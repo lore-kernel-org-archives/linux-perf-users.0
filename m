@@ -1,182 +1,202 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 818B4AD21
-	for <linux-perf-users@vger.kernel.org>; Wed,  9 Jul 2025 15:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2412BE63F
+	for <linux-perf-users@vger.kernel.org>; Wed,  9 Jul 2025 15:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752074723; cv=none; b=GqCPv2K9DZXTf5buF5RuihAsJSI22gxdrD8dfKHF+F2FA4biLLtQ3aTOSBjmG3lPB4PXpNM0n7N/Yw5CWoOSkap5QNPuwAjQuXW25qztDzCWIhF00StF7U4CM2kSlhK4K1mVnqq9y485h6yqAKaFZANitDfcYOZcExIP2H6d2mM=
+	t=1752075749; cv=none; b=ZqgptI16bF64bbLDIgIc4h1fAR0sNO1eZAyjn83k6tBhI1TJSTzC02S3VTxZNtwL25nJTCjTHGY5LI6ufp1bRC2Gh3IrQJk625CxLSxfKR0n1Ok+iRDbJ2Gf9tGbHyutBut1ZGnXUZKh7vXHw7VXlIyS8orUro7UwRCFsb+WkJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752074723; c=relaxed/simple;
-	bh=CxJBqhlrcAX6OgfPXG4HJO7yEixQ9vduEz7ZaZR2wQA=;
+	s=arc-20240116; t=1752075749; c=relaxed/simple;
+	bh=QovcFoD8Krfi+xLDMqZWIXliDqU55FCONFA7+cA4UIU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eq/0HMApGITbCEu8o0MPkz/uJxn5yzs8qnpLEQH3+Qe1HqCia6I4hXAU3RZrd0CDD+N1BSUeUQDG7xK6o+gc133pu+CxEujLJc37qDHOE1KPdEHJyZ9tOmkt/kNR25Cjd1bsBz+3IQGTQKCBvTh2MBMrW1ETXzjw6sRMSsVUeI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HZXAGjOz; arc=none smtp.client-ip=209.85.166.182
+	 To:Cc:Content-Type; b=pWr0bYCFfcxUCxkCZofOFrUGLEyAnKuoBLKSQQGjzDMijBIaCnpJJTHp0p4rB1VZh2/+9kcOHRPAh6oUgEb01DrLLpuaUHi2KxxMbdtGpIoz6pVzJkiavf7/rhNXqNRnR/pL+XMlp8Jee4LlGYO9VetbhePw3oCbiNFK8RWop68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cAC/lPvk; arc=none smtp.client-ip=209.85.166.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HZXAGjOz"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3df2fa612c4so257015ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 09 Jul 2025 08:25:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cAC/lPvk"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so276715ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 09 Jul 2025 08:42:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1752074720; x=1752679520; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1752075746; x=1752680546; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4MXttdVhsPyPi72qpkf3PBJn9R3oi0UkWvffsszV45M=;
-        b=HZXAGjOzGntmN7VnkBpG9d/rNmu9i7j/jPgwmgDfZVvpiyppeBzdz1xzXiu4MqI7Lf
-         jd5nfWcolWCpbKNEXyqnVtsmt9hQDansQmOWychG6w/J+uqI9rEzbUp/0OZ6oD84xVFR
-         nUKDcWDO3jWy82KYY4lDVeeloMmYX2DERhnW6Vy97JOcczM1joxisx0bhLXCgqQJ2/zC
-         XNJZo8f/k0oy+IaumW5TpxhInlbmjV7bi4HLHUMTbhoiuhAw7WOmdSn0nz6ldy1q2wHF
-         Sd0mWXY79dtr5vuFRZj+Ce7w6jTtFicIo/7uVvTwV0lfYa+Y6qTKzpKje+lF969ocOJS
-         6Yiw==
+        bh=hSU5dKke9DWZIUFmbSQUTLS3E3YudP6op3KtOW7lXs8=;
+        b=cAC/lPvkR4pN0tQBsZtysBPM1gtAj2bCFYMsLGX0Xr38nae2v6eVoY2AAzk3Wqzrkz
+         2ugGy0Z2VsusKuXUJr37DbDcHit/KW5jNlU5LLYuFx3s745XQWuGi+o3T0lFvNpy/CLT
+         vuZndPeZQ2Q5IwB+k+QSZmEz7hjkRxfsgpHP22g+2TCnGOY7pkHF01JYFEn0MdpfSdIx
+         UOp0ENnehb/BsMwzFQUDEl9YJswbasR4hxnH45kuMs2LxXzDFajrs1wSbx50muHc3vTW
+         MTlIgaaTuv8GAPFqiIi89Bqb7T9LplJQUyxS3d6pXAp87t2D6n1xhyxoYrHNVGTzsSLx
+         OfWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752074720; x=1752679520;
+        d=1e100.net; s=20230601; t=1752075746; x=1752680546;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4MXttdVhsPyPi72qpkf3PBJn9R3oi0UkWvffsszV45M=;
-        b=jH0GNJF54cOJPCtpDAxMjwGjYCSx+RAe7lVkNnfK9YDBNwFuvaa/OJVwcZs+Aih5nK
-         drKIJW3ZxUakNWDQCttT3hs43WqHzC3PsId79J+4hZTr/Oud1MLs8awL5M+eWpVMkmes
-         Gb7d4XFDAvRRVQCCGUXhj9PW+qKtKfIhWg1vOGAWXY1t74I8LyAcSNyY6yw1gXFv9HFP
-         Fb6jbjTA4WHGIu6vitCAplNicaWtgliq3npW3SiEEEGuc0D+jf7wJYaiuE/VJfXeaTco
-         XdxZwRzLlWXNDfxgIxZi272IgB4kzWJcsSGeP0kvfpxt2ICYd3fGXTGcQUMc7z1L/Yy3
-         Kjhw==
-X-Forwarded-Encrypted: i=1; AJvYcCXejHHPp0oLaBzmCWC0pESWwdl7cxXkYbHRfn3BW/fuocsV0Oj7PZRa+R4mOkRPn8GB57Pzzi6nEukqgxsHblz5@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1SN3L3/aYlv0zsudmx9YyolgsN07fyDLQZ/FTH3EAn+NjT8vK
-	eWNCp73R2b/poXj3rDP5t9XTgCU/CayU35Rt5vDLcNqcbH0uoh1a6qYRdOIOereQP4GqgnAndWE
-	vZWUcwLNq/ajJVKylKdeQTtb6uDHsqkE+xE9QP/km
-X-Gm-Gg: ASbGncviQ/S5tJ4p43yEAZaOw/C6sHB0QbpZ1Kie1CNKW6wnELQ4g3UWDzctNzXDO1p
-	5iNZ7GEJMKy37DqdMLvpgY+iIP8kmhji+P1xdMoX9ymKPyp+CAlwCCo0Th9owRzEiCPMOHA8Mew
-	IcN9V6DZvEG+svRQnHgKDePXmJC1VKl5b3sANGCkYb5hV9NKvlqEIJrQogx5JkfKDdjetQi+Uv
-X-Google-Smtp-Source: AGHT+IHzYwcVE8vOHoXHoNi2SlVmZHN2p4elfH3n1On0m3+V0/TicM03vxIA5SKHhNVI6qwUDEnOIcWGkxzj5jck+rw=
-X-Received: by 2002:a05:6e02:1489:b0:3dc:7cc4:3cb0 with SMTP id
- e9e14a558f8ab-3e1662767ddmr3981645ab.18.1752074720284; Wed, 09 Jul 2025
- 08:25:20 -0700 (PDT)
+        bh=hSU5dKke9DWZIUFmbSQUTLS3E3YudP6op3KtOW7lXs8=;
+        b=UWSAUGW0eaaJZn0kNWFW812ckAi7ol6smOAF21yfVsHtLmGScZEUmmVon5HCk2s6QG
+         8gBrGgXma1iOr5l/MYY/EO0iTN23CFNw4enrVQG4wZ0XS1LSNUP+z8sshLSRb9a8LP89
+         gliwGLq0Jea7tSCJ2LNJObF5oiGtDBxsqtJgqjO5enYjsdp0zeaRL6mKNggtc4LsxP2j
+         0/6dmrQ7cuX3FJzKEXwj1xnJa3ek7gYbxwCkZNiINOAWEzj3Sl0GpLnnGsl6rsjrubCn
+         CtYkgQGA0V6ZeRoxUcy187QKXtpER9XvZWZIQPsT0IkYkWF6eTKCH4e70/b1x7DCeDnY
+         TEeg==
+X-Forwarded-Encrypted: i=1; AJvYcCVjRa4UaPE1BOv9ny7FNxOKrWALsq4Uu/FG/Qch4d3rin6ykEd9Y6LrE8q/lGdY1lH3VKki9uK0ibDVRZ1GsMWn@vger.kernel.org
+X-Gm-Message-State: AOJu0YxObsFxh/TvkgtpMpTxyHmGnnpY7vr1USwSCr90F1kI66AouCG1
+	NlEBQZPj708boQi2LCt2oltA/RZnSYu1SZMryJduBpozLA6ZTgw5xXe3Fr4PKXmdLygtpOtKK3o
+	St9X5Btngp7ZguK/6zZPv4svFXRzH6j7oFWodiTob
+X-Gm-Gg: ASbGncvjhVGeIv15kt6WaXWss8frMyo+x0td88BrNS/7VIccRkrznMZ6vhHLdiYA9SR
+	sWRYFQojS9E4IeRqyY9zkqdEpgaJRDKRFgH7iFut8w0O9pRUYwXTatNZsU54TNY17RT3rypZQba
+	DUnyr+6i2i+4oZbR4GI2KkEDA91JLA0xT0Ci1cehTmiLtpgfezYRERR+ZhaOjms3xLJslNkQ0C
+X-Google-Smtp-Source: AGHT+IHQ9PIy+XOkJNK2AeN146I3YHYL5hcrX407J/wgmZ1WsclScTG1u4s0DXxAV86N/BucOJUHKJySsgYRtBjAxHA=
+X-Received: by 2002:a05:6e02:2592:b0:3dd:a4b7:c737 with SMTP id
+ e9e14a558f8ab-3e167228593mr4070965ab.19.1752075745880; Wed, 09 Jul 2025
+ 08:42:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250603181634.1362626-1-ctshao@google.com> <CAP-5=fVjA9630Com3xNWvgDHbwmsswQ8GEbqvnZ5QCtARQJuvQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fVjA9630Com3xNWvgDHbwmsswQ8GEbqvnZ5QCtARQJuvQ@mail.gmail.com>
+References: <20250709072452.1595257-1-tmricht@linux.ibm.com>
+In-Reply-To: <20250709072452.1595257-1-tmricht@linux.ibm.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 9 Jul 2025 08:25:09 -0700
-X-Gm-Features: Ac12FXwUms8IDbdE-vcEByBVyBXkIv194VzMSR9YD-Tpp16vi9yDvoR_cAvJhuc
-Message-ID: <CAP-5=fXY68WRiz3PVD19GBPg4t+_-f3pyLCwhdCDZHmQ=Aag3Q@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] perf: Reveal PMU type in fdinfo
-To: peterz@infradead.org, mingo@redhat.com
-Cc: linux-kernel@vger.kernel.org, Chun-Tse Shao <ctshao@google.com>, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	james.clark@linaro.org, howardchu95@gmail.com, weilin.wang@intel.com, 
-	linux-perf-users@vger.kernel.org
+Date: Wed, 9 Jul 2025 08:42:14 -0700
+X-Gm-Features: Ac12FXyiyh8qm4Co47ZF3XtMQKMC2KU6LdngoTLT_7JWPX0CgPlWYz3wnTXAFQk
+Message-ID: <CAP-5=fWTc==g=DAS83Eed_Jg9EgE8QiRgM7Jf3vGhmq=8TTdVg@mail.gmail.com>
+Subject: Re: [PATCH] perf list: Remove trailing A in PAI crypto event 4210
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org, 
+	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, 
+	hca@linux.ibm.com, japo@linux.ibm.com, Ingo Franzki <ifranzki@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 24, 2025 at 8:06=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Wed, Jul 9, 2025 at 12:25=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
+om> wrote:
 >
-> On Tue, Jun 3, 2025 at 11:16=E2=80=AFAM Chun-Tse Shao <ctshao@google.com>=
- wrote:
-> >
-> > It gives useful info on knowing which PMUs are reserved by this process=
-.
-> > Also add config which would be useful.
-> > Testing cycles:
-> >
-> >   $ ./perf stat -e cycles &
-> >   $ cat /proc/`pidof perf`/fdinfo/3
-> >   pos:    0
-> >   flags:  02000002
-> >   mnt_id: 16
-> >   ino:    3081
-> >   perf_event_attr.type:   0
-> >   perf_event_attr.config: 0
-> >
-> > Testing L1-dcache-load-misses:
-> >
-> >   $ ./perf stat -e L1-dcache-load-misses &
-> >   $ cat /proc/`pidof perf`/fdinfo/3
-> >   pos:    0
-> >   flags:  02000002
-> >   mnt_id: 16
-> >   ino:    1072
-> >   perf_event_attr.type:   3
-> >   perf_event_attr.config: 65536
-> >
-> > Reviewed-by: Ian Rogers <irogers@google.com>
-> > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> According to the z16 and z17 Principle of Operation documents
+> SA22-7832-13 and SA22-7832-14 the event 4210 is named
+>    PCC_COMPUTE_LAST_BLOCK_CMAC_USING_ENCRYPTED_AES_256
+> without a trailing 'A'. Adjust the json definition files
+> for this event and remove the trailing 'A' character.
+>    PCC_COMPUTE_LAST_BLOCK_CMAC_USING_ENCRYPTED_AES_256A
 >
-> Ping.
+> Also remove a black ' ' between the dash '-' and the number:
+>    xxx-AES- 192 ----> xxx-AES-192
 >
-> Thanks,
-> Ian
+> Suggested-by: Ingo Franzki <ifranzki@linux.ibm.com>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
 
-Hi Peter and Ingo,
-
-This small kernel change enables being able to better diagnose which
-processes are using perf events for what. In the series it is used in
-perf to blame EBUSY for PMUs like intel-pt on which processes are
-using that PMU.
-Are there issues that need resolving before the patch can be
-considered for inclusion?
-
-The original patch was sent in October 2024:
-https://lore.kernel.org/lkml/20241031223948.4179222-2-ctshao@google.com/
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> > ---
-> > v4:
-> >   Removed the first patch in v3 since it is merged.
-> >   Retested to make sure the patch still work.
-> >
-> > v3: lore.kernel.org/20241106003007.2112584-2-ctshao@google.com
-> >
-> >  kernel/events/core.c | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 95e703891b24..bad563692d63 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -56,6 +56,7 @@
-> >  #include <linux/buildid.h>
-> >  #include <linux/task_work.h>
-> >  #include <linux/percpu-rwsem.h>
-> > +#include <linux/seq_file.h>
-> >
-> >  #include "internal.h"
-> >
-> > @@ -7077,6 +7078,14 @@ static int perf_fasync(int fd, struct file *filp=
-, int on)
-> >         return 0;
-> >  }
-> >
-> > +static void perf_show_fdinfo(struct seq_file *m, struct file *f)
-> > +{
-> > +       struct perf_event *event =3D f->private_data;
-> > +
-> > +       seq_printf(m, "perf_event_attr.type:\t%u\n", event->orig_type);
-> > +       seq_printf(m, "perf_event_attr.config:\t%llu\n", (unsigned long=
- long)event->attr.config);
-> > +}
-> > +
-> >  static const struct file_operations perf_fops =3D {
-> >         .release                =3D perf_release,
-> >         .read                   =3D perf_read,
-> > @@ -7085,6 +7094,7 @@ static const struct file_operations perf_fops =3D=
- {
-> >         .compat_ioctl           =3D perf_compat_ioctl,
-> >         .mmap                   =3D perf_mmap,
-> >         .fasync                 =3D perf_fasync,
-> > +       .show_fdinfo            =3D perf_show_fdinfo,
-> >  };
-> >
-> >  /*
-> > --
-> > 2.49.0.1204.g71687c7c1d-goog
-> >
+> ---
+>  .../pmu-events/arch/s390/cf_z16/pai_crypto.json    | 14 +++++++-------
+>  .../pmu-events/arch/s390/cf_z17/pai_crypto.json    |  6 +++---
+>  2 files changed, 10 insertions(+), 10 deletions(-)
+>
+> diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/pai_crypto.json b/too=
+ls/perf/pmu-events/arch/s390/cf_z16/pai_crypto.json
+> index cf8563d059b9..a82674f62409 100644
+> --- a/tools/perf/pmu-events/arch/s390/cf_z16/pai_crypto.json
+> +++ b/tools/perf/pmu-events/arch/s390/cf_z16/pai_crypto.json
+> @@ -753,14 +753,14 @@
+>                 "EventCode": "4203",
+>                 "EventName": "PCC_COMPUTE_LAST_BLOCK_CMAC_USING_ENCRYPTED=
+_TDEA_128",
+>                 "BriefDescription": "PCC COMPUTE LAST BLOCK CMAC USING EN=
+CRYPTED TDEA 128",
+> -               "PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-E=
+ncrypted-TDEA- 128 function ending with CC=3D0"
+> +               "PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-E=
+ncrypted-TDEA-128 function ending with CC=3D0"
+>         },
+>         {
+>                 "Unit": "PAI-CRYPTO",
+>                 "EventCode": "4204",
+>                 "EventName": "PCC_COMPUTE_LAST_BLOCK_CMAC_USING_ENCRYPTED=
+_TDEA_192",
+>                 "BriefDescription": "PCC COMPUTE LAST BLOCK CMAC USING EN=
+CRYPTED TDEA 192",
+> -               "PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-E=
+ncrypted-TDEA- 192 function ending with CC=3D0"
+> +               "PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-E=
+ncrypted-TDEA-192 function ending with CC=3D0"
+>         },
+>         {
+>                 "Unit": "PAI-CRYPTO",
+> @@ -788,21 +788,21 @@
+>                 "EventCode": "4208",
+>                 "EventName": "PCC_COMPUTE_LAST_BLOCK_CMAC_USING_ENCRYPTED=
+_AES_128",
+>                 "BriefDescription": "PCC COMPUTE LAST BLOCK CMAC USING EN=
+CRYPTED AES 128",
+> -               "PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-E=
+ncrypted-AES- 128 function ending with CC=3D0"
+> +               "PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-E=
+ncrypted-AES-128 function ending with CC=3D0"
+>         },
+>         {
+>                 "Unit": "PAI-CRYPTO",
+>                 "EventCode": "4209",
+>                 "EventName": "PCC_COMPUTE_LAST_BLOCK_CMAC_USING_ENCRYPTED=
+_AES_192",
+>                 "BriefDescription": "PCC COMPUTE LAST BLOCK CMAC USING EN=
+CRYPTED AES 192",
+> -               "PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-E=
+ncrypted-AES- 192 function ending with CC=3D0"
+> +               "PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-E=
+ncrypted-AES-192 function ending with CC=3D0"
+>         },
+>         {
+>                 "Unit": "PAI-CRYPTO",
+>                 "EventCode": "4210",
+> -               "EventName": "PCC_COMPUTE_LAST_BLOCK_CMAC_USING_ENCRYPTED=
+_AES_256A",
+> -               "BriefDescription": "PCC COMPUTE LAST BLOCK CMAC USING EN=
+CRYPTED AES 256A",
+> -               "PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-E=
+ncrypted-AES- 256A function ending with CC=3D0"
+> +               "EventName": "PCC_COMPUTE_LAST_BLOCK_CMAC_USING_ENCRYPTED=
+_AES_256",
+> +               "BriefDescription": "PCC COMPUTE LAST BLOCK CMAC USING EN=
+CRYPTED AES 256",
+> +               "PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-E=
+ncrypted-AES-256 function ending with CC=3D0"
+>         },
+>         {
+>                 "Unit": "PAI-CRYPTO",
+> diff --git a/tools/perf/pmu-events/arch/s390/cf_z17/pai_crypto.json b/too=
+ls/perf/pmu-events/arch/s390/cf_z17/pai_crypto.json
+> index a7176c988b8a..fd2eb536ecc7 100644
+> --- a/tools/perf/pmu-events/arch/s390/cf_z17/pai_crypto.json
+> +++ b/tools/perf/pmu-events/arch/s390/cf_z17/pai_crypto.json
+> @@ -800,9 +800,9 @@
+>         {
+>                 "Unit": "PAI-CRYPTO",
+>                 "EventCode": "4210",
+> -               "EventName": "PCC_COMPUTE_LAST_BLOCK_CMAC_USING_ENCRYPTED=
+_AES_256A",
+> -               "BriefDescription": "PCC COMPUTE LAST BLOCK CMAC USING EN=
+CRYPTED AES 256A",
+> -               "PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-E=
+ncrypted-AES-256A function ending with CC=3D0"
+> +               "EventName": "PCC_COMPUTE_LAST_BLOCK_CMAC_USING_ENCRYPTED=
+_AES_256",
+> +               "BriefDescription": "PCC COMPUTE LAST BLOCK CMAC USING EN=
+CRYPTED AES 256",
+> +               "PublicDescription": "PCC-Compute-Last-Block-CMAC-Using-E=
+ncrypted-AES-256 function ending with CC=3D0"
+>         },
+>         {
+>                 "Unit": "PAI-CRYPTO",
+> --
+> 2.49.0
+>
+>
