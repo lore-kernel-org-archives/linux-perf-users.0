@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E88C2E54DF;
-	Wed,  9 Jul 2025 14:02:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04952E54B9;
+	Wed,  9 Jul 2025 14:05:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752069764; cv=none; b=FHIFCRENpT0vXGJhmeoAbYzPbVj8N4YV1q5BuihGQ/CILDLrsqCjwQ9SL+FGyTHtuIK7ggvpTBS6LQrDFI9DFBqIhjKKlB2+pdCcNRS6sYGv/C+V/c9sCS2/85/4ouK7VmyP2bz766btbejRw/A/O8c7G31KqelCS2DRwH/8hiY=
+	t=1752069919; cv=none; b=ENBfPZ6/Ls2ODITe16NOOOav0rA6kTkCy7TWEBhujTwnckI6mEgSqsemFHUu7/QfE0NvLporBiAXNYdiGDHMhYktLTxXtaTUfeETmCv4l6gDQ9ks2op4Dh0wdOvv997bVf/Mrcu1JhzjP6D94XwdWJFcDyXci2riamHlRxItsEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752069764; c=relaxed/simple;
-	bh=U/gcQ/CvuoL0xOLo5eXp7QDf3EbxUpAN+lVuDP3y2QY=;
+	s=arc-20240116; t=1752069919; c=relaxed/simple;
+	bh=aNA261FsW4mkgtRraaqPkgn+WuUogqOB0mFX8ejRiyE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ncxKqSOq+PsfMeA5j+d2Zm1g1ZL7Ku3OqBNay1hUp/1lBP7X9oNZVF4iIPrmptgmpMJmTh5Culprx/VzyQVIZBFLm2XGkT4Bo/r5cy4gapx+mxcvR3JvTf58qmL/uyoFGLFv14Qzl2+OGcP8ZnQe3TYv+feRQB/b7LZnmzRFwls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mRgJFL2I; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=uFsA0abB1UItFLqWaoczkJJA9flOQcJElnlAsBeZzzI4eFbdWCbq+qAx/Sy1LXp0egyLVHSuGDw51pc1cjqIgU0Yhoi20lEmZ8hAZgZXYazgF8NEqBoKhlnY7tob4jBfwm4AQlU+Yq2OgvScVGyUc3GOh4aUot+CTu61lwMVGLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TtFYFduK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mRgJFL2I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CA0AC4CEEF;
-	Wed,  9 Jul 2025 14:02:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TtFYFduK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CFB4C4CEEF;
+	Wed,  9 Jul 2025 14:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752069762;
-	bh=U/gcQ/CvuoL0xOLo5eXp7QDf3EbxUpAN+lVuDP3y2QY=;
+	s=k20201202; t=1752069918;
+	bh=aNA261FsW4mkgtRraaqPkgn+WuUogqOB0mFX8ejRiyE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mRgJFL2I7DWBzHrYhmyUJ9/LXY5h4yPo7+N0ckgNjGyM0K7nh/9ROWmAapo/ZI/g+
-	 rr55rw5QdXTWftLIUGNrXRSsUDj2O5SExwhVeIzh3D8FdoMsvcEm8aY7rCHPTWVbNr
-	 JVA6jUo4asQDg3936mYKAFXee5OvCNVHT1CuSKi50coktYH3DbR4YZ6xQcLh1Gguy2
-	 YSSLy8LGcJmcMjQ/HA7k3nPcTjbUNzeE3TP5CJ+n6F/92bVr6kXus/WSHoduk0+IWZ
-	 c3L3zIlaXtV+7QSKt6z2myrCQR3nGZO+Gld7WHwcIEgSL722NuYhNlUdFrsgWyz/P0
-	 lCy3g/EyG/aWg==
-Message-ID: <ae058bda-c51a-4df0-b93c-5926030918a4@kernel.org>
-Date: Wed, 9 Jul 2025 16:02:36 +0200
+	b=TtFYFduKBgXJyT/cMREPKtGBxZfEp4+Gudgg4rqLd4ko3xKxIUPKZfTJp5WwMvS9K
+	 Q77GGfecm+TEiYgBVxzOlGbikVV9n7dNF+rP/24vZSrqh3sNH/8dBb7/KCcgYSkx0k
+	 29B5Lm/u67Lw5+RoK/PNJlh95/YyWu7+LW807u+KN0XRJKqFCeJLaENFmoi9VRp+rf
+	 BBM5CmamUY+KlYcKzuPH6mf7fWe2OyxhofLBNufN8yJKFQMGuBXeUZ3TkM0R8aPGab
+	 epq8MRGgnng9ewZhLZE8ltp5Qr3KCJroGQcGybqF8+YILoCj3rwiRxFkMpG8tHN0Ln
+	 FlniwUoJA8iMw==
+Message-ID: <23f655bf-aed6-4022-a7bf-3189bae834de@kernel.org>
+Date: Wed, 9 Jul 2025 16:05:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -35,8 +35,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] arm64: dts: fsd: Add PPMU support for MFC block of
- FSD SoC
+Subject: Re: [PATCH 4/6] drivers: perf: samsung: Add PPMU driver support
 To: Vivek Yadav <vivek.2311@samsung.com>, pankaj.dubey@samsung.com,
  ravi.patel@samsung.com, shradha.t@samsung.com, mturquette@baylibre.com,
  sboyd@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
@@ -46,10 +45,10 @@ Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-perf-users@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 References: <20250708103208.79444-1-vivek.2311@samsung.com>
- <CGME20250708103243epcas5p2d8fd5bf02e64e104eca3def802813230@epcas5p2.samsung.com>
- <20250708103208.79444-6-vivek.2311@samsung.com>
-Content-Language: en-US
+ <CGME20250708103240epcas5p336539d4c3a1fb489708c61f9aae6bfa8@epcas5p3.samsung.com>
+ <20250708103208.79444-5-vivek.2311@samsung.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
@@ -93,59 +92,72 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250708103208.79444-6-vivek.2311@samsung.com>
+In-Reply-To: <20250708103208.79444-5-vivek.2311@samsung.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 08/07/2025 12:32, Vivek Yadav wrote:
-> Add device tree node for PPMU instances in MFC block and
-> enable the same for Tesla FSD platform.
-> 
-> Signed-off-by: Ravi Patel <ravi.patel@samsung.com>
-> Signed-off-by: Vivek Yadav <vivek.2311@samsung.com>
-> ---
->  arch/arm64/boot/dts/tesla/fsd-evb.dts |  8 ++++++++
->  arch/arm64/boot/dts/tesla/fsd.dtsi    | 20 ++++++++++++++++++++
->  2 files changed, 28 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/tesla/fsd-evb.dts b/arch/arm64/boot/dts/tesla/fsd-evb.dts
-> index 8d7794642900..f543c7dad7cc 100644
-> --- a/arch/arm64/boot/dts/tesla/fsd-evb.dts
-> +++ b/arch/arm64/boot/dts/tesla/fsd-evb.dts
-> @@ -110,3 +110,11 @@ &serial_0 {
->  &ufs {
->  	status = "okay";
->  };
-> +
-> +&ppmu0_mfc {
-
-Follow DTS coding style.
-
-> +	status = "okay";
+> +static struct platform_driver samsung_ppmu_driver = {
+> +	.probe = samsung_ppmu_probe,
+> +	.remove = samsung_ppmu_remove,
+> +	.driver	= {
+> +		.name = "samsung-ppmu",
+> +		.of_match_table	= ppmu_of_match,
+> +	},
 > +};
 > +
-> +&ppmu1_mfc {
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm64/boot/dts/tesla/fsd.dtsi b/arch/arm64/boot/dts/tesla/fsd.dtsi
-> index 690b4ed9c29b..7b6e7d81be10 100644
-> --- a/arch/arm64/boot/dts/tesla/fsd.dtsi
-> +++ b/arch/arm64/boot/dts/tesla/fsd.dtsi
-> @@ -970,6 +970,26 @@ timer@10040000 {
->  			clock-names = "fin_pll", "mct";
->  		};
->  
-> +		ppmu0_mfc: ppmu@12840000 {
+> +module_platform_driver(samsung_ppmu_driver);
+> +
+> +MODULE_ALIAS("perf:samsung-ppmu");
 
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+No, drop. What's with these aliases from samsung... second try today.
+From where do you get such code?
 
+> +MODULE_DESCRIPTION("Samsung Platform Performance Measuring Unit (PPMU) driver");
+> +MODULE_AUTHOR("Vivek Yadav <vivek.2311@samsung.com>");
+> +MODULE_AUTHOR("Ravi Patel <ravi.patel@samsung.com>");
+> +MODULE_LICENSE("GPL");
+> diff --git a/drivers/perf/samsung/ppmu_platform.c b/drivers/perf/samsung/ppmu_platform.c
+> new file mode 100644
+> index 000000000000..ee11311d5a61
+> --- /dev/null
+> +++ b/drivers/perf/samsung/ppmu_platform.c
+> @@ -0,0 +1,338 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Samsung Platform Performance Measuring Unit (PPMU) core file
+> + *
+> + * Copyright (c) 2024-25 Samsung Electronics Co., Ltd.
+> + *
+> + * Authors: Vivek Yadav <vivek.2311@samsung.com>
+> + *          Ravi Patel <ravi.patel@samsung.com>
+> + */
+> +
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/perf_event.h>
+> +#include "samsung_ppmu.h"
+> +
+> +/*
+> + * PMU format attributes
+> + */
+> +ssize_t samsung_ppmu_format_sysfs_show(struct device *dev,
+> +				       struct device_attribute *attr, char *buf)
+> +{
+> +	struct dev_ext_attribute *eattr;
+> +
+> +	eattr = container_of(attr, struct dev_ext_attribute, attr);
+> +
+> +	return sysfs_emit(buf, "%s\n", (char *)eattr->var);
+> +}
+> +EXPORT_SYMBOL_GPL(samsung_ppmu_format_sysfs_show);
 
-> +			compatible = "samsung,ppmu-v2";
+1. Where did you document ABI?
+2. This is not used. You have one module, not two. Drop all exports.
 
-See writing bindings, DTS coding style and all other documents there
-explaining why this is wrong.
+3. You need to clearly explain what is wrong with existing drivers in a
+very detailed way, before you start posting another (possibly
+duplicated) drivers.
 
 
 Best regards,
