@@ -1,63 +1,66 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05297223338
-	for <linux-perf-users@vger.kernel.org>; Wed,  9 Jul 2025 21:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D00241664
+	for <linux-perf-users@vger.kernel.org>; Wed,  9 Jul 2025 21:40:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752097236; cv=none; b=pFHJ114/bqJjJAz+F4UI+U7z28OsQtUCRdhWlplQBRYrb45uczUTbQmdhnWlM0PcNo/heErSv37kxrz8pwiTVJXwdFOGHujgN9RrIs+mHImtpufPu9f5ZgxDfOCwEBnOP1ZPLJGB1JjPm+F1IPg3aA0Y81qnr7HitW2F2ORxrvQ=
+	t=1752097238; cv=none; b=mEUx9rvgKYhKia8dyCEEyZ5v95a+tJ3zRKZMn8gp5wfVg4/Zos+mQqeCr4O9nFthVsPpMIfa/dbXLawyvwdvgmTepAPeyLjMlLR1gMQFNrHnmeulNMUDSyNBVoyjRwOnVqlzGkbVB3kyXHIHIpIK4WaV0uA6QrcGjXvuuUi9zCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752097236; c=relaxed/simple;
-	bh=dAx/9BHHk2gp6RbxbMCNF3YyX8iXzA6yqSrF1kGWbs0=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=GwlwUZRKteIpJfmkaSbPRrkDvdj9HmReboVgqcAcrk/mli3HkitV5PvwnQ7COQQEZEuB0G1+7p0esTWbV6Zn6t89x1hz2qOw0DY/cNV1xUu+De43F37BC5rYT/hRmPlQ0RIs49OCyRMlVeGLSIVwZ/oxn8cNIphk6+ROvzCH37Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=z5DZf2j8; arc=none smtp.client-ip=209.85.214.202
+	s=arc-20240116; t=1752097238; c=relaxed/simple;
+	bh=1lk85E3pggo+4g2GknSYWSWNs6o0Mw8jBXtuFvYNkFU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=id3p9/yLAoWX+F8fzsZrJ4gjFCDMpRBgiI8SkT3RpNzPR9PTf6nmr3QqGGNhJOa5MLU4/0MurDPbHmMvU8tZi4l7KRBdhBUXxpkCAtjkBzeo7uTFBAlCSTZLn79ayBOcf/69K+hR0FZFooAjxwql1yGKeyDgPaovoEgbG0eJRHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FScjL0Rs; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="z5DZf2j8"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2356ce55d33so4431905ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 09 Jul 2025 14:40:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FScjL0Rs"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2c37558eccso329026a12.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 09 Jul 2025 14:40:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1752097233; x=1752702033; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=xW/jUGxNTN0mrL6/OLpy7P8Qk2WaeRoeDZDx7KoSzjo=;
-        b=z5DZf2j8FjlgU/fBo6sL598Zv3bIoh9La682PPstn4VXGVADrevfvF+xtg992Y84Ng
-         M8+4tSar0FMkWWIhTNGewWm2lC+m79r2CiAM7+p5fjTGXo0tT+9a0lToHHuwEJkqBG7Q
-         WMBLSUDWr1wnwBGCT50jdo/1FDksp9tyufoNUWUOp2GheQ9+wMdEJLo637nLzOVUbtaT
-         za7kEPqF0nta6zP8BvPOrl9AKIQNLnoKRW3evbqzR7W3OjZI+RgY2lTVuxgPHoMExovI
-         +xjrsqaw9e0RXTMVMj9OuEm9WwRIy6+Wg3m4djpfXo4cYeChc2Pc5AmuQB6MiVa4+ml2
-         UJBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752097233; x=1752702033;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1752097235; x=1752702035; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=xW/jUGxNTN0mrL6/OLpy7P8Qk2WaeRoeDZDx7KoSzjo=;
-        b=U2GPA7QUi/9BQkkQ8GSU8iG5qCuIV0Xjp0OOc6maQVp1aciCz7weW1Yk7M4nrzmqE+
-         9qxe4eia4JtLVIKIgZXw6D2qDUKc2k3JVLAgw5uy2tZLWIHrU/ltlcNK0NKL2MvL9gSU
-         neHoZSXZWWwTT7edatH+Cu3yVfo7U9N40SjX0fI7fMVYOlj/fHdEoxbL2VBUc9NHKg/j
-         rv1zYsX5kcJD7JPqBLkVnHjMvHcG38WBlBIN0aS7/FyugOm694sYslYgdoql4nL/C6FF
-         x/CociejrXAwmyUlA+p4lcVRlN+uozJY4HdIf4lsLRLChRb0dga4k2F0BXfB911V3BLU
-         5nAg==
-X-Forwarded-Encrypted: i=1; AJvYcCVRJH6Eho9FuGK11tFiA0UolNgQ+PsgyWZfnvJBdWAEPF/kWBAPB+E3f+WkFAv6eMu9SV4VGnsIqqw5LKYTKHYp@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGJjsJ7BobcxMYcfralBbseKq5QoPREPE49k2qkNAS7CR/DDJ5
-	ZYD/CUeDoNwypLAaheBafZeAYvYK2b6X/FKIajIvgJuun7MDH1oVkmNvUzc/9Bc4UfCMsamJhcE
-	yVPong7Knbw==
-X-Google-Smtp-Source: AGHT+IEjv5yfrOnuSh9ELqkUNKnwmKE8U+2+0r4wrCq2uBQvE9VogBqclCPRDDIkeTGiNeskN9VwecG8hPYK
-X-Received: from plup7.prod.google.com ([2002:a17:903:4b27:b0:22e:4c89:97c7])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f707:b0:236:8df9:ab38
- with SMTP id d9443c01a7336-23ddb2fce7bmr60676095ad.34.1752097233391; Wed, 09
- Jul 2025 14:40:33 -0700 (PDT)
-Date: Wed,  9 Jul 2025 14:40:17 -0700
+        bh=1RNkMgAEj4/GnB7BeI8C0UUIpPaOTXLCNgb+45zsMxs=;
+        b=FScjL0RsBI9fOqixWgw+s3e0+ZVU6uRoglAfNGTOq4KMPjaGwfvlvsO3bneN9Sg+Rs
+         j6q+LX5Ds0EbGDcGfdcZqXXwQQo4/0Q+rBJqjt3hLjnFzpbWs0iE0E/6oCSqSQF/zAjm
+         6tl976wwpI83zeobotT8tN+5t91xiVigcPGyAt2wRxXHeJt04PhRaN5nKhFx+nOGh5MA
+         BYXDpDFt4cB1A9JTOCB2k3cGM6+9jmJmY/I3yyOIyJnpK59wsEAjnSW2CLGMf2TNtTga
+         +j0cEU7uyN34aMcuf4ErsRIv8ywSMD+FeTYrioFJaMHeTmyOjbhAFlhdHTWzOlF2QdI0
+         A/pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752097235; x=1752702035;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1RNkMgAEj4/GnB7BeI8C0UUIpPaOTXLCNgb+45zsMxs=;
+        b=mEjRmh+qBvXgABhjX6G83EHNyoSCsjqSSe6EVYr3mxvPfl11tiYXy1BrAJKE8/cwVZ
+         XZcncJzUN6anTD/CzCbgWj/16FEs4ZdwfQV/HXBn+4yhxzBeupu7FLEXlDrvqSXqGlpa
+         773EVrMqQ811JGsQvfxHAwxTtXLvyHnV9AGg72zafk9Fiqr8WnddQ++MF6ZCO2nZIZPJ
+         ovehmCezMbXZsLITeYRieyRpuvuDpEpXKX4SPlIrWe8315RdMkz8sEcvb+x4cETzW9WZ
+         IXHYtq3TCz+rBraAvd0Moie88g65L9hKW2FzdU4isC7Ltswcycggu+wOYPzL+5Icx0vM
+         yZPg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJO7ErrLm84V8gnS7H2eaPdGmVEk6gOmpx1pZ13AJD3a5MRRtXQ0rfJoVU308fa/RdJUKbMCMa8pHBGE8gJgMQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNVlZLdFPZUPEYAfBs2nY4doxhaZEXj2sOZQB01sxCcT6KaeCV
+	I7BBJwgqiNmiQRIWvd1JUANsvCdnbGtxVknQ6Vd+DSK0Yj0vS0wFpA3/R6Z/cVSMz0nLE1SogvR
+	r53uM+CT9BQ==
+X-Google-Smtp-Source: AGHT+IH2bEm5D5vL0/SOlKgLMUnkYuyDxrvhEh8Sk1TmdRPm6c9OAhUY7JUi0TVyz5YNrku0Gkgejj3nrlBH
+X-Received: from pgr1.prod.google.com ([2002:a63:1141:0:b0:b2f:a31c:f7bc])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:6e91:b0:215:efed:acfc
+ with SMTP id adf61e73a8af0-22cd5a06069mr6978021637.7.1752097235636; Wed, 09
+ Jul 2025 14:40:35 -0700 (PDT)
+Date: Wed,  9 Jul 2025 14:40:18 -0700
+In-Reply-To: <20250709214029.1769089-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250709214029.1769089-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250709214029.1769089-1-irogers@google.com>
-Subject: [PATCH v1 00/12] Python motivated fixes and cleanup
+Message-ID: <20250709214029.1769089-2-irogers@google.com>
+Subject: [PATCH v1 01/12] perf hwmon_pmu: Avoid shortening hwmon PMU name
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,56 +75,30 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Various fixes and clean ups done as part of creating the ilist app,
-the v4 patch series of which is posted here:
-https://lore.kernel.org/lkml/20250628000929.230406-1-irogers@google.com/
+Long names like ucsi_source_psy_USBC000:001 when prefixed with hwmon_
+exceed the buffer size and the last digit is lost. This causes
+confusion with similar names like ucsi_source_psy_USBC000:002. Extend
+the buffer size to avoid this.
 
-These patches are separated out to give something smaller to review
-before adding features. As requested by Namhyung.
+Fixes: 53cc0b351ec9 ("perf hwmon_pmu: Add a tool PMU exposing events from hwmon in sysfs")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/hwmon_pmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ian Rogers (12):
-  perf hwmon_pmu: Avoid shortening hwmon PMU name
-  perf parse-events: Minor tidy up of event_type helper
-  perf spark: Fix includes and add SPDX
-  perf pmu: Tolerate failure to read the type for wellknown PMUs
-  perf metricgroup: Factor out for-each function and move out printing
-  perf stat: Move metric list from config to evlist
-  perf expr: Accumulate rather than replace in the context counts
-  perf jevents: If the long_desc and desc are identical then drop the
-    long_desc
-  perf python: In str(evsel) use the evsel__pmu_name helper
-  perf python: Fix thread check in pyrf_evsel__read
-  perf python: Correct pyrf_evsel__read for tool PMUs
-  perf python: Improve leader copying from evlist
-
- tools/perf/builtin-script.c              |   3 +-
- tools/perf/builtin-stat.c                |  25 ++-
- tools/perf/pmu-events/empty-pmu-events.c | 128 +++++------
- tools/perf/pmu-events/jevents.py         |   3 +
- tools/perf/tests/expand-cgroup.c         |  24 +--
- tools/perf/tests/parse-metric.c          |  16 +-
- tools/perf/tests/pmu-events.c            |  30 +--
- tools/perf/util/cgroup.c                 |  23 +-
- tools/perf/util/cgroup.h                 |   3 +-
- tools/perf/util/evlist.c                 |   3 +
- tools/perf/util/evlist.h                 |   6 +
- tools/perf/util/expr.c                   |   6 +-
- tools/perf/util/hwmon_pmu.c              |   2 +-
- tools/perf/util/metricgroup.c            | 261 ++++-------------------
- tools/perf/util/metricgroup.h            |  10 +-
- tools/perf/util/parse-events.c           |  31 ++-
- tools/perf/util/parse-events.h           |   2 +-
- tools/perf/util/pmu.c                    |  37 +++-
- tools/perf/util/print-events.c           | 133 ++++++++++++
- tools/perf/util/print-events.h           |   2 +
- tools/perf/util/python.c                 |  91 +++++++-
- tools/perf/util/spark.c                  |   8 +-
- tools/perf/util/spark.h                  |   1 +
- tools/perf/util/stat-display.c           |  16 +-
- tools/perf/util/stat-shadow.c            |  13 +-
- tools/perf/util/stat.h                   |  12 +-
- 26 files changed, 443 insertions(+), 446 deletions(-)
-
+diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
+index 7edda010ba27..416dfea9ffff 100644
+--- a/tools/perf/util/hwmon_pmu.c
++++ b/tools/perf/util/hwmon_pmu.c
+@@ -345,7 +345,7 @@ static int hwmon_pmu__read_events(struct hwmon_pmu *pmu)
+ struct perf_pmu *hwmon_pmu__new(struct list_head *pmus, const char *hwmon_dir,
+ 				const char *sysfs_name, const char *name)
+ {
+-	char buf[32];
++	char buf[64];
+ 	struct hwmon_pmu *hwm;
+ 	__u32 type = PERF_PMU_TYPE_HWMON_START + strtoul(sysfs_name + 5, NULL, 10);
+ 
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
