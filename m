@@ -1,144 +1,182 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFF038F9C
-	for <linux-perf-users@vger.kernel.org>; Wed,  9 Jul 2025 14:31:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 818B4AD21
+	for <linux-perf-users@vger.kernel.org>; Wed,  9 Jul 2025 15:25:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752071507; cv=none; b=pYeECck3663bVo7Ihp2WRgqvMbzvMdYsogJQMGSWgiqfY1l3ZmD3uzUoXWahWcsWq+wkEbJXN3PEzFdRZ7oyyl8c9YGshfqdtR9C6+ltLJAW5J+jEHpAtsnZt5ApL/Vde3gbEYkLTZF+W4USsKWwfnAiKRH3P5x5YvmoS4T+6Q8=
+	t=1752074723; cv=none; b=GqCPv2K9DZXTf5buF5RuihAsJSI22gxdrD8dfKHF+F2FA4biLLtQ3aTOSBjmG3lPB4PXpNM0n7N/Yw5CWoOSkap5QNPuwAjQuXW25qztDzCWIhF00StF7U4CM2kSlhK4K1mVnqq9y485h6yqAKaFZANitDfcYOZcExIP2H6d2mM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752071507; c=relaxed/simple;
-	bh=63HYRtLscaJD4DpEPN8eTWuIhppVK43bbdQ/n1/bJsU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FQf212GHjaK5Djwj9Jwx1QDWyFzOGG1GSehmyjQ+n2I/sbVKYY6uX7sKyD+RqJYxl/d87cCNfzP4r+mysWt9PAPOu74Mq3FQ9wNrodGor5SkowZfOOPjSGwt1YySXQFBi8anVANhudGTOot59q3FFxxw76fnU2EKoRcn0xgN1sM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Tdqq4HTH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1752074723; c=relaxed/simple;
+	bh=CxJBqhlrcAX6OgfPXG4HJO7yEixQ9vduEz7ZaZR2wQA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eq/0HMApGITbCEu8o0MPkz/uJxn5yzs8qnpLEQH3+Qe1HqCia6I4hXAU3RZrd0CDD+N1BSUeUQDG7xK6o+gc133pu+CxEujLJc37qDHOE1KPdEHJyZ9tOmkt/kNR25Cjd1bsBz+3IQGTQKCBvTh2MBMrW1ETXzjw6sRMSsVUeI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HZXAGjOz; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tdqq4HTH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752071504;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=LS9jOgSQoqk857hJ81FWyzHteMoNbIFBZD+TbGH43gE=;
-	b=Tdqq4HTH1tTKbDbDZCnFjPvBy42NocXrXpfRstpK0oOwqVRN9pMwpCWE1wmW92qA0tuSbj
-	AToh9XeLeYsYz0z7zKZUlc4NQUIFiLn0jhny1Gekvnz46WcvGli28ujMd7o2c+SknyQlMp
-	yXuYKRzBS2kChLRFL2JXLJEVhbfypB4=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-416-kz4KeGboOHiA3BCnpltxjA-1; Wed,
- 09 Jul 2025 10:31:40 -0400
-X-MC-Unique: kz4KeGboOHiA3BCnpltxjA-1
-X-Mimecast-MFC-AGG-ID: kz4KeGboOHiA3BCnpltxjA_1752071499
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9F2931956077;
-	Wed,  9 Jul 2025 14:31:38 +0000 (UTC)
-Received: from ashelat-thinkpadp1gen5.boston.csb (unknown [10.22.81.233])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 098291956089;
-	Wed,  9 Jul 2025 14:31:34 +0000 (UTC)
-From: Anubhav Shelat <ashelat@redhat.com>
-To: mpetlan@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	linux-perf-users@vger.kernel.org
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	dapeng1.mi@linux.intel.com,
-	james.clark@linaro.org,
-	Anubhav Shelat <ashelat@redhat.com>
-Subject: [PATCH] perf sched timehist: decode process names of processes in zombie state
-Date: Wed,  9 Jul 2025 10:31:20 -0400
-Message-ID: <20250709143119.91147-2-ashelat@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HZXAGjOz"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3df2fa612c4so257015ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 09 Jul 2025 08:25:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1752074720; x=1752679520; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4MXttdVhsPyPi72qpkf3PBJn9R3oi0UkWvffsszV45M=;
+        b=HZXAGjOzGntmN7VnkBpG9d/rNmu9i7j/jPgwmgDfZVvpiyppeBzdz1xzXiu4MqI7Lf
+         jd5nfWcolWCpbKNEXyqnVtsmt9hQDansQmOWychG6w/J+uqI9rEzbUp/0OZ6oD84xVFR
+         nUKDcWDO3jWy82KYY4lDVeeloMmYX2DERhnW6Vy97JOcczM1joxisx0bhLXCgqQJ2/zC
+         XNJZo8f/k0oy+IaumW5TpxhInlbmjV7bi4HLHUMTbhoiuhAw7WOmdSn0nz6ldy1q2wHF
+         Sd0mWXY79dtr5vuFRZj+Ce7w6jTtFicIo/7uVvTwV0lfYa+Y6qTKzpKje+lF969ocOJS
+         6Yiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752074720; x=1752679520;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4MXttdVhsPyPi72qpkf3PBJn9R3oi0UkWvffsszV45M=;
+        b=jH0GNJF54cOJPCtpDAxMjwGjYCSx+RAe7lVkNnfK9YDBNwFuvaa/OJVwcZs+Aih5nK
+         drKIJW3ZxUakNWDQCttT3hs43WqHzC3PsId79J+4hZTr/Oud1MLs8awL5M+eWpVMkmes
+         Gb7d4XFDAvRRVQCCGUXhj9PW+qKtKfIhWg1vOGAWXY1t74I8LyAcSNyY6yw1gXFv9HFP
+         Fb6jbjTA4WHGIu6vitCAplNicaWtgliq3npW3SiEEEGuc0D+jf7wJYaiuE/VJfXeaTco
+         XdxZwRzLlWXNDfxgIxZi272IgB4kzWJcsSGeP0kvfpxt2ICYd3fGXTGcQUMc7z1L/Yy3
+         Kjhw==
+X-Forwarded-Encrypted: i=1; AJvYcCXejHHPp0oLaBzmCWC0pESWwdl7cxXkYbHRfn3BW/fuocsV0Oj7PZRa+R4mOkRPn8GB57Pzzi6nEukqgxsHblz5@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1SN3L3/aYlv0zsudmx9YyolgsN07fyDLQZ/FTH3EAn+NjT8vK
+	eWNCp73R2b/poXj3rDP5t9XTgCU/CayU35Rt5vDLcNqcbH0uoh1a6qYRdOIOereQP4GqgnAndWE
+	vZWUcwLNq/ajJVKylKdeQTtb6uDHsqkE+xE9QP/km
+X-Gm-Gg: ASbGncviQ/S5tJ4p43yEAZaOw/C6sHB0QbpZ1Kie1CNKW6wnELQ4g3UWDzctNzXDO1p
+	5iNZ7GEJMKy37DqdMLvpgY+iIP8kmhji+P1xdMoX9ymKPyp+CAlwCCo0Th9owRzEiCPMOHA8Mew
+	IcN9V6DZvEG+svRQnHgKDePXmJC1VKl5b3sANGCkYb5hV9NKvlqEIJrQogx5JkfKDdjetQi+Uv
+X-Google-Smtp-Source: AGHT+IHzYwcVE8vOHoXHoNi2SlVmZHN2p4elfH3n1On0m3+V0/TicM03vxIA5SKHhNVI6qwUDEnOIcWGkxzj5jck+rw=
+X-Received: by 2002:a05:6e02:1489:b0:3dc:7cc4:3cb0 with SMTP id
+ e9e14a558f8ab-3e1662767ddmr3981645ab.18.1752074720284; Wed, 09 Jul 2025
+ 08:25:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+References: <20250603181634.1362626-1-ctshao@google.com> <CAP-5=fVjA9630Com3xNWvgDHbwmsswQ8GEbqvnZ5QCtARQJuvQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fVjA9630Com3xNWvgDHbwmsswQ8GEbqvnZ5QCtARQJuvQ@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 9 Jul 2025 08:25:09 -0700
+X-Gm-Features: Ac12FXwUms8IDbdE-vcEByBVyBXkIv194VzMSR9YD-Tpp16vi9yDvoR_cAvJhuc
+Message-ID: <CAP-5=fXY68WRiz3PVD19GBPg4t+_-f3pyLCwhdCDZHmQ=Aag3Q@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] perf: Reveal PMU type in fdinfo
+To: peterz@infradead.org, mingo@redhat.com
+Cc: linux-kernel@vger.kernel.org, Chun-Tse Shao <ctshao@google.com>, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	james.clark@linaro.org, howardchu95@gmail.com, weilin.wang@intel.com, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Previously when running perf trace timehist --state, when recording
-processes in the zombie state the process name would not be decoded
-properly and appears with just the PID:
+On Tue, Jun 24, 2025 at 8:06=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Tue, Jun 3, 2025 at 11:16=E2=80=AFAM Chun-Tse Shao <ctshao@google.com>=
+ wrote:
+> >
+> > It gives useful info on knowing which PMUs are reserved by this process=
+.
+> > Also add config which would be useful.
+> > Testing cycles:
+> >
+> >   $ ./perf stat -e cycles &
+> >   $ cat /proc/`pidof perf`/fdinfo/3
+> >   pos:    0
+> >   flags:  02000002
+> >   mnt_id: 16
+> >   ino:    3081
+> >   perf_event_attr.type:   0
+> >   perf_event_attr.config: 0
+> >
+> > Testing L1-dcache-load-misses:
+> >
+> >   $ ./perf stat -e L1-dcache-load-misses &
+> >   $ cat /proc/`pidof perf`/fdinfo/3
+> >   pos:    0
+> >   flags:  02000002
+> >   mnt_id: 16
+> >   ino:    1072
+> >   perf_event_attr.type:   3
+> >   perf_event_attr.config: 65536
+> >
+> > Reviewed-by: Ian Rogers <irogers@google.com>
+> > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+>
+> Ping.
+>
+> Thanks,
+> Ian
 
-1140057.412177 [0006]  Mutter Input Th[3139/3104]          0.956      0.019      0.041      S
-1140057.412222 [0012]  :1248612[1248612]                   0.000      0.000      0.332      Z
-1140057.412275 [0004]  <idle>                              0.052      0.052      0.953      I
-1140057.412284 [0008]  <idle>                              0.070      0.070      0.932      I
-1140057.412333 [0004]  KMS thread[3126/3104]               0.953      0.112      0.058      S
+Hi Peter and Ingo,
 
-Now some extra processing has been added to decode the process name:
+This small kernel change enables being able to better diagnose which
+processes are using perf events for what. In the series it is used in
+perf to blame EBUSY for PMUs like intel-pt on which processes are
+using that PMU.
+Are there issues that need resolving before the patch can be
+considered for inclusion?
 
-1140057.412177 [0006]  Mutter Input Th[3139/3104]          0.956      0.019      0.041      S
-1140057.412222 [0012]  sleep[1248612]                      0.000      0.000      0.332      Z
-1140057.412275 [0004]  <idle>                              0.052      0.052      0.953      I
-1140057.412284 [0008]  <idle>                              0.070      0.070      0.932      I
-1140057.412333 [0004]  KMS thread[3126/3104]               0.953      0.112      0.058      S
+The original patch was sent in October 2024:
+https://lore.kernel.org/lkml/20241031223948.4179222-2-ctshao@google.com/
 
-Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
----
- tools/perf/builtin-sched.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+Thanks,
+Ian
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 26ece6e9bfd1..e1a931341bc8 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -2023,11 +2023,15 @@ static int comm_width = 30;
- static char *timehist_get_commstr(struct thread *thread)
+> > ---
+> > v4:
+> >   Removed the first patch in v3 since it is merged.
+> >   Retested to make sure the patch still work.
+> >
+> > v3: lore.kernel.org/20241106003007.2112584-2-ctshao@google.com
+> >
+> >  kernel/events/core.c | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >
+> > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > index 95e703891b24..bad563692d63 100644
+> > --- a/kernel/events/core.c
+> > +++ b/kernel/events/core.c
+> > @@ -56,6 +56,7 @@
+> >  #include <linux/buildid.h>
+> >  #include <linux/task_work.h>
+> >  #include <linux/percpu-rwsem.h>
+> > +#include <linux/seq_file.h>
+> >
+> >  #include "internal.h"
+> >
+> > @@ -7077,6 +7078,14 @@ static int perf_fasync(int fd, struct file *filp=
+, int on)
+> >         return 0;
+> >  }
+> >
+> > +static void perf_show_fdinfo(struct seq_file *m, struct file *f)
+> > +{
+> > +       struct perf_event *event =3D f->private_data;
+> > +
+> > +       seq_printf(m, "perf_event_attr.type:\t%u\n", event->orig_type);
+> > +       seq_printf(m, "perf_event_attr.config:\t%llu\n", (unsigned long=
+ long)event->attr.config);
+> > +}
+> > +
+> >  static const struct file_operations perf_fops =3D {
+> >         .release                =3D perf_release,
+> >         .read                   =3D perf_read,
+> > @@ -7085,6 +7094,7 @@ static const struct file_operations perf_fops =3D=
  {
- 	static char str[32];
--	const char *comm = thread__comm_str(thread);
-+	char *comm = (char *) thread__comm_str(thread);
-+	char *empty = (char *) "";
- 	pid_t tid = thread__tid(thread);
- 	pid_t pid = thread__pid(thread);
- 	int n;
- 
-+	if (*comm == ':')
-+		comm = empty;
-+
- 	if (pid == 0)
- 		n = scnprintf(str, sizeof(str), "%s", comm);
- 
-@@ -2147,6 +2151,8 @@ static void timehist_print_sample(struct perf_sched *sched,
- 	struct thread_runtime *tr = thread__priv(thread);
- 	const char *next_comm = evsel__strval(evsel, sample, "next_comm");
- 	const u32 next_pid = evsel__intval(evsel, sample, "next_pid");
-+	const char *prev_comm = evsel__strval(evsel, sample, "prev_comm");
-+	char *comm_str = timehist_get_commstr(thread);
- 	u32 max_cpus = sched->max_cpu.cpu + 1;
- 	char tstr[64];
- 	char nstr[30];
-@@ -2173,8 +2179,15 @@ static void timehist_print_sample(struct perf_sched *sched,
- 		}
- 		printf(" ");
- 	}
--
--	printf(" %-*s ", comm_width, timehist_get_commstr(thread));
-+	
-+	/* if a process is in zombie state commstr will start with a '[' and 
-+	 * we need to do extra processing to decode the process name */
-+	if (*comm_str == '[') {
-+		printf(" %s", evsel__strval(evsel, sample, "prev_comm"));
-+		printf("%-*s ", comm_width - (int) strlen(prev_comm), comm_str);
-+	}
-+	else
-+		printf(" %-*s ", comm_width, comm_str);
- 
- 	if (sched->show_prio)
- 		printf(" %-*s ", MAX_PRIO_STR_LEN, timehist_get_priostr(evsel, thread, sample));
--- 
-2.50.0
-
+> >         .compat_ioctl           =3D perf_compat_ioctl,
+> >         .mmap                   =3D perf_mmap,
+> >         .fasync                 =3D perf_fasync,
+> > +       .show_fdinfo            =3D perf_show_fdinfo,
+> >  };
+> >
+> >  /*
+> > --
+> > 2.49.0.1204.g71687c7c1d-goog
+> >
