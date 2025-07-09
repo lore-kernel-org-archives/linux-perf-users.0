@@ -1,129 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A522E7BB8;
-	Wed,  9 Jul 2025 14:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFF038F9C
+	for <linux-perf-users@vger.kernel.org>; Wed,  9 Jul 2025 14:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752069997; cv=none; b=kVUuDcE+qWUA6NfCqehAIqBMoQBXi+NKw3FYxjT612yB1/zBDlYHvnOr3wZCGBTXrG8M6znwjAZ7X425lNS0qewH6P7xY3wjJM1EpSTwlpLoWQ0tKsx97CRpmDWKwGrmWal6ozznpX2GZE01MpBnCpq42JX1EBNNx6/oXmibZrs=
+	t=1752071507; cv=none; b=pYeECck3663bVo7Ihp2WRgqvMbzvMdYsogJQMGSWgiqfY1l3ZmD3uzUoXWahWcsWq+wkEbJXN3PEzFdRZ7oyyl8c9YGshfqdtR9C6+ltLJAW5J+jEHpAtsnZt5ApL/Vde3gbEYkLTZF+W4USsKWwfnAiKRH3P5x5YvmoS4T+6Q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752069997; c=relaxed/simple;
-	bh=zsceZ3e3Q3uizdRPkkkTw9psNWaSicRPXttwuALsa1A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RhuCNwTD8DdYDYsLnoxsly+SCFLjSblFocaw0WGPDNkuxeZczOuL23YjeNcXpLaQJn5pMPmGX1SlkyFGFIHITix7lIl0N7smU3wie9F4QuSmQ9ytkeOWd0P9rX8pag7BkOMO6JFjAogIbRGf/LLc7esQl2wrZma2zk/FXF2ulaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U84/UUO+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752071507; c=relaxed/simple;
+	bh=63HYRtLscaJD4DpEPN8eTWuIhppVK43bbdQ/n1/bJsU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FQf212GHjaK5Djwj9Jwx1QDWyFzOGG1GSehmyjQ+n2I/sbVKYY6uX7sKyD+RqJYxl/d87cCNfzP4r+mysWt9PAPOu74Mq3FQ9wNrodGor5SkowZfOOPjSGwt1YySXQFBi8anVANhudGTOot59q3FFxxw76fnU2EKoRcn0xgN1sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Tdqq4HTH; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U84/UUO+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CF21C4CEEF;
-	Wed,  9 Jul 2025 14:06:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752069995;
-	bh=zsceZ3e3Q3uizdRPkkkTw9psNWaSicRPXttwuALsa1A=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=U84/UUO+lgsVFLJlzZp03T/UT2e5GfDEdigFWYyz8Aa0IXeeiU6gi2ndzt93Gtb8z
-	 5oEuGUAtzIHe9BAv63MuxP/z/xb4sW8h2dyKO0PE94xGqFUUM6xryUn7psq2WqraJt
-	 gk3DtyiTRCW9SM8zu50aop8dr7LPgfXLv0lZ8iGbXBWsDyZCryy++UV4BzUdZMfj1o
-	 fze80VK+y1N25SgMAUsO97cGqmTmpMME0cnex7QyLjGwsCc5IMjR1uXP+wSJapz8vs
-	 7+YrrqHp5Q0QrRGVVyQf/8OXeVZht7yFdyapTHTzhHozjm1LlJnLguO9F1NY/YQpt2
-	 EaD6SbFrpXseg==
-Message-ID: <58851e92-6a06-4074-88fa-fb4f7ead2596@kernel.org>
-Date: Wed, 9 Jul 2025 16:06:29 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tdqq4HTH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1752071504;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=LS9jOgSQoqk857hJ81FWyzHteMoNbIFBZD+TbGH43gE=;
+	b=Tdqq4HTH1tTKbDbDZCnFjPvBy42NocXrXpfRstpK0oOwqVRN9pMwpCWE1wmW92qA0tuSbj
+	AToh9XeLeYsYz0z7zKZUlc4NQUIFiLn0jhny1Gekvnz46WcvGli28ujMd7o2c+SknyQlMp
+	yXuYKRzBS2kChLRFL2JXLJEVhbfypB4=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-416-kz4KeGboOHiA3BCnpltxjA-1; Wed,
+ 09 Jul 2025 10:31:40 -0400
+X-MC-Unique: kz4KeGboOHiA3BCnpltxjA-1
+X-Mimecast-MFC-AGG-ID: kz4KeGboOHiA3BCnpltxjA_1752071499
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9F2931956077;
+	Wed,  9 Jul 2025 14:31:38 +0000 (UTC)
+Received: from ashelat-thinkpadp1gen5.boston.csb (unknown [10.22.81.233])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 098291956089;
+	Wed,  9 Jul 2025 14:31:34 +0000 (UTC)
+From: Anubhav Shelat <ashelat@redhat.com>
+To: mpetlan@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	linux-perf-users@vger.kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	dapeng1.mi@linux.intel.com,
+	james.clark@linaro.org,
+	Anubhav Shelat <ashelat@redhat.com>
+Subject: [PATCH] perf sched timehist: decode process names of processes in zombie state
+Date: Wed,  9 Jul 2025 10:31:20 -0400
+Message-ID: <20250709143119.91147-2-ashelat@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] MAINTAINERS: Add maintainers for Samsung PPMU driver
-To: Vivek Yadav <vivek.2311@samsung.com>, pankaj.dubey@samsung.com,
- ravi.patel@samsung.com, shradha.t@samsung.com, mturquette@baylibre.com,
- sboyd@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- will@kernel.org, mark.rutland@arm.com, s.nawrocki@samsung.com,
- cw00.choi@samsung.com, alim.akhtar@samsung.com, linux-fsd@tesla.com
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-References: <20250708103208.79444-1-vivek.2311@samsung.com>
- <CGME20250708103246epcas5p47b446ec342f9d49361c0a9a3929bcdd2@epcas5p4.samsung.com>
- <20250708103208.79444-7-vivek.2311@samsung.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250708103208.79444-7-vivek.2311@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On 08/07/2025 12:32, Vivek Yadav wrote:
-> Add maintainers entry for Samsung PPMU driver
-> 
-> Signed-off-by: Ravi Patel <ravi.patel@samsung.com>
-> Signed-off-by: Vivek Yadav <vivek.2311@samsung.com>
-> ---
->  MAINTAINERS | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ca11a553d412..5895b4e70c9e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -21023,6 +21023,13 @@ F:	drivers/regulator/s5m*.c
->  F:	drivers/rtc/rtc-s5m.c
->  F:	include/linux/mfd/samsung/
->  
-> +SAMSUNG PPMU DRIVER
+Previously when running perf trace timehist --state, when recording
+processes in the zombie state the process name would not be decoded
+properly and appears with just the PID:
 
-PPMU for what? Exynos? Then add it in the name.
+1140057.412177 [0006]  Mutter Input Th[3139/3104]          0.956      0.019      0.041      S
+1140057.412222 [0012]  :1248612[1248612]                   0.000      0.000      0.332      Z
+1140057.412275 [0004]  <idle>                              0.052      0.052      0.953      I
+1140057.412284 [0008]  <idle>                              0.070      0.070      0.932      I
+1140057.412333 [0004]  KMS thread[3126/3104]               0.953      0.112      0.058      S
 
-> +M:	Vivek Yadav <vivek.2311@samsung.com>
-> +M:	Ravi Patel <ravi.patel@samsung.com>
-> +S:	Supported
-> +F:	Documentation/devicetree/bindings/perf/samsung,ppmu-v2.yaml
-> +F:	drivers/perf/samsung/
+Now some extra processing has been added to decode the process name:
 
-Also, this should be added to Samsung SoC maintainer entry as well.
+1140057.412177 [0006]  Mutter Input Th[3139/3104]          0.956      0.019      0.041      S
+1140057.412222 [0012]  sleep[1248612]                      0.000      0.000      0.332      Z
+1140057.412275 [0004]  <idle>                              0.052      0.052      0.953      I
+1140057.412284 [0008]  <idle>                              0.070      0.070      0.932      I
+1140057.412333 [0004]  KMS thread[3126/3104]               0.953      0.112      0.058      S
 
-Best regards,
-Krzysztof
+Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+---
+ tools/perf/builtin-sched.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 26ece6e9bfd1..e1a931341bc8 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -2023,11 +2023,15 @@ static int comm_width = 30;
+ static char *timehist_get_commstr(struct thread *thread)
+ {
+ 	static char str[32];
+-	const char *comm = thread__comm_str(thread);
++	char *comm = (char *) thread__comm_str(thread);
++	char *empty = (char *) "";
+ 	pid_t tid = thread__tid(thread);
+ 	pid_t pid = thread__pid(thread);
+ 	int n;
+ 
++	if (*comm == ':')
++		comm = empty;
++
+ 	if (pid == 0)
+ 		n = scnprintf(str, sizeof(str), "%s", comm);
+ 
+@@ -2147,6 +2151,8 @@ static void timehist_print_sample(struct perf_sched *sched,
+ 	struct thread_runtime *tr = thread__priv(thread);
+ 	const char *next_comm = evsel__strval(evsel, sample, "next_comm");
+ 	const u32 next_pid = evsel__intval(evsel, sample, "next_pid");
++	const char *prev_comm = evsel__strval(evsel, sample, "prev_comm");
++	char *comm_str = timehist_get_commstr(thread);
+ 	u32 max_cpus = sched->max_cpu.cpu + 1;
+ 	char tstr[64];
+ 	char nstr[30];
+@@ -2173,8 +2179,15 @@ static void timehist_print_sample(struct perf_sched *sched,
+ 		}
+ 		printf(" ");
+ 	}
+-
+-	printf(" %-*s ", comm_width, timehist_get_commstr(thread));
++	
++	/* if a process is in zombie state commstr will start with a '[' and 
++	 * we need to do extra processing to decode the process name */
++	if (*comm_str == '[') {
++		printf(" %s", evsel__strval(evsel, sample, "prev_comm"));
++		printf("%-*s ", comm_width - (int) strlen(prev_comm), comm_str);
++	}
++	else
++		printf(" %-*s ", comm_width, comm_str);
+ 
+ 	if (sched->show_prio)
+ 		printf(" %-*s ", MAX_PRIO_STR_LEN, timehist_get_priostr(evsel, thread, sample));
+-- 
+2.50.0
+
