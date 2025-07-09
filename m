@@ -1,128 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5150B145A1F;
-	Wed,  9 Jul 2025 18:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7614F202F8F
+	for <linux-perf-users@vger.kernel.org>; Wed,  9 Jul 2025 20:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752085625; cv=none; b=eU+s6ixNUt8dXTFRuYLVSDFxbYIrjlW93LFkR7EGAyE+bN7TrNnAO90dB2B9rQoX0wJ+g7BBTYz1fI44GQKy4iCiU9xrtFHMmff803EoMs8LmdXU0lTr8cNjOXLRBOH7+xdnvXsyQDX72jxTApr7njRRZIk51PrEGrhA2S4wnsk=
+	t=1752093499; cv=none; b=TIwo3VZmdm+nipXCNCHPxKIYezFSr1Q/IotdF4s2e9K0VHro546QTzq9dlOW0LVo25EwP2sageBUx80Q9bNgIKQIJ76De1ZBictr/bNXA5DwwLufkKvreGO90+EoafDqofGEC1PXp41Cg9BCzbTTZe2PtDdcFHdsJoLP+Eybin4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752085625; c=relaxed/simple;
-	bh=UB7QIkBRdueZ/ucMHH1IuDHFg0K94C/+SQoeb+QY6ho=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=diQ0dInBFU1MZxDXfqkqECoqOArsTUA10hYdyZvuvHftumFgFVfznHkAx/z0EvKgyfzDVn3X1wQ8XaSLgeKrgtDw87348zulWljt696Mw7mXgocw2YyOyagxdayvrlY7Cw5xcm7Cwigd8owEY5F2mBLgQal58shrQtZwemMvYf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QWBeZQxw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752093499; c=relaxed/simple;
+	bh=Z0LHwX9J9MBCzqD5Jc5ykCwoGHHTErm1baZ04GGDE5E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=prvdsowPhMJESNYOQw1nTc/j99n/pFjgGGv0yR6kRqQvpQOA7RV/VzyK09fzXIZ816UvYDMYj1ilujXX/oVYZBim4hATrACkKODtt7qNKGaf59wHAYfn2SoG6ahWtBIKr5tuibcGQAj3p/qbwlixsGi56fzh79ufVJIDswB9CSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GfBYYoKP; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QWBeZQxw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D32A9C4CEEF;
-	Wed,  9 Jul 2025 18:27:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752085624;
-	bh=UB7QIkBRdueZ/ucMHH1IuDHFg0K94C/+SQoeb+QY6ho=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QWBeZQxwZASERzxDIwjW5W+0P6+iLI1k64l0zYRHwNnYQEyqvany0TzwBe5etHkK8
-	 EQfb67UbXa1cHhp0QpqVISRlJrkyKPY26krioFaIDKy8AguRRqVXwqV3ACZFW6OZNC
-	 bjKKlqE3SeC3Na6ph8iwGQRWQPqPV5OtJcR5uVoN2XTfWu7qne9QM9dLjzpmXRvnVZ
-	 hTbfA+B290u0dFvcDpa16udiwh5XG9PTW+IfFldFbNsCQcU6YopDMrhjWXvNR+H+8O
-	 EVyVsfXThD3DVnVnVTfUY0nYJBO7MbEnE43/9+eHPx7QcwVBqQQPOkXXajJJGjmays
-	 tddA4Cnc3wn4w==
-Message-ID: <e016efd6-891b-467e-8a4e-9ea53b7006a9@kernel.org>
-Date: Wed, 9 Jul 2025 20:27:00 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GfBYYoKP"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 569Bsx3L026048;
+	Wed, 9 Jul 2025 20:38:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=QnzBg1+c/qHU8P5r3tPax01BWGdNwq0YYpDFT6ukF
+	BM=; b=GfBYYoKPOygCPwBeMmT4Sy/TNw3zq14wcKZY1pKSQ9G2byiT6X97c8ncw
+	b6XJTEZ52hTfZA+yzDoUlSQ/MSZtNRWnGNurXgS/nt3dTHYI2uovPvhvhK2B1XZu
+	UUpbgc4dlwdBvgbQuKvY/5GiuVPg4q0OviyKu/vXYd1scrahHHcPOLZJx+BfVGuC
+	QxvjtKeqXmzq6XGj/h6+nafwX0iUXIH8CBGPnGPRZz0hBYU1toN2+3WfjOkXPXmr
+	kHtK1FCDO+6ci4AJv7K9rpDqLF5aw0G4OUbSWQJvX2Uouu96YBpDckJ4ke3NCpC0
+	NJxljgd7koGrJQ7/CDwOT3w5YNyog==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47pur78n3y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Jul 2025 20:38:14 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 569KcE01017179;
+	Wed, 9 Jul 2025 20:38:14 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47pur78n3s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Jul 2025 20:38:14 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 569J6VOo002865;
+	Wed, 9 Jul 2025 20:38:13 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47qfvmhxjf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Jul 2025 20:38:12 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 569KcAZp58130798
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 9 Jul 2025 20:38:11 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DE4DD2004D;
+	Wed,  9 Jul 2025 20:38:10 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BBE792004B;
+	Wed,  9 Jul 2025 20:38:10 +0000 (GMT)
+Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  9 Jul 2025 20:38:10 +0000 (GMT)
+From: Jan Polensky <japo@linux.ibm.com>
+To: adrian.hunter@intel.com, irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org
+Subject: [RFC PATCH v1 1/1] perf test: Increase load in lock contention test on low-activity systems
+Date: Wed,  9 Jul 2025 22:38:09 +0200
+Message-ID: <20250709203809.3211178-1-japo@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 1/2] dt-bindings: memory: add jedec,ddr[3-4]-channel
- binding
-To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>,
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com
-References: <20250626-ddr-bindings-v1-0-cae30933c54c@foss.st.com>
- <20250626-ddr-bindings-v1-1-cae30933c54c@foss.st.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250626-ddr-bindings-v1-1-cae30933c54c@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA5MDE4MiBTYWx0ZWRfX8duddsHqpORH VsMR5HLKM1QhJJOsk9ZbuaV6bb7XZd7iUnM4ChuGmwUAKk6LaPZGJyDkRMDNfKmkobeDCsVZO58 0PDxZrkHkeuXdpCtODxo76j67knvph5NYAAPIQTeSDwL4+OkjuRE1R5D2URprTRYOtZ4pv7Szvv
+ nKYU+RFf/YWyCQ0S+JAi+MtG9KNKSSdlFrXLXWPKguMejMh6b23P4NKJ0wPmDiJX2oO6P2rrNpm SunxSHHT01hGcyOVymVmMmWsUIv2g5xSKR0hXO0YnKJHjtEsm7Bp8IUyfn94MdxmVXRBUcJ4uNr MFBsBBHciitjaPbArRZzjo8wsFVk8w7jkhNMaTDGr8VsOC3R7/iwGbRj9cSDrwkG0+Eic+9paO7
+ 84JkBqIIaV6vCAJJl5wvIu/qzSZtn4RNquMrJpaGIQvwf+WLXQ4Z4iWG9z/EK/ZJG2cIyHry
+X-Proofpoint-GUID: 3aB9jvtP74FrABC646sRvEQe2ddmtJxw
+X-Proofpoint-ORIG-GUID: 2wWI5Bx3RqpTYYMZ94CRkzpPb5Ue1U4f
+X-Authority-Analysis: v=2.4 cv=W/M4VQWk c=1 sm=1 tr=0 ts=686ed336 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=Q_qaQDnRWyw_8FNobJAA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-09_05,2025-07-09_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ mlxscore=0 priorityscore=1501 adultscore=0 clxscore=1011 suspectscore=0
+ spamscore=0 lowpriorityscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507090182
 
-On 26/06/2025 21:48, Clément Le Goffic wrote:
-> Introduce as per jdec,lpddrX-channel binding, jdec,ddr[3-4]-channel
+On low-activity systems, the 'kernel lock contention analysis test'
+often fails due to insufficient system load. To address this, the test
+now increases load by using multiple groups and threads in 'perf bench
+sched messaging', scaled to the number of available CPUs.
 
-s/jdec/jedec/
+Signed-off-by: Jan Polensky <japo@linux.ibm.com>
+---
+ tools/perf/tests/shell/lock_contention.sh | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> binding.
-> 
-> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
-> ---
+diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
+index 30d195d4c62f..e859e1503b5c 100755
+--- a/tools/perf/tests/shell/lock_contention.sh
++++ b/tools/perf/tests/shell/lock_contention.sh
+@@ -44,7 +44,8 @@ check() {
+ test_record()
+ {
+ 	echo "Testing perf lock record and perf lock contention"
+-	perf lock record -o ${perfdata} -- perf bench sched messaging > /dev/null 2>&1
++	perf lock record -o ${perfdata} -- perf bench sched messaging \
++		--group "$(nproc)" --thread "$(nproc)" > /dev/null 2>&1
+ 	# the output goes to the stderr and we expect only 1 output (-E 1)
+ 	perf lock contention -i ${perfdata} -E 1 -q 2> ${result}
+ 	if [ "$(cat "${result}" | wc -l)" != "1" ]; then
+--
+2.48.1
 
-
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    ddr_channel: ddr3-channel@0 {
-> +        compatible = "jedec,ddr3-channel";
-> +        io-width = <16>;
-
-Missing reg... or not? What was your intention
-
-
-> +    };
-> 
-
-
-Best regards,
-Krzysztof
