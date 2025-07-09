@@ -1,55 +1,55 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF870243951
-	for <linux-perf-users@vger.kernel.org>; Wed,  9 Jul 2025 21:40:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F09244665
+	for <linux-perf-users@vger.kernel.org>; Wed,  9 Jul 2025 21:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752097241; cv=none; b=jOG5NV9ec/cwPNn0xOFU9jRAjNBARwcv+OXmAfHxgBBaIaS2RrC1pEBEGpZ6FoK+XAqMFn2FiNwgL9LLSsgp0CfDSG08I2PsLO8EE4PkJK96F+LK9TNV9h5P+12/gG1xDqA5rh1/jsiRzzMBtBOJvJBv1PM8AHY042m9l8aOKRg=
+	t=1752097241; cv=none; b=WnodEExo44sXk+5RWqvfUro8YJKST1lc5y68IE657GtaB47ad94U3rVJFDUDqPP9XxhcEpQ7v/SbqBchnvVyR6iWN61dDKeQ8cUZojmsqVlSYfx3EtQ4W7Z4UB9iDd+ugAjaZdXXjqIWgmwia4/snCegPrNHhLH6USt2ftPCkdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1752097241; c=relaxed/simple;
-	bh=SCSVRXj5DB/cfKYLIvAW2+qqqcd9DzSoDst4X0cpuZc=;
+	bh=4RhnUIdDBTq0pKyjxJeOi7qIuV8UBI3E2+4jD3YcP7M=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=HVAOu3c+dTQkGXb9KK4kM939HSe3giVmCRKmtwQXXNPVe2pmDptopJtnkmJ4IHfVp2hdYarFb5P2uVZfMGTQGooGP0Nm6fJ9l1c9WCOqwikm/a5iDEJpZFMTs4CnLK7Z3rhDUDMd4OeMJFpPVOajDIGSOXzWJ+/fpAjxLi2EW2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SmK7oVt9; arc=none smtp.client-ip=209.85.215.201
+	 To:Content-Type; b=LhOT0LP33NYETJxN04Ymcjz30odt9EmyoQWpyp2GpR8ga5jf5YOmpGfY0XAbEFO9xLSKCqx/wXndwheYKHgP/9XZwnwwBBFVnfhQAc8M5tWPJw5n9p4ZvFKwHQMpJ6NjQLoDiCdpe8dSVvG099filp3XbEFnurZxEP3LEcdaAB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o8lTCzpa; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SmK7oVt9"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b31cc625817so1154506a12.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 09 Jul 2025 14:40:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o8lTCzpa"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-235e3f93687so4281705ad.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 09 Jul 2025 14:40:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1752097237; x=1752702037; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1752097239; x=1752702039; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=uM9b0q174RElAGAUOsRC1+X9nDdEI4t5lPgRji4c5mk=;
-        b=SmK7oVt9XOHbt+8Iu3CuSN4KVNBp9Lfqh1n+AKXwDqT4YSBTQH5cNQuV0MNVNbUaT7
-         j1TY7YTtPlK3R3xxI2y5mRMVZkzb36amtCJBybo3IJeBikCOjR1cE449zxJn2BKweEeB
-         cYtyb1cKBIAxeP6GCDdDYXWwsbQ95scp2kceXjZFbpv876YI7HRqmjPbX0I/ot9Ti/K9
-         GBFhLiti7lIo2x321LCgku81wu+Tsczj+oSPKNMK5KsYpHYrMN6zxPgiXITUX/xleaJC
-         j17MDKhwG1EA1URQJbXo8L8hLkRx0QKuq9sM+4N0oE+sbvKfNgnhm2uEyVb3Tks3q0b2
-         FXdQ==
+        bh=tRZkm/myoY8JXQXFYiK3d6FXz7MSloychwQltzDxXbc=;
+        b=o8lTCzpankEju9ZY/zHFZ2grfNnZExQK88ExddhOE0vAVt4O990tGW8znkvBQdODO+
+         iVZgoJ6s/+K+jWeDumaFDeKYZv0F/4uTW0pQV7wUlf7+WIDdAL2boUGWSxJzeFKQYHL9
+         c3cktyT1loomwDkTbCHCNSaYnwd5H+lzpSn/gXjXYatd3eBriK3OEs0Aeu2H15EX1vVa
+         gwB9MFSJMQvHc8P5RnEmhreBsEewfQF15FctnDPo7qnTdicOWNlqhamVBBuIGaZn0tD4
+         N+e2YVltPwOrIMEHvxdiOhnPtLnx+dc7uLY9Zk68jBIKVv89K2EI/SlPsV7YneV50kIe
+         N3Fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752097237; x=1752702037;
+        d=1e100.net; s=20230601; t=1752097239; x=1752702039;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uM9b0q174RElAGAUOsRC1+X9nDdEI4t5lPgRji4c5mk=;
-        b=cU2Mxp3djznP8/v3VcEUUAY28B2a2Vb/q8cZAaCQZL7S1+1exSZPIY+8RMJSYLZf4Z
-         nLVYsCili4MZKQTryuEMzBsTMBCl1QwsPTGMyHoG0XRDiEyMzYj6YByR3Ss/ayohFLSX
-         tNWcP5o9BK4EgTTbPDv7VkscjMb2eY8AMmcNqh5D/pwOcrFQIyxfL+jn1Lq0hzehdOuG
-         6rAwpcMeqGvr42umfSctQkoDBDXe/owcT/2+txXUcHnNsgvNVNSpt2G7mOoiH+/EOHro
-         RlJfkGBb7VMjn8wf52kgMro/T2DhbPTdNro6FNmEBnksJBqNjwLPJo+Iq+bRyPH4hDSv
-         z/2w==
-X-Forwarded-Encrypted: i=1; AJvYcCU3Ekco5ey/oS2TRgy0vq71O3gwHc75a1yy+ONRcMUwDmFwVrf/DagrIQBBEzy+CrCpQCbvhzMcX2Ts4wswLyP3@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFoE8JfcEQ/ccbRAwdaAlu6PXYHSNOnML0XnJ8d+JguZOs+iuK
-	8uDJIc8+C60pIPpKNRYXX87GNKBBo0kKrN1vv4/GGGw6enipdWbDB5D8NQviyy31UF0GSe/3fJC
-	8D8mdjgkBqg==
-X-Google-Smtp-Source: AGHT+IFltfmQBS7U87C0TdDrtf1ntKrR6/OIw7n3Wyza61DuU6qTE108cX1iKXZNifSy30Gaf+LTVp5Ftm1u
-X-Received: from pjqq12.prod.google.com ([2002:a17:90b:584c:b0:314:3438:8e79])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d40c:b0:313:d361:73d7
- with SMTP id 98e67ed59e1d1-31c3cf9aaffmr1475713a91.13.1752097237503; Wed, 09
- Jul 2025 14:40:37 -0700 (PDT)
-Date: Wed,  9 Jul 2025 14:40:19 -0700
+        bh=tRZkm/myoY8JXQXFYiK3d6FXz7MSloychwQltzDxXbc=;
+        b=wFwYpRa6vE2GSvs6w/XYjUFbZkZOlDx96/oGhMycvY64zEpdcxHvo2zFscYDI/Cy8h
+         Jffs3UDoYYLQ3ralH4I71gtpHsKuqjrm03MHEe4+JBXZ3ndH9o7FrYarsJppCpKDKHp8
+         0uMxlEMN6Q2GLLXyFqGtfY+Ii17uyGZp6JN+YgGLxeSpNHHuggf72V77/dU2ovjErE6J
+         r3pumCifty5t8BG2VhOwKknqceCN3aAFdC4vulk257tlF6GSIjSA1DUSTe8bn/cr8hgi
+         BXw5kgsBMa47Ns6V9hZPFyx8reEBNSq54G1aqUOGC7YSQB/dmajksvZgke5BOJE/bDsq
+         DEYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWb/MhXqGiz6RauwyixvIzHDFGkkjKdeYPsz7VEV8r6WfAu4is+vvVc6M4ePX/i4Dni8DvkzqPdsoEgqptqzGq5@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyp8r/pjwtrcGItDCIY/5lqgQkqS3pI4QrukQ03nx7zWklym6Ei
+	Gj/okv8sJGu/7/uvTqgdC40US1Ijbc91w+Ai2ZKUcVaj9n4LQDaafShBzNzM0OR5fEgJSateZba
+	SOd5vFfOkcw==
+X-Google-Smtp-Source: AGHT+IGZ5grGeIuw5glQVkklBxNEKKxomcSYAQGiwSohPNNQHUy7vJojGsm5h6sCDpZq0PO+bkWJuZ69hg1F
+X-Received: from pgar20.prod.google.com ([2002:a05:6a02:2e94:b0:b2e:c00e:65ed])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:240a:b0:236:9402:a622
+ with SMTP id d9443c01a7336-23de4872c01mr289295ad.34.1752097239690; Wed, 09
+ Jul 2025 14:40:39 -0700 (PDT)
+Date: Wed,  9 Jul 2025 14:40:20 -0700
 In-Reply-To: <20250709214029.1769089-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250709214029.1769089-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250709214029.1769089-3-irogers@google.com>
-Subject: [PATCH v1 02/12] perf parse-events: Minor tidy up of event_type helper
+Message-ID: <20250709214029.1769089-4-irogers@google.com>
+Subject: [PATCH v1 03/12] perf spark: Fix includes and add SPDX
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -75,73 +75,41 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add missing breakpoint and raw types. Avoid a switch, just use a
-lookup array. Switch the type to unsigned to avoid checking negative
-values.
+scnprintf is declared in linux/kernel.h, directly depend upon it.
+Add missing SPDX comments.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/parse-events.c | 31 +++++++++++++------------------
- tools/perf/util/parse-events.h |  2 +-
- 2 files changed, 14 insertions(+), 19 deletions(-)
+ tools/perf/util/spark.c | 8 +++-----
+ tools/perf/util/spark.h | 1 +
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 4cd64ffa4fcd..a59ae5ca0f89 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -135,26 +135,21 @@ const struct event_symbol event_symbols_sw[PERF_COUNT_SW_MAX] = {
- 	},
- };
+diff --git a/tools/perf/util/spark.c b/tools/perf/util/spark.c
+index 70272a8b81a6..65ca253cc22e 100644
+--- a/tools/perf/util/spark.c
++++ b/tools/perf/util/spark.c
+@@ -1,9 +1,7 @@
+-#include <stdio.h>
+-#include <limits.h>
+-#include <string.h>
+-#include <stdlib.h>
++// SPDX-License-Identifier: GPL-2.0
+ #include "spark.h"
+-#include "stat.h"
++#include <limits.h>
++#include <linux/kernel.h>
  
--const char *event_type(int type)
--{
--	switch (type) {
--	case PERF_TYPE_HARDWARE:
--		return "hardware";
--
--	case PERF_TYPE_SOFTWARE:
--		return "software";
--
--	case PERF_TYPE_TRACEPOINT:
--		return "tracepoint";
--
--	case PERF_TYPE_HW_CACHE:
--		return "hardware-cache";
-+static const char *const event_types[] = {
-+	[PERF_TYPE_HARDWARE]	= "hardware",
-+	[PERF_TYPE_SOFTWARE]	= "software",
-+	[PERF_TYPE_TRACEPOINT]	= "tracepoint",
-+	[PERF_TYPE_HW_CACHE]	= "hardware-cache",
-+	[PERF_TYPE_RAW]		= "raw",
-+	[PERF_TYPE_BREAKPOINT]	= "breakpoint",
-+};
+ #define SPARK_SHIFT 8
  
--	default:
--		break;
--	}
-+const char *event_type(size_t type)
-+{
-+	if (type >= PERF_TYPE_MAX)
-+		return "unknown";
+diff --git a/tools/perf/util/spark.h b/tools/perf/util/spark.h
+index 25402d7d7a64..78597c38ef35 100644
+--- a/tools/perf/util/spark.h
++++ b/tools/perf/util/spark.h
+@@ -1,3 +1,4 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ #ifndef SPARK_H
+ #define SPARK_H 1
  
--	return "unknown";
-+	return event_types[type];
- }
- 
- static char *get_config_str(const struct parse_events_terms *head_terms,
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 1c20ed0879aa..b47bf2810112 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -21,7 +21,7 @@ struct option;
- struct perf_pmu;
- struct strbuf;
- 
--const char *event_type(int type);
-+const char *event_type(size_t type);
- 
- /* Arguments encoded in opt->value. */
- struct parse_events_option_args {
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
