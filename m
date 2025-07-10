@@ -1,174 +1,65 @@
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1EA259C83;
-	Thu, 10 Jul 2025 13:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504D9199BC;
+	Thu, 10 Jul 2025 17:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752154403; cv=none; b=qhj6PTH37mZR+q63UFE1b7iiH9eFlYVdWCrBURzXd7crqv591d7lF9JrYG+fTrEd2Z337WY3BgLzL9FI8781bYu0CSR60CVhd61f2NOzO0V7A1gUPtwSnfaXBtnh7i3iJ0Fz8NIPuQHbn5fPnlsjNCDcCgNKqFCwv1PR3f7Wm4w=
+	t=1752168458; cv=none; b=F9as3LXMKT4SOBBEgNgjiDFKD2RVmcnmU/16i0rhMUDLCsm7B1M28dXwfCVu/xCJw97D7DFLxc9/mVs5jIVJHATWvkmqy6rF0QduOYe9xIAWDruZexFbLITU8J+38tMgOIUq0+QFdr2cNg6Sofnmwvnj+q24fEdIj2U+J4n1M+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752154403; c=relaxed/simple;
-	bh=nfK/s+MDeAYPnclkJutwa89fLOtQFfFfkJwoIm0MldU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iu90PMNmwzWsxbXT0d/ND1yI8O6+SIGg8S6ZVGiDiXgA8kheuAH6ELdQmJF3IOCKQ/rAwcBDxfYEWPU8Qktb4Tcg1QAdLYQPUoxiKdVxzpruI10yTdJ/XCnEtRfJdCld+SN4vswGHZVbVS0oatt7yFcAZ6bqsIhR48GYvsrsZAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XzVTmlyD; arc=none smtp.client-ip=209.85.222.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1752168458; c=relaxed/simple;
+	bh=Ki0dO+ZHrOXQSdg82yLFgWjl+hbvkKi5tN2LS0Hq8Kg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=UNmZjypx6q+tw97Go9N92KN1KLBVGXNdw0vPP8bTAZqXA/XJGYIyB5InQ7OLX9V/1CBWhJJr6k6oUkWI5p3QDE5u4wJ+HHhxhfYZAVWsDDW9BUzYnv5/1Ur84r2RGZFaM9y4A5LK2TMru/pG8XhAKCCIPXXy4757LyN/bYDDhoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n2+bfG1V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XzVTmlyD"
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-881114808e4so524248241.3;
-        Thu, 10 Jul 2025 06:33:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752154400; x=1752759200; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=okRj10ybyFEKvbIUZoyobNaWGhdkXbHXR79UDV6Xmac=;
-        b=XzVTmlyDmQeFk6xhe8lX0Xq0pDvjzxb0TO6KGrIHxFHvbP+AH7SmB6X1Mq/5/Sp7m7
-         j6jVDp8QyTyEUwZczaTN65etHwIAjEaLRgSvwRS/1LWnSlxdY8r+bm1AsvYGjEQEPnLh
-         ac+QluyQK9g8nw0Far0QAdZORQ1IEFPZIos3aGg+bCPNK8AmY86x09+lwlKpz5xyVNzp
-         0jAuAy+tNP/xaKaj4c2UdltpvKISd84K8wJRhvaRoApDRbdvT0b5tuwNTLOgsYsHMbqE
-         3UFISX9H3dZrTxlx6NOxNmfkvA9BmOD2L3YR+8XHRvLCnTjbiR9s5iP2LTJh38fKDoE3
-         G1Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752154400; x=1752759200;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=okRj10ybyFEKvbIUZoyobNaWGhdkXbHXR79UDV6Xmac=;
-        b=PHEMkSZOPJupUUb9yCJv8+mwomieQTVes/AQRkwGcOHB3aQgRFWM5omAv2+qmjVDTY
-         AKYJMotHNrPtcPRmtXUyc1F9beQ6TkhhqY27XgVh5zAHBa2Aym3q1e5QkCRbEoBGsOs4
-         xZb75ZMQW2jMU1M3XvPwXg7HnZPx748AfXSZppNQwCfL6vtSuKIAHfjnfWOLwa2h4Tm7
-         0RgyKhTW7DXcK2+8Zn5BI9Kmtlazjhm59OAj4V4nvmUw0a5azMXsHatEl2K+H9jOPJpA
-         v1noG+F3Ix8dvdkf4mh0Gp8c6IHyTsIufgqwIRTbMTStuKHgzj7mSu8HkC2gltAFwe5q
-         WGrw==
-X-Forwarded-Encrypted: i=1; AJvYcCXEDP0WYJ7ZwFWWAIarQZnKhk9bCOFKMUcvbGqFzR916Z4DPzvTz5AcLLuF52Xi4DvO9sIz83IgCcQ8mZo=@vger.kernel.org, AJvYcCXbuiYm0aHcGD8kAEUQdvjcGdeUA1cpo1AjY0Y2AsGsrsaqLd2Ia5ETV1rMKsSxxK8qhYpdT13OpcEitfDat5nldg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwL/IfVgQBgMmyA633wRa+eaYKMpTeUtQG5w2QJe7tO9CZXd4Jf
-	vZAQCONrkpgMlZsIH+CE6fFHuZCgGMNFUcEkJImB/kfUeDrOLCYUgmZ/tftA7TwTf+1OEhL9xQe
-	ptYnFAAtmixV2qSkrBnVhk1iFOK8eEBw=
-X-Gm-Gg: ASbGncsHDJQFaVOlJdBrc5ExXF2ogQhWKAuJ56TxPNhAp2UHOhTXNaIlDGaeNnuD8MT
-	YY37ocvTd6LBeWvzwvvnY2RgCAFXI/JFQ5qpA9ljMes7JoHqzFJF2fmZ3939VdGFKd+tFnZb2uj
-	c1l4tfVic3QDPhDj3ZZ5BDXWgtsLXeb7wFapsI5eb/Tvc=
-X-Google-Smtp-Source: AGHT+IEUhipK8BpFIh0L4sG9itYETsTSsy89yM5cpmb8XEFU3fZM3fuGJBmhOPNVBh8q308LdjUHfnWtxkKgT25ywgY=
-X-Received: by 2002:a05:6122:2187:b0:531:2f51:7676 with SMTP id
- 71dfb90a1353d-535d73c920bmr5063528e0c.9.1752154398939; Thu, 10 Jul 2025
- 06:33:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n2+bfG1V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72E98C4CEE3;
+	Thu, 10 Jul 2025 17:27:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752168455;
+	bh=Ki0dO+ZHrOXQSdg82yLFgWjl+hbvkKi5tN2LS0Hq8Kg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=n2+bfG1VM+GeESruDToH2rAPXmg7nFFxVy9aJ0ozCYIz3lpCzDE378ZAb/e2KIQES
+	 u+r+nVu7J+KW9NNBOP35dVowYn1xS0fmvKjTc3I/1pNoJY80ha9mQDLtJowksRC5hX
+	 Ej+h5hj8YDvXoAPIpul3KwKiFaITY80hHqgtpJN7s3kq62l7seFTbyZp++rJoZOyeY
+	 lOCcXzp6aOn0glElgxtVW6xYSPqZqxf4EssP6TpU3o5b30DceqotT2Rdsircoq1d04
+	 zCRfq5FJhRLS7LhOyUnlG347YWKPeICiWO6/Mr8nAVvqUVLTxXDwa0MscfucKU/EEd
+	 7fREVy7eBB1Cg==
+From: Namhyung Kim <namhyung@kernel.org>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, acme@kernel.org, 
+ Thomas Richter <tmricht@linux.ibm.com>
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, 
+ hca@linux.ibm.com, japo@linux.ibm.com, 
+ Ingo Franzki <ifranzki@linux.ibm.com>
+In-Reply-To: <20250709072452.1595257-1-tmricht@linux.ibm.com>
+References: <20250709072452.1595257-1-tmricht@linux.ibm.com>
+Subject: Re: [PATCH] perf list: Remove trailing A in PAI crypto event 4210
+Message-Id: <175216845541.481342.17562031483386057762.b4-ty@kernel.org>
+Date: Thu, 10 Jul 2025 10:27:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618215843.109941-1-usmanakinyemi202@gmail.com>
- <20250704102007.6354ce9f@pumpkin> <9c59d1b1-a483-49d9-b57a-c86e3e020234@linaro.org>
- <CAPSxiM9AHNrAhRjJKe9fHZ9s7VAQBF9c4S2_HWj2qu1A48hh+g@mail.gmail.com>
-In-Reply-To: <CAPSxiM9AHNrAhRjJKe9fHZ9s7VAQBF9c4S2_HWj2qu1A48hh+g@mail.gmail.com>
-From: Usman Akinyemi <usmanakinyemi202@gmail.com>
-Date: Thu, 10 Jul 2025 19:03:07 +0530
-X-Gm-Features: Ac12FXxTfmie9LGNZsXqRlfH_jKYoN7Yl1MYSUGdY_NjH8KL2bq5qU-PsDRLaX0
-Message-ID: <CAPSxiM9-tZjnssZMA_59ib8Ur+4VNWk4RYOsoFiWHC_Eq+drXA@mail.gmail.com>
-Subject: Re: [PATCH] perf/x86: Replace strncpy() with memcpy() for vendor string
-To: James Clark <james.clark@linaro.org>
-Cc: David Laight <david.laight.linux@gmail.com>, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-On Fri, Jul 4, 2025 at 6:17=E2=80=AFPM Usman Akinyemi
-<usmanakinyemi202@gmail.com> wrote:
->
-> On Fri, Jul 4, 2025 at 4:40=E2=80=AFPM James Clark <james.clark@linaro.or=
-g> wrote:
-> >
-> >
-> >
-> > On 04/07/2025 10:20 am, David Laight wrote:
-> > > On Thu, 19 Jun 2025 03:28:43 +0530
-> > > Usman Akinyemi <usmanakinyemi202@gmail.com> wrote:
-> > >
-> > >> strncpy() is unsafe for fixed-size binary data as
-> > >> it may not NUL-terminate and is deprecated for such
-> >
-> > But memcpy doesn't null terminate after the 4 chars either so I don't
-> > think that's a good justification. Surely you don't want null
-> > termination, because char *vendor is supposed to be a single string
-> > without extra nulls in the middle. It specifically adds a null at the
-> > end of the function.
-> >
-> > >> usage. Since we're copying raw CPUID register values,
-> > >> memcpy() is the correct and safe choice.
-> > >>
-> >
-> > There should be a fixes: tag here if it actually fixes something. But i=
-n
-> > this use case strncpy seems to behave identically to memcpy so I don't
-> > think we should change it. Except maybe if b,c,d have NULLs in them the=
-n
-> > strncpy will give you uninitialized parts where memcpy won't. But that'=
-s
-> > not mentioned in the commit message and presumably it doesn't happen?
->
-> Hi James,
->
-> Thanks for the review.
->
-> What you said is true, strncpy and memcpy seem to behave identically.
->
-> I should have rephrased the commit message in a different way.
-> While strncpy seems to work here, firstly, it is an interface that has
-> been deprecated.
-> See -> https://github.com/KSPP/linux/issues/90.
-> Also, memcpy is semantically correct for copying raw data compared to
-> strncpy which is for string.
->
-> I am not sure if the b, c, d can have a null byte, I think using the
-> semantically correct function (memcpy) improves the robustness even in
-> cases where b, c, d have null byte.
->
-> What do you think?
-Hello,
+On Wed, 09 Jul 2025 09:24:52 +0200, Thomas Richter wrote:
+> According to the z16 and z17 Principle of Operation documents
+> SA22-7832-13 and SA22-7832-14 the event 4210 is named
+>    PCC_COMPUTE_LAST_BLOCK_CMAC_USING_ENCRYPTED_AES_256
+> without a trailing 'A'. Adjust the json definition files
+> for this event and remove the trailing 'A' character.
+>    PCC_COMPUTE_LAST_BLOCK_CMAC_USING_ENCRYPTED_AES_256A
+> 
+> [...]
+Applied to perf-tools-next, thanks!
 
-This is a gentle follow-up on this patch.
+Best regards,
+Namhyung
 
-I would like to know if I can send the updated patch series with the
-correct commit message.
 
-Thanks and Regards
->
-> Thank you.
-> >
-> > >> Signed-off-by: Usman Akinyemi <usmanakinyemi202@gmail.com>
-> > >> ---
-> > >>   tools/perf/arch/x86/util/header.c | 6 +++---
-> > >>   1 file changed, 3 insertions(+), 3 deletions(-)
-> > >>
-> > >> diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86=
-/util/header.c
-> > >> index 412977f8aa83..43ba55627817 100644
-> > >> --- a/tools/perf/arch/x86/util/header.c
-> > >> +++ b/tools/perf/arch/x86/util/header.c
-> > >> @@ -16,9 +16,9 @@ void get_cpuid_0(char *vendor, unsigned int *lvl)
-> > >>      unsigned int b, c, d;
-> > >>
-> > >>      cpuid(0, 0, lvl, &b, &c, &d);
-> > >> -    strncpy(&vendor[0], (char *)(&b), 4);
-> > >> -    strncpy(&vendor[4], (char *)(&d), 4);
-> > >> -    strncpy(&vendor[8], (char *)(&c), 4);
-> > >> +    memcpy(&vendor[0], (char *)(&b), 4);
-> > >> +    memcpy(&vendor[4], (char *)(&d), 4);
-> > >> +    memcpy(&vendor[8], (char *)(&c), 4);
-> > >
-> > > Why not:
-> > >       cpuid(0, 0, lvl, (void *)vendor, (void *)(vendor + 8), (void *)=
-(vendor + 4));
-> > >
-> > >
-> > >>      vendor[12] =3D '\0';
-> > >>   }
-> > >>
-> > >
-> >
