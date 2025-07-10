@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCF2303DE5
-	for <linux-perf-users@vger.kernel.org>; Thu, 10 Jul 2025 20:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5500A306DAC
+	for <linux-perf-users@vger.kernel.org>; Thu, 10 Jul 2025 20:25:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752179140; cv=none; b=aDMtsEX/CakGiIJdplOOHdMmgpvu/XtcreZmtxgWWfDOpUcRVxrCbFGwxqcoyT7LvpuWqNAg3+eJ2OF8koP1CvXievCh82yR2r1j1XSyypuyuofkbcsDaNmlCloX3Sz6K8C+igJ0dcy+C9ckCa9+yiLUWl+2dWlqMHRYGhUoUOw=
+	t=1752179141; cv=none; b=jkQQqcjMkN034+YZI1pMK0/P4GyIFpvii//MUIuBb4uTdPFzTAhS/hlJ1wjCGoZia8gDd3fz4YBwKMCKwOqv4JZwpFqBx6KZddFG1fc8gBtGnip+xodTSyx1vGB5wt2NSP+n4IaehWVBhCf8rRK92/+0OEA04JtbHuA2jf/g9Bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752179140; c=relaxed/simple;
-	bh=QBQ6rMMGrCCqcqpv0nGcMrSiGZpXq85vCuSs2bWMZ9U=;
+	s=arc-20240116; t=1752179141; c=relaxed/simple;
+	bh=WFS1g6kYY+XgrAAa5iSXxbIVXwge/aB1XoG8Q1Q1zEI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=Utb4v7CMKzv0TpRAkENDE5M/paT89q8mXPGq2sbVUDkHbbDb2DXFctxA9G48/NbXgGTUeurPGN1V5kLhRjbO3thcruogPILp74b81PpvgXm96rObdlg2BQ5PMnyze3+eFgggSKx07+rQc/aihkVjKr3akWf/3gx3RgqBAm+QM9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OAPDmd55; arc=none smtp.client-ip=209.85.214.202
+	 To:Content-Type; b=Ju07CU7uFXr37q3Eg2JkW3xx9/2O6sjm8TKL0HBhvxJ+clu9F2O+cPcUsb/VcUt+ZUB68bt/2X2dA5iy7B6Ur1T5PZgpVI83bZ6VcbgQmNgpDM2uQ7frAvFflV5aR0wKddZwHlOPpHkvM5ytOu0oHZHrBrhojvkC8Zb9x3EUWss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KHlkjm/X; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OAPDmd55"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-23507382e64so13810085ad.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Jul 2025 13:25:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KHlkjm/X"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7491814d6f2so1535763b3a.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Jul 2025 13:25:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1752179138; x=1752783938; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1752179140; x=1752783940; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=EP30FVHzqvLXJ2GVgWwMYde05oJPsW/Vmscvz9g3I8Q=;
-        b=OAPDmd55/ELzovNVVrDPT+KQ54Y0O2dnNsf43Zd4rlZJUoLLL/o013BgYv7JKptigy
-         +sMBdSAW2X8zjLGXLGi4W+ExhVJOCQsTTYDM3E3ZpHu4QL/mBqGjNw7BVt2wtPPNxsRT
-         MX6Tz2XKA1DXp/2dfoUkaCi+nu7SxDVTVOoxCBVirFYGETPfIID5C0m/AonlWtEvtC2J
-         IsnyH7S0gs9eOjHeHOIMlmxx1wUo/y2irWdyT50ZBtYSpuff/ZxFOWSerzn0ORLyv+jf
-         S0kkRLBoAe120FnNuKvZfpKJvnRV8UZamGgxJ2ckUFuSVGr3oCgusGroDdWe0HJv2v9e
-         oHQw==
+        bh=nLmmHKES778Ih0J3i1L0ZkfJuaKP4hpTsElytjjdQfs=;
+        b=KHlkjm/X5phLhyX7I1q/rihXyDgXNMz7gr42FWaE9jz6+X9xlKRv/DWItvkMsahS0E
+         xx39SmnR2th1fmFr5ekOi/uSd2LItbnuzDLqMjCZXmeiG8RDM8IvRBNJrP+O21hr/UeS
+         T2WE14vK2MFHNIreBpfvx/lhUEFS/OeFC3gOdqDpQEFon5zLDJUEhx36Sv1iYFqt5ggF
+         0icJnMdpaF7v0lKk+Z03vyP5H2+kmqvMKrP0Mb5TQVZ865Kda8P8oaoxyiM/dJfId4KQ
+         0fPfEPANbmEz0kRsC1Nm4OaiDP3lWAkgxnsgUmPpeOYZQesSQMVTlZJZBwVNjArIHxUX
+         Aa+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752179138; x=1752783938;
+        d=1e100.net; s=20230601; t=1752179140; x=1752783940;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EP30FVHzqvLXJ2GVgWwMYde05oJPsW/Vmscvz9g3I8Q=;
-        b=pk8N2/gioQcuCTyqR8LloXQWLXGifejEkSSDpOqifYFvefirb+jXuAyEZZ5UT77f/N
-         1CRUFxG97kcXdbf8UtrmcW64bUKPmqcbI6H1saTz9PfkVxpamf6J+6Hfee6/X/77hU1V
-         ewGVNLXUMXvHMVOvjXp6tj42k/lyIWyuCBJM40lJN+S33zT3Dy92BVIgMzfocCVEuuUM
-         obHa/QzJKfZttAp3QvEsnWt9AUAQkG2ez6q32uhK491Mbj/Hc3mmaB8hV7/UHEsLDWDR
-         tm412JqQzfWSZjqUxwqMEEZt3PvZlluw95S62N04wT3uxbjYjlyA90xr52opTgK+NuIW
-         0QRg==
-X-Forwarded-Encrypted: i=1; AJvYcCVyrWe6x0VqUppK52t20aJ89DYoPM30j5LAjVXD3LrX2df2/bUPhQEDLG4NziqvUSvgfsshUOD8+2Pa94yl9osG@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz42PaPvChB4leIfBp8c5Dp8jODUaL03uQWd4sqygs4QtNtNg+k
-	hiTR6XXsnP3Xj+PSz6I3XTvADOJEBFdQ+x4+95Qc1KXEpu/5N4BjSC0qEP1RCQnfsXHV7IgooHB
-	Yw/NGJcr69w==
-X-Google-Smtp-Source: AGHT+IFkYqyREbtIQSLbhz2UcEYkhDEn6YLjyav75c5U8o0BRcV3V2J2KJypDuFoK/YcyX7q/QxQUM0VeA/J
-X-Received: from plbms15.prod.google.com ([2002:a17:903:acf:b0:22e:4a61:5545])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:cec4:b0:23c:8f4c:6658
- with SMTP id d9443c01a7336-23dee26d6d8mr4993875ad.25.1752179137825; Thu, 10
- Jul 2025 13:25:37 -0700 (PDT)
-Date: Thu, 10 Jul 2025 13:24:53 -0700
+        bh=nLmmHKES778Ih0J3i1L0ZkfJuaKP4hpTsElytjjdQfs=;
+        b=fTgmkN0lmhMi/aEafWicbE7mcFm6UXD/K6IntKFXA787bgsTb+6rWkLeU1mSKJjVFS
+         bptj4ICG7YhsbMfU8J9qzc/+o5fTni10jLG2C/6LiuJBGCiiWtPKEihOdMnHF9xn064d
+         HGyWQGKdgWUW6Ai6OjK+qgmlGreSCPoxKoaJOy9C9b38sFI6k9GxFmp5cZ2MPgS9KgzD
+         Pwhme+vT5rjwDXKxa9KuxZDwMekK0VD0ig5jWpEOuVtBcNouBfq+bxxgMTSICSGBozjH
+         O84qW6+uUIzRubF7BOnoryTpOY896ODjAIUO8KDkAGp7/OJvI0FSjggIlQpNMA4JMHUm
+         LgGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJC0wW4KcMlpn+hZDb6kcZB2pUIE28ZUasXx5ej+LiGxqu1NtjWUjEEokF25cacWu4zMu6tXinrcMqnMelCx7j@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLaZr0KX4IivEoBHZJ7LBLjonCPDhnQl4zJDSKDkr9eluGnXpS
+	Tkp/YNlyPeZftVrbCKt6zHqsdbToUCsJUN8Qsqzr95jxOXR0i4kVVfVHCWoRr9XtrBYo5PRxC/v
+	7joTzz9Dq5A==
+X-Google-Smtp-Source: AGHT+IEjFG/YTY29uA5hJ6qZ0TEChiwCH3/Mq1LeU8SbYbzUA0zgXqfOLwTrlnQOsn68ErSvSK7CsSstUNPX
+X-Received: from pfbbk21.prod.google.com ([2002:aa7:8315:0:b0:748:f3b0:4db2])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:72ab:b0:220:b0dc:24f2
+ with SMTP id adf61e73a8af0-231202f28eemr1287735637.34.1752179139740; Thu, 10
+ Jul 2025 13:25:39 -0700 (PDT)
+Date: Thu, 10 Jul 2025 13:24:54 -0700
 In-Reply-To: <20250710202500.1959672-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250710202500.1959672-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250710202500.1959672-16-irogers@google.com>
-Subject: [PATCH v5 08/14] perf list: Skip ABI PMUs when printing pmu values
+Message-ID: <20250710202500.1959672-17-irogers@google.com>
+Subject: [PATCH v5 08/14] perf python: Add function returning dictionary of
+ all events on a PMU
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,152 +78,110 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Avoid printing tracepoint, legacy and software events when listing for
-the pmu option. Add the PMU type to the print_event callbacks to ease
-detection.
+Allow all events on a PMU to be gathered, similar to how perf list
+gathers event information.
+
+An example usage:
+```
+$ python
+Python 3.12.9 (main, Feb  5 2025, 01:31:18) [GCC 14.2.0] on linux
+>>> import perf
+>>> for pmu in perf.pmus():
+...   print(pmu.events())
+...
+[{'name': 'mem_load_retired.l3_hit', 'desc': 'Retired load instructions...
+```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-list.c      | 17 +++++++++++++----
- tools/perf/util/pmus.c         |  2 ++
- tools/perf/util/print-events.c |  5 +++++
- tools/perf/util/print-events.h |  2 +-
- 4 files changed, 21 insertions(+), 5 deletions(-)
+ tools/perf/util/python.c | 67 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 3a4061d02f6c..caf42276bd0f 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -58,6 +58,8 @@ struct print_state {
- 	bool metrics;
- 	/** @metricgroups: Controls printing of metric and metric groups. */
- 	bool metricgroups;
-+	/** @exclude_abi: Exclude PMUs with types less than PERF_TYPE_MAX except PERF_TYPE_RAW. */
-+	bool exclude_abi;
- 	/** @last_topic: The last printed event topic. */
- 	char *last_topic;
- 	/** @last_metricgroups: The last printed metric group. */
-@@ -113,7 +115,8 @@ static void wordwrap(FILE *fp, const char *s, int start, int max, int corr)
- 	}
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 0124db5ab3d1..728ed27986b5 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -649,6 +649,67 @@ static PyObject *pyrf_pmu__name(PyObject *self)
+ 	return PyUnicode_FromString(ppmu->pmu->name);
  }
  
--static void default_print_event(void *ps, const char *topic, const char *pmu_name,
-+static void default_print_event(void *ps, const char *topic,
-+				const char *pmu_name, u32 pmu_type,
- 				const char *event_name, const char *event_alias,
- 				const char *scale_unit __maybe_unused,
- 				bool deprecated, const char *event_type_desc,
-@@ -130,6 +133,9 @@ static void default_print_event(void *ps, const char *topic, const char *pmu_nam
- 	if (print_state->pmu_glob && pmu_name && !strglobmatch(pmu_name, print_state->pmu_glob))
- 		return;
- 
-+	if (print_state->exclude_abi && pmu_type < PERF_TYPE_MAX && pmu_type != PERF_TYPE_RAW)
-+		return;
++static bool add_to_dict(PyObject *dict, const char *key, const char *value)
++{
++	PyObject *pkey, *pvalue;
++	bool ret;
 +
- 	if (print_state->event_glob &&
- 	    (!event_name || !strglobmatch(event_name, print_state->event_glob)) &&
- 	    (!event_alias || !strglobmatch(event_alias, print_state->event_glob)) &&
-@@ -354,7 +360,8 @@ static void fix_escape_fprintf(FILE *fp, struct strbuf *buf, const char *fmt, ..
- 	fputs(buf->buf, fp);
- }
++	if (value == NULL)
++		return true;
++
++	pkey = PyUnicode_FromString(key);
++	pvalue = PyUnicode_FromString(value);
++
++	ret = pkey && pvalue && PyDict_SetItem(dict, pkey, pvalue) == 0;
++	Py_XDECREF(pkey);
++	Py_XDECREF(pvalue);
++	return ret;
++}
++
++static int pyrf_pmu__events_cb(void *state, struct pmu_event_info *info)
++{
++	PyObject *py_list = state;
++	PyObject *dict = PyDict_New();
++
++	if (!dict)
++		return -ENOMEM;
++
++	if (!add_to_dict(dict, "name", info->name) ||
++	    !add_to_dict(dict, "alias", info->alias) ||
++	    !add_to_dict(dict, "scale_unit", info->scale_unit) ||
++	    !add_to_dict(dict, "desc", info->desc) ||
++	    !add_to_dict(dict, "long_desc", info->long_desc) ||
++	    !add_to_dict(dict, "encoding_desc", info->encoding_desc) ||
++	    !add_to_dict(dict, "topic", info->topic) ||
++	    !add_to_dict(dict, "event_type_desc", info->event_type_desc) ||
++	    !add_to_dict(dict, "str", info->str) ||
++	    !add_to_dict(dict, "deprecated", info->deprecated ? "deprecated" : NULL) ||
++	    PyList_Append(py_list, dict) != 0) {
++		Py_DECREF(dict);
++		return -ENOMEM;
++	}
++	Py_DECREF(dict);
++	return 0;
++}
++
++static PyObject *pyrf_pmu__events(PyObject *self)
++{
++	struct pyrf_pmu *ppmu = (void *)self;
++	PyObject *py_list = PyList_New(0);
++
++	if (!py_list)
++		return NULL;
++
++	if (perf_pmu__for_each_event(ppmu->pmu,
++				     /*skip_duplicate_pmus=*/false,
++				     py_list,
++				     pyrf_pmu__events_cb) != 0) {
++		Py_DECREF(py_list);
++		return NULL;
++	}
++	return py_list;
++}
++
+ static PyObject *pyrf_pmu__repr(PyObject *self)
+ {
+ 	struct pyrf_pmu *ppmu = (void *)self;
+@@ -659,6 +720,12 @@ static PyObject *pyrf_pmu__repr(PyObject *self)
+ static const char pyrf_pmu__doc[] = PyDoc_STR("perf Performance Monitoring Unit (PMU) object.");
  
--static void json_print_event(void *ps, const char *topic, const char *pmu_name,
-+static void json_print_event(void *ps, const char *topic,
-+			     const char *pmu_name, u32 pmu_type __maybe_unused,
- 			     const char *event_name, const char *event_alias,
- 			     const char *scale_unit,
- 			     bool deprecated, const char *event_type_desc,
-@@ -647,9 +654,11 @@ int cmd_list(int argc, const char **argv)
- 		} else if (strcmp(argv[i], "cache") == 0 ||
- 			 strcmp(argv[i], "hwcache") == 0)
- 			print_hwcache_events(&print_cb, ps);
--		else if (strcmp(argv[i], "pmu") == 0)
-+		else if (strcmp(argv[i], "pmu") == 0) {
-+			default_ps.exclude_abi = true;
- 			perf_pmus__print_pmu_events(&print_cb, ps);
--		else if (strcmp(argv[i], "sdt") == 0)
-+			default_ps.exclude_abi = false;
-+		} else if (strcmp(argv[i], "sdt") == 0)
- 			print_sdt_events(&print_cb, ps);
- 		else if (strcmp(argv[i], "metric") == 0 || strcmp(argv[i], "metrics") == 0) {
- 			default_ps.metricgroups = false;
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index 409b909cfa02..004f5f0c621f 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -645,6 +645,7 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
- 		print_cb->print_event(print_state,
- 				aliases[j].topic,
- 				aliases[j].pmu_name,
-+				aliases[j].pmu->type,
- 				aliases[j].name,
- 				aliases[j].alias,
- 				aliases[j].scale_unit,
-@@ -749,6 +750,7 @@ void perf_pmus__print_raw_pmu_events(const struct print_callbacks *print_cb, voi
- 		print_cb->print_event(print_state,
- 				/*topic=*/NULL,
- 				/*pmu_name=*/NULL,
-+				pmu->type,
- 				format_args.short_string.buf,
- 				/*event_alias=*/NULL,
- 				/*scale_unit=*/NULL,
-diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-index 3a5e5e7bae13..4153124a9948 100644
---- a/tools/perf/util/print-events.c
-+++ b/tools/perf/util/print-events.c
-@@ -121,6 +121,7 @@ void print_sdt_events(const struct print_callbacks *print_cb, void *print_state)
- 		print_cb->print_event(print_state,
- 				/*topic=*/NULL,
- 				/*pmu_name=*/NULL,
-+				PERF_TYPE_TRACEPOINT,
- 				evt_name ?: sdt_name->s,
- 				/*event_alias=*/NULL,
- 				/*deprecated=*/false,
-@@ -222,6 +223,7 @@ int print_hwcache_events(const struct print_callbacks *print_cb, void *print_sta
- 					print_cb->print_event(print_state,
- 							"cache",
- 							pmu->name,
-+							pmu->type,
- 							name,
- 							alias_name,
- 							/*scale_unit=*/NULL,
-@@ -278,6 +280,7 @@ void print_symbol_events(const struct print_callbacks *print_cb, void *print_sta
- 		print_cb->print_event(print_state,
- 				/*topic=*/NULL,
- 				/*pmu_name=*/NULL,
-+				type,
- 				nd->s,
- 				alias,
- 				/*scale_unit=*/NULL,
-@@ -438,6 +441,7 @@ void print_events(const struct print_callbacks *print_cb, void *print_state)
- 	print_cb->print_event(print_state,
- 			/*topic=*/NULL,
- 			/*pmu_name=*/NULL,
-+			PERF_TYPE_RAW,
- 			"rNNN",
- 			/*event_alias=*/NULL,
- 			/*scale_unit=*/NULL,
-@@ -452,6 +456,7 @@ void print_events(const struct print_callbacks *print_cb, void *print_state)
- 	print_cb->print_event(print_state,
- 			/*topic=*/NULL,
- 			/*pmu_name=*/NULL,
-+			PERF_TYPE_BREAKPOINT,
- 			"mem:<addr>[/len][:access]",
- 			/*scale_unit=*/NULL,
- 			/*event_alias=*/NULL,
-diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-events.h
-index 4d95b8257e23..d6ba384f0c66 100644
---- a/tools/perf/util/print-events.h
-+++ b/tools/perf/util/print-events.h
-@@ -12,7 +12,7 @@ struct print_callbacks {
- 	void (*print_start)(void *print_state);
- 	void (*print_end)(void *print_state);
- 	void (*print_event)(void *print_state, const char *topic,
--			const char *pmu_name,
-+			const char *pmu_name, u32 pmu_type,
- 			const char *event_name, const char *event_alias,
- 			const char *scale_unit,
- 			bool deprecated, const char *event_type_desc,
+ static PyMethodDef pyrf_pmu__methods[] = {
++	{
++		.ml_name  = "events",
++		.ml_meth  = (PyCFunction)pyrf_pmu__events,
++		.ml_flags = METH_NOARGS,
++		.ml_doc	  = PyDoc_STR("Name of the PMU including suffixes.")
++	},
+ 	{
+ 		.ml_name  = "name",
+ 		.ml_meth  = (PyCFunction)pyrf_pmu__name,
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
