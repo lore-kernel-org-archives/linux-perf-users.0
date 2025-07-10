@@ -1,55 +1,55 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF1A3093C5
-	for <linux-perf-users@vger.kernel.org>; Thu, 10 Jul 2025 23:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F936309DDB
+	for <linux-perf-users@vger.kernel.org>; Thu, 10 Jul 2025 23:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752191896; cv=none; b=nv1qk9i1xzTkz7ul6DLVkPn3Qweg+kmfvJjlVpBrqXr1EhlCRfzD9oYesH3/U9LwYfJI8wy1LyS43QB8qGYq6qAP70QU+TD9Ovnsbhq5zRByeiqHGc+XO6u9YNQhNoKgWpzxB2qpraH0OD96ICCotdX9ZuRXc9nbqcCWp7JP12w=
+	t=1752191898; cv=none; b=LNaX7jJLR2Cf2bU0KhnWkp3SOYoZq4yyCRgsvyEuqRAL/OzkyRyw5tGI2+vASQmYL0ogvYBC9ypJcXqcjRKCXum/Vn48aVTSUtnwAUmhgDZYl99cWFGv2609R7BEOR8IEvLRQR6FB5R3qHoDdOnXY1VYo+Z7ktvLGEKr2EXk+dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752191896; c=relaxed/simple;
-	bh=12yJFp+ZPyq7VIWySRLKkGC0LH/3/sqX9XbjRxQaNbc=;
+	s=arc-20240116; t=1752191898; c=relaxed/simple;
+	bh=sOTnWI/7IxHdKi9634fHq9XBXh6GwdebrpYxmKO3LjA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=XaGy3dQB/lsL2elgqYwzDg2WZmI1DB06GI11N7FPZRILD0BQhM4q2Dtz5THresaIuGFnSfkSmEJrraMzod2OLfnYwJ0XoOLe2lfvL4zethwsxl7WJDJSIF3QZRXySd9e2WfdvX10xfkrupKd/754tQsquXnM59BbdZ2ZEDZ/+gU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NY6gYPif; arc=none smtp.client-ip=209.85.215.201
+	 To:Content-Type; b=h2qqvUlWckGOA20FZS4eDXhRmuKV571zIoj0vkvZHUSSEo6QRlETNM0PFBFf4GydFviOpOJN5nm3z/CdSCXcfHkbVw+gkqirA3r0cN+qT3XVOXPhn5TA2i1WGcmnws8/S++cdQIfhrNBeFsknPxXnSrMzEli360zJFVWlCSP3Xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TbJFTu8Y; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NY6gYPif"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b38ffb62492so1719702a12.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Jul 2025 16:58:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TbJFTu8Y"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-235e3f93687so22210855ad.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Jul 2025 16:58:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1752191894; x=1752796694; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1752191896; x=1752796696; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6GmxHwehNANjslAlbEN827g4sdD+kiWgzyjC/AAO5fc=;
-        b=NY6gYPifGRyYUTU31A3Sze6qYaLBER2VCz24MgJV8a7OHPt/qrtOTJ1NDIs8RnTbWV
-         UfegW095ju2dSyPXWE7pv5UhoVTthbFlEjd8/Bcl25cv2WHob5KDQDsa0L1E9l4MHMVz
-         qpKZv0EWuJq6cfkTAQTpyTySvzBzXViB73sAz6B2oOJMz7DdiA/xL5Ic13PKdI/8CPwu
-         kVZwjtHe985fLo2xazY7M3XbDFSV25MinUwBujEeU2Nz9LK4cDQcrqPEGSLHaHLLDsck
-         5A+eqFbZP9ls6VeOHRmVAZVUdqlhpW0il9yl6u9V/1WGb95SVHfWByKDgGoGns1zv+I1
-         9fLQ==
+        bh=A1mkViaojKTUojnp/iEqVcXRNkOKi/CXUSAokDzDaV8=;
+        b=TbJFTu8YpGqIUE3ie0WI1ajyE0TZrzn0pnGE427245xjoHs1JFYHrOTPPKMeWccmQM
+         l7INkKV0NYH1qdqvSgz1Ej0yU5Fdve4aPxEJjb88TJmU2yPmKt1QKgSWsGfSIpCDGDJR
+         w2RN+/0Icv1QwBXS9i0UrvIZSV5V8t604hhGSNcl2rXgOqQ2XnX12ksIG+n/Jv9mQ/FY
+         mQB0dyDBrPBAGKCXhIK+Aa4fZnB1GjHwQpNUtjiX7qLUFQbkU9Rzt760BM03DwZpudM1
+         IDSCWF2E6eVNtWNrrukIwlmVXL88sC8+QsW6kAX2rlSnEcRKVCn/0rgRMZffDw/tp/rF
+         1kpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752191894; x=1752796694;
+        d=1e100.net; s=20230601; t=1752191896; x=1752796696;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6GmxHwehNANjslAlbEN827g4sdD+kiWgzyjC/AAO5fc=;
-        b=cKLDt3HPs45W8+yhZOEr3o9j19oDbGE0kgNemdabgFGKVqgWwWlHchRo0rSSHchACH
-         KVfm5yAw/6Ib35vZXeKP9zGyjKYa2znMbibefjsw6Zr0a9IAXZyfACvJJmaFGcKbIcWu
-         g7bmMuWvYqwHuR88hQ74wpFfxGGTWxFN9btZwNYfBEcuXzngEc7/YFZSMFesuCuzgsWB
-         16k4zBNLPrx7QvYoi/rjJq5dq+VNViGCFv5SBJPlCXl7JQFT7koOhyCOrTfbfePD48Ef
-         7a1HvNIS8OU2n1slfde1qjc2R4g2glRIZzjjWhkHF833zzxXm7iKpF4fna5RjxE7Cn8/
-         V0Pw==
-X-Forwarded-Encrypted: i=1; AJvYcCWB6UOdzBWutbM6tOHr4zEsiSXIMdlpDd3PxOarZFeelO3d9Yyg+mtpcXGIa8iXK0Ee3LbkS/agCVdCd2GaT0yf@vger.kernel.org
-X-Gm-Message-State: AOJu0YydTh7Zgytm615QcbDSvn/JpLJ+s1q+jY4yghtdSzBbxj9uHz90
-	KJTwSZDAiBp9pJf8EmYO1PbsBk2Sbo32sHlVGpi5dCIXSTxKNgecQM1mg1IQlWxN3tnEaXi4TnQ
-	UdREVnSgY8A==
-X-Google-Smtp-Source: AGHT+IHab2nPLVhZMvMV0JeGUHv+oB3+dmQtdHOC6bLBDlha9CcopcXmtLsynh9knoF2yBJxVnBK4yMwIrNG
-X-Received: from plblc5.prod.google.com ([2002:a17:902:fa85:b0:236:91fa:131a])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f547:b0:234:a139:1208
- with SMTP id d9443c01a7336-23dede3874dmr15831295ad.16.1752191893843; Thu, 10
- Jul 2025 16:58:13 -0700 (PDT)
-Date: Thu, 10 Jul 2025 16:57:29 -0700
+        bh=A1mkViaojKTUojnp/iEqVcXRNkOKi/CXUSAokDzDaV8=;
+        b=wIyHVrph3JapPxJYOjauP2yxNzRyWtm20ash2TCMnLGtsJZKZwTvamOMoJSMIqZuB4
+         lemGPCTMDz8RjqPwAfqhOt6C1G60VYJ1fThCNV0X72IUljffFC8gofwsp2I6tfaGUgTY
+         g6o6JPR1LDhirHGvtyuso67Fflgfrc1spUqAPfj6ccBJfxVmLpitcAA3PAYARUMhVOKx
+         WR13ZhZMGVsG/5lCRftltHjJsWc7Me1//eDixAezL9RR4WSsLaqz6Ynmw+kFhLyezFAe
+         GlTs1nhQNBRo+CI37cJGpJASUZcJsKQz7sCIDOULh7kgk/sp1i3RwVbwTEfFlZkcLdh0
+         Yttg==
+X-Forwarded-Encrypted: i=1; AJvYcCWediBASf7I3TH488myboONB3OPgEiLOhMK7o62lRFBKaRptLrPy05pK2slq3HkbdEGEfNKS2FJCw8n3YtoyDzP@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVSC1/xReehI4fMa00am7Qr+nIP1d680WU4NLetAm9otjdQlLW
+	WRai3kvNxRdJ0YO4rJxdTFwzOVmSvJ5kMCfGNhnEis5Sw2aYl9RcjAyQX5qHucQN2PxOZzAIc+8
+	faavEt1XoJw==
+X-Google-Smtp-Source: AGHT+IFvctyLxHsEMiXQrVs9EhUMIchwzHOU8dTaMzkffRDJnJ0dvoeDlzLfdaEoSrT+ZJ42U9fb6B2gMWwb
+X-Received: from plcn15.prod.google.com ([2002:a17:902:d2cf:b0:234:aaa9:fcd1])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2ac3:b0:237:ec18:eae3
+ with SMTP id d9443c01a7336-23dede2e018mr15272375ad.4.1752191895718; Thu, 10
+ Jul 2025 16:58:15 -0700 (PDT)
+Date: Thu, 10 Jul 2025 16:57:30 -0700
 In-Reply-To: <20250710235735.1089240-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250710235735.1089240-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250710235735.1089240-9-irogers@google.com>
-Subject: [PATCH v6 08/14] perf python: Add function returning dictionary of
- all events on a PMU
+Message-ID: <20250710235735.1089240-10-irogers@google.com>
+Subject: [PATCH v6 09/14] perf ilist: Add new python ilist command
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -78,110 +77,429 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Allow all events on a PMU to be gathered, similar to how perf list
-gathers event information.
+The perf ilist command is a textual app [1] similar to perf list. In
+the top-left pane a tree of PMUs is displayed. Selecting a PMU expands
+the events within it. Selecting an event displays the `perf list`
+style event information in the top-right pane.
 
-An example usage:
-```
-$ python
-Python 3.12.9 (main, Feb  5 2025, 01:31:18) [GCC 14.2.0] on linux
->>> import perf
->>> for pmu in perf.pmus():
-...   print(pmu.events())
-...
-[{'name': 'mem_load_retired.l3_hit', 'desc': 'Retired load instructions...
-```
+When an event is selected it is opened and the counters on each CPU
+the event is for are periodically read. The bottom of the screen
+contains a scrollable set of sparklines showing the events in total
+and on each CPU. Scrolling below the sparklines shows the same data as
+raw counts. The sparklines are small graphs where the height of the
+bar is in relation to maximum of the other counts in the graph.
+
+By default the counts are read with an interval of 0.1 seconds (10
+times per second). A -I/--interval command line option allows the
+interval to be changed. The oldest read counts are dropped when the
+counts fill the line causing the sparkline to move from right to left.
+
+A search box can be pulled up with the 's' key. 'n' and 'p' iterate
+through the search results. As some PMUs have hundreds of events a 'c'
+key will collapse the events in the current PMU to make navigating the
+PMUs easier.
+
+[1] https://textual.textualize.io/
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/python.c | 67 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+ tools/perf/python/ilist.py | 387 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 387 insertions(+)
+ create mode 100755 tools/perf/python/ilist.py
 
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 2b4f10a9b8fe..b0bd4dc27409 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -653,6 +653,67 @@ static PyObject *pyrf_pmu__name(PyObject *self)
- 	return PyUnicode_FromString(ppmu->pmu->name);
- }
- 
-+static bool add_to_dict(PyObject *dict, const char *key, const char *value)
-+{
-+	PyObject *pkey, *pvalue;
-+	bool ret;
+diff --git a/tools/perf/python/ilist.py b/tools/perf/python/ilist.py
+new file mode 100755
+index 000000000000..3e2fae1db738
+--- /dev/null
++++ b/tools/perf/python/ilist.py
+@@ -0,0 +1,387 @@
++#!/usr/bin/env python3
++# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
++"""Interactive perf list."""
 +
-+	if (value == NULL)
-+		return true;
++import argparse
++from typing import Any, Dict, Tuple
++import perf
++from textual import on
++from textual.app import App, ComposeResult
++from textual.binding import Binding
++from textual.containers import Horizontal, HorizontalGroup, Vertical, VerticalScroll
++from textual.command import SearchIcon
++from textual.screen import ModalScreen
++from textual.widgets import Button, Footer, Header, Input, Label, Sparkline, Static, Tree
++from textual.widgets.tree import TreeNode
 +
-+	pkey = PyUnicode_FromString(key);
-+	pvalue = PyUnicode_FromString(value);
++class ErrorScreen(ModalScreen[bool]):
++    """Pop up dialog for errors."""
 +
-+	ret = pkey && pvalue && PyDict_SetItem(dict, pkey, pvalue) == 0;
-+	Py_XDECREF(pkey);
-+	Py_XDECREF(pvalue);
-+	return ret;
-+}
++    CSS="""
++    ErrorScreen {
++        align: center middle;
++    }
++    """
++    def __init__(self, error: str):
++        self.error = error
++        super().__init__()
 +
-+static int pyrf_pmu__events_cb(void *state, struct pmu_event_info *info)
-+{
-+	PyObject *py_list = state;
-+	PyObject *dict = PyDict_New();
++    def compose(self) -> ComposeResult:
++        yield Button(f"Error: {self.error}", variant="primary", id="error")
 +
-+	if (!dict)
-+		return -ENOMEM;
++    def on_button_pressed(self, event: Button.Pressed) -> None:
++        self.dismiss(True)
 +
-+	if (!add_to_dict(dict, "name", info->name) ||
-+	    !add_to_dict(dict, "alias", info->alias) ||
-+	    !add_to_dict(dict, "scale_unit", info->scale_unit) ||
-+	    !add_to_dict(dict, "desc", info->desc) ||
-+	    !add_to_dict(dict, "long_desc", info->long_desc) ||
-+	    !add_to_dict(dict, "encoding_desc", info->encoding_desc) ||
-+	    !add_to_dict(dict, "topic", info->topic) ||
-+	    !add_to_dict(dict, "event_type_desc", info->event_type_desc) ||
-+	    !add_to_dict(dict, "str", info->str) ||
-+	    !add_to_dict(dict, "deprecated", info->deprecated ? "deprecated" : NULL) ||
-+	    PyList_Append(py_list, dict) != 0) {
-+		Py_DECREF(dict);
-+		return -ENOMEM;
-+	}
-+	Py_DECREF(dict);
-+	return 0;
-+}
 +
-+static PyObject *pyrf_pmu__events(PyObject *self)
-+{
-+	struct pyrf_pmu *ppmu = (void *)self;
-+	PyObject *py_list = PyList_New(0);
++class SearchScreen(ModalScreen[str]):
++    """Pop up dialog for search."""
 +
-+	if (!py_list)
-+		return NULL;
++    CSS="""
++    SearchScreen Horizontal {
++        align: center middle;
++        margin-top: 1;
++    }
++    SearchScreen Input {
++        width: 1fr;
++    }
++    """
++    def compose(self) -> ComposeResult:
++        yield Horizontal(SearchIcon(), Input(placeholder="Event name"))
 +
-+	if (perf_pmu__for_each_event(ppmu->pmu,
-+				     /*skip_duplicate_pmus=*/false,
-+				     py_list,
-+				     pyrf_pmu__events_cb) != 0) {
-+		Py_DECREF(py_list);
-+		return NULL;
-+	}
-+	return py_list;
-+}
++    def on_input_submitted(self, event: Input.Submitted) -> None:
++        """Handle the user pressing Enter in the input field."""
++        self.dismiss(event.value)
 +
- static PyObject *pyrf_pmu__repr(PyObject *self)
- {
- 	struct pyrf_pmu *ppmu = (void *)self;
-@@ -663,6 +724,12 @@ static PyObject *pyrf_pmu__repr(PyObject *self)
- static const char pyrf_pmu__doc[] = PyDoc_STR("perf Performance Monitoring Unit (PMU) object.");
- 
- static PyMethodDef pyrf_pmu__methods[] = {
-+	{
-+		.ml_name  = "events",
-+		.ml_meth  = (PyCFunction)pyrf_pmu__events,
-+		.ml_flags = METH_NOARGS,
-+		.ml_doc	  = PyDoc_STR("Name of the PMU including suffixes.")
-+	},
- 	{
- 		.ml_name  = "name",
- 		.ml_meth  = (PyCFunction)pyrf_pmu__name,
++
++class Counter(HorizontalGroup):
++    """Two labels for a CPU and its counter value."""
++
++    CSS="""
++    Label {
++        gutter: 1;
++    }
++    """
++
++    def __init__(self, cpu: int) -> None:
++        self.cpu = cpu
++        super().__init__()
++
++    def compose(self) -> ComposeResult:
++        label = f"cpu{self.cpu}" if self.cpu >= 0 else "total"
++        yield Label(label + " ")
++        yield Label("0", id=f"counter_{label}")
++
++
++class CounterSparkline(HorizontalGroup):
++    """A Sparkline for a performance counter."""
++
++    def __init__(self, cpu: int) -> None:
++        self.cpu = cpu
++        super().__init__()
++
++    def compose(self) -> ComposeResult:
++        label = f"cpu{self.cpu}" if self.cpu >= 0 else "total"
++        yield Label(label)
++        yield Sparkline([], summary_function=max, id=f"sparkline_{label}")
++
++
++class IListApp(App):
++    TITLE = "Interactive Perf List"
++
++    BINDINGS = [
++        Binding(key="s", action="search", description="Search",
++                tooltip="Search events and PMUs"),
++        Binding(key="n", action="next", description="Next",
++                tooltip="Next search result or item"),
++        Binding(key="p", action="prev", description="Previous",
++                tooltip="Previous search result or item"),
++        Binding(key="c", action="collapse", description="Collapse",
++                tooltip="Collapse the current PMU"),
++        Binding(key="^q", action="quit", description="Quit",
++                tooltip="Quit the app"),
++    ]
++
++    CSS = """
++        /* Make the 'total' sparkline a different color. */
++        #sparkline_total > .sparkline--min-color {
++            color: $accent;
++        }
++        #sparkline_total > .sparkline--max-color {
++            color: $accent 30%;
++        }
++        /*
++         * Make the active_search initially not displayed with the text in
++         * the middle of the line.
++         */
++        #active_search {
++            display: none;
++            width: 100%;
++            text-align: center;
++        }
++    """
++
++    def __init__(self, interval: float) -> None:
++        self.interval = interval
++        self.evlist = None
++        self.search_results: list[TreeNode[str]] = []
++        self.cur_search_result: TreeNode[str] | None = None
++        super().__init__()
++
++
++
++    def expand_and_select(self, node: TreeNode[Any]) -> None:
++        """Expand select a node in the tree."""
++        if node.parent:
++            node.parent.expand()
++            if node.parent.parent:
++                node.parent.parent.expand()
++        node.expand()
++        node.tree.select_node(node)
++        node.tree.scroll_to_node(node)
++
++
++    def set_searched_tree_node(self, previous: bool) -> None:
++        """Set the cur_search_result node to either the next or previous."""
++        l = len(self.search_results)
++
++        if l < 1:
++            tree: Tree[str] = self.query_one("#pmus", Tree)
++            if previous:
++                tree.action_cursor_up()
++            else:
++                tree.action_cursor_down()
++            return
++
++        if self.cur_search_result:
++            idx = self.search_results.index(self.cur_search_result)
++            if previous:
++                idx = idx - 1 if idx > 0 else l - 1
++            else:
++                idx = idx + 1 if idx < l - 1 else 0
++        else:
++            idx = l - 1 if previous else 0
++
++        node = self.search_results[idx]
++        if node == self.cur_search_result:
++            return
++
++        self.cur_search_result = node
++        self.expand_and_select(node)
++
++    def action_search(self) -> None:
++        """Search was chosen."""
++        def set_initial_focus(event: str | None) -> None:
++            """Sets the focus after the SearchScreen is dismissed."""
++
++            search_label = self.query_one("#active_search", Label)
++            search_label.display = True if event else False
++            if not event:
++                return
++            event = event.lower()
++            search_label.update(f'Searching for events matching "{event}"')
++
++            tree: Tree[str] = self.query_one("#pmus", Tree)
++            def find_search_results(event: str, node: TreeNode[str], \
++                                    cursor_seen: bool = False, \
++                                    match_after_cursor: TreeNode[str] | None = None) \
++                    -> Tuple[bool, TreeNode[str] | None]:
++                """Find nodes that match the search remembering the one after the cursor."""
++                if not cursor_seen and node == tree.cursor_node:
++                    cursor_seen = True
++                if node.data and event in node.data:
++                    if cursor_seen and not match_after_cursor:
++                        match_after_cursor = node
++                    self.search_results.append(node)
++
++                if node.children:
++                    for child in node.children:
++                        (cursor_seen, match_after_cursor) = \
++                            find_search_results(event, child, cursor_seen, match_after_cursor)
++                return (cursor_seen, match_after_cursor)
++
++            self.search_results.clear()
++            (_ , self.cur_search_result) = find_search_results(event, tree.root)
++            if len(self.search_results) < 1:
++                self.push_screen(ErrorScreen(f"Failed to find pmu/event {event}"))
++            elif self.cur_search_result:
++                self.expand_and_select(self.cur_search_result)
++            else:
++                self.set_searched_tree_node(previous=False)
++
++        self.push_screen(SearchScreen(), set_initial_focus)
++
++
++    def action_next(self) -> None:
++        """Next was chosen."""
++        self.set_searched_tree_node(previous=False)
++
++
++    def action_prev(self) -> None:
++        """Previous was chosen."""
++        self.set_searched_tree_node(previous=True)
++
++
++    def action_collapse(self) -> None:
++        """Collapse the potentially large number of events under a PMU."""
++        tree: Tree[str] = self.query_one("#pmus", Tree)
++        node = tree.cursor_node
++        if node and node.parent and node.parent.parent:
++            node.parent.collapse_all()
++            node.tree.scroll_to_node(node.parent)
++
++
++    def update_counts(self) -> None:
++        """Called every interval to update counts."""
++        if not self.evlist:
++            return
++
++        def update_count(cpu: int, count: int):
++            # Update the raw count display.
++            counter: Label = self.query(f"#counter_cpu{cpu}" if cpu >= 0 else "#counter_total")
++            if not counter:
++                return
++            counter = counter.first(Label)
++            counter.update(str(count))
++
++            # Update the sparkline.
++            line: Sparkline = self.query(f"#sparkline_cpu{cpu}" if cpu >= 0 else "#sparkline_total")
++            if not line:
++                return
++            line = line.first(Sparkline)
++            # If there are more events than the width, remove the front event.
++            if len(line.data) > line.size.width:
++                line.data.pop(0)
++            line.data.append(count)
++            line.mutate_reactive(Sparkline.data)
++
++        # Update the total and each CPU counts, assume there's just 1 evsel.
++        total = 0
++        self.evlist.disable()
++        for evsel in self.evlist:
++            for cpu in evsel.cpus():
++                aggr = 0
++                for thread in evsel.threads():
++                    counts = evsel.read(cpu, thread)
++                    aggr += counts.val
++                update_count(cpu, aggr)
++                total += aggr
++        update_count(-1, total)
++        self.evlist.enable()
++
++
++    def on_mount(self) -> None:
++        """When App starts set up periodic event updating."""
++        self.update_counts()
++        self.set_interval(self.interval, self.update_counts)
++
++
++    def set_pmu_and_event(self, pmu: str, event: str) -> None:
++        """Updates the event/description and starts the counters."""
++        # Remove previous event information.
++        if self.evlist:
++            self.evlist.disable()
++            self.evlist.close()
++            lines = self.query(CounterSparkline)
++            for line in lines:
++                line.remove()
++            lines = self.query(Counter)
++            for line in lines:
++                line.remove()
++
++        def pmu_event_description(pmu: str, event: str) -> str:
++            """Find and format event description for {pmu}/{event}/."""
++            def get_info(info: Dict[str, str], key: str):
++                return (info[key] + "\n") if key in info else ""
++
++            for p in perf.pmus():
++                if p.name() != pmu:
++                    continue
++                for info in p.events():
++                    if "name" not in info or info["name"] != event:
++                        continue
++
++                    desc = get_info(info, "topic")
++                    desc += get_info(info, "event_type_desc")
++                    desc += get_info(info, "desc")
++                    desc += get_info(info, "long_desc")
++                    desc += get_info(info, "encoding_desc")
++                    return desc
++            return "description"
++
++        # Parse event, update event text and description.
++        full_name = event if event.startswith(pmu) or ':' in event else f"{pmu}/{event}/"
++        self.query_one("#event_name", Label).update(full_name)
++        self.query_one("#event_description", Static).update(pmu_event_description(pmu, event))
++
++        # Open the event.
++        try:
++            self.evlist = perf.parse_events(full_name)
++            if self.evlist:
++                self.evlist.open()
++                self.evlist.enable()
++        except:
++            self.evlist = None
++
++        if not self.evlist:
++            self.push_screen(ErrorScreen(f"Failed to open {full_name}"))
++            return
++
++        # Add spark lines for all the CPUs. Note, must be done after
++        # open so that the evlist CPUs have been computed by propagate
++        # maps.
++        lines = self.query_one("#lines")
++        line = CounterSparkline(cpu=-1)
++        lines.mount(line)
++        for cpu in self.evlist.all_cpus():
++            line = CounterSparkline(cpu)
++            lines.mount(line)
++        line = Counter(cpu=-1)
++        lines.mount(line)
++        for cpu in self.evlist.all_cpus():
++            line = Counter(cpu)
++            lines.mount(line)
++
++
++    def compose(self) -> ComposeResult:
++        """Draws the app."""
++        def pmu_event_tree() -> Tree:
++            """Create tree of PMUs with events under."""
++            tree: Tree[str] = Tree("PMUs", id="pmus")
++            tree.root.expand()
++            for pmu in perf.pmus():
++                pmu_name = pmu.name().lower()
++                pmu_node = tree.root.add(pmu_name, data=pmu_name)
++                for event in sorted(pmu.events(), key=lambda x: x["name"]):
++                    if "name" in event:
++                        e = event["name"].lower()
++                        if "alias" in event:
++                            pmu_node.add_leaf(f'{e} ({event["alias"]})', data=e)
++                        else:
++                            pmu_node.add_leaf(e, data=e)
++            return tree
++
++        yield Header(id="header")
++        yield Horizontal(Vertical(pmu_event_tree(), id="events"),
++                         Vertical(Label("event name", id="event_name"),
++                                  Static("description", markup=False, id="event_description"),
++                                  ))
++        yield Label(id="active_search")
++        yield VerticalScroll(id="lines")
++        yield Footer(id="footer")
++
++
++    @on(Tree.NodeSelected)
++    def on_tree_node_selected(self, event: Tree.NodeSelected[str]) -> None:
++        """Called when a tree node is selected, selecting the event."""
++        if event.node.parent and event.node.parent.parent:
++            assert event.node.parent.data is not None
++            assert event.node.data is not None
++            self.set_pmu_and_event(event.node.parent.data, event.node.data)
++
++
++if __name__ == "__main__":
++    ap = argparse.ArgumentParser()
++    ap.add_argument('-I', '--interval', help="Counter update interval in seconds", default=0.1)
++    args = ap.parse_args()
++    app = IListApp(float(args.interval))
++    app.run()
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
