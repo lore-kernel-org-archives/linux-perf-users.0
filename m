@@ -1,286 +1,174 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C372E6D33;
-	Thu, 10 Jul 2025 11:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1EA259C83;
+	Thu, 10 Jul 2025 13:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752145225; cv=none; b=LJFEKO28uEGLVyFlUwZsOmsh4EcoJbOS3h5dP6oLkDDyODGh66GZmalIh7xxIMIm5JlZpxvWIA7hQynB59m0uypSnINC9StxQtiFAvUWlgg2I1ugF+FHKoJ3m67HYG391De+l+5sH4TlUtwaksIboxK/IvdN/OXp9xmsOrXfyoM=
+	t=1752154403; cv=none; b=qhj6PTH37mZR+q63UFE1b7iiH9eFlYVdWCrBURzXd7crqv591d7lF9JrYG+fTrEd2Z337WY3BgLzL9FI8781bYu0CSR60CVhd61f2NOzO0V7A1gUPtwSnfaXBtnh7i3iJ0Fz8NIPuQHbn5fPnlsjNCDcCgNKqFCwv1PR3f7Wm4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752145225; c=relaxed/simple;
-	bh=VMVrky7aEFXB1dsuXoZKTUr/9FXsjEpD11b0L6/8koo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BqpfiK34w62aMM76enNFY4IM2hSdXz6ikU3fjnqFkF9QIYIV8ZgqGcsUTVFbO67QIw7zg4+g3SAVtcZyg19vOr7mtPCKYu+eRkVSIVR2OH2fWXb7VxCsNVglzmEFk5ZfFR9GyDNGVV1YqwaRzveFNqZtBLGBQYcxfsDngrHbisc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k9NMBjNI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=o1IrUWpI; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1752154403; c=relaxed/simple;
+	bh=nfK/s+MDeAYPnclkJutwa89fLOtQFfFfkJwoIm0MldU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iu90PMNmwzWsxbXT0d/ND1yI8O6+SIGg8S6ZVGiDiXgA8kheuAH6ELdQmJF3IOCKQ/rAwcBDxfYEWPU8Qktb4Tcg1QAdLYQPUoxiKdVxzpruI10yTdJ/XCnEtRfJdCld+SN4vswGHZVbVS0oatt7yFcAZ6bqsIhR48GYvsrsZAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XzVTmlyD; arc=none smtp.client-ip=209.85.222.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k9NMBjNI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o1IrUWpI"
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1752145221;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LXOx5tAvnAjtoJdjEyryVJUnZ+UnzqrMm9Wls9voAK0=;
-	b=k9NMBjNIoPXUZSO6UXx2XkTapOSLDJ65Qj+jO6gR9sUj+IAaNm0XIZfule8s0RrPkdeNw1
-	hYtIo3KT/aUd4ZKnGtx1F3VfxCgekO73sHA4tJADcYSb6+1XS9gpaAG8j/Ouy9Mdb8RjnF
-	ab0VVgVFbNFlOAhG/1WFDLEYTdxS8afkMVuOMgZI+0D43j1VJvc4+kip3YCLPU18uB6E4+
-	VF88VfkrF5gAq9fYjXyjuGHGaFFeQIxq78FUSUABh/T4nbwa2iuyX0KHQPp9ImkM7X3HDK
-	30UxsCmOdAKqxYqcJWTOC7BjECQW6H2BxOKD7IQk94WVTpMH6EiPrxASi7jgDA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1752145221;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LXOx5tAvnAjtoJdjEyryVJUnZ+UnzqrMm9Wls9voAK0=;
-	b=o1IrUWpIBNW/LmaOcvkFndWUL6YYKWXZTgTcaV5GAadPM+bM9uVQjH+UNUlaLu1BuyQ8M9
-	6Ky28uP4SfdMLgAA==
-To: linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 6/6] perf bench futex: Remove support for IMMUTABLE
-Date: Thu, 10 Jul 2025 13:00:11 +0200
-Message-ID: <20250710110011.384614-7-bigeasy@linutronix.de>
-In-Reply-To: <20250710110011.384614-1-bigeasy@linutronix.de>
-References: <20250710110011.384614-1-bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XzVTmlyD"
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-881114808e4so524248241.3;
+        Thu, 10 Jul 2025 06:33:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752154400; x=1752759200; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=okRj10ybyFEKvbIUZoyobNaWGhdkXbHXR79UDV6Xmac=;
+        b=XzVTmlyDmQeFk6xhe8lX0Xq0pDvjzxb0TO6KGrIHxFHvbP+AH7SmB6X1Mq/5/Sp7m7
+         j6jVDp8QyTyEUwZczaTN65etHwIAjEaLRgSvwRS/1LWnSlxdY8r+bm1AsvYGjEQEPnLh
+         ac+QluyQK9g8nw0Far0QAdZORQ1IEFPZIos3aGg+bCPNK8AmY86x09+lwlKpz5xyVNzp
+         0jAuAy+tNP/xaKaj4c2UdltpvKISd84K8wJRhvaRoApDRbdvT0b5tuwNTLOgsYsHMbqE
+         3UFISX9H3dZrTxlx6NOxNmfkvA9BmOD2L3YR+8XHRvLCnTjbiR9s5iP2LTJh38fKDoE3
+         G1Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752154400; x=1752759200;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=okRj10ybyFEKvbIUZoyobNaWGhdkXbHXR79UDV6Xmac=;
+        b=PHEMkSZOPJupUUb9yCJv8+mwomieQTVes/AQRkwGcOHB3aQgRFWM5omAv2+qmjVDTY
+         AKYJMotHNrPtcPRmtXUyc1F9beQ6TkhhqY27XgVh5zAHBa2Aym3q1e5QkCRbEoBGsOs4
+         xZb75ZMQW2jMU1M3XvPwXg7HnZPx748AfXSZppNQwCfL6vtSuKIAHfjnfWOLwa2h4Tm7
+         0RgyKhTW7DXcK2+8Zn5BI9Kmtlazjhm59OAj4V4nvmUw0a5azMXsHatEl2K+H9jOPJpA
+         v1noG+F3Ix8dvdkf4mh0Gp8c6IHyTsIufgqwIRTbMTStuKHgzj7mSu8HkC2gltAFwe5q
+         WGrw==
+X-Forwarded-Encrypted: i=1; AJvYcCXEDP0WYJ7ZwFWWAIarQZnKhk9bCOFKMUcvbGqFzR916Z4DPzvTz5AcLLuF52Xi4DvO9sIz83IgCcQ8mZo=@vger.kernel.org, AJvYcCXbuiYm0aHcGD8kAEUQdvjcGdeUA1cpo1AjY0Y2AsGsrsaqLd2Ia5ETV1rMKsSxxK8qhYpdT13OpcEitfDat5nldg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwL/IfVgQBgMmyA633wRa+eaYKMpTeUtQG5w2QJe7tO9CZXd4Jf
+	vZAQCONrkpgMlZsIH+CE6fFHuZCgGMNFUcEkJImB/kfUeDrOLCYUgmZ/tftA7TwTf+1OEhL9xQe
+	ptYnFAAtmixV2qSkrBnVhk1iFOK8eEBw=
+X-Gm-Gg: ASbGncsHDJQFaVOlJdBrc5ExXF2ogQhWKAuJ56TxPNhAp2UHOhTXNaIlDGaeNnuD8MT
+	YY37ocvTd6LBeWvzwvvnY2RgCAFXI/JFQ5qpA9ljMes7JoHqzFJF2fmZ3939VdGFKd+tFnZb2uj
+	c1l4tfVic3QDPhDj3ZZ5BDXWgtsLXeb7wFapsI5eb/Tvc=
+X-Google-Smtp-Source: AGHT+IEUhipK8BpFIh0L4sG9itYETsTSsy89yM5cpmb8XEFU3fZM3fuGJBmhOPNVBh8q308LdjUHfnWtxkKgT25ywgY=
+X-Received: by 2002:a05:6122:2187:b0:531:2f51:7676 with SMTP id
+ 71dfb90a1353d-535d73c920bmr5063528e0c.9.1752154398939; Thu, 10 Jul 2025
+ 06:33:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250618215843.109941-1-usmanakinyemi202@gmail.com>
+ <20250704102007.6354ce9f@pumpkin> <9c59d1b1-a483-49d9-b57a-c86e3e020234@linaro.org>
+ <CAPSxiM9AHNrAhRjJKe9fHZ9s7VAQBF9c4S2_HWj2qu1A48hh+g@mail.gmail.com>
+In-Reply-To: <CAPSxiM9AHNrAhRjJKe9fHZ9s7VAQBF9c4S2_HWj2qu1A48hh+g@mail.gmail.com>
+From: Usman Akinyemi <usmanakinyemi202@gmail.com>
+Date: Thu, 10 Jul 2025 19:03:07 +0530
+X-Gm-Features: Ac12FXxTfmie9LGNZsXqRlfH_jKYoN7Yl1MYSUGdY_NjH8KL2bq5qU-PsDRLaX0
+Message-ID: <CAPSxiM9-tZjnssZMA_59ib8Ur+4VNWk4RYOsoFiWHC_Eq+drXA@mail.gmail.com>
+Subject: Re: [PATCH] perf/x86: Replace strncpy() with memcpy() for vendor string
+To: James Clark <james.clark@linaro.org>
+Cc: David Laight <david.laight.linux@gmail.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-It has been decided to remove the support IMMUTABLE futex.
-perf bench was one of the eary users for testing purposes. Now that the
-API is removed before it could be used in an official release, remove
-the bits from perf, too.
+On Fri, Jul 4, 2025 at 6:17=E2=80=AFPM Usman Akinyemi
+<usmanakinyemi202@gmail.com> wrote:
+>
+> On Fri, Jul 4, 2025 at 4:40=E2=80=AFPM James Clark <james.clark@linaro.or=
+g> wrote:
+> >
+> >
+> >
+> > On 04/07/2025 10:20 am, David Laight wrote:
+> > > On Thu, 19 Jun 2025 03:28:43 +0530
+> > > Usman Akinyemi <usmanakinyemi202@gmail.com> wrote:
+> > >
+> > >> strncpy() is unsafe for fixed-size binary data as
+> > >> it may not NUL-terminate and is deprecated for such
+> >
+> > But memcpy doesn't null terminate after the 4 chars either so I don't
+> > think that's a good justification. Surely you don't want null
+> > termination, because char *vendor is supposed to be a single string
+> > without extra nulls in the middle. It specifically adds a null at the
+> > end of the function.
+> >
+> > >> usage. Since we're copying raw CPUID register values,
+> > >> memcpy() is the correct and safe choice.
+> > >>
+> >
+> > There should be a fixes: tag here if it actually fixes something. But i=
+n
+> > this use case strncpy seems to behave identically to memcpy so I don't
+> > think we should change it. Except maybe if b,c,d have NULLs in them the=
+n
+> > strncpy will give you uninitialized parts where memcpy won't. But that'=
+s
+> > not mentioned in the commit message and presumably it doesn't happen?
+>
+> Hi James,
+>
+> Thanks for the review.
+>
+> What you said is true, strncpy and memcpy seem to behave identically.
+>
+> I should have rephrased the commit message in a different way.
+> While strncpy seems to work here, firstly, it is an interface that has
+> been deprecated.
+> See -> https://github.com/KSPP/linux/issues/90.
+> Also, memcpy is semantically correct for copying raw data compared to
+> strncpy which is for string.
+>
+> I am not sure if the b, c, d can have a null byte, I think using the
+> semantically correct function (memcpy) improves the robustness even in
+> cases where b, c, d have null byte.
+>
+> What do you think?
+Hello,
 
-Remove Remove support for IMMUTABLE futex.
+This is a gentle follow-up on this patch.
 
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- tools/include/uapi/linux/prctl.h              |  2 --
- tools/perf/bench/futex-hash.c                 |  1 -
- tools/perf/bench/futex-lock-pi.c              |  1 -
- tools/perf/bench/futex-requeue.c              |  1 -
- tools/perf/bench/futex-wake-parallel.c        |  1 -
- tools/perf/bench/futex-wake.c                 |  1 -
- tools/perf/bench/futex.c                      | 21 +++++--------------
- tools/perf/bench/futex.h                      |  1 -
- .../trace/beauty/include/uapi/linux/prctl.h   |  2 --
- 9 files changed, 5 insertions(+), 26 deletions(-)
+I would like to know if I can send the updated patch series with the
+correct commit message.
 
-diff --git a/tools/include/uapi/linux/prctl.h b/tools/include/uapi/linux/pr=
-ctl.h
-index 43dec6eed559a..3b93fb906e3c5 100644
---- a/tools/include/uapi/linux/prctl.h
-+++ b/tools/include/uapi/linux/prctl.h
-@@ -367,8 +367,6 @@ struct prctl_mm_map {
- /* FUTEX hash management */
- #define PR_FUTEX_HASH			78
- # define PR_FUTEX_HASH_SET_SLOTS	1
--# define FH_FLAG_IMMUTABLE		(1ULL << 0)
- # define PR_FUTEX_HASH_GET_SLOTS	2
--# define PR_FUTEX_HASH_GET_IMMUTABLE	3
-=20
- #endif /* _LINUX_PRCTL_H */
-diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
-index d2d6d7f3ea331..7e29f04da7449 100644
---- a/tools/perf/bench/futex-hash.c
-+++ b/tools/perf/bench/futex-hash.c
-@@ -56,7 +56,6 @@ static struct bench_futex_parameters params =3D {
-=20
- static const struct option options[] =3D {
- 	OPT_INTEGER( 'b', "buckets", &params.nbuckets, "Specify amount of hash bu=
-ckets"),
--	OPT_BOOLEAN( 'I', "immutable", &params.buckets_immutable, "Make the hash =
-buckets immutable"),
- 	OPT_UINTEGER('t', "threads", &params.nthreads, "Specify amount of threads=
-"),
- 	OPT_UINTEGER('r', "runtime", &params.runtime, "Specify runtime (in second=
-s)"),
- 	OPT_UINTEGER('f', "futexes", &params.nfutexes, "Specify amount of futexes=
- per threads"),
-diff --git a/tools/perf/bench/futex-lock-pi.c b/tools/perf/bench/futex-lock=
--pi.c
-index 5144a158512cc..40640b6744279 100644
---- a/tools/perf/bench/futex-lock-pi.c
-+++ b/tools/perf/bench/futex-lock-pi.c
-@@ -47,7 +47,6 @@ static struct bench_futex_parameters params =3D {
-=20
- static const struct option options[] =3D {
- 	OPT_INTEGER( 'b', "buckets", &params.nbuckets, "Specify amount of hash bu=
-ckets"),
--	OPT_BOOLEAN( 'I', "immutable", &params.buckets_immutable, "Make the hash =
-buckets immutable"),
- 	OPT_UINTEGER('t', "threads", &params.nthreads, "Specify amount of threads=
-"),
- 	OPT_UINTEGER('r', "runtime", &params.runtime, "Specify runtime (in second=
-s)"),
- 	OPT_BOOLEAN( 'M', "multi",   &params.multi, "Use multiple futexes"),
-diff --git a/tools/perf/bench/futex-requeue.c b/tools/perf/bench/futex-requ=
-eue.c
-index a2f91ee1950b3..0748b0fd689e8 100644
---- a/tools/perf/bench/futex-requeue.c
-+++ b/tools/perf/bench/futex-requeue.c
-@@ -52,7 +52,6 @@ static struct bench_futex_parameters params =3D {
-=20
- static const struct option options[] =3D {
- 	OPT_INTEGER( 'b', "buckets", &params.nbuckets, "Specify amount of hash bu=
-ckets"),
--	OPT_BOOLEAN( 'I', "immutable", &params.buckets_immutable, "Make the hash =
-buckets immutable"),
- 	OPT_UINTEGER('t', "threads",  &params.nthreads, "Specify amount of thread=
-s"),
- 	OPT_UINTEGER('q', "nrequeue", &params.nrequeue, "Specify amount of thread=
-s to requeue at once"),
- 	OPT_BOOLEAN( 's', "silent",   &params.silent, "Silent mode: do not displa=
-y data/details"),
-diff --git a/tools/perf/bench/futex-wake-parallel.c b/tools/perf/bench/fute=
-x-wake-parallel.c
-index ee66482c29fd1..6aede7c46b337 100644
---- a/tools/perf/bench/futex-wake-parallel.c
-+++ b/tools/perf/bench/futex-wake-parallel.c
-@@ -63,7 +63,6 @@ static struct bench_futex_parameters params =3D {
-=20
- static const struct option options[] =3D {
- 	OPT_INTEGER( 'b', "buckets", &params.nbuckets, "Specify amount of hash bu=
-ckets"),
--	OPT_BOOLEAN( 'I', "immutable", &params.buckets_immutable, "Make the hash =
-buckets immutable"),
- 	OPT_UINTEGER('t', "threads", &params.nthreads, "Specify amount of threads=
-"),
- 	OPT_UINTEGER('w', "nwakers", &params.nwakes, "Specify amount of waking th=
-reads"),
- 	OPT_BOOLEAN( 's', "silent",  &params.silent, "Silent mode: do not display=
- data/details"),
-diff --git a/tools/perf/bench/futex-wake.c b/tools/perf/bench/futex-wake.c
-index 8d6107f7cd941..a31fc1563862e 100644
---- a/tools/perf/bench/futex-wake.c
-+++ b/tools/perf/bench/futex-wake.c
-@@ -52,7 +52,6 @@ static struct bench_futex_parameters params =3D {
-=20
- static const struct option options[] =3D {
- 	OPT_INTEGER( 'b', "buckets", &params.nbuckets, "Specify amount of hash bu=
-ckets"),
--	OPT_BOOLEAN( 'I', "immutable", &params.buckets_immutable, "Make the hash =
-buckets immutable"),
- 	OPT_UINTEGER('t', "threads", &params.nthreads, "Specify amount of threads=
-"),
- 	OPT_UINTEGER('w', "nwakes",  &params.nwakes, "Specify amount of threads t=
-o wake at once"),
- 	OPT_BOOLEAN( 's', "silent",  &params.silent, "Silent mode: do not display=
- data/details"),
-diff --git a/tools/perf/bench/futex.c b/tools/perf/bench/futex.c
-index 4c4fee107e591..1481196a22f0c 100644
---- a/tools/perf/bench/futex.c
-+++ b/tools/perf/bench/futex.c
-@@ -9,21 +9,17 @@
- #ifndef PR_FUTEX_HASH
- #define PR_FUTEX_HASH                   78
- # define PR_FUTEX_HASH_SET_SLOTS        1
--# define FH_FLAG_IMMUTABLE              (1ULL << 0)
- # define PR_FUTEX_HASH_GET_SLOTS        2
--# define PR_FUTEX_HASH_GET_IMMUTABLE    3
- #endif // PR_FUTEX_HASH
-=20
- void futex_set_nbuckets_param(struct bench_futex_parameters *params)
- {
--	unsigned long flags;
- 	int ret;
-=20
- 	if (params->nbuckets < 0)
- 		return;
-=20
--	flags =3D params->buckets_immutable ? FH_FLAG_IMMUTABLE : 0;
--	ret =3D prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, params->nbuckets, f=
-lags);
-+	ret =3D prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, params->nbuckets, 0=
-);
- 	if (ret) {
- 		printf("Requesting %d hash buckets failed: %d/%m\n",
- 		       params->nbuckets, ret);
-@@ -47,18 +43,11 @@ void futex_print_nbuckets(struct bench_futex_parameters=
- *params)
- 			printf("Requested: %d in usage: %d\n", params->nbuckets, ret);
- 			err(EXIT_FAILURE, "prctl(PR_FUTEX_HASH)");
- 		}
--		if (params->nbuckets =3D=3D 0) {
-+		if (params->nbuckets =3D=3D 0)
- 			ret =3D asprintf(&futex_hash_mode, "Futex hashing: global hash");
--		} else {
--			ret =3D prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_IMMUTABLE);
--			if (ret < 0) {
--				printf("Can't check if the hash is immutable: %m\n");
--				err(EXIT_FAILURE, "prctl(PR_FUTEX_HASH)");
--			}
--			ret =3D asprintf(&futex_hash_mode, "Futex hashing: %d hash buckets %s",
--				       params->nbuckets,
--				       ret =3D=3D 1 ? "(immutable)" : "");
--		}
-+		else
-+			ret =3D asprintf(&futex_hash_mode, "Futex hashing: %d hash buckets",
-+				       params->nbuckets);
- 	} else {
- 		if (ret <=3D 0) {
- 			ret =3D asprintf(&futex_hash_mode, "Futex hashing: global hash");
-diff --git a/tools/perf/bench/futex.h b/tools/perf/bench/futex.h
-index 9c9a73f9d865e..dd295d27044ac 100644
---- a/tools/perf/bench/futex.h
-+++ b/tools/perf/bench/futex.h
-@@ -26,7 +26,6 @@ struct bench_futex_parameters {
- 	unsigned int nwakes;
- 	unsigned int nrequeue;
- 	int nbuckets;
--	bool buckets_immutable;
- };
-=20
- /**
-diff --git a/tools/perf/trace/beauty/include/uapi/linux/prctl.h b/tools/per=
-f/trace/beauty/include/uapi/linux/prctl.h
-index 43dec6eed559a..3b93fb906e3c5 100644
---- a/tools/perf/trace/beauty/include/uapi/linux/prctl.h
-+++ b/tools/perf/trace/beauty/include/uapi/linux/prctl.h
-@@ -367,8 +367,6 @@ struct prctl_mm_map {
- /* FUTEX hash management */
- #define PR_FUTEX_HASH			78
- # define PR_FUTEX_HASH_SET_SLOTS	1
--# define FH_FLAG_IMMUTABLE		(1ULL << 0)
- # define PR_FUTEX_HASH_GET_SLOTS	2
--# define PR_FUTEX_HASH_GET_IMMUTABLE	3
-=20
- #endif /* _LINUX_PRCTL_H */
---=20
-2.50.0
-
+Thanks and Regards
+>
+> Thank you.
+> >
+> > >> Signed-off-by: Usman Akinyemi <usmanakinyemi202@gmail.com>
+> > >> ---
+> > >>   tools/perf/arch/x86/util/header.c | 6 +++---
+> > >>   1 file changed, 3 insertions(+), 3 deletions(-)
+> > >>
+> > >> diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86=
+/util/header.c
+> > >> index 412977f8aa83..43ba55627817 100644
+> > >> --- a/tools/perf/arch/x86/util/header.c
+> > >> +++ b/tools/perf/arch/x86/util/header.c
+> > >> @@ -16,9 +16,9 @@ void get_cpuid_0(char *vendor, unsigned int *lvl)
+> > >>      unsigned int b, c, d;
+> > >>
+> > >>      cpuid(0, 0, lvl, &b, &c, &d);
+> > >> -    strncpy(&vendor[0], (char *)(&b), 4);
+> > >> -    strncpy(&vendor[4], (char *)(&d), 4);
+> > >> -    strncpy(&vendor[8], (char *)(&c), 4);
+> > >> +    memcpy(&vendor[0], (char *)(&b), 4);
+> > >> +    memcpy(&vendor[4], (char *)(&d), 4);
+> > >> +    memcpy(&vendor[8], (char *)(&c), 4);
+> > >
+> > > Why not:
+> > >       cpuid(0, 0, lvl, (void *)vendor, (void *)(vendor + 8), (void *)=
+(vendor + 4));
+> > >
+> > >
+> > >>      vendor[12] =3D '\0';
+> > >>   }
+> > >>
+> > >
+> >
