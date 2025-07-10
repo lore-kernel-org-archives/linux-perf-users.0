@@ -1,67 +1,50 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFEFD285CB9
-	for <linux-perf-users@vger.kernel.org>; Thu, 10 Jul 2025 05:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61DE51F1313;
+	Thu, 10 Jul 2025 07:47:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752126452; cv=none; b=mbcV5dkaXg5Hs08Hej/SIDae/mn3+xDMy59dLVwZ09fjM/M4pGW8k3IuXGoD6D6fb647wlu9PX9rOq6f+dcDyT3eNG81vqfCvjmE2rbQDnNNoMwbI/48SEVjAzK4oiQAXjZrMwr0njZYhHvpfbsUOebSifSXZBmevkzH9L2E12I=
+	t=1752133645; cv=none; b=ukvihr+nSkMgX2Z8sNoZeEC/NFUK9l/iqOmsALsutMXtj5rBvlF1lLKK7u78+3ufJJIn2MGCfWM37Qn0bDYtOmhybNIbplVOPO3K1/epNHhkKFcBSvu1tSxlrObVJC6wg0bofh/Wa6vX6q2wWsFbzXKmOHRROIm+CQ8+ifpYgIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752126452; c=relaxed/simple;
-	bh=8qxUkjLgaDFESpcVov+37pBe3LxCqjVHuKeMLJ5daqY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aFTjLENzjalVl/q0hU52PFmH2BtgLJr4LZu0Dt8h8EfbWdOL2THn89yLge4ythLWrpSeXUuchpk9GXfUxAzxD0sEoMm0O0Ay1mpRJou8BvBRG6hXC685jLYE/iXKDfQOJtNdAeAU8YlDGu0YI/HylyDw1e5sq+Bsgk+0DhhNFnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=F7L8UsYV; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1752133645; c=relaxed/simple;
+	bh=UqvmjkgZiJytd1q6ZQs8e6B+QvTW5XkRmxayF8Sjnls=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dcmCSOfTZHJpqgeE8aVDdk7WcikqNoZ1IIwWQ4w0f2HUj19IofhSYxcRP3mrOJ75qp8TWdMKCZmq8uB38gj54D53Q82UDmvnGyF7u8XfE3lipQE+doBoGEp1vWAxxF9wY3OU+QLAVd8xzY8b9USRg2aPyTq7jmvkxg6TVneN3j4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=VhSXHgvk; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="F7L8UsYV"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 569LbJQg025932;
-	Thu, 10 Jul 2025 05:47:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=dOA2S2
-	2e+6MmT1LnRvf93hjky0vmdDFv8f1AVrejjLk=; b=F7L8UsYVDdAX9GSUpnFX4M
-	WUp86qC9TRI7wMMDY3YnpDDcIexUb1rd9PQ9tlyBWdSpHc0tT/8FP5zJvmfGzOSF
-	2NjwLWFQ1CdzFTwUcwj7xmnGNU73eaz801et3DkZJBIHRT58nBlhJXZK6eBGYoMB
-	3Y3gJrdxOXzWMhNBqTubJdZ3k2ZEZ+E967hW/I9EMNDrDx9zVNSvidAdgnhIoFgq
-	laWCETLs64z2idJqskRszdJi3wRPXxHL5+bXf1f+K9VI7BbmHasBiG0xNNBDK+RH
-	NmzrEDQijriGuATIfPPpDiIu5c5jGeIhBVEI+LKINoe7KOTSUdvSHXmEDsE0E3ug
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47ptjr9yvp-1
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="VhSXHgvk"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56A6nMQ4020561;
+	Thu, 10 Jul 2025 09:27:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	FteJQilrWBfBvhIiChMigkGkPT4QD1u6xypvpY95TU0=; b=VhSXHgvkoCKjL0PB
+	yLPzLljS9EtzmH6qBo4MWrhd/pumsuUD8+ON95lET7nmSmqFrQnoRVupBYdYAlfu
+	djGjVlo43TAdWUmsXUZgnroiJwMw47odRN0mNYABKDiOZ51Bt/EJzZNDPzmhBCJ0
+	CMbstpvVa2BWVI2D8EppAjFvYXVZ4ZhxSrngbuZELHV/aY6bFeDQ35BAlp1S7N2x
+	GeJfMjn0DSAq3a6zy8jnfueD2KysLIEasSHwMmzGQLS15g1t/eLo25EJf82KRv5d
+	sp1MjzM+BSKvkf8g6WMx0/jPp6e9fRSs21UvN8PDDjbqKUdd6eMSNQ0AzEYvOb8v
+	L38+Tg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47ptxjf7w9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Jul 2025 05:47:26 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 56A5iJaA020578;
-	Thu, 10 Jul 2025 05:47:26 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47ptjr9yvn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Jul 2025 05:47:25 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 56A5enDT021561;
-	Thu, 10 Jul 2025 05:47:25 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 47qectv9xd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Jul 2025 05:47:25 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 56A5lNra33751568
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Jul 2025 05:47:23 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 74B3920043;
-	Thu, 10 Jul 2025 05:47:23 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 515DA20040;
-	Thu, 10 Jul 2025 05:47:23 +0000 (GMT)
-Received: from [9.152.212.130] (unknown [9.152.212.130])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 10 Jul 2025 05:47:23 +0000 (GMT)
-Message-ID: <18cb8b10-4788-4d2c-9160-9d88dcec5c91@linux.ibm.com>
-Date: Thu, 10 Jul 2025 07:47:23 +0200
+	Thu, 10 Jul 2025 09:27:59 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id CC7DF40048;
+	Thu, 10 Jul 2025 09:26:55 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 81309AE9D80;
+	Thu, 10 Jul 2025 09:26:06 +0200 (CEST)
+Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 10 Jul
+ 2025 09:26:05 +0200
+Message-ID: <cadb2bcc-9a2a-447a-ac03-459f3e37a173@foss.st.com>
+Date: Thu, 10 Jul 2025 09:26:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,74 +52,71 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 1/1] perf test: Increase load in lock contention
- test on low-activity systems
-To: Jan Polensky <japo@linux.ibm.com>, adrian.hunter@intel.com,
-        irogers@google.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org
-References: <20250709203809.3211178-1-japo@linux.ibm.com>
+Subject: Re: [PATCH RFC 1/2] dt-bindings: memory: add jedec,ddr[3-4]-channel
+ binding
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Will Deacon <will@kernel.org>,
+        Mark
+ Rutland <mark.rutland@arm.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20250626-ddr-bindings-v1-0-cae30933c54c@foss.st.com>
+ <20250626-ddr-bindings-v1-1-cae30933c54c@foss.st.com>
+ <e016efd6-891b-467e-8a4e-9ea53b7006a9@kernel.org>
 Content-Language: en-US
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <20250709203809.3211178-1-japo@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+In-Reply-To: <e016efd6-891b-467e-8a4e-9ea53b7006a9@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=GL8IEvNK c=1 sm=1 tr=0 ts=686f53ee cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=x4kxwI2lhZTCVj833_4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: EpcKC404fjMj24PwXX-RrdQ4N_JI76Cz
-X-Proofpoint-GUID: IeGKfqOt4_3oCzHuUgouBJ_lcO0ukWJB
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzEwMDA0OCBTYWx0ZWRfXy8GIEhzZby0p 8f6NZK9W+CSOf/Qux7aaHZMEyYLJNpIo0/oOrDku9/ij5kMxNH/VcnCgMO8dZmKGls35+mVRGb7 V3+CtxixqJNC9jzmVZGgRjuXsKHCuOBrgKR2AmEmSCobuLB43X50UX6UuBqcLJwR1KOkxr/ELJV
- goxUhtMFY/9mtr3/XOkf+tSgjDfw8hX2g3buPhD/tzI6Bvdqgo1cp4hKcw4sgg9+X+ICDZZrILs oc0FWQ9FuL0jevSDG3dERAyjzpkIov0WsOtlw8ANd8/lkPAVvhVsItOGzs4Zyyv6hh/XpdPVoQh lEvPv3sD6A9kEi7q9F2r3QdVe3BgYBbZnIhoGJW+H9xmddCjUIFk/4Uis1Jw+RE6Xn4mPkMlEz8
- VcoeKGPNJM6nBygf3m6olGh8waN7AgPmGU82Lp8dczktW73M075Qwehlu/AvUt7rNHaiXVC1
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-07-09_05,2025-07-09_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- clxscore=1015 impostorscore=0 suspectscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 mlxscore=0 spamscore=0 mlxlogscore=999
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507100048
 
-On 7/9/25 22:38, Jan Polensky wrote:
-> On low-activity systems, the 'kernel lock contention analysis test'
-> often fails due to insufficient system load. To address this, the test
-> now increases load by using multiple groups and threads in 'perf bench
-> sched messaging', scaled to the number of available CPUs.
+Hi Krzysztof,
+
+On 7/9/25 20:27, Krzysztof Kozlowski wrote:
+> On 26/06/2025 21:48, Clément Le Goffic wrote:
+>> Introduce as per jdec,lpddrX-channel binding, jdec,ddr[3-4]-channel
 > 
-> Signed-off-by: Jan Polensky <japo@linux.ibm.com>
-> ---
->  tools/perf/tests/shell/lock_contention.sh | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> s/jdec/jedec/
+
+Right thanks
+
 > 
-> diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
-> index 30d195d4c62f..e859e1503b5c 100755
-> --- a/tools/perf/tests/shell/lock_contention.sh
-> +++ b/tools/perf/tests/shell/lock_contention.sh
-> @@ -44,7 +44,8 @@ check() {
->  test_record()
->  {
->  	echo "Testing perf lock record and perf lock contention"
-> -	perf lock record -o ${perfdata} -- perf bench sched messaging > /dev/null 2>&1
-> +	perf lock record -o ${perfdata} -- perf bench sched messaging \
-> +		--group "$(nproc)" --thread "$(nproc)" > /dev/null 2>&1
->  	# the output goes to the stderr and we expect only 1 output (-E 1)
->  	perf lock contention -i ${perfdata} -E 1 -q 2> ${result}
->  	if [ "$(cat "${result}" | wc -l)" != "1" ]; then
-> --
-> 2.48.1
+>> binding.
+>>
+>> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+>> ---
 > 
 > 
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    ddr_channel: ddr3-channel@0 {
+>> +        compatible = "jedec,ddr3-channel";
+>> +        io-width = <16>;
+> 
+> Missing reg... or not? What was your intention
 
-Reviewed-by: Thomas Richter <tmricht@linux.ibm.com>
+Indeed no reg.
+I'll drop the "@0" for the next version.
 
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
+> 
+> 
+>> +    };
+>>
+> 
+> 
+> Best regards,
+> Krzysztof
 
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
