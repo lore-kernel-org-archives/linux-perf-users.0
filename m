@@ -1,137 +1,129 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44302ED149
-	for <linux-perf-users@vger.kernel.org>; Fri, 11 Jul 2025 15:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0EB62ED879
+	for <linux-perf-users@vger.kernel.org>; Fri, 11 Jul 2025 15:55:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752248812; cv=none; b=d/mqDz2z6T7FFbwBIoe/QTNwcDXinsH8w4hB4Cq+UWlCmlUNv2lD21UaozZBkU1rDNKKke4xkR8Gx4xgHIWVaoJG+ijr6ctsDQr083I6rFZNpS/fTJ+2Jbu0yy9TayqMvYWAnrgwrnkgw383xWShl/PFWIa0b9ZAXsAtXm2SmDY=
+	t=1752249330; cv=none; b=ivu9I8zdm8qzyj0grC4ZWjEFiwF05h5xlaZ6lKJz7eOASOQnFhCTZrDu6SdkhCjmB9g7UvWhgR0QhMfhQ/Fzf/XwI8QoNxS4+pWCUCBk25Usldb4+y6VPQmLjvxc+Wx1s3ONYqvkhTabQRt+i2w0A+XtgOm0IZuYc559ZP3BWqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752248812; c=relaxed/simple;
-	bh=hEHkwPv8vsX51jUtxtRrJb0yEIZ/va11qr9IMnIo72k=;
+	s=arc-20240116; t=1752249330; c=relaxed/simple;
+	bh=ZJmv2kGsngYQ0j91GkPhYp/ZYB34ERAIc1y7RI+IQLs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ao8qWq21EVc6THhuEHm0QHS2c8mf2LUSQdeYL4QgRe0layUsR1YB5pG8es3XlC6ZltdHNZ1XzMaH7W+zZMmO7uULoSOapw6XQfrnwjpqdL4RuqDAxwudl5WUzkRKj7M7s0oHo3DwD/T4wqHGaWVJTkEQOMnY14e2mRH5EJBXBN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ij9y8cry; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=CBuXZxQxGUmtC96B5xTFEWKmXt4qskl+nrp/Usyl1i3Lox0IecNMAvW67Bfrz1HD7Hu5zeHyDDRGdjKwDNWgB5lI1UPSokDsgwvRZ9vDZXdRoeKSmVd2hcwJvASFOURhJIT8So4JIChGqCw15qSeRLs5J85cwdPQstxUI3bG1pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hGfd1c3B; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ij9y8cry"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3df2fa612c4so217365ab.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Jul 2025 08:46:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hGfd1c3B"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b26f7d2c1f1so2570165a12.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Jul 2025 08:55:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1752248810; x=1752853610; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z9LqmVHDuYjrYkUHFpQS2h/9pWr7Qcff0gqlSRds5QA=;
-        b=ij9y8cry5zKbeSoguhwwvLt2kBdgfp7Xadvs2qxAIQ4Dx4FOj9/fqh9kAv8S0khnu6
-         xpeol0AW6b14WGIRfDiEokDqd5ku+RCSMAG5rMy6pXRKVzuDlvQ2v/cO/H5az4LEmo1r
-         hvOOlLBdu4kJyyR8nPzmPU2T1UZqgmjyOaSu5iMvWi/PBVz3XyEK71YDDAsfA2+hH3YH
-         W52aPpWyfaNaNvFGtxjz01Q50UeZOQyPOKRMnYIYuyxutjwIB1SAhi3gxmbjMs4TpBuz
-         C6FI0mZKoe9ayQ38Vl3H675DStK88/OqDHg/e4k+rt752ufjv2+7BjgZ8qt0zNoFBUCA
-         XwFQ==
+        d=linaro.org; s=google; t=1752249328; x=1752854128; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=BSUEvMdfd3OtQjcJtnT8MNHYb+tPfeWYuWYxCvun5Ec=;
+        b=hGfd1c3Bmfs+N0Q6OIahJD/ljkhLyGSm5/VGuW7O7gWMM5pH9pt3Ez+dI1bRb4YxW+
+         n5v+S44yuDC7Kf7cTgmJB3Lvl8mPPJgZyCe4P2GtZRgWMzHo6g9fOc1M/fhbo2v0mYKr
+         2WdMC98Sy6TuWBe0mFGqj8HmVg/3LugMc+NZmOSggcb8kk1vaIE8G66+1e/c/izjec4f
+         QtYd+vkEzmnTJTcJV0AwCqCWv4Z6BaHLpvNAf0Sb8DWxHCm6l1yD2QWDGd7HPje2Qffw
+         CAB/y2uox31k7/3FAyMiOh9Sh5w0AORpHsQddsO1/q+pYLs6lEZhhaxrK7xeF9AIZB6s
+         4L6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752248810; x=1752853610;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z9LqmVHDuYjrYkUHFpQS2h/9pWr7Qcff0gqlSRds5QA=;
-        b=WVxJWl9P6Z4dTrqOXvm/u+li7idZdT21fC1a/ZO1L2q2RGX1+6L0xwnO0dEqDRGgQO
-         2U96niYQA+z5SximJIDOmbnX7so0VyVPF80es+Tj6PGccbzAczyQHDSqUICFo0CFzU6v
-         2V035Zrk0DiJnp6pHNE3CMFYc2drrQ0DNV1Jv4Fr7dCu9yyU3QHWQSqzL/w18ix36kFg
-         VNB68zM91IuROEj0rSIZaE754Rs9+5Ftq/bSgAev17Xb43xx6ckwGbOcSGl0OSwrbDwF
-         oI6mqd9bq7P1lc17K11502Hm6Jf7DiQLrmhTEW2Z6osQyKCK95tWf/add0C7CA20Krxx
-         Je5A==
-X-Forwarded-Encrypted: i=1; AJvYcCXrf4mJDenskB+FKzkP2vTOtAB4xdHjXA5RJ8BUhxwTqiqXXi/RSR70mY4qOr4Ht7L4oHAym9+E5rupyDJZtfrW@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdXc3wc3OtEXlkb80eYb5hrPOEghTqMUBjptgir66R/tPhLRcv
-	hBmE25YXwqouzJb4Qx1ncPcmPeQS+fMVkAEfiYWzLmH0FNnhTz2aRSlNTisOaX0DE88Ywh+tJNh
-	nbr/ABr/ec+anEsJ04KfQVK17elrFDsb1YEMowUNX
-X-Gm-Gg: ASbGnctj8Fu41KENpcmnbtm0FY17+hsGSylsSfpDHuAF1qXswJqTZAxsHN3zGO+5b5W
-	S+QvbdABYspfgHzZ+ozsFlLR59ZZIAHxtftvHkyoqKIAVQSnb9YBIK+kHHc2u4xFF2NV3McSJRU
-	e7XtXRVZkPtMkSIG1BHqTWdLZdyjemzsbmcKmRjg9OYNUyHLyk3EUCGnUkxmuK8Ui8ZQohH+Y79
-	PSRPO6Kyr8+NPb31U11AWfn8eX+IdTAByBF
-X-Google-Smtp-Source: AGHT+IElNwBTran63IPg0x97+HFNaKKHbcj1unKuPYglJNVo+L/yKBGkHlmmaOLE3DhFEnvPNh7wVuKpa8qUZCoROHk=
-X-Received: by 2002:a05:6e02:2181:b0:3e0:5c48:8431 with SMTP id
- e9e14a558f8ab-3e254924c8dmr3420505ab.19.1752248809533; Fri, 11 Jul 2025
- 08:46:49 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1752249328; x=1752854128;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BSUEvMdfd3OtQjcJtnT8MNHYb+tPfeWYuWYxCvun5Ec=;
+        b=YfAV5ItEx/d7u+mqJTpI5mlX5TtIj+4gOg67tcHhci6KIlYxv7kcPdSWygVRNvBgqD
+         BimcLrVXSQqF0wCrZ0COQXs0Swl+P0Jz8aCEPqtvH7/gy6W2yc5VxfpFub/BDfkc5ZQm
+         79GotWLS0O9UgweRZlcG+enfbgQRkmyFixIvrG7a3RnwWCEdknlR2mZ86iharMPoEKAG
+         xffvnMsoFq+gWiQlAnaKJVCFddGq0oLPcSIHPlc4XvFNryrATI/pdUOEH2Pt0D4lmUlp
+         blMGjTJQjvk84R+HiHCvcF4PO2b8wRnQyVLfRQ+v5C8KH7LDo01ZJtyxygWhspjqIWiS
+         jsrA==
+X-Forwarded-Encrypted: i=1; AJvYcCVvaLR7csp32H/m6QuRPKfp36tSMuilOyLozvpWEH26oo7abcnPXIFrQNAiBs4xxSiP1BWdta9C4gRpYdzq9+nH@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPMnQGHX5dn9GM+n0dSo66xbQEfyE0W7UNnPFknW69vnm62YTS
+	NRCxzje15ySvgtDpuVtkkwT4IPlP3pyNWdyS0NQ4BtV9TQPGAaxW4E7sW38cLqQsDgLgGiGsBEr
+	jfz88fS3ynZVFjfId6IWkW7eYwyA5cIwQw8Q7cGyUXw==
+X-Gm-Gg: ASbGncvRH5goq4f7jXtRla/fwBwA5mV0/jkib5BsiYNvi2rb1eVVSmbMzEBa4BGXrUP
+	AOarQuU6JO5Jijf52+kUAMwQZSVa6p6i4YwTs7A8WNK6+lnP3r+XMdmotnzrS21iCXLLyG+JKyi
+	jTz12eK8/2Y7SlFkKOhB/gPAX7LiHes3I8PbQopOQyOGLFJgFR9/XP3yVcdnX5KKC2ZNX/wsc5p
+	UvShe71/MTsB0lgAcGcJuaGhZrzkVmMzgOalSde
+X-Google-Smtp-Source: AGHT+IH2f1kHKtkhmbSDnFwU9FsRvu0+CvMkmIgA/3wZF988KeEXY1isz3v5NjcaxVFtljjYa3Rl3Y2Bu4pS6enpzQo=
+X-Received: by 2002:a05:6a20:244a:b0:230:f847:6586 with SMTP id
+ adf61e73a8af0-2311f4315fcmr6577705637.29.1752249327964; Fri, 11 Jul 2025
+ 08:55:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250711-perf_fix_breakpoint_accounting-v1-1-b314393023f9@arm.com>
-In-Reply-To: <20250711-perf_fix_breakpoint_accounting-v1-1-b314393023f9@arm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 11 Jul 2025 08:46:38 -0700
-X-Gm-Features: Ac12FXw9Cg9avYPcJ5rB7lmXzqZ-O_1TpTo4ihzBu-TkAjB6N4I4vj_GQT1A1HE
-Message-ID: <CAP-5=fUghVs4hHxnAc6cTs+SfmR7+pS4bOpMXJF_kX5UchUt4g@mail.gmail.com>
-Subject: Re: [PATCH] perf tests bp_account: Fix leaked file descriptor
-To: Leo Yan <leo.yan@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Aishwarya TCV <aishwarya.tcv@arm.com>
+References: <20250708151502.561-1-alireza.sanaee@huawei.com> <20250708151502.561-4-alireza.sanaee@huawei.com>
+In-Reply-To: <20250708151502.561-4-alireza.sanaee@huawei.com>
+From: Mike Leach <mike.leach@linaro.org>
+Date: Fri, 11 Jul 2025 16:55:15 +0100
+X-Gm-Features: Ac12FXy6OFHr0HcNSbuwxmKfYiD99i1dpKvfe3JL9VMIP9NGMICwwAp3JOTw9ag
+Message-ID: <CAJ9a7VhfW2RYXv6ZO28m65C75iyJUqTYos1tFXs8gAG5gx9yDA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] coresight: cti: Use of_cpu_phandle_to_id for
+ grabbing CPU id
+To: Alireza Sanaee <alireza.sanaee@huawei.com>
+Cc: krzk@kernel.org, robh@kernel.org, coresight@lists.linaro.org, 
+	devicetree@vger.kernel.org, dianders@chromium.org, james.clark@linaro.org, 
+	jonathan.cameron@huawei.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linuxarm@huawei.com, mark.rutland@arm.com, ruanjinjie@huawei.com, 
+	saravanak@google.com, shameerali.kolothum.thodi@huawei.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 11, 2025 at 4:10=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
->
-> Since the commit e9846f5ead26 ("perf test: In forked mode add check that
-> fds aren't leaked"), the test "Breakpoint accounting" reports the error:
->
->   # perf test -vvv "Breakpoint accounting"
->   20: Breakpoint accounting:
->   --- start ---
->   test child forked, pid 373
->   failed opening event 0
->   failed opening event 0
->   watchpoints count 4, breakpoints count 6, has_ioctl 1, share 0
->   wp 0 created
->   wp 1 created
->   wp 2 created
->   wp 3 created
->   wp 0 modified to bp
->   wp max created
->   ---- end(0) ----
->   Leak of file descriptor 7 that opened: 'anon_inode:[perf_event]'
->
-> A watchpoint's file descriptor was not properly released. This patch
-> fixes the leak.
->
-> Fixes: 032db28e5fa3 ("perf tests: Add breakpoint accounting/modify test")
-> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
+Hi,
 
-Reviewed-by: Ian Rogers <irogers@google.com>
-
-Thanks,
-Ian
-
+On Tue, 8 Jul 2025 at 16:16, Alireza Sanaee <alireza.sanaee@huawei.com> wrote:
+>
+> Use the newly created API to grab CPU id.
+>
+> Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>
 > ---
->  tools/perf/tests/bp_account.c | 1 +
->  1 file changed, 1 insertion(+)
+>  .../hwtracing/coresight/coresight-cti-platform.c   | 14 +-------------
+>  1 file changed, 1 insertion(+), 13 deletions(-)
 >
-> diff --git a/tools/perf/tests/bp_account.c b/tools/perf/tests/bp_account.=
-c
-> index 4cb7d486b5c178c622be4fc7e9c8c5a924df9d9b..047433c977bc9de4f8984268a=
-2a9826d6bfa6f17 100644
-> --- a/tools/perf/tests/bp_account.c
-> +++ b/tools/perf/tests/bp_account.c
-> @@ -104,6 +104,7 @@ static int bp_accounting(int wp_cnt, int share)
->                 fd_wp =3D wp_event((void *)&the_var, &attr_new);
->                 TEST_ASSERT_VAL("failed to create max wp\n", fd_wp !=3D -=
-1);
->                 pr_debug("wp max created\n");
-> +               close(fd_wp);
->         }
+> diff --git a/drivers/hwtracing/coresight/coresight-cti-platform.c b/drivers/hwtracing/coresight/coresight-cti-platform.c
+> index d0ae10bf6128..e1dc559d54aa 100644
+> --- a/drivers/hwtracing/coresight/coresight-cti-platform.c
+> +++ b/drivers/hwtracing/coresight/coresight-cti-platform.c
+> @@ -41,20 +41,8 @@
+>   */
+>  static int of_cti_get_cpu_at_node(const struct device_node *node)
+>  {
+> -       int cpu;
+> -       struct device_node *dn;
+> +       int cpu = of_cpu_phandle_to_id(node, NULL, 0);
 >
->         for (i =3D 0; i < wp_cnt; i++)
+> -       if (node == NULL)
+> -               return -1;
+> -
+> -       dn = of_parse_phandle(node, "cpu", 0);
+> -       /* CTI affinity defaults to no cpu */
+> -       if (!dn)
+> -               return -1;
+> -       cpu = of_cpu_node_to_id(dn);
+> -       of_node_put(dn);
+> -
+> -       /* No Affinity  if no cpu nodes are found */
+
+Leave the above comment in place.
+
+>         return (cpu < 0) ? -1 : cpu;
+>  }
 >
-> ---
-> base-commit: a62b7a37e6fcf4a675b1548e7c168b96ec836442
-> change-id: 20250711-perf_fix_breakpoint_accounting-ea3e8b2e8f51
->
-> Best regards,
 > --
-> Leo Yan <leo.yan@arm.com>
+> 2.43.0
 >
+
+With that
+
+Reviewed-by: Mike Leach <mike.leach@linro.org>
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
