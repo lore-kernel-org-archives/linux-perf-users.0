@@ -1,144 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f74.google.com (mail-qv1-f74.google.com [209.85.219.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56AAA1F3D54
-	for <linux-perf-users@vger.kernel.org>; Fri, 11 Jul 2025 20:02:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D89A2537F8
+	for <linux-perf-users@vger.kernel.org>; Fri, 11 Jul 2025 20:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752264142; cv=none; b=bA+9bWfWy4hl7HPPoGkfUwGG2N8NBUJbIy/PSw2RrDBUrXFuOBQbreoPEeU5zwPxJj7vL+lKr/7Af09cAoIZRKglKdI5CdUMzrJVLeHpwGOzCj9KWbieVIPMYWJqTpvlDUgItz7jtPZtEk8fWKa6pzb+tGCZDXdOmZMhpZvYs9U=
+	t=1752264455; cv=none; b=f8OnkPDr8H45h9l2oaC9DttPHvrw16cl4RCKSofHwsme+gxViU+9QjGrU43xAFjcJyMMMaNPzQVMDx7vGlg2yuQ+KQnAecuCErcwYXeOacvg9s5hfJg4mj2llyBlV2lIln7hAWaNBNlst2J7IpT0rfq8D0WY54c5B9L/J/5cyjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752264142; c=relaxed/simple;
-	bh=cJs55+gzHQVnZDWZCXtwlNp0mV/3JIrwGHgnX0UNWr0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LapVhiOhCrxEQiHoBa+7QWp0FtPu0ClURcdpHmaptpU9bCveAxgpP0Ljo8oSZSmfis4e5hoDzclMUEs9t1aYTb5o4AFfaE8ArIkmSnB4i1vzIePbWOSfKXZOjM81DSThZolwBtri4Fk1/2QE2jLFXhbbux0wATGnkjXHmR8zelI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z697tI7a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752264455; c=relaxed/simple;
+	bh=8OmiKAixvVd1qUodpWB5lP5+cBj7n2qE/sWCnAHwWYc=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=K+i2fkLKP63c6H3PN1p4PokouDR9EQFSYXdiAWi1eLaViOfMank12R12lkHbTtgHFTq0MT9OVPcx3mE5Q+MPw2AZlgOgxO6k6VNItEKSL0yTnS9DQoXSBiII7Ph7SS0emBOKsKrueYh0XKpV1RFKx9o+xMy152NQA7b/ABKoHRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mattgilbride.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EZX5VuK/; arc=none smtp.client-ip=209.85.219.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mattgilbride.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z697tI7a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 767C5C4CEED;
-	Fri, 11 Jul 2025 20:02:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752264142;
-	bh=cJs55+gzHQVnZDWZCXtwlNp0mV/3JIrwGHgnX0UNWr0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z697tI7akWgtWFCItWsjRU9bb9vwg2YJVyoxQsWb1YxTFw64ymY6orC5HwSIwSkG3
-	 YETtzQ/a7mJ3fGu708O2mE3ubCgEbqPiMg7chYBg4tQ42IR8HlEYojWKjvr7HkZLVI
-	 ITw4z/QoP9Nw3C3dMD7Hln5ifUfyRw3ARhkFZH57HeyJ4sPwmve9cvNQFkHVu6ORID
-	 j2uWkDyVCH2FZQA5EzUN/kfkFnHaexkNNJ3Q6eZvyYz77Uz4nK5c46EzkPjgXkdG+O
-	 IbGfumOWejhvGDlKnmC3+N3zpaFW3ptL/zrYQFOnj0g0JDGyzawzKnz1KpTU8+bJNn
-	 NIibMSFkFkqjQ==
-Date: Fri, 11 Jul 2025 13:02:20 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Anubhav Shelat <ashelat@redhat.com>
-Cc: mpetlan@redhat.com, acme@kernel.org, irogers@google.com,
-	linux-perf-users@vger.kernel.org, peterz@infradead.org,
-	mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com,
-	dapeng1.mi@linux.intel.com, james.clark@linaro.org
-Subject: Re: [PATCH] perf sched timehist: decode process names of processes
- in zombie state
-Message-ID: <aHFtzFZEvCp0B6V2@google.com>
-References: <20250709143119.91147-2-ashelat@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EZX5VuK/"
+Received: by mail-qv1-f74.google.com with SMTP id 6a1803df08f44-6fab979413fso42319706d6.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Jul 2025 13:07:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1752264453; x=1752869253; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PyWhAnCYCt4u7XeibLhzzMMy2HX/pV/921yEKYQT3nc=;
+        b=EZX5VuK/u7S5M+aWGimT7F/hqXXdlXnl81r/teW4bP0JmqLJpQ85Qq7jbb80N//C8X
+         KE9W+ji1Sy96Xfjg+Jm4cH+KXGVaAMxXvagu0dYR9JFgQCLEMEnPjc+5kZ9y93XxD5RO
+         joUEKkhRAhRLqtsP8Op4GglVHV6AVMXajL9G7ftYPBEcstYGCsPlqBw0PmMtM/s03odB
+         gi/fw5vkeXwyYB3FJw6Nim8eKUbj7SJDaMzxkvTQOEbqJVTA+3ktfGKiMaUVklwm2mTE
+         diodX5RVp7Wc1eQ5UNfhULR2nvLBm1Nit8xGGjwCXTxTCyy1wbwIoWIdgAA3kApMQH5d
+         JRTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752264453; x=1752869253;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PyWhAnCYCt4u7XeibLhzzMMy2HX/pV/921yEKYQT3nc=;
+        b=EqIGkqyJecYX8UOesxfB5G3OKYNyt0TC0g9ymR1WyL+GTkLbOkFhYbIVIOlQUKgj3a
+         80c2yfTNZvLSceY+tACmQ4ma1ZpdY5O8IuopQ6bzuP0CjMrd2y2eRVvLZ6ukZfN5t0Sq
+         NkkXLW0sAwipXwRwwVDRnfbvOf6G7x1+d6izzIHvAg4Zxxzgt6c26UDt0Q+WNHVEfInc
+         hn1Hc9zhY7PbV/CY07UZZ+vQMicdOt7D/yKXRrDZtybbW7yEOXihV2C2h+UE2f8BLtd5
+         r/XryoBWgjkvPGjjcGmLpRWYyP7suQi+iiZwDYg/yJKc/6NRFjTfv6LXRE8NbVMacqJw
+         qHTw==
+X-Gm-Message-State: AOJu0Yy+/3h4HxARb6XO0TgcJD0WHrD7HxtHENw0RxiaNrpzabNEK4QO
+	QqQAoFNOvAC9sjmc9MiFwH8zcofY/2PWHr9u9usg80k58oZSUwwvHCIdEMIz4y48LvCVMZqHcQR
+	NC4o+GpzwvYuCHMIwtD1B4GBzYvu5Sw==
+X-Google-Smtp-Source: AGHT+IG3Murba99pf2Nruu8809aM7LvUkJqNwkECR/wtGoS6MccCGJJni4eGnXrjYnl4jQo30klzBClcQ70IO8if9b4=
+X-Received: from qvvv14.prod.google.com ([2002:a05:6214:808e:b0:6fa:e85f:14f9])
+ (user=mattgilbride job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6214:2304:b0:704:8f24:f044 with SMTP id 6a1803df08f44-704a39c6951mr90664806d6.34.1752264452777;
+ Fri, 11 Jul 2025 13:07:32 -0700 (PDT)
+Date: Fri, 11 Jul 2025 20:07:05 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250709143119.91147-2-ashelat@redhat.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+Message-ID: <20250711200705.1545447-1-mattgilbride@google.com>
+Subject: [PATCH 1/1] uprobes: relax valid_vma check for VM_MAYSHARE
+From: Matt Gilbride <mattgilbride@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andrii Nakryiko <andrii@kernel.org>, David Hildenbrand <david@redhat.com>, 
+	Matt Gilbride <mattgilbride@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+`valid_vma` returns false when registering a uprobe if the provided VMA
+is writable (`VM_WRITE`) or sharable (`VM_MAYSHARE`). This causes
+`perf_event_open` [1] sys calls to fail silently. A successful return
+code is delivered to the caller even though the uprobe wasn't actually
+attached [2][3].
 
-On Wed, Jul 09, 2025 at 10:31:20AM -0400, Anubhav Shelat wrote:
-> Previously when running perf trace timehist --state, when recording
-> processes in the zombie state the process name would not be decoded
-> properly and appears with just the PID:
-> 
-> 1140057.412177 [0006]  Mutter Input Th[3139/3104]          0.956      0.019      0.041      S
-> 1140057.412222 [0012]  :1248612[1248612]                   0.000      0.000      0.332      Z
-> 1140057.412275 [0004]  <idle>                              0.052      0.052      0.953      I
-> 1140057.412284 [0008]  <idle>                              0.070      0.070      0.932      I
-> 1140057.412333 [0004]  KMS thread[3126/3104]               0.953      0.112      0.058      S
-> 
-> Now some extra processing has been added to decode the process name:
-> 
-> 1140057.412177 [0006]  Mutter Input Th[3139/3104]          0.956      0.019      0.041      S
-> 1140057.412222 [0012]  sleep[1248612]                      0.000      0.000      0.332      Z
-> 1140057.412275 [0004]  <idle>                              0.052      0.052      0.953      I
-> 1140057.412284 [0008]  <idle>                              0.070      0.070      0.932      I
-> 1140057.412333 [0004]  KMS thread[3126/3104]               0.953      0.112      0.058      S
+Remove the latter restriction (`VM_MAYSHARE`) from this check to allow
+registering uprobes on code that has been "dual mapped" into a
+process' memory space. This is helpful when instrumenting just-in-time
+compiled code such as that of Android Runtime (ART) [4]. ART maps a
+memfd twice, once as RW and once as RX, to uphold W^X for security
+(defense in depth), and also to provide better performance (no need to
+call `mprotect` before and after writing) [5].
 
-Thanks for the fix.  A nitpick below.
+uprobes already work for code that is ahead-of-time (AOT) compiled by
+the Android Runtime (ART), as it resides in a static ELF file [6]. In
+order to attach to just-in-time (JIT) compiled code, the Android OS itself
+can coordinate with ART to isolate to-be-instrumented code in a separate
+memfd, which will be left untouched for the duration of a uprobe being
+attached. Thus, while the VMAs inside the memfd will *technically* have
+the `VM_MAYSHARE` flag, the system will ensure that they will not be
+written to again until after any uprobe as been detached.
 
-> 
-> Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
-> ---
->  tools/perf/builtin-sched.c | 19 ++++++++++++++++---
->  1 file changed, 16 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 26ece6e9bfd1..e1a931341bc8 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -2023,11 +2023,15 @@ static int comm_width = 30;
->  static char *timehist_get_commstr(struct thread *thread)
->  {
->  	static char str[32];
-> -	const char *comm = thread__comm_str(thread);
-> +	char *comm = (char *) thread__comm_str(thread);
-> +	char *empty = (char *) "";
->  	pid_t tid = thread__tid(thread);
->  	pid_t pid = thread__pid(thread);
->  	int n;
->  
-> +	if (*comm == ':')
-> +		comm = empty;
-> +
->  	if (pid == 0)
->  		n = scnprintf(str, sizeof(str), "%s", comm);
->  
-> @@ -2147,6 +2151,8 @@ static void timehist_print_sample(struct perf_sched *sched,
->  	struct thread_runtime *tr = thread__priv(thread);
->  	const char *next_comm = evsel__strval(evsel, sample, "next_comm");
->  	const u32 next_pid = evsel__intval(evsel, sample, "next_pid");
-> +	const char *prev_comm = evsel__strval(evsel, sample, "prev_comm");
-> +	char *comm_str = timehist_get_commstr(thread);
->  	u32 max_cpus = sched->max_cpu.cpu + 1;
->  	char tstr[64];
->  	char nstr[30];
-> @@ -2173,8 +2179,15 @@ static void timehist_print_sample(struct perf_sched *sched,
->  		}
->  		printf(" ");
->  	}
-> -
-> -	printf(" %-*s ", comm_width, timehist_get_commstr(thread));
-> +	
-> +	/* if a process is in zombie state commstr will start with a '[' and 
-> +	 * we need to do extra processing to decode the process name */
-> +	if (*comm_str == '[') {
-> +		printf(" %s", evsel__strval(evsel, sample, "prev_comm"));
-> +		printf("%-*s ", comm_width - (int) strlen(prev_comm), comm_str);
-> +	}
-> +	else
-> +		printf(" %-*s ", comm_width, comm_str);
+Link: https://man7.org/linux/man-pages/man2/perf_event_open.2.html [1]
+Link: https://github.com/torvalds/linux/blob/088d13246a4672bc03aec664675138e3f5bff68c/kernel/events/uprobes.c#L1197-L1199 [2]
+Link: https://github.com/torvalds/linux/blob/088d13246a4672bc03aec664675138e3f5bff68c/kernel/events/uprobes.c#L1256-L1268 [3]
+Link: https://source.android.com/docs/core/runtime/jit-compiler [4]
+Link: http://cs.android.com/android/platform/superproject/main/+/main:art/runtime/jit/jit_memory_region.cc;l=111-137?q=jit_memory_region.cc [5]
+Link: https://source.android.com/docs/core/runtime#AOT_compilation [6]
+Signed-off-by: Matt Gilbride <mattgilbride@google.com>
+---
+We've created a working proof-of-concept in Android that demonstrates
+what is described in the last paragraph of the commit message. Thus, we
+introduce this patch to understand the reasoning behind the original
+`VM_SHARED` (later converted to `VM_MAYSHARE`) restriction, and the risks
+that may be associated with relaxing it. It's not clear to me why the
+restriction is there, and we'd like to get feedback on why it is or is
+not still relevant.
 
-What about just updating thread comm if it's missing?
+ kernel/events/uprobes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	if (!thread__comm_set(thread)) {
-		const char *prev_comm = evsel__strval(evsel, sample, "prev_comm");
-		thread__set_comm(thread, prev_comm, sample->time);
-	}
-	
-	printf(" %-%s ", comm_width, timehist_get_commstr(thread));
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index a8caaea07ac37..1ecb3fdb853b9 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -123,7 +123,7 @@ struct xol_area {
+  */
+ static bool valid_vma(struct vm_area_struct *vma, bool is_register)
+ {
+-	vm_flags_t flags = VM_HUGETLB | VM_MAYEXEC | VM_MAYSHARE;
++	vm_flags_t flags = VM_HUGETLB | VM_MAYEXEC;
+ 
+ 	if (is_register)
+ 		flags |= VM_WRITE;
+-- 
+2.50.0.727.gbf7dc18ff4-goog
 
-Thanks,
-Namhyung
-
->  
->  	if (sched->show_prio)
->  		printf(" %-*s ", MAX_PRIO_STR_LEN, timehist_get_priostr(evsel, thread, sample));
-> -- 
-> 2.50.0
-> 
