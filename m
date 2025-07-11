@@ -1,204 +1,144 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 563B12F2C4F
-	for <linux-perf-users@vger.kernel.org>; Fri, 11 Jul 2025 18:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56AAA1F3D54
+	for <linux-perf-users@vger.kernel.org>; Fri, 11 Jul 2025 20:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752257737; cv=none; b=CuLNlWyUTOWfsQoAGzxdvf5MaNkr+lG0m3fJFaBaUeWjp4R20diQQxDQvPIG9As2RuQo8OVgk9vY6BWIwJwE1JxCP0K4sQlunGqq7iZGchhiFzETzE98KhSKfuTHI55a90EdfmyZYSKBbHdSTI2p9Vr+my+EL8GF1lz/4bZOSwc=
+	t=1752264142; cv=none; b=bA+9bWfWy4hl7HPPoGkfUwGG2N8NBUJbIy/PSw2RrDBUrXFuOBQbreoPEeU5zwPxJj7vL+lKr/7Af09cAoIZRKglKdI5CdUMzrJVLeHpwGOzCj9KWbieVIPMYWJqTpvlDUgItz7jtPZtEk8fWKa6pzb+tGCZDXdOmZMhpZvYs9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752257737; c=relaxed/simple;
-	bh=luBqKNXkwRCK4krkDNwnpeRHztWoBQondwfZdg6frLc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=esmAUvmj5QE5iQ7nYu9kEY6nFwhO06K3QztYRUHj9Ph/tdcADyjc9c2nGZsy3MQ5fnJ8NDzvL+GsDOPBCqDrCWxeoVpgJlUpkVXedltscUGRkdVuXAGwH05qTH6HyIevQh9yLljgJiXiSR8l26/1QAUIRPxPo8hpKQpOTyjzBlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C2BB16F8;
-	Fri, 11 Jul 2025 11:15:24 -0700 (PDT)
-Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.50])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C07BD3F6A8;
-	Fri, 11 Jul 2025 11:15:33 -0700 (PDT)
-From: Robin Murphy <robin.murphy@arm.com>
-To: will@kernel.org
-Cc: mark.rutland@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	allen.wang@hj-micro.com,
-	peter.du@hj-micro.com,
-	andy.xu@hj-micro.com
-Subject: [PATCH v2 2/2] perf/arm-ni: Support sharing IRQs within an NI instance
-Date: Fri, 11 Jul 2025 19:15:17 +0100
-Message-Id: <f62db639d3b54c959ec477db7b8ccecbef1ca310.1752256072.git.robin.murphy@arm.com>
-X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
-In-Reply-To: <cover.1752256072.git.robin.murphy@arm.com>
-References: <cover.1752256072.git.robin.murphy@arm.com>
+	s=arc-20240116; t=1752264142; c=relaxed/simple;
+	bh=cJs55+gzHQVnZDWZCXtwlNp0mV/3JIrwGHgnX0UNWr0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LapVhiOhCrxEQiHoBa+7QWp0FtPu0ClURcdpHmaptpU9bCveAxgpP0Ljo8oSZSmfis4e5hoDzclMUEs9t1aYTb5o4AFfaE8ArIkmSnB4i1vzIePbWOSfKXZOjM81DSThZolwBtri4Fk1/2QE2jLFXhbbux0wATGnkjXHmR8zelI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z697tI7a; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z697tI7a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 767C5C4CEED;
+	Fri, 11 Jul 2025 20:02:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752264142;
+	bh=cJs55+gzHQVnZDWZCXtwlNp0mV/3JIrwGHgnX0UNWr0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z697tI7akWgtWFCItWsjRU9bb9vwg2YJVyoxQsWb1YxTFw64ymY6orC5HwSIwSkG3
+	 YETtzQ/a7mJ3fGu708O2mE3ubCgEbqPiMg7chYBg4tQ42IR8HlEYojWKjvr7HkZLVI
+	 ITw4z/QoP9Nw3C3dMD7Hln5ifUfyRw3ARhkFZH57HeyJ4sPwmve9cvNQFkHVu6ORID
+	 j2uWkDyVCH2FZQA5EzUN/kfkFnHaexkNNJ3Q6eZvyYz77Uz4nK5c46EzkPjgXkdG+O
+	 IbGfumOWejhvGDlKnmC3+N3zpaFW3ptL/zrYQFOnj0g0JDGyzawzKnz1KpTU8+bJNn
+	 NIibMSFkFkqjQ==
+Date: Fri, 11 Jul 2025 13:02:20 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Anubhav Shelat <ashelat@redhat.com>
+Cc: mpetlan@redhat.com, acme@kernel.org, irogers@google.com,
+	linux-perf-users@vger.kernel.org, peterz@infradead.org,
+	mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com,
+	dapeng1.mi@linux.intel.com, james.clark@linaro.org
+Subject: Re: [PATCH] perf sched timehist: decode process names of processes
+ in zombie state
+Message-ID: <aHFtzFZEvCp0B6V2@google.com>
+References: <20250709143119.91147-2-ashelat@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250709143119.91147-2-ashelat@redhat.com>
 
-From: Shouping Wang <allen.wang@hj-micro.com>
+Hello,
 
-NI-700 has a distinct PMU interrupt output for each Clock Domain,
-however some integrations may still combine these together externally.
-The initial driver didn't attempt to support this, in anticipation of a
-more general solution for IRQ sharing between system PMU instances, but
-that's still a way off, so let's make this intermediate step for now to
-at least allow sharing IRQs within an individual NI instance.
+On Wed, Jul 09, 2025 at 10:31:20AM -0400, Anubhav Shelat wrote:
+> Previously when running perf trace timehist --state, when recording
+> processes in the zombie state the process name would not be decoded
+> properly and appears with just the PID:
+> 
+> 1140057.412177 [0006]  Mutter Input Th[3139/3104]          0.956      0.019      0.041      S
+> 1140057.412222 [0012]  :1248612[1248612]                   0.000      0.000      0.332      Z
+> 1140057.412275 [0004]  <idle>                              0.052      0.052      0.953      I
+> 1140057.412284 [0008]  <idle>                              0.070      0.070      0.932      I
+> 1140057.412333 [0004]  KMS thread[3126/3104]               0.953      0.112      0.058      S
+> 
+> Now some extra processing has been added to decode the process name:
+> 
+> 1140057.412177 [0006]  Mutter Input Th[3139/3104]          0.956      0.019      0.041      S
+> 1140057.412222 [0012]  sleep[1248612]                      0.000      0.000      0.332      Z
+> 1140057.412275 [0004]  <idle>                              0.052      0.052      0.953      I
+> 1140057.412284 [0008]  <idle>                              0.070      0.070      0.932      I
+> 1140057.412333 [0004]  KMS thread[3126/3104]               0.953      0.112      0.058      S
 
-Now that CPU affinity and migration are cleaned up, it's fairly
-straightforward to adopt similar logic to arm-cmn, to identify CDs with
-a common interrupt and loop over them directly in the handler.
+Thanks for the fix.  A nitpick below.
 
-Signed-off-by: Shouping Wang <allen.wang@hj-micro.com>
-[ rm: Rework for affinity handling, cosmetics, new commit message ]
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
+> 
+> Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+> ---
+>  tools/perf/builtin-sched.c | 19 ++++++++++++++++---
+>  1 file changed, 16 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index 26ece6e9bfd1..e1a931341bc8 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -2023,11 +2023,15 @@ static int comm_width = 30;
+>  static char *timehist_get_commstr(struct thread *thread)
+>  {
+>  	static char str[32];
+> -	const char *comm = thread__comm_str(thread);
+> +	char *comm = (char *) thread__comm_str(thread);
+> +	char *empty = (char *) "";
+>  	pid_t tid = thread__tid(thread);
+>  	pid_t pid = thread__pid(thread);
+>  	int n;
+>  
+> +	if (*comm == ':')
+> +		comm = empty;
+> +
+>  	if (pid == 0)
+>  		n = scnprintf(str, sizeof(str), "%s", comm);
+>  
+> @@ -2147,6 +2151,8 @@ static void timehist_print_sample(struct perf_sched *sched,
+>  	struct thread_runtime *tr = thread__priv(thread);
+>  	const char *next_comm = evsel__strval(evsel, sample, "next_comm");
+>  	const u32 next_pid = evsel__intval(evsel, sample, "next_pid");
+> +	const char *prev_comm = evsel__strval(evsel, sample, "prev_comm");
+> +	char *comm_str = timehist_get_commstr(thread);
+>  	u32 max_cpus = sched->max_cpu.cpu + 1;
+>  	char tstr[64];
+>  	char nstr[30];
+> @@ -2173,8 +2179,15 @@ static void timehist_print_sample(struct perf_sched *sched,
+>  		}
+>  		printf(" ");
+>  	}
+> -
+> -	printf(" %-*s ", comm_width, timehist_get_commstr(thread));
+> +	
+> +	/* if a process is in zombie state commstr will start with a '[' and 
+> +	 * we need to do extra processing to decode the process name */
+> +	if (*comm_str == '[') {
+> +		printf(" %s", evsel__strval(evsel, sample, "prev_comm"));
+> +		printf("%-*s ", comm_width - (int) strlen(prev_comm), comm_str);
+> +	}
+> +	else
+> +		printf(" %-*s ", comm_width, comm_str);
 
-v2: Delay enabling IRQs for the sake of reasoning
+What about just updating thread comm if it's missing?
 
- drivers/perf/arm-ni.c | 82 +++++++++++++++++++++++++++++--------------
- 1 file changed, 55 insertions(+), 27 deletions(-)
+	if (!thread__comm_set(thread)) {
+		const char *prev_comm = evsel__strval(evsel, sample, "prev_comm");
+		thread__set_comm(thread, prev_comm, sample->time);
+	}
+	
+	printf(" %-%s ", comm_width, timehist_get_commstr(thread));
 
-diff --git a/drivers/perf/arm-ni.c b/drivers/perf/arm-ni.c
-index 168750e78fc4..3c505352e302 100644
---- a/drivers/perf/arm-ni.c
-+++ b/drivers/perf/arm-ni.c
-@@ -102,6 +102,7 @@ struct arm_ni_unit {
- struct arm_ni_cd {
- 	void __iomem *pmu_base;
- 	u16 id;
-+	s8 irq_friend;
- 	int num_units;
- 	int irq;
- 	struct pmu pmu;
-@@ -448,33 +449,37 @@ static irqreturn_t arm_ni_handle_irq(int irq, void *dev_id)
- {
- 	struct arm_ni_cd *cd = dev_id;
- 	irqreturn_t ret = IRQ_NONE;
--	u32 reg = readl_relaxed(cd->pmu_base + NI_PMOVSCLR);
- 
--	if (reg & (1U << NI_CCNT_IDX)) {
--		ret = IRQ_HANDLED;
--		if (!(WARN_ON(!cd->ccnt))) {
--			arm_ni_event_read(cd->ccnt);
--			arm_ni_init_ccnt(cd);
-+	for (;;) {
-+		u32 reg = readl_relaxed(cd->pmu_base + NI_PMOVSCLR);
-+
-+		if (reg & (1U << NI_CCNT_IDX)) {
-+			ret = IRQ_HANDLED;
-+			if (!(WARN_ON(!cd->ccnt))) {
-+				arm_ni_event_read(cd->ccnt);
-+				arm_ni_init_ccnt(cd);
-+			}
- 		}
--	}
--	for (int i = 0; i < NI_NUM_COUNTERS; i++) {
--		if (!(reg & (1U << i)))
--			continue;
--		ret = IRQ_HANDLED;
--		if (!(WARN_ON(!cd->evcnt[i]))) {
--			arm_ni_event_read(cd->evcnt[i]);
--			arm_ni_init_evcnt(cd, i);
-+		for (int i = 0; i < NI_NUM_COUNTERS; i++) {
-+			if (!(reg & (1U << i)))
-+				continue;
-+			ret = IRQ_HANDLED;
-+			if (!(WARN_ON(!cd->evcnt[i]))) {
-+				arm_ni_event_read(cd->evcnt[i]);
-+				arm_ni_init_evcnt(cd, i);
-+			}
- 		}
-+		writel_relaxed(reg, cd->pmu_base + NI_PMOVSCLR);
-+		if (!cd->irq_friend)
-+			return ret;
-+		cd += cd->irq_friend;
- 	}
--	writel_relaxed(reg, cd->pmu_base + NI_PMOVSCLR);
--	return ret;
- }
- 
- static int arm_ni_init_cd(struct arm_ni *ni, struct arm_ni_node *node, u64 res_start)
- {
- 	struct arm_ni_cd *cd = ni->cds + node->id;
- 	const char *name;
--	int err;
- 
- 	cd->id = node->id;
- 	cd->num_units = node->num_components;
-@@ -534,20 +539,11 @@ static int arm_ni_init_cd(struct arm_ni *ni, struct arm_ni_node *node, u64 res_s
- 		       cd->pmu_base + NI_PMCR);
- 	writel_relaxed(U32_MAX, cd->pmu_base + NI_PMCNTENCLR);
- 	writel_relaxed(U32_MAX, cd->pmu_base + NI_PMOVSCLR);
--	writel_relaxed(U32_MAX, cd->pmu_base + NI_PMINTENSET);
- 
- 	cd->irq = platform_get_irq(to_platform_device(ni->dev), cd->id);
- 	if (cd->irq < 0)
- 		return cd->irq;
- 
--	err = devm_request_irq(ni->dev, cd->irq, arm_ni_handle_irq,
--			       IRQF_NOBALANCING | IRQF_NO_THREAD,
--			       dev_name(ni->dev), cd);
--	if (err)
--		return err;
--
--	irq_set_affinity(cd->irq, cpumask_of(ni->cpu));
--
- 	cd->pmu = (struct pmu) {
- 		.module = THIS_MODULE,
- 		.parent = ni->dev,
-@@ -593,6 +589,34 @@ static void arm_ni_probe_domain(void __iomem *base, struct arm_ni_node *node)
- 	node->num_components = readl_relaxed(base + NI_CHILD_NODE_INFO);
- }
- 
-+static int arm_ni_init_irqs(struct arm_ni *ni)
-+{
-+	int err;
-+
-+	ni_for_each_cd(ni, cd) {
-+		for (struct arm_ni_cd *prev = cd; prev-- > ni->cds; ) {
-+			if (prev->irq == cd->irq) {
-+				prev->irq_friend = cd - prev;
-+				goto set_inten;
-+			}
-+		}
-+		err = devm_request_irq(ni->dev, cd->irq, arm_ni_handle_irq,
-+				       IRQF_NOBALANCING | IRQF_NO_THREAD | IRQF_NO_AUTOEN,
-+				       dev_name(ni->dev), cd);
-+		if (err)
-+			return err;
-+
-+		irq_set_affinity(cd->irq, cpumask_of(ni->cpu));
-+set_inten:
-+		writel_relaxed(U32_MAX, cd->pmu_base + NI_PMINTENSET);
-+	}
-+	/* Look Ma, no absurdly theoretical race conditions! */
-+	ni_for_each_cd(ni, cd)
-+		if (!cd->irq_friend)
-+			enable_irq(cd->irq);
-+	return 0;
-+}
-+
- static int arm_ni_probe(struct platform_device *pdev)
- {
- 	struct arm_ni_node cfg, vd, pd, cd;
-@@ -677,7 +701,11 @@ static int arm_ni_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	return 0;
-+	ret = arm_ni_init_irqs(ni);
-+	if (ret)
-+		arm_ni_remove(pdev);
-+
-+	return ret;
- }
- 
- #ifdef CONFIG_OF
--- 
-2.39.2.101.g768bb238c484.dirty
+Thanks,
+Namhyung
 
+>  
+>  	if (sched->show_prio)
+>  		printf(" %-*s ", MAX_PRIO_STR_LEN, timehist_get_priostr(evsel, thread, sample));
+> -- 
+> 2.50.0
+> 
