@@ -1,144 +1,165 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+Received: from mail-oi1-f202.google.com (mail-oi1-f202.google.com [209.85.167.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5EC212FB6
-	for <linux-perf-users@vger.kernel.org>; Mon, 14 Jul 2025 19:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B85A246BBE
+	for <linux-perf-users@vger.kernel.org>; Mon, 14 Jul 2025 22:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752521986; cv=none; b=QKnZ/bSQuX7gAgdvsk5gPMmpfyFb50qNC3EO18owUAjAGHIJG+rLEzm8laqQDcnoPqZ1UaPUxvFJPkiw4Hst3p4HqrzaJ3LnHAKjqK9sQni1owk12K6zZF1GGCBojXWmV7YJ5g3BXfmsUP0Z4nAVrjjW6EU8pN2Zw7C6/R7mjsM=
+	t=1752533972; cv=none; b=OzTN+JIAEXqzb+QDqyWBOx8tHfRmYa4D0rIhg7vxISkOsRvZO2ppaq5DcVsJWfOy5mJpMmb9f0hnURaS22M38j8+vKROj1AUTdSN+7BGZ56VRovf6fA/uBMLGLxQXoDWfxFtyo3Nzf7jmBmhZ2C4z/GFavJbHN+MgvBKbkgj9wI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752521986; c=relaxed/simple;
-	bh=5cSCYdKyaKnlsB59d7LA/sqcozRwuYbnW6S02DziChQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=P9k1Jc6sulWZibZQPlOyH+koekLd0fr1M46PWrxeyAER2YrKgD0To1TqYu9FtnR+seoW0WPeowQ2Ji/ewMoSazM3xzJMnRJVf0RvYNfgWknS8YxD3ZjxMDUtzHvl5JAG44KTnj7yS4Ph4Az+YKeN5kzr3pr4WIMU6eEnqbMBY0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=F+lEts+O; arc=none smtp.client-ip=209.85.161.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1752533972; c=relaxed/simple;
+	bh=mwEWYUb49kiYyzFjd73AenIm5V7+fVTN/TygHGRLTQc=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=mEbS1cVSueWb3wSzQQxm/9UnwB3kpHNESiWnmchQYD+hHWf0aalQFRksuBSeY2rafdyKioj2DTC2xbjZHEJiKMvH9yAO4j2x3Zc4/TAITY6dyBwL10HXnKeszfxJaPuFBr5Ke0aTIZvjF8DVG7LusUbvxG+yxtFPg10BurBa9XM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fwIbDpJo; arc=none smtp.client-ip=209.85.167.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F+lEts+O"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-61593d51267so68993eaf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Jul 2025 12:39:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fwIbDpJo"
+Received: by mail-oi1-f202.google.com with SMTP id 5614622812f47-40cfdde66b8so1505212b6e.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Jul 2025 15:59:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1752521983; x=1753126783; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
+        d=google.com; s=20230601; t=1752533970; x=1753138770; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=urOya2QD0PAv3aRyUi92qVBccHFN0GyUQM4mpsavCC0=;
-        b=F+lEts+OFVJIPuwVRnJK5F1pfmdT8s0b33WyPl3yTSpNzYc94+Ra3pdGqSBX9oXkZj
-         zc5FeOr9OPpCrRH3OUAE2AHItRNZXv0JzsCwrS4IQlZexQ/8ObfrLmgTilXyv757B5rS
-         sqTbM4JjI/euxM6GVNOWtBwz4PURIWU2GnNKOmguIxcWb2WuED7OQjtuH7NqUTcKCrcL
-         56GOombgsGoU6TcZCI8HQpOlxRl1dEo3smb1sYZGU5ks/yd7qjJOcwAinl9CsqCsUncx
-         V5T4qgOOy2+0ZK5j+7fhFq23EbhI9FM6PgC2MHLNaBRI5iN7mCjmUfEL5q7DQXkvT2D6
-         vpdA==
+        bh=I/fxMTUCeZF4CZ7kst6++ES1PJGZgoz5VeCqTS2km0k=;
+        b=fwIbDpJo5+2x9y0hjKD7yXjoh4GO5y7erNqzDw2wPgJUTQrLg0CeOXHaV/j9tumlvq
+         G3Df83bjBN4yjR87Egt7ZcrWlgCIs0f43JJ6ktuSSeBc+ja00TERCeGz8xRvAydJ1h/p
+         Zab+KICoiUtE6J1EnkqjoxjjnFEEQIl6h+Z9TIGwXEtgX+uKzwbPqdfs61TyTC97SJls
+         5XzcDmO6qJ40iQGZPixgjSX0kBgjhUIQUmYyWgIcuKVqlzKIAQDf8shT5bx4klzbfoSP
+         tql5HDggSJr+6qCzhf2iDXTYBTuhYKqZNoWyDkA9CMwbA6JSdi6DWzhoKnO1ZPWBVnLz
+         UsIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752521983; x=1753126783;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
+        d=1e100.net; s=20230601; t=1752533970; x=1753138770;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=urOya2QD0PAv3aRyUi92qVBccHFN0GyUQM4mpsavCC0=;
-        b=rqS6GEf60kyOWyWYJe1Mtz7+wQF5g5HG3VYPGHO4mztlL3OHhZT809BWhABacgfVLR
-         XwaN8E7gdA9kcIgVbv7X4uUvGPMMKDVoTbF/qeY3XFL5Nnn93ez9sBDCcZE+2cZ4Boxy
-         UfaasyfHLGw2URi9dCSjP7cUn7pjnNDT3MVhlzK79kE4UmotKhnHL0rnAqYB/Dyh7ze8
-         lgvjeFsv9BLV4FZ7gPKAKULDkO70G6km66sCaDabMRwO3c8l/Q2duObzcC735pK23J5M
-         /iVAH5DKed+zMY6c3/UNFtzwh+Ak+HCjHSozpA7DSzbvd9ozRuDKOyw02bQxCwOXs+Oi
-         rkZA==
-X-Forwarded-Encrypted: i=1; AJvYcCXyEdg1wR1V9JnFqGi2Z37ByL/02FIBpV5SEADUP/iO88D+d9KQTbiuNIADKsdBdxvVbzdJF4+2AUnfQSgx22U9@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyj/oR17GuLw+FgrNuhp8XCPKgkMeqweafl+9IpkIs9FxW0AUh5
-	5HAmcNgwWE9ZyPGn0GEh9nh9TQ+wPcuoxML/0uN0n5E6pAeCoML2X7O+TKryC9eO51o=
-X-Gm-Gg: ASbGncspMcEq0p3xAvOirPXdWmnmCMDfJHG6vJSAlr7RNC4Mkp/W1qu7TcmHCvowdqu
-	YTBS5qIxopnI5lIlgoHB+vXlYbWEXU0PUcQlOo8TMukwKMfCYY/vQXL34xg6x7bErTP3nmdVdgw
-	5PGjXL3URntLBuX4bVOF50rg9lsFmpVIxwD1t0q80XS8SfAdsv1OxBkEwW0PaKrqMJmV5q173PH
-	4nh0yZswV7nRl9VPJI+IY2eJbg0I/wr0hmuiIBnrt8UN5df4vj4xP71yKNYZoeW5gxQR0U0njmt
-	WAwVLhT2qIMQq4/CCLKfnkJq00XRO1itWh5TcE47o5QFyXcmmeIFkuB0F+WjWYyg1EP3uU6GMq9
-	pT33gv6XIYIuVc1dtaIFcJ7BF7u3Xdg==
-X-Google-Smtp-Source: AGHT+IG9YCfy/a8BjNGBo1GzQjJuR8GmP8UR9cv+uwP5yDJexmfxPdWGAOu8EtDFH9IyIV9EN6mZeg==
-X-Received: by 2002:a05:6870:c03:b0:296:bbc8:4a82 with SMTP id 586e51a60fabf-2ff2706c894mr10579426fac.27.1752521982792;
-        Mon, 14 Jul 2025 12:39:42 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:6bb2:d90f:e5da:befc])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73cf12b62e8sm1674368a34.60.2025.07.14.12.39.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Jul 2025 12:39:42 -0700 (PDT)
-Date: Mon, 14 Jul 2025 22:39:41 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev,
-	=?iso-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Gatien Chevallier <gatien.chevallier@foss.st.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Gabriel Fernandez <gabriel.fernandez@foss.st.com>,
-	Le Goffic <legoffic.clement@gmail.com>
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	=?iso-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>
-Subject: Re: [PATCH v2 09/16] perf: stm32: introduce DDRPERFM driver
-Message-ID: <1fd92742-0958-4f64-8e50-4d0595fe74eb@suswa.mountain>
+        bh=I/fxMTUCeZF4CZ7kst6++ES1PJGZgoz5VeCqTS2km0k=;
+        b=t9EVPqjMgpuntdgKGn0to9G8s1rrny2HCIrh8c4usnBYgOFj0ptW1ZE52XBn84mTtj
+         XxGUhmNVrE3yC9rk2cObEjyRLQAu4xi6Y5GVcNWDz9XcoaB4nBfhGCR9ou8r5YvURkUn
+         GM3jPkuh3BMM2Pqg1utKmSzfRrbAzJuuJdoCmpib6xdfUaZ6GDiDKjCefkfFMVs3I/xK
+         /wde/AOEeomtZ43zqi8fZH3bh9aXeIFqe12RxOC0+6Nwm1zAgWR94khRe5FxdihzJAa1
+         x5c3QuvNQFMTsOSBqn9BpfzM5ofwJtqODjue2xHV3nl7R9DE/f0+J5weJWTDJ/I+UG3m
+         Esnw==
+X-Forwarded-Encrypted: i=1; AJvYcCWyDPoHihlh6C4Fm/6TPvwDViM99QpApWp+20wi/gwr+BTZ71KxqSH6OoH8rTXC/B9k0TIQQeqRM9OusBWFHozJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuM3jeFemk+enQ7WfYxtWtmiMqVwQwKcuVah2qZsBZbPiBSIUC
+	2Wf5qGGwcnVy+lfZ+5zXc29um+HYmanlgmIkPDahds1ciW5kb92H4OHHzG3gfwCqroAHwcGJ0L3
+	V1B/LnoKwvdPzjYszu9QzhG7Eaw==
+X-Google-Smtp-Source: AGHT+IGHw0Ly0MiuefKQ04+OUmZEq578qloRdUwfTY7soEVZIiwrXeZ5MJnigSkxKeUiTfmWeKo1UFrGGTsjsgNFBg==
+X-Received: from oibkd10.prod.google.com ([2002:a05:6808:470a:b0:40b:1afb:91ee])
+ (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6808:1812:b0:404:2960:9b4d with SMTP id 5614622812f47-41511618b0amr8813197b6e.25.1752533970287;
+ Mon, 14 Jul 2025 15:59:30 -0700 (PDT)
+Date: Mon, 14 Jul 2025 22:58:54 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250711-ddrperfm-upstream-v2-9-cdece720348f@foss.st.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+Message-ID: <20250714225917.1396543-1-coltonlewis@google.com>
+Subject: [PATCH v4 00/23] ARM64 PMU Partitioning
+From: Colton Lewis <coltonlewis@google.com>
+To: kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Mingwei Zhang <mizhang@google.com>, Joey Gouly <joey.gouly@arm.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
+	Mark Rutland <mark.rutland@arm.com>, Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, Colton Lewis <coltonlewis@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Clément,
+This series creates a new PMU scheme on ARM, a partitioned PMU that
+allows reserving a subset of counters for more direct guest access,
+significantly reducing overhead. More details, including performance
+benchmarks, can be read in the v1 cover letter linked below.
 
-kernel test robot noticed the following build warnings:
+v4:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Cl-ment-Le-Goffic/bus-firewall-move-stm32_firewall-header-file-in-include-folder/20250712-030518
-base:   d7b8f8e20813f0179d8ef519541a3527e7661d3a
-patch link:    https://lore.kernel.org/r/20250711-ddrperfm-upstream-v2-9-cdece720348f%40foss.st.com
-patch subject: [PATCH v2 09/16] perf: stm32: introduce DDRPERFM driver
-config: sh-randconfig-r071-20250712 (https://download.01.org/0day-ci/archive/20250712/202507122125.eve8lg60-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 13.4.0
+* Apply Mark Brown's non-UNDEF FGT control commit to the PMU FGT
+  controls and calculate those controls with the others in
+  kvm_calculate_traps()
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202507122125.eve8lg60-lkp@intel.com/
+* Introduce lazy context swaps for guests that only turns on for
+  guests that have enabled partitioning and accessed PMU registers.
 
-smatch warnings:
-drivers/perf/stm32_ddr_pmu.c:380 stm32_ddr_pmu_get_counter() warn: variable dereferenced before check 'pmu' (see line 376)
-drivers/perf/stm32_ddr_pmu.c:380 stm32_ddr_pmu_get_counter() warn: variable dereferenced before check 'event' (see line 377)
+* Rename pmu-part.c to pmu-direct.c because future features might
+  achieve direct PMU access without partitioning.
 
-vim +/pmu +380 drivers/perf/stm32_ddr_pmu.c
+* Better explain certain commits, such as why the untrapped registers
+  are safe to untrap.
 
-73af3c4ba702d7 Clément Le Goffic 2025-07-11  374  static int stm32_ddr_pmu_get_counter(struct stm32_ddr_pmu *pmu, struct perf_event *event)
-73af3c4ba702d7 Clément Le Goffic 2025-07-11  375  {
-73af3c4ba702d7 Clément Le Goffic 2025-07-11 @376  	u32 time_cnt_idx = pmu->cfg->time_cnt_idx;
-                                                                           ^^^^^^^^
+* Reduce the PMU include cleanup down to only what is still necessary
+  and explain why.
 
-73af3c4ba702d7 Clément Le Goffic 2025-07-11 @377  	u32 config = event->attr.config;
-                                                                     ^^^^^^^
+v3:
+https://lore.kernel.org/kvm/20250626200459.1153955-1-coltonlewis@google.com/
 
-73af3c4ba702d7 Clément Le Goffic 2025-07-11  378  	struct stm32_ddr_cnt *cnt;
-73af3c4ba702d7 Clément Le Goffic 2025-07-11  379  
-73af3c4ba702d7 Clément Le Goffic 2025-07-11 @380  	if (!pmu || !event)
-                                                            ^^^^^^^^^^^^^^
-Checks are too late.  The variables have already been dereferenced.
+v2:
+https://lore.kernel.org/kvm/20250620221326.1261128-1-coltonlewis@google.com/
 
-73af3c4ba702d7 Clément Le Goffic 2025-07-11  381  		return -EINVAL;
-73af3c4ba702d7 Clément Le Goffic 2025-07-11  382  
-73af3c4ba702d7 Clément Le Goffic 2025-07-11  383  	pmu->selected_set = GROUP_VALUE(config);
-73af3c4ba702d7 Clément Le Goffic 2025-07-11  384  
-73af3c4ba702d7 Clément Le Goffic 2025-07-11  385  	if (config == TIME_CNT) {
+v1:
+https://lore.kernel.org/kvm/20250602192702.2125115-1-coltonlewis@google.com/
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Colton Lewis (21):
+  arm64: cpufeature: Add cpucap for HPMN0
+  KVM: arm64: Reorganize PMU functions
+  perf: arm_pmuv3: Introduce method to partition the PMU
+  perf: arm_pmuv3: Generalize counter bitmasks
+  perf: arm_pmuv3: Keep out of guest counter partition
+  KVM: arm64: Account for partitioning in kvm_pmu_get_max_counters()
+  KVM: arm64: Set up FGT for Partitioned PMU
+  KVM: arm64: Writethrough trapped PMEVTYPER register
+  KVM: arm64: Use physical PMSELR for PMXEVTYPER if partitioned
+  KVM: arm64: Writethrough trapped PMOVS register
+  KVM: arm64: Write fast path PMU register handlers
+  KVM: arm64: Setup MDCR_EL2 to handle a partitioned PMU
+  KVM: arm64: Account for partitioning in PMCR_EL0 access
+  KVM: arm64: Context swap Partitioned PMU guest registers
+  KVM: arm64: Enforce PMU event filter at vcpu_load()
+  KVM: arm64: Extract enum debug_owner to enum vcpu_register_owner
+  KVM: arm64: Implement lazy PMU context swaps
+  perf: arm_pmuv3: Handle IRQs for Partitioned PMU guest counters
+  KVM: arm64: Inject recorded guest interrupts
+  KVM: arm64: Add ioctl to partition the PMU when supported
+  KVM: arm64: selftests: Add test case for partitioned PMU
 
+Marc Zyngier (1):
+  KVM: arm64: Reorganize PMU includes
+
+Mark Brown (1):
+  KVM: arm64: Introduce non-UNDEF FGT control
+
+ Documentation/virt/kvm/api.rst                |  21 +
+ arch/arm/include/asm/arm_pmuv3.h              |  38 +
+ arch/arm64/include/asm/arm_pmuv3.h            |  61 +-
+ arch/arm64/include/asm/kvm_host.h             |  34 +-
+ arch/arm64/include/asm/kvm_pmu.h              | 123 +++
+ arch/arm64/include/asm/kvm_types.h            |   7 +-
+ arch/arm64/kernel/cpufeature.c                |   8 +
+ arch/arm64/kvm/Makefile                       |   2 +-
+ arch/arm64/kvm/arm.c                          |  22 +
+ arch/arm64/kvm/debug.c                        |  33 +-
+ arch/arm64/kvm/hyp/include/hyp/debug-sr.h     |   6 +-
+ arch/arm64/kvm/hyp/include/hyp/switch.h       | 181 ++++-
+ arch/arm64/kvm/pmu-direct.c                   | 395 ++++++++++
+ arch/arm64/kvm/pmu-emul.c                     | 674 +---------------
+ arch/arm64/kvm/pmu.c                          | 725 ++++++++++++++++++
+ arch/arm64/kvm/sys_regs.c                     | 137 +++-
+ arch/arm64/tools/cpucaps                      |   1 +
+ arch/arm64/tools/sysreg                       |   6 +-
+ drivers/perf/arm_pmuv3.c                      | 128 +++-
+ include/linux/perf/arm_pmu.h                  |   1 +
+ include/linux/perf/arm_pmuv3.h                |  14 +-
+ include/uapi/linux/kvm.h                      |   4 +
+ tools/include/uapi/linux/kvm.h                |   2 +
+ .../selftests/kvm/arm64/vpmu_counter_access.c |  62 +-
+ 24 files changed, 1910 insertions(+), 775 deletions(-)
+ create mode 100644 arch/arm64/kvm/pmu-direct.c
+
+
+base-commit: 79150772457f4d45e38b842d786240c36bb1f97f
+--
+2.50.0.727.gbf7dc18ff4-goog
