@@ -1,281 +1,159 @@
-Received: from mail-oa1-f74.google.com (mail-oa1-f74.google.com [209.85.160.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E0629ACD4
-	for <linux-perf-users@vger.kernel.org>; Mon, 14 Jul 2025 22:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C7128A1EE;
+	Mon, 14 Jul 2025 23:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752533999; cv=none; b=g5No7G3QTztx6aNInteGwrpoKvEovzdFvNUisXwdKAPuZZXPSi9Qm1g5ctzHECDCYJ6dTN9r8KNAxS/1uR+ZHj51JaCGLNjVzsPmNciWc0k1up+Vvd6Y7qfljLb078RbjguxzrehjEP2ubeZJWvBKJKdaI4Dd65pOKHh3PzMRnM=
+	t=1752534394; cv=none; b=KhaexbuvmNBoo+uc/iCmNgsf20cA95KNlrd+T9IRiA8V1ShHWeiB/ltPmDEZUcT+2iGEs4bkB34LxmiFRA2UfTjSfv6B6lsRC3VVb2QOc0u0nRPotVKkNfm2vqS8FfC4hk/lV3KuhAwD0bQ4zk7UhFsTMH1UB8VZ0WKvdMWQlpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752533999; c=relaxed/simple;
-	bh=9eSwVawIpIf46LRehZWFLyWPO8/7v6TDvCTZI7UPgOU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ZKVsrngkY+Ikv4Em3cwX9rE/OV1f7S+4pyRae7YOAy9DyN2EW7oaS23V1eTAAmyqoQmwbkpY5eifMOjcmEslgME0cD/XICl9RQrW5B0cfVrQ55mgf7el2OoEw6P9Bnroj8NpGoss9wpwX7JSAk2tYPPpqSqiSrfmYlgiZe7y3O8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SSrQKsPa; arc=none smtp.client-ip=209.85.160.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+	s=arc-20240116; t=1752534394; c=relaxed/simple;
+	bh=YUruJ4S+nCxznnCUymHO9skBoajuaBdQ5QqlVSBgB9g=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=UlXEz1obTxsDrD3XzxiCfDGjqMl6aASUSZOTDkpJlcb7zZbs8bK3gQO/tJBz6ziX0BPTnNg1Eo2MGLqzVbC33OW+N2zb3xkKNTzkjsy1UwiJcS+j1piN+WBhxzGB6PA9ivR//vZXLKV3y7TlqqCBRYhCOPESO9s/iwnwpBPuC54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PrgT4jMP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SSrQKsPa"
-Received: by mail-oa1-f74.google.com with SMTP id 586e51a60fabf-2ff8a9716d2so490021fac.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Jul 2025 15:59:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1752533994; x=1753138794; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xdZdMkXachOTBLhsNs+TRwK+/iArlUH+VMAh4h7bRTc=;
-        b=SSrQKsPaPBrHudc9xe88pdzqSjf6O4v9J41aal1zomeXC2ME7JWOjmNv8bj38u3V9B
-         Qcbcz2hzW3yyXD6jW7I2igK3nMS/6mE8IU7P+6pbC6lu2DzT8MZPZ10e3mztl/xSGFTm
-         SLXzhtVuR3vyuckkBRFcILbWyNFHof8KLEadCfqNP2beB/G6SR9CDM91ZenFc+7cSeYz
-         6Z0ILJ9Kn4TtVN+engTsvNM4Gct4XCxySGXZz39yIL9zqm6mikkc1HHyB6lFd8HHDDjK
-         xxW9deml5yOCyh45nnn9YlvrCKtHqXZ9P1EQcuTYXUlo0iZb+fflg+EGzAz08Xjr4pZA
-         EWGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752533994; x=1753138794;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xdZdMkXachOTBLhsNs+TRwK+/iArlUH+VMAh4h7bRTc=;
-        b=kExarL6+HpUoThxofavzRWi0KfQnLjjtHj9Ab1XbplFlLf9Pg8l1mdg093oVRLs498
-         c1H2YO4qgq1c4lKf7j1Pe/coUO0OJ88+1BdlaOWmTa28zuqg0NHgU9wcj0NJRyK7RJGT
-         eMhbYVqPVCVljdGINccmqizIRR9efHgMDy6oSnaTe2udIdiKhBaRJ2FU1McD7f7KlYQ3
-         G8l7hKZGNbIwrgYoA4eEAqG/X6/bK5XtCKSP3mraGNiLDVtQ4vEoM8wIXsE+nV24Tfsu
-         I/RsdehVMt9PA9X001U67MibR5FrrH4SIHx/nQnO1VzUPNH4vPtvC3+ItqDnacyxF/ZH
-         27jg==
-X-Forwarded-Encrypted: i=1; AJvYcCUN4rxHZn9fxLcbuMF4CU9izBSU3ln/FYjLuq7f/7Yjn7bZfN52LNAHwbpHOyy7sIG/keJM+T8+v7E6Q4YRCmgk@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRQfMWSguN6eFc7Nls+qZMSwMgjnLKyBO5/4nMiItKsqTVLZvs
-	PZ6trisYcSD2E7ZQLuEDX3BbG4YhN7zPXG46b3WSIxR38U9a8xVRlZJ2XhjQZKaedodgUzpLxjt
-	MxC3NDE0y71B9W6mNhvYnaYOBtA==
-X-Google-Smtp-Source: AGHT+IGtkxxQNHPtdv9dL4s2nR5Wc47eOMAPls/NeDgscE/f3Xbi3rgYw/AG5E5sUgk4Wnfo1XJ8ubTDhh1qfxOcFg==
-X-Received: from oabuj12.prod.google.com ([2002:a05:6871:4e4c:b0:2c2:2bad:1512])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6871:3584:b0:2e9:925b:206f with SMTP id 586e51a60fabf-2ff8fc725d6mr1109775fac.17.1752533994367;
- Mon, 14 Jul 2025 15:59:54 -0700 (PDT)
-Date: Mon, 14 Jul 2025 22:59:17 +0000
-In-Reply-To: <20250714225917.1396543-1-coltonlewis@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PrgT4jMP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54C57C4CEFA;
+	Mon, 14 Jul 2025 23:06:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752534393;
+	bh=YUruJ4S+nCxznnCUymHO9skBoajuaBdQ5QqlVSBgB9g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PrgT4jMPvSPFdG8LMZj5uO0pTibEm/9ItnXq6ythXw2pvFj7NnhAuFlXKWBSslWA1
+	 LDCPvegL6vjsZCvGKKrq7QJGgEUdGyRd//utT7RjTwT1FwupO+NpRkN9jJAOyOxpNU
+	 NFTlaY+e+UuCz0d2EjdKtm+7fOUjSDWkPccKQhrE+HpufumCDRrmI+0FV3/yAqTVAd
+	 g9Qeh0i2fSWH0xAemYlFnPngp8fYBGqiIXGuA2dusVZq9+NlWWfcvHm4yMGfLBlj72
+	 SdqehnASj/Q+CRrvlkbPcsfq5gRT5R9LwXwhJWz8dPLj300nV8chQixZz4RGZZ1qCD
+	 TBAGDQm/C44pg==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+	syzbot <syzbot+2fe61cb2a86066be6985@syzkaller.appspotmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Sasha Levin <sashal@kernel.org>,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.15 08/15] perf/core: Fix WARN in perf_sigtrap()
+Date: Mon, 14 Jul 2025 19:06:09 -0400
+Message-Id: <20250714230616.3709521-8-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250714230616.3709521-1-sashal@kernel.org>
+References: <20250714230616.3709521-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250714225917.1396543-1-coltonlewis@google.com>
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250714225917.1396543-24-coltonlewis@google.com>
-Subject: [PATCH v4 23/23] KVM: arm64: selftests: Add test case for partitioned PMU
-From: Colton Lewis <coltonlewis@google.com>
-To: kvm@vger.kernel.org
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Mingwei Zhang <mizhang@google.com>, Joey Gouly <joey.gouly@arm.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, Colton Lewis <coltonlewis@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.15.6
+Content-Transfer-Encoding: 8bit
 
-Run separate a test case for a partitioned PMU in vpmu_counter_access.
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-An enum is created specifying whether we are testing the emulated or
-partitioned PMU and all the test functions are modified to take the
-implementation as an argument and make the difference in setup
-appropriately.
+[ Upstream commit 3da6bb419750f3ad834786d6ba7c9d5d062c770b ]
 
-Because the test should still succeed even if we are on a machine
-where we have the capability but the ioctl fails because the driver
-was never configured properly, use __vcpu_ioctl to avoid checking the
-return code.
+Since exit_task_work() runs after perf_event_exit_task_context() updated
+ctx->task to TASK_TOMBSTONE, perf_sigtrap() from perf_pending_task() might
+observe event->ctx->task == TASK_TOMBSTONE.
 
-Signed-off-by: Colton Lewis <coltonlewis@google.com>
+Swap the early exit tests in order not to hit WARN_ON_ONCE().
+
+Closes: https://syzkaller.appspot.com/bug?extid=2fe61cb2a86066be6985
+Reported-by: syzbot <syzbot+2fe61cb2a86066be6985@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/b1c224bd-97f9-462c-a3e3-125d5e19c983@I-love.SAKURA.ne.jp
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/include/uapi/linux/kvm.h                |  2 +
- .../selftests/kvm/arm64/vpmu_counter_access.c | 62 +++++++++++++------
- 2 files changed, 46 insertions(+), 18 deletions(-)
 
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index b6ae8ad8934b..21a2c37528c8 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -930,6 +930,7 @@ struct kvm_enable_cap {
- #define KVM_CAP_X86_APIC_BUS_CYCLES_NS 237
- #define KVM_CAP_X86_GUEST_MODE 238
- #define KVM_CAP_ARM_WRITABLE_IMP_ID_REGS 239
-+#define KVM_CAP_ARM_PARTITION_PMU 244
- 
- struct kvm_irq_routing_irqchip {
- 	__u32 irqchip;
-@@ -1356,6 +1357,7 @@ struct kvm_vfio_spapr_tce {
- #define KVM_S390_SET_CMMA_BITS      _IOW(KVMIO, 0xb9, struct kvm_s390_cmma_log)
- /* Memory Encryption Commands */
- #define KVM_MEMORY_ENCRYPT_OP      _IOWR(KVMIO, 0xba, unsigned long)
-+#define KVM_ARM_PARTITION_PMU	_IOWR(KVMIO, 0xce, bool)
- 
- struct kvm_enc_region {
- 	__u64 addr;
-diff --git a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-index f16b3b27e32e..92e665516bc8 100644
---- a/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-+++ b/tools/testing/selftests/kvm/arm64/vpmu_counter_access.c
-@@ -25,6 +25,16 @@
- /* The cycle counter bit position that's common among the PMU registers */
- #define ARMV8_PMU_CYCLE_IDX		31
- 
-+enum pmu_impl {
-+	EMULATED,
-+	PARTITIONED
-+};
-+
-+const char *pmu_impl_str[] = {
-+	"Emulated",
-+	"Partitioned"
-+};
-+
- struct vpmu_vm {
- 	struct kvm_vm *vm;
- 	struct kvm_vcpu *vcpu;
-@@ -405,7 +415,7 @@ static void guest_code(uint64_t expected_pmcr_n)
- }
- 
- /* Create a VM that has one vCPU with PMUv3 configured. */
--static void create_vpmu_vm(void *guest_code)
-+static void create_vpmu_vm(void *guest_code, enum pmu_impl impl)
+LLM Generated explanations, may be completely bogus:
+
+Based on my analysis of the commit, let me provide my assessment:
+
+**YES**
+
+This commit should be backported to stable kernel trees for the
+following reasons:
+
+1. **It fixes a real bug with user-visible impact**: The commit fixes a
+   WARN_ON_ONCE() that fires in perf_sigtrap() when the system hits a
+   specific race condition. This WARN causes kernel log spam and
+   indicates an unexpected state that shouldn't occur.
+
+2. **The fix is small and contained**: The change is minimal - it simply
+   reorders two early exit checks in perf_sigtrap():
+   - Before: Check `event->ctx->task != current` first, then check
+     `PF_EXITING`
+   - After: Check `PF_EXITING` first, then check `event->ctx->task !=
+     current`
+
+3. **Clear race condition**: The commit message explains the race:
+   exit_task_work() runs after perf_event_exit_task_context() has
+   updated ctx->task to TASK_TOMBSTONE. When perf_sigtrap() is called
+   from perf_pending_task() during this window, it observes
+   event->ctx->task == TASK_TOMBSTONE, which doesn't match current,
+   triggering the WARN.
+
+4. **Low risk of regression**: The fix simply reorders existing checks
+   without changing functionality. If the task is exiting (PF_EXITING is
+   set), we return early regardless. The reordering just prevents the
+   WARN from firing in this legitimate exit scenario.
+
+5. **Fixes a reproducible issue**: The commit references a specific
+   syzbot report
+   (https://syzkaller.appspot.com/bug?extid=2fe61cb2a86066be6985),
+   indicating this is a real issue that can be triggered, not just
+   theoretical.
+
+6. **Follows stable tree rules**: This is an important bugfix (prevents
+   kernel warnings), has minimal risk, and doesn't introduce new
+   features or make architectural changes.
+
+The fix is appropriate because during task exit, it's expected that
+ctx->task might be TASK_TOMBSTONE while the task is still cleaning up
+its work items. By checking PF_EXITING first, we properly handle the
+legitimate exit case without triggering false warnings.
+
+ kernel/events/core.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 2d1131e2cfc02..c7df50825cfdb 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7137,18 +7137,18 @@ void perf_event_wakeup(struct perf_event *event)
+ static void perf_sigtrap(struct perf_event *event)
  {
- 	struct kvm_vcpu_init init;
- 	uint8_t pmuver, ec;
-@@ -419,6 +429,7 @@ static void create_vpmu_vm(void *guest_code)
- 		.group = KVM_ARM_VCPU_PMU_V3_CTRL,
- 		.attr = KVM_ARM_VCPU_PMU_V3_INIT,
- 	};
-+	bool partition = (impl == PARTITIONED);
+ 	/*
+-	 * We'd expect this to only occur if the irq_work is delayed and either
+-	 * ctx->task or current has changed in the meantime. This can be the
+-	 * case on architectures that do not implement arch_irq_work_raise().
++	 * Both perf_pending_task() and perf_pending_irq() can race with the
++	 * task exiting.
+ 	 */
+-	if (WARN_ON_ONCE(event->ctx->task != current))
++	if (current->flags & PF_EXITING)
+ 		return;
  
- 	/* The test creates the vpmu_vm multiple times. Ensure a clean state */
- 	memset(&vpmu_vm, 0, sizeof(vpmu_vm));
-@@ -449,6 +460,9 @@ static void create_vpmu_vm(void *guest_code)
- 	/* Initialize vPMU */
- 	vcpu_ioctl(vpmu_vm.vcpu, KVM_SET_DEVICE_ATTR, &irq_attr);
- 	vcpu_ioctl(vpmu_vm.vcpu, KVM_SET_DEVICE_ATTR, &init_attr);
-+
-+	if (kvm_has_cap(KVM_CAP_ARM_PARTITION_PMU))
-+		__vcpu_ioctl(vpmu_vm.vcpu, KVM_ARM_PARTITION_PMU, &partition);
- }
+ 	/*
+-	 * Both perf_pending_task() and perf_pending_irq() can race with the
+-	 * task exiting.
++	 * We'd expect this to only occur if the irq_work is delayed and either
++	 * ctx->task or current has changed in the meantime. This can be the
++	 * case on architectures that do not implement arch_irq_work_raise().
+ 	 */
+-	if (current->flags & PF_EXITING)
++	if (WARN_ON_ONCE(event->ctx->task != current))
+ 		return;
  
- static void destroy_vpmu_vm(void)
-@@ -475,12 +489,12 @@ static void run_vcpu(struct kvm_vcpu *vcpu, uint64_t pmcr_n)
- 	}
- }
- 
--static void test_create_vpmu_vm_with_pmcr_n(uint64_t pmcr_n, bool expect_fail)
-+static void test_create_vpmu_vm_with_pmcr_n(uint64_t pmcr_n, enum pmu_impl impl, bool expect_fail)
- {
- 	struct kvm_vcpu *vcpu;
- 	uint64_t pmcr, pmcr_orig;
- 
--	create_vpmu_vm(guest_code);
-+	create_vpmu_vm(guest_code, impl);
- 	vcpu = vpmu_vm.vcpu;
- 
- 	pmcr_orig = vcpu_get_reg(vcpu, KVM_ARM64_SYS_REG(SYS_PMCR_EL0));
-@@ -508,7 +522,7 @@ static void test_create_vpmu_vm_with_pmcr_n(uint64_t pmcr_n, bool expect_fail)
-  * Create a guest with one vCPU, set the PMCR_EL0.N for the vCPU to @pmcr_n,
-  * and run the test.
-  */
--static void run_access_test(uint64_t pmcr_n)
-+static void run_access_test(uint64_t pmcr_n, enum pmu_impl impl)
- {
- 	uint64_t sp;
- 	struct kvm_vcpu *vcpu;
-@@ -516,7 +530,7 @@ static void run_access_test(uint64_t pmcr_n)
- 
- 	pr_debug("Test with pmcr_n %lu\n", pmcr_n);
- 
--	test_create_vpmu_vm_with_pmcr_n(pmcr_n, false);
-+	test_create_vpmu_vm_with_pmcr_n(pmcr_n, impl, false);
- 	vcpu = vpmu_vm.vcpu;
- 
- 	/* Save the initial sp to restore them later to run the guest again */
-@@ -550,14 +564,14 @@ static struct pmreg_sets validity_check_reg_sets[] = {
-  * Create a VM, and check if KVM handles the userspace accesses of
-  * the PMU register sets in @validity_check_reg_sets[] correctly.
-  */
--static void run_pmregs_validity_test(uint64_t pmcr_n)
-+static void run_pmregs_validity_test(uint64_t pmcr_n, enum pmu_impl impl)
- {
- 	int i;
- 	struct kvm_vcpu *vcpu;
- 	uint64_t set_reg_id, clr_reg_id, reg_val;
- 	uint64_t valid_counters_mask, max_counters_mask;
- 
--	test_create_vpmu_vm_with_pmcr_n(pmcr_n, false);
-+	test_create_vpmu_vm_with_pmcr_n(pmcr_n, impl, false);
- 	vcpu = vpmu_vm.vcpu;
- 
- 	valid_counters_mask = get_counters_mask(pmcr_n);
-@@ -607,11 +621,11 @@ static void run_pmregs_validity_test(uint64_t pmcr_n)
-  * the vCPU to @pmcr_n, which is larger than the host value.
-  * The attempt should fail as @pmcr_n is too big to set for the vCPU.
-  */
--static void run_error_test(uint64_t pmcr_n)
-+static void run_error_test(uint64_t pmcr_n, enum pmu_impl impl)
- {
--	pr_debug("Error test with pmcr_n %lu (larger than the host)\n", pmcr_n);
-+	pr_debug("Error test with pmcr_n %lu (larger than the host allows)\n", pmcr_n);
- 
--	test_create_vpmu_vm_with_pmcr_n(pmcr_n, true);
-+	test_create_vpmu_vm_with_pmcr_n(pmcr_n, impl, true);
- 	destroy_vpmu_vm();
- }
- 
-@@ -619,30 +633,42 @@ static void run_error_test(uint64_t pmcr_n)
-  * Return the default number of implemented PMU event counters excluding
-  * the cycle counter (i.e. PMCR_EL0.N value) for the guest.
-  */
--static uint64_t get_pmcr_n_limit(void)
-+static uint64_t get_pmcr_n_limit(enum pmu_impl impl)
- {
- 	uint64_t pmcr;
- 
--	create_vpmu_vm(guest_code);
-+	create_vpmu_vm(guest_code, impl);
- 	pmcr = vcpu_get_reg(vpmu_vm.vcpu, KVM_ARM64_SYS_REG(SYS_PMCR_EL0));
- 	destroy_vpmu_vm();
- 	return get_pmcr_n(pmcr);
- }
- 
--int main(void)
-+void test_pmu(enum pmu_impl impl)
- {
- 	uint64_t i, pmcr_n;
- 
--	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_PMU_V3));
-+	pr_info("Testing PMU: Implementation = %s\n", pmu_impl_str[impl]);
-+
-+	pmcr_n = get_pmcr_n_limit(impl);
-+	pr_debug("PMCR_EL0.N: Limit = %lu\n", pmcr_n);
- 
--	pmcr_n = get_pmcr_n_limit();
- 	for (i = 0; i <= pmcr_n; i++) {
--		run_access_test(i);
--		run_pmregs_validity_test(i);
-+		run_access_test(i, impl);
-+		run_pmregs_validity_test(i, impl);
- 	}
- 
- 	for (i = pmcr_n + 1; i < ARMV8_PMU_MAX_COUNTERS; i++)
--		run_error_test(i);
-+		run_error_test(i, impl);
-+}
-+
-+int main(void)
-+{
-+	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_PMU_V3));
-+
-+	test_pmu(EMULATED);
-+
-+	if (kvm_has_cap(KVM_CAP_ARM_PARTITION_PMU))
-+		test_pmu(PARTITIONED);
- 
- 	return 0;
- }
+ 	send_sig_perf((void __user *)event->pending_addr,
 -- 
-2.50.0.727.gbf7dc18ff4-goog
+2.39.5
 
