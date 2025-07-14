@@ -1,51 +1,44 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D83E72600;
-	Mon, 14 Jul 2025 08:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8310723BD1D;
+	Mon, 14 Jul 2025 08:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752481839; cv=none; b=TGGbn+2AeCDxo218Ro/cFIt9RsFIb+FIUJRVa5+BiwptMGThrwXljMRM5hAVuVXBWI1EQzeGa7XMKQYXJYiI7HKqcqSbpGf4HI+lBkGvJO1fTe05gn3zLzCsczrPb4VkCB/bQfILpFqzgKaRzlXf8sfBIr0j2oMQaBBkKIDFHBU=
+	t=1752483534; cv=none; b=h7nKHAt0QJdLnsu+YGchLFiPMcVym12oop75dFwBurdWUnUSKi3lajx1bVHZNUt0EkkWKcxxsCHuQaO636f98LF71l7dN+wu045x+0sMDADifWAi76LT0E99123DYvP1IN5OivqbLnRyhLbeZRgXwqKxPLb/dE7hLDcbjRHZ+Is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752481839; c=relaxed/simple;
-	bh=UXxWUo53aedqVB8S2fdgJLytsMH1oCAccK6tpYkBahQ=;
+	s=arc-20240116; t=1752483534; c=relaxed/simple;
+	bh=Pbra00ApgwHXEuR8gnZIa2ZhDS08TIfHcQUZpvP/4JU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oswLCqRe0RSxImNPRuE34l3ieTY1BmNU0EiSkNBAZIzyiLqHnX1tGs4ONJqNet2V9Tdz8FgM3VCY/2+B7PEEnXN6i0lHtmqWGIccZC9dVM4s2TUpjR/Nfw4Iar42w3wyxRIMH9oGyLF6EIloELhTlx56Cev83rSBGaYxHvIfeMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=N82ZdbCj; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N82ZdbCj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=UXxWUo53aedqVB8S2fdgJLytsMH1oCAccK6tpYkBahQ=; b=N82ZdbCjturlES3ex0s4qZ5ELi
-	ZRYcC79RYeThJxke0T2vwa75bcTjUhvtnhO/iTRQBa0UEFVir4P28IRmwZjUTwZiLsO1SVwImeHuF
-	7hFlHsXyJbMfMH52l02zK2/L8fcKcPWp/2Q6sg/B7t7+MJN7BKIc/1a4NgUO4O1RICAoDEr7QBXGq
-	To19P7TLya59FIblwm/L4zJeOouCEbITe3Ki+9Jvcdp9MecnGA0AXbt1wKiEKa8DBcHwq8itpAFsq
-	yWu9MpCNRaBTHmgbYJDM18xKzGMHXkH4kqGZzvJslNwijPsDmPR1Mg9nDOUOSSq96hCWW9mj0EjJ5
-	r8sWX5MQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ubEZs-00000006WXJ-025b;
-	Mon, 14 Jul 2025 08:30:24 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id AFF7B300186; Mon, 14 Jul 2025 10:30:22 +0200 (CEST)
-Date: Mon, 14 Jul 2025 10:30:22 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Matt Gilbride <mattgilbride@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=dYOvNhmH+3HMMkY/ajg/yTxc/9/vVxJf/t5b0UaIpmnaKfhBy6H+nK6+AGmVwRj51tcBOOO22stJyaFIqiUgaWLHYqL4oalaGxBrHzjKvcyPajJ1scOgiQCHXnCNs6zVydvIQoz7p7C4RqV8EvtFhl7YUCLDaae3owZicWUYJVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35E5C1764;
+	Mon, 14 Jul 2025 01:58:42 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1528E3F694;
+	Mon, 14 Jul 2025 01:58:50 -0700 (PDT)
+Date: Mon, 14 Jul 2025 09:58:49 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: James Clark <james.clark@linaro.org>, Will Deacon <will@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>,
-	David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH 1/1] uprobes: relax valid_vma check for VM_MAYSHARE
-Message-ID: <20250714083022.GJ905792@noisy.programming.kicks-ass.net>
-References: <20250711200705.1545447-1-mattgilbride@google.com>
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Anshuman Khandual <Anshuman.Khandual@arm.com>,
+	Rob Herring <Rob.Herring@arm.com>,
+	Suzuki Poulose <Suzuki.Poulose@arm.com>,
+	Robin Murphy <Robin.Murphy@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] perf: arm_spe: Disable buffer before writing to
+ PMBPTR_EL1 or PMBSR_EL1
+Message-ID: <20250714085849.GC1093654@e132581.arm.com>
+References: <20250701-james-spe-vm-interface-v1-0-52a2cd223d00@linaro.org>
+ <20250701-james-spe-vm-interface-v1-2-52a2cd223d00@linaro.org>
+ <20250704155016.GI1039028@e132581.arm.com>
+ <b77f12e7-ea3f-4c57-9706-ff8e32721cc8@linaro.org>
+ <20250707153710.GB2182465@e132581.arm.com>
+ <aG4_uYJgpMXo3QHQ@raptor>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,12 +47,117 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250711200705.1545447-1-mattgilbride@google.com>
+In-Reply-To: <aG4_uYJgpMXo3QHQ@raptor>
 
-On Fri, Jul 11, 2025 at 08:07:05PM +0000, Matt Gilbride wrote:
-> ART maps a memfd twice, once as RW and once as RX, to uphold W^X for
-> security (defense in depth),
+Hi Alexandru,
 
-I'll argue this is no defence at all. As long as there is a writable
-mapping for an executable page, you've lost. You have effectively
-violated W^X.
+On Wed, Jul 09, 2025 at 11:08:57AM +0100, Alexandru Elisei wrote:
+
+[...]
+
+> > > > >   	case SPE_PMU_BUF_FAULT_ACT_OK:
+> > > > >   		/*
+> > > > > @@ -679,18 +692,14 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
+> > > > >   		 * PMBPTR might be misaligned, but we'll burn that bridge
+> > > > >   		 * when we get to it.
+> > > > >   		 */
+> > > > > -		if (!(handle->aux_flags & PERF_AUX_FLAG_TRUNCATED)) {
+> > > > > +		if (!(handle->aux_flags & PERF_AUX_FLAG_TRUNCATED))
+> > > > >   			arm_spe_perf_aux_output_begin(handle, event);
+> > > > > -			isb();
+> > > > 
+> > > > I am a bit suspecious we can remove this isb().
+> > > > 
+> > > > As a reference to the software usage PKLXF in Arm ARM (DDI 0487 L.a),
+> > > > after enable TRBE trace unit, an ISB is mandatory. Maybe check a bit
+> > > > for this?
+> > >
+> > > Wasn't this isb() to separate the programming of the registers with the
+> > > status register clear at the end of this function to enable profiling?
+> > 
+> > Enabling profiling buffer followed an isb() is not only for separating
+> > other register programming.
+> > 
+> > As described in section D17.9, Synchronization and Statistical Profiling
+> > in Arm ARM:
+> > 
+> >   "A Context Synchronization event guarantees that a direct write to a
+> >   System register made by the PE in program order before the Context
+> >   synchronization event are observable by indirect reads and indirect
+> >   writes of the same System register made by a profiling operation
+> >   relating to a sampled operation in program order after the Context
+> >   synchronization event."
+> > 
+> > My understanding is: after the ARM SPE profiling is enabled, the
+> > followed ISB is a Synchronization to make sure the system register
+> > values are observed by SPE. And we cannot rely on ERET, especially if
+> > we are tracing the kernel mode.
+> 
+> Thought about this some more.
+> 
+> Before:
+> 
+> arm_spe_pmu_buf_get_fault_act:
+>   <drain buffer>
+>   ISB
+> arm_spe_perf_aux_output_begin:
+>   PMBLIMITR_EL1.E = 1
+> ISB
+> PMBSR_EL1.S = 0
+> ERET
+> 
+> Now:
+> 
+> PMBLIMITR_EL1 = 0
+> ISB
+> 
+> PMBSR_EL1.S = 0
+> arm_spe_perf_aux_output_begin:
+>   ISB
+>   PMBLIMITR_EL1.E = 1
+> ERET
+> 
+> I don't see much of a difference between the two sequences - the point after
+> which we can be sure that profiling is enabled remains the ERET from the
+> exception return.  The only difference is that, before this change, the ERET
+> synchronized clearing the PMBSR_EL1.S bit, now it synchronizes setting the
+> PMBLIMITR_EL1.E bit.
+> 
+> Thoughts?
+
+To make the discussion easier, I'll focus on the trace enabling flow
+in this reply.
+
+My understanding of a sane flow would be:
+
+  arm_spe_pmu_irq_handler() {
+    arm_spe_perf_aux_output_begin() {
+          SYS_PMBPTR_EL1 = base;
+
+          ISB // Synchronization between SPE register setting and
+              // enabling profiling buffer.
+          PMBLIMITR_EL1.E = 1;
+    }
+    ISB // Context synchronization event to ensure visibility to SPE
+  }
+
+  ... start trace ... (Bottom half, e.g., softirq, etc)
+
+  ERET
+
+In the current code, arm_spe_perf_aux_output_begin() is followed by an
+ISB, which serves as a context synchronization event to ensure
+visibility to the SPE. After that, it ensures that the trace unit will
+function correctly.
+
+I understand that the Software Usage PKLXF recommends using an ERET as
+the synchronization point. However, between enabling the profiling
+buffer and the ERET, the kernel might execute other operations (e.g.,
+softirqs, tasklets, etc.).
+
+Therefore, it seems to me that using ERET as the synchronization point
+may be too late. This is why I think we should keep an ISB after
+arm_spe_perf_aux_output_begin().
+
+Thanks,
+Leo
