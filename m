@@ -1,47 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA9725A33E;
-	Mon, 14 Jul 2025 15:10:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2AEA25C83A
+	for <linux-perf-users@vger.kernel.org>; Mon, 14 Jul 2025 15:10:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752505818; cv=none; b=qOf6KPcXyZRSXVeLLtl9vDj++Au1cWZR9CHRbFzDPU52ez42zZd7s02Aen6bIqUp9T+7qCDBbyDpoPkzXKDLHln0g5No4mvnDkbTeEuB1ebt2s0lkG7KEQA+ae2InJApFLsG/ZsalDTfb2s5xQw1ayVUyFLzOy0lLJhiDXdplic=
+	t=1752505821; cv=none; b=fJkb+ibBPXrVJ87Eaau9IpQWo5CNBBM3aEOJAMrCW6JwCd6pbB4QO+VwznZ4+vuot7uKh2dOD+mnOxngYLMdHSa2KAbzWBOOtP+GcvzuBnXJkUkioIMCRWupLKcuV6McCAtVhripyiQLdrwOSL7voaJ1U5ux3my0w00/bNByMY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752505818; c=relaxed/simple;
-	bh=tL2cvBKvP+TRNoehYql8sqSD0WsB5mk+ZMdcqb1joUM=;
+	s=arc-20240116; t=1752505821; c=relaxed/simple;
+	bh=VxCykl7yeIAWJjVFGH1guO1tvXM4SvGkFfbkVMygBtM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H0FmW19lJGOi8hmzNiEour4UeyuwkdJTBJUDvz5z5RJyvJ/jEXrLPUTtV14yMZ0A2+3GCtbNQmerAv6XDUYy26x5sU1/hp7jiewsB5SAvWdc8b4PtoqYXsrmA36gEhX++hGs0iwY0b2YwJ3TnYA2yaBrQtCSzjw7oHnyBx34PEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cWeEO09G; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=F5/niWuWPoYPYXPezF64A+77xi6AT5yJStYK0bgw7dkmYRGwbnTvU4O3MNzQY9FcwtDBkwN22WbQM0cbEhtLNrLq8Ki3s+IA0fLepOG5hs3qNwUImfc1XwSVo2yh4KSs6/+ZVmugQ94vXumaRSskGDWPwA0uzaK9EB4AjtByV1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zh8nBNHl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cWeEO09G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70FB9C4CEED;
-	Mon, 14 Jul 2025 15:10:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zh8nBNHl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7ED5C4CEF4;
+	Mon, 14 Jul 2025 15:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752505818;
-	bh=tL2cvBKvP+TRNoehYql8sqSD0WsB5mk+ZMdcqb1joUM=;
+	s=k20201202; t=1752505820;
+	bh=VxCykl7yeIAWJjVFGH1guO1tvXM4SvGkFfbkVMygBtM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cWeEO09GvdWR7Yxc1VYvSQtI6HYGeWlBW6L3qlJJ4vSnKlQbEwatoGUPJdS0+bmcL
-	 YUkslPAQW/CggfUqF+K0X2rRRWzjo7cG7S6a7F/rbA8Wjrqid0kG8CvqgnmnmvOwh1
-	 tQbHbOZyA6RppVXNWcVEwvmBPxec3+RD+VWVJS5FKyTUpvw8bGv6XJm3ufFx6HvgSV
-	 4P8g4oWp+6t8A2hgZIcsdt/nf0GB5iAmhYk7Muesdzy54odJSJy7M1Ubl4wbSWV45p
-	 yFyOLlnFKyyHgw5S5U1ApSOtkX6EyOJ0XzVuc8zpceXrUaKlZKxAYWvlD6810rANRw
-	 FmBmcbJFyQOsw==
+	b=Zh8nBNHlmLfyFWZsuMIA7Hkw3ddNEz0XUz3Pr9+g0MTzGDdm1q5T3EI5Okq3X0JRr
+	 77yWCZl7SeJkREuWJqZxL8vUpynLCTOrqySWKuW0p7ErfpLdoTJP0nkg9yTXFQC0a0
+	 /FPnk19mP2fyJgoDhhMMnpxd9nh4ZcYJgJu50u4yf0Y0Rbg4OhFNxN8ZfiwkGahw5F
+	 HPqixW+4x15vkipgl04BU0+t2dlX+rF3GYUwc7/LIzvJG+mooOnBiyJG6pB4fXYivO
+	 Mh4mzbPp20Zdh1ZV0tXnwnk2UFJo7ciB832i1fvF+G2WYY2WdEfueMz+/FhxP8GbMF
+	 XygWhQQ4XStvw==
 From: Will Deacon <will@kernel.org>
-To: jonathan.cameron@huawei.com,
-	mark.rutland@arm.com,
-	linux-cxl@vger.kernel.org,
-	Alok Tiwari <alok.a.tiwari@oracle.com>
+To: Robin Murphy <robin.murphy@arm.com>
 Cc: catalin.marinas@arm.com,
 	kernel-team@android.com,
 	Will Deacon <will@kernel.org>,
+	mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] perf/cxlpmu: Fix allocation argument order and minor formatting
-Date: Mon, 14 Jul 2025 16:10:09 +0100
-Message-Id: <175249658916.1514882.17829256501206984322.b4-ty@kernel.org>
+	allen.wang@hj-micro.com,
+	peter.du@hj-micro.com,
+	andy.xu@hj-micro.com
+Subject: Re: [PATCH v2 0/2] perf/arm-ni: IRQ improvements
+Date: Mon, 14 Jul 2025 16:10:10 +0100
+Message-Id: <175250207277.1540736.2402817264708558809.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250624194350.109790-1-alok.a.tiwari@oracle.com>
-References: <20250624194350.109790-1-alok.a.tiwari@oracle.com>
+In-Reply-To: <cover.1752256072.git.robin.murphy@arm.com>
+References: <cover.1752256072.git.robin.murphy@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,26 +52,22 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Tue, 24 Jun 2025 12:43:37 -0700, Alok Tiwari wrote:
-> This patch series includes a few minor cleanups and correctness
-> improvements in drivers/perf/cxl_pmu.c
+On Fri, 11 Jul 2025 19:15:15 +0100, Robin Murphy wrote:
+> v1: https://lore.kernel.org/all/cover.1747149165.git.robin.murphy@arm.com
 > 
-> Correct the argument order in devm_kcalloc() to follow the
-> conventional count, size form to avoid any confusion or bugs.
+> Hi all,
 > 
-> Remove an unintended newline in the IRQ name string passed to
-> devm_kasprintf() and  fix a formatting issue in the devm_kasprintf()
+> Here's a quick tweak to address Will's concern last time (minus
+> the affinity fix that's already queued).
 > 
 > [...]
 
 Applied to will (for-next/perf), thanks!
 
-[1/3] perf/cxlpmu: Fix devm_kcalloc() argument order in cxl_pmu_probe()
-      https://git.kernel.org/will/c/6ae58c74e7aa
-[2/3] perf/cxlpmu: Remove unintended newline from IRQ name format string
-      https://git.kernel.org/will/c/3e870815ccf5
-[3/3] perf/cxlpmu: Fix typos in cxl_pmu.c comments and documentation
-      https://git.kernel.org/will/c/0259de6331df
+[1/2] perf/arm-ni: Consolidate CPU affinity handling
+      https://git.kernel.org/will/c/6a5dc6c7534e
+[2/2] perf/arm-ni: Support sharing IRQs within an NI instance
+      https://git.kernel.org/will/c/89f0b9ccd314
 
 Cheers,
 -- 
