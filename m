@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA44248883;
-	Mon, 14 Jul 2025 13:26:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D421A2475E3;
+	Mon, 14 Jul 2025 13:32:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752499607; cv=none; b=KtVps/esgVohwjjXylRJz+qSmRD3Th4kTTkEHtl3Jj+58IwPnBU61iSLFh6UnckdG8ZN4X8uv6VGvJ+u/+gkdes/iFDIwdfuzYi1KED4dh0k3kSYDgS9qZj/Z6oAqkNpRKOh6isWtmhYFZCwuDI6URhkFnfqqTCjN5Uq2bxtytg=
+	t=1752499966; cv=none; b=br146vWfPxtf1ch9Tvj2EoMwQBcmVc2G+OqANluPvyRKtwxousE6qFtMp/G/nuAz5559efePyycwLU6R12hL8YKn5+pl6G++ckYNUqAdaFvEtwOTZK4YcvqiEpTFinKf03tUdOxY6eWzNm7JXLUX5g2sb2NZ+uR53uJffvmy6Ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752499607; c=relaxed/simple;
-	bh=F0h9qPfS1IFEzVFRGzECq3FkHstZL9RWV6sL0z924sM=;
+	s=arc-20240116; t=1752499966; c=relaxed/simple;
+	bh=zYLFg0UGybuPu0kCXHDSNl+grvOFE2zIo70Nf4XZjj4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bPJ3XLYnLY+fg9CAQsXqdvgSSOF7e0mgoi+LQ9yOR0Wd7EAVZFamsbniBMGuIGR9xPAO1tGB+G849oa2svcEoz0VaPidHFKk7zJsGImPp8WiS9v8s64FX79ujih440EGWyQERpdhYZ661EUq4800ZAHb3QSX0YV08qOedVTE3N4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qw1miNrN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CoPoKukXtVnkoZnsdtaDkCdn6ZGAcNcdGzdzcAZRgbc7u0X5EXGyAkwSfM16kIQ9VyVUw7g1UIB36bwpjQ4tDPcV4M4kGDXp+ZQvlAhf3foN9Eaq4O2HGYFNZauZEbZbzr00QOAiV93yjEX76//RhW4/EFevX9HzleZCsVYmgBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=touKXH+Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qw1miNrN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F583C4CEED;
-	Mon, 14 Jul 2025 13:26:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="touKXH+Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BCD2C4CEF6;
+	Mon, 14 Jul 2025 13:32:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752499607;
-	bh=F0h9qPfS1IFEzVFRGzECq3FkHstZL9RWV6sL0z924sM=;
+	s=k20201202; t=1752499965;
+	bh=zYLFg0UGybuPu0kCXHDSNl+grvOFE2zIo70Nf4XZjj4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qw1miNrNBh0wkTZ/anfy7aGB7/NfB3gC2jbI1iY9RGdvO/jyibOW8mHgITKi/WHqR
-	 9oruhqtRVHi/HQFfXtVrXuYJ8tZSUnO4DVdS2NHst28qKNxNDDzU6WK5nYKhHQJYVb
-	 uowtKbBVr9JRIUntIH7+S1lUBzaDpxa9otPil7K44hjlPzCqul67n3QFd3ZGZczViR
-	 U+QDSKRGKRyVd5PIhDK8FPKGWsmsA9XaPAHHpeTvU5IVhI4905xdRra3VdM/HwM3UG
-	 KBpN/xFSGxOEZpAnqx2ouiyPiaYCl3uVQthDvJqmqbutytAYTgehiKk7kY17tExVdO
-	 uzSg3fUKz4cAA==
-Date: Mon, 14 Jul 2025 14:26:39 +0100
+	b=touKXH+Qb7rjyg66pw1fVCbvQAzWsmxh7egKqLtOjYEBZTBcu2FM0jsxz01I+6I+W
+	 qpx2dBxkQUHNwnTr8g1wySB0VzzJkWQ1HkEjzP4H8qQMlmS3GYAOFlQtFBEfgwfD7f
+	 h9qKA82Xbb2GMrrQe4yEps7c9OUXrT0CB4zDSq9VuSMxBa2jpXnFQy32+n0EtlT9Rx
+	 vR8aRyRhZVeIpSYKNV9CsRLZMcKy721QXGwV6BIr/1tB5qXF4dJDGrsZ3FEHOGaUbF
+	 51B6L3i/YubBnIfdXnO/Z1yeEBc84d8Fn4m5sKHweSjgXUhqzUH/jqTes+x+lxunU9
+	 cvDEhaNXyyZyA==
+Date: Mon, 14 Jul 2025 14:32:37 +0100
 From: Will Deacon <will@kernel.org>
 To: James Clark <james.clark@linaro.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>,
@@ -46,10 +46,11 @@ Cc: Catalin Marinas <catalin.marinas@arm.com>,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
 	kvmarm@lists.linux.dev
-Subject: Re: [PATCH v3 02/10] perf: arm_spe: Support FEAT_SPEv1p4 filters
-Message-ID: <aHUFj9lH5bZwa4Z2@willie-the-truck>
+Subject: Re: [PATCH v3 01/10] arm64: sysreg: Add new PMSFCR_EL1 fields and
+ PMSDSFR_EL1 register
+Message-ID: <aHUG9bVy9pdwfumh@willie-the-truck>
 References: <20250605-james-perf-feat_spe_eft-v3-0-71b0c9f98093@linaro.org>
- <20250605-james-perf-feat_spe_eft-v3-2-71b0c9f98093@linaro.org>
+ <20250605-james-perf-feat_spe_eft-v3-1-71b0c9f98093@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,66 +59,19 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250605-james-perf-feat_spe_eft-v3-2-71b0c9f98093@linaro.org>
+In-Reply-To: <20250605-james-perf-feat_spe_eft-v3-1-71b0c9f98093@linaro.org>
 
-On Thu, Jun 05, 2025 at 11:49:00AM +0100, James Clark wrote:
-> FEAT_SPEv1p4 (optional from Armv8.8) adds some new filter bits, so
-> remove them from the previous version's RES0 bits using
-> PMSEVFR_EL1_RES0_V1P4_EXCL. It also makes some previously available bits
-> unavailable again, so add those back using PMSEVFR_EL1_RES0_V1P4_INCL.
-> E.g:
+On Thu, Jun 05, 2025 at 11:48:59AM +0100, James Clark wrote:
+> Add new fields and register that are introduced for the features
+> FEAT_SPE_EFT (extended filtering) and FEAT_SPE_FDS (data source
+> filtering).
 > 
->   E[30], bit [30]
->   When FEAT_SPEv1p4 is _not_ implemented ...
-> 
-> FEAT_SPE_V1P3 has the same filters as V1P2 so explicitly add it to the
-> switch.
-> 
-> Reviewed-by: Leo Yan <leo.yan@arm.com>
 > Tested-by: Leo Yan <leo.yan@arm.com>
 > Signed-off-by: James Clark <james.clark@linaro.org>
 > ---
->  arch/arm64/include/asm/sysreg.h | 7 +++++++
->  drivers/perf/arm_spe_pmu.c      | 5 ++++-
->  2 files changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-> index f1bb0d10c39a..880090df3efc 100644
-> --- a/arch/arm64/include/asm/sysreg.h
-> +++ b/arch/arm64/include/asm/sysreg.h
-> @@ -358,6 +358,13 @@
->  	(PMSEVFR_EL1_RES0_IMP & ~(BIT_ULL(18) | BIT_ULL(17) | BIT_ULL(11)))
->  #define PMSEVFR_EL1_RES0_V1P2	\
->  	(PMSEVFR_EL1_RES0_V1P1 & ~BIT_ULL(6))
-> +#define PMSEVFR_EL1_RES0_V1P4_EXCL \
-> +	(BIT_ULL(2) | BIT_ULL(4) | GENMASK_ULL(10, 8) | GENMASK_ULL(23, 19))
-> +#define PMSEVFR_EL1_RES0_V1P4_INCL \
-> +	(GENMASK_ULL(31, 26))
-> +#define PMSEVFR_EL1_RES0_V1P4	\
-> +	(PMSEVFR_EL1_RES0_V1P4_INCL | \
-> +	(PMSEVFR_EL1_RES0_V1P2 & ~PMSEVFR_EL1_RES0_V1P4_EXCL))
->  
->  /* Buffer error reporting */
->  #define PMBSR_EL1_FAULT_FSC_SHIFT	PMBSR_EL1_MSS_SHIFT
-> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> index 3efed8839a4e..d9f6d229dce8 100644
-> --- a/drivers/perf/arm_spe_pmu.c
-> +++ b/drivers/perf/arm_spe_pmu.c
-> @@ -701,9 +701,12 @@ static u64 arm_spe_pmsevfr_res0(u16 pmsver)
->  	case ID_AA64DFR0_EL1_PMSVer_V1P1:
->  		return PMSEVFR_EL1_RES0_V1P1;
->  	case ID_AA64DFR0_EL1_PMSVer_V1P2:
-> +	case ID_AA64DFR0_EL1_PMSVer_V1P3:
-> +		return PMSEVFR_EL1_RES0_V1P2;
-> +	case ID_AA64DFR0_EL1_PMSVer_V1P4:
->  	/* Return the highest version we support in default */
->  	default:
-> -		return PMSEVFR_EL1_RES0_V1P2;
-> +		return PMSEVFR_EL1_RES0_V1P4;
+>  arch/arm64/tools/sysreg | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
 
-See my reply [1] to Leo about this function, but I think we should just
-remove it.
+Acked-by: Will Deacon <will@kernel.org>
 
 Will
-
-[1] https://lore.kernel.org/all/20250707-arm_spe_support_hitm_overhead_v1_public-v3-0-33ea82da3280@arm.com/
