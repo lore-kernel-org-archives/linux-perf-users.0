@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C0D291C14;
-	Mon, 14 Jul 2025 23:07:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C2D298CA4;
+	Mon, 14 Jul 2025 23:07:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752534450; cv=none; b=Ti6JQsYKlVAC0GdLvcES+75rXpoUkuqA7o4IUy7hIz/6meXDeo5OJx6N4bZuxzhp6UlqGc6RyuWuMFsBM/nlefcoJm3RTreifI25tjxNob/ABx0kfse4wC98TBtO/Zrp3FO7Oigj7cZoOUkHn/DIn1IWoWWV/aMG070tAGftbuo=
+	t=1752534475; cv=none; b=TDA6b2PWe/yRPMgx6dxs8bSAR5WYItrRUtxVuizIlIQtMjYD/EXMRYsLLL1UHA7Lctg7Kvs5gKUyB6bWItZ23p3ZYuoZxwEcBjNQ2WiuL91gpZ0y59V0o2JDalrMZIhEQ1ZAe9oj/5WLq5ONUelNhfJz8h6qlAGAraRLjvF+tSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752534450; c=relaxed/simple;
-	bh=TvMhV8JxLv+JN+nrVul8DqDYxh4dThaWXlW2istWtsw=;
+	s=arc-20240116; t=1752534475; c=relaxed/simple;
+	bh=64AD+8Six6qCxgsMIz6zvbkOGb1ypExIrfiYZg4UJv4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=A4fFyJa0dqlEmP59tjL6LRAZ66pADlDALatx3R1cZAWROIMMAlngZWI+F7fQ49eLY37BpMF/qXN93jBp8u5TCpV78YD+D5KvWYL9PsCKyUAs5zXyPdgZrufHwB5I/FeuvKVTyd/JyMlX6SaVtQFsQ7qrvXVAco5eSULk4A0rZ/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n7hi/Hmq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Buw8TQRKHv2gwr+b/nEY4lPX8our03xdCDqyO9Zy+l9kzYE6qEhy6NKUSIfAe4JdrnBp/wSIsKqKYcxReRH4/A3Y/17sBOxyVZVwFdckTnlWxjbM/jznbnGQ7QNM+u05Naajf0kVb8y+59ZHgIcms0v9gGpuxFaFjKD124ShGdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hn6+kWY6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n7hi/Hmq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76C91C4CEF4;
-	Mon, 14 Jul 2025 23:07:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hn6+kWY6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C210C4CEED;
+	Mon, 14 Jul 2025 23:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752534450;
-	bh=TvMhV8JxLv+JN+nrVul8DqDYxh4dThaWXlW2istWtsw=;
+	s=k20201202; t=1752534474;
+	bh=64AD+8Six6qCxgsMIz6zvbkOGb1ypExIrfiYZg4UJv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=n7hi/HmqdetV3qFpjqKq2rLb8pANS9CbZrrkfyrdgO+Ef6nvdijDC+6wW2rfI2DBH
-	 LlVu5R1wmeBF3TD6l4aWO/Jur7rXoSYxt22wl4qtN662i+Dfj8o2uGo2xftO/D2pmX
-	 SFO/jglyrigiKDqCvzzFC8EFz5nzyWwx1cOIg6mGAdBPmHQRjmioyqN8fM6MjqI+Xl
-	 q/y3RV+L3IuDPig/umLsGhe34JOImUizVBIgyV0wSJKy3KjNxJ/IlBzgRQlLmQ++oU
-	 NDxTxyyxNFJE8RRxqrZApeUh1YCjiUeiPjjKDSz2oJBLHYmKVpc23cTEqel9D+nylC
-	 gQGivim1Or/+A==
+	b=Hn6+kWY6l7AYydb30Kwmy+/4kgWsQkdaqh1YnA3nx21/l3yXKiJPBoy10oF4lCMcC
+	 8RqDn48Bsb2+YBaMPUi05RC83tLEcsRgTcUJo4Y2CdJ6VZhDnEm/z+Xhg+18qMJeqn
+	 e5PxDsrEYFa3MZ4mgmWDjZe7Dv4yDoqa1gsIkBrVGRRo3YP7BhxgygvVxZO8ota9M/
+	 9jrOQihMPBSNvtx/R8HC5PYCv3e9cNOYeB/unljbYv33Mwh6jkbuKtSSZ0flI++xrz
+	 RKg7+NeRdxcj2PgVvugw/gYOBAhoTIEfxU86UrOQJf/E47HCjgt040zYKv3N1bF/II
+	 kZQdKPRa8WArQ==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -38,12 +38,12 @@ Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
 	namhyung@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 07/12] perf/core: Fix WARN in perf_sigtrap()
-Date: Mon, 14 Jul 2025 19:07:10 -0400
-Message-Id: <20250714230715.3710039-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 4/6] perf/core: Fix WARN in perf_sigtrap()
+Date: Mon, 14 Jul 2025 19:07:41 -0400
+Message-Id: <20250714230744.3710270-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250714230715.3710039-1-sashal@kernel.org>
-References: <20250714230715.3710039-1-sashal@kernel.org>
+In-Reply-To: <20250714230744.3710270-1-sashal@kernel.org>
+References: <20250714230744.3710270-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.38
+X-stable-base: Linux 6.6.98
 Content-Transfer-Encoding: 8bit
 
 From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
@@ -125,10 +125,10 @@ legitimate exit case without triggering false warnings.
  1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 7210104b3345c..5ad445e80af3b 100644
+index 873b17545717c..7ceacbc24cfae 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -6894,18 +6894,18 @@ void perf_event_wakeup(struct perf_event *event)
+@@ -6785,18 +6785,18 @@ void perf_event_wakeup(struct perf_event *event)
  static void perf_sigtrap(struct perf_event *event)
  {
  	/*
