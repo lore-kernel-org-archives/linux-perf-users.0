@@ -1,164 +1,156 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+Received: from mail-oo1-f73.google.com (mail-oo1-f73.google.com [209.85.161.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6440D2459F6
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Jul 2025 19:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC428F5B
+	for <linux-perf-users@vger.kernel.org>; Tue, 15 Jul 2025 21:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752609359; cv=none; b=YWPSdHrg4VdE8g6Tg+oylcdHc4ioVtSxtD+TwUPQ8ua29I8HzSWs0O4Ttdk0fmYz/VGikZA8Oz9q3Hapz7MkFfsLUFYTzfiYKK25B0ztF/4JnFW+HedKeJwR+jkELoOXQnn8LG27w1nU5bg3tK1sMgkWEgoaUqZwCIh0utUEb8s=
+	t=1752614214; cv=none; b=IzHDGF+lA3EznqCazEdYnQGSH2rb1vwlGojLTLpKSbTnfVzM3UBEb5aR5btsAs232c2DywdLNk4ftOjgldytvp5sNlQnskPF0Cs9Oqe9Pxpc7Tn5ZgFPpBvXz49kPsOb/+xSXbsxwtQ26a9F/xwB9Vq9aoFjTVb34vIgPlTzGvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752609359; c=relaxed/simple;
-	bh=12q3VCBZrNOc2nq+dHbl5NnMmeNaOvVfPA3h3X1cfRg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=tJ7i1C2f7Xz4LaVGGbmtWK8eM2Z+uKyA4pWPlDHqMRSX6l1twVCU2/plGf/i4rVujXbHsYwOqw6fIyDcpuhvOxuRVIRBmcI36NpbympL1pP8yXMhdT/GjFFkrTxYwMmlA4C8aS/Yj4b9V59YDgh2bZ0mL/RnMKjjvyYDvshX8h8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oD1gVVFn; arc=none smtp.client-ip=209.85.166.170
+	s=arc-20240116; t=1752614214; c=relaxed/simple;
+	bh=tOQO6BDvaHzehkXLuqrv7zmehstQBhotZEf5osv7fJ8=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=uleS+LTe3qkoQfUgmrp65u0Y1I5qlTy1HVPK/mBnCUs+739BnjO3Ml3+CaiTHoiHMUBrzyJYPLMnh0IHcgLCD+Gwh8Ve6bHEFD58ZwTidswRE5ll5csnt1Dk6YpEGJpqFgP5yaEG/01TLhwKeed332acEUQ3WgYhY0rYHWab9Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b6C8AYof; arc=none smtp.client-ip=209.85.161.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oD1gVVFn"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so46785ab.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Jul 2025 12:55:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b6C8AYof"
+Received: by mail-oo1-f73.google.com with SMTP id 006d021491bc7-611fdcbe1d8so4054031eaf.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Jul 2025 14:16:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1752609357; x=1753214157; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H8NGzdL+oq3HRN7zaWJJ87MC6Pv7VHTg9tCKEmTKJZY=;
-        b=oD1gVVFnku0DcBVPrLxKsCOF1nJAenNORJ2oOkMzXTOQxW5doJvgHRi2kAfcZMUeC6
-         w3NWuLy643LRLaEz+rkNO5aKY2KsWf75MPIRsd1FHHX86AJnTLPyKr2A7wXG2VDYiTu9
-         eLKaOUBOTTQ9N7iSAn8okzvnaaktdjx6bvncFatA2s3gNlQCSBh3LEOdDbQ0F4uS751B
-         S2SA+WLb3t7Asi7Q2Vn1FKa8jb2oy2yEvJ2hoS4FWsnOXTKrPkWD7JCs0hfOe7NqyJfz
-         o+ApMnj9KJlv/asqNXu71lH6i0NjlLj9Kafvh6KPjIViExnFBZ/4+jSH+I6CdfR0ub5Z
-         CnUA==
+        d=google.com; s=20230601; t=1752614212; x=1753219012; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=W3m+1hLOZ8hAFq4B95DKPtg5XMn2S7HOXjCLINFrtq0=;
+        b=b6C8AYofF7kItz+F131mXwlOi8jlWsKBGsElFJ/SU9PR/dxfsPhNa138fWWGJxygvm
+         VwZnlEXQ2yNx9lqJPk9dXi+yVdsy9MEgOs73w6DNRl1PwRMZhqsKCqSy39uW1AONIBJJ
+         D3cWaOPPDO3oGkH/CPWn9HpcR+eykWkg1/0EK2C9YxllXEsnP99Bd0aqJgQnt21jDi+d
+         d+0OOlfKRefJdl2FIXrl7oNjTv7xjrgSYrvWLWDaZ1S4ivT52f5Hsb6c2sPxth5xzkug
+         wYhX/LxKFqXc19zBdKYbBic6uUOy4vTHNZt6KpPf5VrrNksutLSmMWPIsSB7R8k5jAG8
+         Cl3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752609357; x=1753214157;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H8NGzdL+oq3HRN7zaWJJ87MC6Pv7VHTg9tCKEmTKJZY=;
-        b=JAoMob04hCOjwp2gd0/c+3Kc2/AJEdW/8S6uYQVRJfrWzQOhadsRW0hJdvDO3psqhB
-         Ug2YvtEMMlSxFV6Wt260vTsLt5tSDmsKmkmTk/Ue9LD6DZTpbPXMlFVhVK6oUvTAvWQa
-         30Us3dtFpsEqPLlw31nd8A8l5hONJ+yRA5WoTdIc6LWjcMVMzeiLfpxg+ZS5aIusZYI6
-         aXTmgN9syW3+GWb48xeMbb8Ks/izho84qpK2+CrAS0NOLm4Kivv8g2B+95Ki8yYTApS/
-         lJPCdkpml06exBexyjUBBe4gH6KjyK3l9aTPSuiop7ZwE/aV55StMUbacwHMl1GZuJxo
-         0JGw==
-X-Forwarded-Encrypted: i=1; AJvYcCVY/iAP/G4sbm9vTjAPMKl6ZVMZdsvt2AxtVelc6Fd/gyZMdyXAIJWeDeoJ2u0u8wSGh8rdxgKasf9Ep+AjvNsz@vger.kernel.org
-X-Gm-Message-State: AOJu0YwO6GjN7KbvcKCATD4FJqLwZFZroSxgeiiX+HBtt2/EgNuyckOf
-	Tn5d4iVWad5v0CoRa1lTd+IkNzgjkmmZtchUnkemVjaekonKisIP3by+PR+m5Sa6uwMzt8P11jf
-	Wj5JF237Qr+UVdZEeZVY9UG6gigFvBj1Zj5km+aRc
-X-Gm-Gg: ASbGncu79qc8Vb+ETCnX/bGna7HdQoMd+4z93YV/AYHp5cznHMUEwB9ZOhtmBaZnLW7
-	EXlbQXAYdZMlyS4gXii0eMkf22haPvmK0nlY2A8Yz48PE6cNtqeiiA0GFmM4gHQOarYgM0XxS5g
-	hKeFGOfr+qUGP41mVSNVmUPGPdDDg/iuYJ6NIbIhCtzX+HrJBuqZvOOKmjaarL7JGCq8t3aOdOA
-	GPz2/E1B5h8ULj4IMpSFLj0kREqUtv5CzY0MJoCWgM+nBU=
-X-Google-Smtp-Source: AGHT+IEMaV3yeSFiMGvf4PnpbpG4ighbGc4V9C9Mlt98DW7OT44WBnEtK5ZInX/eQq32VHLE0L0Xn9gxQYIhun7fjis=
-X-Received: by 2002:a05:6e02:2290:b0:3dd:c526:434f with SMTP id
- e9e14a558f8ab-3e282e478femr90005ab.9.1752609357070; Tue, 15 Jul 2025 12:55:57
- -0700 (PDT)
+        d=1e100.net; s=20230601; t=1752614212; x=1753219012;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=W3m+1hLOZ8hAFq4B95DKPtg5XMn2S7HOXjCLINFrtq0=;
+        b=aOFZdyrT1358Wsn/kjIEhQ1sH79e9VB4VVdcwegM5MekuuNl+EH+jXVkEALB1muIYY
+         jqhkXtPV1qJyBmjFOtznetcBmsB1t+QuS9EyfW6bmmYYEKC7kJ8T3ZSWf0qDYZZcAE7+
+         7CqYNg322geHN3FujR/TRnsuf0OeKTGv8By4YTqaRZjYBuUvk9ywY7Z9cmPvSKc2vIR7
+         GBfC/crz7GyHjbk+IKKKYk4vfNX6XrLC/akesfNrY4bRg1Ch4fIYwFr3Uu79V0NvSHBv
+         /7RrFMbWHLDhR4PQjv5Ts7yWQL8Qj7TfEdmAwwLdymSy/WKMURUXp2dGmKVt1IKRm1JW
+         ojcg==
+X-Forwarded-Encrypted: i=1; AJvYcCUMQCd5n2KkBuEDgB278dfaL2JlYklKe1gbWToAbdWvpNsfa559uvGrkB6zeeT1RTj+A4riCnlaYbACX+BruPVG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzlp0rIkfs7/LaGxjoNEb2j7toR90t9jIgTKrKIELYky4GQ3f3r
+	4Dx5BhbJQNod5AHuoxU8YUyJ2900L3Gm6Zj1KAyLvqtri8EFMUNJ3K9WkJKR0ic0LAFk2o5/zXf
+	N6OnXwMK7exJNztEzIRihoLHHAQ==
+X-Google-Smtp-Source: AGHT+IET2M3P36gkp3EjMv7BaUc9VYIy2qskuUCF22ILqTd3hhERB/uyQyetYE1K8s52+LEBtd/RipiSFpzH6qhMLA==
+X-Received: from oobic4.prod.google.com ([2002:a05:6820:6704:b0:613:872a:7b2b])
+ (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6820:418e:b0:615:7c7f:4aa6 with SMTP id 006d021491bc7-615a1f5b472mr11828eaf.3.1752614211817;
+ Tue, 15 Jul 2025 14:16:51 -0700 (PDT)
+Date: Tue, 15 Jul 2025 21:16:50 +0000
+In-Reply-To: <202507160129.vrvWpdVu-lkp@intel.com> (message from kernel test
+ robot on Wed, 16 Jul 2025 01:26:23 +0800)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250627192417.1157736-1-irogers@google.com>
-In-Reply-To: <20250627192417.1157736-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 15 Jul 2025 12:55:45 -0700
-X-Gm-Features: Ac12FXzzPScp-mVL9bARhLKOMJXjxqb02Nbekgkj01rdRvZZwU0lmA8JhBTzNh4
-Message-ID: <CAP-5=fUu6_gOD8=5pNc2XbWc6ueHR_FpM6XF51=mdf9L0V0X2w@mail.gmail.com>
-Subject: Re: [PATCH v1 00/12] CPU mask improvements/fixes particularly for hybrid
-To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Ben Gainey <ben.gainey@arm.com>, 
-	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Levi Yun <yeoreum.yun@arm.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
-	Blake Jones <blakejones@google.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Anubhav Shelat <ashelat@redhat.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Song Liu <song@kernel.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Message-ID: <gsntv7nt9mt9.fsf@coltonlewis-kvm.c.googlers.com>
+Subject: Re: [PATCH v4 22/23] KVM: arm64: Add ioctl to partition the PMU when supported
+From: Colton Lewis <coltonlewis@google.com>
+To: kernel test robot <lkp@intel.com>
+Cc: kvm@vger.kernel.org, oe-kbuild-all@lists.linux.dev, pbonzini@redhat.com, 
+	corbet@lwn.net, linux@armlinux.org.uk, catalin.marinas@arm.com, 
+	will@kernel.org, maz@kernel.org, oliver.upton@linux.dev, mizhang@google.com, 
+	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, 
+	mark.rutland@arm.com, skhan@linuxfoundation.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
-On Fri, Jun 27, 2025 at 12:24=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> On hybrid systems some PMUs apply to all core types, particularly for
-> metrics the msr PMU and the tsc event. The metrics often only want the
-> values of the counter for their specific core type. These patches
-> allow the cpu term in an event to give a PMU name to take the cpumask
-> from. For example:
->
->   $ perf stat -e msr/tsc,cpu=3Dcpu_atom/ ...
->
-> will aggregate the msr/tsc/ value but only for atom cores. In doing
-> this problems were identified in how cpumasks are handled by parsing
-> and event setup when cpumasks are specified along with a task to
-> profile. The event parsing, cpumask evlist propagation code and perf
-> stat code are updated accordingly.
->
-> The final result of the patch series is to be able to run:
-> ```
-> $ perf stat --no-scale -e 'msr/tsc/,msr/tsc,cpu=3Dcpu_core/,msr/tsc,cpu=
-=3Dcpu_atom/' perf test -F 10
->  10.1: Basic parsing test                                            : Ok
->  10.2: Parsing without PMU name                                      : Ok
->  10.3: Parsing with PMU name                                         : Ok
->
->  Performance counter stats for 'perf test -F 10':
->
->         63,704,975      msr/tsc/
->         47,060,704      msr/tsc,cpu=3Dcpu_core/                        (4=
-.62%)
->         16,640,591      msr/tsc,cpu=3Dcpu_atom/                        (2=
-.18%)
-> ```
->
-> This has (further) identified a kernel bug for task events around the
-> enabled time being too large leading to invalid scaling (hence the
->  --no-scale in the command line above).
->
-> Ian Rogers (12):
->   perf parse-events: Warn if a cpu term is unsupported by a CPU
->   perf stat: Avoid buffer overflow to the aggregation map
->   perf stat: Don't size aggregation ids from user_requested_cpus
->   perf parse-events: Allow the cpu term to be a PMU
->   perf tool_pmu: Allow num_cpus(_online) to be specific to a cpumask
->   libperf evsel: Rename own_cpus to pmu_cpus
->   libperf evsel: Factor perf_evsel__exit out of perf_evsel__delete
->   perf evsel: Use libperf perf_evsel__exit
->   perf pmus: Factor perf_pmus__find_by_attr out of evsel__find_pmu
->   perf parse-events: Minor __add_event refactoring
->   perf evsel: Add evsel__open_per_cpu_and_thread
->   perf parse-events: Support user CPUs mixed with threads/processes
+kernel test robot <lkp@intel.com> writes:
 
-Ping.
+> Hi Colton,
 
-Thanks,
-Ian
+> kernel test robot noticed the following build errors:
 
->  tools/lib/perf/evlist.c                 | 118 ++++++++++++++++--------
->  tools/lib/perf/evsel.c                  |   9 +-
->  tools/lib/perf/include/internal/evsel.h |   3 +-
->  tools/perf/builtin-stat.c               |   9 +-
->  tools/perf/tests/event_update.c         |   4 +-
->  tools/perf/util/evlist.c                |  15 +--
->  tools/perf/util/evsel.c                 |  55 +++++++++--
->  tools/perf/util/evsel.h                 |   5 +
->  tools/perf/util/expr.c                  |   2 +-
->  tools/perf/util/header.c                |   4 +-
->  tools/perf/util/parse-events.c          | 102 ++++++++++++++------
->  tools/perf/util/pmus.c                  |  29 +++---
->  tools/perf/util/pmus.h                  |   2 +
->  tools/perf/util/stat.c                  |   6 +-
->  tools/perf/util/synthetic-events.c      |   4 +-
->  tools/perf/util/tool_pmu.c              |  56 +++++++++--
->  tools/perf/util/tool_pmu.h              |   2 +-
->  17 files changed, 297 insertions(+), 128 deletions(-)
->
+> [auto build test ERROR on 79150772457f4d45e38b842d786240c36bb1f97f]
+
+> url:     
+> https://github.com/intel-lab-lkp/linux/commits/Colton-Lewis/arm64-cpufeature-Add-cpucap-for-HPMN0/20250715-070741
+> base:   79150772457f4d45e38b842d786240c36bb1f97f
+> patch link:     
+> https://lore.kernel.org/r/20250714225917.1396543-23-coltonlewis%40google.com
+> patch subject: [PATCH v4 22/23] KVM: arm64: Add ioctl to partition the  
+> PMU when supported
+> config: arm64-randconfig-003-20250715  
+> (https://download.01.org/0day-ci/archive/20250716/202507160129.vrvWpdVu-lkp@intel.com/config)
+> compiler: aarch64-linux-gcc (GCC) 8.5.0
+> reproduce (this is a W=1 build):  
+> (https://download.01.org/0day-ci/archive/20250716/202507160129.vrvWpdVu-lkp@intel.com/reproduce)
+
+> If you fix the issue in a separate patch/commit (i.e. not just a new  
+> version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes:  
+> https://lore.kernel.org/oe-kbuild-all/202507160129.vrvWpdVu-lkp@intel.com/
+
+> All errors (new ones prefixed by >>):
+
+>     In file included from arch/arm64/include/asm/kvm_host.h:31,
+>                      from include/linux/kvm_host.h:45,
+>                      from arch/arm64/kernel/asm-offsets.c:15:
+>     arch/arm64/include/asm/kvm_pmu.h: In function 'kvm_pmu_is_partitioned':
+>>> arch/arm64/include/asm/kvm_pmu.h:301:43: error: parameter name omitted
+>      static inline bool kvm_pmu_is_partitioned(void *)
+>                                                ^~~~~~
+>     arch/arm64/include/asm/kvm_pmu.h: In  
+> function 'kvm_pmu_host_counter_mask':
+>     arch/arm64/include/asm/kvm_pmu.h:306:45: error: parameter name omitted
+>      static inline u64 kvm_pmu_host_counter_mask(void *)
+>                                                  ^~~~~~
+>     arch/arm64/include/asm/kvm_pmu.h: In  
+> function 'kvm_pmu_guest_counter_mask':
+>     arch/arm64/include/asm/kvm_pmu.h:311:46: error: parameter name omitted
+>      static inline u64 kvm_pmu_guest_counter_mask(void *)
+>                                                   ^~~~~~
+>     make[3]: *** [scripts/Makefile.build:182:  
+> arch/arm64/kernel/asm-offsets.s] Error 1 shuffle=21662191
+
+Same spot/declarations that triggered a build error on v2 and fixed in
+v3 but moved to void * in v4 rather than defining an empty arm_pmu
+struct due to v3 feedback.
+
+Notably I remembered to build this branch before sending this time but
+these definitions do not trigger an error or warning on gcc-14 with this
+.config and W=1. So I'm not sure how I could have reasonably caught this
+myself before sending.
+
+Anyway, I'll fix. It's nothing to give the parameters a name.
+
+>     make[3]: Target 'prepare' not remade because of errors.
+>     make[2]: *** [Makefile:1274: prepare0] Error 2 shuffle=21662191
+>     make[2]: Target 'prepare' not remade because of errors.
+>     make[1]: *** [Makefile:248: __sub-make] Error 2 shuffle=21662191
+>     make[1]: Target 'prepare' not remade because of errors.
+>     make: *** [Makefile:248: __sub-make] Error 2 shuffle=21662191
+>     make: Target 'prepare' not remade because of errors.
+
+
+> vim +301 arch/arm64/include/asm/kvm_pmu.h
+
+>     300
+>   > 301	static inline bool kvm_pmu_is_partitioned(void *)
+>     302	{
+>     303		return false;
+>     304	}
+>     305
+
 > --
-> 2.50.0.727.gbf7dc18ff4-goog
->
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
