@@ -1,65 +1,65 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF33A1991CD
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Jul 2025 13:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079472D8790
+	for <linux-perf-users@vger.kernel.org>; Tue, 15 Jul 2025 13:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752584665; cv=none; b=CTM3cJ9riu4TAYHZc+H6oZNNu1XCbg36ZieeYCGqloZe+4i2TgikpJzbhdurBPli6iBeyzZ57ks7UtEDXIhY303FoI7fIDbvl8Y42x8gQzkyzWMdo5OY27DpRlhecyeUYY8EilZOEwTg+Le6Tp+ShhxC2WmKW1xE0Qz6hSk20do=
+	t=1752585024; cv=none; b=qlpSrGkW88NVv4nc2YCcspOzWaIe2TnMFI7wGjRc5D1FYnl0+Qjs4ujVx8MUW2CgVp/RrkR3Qmep0hTUAiTz2fHjynFEgfErJfIOZA5gm5RCJwSTGkDqzywdNCS5VigNA5uu4K+y0mUKpZBiX+emchSraYc5a27qYOwWrG7IeAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752584665; c=relaxed/simple;
-	bh=8de/+OVEmpgQ2MrKae7+4kNVlqKqrSROqzrJtp3x0GM=;
+	s=arc-20240116; t=1752585024; c=relaxed/simple;
+	bh=DHGtu4HwP1LgM2IMWFzTtkDx34BllDYI/W2+QZldCzo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R6F5Qln6cd5aipL6eQf8wzHv6of8D2vJWSoVtQVLFtnOcQuALF+2jZsAUYWa1LOLnRUQU+t1bkyLOoxJMUy6QsOVvj0OWuEadH5ouAIpPq0qIt+BdFW/intF7M1tK3I3r1/nIquQUr/7q6qcpsKDtdlLXNe7YUHU6OqifQSqwf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C2jJrnHY; arc=none smtp.client-ip=209.85.128.44
+	 In-Reply-To:Content-Type; b=EoaWAYWCbIWWHh/Buo2mk9tqwtlwOYbAVB9SLW9I5r/2Kn6sz4hWEIAmiGjEvQNMCwxWVafkoTJ+VAC6Op11ZprG+iolRAqXaDM5TDY16GWng1JGVe3w9cLZBlIg+DKyYTKidZ+sspX8yAPXVmpO8fiaF02kwXNutyTV7NuG4QA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mEl4XVD1; arc=none smtp.client-ip=209.85.221.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C2jJrnHY"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-45555e3317aso23962315e9.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Jul 2025 06:04:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mEl4XVD1"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a51481a598so2772807f8f.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Jul 2025 06:10:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1752584660; x=1753189460; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1752585020; x=1753189820; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=J89r7AvqyeIbrcgrXdArOfzh5yo/o2jaOib37mZOYIs=;
-        b=C2jJrnHYZO1oXJwdOZdcm51OSpRKwYPkD+VhpqTXXu9S36yK8TzPp+UM4CYComG0xy
-         onm71BFohXyMiemoFeb5NozPpV9DasSPCTerx4ruPUruUu0l8wCmCpKKNcsVqdz90ZAW
-         6aJsiXFalWOwTsbr1Z9I0DgcmkPl7CImMkGDy8mekP8lOnjj5vvPMLjT0NrNCeXJmUf3
-         CABYh39K0uLD2nBWyTA/3nkEaj6Iax6Wz29gF8rNoSVAyva4NuCR9Ro+C4Qx/vItDTUF
-         +4KX682cNk3IGEYvjY005TUz8LRcG1qYJFx0qVxjUrEDiOsrhKdiZMNmTNrKHTFjzBRM
-         s1vw==
+        bh=WLie5zOVyoKUjA33oPyC/WGRzvoFygYuppsebPS2FNA=;
+        b=mEl4XVD14MO1nfdjWt4JCOVbSCTujFDcM+zfnjma1mwgyk9+RK+sW6dKwY2wkOP9aK
+         KknmyInPBkmneEUNpkb4tmjX5Zl3ecyLYHzDrWyVXF1f5iBRiX+G/b/GSTW2v+L/5hH5
+         AaCGbRE5e82AKA3PkM5B7JYmdWirKAicJ4IHFC5hGTpAmPi2gM/dcQxnoAW6qDeRoQnO
+         +l4uI/kA+6ygSkcEPtKx9HgtznrHp8pibIaS1pnBZ0RBdVJSL0UI47rch5ilSSYcSLpw
+         DhQysSJeagdRFBU7/k+P9mPHIuzEXKew71Sy2RmOogaekESDaTTsuMyat3c3AqVUHoxd
+         VFrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752584660; x=1753189460;
+        d=1e100.net; s=20230601; t=1752585020; x=1753189820;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J89r7AvqyeIbrcgrXdArOfzh5yo/o2jaOib37mZOYIs=;
-        b=kzkjMI4AKRHE/MnGnvCdNYZhexn4kFkRenqjWuzeg+oXewU6BQ3siPa7Hibbul251e
-         +z0KRcjGZx+CqFwQlG8dxIVpFbwmd+DZP8cqrcekeffJ9lOWAsa7dIcM4e0j/p3hydUu
-         rnbz9evMXXGP0YcHLByEp6hvjh526HPeWt26Ix6lH2CUbhKhFeVnbXk/evCuSBzouFo8
-         5nTX2D1pbl0oH3aAGXdoZhSqwDP2TrmZm60Ap5It6uOVNu2tkNmFm2qAjxOlleyxseyT
-         NeHLOxjvNNDIk+wDg8o+trJjaVvu9J7V7oUODov9YJ5fBE5lWiDNJqh94fx2POMqXfiX
-         aE5g==
-X-Forwarded-Encrypted: i=1; AJvYcCWhnLWeR3lwaCTzthLrjUrYn/kXJVnEgPqP51ZaKg3P1ZH+sbNPSGouNdvwVupoVLWAPJMKYACE1ZfSo6QKT/s3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2iblRHSnLOLIN0bNerN14BzER1RTigsLzhHBDuDWcYA/U5J8D
-	BmbrwzMffHDRddIoVCPA1U+haqlHjzMxXQTUuv3ZCWNhwUUiujzgqDrj+8HuXzdtBo8=
-X-Gm-Gg: ASbGncuCegPw/xc/XvxaLR4986JCBs9T4jptpeZo35Ee0IkuVndm8U6toiUZPFpMCdR
-	EQebcoogy/gB//WTx7H2fzg7d/RbhRJ75FqORj0OVQBJ6vuKVYitPrImbP6ZV8it5xtcjc/Gsyg
-	WZqlV7+YcUizaztigNnBA27rMAXEJCgiRhecUDo9+nSndK1Y+V0vjKzrM9vQgj83oUJlyCvHj0v
-	Fi63uV0LSrWB/9m7j8r3gnNQtRcV4fy6VGzlwCgfMwYNodH2Givaef8N99nzqcXKwLo5Z65nE4j
-	VyA4WipoAmHaZu2rflgRfaxUObfLIKzVDay/v8aPTIkKqbBPYMnVMtoKT7Qlb4Q+e0HUSu8BGB0
-	teMEoLY758n30xnuRA2wSsZ/DbO0=
-X-Google-Smtp-Source: AGHT+IFtWJR4N1CKamdsyz9XjtkQHpkuQDX/87ZZ/cBBW4+sRrWYHFWFc00klxjEz4K5K+dv4kcPxw==
-X-Received: by 2002:a05:6000:4612:b0:3a3:7ba5:960e with SMTP id ffacd0b85a97d-3b5f2e3e99dmr11999857f8f.59.1752584659975;
-        Tue, 15 Jul 2025 06:04:19 -0700 (PDT)
+        bh=WLie5zOVyoKUjA33oPyC/WGRzvoFygYuppsebPS2FNA=;
+        b=T4YE1E/p1IFdmwOsuNu/A2qCKiU27xsjIN2P++xGcz9m4pwVt1VIGuiUWi26anGRTM
+         7GMcGFz3lwFg/6ID2n8YSCWd+y/pA66mKjEO6sbqnnO6fn1MICVhRwBbdWEV02uTgE8g
+         T5f5Ga/yz02j84u4MX8x6QbnfyKUZTiZCTPsn7dR2zVcoHKKW6fGmSk/rP2/f9avmmft
+         fBRIomCa6JxTwQBsUqpqrcSDSlQWenJtSVdVHT+Wmu4Es71+dft9edyzCs1Ywkez+OnU
+         MO63/6GZo/PJVIngwm9ngNHQd/7RauetpO1KoiTEa0GxpiVzM0qU7cl5WSAVDNSP6A1r
+         hI+g==
+X-Forwarded-Encrypted: i=1; AJvYcCXovzJVIiCA3A2wpHDWuXjyPlPFtO4iL1/oVJ5FfzEx2p9ooV6kI1p6WHE1EKYiv1UmrSQxTxoLy6f+WvRUlfDp@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkgT7bBUcRzgM29roojWxjTaP7IBy9lxMVOtN0hrhU9m1getr9
+	m0ekvHZHMRlUaP+JXzFpBHpVmmhynGkEkuYnc7WXetTvGF1jl6/ThG3vspdYko130Vw=
+X-Gm-Gg: ASbGncts/5a3V4QjOJ9yZosmgpBI+jc3ccqq2Cj6sUEak0cP7uxruCDaXJPDOhzv3Ib
+	A3nRvPUsMxSCvmHx3/K7Fc5kaTs5GQl4cfvVwe1g0GpP4JuG1/IcZj3vIEAqaUtPo2bih1QuUBF
+	dany9vke/GmB91VS8N2krdeOFoQZ7HQkPPD9fKHttsiHlCUBbKncCucZbKy6cASxlNxd1zo3Sdw
+	hFXkQOb1vti7vRUveii1zqbG44xPn45OHCYtIknJ+hFf9zwP+UghcRacZET30EIELQx24F1V4QK
+	Pe3PiUF+DhttU9iXsUgsX95tuUUdj4wxW5AlRLv0FEhiYz7ZmRqJNKS+vCK3bEhpGiadAIR3C+q
+	2XbwMdddQ6J8AKCOuCi5FMt24j0M=
+X-Google-Smtp-Source: AGHT+IFe4r8KriuNAFHXNYf/4cwh/PGYuzAM7nUnVEwSGtbr0UTcF5cgzYyzCdphFsVFvt+3gZMD1g==
+X-Received: by 2002:adf:9d82:0:b0:3a4:f5f6:b4ab with SMTP id ffacd0b85a97d-3b5f2dfd6f7mr10433427f8f.30.1752585020307;
+        Tue, 15 Jul 2025 06:10:20 -0700 (PDT)
 Received: from [192.168.1.3] ([185.48.76.109])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b5e8e1e332sm15169687f8f.79.2025.07.15.06.04.18
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4560733e736sm104730995e9.29.2025.07.15.06.10.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Jul 2025 06:04:19 -0700 (PDT)
-Message-ID: <7f51d4f9-7e08-49b5-ab43-8bc765bb2ca8@linaro.org>
-Date: Tue, 15 Jul 2025 14:04:18 +0100
+        Tue, 15 Jul 2025 06:10:19 -0700 (PDT)
+Message-ID: <e1210c84-69d1-4fb2-88c2-a6a1bcb179c5@linaro.org>
+Date: Tue, 15 Jul 2025 14:10:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,8 +67,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/10] perf: arm_spe: Add support for filtering on data
- source
+Subject: Re: [PATCH v3 04/10] arm64/boot: Enable EL2 requirements for
+ SPE_FEAT_FDS
 To: Will Deacon <will@kernel.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>,
  Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>,
@@ -84,145 +84,104 @@ Cc: Catalin Marinas <catalin.marinas@arm.com>,
  linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
  kvmarm@lists.linux.dev
 References: <20250605-james-perf-feat_spe_eft-v3-0-71b0c9f98093@linaro.org>
- <20250605-james-perf-feat_spe_eft-v3-7-71b0c9f98093@linaro.org>
- <aHUOig-kaRo15ZH5@willie-the-truck>
+ <20250605-james-perf-feat_spe_eft-v3-4-71b0c9f98093@linaro.org>
+ <aHUMMk9JUdK6luLN@willie-the-truck>
+ <04d52182-6043-4eaf-a898-9f8ccc893e5f@linaro.org>
+ <aHZQH7QGhi5pbXU8@willie-the-truck>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <aHUOig-kaRo15ZH5@willie-the-truck>
+In-Reply-To: <aHZQH7QGhi5pbXU8@willie-the-truck>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 14/07/2025 3:04 pm, Will Deacon wrote:
-> On Thu, Jun 05, 2025 at 11:49:05AM +0100, James Clark wrote:
->> SPE_FEAT_FDS adds the ability to filter on the data source of packets.
->> Like the other existing filters, enable filtering with PMSFCR_EL1.FDS
->> when any of the filter bits are set.
+On 15/07/2025 1:57 pm, Will Deacon wrote:
+> On Tue, Jul 15, 2025 at 01:48:03PM +0100, James Clark wrote:
 >>
->> Each bit maps to data sources 0-63 described by bits[0:5] in the data
->> source packet (although the full range of data source is 16 bits so
->> higher value data sources can't be filtered on). The filter is an OR of
->> all the bits, so for example setting bits 0 and 3 filters packets from
->> data sources 0 OR 3.
 >>
->> Reviewed-by: Leo Yan <leo.yan@arm.com>
->> Tested-by: Leo Yan <leo.yan@arm.com>
->> Signed-off-by: James Clark <james.clark@linaro.org>
->> ---
->>   drivers/perf/arm_spe_pmu.c | 31 +++++++++++++++++++++++++++++++
->>   1 file changed, 31 insertions(+)
->>
->> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
->> index 9309b846f642..d04318411f77 100644
->> --- a/drivers/perf/arm_spe_pmu.c
->> +++ b/drivers/perf/arm_spe_pmu.c
->> @@ -87,6 +87,7 @@ struct arm_spe_pmu {
->>   #define SPE_PMU_FEAT_INV_FILT_EVT		(1UL << 6)
->>   #define SPE_PMU_FEAT_DISCARD			(1UL << 7)
->>   #define SPE_PMU_FEAT_EFT			(1UL << 8)
->> +#define SPE_PMU_FEAT_FDS			(1UL << 9)
->>   #define SPE_PMU_FEAT_DEV_PROBED			(1UL << 63)
->>   	u64					features;
->>   
->> @@ -232,6 +233,10 @@ static const struct attribute_group arm_spe_pmu_cap_group = {
->>   #define ATTR_CFG_FLD_inv_event_filter_LO	0
->>   #define ATTR_CFG_FLD_inv_event_filter_HI	63
->>   
->> +#define ATTR_CFG_FLD_data_src_filter_CFG	config4	/* PMSDSFR_EL1 */
->> +#define ATTR_CFG_FLD_data_src_filter_LO	0
->> +#define ATTR_CFG_FLD_data_src_filter_HI	63
->> +
->>   GEN_PMU_FORMAT_ATTR(ts_enable);
->>   GEN_PMU_FORMAT_ATTR(pa_enable);
->>   GEN_PMU_FORMAT_ATTR(pct_enable);
->> @@ -248,6 +253,7 @@ GEN_PMU_FORMAT_ATTR(float_filter);
->>   GEN_PMU_FORMAT_ATTR(float_filter_mask);
->>   GEN_PMU_FORMAT_ATTR(event_filter);
->>   GEN_PMU_FORMAT_ATTR(inv_event_filter);
->> +GEN_PMU_FORMAT_ATTR(data_src_filter);
->>   GEN_PMU_FORMAT_ATTR(min_latency);
->>   GEN_PMU_FORMAT_ATTR(discard);
->>   
->> @@ -268,6 +274,7 @@ static struct attribute *arm_spe_pmu_formats_attr[] = {
->>   	&format_attr_float_filter_mask.attr,
->>   	&format_attr_event_filter.attr,
->>   	&format_attr_inv_event_filter.attr,
->> +	&format_attr_data_src_filter.attr,
->>   	&format_attr_min_latency.attr,
->>   	&format_attr_discard.attr,
->>   	NULL,
->> @@ -286,6 +293,9 @@ static umode_t arm_spe_pmu_format_attr_is_visible(struct kobject *kobj,
->>   	if (attr == &format_attr_inv_event_filter.attr && !(spe_pmu->features & SPE_PMU_FEAT_INV_FILT_EVT))
->>   		return 0;
->>   
->> +	if (attr == &format_attr_data_src_filter.attr && !(spe_pmu->features & SPE_PMU_FEAT_FDS))
->> +		return 0;
->> +
->>   	if ((attr == &format_attr_branch_filter_mask.attr ||
->>   	     attr == &format_attr_load_filter_mask.attr ||
->>   	     attr == &format_attr_store_filter_mask.attr ||
->> @@ -406,6 +416,9 @@ static u64 arm_spe_event_to_pmsfcr(struct perf_event *event)
->>   	if (ATTR_CFG_GET_FLD(attr, inv_event_filter))
->>   		reg |= PMSFCR_EL1_FnE;
->>   
->> +	if (ATTR_CFG_GET_FLD(attr, data_src_filter))
->> +		reg |= PMSFCR_EL1_FDS;
+>> On 14/07/2025 2:54 pm, Will Deacon wrote:
+>>> On Thu, Jun 05, 2025 at 11:49:02AM +0100, James Clark wrote:
+>>>> SPE data source filtering (optional from Armv8.8) requires that traps to
+>>>> the filter register PMSDSFR be disabled. Document the requirements and
+>>>> disable the traps if the feature is present.
+>>>>
+>>>> Tested-by: Leo Yan <leo.yan@arm.com>
+>>>> Signed-off-by: James Clark <james.clark@linaro.org>
+>>>> ---
+>>>>    Documentation/arch/arm64/booting.rst | 11 +++++++++++
+>>>>    arch/arm64/include/asm/el2_setup.h   | 14 ++++++++++++++
+>>>>    2 files changed, 25 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/arm64/booting.rst
+>>>> index dee7b6de864f..abd75085a239 100644
+>>>> --- a/Documentation/arch/arm64/booting.rst
+>>>> +++ b/Documentation/arch/arm64/booting.rst
+>>>> @@ -404,6 +404,17 @@ Before jumping into the kernel, the following conditions must be met:
+>>>>        - HDFGWTR2_EL2.nPMICFILTR_EL0 (bit 3) must be initialised to 0b1.
+>>>>        - HDFGWTR2_EL2.nPMUACR_EL1 (bit 4) must be initialised to 0b1.
+>>>> +  For CPUs with SPE data source filtering (FEAT_SPE_FDS):
+>>>> +
+>>>> +  - If EL3 is present:
+>>>> +
+>>>> +    - MDCR_EL3.EnPMS3 (bit 42) must be initialised to 0b1.
+>>>> +
+>>>> +  - If the kernel is entered at EL1 and EL2 is present:
+>>>> +
+>>>> +    - HDFGRTR2_EL2.nPMSDSFR_EL1 (bit 19) must be initialised to 0b1.
+>>>> +    - HDFGWTR2_EL2.nPMSDSFR_EL1 (bit 19) must be initialised to 0b1.
+>>>> +
+>>>>      For CPUs with Memory Copy and Memory Set instructions (FEAT_MOPS):
+>>>>      - If the kernel is entered at EL1 and EL2 is present:
+>>>> diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
+>>>> index 1e7c7475e43f..02b4a7fc016e 100644
+>>>> --- a/arch/arm64/include/asm/el2_setup.h
+>>>> +++ b/arch/arm64/include/asm/el2_setup.h
+>>>> @@ -279,6 +279,20 @@
+>>>>    	orr	x0, x0, #HDFGRTR2_EL2_nPMICFILTR_EL0
+>>>>    	orr	x0, x0, #HDFGRTR2_EL2_nPMUACR_EL1
+>>>>    .Lskip_pmuv3p9_\@:
+>>>> +	mrs	x1, id_aa64dfr0_el1
+>>>> +	ubfx	x1, x1, #ID_AA64DFR0_EL1_PMSVer_SHIFT, #4
+>>>> +	/* If SPE is implemented, */
+>>>> +	cmp	x1, #ID_AA64DFR0_EL1_PMSVer_IMP
+>>>> +	b.lt	.Lskip_spefds_\@
+>>>> +	/* we can read PMSIDR and */
+>>>> +	mrs_s	x1, SYS_PMSIDR_EL1
+>>>> +	and	x1, x1,  #PMSIDR_EL1_FDS
+>>>> +	/* if FEAT_SPE_FDS is implemented, */
+>>>> +	cbz	x1, .Lskip_spefds_\@
+>>>> +	/* disable traps to PMSDSFR. */
+>>>> +	orr	x0, x0, #HDFGRTR2_EL2_nPMSDSFR_EL1
+>>>
+>>> Why is this being done here rather than alongside the existing SPE
+>>> configuration of HDFGRTR_EL2 and HDFGWTR_EL2 near the start of
+>>> __init_el2_fgt?
+>>>
+>> I thought everything was separated by which trap configs it writes to,
+>> rather than the feature. This SPE feature is in HDFGRTR2 so I put it in
+>> __init_el2_fgt2 rather than __init_el2_fgt.
 > 
-> Is the polarity correct here? The description of PMSDSFR_EL1.S<m> suggests
-> that setting bits to 1 _excludes_ the FDS filtering.
+> That's fair; __init_el2_fgt isn't the right place. But the redundancy of
+> re-reading PMSVer from DFR0 is a little jarring.
 > 
-
-Setting filter bits to 1 means that samples matching are included. 
-Setting bits to 0 means that they are excluded. And PMSFCR_EL1.FDS 
-enables filtering as a whole, so if the user sets any filter bit to 1 we 
-want to enable filtering:
-
-   PMSDSFR_EL1.S<m>
-
-   0b0  If PMSFCR_EL1.FDS is 1, do not record load operations that have
-        bits [5:0] of the Data Source packet set to <m>.
-
-   0b1  Load operations with Data Source <m> are unaffected by
-        PMSFCR_EL1.FDS.
-
-I think it's all the right way around and it ends up being the same as 
-the other filters in SPE. Because we're using any bit being set to 
-enable the filtering, the only thing you can't do is enable filtering 
-with a 0 filter, but I didn't think that was useful. See the previous 
-discussion on this here: 
-https://lore.kernel.org/all/5752f039-51c1-4452-b5df-03ff06da7be3@linaro.org/
-
-Reading the "Data source filtering" section in the docs change at the 
-end might help too.
-
->>   	if (ATTR_CFG_GET_FLD(attr, min_latency))
->>   		reg |= PMSFCR_EL1_FL;
->>   
->> @@ -430,6 +443,12 @@ static u64 arm_spe_event_to_pmslatfr(struct perf_event *event)
->>   	return FIELD_PREP(PMSLATFR_EL1_MINLAT, ATTR_CFG_GET_FLD(attr, min_latency));
->>   }
->>   
->> +static u64 arm_spe_event_to_pmsdsfr(struct perf_event *event)
->> +{
->> +	struct perf_event_attr *attr = &event->attr;
->> +	return ATTR_CFG_GET_FLD(attr, data_src_filter);
->> +}
->> +
->>   static void arm_spe_pmu_pad_buf(struct perf_output_handle *handle, int len)
->>   {
->>   	struct arm_spe_pmu_buf *buf = perf_get_aux(handle);
->> @@ -788,6 +807,10 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
->>   	if (arm_spe_event_to_pmsnevfr(event) & arm_spe_pmsevfr_res0(spe_pmu->pmsver))
->>   		return -EOPNOTSUPP;
->>   
->> +	if (arm_spe_event_to_pmsdsfr(event) &&
->> +	    !(spe_pmu->features & SPE_PMU_FEAT_FDS))
->> +		return -EOPNOTSUPP;
+>> I suppose we could have a single __init_el2_spe that writes to both HDFGRTR
+>> and HDFGRTR2 but we'd have to be careful to not overwrite what was already
+>> done in the other sections.
 > 
-> Same question here.
+> Right, perhaps it would be clearer to have trap-preserving macros for
+> features in a specific ID register rather than per-trap configuration
+> register macros.
+> 
+> In other words, we have something like __init_fgt_aa64dfr0 which would
+> configure the FGT and FGT2 registers based on features in aa64dfr0. I
+> think you'd need to have a play to see how it ends up looking but the
+> main thing to avoid is having duplicate ID register parsing code for
+> setting up FGT and FGT2 traps.
 > 
 > Will
 
-
+I'll give it a go but that could end up being fragile to something that 
+is dependent on two different ID registers in the future. Then we'd end 
+up in the same situation for a different reason.
 
