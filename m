@@ -1,50 +1,66 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476502D5406;
-	Tue, 15 Jul 2025 09:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140C72D77F3
+	for <linux-perf-users@vger.kernel.org>; Tue, 15 Jul 2025 11:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752573205; cv=none; b=BlD3hDscz+MHEaRUqo+RqaqTLW3l1IS5vCQwjAI9KmI4UeWE8z3Qp0in4dsyNm2cM2/AS9oQEQqlz2a/UeScGlghnYpQStEWGaiv0Z3dAZwIYOwxsD25ttjaYL4ujDInq3Fd29FOATASyQLMX477lMj1x39xmjmquSGNhA7e88k=
+	t=1752578112; cv=none; b=f6nfk5m8FIfmT43rSW2HyZbCgzzIvOm49WdlDtrs34AFc1iykWefU+T4pMWTaA1XOLJzyq09Ot4+87965Wb0GdYHz/WFNfywVkamNNL/MgIqI4vUQkurrETXNwRNllYWNWtKAZHMBOPSxpeFm557Q6LhE+/J5XMBmEJTIjlhMjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752573205; c=relaxed/simple;
-	bh=tmHF7gRStiy8BJTFYsfZHMVqt0KO2UrdQFipnPx5lP4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qILFLe590piW4PVxnpV08gyNeafiIl7hUZbOjCeN69OpHnmCRJyRCczTwDWECxKcE2U2kguH16hPCgGMPmF4kUtz3YGvCBbHLQEeuxcbtWZlV0kDEK6sGBfF94UEQByG1t+QmEICbrXnyj15GvmUYkM13EHuDbappSRX98Qt7jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=YKNS/mj1; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1752578112; c=relaxed/simple;
+	bh=/OTrZ6TKh/glz/18H5tew0pP6QtymeeEOVKpkPtgJiQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hdGQYBefgMLBfuoI+wS1RdwzAPKTTFgYcyybI+ZnZ+dzmqoGKW+DJMAOxOQ04WsMYR3Mx67nSCz6pK6kz7+9ilpC+1I/vDf219ZwWpwk6smUNRSOk+8qyaVzdfSEuLdDmM4+U4HvVvgodnDEKp2WgYz4LxbLAFUlfY1I1iAiPSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pOwUovDM; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="YKNS/mj1"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56F6uNQR002322;
-	Tue, 15 Jul 2025 11:52:55 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	G1/gp4B+L0w00yUAj4aY/kWgU6WTpYFWiQQBVNHuBZg=; b=YKNS/mj1LT/6AIJY
-	+8QQVR+QBp0xP38nrqNwzF1iu2AWohdHl67RWB0HupkfYK2dzhwq0DVRmzMeyAUK
-	Bczm3DLmg0hapbdZxuMkeqgkx+H31vHa9rak9IRO3QREsWJVE/5Wbe0Ukibb7pOF
-	U0m+pJ8m10/FbMpMolE11jeAhCJt2tSg0t09RHgEFjh4Ei5/DHtaZ4n9iDiUPXY+
-	4hAtt4FYFh6E87hzoap+tBeUvSOhgCaCGGvbuH4ZZb5gFP7CNhZcKwNfbLzQ/GDS
-	9kyBHq7ax+ADFLTED/lyL0IgP2bySJImYvTuovPh/KNfpyQVeIENyEmqy9llvxnR
-	Ws5b1w==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47uf22mk5t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 15 Jul 2025 11:52:55 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A118F4004A;
-	Tue, 15 Jul 2025 11:51:26 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 03564B6CE36;
-	Tue, 15 Jul 2025 11:49:43 +0200 (CEST)
-Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 15 Jul
- 2025 11:49:41 +0200
-Message-ID: <1d22a89d-f060-4663-aef9-6645a66d15a5@foss.st.com>
-Date: Tue, 15 Jul 2025 11:49:41 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pOwUovDM"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a528243636so2925183f8f.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Jul 2025 04:15:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1752578109; x=1753182909; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KeD4qvnpOAgIBY4Q5KTmpBQo8WVRBjthWxr3P8XIcks=;
+        b=pOwUovDMrQ4TqB/vCsIlscKsOoYqz85Aw6KbjNfJEvOuP2p5d1Mg15GJkj7Ry+krLz
+         XY0jNyUFqlvZNlWjuA8C+kDWREhGaNQclmZIGpRB5QFMbhNL75zgecqBKVLMeA3LP0fy
+         xxQycGadQwFREk+3AayGDC8Z64ns3D6JzNzLgW/i+czZfUQb/FkHzJP5615x9mwbFvuq
+         UKEfxHR0PR2WvxzyeDhC3TGy8cGRJfQRcfz/Y3b6uPHPHclhr3d39rruvc7CGdmvm1HE
+         8N0Yydxxt88UTjqnQ8pXSwQj4in/FOkeWbwEnI7jNsy24izUblu6L7V4/S2js+Wlyd7c
+         W8oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752578109; x=1753182909;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KeD4qvnpOAgIBY4Q5KTmpBQo8WVRBjthWxr3P8XIcks=;
+        b=v+dLTRRaB4OHe2s0ENp0ThDmuxaEYYIx917/ul5jNNc0v7OsCT8iAA31DV73JkUlKq
+         4zG9KAvyi/isxBZmnkdJbs/P5vLHe3FAkeI0mO8+p9DS9vorVQUFYxTANmgFD6wqYchc
+         bpTl6PjVfEoCYMZEC+lP3DIthDXXcqmnRhqLzYrA+WYUMDSA2X2WqQ8jpsmFiCwHWm2Z
+         kXf8HCp7o1HDzhW/r825aIeTDWu5g21GK/APOSi+LLqi70JFtkEt/vqQ/TnX10UzoMl2
+         HVnrj3hLubmPRfTmAcMNbo8T+iP7repnnC26U61k4/bKCTkbqTKcCXV+6B8OfY5PO3sW
+         Wmmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUxQ4gq21pip09BvvjA1dlIF3ZurtSeQ9Q1mbtKNp8XRvfJUAjkpcpvWd/2jIr+q8dHvkN3CnmHU7FOFB+SBnJa@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxpS9rodq0Ker/CQfxe5lJenKLac8JRMTD5SNaEcjTiZQbDl1y
+	jFERJnhH6herW3LRnZT1rbjLZzqw5GeDevjPABffkg0wPC4k5J4r56M/JkrCv3JV29IhiFhSYkg
+	XJjpgk5w=
+X-Gm-Gg: ASbGncvVFDZNC19pRN5xnI4/KiL9ZaJnxbkcdAAeWu78Xs/PSJxWLeL+Tg5AfBEgbeg
+	mWR51DHLcblZK+NZX/Gebp7okGGafQ9LJ0Y0oqB+WlvudTzPL+dQQw5h0H71L02kPEhu6VPbfDY
+	CFkcLuXCAvLBsjYjW7AvPFxR/obCvJqBAfaacvTFLLVd/mKYDpPTx6alKdSisSdqKzAthZVDyvo
+	3qJ2x3aGUqXPZKHU/Mr1X+UCjvwlwoFfAjdB8s19tDFt+OVOMZxgSt5NBtJWsP4/ZouBlmmJ7PE
+	nWWgHfjpaqgitxZYcAiCQn6FuUrDp0ci/HrNjtWcXIzNHa6mtfd3V1qmIGsTsK1rAQIp9ODCglh
+	ENYsyK/xBKdgRy0HKy18UW4CiHHs=
+X-Google-Smtp-Source: AGHT+IG8+RnncnWrWqe5aRURSefY3HnfmihLhWZ4TxPEcnqaK//NeNt6YcFH1RHEdf9sGBw4B0HHaA==
+X-Received: by 2002:adf:e191:0:b0:3b6:c88:7b74 with SMTP id ffacd0b85a97d-3b60c887b83mr622884f8f.59.1752578109392;
+        Tue, 15 Jul 2025 04:15:09 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.76.109])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b5e8bd1a2bsm15131107f8f.14.2025.07.15.04.15.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Jul 2025 04:15:09 -0700 (PDT)
+Message-ID: <f3393b26-a1ca-4d8f-9c22-0330956090b4@linaro.org>
+Date: Tue, 15 Jul 2025 12:15:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,339 +68,95 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 09/16] perf: stm32: introduce DDRPERFM driver
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-CC: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob
- Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor
- Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Philipp Zabel
-	<p.zabel@pengutronix.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Gatien Chevallier
-	<gatien.chevallier@foss.st.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Gabriel Fernandez
-	<gabriel.fernandez@foss.st.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Le
- Goffic <legoffic.clement@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>
-References: <20250711-ddrperfm-upstream-v2-0-cdece720348f@foss.st.com>
- <20250711-ddrperfm-upstream-v2-9-cdece720348f@foss.st.com>
- <20250711170415.00001901@huawei.com>
+Subject: Re: [PATCH v3 01/14] drivers/perf: arm_spe: Expose event filter
+To: Leo Yan <leo.yan@arm.com>, Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, German Gomez
+ <german.gomez@arm.com>, Ali Saidi <alisaidi@amazon.com>,
+ Arnaldo Carvalho de Melo <acme@redhat.com>,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org
+References: <20250707-arm_spe_support_hitm_overhead_v1_public-v3-0-33ea82da3280@arm.com>
+ <20250707-arm_spe_support_hitm_overhead_v1_public-v3-1-33ea82da3280@arm.com>
+ <aHUBFGPck-O3vs9b@willie-the-truck>
+ <20250714150921.GE1093654@e132581.arm.com>
+ <aHUerfpLyAPEc9R_@willie-the-truck>
+ <20250714154251.GF1093654@e132581.arm.com>
 Content-Language: en-US
-From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
-In-Reply-To: <20250711170415.00001901@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-15_01,2025-07-14_01,2025-03-28_01
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250714154251.GF1093654@e132581.arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Jonathan,
 
-On 7/11/25 18:04, Jonathan Cameron wrote:
-> On Fri, 11 Jul 2025 16:49:01 +0200
-> Clément Le Goffic <clement.legoffic@foss.st.com> wrote:
+
+On 14/07/2025 4:42 pm, Leo Yan wrote:
+> On Mon, Jul 14, 2025 at 04:13:49PM +0100, Will Deacon wrote:
 > 
->> Introduce the driver for the DDR Performance Monitor available on
->> STM32MPU SoC.
+> [...]
+> 
+>>>> In other words, remove arm_spe_pmsevfr_res0() and the two checks that
+>>>> use it in arm_spe_pmu_event_init(). If userspace tries to filter events
+>>>> that aren't implemented, then it gets to keep the pieces.
+>>>
+>>> Then the question is: what information should be exposed to userspace
+>>> so that tools can decide which events are valid?
+>>>
+>>> I would suggest to expose a new entry, "caps/version", to indicate the
+>>> SPE version number. Tools can use this to apply the appropriate event
+>>> validation. Please let me know if this works for you.
 >>
->> On STM32MP2 platforms, the DDRPERFM allows to monitor up to 8 DDR events
->> that come from the DDR Controller such as read or write events.
->>
->> On STM32MP1 platforms, the DDRPERFM cannot monitor any event on any
->> counter, there is a notion of set of events.
->> Events from different sets cannot be monitored at the same time.
->> The first chosen event selects the set.
->> The set is coded in the first two bytes of the config value which is on 4
->> bytes.
->>
->> On STM32MP25x series, the DDRPERFM clock is shared with the DDR controller
->> and may be secured by bootloaders.
->> Access controllers allow to check access to a resource. Use the access
->> controller defined in the devicetree to know about the access to the
->> DDRPERFM clock.
->>
->> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+>> I thought userspace typically had midr-based json files to figure this
+>> stuff out?
 > 
-> Hi Clément,
+> Yes, the perf tool records the CPU MIDR in the metadata.
 > 
-> A quick drive by review as it's Friday afternoon and I was curious..
+> However, I deliberately tried to avoid relying on this approach,
+> because the perf would then need to maintain a mapping between:
 > 
-> Mostly superficial stuff. I didn't look closely at the perf logic.
+>    MIDR -> Arm SPE version -> Events
+> 
+> Given the large number of CPU variants, maintaining this relationship
+> between CPU ID and SPE version, and subsequently mapping it to supported
+> events, would be quite complex. Additional effort would be required each
+> time a new CPU variant is introduced.
+> 
+>> The supported events aren't probe-able afaict so I don't
+>> think the driver can help.
+> 
 
-Thank you for the review.
-The perf logic is new to me so if you have any suggestion, you're welcome.
+If the RAZ/WI for not implemented is guaranteed, can we not discover the 
+supported filter by writing all ones and reading back what stuck?
 
+> Although the events are not probe-able, some events are specific to
+> certain Arm SPE versions. For example, E[23]:
+> 
+>    | Data snooped.
+>    | When FEAT_SPEv1p4 is implemented
+> 
+> With SPE version information, the perf tool can decode E[23] == 0 as:
+> 
+>    "No snooping" for SPEv4
+> 
+>    "No available information for snooping" for earlier SPE versions
+> 
+> Without SPE version information, it's impossible to distinguish
+> between these two cases.
+> 
+> Thanks,
+> Leo
+I think Leo has a point that some of these shouldn't require any MIDR 
+mappings, and if we're using a filter for some builtin part of the Perf 
+tool then it would be good to have that work everywhere, rather than 
+having to update for every new CPU.
 
-> 
->> diff --git a/drivers/perf/stm32_ddr_pmu.c b/drivers/perf/stm32_ddr_pmu.c
->> new file mode 100644
->> index 000000000000..1be5bbe12978
->> --- /dev/null
->> +++ b/drivers/perf/stm32_ddr_pmu.c
->> @@ -0,0 +1,910 @@
-> 
->> +#define EVENT_NUMBER(group, index)	(((group) << 8) | (index))
->> +#define GROUP_VALUE(event_number)		((event_number) >> 8)
->> +#define EVENT_INDEX(event_number)	((event_number) & 0xFF)
-> 
-> Prefix these macro names with something driver specific.  They are
-> very likely to clash with something in a header in future otherwise.
+We're already publishing the SPE version in dmesg so if we decide to not 
+publish the filters we'd probably go and try to parse that instead. At 
+that point maybe we should publish the SPE version in sysfs properly. At 
+least that's scalable unlike having to update the filters all the time.
 
-Ok
+James
 
-> 
->> +
->> +enum stm32_ddr_pmu_memory_type {
->> +	STM32_DDR_PMU_LPDDR4,
->> +	STM32_DDR_PMU_LPDDR3,
->> +	STM32_DDR_PMU_DDR4,
->> +	STM32_DDR_PMU_DDR3
-> 
-> This should have a trailing comma as might well be more
-> added in future if this IP gets used in more devices.
-
-Ok
-
->> +};
->>
-> 
-> 
->> +
->> +static const struct attribute_group *stm32_ddr_pmu_attr_groups_mp2[] = {
->> +	&stm32_ddr_pmu_events_attrs_group_mp2,
->> +	&stm32_ddr_pmu_format_attr_group,
->> +	NULL,
-> 
-> No comma needed on terminating entries.
-
-Ok, will also be fixed for `stm32_ddr_pmu_attr_groups_mp1[]` and
-`stm32_ddr_pmu_format_attrs[]`
-> 
->> +};
->> +
->> +static int stm32_ddr_pmu_device_probe(struct platform_device *pdev)
->> +{
->> +	struct stm32_firewall firewall;
->> +	struct stm32_ddr_pmu *pmu;
->> +	struct reset_control *rst;
->> +	struct resource *res;
->> +	int ret;
->> +
->> +	pmu = devm_kzalloc(&pdev->dev, struct_size(pmu, counters, MP2_CNT_NB), GFP_KERNEL);
->> +	if (!pmu)
->> +		return -ENOMEM;
->> +
->> +	platform_set_drvdata(pdev, pmu);
->> +	pmu->dev = &pdev->dev;
->> +
->> +	pmu->cfg = device_get_match_data(&pdev->dev);
->> +
->> +	pmu->membase = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
->> +	if (IS_ERR(pmu->membase))
->> +		return PTR_ERR(pmu->membase);
->> +
->> +	if (of_property_present(pmu->dev->of_node, "access-controllers")) {
->> +		ret = stm32_firewall_get_firewall(pmu->dev->of_node, &firewall, 1);
->> +		if (ret)
->> +			return dev_err_probe(pmu->dev, ret, "Failed to get firewall\n");
->> +		ret = stm32_firewall_grant_access_by_id(&firewall, firewall.firewall_id);
->> +		if (ret)
->> +			return dev_err_probe(pmu->dev, ret, "Failed to grant access\n");
->> +	}
->> +
->> +	pmu->clk = devm_clk_get_optional_prepared(pmu->dev, NULL);
-> 
-> Given there are quite a few uses of pmu->dev, maybe worth a local
-> struct device *dev = &pdev->dev; at the top and use dev to replace all these.
-
-As I need pmu->dev elsewhere in the driver I'll stick to it and replace 
-all &pdev->dev
-
-> 
->> +	if (IS_ERR(pmu->clk))
->> +		return dev_err_probe(pmu->dev, PTR_ERR(pmu->clk), "Failed to get prepare clock\n");
->> +
->> +	clk_enable(pmu->clk);
->> +
->> +	rst = devm_reset_control_get_optional_exclusive(&pdev->dev, NULL);
-> 
-> You mix and match between pdev->dev, and pmu->dev. Good to pick one or use local
-> variable as suggested above.
-
-Ok
-> 
->> +	if (IS_ERR(rst)) {
->> +		clk_disable_unprepare(pmu->clk);
-> Given use of _prepared() get above. This doesn't look right - the unprepare
-> should be handled by devm unwinding. clk_disable()
-
-Oh you're right, I can fix this unwinding issue by using 
-`devm_clk_get_optional_enabled()` instead of 
-`devm_clk_get_optional_prepared()` and remove the `clk_enable()` so all 
-`clk_disable_unprepare()` disappear from the probe
-
-
->> +		return dev_err_probe(&pdev->dev, PTR_ERR(rst), "Failed to get reset\n");
->> +	}
->> +
->> +	reset_control_assert(rst);
->> +	reset_control_deassert(rst);
->> +
->> +	pmu->poll_period = ms_to_ktime(POLL_MS);
->> +	hrtimer_setup(&pmu->hrtimer, stm32_ddr_pmu_poll, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
->> +
->> +	for (int i = 0; i < MP2_CNT_NB; i++)
->> +		INIT_LIST_HEAD(&pmu->counters[i]);
->> +
->> +	pmu->selected_set = -1;
->> +
->> +	pmu->pmu = (struct pmu) {
->> +		.task_ctx_nr = perf_invalid_context,
->> +		.start = stm32_ddr_pmu_event_start,
->> +		.stop = stm32_ddr_pmu_event_stop,
->> +		.add = stm32_ddr_pmu_event_add,
->> +		.del = stm32_ddr_pmu_event_del,
->> +		.read = stm32_ddr_pmu_event_read,
->> +		.event_init = stm32_ddr_pmu_event_init,
->> +		.attr_groups = pmu->cfg->attribute,
->> +		.module = THIS_MODULE,
->> +	};
->> +
->> +	ret = perf_pmu_register(&pmu->pmu, DRIVER_NAME, -1);
-> 
-> Calling this exposes user interfaces etc.  Does it really make sense to
-> do that and then write another register?  I'd normally expect this
-> last in probe.
-
-Indeed, will move it at the end of the probe
-
-> 
->> +	if (ret) {
->> +		clk_disable_unprepare(pmu->clk);
-> 
-> As above.
-
-Ok
-> 
->> +		return dev_err_probe(&pdev->dev, ret,
->> +				     "Couldn't register DDRPERFM driver as a PMU\n");
->> +	}
->> +
->> +	if (pmu->cfg->regs->dram_inf.reg) {
->> +		ret = stm32_ddr_pmu_get_memory_type(pmu);
->> +		if (ret) {
->> +			perf_pmu_unregister(&pmu->pmu);
->> +			clk_disable_unprepare(pmu->clk);
->> +			return dev_err_probe(&pdev->dev, ret, "Failed to get memory type\n");
->> +		}
->> +
->> +		writel_relaxed(pmu->dram_type, pmu->membase + pmu->cfg->regs->dram_inf.reg);
->> +	}
->> +
->> +	clk_disable(pmu->clk);
->> +
->> +	return 0;
->> +}
-> 
->> +static const struct stm32_ddr_pmu_regspec stm32_ddr_pmu_regspec_mp2 = {
->> +	.stop =		{ DDRPERFM_CTRL, CTRL_STOP },
->> +	.start =	{ DDRPERFM_CTRL, CTRL_START },
->> +	.status =	{ DDRPERFM_MP2_STATUS, MP2_STATUS_BUSY },
->> +	.clear_cnt =	{ DDRPERFM_CLR, MP2_CLR_CNT},
->> +	.clear_time =	{ DDRPERFM_CLR, MP2_CLR_TIME},
-> 
-> Spaces before } are missing
-> There are a few others above that I'll not mention directly.
-
-Ok thanks
-
-> 
-> 
->> +	.cfg0 =		{ DDRPERFM_MP2_CFG0 },
->> +	.cfg1 =		{ DDRPERFM_MP2_CFG1 },
->> +	.enable =	{ DDRPERFM_MP2_CFG5 },
->> +	.dram_inf =	{ DDRPERFM_MP2_DRAMINF },
->> +	.counter_time =	{ DDRPERFM_MP2_TCNT },
->> +	.counter_evt =	{
->> +				{ DDRPERFM_MP2_EVCNT(0) },
-> Somewhat unusual formatting though neat I guess so fine if you
-> really like it!.
-> 	.counter_evt =	{
-> 		{ DDRPERFM_MP2_EVCNT(0) },
-> 
-> would be what I'd normally expect.
-
-I'll stick to normality, don't wanna be special here
-
->> +				{ DDRPERFM_MP2_EVCNT(1) },
->> +				{ DDRPERFM_MP2_EVCNT(2) },
->> +				{ DDRPERFM_MP2_EVCNT(3) },
->> +				{ DDRPERFM_MP2_EVCNT(4) },
->> +				{ DDRPERFM_MP2_EVCNT(5) },
->> +				{ DDRPERFM_MP2_EVCNT(6) },
->> +				{ DDRPERFM_MP2_EVCNT(7) },
->> +	},
->> +};
->> +
->> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp1 = {
->> +	.regs = &stm32_ddr_pmu_regspec_mp1,
->> +	.attribute = stm32_ddr_pmu_attr_groups_mp1,
->> +	.counters_nb = MP1_CNT_NB,
->> +	.evt_counters_nb = MP1_CNT_NB - 1, /* Time counter is not an event counter */
->> +	.time_cnt_idx = MP1_TIME_CNT_IDX,
->> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp1,
->> +};
->> +
->> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp2 = {
->> +	.regs = &stm32_ddr_pmu_regspec_mp2,
->> +	.attribute = stm32_ddr_pmu_attr_groups_mp2,
->> +	.counters_nb = MP2_CNT_NB,
->> +	.evt_counters_nb = MP2_CNT_NB - 1, /* Time counter is an event counter */
->> +	.time_cnt_idx = MP2_TIME_CNT_IDX,
->> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp2,
->> +};
->> +
->> +static const struct dev_pm_ops stm32_ddr_pmu_pm_ops = {
->> +	SET_SYSTEM_SLEEP_PM_OPS(NULL, stm32_ddr_pmu_device_resume)
->> +};
-> 
-> static DEFINE_SIMPLE_DEV_PM_OPS() looks appropriate here.
-
-Indeed, Thank you
-
-> 
-> 
->> +
->> +static const struct of_device_id stm32_ddr_pmu_of_match[] = {
->> +	{
->> +		.compatible = "st,stm32mp131-ddr-pmu",
->> +		.data = &stm32_ddr_pmu_cfg_mp1
->> +	},
->> +	{
->> +		.compatible = "st,stm32mp251-ddr-pmu",
->> +		.data = &stm32_ddr_pmu_cfg_mp2
->> +	},
->> +	{ },
-> 
-> No comma need after terminating entry.  Nice to make it hard
-> to accidentally add entries after one of these!
-
-Yes, I'll fix it
-
-Best regards,
-Clément
