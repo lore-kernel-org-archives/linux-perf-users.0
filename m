@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118482D0C7F;
-	Tue, 15 Jul 2025 03:17:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4E280B;
+	Tue, 15 Jul 2025 03:20:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752549441; cv=none; b=clNSKT1q/UVLInT7bfpHfwK0LVGbFEltBbU/HF+ioO34bD1DN/uu0OBYOmq2LUMCmxHHpovLRSlmsPCD2CSuWV1mfgrFlDcn1mPcMeBb/SskV886KNHm00iAzU2UiZ89W9MxXn4fNFkQw7OSSsrkgvmr4gbdu96IOi1WyokXEnI=
+	t=1752549621; cv=none; b=C/XVzWqcBGuIZBWPy3s6Mf4ncBODzx51B0MafzoqE8yGvUhOAcU4EDEXX6X9KdeG9/VPagXKKUu8hMEx10L3DaaiP9FOtonpFrO2bskFtYBUDGc38ETMIk1vKH+a1y+rk7mXbItAGwHW9OuE/JrTe6P2ageFu9M+zGHE9AIaCcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752549441; c=relaxed/simple;
-	bh=HTtawzgAqQ5YOwB+NQpNjeTVyd8WRqp+ZD4g6gH58Fg=;
+	s=arc-20240116; t=1752549621; c=relaxed/simple;
+	bh=TDYuRWmFZrwnvk8qMS3AlGvkZ3xUWYu930vi3adDEoY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nxabFhdXhaMKL7YqGEsGt0WG+bJDRwPgY6+CTV+5Rp/37VIER47IWLUrfaUWAOPKe2eW3CcMN9TcAqW9G93CkpO9Hwa4uvT3h3JLO5f6kfSDXkuzEDQi9jrILrKarCcH7S6hvnGUF7WITDpmYyO9qemX//ppy5WmE7pPO0/x2PU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SiSEOjDN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=lCqaYP5nxrM1X9ra+vZftmt3pgMMpm8pvWBSMsTXiD00pnK6fN6m3R/F6TgdGrqotxDCh/pC+7EO2eNvfS+/qsqw7CPeJV41syb1G5dMM9fle5tBe/dm7fx9pLZ0rXDY3zh0tJx7WtrEy45mTQRBfwvxkEOTzTKL8RJqSRPplQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mhnvEVxT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SiSEOjDN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72792C4CEED;
-	Tue, 15 Jul 2025 03:17:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mhnvEVxT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D5B9C4CEED;
+	Tue, 15 Jul 2025 03:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752549438;
-	bh=HTtawzgAqQ5YOwB+NQpNjeTVyd8WRqp+ZD4g6gH58Fg=;
+	s=k20201202; t=1752549621;
+	bh=TDYuRWmFZrwnvk8qMS3AlGvkZ3xUWYu930vi3adDEoY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SiSEOjDNHhYoDZQ4MKAicWSMZ0G8HtCCla9dnikgDs90hfnGgyOloW6Q+SywPrIe9
-	 HfYw/7VWPZi3LUUycotG/9lXaKXVUFjlM0Qu3eklGU0NqGGrEXhyuG3xeqmZLdLUoo
-	 TT/QAA5YfMmtFMAzzUJRAlNP84SwaGbH/nmNdtmown9T/X/BaJ4rNBmOKjvDxEmc69
-	 xcJjTMPHvQP1Z8s9XFiL5lwbxd6yLzO7vfCqtkSW13124agCEXl86ALj2l0pNxqJ5E
-	 ux0Nmi+b0kc/b/e3wChw3gjl2iW3LcMiR0FAiaVxyjzrbAu0vkKGPjZotQaX7Kf7HS
-	 WXBm/i/hn2a4Q==
-Date: Mon, 14 Jul 2025 22:17:17 -0500
+	b=mhnvEVxTxd7nbP4JvA3c5oAI7v4Uh1XECXIYdE/N/qy0huEeZvo77oD3clb4yTeWg
+	 ymcvNK/OWxZiNy8QB28n853qDQu5Onfy2QbNM99FmG7C495d6/1pBwDdOtioibMSSr
+	 /rlMD2bWz/hqVqcD18knvPH4J8lLajX/kcQ2Ilm7eWdWbm7ZGc4Q/ZTnOWmINuwNNe
+	 BxX9zMQoXhN+gpCMRRtNwTSi0RuN0t+Gkpq8fEib5xKs3IOxjBmVBIpaSmzbYDP8qg
+	 xOWvSr5FiKi9K5beUealNgIeVFiD9nCqjoctx0r+oRvwk+1p8VUoHmrFlNxs9LXyT7
+	 106sWikoj8ffw==
+Date: Mon, 14 Jul 2025 22:20:20 -0500
 From: Rob Herring <robh@kernel.org>
 To: =?iso-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>
 Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
@@ -47,11 +47,11 @@ Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
 	linux-clk@vger.kernel.org
-Subject: Re: [PATCH v2 02/16] dt-bindings: stm32: stm32mp25: add
- `access-controller-cell` property
-Message-ID: <20250715031717.GA4144523-robh@kernel.org>
+Subject: Re: [PATCH v2 06/16] arm64: dts: st: add LPDDR channel to
+ stm32mp257f-dk board
+Message-ID: <20250715032020.GB4144523-robh@kernel.org>
 References: <20250711-ddrperfm-upstream-v2-0-cdece720348f@foss.st.com>
- <20250711-ddrperfm-upstream-v2-2-cdece720348f@foss.st.com>
+ <20250711-ddrperfm-upstream-v2-6-cdece720348f@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,53 +61,42 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250711-ddrperfm-upstream-v2-2-cdece720348f@foss.st.com>
+In-Reply-To: <20250711-ddrperfm-upstream-v2-6-cdece720348f@foss.st.com>
 
-On Fri, Jul 11, 2025 at 04:48:54PM +0200, Clément Le Goffic wrote:
-> RCC is able to check the availability of a clock.
-> Allow to query the RCC with a firewall ID.
-
-If it is tied to a clock, do we need another provider? We have the 
-"protected clocks" thing, but that might be a bit different.
-
+On Fri, Jul 11, 2025 at 04:48:58PM +0200, Clément Le Goffic wrote:
+> Add 32bits LPDDR4 channel to the stm32mp257f-dk board.
 > 
 > Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
 > ---
->  Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml | 7 +++++++
+>  arch/arm64/boot/dts/st/stm32mp257f-dk.dts | 7 +++++++
 >  1 file changed, 7 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml b/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml
-> index 88e52f10d1ec..4d471e3d89bc 100644
-> --- a/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml
-> +++ b/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml
-> @@ -31,6 +31,11 @@ properties:
->    '#reset-cells':
->      const: 1
+> diff --git a/arch/arm64/boot/dts/st/stm32mp257f-dk.dts b/arch/arm64/boot/dts/st/stm32mp257f-dk.dts
+> index a278a1e3ce03..a97b41f14ecc 100644
+> --- a/arch/arm64/boot/dts/st/stm32mp257f-dk.dts
+> +++ b/arch/arm64/boot/dts/st/stm32mp257f-dk.dts
+> @@ -54,6 +54,13 @@ led-blue {
+>  		};
+>  	};
 >  
-> +  '#access-controller-cells':
-> +    const: 1
-> +    description:
-> +      Contains the firewall ID associated to the peripheral.
+> +	lpddr_channel: lpddr4-channel {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		compatible = "jedec,lpddr4-channel";
+
+Not tested because this doesn't match the binding.
+
+> +		io-width = <32>;
+> +	};
+
+What would multiple channels look like? I think this needs some work. 
+Like it should perhaps be within the memory node. It's a lot to just say 
+32-bit LPDDR4 x1.
+
 > +
->    clocks:
->      items:
->        - description: CK_SCMI_HSE High Speed External oscillator (8 to 48 MHz)
-> @@ -123,6 +128,7 @@ required:
->    - reg
->    - '#clock-cells'
->    - '#reset-cells'
-> +  - '#access-controller-cells'
->    - clocks
->  
->  additionalProperties: false
-> @@ -136,6 +142,7 @@ examples:
->          reg = <0x44200000 0x10000>;
->          #clock-cells = <1>;
->          #reset-cells = <1>;
-> +        #access-controller-cells = <1>;
->          clocks =  <&scmi_clk CK_SCMI_HSE>,
->                    <&scmi_clk CK_SCMI_HSI>,
->                    <&scmi_clk CK_SCMI_MSI>,
+>  	memory@80000000 {
+>  		device_type = "memory";
+>  		reg = <0x0 0x80000000 0x1 0x0>;
 > 
 > -- 
 > 2.43.0
