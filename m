@@ -1,113 +1,139 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E7027A455
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Jul 2025 17:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC58F284689;
+	Tue, 15 Jul 2025 17:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752599545; cv=none; b=egAafQCbR09E9zukdHFffU5Pt5b7qZiza+hT9i7H/FQOqsgEB7EioZ1am12n0kVA8WPshPcwjdtOFjN2RGEJQC/0D62RnV4Ofx5Tsmv4GrwB/10D4+JFOapMEkkxlhuA8LafpFKxaiQSKd0P3NLPI0uMj3NN1GYhntlnUnudu9k=
+	t=1752600443; cv=none; b=JROvAwj/GZgW8H74E9CqbMy0REx7U01A9nX9SVEJO9jf8xh/EklU2uKIM0HnyHZN194Q6BldFocPH2f8F2351x5MucXOD4GQ6sOKR6gliAwCCOsNJAC+vLgzk5/C+poW7sh7pfRS5P9xsZUW+5QVveKqiwb0UVhpUX+gaATccms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752599545; c=relaxed/simple;
-	bh=YCtVVMpvD/xdVI+sdp+CCepVQsM+MeTkXp7piqk3goY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Plc1I5xFcMLBX0Ignh4x+P9nMJl5bd0368EYsU9MpFA0YAAAsDpvMvrMmFNlblFMvLWAbGwEhvT6C9FerQu59aaFdI3ST28+WwRADHs0GnTBIXQOHMkXoNrWM2BYZA6hHrRfGwd4FJ9rQbzan0VaELz7milUzDF0qcyZMSVPtO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nslnATdC; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1752600443; c=relaxed/simple;
+	bh=ovPKG96PX8GRLMCJnscYphDbflIJz5ol2cbrtMEYKMU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fBF9xyu4KnzrVCKIQJmq4gLyX5BJY9se5kwu0ORlE3/Jg+9DZhE0IDk5aKPMCnVF8kW2sri1h8ll5Q/hXPra5JBDT+URJ/qEgvgTdVXQkcd2h54Vkr7FQuilII3SQsI5uk3BdqlCc8bEJt9e08sWkUMFJ0XzJ3VQsjygO0/15mQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ASIAXXDf; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nslnATdC"
-Message-ID: <ba5c04f4-a33d-4d7f-9272-eee4a4389def@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1752599531;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NCkuFDRYiHgZPUOR6AcG8fkwmC5F3Os71WzjkaB/swA=;
-	b=nslnATdCk5nZ3ZvgSdd+4yfRxO3vc8f/WtBxAXt5EqKJgrxRWH1om/M8h4J8dTGubYcGMS
-	jagtWbWmJeQERNOnPnFAk4s4hp7joNwYmwZLp6SVElD35W+X7SMHCm54rOAe82QrMfHlsI
-	f+Iuu2GpnhPle9XMlmhHLNINsq+aMdI=
-Date: Tue, 15 Jul 2025 10:12:02 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ASIAXXDf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752600442; x=1784136442;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ovPKG96PX8GRLMCJnscYphDbflIJz5ol2cbrtMEYKMU=;
+  b=ASIAXXDfR4dIAnnBg1lb50ru05ofyavLYWbf6KaHN66add6mxTtUP/JS
+   mKlIp9qTSfCeFoPFSbkc3JhHGsdhDwjDJ/MrYF9MKhHwbqrCiW9OgFgFb
+   QWjMYaqaxbhrZj/3BXU3ks0eJEK34QthKDb5yJ5YMr+27jNm+WMg2ZbZf
+   dRTdtjF5eifaDsv1GH993YRmZleTwrwAf3+4/UnOQ1FTCOnSX6EOS/Q1B
+   TD95Ce1lT1Ggdhg5m5bACj1Nc5NpTuSAfFn2YkWQ6/xK5XGJCfTt8N6zY
+   fa6x70wBE2l/OTk1YF8ogn/pTHtV7BK4exJRG1LfOb0V4ksmD28pdoe9k
+   w==;
+X-CSE-ConnectionGUID: 1r2pG4xBQnOcaVNyE0RhcQ==
+X-CSE-MsgGUID: VEMgzlk4RGShVg/1DTgXKw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11493"; a="54048313"
+X-IronPort-AV: E=Sophos;i="6.16,313,1744095600"; 
+   d="scan'208";a="54048313"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2025 10:27:21 -0700
+X-CSE-ConnectionGUID: dJg+dbpVQYq+HakiiLMIUQ==
+X-CSE-MsgGUID: kn5/sUpZQIa1Yvs1bCgxAA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,313,1744095600"; 
+   d="scan'208";a="161605026"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 15 Jul 2025 10:27:15 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ubjQu-000BNn-1v;
+	Tue, 15 Jul 2025 17:27:12 +0000
+Date: Wed, 16 Jul 2025 01:26:23 +0800
+From: kernel test robot <lkp@intel.com>
+To: Colton Lewis <coltonlewis@google.com>, kvm@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Mingwei Zhang <mizhang@google.com>, Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Shuah Khan <skhan@linuxfoundation.org>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Colton Lewis <coltonlewis@google.com>
+Subject: Re: [PATCH v4 22/23] KVM: arm64: Add ioctl to partition the PMU when
+ supported
+Message-ID: <202507160129.vrvWpdVu-lkp@intel.com>
+References: <20250714225917.1396543-23-coltonlewis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v1 2/7] bpf: Add bpf_perf_event_aux_pause kfunc
-Content-Language: en-GB
-To: Leo Yan <leo.yan@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>, Namhyung Kim <namhyung@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- James Clark <james.clark@linaro.org>, "Liang, Kan"
- <kan.liang@linux.intel.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Matt Bobrowski <mattbobrowski@google.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>
-References: <20241215193436.275278-1-leo.yan@arm.com>
- <20241215193436.275278-3-leo.yan@arm.com>
- <80f412f1-a060-463b-9034-3128906e6929@linux.dev>
- <20250714174505.GA3020098@e132581.arm.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <20250714174505.GA3020098@e132581.arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250714225917.1396543-23-coltonlewis@google.com>
+
+Hi Colton,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on 79150772457f4d45e38b842d786240c36bb1f97f]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Colton-Lewis/arm64-cpufeature-Add-cpucap-for-HPMN0/20250715-070741
+base:   79150772457f4d45e38b842d786240c36bb1f97f
+patch link:    https://lore.kernel.org/r/20250714225917.1396543-23-coltonlewis%40google.com
+patch subject: [PATCH v4 22/23] KVM: arm64: Add ioctl to partition the PMU when supported
+config: arm64-randconfig-003-20250715 (https://download.01.org/0day-ci/archive/20250716/202507160129.vrvWpdVu-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250716/202507160129.vrvWpdVu-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507160129.vrvWpdVu-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from arch/arm64/include/asm/kvm_host.h:31,
+                    from include/linux/kvm_host.h:45,
+                    from arch/arm64/kernel/asm-offsets.c:15:
+   arch/arm64/include/asm/kvm_pmu.h: In function 'kvm_pmu_is_partitioned':
+>> arch/arm64/include/asm/kvm_pmu.h:301:43: error: parameter name omitted
+    static inline bool kvm_pmu_is_partitioned(void *)
+                                              ^~~~~~
+   arch/arm64/include/asm/kvm_pmu.h: In function 'kvm_pmu_host_counter_mask':
+   arch/arm64/include/asm/kvm_pmu.h:306:45: error: parameter name omitted
+    static inline u64 kvm_pmu_host_counter_mask(void *)
+                                                ^~~~~~
+   arch/arm64/include/asm/kvm_pmu.h: In function 'kvm_pmu_guest_counter_mask':
+   arch/arm64/include/asm/kvm_pmu.h:311:46: error: parameter name omitted
+    static inline u64 kvm_pmu_guest_counter_mask(void *)
+                                                 ^~~~~~
+   make[3]: *** [scripts/Makefile.build:182: arch/arm64/kernel/asm-offsets.s] Error 1 shuffle=21662191
+   make[3]: Target 'prepare' not remade because of errors.
+   make[2]: *** [Makefile:1274: prepare0] Error 2 shuffle=21662191
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:248: __sub-make] Error 2 shuffle=21662191
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:248: __sub-make] Error 2 shuffle=21662191
+   make: Target 'prepare' not remade because of errors.
 
 
+vim +301 arch/arm64/include/asm/kvm_pmu.h
 
-On 7/14/25 10:45 AM, Leo Yan wrote:
-> Hi Yonghong,
->
-> Really sorry for the long delay. Now I am restarting this work.
->
-> On Mon, Dec 16, 2024 at 09:21:15AM -0800, Yonghong Song wrote:
->> On 12/15/24 11:34 AM, Leo Yan wrote:
->>> The bpf_perf_event_aux_pause kfunc will be used to control the Perf AUX
->>> area to pause or resume.
->>>
->>> An example use-case is attaching eBPF to Ftrace tracepoints.  When a
->>> tracepoint is hit, the associated eBPF program will be executed.  The
->>> eBPF program can invoke bpf_perf_event_aux_pause() to pause or resume
->>> AUX trace.  This is useful for fine-grained tracing by combining
->>> Perf and eBPF.
->>>
->>> This commit implements the bpf_perf_event_aux_pause kfunc, and make it
->>> pass the eBPF verifier.
->> The subject and commit message mentions to implement a kfunc,
->> but actually you implemented a uapi helper. Please implement a kfunc
->> instead (searching __bpf_kfunc in kernel/bpf directory).
-> After some research, my understanding is that kfunc is flexible for
-> exposing APIs via BTF, whereas BPF_CALL is typically used for core BPF
-> features - such as accessing BPF maps.
->
-> Coming back to this patch: it exposes a function with the following
-> definition:
->
->    int bpf_perf_event_aux_pause(struct bpf_map *map, u64 flags, u32 pause);
->
-> I'm not certain whether using __bpf_kfunc is appropriate here, or if I
-> should stick to BPF_CALL to ensure support for accessing bpf_map
-> pointers?
+   300	
+ > 301	static inline bool kvm_pmu_is_partitioned(void *)
+   302	{
+   303		return false;
+   304	}
+   305	
 
-Using helpers (BPF_CALL) is not an option as the whole bpf ecosystem
-moves to kfunc mechanism. You can certainly use kfunc with 'struct bpf_map *'
-as the argument. For example the following kfunc:
-   __bpf_kfunc s64 bpf_map_sum_elem_count(const struct bpf_map *map)
-in kernel/bpf/map_iter.c
-   
-
->
-> Thanks,
-> Leo
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
