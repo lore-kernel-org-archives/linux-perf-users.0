@@ -1,136 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC152C15A3;
-	Tue, 15 Jul 2025 03:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118482D0C7F;
+	Tue, 15 Jul 2025 03:17:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752549202; cv=none; b=aNBFPUWyMGQps2Kd765qY13/FlFn67mJZrqUHwHG7oPEWUJu2C/Zj53Yqd3g2IZIiYIOzP6DZR4KpLYhbBjMonXZ5XBwrTrjNhWrqnWEekVxtwQ4pRNHMKy/AR+yO9iVoEn1DKplT1nLNytuCyMSqCVOH7ae7Zck56b4xOoJghU=
+	t=1752549441; cv=none; b=clNSKT1q/UVLInT7bfpHfwK0LVGbFEltBbU/HF+ioO34bD1DN/uu0OBYOmq2LUMCmxHHpovLRSlmsPCD2CSuWV1mfgrFlDcn1mPcMeBb/SskV886KNHm00iAzU2UiZ89W9MxXn4fNFkQw7OSSsrkgvmr4gbdu96IOi1WyokXEnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752549202; c=relaxed/simple;
-	bh=cmJ9Aikh1+ZORyu24AlmHtsfp1yuhUrUZNONYneZerQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P6ZQlpvzgsDmt2MJ24GaZpjleJPeLfuW65hiuN7M5n0D42o4rO0Pm7zPQhzM1Xez8KBmMLm3DA4fZclgDpuhxZoJ3qV+n9s/URQUxTqxVqXsAscGsxl+s5yRhCGgMZIm8TFxmrV3QbJZ+XMjOaYApvLPF1yhlHlVW9Pdzb3cqYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JsLXV5B3; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1752549441; c=relaxed/simple;
+	bh=HTtawzgAqQ5YOwB+NQpNjeTVyd8WRqp+ZD4g6gH58Fg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nxabFhdXhaMKL7YqGEsGt0WG+bJDRwPgY6+CTV+5Rp/37VIER47IWLUrfaUWAOPKe2eW3CcMN9TcAqW9G93CkpO9Hwa4uvT3h3JLO5f6kfSDXkuzEDQi9jrILrKarCcH7S6hvnGUF7WITDpmYyO9qemX//ppy5WmE7pPO0/x2PU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SiSEOjDN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JsLXV5B3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752549201; x=1784085201;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=cmJ9Aikh1+ZORyu24AlmHtsfp1yuhUrUZNONYneZerQ=;
-  b=JsLXV5B3r2MjxEAbSlAfWw/htidC+yutBU7OdgXsDlN983wUSO3+Kyz2
-   Pg5q9At8M3oUoX4fdS3BDw/ELGsjFbHOKhg+JjdP2ULXu+lRSLm4i1XW8
-   R9iVbyhr55QxXShv2wzq/f0p1sKbhhXrNtNsv9I+B+wjUCeIxoEd3n/iB
-   NDDPJS6dimz9iSAidQGapCScl+5LfbE8yjYt/BHS1N9aHF9LUgcy+fLas
-   ctcCRF25fH4w0KFqrY3OnSy1v6Xc3iqlhfsEehT3XevvLtha0aIf5XWla
-   f0HAw5UAUx7bsCGtPu96zyhHkc9ZoLDHXjxsGFnGeZtBaZVp6ZCF5CfZH
-   A==;
-X-CSE-ConnectionGUID: mAiNquGRSgCAvc8mua9rxA==
-X-CSE-MsgGUID: V0ldb+rGSTCUViDJllCTSA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="58563051"
-X-IronPort-AV: E=Sophos;i="6.16,312,1744095600"; 
-   d="scan'208";a="58563051"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 20:13:20 -0700
-X-CSE-ConnectionGUID: OxUNvS3WT0KnKKCtD1njTw==
-X-CSE-MsgGUID: HAbh1PGWS4iXuv8Km4FrJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,312,1744095600"; 
-   d="scan'208";a="161417551"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.57]) ([10.124.240.57])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 20:13:16 -0700
-Message-ID: <03480d7a-7808-454c-8e3d-872901c31b1d@linux.intel.com>
-Date: Tue, 15 Jul 2025 11:13:13 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SiSEOjDN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72792C4CEED;
+	Tue, 15 Jul 2025 03:17:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752549438;
+	bh=HTtawzgAqQ5YOwB+NQpNjeTVyd8WRqp+ZD4g6gH58Fg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SiSEOjDNHhYoDZQ4MKAicWSMZ0G8HtCCla9dnikgDs90hfnGgyOloW6Q+SywPrIe9
+	 HfYw/7VWPZi3LUUycotG/9lXaKXVUFjlM0Qu3eklGU0NqGGrEXhyuG3xeqmZLdLUoo
+	 TT/QAA5YfMmtFMAzzUJRAlNP84SwaGbH/nmNdtmown9T/X/BaJ4rNBmOKjvDxEmc69
+	 xcJjTMPHvQP1Z8s9XFiL5lwbxd6yLzO7vfCqtkSW13124agCEXl86ALj2l0pNxqJ5E
+	 ux0Nmi+b0kc/b/e3wChw3gjl2iW3LcMiR0FAiaVxyjzrbAu0vkKGPjZotQaX7Kf7HS
+	 WXBm/i/hn2a4Q==
+Date: Mon, 14 Jul 2025 22:17:17 -0500
+From: Rob Herring <robh@kernel.org>
+To: =?iso-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Gatien Chevallier <gatien.chevallier@foss.st.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Gabriel Fernandez <gabriel.fernandez@foss.st.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Le Goffic <legoffic.clement@gmail.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-clk@vger.kernel.org
+Subject: Re: [PATCH v2 02/16] dt-bindings: stm32: stm32mp25: add
+ `access-controller-cell` property
+Message-ID: <20250715031717.GA4144523-robh@kernel.org>
+References: <20250711-ddrperfm-upstream-v2-0-cdece720348f@foss.st.com>
+ <20250711-ddrperfm-upstream-v2-2-cdece720348f@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 08/11] KVM: SVM: Extend VMCB area for virtualized IBS
- registers
-To: Manali Shukla <manali.shukla@amd.com>, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: seanjc@google.com, pbonzini@redhat.com, nikunj@amd.com, bp@alien8.de,
- peterz@infradead.org, mingo@redhat.com, mizhang@google.com,
- thomas.lendacky@amd.com, ravi.bangoria@amd.com, Sandipan.Das@amd.com
-References: <20250627162550.14197-1-manali.shukla@amd.com>
- <20250627162550.14197-9-manali.shukla@amd.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250627162550.14197-9-manali.shukla@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250711-ddrperfm-upstream-v2-2-cdece720348f@foss.st.com>
 
+On Fri, Jul 11, 2025 at 04:48:54PM +0200, Clément Le Goffic wrote:
+> RCC is able to check the availability of a clock.
+> Allow to query the RCC with a firewall ID.
 
-On 6/28/2025 12:25 AM, Manali Shukla wrote:
-> From: Santosh Shukla <santosh.shukla@amd.com>
->
-> Define the new VMCB fields that will beused to save and restore the
+If it is tied to a clock, do we need another provider? We have the 
+"protected clocks" thing, but that might be a bit different.
 
-s/beused/be used/
-
-
-> satate of the following fetch and op IBS related MSRs.
->
->   * MSRC001_1030 [IBS Fetch Control]
->   * MSRC001_1031 [IBS Fetch Linear Address]
->   * MSRC001_1033 [IBS Execution Control]
->   * MSRC001_1034 [IBS Op Logical Address]
->   * MSRC001_1035 [IBS Op Data]
->   * MSRC001_1036 [IBS Op Data 2]
->   * MSRC001_1037 [IBS Op Data 3]
->   * MSRC001_1038 [IBS DC Linear Address]
->   * MSRC001_103B [IBS Branch Target Address]
->   * MSRC001_103C [IBS Fetch Control Extended]
->
-> Signed-off-by: Santosh Shukla <santosh.shukla@amd.com>
-> Signed-off-by: Manali Shukla <manali.shukla@amd.com>
+> 
+> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
 > ---
->  arch/x86/include/asm/svm.h | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-> index ad954a1a6656..b62049b51ebb 100644
-> --- a/arch/x86/include/asm/svm.h
-> +++ b/arch/x86/include/asm/svm.h
-> @@ -356,6 +356,17 @@ struct vmcb_save_area {
->  	u64 last_excp_to;
->  	u8 reserved_0x298[72];
->  	u64 spec_ctrl;		/* Guest version of SPEC_CTRL at 0x2E0 */
-> +	u8 reserved_0x2e8[1168];
-> +	u64 ibs_fetch_ctl;
-> +	u64 ibs_fetch_linear_addr;
-> +	u64 ibs_op_ctl;
-> +	u64 ibs_op_rip;
-> +	u64 ibs_op_data;
-> +	u64 ibs_op_data2;
-> +	u64 ibs_op_data3;
-> +	u64 ibs_dc_linear_addr;
-> +	u64 ibs_br_target;
-> +	u64 ibs_fetch_extd_ctl;
->  } __packed;
+>  Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml b/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml
+> index 88e52f10d1ec..4d471e3d89bc 100644
+> --- a/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml
+> +++ b/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml
+> @@ -31,6 +31,11 @@ properties:
+>    '#reset-cells':
+>      const: 1
 >  
->  /* Save area definition for SEV-ES and SEV-SNP guests */
-> @@ -538,7 +549,7 @@ struct vmcb {
->  	};
->  } __packed;
+> +  '#access-controller-cells':
+> +    const: 1
+> +    description:
+> +      Contains the firewall ID associated to the peripheral.
+> +
+>    clocks:
+>      items:
+>        - description: CK_SCMI_HSE High Speed External oscillator (8 to 48 MHz)
+> @@ -123,6 +128,7 @@ required:
+>    - reg
+>    - '#clock-cells'
+>    - '#reset-cells'
+> +  - '#access-controller-cells'
+>    - clocks
 >  
-> -#define EXPECTED_VMCB_SAVE_AREA_SIZE		744
-> +#define EXPECTED_VMCB_SAVE_AREA_SIZE		1992
->  #define EXPECTED_GHCB_SAVE_AREA_SIZE		1032
->  #define EXPECTED_SEV_ES_SAVE_AREA_SIZE		1648
->  #define EXPECTED_VMCB_CONTROL_AREA_SIZE		1024
-> @@ -564,6 +575,7 @@ static inline void __unused_size_checks(void)
->  	BUILD_BUG_RESERVED_OFFSET(vmcb_save_area, 0x180);
->  	BUILD_BUG_RESERVED_OFFSET(vmcb_save_area, 0x248);
->  	BUILD_BUG_RESERVED_OFFSET(vmcb_save_area, 0x298);
-> +	BUILD_BUG_RESERVED_OFFSET(vmcb_save_area, 0x2e8);
->  
->  	BUILD_BUG_RESERVED_OFFSET(sev_es_save_area, 0xc8);
->  	BUILD_BUG_RESERVED_OFFSET(sev_es_save_area, 0xcc);
+>  additionalProperties: false
+> @@ -136,6 +142,7 @@ examples:
+>          reg = <0x44200000 0x10000>;
+>          #clock-cells = <1>;
+>          #reset-cells = <1>;
+> +        #access-controller-cells = <1>;
+>          clocks =  <&scmi_clk CK_SCMI_HSE>,
+>                    <&scmi_clk CK_SCMI_HSI>,
+>                    <&scmi_clk CK_SCMI_MSI>,
+> 
+> -- 
+> 2.43.0
+> 
