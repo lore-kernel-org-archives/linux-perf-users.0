@@ -1,159 +1,354 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AED1F3BAC;
-	Mon, 14 Jul 2025 23:08:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FFB2C3274;
+	Tue, 15 Jul 2025 02:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752534499; cv=none; b=WG2Bju6pSsKzX12ayy667E/RxwgfFuSdMiiwGKr1ny1iXg23gl2yPUQfgz4Eg+C4GNHcfiYZRw1ZFCJfJ6D9dJa485wnyPTAjEQhYDDT7JrlgFodD8S0TRIUyMeOLR3kIY6U680LpxonEBoWcGoshTXkUwiz22jHHag191tLgyA=
+	t=1752546127; cv=none; b=st2jXQP1mKSDQDVKm7LEjXubCggAMkbKJu4o5FTvaybAFZPAvb2Skp+XamoapDdUi6tQ6a55btGssgrrOIk0nwaxbJYeOPpp7qT6WUlwWHrZGUXaD7R2WfuJBK95jX3dpwMIMrUks0XmD70QyxNlsKmZtXDG+gHmbGpFZC8j0K8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752534499; c=relaxed/simple;
-	bh=aZopBhGjm6b8ZhwVgOoxaIYjjq15fUw+DW+MiePavw4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cDUhv9EKgjlp+DafdiRiD1PY6FVpLWqA4bgTtDTHPdw9q6CwLPgL5zc9ALzQ4aGGzK+bi/d5VpGXZhvI4/TlWQ/godzabhTTiTgT6epu8lfihA/O9dR/FS4D1dgg9UhN38WhT/rAiKLbfQXSh9H9EZ8FpO2oX3jM+AKLzqRVlJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W3dOVIFK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752546127; c=relaxed/simple;
+	bh=VoIDI81IF1mhhatNTQ8YKevKRHp5bKCm0PTI8ZSA4PU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LopGrLjdl/SgAj1dzDNoXi0QmqjNFpUNSOYA9DC2dVLD4eEYBTF8SjLAEON3pzhC7O3x553KnPigMN3fjmhWU4ClP9guDU0DuRcvBh7R9pmlGLEHB0xO+pYn41VDgU0cCgzKykZ3lMoNMmSWdVkT1ZTIjZA2fGSfhuhOYvnRDXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NldwZkVw; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W3dOVIFK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE5CFC4CEF0;
-	Mon, 14 Jul 2025 23:08:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752534499;
-	bh=aZopBhGjm6b8ZhwVgOoxaIYjjq15fUw+DW+MiePavw4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W3dOVIFKLiFjzmg7MwAfHkxwXm3nz2lulJUiUsEjBkB5GGcVt94f2tOfwXsXmD+KZ
-	 TW+DWf/zEhmggpqr5DNVlP7Q00w0GXZAfFcRIRdsI7/T4LMNa/lKfWkjMMOlK6GKVD
-	 D1QRWTcvLRd5d/b9MIruQSC9SFfNSjCU5MHWmgPEDDezenJ63s+MvPVhMlczkzrYCu
-	 1xHtXcnAQqvieKuzAbYzeKSmWMM2cAt7hDEXdYzvWDXc+wVjOnfX6Q28Eu5N1lsH+J
-	 ZY5dn6ZK8BNM1st5VRQuz0TuUjcomAHKKxwV7l62QIQDJaKwqWFiWh8bVphUHF3Vm4
-	 pYu+VnsPSnYHg==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-	syzbot <syzbot+2fe61cb2a86066be6985@syzkaller.appspotmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Sasha Levin <sashal@kernel.org>,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 2/3] perf/core: Fix WARN in perf_sigtrap()
-Date: Mon, 14 Jul 2025 19:08:11 -0400
-Message-Id: <20250714230812.3710500-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250714230812.3710500-1-sashal@kernel.org>
-References: <20250714230812.3710500-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NldwZkVw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752546125; x=1784082125;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VoIDI81IF1mhhatNTQ8YKevKRHp5bKCm0PTI8ZSA4PU=;
+  b=NldwZkVwyRSXzdDv/1cEOtWQNfkrw9M0Pjl4zOluHVcEvJuYjeLU3a4w
+   G/JPtUscxLD+qNJJL0pa1OS39L7nIRFKKhJq85USP7Z34vtVDI0P5Lkde
+   oWWcjZIlYPeHU3IzUb1HgWCDWcQswSrVqEfq0leYSMtkoWLqW9/vchLeB
+   E3Q6cycoZmG6q2BpwJK3GTDzOMahWyLG3/jVpIckboMg4lsyQA6NOd0GP
+   m0RSATkl+qXBPI7VFX35YIY8+8yWbEKlu/rRwyoFA9DwA6UCmBfYxEro7
+   wwZyFfby7teeNWK6RVQdvjfLRJp38s5+zNzVvKNgNaghYP8taAthexIwP
+   g==;
+X-CSE-ConnectionGUID: U6Al39TQTNCFH9uo9TU5eQ==
+X-CSE-MsgGUID: kL2jOphzT5G3TWQFMq+Q7A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11491"; a="66202883"
+X-IronPort-AV: E=Sophos;i="6.16,312,1744095600"; 
+   d="scan'208";a="66202883"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 19:22:04 -0700
+X-CSE-ConnectionGUID: m8NdxOPgTZqYskL23oqUnQ==
+X-CSE-MsgGUID: zTe4wbnlSRG/z7AiMP3+wg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,312,1744095600"; 
+   d="scan'208";a="157814824"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.57]) ([10.124.240.57])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2025 19:22:00 -0700
+Message-ID: <03934334-a4b6-4c9f-ad99-5f8041836065@linux.intel.com>
+Date: Tue, 15 Jul 2025 10:21:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.188
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 02/11] KVM: Add KVM_GET_LAPIC_W_EXTAPIC and
+ KVM_SET_LAPIC_W_EXTAPIC for extapic
+To: Manali Shukla <manali.shukla@amd.com>, kvm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: seanjc@google.com, pbonzini@redhat.com, nikunj@amd.com, bp@alien8.de,
+ peterz@infradead.org, mingo@redhat.com, mizhang@google.com,
+ thomas.lendacky@amd.com, ravi.bangoria@amd.com, Sandipan.Das@amd.com
+References: <20250627162550.14197-1-manali.shukla@amd.com>
+ <20250627162550.14197-3-manali.shukla@amd.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250627162550.14197-3-manali.shukla@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-[ Upstream commit 3da6bb419750f3ad834786d6ba7c9d5d062c770b ]
+On 6/28/2025 12:25 AM, Manali Shukla wrote:
+> Modern AMD processors expose four additional extended LVT registers in
+> the extended APIC register space, which can be used for additional
+> interrupt sources such as instruction-based sampling and others.
+>
+> To support this, introduce two new vCPU-based IOCTLs:
+> KVM_GET_LAPIC_W_EXTAPIC and KVM_SET_LAPIC_W_EXTAPIC. These IOCTLs works
+> similarly to KVM_GET_LAPIC and KVM_SET_LAPIC, but operate on APIC page
+> with extended APIC register space located at APIC offsets 400h-530h.
+>
+> These IOCTLs are intended for use when extended APIC support is
+> enabled in the guest. They allow saving and restoring the full APIC
+> page, including the extended registers.
+>
+> To support this, the `struct kvm_lapic_state_w_extapic` has been made
+> extensible rather than hardcoding its size, improving forward
+> compatibility.
+>
+> Documentation for the new IOCTLs has also been added.
+>
+> For more details on the extended APIC space, refer to AMD Programmer’s
+> Manual Volume 2, Section 16.4.5: Extended Interrupts.
+> https://bugzilla.kernel.org/attachment.cgi?id=306250
+>
+> Signed-off-by: Manali Shukla <manali.shukla@amd.com>
+> ---
+>  Documentation/virt/kvm/api.rst  | 23 ++++++++++++++++++++
+>  arch/x86/include/uapi/asm/kvm.h |  5 +++++
+>  arch/x86/kvm/lapic.c            | 12 ++++++-----
+>  arch/x86/kvm/lapic.h            |  6 ++++--
+>  arch/x86/kvm/x86.c              | 37 ++++++++++++++++++++++++---------
+>  include/uapi/linux/kvm.h        | 10 +++++++++
+>  6 files changed, 76 insertions(+), 17 deletions(-)
+>
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index 1bd2d42e6424..0ca11d43f833 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -2041,6 +2041,18 @@ error.
+>  Reads the Local APIC registers and copies them into the input argument.  The
+>  data format and layout are the same as documented in the architecture manual.
+>  
+> +::
+> +
+> +  #define KVM_APIC_EXT_REG_SIZE 0x540
+> +  struct kvm_lapic_state_w_extapic {
+> +	__DECLARE_FLEX_ARRAY(__u8, regs);
+> +  };
+> +
+> +Applications should use KVM_GET_LAPIC_W_EXTAPIC ioctl if extended APIC is
+> +enabled. KVM_GET_LAPIC_W_EXTAPIC reads Local APIC registers with extended
+> +APIC register space located at offsets 400h-530h and copies them into input
+> +argument.
+> +
+>  If KVM_X2APIC_API_USE_32BIT_IDS feature of KVM_CAP_X2APIC_API is
+>  enabled, then the format of APIC_ID register depends on the APIC mode
+>  (reported by MSR_IA32_APICBASE) of its VCPU.  x2APIC stores APIC ID in
+> @@ -2072,6 +2084,17 @@ always uses xAPIC format.
+>  Copies the input argument into the Local APIC registers.  The data format
+>  and layout are the same as documented in the architecture manual.
+>  
+> +::
+> +
+> +  #define KVM_APIC_EXT_REG_SIZE 0x540
+> +  struct kvm_lapic_state_w_extapic {
+> +	__DECLARE_FLEX_ARRAY(__u8, regs);
+> +  };
+> +
+> +Applications should use KVM_SET_LAPIC_W_EXTAPIC ioctl if extended APIC is enabled.
+> +KVM_SET_LAPIC_W_EXTAPIC copies input arguments with extended APIC register into
+> +Local APIC and extended APIC registers.
+> +
+>  The format of the APIC ID register (bytes 32-35 of struct kvm_lapic_state's
+>  regs field) depends on the state of the KVM_CAP_X2APIC_API capability.
+>  See the note in KVM_GET_LAPIC.
+> diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
+> index 6f3499507c5e..91c3c5b8cae3 100644
+> --- a/arch/x86/include/uapi/asm/kvm.h
+> +++ b/arch/x86/include/uapi/asm/kvm.h
+> @@ -124,6 +124,11 @@ struct kvm_lapic_state {
+>  	char regs[KVM_APIC_REG_SIZE];
+>  };
+>  
+> +#define KVM_APIC_EXT_REG_SIZE 0x540
+> +struct kvm_lapic_state_w_extapic {
+> +	__DECLARE_FLEX_ARRAY(__u8, regs);
+> +};
 
-Since exit_task_work() runs after perf_event_exit_task_context() updated
-ctx->task to TASK_TOMBSTONE, perf_sigtrap() from perf_pending_task() might
-observe event->ctx->task == TASK_TOMBSTONE.
+The name "kvm_lapic_state_w_extapic" seems a little bit too long, maybe
+"kvm_ext_lapic_state" is enough?
 
-Swap the early exit tests in order not to hit WARN_ON_ONCE().
 
-Closes: https://syzkaller.appspot.com/bug?extid=2fe61cb2a86066be6985
-Reported-by: syzbot <syzbot+2fe61cb2a86066be6985@syzkaller.appspotmail.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/b1c224bd-97f9-462c-a3e3-125d5e19c983@I-love.SAKURA.ne.jp
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
-
-LLM Generated explanations, may be completely bogus:
-
-Based on my analysis of the commit, let me provide my assessment:
-
-**YES**
-
-This commit should be backported to stable kernel trees for the
-following reasons:
-
-1. **It fixes a real bug with user-visible impact**: The commit fixes a
-   WARN_ON_ONCE() that fires in perf_sigtrap() when the system hits a
-   specific race condition. This WARN causes kernel log spam and
-   indicates an unexpected state that shouldn't occur.
-
-2. **The fix is small and contained**: The change is minimal - it simply
-   reorders two early exit checks in perf_sigtrap():
-   - Before: Check `event->ctx->task != current` first, then check
-     `PF_EXITING`
-   - After: Check `PF_EXITING` first, then check `event->ctx->task !=
-     current`
-
-3. **Clear race condition**: The commit message explains the race:
-   exit_task_work() runs after perf_event_exit_task_context() has
-   updated ctx->task to TASK_TOMBSTONE. When perf_sigtrap() is called
-   from perf_pending_task() during this window, it observes
-   event->ctx->task == TASK_TOMBSTONE, which doesn't match current,
-   triggering the WARN.
-
-4. **Low risk of regression**: The fix simply reorders existing checks
-   without changing functionality. If the task is exiting (PF_EXITING is
-   set), we return early regardless. The reordering just prevents the
-   WARN from firing in this legitimate exit scenario.
-
-5. **Fixes a reproducible issue**: The commit references a specific
-   syzbot report
-   (https://syzkaller.appspot.com/bug?extid=2fe61cb2a86066be6985),
-   indicating this is a real issue that can be triggered, not just
-   theoretical.
-
-6. **Follows stable tree rules**: This is an important bugfix (prevents
-   kernel warnings), has minimal risk, and doesn't introduce new
-   features or make architectural changes.
-
-The fix is appropriate because during task exit, it's expected that
-ctx->task might be TASK_TOMBSTONE while the task is still cleaning up
-its work items. By checking PF_EXITING first, we properly handle the
-legitimate exit case without triggering false warnings.
-
- kernel/events/core.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index c7ae6b426de38..e2457319b63e1 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -6667,18 +6667,18 @@ void perf_event_wakeup(struct perf_event *event)
- static void perf_sigtrap(struct perf_event *event)
- {
- 	/*
--	 * We'd expect this to only occur if the irq_work is delayed and either
--	 * ctx->task or current has changed in the meantime. This can be the
--	 * case on architectures that do not implement arch_irq_work_raise().
-+	 * Both perf_pending_task() and perf_pending_irq() can race with the
-+	 * task exiting.
- 	 */
--	if (WARN_ON_ONCE(event->ctx->task != current))
-+	if (current->flags & PF_EXITING)
- 		return;
- 
- 	/*
--	 * Both perf_pending_task() and perf_pending_irq() can race with the
--	 * task exiting.
-+	 * We'd expect this to only occur if the irq_work is delayed and either
-+	 * ctx->task or current has changed in the meantime. This can be the
-+	 * case on architectures that do not implement arch_irq_work_raise().
- 	 */
--	if (current->flags & PF_EXITING)
-+	if (WARN_ON_ONCE(event->ctx->task != current))
- 		return;
- 
- 	send_sig_perf((void __user *)event->pending_addr,
--- 
-2.39.5
-
+> +
+>  struct kvm_segment {
+>  	__u64 base;
+>  	__u32 limit;
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 73418dc0ebb2..00ca2b0faa45 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -3046,7 +3046,7 @@ void kvm_apic_ack_interrupt(struct kvm_vcpu *vcpu, int vector)
+>  EXPORT_SYMBOL_GPL(kvm_apic_ack_interrupt);
+>  
+>  static int kvm_apic_state_fixup(struct kvm_vcpu *vcpu,
+> -		struct kvm_lapic_state *s, bool set)
+> +		struct kvm_lapic_state_w_extapic *s, bool set)
+>  {
+>  	if (apic_x2apic_mode(vcpu->arch.apic)) {
+>  		u32 x2apic_id = kvm_x2apic_id(vcpu->arch.apic);
+> @@ -3097,9 +3097,10 @@ static int kvm_apic_state_fixup(struct kvm_vcpu *vcpu,
+>  	return 0;
+>  }
+>  
+> -int kvm_apic_get_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state *s)
+> +int kvm_apic_get_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state_w_extapic *s,
+> +		       unsigned int size)
+>  {
+> -	memcpy(s->regs, vcpu->arch.apic->regs, sizeof(*s));
+> +	memcpy(s->regs, vcpu->arch.apic->regs, size);
+>  
+>  	/*
+>  	 * Get calculated timer current count for remaining timer period (if
+> @@ -3111,7 +3112,8 @@ int kvm_apic_get_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state *s)
+>  	return kvm_apic_state_fixup(vcpu, s, false);
+>  }
+>  
+> -int kvm_apic_set_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state *s)
+> +int kvm_apic_set_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state_w_extapic *s,
+> +		       unsigned int size)
+>  {
+>  	struct kvm_lapic *apic = vcpu->arch.apic;
+>  	int r;
+> @@ -3126,7 +3128,7 @@ int kvm_apic_set_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state *s)
+>  		kvm_recalculate_apic_map(vcpu->kvm);
+>  		return r;
+>  	}
+> -	memcpy(vcpu->arch.apic->regs, s->regs, sizeof(*s));
+> +	memcpy(vcpu->arch.apic->regs, s->regs, size);
+>  
+>  	atomic_set_release(&apic->vcpu->kvm->arch.apic_map_dirty, DIRTY);
+>  	kvm_recalculate_apic_map(vcpu->kvm);
+> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+> index 4518b4e0552f..7ad946b3738d 100644
+> --- a/arch/x86/kvm/lapic.h
+> +++ b/arch/x86/kvm/lapic.h
+> @@ -120,9 +120,11 @@ bool kvm_irq_delivery_to_apic_fast(struct kvm *kvm, struct kvm_lapic *src,
+>  void kvm_apic_send_ipi(struct kvm_lapic *apic, u32 icr_low, u32 icr_high);
+>  
+>  int kvm_apic_set_base(struct kvm_vcpu *vcpu, u64 value, bool host_initiated);
+> -int kvm_apic_get_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state *s);
+> -int kvm_apic_set_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state *s);
+>  void kvm_apic_update_hwapic_isr(struct kvm_vcpu *vcpu);
+> +int kvm_apic_get_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state_w_extapic *s,
+> +		       unsigned int size);
+> +int kvm_apic_set_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state_w_extapic *s,
+> +		       unsigned int size);
+>  int kvm_lapic_find_highest_irr(struct kvm_vcpu *vcpu);
+>  
+>  u64 kvm_get_lapic_tscdeadline_msr(struct kvm_vcpu *vcpu);
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index c880a512005e..c273bbbbbcc6 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -5156,25 +5156,25 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
+>  }
+>  
+>  static int kvm_vcpu_ioctl_get_lapic(struct kvm_vcpu *vcpu,
+> -				    struct kvm_lapic_state *s)
+> +				    struct kvm_lapic_state_w_extapic *s, unsigned int size)
+>  {
+>  	if (vcpu->arch.apic->guest_apic_protected)
+>  		return -EINVAL;
+>  
+>  	kvm_x86_call(sync_pir_to_irr)(vcpu);
+>  
+> -	return kvm_apic_get_state(vcpu, s);
+> +	return kvm_apic_get_state(vcpu, s, size);
+>  }
+>  
+>  static int kvm_vcpu_ioctl_set_lapic(struct kvm_vcpu *vcpu,
+> -				    struct kvm_lapic_state *s)
+> +				    struct kvm_lapic_state_w_extapic *s, unsigned int size)
+>  {
+>  	int r;
+>  
+>  	if (vcpu->arch.apic->guest_apic_protected)
+>  		return -EINVAL;
+>  
+> -	r = kvm_apic_set_state(vcpu, s);
+> +	r = kvm_apic_set_state(vcpu, s, size);
+>  	if (r)
+>  		return r;
+>  	update_cr8_intercept(vcpu);
+> @@ -5903,10 +5903,11 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+>  {
+>  	struct kvm_vcpu *vcpu = filp->private_data;
+>  	void __user *argp = (void __user *)arg;
+> +	unsigned long size;
+>  	int r;
+>  	union {
+>  		struct kvm_sregs2 *sregs2;
+> -		struct kvm_lapic_state *lapic;
+> +		struct kvm_lapic_state_w_extapic *lapic;
+>  		struct kvm_xsave *xsave;
+>  		struct kvm_xcrs *xcrs;
+>  		void *buffer;
+> @@ -5916,35 +5917,51 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+>  
+>  	u.buffer = NULL;
+>  	switch (ioctl) {
+> +	case KVM_GET_LAPIC_W_EXTAPIC:
+>  	case KVM_GET_LAPIC: {
+>  		r = -EINVAL;
+>  		if (!lapic_in_kernel(vcpu))
+>  			goto out;
+> -		u.lapic = kzalloc(sizeof(struct kvm_lapic_state), GFP_KERNEL);
+> +
+> +		if (ioctl == KVM_GET_LAPIC_W_EXTAPIC)
+> +			size = struct_size(u.lapic, regs, KVM_APIC_EXT_REG_SIZE);
+> +		else
+> +			size = sizeof(struct kvm_lapic_state);
+> +
+> +		u.lapic = kzalloc(size, GFP_KERNEL);
+>  
+>  		r = -ENOMEM;
+>  		if (!u.lapic)
+>  			goto out;
+> -		r = kvm_vcpu_ioctl_get_lapic(vcpu, u.lapic);
+> +		r = kvm_vcpu_ioctl_get_lapic(vcpu, u.lapic, size);
+>  		if (r)
+>  			goto out;
+> +
+>  		r = -EFAULT;
+> -		if (copy_to_user(argp, u.lapic, sizeof(struct kvm_lapic_state)))
+> +		if (copy_to_user(argp, u.lapic, size))
+>  			goto out;
+> +
+>  		r = 0;
+>  		break;
+>  	}
+> +	case KVM_SET_LAPIC_W_EXTAPIC:
+>  	case KVM_SET_LAPIC: {
+>  		r = -EINVAL;
+>  		if (!lapic_in_kernel(vcpu))
+>  			goto out;
+> -		u.lapic = memdup_user(argp, sizeof(*u.lapic));
+> +
+> +		if (ioctl == KVM_SET_LAPIC_W_EXTAPIC)
+> +			size = struct_size(u.lapic, regs, KVM_APIC_EXT_REG_SIZE);
+> +		else
+> +			size = sizeof(struct kvm_lapic_state);
+> +		u.lapic = memdup_user(argp, size);
+> +
+>  		if (IS_ERR(u.lapic)) {
+>  			r = PTR_ERR(u.lapic);
+>  			goto out_nofree;
+>  		}
+>  
+> -		r = kvm_vcpu_ioctl_set_lapic(vcpu, u.lapic);
+> +		r = kvm_vcpu_ioctl_set_lapic(vcpu, u.lapic, size);
+>  		break;
+>  	}
+>  	case KVM_INTERRUPT: {
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index d00b85cb168c..cf23c1b52c49 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -1290,6 +1290,16 @@ struct kvm_vfio_spapr_tce {
+>  #define KVM_SET_FPU               _IOW(KVMIO,  0x8d, struct kvm_fpu)
+>  #define KVM_GET_LAPIC             _IOR(KVMIO,  0x8e, struct kvm_lapic_state)
+>  #define KVM_SET_LAPIC             _IOW(KVMIO,  0x8f, struct kvm_lapic_state)
+> +/*
+> + * Added to save/restore local APIC registers with extended APIC (extapic)
+> + * register space.
+> + *
+> + * Qemu emulates extapic logic only when KVM enables extapic functionality via
+> + * KVM capability. In the condition where Qemu sets extapic registers, but KVM doesn't
+> + * set extapic capability, Qemu ends up using KVM_GET_LAPIC and KVM_SET_LAPIC.
+> + */
+> +#define KVM_GET_LAPIC_W_EXTAPIC   _IOR(KVMIO,  0x8e, struct kvm_lapic_state_w_extapic)
+> +#define KVM_SET_LAPIC_W_EXTAPIC   _IOW(KVMIO,  0x8f, struct kvm_lapic_state_w_extapic)
+>  #define KVM_SET_CPUID2            _IOW(KVMIO,  0x90, struct kvm_cpuid2)
+>  #define KVM_GET_CPUID2            _IOWR(KVMIO, 0x91, struct kvm_cpuid2)
+>  /* Available with KVM_CAP_VAPIC */
