@@ -1,156 +1,131 @@
-Received: from mail-oo1-f73.google.com (mail-oo1-f73.google.com [209.85.161.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC428F5B
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Jul 2025 21:16:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.73
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59D6F7261D;
+	Tue, 15 Jul 2025 23:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752614214; cv=none; b=IzHDGF+lA3EznqCazEdYnQGSH2rb1vwlGojLTLpKSbTnfVzM3UBEb5aR5btsAs232c2DywdLNk4ftOjgldytvp5sNlQnskPF0Cs9Oqe9Pxpc7Tn5ZgFPpBvXz49kPsOb/+xSXbsxwtQ26a9F/xwB9Vq9aoFjTVb34vIgPlTzGvU=
+	t=1752621744; cv=none; b=u5l8VzG8J+28OwBiL+2dSVDJ2zRMDqU4lmROETeoN7C8kGNwB/nq7gw6JQVJyLaLgCY/z3qiadwfzS5QTGHGmGWqxUpv4ryeqzF0rLMwIj/dTZnvo+gJbj0cP2y7+0fWg9k9pHrZrBgVeYGIE2UVbWv8BVH4HxnpGNpJy1R4z+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752614214; c=relaxed/simple;
-	bh=tOQO6BDvaHzehkXLuqrv7zmehstQBhotZEf5osv7fJ8=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=uleS+LTe3qkoQfUgmrp65u0Y1I5qlTy1HVPK/mBnCUs+739BnjO3Ml3+CaiTHoiHMUBrzyJYPLMnh0IHcgLCD+Gwh8Ve6bHEFD58ZwTidswRE5ll5csnt1Dk6YpEGJpqFgP5yaEG/01TLhwKeed332acEUQ3WgYhY0rYHWab9Yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b6C8AYof; arc=none smtp.client-ip=209.85.161.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b6C8AYof"
-Received: by mail-oo1-f73.google.com with SMTP id 006d021491bc7-611fdcbe1d8so4054031eaf.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Jul 2025 14:16:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1752614212; x=1753219012; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=W3m+1hLOZ8hAFq4B95DKPtg5XMn2S7HOXjCLINFrtq0=;
-        b=b6C8AYofF7kItz+F131mXwlOi8jlWsKBGsElFJ/SU9PR/dxfsPhNa138fWWGJxygvm
-         VwZnlEXQ2yNx9lqJPk9dXi+yVdsy9MEgOs73w6DNRl1PwRMZhqsKCqSy39uW1AONIBJJ
-         D3cWaOPPDO3oGkH/CPWn9HpcR+eykWkg1/0EK2C9YxllXEsnP99Bd0aqJgQnt21jDi+d
-         d+0OOlfKRefJdl2FIXrl7oNjTv7xjrgSYrvWLWDaZ1S4ivT52f5Hsb6c2sPxth5xzkug
-         wYhX/LxKFqXc19zBdKYbBic6uUOy4vTHNZt6KpPf5VrrNksutLSmMWPIsSB7R8k5jAG8
-         Cl3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752614212; x=1753219012;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W3m+1hLOZ8hAFq4B95DKPtg5XMn2S7HOXjCLINFrtq0=;
-        b=aOFZdyrT1358Wsn/kjIEhQ1sH79e9VB4VVdcwegM5MekuuNl+EH+jXVkEALB1muIYY
-         jqhkXtPV1qJyBmjFOtznetcBmsB1t+QuS9EyfW6bmmYYEKC7kJ8T3ZSWf0qDYZZcAE7+
-         7CqYNg322geHN3FujR/TRnsuf0OeKTGv8By4YTqaRZjYBuUvk9ywY7Z9cmPvSKc2vIR7
-         GBfC/crz7GyHjbk+IKKKYk4vfNX6XrLC/akesfNrY4bRg1Ch4fIYwFr3Uu79V0NvSHBv
-         /7RrFMbWHLDhR4PQjv5Ts7yWQL8Qj7TfEdmAwwLdymSy/WKMURUXp2dGmKVt1IKRm1JW
-         ojcg==
-X-Forwarded-Encrypted: i=1; AJvYcCUMQCd5n2KkBuEDgB278dfaL2JlYklKe1gbWToAbdWvpNsfa559uvGrkB6zeeT1RTj+A4riCnlaYbACX+BruPVG@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzlp0rIkfs7/LaGxjoNEb2j7toR90t9jIgTKrKIELYky4GQ3f3r
-	4Dx5BhbJQNod5AHuoxU8YUyJ2900L3Gm6Zj1KAyLvqtri8EFMUNJ3K9WkJKR0ic0LAFk2o5/zXf
-	N6OnXwMK7exJNztEzIRihoLHHAQ==
-X-Google-Smtp-Source: AGHT+IET2M3P36gkp3EjMv7BaUc9VYIy2qskuUCF22ILqTd3hhERB/uyQyetYE1K8s52+LEBtd/RipiSFpzH6qhMLA==
-X-Received: from oobic4.prod.google.com ([2002:a05:6820:6704:b0:613:872a:7b2b])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6820:418e:b0:615:7c7f:4aa6 with SMTP id 006d021491bc7-615a1f5b472mr11828eaf.3.1752614211817;
- Tue, 15 Jul 2025 14:16:51 -0700 (PDT)
-Date: Tue, 15 Jul 2025 21:16:50 +0000
-In-Reply-To: <202507160129.vrvWpdVu-lkp@intel.com> (message from kernel test
- robot on Wed, 16 Jul 2025 01:26:23 +0800)
+	s=arc-20240116; t=1752621744; c=relaxed/simple;
+	bh=x67+Hru3euykHmBuyLooA2lRlilf1qyeV+pefGwKg6Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KwLNMyXU1yQU9DCvOy5/6PkYU017X1TQZp1onCjveRUTy37R6OiclWrzS/ZwqwUwYUAgiuftX0OcTb1918gPjLjO+Kmif4nBXLBXXa+YJZSE3zjhuuhgh+ttSz6oqyVYY2WxPMiZZ1ul37Oh1p5zM9iskEzJFvJx7cAJ4fZ8u88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0045C12FC;
+	Tue, 15 Jul 2025 16:22:12 -0700 (PDT)
+Received: from [10.57.0.241] (unknown [10.57.0.241])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9D9533F66E;
+	Tue, 15 Jul 2025 16:22:17 -0700 (PDT)
+Message-ID: <153b5191-c585-433e-9cf5-1ed19b9a7f5c@arm.com>
+Date: Wed, 16 Jul 2025 00:22:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <gsntv7nt9mt9.fsf@coltonlewis-kvm.c.googlers.com>
-Subject: Re: [PATCH v4 22/23] KVM: arm64: Add ioctl to partition the PMU when supported
-From: Colton Lewis <coltonlewis@google.com>
-To: kernel test robot <lkp@intel.com>
-Cc: kvm@vger.kernel.org, oe-kbuild-all@lists.linux.dev, pbonzini@redhat.com, 
-	corbet@lwn.net, linux@armlinux.org.uk, catalin.marinas@arm.com, 
-	will@kernel.org, maz@kernel.org, oliver.upton@linux.dev, mizhang@google.com, 
-	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, 
-	mark.rutland@arm.com, skhan@linuxfoundation.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 01/23] arm64: cpufeature: Add cpucap for HPMN0
+Content-Language: en-GB
+To: Colton Lewis <coltonlewis@google.com>, kvm@vger.kernel.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+ Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Mingwei Zhang <mizhang@google.com>, Joey Gouly <joey.gouly@arm.com>,
+ Zenghui Yu <yuzenghui@huawei.com>, Mark Rutland <mark.rutland@arm.com>,
+ Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20250714225917.1396543-1-coltonlewis@google.com>
+ <20250714225917.1396543-2-coltonlewis@google.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20250714225917.1396543-2-coltonlewis@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-kernel test robot <lkp@intel.com> writes:
+On 14/07/2025 23:58, Colton Lewis wrote:
+> Add a capability for FEAT_HPMN0, whether MDCR_EL2.HPMN can specify 0
+> counters reserved for the guest.
+> 
+> This required changing HPMN0 to an UnsignedEnum in tools/sysreg
+> because otherwise not all the appropriate macros are generated to add
+> it to arm64_cpu_capabilities_arm64_features.
+> 
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Colton Lewis <coltonlewis@google.com>
+> ---
+>   arch/arm64/kernel/cpufeature.c | 8 ++++++++
+>   arch/arm64/tools/cpucaps       | 1 +
+>   arch/arm64/tools/sysreg        | 6 +++---
+>   3 files changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index b34044e20128..f38d7b5294ec 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -548,6 +548,7 @@ static const struct arm64_ftr_bits ftr_id_mmfr0[] = {
+>   };
+>   
+>   static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
+> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_HPMN0_SHIFT, 4, 0),
 
-> Hi Colton,
+This doesn't have to be FTR_STRICT. The kernel can deal with 
+differences, by skipping to use HPMN0. We anyway rely on the
+system wide cap for using the feature.
 
-> kernel test robot noticed the following build errors:
+Otherwise,
 
-> [auto build test ERROR on 79150772457f4d45e38b842d786240c36bb1f97f]
-
-> url:     
-> https://github.com/intel-lab-lkp/linux/commits/Colton-Lewis/arm64-cpufeature-Add-cpucap-for-HPMN0/20250715-070741
-> base:   79150772457f4d45e38b842d786240c36bb1f97f
-> patch link:     
-> https://lore.kernel.org/r/20250714225917.1396543-23-coltonlewis%40google.com
-> patch subject: [PATCH v4 22/23] KVM: arm64: Add ioctl to partition the  
-> PMU when supported
-> config: arm64-randconfig-003-20250715  
-> (https://download.01.org/0day-ci/archive/20250716/202507160129.vrvWpdVu-lkp@intel.com/config)
-> compiler: aarch64-linux-gcc (GCC) 8.5.0
-> reproduce (this is a W=1 build):  
-> (https://download.01.org/0day-ci/archive/20250716/202507160129.vrvWpdVu-lkp@intel.com/reproduce)
-
-> If you fix the issue in a separate patch/commit (i.e. not just a new  
-> version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes:  
-> https://lore.kernel.org/oe-kbuild-all/202507160129.vrvWpdVu-lkp@intel.com/
-
-> All errors (new ones prefixed by >>):
-
->     In file included from arch/arm64/include/asm/kvm_host.h:31,
->                      from include/linux/kvm_host.h:45,
->                      from arch/arm64/kernel/asm-offsets.c:15:
->     arch/arm64/include/asm/kvm_pmu.h: In function 'kvm_pmu_is_partitioned':
->>> arch/arm64/include/asm/kvm_pmu.h:301:43: error: parameter name omitted
->      static inline bool kvm_pmu_is_partitioned(void *)
->                                                ^~~~~~
->     arch/arm64/include/asm/kvm_pmu.h: In  
-> function 'kvm_pmu_host_counter_mask':
->     arch/arm64/include/asm/kvm_pmu.h:306:45: error: parameter name omitted
->      static inline u64 kvm_pmu_host_counter_mask(void *)
->                                                  ^~~~~~
->     arch/arm64/include/asm/kvm_pmu.h: In  
-> function 'kvm_pmu_guest_counter_mask':
->     arch/arm64/include/asm/kvm_pmu.h:311:46: error: parameter name omitted
->      static inline u64 kvm_pmu_guest_counter_mask(void *)
->                                                   ^~~~~~
->     make[3]: *** [scripts/Makefile.build:182:  
-> arch/arm64/kernel/asm-offsets.s] Error 1 shuffle=21662191
-
-Same spot/declarations that triggered a build error on v2 and fixed in
-v3 but moved to void * in v4 rather than defining an empty arm_pmu
-struct due to v3 feedback.
-
-Notably I remembered to build this branch before sending this time but
-these definitions do not trigger an error or warning on gcc-14 with this
-.config and W=1. So I'm not sure how I could have reasonably caught this
-myself before sending.
-
-Anyway, I'll fix. It's nothing to give the parameters a name.
-
->     make[3]: Target 'prepare' not remade because of errors.
->     make[2]: *** [Makefile:1274: prepare0] Error 2 shuffle=21662191
->     make[2]: Target 'prepare' not remade because of errors.
->     make[1]: *** [Makefile:248: __sub-make] Error 2 shuffle=21662191
->     make[1]: Target 'prepare' not remade because of errors.
->     make: *** [Makefile:248: __sub-make] Error 2 shuffle=21662191
->     make: Target 'prepare' not remade because of errors.
+Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
 
-> vim +301 arch/arm64/include/asm/kvm_pmu.h
+>   	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_DoubleLock_SHIFT, 4, 0),
+>   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_PMSVer_SHIFT, 4, 0),
+>   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64DFR0_EL1_CTX_CMPs_SHIFT, 4, 0),
+> @@ -2896,6 +2897,13 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+>   		.matches = has_cpuid_feature,
+>   		ARM64_CPUID_FIELDS(ID_AA64MMFR0_EL1, FGT, FGT2)
+>   	},
+> +	{
+> +		.desc = "HPMN0",
+> +		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
+> +		.capability = ARM64_HAS_HPMN0,
+> +		.matches = has_cpuid_feature,
+> +		ARM64_CPUID_FIELDS(ID_AA64DFR0_EL1, HPMN0, IMP)
+> +	},
+>   #ifdef CONFIG_ARM64_SME
+>   	{
+>   		.desc = "Scalable Matrix Extension",
+> diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
+> index 10effd4cff6b..5b196ba21629 100644
+> --- a/arch/arm64/tools/cpucaps
+> +++ b/arch/arm64/tools/cpucaps
+> @@ -39,6 +39,7 @@ HAS_GIC_CPUIF_SYSREGS
+>   HAS_GIC_PRIO_MASKING
+>   HAS_GIC_PRIO_RELAXED_SYNC
+>   HAS_HCR_NV1
+> +HAS_HPMN0
+>   HAS_HCX
+>   HAS_LDAPR
+>   HAS_LPA2
+> diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
+> index 8a8cf6874298..d29742481754 100644
+> --- a/arch/arm64/tools/sysreg
+> +++ b/arch/arm64/tools/sysreg
+> @@ -1531,9 +1531,9 @@ EndEnum
+>   EndSysreg
+>   
+>   Sysreg	ID_AA64DFR0_EL1	3	0	0	5	0
+> -Enum	63:60	HPMN0
+> -	0b0000	UNPREDICTABLE
+> -	0b0001	DEF
+> +UnsignedEnum	63:60	HPMN0
+> +	0b0000	NI
+> +	0b0001	IMP
+>   EndEnum
+>   UnsignedEnum	59:56	ExtTrcBuff
+>   	0b0000	NI
 
->     300
->   > 301	static inline bool kvm_pmu_is_partitioned(void *)
->     302	{
->     303		return false;
->     304	}
->     305
-
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
