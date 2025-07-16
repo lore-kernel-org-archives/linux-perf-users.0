@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097D427144B;
-	Wed, 16 Jul 2025 05:01:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34112274FE0;
+	Wed, 16 Jul 2025 05:01:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752642062; cv=none; b=f8eO07FttiyQqgdSGvrt6JSNTI6DXq4yjHsS4OlsjIj8rNUBGoSet78TPuj8Fszp5Oy9OFteWxMjOuhAlzYs4jaVmENBtbcETZ+WeScurBmgzsNMy///jiP62QLreyMoPS10UXTLFSElgdq3fBBcerPe5UdGcZU4AVjuM+M0uTE=
+	t=1752642062; cv=none; b=oHoKPPrcBHebHB2h9lNvNr9e0nItUovmbwWAefA/R81Lk2IEXWd4Knh7dUlZ2wIL/+XwFu89x444X0YgmKX4oX+418sPiDBwpa8m1uuyN1nT8qKCETAIS4wqts89PNtivI/vf7n4AGZDi7siqiah7YugesvJTKDSpmXsEoqeKRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1752642062; c=relaxed/simple;
-	bh=ZR4FlTTBffrOf8yc2kOBjPOIFcxPv32gKjOEK9beR0w=;
+	bh=kou3VfhcOpB9txR/N43AVmfiCtxMJG8KJTrwCzqrdXs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DMBjWFJHAGfxyIYNDhyijyQwcj88YJYjYErAl5QE6pExLHQsdpU56MJW2XVjBBsfC4JSK/C75PB8mrjixh83xS5JsJgHgoHvM3CxaaODwUwBxHHtaB8ZU2J7wjvXZhUW69tX2MEuieUYDPZlCGZSHcBmi2dhEckcZKO8LJcTdFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JJyuw8/P; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NlOjLDGnr8225Ge+2D2Rkp37PdxEv4W4pcc9MNYtxM68k0F1UgWyvwkXonKRfs/RccuiR6y9vHDmSKzWSuAA6cyj1kRfrXZ46eZ8JYUJDp5XeC5u6j25zfwuuHAViRAI9WZ9VeL3st2AfI0uADZK2hOa2uOcRFmdGU67takGmqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G39D6rkA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JJyuw8/P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EDEDC4CEF6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G39D6rkA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B841FC4CEF9;
 	Wed, 16 Jul 2025 05:01:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752642061;
-	bh=ZR4FlTTBffrOf8yc2kOBjPOIFcxPv32gKjOEK9beR0w=;
+	s=k20201202; t=1752642062;
+	bh=kou3VfhcOpB9txR/N43AVmfiCtxMJG8KJTrwCzqrdXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JJyuw8/PQQXfN9K4UAZ4I5H3HFre3mW78m8mHsl30bXVIOdxlEPWG4T6PLQulBVZX
-	 GrvUf28ucLiJzwrZsQyetKUFOseC3qIqIsFNJ7Lh3Q1fRXFASetFzVxibp/QblFfut
-	 so5M7temQVTjCbJvvbjDNOMKJ0+Gfsr6zz5Ci2HFHo9ej7nkzuXOsQaFFa52WSkJEP
-	 NmsT5+CsrlxZJbW7lKZqW/66mcT5EuFiLOMlaT6UQajUBxvptQ8GwwvD48oLHTqzpx
-	 X4b7td0rbX5iVNuVNbcsYVetoyxVnqVCZaipMpxdzwnE1Qg1C0S+nkdaUA8VQDJhD5
-	 jf+zUM7HnxJdA==
+	b=G39D6rkALhFRsyfb6pUI6drkzfLtKzACsPfW0AjE2tXQBVt6JnHSQLZ5zVBpRPJx5
+	 CFfU+7V3u/WMbDev0EfOJtgcdtwJsocf0eMRpwSmwwFOyLLBA0+hd1ppN0jNR5E9gt
+	 xKuFLA0lTpq0CaEZb0II+PKLPGJclfy0aGblJOhuoCHvVm96EROTPs09HpUyCKCbhv
+	 NktzBvuad/rwgHP5BswHA7tEnHqavTAJr7jUPpNHTgaAbjWt/oxSOaUv73XoFfvYwS
+	 xlr079E89dyhsEjBKvNF4pJN1bdma20pH1l5StpYae0wgvXiIpn7HPJzUU/W8BBSZX
+	 6OGDDXKE8s8tQ==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v3 2/8] perf annotate: Remove __annotation_line__write()
-Date: Tue, 15 Jul 2025 22:00:48 -0700
-Message-ID: <20250716050054.14130-3-namhyung@kernel.org>
+Subject: [PATCH v3 3/8] perf annotate: Pass annotation_print_data to annotation_line__write()
+Date: Tue, 15 Jul 2025 22:00:49 -0700
+Message-ID: <20250716050054.14130-4-namhyung@kernel.org>
 X-Mailer: git-send-email 2.50.0
 In-Reply-To: <20250716050054.14130-1-namhyung@kernel.org>
 References: <20250716050054.14130-1-namhyung@kernel.org>
@@ -50,88 +50,214 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Get rid of the internal function and convert function arguments into
-local variables if they are used more than once.
+It will be used for data type display later.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/annotate.c | 46 ++++++++++++++++----------------------
- 1 file changed, 19 insertions(+), 27 deletions(-)
+ tools/perf/ui/browsers/annotate.c | 13 ++++++++++--
+ tools/perf/util/annotate.c        | 35 +++++++++++++++++--------------
+ tools/perf/util/annotate.h        | 15 +++++++++++--
+ 3 files changed, 43 insertions(+), 20 deletions(-)
 
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index 28ef146f29e8e742..23bea5b165774ae7 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -28,6 +28,8 @@ struct annotate_browser {
+ 	struct annotation_line	   *selection;
+ 	struct arch		   *arch;
+ 	struct hist_entry	   *he;
++	struct debuginfo	   *dbg;
++	struct evsel		   *evsel;
+ 	bool			    searching_backwards;
+ 	char			    search_bf[128];
+ };
+@@ -108,12 +110,18 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
+ 		.printf			 = annotate_browser__printf,
+ 		.write_graph		 = annotate_browser__write_graph,
+ 	};
++	struct annotation_print_data apd = {
++		.he = ab->he,
++		.arch = ab->arch,
++		.evsel = ab->evsel,
++		.dbg = ab->dbg,
++	};
+ 
+ 	/* The scroll bar isn't being used */
+ 	if (!browser->navkeypressed)
+ 		ops.width += 1;
+ 
+-	annotation_line__write(al, notes, &ops);
++	annotation_line__write(al, notes, &ops, &apd);
+ 
+ 	if (ops.current_entry)
+ 		ab->selection = al;
+@@ -976,7 +984,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ 			continue;
+ 		}
+ 		case 'P':
+-			map_symbol__annotation_dump(ms, evsel);
++			map_symbol__annotation_dump(ms, evsel, browser->he);
+ 			continue;
+ 		case 't':
+ 			if (symbol_conf.show_total_period) {
+@@ -1061,6 +1069,7 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+ 			.use_navkeypressed = true,
+ 		},
+ 		.he = he,
++		.evsel = evsel,
+ 	};
+ 	struct dso *dso;
+ 	int ret = -1, err;
 diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 0dd475a744b6dfac..69ee83052396b15e 100644
+index 69ee83052396b15e..c21152710148b68c 100644
 --- a/tools/perf/util/annotate.c
 +++ b/tools/perf/util/annotate.c
-@@ -1935,24 +1935,26 @@ int annotation_br_cntr_entry(char **str, int br_cntr_nr,
- 	return -ENOMEM;
+@@ -765,15 +765,6 @@ __hist_entry__get_data_type(struct hist_entry *he, struct arch *arch,
+ 			    struct debuginfo *dbg, struct disasm_line *dl,
+ 			    int *type_offset);
+ 
+-struct annotation_print_data {
+-	struct hist_entry *he;
+-	struct evsel *evsel;
+-	struct arch *arch;
+-	struct debuginfo *dbg;
+-	u64 start;
+-	int addr_fmt_width;
+-};
+-
+ static int
+ annotation_line__print(struct annotation_line *al, struct annotation_print_data *apd,
+ 		       struct annotation_options *opts, int printed,
+@@ -1230,7 +1221,6 @@ int hist_entry__annotate_printf(struct hist_entry *he, struct evsel *evsel)
+ 	struct annotation_print_data apd = {
+ 		.he = he,
+ 		.evsel = evsel,
+-		.start = map__rip_2objdump(map, sym->start),
+ 	};
+ 	int printed = 2, queue_len = 0;
+ 	int more = 0;
+@@ -1357,7 +1347,8 @@ static void FILE__write_graph(void *fp, int graph)
+ 	fputs(s, fp);
  }
  
--static void __annotation_line__write(struct annotation_line *al, struct annotation *notes,
--				     bool first_line, bool current_entry, bool change_color, int width,
--				     void *obj, unsigned int percent_type,
--				     int  (*obj__set_color)(void *obj, int color),
--				     void (*obj__set_percent_color)(void *obj, double percent, bool current),
--				     int  (*obj__set_jumps_percent_color)(void *obj, int nr, bool current),
--				     void (*obj__printf)(void *obj, const char *fmt, ...),
--				     void (*obj__write_graph)(void *obj, int graph))
--
--{
--	double percent_max = annotation_line__max_percent(al, percent_type);
--	int pcnt_width = annotation__pcnt_width(notes),
--	    cycles_width = annotation__cycles_width(notes);
-+void annotation_line__write(struct annotation_line *al, struct annotation *notes,
-+			    struct annotation_write_ops *wops)
-+{
-+	bool current_entry = wops->current_entry;
-+	bool change_color = wops->change_color;
-+	double percent_max = annotation_line__max_percent(al, annotate_opts.percent_type);
-+	int width = wops->width;
-+	int pcnt_width = annotation__pcnt_width(notes);
-+	int cycles_width = annotation__cycles_width(notes);
- 	bool show_title = false;
- 	char bf[256];
- 	int printed;
--
--	if (first_line && (al->offset == -1 || percent_max == 0.0)) {
-+	void *obj = wops->obj;
-+	int  (*obj__set_color)(void *obj, int color) = wops->set_color;
-+	void (*obj__set_percent_color)(void *obj, double percent, bool current) = wops->set_percent_color;
-+	int  (*obj__set_jumps_percent_color)(void *obj, int nr, bool current) = wops->set_jumps_percent_color;
-+	void (*obj__printf)(void *obj, const char *fmt, ...) = wops->printf;
-+	void (*obj__write_graph)(void *obj, int graph) = wops->write_graph;
-+
-+	if (wops->first_line && (al->offset == -1 || percent_max == 0.0)) {
- 		if (notes->branch && al->cycles) {
- 			if (al->cycles->ipc == 0.0 && al->cycles->avg == 0)
- 				show_title = true;
-@@ -1966,7 +1968,8 @@ static void __annotation_line__write(struct annotation_line *al, struct annotati
- 		for (i = 0; i < al->data_nr; i++) {
- 			double percent;
- 
--			percent = annotation_data__percent(&al->data[i], percent_type);
-+			percent = annotation_data__percent(&al->data[i],
-+							   annotate_opts.percent_type);
- 
- 			obj__set_percent_color(obj, percent, current_entry);
- 			if (symbol_conf.show_total_period) {
-@@ -2115,17 +2118,6 @@ static void __annotation_line__write(struct annotation_line *al, struct annotati
- 
- }
- 
--void annotation_line__write(struct annotation_line *al, struct annotation *notes,
--			    struct annotation_write_ops *wops)
--{
--	__annotation_line__write(al, notes, wops->first_line, wops->current_entry,
--				 wops->change_color, wops->width, wops->obj,
--				 annotate_opts.percent_type,
--				 wops->set_color, wops->set_percent_color,
--				 wops->set_jumps_percent_color, wops->printf,
--				 wops->write_graph);
--}
--
- int symbol__annotate2(struct map_symbol *ms, struct evsel *evsel,
- 		      struct arch **parch)
+-static int symbol__annotate_fprintf2(struct symbol *sym, FILE *fp)
++static int symbol__annotate_fprintf2(struct symbol *sym, FILE *fp,
++				     struct annotation_print_data *apd)
  {
+ 	struct annotation *notes = symbol__annotation(sym);
+ 	struct annotation_write_ops wops = {
+@@ -1374,7 +1365,7 @@ static int symbol__annotate_fprintf2(struct symbol *sym, FILE *fp)
+ 	list_for_each_entry(al, &notes->src->source, node) {
+ 		if (annotation_line__filter(al))
+ 			continue;
+-		annotation_line__write(al, notes, &wops);
++		annotation_line__write(al, notes, &wops, apd);
+ 		fputc('\n', fp);
+ 		wops.first_line = false;
+ 	}
+@@ -1382,13 +1373,18 @@ static int symbol__annotate_fprintf2(struct symbol *sym, FILE *fp)
+ 	return 0;
+ }
+ 
+-int map_symbol__annotation_dump(struct map_symbol *ms, struct evsel *evsel)
++int map_symbol__annotation_dump(struct map_symbol *ms, struct evsel *evsel,
++				struct hist_entry *he)
+ {
+ 	const char *ev_name = evsel__name(evsel);
+ 	char buf[1024];
+ 	char *filename;
+ 	int err = -1;
+ 	FILE *fp;
++	struct annotation_print_data apd = {
++		.he = he,
++		.evsel = evsel,
++	};
+ 
+ 	if (asprintf(&filename, "%s.annotation", ms->sym->name) < 0)
+ 		return -1;
+@@ -1404,7 +1400,7 @@ int map_symbol__annotation_dump(struct map_symbol *ms, struct evsel *evsel)
+ 
+ 	fprintf(fp, "%s() %s\nEvent: %s\n\n",
+ 		ms->sym->name, dso__long_name(map__dso(ms->map)), ev_name);
+-	symbol__annotate_fprintf2(ms->sym, fp);
++	symbol__annotate_fprintf2(ms->sym, fp, &apd);
+ 
+ 	fclose(fp);
+ 	err = 0;
+@@ -1656,6 +1652,10 @@ int hist_entry__tty_annotate2(struct hist_entry *he, struct evsel *evsel)
+ 	struct symbol *sym = ms->sym;
+ 	struct rb_root source_line = RB_ROOT;
+ 	struct hists *hists = evsel__hists(evsel);
++	struct annotation_print_data apd = {
++		.he = he,
++		.evsel = evsel,
++	};
+ 	char buf[1024];
+ 	int err;
+ 
+@@ -1678,7 +1678,7 @@ int hist_entry__tty_annotate2(struct hist_entry *he, struct evsel *evsel)
+ 	hists__scnprintf_title(hists, buf, sizeof(buf));
+ 	fprintf(stdout, "%s, [percent: %s]\n%s() %s\n",
+ 		buf, percent_type_str(annotate_opts.percent_type), sym->name, dso__long_name(dso));
+-	symbol__annotate_fprintf2(sym, stdout);
++	symbol__annotate_fprintf2(sym, stdout, &apd);
+ 
+ 	annotated_source__purge(symbol__annotation(sym)->src);
+ 
+@@ -1936,7 +1936,8 @@ int annotation_br_cntr_entry(char **str, int br_cntr_nr,
+ }
+ 
+ void annotation_line__write(struct annotation_line *al, struct annotation *notes,
+-			    struct annotation_write_ops *wops)
++			    struct annotation_write_ops *wops,
++			    struct annotation_print_data *apd)
+ {
+ 	bool current_entry = wops->current_entry;
+ 	bool change_color = wops->change_color;
+@@ -2114,6 +2115,8 @@ void annotation_line__write(struct annotation_line *al, struct annotation *notes
+ 		disasm_line__write(disasm_line(al), notes, obj, bf, sizeof(bf), obj__printf, obj__write_graph);
+ 
+ 		obj__printf(obj, "%-*s", width - pcnt_width - cycles_width - 3 - printed, bf);
++
++		(void)apd;
+ 	}
+ 
+ }
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index 0f640e4871744262..8fad464a870a2b8e 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -199,8 +199,18 @@ struct annotation_write_ops {
+ 	void (*write_graph)(void *obj, int graph);
+ };
+ 
++struct annotation_print_data {
++	struct hist_entry *he;
++	struct evsel *evsel;
++	struct arch *arch;
++	struct debuginfo *dbg;
++	u64 start;
++	int addr_fmt_width;
++};
++
+ void annotation_line__write(struct annotation_line *al, struct annotation *notes,
+-			    struct annotation_write_ops *ops);
++			    struct annotation_write_ops *ops,
++			    struct annotation_print_data *apd);
+ 
+ int __annotation__scnprintf_samples_period(struct annotation *notes,
+ 					   char *bf, size_t size,
+@@ -463,7 +473,8 @@ void symbol__annotate_zero_histogram(struct symbol *sym, struct evsel *evsel);
+ void symbol__annotate_decay_histogram(struct symbol *sym, struct evsel *evsel);
+ void annotated_source__purge(struct annotated_source *as);
+ 
+-int map_symbol__annotation_dump(struct map_symbol *ms, struct evsel *evsel);
++int map_symbol__annotation_dump(struct map_symbol *ms, struct evsel *evsel,
++				struct hist_entry *he);
+ 
+ bool ui__has_annotation(void);
+ 
 -- 
 2.50.0
 
