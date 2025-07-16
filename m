@@ -1,240 +1,213 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1937DC2D1;
-	Wed, 16 Jul 2025 20:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9583C2652BD
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Jul 2025 20:25:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752697121; cv=none; b=XxKgLJvOBysLZnoSaNLnWBi9sdRHQKPUfFSZehKeV8x63CJcU8Cw8TTR5tfnKf2WVH8kuPy2d+JpdZPaCA6wYQnm3i9GUm+ItNB3Zei9TNdmogxjEEpVYjRUKuS6LoBopaQ/r8oK3W07ltQzNOJ1X18SJduiHbB8SyBRZfVKKT4=
+	t=1752697532; cv=none; b=JU4i8rJaZWMMbSxwCxO17qfVwiWebVQ3VHCO834ULYPsEmxdxG7w9e8+vwHauZGYTzi9nvyviJdKY6TE/D0PeuuuBkdRosyX3vEdrhDvl9mQDAAdbBH1aDSC24ytY6mEORcAW2kAgzsaxrvEn2LkwESZRKuhmrNkAKcBho52qDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752697121; c=relaxed/simple;
-	bh=H/xM4Z0MjVRix0+b1Fuw+636XMoUie55Y/s9OTooSgI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KSt9qpdFi1Pp/m3Onpah1yYXUon1ubHBUg9Ho5IAnyj5bN+KBsaTjxmpUAQ5QoH316GO+U6eudOO8cATvv5w+54kKSZfWzKFRoNqc783Lkk6N+gOnSsLaFDCEPdPHdTrWu2oQLq/L8FlQHA3sPVpIxtlcy+72paWtjLzb4jv8XA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=kmThNzHO; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1752697532; c=relaxed/simple;
+	bh=VAfCUtP3I/jxADnLqcT4chrha2yC4Nh00rThl4dglC8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sjGnuOCu/ymxlB5A0ejw5BwwwJzjSUvB2QCIQixtkYgEhrqWcRlTS6Goo6D2Ll38/zHCrSwiiQ8GdnBwtQgqepTl5xOoMv2neox4/MUV/AanP89QkKan6me/8rKWrRo0WMnZXv2F1ZDEHibs1k3AHDehN3gr668kN+Rt8Wsi3/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kh4y9W6A; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="kmThNzHO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=hN5UcNOceAW9gJ/Y8MIabvr/9qWRaAS173z8GQgYkMI=; b=kmThNzHOvISsdaYQElDiHi8q5Q
-	CwMCw5ANyqqa8r1lg+P+8naMfvfrJIkC/CWnWEQyqcFxuKeUJObRs7MriLA5B+cdBY9gPn1zIGH5E
-	lnhtujB8iEsamDUPd7uNmY5vEFLqxUFpveusUW4xjZvcgeVxQ/pn0n9Mb5tHa4kilZXkEAFQ6XI42
-	8vACu5Yd512HTgNJXam34PFAWkrLc+hEIrAT4qxyDoMF7GylRRZru68eUVyllh+TrBbxfHNn321E3
-	O7CyIhXxOHXlRLYOyG227XMg+fwBp6x1lNWh/cFgFfeTvvLHtw3Bsy40e/GX9KVZE3v10/SSvZUQj
-	NyRdXUjw==;
-Received: from [223.233.66.171] (helo=[192.168.1.12])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uc8aA-00HTUe-A4; Wed, 16 Jul 2025 22:18:26 +0200
-Message-ID: <c6a0b682-a1a5-f19c-acf5-5b08abf80a24@igalia.com>
-Date: Thu, 17 Jul 2025 01:48:17 +0530
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kh4y9W6A"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3e283b2d065so7975ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Jul 2025 13:25:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1752697530; x=1753302330; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5OprCsR0r5YkOp2GbZhU68EsInxcmI2yJSoF9sWxVfA=;
+        b=kh4y9W6AKqItpHSF4lEMGTWrkio6tIpBDUA/ii3M+FfKzTSBldgul4Ohv6MlDW7a+D
+         SYlQwm/f4wQXgtj7zVxoiHRVjEEOE7QPVWNeRbMy2FyHzcIyWrVYjGct02iJotVgxneA
+         scvMntBK8FPEi4/NqsggZQw19rEO6Bm9HT2uC0b3FbhphUha0n75GrDX4Q3JenxD9tNu
+         jAq5llRYufDq9YJjJD87qOqgYq7EAPwd5ii920BhzI/lEVzumsJ9Igz+eeJ9VTznKQPy
+         XTUzMZZ3mpRRQH77mw6Q5Dwnq/YaoylEiTRIEIMfXGV4fzRN8HSws78YskI9UqyPay8r
+         eeHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752697530; x=1753302330;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5OprCsR0r5YkOp2GbZhU68EsInxcmI2yJSoF9sWxVfA=;
+        b=sEKjpIkY3BXw5TIRq2wZcMHsRW5VXRZgbUj3W9DThcJJzAYe9z0VYrVL8HAYCKJ+B7
+         emY8etFlr/NLjMGKltLFx/Y+WIB4vsDJtoAtisRKPN9fm5Jjg0drPmqxJCFR8ip1aMyp
+         n9NDZkKw6TifG//l6BoLq1/SnWwO5xItJDqVzxYpPPKByxIVtIHB2BTQQoZNfQQo9nG9
+         WkxzB47afy9p57rb1Wf1VCrzygtM9UkJYyhL4XdA76Rny1xK4R8XwBnsdTYtz29PCM3f
+         YXQYO020+MccbZO/PGBHRMkErhIrryYdDPxfvNpDZoQUUv/ldLojWiWU6L9nzz74TYxz
+         3vLA==
+X-Forwarded-Encrypted: i=1; AJvYcCVKlhUyy1+CxD6glZ/oDwyxtLcPx6EPCw8r1SsOc5qIgJsPcU51JuPPCL/HXw8kwwZRmvoTeLD+wvwQCr0QE5MX@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWDvQ72fQvIiqqiuTpTLkfOfnyULES3e/a/jDl3atDdOsP8DBO
+	8PF4BCJF2hl6sHgWP0ahhULIgvYYaj1Av/XaZjARJBmoZS7LeHcId3cxPHq7DGnrzWOuMjL8PuQ
+	1Ksgzc835P7HSRkRP47Y6AcBrLbud/ldm272DYVGC
+X-Gm-Gg: ASbGnctDHoqq2uyJYTYkIeYIA896kd0yPEiLc1pHLHe7cCmW2Umb0YOW06K8j/F3zHo
+	CyxXKuuQMDHBbQZdm0BPksgEJ/eiWRL3k6PqNtC8jqjV+/ZqHY2RsNFU2sW97cW5xLaaP4r+tYx
+	t/X2yQ5U6BxBaKfoL8iH5xa0HdIMbxP8ZA5bslFoSCPXRJDMqsXUcTmdTh3tec7ZUMxnThJq/v8
+	LCG/KpWB4q00PnRnzwxuNnadvzKD+0jNwDiVm/ENXky
+X-Google-Smtp-Source: AGHT+IEH0eJvl4k8B/0SPTv/FbzPdEDeNK4Z3vnBWPURgnivIoBRlL9dUiwci7UUjYG+8XUD6bmX6Gpq3NxLzwKRNeo=
+X-Received: by 2002:a05:6e02:3813:b0:3de:215d:c9bd with SMTP id
+ e9e14a558f8ab-3e28caa46e0mr987685ab.20.1752697529344; Wed, 16 Jul 2025
+ 13:25:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v5 3/3] treewide: Switch from tsk->comm to tsk->comm_str
- which is 64 bytes long
-Content-Language: en-US
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Bhupesh <bhupesh@igalia.com>
-Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
- laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
- mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
- alexei.starovoitov@gmail.com, mirq-linux@rere.qmqm.pl, peterz@infradead.org,
- willy@infradead.org, david@redhat.com, viro@zeniv.linux.org.uk,
- keescook@chromium.org, ebiederm@xmission.com, brauner@kernel.org,
- jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com,
- mgorman@suse.de, vschneid@redhat.com, linux-trace-kernel@vger.kernel.org,
- kees@kernel.org, torvalds@linux-foundation.org
-References: <20250716123916.511889-1-bhupesh@igalia.com>
- <20250716123916.511889-4-bhupesh@igalia.com>
- <CAEf4BzaGRz6A1wzBa2ZyQWY_4AvUHvLgBF36iCxc9wJJ1ppH0g@mail.gmail.com>
-From: Bhupesh Sharma <bhsharma@igalia.com>
-In-Reply-To: <CAEf4BzaGRz6A1wzBa2ZyQWY_4AvUHvLgBF36iCxc9wJJ1ppH0g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250627192417.1157736-1-irogers@google.com> <20250627192417.1157736-5-irogers@google.com>
+ <aHgG-9iuoj4B72SU@google.com>
+In-Reply-To: <aHgG-9iuoj4B72SU@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 16 Jul 2025 13:25:17 -0700
+X-Gm-Features: Ac12FXyTzd6y6_b90XDj1o_JruSGmIwR4XIzRkBBPx7eYsVK0jSaCbYbmg7dEic
+Message-ID: <CAP-5=fVt4Nu3ZtKD+DWn9iT1XRzbbzvE3WXaO51V+8UGCE56cg@mail.gmail.com>
+Subject: Re: [PATCH v1 04/12] perf parse-events: Allow the cpu term to be a PMU
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Ben Gainey <ben.gainey@arm.com>, James Clark <james.clark@linaro.org>, 
+	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Levi Yun <yeoreum.yun@arm.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	Zhongqiu Han <quic_zhonhan@quicinc.com>, Blake Jones <blakejones@google.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Anubhav Shelat <ashelat@redhat.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Song Liu <song@kernel.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 7/16/25 11:40 PM, Andrii Nakryiko wrote:
-> On Wed, Jul 16, 2025 at 5:40 AM Bhupesh <bhupesh@igalia.com> wrote:
->> Historically due to the 16-byte length of TASK_COMM_LEN, the
->> users of 'tsk->comm' are restricted to use a fixed-size target
->> buffer also of TASK_COMM_LEN for 'memcpy()' like use-cases.
->>
->> To fix the same, Kees suggested in [1] that we can replace tsk->comm,
->> with tsk->comm_str, inside 'task_struct':
->>         union {
->>                 char    comm_str[TASK_COMM_EXT_LEN];
->>         };
->>
->> where TASK_COMM_EXT_LEN is 64-bytes.
-> Do we absolutely have to rename task->comm field? I understand as an
-> intermediate step to not miss any existing users in the kernel
-> sources, but once that all is done, we can rename that back to comm,
-> right?
+On Wed, Jul 16, 2025 at 1:09=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> The reason I'm asking is because accessing task->comm is *very common*
-> with all sorts of BPF programs and scripts. Yes, we have way to deal
-> with that with BPF CO-RE, but every single use case would need to be
-> updated now to work both with task->comm name on old kernels and
-> task->comm_str on new kernels (because BPF programs are written in
-> more or less kernel version agnostic way, so they have to handle many
-> kernel releases).
+> On Fri, Jun 27, 2025 at 12:24:09PM -0700, Ian Rogers wrote:
+> > On hybrid systems, events like msr/tsc/ will aggregate counts across
+> > all CPUs. Often metrics only want a value like msr/tsc/ for the cores
+> > on which the metric is being computed. Listing each CPU with terms
+> > cpu=3D0,cpu=3D1.. is laborious and would need to be encoded for all
+> > variations of a CPU model.
+> >
+> > Allow the cpumask from a PMU to be an argument to the cpu term. For
+> > example in the following the cpumask of the cstate_pkg PMU selects the
+> > CPUs to count msr/tsc/ counter upon:
+> > ```
+> > $ cat /sys/bus/event_source/devices/cstate_pkg/cpumask
+> > 0
+> > $ perf stat -A -e 'msr/tsc,cpu=3Dcstate_pkg/' -a sleep 0.1
 >
-> So, unless absolutely necessary, can we please keep the field name the
-> same? Changing the size of that field is not really a problem for BPF,
-> so no objections against that.
+> It can be confusing if 'cpu' takes a number or a PMU name.  What about
+> adding a new term (maybe 'cpu_from') to handle this case?
 
-So, as a background we have had several previous discussions regarding 
-renaming the 'tsk->comm' to 'task->comm_str' on the list (please see [1] 
-and [2] for details), and as per Kees's recommendations we have taken 
-this approach in the v5 patchset (may be Kees can add further details if 
-I have missed adding something in the log message above).
+So it is possible for terms to be defined in sysfs in the 'format/' folder:
+```
+$ ls /sys/bus/event_source/devices/cpu_core/format/
+cmask  edge  event  frontend  inv  ldlat  offcore_rsp  pc  umask
+```
+By not introducing a new term we leave 'cpu_from' open for use in this
+way. When I spoke to Kan we thought using the existing term made sense
+and fits the idea of leaving things open for the kernel/drivers to
+use. It is possible to add a new term though. Let me know and I can
+update the patch and documentation accordingly.
 
-That being said, ideally one would not like to break any exiting ABI 
-(which includes existing / older BPF programs). I was having a look at 
-the BPF CO_RE reference guide (see [3]), and was able to make out that 
-BPF CO_RE has a definition of |s||truct task_struct|which doesn't need 
-to match the kernel's struct task_struct definition exactly (as [3] 
-mentions -> only a necessary subset of fields have to be present and 
-compatible):
+Thanks,
+Ian
 
-|struct task_struct { intpid; charcomm[16]; struct 
-task_struct*group_leader; } __attribute__((preserve_access_index)); |
-
-So, if we add a check here to add  '|charcomm[16]' or||charcomm_str[16]' 
-to BPF CO RE's internal 'struct task_struct' on basis of the underlying 
-kernel version being used (something like using  'KERNEL_VERSION(x, y, 
-0)' for example), will that suffice? I have ||used and seen these checks 
-being used in the user-space applications (for example, see [4]) at 
-several occasions.
-
-Please let me know your views.
-
-|[1]. https://lore.kernel.org/all/202505222041.B639D482FB@keescook/
-[2]. 
-https://lore.kernel.org/all/ba4ddf27-91e7-0ecc-95d5-c139f6978812@igalia.com/
-[3]. https://nakryiko.com/posts/bpf-core-reference-guide/
-[4]. 
-https://github.com/crash-utility/crash/blob/master/memory_driver/crash.c#L41C25-L41C49
-
-Thanks.
-
->> And then modify 'get_task_comm()' to pass 'tsk->comm_str'
->> to the existing users.
->>
->> This would mean that ABI is maintained while ensuring that:
->>
->> - Existing users of 'get_task_comm'/ 'set_task_comm' will get 'tsk->comm_str'
->>    truncated to a maximum of 'TASK_COMM_LEN' (16-bytes) to maintain ABI,
->> - New / Modified users of 'get_task_comm'/ 'set_task_comm' will get
->>   'tsk->comm_str' supported for a maximum of 'TASK_COMM_EXTLEN' (64-bytes).
->>
->> Note, that the existing users have not been modified to migrate to
->> 'TASK_COMM_EXT_LEN', in case they have hard-coded expectations of
->> dealing with only a 'TASK_COMM_LEN' long 'tsk->comm_str'.
->>
->> [1]. https://lore.kernel.org/all/202505231346.52F291C54@keescook/
->>
->> Signed-off-by: Bhupesh <bhupesh@igalia.com>
->> ---
->>   arch/arm64/kernel/traps.c        |  2 +-
->>   arch/arm64/kvm/mmu.c             |  2 +-
->>   block/blk-core.c                 |  2 +-
->>   block/bsg.c                      |  2 +-
->>   drivers/char/random.c            |  2 +-
->>   drivers/hid/hid-core.c           |  6 +++---
->>   drivers/mmc/host/tmio_mmc_core.c |  6 +++---
->>   drivers/pci/pci-sysfs.c          |  2 +-
->>   drivers/scsi/scsi_ioctl.c        |  2 +-
->>   drivers/tty/serial/serial_core.c |  2 +-
->>   drivers/tty/tty_io.c             |  8 ++++----
->>   drivers/usb/core/devio.c         | 16 ++++++++--------
->>   drivers/usb/core/message.c       |  2 +-
->>   drivers/vfio/group.c             |  2 +-
->>   drivers/vfio/vfio_iommu_type1.c  |  2 +-
->>   drivers/vfio/vfio_main.c         |  2 +-
->>   drivers/xen/evtchn.c             |  2 +-
->>   drivers/xen/grant-table.c        |  2 +-
->>   fs/binfmt_elf.c                  |  2 +-
->>   fs/coredump.c                    |  4 ++--
->>   fs/drop_caches.c                 |  2 +-
->>   fs/exec.c                        |  8 ++++----
->>   fs/ext4/dir.c                    |  2 +-
->>   fs/ext4/inode.c                  |  2 +-
->>   fs/ext4/namei.c                  |  2 +-
->>   fs/ext4/super.c                  | 12 ++++++------
->>   fs/hugetlbfs/inode.c             |  2 +-
->>   fs/ioctl.c                       |  2 +-
->>   fs/iomap/direct-io.c             |  2 +-
->>   fs/jbd2/transaction.c            |  2 +-
->>   fs/locks.c                       |  2 +-
->>   fs/netfs/internal.h              |  2 +-
->>   fs/proc/base.c                   |  2 +-
->>   fs/read_write.c                  |  2 +-
->>   fs/splice.c                      |  2 +-
->>   include/linux/coredump.h         |  2 +-
->>   include/linux/filter.h           |  2 +-
->>   include/linux/ratelimit.h        |  2 +-
->>   include/linux/sched.h            | 11 ++++++++---
->>   init/init_task.c                 |  2 +-
->>   ipc/sem.c                        |  2 +-
->>   kernel/acct.c                    |  2 +-
->>   kernel/audit.c                   |  4 ++--
->>   kernel/auditsc.c                 | 10 +++++-----
->>   kernel/bpf/helpers.c             |  2 +-
->>   kernel/capability.c              |  4 ++--
->>   kernel/cgroup/cgroup-v1.c        |  2 +-
->>   kernel/cred.c                    |  4 ++--
->>   kernel/events/core.c             |  2 +-
->>   kernel/exit.c                    |  6 +++---
->>   kernel/fork.c                    |  9 +++++++--
->>   kernel/freezer.c                 |  4 ++--
->>   kernel/futex/waitwake.c          |  2 +-
->>   kernel/hung_task.c               | 10 +++++-----
->>   kernel/irq/manage.c              |  2 +-
->>   kernel/kthread.c                 |  2 +-
->>   kernel/locking/rtmutex.c         |  2 +-
->>   kernel/printk/printk.c           |  2 +-
->>   kernel/sched/core.c              | 22 +++++++++++-----------
->>   kernel/sched/debug.c             |  4 ++--
->>   kernel/signal.c                  |  6 +++---
->>   kernel/sys.c                     |  6 +++---
->>   kernel/sysctl.c                  |  2 +-
->>   kernel/time/itimer.c             |  4 ++--
->>   kernel/time/posix-cpu-timers.c   |  2 +-
->>   kernel/tsacct.c                  |  2 +-
->>   kernel/workqueue.c               |  6 +++---
->>   lib/dump_stack.c                 |  2 +-
->>   lib/nlattr.c                     |  6 +++---
->>   mm/compaction.c                  |  2 +-
->>   mm/filemap.c                     |  4 ++--
->>   mm/gup.c                         |  2 +-
->>   mm/memfd.c                       |  2 +-
->>   mm/memory-failure.c              | 10 +++++-----
->>   mm/memory.c                      |  2 +-
->>   mm/mmap.c                        |  4 ++--
->>   mm/oom_kill.c                    | 18 +++++++++---------
->>   mm/page_alloc.c                  |  4 ++--
->>   mm/util.c                        |  2 +-
->>   net/core/sock.c                  |  2 +-
->>   net/dns_resolver/internal.h      |  2 +-
->>   net/ipv4/raw.c                   |  2 +-
->>   net/ipv4/tcp.c                   |  2 +-
->>   net/socket.c                     |  2 +-
->>   security/lsm_audit.c             |  4 ++--
->>   85 files changed, 171 insertions(+), 161 deletions(-)
->>
-> [...]
-
+> Also please update the documentation.
+>
+> Thanks,
+> Namhyung
+>
+> >
+> >  Performance counter stats for 'system wide':
+> >
+> > CPU0          252,621,253      msr/tsc,cpu=3Dcstate_pkg/
+> >
+> >        0.101184092 seconds time elapsed
+> > ```
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/parse-events.c | 37 +++++++++++++++++++++++++---------
+> >  1 file changed, 28 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-eve=
+nts.c
+> > index 7a32d5234a64..ef38eb082342 100644
+> > --- a/tools/perf/util/parse-events.c
+> > +++ b/tools/perf/util/parse-events.c
+> > @@ -192,10 +192,20 @@ static struct perf_cpu_map *get_config_cpu(const =
+struct parse_events_terms *head
+> >
+> >       list_for_each_entry(term, &head_terms->terms, list) {
+> >               if (term->type_term =3D=3D PARSE_EVENTS__TERM_TYPE_CPU) {
+> > -                     struct perf_cpu_map *cpu =3D perf_cpu_map__new_in=
+t(term->val.num);
+> > +                     struct perf_cpu_map *term_cpus;
+> >
+> > -                     perf_cpu_map__merge(&cpus, cpu);
+> > -                     perf_cpu_map__put(cpu);
+> > +                     if (term->type_val =3D=3D PARSE_EVENTS__TERM_TYPE=
+_NUM) {
+> > +                             term_cpus =3D perf_cpu_map__new_int(term-=
+>val.num);
+> > +                     } else {
+> > +                             struct perf_pmu *pmu =3D perf_pmus__find(=
+term->val.str);
+> > +
+> > +                             if (perf_cpu_map__is_empty(pmu->cpus))
+> > +                                     term_cpus =3D pmu->is_core ? cpu_=
+map__online() : NULL;
+> > +                             else
+> > +                                     term_cpus =3D perf_cpu_map__get(p=
+mu->cpus);
+> > +                     }
+> > +                     perf_cpu_map__merge(&cpus, term_cpus);
+> > +                     perf_cpu_map__put(term_cpus);
+> >               }
+> >       }
+> >
+> > @@ -1054,12 +1064,21 @@ do {                                           =
+                          \
+> >               }
+> >               break;
+> >       case PARSE_EVENTS__TERM_TYPE_CPU:
+> > -             CHECK_TYPE_VAL(NUM);
+> > -             if (term->val.num >=3D (u64)cpu__max_present_cpu().cpu) {
+> > -                     parse_events_error__handle(err, term->err_val,
+> > -                                             strdup("too big"),
+> > -                                             NULL);
+> > -                     return -EINVAL;
+> > +             if (term->type_val =3D=3D PARSE_EVENTS__TERM_TYPE_NUM) {
+> > +                     if (term->val.num >=3D (u64)cpu__max_present_cpu(=
+).cpu) {
+> > +                             parse_events_error__handle(err, term->err=
+_val,
+> > +                                                     strdup("too big")=
+,
+> > +                                                     /*help=3D*/NULL);
+> > +                             return -EINVAL;
+> > +                     }
+> > +             } else {
+> > +                     assert(term->type_val =3D=3D PARSE_EVENTS__TERM_T=
+YPE_STR);
+> > +                     if (perf_pmus__find(term->val.str) =3D=3D NULL) {
+> > +                             parse_events_error__handle(err, term->err=
+_val,
+> > +                                                     strdup("not a val=
+id PMU"),
+> > +                                                     /*help=3D*/NULL);
+> > +                             return -EINVAL;
+> > +                     }
+> >               }
+> >               break;
+> >       case PARSE_EVENTS__TERM_TYPE_DRV_CFG:
+> > --
+> > 2.50.0.727.gbf7dc18ff4-goog
+> >
