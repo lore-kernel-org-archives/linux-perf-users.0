@@ -1,207 +1,240 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200D2C2D1;
-	Wed, 16 Jul 2025 20:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1937DC2D1;
+	Wed, 16 Jul 2025 20:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752697014; cv=none; b=lFJqBXRNNk/gtIaN+TD9iJgUdu8Oe2BVZgxFTx8Gnh/kWEwBf8wYKDRsCTO0qzH180oJ3q+0d0uPDF946iSqv8i2vb6lk99TtB/LrYONuOgCTFuT3Mck52Yqg64DXBBZotiXAN+vaqw80gbbexD4OHvni6GyzQBaL3cLUqc0fjw=
+	t=1752697121; cv=none; b=XxKgLJvOBysLZnoSaNLnWBi9sdRHQKPUfFSZehKeV8x63CJcU8Cw8TTR5tfnKf2WVH8kuPy2d+JpdZPaCA6wYQnm3i9GUm+ItNB3Zei9TNdmogxjEEpVYjRUKuS6LoBopaQ/r8oK3W07ltQzNOJ1X18SJduiHbB8SyBRZfVKKT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752697014; c=relaxed/simple;
-	bh=CT6/n9je+Rh3NqEPGvYqif1e1g3eSjS/92Xez6wPYM8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=snYSkmoJfJAPJEjy0L+XwGncDylBusKRo/a/10e536wc+0by38oo4cBUGq3p/mRqsEezeHBjaqsNKsg7bKdV7Apbb+8T0QKiOUQpdIuV1lSheh7yWZNgJP5mZsN7G4Fp1hpCddRZXiQxTGQIR9c+iFrPJ4II1k4KZdyaqOmOVs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CLIZwlYb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752697121; c=relaxed/simple;
+	bh=H/xM4Z0MjVRix0+b1Fuw+636XMoUie55Y/s9OTooSgI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KSt9qpdFi1Pp/m3Onpah1yYXUon1ubHBUg9Ho5IAnyj5bN+KBsaTjxmpUAQ5QoH316GO+U6eudOO8cATvv5w+54kKSZfWzKFRoNqc783Lkk6N+gOnSsLaFDCEPdPHdTrWu2oQLq/L8FlQHA3sPVpIxtlcy+72paWtjLzb4jv8XA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=kmThNzHO; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CLIZwlYb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CBA8C4CEF5;
-	Wed, 16 Jul 2025 20:16:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752697013;
-	bh=CT6/n9je+Rh3NqEPGvYqif1e1g3eSjS/92Xez6wPYM8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CLIZwlYbnEDbGpM4Xdn4nIskDjOtBJxhLXYSFdtHZlDoX1E/9CCOiCugT+cNJzn9x
-	 x9NVCMHvRrx/MP5HPGLuAw8r6xowzhFmo8a4O8Rb9BQRt4ijxj3g6w0q9TLVUgt8iz
-	 41u0Qjq6CpCRuM3JAmDYSDT9VnOgCqk4jnTzdOcRCDKH4BslsqjDNVflCMuxqo7cH2
-	 kGmjQ3rwJpHkZgLjczMkdLlET2jqisoUZgAPZQmg3X3xjA9x4FVI3VTNOQVHWYcL9V
-	 Ky7Tq4wMVyT9XqUUiMJE3Q2u1x1pYV9TG74HNm4OXVW0bysZG8WknSeHnw/nqr13ee
-	 A5zi9nHJ6r6DQ==
-Date: Wed, 16 Jul 2025 17:16:49 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 1/8] perf annotate: Rename to
- __hist_entry__tui_annotate()
-Message-ID: <aHgIsWPhKDZx6R_-@x1>
-References: <20250716050054.14130-1-namhyung@kernel.org>
- <20250716050054.14130-2-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="kmThNzHO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=hN5UcNOceAW9gJ/Y8MIabvr/9qWRaAS173z8GQgYkMI=; b=kmThNzHOvISsdaYQElDiHi8q5Q
+	CwMCw5ANyqqa8r1lg+P+8naMfvfrJIkC/CWnWEQyqcFxuKeUJObRs7MriLA5B+cdBY9gPn1zIGH5E
+	lnhtujB8iEsamDUPd7uNmY5vEFLqxUFpveusUW4xjZvcgeVxQ/pn0n9Mb5tHa4kilZXkEAFQ6XI42
+	8vACu5Yd512HTgNJXam34PFAWkrLc+hEIrAT4qxyDoMF7GylRRZru68eUVyllh+TrBbxfHNn321E3
+	O7CyIhXxOHXlRLYOyG227XMg+fwBp6x1lNWh/cFgFfeTvvLHtw3Bsy40e/GX9KVZE3v10/SSvZUQj
+	NyRdXUjw==;
+Received: from [223.233.66.171] (helo=[192.168.1.12])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uc8aA-00HTUe-A4; Wed, 16 Jul 2025 22:18:26 +0200
+Message-ID: <c6a0b682-a1a5-f19c-acf5-5b08abf80a24@igalia.com>
+Date: Thu, 17 Jul 2025 01:48:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250716050054.14130-2-namhyung@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v5 3/3] treewide: Switch from tsk->comm to tsk->comm_str
+ which is 64 bytes long
+Content-Language: en-US
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Bhupesh <bhupesh@igalia.com>
+Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
+ laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
+ mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
+ alexei.starovoitov@gmail.com, mirq-linux@rere.qmqm.pl, peterz@infradead.org,
+ willy@infradead.org, david@redhat.com, viro@zeniv.linux.org.uk,
+ keescook@chromium.org, ebiederm@xmission.com, brauner@kernel.org,
+ jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com,
+ mgorman@suse.de, vschneid@redhat.com, linux-trace-kernel@vger.kernel.org,
+ kees@kernel.org, torvalds@linux-foundation.org
+References: <20250716123916.511889-1-bhupesh@igalia.com>
+ <20250716123916.511889-4-bhupesh@igalia.com>
+ <CAEf4BzaGRz6A1wzBa2ZyQWY_4AvUHvLgBF36iCxc9wJJ1ppH0g@mail.gmail.com>
+From: Bhupesh Sharma <bhsharma@igalia.com>
+In-Reply-To: <CAEf4BzaGRz6A1wzBa2ZyQWY_4AvUHvLgBF36iCxc9wJJ1ppH0g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 15, 2025 at 10:00:47PM -0700, Namhyung Kim wrote:
-> There are three different but similar functions for annotation on TUI.
+On 7/16/25 11:40 PM, Andrii Nakryiko wrote:
+> On Wed, Jul 16, 2025 at 5:40 AM Bhupesh <bhupesh@igalia.com> wrote:
+>> Historically due to the 16-byte length of TASK_COMM_LEN, the
+>> users of 'tsk->comm' are restricted to use a fixed-size target
+>> buffer also of TASK_COMM_LEN for 'memcpy()' like use-cases.
+>>
+>> To fix the same, Kees suggested in [1] that we can replace tsk->comm,
+>> with tsk->comm_str, inside 'task_struct':
+>>         union {
+>>                 char    comm_str[TASK_COMM_EXT_LEN];
+>>         };
+>>
+>> where TASK_COMM_EXT_LEN is 64-bytes.
+> Do we absolutely have to rename task->comm field? I understand as an
+> intermediate step to not miss any existing users in the kernel
+> sources, but once that all is done, we can rename that back to comm,
+> right?
+>
+> The reason I'm asking is because accessing task->comm is *very common*
+> with all sorts of BPF programs and scripts. Yes, we have way to deal
+> with that with BPF CO-RE, but every single use case would need to be
+> updated now to work both with task->comm name on old kernels and
+> task->comm_str on new kernels (because BPF programs are written in
+> more or less kernel version agnostic way, so they have to handle many
+> kernel releases).
+>
+> So, unless absolutely necessary, can we please keep the field name the
+> same? Changing the size of that field is not really a problem for BPF,
+> so no objections against that.
 
-Why the two initial __? Normally this is when its about work on some
-data structure but the pointer to it isn't passed, but in this case the
-first arg is a 'struct hist_entry *', so calling it
-hist_entry__tui_annotate() would be right?
+So, as a background we have had several previous discussions regarding 
+renaming the 'tsk->comm' to 'task->comm_str' on the list (please see [1] 
+and [2] for details), and as per Kees's recommendations we have taken 
+this approach in the v5 patchset (may be Kees can add further details if 
+I have missed adding something in the log message above).
 
-Well, there is already a hist_entry__tui_annotate(), that does some
-term setup before calling this "new" __hist_entry__tui_annotate().
+That being said, ideally one would not like to break any exiting ABI 
+(which includes existing / older BPF programs). I was having a look at 
+the BPF CO_RE reference guide (see [3]), and was able to make out that 
+BPF CO_RE has a definition of |s||truct task_struct|which doesn't need 
+to match the kernel's struct task_struct definition exactly (as [3] 
+mentions -> only a necessary subset of fields have to be present and 
+compatible):
 
-Looks confusing tho :-\
+|struct task_struct { intpid; charcomm[16]; struct 
+task_struct*group_leader; } __attribute__((preserve_access_index)); |
 
-- Arnaldo
+So, if we add a check here to add  '|charcomm[16]' or||charcomm_str[16]' 
+to BPF CO RE's internal 'struct task_struct' on basis of the underlying 
+kernel version being used (something like using  'KERNEL_VERSION(x, y, 
+0)' for example), will that suffice? I have ||used and seen these checks 
+being used in the user-space applications (for example, see [4]) at 
+several occasions.
 
-> Rename it to __hist_entry__tui_annotate() and make sure it passes 'he'.
-> It's not used for now but it'll be needed for later use.
-> 
-> Also remove map_symbol__tui_annotate() which was a simple wrapper.
-> 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/ui/browsers/annotate.c | 17 +++++++----------
->  tools/perf/ui/browsers/hists.c    |  2 +-
->  tools/perf/util/annotate.h        | 12 ------------
->  tools/perf/util/hist.h            | 12 +++++++-----
->  4 files changed, 15 insertions(+), 28 deletions(-)
-> 
-> diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-> index 183902dac042ecb0..28ef146f29e8e742 100644
-> --- a/tools/perf/ui/browsers/annotate.c
-> +++ b/tools/perf/ui/browsers/annotate.c
-> @@ -27,6 +27,7 @@ struct annotate_browser {
->  	struct rb_node		   *curr_hot;
->  	struct annotation_line	   *selection;
->  	struct arch		   *arch;
-> +	struct hist_entry	   *he;
->  	bool			    searching_backwards;
->  	char			    search_bf[128];
->  };
-> @@ -557,7 +558,7 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
->  	target_ms.map = ms->map;
->  	target_ms.sym = dl->ops.target.sym;
->  	annotation__unlock(notes);
-> -	symbol__tui_annotate(&target_ms, evsel, hbt);
-> +	__hist_entry__tui_annotate(browser->he, &target_ms, evsel, hbt);
->  	sym_title(ms->sym, ms->map, title, sizeof(title), annotate_opts.percent_type);
->  	ui_browser__show_title(&browser->b, title);
->  	return true;
-> @@ -1032,12 +1033,6 @@ static int annotate_browser__run(struct annotate_browser *browser,
->  	return key;
->  }
->  
-> -int map_symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
-> -			     struct hist_browser_timer *hbt)
-> -{
-> -	return symbol__tui_annotate(ms, evsel, hbt);
-> -}
-> -
->  int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
->  			     struct hist_browser_timer *hbt)
->  {
-> @@ -1046,11 +1041,12 @@ int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
->  	SLang_init_tty(0, 0, 0);
->  	SLtty_set_suspend_state(true);
->  
-> -	return map_symbol__tui_annotate(&he->ms, evsel, hbt);
-> +	return __hist_entry__tui_annotate(he, &he->ms, evsel, hbt);
->  }
->  
-> -int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
-> -			 struct hist_browser_timer *hbt)
-> +int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
-> +			       struct evsel *evsel,
-> +			       struct hist_browser_timer *hbt)
->  {
->  	struct symbol *sym = ms->sym;
->  	struct annotation *notes = symbol__annotation(sym);
-> @@ -1064,6 +1060,7 @@ int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
->  			.priv	 = ms,
->  			.use_navkeypressed = true,
->  		},
-> +		.he = he,
->  	};
->  	struct dso *dso;
->  	int ret = -1, err;
-> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-> index d26b925e3d7f46af..55455c49faf01891 100644
-> --- a/tools/perf/ui/browsers/hists.c
-> +++ b/tools/perf/ui/browsers/hists.c
-> @@ -2484,8 +2484,8 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
->  	else
->  		evsel = hists_to_evsel(browser->hists);
->  
-> -	err = map_symbol__tui_annotate(&act->ms, evsel, browser->hbt);
->  	he = hist_browser__selected_entry(browser);
-> +	err = __hist_entry__tui_annotate(he, &act->ms, evsel, browser->hbt);
->  	/*
->  	 * offer option to annotate the other branch source or target
->  	 * (if they exists) when returning from annotate
-> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-> index 8b5131d257b01e3e..0f640e4871744262 100644
-> --- a/tools/perf/util/annotate.h
-> +++ b/tools/perf/util/annotate.h
-> @@ -471,18 +471,6 @@ int hist_entry__annotate_printf(struct hist_entry *he, struct evsel *evsel);
->  int hist_entry__tty_annotate(struct hist_entry *he, struct evsel *evsel);
->  int hist_entry__tty_annotate2(struct hist_entry *he, struct evsel *evsel);
->  
-> -#ifdef HAVE_SLANG_SUPPORT
-> -int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
-> -			 struct hist_browser_timer *hbt);
-> -#else
-> -static inline int symbol__tui_annotate(struct map_symbol *ms __maybe_unused,
-> -				struct evsel *evsel  __maybe_unused,
-> -				struct hist_browser_timer *hbt __maybe_unused)
-> -{
-> -	return 0;
-> -}
-> -#endif
-> -
->  void annotation_options__init(void);
->  void annotation_options__exit(void);
->  
-> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-> index c64254088fc77246..11ae738772ca4f61 100644
-> --- a/tools/perf/util/hist.h
-> +++ b/tools/perf/util/hist.h
-> @@ -712,8 +712,9 @@ struct block_hist {
->  #include "../ui/keysyms.h"
->  void attr_to_script(char *buf, struct perf_event_attr *attr);
->  
-> -int map_symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
-> -			     struct hist_browser_timer *hbt);
-> +int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
-> +			       struct evsel *evsel,
-> +			       struct hist_browser_timer *hbt);
->  
->  int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
->  			     struct hist_browser_timer *hbt);
-> @@ -741,9 +742,10 @@ int evlist__tui_browse_hists(struct evlist *evlist __maybe_unused,
->  {
->  	return 0;
->  }
-> -static inline int map_symbol__tui_annotate(struct map_symbol *ms __maybe_unused,
-> -					   struct evsel *evsel __maybe_unused,
-> -					   struct hist_browser_timer *hbt __maybe_unused)
-> +static inline int __hist_entry__tui_annotate(struct hist_entry *he __maybe_unused,
-> +					     struct map_symbol *ms __maybe_unused,
-> +					     struct evsel *evsel __maybe_unused,
-> +					     struct hist_browser_timer *hbt __maybe_unused)
->  {
->  	return 0;
->  }
-> -- 
-> 2.50.0
+Please let me know your views.
+
+|[1]. https://lore.kernel.org/all/202505222041.B639D482FB@keescook/
+[2]. 
+https://lore.kernel.org/all/ba4ddf27-91e7-0ecc-95d5-c139f6978812@igalia.com/
+[3]. https://nakryiko.com/posts/bpf-core-reference-guide/
+[4]. 
+https://github.com/crash-utility/crash/blob/master/memory_driver/crash.c#L41C25-L41C49
+
+Thanks.
+
+>> And then modify 'get_task_comm()' to pass 'tsk->comm_str'
+>> to the existing users.
+>>
+>> This would mean that ABI is maintained while ensuring that:
+>>
+>> - Existing users of 'get_task_comm'/ 'set_task_comm' will get 'tsk->comm_str'
+>>    truncated to a maximum of 'TASK_COMM_LEN' (16-bytes) to maintain ABI,
+>> - New / Modified users of 'get_task_comm'/ 'set_task_comm' will get
+>>   'tsk->comm_str' supported for a maximum of 'TASK_COMM_EXTLEN' (64-bytes).
+>>
+>> Note, that the existing users have not been modified to migrate to
+>> 'TASK_COMM_EXT_LEN', in case they have hard-coded expectations of
+>> dealing with only a 'TASK_COMM_LEN' long 'tsk->comm_str'.
+>>
+>> [1]. https://lore.kernel.org/all/202505231346.52F291C54@keescook/
+>>
+>> Signed-off-by: Bhupesh <bhupesh@igalia.com>
+>> ---
+>>   arch/arm64/kernel/traps.c        |  2 +-
+>>   arch/arm64/kvm/mmu.c             |  2 +-
+>>   block/blk-core.c                 |  2 +-
+>>   block/bsg.c                      |  2 +-
+>>   drivers/char/random.c            |  2 +-
+>>   drivers/hid/hid-core.c           |  6 +++---
+>>   drivers/mmc/host/tmio_mmc_core.c |  6 +++---
+>>   drivers/pci/pci-sysfs.c          |  2 +-
+>>   drivers/scsi/scsi_ioctl.c        |  2 +-
+>>   drivers/tty/serial/serial_core.c |  2 +-
+>>   drivers/tty/tty_io.c             |  8 ++++----
+>>   drivers/usb/core/devio.c         | 16 ++++++++--------
+>>   drivers/usb/core/message.c       |  2 +-
+>>   drivers/vfio/group.c             |  2 +-
+>>   drivers/vfio/vfio_iommu_type1.c  |  2 +-
+>>   drivers/vfio/vfio_main.c         |  2 +-
+>>   drivers/xen/evtchn.c             |  2 +-
+>>   drivers/xen/grant-table.c        |  2 +-
+>>   fs/binfmt_elf.c                  |  2 +-
+>>   fs/coredump.c                    |  4 ++--
+>>   fs/drop_caches.c                 |  2 +-
+>>   fs/exec.c                        |  8 ++++----
+>>   fs/ext4/dir.c                    |  2 +-
+>>   fs/ext4/inode.c                  |  2 +-
+>>   fs/ext4/namei.c                  |  2 +-
+>>   fs/ext4/super.c                  | 12 ++++++------
+>>   fs/hugetlbfs/inode.c             |  2 +-
+>>   fs/ioctl.c                       |  2 +-
+>>   fs/iomap/direct-io.c             |  2 +-
+>>   fs/jbd2/transaction.c            |  2 +-
+>>   fs/locks.c                       |  2 +-
+>>   fs/netfs/internal.h              |  2 +-
+>>   fs/proc/base.c                   |  2 +-
+>>   fs/read_write.c                  |  2 +-
+>>   fs/splice.c                      |  2 +-
+>>   include/linux/coredump.h         |  2 +-
+>>   include/linux/filter.h           |  2 +-
+>>   include/linux/ratelimit.h        |  2 +-
+>>   include/linux/sched.h            | 11 ++++++++---
+>>   init/init_task.c                 |  2 +-
+>>   ipc/sem.c                        |  2 +-
+>>   kernel/acct.c                    |  2 +-
+>>   kernel/audit.c                   |  4 ++--
+>>   kernel/auditsc.c                 | 10 +++++-----
+>>   kernel/bpf/helpers.c             |  2 +-
+>>   kernel/capability.c              |  4 ++--
+>>   kernel/cgroup/cgroup-v1.c        |  2 +-
+>>   kernel/cred.c                    |  4 ++--
+>>   kernel/events/core.c             |  2 +-
+>>   kernel/exit.c                    |  6 +++---
+>>   kernel/fork.c                    |  9 +++++++--
+>>   kernel/freezer.c                 |  4 ++--
+>>   kernel/futex/waitwake.c          |  2 +-
+>>   kernel/hung_task.c               | 10 +++++-----
+>>   kernel/irq/manage.c              |  2 +-
+>>   kernel/kthread.c                 |  2 +-
+>>   kernel/locking/rtmutex.c         |  2 +-
+>>   kernel/printk/printk.c           |  2 +-
+>>   kernel/sched/core.c              | 22 +++++++++++-----------
+>>   kernel/sched/debug.c             |  4 ++--
+>>   kernel/signal.c                  |  6 +++---
+>>   kernel/sys.c                     |  6 +++---
+>>   kernel/sysctl.c                  |  2 +-
+>>   kernel/time/itimer.c             |  4 ++--
+>>   kernel/time/posix-cpu-timers.c   |  2 +-
+>>   kernel/tsacct.c                  |  2 +-
+>>   kernel/workqueue.c               |  6 +++---
+>>   lib/dump_stack.c                 |  2 +-
+>>   lib/nlattr.c                     |  6 +++---
+>>   mm/compaction.c                  |  2 +-
+>>   mm/filemap.c                     |  4 ++--
+>>   mm/gup.c                         |  2 +-
+>>   mm/memfd.c                       |  2 +-
+>>   mm/memory-failure.c              | 10 +++++-----
+>>   mm/memory.c                      |  2 +-
+>>   mm/mmap.c                        |  4 ++--
+>>   mm/oom_kill.c                    | 18 +++++++++---------
+>>   mm/page_alloc.c                  |  4 ++--
+>>   mm/util.c                        |  2 +-
+>>   net/core/sock.c                  |  2 +-
+>>   net/dns_resolver/internal.h      |  2 +-
+>>   net/ipv4/raw.c                   |  2 +-
+>>   net/ipv4/tcp.c                   |  2 +-
+>>   net/socket.c                     |  2 +-
+>>   security/lsm_audit.c             |  4 ++--
+>>   85 files changed, 171 insertions(+), 161 deletions(-)
+>>
+> [...]
+
