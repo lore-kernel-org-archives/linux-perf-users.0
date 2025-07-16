@@ -1,294 +1,323 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365944A06;
-	Wed, 16 Jul 2025 20:47:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 068741C3C1F
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Jul 2025 22:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752698848; cv=none; b=uMylxamQLhkb9xJPTJRiY6ZqQRFIoj+BaCgGRSLoWqD9vDWjN95w/0c00uk78e3XVOyzFza4mbxYHKaBKJTq5zFKL5EME4ZV9xzbJtssbThC3GOScx6ON+qYzNc2gB0PvgPZ2a/UU+e0gvHjre1Y5q3p27fwMeSGjr8OZqR1dpo=
+	t=1752705570; cv=none; b=egaYgCGSnq5qYcmovQRl8v8OGmx8WzNUgtkytBrOZ9cExw80KgSI/WDqWwoG0h7L8pJzvRbkzXyYwJ5pEyb1anH5nfiaps9f5SRPN5xVOH7Ycv7KIZN1XQkQvmLSEmDCHawafYaHHFck4wG52i1sojwjk5RvVi1h/IyexMpj++4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752698848; c=relaxed/simple;
-	bh=3T4TM5zPbTcVbBZ0F/1W4imNxL6RtnT1EAGJE6R3rDw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NBWOtvqOYXwok4ama7NLqPMEsWlxJbmcLZJG0dySOV46iJ3BY8U+eI2wMtowXD826Dij9705/1Di6b+QdHRxqpsqw94Ykf3f9LpJks0WBdPoyILLdBCtNVCR4G5sxNTMJHfytDqgOLDkYvQ6pFNuyCNUqehLxQYWVTck4H0RrSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OdFPs7UK; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1752705570; c=relaxed/simple;
+	bh=smRXHyHwwqZImvJ5LKZCJWrgt2BtZvjk/sfkFid5R9Q=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=fVxu0Usj7OEgvESULjLFc6vAV+XxlhdsIzxdbG6OKr+6kloSd6AOHeejF1q/6HoGljVSN9Zk+m7czCf79xO2iayqh40Q2wxu7Cnv4INJyI3/oOGYOxLnA6wfo1ttSuWdtFph20lqlxcZPM66HJSgKblJ15LiCG9nvCFAu8KsNS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FtjuzhFQ; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OdFPs7UK"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-313cde344d4so353223a91.0;
-        Wed, 16 Jul 2025 13:47:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FtjuzhFQ"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-313ff01d2a6so253116a91.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Jul 2025 15:39:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752698846; x=1753303646; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YfwkMeGXYqzQAGqk8KkRHnOsvdBHdZtOcGBtO2IOIII=;
-        b=OdFPs7UKPkewgTF9FdQexnIWsVT6FIs9cu40dA0pAxhjtSJpLgLuoloCs+r9A0EdSX
-         gspb57WdMvqkpQzf7lJ7IxWKN9Bh++CGzAR09BF1PrKWopYmkDL94k4HASi42aQnzYba
-         GdUuTK5yx5XQ2YU095mzidfSYvaiv10fzNFgevA67MyEbK/mzOWIRBE3C+WqGBALko8v
-         HkRVoeAN6hb9gxctSqEeEAUqQcbwE1UN3uamgbWrdFQIZm2OXrzLNpAs6qao9+BtXrV0
-         Ot/ki9NYQ+s+LJXahbuZAE75efwWNoHYAoHBMd8Ss2cUUTLV0VXRd9jeYt/MwqLkQeNv
-         Qc3w==
+        d=google.com; s=20230601; t=1752705568; x=1753310368; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Qgdp/Uda1fZWO/lz9uKNrP8iyMs5YMXbAT8dILtk/wo=;
+        b=FtjuzhFQdiNXwt8QDH6oaE4FVAlrAL6D+BfXht3PN2u5CQf7r+X6IKJdowW9qBQYxl
+         HOLpG1fKy6Mxhc81enLrgNfqTB2cUNoxXCQImU6xX2jeJoMx/mqfprM3BrtrnpIwEGOS
+         NITacPilOGu/Pe2huw6o9Rc7zKw0wVkanCse4gtvsGf7HAgaK6vK7nPymxRZh6PYNExT
+         4bBiUd0uhf44/VB264FRtlcOGSeev2hCmcmqJsHcjNgcmA1ZV7ijmU0lGsI8zv1UmLhk
+         5DVoMs/4N5lMfuph0JQ4fioBmQ5fl06gRVqx4tNQwzgk1NtBqkCmXNu8igfTIZ3mg2QV
+         7fVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752698846; x=1753303646;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YfwkMeGXYqzQAGqk8KkRHnOsvdBHdZtOcGBtO2IOIII=;
-        b=Tzh2N7sf9WSkefJMSi/9kWK1uLjEtdxK6yF5rK3QLp1WPAzteZeicvhXprWphNUErg
-         E0SAMkiwTnYDkJ4PAD/57vtu0IZLH/CGLwgUsl42WOagpxoBqIUoaQcZPRRh9XlGy+iC
-         Z78kbFvvj0ZabbMcV4iowJGc+U60viQKuFC/izYe4GeV2FQhQWv84jfkxGXDxy8be4Af
-         icNhW7HWSOK+NdxQnE8SjFrS+NYSoWOEbZpZuuqS1YaCEIRwpPlc2SkkFjKiJnHHHFo2
-         gQGvqlTIHsbK3VShJqoPalruSL5v32lqZWR5eHJWY6o/r1bJbHOoTL4ZEK1hPRdh3Jh8
-         21fQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUWZ/7o5vjr5Sbl+MlJ3/iS3pl6oXpg0mbax8CQCtzwscSKksZoJSeGvSECF2vQeQBcx7ZUN837I573+iCt@vger.kernel.org, AJvYcCUYOcXSKlEC4qjWlnDTOyl/A1VqwMTzf89LorCCDKxAYmpmrGyi1ptR2Uk5zkpTqv+O34bZd7dXsJdsKRRkX7OZuQ==@vger.kernel.org, AJvYcCUlmRD/a2hZVmwoLPu6YWgiZf81TW8aznmJL4dUH9xbSDxyXeCdCLvX6U6qNnGQU7P2LcY=@vger.kernel.org, AJvYcCWB1QgpCz9EZPXBWaZ/WDIHE28c6T1+uRKQmY1xBFvxmZj2hKVgkbTTe1lPkAmhZc7M9GzzUv4hLwAn5o/uIw==@vger.kernel.org, AJvYcCWrMCdHIynHUMsEql1OGLj8ER3h5cZTq5V3KpTwbx431GqMzQkL+QrhjYd0rod66SSvtLSlupVkq7iCI+4XYgnPCKcn@vger.kernel.org
-X-Gm-Message-State: AOJu0YybPeTUKpQaTJtbp5bvkJFLCRsZp7xiA971RVlu522zD+JMkg+L
-	iUZ2P01XVvgqZmh2KsmDVt8nQ5VtKCA3j86vYSW0Eps9dl+pD4906HufELktbOiqEki1zD1+mrB
-	5rl2GlXCF7pJDuq//TJcZdFaF3IJaUfc=
-X-Gm-Gg: ASbGncsIDssXzJkilc2pCrDvo1SmtoX8DVhha6ul23GUkpfIYAosqWb06R41ki5Y0tZ
-	SpzO1ptfaECG6kxZprThrIgFBzodo/Dp8UXjYLSlDrp4PROQESOCj4VfU3Ng0yHisjTU256bivC
-	fEDrJiE8SRWNHila/KWVeHXyF/N6hnFcFg8Cl5QCjN6rzacR4MCsH1Nn4Pw83Rjr4Sl/bbobS30
-	vI0xw==
-X-Google-Smtp-Source: AGHT+IFeFCZTHwQq6CWNE4DeVyMG40lwDfFF0lAyew534oOu3sXQDYX/YiTMj9puYV6XchTRtToJMlDgmQp2I20b5wI=
-X-Received: by 2002:a17:90b:270b:b0:312:e8ed:763 with SMTP id
- 98e67ed59e1d1-31c9f42412cmr4868436a91.22.1752698846319; Wed, 16 Jul 2025
- 13:47:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1752705568; x=1753310368;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Qgdp/Uda1fZWO/lz9uKNrP8iyMs5YMXbAT8dILtk/wo=;
+        b=HdzA5O564fpF4AwKbMlTNcicBOfDwlBhjkVxh+rbxRrBhZ68eIFBLruMJA8syp65GO
+         SO8cqSHIh6c9w5WYEZtGYx4b9QXW1SSmkVy4y37joRkvTgaQaL94cn2/4nX7suTqG8HQ
+         +i7Go74aBSlBtQqFU7bNHXfGH/rLNjsKP0mw9AO0Vhf8bzWlgr2tmFUUHDwCBrPh04dU
+         /S1nJQCf1Ll+U5s/S+r3Z/35gpo/ymVEdlodpSZqGyUhhV4CFeGoa9CjoVGPVQvS03kE
+         kLTQGhGN1Vq91Ot33XtILwJX8wX2H2OVymFeCvQvLmS+FwQSOexLHRhNTdlfP1VbiKZF
+         ZnBA==
+X-Forwarded-Encrypted: i=1; AJvYcCXdWwYao9ir0JCto03wqn4ICP76iFcuYNRCzA1YMPGo7XU9T7yTvP/k8Y5Ry6lxjALrT2SgnmYLT1GSB77Cp3ZF@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZg0gytkmL61sHa53KK4jON9WGqkctFoU5nWSylYJ0+Sxf22of
+	eZq0lHcH9Eq+VS3T7NvWr9C6WT246/OSuy3xT2tDDz/X5EodVvagzNnvHDRYSbPhwRBuM7W9Z2q
+	3ZHN/vermZg==
+X-Google-Smtp-Source: AGHT+IH9dmq//m1YlzRrKfR9Wf0NtkxmXnzHMM/7SmxQmVskyqQxsAwYcQbAN26Kh6jOhpeI8C9Kndw4O+JD
+X-Received: from pja3.prod.google.com ([2002:a17:90b:5483:b0:312:1af5:98c9])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:548d:b0:313:31ca:a74
+ with SMTP id 98e67ed59e1d1-31c9e759b27mr7887982a91.16.1752705568365; Wed, 16
+ Jul 2025 15:39:28 -0700 (PDT)
+Date: Wed, 16 Jul 2025 15:39:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250716123916.511889-1-bhupesh@igalia.com> <20250716123916.511889-4-bhupesh@igalia.com>
- <CAEf4BzaGRz6A1wzBa2ZyQWY_4AvUHvLgBF36iCxc9wJJ1ppH0g@mail.gmail.com> <c6a0b682-a1a5-f19c-acf5-5b08abf80a24@igalia.com>
-In-Reply-To: <c6a0b682-a1a5-f19c-acf5-5b08abf80a24@igalia.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 16 Jul 2025 13:47:14 -0700
-X-Gm-Features: Ac12FXzdMIUrwTNSRAbXY9z4R-Vg46K1zjuhZoodouCKkxjzhdaHWwCSZWFsfng
-Message-ID: <CAEf4BzaJiCLH8nwWa5eM4D+n1nyCn3X-v0+W4-CwLg7hB2Wthg@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] treewide: Switch from tsk->comm to tsk->comm_str
- which is 64 bytes long
-To: Bhupesh Sharma <bhsharma@igalia.com>
-Cc: Bhupesh <bhupesh@igalia.com>, akpm@linux-foundation.org, kernel-dev@igalia.com, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com, 
-	laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org, 
-	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com, 
-	alexei.starovoitov@gmail.com, mirq-linux@rere.qmqm.pl, peterz@infradead.org, 
-	willy@infradead.org, david@redhat.com, viro@zeniv.linux.org.uk, 
-	keescook@chromium.org, ebiederm@xmission.com, brauner@kernel.org, 
-	jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com, 
-	mgorman@suse.de, vschneid@redhat.com, linux-trace-kernel@vger.kernel.org, 
-	kees@kernel.org, torvalds@linux-foundation.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+Message-ID: <20250716223924.825772-1-irogers@google.com>
+Subject: [RFC PATCH v1] perf/core: [Untested] Perf event state changes to fix
+ enable time
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Andi Kleen <ak@linux.intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Thomas Falcon <thomas.falcon@intel.com>, 
+	Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 16, 2025 at 1:18=E2=80=AFPM Bhupesh Sharma <bhsharma@igalia.com=
-> wrote:
->
-> On 7/16/25 11:40 PM, Andrii Nakryiko wrote:
-> > On Wed, Jul 16, 2025 at 5:40=E2=80=AFAM Bhupesh <bhupesh@igalia.com> wr=
-ote:
-> >> Historically due to the 16-byte length of TASK_COMM_LEN, the
-> >> users of 'tsk->comm' are restricted to use a fixed-size target
-> >> buffer also of TASK_COMM_LEN for 'memcpy()' like use-cases.
-> >>
-> >> To fix the same, Kees suggested in [1] that we can replace tsk->comm,
-> >> with tsk->comm_str, inside 'task_struct':
-> >>         union {
-> >>                 char    comm_str[TASK_COMM_EXT_LEN];
-> >>         };
-> >>
-> >> where TASK_COMM_EXT_LEN is 64-bytes.
-> > Do we absolutely have to rename task->comm field? I understand as an
-> > intermediate step to not miss any existing users in the kernel
-> > sources, but once that all is done, we can rename that back to comm,
-> > right?
-> >
-> > The reason I'm asking is because accessing task->comm is *very common*
-> > with all sorts of BPF programs and scripts. Yes, we have way to deal
-> > with that with BPF CO-RE, but every single use case would need to be
-> > updated now to work both with task->comm name on old kernels and
-> > task->comm_str on new kernels (because BPF programs are written in
-> > more or less kernel version agnostic way, so they have to handle many
-> > kernel releases).
-> >
-> > So, unless absolutely necessary, can we please keep the field name the
-> > same? Changing the size of that field is not really a problem for BPF,
-> > so no objections against that.
->
-> So, as a background we have had several previous discussions regarding
-> renaming the 'tsk->comm' to 'task->comm_str' on the list (please see [1]
-> and [2] for details), and as per Kees's recommendations we have taken
-> this approach in the v5 patchset (may be Kees can add further details if
-> I have missed adding something in the log message above).
->
-> That being said, ideally one would not like to break any exiting ABI
+Perf events (and the event_filter_match) may mean that an event is
+inactive, and wanting to be active from sched_in, but this doesn't
+happen due to the filter. As the event is inactive the enabled time
+will accrue but the event's running time won't increase. The ratio of
+enabled to running time is used to scale event counts as it is
+incorrectly assumed in tools that an event is only not accruing
+running time in relation enabled time due to multiplexing (a filter
+may mean it doesn't accrue too).
 
-kernel-internal data structures are not ABI to BPF programs, even
-though they do look into kernel internals routinely for observability
-and other reasons, so there is no ABI/API stability issue here.
+For hybrid systems with a task p-core event, the filter will mean the
+enabled time will increase on the e-cores making it look like the
+event is multiplexing on p-cores. This is reported here:
+https://lore.kernel.org/lkml/20250627192417.1157736-13-irogers@google.com/
 
-Having said that, unless absolutely necessary, renaming something so
-commonly used as task->comm is just an unnecessary widespread
-disruption, which ideally we just avoid, unless absolutely necessary.
+For a perf event opened on both a task and a CPU, the event is only
+active when on the matching CPU due to the filter. This leads to the
+enabled time increasing but not the running time, again looking like
+multiplexing and causing massive incorrect scaling within tools.
 
+This patch proposes a solution by adding a new PERF_EVENT_STATE_ON
+that replaces PERF_EVENT_STATE_INACTIVE. PERF_EVENT_STATE_INACTIVE is
+now used for flexible events that failed to be scheduled due to
+insufficient counters.
 
-> (which includes existing / older BPF programs). I was having a look at
-> the BPF CO_RE reference guide (see [3]), and was able to make out that
-> BPF CO_RE has a definition of |s||truct task_struct|which doesn't need
-> to match the kernel's struct task_struct definition exactly (as [3]
-> mentions -> only a necessary subset of fields have to be present and
-> compatible):
->
-> |struct task_struct { intpid; charcomm[16]; struct
-> task_struct*group_leader; } __attribute__((preserve_access_index)); |
->
-> So, if we add a check here to add  '|charcomm[16]' or||charcomm_str[16]'
-> to BPF CO RE's internal 'struct task_struct' on basis of the underlying
-> kernel version being used (something like using  'KERNEL_VERSION(x, y,
-> 0)' for example), will that suffice? I have ||used and seen these checks
-> being used in the user-space applications (for example, see [4]) at
-> several occasions.
->
+This patch is to highlight the problem and the changes to perf event
+states and their associated state machine. It is uncompiled/untested
+and intended for discussion purposed only.
+---
+ include/linux/perf_event.h | 50 ++++++++++++++++++++++----------------
+ kernel/events/core.c       | 34 ++++++++++++++------------
+ 2 files changed, 47 insertions(+), 37 deletions(-)
 
-It's simpler on BPF side, we can check the existence of task_struct's
-comm field, and handle either task->comm or task->comm_str
-accordingly. This has been done many times for various things that
-evolved in the kernel.
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index ec9d96025683..8c4ffd7e2a02 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -638,29 +638,36 @@ struct perf_addr_filter_range {
+ /*
+  * The normal states are:
+  *
+- *            ACTIVE    --.
+- *               ^        |
+- *               |        |
+- *       sched_{in,out}() |
+- *               |        |
+- *               v        |
+- *      ,---> INACTIVE  --+ <-.
+- *      |                 |   |
+- *      |                {dis,en}able()
+- *   sched_in()           |   |
+- *      |       OFF    <--' --+
+- *      |                     |
+- *      `--->  ERROR    ------'
++ *    .-- disable() -----> OFF <----disable()-------.
++ *    |                     |         ^             |
++ *    +-----------------> enable()    |             |
++ *    |                     |  .------.             |
++ *    |                     v /                     |
++ *  ERROR      .---------> ON <-----------.         |
++ *    ^        |            |             |         |
++ *    |      filter <-- sched_in()  sched_out()     |
++ *    |                     |             |         |
++ *    +-(lack of counters)--+             |         |
++ *    v                     v             |         |
++ *  INACTIVE              ACTIVE          |         |
++ *    |                     |             |         |
++ *    .---------------------+-------------+---------.
+  *
+  * That is:
+  *
+- * sched_in:       INACTIVE          -> {ACTIVE,ERROR}
+- * sched_out:      ACTIVE            -> INACTIVE
+- * disable:        {ACTIVE,INACTIVE} -> OFF
+- * enable:         {OFF,ERROR}       -> INACTIVE
++ * sched_in:       ON                         -> {ON,ERROR,INACTIVE,ACTIVE}
++ * sched_out:      {INACTIVE,ACTIVE}          -> ON
++ * disable:        {ON,ERROR,INACTIVE,ACTIVE} -> OFF
++ * enable:         {OFF,ERROR}                -> ON
+  *
+- * Where {OFF,ERROR} are disabled states.
++ * Where {ON,INACTIVE,ACTIVE} are enabled states and {OFF,ERROR} are disabled
++ * states.
+  *
++ * ON differs from INACTIVE as enabled time only increases for INACTIVE and
++ * ACTIVE events, running time only increases for ACTIVE events. A filter, such
++ * as the task or CPU an event should be scheduled on, can cause an event during
++ * sched_in to remain in the ON state.
++
+  * Then we have the {EXIT,REVOKED,DEAD} states which are various shades of
+  * defunct events:
+  *
+@@ -681,9 +688,10 @@ enum perf_event_state {
+ 	PERF_EVENT_STATE_REVOKED	= -4, /* pmu gone, must not touch */
+ 	PERF_EVENT_STATE_EXIT		= -3, /* task died, still inherit */
+ 	PERF_EVENT_STATE_ERROR		= -2, /* scheduling error, can enable */
+-	PERF_EVENT_STATE_OFF		= -1,
+-	PERF_EVENT_STATE_INACTIVE	=  0,
+-	PERF_EVENT_STATE_ACTIVE		=  1,
++	PERF_EVENT_STATE_OFF		= -1, /* regular disabled event */
++	PERF_EVENT_STATE_ON		=  0, /* enabled but not scheduled */
++	PERF_EVENT_STATE_INACTIVE	=  1, /* not scheduled due to lack of counters */
++	PERF_EVENT_STATE_ACTIVE		=  2, /* scheduled and counting */
+ };
+ 
+ struct file;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 1f746469fda5..ef76c3887f71 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1920,7 +1920,7 @@ list_add_event(struct perf_event *event, struct perf_event_context *ctx)
+ static inline void perf_event__state_init(struct perf_event *event)
+ {
+ 	event->state = event->attr.disabled ? PERF_EVENT_STATE_OFF :
+-					      PERF_EVENT_STATE_INACTIVE;
++					      PERF_EVENT_STATE_ON;
+ }
+ 
+ static int __perf_event_read_size(u64 read_format, int nr_siblings)
+@@ -2362,14 +2362,14 @@ event_sched_out(struct perf_event *event, struct perf_event_context *ctx)
+ {
+ 	struct perf_event_pmu_context *epc = event->pmu_ctx;
+ 	struct perf_cpu_pmu_context *cpc = this_cpc(epc->pmu);
+-	enum perf_event_state state = PERF_EVENT_STATE_INACTIVE;
++	enum perf_event_state state = PERF_EVENT_STATE_ON;
+ 
+ 	// XXX cpc serialization, probably per-cpu IRQ disabled
+ 
+ 	WARN_ON_ONCE(event->ctx != ctx);
+ 	lockdep_assert_held(&ctx->lock);
+ 
+-	if (event->state != PERF_EVENT_STATE_ACTIVE)
++	if (event->state < PERF_EVENT_STATE_INACTIVE)
+ 		return;
+ 
+ 	/*
+@@ -2409,7 +2409,7 @@ group_sched_out(struct perf_event *group_event, struct perf_event_context *ctx)
+ {
+ 	struct perf_event *event;
+ 
+-	if (group_event->state != PERF_EVENT_STATE_ACTIVE)
++	if (group_event->state < PERF_EVENT_STATE_INACTIVE)
+ 		return;
+ 
+ 	perf_assert_pmu_disabled(group_event->pmu_ctx->pmu);
+@@ -2583,7 +2583,7 @@ static void __perf_event_disable(struct perf_event *event,
+ 				 struct perf_event_context *ctx,
+ 				 void *info)
+ {
+-	if (event->state < PERF_EVENT_STATE_INACTIVE)
++	if (event->state < PERF_EVENT_STATE_ON)
+ 		return;
+ 
+ 	perf_pmu_disable(event->pmu_ctx->pmu);
+@@ -3135,13 +3135,13 @@ static void __perf_event_enable(struct perf_event *event,
+ 	struct perf_event *leader = event->group_leader;
+ 	struct perf_event_context *task_ctx;
+ 
+-	if (event->state >= PERF_EVENT_STATE_INACTIVE ||
++	if (event->state >= PERF_EVENT_STATE_ON ||
+ 	    event->state <= PERF_EVENT_STATE_ERROR)
+ 		return;
+ 
+ 	ctx_time_freeze(cpuctx, ctx);
+ 
+-	perf_event_set_state(event, PERF_EVENT_STATE_INACTIVE);
++	perf_event_set_state(event, PERF_EVENT_STATE_ON);
+ 	perf_cgroup_event_enable(event, ctx);
+ 
+ 	if (!ctx->is_active)
+@@ -3150,6 +3150,8 @@ static void __perf_event_enable(struct perf_event *event,
+ 	if (!event_filter_match(event))
+ 		return;
+ 
++	perf_event_set_state(event, PERF_EVENT_STATE_ACTIVE);
++
+ 	/*
+ 	 * If the event is in a group and isn't the group leader,
+ 	 * then don't put it on unless the group is on.
+@@ -3178,7 +3180,7 @@ static void _perf_event_enable(struct perf_event *event)
+ 	struct perf_event_context *ctx = event->ctx;
+ 
+ 	raw_spin_lock_irq(&ctx->lock);
+-	if (event->state >= PERF_EVENT_STATE_INACTIVE ||
++	if (event->state >= PERF_EVENT_STATE_ON ||
+ 	    event->state <  PERF_EVENT_STATE_ERROR) {
+ out:
+ 		raw_spin_unlock_irq(&ctx->lock);
+@@ -4525,10 +4527,10 @@ static int event_enable_on_exec(struct perf_event *event,
+ 		return 0;
+ 
+ 	event->attr.enable_on_exec = 0;
+-	if (event->state >= PERF_EVENT_STATE_INACTIVE)
++	if (event->state >= PERF_EVENT_STATE_ON)
+ 		return 0;
+ 
+-	perf_event_set_state(event, PERF_EVENT_STATE_INACTIVE);
++	perf_event_set_state(event, PERF_EVENT_STATE_ON);
+ 
+ 	return 1;
+ }
+@@ -8544,7 +8546,7 @@ perf_iterate_ctx(struct perf_event_context *ctx,
+ 
+ 	list_for_each_entry_rcu(event, &ctx->event_list, event_entry) {
+ 		if (!all) {
+-			if (event->state < PERF_EVENT_STATE_INACTIVE)
++			if (event->state < PERF_EVENT_STATE_ON)
+ 				continue;
+ 			if (!event_filter_match(event))
+ 				continue;
+@@ -8568,7 +8570,7 @@ static void perf_iterate_sb_cpu(perf_iterate_f output, void *data)
+ 		if (!smp_load_acquire(&event->ctx))
+ 			continue;
+ 
+-		if (event->state < PERF_EVENT_STATE_INACTIVE)
++		if (event->state < PERF_EVENT_STATE_ON)
+ 			continue;
+ 		if (!event_filter_match(event))
+ 			continue;
+@@ -12864,7 +12866,7 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 	event->ns		= get_pid_ns(task_active_pid_ns(current));
+ 	event->id		= atomic64_inc_return(&perf_event_id);
+ 
+-	event->state		= PERF_EVENT_STATE_INACTIVE;
++	event->state		= PERF_EVENT_STATE_ON;
+ 
+ 	if (parent_event)
+ 		event->event_caps = parent_event->event_caps;
+@@ -13875,7 +13877,7 @@ static void __perf_pmu_install_event(struct pmu *pmu,
+ 	event->pmu_ctx = epc;
+ 
+ 	if (event->state >= PERF_EVENT_STATE_OFF)
+-		event->state = PERF_EVENT_STATE_INACTIVE;
++		event->state = PERF_EVENT_STATE_ON;
+ 	perf_install_in_context(ctx, event, cpu);
+ 
+ 	/*
+@@ -14288,8 +14290,8 @@ inherit_event(struct perf_event *parent_event,
+ 	 * not its attr.disabled bit.  We hold the parent's mutex,
+ 	 * so we won't race with perf_event_{en, dis}able_family.
+ 	 */
+-	if (parent_state >= PERF_EVENT_STATE_INACTIVE)
+-		child_event->state = PERF_EVENT_STATE_INACTIVE;
++	if (parent_state >= PERF_EVENT_STATE_ON)
++		child_event->state = PERF_EVENT_STATE_ON;
+ 	else
+ 		child_event->state = PERF_EVENT_STATE_OFF;
+ 
+-- 
+2.50.0.727.gbf7dc18ff4-goog
 
-But given how frequently task->comm is referenced (pretty much any
-profiler or tracer will capture this), it's just the widespread nature
-of accessing task->comm in BPF programs/scripts that will cause a lot
-of adaptation churn. And given the reason for renaming was to catch
-missing cases during refactoring, my ask was to do this renaming
-locally, validate all kernel code was modified, and then switch the
-field name back to "comm" (which you already did, so the remaining
-part would be just to rename comm_str back to comm). Unless I'm
-missing something else, of course.
-
-> Please let me know your views.
->
-> |[1]. https://lore.kernel.org/all/202505222041.B639D482FB@keescook/
-> [2].
-> https://lore.kernel.org/all/ba4ddf27-91e7-0ecc-95d5-c139f6978812@igalia.c=
-om/
-> [3]. https://nakryiko.com/posts/bpf-core-reference-guide/
-> [4].
-> https://github.com/crash-utility/crash/blob/master/memory_driver/crash.c#=
-L41C25-L41C49
->
-> Thanks.
->
-> >> And then modify 'get_task_comm()' to pass 'tsk->comm_str'
-> >> to the existing users.
-> >>
-> >> This would mean that ABI is maintained while ensuring that:
-> >>
-> >> - Existing users of 'get_task_comm'/ 'set_task_comm' will get 'tsk->co=
-mm_str'
-> >>    truncated to a maximum of 'TASK_COMM_LEN' (16-bytes) to maintain AB=
-I,
-> >> - New / Modified users of 'get_task_comm'/ 'set_task_comm' will get
-> >>   'tsk->comm_str' supported for a maximum of 'TASK_COMM_EXTLEN' (64-by=
-tes).
-> >>
-> >> Note, that the existing users have not been modified to migrate to
-> >> 'TASK_COMM_EXT_LEN', in case they have hard-coded expectations of
-> >> dealing with only a 'TASK_COMM_LEN' long 'tsk->comm_str'.
-> >>
-> >> [1]. https://lore.kernel.org/all/202505231346.52F291C54@keescook/
-> >>
-> >> Signed-off-by: Bhupesh <bhupesh@igalia.com>
-> >> ---
-> >>   arch/arm64/kernel/traps.c        |  2 +-
-> >>   arch/arm64/kvm/mmu.c             |  2 +-
-> >>   block/blk-core.c                 |  2 +-
-> >>   block/bsg.c                      |  2 +-
-> >>   drivers/char/random.c            |  2 +-
-> >>   drivers/hid/hid-core.c           |  6 +++---
-> >>   drivers/mmc/host/tmio_mmc_core.c |  6 +++---
-> >>   drivers/pci/pci-sysfs.c          |  2 +-
-> >>   drivers/scsi/scsi_ioctl.c        |  2 +-
-> >>   drivers/tty/serial/serial_core.c |  2 +-
-> >>   drivers/tty/tty_io.c             |  8 ++++----
-> >>   drivers/usb/core/devio.c         | 16 ++++++++--------
-> >>   drivers/usb/core/message.c       |  2 +-
-> >>   drivers/vfio/group.c             |  2 +-
-> >>   drivers/vfio/vfio_iommu_type1.c  |  2 +-
-> >>   drivers/vfio/vfio_main.c         |  2 +-
-> >>   drivers/xen/evtchn.c             |  2 +-
-> >>   drivers/xen/grant-table.c        |  2 +-
-> >>   fs/binfmt_elf.c                  |  2 +-
-> >>   fs/coredump.c                    |  4 ++--
-> >>   fs/drop_caches.c                 |  2 +-
-> >>   fs/exec.c                        |  8 ++++----
-> >>   fs/ext4/dir.c                    |  2 +-
-> >>   fs/ext4/inode.c                  |  2 +-
-> >>   fs/ext4/namei.c                  |  2 +-
-> >>   fs/ext4/super.c                  | 12 ++++++------
-> >>   fs/hugetlbfs/inode.c             |  2 +-
-> >>   fs/ioctl.c                       |  2 +-
-> >>   fs/iomap/direct-io.c             |  2 +-
-> >>   fs/jbd2/transaction.c            |  2 +-
-> >>   fs/locks.c                       |  2 +-
-> >>   fs/netfs/internal.h              |  2 +-
-> >>   fs/proc/base.c                   |  2 +-
-> >>   fs/read_write.c                  |  2 +-
-> >>   fs/splice.c                      |  2 +-
-> >>   include/linux/coredump.h         |  2 +-
-> >>   include/linux/filter.h           |  2 +-
-> >>   include/linux/ratelimit.h        |  2 +-
-> >>   include/linux/sched.h            | 11 ++++++++---
-> >>   init/init_task.c                 |  2 +-
-> >>   ipc/sem.c                        |  2 +-
-> >>   kernel/acct.c                    |  2 +-
-> >>   kernel/audit.c                   |  4 ++--
-> >>   kernel/auditsc.c                 | 10 +++++-----
-> >>   kernel/bpf/helpers.c             |  2 +-
-> >>   kernel/capability.c              |  4 ++--
-> >>   kernel/cgroup/cgroup-v1.c        |  2 +-
-> >>   kernel/cred.c                    |  4 ++--
-> >>   kernel/events/core.c             |  2 +-
-> >>   kernel/exit.c                    |  6 +++---
-> >>   kernel/fork.c                    |  9 +++++++--
-> >>   kernel/freezer.c                 |  4 ++--
-> >>   kernel/futex/waitwake.c          |  2 +-
-> >>   kernel/hung_task.c               | 10 +++++-----
-> >>   kernel/irq/manage.c              |  2 +-
-> >>   kernel/kthread.c                 |  2 +-
-> >>   kernel/locking/rtmutex.c         |  2 +-
-> >>   kernel/printk/printk.c           |  2 +-
-> >>   kernel/sched/core.c              | 22 +++++++++++-----------
-> >>   kernel/sched/debug.c             |  4 ++--
-> >>   kernel/signal.c                  |  6 +++---
-> >>   kernel/sys.c                     |  6 +++---
-> >>   kernel/sysctl.c                  |  2 +-
-> >>   kernel/time/itimer.c             |  4 ++--
-> >>   kernel/time/posix-cpu-timers.c   |  2 +-
-> >>   kernel/tsacct.c                  |  2 +-
-> >>   kernel/workqueue.c               |  6 +++---
-> >>   lib/dump_stack.c                 |  2 +-
-> >>   lib/nlattr.c                     |  6 +++---
-> >>   mm/compaction.c                  |  2 +-
-> >>   mm/filemap.c                     |  4 ++--
-> >>   mm/gup.c                         |  2 +-
-> >>   mm/memfd.c                       |  2 +-
-> >>   mm/memory-failure.c              | 10 +++++-----
-> >>   mm/memory.c                      |  2 +-
-> >>   mm/mmap.c                        |  4 ++--
-> >>   mm/oom_kill.c                    | 18 +++++++++---------
-> >>   mm/page_alloc.c                  |  4 ++--
-> >>   mm/util.c                        |  2 +-
-> >>   net/core/sock.c                  |  2 +-
-> >>   net/dns_resolver/internal.h      |  2 +-
-> >>   net/ipv4/raw.c                   |  2 +-
-> >>   net/ipv4/tcp.c                   |  2 +-
-> >>   net/socket.c                     |  2 +-
-> >>   security/lsm_audit.c             |  4 ++--
-> >>   85 files changed, 171 insertions(+), 161 deletions(-)
-> >>
-> > [...]
->
