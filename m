@@ -1,367 +1,241 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C9F2274FF1;
-	Wed, 16 Jul 2025 20:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141DD29AB13
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Jul 2025 20:38:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752697688; cv=none; b=N0jD6LN41vfKAmGHNR8zPL9Gi/o50dx0iMc0pdteAwsZzLp+6997qbtHv4xIP5lLYvCyGFxIjgQr2R7QPST+NGN4luTGeJm9i4YCn4DXa9Om1bWWez0jT3LqXtSyNd953yNLfs3qN6R5vzVUaSSYREf8pvpJqmqCZGE4ZBrZhZc=
+	t=1752698338; cv=none; b=Wkme/RcIAr9ZheHuV60mZOPGHyu1wKM5nLBhVy3hXKdh6AII/d5e8X/U2dHS9CraHlUjTGU6kmmcS2Hi6Oxa+ja1DtWxmDw8eKVavDw8DWmKWN1rBI9bhFxYbXlaNr2hvUHSxi9FM4PGIxMijS+Cbso4/gBce4xc8nz3Nf91Hdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752697688; c=relaxed/simple;
-	bh=brHo0opNvg7cbMIzp5qYocuQ4Uf/Pi0EVD1qO32ApB0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MnOXAmjP4/GxpvMdvkB8Ed0BpG6tQQeg/ruUzXlEI2py9da01c+t3E8YcrwlTtf3Ykv6OB4Y3O9FD8m38IMFiRrFDDD0WPubzwQnrbm4+lz0DoW59nOoUSM2LP1AGCJzbArGeSpR2c5OIzdnKAOHyPsEpVygEanFaJaiZAYRjLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XS9wW+kC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752698338; c=relaxed/simple;
+	bh=4b9dCB7uVA5w5RCtTnmunbPMHyI+fvfrqoVNlrbQTjM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u2pnexwaYE3kiaKCMLwX1TS8wMh4N7caO59BPbAFQO0HEANN0xXWhEg+PC3PpBFwENaz1+soOfgysNEqbwNu39IYDeMjnHoH3slcL5i8hqPrVQ0LHMnpNmW2D1Nf2qWuBqh8QSrIYPs4IV+y1Vp8LE7n0VCVf5jQN/OWtVuBEVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZDHCdhez; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XS9wW+kC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5057C4CEE7;
-	Wed, 16 Jul 2025 20:28:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752697687;
-	bh=brHo0opNvg7cbMIzp5qYocuQ4Uf/Pi0EVD1qO32ApB0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XS9wW+kCAdkIs5Bt2XOj2EhOPkuGPB92ZEvnDz/jfOInfmJCwXIbUYlJOwBm5c5C4
-	 SxQhGI5YL9BpuiZX7QsNK5MSlb0s7xfn0e6vkX/uW8mbEVLs2aXFfxpa252kxruxTq
-	 8BL8JKk3oewMZzEva9iMDYJ5o+TTm7B65eS9c2402Dy+XHytd5KUOprfJjZZNIWElb
-	 6h4FWhOqCuVNNwsbSzyN2HBWpIH1uIFjlZlqrXW0F3n2xNrFhuyUkSX0VFJZ6NuRg8
-	 3M5TPVpBWcerUE4g3ExO4XEFF//YqHQ40uaXOy4/HN5Vv0WfZYp1yadLcRiN5+0tDy
-	 8HPsURqRtwzdw==
-Date: Wed, 16 Jul 2025 13:28:05 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Thomas Falcon <thomas.falcon@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Ben Gainey <ben.gainey@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Howard Chu <howardchu95@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>, Levi Yun <yeoreum.yun@arm.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>,
-	Blake Jones <blakejones@google.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Anubhav Shelat <ashelat@redhat.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Song Liu <song@kernel.org>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 12/12] perf parse-events: Support user CPUs mixed with
- threads/processes
-Message-ID: <aHgLVcxpEphtYLsB@google.com>
-References: <20250627192417.1157736-1-irogers@google.com>
- <20250627192417.1157736-13-irogers@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZDHCdhez"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1752698334;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xY8gUnvpobKv4/aQ3mQ9PIXQV+nadZUVPTvlqujhXdk=;
+	b=ZDHCdhezgiMGZrWpeBMzyI2qLMtYZjBWf7eT1USv+uZHaJAj93L4cjku4Zwep4i9hn0fMH
+	jtNMPiK9yhD4q6K7iqUqHbBP81LmsycfsWpQJFXquYu5J+TWUs3UiTKmiUe5pDT8TdJoH+
+	7ehLUo4PTloBt2WOjHJ0AkntFAa/wio=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-516-V2hBx-lXPGqBaNFeCS9bZw-1; Wed, 16 Jul 2025 16:38:53 -0400
+X-MC-Unique: V2hBx-lXPGqBaNFeCS9bZw-1
+X-Mimecast-MFC-AGG-ID: V2hBx-lXPGqBaNFeCS9bZw_1752698332
+Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-55629c3a5daso232281e87.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 16 Jul 2025 13:38:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752698332; x=1753303132;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xY8gUnvpobKv4/aQ3mQ9PIXQV+nadZUVPTvlqujhXdk=;
+        b=ontck9zmvxmT8OHs/ePO8uUR7uXH2jEZ7d8KqZp9qFId5ghWr8VgOeFC39lWBiX0I9
+         yjtgOmYzM+460fZnK488DQlAK/fTwfz1mvw0W/omlCr7bnMHJgvsVO19LuYfxFM3hx5k
+         0TIpntNZAYZUNYpnGLhtrVZ2CXobGlAKH0cCxibxdv92o67Ix5eYf7zViOwkm4V63hlk
+         zOOpI3AM2nm82pAypDhyDbpvvMwGCjUNAG3BvJIZqdIVNeOr4EMtGG09RSGhHfOX0zPN
+         oitl98Xc6ccSGYN+y0EQaHfdEjhTBHJHGn+oa4w18u637g0ciXYb4dgw7lpvsb1w37eH
+         c69g==
+X-Forwarded-Encrypted: i=1; AJvYcCXoASgUi/VllT2azdouF1sADtfvjExxHQliVbPTtcXBMegCNWOR4sbRZGpoyltBwYNHSg62lSnz6N6bWoj/bxB7@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuaeSgPV5/WyBGVqHA47J+QLCG84Q6PcaUXiJeGWM3ubN0n+nB
+	QLHgMY+/vQFMln1Ylths8ugU1tC80jYbAw22FQmYy9zPYHbm8o06A6LfSgimL55EbK45NRcgwDk
+	6eEh/ZmPqv71uExpYP0bVGUMGChC2X6aqtJGUbqms8qc+NhheIQsBl50plzZn6Hs1p7ZaZf5QyG
+	1Xqyhu6rbCmyRBWV2qwJWHGYvuQfviS5RQDEGjV31ZSE+QGL9NvK+WMGkf
+X-Gm-Gg: ASbGncsOeEfasebAqOLhJVNKCU3e1QVnVP4uXgiaE0Viid0uTq7i1BIxawO9BffrgSs
+	OnhOerKqn0+SlxQYdm5fLjvdtzi56swR3tlYGks7wh6runU5VN7CtB5PmzjK/JDi/JoPXPkDm0I
+	sHUh5qu8JGrGrt6fCwzUVKvi0=
+X-Received: by 2002:a05:6512:3f08:b0:553:ad28:210a with SMTP id 2adb3069b0e04-55a233efa6emr1487421e87.51.1752698331913;
+        Wed, 16 Jul 2025 13:38:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE3d8ZErTr13ORmYwVRyQx6Xa3GyB551UCdAxVhh41hIYvatpT7Kym3S4YHqCfZ7R9jOU/FuQQTPDq78gckdKQ=
+X-Received: by 2002:a05:6512:3f08:b0:553:ad28:210a with SMTP id
+ 2adb3069b0e04-55a233efa6emr1487406e87.51.1752698331420; Wed, 16 Jul 2025
+ 13:38:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250627192417.1157736-13-irogers@google.com>
+References: <20250709143119.91147-2-ashelat@redhat.com> <aHFtzFZEvCp0B6V2@google.com>
+ <CA+G8DhKB3H-nNyKNmgOd_uj-YnfBTS8pSz6dFqZ5+gnxf-z7oQ@mail.gmail.com> <aHf_IDvsyOubNm24@google.com>
+In-Reply-To: <aHf_IDvsyOubNm24@google.com>
+From: Anubhav Shelat <ashelat@redhat.com>
+Date: Wed, 16 Jul 2025 16:38:40 -0400
+X-Gm-Features: Ac12FXw7pPzxsqwpC1Udhmew_7U2dEUtTte3cEJyNgfjcV8YVIFxdqLfcjmvaTs
+Message-ID: <CA+G8DhLPC59kokzJFajfhxu6g0n4sQC8odHoHeRp+MwPbf8Htg@mail.gmail.com>
+Subject: Re: [PATCH] perf sched timehist: decode process names of processes in
+ zombie state
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: mpetlan@redhat.com, acme@kernel.org, irogers@google.com, 
+	linux-perf-users@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	dapeng1.mi@linux.intel.com, james.clark@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 27, 2025 at 12:24:17PM -0700, Ian Rogers wrote:
-> Counting events system-wide with a specified CPU prior to this change worked:
-> ```
-> $ perf stat -e 'msr/tsc/,msr/tsc,cpu=cpu_core/,msr/tsc,cpu=cpu_atom/' -a sleep 1
-> 
->   Performance counter stats for 'system wide':
-> 
->      59,393,419,099      msr/tsc/
->      33,927,965,927      msr/tsc,cpu=cpu_core/
->      25,465,608,044      msr/tsc,cpu=cpu_atom/
-> ```
-> 
-> However, when counting with process the counts became system wide:
-> ```
-> $ perf stat -e 'msr/tsc/,msr/tsc,cpu=cpu_core/,msr/tsc,cpu=cpu_atom/' perf test -F 10
->  10.1: Basic parsing test                                            : Ok
->  10.2: Parsing without PMU name                                      : Ok
->  10.3: Parsing with PMU name                                         : Ok
-> 
->  Performance counter stats for 'perf test -F 10':
-> 
->         59,233,549      msr/tsc/
->         59,227,556      msr/tsc,cpu=cpu_core/
->         59,224,053      msr/tsc,cpu=cpu_atom/
-> ```
-> 
-> Make the handling of CPU maps with event parsing clearer. When an
-> event is parsed creating an evsel the cpus should be either the PMU's
-> cpumask or user specified CPUs.
-> 
-> Update perf_evlist__propagate_maps so that it doesn't clobber the user
-> specified CPUs. Try to make the behavior clearer, firstly fix up
-> missing cpumasks. Next, perform sanity checks and adjustments from the
-> global evlist CPU requests and for the PMU including simplifying to
-> the "any CPU"(-1) value. Finally remove the event if the cpumask is
-> empty.
-> 
-> So that events are opened with a CPU and a thread change stat's
-> create_perf_stat_counter to give both.
-> 
-> With the change things are fixed:
-> ```
-> $ perf stat --no-scale -e 'msr/tsc/,msr/tsc,cpu=cpu_core/,msr/tsc,cpu=cpu_atom/' perf test -F 10
->  10.1: Basic parsing test                                            : Ok
->  10.2: Parsing without PMU name                                      : Ok
->  10.3: Parsing with PMU name                                         : Ok
-> 
->  Performance counter stats for 'perf test -F 10':
-> 
->         63,704,975      msr/tsc/
->         47,060,704      msr/tsc,cpu=cpu_core/                        (4.62%)
->         16,640,591      msr/tsc,cpu=cpu_atom/                        (2.18%)
-> ```
-> 
-> However, note the "--no-scale" option is used. This is necessary as
-> the running time for the event on the counter isn't the same as the
-> enabled time because the thread doesn't necessarily run on the CPUs
-> specified for the counter. All counter values are scaled with:
-> 
->   scaled_value = value * time_enabled / time_running
-> 
-> and so without --no-scale the scaled_value becomes very large. This
-> problem already exists on hybrid systems for the same reason. Here are
-> 2 runs of the same code with an instructions event that counts the
-> same on both types of core, there is no real multiplexing happening on
-> the event:
-
-This is unfortunate.  The event is in a task context but also has a CPU
-constraint.  So it's not schedulable on other CPUs.
-
-A problem is that it cannot distinguish the real multiplexing..
-
-> 
-> ```
-> $ perf stat -e instructions perf test -F 10
-> ...
->  Performance counter stats for 'perf test -F 10':
-> 
->         87,896,447      cpu_atom/instructions/                       (14.37%)
->         98,171,964      cpu_core/instructions/                       (85.63%)
-> ...
-> $ perf stat --no-scale -e instructions perf test -F 10
-> ...
->  Performance counter stats for 'perf test -F 10':
-> 
->         13,069,890      cpu_atom/instructions/                       (19.32%)
->         83,460,274      cpu_core/instructions/                       (80.68%)
-> ...
-> ```
-> The scaling has inflated per-PMU instruction counts and the overall
-> count by 2x.
-> 
-> To fix this the kernel needs changing when a task+CPU event (or just
-> task event on hybrid) is scheduled out. A fix could be that the state
-> isn't inactive but off for such events, so that time_enabled counts
-> don't accumulate on them.
-
-Right, maybe we need to add a new state (UNSCHEDULABLE?) to skip
-updating the enabled time.
+Yep you're right. Sending it now.
 
 Thanks,
-Namhyung
+Anubhav
 
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/lib/perf/evlist.c        | 118 ++++++++++++++++++++++-----------
->  tools/perf/util/parse-events.c |  10 ++-
->  tools/perf/util/stat.c         |   6 +-
->  3 files changed, 86 insertions(+), 48 deletions(-)
-> 
-> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-> index 9d9dec21f510..2d2236400220 100644
-> --- a/tools/lib/perf/evlist.c
-> +++ b/tools/lib/perf/evlist.c
-> @@ -36,49 +36,87 @@ void perf_evlist__init(struct perf_evlist *evlist)
->  static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
->  					  struct perf_evsel *evsel)
->  {
-> -	if (evsel->system_wide) {
-> -		/* System wide: set the cpu map of the evsel to all online CPUs. */
-> -		perf_cpu_map__put(evsel->cpus);
-> -		evsel->cpus = perf_cpu_map__new_online_cpus();
-> -	} else if (evlist->has_user_cpus && evsel->is_pmu_core) {
-> -		/*
-> -		 * User requested CPUs on a core PMU, ensure the requested CPUs
-> -		 * are valid by intersecting with those of the PMU.
-> -		 */
-> +	if (perf_cpu_map__is_empty(evsel->cpus)) {
-> +		if (perf_cpu_map__is_empty(evsel->pmu_cpus)) {
-> +			/*
-> +			 * Assume the unset PMU cpus were for a system-wide
-> +			 * event, like a software or tracepoint.
-> +			 */
-> +			evsel->pmu_cpus = perf_cpu_map__new_online_cpus();
-> +		}
-> +		if (evlist->has_user_cpus && !evsel->system_wide) {
-> +			/*
-> +			 * Use the user CPUs unless the evsel is set to be
-> +			 * system wide, such as the dummy event.
-> +			 */
-> +			evsel->cpus = perf_cpu_map__get(evlist->user_requested_cpus);
-> +		} else {
-> +			/*
-> +			 * System wide and other modes, assume the cpu map
-> +			 * should be set to all PMU CPUs.
-> +			 */
-> +			evsel->cpus = perf_cpu_map__get(evsel->pmu_cpus);
-> +		}
-> +	}
-> +	/*
-> +	 * Avoid "any CPU"(-1) for uncore and PMUs that require a CPU, even if
-> +	 * requested.
-> +	 */
-> +	if (evsel->requires_cpu && perf_cpu_map__has_any_cpu(evsel->cpus)) {
->  		perf_cpu_map__put(evsel->cpus);
-> -		evsel->cpus = perf_cpu_map__intersect(evlist->user_requested_cpus, evsel->pmu_cpus);
-> +		evsel->cpus = perf_cpu_map__get(evsel->pmu_cpus);
-> +	}
->  
-> -		/*
-> -		 * Empty cpu lists would eventually get opened as "any" so remove
-> -		 * genuinely empty ones before they're opened in the wrong place.
-> -		 */
-> -		if (perf_cpu_map__is_empty(evsel->cpus)) {
-> -			struct perf_evsel *next = perf_evlist__next(evlist, evsel);
-> -
-> -			perf_evlist__remove(evlist, evsel);
-> -			/* Keep idx contiguous */
-> -			if (next)
-> -				list_for_each_entry_from(next, &evlist->entries, node)
-> -					next->idx--;
-> +	/*
-> +	 * Globally requested CPUs replace user requested unless the evsel is
-> +	 * set to be system wide.
-> +	 */
-> +	if (evlist->has_user_cpus && !evsel->system_wide) {
-> +		assert(!perf_cpu_map__has_any_cpu(evlist->user_requested_cpus));
-> +		if (!perf_cpu_map__equal(evsel->cpus, evlist->user_requested_cpus)) {
-> +			perf_cpu_map__put(evsel->cpus);
-> +			evsel->cpus = perf_cpu_map__get(evlist->user_requested_cpus);
->  		}
-> -	} else if (!evsel->pmu_cpus || evlist->has_user_cpus ||
-> -		(!evsel->requires_cpu && perf_cpu_map__has_any_cpu(evlist->user_requested_cpus))) {
-> -		/*
-> -		 * The PMU didn't specify a default cpu map, this isn't a core
-> -		 * event and the user requested CPUs or the evlist user
-> -		 * requested CPUs have the "any CPU" (aka dummy) CPU value. In
-> -		 * which case use the user requested CPUs rather than the PMU
-> -		 * ones.
-> -		 */
-> +	}
-> +
-> +	/* Ensure cpus only references valid PMU CPUs. */
-> +	if (!perf_cpu_map__has_any_cpu(evsel->cpus) &&
-> +	    !perf_cpu_map__is_subset(evsel->pmu_cpus, evsel->cpus)) {
-> +		struct perf_cpu_map *tmp = perf_cpu_map__intersect(evsel->pmu_cpus, evsel->cpus);
-> +
->  		perf_cpu_map__put(evsel->cpus);
-> -		evsel->cpus = perf_cpu_map__get(evlist->user_requested_cpus);
-> -	} else if (evsel->cpus != evsel->pmu_cpus) {
-> -		/*
-> -		 * No user requested cpu map but the PMU cpu map doesn't match
-> -		 * the evsel's. Reset it back to the PMU cpu map.
-> -		 */
-> +		evsel->cpus = tmp;
-> +	}
-> +
-> +	/*
-> +	 * Was event requested on all the PMU's CPUs but the user requested is
-> +	 * any CPU (-1)? If so switch to using any CPU (-1) to reduce the number
-> +	 * of events.
-> +	 */
-> +	if (!evsel->system_wide &&
-> +	    perf_cpu_map__equal(evsel->cpus, evsel->pmu_cpus) &&
-> +	    perf_cpu_map__has_any_cpu(evlist->user_requested_cpus)) {
->  		perf_cpu_map__put(evsel->cpus);
-> -		evsel->cpus = perf_cpu_map__get(evsel->pmu_cpus);
-> +		evsel->cpus = perf_cpu_map__get(evlist->user_requested_cpus);
-> +	}
-> +
-> +	/* Sanity check assert before the evsel is potentially removed. */
-> +	assert(!evsel->requires_cpu || !perf_cpu_map__has_any_cpu(evsel->cpus));
-> +
-> +	/*
-> +	 * Empty cpu lists would eventually get opened as "any" so remove
-> +	 * genuinely empty ones before they're opened in the wrong place.
-> +	 */
-> +	if (perf_cpu_map__is_empty(evsel->cpus)) {
-> +		struct perf_evsel *next = perf_evlist__next(evlist, evsel);
-> +
-> +		perf_evlist__remove(evlist, evsel);
-> +		/* Keep idx contiguous */
-> +		if (next)
-> +			list_for_each_entry_from(next, &evlist->entries, node)
-> +				next->idx--;
-> +
-> +		return;
->  	}
->  
->  	if (evsel->system_wide) {
-> @@ -98,6 +136,10 @@ static void perf_evlist__propagate_maps(struct perf_evlist *evlist)
->  
->  	evlist->needs_map_propagation = true;
->  
-> +	/* Clear the all_cpus set which will be merged into during propagation. */
-> +	perf_cpu_map__put(evlist->all_cpus);
-> +	evlist->all_cpus = NULL;
-> +
->  	list_for_each_entry_safe(evsel, n, &evlist->entries, node)
->  		__perf_evlist__propagate_maps(evlist, evsel);
->  }
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 4092a43aa84e..0ff7ae75d8f9 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -313,20 +313,18 @@ __add_event(struct list_head *list, int *idx,
->  	if (pmu) {
->  		is_pmu_core = pmu->is_core;
->  		pmu_cpus = perf_cpu_map__get(pmu->cpus);
-> +		if (perf_cpu_map__is_empty(pmu_cpus))
-> +			pmu_cpus = cpu_map__online();
->  	} else {
->  		is_pmu_core = (attr->type == PERF_TYPE_HARDWARE ||
->  			       attr->type == PERF_TYPE_HW_CACHE);
->  		pmu_cpus = is_pmu_core ? cpu_map__online() : NULL;
->  	}
->  
-> -	if (has_user_cpus) {
-> +	if (has_user_cpus)
->  		cpus = perf_cpu_map__get(user_cpus);
-> -		/* Existing behavior that pmu_cpus matches the given user ones. */
-> -		perf_cpu_map__put(pmu_cpus);
-> -		pmu_cpus = perf_cpu_map__get(user_cpus);
-> -	} else {
-> +	else
->  		cpus = perf_cpu_map__get(pmu_cpus);
-> -	}
->  
->  	if (init_attr)
->  		event_attr_init(attr);
-> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> index 355a7d5c8ab8..8d3bcdb69d37 100644
-> --- a/tools/perf/util/stat.c
-> +++ b/tools/perf/util/stat.c
-> @@ -769,8 +769,6 @@ int create_perf_stat_counter(struct evsel *evsel,
->  			attr->enable_on_exec = 1;
->  	}
->  
-> -	if (target__has_cpu(target) && !target__has_per_thread(target))
-> -		return evsel__open_per_cpu(evsel, evsel__cpus(evsel), cpu_map_idx);
-> -
-> -	return evsel__open_per_thread(evsel, evsel->core.threads);
-> +	return evsel__open_per_cpu_and_thread(evsel, evsel__cpus(evsel), cpu_map_idx,
-> +					      evsel->core.threads);
->  }
-> -- 
-> 2.50.0.727.gbf7dc18ff4-goog
-> 
+On Wed, Jul 16, 2025 at 3:36=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Tue, Jul 15, 2025 at 11:59:29AM -0400, Anubhav Shelat wrote:
+> > When I tried to build, it threw the error:
+> >
+> > builtin-sched.c: In function =E2=80=98timehist_print_sample=E2=80=99:
+> > builtin-sched.c:2186:29: error: declaration of =E2=80=98prev_comm=E2=80=
+=99 shadows a
+> > previous local [-Werror=3Dshadow]
+> >  2186 |                 const char *prev_comm =3D evsel__strval(evsel,
+> > sample, "prev_comm");
+> >       |                             ^~~~~~~~~
+> > builtin-sched.c:2154:21: note: shadowed declaration is here
+> >  2154 |         const char *prev_comm =3D evsel__strval(evsel, sample,
+> > "prev_comm");
+> >       |                     ^~~~~~~~~
+> > builtin-sched.c:2154:21: error: unused variable =E2=80=98prev_comm=E2=
+=80=99
+> > [-Werror=3Dunused-variable]
+>
+> Yep, you need to delete the old code.
+>
+> Thanks,
+> Namhyung
+>
+> >
+> > On Fri, Jul 11, 2025 at 4:02=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > >
+> > > Hello,
+> > >
+> > > On Wed, Jul 09, 2025 at 10:31:20AM -0400, Anubhav Shelat wrote:
+> > > > Previously when running perf trace timehist --state, when recording
+> > > > processes in the zombie state the process name would not be decoded
+> > > > properly and appears with just the PID:
+> > > >
+> > > > 1140057.412177 [0006]  Mutter Input Th[3139/3104]          0.956   =
+   0.019      0.041      S
+> > > > 1140057.412222 [0012]  :1248612[1248612]                   0.000   =
+   0.000      0.332      Z
+> > > > 1140057.412275 [0004]  <idle>                              0.052   =
+   0.052      0.953      I
+> > > > 1140057.412284 [0008]  <idle>                              0.070   =
+   0.070      0.932      I
+> > > > 1140057.412333 [0004]  KMS thread[3126/3104]               0.953   =
+   0.112      0.058      S
+> > > >
+> > > > Now some extra processing has been added to decode the process name=
+:
+> > > >
+> > > > 1140057.412177 [0006]  Mutter Input Th[3139/3104]          0.956   =
+   0.019      0.041      S
+> > > > 1140057.412222 [0012]  sleep[1248612]                      0.000   =
+   0.000      0.332      Z
+> > > > 1140057.412275 [0004]  <idle>                              0.052   =
+   0.052      0.953      I
+> > > > 1140057.412284 [0008]  <idle>                              0.070   =
+   0.070      0.932      I
+> > > > 1140057.412333 [0004]  KMS thread[3126/3104]               0.953   =
+   0.112      0.058      S
+> > >
+> > > Thanks for the fix.  A nitpick below.
+> > >
+> > > >
+> > > > Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+> > > > ---
+> > > >  tools/perf/builtin-sched.c | 19 ++++++++++++++++---
+> > > >  1 file changed, 16 insertions(+), 3 deletions(-)
+> > > >
+> > > > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.=
+c
+> > > > index 26ece6e9bfd1..e1a931341bc8 100644
+> > > > --- a/tools/perf/builtin-sched.c
+> > > > +++ b/tools/perf/builtin-sched.c
+> > > > @@ -2023,11 +2023,15 @@ static int comm_width =3D 30;
+> > > >  static char *timehist_get_commstr(struct thread *thread)
+> > > >  {
+> > > >       static char str[32];
+> > > > -     const char *comm =3D thread__comm_str(thread);
+> > > > +     char *comm =3D (char *) thread__comm_str(thread);
+> > > > +     char *empty =3D (char *) "";
+> > > >       pid_t tid =3D thread__tid(thread);
+> > > >       pid_t pid =3D thread__pid(thread);
+> > > >       int n;
+> > > >
+> > > > +     if (*comm =3D=3D ':')
+> > > > +             comm =3D empty;
+> > > > +
+> > > >       if (pid =3D=3D 0)
+> > > >               n =3D scnprintf(str, sizeof(str), "%s", comm);
+> > > >
+> > > > @@ -2147,6 +2151,8 @@ static void timehist_print_sample(struct perf=
+_sched *sched,
+> > > >       struct thread_runtime *tr =3D thread__priv(thread);
+> > > >       const char *next_comm =3D evsel__strval(evsel, sample, "next_=
+comm");
+> > > >       const u32 next_pid =3D evsel__intval(evsel, sample, "next_pid=
+");
+> > > > +     const char *prev_comm =3D evsel__strval(evsel, sample, "prev_=
+comm");
+> > > > +     char *comm_str =3D timehist_get_commstr(thread);
+> > > >       u32 max_cpus =3D sched->max_cpu.cpu + 1;
+> > > >       char tstr[64];
+> > > >       char nstr[30];
+> > > > @@ -2173,8 +2179,15 @@ static void timehist_print_sample(struct per=
+f_sched *sched,
+> > > >               }
+> > > >               printf(" ");
+> > > >       }
+> > > > -
+> > > > -     printf(" %-*s ", comm_width, timehist_get_commstr(thread));
+> > > > +
+> > > > +     /* if a process is in zombie state commstr will start with a =
+'[' and
+> > > > +      * we need to do extra processing to decode the process name =
+*/
+> > > > +     if (*comm_str =3D=3D '[') {
+> > > > +             printf(" %s", evsel__strval(evsel, sample, "prev_comm=
+"));
+> > > > +             printf("%-*s ", comm_width - (int) strlen(prev_comm),=
+ comm_str);
+> > > > +     }
+> > > > +     else
+> > > > +             printf(" %-*s ", comm_width, comm_str);
+> > >
+> > > What about just updating thread comm if it's missing?
+> > >
+> > >         if (!thread__comm_set(thread)) {
+> > >                 const char *prev_comm =3D evsel__strval(evsel, sample=
+, "prev_comm");
+> > >                 thread__set_comm(thread, prev_comm, sample->time);
+> > >         }
+> > >
+> > >         printf(" %-%s ", comm_width, timehist_get_commstr(thread));
+> > >
+> > > Thanks,
+> > > Namhyung
+> > >
+> > > >
+> > > >       if (sched->show_prio)
+> > > >               printf(" %-*s ", MAX_PRIO_STR_LEN, timehist_get_prios=
+tr(evsel, thread, sample));
+> > > > --
+> > > > 2.50.0
+> > > >
+> > >
+> >
+>
+
