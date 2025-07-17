@@ -1,111 +1,186 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3053D29ACE4
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Jul 2025 11:43:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A10729ACC6;
+	Thu, 17 Jul 2025 11:52:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752752632; cv=none; b=n0ZxldqisZDlQf8oqlLK/U6Gl3o37BlXRIF6DzKD6c+D/RSp8yUN7mYcYq5Fwr8E/a2H+YnQrk3L5mPmW8PGmtacanfIixf+eypBupsJUAx/JGAm50ZQehQd+cSe7QwfK0te6bJf0IZ2vEdL2tCl8cDJL1s+nmWYp4DfhcwHx9g=
+	t=1752753174; cv=none; b=fjnftJ5VVQcsCS0YPMuBHUqZI1FYGIdLeAtbpIgic/yJpnVMYDKzJ1C/i4rwuTP/KAHlN4kU/TMBAoRxJWH0EGCTvOsPEz+IPu4LudQ1QXDUBsi9BNurk/p6bS7A//CoFOJbkKKKgGGKZbdLNvTaiAqM7Lhx92ZDx9j7cqr7hZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752752632; c=relaxed/simple;
-	bh=6uGhnGeIROplMLbWKJi+hQJH1Pv8f8Jn73TRI+B3DjI=;
+	s=arc-20240116; t=1752753174; c=relaxed/simple;
+	bh=768jnmLVmr/V6ZyVJm0rYYFSz76GLOLtXyYMf0pndCk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fjCkCH5xiNGoE32IM3fQUWzaObsURcuiTrY3wfF4fbCjPXgpj8+k9F/tGEuh7//OrbpofQ/tmR+M3yCO8fkwuxsK5sWIuz89lOvoNSpTLspTGMJ5EzF5wcxkufbzTcmICFfxEAMKLqgCDk4U/4P+qEJXw6zdm5JwyYWZyG1b4wQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aWDFeqpu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cRl+QNEmBjST2nZuAfvO6PUwY6ttP1UDtgGn7LfvvmwH07M8I0BWsugzxrRNHmVT07l+9fcRKRUEYDVMDIn6iHx2RdejXQdLSpPhOTzz4/G0NtdYhZPA4VMR9zhevAzDaL6suy+2oZC1YukZtvx0KQU+JCGupD2BtPFSvYSRYuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O7UGW1d3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aWDFeqpu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90063C4CEE3;
-	Thu, 17 Jul 2025 11:43:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O7UGW1d3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 276E6C4CEF6;
+	Thu, 17 Jul 2025 11:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752752632;
-	bh=6uGhnGeIROplMLbWKJi+hQJH1Pv8f8Jn73TRI+B3DjI=;
+	s=k20201202; t=1752753173;
+	bh=768jnmLVmr/V6ZyVJm0rYYFSz76GLOLtXyYMf0pndCk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aWDFeqpu1wpW9lQnbm7r3vnK65+k2/8NqWUgTzdpBDYXQ4LjXVGKwfqjGwiLa6//F
-	 zVT0g2+P2X1lBoIowaCY5SwmSZmF3WGCesIC78MypjeoNcBm/yNgnCfpzThxEyhTUF
-	 aWgt8ExwkjEyfMQChTtPw1svY7EoKBITHmidm3sFsjsfzGQtIklK6B6H+8geOTfBmQ
-	 Cnh5iy1auCZ1lhAYnJTvf/lM4LS1ooDOv+hqyYLZtH6g5O8rA4KTb3uZVG+PpQF2va
-	 MxFevnQ2ajttxyILn3m2GvXwbWvAlU5rVcUKBAKfZJlDEuoQ4D8X1yjWo0z08sRqcQ
-	 NOpIwoHebajuQ==
-Date: Thu, 17 Jul 2025 12:43:46 +0100
+	b=O7UGW1d3rjbTWkmaRHwUuO+4xw8pbVWJb/FnZE7jAYa9Rk8FiEZuhmIoIdcRiu4mP
+	 mvKD5TYzhiaeMPUaszLAa+1ep6tyzZSBcGwilCx7XZjbTF0FZ3ZxEbC4SvfYJKkYwc
+	 DIDM5QDywPSAo2EGXHsTDJUBRSkSyf8dlB49GC5QeXSpNnH9nObwZU0RWPX5heiSTK
+	 NijJp76wqTWn3Ogf7f7IALBu523yGOa1QJlgPBzKU/WbmKrDX3x8l32U7JtoH+889G
+	 BV3VLFNA0U1UeQXSHf7wGX5P44vMv6wJYnnZNe0fJO/lbdi//0Sh3GKTSbm00oul2K
+	 knMskkyRTSktw==
+Date: Thu, 17 Jul 2025 12:52:46 +0100
 From: Will Deacon <will@kernel.org>
 To: James Clark <james.clark@linaro.org>
-Cc: Leo Yan <leo.yan@arm.com>, Mark Rutland <mark.rutland@arm.com>,
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	German Gomez <german.gomez@arm.com>,
-	Ali Saidi <alisaidi@amazon.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 01/14] drivers/perf: arm_spe: Expose event filter
-Message-ID: <aHjh8sqeEPQDVg0z@willie-the-truck>
-References: <20250707-arm_spe_support_hitm_overhead_v1_public-v3-0-33ea82da3280@arm.com>
- <20250707-arm_spe_support_hitm_overhead_v1_public-v3-1-33ea82da3280@arm.com>
- <aHUBFGPck-O3vs9b@willie-the-truck>
- <20250714150921.GE1093654@e132581.arm.com>
- <aHUerfpLyAPEc9R_@willie-the-truck>
- <20250714154251.GF1093654@e132581.arm.com>
- <f3393b26-a1ca-4d8f-9c22-0330956090b4@linaro.org>
+	Adrian Hunter <adrian.hunter@intel.com>, leo.yan@arm.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH v3 04/10] arm64/boot: Enable EL2 requirements for
+ SPE_FEAT_FDS
+Message-ID: <aHjkDl7TXX9UjVmo@willie-the-truck>
+References: <20250605-james-perf-feat_spe_eft-v3-0-71b0c9f98093@linaro.org>
+ <20250605-james-perf-feat_spe_eft-v3-4-71b0c9f98093@linaro.org>
+ <aHUMMk9JUdK6luLN@willie-the-truck>
+ <04d52182-6043-4eaf-a898-9f8ccc893e5f@linaro.org>
+ <aHZQH7QGhi5pbXU8@willie-the-truck>
+ <e1210c84-69d1-4fb2-88c2-a6a1bcb179c5@linaro.org>
+ <80b7c29e-83b9-46a4-826e-d252ad425d4d@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <f3393b26-a1ca-4d8f-9c22-0330956090b4@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <80b7c29e-83b9-46a4-826e-d252ad425d4d@linaro.org>
 
-On Tue, Jul 15, 2025 at 12:15:07PM +0100, James Clark wrote:
-> On 14/07/2025 4:42 pm, Leo Yan wrote:
-> > On Mon, Jul 14, 2025 at 04:13:49PM +0100, Will Deacon wrote:
+On Tue, Jul 15, 2025 at 02:28:19PM +0100, James Clark wrote:
+> 
+> 
+> On 15/07/2025 2:10 pm, James Clark wrote:
 > > 
-> > [...]
 > > 
-> > > > > In other words, remove arm_spe_pmsevfr_res0() and the two checks that
-> > > > > use it in arm_spe_pmu_event_init(). If userspace tries to filter events
-> > > > > that aren't implemented, then it gets to keep the pieces.
+> > On 15/07/2025 1:57 pm, Will Deacon wrote:
+> > > On Tue, Jul 15, 2025 at 01:48:03PM +0100, James Clark wrote:
 > > > > 
-> > > > Then the question is: what information should be exposed to userspace
-> > > > so that tools can decide which events are valid?
 > > > > 
-> > > > I would suggest to expose a new entry, "caps/version", to indicate the
-> > > > SPE version number. Tools can use this to apply the appropriate event
-> > > > validation. Please let me know if this works for you.
+> > > > On 14/07/2025 2:54 pm, Will Deacon wrote:
+> > > > > On Thu, Jun 05, 2025 at 11:49:02AM +0100, James Clark wrote:
+> > > > > > SPE data source filtering (optional from Armv8.8)
+> > > > > > requires that traps to
+> > > > > > the filter register PMSDSFR be disabled. Document the requirements and
+> > > > > > disable the traps if the feature is present.
+> > > > > > 
+> > > > > > Tested-by: Leo Yan <leo.yan@arm.com>
+> > > > > > Signed-off-by: James Clark <james.clark@linaro.org>
+> > > > > > ---
+> > > > > >    Documentation/arch/arm64/booting.rst | 11 +++++++++++
+> > > > > >    arch/arm64/include/asm/el2_setup.h   | 14 ++++++++++++++
+> > > > > >    2 files changed, 25 insertions(+)
+> > > > > > 
+> > > > > > diff --git a/Documentation/arch/arm64/booting.rst
+> > > > > > b/Documentation/ arch/arm64/booting.rst
+> > > > > > index dee7b6de864f..abd75085a239 100644
+> > > > > > --- a/Documentation/arch/arm64/booting.rst
+> > > > > > +++ b/Documentation/arch/arm64/booting.rst
+> > > > > > @@ -404,6 +404,17 @@ Before jumping into the kernel, the
+> > > > > > following conditions must be met:
+> > > > > >        - HDFGWTR2_EL2.nPMICFILTR_EL0 (bit 3) must be
+> > > > > > initialised to 0b1.
+> > > > > >        - HDFGWTR2_EL2.nPMUACR_EL1 (bit 4) must be initialised to 0b1.
+> > > > > > +  For CPUs with SPE data source filtering (FEAT_SPE_FDS):
+> > > > > > +
+> > > > > > +  - If EL3 is present:
+> > > > > > +
+> > > > > > +    - MDCR_EL3.EnPMS3 (bit 42) must be initialised to 0b1.
+> > > > > > +
+> > > > > > +  - If the kernel is entered at EL1 and EL2 is present:
+> > > > > > +
+> > > > > > +    - HDFGRTR2_EL2.nPMSDSFR_EL1 (bit 19) must be initialised to 0b1.
+> > > > > > +    - HDFGWTR2_EL2.nPMSDSFR_EL1 (bit 19) must be initialised to 0b1.
+> > > > > > +
+> > > > > >      For CPUs with Memory Copy and Memory Set
+> > > > > > instructions (FEAT_MOPS):
+> > > > > >      - If the kernel is entered at EL1 and EL2 is present:
+> > > > > > diff --git a/arch/arm64/include/asm/el2_setup.h
+> > > > > > b/arch/arm64/ include/asm/el2_setup.h
+> > > > > > index 1e7c7475e43f..02b4a7fc016e 100644
+> > > > > > --- a/arch/arm64/include/asm/el2_setup.h
+> > > > > > +++ b/arch/arm64/include/asm/el2_setup.h
+> > > > > > @@ -279,6 +279,20 @@
+> > > > > >        orr    x0, x0, #HDFGRTR2_EL2_nPMICFILTR_EL0
+> > > > > >        orr    x0, x0, #HDFGRTR2_EL2_nPMUACR_EL1
+> > > > > >    .Lskip_pmuv3p9_\@:
+> > > > > > +    mrs    x1, id_aa64dfr0_el1
+> > > > > > +    ubfx    x1, x1, #ID_AA64DFR0_EL1_PMSVer_SHIFT, #4
+> > > > > > +    /* If SPE is implemented, */
+> > > > > > +    cmp    x1, #ID_AA64DFR0_EL1_PMSVer_IMP
+> > > > > > +    b.lt    .Lskip_spefds_\@
+> > > > > > +    /* we can read PMSIDR and */
+> > > > > > +    mrs_s    x1, SYS_PMSIDR_EL1
+> > > > > > +    and    x1, x1,  #PMSIDR_EL1_FDS
+> > > > > > +    /* if FEAT_SPE_FDS is implemented, */
+> > > > > > +    cbz    x1, .Lskip_spefds_\@
+> > > > > > +    /* disable traps to PMSDSFR. */
+> > > > > > +    orr    x0, x0, #HDFGRTR2_EL2_nPMSDSFR_EL1
+> > > > > 
+> > > > > Why is this being done here rather than alongside the existing SPE
+> > > > > configuration of HDFGRTR_EL2 and HDFGWTR_EL2 near the start of
+> > > > > __init_el2_fgt?
+> > > > > 
+> > > > I thought everything was separated by which trap configs it writes to,
+> > > > rather than the feature. This SPE feature is in HDFGRTR2 so I put it in
+> > > > __init_el2_fgt2 rather than __init_el2_fgt.
 > > > 
-> > > I thought userspace typically had midr-based json files to figure this
-> > > stuff out?
+> > > That's fair; __init_el2_fgt isn't the right place. But the redundancy of
+> > > re-reading PMSVer from DFR0 is a little jarring.
+> > > 
+> > > > I suppose we could have a single __init_el2_spe that writes to
+> > > > both HDFGRTR
+> > > > and HDFGRTR2 but we'd have to be careful to not overwrite what
+> > > > was already
+> > > > done in the other sections.
+> > > 
+> > > Right, perhaps it would be clearer to have trap-preserving macros for
+> > > features in a specific ID register rather than per-trap configuration
+> > > register macros.
+> > > 
+> > > In other words, we have something like __init_fgt_aa64dfr0 which would
+> > > configure the FGT and FGT2 registers based on features in aa64dfr0. I
+> > > think you'd need to have a play to see how it ends up looking but the
+> > > main thing to avoid is having duplicate ID register parsing code for
+> > > setting up FGT and FGT2 traps.
+> > > 
 > > 
-> > Yes, the perf tool records the CPU MIDR in the metadata.
-> > 
-> > However, I deliberately tried to avoid relying on this approach,
-> > because the perf would then need to maintain a mapping between:
-> > 
-> >    MIDR -> Arm SPE version -> Events
-> > 
-> > Given the large number of CPU variants, maintaining this relationship
-> > between CPU ID and SPE version, and subsequently mapping it to supported
-> > events, would be quite complex. Additional effort would be required each
-> > time a new CPU variant is introduced.
-> > 
-> > > The supported events aren't probe-able afaict so I don't
-> > > think the driver can help.
+> > I'll give it a go but that could end up being fragile to something that
+> > is dependent on two different ID registers in the future. Then we'd end
+> > up in the same situation for a different reason.
 > > 
 > 
-> If the RAZ/WI for not implemented is guaranteed, can we not discover the
-> supported filter by writing all ones and reading back what stuck?
+> I think I've run into it already. Wouldn't checking for FGT and FGT2 have to
+> be repeated when doing each ID register? Now we only do that once at the
+> start of __init_el2_fgt and __init_el2_fgt2, even if we might sometimes
+> check a different ID register twice. But if we flipped it we'd always have
+> to repeat those.
 
-That might be the best option.
+Bah, this is quite horrible! Maybe the best we can do for now is have a
+macro for safely getting at PMBIDR?
 
-Looking back at older versions of the architecture, unallocated fields
-in PMSEVFR_EL1 were RES0 in revision D.a of the Arm ARM but everything
-became RAZ/WI in revision D.b, so the whole reason we were maintaining
-these masks in the driver is no longer relevant.
-
-As you say, we can just probe the thing and report the result back to
-userspace.
+At some point, I suspect this whole FGT-configuration logic will need
+reworking but at the moment it's hard to see what the best approach
+would be.
 
 Will
