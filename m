@@ -1,112 +1,128 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59F5513790B;
-	Thu, 17 Jul 2025 15:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794762F0C43
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Jul 2025 15:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752764719; cv=none; b=CfnmF/BgeaZoJ3mUIGo99OKfK8P+3UTisv40SrsTTEi4P6V5/ivS62GC6SHIMAvM0hAm4ke3ZcRKRyuHyLZBw9EtNYACtGt6pauuB8KgtGiAWsSpbr6GPdhuxxuRvY8cbLxyofG+SEa2I545F0R+dmIxtbyjs/wM/aWDrSpaWZQ=
+	t=1752764948; cv=none; b=Ueirl3skteKUAhejJRyvKDpjIMVwIT3iNZJYUwFWIS6vI2tnpZhxE8tvQctxw6CQqZqmQW7Hj3AnRKdgzUgeUZRFCyf7EcGCexEesw36iBg87IP5I6aMNp/4+5oVVBRsw36kWs5MwCztyvy8aGI6Lnu4MzlZLUjzsfGyxCQ3V/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752764719; c=relaxed/simple;
-	bh=uoLRd01WGj9blBLb7RINWtE7jWKrNCOt2K+pkM8WXHk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WNrqYDw4XvNi/QUwnAyuNurpk2A67LS3Juj6UoFDcBK7LLOM2YhO/K59R9rZMFkeO09ToeIXrGZx4pzV1d358XCVBujO90Zp49j7BUA3QmCTZ9RMXs/nkE5Gs8PEZW5LSjs4WjqTrczx5Orwe/dG4A0zpBb6F74GRBBGrcYrXJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D20241596;
-	Thu, 17 Jul 2025 08:05:09 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B73C3F694;
-	Thu, 17 Jul 2025 08:05:14 -0700 (PDT)
-Date: Thu, 17 Jul 2025 16:05:09 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Nick Chan <towinchenmi@gmail.com>
-Cc: Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Janne Grunau <j@jannau.net>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Neal Gompa <neal@gompa.dev>, Sven Peter <sven@kernel.org>,
-	Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
-	asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH RESEND v7 00/21] drivers/perf: apple_m1: Add Apple
- A7-A11, T2 SoC support
-Message-ID: <aHkRJdAuvhS2mNQj@J2N7QTR9R3>
-References: <20250616-apple-cpmu-v7-0-df2778a44d5c@gmail.com>
- <aHUeUMmn_19EayL1@willie-the-truck>
- <be327242-ad55-476a-bed4-44c33c263962@gmail.com>
+	s=arc-20240116; t=1752764948; c=relaxed/simple;
+	bh=EiDVBW76tvLcvcxgrKHMClTLXcXHYkd8R9wEyzxQqCE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=tcpVRso7hKHzuwrU/bezj0WeK72FY/AcHYZ58wF9PNwdZ10NiMR0uoAW/2ZdiM19yI3R1WcFAOzC5QUQLUybyRtzZ/l24fsYGUy4RsFhKsD8D9rujJN4Qz7xgIdOa+GOOUkSjlHSJqn9t4ZWDn9YMOJhXI/RI+wIX+XK0miVQSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VNLDk0r9; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VNLDk0r9"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b3510c0cfc7so686834a12.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Jul 2025 08:09:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1752764947; x=1753369747; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MIXUDuq7ovshxxSYABdfkB3392ffxtbOzDMl2+dJvEY=;
+        b=VNLDk0r9FCqWv9fvO3zXgcTQhP8UOyAhz9oNz0xd6mBw6f2MhRUoEcyh9oXkvlG/ff
+         K/ASBXBCZN6+LilCOZupZ3jnjfGR+tbEDt1EhSX8ZMgiCnZqB4hDWIwWDn0mQRgigT0L
+         MgNbfp6aLtqyWb2+a2Dk0tVxEE8A5ZKqik7FpMIRqzPpwWvQc97Vcbb0Fw0u2Onx0cJz
+         RULcBx3TYCCFWSfWMNZTOX6slsG7D+OuLhsnnKhowuqY+iBROjOezSyD8T8yhm961Qri
+         q1NKfAVyU6qmhKqIUDy4xMhqL8Epv2nMDPdEMqR1Qz0EDJGfc2jplPiWwoM6HcsQyTOZ
+         yfYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752764947; x=1753369747;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MIXUDuq7ovshxxSYABdfkB3392ffxtbOzDMl2+dJvEY=;
+        b=XPEOWcnL+d4OzUh6W+qiOve/02c56sXK8DBh51+08J1IQ0Di5XjBxZ7Xp0YNp+xqAx
+         58R9pRLjyph66fYTdgkZWYGl/MB8P70kga4UaGaQZ5Z7+OtigLMXr7g91V5A6ccDu1jK
+         3JOcs9BFzUFouLnIvLzqDWB3teJIO6t9kkKnHzb7Lbl137qdbzTswGdXVaD+coIeEdsk
+         Vc54gxtoES6lODTdeV+wMEtwxBCstBjj8uPGWgIF3V9Gn49d59yJIoNxyB1EINSzurtu
+         Rj1lnSlJf8YuoLYt9CPCzaAtDMMcETlqOUdTtD07plXM3ef8XX5+5S14B0XX1p7hN7jv
+         mmXg==
+X-Forwarded-Encrypted: i=1; AJvYcCXmD1928G7beKg2X0QrEt2hU0vBuIIAKIDOX9730TzqmkoOmte0UIpUCa2jiS6ceO3+UJ817Fi7pUSNLWwE1B9n@vger.kernel.org
+X-Gm-Message-State: AOJu0YwO42Le6d6pWN/p1zTAdGL6vZZ0HRR8+4uDYOkX8tAJlJRQCn5n
+	OvpCJzQvgbuCpgALnI2GGJsWzunc+uEnl6486zxiyD+sqlFVoYMOOEWFHaEvlHOyn1xkBKq8SOw
+	qNFCWpAkHcA==
+X-Google-Smtp-Source: AGHT+IFL73neqb2Qi4RrByaNIFT61LP8vi6nbcp4FuivM0fh4JTn/cRc9MN7woer2IIWixLA8PMuIsJuPgsE
+X-Received: from pjbsp7.prod.google.com ([2002:a17:90b:52c7:b0:311:c197:70a4])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5307:b0:311:b3e7:fb38
+ with SMTP id 98e67ed59e1d1-31c9e76371bmr11205278a91.19.1752764946725; Thu, 17
+ Jul 2025 08:09:06 -0700 (PDT)
+Date: Thu, 17 Jul 2025 08:08:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <be327242-ad55-476a-bed4-44c33c263962@gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+Message-ID: <20250717150855.1032526-1-irogers@google.com>
+Subject: [PATCH v2 1/3] tools subcmd: Tighten the filename size in check_if_command_finished
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jul 14, 2025 at 11:59:36PM +0800, Nick Chan wrote:
-> 
-> Will Deacon 於 2025/7/14 夜晚11:12 寫道:
-> > On Mon, Jun 16, 2025 at 09:31:49AM +0800, Nick Chan wrote:
-> >> This series adds support for the CPU PMU in the older Apple A7-A11, T2
-> >> SoCs. These PMUs may have a different event layout, less counters, or
-> >> deliver their interrupts via IRQ instead of a FIQ. Since some of those
-> >> older SoCs support 32-bit EL0, counting for 32-bit EL0 also need to
-> >> be enabled by the driver where applicable.
-> >>
-> >> Patch 1 adds the DT bindings.
-> >> Patch 2-7 prepares the driver to allow adding support for those
-> >> older SoCs.
-> > Modulo my nits, the patches look alright to this point...
-> >
-> >> Patch 8-12 adds support for the older SoCs.
-> > ... but I'm not sure if anybody actually cares about these older SoCs
-> > and, even if they do, what the state of the rest of Linux is on those
-> > parts. I recall horror stories about the OS being quietly migrated
-> > between CPUs with incompatible features, at which point I think we have
-> > to question whether we actually care about supporting this hardware.
-> The "horror" story you mentioned is about Apple A10/A10X/T2, which
-> has a big little switcher integrated into the cpufreq block, so when the
-> cpufreq driver switch between states in the same way as on other
-> SoCs, on these SoCs that would silently cause a CPU migration. There
-> is only one incompatible feature that I am aware of which is 32-bit EL0
-> support.
+FILENAME_MAX is often PATH_MAX (4kb), far more than needed for the
+/proc path. Make the buffer size sufficient for the maximum integer
+plus "/proc/" and "/status" with a '\0' terminator.
 
-Surely the MIDR/REVIDR/AIDR also change?
+Fixes: 5ce42b5de461 ("tools subcmd: Add non-waitpid check_if_command_finished()")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+v2: Fix precedence issue reported by the kernel test robot.
+---
+ tools/lib/subcmd/run-command.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-In general, silent migration isn't acceptable for the kernel, even if
-you largely happen to get away with that today. It is not acceptable for
-architectural feature support to change dynamically.
+diff --git a/tools/lib/subcmd/run-command.c b/tools/lib/subcmd/run-command.c
+index 0a764c25c384..b7510f83209a 100644
+--- a/tools/lib/subcmd/run-command.c
++++ b/tools/lib/subcmd/run-command.c
+@@ -5,6 +5,7 @@
+ #include <ctype.h>
+ #include <fcntl.h>
+ #include <string.h>
++#include <linux/compiler.h>
+ #include <linux/string.h>
+ #include <errno.h>
+ #include <sys/wait.h>
+@@ -216,10 +217,20 @@ static int wait_or_whine(struct child_process *cmd, bool block)
+ 	return result;
+ }
+ 
++/*
++ * Conservative estimate of number of characaters needed to hold an a decoded
++ * integer, assume each 3 bits needs a character byte and plus a possible sign
++ * character.
++ */
++#ifndef is_signed_type
++#define is_signed_type(type) (((type)(-1)) < (type)1)
++#endif
++#define MAX_STRLEN_TYPE(type) (sizeof(type) * 8 / 3 + (is_signed_type(type) ? 1 : 0))
++
+ int check_if_command_finished(struct child_process *cmd)
+ {
+ #ifdef __linux__
+-	char filename[FILENAME_MAX + 12];
++	char filename[6 + MAX_STRLEN_TYPE(typeof(cmd->pid)) + 7 + 1];
+ 	char status_line[256];
+ 	FILE *status_file;
+ 
+@@ -227,7 +238,7 @@ int check_if_command_finished(struct child_process *cmd)
+ 	 * Check by reading /proc/<pid>/status as calling waitpid causes
+ 	 * stdout/stderr to be closed and data lost.
+ 	 */
+-	sprintf(filename, "/proc/%d/status", cmd->pid);
++	sprintf(filename, "/proc/%u/status", cmd->pid);
+ 	status_file = fopen(filename, "r");
+ 	if (status_file == NULL) {
+ 		/* Open failed assume finish_command was called. */
+-- 
+2.50.0.727.gbf7dc18ff4-goog
 
-> However, since the CPUs in these SoCs does not support
-> 4K pages anyways in practice this is not an issue for as long as
-> CONFIG_EXPERT is disabled.
-
-Do these parts have EL2?
-
-> > On the other hand, if it all works swimmingly and it's just the PMU
-> > driver that needs updating, then I could get on board with it.
-> 
-> As mentioned above, it does all work fine when CONFIG_EXPERT is not
-> enabled, and if it is enabled, then 32-bit process may crash with illegal
-> instruction but everything else will still works fine.
-
-I don't think that's quite true, unless these parts are also violating
-the architecture.
-
-If the CPU doesn't implement AArch32, then an ERET to AArch32 is
-illegal. The way illegal exception returns are handled means that this
-will result in a (fatal) illegal execution state exception being taken
-from the exception return code in the kernel, not an UNDEF being taken
-from userspace that would result in a SIGILL.
-
-I do not think that we should pretend to support hardware with silent
-microarchitectural migration. So at the very least, we do not care about
-A10/A10X/T2.
-
-Mark.
