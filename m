@@ -1,150 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC382C18A;
-	Thu, 17 Jul 2025 09:09:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8DD1547CC;
+	Thu, 17 Jul 2025 09:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752743355; cv=none; b=mxd6uBGt0HhLHUXHhZd0eDu4oacVqEyidvndLO/3yc4IrTQgsqiAP7MeDwRgGP6bwXsz34CtybN5RICbTQT4jB2dlP62MpoyJ8Z2+Zi7kulb+/oUBjM7i4PFysWoqz6qY3McBQQMm+sec8TmGUHeQXoY3JMv3w4d5AOsXZkHpYc=
+	t=1752745633; cv=none; b=gkzKwVw9L3EMtPq7Hy+lQyg0FFdBtStGrOI1Wdn07FTyO0U0EP+DOpwmjkB9W1i1mzoMgpPAJxBetIpZpDKY3iKU94OXJrE7gHPeyB6iIqKxqi56XWzNfgeamd7juDRTnAtQWmqTKZfNRNrFpfsrARl3BwEbctd6eF4OJnwzq9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752743355; c=relaxed/simple;
-	bh=hSFoy5VqyrudHZ6R4bwcXEN9ZOwY5A2qYXTuyDbMPio=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e5eN8lK7rv1xzHmk1ee2KB5Jse7/dJUctCM5F8hazuQ2M0X/WBlg+uO21dwrmzIeMjeb6hkZ4UwFQkejf0aq2LWCbzCnBMqsnSeD9AiFnlEj1BF0qF+1UJ7KakO6+0VNGv/CwvcbFwgsHoYds1nto2M9Pb462s2/6vwgmoPs8r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KjfkpI/W; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1752745633; c=relaxed/simple;
+	bh=mBtBclCHGGf6QUs4GBjgavXvjySSzPF23qcnrqOWjMw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FasvCulHJbkAs+vhdJmQwvB6VGMt7UFdxwjgBP5uqDgghFZ7G3992Yb5URCvrLOXKTwncJjtPF8+pd9KMF/dHBqH17RXZn+cNMI1JDKSnGWLuUdToMaRUKUg8T3EfD/wM09TTluHtmy4DLQFkgtged06nw1eKOoOS/Is4TWOf24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AzrE26Sz; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KjfkpI/W"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AzrE26Sz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752743353; x=1784279353;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=hSFoy5VqyrudHZ6R4bwcXEN9ZOwY5A2qYXTuyDbMPio=;
-  b=KjfkpI/WApoMiG18hvPxh02/WpJ9RxaeCfNAbrMK6o/VJ5UFWSDR1dCN
-   QjToXzXQU8aKEDub2lVSjYdR5somLKB/kjIczmT33C/0WyonfmQ7IokU4
-   o+V+IVjTB3MPY59Y5Du/GIS39lU2lYZd7cmG6iVyKCsRdHq3EytttR1dR
-   uPCc9qhhLD13rHVpMcBzHIl1uYtWezQTPIqtMWHN8Y+v4AAXQNJX7f6Zu
-   Eqg7dTBwpJno2aTM9jROFCedgNaSrQGyNbAhvQwbGFrHG6ShMS6GJq5Ku
-   Kce3DmtNgmqG/S0QKht/l1lZFmHPbbGyqDVdI+vdyEoqIFZNAevWQqmxs
+  t=1752745631; x=1784281631;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=mBtBclCHGGf6QUs4GBjgavXvjySSzPF23qcnrqOWjMw=;
+  b=AzrE26SzdOp5HfNV3tFt1G/KUZ1iBHIOF96j3V/V+pFndSna6Qhs+Q6k
+   QIxEdil8VkiyqPtsV1aRQCeqENiiTBvDwtpfZ1T9wUhRmUQPUHCjp98QF
+   sKdDanPmDOPRiaP2FEdRU7pxhVe9q7+Bo31F3ZcJOq4M2M19x4Arx/o1E
+   LhXzbOWUHkPV3/gMacIUfe1z6gKN1xuaG9wBpEcG2utEuNYD0S/N1EmzL
+   b/vvT6GJxJWCo6aVI7bFrcZHPG8WN9pIrGaToDC3UGk5lAmsyMqiuiZwU
+   6qtLEGyCoMxq5hwpMLANB2PWybz6ii1cOutROYHVQyMA1JQYxcrrFmb1e
    w==;
-X-CSE-ConnectionGUID: mzcO15uFTJKsyC/H2Remuw==
-X-CSE-MsgGUID: yepIYSuDSg+Drfe2s9/ySA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11493"; a="55129590"
+X-CSE-ConnectionGUID: A2DMtR+bQ1qfTv63ak0iSw==
+X-CSE-MsgGUID: bQM4maZNQAiLSssW1Y3k9g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11493"; a="80461622"
 X-IronPort-AV: E=Sophos;i="6.16,318,1744095600"; 
-   d="scan'208";a="55129590"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2025 02:09:13 -0700
-X-CSE-ConnectionGUID: ul3g2CwIRfKNsnRjN5KzcQ==
-X-CSE-MsgGUID: Fdi5OaeJQzWjtXyohyk6XQ==
+   d="scan'208";a="80461622"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2025 02:47:10 -0700
+X-CSE-ConnectionGUID: PUY9YsYZSJGoA77VTcqigw==
+X-CSE-MsgGUID: +ieSrN+TRDaPLfqdc38VfA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,318,1744095600"; 
-   d="scan'208";a="188683008"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.106]) ([10.124.240.106])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2025 02:09:09 -0700
-Message-ID: <9b4651bf-20e4-406f-ba41-9f67515e5bea@linux.intel.com>
-Date: Thu, 17 Jul 2025 17:09:05 +0800
+   d="scan'208";a="158458484"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 17 Jul 2025 02:47:08 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ucLCk-000DUZ-0Y;
+	Thu, 17 Jul 2025 09:47:06 +0000
+Date: Thu, 17 Jul 2025 17:46:11 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v1 1/3] tools subcmd: Tighten the filename size in
+ check_if_command_finished
+Message-ID: <202507171729.UkGLqJBw-lkp@intel.com>
+References: <20250716201512.792052-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] perf/x86: Add PERF_CAP_PEBS_TIMING_INFO flag
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
- Eranian Stephane <eranian@google.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
- Yi Lai <yi1.lai@intel.com>
-References: <20250717090302.11316-1-dapeng1.mi@linux.intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250717090302.11316-1-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250716201512.792052-1-irogers@google.com>
 
-Run basic perf  counting, PMI based sampling and PEBS based sampling on
-Intel Sapphire Rapids, Granite Rapids and Sierra Forest platforms, no issue
-is found.
+Hi Ian,
 
-On 7/17/2025 5:03 PM, Dapeng Mi wrote:
-> IA32_PERF_CAPABILITIES.PEBS_TIMING_INFO[bit 17] is introduced to
-> indicate whether timed PEBS is supported. Timed PEBS adds a new "retired
-> latency" field in basic info group to show the timing info. Please find
-> detailed information about timed PEBS in section 8.4.1 "Timed Processor
-> Event Based Sampling" of "Intel Architecture Instruction Set Extensions
-> and Future Features".
->
-> This patch adds PERF_CAP_PEBS_TIMING_INFO flag and KVM module leverages
-> this flag to expose timed PEBS feature to guest.
->
-> Moreover, opportunistically refine the indents and make the macros
-> share consistent indents.
->
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Tested-by: Yi Lai <yi1.lai@intel.com>
-> ---
->  arch/x86/include/asm/msr-index.h       | 14 ++++++++------
->  tools/arch/x86/include/asm/msr-index.h | 14 ++++++++------
->  2 files changed, 16 insertions(+), 12 deletions(-)
->
-> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-> index b7dded3c8113..48b7ed28718c 100644
-> --- a/arch/x86/include/asm/msr-index.h
-> +++ b/arch/x86/include/asm/msr-index.h
-> @@ -315,12 +315,14 @@
->  #define PERF_CAP_PT_IDX			16
->  
->  #define MSR_PEBS_LD_LAT_THRESHOLD	0x000003f6
-> -#define PERF_CAP_PEBS_TRAP             BIT_ULL(6)
-> -#define PERF_CAP_ARCH_REG              BIT_ULL(7)
-> -#define PERF_CAP_PEBS_FORMAT           0xf00
-> -#define PERF_CAP_PEBS_BASELINE         BIT_ULL(14)
-> -#define PERF_CAP_PEBS_MASK	(PERF_CAP_PEBS_TRAP | PERF_CAP_ARCH_REG | \
-> -				 PERF_CAP_PEBS_FORMAT | PERF_CAP_PEBS_BASELINE)
-> +#define PERF_CAP_PEBS_TRAP		BIT_ULL(6)
-> +#define PERF_CAP_ARCH_REG		BIT_ULL(7)
-> +#define PERF_CAP_PEBS_FORMAT		0xf00
-> +#define PERF_CAP_PEBS_BASELINE		BIT_ULL(14)
-> +#define PERF_CAP_PEBS_TIMING_INFO	BIT_ULL(17)
-> +#define PERF_CAP_PEBS_MASK		(PERF_CAP_PEBS_TRAP | PERF_CAP_ARCH_REG | \
-> +					 PERF_CAP_PEBS_FORMAT | PERF_CAP_PEBS_BASELINE | \
-> +					 PERF_CAP_PEBS_TIMING_INFO)
->  
->  #define MSR_IA32_RTIT_CTL		0x00000570
->  #define RTIT_CTL_TRACEEN		BIT(0)
-> diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
-> index b7dded3c8113..48b7ed28718c 100644
-> --- a/tools/arch/x86/include/asm/msr-index.h
-> +++ b/tools/arch/x86/include/asm/msr-index.h
-> @@ -315,12 +315,14 @@
->  #define PERF_CAP_PT_IDX			16
->  
->  #define MSR_PEBS_LD_LAT_THRESHOLD	0x000003f6
-> -#define PERF_CAP_PEBS_TRAP             BIT_ULL(6)
-> -#define PERF_CAP_ARCH_REG              BIT_ULL(7)
-> -#define PERF_CAP_PEBS_FORMAT           0xf00
-> -#define PERF_CAP_PEBS_BASELINE         BIT_ULL(14)
-> -#define PERF_CAP_PEBS_MASK	(PERF_CAP_PEBS_TRAP | PERF_CAP_ARCH_REG | \
-> -				 PERF_CAP_PEBS_FORMAT | PERF_CAP_PEBS_BASELINE)
-> +#define PERF_CAP_PEBS_TRAP		BIT_ULL(6)
-> +#define PERF_CAP_ARCH_REG		BIT_ULL(7)
-> +#define PERF_CAP_PEBS_FORMAT		0xf00
-> +#define PERF_CAP_PEBS_BASELINE		BIT_ULL(14)
-> +#define PERF_CAP_PEBS_TIMING_INFO	BIT_ULL(17)
-> +#define PERF_CAP_PEBS_MASK		(PERF_CAP_PEBS_TRAP | PERF_CAP_ARCH_REG | \
-> +					 PERF_CAP_PEBS_FORMAT | PERF_CAP_PEBS_BASELINE | \
-> +					 PERF_CAP_PEBS_TIMING_INFO)
->  
->  #define MSR_IA32_RTIT_CTL		0x00000570
->  #define RTIT_CTL_TRACEEN		BIT(0)
->
-> base-commit: 829f5a6308ce11c3edaa31498a825f8c41b9e9aa
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on perf-tools-next/perf-tools-next]
+[also build test ERROR on tip/perf/core perf-tools/perf-tools linus/master v6.16-rc6 next-20250716]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Ian-Rogers/perf-pmu-Switch-FILENAME_MAX-to-NAME_MAX/20250717-042514
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
+patch link:    https://lore.kernel.org/r/20250716201512.792052-1-irogers%40google.com
+patch subject: [PATCH v1 1/3] tools subcmd: Tighten the filename size in check_if_command_finished
+config: arm-randconfig-001-20250717 (https://download.01.org/0day-ci/archive/20250717/202507171729.UkGLqJBw-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 16534d19bf50bde879a83f0ae62875e2c5120e64)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250717/202507171729.UkGLqJBw-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507171729.UkGLqJBw-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> run-command.c:233:20: error: operator '?:' has lower precedence than '+'; '+' will be evaluated first [-Werror,-Wparentheses]
+     233 |         char filename[6 + MAX_STRLEN_TYPE(typeof(cmd->pid)) + 7 + 1];
+         |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   run-command.c:228:76: note: expanded from macro 'MAX_STRLEN_TYPE'
+     228 | #define MAX_STRLEN_TYPE(type) (sizeof(type) * 8 / 3 + is_signed_type(type) ? 1 : 0)
+         |                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^
+   run-command.c:233:20: note: place parentheses around the '+' expression to silence this warning
+     233 |         char filename[6 + MAX_STRLEN_TYPE(typeof(cmd->pid)) + 7 + 1];
+         |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   run-command.c:228:76: note: expanded from macro 'MAX_STRLEN_TYPE'
+     228 | #define MAX_STRLEN_TYPE(type) (sizeof(type) * 8 / 3 + is_signed_type(type) ? 1 : 0)
+         |                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^
+   run-command.c:233:20: note: place parentheses around the '?:' expression to evaluate it first
+     233 |         char filename[6 + MAX_STRLEN_TYPE(typeof(cmd->pid)) + 7 + 1];
+         |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   run-command.c:228:76: note: expanded from macro 'MAX_STRLEN_TYPE'
+     228 | #define MAX_STRLEN_TYPE(type) (sizeof(type) * 8 / 3 + is_signed_type(type) ? 1 : 0)
+         |                                                       ~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+   1 error generated.
+   make[6]: *** [tools/build/Makefile.build:85: tools/bpf/resolve_btfids/libsubcmd/run-command.o] Error 1 shuffle=467312727
+   make[6]: Target '__build' not remade because of errors.
+   make[5]: *** [Makefile:78: tools/bpf/resolve_btfids/libsubcmd/libsubcmd-in.o] Error 2 shuffle=467312727
+   make[5]: Target 'tools/bpf/resolve_btfids/libsubcmd/libsubcmd.a' not remade because of errors.
+   make[4]: *** [Makefile:56: tools/bpf/resolve_btfids//libsubcmd/libsubcmd.a] Error 2 shuffle=467312727
+   make[4]: Target 'all' not remade because of errors.
+   make[3]: *** [Makefile:76: bpf/resolve_btfids] Error 2 shuffle=467312727
+   make[2]: *** [Makefile:1443: tools/bpf/resolve_btfids] Error 2 shuffle=467312727
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:248: __sub-make] Error 2 shuffle=467312727
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:248: __sub-make] Error 2 shuffle=467312727
+   make: Target 'prepare' not remade because of errors.
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
