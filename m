@@ -1,55 +1,55 @@
-Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9DC82309B2
-	for <linux-perf-users@vger.kernel.org>; Thu, 17 Jul 2025 21:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2C952F88
+	for <linux-perf-users@vger.kernel.org>; Thu, 17 Jul 2025 21:02:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752786164; cv=none; b=eOzSLrK9NTYLAq+Fi8TbXVpwkNvTnsBvaKPo+WIdG2ForBKuxA5bKFqaQ4PO1iyDLWUe179SdSYR+4RyW0w5dxzwMZeg8J3uGHTjfPFSjV6gPJXc/gs/ZELDnBjm6ed3GTRNA4pZdn/ea6S9+pmkLRd6KEzz1I+vG5LRh0NTZxY=
+	t=1752786165; cv=none; b=Vg0eckeXkilgndDIW6w5SBceMPJixIXTmNLAatd0YXp5kz/CgA7LMkbrxJM28YvujjbbR9wij6oun7MqzU+ZrxQeHyaqQhFeIFdFfk+2lFWmnO3q1154PnxWmnlmhRudzR69hAplVCBp18542L4CPtoMw3ALKnpuem2eCz2ZAzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752786164; c=relaxed/simple;
-	bh=zejmlYNwgS/OQpMHacoEnWFRqhftHB8onU2Qvy6vpsU=;
+	s=arc-20240116; t=1752786165; c=relaxed/simple;
+	bh=rxECd/orHJ+FjXD+vxZ9UCxbrPbeZ0Ymr36fQ+vUgvE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=qTjSqSiQZbOPut/LSrAxxkAWB3ughdgsqMfwiDdLoeAPnDwb12oBv1f/v+tl7HiPXpGncF/HaD9xHqmRIteKeQMqAMqel33GcuKQa3GgiAsKX/dSZq/q2XcZ5BW9AziBmF5ZzA7ZccNQuEwZ4FC4j/Ewdww+ynPGGYRqgsXJDOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j9ilSaMP; arc=none smtp.client-ip=209.85.160.73
+	 To:Content-Type; b=rGMhWwpW8dr8yKwq9BcXh1Ma4GgxfP9NeJskUjv/QOipk4XRZxPIjpgY2Yend9wMSm5tl2UTDqEDG2KTD6D3gAT6vucgky8SM/MPHHqGlwmnn3J5/82xQhBxPc1n5DbPObL+pzjG6UwaCOrMx1+IuPsNmfn0SkMgTTBvyTTneoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kL/aq8pY; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j9ilSaMP"
-Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-2eb887a2109so1427255fac.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 17 Jul 2025 14:02:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kL/aq8pY"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3141f9ce4e2so1955352a91.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Jul 2025 14:02:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1752786162; x=1753390962; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1752786163; x=1753390963; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=5dVZGHVi7sQRXRzVKkfTNIiUhn/WdB0GHZb62bnQe1c=;
-        b=j9ilSaMPRHB+DZzYb/SMuDIF0UULb6BkWSNUdI+EdT8bPPRKWBXvNbWvzPTCava9C4
-         QNWUtVeR7De9Ve/ymmBjvyicp6SLLYSidVcz4SH+HtBAFxO8fK9ubvn3n0b7bZ5D70oU
-         o6d0dw6jYk9xsQ4AcBWeoMx9cXuILOulqrARA/3K/krD8eNDFhxwaKd0bzmCnUjbK82u
-         Q+SmIvGfWkXi85+SPqnQBjykb+7m4xm9NXwScZ4XdIcQwX3BZb16J4ZoSheQnY2ahtbR
-         uNdm5UeRXMkjhM6wuzngNJ1A451VztnwfAe0w0GJt0kYSNZAGd+Qxl6zvON+d4vVT9ob
-         sQ2w==
+        bh=8LzGDRK9pbbZy05/7NVo0qy9CZXcleNoSvz0ippsT70=;
+        b=kL/aq8pY0Mc7uRz9P2uhSIaSgGveJw8RXWFzuUU+nef1tEVlGlXrK+dZrPRjYE9BKg
+         UhQk5ev6pjagq9wF+JiM6PvJsdIRraiqTOVphMTJfQzWFyeIiyHcmJRKHiZATwMbjaDQ
+         TZ6s7QzvjiiiBILxWe6yY2NVH88odwJHuC2jrsBGYQO8gDgAg+eJVhv8p0mTswJeEkBl
+         e6lw5CThFaMh4nVddf5Hl1aaVIXX2yy9oOutErAC73TQyreHXs7IZNP09ghL0wD/zjit
+         Yt4zMV0N2/LtULRRotHIW2OUnG4FCq0AM7dC37yfH7+7robP+PLKsli/4ZM7zcnc6DFe
+         5AWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752786162; x=1753390962;
+        d=1e100.net; s=20230601; t=1752786163; x=1753390963;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5dVZGHVi7sQRXRzVKkfTNIiUhn/WdB0GHZb62bnQe1c=;
-        b=tqSpkz5sz/Q2OEjscW+ESJLoB9gTz+U1CO+Y3RwTfPgBySknb/XSJ/+EWWyS3XWjg0
-         fGmYmAEv/URSPr8Fwb8PL/yxEeOZmrzaO+L2WrbnC520R+6z5LIplegcKTINJxnsrBK9
-         aoiZ+aohLim+x1xuOoQvILl9MAtzGOO2IFsRCpCsU3WqopE2AoXPs9FEvl3RGPkkIIIK
-         cPIoVEYsL50Zd52opBOQ4ne8/jCICH6r7n53VGGAej5gfHL7THnYB0U9GRqGTkrKx8pH
-         ueu5ySbaeYx7NNwDNg7r+qs8hSZ/xKHcvySDO3paUHLkkUU6Dy9ZA/wUrPZMNlgoXdFl
-         8+KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJYWPtzsoKerId0R8F3mMX5Gtap+b87z3Ip0PGqfXS230NjSKHsyYpDD8KkprYmiP5tcxntW/DnPBC4pQ5QouV@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjCfEhdTp8A61B7iP6hnyZt1uQCOBcwqNkPNutinkSC1874Yeh
-	1ZBZ7MeZWH7rVB+TQ6I8coQi48Y42aHbAHlL8/wPX+Tz+jeenTcUYXfgcmdd4XrQ1KhTUG6pF1Q
-	1D3hZF116/Q==
-X-Google-Smtp-Source: AGHT+IEf3wLginiuFgPMj/KhLeA3Fl3A4TQMyoFRYUZgHRewuT2Nl/mXUfU8dUFzGBWTIush9hwAag7yKgmI
-X-Received: from oabna16.prod.google.com ([2002:a05:6870:6c10:b0:2b8:e735:4798])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:3048:b0:2d5:2955:aa58
- with SMTP id 586e51a60fabf-2ffb1eafd4amr5810811fac.0.1752786161596; Thu, 17
- Jul 2025 14:02:41 -0700 (PDT)
-Date: Thu, 17 Jul 2025 14:02:23 -0700
+        bh=8LzGDRK9pbbZy05/7NVo0qy9CZXcleNoSvz0ippsT70=;
+        b=ano/8J/ORlcr901Ch7aQzgt/N8ny9by8i131ObJEZXFTKs8WeqAX+SyhsrTBDFvLsY
+         s/CVgaFNMnZxOKk1i8m+nGg370+gh4LCmdzo0dwgqCXmHBXSB93gCtBMTIJHeAyYyQlz
+         38d3qZ0AbPoz7WTvUUh6Kljs7RWgmJQSCl7HxiOosD7N+90jo+jrWkjLdC1bOvVcdcio
+         SVqChX8lxEaK/4k7ijJFIR2jsjQ6UjDfWOL3YDnmNWx+jGM1XCWg1Di6CqPHs3koG7RT
+         O1lMprLz4WFHgAZ0atJzgSHNXKzW3tDnmiAs8MoBrzIdVdRTzII4X7eyRJgkPM+81V/5
+         eK7A==
+X-Forwarded-Encrypted: i=1; AJvYcCVDs4xLDYw9sblz0r3WCLP3ZOpWR2euNqyOkHrxY5iBhI8t3FY2IDBpQTteDK9fB1jDVFkKi3Sd0/UV65v+CZ6U@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzdv268yAVrifls6cyVhdDv8568oCPQK3DCYS0msfHA12pwTDTC
+	nObcH+Ne9XWSgIU1x3bd4vy71k0F0u1RF43cSPgwYq/UERK3XncaxnZrDnI5RlLeMqYC7gOdKLw
+	0JDEKRK2pSQ==
+X-Google-Smtp-Source: AGHT+IGsliyvhCftHU8djUYilaALOZXqY6bbgwjC12dls6LI/EgUoGa/R5hu086zF4Ygat+4qBbb9lXx2O9T
+X-Received: from pjb7.prod.google.com ([2002:a17:90b:2f07:b0:31c:160d:e3be])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:270b:b0:312:e8ed:763
+ with SMTP id 98e67ed59e1d1-31c9f42412cmr9768817a91.22.1752786163575; Thu, 17
+ Jul 2025 14:02:43 -0700 (PDT)
+Date: Thu, 17 Jul 2025 14:02:24 -0700
 In-Reply-To: <20250717210233.1143622-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250717210233.1143622-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250717210233.1143622-3-irogers@google.com>
-Subject: [PATCH v2 02/12] perf stat: Avoid buffer overflow to the aggregation map
+Message-ID: <20250717210233.1143622-4-irogers@google.com>
+Subject: [PATCH v2 03/12] perf stat: Don't size aggregation ids from user_requested_cpus
 From: Ian Rogers <irogers@google.com>
 To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,31 +77,34 @@ To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.or
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-CPUs may be created and passed to perf_stat__get_aggr (via
-config->aggr_get_id), such as in the stat display
-should_skip_zero_counter. There may be no such aggr_id, for example,
-if running with a thread. Add a missing bound check and just create
-IDs for these cases.
+As evsels may have additional CPU terms, the user_requested_cpus may
+not reflect all the CPUs requested. Use evlist->all_cpus to size the
+array as that reflects all the CPUs potentially needed by the evlist.
 
 Reviewed-by: Thomas Falcon <thomas.falcon@intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-stat.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 77e2248fa7fc..73b4521ab8af 100644
+index 73b4521ab8af..00fce828cd5e 100644
 --- a/tools/perf/builtin-stat.c
 +++ b/tools/perf/builtin-stat.c
-@@ -1365,7 +1365,7 @@ static struct aggr_cpu_id perf_stat__get_aggr(struct perf_stat_config *config,
- 	struct aggr_cpu_id id;
+@@ -1513,11 +1513,8 @@ static int perf_stat_init_aggr_mode(void)
+ 	 * taking the highest cpu number to be the size of
+ 	 * the aggregation translate cpumap.
+ 	 */
+-	if (!perf_cpu_map__is_any_cpu_or_is_empty(evsel_list->core.user_requested_cpus))
+-		nr = perf_cpu_map__max(evsel_list->core.user_requested_cpus).cpu;
+-	else
+-		nr = 0;
+-	stat_config.cpus_aggr_map = cpu_aggr_map__empty_new(nr + 1);
++	nr = perf_cpu_map__max(evsel_list->core.all_cpus).cpu + 1;
++	stat_config.cpus_aggr_map = cpu_aggr_map__empty_new(nr);
+ 	return stat_config.cpus_aggr_map ? 0 : -ENOMEM;
+ }
  
- 	/* per-process mode - should use global aggr mode */
--	if (cpu.cpu == -1)
-+	if (cpu.cpu == -1 || cpu.cpu >= config->cpus_aggr_map->nr)
- 		return get_id(config, cpu);
- 
- 	if (aggr_cpu_id__is_empty(&config->cpus_aggr_map->map[cpu.cpu]))
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
