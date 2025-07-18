@@ -1,40 +1,65 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76BF91E98F3;
-	Fri, 18 Jul 2025 19:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A971E0DCB;
+	Fri, 18 Jul 2025 20:46:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752866012; cv=none; b=T1gNCAXtXu6FEHcEwrYnjZM5e43ytDnHdYoRpH6UiBOk24MEYpXS/+AjT9af/nQ1pXZdweme+Fa+gt5hn70ApC2hoR7mWpT7gJtVEgHjFElIQgUn3VXsoJQ5x/qYp1/jGIpnHBYcYxfGbMYcBYuHHqrHJFThgiGzsU6svfadrgw=
+	t=1752871566; cv=none; b=t7TXZH8yKRT2uiE1UXQHOYB8AqKf1/n5rh7GeCiCML1ym0lDOTtLkwbBJo+wjpXD3QM3yj+G13kEfDC60bvGnVtC6agRp8TrcWAMR+U+rGi45YKEt4+Xn7WJjt4Ced5I5iOTGxivme/O0jErMSI2a0MAh3l+aJvTXPbQPQwEA+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752866012; c=relaxed/simple;
-	bh=8NypKIe1ZZsOHejG6zGdh7arcs7UZgBckNhF67Rughc=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=IE8XjuwWxMHkWmyMLQwibi5tZSPo8tqlCaZlZbuR8UOUPkRxY+51cEZbqRS4IgZuYurKfSmlhFnFLXt8n0BiMNZ4UWvU4rvLGaQ1r+T/CvgbOMOyHkVLcFND2fm+BeIHYLeC7ESk6WI3YNskp4/2eSBY4bnZzNwOQDB1MKOnF5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=LiNHhk9Q; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1752871566; c=relaxed/simple;
+	bh=uXAK2LcN+D1aB2LwqkwZRyXZHRbBhvjT7o6KbAa+ppk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GY0HganyK4cEcXLq2FdEuR7eixw3bjYmgA844XVYm6ec74kzw4nYnyFscPiKq/i5T6ZOE9du3yVrU/0yhsTWtbXDIdvm5jbIUFZkRoZVGnKvqzE2oDtEKv/A+o8xbW2WQvdMIOZjY4TK7fcv957vyQlCf2QDUT6fcUg3NpExBx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T+BRTgRM; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="LiNHhk9Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1752866007; x=1753470807; i=markus.elfring@web.de;
-	bh=8NypKIe1ZZsOHejG6zGdh7arcs7UZgBckNhF67Rughc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=LiNHhk9QRbD8YPiaUEGigur6nqMiT7xinnhd/26bQhnk+z09I+p3cf5oWKueoPL+
-	 NZFuepobUkfDKCPvkb4zzXFCyntq3KpxEwMm/blWbQ5lRj73QNVRzKP5InilzjCtA
-	 DwSpQdIPPKi/yScGh/2oGGU7d9oIlEM25DS2RjtR3P3H2CKvHNrpBSTusKwZB2R8m
-	 HkcvB/JLfwT/belLNGtZQU+X2ftkSJ8Gg1W96vHdNDE7bXjykS3ZZbk0CSdfxD/S9
-	 6yMef+OR3OFo3cu7oONhhkdN3QOJSlTqYiic5KligHlXMGpDuzHL1QoxF60+cj9mx
-	 b8o41OWKW0Jq9b3Vjw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.69.219]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N0Zo6-1ur3Pn0TUS-015D6M; Fri, 18
- Jul 2025 21:13:27 +0200
-Message-ID: <f39dda96-9e4e-4f33-a4fb-a97c375d281e@web.de>
-Date: Fri, 18 Jul 2025 21:13:23 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+BRTgRM"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2352400344aso23545195ad.2;
+        Fri, 18 Jul 2025 13:46:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752871564; x=1753476364; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uXAK2LcN+D1aB2LwqkwZRyXZHRbBhvjT7o6KbAa+ppk=;
+        b=T+BRTgRMn94IrvUTdoX2H+Zsu1XQkEFi6rSIwZ6rU+JiM9vcQLljDWtHcaTLLTOKls
+         PDUEdU++7SSgjtuKHXEFLMt//1HsQiUNqc88lsqDZtHF+FLGRxXGJ9i577a+TuuIp9fi
+         CpmpOPvnIgoix1wXHtnZFz2Y2+r+GAz8YGDIX3Nz1WptJ7S9jeIae3M9jcAx8v9tyHHE
+         UvP5mk6qZNhZxOgvjsXtcllri0rn2se4dt3qr3+n0mfCKB9EdW69rHBHuuPnNaEd7XsD
+         asEwNy7Uiq9hqNK8Zyo/5rLGnQGSqrnRa821MfVujRUvBUm6HTf9JbcF55t5FJv0aNdk
+         o7JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752871564; x=1753476364;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uXAK2LcN+D1aB2LwqkwZRyXZHRbBhvjT7o6KbAa+ppk=;
+        b=PdxzQV+GFaeYr2z2JZh7WuufzJUVXyatnEZQymqXDNM1vGFxKQrylQW7gpQlRoXw9T
+         HBptBdRgDVfVEt9YHYg8D7sKqjZgQtEnolemC1SqP1PFBXaAbro20Qh/6cpdklN/Uczr
+         M/EFzqorR3WgwLdNTqJrmQC6GNDKgQpKxRwtwsL8USXEtnmeXBwqo0/dzBCsneGw96ep
+         mzdKwG74EhcFc4mQnfGajFfeMzZA7Dy9Gd38bAZeVtN5hzD7/Q35uJvSkYLKRmJFNhvW
+         xotSBv2KVSJ8pI9eUcBUNXMIOqguMVAshTgPFvertHV4rueAG+T7GoOYKqq9TyKrLOX6
+         EHPw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/jFb385JOhFAR+OxIQDe6IaEM7lM1pzS8n4TmHTgg8slO+sjPvJAvEzvhPwzpLUQ2luRgLSj5yf71ojE9@vger.kernel.org, AJvYcCXKV0MUkMFWqvJYJeY3udCWl3Fqg59ttzAF6NgAOhOnGzjONFkfD4Oyaa5u0s0zLLKugwV8d2LfCqDp@vger.kernel.org, AJvYcCXxXD6z0lHert2a+IyreLLixvGuiF0UKX2JxMCnuY/2tsfwrVffeSbXiwy8sOyS75isDEOJLz1HrVWO8uEf8Sd26w==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFKhUtJJIkL7AA5rHufSmstDOpwe5GSF4XEHj+lk9puyrWqkIE
+	b+TX7ga/q6WGCq1hCFHYL3Qu6nMVbl7HKBzpp/7VOx/IwNeGEdC3TYGr
+X-Gm-Gg: ASbGncsK2TYXSmUhd8g58u72nCGWUhn8/KGzj+6vZrVlc0K5AiwFNMTyY8/z8MMtmGF
+	Ky78VRduDTyUT3AE7/dUfMuSHOoqMY5kcrQBDus5RBRm1u3CdE+iFLXeU5tZcjWWV9REQDtp/xs
+	K6XHgNCj3HZLKQsq/I7Yj/4sOmMIL/FbRsKTdeeu81Ka1XEAFani1DXSTZwufdwNmqNUwHiPWBa
+	jXSkntJHQVJP1NjTHFJ6Nnw1WMEui/p6mkb94/G4P18+2x3K5VkroW6FMXy5YYAFoZcHytVjHj7
+	WmUqdnlA6M70guXFzIU/shFtKTjRMiijTFJiMsn9yWXTorQNpIi5/Bg5GhpGsnN8PLa5wjgoDhx
+	P3GuQtIRoAJ6Xpe3aZpnpnqDW+TRAv8ErTqmxZ6iMbCHYnbUN59CUOVVAHe1fpYE=
+X-Google-Smtp-Source: AGHT+IFfAzmfpnYky0WJeFj+PkACVQRkUKSaLnIxhEt/NV8Uzws4ecq5iTsonExxyL5PHW/z3ZTr5A==
+X-Received: by 2002:a17:90b:3cc6:b0:30a:4874:5397 with SMTP id 98e67ed59e1d1-31c9e6fbb09mr17031670a91.9.1752871563843;
+        Fri, 18 Jul 2025 13:46:03 -0700 (PDT)
+Received: from [192.168.0.109] (061092221177.ctinets.com. [61.92.221.177])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23e3b61566bsm17746325ad.81.2025.07.18.13.46.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Jul 2025 13:46:03 -0700 (PDT)
+Message-ID: <2b69fbd1-067e-4ff4-8ea4-88e32763209a@gmail.com>
+Date: Sat, 19 Jul 2025 04:45:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -42,92 +67,99 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
- James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
- Kan Liang <kan.liang@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>,
- Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ravi Bangoria <ravi.bangoria@amd.com>,
- Thomas Falcon <thomas.falcon@intel.com>, Weilin Wang <weilin.wang@intel.com>
-References: <20250718071734.1444891-1-irogers@google.com>
-Subject: Re: [PATCH 1/2] perf topdown: Use attribute to see an event is a
- topdown metic or slots
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250718071734.1444891-1-irogers@google.com>
+Subject: Re: [PATCH RESEND v7 00/21] drivers/perf: apple_m1: Add Apple A7-A11,
+ T2 SoC support
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+ Neal Gompa <neal@gompa.dev>, Sven Peter <sven@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
+ asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250616-apple-cpmu-v7-0-df2778a44d5c@gmail.com>
+ <aHUeUMmn_19EayL1@willie-the-truck>
+ <be327242-ad55-476a-bed4-44c33c263962@gmail.com>
+ <aHkRJdAuvhS2mNQj@J2N7QTR9R3>
+ <705f1dfb-7e1b-4930-a1a9-c763299a4305@gmail.com>
+ <aHph5u4-b6mfggPv@J2N7QTR9R3>
+Content-Language: en-US
+From: Nick Chan <towinchenmi@gmail.com>
+In-Reply-To: <aHph5u4-b6mfggPv@J2N7QTR9R3>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:vJmCh5W/B/9WFlaEkWvj5dkUe9NWWAI4JzEb8b7HrH9+Mx3CKKX
- QzaexJY8odHrtajkfOdYWnziQgkPFLexs7Smj3u40mGpi9kkVXPm6B0Z1F7gp+Jp4PruDXd
- UziZz/2gEDOt/2sizfl9xBwQAGw+ce7naz4nB0Zzo3Rzd2/Ob8G1n71ujn/saGaQTnlWr7+
- wCR9F1LrWs0D3cGHok8RQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:HZeA++rzKgU=;h5xhBcQwNLBOz6ulATm464UBw70
- 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
- FnoN8=
-
-> The string comparisons were overly broad and could fire for the
-> incorrect PMU and events. Switch to using the config in the attribute
-=E2=80=A6
-
-How do you think about to refer to a =E2=80=9Cmetric=E2=80=9D in the summa=
-ry phrase?
+Content-Transfer-Encoding: 8bit
 
 
-Will a cover letter become helpful for such a patch series?
+Mark Rutland 於 2025/7/18 夜晚11:01 寫道:
+> On Fri, Jul 18, 2025 at 01:00:45AM +0800, Nick Chan wrote:
+>> On 17/7/2025 23:05, Mark Rutland wrote:
+>>> On Mon, Jul 14, 2025 at 11:59:36PM +0800, Nick Chan wrote:
+>>>> Will Deacon 於 2025/7/14 夜晚11:12 寫道:
+>>>>> On Mon, Jun 16, 2025 at 09:31:49AM +0800, Nick Chan wrote:
+>>>>>> Patch 8-12 adds support for the older SoCs.
+>>>>> ... but I'm not sure if anybody actually cares about these older SoCs
+>>>>> and, even if they do, what the state of the rest of Linux is on those
+>>>>> parts. I recall horror stories about the OS being quietly migrated
+>>>>> between CPUs with incompatible features, at which point I think we have
+>>>>> to question whether we actually care about supporting this hardware.
+>>>> The "horror" story you mentioned is about Apple A10/A10X/T2, which
+>>>> has a big little switcher integrated into the cpufreq block, so when the
+>>>> cpufreq driver switch between states in the same way as on other
+>>>> SoCs, on these SoCs that would silently cause a CPU migration. There
+>>>> is only one incompatible feature that I am aware of which is 32-bit EL0
+>>>> support.
+>>> Surely the MIDR/REVIDR/AIDR also change?
+>> They do not change. ID_AA64PFR0_EL1 also does not change (fixed 0x12).
+>> What *does* change however is MPIDR. (P-cores has bit 16 set while
+>> E-cores do not)
+> The MPIDR changing isn't ok either. You might get away with that today,
+> but that's not supposed to change behind the back of the kernel.
+>
+> Is there anything else that can change, or are we absolutley certain
+> that *only* MPIDR changes?
 
-Regards,
-Markus
+Only MPIDR changes, and the state of bit 16 in MPIDR is consistent across all PEs. (At any
+given moment, either all PEs are backed by efficiency cores, or all backed by performance
+cores)
+
+>
+>>>> As mentioned above, it does all work fine when CONFIG_EXPERT is not
+>>>> enabled, and if it is enabled, then 32-bit process may crash with illegal
+>>>> instruction but everything else will still works fine.
+>>> I don't think that's quite true, unless these parts are also violating
+>>> the architecture.
+>>>
+>>> If the CPU doesn't implement AArch32, then an ERET to AArch32 is
+>>> illegal. The way illegal exception returns are handled means that this
+>>> will result in a (fatal) illegal execution state exception being taken
+>>> from the exception return code in the kernel, not an UNDEF being taken
+>>> from userspace that would result in a SIGILL.
+>> Speaking from experience, when testing with the userspace cpufreq governor,
+>> trying to run AArch32 code on the ecores really does result in illegal
+>> instruction for that process while everything else remains fine.
+>>
+>> Referencing ID_AA64PFR0_EL1, the E-cores does claim to support
+>> AArch32 EL0, even though they could not execute it for real.
+> Ok, so that's a clear violation of the architecture, and doesn't fill me
+> with confidence about anything else.
+
+Regarding this, the hardware also needs to handle the case where the PE is already in AArch32
+EL0 and migration to E-cores is attempted. In this case there is no exception return happening so
+the behavior of the hardware is not as bad as it sounds.
+
+
+>
+>>> I do not think that we should pretend to support hardware with silent
+>>> microarchitectural migration. So at the very least, we do not care about
+>>> A10/A10X/T2.
+>> As explained above, what actually happens on the hardware is different
+>> from what you believed, so please do reconsider.
+> Different certainly, but still problematic.
+>
+> I maintain that we should not pretend to support this hardware.
+>
+> Mark.
+>
+Nick Chan
