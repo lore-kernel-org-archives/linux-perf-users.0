@@ -1,139 +1,98 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A2772DF3CC;
-	Fri, 18 Jul 2025 15:26:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A226FD515;
+	Fri, 18 Jul 2025 15:38:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752852388; cv=none; b=RXRb9ubdnBR31rgPH/4Wcqoi+uiaoN/oCVtLZeX4Yujf1goamXx9Dzf7bx8X0kAav8YvYJwdoJS1RWwVtgNjz1j1+1vKBIbOU0Ue8NIMEMkYR0NFen1w9mnpXBZelzrZDFvKcs+a0tBEUH21hJ2RM7Fdeqnw4eKTldgsgUFSVck=
+	t=1752853086; cv=none; b=FWKhVbSMF+xTb8nizo8xwqJySwJX8Fk1eO7D+dy9tXeMPb1C67hsLbUZi41vy/etM5a6AzlfL+FP4B+cxKMm8Sf7FUlEfvzHjbvFnBv8MkEiJoxsnLhQXsCeB3USqo4Yt+1ioStSeJcbSY7eCac9yAt9r46fnIdiJDTbvse6Gd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752852388; c=relaxed/simple;
-	bh=+3gjGeeKe7DyZ3/goDLLn+ZLf1jbvy7KWHPofuCLFbE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Kyv9ijDictsZzg8+ggLlHVDeUC2TVJA7gGnZpr1mBD70IwjioovEhvr4I4SmjRFIQAs0fWd1sWWkgbmAoKWG/gYvuCXAJ/kNB8hH8xt+3NFKkJlgnbqgr69MZrj6K2czBhkj3rA39CYMqTwt/m37y4ZHaPJz5K3JtegzSRDHDS8=
+	s=arc-20240116; t=1752853086; c=relaxed/simple;
+	bh=wVzzfH9VNd5QcyCYf3Hm3wOcD5aMu7o9CHpXNXTfKzE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pg5IJANfnvIPytf5ivnfpPeBkBIN1LobqU/7PRfkd6QAu7+JejO8KG4hPRWnjbuLxBUSd4SwARzRyjHmO8dChPqYw3ZLMitr2cG/5a7orxPeQPWXvDp5xe23bLb9QXMemuOgq6Leapc6L1oGbT/8KvboZQ5yuI1zfZgUY/Lp8yI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC2201BA8;
-	Fri, 18 Jul 2025 08:26:18 -0700 (PDT)
-Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14ECE3F6A8;
-	Fri, 18 Jul 2025 08:26:21 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A469F16A3;
+	Fri, 18 Jul 2025 08:37:56 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 774AE3F6A8;
+	Fri, 18 Jul 2025 08:38:03 -0700 (PDT)
+Date: Fri, 18 Jul 2025 16:38:01 +0100
 From: Leo Yan <leo.yan@arm.com>
-Date: Fri, 18 Jul 2025 16:25:40 +0100
-Subject: [PATCH PATCH v2 v2 6/6] perf docs: Document AUX pause and resume
- with BPF
+To: Yonghong Song <yonghong.song@linux.dev>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Matt Bobrowski <mattbobrowski@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>
+Subject: Re: [PATCH v1 2/7] bpf: Add bpf_perf_event_aux_pause kfunc
+Message-ID: <20250718153801.GB3137075@e132581.arm.com>
+References: <20241215193436.275278-1-leo.yan@arm.com>
+ <20241215193436.275278-3-leo.yan@arm.com>
+ <80f412f1-a060-463b-9034-3128906e6929@linux.dev>
+ <20250714174505.GA3020098@e132581.arm.com>
+ <ba5c04f4-a33d-4d7f-9272-eee4a4389def@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250718-perf_aux_pause_resume_bpf_rebase-v2-6-992557b8fb16@arm.com>
-References: <20250718-perf_aux_pause_resume_bpf_rebase-v2-0-992557b8fb16@arm.com>
-In-Reply-To: <20250718-perf_aux_pause_resume_bpf_rebase-v2-0-992557b8fb16@arm.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
- KP Singh <kpsingh@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
- Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- James Clark <james.clark@linaro.org>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Mike Leach <mike.leach@linaro.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1752852356; l=3165;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=+3gjGeeKe7DyZ3/goDLLn+ZLf1jbvy7KWHPofuCLFbE=;
- b=kWn0mmWrjDjFJ8G9FTKcccKDj8+qNhvVDMlEl+OqnbsmFXRcVTJopE992iXdHekVJVWx5bXPm
- rPXmDBym1APDW53x4m5yBx1YPG0RsvLAZBz48HpVnWZSYSAolXxKdpI
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ba5c04f4-a33d-4d7f-9272-eee4a4389def@linux.dev>
 
-Documents the usage of the --bpf-aux-pause option and provides
-examples.
+Hi Yonghong,
 
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/perf/Documentation/perf-record.txt | 51 ++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+On Tue, Jul 15, 2025 at 10:12:02AM -0700, Yonghong Song wrote:
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 612612fa2d8041b94860035ed9cb01557a20b6b7..5aee20bfd03bda72bddabf42005b9678309414ad 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -544,6 +544,57 @@ must be an AUX area event. Samples on other events will be created containing
- data from the AUX area. Optionally sample size may be specified, otherwise it
- defaults to 4KiB.
- 
-+--bpf-aux-pause=[=OPTIONS]::
-+Specify trace events for triggering AUX pause with a BPF program. A trace event
-+can be static ftrace tracepoint, or dynamic tracepoint by using kprobe,
-+kretprobe, uprobe or uretprobe. This option must be enabled in combination with
-+the "aux-action=start-paused" configuration in an AUX event.
-+
-+For attaching a kprobe or kretprobe event, the format is:
-+
-+  {kprobe|kretprobe}:{p|r}:function_name
-+
-+The format for attaching a uprobe or uretprobe event is:
-+
-+  {uprobe|uretprobe}:{p|r}:executable:function_name
-+
-+The format for attaching a tracepoint is:
-+
-+  {tp|tracepoint}:{p|r}:category:tracepint
-+
-+The first field is for the trace event type. It supports five types: kprobe,
-+kretprobe, uprobe, uretprobe, and tracepoint ('tp' is also supported as an
-+abbreviation for "tracepoint"). The second field specifies whether the action is
-+pause ("p") or resume ("r").
-+
-+For probes, the "function_name" field is used to specify a function name. In
-+particular, for a uprobe or uretprobe, an executable path must also be provided.
-+In the case of a ftrace tracepoint, the "category" and "tracepoint" fields are
-+used together to provide complete tracepoint information.
-+
-+The '--bpf-aux-pause' option does not support inherit mode.  In the default
-+trace mode, it needs to be combined with the '-i' or '--no-inherit' option to
-+disable inherit mode.
-+
-+The syntax supports multiple trace events, with each separated by a comma (,).
-+For example, users can set up AUX pause on a kernel function with kretprobe and
-+AUX resume on a tracepoint with the syntax below:
-+
-+  For default trace mode (with inherit mode disabled):
-+  perf record -e cs_etm/aux-action=start-paused/ \
-+    --bpf-aux-pause="kretprobe:p:__arm64_sys_openat,tp:r:sched:sched_switch" \
-+    -i ...
-+
-+  For system wide trace mode:
-+  perf record -e cs_etm/aux-action=start-paused/ \
-+    --bpf-aux-pause="kretprobe:p:__arm64_sys_openat,tp:r:sched:sched_switch" \
-+    -a ...
-+
-+  For trace with uprobe and uretprobe:
-+  perf record -e cs_etm/aux-action=start-paused/ \
-+    --bpf-aux-pause="uretprobe:p:~/sort:bubble_sort,uprobe:r:~/sort:bubble_sort" \
-+    -i --per-thread -- ~/sort
-+
- --proc-map-timeout::
- When processing pre-existing threads /proc/XXX/mmap, it may take a long time,
- because the file may be huge. A time out is needed in such cases.
+[...]
 
--- 
-2.34.1
+> > I'm not certain whether using __bpf_kfunc is appropriate here, or if I
+> > should stick to BPF_CALL to ensure support for accessing bpf_map
+> > pointers?
+> 
+> Using helpers (BPF_CALL) is not an option as the whole bpf ecosystem
+> moves to kfunc mechanism. You can certainly use kfunc with 'struct bpf_map *'
+> as the argument. For example the following kfunc:
+>   __bpf_kfunc s64 bpf_map_sum_elem_count(const struct bpf_map *map)
+> in kernel/bpf/map_iter.c
 
+Thanks a lot for suggestion. I followed the idea to refactor the patch
+with kfunc, see the new version:
+https://lore.kernel.org/linux-perf-users/20250718-perf_aux_pause_resume_bpf_rebase-v2-0-992557b8fb16@arm.com/T/#m27a72255c93fa672e164cb87a322b979fe8f9408
+
+Just clarify one thing, I defined the kfunc in new patch:
+
+  int bpf_perf_event_aux_pause(void *p__map, u64 flags, u32 pause)
+
+Unlike your suggestion, I defined the first parameter as "void
+*p__map" (I refers to bpf_arena_alloc_pages()) rather than
+"struct bpf_map *map". This is because the BPF program will pass a
+variable from the map section, rather than passing a map pointer.
+
+TBH, I do not watch closely the BPF mailing list, so I may not be
+fully following the conventions. If anything is incorrect, please
+correct it as needed.
+
+Thank you,
+
+Leo
