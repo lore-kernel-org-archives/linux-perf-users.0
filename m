@@ -1,115 +1,140 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0B3B1B87F0;
-	Fri, 18 Jul 2025 15:02:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 674D02E54BD;
+	Fri, 18 Jul 2025 15:26:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752850929; cv=none; b=ocrBdmp0gi0uL0SGbjGvrlMBG3jf5jgvESgsO8lCpSmSih9aEZXe3wee9TFkZ3hmJK74sffNOOO+BgwnEyIzeJ57PmuJnkUKZkcmJiHhkc6pIDSLRgY0EsklBK2z2rO+lBHzKVuqEUypycOGaSnS5LAXQBv7H4jxdMxuk8oYv3k=
+	t=1752852363; cv=none; b=O+dq2LXpCCwYK2ER0TB1rQgo0BMedwJ4JzFLkZJfASV0LNaXCWFrDo0Qwlv/OmH3kODR8FFKkzRX08q0vnlSKXou34X9SGF3gk+iXg+EPT8iu6cj9tfkGcV9xkR+XI5LZm6nk+cONSCphUvsQyMDwSJcn9xl343wpr9pearrFig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752850929; c=relaxed/simple;
-	bh=gaE4ZC3ILEUagvfAVqvzN406gZmK89Cu8YYw+eY8jXs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ACnu7f8halKZ7Z3z6JfQIz98KEPbvJpG6nqnNTYcsMy6BWH7qBs2aYv22ZFytBZiQqJBKXdBg+zOUa0sGyN+rH8YbksVTG22Wl0m3QxIh7MUBaR+jB4aMRz1PTK6O06U4CUn3SvMVE2mef854Mn318TrZ6wAMK9kG9T5gAlYdmY=
+	s=arc-20240116; t=1752852363; c=relaxed/simple;
+	bh=L/zjElicyBquY6FNje7j0/5XPOZRjJinzZxw5ZTiPLw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=pr35+V0qxlVeeubb9+T7696H9qKTXKM3znfquVoG2khrRg8bEm4AJ+MJ3UWil13infZQD2+JWuWzyuMu5LGmzaTljINp/LaJDAAvHBHcrxM9b25Zjbl21SnY6/dHOoXrmhXXUZVtoqCq3GBkmI/cqna9zXNgogO3UBjLCj5FJJA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CF4216A3;
-	Fri, 18 Jul 2025 08:01:59 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 617CB3F6A8;
-	Fri, 18 Jul 2025 08:02:04 -0700 (PDT)
-Date: Fri, 18 Jul 2025 16:01:58 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Nick Chan <towinchenmi@gmail.com>
-Cc: Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Janne Grunau <j@jannau.net>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Neal Gompa <neal@gompa.dev>, Sven Peter <sven@kernel.org>,
-	Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
-	asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH RESEND v7 00/21] drivers/perf: apple_m1: Add Apple
- A7-A11, T2 SoC support
-Message-ID: <aHph5u4-b6mfggPv@J2N7QTR9R3>
-References: <20250616-apple-cpmu-v7-0-df2778a44d5c@gmail.com>
- <aHUeUMmn_19EayL1@willie-the-truck>
- <be327242-ad55-476a-bed4-44c33c263962@gmail.com>
- <aHkRJdAuvhS2mNQj@J2N7QTR9R3>
- <705f1dfb-7e1b-4930-a1a9-c763299a4305@gmail.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8039C16A3;
+	Fri, 18 Jul 2025 08:25:53 -0700 (PDT)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C02823F6A8;
+	Fri, 18 Jul 2025 08:25:56 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v2 0/6] perf auxtrace: Support AUX pause and resume with
+ BPF
+Date: Fri, 18 Jul 2025 16:25:34 +0100
+Message-Id: <20250718-perf_aux_pause_resume_bpf_rebase-v2-0-992557b8fb16@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <705f1dfb-7e1b-4930-a1a9-c763299a4305@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAG5nemgC/x2NsQrCMBBAfyXcbCANlqCbuDg6uJUS7upFb7CGH
+ CmF0n83uL23vLeBchFWOJsNCi+i8p2b+IOB6Y3zi608m4N3vnehCzZzSRHrGjNW5VhY64cj5dS
+ QUNl24TiFEzlC6qFlcuEk638xwP3yuN7M4mHc9x/zaua2fAAAAA==
+X-Change-ID: 20250717-perf_aux_pause_resume_bpf_rebase-174c79b0bab5
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+ KP Singh <kpsingh@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
+ Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ James Clark <james.clark@linaro.org>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Mike Leach <mike.leach@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1752852356; l=3313;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=L/zjElicyBquY6FNje7j0/5XPOZRjJinzZxw5ZTiPLw=;
+ b=nYbD7ZpIfxhu4FTCNxB0+kCewOUWhgYrUmxGvY03Rg/CeHbAPDZojVmLoLhTgh5tWOXagx5wp
+ nvzi7Oim5A5DbMYOf9xwxJIoRJ49PgIG3WY4g6AyQ/VDB/iavw/Zq8Z
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-On Fri, Jul 18, 2025 at 01:00:45AM +0800, Nick Chan wrote:
-> On 17/7/2025 23:05, Mark Rutland wrote:
-> > On Mon, Jul 14, 2025 at 11:59:36PM +0800, Nick Chan wrote:
-> >> Will Deacon 於 2025/7/14 夜晚11:12 寫道:
-> >>> On Mon, Jun 16, 2025 at 09:31:49AM +0800, Nick Chan wrote:
-> >>>> Patch 8-12 adds support for the older SoCs.
-> >>> ... but I'm not sure if anybody actually cares about these older SoCs
-> >>> and, even if they do, what the state of the rest of Linux is on those
-> >>> parts. I recall horror stories about the OS being quietly migrated
-> >>> between CPUs with incompatible features, at which point I think we have
-> >>> to question whether we actually care about supporting this hardware.
-> >> The "horror" story you mentioned is about Apple A10/A10X/T2, which
-> >> has a big little switcher integrated into the cpufreq block, so when the
-> >> cpufreq driver switch between states in the same way as on other
-> >> SoCs, on these SoCs that would silently cause a CPU migration. There
-> >> is only one incompatible feature that I am aware of which is 32-bit EL0
-> >> support.
-> > 
-> > Surely the MIDR/REVIDR/AIDR also change?
-> They do not change. ID_AA64PFR0_EL1 also does not change (fixed 0x12).
-> What *does* change however is MPIDR. (P-cores has bit 16 set while
-> E-cores do not)
+This series extends Perf for fine-grained tracing by using BPF program
+to pause and resume AUX tracing. The BPF program can be attached to
+tracepoints (including ftrace tracepoints and dynamic tracepoints, like
+kprobe, kretprobe, uprobe and uretprobe).
 
-The MPIDR changing isn't ok either. You might get away with that today,
-but that's not supposed to change behind the back of the kernel.
+The first two patches are changes in kernel - it adds a bpf kfunc which
+can be invoked from BPF program.
 
-Is there anything else that can change, or are we absolutley certain
-that *only* MPIDR changes?
+The Perf tool implements BPF skeleton program, hooks BPF program into a
+perf record session. This is finished by patches 03 ~ 05.
 
-> >> As mentioned above, it does all work fine when CONFIG_EXPERT is not
-> >> enabled, and if it is enabled, then 32-bit process may crash with illegal
-> >> instruction but everything else will still works fine.
-> > 
-> > I don't think that's quite true, unless these parts are also violating
-> > the architecture.
-> > 
-> > If the CPU doesn't implement AArch32, then an ERET to AArch32 is
-> > illegal. The way illegal exception returns are handled means that this
-> > will result in a (fatal) illegal execution state exception being taken
-> > from the exception return code in the kernel, not an UNDEF being taken
-> > from userspace that would result in a SIGILL.
-> Speaking from experience, when testing with the userspace cpufreq governor,
-> trying to run AArch32 code on the ecores really does result in illegal
-> instruction for that process while everything else remains fine.
-> 
-> Referencing ID_AA64PFR0_EL1, the E-cores does claim to support
-> AArch32 EL0, even though they could not execute it for real.
+The patch 06 updates documentation for usage of the new introduced
+option '--bpf-aux-pause'.
 
-Ok, so that's a clear violation of the architecture, and doesn't fill me
-with confidence about anything else.
+This series has been tested on Hikey960 platform with commands:
 
-> > I do not think that we should pretend to support hardware with silent
-> > microarchitectural migration. So at the very least, we do not care about
-> > A10/A10X/T2.
-> As explained above, what actually happens on the hardware is different
-> from what you believed, so please do reconsider.
+  perf record -e cs_etm/aux-action=start-paused/ \
+    --bpf-aux-pause="kretprobe:p:__arm64_sys_openat,kprobe:r:__arm64_sys_openat,tp:r:sched:sched_switch" \
+    -a -- ls
 
-Different certainly, but still problematic.
+  perf record -e cs_etm/aux-action=start-paused/ \
+    --bpf-aux-pause="kretprobe:p:__arm64_sys_openat,kprobe:r:__arm64_sys_openat,tp:r:sched:sched_switch" \
+    -i -- ls
 
-I maintain that we should not pretend to support this hardware.
+  perf record -e cs_etm/aux-action=start-paused/ \
+    --bpf-aux-pause="uretprobe:p:/mnt/sort:bubble_sort,uprobe:r:/mnt/sort:bubble_sort" \
+    --per-thread -- /mnt/sort
 
-Mark.
+Note, as the AUX pause operation cannot be inherited by child tasks, it
+requires to specify the '-i' option for default mode. Otherwise, the
+tool reports an error to remind user to disable inherited mode:
+
+  Failed to update BPF map for auxtrace: Operation not supported.
+    Try to disable inherit mode with option '-i'.
+
+Changes in v2:
+- Changed to use BPF kfunc and dropped uAPI (Yonghong).
+- Added support uprobe/uretprobe.
+- Refined the syntax for trigger points (mainly for trigger action {p:r}).
+- Fixed a bug in the BPF program with passing wrong flag.
+- Rebased on bpf-next branch.
+- Link to v1: https://lore.kernel.org/linux-perf-users/20241215193436.275278-1-leo.yan@arm.com/T/#m10ea3e66bca7418db07c141a14217934f36e3bc8
+
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+Leo Yan (6):
+      perf/core: Make perf_event_aux_pause() as external function
+      bpf: Add bpf_perf_event_aux_pause kfunc
+      perf: auxtrace: Control AUX pause and resume with BPF
+      perf: auxtrace: Add BPF userspace program for AUX pause and resume
+      perf record: Support AUX pause and resume with BPF
+      perf docs: Document AUX pause and resume with BPF
+
+ include/linux/perf_event.h                    |   1 +
+ kernel/events/core.c                          |   2 +-
+ kernel/trace/bpf_trace.c                      |  60 ++++
+ tools/perf/Documentation/perf-record.txt      |  51 ++++
+ tools/perf/Makefile.perf                      |   1 +
+ tools/perf/builtin-record.c                   |  20 +-
+ tools/perf/util/Build                         |   4 +
+ tools/perf/util/auxtrace.h                    |  43 +++
+ tools/perf/util/bpf_auxtrace_pause.c          | 408 ++++++++++++++++++++++++++
+ tools/perf/util/bpf_skel/auxtrace_pause.bpf.c | 156 ++++++++++
+ tools/perf/util/evsel.c                       |   6 +
+ tools/perf/util/record.h                      |   1 +
+ 12 files changed, 751 insertions(+), 2 deletions(-)
+---
+base-commit: 0768e980feb5cffe63920d375bebef3bb4654961
+change-id: 20250717-perf_aux_pause_resume_bpf_rebase-174c79b0bab5
+
+Best regards,
+-- 
+Leo Yan <leo.yan@arm.com>
+
