@@ -1,44 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4BF801
-	for <linux-perf-users@vger.kernel.org>; Fri, 18 Jul 2025 00:06:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A489182;
+	Fri, 18 Jul 2025 00:06:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752797193; cv=none; b=il/WoCBuWFWm4yoNTQSMXTBEQW7Ozxz3OfXT55mDM7DI3dZ8BVG6PFJyVYzR/byp+Fy0FF9bYgeZIyZTt0D1LxBhxsg/7EZXdkf5sc7lCLjj6WsqR9m0UqwfdS+tVJD9LH+jiG+PotjJOdddHCrx2Ab2pxXR6pr+iuEp7p5SzYs=
+	t=1752797193; cv=none; b=hbLpVNjyW9Sa+WaOV9PGQQTVX/dhTVII48TlokPw3DLAYa+YJYLtgigYDfrVB01E1f+YRTYqEjOjD8CPIA6i9Tppx9aZRq7/GKZ6uGqkzFLwhvzIdDRKhNToUvz9p6uBqq+WGIwYsuk5aMs0BjM5+oVes6rY+u77tWlyML+uJaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1752797193; c=relaxed/simple;
-	bh=7QOVtt0e8gEg3/WGLk0iqEq8f7Z5oWqO0ZG0EQcwiNE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Of33eaElN4bxxVHH3DEzB3WiVZGZIeTUYnBBcGcfh/PQx1NzMDsjJoZmDXmZaTEAXJu8bCRJcae5575llmQf96j6ZIZfsR9QccI2gK+dJLMhMtBCRWvW19WKJTqlHAO8vC0yFELmnUJSSoJGlrHX6yytCtNMzTjuuQI1KHEYSOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cDraffFr; arc=none smtp.client-ip=10.30.226.201
+	bh=GZD6G30HqjgR/A80DL+8tLA/WKiBDWC8lpoeOimL0h4=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=ZWTNCUE5y4JemB6Ay8LwHSGA/tSFGcOaty6wR7RtMT5RA905j4lqgGT+RZxiazW8ND2/XaHPyTOkJDLzyhzYlHhBpo/BE+16rl8arqAA5VNMKYSK4eGnOEViBc8H1v4Tm6RGOKNPLXzUnDGIJjqlrLAE52K55sGTxDL11+DXi+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YYNN9ufk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cDraffFr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BCBDC4CEF0;
-	Fri, 18 Jul 2025 00:06:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YYNN9ufk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9B1CC4CEE3;
+	Fri, 18 Jul 2025 00:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1752797192;
-	bh=7QOVtt0e8gEg3/WGLk0iqEq8f7Z5oWqO0ZG0EQcwiNE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=cDraffFrarya0sA8u/D3TqPDUoqsliTdRaI2SrGyTEyGJTG9Az6XCtutl1BnQnCOs
-	 0RFGS5P2eBNyo+AE/vO3LK/RpnLdniMcN7t03wiec2MOvzcD/cF0I+cRCorr+PlUw+
-	 fjidmf9X5jyy2ailLWfpNPzDeuqu+aKKoPfD5gBcFnwebfZRtzgB8o2w6fBcZkX5x3
-	 scBy7xtBR3MVr6q0uj57Bxv7MlxnVNY+PGD9+InCqSJFqYdeNJrE+Cj+VYm1YBOUjH
-	 17FhbXjeM/eGHpxD/7xQY9AGxiLvAXhG7J4bh+opQP/ifIDeh4CrM37Dlcpl4SLfDJ
-	 wEL5ugljwVr3w==
+	bh=GZD6G30HqjgR/A80DL+8tLA/WKiBDWC8lpoeOimL0h4=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=YYNN9ufkFhvKcVjvrHQPXgoD+FCaXwCdPt4qBCzZf6nICTDCauO5stP0bLCy/xqH4
+	 aVwuzddLw7hufiQ33zQCgM48ue7yVIl/qDff+YzViEjyxakDLfcNtOjItvB+GLjcvE
+	 lrbyrwyN6PNUwxR+7Nj3r4/82Q/6Z4v0+zifen+SVay15z7oywizeELI6mn0+ny8jr
+	 0IBnDCLIowPjYQud6UgUB+qvikdNBlhI+rP0CLkmJw50BCj0V4KKCIb0GMh2c8M7ri
+	 w7VhHUtrv2ZiPRD5kPqzjYqjl5nM8kIWQ8axvhxCXaJaMCVxx5IWwjSCqqeadFYC43
+	 on5jQc5xbnKpg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: mpetlan@redhat.com, acme@kernel.org, irogers@google.com, 
- linux-perf-users@vger.kernel.org, Anubhav Shelat <ashelat@redhat.com>
-Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, 
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
- adrian.hunter@intel.com, kan.liang@linux.intel.com, 
- dapeng1.mi@linux.intel.com, james.clark@linaro.org
-In-Reply-To: <20250716203914.45772-2-ashelat@redhat.com>
-References: <20250716203914.45772-2-ashelat@redhat.com>
-Subject: Re: [PATCH v2] perf sched timehist: decode process names of
- processes in zombie state
-Message-Id: <175279719246.656724.5249718346589585675.b4-ty@kernel.org>
-Date: Thu, 17 Jul 2025 17:06:32 -0700
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Kan Liang <kan.liang@linux.intel.com>, 
+ Wangyang Guo <wangyang.guo@intel.com>, 
+ Tim Chen <tim.c.chen@linux.intel.com>, Zhiguo Zhou <zhiguo.zhou@intel.com>, 
+ Tianyou Li <tianyou.li@intel.com>, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
+In-Reply-To: <20250716004635.31161-1-irogers@google.com>
+References: <20250716004635.31161-1-irogers@google.com>
+Subject: Re: [PATCH v1] perf flamegraph: Fix minor pylint/type hint issues
+Message-Id: <175279719184.656724.221004202740500543.b4-ty@kernel.org>
+Date: Thu, 17 Jul 2025 17:06:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,18 +52,12 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Wed, 16 Jul 2025 16:39:15 -0400, Anubhav Shelat wrote:
-> Previously when running perf trace timehist --state, when recording
-> processes in the zombie state the process name would not be decoded
-> properly and appears with just the PID:
+On Tue, 15 Jul 2025 17:46:35 -0700, Ian Rogers wrote:
+> Switch to assuming python3. Fix minor pylint issues on line length,
+> repeated compares, not using f-strings and variable case. Add type
+> hints and check with mypy.
 > 
-> 1140057.412177 [0006]  Mutter Input Th[3139/3104]          0.956      0.019      0.041      S
-> 1140057.412222 [0012]  :1248612[1248612]                   0.000      0.000      0.332      Z
-> 1140057.412275 [0004]  <idle>                              0.052      0.052      0.953      I
-> 1140057.412284 [0008]  <idle>                              0.070      0.070      0.932      I
-> 1140057.412333 [0004]  KMS thread[3126/3104]               0.953      0.112      0.058      S
 > 
-> [...]
 Applied to perf-tools-next, thanks!
 
 Best regards,
