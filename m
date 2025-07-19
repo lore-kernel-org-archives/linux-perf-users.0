@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86A53149C41;
-	Sat, 19 Jul 2025 04:37:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 347CF21ABD5;
+	Sat, 19 Jul 2025 04:37:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752899875; cv=none; b=OA5dv3xP3PmS85hPG4blibL4842ziHoKmGpfmm7lWTYkJ/E0Kz/Ohc9QHQgc0Mb7Qwbt18tGbZ4u7JKOrcvVB6GB1C1JmZpRaG9KDkPth31uApnj3nlXQ2KQ3Ppjq1KjJF+Qj2G4sbmkRJEhek/gwSJy9GOoBUQBzLWNDEd4fdY=
+	t=1752899876; cv=none; b=iaCjF/5B/10fmKDZ/D5PRWU0w72+OA44FwTch9CMrm9JbU4LxexgXNbpzQUBXDf1fwpubqykT1VrDYFIPl4KsdlN2ckLiWfFPoXLmGL2flFVsLA29T6XrAH8Ojb9VDDe5xVEoy6yCGAIkRoEvBEveQEwDRk0kN1B562NrZSTSrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752899875; c=relaxed/simple;
-	bh=/pQppYO1yCT8qPFWYW6OyV6VDHNQ/uI+qcbhsRfbKYM=;
+	s=arc-20240116; t=1752899876; c=relaxed/simple;
+	bh=9P2954cNJ8XHv3MEpXhgG8WzfYYUFsuLqaxFnmm0PrM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hewV39wO4d8yEsS/bqw5x23bMhuT0guAyBgYn/CVYhBMmBupaWk1t8W51QvJuw8dWICtaV2BS4N/jT5g3wgTb6eQmMK3rH8BAOtp/m0m8/AONODZHA2SJwrNZigsURiPuA8onzzGRg3rYL6gyxabQ405ylI1z2UVCD67SpSKrF0=
+	 MIME-Version; b=QWJxJLrvTYjqoUGZB7d/0YHrpJbqjLyR9MU3I8nZfmUYXfI00OCWREFxjlx+dmKjF+N3Jfmn26Mc1e66p1J5ajxwjEhBhvmIv/m/jrYUa1SJL0bqteBbNdUKP79kFRBlD/H1hxUnpCSPDSZOPl2792umCjBGbKWvkErySYLIDf0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC60A15A1;
-	Fri, 18 Jul 2025 21:37:45 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7CEB51CC4;
+	Fri, 18 Jul 2025 21:37:47 -0700 (PDT)
 Received: from u200865.usa.arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A29E93F66E;
-	Fri, 18 Jul 2025 21:37:51 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 661563F66E;
+	Fri, 18 Jul 2025 21:37:53 -0700 (PDT)
 From: Jeremy Linton <jeremy.linton@arm.com>
 To: linux-trace-kernel@vger.kernel.org
 Cc: linux-perf-users@vger.kernel.org,
@@ -42,9 +42,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Jeremy Linton <jeremy.linton@arm.com>
-Subject: [PATCH v4 1/8] arm64/gcs: task_gcs_el0_enable() should use passed task
-Date: Fri, 18 Jul 2025 23:37:33 -0500
-Message-ID: <20250719043740.4548-2-jeremy.linton@arm.com>
+Subject: [PATCH v4 2/8] arm64: probes: Break ret out from bl/blr
+Date: Fri, 18 Jul 2025 23:37:34 -0500
+Message-ID: <20250719043740.4548-3-jeremy.linton@arm.com>
 X-Mailer: git-send-email 2.50.0
 In-Reply-To: <20250719043740.4548-1-jeremy.linton@arm.com>
 References: <20250719043740.4548-1-jeremy.linton@arm.com>
@@ -56,58 +56,77 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Mark Rutland noticed that the task parameter is ignored and
-'current' is being used instead. Since this is usually
-what its passed, it hasn't yet been causing problems but likely
-will as the code gets more testing.
+Prepare for GCS by breaking RET out into its own function, where
+it makes more sense to encapsulate the new behavior independent
+from the branch instructions.
 
-But, once this is fixed, it creates a new bug in copy_thread_gcs()
-since the gcs_el_mode isn't yet set for the task before its being
-checked. Move gcs_alloc_thread_stack() after the new task's
-gcs_el0_mode initialization to avoid this.
-
-Fixes: fc84bc5378a8 ("arm64/gcs: Context switch GCS state for EL0")
 Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-Reviewed-by: Mark Brown <broonie@kernel.org>
 ---
- arch/arm64/include/asm/gcs.h | 2 +-
- arch/arm64/kernel/process.c  | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/kernel/probes/decode-insn.c   |  7 ++++---
+ arch/arm64/kernel/probes/simulate-insn.c | 10 +++++++++-
+ arch/arm64/kernel/probes/simulate-insn.h |  3 ++-
+ 3 files changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/include/asm/gcs.h b/arch/arm64/include/asm/gcs.h
-index f50660603ecf..5bc432234d3a 100644
---- a/arch/arm64/include/asm/gcs.h
-+++ b/arch/arm64/include/asm/gcs.h
-@@ -58,7 +58,7 @@ static inline u64 gcsss2(void)
+diff --git a/arch/arm64/kernel/probes/decode-insn.c b/arch/arm64/kernel/probes/decode-insn.c
+index 6438bf62e753..4137cc5ef031 100644
+--- a/arch/arm64/kernel/probes/decode-insn.c
++++ b/arch/arm64/kernel/probes/decode-insn.c
+@@ -108,9 +108,10 @@ arm_probe_decode_insn(u32 insn, struct arch_probe_insn *api)
+ 	    aarch64_insn_is_bl(insn)) {
+ 		api->handler = simulate_b_bl;
+ 	} else if (aarch64_insn_is_br(insn) ||
+-	    aarch64_insn_is_blr(insn) ||
+-	    aarch64_insn_is_ret(insn)) {
+-		api->handler = simulate_br_blr_ret;
++		aarch64_insn_is_blr(insn)) {
++		api->handler = simulate_br_blr;
++	} else if (aarch64_insn_is_ret(insn)) {
++		api->handler = simulate_ret;
+ 	} else {
+ 		/*
+ 		 * Instruction cannot be stepped out-of-line and we don't
+diff --git a/arch/arm64/kernel/probes/simulate-insn.c b/arch/arm64/kernel/probes/simulate-insn.c
+index 4c6d2d712fbd..09a0b36122d0 100644
+--- a/arch/arm64/kernel/probes/simulate-insn.c
++++ b/arch/arm64/kernel/probes/simulate-insn.c
+@@ -126,7 +126,7 @@ simulate_b_cond(u32 opcode, long addr, struct pt_regs *regs)
+ }
  
- static inline bool task_gcs_el0_enabled(struct task_struct *task)
+ void __kprobes
+-simulate_br_blr_ret(u32 opcode, long addr, struct pt_regs *regs)
++simulate_br_blr(u32 opcode, long addr, struct pt_regs *regs)
  {
--	return current->thread.gcs_el0_mode & PR_SHADOW_STACK_ENABLE;
-+	return task->thread.gcs_el0_mode & PR_SHADOW_STACK_ENABLE;
+ 	int xn = (opcode >> 5) & 0x1f;
+ 
+@@ -138,6 +138,14 @@ simulate_br_blr_ret(u32 opcode, long addr, struct pt_regs *regs)
+ 		set_x_reg(regs, 30, addr + 4);
  }
  
- void gcs_set_el0_mode(struct task_struct *task);
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index 08b7042a2e2d..3e1baff5e88d 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -307,13 +307,13 @@ static int copy_thread_gcs(struct task_struct *p,
- 	p->thread.gcs_base = 0;
- 	p->thread.gcs_size = 0;
- 
-+	p->thread.gcs_el0_mode = current->thread.gcs_el0_mode;
-+	p->thread.gcs_el0_locked = current->thread.gcs_el0_locked;
++void __kprobes
++simulate_ret(u32 opcode, long addr, struct pt_regs *regs)
++{
++	int xn = (opcode >> 5) & 0x1f;
 +
- 	gcs = gcs_alloc_thread_stack(p, args);
- 	if (IS_ERR_VALUE(gcs))
- 		return PTR_ERR((void *)gcs);
- 
--	p->thread.gcs_el0_mode = current->thread.gcs_el0_mode;
--	p->thread.gcs_el0_locked = current->thread.gcs_el0_locked;
--
- 	return 0;
- }
- 
++	instruction_pointer_set(regs, get_x_reg(regs, xn));
++}
++
+ void __kprobes
+ simulate_cbz_cbnz(u32 opcode, long addr, struct pt_regs *regs)
+ {
+diff --git a/arch/arm64/kernel/probes/simulate-insn.h b/arch/arm64/kernel/probes/simulate-insn.h
+index efb2803ec943..9e772a292d56 100644
+--- a/arch/arm64/kernel/probes/simulate-insn.h
++++ b/arch/arm64/kernel/probes/simulate-insn.h
+@@ -11,7 +11,8 @@
+ void simulate_adr_adrp(u32 opcode, long addr, struct pt_regs *regs);
+ void simulate_b_bl(u32 opcode, long addr, struct pt_regs *regs);
+ void simulate_b_cond(u32 opcode, long addr, struct pt_regs *regs);
+-void simulate_br_blr_ret(u32 opcode, long addr, struct pt_regs *regs);
++void simulate_br_blr(u32 opcode, long addr, struct pt_regs *regs);
++void simulate_ret(u32 opcode, long addr, struct pt_regs *regs);
+ void simulate_cbz_cbnz(u32 opcode, long addr, struct pt_regs *regs);
+ void simulate_tbz_tbnz(u32 opcode, long addr, struct pt_regs *regs);
+ void simulate_ldr_literal(u32 opcode, long addr, struct pt_regs *regs);
 -- 
 2.50.1
 
