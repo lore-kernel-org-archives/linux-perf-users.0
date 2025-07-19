@@ -1,55 +1,55 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E9120ADF8
-	for <linux-perf-users@vger.kernel.org>; Sat, 19 Jul 2025 03:06:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5F1233140
+	for <linux-perf-users@vger.kernel.org>; Sat, 19 Jul 2025 03:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752894361; cv=none; b=pnoKvbV4Iwg5E8G6RXsTlk7rGZeh2jhouBe07mmPsJUIl6ZfvKGMhekkRlHnnTXUWQTyDEHFsro5meXNEtfyYL2e2faR81O1XUQtx8y1K1i1V6/dQVTK7L+nkxHfZVqc2qdeTaGkSieGLdZnV7sNIggo32m9GkhNgZQ7t1G8jGM=
+	t=1752894364; cv=none; b=mhX7g8U/TgFErdcMobXeKZAF3C1aHdMCNblvBdtJB8OvjffHE+2/8CltyYdvUdaxmRR5GNaptWTX1IZ7c4i/e18na6CQ2OOlXLbPFmLwC4UFuYUH6assnIWmEXwFWAuT+5FdXItL1Ynh98cqbAlQfwYdn0iMHHjSq/QshvkHzmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752894361; c=relaxed/simple;
-	bh=gnUVsnOcV/XtpgO/L2imjrh4swAc/StdCtllv4r2d8E=;
+	s=arc-20240116; t=1752894364; c=relaxed/simple;
+	bh=DANcYFjWFog65lA2TzZsCGmS77SSjwfSoaVllkCywbg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=Dqxkfy2/FP4MAjkdi8XY4qIL+lupAC6qlM0a2VeH+B1TLyCMkG1VkhrQ8WGQjkCoKrolF5b7Isxd0ygfvA24W6bx9UyiM9kBtBPO933xhYKRq3e0PnKXojAL3g/GoaOPWCrgnnYeQgPjEea89KP3sr+vxZBZ6iAdC7WnppibX9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NSqgKl1m; arc=none smtp.client-ip=209.85.210.201
+	 To:Content-Type; b=ZOf+CP0bZazMIrqdSd0E4W0hOJkKm8J2G8RO+5Ta+6o3c7kzs+5buaiYQ9GG1DAUcTieYVpI9owx9CYGPSAgCBaN7ZcrVi9QEMSdNRrHwqHqCZYNJBHPh3s4EGzhnivdyK5emJ7msym47gMFK4FhhJEse6xME9e9P+83bPYEoEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yYCQ1zNJ; arc=none smtp.client-ip=209.85.160.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NSqgKl1m"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-740774348f6so2671285b3a.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Jul 2025 20:06:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yYCQ1zNJ"
+Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-2f3b9f042a6so2734766fac.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 18 Jul 2025 20:06:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1752894359; x=1753499159; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1752894361; x=1753499161; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=nmgRc//yvu8C/2TPTG7gdgWNTTZ5mY9hqNAERparZN8=;
-        b=NSqgKl1mGVNlT2kIuAiTy9OhB3bZq7Sqct8Vnqoq4uiablBFgW99WdrO0deCOcLuLq
-         KML1HC6TGohOSoFfi7hxPmEP+2O4nPMmlxzmQTa0fjLDlSwTtHMmNsWokViK9QQsEjI8
-         wAXICrEKo1DxL4qbyhTpSgnkcZokeZTzb1wMyX24DANkycRDV9ag9LVVJjXDMTRmhVQl
-         QNnmNHefHFfAv7umNFGkrUcIifUMaGirQ0wh0K8uo9jaGDhweNXmj8GrqpAmBRBWRq2Q
-         D6URjIzFws2fPUROIcSJuxgL9nNeb8LS87yIN3EXXLyJlJpanZYWEwnqpy6/XbILaKgE
-         YuDA==
+        bh=87ygbU8b8rNXhdTHrIi6W+OHuxcL4xxMWjwjqIk1tDg=;
+        b=yYCQ1zNJJn62ZjijvzW0htn1cPOve7/0R39uDMGm4al7JKbcwvWBgs1WeCZWWltWzA
+         qZUQE8f7/jt8YhJ9Vw3CcIdLc9vH7vGGwYf7WNygoGR7pkY7/Se4ABmOyfD07872MzpN
+         /rDuD0DBdrlKXULBA/hLLnt4SZ5qrVPIEcc9tQaM0KK/v1P7iBYHpmRdg04/eA7oz+oG
+         70j/L/Ebm+bY+TXoSOc8df2hiVeJV8nM2GrVyDgBX/05bEVz0E4QxKYvc8oA8iPYWQJK
+         6wknfjxuq4WJWxr1SodQV1250fpE5+aZBRpO9qu1QQD+TuvDYckmkX5FFKFm33BRoT+W
+         I8iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752894359; x=1753499159;
+        d=1e100.net; s=20230601; t=1752894361; x=1753499161;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nmgRc//yvu8C/2TPTG7gdgWNTTZ5mY9hqNAERparZN8=;
-        b=gsuYZOQEiUyhYCHQvEPxMONBFKuAuGdUM+LMVP67XRK6EBYzXdh6HbrElycu1C+ajv
-         8fKIcWwBau16z9Dy5h829m3enRjpRXQZL7gLbSqODm5phNTp/5vuckrMM6tVpXGPT03a
-         HL6hqCFdD6IhmcLYRVD1vf1p2zmQn9gfq34/bxqwg2EWNBkoD1DsY8I5Jb4L3j/5RY2z
-         Fn3SCbMTaSTpyprXIPUnURZBG8eb1baN8wpXUG27HasNFb2IyCqxPvz4NKa+DqDecT7+
-         8WL3ciNVOoTiCAB1WcnJ8QzPj4VmWfgR47SrfcLqGxCtUTkzSRTkvdqozJX7ifh5PDqK
-         ZLcw==
-X-Forwarded-Encrypted: i=1; AJvYcCVrLmaGocaURExIidtcOAD5WVmdEFXLya2nYJ6kAA81BCtqYhJbAGTfDhyyluVjilvg+EsIgRWkDU5eCFbZllYL@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRskW/OzOl8VNVTlTHwiKX8FmrjVgRts+FxhObxB8DqUkIsp40
-	A3WTeCUyE7EcAcTOhc2jfwqKsuYs6lvE275wJzcikZWNQEk9GTNEzzb90MtC1NHQcIzVE5fi3zG
-	VvVFHyOhAiQ==
-X-Google-Smtp-Source: AGHT+IG4YDUB4lx+V+i8TajjW6vMqT0pjd6tqiud9nGrVufXkeQRNx06qqxAraYwENxoI7aztNJ+KmaqZCxN
-X-Received: from pfbdh2.prod.google.com ([2002:a05:6a00:4782:b0:746:fd4c:1fcf])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3e23:b0:748:e150:ac5c
- with SMTP id d2e1a72fcca58-759ae1e7120mr7877546b3a.23.1752894359467; Fri, 18
- Jul 2025 20:05:59 -0700 (PDT)
-Date: Fri, 18 Jul 2025 20:05:16 -0700
+        bh=87ygbU8b8rNXhdTHrIi6W+OHuxcL4xxMWjwjqIk1tDg=;
+        b=kmdZgyLAsaym+N7Fm7gGoiuzwGOd9/Ob+G1wfhSB0YqRbAw9G/q8pq4Ks2iWE3saOY
+         HsBTfVYFW/+XuBoFeo7+M6eAsRR30yv0YuDzSS7G89WjjuYi7G4jKo+0MqU9qpwP2YqK
+         TryP9Ypicqqy+qKLe5V6nAyU6oVWLg83S5pFaod+8w17FFOHzqhmZCx1/fG3hIijXwog
+         AjwTRMD4/hM/+D5diFTnFxVtwsjIXEPQIuE9CZuhxc4/GTRbUQ4jzkkOBEkDYiNvcf5r
+         lqOpomXntob+WyDJRJLZQIgHiynE4/tfodCyTrh29/GK+4qIYj3BDMmpaGCycKp2ejb4
+         u6bw==
+X-Forwarded-Encrypted: i=1; AJvYcCXH2Y0W5GcUhnJH7CA1ULAj467r1f8YUnrtAOntCMP2hFe9uLf8fwB2Aabza7maVSVewqOtM678Ioq9Sph55kK6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0YPAAfyhC2E0dl8RdbCshPqz6jPxDaLxYAXlg934g5lvNAsCx
+	kupJNLebZqxXcqMh0vWQgul7o9kPnd836A13qFTTUG5Uvwp+en0Q5qWSTimJ5qGGkwGy4kpTIrA
+	8rdglHdO+1Q==
+X-Google-Smtp-Source: AGHT+IF1zn1v8hKOs29XSjJpG0BiScmrrZ3QjOazEkYYMiDIpN9PpZyK6FC/Hrsm7Uo2yRHmvvdrcHmf9GW3
+X-Received: from oabrc11.prod.google.com ([2002:a05:6871:61cb:b0:2ff:9f42:9536])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:c995:b0:2cc:3523:9cd5
+ with SMTP id 586e51a60fabf-2ffb22a045amr9659853fac.17.1752894361378; Fri, 18
+ Jul 2025 20:06:01 -0700 (PDT)
+Date: Fri, 18 Jul 2025 20:05:17 -0700
 In-Reply-To: <20250719030517.1990983-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250719030517.1990983-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250719030517.1990983-15-irogers@google.com>
-Subject: [PATCH v3 14/15] perf parse-events: Fix missing slots for Intel
- topdown metric events
+Message-ID: <20250719030517.1990983-16-irogers@google.com>
+Subject: [PATCH v3 15/15] perf metricgroups: Add NO_THRESHOLD_AND_NMI constraint
 From: Ian Rogers <irogers@google.com>
 To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -74,185 +73,118 @@ To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.or
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Topdown metric events require grouping with a slots event. In perf
-metrics this is currently achieved by metrics adding an unnecessary
-"0 * tma_info_thread_slots". New TMA metrics trigger optimizations of
-the metric expression that removes the event and breaks the metric due
-to the missing but required event. Add a pass immediately before
-sorting and fixing parsed events, that insert a slots event if one is
-missing. Update test expectations to match this.
+Thresholds can increase the number of counters a metric needs. The NMI
+watchdog can take away a counter (hopefully the buddy watchdog will
+become the default and this will no longer be true). Add a new
+constraint for the case that a metric and its thresholds would fit in
+counters but only if the NMI watchdog isn't enabled. Either the
+threshold or the NMI watchdog should be disabled to make the metric
+fit. Wire this up into the metric__group_events logic.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/x86/util/evlist.c  | 24 ++++++++++++++++++++++++
- tools/perf/arch/x86/util/topdown.c | 28 ++++++++++++++++++++++++++++
- tools/perf/arch/x86/util/topdown.h |  2 ++
- tools/perf/tests/parse-events.c    | 24 ++++++++++++------------
- tools/perf/util/evlist.h           |  1 +
- tools/perf/util/parse-events.c     | 10 ++++++++++
- 6 files changed, 77 insertions(+), 12 deletions(-)
+ tools/perf/pmu-events/jevents.py   |  1 +
+ tools/perf/pmu-events/pmu-events.h | 14 ++++++++++----
+ tools/perf/util/metricgroup.c      | 16 ++++++++++++----
+ 3 files changed, 23 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-index 1969758cc8c1..75e9d00a1494 100644
---- a/tools/perf/arch/x86/util/evlist.c
-+++ b/tools/perf/arch/x86/util/evlist.c
-@@ -81,3 +81,27 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
- 	/* Default ordering by insertion index. */
- 	return lhs->core.idx - rhs->core.idx;
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index e821155151ec..0abd3cfb15ea 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -235,6 +235,7 @@ class JsonEvent:
+           'NO_GROUP_EVENTS_NMI': '2',
+           'NO_NMI_WATCHDOG': '2',
+           'NO_GROUP_EVENTS_SMT': '3',
++          'NO_THRESHOLD_AND_NMI': '4',
+       }
+       return metric_constraint_to_enum[metric_constraint]
+ 
+diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
+index a523936846e0..ea022ea55087 100644
+--- a/tools/perf/pmu-events/pmu-events.h
++++ b/tools/perf/pmu-events/pmu-events.h
+@@ -25,15 +25,21 @@ enum metric_event_groups {
+ 	 */
+ 	MetricNoGroupEvents = 1,
+ 	/**
+-	 * @MetricNoGroupEventsNmi: Don't group events for the metric if the NMI
+-	 *                          watchdog is enabled.
++	 * @MetricNoGroupEventsNmi:
++	 * Don't group events for the metric if the NMI watchdog is enabled.
+ 	 */
+ 	MetricNoGroupEventsNmi = 2,
+ 	/**
+-	 * @MetricNoGroupEventsSmt: Don't group events for the metric if SMT is
+-	 *                          enabled.
++	 * @MetricNoGroupEventsSmt:
++	 * Don't group events for the metric if SMT is enabled.
+ 	 */
+ 	MetricNoGroupEventsSmt = 3,
++	/**
++	 * @MetricNoGroupEventsThresholdAndNmi:
++	 * Don't group events for the metric thresholds and if the NMI watchdog
++	 * is enabled.
++	 */
++	MetricNoGroupEventsThresholdAndNmi = 4,
+ };
+ /*
+  * Describe each PMU event. Each CPU has a table of PMU events.
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 3cc6c47402bd..595b83142d2c 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -179,7 +179,7 @@ static void metric__watchdog_constraint_hint(const char *name, bool foot)
+ 		   "    echo 1 > /proc/sys/kernel/nmi_watchdog\n");
  }
-+
-+int arch_evlist__add_required_events(struct list_head *list)
-+{
-+	struct evsel *pos, *metric_event = NULL;
-+	int idx = 0;
-+
-+	if (!topdown_sys_has_perf_metrics())
-+		return 0;
-+
-+	list_for_each_entry(pos, list, core.node) {
-+		if (arch_is_topdown_slots(pos)) {
-+			/* Slots event already present, nothing to do. */
-+			return 0;
-+		}
-+		if (metric_event == NULL && arch_is_topdown_metrics(pos))
-+			metric_event = pos;
-+		idx++;
-+	}
-+	if (metric_event == NULL) {
-+		/* No topdown metric events, nothing to do. */
-+		return 0;
-+	}
-+	return topdown_insert_slots_event(list, idx + 1, metric_event);
-+}
-diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
-index 66b231fbf52e..0d01b662627a 100644
---- a/tools/perf/arch/x86/util/topdown.c
-+++ b/tools/perf/arch/x86/util/topdown.c
-@@ -77,3 +77,31 @@ bool arch_topdown_sample_read(struct evsel *leader)
  
- 	return false;
- }
-+
-+/*
-+ * Make a copy of the topdown metric event metric_event with the given index but
-+ * change its configuration to be a topdown slots event. Copying from
-+ * metric_event ensures modifiers are the same.
-+ */
-+int topdown_insert_slots_event(struct list_head *list, int idx, struct evsel *metric_event)
-+{
-+	struct evsel *evsel = evsel__new_idx(&metric_event->core.attr, idx);
-+
-+	if (!evsel)
-+		return -ENOMEM;
-+
-+	evsel->core.attr.config = TOPDOWN_SLOTS;
-+	evsel->core.cpus = perf_cpu_map__get(metric_event->core.cpus);
-+	evsel->core.pmu_cpus = perf_cpu_map__get(metric_event->core.pmu_cpus);
-+	evsel->core.is_pmu_core = true;
-+	evsel->pmu = metric_event->pmu;
-+	evsel->name = strdup("slots");
-+	evsel->precise_max = metric_event->precise_max;
-+	evsel->sample_read = metric_event->sample_read;
-+	evsel->weak_group = metric_event->weak_group;
-+	evsel->bpf_counter = metric_event->bpf_counter;
-+	evsel->retire_lat = metric_event->retire_lat;
-+	evsel__set_leader(evsel, evsel__leader(metric_event));
-+	list_add_tail(&evsel->core.node, list);
-+	return 0;
-+}
-diff --git a/tools/perf/arch/x86/util/topdown.h b/tools/perf/arch/x86/util/topdown.h
-index 2349536cf882..69035565e649 100644
---- a/tools/perf/arch/x86/util/topdown.h
-+++ b/tools/perf/arch/x86/util/topdown.h
-@@ -5,9 +5,11 @@
- #include <stdbool.h>
- 
- struct evsel;
-+struct list_head;
- 
- bool topdown_sys_has_perf_metrics(void);
- bool arch_is_topdown_slots(const struct evsel *evsel);
- bool arch_is_topdown_metrics(const struct evsel *evsel);
-+int topdown_insert_slots_event(struct list_head *list, int idx, struct evsel *metric_event);
- 
- #endif
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 5ec2e5607987..bb8004397650 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -719,20 +719,20 @@ static int test__checkevent_pmu_partial_time_callgraph(struct evlist *evlist)
- 
- static int test__checkevent_pmu_events(struct evlist *evlist)
+-static bool metric__group_events(const struct pmu_metric *pm)
++static bool metric__group_events(const struct pmu_metric *pm, bool metric_no_threshold)
  {
--	struct evsel *evsel = evlist__first(evlist);
-+	struct evsel *evsel;
+ 	switch (pm->event_grouping) {
+ 	case MetricNoGroupEvents:
+@@ -191,6 +191,13 @@ static bool metric__group_events(const struct pmu_metric *pm)
+ 		return false;
+ 	case MetricNoGroupEventsSmt:
+ 		return !smt_on();
++	case MetricNoGroupEventsThresholdAndNmi:
++		if (metric_no_threshold)
++			return true;
++		if (!sysctl__nmi_watchdog_enabled())
++			return true;
++		metric__watchdog_constraint_hint(pm->metric_name, /*foot=*/false);
++		return false;
+ 	case MetricGroupEvents:
+ 	default:
+ 		return true;
+@@ -212,6 +219,7 @@ static void metric__free(struct metric *m)
+ static struct metric *metric__new(const struct pmu_metric *pm,
+ 				  const char *modifier,
+ 				  bool metric_no_group,
++				  bool metric_no_threshold,
+ 				  int runtime,
+ 				  const char *user_requested_cpu_list,
+ 				  bool system_wide)
+@@ -246,7 +254,7 @@ static struct metric *metric__new(const struct pmu_metric *pm,
+ 	}
+ 	m->pctx->sctx.runtime = runtime;
+ 	m->pctx->sctx.system_wide = system_wide;
+-	m->group_events = !metric_no_group && metric__group_events(pm);
++	m->group_events = !metric_no_group && metric__group_events(pm, metric_no_threshold);
+ 	m->metric_refs = NULL;
+ 	m->evlist = NULL;
  
--	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
--	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type ||
--				      strcmp(evsel->pmu->name, "cpu"));
--	TEST_ASSERT_VAL("wrong exclude_user",
--			!evsel->core.attr.exclude_user);
--	TEST_ASSERT_VAL("wrong exclude_kernel",
--			evsel->core.attr.exclude_kernel);
--	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
--	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
--	TEST_ASSERT_VAL("wrong pinned", !evsel->core.attr.pinned);
--	TEST_ASSERT_VAL("wrong exclusive", !evsel->core.attr.exclusive);
-+	TEST_ASSERT_VAL("wrong number of entries", 1 <= evlist->core.nr_entries);
+@@ -831,8 +839,8 @@ static int __add_metric(struct list_head *metric_list,
+ 		 * This metric is the root of a tree and may reference other
+ 		 * metrics that are added recursively.
+ 		 */
+-		root_metric = metric__new(pm, modifier, metric_no_group, runtime,
+-					  user_requested_cpu_list, system_wide);
++		root_metric = metric__new(pm, modifier, metric_no_group, metric_no_threshold,
++					  runtime, user_requested_cpu_list, system_wide);
+ 		if (!root_metric)
+ 			return -ENOMEM;
  
-+	evlist__for_each_entry(evlist, evsel) {
-+		TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type ||
-+					      strcmp(evsel->pmu->name, "cpu"));
-+		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
-+		TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
-+		TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
-+		TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
-+		TEST_ASSERT_VAL("wrong pinned", !evsel->core.attr.pinned);
-+		TEST_ASSERT_VAL("wrong exclusive", !evsel->core.attr.exclusive);
-+	}
- 	return TEST_OK;
- }
- 
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index fac1a01ba13f..1472d2179be1 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -111,6 +111,7 @@ void evlist__add(struct evlist *evlist, struct evsel *entry);
- void evlist__remove(struct evlist *evlist, struct evsel *evsel);
- 
- int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs);
-+int arch_evlist__add_required_events(struct list_head *list);
- 
- int evlist__add_dummy(struct evlist *evlist);
- struct evsel *evlist__add_aux_dummy(struct evlist *evlist, bool system_wide);
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index fe2073c6b549..01fa8c80998b 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2190,6 +2190,11 @@ static int evlist__cmp(void *_fg_idx, const struct list_head *l, const struct li
- 	return arch_evlist__cmp(lhs, rhs);
- }
- 
-+int __weak arch_evlist__add_required_events(struct list_head *list __always_unused)
-+{
-+	return 0;
-+}
-+
- static int parse_events__sort_events_and_fix_groups(struct list_head *list)
- {
- 	int idx = 0, force_grouped_idx = -1;
-@@ -2201,6 +2206,11 @@ static int parse_events__sort_events_and_fix_groups(struct list_head *list)
- 	struct evsel *force_grouped_leader = NULL;
- 	bool last_event_was_forced_leader = false;
- 
-+	/* On x86 topdown metrics events require a slots event. */
-+	ret = arch_evlist__add_required_events(list);
-+	if (ret)
-+		return ret;
-+
- 	/*
- 	 * Compute index to insert ungrouped events at. Place them where the
- 	 * first ungrouped event appears.
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
