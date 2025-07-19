@@ -1,55 +1,55 @@
-Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DE620ADF8
-	for <linux-perf-users@vger.kernel.org>; Sat, 19 Jul 2025 03:05:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E994C22DFA3
+	for <linux-perf-users@vger.kernel.org>; Sat, 19 Jul 2025 03:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752894354; cv=none; b=YmPXrDjeVhoH3Qw2/M1nlOr0u8PA2CmdAtOf/Lycsym64ZJPiMMKDWpbGUoMv3Rkjd8n7Sf8yqfXJZt9F32kcHA45zlkC5C+3dxE3T9CrHTQwg6CJwgwTuIFkTOfZGGZGzp7xY8B0dlpyYo64v+z23MoUy7xPwGssskTXwtBK90=
+	t=1752894356; cv=none; b=E/mFwrM3mP++YMWheLHDzt5vw+/rqAhdTveMq6eYrl3X1mIIYE4OkqwWVM/WLdqJUqXWUV1sPAQmuaHSorT/LBv6Dm6geNlDIpuzTZrswSCt+QzDteKCa9W4Ws/wlQRXq4fOBJRefIoQIRtf64hn93D0VAokNnlR1FubARCvkJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752894354; c=relaxed/simple;
-	bh=jEgvDggwtQddGz/4ZXMmANkYODrHYVg1OL8Si0VZ5M0=;
+	s=arc-20240116; t=1752894356; c=relaxed/simple;
+	bh=7V57mrxclma+L6i7A+s/RUZqSr9To26yFbxOIRG9Ic8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=kpYv0FFRwjtRqjuyL3cm1driTvIg1qI+hAPO3XjdubFICFgm9bkx/RVeSUoyvrGhf1semqM9TZdaj/zb9DRL6g+xHyhqXCItf97OeD0f0Tco2+HRDZ9OtGzT96We8CRuuqyIrxgcw3XMXmJy8TKayB26gMVZWIA/QG/yd8ZuVNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Qg/0B+6u; arc=none smtp.client-ip=209.85.160.73
+	 To:Content-Type; b=n42uMMEv5CjyWxMZDgpmdGg1yCNROuF6x+4gbtR6rjpu//NQ86Ntu4o5YnaqWYtUjU9nHjJEYNyjndOZvKecOBEk++jHQaG49bIfe6yxEYUc6Yo99E0zhQ3s3lqjFAy8kXLniF+hmkJDBrK1ljkkzLgh7CSe5LDT5tZH7pPLNeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1KmgzzwL; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qg/0B+6u"
-Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-2e8e969090aso2688239fac.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Jul 2025 20:05:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1KmgzzwL"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-313c3915345so3945567a91.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 18 Jul 2025 20:05:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1752894352; x=1753499152; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1752894354; x=1753499154; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=FbO2FaLlRAtP3MPRgVDa/ZaeF16Ze9Vrmjj4VaK1jxk=;
-        b=Qg/0B+6u0J2HgxoKg6/74lqLvHYs5P9h4OmbgpTEDkvEzn+t9S4AW+NarHsrhtEL3e
-         upjvxsqyhoLuGxdSmDcg6+ivbJc3qsQh+LHWua6puHcFvelVnT77Y2UJfmDfKO7J5CUt
-         GmMbXZ1SE/8oxkl7rZ6rVaZyjsYden1WKxUFCshPPlAB6EHs3mU7Xps8iTcQzAXIqFT7
-         lfgXgc1A5yhlDAOH0nVYFOvy5a8STDKhMCGcNQM0rSjoS4oeeyYNvGq6ap0xz5S9qWbv
-         BoLMK6bn2kH8abPJ6eITjGfjHtFbYbcOj5Dxr7+8m5jXlfKnEA1Nnj2YuPLEuGisnq9k
-         Mahg==
+        bh=lxK32ZV3/TwHJ48GSqnT12vEqhtnY89NH3NlvQCfpOQ=;
+        b=1KmgzzwL/r3AVd9PKK9u2XF3aS85LtaiP/g11RDqe5dzP4+/R01rqzLjZnHTibG0an
+         cSoYHxI14is6CyMgilzEgoksS33p47FYvki+LmmVy6TX0gXJ5n0nA6W94jgs0NgQZlur
+         5VExYtpGSeK1PG9SrO8JI+FDNeIGTbCKLP+pVrjzOqEZG40LY4M6CEPD1aoZe5hdPS2Y
+         2/wWg4XLyMVldXIKfJ7+RUu2Bt1ZDoYeCgvBqx0YXRBZ2sj/DGbCbAw0kYoE4atjy5ah
+         wiYYfjarsFnlsYN2yKlGuEO+RqEBHefTI678Jz6FBfEB2StFFK+T+saE16UhbbduqsyH
+         taiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752894352; x=1753499152;
+        d=1e100.net; s=20230601; t=1752894354; x=1753499154;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FbO2FaLlRAtP3MPRgVDa/ZaeF16Ze9Vrmjj4VaK1jxk=;
-        b=mFcSMGD57xQtyvEGQ8jInnrwKDgxE4Rj7qnO2rg7X1Fm1nF4oQUDrDQrYV8Ukdx8cx
-         6JYIehaMlsbmqfIfqskYYBgNXZIyHakOajqEWjJL//rlKUVlRAFeJQlYhjsaQmSOf9Le
-         fVcfZBYFskcLqSJ322tWnKVsJUetRHAgbhX2VixnvVAdRjwiolAdOXyrmJ4uO3RrQJXs
-         AoLC8lp2rRso4VOymc8L75cyu8eF97B14vOq8WKIORPnQG25jVlHEHNCkzG25ceACo1y
-         eYZQNBeJIodozHfLbLiw+vqdVFBIoG+pVe56M1mxnMrTabQt6tHGWUv2d2JD257U64tz
-         nh9w==
-X-Forwarded-Encrypted: i=1; AJvYcCVvD/kB4OLo74CE+Q2iry4BuZ3U7z89BPqGJ36o+5C6DatY2gD9ndizGriioPYdNzOUsyZecqysBHgpjft4C0QE@vger.kernel.org
-X-Gm-Message-State: AOJu0YxamYOJIsv5JVFra9r2PWrsvM5iO+S8lTjTrG58dUZaLJ+NVCBP
-	1sjhAChr7cjAOnu24WVSUhf/M0n2R7XqJjeup0Pix8Mq+da3bgLGQRwh7R0qXR9qanXNgz5yMVI
-	TeK4+ODq41A==
-X-Google-Smtp-Source: AGHT+IH9mQssBop1ojQqFEkRCfHDS5fXdwoIedZ8y4RWCt//Bq7XXGqKMaiiV+8DtXnKcOcE+95CnISBh2tw
-X-Received: from oacpz15.prod.google.com ([2002:a05:6871:e48f:b0:2ff:a540:5c40])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6871:b0e:b0:28c:8476:dd76
- with SMTP id 586e51a60fabf-2ffd256ea33mr7239613fac.29.1752894351636; Fri, 18
- Jul 2025 20:05:51 -0700 (PDT)
-Date: Fri, 18 Jul 2025 20:05:12 -0700
+        bh=lxK32ZV3/TwHJ48GSqnT12vEqhtnY89NH3NlvQCfpOQ=;
+        b=LAXEvPa6g1ZwTobAYsywr24BS/AZBMPbFTLlGwOSS2iDX2/+YpNOB+0t/YYHkblO0Z
+         kFeSqdkyD420xwrQ1yiF/txUJBzkY9bFU4FlW6xxc6w7wEcgfG6LR1pf8iX3L/VyD5xL
+         Tgy001+SS5ZovgeOldEAETKZRx3U+rViLzaQhz8jAx/XK/rAgQluJruf2QfVbwR8RAYe
+         wUFqqaJpMR2jL19BFIKt30cwYSCakzz1ToQ3IoedrZtOzV0IVV858Je7XqVjUIP6DtQ9
+         WrFPF1T96dVSQGj5JkFqhkmT9vZXWp64PVlcfqY2AyRvaE0oUoUpmo0xBevWOARqDRia
+         mSFw==
+X-Forwarded-Encrypted: i=1; AJvYcCVULFENOpEqhpJ/B80WkaBD3IRnFo1B4hxcdNrYx9/6d4AGlBOuXEDzKRmo6CiguDb8qvxwXJ2dPBvxsdCNia9F@vger.kernel.org
+X-Gm-Message-State: AOJu0YzT2yZMeAtrqsK010xbcvzDhNXr2xOvHbtgYcmRzMQE9eSBlj1U
+	RxHyJ/dDMAzOoMm7vyiRvCe0WmiKcbrlQSFES7ovRqsvmRlsDHZPHHU5tkkVI9yu8cBp4AapPVL
+	RnIfNVyZnDg==
+X-Google-Smtp-Source: AGHT+IGog4H16tvEQwiT1AI891pwhJQ9A4BVEfNjMEJyKJU2RSnd/ONsvz2K6wIehr6NTjys2vAEPGX8XNto
+X-Received: from pjqq12.prod.google.com ([2002:a17:90b:584c:b0:314:2a3f:89c5])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1b43:b0:311:e8cc:4253
+ with SMTP id 98e67ed59e1d1-31caf82168bmr13625383a91.2.1752894353867; Fri, 18
+ Jul 2025 20:05:53 -0700 (PDT)
+Date: Fri, 18 Jul 2025 20:05:13 -0700
 In-Reply-To: <20250719030517.1990983-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250719030517.1990983-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250719030517.1990983-11-irogers@google.com>
-Subject: [PATCH v3 10/15] perf parse-events: Minor __add_event refactoring
+Message-ID: <20250719030517.1990983-12-irogers@google.com>
+Subject: [PATCH v3 11/15] perf evsel: Add evsel__open_per_cpu_and_thread
 From: Ian Rogers <irogers@google.com>
 To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,141 +73,75 @@ To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.or
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Rename cpu_list to user_cpus. If a PMU isn't given, find it early from
-the perf_event_attr. Make the pmu_cpus more explicitly a copy from the
-PMU (except when user_cpus are given). Derive the cpus from pmu_cpus
-and user_cpus as appropriate. Handle strdup errors on name and
-metric_id.
+Add evsel__open_per_cpu_and_thread that combines the operation of
+evsel__open_per_cpu and evsel__open_per_thread so that an event
+without the "any" cpumask can be opened with its cpumask and with
+threads it specifies. Change the implementation of evsel__open_per_cpu
+and evsel__open_per_thread to use evsel__open_per_cpu_and_thread to
+make the implementation of those functions clearer.
 
 Reviewed-by: Thomas Falcon <thomas.falcon@intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/parse-events.c | 69 +++++++++++++++++++++++-----------
- 1 file changed, 48 insertions(+), 21 deletions(-)
+ tools/perf/util/evsel.c | 23 +++++++++++++++++++----
+ tools/perf/util/evsel.h |  3 +++
+ 2 files changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index d506f9943506..bd2d831d5123 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -259,12 +259,12 @@ __add_event(struct list_head *list, int *idx,
- 	    bool init_attr,
- 	    const char *name, const char *metric_id, struct perf_pmu *pmu,
- 	    struct list_head *config_terms, struct evsel *first_wildcard_match,
--	    struct perf_cpu_map *cpu_list, u64 alternate_hw_config)
-+	    struct perf_cpu_map *user_cpus, u64 alternate_hw_config)
- {
- 	struct evsel *evsel;
- 	bool is_pmu_core;
--	struct perf_cpu_map *cpus;
--	bool has_cpu_list = !perf_cpu_map__is_empty(cpu_list);
-+	struct perf_cpu_map *cpus, *pmu_cpus;
-+	bool has_user_cpus = !perf_cpu_map__is_empty(user_cpus);
- 
- 	/*
- 	 * Ensure the first_wildcard_match's PMU matches that of the new event
-@@ -288,8 +288,6 @@ __add_event(struct list_head *list, int *idx,
- 	}
- 
- 	if (pmu) {
--		is_pmu_core = pmu->is_core;
--		cpus = perf_cpu_map__get(has_cpu_list ? cpu_list : pmu->cpus);
- 		perf_pmu__warn_invalid_formats(pmu);
- 		if (attr->type == PERF_TYPE_RAW || attr->type >= PERF_TYPE_MAX) {
- 			perf_pmu__warn_invalid_config(pmu, attr->config, name,
-@@ -301,48 +299,77 @@ __add_event(struct list_head *list, int *idx,
- 			perf_pmu__warn_invalid_config(pmu, attr->config3, name,
- 						PERF_PMU_FORMAT_VALUE_CONFIG3, "config3");
- 		}
-+	}
-+	/*
-+	 * If a PMU wasn't given, such as for legacy events, find now that
-+	 * warnings won't be generated.
-+	 */
-+	if (!pmu)
-+		pmu = perf_pmus__find_by_attr(attr);
-+
-+	if (pmu) {
-+		is_pmu_core = pmu->is_core;
-+		pmu_cpus = perf_cpu_map__get(pmu->cpus);
- 	} else {
- 		is_pmu_core = (attr->type == PERF_TYPE_HARDWARE ||
- 			       attr->type == PERF_TYPE_HW_CACHE);
--		if (has_cpu_list)
--			cpus = perf_cpu_map__get(cpu_list);
--		else
--			cpus = is_pmu_core ? cpu_map__online() : NULL;
-+		pmu_cpus = is_pmu_core ? cpu_map__online() : NULL;
-+	}
-+
-+	if (has_user_cpus) {
-+		cpus = perf_cpu_map__get(user_cpus);
-+		/* Existing behavior that pmu_cpus matches the given user ones. */
-+		perf_cpu_map__put(pmu_cpus);
-+		pmu_cpus = perf_cpu_map__get(user_cpus);
-+	} else {
-+		cpus = perf_cpu_map__get(pmu_cpus);
- 	}
-+
- 	if (init_attr)
- 		event_attr_init(attr);
- 
- 	evsel = evsel__new_idx(attr, *idx);
--	if (!evsel) {
--		perf_cpu_map__put(cpus);
--		return NULL;
-+	if (!evsel)
-+		goto out_err;
-+
-+	if (name) {
-+		evsel->name = strdup(name);
-+		if (!evsel->name)
-+			goto out_err;
-+	}
-+
-+	if (metric_id) {
-+		evsel->metric_id = strdup(metric_id);
-+		if (!evsel->metric_id)
-+			goto out_err;
- 	}
- 
- 	(*idx)++;
- 	evsel->core.cpus = cpus;
--	evsel->core.pmu_cpus = perf_cpu_map__get(cpus);
-+	evsel->core.pmu_cpus = pmu_cpus;
- 	evsel->core.requires_cpu = pmu ? pmu->is_uncore : false;
- 	evsel->core.is_pmu_core = is_pmu_core;
- 	evsel->pmu = pmu;
- 	evsel->alternate_hw_config = alternate_hw_config;
- 	evsel->first_wildcard_match = first_wildcard_match;
- 
--	if (name)
--		evsel->name = strdup(name);
--
--	if (metric_id)
--		evsel->metric_id = strdup(metric_id);
--
- 	if (config_terms)
- 		list_splice_init(config_terms, &evsel->config_terms);
- 
- 	if (list)
- 		list_add_tail(&evsel->core.node, list);
- 
--	if (has_cpu_list)
--		evsel__warn_user_requested_cpus(evsel, cpu_list);
-+	if (has_user_cpus)
-+		evsel__warn_user_requested_cpus(evsel, user_cpus);
- 
- 	return evsel;
-+out_err:
-+	perf_cpu_map__put(cpus);
-+	perf_cpu_map__put(pmu_cpus);
-+	zfree(&evsel->name);
-+	zfree(&evsel->metric_id);
-+	free(evsel);
-+	return NULL;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index af2b26c6456a..ae11df1e7902 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2761,17 +2761,32 @@ void evsel__close(struct evsel *evsel)
+ 	perf_evsel__free_id(&evsel->core);
  }
  
- struct evsel *parse_events__add_event(int idx, struct perf_event_attr *attr,
+-int evsel__open_per_cpu(struct evsel *evsel, struct perf_cpu_map *cpus, int cpu_map_idx)
++int evsel__open_per_cpu_and_thread(struct evsel *evsel,
++				   struct perf_cpu_map *cpus, int cpu_map_idx,
++				   struct perf_thread_map *threads)
+ {
+ 	if (cpu_map_idx == -1)
+-		return evsel__open_cpu(evsel, cpus, NULL, 0, perf_cpu_map__nr(cpus));
++		return evsel__open_cpu(evsel, cpus, threads, 0, perf_cpu_map__nr(cpus));
+ 
+-	return evsel__open_cpu(evsel, cpus, NULL, cpu_map_idx, cpu_map_idx + 1);
++	return evsel__open_cpu(evsel, cpus, threads, cpu_map_idx, cpu_map_idx + 1);
++}
++
++int evsel__open_per_cpu(struct evsel *evsel, struct perf_cpu_map *cpus, int cpu_map_idx)
++{
++	struct perf_thread_map *threads = thread_map__new_by_tid(-1);
++	int ret = evsel__open_per_cpu_and_thread(evsel, cpus, cpu_map_idx, threads);
++
++	perf_thread_map__put(threads);
++	return ret;
+ }
+ 
+ int evsel__open_per_thread(struct evsel *evsel, struct perf_thread_map *threads)
+ {
+-	return evsel__open(evsel, NULL, threads);
++	struct perf_cpu_map *cpus = perf_cpu_map__new_any_cpu();
++	int ret = evsel__open_per_cpu_and_thread(evsel, cpus, -1, threads);
++
++	perf_cpu_map__put(cpus);
++	return ret;
+ }
+ 
+ static int perf_evsel__parse_id_sample(const struct evsel *evsel,
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index cefa8e64c0d5..8e79eb6d41b3 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -351,6 +351,9 @@ int evsel__enable(struct evsel *evsel);
+ int evsel__disable(struct evsel *evsel);
+ int evsel__disable_cpu(struct evsel *evsel, int cpu_map_idx);
+ 
++int evsel__open_per_cpu_and_thread(struct evsel *evsel,
++				   struct perf_cpu_map *cpus, int cpu_map_idx,
++				   struct perf_thread_map *threads);
+ int evsel__open_per_cpu(struct evsel *evsel, struct perf_cpu_map *cpus, int cpu_map_idx);
+ int evsel__open_per_thread(struct evsel *evsel, struct perf_thread_map *threads);
+ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
