@@ -1,50 +1,65 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87CD32989B4;
-	Mon, 21 Jul 2025 15:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1815B2E03E6
+	for <linux-perf-users@vger.kernel.org>; Mon, 21 Jul 2025 16:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753112866; cv=none; b=WWJQvAhqaWdNm6+ERyMZU4NUFcCSiHmb1oHwIPpJXLTu+T3NYV8cOqHzb6GwVA6HFHOqT3PUhMF3Ek+FsTJ+fv9pIZ0IrWovmaE4sIz8x1GsW50IaClAXephqqXjitlK4FDF/klswi6Q5r5C8wfKUFjSMWDLqFpfGbB8TrbrNwc=
+	t=1753114435; cv=none; b=c0P5tMD0tvAMNqmj778Qav9WNCH/pcpQGJblOTSQ+/GZ4fTgYbG9RKPWsqk++QjAOCIxyk/NMhlhoVTlij+rWqqXLSRUH1o6xouEy720LMvDnm/8pCd6agu4KkT8mypbTLfkifOYrSz2/rLLjP1j0o83JI6LSMoHuUVLlO+Q5c8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753112866; c=relaxed/simple;
-	bh=yf93avLfOcBjv9y23grxTOASqvyH83/l7cM6ZlT0nAM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=URB4eYZzf6pObeOwSj72yKpxEBuzFT6MyPVHNuxnyKFKVv3Ml6r7tsUlAdtKj1Nisk+9Srv8gCy0b9QeINyUSyameQAy5dHG9T0cEwjJ7ZtcZSHzKsxMRjRRVVEL8zpjHDLm+zfIfeQhpU1Ncy6jyQzYF1iNZLr4hJMYv9HJleM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=3xbpjXFn; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1753114435; c=relaxed/simple;
+	bh=GGSxE1Hu/CmOz5hk4iCIXmBgYdKQBmbj6Z4PL8VgTak=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=Q8Bnc0usmIsE2J20zOeIWtRD1EsRzwDWmNFwrtZffexOWyOITvQa3qf+kwQiP9OkHsOYNg/+uxO4E1p7PHBF+wSwr8JsKk74l4JNhGr+9slJHKzjr/oJbUbEu3xXTp5H4qSNOeMplODj/FnSDliKnFcyiQp5NZVHwMnyvFJXST8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cjbLsZrt; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="3xbpjXFn"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56LDt62k020590;
-	Mon, 21 Jul 2025 17:47:23 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	P1ZuzEzRREiwLydWZlhzK+dlWBAxlIhEYuf20M8l1eU=; b=3xbpjXFnyMs0SC5A
-	i2NSTVksJj+qckbzFNDpYbQCrsNAuBlK574aC/pSgp9d95ovb31I7jR/KuivJ7Z7
-	vrlAF+Tjwygg8on9g8Nk5p0sTilTUvoy9mumnLwxZBwjmm5NG/irpmq9NNUmkiFu
-	0wrn5CM/J1V4wrupgXWM38kPE8qB0Av7ZcgyJMY415Yd2dEUQK7cZuJkMRI5BKp/
-	DW2K9XPdF4dI97k5wGLSQiynVfnweB2tJ1SZhLZSWwfrcbbY7ZWOHj3Oq1ycURsO
-	5wh+4Djrh+l9cQH6KWUDkkJClULDqjLBmk0Ufn2f8W5yGH6gc1qtD7k05Ef/cmMt
-	a3Wd6g==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4800g8hn2a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 21 Jul 2025 17:47:23 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 822DF4007D;
-	Mon, 21 Jul 2025 17:46:05 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 36E51768F09;
-	Mon, 21 Jul 2025 17:44:23 +0200 (CEST)
-Received: from [10.252.5.249] (10.252.5.249) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 21 Jul
- 2025 17:44:21 +0200
-Message-ID: <162aa05f-69df-4607-bf47-fbec60589f95@foss.st.com>
-Date: Mon, 21 Jul 2025 17:44:20 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cjbLsZrt"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-455b00339c8so32286535e9.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Jul 2025 09:13:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1753114431; x=1753719231; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=9BReN8kFhNkqoSb3wxSgjEPGo+Of3+hoptB67zyAW78=;
+        b=cjbLsZrt6/2Ve0zjFZmbBZsIfjFeqQw/cid/lH3mmtdqJFhMH0jLZT206f357Z69Rr
+         jO7DfJyH73EIiPzhrWInpI0ENkhXy+Gm6mE4ER3pspP5zAouql/Xbk3hwnT0traxZhu2
+         Mhgvs7d0HqSX4bwUbvaQOlAcerIeJvoHU5QN63Wq5GxznO3/TnpF4hMlb8zj+A6nU9Du
+         wMd4l0CAh5O2Lu0ocfPCP19GX0h2qXBpGZVBQeJFLNCeIcLhRL3JsyaBQB8xU8w0x1Vc
+         /YupH4fg+JGERAuWgx4+B8aHU6otjdePAirmuwWjVbHOYPhax0Fskoyhi2qRP3vlX302
+         j8Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753114431; x=1753719231;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9BReN8kFhNkqoSb3wxSgjEPGo+Of3+hoptB67zyAW78=;
+        b=H0DKhy9rLEVPFU/hmVNu9GezQv/7cF7mY6xr4ry12Z09HCdfMZUhQj6kWSNw7oXfMg
+         EGp0InthI/n8CnqJegOc2zGCRAGWJaK0nu/QYxkEe5AH+kXHM22OrQ4bYrSGFRmBw5SC
+         qUOl0DKulX44SQ2DH3QSqm2Z0qZHQf2pmseoT2XEPfj2aVhAlHJaqg87qOCcqH5WJovT
+         O1nkTs1AqK2PtzfqQSqdtTk6o35iV+MSjGRQxb2Rk7/qlJHX1F/hSjkUULm3JCFjnqmR
+         /7J5hGDAhtRjh9rB2n6W07fuWLLmwSKt9cy43iedE430XbZ32FhJZPr0QAExJ9arQc9V
+         h6HA==
+X-Forwarded-Encrypted: i=1; AJvYcCXVaK6q/4h9Trj2W4WbFPwggeJJamfeuKS/47jLty9Lmd3hvUvjAr5lSQAQJf9KlpcnDNVGITn1d3ZSPRll3zvE@vger.kernel.org
+X-Gm-Message-State: AOJu0YwiOKXGIBfOl9Re9X2NrzY2wRfm7U5G+iCs3hjOc8iaLNnICXVU
+	8yZBn0ekXIQU0PrLh7TYpazwqYvJuPJUEt84sAjL+91eXZ20TBoXgos1xhL7ZdIUkMc=
+X-Gm-Gg: ASbGncufB5Js8St5uWSSiSpuUUDKOcPR4wfEGeLyV5xQYtiVd8T3rwBaq/Ja2Cge5TN
+	ADrwWsYXNF9nJKeXEB9Dvxjn07UaQSolmnVqAvlsd33CNRPudMa+oDSjykJKKiNYRV9UCqPT2KR
+	KeJK2tIgdfbOWIVUb2sDslKoLmK+0K+Llw9LU1GwlyoB7N/zJhSKxkZRFoXGLuWhvhSOyWnNpJy
+	38Qp3CYlCTy6kNlVAz7lRYPCjjtwzd0ltF/QVBilYk9I3Zj524d/yXCiCtfmKfkIMeutAXoTuzZ
+	hl1lwAQRx9Xl8AGDdBXNgEAyTP5f8EYjioeIA35y+/NyaVyIS5RMsKr0t2JbzxlPWKjb2SEVAsN
+	jjC9fN+P4T8cOivJF+Ak8DXmIbbetYb9nkrnMqA==
+X-Google-Smtp-Source: AGHT+IGS05W2n0Cs3+lkmQ0hawv/FUnUeJ4fwkqkj5rDTWEAfnRp5XtI8zOuQ9QBwRb1AvWITpdyfA==
+X-Received: by 2002:adf:9dc3:0:b0:3a4:f918:9db9 with SMTP id ffacd0b85a97d-3b60e5127e4mr14240084f8f.32.1753114431398;
+        Mon, 21 Jul 2025 09:13:51 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.76.109])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4562e80731bsm163234685e9.15.2025.07.21.09.13.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Jul 2025 09:13:50 -0700 (PDT)
+Message-ID: <2b51b856-a1c6-4ff1-b336-ae612e5d1cf5@linaro.org>
+Date: Mon, 21 Jul 2025 17:13:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,90 +67,99 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/16] arm64: dts: st: add LPDDR channel to
- stm32mp257f-dk board
-To: Rob Herring <robh@kernel.org>
-CC: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Gatien Chevallier
-	<gatien.chevallier@foss.st.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Gabriel Fernandez
-	<gabriel.fernandez@foss.st.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Le
- Goffic <legoffic.clement@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>
-References: <20250711-ddrperfm-upstream-v2-0-cdece720348f@foss.st.com>
- <20250711-ddrperfm-upstream-v2-6-cdece720348f@foss.st.com>
- <20250715032020.GB4144523-robh@kernel.org>
- <ae960a16-65ad-4b22-b9fb-89efbffacd3e@foss.st.com>
- <20250715150224.GA1319886-robh@kernel.org>
+Subject: Re: [PATCH v1 00/12] CPU mask improvements/fixes particularly for
+ hybrid
+To: Ian Rogers <irogers@google.com>
+References: <20250627192417.1157736-1-irogers@google.com>
 Content-Language: en-US
-From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
-In-Reply-To: <20250715150224.GA1319886-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-07-21_04,2025-07-21_02,2025-03-28_01
+Cc: Thomas Falcon <thomas.falcon@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Ben Gainey <ben.gainey@arm.com>,
+ Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>,
+ Levi Yun <yeoreum.yun@arm.com>, "Dr. David Alan Gilbert"
+ <linux@treblig.org>, Zhongqiu Han <quic_zhonhan@quicinc.com>,
+ Blake Jones <blakejones@google.com>, Yicong Yang <yangyicong@hisilicon.com>,
+ Anubhav Shelat <ashelat@redhat.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+ Song Liu <song@kernel.org>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250627192417.1157736-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Rob
 
-On 7/15/25 17:02, Rob Herring wrote:
-> On Tue, Jul 15, 2025 at 10:32:09AM +0200, Clement LE GOFFIC wrote:
->> Hi Rob,
->>
->> Thanks for the review !
->>
->> On 7/15/25 05:20, Rob Herring wrote:
->>> On Fri, Jul 11, 2025 at 04:48:58PM +0200, Clément Le Goffic wrote:
->>>> Add 32bits LPDDR4 channel to the stm32mp257f-dk board.
->>>>
->>>> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
->>>> ---
->>>>    arch/arm64/boot/dts/st/stm32mp257f-dk.dts | 7 +++++++
->>>>    1 file changed, 7 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/st/stm32mp257f-dk.dts b/arch/arm64/boot/dts/st/stm32mp257f-dk.dts
->>>> index a278a1e3ce03..a97b41f14ecc 100644
->>>> --- a/arch/arm64/boot/dts/st/stm32mp257f-dk.dts
->>>> +++ b/arch/arm64/boot/dts/st/stm32mp257f-dk.dts
->>>> @@ -54,6 +54,13 @@ led-blue {
->>>>    		};
->>>>    	};
->>>> +	lpddr_channel: lpddr4-channel {
->>>> +		#address-cells = <1>;
->>>> +		#size-cells = <0>;
->>>> +		compatible = "jedec,lpddr4-channel";
->>>
->>> Not tested because this doesn't match the binding.
->>
->> Hmm, I've tested with make dtbs_check and dt_binding_check and it didn't
->> complain on my side.
->> What I have miss ?
+
+On 27/06/2025 8:24 pm, Ian Rogers wrote:
+> On hybrid systems some PMUs apply to all core types, particularly for
+> metrics the msr PMU and the tsc event. The metrics often only want the
+> values of the counter for their specific core type. These patches
+> allow the cpu term in an event to give a PMU name to take the cpumask
+> from. For example:
 > 
-> Oh wait, we already have a binding for that. I was confused with your
-> adding "jedec,ddr4-channel". Sorry for the noise.
+>    $ perf stat -e msr/tsc,cpu=cpu_atom/ ...
+> 
+> will aggregate the msr/tsc/ value but only for atom cores. In doing
+> this problems were identified in how cpumasks are handled by parsing
+> and event setup when cpumasks are specified along with a task to
+> profile. The event parsing, cpumask evlist propagation code and perf
+> stat code are updated accordingly.
+> 
+> The final result of the patch series is to be able to run:
+> ```
+> $ perf stat --no-scale -e 'msr/tsc/,msr/tsc,cpu=cpu_core/,msr/tsc,cpu=cpu_atom/' perf test -F 10
+>   10.1: Basic parsing test                                            : Ok
+>   10.2: Parsing without PMU name                                      : Ok
+>   10.3: Parsing with PMU name                                         : Ok
+> 
+>   Performance counter stats for 'perf test -F 10':
+> 
+>          63,704,975      msr/tsc/
+>          47,060,704      msr/tsc,cpu=cpu_core/                        (4.62%)
+>          16,640,591      msr/tsc,cpu=cpu_atom/                        (2.18%)
+> ```
+> 
+> This has (further) identified a kernel bug for task events around the
+> enabled time being too large leading to invalid scaling (hence the
+>   --no-scale in the command line above).
+> 
+> Ian Rogers (12):
+>    perf parse-events: Warn if a cpu term is unsupported by a CPU
+>    perf stat: Avoid buffer overflow to the aggregation map
+>    perf stat: Don't size aggregation ids from user_requested_cpus
+>    perf parse-events: Allow the cpu term to be a PMU
+>    perf tool_pmu: Allow num_cpus(_online) to be specific to a cpumask
+>    libperf evsel: Rename own_cpus to pmu_cpus
+>    libperf evsel: Factor perf_evsel__exit out of perf_evsel__delete
+>    perf evsel: Use libperf perf_evsel__exit
+>    perf pmus: Factor perf_pmus__find_by_attr out of evsel__find_pmu
+>    perf parse-events: Minor __add_event refactoring
+>    perf evsel: Add evsel__open_per_cpu_and_thread
+>    perf parse-events: Support user CPUs mixed with threads/processes
+> 
+>   tools/lib/perf/evlist.c                 | 118 ++++++++++++++++--------
+>   tools/lib/perf/evsel.c                  |   9 +-
+>   tools/lib/perf/include/internal/evsel.h |   3 +-
+>   tools/perf/builtin-stat.c               |   9 +-
+>   tools/perf/tests/event_update.c         |   4 +-
+>   tools/perf/util/evlist.c                |  15 +--
+>   tools/perf/util/evsel.c                 |  55 +++++++++--
+>   tools/perf/util/evsel.h                 |   5 +
+>   tools/perf/util/expr.c                  |   2 +-
+>   tools/perf/util/header.c                |   4 +-
+>   tools/perf/util/parse-events.c          | 102 ++++++++++++++------
+>   tools/perf/util/pmus.c                  |  29 +++---
+>   tools/perf/util/pmus.h                  |   2 +
+>   tools/perf/util/stat.c                  |   6 +-
+>   tools/perf/util/synthetic-events.c      |   4 +-
+>   tools/perf/util/tool_pmu.c              |  56 +++++++++--
+>   tools/perf/util/tool_pmu.h              |   2 +-
+>   17 files changed, 297 insertions(+), 128 deletions(-)
+> 
 
-It's fine no worries.
-However, in the patch 8, I add the property "memory-channel" that is not 
-in the dtschema repo and I didn't get any reviews on it.
-Is it ok for you ? or maybe should we discuss it over there ?
-I can try to do a PR on the dtschema thought, if it is ok.
+Tested-by: James Clark <james.clark@linaro.org>
 
-Best regards,
-Clément
