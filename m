@@ -1,98 +1,153 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07EE943AB7
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Jul 2025 13:41:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AA851DF754;
+	Mon, 21 Jul 2025 15:21:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753105275; cv=none; b=V3zI/b+v4diaS6f7zwpmIVNVuSS7083jcSL+QoNR0EVDkk9E9j/gHejDN9u0DsYxN/5o9HBv6UWItg+kX+gQ0vUXDqyMe7ni6N2sBHCZwJefBrblGJCboY/HJgDdiqbNMADU2BVHMdbTIfN0lqZSfdwIyv3Pb1+F/YGV4qJOuSY=
+	t=1753111300; cv=none; b=awuop+2FPywSVKJi4ME1EhrVt5Xj6LcyU3Gn1cPX11DqKV79sDkuqXNNAYCLl0aTzUdSW8tr0J4q/TctNBq1GCEAu/pGRu1OisKvItgXwBm08Ahbs0TJG0UzHT8myslA9BOLN08b6//UN0k9WJCfV5GOUwx9F/uOVqlEvVVZtmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753105275; c=relaxed/simple;
-	bh=X/CMxu+Wcc1BLZ6yTXXEuwdplxLvqklxHi3I0HvZ1sc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ifM5YhghJ0ESVQ9T7nOORsUmH3F76dWjD8YKCtkEzlbOVLPscVamJH6U8iRsoAxVrusoD/b2MfAsecJ9Q8qhxfJVQjFJXc/fKiVWcGTPvrt9iB2EJ74eSRSVJeUon6Z1ud6qreQ24kW+t1Y+dyJk39741uAHk/Kvg9+H0hl2C/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wrRB0sKc; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wrRB0sKc"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3e2429bd4b3so291025ab.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Jul 2025 06:41:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753105273; x=1753710073; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X/CMxu+Wcc1BLZ6yTXXEuwdplxLvqklxHi3I0HvZ1sc=;
-        b=wrRB0sKcLt8ItuXNGEuBC4QUphJS4jnezVcosHeEGddWYOgiFYpJ6KawlZ8YT70xWU
-         CPViz5NSK3ZBtupsi8FvTw9+TqsxEOkls0KKzxrFYBVvvj03gl+DJRO6rKinT+qlJ8+n
-         3V3IAkqRrlZbQJal1I/+4tNxGoDL0MCS3EMHScMABix0MawjkzBaTwz5NqvruGC04ZEc
-         QFA/Uf6GmYWuiZQIEd+6Kr6Cci7R50DKiZmtgV85zXjFoAqMVKcunXIj/R9UIbMziFQ9
-         9KK3Rw3aOz0oVen8pwOb6A4IWp/3MtZD1rJldRhnrAS5RRW/EZxVH1+EhZiX8W8mkpps
-         56TQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753105273; x=1753710073;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=X/CMxu+Wcc1BLZ6yTXXEuwdplxLvqklxHi3I0HvZ1sc=;
-        b=BOOGxa45XPNpsj2tcV+gBpnz0OfOA5PowyOYbNRabjiUZbjurSMEXuv4V/KO893AZZ
-         NbzI8PwRbTkyyEKAZ5ZafkvxUs8iUOKgDtUrXlBq+Y8EMLCDjJ942B8VChQBAgitouGO
-         Pqbb8PnuXxd9IAsUJWGPBJfAQBglPsC37SzCOT0ddMpsBX8gVjEVnHPAFidUaKvz18Af
-         +cnTU7v2dCOFwLJHmUSz7LghaMyYBuHMj983kR4ZwIyG9RotNZLY2KtY+zgl101vKp1W
-         U4cKRtabJOVBLDTZeggrEitSVk1FTW97HxiAduUs5Q+B8dMIGOr2B6tm9qivP4d4i/N7
-         2N9A==
-X-Forwarded-Encrypted: i=1; AJvYcCX0wMP/o1l9tu1r4AYBqW/wjKPwbug1nN0tiYc6tIgRicX1U3b78/6fnqTNUAymN221TheioB0HlWlOsC6ZP1pg@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZYl0ibYe08NnQZ+2t3ZHUKXxhZ8NxLLDgxGoX+XOpEcivfqAF
-	zkiClA2xJxtVTUrBeDbvJzsxO6AkgfM8oZPk0iG9vqv/51WxV7l6sOiFP+aICuDQGAjXgPRHC4T
-	N5KFqzZzQ65mSomUf0ELr5sGtNp2RJae947NiielG
-X-Gm-Gg: ASbGncvLVUIxo1CL4SgvTy/GoJsLirj0G5CQNmLMR9AaUT5+N1jsxLlyClqSuKrFo6W
-	rp7wyjs6QKUM7sPV/v9JBTWWqzFq64TsFa2rqDRmsKdS4RS/F2SIQuANu89IUo9i5Imlr2AXteQ
-	SO5LEi2YqqWVHZoHl/+c0fWFow1hxVlRPTKIKtiiZt+xo3cWEeQimLYI2DmtSJBhHZtvg2MCWvD
-	YDRJset
-X-Google-Smtp-Source: AGHT+IHV83LP0tfjFwhzfm+LStb9AHAjPM8BS0BOqo7MAWn3Qp4XExy+AH9x4hJvY+P5EHS3w8P7pBTIRquISuawbZ4=
-X-Received: by 2002:a05:6e02:3c8a:b0:3e0:58e6:d8a3 with SMTP id
- e9e14a558f8ab-3e2a18446a6mr5536615ab.27.1753105272688; Mon, 21 Jul 2025
- 06:41:12 -0700 (PDT)
+	s=arc-20240116; t=1753111300; c=relaxed/simple;
+	bh=nBeLfk14javg9SOP+fdU5fQH+x2VW066F+emh6tP8+w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZhiDS6uiD1YnB8ApcSwejWm0s2VWIsM7XTj5qbqNQWpXLKLVCutddDAisuN5HGvNVwC3RkAuNi1VU38lj15OYA8mqbv+Q0Co53UvlgDSdHj6a2Br4xEDjxhA1G2/aMb3mvljEYe1YTIg/UYT1O3Z9PER8eYOo1k1hIyvKaqAln8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82349153B;
+	Mon, 21 Jul 2025 08:21:31 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C80A33F6A8;
+	Mon, 21 Jul 2025 08:21:36 -0700 (PDT)
+Date: Mon, 21 Jul 2025 16:21:34 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Alexandru Elisei <alexandru.elisei@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Anshuman Khandual <Anshuman.Khandual@arm.com>,
+	Rob Herring <Rob.Herring@arm.com>,
+	Suzuki Poulose <Suzuki.Poulose@arm.com>,
+	Robin Murphy <Robin.Murphy@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] perf: arm_spe: Disable buffer before writing to
+ PMBPTR_EL1 or PMBSR_EL1
+Message-ID: <20250721152134.GF3137075@e132581.arm.com>
+References: <20250701-james-spe-vm-interface-v1-0-52a2cd223d00@linaro.org>
+ <20250701-james-spe-vm-interface-v1-2-52a2cd223d00@linaro.org>
+ <20250704155016.GI1039028@e132581.arm.com>
+ <b77f12e7-ea3f-4c57-9706-ff8e32721cc8@linaro.org>
+ <20250707153710.GB2182465@e132581.arm.com>
+ <aG4_uYJgpMXo3QHQ@raptor>
+ <20250714085849.GC1093654@e132581.arm.com>
+ <0c53164a-306a-4cb7-9085-bba8985c32e7@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250714164405.111477-1-irogers@google.com> <20250714164405.111477-12-irogers@google.com>
- <inu4jmw3jpnbhpaqjou27sn7m5zlzu3ksiuhir42wz4yxj2nvz@xpekkgpqldo7>
-In-Reply-To: <inu4jmw3jpnbhpaqjou27sn7m5zlzu3ksiuhir42wz4yxj2nvz@xpekkgpqldo7>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 21 Jul 2025 06:41:00 -0700
-X-Gm-Features: Ac12FXwC2QRBmn2fy99vXH91ei2LVIiaugmsdPaTLby6WW6k-lmNtGPaGk-2Xf0
-Message-ID: <CAP-5=fWKKtETkDX48KomxZZa4YiRwhOr5oAOHxkb=a3i5rTmyg@mail.gmail.com>
-Subject: Re: [PATCH v7 11/16] perf ilist: Add new python ilist command
-To: Gautam Menghani <gautam@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Collin Funk <collin.funk1@gmail.com>, 
-	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Andi Kleen <ak@linux.intel.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Chun-Tse Shao <ctshao@google.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0c53164a-306a-4cb7-9085-bba8985c32e7@linaro.org>
 
-On Mon, Jul 21, 2025 at 12:32=E2=80=AFAM Gautam Menghani <gautam@linux.ibm.=
-com> wrote:
->
-> Hi Ian,
->
-> Thanks for this. I tested this on both x86 and IBM pseries machine, the
-> entire series LGTM
->
-> Tested-by: Gautam Menghani <gautam@linux.ibm.com>
+On Mon, Jul 21, 2025 at 02:20:15PM +0100, James Clark wrote:
 
-Many thanks,
-Ian
+[...]
+
+> > > Thought about this some more.
+> > > 
+> > > Before:
+> > > 
+> > > arm_spe_pmu_buf_get_fault_act:
+> > >    <drain buffer>
+> > >    ISB
+> > > arm_spe_perf_aux_output_begin:
+> > >    PMBLIMITR_EL1.E = 1
+> > > ISB
+> > > PMBSR_EL1.S = 0
+> > > ERET
+> > > 
+> > > Now:
+> > > 
+> > > PMBLIMITR_EL1 = 0
+> > > ISB
+> > > 
+> > > PMBSR_EL1.S = 0
+> > > arm_spe_perf_aux_output_begin:
+> > >    ISB
+> > >    PMBLIMITR_EL1.E = 1
+> > > ERET
+> > > 
+> > > I don't see much of a difference between the two sequences - the point after
+> > > which we can be sure that profiling is enabled remains the ERET from the
+> > > exception return.  The only difference is that, before this change, the ERET
+> > > synchronized clearing the PMBSR_EL1.S bit, now it synchronizes setting the
+> > > PMBLIMITR_EL1.E bit.
+> > > 
+> > > Thoughts?
+> > 
+> > To make the discussion easier, I'll focus on the trace enabling flow
+> > in this reply.
+> > 
+> > My understanding of a sane flow would be:
+> > 
+> >    arm_spe_pmu_irq_handler() {
+> >      arm_spe_perf_aux_output_begin() {
+> >            SYS_PMBPTR_EL1 = base;
+> > 
+> >            ISB // Synchronization between SPE register setting and
+> >                // enabling profiling buffer.
+> >            PMBLIMITR_EL1.E = 1;
+> >      }
+> >      ISB // Context synchronization event to ensure visibility to SPE
+> >    }
+> > 
+> >    ... start trace ... (Bottom half, e.g., softirq, etc)
+> > 
+> >    ERET
+> > 
+> > In the current code, arm_spe_perf_aux_output_begin() is followed by an
+> > ISB, which serves as a context synchronization event to ensure
+> > visibility to the SPE. After that, it ensures that the trace unit will
+> > function correctly.
+> > 
+> 
+> But I think Alex's point is that in the existing code the thing that finally
+> enables trace (PMBSR_EL1.S = 0) isn't followed by an isb(), only an ERET. So
+> the new flow isn't any different in that regard.
+
+Thanks for explanation.
+
+> > I understand that the Software Usage PKLXF recommends using an ERET as
+> > the synchronization point. However, between enabling the profiling
+> > buffer and the ERET, the kernel might execute other operations (e.g.,
+> > softirqs, tasklets, etc.).
+> 
+> Isn't preemption disabled? Surely that's not possible. Even if something did
+> run it wouldn't be anything that touches the SPE registers, and we're sure
+> there's an isb() between setting up the buffer and the final PMBLIMITR_EL1.E
+> = 1
+
+Yes, bottom half runs in preemtion disabled state. See:
+
+  el1_interrupt() -> __el1_irq() -> irq_exit_rcu() -> invoke_softirq()
+
+In some cases, sotfirq and tasklet might even cause long latency (I
+believe it can be milliseconds or even longer), this is why ftrace
+"irqsoff" tracer is used to profile latency caused by irq off state.
+
+Bottom half does not modify SPE registsers, but it can be a long road
+between enabling SPE trace and ERET.
+
+> > Therefore, it seems to me that using ERET as the synchronization point
+> > may be too late. This is why I think we should keep an ISB after
+> > arm_spe_perf_aux_output_begin().
+> 
+> Wouldn't that make the ERET too late even in the current code then? But I
+> think we're agreeing there's no issue there?
+
+I would say ERET is too late for current code as well.
+
+Thanks,
+Leo
