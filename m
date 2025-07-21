@@ -1,153 +1,141 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AA851DF754;
-	Mon, 21 Jul 2025 15:21:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87CD32989B4;
+	Mon, 21 Jul 2025 15:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753111300; cv=none; b=awuop+2FPywSVKJi4ME1EhrVt5Xj6LcyU3Gn1cPX11DqKV79sDkuqXNNAYCLl0aTzUdSW8tr0J4q/TctNBq1GCEAu/pGRu1OisKvItgXwBm08Ahbs0TJG0UzHT8myslA9BOLN08b6//UN0k9WJCfV5GOUwx9F/uOVqlEvVVZtmc=
+	t=1753112866; cv=none; b=WWJQvAhqaWdNm6+ERyMZU4NUFcCSiHmb1oHwIPpJXLTu+T3NYV8cOqHzb6GwVA6HFHOqT3PUhMF3Ek+FsTJ+fv9pIZ0IrWovmaE4sIz8x1GsW50IaClAXephqqXjitlK4FDF/klswi6Q5r5C8wfKUFjSMWDLqFpfGbB8TrbrNwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753111300; c=relaxed/simple;
-	bh=nBeLfk14javg9SOP+fdU5fQH+x2VW066F+emh6tP8+w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZhiDS6uiD1YnB8ApcSwejWm0s2VWIsM7XTj5qbqNQWpXLKLVCutddDAisuN5HGvNVwC3RkAuNi1VU38lj15OYA8mqbv+Q0Co53UvlgDSdHj6a2Br4xEDjxhA1G2/aMb3mvljEYe1YTIg/UYT1O3Z9PER8eYOo1k1hIyvKaqAln8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82349153B;
-	Mon, 21 Jul 2025 08:21:31 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C80A33F6A8;
-	Mon, 21 Jul 2025 08:21:36 -0700 (PDT)
-Date: Mon, 21 Jul 2025 16:21:34 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Alexandru Elisei <alexandru.elisei@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Anshuman Khandual <Anshuman.Khandual@arm.com>,
-	Rob Herring <Rob.Herring@arm.com>,
-	Suzuki Poulose <Suzuki.Poulose@arm.com>,
-	Robin Murphy <Robin.Murphy@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] perf: arm_spe: Disable buffer before writing to
- PMBPTR_EL1 or PMBSR_EL1
-Message-ID: <20250721152134.GF3137075@e132581.arm.com>
-References: <20250701-james-spe-vm-interface-v1-0-52a2cd223d00@linaro.org>
- <20250701-james-spe-vm-interface-v1-2-52a2cd223d00@linaro.org>
- <20250704155016.GI1039028@e132581.arm.com>
- <b77f12e7-ea3f-4c57-9706-ff8e32721cc8@linaro.org>
- <20250707153710.GB2182465@e132581.arm.com>
- <aG4_uYJgpMXo3QHQ@raptor>
- <20250714085849.GC1093654@e132581.arm.com>
- <0c53164a-306a-4cb7-9085-bba8985c32e7@linaro.org>
+	s=arc-20240116; t=1753112866; c=relaxed/simple;
+	bh=yf93avLfOcBjv9y23grxTOASqvyH83/l7cM6ZlT0nAM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=URB4eYZzf6pObeOwSj72yKpxEBuzFT6MyPVHNuxnyKFKVv3Ml6r7tsUlAdtKj1Nisk+9Srv8gCy0b9QeINyUSyameQAy5dHG9T0cEwjJ7ZtcZSHzKsxMRjRRVVEL8zpjHDLm+zfIfeQhpU1Ncy6jyQzYF1iNZLr4hJMYv9HJleM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=3xbpjXFn; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="3xbpjXFn"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56LDt62k020590;
+	Mon, 21 Jul 2025 17:47:23 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	P1ZuzEzRREiwLydWZlhzK+dlWBAxlIhEYuf20M8l1eU=; b=3xbpjXFnyMs0SC5A
+	i2NSTVksJj+qckbzFNDpYbQCrsNAuBlK574aC/pSgp9d95ovb31I7jR/KuivJ7Z7
+	vrlAF+Tjwygg8on9g8Nk5p0sTilTUvoy9mumnLwxZBwjmm5NG/irpmq9NNUmkiFu
+	0wrn5CM/J1V4wrupgXWM38kPE8qB0Av7ZcgyJMY415Yd2dEUQK7cZuJkMRI5BKp/
+	DW2K9XPdF4dI97k5wGLSQiynVfnweB2tJ1SZhLZSWwfrcbbY7ZWOHj3Oq1ycURsO
+	5wh+4Djrh+l9cQH6KWUDkkJClULDqjLBmk0Ufn2f8W5yGH6gc1qtD7k05Ef/cmMt
+	a3Wd6g==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4800g8hn2a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Jul 2025 17:47:23 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 822DF4007D;
+	Mon, 21 Jul 2025 17:46:05 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 36E51768F09;
+	Mon, 21 Jul 2025 17:44:23 +0200 (CEST)
+Received: from [10.252.5.249] (10.252.5.249) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 21 Jul
+ 2025 17:44:21 +0200
+Message-ID: <162aa05f-69df-4607-bf47-fbec60589f95@foss.st.com>
+Date: Mon, 21 Jul 2025 17:44:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0c53164a-306a-4cb7-9085-bba8985c32e7@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 06/16] arm64: dts: st: add LPDDR channel to
+ stm32mp257f-dk board
+To: Rob Herring <robh@kernel.org>
+CC: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Gatien Chevallier
+	<gatien.chevallier@foss.st.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Gabriel Fernandez
+	<gabriel.fernandez@foss.st.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Le
+ Goffic <legoffic.clement@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>
+References: <20250711-ddrperfm-upstream-v2-0-cdece720348f@foss.st.com>
+ <20250711-ddrperfm-upstream-v2-6-cdece720348f@foss.st.com>
+ <20250715032020.GB4144523-robh@kernel.org>
+ <ae960a16-65ad-4b22-b9fb-89efbffacd3e@foss.st.com>
+ <20250715150224.GA1319886-robh@kernel.org>
+Content-Language: en-US
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+In-Reply-To: <20250715150224.GA1319886-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-21_04,2025-07-21_02,2025-03-28_01
 
-On Mon, Jul 21, 2025 at 02:20:15PM +0100, James Clark wrote:
+Hi Rob
 
-[...]
-
-> > > Thought about this some more.
-> > > 
-> > > Before:
-> > > 
-> > > arm_spe_pmu_buf_get_fault_act:
-> > >    <drain buffer>
-> > >    ISB
-> > > arm_spe_perf_aux_output_begin:
-> > >    PMBLIMITR_EL1.E = 1
-> > > ISB
-> > > PMBSR_EL1.S = 0
-> > > ERET
-> > > 
-> > > Now:
-> > > 
-> > > PMBLIMITR_EL1 = 0
-> > > ISB
-> > > 
-> > > PMBSR_EL1.S = 0
-> > > arm_spe_perf_aux_output_begin:
-> > >    ISB
-> > >    PMBLIMITR_EL1.E = 1
-> > > ERET
-> > > 
-> > > I don't see much of a difference between the two sequences - the point after
-> > > which we can be sure that profiling is enabled remains the ERET from the
-> > > exception return.  The only difference is that, before this change, the ERET
-> > > synchronized clearing the PMBSR_EL1.S bit, now it synchronizes setting the
-> > > PMBLIMITR_EL1.E bit.
-> > > 
-> > > Thoughts?
-> > 
-> > To make the discussion easier, I'll focus on the trace enabling flow
-> > in this reply.
-> > 
-> > My understanding of a sane flow would be:
-> > 
-> >    arm_spe_pmu_irq_handler() {
-> >      arm_spe_perf_aux_output_begin() {
-> >            SYS_PMBPTR_EL1 = base;
-> > 
-> >            ISB // Synchronization between SPE register setting and
-> >                // enabling profiling buffer.
-> >            PMBLIMITR_EL1.E = 1;
-> >      }
-> >      ISB // Context synchronization event to ensure visibility to SPE
-> >    }
-> > 
-> >    ... start trace ... (Bottom half, e.g., softirq, etc)
-> > 
-> >    ERET
-> > 
-> > In the current code, arm_spe_perf_aux_output_begin() is followed by an
-> > ISB, which serves as a context synchronization event to ensure
-> > visibility to the SPE. After that, it ensures that the trace unit will
-> > function correctly.
-> > 
+On 7/15/25 17:02, Rob Herring wrote:
+> On Tue, Jul 15, 2025 at 10:32:09AM +0200, Clement LE GOFFIC wrote:
+>> Hi Rob,
+>>
+>> Thanks for the review !
+>>
+>> On 7/15/25 05:20, Rob Herring wrote:
+>>> On Fri, Jul 11, 2025 at 04:48:58PM +0200, Clément Le Goffic wrote:
+>>>> Add 32bits LPDDR4 channel to the stm32mp257f-dk board.
+>>>>
+>>>> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+>>>> ---
+>>>>    arch/arm64/boot/dts/st/stm32mp257f-dk.dts | 7 +++++++
+>>>>    1 file changed, 7 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/st/stm32mp257f-dk.dts b/arch/arm64/boot/dts/st/stm32mp257f-dk.dts
+>>>> index a278a1e3ce03..a97b41f14ecc 100644
+>>>> --- a/arch/arm64/boot/dts/st/stm32mp257f-dk.dts
+>>>> +++ b/arch/arm64/boot/dts/st/stm32mp257f-dk.dts
+>>>> @@ -54,6 +54,13 @@ led-blue {
+>>>>    		};
+>>>>    	};
+>>>> +	lpddr_channel: lpddr4-channel {
+>>>> +		#address-cells = <1>;
+>>>> +		#size-cells = <0>;
+>>>> +		compatible = "jedec,lpddr4-channel";
+>>>
+>>> Not tested because this doesn't match the binding.
+>>
+>> Hmm, I've tested with make dtbs_check and dt_binding_check and it didn't
+>> complain on my side.
+>> What I have miss ?
 > 
-> But I think Alex's point is that in the existing code the thing that finally
-> enables trace (PMBSR_EL1.S = 0) isn't followed by an isb(), only an ERET. So
-> the new flow isn't any different in that regard.
+> Oh wait, we already have a binding for that. I was confused with your
+> adding "jedec,ddr4-channel". Sorry for the noise.
 
-Thanks for explanation.
+It's fine no worries.
+However, in the patch 8, I add the property "memory-channel" that is not 
+in the dtschema repo and I didn't get any reviews on it.
+Is it ok for you ? or maybe should we discuss it over there ?
+I can try to do a PR on the dtschema thought, if it is ok.
 
-> > I understand that the Software Usage PKLXF recommends using an ERET as
-> > the synchronization point. However, between enabling the profiling
-> > buffer and the ERET, the kernel might execute other operations (e.g.,
-> > softirqs, tasklets, etc.).
-> 
-> Isn't preemption disabled? Surely that's not possible. Even if something did
-> run it wouldn't be anything that touches the SPE registers, and we're sure
-> there's an isb() between setting up the buffer and the final PMBLIMITR_EL1.E
-> = 1
-
-Yes, bottom half runs in preemtion disabled state. See:
-
-  el1_interrupt() -> __el1_irq() -> irq_exit_rcu() -> invoke_softirq()
-
-In some cases, sotfirq and tasklet might even cause long latency (I
-believe it can be milliseconds or even longer), this is why ftrace
-"irqsoff" tracer is used to profile latency caused by irq off state.
-
-Bottom half does not modify SPE registsers, but it can be a long road
-between enabling SPE trace and ERET.
-
-> > Therefore, it seems to me that using ERET as the synchronization point
-> > may be too late. This is why I think we should keep an ISB after
-> > arm_spe_perf_aux_output_begin().
-> 
-> Wouldn't that make the ERET too late even in the current code then? But I
-> think we're agreeing there's no issue there?
-
-I would say ERET is too late for current code as well.
-
-Thanks,
-Leo
+Best regards,
+Clément
