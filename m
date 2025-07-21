@@ -1,222 +1,106 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08388BEE
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Jul 2025 13:20:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E41D2C327C
+	for <linux-perf-users@vger.kernel.org>; Mon, 21 Jul 2025 13:26:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753104020; cv=none; b=mDzE1gIzpFZ84gOs1WvmI9y/6N0Bwfw4m21RswULVJ5/5qr2SuLdm4w1z+opM/BqeIerY32PfTcQtvv9QZMAihGk+WE+e29zKb93ViS8NtrcJcTJMtSGXG+3af0O5PpoDvjkuI82AaJ4R5awCTIbn391mUHaFvExaDsCXEgR/3Q=
+	t=1753104416; cv=none; b=Vot3Q1reOKDaaGrPFfvxA/o4XyMf5Rl/aBfZT6Yj3QBsMtcpC3lhSGmM+0oQNBahxdmpppsq/DuFdxa61dj55ncOrMPmGEu+DITi1mBNzxJxymmmX3LBmQIbKgIXr/1y8JbEqAdeatB+Z6UT6v40xZWl2fFYQ+vmieCnzJX7WPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753104020; c=relaxed/simple;
-	bh=vFYsACjf+wWImBMqFRsLGjZ2g5T9qvVJqCKa1lGxxgE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l0ehmI4FK/CmSjBbbQ7B1eXWWD/5hNdhvo2jmxYqVC5QvfODvBMGTSFWHU7rz0UIxl88BctSQ9bnWwgycdTJ8s6FNz1Du9nhqSagFvrhSWa2nK8ECONYUrhHdpJ5oO2HcPcelBUEnY3vIeDSTRSFyDloOxXd9hseEBhmWeK1ZQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vFGGbJfr; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1753104416; c=relaxed/simple;
+	bh=4IijtH2QmNsDrjdgrlfWy8rHc4PbCYf4fjH8MzbKjJQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=m4uo08cXBoCxgE00Rv2IVPIDTdQz0z5fe2cxOqLGoenzKxoDlPUTCF45dhS9Snzi/xZdcH/IBNo08ehVUxK/LzfeMUpYqivLkFtHCi2F7NwbTNZSBOlGpfFzMR35hg9DZmzuM4hPJ3IcfWyt58ERRo6AXm+WcY3Z2z9ID09y3Vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dILL8VKL; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vFGGbJfr"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4538bc52a8dso33562955e9.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Jul 2025 06:20:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1753104017; x=1753708817; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vrn9rE6UkF/v98BJ3Qu5cq8UrY7vJ2riZbgUi0l0lcs=;
-        b=vFGGbJfr1jf4m2Un99pCCWR2wFDwIJbrMohaPirrvrr1Evc+kstuO6fhRd+mDI5P8G
-         x9BM5namDDZeDUnlY+yMiPJpFwqyM9bX1mfnZ4h/8OVG/ueeaGByHQZZEiiyo2nYXJNQ
-         LCwgSn/LLBu3vcSkGRwmxTYKu+/nYL5XMYUImq4m378UODgnAPY6tfSGAlzpZBYP/hCv
-         ++OPnQY+BHWuhwvZiBsfRobVJ1sqmqjyzC0gP0Ttc5iTtPmLN57nuNtT3bewMXAKdqdQ
-         GhcDPhm8eovcSoRYu7101W2/Fcyxyg32kjAvsqm7QRGAJItNqZXjSgaRdUdsgypVeuxF
-         8aVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753104017; x=1753708817;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vrn9rE6UkF/v98BJ3Qu5cq8UrY7vJ2riZbgUi0l0lcs=;
-        b=aLATo4O0MvuCkFxh3EFGeUSK3zTwd2ED0RPnmlm2pRDUPnenKG7jTorvGGUW0vB4/Q
-         jn9Opz2kNHv1J66fHQZZYfaIRgKly+Ya3D7MY0GGuBMeM6TYrvVNZsbZZUp65PsfKyWu
-         8EBfpjgJmj65e5bPNNsA+CR6DD5DaPNqji2qSZHVONZk4+KoSoFzq5FZHxwzsAy9+nHP
-         01I5FmlMsCKs2DqvFvYe+Gp9LuAyE+3UbWOXRNb7v6dney18uusz24VNjZkbFgBcS0Jl
-         aAaET16cUeoUIQgj3MB6Mkl+Uyf8Un4/Z4vjXRHD9k3/aYuwK2haDJcqMk8ildCjXmkc
-         EuEw==
-X-Forwarded-Encrypted: i=1; AJvYcCWZQDRtaWnqt+FMMaJSt8r2hztt9KBvbC6m3adR5a7Ztabfn97W+aNMeymIRLi8LjEVVq49ijcbDkF5Y5yEPekY@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiRvs/guOxr11Hlu/tiNUu8XpwO6EKwEyomZajaVdNCg4nJABV
-	nuHSqmOf/S844Iu/a1ZLiAU1SdKtXIf7Eg4SUqrplwQFj/ztSJ+723fHWVgkl0fazQg=
-X-Gm-Gg: ASbGncsb2H/nky5Q/FMZ5r2L31IkJukd0qf8b26nCGiKsvXhLW1+Mz0u4x/cUrqlUBx
-	UoXuENNm4YmawqTeki61F8AWRFyvAS0KyNXF40ZgCXzEYSMMqC68JwU626WrFZBp6A4rkkd/22l
-	dWEls1U1gdXnFGToM0hk58bmsfvMkLqE5XXkGZCCB62KvyePKCVWen6SdGootPUAnAJU19dydMm
-	7btREjb1xkdtgWSgsubLq5rDRiOWtQJZL2AzkTpz7b9k6tbtVznrOaVQNwBYOYcMFGTHc3tEsLK
-	+ZNgv7kdBFhT8+Ca9xvb0oLqnrVwJ4XNiDCA0nuV4G/X8AEf3ljFNmgW87FxnsIUfMcxN6Bj8AZ
-	Uj3aeivKWwzVTpfdpYIK8rGnoO8c3lrw38tl1pw==
-X-Google-Smtp-Source: AGHT+IH+iH70+HX8sNgyQja7zJIW/pG4ctsn+z4ohiQa3kbUyjxssWONPs/1WpQT4zINE1WNbLE7Uw==
-X-Received: by 2002:a05:6000:992:b0:3a4:f663:acb9 with SMTP id ffacd0b85a97d-3b61b0ec0dbmr9587918f8f.9.1753104016864;
-        Mon, 21 Jul 2025 06:20:16 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.76.109])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b75baa7072sm3489845f8f.2.2025.07.21.06.20.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Jul 2025 06:20:16 -0700 (PDT)
-Message-ID: <0c53164a-306a-4cb7-9085-bba8985c32e7@linaro.org>
-Date: Mon, 21 Jul 2025 14:20:15 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dILL8VKL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1753104412;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4c7HQtR5k6EhHDtfsyZmqz9t0/ZV8ZK7UNKA20gH/pc=;
+	b=dILL8VKL1uWNmQLuD7ewoql4+6FlgLLcJpCLbn9q2M1ebhtY33+sYFKWYwvjYuDYXbWdlm
+	PHmXpe24CwBfOV0jm4weqOVP5OVMdtvkFE2hMwDnoII3XBexngBMTRGOYMgxt7lHZ3ssD6
+	2Xq6C9BwCfqwHv5qzXXaTRVimoq/vBE=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-249-7rtKZtefPUirCGV-fTp6xQ-1; Mon,
+ 21 Jul 2025 09:26:47 -0400
+X-MC-Unique: 7rtKZtefPUirCGV-fTp6xQ-1
+X-Mimecast-MFC-AGG-ID: 7rtKZtefPUirCGV-fTp6xQ_1753104406
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B3DA419560A7;
+	Mon, 21 Jul 2025 13:26:46 +0000 (UTC)
+Received: from jbrnak-thinkpadx1carbongen9.tpbc.com (unknown [10.43.17.245])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BE74419560A3;
+	Mon, 21 Jul 2025 13:26:44 +0000 (UTC)
+From: Jakub Brnak <jbrnak@redhat.com>
+To: vmolnaro@redhat.com
+Cc: acme@kernel.org,
+	acme@redhat.com,
+	irogers@google.com,
+	linux-perf-users@vger.kernel.org,
+	mpetlan@redhat.com,
+	namhyung@kernel.org
+Subject: [PATCH v3 0/7] Introduce structure for shell tests
+Date: Mon, 21 Jul 2025 15:26:35 +0200
+Message-ID: <20250721132642.40906-1-jbrnak@redhat.com>
+In-Reply-To: <20250113182605.130719-1-vmolnaro@redhat.com>
+References: <20250113182605.130719-1-vmolnaro@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] perf: arm_spe: Disable buffer before writing to
- PMBPTR_EL1 or PMBSR_EL1
-To: Leo Yan <leo.yan@arm.com>, Alexandru Elisei <alexandru.elisei@arm.com>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Anshuman Khandual <Anshuman.Khandual@arm.com>,
- Rob Herring <Rob.Herring@arm.com>, Suzuki Poulose <Suzuki.Poulose@arm.com>,
- Robin Murphy <Robin.Murphy@arm.com>, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250701-james-spe-vm-interface-v1-0-52a2cd223d00@linaro.org>
- <20250701-james-spe-vm-interface-v1-2-52a2cd223d00@linaro.org>
- <20250704155016.GI1039028@e132581.arm.com>
- <b77f12e7-ea3f-4c57-9706-ff8e32721cc8@linaro.org>
- <20250707153710.GB2182465@e132581.arm.com> <aG4_uYJgpMXo3QHQ@raptor>
- <20250714085849.GC1093654@e132581.arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250714085849.GC1093654@e132581.arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
+Hi Arnaldo,
 
+This series of Veronika's patches as a part of upstreaming effort of perftool-testsuite has been rebased on the latest perf-tools-next branch and should now apply cleanly. 
+Patches 01/10, 02/10, and 05/10 from the v2 have been dropped as they were already accepted upstream. 
 
-On 14/07/2025 9:58 am, Leo Yan wrote:
-> Hi Alexandru,
-> 
-> On Wed, Jul 09, 2025 at 11:08:57AM +0100, Alexandru Elisei wrote:
-> 
-> [...]
-> 
->>>>>>    	case SPE_PMU_BUF_FAULT_ACT_OK:
->>>>>>    		/*
->>>>>> @@ -679,18 +692,14 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
->>>>>>    		 * PMBPTR might be misaligned, but we'll burn that bridge
->>>>>>    		 * when we get to it.
->>>>>>    		 */
->>>>>> -		if (!(handle->aux_flags & PERF_AUX_FLAG_TRUNCATED)) {
->>>>>> +		if (!(handle->aux_flags & PERF_AUX_FLAG_TRUNCATED))
->>>>>>    			arm_spe_perf_aux_output_begin(handle, event);
->>>>>> -			isb();
->>>>>
->>>>> I am a bit suspecious we can remove this isb().
->>>>>
->>>>> As a reference to the software usage PKLXF in Arm ARM (DDI 0487 L.a),
->>>>> after enable TRBE trace unit, an ISB is mandatory. Maybe check a bit
->>>>> for this?
->>>>
->>>> Wasn't this isb() to separate the programming of the registers with the
->>>> status register clear at the end of this function to enable profiling?
->>>
->>> Enabling profiling buffer followed an isb() is not only for separating
->>> other register programming.
->>>
->>> As described in section D17.9, Synchronization and Statistical Profiling
->>> in Arm ARM:
->>>
->>>    "A Context Synchronization event guarantees that a direct write to a
->>>    System register made by the PE in program order before the Context
->>>    synchronization event are observable by indirect reads and indirect
->>>    writes of the same System register made by a profiling operation
->>>    relating to a sampled operation in program order after the Context
->>>    synchronization event."
->>>
->>> My understanding is: after the ARM SPE profiling is enabled, the
->>> followed ISB is a Synchronization to make sure the system register
->>> values are observed by SPE. And we cannot rely on ERET, especially if
->>> we are tracing the kernel mode.
->>
->> Thought about this some more.
->>
->> Before:
->>
->> arm_spe_pmu_buf_get_fault_act:
->>    <drain buffer>
->>    ISB
->> arm_spe_perf_aux_output_begin:
->>    PMBLIMITR_EL1.E = 1
->> ISB
->> PMBSR_EL1.S = 0
->> ERET
->>
->> Now:
->>
->> PMBLIMITR_EL1 = 0
->> ISB
->>
->> PMBSR_EL1.S = 0
->> arm_spe_perf_aux_output_begin:
->>    ISB
->>    PMBLIMITR_EL1.E = 1
->> ERET
->>
->> I don't see much of a difference between the two sequences - the point after
->> which we can be sure that profiling is enabled remains the ERET from the
->> exception return.  The only difference is that, before this change, the ERET
->> synchronized clearing the PMBSR_EL1.S bit, now it synchronizes setting the
->> PMBLIMITR_EL1.E bit.
->>
->> Thoughts?
-> 
-> To make the discussion easier, I'll focus on the trace enabling flow
-> in this reply.
-> 
-> My understanding of a sane flow would be:
-> 
->    arm_spe_pmu_irq_handler() {
->      arm_spe_perf_aux_output_begin() {
->            SYS_PMBPTR_EL1 = base;
-> 
->            ISB // Synchronization between SPE register setting and
->                // enabling profiling buffer.
->            PMBLIMITR_EL1.E = 1;
->      }
->      ISB // Context synchronization event to ensure visibility to SPE
->    }
-> 
->    ... start trace ... (Bottom half, e.g., softirq, etc)
-> 
->    ERET
-> 
-> In the current code, arm_spe_perf_aux_output_begin() is followed by an
-> ISB, which serves as a context synchronization event to ensure
-> visibility to the SPE. After that, it ensures that the trace unit will
-> function correctly.
-> 
+Thanks,
+Jakub Brnak
 
-But I think Alex's point is that in the existing code the thing that 
-finally enables trace (PMBSR_EL1.S = 0) isn't followed by an isb(), only 
-an ERET. So the new flow isn't any different in that regard.
+Veronika Molnarova (7):
+  perf test perftool_testsuite: Use absolute paths
+  perf tests: Create a structure for shell tests
+  perf test: Provide setup for the shell test suite
+  perftool-testsuite: Add empty setup for base_probe
+  perf test: Introduce storing logs for shell tests
+  perf test: Format log directories for shell tests
+  perf test: Remove perftool drivers
 
-> I understand that the Software Usage PKLXF recommends using an ERET as
-> the synchronization point. However, between enabling the profiling
-> buffer and the ERET, the kernel might execute other operations (e.g.,
-> softirqs, tasklets, etc.).
+ tools/perf/tests/builtin-test.c               | 137 +++++++++-
+ tools/perf/tests/shell/base_probe/setup.sh    |  13 +
+ .../base_probe/test_adding_blacklisted.sh     |  13 +-
+ .../shell/base_probe/test_adding_kernel.sh    |  53 ++--
+ .../perf/tests/shell/base_probe/test_basic.sh |  19 +-
+ .../shell/base_probe/test_invalid_options.sh  |  11 +-
+ .../shell/base_probe/test_line_semantics.sh   |   7 +-
+ tools/perf/tests/shell/base_report/setup.sh   |   6 +-
+ .../tests/shell/base_report/test_basic.sh     |  47 ++--
+ tools/perf/tests/shell/common/init.sh         |   4 +-
+ .../tests/shell/perftool-testsuite_probe.sh   |  24 --
+ .../tests/shell/perftool-testsuite_report.sh  |  23 --
+ tools/perf/tests/tests-scripts.c              | 258 +++++++++++++++---
+ tools/perf/tests/tests-scripts.h              |  15 +
+ tools/perf/tests/tests.h                      |   8 +-
+ 15 files changed, 465 insertions(+), 173 deletions(-)
+ create mode 100755 tools/perf/tests/shell/base_probe/setup.sh
+ delete mode 100755 tools/perf/tests/shell/perftool-testsuite_probe.sh
+ delete mode 100755 tools/perf/tests/shell/perftool-testsuite_report.sh
 
-Isn't preemption disabled? Surely that's not possible. Even if something 
-did run it wouldn't be anything that touches the SPE registers, and 
-we're sure there's an isb() between setting up the buffer and the final 
-PMBLIMITR_EL1.E = 1
-
-> 
-> Therefore, it seems to me that using ERET as the synchronization point
-> may be too late. This is why I think we should keep an ISB after
-> arm_spe_perf_aux_output_begin().
-> 
-> Thanks,
-> Leo
-
-Wouldn't that make the ERET too late even in the current code then? But 
-I think we're agreeing there's no issue there?
-
-James
+-- 
+2.50.1
 
