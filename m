@@ -1,121 +1,75 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4D71D7E41;
-	Sun, 20 Jul 2025 08:59:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F31D35946;
+	Mon, 21 Jul 2025 00:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753001959; cv=none; b=D+zUUcCHMtCKtG3wUk2WWiMTq6Vz+aUMPwu/690PFZO79h8VNrLJQ5ojopzOH0XtaR6NYZWYB1BeRRgFS6Llfe5cTx90u5nLNgeFzF8biIIX6gJrp4nFV3aUb1DHLlxjQJj0LA3/mI3LcW+ErNRrEpKf1mhCwDSn36bMPhPB27w=
+	t=1753057810; cv=none; b=asUO8BSBc/e2QdyVlz7EhSB9ydoC4AiUonymjHZBQ2TO0ulPbAB13igFHqF1b8eLpkqINj4kT97kZbUa+Z1ehCV0F45TEuTVMAudJFUl5sERtS1QzWYJAT3hV/BtvMTaVt6/ouljcLRhnJ9muG6dbsnqlTQLHNSG44cEwp2MdPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753001959; c=relaxed/simple;
-	bh=M0bOc/j6BpQq1mxDARi3426daG4a2ThIlUeEdFrkC8A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WqtuE3/nSIm8qtyo2V0IZPyKQaBQiCa0QS9CzylYDBZca3c1btOJVgJNax36WSL4U6OCieTRORWzcaGj0JRDdOKXuafbd+v85Sr/YCe/alEpWfWSpRRB7MUTjGAd2vQwyjSNP0JPVlaLN9j7o/iafLy9cWqezFYo1SivtXANS3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ci2lDV9A; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1753057810; c=relaxed/simple;
+	bh=Z3IQ//BUVuDYShz8oy9xXfu+5hwrpJS0iBCHzigaVV4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k2IK99am31mDnhhwiCijJdplyNSHieqJ2DpunnA/4LP5vSjdP9LG2nDiUtH/jB1IbSx40sidccdG+Yy1nY1TXPjgPjPR+tfviAUvFWa9SdA6JDa8Gd5YRDTza2WFI0DuVbALTOJ8Qi+H8AM4YQWVdj6Qfucn+BhSyrhs0xVWuwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SYQZrXPJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ci2lDV9A"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2353a2bc210so30132915ad.2;
-        Sun, 20 Jul 2025 01:59:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753001957; x=1753606757; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sA2xO3FkcLO8DaNf6KbVUYpnZ2ST2OFsE3flTGRsM5U=;
-        b=Ci2lDV9AFsWC9CVpMI7DG7TZeUEGhN1LA/jDZg5I3LMINDAaP7QCMDStZnEIL2Qf5D
-         2PchmzxOPThM3ET5+rjheytW0k1vK0TuvEKSVkCyWIpf4VuxEmPO/Ww2Rra0f+6PMSP8
-         K968LlPWSYTMyNoZPaIHkwJeddpop94DElMmIM+C80NuC3P83ciTGaYWxafqEVrrEB1/
-         vRPHJExac11t+aF8JCaBGWFWV0NCTsgkVuiA6AwKOVAdYj+Matiioci2cfVxW++Snflp
-         DWu2hjWm/L3glmM7DqT9Rcx1pnW28vIys94Ueqj5VgXSsv6JXfthRaBnzHlTT/5mcalh
-         CE/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753001957; x=1753606757;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sA2xO3FkcLO8DaNf6KbVUYpnZ2ST2OFsE3flTGRsM5U=;
-        b=WPvPEsECL6bYfRUNFnOn04597O27m1+FpxGmbkbYO4u7vHFyo6hqhUmhhjKOcolqTa
-         pIpnB6ccJPJC3EOxDICQxJ7Tp73qHN8lV8vwHcw9aCAyNP/xTY2RZQckBTuAA2sOA/B1
-         s2/iIxYgw0re5Q7u9/CNRK9EutabV+SClgq0liR4PH/U3Xj4HCpsVH/bRzebARHSDTKg
-         LLnaVoeI3ZqbTRag64JNNL6Nq9ACQWqoMXGubIsFwNgYFnQ/6HCDywGQJz+CQcB464ug
-         RR8a/SOqATdIOw09n7SUB9D9D2JlLLH7UEa4o92h2IL3c4DqfV/l+n3ILFSER82e4+RV
-         3LCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUZPp4oWAPWOn/mvS6gGG/zyYn5Pcpegul1ahRNS7azO92Jn71yyPwjLPlQJGGCsh6VN4vi+1dC80EDUIc=@vger.kernel.org, AJvYcCWnfHeKTUnRa2vgHHYN9l8zYQUAyuaTXGfgR6OgDdq4NC1ELm4c2x10XoB0w41kHPgSkdgcZ5jhATs3b8crv6wQIA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiAUlTUrrJXxcsH0Xk5EscUnH1sFNn0OTi4toHFlYaYs50XHbW
-	6D/Mlqyn9e1R/27fTmo/CttA13QIpknTQY2x+debVbCX0bsUu8G9fXhl
-X-Gm-Gg: ASbGncvux/jpD/F+ZuVKdWzUydr8ucdjvQ54nJsweuDKpuZOyw7GTJoV8/LliP4h+z/
-	DTx6xvqHrAZnxpIP+awLIRbjvcEQObK40WFeJ8BDQx2TfDdQcdrBRf/swlVIYaK1Tp0v2TJzy/S
-	WBZvie/0cGDJddmTNgCrJ8MwcWA5FU15k+q0sRkkdygwLAEnAmLmKrys64XLSv0lYZJrIuqiwel
-	reLSCurRIq1SlEToDuHlhZnK6BHbe7EymN6A0AGJ2OsC1MRlulT++/ku81WZGkFORIKieh8OI21
-	Q14YaFhRbwqdWjv8UJbm/JL4sfEvOyTtVyebN5w4bPmv1HN5/Qx1tWvpO17iwQO5TwATV1R0QpY
-	Xfj/JjT2p5pHQbFoNEtUwtLNlVXwy
-X-Google-Smtp-Source: AGHT+IGQHzsV8pz3bryJ251pP0Aj07yt9omnf6sYGxLQAsHu/WuzEoDKSfTb4TUE2i34Lg2ek1yOHg==
-X-Received: by 2002:a17:902:d490:b0:234:c2e7:a0e4 with SMTP id d9443c01a7336-23e25684a67mr227746295ad.3.1753001956941;
-        Sun, 20 Jul 2025 01:59:16 -0700 (PDT)
-Received: from archlinux ([205.254.163.4])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23e3b6f003esm39063405ad.221.2025.07.20.01.59.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Jul 2025 01:59:16 -0700 (PDT)
-From: Suchit Karunakaran <suchitkarunakaran@gmail.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org
-Cc: sesse@google.com,
-	charlie@rivosinc.com,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	skhan@linuxfoundation.org,
-	Suchit Karunakaran <suchitkarunakaran@gmail.com>
-Subject: [PATCH] perf tests: Fix lib path detection for non-x86 architectures
-Date: Sun, 20 Jul 2025 14:29:05 +0530
-Message-ID: <20250720085905.192652-1-suchitkarunakaran@gmail.com>
-X-Mailer: git-send-email 2.50.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SYQZrXPJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D5AEC4CEE7;
+	Mon, 21 Jul 2025 00:30:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753057809;
+	bh=Z3IQ//BUVuDYShz8oy9xXfu+5hwrpJS0iBCHzigaVV4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SYQZrXPJte+ORULINt/7fnPZMWv95A8AnQxTsfKiw5NxE3XNuoyZ09l2sj8Hjrb7L
+	 6Kfpp1493vPQjkjAp0n4oO06ESvRUse8EYwsD3a20IiRTx8fW0jIGtMtnb5p0BPaU6
+	 EaRy9+MqJHi6gyoqvwnctSHZpwSudWFxjra0m6YswF1CV02Toe3j9dHqG6ttdZiq5q
+	 xE2dkERHMAovAuxSel8/SFRi/VDV04Z96phqZwrXBqyTbovLYwXMyOFFAD2zc47dat
+	 ncwOzZixvLR2PQpG55yARAS/8SWlit3uZGLkyKgOZzAM1yblxg8gQ1avy+5hcSdPrV
+	 zDJjAsBMm7icA==
+Date: Sun, 20 Jul 2025 19:30:08 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Alireza Sanaee <alireza.sanaee@huawei.com>
+Cc: mark.rutland@arm.com, shameerali.kolothum.thodi@huawei.com,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	jonathan.cameron@huawei.com, linux-arm-kernel@lists.infradead.org,
+	james.clark@linaro.org, mike.leach@linaro.org,
+	coresight@lists.linaro.org, krzk@kernel.org, linuxarm@huawei.com,
+	suzuki.poulose@arm.com, dianders@chromium.org,
+	ruanjinjie@huawei.com, linux-perf-users@vger.kernel.org,
+	saravanak@google.com
+Subject: Re: [PATCH v3 1/6] of: add infra for finding CPU id from phandle
+Message-ID: <175305780744.3139904.12956973374132329407.robh@kernel.org>
+References: <20250718094848.587-1-alireza.sanaee@huawei.com>
+ <20250718094848.587-2-alireza.sanaee@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250718094848.587-2-alireza.sanaee@huawei.com>
 
-The existing Makefile logic for determining library paths was
-hardcoded for x86 architectures, causing incorrect behavior
-on other platforms. This patch implements a portable solution
-using system bit detection.
 
-Signed-off-by: Suchit Karunakaran <suchitkarunakaran@gmail.com>
----
- tools/perf/tests/make | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+On Fri, 18 Jul 2025 10:48:43 +0100, Alireza Sanaee wrote:
+> Get CPU ID from phandle. Some drivers such as coresight, cti-coresight,
+> or arm-dsu use this API for finding CPU node in DT. In particular,
+> drivers do this by getting the CPU device_node through a phandle and
+> then find the CPU ID using of_cpu_node_to_id(). This commit encapsulates
+> CPU node finding and improves readability.
+> 
+> The API interface takes three parameters, 1) node, 2) pointer to
+> pointer of CPU node, 3) CPU node index. API sets the pointer to the CPU
+> node and allows the driver to work with the CPU node, for logging
+> purposes for instance.
+> 
+> Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>
+> ---
+>  drivers/of/cpu.c   | 49 ++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of.h |  9 +++++++++
+>  2 files changed, 58 insertions(+)
+> 
 
-diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-index 0ee94caf9ec1..565522408f99 100644
---- a/tools/perf/tests/make
-+++ b/tools/perf/tests/make
-@@ -53,9 +53,12 @@ endif
- 
- include $(srctree)/tools/scripts/Makefile.arch
- 
--# FIXME looks like x86 is the only arch running tests ;-)
--# we need some IS_(32/64) flag to make this generic
--ifeq ($(ARCH)$(IS_64_BIT), x861)
-+BITS := $(shell getconf LONG_BIT)
-+IS_64_BIT ?= 1
-+ifeq ($(BITS), 32)
-+IS_64_BIT = 0
-+endif
-+ifeq ($(IS_64_BIT), 1)
- lib = lib64
- else
- lib = lib
--- 
-2.50.1
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
