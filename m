@@ -1,137 +1,115 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77FA9219E93
-	for <linux-perf-users@vger.kernel.org>; Mon, 21 Jul 2025 21:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457731D63E8;
+	Mon, 21 Jul 2025 22:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753132658; cv=none; b=IsVWuvZ281M7prAm+HfSCXjf02K7Ig5J+RgHW11S4zfRHElTcxrVfCE7CblZalHtJmalmeMrn1LLMRiPVhCFa+EOPC0w7ibXOqOWb1aqs0N2D7X/GPViAnY7e6JP1yE/zTXBmVUuI4Pl6+5Zfo5uPI/C6Z2WD570Agh6BfFeww0=
+	t=1753137162; cv=none; b=MuVm2L5dw0R6arRhqhVaPqnwOwK091cLCoTKIHvpAL6qV9sQILbqbXokStUt0p0ewg7joG0rtg8EI1ejpM8qAXIVBhoJ7fk4zpSWnlLPxNVz4ktP5q2Kbou/5sbsOKIMbFcu1GLr7aa9fw34OPVraJxWqRFDeeN+zdDGVbgweK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753132658; c=relaxed/simple;
-	bh=zdUKaEQPaR0Y8p/zfg05UZDAo7TL4JCVF0QTyHSO8x0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=E4YitfP5S5+Wb9q/UtDfxkz8gm67D5zr2fVruGUy+LmI6/HiBN2a/Z2EGn+03NNtqa5/rwhRZgJM5GQXpQ1MAHrZpoq1v95QTP00fj1Tc33cyuZYwIBYE8QLKOQNBLGh77OrVdP9S/EPF8tr6i2VTAH/shbbx56Cg9D5p0pXf1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=FobE9HHn; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
+	s=arc-20240116; t=1753137162; c=relaxed/simple;
+	bh=ELPl9lWbCPvMx9ROUix88btEknHVjfc7IpFHv1NZmk0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dOHL6d7jK2WLs0noyyILn0P8H9HvMXjxkk4OnlxUXrdwVLQz/g6R0Xp+hzzNXcGRGoZTvJfpVgMd4oXFwJXMvUIivPHWlnfb+Xg9uGa9uVjmVUnbmI8VTm609eD3weaoq3W/RyFDAwcg+mIufCbNloQaJpXHoBygsb0kZ5ZKw6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W1o0xnaW; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="FobE9HHn"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4a9bff7fc6dso46773721cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Jul 2025 14:17:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W1o0xnaW"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-23f8d8928efso124105ad.0;
+        Mon, 21 Jul 2025 15:32:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google; t=1753132654; x=1753737454; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qWGJk1iJIsjh54/ScdRo2P8arFiYQbmD3zTFqCzvJy0=;
-        b=FobE9HHnoGddf1Gua2+kXxL20cg04/Zda9sIKfOv+pjKCVRh56NSlXaxN0PSS+GkDS
-         y2vuFHhIlV/5UmzZOqrrHzoJkEAr8x49oUkF/VwlKZBARqO6WOZW7kJyBeiRiwlvnA0K
-         uz0Z46aQGxpLqMUGXRwPOerdrkc58VzyfuMJM=
+        d=gmail.com; s=20230601; t=1753137160; x=1753741960; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VyDfV7rrZC5dmrjBy7MCe0nD1X8oWEIwHRrOY9MYlZc=;
+        b=W1o0xnaW4eZxtKC0HEvZDZ87KqcG693m7ewupGW/oFKPc8QCunolmCvCaUkKSKEAQA
+         nD2GuUqFU0cJFVlXcpmuMa0E7vZYBxAtpn3YtDrELoP+29omrqnMYNxAk8VcAtubC+Rs
+         c7yDua551obZjUv/hmQ0BKqY2uyQBP5Hqk3xkdCpZa6+6Ce9BG8kh0+YwVTSYWb2uhn0
+         6UCje6V1Ho9W3krFuwTDLTKGv0d2LLgiAqOcm8zkZYuFQUPvyE7zCEXErDvzrNB9+M2y
+         DfdhqA06IBgQQPB+74G5JIoCOSsuUbF4i++3e4BDpmdF/SguQOo1pbaRF8/LEBJjImWG
+         JcIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753132654; x=1753737454;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qWGJk1iJIsjh54/ScdRo2P8arFiYQbmD3zTFqCzvJy0=;
-        b=Ltz79s7ENb9UmpV2o0raluRBQ/ugQKViD5Vaz4izoE1ci5wtN3G45/y2KFHwqDsLwZ
-         d+ZTA+3kMaDhFclNS24gFpaPiBGuWewbc14K72867hgHt9L3rwKopAyl5tK6BXJxgoS/
-         c7hE6yE6HxBPxo07Cggpz4FvcUXRMHebKYFpfxComcG7/BjxbWqOdZwiQNDBCwS6BpuI
-         gVZ6MFlLxrJEDnqTOQXNUXk/CYIQx8SUecJEgpdhI9iIerXCbB+U7j1Cs6DVtBsH2HRW
-         IGbJ6MWIur17m/G5lnxfDEJ4BMAiOCBiw0Tle0J40B0xuJbgsN0eEBdpwO3J7sqo/v1M
-         6UcA==
-X-Forwarded-Encrypted: i=1; AJvYcCVqcalQcKcoapxF3rmd36odj/0B4IeNs/tb2E2hbszFf9Z/p5oEHeMfXxZn7sw+12NwBYeQs5XLTA+rH5UeF5SL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4I0Qsyt3hrbKq507+QE8uPA2lx52fNucAk7yBIt6yhDPSkS0n
-	cNyNMziWN+5Eu5i20mzOWYnHu9C9TWL0V3bJna22Am78UqahKMiMNQYtvYEHL/0Sbw==
-X-Gm-Gg: ASbGncvlR43n815r2szj/eCraicRYOvHvxzHbVRbvq1jqsIwOUxBi5IfjMWEI3jgOrs
-	EEIqVhp7MB61jMMH0zR6fHbnTPxITTJPaWUarJ+MRBGWD2MhxAx8t9QwfYX8jGVneui5eM+3ZMu
-	BGqVz2FSAJbcmgISrlkSvwchPwtwrizqBGH6WR0pskdXw5u0O1vpG967scUZwANBT+fd0bV4qyF
-	Orabm3NWaeSqvsbY5EvREhHoAFmub2S45/UiOMOxUwoa4ttG/qVna4J9m9LVpcJb9XK0z7d8FqP
-	ijTPBT/y25DJAyO2xPSAP2hsBDky21sGDn2rHEaTrr9zvOd3OnushAT997lS/jRitdCfrllxdeR
-	cjxyZpK/X0TrNHl+Wbn98M+l35CswC5869bVzRe6QrQ==
-X-Google-Smtp-Source: AGHT+IGgbc2+HpbbkCjaHb07n+MxIhFnG5PNcc7/sdOmvMZ4DuULITdNYAqCLBKU+qLcRC76lYXY1g==
-X-Received: by 2002:ac8:7f93:0:b0:4a7:7c8e:1d5 with SMTP id d75a77b69052e-4ae5b7c3eb5mr18526461cf.17.1753132654248;
-        Mon, 21 Jul 2025 14:17:34 -0700 (PDT)
-Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4abb4b46b27sm46652641cf.64.2025.07.21.14.17.32
+        d=1e100.net; s=20230601; t=1753137160; x=1753741960;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VyDfV7rrZC5dmrjBy7MCe0nD1X8oWEIwHRrOY9MYlZc=;
+        b=cw0Fp2oswvKAtqp56CkyzQqmynH1+RWYorJEYE49qTA5DSMmqMQ3h2Mp5RsiT/DK9S
+         Bi3VbxcvdbE1dZM0QTJ46Dw8lxBaY2KXCIF7vk6gqcYghvlHxFtD+hRucQkEnU1gBUwe
+         iafGZUclxhGHvZ50WhpuNDVHWyh660/lU0GE20p7jjPdM/GcATp0YUBMjGhglbiOcyVZ
+         LszXW1Fl6AlHYV0kc7bmYkasDLadRcWnoMr1n/z6JlXBDkA6JXiVJYwV77clYfgdmqOo
+         AwQ1+rPK0iuD1ShYyagTvXSD8wbk6cpoIWYvON45UqJp2ojq5yq0GFevoN6O+y65GQXl
+         ZfMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1yoW5BDvHCVd6YHwJyftVGtLm9oqqeYULHI8qvUPz8FwXBOiblRxa49tYC/cwhSiOCrz0HzZ1ViIB4g3Q0EKrSg==@vger.kernel.org, AJvYcCU4NDHM/DbUI29abunDmc3x7nuRqP1rFBh0JR2ZS55ah36nTn6773UU4bapF+Cr+7j4l+ynODMJGAlvH/o6NC5CJ/5H@vger.kernel.org, AJvYcCUoZCv+uSLdYniGm1kdtANbigluRMp4cVMm8UawYlsjueBVMejar7r2r8AnUirnfdJoH68=@vger.kernel.org, AJvYcCWWXywy/70OEikAQM68NQB4t2VikYcKQjAO3jpOMrZUSlXJ2vvWOSvHqxZwmoloepkhGHvnVUZ1Pm1XSmQ5@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkN2aO8JzgRNNVB4BWidv0nFCVAre16+rM2zVzjm+t6oxWPX9E
+	A1WLhJKuQ2KePt3Xgkcj5tGoNsAFi4pFKBzwfLD0Xylya2iQnc/FBbaN
+X-Gm-Gg: ASbGncthaDAVPvSsCFMZTCKNJb0UGVczxqIYCgHokjKjsrnbeh+e+Cmsfm/2ZKUeBfk
+	2JieeEB4X4htgzx1mRpQ/za301J+gzt0u8qiWCrilTfW5XqlKID3anClF7lmfreAwvCbnUaQXqm
+	x+X7vEC/sp/SNRrIkN5NZ24UAGmSKNMuRbheGi/z9iLTZFJtPLxzehI85mjE1dA6ks0OEXoPE0B
+	tfOxR9v1Yiaj7dMQiaF9g/61qMDOPIMZfDWCDKTukn9sA6Oblj3FpGsIDq0ovX9nO98WfJRqINa
+	CAkPvfu9eZaNdQIryWpe5vMFW34pFy/tSC+u/YoXwajTJNoDRNmIMwOjZ6uwMMlPRd0iAviyTs+
+	B2aKqOQc6dSr94axAMVhgaVICe1tm
+X-Google-Smtp-Source: AGHT+IFxy0rmgZAbiSXgvLRGw/zEKapICvB3xXkOxn8uTPeRFBUpotCA5y8fyW59jrPG+IccPl/FbA==
+X-Received: by 2002:a17:902:dac1:b0:235:ecf2:393 with SMTP id d9443c01a7336-23e257a3b70mr339054145ad.53.1753137160347;
+        Mon, 21 Jul 2025 15:32:40 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c096:14a::281? ([2620:10d:c090:600::1:7203])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31cc3e5b439sm6639389a91.14.2025.07.21.15.32.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Jul 2025 14:17:33 -0700 (PDT)
-From: Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date: Mon, 21 Jul 2025 17:17:32 -0400 (EDT)
-To: Vince Weaver <vincent.weaver@maine.edu>
-cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-    "Liang, Kan" <kan.liang@linux.intel.com>, 
-    Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-    Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-    Adrian Hunter <adrian.hunter@intel.com>, 
-    Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [perf] fuzzer triggers "BUG: kernel NULL pointer dereference"
-In-Reply-To: <5baea1f7-6edd-d6fa-27ce-04eddb7e5199@maine.edu>
-Message-ID: <fdcdd5a7-76b5-6c52-63dc-95fadddf7772@maine.edu>
-References: <5baea1f7-6edd-d6fa-27ce-04eddb7e5199@maine.edu>
+        Mon, 21 Jul 2025 15:32:39 -0700 (PDT)
+Message-ID: <3790244e9b6f5508ef54eb799ed5b6e6a9d72b3a.camel@gmail.com>
+Subject: Re: [PATCH v1 2/7] bpf: Add bpf_perf_event_aux_pause kfunc
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: Leo Yan <leo.yan@arm.com>, Yonghong Song <yonghong.song@linux.dev>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter	
+ <adrian.hunter@intel.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa	
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, James Clark	
+ <james.clark@linaro.org>, "Liang, Kan" <kan.liang@linux.intel.com>, Alexei
+ Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>,  Martin KaFai Lau
+ <martin.lau@linux.dev>, Song Liu <song@kernel.org>, John Fastabend
+ <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
+ Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,  Matt Bobrowski
+ <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami
+ Hiramatsu	 <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, 	linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, 	bpf@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Suzuki K Poulose	
+ <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>
+Date: Mon, 21 Jul 2025 15:32:31 -0700
+In-Reply-To: <20250718153801.GB3137075@e132581.arm.com>
+References: <20241215193436.275278-1-leo.yan@arm.com>
+	 <20241215193436.275278-3-leo.yan@arm.com>
+	 <80f412f1-a060-463b-9034-3128906e6929@linux.dev>
+	 <20250714174505.GA3020098@e132581.arm.com>
+	 <ba5c04f4-a33d-4d7f-9272-eee4a4389def@linux.dev>
+	 <20250718153801.GB3137075@e132581.arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 
+On Fri, 2025-07-18 at 16:38 +0100, Leo Yan wrote:
 
-I'm still tracking this fuzzer issue.  The fuzzer can reliably trigger the 
-crash but only 32000 syscalls deep into a run and I am having a lot of 
-trouble trying to gather a trace/testcase that can generate it.
+[...]
 
-I was hoping the recent
-	[PATCH] perf/x86: Check if cpuc->events[*] pointer exists before accessing it
-patch might fix things as the symptoms were vaguely similar but that 
-particular patch does not fix the problem.
+> Just clarify one thing, I defined the kfunc in new patch:
+>=20
+>   int bpf_perf_event_aux_pause(void *p__map, u64 flags, u32 pause)
+>=20
+> Unlike your suggestion, I defined the first parameter as "void
+> *p__map" (I refers to bpf_arena_alloc_pages()) rather than
+> "struct bpf_map *map". This is because the BPF program will pass a
+> variable from the map section, rather than passing a map pointer.
 
-Vince
+This is correct,
+see commit 8d94f1357c00 ("bpf: Recognize '__map' suffix in kfunc arguments"=
+)
 
-On Tue, 8 Jul 2025, Vince Weaver wrote:
-
-> Hello
-> 
-> the perf_fuzzer can reliably trigger this on a 6.16-rc2 kernel.  It 
-> doesn't look obviously perf related but since the perf_fuzzer triggered it 
-> I thought I'd report it as a perf issue first.  I can work on a smaller 
-> test case but that might take a bit especially as the machine locks up 
-> super hard and requires being unplugged after it's triggered.
-> 
-> let me know if there's any other info I can provide.  The dump below is 
-> transcribed from a screenshot as I still haven't figured out a way to get 
-> a serial console on this Raptorlake system.
-> 
-> BUG: kernel NULL pointer dereference, address: 0000000000000008
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 0 P4D 0
-> Oops: Oops: 0000 [#1] SMP NOPTI
-> CPU: 5 UID: 0 PID: 0 Comm: swapper/5 Not tainted 6.16.0-rc2+ #8 PREEMPT (voluntary)
-> Hardware name: Dell Inc. Precision 3660/0VJ7G2
-> RIP: 0010:rb_insert_color+0x18/0x130
-> Code: 1f 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 48 8b 07
-> RSP: 0018:ffffb5e5c01e3df8 EFLAGS: 00010046
-> RAX: ffff93f1927f8168 .....
-> ...
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000000000000008 CR3: 00000000596824001 CR4: 000000000000f72ef0
-> DR0: 00000000a000001 ....
-> PKRU: 55555554
-> Call Trace:
->  <TASK>
->  timerqueue_add+0x66/0xb0
->  hrtimer_start_range_ns+0x102/0x420
->  ? next_zone+0x42/0x70
->  tick_nohz_stop_tick+0xce/0x230
->  tick_nohz_idle_stop_tick+0x70/0xd0
->  do_idle+0x1d3/240
->  cpu_startup_entry+0x29/0x30
->  start_secondary+0x119/0x140
->  common_startup_64+0x13e/0x141
->  </TASK>
-> 
-> 
-> 
+[...]
