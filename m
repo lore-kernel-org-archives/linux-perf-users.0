@@ -1,104 +1,105 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942062877CC
-	for <linux-perf-users@vger.kernel.org>; Tue, 22 Jul 2025 21:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2BAB10F2;
+	Tue, 22 Jul 2025 22:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753221501; cv=none; b=ddiHxKScqRYzarrFOGsBmK9bub9mGfP6M9lEJtEjfwcrwreTG0VaUvt8eL6gGdLZ+FbKPZUc72yW6MoH7Meu3C0s3sXZclnIc9Yp6wTicQucshBTHEOCiyK+9u1sQCCa47FVQCaMczCqRbqwj8yfe2PA1vIWmYUPVwhoor//4HQ=
+	t=1753223792; cv=none; b=hhrHe6wF485CR25aooUIdr/Wjx8U2EjorUP2eUn6457nJ7E7yWsZQkRr7Yh5Ur5ewL9ngoS9kcp2KP37YIQQRf5BqlypSR2GElO0vDxrQ/ToV96ELwlhzEfVqYitOILErhIqZ/W9muzZ3GvdaGkTx9HMyhqUbV+qq1lwQnqroR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753221501; c=relaxed/simple;
-	bh=EngUjsKE6ntaSga2u9NxwJiCa0I8KWoIYhdBjksfnBg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZRU5zN0Sp3g47jTld7u/gcVGiCE+rdCUw6UeMkI+2xqcrdV67d94q62Xl2Ca8oBuaWmWbA5myTjQTxQHYtdkarngVAPfePSm0iRNSnUxYw6AFlQxefzKVwtK/3AzxFc5admfrPxAxKYq5fZO6V1JryQDJI/wc5vlSbwNSNx/EGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=google.com; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UVCLt9hr; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1753223792; c=relaxed/simple;
+	bh=hMI0nsOW00t91gdZHOJGLbhrE7TnL+1bESOMcvbzRjE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=jUVLFoP9jldC0168m9tdaBG/2PBJNBRCpLew52+xoZ7pOuN4BUYCJo1XVSRW0Oa0iwhVVl6pMMqnFskZZu6oVoN0ayRdT+FC7g35bdAmrdxjQRtMVfb70GyMwesRdGWLZUOWEkSal40Le7NvaZqZhCZPgBSFs9ayMc+6+hEXgF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=grlAPyxU; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UVCLt9hr"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-611d32903d5so4281a12.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Jul 2025 14:58:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="grlAPyxU"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7d9eac11358so586959785a.3;
+        Tue, 22 Jul 2025 15:36:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1753221497; x=1753826297; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XphRFYGKTpOm5xqnRvI7xsnYVXmfTKHiTieuuJNNgkI=;
-        b=UVCLt9hrIkRO21cndqVwG+FcQW3FCo2GmRfwuZDHOlTrI7SNrja+Mpmf7h185ZpHBH
-         HJny8RyTGLnAEK7fUBtNYdmPGFyHl8jSDINWskWNGEE2vM2twjUD0oAZ0W0Dt8nCS3MB
-         BHBj+GuCntnl741iXcVqJ3fnk3DhBbTd2LN0g=
+        d=gmail.com; s=20230601; t=1753223790; x=1753828590; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TBB+90UYLZMUNkM8Iop40n+D0UzNuJmPLssHgoedKC8=;
+        b=grlAPyxU4wh7T6Yk5iyTpxIhPSXmUdODkfXmUD0cNV+yNVHZCzxbYfJgq+CDh7FcWy
+         9NpGRus99NaIItis2j+c9407spRmpArnAgTiqJNVfanpoz3VzyM7jFnFnhjoBdsei8EJ
+         iJOmpL2ArdDzZFBJ0O974EU0KlEhq4SVtFP16Ql/AkVekKPxLTWIRuzDX9ufSzsrhPX2
+         Ujpe3xC/x3cI/I5cdAOtpMI8GTE2uhnNKow0TqdyRS9lCGwLkKyCUh2qeNkBj3875KE2
+         33DWGML+R+jpHQbPBkGJENX+gtOypkpRXraGxRKevpmS3PaAvj1foY6NdKpnXsfWkMOs
+         rQxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753221497; x=1753826297;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XphRFYGKTpOm5xqnRvI7xsnYVXmfTKHiTieuuJNNgkI=;
-        b=jQA4+e3GmTzx0rumeSlSt4Ob9vWrqYHxYgZnbMKxWGejlrdppcpnK2LxkEsMB+pPbm
-         3LILTWquo7vIhYHKxYfdMXqBHQjP39/5+nfGnJtUUadiBY397pd4mAe+28JBN5UQJKJn
-         dBobzmpNT4q2i/HXcYYjiVd+j1gVgBkU6ydW5BhriJCSvfrAV0us09IiMihgXdnSkEli
-         X72Nd/K7YFNQ9756JXvldMH1SQLOuCB0746XFWsZJdHeBcoWpPyW0H1LuMZSn4QLEvOZ
-         FEhpwGwQcg2iPYhkmBHAXKjWYgr/T3e8wxXCbFrmyqTMsO9ydlg/1nkU8IF+EK8rlECv
-         aCsg==
-X-Forwarded-Encrypted: i=1; AJvYcCU5J+5RQQApfa9ilAQuuo+jQOG+0Yo1fVvOM9UJ13oaWCfZT6/T5s1dZfEQNbCJe1tha41eqLzwxOBUoYxSgvFs@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTwRUqpN/Xdv3LgzKF/9RW1lfQeMDwBDk161NeAm5S7PwKTWsj
-	ZrqJA0bK6nXEHzRdymbC9bOmTSrCMgWhZ1MEEaQJkTfaDylgxdRMj5uHOISvKfD2QapbHbhGtkR
-	3XvP2U22Rf+SdZxWRTVxKIS0jFBiO+XK6E4YkSgWs
-X-Gm-Gg: ASbGncuu++etjyPNC685fqSrTM+qYIFbvXs2hbIWziYEUthELl+1A0qSS1wHVFelzHO
-	QIiPZmP8QtvZ3bLflTz5cIFkWvysV4K4lYXo19SUrT4NUIlTW+r+QdTcvkiEJCpeoThwC7tHSFx
-	tvFAYaWRrA3UAaSJDiZgq8wU8xoN2V7QjmfdM830wrCHeb09o1XYp6j90mo8ZNZN9s1Klq9Rh6x
-	nUoV9hPAOSos94ObFMoVpy3wAKQ+nxZ3giXC2wemcSS
-X-Google-Smtp-Source: AGHT+IFp5y+l1fTW8GtjpxnnyEe4EWyuH/zYE3JF5LoJQi9huRUvCNpCO/HKD9InP/jd87P+NKE1aVh/xMR3qwPcil0=
-X-Received: by 2002:a50:cd11:0:b0:612:7599:65c7 with SMTP id
- 4fb4d7f45d1cf-6149ac2e0b6mr29581a12.6.1753221496595; Tue, 22 Jul 2025
- 14:58:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1753223790; x=1753828590;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TBB+90UYLZMUNkM8Iop40n+D0UzNuJmPLssHgoedKC8=;
+        b=MoVHPMoz+c8B5AkR7wFGF5rh0kTPeoEhD9oDsu8pMP3DlA6Zkd5B4f+NzNOXdj2CAk
+         pjrYbszma4W5dn8Yh+u+i69N3G38TayK0OWyEQb642kT08f0Bpff2F30+A6HfwnjAYmu
+         bZIguVgBmDqOGIPz69Ytgk5E02WlsVBxhplFKDtc6JZD96/UFJuF6Gb0wsXxAxty06mN
+         /o1TMpdgsi76fbKj6Mzc4MX3uagOJFbuVJdwmGMeL3ptrtB14P/1+Zo11vNDS2wyxkGe
+         ZFZEAeT4eWpH08Kaxx6jKSW37flaP2fiLE9NXaBVTvxQnD7NR1htpgKNnlGgtN/6Hoer
+         zLJA==
+X-Forwarded-Encrypted: i=1; AJvYcCVBEKTX5WAteRg/YS5eRxo3RrsN16hywv0XEK9j1sax08XSlYmU93I5UNnvjF8P6odHkLTd/c1ux9XGBrqMjppURQ==@vger.kernel.org, AJvYcCVsnf3/PJ8saTNabWMVfr/dEh/w3bQJNYknZoZj4FPLHqEvJayTySoS0vvQu4inwXw/Xh9RTm8QLJFGdX8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWZQu6ozMkh5t/+S5Y8F+/EpPUrBuwutaVORDhRYHuEuYG+RIM
+	hmnSLOd07A5ZImQNH4JRVuqeI1pIh2IybLoM+jSEyBZ8JXMG0v2L9hba
+X-Gm-Gg: ASbGncuTqyfmekNWNWwyj9bt995z6gQ+7cOwvuuPM7ZFFCGXQzSmyD96tyU7Yu5HNAH
+	ifJIZyfK12Wy4SaM2BR4jZRAySTpTgqVrZb1Nxdngz4f/Ys+F9y86eVUh4np+FtYcgayVtTgYBz
+	nvEeJ7cRUDI3yy7GPLsDHhkQChKI0fW5sqVumJDQivI7b9PmZJmO+eTHSDXdZ0NLTjn6zsfe/qI
+	PPchYus4Pd1wWu2cF3m3bqG+1Ad+zF5ZpjOxwkqyHD8ZKY+WUhteL6u/wQmLFScuSjRPHJyeB92
+	GHlk/ojg5WuHpMwoYDokgy5ue/WhtSVFsucHDvrupbfFEWVrQrbuxlqJ6VYcisqj4u8aXaxS0TB
+	kc0oUeavt/Rsl9MNDrgBU/KbooRt75Hk=
+X-Google-Smtp-Source: AGHT+IEbe8BbhV+igVqGgr2sIN5xkSIsdDLD4nm09zpSxpKxfdqRu1gZLhD2/emij7TH9ZMxEHKGXQ==
+X-Received: by 2002:a05:620a:6cc4:b0:7e3:417a:9609 with SMTP id af79cd13be357-7e62a03c142mr146618685a.0.1753223789697;
+        Tue, 22 Jul 2025 15:36:29 -0700 (PDT)
+Received: from Gentoo.localdomain ([37.19.198.68])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e356b2a9a6sm595561685a.8.2025.07.22.15.36.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Jul 2025 15:36:29 -0700 (PDT)
+From: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	vmolnaro@redhat.com,
+	mpetlan@redhat.com,
+	unixbhaskar@gmail.com,
+	atrajeev@linux.vnet.ibm.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] tools:perf:tests:shell:common This file was missing the shebang line, so added it
+Date: Wed, 23 Jul 2025 04:02:24 +0530
+Message-ID: <20250722223350.414-1-unixbhaskar@gmail.com>
+X-Mailer: git-send-email 2.49.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250722-ddrperfm-upstream-v3-0-7b7a4f3dc8a0@foss.st.com> <20250722-ddrperfm-upstream-v3-7-7b7a4f3dc8a0@foss.st.com>
-In-Reply-To: <20250722-ddrperfm-upstream-v3-7-7b7a4f3dc8a0@foss.st.com>
-From: Julius Werner <jwerner@chromium.org>
-Date: Tue, 22 Jul 2025 14:58:03 -0700
-X-Gm-Features: Ac12FXx4M-_tpsnv6SoYOcaCR3mVKSUiARmyCSX04o5wxXNHMo0oAxmxSQQ0MIM
-Message-ID: <CAODwPW-kVcnVtVakXs7aBcwb_nv0bLTaK5PKNo4zmJaJ=VC8Wg@mail.gmail.com>
-Subject: Re: [PATCH v3 07/19] dt-bindings: memory: factorise LPDDR channel
- binding into memory channel
-To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
-	Gatien Chevallier <gatien.chevallier@foss.st.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Gabriel Fernandez <gabriel.fernandez@foss.st.com>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Le Goffic <legoffic.clement@gmail.com>, 
-	Julius Werner <jwerner@chromium.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-> +  purpose of this node is to overall memory topology of the system, including the
+This file was missing the shebang line, so added it.
 
-nit: Might take the opportunity to fix the typo here (missing words:
-"is to describe the overall memory topology").
+Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+---
+ tools/perf/tests/shell/common/init.sh | 1 +
+ 1 file changed, 1 insertion(+)
 
->    - Julius Werner <jwerner@chromium.org>
+diff --git a/tools/perf/tests/shell/common/init.sh b/tools/perf/tests/shell/common/init.sh
+index 26c7525651e0..9e9d4247ada3 100644
+--- a/tools/perf/tests/shell/common/init.sh
++++ b/tools/perf/tests/shell/common/init.sh
+@@ -1,3 +1,4 @@
++#!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ #
+ #	init.sh
+--
+2.49.1
 
-Why remove me? (Although I'm also not really sure why I'm maintainer
-for this file and Krzysztof for all the others, tbh.)
-
->  examples:
->    - |
-
-I think that's a load-bearing pipe character you're removing here?
-
-> -    lpddr-channel0 {
-> +    memory-channel0 {
-
-Just to double-check, the name of this node doesn't really mean
-anything and isn't directly interpreted by the kernel, right? I'm fine
-with changing the example here to fit better with the new expanded
-scope of the schema, but we have existing firmware that generates
-nodes with the `lpddr-channel0` name, I want to make sure that it
-won't break from making changes here.
