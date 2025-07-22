@@ -1,52 +1,52 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C59301D6193;
-	Tue, 22 Jul 2025 14:06:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB51B2EAB83;
+	Tue, 22 Jul 2025 14:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753193216; cv=none; b=Lox8vs2qu7cpyKYVUZtLk7i47Skl8QX8FUQmVvUI2KitbsdrFL+eKJgU5zaqDPd/lxB6ZHZALjRmXrdTJWSTU/PvdgU0NY8phiPkPKWi8MefnFVsb0BigVcmYOnCiVKn9MPthFR5rpW9XdjiTP5pAsH3cAmoWVe0353F1NtU5mw=
+	t=1753193219; cv=none; b=hbg5Zd7nD89ldOxLwtOWMHUANyiYE69FUS8AtAG4ypbGBWllQxK1N31aGepeWRNAzOhpU7X7/2c4GXhwPD0deGkCaU+SyJBpulW+TE29JsggyMvHmT1UjVXw34UnlyslBb/NPvAZstkvgvq+ohYKnz8nvw8tBaCKVZ3i8QPBXEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753193216; c=relaxed/simple;
-	bh=Dq2ykfq63wn8VObJtf2Dtv3Y1KpLFKfxnczqmYre38w=;
+	s=arc-20240116; t=1753193219; c=relaxed/simple;
+	bh=mon8TzNHLXQT6zZMNvX4vMAOvrBz13cVa0XmDe2JSsU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=p3eaFDJ3/zI+j5e1LEYlWtf2BP1cH9235KiWJ9xt7TTLJugGm7KT0Fi7pNZ7WcqVZyWDCa6B5iTftVvlPx8ZTtOkBVClFtKLiyx9VrrxGJ8HWPsHJ9q2iov3jf/innsKDLxTKf4TiVSCW6L9mLN+T3enfklDgZywRE5OCeGM4iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=zK7U4cq3; arc=none smtp.client-ip=185.132.182.106
+	 In-Reply-To:To:CC; b=QY50W9QjCoqBxQ7gENTqf8n/QzS1PfxjKX0PWlnne2psdLcOq7z+llFYvwWkJkKaDW8FMon2pZah7Ley1F/dD5y+Us50IUZ+mcBkFU15+1boHQ1e4mSWGcjGW3dIJsvi+jdNCjy+1CGqaNLLoEKoDSUajSTOYp7o60tWImLjdek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=p3ucefz+; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="zK7U4cq3"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56MDdKAF013598;
-	Tue, 22 Jul 2025 16:06:22 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="p3ucefz+"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56ME4Fs4028578;
+	Tue, 22 Jul 2025 16:06:44 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	1S+/fxjBGM9OThOsnlJiBdnI+RCOnybmlz6yPJOrPUQ=; b=zK7U4cq3eIBnlomy
-	7MJ+7nS0AO3BTgn8rSi+m/5o5qJUbYpKBQD+Zr30BWAW817UF946O1q9csOMOKF6
-	v25Y5LaFOWfEdbMrtQT8sONW52vFg2ipIoXMnQKCTtMygrAO6/4iuHrAoXIGFdnA
-	4E4uqGXVU3tIuzsZH+vTyQMlvuWLTUX+1HaO2v5QFtDhL2JqMggAHBPuDMQNXXPa
-	XgkEZdwmGZCLmAUEgYyf7weuLBgDvSni/80pbViUIw8GMxX9598Gne67E9tRmBVk
-	5nZuuc6w8/EKbbbDqogM4vg+/34yhiXefOawmgNTZE4Lmk6UORHOyuw+r91WIGaZ
-	B+96Tw==
+	m0xdNfz6LyNhNT7aB8b6n+LHAO+1A1pSYtRKBgMjwCw=; b=p3ucefz+gCqWme6q
+	eZ+WFS0MrqsHZ0dl8Q3kLSxcb0bjYMat/Sof9qESE/waGAa8mA1Ob6Y5f5qez1dJ
+	Zl/fUubJu+Uukf0WYTbYpkPfFBj0GXyVHaak5utrXq+IEisZL/U0aHKQlh/Uld+I
+	xfDK5/Ppy/96IeyPXSDvO4hCjJGJJOhL41aiEViPirCQKH3hLr8N4mNscrZkBb70
+	TA0qCCF0LtIFgLyUpwAiXgmHENMP0RUU00WMZk1zN0C4vXYIJkJfJfTLVIAZPVtt
+	JiFKAI/QfMvglauJF5M5xp014MDEnuJDkJZapOysQ9q/jDMPXr9XK6kZo+0j7ckn
+	ncrYJw==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 480mx4kja0-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 480pamu7j9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Jul 2025 16:06:21 +0200 (MEST)
+	Tue, 22 Jul 2025 16:06:44 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1E6ED40046;
-	Tue, 22 Jul 2025 16:05:08 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 23F7440050;
+	Tue, 22 Jul 2025 16:05:15 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1A8CB7A1A57;
-	Tue, 22 Jul 2025 16:03:50 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DCD417A31EE;
+	Tue, 22 Jul 2025 16:03:56 +0200 (CEST)
 Received: from localhost (10.48.86.185) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 22 Jul
- 2025 16:03:49 +0200
+ 2025 16:03:56 +0200
 From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-Date: Tue, 22 Jul 2025 16:03:18 +0200
-Subject: [PATCH v3 01/19] bus: firewall: move stm32_firewall header file in
- include folder
+Date: Tue, 22 Jul 2025 16:03:27 +0200
+Subject: [PATCH v3 10/19] arm64: dts: st: add DDR channel to
+ stm32mp257f-ev1 board
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-ID: <20250722-ddrperfm-upstream-v3-1-7b7a4f3dc8a0@foss.st.com>
+Message-ID: <20250722-ddrperfm-upstream-v3-10-7b7a4f3dc8a0@foss.st.com>
 References: <20250722-ddrperfm-upstream-v3-0-7b7a4f3dc8a0@foss.st.com>
 In-Reply-To: <20250722-ddrperfm-upstream-v3-0-7b7a4f3dc8a0@foss.st.com>
 To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
@@ -92,86 +92,31 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-07-22_02,2025-07-21_02,2025-03-28_01
 
-Other driver than rifsc and etzpc can implement firewall ops, such as
-rcc.
-In order for them to have access to the ops and type of this framework,
-we need to get the `stm32_firewall.h` file in the include/ folder.
+Add 32bits DDR4 channel to the stm32mp257f-dk board.
 
 Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
 ---
- drivers/bus/stm32_etzpc.c                       | 3 +--
- drivers/bus/stm32_firewall.c                    | 3 +--
- drivers/bus/stm32_rifsc.c                       | 3 +--
- {drivers => include/linux}/bus/stm32_firewall.h | 0
- 4 files changed, 3 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/st/stm32mp257f-ev1.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/bus/stm32_etzpc.c b/drivers/bus/stm32_etzpc.c
-index 7fc0f16960be..4918a14e507e 100644
---- a/drivers/bus/stm32_etzpc.c
-+++ b/drivers/bus/stm32_etzpc.c
-@@ -5,6 +5,7 @@
+diff --git a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
+index 2f561ad40665..cd2fe81bf934 100644
+--- a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
++++ b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
+@@ -41,6 +41,13 @@ pad_clk: pad-clk {
+ 		};
+ 	};
  
- #include <linux/bitfield.h>
- #include <linux/bits.h>
-+#include <linux/bus/stm32_firewall.h>
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/init.h>
-@@ -16,8 +17,6 @@
- #include <linux/platform_device.h>
- #include <linux/types.h>
- 
--#include "stm32_firewall.h"
--
- /*
-  * ETZPC registers
-  */
-diff --git a/drivers/bus/stm32_firewall.c b/drivers/bus/stm32_firewall.c
-index 2fc9761dadec..ef4988054b44 100644
---- a/drivers/bus/stm32_firewall.c
-+++ b/drivers/bus/stm32_firewall.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/bitfield.h>
- #include <linux/bits.h>
-+#include <linux/bus/stm32_firewall.h>
- #include <linux/bus/stm32_firewall_device.h>
- #include <linux/device.h>
- #include <linux/err.h>
-@@ -18,8 +19,6 @@
- #include <linux/types.h>
- #include <linux/slab.h>
- 
--#include "stm32_firewall.h"
--
- /* Corresponds to STM32_FIREWALL_MAX_EXTRA_ARGS + firewall ID */
- #define STM32_FIREWALL_MAX_ARGS		(STM32_FIREWALL_MAX_EXTRA_ARGS + 1)
- 
-diff --git a/drivers/bus/stm32_rifsc.c b/drivers/bus/stm32_rifsc.c
-index 4cf1b60014b7..643ddd0a5f54 100644
---- a/drivers/bus/stm32_rifsc.c
-+++ b/drivers/bus/stm32_rifsc.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/bitfield.h>
- #include <linux/bits.h>
-+#include <linux/bus/stm32_firewall.h>
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/init.h>
-@@ -16,8 +17,6 @@
- #include <linux/platform_device.h>
- #include <linux/types.h>
- 
--#include "stm32_firewall.h"
--
- /*
-  * RIFSC offset register
-  */
-diff --git a/drivers/bus/stm32_firewall.h b/include/linux/bus/stm32_firewall.h
-similarity index 100%
-rename from drivers/bus/stm32_firewall.h
-rename to include/linux/bus/stm32_firewall.h
++	ddr_channel: ddr4-channel {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "jedec,ddr4-channel";
++		io-width = <32>;
++	};
++
+ 	imx335_2v9: regulator-2v9 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "imx335-avdd";
 
 -- 
 2.43.0
