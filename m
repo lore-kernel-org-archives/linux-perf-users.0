@@ -1,145 +1,101 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63BE8F40;
-	Mon, 21 Jul 2025 22:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A221805B
+	for <linux-perf-users@vger.kernel.org>; Tue, 22 Jul 2025 01:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753137545; cv=none; b=AQ8hbBop1F4mrwDEE95kkXfwXPsmGFb3D7vK9TxYXGSaf+kihUIQRQqVIHHk4j2xiyB62OH9/QdJICC8NSsUbR2t152gxKGjq41ts0jrjGdMeL4qqi34OG3Vrj+GLdd25KwqDQ58kiDSnv/rqlOetd8OpxMWx59bEoPZWh8BwrQ=
+	t=1753148096; cv=none; b=F/DS8VFwjLNHvQdUW+lqtZVog1AmqIEZfopoyjyz4esKTVYSZzSO+pDWiWOdLJLRg13HQcKDToVNe3ajwTKxtjtxhujNc4hSXxD6muKDJzVWUik9jbV5NwNTGsDqOnUwDF51+WZX1+nSMC41Lt8DdZPQIhsFv8H8XRHWPGqHPTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753137545; c=relaxed/simple;
-	bh=UbpXCOpSVnI6N9IQrEqmNGNfsdb/u83IjJbbivKICtg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VWgIKTDceA2pW53rtbqMH5o0GiqLjAIDILZAD1y2S88SrCIGhrybkm0xh3qjhmyA/2/q939hxs1rr5toKUbZzpH2W1O+i+hPQ9tQMGAMhPpeQ6kQUS2YH7DLT1Ymd6+Y017YU63metVZdKqRLc+U0/s6DVnxl7JqiONr8LE8TaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bZ25C3R9; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1753148096; c=relaxed/simple;
+	bh=ml+CruI2TrPMvJL6Ve9QrgFk1hQk6xyzgZpDd4Hsx9k=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=NNCuI1MHEd4nUkXUFgBpOIJfFCB8Qvz0dQd3Og4kY3i8TbhJvhgCKdZ/95UFu+FvmDYw5zKWVWMyu2jNhHGfxrUOuBLvtuq5758IUHtfoJYFRnvQNxv7NYIaCj8oVBnmoiZuAZJYqlK53X/RXUXtA++FvZxU4pYfbBVAaMpJ6nE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MvlcyMGk; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bZ25C3R9"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-74b54cead6cso3100835b3a.1;
-        Mon, 21 Jul 2025 15:39:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MvlcyMGk"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-311e7337f26so5169514a91.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Jul 2025 18:34:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753137543; x=1753742343; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+        d=google.com; s=20230601; t=1753148094; x=1753752894; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=+flNOTHZGwl5tQTzAtuKBDIQ+jwApZ1+t8fvYYT5Rs0=;
-        b=bZ25C3R9ga/ThlxFm5Qo4lyiV/eTaHB9Mopl5IyI9CFcOnAye2jky9ETWkbdgjlXws
-         CT9uEmFWTA+WYaOqWD8izWu3nBxItkiau+Pv7fv+Dh6YFQ74By6+eZ4S360bNSiwXVPE
-         sJ3p3QpmHcCWHHbG33JvCYd0ohw8Zjek5MvVZcd4W6YLk9Dy97AebJxR5Yf2xOmGET6T
-         Pt7qXgC1Leybf9J4cHYwHoCPFfcQOzQiA1kX/CAHZFH98igJXGvFXyYcmeg5aJ0RwirP
-         QE+FELokSTUGRvLiu73bNck7wFO6ZFRYlcOybss8zHVZd3JweH9Myt/A6/KHX0hbYErI
-         G9Iw==
+        bh=QX1c9/Mh/EGaQrrI9AS/O0cONZegTS8Gy7pO7vmBK3s=;
+        b=MvlcyMGkvguZyE/HX2S3tFptEZmfdf6um0/FPqZHi8UMivcsnUEi554qlrqwNVihUA
+         xuZE15yOrxj6NGIcNs8E2aZtIPeH/PZeAKyUECUZMiV6+GCqt+uNIMqvNfqZjKGr9zcd
+         yfDAknww3QNBPAXAalZr5TdhZM3DzPPfbOVgHbvmUMAuOPQYzqAtR6qyY2Yo8CUW5KUi
+         8J7FcJiY9tZMmI/8Y32oEUWXFDIW3eKfHVp6jcEnEw5u8iMtN0stAJVb9EscxiNqSrJ1
+         E9SNUROma8V0OcmmFYMocQQRRNN33B+CtT8T5kZgu8Tgqv7QFmtXT59hzr2ZAqWbiYfF
+         BAVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753137543; x=1753742343;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        d=1e100.net; s=20230601; t=1753148094; x=1753752894;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=+flNOTHZGwl5tQTzAtuKBDIQ+jwApZ1+t8fvYYT5Rs0=;
-        b=I/PFCFLoeTy6i2bWT7ZGXm4Hs1wlqk8r8WVw7Viti0ux70D0ghFt1C56b7tL//Ba9Q
-         Ewm6a2XHrHppWtIMl4tHBzcBjYvo38crwukm/hnOrssci2j5PO32CpD74xvU0e8Fr/Hx
-         /quQtGhA5HuZjuOt4gBvdPT8F7PrHwCmdlPtc6vx+AfZp3ZK/ZZgGVfT7JcGbh7TwZXY
-         M1vWibYV/efOz12QRUneopChjKEf6POWeCWmPhM+MYxZjbB8lPsoVGorTvpEhz7v2Mp5
-         hU2UYqovI8XZj/CyUxvL5Vlion96V/OAOCUFRvash8NDUVx0tCKGoSisyVDAh+FCVc8c
-         ICAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV8O9lPwTmiBr/0bcDOJaCYbsBIj7zIvxEvMbM07ARpcHwsxqSIIFS1+YTqUCQ7F30OugeOnZOh2ajwW2q5IzNf7scY@vger.kernel.org, AJvYcCW6EcTO05DX5uXPp1lHNPfWHPGGEkhqTYwDpiAldNecMBIXqfYlIQ2eaj5nng9Fov5sT7EGqpxA03dnG2dK@vger.kernel.org, AJvYcCXWfLKOPu+AfiotMu+gOo97e8PK0t6ZEmfQLiVZapnYGGapRNtI0NbYEEL1PAIMZq2qhWU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQ67HJ0/cLJzTFnvU6urWZBCKq8owf1TkeQKi1lkxnNDyH28ZJ
-	uI0xisN8ldUhLb3fGT+eqST5A9KbYJfCruH8CEyG5V8de/P3m6586n2l
-X-Gm-Gg: ASbGnctNwRO21Mc8Gq8GxAp8XVaezTYS3WFOeZ0Tv7whBxsgwdFJW0EBQXv4g2U2cEG
-	nKf2scAKFKJ7tZaR/7QdEjh1jzp+IgLMbqGkzNbGUGW7L/FeBAxyvw/EaskaGRdUTcpDrOkTPWY
-	Jsav93b8HZ0K6tJxXIC6wgMgLQqC3jKFc9CnRNO/STd7k7GAlapEsrlDcHhwWBCSnPRcfjrBece
-	pwgNo6C9O8xdsMkWEX294URHLD3jf5h52bNXL1C/dBNBigN0NdJDbIGz1RwUzF9dt9q5x11GZX0
-	Ao+th7ntsD7B6vKbkEe0qqGdn4+8SlMEitmj71R49VUAzbB4bQFPdimAuIz38e9F+6Qbo0IYCwu
-	cM4qw9kgPYt3H84D1tXByoyNCBAeQ
-X-Google-Smtp-Source: AGHT+IGHuL6EcqmV2YbTKaTZXfPkI9SvE9yeb5FM/NP9QXasZt5olfZKPRuC/PrXh8bdWBDrRNYceQ==
-X-Received: by 2002:a05:6a00:2194:b0:742:a111:ee6f with SMTP id d2e1a72fcca58-7572286b05emr25926354b3a.10.1753137542824;
-        Mon, 21 Jul 2025 15:39:02 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c096:14a::281? ([2620:10d:c090:600::1:7203])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-759cb15761dsm6393291b3a.67.2025.07.21.15.39.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Jul 2025 15:39:02 -0700 (PDT)
-Message-ID: <ac8266f19ecde10a49911192014dddf35b3b496d.camel@gmail.com>
-Subject: Re: [PATCH PATCH v2 v2 2/6] bpf: Add bpf_perf_event_aux_pause kfunc
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: Leo Yan <leo.yan@arm.com>, Peter Zijlstra <peterz@infradead.org>, Ingo
- Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim	 <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers	 <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, KP
- Singh	 <kpsingh@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>,
- Song Liu	 <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel
- Borkmann	 <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau	 <martin.lau@linux.dev>, Yonghong Song
- <yonghong.song@linux.dev>, John Fastabend	 <john.fastabend@gmail.com>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo	 <haoluo@google.com>, Steven
- Rostedt <rostedt@goodmis.org>, Masami Hiramatsu	 <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,  James Clark
- <james.clark@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Mike
- Leach	 <mike.leach@linaro.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Date: Mon, 21 Jul 2025 15:38:59 -0700
-In-Reply-To: <20250718-perf_aux_pause_resume_bpf_rebase-v2-2-992557b8fb16@arm.com>
-References: 
-	<20250718-perf_aux_pause_resume_bpf_rebase-v2-0-992557b8fb16@arm.com>
-	 <20250718-perf_aux_pause_resume_bpf_rebase-v2-2-992557b8fb16@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+        bh=QX1c9/Mh/EGaQrrI9AS/O0cONZegTS8Gy7pO7vmBK3s=;
+        b=mhlskGLe62YzmsPqTfQBnyIK3CAHCAMYDAneeEW1NuwWaAmm+J54TGLBEuCA1ih4YQ
+         gHH997/WBoZbpmlZTTaoC20Kvis2GzRuarWqXWcs2UvjMPxT8e0sMzT7MULRqFwdT/yE
+         0kac6OFwHuEIkd0/cNPkBjEmuAddZQzV0FZtSKq5WCgyJUiDq596nywYTFUanf0l8Gu3
+         VUD/UUwv9IqJsVJYtnGMXWO55M7/75/NGI4EvpT4SSAr6Rtp3KYQiapQT8HR0BeCcaKt
+         Qtg9JI30jsB4UeAHEmgn9WUw3SsU3HOUIm8sgSPMRL4vsriHQbXoQysL9825YbjUWjvG
+         Unzg==
+X-Forwarded-Encrypted: i=1; AJvYcCXPcl+ZBCOchv0cw/Cq7gx4u9lVsEN+okNXlT5SjmBJIZ2y/nooyxRxzhenGqegYQ9c8YuI1NnWS8a1Uf2bx8p5@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJaIOy9d8iHO6Gy2rjxB2Gzkal3jvDvigHw0fqwu2xbO8A4vUB
+	uEMh4L/euSPOwomNbXI8NxFy3ZPsXtfhS/iBZeA0PcFKOYgmijAghaJRpgymj4SygIQczhJ+rHe
+	KLGHg5O1bNQ==
+X-Google-Smtp-Source: AGHT+IFuiYRn2c2rkf0K51zFEPQoIVUZo3CfbVzecU8nFOP9As6coBCa/SJWHmxy0MbELM4WWmNrSHBrySJ6
+X-Received: from pjuj4.prod.google.com ([2002:a17:90a:d004:b0:313:242b:1773])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5281:b0:310:8d4a:a246
+ with SMTP id 98e67ed59e1d1-31c9e6e515cmr29689084a91.1.1753148093986; Mon, 21
+ Jul 2025 18:34:53 -0700 (PDT)
+Date: Mon, 21 Jul 2025 18:34:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+Message-ID: <20250722013449.146233-1-irogers@google.com>
+Subject: [PATCH v1] perf pfm: Don't force loading of all PMUs
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 2025-07-18 at 16:25 +0100, Leo Yan wrote:
+Force loading all PMUs adds significant cost because DRM and other
+PMUs are loaded, it should also not be required if the pmus__
+functions are used.
 
-[...]
+Tested by run perf test, in particular the pfm related tests. Also
+`perf list` is identical before and after.
 
-> +__bpf_kfunc int bpf_perf_event_aux_pause(void *p__map, u64 flags, u32 pa=
-use)
-> +{
-> +	struct bpf_map *map =3D p__map;
-> +	struct bpf_array *array =3D container_of(map, struct bpf_array, map);
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/pfm.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-Verifier makes sure that p__map is a not null pointer to an object of
-type bpf_map, but it does not guarantee that the object is an instance
-of bpf_array.
-You need to check map->type, same way bpf_arena_alloc_pages() does.
+diff --git a/tools/perf/util/pfm.c b/tools/perf/util/pfm.c
+index 0dacc133ed39..e89395814e88 100644
+--- a/tools/perf/util/pfm.c
++++ b/tools/perf/util/pfm.c
+@@ -47,10 +47,6 @@ int parse_libpfm_events_option(const struct option *opt, const char *str,
+ 	p_orig = p = strdup(str);
+ 	if (!p)
+ 		return -1;
+-	/*
+-	 * force loading of the PMU list
+-	 */
+-	perf_pmus__scan(NULL);
+ 
+ 	for (q = p; strsep(&p, ",{}"); q = p) {
+ 		sep = p ? str + (p - p_orig - 1) : "";
+-- 
+2.50.0.727.gbf7dc18ff4-goog
 
-> +	unsigned int cpu =3D smp_processor_id();
-> +	u64 index =3D flags & BPF_F_INDEX_MASK;
-> +	struct bpf_event_entry *ee;
-> +	int ret =3D 0;
-> +
-> +	/* Disabling IRQ avoids race condition with perf event flows. */
-> +	guard(irqsave)();
-> +
-> +	if (unlikely(flags & ~(BPF_F_INDEX_MASK))) {
-> +		ret =3D -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	if (index =3D=3D BPF_F_CURRENT_CPU)
-> +		index =3D cpu;
-> +
-> +	if (unlikely(index >=3D array->map.max_entries)) {
-> +		ret =3D -E2BIG;
-> +		goto out;
-> +	}
-> +
-> +	ee =3D READ_ONCE(array->ptrs[index]);
-> +	if (!ee) {
-> +		ret =3D -ENOENT;
-> +		goto out;
-> +	}
-> +
-> +	if (!has_aux(ee->event))
-> +		ret =3D -EINVAL;
-> +
-> +	perf_event_aux_pause(ee->event, pause);
-> +out:
-> +	return ret;
-> +}
-
-[...]
