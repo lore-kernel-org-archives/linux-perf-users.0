@@ -1,52 +1,52 @@
 Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165602EB5D5;
-	Tue, 22 Jul 2025 14:07:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64CDB2EA140;
+	Tue, 22 Jul 2025 14:07:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753193223; cv=none; b=XveQuBOFrtqyAs/vzU3MyX003ag29IUUgLweNYSnSZMeg+kxTW4FDAHvYbU3TH+KRHtlMVsl5OJiiwbN1YcQGxn1W4y9tTD2AN6cnh81Z7ube3ocTlnTR+QbO+XXLAPBskegMrH6Cm8g704QYI1nmmIMOOh36ASLVkJAgZqpkt4=
+	t=1753193225; cv=none; b=ZPL+xdwagGGXEnL6BsrWXPDVWxXLJq3KG1DaZb03xdGwnT1VueR3aRIMxpViEkHvybX0EFQOR8G4ZmwEeuc1wG/TSoNOZH39Bp9yTU82CsFgCgMxIvPgCjCNUuGGvb0SIDD7HtlF4wXUNUFiGPKn0GLnmSHppC+Zsx/528rjTCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753193223; c=relaxed/simple;
-	bh=IJN+hzknQrvfMsfRdevhy9aScGLwuXIEUD6UONHUvTM=;
+	s=arc-20240116; t=1753193225; c=relaxed/simple;
+	bh=PeN3qmCWQUdwNQs4xuvTgl/wQEdVxnzDNM1iGwMrCyQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=FIHj3J6Fk4dAYQ1xImkyltkZgWUAlU1SRuyFkVfl7+d3eaG4B7/FnUOeKXjp5EkxpAVYLQq1dnhVl+9DhTaoe4NTBTTQaIUfOfi6kH5IeeUED9SJTlijOFPbkdEKChOmoCxWRUVAVwyW0CSDAHSk/dVMw4WMz+lV6KRKSk3Czj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=KGVgcXTr; arc=none smtp.client-ip=185.132.182.106
+	 In-Reply-To:To:CC; b=REnc84ZyjA533nCFtu/lgZCnclmBt3QM2urzvfRCt4cQt6tm3zmvDfl/iR+pwlXcKb0bDdF2Na3phZ27iGpoHEfRPKbQ3V9ffMK2gMXFdrFsYyK7rAuI19JcWuxmEXDBRyrc1Z1WXxXTH+q70YP0DlEEb32uaw49zhiR9mpsMgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=NvI9jpQS; arc=none smtp.client-ip=185.132.182.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="KGVgcXTr"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56MDp9CT023321;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="NvI9jpQS"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56MDXiGn010281;
 	Tue, 22 Jul 2025 16:06:44 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	Dzel1SQ7Aw9QbVnKaZahBU4awr4IRT5i98pBcRRcA0E=; b=KGVgcXTroxoci5yM
-	4elqOr8q6WdZvV928qCfrE9xV5NjBiEE/LkA4TdiuEIpxhSz/cvhw/CZY22tMoBp
-	+gG71HQw8zlrz1JvDb7Avg+UU66t6Ejo6o1jBROLFygqsrzCyWxnFHXVG/UJLzdW
-	Qgi6e96r7BUJD3vOw0hOohbSCG7KrIxMuTaciHfQajb5avERAj7Ah3NlT4jhLst8
-	NiAkeEQ4f9+geJvP8JAt2o3W5RgfP7TEQmsClx7zLWDKDNbRQmmxWSUh7jKmtqdA
-	+8xlhqHlcPKjCd+Kq2G7299w54KP7JJX/i5J+hQwvkUBRUFmg7caBSKobMlTN8mc
-	wooqPA==
+	iltrvkkBDPNUkwWqDFThCKXQjo7LhI+eeBGbd3adnYk=; b=NvI9jpQS+JhmRmRq
+	nxK2aoBTimL5MKRL8KLi4p61ZSy+o0019paPFiRiWz4NtFPqXoaBcDj5E5m7aXxK
+	8iG6fTcFSAdlK3nmOA0TVRrdcqjX7rrzaJLKpNJ1y8+32nQOHXpxSmH6DoR7zHN7
+	asA5JHawwVl6WkXT+HY/Brcc6ZoGHXxGu9bd8tJkAqJU8cxGo+H+mpuVTgBpCz2T
+	YFcgonhukwIb3ndH7Tz/N5i6sRG1eM7vbK4vQOJcO1rcXzOByMZlSXdf62ku2MwY
+	1BXAXj2D52jlUam3IfBux3F9/vjYNdjXF9d9tLLM3SIw7tM9jeMEDoOp9711osa4
+	mhtcsQ==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4802q26j67-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4800skxyhg-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 22 Jul 2025 16:06:44 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1F8134004F;
-	Tue, 22 Jul 2025 16:05:15 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 12E464005E;
+	Tue, 22 Jul 2025 16:05:20 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A79077A31F8;
-	Tue, 22 Jul 2025 16:03:57 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EFE437A1A6D;
+	Tue, 22 Jul 2025 16:03:59 +0200 (CEST)
 Received: from localhost (10.48.86.185) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 22 Jul
- 2025 16:03:57 +0200
+ 2025 16:03:59 +0200
 From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-Date: Tue, 22 Jul 2025 16:03:28 +0200
-Subject: [PATCH v3 11/19] dt-bindings: perf: stm32: introduce DDRPERFM
- dt-bindings
+Date: Tue, 22 Jul 2025 16:03:31 +0200
+Subject: [PATCH v3 14/19] MAINTAINERS: add myself as STM32 DDR PMU
+ maintainer
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-ID: <20250722-ddrperfm-upstream-v3-11-7b7a4f3dc8a0@foss.st.com>
+Message-ID: <20250722-ddrperfm-upstream-v3-14-7b7a4f3dc8a0@foss.st.com>
 References: <20250722-ddrperfm-upstream-v3-0-7b7a4f3dc8a0@foss.st.com>
 In-Reply-To: <20250722-ddrperfm-upstream-v3-0-7b7a4f3dc8a0@foss.st.com>
 To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
@@ -92,115 +92,31 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-07-22_02,2025-07-21_02,2025-03-28_01
 
-DDRPERFM is the DDR Performance Monitor embedded in STM32MPU SoC.
-It allows to monitor DDR events that come from the DDR Controller
-such as read or write events.
+Add Clément Le Goffic as STM32 DDR PMU maintainer.
 
 Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
 ---
- .../devicetree/bindings/perf/st,stm32-ddr-pmu.yaml | 94 ++++++++++++++++++++++
- 1 file changed, 94 insertions(+)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml b/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml
-new file mode 100644
-index 000000000000..34e1bba65f04
---- /dev/null
-+++ b/Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml
-@@ -0,0 +1,94 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/perf/st,stm32-ddr-pmu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 10850512c118..247f07ae4176 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -23487,6 +23487,13 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/power/supply/st,stc3117.yaml
+ F:	drivers/power/supply/stc3117_fuel_gauge.c
+ 
++ST STM32 DDR PMU
++M:	Clément Le Goffic <legoffic.clement@gmail.com>
++S:	Maintained
++F:	Documentation/admin-guide/perf/stm32-ddr-pmu.rst
++F:	Documentation/devicetree/bindings/perf/st,stm32-ddr-pmu.yaml
++F:	drivers/perf/stm32_ddr-pmu.c
 +
-+maintainers:
-+  - Clément Le Goffic <legoffic.clement@gmail.com>
-+
-+title: STMicroelectronics STM32 DDR Performance Monitor (DDRPERFM)
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - const: st,stm32mp131-ddr-pmu
-+      - items:
-+          - enum:
-+              - st,stm32mp151-ddr-pmu
-+          - const: st,stm32mp131-ddr-pmu
-+      - items:
-+          - const: st,stm32mp251-ddr-pmu
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  access-controllers:
-+    minItems: 1
-+    maxItems: 2
-+
-+  memory-channel:
-+    description:
-+      The memory channel this DDRPERFM is attached to.
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+required:
-+  - compatible
-+  - reg
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: st,stm32mp131-ddr-pmu
-+    then:
-+      required:
-+        - clocks
-+        - resets
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: st,stm32mp251-ddr-pmu
-+    then:
-+      required:
-+        - access-controllers
-+        - memory-channel
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    #include <dt-bindings/reset/stm32mp1-resets.h>
-+
-+    perf@5a007000 {
-+        compatible = "st,stm32mp151-ddr-pmu", "st,stm32mp131-ddr-pmu";
-+        reg = <0x5a007000 0x400>;
-+        clocks = <&rcc DDRPERFM>;
-+        resets = <&rcc DDRPERFM_R>;
-+    };
-+
-+  - |
-+    ddr_channel: ddr3-channel {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        compatible = "jedec,ddr3-channel";
-+        io-width = <16>;
-+    };
-+
-+    perf@48041000 {
-+      compatible = "st,stm32mp251-ddr-pmu";
-+      reg = <0x48041000 0x400>;
-+      access-controllers = <&rcc 104>;
-+      memory-channel = <&ddr_channel>;
-+    };
+ ST STM32 FIREWALL
+ M:	Gatien Chevallier <gatien.chevallier@foss.st.com>
+ S:	Maintained
 
 -- 
 2.43.0
