@@ -1,247 +1,209 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DDA2EE980;
-	Tue, 22 Jul 2025 14:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507A42EA46A
+	for <linux-perf-users@vger.kernel.org>; Tue, 22 Jul 2025 14:46:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753193248; cv=none; b=czDE0rEDA2HxO5JIFbF1oEq1U43kK9jpHrJN1XfV3JW3QgV3SyWMEf4ZH45QwoDFw83kHTRhDNqzs6yk8DUPkzrGwqzliZqQBtHABfYT4UyqB3TPJnua0upE3+UcU9cRZH+jvSLf/dYQAbikpU3Ryu64prraVtqYLfW4fWQ84XM=
+	t=1753195580; cv=none; b=nBjg25hm7oqF7s/CQ6PNnHRRULL5iBcKfxMesRyntU9F4U01nfYaNwgS0bBxBrPEXQCkjraN8Jn2Xtrlu8eBCwA68K74cBsDY9zBZqxarqYAmWT2CClUkX/BG1kS59+2R1p11mlMEVQQ3ygNk0rpaGsoDhE+XSNKn6avlmtzjYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753193248; c=relaxed/simple;
-	bh=B3BMoY8Fmirkg32h0T6O/jEuzLvpUCGP9jIQT0WDCVo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=OHCLLdzTYm7MEZrzr8VamjNeTvxBzBYDTy6C0IJKIkfy5XzZCYYLq/jJN+R+6PkE4Ntvzr+Ig1/hn1et4oQoK1tYJgsJyPlNLoiM9UPenjVXzSrLXCyNZaV8+V7gWO4ZIIqNaF8KlvLvwcJfPNh6yQOzGecMy9Tq11grHeMF78s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=ju5CmOMF; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1753195580; c=relaxed/simple;
+	bh=Rvaa3cO6sz7LRc4YI/Z6bfeC7kjrZOw49htRXcjJeM4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nfT1WNbSHR852VQF/5hxQFImAuTUAXOJuQ4TS6nr2vZuE17CZVOlWdrXpaB4vxACHhd7x1xsf5QJuLIvgHi1szhfzibuizd7Jg5kDAp3eZkHAJnf/T97OOcvwj45zBdj+EgFwowq90hOtb3TAYwB1i1JI46B3Yd1NIUkQbNy7N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aU3Rrk1g; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="ju5CmOMF"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56MBoudE012419;
-	Tue, 22 Jul 2025 16:07:07 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	A939/GpJAC3t+1N2NGPjJLrNWs6MhM0fkRM7WTY2FCg=; b=ju5CmOMFiAkTaQuj
-	cZCFIr2OSHAq/K04RUzc0gcpbwVGjhoO+f8jE8ExqN7KJOW6YfR/3fqn974KUDgh
-	CdRF8/s4dBSWxB6ZnUtF6ihIs8k9BzFfjinVukuzP44RDbfjGFHtsoyfnFVQwvgV
-	1z4qMKY12JEAoxgwrrtvSza3GEE8RKHpbb/71FgzKfXRqGcvG8SWnF3F671wIqDI
-	OsLvG8QF3efIiXBY4r/9RL5DMN484sKfq/nkxczWqBzE3ARiVzXJnyBftixWGw7L
-	m5JHqykEnBbtjzQh2qDpZyveI4eWh+i1jWhQt0tZJsIpmfs8qwxffcX/9ftayINL
-	j5mCVA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4802q26j8f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Jul 2025 16:07:07 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8AC1E4005A;
-	Tue, 22 Jul 2025 16:05:11 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1EBF87A2A48;
-	Tue, 22 Jul 2025 16:03:53 +0200 (CEST)
-Received: from localhost (10.48.86.185) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 22 Jul
- 2025 16:03:52 +0200
-From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-Date: Tue, 22 Jul 2025 16:03:22 +0200
-Subject: [PATCH v3 05/19] dt-bindings: memory: factorise LPDDR props into
- memory props
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aU3Rrk1g"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-455b002833bso22108155e9.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Jul 2025 07:46:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1753195573; x=1753800373; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+zRq6q+Q3aRIIcPAovmp38L5s64IDYxDAuFuBlXk1Vs=;
+        b=aU3Rrk1gAG5wwj7esNOcZixbOoyu+WHIyQY1MGsSIKqr+lDXll+20c6Fc9OyJiVanV
+         fEN6AXuYop5N8j1wcNs44m5bt5aM5XcT0y/Zo46tZGyj4/YW+w6x5QGNW7c831GGMjqb
+         eHWi3g7I+qowKI7GPbtIq40cBM3SWftJmwVI1FitkOusf2vWKE/KvlLHWui7zxp4F2VI
+         mPdYSNbFAspbHPFlnBw2STBJdelb0zbiSdjPTJ/5XpkeRPRfYBHir5P44Xm7b/q0G+QH
+         TD1n4qx39Zrxlw4PiMP/iGw7BcPOVg1rKPPp6eIy65ZQHbDoaVGkUTpOVxDAFhmcWGQY
+         clSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753195573; x=1753800373;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+zRq6q+Q3aRIIcPAovmp38L5s64IDYxDAuFuBlXk1Vs=;
+        b=N2AK3l6SYQetMzlS3di+DShz1BnRRUHDb3vG4Uhlwd26KrmXrg1OBgyld421f9ROnZ
+         2p9TQQ6eZoH2usuanqvaAxN0ObxkVgSXpPoqaDqiZU4UFQar7iZOGqdHBJJW7SBDnOkO
+         rJOx23XPcWNyn9nwbv8uZPvsCsoe8XoSsDfinJI1FXGzLN5nqJxMsLKjmEJAh9YlDJJa
+         thofVtoY7rr8o6zTlf2Drfss3Om4sZrtF1LrqU4nCbu7QdyH5HutvKwFCr4EC6ehpNtD
+         OlJI+UbQ3N7mj8lFjLoFbI0cpbi/Zk1EffWbl2K72MnVnPXTQZF/jfrwBmrb6CshA7Hr
+         bKCw==
+X-Forwarded-Encrypted: i=1; AJvYcCWbJHl8aOk6YJcHO5WsO4K24XBXDmyEWmmkhfvfr5GobC1Q13fVVfixgcCNQ/El044MxsZz3lxAiiyeJ+rkk1ME@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkJXXUmsGlB4qWcAOmknQXurK4P3KmaKU7cSAjZqrqexZu7Bwx
+	XVVGgQmrEE72pOOzr+d+U3eBwLkGjL8vDJeq4lr09nQedRofKDDAIZOWrYXiNfAeQpY=
+X-Gm-Gg: ASbGnct0b+ze6KRBhC5phMCPKY9qh2nwhPBB+lOBgewCiWUByaQNLXXj6gH3Tm/BQqM
+	SjNgm4w94wmCI3Onc60L+KwjJdAOLVTBXKylOj6T0nuZhJdmWW7K7HJIiYaEcI4yoitX+CByW6A
+	CEdj2hU0re3SrorJ3M9ePoUpcPhrnwZvJ+J7NnHj0pztlz5Jri4EHgwVIwUdK72U2Pm28byNd9N
+	MNrOfia00fypSl/5Wugq+ClgfcovJNZ7PZnWO91CN9YzeJifCfErNvxc7Um/ajKM+TiZUzT7Lo9
+	455LIi4KkAebYoJctMcZiTimPg3RwG07+zaHVVokZo9/qTck3EbHWLAEKQW5hXaQk2SlW7DcN1c
+	3Wopj7huV1QkV/tx5E6y7yZoJzpk=
+X-Google-Smtp-Source: AGHT+IEzlWOgnfRNv4/fQDkTRc8GhsQBHo1Y57syH6gUs7Qb009+oIXJL35tfLadwhf4ZS07sILvoA==
+X-Received: by 2002:a05:600c:354c:b0:456:161c:3d61 with SMTP id 5b1f17b1804b1-4562e275c25mr216633925e9.22.1753195573391;
+        Tue, 22 Jul 2025 07:46:13 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.76.109])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4563b75cb86sm134030035e9.32.2025.07.22.07.46.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Jul 2025 07:46:12 -0700 (PDT)
+Message-ID: <10e9cb52-2476-4c13-8632-0a85830f98dd@linaro.org>
+Date: Tue, 22 Jul 2025 15:46:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-ID: <20250722-ddrperfm-upstream-v3-5-7b7a4f3dc8a0@foss.st.com>
-References: <20250722-ddrperfm-upstream-v3-0-7b7a4f3dc8a0@foss.st.com>
-In-Reply-To: <20250722-ddrperfm-upstream-v3-0-7b7a4f3dc8a0@foss.st.com>
-To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob
- Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor
- Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Philipp Zabel
-	<p.zabel@pengutronix.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Gatien Chevallier
-	<gatien.chevallier@foss.st.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Gabriel Fernandez
-	<gabriel.fernandez@foss.st.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Le
- Goffic <legoffic.clement@gmail.com>,
-        Julius Werner <jwerner@chromium.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>,
-        =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-X-Mailer: b4 0.15-dev-8018a
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-07-22_02,2025-07-21_02,2025-03-28_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] perf: arm_spe: Disable buffer before writing to
+ PMBPTR_EL1 or PMBSR_EL1
+To: Leo Yan <leo.yan@arm.com>
+Cc: Alexandru Elisei <alexandru.elisei@arm.com>, Will Deacon
+ <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Anshuman Khandual <Anshuman.Khandual@arm.com>,
+ Rob Herring <Rob.Herring@arm.com>, Suzuki Poulose <Suzuki.Poulose@arm.com>,
+ Robin Murphy <Robin.Murphy@arm.com>, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250701-james-spe-vm-interface-v1-0-52a2cd223d00@linaro.org>
+ <20250701-james-spe-vm-interface-v1-2-52a2cd223d00@linaro.org>
+ <20250704155016.GI1039028@e132581.arm.com>
+ <b77f12e7-ea3f-4c57-9706-ff8e32721cc8@linaro.org>
+ <20250707153710.GB2182465@e132581.arm.com> <aG4_uYJgpMXo3QHQ@raptor>
+ <20250714085849.GC1093654@e132581.arm.com>
+ <0c53164a-306a-4cb7-9085-bba8985c32e7@linaro.org>
+ <20250721152134.GF3137075@e132581.arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250721152134.GF3137075@e132581.arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-LPDDR and DDR bindings use the same properties (at least for density,
-io-width and reg).
-To avoid bindings duplication, factorise the properties.
 
-The compatible description has been updated because the MR (Mode
-registers) used to get manufacturer ID and revision ID are not present
-in case of DDR.
-Those information should be in a SPD (Serial Presence Detect) EEPROM in
-case of DIMM module or are known in case of soldered memory chips as
-they are in the datasheet of the memory chips.
 
-Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
----
- .../memory-controllers/ddr/jedec,lpddr2.yaml       |  2 +-
- .../memory-controllers/ddr/jedec,lpddr3.yaml       |  2 +-
- .../memory-controllers/ddr/jedec,lpddr4.yaml       |  2 +-
- .../memory-controllers/ddr/jedec,lpddr5.yaml       |  2 +-
- ...ec,lpddr-props.yaml => jedec,memory-props.yaml} | 24 +++++++++++++---------
- 5 files changed, 18 insertions(+), 14 deletions(-)
+On 21/07/2025 4:21 pm, Leo Yan wrote:
+> On Mon, Jul 21, 2025 at 02:20:15PM +0100, James Clark wrote:
+> 
+> [...]
+> 
+>>>> Thought about this some more.
+>>>>
+>>>> Before:
+>>>>
+>>>> arm_spe_pmu_buf_get_fault_act:
+>>>>     <drain buffer>
+>>>>     ISB
+>>>> arm_spe_perf_aux_output_begin:
+>>>>     PMBLIMITR_EL1.E = 1
+>>>> ISB
+>>>> PMBSR_EL1.S = 0
+>>>> ERET
+>>>>
+>>>> Now:
+>>>>
+>>>> PMBLIMITR_EL1 = 0
+>>>> ISB
+>>>>
+>>>> PMBSR_EL1.S = 0
+>>>> arm_spe_perf_aux_output_begin:
+>>>>     ISB
+>>>>     PMBLIMITR_EL1.E = 1
+>>>> ERET
+>>>>
+>>>> I don't see much of a difference between the two sequences - the point after
+>>>> which we can be sure that profiling is enabled remains the ERET from the
+>>>> exception return.  The only difference is that, before this change, the ERET
+>>>> synchronized clearing the PMBSR_EL1.S bit, now it synchronizes setting the
+>>>> PMBLIMITR_EL1.E bit.
+>>>>
+>>>> Thoughts?
+>>>
+>>> To make the discussion easier, I'll focus on the trace enabling flow
+>>> in this reply.
+>>>
+>>> My understanding of a sane flow would be:
+>>>
+>>>     arm_spe_pmu_irq_handler() {
+>>>       arm_spe_perf_aux_output_begin() {
+>>>             SYS_PMBPTR_EL1 = base;
+>>>
+>>>             ISB // Synchronization between SPE register setting and
+>>>                 // enabling profiling buffer.
+>>>             PMBLIMITR_EL1.E = 1;
+>>>       }
+>>>       ISB // Context synchronization event to ensure visibility to SPE
+>>>     }
+>>>
+>>>     ... start trace ... (Bottom half, e.g., softirq, etc)
+>>>
+>>>     ERET
+>>>
+>>> In the current code, arm_spe_perf_aux_output_begin() is followed by an
+>>> ISB, which serves as a context synchronization event to ensure
+>>> visibility to the SPE. After that, it ensures that the trace unit will
+>>> function correctly.
+>>>
+>>
+>> But I think Alex's point is that in the existing code the thing that finally
+>> enables trace (PMBSR_EL1.S = 0) isn't followed by an isb(), only an ERET. So
+>> the new flow isn't any different in that regard.
+> 
+> Thanks for explanation.
+> 
+>>> I understand that the Software Usage PKLXF recommends using an ERET as
+>>> the synchronization point. However, between enabling the profiling
+>>> buffer and the ERET, the kernel might execute other operations (e.g.,
+>>> softirqs, tasklets, etc.).
+>>
+>> Isn't preemption disabled? Surely that's not possible. Even if something did
+>> run it wouldn't be anything that touches the SPE registers, and we're sure
+>> there's an isb() between setting up the buffer and the final PMBLIMITR_EL1.E
+>> = 1
+> 
+> Yes, bottom half runs in preemtion disabled state. See:
+> 
+>    el1_interrupt() -> __el1_irq() -> irq_exit_rcu() -> invoke_softirq()
+> 
+> In some cases, sotfirq and tasklet might even cause long latency (I
+> believe it can be milliseconds or even longer), this is why ftrace
+> "irqsoff" tracer is used to profile latency caused by irq off state.
+> 
+> Bottom half does not modify SPE registsers, but it can be a long road
+> between enabling SPE trace and ERET.
+> 
+>>> Therefore, it seems to me that using ERET as the synchronization point
+>>> may be too late. This is why I think we should keep an ISB after
+>>> arm_spe_perf_aux_output_begin().
+>>
+>> Wouldn't that make the ERET too late even in the current code then? But I
+>> think we're agreeing there's no issue there?
+> 
+> I would say ERET is too late for current code as well.
+> 
+> Thanks,
+> Leo
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr2.yaml b/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr2.yaml
-index a237bc259273..f290a25675b2 100644
---- a/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr2.yaml
-+++ b/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr2.yaml
-@@ -10,7 +10,7 @@ maintainers:
-   - Krzysztof Kozlowski <krzk@kernel.org>
- 
- allOf:
--  - $ref: jedec,lpddr-props.yaml#
-+  - $ref: jedec,memory-props.yaml#
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr3.yaml b/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr3.yaml
-index e328a1195ba6..994127dbcdca 100644
---- a/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr3.yaml
-+++ b/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr3.yaml
-@@ -10,7 +10,7 @@ maintainers:
-   - Krzysztof Kozlowski <krzk@kernel.org>
- 
- allOf:
--  - $ref: jedec,lpddr-props.yaml#
-+  - $ref: jedec,memory-props.yaml#
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr4.yaml b/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr4.yaml
-index a078892fecee..753376a3ad1f 100644
---- a/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr4.yaml
-+++ b/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr4.yaml
-@@ -10,7 +10,7 @@ maintainers:
-   - Krzysztof Kozlowski <krzk@kernel.org>
- 
- allOf:
--  - $ref: jedec,lpddr-props.yaml#
-+  - $ref: jedec,memory-props.yaml#
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr5.yaml b/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr5.yaml
-index e441dac5f154..27e2bbdb631d 100644
---- a/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr5.yaml
-+++ b/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr5.yaml
-@@ -10,7 +10,7 @@ maintainers:
-   - Krzysztof Kozlowski <krzk@kernel.org>
- 
- allOf:
--  - $ref: jedec,lpddr-props.yaml#
-+  - $ref: jedec,memory-props.yaml#
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr-props.yaml b/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,memory-props.yaml
-similarity index 72%
-rename from Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr-props.yaml
-rename to Documentation/devicetree/bindings/memory-controllers/ddr/jedec,memory-props.yaml
-index 30267ce70124..0bc919fd8b53 100644
---- a/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr-props.yaml
-+++ b/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,memory-props.yaml
-@@ -1,16 +1,16 @@
- # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/memory-controllers/ddr/jedec,lpddr-props.yaml#
-+$id: http://devicetree.org/schemas/memory-controllers/ddr/jedec,memory-props.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
--title: Common properties for LPDDR types
-+title: Common properties for memory types
- 
- description:
--  Different LPDDR types generally use the same properties and only differ in the
-+  Different memory types generally use the same properties and only differ in the
-   range of legal values for each. This file defines the common parts that can be
-   reused for each type. Nodes using this schema should generally be nested under
--  an LPDDR channel node.
-+  an memory channel node.
- 
- maintainers:
-   - Krzysztof Kozlowski <krzk@kernel.org>
-@@ -21,14 +21,15 @@ properties:
-       Compatible strings can be either explicit vendor names and part numbers
-       (e.g. elpida,ECB240ABACN), or generated strings of the form
-       lpddrX-YY,ZZZZ where X is the LPDDR version, YY is the manufacturer ID
--      (from MR5) and ZZZZ is the revision ID (from MR6 and MR7). Both IDs are
--      formatted in lower case hexadecimal representation with leading zeroes.
-+      (from MR5 in case of LPDDR) and ZZZZ is the revision ID (from MR6 and MR7
-+      in case of LPDDR). Both IDs are formatted in lower case hexadecimal
-+      representation with leading zeroes.
-       The latter form can be useful when LPDDR nodes are created at runtime by
-       boot firmware that doesn't have access to static part number information.
- 
-   reg:
-     description:
--      The rank number of this LPDDR rank when used as a subnode to an LPDDR
-+      The rank number of this memory rank when used as a subnode to an memory
-       channel.
-     minimum: 0
-     maximum: 3
-@@ -36,7 +37,8 @@ properties:
-   revision-id:
-     $ref: /schemas/types.yaml#/definitions/uint32-array
-     description:
--      Revision IDs read from Mode Register 6 and 7. One byte per uint32 cell (i.e. <MR6 MR7>).
-+      Revision IDs read from Mode Register 6 and 7 in case of LPDDR.
-+      One byte per uint32 cell (i.e. <MR6 MR7>).
-     maxItems: 2
-     items:
-       minimum: 0
-@@ -45,7 +47,8 @@ properties:
-   density:
-     $ref: /schemas/types.yaml#/definitions/uint32
-     description:
--      Density in megabits of SDRAM chip. Decoded from Mode Register 8.
-+      Density in megabits of SDRAM chip. Decoded from Mode Register 8 in case of
-+      LPDDR.
-     enum:
-       - 64
-       - 128
-@@ -65,7 +68,8 @@ properties:
-   io-width:
-     $ref: /schemas/types.yaml#/definitions/uint32
-     description:
--      IO bus width in bits of SDRAM chip. Decoded from Mode Register 8.
-+      IO bus width in bits of SDRAM chip. Decoded from Mode Register 8 in case
-+      of LPDDR.
-     enum:
-       - 8
-       - 16
 
--- 
-2.43.0
+Ok I get it now. The point is that there is stuff in between the return 
+in the SPE IRQ handler and the actual ERET. If someone is interested in 
+sampling the kernel then they might miss sampling a small amount of that.
+
+It's not a correctness thing, just reducing potential gaps in the 
+samples. I can add another commit to add it, but it doesn't look like it 
+would be a fixes commit either, just an improvement. And the same issue 
+applies to the existing code too.
+
+James
 
