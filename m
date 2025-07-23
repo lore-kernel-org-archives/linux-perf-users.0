@@ -1,601 +1,664 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0037A1E7C38;
-	Wed, 23 Jul 2025 18:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753295080; cv=none; b=FGNdOWPv6gTPpOfy1NG7NO0PtnHlfK6tyAZzIyCIF0KA1ZRBI79qCJ703Kl6QGFq0aCP5PqFtMSuBu40TyxpoIY5I7/VFRasAKDcZ3GJCVglLhedqfLCuuERXEl9aW0z62JqCQ8p/IyPjoA0yOkdSb5SGMbuMLV3F9/gCGA29pI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753295080; c=relaxed/simple;
-	bh=esWME+OeA9UJ0rpkz5T3ZlLWXoODDMkUr7lbDQrK9Sg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j903jQG7zXv4LngWiag7WzZoyIn1/W4B466hMZaYDxqCygDz8/sRQdtS2f6HHq0hF+RoR6L9jK9ZCAAcaf/rNZbQQMSEdzCyqlD07UCKfEH986Ln6mkLC8klxHn0cVDZswIM2vGBc2YzL1IFA+SrQtcPD8Gr/pIn5zz5hxOB2O4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=unnkRupS; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81471798F;
+	Wed, 23 Jul 2025 18:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753295640; cv=fail; b=s1yocKJJ786ghFmL9LMrvtPpSTcCChJxcj2LXB2T5LS46H1XsL+yvsWyO3pmLtj99EDP8lgLRFQB6EJlW/vx8bHa22qG07n88KX2s+jEr/o1Coi7kbyW9Zl+NGJqJ3bvKXboa8tS8k0wP66UYwkS82S5+ddJds4TL6Sn8sVFMWk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753295640; c=relaxed/simple;
+	bh=DzVj9tZgq9T9cWPLJYjWVudAy/8glNB+73lGbumjBYk=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=AMg9o1/XEtyS0BFVloPVdG13d+9UbQrfiiUnzXuqre8l3dJyRgAfMZc0hFd8cNI+D0JmTEJ3iTZpessEaoqApuETqLEhC665tSOeuFvLTOy6yvSHwyQnEjVnmfvnw+yUGElEYS5wfxGTIBLRd9awOD1uqrw3uIH2lkJSTApMsyA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bzG0Qz78; arc=fail smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="unnkRupS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0959DC4CEE7;
-	Wed, 23 Jul 2025 18:24:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753295079;
-	bh=esWME+OeA9UJ0rpkz5T3ZlLWXoODDMkUr7lbDQrK9Sg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=unnkRupST0Xhz3vpf+a+2KBbmB2n9qS/hQIPTwiulUEs7FhKbQJoaUqgiU1bH7kLq
-	 XrHzXH7GActdq2h1Bm3wvIx3tJBV6BGuLnY9yKS+Oqtv93U3AXGraf7sKJTE3JnvKv
-	 L0HAma2n15tzoaK8ooJaEKLEIdFgKrbw/JDsrcpPVCOD+UWnevzU2v1NEZZbvzUDuq
-	 SeiLc2xm4TQpp0g4v/es2C28MOZiU6P3L+4/e0gJtXm3V1i8USR+5ojEhQ+unhBk3G
-	 51bHXmxp1zZNGvhf7Wus9AihtfoJEYTzDgXhIqFfLNawxvaPFnNonFHzQ26DyNcmq8
-	 9ffFaqyzROFuw==
-Date: Wed, 23 Jul 2025 11:24:37 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Collin Funk <collin.funk1@gmail.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Gautam Menghani <gautam@linux.ibm.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v7 02/16] perf jevents: Add common software event json
-Message-ID: <aIEo5QLf3YkYJCB_@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bzG0Qz78"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753295638; x=1784831638;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   content-id:content-transfer-encoding:mime-version;
+  bh=DzVj9tZgq9T9cWPLJYjWVudAy/8glNB+73lGbumjBYk=;
+  b=bzG0Qz78RMQJNY126VVYyt0sg13Oj/6s1TgjSMRKgqwDp3cA6KUHEPLv
+   QruWon0IjSdpa686eVXhgay3Z9tu6M/Y6fO5i9+QfxTHEPQytjmro/WY0
+   b5zBTngLPtZgw4rkXMip3S0lsFFuQWn2VZzBTFFoeGMlb/6sJcWXXDoUO
+   KijjWeL0wt+03y6go52J4Aetq+iGAFqbjsSF+RJgtBVwtc0ZAOEFgN9vR
+   NecvppXm2AI4GXV3PVfeu+beeRneBml1CqYCyY1eHO+0NLtFMJpPByaZ5
+   YXrZUyuzS+7+H095DHSv+EudNNFOrCxNJKx/kC0NiwgkpRCZYLju+Att7
+   g==;
+X-CSE-ConnectionGUID: +kRr67aAS66RxiUB0yC1gA==
+X-CSE-MsgGUID: Dhb0/sayQaOeo4RxylumgQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11501"; a="55549714"
+X-IronPort-AV: E=Sophos;i="6.16,335,1744095600"; 
+   d="scan'208";a="55549714"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2025 11:33:49 -0700
+X-CSE-ConnectionGUID: plUk/LTFSiucebO0rN6oPQ==
+X-CSE-MsgGUID: pqBTGm5ORI2FXtkk2n8Rsg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,335,1744095600"; 
+   d="scan'208";a="164158551"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2025 11:33:47 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26; Wed, 23 Jul 2025 11:33:46 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26 via Frontend Transport; Wed, 23 Jul 2025 11:33:46 -0700
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (40.107.102.43)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26; Wed, 23 Jul 2025 11:33:45 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QmDuaVYJKhCqt5KaM/fG4rE04lWMART8YkYD3cBgDkgRUtGd7CMexmJBx0Jr7Z8qcWPRGCA6b1PnYDT5bGyepeHpq9YkuYj/oUZ6qa74iz1IOSU0OzWKpW4w7KjCb+fNQ30Y0HUHSZvzMrQdwaslicPpMrAwwBfEqFxJokBq5wpaoN4J4PM6thbSbAEPHgKMB8UKfx1mbxntvR4Qftmqp5aFsYLBDARNw8soVKLiAh+Zu45BcTaBZlXibTwZ+KnBOrDgSTGRBQbTzsf1w3MGvZ41zfvDaappCoq3nEFIBDbibgmQFX19xeDq1CweWjDRRkPZunWXdunwH0g4eaEgFQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DzVj9tZgq9T9cWPLJYjWVudAy/8glNB+73lGbumjBYk=;
+ b=T/KIyqtdIBtmIDW22JZfWzgDDJTPIXwr0CjoJ7uS2hnzK/qp6Yt44jY6rOeoP9zoorBW8zGiCujVGWU2gHePpd6QBt69gza+M8ED+XAE3dNfavv7rDCidpiEfFQ1Y4xCiJXX0j7weHrPoTu1KSX+1mQ2x6nXnYu4L57sNsqHeUAZD1B7/f9Y36LMQ9fmyNjEth0W4qzp0yW6OY48NjxAmFFdg3ZBkgcgsjg2RZtgU9RJZQu+t6DBIjp4/dYc6QjQWIHZRL+6OmnGVZjwSiPvn27EWMsHtEzyrpozfLn3fEr+eOV03TPGvlaa+dSUT7Q8svogRhwmSW8V1EohW5tbug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CH3PR11MB8383.namprd11.prod.outlook.com (2603:10b6:610:171::6)
+ by DS7PR11MB7886.namprd11.prod.outlook.com (2603:10b6:8:d8::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8943.30; Wed, 23 Jul
+ 2025 18:33:28 +0000
+Received: from CH3PR11MB8383.namprd11.prod.outlook.com
+ ([fe80::56d4:6f50:dd04:d11b]) by CH3PR11MB8383.namprd11.prod.outlook.com
+ ([fe80::56d4:6f50:dd04:d11b%5]) with mapi id 15.20.8964.019; Wed, 23 Jul 2025
+ 18:33:28 +0000
+From: "Falcon, Thomas" <thomas.falcon@intel.com>
+To: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+	"mhiramat@kernel.org" <mhiramat@kernel.org>, "tmricht@linux.ibm.com"
+	<tmricht@linux.ibm.com>, "xu.yang_2@nxp.com" <xu.yang_2@nxp.com>,
+	"howardchu95@gmail.com" <howardchu95@gmail.com>, "Hunter, Adrian"
+	<adrian.hunter@intel.com>, "ak@linux.intel.com" <ak@linux.intel.com>,
+	"mingo@redhat.com" <mingo@redhat.com>, "irogers@google.com"
+	<irogers@google.com>, "gautam@linux.ibm.com" <gautam@linux.ibm.com>,
+	"ctshao@google.com" <ctshao@google.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "james.clark@linaro.org"
+	<james.clark@linaro.org>, "collin.funk1@gmail.com" <collin.funk1@gmail.com>,
+	"mark.rutland@arm.com" <mark.rutland@arm.com>, "peterz@infradead.org"
+	<peterz@infradead.org>, "linux@treblig.org" <linux@treblig.org>, "Wang,
+ Weilin" <weilin.wang@intel.com>, "yangtiezhu@loongson.cn"
+	<yangtiezhu@loongson.cn>, "acme@kernel.org" <acme@kernel.org>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, "jolsa@kernel.org"
+	<jolsa@kernel.org>, "namhyung@kernel.org" <namhyung@kernel.org>
+Subject: Re: [PATCH v7 11/16] perf ilist: Add new python ilist command
+Thread-Topic: [PATCH v7 11/16] perf ilist: Add new python ilist command
+Thread-Index: AQHb9N6riUYDQoggRUqkirOXJTHqq7RAFtAA
+Date: Wed, 23 Jul 2025 18:33:28 +0000
+Message-ID: <66fd717b870b63ec703b4bf0bbcc50a6d0742c30.camel@intel.com>
 References: <20250714164405.111477-1-irogers@google.com>
- <20250714164405.111477-3-irogers@google.com>
+	 <20250714164405.111477-12-irogers@google.com>
+In-Reply-To: <20250714164405.111477-12-irogers@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH3PR11MB8383:EE_|DS7PR11MB7886:EE_
+x-ms-office365-filtering-correlation-id: c5f114f2-cfd0-4651-b4d3-08ddca176ad0
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700018|921020;
+x-microsoft-antispam-message-info: =?utf-8?B?blprUllORXEyczRlSWptTXBYQ0dscEcvVXUvNHZKOUg3SVlQK0J3WmxOWDdG?=
+ =?utf-8?B?c0F5dU8wYlZiVDRYN3J1R04wRFNMUDJqSC9TS0hSeWNCLzBhb3ZUczRZWG5T?=
+ =?utf-8?B?OHYyQjRIQm5lNlU2UFpPS0MwQmVRVUkvcUZTM3lXMDc0RkE2NVFGTzA5czI3?=
+ =?utf-8?B?QUF5SEVpeU1BaFBkeEVkWlB5UDdGa3YyMVd2M2tkRkZJZ2NsMmI4WnVsMmJI?=
+ =?utf-8?B?MnBSWGIwMTErN2FiVjVJNVJDUTNVM1EwNDgwdHNwVjRLVmF3d1UxQTdVamd4?=
+ =?utf-8?B?WXNXeHVrTHV2TVBFdURPYkNDSzhSSHdYQjJGVTlIRm9ERUt0Ym11aVY5THRT?=
+ =?utf-8?B?VVoxbmx3Z3pOak1LcTJMc3BIejhJa05yengvOU1rSnh0YnhxNXNwL2NaMDVY?=
+ =?utf-8?B?d0NtRXcxUC9nNUgrTzJzTW85MnlnNzJwa0pGVXpTb0Rxdmc0ZTFXQTFwbFo3?=
+ =?utf-8?B?azV4MlQ0U2hGQTZhMjY3Uk5WdmgwS3JjWXJ5cWtrcWZhMjh1YXFjK3pjbVBW?=
+ =?utf-8?B?US9MWUdDZUJKMm84Sm1nUGN5YUZtcXZKcElwb29NcG1XeVNuNFFGdDVpQzBD?=
+ =?utf-8?B?RmRITGc4WmdJYzRjQi9YRS9CUEh0U3BDeGhlSDU4cWpsYkxacmNVemcwUkRB?=
+ =?utf-8?B?a3I0QlVIL05wOG5pR1pNTzhsTlBMYjM1OFJYSXd0L1B1UEZBQzRQNmx4WFph?=
+ =?utf-8?B?cGVJN1hsQnlnS0Y0ZGs5bkQwQmNqd3pJOWRqTzduUkJYMnJXWjBmK3FkbFZr?=
+ =?utf-8?B?WEFOWnM0Rmg0bUdIWEtQcVd2TUpsV084YUkxN2hYZXI2T2kwY2xIYUJwZTFR?=
+ =?utf-8?B?Qk9Nd1laZ0RJN25FS3pKV2xFYlN1dGVBWDdiL0VVUlNoUkppd1JSVFZybTY2?=
+ =?utf-8?B?cjYySThQc0ZMcWdoWDh6Tk9WOXdBS1lEMlZsaTZtRzA5OGlMUThSWXRiNmhx?=
+ =?utf-8?B?RGxlTnhTNXR5ZnBoclJiV3RjcCtLSHprSGpZb3pVSGhheW9reVlpM3RHQmFS?=
+ =?utf-8?B?bW91bHIzc2Vxc2ZWdGRBY3JTQjJ0TGUrUHgrOWY0MWhVeGd5WnBPN2hnZndM?=
+ =?utf-8?B?VlEzQmdsMVJzQzVjSXZtNm5ueTlmT3pEclhmbWhTNndIK29BanlMNXF5NFlM?=
+ =?utf-8?B?MkFWeWhnZ2hxYnFoanRwY3paMVgyaHFSdklKSVBKR0c3K05xV3NpWkVPVTln?=
+ =?utf-8?B?VUwzbG82aWRzOHBjYjJHaUZKdmM4K3ZacGhibU10SWVDcHdLYzEwL2tabFBF?=
+ =?utf-8?B?WlRqOVZsdnF3cnRUTlZkczhOTWN0elVxV1ZObUNvMFp4TVZrNTNuZXVnWnFU?=
+ =?utf-8?B?R2hSUTIvMUhWYTk2MzJFMXRrM0hNNTNWVEhBYkxMWVh1dWJYNUlwd1MxN2N3?=
+ =?utf-8?B?SzVxU2gxWkUvWjc1eTRnbDBtbkVnUmdZSU00K0Q5L1FXVVFxVVFiU24wVVo5?=
+ =?utf-8?B?UngrUXZ1LzZSc3BRSGhwTXV4VlhBRWJRTCs2a2hsWjE3QzVBVlZscm84OTYw?=
+ =?utf-8?B?QUVrbWJlZG54WUZZS0RvaFRGKzlySFNIeFBseFJkaDJaT0N6T01pMTJHMXBy?=
+ =?utf-8?B?L0lMS2Jld1NHNHlZWHZBQzBNYzZnSnJlR05FWm5zbzhrSldoOStIYVhMdC9i?=
+ =?utf-8?B?NzBubEN5Yi8wS1NVNEExSFc4Z1BwcTFWbkF3b3NTdXFPMDhmVE9xdDl5RzhH?=
+ =?utf-8?B?NldWV2lBbkpQamtpN3F4b05iMEdQMjJaRDdKS3lja2hNT3dXNmd2OXlrUmUx?=
+ =?utf-8?B?bGFvZjh3Z1JaRW55VjZVbW1RRXBQaXB4eHdHaUJseGlsZDdBQTBsbVZFVXhx?=
+ =?utf-8?B?TVNQS2E0b1lOZlV2SGlEK2NQM1pWczZ2R1NCdkdPaFFEeUZXRlBZUzJQcGJU?=
+ =?utf-8?B?ck5nTHJDOWJ0M05MTTBrM3d0VmZYTWJmcTFOeDFzWVRjNERzWW43ZHpUSnRN?=
+ =?utf-8?Q?xGGQPLHUyD9f2rkLenb8YJMm/6ZEJkxy?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8383.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700018)(921020);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Z1ppNzByY29FazNFdEhWbmo4MEwvLzV5ZGVDWjFOMncvbEpRNW42anlZQUFs?=
+ =?utf-8?B?Q3JGa0JUd3RrVEdwRjlNWWRCTm9CSFJmWHF6L1lsOEFDZDI0YkRzUEY3WmJ6?=
+ =?utf-8?B?UmlrSXBBTDlhd3IyTFZCcVZrTk1XQllJOEhDT0lVZGtlOFdyZFE2bVY1UFNC?=
+ =?utf-8?B?RWN4SDEwUjc0OVRlSVZHQk04cEc3aDBCZmI4VldNZjM3M2ErSktESVhPZW1S?=
+ =?utf-8?B?NDdYcWsrRGhHZXBUWG9IeHRPaWFrNjNQd2tuK0tXbnoxbk5wQnRhcWFQdXpm?=
+ =?utf-8?B?QjBqSTJTUFlSNjl6U2FyeTFjNkNWNzZiR0pJMDZwS2EyM3NBR2RLWEczZXlE?=
+ =?utf-8?B?eDd2U3o2QlZ5SkJPaVdPdVJLOUFlNis1dHFIamR5c0dBVktSemRaR2pING8x?=
+ =?utf-8?B?azdUc0gvVkVVSnRQY1dYQTVBdHY2L1dUT0pPL2pMbm5LQ3JKejhOR091a1dB?=
+ =?utf-8?B?WkhWbGFkL1VhbFk1Q05FWjdKL1NTNDAvOWNweVBSOU5GM1d6RkdHaEhxR3l2?=
+ =?utf-8?B?dXAzRUxRWVkxTHNHRS9ZdzhQV2sxUERrYlNKREVtSUxPTVZHSnJyNGU5NWNr?=
+ =?utf-8?B?cC90OGVKRjNTVmlhekk5NDFlTC9rTWhPWW5jN25rbDRMS3dxMjN3M0N6eWht?=
+ =?utf-8?B?N2VWRmg1eTFjYnQ3OENlaHhWdmxJTnZXYmhlL2IvVCtRNXFiQWJIb0RuampK?=
+ =?utf-8?B?c3pxZkZ3Zm5KYlVzTXI3K21MZXBybmgzYStlbS83WkJ3cTNYUWpzczJWeUxi?=
+ =?utf-8?B?VFBKa2V4NUJDVXZzSk1hTmdiT1RBSFhsUE9IVytHbWlocTdqL0VFaHM5cXZv?=
+ =?utf-8?B?TkVrRFJUZG5nMURlZlZyNEVyNWo0VTZzYUFGVWttMGZBRTJxdlU0OGE0dlpK?=
+ =?utf-8?B?ZDh5ZXd3ZmtaWitZeG9HcXpraVM5YmJxSVl0WGxYbU9Zekw1S2wyZGRBU1hp?=
+ =?utf-8?B?NG1teGluUHhPUDJVSUpXdkFFdldFWExrZzRmWmRjQkZVaDdiK3BDamtNN1pS?=
+ =?utf-8?B?cVB0UUV2eGJTKy9VbEprT2d0ejFVemlBb3RYaUpzWjZ6WU1PUDJwSjhWTXdY?=
+ =?utf-8?B?djVNSFI1TUxvc3Y0dERMQnh5N0ZOQ2ZmNUxHSUNpVmVVcDg3OTl3RlpzbVRo?=
+ =?utf-8?B?REw3RGhtRlhJSVhXQ2hiNGFPZ3dwcFI0amZlcldtS1MvL1JWY0F6UmJEZ1NC?=
+ =?utf-8?B?aFdUUkRnRXN0UGJnWlVpMXFESis3TFhPY1kwMjlKTlFadlNBK0RJdjRMNlB0?=
+ =?utf-8?B?bnpJMTA4SG9COTY2SURobmpoQmJtQXgwRG9udG4wL0h3UGtmaFU3V1FxYTBn?=
+ =?utf-8?B?NnNkYVBtc2s5T2dkdDhlRzQvOWtqNXFDM3VDMC9rWnVVY3hnOHd0aTZPT0FU?=
+ =?utf-8?B?NlUxSnFCU2J1NTZWREEzblRqRXUrYjZEVlh6eU5zNkN3VXlwQnphWFBqN3BG?=
+ =?utf-8?B?OXVNOEZXUW9RN0JUK2MwMjdkS2szVWhOUklxbmlCWkg0RjRKVXo3MkZrSVhN?=
+ =?utf-8?B?Y2lCME1yNUljQks3SExBNVpNcFpER045MHRVR200K0QzY2RLRVRLdG5odDFY?=
+ =?utf-8?B?Y3FodVFVTG5Jbkp1bTJZaUk2b05JaVhKYnB1WExza1QwUEx5eFhPVWJzZzNG?=
+ =?utf-8?B?MWY3bUd3bjhDWXU3Rk9hZGVZcFBXMFNHbW5BUVRyaHd2RVM1MitoV29wS1hT?=
+ =?utf-8?B?ajNod2o1OTNYYW9HQWQ0ZXZVTFo3Y1JmaTd1dllVMHdzcHh2TWtGMENEWFYv?=
+ =?utf-8?B?ZmxJb3QyUVdMMjdIL0lIRXI1a3pnQ1ZtcUpUMDlmS0ovZ2J1bnFZNlluUldo?=
+ =?utf-8?B?b3RHazMxYU5JVS9ZU2hmRlRRRUtGV2pocWt0K3g1UXFKbEFwVGFPdVJQWFU2?=
+ =?utf-8?B?RjBTOGJtU043MTJIZTV3T1F0cTZCbC8xdWlmZTEvcTZtelNqZThZZS9TQitS?=
+ =?utf-8?B?TTNiZXFiQTR5VnBHQmlxQVhhMFV2cUVKNktXeTNoTTJPOVE4a3V3TnhybDls?=
+ =?utf-8?B?TEduRExYUExoMzhUNFRhWS9iSWdLaHRMQVYvNEVxQ0U0MzRwcmE4L3ZkdzlW?=
+ =?utf-8?B?dTBxYURNVHE2MEZ5NGJuQlRVNStZWnlLbTNIQ0FBVDNQUElkS1VEeWxLYzZ2?=
+ =?utf-8?B?anhxQ2dWaTdMZmZiRjR6OGJXTGhJbk5BNjJsbXh3OGhqQU5kbUx1SnZXSkI1?=
+ =?utf-8?B?Y1E9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BF93731F58971D4DA9C9A455F3E5A5E8@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250714164405.111477-3-irogers@google.com>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8383.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c5f114f2-cfd0-4651-b4d3-08ddca176ad0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2025 18:33:28.1294
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0rJVtFcgxmobSQ0yt8EvUx7gHHYmPOhi5BWtanmkpvfZppHQGHVFYHum89Dm3JfO0ecKJ0gvzAJC7mcmuRhmdA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB7886
+X-OriginatorOrg: intel.com
 
-On Mon, Jul 14, 2025 at 09:43:50AM -0700, Ian Rogers wrote:
-> Add json for software events so that in perf list the events can have
-> a description.  Common json exists for the tool PMU but it has no
-> sysfs equivalent. Modify the map_for_pmu code to return the common map
-> (rather than an architecture specific one) when a PMU with a common
-> name is being looked for, this allows the events to be found.
-
-Can you please share new output of `perf list sw`?  I'm glad we have
-description for software events.  But I'm also curious what's the side
-effect of having them in JSON - maybe case insensitivity?
-
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  .../arch/common/common/software.json          |  92 ++++++
->  tools/perf/pmu-events/empty-pmu-events.c      | 266 +++++++++++-------
->  tools/perf/pmu-events/jevents.py              |  15 +-
->  3 files changed, 264 insertions(+), 109 deletions(-)
->  create mode 100644 tools/perf/pmu-events/arch/common/common/software.json
-> 
-> diff --git a/tools/perf/pmu-events/arch/common/common/software.json b/tools/perf/pmu-events/arch/common/common/software.json
-> new file mode 100644
-> index 000000000000..3af2f565a601
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/common/common/software.json
-> @@ -0,0 +1,92 @@
-> +[
-> +  {
-> +    "Unit": "software",
-> +    "EventName": "cpu-clock",
-> +    "BriefDescription": "Per-CPU high-resolution timer based event",
-> +    "ConfigCode": "0"
-> +  },
-> +  {
-> +    "Unit": "software",
-> +    "EventName": "task-clock",
-> +    "BriefDescription": "Task based high-resolution timer based event",
-
-s/Task based/Per-task/ ?
-
-
-> +    "ConfigCode": "1"
-> +  },
-> +  {
-> +    "Unit": "software",
-> +    "EventName": "faults",
-> +    "BriefDescription": "Number of page faults [This event is an alias of page-faults]",
-> +    "ConfigCode": "2"
-
-It'd be nice if it can handle aliases without adding a new entry.  But I
-guess it requires non-trivial changes.
-
-Thanks,
-Namhyung
-
-> +  },
-> +  {
-> +    "Unit": "software",
-> +    "EventName": "page-faults",
-> +    "BriefDescription": "Number of page faults [This event is an alias of faults]",
-> +    "ConfigCode": "2"
-> +  },
-> +  {
-> +    "Unit": "software",
-> +    "EventName": "context-switches",
-> +    "BriefDescription": "Number of context switches [This event is an alias of cs]",
-> +    "ConfigCode": "3"
-> +  },
-> +  {
-> +    "Unit": "software",
-> +    "EventName": "cs",
-> +    "BriefDescription": "Number of context switches [This event is an alias of context-switches]",
-> +    "ConfigCode": "3"
-> +  },
-> +  {
-> +    "Unit": "software",
-> +    "EventName": "cpu-migrations",
-> +    "BriefDescription": "Number of times a process has migrated to a new CPU [This event is an alias of migrations]",
-> +    "ConfigCode": "4"
-> +  },
-> +  {
-> +    "Unit": "software",
-> +    "EventName": "migrations",
-> +    "BriefDescription": "Number of times a process has migrated to a new CPU [This event is an alias of cpu-migrations]",
-> +    "ConfigCode": "4"
-> +  },
-> +  {
-> +    "Unit": "software",
-> +    "EventName": "minor-faults",
-> +    "BriefDescription": "Number of minor page faults. Minor faults don't require I/O to handle",
-> +    "ConfigCode": "5"
-> +  },
-> +  {
-> +    "Unit": "software",
-> +    "EventName": "major-faults",
-> +    "BriefDescription": "Number of major page faults. Major faults require I/O to handle",
-> +    "ConfigCode": "6"
-> +  },
-> +  {
-> +    "Unit": "software",
-> +    "EventName": "alignment-faults",
-> +    "BriefDescription": "Number of kernel handled memory alignment faults",
-> +    "ConfigCode": "7"
-> +  },
-> +  {
-> +    "Unit": "software",
-> +    "EventName": "emulation-faults",
-> +    "BriefDescription": "Number of kernel handled unimplemented instruction faults handled through emulation",
-> +    "ConfigCode": "8"
-> +  },
-> +  {
-> +    "Unit": "software",
-> +    "EventName": "dummy",
-> +    "BriefDescription": "A placeholder event that doesn't count anything",
-> +    "ConfigCode": "9"
-> +  },
-> +  {
-> +    "Unit": "software",
-> +    "EventName": "bpf-output",
-> +    "BriefDescription": "An event used by BPF programs to write to the perf ring buffer",
-> +    "ConfigCode": "10"
-> +  },
-> +  {
-> +    "Unit": "software",
-> +    "EventName": "cgroup-switches",
-> +    "BriefDescription": "Number of context switches to a task in a different cgroup",
-> +    "ConfigCode": "11"
-> +  }
-> +]
-> diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
-> index a4569a74db07..7d179d703ab1 100644
-> --- a/tools/perf/pmu-events/empty-pmu-events.c
-> +++ b/tools/perf/pmu-events/empty-pmu-events.c
-> @@ -19,109 +19,147 @@ struct pmu_table_entry {
->  };
->  
->  static const char *const big_c_string =
-> -/* offset=0 */ "tool\000"
-> -/* offset=5 */ "duration_time\000tool\000Wall clock interval time in nanoseconds\000config=1\000\00000\000\000\000\000\000"
-> -/* offset=81 */ "user_time\000tool\000User (non-kernel) time in nanoseconds\000config=2\000\00000\000\000\000\000\000"
-> -/* offset=151 */ "system_time\000tool\000System/kernel time in nanoseconds\000config=3\000\00000\000\000\000\000\000"
-> -/* offset=219 */ "has_pmem\000tool\0001 if persistent memory installed otherwise 0\000config=4\000\00000\000\000\000\000\000"
-> -/* offset=295 */ "num_cores\000tool\000Number of cores. A core consists of 1 or more thread, with each thread being associated with a logical Linux CPU\000config=5\000\00000\000\000\000\000\000"
-> -/* offset=440 */ "num_cpus\000tool\000Number of logical Linux CPUs. There may be multiple such CPUs on a core\000config=6\000\00000\000\000\000\000\000"
-> -/* offset=543 */ "num_cpus_online\000tool\000Number of online logical Linux CPUs. There may be multiple such CPUs on a core\000config=7\000\00000\000\000\000\000\000"
-> -/* offset=660 */ "num_dies\000tool\000Number of dies. Each die has 1 or more cores\000config=8\000\00000\000\000\000\000\000"
-> -/* offset=736 */ "num_packages\000tool\000Number of packages. Each package has 1 or more die\000config=9\000\00000\000\000\000\000\000"
-> -/* offset=822 */ "slots\000tool\000Number of functional units that in parallel can execute parts of an instruction\000config=0xa\000\00000\000\000\000\000\000"
-> -/* offset=932 */ "smt_on\000tool\0001 if simultaneous multithreading (aka hyperthreading) is enable otherwise 0\000config=0xb\000\00000\000\000\000\000\000"
-> -/* offset=1039 */ "system_tsc_freq\000tool\000The amount a Time Stamp Counter (TSC) increases per second\000config=0xc\000\00000\000\000\000\000\000"
-> -/* offset=1138 */ "default_core\000"
-> -/* offset=1151 */ "bp_l1_btb_correct\000branch\000L1 BTB Correction\000event=0x8a\000\00000\000\000\000\000\000"
-> -/* offset=1213 */ "bp_l2_btb_correct\000branch\000L2 BTB Correction\000event=0x8b\000\00000\000\000\000\000\000"
-> -/* offset=1275 */ "l3_cache_rd\000cache\000L3 cache access, read\000event=0x40\000\00000\000\000\000\000Attributable Level 3 cache access, read\000"
-> -/* offset=1373 */ "segment_reg_loads.any\000other\000Number of segment register loads\000event=6,period=200000,umask=0x80\000\00000\000\000\000\000\000"
-> -/* offset=1475 */ "dispatch_blocked.any\000other\000Memory cluster signals to block micro-op dispatch for any reason\000event=9,period=200000,umask=0x20\000\00000\000\000\000\000\000"
-> -/* offset=1608 */ "eist_trans\000other\000Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions\000event=0x3a,period=200000\000\00000\000\000\000\000\000"
-> -/* offset=1726 */ "hisi_sccl,ddrc\000"
-> -/* offset=1741 */ "uncore_hisi_ddrc.flux_wcmd\000uncore\000DDRC write commands\000event=2\000\00000\000\000\000\000\000"
-> -/* offset=1811 */ "uncore_cbox\000"
-> -/* offset=1823 */ "unc_cbo_xsnp_response.miss_eviction\000uncore\000A cross-core snoop resulted from L3 Eviction which misses in some processor core\000event=0x22,umask=0x81\000\00000\000\000\000\000\000"
-> -/* offset=1977 */ "event-hyphen\000uncore\000UNC_CBO_HYPHEN\000event=0xe0\000\00000\000\000\000\000\000"
-> -/* offset=2031 */ "event-two-hyph\000uncore\000UNC_CBO_TWO_HYPH\000event=0xc0\000\00000\000\000\000\000\000"
-> -/* offset=2089 */ "hisi_sccl,l3c\000"
-> -/* offset=2103 */ "uncore_hisi_l3c.rd_hit_cpipe\000uncore\000Total read hits\000event=7\000\00000\000\000\000\000\000"
-> -/* offset=2171 */ "uncore_imc_free_running\000"
-> -/* offset=2195 */ "uncore_imc_free_running.cache_miss\000uncore\000Total cache misses\000event=0x12\000\00000\000\000\000\000\000"
-> -/* offset=2275 */ "uncore_imc\000"
-> -/* offset=2286 */ "uncore_imc.cache_hits\000uncore\000Total cache hits\000event=0x34\000\00000\000\000\000\000\000"
-> -/* offset=2351 */ "uncore_sys_ddr_pmu\000"
-> -/* offset=2370 */ "sys_ddr_pmu.write_cycles\000uncore\000ddr write-cycles event\000event=0x2b\000v8\00000\000\000\000\000\000"
-> -/* offset=2446 */ "uncore_sys_ccn_pmu\000"
-> -/* offset=2465 */ "sys_ccn_pmu.read_cycles\000uncore\000ccn read-cycles event\000config=0x2c\0000x01\00000\000\000\000\000\000"
-> -/* offset=2542 */ "uncore_sys_cmn_pmu\000"
-> -/* offset=2561 */ "sys_cmn_pmu.hnf_cache_miss\000uncore\000Counts total cache misses in first lookup result (high priority)\000eventid=1,type=5\000(434|436|43c|43a).*\00000\000\000\000\000\000"
-> -/* offset=2704 */ "CPI\000\0001 / IPC\000\000\000\000\000\000\000\00000"
-> -/* offset=2726 */ "IPC\000group1\000inst_retired.any / cpu_clk_unhalted.thread\000\000\000\000\000\000\000\00000"
-> -/* offset=2789 */ "Frontend_Bound_SMT\000\000idq_uops_not_delivered.core / (4 * (cpu_clk_unhalted.thread / 2 * (1 + cpu_clk_unhalted.one_thread_active / cpu_clk_unhalted.ref_xclk)))\000\000\000\000\000\000\000\00000"
-> -/* offset=2955 */ "dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000"
-> -/* offset=3019 */ "icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000"
-> -/* offset=3086 */ "cache_miss_cycles\000group1\000dcache_miss_cpi + icache_miss_cycles\000\000\000\000\000\000\000\00000"
-> -/* offset=3157 */ "DCache_L2_All_Hits\000\000l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit + l2_rqsts.rfo_hit\000\000\000\000\000\000\000\00000"
-> -/* offset=3251 */ "DCache_L2_All_Miss\000\000max(l2_rqsts.all_demand_data_rd - l2_rqsts.demand_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_miss\000\000\000\000\000\000\000\00000"
-> -/* offset=3385 */ "DCache_L2_All\000\000DCache_L2_All_Hits + DCache_L2_All_Miss\000\000\000\000\000\000\000\00000"
-> -/* offset=3449 */ "DCache_L2_Hits\000\000d_ratio(DCache_L2_All_Hits, DCache_L2_All)\000\000\000\000\000\000\000\00000"
-> -/* offset=3517 */ "DCache_L2_Misses\000\000d_ratio(DCache_L2_All_Miss, DCache_L2_All)\000\000\000\000\000\000\000\00000"
-> -/* offset=3587 */ "M1\000\000ipc + M2\000\000\000\000\000\000\000\00000"
-> -/* offset=3609 */ "M2\000\000ipc + M1\000\000\000\000\000\000\000\00000"
-> -/* offset=3631 */ "M3\000\0001 / M3\000\000\000\000\000\000\000\00000"
-> -/* offset=3651 */ "L1D_Cache_Fill_BW\000\00064 * l1d.replacement / 1e9 / duration_time\000\000\000\000\000\000\000\00000"
-> +/* offset=0 */ "software\000"
-> +/* offset=9 */ "cpu-clock\000software\000Per-CPU high-resolution timer based event\000config=0\000\00000\000\000\000\000\000"
-> +/* offset=87 */ "task-clock\000software\000Task based high-resolution timer based event\000config=1\000\00000\000\000\000\000\000"
-> +/* offset=169 */ "faults\000software\000Number of page faults [This event is an alias of page-faults]\000config=2\000\00000\000\000\000\000\000"
-> +/* offset=264 */ "page-faults\000software\000Number of page faults [This event is an alias of faults]\000config=2\000\00000\000\000\000\000\000"
-> +/* offset=359 */ "context-switches\000software\000Number of context switches [This event is an alias of cs]\000config=3\000\00000\000\000\000\000\000"
-> +/* offset=460 */ "cs\000software\000Number of context switches [This event is an alias of context-switches]\000config=3\000\00000\000\000\000\000\000"
-> +/* offset=561 */ "cpu-migrations\000software\000Number of times a process has migrated to a new CPU [This event is an alias of migrations]\000config=4\000\00000\000\000\000\000\000"
-> +/* offset=693 */ "migrations\000software\000Number of times a process has migrated to a new CPU [This event is an alias of cpu-migrations]\000config=4\000\00000\000\000\000\000\000"
-> +/* offset=825 */ "minor-faults\000software\000Number of minor page faults. Minor faults don't require I/O to handle\000config=5\000\00000\000\000\000\000\000"
-> +/* offset=934 */ "major-faults\000software\000Number of major page faults. Major faults require I/O to handle\000config=6\000\00000\000\000\000\000\000"
-> +/* offset=1037 */ "alignment-faults\000software\000Number of kernel handled memory alignment faults\000config=7\000\00000\000\000\000\000\000"
-> +/* offset=1129 */ "emulation-faults\000software\000Number of kernel handled unimplemented instruction faults handled through emulation\000config=8\000\00000\000\000\000\000\000"
-> +/* offset=1256 */ "dummy\000software\000A placeholder event that doesn't count anything\000config=9\000\00000\000\000\000\000\000"
-> +/* offset=1336 */ "bpf-output\000software\000An event used by BPF programs to write to the perf ring buffer\000config=0xa\000\00000\000\000\000\000\000"
-> +/* offset=1438 */ "cgroup-switches\000software\000Number of context switches to a task in a different cgroup\000config=0xb\000\00000\000\000\000\000\000"
-> +/* offset=1541 */ "tool\000"
-> +/* offset=1546 */ "duration_time\000tool\000Wall clock interval time in nanoseconds\000config=1\000\00000\000\000\000\000\000"
-> +/* offset=1622 */ "user_time\000tool\000User (non-kernel) time in nanoseconds\000config=2\000\00000\000\000\000\000\000"
-> +/* offset=1692 */ "system_time\000tool\000System/kernel time in nanoseconds\000config=3\000\00000\000\000\000\000\000"
-> +/* offset=1760 */ "has_pmem\000tool\0001 if persistent memory installed otherwise 0\000config=4\000\00000\000\000\000\000\000"
-> +/* offset=1836 */ "num_cores\000tool\000Number of cores. A core consists of 1 or more thread, with each thread being associated with a logical Linux CPU\000config=5\000\00000\000\000\000\000\000"
-> +/* offset=1981 */ "num_cpus\000tool\000Number of logical Linux CPUs. There may be multiple such CPUs on a core\000config=6\000\00000\000\000\000\000\000"
-> +/* offset=2084 */ "num_cpus_online\000tool\000Number of online logical Linux CPUs. There may be multiple such CPUs on a core\000config=7\000\00000\000\000\000\000\000"
-> +/* offset=2201 */ "num_dies\000tool\000Number of dies. Each die has 1 or more cores\000config=8\000\00000\000\000\000\000\000"
-> +/* offset=2277 */ "num_packages\000tool\000Number of packages. Each package has 1 or more die\000config=9\000\00000\000\000\000\000\000"
-> +/* offset=2363 */ "slots\000tool\000Number of functional units that in parallel can execute parts of an instruction\000config=0xa\000\00000\000\000\000\000\000"
-> +/* offset=2473 */ "smt_on\000tool\0001 if simultaneous multithreading (aka hyperthreading) is enable otherwise 0\000config=0xb\000\00000\000\000\000\000\000"
-> +/* offset=2580 */ "system_tsc_freq\000tool\000The amount a Time Stamp Counter (TSC) increases per second\000config=0xc\000\00000\000\000\000\000\000"
-> +/* offset=2679 */ "default_core\000"
-> +/* offset=2692 */ "bp_l1_btb_correct\000branch\000L1 BTB Correction\000event=0x8a\000\00000\000\000\000\000\000"
-> +/* offset=2754 */ "bp_l2_btb_correct\000branch\000L2 BTB Correction\000event=0x8b\000\00000\000\000\000\000\000"
-> +/* offset=2816 */ "l3_cache_rd\000cache\000L3 cache access, read\000event=0x40\000\00000\000\000\000\000Attributable Level 3 cache access, read\000"
-> +/* offset=2914 */ "segment_reg_loads.any\000other\000Number of segment register loads\000event=6,period=200000,umask=0x80\000\00000\000\000\000\000\000"
-> +/* offset=3016 */ "dispatch_blocked.any\000other\000Memory cluster signals to block micro-op dispatch for any reason\000event=9,period=200000,umask=0x20\000\00000\000\000\000\000\000"
-> +/* offset=3149 */ "eist_trans\000other\000Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions\000event=0x3a,period=200000\000\00000\000\000\000\000\000"
-> +/* offset=3267 */ "hisi_sccl,ddrc\000"
-> +/* offset=3282 */ "uncore_hisi_ddrc.flux_wcmd\000uncore\000DDRC write commands\000event=2\000\00000\000\000\000\000\000"
-> +/* offset=3352 */ "uncore_cbox\000"
-> +/* offset=3364 */ "unc_cbo_xsnp_response.miss_eviction\000uncore\000A cross-core snoop resulted from L3 Eviction which misses in some processor core\000event=0x22,umask=0x81\000\00000\000\000\000\000\000"
-> +/* offset=3518 */ "event-hyphen\000uncore\000UNC_CBO_HYPHEN\000event=0xe0\000\00000\000\000\000\000\000"
-> +/* offset=3572 */ "event-two-hyph\000uncore\000UNC_CBO_TWO_HYPH\000event=0xc0\000\00000\000\000\000\000\000"
-> +/* offset=3630 */ "hisi_sccl,l3c\000"
-> +/* offset=3644 */ "uncore_hisi_l3c.rd_hit_cpipe\000uncore\000Total read hits\000event=7\000\00000\000\000\000\000\000"
-> +/* offset=3712 */ "uncore_imc_free_running\000"
-> +/* offset=3736 */ "uncore_imc_free_running.cache_miss\000uncore\000Total cache misses\000event=0x12\000\00000\000\000\000\000\000"
-> +/* offset=3816 */ "uncore_imc\000"
-> +/* offset=3827 */ "uncore_imc.cache_hits\000uncore\000Total cache hits\000event=0x34\000\00000\000\000\000\000\000"
-> +/* offset=3892 */ "uncore_sys_ddr_pmu\000"
-> +/* offset=3911 */ "sys_ddr_pmu.write_cycles\000uncore\000ddr write-cycles event\000event=0x2b\000v8\00000\000\000\000\000\000"
-> +/* offset=3987 */ "uncore_sys_ccn_pmu\000"
-> +/* offset=4006 */ "sys_ccn_pmu.read_cycles\000uncore\000ccn read-cycles event\000config=0x2c\0000x01\00000\000\000\000\000\000"
-> +/* offset=4083 */ "uncore_sys_cmn_pmu\000"
-> +/* offset=4102 */ "sys_cmn_pmu.hnf_cache_miss\000uncore\000Counts total cache misses in first lookup result (high priority)\000eventid=1,type=5\000(434|436|43c|43a).*\00000\000\000\000\000\000"
-> +/* offset=4245 */ "CPI\000\0001 / IPC\000\000\000\000\000\000\000\00000"
-> +/* offset=4267 */ "IPC\000group1\000inst_retired.any / cpu_clk_unhalted.thread\000\000\000\000\000\000\000\00000"
-> +/* offset=4330 */ "Frontend_Bound_SMT\000\000idq_uops_not_delivered.core / (4 * (cpu_clk_unhalted.thread / 2 * (1 + cpu_clk_unhalted.one_thread_active / cpu_clk_unhalted.ref_xclk)))\000\000\000\000\000\000\000\00000"
-> +/* offset=4496 */ "dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000"
-> +/* offset=4560 */ "icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000"
-> +/* offset=4627 */ "cache_miss_cycles\000group1\000dcache_miss_cpi + icache_miss_cycles\000\000\000\000\000\000\000\00000"
-> +/* offset=4698 */ "DCache_L2_All_Hits\000\000l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit + l2_rqsts.rfo_hit\000\000\000\000\000\000\000\00000"
-> +/* offset=4792 */ "DCache_L2_All_Miss\000\000max(l2_rqsts.all_demand_data_rd - l2_rqsts.demand_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_miss\000\000\000\000\000\000\000\00000"
-> +/* offset=4926 */ "DCache_L2_All\000\000DCache_L2_All_Hits + DCache_L2_All_Miss\000\000\000\000\000\000\000\00000"
-> +/* offset=4990 */ "DCache_L2_Hits\000\000d_ratio(DCache_L2_All_Hits, DCache_L2_All)\000\000\000\000\000\000\000\00000"
-> +/* offset=5058 */ "DCache_L2_Misses\000\000d_ratio(DCache_L2_All_Miss, DCache_L2_All)\000\000\000\000\000\000\000\00000"
-> +/* offset=5128 */ "M1\000\000ipc + M2\000\000\000\000\000\000\000\00000"
-> +/* offset=5150 */ "M2\000\000ipc + M1\000\000\000\000\000\000\000\00000"
-> +/* offset=5172 */ "M3\000\0001 / M3\000\000\000\000\000\000\000\00000"
-> +/* offset=5192 */ "L1D_Cache_Fill_BW\000\00064 * l1d.replacement / 1e9 / duration_time\000\000\000\000\000\000\000\00000"
->  ;
->  
-> +static const struct compact_pmu_event pmu_events__common_software[] = {
-> +{ 1037 }, /* alignment-faults\000software\000Number of kernel handled memory alignment faults\000config=7\000\00000\000\000\000\000\000 */
-> +{ 1336 }, /* bpf-output\000software\000An event used by BPF programs to write to the perf ring buffer\000config=0xa\000\00000\000\000\000\000\000 */
-> +{ 1438 }, /* cgroup-switches\000software\000Number of context switches to a task in a different cgroup\000config=0xb\000\00000\000\000\000\000\000 */
-> +{ 359 }, /* context-switches\000software\000Number of context switches [This event is an alias of cs]\000config=3\000\00000\000\000\000\000\000 */
-> +{ 9 }, /* cpu-clock\000software\000Per-CPU high-resolution timer based event\000config=0\000\00000\000\000\000\000\000 */
-> +{ 561 }, /* cpu-migrations\000software\000Number of times a process has migrated to a new CPU [This event is an alias of migrations]\000config=4\000\00000\000\000\000\000\000 */
-> +{ 460 }, /* cs\000software\000Number of context switches [This event is an alias of context-switches]\000config=3\000\00000\000\000\000\000\000 */
-> +{ 1256 }, /* dummy\000software\000A placeholder event that doesn't count anything\000config=9\000\00000\000\000\000\000\000 */
-> +{ 1129 }, /* emulation-faults\000software\000Number of kernel handled unimplemented instruction faults handled through emulation\000config=8\000\00000\000\000\000\000\000 */
-> +{ 169 }, /* faults\000software\000Number of page faults [This event is an alias of page-faults]\000config=2\000\00000\000\000\000\000\000 */
-> +{ 934 }, /* major-faults\000software\000Number of major page faults. Major faults require I/O to handle\000config=6\000\00000\000\000\000\000\000 */
-> +{ 693 }, /* migrations\000software\000Number of times a process has migrated to a new CPU [This event is an alias of cpu-migrations]\000config=4\000\00000\000\000\000\000\000 */
-> +{ 825 }, /* minor-faults\000software\000Number of minor page faults. Minor faults don't require I/O to handle\000config=5\000\00000\000\000\000\000\000 */
-> +{ 264 }, /* page-faults\000software\000Number of page faults [This event is an alias of faults]\000config=2\000\00000\000\000\000\000\000 */
-> +{ 87 }, /* task-clock\000software\000Task based high-resolution timer based event\000config=1\000\00000\000\000\000\000\000 */
-> +};
->  static const struct compact_pmu_event pmu_events__common_tool[] = {
-> -{ 5 }, /* duration_time\000tool\000Wall clock interval time in nanoseconds\000config=1\000\00000\000\000\000\000\000 */
-> -{ 219 }, /* has_pmem\000tool\0001 if persistent memory installed otherwise 0\000config=4\000\00000\000\000\000\000\000 */
-> -{ 295 }, /* num_cores\000tool\000Number of cores. A core consists of 1 or more thread, with each thread being associated with a logical Linux CPU\000config=5\000\00000\000\000\000\000\000 */
-> -{ 440 }, /* num_cpus\000tool\000Number of logical Linux CPUs. There may be multiple such CPUs on a core\000config=6\000\00000\000\000\000\000\000 */
-> -{ 543 }, /* num_cpus_online\000tool\000Number of online logical Linux CPUs. There may be multiple such CPUs on a core\000config=7\000\00000\000\000\000\000\000 */
-> -{ 660 }, /* num_dies\000tool\000Number of dies. Each die has 1 or more cores\000config=8\000\00000\000\000\000\000\000 */
-> -{ 736 }, /* num_packages\000tool\000Number of packages. Each package has 1 or more die\000config=9\000\00000\000\000\000\000\000 */
-> -{ 822 }, /* slots\000tool\000Number of functional units that in parallel can execute parts of an instruction\000config=0xa\000\00000\000\000\000\000\000 */
-> -{ 932 }, /* smt_on\000tool\0001 if simultaneous multithreading (aka hyperthreading) is enable otherwise 0\000config=0xb\000\00000\000\000\000\000\000 */
-> -{ 151 }, /* system_time\000tool\000System/kernel time in nanoseconds\000config=3\000\00000\000\000\000\000\000 */
-> -{ 1039 }, /* system_tsc_freq\000tool\000The amount a Time Stamp Counter (TSC) increases per second\000config=0xc\000\00000\000\000\000\000\000 */
-> -{ 81 }, /* user_time\000tool\000User (non-kernel) time in nanoseconds\000config=2\000\00000\000\000\000\000\000 */
-> +{ 1546 }, /* duration_time\000tool\000Wall clock interval time in nanoseconds\000config=1\000\00000\000\000\000\000\000 */
-> +{ 1760 }, /* has_pmem\000tool\0001 if persistent memory installed otherwise 0\000config=4\000\00000\000\000\000\000\000 */
-> +{ 1836 }, /* num_cores\000tool\000Number of cores. A core consists of 1 or more thread, with each thread being associated with a logical Linux CPU\000config=5\000\00000\000\000\000\000\000 */
-> +{ 1981 }, /* num_cpus\000tool\000Number of logical Linux CPUs. There may be multiple such CPUs on a core\000config=6\000\00000\000\000\000\000\000 */
-> +{ 2084 }, /* num_cpus_online\000tool\000Number of online logical Linux CPUs. There may be multiple such CPUs on a core\000config=7\000\00000\000\000\000\000\000 */
-> +{ 2201 }, /* num_dies\000tool\000Number of dies. Each die has 1 or more cores\000config=8\000\00000\000\000\000\000\000 */
-> +{ 2277 }, /* num_packages\000tool\000Number of packages. Each package has 1 or more die\000config=9\000\00000\000\000\000\000\000 */
-> +{ 2363 }, /* slots\000tool\000Number of functional units that in parallel can execute parts of an instruction\000config=0xa\000\00000\000\000\000\000\000 */
-> +{ 2473 }, /* smt_on\000tool\0001 if simultaneous multithreading (aka hyperthreading) is enable otherwise 0\000config=0xb\000\00000\000\000\000\000\000 */
-> +{ 1692 }, /* system_time\000tool\000System/kernel time in nanoseconds\000config=3\000\00000\000\000\000\000\000 */
-> +{ 2580 }, /* system_tsc_freq\000tool\000The amount a Time Stamp Counter (TSC) increases per second\000config=0xc\000\00000\000\000\000\000\000 */
-> +{ 1622 }, /* user_time\000tool\000User (non-kernel) time in nanoseconds\000config=2\000\00000\000\000\000\000\000 */
->  
->  };
->  
->  const struct pmu_table_entry pmu_events__common[] = {
-> +{
-> +     .entries = pmu_events__common_software,
-> +     .num_entries = ARRAY_SIZE(pmu_events__common_software),
-> +     .pmu_name = { 0 /* software\000 */ },
-> +},
->  {
->       .entries = pmu_events__common_tool,
->       .num_entries = ARRAY_SIZE(pmu_events__common_tool),
-> -     .pmu_name = { 0 /* tool\000 */ },
-> +     .pmu_name = { 1541 /* tool\000 */ },
->  },
->  };
->  
->  static const struct compact_pmu_event pmu_events__test_soc_cpu_default_core[] = {
-> -{ 1151 }, /* bp_l1_btb_correct\000branch\000L1 BTB Correction\000event=0x8a\000\00000\000\000\000\000\000 */
-> -{ 1213 }, /* bp_l2_btb_correct\000branch\000L2 BTB Correction\000event=0x8b\000\00000\000\000\000\000\000 */
-> -{ 1475 }, /* dispatch_blocked.any\000other\000Memory cluster signals to block micro-op dispatch for any reason\000event=9,period=200000,umask=0x20\000\00000\000\000\000\000\000 */
-> -{ 1608 }, /* eist_trans\000other\000Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions\000event=0x3a,period=200000\000\00000\000\000\000\000\000 */
-> -{ 1275 }, /* l3_cache_rd\000cache\000L3 cache access, read\000event=0x40\000\00000\000\000\000\000Attributable Level 3 cache access, read\000 */
-> -{ 1373 }, /* segment_reg_loads.any\000other\000Number of segment register loads\000event=6,period=200000,umask=0x80\000\00000\000\000\000\000\000 */
-> +{ 2692 }, /* bp_l1_btb_correct\000branch\000L1 BTB Correction\000event=0x8a\000\00000\000\000\000\000\000 */
-> +{ 2754 }, /* bp_l2_btb_correct\000branch\000L2 BTB Correction\000event=0x8b\000\00000\000\000\000\000\000 */
-> +{ 3016 }, /* dispatch_blocked.any\000other\000Memory cluster signals to block micro-op dispatch for any reason\000event=9,period=200000,umask=0x20\000\00000\000\000\000\000\000 */
-> +{ 3149 }, /* eist_trans\000other\000Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions\000event=0x3a,period=200000\000\00000\000\000\000\000\000 */
-> +{ 2816 }, /* l3_cache_rd\000cache\000L3 cache access, read\000event=0x40\000\00000\000\000\000\000Attributable Level 3 cache access, read\000 */
-> +{ 2914 }, /* segment_reg_loads.any\000other\000Number of segment register loads\000event=6,period=200000,umask=0x80\000\00000\000\000\000\000\000 */
->  };
->  static const struct compact_pmu_event pmu_events__test_soc_cpu_hisi_sccl_ddrc[] = {
-> -{ 1741 }, /* uncore_hisi_ddrc.flux_wcmd\000uncore\000DDRC write commands\000event=2\000\00000\000\000\000\000\000 */
-> +{ 3282 }, /* uncore_hisi_ddrc.flux_wcmd\000uncore\000DDRC write commands\000event=2\000\00000\000\000\000\000\000 */
->  };
->  static const struct compact_pmu_event pmu_events__test_soc_cpu_hisi_sccl_l3c[] = {
-> -{ 2103 }, /* uncore_hisi_l3c.rd_hit_cpipe\000uncore\000Total read hits\000event=7\000\00000\000\000\000\000\000 */
-> +{ 3644 }, /* uncore_hisi_l3c.rd_hit_cpipe\000uncore\000Total read hits\000event=7\000\00000\000\000\000\000\000 */
->  };
->  static const struct compact_pmu_event pmu_events__test_soc_cpu_uncore_cbox[] = {
-> -{ 1977 }, /* event-hyphen\000uncore\000UNC_CBO_HYPHEN\000event=0xe0\000\00000\000\000\000\000\000 */
-> -{ 2031 }, /* event-two-hyph\000uncore\000UNC_CBO_TWO_HYPH\000event=0xc0\000\00000\000\000\000\000\000 */
-> -{ 1823 }, /* unc_cbo_xsnp_response.miss_eviction\000uncore\000A cross-core snoop resulted from L3 Eviction which misses in some processor core\000event=0x22,umask=0x81\000\00000\000\000\000\000\000 */
-> +{ 3518 }, /* event-hyphen\000uncore\000UNC_CBO_HYPHEN\000event=0xe0\000\00000\000\000\000\000\000 */
-> +{ 3572 }, /* event-two-hyph\000uncore\000UNC_CBO_TWO_HYPH\000event=0xc0\000\00000\000\000\000\000\000 */
-> +{ 3364 }, /* unc_cbo_xsnp_response.miss_eviction\000uncore\000A cross-core snoop resulted from L3 Eviction which misses in some processor core\000event=0x22,umask=0x81\000\00000\000\000\000\000\000 */
->  };
->  static const struct compact_pmu_event pmu_events__test_soc_cpu_uncore_imc[] = {
-> -{ 2286 }, /* uncore_imc.cache_hits\000uncore\000Total cache hits\000event=0x34\000\00000\000\000\000\000\000 */
-> +{ 3827 }, /* uncore_imc.cache_hits\000uncore\000Total cache hits\000event=0x34\000\00000\000\000\000\000\000 */
->  };
->  static const struct compact_pmu_event pmu_events__test_soc_cpu_uncore_imc_free_running[] = {
-> -{ 2195 }, /* uncore_imc_free_running.cache_miss\000uncore\000Total cache misses\000event=0x12\000\00000\000\000\000\000\000 */
-> +{ 3736 }, /* uncore_imc_free_running.cache_miss\000uncore\000Total cache misses\000event=0x12\000\00000\000\000\000\000\000 */
->  
->  };
->  
-> @@ -129,51 +167,51 @@ const struct pmu_table_entry pmu_events__test_soc_cpu[] = {
->  {
->       .entries = pmu_events__test_soc_cpu_default_core,
->       .num_entries = ARRAY_SIZE(pmu_events__test_soc_cpu_default_core),
-> -     .pmu_name = { 1138 /* default_core\000 */ },
-> +     .pmu_name = { 2679 /* default_core\000 */ },
->  },
->  {
->       .entries = pmu_events__test_soc_cpu_hisi_sccl_ddrc,
->       .num_entries = ARRAY_SIZE(pmu_events__test_soc_cpu_hisi_sccl_ddrc),
-> -     .pmu_name = { 1726 /* hisi_sccl,ddrc\000 */ },
-> +     .pmu_name = { 3267 /* hisi_sccl,ddrc\000 */ },
->  },
->  {
->       .entries = pmu_events__test_soc_cpu_hisi_sccl_l3c,
->       .num_entries = ARRAY_SIZE(pmu_events__test_soc_cpu_hisi_sccl_l3c),
-> -     .pmu_name = { 2089 /* hisi_sccl,l3c\000 */ },
-> +     .pmu_name = { 3630 /* hisi_sccl,l3c\000 */ },
->  },
->  {
->       .entries = pmu_events__test_soc_cpu_uncore_cbox,
->       .num_entries = ARRAY_SIZE(pmu_events__test_soc_cpu_uncore_cbox),
-> -     .pmu_name = { 1811 /* uncore_cbox\000 */ },
-> +     .pmu_name = { 3352 /* uncore_cbox\000 */ },
->  },
->  {
->       .entries = pmu_events__test_soc_cpu_uncore_imc,
->       .num_entries = ARRAY_SIZE(pmu_events__test_soc_cpu_uncore_imc),
-> -     .pmu_name = { 2275 /* uncore_imc\000 */ },
-> +     .pmu_name = { 3816 /* uncore_imc\000 */ },
->  },
->  {
->       .entries = pmu_events__test_soc_cpu_uncore_imc_free_running,
->       .num_entries = ARRAY_SIZE(pmu_events__test_soc_cpu_uncore_imc_free_running),
-> -     .pmu_name = { 2171 /* uncore_imc_free_running\000 */ },
-> +     .pmu_name = { 3712 /* uncore_imc_free_running\000 */ },
->  },
->  };
->  
->  static const struct compact_pmu_event pmu_metrics__test_soc_cpu_default_core[] = {
-> -{ 2704 }, /* CPI\000\0001 / IPC\000\000\000\000\000\000\000\00000 */
-> -{ 3385 }, /* DCache_L2_All\000\000DCache_L2_All_Hits + DCache_L2_All_Miss\000\000\000\000\000\000\000\00000 */
-> -{ 3157 }, /* DCache_L2_All_Hits\000\000l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit + l2_rqsts.rfo_hit\000\000\000\000\000\000\000\00000 */
-> -{ 3251 }, /* DCache_L2_All_Miss\000\000max(l2_rqsts.all_demand_data_rd - l2_rqsts.demand_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_miss\000\000\000\000\000\000\000\00000 */
-> -{ 3449 }, /* DCache_L2_Hits\000\000d_ratio(DCache_L2_All_Hits, DCache_L2_All)\000\000\000\000\000\000\000\00000 */
-> -{ 3517 }, /* DCache_L2_Misses\000\000d_ratio(DCache_L2_All_Miss, DCache_L2_All)\000\000\000\000\000\000\000\00000 */
-> -{ 2789 }, /* Frontend_Bound_SMT\000\000idq_uops_not_delivered.core / (4 * (cpu_clk_unhalted.thread / 2 * (1 + cpu_clk_unhalted.one_thread_active / cpu_clk_unhalted.ref_xclk)))\000\000\000\000\000\000\000\00000 */
-> -{ 2726 }, /* IPC\000group1\000inst_retired.any / cpu_clk_unhalted.thread\000\000\000\000\000\000\000\00000 */
-> -{ 3651 }, /* L1D_Cache_Fill_BW\000\00064 * l1d.replacement / 1e9 / duration_time\000\000\000\000\000\000\000\00000 */
-> -{ 3587 }, /* M1\000\000ipc + M2\000\000\000\000\000\000\000\00000 */
-> -{ 3609 }, /* M2\000\000ipc + M1\000\000\000\000\000\000\000\00000 */
-> -{ 3631 }, /* M3\000\0001 / M3\000\000\000\000\000\000\000\00000 */
-> -{ 3086 }, /* cache_miss_cycles\000group1\000dcache_miss_cpi + icache_miss_cycles\000\000\000\000\000\000\000\00000 */
-> -{ 2955 }, /* dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000 */
-> -{ 3019 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000 */
-> +{ 4245 }, /* CPI\000\0001 / IPC\000\000\000\000\000\000\000\00000 */
-> +{ 4926 }, /* DCache_L2_All\000\000DCache_L2_All_Hits + DCache_L2_All_Miss\000\000\000\000\000\000\000\00000 */
-> +{ 4698 }, /* DCache_L2_All_Hits\000\000l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit + l2_rqsts.rfo_hit\000\000\000\000\000\000\000\00000 */
-> +{ 4792 }, /* DCache_L2_All_Miss\000\000max(l2_rqsts.all_demand_data_rd - l2_rqsts.demand_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_miss\000\000\000\000\000\000\000\00000 */
-> +{ 4990 }, /* DCache_L2_Hits\000\000d_ratio(DCache_L2_All_Hits, DCache_L2_All)\000\000\000\000\000\000\000\00000 */
-> +{ 5058 }, /* DCache_L2_Misses\000\000d_ratio(DCache_L2_All_Miss, DCache_L2_All)\000\000\000\000\000\000\000\00000 */
-> +{ 4330 }, /* Frontend_Bound_SMT\000\000idq_uops_not_delivered.core / (4 * (cpu_clk_unhalted.thread / 2 * (1 + cpu_clk_unhalted.one_thread_active / cpu_clk_unhalted.ref_xclk)))\000\000\000\000\000\000\000\00000 */
-> +{ 4267 }, /* IPC\000group1\000inst_retired.any / cpu_clk_unhalted.thread\000\000\000\000\000\000\000\00000 */
-> +{ 5192 }, /* L1D_Cache_Fill_BW\000\00064 * l1d.replacement / 1e9 / duration_time\000\000\000\000\000\000\000\00000 */
-> +{ 5128 }, /* M1\000\000ipc + M2\000\000\000\000\000\000\000\00000 */
-> +{ 5150 }, /* M2\000\000ipc + M1\000\000\000\000\000\000\000\00000 */
-> +{ 5172 }, /* M3\000\0001 / M3\000\000\000\000\000\000\000\00000 */
-> +{ 4627 }, /* cache_miss_cycles\000group1\000dcache_miss_cpi + icache_miss_cycles\000\000\000\000\000\000\000\00000 */
-> +{ 4496 }, /* dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000 */
-> +{ 4560 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000 */
->  
->  };
->  
-> @@ -181,18 +219,18 @@ const struct pmu_table_entry pmu_metrics__test_soc_cpu[] = {
->  {
->       .entries = pmu_metrics__test_soc_cpu_default_core,
->       .num_entries = ARRAY_SIZE(pmu_metrics__test_soc_cpu_default_core),
-> -     .pmu_name = { 1138 /* default_core\000 */ },
-> +     .pmu_name = { 2679 /* default_core\000 */ },
->  },
->  };
->  
->  static const struct compact_pmu_event pmu_events__test_soc_sys_uncore_sys_ccn_pmu[] = {
-> -{ 2465 }, /* sys_ccn_pmu.read_cycles\000uncore\000ccn read-cycles event\000config=0x2c\0000x01\00000\000\000\000\000\000 */
-> +{ 4006 }, /* sys_ccn_pmu.read_cycles\000uncore\000ccn read-cycles event\000config=0x2c\0000x01\00000\000\000\000\000\000 */
->  };
->  static const struct compact_pmu_event pmu_events__test_soc_sys_uncore_sys_cmn_pmu[] = {
-> -{ 2561 }, /* sys_cmn_pmu.hnf_cache_miss\000uncore\000Counts total cache misses in first lookup result (high priority)\000eventid=1,type=5\000(434|436|43c|43a).*\00000\000\000\000\000\000 */
-> +{ 4102 }, /* sys_cmn_pmu.hnf_cache_miss\000uncore\000Counts total cache misses in first lookup result (high priority)\000eventid=1,type=5\000(434|436|43c|43a).*\00000\000\000\000\000\000 */
->  };
->  static const struct compact_pmu_event pmu_events__test_soc_sys_uncore_sys_ddr_pmu[] = {
-> -{ 2370 }, /* sys_ddr_pmu.write_cycles\000uncore\000ddr write-cycles event\000event=0x2b\000v8\00000\000\000\000\000\000 */
-> +{ 3911 }, /* sys_ddr_pmu.write_cycles\000uncore\000ddr write-cycles event\000event=0x2b\000v8\00000\000\000\000\000\000 */
->  
->  };
->  
-> @@ -200,17 +238,17 @@ const struct pmu_table_entry pmu_events__test_soc_sys[] = {
->  {
->       .entries = pmu_events__test_soc_sys_uncore_sys_ccn_pmu,
->       .num_entries = ARRAY_SIZE(pmu_events__test_soc_sys_uncore_sys_ccn_pmu),
-> -     .pmu_name = { 2446 /* uncore_sys_ccn_pmu\000 */ },
-> +     .pmu_name = { 3987 /* uncore_sys_ccn_pmu\000 */ },
->  },
->  {
->       .entries = pmu_events__test_soc_sys_uncore_sys_cmn_pmu,
->       .num_entries = ARRAY_SIZE(pmu_events__test_soc_sys_uncore_sys_cmn_pmu),
-> -     .pmu_name = { 2542 /* uncore_sys_cmn_pmu\000 */ },
-> +     .pmu_name = { 4083 /* uncore_sys_cmn_pmu\000 */ },
->  },
->  {
->       .entries = pmu_events__test_soc_sys_uncore_sys_ddr_pmu,
->       .num_entries = ARRAY_SIZE(pmu_events__test_soc_sys_uncore_sys_ddr_pmu),
-> -     .pmu_name = { 2351 /* uncore_sys_ddr_pmu\000 */ },
-> +     .pmu_name = { 3892 /* uncore_sys_ddr_pmu\000 */ },
->  },
->  };
->  
-> @@ -632,8 +670,20 @@ static const struct pmu_events_map *map_for_pmu(struct perf_pmu *pmu)
->  {
->          struct perf_cpu cpu = {-1};
->  
-> -        if (pmu)
-> +        if (pmu) {
-> +                for (size_t i=0; i < ARRAY_SIZE(pmu_events__common); i++) {
-> +                        const char *pmu_name = &big_c_string[pmu_events__common[i].pmu_name.offset];
-> +
-> +                        if (!strcmp(pmu_name, pmu->name)) {
-> +                                const struct pmu_events_map *map = &pmu_events_map[0];
-> +
-> +                                while (strcmp("common", map->arch))
-> +                                        map++;
-> +                                return map;
-> +                        }
-> +                }
->                  cpu = perf_cpu_map__min(pmu->cpus);
-> +        }
->          return map_for_cpu(cpu);
->  }
->  
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-> index e821155151ec..76c1e7b0bc22 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-> @@ -295,6 +295,7 @@ class JsonEvent:
->            'cpu_atom': 'cpu_atom',
->            'ali_drw': 'ali_drw',
->            'arm_cmn': 'arm_cmn',
-> +          'software': 'software',
->            'tool': 'tool',
->        }
->        return table[unit] if unit in table else f'uncore_{unit.lower()}'
-> @@ -1158,8 +1159,20 @@ static const struct pmu_events_map *map_for_pmu(struct perf_pmu *pmu)
->  {
->          struct perf_cpu cpu = {-1};
->  
-> -        if (pmu)
-> +        if (pmu) {
-> +                for (size_t i=0; i < ARRAY_SIZE(pmu_events__common); i++) {
-> +                        const char *pmu_name = &big_c_string[pmu_events__common[i].pmu_name.offset];
-> +
-> +                        if (!strcmp(pmu_name, pmu->name)) {
-> +                                const struct pmu_events_map *map = &pmu_events_map[0];
-> +
-> +                                while (strcmp("common", map->arch))
-> +                                        map++;
-> +                                return map;
-> +                        }
-> +                }
->                  cpu = perf_cpu_map__min(pmu->cpus);
-> +        }
->          return map_for_cpu(cpu);
->  }
->  
-> -- 
-> 2.50.0.727.gbf7dc18ff4-goog
-> 
+T24gTW9uLCAyMDI1LTA3LTE0IGF0IDA5OjQzIC0wNzAwLCBJYW4gUm9nZXJzIHdyb3RlOg0KPiBU
+aGUgcGVyZiBpbGlzdCBjb21tYW5kIGlzIGEgdGV4dHVhbCBhcHAgWzFdIHNpbWlsYXIgdG8gcGVy
+ZiBsaXN0LiBJbg0KPiB0aGUgdG9wLWxlZnQgcGFuZSBhIHRyZWUgb2YgUE1VcyBpcyBkaXNwbGF5
+ZWQuIFNlbGVjdGluZyBhIFBNVSBleHBhbmRzDQo+IHRoZSBldmVudHMgd2l0aGluIGl0LiBTZWxl
+Y3RpbmcgYW4gZXZlbnQgZGlzcGxheXMgdGhlIGBwZXJmIGxpc3RgDQo+IHN0eWxlIGV2ZW50IGlu
+Zm9ybWF0aW9uIGluIHRoZSB0b3AtcmlnaHQgcGFuZS4NCj4gDQo+IFdoZW4gYW4gZXZlbnQgaXMg
+c2VsZWN0ZWQgaXQgaXMgb3BlbmVkIGFuZCB0aGUgY291bnRlcnMgb24gZWFjaCBDUFUNCj4gdGhl
+IGV2ZW50IGlzIGZvciBhcmUgcGVyaW9kaWNhbGx5IHJlYWQuIFRoZSBib3R0b20gb2YgdGhlIHNj
+cmVlbg0KPiBjb250YWlucyBhIHNjcm9sbGFibGUgc2V0IG9mIHNwYXJrbGluZXMgc2hvd2luZyB0
+aGUgZXZlbnRzIGluIHRvdGFsDQo+IGFuZCBvbiBlYWNoIENQVS4gU2Nyb2xsaW5nIGJlbG93IHRo
+ZSBzcGFya2xpbmVzIHNob3dzIHRoZSBzYW1lIGRhdGEgYXMNCj4gcmF3IGNvdW50cy4gVGhlIHNw
+YXJrbGluZXMgYXJlIHNtYWxsIGdyYXBocyB3aGVyZSB0aGUgaGVpZ2h0IG9mIHRoZQ0KPiBiYXIg
+aXMgaW4gcmVsYXRpb24gdG8gbWF4aW11bSBvZiB0aGUgb3RoZXIgY291bnRzIGluIHRoZSBncmFw
+aC4NCj4gDQo+IEJ5IGRlZmF1bHQgdGhlIGNvdW50cyBhcmUgcmVhZCB3aXRoIGFuIGludGVydmFs
+IG9mIDAuMSBzZWNvbmRzICgxMA0KPiB0aW1lcyBwZXIgc2Vjb25kKS4gQSAtSS8tLWludGVydmFs
+IGNvbW1hbmQgbGluZSBvcHRpb24gYWxsb3dzIHRoZQ0KPiBpbnRlcnZhbCB0byBiZSBjaGFuZ2Vk
+LiBUaGUgb2xkZXN0IHJlYWQgY291bnRzIGFyZSBkcm9wcGVkIHdoZW4gdGhlDQo+IGNvdW50cyBm
+aWxsIHRoZSBsaW5lIGNhdXNpbmcgdGhlIHNwYXJrbGluZSB0byBtb3ZlIGZyb20gcmlnaHQgdG8g
+bGVmdC4NCj4gDQo+IEEgc2VhcmNoIGJveCBjYW4gYmUgcHVsbGVkIHVwIHdpdGggdGhlICdzJyBr
+ZXkuICduJyBhbmQgJ3AnIGl0ZXJhdGUNCj4gdGhyb3VnaCB0aGUgc2VhcmNoIHJlc3VsdHMuIEFz
+IHNvbWUgUE1VcyBoYXZlIGh1bmRyZWRzIG9mIGV2ZW50cyBhICdjJw0KPiBrZXkgd2lsbCBjb2xs
+YXBzZSB0aGUgZXZlbnRzIGluIHRoZSBjdXJyZW50IFBNVSB0byBtYWtlIG5hdmlnYXRpbmcgdGhl
+DQo+IFBNVXMgZWFzaWVyLg0KPiANCj4gWzFdIGh0dHBzOi8vdGV4dHVhbC50ZXh0dWFsaXplLmlv
+Lw0KPiANCj4gU2lnbmVkLW9mZi1ieTogSWFuIFJvZ2VycyA8aXJvZ2Vyc0Bnb29nbGUuY29tPg0K
+DQpIaSBJYW4sIEkgaGl0IGEgc2VnZmF1bHQgcGxheWluZyBhcm91bmQgd2l0aCB0aGUgaWxpc3Qg
+c2VhcmNoIGZlYXR1cmUuIEkgY2FuIHJlY3JlYXRlIGl0IHByZXR0eQ0KcmVsaWFibHkgYnkgc2Vh
+cmNoaW5nIGZvciBzb21ldGhpbmcgdGhlbiBob2xkaW5nIGRvd24gJ24nIHRvIHF1aWNrbHkgY3lj
+bGUgdGhyb3VnaCB0aGUgcmVzdWx0cy4NCkFmdGVyIGEgZmV3IHNlY29uZHMsIHRoZSBwcm9ncmFt
+IGNyYXNoZXMuDQoNCkkndmUgYXR0YWNoZWQgYSBiYWNrdHJhY2UgZnJvbSBnZGIgYmVsb3cuDQoN
+ClRoYW5rcywNClRvbQ0KDQojMCAgX19tZW1zZXRfYXZ4Ml91bmFsaWduZWRfZXJtcyAoKSBhdCAu
+Li9zeXNkZXBzL3g4Nl82NC9tdWx0aWFyY2gvbWVtc2V0LXZlYy11bmFsaWduZWQtZXJtcy5TOjIx
+MA0KIzEgIDB4MDAwMDdmZmZlODgxMjFhNyBpbiBwZXJmX2V2c2VsX19yZWFkIChldnNlbD0weDU1
+NTU1N2IxNjM5MCwgY3B1X21hcF9pZHg9OCwgdGhyZWFkPTAsDQpjb3VudD0weDApIGF0IGV2c2Vs
+LmM6NDAzDQojMiAgMHgwMDAwN2ZmZmU4OGNiZjk3IGluIGV2c2VsX19yZWFkX29uZSAoZXZzZWw9
+MHg1NTU1NTdiMTYzOTAsIGNwdV9tYXBfaWR4PTgsIHRocmVhZD0wKSBhdA0KdXRpbC9ldnNlbC5j
+OjE3MTkNCiMzICAweDAwMDA3ZmZmZTg4Y2M3OTQgaW4gZXZzZWxfX3JlYWRfY291bnRlciAoZXZz
+ZWw9MHg1NTU1NTdiMTYzOTAsIGNwdV9tYXBfaWR4PTgsIHRocmVhZD0wKSBhdA0KdXRpbC9ldnNl
+bC5jOjE4OTYNCiM0ICAweDAwMDA3ZmZmZTg4MGMwYTggaW4gcHJlcGFyZV9tZXRyaWMgKG1leHA9
+MHg1NTU1NTVkMjU2NjAsIGV2c2VsPTxvcHRpbWl6ZWQgb3V0PiwNCnBjdHg9MHg1NTU1NTc5YjVk
+MDAsIGNwdV9pZHg9OCwgdGhyZWFkX2lkeD0wKQ0KICAgIGF0IC9ob21lL3RmYWxjb24vcGVyZi10
+b29scy1uZXh0L3Rvb2xzL3BlcmYvdXRpbC9weXRob24uYzoxMzUzDQojNSAgcHlyZl9ldmxpc3Rf
+X2NvbXB1dGVfbWV0cmljIChwZXZsaXN0PTxvcHRpbWl6ZWQgb3V0PiwgYXJncz08b3B0aW1pemVk
+IG91dD4sIGt3YXJncz08b3B0aW1pemVkDQpvdXQ+KSBhdCAvaG9tZS90ZmFsY29uL3BlcmYtdG9v
+bHMtbmV4dC90b29scy9wZXJmL3V0aWwvcHl0aG9uLmM6MTQyOA0KIzYgIDB4MDAwMDdmZmZmNzk3
+ODY1NSBpbiBtZXRob2RfdmVjdG9yY2FsbF9WQVJBUkdTX0tFWVdPUkRTIChmdW5jPTxvcHRpbWl6
+ZWQgb3V0PiwNCmFyZ3M9MHg3ZmZmZjdmYjE2ODAsIG5hcmdzZj08b3B0aW1pemVkIG91dD4sIGt3
+bmFtZXM9PG9wdGltaXplZCBvdXQ+KQ0KICAgIGF0IC91c3Ivc3JjL2RlYnVnL3B5dGhvbjMuMTMt
+My4xMy41LTEuZmM0MS54ODZfNjQvT2JqZWN0cy9kZXNjcm9iamVjdC5jOjM1OA0KIzcgIDB4MDAw
+MDdmZmZmNzkzZjMzNyBpbiBfUHlPYmplY3RfVmVjdG9yY2FsbFRzdGF0ZSAodHN0YXRlPTB4N2Zm
+ZmY3ZDU5OWQwIDxfUHlSdW50aW1lKzI4MzAyND4sDQpjYWxsYWJsZT0weDdmZmZlOTRmM2RkMCwg
+YXJncz08b3B0aW1pemVkIG91dD4sIG5hcmdzZj08b3B0aW1pemVkIG91dD4sIA0KICAgIGt3bmFt
+ZXM9PG9wdGltaXplZCBvdXQ+KSBhdCAvdXNyL3NyYy9kZWJ1Zy9weXRob24zLjEzLTMuMTMuNS0N
+CjEuZmM0MS54ODZfNjQvSW5jbHVkZS9pbnRlcm5hbC9weWNvcmVfY2FsbC5oOjE2OA0KIzggIFB5
+T2JqZWN0X1ZlY3RvcmNhbGwgKGNhbGxhYmxlPTB4N2ZmZmU5NGYzZGQwLCBhcmdzPTxvcHRpbWl6
+ZWQgb3V0PiwgbmFyZ3NmPTxvcHRpbWl6ZWQgb3V0PiwNCmt3bmFtZXM9PG9wdGltaXplZCBvdXQ+
+KQ0KICAgIGF0IC91c3Ivc3JjL2RlYnVnL3B5dGhvbjMuMTMtMy4xMy41LTEuZmM0MS54ODZfNjQv
+T2JqZWN0cy9jYWxsLmM6MzI3DQojOSAgMHgwMDAwN2ZmZmY3OTRmMWMxIGluIF9QeUV2YWxfRXZh
+bEZyYW1lRGVmYXVsdCAodHN0YXRlPTxvcHRpbWl6ZWQgb3V0PiwgZnJhbWU9PG9wdGltaXplZCBv
+dXQ+LA0KdGhyb3dmbGFnPTxvcHRpbWl6ZWQgb3V0PikNCiAgICBhdCAvdXNyL3NyYy9kZWJ1Zy9w
+eXRob24zLjEzLTMuMTMuNS0xLmZjNDEueDg2XzY0L1B5dGhvbi9nZW5lcmF0ZWRfY2FzZXMuYy5o
+OjE4NDMNCiMxMCAweDAwMDA3ZmZmZjc5YWI1OWYgaW4gX1B5RXZhbF9FdmFsRnJhbWUgKHRzdGF0
+ZT0weDdmZmZmN2Q1OTlkMCA8X1B5UnVudGltZSsyODMwMjQ+LA0KZnJhbWU9PG9wdGltaXplZCBv
+dXQ+LCB0aHJvd2ZsYWc9MCkNCiAgICBhdCAvdXNyL3NyYy9kZWJ1Zy9weXRob24zLjEzLTMuMTMu
+NS0xLmZjNDEueDg2XzY0L0luY2x1ZGUvaW50ZXJuYWwvcHljb3JlX2NldmFsLmg6MTE5DQojMTEg
+X1B5RXZhbF9WZWN0b3IgKHRzdGF0ZT0weDdmZmZmN2Q1OTlkMCA8X1B5UnVudGltZSsyODMwMjQ+
+LCBmdW5jPTB4N2ZmZmRkZTM0NDAwLCBsb2NhbHM9MHgwLA0KYXJncz0weDdmZmZmZmZmYzlhOCwg
+YXJnY291bnQ9MSwga3duYW1lcz0weDApDQogICAgYXQgL3Vzci9zcmMvZGVidWcvcHl0aG9uMy4x
+My0zLjEzLjUtMS5mYzQxLng4Nl82NC9QeXRob24vY2V2YWwuYzoxODE2DQojMTIgX1B5RnVuY3Rp
+b25fVmVjdG9yY2FsbCAoZnVuYz0weDdmZmZkZGUzNDQwMCwgc3RhY2s9MHg3ZmZmZmZmZmM5YTgs
+IG5hcmdzZj0xLCBrd25hbWVzPTB4MCkgYXQNCi91c3Ivc3JjL2RlYnVnL3B5dGhvbjMuMTMtMy4x
+My41LTEuZmM0MS54ODZfNjQvT2JqZWN0cy9jYWxsLmM6NDEzDQojMTMgX1B5T2JqZWN0X1ZlY3Rv
+cmNhbGxUc3RhdGUgKHRzdGF0ZT0weDdmZmZmN2Q1OTlkMCA8X1B5UnVudGltZSsyODMwMjQ+LCBj
+YWxsYWJsZT0weDdmZmZkZGUzNDQwMCwNCmFyZ3M9MHg3ZmZmZmZmZmM5YTgsIG5hcmdzZj0xLCBr
+d25hbWVzPTB4MCkNCiAgICBhdCAvdXNyL3NyYy9kZWJ1Zy9weXRob24zLjEzLTMuMTMuNS0xLmZj
+NDEueDg2XzY0L0luY2x1ZGUvaW50ZXJuYWwvcHljb3JlX2NhbGwuaDoxNjgNCiMxNCBtZXRob2Rf
+dmVjdG9yY2FsbCAobWV0aG9kPTxvcHRpbWl6ZWQgb3V0PiwgYXJncz0weDdmZmZmN2QyYTE0MCA8
+X1B5UnVudGltZSs4ODMyMD4sDQpuYXJnc2Y9PG9wdGltaXplZCBvdXQ+LCBrd25hbWVzPTxvcHRp
+bWl6ZWQgb3V0PikNCiAgICBhdCAvdXNyL3NyYy9kZWJ1Zy9weXRob24zLjEzLTMuMTMuNS0xLmZj
+NDEueDg2XzY0L09iamVjdHMvY2xhc3NvYmplY3QuYzo3MA0KIzE1IDB4MDAwMDdmZmZmNzk1MzY5
+ZCBpbiBQeU9iamVjdF9DYWxsIChjYWxsYWJsZT0weDdmZmZjZmM5NzhjMCwgYXJncz0weDdmZmZm
+N2QyYTEyOA0KPF9QeVJ1bnRpbWUrODgyOTY+LCBrd2FyZ3M9MHgwKQ0KICAgIGF0IC91c3Ivc3Jj
+L2RlYnVnL3B5dGhvbjMuMTMtMy4xMy41LTEuZmM0MS54ODZfNjQvT2JqZWN0cy9jYWxsLmM6Mzcz
+DQojMTYgUHlDRnVuY3Rpb25fQ2FsbCAoY2FsbGFibGU9MHg3ZmZmY2ZjOTc4YzAsIGFyZ3M9MHg3
+ZmZmZjdkMmExMjggPF9QeVJ1bnRpbWUrODgyOTY+LCBrd2FyZ3M9MHgwKQ0KYXQgL3Vzci9zcmMv
+ZGVidWcvcHl0aG9uMy4xMy0zLjEzLjUtMS5mYzQxLng4Nl82NC9PYmplY3RzL2NhbGwuYzozODEN
+CiMxNyBfUHlFdmFsX0V2YWxGcmFtZURlZmF1bHQgKHRzdGF0ZT08b3B0aW1pemVkIG91dD4sIGZy
+YW1lPTxvcHRpbWl6ZWQgb3V0PiwgdGhyb3dmbGFnPTxvcHRpbWl6ZWQNCm91dD4pDQogICAgYXQg
+L3Vzci9zcmMvZGVidWcvcHl0aG9uMy4xMy0zLjEzLjUtMS5mYzQxLng4Nl82NC9QeXRob24vZ2Vu
+ZXJhdGVkX2Nhc2VzLmMuaDoxMzU1DQojMTggMHgwMDAwN2ZmZmY3YTNhODYxIGluIF9QeUV2YWxf
+RXZhbEZyYW1lICh0c3RhdGU9MHg3ZmZmZjdkNTk5ZDAgPF9QeVJ1bnRpbWUrMjgzMDI0PiwNCmZy
+YW1lPTxvcHRpbWl6ZWQgb3V0PiwgdGhyb3dmbGFnPTApDQogICAgYXQgL3Vzci9zcmMvZGVidWcv
+cHl0aG9uMy4xMy0zLjEzLjUtMS5mYzQxLng4Nl82NC9JbmNsdWRlL2ludGVybmFsL3B5Y29yZV9j
+ZXZhbC5oOjExOQ0KIzE5IGdlbl9zZW5kX2V4MiAoZ2VuPTB4N2ZmZmRjY2ZjYmEwLCBhcmc9MHg3
+ZmZmZjdkMGJkMzAgPF9QeV9Ob25lU3RydWN0PiwgcHJlc3VsdD0weDdmZmZmZmZmY2M2OCwNCmV4
+Yz0wLCBjbG9zaW5nPTxvcHRpbWl6ZWQgb3V0PikNCiAgICBhdCAvdXNyL3NyYy9kZWJ1Zy9weXRo
+b24zLjEzLTMuMTMuNS0xLmZjNDEueDg2XzY0L09iamVjdHMvZ2Vub2JqZWN0LmM6MjI5DQojMjAg
+MHgwMDAwN2ZmZmRlNTY0MTQ5IGluIHRhc2tfc3RlcF9pbXBsIChzdGF0ZT1zdGF0ZUBlbnRyeT0w
+eDdmZmZkZTg5ZGZkMCwNCnRhc2s9dGFza0BlbnRyeT0weDdmZmZkY2Q0NDNjMCwgZXhjPWV4Y0Bl
+bnRyeT0weDApDQogICAgYXQgL3Vzci9zcmMvZGVidWcvcHl0aG9uMy4xMy0zLjEzLjUtMS5mYzQx
+Lng4Nl82NC9Nb2R1bGVzL19hc3luY2lvbW9kdWxlLmM6Mjc4Mg0KIzIxIDB4MDAwMDdmZmZkZTU2
+NTdhNSBpbiB0YXNrX3N0ZXAgKHN0YXRlPTB4N2ZmZmRlODlkZmQwLCB0YXNrPTB4N2ZmZmRjZDQ0
+M2MwLCBleGM9MHgwKSBhdA0KL3Vzci9zcmMvZGVidWcvcHl0aG9uMy4xMy0zLjEzLjUtMS5mYzQx
+Lng4Nl82NC9Nb2R1bGVzL19hc3luY2lvbW9kdWxlLmM6MzEwMQ0KIzIyIDB4MDAwMDdmZmZmNzk3
+MDBhNyBpbiBjZnVuY3Rpb25fdmVjdG9yY2FsbF9PIChmdW5jPTB4N2ZmZmNjMGIxYWQwLCBhcmdz
+PTB4N2ZmZmNjMzdlODYwLA0KbmFyZ3NmPTxvcHRpbWl6ZWQgb3V0Piwga3duYW1lcz08b3B0aW1p
+emVkIG91dD4pDQogICAgYXQgL3Vzci9zcmMvZGVidWcvcHl0aG9uMy4xMy0zLjEzLjUtMS5mYzQx
+Lng4Nl82NC9JbmNsdWRlL2NweXRob24vbWV0aG9kb2JqZWN0Lmg6NTANCiMyMyAweDAwMDA3ZmZm
+ZjdhZDZhM2YgaW4gX1B5T2JqZWN0X1ZlY3RvcmNhbGxUc3RhdGUgKHRzdGF0ZT0weDdmZmZmN2Q1
+OTlkMCA8X1B5UnVudGltZSsyODMwMjQ+LA0KY2FsbGFibGU9MHg3ZmZmY2MwYjFhZDAsIGFyZ3M9
+PG9wdGltaXplZCBvdXQ+LCBuYXJnc2Y9PG9wdGltaXplZCBvdXQ+LCANCiAgICBrd25hbWVzPTxv
+cHRpbWl6ZWQgb3V0PikgYXQgL3Vzci9zcmMvZGVidWcvcHl0aG9uMy4xMy0zLjEzLjUtDQoxLmZj
+NDEueDg2XzY0L0luY2x1ZGUvaW50ZXJuYWwvcHljb3JlX2NhbGwuaDoxNjgNCiMyNCAweDAwMDA3
+ZmZmZjc4ZWYxNWIgaW4gY29udGV4dF9ydW4gKHNlbGY9MHg3ZmZmZGRmMmE0NDAsIGFyZ3M9MHg3
+ZmZmY2MzN2U4NTgsIG5hcmdzPTIsDQprd25hbWVzPTB4MCkNCiAgICBhdCAvdXNyL3NyYy9kZWJ1
+Zy9weXRob24zLjEzLTMuMTMuNS0xLmZjNDEueDg2XzY0L1B5dGhvbi9jb250ZXh0LmM6NjY0DQoj
+MjUgMHgwMDAwN2ZmZmY3OTY5YjRiIGluIGNmdW5jdGlvbl92ZWN0b3JjYWxsX0ZBU1RDQUxMX0tF
+WVdPUkRTIChmdW5jPTxvcHRpbWl6ZWQgb3V0PiwNCmFyZ3M9MHg3ZmZmY2MzN2U4NTgsIG5hcmdz
+Zj08b3B0aW1pemVkIG91dD4sIGt3bmFtZXM9PG9wdGltaXplZCBvdXQ+KQ0KICAgIGF0IC91c3Iv
+c3JjL2RlYnVnL3B5dGhvbjMuMTMtMy4xMy41LTEuZmM0MS54ODZfNjQvT2JqZWN0cy9tZXRob2Rv
+YmplY3QuYzo0NDENCiMyNiAweDAwMDA3ZmZmZjc5NTM2OWQgaW4gUHlPYmplY3RfQ2FsbCAoY2Fs
+bGFibGU9MHg3ZmZmY2RmZjg5NTAsIGFyZ3M9MHg3ZmZmY2MzN2U4NDAsIGt3YXJncz0weDApDQph
+dCAvdXNyL3NyYy9kZWJ1Zy9weXRob24zLjEzLTMuMTMuNS0xLmZjNDEueDg2XzY0L09iamVjdHMv
+Y2FsbC5jOjM3Mw0KIzI3IFB5Q0Z1bmN0aW9uX0NhbGwgKGNhbGxhYmxlPTB4N2ZmZmNkZmY4OTUw
+LCBhcmdzPTB4N2ZmZmNjMzdlODQwLCBrd2FyZ3M9MHgwKSBhdA0KL3Vzci9zcmMvZGVidWcvcHl0
+aG9uMy4xMy0zLjEzLjUtMS5mYzQxLng4Nl82NC9PYmplY3RzL2NhbGwuYzozODENCiMyOCBfUHlF
+dmFsX0V2YWxGcmFtZURlZmF1bHQgKHRzdGF0ZT08b3B0aW1pemVkIG91dD4sIGZyYW1lPTxvcHRp
+bWl6ZWQgb3V0PiwgdGhyb3dmbGFnPTxvcHRpbWl6ZWQNCm91dD4pDQogICAgYXQgL3Vzci9zcmMv
+ZGVidWcvcHl0aG9uMy4xMy0zLjEzLjUtMS5mYzQxLng4Nl82NC9QeXRob24vZ2VuZXJhdGVkX2Nh
+c2VzLmMuaDoxMzU1DQojMjkgMHgwMDAwN2ZmZmY3YTI1ZmNiIGluIFB5RXZhbF9FdmFsQ29kZSAo
+Y289MHg1NTU1NTU1ZDlhOTAsIGdsb2JhbHM9PG9wdGltaXplZCBvdXQ+LA0KbG9jYWxzPTB4N2Zm
+ZmU5NjM0YzgwKQ0KICAgIGF0IC91c3Ivc3JjL2RlYnVnL3B5dGhvbjMuMTMtMy4xMy41LTEuZmM0
+MS54ODZfNjQvUHl0aG9uL2NldmFsLmM6NjA0DQojMzAgMHgwMDAwN2ZmZmY3YTY0MGMzIGluIHJ1
+bl9ldmFsX2NvZGVfb2JqICh0c3RhdGU9dHN0YXRlQGVudHJ5PTB4N2ZmZmY3ZDU5OWQwIDxfUHlS
+dW50aW1lKzI4MzAyND4sDQpjbz1jb0BlbnRyeT0weDU1NTU1NTVkOWE5MCwgZ2xvYmFscz1nbG9i
+YWxzQGVudHJ5PTB4N2ZmZmU5NjM0YzgwLCANCiAgICBsb2NhbHM9bG9jYWxzQGVudHJ5PTB4N2Zm
+ZmU5NjM0YzgwKSBhdCAvdXNyL3NyYy9kZWJ1Zy9weXRob24zLjEzLTMuMTMuNS0NCjEuZmM0MS54
+ODZfNjQvUHl0aG9uL3B5dGhvbnJ1bi5jOjEzODENCiMzMSAweDAwMDA3ZmZmZjdhNjE1ZjMgaW4g
+cnVuX21vZCAobW9kPW1vZEBlbnRyeT0weDU1NTU1NTcxMGVjOCwNCmZpbGVuYW1lPWZpbGVuYW1l
+QGVudHJ5PTB4N2ZmZmU5NjU2OGUwLCBnbG9iYWxzPWdsb2JhbHNAZW50cnk9MHg3ZmZmZTk2MzRj
+ODAsIA0KICAgIGxvY2Fscz1sb2NhbHNAZW50cnk9MHg3ZmZmZTk2MzRjODAsIGZsYWdzPWZsYWdz
+QGVudHJ5PTB4N2ZmZmZmZmZkMjk4LA0KYXJlbmE9YXJlbmFAZW50cnk9MHg3ZmZmZTk3MWJkYjAs
+IGludGVyYWN0aXZlX3NyYz0weDAsIGdlbmVyYXRlX25ld19zb3VyY2U9MCkNCiAgICBhdCAvdXNy
+L3NyYy9kZWJ1Zy9weXRob24zLjEzLTMuMTMuNS0xLmZjNDEueDg2XzY0L1B5dGhvbi9weXRob25y
+dW4uYzoxNDY2DQojMzIgMHgwMDAwN2ZmZmY3YTVkZmQ2IGluIHB5cnVuX2ZpbGUgKGZwPWZwQGVu
+dHJ5PTB4NTU1NTU1NTcwM2EwLA0KZmlsZW5hbWU9ZmlsZW5hbWVAZW50cnk9MHg3ZmZmZTk2NTY4
+ZTAsIHN0YXJ0PXN0YXJ0QGVudHJ5PTI1NywgZ2xvYmFscz1nbG9iYWxzQGVudHJ5PTB4N2ZmZmU5
+NjM0YzgwLA0KICAgIGxvY2Fscz1sb2NhbHNAZW50cnk9MHg3ZmZmZTk2MzRjODAsIGNsb3NlaXQ9
+Y2xvc2VpdEBlbnRyeT0xLCBmbGFncz0weDdmZmZmZmZmZDI5OCkgYXQNCi91c3Ivc3JjL2RlYnVn
+L3B5dGhvbjMuMTMtMy4xMy41LTEuZmM0MS54ODZfNjQvUHl0aG9uL3B5dGhvbnJ1bi5jOjEyOTUN
+CiMzMyAweDAwMDA3ZmZmZjdhNWRjNGYgaW4gX1B5UnVuX1NpbXBsZUZpbGVPYmplY3QgKGZwPWZw
+QGVudHJ5PTB4NTU1NTU1NTcwM2EwLA0KZmlsZW5hbWU9ZmlsZW5hbWVAZW50cnk9MHg3ZmZmZTk2
+NTY4ZTAsIGNsb3NlaXQ9Y2xvc2VpdEBlbnRyeT0xLCANCiAgICBmbGFncz1mbGFnc0BlbnRyeT0w
+eDdmZmZmZmZmZDI5OCkgYXQgL3Vzci9zcmMvZGVidWcvcHl0aG9uMy4xMy0zLjEzLjUtDQoxLmZj
+NDEueDg2XzY0L1B5dGhvbi9weXRob25ydW4uYzo1MTcNCiMzNCAweDAwMDA3ZmZmZjdhNWQ4ODEg
+aW4gX1B5UnVuX0FueUZpbGVPYmplY3QgKGZwPWZwQGVudHJ5PTB4NTU1NTU1NTcwM2EwLA0KZmls
+ZW5hbWU9ZmlsZW5hbWVAZW50cnk9MHg3ZmZmZTk2NTY4ZTAsIGNsb3NlaXQ9Y2xvc2VpdEBlbnRy
+eT0xLCANCiAgICBmbGFncz1mbGFnc0BlbnRyeT0weDdmZmZmZmZmZDI5OCkgYXQgL3Vzci9zcmMv
+ZGVidWcvcHl0aG9uMy4xMy0zLjEzLjUtDQoxLmZjNDEueDg2XzY0L1B5dGhvbi9weXRob25ydW4u
+Yzo3Nw0KIzM1IDB4MDAwMDdmZmZmN2E1YmVkYSBpbiBweW1haW5fcnVuX2ZpbGVfb2JqIChwcm9n
+cmFtX25hbWU9MHg3ZmZmZTk2MzRkYjAsIGZpbGVuYW1lPTB4N2ZmZmU5NjU2OGUwLA0Kc2tpcF9z
+b3VyY2VfZmlyc3RfbGluZT0wKQ0KICAgIGF0IC91c3Ivc3JjL2RlYnVnL3B5dGhvbjMuMTMtMy4x
+My41LTEuZmM0MS54ODZfNjQvTW9kdWxlcy9tYWluLmM6NDEwDQojMzYgcHltYWluX3J1bl9maWxl
+IChjb25maWc9MHg3ZmZmZjdkMmMwYzggPF9QeVJ1bnRpbWUrOTYzOTI+KSBhdCAvdXNyL3NyYy9k
+ZWJ1Zy9weXRob24zLjEzLTMuMTMuNS0NCjEuZmM0MS54ODZfNjQvTW9kdWxlcy9tYWluLmM6NDI5
+DQojMzcgcHltYWluX3J1bl9weXRob24gKGV4aXRjb2RlPTB4N2ZmZmZmZmZkMjhjKSBhdCAvdXNy
+L3NyYy9kZWJ1Zy9weXRob24zLjEzLTMuMTMuNS0NCjEuZmM0MS54ODZfNjQvTW9kdWxlcy9tYWlu
+LmM6Njk2DQojMzggUHlfUnVuTWFpbiAoKSBhdCAvdXNyL3NyYy9kZWJ1Zy9weXRob24zLjEzLTMu
+MTMuNS0xLmZjNDEueDg2XzY0L01vZHVsZXMvbWFpbi5jOjc3NQ0KIzM5IDB4MDAwMDdmZmZmN2Ex
+Mzk2YyBpbiBQeV9CeXRlc01haW4gKGFyZ2M9PG9wdGltaXplZCBvdXQ+LCBhcmd2PTxvcHRpbWl6
+ZWQgb3V0PikgYXQNCi91c3Ivc3JjL2RlYnVnL3B5dGhvbjMuMTMtMy4xMy41LTEuZmM0MS54ODZf
+NjQvTW9kdWxlcy9tYWluLmM6ODI5DQojNDAgMHgwMDAwN2ZmZmY3NjBmNDg4IGluIF9fbGliY19z
+dGFydF9jYWxsX21haW4gKG1haW49bWFpbkBlbnRyeT0weDU1NTU1NTU1NTE2MCA8bWFpbj4sDQph
+cmdjPWFyZ2NAZW50cnk9MiwgYXJndj1hcmd2QGVudHJ5PTB4N2ZmZmZmZmZkNGY4KQ0KICAgIGF0
+IC4uL3N5c2RlcHMvbnB0bC9saWJjX3N0YXJ0X2NhbGxfbWFpbi5oOjU4DQojNDEgMHgwMDAwN2Zm
+ZmY3NjBmNTRiIGluIF9fbGliY19zdGFydF9tYWluX2ltcGwgKG1haW49MHg1NTU1NTU1NTUxNjAg
+PG1haW4+LCBhcmdjPTIsDQphcmd2PTB4N2ZmZmZmZmZkNGY4LCBpbml0PTxvcHRpbWl6ZWQgb3V0
+PiwgZmluaT08b3B0aW1pemVkIG91dD4sIA0KICAgIHJ0bGRfZmluaT08b3B0aW1pemVkIG91dD4s
+IHN0YWNrX2VuZD0weDdmZmZmZmZmZDRlOCkgYXQgLi4vY3N1L2xpYmMtc3RhcnQuYzozNjANCiM0
+MiAweDAwMDA1NTU1NTU1NTUwOTUgaW4gX3N0YXJ0ICgpDQoNCg0KPiAtLS0NCj4gIHRvb2xzL3Bl
+cmYvcHl0aG9uL2lsaXN0LnB5IHwgMzkyICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCAzOTIgaW5zZXJ0aW9ucygrKQ0KPiAgY3JlYXRlIG1v
+ZGUgMTAwNzU1IHRvb2xzL3BlcmYvcHl0aG9uL2lsaXN0LnB5DQo+IA0KPiBkaWZmIC0tZ2l0IGEv
+dG9vbHMvcGVyZi9weXRob24vaWxpc3QucHkgYi90b29scy9wZXJmL3B5dGhvbi9pbGlzdC5weQ0K
+PiBuZXcgZmlsZSBtb2RlIDEwMDc1NQ0KPiBpbmRleCAwMDAwMDAwMDAwMDAuLmIyMWY0YzkzMjQ3
+ZQ0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBiL3Rvb2xzL3BlcmYvcHl0aG9uL2lsaXN0LnB5DQo+
+IEBAIC0wLDAgKzEsMzkyIEBADQo+ICsjIS91c3IvYmluL2VudiBweXRob24zDQo+ICsjIFNQRFgt
+TGljZW5zZS1JZGVudGlmaWVyOiAoTEdQTC0yLjEgT1IgQlNELTItQ2xhdXNlKQ0KPiArIiIiSW50
+ZXJhY3RpdmUgcGVyZiBsaXN0LiIiIg0KPiArDQo+ICtpbXBvcnQgYXJncGFyc2UNCj4gK2Zyb20g
+dHlwaW5nIGltcG9ydCBBbnksIERpY3QsIFR1cGxlDQo+ICtpbXBvcnQgcGVyZg0KPiArZnJvbSB0
+ZXh0dWFsIGltcG9ydCBvbg0KPiArZnJvbSB0ZXh0dWFsLmFwcCBpbXBvcnQgQXBwLCBDb21wb3Nl
+UmVzdWx0DQo+ICtmcm9tIHRleHR1YWwuYmluZGluZyBpbXBvcnQgQmluZGluZw0KPiArZnJvbSB0
+ZXh0dWFsLmNvbnRhaW5lcnMgaW1wb3J0IEhvcml6b250YWwsIEhvcml6b250YWxHcm91cCwgVmVy
+dGljYWwsIFZlcnRpY2FsU2Nyb2xsDQo+ICtmcm9tIHRleHR1YWwuY29tbWFuZCBpbXBvcnQgU2Vh
+cmNoSWNvbg0KPiArZnJvbSB0ZXh0dWFsLnNjcmVlbiBpbXBvcnQgTW9kYWxTY3JlZW4NCj4gK2Zy
+b20gdGV4dHVhbC53aWRnZXRzIGltcG9ydCBCdXR0b24sIEZvb3RlciwgSGVhZGVyLCBJbnB1dCwg
+TGFiZWwsIFNwYXJrbGluZSwgU3RhdGljLCBUcmVlDQo+ICtmcm9tIHRleHR1YWwud2lkZ2V0cy50
+cmVlIGltcG9ydCBUcmVlTm9kZQ0KPiArDQo+ICtjbGFzcyBFcnJvclNjcmVlbihNb2RhbFNjcmVl
+bltib29sXSk6DQo+ICsgICAgIiIiUG9wIHVwIGRpYWxvZyBmb3IgZXJyb3JzLiIiIg0KPiArDQo+
+ICsgICAgQ1NTPSIiIg0KPiArICAgIEVycm9yU2NyZWVuIHsNCj4gKyAgICAgICAgYWxpZ246IGNl
+bnRlciBtaWRkbGU7DQo+ICsgICAgfQ0KPiArICAgICIiIg0KPiArICAgIGRlZiBfX2luaXRfXyhz
+ZWxmLCBlcnJvcjogc3RyKToNCj4gKyAgICAgICAgc2VsZi5lcnJvciA9IGVycm9yDQo+ICsgICAg
+ICAgIHN1cGVyKCkuX19pbml0X18oKQ0KPiArDQo+ICsgICAgZGVmIGNvbXBvc2Uoc2VsZikgLT4g
+Q29tcG9zZVJlc3VsdDoNCj4gKyAgICAgICAgeWllbGQgQnV0dG9uKGYiRXJyb3I6IHtzZWxmLmVy
+cm9yfSIsIHZhcmlhbnQ9InByaW1hcnkiLCBpZD0iZXJyb3IiKQ0KPiArDQo+ICsgICAgZGVmIG9u
+X2J1dHRvbl9wcmVzc2VkKHNlbGYsIGV2ZW50OiBCdXR0b24uUHJlc3NlZCkgLT4gTm9uZToNCj4g
+KyAgICAgICAgc2VsZi5kaXNtaXNzKFRydWUpDQo+ICsNCj4gKw0KPiArY2xhc3MgU2VhcmNoU2Ny
+ZWVuKE1vZGFsU2NyZWVuW3N0cl0pOg0KPiArICAgICIiIlBvcCB1cCBkaWFsb2cgZm9yIHNlYXJj
+aC4iIiINCj4gKw0KPiArICAgIENTUz0iIiINCj4gKyAgICBTZWFyY2hTY3JlZW4gSG9yaXpvbnRh
+bCB7DQo+ICsgICAgICAgIGFsaWduOiBjZW50ZXIgbWlkZGxlOw0KPiArICAgICAgICBtYXJnaW4t
+dG9wOiAxOw0KPiArICAgIH0NCj4gKyAgICBTZWFyY2hTY3JlZW4gSW5wdXQgew0KPiArICAgICAg
+ICB3aWR0aDogMWZyOw0KPiArICAgIH0NCj4gKyAgICAiIiINCj4gKyAgICBkZWYgY29tcG9zZShz
+ZWxmKSAtPiBDb21wb3NlUmVzdWx0Og0KPiArICAgICAgICB5aWVsZCBIb3Jpem9udGFsKFNlYXJj
+aEljb24oKSwgSW5wdXQocGxhY2Vob2xkZXI9IkV2ZW50IG5hbWUiKSkNCj4gKw0KPiArICAgIGRl
+ZiBvbl9pbnB1dF9zdWJtaXR0ZWQoc2VsZiwgZXZlbnQ6IElucHV0LlN1Ym1pdHRlZCkgLT4gTm9u
+ZToNCj4gKyAgICAgICAgIiIiSGFuZGxlIHRoZSB1c2VyIHByZXNzaW5nIEVudGVyIGluIHRoZSBp
+bnB1dCBmaWVsZC4iIiINCj4gKyAgICAgICAgc2VsZi5kaXNtaXNzKGV2ZW50LnZhbHVlKQ0KPiAr
+DQo+ICsNCj4gK2NsYXNzIENvdW50ZXIoSG9yaXpvbnRhbEdyb3VwKToNCj4gKyAgICAiIiJUd28g
+bGFiZWxzIGZvciBhIENQVSBhbmQgaXRzIGNvdW50ZXIgdmFsdWUuIiIiDQo+ICsNCj4gKyAgICBD
+U1M9IiIiDQo+ICsgICAgTGFiZWwgew0KPiArICAgICAgICBndXR0ZXI6IDE7DQo+ICsgICAgfQ0K
+PiArICAgICIiIg0KPiArDQo+ICsgICAgZGVmIF9faW5pdF9fKHNlbGYsIGNwdTogaW50KSAtPiBO
+b25lOg0KPiArICAgICAgICBzZWxmLmNwdSA9IGNwdQ0KPiArICAgICAgICBzdXBlcigpLl9faW5p
+dF9fKCkNCj4gKw0KPiArICAgIGRlZiBjb21wb3NlKHNlbGYpIC0+IENvbXBvc2VSZXN1bHQ6DQo+
+ICsgICAgICAgIGxhYmVsID0gZiJjcHV7c2VsZi5jcHV9IiBpZiBzZWxmLmNwdSA+PSAwIGVsc2Ug
+InRvdGFsIg0KPiArICAgICAgICB5aWVsZCBMYWJlbChsYWJlbCArICIgIikNCj4gKyAgICAgICAg
+eWllbGQgTGFiZWwoIjAiLCBpZD1mImNvdW50ZXJfe2xhYmVsfSIpDQo+ICsNCj4gKw0KPiArY2xh
+c3MgQ291bnRlclNwYXJrbGluZShIb3Jpem9udGFsR3JvdXApOg0KPiArICAgICIiIkEgU3Bhcmts
+aW5lIGZvciBhIHBlcmZvcm1hbmNlIGNvdW50ZXIuIiIiDQo+ICsNCj4gKyAgICBkZWYgX19pbml0
+X18oc2VsZiwgY3B1OiBpbnQpIC0+IE5vbmU6DQo+ICsgICAgICAgIHNlbGYuY3B1ID0gY3B1DQo+
+ICsgICAgICAgIHN1cGVyKCkuX19pbml0X18oKQ0KPiArDQo+ICsgICAgZGVmIGNvbXBvc2Uoc2Vs
+ZikgLT4gQ29tcG9zZVJlc3VsdDoNCj4gKyAgICAgICAgbGFiZWwgPSBmImNwdXtzZWxmLmNwdX0i
+IGlmIHNlbGYuY3B1ID49IDAgZWxzZSAidG90YWwiDQo+ICsgICAgICAgIHlpZWxkIExhYmVsKGxh
+YmVsKQ0KPiArICAgICAgICB5aWVsZCBTcGFya2xpbmUoW10sIHN1bW1hcnlfZnVuY3Rpb249bWF4
+LCBpZD1mInNwYXJrbGluZV97bGFiZWx9IikNCj4gKw0KPiArDQo+ICtjbGFzcyBJTGlzdEFwcChB
+cHApOg0KPiArICAgIFRJVExFID0gIkludGVyYWN0aXZlIFBlcmYgTGlzdCINCj4gKw0KPiArICAg
+IEJJTkRJTkdTID0gWw0KPiArICAgICAgICBCaW5kaW5nKGtleT0icyIsIGFjdGlvbj0ic2VhcmNo
+IiwgZGVzY3JpcHRpb249IlNlYXJjaCIsDQo+ICsgICAgICAgICAgICAgICAgdG9vbHRpcD0iU2Vh
+cmNoIGV2ZW50cyBhbmQgUE1VcyIpLA0KPiArICAgICAgICBCaW5kaW5nKGtleT0ibiIsIGFjdGlv
+bj0ibmV4dCIsIGRlc2NyaXB0aW9uPSJOZXh0IiwNCj4gKyAgICAgICAgICAgICAgICB0b29sdGlw
+PSJOZXh0IHNlYXJjaCByZXN1bHQgb3IgaXRlbSIpLA0KPiArICAgICAgICBCaW5kaW5nKGtleT0i
+cCIsIGFjdGlvbj0icHJldiIsIGRlc2NyaXB0aW9uPSJQcmV2aW91cyIsDQo+ICsgICAgICAgICAg
+ICAgICAgdG9vbHRpcD0iUHJldmlvdXMgc2VhcmNoIHJlc3VsdCBvciBpdGVtIiksDQo+ICsgICAg
+ICAgIEJpbmRpbmcoa2V5PSJjIiwgYWN0aW9uPSJjb2xsYXBzZSIsIGRlc2NyaXB0aW9uPSJDb2xs
+YXBzZSIsDQo+ICsgICAgICAgICAgICAgICAgdG9vbHRpcD0iQ29sbGFwc2UgdGhlIGN1cnJlbnQg
+UE1VIiksDQo+ICsgICAgICAgIEJpbmRpbmcoa2V5PSJecSIsIGFjdGlvbj0icXVpdCIsIGRlc2Ny
+aXB0aW9uPSJRdWl0IiwNCj4gKyAgICAgICAgICAgICAgICB0b29sdGlwPSJRdWl0IHRoZSBhcHAi
+KSwNCj4gKyAgICBdDQo+ICsNCj4gKyAgICBDU1MgPSAiIiINCj4gKyAgICAgICAgLyogTWFrZSB0
+aGUgJ3RvdGFsJyBzcGFya2xpbmUgYSBkaWZmZXJlbnQgY29sb3IuICovDQo+ICsgICAgICAgICNz
+cGFya2xpbmVfdG90YWwgPiAuc3BhcmtsaW5lLS1taW4tY29sb3Igew0KPiArICAgICAgICAgICAg
+Y29sb3I6ICRhY2NlbnQ7DQo+ICsgICAgICAgIH0NCj4gKyAgICAgICAgI3NwYXJrbGluZV90b3Rh
+bCA+IC5zcGFya2xpbmUtLW1heC1jb2xvciB7DQo+ICsgICAgICAgICAgICBjb2xvcjogJGFjY2Vu
+dCAzMCU7DQo+ICsgICAgICAgIH0NCj4gKyAgICAgICAgLyoNCj4gKyAgICAgICAgICogTWFrZSB0
+aGUgYWN0aXZlX3NlYXJjaCBpbml0aWFsbHkgbm90IGRpc3BsYXllZCB3aXRoIHRoZSB0ZXh0IGlu
+DQo+ICsgICAgICAgICAqIHRoZSBtaWRkbGUgb2YgdGhlIGxpbmUuDQo+ICsgICAgICAgICAqLw0K
+PiArICAgICAgICAjYWN0aXZlX3NlYXJjaCB7DQo+ICsgICAgICAgICAgICBkaXNwbGF5OiBub25l
+Ow0KPiArICAgICAgICAgICAgd2lkdGg6IDEwMCU7DQo+ICsgICAgICAgICAgICB0ZXh0LWFsaWdu
+OiBjZW50ZXI7DQo+ICsgICAgICAgIH0NCj4gKyAgICAiIiINCj4gKw0KPiArICAgIGRlZiBfX2lu
+aXRfXyhzZWxmLCBpbnRlcnZhbDogZmxvYXQpIC0+IE5vbmU6DQo+ICsgICAgICAgIHNlbGYuaW50
+ZXJ2YWwgPSBpbnRlcnZhbA0KPiArICAgICAgICBzZWxmLmV2bGlzdCA9IE5vbmUNCj4gKyAgICAg
+ICAgc2VsZi5zZWFyY2hfcmVzdWx0czogbGlzdFtUcmVlTm9kZVtzdHJdXSA9IFtdDQo+ICsgICAg
+ICAgIHNlbGYuY3VyX3NlYXJjaF9yZXN1bHQ6IFRyZWVOb2RlW3N0cl0gfCBOb25lID0gTm9uZQ0K
+PiArICAgICAgICBzdXBlcigpLl9faW5pdF9fKCkNCj4gKw0KPiArDQo+ICsNCj4gKyAgICBkZWYg
+ZXhwYW5kX2FuZF9zZWxlY3Qoc2VsZiwgbm9kZTogVHJlZU5vZGVbQW55XSkgLT4gTm9uZToNCj4g
+KyAgICAgICAgIiIiRXhwYW5kIHNlbGVjdCBhIG5vZGUgaW4gdGhlIHRyZWUuIiIiDQo+ICsgICAg
+ICAgIGlmIG5vZGUucGFyZW50Og0KPiArICAgICAgICAgICAgbm9kZS5wYXJlbnQuZXhwYW5kKCkN
+Cj4gKyAgICAgICAgICAgIGlmIG5vZGUucGFyZW50LnBhcmVudDoNCj4gKyAgICAgICAgICAgICAg
+ICBub2RlLnBhcmVudC5wYXJlbnQuZXhwYW5kKCkNCj4gKyAgICAgICAgbm9kZS5leHBhbmQoKQ0K
+PiArICAgICAgICBub2RlLnRyZWUuc2VsZWN0X25vZGUobm9kZSkNCj4gKyAgICAgICAgbm9kZS50
+cmVlLnNjcm9sbF90b19ub2RlKG5vZGUpDQo+ICsNCj4gKw0KPiArICAgIGRlZiBzZXRfc2VhcmNo
+ZWRfdHJlZV9ub2RlKHNlbGYsIHByZXZpb3VzOiBib29sKSAtPiBOb25lOg0KPiArICAgICAgICAi
+IiJTZXQgdGhlIGN1cl9zZWFyY2hfcmVzdWx0IG5vZGUgdG8gZWl0aGVyIHRoZSBuZXh0IG9yIHBy
+ZXZpb3VzLiIiIg0KPiArICAgICAgICBsID0gbGVuKHNlbGYuc2VhcmNoX3Jlc3VsdHMpDQo+ICsN
+Cj4gKyAgICAgICAgaWYgbCA8IDE6DQo+ICsgICAgICAgICAgICB0cmVlOiBUcmVlW3N0cl0gPSBz
+ZWxmLnF1ZXJ5X29uZSgiI3BtdXMiLCBUcmVlKQ0KPiArICAgICAgICAgICAgaWYgcHJldmlvdXM6
+DQo+ICsgICAgICAgICAgICAgICAgdHJlZS5hY3Rpb25fY3Vyc29yX3VwKCkNCj4gKyAgICAgICAg
+ICAgIGVsc2U6DQo+ICsgICAgICAgICAgICAgICAgdHJlZS5hY3Rpb25fY3Vyc29yX2Rvd24oKQ0K
+PiArICAgICAgICAgICAgcmV0dXJuDQo+ICsNCj4gKyAgICAgICAgaWYgc2VsZi5jdXJfc2VhcmNo
+X3Jlc3VsdDoNCj4gKyAgICAgICAgICAgIGlkeCA9IHNlbGYuc2VhcmNoX3Jlc3VsdHMuaW5kZXgo
+c2VsZi5jdXJfc2VhcmNoX3Jlc3VsdCkNCj4gKyAgICAgICAgICAgIGlmIHByZXZpb3VzOg0KPiAr
+ICAgICAgICAgICAgICAgIGlkeCA9IGlkeCAtIDEgaWYgaWR4ID4gMCBlbHNlIGwgLSAxDQo+ICsg
+ICAgICAgICAgICBlbHNlOg0KPiArICAgICAgICAgICAgICAgIGlkeCA9IGlkeCArIDEgaWYgaWR4
+IDwgbCAtIDEgZWxzZSAwDQo+ICsgICAgICAgIGVsc2U6DQo+ICsgICAgICAgICAgICBpZHggPSBs
+IC0gMSBpZiBwcmV2aW91cyBlbHNlIDANCj4gKw0KPiArICAgICAgICBub2RlID0gc2VsZi5zZWFy
+Y2hfcmVzdWx0c1tpZHhdDQo+ICsgICAgICAgIGlmIG5vZGUgPT0gc2VsZi5jdXJfc2VhcmNoX3Jl
+c3VsdDoNCj4gKyAgICAgICAgICAgIHJldHVybg0KPiArDQo+ICsgICAgICAgIHNlbGYuY3VyX3Nl
+YXJjaF9yZXN1bHQgPSBub2RlDQo+ICsgICAgICAgIHNlbGYuZXhwYW5kX2FuZF9zZWxlY3Qobm9k
+ZSkNCj4gKw0KPiArICAgIGRlZiBhY3Rpb25fc2VhcmNoKHNlbGYpIC0+IE5vbmU6DQo+ICsgICAg
+ICAgICIiIlNlYXJjaCB3YXMgY2hvc2VuLiIiIg0KPiArICAgICAgICBkZWYgc2V0X2luaXRpYWxf
+Zm9jdXMoZXZlbnQ6IHN0ciB8IE5vbmUpIC0+IE5vbmU6DQo+ICsgICAgICAgICAgICAiIiJTZXRz
+IHRoZSBmb2N1cyBhZnRlciB0aGUgU2VhcmNoU2NyZWVuIGlzIGRpc21pc3NlZC4iIiINCj4gKw0K
+PiArICAgICAgICAgICAgc2VhcmNoX2xhYmVsID0gc2VsZi5xdWVyeV9vbmUoIiNhY3RpdmVfc2Vh
+cmNoIiwgTGFiZWwpDQo+ICsgICAgICAgICAgICBzZWFyY2hfbGFiZWwuZGlzcGxheSA9IFRydWUg
+aWYgZXZlbnQgZWxzZSBGYWxzZQ0KPiArICAgICAgICAgICAgaWYgbm90IGV2ZW50Og0KPiArICAg
+ICAgICAgICAgICAgIHJldHVybg0KPiArICAgICAgICAgICAgZXZlbnQgPSBldmVudC5sb3dlcigp
+DQo+ICsgICAgICAgICAgICBzZWFyY2hfbGFiZWwudXBkYXRlKGYnU2VhcmNoaW5nIGZvciBldmVu
+dHMgbWF0Y2hpbmcgIntldmVudH0iJykNCj4gKw0KPiArICAgICAgICAgICAgdHJlZTogVHJlZVtz
+dHJdID0gc2VsZi5xdWVyeV9vbmUoIiNwbXVzIiwgVHJlZSkNCj4gKyAgICAgICAgICAgIGRlZiBm
+aW5kX3NlYXJjaF9yZXN1bHRzKGV2ZW50OiBzdHIsIG5vZGU6IFRyZWVOb2RlW3N0cl0sIFwNCj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGN1cnNvcl9zZWVuOiBib29sID0g
+RmFsc2UsIFwNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG1hdGNoX2Fm
+dGVyX2N1cnNvcjogVHJlZU5vZGVbc3RyXSB8IE5vbmUgPSBOb25lKSBcDQo+ICsgICAgICAgICAg
+ICAgICAgICAgIC0+IFR1cGxlW2Jvb2wsIFRyZWVOb2RlW3N0cl0gfCBOb25lXToNCj4gKyAgICAg
+ICAgICAgICAgICAiIiJGaW5kIG5vZGVzIHRoYXQgbWF0Y2ggdGhlIHNlYXJjaCByZW1lbWJlcmlu
+ZyB0aGUgb25lIGFmdGVyIHRoZSBjdXJzb3IuIiIiDQo+ICsgICAgICAgICAgICAgICAgaWYgbm90
+IGN1cnNvcl9zZWVuIGFuZCBub2RlID09IHRyZWUuY3Vyc29yX25vZGU6DQo+ICsgICAgICAgICAg
+ICAgICAgICAgIGN1cnNvcl9zZWVuID0gVHJ1ZQ0KPiArICAgICAgICAgICAgICAgIGlmIG5vZGUu
+ZGF0YSBhbmQgZXZlbnQgaW4gbm9kZS5kYXRhOg0KPiArICAgICAgICAgICAgICAgICAgICBpZiBj
+dXJzb3Jfc2VlbiBhbmQgbm90IG1hdGNoX2FmdGVyX2N1cnNvcjoNCj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgIG1hdGNoX2FmdGVyX2N1cnNvciA9IG5vZGUNCj4gKyAgICAgICAgICAgICAgICAg
+ICAgc2VsZi5zZWFyY2hfcmVzdWx0cy5hcHBlbmQobm9kZSkNCj4gKw0KPiArICAgICAgICAgICAg
+ICAgIGlmIG5vZGUuY2hpbGRyZW46DQo+ICsgICAgICAgICAgICAgICAgICAgIGZvciBjaGlsZCBp
+biBub2RlLmNoaWxkcmVuOg0KPiArICAgICAgICAgICAgICAgICAgICAgICAgKGN1cnNvcl9zZWVu
+LCBtYXRjaF9hZnRlcl9jdXJzb3IpID0gXA0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IGZpbmRfc2VhcmNoX3Jlc3VsdHMoZXZlbnQsIGNoaWxkLCBjdXJzb3Jfc2VlbiwgbWF0Y2hfYWZ0
+ZXJfY3Vyc29yKQ0KPiArICAgICAgICAgICAgICAgIHJldHVybiAoY3Vyc29yX3NlZW4sIG1hdGNo
+X2FmdGVyX2N1cnNvcikNCj4gKw0KPiArICAgICAgICAgICAgc2VsZi5zZWFyY2hfcmVzdWx0cy5j
+bGVhcigpDQo+ICsgICAgICAgICAgICAoXyAsIHNlbGYuY3VyX3NlYXJjaF9yZXN1bHQpID0gZmlu
+ZF9zZWFyY2hfcmVzdWx0cyhldmVudCwgdHJlZS5yb290KQ0KPiArICAgICAgICAgICAgaWYgbGVu
+KHNlbGYuc2VhcmNoX3Jlc3VsdHMpIDwgMToNCj4gKyAgICAgICAgICAgICAgICBzZWxmLnB1c2hf
+c2NyZWVuKEVycm9yU2NyZWVuKGYiRmFpbGVkIHRvIGZpbmQgcG11L2V2ZW50IHtldmVudH0iKSkN
+Cj4gKyAgICAgICAgICAgICAgICBzZWFyY2hfbGFiZWwuZGlzcGxheSA9IEZhbHNlDQo+ICsgICAg
+ICAgICAgICBlbGlmIHNlbGYuY3VyX3NlYXJjaF9yZXN1bHQ6DQo+ICsgICAgICAgICAgICAgICAg
+c2VsZi5leHBhbmRfYW5kX3NlbGVjdChzZWxmLmN1cl9zZWFyY2hfcmVzdWx0KQ0KPiArICAgICAg
+ICAgICAgZWxzZToNCj4gKyAgICAgICAgICAgICAgICBzZWxmLnNldF9zZWFyY2hlZF90cmVlX25v
+ZGUocHJldmlvdXM9RmFsc2UpDQo+ICsNCj4gKyAgICAgICAgc2VsZi5wdXNoX3NjcmVlbihTZWFy
+Y2hTY3JlZW4oKSwgc2V0X2luaXRpYWxfZm9jdXMpDQo+ICsNCj4gKw0KPiArICAgIGRlZiBhY3Rp
+b25fbmV4dChzZWxmKSAtPiBOb25lOg0KPiArICAgICAgICAiIiJOZXh0IHdhcyBjaG9zZW4uIiIi
+DQo+ICsgICAgICAgIHNlbGYuc2V0X3NlYXJjaGVkX3RyZWVfbm9kZShwcmV2aW91cz1GYWxzZSkN
+Cj4gKw0KPiArDQo+ICsgICAgZGVmIGFjdGlvbl9wcmV2KHNlbGYpIC0+IE5vbmU6DQo+ICsgICAg
+ICAgICIiIlByZXZpb3VzIHdhcyBjaG9zZW4uIiIiDQo+ICsgICAgICAgIHNlbGYuc2V0X3NlYXJj
+aGVkX3RyZWVfbm9kZShwcmV2aW91cz1UcnVlKQ0KPiArDQo+ICsNCj4gKyAgICBkZWYgYWN0aW9u
+X2NvbGxhcHNlKHNlbGYpIC0+IE5vbmU6DQo+ICsgICAgICAgICIiIkNvbGxhcHNlIHRoZSBwb3Rl
+bnRpYWxseSBsYXJnZSBudW1iZXIgb2YgZXZlbnRzIHVuZGVyIGEgUE1VLiIiIg0KPiArICAgICAg
+ICB0cmVlOiBUcmVlW3N0cl0gPSBzZWxmLnF1ZXJ5X29uZSgiI3BtdXMiLCBUcmVlKQ0KPiArICAg
+ICAgICBub2RlID0gdHJlZS5jdXJzb3Jfbm9kZQ0KPiArICAgICAgICBpZiBub2RlIGFuZCBub2Rl
+LnBhcmVudCBhbmQgbm9kZS5wYXJlbnQucGFyZW50Og0KPiArICAgICAgICAgICAgbm9kZS5wYXJl
+bnQuY29sbGFwc2VfYWxsKCkNCj4gKyAgICAgICAgICAgIG5vZGUudHJlZS5zY3JvbGxfdG9fbm9k
+ZShub2RlLnBhcmVudCkNCj4gKw0KPiArDQo+ICsgICAgZGVmIHVwZGF0ZV9jb3VudHMoc2VsZikg
+LT4gTm9uZToNCj4gKyAgICAgICAgIiIiQ2FsbGVkIGV2ZXJ5IGludGVydmFsIHRvIHVwZGF0ZSBj
+b3VudHMuIiIiDQo+ICsgICAgICAgIGlmIG5vdCBzZWxmLmV2bGlzdDoNCj4gKyAgICAgICAgICAg
+IHJldHVybg0KPiArDQo+ICsgICAgICAgIGRlZiB1cGRhdGVfY291bnQoY3B1OiBpbnQsIGNvdW50
+OiBpbnQpOg0KPiArICAgICAgICAgICAgIyBVcGRhdGUgdGhlIHJhdyBjb3VudCBkaXNwbGF5Lg0K
+PiArICAgICAgICAgICAgY291bnRlcjogTGFiZWwgPSBzZWxmLnF1ZXJ5KGYiI2NvdW50ZXJfY3B1
+e2NwdX0iIGlmIGNwdSA+PSAwIGVsc2UgIiNjb3VudGVyX3RvdGFsIikNCj4gKyAgICAgICAgICAg
+IGlmIG5vdCBjb3VudGVyOg0KPiArICAgICAgICAgICAgICAgIHJldHVybg0KPiArICAgICAgICAg
+ICAgY291bnRlciA9IGNvdW50ZXIuZmlyc3QoTGFiZWwpDQo+ICsgICAgICAgICAgICBjb3VudGVy
+LnVwZGF0ZShzdHIoY291bnQpKQ0KPiArDQo+ICsgICAgICAgICAgICAjIFVwZGF0ZSB0aGUgc3Bh
+cmtsaW5lLg0KPiArICAgICAgICAgICAgbGluZTogU3BhcmtsaW5lID0gc2VsZi5xdWVyeShmIiNz
+cGFya2xpbmVfY3B1e2NwdX0iIGlmIGNwdSA+PSAwIGVsc2UgIiNzcGFya2xpbmVfdG90YWwiKQ0K
+PiArICAgICAgICAgICAgaWYgbm90IGxpbmU6DQo+ICsgICAgICAgICAgICAgICAgcmV0dXJuDQo+
+ICsgICAgICAgICAgICBsaW5lID0gbGluZS5maXJzdChTcGFya2xpbmUpDQo+ICsgICAgICAgICAg
+ICAjIElmIHRoZXJlIGFyZSBtb3JlIGV2ZW50cyB0aGFuIHRoZSB3aWR0aCwgcmVtb3ZlIHRoZSBm
+cm9udCBldmVudC4NCj4gKyAgICAgICAgICAgIGlmIGxlbihsaW5lLmRhdGEpID4gbGluZS5zaXpl
+LndpZHRoOg0KPiArICAgICAgICAgICAgICAgIGxpbmUuZGF0YS5wb3AoMCkNCj4gKyAgICAgICAg
+ICAgIGxpbmUuZGF0YS5hcHBlbmQoY291bnQpDQo+ICsgICAgICAgICAgICBsaW5lLm11dGF0ZV9y
+ZWFjdGl2ZShTcGFya2xpbmUuZGF0YSkNCj4gKw0KPiArICAgICAgICAjIFVwZGF0ZSB0aGUgdG90
+YWwgYW5kIGVhY2ggQ1BVIGNvdW50cywgYXNzdW1lIHRoZXJlJ3MganVzdCAxIGV2c2VsLg0KPiAr
+ICAgICAgICB0b3RhbCA9IDANCj4gKyAgICAgICAgc2VsZi5ldmxpc3QuZGlzYWJsZSgpDQo+ICsg
+ICAgICAgIGZvciBldnNlbCBpbiBzZWxmLmV2bGlzdDoNCj4gKyAgICAgICAgICAgIGZvciBjcHUg
+aW4gZXZzZWwuY3B1cygpOg0KPiArICAgICAgICAgICAgICAgIGFnZ3IgPSAwDQo+ICsgICAgICAg
+ICAgICAgICAgZm9yIHRocmVhZCBpbiBldnNlbC50aHJlYWRzKCk6DQo+ICsgICAgICAgICAgICAg
+ICAgICAgIGNvdW50cyA9IGV2c2VsLnJlYWQoY3B1LCB0aHJlYWQpDQo+ICsgICAgICAgICAgICAg
+ICAgICAgIGFnZ3IgKz0gY291bnRzLnZhbA0KPiArICAgICAgICAgICAgICAgIHVwZGF0ZV9jb3Vu
+dChjcHUsIGFnZ3IpDQo+ICsgICAgICAgICAgICAgICAgdG90YWwgKz0gYWdncg0KPiArICAgICAg
+ICB1cGRhdGVfY291bnQoLTEsIHRvdGFsKQ0KPiArICAgICAgICBzZWxmLmV2bGlzdC5lbmFibGUo
+KQ0KPiArDQo+ICsNCj4gKyAgICBkZWYgb25fbW91bnQoc2VsZikgLT4gTm9uZToNCj4gKyAgICAg
+ICAgIiIiV2hlbiBBcHAgc3RhcnRzIHNldCB1cCBwZXJpb2RpYyBldmVudCB1cGRhdGluZy4iIiIN
+Cj4gKyAgICAgICAgc2VsZi51cGRhdGVfY291bnRzKCkNCj4gKyAgICAgICAgc2VsZi5zZXRfaW50
+ZXJ2YWwoc2VsZi5pbnRlcnZhbCwgc2VsZi51cGRhdGVfY291bnRzKQ0KPiArDQo+ICsNCj4gKyAg
+ICBkZWYgc2V0X3BtdV9hbmRfZXZlbnQoc2VsZiwgcG11OiBzdHIsIGV2ZW50OiBzdHIpIC0+IE5v
+bmU6DQo+ICsgICAgICAgICIiIlVwZGF0ZXMgdGhlIGV2ZW50L2Rlc2NyaXB0aW9uIGFuZCBzdGFy
+dHMgdGhlIGNvdW50ZXJzLiIiIg0KPiArICAgICAgICAjIFJlbW92ZSBwcmV2aW91cyBldmVudCBp
+bmZvcm1hdGlvbi4NCj4gKyAgICAgICAgaWYgc2VsZi5ldmxpc3Q6DQo+ICsgICAgICAgICAgICBz
+ZWxmLmV2bGlzdC5kaXNhYmxlKCkNCj4gKyAgICAgICAgICAgIHNlbGYuZXZsaXN0LmNsb3NlKCkN
+Cj4gKyAgICAgICAgICAgIGxpbmVzID0gc2VsZi5xdWVyeShDb3VudGVyU3BhcmtsaW5lKQ0KPiAr
+ICAgICAgICAgICAgZm9yIGxpbmUgaW4gbGluZXM6DQo+ICsgICAgICAgICAgICAgICAgbGluZS5y
+ZW1vdmUoKQ0KPiArICAgICAgICAgICAgbGluZXMgPSBzZWxmLnF1ZXJ5KENvdW50ZXIpDQo+ICsg
+ICAgICAgICAgICBmb3IgbGluZSBpbiBsaW5lczoNCj4gKyAgICAgICAgICAgICAgICBsaW5lLnJl
+bW92ZSgpDQo+ICsNCj4gKyAgICAgICAgZGVmIHBtdV9ldmVudF9kZXNjcmlwdGlvbihwbXU6IHN0
+ciwgZXZlbnQ6IHN0cikgLT4gc3RyOg0KPiArICAgICAgICAgICAgIiIiRmluZCBhbmQgZm9ybWF0
+IGV2ZW50IGRlc2NyaXB0aW9uIGZvciB7cG11fS97ZXZlbnR9Ly4iIiINCj4gKyAgICAgICAgICAg
+IGRlZiBnZXRfaW5mbyhpbmZvOiBEaWN0W3N0ciwgc3RyXSwga2V5OiBzdHIpOg0KPiArICAgICAg
+ICAgICAgICAgIHJldHVybiAoaW5mb1trZXldICsgIlxuIikgaWYga2V5IGluIGluZm8gZWxzZSAi
+Ig0KPiArDQo+ICsgICAgICAgICAgICBmb3IgcCBpbiBwZXJmLnBtdXMoKToNCj4gKyAgICAgICAg
+ICAgICAgICBpZiBwLm5hbWUoKSAhPSBwbXU6DQo+ICsgICAgICAgICAgICAgICAgICAgIGNvbnRp
+bnVlDQo+ICsgICAgICAgICAgICAgICAgZm9yIGluZm8gaW4gcC5ldmVudHMoKToNCj4gKyAgICAg
+ICAgICAgICAgICAgICAgaWYgIm5hbWUiIG5vdCBpbiBpbmZvIG9yIGluZm9bIm5hbWUiXSAhPSBl
+dmVudDoNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlDQo+ICsNCj4gKyAgICAg
+ICAgICAgICAgICAgICAgZGVzYyA9IGdldF9pbmZvKGluZm8sICJ0b3BpYyIpDQo+ICsgICAgICAg
+ICAgICAgICAgICAgIGRlc2MgKz0gZ2V0X2luZm8oaW5mbywgImV2ZW50X3R5cGVfZGVzYyIpDQo+
+ICsgICAgICAgICAgICAgICAgICAgIGRlc2MgKz0gZ2V0X2luZm8oaW5mbywgImRlc2MiKQ0KPiAr
+ICAgICAgICAgICAgICAgICAgICBkZXNjICs9IGdldF9pbmZvKGluZm8sICJsb25nX2Rlc2MiKQ0K
+PiArICAgICAgICAgICAgICAgICAgICBkZXNjICs9IGdldF9pbmZvKGluZm8sICJlbmNvZGluZ19k
+ZXNjIikNCj4gKyAgICAgICAgICAgICAgICAgICAgcmV0dXJuIGRlc2MNCj4gKyAgICAgICAgICAg
+IHJldHVybiAiZGVzY3JpcHRpb24iDQo+ICsNCj4gKyAgICAgICAgIyBQYXJzZSBldmVudCwgdXBk
+YXRlIGV2ZW50IHRleHQgYW5kIGRlc2NyaXB0aW9uLg0KPiArICAgICAgICBmdWxsX25hbWUgPSBl
+dmVudCBpZiBldmVudC5zdGFydHN3aXRoKHBtdSkgb3IgJzonIGluIGV2ZW50IGVsc2UgZiJ7cG11
+fS97ZXZlbnR9LyINCj4gKyAgICAgICAgc2VsZi5xdWVyeV9vbmUoIiNldmVudF9uYW1lIiwgTGFi
+ZWwpLnVwZGF0ZShmdWxsX25hbWUpDQo+ICsgICAgICAgIHNlbGYucXVlcnlfb25lKCIjZXZlbnRf
+ZGVzY3JpcHRpb24iLCBTdGF0aWMpLnVwZGF0ZShwbXVfZXZlbnRfZGVzY3JpcHRpb24ocG11LCBl
+dmVudCkpDQo+ICsNCj4gKyAgICAgICAgIyBPcGVuIHRoZSBldmVudC4NCj4gKyAgICAgICAgdHJ5
+Og0KPiArICAgICAgICAgICAgc2VsZi5ldmxpc3QgPSBwZXJmLnBhcnNlX2V2ZW50cyhmdWxsX25h
+bWUpDQo+ICsgICAgICAgICAgICBpZiBzZWxmLmV2bGlzdDoNCj4gKyAgICAgICAgICAgICAgICBz
+ZWxmLmV2bGlzdC5vcGVuKCkNCj4gKyAgICAgICAgICAgICAgICBzZWxmLmV2bGlzdC5lbmFibGUo
+KQ0KPiArICAgICAgICBleGNlcHQ6DQo+ICsgICAgICAgICAgICBzZWxmLmV2bGlzdCA9IE5vbmUN
+Cj4gKw0KPiArICAgICAgICBpZiBub3Qgc2VsZi5ldmxpc3Q6DQo+ICsgICAgICAgICAgICBzZWxm
+LnB1c2hfc2NyZWVuKEVycm9yU2NyZWVuKGYiRmFpbGVkIHRvIG9wZW4ge2Z1bGxfbmFtZX0iKSkN
+Cj4gKyAgICAgICAgICAgIHJldHVybg0KPiArDQo+ICsgICAgICAgICMgQWRkIHNwYXJrIGxpbmVz
+IGZvciBhbGwgdGhlIENQVXMuIE5vdGUsIG11c3QgYmUgZG9uZSBhZnRlcg0KPiArICAgICAgICAj
+IG9wZW4gc28gdGhhdCB0aGUgZXZsaXN0IENQVXMgaGF2ZSBiZWVuIGNvbXB1dGVkIGJ5IHByb3Bh
+Z2F0ZQ0KPiArICAgICAgICAjIG1hcHMuDQo+ICsgICAgICAgIGxpbmVzID0gc2VsZi5xdWVyeV9v
+bmUoIiNsaW5lcyIpDQo+ICsgICAgICAgIGxpbmUgPSBDb3VudGVyU3BhcmtsaW5lKGNwdT0tMSkN
+Cj4gKyAgICAgICAgbGluZXMubW91bnQobGluZSkNCj4gKyAgICAgICAgZm9yIGNwdSBpbiBzZWxm
+LmV2bGlzdC5hbGxfY3B1cygpOg0KPiArICAgICAgICAgICAgbGluZSA9IENvdW50ZXJTcGFya2xp
+bmUoY3B1KQ0KPiArICAgICAgICAgICAgbGluZXMubW91bnQobGluZSkNCj4gKyAgICAgICAgbGlu
+ZSA9IENvdW50ZXIoY3B1PS0xKQ0KPiArICAgICAgICBsaW5lcy5tb3VudChsaW5lKQ0KPiArICAg
+ICAgICBmb3IgY3B1IGluIHNlbGYuZXZsaXN0LmFsbF9jcHVzKCk6DQo+ICsgICAgICAgICAgICBs
+aW5lID0gQ291bnRlcihjcHUpDQo+ICsgICAgICAgICAgICBsaW5lcy5tb3VudChsaW5lKQ0KPiAr
+DQo+ICsNCj4gKyAgICBkZWYgY29tcG9zZShzZWxmKSAtPiBDb21wb3NlUmVzdWx0Og0KPiArICAg
+ICAgICAiIiJEcmF3cyB0aGUgYXBwLiIiIg0KPiArICAgICAgICBkZWYgcG11X2V2ZW50X3RyZWUo
+KSAtPiBUcmVlOg0KPiArICAgICAgICAgICAgIiIiQ3JlYXRlIHRyZWUgb2YgUE1VcyB3aXRoIGV2
+ZW50cyB1bmRlci4iIiINCj4gKyAgICAgICAgICAgIHRyZWU6IFRyZWVbc3RyXSA9IFRyZWUoIlBN
+VXMiLCBpZD0icG11cyIpDQo+ICsgICAgICAgICAgICB0cmVlLnJvb3QuZXhwYW5kKCkNCj4gKyAg
+ICAgICAgICAgIGZvciBwbXUgaW4gcGVyZi5wbXVzKCk6DQo+ICsgICAgICAgICAgICAgICAgcG11
+X25hbWUgPSBwbXUubmFtZSgpLmxvd2VyKCkNCj4gKyAgICAgICAgICAgICAgICBwbXVfbm9kZSA9
+IHRyZWUucm9vdC5hZGQocG11X25hbWUsIGRhdGE9cG11X25hbWUpDQo+ICsgICAgICAgICAgICAg
+ICAgdHJ5Og0KPiArICAgICAgICAgICAgICAgICAgICBmb3IgZXZlbnQgaW4gc29ydGVkKHBtdS5l
+dmVudHMoKSwga2V5PWxhbWJkYSB4OiB4WyJuYW1lIl0pOg0KPiArICAgICAgICAgICAgICAgICAg
+ICAgICAgaWYgIm5hbWUiIGluIGV2ZW50Og0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IGUgPSBldmVudFsibmFtZSJdLmxvd2VyKCkNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBpZiAiYWxpYXMiIGluIGV2ZW50Og0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBwbXVfbm9kZS5hZGRfbGVhZihmJ3tlfSAoe2V2ZW50WyJhbGlhcyJdfSknLCBkYXRhPWUpDQo+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgZWxzZToNCj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgcG11X25vZGUuYWRkX2xlYWYoZSwgZGF0YT1lKQ0KPiArICAgICAgICAg
+ICAgICAgIGV4Y2VwdDoNCj4gKyAgICAgICAgICAgICAgICAgICAgIyBSZWFkaW5nIGV2ZW50cyBt
+YXkgZmFpbCB3aXRoIEVQRVJNLCBpZ25vcmUuDQo+ICsgICAgICAgICAgICAgICAgICAgIHBhc3MN
+Cj4gKyAgICAgICAgICAgIHJldHVybiB0cmVlDQo+ICsNCj4gKyAgICAgICAgeWllbGQgSGVhZGVy
+KGlkPSJoZWFkZXIiKQ0KPiArICAgICAgICB5aWVsZCBIb3Jpem9udGFsKFZlcnRpY2FsKHBtdV9l
+dmVudF90cmVlKCksIGlkPSJldmVudHMiKSwNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICBW
+ZXJ0aWNhbChMYWJlbCgiZXZlbnQgbmFtZSIsIGlkPSJldmVudF9uYW1lIiksDQo+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgU3RhdGljKCJkZXNjcmlwdGlvbiIsIG1hcmt1cD1G
+YWxzZSwgaWQ9ImV2ZW50X2Rlc2NyaXB0aW9uIiksDQo+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgKSkNCj4gKyAgICAgICAgeWllbGQgTGFiZWwoaWQ9ImFjdGl2ZV9zZWFyY2gi
+KQ0KPiArICAgICAgICB5aWVsZCBWZXJ0aWNhbFNjcm9sbChpZD0ibGluZXMiKQ0KPiArICAgICAg
+ICB5aWVsZCBGb290ZXIoaWQ9ImZvb3RlciIpDQo+ICsNCj4gKw0KPiArICAgIEBvbihUcmVlLk5v
+ZGVTZWxlY3RlZCkNCj4gKyAgICBkZWYgb25fdHJlZV9ub2RlX3NlbGVjdGVkKHNlbGYsIGV2ZW50
+OiBUcmVlLk5vZGVTZWxlY3RlZFtzdHJdKSAtPiBOb25lOg0KPiArICAgICAgICAiIiJDYWxsZWQg
+d2hlbiBhIHRyZWUgbm9kZSBpcyBzZWxlY3RlZCwgc2VsZWN0aW5nIHRoZSBldmVudC4iIiINCj4g
+KyAgICAgICAgaWYgZXZlbnQubm9kZS5wYXJlbnQgYW5kIGV2ZW50Lm5vZGUucGFyZW50LnBhcmVu
+dDoNCj4gKyAgICAgICAgICAgIGFzc2VydCBldmVudC5ub2RlLnBhcmVudC5kYXRhIGlzIG5vdCBO
+b25lDQo+ICsgICAgICAgICAgICBhc3NlcnQgZXZlbnQubm9kZS5kYXRhIGlzIG5vdCBOb25lDQo+
+ICsgICAgICAgICAgICBzZWxmLnNldF9wbXVfYW5kX2V2ZW50KGV2ZW50Lm5vZGUucGFyZW50LmRh
+dGEsIGV2ZW50Lm5vZGUuZGF0YSkNCj4gKw0KPiArDQo+ICtpZiBfX25hbWVfXyA9PSAiX19tYWlu
+X18iOg0KPiArICAgIGFwID0gYXJncGFyc2UuQXJndW1lbnRQYXJzZXIoKQ0KPiArICAgIGFwLmFk
+ZF9hcmd1bWVudCgnLUknLCAnLS1pbnRlcnZhbCcsIGhlbHA9IkNvdW50ZXIgdXBkYXRlIGludGVy
+dmFsIGluIHNlY29uZHMiLCBkZWZhdWx0PTAuMSkNCj4gKyAgICBhcmdzID0gYXAucGFyc2VfYXJn
+cygpDQo+ICsgICAgYXBwID0gSUxpc3RBcHAoZmxvYXQoYXJncy5pbnRlcnZhbCkpDQo+ICsgICAg
+YXBwLnJ1bigpDQoNCg==
