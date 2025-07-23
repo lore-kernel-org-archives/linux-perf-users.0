@@ -1,131 +1,182 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3231F1909;
-	Wed, 23 Jul 2025 22:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6340B273D65
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Jul 2025 22:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753308848; cv=none; b=EX7x88qPNZER2Xyn2YNVhD75hUZIxcU+fQtdjmlBQ2WvWQFOwje99qRLgppKHu8/bULkF5tiZFZeIZYA5Svs4THedUD7bhbBGLhZ8/Vmkhd/04xblkRqOiTbKEONNsAEeS0pEQAKgtAtXiLKX5uBSxOHLhgtOMXFgUR0pQ0Cadc=
+	t=1753309461; cv=none; b=Rb0A/V1vkLUF9rePr7TiIcAs6VYp92ySulaMHw5O7MAXChPBSlBz0lk+1068mP6z5sdqmmbeWhEWpTyHTzcscyC5bix6/PBw6RYFT3RDKUuCiajB8d8pLppZtPDRJ62FY/oTVFYr67+UmCZMsxkk3HzBEaY7jyh36P2mXR8V+uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753308848; c=relaxed/simple;
-	bh=1n2X3dSDnt+iiB9SB7H1HStj19tGyqnSrPupfMGdvpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ct8hKbaAG6t0uW+sTa9IaObbblRyN8SgxWo299DL3xpYBMG1JA4pa0PtWKEBQv1rRosGQxnPTVeKLcdz6CPPbG8l/olhWrB9SY+AWWGuNZEPRTzpOvyALiiefTRyokZMyGgbAQ6iL5a1wUqIi8rhg2OFp003oZ9/7dKsvzyXX2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bFqt3/4m; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1753309461; c=relaxed/simple;
+	bh=QZl+aj0jdfz6G6uJ4x4gxugiCYDMM6YaxpQVndTOsVE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D0DMt7E1lHUWbnZksEHVDp6VlOQw2hJCbXoJCmDUKTFaUccqiSC5s6VvptPDiZPpkP63pQP5HpWsKt6i4cXRznZcwVGF4Cy+db4F/OaKfussPjY+m2q9GZq8nbRgJQXb82a65GmURSMjxc2r64N+ryCx99Td1YIgOwOXOxYf0U4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tBRVQMBV; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bFqt3/4m"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-451d6ade159so1818685e9.1;
-        Wed, 23 Jul 2025 15:14:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tBRVQMBV"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3df371e1d29so36145ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Jul 2025 15:24:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753308845; x=1753913645; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1753309456; x=1753914256; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Dcxr9WChsXfgQ3Y6J1Tmdhs3S3jUnpYIY2ntdf391WI=;
-        b=bFqt3/4mU32+NzzFuMr6aQVhJVb7bdzVPZFmFxQo6JxoLprYBciWt8kzJs4nDTd5lh
-         /VgUvdbIGu0GDerYHo5l4Qdd5VvFMVmvjlmFXkmfkLmRTsVYYghhqW6mb/HTHRIGai6q
-         myqDsoutpISDXuTHKycFbFj/5yWHOqXQ+U6GlJPAkcK8dTXSaCsIZJKoIJ/MXukT/f5U
-         kZlptdFh+GoO1qdaQrXg7t3zoma5FqFjco/1WJuwr2VRWC9u2uuuhtYorbaXxAek59hM
-         tXl9laUCouF65Bsuwo/0RaXHQUOmreozQY1/ErIsZ3QhC6sjDrU0JgH6XZEyZOt/c10B
-         1d+g==
+        bh=v/c99hzy9f0/KLwI1t6QNyCBJcre+wNLwofDjJBXPRs=;
+        b=tBRVQMBVDVjHZQO261cR0AGgNoCGZKKiZCtMkIfxfVA7geCSuWyl0XO3D3Zz0KhWYI
+         1loJnpMrDZrOrvsE6xkC5299meRBsXRniUcNEFuNCf/Xh+naWh2S2ZuLGEe2ZDKmHBIJ
+         F6cOZW0QQjkW2N4IT/ugytMK57drmMgn/R5tp/NJaKhKTr9p1SrLHhuwCldS4YKEzpAy
+         2K77QOIj0rKW5Q/ULR3Uym5TT3q1m9jayoQMt3cDHcPWCtboAlxXVMZIQ5+WNTPeRxG/
+         OYCe/KbDiFDRj/CmcigHxcP7IbqagLTd9Rt52uVLY2AxxNLgEUQIaZ0DH0NX0NYMrt/O
+         fGpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753308845; x=1753913645;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1753309456; x=1753914256;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Dcxr9WChsXfgQ3Y6J1Tmdhs3S3jUnpYIY2ntdf391WI=;
-        b=UfS401Za6mnf4HIRuNx6a97cAyDLtBbUwb1T5PEMFZPgU/SMEIBW1Xtev4L8xWEqA2
-         PI6xqtaJ+F6FmdqsHnJNUNgnjJzq5fMqyBDhl/aj/RU45lTYDIbWx4Ft+AX+rAw6C4Fy
-         WRvaLlvJv438Uv/W2euzBJgGL+uf1L/N6NvIi+IbrnjloTGxxTnrL28X3hX+Cqd/aVna
-         i+GxY80nFC7CHQdNEsutimyU4wTRAg7lVMQuiZNEWhUMs77dx1dBCGGmq62g0Q52c80u
-         rrcZFmFwKlYbfhb8s/fEv3JtINarCMxXD1PAY7N6IlVk1JQvSPPPC3q7vqyEog3HOdGh
-         NVSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW2Nz6MsmvS6rbGZkE5XE83fjuvJiHru2Ygfww0NsyPH8UsBTM2jD+HA5NUxmXspdoVnFntsX0OySP5a2kHuJ8M0w==@vger.kernel.org, AJvYcCXIU744CuSzvHyXGz7BRJ2LitNekZamsoQWL8UVYC72WMCELONcNNdpHXPb4GQ+//cfyhtiePyuhhvmxDQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWgrZW/2ITsQFk24HeO9CcRBml97nSxhG0sA0hwEvqSXn6Un00
-	N/00IB/1llxwGm3pI2TsK8stDPElnu7Jxh7NUeLeFSy90cqmWwI3gU6k
-X-Gm-Gg: ASbGncuXqhoWGfoJUubm7eiKhp9pj6ddv9BF/DJCpxPAvcvg9Bu+93M33/pXu27lCP/
-	K9DJWocQXSsDyy/YlME0DcJX14TojzTr8DQM5oHaRVCIQf+fbzATXbhljOtbq6u+trLwxpsghME
-	sY5FVl15+Jkn2U/N8xxw/FzgZnSXc+Ecw+9jSOt+8hlac5r682piHY/yAPXghAig0W4jWiBEjyT
-	hF73EjXp0+HYwUwll1rO4zb8bssGHqwdPhSGb7eWcnqd7iy7WfXk27z8+5VVpQZlIiDWnF6dJ6b
-	LGuEhDaBVAVHCqfgBFURtjA1Jma8Bh/DoYF0MbXCPXfqhvef2Cilc0Y5VemyKRpry5nVJL6e9kp
-	raUPCj7XyxNI8hC1pbWOJvO4/Fq0v19OYH5V9CmSNvnE+hiix0PTGj8/C0ob5
-X-Google-Smtp-Source: AGHT+IEHu4yEUwkN54fD2xw9nPvwgj8fXax3ltxH3jc2G3S4Abiw8N8eyK0gVyU28RXmmWI5cYhJwA==
-X-Received: by 2002:a05:600c:3b1a:b0:43c:f8fc:f697 with SMTP id 5b1f17b1804b1-45868c8d67amr44059195e9.9.1753308845293;
-        Wed, 23 Jul 2025 15:14:05 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4586f433c0asm1824735e9.30.2025.07.23.15.14.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Jul 2025 15:14:05 -0700 (PDT)
-Date: Wed, 23 Jul 2025 23:14:03 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, kernel test robot <lkp@intel.com>,
- Eric Biggers <ebiggers@google.com>, Yuzhuo Jing <yuzhuo@google.com>, Andy
- Lutomirski <luto@kernel.org>, Vincenzo Frascino
- <vincenzo.frascino@arm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Al
- Viro <viro@zeniv.linux.org.uk>, Christophe Leroy
- <christophe.leroy@csgroup.eu>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v3 1/3] vdso: Switch get/put unaligned from packed
- struct to memcpy
-Message-ID: <20250723231403.6ef5c162@pumpkin>
-In-Reply-To: <CAP-5=fWeK4RnL8=BQm3o3u0KoONYEptwEYFBC5_DkJTbgpbx9g@mail.gmail.com>
-References: <20250626054826.433453-2-irogers@google.com>
-	<202507050736.b4hX0Xks-lkp@intel.com>
-	<87o6tcrzh2.ffs@tglx>
-	<CAP-5=fWbmo3ejmeWbweSk5waPtS2VTc1obtaWiibZC3cVmvVvg@mail.gmail.com>
-	<CAP-5=fWeK4RnL8=BQm3o3u0KoONYEptwEYFBC5_DkJTbgpbx9g@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        bh=v/c99hzy9f0/KLwI1t6QNyCBJcre+wNLwofDjJBXPRs=;
+        b=QKyBJR/lq2dxAjvdi9Ns+duIo0u76fx3+kY3tlMCaTFztD8BQeQlZ3fSWZpenzJgvZ
+         xRba3CjjBRXqVM+z1QtsF64KDdBPhdFBa5ddJo+mRU2ygInM0uRo5dA7cRp1me4OqwBs
+         Hy4FUU89OK86GftgzTbnPio2mSMpw/hOMxrsJ53xSKOcMbrOnzLsVXduc9xG5iFMMPPX
+         7aDu930ebbWU8+BfOry2GX1SFN5uR1tJ04HQiwaon9bCrHYVsOOITZ5SV4nHdo0PidPN
+         IyO56GH9urj6rROvxTMXZtlU8/uff62vYTrmWIoOuJxwVcT3bprttaIbGDz1aR/k47g1
+         u//g==
+X-Forwarded-Encrypted: i=1; AJvYcCXkp+7l//EilCbE7IXanKf/AEvF89g52pVvCRN9mQj+z7ptdIujLiR4bRXin6/JqqG6wdKFz5bag/6XH8u0IwxR@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDuQcRfWR+a2vomncIcDYqcirxShLzqHHij0rgfY8+s4edTBr2
+	TahT7j2dXIB1jAutancSaVkY54wtW7cZJTre3K3CoZJdpfBp2tqm/mgQ5P61CM4KkWyOdg3dRA7
+	WLUvvMgwMdtzrg6tc2ebJ1/U3eI0Rx7B7No3dL+X4
+X-Gm-Gg: ASbGncssIr7oylREb9tPwQgVRYmpxJPZSx+BI1lsdgNvq6c18Ue31+oG5UNFhSoq6TI
+	3BZldTxilwMFFmrrNfLuRyUezfSB8Q8czKBC7ChaZnM0TpnYGVAR/Arq4FMdLEt40xDl5fWD/fE
+	8DeWQPdbBtXvjqlo5EuUBKrpUXmloyBrgq5JMV7PSe5xvfWEu1FtSM6ve+f/ZMUzcO36XwbZ/TQ
+	6D1mOVeHFWzAmA1TmfI+Ds3j1RQkkTxcupe
+X-Google-Smtp-Source: AGHT+IEKdVNnHlUVJYqAzTrXSgC3eTihvKZPzpz9CHNj/OkdLzBJoUrZGNaFlqwcJY3jwVvyx6LDsWnsl6B0Ho91vJY=
+X-Received: by 2002:a05:6e02:3f0d:b0:3e3:a51f:dd71 with SMTP id
+ e9e14a558f8ab-3e3b740b1eemr532755ab.27.1753309456145; Wed, 23 Jul 2025
+ 15:24:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250714164405.111477-1-irogers@google.com> <20250714164405.111477-2-irogers@google.com>
+ <aIEmK1Ekly_HUJvV@google.com> <CAP-5=fWQQoo9OQhiQEyAGvUm-LVs7vpkbvEdnw7OO+KGBXiHqA@mail.gmail.com>
+In-Reply-To: <CAP-5=fWQQoo9OQhiQEyAGvUm-LVs7vpkbvEdnw7OO+KGBXiHqA@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 23 Jul 2025 15:24:04 -0700
+X-Gm-Features: Ac12FXxB9xzulQIVtlmJKWbQTIWlguHhPzyoltH2j09OZqPzlCdKAEB6-uylqtU
+Message-ID: <CAP-5=fVy1bMvMOWSKom10ivTbP_+baWk1=N7jjr4ye+LbM+bbQ@mail.gmail.com>
+Subject: Re: [PATCH v7 01/16] perf python: Add more exceptions on error paths
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Collin Funk <collin.funk1@gmail.com>, 
+	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Andi Kleen <ak@linux.intel.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Gautam Menghani <gautam@linux.ibm.com>, Thomas Falcon <thomas.falcon@intel.com>, 
+	Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 22 Jul 2025 10:00:51 -0700
-Ian Rogers <irogers@google.com> wrote:
+On Wed, Jul 23, 2025 at 11:21=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> On Wed, Jul 23, 2025 at 11:13=E2=80=AFAM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> >
+> > On Mon, Jul 14, 2025 at 09:43:49AM -0700, Ian Rogers wrote:
+> > > Returning NULL will cause the python interpreter to fail but not
+> > > report an error. If none wants to be returned then Py_None needs
+> > > returning. Set the error for the cases returning NULL so that more
+> > > meaningful interpreter behavior is had.
+> >
+> > It looks like you are adding error messages for the failure cases, not
+> > adding new exceptions, right?  IIUC returning NULL in pyrf_event__new()
+> > ends up having PyErr_NoMemory().  Then now it has different messages?
+>
+> This change doesn't alter the exception if there already is one. There
+> are lots of cases where NULL is being returned for an error but that
+> causes the python interpreter to fail/crash. This patch is just adding
+> the exceptions and still returning NULL, previously set exceptions are
+> left alone. With the exceptions returned the python interpreter does
+> something more useful than fail/crash :-)
+>
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/util/python.c | 14 +++++++++++---
+> > >  1 file changed, 11 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> > > index 2f28f71325a8..02544387f39d 100644
+> > > --- a/tools/perf/util/python.c
+> > > +++ b/tools/perf/util/python.c
+> > > @@ -475,13 +475,19 @@ static PyObject *pyrf_event__new(const union pe=
+rf_event *event)
+> > >       if ((event->header.type < PERF_RECORD_MMAP ||
+> > >            event->header.type > PERF_RECORD_SAMPLE) &&
+> > >           !(event->header.type =3D=3D PERF_RECORD_SWITCH ||
+> > > -           event->header.type =3D=3D PERF_RECORD_SWITCH_CPU_WIDE))
+> > > +           event->header.type =3D=3D PERF_RECORD_SWITCH_CPU_WIDE)){
+> > > +             PyErr_Format(PyExc_TypeError, "Unexpected header type %=
+u",
+> > > +                          event->header.type);
+> > >               return NULL;
+> > > +     }
+> > >
+> > >       // FIXME this better be dynamic or we need to parse everything
+> > >       // before calling perf_mmap__consume(), including tracepoint fi=
+elds.
+> > > -     if (sizeof(pevent->event) < event->header.size)
+> > > +     if (sizeof(pevent->event) < event->header.size) {
+> > > +             PyErr_Format(PyExc_TypeError, "Unexpected event version=
+: %zd < %u",
+> >
+> > Maybe "Unexpected event size" instead?
+>
+> I think size is more accurate to the code, version is more useful to
+> the user. I believe there is existing use of the event size being used
+> as a quasi version number, so I think this description is consistent.
+> If you feel strongly I can change it.
 
-...
-> Oh, the actual warning is "leaves the object uninitialized". It is
-> possible to silence this by changing:
-> 
->   const U16 __get_unaligned_ctrl_type __always_unused;
-> 
-> to something like:
-> 
->   const U16 __get_unaligned_ctrl_type __always_unused = 0;
-> 
-> You then get complained at that the code is using 0 instead of NULL
-> when instead of U16 the type of the __get_unaligned_t is a pointer.
-> Basically I've entered into an analysis tool wac-a-mole and I don't
-> have a combination to make them all happy.
+Actually I was thinking of the attribute size, let me fix this.
 
-Can you embed the variable inside a struct and then initialise with {} ?
+Thanks,
+Ian
 
-Does this code actually work all the time?
-There have always been 'problems' because gcc remembers the alignment
-of pointers through (void *) casts.
-So if your misaligned pointer has a type that should be aligned
-them memcpy(&dest, (void *)misaligned_int_ptr, 4) will still do an
-aligned read.
-
-You also really need the compiler to optimise the memcpy into two
-memory reads, some shifts, masks and ors, and a single write to a
-register.
-I'm not at all sure that is going to happen.
-(Especially since I've never seen it optimised to only two reads
-even when reading 'packed' variables.
-
-	David
-
-> 
 > Thanks,
 > Ian
-> 
-
+>
+> > Thanks,
+> > Namhyung
+> >
+> >
+> > > +                          sizeof(pevent->event), event->header.size)=
+;
+> > >               return NULL;
+> > > +     }
+> > >
+> > >       ptype =3D pyrf_event__type[event->header.type];
+> > >       pevent =3D PyObject_New(struct pyrf_event, ptype);
+> > > @@ -1199,8 +1205,10 @@ static PyObject *pyrf_evlist__read_on_cpu(stru=
+ct pyrf_evlist *pevlist,
+> > >               return NULL;
+> > >
+> > >       md =3D get_md(evlist, cpu);
+> > > -     if (!md)
+> > > +     if (!md) {
+> > > +             PyErr_Format(PyExc_TypeError, "Unknown CPU '%d'", cpu);
+> > >               return NULL;
+> > > +     }
+> > >
+> > >       if (perf_mmap__read_init(&md->core) < 0)
+> > >               goto end;
+> > > --
+> > > 2.50.0.727.gbf7dc18ff4-goog
+> > >
