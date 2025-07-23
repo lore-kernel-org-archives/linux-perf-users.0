@@ -1,55 +1,55 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C789274666
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Jul 2025 23:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B532749CB
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Jul 2025 23:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753312985; cv=none; b=YLzqxkl5pfsryKHE1flQdoN0WyMSa++smDg6Wj4FTHQZrZ4a+d5Uz3lK0wSYmg8QCDG9DefcNhO51eeKovGyCojpcUUpmHH/0IUnh0CP1mgkotaP6cWm7d4ZHpcW0mWwfHrewcMYeYTNVt1/SZwsAIpFTlvgHQKlE2yKCJDSvH0=
+	t=1753312990; cv=none; b=ZYKRKTGv7pVkjC1iJYIqQ49ERwPS+v1MlcNN6hOi4Xv2MQmP0oltH6MampVH3pNp1vOlpbCfMlNHUaHsttI6amerZCDL3O4uo1fZAkBpQC/vP0bnAROWiTpyYutrBSn1JOLXAKabjQAndYnqgKb0psYJGbnDuaeKznwU2/7CW2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753312985; c=relaxed/simple;
-	bh=ITH+WGnIDk5Syvv1E7DWgL8Gj28bdzS/hdWom7U5GlY=;
+	s=arc-20240116; t=1753312990; c=relaxed/simple;
+	bh=IsJcOq3wGalG+joiiKDrUg/a4tf1pjR+BiJdR4fqGv4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UktHeyAojGRH2VBv90dYh8q8UBFlSKNMcylG1dduUz7k8qvTDAKdL28IT2icG928OvMie+49/eD++UpjffIMtBHagTKRF9qV2HkxBYLlj8Nf84ws0pEvJRlF4+zGeTmv0hkrphgL4D7F9l2LlJIZw4Cf1GNR8bCHHa56AROW5/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N+Qyj7MX; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=l9vFXCIKistwkpU5QUplK4TBPZBslp05QJb/ZevrsZoZ/0yGm0uGX7wa9IYVW240iQlPOv8CP67dXFYZv0ivXaBrqTAtmLIr08oTMQ3gwYg4HW+7wMRM9sV5xFKRTwGsPLxBLfE7DUjp2uOR7paWLTNHEZDNidtIPvu1T8l+uJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X90Os1hc; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N+Qyj7MX"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-748d96b974cso325883b3a.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Jul 2025 16:23:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X90Os1hc"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3132c1942a1so544921a91.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Jul 2025 16:23:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753312983; x=1753917783; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1753312988; x=1753917788; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PRH6HZKDKoaKwPBOk/dUfxHlkHKgENKAsBPm6OWaIbk=;
-        b=N+Qyj7MXYz6fXP75H75woRUm6AIKp8mRpJ75x4bK47Bb7FpyhuSVFXotDo5PiyPwkG
-         TqqHFHkFDfmRztF1jwwmbo9XnNp1ES2G0FxOAjQ/lu64hKzoQQf5GT0SCqg8ZZyEQKja
-         FzoSXCUEaPWx7qHQeCUoKBDibERz5nh05Vk/2byCetilPjXo+2ju2wT17RjtTr7I9r/6
-         9YncYdz5OOP9+OraErMYADOpWQ6ePVS702OBqxpRYJCjBwhS+oZ73zP00c5QcjBaTcsZ
-         352lZFgx5P2ONpRpQy4iD35Zj9UHcnJ/qBeQ0TFh2bCAAyL1Dnxf43dAL1Cr8fFDoFdn
-         ArCg==
+        bh=oVItISMGBRXYY23ho5sLW0N44o7z13JmOf4xsnODe64=;
+        b=X90Os1hchJtIRN/I4VgolNtj2knBOnCX7qy2wqeTBePfKZZG/n1Jk8XnXnA5ZEQbKY
+         Raoq903MVAnt9QmvoSP2hcd8o4lBbCiqYXBVHbe2hTRmTIf803u3CJLg1H9LR0Lbx+WL
+         vv+RAaJ4P6UxKoIOSykmwnYGrhJGbbybfbCvyzw2GFDBzH6rxsmd2HRxtLx/JqTS0d+u
+         3jjNtvugDZF9DZDsQim4BV79bnR2A0Y6iL1oAuHtm3hk/M5RhKJ/biN78mTq0JnKnAhZ
+         85gOvMRNL36lr3ccnw3qJ6gyplL8QLIC7V42h6El1t5DqHcggv/PXa+TrZ6S9dHrb8xU
+         mDxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753312983; x=1753917783;
+        d=1e100.net; s=20230601; t=1753312988; x=1753917788;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PRH6HZKDKoaKwPBOk/dUfxHlkHKgENKAsBPm6OWaIbk=;
-        b=YuuJcSugNfSwcVFfzmPI7z//2pL1B9TvDnPCJUpxUcFz1wYdMzFab1Z4sIDeB7UO0R
-         31NNuqzlPM5j1kCdtm7KEdc04+3jM+gqCHMPvUVupIHz+uCFoEYdpUPcl0F++0wj9YkX
-         KF4hKKtOoteacXBsxLZIKui41ZCLXpSQpSYTXHlLP8W5OH1rmWpvyTyvpb8IUj3Lbls6
-         nz7n/HSpuEUTiQ+dsnc0e4al3zfEMriexgTD9ZD8vR8jRqSbtu8s5WgEXYMJiHiYiwcU
-         YPMbjvHwZ1D1EJc78w6dBDTMpjGhoj6r+2fpS8pCUGdXwfFUSEwgcnkMHcpTYa/qEyDR
-         vr6A==
-X-Forwarded-Encrypted: i=1; AJvYcCUCBApJyZeg2Vi1WXF9DtBfmrz1hHmz+w8eppFmr9MzFolzR54hDWeC/baNDzv8e28mhf5m8HlT9Q8vv50ocIqQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpPyZahxBQOFUoiYSjA22+4hGjE0waLt5u2N/QT1tCeoGP1KqE
-	fN4qB9iU9EUvX0APUO/YaSkwZD0j9jReP2fYizKq7ykKXGjbWIDl7k//c9oNEcZFzVGXSi9exc1
-	8XZg5h2urMg==
-X-Google-Smtp-Source: AGHT+IEBQmFOYJpk7Vc0ebapw8BkruPXjwGsNAnot1LFhemYBwzPPibAyobqm5RTp2kHLpNHNEWBdbUQkP6O
-X-Received: from pftb15.prod.google.com ([2002:a05:6a00:2cf:b0:746:2d8f:cac1])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1a91:b0:757:51d:9dd9
- with SMTP id d2e1a72fcca58-76035de66bdmr6476770b3a.17.1753312983098; Wed, 23
- Jul 2025 16:23:03 -0700 (PDT)
-Date: Wed, 23 Jul 2025 16:22:07 -0700
+        bh=oVItISMGBRXYY23ho5sLW0N44o7z13JmOf4xsnODe64=;
+        b=n7iA7mFlpRKjonA/czS69IksURe9Wlx0lQOn+8uielegsOaMvjKZKsd13x1nJkFYD1
+         xlaqjRnOLhCFOXAK7VMWJp42k5q/lLHMbKmRFrU3OImQ8BfEDa7wXlCYNcnfaE2B1kPJ
+         BaDVkXIE1CHoTRY7npD2h7fxE7s1BLOIhmF+/Meoq94kNkYKAmbY0xpauQsmQ0YcETWL
+         u8RchmG12L1/6on2G26GUkyf2JjyVLz4SE8itylzRGLVA88Qjcta+rZ0NOAGbfnK/JR0
+         cU1URSyVURRX5zVrmZZTECxsnCAUdLYJKFoi3yJCxUJIKVIlLihJwoZEYGkvn1CH9Ri3
+         +HZw==
+X-Forwarded-Encrypted: i=1; AJvYcCWwKLcrMEpu/DcRY77hm55nTWI4P/m+eAPGv1nQCOgcCvtZg9/esPv0IoskbACkfgJ7aMrmZJRI2aFGfMYYWUKG@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSX2LloLn2ZuOtB9RX/7GH4X+lVFkWlXFUdCqJ0LZ4Gjxo3eib
+	XdkQkfHnWl8Xs/zIat9fnwrOZ06eMkObMuZFA9IlOkzzy44heh1xf2VFsMeY3gUZHLbzdAPr5Rv
+	a9kLJLZTaxg==
+X-Google-Smtp-Source: AGHT+IFcDcN5IzqZxloQ0osGicyNu7AlkEa73gtmuy+1tLDPEMcAP8QkQFM73JpvcXCs7KLVVeNAZNHAxlyb
+X-Received: from pjbse12.prod.google.com ([2002:a17:90b:518c:b0:31c:2fe4:33b5])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:184d:b0:313:1769:eb49
+ with SMTP id 98e67ed59e1d1-31e50735c36mr7658032a91.8.1753312988654; Wed, 23
+ Jul 2025 16:23:08 -0700 (PDT)
+Date: Wed, 23 Jul 2025 16:22:08 -0700
 In-Reply-To: <20250723232217.516179-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250723232217.516179-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250723232217.516179-7-irogers@google.com>
-Subject: [PATCH v8 06/16] perf list: Remove tracepoint printing code
+Message-ID: <20250723232217.516179-8-irogers@google.com>
+Subject: [PATCH v8 07/16] perf list: Skip ABI PMUs when printing pmu values
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -78,208 +78,174 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Now that the tp_pmu can iterate and describe events remove the custom
-tracepoint printing logic, this avoids perf list showing the
-tracepoint events twice.
+Avoid printing tracepoint, legacy and software events when listing for
+the pmu option. Add the PMU type to the print_event callbacks to ease
+detection.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-list.c      | 29 ++++++++---
- tools/perf/util/print-events.c | 93 ----------------------------------
- tools/perf/util/print-events.h |  2 -
- 3 files changed, 23 insertions(+), 101 deletions(-)
+ tools/perf/builtin-list.c      | 17 +++++++++++++----
+ tools/perf/util/pfm.c          |  2 ++
+ tools/perf/util/pmus.c         |  2 ++
+ tools/perf/util/print-events.c |  5 +++++
+ tools/perf/util/print-events.h |  2 +-
+ 5 files changed, 23 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 674bb0afbf93..3a4061d02f6c 100644
+index 3a4061d02f6c..caf42276bd0f 100644
 --- a/tools/perf/builtin-list.c
 +++ b/tools/perf/builtin-list.c
-@@ -614,9 +614,18 @@ int cmd_list(int argc, const char **argv)
- 	for (i = 0; i < argc; ++i) {
- 		char *sep, *s;
+@@ -58,6 +58,8 @@ struct print_state {
+ 	bool metrics;
+ 	/** @metricgroups: Controls printing of metric and metric groups. */
+ 	bool metricgroups;
++	/** @exclude_abi: Exclude PMUs with types less than PERF_TYPE_MAX except PERF_TYPE_RAW. */
++	bool exclude_abi;
+ 	/** @last_topic: The last printed event topic. */
+ 	char *last_topic;
+ 	/** @last_metricgroups: The last printed metric group. */
+@@ -113,7 +115,8 @@ static void wordwrap(FILE *fp, const char *s, int start, int max, int corr)
+ 	}
+ }
  
--		if (strcmp(argv[i], "tracepoint") == 0)
--			print_tracepoint_events(&print_cb, ps);
--		else if (strcmp(argv[i], "hw") == 0 ||
-+		if (strcmp(argv[i], "tracepoint") == 0) {
-+			char *old_pmu_glob = default_ps.pmu_glob;
+-static void default_print_event(void *ps, const char *topic, const char *pmu_name,
++static void default_print_event(void *ps, const char *topic,
++				const char *pmu_name, u32 pmu_type,
+ 				const char *event_name, const char *event_alias,
+ 				const char *scale_unit __maybe_unused,
+ 				bool deprecated, const char *event_type_desc,
+@@ -130,6 +133,9 @@ static void default_print_event(void *ps, const char *topic, const char *pmu_nam
+ 	if (print_state->pmu_glob && pmu_name && !strglobmatch(pmu_name, print_state->pmu_glob))
+ 		return;
+ 
++	if (print_state->exclude_abi && pmu_type < PERF_TYPE_MAX && pmu_type != PERF_TYPE_RAW)
++		return;
 +
-+			default_ps.pmu_glob = strdup("tracepoint");
-+			if (!default_ps.pmu_glob) {
-+				ret = -1;
-+				goto out;
-+			}
-+			perf_pmus__print_pmu_events(&print_cb, ps);
-+			zfree(&default_ps.pmu_glob);
-+			default_ps.pmu_glob = old_pmu_glob;
-+		} else if (strcmp(argv[i], "hw") == 0 ||
- 			 strcmp(argv[i], "hardware") == 0)
- 			print_symbol_events(&print_cb, ps, PERF_TYPE_HARDWARE,
- 					event_symbols_hw, PERF_COUNT_HW_MAX);
-@@ -658,6 +667,7 @@ int cmd_list(int argc, const char **argv)
- #endif
- 		else if ((sep = strchr(argv[i], ':')) != NULL) {
- 			char *old_pmu_glob = default_ps.pmu_glob;
-+			char *old_event_glob = default_ps.event_glob;
+ 	if (print_state->event_glob &&
+ 	    (!event_name || !strglobmatch(event_name, print_state->event_glob)) &&
+ 	    (!event_alias || !strglobmatch(event_alias, print_state->event_glob)) &&
+@@ -354,7 +360,8 @@ static void fix_escape_fprintf(FILE *fp, struct strbuf *buf, const char *fmt, ..
+ 	fputs(buf->buf, fp);
+ }
  
- 			default_ps.event_glob = strdup(argv[i]);
- 			if (!default_ps.event_glob) {
-@@ -665,13 +675,21 @@ int cmd_list(int argc, const char **argv)
- 				goto out;
- 			}
- 
--			print_tracepoint_events(&print_cb, ps);
-+			default_ps.pmu_glob = strdup("tracepoint");
-+			if (!default_ps.pmu_glob) {
-+				zfree(&default_ps.event_glob);
-+				ret = -1;
-+				goto out;
-+			}
-+			perf_pmus__print_pmu_events(&print_cb, ps);
-+			zfree(&default_ps.pmu_glob);
-+			default_ps.pmu_glob = old_pmu_glob;
- 			print_sdt_events(&print_cb, ps);
- 			default_ps.metrics = true;
- 			default_ps.metricgroups = true;
- 			metricgroup__print(&print_cb, ps);
- 			zfree(&default_ps.event_glob);
--			default_ps.pmu_glob = old_pmu_glob;
-+			default_ps.event_glob = old_event_glob;
- 		} else {
- 			if (asprintf(&s, "*%s*", argv[i]) < 0) {
- 				printf("Critical: Not enough memory! Trying to continue...\n");
-@@ -682,7 +700,6 @@ int cmd_list(int argc, const char **argv)
- 					event_symbols_hw, PERF_COUNT_HW_MAX);
+-static void json_print_event(void *ps, const char *topic, const char *pmu_name,
++static void json_print_event(void *ps, const char *topic,
++			     const char *pmu_name, u32 pmu_type __maybe_unused,
+ 			     const char *event_name, const char *event_alias,
+ 			     const char *scale_unit,
+ 			     bool deprecated, const char *event_type_desc,
+@@ -647,9 +654,11 @@ int cmd_list(int argc, const char **argv)
+ 		} else if (strcmp(argv[i], "cache") == 0 ||
+ 			 strcmp(argv[i], "hwcache") == 0)
  			print_hwcache_events(&print_cb, ps);
+-		else if (strcmp(argv[i], "pmu") == 0)
++		else if (strcmp(argv[i], "pmu") == 0) {
++			default_ps.exclude_abi = true;
  			perf_pmus__print_pmu_events(&print_cb, ps);
--			print_tracepoint_events(&print_cb, ps);
+-		else if (strcmp(argv[i], "sdt") == 0)
++			default_ps.exclude_abi = false;
++		} else if (strcmp(argv[i], "sdt") == 0)
  			print_sdt_events(&print_cb, ps);
- 			default_ps.metrics = true;
- 			default_ps.metricgroups = true;
+ 		else if (strcmp(argv[i], "metric") == 0 || strcmp(argv[i], "metrics") == 0) {
+ 			default_ps.metricgroups = false;
+diff --git a/tools/perf/util/pfm.c b/tools/perf/util/pfm.c
+index 0dacc133ed39..15fc3898ec83 100644
+--- a/tools/perf/util/pfm.c
++++ b/tools/perf/util/pfm.c
+@@ -234,6 +234,7 @@ print_libpfm_event(const struct print_callbacks *print_cb, void *print_state,
+ 
+ 	if (is_libpfm_event_supported(name, cpus, threads)) {
+ 		print_cb->print_event(print_state, topic, pinfo->name,
++				      /*pmu_type=*/PERF_TYPE_RAW,
+ 				      name, info->equiv,
+ 				      /*scale_unit=*/NULL,
+ 				      /*deprecated=*/NULL, "PFM event",
+@@ -269,6 +270,7 @@ print_libpfm_event(const struct print_callbacks *print_cb, void *print_state,
+ 			print_cb->print_event(print_state,
+ 					topic,
+ 					pinfo->name,
++					/*pmu_type=*/PERF_TYPE_RAW,
+ 					name, /*alias=*/NULL,
+ 					/*scale_unit=*/NULL,
+ 					/*deprecated=*/NULL, "PFM event",
+diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+index 409b909cfa02..004f5f0c621f 100644
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -645,6 +645,7 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
+ 		print_cb->print_event(print_state,
+ 				aliases[j].topic,
+ 				aliases[j].pmu_name,
++				aliases[j].pmu->type,
+ 				aliases[j].name,
+ 				aliases[j].alias,
+ 				aliases[j].scale_unit,
+@@ -749,6 +750,7 @@ void perf_pmus__print_raw_pmu_events(const struct print_callbacks *print_cb, voi
+ 		print_cb->print_event(print_state,
+ 				/*topic=*/NULL,
+ 				/*pmu_name=*/NULL,
++				pmu->type,
+ 				format_args.short_string.buf,
+ 				/*event_alias=*/NULL,
+ 				/*scale_unit=*/NULL,
 diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-index c1a8708b55ab..3a5e5e7bae13 100644
+index 3a5e5e7bae13..4153124a9948 100644
 --- a/tools/perf/util/print-events.c
 +++ b/tools/perf/util/print-events.c
-@@ -44,97 +44,6 @@ static const char * const event_type_descriptors[] = {
- 	"Hardware breakpoint",
- };
- 
--/*
-- * Print the events from <debugfs_mount_point>/tracing/events
-- */
--void print_tracepoint_events(const struct print_callbacks *print_cb __maybe_unused, void *print_state __maybe_unused)
--{
--	char *events_path = get_tracing_file("events");
--	int events_fd = open(events_path, O_PATH);
--	struct dirent **sys_namelist = NULL;
--	int sys_items;
--
--	if (events_fd < 0) {
--		pr_err("Error: failed to open tracing events directory\n");
--		pr_err("%s: %s\n", events_path, strerror(errno));
--		return;
--	}
--	put_tracing_file(events_path);
--
--	sys_items = tracing_events__scandir_alphasort(&sys_namelist);
--
--	for (int i = 0; i < sys_items; i++) {
--		struct dirent *sys_dirent = sys_namelist[i];
--		struct dirent **evt_namelist = NULL;
--		int dir_fd;
--		int evt_items;
--
--		if (sys_dirent->d_type != DT_DIR ||
--		    !strcmp(sys_dirent->d_name, ".") ||
--		    !strcmp(sys_dirent->d_name, ".."))
--			goto next_sys;
--
--		dir_fd = openat(events_fd, sys_dirent->d_name, O_PATH);
--		if (dir_fd < 0)
--			goto next_sys;
--
--		evt_items = scandirat(events_fd, sys_dirent->d_name, &evt_namelist, NULL, alphasort);
--		for (int j = 0; j < evt_items; j++) {
--			/*
--			 * Buffer sized at twice the max filename length + 1
--			 * separator + 1 \0 terminator.
--			 */
--			char buf[NAME_MAX * 2 + 2];
--			/* 16 possible hex digits and 22 other characters and \0. */
--			char encoding[16 + 22];
--			struct dirent *evt_dirent = evt_namelist[j];
--			struct io id;
--			__u64 config;
--
--			if (evt_dirent->d_type != DT_DIR ||
--			    !strcmp(evt_dirent->d_name, ".") ||
--			    !strcmp(evt_dirent->d_name, ".."))
--				goto next_evt;
--
--			snprintf(buf, sizeof(buf), "%s/id", evt_dirent->d_name);
--			io__init(&id, openat(dir_fd, buf, O_RDONLY), buf, sizeof(buf));
--
--			if (id.fd < 0)
--				goto next_evt;
--
--			if (io__get_dec(&id, &config) < 0) {
--				close(id.fd);
--				goto next_evt;
--			}
--			close(id.fd);
--
--			snprintf(buf, sizeof(buf), "%s:%s",
--				 sys_dirent->d_name, evt_dirent->d_name);
--			snprintf(encoding, sizeof(encoding), "tracepoint/config=0x%llx/", config);
--			print_cb->print_event(print_state,
--					/*topic=*/NULL,
--					/*pmu_name=*/NULL, /* really "tracepoint" */
--					/*event_name=*/buf,
--					/*event_alias=*/NULL,
--					/*scale_unit=*/NULL,
--					/*deprecated=*/false,
--					"Tracepoint event",
--					/*desc=*/NULL,
--					/*long_desc=*/NULL,
--					encoding);
--next_evt:
--			free(evt_namelist[j]);
--		}
--		close(dir_fd);
--		free(evt_namelist);
--next_sys:
--		free(sys_namelist[i]);
--	}
--
--	free(sys_namelist);
--	close(events_fd);
--}
--
- void print_sdt_events(const struct print_callbacks *print_cb, void *print_state)
- {
- 	struct strlist *bidlist, *sdtlist;
-@@ -552,8 +461,6 @@ void print_events(const struct print_callbacks *print_cb, void *print_state)
- 			/*long_desc=*/NULL,
- 			/*encoding_desc=*/NULL);
- 
--	print_tracepoint_events(print_cb, print_state);
--
- 	print_sdt_events(print_cb, print_state);
- 
- 	metricgroup__print(print_cb, print_state);
+@@ -121,6 +121,7 @@ void print_sdt_events(const struct print_callbacks *print_cb, void *print_state)
+ 		print_cb->print_event(print_state,
+ 				/*topic=*/NULL,
+ 				/*pmu_name=*/NULL,
++				PERF_TYPE_TRACEPOINT,
+ 				evt_name ?: sdt_name->s,
+ 				/*event_alias=*/NULL,
+ 				/*deprecated=*/false,
+@@ -222,6 +223,7 @@ int print_hwcache_events(const struct print_callbacks *print_cb, void *print_sta
+ 					print_cb->print_event(print_state,
+ 							"cache",
+ 							pmu->name,
++							pmu->type,
+ 							name,
+ 							alias_name,
+ 							/*scale_unit=*/NULL,
+@@ -278,6 +280,7 @@ void print_symbol_events(const struct print_callbacks *print_cb, void *print_sta
+ 		print_cb->print_event(print_state,
+ 				/*topic=*/NULL,
+ 				/*pmu_name=*/NULL,
++				type,
+ 				nd->s,
+ 				alias,
+ 				/*scale_unit=*/NULL,
+@@ -438,6 +441,7 @@ void print_events(const struct print_callbacks *print_cb, void *print_state)
+ 	print_cb->print_event(print_state,
+ 			/*topic=*/NULL,
+ 			/*pmu_name=*/NULL,
++			PERF_TYPE_RAW,
+ 			"rNNN",
+ 			/*event_alias=*/NULL,
+ 			/*scale_unit=*/NULL,
+@@ -452,6 +456,7 @@ void print_events(const struct print_callbacks *print_cb, void *print_state)
+ 	print_cb->print_event(print_state,
+ 			/*topic=*/NULL,
+ 			/*pmu_name=*/NULL,
++			PERF_TYPE_BREAKPOINT,
+ 			"mem:<addr>[/len][:access]",
+ 			/*scale_unit=*/NULL,
+ 			/*event_alias=*/NULL,
 diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-events.h
-index 48682e2d166d..4d95b8257e23 100644
+index 4d95b8257e23..d6ba384f0c66 100644
 --- a/tools/perf/util/print-events.h
 +++ b/tools/perf/util/print-events.h
-@@ -37,8 +37,6 @@ void print_sdt_events(const struct print_callbacks *print_cb, void *print_state)
- void print_symbol_events(const struct print_callbacks *print_cb, void *print_state,
- 			 unsigned int type, const struct event_symbol *syms,
- 			 unsigned int max);
--
--void print_tracepoint_events(const struct print_callbacks *print_cb, void *print_state);
- void metricgroup__print(const struct print_callbacks *print_cb, void *print_state);
- bool is_event_supported(u8 type, u64 config);
- 
+@@ -12,7 +12,7 @@ struct print_callbacks {
+ 	void (*print_start)(void *print_state);
+ 	void (*print_end)(void *print_state);
+ 	void (*print_event)(void *print_state, const char *topic,
+-			const char *pmu_name,
++			const char *pmu_name, u32 pmu_type,
+ 			const char *event_name, const char *event_alias,
+ 			const char *scale_unit,
+ 			bool deprecated, const char *event_type_desc,
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
