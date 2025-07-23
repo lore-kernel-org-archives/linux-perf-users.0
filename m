@@ -1,52 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D45433A6;
-	Wed, 23 Jul 2025 01:03:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E87F78F26;
+	Wed, 23 Jul 2025 01:05:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753232632; cv=none; b=sHN7eCUwiwUICy9N3YKxngZfJKUXoa+K9zmfAQFcAh1udTd5MgXsO3W19ChCtfliyMEaXS/FzTRhRFUjTkIsQgRm1lBdLXhAalxKuyV3Tbap8exIHjGFdUbTE8/GoDVT6j2iJnh21BAEfyejjWwr+oN9Y1CMZNYUV3O3mSKJVL8=
+	t=1753232740; cv=none; b=LE9EywCjyw812bN72Nu955U8Mwp67GkY4/zMCRi4ke83ErimidHm7SigE6zCwkmHCWDN+xySBfVBADIWQPmNec73TwjOE1Nhu6bM5Pfo28PmX/a0UK6Y4AaNGSrx7KT63bIahoSrPaBwdfairdo33LmFP8WB6JVT0Ixz+Ukv1do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753232632; c=relaxed/simple;
-	bh=0gHO6zQzPlUf/Uh6AXsJ5KQkA7TVuorKLs8I2rKnc9U=;
+	s=arc-20240116; t=1753232740; c=relaxed/simple;
+	bh=e2DyZmmSsCT3bMt2g8K8/Y1GL9j82NXslnA1an1SnSY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IVjsMkHdDbexOe0ZmOyukpcOQyYvxR77V3XNQnv6uoNF+zSItL6eVOIen0FWXqApqqXSqS8jx1aSxUaZwn8Adx1gDewvwtJZy8O2NUqrIRTned9FgjNmIczlCmv8+KTkURpfQm9Hqop9mI4dkXKhXGRMZ7YJZKHw3hyj8lMqinM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JMpgd6wu; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mzQaay9qV7cowHCSZv9S4s7F7tybS/vWnToDz10GPc81ZD2pXVrFrszSRcjBlj6sPjW34iwdBAABCl/5Uo9pi45CLs9ALEUyxZP4bBO72QNc6HTqG/PPNeoDuyJFqEnUQ9icuEromybH5j9RxleOmENnI6jgNcznsqhrvG8yNrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rhrJrcpx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JMpgd6wu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54F1DC4CEEB;
-	Wed, 23 Jul 2025 01:03:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rhrJrcpx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64A1AC4CEEB;
+	Wed, 23 Jul 2025 01:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753232632;
-	bh=0gHO6zQzPlUf/Uh6AXsJ5KQkA7TVuorKLs8I2rKnc9U=;
+	s=k20201202; t=1753232740;
+	bh=e2DyZmmSsCT3bMt2g8K8/Y1GL9j82NXslnA1an1SnSY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JMpgd6wuxyTVLgY24ux2bD7+eb9qM0Pqh6eS4Vgxbjf+PoSmjXS/yRA39M5rd7T2v
-	 g1w12pN3R2xkacgEcb56qA7oTFmnlCcFbYyGvKvkZ9RWooVSLDkvTvuf+2k97bpKPu
-	 XUw6OeZz6+WC1mabJrZItppUprvFYELNWx1LpMwaSSSfQZm4ziC7UiBxTxHxowkdzJ
-	 n/v9EtQNgLbJ1WweB/FSJIOJHRy3QmKtxq/qKUjB66ZlKU/kIRSMKBtrUerYOyYf6l
-	 EQJAMswV/XZUON5yB8TRCkaCPTOJL2nfhSUZW7SWJAgPzp5+DYWPL5mjN70NYJQ7Wq
-	 vF2wruagUHExg==
-Date: Tue, 22 Jul 2025 18:03:49 -0700
+	b=rhrJrcpxZM6pvFEQtZRlMwqaiAeQSTkK/AR6+GQWCxMmbsPCJGvEKjkYp3CDjV0mR
+	 JkO2hnI+ClH75XAEXQzehaAKYvYLkWsk1uB5W5XeIXj4QVLiK8LIvjiiAYKuvZADkC
+	 K25vnIGNPSWG/fmTN2ro6KZBoCu87Z71SIBKrA8tynwBFB+jV3l0hmowPI3KhHfV3H
+	 gyVab42sfid5DIa52gJz4gubuhTAHnO4Vk8dWo1DhxX0fGqR8xAqqb9S4+OI65gtLD
+	 3mw8pESVVKFLcZfI/70/0SwdOEqBLSXTQOwxEN5HA4AeW0njsElTANJQTxxJ0z1A6N
+	 4yL8HQL8f4KhQ==
+Date: Tue, 22 Jul 2025 18:05:38 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Thomas Falcon <thomas.falcon@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	James Clark <james.clark@linaro.org>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] perf topdown: Use attribute to see an event is a
- topdown metic or slots
-Message-ID: <aIA09RLkeKjeUCnB@google.com>
-References: <20250718132750.1546457-1-irogers@google.com>
+To: "Falcon, Thomas" <thomas.falcon@intel.com>
+Cc: "linux-actions@lists.infradead.org" <linux-actions@lists.infradead.org>,
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+	"Biggers, Caleb" <caleb.biggers@intel.com>,
+	"Hunter, Adrian" <adrian.hunter@intel.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"irogers@google.com" <irogers@google.com>,
+	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
+	"mark.rutland@arm.com" <mark.rutland@arm.com>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"Wang, Weilin" <weilin.wang@intel.com>,
+	"mani@kernel.org" <mani@kernel.org>,
+	"acme@kernel.org" <acme@kernel.org>,
+	"afaerber@suse.de" <afaerber@suse.de>,
+	"jolsa@kernel.org" <jolsa@kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v1 00/19] Intel TMA 5.1 metrics and event updates
+Message-ID: <aIA1YubpL7wpiC0X@google.com>
+References: <20250719034515.2000467-1-irogers@google.com>
+ <e09bab119c9fb6b0c2b5bcd39c6f2b508445ca37.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,306 +58,139 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250718132750.1546457-1-irogers@google.com>
+In-Reply-To: <e09bab119c9fb6b0c2b5bcd39c6f2b508445ca37.camel@intel.com>
 
-On Fri, Jul 18, 2025 at 06:27:49AM -0700, Ian Rogers wrote:
-> The string comparisons were overly broad and could fire for the
-> incorrect PMU and events. Switch to using the config in the attribute
-> then add a perf test to confirm the attribute config values match
-> those of parsed events of that name and don't match others. This
-> exposed matches for slots events that shouldn't have matched as the
-> slots fixed counter event, such as topdown.slots_p.
+On Tue, Jul 22, 2025 at 06:14:30PM +0000, Falcon, Thomas wrote:
+> On Fri, 2025-07-18 at 20:44 -0700, Ian Rogers wrote:
+> > Update events from:
+> > v1.31 -> v1.33 for alderlake
+> > v1.09 -> v1.12 for arrowlake
+> > v1.14 -> v1.16 for emeraldrapids
+> > v1.10 -> v1.12 for graniterpaids
+> > v1.14 -> v1.17 for lunarlake
+> > v1.14 -> v1.16 for meteorlake
+> > v1.28 -> v1.30 for sapphirerapids
+> > 
+> > Update TMA 5.0 to 5.1 removing the slots event workaround as the patch series:
+> > https://lore.kernel.org/lkml/20250719030517.1990983-1-irogers@google.com/
+> > is assumed.
+
+So I'll merge this series after the above patchset.
+
+> > 
+> > The patches are generated by:
+> > https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+> > with pull requests 323 and 324 applied.
+> > 
 > 
-> Fixes: fbc798316bef ("perf x86/topdown: Refine helper arch_is_topdown_metrics()")
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Hi Ian, metrics tests look good on my alder lake and arrow lake.
+> 
+> Tested-by: Thomas Falcon <thomas.falcon@intel.com>
 
-Dapeng, are you ok with this (or Ian's TMA fix v3 below)?
-
-https://lore.kernel.org/r/20250719030517.1990983-1-irogers@google.com
-
-Thanks,
+Thanks for the test!
 Namhyung
 
-
-> ---
-> v2: In test rename topdown_pmu to p_core_pmu for clarity.
-> ---
->  tools/perf/arch/x86/include/arch-tests.h |  4 ++
->  tools/perf/arch/x86/tests/Build          |  1 +
->  tools/perf/arch/x86/tests/arch-tests.c   |  1 +
->  tools/perf/arch/x86/tests/topdown.c      | 76 ++++++++++++++++++++++++
->  tools/perf/arch/x86/util/evsel.c         | 46 ++++----------
->  tools/perf/arch/x86/util/topdown.c       | 31 ++++------
->  tools/perf/arch/x86/util/topdown.h       |  4 ++
->  7 files changed, 108 insertions(+), 55 deletions(-)
->  create mode 100644 tools/perf/arch/x86/tests/topdown.c
 > 
-> diff --git a/tools/perf/arch/x86/include/arch-tests.h b/tools/perf/arch/x86/include/arch-tests.h
-> index 4fd425157d7d..8713e9122d4c 100644
-> --- a/tools/perf/arch/x86/include/arch-tests.h
-> +++ b/tools/perf/arch/x86/include/arch-tests.h
-> @@ -2,6 +2,8 @@
->  #ifndef ARCH_TESTS_H
->  #define ARCH_TESTS_H
->  
-> +#include "tests/tests.h"
-> +
->  struct test_suite;
->  
->  /* Tests */
-> @@ -17,6 +19,8 @@ int test__amd_ibs_via_core_pmu(struct test_suite *test, int subtest);
->  int test__amd_ibs_period(struct test_suite *test, int subtest);
->  int test__hybrid(struct test_suite *test, int subtest);
->  
-> +DECLARE_SUITE(x86_topdown);
-> +
->  extern struct test_suite *arch_tests[];
->  
->  #endif
-> diff --git a/tools/perf/arch/x86/tests/Build b/tools/perf/arch/x86/tests/Build
-> index 01d5527f38c7..311b6b53d3d8 100644
-> --- a/tools/perf/arch/x86/tests/Build
-> +++ b/tools/perf/arch/x86/tests/Build
-> @@ -11,6 +11,7 @@ endif
->  perf-test-$(CONFIG_X86_64) += bp-modify.o
->  perf-test-y += amd-ibs-via-core-pmu.o
->  perf-test-y += amd-ibs-period.o
-> +perf-test-y += topdown.o
->  
->  ifdef SHELLCHECK
->    SHELL_TESTS := gen-insn-x86-dat.sh
-> diff --git a/tools/perf/arch/x86/tests/arch-tests.c b/tools/perf/arch/x86/tests/arch-tests.c
-> index bfee2432515b..29ec1861ccef 100644
-> --- a/tools/perf/arch/x86/tests/arch-tests.c
-> +++ b/tools/perf/arch/x86/tests/arch-tests.c
-> @@ -53,5 +53,6 @@ struct test_suite *arch_tests[] = {
->  	&suite__amd_ibs_via_core_pmu,
->  	&suite__amd_ibs_period,
->  	&suite__hybrid,
-> +	&suite__x86_topdown,
->  	NULL,
->  };
-> diff --git a/tools/perf/arch/x86/tests/topdown.c b/tools/perf/arch/x86/tests/topdown.c
-> new file mode 100644
-> index 000000000000..8d0ea7a4bbc1
-> --- /dev/null
-> +++ b/tools/perf/arch/x86/tests/topdown.c
-> @@ -0,0 +1,76 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include "arch-tests.h"
-> +#include "../util/topdown.h"
-> +#include "evlist.h"
-> +#include "parse-events.h"
-> +#include "pmu.h"
-> +#include "pmus.h"
-> +
-> +static int event_cb(void *state, struct pmu_event_info *info)
-> +{
-> +	char buf[256];
-> +	struct parse_events_error parse_err;
-> +	int *ret = state, err;
-> +	struct evlist *evlist = evlist__new();
-> +	struct evsel *evsel;
-> +
-> +	if (!evlist)
-> +		return -ENOMEM;
-> +
-> +	parse_events_error__init(&parse_err);
-> +	snprintf(buf, sizeof(buf), "%s/%s/", info->pmu->name, info->name);
-> +	err = parse_events(evlist, buf, &parse_err);
-> +	if (err) {
-> +		parse_events_error__print(&parse_err, buf);
-> +		*ret = TEST_FAIL;
-> +	}
-> +	parse_events_error__exit(&parse_err);
-> +	evlist__for_each_entry(evlist, evsel) {
-> +		bool fail = false;
-> +		bool p_core_pmu = evsel->pmu->type == PERF_TYPE_RAW;
-> +		const char *name = evsel__name(evsel);
-> +
-> +		if (strcasestr(name, "uops_retired.slots") ||
-> +		    strcasestr(name, "topdown.backend_bound_slots") ||
-> +		    strcasestr(name, "topdown.br_mispredict_slots") ||
-> +		    strcasestr(name, "topdown.memory_bound_slots") ||
-> +		    strcasestr(name, "topdown.bad_spec_slots") ||
-> +		    strcasestr(name, "topdown.slots_p")) {
-> +			if (arch_is_topdown_slots(evsel) || arch_is_topdown_metrics(evsel))
-> +				fail = true;
-> +		} else if (strcasestr(name, "slots")) {
-> +			if (arch_is_topdown_slots(evsel) != p_core_pmu ||
-> +			    arch_is_topdown_metrics(evsel))
-> +				fail = true;
-> +		} else if (strcasestr(name, "topdown")) {
-> +			if (arch_is_topdown_slots(evsel) ||
-> +			    arch_is_topdown_metrics(evsel) != p_core_pmu)
-> +				fail = true;
-> +		} else if (arch_is_topdown_slots(evsel) || arch_is_topdown_metrics(evsel)) {
-> +			fail = true;
-> +		}
-> +		if (fail) {
-> +			pr_debug("Broken topdown information for '%s'\n", evsel__name(evsel));
-> +			*ret = TEST_FAIL;
-> +		}
-> +	}
-> +	evlist__delete(evlist);
-> +	return 0;
-> +}
-> +
-> +static int test__x86_topdown(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-> +{
-> +	int ret = TEST_OK;
-> +	struct perf_pmu *pmu = NULL;
-> +
-> +	if (!topdown_sys_has_perf_metrics())
-> +		return TEST_OK;
-> +
-> +	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
-> +		if (perf_pmu__for_each_event(pmu, /*skip_duplicate_pmus=*/false, &ret, event_cb))
-> +			break;
-> +	}
-> +	return ret;
-> +}
-> +
-> +DEFINE_SUITE("x86 topdown", x86_topdown);
-> diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
-> index 3dd29ba2c23b..9bc80fff3aa0 100644
-> --- a/tools/perf/arch/x86/util/evsel.c
-> +++ b/tools/perf/arch/x86/util/evsel.c
-> @@ -23,47 +23,25 @@ void arch_evsel__set_sample_weight(struct evsel *evsel)
->  bool evsel__sys_has_perf_metrics(const struct evsel *evsel)
->  {
->  	struct perf_pmu *pmu;
-> -	u32 type = evsel->core.attr.type;
->  
-> -	/*
-> -	 * The PERF_TYPE_RAW type is the core PMU type, e.g., "cpu" PMU
-> -	 * on a non-hybrid machine, "cpu_core" PMU on a hybrid machine.
-> -	 * The slots event is only available for the core PMU, which
-> -	 * supports the perf metrics feature.
-> -	 * Checking both the PERF_TYPE_RAW type and the slots event
-> -	 * should be good enough to detect the perf metrics feature.
-> -	 */
-> -again:
-> -	switch (type) {
-> -	case PERF_TYPE_HARDWARE:
-> -	case PERF_TYPE_HW_CACHE:
-> -		type = evsel->core.attr.config >> PERF_PMU_TYPE_SHIFT;
-> -		if (type)
-> -			goto again;
-> -		break;
-> -	case PERF_TYPE_RAW:
-> -		break;
-> -	default:
-> +	if (!topdown_sys_has_perf_metrics())
->  		return false;
-> -	}
-> -
-> -	pmu = evsel->pmu;
-> -	if (pmu && perf_pmu__is_fake(pmu))
-> -		pmu = NULL;
->  
-> -	if (!pmu) {
-> -		while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
-> -			if (pmu->type == PERF_TYPE_RAW)
-> -				break;
-> -		}
-> -	}
-> -	return pmu && perf_pmu__have_event(pmu, "slots");
-> +	/*
-> +	 * The PERF_TYPE_RAW type is the core PMU type, e.g., "cpu" PMU on a
-> +	 * non-hybrid machine, "cpu_core" PMU on a hybrid machine.  The
-> +	 * topdown_sys_has_perf_metrics checks the slots event is only available
-> +	 * for the core PMU, which supports the perf metrics feature. Checking
-> +	 * both the PERF_TYPE_RAW type and the slots event should be good enough
-> +	 * to detect the perf metrics feature.
-> +	 */
-> +	pmu = evsel__find_pmu(evsel);
-> +	return pmu && pmu->type == PERF_TYPE_RAW;
->  }
->  
->  bool arch_evsel__must_be_in_group(const struct evsel *evsel)
->  {
-> -	if (!evsel__sys_has_perf_metrics(evsel) || !evsel->name ||
-> -	    strcasestr(evsel->name, "uops_retired.slots"))
-> +	if (!evsel__sys_has_perf_metrics(evsel))
->  		return false;
->  
->  	return arch_is_topdown_metrics(evsel) || arch_is_topdown_slots(evsel);
-> diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
-> index d1c654839049..66b231fbf52e 100644
-> --- a/tools/perf/arch/x86/util/topdown.c
-> +++ b/tools/perf/arch/x86/util/topdown.c
-> @@ -1,6 +1,4 @@
->  // SPDX-License-Identifier: GPL-2.0
-> -#include "api/fs/fs.h"
-> -#include "util/evsel.h"
->  #include "util/evlist.h"
->  #include "util/pmu.h"
->  #include "util/pmus.h"
-> @@ -8,6 +6,9 @@
->  #include "topdown.h"
->  #include "evsel.h"
->  
-> +// cmask=0, inv=0, pc=0, edge=0, umask=4, event=0
-> +#define TOPDOWN_SLOTS		0x0400
-> +
->  /* Check whether there is a PMU which supports the perf metrics. */
->  bool topdown_sys_has_perf_metrics(void)
->  {
-> @@ -32,31 +33,19 @@ bool topdown_sys_has_perf_metrics(void)
->  	return has_perf_metrics;
->  }
->  
-> -#define TOPDOWN_SLOTS		0x0400
->  bool arch_is_topdown_slots(const struct evsel *evsel)
->  {
-> -	if (evsel->core.attr.config == TOPDOWN_SLOTS)
-> -		return true;
-> -
-> -	return false;
-> +	return evsel->core.attr.type == PERF_TYPE_RAW &&
-> +	       evsel->core.attr.config == TOPDOWN_SLOTS &&
-> +	       evsel->core.attr.config1 == 0;
->  }
->  
->  bool arch_is_topdown_metrics(const struct evsel *evsel)
->  {
-> -	int config = evsel->core.attr.config;
-> -	const char *name_from_config;
-> -	struct perf_pmu *pmu;
-> -
-> -	/* All topdown events have an event code of 0. */
-> -	if ((config & 0xFF) != 0)
-> -		return false;
-> -
-> -	pmu = evsel__find_pmu(evsel);
-> -	if (!pmu || !pmu->is_core)
-> -		return false;
-> -
-> -	name_from_config = perf_pmu__name_from_config(pmu, config);
-> -	return name_from_config && strcasestr(name_from_config, "topdown");
-> +	// cmask=0, inv=0, pc=0, edge=0, umask=0x80-0x87, event=0
-> +	return evsel->core.attr.type == PERF_TYPE_RAW &&
-> +		(evsel->core.attr.config & 0xFFFFF8FF) == 0x8000 &&
-> +		evsel->core.attr.config1 == 0;
->  }
->  
->  /*
-> diff --git a/tools/perf/arch/x86/util/topdown.h b/tools/perf/arch/x86/util/topdown.h
-> index 1bae9b1822d7..2349536cf882 100644
-> --- a/tools/perf/arch/x86/util/topdown.h
-> +++ b/tools/perf/arch/x86/util/topdown.h
-> @@ -2,6 +2,10 @@
->  #ifndef _TOPDOWN_H
->  #define _TOPDOWN_H 1
->  
-> +#include <stdbool.h>
-> +
-> +struct evsel;
-> +
->  bool topdown_sys_has_perf_metrics(void);
->  bool arch_is_topdown_slots(const struct evsel *evsel);
->  bool arch_is_topdown_metrics(const struct evsel *evsel);
-> -- 
-> 2.50.0.727.gbf7dc18ff4-goog
+> > Ian Rogers (19):
+> >   perf vendor events: Update alderlake events/metrics
+> >   perf vendor events: Update arrowlake events/metrics
+> >   perf vendor events: Update broadwell metrics
+> >   perf vendor events: Update cascadelakex metrics
+> >   perf vendor events: Update emeraldrapids events/metrics
+> >   perf vendor events: Update grandridge metrics
+> >   perf vendor events: Update graniterapids events/metrics
+> >   perf vendor events: Update haswell metrics
+> >   perf vendor events: Update icelake metrics
+> >   perf vendor events: Update ivybridge/ivytown metrics
+> >   perf vendor events: Update jaketown metrics
+> >   perf vendor events: Update lunarlake events/metrics
+> >   perf vendor events: Update meteorlake events/metrics
+> >   perf vendor events: Update rocketlake metrics
+> >   perf vendor events: Update sandybridge metrics
+> >   perf vendor events: Update sapphirerapids events/metrics
+> >   perf vendor events: Update sierraforest metrics
+> >   perf vendor events: Update skylake metrics
+> >   perf vendor events: Update tigerlake metrics
+> > 
+> >  .../arch/x86/alderlake/adl-metrics.json       | 104 ++++----
+> >  .../pmu-events/arch/x86/alderlake/cache.json  |  99 ++++----
+> >  .../arch/x86/alderlake/floating-point.json    |  28 +--
+> >  .../arch/x86/alderlake/frontend.json          |  42 ++--
+> >  .../pmu-events/arch/x86/alderlake/memory.json |  12 +-
+> >  .../pmu-events/arch/x86/alderlake/other.json  |   8 +-
+> >  .../arch/x86/alderlake/pipeline.json          | 163 +++++--------
+> >  .../x86/alderlake/uncore-interconnect.json    |   2 -
+> >  .../arch/x86/alderlake/virtual-memory.json    |  40 +--
+> >  .../arch/x86/alderlaken/adln-metrics.json     |  20 +-
+> >  .../x86/alderlaken/uncore-interconnect.json   |   2 -
+> >  .../arch/x86/arrowlake/arl-metrics.json       | 180 ++++++++------
+> >  .../pmu-events/arch/x86/arrowlake/cache.json  | 122 +++++++---
+> >  .../arch/x86/arrowlake/frontend.json          |  40 +--
+> >  .../pmu-events/arch/x86/arrowlake/memory.json |  22 +-
+> >  .../arch/x86/arrowlake/pipeline.json          |  94 +++++---
+> >  .../arch/x86/broadwell/bdw-metrics.json       |  30 +--
+> >  .../arch/x86/broadwellde/bdwde-metrics.json   |  30 +--
+> >  .../arch/x86/broadwellx/bdx-metrics.json      |  33 ++-
+> >  .../arch/x86/cascadelakex/clx-metrics.json    | 139 ++++++++---
+> >  .../arch/x86/emeraldrapids/cache.json         | 100 ++++----
+> >  .../arch/x86/emeraldrapids/emr-metrics.json   | 131 +++++-----
+> >  .../x86/emeraldrapids/floating-point.json     |  43 ++--
+> >  .../arch/x86/emeraldrapids/frontend.json      |  42 ++--
+> >  .../arch/x86/emeraldrapids/memory.json        |  30 +--
+> >  .../arch/x86/emeraldrapids/other.json         |  28 ++-
+> >  .../arch/x86/emeraldrapids/pipeline.json      | 167 +++++--------
+> >  .../arch/x86/emeraldrapids/uncore-memory.json |  82 +++++++
+> >  .../x86/emeraldrapids/virtual-memory.json     |  40 +--
+> >  .../arch/x86/grandridge/grr-metrics.json      |  20 +-
+> >  .../arch/x86/graniterapids/cache.json         | 227 +++++++++++++-----
+> >  .../x86/graniterapids/floating-point.json     |  43 ++--
+> >  .../arch/x86/graniterapids/frontend.json      |  42 ++--
+> >  .../arch/x86/graniterapids/gnr-metrics.json   | 131 +++++-----
+> >  .../arch/x86/graniterapids/memory.json        |  33 ++-
+> >  .../arch/x86/graniterapids/other.json         |  30 ++-
+> >  .../arch/x86/graniterapids/pipeline.json      | 167 ++++++-------
+> >  .../arch/x86/graniterapids/uncore-io.json     |   1 -
+> >  .../arch/x86/graniterapids/uncore-memory.json |  31 ---
+> >  .../x86/graniterapids/virtual-memory.json     |  40 +--
+> >  .../arch/x86/haswell/hsw-metrics.json         |  32 ++-
+> >  .../arch/x86/haswellx/hsx-metrics.json        |  35 ++-
+> >  .../arch/x86/icelake/icl-metrics.json         |  96 ++++----
+> >  .../arch/x86/icelakex/icx-metrics.json        | 155 ++++++++----
+> >  .../arch/x86/ivybridge/ivb-metrics.json       |  30 +--
+> >  .../arch/x86/ivytown/ivt-metrics.json         |  33 ++-
+> >  .../arch/x86/jaketown/jkt-metrics.json        |  20 +-
+> >  .../pmu-events/arch/x86/lunarlake/cache.json  | 104 ++++++--
+> >  .../arch/x86/lunarlake/frontend.json          |  40 +--
+> >  .../arch/x86/lunarlake/lnl-metrics.json       | 216 +++++++++--------
+> >  .../pmu-events/arch/x86/lunarlake/memory.json |  22 +-
+> >  .../arch/x86/lunarlake/pipeline.json          |  85 ++++---
+> >  .../x86/lunarlake/uncore-interconnect.json    |  10 +
+> >  .../arch/x86/lunarlake/uncore-memory.json     |   8 +
+> >  tools/perf/pmu-events/arch/x86/mapfile.csv    |  16 +-
+> >  .../pmu-events/arch/x86/meteorlake/cache.json | 129 +++++-----
+> >  .../arch/x86/meteorlake/floating-point.json   |  28 +--
+> >  .../arch/x86/meteorlake/frontend.json         |  42 ++--
+> >  .../arch/x86/meteorlake/memory.json           |  15 +-
+> >  .../arch/x86/meteorlake/mtl-metrics.json      | 103 ++++----
+> >  .../pmu-events/arch/x86/meteorlake/other.json |   5 +-
+> >  .../arch/x86/meteorlake/pipeline.json         | 173 ++++++-------
+> >  .../arch/x86/meteorlake/virtual-memory.json   |  40 +--
+> >  .../arch/x86/rocketlake/rkl-metrics.json      |  97 ++++----
+> >  .../arch/x86/sandybridge/snb-metrics.json     |  19 +-
+> >  .../arch/x86/sapphirerapids/cache.json        | 100 ++++----
+> >  .../x86/sapphirerapids/floating-point.json    |  43 ++--
+> >  .../arch/x86/sapphirerapids/frontend.json     |  42 ++--
+> >  .../arch/x86/sapphirerapids/memory.json       |  30 +--
+> >  .../arch/x86/sapphirerapids/other.json        |  28 ++-
+> >  .../arch/x86/sapphirerapids/pipeline.json     | 167 +++++--------
+> >  .../arch/x86/sapphirerapids/spr-metrics.json  | 153 +++++++-----
+> >  .../x86/sapphirerapids/uncore-memory.json     |  82 +++++++
+> >  .../x86/sapphirerapids/virtual-memory.json    |  40 +--
+> >  .../arch/x86/sierraforest/srf-metrics.json    |  20 +-
+> >  .../arch/x86/skylake/skl-metrics.json         | 101 +++++---
+> >  .../arch/x86/skylakex/skx-metrics.json        | 101 +++++---
+> >  .../arch/x86/tigerlake/tgl-metrics.json       |  97 ++++----
+> >  78 files changed, 2870 insertions(+), 2325 deletions(-)
+> >  create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/uncore-interconnect.json
+> > 
 > 
