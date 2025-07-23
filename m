@@ -1,421 +1,188 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10117226D1B;
-	Wed, 23 Jul 2025 17:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3AD21FF42;
+	Wed, 23 Jul 2025 18:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753292360; cv=none; b=rZ8pFE7LDgcdTaJt7pcy/6PNlNWqqVRtloNAM6Op2JcJgWYXqsbILK9YE8Nz7EL023UtdedAFU4TdxD7k3Sg/PxkCbWqc/F6lTcOkkc3h4YQH+MY6zQCT8Z8bSwaPfxFbSP31jdJKmBvUDVlizwhvP134U++50MfTwlX3I9GhcY=
+	t=1753293621; cv=none; b=j+nFWwK8FfGnRgoJNAMcvUgKUMK6EinjohbESGY4foTW03AYwCi5NBaP/hWVGZUWSNBtMvHHtCPPhIViuYfMMBaQepfN5E5Ns+XM3abMpFMfSXnr48jRh7LoTx8cIODmeRnNPt0bL9SMRONWQeWNUWXqFZ+0DUb3wr5hKAjzqu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753292360; c=relaxed/simple;
-	bh=NsZxATHi12+cqZgfq4znte0vptZe/x/VViXrhuT2bJU=;
+	s=arc-20240116; t=1753293621; c=relaxed/simple;
+	bh=apI8pnNAFLf6iQss/lQxckExRNzFL10tAutzTRF9k5Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CjcnCnYfJFT+qu1AkuTcdFF7Ry1QzD7fePqCSLYl5UC1GUXiNvWrEA4A7WN0TxGjOWCG5mNorhPHfXiALKQocZJPGxYMNFOfszK77b3F+32KpgbdQ0PbfR6xfr5y1k4MV7gF1EWKUWRbBcE8nVqVM4az0xUZNC+f+kfoIc/DsJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1783322C7;
-	Wed, 23 Jul 2025 10:39:11 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5CEDE3F66E;
-	Wed, 23 Jul 2025 10:39:15 -0700 (PDT)
-Date: Wed, 23 Jul 2025 18:39:10 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Yunseong Kim <ysk@kzalloc.com>
-Cc: Will Deacon <will@kernel.org>, Austin Kim <austindh.kim@gmail.com>,
-	Michelle Jin <shjy180909@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Yeoreum Yun <yeoreum.yun@arm.com>, syzkaller@googlegroups.com,
+	 Content-Type:Content-Disposition:In-Reply-To; b=j5M8Z0uzHs34ltmsqdKoVnacIspNRKMfK5TvhkB99h3ssUAc/uHi9zmjsYmDrJ5Q+NoVA8Z8PQetMuvH/uFunxl0GjQNIJ43Izb63YopSKI017CTZk36hd21pAmGlQXfe/cQVPiBEAdZcebv0HJ4u4DQQ0qWVGig1JyGFZHvEBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZbCi6oRp; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZbCi6oRp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1B6FC4CEF7;
+	Wed, 23 Jul 2025 18:00:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753293620;
+	bh=apI8pnNAFLf6iQss/lQxckExRNzFL10tAutzTRF9k5Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZbCi6oRp62dNOChxWFud2O3ip6O/K8eJghSx4JCeiZ9HllkZKcmfD2vrx5nD4uM0V
+	 aTZAyCesPftUjuwevqcirwvPSHxYkOItW9wwGrhUPX4bUaEaFePSU1rDqFJbRGrhf0
+	 G8BrvYf/ZVtVGDjU0H+8kuQrfd8+vX1qagDyvixXCJ0xl8xFzcAgahPXDkkFmf8hpi
+	 k/Va+MIoUE1u6mwoQcHqmEhrBkZVWs3U08DKMOMRthDFJaZqTncgGnuoE8b/MWluvG
+	 SrRs0GQaSgI/fv0b3JN8ES38UTOQwOHbkk/yQB0gmeiK7JGRkxCKN+img8bl8ll9vB
+	 vLkPxhmg99bpw==
+Date: Wed, 23 Jul 2025 11:00:18 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH] perf: arm_pmuv3: Fix kernel panic on UBSAN from negative
- hw.idx in armv8pmu_enable/disable_event()
-Message-ID: <aIEePonPatjNrJVk@J2N7QTR9R3>
-References: <20250723104359.364547-5-ysk@kzalloc.com>
- <aIDXE3GsRVUbPmaz@J2N7QTR9R3>
+	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Collin Funk <collin.funk1@gmail.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Gautam Menghani <gautam@linux.ibm.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v7 00/16] New perf ilist app
+Message-ID: <aIEjMroa3bW-T7d-@google.com>
+References: <20250714164405.111477-1-irogers@google.com>
+ <CAP-5=fW=AG8ztbzS-KXpo9fH_Hp_fkZ3CVDuG9pN7P32Qm0oyg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aIDXE3GsRVUbPmaz@J2N7QTR9R3>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fW=AG8ztbzS-KXpo9fH_Hp_fkZ3CVDuG9pN7P32Qm0oyg@mail.gmail.com>
 
-On Wed, Jul 23, 2025 at 01:35:31PM +0100, Mark Rutland wrote:
-> [ dropping Hemendra, since he doens't need to be spammed with ML traffic ]
-> 
-> On Wed, Jul 23, 2025 at 10:44:03AM +0000, Yunseong Kim wrote:
-> > When 'event->hw.idx' was negative in armv8pmu_enable/disable_event().
-> > 
-> >   UBSAN: shift-out-of-bounds in drivers/perf/arm_pmuv3.c:716:25
-> >   shift exponent -1 is negative
-> > 
-> >   UBSAN: shift-out-of-bounds in drivers/perf/arm_pmuv3.c:658:13
-> >   shift exponent -1 is negative
-> > 
-> > This occurred because a perf_event could reach armv8pmu event with a
-> > negative idx, typically when a valid counter could not be allocated.
-> 
-> These functions are never supposed to be called for an event with a
-> negative idx. For that to happen there must either be an earlier bug (at
-> the time of pmu::add()) or there's a concurrency bug.
+Hi Ian,
 
-AFAICT this is a result of the group throttling logic introduced in
-commit:
+On Wed, Jul 23, 2025 at 08:32:33AM -0700, Ian Rogers wrote:
+> On Mon, Jul 14, 2025 at 9:44 AM Ian Rogers <irogers@google.com> wrote:
+> >
+> > This patch series builds up to the addition of a new ilist app written
+> > in python using textual [1] for the UI. The app presents perf PMUs and
+> > events, displays the event information as in `perf list` while at the
+> > bottom of the console showing recent activity of the event in total
+> > and across all CPUs. It also displays metrics, placed in a tree
+> > through their metric group, again with counts being displayed in the
+> > bottom panel.
+> >
+> > The first ground work patches of fixes, cleanup and refactoring were
+> > separated into their own series here:
+> > https://lore.kernel.org/lkml/20250709214029.1769089-1-irogers@google.com/
+> >
+> > The second part of the patches adds event json for the software PMU
+> > and makes the tracepoint PMU support iteration of events and the
+> > like. Without these improvements the tracepoint and software PMUs will
+> > appear to have no events in the ilist app. As the software PMU moves
+> > parsing to json, the legacy hard coded parsing is removed. This has
+> > proven controversial for hardware events and so that cleanup isn't
+> > done here.
+> >
+> > The final patches expand the perf python APIs and add the ilist
+> > command. To run it you need the updated perf.cpython.so in your
+> > PYTHONPATH and then execute the script. Expanding PMUs and then
+> > selecting events will cause event informatin to be displayed in the
+> > top-right and the counters values to be displayed as sparklines and
+> > counts in the bottom half of the screen.
+> >
+> > [1] https://textual.textualize.io/
+> >
+> > v7: Better handle errors in the python code and ignore errors when
+> >     scanning PMU/events in ilist.py, improving the behavior when not
+> >     root. Add a tp_pmu/python clean up. Minor kernel coding style
+> >     clean up. Fix behavior of ilist if a search result isn't found but
+> >     then next is chosen.
+> >
+> > v6: For metrics on hybrid systems don't purely match by name, also
+> >     match the CPU and thread so that if the same metric exists for
+> >     different PMUs the appropriate one is selected and counters may be
+> >     read. Likewise use evsel maps and not the evlists.
+> >
+> > v5: Split the series in two. Add metric support. Various clean ups and
+> >     tweaks to the app in particular around the handling of searches.
+> >
+> > v4: No conflict rebase. Picks up perf-tools-next DRM PMU which
+> >     displays as expected.
+> >
+> > v3: Add a search dialog to the ilist app with 'n'ext and 'p'revious
+> >     keys. No changes in the ground work first 14 patches.
+> >
+> > v2: In the jevents event description duplication, some minor changes
+> >     accidentally missed from v1 meaning that in v1 the descriptions
+> >     were still duplicated. Expand the cover letter with some thoughts
+> >     on the series.
+> >
+> > Ian Rogers (16):
+> >   perf python: Add more exceptions on error paths
+> >   perf jevents: Add common software event json
+> >   perf parse-events: Remove non-json software events
+> >   perf tp_pmu: Factor existing tracepoint logic to new file
+> >   perf tp_pmu: Add event APIs
+> >   perf list: Remove tracepoint printing code
+> >   perf list: Skip ABI PMUs when printing pmu values
+> >   perf python: Improve the tracepoint function if no libtraceevent
+> >   perf python: Add basic PMU abstraction and pmus sequence
+> >   perf python: Add function returning dictionary of all events on a PMU
+> >   perf ilist: Add new python ilist command
+> >   perf python: Add parse_metrics function
+> >   perf python: Add evlist metrics function
+> >   perf python: Add evlist compute_metric
+> >   perf python: Add metrics function
+> >   perf ilist: Add support for metrics
+> 
+> Hi,
+> 
+> Is there any more I can do to get this series landed? I appreciate having:
+> 
+> Tested-by: Gautam Menghani <gautam@linux.ibm.com>
+> 
+> I think there is some follow up for "make install" for scripts like
+> these, but I'm keen for the python API to move forward.
+ 
+I'll review the series today so that we can get some part of it, at
+least.  Basically I think we need a wrapper script like perf-ilist to
+run this easily (maybe with documentation).
 
-  9734e25fbf5ae68e ("perf: Fix the throttle logic for a group")
+Thanks,
+Namhyung
 
-That doesn't take into account that sibling events could have
-event->state <= PERF_EVENT_STATE_OFF, e.g. by virtue of
-perf_event_attr::disabled. For those events, event_sched_in() won't
-initialise the event, e.g. won't call event->pmu->add().
-
-Thus when perf_event_throttle_group() and perf_event_unthrottle_group()
-iterate over events with:
-
-	for_each_sibling_event(sibling, leader)
-		perf_event_[un]throttle(sibling, ...);
-
-... perf_event_[un]throttle() will call event->pmu->stop() and
-event->pmu->start() for those disabled events, resulting in the UBSAN
-splat above since they don't have a hw idx (which is assigned by
-event->pmu->add()).
-
-I think the event's state needs to be taken into account somewhere
-during throttling. Given the sample of event_sched_in(), I'd assume that
-should be in the core code, rather than in each architecture's
-pmu::{start,stop}().
-
-I can reproduce this locally with:
-
-| #include <stdio.h>
-| #include <stdlib.h>
-| #include <unistd.h>
-| 
-| #include <sys/syscall.h>
-| #include <sys/types.h>
-| 
-| #include <linux/perf_event.h>
-| 
-| static int perf_event_open(struct perf_event_attr *attr, pid_t pid, int cpu,
-|                            int group_fd, unsigned long flags)
-| {
-|         return syscall(__NR_perf_event_open, attr, pid, cpu, group_fd, flags);
-| }
-| 
-| struct perf_event_attr attr_parent = {
-|         .type = PERF_TYPE_HARDWARE,
-|         .size = sizeof(attr_parent),
-|         .config = PERF_COUNT_HW_CPU_CYCLES,
-|         .sample_period = 1,
-|         .exclude_kernel = 1,
-| };
-| 
-| struct perf_event_attr attr_child = {
-|         .type = PERF_TYPE_HARDWARE,
-|         .size = sizeof(attr_child),
-|         .config = PERF_COUNT_HW_CPU_CYCLES,
-|         .exclude_kernel = 1,
-|         .disabled = 1,
-| };
-| 
-| int main(int argc, char *argv[])
-| {
-|         int parent, child;
-| 
-|         parent = perf_event_open(&attr_parent, 0, -1, -1, 0);
-|         if (parent < 0) {
-|                 fprintf(stderr, "Unable to create event: %d\n", parent);
-|                 exit (-1);
-|         }
-| 
-|         child = perf_event_open(&attr_child, 0, -1, parent, 0);
-|         if (child < 0) {
-|                 fprintf(stderr, "Unable to create event: %d\n", child);
-|                 exit (-1);
-|         }
-| 
-|         for (;;) {
-|                 asm("" ::: "memory");
-|         }
-| 
-|         return 0;
-| }
-
-I've kept the context below for anyone new to this thread, but hopefully
-the above is clear?
-
-Mark.
-
-> > This issue was observed when running KVM on Radxa's Orion6 platform.
-> 
-> Do you mean that you see this on the host, or in a guest?
-> 
-> Are you using pseudo-NMI?
-> 
-> > The issue was previously guarded indirectly by armv8pmu_event_is_chained(),
-> > which internally warned and returned false for idx < 0. But since the
-> > commit 29227d6ea157 ("arm64: perf: Clean up enable/disable calls"), this
-> > check was removed.
-> 
-> The warning there was because this case *should not happen*, and
-> returning false was a way of minimizing the risk of a crash before the
-> warning was logged. 
-> 
-> I don't think that armv8pmu_event_is_chained() would avoid the UBSAN
-> splat. Prior to commit 29227d6ea157 we had:
-> 
-> | static inline void armv8pmu_enable_event_counter(struct perf_event *event)
-> | {
-> |         struct perf_event_attr *attr = &event->attr;
-> |         int idx = event->hw.idx;
-> | 
-> | 	...
-> | 
-> |         if (!kvm_pmu_counter_deferred(attr)) {
-> |                 armv8pmu_enable_counter(idx);
-> |                 if (armv8pmu_event_is_chained(event))
-> |                         armv8pmu_enable_counter(idx - 1);
-> |         }
-> | }
-> 
-> Note the first call to armv8pmu_enable_counter(idx), so this wouldn't
-> help for an event with event->hw.idx==-1, and the only other way we
-> could get here is with a chained event with event->hw.idx==0, which is
-> not valid.
-> 
-> > To prevent undefined behavior, add an explicit guard to early return from
-> > armv8pmu event if hw.idx < 0, 
-> 
-> That is not a correct fix, and simply hides the real bug. It should not
-> be possible to reach this code when hw.idx < 0, and idx should be >= 0
-> whenever pmu::add() succeeds.
-> 
-> > similar to handling in other PMU drivers.
-> > (e.g. intel_pmu_disable_event() on arch/x86/events/intel/core.c)
-> 
-> I think what you're saying here is that intel_pmu_disable_event() will
-> pr_warn() and return early in this case. As above, that is because this
-> case is not expected to occur, and indicates a bug elsewhere.
-> 
-> > $ ./syz-execprog -executor=./syz-executor -repeat=0  -sandbox=none \
-> >   -disable=binfmt_misc,cgroups,close_fds,devlink_pci,ieee802154,net_dev,net_reset,nic_vf,swap,sysctl,tun,usb,vhci,wifi \
-> >   -procs=8 perf.syz
-> > 
-> > r0 = perf_event_open(&(0x7f0000000240)={
-> >         0x0, 0x80, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-> >         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-> >         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-> >         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-> >         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-> >         @perf_config_ext
-> >     }, 0x0, 0x0, 0xffffffffffffffff, 0x0)
-> > 
-> > perf_event_open(&(0x7f0000000280)={
-> >         0x0, 0x80, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-> >         0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-> >         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-> >         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-> >         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-> >         @perf_config_ext
-> >     }, 0x0, 0x0, r0, 0x0)
-> > 
-> > perf_event_open(&(0x7f0000000540)={
-> >         0x3, 0x80, 0x0, 0x0, 0x0, 0x0, 0x0, 0x4, 0x0, 0x0,
-> >         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-> >         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-> >         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-> >         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x4,
-> >         @perf_bp={0x0, 0x2}, 0x20, 0x0, 0x0, 0x0, 0x2,
-> >         0x0, 0x0, 0x0, 0x0, 0x0, 0x81
-> >     }, 0x0, 0x0, r0, 0x0)
-> 
-> This isn't all that helpful for reproducing the issue. Are the later
-> lines the contents of 'perf.syz'? My local build of syz-execprog can't
-> seem to parse this and prints help/usage.
-> 
-> Has your syzkaller instance managed to generate a C reproducer that you
-> can share?
-> 
-> It should be possible to manually build a test from the above, but
-> that's rather tedious.
-> 
-> > ------------[ cut here ]------------
-> > UBSAN: shift-out-of-bounds in drivers/perf/arm_pmuv3.c:716:25
-> > shift exponent -1 is negative
-> > CPU: 0 UID: 0 PID: 8405 Comm: syz.3.19 Tainted: G        W           6.16.0-rc2-g5982a539cdce #3 PREEMPT
-> > Tainted: [W]=WARN
-> > Hardware name: QEMU KVM Virtual Machine, BIOS 2025.02-8 05/13/2025
-> > Call trace:
-> >  show_stack+0x2c/0x3c (C)
-> >  __dump_stack+0x30/0x40
-> >  dump_stack_lvl+0xd8/0x12c
-> >  dump_stack+0x1c/0x28
-> >  ubsan_epilogue+0x14/0x48
-> >  __ubsan_handle_shift_out_of_bounds+0x2b0/0x34c
-> >  armv8pmu_enable_event+0x3c4/0x4b0
-> >  armpmu_start+0xc4/0x118
-> >  perf_event_unthrottle_group+0x3a8/0x50c
-> >  perf_adjust_freq_unthr_events+0x2f4/0x578
-> >  perf_adjust_freq_unthr_context+0x278/0x46c
-> >  perf_event_task_tick+0x394/0x5b0
-> 
-> AFAICT perf_event_task_tick() is called with IRQs masked, and
-> perf_adjust_freq_unthr_context() disables the PMU for the duration of
-> the state manipulation, so this shouldn't be able to race with anything
-> that's using appropriate IRQ masking.
-> 
-> This might be able to race with a pNMI though, and it looks like we're
-> not entirely robust.
-> 
-> >  sched_tick+0x314/0x6cc
-> >  update_process_times+0x374/0x4b0
-> >  tick_nohz_handler+0x334/0x480
-> >  __hrtimer_run_queues+0x3ec/0xb78
-> >  hrtimer_interrupt+0x2b8/0xb50
-> >  arch_timer_handler_virt+0x74/0x88
-> >  handle_percpu_devid_irq+0x174/0x308
-> >  generic_handle_domain_irq+0xe0/0x140
-> >  gic_handle_irq+0x6c/0x190
-> >  call_on_irq_stack+0x24/0x30
-> >  do_interrupt_handler+0xd4/0x138
-> >  el1_interrupt+0x34/0x54
-> >  el1h_64_irq_handler+0x18/0x24
-> >  el1h_64_irq+0x6c/0x70
-> >  generic_exec_single+0x2dc/0x304 (P)
-> >  smp_call_function_single+0x308/0x530
-> >  perf_install_in_context+0x4a0/0x798
-> >  __arm64_sys_perf_event_open+0x184c/0x1d50
-> >  invoke_syscall+0x98/0x2b8
-> >  el0_svc_common+0x130/0x23c
-> >  do_el0_svc+0x48/0x58
-> >  el0_svc+0x58/0x17c
-> >  el0t_64_sync_handler+0x78/0x108
-> >  el0t_64_sync+0x198/0x19c
-> > ---[ end trace ]---
-> > ------------[ cut here ]------------
-> > UBSAN: shift-out-of-bounds in drivers/perf/arm_pmuv3.c:658:13
-> > shift exponent -1 is negative
-> > CPU: 0 UID: 0 PID: 8006 Comm: syz.0.19 Not tainted 6.16.0-rc2-g5982a539cdce #3 PREEMPT
-> > Hardware name: QEMU KVM Virtual Machine, BIOS 2025.02-8 05/13/2025
-> > Call trace:
-> >  show_stack+0x2c/0x3c (C)
-> >  __dump_stack+0x30/0x40
-> >  dump_stack_lvl+0xd8/0x12c
-> >  dump_stack+0x1c/0x28
-> >  ubsan_epilogue+0x14/0x48
-> >  __ubsan_handle_shift_out_of_bounds+0x2b0/0x34c
-> >  armv8pmu_disable_event+0x228/0x2f8
-> >  armpmu_stop+0xa0/0x104
-> >  perf_event_throttle_group+0x354/0x4cc
-> >  __perf_event_account_interrupt+0x26c/0x290
-> >  __perf_event_overflow+0xe8/0xd28
-> >  perf_event_overflow+0x38/0x4c
-> >  armv8pmu_handle_irq+0x244/0x320
-> >  armpmu_dispatch_irq+0x6c/0x9c
-> >  handle_percpu_devid_irq+0x174/0x308
-> >  generic_handle_domain_irq+0xe0/0x140
-> >  gic_handle_irq+0x6c/0x190
-> >  call_on_irq_stack+0x24/0x30
-> >  do_interrupt_handler+0xd4/0x138
-> >  el1_interrupt+0x34/0x54
-> >  el1h_64_irq_handler+0x18/0x24
-> >  el1h_64_irq+0x6c/0x70
-> 
-> This indicates a regular IRQ rather than a pNMI.
-> 
-> >  generic_exec_single+0x2dc/0x304 (P)
-> >  smp_call_function_single+0x308/0x530
-> >  perf_install_in_context+0x4a0/0x798
-> >  __arm64_sys_perf_event_open+0x184c/0x1d50
-> >  invoke_syscall+0x98/0x2b8
-> >  el0_svc_common+0x130/0x23c
-> >  do_el0_svc+0x48/0x58
-> >  el0_svc+0x58/0x17c
-> >  el0t_64_sync_handler+0x78/0x108
-> >  el0t_64_sync+0x198/0x19c
-> > ---[ end trace ]---
-> > ------------[ cut here ]------------
-> > UBSAN: shift-out-of-bounds in drivers/perf/arm_pmuv3.c:730:26
-> > shift exponent -1 is negative
-> > CPU: 0 UID: 0 PID: 8006 Comm: syz.0.19 Not tainted 6.16.0-rc2-g5982a539cdce #3 PREEMPT
-> > Hardware name: QEMU KVM Virtual Machine, BIOS 2025.02-8 05/13/2025
-> > Call trace:
-> >  show_stack+0x2c/0x3c (C)
-> >  __dump_stack+0x30/0x40
-> >  dump_stack_lvl+0xd8/0x12c
-> >  dump_stack+0x1c/0x28
-> >  ubsan_epilogue+0x14/0x48
-> >  __ubsan_handle_shift_out_of_bounds+0x2b0/0x34c
-> >  armv8pmu_disable_event+0x298/0x2f8
-> >  armpmu_stop+0xa0/0x104
-> >  perf_event_throttle_group+0x354/0x4cc
-> >  __perf_event_account_interrupt+0x26c/0x290
-> >  __perf_event_overflow+0xe8/0xd28
-> >  perf_event_overflow+0x38/0x4c
-> >  armv8pmu_handle_irq+0x244/0x320
-> >  armpmu_dispatch_irq+0x6c/0x9c
-> >  handle_percpu_devid_irq+0x174/0x308
-> >  generic_handle_domain_irq+0xe0/0x140
-> >  gic_handle_irq+0x6c/0x190
-> >  call_on_irq_stack+0x24/0x30
-> >  do_interrupt_handler+0xd4/0x138
-> >  el1_interrupt+0x34/0x54
-> >  el1h_64_irq_handler+0x18/0x24
-> >  el1h_64_irq+0x6c/0x70
-> >  generic_exec_single+0x2dc/0x304 (P)
-> >  smp_call_function_single+0x308/0x530
-> >  perf_install_in_context+0x4a0/0x798
-> >  __arm64_sys_perf_event_open+0x184c/0x1d50
-> >  invoke_syscall+0x98/0x2b8
-> >  el0_svc_common+0x130/0x23c
-> >  do_el0_svc+0x48/0x58
-> >  el0_svc+0x58/0x17c
-> >  el0t_64_sync_handler+0x78/0x108
-> >  el0t_64_sync+0x198/0x19c
-> > ---[ end trace ]---
-> > 
-> > Fixes: 29227d6ea157 ("arm64: perf: Clean up enable/disable calls")
-> 
-> As above, I do not believe that this fixes tag is accurate.
-> 
-> > Signed-off-by: Yunseong Kim <ysk@kzalloc.com>
-> > Tested-by: Yunseong Kim <ysk@kzalloc.com>
-> > Cc: Yeoreum Yun <yeoreum.yun@arm.com>
-> > Cc: syzkaller@googlegroups.com
-> > ---
-> >  drivers/perf/arm_pmuv3.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-> > index 3db9f4ed17e8..846d69643fd8 100644
-> > --- a/drivers/perf/arm_pmuv3.c
-> > +++ b/drivers/perf/arm_pmuv3.c
-> > @@ -795,6 +795,9 @@ static void armv8pmu_enable_user_access(struct arm_pmu *cpu_pmu)
-> >  
-> >  static void armv8pmu_enable_event(struct perf_event *event)
-> >  {
-> > +	if (unlikely(event->hw.idx < 0))
-> > +		return;
-> > +
-> >  	armv8pmu_write_event_type(event);
-> >  	armv8pmu_enable_event_irq(event);
-> >  	armv8pmu_enable_event_counter(event);
-> > @@ -802,6 +805,9 @@ static void armv8pmu_enable_event(struct perf_event *event)
-> >  
-> >  static void armv8pmu_disable_event(struct perf_event *event)
-> >  {
-> > +	if (unlikely(event->hw.idx < 0))
-> > +		return;
-> > +
-> >  	armv8pmu_disable_event_counter(event);
-> >  	armv8pmu_disable_event_irq(event);
-> 
-> As above, this is not a correct fix, and NAK to silently ignoring an
-> invalid idx.
-> 
-> Mark.
-> 
+> >
+> >  tools/perf/builtin-list.c                     |  65 ++-
+> >  .../arch/common/common/software.json          |  92 ++++
+> >  tools/perf/pmu-events/empty-pmu-events.c      | 266 +++++----
+> >  tools/perf/pmu-events/jevents.py              |  15 +-
+> >  tools/perf/python/ilist.py                    | 491 +++++++++++++++++
+> >  tools/perf/util/Build                         |   1 +
+> >  tools/perf/util/evsel.c                       |  21 +-
+> >  tools/perf/util/parse-events.c                | 198 ++-----
+> >  tools/perf/util/parse-events.h                |   1 -
+> >  tools/perf/util/parse-events.l                |  38 +-
+> >  tools/perf/util/parse-events.y                |  29 +-
+> >  tools/perf/util/pfm.c                         |   2 +
+> >  tools/perf/util/pmu.c                         |   7 +
+> >  tools/perf/util/pmus.c                        |   2 +
+> >  tools/perf/util/print-events.c                | 100 +---
+> >  tools/perf/util/print-events.h                |   4 +-
+> >  tools/perf/util/python.c                      | 519 +++++++++++++++++-
+> >  tools/perf/util/tp_pmu.c                      | 209 +++++++
+> >  tools/perf/util/tp_pmu.h                      |  19 +
+> >  19 files changed, 1638 insertions(+), 441 deletions(-)
+> >  create mode 100644 tools/perf/pmu-events/arch/common/common/software.json
+> >  create mode 100755 tools/perf/python/ilist.py
+> >  create mode 100644 tools/perf/util/tp_pmu.c
+> >  create mode 100644 tools/perf/util/tp_pmu.h
+> >
+> > --
+> > 2.50.0.727.gbf7dc18ff4-goog
+> >
