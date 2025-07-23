@@ -1,106 +1,71 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 785A3210F59;
-	Wed, 23 Jul 2025 17:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F49B7262B;
+	Wed, 23 Jul 2025 17:30:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753290861; cv=none; b=ZZLE1voUQdXiBXUxUKWCF+nvyt4yyMSb5Cv4tUWOUL7nplJMLf7LoxP4qvTdvTEGysvjgv7QeUG6MWBwO6oXn4GTajwqMCz9H2fjOHINbwraiZbnl2aXQ30ZHLjXh1xsPQZQlCt47hRcUCS4tvX1DILmGq2lJNKaRiNhrZt5Hrg=
+	t=1753291846; cv=none; b=ROAArxBRnK8HnnJ1IwX7XSwDbNEEAx4fpOWIRQBMe8sj4qYwZu5RKl5YeOdil4j8QZOzCxw4wcYxjkLn5SHLrBHYwsIvYEddqV0kjvW0775Zj3+ES8hOai38pdel9DMKT6+35d4THQIon27g37BWD6C/sQR60WtAKeTIE4rgVfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753290861; c=relaxed/simple;
-	bh=QEhVG7UaEQoCsOv4KhYFV0ONxI+PWKVznJXkzpHUNlc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PkKShNvqLlAR3pwz7guMb7Yw9M0tEAQazsNNamjpTefIChY0hWb5HWTZ1MoLdqeP3TQIHFTHy1gWXphnYoE3WSV4k3s8RwBiJkvBE7P+mru9g3bi8EKaaCamlMYN0BC9/MCmtvkLe8vt9d8189Gf4QG0KZRpneYgGKKu9Goexpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 45DEA22C7;
-	Wed, 23 Jul 2025 10:14:12 -0700 (PDT)
-Received: from [192.168.20.57] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD85D3F66E;
-	Wed, 23 Jul 2025 10:14:17 -0700 (PDT)
-Message-ID: <2a6e1c4b-e8b0-49e2-896c-65c55103b017@arm.com>
-Date: Wed, 23 Jul 2025 12:14:17 -0500
+	s=arc-20240116; t=1753291846; c=relaxed/simple;
+	bh=5kbDHJBDt91yPJpWqpTjlQNKjspG21vEOO5BD8wsh0I=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=b2mq+Nd+E2bJM1cxrjD6F3ZxN5hB/YDkAreHiJSTiFmHDAU8938F6ziGy4fct6ODsIFC3dSIrEjSEiDLCZRzq/Tj36/pLVy6gROmyv3cKsIOIu9q8GDldUd7at73H9TtQxG3PXhHPAO9m9qfvovBQOmwgfyzBUsUE9Ng4nS2sHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DcQRP4Fb; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DcQRP4Fb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42834C4CEE7;
+	Wed, 23 Jul 2025 17:30:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753291845;
+	bh=5kbDHJBDt91yPJpWqpTjlQNKjspG21vEOO5BD8wsh0I=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=DcQRP4FbjHC/WTvDxeSV8W8DJkm/03KnMeSpvt19yXTjDLMekFVq47AH50jYGX9/2
+	 87r2oXesc8gGDsGcVAYNDKJ+YSMBG7AyORlumpCpjVYlJWbO0i65arMQQoXgf2eyoL
+	 9As/MyDDLMKtiTOazxMJ/mMPfYPbjx6N9TnuQWOVDXsGNeQAMVlPJaJovK+BSNCjfa
+	 TOz6Sx2i6RoWjLl/a6e4RWlB5BRWjiXio4a5vrhlnyu/x/9zwJHlobKZ+PlViNzsos
+	 YBLCR1qnwzkBg7okNd0TmM8B024LB65iJNM4XyKxN5D2sb8s31mRzQeeNkTNmYfj6/
+	 r7VKg6IlmSNmQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Changbin Du <changbin.du@huawei.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ "Liang, Kan" <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250613114048.132336-1-changbin.du@huawei.com>
+References: <20250613114048.132336-1-changbin.du@huawei.com>
+Subject: Re: [PATCH] perf: ftrace: add graph tracer options
+ args/retval/retval-hex/retaddr
+Message-Id: <175329184520.30139.10951827776162604991.b4-ty@kernel.org>
+Date: Wed, 23 Jul 2025 10:30:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/8] arm64: uaccess: Add additional userspace GCS
- accessors
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com,
- thiago.bauermann@linaro.org, broonie@kernel.org, yury.khrustalev@arm.com,
- kristina.martsenko@arm.com, liaochang1@huawei.com, will@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250719043740.4548-1-jeremy.linton@arm.com>
- <20250719043740.4548-5-jeremy.linton@arm.com> <aICwaQZxK5Spjj8G@arm.com>
-Content-Language: en-US
-From: Jeremy Linton <jeremy.linton@arm.com>
-In-Reply-To: <aICwaQZxK5Spjj8G@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-Hi,
-
-
-Thanks for looking at this.
-
-On 7/23/25 4:50 AM, Catalin Marinas wrote:
-> On Fri, Jul 18, 2025 at 11:37:36PM -0500, Jeremy Linton wrote:
->> +/*
->> + * Unlike put_user_gcs() above, the use of copy_from_user() may provide
->> + * an opening for non GCS pages to be used to source data. Therefore this
->> + * should only be used in contexts where that is acceptable.
->> + */
+On Fri, 13 Jun 2025 19:40:47 +0800, Changbin Du wrote:
+> This change adds support for new funcgraph tracer options funcgraph-args,
+> funcgraph-retval, funcgraph-retval-hex and funcgraph-retaddr.
 > 
-> Even in user space, the GCS pages can be read with normal loads, so
-> already usable as a data source if one wants to (not that it's of much
-> use). So not sure the comment here is needed.
-
-Right, but userspace isn't using it in a privileged context to emulate 
-operations that have a permission check performed as part of the read 
-when performed by the HW.
-
-This comment was added in V2 following a number of conversations about 
-whether this was an actual risk or something that is only a problem if a 
-long set of pre-conditions hold true. Conditions which can be summarized 
-as "it is too late anyway".
-
-Hence the comment to remind people that this routine isn't assuring the 
-page is correctly marked.
-
-I will reword it a bit if that is ok.
-
-
+> The new added options are:
+>   - args       : Show function arguments.
+>   - retval     : Show function return value.
+>   - retval-hex : Show function return value in hexadecimal format.
+>   - retaddr    : Show function return address.
 > 
->> +static inline u64 load_user_gcs(unsigned long __user *addr, int *err)
-> 
-> Nitpick: name this get_user_gcs() for symmetry with put_user_gcs().
-> 
->> +{
->> +	unsigned long ret;
->> +	u64 load = 0;
->> +
->> +	gcsb_dsync();
-> 
-> Might be worth a comment here, see the one in gcs_restore_signal().
+> [...]
+Applied to perf-tools-next, thanks!
 
-Sure,
+Best regards,
+Namhyung
 
-> 
->> +	ret = copy_from_user(&load, addr, sizeof(load));
->> +	if (ret != 0)
->> +		*err = ret;
->> +	return load;
->> +}
-> 
-> Otherwise the patch looks fine:
-> 
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 
