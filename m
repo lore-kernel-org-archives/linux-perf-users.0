@@ -1,328 +1,187 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 267F32E54DE;
-	Wed, 23 Jul 2025 12:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35EDF2E62B2;
+	Wed, 23 Jul 2025 13:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753274142; cv=none; b=uyGNVagdcIogh8fPaOLW67K8RkXGbV4dksvVS0oYezmIZZD5on0Q2u41hBSYVSEw8bYTHUrJQZmxZsztrYx0rYGcBidoU8FwXxxoqschucvp7v8AM3dx+q+/OSoscpiquR/lgmNmZHYavlrlocqe1TC1Lwi3guAbB8qq/kudqlo=
+	t=1753276148; cv=none; b=EBGSWn1QQoXlQBQ++I43bZ88iXFrqUB6zQysUGF+qZAHFIZaiFvREDB3uqqvsor/BTfoCD8vLGgb3eAcjw2gMyWM+ChcJzoYfugfHNxFpvf02v5lcv9sWnKRu6ozYB4v3sumEhMa0gv55u1pA+7fUiBfc8y5HTDrcw8QCn6+eq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753274142; c=relaxed/simple;
-	bh=jngubJk2lOl2zLElFgLufbJ8b315hjmmnq1reMuEJMY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KvtgquwV6StRp0uDiMnZdVY504WnwN7jSKw5m6PpKmGNo/LPCitvlFJH69wr7Fo4+X5BK9nw+7A/Hkm/eWKNaWluFfDuKs194ZSCEZSkocw6U2tiY2IbumxySe65gzKrAk+hiIZrqpRDj+VlyvrymKo86SRHbN5BJBb6mg1VSao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F02BA22C7;
-	Wed, 23 Jul 2025 05:35:32 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 859613F6A8;
-	Wed, 23 Jul 2025 05:35:37 -0700 (PDT)
-Date: Wed, 23 Jul 2025 13:35:31 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Yunseong Kim <ysk@kzalloc.com>
-Cc: Will Deacon <will@kernel.org>, Austin Kim <austindh.kim@gmail.com>,
-	Michelle Jin <shjy180909@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Yeoreum Yun <yeoreum.yun@arm.com>, syzkaller@googlegroups.com
-Subject: Re: [PATCH] perf: arm_pmuv3: Fix kernel panic on UBSAN from negative
- hw.idx in armv8pmu_enable/disable_event()
-Message-ID: <aIDXE3GsRVUbPmaz@J2N7QTR9R3>
-References: <20250723104359.364547-5-ysk@kzalloc.com>
+	s=arc-20240116; t=1753276148; c=relaxed/simple;
+	bh=zHL0/JrntZk6f9z9OaKUCRl5Ve/+xb8bifr4gesVLAc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=b3390LaKlP+uONuX+AlOIPzXLLAVyeuEHMOPsHP1jOQYbRINUrOHp0rHx6831sDFXvACLoQEbBNZeK7O1zZ2ppMGvtv9+92J4bGR+O+OHkSHY6plG0IFKmygZot32whjOi6FguKXRhrGL1Tc+JE4w9XToHDgYmJGZ6OJDNTD1lY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=RH6qh2wH; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="RH6qh2wH"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56NCZlrm001242;
+	Wed, 23 Jul 2025 15:08:47 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	c84xGmzk0WDtYO8pxiXJLl1Oz2OVFtl3JU/pJXFAfdc=; b=RH6qh2wHcTQYNBC8
+	CAycCaMn2NUvSRfSnkiB2ortckzk3VhwRZw9n01Tll8fh7adNrQKUAEywm5mA4Zd
+	1y7IXxbrMwXq0IeHjlAQmyG/rP/eVLcsUaGiW7ep2J5zIveSGKX5qfMZZVIJuE7Y
+	JYrw7R5vj+3sxx9I3JGGlm5X2MnvBe9cUOxkatD7CtgAO80oC3/zsZDpLHB1cDYD
+	N8ZusBFym0S/t09GpROOK4aSKykKGW6q5OTEfsPNVXSiuK/M3zrnmZRlLVJ7TMEp
+	JleNHc6aoz5BJN3na+8KvnFMndi9G+xTkFuYd3bZbv50dg1kHcTgj6qkqLPfurav
+	oU1Gog==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4800sm4jtw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Jul 2025 15:08:46 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4312340044;
+	Wed, 23 Jul 2025 15:07:26 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 394CA799877;
+	Wed, 23 Jul 2025 15:06:05 +0200 (CEST)
+Received: from localhost (10.48.86.185) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 23 Jul
+ 2025 15:06:04 +0200
+From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
+Date: Wed, 23 Jul 2025 15:05:47 +0200
+Subject: [PATCH v4 03/20] clk: stm32mp25: add firewall grant_access ops
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250723104359.364547-5-ysk@kzalloc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-ID: <20250723-ddrperfm-upstream-v4-3-1aa53ca319f4@foss.st.com>
+References: <20250723-ddrperfm-upstream-v4-0-1aa53ca319f4@foss.st.com>
+In-Reply-To: <20250723-ddrperfm-upstream-v4-0-1aa53ca319f4@foss.st.com>
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob
+ Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor
+ Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Philipp Zabel
+	<p.zabel@pengutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Gatien Chevallier
+	<gatien.chevallier@foss.st.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Gabriel Fernandez
+	<gabriel.fernandez@foss.st.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Le
+ Goffic <legoffic.clement@gmail.com>,
+        Julius Werner <jwerner@chromium.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>,
+        =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
+X-Mailer: b4 0.15-dev-8018a
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-07-23_02,2025-07-22_01,2025-03-28_01
 
-[ dropping Hemendra, since he doens't need to be spammed with ML traffic ]
+On STM32MP25, the RCC peripheral manages the secure level of resources
+that are used by other devices such as clocks.
+Declare this peripheral as a firewall controller.
 
-On Wed, Jul 23, 2025 at 10:44:03AM +0000, Yunseong Kim wrote:
-> When 'event->hw.idx' was negative in armv8pmu_enable/disable_event().
-> 
->   UBSAN: shift-out-of-bounds in drivers/perf/arm_pmuv3.c:716:25
->   shift exponent -1 is negative
-> 
->   UBSAN: shift-out-of-bounds in drivers/perf/arm_pmuv3.c:658:13
->   shift exponent -1 is negative
-> 
-> This occurred because a perf_event could reach armv8pmu event with a
-> negative idx, typically when a valid counter could not be allocated.
+Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+---
+ drivers/clk/stm32/clk-stm32mp25.c | 40 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 39 insertions(+), 1 deletion(-)
 
-These functions are never supposed to be called for an event with a
-negative idx. For that to happen there must either be an earlier bug (at
-the time of pmu::add()) or there's a concurrency bug.
+diff --git a/drivers/clk/stm32/clk-stm32mp25.c b/drivers/clk/stm32/clk-stm32mp25.c
+index 52f0e8a12926..af4bc06d703a 100644
+--- a/drivers/clk/stm32/clk-stm32mp25.c
++++ b/drivers/clk/stm32/clk-stm32mp25.c
+@@ -4,8 +4,10 @@
+  * Author: Gabriel Fernandez <gabriel.fernandez@foss.st.com> for STMicroelectronics.
+  */
+ 
++#include <linux/bus/stm32_firewall.h>
+ #include <linux/bus/stm32_firewall_device.h>
+ #include <linux/clk-provider.h>
++#include <linux/device.h>
+ #include <linux/io.h>
+ #include <linux/platform_device.h>
+ 
+@@ -1602,6 +1604,11 @@ static int stm32_rcc_get_access(void __iomem *base, u32 index)
+ 	return 0;
+ }
+ 
++static int stm32mp25_rcc_grant_access(struct stm32_firewall_controller *ctrl, u32 firewall_id)
++{
++	return stm32_rcc_get_access(ctrl->mmio, firewall_id);
++}
++
+ static int stm32mp25_check_security(struct device_node *np, void __iomem *base,
+ 				    const struct clock_config *cfg)
+ {
+@@ -1970,6 +1977,7 @@ MODULE_DEVICE_TABLE(of, stm32mp25_match_data);
+ 
+ static int stm32mp25_rcc_clocks_probe(struct platform_device *pdev)
+ {
++	struct stm32_firewall_controller *rcc_controller;
+ 	struct device *dev = &pdev->dev;
+ 	void __iomem *base;
+ 	int ret;
+@@ -1982,7 +1990,36 @@ static int stm32mp25_rcc_clocks_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	return stm32_rcc_init(dev, stm32mp25_match_data, base);
++	ret = stm32_rcc_init(dev, stm32mp25_match_data, base);
++	if (ret)
++		return ret;
++
++	rcc_controller = devm_kzalloc(&pdev->dev, sizeof(*rcc_controller), GFP_KERNEL);
++	if (!rcc_controller)
++		return -ENOMEM;
++
++	rcc_controller->dev = dev;
++	rcc_controller->mmio = base;
++	rcc_controller->name = dev_driver_string(dev);
++	rcc_controller->type = STM32_PERIPHERAL_FIREWALL;
++	rcc_controller->grant_access = stm32mp25_rcc_grant_access;
++
++	platform_set_drvdata(pdev, rcc_controller);
++
++	ret = stm32_firewall_controller_register(rcc_controller);
++	if (ret) {
++		dev_err(dev, "Couldn't register as a firewall controller: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static void stm32mp25_rcc_clocks_remove(struct platform_device *pdev)
++{
++	struct stm32_firewall_controller *rcc_controller = platform_get_drvdata(pdev);
++
++	stm32_firewall_controller_unregister(rcc_controller);
+ }
+ 
+ static struct platform_driver stm32mp25_rcc_clocks_driver = {
+@@ -1991,6 +2028,7 @@ static struct platform_driver stm32mp25_rcc_clocks_driver = {
+ 		.of_match_table = stm32mp25_match_data,
+ 	},
+ 	.probe = stm32mp25_rcc_clocks_probe,
++	.remove = stm32mp25_rcc_clocks_remove,
+ };
+ 
+ static int __init stm32mp25_clocks_init(void)
 
-> This issue was observed when running KVM on Radxa's Orion6 platform.
+-- 
+2.43.0
 
-Do you mean that you see this on the host, or in a guest?
-
-Are you using pseudo-NMI?
-
-> The issue was previously guarded indirectly by armv8pmu_event_is_chained(),
-> which internally warned and returned false for idx < 0. But since the
-> commit 29227d6ea157 ("arm64: perf: Clean up enable/disable calls"), this
-> check was removed.
-
-The warning there was because this case *should not happen*, and
-returning false was a way of minimizing the risk of a crash before the
-warning was logged. 
-
-I don't think that armv8pmu_event_is_chained() would avoid the UBSAN
-splat. Prior to commit 29227d6ea157 we had:
-
-| static inline void armv8pmu_enable_event_counter(struct perf_event *event)
-| {
-|         struct perf_event_attr *attr = &event->attr;
-|         int idx = event->hw.idx;
-| 
-| 	...
-| 
-|         if (!kvm_pmu_counter_deferred(attr)) {
-|                 armv8pmu_enable_counter(idx);
-|                 if (armv8pmu_event_is_chained(event))
-|                         armv8pmu_enable_counter(idx - 1);
-|         }
-| }
-
-Note the first call to armv8pmu_enable_counter(idx), so this wouldn't
-help for an event with event->hw.idx==-1, and the only other way we
-could get here is with a chained event with event->hw.idx==0, which is
-not valid.
-
-> To prevent undefined behavior, add an explicit guard to early return from
-> armv8pmu event if hw.idx < 0, 
-
-That is not a correct fix, and simply hides the real bug. It should not
-be possible to reach this code when hw.idx < 0, and idx should be >= 0
-whenever pmu::add() succeeds.
-
-> similar to handling in other PMU drivers.
-> (e.g. intel_pmu_disable_event() on arch/x86/events/intel/core.c)
-
-I think what you're saying here is that intel_pmu_disable_event() will
-pr_warn() and return early in this case. As above, that is because this
-case is not expected to occur, and indicates a bug elsewhere.
-
-> $ ./syz-execprog -executor=./syz-executor -repeat=0  -sandbox=none \
->   -disable=binfmt_misc,cgroups,close_fds,devlink_pci,ieee802154,net_dev,net_reset,nic_vf,swap,sysctl,tun,usb,vhci,wifi \
->   -procs=8 perf.syz
-> 
-> r0 = perf_event_open(&(0x7f0000000240)={
->         0x0, 0x80, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
->         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
->         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
->         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
->         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
->         @perf_config_ext
->     }, 0x0, 0x0, 0xffffffffffffffff, 0x0)
-> 
-> perf_event_open(&(0x7f0000000280)={
->         0x0, 0x80, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
->         0x1, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
->         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
->         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
->         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
->         @perf_config_ext
->     }, 0x0, 0x0, r0, 0x0)
-> 
-> perf_event_open(&(0x7f0000000540)={
->         0x3, 0x80, 0x0, 0x0, 0x0, 0x0, 0x0, 0x4, 0x0, 0x0,
->         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
->         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
->         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
->         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x4,
->         @perf_bp={0x0, 0x2}, 0x20, 0x0, 0x0, 0x0, 0x2,
->         0x0, 0x0, 0x0, 0x0, 0x0, 0x81
->     }, 0x0, 0x0, r0, 0x0)
-
-This isn't all that helpful for reproducing the issue. Are the later
-lines the contents of 'perf.syz'? My local build of syz-execprog can't
-seem to parse this and prints help/usage.
-
-Has your syzkaller instance managed to generate a C reproducer that you
-can share?
-
-It should be possible to manually build a test from the above, but
-that's rather tedious.
-
-> ------------[ cut here ]------------
-> UBSAN: shift-out-of-bounds in drivers/perf/arm_pmuv3.c:716:25
-> shift exponent -1 is negative
-> CPU: 0 UID: 0 PID: 8405 Comm: syz.3.19 Tainted: G        W           6.16.0-rc2-g5982a539cdce #3 PREEMPT
-> Tainted: [W]=WARN
-> Hardware name: QEMU KVM Virtual Machine, BIOS 2025.02-8 05/13/2025
-> Call trace:
->  show_stack+0x2c/0x3c (C)
->  __dump_stack+0x30/0x40
->  dump_stack_lvl+0xd8/0x12c
->  dump_stack+0x1c/0x28
->  ubsan_epilogue+0x14/0x48
->  __ubsan_handle_shift_out_of_bounds+0x2b0/0x34c
->  armv8pmu_enable_event+0x3c4/0x4b0
->  armpmu_start+0xc4/0x118
->  perf_event_unthrottle_group+0x3a8/0x50c
->  perf_adjust_freq_unthr_events+0x2f4/0x578
->  perf_adjust_freq_unthr_context+0x278/0x46c
->  perf_event_task_tick+0x394/0x5b0
-
-AFAICT perf_event_task_tick() is called with IRQs masked, and
-perf_adjust_freq_unthr_context() disables the PMU for the duration of
-the state manipulation, so this shouldn't be able to race with anything
-that's using appropriate IRQ masking.
-
-This might be able to race with a pNMI though, and it looks like we're
-not entirely robust.
-
->  sched_tick+0x314/0x6cc
->  update_process_times+0x374/0x4b0
->  tick_nohz_handler+0x334/0x480
->  __hrtimer_run_queues+0x3ec/0xb78
->  hrtimer_interrupt+0x2b8/0xb50
->  arch_timer_handler_virt+0x74/0x88
->  handle_percpu_devid_irq+0x174/0x308
->  generic_handle_domain_irq+0xe0/0x140
->  gic_handle_irq+0x6c/0x190
->  call_on_irq_stack+0x24/0x30
->  do_interrupt_handler+0xd4/0x138
->  el1_interrupt+0x34/0x54
->  el1h_64_irq_handler+0x18/0x24
->  el1h_64_irq+0x6c/0x70
->  generic_exec_single+0x2dc/0x304 (P)
->  smp_call_function_single+0x308/0x530
->  perf_install_in_context+0x4a0/0x798
->  __arm64_sys_perf_event_open+0x184c/0x1d50
->  invoke_syscall+0x98/0x2b8
->  el0_svc_common+0x130/0x23c
->  do_el0_svc+0x48/0x58
->  el0_svc+0x58/0x17c
->  el0t_64_sync_handler+0x78/0x108
->  el0t_64_sync+0x198/0x19c
-> ---[ end trace ]---
-> ------------[ cut here ]------------
-> UBSAN: shift-out-of-bounds in drivers/perf/arm_pmuv3.c:658:13
-> shift exponent -1 is negative
-> CPU: 0 UID: 0 PID: 8006 Comm: syz.0.19 Not tainted 6.16.0-rc2-g5982a539cdce #3 PREEMPT
-> Hardware name: QEMU KVM Virtual Machine, BIOS 2025.02-8 05/13/2025
-> Call trace:
->  show_stack+0x2c/0x3c (C)
->  __dump_stack+0x30/0x40
->  dump_stack_lvl+0xd8/0x12c
->  dump_stack+0x1c/0x28
->  ubsan_epilogue+0x14/0x48
->  __ubsan_handle_shift_out_of_bounds+0x2b0/0x34c
->  armv8pmu_disable_event+0x228/0x2f8
->  armpmu_stop+0xa0/0x104
->  perf_event_throttle_group+0x354/0x4cc
->  __perf_event_account_interrupt+0x26c/0x290
->  __perf_event_overflow+0xe8/0xd28
->  perf_event_overflow+0x38/0x4c
->  armv8pmu_handle_irq+0x244/0x320
->  armpmu_dispatch_irq+0x6c/0x9c
->  handle_percpu_devid_irq+0x174/0x308
->  generic_handle_domain_irq+0xe0/0x140
->  gic_handle_irq+0x6c/0x190
->  call_on_irq_stack+0x24/0x30
->  do_interrupt_handler+0xd4/0x138
->  el1_interrupt+0x34/0x54
->  el1h_64_irq_handler+0x18/0x24
->  el1h_64_irq+0x6c/0x70
-
-This indicates a regular IRQ rather than a pNMI.
-
->  generic_exec_single+0x2dc/0x304 (P)
->  smp_call_function_single+0x308/0x530
->  perf_install_in_context+0x4a0/0x798
->  __arm64_sys_perf_event_open+0x184c/0x1d50
->  invoke_syscall+0x98/0x2b8
->  el0_svc_common+0x130/0x23c
->  do_el0_svc+0x48/0x58
->  el0_svc+0x58/0x17c
->  el0t_64_sync_handler+0x78/0x108
->  el0t_64_sync+0x198/0x19c
-> ---[ end trace ]---
-> ------------[ cut here ]------------
-> UBSAN: shift-out-of-bounds in drivers/perf/arm_pmuv3.c:730:26
-> shift exponent -1 is negative
-> CPU: 0 UID: 0 PID: 8006 Comm: syz.0.19 Not tainted 6.16.0-rc2-g5982a539cdce #3 PREEMPT
-> Hardware name: QEMU KVM Virtual Machine, BIOS 2025.02-8 05/13/2025
-> Call trace:
->  show_stack+0x2c/0x3c (C)
->  __dump_stack+0x30/0x40
->  dump_stack_lvl+0xd8/0x12c
->  dump_stack+0x1c/0x28
->  ubsan_epilogue+0x14/0x48
->  __ubsan_handle_shift_out_of_bounds+0x2b0/0x34c
->  armv8pmu_disable_event+0x298/0x2f8
->  armpmu_stop+0xa0/0x104
->  perf_event_throttle_group+0x354/0x4cc
->  __perf_event_account_interrupt+0x26c/0x290
->  __perf_event_overflow+0xe8/0xd28
->  perf_event_overflow+0x38/0x4c
->  armv8pmu_handle_irq+0x244/0x320
->  armpmu_dispatch_irq+0x6c/0x9c
->  handle_percpu_devid_irq+0x174/0x308
->  generic_handle_domain_irq+0xe0/0x140
->  gic_handle_irq+0x6c/0x190
->  call_on_irq_stack+0x24/0x30
->  do_interrupt_handler+0xd4/0x138
->  el1_interrupt+0x34/0x54
->  el1h_64_irq_handler+0x18/0x24
->  el1h_64_irq+0x6c/0x70
->  generic_exec_single+0x2dc/0x304 (P)
->  smp_call_function_single+0x308/0x530
->  perf_install_in_context+0x4a0/0x798
->  __arm64_sys_perf_event_open+0x184c/0x1d50
->  invoke_syscall+0x98/0x2b8
->  el0_svc_common+0x130/0x23c
->  do_el0_svc+0x48/0x58
->  el0_svc+0x58/0x17c
->  el0t_64_sync_handler+0x78/0x108
->  el0t_64_sync+0x198/0x19c
-> ---[ end trace ]---
-> 
-> Fixes: 29227d6ea157 ("arm64: perf: Clean up enable/disable calls")
-
-As above, I do not believe that this fixes tag is accurate.
-
-> Signed-off-by: Yunseong Kim <ysk@kzalloc.com>
-> Tested-by: Yunseong Kim <ysk@kzalloc.com>
-> Cc: Yeoreum Yun <yeoreum.yun@arm.com>
-> Cc: syzkaller@googlegroups.com
-> ---
->  drivers/perf/arm_pmuv3.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-> index 3db9f4ed17e8..846d69643fd8 100644
-> --- a/drivers/perf/arm_pmuv3.c
-> +++ b/drivers/perf/arm_pmuv3.c
-> @@ -795,6 +795,9 @@ static void armv8pmu_enable_user_access(struct arm_pmu *cpu_pmu)
->  
->  static void armv8pmu_enable_event(struct perf_event *event)
->  {
-> +	if (unlikely(event->hw.idx < 0))
-> +		return;
-> +
->  	armv8pmu_write_event_type(event);
->  	armv8pmu_enable_event_irq(event);
->  	armv8pmu_enable_event_counter(event);
-> @@ -802,6 +805,9 @@ static void armv8pmu_enable_event(struct perf_event *event)
->  
->  static void armv8pmu_disable_event(struct perf_event *event)
->  {
-> +	if (unlikely(event->hw.idx < 0))
-> +		return;
-> +
->  	armv8pmu_disable_event_counter(event);
->  	armv8pmu_disable_event_irq(event);
-
-As above, this is not a correct fix, and NAK to silently ignoring an
-invalid idx.
-
-Mark.
