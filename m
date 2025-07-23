@@ -1,102 +1,89 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5019A21C190;
-	Tue, 22 Jul 2025 22:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA442F43
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Jul 2025 00:37:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753224636; cv=none; b=WxlTanxxA3QzjjiwNBCgDCU7EN51qPdxpdVJA/gf3C8t4u23uBFYj71VnjgQjRbO3ZNTMoCWpeySdLuRvaDWW+9zf961nCOah6N0r+kn042qakWYMRqGAXVkK9wxSVU5R5zKeMaufnXs6q5pOH4/39zPgY4ycxq5q6e5ZL3PAHk=
+	t=1753231036; cv=none; b=DVZ48k8dMI03VWle6cD1/LAQ3dYzXC/VCfLPnfIzhOobZOEUMuzHSthduv2a8dS2YPFqdzTABOCslDnBvS8WIWqMSChz2BZ7F8kxZg5sFFCEuDN1ZMoUvoJUqWGTQ4yz7jIWMKQGtLkemXEn63uNt7OlP2YpPVS2dWUJeRg4hlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753224636; c=relaxed/simple;
-	bh=/QBVWJ0kj7458ZMk1ote9UnlBV1cQZ5CKBVmiln3XUc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=TSdGrJVLIUXosMGRvl+fr82iC3w7pSkp/vR3nNSl77b/8/CmRS0mAbI8MsLqPR/yDQiq1NKP2gjUO/hI1IP121xwB0oXHK3NvNz3iwB5YGm/7qtnbtn4gs5v6vde/RmQUEgl7WccbIf96vwxONbyEJXYoNUvg0XH4FHHWwyHUf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fh89VRaI; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1753231036; c=relaxed/simple;
+	bh=R4JuDpULNKFkGzGHna+bohAj2cVbOZ9resF4fyzhn6o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gpW+xPZT9VPk79X3SmSx207yNFG9xYTPOdGcaYwSBeLBtJmfJ8srb75sGZHMEe0TTTMV4ZrODSaW1MR7qYfCkYE6YrqQ9ZRV3LCcqlSbHgNC6QVNVOEv1V9YHKq332Re0FV+Sw7qIs2IMMI5sQeg4Do7DOAASc+hvmbqG7eSxUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ak+MSl4r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fh89VRaI"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7e2e3108841so714329385a.3;
-        Tue, 22 Jul 2025 15:50:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753224634; x=1753829434; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/QBVWJ0kj7458ZMk1ote9UnlBV1cQZ5CKBVmiln3XUc=;
-        b=Fh89VRaIo2XRPBGlPKAnvowjBE8GeR8PmbxzgP8dknCL2BP9S+03aW4S4qUTU+zU9r
-         qhuDVfLawgIKeZFuznbND/NcJb2tZApvQYmaV1Uesy9AB6pCABc8p6Fp7ImUlDjS4Jxs
-         1RB3RsYvZgAeFb5gt7BRj00FpIb7iJ9ccJb4xI+sPxVav9XqGTSONrwjvIIh4y6+IuJj
-         8puamkCmBw1DANU2SIuU3ptRNqAc3nADrFNMGOGWVrKho6KSeamFFDLCkZFJB1yAZf+3
-         anUvCwZfi3EmcOKirBFDv7FHbS7P9HrEYBRsWldUSRz82sZWPTSYpiVaflDiEfBl1A2A
-         x99A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753224634; x=1753829434;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/QBVWJ0kj7458ZMk1ote9UnlBV1cQZ5CKBVmiln3XUc=;
-        b=pkqpzwz5WzE/bEYCOsWpe1SaP/LBpzEyeq81N+LtOKnV+b6uqwERM8g+Mavl8HckaL
-         hUCcnCKkQj9WjWBf+Z6UAn4bINIqFqY10pwbUVM/xXqQTp3zYQUIcZTFi297l7/Uyf6+
-         jQXSgsFf6m3WhKKHu8PmL9BeZtMHTl11ZGcBh7bupeKW8yt3seTPL202lOvQZYYtDN6J
-         vLSfY2lC7TpQ/YbXmx0Ut/buptO2U2u8wQCHDHDGypi8+cu/kksw6j4sdtofq7OPyyFg
-         aX9Cg/yuMzHQghgFvk5rzt5HBKJ8H47lAuJC34gpFBnV9MlnynZkJpFhMn2R8b8EFJ1S
-         u0EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXbbpkZhpMTBfoW/5x92VmE/5MDA6Z8sgoCHbFH2PUsCBM2/ePLucnwSpd1mx+5yshRJxZ/2GlN3asHhy4=@vger.kernel.org, AJvYcCXn/gHBVXk1s7nZIp8+PBxL10hNK1Y2BNdAjHKAJhvdqHm43iDr0F0zb8NC8IUgT6eB3+OyDP7siyN11o3TLjvVsQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YygZ3rtJQXiSflpmmkSgLGz+Bj7po48yMBq5ZRlNFZQqLxkKBos
-	FX0rY1Wl8VxJ9IFmKSLPckdKXLZqhWJfFwtVQPoDiTW6GLolm+sZRkBw
-X-Gm-Gg: ASbGnctLO6+Wr1u/E98Wm3WFWzNGkaXKAqHUypVG//rUK0dox91IoQLc49vVZQPeDpQ
-	wuTN4xPJrMiBIby0VOMEW9Ow8+xvsPgllpOgyZjfmHmrJsrlNZwPOL1mO+dgIC1dpBQfR+8pZ53
-	UFM60zIh4ruXcbTOcYE3LHU4WOfUi6PYecU2HFV1NiAiwgKxQcy/cY5qO/8ql5mqA/FX9isJ0Dn
-	EKNiecSUi6Qimri3Dke69jXutyp0HJm63/7+cvWeQcq5xT6MQ0VHFB6iowA3L+gFhBrcaEwErty
-	2Qr+J7HlqKCztcEJD465h5xd1TKcNe/Tbbk5LsskYAamnrpr9dUySkxaFLMljx0RbIGHKJ2QpNz
-	/zqsHDZ4KuEyWe/EqSilv50MqZ6jBIZ/06xzr/vAnww==
-X-Google-Smtp-Source: AGHT+IHVxqOeAZ5vJebxapDm+JIQblEv2y1cOjkdFHVkA2ZjKIXq2d5/qbibRMBMr5Fo/HoHy7NzYA==
-X-Received: by 2002:a05:620a:110f:b0:7e2:769a:c858 with SMTP id af79cd13be357-7e62a132d9bmr113633885a.3.1753224634142;
-        Tue, 22 Jul 2025 15:50:34 -0700 (PDT)
-Received: from Gentoo.localdomain ([37.19.198.68])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e356c44cdesm571413585a.61.2025.07.22.15.50.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Jul 2025 15:50:33 -0700 (PDT)
-From: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	unixbhaskar@gmail.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] tools:perf:tests:shell:common This file was missing the shebang line, so added it
-Date: Wed, 23 Jul 2025 04:17:15 +0530
-Message-ID: <20250722224810.30252-1-unixbhaskar@gmail.com>
-X-Mailer: git-send-email 2.49.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ak+MSl4r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD6D9C4CEEB;
+	Wed, 23 Jul 2025 00:37:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753231036;
+	bh=R4JuDpULNKFkGzGHna+bohAj2cVbOZ9resF4fyzhn6o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ak+MSl4rFKUSmwyll+lzSf+oqBI57bck7BjQnMxUgTXGggeE9RfdF/EdQgtNypGAG
+	 HBFpu9wBS2+PoRkXGqAJxlTEeCWISt6oWjkNbO+RzWugNHzbSoZUp74n13tKWwYOxK
+	 WF3LuJ7G69UApGxclaeRKGfjlZNLEvL14AodSXJvVgNinzLwMlphoxUVIjeBUgT4AQ
+	 vZfcID/Xa3gqZONTDSmHZPvLfmxJYzhbqzxmDe+CfKtocQ4ca+MoE0vBv7FkDEv+NF
+	 cqT2PfLfnfAmyZMBIT2QlqtdlafdgfWrOjbmUDwawr++cm0kL+RuI/mhHzX42HfLYh
+	 KQUwN9IGXY8dw==
+Date: Tue, 22 Jul 2025 17:37:13 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Federico Pellegrin <fede@evolware.org>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/1] perf build: Always disable stack protection for BPF
+ skeleton objects
+Message-ID: <aIAuuVM-VYIF0Lsl@google.com>
+References: <20250718041224.12389-1-fede@evolware.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250718041224.12389-1-fede@evolware.org>
 
-This file was missing a shebang line, so added it.
+Hello,
 
-Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
----
- tools/perf/tests/shell/common/patterns.sh | 1 +
- 1 file changed, 1 insertion(+)
+On Fri, Jul 18, 2025 at 06:12:24AM +0200, Federico Pellegrin wrote:
+> When the clang toolchain has stack protection enabled, the bpf
+> skeletons build fails with:
+> 
+> error: A call to built-in function '__stack_chk_fail' is not supported.
+> 
+> Since stack-protector makes no sense for the BPF bits, just unconditionally
+> disable it.
+> 
+> See also similar case at 878625e1c7a10dfbb1fdaaaae2c4d2a58fbce627
+> 
+> Signed-off-by: Federico Pellegrin <fede@evolware.org>
 
-diff --git a/tools/perf/tests/shell/common/patterns.sh b/tools/perf/tests/shell/common/patterns.sh
-index 21dab25c7b7f..807c1bc7bb52 100644
---- a/tools/perf/tests/shell/common/patterns.sh
-+++ b/tools/perf/tests/shell/common/patterns.sh
-@@ -1,3 +1,4 @@
-+#!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
+Applied to perf-tools-next with minor updates.
 
- export RE_NUMBER="[0-9\.]+"
---
-2.49.1
+Thanks,
+Namhyung
 
+> ---
+>  tools/perf/Makefile.perf | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index d4c7031b01a7..ca7dc65a3182 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -1251,7 +1251,7 @@ else
+>  endif
+>  
+>  $(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(LIBBPF) $(SKEL_OUT)/vmlinux.h | $(SKEL_TMP_OUT)
+> -	$(QUIET_CLANG)$(CLANG) -g -O2 --target=bpf $(CLANG_OPTIONS) $(BPF_INCLUDE) $(TOOLS_UAPI_INCLUDE) \
+> +	$(QUIET_CLANG)$(CLANG) -g -O2 -fno-stack-protector --target=bpf $(CLANG_OPTIONS) $(BPF_INCLUDE) $(TOOLS_UAPI_INCLUDE) \
+>  	  -c $(filter util/bpf_skel/%.bpf.c,$^) -o $@
+>  
+>  $(SKEL_OUT)/%.skel.h: $(SKEL_TMP_OUT)/%.bpf.o | $(BPFTOOL)
+> -- 
+> 2.50.1
+> 
