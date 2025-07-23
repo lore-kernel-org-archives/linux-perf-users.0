@@ -1,205 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3E22192F4;
-	Wed, 23 Jul 2025 19:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D0B17C91;
+	Wed, 23 Jul 2025 21:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753298661; cv=none; b=YTrWWqmoJ9f4VQQI4nBUIsSNO309PGeI9vlmi0ZgprSaSEttER5F15jDZ8q7OEMhHeyTWS+sE/+RqSPrbEqmgIdkXWiWEA6OHhXHbaLmAh/IJH9+c3I9Qxqmr2Q+Szwo0F8+XsN3+CuGw0YHPT0j/fpqKL45YlF4WNUnph4UJ/c=
+	t=1753304872; cv=none; b=OYNceXlZ/hn0QJcda1MX/Ppwn3e1R51L3M3bLKJHJ3Uy5DFrW40KdqPlbzB7Syh6scKEZ9lhWFDKPpZUmkwc41aQ+O/fVRMsnS/R5AAY5G1eQIGHol+kNXPNqfQZ5IQe3jGeCzqolhvv5tJEobco1LX+wdiWu/jZrsMHe5f0ujs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753298661; c=relaxed/simple;
-	bh=Vm3veatecaJYU4VIsRdH8NCXde2FjUk++0i7MGDnLSU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OnIUDvQ+fLdVP6fHNpuhh5dJEWhnuLOkH/F23BeZG3vdEXRhfxEe/7Wie6XjID54006EjL/tfwpF5AkC0lUK3k+Xy8divXKVbarKP6CwURFjTnh4bLUl/tbVJoBTcFG7wqQJj4yLAZlg6waen04UXkFCmjoT4F9hGoH2SgvlMUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tdXNQ/v4; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tdXNQ/v4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E24FC4CEE7;
-	Wed, 23 Jul 2025 19:24:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753298660;
-	bh=Vm3veatecaJYU4VIsRdH8NCXde2FjUk++0i7MGDnLSU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tdXNQ/v4aT+sV8Po9m6wkOdCdj13AQSFYRr3ic/Zf7qm55kS8ImW1jPrqFDFEQGOt
-	 H4uVReEuuGSKfBNIDi5jTmdMc/oaGTlaEm8gFRiPQGekUXaMWaN+NllBhJvO3UwUhh
-	 z+sbXDoO8gdEoYBOVgVEfu6+wOWP28x4fgz+uyj9/0hsRdaLNsiKda8+79dopLz0IC
-	 TTir97SiPxr4pKhEIEvY0cf427GSvlKXc4mxLhiCD+9YXUm4NFZ8gHOjreFY6C60Nk
-	 PqTnvgkd1wRXdVi9xMJN0duMh+b1/aaI3jV6OFpaXG23wtJMK+0IoqLJn/QO1xD4Ir
-	 NQc6opbxw46pw==
-Date: Wed, 23 Jul 2025 16:24:17 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	s=arc-20240116; t=1753304872; c=relaxed/simple;
+	bh=hPWMMmywbOOEzN+S87+NwwdTnc0omrEhFKsvJPqdTgk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=puJ6WEPJxxj/UmiBtthXfnd8p2FF0IyvLcLZ12UwWrYjRrKyKkuELzJMGOxMi/kncgon/IFJruNJBMQbduVAOLNN3XuBZmegutD2wX851lMX8TcpXnHgnqkeqR9O21SzaYyQdYknohFeLQBUNvaq5OaiTsOO72VMTNBIOpujY94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b3510c22173so41134a12.0;
+        Wed, 23 Jul 2025 14:07:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753304870; x=1753909670;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/IMiDdl5dSKdreUaUPFyQ/2CpyhV6qLtFUX9jkTE9Bk=;
+        b=eYsdOXB1Dz6iyOKAL+VP6aapg43IyLDS0Rj7Ipl4/3hZpkydqgHiRJstzTOKzDBB5m
+         eXGn8u5ioW6YVjmUvcnSeahjjvfySCWKfaIz7iPiC5BmqL3SEVWzI7fxP/aIsKHrN+19
+         FWmJBgQbY58rukjBCNpM6AH/YEB9h0NCwfAy/PciKm+3z7qmVrgh1jHFM0afXDRW5JYf
+         349apI2SH44yiyEeDPpaOmWdxv+zRET6uXneF0LxxhJtpUFfAnk6GXCDLOPdYjMVgAbH
+         15JAGIYMQAmj7TcmSQOKqZGFhbncJcSPgI/GFivIID+zizdDzgQxgr/WVt/pJ2ASX63I
+         W5hA==
+X-Forwarded-Encrypted: i=1; AJvYcCVuEj34w2KqrZNEHJBsmqEjY4U01SXI3TDOPcYj/Ag373WTmk6fQ0yZFmgN9V6LKyEUCyBOkre5V0cQ9EJgfeKN+Q==@vger.kernel.org, AJvYcCWmXzTW/qihjANKuAne3gnag3DI/deq1Ietu0RWfzcTz31P8YpB0jFF3VNOGe6Eecn3mQ6ovmE86LKCBSY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRS0rSb6skbpHr/K8H7FDe3XRjLplbi1D5RhOQKSGxZWoCM478
+	Ks85c7CZ3txTIHM8ufDFvzQPwzXuDmet0YnzDFPgfhNyDVwecIjE9zT1
+X-Gm-Gg: ASbGncs/4nMu10tJO3FEuXhG9aMQ3iymINyDNMGivaVZwtjtcxyx7r6+gOleMsGGGKT
+	eoNYPMqTOFSrrrZs60+lFlsOY33gKgxh51tRJclG4RhWUl9MtEKgnJpnXtsK4as5C+HPd0JvpqF
+	wefaAZp5b3DTpAUqyyrt4rnOIVEGoySpk4Y3/4XfT8E1KTdj9atFSnglpcfHMwCfKRho2sIBjF/
+	oVUfVhWkXFSNxVxIiy43CE2GZfkyVPnFo1cHdSNFalwvrdnKgLpgEk3pO7FUr2jyTAP9KV1IGGg
+	T/grbbPnJFLZttv52Cadt5/J1aqybvzUGXHJGAQfqY2hfFdNcSG+48RVydj3I2xvzvC/Ek4/vdE
+	mfCBoi8QPbo1/zPSMoSRjFEE=
+X-Google-Smtp-Source: AGHT+IEi131jF0DgSED99zXtWgOrXDGfJi5rNwdTWqxbh/HdaMC7dTOr3gW9pa2J13t2/D/l+T+ncg==
+X-Received: by 2002:a05:6a20:3ca7:b0:239:d43:4820 with SMTP id adf61e73a8af0-23d491af241mr2497205637.10.1753304870583;
+        Wed, 23 Jul 2025 14:07:50 -0700 (PDT)
+Received: from localhost ([218.152.98.97])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31e519e169asm2335508a91.13.2025.07.23.14.07.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Jul 2025 14:07:50 -0700 (PDT)
+From: Yunseong Kim <ysk@kzalloc.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Collin Funk <collin.funk1@gmail.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Gautam Menghani <gautam@linux.ibm.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v7 00/16] New perf ilist app
-Message-ID: <aIE24fDAuIqDXX3h@x1>
-References: <20250714164405.111477-1-irogers@google.com>
- <CAP-5=fW=AG8ztbzS-KXpo9fH_Hp_fkZ3CVDuG9pN7P32Qm0oyg@mail.gmail.com>
- <aIEjMroa3bW-T7d-@google.com>
- <aIEzRNLTCTA5Gqhm@x1>
- <aIEzzt1f3UWDCAIw@x1>
+	"Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Will Deacon <will@kernel.org>,
+	Yeoreum Yun <yeoreum.yun@arm.com>,
+	Austin Kim <austindh.kim@gmail.com>,
+	Michelle Jin <shjy180909@gmail.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yunseong Kim <ysk@kzalloc.com>,
+	syzkaller@googlegroups.com
+Subject: [PATCH] perf/core: Prevent UBSAN negative‑idx shift by throttle/unthrottle group
+Date: Wed, 23 Jul 2025 21:04:28 +0000
+Message-ID: <20250723210426.590974-3-ysk@kzalloc.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aIEzzt1f3UWDCAIw@x1>
 
-On Wed, Jul 23, 2025 at 04:11:13PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Jul 23, 2025 at 04:08:55PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Wed, Jul 23, 2025 at 11:00:18AM -0700, Namhyung Kim wrote:
-> > > > I think there is some follow up for "make install" for scripts like
-> > > > these, but I'm keen for the python API to move forward.
-  
-> > > I'll review the series today so that we can get some part of it, at
-> > > least.  Basically I think we need a wrapper script like perf-ilist to
-> > > run this easily (maybe with documentation).
+Where perf_event_throttle_group() and perf_event_unthrottle_group() would
+invoke pmu->start()/stop() on events still in the OFF state, leaving
+event->hw.idx == -1 and triggering UBSAN shift-out-of-bounds errors
+(negative shift exponent) in pmu enable/disable event. By checking
+'event->state > PERF_EVENT_STATE_OFF' for both the group leader and each
+sibling, this ensure only started events with valid hw.idx values are passed
+to the PMU, preventing negative-index shifts undefined behavior.
+
+The issue is reproducible using the syzlang and C reproducer available:
+Link: https://lore.kernel.org/lkml/14fb716a-dedf-482a-8518-e5cc26165e97@kzalloc.com/
+
+Fixes: 9734e25fbf5a ("perf: Fix the throttle logic for a group")
+Signed-off-by: Yunseong Kim <ysk@kzalloc.com>
+Tested-by: Yunseong Kim <ysk@kzalloc.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: syzkaller@googlegroups.com
+---
+ kernel/events/core.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 22fdf0c187cd..e5cec61be545 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2684,18 +2684,28 @@ static void perf_event_unthrottle_group(struct perf_event *event, bool skip_star
+ {
+ 	struct perf_event *sibling, *leader = event->group_leader;
  
-> > I just tried, with the series applied:
+-	perf_event_unthrottle(leader, skip_start_event ? leader != event : true);
+-	for_each_sibling_event(sibling, leader)
+-		perf_event_unthrottle(sibling, skip_start_event ? sibling != event : true);
++	if (leader->state > PERF_EVENT_STATE_OFF)
++		perf_event_unthrottle(leader,
++			skip_start_event ? leader != event : true);
++
++	for_each_sibling_event(sibling, leader) {
++		if (sibling->state > PERF_EVENT_STATE_OFF)
++			perf_event_unthrottle(sibling,
++				skip_start_event ? sibling != event : true);
++	}
+ }
  
-> > root@number:~# perf ilist
-> > perf: 'ilist' is not a perf-command. See 'perf --help'.
+ static void perf_event_throttle_group(struct perf_event *event)
+ {
+ 	struct perf_event *sibling, *leader = event->group_leader;
  
-> > Did you mean this?
-> > 	list
-> > root@number:~#
+-	perf_event_throttle(leader);
+-	for_each_sibling_event(sibling, leader)
+-		perf_event_throttle(sibling);
++	if (leader->state > PERF_EVENT_STATE_OFF)
++		perf_event_throttle(leader);
++
++	for_each_sibling_event(sibling, leader) {
++		if (sibling->state > PERF_EVENT_STATE_OFF)
++			perf_event_throttle(sibling);
++	}
+ }
  
-> > Now trying to figure out why it is not running.
- 
-> So it is not wired up like 'perf archive', trying it directly:
- 
-> root@number:~# ~acme/git/perf-tools-next/tools/perf/python/ilist.py 
-> Traceback (most recent call last):
->   File "/home/acme/git/perf-tools-next/tools/perf/python/ilist.py", line 11, in <module>
->     from textual import on
-> ModuleNotFoundError: No module named 'textual'
-> root@number:~#
- 
-> I thought there was some discussion about catching this exception and
-> providing guidance, lemme try...
+ static int
+-- 
+2.50.0
 
-root@number:~# sudo dnf install python-textual
-Updating and loading repositories:
- google-chrome                                        100% |   6.1 KiB/s |   1.3 KiB |  00m00s
- Copr repo for PyCharm owned by phracek               100% |   2.0 KiB/s |   2.1 KiB |  00m01s
- RPM Fusion for Fedora 42 - Nonfree - NVIDIA Driver   100% |   2.6 KiB/s |   2.5 KiB |  00m01s
- RPM Fusion for Fedora 42 - Nonfree - Steam           100% |   5.8 KiB/s |   2.4 KiB |  00m00s
- google-chrome                                        100% |   7.2 KiB/s |   3.2 KiB |  00m00s
- Copr repo for PyCharm owned by phracek               100% |  15.7 KiB/s |   4.8 KiB |  00m00s
-Repositories loaded.
-Package                           Arch    Version         Repository     Size
-Installing:
- python3-textual                  noarch  1.0.0-1.fc42    fedora      6.6 MiB
-Installing dependencies:
- python3-linkify-it-py            noarch  2.0.3-4.fc42    fedora    110.4 KiB
- python3-markdown-it-py           noarch  3.0.0-8.fc42    fedora    496.3 KiB
- python3-markdown-it-py+linkify   noarch  3.0.0-8.fc42    fedora      9.0 KiB
- python3-markdown-it-py+plugins   noarch  3.0.0-8.fc42    fedora      9.0 KiB
- python3-mdit-py-plugins          noarch  0.4.2-2.fc42    fedora    289.4 KiB
- python3-mdurl                    noarch  0.1.2-9.fc42    fedora     41.4 KiB
- python3-platformdirs             noarch  4.2.2-4.fc42    fedora    162.0 KiB
- python3-pygments                 noarch  2.18.0-4.fc42   fedora     10.6 MiB
- python3-rich                     noarch  13.9.4-2.fc42   fedora      2.5 MiB
- python3-uc-micro-py              noarch  1.0.3-4.fc42    fedora     13.1 KiB
-
-Transaction Summary:
- Installing:        11 packages
-
-Total size of inbound packages is 5 MiB. Need to download 5 MiB.
-After this operation, 21 MiB extra will be used (install 21 MiB, remove 0 B).
-Is this ok [y/N]: y
-<SNIP>
-[13/13] Installing python3-textual-0:1.0.0-1.fc42.noarch                                                                         100% |  10.1 MiB/s |   6.8 MiB |  00m01s
-Complete!
-root@number:~# ~acme/git/perf-tools-next/tools/perf/python/ilist.py 
-╭────────────────────────────────────────────────────────────────── Traceback (most recent call last) ──────────────────────────────────────────────────────────────────╮
-│ /home/acme/git/perf-tools-next/tools/perf/python/ilist.py:470 in compose                                                                                              │
-│                                                                                                                                                                       │
-│   467 │   │   │   return tree                                                                                                                                         │
-│   468 │   │                                                                                                                                                           │
-│   469 │   │   yield Header(id="header")                                                                                                                               │
-│ ❱ 470 │   │   yield Horizontal(Vertical(metric_event_tree(), id="events"),                                                                                            │
-│   471 │   │   │   │   │   │    Vertical(Label("event name", id="event_name"),                                                                                         │
-│   472 │   │   │   │   │   │   │   │     Static("description", markup=False, id="event_descript                                                                        │
-│   473 │   │   │   │   │   │   │   │     ))                                                                                                                            │
-│                                                                                                                                                                       │
-│ ╭───────────────────────────────────────────────── locals ─────────────────────────────────────────────────╮                                                          │
-│ │ self = IListApp(title='Interactive Perf List', classes={'-dark-mode'}, pseudo_classes={'dark', 'focus'}) │                                                          │
-│ ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────╯                                                          │
-│                                                                                                                                                                       │
-│ /home/acme/git/perf-tools-next/tools/perf/python/ilist.py:433 in metric_event_tree                                                                                    │
-│                                                                                                                                                                       │
-│   430 │   │   │   """Create tree of PMUs and metricgroups with events or metrics under."""     ╭─────────── locals ────────────╮                                      │
-│   431 │   │   │   tree: Tree[TreeValue] = Tree("Root", id="root")                              │ pmus = TreeNode('PMUs', None) │                                      │
-│   432 │   │   │   pmus = tree.root.add("PMUs")                                                 │ tree = Tree(id='root')        │                                      │
-│ ❱ 433 │   │   │   for pmu in perf.pmus():                                                      ╰───────────────────────────────╯                                      │
-│   434 │   │   │   │   pmu_name = pmu.name().lower()                                                                                                                   │
-│   435 │   │   │   │   pmu_node = pmus.add(pmu_name)                                                                                                                   │
-│   436 │   │   │   │   try:                                                                                                                                            │
-╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-AttributeError: module 'perf' has no attribute 'pmus'
-root@number:~# 
-
-Ok, that was with the 'python-perf3' rpm package on fedora 42, trying
-with the new one...
-
-root@number:~# export PYTHONPATH=/tmp/build/perf-tools-next/python
-root@number:~# ~acme/git/perf-tools-next/tools/perf/python/ilist.py 
-
-Cool stuff!
-
-Lots of flashing lights! :-)
-
-Interesting to quickly browse all those events, I like it.
-
-I searched for "wakeup" and stumbled on ftrace:wakeup failures, but that
-should be just a minor adjustment, some exception list:
-
-root@number:~# ls -la /sys/kernel/tracing/events/ftrace/wakeup/
-total 0
-drwxr-xr-x. 1 root root 0 Jul 23 16:04 .
-drwxr-xr-x. 1 root root 0 Jul 23 16:04 ..
--r--r-----. 1 root root 0 Jul 23 16:04 format
--r--r-----. 1 root root 0 Jul 23 16:19 hist
-root@number:~# 
-root@number:~# ls -la /sys/kernel/tracing/events/sched/sched_wakeup/
-total 0
-drwxr-xr-x. 1 root root 0 Jul 23 16:04 .
-drwxr-xr-x. 1 root root 0 Jul 23 16:04 ..
--rw-r-----. 1 root root 0 Jul 23 16:19 enable
--rw-r-----. 1 root root 0 Jul 23 16:19 filter
--r--r-----. 1 root root 0 Jul 23 16:04 format
--r--r-----. 1 root root 0 Jul 23 16:19 hist
--r--r-----. 1 root root 0 Jul 23 16:04 id
--rw-r-----. 1 root root 0 Jul 23 16:19 trigger
-root@number:~#
-
-Do you know how to take text screen shots in textual?
-
-Apart from the super minor nits, thanks for working on this:
-
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-- Arnaldo
