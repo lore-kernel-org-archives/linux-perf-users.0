@@ -1,73 +1,73 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08B21D7E4A
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Jul 2025 18:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0340E218584
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Jul 2025 18:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753294544; cv=none; b=ljm+pDhxZidM7viC7yjfXs/eGLrI+hNy1whYHzUunKhsNcKBejmz6q7ZvjjU1v3E/LneVE38zcVH6O8mpEistf25y/oFZl+shySLAs/iq+cuFStItBag2crSfhsemYzpWnnbQIvfd8YCMOl4wPRoBZgG/TsXBpOKg7KJZXQRmZk=
+	t=1753294892; cv=none; b=T8HHZjfXgm7AQJiE0+c+8PBZDQwn6jal/imfx+6om0cR93bRm8pwQr5pd7/7yxA3N44AUErfB2KSDbQeYMVR4kplVSH/wNgEir+NMmRq6ujHkyZENnEB2iXE0kcNG3cdVwjyO8i7/rKba7zY5pDC3oQKWOVbqajvwAcLMXnY63E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753294544; c=relaxed/simple;
-	bh=vjCS7XRV9GNLU9BZynOc/Q1ypNtkMuWhatqaXYlbaOk=;
+	s=arc-20240116; t=1753294892; c=relaxed/simple;
+	bh=x/f9IRuutxykfXqdhJQOESHNxKfFRj+OQF7+8Xsi5iY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qNQJ0VqPI2qNWdOZfSIiMz0VCraen+HgUzHGNyDkNOaZgejz1EkwlCjUdDCsifZV+M9mcBi7k6U9SkLiZyh1auuRt6bKRVluzH8N0WtI2dzmmBhP21yK/ytZQI9qtz+rF6OY0s9Z7cvYrtEchOxYY8NljvMzB+6NWDl1l2BE5fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rZxHiwm8; arc=none smtp.client-ip=209.85.166.182
+	 To:Cc:Content-Type; b=ZxVY+SJ7xnIu2FUQGlPa2p7NUO+GqCEG8pMx/QeXRnoJ4QmDjhZlRgL7koQQOSD9Hos7xbPsnt95X5XRmJ6YKc1ngn3n2BNGxPZ59Y+6FBavLBKT5XEj6WKXJIAqioIdqRpA97Ng1XzH04ML4fMDFI5D8wmtCqgx0oBNqOZ4fxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KyKzs9QZ; arc=none smtp.client-ip=209.85.166.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rZxHiwm8"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3df371e1d29so14595ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Jul 2025 11:15:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KyKzs9QZ"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3e283b2d065so25035ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Jul 2025 11:21:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753294542; x=1753899342; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1753294890; x=1753899690; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=H36aNSQcBdBkwNrcJ1g0QaYoDvoQx/EdYKDUImcfEe0=;
-        b=rZxHiwm8AIIwSh7t1basAC3f10IA+QgUbEWvNqsxTigBgb5mqHHuZBAgRFw+dNknqt
-         FxbDJ7zlvh0C9Y06X8QLIK+3JmyEoldCSxLp5ubkR31feZ7CHDrASs0+Pe7bJGMOEqXI
-         tsWR0dhmNWJtoFDT/Ufuhtfhq6TcnNiKTCx3jqxpDeEIlNFPNZ4dEkQwWEDWuDxKTaqq
-         q8r1Pxk74xg8H/pGDid7Rzy37yt64sBzEsmAdtm6JioxTySL5M6WH5IuF9M5eT47fjEv
-         EVnAykbtbXhbbkPrrJzgcd9aYGljxY0Q1dqMrZKKMD5DkhL2izg+oszbTrKGx8KapI68
-         MEpA==
+        bh=wZ1mEiwCWRTYXkSoTNUc0GD/vI93aJ+12BCapC+1BjI=;
+        b=KyKzs9QZFijiU12NfaAV4399RE9t29oM4+xtAN75dIlZ9A9oDoN1NPD/qL8sjdpZv2
+         CBboGDJhdN6jAVQBGlP1oz3F+wAd5114/9M0sYd+NoGkeJjSZdhhAol9qjtmnH7EubTk
+         GSAy1VXmn1BPb1DhPr0mm5SEJIp8I7sVNSbo8SRHCem7y9MbYBNYafPfY+GvZVBFL102
+         uirotl0BofF/GcQKiKr6X/uezcMwqBhb7MXV/JIWZip4ZMBGhArDhkQ49IMim9tZuE/K
+         yCxeXAO6uFgjs7Dt/PnOXE3UgXtlmddsKtCbak77JKBcEQcnVcHOjpqWrXHD83sp1Olt
+         5ROw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753294542; x=1753899342;
+        d=1e100.net; s=20230601; t=1753294890; x=1753899690;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=H36aNSQcBdBkwNrcJ1g0QaYoDvoQx/EdYKDUImcfEe0=;
-        b=tG39YoS7cJNDDhjeXabJlv61mwU8ua/dWX+zvVaNiFGx4Z4tTsairikNsRcRu8Io3c
-         sjwGCtu65g/unvAAS6STFXQR8GTkxmp3CwTYhccCPf0vtlOOKMoHE9XYobBadLzNdF4q
-         soOvJR0qNm5ZSvbpRAGYj8Cb/YSHyZnxcX9pizc9BU1AS5x4lPfPp9tMaFsNUGJVeM7W
-         NPn/WOa1meOU+tl4HrK3gjdBcGToIYYWqGQ+PbOx/lPtcJHgjZDDNe59ILWW7ACoVXjN
-         S5GMXaUaKn2JboUT4hqvNJGarXqOoNFP+3JbHNXCLhrtbqgH17Sv5l05ZkMxTSI7Q8UJ
-         EbPA==
-X-Forwarded-Encrypted: i=1; AJvYcCVP7irnvj6VP4jcEgmgWeP2rW1omH8uw65TitRKqn2JvTy4W+zf824ntKwcz73nvomScrb7ejCh5Zc2huZmc3u5@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgpF2vHElNIQf8NQnjL9lMPBR167TUSesaBPMiPx1oBZvWVitX
-	g4vPtn2pa9f2LXiKUJ1CbgWLhV8s6ctzeuTvTXcTt3p27obn5jnmItiO+kCDazQTUy7vjxdZWKw
-	0yxaV/c44Y29SDnMXWzUByTQlRoBxBOgcX2eVBelS
-X-Gm-Gg: ASbGncti47gOOMpSDzjzw3eftS6z45/bo78ekfdvhZyUiF58AQkWVxCkS/Flpb8zsnT
-	LqDGz7S2ReFXi1A1y4lZhfrNsqsNQoFz7eAJQXDPwbHI2P1iNiO8/xP2Ts71iZ0YG0lUdiNOsbU
-	kBgdQQGdrWSUf0jJjoC5qDizeClx2Sj80fWwwWv/bwsWOeY/qY+DFOJzju736YXg0DX4jcNWjif
-	O0pRB0YAvDygtTOaJU5Pl22xjiV9+9NBEYF
-X-Google-Smtp-Source: AGHT+IE13asCQBfg5BH5l0ZzmcYhpaRmMrBFh6FbaJlmYj/g2YllwYTcBbaHjqK+UWJCEdPp7ZgECDHmJV+eHNC3B/I=
-X-Received: by 2002:a05:6e02:1a0d:b0:3e3:a7d5:a47a with SMTP id
- e9e14a558f8ab-3e3b66571b5mr99715ab.7.1753294541306; Wed, 23 Jul 2025 11:15:41
- -0700 (PDT)
+        bh=wZ1mEiwCWRTYXkSoTNUc0GD/vI93aJ+12BCapC+1BjI=;
+        b=NJqXN13RuXV6h1dc/mN7OZK0UgStASnerbo7BDCHyXKYS3WIEjTNz7zpSGZvrK5U8D
+         3Zs20hZO/g/0vukCM5MlKtVvbUv3yTHGFzeW5u8WSR0xctiBfs2ymY1u3oe4E3ul4iqV
+         ptnhe3qgmudFddi+lD2qIGIINUeXQno7xfmpMJyGrNCa0aYVDmU/xvRdEMLKCEzoIDL0
+         aEUsDElENc8u4mN/p+8ClWaidC5Vlv+6FESlNySbGRiDEjA8mI6rC2hs05ZXNhK48oCG
+         Amuo5z5V1fuZyMIf3rbJLRwgqBVobDiDGKSWv+A2SkYu8mxgJjez+io/XNSZDHEfgfLK
+         EK8g==
+X-Forwarded-Encrypted: i=1; AJvYcCWvRd6RxP3N/h6Yr965NAg9JW4O3orT5vftzWPIdHdLBMlS00izwcyFgDEq13Ht6e+atskGB0vvWPqRWr0P7smP@vger.kernel.org
+X-Gm-Message-State: AOJu0YyU3TOd8GbHRymRMVFjxv4V5Vq/JCntoLf1GMW1Mwdfu68aJHJE
+	aG4HBKE1+StJkX8jaOX8E5eJzgqaDFhtpEU86xE5sap6kOZarZrCMtPu//kUFWS1JvSFofLl9Yh
+	fJgYF3qIufZkHs/4bB7a962ksOPo95TFtVbixx6Sz
+X-Gm-Gg: ASbGnctEfS0VEbpy6Sm9sK8sOgJaa4mfS0VX4jkjRtkpGHtk7Mci5cosbVeUE3iwLxQ
+	kpzh6BoML44HQzH1qQvjD2z50bP1BdmG0yRrriA5jGOqKqiMjJz+tSk6q0rbac2hu3rKjgbPwwU
+	4OmZZJRY73IRb4b0Qd/WmQ6e2fxQjoxe2lC0gFRLR4QiZlb5dQIiysGzIzGTZqLtzB5/GjoUgWI
+	RMxb5HMJNbmW0ZjLVtJubnYDHLQ1qsdaSt+
+X-Google-Smtp-Source: AGHT+IHqmXfCM/EX0UmPWRDWW0pZtA/fTrJTv/qu9dbk1MufwPFd2Dkshn9UT6yLQfswZ6HMg5S/ms+kgNYYEyYUXEc=
+X-Received: by 2002:a05:6e02:378f:b0:3e2:c639:8279 with SMTP id
+ e9e14a558f8ab-3e3b64c0974mr266085ab.20.1753294889714; Wed, 23 Jul 2025
+ 11:21:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250714164405.111477-1-irogers@google.com> <CAP-5=fW=AG8ztbzS-KXpo9fH_Hp_fkZ3CVDuG9pN7P32Qm0oyg@mail.gmail.com>
- <aIEjMroa3bW-T7d-@google.com>
-In-Reply-To: <aIEjMroa3bW-T7d-@google.com>
+References: <20250714164405.111477-1-irogers@google.com> <20250714164405.111477-2-irogers@google.com>
+ <aIEmK1Ekly_HUJvV@google.com>
+In-Reply-To: <aIEmK1Ekly_HUJvV@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 23 Jul 2025 11:15:29 -0700
-X-Gm-Features: Ac12FXw5c8Ku4R1FuTi1BLP5m5hmDNxu_9ZbwpmPfjflCFGU7qqUz7X34M9e4jQ
-Message-ID: <CAP-5=fX1j_MdzjqLTYeNGFTWLaQp8Dmbi093QN98b2pNgFcpBA@mail.gmail.com>
-Subject: Re: [PATCH v7 00/16] New perf ilist app
+Date: Wed, 23 Jul 2025 11:21:18 -0700
+X-Gm-Features: Ac12FXzL_ebj06u9FHjMPYfp1dXDwRW9s3Yop9iiUU4T-Uxt6PSsK3CaksJYluE
+Message-ID: <CAP-5=fWQQoo9OQhiQEyAGvUm-LVs7vpkbvEdnw7OO+KGBXiHqA@mail.gmail.com>
+Subject: Re: [PATCH v7 01/16] perf python: Add more exceptions on error paths
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -84,138 +84,63 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 23, 2025 at 11:00=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+On Wed, Jul 23, 2025 at 11:13=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
  wrote:
 >
-> Hi Ian,
+> On Mon, Jul 14, 2025 at 09:43:49AM -0700, Ian Rogers wrote:
+> > Returning NULL will cause the python interpreter to fail but not
+> > report an error. If none wants to be returned then Py_None needs
+> > returning. Set the error for the cases returning NULL so that more
+> > meaningful interpreter behavior is had.
 >
-> On Wed, Jul 23, 2025 at 08:32:33AM -0700, Ian Rogers wrote:
-> > On Mon, Jul 14, 2025 at 9:44=E2=80=AFAM Ian Rogers <irogers@google.com>=
- wrote:
-> > >
-> > > This patch series builds up to the addition of a new ilist app writte=
-n
-> > > in python using textual [1] for the UI. The app presents perf PMUs an=
-d
-> > > events, displays the event information as in `perf list` while at the
-> > > bottom of the console showing recent activity of the event in total
-> > > and across all CPUs. It also displays metrics, placed in a tree
-> > > through their metric group, again with counts being displayed in the
-> > > bottom panel.
-> > >
-> > > The first ground work patches of fixes, cleanup and refactoring were
-> > > separated into their own series here:
-> > > https://lore.kernel.org/lkml/20250709214029.1769089-1-irogers@google.=
-com/
-> > >
-> > > The second part of the patches adds event json for the software PMU
-> > > and makes the tracepoint PMU support iteration of events and the
-> > > like. Without these improvements the tracepoint and software PMUs wil=
-l
-> > > appear to have no events in the ilist app. As the software PMU moves
-> > > parsing to json, the legacy hard coded parsing is removed. This has
-> > > proven controversial for hardware events and so that cleanup isn't
-> > > done here.
-> > >
-> > > The final patches expand the perf python APIs and add the ilist
-> > > command. To run it you need the updated perf.cpython.so in your
-> > > PYTHONPATH and then execute the script. Expanding PMUs and then
-> > > selecting events will cause event informatin to be displayed in the
-> > > top-right and the counters values to be displayed as sparklines and
-> > > counts in the bottom half of the screen.
-> > >
-> > > [1] https://textual.textualize.io/
-> > >
-> > > v7: Better handle errors in the python code and ignore errors when
-> > >     scanning PMU/events in ilist.py, improving the behavior when not
-> > >     root. Add a tp_pmu/python clean up. Minor kernel coding style
-> > >     clean up. Fix behavior of ilist if a search result isn't found bu=
-t
-> > >     then next is chosen.
-> > >
-> > > v6: For metrics on hybrid systems don't purely match by name, also
-> > >     match the CPU and thread so that if the same metric exists for
-> > >     different PMUs the appropriate one is selected and counters may b=
-e
-> > >     read. Likewise use evsel maps and not the evlists.
-> > >
-> > > v5: Split the series in two. Add metric support. Various clean ups an=
-d
-> > >     tweaks to the app in particular around the handling of searches.
-> > >
-> > > v4: No conflict rebase. Picks up perf-tools-next DRM PMU which
-> > >     displays as expected.
-> > >
-> > > v3: Add a search dialog to the ilist app with 'n'ext and 'p'revious
-> > >     keys. No changes in the ground work first 14 patches.
-> > >
-> > > v2: In the jevents event description duplication, some minor changes
-> > >     accidentally missed from v1 meaning that in v1 the descriptions
-> > >     were still duplicated. Expand the cover letter with some thoughts
-> > >     on the series.
-> > >
-> > > Ian Rogers (16):
-> > >   perf python: Add more exceptions on error paths
-> > >   perf jevents: Add common software event json
-> > >   perf parse-events: Remove non-json software events
-> > >   perf tp_pmu: Factor existing tracepoint logic to new file
-> > >   perf tp_pmu: Add event APIs
-> > >   perf list: Remove tracepoint printing code
-> > >   perf list: Skip ABI PMUs when printing pmu values
-> > >   perf python: Improve the tracepoint function if no libtraceevent
-> > >   perf python: Add basic PMU abstraction and pmus sequence
-> > >   perf python: Add function returning dictionary of all events on a P=
-MU
-> > >   perf ilist: Add new python ilist command
-> > >   perf python: Add parse_metrics function
-> > >   perf python: Add evlist metrics function
-> > >   perf python: Add evlist compute_metric
-> > >   perf python: Add metrics function
-> > >   perf ilist: Add support for metrics
+> It looks like you are adding error messages for the failure cases, not
+> adding new exceptions, right?  IIUC returning NULL in pyrf_event__new()
+> ends up having PyErr_NoMemory().  Then now it has different messages?
+
+This change doesn't alter the exception if there already is one. There
+are lots of cases where NULL is being returned for an error but that
+causes the python interpreter to fail/crash. This patch is just adding
+the exceptions and still returning NULL, previously set exceptions are
+left alone. With the exceptions returned the python interpreter does
+something more useful than fail/crash :-)
+
 > >
-> > Hi,
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/python.c | 14 +++++++++++---
+> >  1 file changed, 11 insertions(+), 3 deletions(-)
 > >
-> > Is there any more I can do to get this series landed? I appreciate havi=
-ng:
+> > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> > index 2f28f71325a8..02544387f39d 100644
+> > --- a/tools/perf/util/python.c
+> > +++ b/tools/perf/util/python.c
+> > @@ -475,13 +475,19 @@ static PyObject *pyrf_event__new(const union perf=
+_event *event)
+> >       if ((event->header.type < PERF_RECORD_MMAP ||
+> >            event->header.type > PERF_RECORD_SAMPLE) &&
+> >           !(event->header.type =3D=3D PERF_RECORD_SWITCH ||
+> > -           event->header.type =3D=3D PERF_RECORD_SWITCH_CPU_WIDE))
+> > +           event->header.type =3D=3D PERF_RECORD_SWITCH_CPU_WIDE)){
+> > +             PyErr_Format(PyExc_TypeError, "Unexpected header type %u"=
+,
+> > +                          event->header.type);
+> >               return NULL;
+> > +     }
 > >
-> > Tested-by: Gautam Menghani <gautam@linux.ibm.com>
-> >
-> > I think there is some follow up for "make install" for scripts like
-> > these, but I'm keen for the python API to move forward.
+> >       // FIXME this better be dynamic or we need to parse everything
+> >       // before calling perf_mmap__consume(), including tracepoint fiel=
+ds.
+> > -     if (sizeof(pevent->event) < event->header.size)
+> > +     if (sizeof(pevent->event) < event->header.size) {
+> > +             PyErr_Format(PyExc_TypeError, "Unexpected event version: =
+%zd < %u",
 >
-> I'll review the series today so that we can get some part of it, at
-> least.  Basically I think we need a wrapper script like perf-ilist to
-> run this easily (maybe with documentation).
+> Maybe "Unexpected event size" instead?
 
-Sgtm, I'll hold off on a new version, Arnaldo has caught some useful
-nits to clean up in it.
-
-Something related are the scripting engine scripts like gecko and
-flamegraph. Something I've discovered is that those scripts work less
-well than standalone apps like the ilist.py here. One issue there is
-that the scripting engine tends to throw lots of data into a
-dictionary in case it is useful, which means there is a higher
-overhead than in the standalone app. Another issue is that the
-scripting engine wants perf to drive python to drive the script. This
-conflicts with python wanting to own the main thread, things like
-asyncio, etc. For textual it isn't possible for the app to run on
-anything other than the main thread, but it'd be useful to
-incrementally load data while displaying it. With the scripting engine
-it is only possible to run a textual app at trace_end (i.e. not
-incrementally). Something we found in the gecko work was that it was
-hard to handle command line arguments in a scripting engine style
-script, what options are for record, report and live mode.
-
-What does this mean? I think we want to move the scripting engine into
-the python.c and perf python .so and expose it with something like the
-session/tool API. I think we should migrate the existing scripts to
-use this and then I think we can deprecate the python interpreter
-script engine integration. Perhaps we can deprecate perl scripting
-engine support at the same time. Then things like ilist.py can be run
-with "perf script ilist", similar to how the scripting engine scripts
-run today. Your proposal would avoid the need for the script keyword,
-but perhaps that'd make it clear why the UI changes. I don't mind
-having or not having "script" in the command line :-)
+I think size is more accurate to the code, version is more useful to
+the user. I believe there is existing use of the event size being used
+as a quasi version number, so I think this description is consistent.
+If you feel strongly I can change it.
 
 Thanks,
 Ian
@@ -223,35 +148,26 @@ Ian
 > Thanks,
 > Namhyung
 >
-> > >
-> > >  tools/perf/builtin-list.c                     |  65 ++-
-> > >  .../arch/common/common/software.json          |  92 ++++
-> > >  tools/perf/pmu-events/empty-pmu-events.c      | 266 +++++----
-> > >  tools/perf/pmu-events/jevents.py              |  15 +-
-> > >  tools/perf/python/ilist.py                    | 491 ++++++++++++++++=
-+
-> > >  tools/perf/util/Build                         |   1 +
-> > >  tools/perf/util/evsel.c                       |  21 +-
-> > >  tools/perf/util/parse-events.c                | 198 ++-----
-> > >  tools/perf/util/parse-events.h                |   1 -
-> > >  tools/perf/util/parse-events.l                |  38 +-
-> > >  tools/perf/util/parse-events.y                |  29 +-
-> > >  tools/perf/util/pfm.c                         |   2 +
-> > >  tools/perf/util/pmu.c                         |   7 +
-> > >  tools/perf/util/pmus.c                        |   2 +
-> > >  tools/perf/util/print-events.c                | 100 +---
-> > >  tools/perf/util/print-events.h                |   4 +-
-> > >  tools/perf/util/python.c                      | 519 ++++++++++++++++=
-+-
-> > >  tools/perf/util/tp_pmu.c                      | 209 +++++++
-> > >  tools/perf/util/tp_pmu.h                      |  19 +
-> > >  19 files changed, 1638 insertions(+), 441 deletions(-)
-> > >  create mode 100644 tools/perf/pmu-events/arch/common/common/software=
-.json
-> > >  create mode 100755 tools/perf/python/ilist.py
-> > >  create mode 100644 tools/perf/util/tp_pmu.c
-> > >  create mode 100644 tools/perf/util/tp_pmu.h
-> > >
-> > > --
-> > > 2.50.0.727.gbf7dc18ff4-goog
-> > >
+>
+> > +                          sizeof(pevent->event), event->header.size);
+> >               return NULL;
+> > +     }
+> >
+> >       ptype =3D pyrf_event__type[event->header.type];
+> >       pevent =3D PyObject_New(struct pyrf_event, ptype);
+> > @@ -1199,8 +1205,10 @@ static PyObject *pyrf_evlist__read_on_cpu(struct=
+ pyrf_evlist *pevlist,
+> >               return NULL;
+> >
+> >       md =3D get_md(evlist, cpu);
+> > -     if (!md)
+> > +     if (!md) {
+> > +             PyErr_Format(PyExc_TypeError, "Unknown CPU '%d'", cpu);
+> >               return NULL;
+> > +     }
+> >
+> >       if (perf_mmap__read_init(&md->core) < 0)
+> >               goto end;
+> > --
+> > 2.50.0.727.gbf7dc18ff4-goog
+> >
