@@ -1,294 +1,210 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12362797A4;
-	Wed, 23 Jul 2025 08:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD492A59;
+	Wed, 23 Jul 2025 08:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753258005; cv=none; b=VXv7DWPthCBIydKhIFWuB/sttzYbGZMMdF6gzQG5VJhG8sznXpmwAG3IxUy+yPMgrHIH67S/rlI5DhB62YgaDl/YzloZyPcJNYk85J4gGucipxLNwK1gCTbYmZHsTWpIdb3MteepBT/uLaBmxWXQqw8zXnZ4eCnBud9oWyPjLl0=
+	t=1753258389; cv=none; b=BNkyIeciVYwJwfpf416ODzH3cK9LavHIoUtt88O0DqWvKLhoJ9sHkZptN3l9q9ySeLHAthh4GMDlzw9R67aVci/O8APGpYKPme/a8fvaJNKxu7HzPowX4LqcokOqq3Gj5n7zOohofUnCS/A7tqK28LnFsUxywtml2fjNTd9aZyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753258005; c=relaxed/simple;
-	bh=7wxD8Yrjg6ZlsoNeZb1eFvzqUhJjLEB9d0SVb221OC0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RLdjmxlLgnFO4ZQMyvpNdnIoL0H2ydGg11wM6S9aJ5/S1jLmMKGxv4czOh+Jx4Iod3nbZlJFi+7DdgpGRe/e0VM+sHpmi0zvB9qLHZy2EPjzgGARyT0+PQmXhuH/0k3lP5NCHoDp5yfxlDsMhEyk+5WOOusNZLdcVfWPAqnFy8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=c/ApPuz6; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1753258389; c=relaxed/simple;
+	bh=x4YCilgrFXmxCXXy8ZoPr6Kw8EmAvhbD3xpyUcNslJU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=QMYI4R98j/vwpgxwQPl0AyExUSVFMn7S15Fm0m1QMwTKwK44u4ZTV6UqC1D7gXMJPZ9s/4IzMNg8hfFXqLOmf1gLd2amVyhInOUUMSfdx7sBPJdl5lzVKpoi9Lm5uo5+MglVQX53FkiOAZDoNqsJbZuaX2TbF+w/R8AldE+oifo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=c2BAurjQ; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="c/ApPuz6"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56N5LmIv021999;
-	Wed, 23 Jul 2025 08:06:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=58wkRkSKcLcDEF5ZpxWaTthSD+CKaD
-	ykasPLRcT80yk=; b=c/ApPuz6OliBbckWbDjKtnmlPUcms020Ik98ZSaVtLrV/w
-	GoJG8rTwwk9QieM14bFJokKaUQMo9RFIuCc9z5nYu+B565O0P0mWYuRZ6XuQ0o7y
-	TcSd4qgXaCK+nvVkZECN/ekec2JwGutHNDPi7NszWNncFTsK2Pu8GRK1DMJ9f3JR
-	Q4WG+8Avv21eQfnSfx5Mv5qsaroL+K1o6mvyfhFZu+MM86tJLn+zlsLUaZ96kQ5u
-	TeVyXfmwcPVJDd7CNB3g41e7QQq5qyK4ggNtZrvSxSlRnxSi9L6MNmhaYFwcNGXM
-	t++5GaeUXo1QbzRYuyjrllXGG2ncG3bGXMfkIa/A==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 482ffbbfk8-1
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="c2BAurjQ"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56N6doax017391;
+	Wed, 23 Jul 2025 10:12:48 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	QK/sgu4bbRdODvf5tGfCdDwOR/bbwmheF/bQDBgiURc=; b=c2BAurjQoIkZx3qZ
+	U2f+PzALTuiatgf01cQJZ+5YLfNH9gWPig4oRGmgheOtBV6Fysjg3Dbjnyq3At1K
+	C06RPHgeUh3BDvg17/h+P/+vsRdODvB4gkDo6OOZFuKie0KGvhlXbXFBb3/SXuYq
+	hRkN/TQBnhr+e8cye3LN3PH5MUR+3JqDcMblh1k+fCMjX13S64aaHHjRCoPXakVq
+	ui2IgS0L9Jb9e+sxtSOl6kjyrnZP+pLaop77Dt5U0vAbHXFPodnoh06RmDssgYUO
+	qsuGOrFmw/0G6jp3XDY/ZThhXSJ2KPAst6jbzuklVuJBOuMO5+1bZw9V6jLMl2l4
+	pqpznw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 480mx4qpqw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Jul 2025 08:06:32 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 56N86VBJ030152;
-	Wed, 23 Jul 2025 08:06:31 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 482ffbbfk3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Jul 2025 08:06:31 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 56N418eo014301;
-	Wed, 23 Jul 2025 08:06:30 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 480ppp6x8x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Jul 2025 08:06:30 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 56N86Sj754722954
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 23 Jul 2025 08:06:28 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 773FA2004E;
-	Wed, 23 Jul 2025 08:06:28 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E7ADC20040;
-	Wed, 23 Jul 2025 08:06:27 +0000 (GMT)
-Received: from li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com (unknown [9.111.19.130])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 23 Jul 2025 08:06:27 +0000 (GMT)
-Date: Wed, 23 Jul 2025 10:06:26 +0200
-From: Sumanth Korikkar <sumanthk@linux.ibm.com>
-To: kan.liang@linux.intel.com
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
-        irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, eranian@google.com,
-        ctshao@google.com, tmricht@linux.ibm.com, leo.yan@arm.com,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH V4 07/16] s390/perf: Remove driver-specific throttle
- support
-Message-ID: <aICYAqM5EQUlTqtX@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
-References: <20250520181644.2673067-1-kan.liang@linux.intel.com>
- <20250520181644.2673067-8-kan.liang@linux.intel.com>
+	Wed, 23 Jul 2025 10:12:48 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2CEBC40046;
+	Wed, 23 Jul 2025 10:11:22 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CB65D76C471;
+	Wed, 23 Jul 2025 10:10:01 +0200 (CEST)
+Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 23 Jul
+ 2025 10:10:00 +0200
+Message-ID: <e9e33fc7-4705-4e6d-bd33-ce9dc1a9b94e@foss.st.com>
+Date: Wed, 23 Jul 2025 10:10:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520181644.2673067-8-kan.liang@linux.intel.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: UTGLOoyD7eJ7cIMYlST5sCU3mdpQlqP1
-X-Authority-Analysis: v=2.4 cv=De8XqutW c=1 sm=1 tr=0 ts=68809808 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=kj9zAlcOel0A:10 a=Wb1JkmetP80A:10 a=QyXUC8HyAAAA:8 a=VnNF1IyMAAAA:8
- a=VwQbUJbxAAAA:8 a=k1CFeq3D6HfWPww2QuQA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: k3aRQo9I_5iPyc5ns6G-HrgSk84Jim1i
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzIzMDA2NCBTYWx0ZWRfXz4XBSkNWq/nF
- AtnF7eFSlj+Xvytj4a/39E60iU3A65LOzhQE8mL8nCPQ2rNMgQPzsqlkRjrD1sPmfZk0GSGqXrw
- ogTLsDLFX+1gT9/F094rseC2aE4Z+D06wz4saj4aP2UulT+nJI6hOoSFbpJDmgL8PG8NSbmiEXI
- XoJqy/FAkJ390bnTZbv7zEylXziEJ2zgBut5FgPBhHfp4ROWNMm4dvWGrpP6jn42nKryIi/oTjh
- z49UZjyPlCQbFs0i2MPjwBU50obx4EiPyQUolwa9WByxOyD3pT2VRcRiIBW79X64EguE/glPxh7
- hKSkraIoFQUJ1jjclHvD0/KGQhLeND0KJzHSjMYaaUZgrohuZHB/GqOtBg29i/DLIyip/VQlDbv
- fvNgBhfoJGyD54UFH7MHWBbapUTIATTRgYwSXelhBG48MmAGsO1Zpzc6Fp9DbBwAjw2uyHUw
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 07/19] dt-bindings: memory: factorise LPDDR channel
+ binding into memory channel
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Julius Werner
+	<jwerner@chromium.org>
+CC: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob
+ Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor
+ Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Philipp Zabel
+	<p.zabel@pengutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Gatien Chevallier
+	<gatien.chevallier@foss.st.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Gabriel Fernandez
+	<gabriel.fernandez@foss.st.com>,
+        Le Goffic <legoffic.clement@gmail.com>,
+        Julius Werner <jwerner@chromium.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>
+References: <20250722-ddrperfm-upstream-v3-0-7b7a4f3dc8a0@foss.st.com>
+ <20250722-ddrperfm-upstream-v3-7-7b7a4f3dc8a0@foss.st.com>
+ <20250723-zealous-turtle-of-perfection-e67aee@kuoka>
+Content-Language: en-US
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+In-Reply-To: <20250723-zealous-turtle-of-perfection-e67aee@kuoka>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-07-23_01,2025-07-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 bulkscore=0 lowpriorityscore=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 priorityscore=1501 clxscore=1011 phishscore=0 adultscore=0
- malwarescore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507230064
 
-On Tue, May 20, 2025 at 11:16:35AM -0700, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
+Hi Krzysztof,
+
+On 7/23/25 08:57, Krzysztof Kozlowski wrote:
+> On Tue, Jul 22, 2025 at 04:03:24PM +0200, Clément Le Goffic wrote:
+>> LPDDR and DDR channels exist and share the same properties, they have a
+>> compatible, ranks, and an io-width.
 > 
-> The throttle support has been added in the generic code. Remove
-> the driver-specific throttle support.
+> Maybe it is true for all types of SDRAM, like RDRAM and eDRAM, but I
+> don't think all memory types do.
 > 
-> Besides the throttle, perf_event_overflow may return true because of
-> event_limit. It already does an inatomic event disable. The pmu->stop
-> is not required either.
+> I think this should be renamed to sdram-channel.
+
+Ok, do you want me to also the memory-props patch into sdram-props ?
+
 > 
-> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Thomas Richter <tmricht@linux.ibm.com>
-> Cc: linux-s390@vger.kernel.org
-> ---
->  arch/s390/kernel/perf_cpum_cf.c | 2 --
->  arch/s390/kernel/perf_cpum_sf.c | 5 +----
->  2 files changed, 1 insertion(+), 6 deletions(-)
+>>
+>> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+>> ---
+>>   ...pddr-channel.yaml => jedec,memory-channel.yaml} | 26 +++++++++++-----------
+>>   1 file changed, 13 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr-channel.yaml b/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,memory-channel.yaml
+>> similarity index 82%
+>> rename from Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr-channel.yaml
+>> rename to Documentation/devicetree/bindings/memory-controllers/ddr/jedec,memory-channel.yaml
+>> index 34b5bd153f63..3bf3a63466eb 100644
+>> --- a/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,lpddr-channel.yaml
+>> +++ b/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,memory-channel.yaml
+>> @@ -1,16 +1,16 @@
+>>   # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>   %YAML 1.2
+>>   ---
+>> -$id: http://devicetree.org/schemas/memory-controllers/ddr/jedec,lpddr-channel.yaml#
+>> +$id: http://devicetree.org/schemas/memory-controllers/ddr/jedec,memory-channel.yaml#
+>>   $schema: http://devicetree.org/meta-schemas/core.yaml#
+>>   
+>> -title: LPDDR channel with chip/rank topology description
+>> +title: Memory channel with chip/rank topology description
+>>   
+>>   description:
+>> -  An LPDDR channel is a completely independent set of LPDDR pins (DQ, CA, CS,
+>> -  CK, etc.) that connect one or more LPDDR chips to a host system. The main
+>> -  purpose of this node is to overall LPDDR topology of the system, including the
+>> -  amount of individual LPDDR chips and the ranks per chip.
+>> +  A memory channel is a completely independent set of pins (DQ, CA, CS,
 > 
-> diff --git a/arch/s390/kernel/perf_cpum_cf.c b/arch/s390/kernel/perf_cpum_cf.c
-> index e657fad7e376..6a262e198e35 100644
-> --- a/arch/s390/kernel/perf_cpum_cf.c
-> +++ b/arch/s390/kernel/perf_cpum_cf.c
-> @@ -980,8 +980,6 @@ static int cfdiag_push_sample(struct perf_event *event,
->  	}
->  
->  	overflow = perf_event_overflow(event, &data, &regs);
-> -	if (overflow)
-> -		event->pmu->stop(event, 0);
->  
->  	perf_event_update_userpage(event);
->  	return overflow;
-> diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-> index ad22799d8a7d..91469401f2c9 100644
-> --- a/arch/s390/kernel/perf_cpum_sf.c
-> +++ b/arch/s390/kernel/perf_cpum_sf.c
-> @@ -1072,10 +1072,7 @@ static int perf_push_sample(struct perf_event *event,
->  	overflow = 0;
->  	if (perf_event_exclude(event, &regs, sde_regs))
->  		goto out;
-> -	if (perf_event_overflow(event, &data, &regs)) {
-> -		overflow = 1;
-> -		event->pmu->stop(event, 0);
-> -	}
-> +	overflow = perf_event_overflow(event, &data, &regs);
->  	perf_event_update_userpage(event);
->  out:
->  	return overflow;
-> -- 
-> 2.38.1
+> A memory channel of SDRAM memory like DDR SDRAM or LPDDR SDRAM is ...
 
-Hi all,
+Ack
 
-This seems to break POLL_HUP delivery to userspace - when event_limit reaches 0
+> 
+>> +  CK, etc.) that connect one or more memory chips to a host system. The main
+>> +  purpose of this node is to overall memory topology of the system, including the
+>> +  amount of individual memory chips and the ranks per chip.
+>>   
+>>   maintainers:
+>>     - Julius Werner <jwerner@chromium.org>
+>> @@ -26,14 +26,14 @@ properties:
+>>     io-width:
+>>       description:
+>>         The number of DQ pins in the channel. If this number is different
+>> -      from (a multiple of) the io-width of the LPDDR chip, that means that
+>> +      from (a multiple of) the io-width of the memory chip, that means that
+>>         multiple instances of that type of chip are wired in parallel on this
+>>         channel (with the channel's DQ pins split up between the different
+>>         chips, and the CA, CS, etc. pins of the different chips all shorted
+>>         together).  This means that the total physical memory controlled by a
+>>         channel is equal to the sum of the densities of each rank on the
+>> -      connected LPDDR chip, times the io-width of the channel divided by
+>> -      the io-width of the LPDDR chip.
+>> +      connected memory chip, times the io-width of the channel divided by
+>> +      the io-width of the memory chip.
+>>       enum:
+>>         - 8
+>>         - 16
+>> @@ -51,8 +51,8 @@ patternProperties:
+>>     "^rank@[0-9]+$":
+>>       type: object
+>>       description:
+>> -      Each physical LPDDR chip may have one or more ranks. Ranks are
+>> -      internal but fully independent sub-units of the chip. Each LPDDR bus
+>> +      Each physical memory chip may have one or more ranks. Ranks are
+>> +      internal but fully independent sub-units of the chip. Each memory bus
+>>         transaction on the channel targets exactly one rank, based on the
+>>         state of the CS pins. Different ranks may have different densities and
+>>         timing requirements.
+>> @@ -107,7 +107,7 @@ additionalProperties: false
+>>   
+>>   examples:
+>>     - |
+>> -    lpddr-channel0 {
+>> +    memory-channel0 {
+> 
+> If doing this, then separate commit based on generic node name
+> convention. But then we need to come with generic node name first,
+> sdram-channel?
 
-From perf_event_open man page:
-PERF_EVENT_IOC_REFRESH
-              Non-inherited overflow counters can use this to enable a
-              counter for a number of overflows specified by the
-              argument, after which it is disabled.  Subsequent calls of
-              this ioctl add the argument value to the current count.  An
-              overflow notification with POLL_IN set will happen on each
-              overflow until the count reaches 0; when that happens a
-              notification with POLL_HUP set is sent and the event is
-              disabled.
+I don't want anything specific so yes it could be cool to have a generic 
+node name.
+"sdram-channel" is fine for me.
+@Julius what do you think about it ?
+Is your existing software generating it in the kernel ?
+I'm curious about dynamic node name generation.
 
-When the event_limit reaches 0, the POLL_HUP signal is expected to be
-sent. Prior to this patch, an explicit call to event->stop() was made,
-which may have contributed to ensuring that the POLL_HUP signal was
-ultimately delivered. However, after  this change, I often did not
-observe the POLL_HUP signal being delivered as expected in the end
+> 
+> And also '-0', not '0' suffix.
 
-Example program:
-output:
-Computation result: 49951804672
-count.hup: 0 count.pollin: 22
+Ack
 
-Expected output should be:
-count.hup: 1 in the end
+> Best regards,
+> Krzysztof
+> 
 
-#define _GNU_SOURCE
-#include <time.h>
-#include <stdbool.h>
-#include <signal.h>
-#include <poll.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <time.h>
-
-#include <sys/ioctl.h>
-#include <sys/syscall.h>
-#include <linux/perf_event.h>
-
-static struct signal_counts {
-        int in;
-	int out;
-	int hup;
-	int unknown;
-} count;
-
-
-static unsigned long sample_type = PERF_SAMPLE_IP | PERF_SAMPLE_TID |
-		PERF_SAMPLE_TIME | PERF_SAMPLE_ADDR | PERF_SAMPLE_READ |
-		PERF_SAMPLE_ID | PERF_SAMPLE_CPU |
-		PERF_SAMPLE_PERIOD | PERF_SAMPLE_STREAM_ID | PERF_SAMPLE_RAW;
-
-static void sighandler(int signum, siginfo_t *info, void *uc)
-{
-	switch(info->si_code) {
-                case POLL_IN:  count.in++;  break;
-                case POLL_OUT: count.out++; break;
-                case POLL_HUP: count.hup++; break;
-                default: count.unknown++; break;
-        }
-}
-
-void generate_load(unsigned long long iterations) {
-    unsigned long long sum = 0;
-    srand(time(0));
-
-    for (unsigned long long i = 0; i < iterations; ++i) {
-        int rnd = rand();
-        sum += (rnd ^ (rnd >> 3)) % 1000;
-    }
-    printf("Computation result: %llu\n", sum);
-}
-
-void perf_attr(struct perf_event_attr *pe,
-		       unsigned long config, unsigned long period, bool freq,
-		       unsigned long bits)
-{
-	memset(pe, 0, sizeof(struct perf_event_attr));
-	pe->size = sizeof(struct perf_event_attr);
-	pe->type = PERF_TYPE_HARDWARE;
-	pe->config = PERF_COUNT_HW_CPU_CYCLES;
-	pe->exclude_kernel = 0;
-	pe->sample_period = 50000;
-	pe->freq = 1;
-	pe->disabled = 1;
-	pe->config = config;
-	pe->freq = freq;
-	pe->sample_type = bits;
-}
-
-int main(int argc, char **argv)
-{
-	int fd, signo = SIGIO, rc = -1;
-	struct sigaction sa, sa_old;
-	struct perf_event_attr pe;
-
-	perf_attr(&pe, PERF_COUNT_HW_CPU_CYCLES, 50000, 1, sample_type);
-	/* Set up overflow handler */
-	memset(&sa, 0, sizeof(struct sigaction));
-	memset(&sa_old, 0, sizeof(struct sigaction));
-	sa.sa_sigaction = sighandler;
-	sa.sa_flags = SA_SIGINFO;
-	if (sigaction(signo, &sa, &sa_old) < 0)
-		goto out;
-
-	fd = syscall(__NR_perf_event_open, &pe, 0, -1, -1, 0);
-	if (fd < 0)
-		return rc;
-
-	rc = fcntl(fd, F_SETFL, O_RDWR | O_NONBLOCK | O_ASYNC);
-	rc |= fcntl(fd, F_SETSIG, signo);
-	rc |= fcntl(fd, F_SETOWN, getpid());
-	if (rc)
-		goto out;
-
-	rc = ioctl(fd, PERF_EVENT_IOC_REFRESH, 2500);
-	if (rc)
-		goto out;
-
-	generate_load(100000000ULL);
-	sigaction(signo, &sa_old, NULL);
-	printf("count.hup: %d count.pollin: %d\n", count.hup, count.in);
-	close(fd);
-	return 0;
-out:
-	return rc;
-}
-
-Thank you,
-Sumanth
