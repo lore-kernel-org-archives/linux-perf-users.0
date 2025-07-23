@@ -1,100 +1,399 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD0826B77D
-	for <linux-perf-users@vger.kernel.org>; Wed, 23 Jul 2025 21:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131FA149C51
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Jul 2025 21:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753305382; cv=none; b=JFaF9lEWsnqxJ5aKmYrNRowKwnkRX5D/TCtrYsA0/oAb6RzQpR0qvfiAo/+B27LWOOxX7yONJGRuB2yKIRhsNY3MpPktNr+JcUPcWgEnf0hgCzFkTb5yos6S34vyQcGyCy6Mwld2yPF6Z4FJLp48xop9+759B6StXQA2MdMo6KI=
+	t=1753306261; cv=none; b=KT3C6CpYJyoScFnXYeuZrQia7PISIrbylJ5k0YzjwIz3eOYyFkZRyLrSNcNK6TWS9OLRAf5nFqcukf+oOWPki6fxblX1yESswbA4PM+3gfGIncWzC24qyzzNSg+YxGvm1EigIQQg2fdtV7PHVp6CDcwGLodH083m/O1Phj+Q1zI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753305382; c=relaxed/simple;
-	bh=yWyJDF3Q2SumP8IS31W52vFdyTdD9QP8y32xJ3aVsWU=;
+	s=arc-20240116; t=1753306261; c=relaxed/simple;
+	bh=8GqfXgHYNXVpgTshJHFZ9EKz1NILSN8zm/sk8THPuhs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nwrpn13K4rxEFQ666860RJTHe5+7kJ5XcboEuBmTUto7ZN5rbS2zbKip5gXSwn/7mSdKzAL9JQzN8AMCtqt4NhOsHxI08jrqnPUMWgXsGQTRXTATivZJVa0LTEJX5xXIUVy2IYU5W880cQQw1dwCb7FgHS6CYUpjqfpxlpnOY2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=google.com; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TB2m0bfb; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+	 To:Cc:Content-Type; b=furg2iKJ1feh5VrlVlS+jj3R/Tro0iZowv+M3o6l/zrHiGqYKRT2XLgAVnNkUyhB1QUAwiv/A5tY8i58qeFtWdaDDMzHsHMIYQwQr1mQkUwV+MfAkFDx9kG38zd0GCEpJyLkI57ETk7dhdPgc2ItXxuIMBFVgBAFFQClcrA9EnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LigF1vSz; arc=none smtp.client-ip=209.85.166.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TB2m0bfb"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso1492a12.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 23 Jul 2025 14:16:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LigF1vSz"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3e283b2d065so22545ab.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Jul 2025 14:30:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1753305379; x=1753910179; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=yWyJDF3Q2SumP8IS31W52vFdyTdD9QP8y32xJ3aVsWU=;
-        b=TB2m0bfb5AWnodsdI4fAEe0G25DPq8LtpAMClOdD/1YTS2jhq5Eb5DG1EWe5FtLuLy
-         qNrGoar7njwPPDGhlAMbnxBPCljPkWLUXxUz3zyc/VRwGnPAIYhUHn8UZMdGuJjEJ22L
-         423/h9wpccWK3CqTPWZDh35goLIjqDiOsjVL4=
+        d=google.com; s=20230601; t=1753306259; x=1753911059; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=orgQ53VxvDE7K4DI58+91p61IvF8xtetI5VKe7hXQlo=;
+        b=LigF1vSz9NMpcGW9KqZtigS3qC+SzL0AR0zSC6/JLUauEGeLSjP7JS8zPca8PL7lSe
+         cWnIj3Utg/DQhFAdIj1HnWzzks0SczrH6D3NQOm9yhgPr8CKoYJjEq+ABZ20z17XHiTV
+         gg3eJ6/ZfMW2bBZtvkq0lTm9r6RXC1DVxiKMu+D7L63Jo/8tsn35qvtkKw2CKAcZ1Axd
+         FHm4vFD8JC9cs+WTyqfI47/CMve3ncb+1F9BPPc66SjI4Y4aHZgpI4GnxWzd4UD/c0wC
+         8PaKZi5Zgg1UHPOIpk7/fuYRGn534eNWvjhOBOO14pjinflc6lhNJbgQZmMk1xINT5Sg
+         U5fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753305379; x=1753910179;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yWyJDF3Q2SumP8IS31W52vFdyTdD9QP8y32xJ3aVsWU=;
-        b=v5GCz1y9CafJtIeARCYTyxk0dSKQl0R9VXQG6W+4T/ImWAVEssG2u9sJ/RU/1pL9bT
-         yL0PjZBLBsbVUn9kgjd09W7UIcpB0lynE2lY0uWVmpSzOBOETv5A717MMG0tWYxoj4bG
-         +PVWKvY2Frc1lwL42OKR66P4/29fS3z78FvRDlrkocN9CNZd0coq7fGTPqhz/shldKb/
-         t6UAZ3qVPoxTkyNwJ5K54rdRT1M/2W94idWhoerpvpazvj/n6vpnxIGhmySYRuORsqLA
-         Tcjd0WKR1pHV9CotT9mkRhLLZxFI/8b40ivWQY1gsxm7QYrNfVsLdNJsbbHgh5eEvbBd
-         SQpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWDouHzKl3CGPlfULDQLxqlG6nirCEvo8BWmtCEUXkp6SKMBhRx5FSXm3yNvXl2343lDB8K5odv9pKmPiRAKcb9@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTr5iDIDZSRkBPyzw8SoCvQc9X52UcIwkLI0/LcpLiqQ5eSmnu
-	ceWJYqIcdV0oiDkgu28YBNLmN7Kb0bprjtfiZ2iLxrN/0tDCzV3WTVDC9I1d6stKiolM0cwRnUo
-	/Cgm7usIkgjFmUcuXrwhtIhixcUs8C057gNnnCWLL
-X-Gm-Gg: ASbGncuOtQgMmyiA/7RUE9gOK/rS+NrMb2WvscXK/grZhXXvlY5p7pIOG86f8SLpWrV
-	MbCREhdk7KMS+Ezk0u3iwZDpX6wRbkShRvOzYah6lhc+CKKFHwALW4TG5GBfbKstz+J6LkUeF9o
-	P2edFJLeW1wcXH/nYB4rJ9pIzAng41vuBQdU/dgpT7PHzNIaEGFLG/5XPVzcXrMdasTsBriHVXT
-	zeedGHUCYPvzYabHDuDGcxP8Ig0x0aU2g==
-X-Google-Smtp-Source: AGHT+IGkycQnfe72S9SyWbMalkjmg0I49bPxAmbp0MCvmAI2AYuaRbELjXuXnq+jCKrEmFtw1MggLjmHYfDowt+Iv2w=
-X-Received: by 2002:a50:aa8a:0:b0:607:bd2:4757 with SMTP id
- 4fb4d7f45d1cf-614cce2f67amr6758a12.1.1753305379189; Wed, 23 Jul 2025 14:16:19
- -0700 (PDT)
+        d=1e100.net; s=20230601; t=1753306259; x=1753911059;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=orgQ53VxvDE7K4DI58+91p61IvF8xtetI5VKe7hXQlo=;
+        b=wSGjpUEZ5UCFaavaGnbAP7Y1Q4pbcTKBJBs1XEChOliBQr+1AaiOkVIexwVfpTPDaq
+         2YQRxmZJ+4d6SncsYjHB/snP4xWL9D+9f3FjMKlOWggLulo6cJNs4qieIGqlz0cM+R3I
+         MfCwFSEVmweFrTD/KcqsrpQIpV09dnkrkpLAoMGlxTpy379bElB70wvnSnCUbg0TcOw1
+         o2bMc/KLSdv4OwjnxmOKIvl1X+ZwL2I1l5Ywg0fBrMgTt/Y+l+is3fS9te0DxaAGkdI8
+         YRidXYnS2WhPPReHDquPRImJzzQYwIrPynqsF2FmdlQCByV55+VPupEKIuw6OeTpzUbo
+         MREQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV65G2kGfTa2y/B44yidGCDuQrJGQBVPuqGDN4VTr9PlmZ2Vn4y0w46Mlh6MGg9h4raI9GkKP47PJ7+EOA1l/ol@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCt6V55mTFYAjg/IBORA2M2O5E/1pxWQlGXlKBU/SI2SRJXVLT
+	qhfpVLfvgQskK7a0OiKRdVMDZFj0f+f2oBtYike3lJWcocfc1r24UbdGdQQddfwbVYveailMckl
+	2/2pptwUhwUPsx0Fo2cIcwy7ReU7DfJM0Q1qV9PBd
+X-Gm-Gg: ASbGncvc9tpK+BF4ipcORESP8c5EUOPK9+q5TiD4pkHwQokP6EkxDu78CJ6taM9+wBQ
+	g65uIHvOg+Iqcqsz8gznf5qjZ1wEEESwr479vAn8nj77sCNKbR0nWrMUOA5ZXRUEeh+kLtTgpgM
+	xslKoLynDER8Kj6FaQet86BpYT6GyPKzQrRfXNV5oNmYzLZHznsO9l/9ORG7JXOhVoz86PAK8NB
+	r/oIzYkVoNecU4nJJKe/6sZta2rBaYJyhsI5Wpm138DI2I=
+X-Google-Smtp-Source: AGHT+IHa8E6SGvre3z5lAyD3hgBdrG1LWtWJLI70ia+xv9xvbarp5qfBNf1UyCGO55sjYql1FVMbZMIIFInkmwSh5OI=
+X-Received: by 2002:a05:6e02:3009:b0:3dd:872d:b3fd with SMTP id
+ e9e14a558f8ab-3e3b6418762mr1447175ab.2.1753306258827; Wed, 23 Jul 2025
+ 14:30:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250722-ddrperfm-upstream-v3-0-7b7a4f3dc8a0@foss.st.com>
- <20250722-ddrperfm-upstream-v3-7-7b7a4f3dc8a0@foss.st.com>
- <20250723-zealous-turtle-of-perfection-e67aee@kuoka> <e9e33fc7-4705-4e6d-bd33-ce9dc1a9b94e@foss.st.com>
-In-Reply-To: <e9e33fc7-4705-4e6d-bd33-ce9dc1a9b94e@foss.st.com>
-From: Julius Werner <jwerner@chromium.org>
-Date: Wed, 23 Jul 2025 14:16:05 -0700
-X-Gm-Features: Ac12FXyYNcqm7jBBLCa0VFOXC51yHGdhXmCX5kALRLR-kvG2ffG7jYjz27Mm2C0
-Message-ID: <CAODwPW-bwg-CD8qfP0cb58QVFLfJSqj6DhZSQuqHxsEdLz1QDA@mail.gmail.com>
-Subject: Re: [PATCH v3 07/19] dt-bindings: memory: factorise LPDDR channel
- binding into memory channel
-To: Clement LE GOFFIC <clement.legoffic@foss.st.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Julius Werner <jwerner@chromium.org>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
-	Gatien Chevallier <gatien.chevallier@foss.st.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Gabriel Fernandez <gabriel.fernandez@foss.st.com>, 
-	Le Goffic <legoffic.clement@gmail.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
+References: <20250714164405.111477-1-irogers@google.com> <CAP-5=fW=AG8ztbzS-KXpo9fH_Hp_fkZ3CVDuG9pN7P32Qm0oyg@mail.gmail.com>
+ <aIEjMroa3bW-T7d-@google.com> <aIEzRNLTCTA5Gqhm@x1> <aIEzzt1f3UWDCAIw@x1> <aIE24fDAuIqDXX3h@x1>
+In-Reply-To: <aIE24fDAuIqDXX3h@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 23 Jul 2025 14:30:47 -0700
+X-Gm-Features: Ac12FXyJnNr28uVoH2tm43QH4OsNUTUqvtfYcvTGkG-r5LRzTbiSQSKtzuyCDh0
+Message-ID: <CAP-5=fXCCKn5EREFCrS5JpRf_Y2ueWAd0cXy4fBfLQcP3XmqJA@mail.gmail.com>
+Subject: Re: [PATCH v7 00/16] New perf ilist app
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Collin Funk <collin.funk1@gmail.com>, 
+	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Andi Kleen <ak@linux.intel.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, 
+	Gautam Menghani <gautam@linux.ibm.com>, Thomas Falcon <thomas.falcon@intel.com>, 
+	Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> I don't want anything specific so yes it could be cool to have a generic
-> node name.
-> "sdram-channel" is fine for me.
-> @Julius what do you think about it ?
-> Is your existing software generating it in the kernel ?
-> I'm curious about dynamic node name generation.
+On Wed, Jul 23, 2025 at 12:24=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Wed, Jul 23, 2025 at 04:11:13PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Wed, Jul 23, 2025 at 04:08:55PM -0300, Arnaldo Carvalho de Melo wrot=
+e:
+> > > On Wed, Jul 23, 2025 at 11:00:18AM -0700, Namhyung Kim wrote:
+> > > > > I think there is some follow up for "make install" for scripts li=
+ke
+> > > > > these, but I'm keen for the python API to move forward.
+>
+> > > > I'll review the series today so that we can get some part of it, at
+> > > > least.  Basically I think we need a wrapper script like perf-ilist =
+to
+> > > > run this easily (maybe with documentation).
+>
+> > > I just tried, with the series applied:
+>
+> > > root@number:~# perf ilist
+> > > perf: 'ilist' is not a perf-command. See 'perf --help'.
+>
+> > > Did you mean this?
+> > >     list
+> > > root@number:~#
+>
+> > > Now trying to figure out why it is not running.
+>
+> > So it is not wired up like 'perf archive', trying it directly:
+>
+> > root@number:~# ~acme/git/perf-tools-next/tools/perf/python/ilist.py
+> > Traceback (most recent call last):
+> >   File "/home/acme/git/perf-tools-next/tools/perf/python/ilist.py", lin=
+e 11, in <module>
+> >     from textual import on
+> > ModuleNotFoundError: No module named 'textual'
+> > root@number:~#
+>
+> > I thought there was some discussion about catching this exception and
+> > providing guidance, lemme try...
+>
+> root@number:~# sudo dnf install python-textual
+> Updating and loading repositories:
+>  google-chrome                                        100% |   6.1 KiB/s =
+|   1.3 KiB |  00m00s
+>  Copr repo for PyCharm owned by phracek               100% |   2.0 KiB/s =
+|   2.1 KiB |  00m01s
+>  RPM Fusion for Fedora 42 - Nonfree - NVIDIA Driver   100% |   2.6 KiB/s =
+|   2.5 KiB |  00m01s
+>  RPM Fusion for Fedora 42 - Nonfree - Steam           100% |   5.8 KiB/s =
+|   2.4 KiB |  00m00s
+>  google-chrome                                        100% |   7.2 KiB/s =
+|   3.2 KiB |  00m00s
+>  Copr repo for PyCharm owned by phracek               100% |  15.7 KiB/s =
+|   4.8 KiB |  00m00s
+> Repositories loaded.
+> Package                           Arch    Version         Repository     =
+Size
+> Installing:
+>  python3-textual                  noarch  1.0.0-1.fc42    fedora      6.6=
+ MiB
+> Installing dependencies:
+>  python3-linkify-it-py            noarch  2.0.3-4.fc42    fedora    110.4=
+ KiB
+>  python3-markdown-it-py           noarch  3.0.0-8.fc42    fedora    496.3=
+ KiB
+>  python3-markdown-it-py+linkify   noarch  3.0.0-8.fc42    fedora      9.0=
+ KiB
+>  python3-markdown-it-py+plugins   noarch  3.0.0-8.fc42    fedora      9.0=
+ KiB
+>  python3-mdit-py-plugins          noarch  0.4.2-2.fc42    fedora    289.4=
+ KiB
+>  python3-mdurl                    noarch  0.1.2-9.fc42    fedora     41.4=
+ KiB
+>  python3-platformdirs             noarch  4.2.2-4.fc42    fedora    162.0=
+ KiB
+>  python3-pygments                 noarch  2.18.0-4.fc42   fedora     10.6=
+ MiB
+>  python3-rich                     noarch  13.9.4-2.fc42   fedora      2.5=
+ MiB
+>  python3-uc-micro-py              noarch  1.0.3-4.fc42    fedora     13.1=
+ KiB
+>
+> Transaction Summary:
+>  Installing:        11 packages
+>
+> Total size of inbound packages is 5 MiB. Need to download 5 MiB.
+> After this operation, 21 MiB extra will be used (install 21 MiB, remove 0=
+ B).
+> Is this ok [y/N]: y
+> <SNIP>
+> [13/13] Installing python3-textual-0:1.0.0-1.fc42.noarch                 =
+                                                        100% |  10.1 MiB/s =
+|   6.8 MiB |  00m01s
+> Complete!
+> root@number:~# ~acme/git/perf-tools-next/tools/perf/python/ilist.py
+> =E2=95=AD=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80 Traceback (most recent call last) =E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=95=AE
+> =E2=94=82 /home/acme/git/perf-tools-next/tools/perf/python/ilist.py:470 i=
+n compose                                                                  =
+                            =E2=94=82
+> =E2=94=82                                                                =
+                                                                           =
+                            =E2=94=82
+> =E2=94=82   467 =E2=94=82   =E2=94=82   =E2=94=82   return tree          =
+                                                                           =
+                                                    =E2=94=82
+> =E2=94=82   468 =E2=94=82   =E2=94=82                                    =
+                                                                           =
+                                            =E2=94=82
+> =E2=94=82   469 =E2=94=82   =E2=94=82   yield Header(id=3D"header")      =
+                                                                           =
+                                              =E2=94=82
+> =E2=94=82 =E2=9D=B1 470 =E2=94=82   =E2=94=82   yield Horizontal(Vertical=
+(metric_event_tree(), id=3D"events"),                                      =
+                                                      =E2=94=82
+> =E2=94=82   471 =E2=94=82   =E2=94=82   =E2=94=82   =E2=94=82   =E2=94=82=
+   =E2=94=82    Vertical(Label("event name", id=3D"event_name"),           =
+                                                                           =
+   =E2=94=82
+> =E2=94=82   472 =E2=94=82   =E2=94=82   =E2=94=82   =E2=94=82   =E2=94=82=
+   =E2=94=82   =E2=94=82   =E2=94=82     Static("description", markup=3DFal=
+se, id=3D"event_descript                                                   =
+                     =E2=94=82
+> =E2=94=82   473 =E2=94=82   =E2=94=82   =E2=94=82   =E2=94=82   =E2=94=82=
+   =E2=94=82   =E2=94=82   =E2=94=82     ))                                =
+                                                                           =
+                 =E2=94=82
+> =E2=94=82                                                                =
+                                                                           =
+                            =E2=94=82
+> =E2=94=82 =E2=95=AD=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80 locals =E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=95=AE                                                      =
+    =E2=94=82
+> =E2=94=82 =E2=94=82 self =3D IListApp(title=3D'Interactive Perf List', cl=
+asses=3D{'-dark-mode'}, pseudo_classes=3D{'dark', 'focus'}) =E2=94=82      =
+                                                    =E2=94=82
+> =E2=94=82 =E2=95=B0=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=95=AF                                                          =E2=94=
+=82
+> =E2=94=82                                                                =
+                                                                           =
+                            =E2=94=82
+> =E2=94=82 /home/acme/git/perf-tools-next/tools/perf/python/ilist.py:433 i=
+n metric_event_tree                                                        =
+                            =E2=94=82
+> =E2=94=82                                                                =
+                                                                           =
+                            =E2=94=82
+> =E2=94=82   430 =E2=94=82   =E2=94=82   =E2=94=82   """Create tree of PMU=
+s and metricgroups with events or metrics under."""     =E2=95=AD=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80 locals =E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=95=AE         =
+                             =E2=94=82
+> =E2=94=82   431 =E2=94=82   =E2=94=82   =E2=94=82   tree: Tree[TreeValue]=
+ =3D Tree("Root", id=3D"root")                              =E2=94=82 pmus =
+=3D TreeNode('PMUs', None) =E2=94=82                                      =
+=E2=94=82
+> =E2=94=82   432 =E2=94=82   =E2=94=82   =E2=94=82   pmus =3D tree.root.ad=
+d("PMUs")                                                 =E2=94=82 tree =
+=3D Tree(id=3D'root')        =E2=94=82                                     =
+ =E2=94=82
+> =E2=94=82 =E2=9D=B1 433 =E2=94=82   =E2=94=82   =E2=94=82   for pmu in pe=
+rf.pmus():                                                      =E2=95=B0=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=95=AF            =
+                          =E2=94=82
+> =E2=94=82   434 =E2=94=82   =E2=94=82   =E2=94=82   =E2=94=82   pmu_name =
+=3D pmu.name().lower()                                                     =
+                                                              =E2=94=82
+> =E2=94=82   435 =E2=94=82   =E2=94=82   =E2=94=82   =E2=94=82   pmu_node =
+=3D pmus.add(pmu_name)                                                     =
+                                                              =E2=94=82
+> =E2=94=82   436 =E2=94=82   =E2=94=82   =E2=94=82   =E2=94=82   try:     =
+                                                                           =
+                                                            =E2=94=82
+> =E2=95=B0=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
+=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
+=94=80=E2=94=80=E2=95=AF
+> AttributeError: module 'perf' has no attribute 'pmus'
+> root@number:~#
+>
+> Ok, that was with the 'python-perf3' rpm package on fedora 42, trying
+> with the new one...
+>
+> root@number:~# export PYTHONPATH=3D/tmp/build/perf-tools-next/python
+> root@number:~# ~acme/git/perf-tools-next/tools/perf/python/ilist.py
+>
+> Cool stuff!
+>
+> Lots of flashing lights! :-)
+>
+> Interesting to quickly browse all those events, I like it.
+>
+> I searched for "wakeup" and stumbled on ftrace:wakeup failures, but that
+> should be just a minor adjustment, some exception list:
+>
+> root@number:~# ls -la /sys/kernel/tracing/events/ftrace/wakeup/
+> total 0
+> drwxr-xr-x. 1 root root 0 Jul 23 16:04 .
+> drwxr-xr-x. 1 root root 0 Jul 23 16:04 ..
+> -r--r-----. 1 root root 0 Jul 23 16:04 format
+> -r--r-----. 1 root root 0 Jul 23 16:19 hist
+> root@number:~#
+> root@number:~# ls -la /sys/kernel/tracing/events/sched/sched_wakeup/
+> total 0
+> drwxr-xr-x. 1 root root 0 Jul 23 16:04 .
+> drwxr-xr-x. 1 root root 0 Jul 23 16:04 ..
+> -rw-r-----. 1 root root 0 Jul 23 16:19 enable
+> -rw-r-----. 1 root root 0 Jul 23 16:19 filter
+> -r--r-----. 1 root root 0 Jul 23 16:04 format
+> -r--r-----. 1 root root 0 Jul 23 16:19 hist
+> -r--r-----. 1 root root 0 Jul 23 16:04 id
+> -rw-r-----. 1 root root 0 Jul 23 16:19 trigger
+> root@number:~#
+>
+> Do you know how to take text screen shots in textual?
 
-I'm fine with whatever for the example here as long as the kernel does
-not rely on any specific format. `sdram-channel-X` seems fine.
+So there's a built-in screen shot thing. Press ctrl+p to bring up the
+inbuilt command palette, then select "Save screenshot" which will save
+an SVG screenshot. It should be possible to force a lowly terminal and
+then grab the characters, I tried but didn't get very far with it.
+There are console recorder apps. My preference has just been to grab
+regular screenshots and then cut out a PNG. Attaching any kind of
+non-standard character or image to an LKML post I think would cause it
+to be bounced. I've posted some images here:
 
-On our platforms we generate these dynamically in the bootloader based
-on what we enumerated during memory training, so there's no kernel
-code for it. If you're curious, our bootloader code generating it is
-here: https://chromium.googlesource.com/chromiumos/platform/depthcharge/+/refs/heads/main/src/boot/memchipinfo.c#25
-(We can update this if there's kernel consensus on a new format, but
-we'll still have older platforms that keep running the old
-implementation and we also want those to remain compatible with newer
-versions of Linux.)
+ilist working first on events:
+https://fosstodon.org/@irogers/114677152263351891
+ilist metrics working on hybrid:
+https://fosstodon.org/@irogers/114831660998075850
+ilist running on WSL on AMD:
+https://fosstodon.org/@irogers/114849910913098482
+
+> Apart from the super minor nits, thanks for working on this:
+>
+> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+Thanks! I think there are still improvements to be had like improving
+the layout of the screen, deduplicating PMUs, etc. nothing that can't
+be incrementally added. Probably the biggest thing is what to do for
+"make install" and packaging it [1]. I think it is a very nice way to
+discover what perf can inform you about, and I think everyone I've
+talked to prefers doing it with this app rather than trying to get the
+same data from regular `perf list`. For example, I was surprised how
+much data I could get from WSL.
+
+Thanks,
+Ian
+
+[1] (some thoughts on packaging in reply to Namhyung)
+https://lore.kernel.org/lkml/CAP-5=3DfX1j_MdzjqLTYeNGFTWLaQp8Dmbi093QN98b2p=
+NgFcpBA@mail.gmail.com/
+
+> - Arnaldo
