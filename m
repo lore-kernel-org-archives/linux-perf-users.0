@@ -1,140 +1,100 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D0B17C91;
-	Wed, 23 Jul 2025 21:07:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD0826B77D
+	for <linux-perf-users@vger.kernel.org>; Wed, 23 Jul 2025 21:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753304872; cv=none; b=OYNceXlZ/hn0QJcda1MX/Ppwn3e1R51L3M3bLKJHJ3Uy5DFrW40KdqPlbzB7Syh6scKEZ9lhWFDKPpZUmkwc41aQ+O/fVRMsnS/R5AAY5G1eQIGHol+kNXPNqfQZ5IQe3jGeCzqolhvv5tJEobco1LX+wdiWu/jZrsMHe5f0ujs=
+	t=1753305382; cv=none; b=JFaF9lEWsnqxJ5aKmYrNRowKwnkRX5D/TCtrYsA0/oAb6RzQpR0qvfiAo/+B27LWOOxX7yONJGRuB2yKIRhsNY3MpPktNr+JcUPcWgEnf0hgCzFkTb5yos6S34vyQcGyCy6Mwld2yPF6Z4FJLp48xop9+759B6StXQA2MdMo6KI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753304872; c=relaxed/simple;
-	bh=hPWMMmywbOOEzN+S87+NwwdTnc0omrEhFKsvJPqdTgk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=puJ6WEPJxxj/UmiBtthXfnd8p2FF0IyvLcLZ12UwWrYjRrKyKkuELzJMGOxMi/kncgon/IFJruNJBMQbduVAOLNN3XuBZmegutD2wX851lMX8TcpXnHgnqkeqR9O21SzaYyQdYknohFeLQBUNvaq5OaiTsOO72VMTNBIOpujY94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b3510c22173so41134a12.0;
-        Wed, 23 Jul 2025 14:07:51 -0700 (PDT)
+	s=arc-20240116; t=1753305382; c=relaxed/simple;
+	bh=yWyJDF3Q2SumP8IS31W52vFdyTdD9QP8y32xJ3aVsWU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Nwrpn13K4rxEFQ666860RJTHe5+7kJ5XcboEuBmTUto7ZN5rbS2zbKip5gXSwn/7mSdKzAL9JQzN8AMCtqt4NhOsHxI08jrqnPUMWgXsGQTRXTATivZJVa0LTEJX5xXIUVy2IYU5W880cQQw1dwCb7FgHS6CYUpjqfpxlpnOY2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=google.com; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TB2m0bfb; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TB2m0bfb"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso1492a12.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Jul 2025 14:16:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1753305379; x=1753910179; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=yWyJDF3Q2SumP8IS31W52vFdyTdD9QP8y32xJ3aVsWU=;
+        b=TB2m0bfb5AWnodsdI4fAEe0G25DPq8LtpAMClOdD/1YTS2jhq5Eb5DG1EWe5FtLuLy
+         qNrGoar7njwPPDGhlAMbnxBPCljPkWLUXxUz3zyc/VRwGnPAIYhUHn8UZMdGuJjEJ22L
+         423/h9wpccWK3CqTPWZDh35goLIjqDiOsjVL4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753304870; x=1753909670;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1753305379; x=1753910179;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/IMiDdl5dSKdreUaUPFyQ/2CpyhV6qLtFUX9jkTE9Bk=;
-        b=eYsdOXB1Dz6iyOKAL+VP6aapg43IyLDS0Rj7Ipl4/3hZpkydqgHiRJstzTOKzDBB5m
-         eXGn8u5ioW6YVjmUvcnSeahjjvfySCWKfaIz7iPiC5BmqL3SEVWzI7fxP/aIsKHrN+19
-         FWmJBgQbY58rukjBCNpM6AH/YEB9h0NCwfAy/PciKm+3z7qmVrgh1jHFM0afXDRW5JYf
-         349apI2SH44yiyEeDPpaOmWdxv+zRET6uXneF0LxxhJtpUFfAnk6GXCDLOPdYjMVgAbH
-         15JAGIYMQAmj7TcmSQOKqZGFhbncJcSPgI/GFivIID+zizdDzgQxgr/WVt/pJ2ASX63I
-         W5hA==
-X-Forwarded-Encrypted: i=1; AJvYcCVuEj34w2KqrZNEHJBsmqEjY4U01SXI3TDOPcYj/Ag373WTmk6fQ0yZFmgN9V6LKyEUCyBOkre5V0cQ9EJgfeKN+Q==@vger.kernel.org, AJvYcCWmXzTW/qihjANKuAne3gnag3DI/deq1Ietu0RWfzcTz31P8YpB0jFF3VNOGe6Eecn3mQ6ovmE86LKCBSY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRS0rSb6skbpHr/K8H7FDe3XRjLplbi1D5RhOQKSGxZWoCM478
-	Ks85c7CZ3txTIHM8ufDFvzQPwzXuDmet0YnzDFPgfhNyDVwecIjE9zT1
-X-Gm-Gg: ASbGncs/4nMu10tJO3FEuXhG9aMQ3iymINyDNMGivaVZwtjtcxyx7r6+gOleMsGGGKT
-	eoNYPMqTOFSrrrZs60+lFlsOY33gKgxh51tRJclG4RhWUl9MtEKgnJpnXtsK4as5C+HPd0JvpqF
-	wefaAZp5b3DTpAUqyyrt4rnOIVEGoySpk4Y3/4XfT8E1KTdj9atFSnglpcfHMwCfKRho2sIBjF/
-	oVUfVhWkXFSNxVxIiy43CE2GZfkyVPnFo1cHdSNFalwvrdnKgLpgEk3pO7FUr2jyTAP9KV1IGGg
-	T/grbbPnJFLZttv52Cadt5/J1aqybvzUGXHJGAQfqY2hfFdNcSG+48RVydj3I2xvzvC/Ek4/vdE
-	mfCBoi8QPbo1/zPSMoSRjFEE=
-X-Google-Smtp-Source: AGHT+IEi131jF0DgSED99zXtWgOrXDGfJi5rNwdTWqxbh/HdaMC7dTOr3gW9pa2J13t2/D/l+T+ncg==
-X-Received: by 2002:a05:6a20:3ca7:b0:239:d43:4820 with SMTP id adf61e73a8af0-23d491af241mr2497205637.10.1753304870583;
-        Wed, 23 Jul 2025 14:07:50 -0700 (PDT)
-Received: from localhost ([218.152.98.97])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31e519e169asm2335508a91.13.2025.07.23.14.07.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Jul 2025 14:07:50 -0700 (PDT)
-From: Yunseong Kim <ysk@kzalloc.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Will Deacon <will@kernel.org>,
-	Yeoreum Yun <yeoreum.yun@arm.com>,
-	Austin Kim <austindh.kim@gmail.com>,
-	Michelle Jin <shjy180909@gmail.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yunseong Kim <ysk@kzalloc.com>,
-	syzkaller@googlegroups.com
-Subject: [PATCH] perf/core: Prevent UBSAN negative‑idx shift by throttle/unthrottle group
-Date: Wed, 23 Jul 2025 21:04:28 +0000
-Message-ID: <20250723210426.590974-3-ysk@kzalloc.com>
-X-Mailer: git-send-email 2.50.0
+        bh=yWyJDF3Q2SumP8IS31W52vFdyTdD9QP8y32xJ3aVsWU=;
+        b=v5GCz1y9CafJtIeARCYTyxk0dSKQl0R9VXQG6W+4T/ImWAVEssG2u9sJ/RU/1pL9bT
+         yL0PjZBLBsbVUn9kgjd09W7UIcpB0lynE2lY0uWVmpSzOBOETv5A717MMG0tWYxoj4bG
+         +PVWKvY2Frc1lwL42OKR66P4/29fS3z78FvRDlrkocN9CNZd0coq7fGTPqhz/shldKb/
+         t6UAZ3qVPoxTkyNwJ5K54rdRT1M/2W94idWhoerpvpazvj/n6vpnxIGhmySYRuORsqLA
+         Tcjd0WKR1pHV9CotT9mkRhLLZxFI/8b40ivWQY1gsxm7QYrNfVsLdNJsbbHgh5eEvbBd
+         SQpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWDouHzKl3CGPlfULDQLxqlG6nirCEvo8BWmtCEUXkp6SKMBhRx5FSXm3yNvXl2343lDB8K5odv9pKmPiRAKcb9@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTr5iDIDZSRkBPyzw8SoCvQc9X52UcIwkLI0/LcpLiqQ5eSmnu
+	ceWJYqIcdV0oiDkgu28YBNLmN7Kb0bprjtfiZ2iLxrN/0tDCzV3WTVDC9I1d6stKiolM0cwRnUo
+	/Cgm7usIkgjFmUcuXrwhtIhixcUs8C057gNnnCWLL
+X-Gm-Gg: ASbGncuOtQgMmyiA/7RUE9gOK/rS+NrMb2WvscXK/grZhXXvlY5p7pIOG86f8SLpWrV
+	MbCREhdk7KMS+Ezk0u3iwZDpX6wRbkShRvOzYah6lhc+CKKFHwALW4TG5GBfbKstz+J6LkUeF9o
+	P2edFJLeW1wcXH/nYB4rJ9pIzAng41vuBQdU/dgpT7PHzNIaEGFLG/5XPVzcXrMdasTsBriHVXT
+	zeedGHUCYPvzYabHDuDGcxP8Ig0x0aU2g==
+X-Google-Smtp-Source: AGHT+IGkycQnfe72S9SyWbMalkjmg0I49bPxAmbp0MCvmAI2AYuaRbELjXuXnq+jCKrEmFtw1MggLjmHYfDowt+Iv2w=
+X-Received: by 2002:a50:aa8a:0:b0:607:bd2:4757 with SMTP id
+ 4fb4d7f45d1cf-614cce2f67amr6758a12.1.1753305379189; Wed, 23 Jul 2025 14:16:19
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250722-ddrperfm-upstream-v3-0-7b7a4f3dc8a0@foss.st.com>
+ <20250722-ddrperfm-upstream-v3-7-7b7a4f3dc8a0@foss.st.com>
+ <20250723-zealous-turtle-of-perfection-e67aee@kuoka> <e9e33fc7-4705-4e6d-bd33-ce9dc1a9b94e@foss.st.com>
+In-Reply-To: <e9e33fc7-4705-4e6d-bd33-ce9dc1a9b94e@foss.st.com>
+From: Julius Werner <jwerner@chromium.org>
+Date: Wed, 23 Jul 2025 14:16:05 -0700
+X-Gm-Features: Ac12FXyYNcqm7jBBLCa0VFOXC51yHGdhXmCX5kALRLR-kvG2ffG7jYjz27Mm2C0
+Message-ID: <CAODwPW-bwg-CD8qfP0cb58QVFLfJSqj6DhZSQuqHxsEdLz1QDA@mail.gmail.com>
+Subject: Re: [PATCH v3 07/19] dt-bindings: memory: factorise LPDDR channel
+ binding into memory channel
+To: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Julius Werner <jwerner@chromium.org>, Will Deacon <will@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
+	Gatien Chevallier <gatien.chevallier@foss.st.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Gabriel Fernandez <gabriel.fernandez@foss.st.com>, 
+	Le Goffic <legoffic.clement@gmail.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Where perf_event_throttle_group() and perf_event_unthrottle_group() would
-invoke pmu->start()/stop() on events still in the OFF state, leaving
-event->hw.idx == -1 and triggering UBSAN shift-out-of-bounds errors
-(negative shift exponent) in pmu enable/disable event. By checking
-'event->state > PERF_EVENT_STATE_OFF' for both the group leader and each
-sibling, this ensure only started events with valid hw.idx values are passed
-to the PMU, preventing negative-index shifts undefined behavior.
+> I don't want anything specific so yes it could be cool to have a generic
+> node name.
+> "sdram-channel" is fine for me.
+> @Julius what do you think about it ?
+> Is your existing software generating it in the kernel ?
+> I'm curious about dynamic node name generation.
 
-The issue is reproducible using the syzlang and C reproducer available:
-Link: https://lore.kernel.org/lkml/14fb716a-dedf-482a-8518-e5cc26165e97@kzalloc.com/
+I'm fine with whatever for the example here as long as the kernel does
+not rely on any specific format. `sdram-channel-X` seems fine.
 
-Fixes: 9734e25fbf5a ("perf: Fix the throttle logic for a group")
-Signed-off-by: Yunseong Kim <ysk@kzalloc.com>
-Tested-by: Yunseong Kim <ysk@kzalloc.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: syzkaller@googlegroups.com
----
- kernel/events/core.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 22fdf0c187cd..e5cec61be545 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2684,18 +2684,28 @@ static void perf_event_unthrottle_group(struct perf_event *event, bool skip_star
- {
- 	struct perf_event *sibling, *leader = event->group_leader;
- 
--	perf_event_unthrottle(leader, skip_start_event ? leader != event : true);
--	for_each_sibling_event(sibling, leader)
--		perf_event_unthrottle(sibling, skip_start_event ? sibling != event : true);
-+	if (leader->state > PERF_EVENT_STATE_OFF)
-+		perf_event_unthrottle(leader,
-+			skip_start_event ? leader != event : true);
-+
-+	for_each_sibling_event(sibling, leader) {
-+		if (sibling->state > PERF_EVENT_STATE_OFF)
-+			perf_event_unthrottle(sibling,
-+				skip_start_event ? sibling != event : true);
-+	}
- }
- 
- static void perf_event_throttle_group(struct perf_event *event)
- {
- 	struct perf_event *sibling, *leader = event->group_leader;
- 
--	perf_event_throttle(leader);
--	for_each_sibling_event(sibling, leader)
--		perf_event_throttle(sibling);
-+	if (leader->state > PERF_EVENT_STATE_OFF)
-+		perf_event_throttle(leader);
-+
-+	for_each_sibling_event(sibling, leader) {
-+		if (sibling->state > PERF_EVENT_STATE_OFF)
-+			perf_event_throttle(sibling);
-+	}
- }
- 
- static int
--- 
-2.50.0
-
+On our platforms we generate these dynamically in the bootloader based
+on what we enumerated during memory training, so there's no kernel
+code for it. If you're curious, our bootloader code generating it is
+here: https://chromium.googlesource.com/chromiumos/platform/depthcharge/+/refs/heads/main/src/boot/memchipinfo.c#25
+(We can update this if there's kernel consensus on a new format, but
+we'll still have older platforms that keep running the old
+implementation and we also want those to remain compatible with newer
+versions of Linux.)
