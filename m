@@ -1,55 +1,55 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5204B2ECE94
-	for <linux-perf-users@vger.kernel.org>; Thu, 24 Jul 2025 16:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849932ECEAB
+	for <linux-perf-users@vger.kernel.org>; Thu, 24 Jul 2025 16:33:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753374818; cv=none; b=h01fIHytXSDmKiu+DYHnvX6WNQN9d3Zi09DgT20CZMZcaoNH68FeQ8rpC9B1SC60JpRjquL7DWN0CpTb2ZzZNv4e/tIM8OCFpFHTuHPF8ZOF6yeR4a7Fk0K4F8DohMk7+yVj4uU7+OMI+GTkU47SkTtFYcyB//hMAx95+dBAVtg=
+	t=1753374821; cv=none; b=gWGHZTvXjwKJlYhqttmGV9l3IsPyHs0WEnxkuLQ78rbBNviVXpXcjgJMOM/3r+nEofX+sx9VzTFF6s4K7T9KEZ+/AzijE23y7vtYE/qxQDsPyawVPTHi208tNoS8N8Yo053hXI4FfRZc8+3T/xpOUgZfOP1APPLhZCnkEw2S+sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753374818; c=relaxed/simple;
-	bh=z/xSjHdP56FXYIWs+aIIljgC0ViewnharrTuckvuFUU=;
+	s=arc-20240116; t=1753374821; c=relaxed/simple;
+	bh=hWt/6YbpyonBX2+y7Dnsw4uX+EYw5js9GLR2q2lo/Sg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=R2dRlP18aU/0T6+TkCciqAyoS/g9QeFTr95uY5aTmKRzsgmpdyVf0Ok/bpT64l1TQ3Y6g4eYxElX7D8dfIbdmW5S8yet1tJlwsjfj+MfZoIjHh9gDiAXtnBOYTIMF2khHzjmE1qflwCr+pnNDcIQy4m5zUFJbNn/dwI8HviISyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M9nAMuRn; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=rwmzI74fmr3g0dGxtRGOx+7/p9WUm8LeeDjj7VX2I9frIOEhSTF9S3r2qyF3FSXGnlWZR9yUzcigL81v/1OCvxJhxWjoRSgcGX5ryqLJTLnkfPB735KF7idaptXiRbmIfjKtKX/oMmJYUKOdScHX2BuOwHSAsJYXNEDj/UKy4m4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=civDJJ4q; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M9nAMuRn"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e8de720b009so593507276.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Jul 2025 09:33:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="civDJJ4q"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-748e1e474f8so1962163b3a.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Jul 2025 09:33:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753374815; x=1753979615; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1753374818; x=1753979618; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Sdm1hmB2kPMSJ2yB+sDP6pEGWfyWwz9T2RmJ3aOqJf4=;
-        b=M9nAMuRnCoJKE+wQWjGp2naLe/993Zlb0/vdxgKJff8DDjd9gtVEUDbZQBG3ZV5g9p
-         ndLuebIk6cHDjyG0gxVszcv/tpnxybjdZ5QInVd2/5POj65YXjHpCoWbq3zpvXYuj2GR
-         6gD3OMsMWS3eA7u88Czm8SqR8pFajy5fAeJl88yokZT5nDyI2ZJUiC5vNWvwv/xVg4YI
-         dfJFICrtAKicN6tGBDNp+RA10YRAwAnb6NeFJlAlhy7zYyeeFLX73CXbz22wt//ETX/8
-         F9TAzVQakkMf8La7qitFm2xUuTWudBiNKi4FpaCrS2JQOtJxpr337NRWqDgvgcFwdHlj
-         3Rxg==
+        bh=mO+rbRiTDR6FlQBr5ZxWVUFBcSyOj58M3QIN0WwdPfg=;
+        b=civDJJ4qdljpF/GvLRASTpEQt44vwpWPwmW5rmrWEx7wezO6Dhc4yw9gUQQG/yjI7m
+         X/1MHLcUHXqxzg98XWMHJmmMpXQkoLTDFM9e3nPlHJl5FVP29wXw71IsYSIKZ2AM3Od+
+         siyqNcXPFu/cABAFWaOD9D780CiGlaHdyw958ZXWjnNqMdxuP1emipIjjoaIjxtc+/A3
+         jdqxbzBjg8nAM2Dt1ekSUeyYUkSO/Z9QixFvkf6SuEGWTmzBvamysOTO8qb5+8A0Bq6z
+         1lI3UzTjcdWp+GnT4VQlS566Q/01ydIrVaQW+r4ZhvEHa/mvadRM1xgdA/M4YdV/eaHs
+         g3fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753374815; x=1753979615;
+        d=1e100.net; s=20230601; t=1753374818; x=1753979618;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Sdm1hmB2kPMSJ2yB+sDP6pEGWfyWwz9T2RmJ3aOqJf4=;
-        b=jDBPYepjsXqknjC1mg/3t44nGSMgLwYPWji/m3ck7Un+ASDg9lOujcxKyGSj7WLpl7
-         1S36KcF1Hvd6jc5I/9BT4/OFh0iHgJRN7hiJUV4z6TKbrBa3LdTb3sUZr1axsCgTJp+j
-         +iaq3p2bE/7E2PQAIP06RdXxj+q35sCT1ydzOKzo9V8Eg/D3R5VuuZIVK1Fl2DCoVcni
-         IBqaNUweTWFC1iJGr7mglhzDGfaSD+635vSYAHlr/Qe8UB3zLQu4z+EHneK5e+l7qV7N
-         NI420FfaUKm4r8odRma+OQMzlr6igikCYqhvt0qimxVKYwg0v95TIDBNqNHtJtG/9gEy
-         /NhA==
-X-Forwarded-Encrypted: i=1; AJvYcCVQR868Gc13olWLBDd/iHIBzZREXHNBydT9oqStI7axBPwcvTE1mH8KNajJMVhB2KEXhQOVG5qIM7V/QDy9vJ26@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLplfp03jo+35TrMOi+4V/kpxfRQN9pTA8YHobC+vhkzskquez
-	NFKD1LCQJPYK0KSwpubSqAMB+t+wsacPlYTEITNmUmVg+lRHwGP13IntO3cmXHDQWiRmBGfqqWE
-	Q+z3m6JcQtw==
-X-Google-Smtp-Source: AGHT+IGdvVU2kyOvJVHKnWQwtopdS3uO12p5q6cuQuTQqBzAPtRCgVQ93vv29c0Qy5A/Q0xotZJoWnAwhvCZ
-X-Received: from ybaa8.prod.google.com ([2002:a05:6902:4808:b0:e8d:dc80:4fb2])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a25:1c6:0:b0:e8d:892c:a2e4
- with SMTP id 3f1490d57ef6-e8dc5ac9b46mr7678442276.28.1753374815175; Thu, 24
- Jul 2025 09:33:35 -0700 (PDT)
-Date: Thu, 24 Jul 2025 09:32:48 -0700
+        bh=mO+rbRiTDR6FlQBr5ZxWVUFBcSyOj58M3QIN0WwdPfg=;
+        b=BDQsFyta7O8XRJpPbS4d5vZGHeS4MbvLGr8i+4TDMsfiEAzisCgCmCPm9k+odS6Jgb
+         SCDjHzE20WGoCttEqY7qZnXPlcSCILv0I24G+rJIjykD2LFZVVpjCPv+iMEr680hRLcg
+         olhrLso/qhgaRzznMru6Bm1FSabtAs0es13iA++JMX8gn34ezVMYqShvKDFYBTKtGdA5
+         Ag08kpNnwbQJAo0DS+NTwU37vD6b6KMdKDWWaX7U6vn5whAoX208+QKsjxPBkOxlmkwx
+         UDo1oU5z1ntLWhi1MC6oedimioCZuDmtG4PpEI+W4ncuwhKBM82kba/w37YtmS/S7ttd
+         VfCg==
+X-Forwarded-Encrypted: i=1; AJvYcCVdO1aDPBg5zQ6N6K3oZNlN1+ER31Hf+dKp0/7HzCTIOsAS/HcwbOyD1/5/AfrD3jbrnGHnLDCwA7EQETqrRDHJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGhB3EX8zSBkwhJc3Xig9/tWiYla0Tyxn6lLDQ44+egLQrTuF+
+	4eXns0QOnKPZWWRer0gu6PZpZg/1EDz6NNzkXaT7XTDiq4chc87D4mQJ/ucm5oS0izgkiTCAOmk
+	pkJHcJQ2aJQ==
+X-Google-Smtp-Source: AGHT+IG6+ia0kBj02sRX6GO6EKmAB7RaQnFmeXL5btjoRO7fcOGW30hi+GIAoUJalldRRWByMtby2LvFuopm
+X-Received: from pfbif3.prod.google.com ([2002:a05:6a00:8b03:b0:747:bd3b:4b63])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:b89:b0:736:3d7c:236c
+ with SMTP id d2e1a72fcca58-760351dd745mr10559306b3a.14.1753374817557; Thu, 24
+ Jul 2025 09:33:37 -0700 (PDT)
+Date: Thu, 24 Jul 2025 09:32:49 -0700
 In-Reply-To: <20250724163302.596743-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250724163302.596743-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250724163302.596743-9-irogers@google.com>
-Subject: [PATCH v6 08/22] perf record: Make --buildid-mmap the default
+Message-ID: <20250724163302.596743-10-irogers@google.com>
+Subject: [PATCH v6 09/22] perf session: Add accessor for session->header.env
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -89,197 +89,918 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Support for build IDs in mmap2 perf events has been present since
-Linux v5.12:
-https://lore.kernel.org/lkml/20210219194619.1780437-1-acme@kernel.org/
-Build ID mmap events don't avoid the need to inject build IDs for DSO
-touched by samples as the build ID cache is populated by perf
-record. They can avoid some cases of symbol mis-resolution caused by
-the file system changing from when a sample occurred and when the DSO
-is sought.
-
-Unlike the --buildid-mmap option, this chnage doesn't disable the
-build ID cache but it does disable the processing of samples looking
-for DSOs to inject build IDs for. To disable the build ID cache the -B
-(--no-buildid) option should be used.
-
-Making this option the default was raised on the list in:
-https://lore.kernel.org/linux-perf-users/CAP-5=fXP7jN_QrGUcd55_QH5J-Y-FCaJ6=NaHVtyx0oyNh8_-Q@mail.gmail.com/
+The perf_env from the header in the session is frequently accessed,
+add an accessor function rather than access directly. Cache the value
+to avoid repeated calls. No behavioral change.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Documentation/perf-record.txt |  4 ++-
- tools/perf/builtin-record.c              | 34 +++++++++++++++---------
- tools/perf/util/symbol_conf.h            |  2 +-
- tools/perf/util/synthetic-events.c       | 16 +++++------
- 4 files changed, 34 insertions(+), 22 deletions(-)
+ tools/perf/builtin-annotate.c       |  4 +--
+ tools/perf/builtin-buildid-cache.c  |  2 +-
+ tools/perf/builtin-c2c.c            | 16 ++++++------
+ tools/perf/builtin-inject.c         |  2 +-
+ tools/perf/builtin-kmem.c           |  2 +-
+ tools/perf/builtin-kvm.c            |  4 +--
+ tools/perf/builtin-kwork.c          |  2 +-
+ tools/perf/builtin-lock.c           |  4 +--
+ tools/perf/builtin-mem.c            |  2 +-
+ tools/perf/builtin-record.c         | 22 +++++++++--------
+ tools/perf/builtin-report.c         |  8 +++---
+ tools/perf/builtin-sched.c          |  8 +++---
+ tools/perf/builtin-script.c         | 14 ++++++-----
+ tools/perf/builtin-stat.c           | 23 ++++++++---------
+ tools/perf/builtin-timechart.c      |  2 +-
+ tools/perf/builtin-top.c            |  5 ++--
+ tools/perf/builtin-trace.c          |  2 +-
+ tools/perf/tests/topology.c         | 38 +++++++++++++----------------
+ tools/perf/util/bpf-event.c         |  2 +-
+ tools/perf/util/branch.c            |  2 +-
+ tools/perf/util/data-convert-bt.c   | 16 ++++++------
+ tools/perf/util/data-convert-json.c | 36 +++++++++++++--------------
+ tools/perf/util/session.c           |  7 +++++-
+ tools/perf/util/session.h           |  2 ++
+ tools/perf/util/tool.c              |  2 +-
+ 25 files changed, 120 insertions(+), 107 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 612612fa2d80..067891bd7da6 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -563,7 +563,9 @@ Specify vmlinux path which has debuginfo.
- Record build-id of all DSOs regardless whether it's actually hit or not.
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 9833c2c82a2f..326593862998 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -562,7 +562,7 @@ static int __cmd_annotate(struct perf_annotate *ann)
+ 	}
  
- --buildid-mmap::
--Record build ids in mmap2 events, disables build id cache (implies --no-buildid).
-+Legacy record build-id in map events option which is now the
-+default. Behaves indentically to --no-buildid. Disable with
-+--no-buildid-mmap.
+ 	if (!annotate_opts.objdump_path) {
+-		ret = perf_env__lookup_objdump(&session->header.env,
++		ret = perf_env__lookup_objdump(perf_session__env(session),
+ 					       &annotate_opts.objdump_path);
+ 		if (ret)
+ 			goto out;
+@@ -896,7 +896,7 @@ int cmd_annotate(int argc, const char **argv)
  
- --aio[=n]::
- Use <n> control blocks in asynchronous (Posix AIO) trace writing mode (default: 1, max: 4).
+ 	symbol_conf.try_vmlinux_path = true;
+ 
+-	ret = symbol__init(&annotate.session->header.env);
++	ret = symbol__init(perf_session__env(annotate.session));
+ 	if (ret < 0)
+ 		goto out_delete;
+ 
+diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
+index e936a34b7d37..c98104481c8a 100644
+--- a/tools/perf/builtin-buildid-cache.c
++++ b/tools/perf/builtin-buildid-cache.c
+@@ -453,7 +453,7 @@ int cmd_buildid_cache(int argc, const char **argv)
+ 			return PTR_ERR(session);
+ 	}
+ 
+-	if (symbol__init(session ? &session->header.env : NULL) < 0)
++	if (symbol__init(session ? perf_session__env(session) : NULL) < 0)
+ 		goto out;
+ 
+ 	setup_pager();
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index e2e257bcc461..8cb36d9433f8 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -2267,14 +2267,15 @@ static int setup_nodes(struct perf_session *session)
+ 	int node, idx;
+ 	struct perf_cpu cpu;
+ 	int *cpu2node;
++	struct perf_env *env = perf_session__env(session);
+ 
+ 	if (c2c.node_info > 2)
+ 		c2c.node_info = 2;
+ 
+-	c2c.nodes_cnt = session->header.env.nr_numa_nodes;
+-	c2c.cpus_cnt  = session->header.env.nr_cpus_avail;
++	c2c.nodes_cnt = env->nr_numa_nodes;
++	c2c.cpus_cnt  = env->nr_cpus_avail;
+ 
+-	n = session->header.env.numa_nodes;
++	n = env->numa_nodes;
+ 	if (!n)
+ 		return -EINVAL;
+ 
+@@ -3030,6 +3031,7 @@ static int perf_c2c__report(int argc, const char **argv)
+ 	};
+ 	int err = 0;
+ 	const char *output_str, *sort_str = NULL;
++	struct perf_env *env;
+ 
+ 	argc = parse_options(argc, argv, options, report_c2c_usage,
+ 			     PARSE_OPT_STOP_AT_NON_OPTION);
+@@ -3072,14 +3074,14 @@ static int perf_c2c__report(int argc, const char **argv)
+ 		pr_debug("Error creating perf session\n");
+ 		goto out;
+ 	}
+-
++	env = perf_session__env(session);
+ 	/*
+ 	 * Use the 'tot' as default display type if user doesn't specify it;
+ 	 * since Arm64 platform doesn't support HITMs flag, use 'peer' as the
+ 	 * default display type.
+ 	 */
+ 	if (!display) {
+-		if (!strcmp(perf_env__arch(&session->header.env), "arm64"))
++		if (!strcmp(perf_env__arch(env), "arm64"))
+ 			display = "peer";
+ 		else
+ 			display = "tot";
+@@ -3109,7 +3111,7 @@ static int perf_c2c__report(int argc, const char **argv)
+ 		goto out_session;
+ 	}
+ 
+-	err = mem2node__init(&c2c.mem2node, &session->header.env);
++	err = mem2node__init(&c2c.mem2node, env);
+ 	if (err)
+ 		goto out_session;
+ 
+@@ -3117,7 +3119,7 @@ static int perf_c2c__report(int argc, const char **argv)
+ 	if (err)
+ 		goto out_mem2node;
+ 
+-	if (symbol__init(&session->header.env) < 0)
++	if (symbol__init(env) < 0)
+ 		goto out_mem2node;
+ 
+ 	/* No pipe support at the moment. */
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 13bbb493141f..f73350a3417a 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -2608,7 +2608,7 @@ int cmd_inject(int argc, const char **argv)
+ 		inject.tool.finished_round = perf_event__drop_oe;
+ 	}
+ #endif
+-	ret = symbol__init(&inject.session->header.env);
++	ret = symbol__init(perf_session__env(inject.session));
+ 	if (ret < 0)
+ 		goto out_delete;
+ 
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index 67fb1946ef13..7929a5fa5f46 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -2024,7 +2024,7 @@ int cmd_kmem(int argc, const char **argv)
+ 		symbol_conf.use_callchain = true;
+ 	}
+ 
+-	symbol__init(&session->header.env);
++	symbol__init(perf_session__env(session));
+ 
+ 	if (perf_time__parse_str(&ptime, time_str) != 0) {
+ 		pr_err("Invalid time string\n");
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index d75bd3684980..7b15b4a705e4 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -1175,7 +1175,7 @@ static int cpu_isa_config(struct perf_kvm_stat *kvm)
+ 		}
+ 		cpuid = buf;
+ 	} else
+-		cpuid = kvm->session->header.env.cpuid;
++		cpuid = perf_session__env(kvm->session)->cpuid;
+ 
+ 	if (!cpuid) {
+ 		pr_err("Failed to look up CPU type\n");
+@@ -1561,7 +1561,7 @@ static int read_events(struct perf_kvm_stat *kvm)
+ 		return PTR_ERR(kvm->session);
+ 	}
+ 
+-	symbol__init(&kvm->session->header.env);
++	symbol__init(perf_session__env(kvm->session));
+ 
+ 	if (!perf_session__has_traces(kvm->session, "kvm record")) {
+ 		ret = -EINVAL;
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index c41a68d073de..d2e08de5976d 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -1804,7 +1804,7 @@ static int perf_kwork__read_events(struct perf_kwork *kwork)
+ 		return PTR_ERR(session);
+ 	}
+ 
+-	symbol__init(&session->header.env);
++	symbol__init(perf_session__env(session));
+ 
+ 	if (perf_kwork__check_config(kwork, session) != 0)
+ 		goto out_delete;
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 3b3ade7a39ca..fd49703021fd 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -1876,7 +1876,7 @@ static int __cmd_report(bool display_info)
+ 	}
+ 
+ 	symbol_conf.allow_aliases = true;
+-	symbol__init(&session->header.env);
++	symbol__init(perf_session__env(session));
+ 
+ 	if (!data.is_pipe) {
+ 		if (!perf_session__has_traces(session, "lock record"))
+@@ -2042,7 +2042,7 @@ static int __cmd_contention(int argc, const char **argv)
+ 		con.save_callstack = true;
+ 
+ 	symbol_conf.allow_aliases = true;
+-	symbol__init(&session->header.env);
++	symbol__init(perf_session__env(session));
+ 
+ 	if (use_bpf) {
+ 		err = target__validate(&target);
+diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
+index 5ec83cd85650..c6496adff3fe 100644
+--- a/tools/perf/builtin-mem.c
++++ b/tools/perf/builtin-mem.c
+@@ -304,7 +304,7 @@ static int report_raw_events(struct perf_mem *mem)
+ 			goto out_delete;
+ 	}
+ 
+-	ret = symbol__init(&session->header.env);
++	ret = symbol__init(perf_session__env(session));
+ 	if (ret < 0)
+ 		goto out_delete;
+ 
 diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 53971b9de3ba..a59c4e15575c 100644
+index a59c4e15575c..8a829ddff6f2 100644
 --- a/tools/perf/builtin-record.c
 +++ b/tools/perf/builtin-record.c
-@@ -171,6 +171,7 @@ struct record {
- 	bool			no_buildid_cache_set;
- 	bool			buildid_all;
- 	bool			buildid_mmap;
-+	bool			buildid_mmap_set;
- 	bool			timestamp_filename;
- 	bool			timestamp_boundary;
- 	bool			off_cpu;
-@@ -1811,6 +1812,7 @@ record__finish_output(struct record *rec)
- 			data->dir.files[i].size = lseek(data->dir.files[i].fd, 0, SEEK_CUR);
- 	}
+@@ -2203,7 +2203,7 @@ static int record__setup_sb_evlist(struct record *rec)
+ 			}
+ 		}
  
-+	/* Buildid scanning disabled or build ID in kernel and synthesized map events. */
- 	if (!rec->no_buildid) {
- 		process_buildids(rec);
- 
-@@ -3005,6 +3007,8 @@ static int perf_record_config(const char *var, const char *value, void *cb)
- 			rec->no_buildid = true;
- 		else if (!strcmp(value, "mmap"))
- 			rec->buildid_mmap = true;
-+		else if (!strcmp(value, "no-mmap"))
-+			rec->buildid_mmap = false;
- 		else
+-		if (evlist__add_bpf_sb_event(rec->sb_evlist, &rec->session->header.env)) {
++		if (evlist__add_bpf_sb_event(rec->sb_evlist, perf_session__env(rec->session))) {
+ 			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
  			return -1;
- 		return 0;
-@@ -3411,6 +3415,7 @@ static struct record record = {
- 		.synth               = PERF_SYNTH_ALL,
- 		.off_cpu_thresh_ns   = OFFCPU_THRESH,
- 	},
-+	.buildid_mmap = true,
- };
+ 		}
+@@ -2222,15 +2222,16 @@ static int record__init_clock(struct record *rec)
+ 	struct perf_session *session = rec->session;
+ 	struct timespec ref_clockid;
+ 	struct timeval ref_tod;
++	struct perf_env *env = perf_session__env(session);
+ 	u64 ref;
  
- const char record_callchain_help[] = CALLCHAIN_RECORD_HELP
-@@ -3577,8 +3582,8 @@ static struct option __record_options[] = {
- 		   "file", "vmlinux pathname"),
- 	OPT_BOOLEAN(0, "buildid-all", &record.buildid_all,
- 		    "Record build-id of all DSOs regardless of hits"),
--	OPT_BOOLEAN(0, "buildid-mmap", &record.buildid_mmap,
--		    "Record build-id in map events"),
-+	OPT_BOOLEAN_SET(0, "buildid-mmap", &record.buildid_mmap, &record.buildid_mmap_set,
-+			"Record build-id in mmap events and skip build-id processing."),
- 	OPT_BOOLEAN(0, "timestamp-filename", &record.timestamp_filename,
- 		    "append timestamp to output filename"),
- 	OPT_BOOLEAN(0, "timestamp-boundary", &record.timestamp_boundary,
-@@ -4108,19 +4113,24 @@ int cmd_record(int argc, const char **argv)
- 		record.opts.record_switch_events = true;
- 	}
- 
-+	if (!rec->buildid_mmap) {
-+		pr_debug("Disabling build id in synthesized mmap2 events.\n");
-+		symbol_conf.no_buildid_mmap2 = true;
-+	} else if (rec->buildid_mmap_set) {
-+		/*
-+		 * Explicitly passing --buildid-mmap disables buildid processing
-+		 * and cache generation.
-+		 */
-+		rec->no_buildid = true;
-+	}
-+	if (rec->buildid_mmap && !perf_can_record_build_id()) {
-+		pr_warning("Missing support for build id in kernel mmap events.\n"
-+			   "Disable this warning with --no-buildid-mmap\n");
-+		rec->buildid_mmap = false;
-+	}
- 	if (rec->buildid_mmap) {
--		if (!perf_can_record_build_id()) {
--			pr_err("Failed: no support to record build id in mmap events, update your kernel.\n");
--			err = -EINVAL;
--			goto out_opts;
--		}
--		pr_debug("Enabling build id in mmap2 events.\n");
--		/* Enable mmap build id synthesizing. */
--		symbol_conf.buildid_mmap2 = true;
- 		/* Enable perf_event_attr::build_id bit. */
- 		rec->opts.build_id = true;
--		/* Disable build id cache. */
--		rec->no_buildid = true;
- 	}
- 
- 	if (rec->opts.record_cgroup && !perf_can_record_cgroup()) {
-diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-index cd9aa82c7d5a..7a80d2c14d9b 100644
---- a/tools/perf/util/symbol_conf.h
-+++ b/tools/perf/util/symbol_conf.h
-@@ -43,7 +43,7 @@ struct symbol_conf {
- 			report_individual_block,
- 			inline_name,
- 			disable_add2line_warn,
--			buildid_mmap2,
-+			no_buildid_mmap2,
- 			guest_code,
- 			lazy_load_kernel_maps,
- 			keep_exited_threads,
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 69b98023ce74..638d7dd7fa4b 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -532,7 +532,7 @@ int perf_event__synthesize_mmap_events(const struct perf_tool *tool,
- 		event->mmap2.pid = tgid;
- 		event->mmap2.tid = pid;
- 
--		if (symbol_conf.buildid_mmap2)
-+		if (!symbol_conf.no_buildid_mmap2)
- 			perf_record_mmap2__read_build_id(&event->mmap2, machine, false);
- 
- 		if (perf_tool__process_synth_event(tool, event, machine, process) != 0) {
-@@ -690,7 +690,7 @@ static int perf_event__synthesize_modules_maps_cb(struct map *map, void *data)
+ 	if (!rec->opts.use_clockid)
  		return 0;
  
- 	dso = map__dso(map);
--	if (symbol_conf.buildid_mmap2) {
-+	if (!symbol_conf.no_buildid_mmap2) {
- 		size = PERF_ALIGN(dso__long_name_len(dso) + 1, sizeof(u64));
- 		event->mmap2.header.type = PERF_RECORD_MMAP2;
- 		event->mmap2.header.size = (sizeof(event->mmap2) -
-@@ -734,9 +734,9 @@ int perf_event__synthesize_modules(const struct perf_tool *tool, perf_event__han
- 		.process = process,
- 		.machine = machine,
+ 	if (rec->opts.use_clockid && rec->opts.clockid_res_ns)
+-		session->header.env.clock.clockid_res_ns = rec->opts.clockid_res_ns;
++		env->clock.clockid_res_ns = rec->opts.clockid_res_ns;
+ 
+-	session->header.env.clock.clockid = rec->opts.clockid;
++	env->clock.clockid = rec->opts.clockid;
+ 
+ 	if (gettimeofday(&ref_tod, NULL) != 0) {
+ 		pr_err("gettimeofday failed, cannot set reference time.\n");
+@@ -2245,12 +2246,12 @@ static int record__init_clock(struct record *rec)
+ 	ref = (u64) ref_tod.tv_sec * NSEC_PER_SEC +
+ 	      (u64) ref_tod.tv_usec * NSEC_PER_USEC;
+ 
+-	session->header.env.clock.tod_ns = ref;
++	env->clock.tod_ns = ref;
+ 
+ 	ref = (u64) ref_clockid.tv_sec * NSEC_PER_SEC +
+ 	      (u64) ref_clockid.tv_nsec;
+ 
+-	session->header.env.clock.clockid_ns = ref;
++	env->clock.clockid_ns = ref;
+ 	return 0;
+ }
+ 
+@@ -2396,6 +2397,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	int fd;
+ 	float ratio = 0;
+ 	enum evlist_ctl_cmd cmd = EVLIST_CTL_CMD_UNSUPPORTED;
++	struct perf_env *env;
+ 
+ 	atexit(record__sig_exit);
+ 	signal(SIGCHLD, sig_handler);
+@@ -2437,7 +2439,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		pr_err("Perf session creation failed.\n");
+ 		return PTR_ERR(session);
+ 	}
+-
++	env = perf_session__env(session);
+ 	if (record__threads_enabled(rec)) {
+ 		if (perf_data__is_pipe(&rec->data)) {
+ 			pr_err("Parallel trace streaming is not available in pipe mode.\n");
+@@ -2471,8 +2473,8 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	}
+ #endif // HAVE_EVENTFD_SUPPORT
+ 
+-	session->header.env.comp_type  = PERF_COMP_ZSTD;
+-	session->header.env.comp_level = rec->opts.comp_level;
++	env->comp_type  = PERF_COMP_ZSTD;
++	env->comp_level = rec->opts.comp_level;
+ 
+ 	if (rec->opts.kcore &&
+ 	    !record__kcore_readable(&session->machines.host)) {
+@@ -2525,7 +2527,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	}
+ 	/* Debug message used by test scripts */
+ 	pr_debug3("perf record done opening and mmapping events\n");
+-	session->header.env.comp_mmap_len = session->evlist->core.mmap_len;
++	env->comp_mmap_len = session->evlist->core.mmap_len;
+ 
+ 	if (rec->opts.kcore) {
+ 		err = record__kcore_copy(&session->machines.host, data);
+@@ -2855,7 +2857,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 
+ 	if (rec->session->bytes_transferred && rec->session->bytes_compressed) {
+ 		ratio = (float)rec->session->bytes_transferred/(float)rec->session->bytes_compressed;
+-		session->header.env.comp_ratio = ratio + 0.5;
++		env->comp_ratio = ratio + 0.5;
+ 	}
+ 
+ 	if (forks) {
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 26186717fe9b..704576e46e4b 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -447,7 +447,7 @@ static int report__setup_sample_type(struct report *rep)
+ 		}
+ 	}
+ 
+-	callchain_param_setup(sample_type, perf_env__arch(&rep->session->header.env));
++	callchain_param_setup(sample_type, perf_env__arch(perf_session__env(rep->session)));
+ 
+ 	if (rep->stitch_lbr && (callchain_param.record_mode != CALLCHAIN_LBR)) {
+ 		ui__warning("Can't find LBR callchain. Switch off --stitch-lbr.\n"
+@@ -550,7 +550,7 @@ static int evlist__tui_block_hists_browse(struct evlist *evlist, struct report *
+ 	evlist__for_each_entry(evlist, pos) {
+ 		ret = report__browse_block_hists(&rep->block_reports[i++].hist,
+ 						 rep->min_percent, pos,
+-						 &rep->session->header.env);
++						 perf_session__env(rep->session));
+ 		if (ret != 0)
+ 			return ret;
+ 	}
+@@ -685,7 +685,7 @@ static int report__browse_hists(struct report *rep)
+ 		}
+ 
+ 		ret = evlist__tui_browse_hists(evlist, help, NULL, rep->min_percent,
+-					       &session->header.env, true);
++					       perf_session__env(session), true);
+ 		/*
+ 		 * Usually "ret" is the last pressed key, and we only
+ 		 * care if the key notifies us to switch data file.
+@@ -1842,7 +1842,7 @@ int cmd_report(int argc, const char **argv)
+ 		annotation_config__init();
+ 	}
+ 
+-	if (symbol__init(&session->header.env) < 0)
++	if (symbol__init(perf_session__env(session)) < 0)
+ 		goto error;
+ 
+ 	if (report.time_str) {
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 34051ad23493..f166d6cbc083 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -1939,7 +1939,7 @@ static int perf_sched__read_events(struct perf_sched *sched)
+ 		return PTR_ERR(session);
+ 	}
+ 
+-	symbol__init(&session->header.env);
++	symbol__init(perf_session__env(session));
+ 
+ 	/* prefer sched_waking if it is captured */
+ 	if (evlist__find_tracepoint_by_name(session->evlist, "sched:sched_waking"))
+@@ -3294,6 +3294,7 @@ static int perf_sched__timehist(struct perf_sched *sched)
  	};
--	size_t size = symbol_conf.buildid_mmap2
--		? sizeof(args.event->mmap2)
--		: sizeof(args.event->mmap);
-+	size_t size = symbol_conf.no_buildid_mmap2
-+		? sizeof(args.event->mmap)
-+		: sizeof(args.event->mmap2);
  
- 	args.event = zalloc(size + machine->id_hdr_size);
- 	if (args.event == NULL) {
-@@ -1124,8 +1124,8 @@ static int __perf_event__synthesize_kernel_mmap(const struct perf_tool *tool,
- 						struct machine *machine)
- {
- 	union perf_event *event;
--	size_t size = symbol_conf.buildid_mmap2 ?
--			sizeof(event->mmap2) : sizeof(event->mmap);
-+	size_t size = symbol_conf.no_buildid_mmap2 ?
-+			sizeof(event->mmap) : sizeof(event->mmap2);
- 	struct map *map = machine__kernel_map(machine);
- 	struct kmap *kmap;
- 	int err;
-@@ -1159,7 +1159,7 @@ static int __perf_event__synthesize_kernel_mmap(const struct perf_tool *tool,
- 		event->header.misc = PERF_RECORD_MISC_GUEST_KERNEL;
+ 	struct perf_session *session;
++	struct perf_env *env;
+ 	struct evlist *evlist;
+ 	int err = -1;
+ 
+@@ -3318,6 +3319,7 @@ static int perf_sched__timehist(struct perf_sched *sched)
+ 	if (IS_ERR(session))
+ 		return PTR_ERR(session);
+ 
++	env = perf_session__env(session);
+ 	if (cpu_list) {
+ 		err = perf_session__cpu_bitmap(session, cpu_list, cpu_bitmap);
+ 		if (err < 0)
+@@ -3326,7 +3328,7 @@ static int perf_sched__timehist(struct perf_sched *sched)
+ 
+ 	evlist = session->evlist;
+ 
+-	symbol__init(&session->header.env);
++	symbol__init(env);
+ 
+ 	if (perf_time__parse_str(&sched->ptime, sched->time_str) != 0) {
+ 		pr_err("Invalid time string\n");
+@@ -3365,7 +3367,7 @@ static int perf_sched__timehist(struct perf_sched *sched)
+ 		goto out;
+ 
+ 	/* pre-allocate struct for per-CPU idle stats */
+-	sched->max_cpu.cpu = session->header.env.nr_cpus_online;
++	sched->max_cpu.cpu = env->nr_cpus_online;
+ 	if (sched->max_cpu.cpu == 0)
+ 		sched->max_cpu.cpu = 4;
+ 	if (init_idle_threads(sched->max_cpu.cpu))
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 271f22962e32..31cce67217b0 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -714,7 +714,7 @@ static int perf_session__check_output_opt(struct perf_session *session)
+ 		}
  	}
  
--	if (symbol_conf.buildid_mmap2) {
-+	if (!symbol_conf.no_buildid_mmap2) {
- 		size = snprintf(event->mmap2.filename, sizeof(event->mmap2.filename),
- 				"%s%s", machine->mmap_name, kmap->ref_reloc_sym->name) + 1;
- 		size = PERF_ALIGN(size, sizeof(u64));
+-	if (tod && !session->header.env.clock.enabled) {
++	if (tod && !perf_session__env(session)->clock.enabled) {
+ 		pr_err("Can't provide 'tod' time, missing clock data. "
+ 		       "Please record with -k/--clockid option.\n");
+ 		return -1;
+@@ -759,7 +759,7 @@ tod_scnprintf(struct perf_script *script, char *buf, int buflen,
+ 	if (buflen < 64 || !script)
+ 		return buf;
+ 
+-	env = &script->session->header.env;
++	env = perf_session__env(script->session);
+ 	if (!env->clock.enabled) {
+ 		scnprintf(buf, buflen, "disabled");
+ 		return buf;
+@@ -3863,6 +3863,7 @@ int cmd_script(int argc, const char **argv)
+ 		"perf script [<options>] <top-script> [script-args]",
+ 		NULL
+ 	};
++	struct perf_env *env;
+ 
+ 	perf_set_singlethreaded();
+ 
+@@ -4109,6 +4110,7 @@ int cmd_script(int argc, const char **argv)
+ 	if (IS_ERR(session))
+ 		return PTR_ERR(session);
+ 
++	env = perf_session__env(session);
+ 	if (header || header_only) {
+ 		script.tool.show_feat_hdr = SHOW_FEAT_HEADER;
+ 		perf_session__fprintf_info(session, stdout, show_full_info);
+@@ -4118,17 +4120,17 @@ int cmd_script(int argc, const char **argv)
+ 	if (show_full_info)
+ 		script.tool.show_feat_hdr = SHOW_FEAT_HEADER_FULL_INFO;
+ 
+-	if (symbol__init(&session->header.env) < 0)
++	if (symbol__init(env) < 0)
+ 		goto out_delete;
+ 
+ 	uname(&uts);
+ 	if (data.is_pipe) { /* Assume pipe_mode indicates native_arch */
+ 		native_arch = true;
+-	} else if (session->header.env.arch) {
+-		if (!strcmp(uts.machine, session->header.env.arch))
++	} else if (env->arch) {
++		if (!strcmp(uts.machine, env->arch))
+ 			native_arch = true;
+ 		else if (!strcmp(uts.machine, "x86_64") &&
+-			 !strcmp(session->header.env.arch, "i386"))
++			 !strcmp(env->arch, "i386"))
+ 			native_arch = true;
+ 	}
+ 
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 77e2248fa7fc..8b0a0a9ef631 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1692,48 +1692,48 @@ static struct aggr_cpu_id perf_env__get_global_aggr_by_cpu(struct perf_cpu cpu _
+ static struct aggr_cpu_id perf_stat__get_socket_file(struct perf_stat_config *config __maybe_unused,
+ 						     struct perf_cpu cpu)
+ {
+-	return perf_env__get_socket_aggr_by_cpu(cpu, &perf_stat.session->header.env);
++	return perf_env__get_socket_aggr_by_cpu(cpu, perf_session__env(perf_stat.session));
+ }
+ static struct aggr_cpu_id perf_stat__get_die_file(struct perf_stat_config *config __maybe_unused,
+ 						  struct perf_cpu cpu)
+ {
+-	return perf_env__get_die_aggr_by_cpu(cpu, &perf_stat.session->header.env);
++	return perf_env__get_die_aggr_by_cpu(cpu, perf_session__env(perf_stat.session));
+ }
+ 
+ static struct aggr_cpu_id perf_stat__get_cluster_file(struct perf_stat_config *config __maybe_unused,
+ 						      struct perf_cpu cpu)
+ {
+-	return perf_env__get_cluster_aggr_by_cpu(cpu, &perf_stat.session->header.env);
++	return perf_env__get_cluster_aggr_by_cpu(cpu, perf_session__env(perf_stat.session));
+ }
+ 
+ static struct aggr_cpu_id perf_stat__get_cache_file(struct perf_stat_config *config __maybe_unused,
+ 						    struct perf_cpu cpu)
+ {
+-	return perf_env__get_cache_aggr_by_cpu(cpu, &perf_stat.session->header.env);
++	return perf_env__get_cache_aggr_by_cpu(cpu, perf_session__env(perf_stat.session));
+ }
+ 
+ static struct aggr_cpu_id perf_stat__get_core_file(struct perf_stat_config *config __maybe_unused,
+ 						   struct perf_cpu cpu)
+ {
+-	return perf_env__get_core_aggr_by_cpu(cpu, &perf_stat.session->header.env);
++	return perf_env__get_core_aggr_by_cpu(cpu, perf_session__env(perf_stat.session));
+ }
+ 
+ static struct aggr_cpu_id perf_stat__get_cpu_file(struct perf_stat_config *config __maybe_unused,
+ 						  struct perf_cpu cpu)
+ {
+-	return perf_env__get_cpu_aggr_by_cpu(cpu, &perf_stat.session->header.env);
++	return perf_env__get_cpu_aggr_by_cpu(cpu, perf_session__env(perf_stat.session));
+ }
+ 
+ static struct aggr_cpu_id perf_stat__get_node_file(struct perf_stat_config *config __maybe_unused,
+ 						   struct perf_cpu cpu)
+ {
+-	return perf_env__get_node_aggr_by_cpu(cpu, &perf_stat.session->header.env);
++	return perf_env__get_node_aggr_by_cpu(cpu, perf_session__env(perf_stat.session));
+ }
+ 
+ static struct aggr_cpu_id perf_stat__get_global_file(struct perf_stat_config *config __maybe_unused,
+ 						     struct perf_cpu cpu)
+ {
+-	return perf_env__get_global_aggr_by_cpu(cpu, &perf_stat.session->header.env);
++	return perf_env__get_global_aggr_by_cpu(cpu, perf_session__env(perf_stat.session));
+ }
+ 
+ static aggr_cpu_id_get_t aggr_mode__get_aggr_file(enum aggr_mode aggr_mode)
+@@ -1792,7 +1792,7 @@ static aggr_get_id_t aggr_mode__get_id_file(enum aggr_mode aggr_mode)
+ 
+ static int perf_stat_init_aggr_mode_file(struct perf_stat *st)
+ {
+-	struct perf_env *env = &st->session->header.env;
++	struct perf_env *env = perf_session__env(st->session);
+ 	aggr_cpu_id_get_t get_id = aggr_mode__get_aggr_file(stat_config.aggr_mode);
+ 	bool needs_sort = stat_config.aggr_mode != AGGR_NONE;
+ 
+@@ -2115,8 +2115,9 @@ static int process_stat_round_event(struct perf_session *session,
+ {
+ 	struct perf_record_stat_round *stat_round = &event->stat_round;
+ 	struct timespec tsh, *ts = NULL;
+-	const char **argv = session->header.env.cmdline_argv;
+-	int argc = session->header.env.nr_cmdline;
++	struct perf_env *env = perf_session__env(session);
++	const char **argv = env->cmdline_argv;
++	int argc = env->nr_cmdline;
+ 
+ 	process_counters();
+ 
+diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
+index 068d297aaf44..22050c640dfa 100644
+--- a/tools/perf/builtin-timechart.c
++++ b/tools/perf/builtin-timechart.c
+@@ -1618,7 +1618,7 @@ static int __cmd_timechart(struct timechart *tchart, const char *output_name)
+ 	if (IS_ERR(session))
+ 		return PTR_ERR(session);
+ 
+-	symbol__init(&session->header.env);
++	symbol__init(perf_session__env(session));
+ 
+ 	(void)perf_header__process_sections(&session->header,
+ 					    perf_data__fd(session->data),
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index c77e195ea786..87d5742b7eb7 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -647,7 +647,8 @@ static void *display_thread_tui(void *arg)
+ 	}
+ 
+ 	ret = evlist__tui_browse_hists(top->evlist, help, &hbt, top->min_percent,
+-				       &top->session->header.env, !top->record_opts.overwrite);
++				       perf_session__env(top->session),
++				       !top->record_opts.overwrite);
+ 	if (ret == K_RELOAD) {
+ 		top->zero = true;
+ 		goto repeat;
+@@ -1253,7 +1254,7 @@ static int __cmd_top(struct perf_top *top)
+ 	int ret;
+ 
+ 	if (!annotate_opts.objdump_path) {
+-		ret = perf_env__lookup_objdump(&top->session->header.env,
++		ret = perf_env__lookup_objdump(perf_session__env(top->session),
+ 					       &annotate_opts.objdump_path);
+ 		if (ret)
+ 			return ret;
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index bb2dbc1d2ffa..0261f4eefe6d 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -4701,7 +4701,7 @@ static int trace__replay(struct trace *trace)
+ 	if (trace->opts.target.tid)
+ 		symbol_conf.tid_list_str = strdup(trace->opts.target.tid);
+ 
+-	if (symbol__init(&session->header.env) < 0)
++	if (symbol__init(perf_session__env(session)) < 0)
+ 		goto out;
+ 
+ 	trace->host = &session->machines.host;
+diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
+index a8cb5ba898ab..bc7d10630dad 100644
+--- a/tools/perf/tests/topology.c
++++ b/tools/perf/tests/topology.c
+@@ -69,9 +69,11 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+ 	int i;
+ 	struct aggr_cpu_id id;
+ 	struct perf_cpu cpu;
++	struct perf_env *env;
+ 
+ 	session = perf_session__new(&data, NULL);
+ 	TEST_ASSERT_VAL("can't get session", !IS_ERR(session));
++	env = perf_session__env(session);
+ 	cpu__setup_cpunode_map();
+ 
+ 	/* On platforms with large numbers of CPUs process_cpu_topology()
+@@ -95,9 +97,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+ 	 *  condition is true (see do_core_id_test in header.c). So always
+ 	 *  run this test on those platforms.
+ 	 */
+-	if (!session->header.env.cpu
+-			&& strncmp(session->header.env.arch, "s390", 4)
+-			&& strncmp(session->header.env.arch, "aarch64", 7))
++	if (!env->cpu && strncmp(env->arch, "s390", 4) && strncmp(env->arch, "aarch64", 7))
+ 		return TEST_SKIP;
+ 
+ 	/*
+@@ -106,20 +106,20 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+ 	 * physical_package_id will be set to -1. Hence skip this
+ 	 * test if physical_package_id returns -1 for cpu from perf_cpu_map.
+ 	 */
+-	if (!strncmp(session->header.env.arch, "ppc64le", 7)) {
++	if (!strncmp(env->arch, "ppc64le", 7)) {
+ 		if (cpu__get_socket_id(perf_cpu_map__cpu(map, 0)) == -1)
+ 			return TEST_SKIP;
+ 	}
+ 
+-	TEST_ASSERT_VAL("Session header CPU map not set", session->header.env.cpu);
++	TEST_ASSERT_VAL("Session header CPU map not set", env->cpu);
+ 
+-	for (i = 0; i < session->header.env.nr_cpus_avail; i++) {
++	for (i = 0; i < env->nr_cpus_avail; i++) {
+ 		cpu.cpu = i;
+ 		if (!perf_cpu_map__has(map, cpu))
+ 			continue;
+ 		pr_debug("CPU %d, core %d, socket %d\n", i,
+-			 session->header.env.cpu[i].core_id,
+-			 session->header.env.cpu[i].socket_id);
++			 env->cpu[i].core_id,
++			 env->cpu[i].socket_id);
+ 	}
+ 
+ 	// Test that CPU ID contains socket, die, core and CPU
+@@ -129,13 +129,12 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+ 				cpu.cpu == id.cpu.cpu);
+ 
+ 		TEST_ASSERT_VAL("Cpu map - Core ID doesn't match",
+-			session->header.env.cpu[cpu.cpu].core_id == id.core);
++			env->cpu[cpu.cpu].core_id == id.core);
+ 		TEST_ASSERT_VAL("Cpu map - Socket ID doesn't match",
+-			session->header.env.cpu[cpu.cpu].socket_id ==
+-			id.socket);
++			env->cpu[cpu.cpu].socket_id == id.socket);
+ 
+ 		TEST_ASSERT_VAL("Cpu map - Die ID doesn't match",
+-			session->header.env.cpu[cpu.cpu].die_id == id.die);
++			env->cpu[cpu.cpu].die_id == id.die);
+ 		TEST_ASSERT_VAL("Cpu map - Node ID is set", id.node == -1);
+ 		TEST_ASSERT_VAL("Cpu map - Thread IDX is set", id.thread_idx == -1);
+ 	}
+@@ -144,14 +143,13 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+ 	perf_cpu_map__for_each_cpu(cpu, i, map) {
+ 		id = aggr_cpu_id__core(cpu, NULL);
+ 		TEST_ASSERT_VAL("Core map - Core ID doesn't match",
+-			session->header.env.cpu[cpu.cpu].core_id == id.core);
++			env->cpu[cpu.cpu].core_id == id.core);
+ 
+ 		TEST_ASSERT_VAL("Core map - Socket ID doesn't match",
+-			session->header.env.cpu[cpu.cpu].socket_id ==
+-			id.socket);
++			env->cpu[cpu.cpu].socket_id == id.socket);
+ 
+ 		TEST_ASSERT_VAL("Core map - Die ID doesn't match",
+-			session->header.env.cpu[cpu.cpu].die_id == id.die);
++			env->cpu[cpu.cpu].die_id == id.die);
+ 		TEST_ASSERT_VAL("Core map - Node ID is set", id.node == -1);
+ 		TEST_ASSERT_VAL("Core map - Thread IDX is set", id.thread_idx == -1);
+ 	}
+@@ -160,11 +158,10 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+ 	perf_cpu_map__for_each_cpu(cpu, i, map) {
+ 		id = aggr_cpu_id__die(cpu, NULL);
+ 		TEST_ASSERT_VAL("Die map - Socket ID doesn't match",
+-			session->header.env.cpu[cpu.cpu].socket_id ==
+-			id.socket);
++			env->cpu[cpu.cpu].socket_id == id.socket);
+ 
+ 		TEST_ASSERT_VAL("Die map - Die ID doesn't match",
+-			session->header.env.cpu[cpu.cpu].die_id == id.die);
++			env->cpu[cpu.cpu].die_id == id.die);
+ 
+ 		TEST_ASSERT_VAL("Die map - Node ID is set", id.node == -1);
+ 		TEST_ASSERT_VAL("Die map - Core is set", id.core == -1);
+@@ -176,8 +173,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+ 	perf_cpu_map__for_each_cpu(cpu, i, map) {
+ 		id = aggr_cpu_id__socket(cpu, NULL);
+ 		TEST_ASSERT_VAL("Socket map - Socket ID doesn't match",
+-			session->header.env.cpu[cpu.cpu].socket_id ==
+-			id.socket);
++			env->cpu[cpu.cpu].socket_id == id.socket);
+ 
+ 		TEST_ASSERT_VAL("Socket map - Node ID is set", id.node == -1);
+ 		TEST_ASSERT_VAL("Socket map - Die ID is set", id.die == -1);
+diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+index dc09a4730c50..664f361ef8c1 100644
+--- a/tools/perf/util/bpf-event.c
++++ b/tools/perf/util/bpf-event.c
+@@ -549,7 +549,7 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
+ 	 * for perf-record and perf-report use header.env;
+ 	 * otherwise, use global perf_env.
+ 	 */
+-	env = session->data ? &session->header.env : &perf_env;
++	env = session->data ? perf_session__env(session) : &perf_env;
+ 
+ 	arrays = 1UL << PERF_BPIL_JITED_KSYMS;
+ 	arrays |= 1UL << PERF_BPIL_JITED_FUNC_LENS;
+diff --git a/tools/perf/util/branch.c b/tools/perf/util/branch.c
+index ab760e267d41..3712be067464 100644
+--- a/tools/perf/util/branch.c
++++ b/tools/perf/util/branch.c
+@@ -46,7 +46,7 @@ const char *branch_new_type_name(int new_type)
+ 		"FAULT_DATA",
+ 		"FAULT_INST",
+ /*
+- * TODO: This switch should happen on 'session->header.env.arch'
++ * TODO: This switch should happen on 'perf_session__env(session)->arch'
+  * instead, because an arm64 platform perf recording could be
+  * opened for analysis on other platforms as well.
+  */
+diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
+index 5e7ff09fbc95..3d2e437e1354 100644
+--- a/tools/perf/util/data-convert-bt.c
++++ b/tools/perf/util/data-convert-bt.c
+@@ -1338,14 +1338,14 @@ static void cleanup_events(struct perf_session *session)
+ static int setup_streams(struct ctf_writer *cw, struct perf_session *session)
+ {
+ 	struct ctf_stream **stream;
+-	struct perf_header *ph = &session->header;
++	struct perf_env *env = perf_session__env(session);
+ 	int ncpus;
+ 
+ 	/*
+ 	 * Try to get the number of cpus used in the data file,
+ 	 * if not present fallback to the MAX_CPUS.
+ 	 */
+-	ncpus = ph->env.nr_cpus_avail ?: MAX_CPUS;
++	ncpus = env->nr_cpus_avail ?: MAX_CPUS;
+ 
+ 	stream = zalloc(sizeof(*stream) * ncpus);
+ 	if (!stream) {
+@@ -1371,7 +1371,7 @@ static void free_streams(struct ctf_writer *cw)
+ static int ctf_writer__setup_env(struct ctf_writer *cw,
+ 				 struct perf_session *session)
+ {
+-	struct perf_header *header = &session->header;
++	struct perf_env *env = perf_session__env(session);
+ 	struct bt_ctf_writer *writer = cw->writer;
+ 
+ #define ADD(__n, __v)							\
+@@ -1380,11 +1380,11 @@ do {									\
+ 		return -1;						\
+ } while (0)
+ 
+-	ADD("host",    header->env.hostname);
++	ADD("host",    env->hostname);
+ 	ADD("sysname", "Linux");
+-	ADD("release", header->env.os_release);
+-	ADD("version", header->env.version);
+-	ADD("machine", header->env.arch);
++	ADD("release", env->os_release);
++	ADD("version", env->version);
++	ADD("machine", env->arch);
+ 	ADD("domain", "kernel");
+ 	ADD("tracer_name", "perf");
+ 
+@@ -1401,7 +1401,7 @@ static int ctf_writer__setup_clock(struct ctf_writer *cw,
+ 	int64_t offset = 0;
+ 
+ 	if (tod) {
+-		struct perf_env *env = &session->header.env;
++		struct perf_env *env = perf_session__env(session);
+ 
+ 		if (!env->clock.enabled) {
+ 			pr_err("Can't provide --tod time, missing clock data. "
+diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+index d9f805bf6fb0..9dc1e184cf3c 100644
+--- a/tools/perf/util/data-convert-json.c
++++ b/tools/perf/util/data-convert-json.c
+@@ -257,7 +257,8 @@ static int process_sample_event(const struct perf_tool *tool,
+ static void output_headers(struct perf_session *session, struct convert_json *c)
+ {
+ 	struct stat st;
+-	struct perf_header *header = &session->header;
++	const struct perf_header *header = &session->header;
++	const struct perf_env *env = perf_session__env(session);
+ 	int ret;
+ 	int fd = perf_data__fd(session->data);
+ 	int i;
+@@ -280,32 +281,32 @@ static void output_headers(struct perf_session *session, struct convert_json *c)
+ 	output_json_key_format(out, true, 2, "data-size", "%" PRIu64, header->data_size);
+ 	output_json_key_format(out, true, 2, "feat-offset", "%" PRIu64, header->feat_offset);
+ 
+-	output_json_key_string(out, true, 2, "hostname", header->env.hostname);
+-	output_json_key_string(out, true, 2, "os-release", header->env.os_release);
+-	output_json_key_string(out, true, 2, "arch", header->env.arch);
++	output_json_key_string(out, true, 2, "hostname", env->hostname);
++	output_json_key_string(out, true, 2, "os-release", env->os_release);
++	output_json_key_string(out, true, 2, "arch", env->arch);
+ 
+-	if (header->env.cpu_desc)
+-		output_json_key_string(out, true, 2, "cpu-desc", header->env.cpu_desc);
++	if (env->cpu_desc)
++		output_json_key_string(out, true, 2, "cpu-desc", env->cpu_desc);
+ 
+-	output_json_key_string(out, true, 2, "cpuid", header->env.cpuid);
+-	output_json_key_format(out, true, 2, "nrcpus-online", "%u", header->env.nr_cpus_online);
+-	output_json_key_format(out, true, 2, "nrcpus-avail", "%u", header->env.nr_cpus_avail);
++	output_json_key_string(out, true, 2, "cpuid", env->cpuid);
++	output_json_key_format(out, true, 2, "nrcpus-online", "%u", env->nr_cpus_online);
++	output_json_key_format(out, true, 2, "nrcpus-avail", "%u", env->nr_cpus_avail);
+ 
+-	if (header->env.clock.enabled) {
++	if (env->clock.enabled) {
+ 		output_json_key_format(out, true, 2, "clockid",
+-				"%u", header->env.clock.clockid);
++				"%u", env->clock.clockid);
+ 		output_json_key_format(out, true, 2, "clock-time",
+-				"%" PRIu64, header->env.clock.clockid_ns);
++				"%" PRIu64, env->clock.clockid_ns);
+ 		output_json_key_format(out, true, 2, "real-time",
+-				"%" PRIu64, header->env.clock.tod_ns);
++				"%" PRIu64, env->clock.tod_ns);
+ 	}
+ 
+-	output_json_key_string(out, true, 2, "perf-version", header->env.version);
++	output_json_key_string(out, true, 2, "perf-version", env->version);
+ 
+ 	output_json_key_format(out, true, 2, "cmdline", "[");
+-	for (i = 0; i < header->env.nr_cmdline; i++) {
++	for (i = 0; i < env->nr_cmdline; i++) {
+ 		output_json_delimiters(out, i != 0, 3);
+-		output_json_string(c->out, header->env.cmdline_argv[i]);
++		output_json_string(c->out, env->cmdline_argv[i]);
+ 	}
+ 	output_json_format(out, false, 2, "]");
+ }
+@@ -376,8 +377,7 @@ int bt_convert__perf2json(const char *input_name, const char *output_name,
+ 		fprintf(stderr, "Error creating perf session!\n");
+ 		goto err_fclose;
+ 	}
+-
+-	if (symbol__init(&session->header.env) < 0) {
++	if (symbol__init(perf_session__env(session)) < 0) {
+ 		fprintf(stderr, "Symbol init error!\n");
+ 		goto err_session_delete;
+ 	}
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 38075059086c..b09d157f7d04 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -2558,7 +2558,7 @@ int perf_session__cpu_bitmap(struct perf_session *session,
+ {
+ 	int i, err = -1;
+ 	struct perf_cpu_map *map;
+-	int nr_cpus = min(session->header.env.nr_cpus_avail, MAX_NR_CPUS);
++	int nr_cpus = min(perf_session__env(session)->nr_cpus_avail, MAX_NR_CPUS);
+ 	struct perf_cpu cpu;
+ 
+ 	for (i = 0; i < PERF_TYPE_MAX; ++i) {
+@@ -2747,3 +2747,8 @@ int perf_session__dsos_hit_all(struct perf_session *session)
+ 
+ 	return 0;
+ }
++
++struct perf_env *perf_session__env(struct perf_session *session)
++{
++	return &session->header.env;
++}
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index db1c120a9e67..e7f7464b838f 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -208,4 +208,6 @@ int perf_event__process_finished_round(const struct perf_tool *tool,
+ 				       union perf_event *event,
+ 				       struct ordered_events *oe);
+ 
++struct perf_env *perf_session__env(struct perf_session *session);
++
+ #endif /* __PERF_SESSION_H */
+diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
+index 204ec03071bc..e83c7ababc2a 100644
+--- a/tools/perf/util/tool.c
++++ b/tools/perf/util/tool.c
+@@ -20,7 +20,7 @@ static int perf_session__process_compressed_event(struct perf_session *session,
+ 	void *src;
+ 	size_t decomp_size, src_size;
+ 	u64 decomp_last_rem = 0;
+-	size_t mmap_len, decomp_len = session->header.env.comp_mmap_len;
++	size_t mmap_len, decomp_len = perf_session__env(session)->comp_mmap_len;
+ 	struct decomp *decomp, *decomp_last = session->active_decomp->decomp_last;
+ 
+ 	if (decomp_last) {
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
