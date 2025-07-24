@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8141B4A21;
-	Thu, 24 Jul 2025 00:20:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A292CA8;
+	Thu, 24 Jul 2025 00:40:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753316412; cv=none; b=TN1IIjjNwjNJDRT+pnMkJ5wbHhCKMy2H5pSHcSCuZo6YNbRLhY9aEaVdwE7yJr0hXF6X3UU3uwFOt+33cS1UucUmeIU54jT1pq3rUW19cn74hqVHC7UjJtp/XzT0vYPd8xCk/YoxIMOsAQ7t6pNFXD0aSuLF/pHgl6WldxCJB3M=
+	t=1753317635; cv=none; b=rZE2DEk+Xj8O3z0g5eibrbNuktjeztMoabTLv9plrvFB7bVJEOpw+kZQNr9CtJfFvqKzUdU11EcXVyvFDoQSllLyNoMWhiRNfLe0NG+LbjdCmRxLlgXXDbCNOBZ3u5ealGb7PwTBcTkeYTyLzP8bfMB1GiSZJW5NUq9Ejdczij0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753316412; c=relaxed/simple;
-	bh=ZU7oU0PDwlGMFiAiw4TsKoZP5zaWChHVEF5OPdPsT/E=;
+	s=arc-20240116; t=1753317635; c=relaxed/simple;
+	bh=aI8q0rjLfVZPSA8wtYgSHYwmUfikQgdRXWAfBygWsRk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=smz1a5LSNEJvbW7zyvBK1+FStaUeJcJNIgvdqQG2YVWN3yCjuiVDNWxFW87YMMgtpeI94BdoVbuj8/LMh+0UPBEB3JE/r0XNYye7MwmdS5crE0no2x2lt1utabSqhKLb7esTtm8kM8BgjpTsctq79rQ51GbKzmu+hFxwjnFjFmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hUDhKlcd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ekzmLalW4fD09/agT2Lb4HLGDRRGjnk4cvmApXQLM92RYQDU5Z6R839apWD+DXN2k8VuaWNPRE7HiidXYvZG+ITOazBARB40QSzQkanhRvPLOsY7V42pbjexJw5TdzOasGn/iyvZiOTvS+6UBhuWdhkvEXI4BKImwfCaXp/LaqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nh0Bb3gm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hUDhKlcd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7314BC4CEE7;
-	Thu, 24 Jul 2025 00:20:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nh0Bb3gm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAC98C4CEE7;
+	Thu, 24 Jul 2025 00:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753316412;
-	bh=ZU7oU0PDwlGMFiAiw4TsKoZP5zaWChHVEF5OPdPsT/E=;
+	s=k20201202; t=1753317635;
+	bh=aI8q0rjLfVZPSA8wtYgSHYwmUfikQgdRXWAfBygWsRk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hUDhKlcdFwCZ9kMrSni3fQBkF5RGCdTSlV79gXUGZE21GYlqgswVPL97Uo0wn5UG8
-	 nX7u4EUMRho7SwmWf0E6Wl8oPj9RQS7UziZgMMZMiZqOe3BVigq8oL4tEhHlegVsBZ
-	 POLjX5d+CED2MIYHtGfu0PmrfsA9zBqnNXQC6RPeBNZwRz+VCzDmXSrK5DhrygEPYr
-	 pCN7H6LexmoGcOSbumx5k1oVer+nAgpowGqQ0JPT096Gq+UyEOPurMXR9VUdccFTIO
-	 PY2KoGBJyEN59oVKwdAGb/n8U8ZLm/Hd3K7ajU2nD3XcenqF7v2c3IqjXSfntb5LHv
-	 K8VYWHPwFGjHA==
-Date: Wed, 23 Jul 2025 17:20:09 -0700
+	b=nh0Bb3gm+4/q/sfeCbuEJVXOLV8pMcy8oie5UfLJTrKmvAleIOYnNwgFrSo908xIw
+	 /amkRatBYHkJiMYAAwVJCs1fl1O8FOb2SRBO6vN2/C5qItHbH3ujAqnwj9g0szbojT
+	 iGMZJsPQ3EYIQI4kpCxn9tQF5exW5llkCrJN3AiGTRvtK22rjvfk7CBS3RTJmcmxRb
+	 wlluxSrXVQ9Fippbq17uwdUzdSGH7PyQpJWGbEyHzaEHQaw5Wlf90GZhZze2NuhEx9
+	 WL/uQZwYADz/6sUDh4De2P1r9gRT8mqFE3m6pOmw0/9ynHqW/Vw/OvMBwG0IxKdahJ
+	 H2/gqgFZD3wBg==
+Date: Wed, 23 Jul 2025 17:40:33 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -48,12 +48,12 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Gautam Menghani <gautam@linux.ibm.com>,
 	Thomas Falcon <thomas.falcon@intel.com>,
 	Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v7 03/16] perf parse-events: Remove non-json software
- events
-Message-ID: <aIF8OToitmp8Uj_T@google.com>
-References: <20250714164405.111477-1-irogers@google.com>
- <20250714164405.111477-4-irogers@google.com>
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v8 01/16] perf python: Add more exceptions on error paths
+Message-ID: <aIGBAQv2Cn9qGqP1@google.com>
+References: <20250723232217.516179-1-irogers@google.com>
+ <20250723232217.516179-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -62,301 +62,69 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250714164405.111477-4-irogers@google.com>
+In-Reply-To: <20250723232217.516179-2-irogers@google.com>
 
-On Mon, Jul 14, 2025 at 09:43:51AM -0700, Ian Rogers wrote:
-> Remove the hard coded encodings from parse-events. This has the
-> consequence that software events are matched using the sysfs/json
-> priority, will be case insensitive and will be wildcarded across PMUs.
-> As there were software and hardware types in the parsing code, the
-> removal means software vs hardware logic can be removed and hardware
-> assumed.
-> 
-> Now the perf json provides detailed descriptions of software events,
-> remove the previous listing support that didn't contain event
-> descriptions. When globbing is required for the "sw" option in perf
-> list, use string PMU globbing as was done previously for the tool PMU.
+On Wed, Jul 23, 2025 at 04:22:02PM -0700, Ian Rogers wrote:
+> Returning NULL will cause the python interpreter to fail but not
+> report an error. If none wants to be returned then Py_None needs
+> returning. Set the error for the cases returning NULL so that more
+> meaningful interpreter behavior is had.
 
-Oh, you explained the issues here.  Great, I've seen you posted v8.
-Will continue there.
+Nit: I still don't get what "add more exceptions" means.  What I'm
+seeing is adding more error messages.  Also returning NULL from this
+function won't pass it to the interpreter as the convert checks the
+return value.
+
+But anyway, looks good to me.
 
 Thanks,
 Namhyung
 
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
+> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > ---
->  tools/perf/builtin-list.c      | 19 ++++++-------
->  tools/perf/util/parse-events.c | 51 ----------------------------------
->  tools/perf/util/parse-events.h |  1 -
->  tools/perf/util/parse-events.l | 38 +++++++++----------------
->  tools/perf/util/parse-events.y | 29 ++++++++-----------
->  tools/perf/util/print-events.c |  2 --
->  6 files changed, 33 insertions(+), 107 deletions(-)
+>  tools/perf/util/python.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
 > 
-> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-> index e9b595d75df2..674bb0afbf93 100644
-> --- a/tools/perf/builtin-list.c
-> +++ b/tools/perf/builtin-list.c
-> @@ -623,16 +623,17 @@ int cmd_list(int argc, const char **argv)
->  		else if (strcmp(argv[i], "sw") == 0 ||
->  			 strcmp(argv[i], "software") == 0) {
->  			char *old_pmu_glob = default_ps.pmu_glob;
-> +			static const char * const sw_globs[] = { "software", "tool" };
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index 2f28f71325a8..3affde0ad15a 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -475,13 +475,19 @@ static PyObject *pyrf_event__new(const union perf_event *event)
+>  	if ((event->header.type < PERF_RECORD_MMAP ||
+>  	     event->header.type > PERF_RECORD_SAMPLE) &&
+>  	    !(event->header.type == PERF_RECORD_SWITCH ||
+> -	      event->header.type == PERF_RECORD_SWITCH_CPU_WIDE))
+> +	      event->header.type == PERF_RECORD_SWITCH_CPU_WIDE)) {
+> +		PyErr_Format(PyExc_TypeError, "Unexpected header type %u",
+> +			     event->header.type);
+>  		return NULL;
+> +	}
 >  
-> -			print_symbol_events(&print_cb, ps, PERF_TYPE_SOFTWARE,
-> -					event_symbols_sw, PERF_COUNT_SW_MAX);
-> -			default_ps.pmu_glob = strdup("tool");
-> -			if (!default_ps.pmu_glob) {
-> -				ret = -1;
-> -				goto out;
-> +			for (size_t j = 0; j < ARRAY_SIZE(sw_globs); j++) {
-> +				default_ps.pmu_glob = strdup(sw_globs[j]);
-> +				if (!default_ps.pmu_glob) {
-> +					ret = -1;
-> +					goto out;
-> +				}
-> +				perf_pmus__print_pmu_events(&print_cb, ps);
-> +				zfree(&default_ps.pmu_glob);
->  			}
-> -			perf_pmus__print_pmu_events(&print_cb, ps);
-> -			zfree(&default_ps.pmu_glob);
->  			default_ps.pmu_glob = old_pmu_glob;
->  		} else if (strcmp(argv[i], "cache") == 0 ||
->  			 strcmp(argv[i], "hwcache") == 0)
-> @@ -679,8 +680,6 @@ int cmd_list(int argc, const char **argv)
->  			default_ps.event_glob = s;
->  			print_symbol_events(&print_cb, ps, PERF_TYPE_HARDWARE,
->  					event_symbols_hw, PERF_COUNT_HW_MAX);
-> -			print_symbol_events(&print_cb, ps, PERF_TYPE_SOFTWARE,
-> -					event_symbols_sw, PERF_COUNT_SW_MAX);
->  			print_hwcache_events(&print_cb, ps);
->  			perf_pmus__print_pmu_events(&print_cb, ps);
->  			print_tracepoint_events(&print_cb, ps);
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index a59ae5ca0f89..1ae481c9802b 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -84,57 +84,6 @@ const struct event_symbol event_symbols_hw[PERF_COUNT_HW_MAX] = {
->  	},
->  };
+>  	// FIXME this better be dynamic or we need to parse everything
+>  	// before calling perf_mmap__consume(), including tracepoint fields.
+> -	if (sizeof(pevent->event) < event->header.size)
+> +	if (sizeof(pevent->event) < event->header.size) {
+> +		PyErr_Format(PyExc_TypeError, "Unexpected event size: %zd < %u",
+> +			     sizeof(pevent->event), event->header.size);
+>  		return NULL;
+> +	}
 >  
-> -const struct event_symbol event_symbols_sw[PERF_COUNT_SW_MAX] = {
-> -	[PERF_COUNT_SW_CPU_CLOCK] = {
-> -		.symbol = "cpu-clock",
-> -		.alias  = "",
-> -	},
-> -	[PERF_COUNT_SW_TASK_CLOCK] = {
-> -		.symbol = "task-clock",
-> -		.alias  = "",
-> -	},
-> -	[PERF_COUNT_SW_PAGE_FAULTS] = {
-> -		.symbol = "page-faults",
-> -		.alias  = "faults",
-> -	},
-> -	[PERF_COUNT_SW_CONTEXT_SWITCHES] = {
-> -		.symbol = "context-switches",
-> -		.alias  = "cs",
-> -	},
-> -	[PERF_COUNT_SW_CPU_MIGRATIONS] = {
-> -		.symbol = "cpu-migrations",
-> -		.alias  = "migrations",
-> -	},
-> -	[PERF_COUNT_SW_PAGE_FAULTS_MIN] = {
-> -		.symbol = "minor-faults",
-> -		.alias  = "",
-> -	},
-> -	[PERF_COUNT_SW_PAGE_FAULTS_MAJ] = {
-> -		.symbol = "major-faults",
-> -		.alias  = "",
-> -	},
-> -	[PERF_COUNT_SW_ALIGNMENT_FAULTS] = {
-> -		.symbol = "alignment-faults",
-> -		.alias  = "",
-> -	},
-> -	[PERF_COUNT_SW_EMULATION_FAULTS] = {
-> -		.symbol = "emulation-faults",
-> -		.alias  = "",
-> -	},
-> -	[PERF_COUNT_SW_DUMMY] = {
-> -		.symbol = "dummy",
-> -		.alias  = "",
-> -	},
-> -	[PERF_COUNT_SW_BPF_OUTPUT] = {
-> -		.symbol = "bpf-output",
-> -		.alias  = "",
-> -	},
-> -	[PERF_COUNT_SW_CGROUP_SWITCHES] = {
-> -		.symbol = "cgroup-switches",
-> -		.alias  = "",
-> -	},
-> -};
-> -
->  static const char *const event_types[] = {
->  	[PERF_TYPE_HARDWARE]	= "hardware",
->  	[PERF_TYPE_SOFTWARE]	= "software",
-> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-> index b47bf2810112..62dc7202e3ba 100644
-> --- a/tools/perf/util/parse-events.h
-> +++ b/tools/perf/util/parse-events.h
-> @@ -264,7 +264,6 @@ struct event_symbol {
->  	const char	*alias;
->  };
->  extern const struct event_symbol event_symbols_hw[];
-> -extern const struct event_symbol event_symbols_sw[];
+>  	ptype = pyrf_event__type[event->header.type];
+>  	pevent = PyObject_New(struct pyrf_event, ptype);
+> @@ -1199,8 +1205,10 @@ static PyObject *pyrf_evlist__read_on_cpu(struct pyrf_evlist *pevlist,
+>  		return NULL;
 >  
->  char *parse_events_formats_error_string(char *additional_terms);
+>  	md = get_md(evlist, cpu);
+> -	if (!md)
+> +	if (!md) {
+> +		PyErr_Format(PyExc_TypeError, "Unknown CPU '%d'", cpu);
+>  		return NULL;
+> +	}
 >  
-> diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-> index 4af7b9c1f44d..2034590eb789 100644
-> --- a/tools/perf/util/parse-events.l
-> +++ b/tools/perf/util/parse-events.l
-> @@ -117,12 +117,12 @@ do {								\
->  	yyless(0);						\
->  } while (0)
->  
-> -static int sym(yyscan_t scanner, int type, int config)
-> +static int sym(yyscan_t scanner, int config)
->  {
->  	YYSTYPE *yylval = parse_events_get_lval(scanner);
->  
-> -	yylval->num = (type << 16) + config;
-> -	return type == PERF_TYPE_HARDWARE ? PE_VALUE_SYM_HW : PE_VALUE_SYM_SW;
-> +	yylval->num = config;
-> +	return PE_VALUE_SYM_HW;
->  }
->  
->  static int term(yyscan_t scanner, enum parse_events__term_type type)
-> @@ -391,28 +391,16 @@ r0x{num_raw_hex}	{ return str(yyscanner, PE_RAW); }
->  <<EOF>>			{ BEGIN(INITIAL); }
->  }
->  
-> -cpu-cycles|cycles				{ return sym(yyscanner, PERF_TYPE_HARDWARE, PERF_COUNT_HW_CPU_CYCLES); }
-> -stalled-cycles-frontend|idle-cycles-frontend	{ return sym(yyscanner, PERF_TYPE_HARDWARE, PERF_COUNT_HW_STALLED_CYCLES_FRONTEND); }
-> -stalled-cycles-backend|idle-cycles-backend	{ return sym(yyscanner, PERF_TYPE_HARDWARE, PERF_COUNT_HW_STALLED_CYCLES_BACKEND); }
-> -instructions					{ return sym(yyscanner, PERF_TYPE_HARDWARE, PERF_COUNT_HW_INSTRUCTIONS); }
-> -cache-references				{ return sym(yyscanner, PERF_TYPE_HARDWARE, PERF_COUNT_HW_CACHE_REFERENCES); }
-> -cache-misses					{ return sym(yyscanner, PERF_TYPE_HARDWARE, PERF_COUNT_HW_CACHE_MISSES); }
-> -branch-instructions|branches			{ return sym(yyscanner, PERF_TYPE_HARDWARE, PERF_COUNT_HW_BRANCH_INSTRUCTIONS); }
-> -branch-misses					{ return sym(yyscanner, PERF_TYPE_HARDWARE, PERF_COUNT_HW_BRANCH_MISSES); }
-> -bus-cycles					{ return sym(yyscanner, PERF_TYPE_HARDWARE, PERF_COUNT_HW_BUS_CYCLES); }
-> -ref-cycles					{ return sym(yyscanner, PERF_TYPE_HARDWARE, PERF_COUNT_HW_REF_CPU_CYCLES); }
-> -cpu-clock					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_CPU_CLOCK); }
-> -task-clock					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_TASK_CLOCK); }
-> -page-faults|faults				{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_PAGE_FAULTS); }
-> -minor-faults					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_PAGE_FAULTS_MIN); }
-> -major-faults					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_PAGE_FAULTS_MAJ); }
-> -context-switches|cs				{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_CONTEXT_SWITCHES); }
-> -cpu-migrations|migrations			{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_CPU_MIGRATIONS); }
-> -alignment-faults				{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_ALIGNMENT_FAULTS); }
-> -emulation-faults				{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_EMULATION_FAULTS); }
-> -dummy						{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_DUMMY); }
-> -bpf-output					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_BPF_OUTPUT); }
-> -cgroup-switches					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_CGROUP_SWITCHES); }
-> +cpu-cycles|cycles				{ return sym(yyscanner, PERF_COUNT_HW_CPU_CYCLES); }
-> +stalled-cycles-frontend|idle-cycles-frontend	{ return sym(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_FRONTEND); }
-> +stalled-cycles-backend|idle-cycles-backend	{ return sym(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_BACKEND); }
-> +instructions					{ return sym(yyscanner, PERF_COUNT_HW_INSTRUCTIONS); }
-> +cache-references				{ return sym(yyscanner, PERF_COUNT_HW_CACHE_REFERENCES); }
-> +cache-misses					{ return sym(yyscanner, PERF_COUNT_HW_CACHE_MISSES); }
-> +branch-instructions|branches			{ return sym(yyscanner, PERF_COUNT_HW_BRANCH_INSTRUCTIONS); }
-> +branch-misses					{ return sym(yyscanner, PERF_COUNT_HW_BRANCH_MISSES); }
-> +bus-cycles					{ return sym(yyscanner, PERF_COUNT_HW_BUS_CYCLES); }
-> +ref-cycles					{ return sym(yyscanner, PERF_COUNT_HW_REF_CPU_CYCLES); }
->  
->  {lc_type}			{ return str(yyscanner, PE_LEGACY_CACHE); }
->  {lc_type}-{lc_op_result}	{ return str(yyscanner, PE_LEGACY_CACHE); }
-> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-> index f888cbb076d6..a2361c0040d7 100644
-> --- a/tools/perf/util/parse-events.y
-> +++ b/tools/perf/util/parse-events.y
-> @@ -55,7 +55,7 @@ static void free_list_evsel(struct list_head* list_evsel)
->  %}
->  
->  %token PE_START_EVENTS PE_START_TERMS
-> -%token PE_VALUE PE_VALUE_SYM_HW PE_VALUE_SYM_SW PE_TERM
-> +%token PE_VALUE PE_VALUE_SYM_HW PE_TERM
->  %token PE_EVENT_NAME
->  %token PE_RAW PE_NAME
->  %token PE_MODIFIER_EVENT PE_MODIFIER_BP PE_BP_COLON PE_BP_SLASH
-> @@ -66,10 +66,8 @@ static void free_list_evsel(struct list_head* list_evsel)
->  %token PE_TERM_HW
->  %type <num> PE_VALUE
->  %type <num> PE_VALUE_SYM_HW
-> -%type <num> PE_VALUE_SYM_SW
->  %type <mod> PE_MODIFIER_EVENT
->  %type <term_type> PE_TERM
-> -%type <num> value_sym
->  %type <str> PE_RAW
->  %type <str> PE_NAME
->  %type <str> PE_LEGACY_CACHE
-> @@ -306,24 +304,19 @@ PE_NAME sep_dc
->  	$$ = list;
->  }
->  
-> -value_sym:
-> -PE_VALUE_SYM_HW
-> -|
-> -PE_VALUE_SYM_SW
-> -
->  event_legacy_symbol:
-> -value_sym '/' event_config '/'
-> +PE_VALUE_SYM_HW '/' event_config '/'
->  {
->  	struct list_head *list;
-> -	int type = $1 >> 16;
-> -	int config = $1 & 255;
->  	int err;
-> -	bool wildcard = (type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE);
->  
->  	list = alloc_list();
->  	if (!list)
->  		YYNOMEM;
-> -	err = parse_events_add_numeric(_parse_state, list, type, config, $3, wildcard);
-> +	err = parse_events_add_numeric(_parse_state, list,
-> +				       PERF_TYPE_HARDWARE, $1,
-> +				       $3,
-> +				       /*wildcard=*/true);
->  	parse_events_terms__delete($3);
->  	if (err) {
->  		free_list_evsel(list);
-> @@ -332,18 +325,18 @@ value_sym '/' event_config '/'
->  	$$ = list;
->  }
->  |
-> -value_sym sep_slash_slash_dc
-> +PE_VALUE_SYM_HW sep_slash_slash_dc
->  {
->  	struct list_head *list;
-> -	int type = $1 >> 16;
-> -	int config = $1 & 255;
-> -	bool wildcard = (type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE);
->  	int err;
->  
->  	list = alloc_list();
->  	if (!list)
->  		YYNOMEM;
-> -	err = parse_events_add_numeric(_parse_state, list, type, config, /*head_config=*/NULL, wildcard);
-> +	err = parse_events_add_numeric(_parse_state, list,
-> +				       PERF_TYPE_HARDWARE, $1,
-> +				       /*head_config=*/NULL,
-> +				       /*wildcard=*/true);
->  	if (err)
->  		PE_ABORT(err);
->  	$$ = list;
-> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-> index e233bacaa641..c1a8708b55ab 100644
-> --- a/tools/perf/util/print-events.c
-> +++ b/tools/perf/util/print-events.c
-> @@ -521,8 +521,6 @@ void print_events(const struct print_callbacks *print_cb, void *print_state)
->  {
->  	print_symbol_events(print_cb, print_state, PERF_TYPE_HARDWARE,
->  			event_symbols_hw, PERF_COUNT_HW_MAX);
-> -	print_symbol_events(print_cb, print_state, PERF_TYPE_SOFTWARE,
-> -			event_symbols_sw, PERF_COUNT_SW_MAX);
->  
->  	print_hwcache_events(print_cb, print_state);
->  
+>  	if (perf_mmap__read_init(&md->core) < 0)
+>  		goto end;
 > -- 
 > 2.50.0.727.gbf7dc18ff4-goog
 > 
