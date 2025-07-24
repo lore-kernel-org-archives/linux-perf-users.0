@@ -1,433 +1,280 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4EE62E92DE
-	for <linux-perf-users@vger.kernel.org>; Thu, 24 Jul 2025 15:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5311B187332
+	for <linux-perf-users@vger.kernel.org>; Thu, 24 Jul 2025 16:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753369953; cv=none; b=YZ2/x0ZZquTD3DUhXkijeaBCVxVoIVmPT72Ps3ZGqd/GxOFDgbx1Qze7dNnKr1YIsdp57tWvx/91PBcr+8ksYUtWB7D/TmNeFDntu54y0DtXodfWBtjOnwRgaCUI3wFKDQ/agN/qgGpDNcFX31JOzXgu7kc/7ui8bdkoXxe2ocI=
+	t=1753374795; cv=none; b=t81xPJlUoFh041HEYgLfTPg5R6tlN62AFZypMw7ssffWIf/lcY/96FegbzOxmMxgv8kcPfTPfYLb6LJ/fGy4GaX/6l9yFXpTHEKpeRF3DR1Nl6doIPrUCE9yJUX1p8GBySzhENYM1JjQmFbywv4eoyqZPOgJqPwtn/wbKMBq7o4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753369953; c=relaxed/simple;
-	bh=cN2tNQUQ5DSmY+J8rfKkrRDzTaR0TurOmUh791JJygA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=l4Qy5sb6yLbDGP05YTDzJraaAbiUfA7CxMjLdh7NdUWfHYhJgjrlxCgXjVMUHXu7srDeZCycvi15KRPFLrysn8jnausC+8D1L26xaYwI74B1QS9HnqnduTAOXveTs91odjwuiCae8z9/RLQJ52rgM+Gqn4gQVB2oueix6oSFfsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NsQk3cq0; arc=none smtp.client-ip=209.85.166.180
+	s=arc-20240116; t=1753374795; c=relaxed/simple;
+	bh=GkagUxGPd40m21OGzhG1u2Wfyqr+vADuEMC8AVe0mzM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=fZtKSEVcsi8jyx+dZOxaoYzRJG5xBjyfLJcc125z4gZYO8TUxPFqxmO/KzHjhvUtn0y2SATPnyP2BqRdRTvK9BHgmNmyPluBe4E2xASSQ3cP7QxpJkXZ5DAmmcu6dVR7t85RL0zuj3WFlNYHpufBm1DdgaFgbYTq4IxgDiKTGkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tTRuIRkq; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NsQk3cq0"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3df371e1d29so121585ab.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 24 Jul 2025 08:12:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tTRuIRkq"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2369261224bso12542165ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 24 Jul 2025 09:33:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753369951; x=1753974751; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4SCZwlN1DZ4gYURnYlbzXQh7CPK4WG0l5dNr+tbXPnQ=;
-        b=NsQk3cq0y6oi0pU4zOUaUfS4c5Z3j3LruojJ0IlWqzJ4xXicaYINb62Hwg/Q4Q0CXx
-         S27Uc7ZcZxV+uVh4At/v5iL4CY3k6MBrTU4299GYIIjMTF3/Ou8b9vi1ys7wC4L6cohx
-         bioInEdZmCfn23oM7ORXIvfpQ0g8i5xGqqadbdCT/8ZKJbzQeX/HhGErC7wPkQWATFAZ
-         Gi1LPUUetymROzVgLVmBy0k03fApM7n0lgVKzUY9P4NRI98WlMlpMUcUL3Dch4NnHmny
-         34iroC8f7QjgJILXAmAK7cVYGr/7sAgD2MngozfDfbCzsUCPiiNoabJ/fg+H3UHzf6yt
-         XpAQ==
+        d=google.com; s=20230601; t=1753374794; x=1753979594; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PMUeODdFKN3+xA1VGSzNxeyp9RhfPqFKimrtY3VuKmo=;
+        b=tTRuIRkqOoPKB6XMXzYasPzaVMHfNDIddXv7zFElOsmn+6dIw0P0QYuZ+s3Ad3ZRol
+         +0HoYH5gv5KoFQ1IOOVb4zVDR+3IwSZYGPi2P72BUbJIVtweyOksyVvE7wqsSl9Yo6DO
+         tgVaeTPZfnOfRK4CRSViLNAWh4v3JD6TUTMCxY9csmPlU7FeOGOAcFmB9vpohPpFYeXj
+         JUDsvvD5VowVIEAdprjRQN5q6BI7ebzF87ykdiahcnMtHKgitgGYuzmYBaDbkLNkouJN
+         iWCs3SkgXtUxV8MLD2cPVX6LwvBVcCHQjSo8r1xRnNdBaSAUz41Pl1yQQuToDLmurR13
+         bp+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753369951; x=1753974751;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4SCZwlN1DZ4gYURnYlbzXQh7CPK4WG0l5dNr+tbXPnQ=;
-        b=N6dbSmIm0nx3Jt/JFgONT6Y29Je8iMV/Z8dVTyN9zMpBgQOW2atv/NFyy68C4uXmSg
-         q+KXxreUP8PYRW/wUb1Bz0AGyzSNsbFxq8gYI+cz7A/9MTc/194Ru/BM8LJg5J2MBxEw
-         /tTCYe2TZQiWzn0biILNpk+3Tn3nqB1Osy1PWup6U5gvluUEtAiuAB1iYrepHL7VOEGA
-         mFurfRHsypbv5IQ9tVckpilfHA3tb4dAyAn8AVgeDKfjKndlaQhHLnCiqhA0413vc4ly
-         29EHzX0YsjkRuhurbKukw9/fnKKW7vN1N/45pthmozwp4Kxin7knnCgrnobzglkqrMX0
-         yIYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUfgLI1E8uV0MXcOHrPwUWkg/N1Mot9NeVwjQsQH/oQ8aaryqfc289lmB68GelJ25ahKC0RfbzNX1m2PfaiY4DH@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvaJRDlTssGmRfFlyDxaWOtBdEcv668AMHKcsgU3Io62R1xKta
-	O+iF8zIvVIvFRnEjqi+qhysO6cq2S9xzPJH5d6D0pUAPbQeXrNPflQ/hCCYkamqipMpe0vWT+Y1
-	zHs1OJQf4VD4gXeFov8jV5WErCkRfzOgj2poOWBET
-X-Gm-Gg: ASbGnctVJsNnKNN1Ku/ZzouKLJK5cpWyfDKaNhfQrnyobrgHIfGNQRKJqSyO/ma3Lzi
-	DtpM+rnZjk8bTkewH3PfbG4xwMZ0x11CYjvhIQjdltR7DG+kYyefhDrrJDbHK983sgmOFxv3ts9
-	/ymzkzUjVFhQHemxzlQzzhK096xWvbkov9kVhh6jfiw6gyY1V4I7GvTgdrguRLJMGDyiLC1WwmE
-	UKlBCcxq91hhtgQ5WMpQ9smTrJTMDZNyryxRvhRaCneME8=
-X-Google-Smtp-Source: AGHT+IH/NIQ93QkBUfEnqfXy7dRKNawAHkt5I0iRXm4p6DBT05rQ+OQP4NlR+mbjFGdQULHJ+2zja/Nh6U5dtUjYfOQ=
-X-Received: by 2002:a05:6e02:3707:b0:3e3:a594:f0e4 with SMTP id
- e9e14a558f8ab-3e3b64c0d4cmr4850395ab.16.1753369950576; Thu, 24 Jul 2025
- 08:12:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1753374794; x=1753979594;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PMUeODdFKN3+xA1VGSzNxeyp9RhfPqFKimrtY3VuKmo=;
+        b=aVgcF1jyFEJAoGCrdrwuJ/QsM4pag6UyUZfjro9HxtW6M36Y/dIUYSLsE7yuNU7Zf1
+         UMWg4xUmO53XSqgq9vFczIKhG7i1aJpxsxTWLGc5GJbrMy/7LWDvty9ouNLXI1/W+ogq
+         l8glFBPYTrIWjcAoC1UB4DGB7+YO4kGgW6fzpl2htAXtedN1W0FBGc0GqD9T00Rjnqga
+         tYyhubS80SeOEQSc9+TcDMr8j1oQZtzhExhVzaqn2kFheLI35PfHVjn5lgS4jG8x01jX
+         jiCZVOuxWzm9SzjVWkk4LYgupdxyrd9R9BHG7smWcsjYUILP6mZBYYj4djR/2WxLphK1
+         tJ4A==
+X-Forwarded-Encrypted: i=1; AJvYcCWb1CFmdKLWjhSZ7EsaPo25fzg5fKfWgumwRPAP1jTjhdpcJNgY7dGNX944HkvGkSah5ce9E8Rf2qg4tRFggx/g@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywc7E9iLJKu9Pc9km4s0FuSED6rCwZI6MvTNoSb8rAYP4StEB30
+	+4thRq9K1k4+TnE40g47fCM8k6ILndwwmI9bE2JXmEXAAYA9sy5XHxmGB2v88+oQR3xaYU1hc6+
+	KMGG0KTk6EA==
+X-Google-Smtp-Source: AGHT+IEg88zwA+Qq5dqXP51SbEt5Xx2TG50/3JFk/LwUBXxURdK/VprD1tC1Unk3UpZ2ejVxo8TpC77njy70
+X-Received: from plbkb7.prod.google.com ([2002:a17:903:3387:b0:223:690d:fd84])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ef43:b0:235:f078:4746
+ with SMTP id d9443c01a7336-23f981b196cmr109807915ad.42.1753374793548; Thu, 24
+ Jul 2025 09:33:13 -0700 (PDT)
+Date: Thu, 24 Jul 2025 09:32:40 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250719030517.1990983-1-irogers@google.com> <20250719030517.1990983-13-irogers@google.com>
-In-Reply-To: <20250719030517.1990983-13-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+Message-ID: <20250724163302.596743-1-irogers@google.com>
+Subject: [PATCH v6 00/22] perf: Make code more generic with modern defaults
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 24 Jul 2025 08:12:19 -0700
-X-Gm-Features: Ac12FXxPpxrfApDu0c01skJYTXU8rS_dNJgcQlToNVfyL4nBX2N9h0is6tM5i4Y
-Message-ID: <CAP-5=fWqEWeKM585esEHJGJyrxn6bz-yucrEqBWE5eqmCuccTA@mail.gmail.com>
-Subject: Re: [PATCH v3 12/15] perf parse-events: Support user CPUs mixed with threads/processes
-To: Thomas Falcon <thomas.falcon@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"Liang, Kan" <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	James Clark <james.clark@linaro.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Colin Ian King <colin.i.king@gmail.com>, 
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Graham Woodward <graham.woodward@arm.com>, Ilkka Koskinen <ilkka@os.amperecomputing.com>, 
+	Zhongqiu Han <quic_zhonhan@quicinc.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Athira Rajeev <atrajeev@linux.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
+	Li Huafei <lihuafei1@huawei.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	Stephen Brennan <stephen.s.brennan@oracle.com>, Chun-Tse Shao <ctshao@google.com>, 
+	Yujie Liu <yujie.liu@intel.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	Levi Yun <yeoreum.yun@arm.com>, Howard Chu <howardchu95@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Thomas Falcon <thomas.falcon@intel.com>, 
+	Matt Fleming <matt@readmodwrite.com>, 
+	"=?UTF-8?q?Krzysztof=20=C5=81opatowski?=" <krzysztof.m.lopatowski@gmail.com>, Zixian Cai <fzczx123@gmail.com>, 
+	Steve Clevenger <scclevenger@os.amperecomputing.com>, Ben Gainey <ben.gainey@arm.com>, 
+	Chaitanya S Prakash <chaitanyas.prakash@arm.com>, Martin Liska <martin.liska@hey.com>, 
+	"=?UTF-8?q?Martin=20Li=C5=A1ka?=" <m.liska@foxlink.cz>, Song Liu <song@kernel.org>, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 18, 2025 at 8:05=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> Counting events system-wide with a specified CPU prior to this change
-> worked:
-> ```
-> $ perf stat -e 'msr/tsc/,msr/tsc,cpu=3Dcpu_core/,msr/tsc,cpu=3Dcpu_atom/'=
- -a sleep 1
->
->   Performance counter stats for 'system wide':
->
->      59,393,419,099      msr/tsc/
->      33,927,965,927      msr/tsc,cpu=3Dcpu_core/
->      25,465,608,044      msr/tsc,cpu=3Dcpu_atom/
-> ```
->
-> However, when counting with process the counts became system wide:
-> ```
-> $ perf stat -e 'msr/tsc/,msr/tsc,cpu=3Dcpu_core/,msr/tsc,cpu=3Dcpu_atom/'=
- perf test -F 10
->  10.1: Basic parsing test                                            : Ok
->  10.2: Parsing without PMU name                                      : Ok
->  10.3: Parsing with PMU name                                         : Ok
->
->  Performance counter stats for 'perf test -F 10':
->
->         59,233,549      msr/tsc/
->         59,227,556      msr/tsc,cpu=3Dcpu_core/
->         59,224,053      msr/tsc,cpu=3Dcpu_atom/
-> ```
->
-> Make the handling of CPU maps with event parsing clearer. When an
-> event is parsed creating an evsel the cpus should be either the PMU's
-> cpumask or user specified CPUs.
->
-> Update perf_evlist__propagate_maps so that it doesn't clobber the user
-> specified CPUs. Try to make the behavior clearer, firstly fix up
-> missing cpumasks. Next, perform sanity checks and adjustments from the
-> global evlist CPU requests and for the PMU including simplifying to
-> the "any CPU"(-1) value. Finally remove the event if the cpumask is
-> empty.
->
-> So that events are opened with a CPU and a thread change stat's
-> create_perf_stat_counter to give both.
->
-> With the change things are fixed:
-> ```
-> $ perf stat --no-scale -e 'msr/tsc/,msr/tsc,cpu=3Dcpu_core/,msr/tsc,cpu=
-=3Dcpu_atom/' perf test -F 10
->  10.1: Basic parsing test                                            : Ok
->  10.2: Parsing without PMU name                                      : Ok
->  10.3: Parsing with PMU name                                         : Ok
->
->  Performance counter stats for 'perf test -F 10':
->
->         63,704,975      msr/tsc/
->         47,060,704      msr/tsc,cpu=3Dcpu_core/                        (4=
-.62%)
->         16,640,591      msr/tsc,cpu=3Dcpu_atom/                        (2=
-.18%)
-> ```
->
-> However, note the "--no-scale" option is used. This is necessary as
-> the running time for the event on the counter isn't the same as the
-> enabled time because the thread doesn't necessarily run on the CPUs
-> specified for the counter. All counter values are scaled with:
->
->   scaled_value =3D value * time_enabled / time_running
->
-> and so without --no-scale the scaled_value becomes very large. This
-> problem already exists on hybrid systems for the same reason. Here are
-> 2 runs of the same code with an instructions event that counts the
-> same on both types of core, there is no real multiplexing happening on
-> the event:
->
-> ```
-> $ perf stat -e instructions perf test -F 10
-> ...
->  Performance counter stats for 'perf test -F 10':
->
->         87,896,447      cpu_atom/instructions/                       (14.=
-37%)
->         98,171,964      cpu_core/instructions/                       (85.=
-63%)
-> ...
-> $ perf stat --no-scale -e instructions perf test -F 10
-> ...
->  Performance counter stats for 'perf test -F 10':
->
->         13,069,890      cpu_atom/instructions/                       (19.=
-32%)
->         83,460,274      cpu_core/instructions/                       (80.=
-68%)
-> ...
-> ```
-> The scaling has inflated per-PMU instruction counts and the overall
-> count by 2x.
->
-> To fix this the kernel needs changing when a task+CPU event (or just
-> task event on hybrid) is scheduled out. A fix could be that the state
-> isn't inactive but off for such events, so that time_enabled counts
-> don't accumulate on them.
->
-> Reviewed-by: Thomas Falcon <thomas.falcon@intel.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/lib/perf/evlist.c        | 119 ++++++++++++++++++++++-----------
->  tools/perf/util/parse-events.c |  10 ++-
->  tools/perf/util/stat.c         |   6 +-
->  3 files changed, 87 insertions(+), 48 deletions(-)
->
-> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-> index 9d9dec21f510..3ed023f4b190 100644
-> --- a/tools/lib/perf/evlist.c
-> +++ b/tools/lib/perf/evlist.c
-> @@ -36,49 +36,88 @@ void perf_evlist__init(struct perf_evlist *evlist)
->  static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
->                                           struct perf_evsel *evsel)
->  {
-> -       if (evsel->system_wide) {
-> -               /* System wide: set the cpu map of the evsel to all onlin=
-e CPUs. */
-> -               perf_cpu_map__put(evsel->cpus);
-> -               evsel->cpus =3D perf_cpu_map__new_online_cpus();
-> -       } else if (evlist->has_user_cpus && evsel->is_pmu_core) {
-> -               /*
-> -                * User requested CPUs on a core PMU, ensure the requeste=
-d CPUs
-> -                * are valid by intersecting with those of the PMU.
-> -                */
-> +       if (perf_cpu_map__is_empty(evsel->cpus)) {
-> +               if (perf_cpu_map__is_empty(evsel->pmu_cpus)) {
-> +                       /*
-> +                        * Assume the unset PMU cpus were for a system-wi=
-de
-> +                        * event, like a software or tracepoint.
-> +                        */
-> +                       evsel->pmu_cpus =3D perf_cpu_map__new_online_cpus=
-();
+This patch series combines:
+"perf: Default use of build IDs and improvements"
+https://lore.kernel.org/lkml/20250428213409.1417584-1-irogers@google.com/
+"Remove global perf_env"
+https://lore.kernel.org/lkml/20250527064153.149939-1-irogers@google.com/
+"Generic weight struct, use env for sort key and header"
+https://lore.kernel.org/lkml/20250521135500.677508-1-irogers@google.com/
+This is done as the last 2 series depend on each other and the
+cleanups in the 1st have the potential to conflict with them.
 
-Note, I'd like to follow this change up and remove the code above.
-This isn't currently possible because of the assumptions of software
-events. It is possible for a PMU to have an empty cpumask in a
-situation like a hybrid machine and you've made all of one core type
-off-line. By making this case be all online CPUs then the offline
-PMU's events (say cpu_atom) can end up trying to be programmed on the
-online PMU's CPUs (say cpu_core) and fail at perf_event_open. This can
-easily happen for metrics that are defined on both core types.
+"perf: Default use of build IDs and improvements"
 
-Thanks,
-Ian
+Build ID mmap2 events have been available since Linux v5.12 and avoid
+certain races. Enable these by default as discussed in:
+https://lore.kernel.org/linux-perf-users/CAP-5=fXP7jN_QrGUcd55_QH5J-Y-FCaJ6=NaHVtyx0oyNh8_-Q@mail.gmail.com/
 
-> +               }
-> +               if (evlist->has_user_cpus && !evsel->system_wide) {
-> +                       /*
-> +                        * Use the user CPUs unless the evsel is set to b=
-e
-> +                        * system wide, such as the dummy event.
-> +                        */
-> +                       evsel->cpus =3D perf_cpu_map__get(evlist->user_re=
-quested_cpus);
-> +               } else {
-> +                       /*
-> +                        * System wide and other modes, assume the cpu ma=
-p
-> +                        * should be set to all PMU CPUs.
-> +                        */
-> +                       evsel->cpus =3D perf_cpu_map__get(evsel->pmu_cpus=
-);
-> +               }
-> +       }
-> +       /*
-> +        * Avoid "any CPU"(-1) for uncore and PMUs that require a CPU, ev=
-en if
-> +        * requested.
-> +        */
-> +       if (evsel->requires_cpu && perf_cpu_map__has_any_cpu(evsel->cpus)=
-) {
->                 perf_cpu_map__put(evsel->cpus);
-> -               evsel->cpus =3D perf_cpu_map__intersect(evlist->user_requ=
-ested_cpus, evsel->pmu_cpus);
-> +               evsel->cpus =3D perf_cpu_map__get(evsel->pmu_cpus);
-> +       }
->
-> -               /*
-> -                * Empty cpu lists would eventually get opened as "any" s=
-o remove
-> -                * genuinely empty ones before they're opened in the wron=
-g place.
-> -                */
-> -               if (perf_cpu_map__is_empty(evsel->cpus)) {
-> -                       struct perf_evsel *next =3D perf_evlist__next(evl=
-ist, evsel);
-> -
-> -                       perf_evlist__remove(evlist, evsel);
-> -                       /* Keep idx contiguous */
-> -                       if (next)
-> -                               list_for_each_entry_from(next, &evlist->e=
-ntries, node)
-> -                                       next->idx--;
-> +       /*
-> +        * Globally requested CPUs replace user requested unless the evse=
-l is
-> +        * set to be system wide.
-> +        */
-> +       if (evlist->has_user_cpus && !evsel->system_wide) {
-> +               assert(!perf_cpu_map__has_any_cpu(evlist->user_requested_=
-cpus));
-> +               if (!perf_cpu_map__equal(evsel->cpus, evlist->user_reques=
-ted_cpus)) {
-> +                       perf_cpu_map__put(evsel->cpus);
-> +                       evsel->cpus =3D perf_cpu_map__get(evlist->user_re=
-quested_cpus);
->                 }
-> -       } else if (!evsel->pmu_cpus || evlist->has_user_cpus ||
-> -               (!evsel->requires_cpu && perf_cpu_map__has_any_cpu(evlist=
-->user_requested_cpus))) {
-> -               /*
-> -                * The PMU didn't specify a default cpu map, this isn't a=
- core
-> -                * event and the user requested CPUs or the evlist user
-> -                * requested CPUs have the "any CPU" (aka dummy) CPU valu=
-e. In
-> -                * which case use the user requested CPUs rather than the=
- PMU
-> -                * ones.
-> -                */
-> +       }
-> +
-> +       /* Ensure cpus only references valid PMU CPUs. */
-> +       if (!perf_cpu_map__has_any_cpu(evsel->cpus) &&
-> +           !perf_cpu_map__is_subset(evsel->pmu_cpus, evsel->cpus)) {
-> +               struct perf_cpu_map *tmp =3D perf_cpu_map__intersect(evse=
-l->pmu_cpus, evsel->cpus);
-> +
->                 perf_cpu_map__put(evsel->cpus);
-> -               evsel->cpus =3D perf_cpu_map__get(evlist->user_requested_=
-cpus);
-> -       } else if (evsel->cpus !=3D evsel->pmu_cpus) {
-> -               /*
-> -                * No user requested cpu map but the PMU cpu map doesn't =
-match
-> -                * the evsel's. Reset it back to the PMU cpu map.
-> -                */
-> +               evsel->cpus =3D tmp;
-> +       }
-> +
-> +       /*
-> +        * Was event requested on all the PMU's CPUs but the user request=
-ed is
-> +        * any CPU (-1)? If so switch to using any CPU (-1) to reduce the=
- number
-> +        * of events.
-> +        */
-> +       if (!evsel->system_wide &&
-> +           !evsel->requires_cpu &&
-> +           perf_cpu_map__equal(evsel->cpus, evsel->pmu_cpus) &&
-> +           perf_cpu_map__has_any_cpu(evlist->user_requested_cpus)) {
->                 perf_cpu_map__put(evsel->cpus);
-> -               evsel->cpus =3D perf_cpu_map__get(evsel->pmu_cpus);
-> +               evsel->cpus =3D perf_cpu_map__get(evlist->user_requested_=
-cpus);
-> +       }
-> +
-> +       /* Sanity check assert before the evsel is potentially removed. *=
-/
-> +       assert(!evsel->requires_cpu || !perf_cpu_map__has_any_cpu(evsel->=
-cpus));
-> +
-> +       /*
-> +        * Empty cpu lists would eventually get opened as "any" so remove
-> +        * genuinely empty ones before they're opened in the wrong place.
-> +        */
-> +       if (perf_cpu_map__is_empty(evsel->cpus)) {
-> +               struct perf_evsel *next =3D perf_evlist__next(evlist, evs=
-el);
-> +
-> +               perf_evlist__remove(evlist, evsel);
-> +               /* Keep idx contiguous */
-> +               if (next)
-> +                       list_for_each_entry_from(next, &evlist->entries, =
-node)
-> +                               next->idx--;
-> +
-> +               return;
->         }
->
->         if (evsel->system_wide) {
-> @@ -98,6 +137,10 @@ static void perf_evlist__propagate_maps(struct perf_e=
-vlist *evlist)
->
->         evlist->needs_map_propagation =3D true;
->
-> +       /* Clear the all_cpus set which will be merged into during propag=
-ation. */
-> +       perf_cpu_map__put(evlist->all_cpus);
-> +       evlist->all_cpus =3D NULL;
-> +
->         list_for_each_entry_safe(evsel, n, &evlist->entries, node)
->                 __perf_evlist__propagate_maps(evlist, evsel);
->  }
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
-s.c
-> index bd2d831d5123..fe2073c6b549 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -310,20 +310,18 @@ __add_event(struct list_head *list, int *idx,
->         if (pmu) {
->                 is_pmu_core =3D pmu->is_core;
->                 pmu_cpus =3D perf_cpu_map__get(pmu->cpus);
-> +               if (perf_cpu_map__is_empty(pmu_cpus))
-> +                       pmu_cpus =3D cpu_map__online();
->         } else {
->                 is_pmu_core =3D (attr->type =3D=3D PERF_TYPE_HARDWARE ||
->                                attr->type =3D=3D PERF_TYPE_HW_CACHE);
->                 pmu_cpus =3D is_pmu_core ? cpu_map__online() : NULL;
->         }
->
-> -       if (has_user_cpus) {
-> +       if (has_user_cpus)
->                 cpus =3D perf_cpu_map__get(user_cpus);
-> -               /* Existing behavior that pmu_cpus matches the given user=
- ones. */
-> -               perf_cpu_map__put(pmu_cpus);
-> -               pmu_cpus =3D perf_cpu_map__get(user_cpus);
-> -       } else {
-> +       else
->                 cpus =3D perf_cpu_map__get(pmu_cpus);
-> -       }
->
->         if (init_attr)
->                 event_attr_init(attr);
-> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> index b0205e99a4c9..50b1a92d16df 100644
-> --- a/tools/perf/util/stat.c
-> +++ b/tools/perf/util/stat.c
-> @@ -769,8 +769,6 @@ int create_perf_stat_counter(struct evsel *evsel,
->                         attr->enable_on_exec =3D 1;
->         }
->
-> -       if (target__has_cpu(target) && !target__has_per_thread(target))
-> -               return evsel__open_per_cpu(evsel, evsel__cpus(evsel), cpu=
-_map_idx);
-> -
-> -       return evsel__open_per_thread(evsel, evsel->core.threads);
-> +       return evsel__open_per_cpu_and_thread(evsel, evsel__cpus(evsel), =
-cpu_map_idx,
-> +                                             evsel->core.threads);
->  }
-> --
-> 2.50.0.727.gbf7dc18ff4-goog
->
+The dso_id is used to indentify a DSO that may change by being
+overwritten. The inode generation isn't present in /proc/pid/maps and
+so was already only optionally filled in. With build ID mmap events
+the other major, minor and inode varialbes aren't filled in. Change
+the dso_id implementation to make optional values explicit, rather
+than injecting a dso_id we want to improve it during find operations,
+add the buildid to the dso_id for sorting and so that matching fails
+when build IDs vary between DSOs.
+
+Mark the callchain for buildids and not just the sample IP, fixing
+missing DSOs.
+
+Fix sample__for_each_callchain_node to populate the map even when
+symbols aren't computed.
+
+Other minor bits of build_id clean up.
+
+"Remove global perf_env"
+
+The global perf_env is used to hold host information, but it is also
+used as a fallback in a number of cases where the information may be
+bogus. Restructure the code so that the perf_env of the session is
+accessed. When necessary a locally scoped host perf_env is created and
+used.
+
+Cleaning up the inconsistency was requested by Kan Liang in:
+https://lore.kernel.org/lkml/c56c9e23-cf6e-4040-aee8-da13d5157dcf@linux.intel.com/
+
+"Generic weight struct, use env for sort key and header"
+
+The arch directory is a barrier to cross-platform development as files
+and behaviors within it are inherently platform specific. Sample
+parsing should be generic but the PERF_SAMPLE_WEIGHT_STRUCT handling
+was only present if building for x86 or powerpc. The sort key and
+headers should be specific to the session that is being executed and
+not to the machine perf is being run upon. These patches clean this
+and associated code up.
+
+v6: Fix v5 review feedback from Namhyung (thanks Namhyung!).
+
+v5: Drop merged 1st patch. Rebase and fix breakages in new/changed code.
+
+v4: Shorten to "weight3" histogram and sample variable, but comment
+    its use (Namhyung). Fix evsel__env use in `perf trace` where no
+    session was present. Assert the session is never passed a NULL
+    host_env when there is no data file and its associated env.
+
+Ian Rogers (22):
+  perf build-id: Reduce size of "size" variable
+  perf build-id: Truncate to avoid overflowing the build_id data
+  perf build-id: Change sprintf functions to snprintf
+  perf build-id: Mark DSO in sample callchains
+  perf build-id: Ensure struct build_id is empty before use
+  perf dso: Move build_id to dso_id
+  perf jitdump: Directly mark the jitdump DSO
+  perf record: Make --buildid-mmap the default
+  perf session: Add accessor for session->header.env
+  perf evlist: Change env variable to session
+  perf header: Clean up use of perf_env
+  perf test: Avoid use perf_env
+  perf session: Add host_env argument to perf_session__new
+  perf top: Make perf_env locally scoped
+  perf bench synthesize: Avoid use of global perf_env
+  perf machine: Explicitly pass in host perf_env
+  perf auxtrace: Pass perf_env from session through to mmap read
+  perf trace: Avoid global perf_env with evsel__env
+  perf env: Remove global perf_env
+  perf sample: Remove arch notion of sample parsing
+  perf test: Move PERF_SAMPLE_WEIGHT_STRUCT parsing to common test
+  perf sort: Use perf_env to set arch sort keys and header
+
+ tools/perf/Documentation/perf-record.txt      |   4 +-
+ tools/perf/arch/powerpc/util/Build            |   1 -
+ tools/perf/arch/powerpc/util/event.c          |  60 ------
+ tools/perf/arch/x86/include/arch-tests.h      |   1 -
+ tools/perf/arch/x86/tests/Build               |   1 -
+ tools/perf/arch/x86/tests/arch-tests.c        |   2 -
+ tools/perf/arch/x86/tests/sample-parsing.c    | 125 ------------
+ tools/perf/arch/x86/util/event.c              |  46 -----
+ tools/perf/bench/inject-buildid.c             |   2 +-
+ tools/perf/bench/synthesize.c                 |  27 ++-
+ tools/perf/builtin-annotate.c                 |   6 +-
+ tools/perf/builtin-buildid-cache.c            |  22 +--
+ tools/perf/builtin-buildid-list.c             |  11 +-
+ tools/perf/builtin-c2c.c                      |  69 ++++---
+ tools/perf/builtin-diff.c                     |   2 +-
+ tools/perf/builtin-inject.c                   |  41 ++--
+ tools/perf/builtin-kallsyms.c                 |  21 ++-
+ tools/perf/builtin-kmem.c                     |   2 +-
+ tools/perf/builtin-kvm.c                      |   4 +-
+ tools/perf/builtin-kwork.c                    |   2 +-
+ tools/perf/builtin-lock.c                     |   4 +-
+ tools/perf/builtin-mem.c                      |   2 +-
+ tools/perf/builtin-record.c                   |  64 ++++---
+ tools/perf/builtin-report.c                   |  27 ++-
+ tools/perf/builtin-sched.c                    |   8 +-
+ tools/perf/builtin-script.c                   |  18 +-
+ tools/perf/builtin-stat.c                     |  23 +--
+ tools/perf/builtin-timechart.c                |   2 +-
+ tools/perf/builtin-top.c                      |  60 +++---
+ tools/perf/builtin-trace.c                    |  38 ++--
+ tools/perf/include/perf/perf_dlfilter.h       |   2 +-
+ tools/perf/perf.c                             |   3 -
+ tools/perf/tests/code-reading.c               |   6 +-
+ tools/perf/tests/dlfilter-test.c              |  51 ++---
+ tools/perf/tests/dwarf-unwind.c               |  10 +-
+ tools/perf/tests/hists_cumulate.c             |   8 +-
+ tools/perf/tests/hists_filter.c               |   8 +-
+ tools/perf/tests/hists_link.c                 |   8 +-
+ tools/perf/tests/hists_output.c               |  10 +-
+ tools/perf/tests/mmap-thread-lookup.c         |   6 +-
+ tools/perf/tests/pe-file-parsing.c            |   2 +-
+ tools/perf/tests/sample-parsing.c             |  14 ++
+ tools/perf/tests/sdt.c                        |   2 +-
+ tools/perf/tests/symbols.c                    |  12 +-
+ tools/perf/tests/topology.c                   |  39 ++--
+ tools/perf/ui/browser.h                       |   4 +-
+ tools/perf/ui/browsers/header.c               |   4 +-
+ tools/perf/ui/browsers/hists.c                |   2 +-
+ tools/perf/util/amd-sample-raw.c              |   2 +-
+ tools/perf/util/arm-spe.c                     |   2 +-
+ tools/perf/util/auxtrace.c                    |  13 +-
+ tools/perf/util/auxtrace.h                    |   6 +-
+ tools/perf/util/bpf-event.c                   |   2 +-
+ tools/perf/util/branch.c                      |   2 +-
+ tools/perf/util/build-id.c                    |  63 ++++---
+ tools/perf/util/build-id.h                    |   8 +-
+ tools/perf/util/data-convert-bt.c             |  16 +-
+ tools/perf/util/data-convert-json.c           |  36 ++--
+ tools/perf/util/debug.c                       |   9 +-
+ tools/perf/util/debuginfo.c                   |   2 +-
+ tools/perf/util/disasm.c                      |   2 +-
+ tools/perf/util/dlfilter.c                    |   2 +-
+ tools/perf/util/dso.c                         | 111 ++++++-----
+ tools/perf/util/dso.h                         |  75 ++++----
+ tools/perf/util/dsos.c                        |  20 +-
+ tools/perf/util/env.c                         |   3 +-
+ tools/perf/util/env.h                         |   2 -
+ tools/perf/util/event.c                       |   2 +-
+ tools/perf/util/event.h                       |   5 -
+ tools/perf/util/evlist.h                      |   2 +-
+ tools/perf/util/evsel.c                       |  29 ++-
+ tools/perf/util/evsel.h                       |   1 +
+ tools/perf/util/header.c                      | 178 ++++++++++--------
+ tools/perf/util/hist.c                        |   4 +-
+ tools/perf/util/hist.h                        |   3 +-
+ tools/perf/util/intel-tpebs.c                 |   4 +-
+ tools/perf/util/jitdump.c                     |  21 ++-
+ tools/perf/util/machine.c                     |  44 ++---
+ tools/perf/util/machine.h                     |   6 +-
+ tools/perf/util/map.c                         |  15 +-
+ tools/perf/util/map.h                         |   5 +-
+ tools/perf/util/probe-event.c                 |  10 +-
+ tools/perf/util/probe-file.c                  |   4 +-
+ tools/perf/util/probe-finder.c                |   5 +-
+ tools/perf/util/s390-cpumsf.c                 |   2 +-
+ tools/perf/util/sample-raw.c                  |   7 +-
+ tools/perf/util/sample-raw.h                  |   2 +-
+ tools/perf/util/sample.h                      |   6 +-
+ .../scripting-engines/trace-event-python.c    |   7 +-
+ tools/perf/util/session.c                     |  19 +-
+ tools/perf/util/session.h                     |   7 +-
+ tools/perf/util/sort.c                        |  95 ++++++----
+ tools/perf/util/sort.h                        |   5 +-
+ tools/perf/util/symbol-minimal.c              |   2 +-
+ tools/perf/util/symbol.c                      |   7 +-
+ tools/perf/util/symbol_conf.h                 |   2 +-
+ tools/perf/util/synthetic-events.c            |  54 ++++--
+ tools/perf/util/tool.c                        |   2 +-
+ 98 files changed, 923 insertions(+), 894 deletions(-)
+ delete mode 100644 tools/perf/arch/powerpc/util/event.c
+ delete mode 100644 tools/perf/arch/x86/tests/sample-parsing.c
+
+-- 
+2.50.0.727.gbf7dc18ff4-goog
+
