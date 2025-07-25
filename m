@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC62248F74;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D5524CEE8;
 	Fri, 25 Jul 2025 19:38:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753472282; cv=none; b=Qng3DiiUUcW9azUoiQxOQ0FqG9QyHpO81ernGJVLpLNUh6GkFJo+7SOpLMsW1P+dnDpKyUsQ1n0ROBgQDefU7B70H04YNvrdoKXg3/D0ntZPJGrn5PdMA5D7Eg/siZqLKx8UpYatfJwUWq9vKQkV5un4Ws1YOXO/WnCAKPNVVl8=
+	t=1753472283; cv=none; b=JI7mdLjjJJH+4UofKzt1t7JLK4HdZkiBtTUvl2fa77sxjHYwzkAeVaE8dAhPpON/hsiQZicFuCPDfmC6d1thtb5/5RHUT4/QUxzurOjLQYtBG6fR3we4p6xw/J4is+fofDiOGsc1EyFj2tFDsI05f171UyYuXFEZqS3/Ay8C8Q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753472282; c=relaxed/simple;
-	bh=1oEn/noJpop/kPy31O4iVBmwGzWGx3I0ATp1Neb7mZU=;
+	s=arc-20240116; t=1753472283; c=relaxed/simple;
+	bh=+xRfxl6reT2O47Gb7JM+Ilv6ijsGqAACPOiQ1gg1OQE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TxTJ2N/GPM8bHptw8x13Vq8gvSSLkThI03rh0/STKjqTyPhKOvIJX2tuuVf406WFvx1PjojupJlCydAoI4i9+g7ZXWphWaDBKpKaYSSCvJUXpSTcZ0eyD7T51uF9cUBAt9nFKkk/gEXSW/P7gZeozs8ohgSaGTeXIlYeb6dvbMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Opj1V112; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LK5yv55VGGGDqvgfwkQeup495XS4lH8Jl2WY9DZQ+b8cwIXTC5fU/dpcbsm4DVoYSiLWb1BI8DzNltVzDV27zr0Rj5ogOyC8q06G91+L85+LxmMAPXrIOaUX1Z5KG3CigLGq11Lwfe0EpktqdLhQChRQB+kNyb2AgTnNdwXnHQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NjPaKvLq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Opj1V112"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B19BFC4CEF4;
-	Fri, 25 Jul 2025 19:38:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NjPaKvLq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3788AC4CEE7;
+	Fri, 25 Jul 2025 19:38:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1753472282;
-	bh=1oEn/noJpop/kPy31O4iVBmwGzWGx3I0ATp1Neb7mZU=;
+	bh=+xRfxl6reT2O47Gb7JM+Ilv6ijsGqAACPOiQ1gg1OQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Opj1V1128nLYLEi95UyBThmmO7ziS3crsacmIwJbNjj1+O7p8RBBhTbq4hZ8f/q+l
-	 Joy15bqitC7Ag3r/IRzPxUJZ2K5bME9Y0W4Fy07kvmP72xPDH+s+LucKYKxJYRylxm
-	 QmWVB87755UPOdZ/tG8oafE6UIq6SybXfxe9otyXh/Gh75kNFyerCmrKhur0yI2EZN
-	 eaKScNcpbaxiz1U2iQg4ucGrb9zjCWxxXykWwQYyFw+APeoCK++zEYnxtqfQA4rEYU
-	 Ga2s5+VKF1kmhlBM6nydtClkrFM7e5Lr7tVYJ1njbqcg9dFKa7LVbKdvwx5d5YzcnV
-	 m3OYZBEaG3itA==
+	b=NjPaKvLqTGop/ine+UqvJrSNOP71Em4gGu1oEJ6Uqdk/XETkYG/4ZhjtwsDcP9tPt
+	 cwA2Vr7Q65q5k5ipwur6vTwLktJVRX945P9OYz95rItrGlE1WMZtXt1PwJ9/RmGir+
+	 aiUE3tKYZyfVYkl1F3uzqEqGUrvsYiu//1HN7zjzhhbm90rSAo9o/drt9quEYDceEw
+	 ZY7ZrC4YL2MJaOJCIYykJc77n87RyCKL98H7n87+oMNKgi7L3stDFyScmarkGAC2sF
+	 6xREb/V8FTT7AHLokRPmk8fHpOPP8jRwpvDpPFrLLXtOzteljZqTyr3eVzfnUQ419S
+	 Vpj+8aH+bTyrw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v4 1/9] perf annotate: Rename to __hist_entry__tui_annotate()
-Date: Fri, 25 Jul 2025 12:37:47 -0700
-Message-ID: <20250725193755.12276-2-namhyung@kernel.org>
+Subject: [PATCH v4 2/9] perf annotate: Remove __annotation_line__write()
+Date: Fri, 25 Jul 2025 12:37:48 -0700
+Message-ID: <20250725193755.12276-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250725193755.12276-1-namhyung@kernel.org>
 References: <20250725193755.12276-1-namhyung@kernel.org>
@@ -50,145 +50,88 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There are three different but similar functions for annotation on TUI.
-Rename it to __hist_entry__tui_annotate() and make sure it passes 'he'.
-It's not used for now but it'll be needed for later use.
-
-Also remove map_symbol__tui_annotate() which was a simple wrapper.
+Get rid of the internal function and convert function arguments into
+local variables if they are used more than once.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/ui/browsers/annotate.c | 17 +++++++----------
- tools/perf/ui/browsers/hists.c    |  2 +-
- tools/perf/util/annotate.h        | 12 ------------
- tools/perf/util/hist.h            | 12 +++++++-----
- 4 files changed, 15 insertions(+), 28 deletions(-)
+ tools/perf/util/annotate.c | 46 ++++++++++++++++----------------------
+ 1 file changed, 19 insertions(+), 27 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 183902dac042ecb0..28ef146f29e8e742 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -27,6 +27,7 @@ struct annotate_browser {
- 	struct rb_node		   *curr_hot;
- 	struct annotation_line	   *selection;
- 	struct arch		   *arch;
-+	struct hist_entry	   *he;
- 	bool			    searching_backwards;
- 	char			    search_bf[128];
- };
-@@ -557,7 +558,7 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
- 	target_ms.map = ms->map;
- 	target_ms.sym = dl->ops.target.sym;
- 	annotation__unlock(notes);
--	symbol__tui_annotate(&target_ms, evsel, hbt);
-+	__hist_entry__tui_annotate(browser->he, &target_ms, evsel, hbt);
- 	sym_title(ms->sym, ms->map, title, sizeof(title), annotate_opts.percent_type);
- 	ui_browser__show_title(&browser->b, title);
- 	return true;
-@@ -1032,12 +1033,6 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 	return key;
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 0dd475a744b6dfac..69ee83052396b15e 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1935,24 +1935,26 @@ int annotation_br_cntr_entry(char **str, int br_cntr_nr,
+ 	return -ENOMEM;
  }
  
--int map_symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
--			     struct hist_browser_timer *hbt)
+-static void __annotation_line__write(struct annotation_line *al, struct annotation *notes,
+-				     bool first_line, bool current_entry, bool change_color, int width,
+-				     void *obj, unsigned int percent_type,
+-				     int  (*obj__set_color)(void *obj, int color),
+-				     void (*obj__set_percent_color)(void *obj, double percent, bool current),
+-				     int  (*obj__set_jumps_percent_color)(void *obj, int nr, bool current),
+-				     void (*obj__printf)(void *obj, const char *fmt, ...),
+-				     void (*obj__write_graph)(void *obj, int graph))
+-
 -{
--	return symbol__tui_annotate(ms, evsel, hbt);
+-	double percent_max = annotation_line__max_percent(al, percent_type);
+-	int pcnt_width = annotation__pcnt_width(notes),
+-	    cycles_width = annotation__cycles_width(notes);
++void annotation_line__write(struct annotation_line *al, struct annotation *notes,
++			    struct annotation_write_ops *wops)
++{
++	bool current_entry = wops->current_entry;
++	bool change_color = wops->change_color;
++	double percent_max = annotation_line__max_percent(al, annotate_opts.percent_type);
++	int width = wops->width;
++	int pcnt_width = annotation__pcnt_width(notes);
++	int cycles_width = annotation__cycles_width(notes);
+ 	bool show_title = false;
+ 	char bf[256];
+ 	int printed;
+-
+-	if (first_line && (al->offset == -1 || percent_max == 0.0)) {
++	void *obj = wops->obj;
++	int  (*obj__set_color)(void *obj, int color) = wops->set_color;
++	void (*obj__set_percent_color)(void *obj, double percent, bool current) = wops->set_percent_color;
++	int  (*obj__set_jumps_percent_color)(void *obj, int nr, bool current) = wops->set_jumps_percent_color;
++	void (*obj__printf)(void *obj, const char *fmt, ...) = wops->printf;
++	void (*obj__write_graph)(void *obj, int graph) = wops->write_graph;
++
++	if (wops->first_line && (al->offset == -1 || percent_max == 0.0)) {
+ 		if (notes->branch && al->cycles) {
+ 			if (al->cycles->ipc == 0.0 && al->cycles->avg == 0)
+ 				show_title = true;
+@@ -1966,7 +1968,8 @@ static void __annotation_line__write(struct annotation_line *al, struct annotati
+ 		for (i = 0; i < al->data_nr; i++) {
+ 			double percent;
+ 
+-			percent = annotation_data__percent(&al->data[i], percent_type);
++			percent = annotation_data__percent(&al->data[i],
++							   annotate_opts.percent_type);
+ 
+ 			obj__set_percent_color(obj, percent, current_entry);
+ 			if (symbol_conf.show_total_period) {
+@@ -2115,17 +2118,6 @@ static void __annotation_line__write(struct annotation_line *al, struct annotati
+ 
+ }
+ 
+-void annotation_line__write(struct annotation_line *al, struct annotation *notes,
+-			    struct annotation_write_ops *wops)
+-{
+-	__annotation_line__write(al, notes, wops->first_line, wops->current_entry,
+-				 wops->change_color, wops->width, wops->obj,
+-				 annotate_opts.percent_type,
+-				 wops->set_color, wops->set_percent_color,
+-				 wops->set_jumps_percent_color, wops->printf,
+-				 wops->write_graph);
 -}
 -
- int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
- 			     struct hist_browser_timer *hbt)
+ int symbol__annotate2(struct map_symbol *ms, struct evsel *evsel,
+ 		      struct arch **parch)
  {
-@@ -1046,11 +1041,12 @@ int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
- 	SLang_init_tty(0, 0, 0);
- 	SLtty_set_suspend_state(true);
- 
--	return map_symbol__tui_annotate(&he->ms, evsel, hbt);
-+	return __hist_entry__tui_annotate(he, &he->ms, evsel, hbt);
- }
- 
--int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
--			 struct hist_browser_timer *hbt)
-+int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
-+			       struct evsel *evsel,
-+			       struct hist_browser_timer *hbt)
- {
- 	struct symbol *sym = ms->sym;
- 	struct annotation *notes = symbol__annotation(sym);
-@@ -1064,6 +1060,7 @@ int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
- 			.priv	 = ms,
- 			.use_navkeypressed = true,
- 		},
-+		.he = he,
- 	};
- 	struct dso *dso;
- 	int ret = -1, err;
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index d9d3fb44477ac6d5..487c0b08c0038710 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -2484,8 +2484,8 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
- 	else
- 		evsel = hists_to_evsel(browser->hists);
- 
--	err = map_symbol__tui_annotate(&act->ms, evsel, browser->hbt);
- 	he = hist_browser__selected_entry(browser);
-+	err = __hist_entry__tui_annotate(he, &act->ms, evsel, browser->hbt);
- 	/*
- 	 * offer option to annotate the other branch source or target
- 	 * (if they exists) when returning from annotate
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 8b5131d257b01e3e..0f640e4871744262 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -471,18 +471,6 @@ int hist_entry__annotate_printf(struct hist_entry *he, struct evsel *evsel);
- int hist_entry__tty_annotate(struct hist_entry *he, struct evsel *evsel);
- int hist_entry__tty_annotate2(struct hist_entry *he, struct evsel *evsel);
- 
--#ifdef HAVE_SLANG_SUPPORT
--int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
--			 struct hist_browser_timer *hbt);
--#else
--static inline int symbol__tui_annotate(struct map_symbol *ms __maybe_unused,
--				struct evsel *evsel  __maybe_unused,
--				struct hist_browser_timer *hbt __maybe_unused)
--{
--	return 0;
--}
--#endif
--
- void annotation_options__init(void);
- void annotation_options__exit(void);
- 
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 70438d03ca9c33b1..c64005278687cb02 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -713,8 +713,9 @@ struct block_hist {
- #include "../ui/keysyms.h"
- void attr_to_script(char *buf, struct perf_event_attr *attr);
- 
--int map_symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
--			     struct hist_browser_timer *hbt);
-+int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
-+			       struct evsel *evsel,
-+			       struct hist_browser_timer *hbt);
- 
- int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
- 			     struct hist_browser_timer *hbt);
-@@ -742,9 +743,10 @@ int evlist__tui_browse_hists(struct evlist *evlist __maybe_unused,
- {
- 	return 0;
- }
--static inline int map_symbol__tui_annotate(struct map_symbol *ms __maybe_unused,
--					   struct evsel *evsel __maybe_unused,
--					   struct hist_browser_timer *hbt __maybe_unused)
-+static inline int __hist_entry__tui_annotate(struct hist_entry *he __maybe_unused,
-+					     struct map_symbol *ms __maybe_unused,
-+					     struct evsel *evsel __maybe_unused,
-+					     struct hist_browser_timer *hbt __maybe_unused)
- {
- 	return 0;
- }
 -- 
 2.50.1
 
