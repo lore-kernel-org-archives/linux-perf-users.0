@@ -1,63 +1,66 @@
-Received: from mail-qt1-f202.google.com (mail-qt1-f202.google.com [209.85.160.202])
+Received: from mail-qt1-f201.google.com (mail-qt1-f201.google.com [209.85.160.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED806259CB9
-	for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 20:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E394625A2A5
+	for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 20:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753475302; cv=none; b=NcpeoxXAlhoj5jPvUus2tK5Gcg4HWfyeIN3k1fkquqtzLsAXXK5H6ZByhi8YWJLyslXuv+C5pkK9VZPBNukuePBDXO7izdgPq6ir3YXeZxt7Q/BSL914/uUSDt3s7g2/jIw8xvQgOnImHd8m92ubw4P9nwzBjCrJsNWVN7vYX4A=
+	t=1753475303; cv=none; b=uAFHQykpBcq1xk4lFeg4t8QEsu98vt7DBM+pj3100NMA9FJQSjOZlFM8yLYnfQIMZizPz3DqO/7kHSAubG0xHbkAleqxpSQJCPA8whM6AHv4gEy7cx2A4XUe5tyQwzVldx4xXc3gecPtlWm2ZqRHhQeIduEo76wo/KwXnQM7i6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753475302; c=relaxed/simple;
-	bh=gXTJnen5/k7cpoZ23BuEhZhJsM3pfjzHd8tKam8f0t0=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=AXRF8NPCWfiXUCVR6HIkuNBJ2DiXBxypE/nIBs2QyybNbDIj1tJPvC5J3/kpzhCEzn0xfcr+0T0Uwl33dEE8sA4wxcDvEFP4G71QWXbE8u/ckrf/DClvukr982yn9UQ+V0+Bt1Ja9l7UBHleGB1yBKVrntHRH6rADg3sy+UUgw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QQZJ18q7; arc=none smtp.client-ip=209.85.160.202
+	s=arc-20240116; t=1753475303; c=relaxed/simple;
+	bh=y7ZMmXMl4AeF7iTeFou5MQEhQkYueVSw9Jduxng0eNo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=PN7LFcoLOoSqOzCC4NmIJsTzT0LmK1+reStWECxNXeulzB6glgd6zqRVkiVFMEwB3KPktP6nkhzgty8uDf0UQujR0ZpGPc9F6Savfxd/MsiW4xTM8eBcbefONbZhS0VIHcw2bI8FKIgPvxC0hlMZSopBpxF4tD9r7TnqgOKXuUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wAPUzRxI; arc=none smtp.client-ip=209.85.160.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QQZJ18q7"
-Received: by mail-qt1-f202.google.com with SMTP id d75a77b69052e-4abb12861cfso47280381cf.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 13:28:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wAPUzRxI"
+Received: by mail-qt1-f201.google.com with SMTP id d75a77b69052e-4ab684d3b55so46219881cf.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 13:28:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753475300; x=1754080100; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=DDk9iD/I/15mfC7z2yZd+qqbmK63SyY3qkF61lMO7hw=;
-        b=QQZJ18q71Swn3pn1i+Rxe4kyr4ifU70cZoNXfZx4nppzyaXlkn9HHNkRvBhpjzkyBd
-         MjCELuAKoFziwzwk16CJrFgPcifgqsPnQ6TpcUehkCWiSpxeNsZIZ5ipqZ2SCaFmKE5a
-         Joj4wE7ulu9aHYczwY1SAf4eLZr1KNRp1PLmNLeiet/5cH9owYhHbOSu6/rFnQXzpG0P
-         DWpOBjkytPV+dUcTZ3GjKjxy/kiw1V/VE2RSnznpcLDutkxlvUp+y/kv9K3caDVm2THW
-         djNyanHBrOT2ZeLzLrom5COxtMJxSredNvktV5xA1z2GbF+2bQzOjUgY1+tWrBaHTIhQ
-         2t0A==
+        d=google.com; s=20230601; t=1753475301; x=1754080101; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aSnOCIynF2EPoUgwxpXJNlBKEOIAjcwZq8VcJJ4NIKo=;
+        b=wAPUzRxIdzE2StFBz8MQFaxMr/vU3Hg6RL0xyCp4bkTyBtggfpsx9wyGJDnEiCR+Aa
+         FnWgeyMVcU8FN3ePNub3og6Bm52yeEpgTSD2QQ9G2HoStyWcDzHc3cIRVIE3dqhPRXQt
+         DtnMqN2gdcOwWA2GzLuzT1naquz3d9g46h3ONzXrECh88hDZVrw5+qn9oeMIQF3X3MGz
+         V7PXNAQfVcZWHpj4a38J8GC/Cwq88eQyOpCJ1bVZEVO/0Vg1gzv+O+hCjliceWiqkPPm
+         K6HEJWv6F/7R1oYtXyhB7hciTfk6zK4dkj3fKneVTkJ6auY2Gc/vopC26ke62MZ+D+jU
+         d3dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753475300; x=1754080100;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DDk9iD/I/15mfC7z2yZd+qqbmK63SyY3qkF61lMO7hw=;
-        b=MHzRteD13FpsIctMR5zqKHa9yTXVlgImGDfXtCKT4IFKI6vqfOJV4Mxid7/uVhhOjB
-         qZ+GFLaQBP4QRUV+sxjbTw9y4aoGMF7uTx6V+ZZR58zdXmdQ3L9y7lH9mSGi/0y2+y3v
-         whFFDT/XcG+ysctD8P/PfYhTFUbD4F5ps9x6VD36YXyGWUuyHtwXRJfw7k+vS8F5qtlf
-         AmnEOaKXom7PJ+oLrjp7u6YeG2rjj0Z6hgez7T7lkndB/2frIfHBaeDHMrblUhTuyKmf
-         2cFpabdv0AThaZSzsfzlMws2m3binQoZMZ85IR48G7mIv2NbXuHzhswx5qQawH4royMq
-         XYYw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0w0izYncy959V01abzRQA/Ekp8njIEJLJZPOrTyik15zKMVMCUBF3Ht98Rti3pvJDgzI7gu3dHLq9JO+ggUA/@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUPwbCEQnVA5BFSx5acBt6j31aPCTzeXEv8ybCCAhOKJyU9Goy
-	9opLcSVHNDW3EpnGlwjgsGBNgPWxbDBz5l8ZMmlFrMoq5GMRRpQR/rQWnuw6gA3jDx8gDdOJsXI
-	FvxDiJq60dA==
-X-Google-Smtp-Source: AGHT+IGoW369nQimnMdyOQv3l2inVS2nmeFQHd5UQmHCGbQIndLINbr8efAQFTdyc+N3SnK/40By8NreEylV
-X-Received: from qtei9.prod.google.com ([2002:a05:622a:8c9:b0:4ab:cacc:4c68])
- (user=zecheng job=prod-delivery.src-stubby-dispatcher) by 2002:ac8:570a:0:b0:4ab:6b08:9dc1
- with SMTP id d75a77b69052e-4ae8ef9bea7mr50798341cf.19.1753475299804; Fri, 25
- Jul 2025 13:28:19 -0700 (PDT)
-Date: Fri, 25 Jul 2025 20:28:03 +0000
+        d=1e100.net; s=20230601; t=1753475301; x=1754080101;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aSnOCIynF2EPoUgwxpXJNlBKEOIAjcwZq8VcJJ4NIKo=;
+        b=q3VIyfSo2hH6DUpECLWPvj+Z277vMh8d11mAWslUrIEhZKyXwAPRZ8oSDtoApyzyFq
+         25CzBs6g/8On0qjUsKIda8QkzWqRS0OrGuC7MFUWNfRco24TtqVB5AR9xS/+qZoQPHr6
+         imQ8+fnqPTIS2/9wRthZz70bHTGKqFXy5kA85pnv9TGVbOGE0NVLpOfG+uPQpcPSdwgO
+         KHBWq1Rimw61K+Dxl70kJFuJjCp+IsUMwAWhmMgq+KpXX00dp6zYtoZrW8usQ6EE+n+L
+         k+gWtrCVYUHyzyWx5+fWEN8+gDEe5bx4bjfQ+vRmUwIoMBMFjA2J6/0miEi5Y1oINcCK
+         8QaA==
+X-Forwarded-Encrypted: i=1; AJvYcCWsix8HvEPDra7qZVWhP7YOVVC+Cb1d0i3H5WrZVXwusc0tURkq4ohhL0yhxZEdvhlgakfa9AtJ9qvdPbV1R6Qg@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYAkIfwn/EjfsE+Lo2RA4vy34NxxGhRxLvjINguFlYZQWOGusR
+	RdtJ1Qj+JTNrOUT7vcO5y2nCc08ylgGg+fu5lTVnZmG7C2mE4zAxJoagtdaU5TD7Q9eF2oMWdyM
+	iTvhJwJB45w==
+X-Google-Smtp-Source: AGHT+IEtaubTt49Ik8s9cRgE+B+Ay3+2JHiCaKE3hc7DgJYA6W0TCehhgfWQ7j17dc3k3QPYrwA+8oaWNbSX
+X-Received: from qtbcp4.prod.google.com ([2002:a05:622a:4204:b0:4ab:6375:3dda])
+ (user=zecheng job=prod-delivery.src-stubby-dispatcher) by 2002:a05:622a:5448:b0:4ab:63b8:3320
+ with SMTP id d75a77b69052e-4ae87225337mr79667211cf.23.1753475300882; Fri, 25
+ Jul 2025 13:28:20 -0700 (PDT)
+Date: Fri, 25 Jul 2025 20:28:04 +0000
+In-Reply-To: <20250725202809.1230085-1-zecheng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250725202809.1230085-1-zecheng@google.com>
 X-Mailer: git-send-email 2.50.1.470.g6ba607880d-goog
-Message-ID: <20250725202809.1230085-1-zecheng@google.com>
-Subject: [PATCH v1 0/6] perf tools: Some improvements on data type profiler
+Message-ID: <20250725202809.1230085-2-zecheng@google.com>
+Subject: [PATCH v1 1/6] perf dwarf-aux: Use signed comparison in match_var_offset
 From: Zecheng Li <zecheng@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -70,51 +73,49 @@ Cc: Zecheng Li <zli94@ncsu.edu>, Xu Liu <xliuprof@google.com>,
 	Zecheng Li <zecheng@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Hi all,
+match_var_offset compares address offsets to determine if an access
+falls within a variable's bounds. The offsets involved for those
+relative to base registers from DW_OP_breg can be negative.
 
-I've identified several missing data type annotations within the perf
-tools when annotating the Linux kernel. This patch series improves the
-coverage and correctness of data type annotations.
+The current implementation uses unsigned types (u64) for these offsets,
+which rejects almost all negative values.
 
-Here's a breakdown of the changes:
+This commit changes the local variables within match_var_offset to
+signed types (s64) before performing comparisons. This ensures correct
+behavior when addr_offset_ or addr_type_ are negative.
 
-Patches 1 and 2 fixes direct type matching from DWARF. They fix cases
-with intrusive linked lists (e.g, sched_balance_update_blocked_averages)
-where type information was previously missed.
+Signed-off-by: Zecheng Li <zecheng@google.com>
+---
+ tools/perf/util/dwarf-aux.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Patch 3 utilizes this to better determine the types of stack
-variables for instruction tracking.
-
-Patch 4 skips annotations for lea instructions, as these do not involve
-memory access.
-
-Patches 5 and 6 implement a basic idea for register offset tracking
-based on arithmetic operations. While this feature has known limitations
-and may regress in rare cases compared to the original, it generally
-improves offset tracking in most scenarios.
-
-Note: I will be communicating from a new email address, zli94@ncsu.edu,
-as I will soon lose access to my current email account.
-
-Thanks,
-Zecheng
-
-Zecheng Li (6):
-  perf dwarf-aux: Use signed comparison in match_var_offset
-  perf dwarf-aux: More accurate variable type match for breg
-  perf dwarf-aux: Better type matching for stack variables
-  perf annotate: Skip annotating data types to lea instructions
-  perf dwarf-aux: Find pointer type to a type
-  perf annotate: Track arithmetic instructions on pointers
-
- tools/perf/arch/x86/annotate/instructions.c | 109 ++++++++++++++++-
- tools/perf/util/annotate-data.c             |  14 ++-
- tools/perf/util/annotate-data.h             |   6 +
- tools/perf/util/annotate.c                  |   5 +
- tools/perf/util/dwarf-aux.c                 | 125 ++++++++++++++++++--
- tools/perf/util/dwarf-aux.h                 |   4 +
- 6 files changed, 247 insertions(+), 16 deletions(-)
-
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 559c953ca172..bf906dff9ef0 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -1388,10 +1388,12 @@ struct find_var_data {
+ #define DWARF_OP_DIRECT_REGS  32
+ 
+ static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
+-			     u64 addr_offset, u64 addr_type, bool is_pointer)
++			     u64 addr_offset_, u64 addr_type_, bool is_pointer)
+ {
+ 	Dwarf_Die type_die;
+ 	Dwarf_Word size;
++	s64 addr_offset = (s64)addr_offset_;
++	s64 addr_type = (s64)addr_type_;
+ 
+ 	if (addr_offset == addr_type) {
+ 		/* Update offset relative to the start of the variable */
+@@ -1414,7 +1416,7 @@ static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
+ 	if (dwarf_aggregate_size(&type_die, &size) < 0)
+ 		return false;
+ 
+-	if (addr_offset >= addr_type + size)
++	if (addr_offset_ - addr_type_ >= size)
+ 		return false;
+ 
+ 	/* Update offset relative to the start of the variable */
 -- 
 2.50.1.470.g6ba607880d-goog
 
