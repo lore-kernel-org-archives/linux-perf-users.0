@@ -1,47 +1,47 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012031.outbound.protection.outlook.com [52.101.66.31])
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011059.outbound.protection.outlook.com [52.101.70.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6488F1DEFDD;
-	Fri, 25 Jul 2025 05:37:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B2E8F6E;
+	Fri, 25 Jul 2025 05:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.59
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753421863; cv=fail; b=Te88tN0tuIwa38PYBJOX+mBlYxi7pCzCpjjP7/08m6Yd/zabnr0sVUy5o5DPhIgIMCtFMR80mccQu05pHLBrqaub3DclRkYsUS2n0wrJWEmvzURjj/VoIpfyVBndz+KZHPgCnB0LUGTmNPgdWnouCL0wYjc6KxXxUQqmtW/MrLs=
+	t=1753422493; cv=fail; b=e3La+Wp+SInEoW5sGdpxDfj359zEEVYuJ9oBmlJZ1E4solSuw4iuJGJE+17QkHOqa+BE3MDb+hGOwXW/hv7DhJDky8uK2rJqMG6T0fwWqAVQ0J313ZLD2Y2g3iWHf118t0R+C/3bjjO++EnS3me44PJGRFgM2HHK/E8pT9chjT4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753421863; c=relaxed/simple;
-	bh=iXyod796ritTo3iLi8RWlDOz+M7sNAninzoyY4UJRRs=;
+	s=arc-20240116; t=1753422493; c=relaxed/simple;
+	bh=G6SD80Qo4CxsdIwDiuDC/8A0WlyA2+u+C02CbcFfi4E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Nk1tHP4v/JqixySoy6q554JUfJtcQbArtJgPbsJIiPcfNvrHIX22C8Vu3HiBSbwlSelvTATiA+mpjOTIFiPQHQ4Ja6aXlAgHzZodNdmqrbjknwx9oVQJ857JIHfStlrhbVcP3XqvBS4SZ4SKsDeW12z4jUt+VA5j+Czif6hEBhg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Y5Cf2Hlm; arc=fail smtp.client-ip=52.101.66.31
+	 Content-Disposition:In-Reply-To:MIME-Version; b=cNwAog8ZnJCRuoyEN00FMwK9/YzzeiYpdtogLU6V7s5rS+7bOTl6BFXtmx7GGDcZbqktVyogn9fLmwBupowEP4Ln81RUJlejnckVlX6EtBLYKuixBLQfdqpM0QarEHHwX0gLIn2zNb6HCLfXb8RKkIUL0bc1uTZn9lWvyaYsbOU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=ToV9ZChu; arc=fail smtp.client-ip=52.101.70.59
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Y5Cf2Hlm"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="ToV9ZChu"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rfDKVqV9htfQt8+aLOG8zmVijDUTDJ4yt5bWLXXfVkyNt8q3GT8fs9eMc6f6ThtFgTGJdq6CdKxAuzXEiK7qhh/cRXt3TVLOOUjFMdaPmmz3+t+frspKEtct8dmv1oGyQ/ys4wJR+g1eYPyb91U3V0U3xV46ztQbynOJfmnxU20QsJtOLA6rDX9D5XbY0hH7ddPivkbMpaaAIsNGx1F7yBpAk9uh6MB+PkSgI95F8TpsbwwIIJxZ+kHSOkOpLz1LzA+jnJGD8bMfgeM1BDDgrhWyO0qFuNW8ebhXryZ5Ca11Pf1bbgVQ0OaF6N+vMpWKoNlc+EJVYdBBRUxy5YDukg==
+ b=gPMj1FGc0YZ4T2qBVTZJ8N7wh4M4SzvGIcHMgYCSSiZYwVlzcFJzkEheiVjwBootcsusQYmowf52A/i3Tl4YcPjWj0hdCaw0PGjfErqwETw0+ZCeVW1qb1RWfibP95epJ4teIwcuKtAKd8AtttsEMNu4++9fYvmHywHl0R268GhBH0eh+lh08Ua2JRK+BphGbfLSjMhegKifzxcbv1ZlbvPSxH4EurPwE6jiWilGvQ23yYsgCQvky1AIFxhZCxGWbc3rSZqhkvGsTBw2JsBoVgozDQizP/daw/heihDu0Noi9DZyVBSnXIWBY4loYWu4VUKLKnbg7+jf4fug9o1fDQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Rp1T2S0dK0e6Ouyex/54Rz68y5pJKeqBQBbQPv3oV6M=;
- b=mEc02IIY6b6KSx7SyZqBu/XWdvvgGA2y7bN0sZXf6Q7xhy3CMPyZa/lqKB1duscjrlOB5kBRG3+TYjVpAsEOoKaUc8iAngZ27A3v+YsSN50IcrhxdSXqJl4a1mhgsh0ONWsyGPObrdjhrdjEqYjr2whN8BQlbpIOgnPCiYk7JW9MN+36l+C8mxa5sQlQTuiYVUDm/uL2ok3nGmsYk8AVbn/lvbRNtLnNqKaDQvDUmgoEdClDikljyf9ure026OT6yHfRsLi3ytX2CxcBBnwCEq6SihDiGPU/K0ZWzQ+lrEXlDt931wvszx1or3lHI3DB+vB89KWcrQAjVuR77cDxXw==
+ bh=BCZjj5yyJ+LHoX/sTjmDjC0qMc1QzhhF4mlTYMFq+ic=;
+ b=EqeahgipI3KyJoLrIrKYAVyNq+omV8RdVQQ6YdoCc8t3gLxacFg0I8+wcknHTGNVhgHfVCuxzOaHilNLIdM+b6iEmJcfw97wgIC6Kti8che/6Hl0rNfA2xNzTOvdg+UsQvs32ymxcgdRWoM51MwTnDFR/X+2CuLVFg2Jlurjm5pvaLe2THFMM11gMhg0y809/y9BsNTVYxPeZDJicyrRc4RHo4FqwrMmRtNhzI/WxCs0Od1nqgBx1jyKSV0hxi2Wslnd0ofOpBSG9wRf4d9cKFc/oOp8HpZwMVmp0FNLumSRRfX0a0nrT+ghzelNoSuG34QXlDlptTDG3l0AArfjcA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rp1T2S0dK0e6Ouyex/54Rz68y5pJKeqBQBbQPv3oV6M=;
- b=Y5Cf2Hlm/fzQKa496MohxqOnXrl+G2GxV0/Xv8PrZl1pPIHHT3Gv2leX5qvLa+0zHLlo0Nk5hMrAGgmA6sBtmTnDRV4C9n0EvmyJrg6VclUDkN13g/SuX3TjRGK5s+qrdG+P+OM8FZTEWSG1TgYu6wh/1pF2Sf/Yj2JT+y0eSc8jQzT0IPHltpL8a3hTD/29ngXMahwI+O1osoUeqfwsQxsqEDLgkvCfSti2x0DQ1XXluDP3z1VPii15lbG60ClLL/mpfZOAmjUeYZ/Jlx6Zw7gSnP2+oc1vxEa4P2ZqFvzVHjL00dOOKer8cGz/1o2XHdmDN9wWT1MfH8Ot6EPh0g==
+ bh=BCZjj5yyJ+LHoX/sTjmDjC0qMc1QzhhF4mlTYMFq+ic=;
+ b=ToV9ZChuZhqZqSxYDEKwm0toWEreoMrKsPNRDVdgQD9oepD+vJIRcCSs+QiboKoUvwsvO58tAB8YH8ZQmUH3ALcZSV+xVRkN6LLGQ4Pvqsv0r1hyo+DxzmdzghflZrAjpw/vSbqekxXGuoZJfZiYJLv9x/a0iHnZXhP78SP+4dg3qqSAygrowwhsyqWmQpy/q3a13zIxSumcAmJpZVpUU4tyxMGKc3n09sXT/8bWPuWsNOttmIrWcvCGFKRhd3WkiwZOTR8DW5vnuH6IgqHsuwCWay35LyumYPM+mvKSTY5p8aUJ+M4zeOuH06x4AWjDHWE23VmJxxw6VF5699hycg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from DU2PR04MB8822.eurprd04.prod.outlook.com (2603:10a6:10:2e1::11)
- by GV1PR04MB9054.eurprd04.prod.outlook.com (2603:10a6:150:1d::22) with
+ by PAXPR04MB8079.eurprd04.prod.outlook.com (2603:10a6:102:1cc::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8964.23; Fri, 25 Jul
- 2025 05:37:35 +0000
+ 2025 05:47:53 +0000
 Received: from DU2PR04MB8822.eurprd04.prod.outlook.com
  ([fe80::4e24:c2c7:bd58:c5c7]) by DU2PR04MB8822.eurprd04.prod.outlook.com
  ([fe80::4e24:c2c7:bd58:c5c7%4]) with mapi id 15.20.8964.023; Fri, 25 Jul 2025
- 05:37:35 +0000
-Date: Fri, 25 Jul 2025 13:32:15 +0800
+ 05:47:53 +0000
+Date: Fri, 25 Jul 2025 13:42:34 +0800
 From: Xu Yang <xu.yang_2@nxp.com>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -56,15 +56,15 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Gautam Menghani <gautam@linux.ibm.com>, Thomas Falcon <thomas.falcon@intel.com>, 
 	Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v8 11/16] perf ilist: Add new python ilist command
-Message-ID: <k56ukpfv77qhoblfagz6naux5mo65hgj4m3ubivq4uz3mar7f4@r4fp25smfbme>
+Subject: Re: [PATCH v8 15/16] perf python: Add metrics function
+Message-ID: <fui4zmtpolivpmrmhwwacahlh5ld256lhsd5pdnsvr4l3iicqp@lttgjcpumt4v>
 References: <20250723232217.516179-1-irogers@google.com>
- <20250723232217.516179-12-irogers@google.com>
+ <20250723232217.516179-16-irogers@google.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250723232217.516179-12-irogers@google.com>
-X-ClientProxiedBy: AS4P195CA0034.EURP195.PROD.OUTLOOK.COM
- (2603:10a6:20b:65a::22) To DU2PR04MB8822.eurprd04.prod.outlook.com
+In-Reply-To: <20250723232217.516179-16-irogers@google.com>
+X-ClientProxiedBy: AM0PR04CA0061.eurprd04.prod.outlook.com
+ (2603:10a6:208:1::38) To DU2PR04MB8822.eurprd04.prod.outlook.com
  (2603:10a6:10:2e1::11)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -73,523 +73,228 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8822:EE_|GV1PR04MB9054:EE_
-X-MS-Office365-Filtering-Correlation-Id: ad26d051-44fb-467f-1c55-08ddcb3d5b9f
+X-MS-TrafficTypeDiagnostic: DU2PR04MB8822:EE_|PAXPR04MB8079:EE_
+X-MS-Office365-Filtering-Correlation-Id: d1726fd2-500e-4002-7b30-08ddcb3ecc09
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|52116014|7416014|376014|19092799006|1800799024|7053199007|38350700014;
+	BCL:0;ARA:13230040|366016|376014|7416014|52116014|19092799006|1800799024|38350700014|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ICTP2Iswm1kQZfpLG/7Tbe5NIWY27UYsmE33LLQIoSbT3Sya2DJcchMOl7Ai?=
- =?us-ascii?Q?NUWOxYft3yqaJJlA9W0RrZq38q0/bVi8pd34UiLfqrTjYilS5ZnbuoLDVivS?=
- =?us-ascii?Q?0QE72D/vFUsZRegxJvRaRrWq0c3oLRYricg52bzhZwDMMu0AGtipoYyi1w+T?=
- =?us-ascii?Q?5v2wdXOP2KfJdTj8CJiCD2L93uOLZZmQXB38g8cMRbykED0Hc09sUIfeJY8x?=
- =?us-ascii?Q?p5Q4GGYnV2omDN6NMJgiF6ytmwN4VekXBwKiQuan4EEolXTGhO5JJGLI3y7T?=
- =?us-ascii?Q?ku6bnTV4PVywsnbdEa0v3ooFWzOyLUQf1Jmyyio5wRVWRSe6DqIInbp+RtJD?=
- =?us-ascii?Q?NW0ha7I02TAPo4YMenYx40rb9Zb6tV6ZCoBDAT5Z9AraIqw7/h3nwKmiudJN?=
- =?us-ascii?Q?Nm3S8IXXEtSzaDb6iFrxe+wTBvS+L6yIm8Lf8tBq+cfUDpyPsmrawi6XTCjk?=
- =?us-ascii?Q?pyzHvOGl+5XFvcEeasNqG9wmcXbHkccHvgKj4hbo+MakN1EheIwkoG0MAzm2?=
- =?us-ascii?Q?MAQ0yRloUoB2pcgBCy9BpTl5VMHCsShA1sGUGKFm6/I/KrxhbIZY7i8uG+Gc?=
- =?us-ascii?Q?PujkJVMR04o6JQ4ECV+U4tXLGKT+94fSqJvJgbQTvwoOQ4uVhXxAsXfU6tWy?=
- =?us-ascii?Q?9dFCWqtly6k309LXJivedZtpIVVo5uS6+2rbPFglY2UqHVDHpJNXWZcuOVjx?=
- =?us-ascii?Q?d7pAqWITN/fv8n7+w4EfDXfIcz8whATEwNea+2FjOyNfQX/9+BtpLyy6GZJv?=
- =?us-ascii?Q?Pg7u/gt1aA6k6hS6F7PPa1rZG5p6C8TcdvcMqNPaQU2yZ8dlaa9bauYq5X16?=
- =?us-ascii?Q?dUrT2AUuziwCMJmVgq+ygTQnioozyV3HGJN8CIliiOipCfUJHoKSjyloEaEK?=
- =?us-ascii?Q?YFIRF6/0+JiEdGsHjNFY29bYstCVwzueiYtaqlf/J55sdLqZd6TUbagb3A6n?=
- =?us-ascii?Q?DTne8pPAPKK42WJyBJWsN4XQFYnRCs5Qc6FTWjm4LrfE3+I0YrF6gKAJq6fr?=
- =?us-ascii?Q?GlGYbPHz2PjrxIyIr2R7iRdpzWOVazBeqEwgncEoN85xrodn3T8VB/tzYcKI?=
- =?us-ascii?Q?XJg6w2+oJO71HoHKKlxrt7Ds/8nqGxGxDwIVbG4MDcVDYh9hMJ4OnEcaWHts?=
- =?us-ascii?Q?0sCLfHjcN8Cd9hz7B4DUxawcYadpCKxKTPGECaR4br8y/1IEc18gTYbafQ1Q?=
- =?us-ascii?Q?cFRzd0nt6iP+nzKBKZ0PBrB4TSmy4MJ9y6pRZFXfj09W721UCdpZP4+6i98a?=
- =?us-ascii?Q?FgEvikwXLC/T+bSDRGOjBcjNpCqw2Md1KUrzUJQAY8oCbwZCMvvUblXQtgp2?=
- =?us-ascii?Q?gzsikAjIOYnkba1Cc7BYI7OMMqwAFaSXubHsD+eiN0Vw6HAN7vmSjFHr3QJY?=
- =?us-ascii?Q?M9opMYpytxQgMxdSpd+FMHCCBiTaOOOl+0i1Bvgf+Mu04wfZl+nzLe5rXQjv?=
- =?us-ascii?Q?5r+rAyLSkmk=3D?=
+	=?us-ascii?Q?Aacv6e8Ex7UkZWTGriX7FwDU593PH4iOEUwZvbMX1VCzgLPDjOUbfVoj8agu?=
+ =?us-ascii?Q?U44c/p3F/ef3xuAaU1eEcCNLgxt60fiV+juasxGIY31V/SKzUb02TCEilYkI?=
+ =?us-ascii?Q?uLyZ57tHFpr4OqPmYQ8nECy/pdX1Y3LIpKkAbt0ZhDmZwhJhsqJSfxnYTRbb?=
+ =?us-ascii?Q?U0+6xsRos/gVVA5VvjC2x4Nt48IUBlYnCNCuwySxUkaCHArqp5OGqjc/QcQO?=
+ =?us-ascii?Q?pHS09+eomoWXi0WJrullCUaBNS8PbKCY2kQB1lRc/LaN1qlWVxVPHuY5bOVg?=
+ =?us-ascii?Q?Ap5oVXX/4d/lZoQ3WOa0Xr1DRHsovdKPNIaA1Siz+RYeNuaoxmY8ic2VpN+4?=
+ =?us-ascii?Q?SjFiM+9Nhgj69nYpc3h88p/Zj/u9wzdnEbqW7mMYpGKMPcxXPR+zUcIHSxdQ?=
+ =?us-ascii?Q?RBilBDlaJ9qgQlJ+EEj7NUuq+btA0WZ4eGd5vY90gT9iUElhKasAuozDZyeQ?=
+ =?us-ascii?Q?6PDENpz9QhIbtytX6DKkSqlSy99E5IiTE4coA+4ug9RIR+/5szgs16meBRLI?=
+ =?us-ascii?Q?v3jEJ23w0DT984ZO+0hKrTLhQpCUtG8FvVtQg5Jkw6koTPZHbjZ75LXS2S02?=
+ =?us-ascii?Q?8CBUUS4VnLY2xo5EwQZ5hALYywVpH2NW4sWCjqgiQvxXtaBphpiL4wDOcPF5?=
+ =?us-ascii?Q?Ixb6xVTVycbEw6zs5L7wGL5e4V8sN1vg9mgRwp5XpFjcBsDm/KB0fTq80ArS?=
+ =?us-ascii?Q?u2M8lTZSNpcbpcFtcPM528v3TJlERHCFp8rWAjbuFjD8YIh+RF+dUa9VORMA?=
+ =?us-ascii?Q?q41h1NSFIZZwBxJXOKTGTPfoiC6cK143HZucRPY1NDqfhKDcsE4QKF4Vylix?=
+ =?us-ascii?Q?w1Lmx/rc2wXFKR48GRhFlKv0YNNT1jDqYVdtus7mS0Kgpl/Aua9KqTSHjCdV?=
+ =?us-ascii?Q?tHBof5FE2mYwCHlleWX026YF0O3EMGxkWgpvxR8+qTWBNpjX+VH5cthAsjtO?=
+ =?us-ascii?Q?IxIjJtUHtU60xBUwev1g4EWXoMr8KidtntPujmPPpT8fZkWpQckTP04lwKmG?=
+ =?us-ascii?Q?KpQRlKAjyubwHzIHupNYtghTZqVlo+Gz1ROlrpsM5fNIqDNHpUdDc+sRL5d/?=
+ =?us-ascii?Q?DjvX/s9Q9sCef2/Tm++nKqqvniE6drju5tE8Ek4yrZS1ULKMcfbTvh+e40ch?=
+ =?us-ascii?Q?zzpNIaw5fGcfc0IrkpT/6nr+SziZfxittU/O1DLeLBRY2PBS9/nbCWqWAHt9?=
+ =?us-ascii?Q?ZfwZuHdAQoqLU7T8VxdX2efIYXxkIb9d6J99J9S1DQc5bVNUmWr6nlUtnD1v?=
+ =?us-ascii?Q?1hsd1gzMUdFO7r4H1yRo4iNY/mQBM7R4rdAAoLU0uhX7xY5BHhnhnya5Zt6U?=
+ =?us-ascii?Q?f4vaFOFvzuf7V2kD11lxl0fPAOCAUeptp5XRgxEZC2YAIfsuseUK7nIhOIKM?=
+ =?us-ascii?Q?f2MP53PrtoZP7vek1s6JpehT28KTJb6QA9xrHrTHEZMTI8BIwJcf9E0XFtNy?=
+ =?us-ascii?Q?QCuON1oAbEVJQ0PYEG24o5B/UthBZla4H87QXl6A7UdUTVc2We9Q6A=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8822.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(7416014)(376014)(19092799006)(1800799024)(7053199007)(38350700014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8822.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(52116014)(19092799006)(1800799024)(38350700014)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9ARU4SxBtb28v4iZvXTKOTqZDQUfpZjDf53rMbu8iR5jcs/2VEuULiftzSES?=
- =?us-ascii?Q?/8pUEpMcVJceXZOpFchHnyWDWSJCAOgNom9U1rot1cohW0pyK8Ty6x+LXuAE?=
- =?us-ascii?Q?PeH8BeH9Oism0/oy8ckQ5KfHeBhCqPhAp3Zcfzz3TnSo+Rsz1sVF1KmtGgQv?=
- =?us-ascii?Q?EkNPOSJj/3RpzAkc1lMN+L4gcTrwVnKIiYaf9m+pti0IRLxDzk3qO966am13?=
- =?us-ascii?Q?nu/sHYtq+ENPbkhN8m0uZOn/S9ngjm9YzDg3Rghvt8+WAWs1eUXZUkLELUK0?=
- =?us-ascii?Q?wWxgCEKRnKk0HdUH86G2/TmK1b0ldqxH/bBxc5cxibJIc6oRlVWEjQVcV6AF?=
- =?us-ascii?Q?RePEjLUt/ulJyB9e8nKsui/LOJPUBOdYkopaewQNE6uQzenjtKD0256EKWFz?=
- =?us-ascii?Q?F6xunFV0UwXXz3l/N2p2uVKiaRSVjRRdFCTOPWfYKhzNiqLDJeUQI+HnwO0D?=
- =?us-ascii?Q?/Zl1eRWfWH7lF8Yrs/GV1QGNIt/VfgrYMPFBrOhnu6LMUc1r/l4rz7lBMh3b?=
- =?us-ascii?Q?T6LpikKcRVm1t0+ZzARExIZHy0d6Pz0pIfZO1A87giPIECyw6og3cyuicuiq?=
- =?us-ascii?Q?8/3+f5tvnhQZz5lbKI+g8EjUwD0FDUzwRggrBghbHjPA8DYNFJnBY1IUgXNQ?=
- =?us-ascii?Q?Gv9VC5ypRZsCLo8hw7sVC2Cz69BR4lUsFagoFFxWgliymwhLLAKYWoqO/zFr?=
- =?us-ascii?Q?5uy5K/dP0A5jj9UPKTkVh1kngVnpHji2xgDywGzYjWkM25wlm7nD/B/jDBX3?=
- =?us-ascii?Q?RY7Q6KHZ2D1sc8fjaN0BkdsVxOvKmhJtX+AgB57C6cm0JzIzNRb1CI4SSRTD?=
- =?us-ascii?Q?k4AvAJ9cYn280sBZgLf+wfluwY0y+t4g8NSn5UC/TQF4jDR1e3StjYQ/H4Qp?=
- =?us-ascii?Q?xJ2EtczHG3J/2XN0bQMjoX7CErRMgMnOwmCv/xiWVng0fM9ZmrmjLP37hVMj?=
- =?us-ascii?Q?H14FY7Rwif6QUxkzhNagf54zEyBcBpBohkgTtU4kvybE9poWiauIhRXABRV4?=
- =?us-ascii?Q?AJXVY2q2J8E12hA1sMk8Cz8xp6CMcEZgca2p4EiFhFXy1DQB4CL9wQ2XRi4d?=
- =?us-ascii?Q?pLM3xNf9ghCrck4eIz1hZOJbCYugUjWWLpAillms4Kbr6Eg3CfFQjLCQEm/5?=
- =?us-ascii?Q?78kEvI8FKyvAPgSOrf8cehlMx6mnQSvx6cNmK+C3dcEJvRYNnRBcG/Fc9OdI?=
- =?us-ascii?Q?cumSHEL1DNlrBEf4+KMNcTJiOW0C4O8j788jMI8wdR/vPUS8WYMK4IueJ41l?=
- =?us-ascii?Q?aivX+2snItGxN3tqlof1acSyEC0hZ9wJ1zJNC2vIFy5mq8eq/Q3qAdwDP9an?=
- =?us-ascii?Q?/LXh+Hk3ybONer2uhaApmGlZ3t9K0HfblwIy9bCzpM3rOktG3QLZd6CJ9U+s?=
- =?us-ascii?Q?B6ZAkkSYjPfflppm+zoWhZ88Yj46F9JLvBohCaH3PNv4saXLhifA/RQaQIwn?=
- =?us-ascii?Q?iQjqwhO5TYvl4fFiOAH4G6gnd+UCJLWztOzLbJ2egl3AjvzbyHAp2B8pcDgA?=
- =?us-ascii?Q?wMDRco/fSALBilpMkDEAv5mUisVwx0dt2wqomRfWaTlCwzDhuZD9ICMVmTgt?=
- =?us-ascii?Q?EG7ar+hNWcY+P+ZnS9x7qFsge4dYAI0CozQuySGU?=
+	=?us-ascii?Q?V6fmcDMzwDaweU0MUYgooTVhjrl60FJdjdWecXbJJiPJLm0yUq766cZhxPtJ?=
+ =?us-ascii?Q?4bLaYLjM4UqrCb5zb5DbiCuNVx4moiresL986+R2005E07UlTr0uyqNMNrFo?=
+ =?us-ascii?Q?9jnVCHnOBBjSg/PXKrJ34lsxn4kQqADP7qJ36lEyJhJh7YA4r9Y2jdAmCxop?=
+ =?us-ascii?Q?uJSCq3JP+AWdynEk8zB4uPD6EAtXSofISAZGmdsnHsDHvm5hqCLft9wXAQkv?=
+ =?us-ascii?Q?xH0eACC4mvj3bs56TioIwOWKxpWI2VFifSEO4HVSdplw3GgimFbIgGiO9yAb?=
+ =?us-ascii?Q?/FkzYx6frck+D2mJcndbDYUoR2DFYfasrC2quF/W5oCqt7loyFTWhNMaDqf4?=
+ =?us-ascii?Q?ciqEOS0ZywvUsjSlf21zDHw25CFHPR9an2Zrh5RVHHcM/4FprIzHwFf9b0JF?=
+ =?us-ascii?Q?DEvOd09d04wUwaFml3WmPqdt0m8lCtQdeLCF4UaKX9oF1mM7iVEXg6OovBlh?=
+ =?us-ascii?Q?nIYrnf+JFCtpeiD7SHCHp6e+qNkhtrQbMhtp+UJTpkLBmlaVbpP/wsJIBoJC?=
+ =?us-ascii?Q?dLF5RQLUWibRqtJqNI8IaEWZMTfMTM2ICFsXyCmHAScUn/pSLEZ2nETLKdEY?=
+ =?us-ascii?Q?d/NygoHjR1xBCQZVluEW9M9Omsb0Opc75WRqu1wwt1KLB0MigrXt14NQc0dW?=
+ =?us-ascii?Q?GL932J2jPPUKqUU4qX/NdcsAjUE/MslC0O8shrIWTaXFmIdRQ2IKeh8/xh0h?=
+ =?us-ascii?Q?2mtvNtWeJpfzdArQElgTzpVWC4WhTTPJo657epv7lOdBQ9ue8z2+HVuTELbZ?=
+ =?us-ascii?Q?rsptIDx93T50FzqAeAQoKTUS08JGlXVQCEp1OZ3DnI37zRHXsHfPD+J193Ll?=
+ =?us-ascii?Q?/Reztn4zgOrz+stR/VVUvEGDy92lXhpVUBiZTIvihTXUkvlJwxcvP+JppvGM?=
+ =?us-ascii?Q?1TyWq/E6TYMHJPstecC+PCMfrSx4W2P3fmPPhphA4D98mGK5Q1fsOUjjDmgR?=
+ =?us-ascii?Q?g/tNXhFWMBarr5fydRKaH7IS+c6p9le8i8SxabE9RBLMggWBBaHhBwi+gsvQ?=
+ =?us-ascii?Q?o8FNR1pZki7JbsbpyyNboCYKGEYc/lHjmA8A1p48D5wYCo6Z4P8Eydi8ZzjP?=
+ =?us-ascii?Q?2Xq3OThewFuS5pEOhFYMjqf7tkDJMGzP3NqwznvXpkjYl4qHHL8UAKG0q+yv?=
+ =?us-ascii?Q?cAgDTQRADnynChc4guNgEK43+KAA4+2wB33NWycC2OKKSyEMq7LeA3fIclZK?=
+ =?us-ascii?Q?jPbHc+7mUzk7qq+QvC11bebQwCv7IiwpAvVt3y/ZproFx1m3cv8zoZl7N2TW?=
+ =?us-ascii?Q?kMYo85T9jAFY9/hK7ffDxJuW4bQYGn7FpyFvIwa4nN5elnrj/TdBaxAmw7TH?=
+ =?us-ascii?Q?WO/QwyUv8jsx/UBQmlSuC/CY6SugkQ+Hkzb28uYUAWRKuw96GyN0nsa9UI8C?=
+ =?us-ascii?Q?grXLszlL5CW34Wb6EzimRvokhcC0oiZaU/H4CmjH/+2QfAhmkymmFgGppMQp?=
+ =?us-ascii?Q?Cu6l5eEqisKWhBggZcSNsNyF4bjBXO2fUQeMl5wgxTqdjEc7gFXRSLk3I6XE?=
+ =?us-ascii?Q?5S/8J8Qrho/aJOCxOXWnFQUy7fIj3kzhzxagwiwuRFxpoBgfTTBFMYQRI0Qo?=
+ =?us-ascii?Q?Rtjh5eCD/2oV8Dp+66hSryhkabS8Snm2XDseuFGB?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad26d051-44fb-467f-1c55-08ddcb3d5b9f
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1726fd2-500e-4002-7b30-08ddcb3ecc09
 X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8822.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jul 2025 05:37:35.3037
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jul 2025 05:47:52.9942
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: K3FeqYmt+eLiyeKu409KXgggTpZUmdf9REMh6YLS8vzQ2AbpjOQYZBeWl2jVhXL5Gn1/j1Y0bh8RxEmbiZc5EQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB9054
+X-MS-Exchange-CrossTenant-UserPrincipalName: w6gyoEtv+YBTqdvDc33eYZyov7/Ds35JxEACMjvDdWiN2FteqzLq9NZodazg+5BmtwhYsi/dImdWWafyc+sljw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8079
 
 Hi Ian,
 
-On Wed, Jul 23, 2025 at 04:22:12PM -0700, Ian Rogers wrote:
-> The perf ilist command is a textual app [1] similar to perf list. In
-> the top-left pane a tree of PMUs is displayed. Selecting a PMU expands
-> the events within it. Selecting an event displays the `perf list`
-> style event information in the top-right pane.
-> 
-> When an event is selected it is opened and the counters on each CPU
-> the event is for are periodically read. The bottom of the screen
-> contains a scrollable set of sparklines showing the events in total
-> and on each CPU. Scrolling below the sparklines shows the same data as
-> raw counts. The sparklines are small graphs where the height of the
-> bar is in relation to maximum of the other counts in the graph.
-> 
-> By default the counts are read with an interval of 0.1 seconds (10
-> times per second). A -I/--interval command line option allows the
-> interval to be changed. The oldest read counts are dropped when the
-> counts fill the line causing the sparkline to move from right to left.
-> 
-> A search box can be pulled up with the 's' key. 'n' and 'p' iterate
-> through the search results. As some PMUs have hundreds of events a 'c'
-> key will collapse the events in the current PMU to make navigating the
-> PMUs easier.
-> 
-> [1] https://textual.textualize.io/
+On Wed, Jul 23, 2025 at 04:22:16PM -0700, Ian Rogers wrote:
+> The metrics function returns a list dictionaries describing metrics as
+> strings mapping to strings, except for metric groups that are a string
+> mapping to a list of strings. For example:
+> ```
+> >>> import perf
+> >>> perf.metrics()[0]
+> {'MetricGroup': ['Power'], 'MetricName': 'C10_Pkg_Residency',
+>  'PMU': 'default_core', 'MetricExpr': 'cstate_pkg@c10\\-residency@ / TSC',
+>  'ScaleUnit': '100%', 'BriefDescription': 'C10 residency percent per package'}
+> ```
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > ---
->  tools/perf/python/ilist.py | 392 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 392 insertions(+)
->  create mode 100755 tools/perf/python/ilist.py
+>  tools/perf/util/python.c | 83 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 83 insertions(+)
 > 
-> diff --git a/tools/perf/python/ilist.py b/tools/perf/python/ilist.py
-> new file mode 100755
-> index 000000000000..b21f4c93247e
-> --- /dev/null
-> +++ b/tools/perf/python/ilist.py
-> @@ -0,0 +1,392 @@
-> +#!/usr/bin/env python3
-> +# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-> +"""Interactive perf list."""
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index bee7c8a69bad..a8ba1379cf21 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -2073,7 +2073,90 @@ static PyObject *pyrf__parse_metrics(PyObject *self, PyObject *args)
+>  	return result;
+>  }
+>  
+> +static PyObject *pyrf__metrics_groups(const struct pmu_metric *pm)
+> +{
+> +	PyObject *groups = PyList_New(/*len=*/0);
+> +	const char *mg = pm->metric_group;
 > +
-> +import argparse
-> +from typing import Any, Dict, Tuple
-> +import perf
-> +from textual import on
-> +from textual.app import App, ComposeResult
-> +from textual.binding import Binding
-> +from textual.containers import Horizontal, HorizontalGroup, Vertical, VerticalScroll
-> +from textual.command import SearchIcon
-> +from textual.screen import ModalScreen
-> +from textual.widgets import Button, Footer, Header, Input, Label, Sparkline, Static, Tree
-> +from textual.widgets.tree import TreeNode
+> +	if (!groups)
+> +		return NULL;
 > +
-> +class ErrorScreen(ModalScreen[bool]):
-> +    """Pop up dialog for errors."""
+> +	while (mg) {
+> +		PyObject *val = NULL;
+> +		const char *sep = strchr(mg, ';');
+> +		size_t len = sep ? (size_t)(sep - mg) : strlen(mg);
 > +
-> +    CSS="""
-> +    ErrorScreen {
-> +        align: center middle;
-> +    }
-> +    """
-> +    def __init__(self, error: str):
-> +        self.error = error
-> +        super().__init__()
+> +		if (len > 0) {
+> +			val = PyUnicode_FromStringAndSize(mg, len);
+> +			if (val)
+> +				PyList_Append(groups, val);
 > +
-> +    def compose(self) -> ComposeResult:
-> +        yield Button(f"Error: {self.error}", variant="primary", id="error")
+> +			Py_XDECREF(val);
+> +		}
+> +		mg = sep ? sep + 1 : NULL;
+> +	}
+> +	return groups;
+> +}
 > +
-> +    def on_button_pressed(self, event: Button.Pressed) -> None:
-> +        self.dismiss(True)
+> +static int pyrf__metrics_cb(const struct pmu_metric *pm,
+> +			    const struct pmu_metrics_table *table __maybe_unused,
+> +			    void *vdata)
+> +{
+> +	PyObject *py_list = vdata;
+> +	PyObject *dict = PyDict_New();
+> +	PyObject *key = dict ? PyUnicode_FromString("MetricGroup") : NULL;
+> +	PyObject *value = key ? pyrf__metrics_groups(pm) : NULL;
 > +
+> +	if (!value || PyDict_SetItem(dict, key, value) != 0) {
+> +		Py_XDECREF(key);
+> +		Py_XDECREF(value);
+> +		Py_XDECREF(dict);
+> +		return -ENOMEM;
+> +	}
 > +
-> +class SearchScreen(ModalScreen[str]):
-> +    """Pop up dialog for search."""
+> +	if (!add_to_dict(dict, "MetricName", pm->metric_name) ||
+> +	    !add_to_dict(dict, "PMU", pm->pmu) ||
+> +	    !add_to_dict(dict, "MetricExpr", pm->metric_expr) ||
+> +	    !add_to_dict(dict, "MetricThreshold", pm->metric_threshold) ||
+> +	    !add_to_dict(dict, "ScaleUnit", pm->unit) ||
+> +	    !add_to_dict(dict, "Compat", pm->compat) ||
+> +	    !add_to_dict(dict, "BriefDescription", pm->desc) ||
+> +	    !add_to_dict(dict, "PublicDescription", pm->long_desc) ||
+> +	    PyList_Append(py_list, dict) != 0) {
+> +		Py_DECREF(dict);
+> +		return -ENOMEM;
+> +	}
+> +	Py_DECREF(dict);
+> +	return 0;
+> +}
 > +
-> +    CSS="""
-> +    SearchScreen Horizontal {
-> +        align: center middle;
-> +        margin-top: 1;
-> +    }
-> +    SearchScreen Input {
-> +        width: 1fr;
-> +    }
-> +    """
-> +    def compose(self) -> ComposeResult:
-> +        yield Horizontal(SearchIcon(), Input(placeholder="Event name"))
+> +static PyObject *pyrf__metrics(PyObject *self, PyObject *args)
+> +{
+> +	const struct pmu_metrics_table *table = pmu_metrics_table__find();
+> +	PyObject *list = PyList_New(/*len=*/0);
+> +	int ret;
 > +
-> +    def on_input_submitted(self, event: Input.Submitted) -> None:
-> +        """Handle the user pressing Enter in the input field."""
-> +        self.dismiss(event.value)
+> +	if (!list)
+> +		return NULL;
 > +
-> +
-> +class Counter(HorizontalGroup):
-> +    """Two labels for a CPU and its counter value."""
-> +
-> +    CSS="""
-> +    Label {
-> +        gutter: 1;
-> +    }
-> +    """
-> +
-> +    def __init__(self, cpu: int) -> None:
-> +        self.cpu = cpu
-> +        super().__init__()
-> +
-> +    def compose(self) -> ComposeResult:
-> +        label = f"cpu{self.cpu}" if self.cpu >= 0 else "total"
-> +        yield Label(label + " ")
-> +        yield Label("0", id=f"counter_{label}")
-> +
-> +
-> +class CounterSparkline(HorizontalGroup):
-> +    """A Sparkline for a performance counter."""
-> +
-> +    def __init__(self, cpu: int) -> None:
-> +        self.cpu = cpu
-> +        super().__init__()
-> +
-> +    def compose(self) -> ComposeResult:
-> +        label = f"cpu{self.cpu}" if self.cpu >= 0 else "total"
-> +        yield Label(label)
-> +        yield Sparkline([], summary_function=max, id=f"sparkline_{label}")
-> +
-> +
-> +class IListApp(App):
-> +    TITLE = "Interactive Perf List"
-> +
-> +    BINDINGS = [
-> +        Binding(key="s", action="search", description="Search",
-> +                tooltip="Search events and PMUs"),
-> +        Binding(key="n", action="next", description="Next",
-> +                tooltip="Next search result or item"),
-> +        Binding(key="p", action="prev", description="Previous",
-> +                tooltip="Previous search result or item"),
-> +        Binding(key="c", action="collapse", description="Collapse",
-> +                tooltip="Collapse the current PMU"),
-> +        Binding(key="^q", action="quit", description="Quit",
-> +                tooltip="Quit the app"),
-> +    ]
-> +
-> +    CSS = """
-> +        /* Make the 'total' sparkline a different color. */
-> +        #sparkline_total > .sparkline--min-color {
-> +            color: $accent;
-> +        }
-> +        #sparkline_total > .sparkline--max-color {
-> +            color: $accent 30%;
-> +        }
-> +        /*
-> +         * Make the active_search initially not displayed with the text in
-> +         * the middle of the line.
-> +         */
-> +        #active_search {
-> +            display: none;
-> +            width: 100%;
-> +            text-align: center;
-> +        }
-> +    """
-> +
-> +    def __init__(self, interval: float) -> None:
-> +        self.interval = interval
-> +        self.evlist = None
-> +        self.search_results: list[TreeNode[str]] = []
-> +        self.cur_search_result: TreeNode[str] | None = None
-> +        super().__init__()
-> +
-> +
-> +
+> +	ret = pmu_metrics_table__for_each_metric(table, pyrf__metrics_cb, list);
+> +	if (ret) {
+> +		Py_DECREF(list);
+> +		errno = -ret;
+> +		PyErr_SetFromErrno(PyExc_OSError);
+> +		return NULL;
+> +	}
 
-Nit: could you keep consistent blank line code style? Because I see 3
-blank line here and 2 or 1 blank line elsewhere.
+Could the system metric be supported?
 
-Refer to:
-https://peps.python.org/pep-0008/#blank-lines
+I notice that "perf list metric" shows some system metrics, but this python
+binding doesn't show these metrics:
+
+root@imx93evk:~/python# perf list metric
+
+List of pre-defined events (to be used in -e or -M):
+
+Metrics:
+
+  imx93_bandwidth_usage.lpddr4x
+       [bandwidth usage for lpddr4x evk board]
+  imx93_ddr_read.all
+       [bytes all masters read from ddr]
+  imx93_ddr_write.all
+       [bytes all masters write to ddr]
+
+root@imx93evk:~/python# python3
+>>> import perf
+>>> perf.metrics()
+[]
+>>>
+
+If I add below code here, it can be shown too.
+
+pmu_for_each_sys_metric(pyrf__metrics_cb, list);
 
 Thanks,
 Xu Yang
 
-> +    def expand_and_select(self, node: TreeNode[Any]) -> None:
-> +        """Expand select a node in the tree."""
-> +        if node.parent:
-> +            node.parent.expand()
-> +            if node.parent.parent:
-> +                node.parent.parent.expand()
-> +        node.expand()
-> +        node.tree.select_node(node)
-> +        node.tree.scroll_to_node(node)
+> +	return list;
+> +}
 > +
-> +
-> +    def set_searched_tree_node(self, previous: bool) -> None:
-> +        """Set the cur_search_result node to either the next or previous."""
-> +        l = len(self.search_results)
-> +
-> +        if l < 1:
-> +            tree: Tree[str] = self.query_one("#pmus", Tree)
-> +            if previous:
-> +                tree.action_cursor_up()
-> +            else:
-> +                tree.action_cursor_down()
-> +            return
-> +
-> +        if self.cur_search_result:
-> +            idx = self.search_results.index(self.cur_search_result)
-> +            if previous:
-> +                idx = idx - 1 if idx > 0 else l - 1
-> +            else:
-> +                idx = idx + 1 if idx < l - 1 else 0
-> +        else:
-> +            idx = l - 1 if previous else 0
-> +
-> +        node = self.search_results[idx]
-> +        if node == self.cur_search_result:
-> +            return
-> +
-> +        self.cur_search_result = node
-> +        self.expand_and_select(node)
-> +
-> +    def action_search(self) -> None:
-> +        """Search was chosen."""
-> +        def set_initial_focus(event: str | None) -> None:
-> +            """Sets the focus after the SearchScreen is dismissed."""
-> +
-> +            search_label = self.query_one("#active_search", Label)
-> +            search_label.display = True if event else False
-> +            if not event:
-> +                return
-> +            event = event.lower()
-> +            search_label.update(f'Searching for events matching "{event}"')
-> +
-> +            tree: Tree[str] = self.query_one("#pmus", Tree)
-> +            def find_search_results(event: str, node: TreeNode[str], \
-> +                                    cursor_seen: bool = False, \
-> +                                    match_after_cursor: TreeNode[str] | None = None) \
-> +                    -> Tuple[bool, TreeNode[str] | None]:
-> +                """Find nodes that match the search remembering the one after the cursor."""
-> +                if not cursor_seen and node == tree.cursor_node:
-> +                    cursor_seen = True
-> +                if node.data and event in node.data:
-> +                    if cursor_seen and not match_after_cursor:
-> +                        match_after_cursor = node
-> +                    self.search_results.append(node)
-> +
-> +                if node.children:
-> +                    for child in node.children:
-> +                        (cursor_seen, match_after_cursor) = \
-> +                            find_search_results(event, child, cursor_seen, match_after_cursor)
-> +                return (cursor_seen, match_after_cursor)
-> +
-> +            self.search_results.clear()
-> +            (_ , self.cur_search_result) = find_search_results(event, tree.root)
-> +            if len(self.search_results) < 1:
-> +                self.push_screen(ErrorScreen(f"Failed to find pmu/event {event}"))
-> +                search_label.display = False
-> +            elif self.cur_search_result:
-> +                self.expand_and_select(self.cur_search_result)
-> +            else:
-> +                self.set_searched_tree_node(previous=False)
-> +
-> +        self.push_screen(SearchScreen(), set_initial_focus)
-> +
-> +
-> +    def action_next(self) -> None:
-> +        """Next was chosen."""
-> +        self.set_searched_tree_node(previous=False)
-> +
-> +
-> +    def action_prev(self) -> None:
-> +        """Previous was chosen."""
-> +        self.set_searched_tree_node(previous=True)
-> +
-> +
-> +    def action_collapse(self) -> None:
-> +        """Collapse the potentially large number of events under a PMU."""
-> +        tree: Tree[str] = self.query_one("#pmus", Tree)
-> +        node = tree.cursor_node
-> +        if node and node.parent and node.parent.parent:
-> +            node.parent.collapse_all()
-> +            node.tree.scroll_to_node(node.parent)
-> +
-> +
-> +    def update_counts(self) -> None:
-> +        """Called every interval to update counts."""
-> +        if not self.evlist:
-> +            return
-> +
-> +        def update_count(cpu: int, count: int):
-> +            # Update the raw count display.
-> +            counter: Label = self.query(f"#counter_cpu{cpu}" if cpu >= 0 else "#counter_total")
-> +            if not counter:
-> +                return
-> +            counter = counter.first(Label)
-> +            counter.update(str(count))
-> +
-> +            # Update the sparkline.
-> +            line: Sparkline = self.query(f"#sparkline_cpu{cpu}" if cpu >= 0 else "#sparkline_total")
-> +            if not line:
-> +                return
-> +            line = line.first(Sparkline)
-> +            # If there are more events than the width, remove the front event.
-> +            if len(line.data) > line.size.width:
-> +                line.data.pop(0)
-> +            line.data.append(count)
-> +            line.mutate_reactive(Sparkline.data)
-> +
-> +        # Update the total and each CPU counts, assume there's just 1 evsel.
-> +        total = 0
-> +        self.evlist.disable()
-> +        for evsel in self.evlist:
-> +            for cpu in evsel.cpus():
-> +                aggr = 0
-> +                for thread in evsel.threads():
-> +                    counts = evsel.read(cpu, thread)
-> +                    aggr += counts.val
-> +                update_count(cpu, aggr)
-> +                total += aggr
-> +        update_count(-1, total)
-> +        self.evlist.enable()
-> +
-> +
-> +    def on_mount(self) -> None:
-> +        """When App starts set up periodic event updating."""
-> +        self.update_counts()
-> +        self.set_interval(self.interval, self.update_counts)
-> +
-> +
-> +    def set_pmu_and_event(self, pmu: str, event: str) -> None:
-> +        """Updates the event/description and starts the counters."""
-> +        # Remove previous event information.
-> +        if self.evlist:
-> +            self.evlist.disable()
-> +            self.evlist.close()
-> +            lines = self.query(CounterSparkline)
-> +            for line in lines:
-> +                line.remove()
-> +            lines = self.query(Counter)
-> +            for line in lines:
-> +                line.remove()
-> +
-> +        def pmu_event_description(pmu: str, event: str) -> str:
-> +            """Find and format event description for {pmu}/{event}/."""
-> +            def get_info(info: Dict[str, str], key: str):
-> +                return (info[key] + "\n") if key in info else ""
-> +
-> +            for p in perf.pmus():
-> +                if p.name() != pmu:
-> +                    continue
-> +                for info in p.events():
-> +                    if "name" not in info or info["name"] != event:
-> +                        continue
-> +
-> +                    desc = get_info(info, "topic")
-> +                    desc += get_info(info, "event_type_desc")
-> +                    desc += get_info(info, "desc")
-> +                    desc += get_info(info, "long_desc")
-> +                    desc += get_info(info, "encoding_desc")
-> +                    return desc
-> +            return "description"
-> +
-> +        # Parse event, update event text and description.
-> +        full_name = event if event.startswith(pmu) or ':' in event else f"{pmu}/{event}/"
-> +        self.query_one("#event_name", Label).update(full_name)
-> +        self.query_one("#event_description", Static).update(pmu_event_description(pmu, event))
-> +
-> +        # Open the event.
-> +        try:
-> +            self.evlist = perf.parse_events(full_name)
-> +            if self.evlist:
-> +                self.evlist.open()
-> +                self.evlist.enable()
-> +        except:
-> +            self.evlist = None
-> +
-> +        if not self.evlist:
-> +            self.push_screen(ErrorScreen(f"Failed to open {full_name}"))
-> +            return
-> +
-> +        # Add spark lines for all the CPUs. Note, must be done after
-> +        # open so that the evlist CPUs have been computed by propagate
-> +        # maps.
-> +        lines = self.query_one("#lines")
-> +        line = CounterSparkline(cpu=-1)
-> +        lines.mount(line)
-> +        for cpu in self.evlist.all_cpus():
-> +            line = CounterSparkline(cpu)
-> +            lines.mount(line)
-> +        line = Counter(cpu=-1)
-> +        lines.mount(line)
-> +        for cpu in self.evlist.all_cpus():
-> +            line = Counter(cpu)
-> +            lines.mount(line)
-> +
-> +
-> +    def compose(self) -> ComposeResult:
-> +        """Draws the app."""
-> +        def pmu_event_tree() -> Tree:
-> +            """Create tree of PMUs with events under."""
-> +            tree: Tree[str] = Tree("PMUs", id="pmus")
-> +            tree.root.expand()
-> +            for pmu in perf.pmus():
-> +                pmu_name = pmu.name().lower()
-> +                pmu_node = tree.root.add(pmu_name, data=pmu_name)
-> +                try:
-> +                    for event in sorted(pmu.events(), key=lambda x: x["name"]):
-> +                        if "name" in event:
-> +                            e = event["name"].lower()
-> +                            if "alias" in event:
-> +                                pmu_node.add_leaf(f'{e} ({event["alias"]})', data=e)
-> +                            else:
-> +                                pmu_node.add_leaf(e, data=e)
-> +                except:
-> +                    # Reading events may fail with EPERM, ignore.
-> +                    pass
-> +            return tree
-> +
-> +        yield Header(id="header")
-> +        yield Horizontal(Vertical(pmu_event_tree(), id="events"),
-> +                         Vertical(Label("event name", id="event_name"),
-> +                                  Static("description", markup=False, id="event_description"),
-> +                                  ))
-> +        yield Label(id="active_search")
-> +        yield VerticalScroll(id="lines")
-> +        yield Footer(id="footer")
-> +
-> +
-> +    @on(Tree.NodeSelected)
-> +    def on_tree_node_selected(self, event: Tree.NodeSelected[str]) -> None:
-> +        """Called when a tree node is selected, selecting the event."""
-> +        if event.node.parent and event.node.parent.parent:
-> +            assert event.node.parent.data is not None
-> +            assert event.node.data is not None
-> +            self.set_pmu_and_event(event.node.parent.data, event.node.data)
-> +
-> +
-> +if __name__ == "__main__":
-> +    ap = argparse.ArgumentParser()
-> +    ap.add_argument('-I', '--interval', help="Counter update interval in seconds", default=0.1)
-> +    args = ap.parse_args()
-> +    app = IListApp(float(args.interval))
-> +    app.run()
+>  static PyMethodDef perf__methods[] = {
+> +	{
+> +		.ml_name  = "metrics",
+> +		.ml_meth  = (PyCFunction) pyrf__metrics,
+> +		.ml_flags = METH_NOARGS,
+> +		.ml_doc	  = PyDoc_STR(
+> +			"Returns a list of metrics represented as string values in dictionaries.")
+> +	},
+>  	{
+>  		.ml_name  = "tracepoint",
+>  		.ml_meth  = (PyCFunction) pyrf__tracepoint,
 > -- 
 > 2.50.0.727.gbf7dc18ff4-goog
 > 
