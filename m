@@ -1,55 +1,55 @@
-Received: from mail-qv1-f74.google.com (mail-qv1-f74.google.com [209.85.219.74])
+Received: from mail-qt1-f201.google.com (mail-qt1-f201.google.com [209.85.160.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6AB25DCE5
-	for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 20:28:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B78925F799
+	for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 20:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753475308; cv=none; b=WobVjuqJsH5blW+2cSv9lWGySVTgFH/YnxRypTKxbhlZ6pdH00lZF6p+gTtEqHczIAqhujNbxR/I6nC7SwGw94nmwwpjh8G+zM++mkaRFPOHOfFcGQYAFbXG+2OmZ1YDR4i7wtmVwTzrw/SFmeBuwPRmWZG8MSgQocOiLGeJVZY=
+	t=1753475310; cv=none; b=a6NVmEsHd2uFXX6oZyBsuxOrdhJWIchkGBZoUS2CBNmXjCeNAGdgREKGcBg0DfiHZgQUkkReCGDDFj7oshJ9USHWuRtX3ujIP7HgDZMfnuMr0pRs2Cw4bOXEQRi+Snyl0wydDT+pc2m9V3hflEVL4q11+i68GbUZhJ67vO2r4a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753475308; c=relaxed/simple;
-	bh=eqiNdrNNyNQ3rEI/7tgLzhp5UuUTLh3U4kfXBxwdLsM=;
+	s=arc-20240116; t=1753475310; c=relaxed/simple;
+	bh=lv54xUtQ3WONfNqydnskRHUhGzP6WkcXiLDmvg3vg48=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cABrOXJTEJ3KieUbv4LinsRfgBYYugRxe0Yvd1oI8FH0+/v9m9yT92hiEMIalBzFa1z4TNUY2RF+JS64aiA5gQolHDFDzHk7gNKpLAbZbaN0jDdcQFW/8rXVgMLOmJunvJfkBMZQCb8YcCRhsYS1vY4u203G+TbxAj44pH4ecPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BVyy4621; arc=none smtp.client-ip=209.85.219.74
+	 To:Cc:Content-Type; b=VZDAAzsdOS01W81dCWfS9OjQirWmVRp/vmZJZxl4nExPifgUE0lqZ4Zu02eI4kUjIEYNgOLMiUrhcQe8Z7/OH7dubiCzY7sWM6CRkKbaXVeAax1gQUKuLtMy/0NY4OJ7aj3iW8/mTlXYe7OjCm9jpFqKDIdI7C1QNwGpK3+wLAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vOuKzQCJ; arc=none smtp.client-ip=209.85.160.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BVyy4621"
-Received: by mail-qv1-f74.google.com with SMTP id 6a1803df08f44-7071f67a934so12135726d6.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 13:28:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vOuKzQCJ"
+Received: by mail-qt1-f201.google.com with SMTP id d75a77b69052e-4aba439b4ffso53407341cf.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 13:28:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753475306; x=1754080106; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1753475307; x=1754080107; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wAsAF9iZYEJs1sam0wHaYd1qu3uSk+JqG6BWLJsyAu8=;
-        b=BVyy4621QpGYwWyB72U/65hCMdWPlauIZUGXYdR6YePrkPcHxyfKXRNPiqj1k6Qcdv
-         I2sXaD6tIqVK1+IrPAsTi/xiiUKjvBeZe2llf/82kjq/8wfbH8fWX2q7lRwrkHgbbOWN
-         nUuG/yDzFzkylh1CrBczmEAcMANZs9JKuDtGWzM/9IfQ+x0SNrkeTR52dCjpDIt0Gt5y
-         9iSfY+pN/GkoZ84xqSh5XJYLDJ480mPaWlre3IrfQ3FzKWnS7LQBFpjGO/PyCmTEmUO3
-         +aY62aWP6AnwKkXZCwLpF0Q+2OrSWM0EuZxEZGN7G1tbSxxLUoGP4M5W3Ok+21R3qOmg
-         y9rQ==
+        bh=JgtV/JZRHlv0+PHl5j1NSg/A21YbT9f5uAr0q6A1H5c=;
+        b=vOuKzQCJCSQPTmbimUQnQG7eIkzupEINRwMU+azquzpWHJ+3F9jXssmZNCdhyurrgs
+         VJNkwGuQb69IZBHyzxrvX3H++z/Yhh1niFSQ6Z5t4p1BbiUDkc5MIs2GH2eKNA41ryW0
+         hjzkHF3wcZshawk/Yzn5YOHfWc5Zib/hTSWuxOgByheuBdzWvB0YDJQeWKfnNwGArQyv
+         JQfkgcKecE/M2T2g1R9kRij+Ya01OUR+Kd3WWhKNfTyQm9t2dqMqNHEjQhN8h4XxE2P+
+         PAWnA+DVvHOdHnIU1q5G5W68Nlf0y5sn7Nhi9DEKyKVBhFEI+a2mGgApB7HlDfyphp1c
+         aOlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753475306; x=1754080106;
+        d=1e100.net; s=20230601; t=1753475307; x=1754080107;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wAsAF9iZYEJs1sam0wHaYd1qu3uSk+JqG6BWLJsyAu8=;
-        b=J8ZaiU4fWmfriFAv9XBrpv3fQyCIt6P3TctpE6IMtVQu3ji5lYlDB51qyICkxAKDSw
-         28PfIY1/41XEz91opFVIteiJIlkILI8i44aOXYRKeu9d0pvQNomba10Qmckc81q/jInE
-         VzGYv0rFfnUYt4/Uh9ll+jDUUh/5xx7Gt2gpI1XARSy/AP5ipOvaK91tRPbi7udfrMW9
-         q6rhRbhjZzYVYyecpYvTdJYJMqzYIwwWUzKmuYgHX62F6Usu8ByGy4gl0ScSGvEdgkjf
-         NirLV+3rA4a+BJc/7TzAb7NEkGQZ1AZ2aPq+xqdCqA0q38xg+a/FPvotgN2+XYb6/y88
-         +Z4A==
-X-Forwarded-Encrypted: i=1; AJvYcCU8J1ACBgzfTU9EVXve59/ERT0QSIat5mmRAMcQkeOm3sbt+0/I8azcPguLu9qzfk5TCV/O8DJB8eQMrKjqF7xM@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfRggV8TzeIPY0afL4+Kbj5gq7WOkESOomKbUcGBTn+5T+ekxF
-	LSvgM3j+S4nt+mk3H/Jw+V8GcbCREPVWRE7CvkSLsfEVxmHI1ClMFqnde54fpEkFVozYENwVNNg
-	+ftKq6UkCpw==
-X-Google-Smtp-Source: AGHT+IFC21i9K0c6rPNOKxlTLDf5sxgCJsd5DNkYpywRCfVT8HRuIL0FCuuTh/eeK3uPHkKd3jeNZIkFY0nx
-X-Received: from qvbmn12.prod.google.com ([2002:a05:6214:5ecc:b0:704:88ad:4ae9])
- (user=zecheng job=prod-delivery.src-stubby-dispatcher) by 2002:a0c:e304:0:b0:707:ce0:d19b
- with SMTP id 6a1803df08f44-707204bde1bmr32951266d6.6.1753475306090; Fri, 25
- Jul 2025 13:28:26 -0700 (PDT)
-Date: Fri, 25 Jul 2025 20:28:08 +0000
+        bh=JgtV/JZRHlv0+PHl5j1NSg/A21YbT9f5uAr0q6A1H5c=;
+        b=cPLqs6ryNWIL7emBIX2Yb+oRe2bmPgN3nHHXxsDUkuRi9OwEdRrVakVDXdaHHbAhCR
+         Rk5EVYFc4LEwGhDEXw/t4p1IrLyHGGdHMesRNJPDZ2MVGRXs63JasLd+VO14HvTVPXJe
+         dgYE2rfryNUXRDmSkMtA8xYti8aW44L3LzlcHaQ8dsCeoUJ+wJ6+c5MkJ5NkKKH8IgZe
+         l870iwyOHHGboVK1XsgKaA8pJAhRQEvw1K8kJzimy4plJlpY1UJvZwaxhWiDPwpIRdjW
+         WQMcPboRr2pvabz9PhbYqmGdg/zF/lUxqNof2H23jE6KK5DJjoVj3UL3n8o5YaAmnthH
+         azhg==
+X-Forwarded-Encrypted: i=1; AJvYcCUsec+TsN+8tzJ99+5DEfXXBzghUiasmwB76r6mXKseQEQXE2j7Yp2C19zQW9SGaZRud2eJrr3UtBc63/q/rJuF@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsBQWeCvnya6sOzhjGl1dt74GFMZq1EZCejbiDoFvQ8FKhHbF3
+	vs4+S5nTXEuixQ2zvc9Ca9n5p48hX7SXXzKzqizBnjLMTfIScyfBYYd/pzlHLaZKDLHoNeN/26t
+	PysC9tV4m+A==
+X-Google-Smtp-Source: AGHT+IEaPavaGTYObiXIJE1ukWXvmgQePpoF9ZlEjnTtODAqdevAV+DR5yKu8V2x2kO3XF3fMCQqXamylvm1
+X-Received: from qtbfk17.prod.google.com ([2002:a05:622a:5591:b0:4a9:91da:e87e])
+ (user=zecheng job=prod-delivery.src-stubby-dispatcher) by 2002:a05:622a:1888:b0:4ab:b0a0:5b58
+ with SMTP id d75a77b69052e-4ae8f11e1efmr51406351cf.46.1753475307164; Fri, 25
+ Jul 2025 13:28:27 -0700 (PDT)
+Date: Fri, 25 Jul 2025 20:28:09 +0000
 In-Reply-To: <20250725202809.1230085-1-zecheng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250725202809.1230085-1-zecheng@google.com>
 X-Mailer: git-send-email 2.50.1.470.g6ba607880d-goog
-Message-ID: <20250725202809.1230085-6-zecheng@google.com>
-Subject: [PATCH v1 5/6] perf dwarf-aux: Find pointer type to a type
+Message-ID: <20250725202809.1230085-7-zecheng@google.com>
+Subject: [PATCH v1 6/6] perf annotate: Track arithmetic instructions on pointers
 From: Zecheng Li <zecheng@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,112 +73,353 @@ Cc: Zecheng Li <zli94@ncsu.edu>, Xu Liu <xliuprof@google.com>,
 	Zecheng Li <zecheng@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Implement die_find_pointer_to_type that searches for the pointer type to
-a given type in the CU. There's no guarantee that a pointer DIE exists
-for every possible base type. Compilers only generate DIEs for types
-actually used or defined.
+Track the arithmetic operations on registers with pointer types. We
+handle only add and lea instructions. The original pointer information
+needs to be preserved for getting outermost struct types. For example,
+reg0 points to a struct cfs_rq, when we add 0x10 to reg0, it should
+preserve the information of struct cfs_rq + 0x10 in the register instead
+of a pointer type to the child field at 0x10.
 
-The performance could be improved by adding a cache for the pointer
-types. Currently its impact on the annotation time for vmlinux is low.
+Details:
+
+1.  struct type_state_reg now includes an offset, indicating if the
+    register points to the start or an internal part of its associated
+    type. This offset is used in mem to reg and reg to stack mem
+    transfers, and also applied to the final type offset.
+
+2.  lea offset(%sp/%fp), reg is now treated as taking the address of a
+    stack variable. It worked fine in most cases, but an issue with this
+    approach is the pointer type may not exist.
+
+3.  lea offset(%base), reg is handled by moving the type from %base and
+    adding an offset, similar to an add operation followed by a mov reg
+    to reg.
+
+4.  Non-stack variables from DWARF with non-zero offsets in their
+    location expressions are now accepted with register offset tracking.
+
+Limitation: Offset tracking for register moved to the stack is not yet
+implemented. Currently, moving an register with offset to the stack
+resolves to the member type, which worked in some of the cases. Strictly
+it should be a pointer to the immediate child member. Multi-register
+addressing modes in LEA are not supported.
 
 Signed-off-by: Zecheng Li <zecheng@google.com>
 ---
- tools/perf/util/dwarf-aux.c | 69 +++++++++++++++++++++++++++++++++++++
- tools/perf/util/dwarf-aux.h |  4 +++
- 2 files changed, 73 insertions(+)
+ tools/perf/arch/x86/annotate/instructions.c | 109 +++++++++++++++++++-
+ tools/perf/util/annotate-data.c             |  14 ++-
+ tools/perf/util/annotate-data.h             |   6 ++
+ 3 files changed, 120 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 4039dbd2b8c0..49d509839a85 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -2121,3 +2121,72 @@ Dwarf_Die *die_deref_ptr_type(Dwarf_Die *ptr_die, int offset,
+diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arch/x86/annotate/instructions.c
+index c6d403eae744..82fc0106a4de 100644
+--- a/tools/perf/arch/x86/annotate/instructions.c
++++ b/tools/perf/arch/x86/annotate/instructions.c
+@@ -248,6 +248,7 @@ static void update_insn_state_x86(struct type_state *state,
+ 			tsr = &state->regs[state->ret_reg];
+ 			tsr->type = type_die;
+ 			tsr->kind = TSR_KIND_TYPE;
++			tsr->offset = 0;
+ 			tsr->ok = true;
  
- 	return die_get_member_type(&type_die, offset, die_mem);
- }
+ 			pr_debug_dtp("call [%x] return -> reg%d",
+@@ -284,6 +285,7 @@ static void update_insn_state_x86(struct type_state *state,
+ 			    !strcmp(var_name, "this_cpu_off") &&
+ 			    tsr->kind == TSR_KIND_CONST) {
+ 				tsr->kind = TSR_KIND_PERCPU_BASE;
++				tsr->offset = 0;
+ 				tsr->ok = true;
+ 				imm_value = tsr->imm_value;
+ 			}
+@@ -291,6 +293,15 @@ static void update_insn_state_x86(struct type_state *state,
+ 		else
+ 			return;
+ 
++		/* Ignore add to non-pointer types like int */
++		if (dwarf_tag(&tsr->type) == DW_TAG_pointer_type &&
++		    src->reg1 != DWARF_REG_PC && tsr->kind == TSR_KIND_TYPE && !dst->mem_ref) {
++			tsr->offset += imm_value;
++			pr_debug_dtp("add [%x] offset %#"PRIx64" to reg%d",
++				     insn_offset, imm_value, dst->reg1);
++			pr_debug_type_name(&tsr->type, tsr->kind);
++		}
 +
-+struct find_pointer_type_data {
-+	/* DIE offset of the type we want to point to */
-+	Dwarf_Off target_type_offset;
-+	Dwarf_Die *found_die;
-+};
+ 		if (tsr->kind != TSR_KIND_PERCPU_BASE)
+ 			return;
+ 
+@@ -302,6 +313,7 @@ static void update_insn_state_x86(struct type_state *state,
+ 			 */
+ 			tsr->type = type_die;
+ 			tsr->kind = TSR_KIND_POINTER;
++			tsr->offset = 0;
+ 			tsr->ok = true;
+ 
+ 			pr_debug_dtp("add [%x] percpu %#"PRIx64" -> reg%d",
+@@ -311,6 +323,68 @@ static void update_insn_state_x86(struct type_state *state,
+ 		return;
+ 	}
+ 
++	if (!strncmp(dl->ins.name, "lea", 3)) {
++		struct type_state_reg *src_tsr;
++		int sreg = src->reg1;
 +
-+static int __die_find_pointer_to_type_cb(Dwarf_Die *die_mem, void *arg)
-+{
-+	struct find_pointer_type_data *data = arg;
-+	Dwarf_Attribute type_attr;
-+	Dwarf_Die type_die;
-+	Dwarf_Off ref_type_offset;
++		if (!has_reg_type(state, sreg) ||
++		    !has_reg_type(state, dst->reg1) ||
++		    !src->mem_ref)
++			return;
 +
-+	if (dwarf_tag(die_mem) != DW_TAG_pointer_type)
-+		return DIE_FIND_CB_CONTINUE;
++		src_tsr = &state->regs[sreg];
++		tsr = &state->regs[dst->reg1];
 +
-+	if (!dwarf_attr(die_mem, DW_AT_type, &type_attr))
-+		return DIE_FIND_CB_SIBLING;
++		tsr->copied_from = -1;
++		tsr->ok = false;
 +
-+	/* Get the DIE this pointer points to */
-+	if (!dwarf_formref_die(&type_attr, &type_die))
-+		return DIE_FIND_CB_SIBLING;
++		/* Case 1: Based on stack pointer or frame pointer */
++		if (sreg == fbreg || sreg == state->stack_reg) {
++			struct type_state_stack *stack;
++			int offset = src->offset - fboff;
 +
-+	ref_type_offset = dwarf_dieoffset(&type_die);
++			stack = find_stack_state(state, offset);
++			if (!stack)
++				return;
 +
-+	if (ref_type_offset != 0 && ref_type_offset == data->target_type_offset) {
-+		/* This die_mem is a pointer to the target type */
-+		if (data->found_die)
-+			*data->found_die = *die_mem;
-+		return DIE_FIND_CB_END;
++			/* TODO: the pointer type may not exist */
++			/* Now the register becomes a pointer to the stack variable */
++			if (!die_find_pointer_to_type(cu_die, &stack->type, &type_die))
++				return;
++
++			tsr->type = type_die;
++			tsr->kind = TSR_KIND_TYPE;
++			tsr->offset = 0;
++			tsr->ok = true;
++
++			pr_debug_dtp("lea [%x] -> reg%d points to %s + %#x on stack\n",
++					insn_offset, dst->reg1,
++					(sreg == fbreg) ? "fbreg" : "sp", offset);
++			pr_debug_type_name(&tsr->type, tsr->kind);
++		}
++		/* Case 2: Based on a register holding a typed pointer */
++		else if (has_reg_type(state, sreg) &&
++			 state->regs[sreg].ok &&
++			 state->regs[sreg].kind == TSR_KIND_TYPE) {
++
++			/* Check if the target type has a member at the new offset */
++			if (__die_get_real_type(&state->regs[sreg].type, &type_die) == NULL ||
++			    !die_get_member_type(&type_die,
++						 src->offset + src_tsr->offset, &type_die))
++				return;
++
++			tsr->type = src_tsr->type;
++			tsr->kind = TSR_KIND_TYPE;
++			tsr->offset = src->offset + src_tsr->offset;
++			tsr->ok = true;
++
++			pr_debug_dtp("lea [%x] -> reg%d points to reg%d + %#x\n",
++					insn_offset, dst->reg1, sreg, src->offset);
++			pr_debug_type_name(&tsr->type, tsr->kind);
++		}
++		return;
 +	}
 +
-+	return DIE_FIND_CB_SIBLING;
-+}
-+
-+/**
-+ * die_find_pointer_to_type - Find a DIE for a pointer to a given type
-+ * @cu_die: The compilation unit to search within.
-+ * @target_type: The DIE of the type you want to find a pointer to.
-+ * @result_die: Buffer to store the found DW_TAG_pointer_type DIE.
-+ *
-+ * Scans the children of the @cu_die for a DW_TAG_pointer_type DIE
-+ * whose DW_AT_type attribute references the @target_type.
-+ *
-+ * Return: @result_die if found, NULL otherwise.
-+ */
-+Dwarf_Die *die_find_pointer_to_type(Dwarf_Die *cu_die, Dwarf_Die *target_type,
-+				   Dwarf_Die *result_die)
-+{
-+	struct find_pointer_type_data data;
-+	Dwarf_Die search_mem;
-+
-+	if (!cu_die || !target_type || !result_die)
-+		return NULL;
-+
-+	data.target_type_offset = dwarf_dieoffset(target_type);
-+	if (data.target_type_offset == 0) {
-+		pr_debug("Target type DIE has no offset\n");
-+		return NULL;
-+	}
-+	data.found_die = result_die;
-+
-+	if (die_find_child(cu_die, __die_find_pointer_to_type_cb, &data, &search_mem))
-+		return result_die;
-+
-+	return NULL;
-+}
-+
-diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-index 892c8c5c23fc..7e1336ff276e 100644
---- a/tools/perf/util/dwarf-aux.h
-+++ b/tools/perf/util/dwarf-aux.h
-@@ -156,6 +156,10 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset, Dwarf_Die *die_m
- /* Return type info where the pointer and offset point to */
- Dwarf_Die *die_deref_ptr_type(Dwarf_Die *ptr_die, int offset, Dwarf_Die *die_mem);
+ 	if (strncmp(dl->ins.name, "mov", 3))
+ 		return;
  
-+/* Find a DIE for a pointer to a given type */
-+Dwarf_Die *die_find_pointer_to_type(Dwarf_Die *cu_die, Dwarf_Die *target_type,
-+				   Dwarf_Die *result_die);
-+
- /* Get byte offset range of given variable DIE */
- int die_get_var_range(Dwarf_Die *sp_die, Dwarf_Die *vr_die, struct strbuf *buf);
+@@ -345,6 +419,7 @@ static void update_insn_state_x86(struct type_state *state,
  
+ 			if (var_addr == 40) {
+ 				tsr->kind = TSR_KIND_CANARY;
++				tsr->offset = 0;
+ 				tsr->ok = true;
+ 
+ 				pr_debug_dtp("mov [%x] stack canary -> reg%d\n",
+@@ -361,6 +436,7 @@ static void update_insn_state_x86(struct type_state *state,
+ 
+ 			tsr->type = type_die;
+ 			tsr->kind = TSR_KIND_TYPE;
++			tsr->offset = 0;
+ 			tsr->ok = true;
+ 
+ 			pr_debug_dtp("mov [%x] this-cpu addr=%#"PRIx64" -> reg%d",
+@@ -372,6 +448,7 @@ static void update_insn_state_x86(struct type_state *state,
+ 		if (src->imm) {
+ 			tsr->kind = TSR_KIND_CONST;
+ 			tsr->imm_value = src->offset;
++			tsr->offset = 0;
+ 			tsr->ok = true;
+ 
+ 			pr_debug_dtp("mov [%x] imm=%#x -> reg%d\n",
+@@ -388,6 +465,7 @@ static void update_insn_state_x86(struct type_state *state,
+ 		tsr->type = state->regs[src->reg1].type;
+ 		tsr->kind = state->regs[src->reg1].kind;
+ 		tsr->imm_value = state->regs[src->reg1].imm_value;
++		tsr->offset = 0;
+ 		tsr->ok = true;
+ 
+ 		/* To copy back the variable type later (hopefully) */
+@@ -421,12 +499,14 @@ static void update_insn_state_x86(struct type_state *state,
+ 			} else if (!stack->compound) {
+ 				tsr->type = stack->type;
+ 				tsr->kind = stack->kind;
++				tsr->offset = 0;
+ 				tsr->ok = true;
+ 			} else if (die_get_member_type(&stack->type,
+ 						       offset - stack->offset,
+ 						       &type_die)) {
+ 				tsr->type = type_die;
+ 				tsr->kind = TSR_KIND_TYPE;
++				tsr->offset = 0;
+ 				tsr->ok = true;
+ 			} else {
+ 				tsr->ok = false;
+@@ -446,9 +526,10 @@ static void update_insn_state_x86(struct type_state *state,
+ 		else if (has_reg_type(state, sreg) && state->regs[sreg].ok &&
+ 			 state->regs[sreg].kind == TSR_KIND_TYPE &&
+ 			 die_deref_ptr_type(&state->regs[sreg].type,
+-					    src->offset, &type_die)) {
++					    src->offset + state->regs[sreg].offset, &type_die)) {
+ 			tsr->type = type_die;
+ 			tsr->kind = TSR_KIND_TYPE;
++			tsr->offset = 0;
+ 			tsr->ok = true;
+ 
+ 			pr_debug_dtp("mov [%x] %#x(reg%d) -> reg%d",
+@@ -473,6 +554,7 @@ static void update_insn_state_x86(struct type_state *state,
+ 
+ 			tsr->type = type_die;
+ 			tsr->kind = TSR_KIND_TYPE;
++			tsr->offset = 0;
+ 			tsr->ok = true;
+ 
+ 			pr_debug_dtp("mov [%x] global addr=%"PRIx64" -> reg%d",
+@@ -504,6 +586,7 @@ static void update_insn_state_x86(struct type_state *state,
+ 			    die_get_member_type(&type_die, offset, &type_die)) {
+ 				tsr->type = type_die;
+ 				tsr->kind = TSR_KIND_TYPE;
++				tsr->offset = 0;
+ 				tsr->ok = true;
+ 
+ 				if (src->multi_regs) {
+@@ -526,6 +609,7 @@ static void update_insn_state_x86(struct type_state *state,
+ 					     src->offset, &type_die)) {
+ 			tsr->type = type_die;
+ 			tsr->kind = TSR_KIND_TYPE;
++			tsr->offset = 0;
+ 			tsr->ok = true;
+ 
+ 			pr_debug_dtp("mov [%x] pointer %#x(reg%d) -> reg%d",
+@@ -548,6 +632,7 @@ static void update_insn_state_x86(struct type_state *state,
+ 							&var_name, &offset) &&
+ 				    !strcmp(var_name, "__per_cpu_offset")) {
+ 					tsr->kind = TSR_KIND_PERCPU_BASE;
++					tsr->offset = 0;
+ 					tsr->ok = true;
+ 
+ 					pr_debug_dtp("mov [%x] percpu base reg%d\n",
+@@ -571,6 +656,22 @@ static void update_insn_state_x86(struct type_state *state,
+ 			int offset = dst->offset - fboff;
+ 
+ 			tsr = &state->regs[src->reg1];
++			type_die = tsr->type;
++
++			/* The register is derived from a pointer to the type */
++			if (tsr->offset != 0) {
++				/*
++				 * deref gets the innermost field, but we actually want direct
++				 * child field and take a pointer to it.
++				 * However array type like unsigned long[] is already a pointer
++				 * and is the most common case for this kind of stack variable.
++				 */
++				if (die_deref_ptr_type(&tsr->type, tsr->offset, &type_die)) {
++					pr_debug_dtp("find member: tsr->offset: %d", tsr->offset);
++					pr_debug_type_name(&type_die, tsr->kind);
++				} else
++					return;
++			}
+ 
+ 			stack = find_stack_state(state, offset);
+ 			if (stack) {
+@@ -583,10 +684,10 @@ static void update_insn_state_x86(struct type_state *state,
+ 				 */
+ 				if (!stack->compound)
+ 					set_stack_state(stack, offset, tsr->kind,
+-							&tsr->type);
++							&type_die);
+ 			} else {
+ 				findnew_stack_state(state, offset, tsr->kind,
+-						    &tsr->type);
++						    &type_die);
+ 			}
+ 
+ 			if (dst->reg1 == fbreg) {
+@@ -596,7 +697,7 @@ static void update_insn_state_x86(struct type_state *state,
+ 				pr_debug_dtp("mov [%x] reg%d -> %#x(reg%d)",
+ 					     insn_offset, src->reg1, offset, dst->reg1);
+ 			}
+-			pr_debug_type_name(&tsr->type, tsr->kind);
++			pr_debug_type_name(&type_die, tsr->kind);
+ 		}
+ 		/*
+ 		 * Ignore other transfers since it'd set a value in a struct
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index 1ef2edbc71d9..9cb215e499ef 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -887,7 +887,7 @@ static void update_var_state(struct type_state *state, struct data_loc_info *dlo
+ 					     insn_offset, -offset);
+ 			}
+ 			pr_debug_type_name(&mem_die, TSR_KIND_TYPE);
+-		} else if (has_reg_type(state, var->reg) && var->offset == 0) {
++		} else if (has_reg_type(state, var->reg)) {
+ 			struct type_state_reg *reg;
+ 			Dwarf_Die orig_type;
+ 
+@@ -898,13 +898,17 @@ static void update_var_state(struct type_state *state, struct data_loc_info *dlo
+ 				continue;
+ 
+ 			orig_type = reg->type;
+-
++			/*
++			 * var->offset + reg value is the beginning of the struct
++			 * reg->offset is the offset the reg points
++			 */
++			reg->offset = -var->offset;
+ 			reg->type = mem_die;
+ 			reg->kind = TSR_KIND_TYPE;
+ 			reg->ok = true;
+ 
+-			pr_debug_dtp("var [%"PRIx64"] reg%d",
+-				     insn_offset, var->reg);
++			pr_debug_dtp("var [%"PRIx64"] reg%d at offset %d",
++				     insn_offset, var->reg, var->offset);
+ 			pr_debug_type_name(&mem_die, TSR_KIND_TYPE);
+ 
+ 			/*
+@@ -1092,7 +1096,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
+ 		if (__die_get_real_type(&state->regs[reg].type, type_die) == NULL)
+ 			return PERF_TMR_NO_POINTER;
+ 
+-		dloc->type_offset = dloc->op->offset;
++		dloc->type_offset = dloc->op->offset + state->regs[reg].offset;
+ 
+ 		if (dwarf_tag(type_die) == DW_TAG_typedef)
+ 			die_get_real_type(type_die, &sized_type);
+diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+index 541fee1a5f0a..a6df0491eebf 100644
+--- a/tools/perf/util/annotate-data.h
++++ b/tools/perf/util/annotate-data.h
+@@ -173,6 +173,12 @@ extern struct annotated_data_stat ann_data_stat;
+ struct type_state_reg {
+ 	Dwarf_Die type;
+ 	u32 imm_value;
++        /*
++         * The offset within the struct that the register points to.
++         * A value of 0 means the register points to the beginning.
++	 * type_offset = op->offset + reg->offset
++         */
++	s32 offset;
+ 	bool ok;
+ 	bool caller_saved;
+ 	u8 kind;
 -- 
 2.50.1.470.g6ba607880d-goog
 
