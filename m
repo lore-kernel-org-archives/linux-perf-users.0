@@ -1,63 +1,68 @@
 Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A296192D97
-	for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 08:26:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A989F2BEC4E
+	for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 08:26:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753431991; cv=none; b=Fk5TFG3m8HVI9ht5iffF3xDSGRs3orikE0sQn/9IrgfREpJH3iyxJ3wX2zho7XEgZsfsyLEZqEmwLRLke+ocjftekKsuZVpKLCSikrh3oFRtKfelkdnirkiEgfSsXm/+I8BiY6QvwZ6vq5YFYnmMPYIgBuTrkRgXz+SqohXYlFo=
+	t=1753431994; cv=none; b=u/0TABhKrHG3g37fYm62Vm6fN3WBVQsMViZ2gIEN0bgk1egTroy0xRkLQKQtjxJqRUeKPMuVKWOaUdoC3tQIVCy1dd3IqFrn6g4LzpxKm0/uIyE6tq/9wKHT2eOdZb7Z8O2BLqM1SUZU4NHw90zDdlcw7kgGcJ1KCDQIvW/rniA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753431991; c=relaxed/simple;
-	bh=odhf3rRUfOX5d37KNt5tf95pxR8MiXnCPf2TmRsMBH4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=rP2c1SK5c7KmDpJncgCSRIxFh9oclFwPjS26/AK7jubNejZFPoWc4+7A0ZvvxQEMV6wU+E9/b4MsqiIBgRaMJF3RyjagIh6v4bB78j1R6U/WG42kolMwDHFnK9/AbvWJq7Uy3CtuBci965nNrG596MxfvvP3LeNOdfmlnf+ejWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tpw0aDjG; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1753431994; c=relaxed/simple;
+	bh=jE7Hhzdaa6WcZLZXu96REkZw0oZ2q6K9ocYRpF1juaA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=MZAtmn//wWm/a2L9sXS2ZsZsB0ksI/+ayXlrIkb1CNsFZc2fffyEYyMXE4K0DgDa6oiAmiCP9JR5dn+JldL8ua5fA8ypjW/eQ1BfJZUPFGEqacmpYJSP6mgPuV+xOmWB9/HUl2aNbcQoF+hx/4+U98kaivLh73HcDqxJ97Uki/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WWlxDpF0; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tpw0aDjG"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-31e3fdf1906so1851353a91.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 01:26:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WWlxDpF0"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-31315427249so1855034a91.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 01:26:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753431990; x=1754036790; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=IADMlPbUfX5wO6hQ3MTh3Wg0t7hXEhtuY45C12JN0BE=;
-        b=tpw0aDjGWIaL2ylcRPUxNnfEW+yAePultzbmTyVgOjtvOyLs/llYklDRKSM2aK7pDE
-         bEB7GBGiTlK6e0On0NpKhW7HKNKuUNQe51Acxs1I1n19NCGxfYcNzv1t/A4LTpvRG8mV
-         K9bX0C1hqRf/x2QVm/ehyN4HwOlC2xE+SZQs1Ve37P7okBRyi+ydzUmHYQ8zFSIQXlVb
-         tbxOpQTL7AZUYiigwnE6AsPkchWMX9bKuE7dSxEXUbVI1xgeUXclIFmlWLGLwyKsdIuU
-         O6+YrV8VjewLmS2Cjh52KwkI5OnuFqrOLFHuxHZkrUfo8xb5LS/3vmh0E/tUixEZYFLd
-         n4XQ==
+        d=google.com; s=20230601; t=1753431992; x=1754036792; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=l1kwxcG/iGlrNbxT+8So+pNEb+6yQ1AuZR+BiaBFN+A=;
+        b=WWlxDpF03pVGiyZSAdXeJg+qFyLT//a2vyF8Yg50+tYky1UDMdopFhE06pkneJ/85i
+         tMcDKVtpl396zMWbOSBn5S3HgxSfqlCNIOaPlYUkBj2ri2W/PNj1zqPRTsRpOQ+710LH
+         nQZLDuNl4O4cv/cqwtuaQYHBJAffU8Oef/VTDq6Qcti7sniv68n0tCV11BnafDL98PCt
+         hTC7s1B+cyVmuKxqV8xLX5J8CYI+VH4nFm0YSlhnyy0/X8PuLmrs4CaJkGUI12HSMXv4
+         v5elksLRBzyaMngU+NnDfuO2mg9LRPNooPG/S/S2+lYXIxIiD3r8UbaDNx0+g2h7i5o5
+         3BPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753431990; x=1754036790;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IADMlPbUfX5wO6hQ3MTh3Wg0t7hXEhtuY45C12JN0BE=;
-        b=gYJyaIdGirVkzHxdOdTOcSXoAjI/BStOI0z1OyPiw0Aa/SdAEqVVz94JZEo47iqcHQ
-         wejRVS1QUY9NbiNstkXBJa/2YvgMtD07y/S8fB2wE1mUrXDIw7X+2dE4HbNE4cjbzwDa
-         DpFvQQ5lRGo63S8/QdNpG59f4K2MAz3CMIWW+gjpygTkih2YiwkbfyfYJt+MbDT6BDb7
-         b3Wa//LNeJhi40G7vl+bvi5lVB+2sgScBQnMRPUpddojDUoYo0OkdEiC4qh5pwsTBLdk
-         5MvYnQX995dFX/kfBjgG2zrAjmRtSVixasATQ7btAWO1VsRKXdGVuzu/cMbyVyMsu8ai
-         NTyw==
-X-Forwarded-Encrypted: i=1; AJvYcCWM6B5H46+f+b9QraC5Pq9hGoisdC1nQD3x5dsOOmn4l/72FkuYjBJFZawsYRsXiHq0bKLygD0AHK6nf0m4PCJ+@vger.kernel.org
-X-Gm-Message-State: AOJu0YzohvyYAe+bNxGHmrc6kJe3vuW6tNelUImmwoWSlf7sA8LEJD0E
-	d3lEW9sxymQVWEZFKTXVQyz9AVbyVVOECr0UTGnYQWHF2FrjwazL4vLRyhnSzh/ypsjtlS8DZ91
-	Tc98BkDCWxg==
-X-Google-Smtp-Source: AGHT+IGw1FJe/GrSKtt+0lg7LI1vDU9eduSaKdi/GRDoWHq35E0s1qO9SP9rvw8QX3pqffEC3yprU55Vr8Wh
-X-Received: from pjbhl4.prod.google.com ([2002:a17:90b:1344:b0:313:d6cf:4fa0])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:da8f:b0:313:f9fc:7213
- with SMTP id 98e67ed59e1d1-31e778f7864mr1580271a91.21.1753431989595; Fri, 25
- Jul 2025 01:26:29 -0700 (PDT)
-Date: Fri, 25 Jul 2025 01:24:04 -0700
+        d=1e100.net; s=20230601; t=1753431992; x=1754036792;
+        h=content-transfer-encoding:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=l1kwxcG/iGlrNbxT+8So+pNEb+6yQ1AuZR+BiaBFN+A=;
+        b=EYlVIhTAUQYBPO3a5dSUeo7kaHSqD86Hok5s6aAfpQ3nMgPfIlqj3XR4EdlQXfPJdW
+         SSNGfSIqdsbIEX/sphi3lAja0Bh1RCmjEsZkGioeLCxjAfxP5PzDSR6vvMteStGl5Prb
+         ePQAiwNSt+YsHTF0E/B+Y45WF4/AhTpEsYdJfpR3rSdXX8ZZz02E8jSxUfMCDOqaSxG0
+         rBRvgLGMx/F1QLauE4u6+zIrMjqO/clIH7EJ0GZ/+PEBW2lxFPZ0Bbd47ynbnViWY2pJ
+         Km0914i7e37m6KfcIsBa+Z3ZtQbnSDHN/MCazw4XGCWDrup04JvZOnWlRd/7heRyztXY
+         Grmg==
+X-Forwarded-Encrypted: i=1; AJvYcCUUgY0ffMxtz0EEIfpaBoeVA36+BIYIApiRxig6zZLfsrZSqMpMcfTZnIOwpkizXKgNvXT1PGmjRdMHftt+hxGe@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYXxm3ge5dwVXRYEA3VHdRxt7KPWEkBuADhaGKKlO1d9AqpwTh
+	WqEaKLw66YMzM5J4Rszd6C+0/8lAmLhWilnxuBLoREjz5eoj4QY0r+Rilk1+vkOxEAQnShNzg0X
+	HKQIE6ATVTw==
+X-Google-Smtp-Source: AGHT+IHAaMwMO1+sbqmgMIzB2wkyTQ+GP3sEHk6S8WjLbFNspRHmCQk2D7AhMmen9kr2CQ6LA72fqQnxd8A9
+X-Received: from pjbsw11.prod.google.com ([2002:a17:90b:2c8b:b0:31c:2fe4:33bd])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:37ce:b0:2ee:d371:3227
+ with SMTP id 98e67ed59e1d1-31e77af4429mr1762163a91.17.1753431991910; Fri, 25
+ Jul 2025 01:26:31 -0700 (PDT)
+Date: Fri, 25 Jul 2025 01:24:05 -0700
+In-Reply-To: <20250725082425.20999-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250725082425.20999-1-irogers@google.com>
 X-Mailer: git-send-email 2.50.1.552.g942d659e1b-goog
-Message-ID: <20250725082425.20999-1-irogers@google.com>
-Subject: [PATCH v1 1/2] perf script: New treport script
+Message-ID: <20250725082425.20999-2-irogers@google.com>
+Subject: [PATCH v1 2/2] perf script: treport add flamegraph support
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -67,207 +72,437 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Kan Liang <kan.liang@linux.intel.com>, Alice Rogers <alice.mei.rogers@gmail.com>, 
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
 From: Alice Rogers <alice.mei.rogers@gmail.com>
 
-A textual app that displays the results of processing samples similar
-to perf report. The app displays a tree of first processed and then
-functions which drop down to show more detail on the functions they
-call. The functions with the largest number of samples are sorted
-first, after each function the percentage of time spent within it is
-highlighted.
+Implement a flamegraph widget that recursively walks down a tree
+splitting line segments based on their value (summed up periods across
+call chains). A visitor pattern is used so that the same logic can
+both draw the line segments and locate which segment had a mouse
+click.
+
+Add a tab for the flame graph widget.
 
 Signed-off-by: Alice Rogers <alice.mei.rogers@gmail.com>
 Co-developed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/scripts/python/treport.py | 177 +++++++++++++++++++++++++++
- 1 file changed, 177 insertions(+)
- create mode 100644 tools/perf/scripts/python/treport.py
+ tools/perf/scripts/python/treport.py | 342 ++++++++++++++++++++++++++-
+ 1 file changed, 341 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/scripts/python/treport.py b/tools/perf/scripts/python/treport.py
-new file mode 100644
-index 000000000000..fd1ca79efdad
---- /dev/null
+diff --git a/tools/perf/scripts/python/treport.py b/tools/perf/scripts/pyth=
+on/treport.py
+index fd1ca79efdad..fd43a3dbe1c2 100644
+--- a/tools/perf/scripts/python/treport.py
 +++ b/tools/perf/scripts/python/treport.py
-@@ -0,0 +1,177 @@
-+# treport.py - perf report like tool written using textual
-+# SPDX-License-Identifier: MIT
-+from textual.app import App, ComposeResult
-+from textual.binding import Binding
-+from textual.widgets import Footer, Header, TabbedContent, TabPane, Tree
-+from textual.widgets.tree import TreeNode
-+from typing import Dict
+@@ -1,10 +1,40 @@
+ # treport.py - perf report like tool written using textual
+ # SPDX-License-Identifier: MIT
++from abc import ABC, abstractmethod
++from rich.segment import Segment
++from rich.style import Style
++from textual import events
+ from textual.app import App, ComposeResult
+ from textual.binding import Binding
++from textual.color import Color
++from textual.strip import Strip
+ from textual.widgets import Footer, Header, TabbedContent, TabPane, Tree
+ from textual.widgets.tree import TreeNode
+-from typing import Dict
++from textual.scroll_view import ScrollView
++from typing import Dict, Optional
 +
-+class ProfileNode:
-+    """Represents a single node in a call stack tree.
++def make_fixed_length_string(s: str, length: int, pad_char=3D' '):
++    """Make the string s a fixed length.
 +
-+    Generally a ProfileNode corresponds to a symbol in a call stack.
-+    The root is special, its children are events and the events
-+    children are process names. After the process name come the
-+    samples.
-+
-+    Attributes:
-+        name (str): The name of the function, process or event.
-+        value (int): The sample count for this node including counts from its
-+                     children.
-+        parent (ProfileNode): The parent of this node, this node belongs to its
-+                              children.
-+        children (Dict[str, ProfileNode]): A dictionary of child nodes, keyed by
-+                                           their names.
++    Increases or decreases the length of s to be length. If the length is
++    increased then pad_char is inserted on the right.
 +    """
-+    def __init__(self, name: str, parent: "ProfileNode"):
-+        """Initializes a ProfileNode."""
-+        self.name = name
-+        self.value: int = 0
-+        self.parent = parent if parent else self
-+        self.children: Dict[str, ProfileNode] = {}
++    return s[:length] if len(s) > length else s.ljust(length, pad_char)
 +
-+    def find_or_create_node(self, name: str) -> "ProfileNode":
-+        """Finds a child node by name or creates it if it doesn't exist."""
-+        if name in self.children:
-+            return self.children[name]
-+        child = ProfileNode(name, self)
-+        self.children[name] = child
-+        return child
 +
-+    def depth(self) -> int:
-+        """The maximum depth of the call stack tree from this node down."""
-+        if not self.children:
-+            return 1
-+        return max([child.depth() for child in self.children.values()]) + 1
-+
-+    def process_event(self, event: Dict) -> None:
-+        """Processes a single profiling event to update the call stack tree.
++class FlameVisitor(ABC):
++    """Parent for visitor used by ProfileNode.flame_walk"""
++    @abstractmethod
++    def visit(self, node: Optional["ProfileNode"], width: int) -> None:
++        """Visit a profile node width the specified flame graph width.
 +
 +        Args:
-+            event (Dict): A dictionary representing a single profiling sample,
-+                          expected to contain keys like 'comm', 'pid', 'period',
-+                          and 'callchain'.
++            node: The `ProfileNode` for the current segment. This may be `=
+None`
++                to represent a gap or an unknown portion of the stack.
++            width: The calculated width of the flame graph rectangle for t=
+his
++                node, which is proportional to its sample count.
 +        """
-+        pid = 0
-+        if "sample" in event and "pid" in event["sample"]:
-+            pid = event["sample"]["pid"]
 +
-+        if pid == 0:
-+            comm = event.get("comm", "kernel")
-+        else:
-+            comm = f"{event.get('comm', 'unknown')} ({pid})"
+=20
+ class ProfileNode:
+     """Represents a single node in a call stack tree.
+@@ -118,6 +148,314 @@ class ProfileNode:
+                             key=3Dlambda pnode: pnode.value, reverse=3DTru=
+e):
+             pnode.add_to_tree(new_node, root_value)
+=20
++    def largest_child(self) -> "ProfileNode":
++        """Finds the child with the highest value (sample count)."""
++        if self.children:
++            return max(self.children.values(), key=3Dlambda node: node.val=
+ue)
++        return self
 +
-+        period = int(event["period"]) if 'period' in event else 1
-+        self.value += period
++    def child_after(self, sought: "ProfileNode") -> "ProfileNode":
++        """Finds the next sibling after the given node, sorted by value.""=
+"
++        found =3D False
++        for child in sorted(self.children.values(), key=3Dlambda node: nod=
+e.value,
++                            reverse=3DTrue):
++            if child =3D=3D sought:
++                found =3D True
++            elif found:
++                return child
++        return sought
 +
-+        node = self.find_or_create_node(comm)
-+        node.value += period
++    def child_before(self, sought: "ProfileNode") -> "ProfileNode":
++        """Finds the previous sibling before the given node, sorted by val=
+ue."""
++        last =3D None
++        for child in sorted(self.children.values(), key=3Dlambda node: nod=
+e.value,
++                            reverse=3DTrue):
++            if child =3D=3D sought:
++                return last if last else sought
++            last =3D child
++        return sought
 +
-+        if "callchain" in event:
-+            for entry in reversed(event["callchain"]):
-+                sym = entry.get("sym")
-+                name = None
-+                if sym:
-+                    name = sym.get("name")
-+                if not name:
-+                    name = entry.get("dso", "unknown")
-+                    if "ip" in entry:
-+                        name += f" 0x{entry['ip']:x}"
-+                node = node.find_or_create_node(name)
-+                node.value += period
-+        else:
-+            name = event.get("symbol")
-+            if not name:
-+                name = event.get("dso", "unknown")
-+                if "ip" in event:
-+                    name += f" 0x{event['ip']:x}"
-+            node = node.find_or_create_node(name)
-+            node.value += period
++    def has_child(self, sought: "ProfileNode") -> bool:
++        """Checks if the sought node is a descendant of this node."""
++        for child in self.children.values():
++            if child =3D=3D sought or child.has_child(sought):
++                return True
++        return False
 +
-+    def add_to_tree(self, node: TreeNode, root_value: int) -> None:
-+        """Recursively adds this node and its children to a textual TreeNode.
++    def has_parent(self, parent: "ProfileNode") -> bool:
++        """Checks if the parent node is an ancestor of this node."""
++        p =3D self.parent
++        while True:
++            if p =3D=3D parent:
++                return True
++            new_p =3D p.parent
++            if new_p =3D=3D p:
++                break
++            p =3D new_p
++        return False
++
++    def flame_walk(self, wanted_strip: int, cur_strip: int, parent_width: =
+int,
++                   selected: "ProfileNode", visitor: FlameVisitor) -> None=
+:
++        """Recursively walks the tree to visit a single flame graph row.
++
++        This method calculates the proportional width for each child
++        based on its value (sample count) relative to its parent. It
++        then invokes a `visitor` to process each segment of the flame
++        graph row.
 +
 +        Args:
-+            node (TreeNode): The textual `TreeNode` object to which this
-+                             ProfileNode should be added.
-+            root_value (int): Value at the root of the tree.
++            wanted_strip (int): The target depth (Y-axis) of the flame gra=
+ph row
++                                to generate.
++            cur_strip (int): The current depth of the traversal.
++            parent_width (int): The width of the parent of this node.
++            selected (ProfileNode): The currently selected node in the UI,=
+ used
++                                    to adjust rendering to highlight the
++                                    selected path.
++            visitor (FlameVisitor): A visitor object whose `visit` method =
+is
++                                    called for each segment of the flame g=
+raph
++                                    row.
 +        """
-+        if root_value == 0:
-+            root_value = self.value
-+
-+        # Calculate the percentage for the node, highlighting the
-+        # percentage with reversed colors.
-+        if root_value != 0:
-+            percent = self.value / root_value * 100
-+            label = f"{self.name} [r]{percent:.3g}%[/]"
-+        else:
-+            label = self.name
-+
-+        # Add a standalone leaf.
-+        if not self.children:
-+            node.add_leaf(label)
++        if parent_width =3D=3D 0:
 +            return
 +
-+        # Recursively add children.
-+        new_node = node.add(label)
-+        for pnode in sorted(self.children.values(),
-+                            key=lambda pnode: pnode.value, reverse=True):
-+            pnode.add_to_tree(new_node, root_value)
++        parent_selected =3D selected =3D=3D self or self.has_parent(select=
+ed)
++        child_selected =3D not parent_selected and self.has_child(selected=
+)
++        if not parent_selected and not child_selected:
++            # Branches of the tree with no node selected aren't drawn.
++            return
++
++        # left_over is used to check for a gap after the children due
++        # to samples being in the parent.
++        left_over =3D parent_width
++        for child in sorted(self.children.values(), key=3Dlambda node: nod=
+e.value,
++                            reverse=3DTrue):
++            if parent_selected:
++                if self.value:
++                    desired_width =3D int((parent_width * child.value) / s=
+elf.value)
++                else:
++                    desired_width =3D parent_width // len(self.children)
++                if desired_width =3D=3D 0:
++                    # Nothing can be drawn for this node or later smaller =
+children.
++                    break
++            elif child =3D=3D selected or child.has_child(selected):
++                desired_width =3D parent_width
++            else:
++                # A sibling or its child are selected, but not this branch=
+.
++                continue
++
++            # Either visit the wanted_strip or recurse to the next level.
++            if wanted_strip =3D=3D cur_strip:
++                visitor.visit(child, desired_width)
++            else:
++                child.flame_walk(wanted_strip, cur_strip + 1, desired_widt=
+h,
++                                 selected, visitor)
++            left_over -=3D desired_width
++            if left_over =3D=3D 0:
++                # No space left to draw in.
++                break
++
++        # Always visit the left_over regardless of the wanted_strip as the=
+re
++        # may be additional gap added to a line by a parent.
++        if left_over:
++            visitor.visit(None, left_over)
++
++    def make_flame_strip(self, wanted_strip: int, parent_width: int,
++                         cursor: "ProfileNode", selected: "ProfileNode") -=
+> Strip:
++        """Creates a renderable 'Strip' for a single row of a flame graph.
++
++        This method orchestrates the `flame_walk` traversal with a special=
+ized
++        visitor to generate a list of segments. The segments are used by a=
+`Strip`
++        object for rendering in the terminal.
++
++        Args:
++            wanted_strip (int): The target depth (Y-axis) of the flame gra=
+ph row.
++            parent_width (int): The total width (in characters) of the dis=
+play
++                                area.
++            cursor (ProfileNode): The node currently under the cursor, for
++                                  highlighting.
++            selected (ProfileNode): The node that is actively selected.
++
++        Returns:
++            Strip: A renderable strip of segments for the specified row.
++        """
++        black =3D Color.parse("#000000")
++        # Non-cursor values range from red up to white.
++        normal_styles =3D [
++            Style(color=3Dblack.rich_color, bgcolor=3DColor(255, x, x).ric=
+h_color
++                  ) for x in range(0, 220, 25)
++        ]
++        # Cursor is red text with a black background.
++        cursor_style =3D Style(color=3DColor.parse("#ff0000").rich_color,
++                             bgcolor=3Dblack.rich_color)
++
++        class StripVisitor(FlameVisitor):
++            """Visitor creating textual flame graph segments.
++
++            Attributes:
++                segments (list): The textual segments that will be placed =
+in a
++                                 `Strip`.
++                gap_width (int): The width of any outstanding gap between =
+the
++                                 last and next node.
++                ctr (int): Used to adjust the flame graph segment's color.
++            """
++            def __init__(self):
++                self.segments =3D []
++                self.gap_width =3D 0
++                self.ctr =3D wanted_strip
++
++            def visit(self, node: Optional[ProfileNode], width: int) -> No=
+ne:
++                if node:
++                    if self.gap_width > 0:
++                        self.segments.append(Segment(
++                            make_fixed_length_string(" ", self.gap_width))=
+)
++                        self.gap_width =3D 0
++                    style =3D cursor_style
++                    if node !=3D cursor:
++                        style =3D normal_styles[self.ctr % len(normal_styl=
+es)]
++                    self.segments.append(Segment(
++                        make_fixed_length_string(node.name, width), style)=
+)
++                else:
++                    self.gap_width +=3D width
++                self.ctr +=3D 1
++
++        visitor =3D StripVisitor()
++        self.flame_walk(wanted_strip, 0, parent_width, selected, visitor)
++        return Strip(visitor.segments) if visitor.segments else Strip.blan=
+k(parent_width)
++
++    def find_node(self, sought_x: int, sought_y: int, parent_width: int,
++                  selected: "ProfileNode") -> "ProfileNode":
++        """Finds the ProfileNode corresponding to specific X, Y coordinate=
+s.
++
++        This translates a mouse click on a flame graph back to the
++        `ProfileNode` that it represents.
++
++        Args:
++            sought_x (int): The X coordinate (character column).
++            sought_y (int): The Y coordinate (row or depth).
++            parent_width (int): The total width of the display area.
++            selected (ProfileNode): The currently selected node, which aff=
+ects
++                                    layout.
++
++        Returns:
++            Optional[ProfileNode]: The node found at the coordinates, or N=
+one.
++
++        """
++        class FindVisitor(FlameVisitor):
++            """Visitor locating a `ProfileNode`.
++
++            Attributes:
++                x (int): offset within line.
++                found (Optional[ProfileNode]): located node
++                gap_width (int): The width of any outstanding gap between =
+the
++                                 last and next node.
++                ctr (int): Used to adjust the flame graph segment's color.
++            """
++            def __init__(self):
++                self.x =3D 0
++                self.found =3D None
++
++            def visit(self, node: Optional[ProfileNode], width: int) -> No=
+ne:
++                if self.x <=3D sought_x and sought_x < self.x + width:
++                    self.found =3D node
++                self.x +=3D width
++
++        visitor =3D FindVisitor()
++        self.flame_walk(sought_y, 0, parent_width, selected, visitor)
++        return visitor.found
 +
 +
-+class ReportApp(App):
-+    """A Textual application to display profiling data."""
++class FlameGraph(ScrollView):
++    """A scrollable widget to display a flame graph from a profile.
 +
-+    # The ^q binding is implied but having it here adds it in the Footer.
-+    BINDINGS = [
-+        Binding(key="^q", action="quit", description="Quit",
-+                tooltip="Quit the app"),
-+    ]
++    Attributes:
++        root (ProfileNode): Root of the profile tree.
++        cursor (ProfileNode): Currently highlighted cursor node.
++        selected (ProfileNode): The currently selected node for zooming.
++    """
 +
-+    def __init__(self, root: ProfileNode):
-+        """Initialize the application."""
-+        super().__init__()
-+        self.root = root
++    # Define key bindings for navigating the flame graph.
++    # Allows movement with vim-style keys (h,j,k,l) and arrow keys.
++    BINDINGS =3D [
++        Binding("j,down", "move_down", "Down", key_display=3D"=E2=86=93",
++                tooltip=3D"Move cursor down to largest child"),
++        Binding("k,up", "move_up", "Up", key_display=3D"=E2=86=91",
++                tooltip=3D"Move cursor up to parent"),
++        Binding("l,right", "move_right", "Right", key_display=3D"=E2=86=92=
+",
++                tooltip=3D"Move cursor to the right sibling"),
++        Binding("h,left", "move_left", "Left", key_display=3D"=E2=86=90",
++                tooltip=3D"Move cursor to the left sibling"),
++        Binding("enter", "zoom_in", "Zoom In",
++                tooltip=3D"Expand the cursor's node to be screen width"),
++        Binding("escape", "zoom_out", "Zoom Out",
++                tooltip=3D"Zoom out to initial view."),
++     ]
 +
-+    def make_report_tree(self) -> Tree:
-+        """Make a Tree widget from the profile data."""
-+        tree: Tree[None] = Tree("Profile")
-+        # Add events to tree skipping the root.
-+        for pnode in sorted(self.root.children.values(),
-+                            key=lambda node: node.value, reverse=True):
-+            pnode.add_to_tree(tree.root, root_value=0)
-+        # Expand the first 2 levels of the tree.
-+        tree.root.expand()
-+        for tnode in tree.root.children:
-+            tnode.expand()
-+        return tree
++    # Default CSS for the widget to ensure it fills its container's width.
++    DEFAULT_CSS =3D """
++    FlameGraph {
++        width: 100%;
++    }
++    """
 +
-+    def compose(self) -> ComposeResult:
-+        """Composes the user interface of the application."""
-+        yield Header()
-+        with TabbedContent(initial="report"):
-+            with TabPane("Report", id="report"):
-+                yield self.make_report_tree()
-+        yield Footer()
++    def __init__(self, root: ProfileNode, *args, **kwargs):
++        """Initialize the FlameGraph widget."""
++        super().__init__(*args, **kwargs)
++        self.root =3D root
++        self.cursor =3D root
++        self.selected =3D root
 +
++    def action_move_down(self) -> None:
++        """Handle key press down."""
++        self.cursor =3D self.cursor.largest_child()
++        self.refresh()
 +
-+class ProfileBuilder:
-+    """Constructs a profile tree from a stream of events."""
-+    def __init__(self):
-+        self.root = ProfileNode("root", parent=None)
++    def action_move_up(self) -> None:
++        """Handle key press up."""
++        if self.cursor.parent !=3D self.cursor.parent.parent:
++            self.cursor =3D self.cursor.parent
++            self.refresh()
 +
-+    def process_event(self, event) -> None:
-+        """Called by `perf script` to update the profile tree."""
-+        ev_name = event.get("ev_name", "default")
-+        ev_root = self.root.find_or_create_node(ev_name)
-+        ev_root.process_event(event)
++    def action_move_right(self) -> None:
++        """Handle key press right."""
++        self.cursor =3D self.cursor.parent.child_after(self.cursor)
++        self.refresh()
 +
-+if __name__ == "__main__":
-+    # process_event is called for each perf event to build the profile.
-+    profile = ProfileBuilder()
-+    process_event = profile.process_event
-+    # trace_end will run the application, this can't be done
-+    # concurrently as perf expects to be the main thread as does
-+    # Textual.
-+    app = ReportApp(profile.root)
-+    trace_end = app.run
--- 
++    def action_move_left(self) -> None:
++        """Handle key press left."""
++        self.cursor =3D self.cursor.parent.child_before(self.cursor)
++        self.refresh()
++
++    def action_zoom_in(self) -> None:
++        """Handle key press zoom in."""
++        self.selected =3D self.cursor
++        self.refresh()
++
++    def action_zoom_out(self) -> None:
++        """Handle key press zoom out."""
++        self.selected =3D self.root
++        self.refresh()
++
++    def render_line(self, y: int) -> Strip:
++        """Render a single line (row) of the flame graph."""
++        _, scroll_y =3D self.scroll_offset
++        y +=3D scroll_y
++        return self.root.make_flame_strip(y, self.size.width, self.cursor,
++                                          self.selected)
++
++    def on_mount(self) -> None:
++        """Set the height of the widget when it is displayed."""
++        self.styles.height =3D self.root.depth()
++
++    def on_click(self, click: events.Click) -> None:
++        """Handles a mouse click and update the cursor position."""
++        _, scroll_y =3D self.scroll_offset
++        y =3D scroll_y + click.y
++        clicked_node =3D self.root.find_node(click.x, y, self.size.width,
++                                           self.selected)
++        if clicked_node:
++            self.cursor =3D clicked_node
++            self.refresh()
++
+=20
+ class ReportApp(App):
+     """A Textual application to display profiling data."""
+@@ -152,6 +490,8 @@ class ReportApp(App):
+         with TabbedContent(initial=3D"report"):
+             with TabPane("Report", id=3D"report"):
+                 yield self.make_report_tree()
++            with TabPane("Flame Graph", id=3D"flame"):
++                yield FlameGraph(self.root)
+         yield Footer()
+=20
+=20
+--=20
 2.50.1.552.g942d659e1b-goog
 
