@@ -1,236 +1,145 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9412D322C;
-	Fri, 25 Jul 2025 09:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 139B423908B;
+	Fri, 25 Jul 2025 09:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753436107; cv=none; b=JxiqcHm8zxZb0y422JrAyqEkkdsc2fqTS0qlxrCaGQaO+Ko1SSo8XszSN9d7noNmh+VBbl4TPKonFrUeOWSX5YAP4GA7sdhLesdAtA7D8LAtKgA7l2Kk8sqzuE2GX4GXyy90pLB5Ol4yM9uXX+xB6NUwKYgISiaTz4cCqngJv9c=
+	t=1753437571; cv=none; b=i7ZJTXhBgaYKr4hh/fzLltH2fc63ab/buKBvU+eJG0hXzrYNv6uL9K7IZPE2XeMg2mksUNf1YM6swy1CwahvC373RXrywJaUtxsq1oRyncamYBePWSyrnydKF3w1qcTZwXTWXafswphhfbrgfIbRG3uK7JYxYgwiKt4SlH1fWEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753436107; c=relaxed/simple;
-	bh=xJFDqfihKhSVrbq66CEMQR4L+rbjVhnQMnLN6LQ2ZU0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TqEmY3WhAVpXmYglJGWiLnTPvgCvBrWMFNQj3PnLSq6wfAlYbww1vqliUCgDsj4EgTdENbKrmqf1ceYQJEy0HJiAVB4MGlEuy2UHHZ3EdHCt9J3XPu1aV/7M13T3j21iNblHWZB4LWDriJo5iB23lyK4t7WXL+BSKM1WzW18dDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=q0wHufda; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="q0wHufda"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56OM9FoN023954;
-	Fri, 25 Jul 2025 09:35:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=5dBPYbVmCl7k/jVbj1N9uhGvhjb0Y/pJg2vGVLEW/
-	ec=; b=q0wHufdag8Lfl5ggh/71T7SgtvB7GQLl6Ci/UTYt0Thry/RsF7CamnPVU
-	iDS0ghKD6Aut6waO6Ph+ioU2xsu+Xos0+tAfDI0CieTrQblZREgl/OkWnfj/0Ugn
-	C3JIqPvb+f42t16v5QliWk/NuJ/2fkFANjEHBkzffqMMUvj/23VnzdhOxHi1SFKD
-	NRgeL1ruhaz+glubcshsZhfJlgHZKCt/sRi+p1BfiRNMRj1yZhE8WoqYJwOqvas9
-	R4KX7acB7x2tP6MCrmfMr+Y2l4RK3mJDlxUPmX0bp5fi1pSSZnpPPo1MSd81N1Hf
-	CFs2OCydzcRBZ3cYs+Bkj/WCnxs4w==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 483wcht87v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Jul 2025 09:35:02 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 56P5V3WM024985;
-	Fri, 25 Jul 2025 09:35:01 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 480rd2rmv0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Jul 2025 09:35:01 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 56P9Yv0A31982326
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 25 Jul 2025 09:34:57 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C19362004D;
-	Fri, 25 Jul 2025 09:34:57 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 91CB22004B;
-	Fri, 25 Jul 2025 09:34:57 +0000 (GMT)
-Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 25 Jul 2025 09:34:57 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-        bpf@vger.kernel.org
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, japo@linux.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [PATCH bpf] libbpf: eBPF fails on events with auxiliary data
-Date: Fri, 25 Jul 2025 11:34:05 +0200
-Message-ID: <20250725093405.3629253-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1753437571; c=relaxed/simple;
+	bh=1WMiJWKF/kFU4nJJ9ht2tF6BzE/oWPQGO6AQ2yKPdOI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ifkidVJ7dQfZa/5XieaQZDqjdUWwFgydk5Ky34Dr+f+URmI2OSRd1TDz694YqSPVSTwVfblE4W7VzEn18Fad3Zb1CFAZCp4Il2mxUJ7FPbMnW02ZzjqBDfkP50Dcjk3eD8+rMq6nqCr0nvASTQhJjTOLEmKfj+dUXI+UC5raHzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50608176C;
+	Fri, 25 Jul 2025 02:59:21 -0700 (PDT)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 153543F5A1;
+	Fri, 25 Jul 2025 02:59:23 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v3 0/6] perf auxtrace: Support AUX pause and resume with
+ BPF
+Date: Fri, 25 Jul 2025 10:59:09 +0100
+Message-Id: <20250725-perf_aux_pause_resume_bpf_rebase-v3-0-9fc84c0f4b3a@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzI1MDA3NyBTYWx0ZWRfX+ZENGg3ptU20
- mJ+2lhkM4SOyVbsL0g5gvB/k3MUtchsRh2/xOa4AQUDCo7N0bz4heh98c0kwesGKcYftbNZMA4S
- UzuCzziA78Ro8WYtj8q9jjwSHHMg0AtTr/r5Pd1x/2iU6IxKvlI/wzBGoS3qIb8b+7XHkInRHba
- jhTsD7wV9LKAPVMe3j45dO4b5ze7jgDtDqOxNRtZaaqNVrCp6ynjJpE0BEZpLvYbGw2WXxiSi8/
- D5gdspoymyUZo4z+ah6liMoue1G9r7B5V4ZcZqvkw6o1LPWwP5cM3zhvEQ0XV3iPWDRt3RZdcda
- dS8cfKRSXMvV4SJiO52XM3nwaKtShCWKnoj0IISFzJKp8qGKJcgZtgOSmEBQ7jgJy2EAdQESQHl
- NZ+CrTVneiEUoz5zlHdVwcArgZ8nLm0MoS0/7LstywNS9E0rcmOQf7jC19mv1SE3uQHDCHEA
-X-Proofpoint-GUID: Dm9ofB6kYIjI7E2hbV3DEdJb_nQDepIs
-X-Proofpoint-ORIG-GUID: Dm9ofB6kYIjI7E2hbV3DEdJb_nQDepIs
-X-Authority-Analysis: v=2.4 cv=G+ccE8k5 c=1 sm=1 tr=0 ts=68834fc6 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=Wb1JkmetP80A:10 a=FOH2dFAWAAAA:8 a=1XWaLZrsAAAA:8 a=VnNF1IyMAAAA:8
- a=_RghCZ_K9Bj0KFtpOxAA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-07-25_02,2025-07-24_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 suspectscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
- impostorscore=0 mlxscore=0 adultscore=0 priorityscore=1501 clxscore=1011
- malwarescore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507250077
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAG1Vg2gC/4WNsQ6CMBRFf4W82ZpSrRUnjYujg5shTYuv0gFoX
+ oVgCP9uJe5u996T3DNBRPIY4ZBNQDj46Ls2lc0qg6o27ROZf6QOggvJVa5YQHLa9KMOpo+oCWP
+ foLbBpWhNRJarbaUKy62xEtJNIHR+XBR3uJ5u50s2CCgTqX18dfRe3Gn68p9m/18zCMZZUQgpl
+ d07m++Ohpp11TVQzvP8Ac5V7rXYAAAA
+X-Change-ID: 20250717-perf_aux_pause_resume_bpf_rebase-174c79b0bab5
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+ KP Singh <kpsingh@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>, 
+ Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ James Clark <james.clark@linaro.org>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Mike Leach <mike.leach@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1753437563; l=3470;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=1WMiJWKF/kFU4nJJ9ht2tF6BzE/oWPQGO6AQ2yKPdOI=;
+ b=WkyuFOx5mkoyPRKu7qgtoWxE/7mhkYVVYhrKowVD/tLs8C0rwDxaIdSNO5YtRMigXUSW2HYhO
+ 2W6WQohlgS4Aq024qdzPBITCZZM6ASseZWXkAdYuoLzoRyN58VYl1cZ
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-On linux-next
-commit b4c658d4d63d61 ("perf target: Remove uid from target")
-introduces a regression on s390. In fact the regression exists
-on all platforms when the event supports auxiliary data gathering.
+This series extends Perf for fine-grained tracing by using BPF program
+to pause and resume AUX tracing. The BPF program can be attached to
+tracepoints (including ftrace tracepoints and dynamic tracepoints, like
+kprobe, kretprobe, uprobe and uretprobe).
 
-Command
-   # ./perf record -u 0 -aB --synth=no -- ./perf test -w thloop
-   [ perf record: Woken up 1 times to write data ]
-   [ perf record: Captured and wrote 0.011 MB perf.data ]
-   # ./perf report --stats | grep SAMPLE
-   #
+The first two patches are changes in kernel - it adds a bpf kfunc which
+can be invoked from BPF program.
 
-does not generate samples in the perf.data file.
-On x86 command 
-  # sudo perf record -e intel_pt// -u 0 ls
-is broken too.
+The Perf tool implements BPF skeleton program, hooks BPF program into a
+perf record session. This is finished by patches 03 ~ 05.
 
-Looking at the sequence of calls in 'perf record' reveals this
-behavior:
-1. The event 'cycles' is created and enabled:
-   record__open()
-   +-> evlist__apply_filters()
-       +-> perf_bpf_filter__prepare()
-	   +-> bpf_program.attach_perf_event()
-	       +-> bpf_program.attach_perf_event_opts()
-	           +-> __GI___ioctl(..., PERF_EVENT_IOC_ENABLE, ...)
-   The event 'cycles' is enabled and active now. However the event's
-   ring-buffer to store the samples generated by hardware is not
-   allocated yet. This happens now after enabling the event:
+The patch 06 updates documentation for usage of the new introduced
+option '--bpf-aux-pause'.
 
-2. The event's fd is mmap() to create the ring buffer:
-   record__open()
-   +-> record__mmap()
-       +-> record__mmap_evlist()
-	   +-> evlist__mmap_ex()
-	       +-> perf_evlist__mmap_ops()
-	           +-> mmap_per_cpu()
-	               +-> mmap_per_evsel()
-	                   +-> mmap__mmap()
-	                       +-> perf_mmap__mmap()
-	                           +-> mmap()
+This series has been tested on Hikey960 platform with commands:
 
-   This allocates the ring-buffer for the event 'cycles'.  With mmap()
-   the kernel creates the ring buffer:
+  perf record -e cs_etm/aux-action=start-paused/ \
+    --bpf-aux-pause="kretprobe:p:__arm64_sys_openat,kprobe:r:__arm64_sys_openat,tp:r:sched:sched_switch" \
+    -a -- ls
 
-   perf_mmap(): kernel function to create the event's ring
-   |            buffer to save the sampled data.
-   |
-   +-> ring_buffer_attach(): Allocates memory for ring buffer.
-       |        The PMU has auxiliary data setup function. The
-       |        has_aux(event) condition is true and the PMU's
-       |        stop() is called to stop sampling. It is not
-       |        restarted:
-       |        if (has_aux(event))
-       |                perf_event_stop(event, 0);
-       |
-       +-> cpumsf_pmu_stop():
+  perf record -e cs_etm/aux-action=start-paused/ \
+    --bpf-aux-pause="kretprobe:p:__arm64_sys_openat,kprobe:r:__arm64_sys_openat,tp:r:sched:sched_switch" \
+    -i -- ls
 
-   Hardware sampling is stopped. No samples are generated and saved
-   anymore.
+  perf record -e cs_etm/aux-action=start-paused/ \
+    --bpf-aux-pause="uretprobe:p:/mnt/sort:bubble_sort,uprobe:r:/mnt/sort:bubble_sort" \
+    --per-thread -- /mnt/sort
 
-3. After the event 'cycles' has been mapped, the event is enabled a
-   second time in:
-   __cmd_record()
-   +-> evlist__enable()
-       +-> __evlist__enable()
-	   +-> evsel__enable_cpu()
-	       +-> perf_evsel__enable_cpu()
-	           +-> perf_evsel__run_ioctl()
-	               +-> perf_evsel__ioctl()
-	                   +-> __GI___ioctl(., PERF_EVENT_IOC_ENABLE, .)
-   The second
-      ioctl(fd, PERF_EVENT_IOC_ENABLE, 0);
-   is just a NOP in this case. The first invocation in (1.) sets the
-   event::state to PERF_EVENT_STATE_ACTIVE. The kernel functions
-   perf_ioctl()
-   +-> _perf_ioctl()
-       +-> _perf_event_enable()
-           +-> __perf_event_enable() returns immediately because
-	              event::state is already set to
-		      PERF_EVENT_STATE_ACTIVE.
+Note, as the AUX pause operation cannot be inherited by child tasks, it
+requires to specify the '-i' option for default mode. Otherwise, the
+tool reports an error to remind user to disable inherited mode:
 
-This happens on s390, because the event 'cycles' offers the possibility
-to save auxilary data. The PMU call backs setup_aux() and
-free_aux() are defined. Without both call back functions,
-cpumsf_pmu_stop() is not invoked and sampling continues.
+  Failed to update BPF map for auxtrace: Operation not supported.
+    Try to disable inherit mode with option '-i'.
 
-To remedy this, remove the first invocation of
-   ioctl(..., PERF_EVENT_IOC_ENABLE, ...).
-in step (1.) Create the event in step (1.) and enable it in step (3.)
-after the ring buffer has been mapped.
+Changes in v3:
+- Added check "map->type" (Eduard)
+- Fixed kfunc with guard(irqsave).
+- Link to v2: https://lore.kernel.org/r/20250718-perf_aux_pause_resume_bpf_rebase-v2-0-992557b8fb16@arm.com
 
-Output after:
- # ./perf record -aB --synth=no -u 0 -- ./perf test -w thloop 2
- [ perf record: Woken up 3 times to write data ]
- [ perf record: Captured and wrote 0.876 MB perf.data ]
- # ./perf  report --stats | grep SAMPLE
-              SAMPLE events:      16200  (99.5%)
-              SAMPLE events:      16200
- #
+Changes in v2:
+- Changed to use BPF kfunc and dropped uAPI (Yonghong).
+- Added support uprobe/uretprobe.
+- Refined the syntax for trigger points (mainly for trigger action {p:r}).
+- Fixed a bug in the BPF program with passing wrong flag.
+- Rebased on bpf-next branch.
+- Link to v1: https://lore.kernel.org/linux-perf-users/20241215193436.275278-1-leo.yan@arm.com/T/#m10ea3e66bca7418db07c141a14217934f36e3bc8
 
-The software event succeeded before and after the patch:
- # ./perf record -e cpu-clock -aB --synth=no -u 0 -- ./perf test -w thloop 2
- [ perf record: Woken up 7 times to write data ]
- [ perf record: Captured and wrote 2.870 MB perf.data ]
- # ./perf  report --stats | grep SAMPLE
-              SAMPLE events:      53506  (99.8%)
-              SAMPLE events:      53506
- #
-
-Fixes: 63f2f5ee856ba ("libbpf: add ability to attach/detach BPF program to perf event")
-To: Andrii Nakryiko <andriin@fb.com>
-To: Ian Rogers <irogers@google.com>
-To: Ilya Leoshkevich <iii@linux.ibm.com>
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Tested-by: Ilya Leoshkevich <iii@linux.ibm.com>
 ---
- tools/lib/bpf/libbpf.c | 6 ------
- 1 file changed, 6 deletions(-)
+Leo Yan (6):
+      perf/core: Make perf_event_aux_pause() as external function
+      bpf: Add bpf_perf_event_aux_pause kfunc
+      perf: auxtrace: Control AUX pause and resume with BPF
+      perf: auxtrace: Add BPF userspace program for AUX pause and resume
+      perf record: Support AUX pause and resume with BPF
+      perf docs: Document AUX pause and resume with BPF
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 162ebd16a59f..5973412a1031 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -10960,12 +10960,6 @@ struct bpf_link *bpf_program__attach_perf_event_opts(const struct bpf_program *p
- 		}
- 		link->link.fd = pfd;
- 	}
--	if (ioctl(pfd, PERF_EVENT_IOC_ENABLE, 0) < 0) {
--		err = -errno;
--		pr_warn("prog '%s': failed to enable perf_event FD %d: %s\n",
--			prog->name, pfd, errstr(err));
--		goto err_out;
--	}
- 
- 	return &link->link;
- err_out:
+ include/linux/perf_event.h                    |   1 +
+ kernel/events/core.c                          |   2 +-
+ kernel/trace/bpf_trace.c                      |  55 ++++
+ tools/perf/Documentation/perf-record.txt      |  51 ++++
+ tools/perf/Makefile.perf                      |   1 +
+ tools/perf/builtin-record.c                   |  20 +-
+ tools/perf/util/Build                         |   4 +
+ tools/perf/util/auxtrace.h                    |  43 +++
+ tools/perf/util/bpf_auxtrace_pause.c          | 408 ++++++++++++++++++++++++++
+ tools/perf/util/bpf_skel/auxtrace_pause.bpf.c | 156 ++++++++++
+ tools/perf/util/evsel.c                       |   6 +
+ tools/perf/util/record.h                      |   1 +
+ 12 files changed, 746 insertions(+), 2 deletions(-)
+---
+base-commit: 95993dc3039e29dabb9a50d074145d4cb757b08b
+change-id: 20250717-perf_aux_pause_resume_bpf_rebase-174c79b0bab5
+
+Best regards,
 -- 
-2.50.0
+Leo Yan <leo.yan@arm.com>
 
