@@ -1,55 +1,55 @@
-Received: from mail-qt1-f201.google.com (mail-qt1-f201.google.com [209.85.160.201])
+Received: from mail-qk1-f201.google.com (mail-qk1-f201.google.com [209.85.222.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E394625A2A5
-	for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 20:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4BD25A343
+	for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 20:28:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753475303; cv=none; b=uAFHQykpBcq1xk4lFeg4t8QEsu98vt7DBM+pj3100NMA9FJQSjOZlFM8yLYnfQIMZizPz3DqO/7kHSAubG0xHbkAleqxpSQJCPA8whM6AHv4gEy7cx2A4XUe5tyQwzVldx4xXc3gecPtlWm2ZqRHhQeIduEo76wo/KwXnQM7i6I=
+	t=1753475305; cv=none; b=e7taVH7P8ZbIoLdTQP2prAy8WrqDeh6sgGVEpQm+i4k8REqXbhT7uTfPaP6aisBFGc/xP5t8YdUZvSCn2LAKPwhYrVzPIwELtdEuL1iEe2ZqpZIXVNldBv51UH4Ez7Noja+/u7+vj/eHxqBF9mbGQ0qSnBLfmj6iN/AGwNQaNR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753475303; c=relaxed/simple;
-	bh=y7ZMmXMl4AeF7iTeFou5MQEhQkYueVSw9Jduxng0eNo=;
+	s=arc-20240116; t=1753475305; c=relaxed/simple;
+	bh=4WUHG3gQhYHFYivqw1IpclYSWeb/z1fqX28zLV0M6hw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PN7LFcoLOoSqOzCC4NmIJsTzT0LmK1+reStWECxNXeulzB6glgd6zqRVkiVFMEwB3KPktP6nkhzgty8uDf0UQujR0ZpGPc9F6Savfxd/MsiW4xTM8eBcbefONbZhS0VIHcw2bI8FKIgPvxC0hlMZSopBpxF4tD9r7TnqgOKXuUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wAPUzRxI; arc=none smtp.client-ip=209.85.160.201
+	 To:Cc:Content-Type; b=rRED8wLF6TLTvNi5R4WmIvr+u3GMxgDCxfTRvdFUFnPg6TZZSIeM3ngVKeebg2BjcjIa0qPIpLmDgtczV4kRR2Lnh8qgzTH5I4yRu/1nAG1IX5pek4YJVjF/HqxxFmKtI6KUK3oqb7GN/Jd8NwgXg1+AphwxhbPISiYETw6By7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CTBB0a+R; arc=none smtp.client-ip=209.85.222.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wAPUzRxI"
-Received: by mail-qt1-f201.google.com with SMTP id d75a77b69052e-4ab684d3b55so46219881cf.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 13:28:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CTBB0a+R"
+Received: by mail-qk1-f201.google.com with SMTP id af79cd13be357-7c7c30d8986so740676185a.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 13:28:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753475301; x=1754080101; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1753475302; x=1754080102; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aSnOCIynF2EPoUgwxpXJNlBKEOIAjcwZq8VcJJ4NIKo=;
-        b=wAPUzRxIdzE2StFBz8MQFaxMr/vU3Hg6RL0xyCp4bkTyBtggfpsx9wyGJDnEiCR+Aa
-         FnWgeyMVcU8FN3ePNub3og6Bm52yeEpgTSD2QQ9G2HoStyWcDzHc3cIRVIE3dqhPRXQt
-         DtnMqN2gdcOwWA2GzLuzT1naquz3d9g46h3ONzXrECh88hDZVrw5+qn9oeMIQF3X3MGz
-         V7PXNAQfVcZWHpj4a38J8GC/Cwq88eQyOpCJ1bVZEVO/0Vg1gzv+O+hCjliceWiqkPPm
-         K6HEJWv6F/7R1oYtXyhB7hciTfk6zK4dkj3fKneVTkJ6auY2Gc/vopC26ke62MZ+D+jU
-         d3dQ==
+        bh=M0eYSeMuUS/cZaFjj6vw+bFZjqUrA78ZYNsNfFMz9W4=;
+        b=CTBB0a+RvgmYLxMQKDPItn3I79dXU/N+JZMQ/ReKU9yMqCMLj9/gz2/HP8QiJyrvR9
+         2irvhfgFkwq8op4xL55sD5AInZqszuvb2s8MRgh79AmDQodm1UCiO1jxWMxv+c99P339
+         FajrR/Pe2GtZj1Iq+U/b7Tn5/1KfyGAndNg96hinNe6FKUI/Dld47FLr6kkxx74odH0v
+         +zWC206X3Yot7zcmfE77hoCYGVkQllm1M5BjG3xjWfqeSDX7Ox2+5TNdcL4djurKz1/S
+         6QpSanMDJMgpzYHua3IDpxrLjhdXmJRaxkU/6nFSPyXoUT3DLCnozQFtUhnGusPX1HNa
+         3fCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753475301; x=1754080101;
+        d=1e100.net; s=20230601; t=1753475302; x=1754080102;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aSnOCIynF2EPoUgwxpXJNlBKEOIAjcwZq8VcJJ4NIKo=;
-        b=q3VIyfSo2hH6DUpECLWPvj+Z277vMh8d11mAWslUrIEhZKyXwAPRZ8oSDtoApyzyFq
-         25CzBs6g/8On0qjUsKIda8QkzWqRS0OrGuC7MFUWNfRco24TtqVB5AR9xS/+qZoQPHr6
-         imQ8+fnqPTIS2/9wRthZz70bHTGKqFXy5kA85pnv9TGVbOGE0NVLpOfG+uPQpcPSdwgO
-         KHBWq1Rimw61K+Dxl70kJFuJjCp+IsUMwAWhmMgq+KpXX00dp6zYtoZrW8usQ6EE+n+L
-         k+gWtrCVYUHyzyWx5+fWEN8+gDEe5bx4bjfQ+vRmUwIoMBMFjA2J6/0miEi5Y1oINcCK
-         8QaA==
-X-Forwarded-Encrypted: i=1; AJvYcCWsix8HvEPDra7qZVWhP7YOVVC+Cb1d0i3H5WrZVXwusc0tURkq4ohhL0yhxZEdvhlgakfa9AtJ9qvdPbV1R6Qg@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYAkIfwn/EjfsE+Lo2RA4vy34NxxGhRxLvjINguFlYZQWOGusR
-	RdtJ1Qj+JTNrOUT7vcO5y2nCc08ylgGg+fu5lTVnZmG7C2mE4zAxJoagtdaU5TD7Q9eF2oMWdyM
-	iTvhJwJB45w==
-X-Google-Smtp-Source: AGHT+IEtaubTt49Ik8s9cRgE+B+Ay3+2JHiCaKE3hc7DgJYA6W0TCehhgfWQ7j17dc3k3QPYrwA+8oaWNbSX
-X-Received: from qtbcp4.prod.google.com ([2002:a05:622a:4204:b0:4ab:6375:3dda])
- (user=zecheng job=prod-delivery.src-stubby-dispatcher) by 2002:a05:622a:5448:b0:4ab:63b8:3320
- with SMTP id d75a77b69052e-4ae87225337mr79667211cf.23.1753475300882; Fri, 25
- Jul 2025 13:28:20 -0700 (PDT)
-Date: Fri, 25 Jul 2025 20:28:04 +0000
+        bh=M0eYSeMuUS/cZaFjj6vw+bFZjqUrA78ZYNsNfFMz9W4=;
+        b=cx9RVTVVs+7PeTUfs3H7vmeV1GYxHccs1BqLjZS8dudlW3tVVpmygqyAXcwNBoLgJW
+         ulflo7M05F7prVCQB/Ffw6GG7cw2GabX/Z4IeLFi0v984S97rvBo97Yx2iUMVg2N8V6C
+         OktSMDQ3PUdglVk2ubWUO4CeUEPedreHJsT3ijXMaWGT8FklH/sp9KdQYSioYRXxThlJ
+         bQziESVzwN9QtKasN13HNWhAc4WNrfbp4KcWHLuVL13GBVNj/Dp9sXUADV63IviTexrO
+         JcCqLofMFokbie3s4AUo88vpBOh7EYjLk76roUuwnT9hV23eS5PpO1vP8f+549joFEDN
+         IkAA==
+X-Forwarded-Encrypted: i=1; AJvYcCVo2LtV5WN4EVJI3KdrlmMEDFmtQh4avb1/DS2KaEdAMJkcCdEtE/Qa875A98AvRin3Bc/pUdEEvJGSAt/KmZXn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0yFPZiA0qg0tKfUeVhMWv7YKTzGKnEDVwWrY4W8wnK6MA41h3
+	lHEx6HJu+MuVgZ/GUkGC3l1JR5qyV+G+w6ptfT6JB5IGIbnMrbu89/Y+zwtlcfZFi8uwCOtkCY5
+	HpxwM9Gs7cA==
+X-Google-Smtp-Source: AGHT+IGguu6Q5s+hXxqE9U/Ws3a68elF+ciB8met5fbwhcLiqcVm4bFlvEvADCzimGciV5znCZiumxeozGxb
+X-Received: from qvb13.prod.google.com ([2002:a05:6214:600d:b0:6fb:5697:95f1])
+ (user=zecheng job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6214:e46:b0:6fa:ccb6:602a
+ with SMTP id 6a1803df08f44-7072053f3f2mr53217756d6.20.1753475302280; Fri, 25
+ Jul 2025 13:28:22 -0700 (PDT)
+Date: Fri, 25 Jul 2025 20:28:05 +0000
 In-Reply-To: <20250725202809.1230085-1-zecheng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250725202809.1230085-1-zecheng@google.com>
 X-Mailer: git-send-email 2.50.1.470.g6ba607880d-goog
-Message-ID: <20250725202809.1230085-2-zecheng@google.com>
-Subject: [PATCH v1 1/6] perf dwarf-aux: Use signed comparison in match_var_offset
+Message-ID: <20250725202809.1230085-3-zecheng@google.com>
+Subject: [PATCH v1 2/6] perf dwarf-aux: More accurate variable type match for breg
 From: Zecheng Li <zecheng@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,49 +73,120 @@ Cc: Zecheng Li <zli94@ncsu.edu>, Xu Liu <xliuprof@google.com>,
 	Zecheng Li <zecheng@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-match_var_offset compares address offsets to determine if an access
-falls within a variable's bounds. The offsets involved for those
-relative to base registers from DW_OP_breg can be negative.
+Introduces the function is_breg_access_indirect to determine whether a
+memory access involving a DW_OP_breg* operation refers to the variable's
+value directly or requires dereferencing the variable's type as a
+pointer based on the DWARF expression. Previously, all breg based
+accesses were assumed to directly access the variable's value
+(is_pointer = false).
 
-The current implementation uses unsigned types (u64) for these offsets,
-which rejects almost all negative values.
+The is_breg_access_indirect function handles three main cases:
 
-This commit changes the local variables within match_var_offset to
-signed types (s64) before performing comparisons. This ensures correct
-behavior when addr_offset_ or addr_type_ are negative.
+1. Base register + offset only: (e.g., DW_OP_breg7 RSP+88) The
+   calculated address is the location of the variable. The access is
+   direct, so no type dereference is needed. Returns false.
+
+2. Base register + offset, followed by other operations ending in
+   DW_OP_stack_value, including DW_OP_deref: (e.g., DW_OP_breg7 RSP+96,
+   DW_OP_deref, DW_OP_plus_uconst 0x64, DW_OP_stack_value) The DWARF
+   expression computes the variable's value, but that value requires a
+   dereference. The memory access is fetching that value, so no type
+   dereference is needed. Returns false.
+
+3. Base register + offset, followed only by DW_OP_stack_value: (e.g.,
+   DW_OP_breg7 RSP+176, DW_OP_stack_value) This indicates the value at
+   the base + offset is the variable's value. Since this value is being
+   used as an address in the memory access, the variable's type is
+   treated as a pointer and requires a type dereference. Returns true.
+
+The is_pointer argument passed to match_var_offset is now set by
+is_breg_access_indirect for breg accesses.
 
 Signed-off-by: Zecheng Li <zecheng@google.com>
 ---
- tools/perf/util/dwarf-aux.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/util/dwarf-aux.c | 42 ++++++++++++++++++++++++++++++++-----
+ 1 file changed, 37 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 559c953ca172..bf906dff9ef0 100644
+index bf906dff9ef0..814c96ea509f 100644
 --- a/tools/perf/util/dwarf-aux.c
 +++ b/tools/perf/util/dwarf-aux.c
-@@ -1388,10 +1388,12 @@ struct find_var_data {
- #define DWARF_OP_DIRECT_REGS  32
+@@ -1424,6 +1424,38 @@ static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
+ 	return true;
+ }
  
- static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
--			     u64 addr_offset, u64 addr_type, bool is_pointer)
-+			     u64 addr_offset_, u64 addr_type_, bool is_pointer)
++/**
++ * is_breg_access_indirect - Check if breg based access implies type dereference
++ * @ops: DWARF operations array
++ * @nops: Number of operations in @ops
++ *
++ * Returns true if the DWARF expression indicates the variable's value is
++ * a pointer that the memory access dereferences.
++ * Returns false if the expression evaluates to the variable's value directly.
++ * This is called after check_allowed_ops.
++ */
++static bool is_breg_access_indirect(Dwarf_Op *ops, size_t nops)
++{
++	ops++;
++	nops--;
++
++	/* only the base register */
++	if (nops == 0)
++		return false;
++
++	switch (ops->atom) {
++	case DW_OP_stack_value:
++		return true;
++	case DW_OP_deref_size:
++	case DW_OP_deref:
++	case DW_OP_piece:
++		return false;
++	default:
++		/* unreachable, OP not supported */
++		return false;
++	}
++}
++
+ /* Only checks direct child DIEs in the given scope. */
+ static int __die_find_var_reg_cb(Dwarf_Die *die_mem, void *arg)
  {
- 	Dwarf_Die type_die;
- 	Dwarf_Word size;
-+	s64 addr_offset = (s64)addr_offset_;
-+	s64 addr_type = (s64)addr_type_;
+@@ -1452,7 +1484,7 @@ static int __die_find_var_reg_cb(Dwarf_Die *die_mem, void *arg)
+ 		if (data->is_fbreg && ops->atom == DW_OP_fbreg &&
+ 		    check_allowed_ops(ops, nops) &&
+ 		    match_var_offset(die_mem, data, data->offset, ops->number,
+-				     /*is_pointer=*/false))
++				     /*is_pointer=*/is_breg_access_indirect(ops, nops)))
+ 			return DIE_FIND_CB_END;
  
- 	if (addr_offset == addr_type) {
- 		/* Update offset relative to the start of the variable */
-@@ -1414,7 +1416,7 @@ static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
- 	if (dwarf_aggregate_size(&type_die, &size) < 0)
- 		return false;
+ 		/* Only match with a simple case */
+@@ -1464,11 +1496,11 @@ static int __die_find_var_reg_cb(Dwarf_Die *die_mem, void *arg)
+ 					     /*is_pointer=*/true))
+ 				return DIE_FIND_CB_END;
  
--	if (addr_offset >= addr_type + size)
-+	if (addr_offset_ - addr_type_ >= size)
- 		return false;
+-			/* Local variables accessed by a register + offset */
++			/* variables accessed by a register + offset */
+ 			if (ops->atom == (DW_OP_breg0 + data->reg) &&
+ 			    check_allowed_ops(ops, nops) &&
+ 			    match_var_offset(die_mem, data, data->offset, ops->number,
+-					     /*is_pointer=*/false))
++					     /*is_pointer=*/is_breg_access_indirect(ops, nops)))
+ 				return DIE_FIND_CB_END;
+ 		} else {
+ 			/* pointer variables saved in a register 32 or above */
+@@ -1478,11 +1510,11 @@ static int __die_find_var_reg_cb(Dwarf_Die *die_mem, void *arg)
+ 					     /*is_pointer=*/true))
+ 				return DIE_FIND_CB_END;
  
- 	/* Update offset relative to the start of the variable */
+-			/* Local variables accessed by a register + offset */
++			/* variables accessed by a register + offset */
+ 			if (ops->atom == DW_OP_bregx && data->reg == ops->number &&
+ 			    check_allowed_ops(ops, nops) &&
+ 			    match_var_offset(die_mem, data, data->offset, ops->number2,
+-					     /*is_poitner=*/false))
++					     /*is_pointer=*/is_breg_access_indirect(ops, nops)))
+ 				return DIE_FIND_CB_END;
+ 		}
+ 	}
 -- 
 2.50.1.470.g6ba607880d-goog
 
