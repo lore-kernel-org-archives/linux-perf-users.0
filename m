@@ -1,99 +1,133 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008692B9BA
-	for <linux-perf-users@vger.kernel.org>; Sat, 26 Jul 2025 00:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FA176026
+	for <linux-perf-users@vger.kernel.org>; Sat, 26 Jul 2025 00:42:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753490429; cv=none; b=Yk9FrkZbxA1G1ngbAyZ5kDHEpeecXYrVNsJlyDLXfWh/DZhj8EHTe5WmPae3mvoIh/LIIh+eoP482z3Uxpakplsjg7rJHtkw6JTo8tKkWfbFWIBsYOdaBp0QcExX3JueX3JYTnDIjaMKbgEIPWW6/12vRnk/yB5hxso4/X1+Jt8=
+	t=1753490534; cv=none; b=EsqJsjS+erUdJyxD7w9oW1iHCqDLiGCryVTug8fmSdLeRVdgVtykOMgRGwDfsJohve26NiQk1dF5R5Ot8Rgk6Gtjs9aarmk9k1wU0JMfUWzpOArG7KmzSsdljRCR3YgTtBgdKlh9dtV+k3y+HaVQqckWdOMfQ5SdeI/dhcFfOBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753490429; c=relaxed/simple;
-	bh=n8D/edGFZL/hgNbZYwUtmezqHxp9oRlZEQVwjzRgobQ=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=tjVPjLlKJ6p4yvtJE63uxK3A/SFUGkEZA12WAqr1/VTohDP4XRAjqtxN7AQO2ImJcMbDDnmDJATO/LolhF1OZiXthOUvzS58S3iBgoYkiSnO73ApvqW0dF4KnD+r7FBK7M4+dPQyiSEwy8Ly0dTSsHCSGgY77BM78o1S/OT2920=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--blakejones.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DMy1RK62; arc=none smtp.client-ip=209.85.210.201
+	s=arc-20240116; t=1753490534; c=relaxed/simple;
+	bh=i2KMGB5jXlYrZOEVyEEtlYkBMWkUvJBvYvMLMWjqryY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IvmwxYQwEy9apOxwsb/x0v1HLFOa99YZgNzd+qopxRt+gfwlr+1YFpaPLYeHVmiDaiSivwUxvjvK2jEZ8UnSC9yyxf9E8mge1eJfJchhw0M99fZ5nbrjW3+bYyymswR5UL9hbpIuC0xJ57IRC3++2yKFA7AmhDS7AXncU1Re5wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EvfJPXFb; arc=none smtp.client-ip=209.85.217.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--blakejones.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DMy1RK62"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7492da755a1so2363720b3a.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 17:40:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EvfJPXFb"
+Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-4e9c6b44477so1714917137.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 17:42:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753490427; x=1754095227; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9Zqr8X01SGutVjV/XNi7iN/97nh5Gk7Veb9QakNbtvc=;
-        b=DMy1RK62tQPnRAgekk7WhgdtAX1l/XVigu2kmRxQCUGSpm6RU2e7WRRjsruS/swRy7
-         l++hEVQ1NhI2AuMJBoeahRo/tQsLXHcjjSbs3tahT6myVe5gkxfabWdYLIMiY2QyZIbx
-         HHlmA2oYBRafDPaOH6i6B6S+oKTJPnt9obQxrJOGOP/roqOZManW5E5mZyuzYa08TN96
-         0QDJl5raj8JbglyqAWlb3RxzB4IIRBOCH+X6/CTUmwMRUWT8+mOQUOclFXDkpF4jHomU
-         m7+z34z/SsEwFciZ/Czo4Wu1KVteVaNk/5Q6JDIzk9tPpKOZn3TzAkUDLXM1Vu271/ur
-         QTEA==
+        d=google.com; s=20230601; t=1753490531; x=1754095331; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i2KMGB5jXlYrZOEVyEEtlYkBMWkUvJBvYvMLMWjqryY=;
+        b=EvfJPXFb+WTFp+kudxv6YHLf0TPkAJgThkffhKdWGbmjz30u3nn9Zduz8zDqdlAlOM
+         j84jklBeCiSyQDNfKpHoY5KNobAq6ly+8cqJzhXgfvrDLMLhOd5Q5uKfRcYjfGDNgRZz
+         ogAL316jEF7qhlCIN0GxRdmjwnvYEup+IgHiRL5ctFSsMTZL6akOHKtSdMMO4JJiCdIV
+         TvRPGEx/yWQS5hFrEuaWpx/B5s5KwO9XHoz3ODbAkAPDR5f8SRt3NE8Jincs43nR3SAU
+         WYSMBjATDMryH65U06Fb6gbmMPWUSEXJolRVXv+99OhwGwr47TCESyJEYVYy555ouxuH
+         U7ZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753490427; x=1754095227;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9Zqr8X01SGutVjV/XNi7iN/97nh5Gk7Veb9QakNbtvc=;
-        b=W8gZ0cddXKkwfIxXED2R3x2XQXJmC8LQW+RpyXVo8Xvh2QTqfhDVjEpzLdkk1gf+9e
-         LMjiLFFXNRf6KT1i/QH0Al+XanmgUCDesPKatHkKROTWA80cK2HfGVMFtzYWsR6FimP/
-         e9fZcZXaZtVPuMuL8Z4bED4XGyPDRyRtTS7J0G5Ba1KGYzbBUqc9Q+Mk3Xjh0wkLPO5q
-         2ONu9uHW3oFPt3/hOc2sEDLKg8mHUeFBjKwSXt/1I67R9hRFywXmr5TZnZmsI0e5mCRq
-         pdrL+ULRyDQGzNq2K4g64dlcnfGEHVoRniAkOAMrClZPlK/uzCgNEd3+YedSKOY5LaNr
-         mYFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXbdnleoEPdJQmxlafaIXBJIcNIwJR60VCoJxoDfpjSPgeXbILiymntRsZV4zBIcJDrB540lWCcypl2NrrRmpjJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YykwyEXZmbzdxhcWGfULKz05wjfj2XdqomMRhSNBPXN1+kX+a8z
-	pq/RywU+TUEwa/qYbv5Up5WcZ4wZvY2+cahxYUQaXR6SxnLXEa63X4xOKWWQ21i3ji0ghBfXLZ4
-	APSL1pzfltS9YirW85Al3XQ==
-X-Google-Smtp-Source: AGHT+IGSoo8WdGl+OGvbRnbs0+/8TM4wBhGm55waZ4GSl0VDmPb7RoWgx3X4IQSiC2YjsJugCZwIw0DRLCTKodF2
-X-Received: from pfau2.prod.google.com ([2002:a05:6a00:aa82:b0:748:34d:6d4f])
- (user=blakejones job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:1953:b0:748:2cbb:be45 with SMTP id d2e1a72fcca58-7633583028dmr5161224b3a.15.1753490427032;
- Fri, 25 Jul 2025 17:40:27 -0700 (PDT)
-Date: Fri, 25 Jul 2025 17:40:23 -0700
+        d=1e100.net; s=20230601; t=1753490531; x=1754095331;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=i2KMGB5jXlYrZOEVyEEtlYkBMWkUvJBvYvMLMWjqryY=;
+        b=G7ICbpXaKKCXdBjYex9dfiiC9j+XmwSNnil5Fo4RCGxAau5m6j0XC4FdIPU/v25VBD
+         RwlAJDYKF8myYxhv3wmCm4fgVIhrPhTkvctrqjY1aZeB84AUq6yXzd+bbG1KGOXCFBBb
+         QBnx+muv6BcK5VNTQwU8xVKwAzQX+rYkZD4RyC15IdwD6IvZMambi/ptxUm1vnmDkSj7
+         5eYyfqZTyC+aobHI45tbFUOuivvdkFyclPzpxVbVW+ywDbbPsz+cesQiIBb0QxDTn1yu
+         WLQvgTvHRLmXRCaTAhk6eoAAMQv/y10iWGdHuGwNz39P8ZaLyjGkKZlqJdItCcZTahkx
+         3mMw==
+X-Forwarded-Encrypted: i=1; AJvYcCXQuJJlV+5oMV3SXrgGiHVXZTQe5iZSXW6VP1IrCIYn8h5AZW0Rg/bV0griNCyxeRm1KK6RgcJprTFWzFy5ITaR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1lxbm0VHsMmXy5MGjM2iEupz/jj4pO/WUqOCW4UiKtNBW4pc0
+	GHc7oRVYKO3YC23G4n4yFnt6RROdMW12nD1l7u1t5uiZIgRxVt/+XuEK4ujOg1pmIFb/QDZZGM3
+	BWXid9CaNpT5WRpe3S4UtInDeUqXA5bBIoKvFGPQl
+X-Gm-Gg: ASbGncsrmpDMQYe6S2bU8rFvLfO9jP5RGwZp1oRFxEx4XfA0vKXT4W8eLTbdh3Xhpzu
+	OxZH6SHsUwrNy0VHFGPX5j/pEpmPzFG5RcOie1J4T/LU4OR8Sjk0Gj6qTjIJOeM9Y7cMYknnlB+
+	HhS3G1Wuu1uXE85ZDPmQ+n20TFNL5pCvbX83Mbp1Q2gtqhOjU0dBVJeo03BbpArARwRRtaNhjmy
+	LdjpBo=
+X-Google-Smtp-Source: AGHT+IHrA3GZZD0wwju8aMv9Qz7fcPczk9FABOxxb3E5ADsq04AqPwLpKjr7JRvL4/0iuqFoC974FPIiSp+z8XfswSE=
+X-Received: by 2002:a05:6102:8087:b0:4e9:c652:6a1e with SMTP id
+ ada2fe7eead31-4fa3fa67872mr2000007137.3.1753490530877; Fri, 25 Jul 2025
+ 17:42:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.50.1.470.g6ba607880d-goog
-Message-ID: <20250726004023.3466563-1-blakejones@google.com>
-Subject: [PATCH] Fix comment ordering.
+MIME-Version: 1.0
+References: <20250605233934.1881839-1-blakejones@google.com>
+ <20250605233934.1881839-5-blakejones@google.com> <CAP-5=fVX_Qohsf=f=-fR8mYsTq4zitURit2=4BYyD5HPJHOT7Q@mail.gmail.com>
+ <CAP_z_Cjuh9HJvcnsARaX-QUwDMbRPMDr9AtxbBxYUR_BTSzwCg@mail.gmail.com> <CAP-5=fWuU8Xhzvjx8FgQpOJCJXewOw9S3Vdm+aXYgw64bsq0UA@mail.gmail.com>
+In-Reply-To: <CAP-5=fWuU8Xhzvjx8FgQpOJCJXewOw9S3Vdm+aXYgw64bsq0UA@mail.gmail.com>
 From: Blake Jones <blakejones@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Blake Jones <blakejones@google.com>, 
-	Collin Funk <collin.funk1@gmail.com>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
+Date: Fri, 25 Jul 2025 17:41:59 -0700
+X-Gm-Features: Ac12FXz0LtMLKb3jLJLRjLCQ4NRMLoH85zHPh6h6oQV6X5PeOP12nXzMnjePzzA
+Message-ID: <CAP_z_CjEzaPo=V+rzyDWFgnnHfNGAe_jHm7g=++V72GPs1A-fw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] perf: add test for PERF_RECORD_BPF_METADATA collection
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, 
+	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, 
+	Guilherme Amadio <amadio@gentoo.org>, Yang Jihong <yangjihong@bytedance.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Chun-Tse Shao <ctshao@google.com>, 
+	Aditya Gupta <adityag@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Zhongqiu Han <quic_zhonhan@quicinc.com>, Andi Kleen <ak@linux.intel.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Yujie Liu <yujie.liu@intel.com>, 
+	Graham Woodward <graham.woodward@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Ben Gainey <ben.gainey@arm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Commit edf2cadf01e8f2620af25b337d15ebc584911b46 ("perf test: add test for
-BPF metadata collection") overlooked a behavior of "perf test list",
-causing it to print "SPDX-License-Identifier: GPL-2.0" as a description for
-that test. This reorders the comments to fix that issue.
+I just sent https://lore.kernel.org/linux-perf-users/20250726004023.3466563=
+-1-blakejones@google.com/T/#u
+to address this issue. Sorry for the delay.
 
-Signed-off-by: Blake Jones <blakejones@google.com>
----
- tools/perf/tests/shell/test_bpf_metadata.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/tests/shell/test_bpf_metadata.sh b/tools/perf/tests/shell/test_bpf_metadata.sh
-index bc9aef161664..69e3c2055134 100755
---- a/tools/perf/tests/shell/test_bpf_metadata.sh
-+++ b/tools/perf/tests/shell/test_bpf_metadata.sh
-@@ -1,7 +1,7 @@
- #!/bin/bash
--# SPDX-License-Identifier: GPL-2.0
-+# BPF metadata collection test
- #
--# BPF metadata collection test.
-+# SPDX-License-Identifier: GPL-2.0
- 
- set -e
- 
--- 
-2.50.1.470.g6ba607880d-goog
-
+On Wed, Jul 9, 2025 at 2:45=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> On Wed, Jul 9, 2025 at 2:08=E2=80=AFPM Blake Jones <blakejones@google.com=
+> wrote:
+> >
+> > On Wed, Jul 9, 2025 at 2:02=E2=80=AFPM Ian Rogers <irogers@google.com> =
+wrote:
+> > > > +++ b/tools/perf/tests/shell/test_bpf_metadata.sh
+> > > > @@ -0,0 +1,76 @@
+> > > > +#!/bin/sh
+> > > > +# SPDX-License-Identifier: GPL-2.0
+> > >
+> > > The 2nd line in a shell test script is taken to be the name of the te=
+st, so
+> > > ```
+> > > $ perf test list 108
+> > > 108: SPDX-License-Identifier: GPL-2.0
+> > > ```
+> > >
+> > > > +#
+> > > > +# BPF metadata collection test.
+> > >
+> > > This should be on line 2 instead.
+> >
+> > Oof, that sure wasn't on my radar. Should I do a followup patch, or is
+> > it not worth bothering?
+>
+> The patch has been in perf-tools-next for a few weeks:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/commit/?h=3Dperf-tools-next&id=3Dedf2cadf01e8f2620af25b337d15ebc584911b=
+46
+> so modifying it is probably not a good idea (it'd need a forced push
+> and break people downstream). If you could send a follow up, that'd be
+> great just so that we have >1 person in the
+> author/reviewer/signed-off-by tag!
+>
+> Thanks,
+> Ian
