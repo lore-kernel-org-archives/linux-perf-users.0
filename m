@@ -1,42 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973E028682
-	for <linux-perf-users@vger.kernel.org>; Sat, 26 Jul 2025 06:21:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67C5170826;
+	Sat, 26 Jul 2025 06:39:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753510914; cv=none; b=rvwxD2NnEzmWXZyg6fuhsaRRghuDWXIAaZYz7Azilc0cuwFMqALQVFyyStkmcrjKuT+hxwa2XX7+m/TORGzEQ6N1o37usxN2hQaGzUObevpFP3TKJ6HrsmNiFtQHk94IDEpQQHQJFVxM7+3ah+XQ0caI6Hie95paszBLNeL/MoY=
+	t=1753511979; cv=none; b=lPM+zKao2Yvh+mhQnNwwCI+JKBbRbvaN7C5zGimJ1ZR7BjoHy4y2zKDC0POrbed7tlKvIXYug1x/BOGfX/yAR9qtUQJL6ylM/UdbuSh2wpI7VCWHlkrn6sRPUJEM5F43xPfBGERNMgiUQ8UJfLJUNVOtGKZV/E7etrey7wj4lWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753510914; c=relaxed/simple;
-	bh=hsCxdxCbPd+gIOTViUigISUb9oD8yxMiDkHlzsPlKKc=;
+	s=arc-20240116; t=1753511979; c=relaxed/simple;
+	bh=+Fm0LLoN34vFcBElRkyqT1ywLuu0TPIjCMpkHEuOSYA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bMiXn5LQ67gkiqhnScpkUZ6U9BObyivkOx+lXpP0XkopFchUrTlA0x4sILb3IPhVPEXGx963ecA/880JokeFdBRJ8lLfHqDClX1764/puqHWlX5i/Oboyf3e3wqWsnPe9qp8NicGQZ1JAHclwLwuxIK4RpUeoS3B1nLLlBwI+3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qZmXRCtC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=hxyLioCSBBMWxOVa4PUNrIkeQvKtr2OwSWf0ghPEPM6VeH/3jp/wFvd9DkBLPG1J2NHIkphDELT6lgv988K+TLdo6puKB5hXsePubv2JG6URe5oNrHc3UmEKNn/RMq7gEqMeALC3xPOHaR662P/9nXdC/4FIOxPjpI9zTgBNiFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=odzzanzi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qZmXRCtC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C593BC4CEED;
-	Sat, 26 Jul 2025 06:21:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="odzzanzi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5E6EC4CEED;
+	Sat, 26 Jul 2025 06:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753510914;
-	bh=hsCxdxCbPd+gIOTViUigISUb9oD8yxMiDkHlzsPlKKc=;
+	s=k20201202; t=1753511979;
+	bh=+Fm0LLoN34vFcBElRkyqT1ywLuu0TPIjCMpkHEuOSYA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qZmXRCtCCT1Ko7rklQS6vemCFLvy66/NM+b0MguRJiDlzgte4ENSpQuEo7siKu7AE
-	 l2j1fFC+main8VHAYzv8ngJIWos8vkqcRurYW9hDJm/Nz2E3NOqVtjvvYNWRDIypKh
-	 rY2QuOg3okksBcCEdJMZ5oNv94gwTuArkyOoMT6Ymz4dy7OMGfclXnUkskbHV7CqWC
-	 R8O+mG+/4wmRm66kvdlp30l4TuQvvQa8SON7lZYVorV6qtJ1YTzzxIFFCvuVBNGVqy
-	 iWlAK7icOMrkCRbYiRPCcqVUV/kCEDmoK1c+3TT5GV1aY0XjhNmMxMTIA5EokxEtWr
-	 fgk6Yj5egWKjA==
-Date: Fri, 25 Jul 2025 23:21:52 -0700
+	b=odzzanzianmxr6T8Fm48xRf/uqxfxr146FrJqgn1187xaMwjt8tlAy84EiKNhoDkc
+	 9po+PVAzNvtCyXMOd1DnFDx2DUQK2tWFty7/iPhDCnwwSsGq54xI9weSXOifeQ99cD
+	 fn2NG4t95c0ICxSFu+gFibFy4ALWU/KXotDSRS95Pc7JqYzAc6tahDyO0E5jFmxghS
+	 1CxPn0rHRBOdg/v7HCWw+IjzKp/fc2dwrCOIzC/YSLq+vnkcXKoLs7hX5QhBmH7FQf
+	 jLE2HWmvVB0+PCxQUQwr5Kzz03UZWyx/PBUKQsH8HPYHytwtwIh+NSBvQJ6PrU/31H
+	 aaaQI5+3gilLg==
+Date: Fri, 25 Jul 2025 23:39:37 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Jakub Brnak <jbrnak@redhat.com>
-Cc: vmolnaro@redhat.com, acme@kernel.org, acme@redhat.com,
-	irogers@google.com, linux-perf-users@vger.kernel.org,
-	mpetlan@redhat.com
-Subject: Re: [PATCH v3 6/7] perf test: Format log directories for shell tests
-Message-ID: <aIR0AH_-y-jurGZq@google.com>
-References: <20250113182605.130719-1-vmolnaro@redhat.com>
- <20250721132642.40906-1-jbrnak@redhat.com>
- <20250721132642.40906-7-jbrnak@redhat.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Alice Rogers <alice.mei.rogers@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] perf script: New treport script
+Message-ID: <aIR4KdxVcMzpPemP@google.com>
+References: <20250725082425.20999-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,80 +49,223 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250721132642.40906-7-jbrnak@redhat.com>
+In-Reply-To: <20250725082425.20999-1-irogers@google.com>
 
-On Mon, Jul 21, 2025 at 03:26:41PM +0200, Jakub Brnak wrote:
-> From: Veronika Molnarova <vmolnaro@redhat.com>
+On Fri, Jul 25, 2025 at 01:24:04AM -0700, Ian Rogers wrote:
+> From: Alice Rogers <alice.mei.rogers@gmail.com>
+
+Hello Alice, thanks for your contribution!
+
 > 
-> The name of the log directory can be taken from the test suite
-> description, which possibly could contain whitespace characters. This
-> can cause further issues if the name is not quoted correctly.
+> A textual app that displays the results of processing samples similar
+> to perf report. The app displays a tree of first processed and then
+> functions which drop down to show more detail on the functions they
+> call. The functions with the largest number of samples are sorted
+> first, after each function the percentage of time spent within it is
+> highlighted.
+
+Can you please tell us how to run this script and what's needed to run
+it?  Note that some people might not have textual in the system.  How
+will it work in that case?
+
+Also please add some example output in the commit message.  It'd be
+great if you can compare it with perf report output.
+
+Thanks,
+Namhyung
+
 > 
-> Replace the whitespace characters with an underscore to prevent the
-> possible issues caused by the name splitting.
-> 
-> Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
-> Signed-off-by: Jakub Brnak <jbrnak@redhat.com>
+> Signed-off-by: Alice Rogers <alice.mei.rogers@gmail.com>
+> Co-developed-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/tests/builtin-test.c | 21 +++++++++++++++++++--
->  1 file changed, 19 insertions(+), 2 deletions(-)
+>  tools/perf/scripts/python/treport.py | 177 +++++++++++++++++++++++++++
+>  1 file changed, 177 insertions(+)
+>  create mode 100644 tools/perf/scripts/python/treport.py
 > 
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index 89b180798224..9cb0788d3307 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -283,6 +283,21 @@ static bool test_exclusive(const struct test_suite *t, int test_case)
->  	return t->test_cases[test_case].exclusive;
->  }
->  
-> +/* Replace non-alphanumeric characters with _ */
-> +static void check_dir_name(const char *src, char *dst)
-
-It's not about just checking the name.  Maybe replace_dir_name()?
-
-Thanks,
-Namhyung
-
-> +{
-> +	size_t i;
-> +	size_t len = strlen(src);
+> diff --git a/tools/perf/scripts/python/treport.py b/tools/perf/scripts/python/treport.py
+> new file mode 100644
+> index 000000000000..fd1ca79efdad
+> --- /dev/null
+> +++ b/tools/perf/scripts/python/treport.py
+> @@ -0,0 +1,177 @@
+> +# treport.py - perf report like tool written using textual
+> +# SPDX-License-Identifier: MIT
+> +from textual.app import App, ComposeResult
+> +from textual.binding import Binding
+> +from textual.widgets import Footer, Header, TabbedContent, TabPane, Tree
+> +from textual.widgets.tree import TreeNode
+> +from typing import Dict
 > +
-> +	for (i = 0; i < len; i++) {
-> +		if (!isalnum(src[i]))
-> +			dst[i] = '_';
-> +		else
-> +			dst[i] = src[i];
-> +	}
-> +	dst[i] = '\0';
-> +}
+> +class ProfileNode:
+> +    """Represents a single node in a call stack tree.
 > +
->  static int delete_file(const char *fpath, const struct stat *sb __maybe_unused,
->  						 int typeflag, struct FTW *ftwbuf)
->  {
-> @@ -328,10 +343,12 @@ static bool create_logs(struct test_suite *t, int pass){
->  
->  static char *setup_shell_logs(const char *name)
->  {
-> -	char template[PATH_MAX];
-> +	char template[PATH_MAX], valid_name[strlen(name)+1];
->  	char *temp_dir;
->  
-> -	if (snprintf(template, PATH_MAX, "/tmp/perf_test_%s.XXXXXX", name) < 0) {
-> +	check_dir_name(name, valid_name);
+> +    Generally a ProfileNode corresponds to a symbol in a call stack.
+> +    The root is special, its children are events and the events
+> +    children are process names. After the process name come the
+> +    samples.
 > +
-> +	if (snprintf(template, PATH_MAX, "/tmp/perf_test_%s.XXXXXX", valid_name) < 0) {
-
-It'd be better to do snprintf() first and replace the name so that it
-doesn't add the valid_name buffer.
-
-Thanks,
-Namhyung
-
-
->  		pr_err("Failed to create log dir template");
->  		return NULL; /* Skip the testsuite */
->  	}
+> +    Attributes:
+> +        name (str): The name of the function, process or event.
+> +        value (int): The sample count for this node including counts from its
+> +                     children.
+> +        parent (ProfileNode): The parent of this node, this node belongs to its
+> +                              children.
+> +        children (Dict[str, ProfileNode]): A dictionary of child nodes, keyed by
+> +                                           their names.
+> +    """
+> +    def __init__(self, name: str, parent: "ProfileNode"):
+> +        """Initializes a ProfileNode."""
+> +        self.name = name
+> +        self.value: int = 0
+> +        self.parent = parent if parent else self
+> +        self.children: Dict[str, ProfileNode] = {}
+> +
+> +    def find_or_create_node(self, name: str) -> "ProfileNode":
+> +        """Finds a child node by name or creates it if it doesn't exist."""
+> +        if name in self.children:
+> +            return self.children[name]
+> +        child = ProfileNode(name, self)
+> +        self.children[name] = child
+> +        return child
+> +
+> +    def depth(self) -> int:
+> +        """The maximum depth of the call stack tree from this node down."""
+> +        if not self.children:
+> +            return 1
+> +        return max([child.depth() for child in self.children.values()]) + 1
+> +
+> +    def process_event(self, event: Dict) -> None:
+> +        """Processes a single profiling event to update the call stack tree.
+> +
+> +        Args:
+> +            event (Dict): A dictionary representing a single profiling sample,
+> +                          expected to contain keys like 'comm', 'pid', 'period',
+> +                          and 'callchain'.
+> +        """
+> +        pid = 0
+> +        if "sample" in event and "pid" in event["sample"]:
+> +            pid = event["sample"]["pid"]
+> +
+> +        if pid == 0:
+> +            comm = event.get("comm", "kernel")
+> +        else:
+> +            comm = f"{event.get('comm', 'unknown')} ({pid})"
+> +
+> +        period = int(event["period"]) if 'period' in event else 1
+> +        self.value += period
+> +
+> +        node = self.find_or_create_node(comm)
+> +        node.value += period
+> +
+> +        if "callchain" in event:
+> +            for entry in reversed(event["callchain"]):
+> +                sym = entry.get("sym")
+> +                name = None
+> +                if sym:
+> +                    name = sym.get("name")
+> +                if not name:
+> +                    name = entry.get("dso", "unknown")
+> +                    if "ip" in entry:
+> +                        name += f" 0x{entry['ip']:x}"
+> +                node = node.find_or_create_node(name)
+> +                node.value += period
+> +        else:
+> +            name = event.get("symbol")
+> +            if not name:
+> +                name = event.get("dso", "unknown")
+> +                if "ip" in event:
+> +                    name += f" 0x{event['ip']:x}"
+> +            node = node.find_or_create_node(name)
+> +            node.value += period
+> +
+> +    def add_to_tree(self, node: TreeNode, root_value: int) -> None:
+> +        """Recursively adds this node and its children to a textual TreeNode.
+> +
+> +        Args:
+> +            node (TreeNode): The textual `TreeNode` object to which this
+> +                             ProfileNode should be added.
+> +            root_value (int): Value at the root of the tree.
+> +        """
+> +        if root_value == 0:
+> +            root_value = self.value
+> +
+> +        # Calculate the percentage for the node, highlighting the
+> +        # percentage with reversed colors.
+> +        if root_value != 0:
+> +            percent = self.value / root_value * 100
+> +            label = f"{self.name} [r]{percent:.3g}%[/]"
+> +        else:
+> +            label = self.name
+> +
+> +        # Add a standalone leaf.
+> +        if not self.children:
+> +            node.add_leaf(label)
+> +            return
+> +
+> +        # Recursively add children.
+> +        new_node = node.add(label)
+> +        for pnode in sorted(self.children.values(),
+> +                            key=lambda pnode: pnode.value, reverse=True):
+> +            pnode.add_to_tree(new_node, root_value)
+> +
+> +
+> +class ReportApp(App):
+> +    """A Textual application to display profiling data."""
+> +
+> +    # The ^q binding is implied but having it here adds it in the Footer.
+> +    BINDINGS = [
+> +        Binding(key="^q", action="quit", description="Quit",
+> +                tooltip="Quit the app"),
+> +    ]
+> +
+> +    def __init__(self, root: ProfileNode):
+> +        """Initialize the application."""
+> +        super().__init__()
+> +        self.root = root
+> +
+> +    def make_report_tree(self) -> Tree:
+> +        """Make a Tree widget from the profile data."""
+> +        tree: Tree[None] = Tree("Profile")
+> +        # Add events to tree skipping the root.
+> +        for pnode in sorted(self.root.children.values(),
+> +                            key=lambda node: node.value, reverse=True):
+> +            pnode.add_to_tree(tree.root, root_value=0)
+> +        # Expand the first 2 levels of the tree.
+> +        tree.root.expand()
+> +        for tnode in tree.root.children:
+> +            tnode.expand()
+> +        return tree
+> +
+> +    def compose(self) -> ComposeResult:
+> +        """Composes the user interface of the application."""
+> +        yield Header()
+> +        with TabbedContent(initial="report"):
+> +            with TabPane("Report", id="report"):
+> +                yield self.make_report_tree()
+> +        yield Footer()
+> +
+> +
+> +class ProfileBuilder:
+> +    """Constructs a profile tree from a stream of events."""
+> +    def __init__(self):
+> +        self.root = ProfileNode("root", parent=None)
+> +
+> +    def process_event(self, event) -> None:
+> +        """Called by `perf script` to update the profile tree."""
+> +        ev_name = event.get("ev_name", "default")
+> +        ev_root = self.root.find_or_create_node(ev_name)
+> +        ev_root.process_event(event)
+> +
+> +if __name__ == "__main__":
+> +    # process_event is called for each perf event to build the profile.
+> +    profile = ProfileBuilder()
+> +    process_event = profile.process_event
+> +    # trace_end will run the application, this can't be done
+> +    # concurrently as perf expects to be the main thread as does
+> +    # Textual.
+> +    app = ReportApp(profile.root)
+> +    trace_end = app.run
 > -- 
-> 2.50.1
+> 2.50.1.552.g942d659e1b-goog
 > 
