@@ -1,425 +1,255 @@
-Received: from mail-qt1-f201.google.com (mail-qt1-f201.google.com [209.85.160.201])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B78925F799
-	for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 20:28:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE36645
+	for <linux-perf-users@vger.kernel.org>; Sat, 26 Jul 2025 00:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753475310; cv=none; b=a6NVmEsHd2uFXX6oZyBsuxOrdhJWIchkGBZoUS2CBNmXjCeNAGdgREKGcBg0DfiHZgQUkkReCGDDFj7oshJ9USHWuRtX3ujIP7HgDZMfnuMr0pRs2Cw4bOXEQRi+Snyl0wydDT+pc2m9V3hflEVL4q11+i68GbUZhJ67vO2r4a4=
+	t=1753489015; cv=none; b=j6BWBQ9KGGJadCbuwpyviRkKNaZ/zXuBNaHp8uvife/hL8DnD3e6nfTY+e69GqJA1F7ttxBEDp5BV8pHJ/KoCf9GzM79YJQ+ElI80Xa9l5AlN+LdC12be7KWkNh6NGBuCGKt9RMzQ6ymZafuARuo2h3G2swOJdH14CVPC6Mv2Io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753475310; c=relaxed/simple;
-	bh=lv54xUtQ3WONfNqydnskRHUhGzP6WkcXiLDmvg3vg48=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=VZDAAzsdOS01W81dCWfS9OjQirWmVRp/vmZJZxl4nExPifgUE0lqZ4Zu02eI4kUjIEYNgOLMiUrhcQe8Z7/OH7dubiCzY7sWM6CRkKbaXVeAax1gQUKuLtMy/0NY4OJ7aj3iW8/mTlXYe7OjCm9jpFqKDIdI7C1QNwGpK3+wLAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vOuKzQCJ; arc=none smtp.client-ip=209.85.160.201
+	s=arc-20240116; t=1753489015; c=relaxed/simple;
+	bh=wLT07SspZJyUlUAY+iQCMYoNLLiQF7EBOVzYGdcBfcM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nhIsJE06wtX1/oD5Uj08DA/NZ0QIzood64zL9N9/J4zKMv1L0nRTNLL6kiNO4gwXt8nQnIloajMhH4aYOnyhfvXeQ7soK5C9E01zt5hkEEbbigWc31SFFDFWrVCNgDytNHR2FpQzql1/XGNbK7q+/pblM/9kS/Fqf1AtBZe1y3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=n/GXpBTJ; arc=none smtp.client-ip=209.85.166.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vOuKzQCJ"
-Received: by mail-qt1-f201.google.com with SMTP id d75a77b69052e-4aba439b4ffso53407341cf.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 13:28:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n/GXpBTJ"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3e283b2d065so42895ab.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 17:16:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753475307; x=1754080107; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JgtV/JZRHlv0+PHl5j1NSg/A21YbT9f5uAr0q6A1H5c=;
-        b=vOuKzQCJCSQPTmbimUQnQG7eIkzupEINRwMU+azquzpWHJ+3F9jXssmZNCdhyurrgs
-         VJNkwGuQb69IZBHyzxrvX3H++z/Yhh1niFSQ6Z5t4p1BbiUDkc5MIs2GH2eKNA41ryW0
-         hjzkHF3wcZshawk/Yzn5YOHfWc5Zib/hTSWuxOgByheuBdzWvB0YDJQeWKfnNwGArQyv
-         JQfkgcKecE/M2T2g1R9kRij+Ya01OUR+Kd3WWhKNfTyQm9t2dqMqNHEjQhN8h4XxE2P+
-         PAWnA+DVvHOdHnIU1q5G5W68Nlf0y5sn7Nhi9DEKyKVBhFEI+a2mGgApB7HlDfyphp1c
-         aOlQ==
+        d=google.com; s=20230601; t=1753489013; x=1754093813; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tWGAQbQT83vwF/MhSXD7xIgiGrpcABal3I6ANTiGhnw=;
+        b=n/GXpBTJ5xYonlQPW3VZSmQV/Hez/5fvF6gmmnSxj1Wcr0jRhiBENWwNWvF2eYL3U9
+         iyk8kwWwZCmh6rV30M4a2M5d8Y9fcA3aQ1wl3Yh5GEie5ABBcCMV0pja01L4H0i06AKn
+         xXoTcicTiae333JKr/NCeTCfeybiyYGEW3HaDuItcVTwgC81IyUlzFISCT8mKPrha6Ti
+         zt/rGGZEMX2lDZ55ByaSV55vTD3p+0rdARJE8p/MuaaDcS6PzIwN8Hvz4NQoBT7P4haR
+         T+LUg0pZ4TFjOu39RX1qmlgocI5nn679BLZnZVquRxA3qRhJBw9GhIoGH16a+3Nk0azO
+         s3gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753475307; x=1754080107;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JgtV/JZRHlv0+PHl5j1NSg/A21YbT9f5uAr0q6A1H5c=;
-        b=cPLqs6ryNWIL7emBIX2Yb+oRe2bmPgN3nHHXxsDUkuRi9OwEdRrVakVDXdaHHbAhCR
-         Rk5EVYFc4LEwGhDEXw/t4p1IrLyHGGdHMesRNJPDZ2MVGRXs63JasLd+VO14HvTVPXJe
-         dgYE2rfryNUXRDmSkMtA8xYti8aW44L3LzlcHaQ8dsCeoUJ+wJ6+c5MkJ5NkKKH8IgZe
-         l870iwyOHHGboVK1XsgKaA8pJAhRQEvw1K8kJzimy4plJlpY1UJvZwaxhWiDPwpIRdjW
-         WQMcPboRr2pvabz9PhbYqmGdg/zF/lUxqNof2H23jE6KK5DJjoVj3UL3n8o5YaAmnthH
-         azhg==
-X-Forwarded-Encrypted: i=1; AJvYcCUsec+TsN+8tzJ99+5DEfXXBzghUiasmwB76r6mXKseQEQXE2j7Yp2C19zQW9SGaZRud2eJrr3UtBc63/q/rJuF@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsBQWeCvnya6sOzhjGl1dt74GFMZq1EZCejbiDoFvQ8FKhHbF3
-	vs4+S5nTXEuixQ2zvc9Ca9n5p48hX7SXXzKzqizBnjLMTfIScyfBYYd/pzlHLaZKDLHoNeN/26t
-	PysC9tV4m+A==
-X-Google-Smtp-Source: AGHT+IEaPavaGTYObiXIJE1ukWXvmgQePpoF9ZlEjnTtODAqdevAV+DR5yKu8V2x2kO3XF3fMCQqXamylvm1
-X-Received: from qtbfk17.prod.google.com ([2002:a05:622a:5591:b0:4a9:91da:e87e])
- (user=zecheng job=prod-delivery.src-stubby-dispatcher) by 2002:a05:622a:1888:b0:4ab:b0a0:5b58
- with SMTP id d75a77b69052e-4ae8f11e1efmr51406351cf.46.1753475307164; Fri, 25
- Jul 2025 13:28:27 -0700 (PDT)
-Date: Fri, 25 Jul 2025 20:28:09 +0000
-In-Reply-To: <20250725202809.1230085-1-zecheng@google.com>
+        d=1e100.net; s=20230601; t=1753489013; x=1754093813;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tWGAQbQT83vwF/MhSXD7xIgiGrpcABal3I6ANTiGhnw=;
+        b=YCjh6H3AQcZ7njHhJwXYTW26HyTK9i0OKgGQZtDbloYyun2RRo9O1NqgUPiEN+SbYU
+         wJ7Kw7+oMJpaCTxP1PPvITFUyD7bLuKMMaPdn36P22ySal94DZa2a/JVBb2IInHXY0E/
+         0KThvJaUt/L0FoRUg6DQksxhE45X1YuxY0WOBjD+3uulKcDb2tdMVikv4c9jpU2OehCP
+         VrwWWdRZvyObnnxMwXxBkn+XxOcALUdHuoS+okTdoLvrIX/wXC5xe1QlRlGgAXa1W58P
+         kumyZZU7By2y09h3NQfxZ1OnZOdtkwF4i3hvPVNhkp1WLtehhFyrDZcNkwBZWWAJpBc6
+         tzaw==
+X-Forwarded-Encrypted: i=1; AJvYcCWjt6iiWDceHVksacL+/ob+CDnoqfOmrUWpeL1AQXUrznpuvyKHd/KYlecU613dAgA3V5Ylcp8lL7fYTVM4pzTH@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZmcUXO+oaJfw6kmmvhr+K/o9Z8k6ci6J2lOt9cB3hFXqrlyjR
+	c0SbaoJ/h98BLtzbUD/0/WQtFFMTDoL9USsGtF1aBSfEzg0vhupmyRuETXcwqTxNK26ED+YXZI/
+	ZyyIk7ldPI9rbhpiBB2y3kaBSX0PXRKN4WoOs/Yds
+X-Gm-Gg: ASbGncsl/w9gdYP9UWgXxip0i+pfF5RsWsLC7LUw5tIRHAp2QS7+cs3zbqE0HpIln/r
+	xCT6Wg4ht6vlEXrRUTdhrcpNsGPJyi6Ugj3tfA/re2Ft/2bDQ9Qh0vo4HavNh2TH1eHp2VHV/I1
+	ZrYfX8qCptV90qwL3O4v8wKUZj4LttrkQkceIXP/r78LcIqRQZM9I48yOtu6yHhvrhH5Ql/hoX/
+	x2lkru5o35qvRmaxXGrU2181WGqtA==
+X-Google-Smtp-Source: AGHT+IE1m8smmID3cFuFNgjSz/MkYOtEOhdWRalCKfFb0FRn9NH9Mkh0FOMnWVqWkUHymBgr+7hXOVd76uU8eaYfKQM=
+X-Received: by 2002:a05:6e02:3399:b0:3e2:c639:8279 with SMTP id
+ e9e14a558f8ab-3e3cbfebd2cmr1701865ab.20.1753489012378; Fri, 25 Jul 2025
+ 17:16:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250725202809.1230085-1-zecheng@google.com>
-X-Mailer: git-send-email 2.50.1.470.g6ba607880d-goog
-Message-ID: <20250725202809.1230085-7-zecheng@google.com>
-Subject: [PATCH v1 6/6] perf annotate: Track arithmetic instructions on pointers
-From: Zecheng Li <zecheng@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"Liang, Kan" <kan.liang@linux.intel.com>, Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Zecheng Li <zli94@ncsu.edu>, Xu Liu <xliuprof@google.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Zecheng Li <zecheng@google.com>
+MIME-Version: 1.0
+References: <20250725193755.12276-1-namhyung@kernel.org> <20250725193755.12276-2-namhyung@kernel.org>
+In-Reply-To: <20250725193755.12276-2-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 25 Jul 2025 17:16:39 -0700
+X-Gm-Features: Ac12FXyZRMAxtFSurK7aKeC9G_8NlL5V7QhxZMAiTEQfpuDa27RRtPfSAuEbzn0
+Message-ID: <CAP-5=fXcBfQCbsrYmyrr4X+Svoo7iJW_62G8jG9C7f7hwwQAfA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/9] perf annotate: Rename to __hist_entry__tui_annotate()
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Track the arithmetic operations on registers with pointer types. We
-handle only add and lea instructions. The original pointer information
-needs to be preserved for getting outermost struct types. For example,
-reg0 points to a struct cfs_rq, when we add 0x10 to reg0, it should
-preserve the information of struct cfs_rq + 0x10 in the register instead
-of a pointer type to the child field at 0x10.
+On Fri, Jul 25, 2025 at 12:38=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> There are three different but similar functions for annotation on TUI.
+> Rename it to __hist_entry__tui_annotate() and make sure it passes 'he'.
+> It's not used for now but it'll be needed for later use.
+>
+> Also remove map_symbol__tui_annotate() which was a simple wrapper.
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/ui/browsers/annotate.c | 17 +++++++----------
+>  tools/perf/ui/browsers/hists.c    |  2 +-
+>  tools/perf/util/annotate.h        | 12 ------------
+>  tools/perf/util/hist.h            | 12 +++++++-----
+>  4 files changed, 15 insertions(+), 28 deletions(-)
+>
+> diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/a=
+nnotate.c
+> index 183902dac042ecb0..28ef146f29e8e742 100644
+> --- a/tools/perf/ui/browsers/annotate.c
+> +++ b/tools/perf/ui/browsers/annotate.c
+> @@ -27,6 +27,7 @@ struct annotate_browser {
+>         struct rb_node             *curr_hot;
+>         struct annotation_line     *selection;
+>         struct arch                *arch;
+> +       struct hist_entry          *he;
 
-Details:
+nit: as you are here is it worth commenting this, for example, who owns "he=
+"?
 
-1.  struct type_state_reg now includes an offset, indicating if the
-    register points to the start or an internal part of its associated
-    type. This offset is used in mem to reg and reg to stack mem
-    transfers, and also applied to the final type offset.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-2.  lea offset(%sp/%fp), reg is now treated as taking the address of a
-    stack variable. It worked fine in most cases, but an issue with this
-    approach is the pointer type may not exist.
+Thanks,
+Ian
 
-3.  lea offset(%base), reg is handled by moving the type from %base and
-    adding an offset, similar to an add operation followed by a mov reg
-    to reg.
-
-4.  Non-stack variables from DWARF with non-zero offsets in their
-    location expressions are now accepted with register offset tracking.
-
-Limitation: Offset tracking for register moved to the stack is not yet
-implemented. Currently, moving an register with offset to the stack
-resolves to the member type, which worked in some of the cases. Strictly
-it should be a pointer to the immediate child member. Multi-register
-addressing modes in LEA are not supported.
-
-Signed-off-by: Zecheng Li <zecheng@google.com>
----
- tools/perf/arch/x86/annotate/instructions.c | 109 +++++++++++++++++++-
- tools/perf/util/annotate-data.c             |  14 ++-
- tools/perf/util/annotate-data.h             |   6 ++
- 3 files changed, 120 insertions(+), 9 deletions(-)
-
-diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arch/x86/annotate/instructions.c
-index c6d403eae744..82fc0106a4de 100644
---- a/tools/perf/arch/x86/annotate/instructions.c
-+++ b/tools/perf/arch/x86/annotate/instructions.c
-@@ -248,6 +248,7 @@ static void update_insn_state_x86(struct type_state *state,
- 			tsr = &state->regs[state->ret_reg];
- 			tsr->type = type_die;
- 			tsr->kind = TSR_KIND_TYPE;
-+			tsr->offset = 0;
- 			tsr->ok = true;
- 
- 			pr_debug_dtp("call [%x] return -> reg%d",
-@@ -284,6 +285,7 @@ static void update_insn_state_x86(struct type_state *state,
- 			    !strcmp(var_name, "this_cpu_off") &&
- 			    tsr->kind == TSR_KIND_CONST) {
- 				tsr->kind = TSR_KIND_PERCPU_BASE;
-+				tsr->offset = 0;
- 				tsr->ok = true;
- 				imm_value = tsr->imm_value;
- 			}
-@@ -291,6 +293,15 @@ static void update_insn_state_x86(struct type_state *state,
- 		else
- 			return;
- 
-+		/* Ignore add to non-pointer types like int */
-+		if (dwarf_tag(&tsr->type) == DW_TAG_pointer_type &&
-+		    src->reg1 != DWARF_REG_PC && tsr->kind == TSR_KIND_TYPE && !dst->mem_ref) {
-+			tsr->offset += imm_value;
-+			pr_debug_dtp("add [%x] offset %#"PRIx64" to reg%d",
-+				     insn_offset, imm_value, dst->reg1);
-+			pr_debug_type_name(&tsr->type, tsr->kind);
-+		}
-+
- 		if (tsr->kind != TSR_KIND_PERCPU_BASE)
- 			return;
- 
-@@ -302,6 +313,7 @@ static void update_insn_state_x86(struct type_state *state,
- 			 */
- 			tsr->type = type_die;
- 			tsr->kind = TSR_KIND_POINTER;
-+			tsr->offset = 0;
- 			tsr->ok = true;
- 
- 			pr_debug_dtp("add [%x] percpu %#"PRIx64" -> reg%d",
-@@ -311,6 +323,68 @@ static void update_insn_state_x86(struct type_state *state,
- 		return;
- 	}
- 
-+	if (!strncmp(dl->ins.name, "lea", 3)) {
-+		struct type_state_reg *src_tsr;
-+		int sreg = src->reg1;
-+
-+		if (!has_reg_type(state, sreg) ||
-+		    !has_reg_type(state, dst->reg1) ||
-+		    !src->mem_ref)
-+			return;
-+
-+		src_tsr = &state->regs[sreg];
-+		tsr = &state->regs[dst->reg1];
-+
-+		tsr->copied_from = -1;
-+		tsr->ok = false;
-+
-+		/* Case 1: Based on stack pointer or frame pointer */
-+		if (sreg == fbreg || sreg == state->stack_reg) {
-+			struct type_state_stack *stack;
-+			int offset = src->offset - fboff;
-+
-+			stack = find_stack_state(state, offset);
-+			if (!stack)
-+				return;
-+
-+			/* TODO: the pointer type may not exist */
-+			/* Now the register becomes a pointer to the stack variable */
-+			if (!die_find_pointer_to_type(cu_die, &stack->type, &type_die))
-+				return;
-+
-+			tsr->type = type_die;
-+			tsr->kind = TSR_KIND_TYPE;
-+			tsr->offset = 0;
-+			tsr->ok = true;
-+
-+			pr_debug_dtp("lea [%x] -> reg%d points to %s + %#x on stack\n",
-+					insn_offset, dst->reg1,
-+					(sreg == fbreg) ? "fbreg" : "sp", offset);
-+			pr_debug_type_name(&tsr->type, tsr->kind);
-+		}
-+		/* Case 2: Based on a register holding a typed pointer */
-+		else if (has_reg_type(state, sreg) &&
-+			 state->regs[sreg].ok &&
-+			 state->regs[sreg].kind == TSR_KIND_TYPE) {
-+
-+			/* Check if the target type has a member at the new offset */
-+			if (__die_get_real_type(&state->regs[sreg].type, &type_die) == NULL ||
-+			    !die_get_member_type(&type_die,
-+						 src->offset + src_tsr->offset, &type_die))
-+				return;
-+
-+			tsr->type = src_tsr->type;
-+			tsr->kind = TSR_KIND_TYPE;
-+			tsr->offset = src->offset + src_tsr->offset;
-+			tsr->ok = true;
-+
-+			pr_debug_dtp("lea [%x] -> reg%d points to reg%d + %#x\n",
-+					insn_offset, dst->reg1, sreg, src->offset);
-+			pr_debug_type_name(&tsr->type, tsr->kind);
-+		}
-+		return;
-+	}
-+
- 	if (strncmp(dl->ins.name, "mov", 3))
- 		return;
- 
-@@ -345,6 +419,7 @@ static void update_insn_state_x86(struct type_state *state,
- 
- 			if (var_addr == 40) {
- 				tsr->kind = TSR_KIND_CANARY;
-+				tsr->offset = 0;
- 				tsr->ok = true;
- 
- 				pr_debug_dtp("mov [%x] stack canary -> reg%d\n",
-@@ -361,6 +436,7 @@ static void update_insn_state_x86(struct type_state *state,
- 
- 			tsr->type = type_die;
- 			tsr->kind = TSR_KIND_TYPE;
-+			tsr->offset = 0;
- 			tsr->ok = true;
- 
- 			pr_debug_dtp("mov [%x] this-cpu addr=%#"PRIx64" -> reg%d",
-@@ -372,6 +448,7 @@ static void update_insn_state_x86(struct type_state *state,
- 		if (src->imm) {
- 			tsr->kind = TSR_KIND_CONST;
- 			tsr->imm_value = src->offset;
-+			tsr->offset = 0;
- 			tsr->ok = true;
- 
- 			pr_debug_dtp("mov [%x] imm=%#x -> reg%d\n",
-@@ -388,6 +465,7 @@ static void update_insn_state_x86(struct type_state *state,
- 		tsr->type = state->regs[src->reg1].type;
- 		tsr->kind = state->regs[src->reg1].kind;
- 		tsr->imm_value = state->regs[src->reg1].imm_value;
-+		tsr->offset = 0;
- 		tsr->ok = true;
- 
- 		/* To copy back the variable type later (hopefully) */
-@@ -421,12 +499,14 @@ static void update_insn_state_x86(struct type_state *state,
- 			} else if (!stack->compound) {
- 				tsr->type = stack->type;
- 				tsr->kind = stack->kind;
-+				tsr->offset = 0;
- 				tsr->ok = true;
- 			} else if (die_get_member_type(&stack->type,
- 						       offset - stack->offset,
- 						       &type_die)) {
- 				tsr->type = type_die;
- 				tsr->kind = TSR_KIND_TYPE;
-+				tsr->offset = 0;
- 				tsr->ok = true;
- 			} else {
- 				tsr->ok = false;
-@@ -446,9 +526,10 @@ static void update_insn_state_x86(struct type_state *state,
- 		else if (has_reg_type(state, sreg) && state->regs[sreg].ok &&
- 			 state->regs[sreg].kind == TSR_KIND_TYPE &&
- 			 die_deref_ptr_type(&state->regs[sreg].type,
--					    src->offset, &type_die)) {
-+					    src->offset + state->regs[sreg].offset, &type_die)) {
- 			tsr->type = type_die;
- 			tsr->kind = TSR_KIND_TYPE;
-+			tsr->offset = 0;
- 			tsr->ok = true;
- 
- 			pr_debug_dtp("mov [%x] %#x(reg%d) -> reg%d",
-@@ -473,6 +554,7 @@ static void update_insn_state_x86(struct type_state *state,
- 
- 			tsr->type = type_die;
- 			tsr->kind = TSR_KIND_TYPE;
-+			tsr->offset = 0;
- 			tsr->ok = true;
- 
- 			pr_debug_dtp("mov [%x] global addr=%"PRIx64" -> reg%d",
-@@ -504,6 +586,7 @@ static void update_insn_state_x86(struct type_state *state,
- 			    die_get_member_type(&type_die, offset, &type_die)) {
- 				tsr->type = type_die;
- 				tsr->kind = TSR_KIND_TYPE;
-+				tsr->offset = 0;
- 				tsr->ok = true;
- 
- 				if (src->multi_regs) {
-@@ -526,6 +609,7 @@ static void update_insn_state_x86(struct type_state *state,
- 					     src->offset, &type_die)) {
- 			tsr->type = type_die;
- 			tsr->kind = TSR_KIND_TYPE;
-+			tsr->offset = 0;
- 			tsr->ok = true;
- 
- 			pr_debug_dtp("mov [%x] pointer %#x(reg%d) -> reg%d",
-@@ -548,6 +632,7 @@ static void update_insn_state_x86(struct type_state *state,
- 							&var_name, &offset) &&
- 				    !strcmp(var_name, "__per_cpu_offset")) {
- 					tsr->kind = TSR_KIND_PERCPU_BASE;
-+					tsr->offset = 0;
- 					tsr->ok = true;
- 
- 					pr_debug_dtp("mov [%x] percpu base reg%d\n",
-@@ -571,6 +656,22 @@ static void update_insn_state_x86(struct type_state *state,
- 			int offset = dst->offset - fboff;
- 
- 			tsr = &state->regs[src->reg1];
-+			type_die = tsr->type;
-+
-+			/* The register is derived from a pointer to the type */
-+			if (tsr->offset != 0) {
-+				/*
-+				 * deref gets the innermost field, but we actually want direct
-+				 * child field and take a pointer to it.
-+				 * However array type like unsigned long[] is already a pointer
-+				 * and is the most common case for this kind of stack variable.
-+				 */
-+				if (die_deref_ptr_type(&tsr->type, tsr->offset, &type_die)) {
-+					pr_debug_dtp("find member: tsr->offset: %d", tsr->offset);
-+					pr_debug_type_name(&type_die, tsr->kind);
-+				} else
-+					return;
-+			}
- 
- 			stack = find_stack_state(state, offset);
- 			if (stack) {
-@@ -583,10 +684,10 @@ static void update_insn_state_x86(struct type_state *state,
- 				 */
- 				if (!stack->compound)
- 					set_stack_state(stack, offset, tsr->kind,
--							&tsr->type);
-+							&type_die);
- 			} else {
- 				findnew_stack_state(state, offset, tsr->kind,
--						    &tsr->type);
-+						    &type_die);
- 			}
- 
- 			if (dst->reg1 == fbreg) {
-@@ -596,7 +697,7 @@ static void update_insn_state_x86(struct type_state *state,
- 				pr_debug_dtp("mov [%x] reg%d -> %#x(reg%d)",
- 					     insn_offset, src->reg1, offset, dst->reg1);
- 			}
--			pr_debug_type_name(&tsr->type, tsr->kind);
-+			pr_debug_type_name(&type_die, tsr->kind);
- 		}
- 		/*
- 		 * Ignore other transfers since it'd set a value in a struct
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index 1ef2edbc71d9..9cb215e499ef 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -887,7 +887,7 @@ static void update_var_state(struct type_state *state, struct data_loc_info *dlo
- 					     insn_offset, -offset);
- 			}
- 			pr_debug_type_name(&mem_die, TSR_KIND_TYPE);
--		} else if (has_reg_type(state, var->reg) && var->offset == 0) {
-+		} else if (has_reg_type(state, var->reg)) {
- 			struct type_state_reg *reg;
- 			Dwarf_Die orig_type;
- 
-@@ -898,13 +898,17 @@ static void update_var_state(struct type_state *state, struct data_loc_info *dlo
- 				continue;
- 
- 			orig_type = reg->type;
--
-+			/*
-+			 * var->offset + reg value is the beginning of the struct
-+			 * reg->offset is the offset the reg points
-+			 */
-+			reg->offset = -var->offset;
- 			reg->type = mem_die;
- 			reg->kind = TSR_KIND_TYPE;
- 			reg->ok = true;
- 
--			pr_debug_dtp("var [%"PRIx64"] reg%d",
--				     insn_offset, var->reg);
-+			pr_debug_dtp("var [%"PRIx64"] reg%d at offset %d",
-+				     insn_offset, var->reg, var->offset);
- 			pr_debug_type_name(&mem_die, TSR_KIND_TYPE);
- 
- 			/*
-@@ -1092,7 +1096,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
- 		if (__die_get_real_type(&state->regs[reg].type, type_die) == NULL)
- 			return PERF_TMR_NO_POINTER;
- 
--		dloc->type_offset = dloc->op->offset;
-+		dloc->type_offset = dloc->op->offset + state->regs[reg].offset;
- 
- 		if (dwarf_tag(type_die) == DW_TAG_typedef)
- 			die_get_real_type(type_die, &sized_type);
-diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-index 541fee1a5f0a..a6df0491eebf 100644
---- a/tools/perf/util/annotate-data.h
-+++ b/tools/perf/util/annotate-data.h
-@@ -173,6 +173,12 @@ extern struct annotated_data_stat ann_data_stat;
- struct type_state_reg {
- 	Dwarf_Die type;
- 	u32 imm_value;
-+        /*
-+         * The offset within the struct that the register points to.
-+         * A value of 0 means the register points to the beginning.
-+	 * type_offset = op->offset + reg->offset
-+         */
-+	s32 offset;
- 	bool ok;
- 	bool caller_saved;
- 	u8 kind;
--- 
-2.50.1.470.g6ba607880d-goog
-
+>         bool                        searching_backwards;
+>         char                        search_bf[128];
+>  };
+> @@ -557,7 +558,7 @@ static bool annotate_browser__callq(struct annotate_b=
+rowser *browser,
+>         target_ms.map =3D ms->map;
+>         target_ms.sym =3D dl->ops.target.sym;
+>         annotation__unlock(notes);
+> -       symbol__tui_annotate(&target_ms, evsel, hbt);
+> +       __hist_entry__tui_annotate(browser->he, &target_ms, evsel, hbt);
+>         sym_title(ms->sym, ms->map, title, sizeof(title), annotate_opts.p=
+ercent_type);
+>         ui_browser__show_title(&browser->b, title);
+>         return true;
+> @@ -1032,12 +1033,6 @@ static int annotate_browser__run(struct annotate_b=
+rowser *browser,
+>         return key;
+>  }
+>
+> -int map_symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
+> -                            struct hist_browser_timer *hbt)
+> -{
+> -       return symbol__tui_annotate(ms, evsel, hbt);
+> -}
+> -
+>  int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
+>                              struct hist_browser_timer *hbt)
+>  {
+> @@ -1046,11 +1041,12 @@ int hist_entry__tui_annotate(struct hist_entry *h=
+e, struct evsel *evsel,
+>         SLang_init_tty(0, 0, 0);
+>         SLtty_set_suspend_state(true);
+>
+> -       return map_symbol__tui_annotate(&he->ms, evsel, hbt);
+> +       return __hist_entry__tui_annotate(he, &he->ms, evsel, hbt);
+>  }
+>
+> -int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
+> -                        struct hist_browser_timer *hbt)
+> +int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol =
+*ms,
+> +                              struct evsel *evsel,
+> +                              struct hist_browser_timer *hbt)
+>  {
+>         struct symbol *sym =3D ms->sym;
+>         struct annotation *notes =3D symbol__annotation(sym);
+> @@ -1064,6 +1060,7 @@ int symbol__tui_annotate(struct map_symbol *ms, str=
+uct evsel *evsel,
+>                         .priv    =3D ms,
+>                         .use_navkeypressed =3D true,
+>                 },
+> +               .he =3D he,
+>         };
+>         struct dso *dso;
+>         int ret =3D -1, err;
+> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hist=
+s.c
+> index d9d3fb44477ac6d5..487c0b08c0038710 100644
+> --- a/tools/perf/ui/browsers/hists.c
+> +++ b/tools/perf/ui/browsers/hists.c
+> @@ -2484,8 +2484,8 @@ do_annotate(struct hist_browser *browser, struct po=
+pup_action *act)
+>         else
+>                 evsel =3D hists_to_evsel(browser->hists);
+>
+> -       err =3D map_symbol__tui_annotate(&act->ms, evsel, browser->hbt);
+>         he =3D hist_browser__selected_entry(browser);
+> +       err =3D __hist_entry__tui_annotate(he, &act->ms, evsel, browser->=
+hbt);
+>         /*
+>          * offer option to annotate the other branch source or target
+>          * (if they exists) when returning from annotate
+> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+> index 8b5131d257b01e3e..0f640e4871744262 100644
+> --- a/tools/perf/util/annotate.h
+> +++ b/tools/perf/util/annotate.h
+> @@ -471,18 +471,6 @@ int hist_entry__annotate_printf(struct hist_entry *h=
+e, struct evsel *evsel);
+>  int hist_entry__tty_annotate(struct hist_entry *he, struct evsel *evsel)=
+;
+>  int hist_entry__tty_annotate2(struct hist_entry *he, struct evsel *evsel=
+);
+>
+> -#ifdef HAVE_SLANG_SUPPORT
+> -int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
+> -                        struct hist_browser_timer *hbt);
+> -#else
+> -static inline int symbol__tui_annotate(struct map_symbol *ms __maybe_unu=
+sed,
+> -                               struct evsel *evsel  __maybe_unused,
+> -                               struct hist_browser_timer *hbt __maybe_un=
+used)
+> -{
+> -       return 0;
+> -}
+> -#endif
+> -
+>  void annotation_options__init(void);
+>  void annotation_options__exit(void);
+>
+> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+> index 70438d03ca9c33b1..c64005278687cb02 100644
+> --- a/tools/perf/util/hist.h
+> +++ b/tools/perf/util/hist.h
+> @@ -713,8 +713,9 @@ struct block_hist {
+>  #include "../ui/keysyms.h"
+>  void attr_to_script(char *buf, struct perf_event_attr *attr);
+>
+> -int map_symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
+> -                            struct hist_browser_timer *hbt);
+> +int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol =
+*ms,
+> +                              struct evsel *evsel,
+> +                              struct hist_browser_timer *hbt);
+>
+>  int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
+>                              struct hist_browser_timer *hbt);
+> @@ -742,9 +743,10 @@ int evlist__tui_browse_hists(struct evlist *evlist _=
+_maybe_unused,
+>  {
+>         return 0;
+>  }
+> -static inline int map_symbol__tui_annotate(struct map_symbol *ms __maybe=
+_unused,
+> -                                          struct evsel *evsel __maybe_un=
+used,
+> -                                          struct hist_browser_timer *hbt=
+ __maybe_unused)
+> +static inline int __hist_entry__tui_annotate(struct hist_entry *he __may=
+be_unused,
+> +                                            struct map_symbol *ms __mayb=
+e_unused,
+> +                                            struct evsel *evsel __maybe_=
+unused,
+> +                                            struct hist_browser_timer *h=
+bt __maybe_unused)
+>  {
+>         return 0;
+>  }
+> --
+> 2.50.1
+>
