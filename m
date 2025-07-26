@@ -1,72 +1,72 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64CE17DA9C
-	for <linux-perf-users@vger.kernel.org>; Sat, 26 Jul 2025 00:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B5015E8B
+	for <linux-perf-users@vger.kernel.org>; Sat, 26 Jul 2025 01:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753491499; cv=none; b=CKSr5zSRxmc5jO5amm3hinLZrb7yORBndNrzbwhiIsfchyU7spxBvFgziJi0l+IUGeKsGbXOtlUSP8I68IGGnevBeGP7WPerCUCV1h4YvTuFcViH1qPIhswRSgfQScBYKrt7dLUShg6lTRojaOyQKwm8jJgbwr0aH2uYGeqZwDA=
+	t=1753492667; cv=none; b=IFzsNHubMdtcrwOE6EfqTI0GDGrVKTYX8WEZm9NezbMPcyUuIThQV0nMASRs6HcVOUpqpeHG9o7rc0yvW8S2ImD9g6jJO6t+VRv/E7NMowFYYlaZtQN0ow0g9T0gmslvcRMOYambN8UCXb16XtHrgKmKphW5a2fI3/3n/luYCNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753491499; c=relaxed/simple;
-	bh=DIf6O7PnWgEkqOWfZT2pbDIF9srrUdRo1wLN+ipZlJY=;
+	s=arc-20240116; t=1753492667; c=relaxed/simple;
+	bh=rBuXP11cTTAHJUew+WFT5v30X/Kyh5kYLAanwOrwuHU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ElTeNz99BqlflgCyFhg+i94PUDDpdiVSoteuqmFXjwjDlWHmkLfrT5lWGzTce8GSn4KYLDv4ZNpr2RoXPM7vcGy5UmFjXe92U+Y+QRg++yfgzwjeeJC5p40mcUyA6jccsF+bGHIbqG/NcUSJFBwdXQd8mCNzYvg281DBiLKR9tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VVDe0V+b; arc=none smtp.client-ip=209.85.214.169
+	 To:Cc:Content-Type; b=UBt2cYghQiIzw3PQxysOMBhHIKuLTsLKSEe+ZmpjoF1+eu1J6PLk3YX7zFc+LU4Zy3Bwe6kjYuWOQVEBIPW3RnamXBYVhqaLxgzYFvTghGtcV6HMNSh3ECkFmmEzFWeMmLKVda1PYdu5AhxlktP4E2rjLJsgJU6lU96ZS+iNvEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZGzzmP4z; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VVDe0V+b"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-23dd9ae5aacso45805ad.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 17:58:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZGzzmP4z"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2357c61cda7so41785ad.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 18:17:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753491498; x=1754096298; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1753492665; x=1754097465; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4fplU80zmFpf0ULHak+TNWOazTGxzQTr6hTMAaKKe0E=;
-        b=VVDe0V+bTGJ+juYXAVS/iuSUAgn5R+31oniOzyoXUCjpJ+8TjH6RKQ+TdUQsWDdivj
-         61uW6ICS6q5kq6oXFdZ/yg9Ok1poDbaiA+Z486dd2Zvs7V+lVMyFKsG60J+lDWpdpoQH
-         RwWZEj8vxNefHEooXSxmfD9OrGmDPXeL1AkRaz2mDe3msrRuMSU3Nh5ObqWep28HxOpp
-         q92hlBwmPSccVrInz4EON69ynZzXa0oSUl4Z8nj1gV14xuZzZAEpFnrpyo1sz/OGuloY
-         bISufNYy8RYhNmtkHWritRFnU6sm0VKeU268IPOOg+KrPjMVNW+gq8+SLGFgaTcxFM10
-         Ju1Q==
+        bh=+CzE9BhxSNhTzmTStidUkVVAUXhRg6U5w11hY/7VMWA=;
+        b=ZGzzmP4z+ozzOD6iZlJhDd9XTPcVj9mfIxs13Y3LuoiBX7ZNwlTPJKuV7Gt0jcuakK
+         NQ9/WpWwNLtFJeX/zjzX3+wt8h+F2DWIF2QZN3HS3mxHoYSWraGW5JyMu5Z7n5jdnowS
+         RVlwYB/QDwUMhKoeY49+pFxe3qSc5n2+KxXOZz/tADLLynu/d1VEN45nWePqUbDDrmWw
+         9ZEliS5aS2AoR/S8EWUBmWpqrfOxm2N77d4YgfOBnBXmbDX3Q8B8rHxUlo4NqKdt2O47
+         PcmkO++cm7exZMqDXvBaLBAHrcTtk7Io3WpSIcaz/IMT7xaspLR8gT+B+Y7kk06UWBxI
+         Cw8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753491498; x=1754096298;
+        d=1e100.net; s=20230601; t=1753492665; x=1754097465;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4fplU80zmFpf0ULHak+TNWOazTGxzQTr6hTMAaKKe0E=;
-        b=c/3S4cp7e8o9CTIpgNXPcmUrF//KaCvkWo6dkvxFDv+BDFZX8KVi+qCh0GmtvzD5QI
-         +BbWfupSnC+VZCrTsAN3rdL87DHdrTvkXYQyv5ElweDQGD87l3JNIzoakv5dVfLtsZw8
-         MYPvbIwzw9yRePEm4nKRUC8ShbLluhkt8kVz9HK7A88IdaRkkZ+KxUqk+lF+I1hx5S8F
-         M5ylexdCUhvKTFiqLY7ZAI5p2PnXrlMLxq8X+xtNpqQt6UDGoPhqGQzrzkNmGey0DgYj
-         nqQY0fYTn85gIhjjtIapHIcfs8/fV0w3k3zP6zOpq6Kz/lj+eF/xeohnQaBRo99QmnAa
-         PwBA==
-X-Forwarded-Encrypted: i=1; AJvYcCUH6zfYkFepvFsPLBzu1qpFR8DHNTlBDJ/svBgNiX/YYvJ7dymW28J3nvxetXyfh1CeV7b4l/tmz/oQ80mNT4rf@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRjNFN6SLeA0HM5QB3lSe7wx2t/B5J3TwzyMwTOiK8pjXZJWjF
-	QuBHQCp2oDQCnsS9+CwYvWkhhVDTMw1EKDI71VPA9uQRrmb5I3TaySY5G3fkWmzpd2SUYiJnMaK
-	bfhXcNWBidBZWbTII3EN9YGFILgFYGDpXSHKgHY6t
-X-Gm-Gg: ASbGncseEaVgcwTQZfAMMMO7BuEQ9+I9y5Nu8bo6PN7LEedgIII09QIh71zQTJirHLS
-	Z/BbFTHDIYj1SX3CAver3ZQduCjRp3Od+VGcnR4GjRV8N/Ceq3mrexaik321wrBYrT7JJShAaES
-	TTWjS9JJ+ilEbC8CEUSQTzKEbv4Ukq3o/fzd9wIl9sNpCup2gD9M9GYzvfB7BGPLgHXTbFLciOc
-	cELbzyo
-X-Google-Smtp-Source: AGHT+IHeyEi742aFO3hV++AeipeYKf/qUxIOv48p8HeoniBt1Dakppqs9grY2COUbSw6mP1pEx8383vgJzT2eDE3tHY=
-X-Received: by 2002:a17:902:c94b:b0:223:fd7e:84ab with SMTP id
- d9443c01a7336-23fbfd1a554mr1233415ad.24.1753491497158; Fri, 25 Jul 2025
- 17:58:17 -0700 (PDT)
+        bh=+CzE9BhxSNhTzmTStidUkVVAUXhRg6U5w11hY/7VMWA=;
+        b=FyXE2CMF9Phm4ljUPReN2N30KIgLkT8Q+zhVGBN8V2Ft824Am5cm5YZnMQrReTSelP
+         67cw+08YIkooWoBkQoQHewoYoaT53GUDCWpCUv4i7+lTW6cwWpP6i+1PK0wijKgLVWfo
+         MhKHz5PWA9b3HE2TFAURrTqs1cYuwTERkcynAWxfsFE8K2jDxk540Hria0j7cPTx7/xl
+         ABC0rBA0d58yVdF3HUuEIUesCzMHTrwCp8EiplqHPCEg6ufnEdcE0a+hFqVjueuf+sp6
+         7Xexe4amqWFTtf/0hqUbe7aOQkravd6WbGyJWMQ23n6oAHmjycpkvr8h/B6GHzDrVxBi
+         GHmw==
+X-Forwarded-Encrypted: i=1; AJvYcCVS8S1vDSjJvyk0z7j+miQIF6lf07lq0fgdBur0egJoU9I5zU5JyMCZFm2PBzx+Wx2L91k8fR1ULPFAvz3FTb2m@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzGPMLf5sODo1mRdQRDNFUaX9owulnMeTFVVZTPXum/92NWM44
+	Ud1OBaq+6KjH/XVATw0XCkvF6otvFLwmJw2CGQZmuSiKsIfaT7QS3/zp4SlzNb7sDUVyd4fJ9o0
+	vJOoDj1PK4DZlzZ74Bk0d+y4OT3sLkglF0Qcb6+jg
+X-Gm-Gg: ASbGncsOXxGJswWZfIwfw3ACFUx9MoCCc7VUjGCgvx3MAY6i6iRaYQKcCDG48HFgfSR
+	zcrm/O1AbWWmFZQm/wss9/Fl9sHCarFF6YpurJ9bPcgUIYvk00LuLONeZ3Fphxyh12qP2oyWy+9
+	KfTzcHvM7PRUrrhw3MfloCbDHeLMKXdqs0s3O/kfswxgGjhhIV23lB97htxi9fWIr6CPaLa79op
+	DGx8VTR
+X-Google-Smtp-Source: AGHT+IGlsvsTsUZQ2soytq96SMI1FjDFWMD3awMjXBXgJZ1qaV2XSIzI6poM9NTHhx1kuOS1iZEJCQ4x8irgTIVL9hE=
+X-Received: by 2002:a17:903:2443:b0:22e:4509:cb86 with SMTP id
+ d9443c01a7336-23fc5985aa4mr558365ad.19.1753492664646; Fri, 25 Jul 2025
+ 18:17:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250725202809.1230085-1-zecheng@google.com> <20250725202809.1230085-2-zecheng@google.com>
-In-Reply-To: <20250725202809.1230085-2-zecheng@google.com>
+References: <20250725202809.1230085-1-zecheng@google.com> <20250725202809.1230085-4-zecheng@google.com>
+In-Reply-To: <20250725202809.1230085-4-zecheng@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 25 Jul 2025 17:58:05 -0700
-X-Gm-Features: Ac12FXzpELJCcryfhuSE4R5Cmu-ZJknOKDSv3fvvFdgvz8mX4aUbhKb-Qd_Capc
-Message-ID: <CAP-5=fV3KaHMR1eFtUh0kY6CmVkZjw8vJ0UNcY3phH=2jsiwyg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/6] perf dwarf-aux: Use signed comparison in match_var_offset
+Date: Fri, 25 Jul 2025 18:17:33 -0700
+X-Gm-Features: Ac12FXyB6Dqt3xAkPNOvfvYZcxPt6h8cYTX5xTZF2VEnqGxHIqMsMCp8hmgsGbk
+Message-ID: <CAP-5=fWbKj6fjxTccpszgMoVCc17e+2ZmixU5B3W0WU5wo_zDg@mail.gmail.com>
+Subject: Re: [PATCH v1 3/6] perf dwarf-aux: Better type matching for stack variables
 To: Zecheng Li <zecheng@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -81,61 +81,49 @@ Content-Transfer-Encoding: quoted-printable
 On Fri, Jul 25, 2025 at 1:28=E2=80=AFPM Zecheng Li <zecheng@google.com> wro=
 te:
 >
-> match_var_offset compares address offsets to determine if an access
-> falls within a variable's bounds. The offsets involved for those
-> relative to base registers from DW_OP_breg can be negative.
+> Utilizes the previous is_breg_access_indirect function to determine if
+> the stack location stores the variable itself or the struct it points
+> to.
 >
-> The current implementation uses unsigned types (u64) for these offsets,
-> which rejects almost all negative values.
->
-> This commit changes the local variables within match_var_offset to
-> signed types (s64) before performing comparisons. This ensures correct
-> behavior when addr_offset_ or addr_type_ are negative.
+> If the DWARF expression shows DW_OP_stack_value without DW_OP_deref, it
+> indicates the variable value is the reg + offset itself, and the stack
+> location it points to is the dereferenced type.
 >
 > Signed-off-by: Zecheng Li <zecheng@google.com>
 > ---
->  tools/perf/util/dwarf-aux.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+>  tools/perf/util/dwarf-aux.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 >
 > diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> index 559c953ca172..bf906dff9ef0 100644
+> index 814c96ea509f..4039dbd2b8c0 100644
 > --- a/tools/perf/util/dwarf-aux.c
 > +++ b/tools/perf/util/dwarf-aux.c
-> @@ -1388,10 +1388,12 @@ struct find_var_data {
->  #define DWARF_OP_DIRECT_REGS  32
+> @@ -1635,6 +1635,14 @@ static int __die_collect_vars_cb(Dwarf_Die *die_me=
+m, void *arg)
+>         if (die_get_real_type(die_mem, &type_die) =3D=3D NULL)
+>                 return DIE_FIND_CB_SIBLING;
 >
->  static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *d=
-ata,
-> -                            u64 addr_offset, u64 addr_type, bool is_poin=
-ter)
-> +                            u64 addr_offset_, u64 addr_type_, bool is_po=
-inter)
->  {
->         Dwarf_Die type_die;
->         Dwarf_Word size;
-> +       s64 addr_offset =3D (s64)addr_offset_;
-> +       s64 addr_type =3D (s64)addr_type_;
+> +       if ((ops->atom =3D=3D DW_OP_fbreg || ops->atom =3D=3D DW_OP_breg7=
+) &&
 
-Would it be better to make the function take signed types? I'm
-thinking if a 32-bit int is passed, with the signature as-is it is
-unclear if sign-extension will happen.
+A comment saying the significance of DW_OP_fbreg and DW_OP_breg7 would
+be useful, for example, why not DW_OP_breg6? Isn't breg7 going to be
+x86 specific?
 
 Thanks,
 Ian
 
->
->         if (addr_offset =3D=3D addr_type) {
->                 /* Update offset relative to the start of the variable */
-> @@ -1414,7 +1416,7 @@ static bool match_var_offset(Dwarf_Die *die_mem, st=
-ruct find_var_data *data,
->         if (dwarf_aggregate_size(&type_die, &size) < 0)
->                 return false;
->
-> -       if (addr_offset >=3D addr_type + size)
-> +       if (addr_offset_ - addr_type_ >=3D size)
->                 return false;
->
->         /* Update offset relative to the start of the variable */
+
+> +           dwarf_tag(&type_die) =3D=3D DW_TAG_pointer_type &&
+> +           is_breg_access_indirect(ops, nops)) {
+> +               /* Get the target type of the pointer */
+> +               if (die_get_real_type(&type_die, &type_die) =3D=3D NULL)
+> +                       return DIE_FIND_CB_SIBLING;
+> +       }
+> +
+>         vt =3D malloc(sizeof(*vt));
+>         if (vt =3D=3D NULL)
+>                 return DIE_FIND_CB_END;
 > --
 > 2.50.1.470.g6ba607880d-goog
 >
