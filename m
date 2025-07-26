@@ -1,133 +1,210 @@
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FA176026
-	for <linux-perf-users@vger.kernel.org>; Sat, 26 Jul 2025 00:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150A6129E6E
+	for <linux-perf-users@vger.kernel.org>; Sat, 26 Jul 2025 00:44:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753490534; cv=none; b=EsqJsjS+erUdJyxD7w9oW1iHCqDLiGCryVTug8fmSdLeRVdgVtykOMgRGwDfsJohve26NiQk1dF5R5Ot8Rgk6Gtjs9aarmk9k1wU0JMfUWzpOArG7KmzSsdljRCR3YgTtBgdKlh9dtV+k3y+HaVQqckWdOMfQ5SdeI/dhcFfOBE=
+	t=1753490689; cv=none; b=SyhipBBmf1JelC//U15Iapa/kivPIT9JkHhFgIV+I2DNEX1EQduWvh/iXRP1ow8vgS0bzgp9CFtOLPVK4v0uSvMwpDd5kZzKL7uiXVVwOMBwZeUusUp80tonE2AhLk7HWPzfWRxk4m6yuDFdpYPWqsSSbCFaMZDiL1l0azpGrUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753490534; c=relaxed/simple;
-	bh=i2KMGB5jXlYrZOEVyEEtlYkBMWkUvJBvYvMLMWjqryY=;
+	s=arc-20240116; t=1753490689; c=relaxed/simple;
+	bh=9JFB9IXapt2d7PBmF4Tk/F4nAX0jKPDuyt5xJWIWPgo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IvmwxYQwEy9apOxwsb/x0v1HLFOa99YZgNzd+qopxRt+gfwlr+1YFpaPLYeHVmiDaiSivwUxvjvK2jEZ8UnSC9yyxf9E8mge1eJfJchhw0M99fZ5nbrjW3+bYyymswR5UL9hbpIuC0xJ57IRC3++2yKFA7AmhDS7AXncU1Re5wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EvfJPXFb; arc=none smtp.client-ip=209.85.217.44
+	 To:Cc:Content-Type; b=fbg5UT9jczmKKXiGQulgTM7TcrlViqvdnuJAW2UGGxQ3I1wqHevX1xNYMHJnOg0fPW/5DtNFMoa+3YqVQ73klOdnF8nv/dVrKcPyUAchlEey2/OGZ9jtIItRGT8Yy0AQJecQJyu4fro9QModPPbRGJl++Rs4xJWS9eUE9TYt7ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2toMk+kC; arc=none smtp.client-ip=209.85.166.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EvfJPXFb"
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-4e9c6b44477so1714917137.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 17:42:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2toMk+kC"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3e2429bd4b3so42705ab.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 25 Jul 2025 17:44:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753490531; x=1754095331; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1753490686; x=1754095486; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=i2KMGB5jXlYrZOEVyEEtlYkBMWkUvJBvYvMLMWjqryY=;
-        b=EvfJPXFb+WTFp+kudxv6YHLf0TPkAJgThkffhKdWGbmjz30u3nn9Zduz8zDqdlAlOM
-         j84jklBeCiSyQDNfKpHoY5KNobAq6ly+8cqJzhXgfvrDLMLhOd5Q5uKfRcYjfGDNgRZz
-         ogAL316jEF7qhlCIN0GxRdmjwnvYEup+IgHiRL5ctFSsMTZL6akOHKtSdMMO4JJiCdIV
-         TvRPGEx/yWQS5hFrEuaWpx/B5s5KwO9XHoz3ODbAkAPDR5f8SRt3NE8Jincs43nR3SAU
-         WYSMBjATDMryH65U06Fb6gbmMPWUSEXJolRVXv+99OhwGwr47TCESyJEYVYy555ouxuH
-         U7ZQ==
+        bh=QPWnUybGUUkWCXTqRdDIxAceE2NePosWnljOPJMqdUk=;
+        b=2toMk+kC7E6iIBtteBsOBsh13T4m2RP9gW/+T+BrHIfy8EqP0Eh5pP2d3XJ3vxV2NQ
+         yy7+CoucCuV+ifM6ZofwrgCh8hn1O2fSV5RpoT5ai94kvvOSnI9x9sRTgwkM5B7PjKSi
+         uFLsk67TkT+wopADtxJ6otVB5wula+cDB864cwLQCbYAru+ZXvTIpfeMxZhEsOjnJdxF
+         bdV4mWHG37I/r2MDfqxn7hnLaBUiPlrPgf23cyZfOXi5OTkQC6q4LchhS3yBOOx0arlv
+         5BnmahyPHy8OAUIM3+j6xw5lbxKixIzKhg6eQh8CghEfeVix2jY/I5pCccMJuutbO1oC
+         erRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753490531; x=1754095331;
+        d=1e100.net; s=20230601; t=1753490686; x=1754095486;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=i2KMGB5jXlYrZOEVyEEtlYkBMWkUvJBvYvMLMWjqryY=;
-        b=G7ICbpXaKKCXdBjYex9dfiiC9j+XmwSNnil5Fo4RCGxAau5m6j0XC4FdIPU/v25VBD
-         RwlAJDYKF8myYxhv3wmCm4fgVIhrPhTkvctrqjY1aZeB84AUq6yXzd+bbG1KGOXCFBBb
-         QBnx+muv6BcK5VNTQwU8xVKwAzQX+rYkZD4RyC15IdwD6IvZMambi/ptxUm1vnmDkSj7
-         5eYyfqZTyC+aobHI45tbFUOuivvdkFyclPzpxVbVW+ywDbbPsz+cesQiIBb0QxDTn1yu
-         WLQvgTvHRLmXRCaTAhk6eoAAMQv/y10iWGdHuGwNz39P8ZaLyjGkKZlqJdItCcZTahkx
-         3mMw==
-X-Forwarded-Encrypted: i=1; AJvYcCXQuJJlV+5oMV3SXrgGiHVXZTQe5iZSXW6VP1IrCIYn8h5AZW0Rg/bV0griNCyxeRm1KK6RgcJprTFWzFy5ITaR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1lxbm0VHsMmXy5MGjM2iEupz/jj4pO/WUqOCW4UiKtNBW4pc0
-	GHc7oRVYKO3YC23G4n4yFnt6RROdMW12nD1l7u1t5uiZIgRxVt/+XuEK4ujOg1pmIFb/QDZZGM3
-	BWXid9CaNpT5WRpe3S4UtInDeUqXA5bBIoKvFGPQl
-X-Gm-Gg: ASbGncsrmpDMQYe6S2bU8rFvLfO9jP5RGwZp1oRFxEx4XfA0vKXT4W8eLTbdh3Xhpzu
-	OxZH6SHsUwrNy0VHFGPX5j/pEpmPzFG5RcOie1J4T/LU4OR8Sjk0Gj6qTjIJOeM9Y7cMYknnlB+
-	HhS3G1Wuu1uXE85ZDPmQ+n20TFNL5pCvbX83Mbp1Q2gtqhOjU0dBVJeo03BbpArARwRRtaNhjmy
-	LdjpBo=
-X-Google-Smtp-Source: AGHT+IHrA3GZZD0wwju8aMv9Qz7fcPczk9FABOxxb3E5ADsq04AqPwLpKjr7JRvL4/0iuqFoC974FPIiSp+z8XfswSE=
-X-Received: by 2002:a05:6102:8087:b0:4e9:c652:6a1e with SMTP id
- ada2fe7eead31-4fa3fa67872mr2000007137.3.1753490530877; Fri, 25 Jul 2025
- 17:42:10 -0700 (PDT)
+        bh=QPWnUybGUUkWCXTqRdDIxAceE2NePosWnljOPJMqdUk=;
+        b=ezE31qzkK95rBeSkOTfvH34cXRC9C2ka8p8pz3hDG6Dn3Cw7GIu8IyFKepRuTuhGIh
+         nZnZmUi761KTA/feSxUcAAcDGdM7v2idKsiKLUd2t9rn1wzFitOmSTbwIhs1iZ7uo+NQ
+         C6LmV8sVtr7cmc0H6ZpoSUbMAFwzIOkLVZjJ2y9PYISOraPH5rK/raByjeDZ7gMxDtLG
+         ITnw0J15f309aQFPZ1DGCFdxBloT3DDEdD3poIMNXITX9mb2iCpd3YpUjw5cj2+6SjUM
+         1L1VhGFYUDaUakipkljpOca1MzXTF9KIkas8J9/G/ngNkSYVe+ZjzNTMryp/PlglbSjv
+         MBIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUd0sE1P5SLi5IeGjTANfrtrQOjVmHzJAw+d1vp9EH1llWPgo1jLbQc38rLAzIs6UCp/Yhj9D2maGwWYROYeTeT@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTK+o9AggpJM5MTLaiPBa9QV/SY+TjqOOfptC9kH1D2tDd/098
+	BLNez6RPsYJC99i7atiRHRtT22hW18vpk8XtRK00i6+tiNz9QZp+STNCjLgAxPYGWide6Lpv+pC
+	v+VTETVVdUwLbKtmAhFsQSh2qm/CbApeW8wNUlMAbs/894HEu5sCVNIG0
+X-Gm-Gg: ASbGncu2avkRcn1BQwGh2d5SvkAQuQL3fX3rPeii8zVW8xW6aykSW6gpazAfprULTCe
+	uBCTeTlUxeRHpJeX2WEbnMJL2Zmrjbv2gRMoS+viMrs014+7wCstV6AsLL1A159HzYevs4FUqQW
+	U23YEM6xJG11f5fgI2nNzQUv9KGGi9OBUGTjppRBjGR3TXElUIwcuocsy6ETNu0N9Wg5knYa8+i
+	c5mg+7W
+X-Google-Smtp-Source: AGHT+IEHep2QYo3/LUJWt7WhvNXreRM+1G567+rK9hz7zyyMGGvYlVYw4NBVEb6WWUvJpA/Lns63orazNlcJeanqKbU=
+X-Received: by 2002:a05:6e02:1d96:b0:3ce:7852:1e9 with SMTP id
+ e9e14a558f8ab-3e3cce7e6famr904165ab.17.1753490685878; Fri, 25 Jul 2025
+ 17:44:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250605233934.1881839-1-blakejones@google.com>
- <20250605233934.1881839-5-blakejones@google.com> <CAP-5=fVX_Qohsf=f=-fR8mYsTq4zitURit2=4BYyD5HPJHOT7Q@mail.gmail.com>
- <CAP_z_Cjuh9HJvcnsARaX-QUwDMbRPMDr9AtxbBxYUR_BTSzwCg@mail.gmail.com> <CAP-5=fWuU8Xhzvjx8FgQpOJCJXewOw9S3Vdm+aXYgw64bsq0UA@mail.gmail.com>
-In-Reply-To: <CAP-5=fWuU8Xhzvjx8FgQpOJCJXewOw9S3Vdm+aXYgw64bsq0UA@mail.gmail.com>
-From: Blake Jones <blakejones@google.com>
-Date: Fri, 25 Jul 2025 17:41:59 -0700
-X-Gm-Features: Ac12FXz0LtMLKb3jLJLRjLCQ4NRMLoH85zHPh6h6oQV6X5PeOP12nXzMnjePzzA
-Message-ID: <CAP_z_CjEzaPo=V+rzyDWFgnnHfNGAe_jHm7g=++V72GPs1A-fw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] perf: add test for PERF_RECORD_BPF_METADATA collection
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, 
-	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, 
-	Guilherme Amadio <amadio@gentoo.org>, Yang Jihong <yangjihong@bytedance.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Chun-Tse Shao <ctshao@google.com>, 
-	Aditya Gupta <adityag@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Zhongqiu Han <quic_zhonhan@quicinc.com>, Andi Kleen <ak@linux.intel.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Yujie Liu <yujie.liu@intel.com>, 
-	Graham Woodward <graham.woodward@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Ben Gainey <ben.gainey@arm.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+References: <20250725193755.12276-1-namhyung@kernel.org> <20250725193755.12276-9-namhyung@kernel.org>
+In-Reply-To: <20250725193755.12276-9-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 25 Jul 2025 17:44:33 -0700
+X-Gm-Features: Ac12FXwKFtkaUOt5oHGOS4d5yrst1_xqdIh5_OnIcCc3aJSP8ffW-lYND28Bamc
+Message-ID: <CAP-5=fWJxCq97Oss3NXbXEKHeNXbif9-yWvktNRQvwtm3H3jbA@mail.gmail.com>
+Subject: Re: [PATCH v4 8/9] perf annotate: Hide data-type for stack operation
+ and canary
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-I just sent https://lore.kernel.org/linux-perf-users/20250726004023.3466563=
--1-blakejones@google.com/T/#u
-to address this issue. Sorry for the delay.
+On Fri, Jul 25, 2025 at 12:38=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> It's mostly unnecessary to print when it has no actual type information
+> like in the stack operations and canary.  Let's have them if -v option
+> is given.
+>
+> Before:
+>   $ perf annotate --code-with-type
+>   ...
+>          : 0    0xd640 <_dl_relocate_object>:
+>     0.00 :      0:       endbr64
+>     0.00 :      4:       pushq   %rbp           # data-type: (stack opera=
+tion)
+>     0.00 :      5:       movq    %rsp, %rbp
+>     0.00 :      8:       pushq   %r15           # data-type: (stack opera=
+tion)
+>     0.00 :      a:       pushq   %r14           # data-type: (stack opera=
+tion)
+>     0.00 :      c:       pushq   %r13           # data-type: (stack opera=
+tion)
+>     0.00 :      e:       pushq   %r12           # data-type: (stack opera=
+tion)
+>     0.00 :     10:       pushq   %rbx           # data-type: (stack opera=
+tion)
 
-On Wed, Jul 9, 2025 at 2:45=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
+I believe the intent in the dwarf is to say where the caller's callee
+saves are, but the stack slots should just be saved and restored and
+won't be used for anything interesting, perhaps for exception
+handling. An annotation like:
+# caller's RBX at stack frame offset -48
+could perhaps be useful.
+
+>     0.00 :     11:       subq    $0xf8, %rsp
+>     ...
+>     0.00 :     d4:       testl   %eax, %eax
+>     0.00 :     d6:       jne     0xf424
+>     0.00 :     dc:       movq    0xf0(%r14), %rbx               # data-ty=
+pe: struct link_map +0xf0
+>     0.00 :     e3:       testq   %rbx, %rbx
+>     0.00 :     e6:       jne     0xf2dd
+>     0.00 :     ec:       cmpq    $0, 0xf8(%r14)         # data-type: stru=
+ct link_map +0xf8
+>     ...
 >
-> On Wed, Jul 9, 2025 at 2:08=E2=80=AFPM Blake Jones <blakejones@google.com=
-> wrote:
-> >
-> > On Wed, Jul 9, 2025 at 2:02=E2=80=AFPM Ian Rogers <irogers@google.com> =
-wrote:
-> > > > +++ b/tools/perf/tests/shell/test_bpf_metadata.sh
-> > > > @@ -0,0 +1,76 @@
-> > > > +#!/bin/sh
-> > > > +# SPDX-License-Identifier: GPL-2.0
-> > >
-> > > The 2nd line in a shell test script is taken to be the name of the te=
-st, so
-> > > ```
-> > > $ perf test list 108
-> > > 108: SPDX-License-Identifier: GPL-2.0
-> > > ```
-> > >
-> > > > +#
-> > > > +# BPF metadata collection test.
-> > >
-> > > This should be on line 2 instead.
-> >
-> > Oof, that sure wasn't on my radar. Should I do a followup patch, or is
-> > it not worth bothering?
+> After:
+>          : 0    0xd640 <_dl_relocate_object>:
+>     0.00 :      0:       endbr64
+>     0.00 :      4:       pushq   %rbp
+>     0.00 :      5:       movq    %rsp, %rbp
+>     0.00 :      8:       pushq   %r15
+>     0.00 :      a:       pushq   %r14
+>     0.00 :      c:       pushq   %r13
+>     0.00 :      e:       pushq   %r12
+>     0.00 :     10:       pushq   %rbx
+>     0.00 :     11:       subq    $0xf8, %rsp
+>     ...
+>     0.00 :     d4:       testl   %eax, %eax
+>     0.00 :     d6:       jne     0xf424
+>     0.00 :     dc:       movq    0xf0(%r14), %rbx               # data-ty=
+pe: struct link_map +0xf0
+>     0.00 :     e3:       testq   %rbx, %rbx
+>     0.00 :     e6:       jne     0xf2dd
+>     0.00 :     ec:       cmpq    $0, 0xf8(%r14)         # data-type: stru=
+ct link_map +0xf8
+>     ...
 >
-> The patch has been in perf-tools-next for a few weeks:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
-git/commit/?h=3Dperf-tools-next&id=3Dedf2cadf01e8f2620af25b337d15ebc584911b=
-46
-> so modifying it is probably not a good idea (it'd need a forced push
-> and break people downstream). If you could send a follow up, that'd be
-> great just so that we have >1 person in the
-> author/reviewer/signed-off-by tag!
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/annotate.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
 >
-> Thanks,
-> Ian
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index 06ddc7a9f58722a4..6fc07971631ac8a3 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -765,6 +765,17 @@ __hist_entry__get_data_type(struct hist_entry *he, s=
+truct arch *arch,
+>                             struct debuginfo *dbg, struct disasm_line *dl=
+,
+>                             int *type_offset);
+>
+> +static bool needs_type_info(struct annotated_data_type *data_type)
+> +{
+> +       if (data_type =3D=3D NULL || data_type =3D=3D NO_TYPE)
+> +               return false;
+> +
+> +       if (verbose)
+> +               return true;
+
+lgtm given the many overloaded meanings of verbose.
+
+Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks,
+Ian
+
+> +
+> +       return (data_type !=3D &stackop_type) && (data_type !=3D &canary_=
+type);
+> +}
+> +
+>  static int
+>  annotation_line__print(struct annotation_line *al, struct annotation_pri=
+nt_data *apd,
+>                        struct annotation_options *opts, int printed,
+> @@ -844,7 +855,7 @@ annotation_line__print(struct annotation_line *al, st=
+ruct annotation_print_data
+>
+>                         data_type =3D __hist_entry__get_data_type(apd->he=
+, apd->arch,
+>                                                                 apd->dbg,=
+ dl, &offset);
+> -                       if (data_type && data_type !=3D NO_TYPE) {
+> +                       if (needs_type_info(data_type)) {
+>                                 char buf[4096];
+>
+>                                 printf("\t\t# data-type: %s",
+> @@ -2138,7 +2149,7 @@ void annotation_line__write(struct annotation_line =
+*al, struct annotation *notes
+>                                                                 apd->dbg,
+>                                                                 disasm_li=
+ne(al),
+>                                                                 &offset);
+> -                       if (data_type && data_type !=3D NO_TYPE) {
+> +                       if (needs_type_info(data_type)) {
+>                                 char member[256];
+>
+>                                 printed =3D scnprintf(bf, sizeof(bf),
+> --
+> 2.50.1
+>
