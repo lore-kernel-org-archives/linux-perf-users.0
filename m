@@ -1,138 +1,122 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98A6226D1B
-	for <linux-perf-users@vger.kernel.org>; Sat, 26 Jul 2025 23:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B9B32E36E1;
+	Sat, 26 Jul 2025 23:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753573076; cv=none; b=TPEKYGLCssjDxFfX0A6FYnzkHjhroC1p9fJkjo6ZPBzgJiaBKyQLDkF73dNpYgk0iVjH+VMAggKEHPURqp5J4khNM/38kIJUw9wRVShM4YrTGnL9xJvVkvp8Ovbzhgqx9SjJ0Y7XOEEQ9DDPXj28rj5KcVCpUSg91yfBzmXNMsw=
+	t=1753574221; cv=none; b=ISBiqlSUvhCK4l6l7PFKjHDxOZ9iSeKbqMmoEXh7w2SQTC0B9XXZNZB9tqGH583PYcrROGAlernHClLkoqScecylJlrkwOF9FpWpeBniIIUI8klwzcLgJ09Tj8mCCCVEKVO9NaigO2I40ZYOhbooPFKdQ9DX3eg2PGHhHehtbfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753573076; c=relaxed/simple;
-	bh=7B24QJDsbG9O9xyrIOj7H/k5Wjt7NkdzQ2ZYcADPiko=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gaiqDbsve2TKSTDmusG3dKPj4x3CBffEno6W1drWtNxzjItHIw/R7zPyd6VPgaIVFZ0g0yiwQ6FHLlQHVDUR6SWkmkLaaY3SOJdRIMgdsss3IIV60683TzgcF9Abp0BY+wj+RlbFPwbSTleUS9J5yAZ1KQKQIKSx4ch0lKA2nQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=YCpSn1le; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1753574221; c=relaxed/simple;
+	bh=Sdfs3QkkKuQkwFg/ty22zrUbe9MrbPxVkKhvowscPYY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hoB4T3MkeBz1HIEWXvVGBgotYzTYsXYb1yyuwR0V0LTPq3AFkQTSZiqJ5CanQVSPyvkMRkwZaEKBXGQoGAZqK7V3v6qBZIDqzgUXoGSHKRGmKs/MHBGGKCoW7/Pptj+2xv3I2nMPWMwsSxanUOmL4IFhsYiM1kCktMnyuUs+L7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ChW4BqMR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="YCpSn1le"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ae360b6249fso550134466b.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 26 Jul 2025 16:37:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1753573072; x=1754177872; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1tHg+Y1g27jBmEKsSCwCSS49UstWUnsuEvPhc+oks0Q=;
-        b=YCpSn1leoz8iY+M1vcgUvBZAhIM5A+TzG88DyCPofvwrQz37gx7TF+UOReUjPlrwZ+
-         8NxkmnOjg4W5+g3RrUorRFQ974SK4fOQTxGdOTlp4MYQREzeI0+g1hgn3+nsgWl2tA9e
-         X328Xr7ZhwkqdGRCPzUT7efqp/1HlPTs0z540=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753573072; x=1754177872;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1tHg+Y1g27jBmEKsSCwCSS49UstWUnsuEvPhc+oks0Q=;
-        b=gtBfLWh2tsCsdquOOJKZT12opnP2n2ehsDqL3g1ugnVOJqkfBBHIvr0bBBUYHBFRh9
-         WKUc63FccT5W5l773TirnvwW4E9cwNL7UP2/Hd5VSE7cQ8MfHaWs6QbKkSWb/z62lBTh
-         TV/IwM42tzL4OrDJIX0jeAc12s80wL1uTsrkCaUd2RrvKMRqnHhziv7udP5Hiq3B2Shy
-         5tmDBW3i3uHSaC3HotGgBpr0iLPFLNEVT1IVGSIunTEEU09mkFQBdF0gWf5qCMcBv0hO
-         wLKEELuz6y6YAlvmkA6FY8Wopuo2ylLwiK0+r79IdX47Xqfhfk4kfZYknQupjrw3kbG/
-         WPYA==
-X-Forwarded-Encrypted: i=1; AJvYcCW1VR3eHXnmTCYbOmJJhlyTYZ7olKYEqFtLBgllD+7Z8Av/xxGaHtjGydcgZjQ/jhS61qbfR43N0zEMKf6TXeEs@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywm7PeeBlA0bsfBzeJOz01NTBiFquoUhOLJ8Iv5Hi6o9KkdQgY2
-	e5hLXSXdn5MyEBZFGkoUk2Bk1epq/d19GdbIeZqCZPH6yZxbK6qV9RvAopIolc1u2NEnNJpJBzy
-	R4YineRWDPw==
-X-Gm-Gg: ASbGncvl6NKrdtPbRBP4aPwqYhX0yWp+/rKAJmATAH3LwnwmY18YWa80Oi+NQ5VlQkQ
-	hBPy5s2TYIwnVp2bFuCyw4HdpneF55/PT/fKqkhtTb1N6VAAww1tkFP2f0JMtp0joyWmkbZGLpz
-	mB8cuhkOsOL9JoowsaYeYmV7pYnu+c05b4zJ/1TwTZFD0SG/0o3vOz48wTpXXEzQKYvKyI0vL52
-	Mn+qQunl32DWoUPeNeH9pPJFpdSVKBdE79lzylk35e0h3XS6/uPB0217GPyGpyWwig/NZHOdWtq
-	v82d41aJ9UPLp+WjaDdROsa/zP1sN+vbWYQ4pm8CEd4AY/q6zncJ9hvsu4b7WIHtQSy3f0xagbH
-	fEoZ2nBaK1QbOiKaewxbDS2druNkUKi4bCf0kJ6fYboURR+/bdKa79BZaIDJiERtZ7fPV5DJJ
-X-Google-Smtp-Source: AGHT+IGq1w8AqO0FHfSJZ7JiwoPNtEKlIgepIa4JhOSlbpOhRKERda9Fv8TYn2Dg//gqkCMCDeb7QQ==
-X-Received: by 2002:a17:907:7207:b0:ae0:abec:dc13 with SMTP id a640c23a62f3a-af61eb1c9e5mr632252166b.53.1753573072481;
-        Sat, 26 Jul 2025 16:37:52 -0700 (PDT)
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com. [209.85.208.49])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-af635a618fdsm207637166b.82.2025.07.26.16.37.50
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 26 Jul 2025 16:37:50 -0700 (PDT)
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-60c60f7eeaaso5286893a12.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 26 Jul 2025 16:37:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVrzBDHfK31n3QfTQBZCUVcWAqe3k4n44j68/2iIxRoQOoVnrZft3Ma+Oc8Nn18gNFVc4FNho5PefH10rTcKl5C@vger.kernel.org
-X-Received: by 2002:a05:6402:483:b0:611:f4b2:379c with SMTP id
- 4fb4d7f45d1cf-614f1dced8amr5514831a12.20.1753573070075; Sat, 26 Jul 2025
- 16:37:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ChW4BqMR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF263C4CEED;
+	Sat, 26 Jul 2025 23:57:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753574221;
+	bh=Sdfs3QkkKuQkwFg/ty22zrUbe9MrbPxVkKhvowscPYY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ChW4BqMRcIYTheIsIdGmXlhog+Aq19Q78gKEovp6VgCuewHIqQNR/SxLbNM5AAi1T
+	 ZqXVp9l/RIuLeSX7qUNg6zPVVxVPP8fUp8h7UUMvEujhB7c1ttdeDyzMM1gNzKUtzy
+	 MuEwFz0jrsKlfesKSetCFSsYodPMRkQp8cv8FlCa9Hyg0s077vznwlVcEYcM7rMr/V
+	 pfwKw/H27hLne0rpNH4PoFlyLagHBoSzUPFLEw4DRV4nlpug1QRwl6gAn7AVXp70hK
+	 4A/83gqx11xFebuB3sW0vX+ti05+MSpBgjB6Xk0wC00Ax0hepnSDVBJuoD/MvV920D
+	 QEx+ZvdsaIL9w==
+Date: Sat, 26 Jul 2025 16:56:59 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Zecheng Li <zecheng@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>, Zecheng Li <zli94@ncsu.edu>,
+	Xu Liu <xliuprof@google.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/6] perf dwarf-aux: Use signed comparison in
+ match_var_offset
+Message-ID: <aIVrSy8Z8s2JqqVO@google.com>
+References: <20250725202809.1230085-1-zecheng@google.com>
+ <20250725202809.1230085-2-zecheng@google.com>
+ <CAP-5=fV3KaHMR1eFtUh0kY6CmVkZjw8vJ0UNcY3phH=2jsiwyg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250724123612.206110-1-bhupesh@igalia.com> <20250724123612.206110-3-bhupesh@igalia.com>
- <202507241640.572BF86C70@keescook> <CAHk-=wi5c=_-FBGo_88CowJd_F-Gi6Ud9d=TALm65ReN7YjrMw@mail.gmail.com>
- <B9C50D0B-DCD9-41A2-895D-4899728AF605@kernel.org>
-In-Reply-To: <B9C50D0B-DCD9-41A2-895D-4899728AF605@kernel.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 26 Jul 2025 16:37:33 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wixR7ZR+aebFsWX4qWZ84tMTmyNWLUPmTy3YvaNJGqd-Q@mail.gmail.com>
-X-Gm-Features: Ac12FXwLhT2VoOEv9kNeOdgouvN4zZ9YLvHzVMPIsLMuRmQFnkSkLFn13r5tjO0
-Message-ID: <CAHk-=wixR7ZR+aebFsWX4qWZ84tMTmyNWLUPmTy3YvaNJGqd-Q@mail.gmail.com>
-Subject: Re: [PATCH v6 2/3] treewide: Switch memcpy() users of 'task->comm' to
- a more safer implementation
-To: Kees Cook <kees@kernel.org>
-Cc: Bhupesh <bhupesh@igalia.com>, akpm@linux-foundation.org, kernel-dev@igalia.com, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com, 
-	laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org, 
-	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com, 
-	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com, 
-	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org, 
-	david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com, 
-	brauner@kernel.org, jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com, 
-	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fV3KaHMR1eFtUh0kY6CmVkZjw8vJ0UNcY3phH=2jsiwyg@mail.gmail.com>
 
-On Sat, 26 Jul 2025 at 16:19, Kees Cook <kees@kernel.org> wrote:
->
-> That works for me! I just get twitchy around seeing memcpy used for strings. :) if we're gonna NUL after the memcpy, just use strscpy_pad().
+On Fri, Jul 25, 2025 at 05:58:05PM -0700, Ian Rogers wrote:
+> On Fri, Jul 25, 2025 at 1:28 PM Zecheng Li <zecheng@google.com> wrote:
+> >
+> > match_var_offset compares address offsets to determine if an access
+> > falls within a variable's bounds. The offsets involved for those
+> > relative to base registers from DW_OP_breg can be negative.
+> >
+> > The current implementation uses unsigned types (u64) for these offsets,
+> > which rejects almost all negative values.
+> >
+> > This commit changes the local variables within match_var_offset to
+> > signed types (s64) before performing comparisons. This ensures correct
+> > behavior when addr_offset_ or addr_type_ are negative.
+> >
+> > Signed-off-by: Zecheng Li <zecheng@google.com>
+> > ---
+> >  tools/perf/util/dwarf-aux.c | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> > index 559c953ca172..bf906dff9ef0 100644
+> > --- a/tools/perf/util/dwarf-aux.c
+> > +++ b/tools/perf/util/dwarf-aux.c
+> > @@ -1388,10 +1388,12 @@ struct find_var_data {
+> >  #define DWARF_OP_DIRECT_REGS  32
+> >
+> >  static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
+> > -                            u64 addr_offset, u64 addr_type, bool is_pointer)
+> > +                            u64 addr_offset_, u64 addr_type_, bool is_pointer)
+> >  {
+> >         Dwarf_Die type_die;
+> >         Dwarf_Word size;
+> > +       s64 addr_offset = (s64)addr_offset_;
+> > +       s64 addr_type = (s64)addr_type_;
+> 
+> Would it be better to make the function take signed types? I'm
+> thinking if a 32-bit int is passed, with the signature as-is it is
+> unclear if sign-extension will happen.
 
-I do worry a tiny bit about performance.
+Hmm.. right.  The addr_offset often from 'int' type so negative value
+can have the sign-extension problem.
 
-Because 'memcpy+set last byte to NUL' really is just a couple of
-instructions when we're talking small constant-sized arrays.
+Zecheng, can you please update the function signature to s64 and check
+if the final offset is negative or bigger than the size?
 
-strscpy_pad() isn't horrible, but it's still at another level. And
-most of the cost is that "return the length" which people often don't
-care about.
+Thanks,
+Namhyung
 
-Dang, I wish we had some compiler trick to say "if the value isn't
-used, do X, if it _is_ used do Y".
-
-It's such a trivial thing in the compiler itself, and the information
-is there, but I don't think it is exposed in any useful way.
-
-In fact, it *is* exposed in one way I can think of:
-
-   __attribute__((__warn_unused_result__))
-
-but not in a useful form for actually generating different code.
-
-Some kind of "__builtin_if_used(x,y)" where it picks 'x' if the value
-is used, and 'y' if it isn't would be lovely for this.
-
-Then you could do things like
-
-    #define my_helper(x) \
-        __builtin_if_used( \
-                full_semantics(x), \
-                simpler_version(x))
-
-when having a return value means extra work and most people don't care.
-
-Maybe it exists in some form that I haven't thought of?
-
-Any compiler people around?
-
-                 Linus
+> >
+> >         if (addr_offset == addr_type) {
+> >                 /* Update offset relative to the start of the variable */
+> > @@ -1414,7 +1416,7 @@ static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
+> >         if (dwarf_aggregate_size(&type_die, &size) < 0)
+> >                 return false;
+> >
+> > -       if (addr_offset >= addr_type + size)
+> > +       if (addr_offset_ - addr_type_ >= size)
+> >                 return false;
+> >
+> >         /* Update offset relative to the start of the variable */
+> > --
+> > 2.50.1.470.g6ba607880d-goog
+> >
