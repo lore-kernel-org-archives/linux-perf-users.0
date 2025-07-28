@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B786621D3D2;
-	Mon, 28 Jul 2025 18:47:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715498BE8;
+	Mon, 28 Jul 2025 18:51:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753728467; cv=none; b=ALMSmkMsMCaQyX0IxdLVzuDB7bYqjE/6vII/zSi4f7aQShHmQmACupkn6S4ea44gv3t5wXScyCudr++ybzl+9bMzKl5Oti1HfIurFc+Eiit6LRivtNqfKR0JYYUPY9U+7zHEzk1odLo8LUOjtmPBhMbt486FyB27jSrKWZKswFw=
+	t=1753728707; cv=none; b=V6LqfEQQ+73UBtq8PVNcYgXHipzluZm1s6qLG88Ah6VqvcIc9QRR7RCjOzZBZBLItJmXJZJuvSP0RBM3cJP9KMX3Gp10lzSPjmxLpwwaVJyxUuhdmIJVYfhE10rGvpzodjamh22pYlf2gkvZcRZeIwJzd9FdbJj8HqVd5SN4qEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753728467; c=relaxed/simple;
-	bh=cA73/lc9IWHo6yAek5ZnaVyqbHc5bxbJzNBobW6cvdw=;
+	s=arc-20240116; t=1753728707; c=relaxed/simple;
+	bh=GTSwy1O36/JRknrJGF9qlur4Q0A4yngcbkrPXG+BwBc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CVBkPkwa5YPTJk8DpLeRCiFK06mMyBHPSHIljRIGPPtNjjZPn7u+n3vfU79rrrPFs0xjbmeI30Lb74ue3cnj7mqCVU4JFqAormWq3HPjlFpQMD90KQ3DH4aDeD1p/JIy7yb9EkRVtsRMJY2hlFeuS0Qo5eGKgNrKLGV8878ints=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RKnacxs2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=miAEHjKj5uUWiPbbH3YUppuT+WxE5MbKVQgcjLBsKFZCGho1y4lI7RLlGQIVcm3vd76CHma+3arH+6VHCxM9lxCGYIFhJ2nwAXf1ZA8gaMPdDu9395zLP6Dvg4yz352hgbbkNHpsS13yFcWn8i6P3XlftA60weQZgPrf2jxqmX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qabTawZl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RKnacxs2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FD71C4CEE7;
-	Mon, 28 Jul 2025 18:47:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qabTawZl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96055C4CEE7;
+	Mon, 28 Jul 2025 18:51:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753728467;
-	bh=cA73/lc9IWHo6yAek5ZnaVyqbHc5bxbJzNBobW6cvdw=;
+	s=k20201202; t=1753728707;
+	bh=GTSwy1O36/JRknrJGF9qlur4Q0A4yngcbkrPXG+BwBc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RKnacxs2yto7i2z8cOvfComv3mr3h/zxLroMTtPXXEkeinKAK13o00O/3nNYzlQpY
-	 C+SrGjWwQ90V3zo4zA1NHkfESd9bXDvssnbEZ3zDE0qzvl/4LPDxX6fxdEWZnFVyIQ
-	 wzUqATn+FtkgVkrlFce2h6lXaDXOYT0WBX0uVDlwH5UMz4izHd4aoBTH5movFWZY4J
-	 4bWqQ5gR24T0MXs/tqj9VOSLoHGzLCtjtrQPXbqto2MSJ0bB+7zhttKiBdXJvEVVkp
-	 3Modd8sqZHGgsqJWapgM7hSPNaPXPjvUry0nCKNRXuXGPJt0YR8aR52vKaspWdEHVL
-	 Uvqbkw45lThPA==
-Date: Mon, 28 Jul 2025 11:47:45 -0700
+	b=qabTawZluY8Nu9pQ0XqTVqYvFj7sDBgUZhwD5R3yx1Z26wHJ0XclF/Jx9zbmjCcxJ
+	 dyqwaN/+4pi0ZSqtSc3Xn1UtJ5gh7RYp4lJm0sd1Xmg17/Q8aVgoXR/zqaWA0iP0pB
+	 sCGptbDF7XHWQDpEwm4As2AdheAWFUSUtCyoZ16c3YFVt/H+/j0M7qO5ZSNT2vWg1k
+	 QywwfMBNZYuyKbGxGDz4cuyGrejVcv7aWVRWUySO2CtaVKo+rKKA+5An2VX5JWXHgu
+	 9qBFY7kfw8s7atliIOcVnCiD7hYbY9ayH/SaMnwF+nMAAE3NZzDZ6Jn+eHktFZ+Z2E
+	 TACseWXDrIt0w==
+Date: Mon, 28 Jul 2025 11:51:45 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -35,12 +35,12 @@ Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v4 5/9] perf annotate: Add --code-with-type support for
- TUI
-Message-ID: <aIfF0X80EhOF2f4J@google.com>
+Subject: Re: [PATCH v4 8/9] perf annotate: Hide data-type for stack operation
+ and canary
+Message-ID: <aIfGwdcRZ_gwyhiC@google.com>
 References: <20250725193755.12276-1-namhyung@kernel.org>
- <20250725193755.12276-6-namhyung@kernel.org>
- <CAP-5=fWapueXS2NBHyd8VAen7XsenZjRGFgyKtLZFuTmCGaA7g@mail.gmail.com>
+ <20250725193755.12276-9-namhyung@kernel.org>
+ <CAP-5=fWJxCq97Oss3NXbXEKHeNXbif9-yWvktNRQvwtm3H3jbA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,198 +50,126 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWapueXS2NBHyd8VAen7XsenZjRGFgyKtLZFuTmCGaA7g@mail.gmail.com>
+In-Reply-To: <CAP-5=fWJxCq97Oss3NXbXEKHeNXbif9-yWvktNRQvwtm3H3jbA@mail.gmail.com>
 
-On Fri, Jul 25, 2025 at 05:31:52PM -0700, Ian Rogers wrote:
+On Fri, Jul 25, 2025 at 05:44:33PM -0700, Ian Rogers wrote:
 > On Fri, Jul 25, 2025 at 12:38 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > Until now, the --code-with-type option is available only on stdio.
-> > But it was an artifical limitation because of an implemention issue.
+> > It's mostly unnecessary to print when it has no actual type information
+> > like in the stack operations and canary.  Let's have them if -v option
+> > is given.
 > >
-> > Implement the same logic in annotation_line__write() for stdio2/TUI.
-> > Make disasm_line__write() return the number of printed characters so
-> > that it can skip unnecessary operations when the screen is full.
+> > Before:
+> >   $ perf annotate --code-with-type
+> >   ...
+> >          : 0    0xd640 <_dl_relocate_object>:
+> >     0.00 :      0:       endbr64
+> >     0.00 :      4:       pushq   %rbp           # data-type: (stack operation)
+> >     0.00 :      5:       movq    %rsp, %rbp
+> >     0.00 :      8:       pushq   %r15           # data-type: (stack operation)
+> >     0.00 :      a:       pushq   %r14           # data-type: (stack operation)
+> >     0.00 :      c:       pushq   %r13           # data-type: (stack operation)
+> >     0.00 :      e:       pushq   %r12           # data-type: (stack operation)
+> >     0.00 :     10:       pushq   %rbx           # data-type: (stack operation)
 > 
-> This change seems to be different from the rest of what is the patch,
-> is it possible to have it is a patch before this one?
+> I believe the intent in the dwarf is to say where the caller's callee
+> saves are, but the stack slots should just be saved and restored and
+> won't be used for anything interesting, perhaps for exception
+> handling. An annotation like:
+> # caller's RBX at stack frame offset -48
+> could perhaps be useful.
 
-Yep, will do in the next version.
-
-Thanks,
-Namhyung
+The main purpose of the annotation of the stack operation is to sync
+with the output of data type profiling.  As it can report lots of
+accesses were from the stack operation, this can answer where they are.
 
 > 
-> > Remove the limitation and update the man page.
+> >     0.00 :     11:       subq    $0xf8, %rsp
+> >     ...
+> >     0.00 :     d4:       testl   %eax, %eax
+> >     0.00 :     d6:       jne     0xf424
+> >     0.00 :     dc:       movq    0xf0(%r14), %rbx               # data-type: struct link_map +0xf0
+> >     0.00 :     e3:       testq   %rbx, %rbx
+> >     0.00 :     e6:       jne     0xf2dd
+> >     0.00 :     ec:       cmpq    $0, 0xf8(%r14)         # data-type: struct link_map +0xf8
+> >     ...
+> >
+> > After:
+> >          : 0    0xd640 <_dl_relocate_object>:
+> >     0.00 :      0:       endbr64
+> >     0.00 :      4:       pushq   %rbp
+> >     0.00 :      5:       movq    %rsp, %rbp
+> >     0.00 :      8:       pushq   %r15
+> >     0.00 :      a:       pushq   %r14
+> >     0.00 :      c:       pushq   %r13
+> >     0.00 :      e:       pushq   %r12
+> >     0.00 :     10:       pushq   %rbx
+> >     0.00 :     11:       subq    $0xf8, %rsp
+> >     ...
+> >     0.00 :     d4:       testl   %eax, %eax
+> >     0.00 :     d6:       jne     0xf424
+> >     0.00 :     dc:       movq    0xf0(%r14), %rbx               # data-type: struct link_map +0xf0
+> >     0.00 :     e3:       testq   %rbx, %rbx
+> >     0.00 :     e6:       jne     0xf2dd
+> >     0.00 :     ec:       cmpq    $0, 0xf8(%r14)         # data-type: struct link_map +0xf8
+> >     ...
 > >
 > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > > ---
-> >  tools/perf/Documentation/perf-annotate.txt |  1 -
-> >  tools/perf/builtin-annotate.c              |  5 --
-> >  tools/perf/ui/browsers/annotate.c          |  6 +++
-> >  tools/perf/util/annotate.c                 | 61 +++++++++++++++++++---
-> >  4 files changed, 61 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
-> > index 46090c5b42b4762f..547f1a2680185e3c 100644
-> > --- a/tools/perf/Documentation/perf-annotate.txt
-> > +++ b/tools/perf/Documentation/perf-annotate.txt
-> > @@ -170,7 +170,6 @@ include::itrace.txt[]
-> >
-> >  --code-with-type::
-> >         Show data type info in code annotation (for memory instructions only).
-> > -       Currently it only works with --stdio option.
-> >
-> >
-> >  SEE ALSO
-> > diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-> > index 5d57d2913f3d9a33..646f43b0f7c4c9b0 100644
-> > --- a/tools/perf/builtin-annotate.c
-> > +++ b/tools/perf/builtin-annotate.c
-> > @@ -917,11 +917,6 @@ int cmd_annotate(int argc, const char **argv)
-> >                 symbol_conf.annotate_data_sample = true;
-> >         } else if (annotate_opts.code_with_type) {
-> >                 symbol_conf.annotate_data_member = true;
-> > -
-> > -               if (!annotate.use_stdio) {
-> > -                       pr_err("--code-with-type only works with --stdio.\n");
-> > -                       goto out_delete;
-> > -               }
-> >         }
-> >
-> >         setup_browser(true);
-> > diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-> > index 23bea5b165774ae7..cdee1969f3131a7c 100644
-> > --- a/tools/perf/ui/browsers/annotate.c
-> > +++ b/tools/perf/ui/browsers/annotate.c
-> > @@ -4,6 +4,7 @@
-> >  #include "../ui.h"
-> >  #include "../../util/annotate.h"
-> >  #include "../../util/debug.h"
-> > +#include "../../util/debuginfo.h"
-> >  #include "../../util/dso.h"
-> >  #include "../../util/hist.h"
-> >  #include "../../util/sort.h"
-> > @@ -1101,6 +1102,9 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
-> >
-> >         ui_helpline__push("Press ESC to exit");
-> >
-> > +       if (annotate_opts.code_with_type)
-> > +               browser.dbg = debuginfo__new(dso__long_name(dso));
-> > +
-> >         browser.b.width = notes->src->widths.max_line_len;
-> >         browser.b.nr_entries = notes->src->nr_entries;
-> >         browser.b.entries = &notes->src->source;
-> > @@ -1111,6 +1115,8 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
-> >
-> >         ret = annotate_browser__run(&browser, evsel, hbt);
-> >
-> > +       if (annotate_opts.code_with_type)
-> > +               debuginfo__delete(browser.dbg);
-> >         if (not_annotated && !notes->src->tried_source)
-> >                 annotated_source__purge(notes->src);
+> >  tools/perf/util/annotate.c | 15 +++++++++++++--
+> >  1 file changed, 13 insertions(+), 2 deletions(-)
 > >
 > > diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> > index d69e406c1bc289cd..06ddc7a9f58722a4 100644
+> > index 06ddc7a9f58722a4..6fc07971631ac8a3 100644
 > > --- a/tools/perf/util/annotate.c
 > > +++ b/tools/perf/util/annotate.c
-> > @@ -1362,6 +1362,11 @@ static int symbol__annotate_fprintf2(struct symbol *sym, FILE *fp,
-> >         };
-> >         struct annotation_line *al;
+> > @@ -765,6 +765,17 @@ __hist_entry__get_data_type(struct hist_entry *he, struct arch *arch,
+> >                             struct debuginfo *dbg, struct disasm_line *dl,
+> >                             int *type_offset);
 > >
-> > +       if (annotate_opts.code_with_type) {
-> > +               evsel__get_arch(apd->evsel, &apd->arch);
-> > +               apd->dbg = debuginfo__new(dso__long_name(map__dso(apd->he->ms.map)));
-> > +       }
+> > +static bool needs_type_info(struct annotated_data_type *data_type)
+> > +{
+> > +       if (data_type == NULL || data_type == NO_TYPE)
+> > +               return false;
 > > +
-> >         list_for_each_entry(al, &notes->src->source, node) {
-> >                 if (annotation_line__filter(al))
-> >                         continue;
-> > @@ -1370,6 +1375,9 @@ static int symbol__annotate_fprintf2(struct symbol *sym, FILE *fp,
-> >                 wops.first_line = false;
-> >         }
-> >
-> > +       if (annotate_opts.code_with_type)
-> > +               debuginfo__delete(apd->dbg);
+> > +       if (verbose)
+> > +               return true;
+> 
+> lgtm given the many overloaded meanings of verbose.
+
+:-)
+
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks for your careful review!
+Namhyung
+ 
 > > +
-> >         return 0;
-> >  }
-> >
-> > @@ -1743,7 +1751,7 @@ static double annotation_line__max_percent(struct annotation_line *al,
-> >         return percent_max;
-> >  }
-> >
-> > -static void disasm_line__write(struct disasm_line *dl, struct annotation *notes,
-> > +static int disasm_line__write(struct disasm_line *dl, struct annotation *notes,
-> >                                void *obj, char *bf, size_t size,
-> >                                void (*obj__printf)(void *obj, const char *fmt, ...),
-> >                                void (*obj__write_graph)(void *obj, int graph))
-> > @@ -1771,8 +1779,8 @@ static void disasm_line__write(struct disasm_line *dl, struct annotation *notes,
-> >                 obj__printf(obj, "  ");
-> >         }
-> >
-> > -       disasm_line__scnprintf(dl, bf, size, !annotate_opts.use_offset,
-> > -                              notes->src->widths.max_ins_name);
-> > +       return disasm_line__scnprintf(dl, bf, size, !annotate_opts.use_offset,
-> > +                                     notes->src->widths.max_ins_name);
-> >  }
-> >
-> >  static void ipc_coverage_string(char *bf, int size, struct annotation *notes)
-> > @@ -2116,11 +2124,52 @@ void annotation_line__write(struct annotation_line *al, struct annotation *notes
-> >
-> >                 width -= printed + 3;
-> >
-> > -               disasm_line__write(disasm_line(al), notes, obj, bf, sizeof(bf), obj__printf, obj__write_graph);
-> > +               printed = disasm_line__write(disasm_line(al), notes, obj, bf, sizeof(bf),
-> > +                                            obj__printf, obj__write_graph);
+> > +       return (data_type != &stackop_type) && (data_type != &canary_type);
+> > +}
 > > +
-> > +               obj__printf(obj, "%s", bf);
-> > +               width -= printed;
-> > +
-> > +               if (annotate_opts.code_with_type && apd->dbg) {
-> > +                       struct annotated_data_type *data_type;
-> > +                       int offset = 0;
-> > +
-> > +                       data_type = __hist_entry__get_data_type(apd->he, apd->arch,
-> > +                                                               apd->dbg,
-> > +                                                               disasm_line(al),
-> > +                                                               &offset);
-> > +                       if (data_type && data_type != NO_TYPE) {
-> > +                               char member[256];
-> > +
-> > +                               printed = scnprintf(bf, sizeof(bf),
-> > +                                                   "\t\t# data-type: %s",
-> > +                                                   data_type->self.type_name);
+> >  static int
+> >  annotation_line__print(struct annotation_line *al, struct annotation_print_data *apd,
+> >                        struct annotation_options *opts, int printed,
+> > @@ -844,7 +855,7 @@ annotation_line__print(struct annotation_line *al, struct annotation_print_data
 > >
-> > -               obj__printf(obj, "%-*s", width, bf);
-> > +                               if (data_type != &stackop_type &&
-> > +                                   data_type != &canary_type &&
-> > +                                   sizeof(bf) > (size_t)printed) {
-> > +                                       printed += scnprintf(bf + printed,
-> > +                                                            sizeof(bf) - printed,
-> > +                                                            " +%#x", offset);
-> > +                               }
-> > +
-> > +                               if (annotated_data_type__get_member_name(data_type,
-> > +                                                                        member,
-> > +                                                                        sizeof(member),
-> > +                                                                        offset) &&
-> > +                                   sizeof(bf) > (size_t)printed) {
-> > +                                       printed += scnprintf(bf + printed,
-> > +                                                            sizeof(bf) - printed,
-> > +                                                            " (%s)", member);
-> > +                               }
+> >                         data_type = __hist_entry__get_data_type(apd->he, apd->arch,
+> >                                                                 apd->dbg, dl, &offset);
+> > -                       if (data_type && data_type != NO_TYPE) {
+> > +                       if (needs_type_info(data_type)) {
+> >                                 char buf[4096];
 > >
-> > -               (void)apd;
-> > +                               obj__printf(obj, "%-*s", width, bf);
-> > +                       } else {
-> > +                               obj__printf(obj, "%-*s", width, " ");
-> > +                       }
-> > +               } else {
-> > +                       obj__printf(obj, "%-*s", width, " ");
-> > +               }
-> >         }
+> >                                 printf("\t\t# data-type: %s",
+> > @@ -2138,7 +2149,7 @@ void annotation_line__write(struct annotation_line *al, struct annotation *notes
+> >                                                                 apd->dbg,
+> >                                                                 disasm_line(al),
+> >                                                                 &offset);
+> > -                       if (data_type && data_type != NO_TYPE) {
+> > +                       if (needs_type_info(data_type)) {
+> >                                 char member[256];
 > >
-> >  }
+> >                                 printed = scnprintf(bf, sizeof(bf),
 > > --
 > > 2.50.1
 > >
