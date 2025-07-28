@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 997A34A01;
-	Mon, 28 Jul 2025 18:47:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B786621D3D2;
+	Mon, 28 Jul 2025 18:47:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753728423; cv=none; b=fcQNoRo9Ms5lf1LZZCZaj1Wt5fMtB5p+IR7jsZuRYFiQwYK+qOIcU8GT3DsqVqEwemJwrMtQU5XsJ835W1lNJulHF7RG2TE+Wv92FL5irmmFvA+1C/82Es4INPsaUml9+gpfsczahVcRHKls7lS8k9LpcgiOwqLfLrxM+9YmaNQ=
+	t=1753728467; cv=none; b=ALMSmkMsMCaQyX0IxdLVzuDB7bYqjE/6vII/zSi4f7aQShHmQmACupkn6S4ea44gv3t5wXScyCudr++ybzl+9bMzKl5Oti1HfIurFc+Eiit6LRivtNqfKR0JYYUPY9U+7zHEzk1odLo8LUOjtmPBhMbt486FyB27jSrKWZKswFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753728423; c=relaxed/simple;
-	bh=02Fddf8ITJihQ8B/mhFuNZSUFPZDC0Xr/u8l2xDBq0E=;
+	s=arc-20240116; t=1753728467; c=relaxed/simple;
+	bh=cA73/lc9IWHo6yAek5ZnaVyqbHc5bxbJzNBobW6cvdw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LdeYPG1lTgtedG4CwlPJbOelcL3m7x7OTi62/Nor8pbCT1NqLNsOlb1luGOqN+bqQVHPQy+9Qy9RYVUsbUWC+2S6Rh5deII775uAkNf0MKGPURSOgclq0VzQfK/v4KKKD00P2jLEDrGBw4nZoo53d/Pl2rpKRNBgu4p0fpo0zEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vi/MIXy5; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=CVBkPkwa5YPTJk8DpLeRCiFK06mMyBHPSHIljRIGPPtNjjZPn7u+n3vfU79rrrPFs0xjbmeI30Lb74ue3cnj7mqCVU4JFqAormWq3HPjlFpQMD90KQ3DH4aDeD1p/JIy7yb9EkRVtsRMJY2hlFeuS0Qo5eGKgNrKLGV8878ints=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RKnacxs2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vi/MIXy5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE881C4CEE7;
-	Mon, 28 Jul 2025 18:47:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RKnacxs2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FD71C4CEE7;
+	Mon, 28 Jul 2025 18:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753728423;
-	bh=02Fddf8ITJihQ8B/mhFuNZSUFPZDC0Xr/u8l2xDBq0E=;
+	s=k20201202; t=1753728467;
+	bh=cA73/lc9IWHo6yAek5ZnaVyqbHc5bxbJzNBobW6cvdw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Vi/MIXy5XCFlVbeVJl1XpG/AkUlIoYhaNCviZztZ9OPdr18DuRoz7I9Y6xilwXWTV
-	 XKxDAHE1NuKn3MYPSOYqEUHKnSpRm4qggphjeekw+eGX0W3R64wTy/kOjc4LymuLgN
-	 aDMoTbAuEkrVjhuCdsxxkJo3jmlOthfBtkvhXH4G37lmXKHM+vwVFPQYOI0Mll2lEo
-	 zi5i67qJ3zW7o7BqLQryVrevjtN4roWpo4spFZmCYyWEs+Rh69iEpO2rlSFJApukL6
-	 WiEF636thrudPjbcdH3NkG1x9ITKtLh9kmzDrsYaspt6HtWKs4EVn9O1DC8WdtWEyr
-	 XP+d0khtzM1Yw==
-Date: Mon, 28 Jul 2025 11:47:01 -0700
+	b=RKnacxs2yto7i2z8cOvfComv3mr3h/zxLroMTtPXXEkeinKAK13o00O/3nNYzlQpY
+	 C+SrGjWwQ90V3zo4zA1NHkfESd9bXDvssnbEZ3zDE0qzvl/4LPDxX6fxdEWZnFVyIQ
+	 wzUqATn+FtkgVkrlFce2h6lXaDXOYT0WBX0uVDlwH5UMz4izHd4aoBTH5movFWZY4J
+	 4bWqQ5gR24T0MXs/tqj9VOSLoHGzLCtjtrQPXbqto2MSJ0bB+7zhttKiBdXJvEVVkp
+	 3Modd8sqZHGgsqJWapgM7hSPNaPXPjvUry0nCKNRXuXGPJt0YR8aR52vKaspWdEHVL
+	 Uvqbkw45lThPA==
+Date: Mon, 28 Jul 2025 11:47:45 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -35,12 +35,12 @@ Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v4 4/9] perf annotate: Simplify width calculation in
- annotation_line__write()
-Message-ID: <aIfFpfYqxveCJJLC@google.com>
+Subject: Re: [PATCH v4 5/9] perf annotate: Add --code-with-type support for
+ TUI
+Message-ID: <aIfF0X80EhOF2f4J@google.com>
 References: <20250725193755.12276-1-namhyung@kernel.org>
- <20250725193755.12276-5-namhyung@kernel.org>
- <CAP-5=fUM=1paD_3morMnz_6m8WWE8pmN0sC27xPanbp3FWYtjQ@mail.gmail.com>
+ <20250725193755.12276-6-namhyung@kernel.org>
+ <CAP-5=fWapueXS2NBHyd8VAen7XsenZjRGFgyKtLZFuTmCGaA7g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,85 +50,198 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUM=1paD_3morMnz_6m8WWE8pmN0sC27xPanbp3FWYtjQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fWapueXS2NBHyd8VAen7XsenZjRGFgyKtLZFuTmCGaA7g@mail.gmail.com>
 
-On Fri, Jul 25, 2025 at 05:30:04PM -0700, Ian Rogers wrote:
+On Fri, Jul 25, 2025 at 05:31:52PM -0700, Ian Rogers wrote:
 > On Fri, Jul 25, 2025 at 12:38 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > The width is updated after each part is printed.  It can skip the output
-> > processing if the total printed size is bigger than the width.
+> > Until now, the --code-with-type option is available only on stdio.
+> > But it was an artifical limitation because of an implemention issue.
 > >
-> > No function changes intended.
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/util/annotate.c | 10 +++++++---
-> >  1 file changed, 7 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> > index c21152710148b68c..d69e406c1bc289cd 100644
-> > --- a/tools/perf/util/annotate.c
-> > +++ b/tools/perf/util/annotate.c
-> > @@ -1993,6 +1993,7 @@ void annotation_line__write(struct annotation_line *al, struct annotation *notes
-> >                                            symbol_conf.show_nr_samples ? "Samples" : "Percent");
-> >                 }
-> >         }
-> > +       width -= pcnt_width;
-> >
-> >         if (notes->branch) {
-> >                 if (al->cycles && al->cycles->ipc)
-> > @@ -2056,11 +2057,12 @@ void annotation_line__write(struct annotation_line *al, struct annotation *notes
-> >                         obj__printf(obj, "%*s", ANNOTATION__AVG_IPC_WIDTH, bf);
-> >                 }
-> >         }
-> > +       width -= cycles_width;
-> >
-> >         obj__printf(obj, " ");
-> >
-> >         if (!*al->line)
-> > -               obj__printf(obj, "%-*s", width - pcnt_width - cycles_width, " ");
-> > +               obj__printf(obj, "%-*s", width, " ");
-> >         else if (al->offset == -1) {
-> >                 if (al->line_nr && annotate_opts.show_linenr)
-> >                         printed = scnprintf(bf, sizeof(bf), "%-*d ",
-> > @@ -2069,7 +2071,7 @@ void annotation_line__write(struct annotation_line *al, struct annotation *notes
-> >                         printed = scnprintf(bf, sizeof(bf), "%-*s  ",
-> >                                             notes->src->widths.addr, " ");
-> >                 obj__printf(obj, bf);
-> > -               obj__printf(obj, "%-*s", width - printed - pcnt_width - cycles_width + 1, al->line);
-> > +               obj__printf(obj, "%-*s", width - printed + 1, al->line);
+> > Implement the same logic in annotation_line__write() for stdio2/TUI.
+> > Make disasm_line__write() return the number of printed characters so
+> > that it can skip unnecessary operations when the screen is full.
 > 
-> This doesn't seem to line up with the commit message, should width be
-> updated prior to this call?
+> This change seems to be different from the rest of what is the patch,
+> is it possible to have it is a patch before this one?
 
-Fair enough.
-
-> 
-> >         } else {
-> >                 u64 addr = al->offset;
-> >                 int color = -1;
-> > @@ -2112,9 +2114,11 @@ void annotation_line__write(struct annotation_line *al, struct annotation *notes
-> >                 if (change_color)
-> >                         obj__set_color(obj, color);
-> >
-> > +               width -= printed + 3;
-> 
-> nit: For constants that like '+3' here and '+1' it'd be nice for a
-> comment just to say where the adjustment comes from.
-
-Sure, will do.
+Yep, will do in the next version.
 
 Thanks,
 Namhyung
- 
-> > +
-> >                 disasm_line__write(disasm_line(al), notes, obj, bf, sizeof(bf), obj__printf, obj__write_graph);
+
+> 
+> > Remove the limitation and update the man page.
 > >
-> > -               obj__printf(obj, "%-*s", width - pcnt_width - cycles_width - 3 - printed, bf);
-> > +               obj__printf(obj, "%-*s", width, bf);
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/Documentation/perf-annotate.txt |  1 -
+> >  tools/perf/builtin-annotate.c              |  5 --
+> >  tools/perf/ui/browsers/annotate.c          |  6 +++
+> >  tools/perf/util/annotate.c                 | 61 +++++++++++++++++++---
+> >  4 files changed, 61 insertions(+), 12 deletions(-)
 > >
-> >                 (void)apd;
+> > diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
+> > index 46090c5b42b4762f..547f1a2680185e3c 100644
+> > --- a/tools/perf/Documentation/perf-annotate.txt
+> > +++ b/tools/perf/Documentation/perf-annotate.txt
+> > @@ -170,7 +170,6 @@ include::itrace.txt[]
+> >
+> >  --code-with-type::
+> >         Show data type info in code annotation (for memory instructions only).
+> > -       Currently it only works with --stdio option.
+> >
+> >
+> >  SEE ALSO
+> > diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+> > index 5d57d2913f3d9a33..646f43b0f7c4c9b0 100644
+> > --- a/tools/perf/builtin-annotate.c
+> > +++ b/tools/perf/builtin-annotate.c
+> > @@ -917,11 +917,6 @@ int cmd_annotate(int argc, const char **argv)
+> >                 symbol_conf.annotate_data_sample = true;
+> >         } else if (annotate_opts.code_with_type) {
+> >                 symbol_conf.annotate_data_member = true;
+> > -
+> > -               if (!annotate.use_stdio) {
+> > -                       pr_err("--code-with-type only works with --stdio.\n");
+> > -                       goto out_delete;
+> > -               }
 > >         }
+> >
+> >         setup_browser(true);
+> > diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+> > index 23bea5b165774ae7..cdee1969f3131a7c 100644
+> > --- a/tools/perf/ui/browsers/annotate.c
+> > +++ b/tools/perf/ui/browsers/annotate.c
+> > @@ -4,6 +4,7 @@
+> >  #include "../ui.h"
+> >  #include "../../util/annotate.h"
+> >  #include "../../util/debug.h"
+> > +#include "../../util/debuginfo.h"
+> >  #include "../../util/dso.h"
+> >  #include "../../util/hist.h"
+> >  #include "../../util/sort.h"
+> > @@ -1101,6 +1102,9 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+> >
+> >         ui_helpline__push("Press ESC to exit");
+> >
+> > +       if (annotate_opts.code_with_type)
+> > +               browser.dbg = debuginfo__new(dso__long_name(dso));
+> > +
+> >         browser.b.width = notes->src->widths.max_line_len;
+> >         browser.b.nr_entries = notes->src->nr_entries;
+> >         browser.b.entries = &notes->src->source;
+> > @@ -1111,6 +1115,8 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+> >
+> >         ret = annotate_browser__run(&browser, evsel, hbt);
+> >
+> > +       if (annotate_opts.code_with_type)
+> > +               debuginfo__delete(browser.dbg);
+> >         if (not_annotated && !notes->src->tried_source)
+> >                 annotated_source__purge(notes->src);
+> >
+> > diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> > index d69e406c1bc289cd..06ddc7a9f58722a4 100644
+> > --- a/tools/perf/util/annotate.c
+> > +++ b/tools/perf/util/annotate.c
+> > @@ -1362,6 +1362,11 @@ static int symbol__annotate_fprintf2(struct symbol *sym, FILE *fp,
+> >         };
+> >         struct annotation_line *al;
+> >
+> > +       if (annotate_opts.code_with_type) {
+> > +               evsel__get_arch(apd->evsel, &apd->arch);
+> > +               apd->dbg = debuginfo__new(dso__long_name(map__dso(apd->he->ms.map)));
+> > +       }
+> > +
+> >         list_for_each_entry(al, &notes->src->source, node) {
+> >                 if (annotation_line__filter(al))
+> >                         continue;
+> > @@ -1370,6 +1375,9 @@ static int symbol__annotate_fprintf2(struct symbol *sym, FILE *fp,
+> >                 wops.first_line = false;
+> >         }
+> >
+> > +       if (annotate_opts.code_with_type)
+> > +               debuginfo__delete(apd->dbg);
+> > +
+> >         return 0;
+> >  }
+> >
+> > @@ -1743,7 +1751,7 @@ static double annotation_line__max_percent(struct annotation_line *al,
+> >         return percent_max;
+> >  }
+> >
+> > -static void disasm_line__write(struct disasm_line *dl, struct annotation *notes,
+> > +static int disasm_line__write(struct disasm_line *dl, struct annotation *notes,
+> >                                void *obj, char *bf, size_t size,
+> >                                void (*obj__printf)(void *obj, const char *fmt, ...),
+> >                                void (*obj__write_graph)(void *obj, int graph))
+> > @@ -1771,8 +1779,8 @@ static void disasm_line__write(struct disasm_line *dl, struct annotation *notes,
+> >                 obj__printf(obj, "  ");
+> >         }
+> >
+> > -       disasm_line__scnprintf(dl, bf, size, !annotate_opts.use_offset,
+> > -                              notes->src->widths.max_ins_name);
+> > +       return disasm_line__scnprintf(dl, bf, size, !annotate_opts.use_offset,
+> > +                                     notes->src->widths.max_ins_name);
+> >  }
+> >
+> >  static void ipc_coverage_string(char *bf, int size, struct annotation *notes)
+> > @@ -2116,11 +2124,52 @@ void annotation_line__write(struct annotation_line *al, struct annotation *notes
+> >
+> >                 width -= printed + 3;
+> >
+> > -               disasm_line__write(disasm_line(al), notes, obj, bf, sizeof(bf), obj__printf, obj__write_graph);
+> > +               printed = disasm_line__write(disasm_line(al), notes, obj, bf, sizeof(bf),
+> > +                                            obj__printf, obj__write_graph);
+> > +
+> > +               obj__printf(obj, "%s", bf);
+> > +               width -= printed;
+> > +
+> > +               if (annotate_opts.code_with_type && apd->dbg) {
+> > +                       struct annotated_data_type *data_type;
+> > +                       int offset = 0;
+> > +
+> > +                       data_type = __hist_entry__get_data_type(apd->he, apd->arch,
+> > +                                                               apd->dbg,
+> > +                                                               disasm_line(al),
+> > +                                                               &offset);
+> > +                       if (data_type && data_type != NO_TYPE) {
+> > +                               char member[256];
+> > +
+> > +                               printed = scnprintf(bf, sizeof(bf),
+> > +                                                   "\t\t# data-type: %s",
+> > +                                                   data_type->self.type_name);
+> >
+> > -               obj__printf(obj, "%-*s", width, bf);
+> > +                               if (data_type != &stackop_type &&
+> > +                                   data_type != &canary_type &&
+> > +                                   sizeof(bf) > (size_t)printed) {
+> > +                                       printed += scnprintf(bf + printed,
+> > +                                                            sizeof(bf) - printed,
+> > +                                                            " +%#x", offset);
+> > +                               }
+> > +
+> > +                               if (annotated_data_type__get_member_name(data_type,
+> > +                                                                        member,
+> > +                                                                        sizeof(member),
+> > +                                                                        offset) &&
+> > +                                   sizeof(bf) > (size_t)printed) {
+> > +                                       printed += scnprintf(bf + printed,
+> > +                                                            sizeof(bf) - printed,
+> > +                                                            " (%s)", member);
+> > +                               }
+> >
+> > -               (void)apd;
+> > +                               obj__printf(obj, "%-*s", width, bf);
+> > +                       } else {
+> > +                               obj__printf(obj, "%-*s", width, " ");
+> > +                       }
+> > +               } else {
+> > +                       obj__printf(obj, "%-*s", width, " ");
+> > +               }
+> >         }
+> >
+> >  }
 > > --
 > > 2.50.1
 > >
