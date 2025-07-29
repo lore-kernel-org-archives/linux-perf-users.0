@@ -1,124 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0502045B6;
-	Tue, 29 Jul 2025 03:29:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8948720D4F9;
+	Tue, 29 Jul 2025 07:06:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753759765; cv=none; b=uxtMbjDzUxFi2S729uHfxCDxS5UouiG3gpfn+X6UPqNi7qjxOgV1ycxX4I/GLrCK00Clfxclg8dZ89NOw2NSmwb7xK35yVpCcHcbsZpH2XEjIdIvat2WL40A+al0RAgVJvfHA0DlBHLvY7FZhyCt538aXzo2Pxml7EQc2KQGkkY=
+	t=1753772793; cv=none; b=hl2BtIBHbaotUT89NYuQe/LLExn0Qp+uJZ3K+cKYPaC4iRNK4iBR95MNQudzdenpQxoJVmYYRUfUPkhOSio7p6DWy6F4DVIYesAyiw4lTWvq8js9XJ4DWz1a4vhWL7krPksFfv0/SyBJvzGxLVLyz0LiqebSIhrkCEknR5/e4/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753759765; c=relaxed/simple;
-	bh=ANZkbK817MFJd1tmvTvtQznG5aURBb6fkvguPdy8/Rk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FHqfvUIrE98eRPAoCS18VhhxiuE7YPCTnlrFKxnZTNoOCDrjSpnrpFKZORm7o0sso0lcJX1VohJyV70lIyqn4u/RQ82uxE8tLdr9/0qiHZ1T6JAJ8pcv1n2SgB9azeYJrOBix0UPkWknDlMLEVObbRXe0D+GFRmPIh6rJM3u3NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HKki5wkZ; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1753772793; c=relaxed/simple;
+	bh=9X7FbclAlAgH064Wn2VJEp64tOlkfUs5O5CddFL27Os=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Xscix6Z4MdRBbVDememmpAH8R3RFgQqsme3eKhyH1xdb/TpCUeu+qU4vLG9pxmBEkwBQNC11vPtUZMZeGF/TEIhiaZcIKxqze/1aG2bHek29zmQgNxa9MrADzkJROPS+LCMT8O0h0Xkkwv2+cTJZMJeIsY6cdMLB6foyF/SQp54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GbGmnjzU; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HKki5wkZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1753759764; x=1785295764;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ANZkbK817MFJd1tmvTvtQznG5aURBb6fkvguPdy8/Rk=;
-  b=HKki5wkZU9EjhOGwr9/HgpdZ9L8MEyWhhIWXGhqj/0uDR+VjMTogN45k
-   KV2Wsqz0YHM8zAkNBzvqE2xvysg8PZItlaTfCGgJdl9+R/f/IErv6a7AB
-   tE3Aeq3vKYTbE2YYY/UY4nTDuuHbrDM3IyOsyb4BO2ZWKqaXVQXqsKhfN
-   4lbKtRNvD4HnGJABsvHheUgaQqfUUwddgUdjwvu+B3UPDoRkehuzFj7IM
-   mr/8F5dMfWkwuQFxzDDh0YAp7cr9wLxoFfLKExp1qGRpE2UvvH4sGJzu7
-   mz3/t8rw/tXflDcak56in5UA+kB7SPYLzQcbzvweDx1i7OAjYUvR4ByQT
-   Q==;
-X-CSE-ConnectionGUID: k7lGRyVnShKiR6+RJvZB3Q==
-X-CSE-MsgGUID: A6i+33SaSriJtrQH7aVXVQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11505"; a="66291914"
-X-IronPort-AV: E=Sophos;i="6.16,348,1744095600"; 
-   d="scan'208";a="66291914"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2025 20:29:23 -0700
-X-CSE-ConnectionGUID: dmmLKCIFQpqYNDG5hHfwEw==
-X-CSE-MsgGUID: 2RK1eSy1Q3a6Klp6VpNCRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,348,1744095600"; 
-   d="scan'208";a="193570153"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.106]) ([10.124.240.106])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2025 20:29:17 -0700
-Message-ID: <7dc97db7-5eea-4b65-aed3-4fc2846e13a6@linux.intel.com>
-Date: Tue, 29 Jul 2025 11:29:14 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GbGmnjzU"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b26f7d2c1f1so6494281a12.0;
+        Tue, 29 Jul 2025 00:06:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753772792; x=1754377592; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WVwEerSqyXqjnTvB4E0wQkicRSlmUziq2hhxax3RXag=;
+        b=GbGmnjzUm7wfF37vejwEqHSLukHyEhJci84j89JO65WkjsQ0oAY4gxHpvKH/zjLgm+
+         7Q3rbT6YrHHJ08Ln37JNH7px69uuGA/TWP2Q3+Bz9y5SGooOMWZjzhr0cNDy63iwhhxY
+         ju/hjC9OlTh2kvi15CLCC5ONU6ehJSpWIvqw2boUPRprJ4AuWjf0yBqs7Bl8ZHZrwzJ0
+         yLDKksBrFFSVd9h6DQGmP4K5to81rmmoT8pB0VZLev072Y2WIsqYMGRQB78KL7QjmkJh
+         ePLSbIlopoMnJ4Iwy/fS3GdobHWlbU9kbdR0i9tFF2bdYCRR8LpHw+wirEIWudFoU7mA
+         bSDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753772792; x=1754377592;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WVwEerSqyXqjnTvB4E0wQkicRSlmUziq2hhxax3RXag=;
+        b=EiAuYDTq7Od3VA83Mp8HoorA33QfTGsPtcguzmFpAL26HkblHpASbvIheWbLcwEm3d
+         RMlDhddO79z0zzVspQCS6vd1tTUX0a0jw2qPpWIqhEEeularzPCSbGY64eMHjFjC/uKS
+         vPD3vflfRNfBokU7J2o/yHHFCW2SKg+pgng+aRkkX6fhkMS0Z719/+ZDYbAFhZJA3T0M
+         KnUeHZcjsezwP2Pbg1vd2S5P12kdQZtdGGjvuC27pTODI563jYCxnnCTcewrA22vZamn
+         2qjac7dmMc0TrRvOHqqab1WSiOvPIfF0l1B97fX99yGptBMxSMEHEt588UUV6L5nUdUF
+         Iytg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2EnrQrsDgzYPe2SVfFEHiJ3wq68G7YqoIZi3YiqieWfm8Iardv/SNn35fsOtg5PAQN6KbzfuHzkN0oBXlmTjJLw==@vger.kernel.org, AJvYcCWbw9uoIaxKxKxGJef2fcfGd8XI6BoWsFoGRV2xZbJAtL9hFUAXDOjul+M/pxFp8IYqcP+DLYyHKNjjvEk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3Kfu4B3YhcOGUspjD8PAdHFgOxfyN6ND3bXzTLP9R476hslZH
+	ALJ3iMAjLoYq7pJrAw/IgO5lvlUbVAVmHLKM5i6VOCuREnK8xdC0qQSz
+X-Gm-Gg: ASbGncs+eT1ErLcv6aGKgSYvxaKK6o9rqpndmvRDRjNLu9bvWBivYLInYxOnHGsf2RZ
+	xsAbtX8NzyRF/2zbE/onxjyNf3aAmtG5W9PLsIggIk9ExfVjq2RVtHOkCNDByoIpe6o4ikLfotV
+	5zU0ABFMRKZU3nh1W+lwHUaEYkNecLD8O25T5rZV2GmbPZ8EtoD2DhKf+cXzrZJXHz99gZ/UNKe
+	X7poqrNJHEdVMmOGl+615I7pSHpd9PoVW7MuYwZ8rAU/ylXi8T9u6G61AfWUZbE9uucJvAo/EbD
+	BxFxEql+ntLspoO2qE2dU3PNNY/csz/IHw+QveOcIoc5qqqh7YTXswOwy4WyahCx49BdMj6b3XA
+	pwhLxnkLySLQmtUlTl/Q3O9o9
+X-Google-Smtp-Source: AGHT+IFwHc/m22qVlTvdQ4PIQixQsuTFAFaEOuAgj5iw0EdQMBeT/2y7vmG4ge4xXg9Q0A2ouF47lQ==
+X-Received: by 2002:a17:903:230c:b0:240:96a:b81d with SMTP id d9443c01a7336-240096abbc8mr122047935ad.5.1753772791731;
+        Tue, 29 Jul 2025 00:06:31 -0700 (PDT)
+Received: from localhost.localdomain ([2406:5900:2:f21::2a1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23fbe512d29sm70039485ad.140.2025.07.29.00.06.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Jul 2025 00:06:31 -0700 (PDT)
+From: Ryan Chung <seokwoo.chung130@gmail.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ryan Chung <seokwoo.chung130@gmail.com>
+Subject: [PATCH] event/core.c: fix warning format specifier to use %llu instead of %lld for u64 values.
+Date: Tue, 29 Jul 2025 16:06:03 +0900
+Message-ID: <20250729070620.527482-1-seokwoo.chung130@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 20/38] KVM: x86/pmu: Check if mediated vPMU can
- intercept rdpmc
-To: Sean Christopherson <seanjc@google.com>,
- Sandipan Das <sandipan.das@amd.com>
-Cc: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
- Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Yongwei Ma <yongwei.ma@intel.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Jim Mattson <jmattson@google.com>, Zide Chen <zide.chen@intel.com>,
- Eranian Stephane <eranian@google.com>, Shukla Manali
- <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
-References: <20250324173121.1275209-1-mizhang@google.com>
- <20250324173121.1275209-21-mizhang@google.com>
- <a700ab4c-0e8d-499d-be71-f24c4a6439cf@amd.com> <aG6QeTXrd7Can8PK@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aG6QeTXrd7Can8PK@google.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Updates the perf duration warning to use the unsigned 64‑bit format specifier `%llu` instead of `%lld`, ensuring the format matches the `u64` types.
 
-On 7/9/2025 11:53 PM, Sean Christopherson wrote:
-> On Mon, May 26, 2025, Sandipan Das wrote:
->>> @@ -212,6 +212,18 @@ static void amd_pmu_refresh(struct kvm_vcpu *vcpu)
->>>  	bitmap_set(pmu->all_valid_pmc_idx, 0, pmu->nr_arch_gp_counters);
->>>  }
->>>  
->>> +static void amd_pmu_refresh(struct kvm_vcpu *vcpu)
->>> +{
->>> +	struct vcpu_svm *svm = to_svm(vcpu);
->>> +
->>> +	__amd_pmu_refresh(vcpu);
->>> +
->>> +	if (kvm_rdpmc_in_guest(vcpu))
->>> +		svm_clr_intercept(svm, INTERCEPT_RDPMC);
->>> +	else
->>> +		svm_set_intercept(svm, INTERCEPT_RDPMC);
->>> +}
->>> +
->> After putting kprobes on kvm_pmu_rdpmc(), I noticed that RDPMC instructions were
->> getting intercepted for the secondary vCPUs. This happens because when secondary
->> vCPUs come up, kvm_vcpu_reset() gets called after guest CPUID has been updated.
->> While RDPMC interception is initially disabled in the kvm_pmu_refresh() path, it
->> gets re-enabled in the kvm_vcpu_reset() path as svm_vcpu_reset() calls init_vmcb().
->> We should consider adding the following change to avoid that.
-> Revisiting this code after the MSR interception rework, I think we should go for
-> a more complete, big-hammer solution.  Rather than manipulate intercepts during
-> kvm_pmu_refresh(), do the updates as part of the "common" recalc intercepts flow.
-> And then to trigger recalc on PERF_CAPABILITIES writes, turn KVM_REQ_MSR_FILTER_CHANGED
-> into a generic KVM_REQ_RECALC_INTERCEPTS.
->
-> That way there's one path for calculating dynamic intercepts, which should make it
-> much more difficult for us to screw up things like reacting to MSR filter changes.
-> And providing a single path avoids needing to have a series of back-and-forth calls
-> between common x86 code, PMU code, and vendor code.
+No functional change intended.
 
-Sounds good to me.
+Signed-off-by: Ryan Chung <seokwoo.chung130@gmail.com>
+---
+ kernel/events/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-BTW, Sean, may I know your plan about the mediated vPMU v5 patch set? Thanks.
-
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 22fdf0c187cd..b8d7c4a64c44 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -602,7 +602,7 @@ static u64 __report_allowed;
+ static void perf_duration_warn(struct irq_work *w)
+ {
+ 	printk_ratelimited(KERN_INFO
+-		"perf: interrupt took too long (%lld > %lld), lowering "
++		"perf: interrupt took too long (%llu > %llu), lowering "
+ 		"kernel.perf_event_max_sample_rate to %d\n",
+ 		__report_avg, __report_allowed,
+ 		sysctl_perf_event_sample_rate);
+@@ -655,7 +655,7 @@ void perf_sample_event_took(u64 sample_len_ns)
+ 	perf_sample_period_ns = NSEC_PER_SEC / sysctl_perf_event_sample_rate;
+ 
+ 	if (!irq_work_queue(&perf_duration_work)) {
+-		early_printk("perf: interrupt took too long (%lld > %lld), lowering "
++		early_printk("perf: interrupt took too long (%llu > %llu), lowering "
+ 			     "kernel.perf_event_max_sample_rate to %d\n",
+ 			     __report_avg, __report_allowed,
+ 			     sysctl_perf_event_sample_rate);
+-- 
+2.43.0
 
