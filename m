@@ -1,55 +1,55 @@
 Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F87202998
-	for <linux-perf-users@vger.kernel.org>; Tue, 29 Jul 2025 02:26:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A677720D4F9
+	for <linux-perf-users@vger.kernel.org>; Tue, 29 Jul 2025 02:26:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753756010; cv=none; b=u2WHm0jrAraeNG7JWhBMiiM66NXeCO6OTUcN/yvM8fvWAKe6uWUIcmVIr8RI0qpSBmOu3/2V//hpamlUVE0Rk6q7u1ROOIhsHEEC9EeTSk/cP0UUPCSRmWnAyPRU6VQZXkElipaM0rGbFhRpe/zv8VKyNeR4ZMaQBktF0OX0G/Q=
+	t=1753756013; cv=none; b=NVPEgnxmu1+jBOMeSHLQhCeCqXVkzi47Lek97oqom4tn+7BUs/MXEWSOz7uK0EtgLWz0p44BrxzwknwM0DBXT7Y6aNWnAuS4YB8ReKN/WE2LghP50yqKBKyb5VnGwvoGDYhlomM9bvkmp4EShnNEtqAimHNfl5O7UBPn0ACb7zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753756010; c=relaxed/simple;
-	bh=4ISGW0qCLPw0BM53+WZj1UO7Eu/DiHDQi040hwtDTro=;
+	s=arc-20240116; t=1753756013; c=relaxed/simple;
+	bh=bpPKQzVvF2Y3jUpkSIAzRUU7htVMnv8MWQb3f1guygM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=d2o2a1QtuktGsGSCwbquI5OcpDtmh92Ho6hKVXVq6ASYYkc9GyQoz3iGyQtPsUNwEY++hRFLsLy8nLmK+qShc1T5PuVkKKRcyEJBT2chk6piShKspJtS0VfVz2SMi4FY7/DSuaxrwbNok6+b9bRZXaHcFFsQpukzKdy2NenJnDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yvy3uJGj; arc=none smtp.client-ip=209.85.214.202
+	 To:Content-Type; b=CUJQg5pTNZG604XT/YiJJaLhgtvTzH7hdsw2h0A8lOy9ooAX4215OjYGuO2kdmmIjfdSwJj2DJPezmohogkAE0MUhmx3KINuHj3PAn1bIGu7eLoXiandFSZedpcrOV0IJgGip1guoGqYISOybIOGNZorvrnpdRrPmWBAQrtuGmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sNxNF3r+; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yvy3uJGj"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-23ffd934201so19792385ad.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Jul 2025 19:26:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sNxNF3r+"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-23638e1605dso39151555ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Jul 2025 19:26:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753756008; x=1754360808; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1753756010; x=1754360810; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=MZDFdixHdB12wePHGCdlmdShiJsvmZbe+2EaeGSxRAI=;
-        b=yvy3uJGjVeSFxfka0z1c0zQiLzmtMvwka3ld+dW61JGQdNKt+rPtw2RRh0s5zkj7vB
-         TBiB2Wkdp7NlJv0AwYrY8jby+27RbFo6+QsLLaBQu2BL4Sr3axPH6F8WuG2vyEZr2Ze6
-         leFFoYnXCNCcMUe4j1dSPmZYx+qtDvYMn0UQepywD+Dt0zI2BJROOGC1dUUGuT36GnKN
-         9xyTVl0q3pTGTjg+W8ODZbLVUJVYPDBYqipjkCJisMLnl66wlT9L7GLcjXgS5uVavXQV
-         JggyLiBGICQHWGtSPSmyAA3wKYcCc0ri9yaSW3McrCdgmZK8JFd6PDFGkEMky/MkxKSY
-         oB5A==
+        bh=NPDuevloimGKVsWil7Slcd/Yj9vleIb69P9iimghSK4=;
+        b=sNxNF3r+5VVjyrbiG1R8TKESohNemm/A6syHOxVpFiwYedSwnM1lIeV4GjuvB07F3v
+         j4x3nmF3YQSfP98uJT/cQBi37gIc4J30k1Mv0GZGJaIqvmi1xQk0YiTpeVW05fteCMyz
+         S6P/JUyVu5bkqHs6gfGhdgIxPCQPPa9J4qEpa0cj8CgFb0Kz9YJhJJImkXTlnOelslb3
+         OU99M/O3epFnAjMqAvClXaXPvS2FbGS7JiU5iYGmJaM9VTlzuBK3O8FiYU33tzMQfZ0T
+         DEQqeV38AiF2dUa7vkd4S31D390cA9pqdATadBP76pxmPLiuYW75vKhUHjAIq8XqUYsB
+         5SeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753756008; x=1754360808;
+        d=1e100.net; s=20230601; t=1753756010; x=1754360810;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MZDFdixHdB12wePHGCdlmdShiJsvmZbe+2EaeGSxRAI=;
-        b=VrcXSHKEpslVhloDyuD4XnNDLx9yY911Klm1v0orcMxUC1GjEzQbMcu5GT072f/Ro3
-         FGNPar2vJa10AU6KsnYm8bQ9qm2XHFfIIMQ5rkbd+c17RbdCvl/ady6tIZJF3A082ykb
-         4Iya0Gfa4zg9hkk0h3yGqsCiw/nEV26CY+7tbmAWOv1FJ0ZB+ylaKlUP7Jjv9CZ9XjuW
-         I8BBQYVUVx/LA7Hfj8VoCfcinHusZBbxZFUswg+Sxb8pP0kRB05oIgAnf2AkQvsuliEO
-         8TI9UD32kPAyXSllefhfO+AzdoIbbLxoYNIDdS/oO6yPSJ5EXQnPkL0Sz3yBqw4mxyaY
-         qCHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU3IBGZkA8sWYBSqDloTRLVtPJtbR/9uStTCFawhYygPWjMen8IiKroLF3MbvvxaJbaqrN9XsEHaAYW8ZoZKAvX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2TfGDm2tuL8Q/0qeXq2EnMS7B1eleblWCj9W44MX2MXgKEig4
-	AryvrlPXk5Q3hmmMMkOugu3l3gWNQ+gKmLf8dfr1K+mEBj2F0zlJNkuQn4MHoS81YHTfbGJWAh4
-	uNeyscg==
-X-Google-Smtp-Source: AGHT+IGT/z+KJFAljNSW6NANlfZq/RIKeylnOweKpxXQz/9KYWN22xeESvB+lMHSNFQTjy3lnaZ3WI8wSiY=
-X-Received: from plbme16.prod.google.com ([2002:a17:902:fc50:b0:23f:8c3f:e0fc])
- (user=yuzhuo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f54c:b0:240:71a5:f30
- with SMTP id d9443c01a7336-24071a51d35mr8329275ad.22.1753756008099; Mon, 28
- Jul 2025 19:26:48 -0700 (PDT)
-Date: Mon, 28 Jul 2025 19:26:35 -0700
+        bh=NPDuevloimGKVsWil7Slcd/Yj9vleIb69P9iimghSK4=;
+        b=jnEcfBBW9Df2J4xdFJ6DhqSploWuYewA3xivBuGJtd+yynAsOcIOLMWX61XTA8KD1k
+         m76GMFpTwl6pz+mdV5lAgXVjaPx5gz1bFzjL58QSV/KB1R1T63e/HIBlBLYsrXDocsP0
+         69z61J2cnIJIveBkwZ2kBECy2z+BrxoODQHX44wYs6pJ4n/g0Fma3S44qxo1j0eeWKXT
+         aVKVAuGDb358RTKjRErRgmiZXbDZHArChVuziR/h5nZY9mnDEfrj+RgWQ7A+iLT41Rdp
+         I8yRgYR3QWfNepS9r7FFQe0ihdkK8uEKc1oNkDMRIl6YI8NQMMgkJKqJWmA/ApwvClvB
+         saJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXN6kxBkKM6Tc2s/8L3Y5L5tLZuGp5rRZWSBevwpYwVAsp4/EJUR1Qz7Tcp0FATTOSBC2ho6dpO2EU8Q4T24fFr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9YAe9tNNsZXG1+GSwP2V0x4enDHDVnoNZeqUkHLH5cmRwcwgA
+	Zqmv20xS/n8Ubhbf5AZI/2vcU3dP0q8ZT66EAd/ai1dFpNYeRjioyjNuFfRefSTvfocVqwhfse/
+	Fy/WFdQ==
+X-Google-Smtp-Source: AGHT+IGyyM3fDnm9QBVau2QFKbJOjQeX2Y82KWdawzVLWv6ahiPgYmXl8LvmKTgkRHyMXJzIeDPEu2d5dAI=
+X-Received: from pjbsn7.prod.google.com ([2002:a17:90b:2e87:b0:313:2d44:397b])
+ (user=yuzhuo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:228e:b0:240:1f19:d35c
+ with SMTP id d9443c01a7336-2401f19d5acmr92061085ad.39.1753756009846; Mon, 28
+ Jul 2025 19:26:49 -0700 (PDT)
+Date: Mon, 28 Jul 2025 19:26:36 -0700
 In-Reply-To: <20250729022640.3134066-1-yuzhuo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250729022640.3134066-1-yuzhuo@google.com>
 X-Mailer: git-send-email 2.50.1.487.gc89ff58d15-goog
-Message-ID: <20250729022640.3134066-3-yuzhuo@google.com>
-Subject: [PATCH v1 2/7] tools: Import smp_cond_load and atomic_cond_read
+Message-ID: <20250729022640.3134066-4-yuzhuo@google.com>
+Subject: [PATCH v1 3/7] tools: Partial import of prefetch.h
 From: Yuzhuo Jing <yuzhuo@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,93 +76,62 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Import generic barrier implementation of smp_cond_load_{acquire,relaxed}
-and import macro definitions of atomic_cond_read_{acquire,relaxed}.
+Import only prefetch and prefetchw but not page and range related
+methods.
 
 Signed-off-by: Yuzhuo Jing <yuzhuo@google.com>
 ---
- tools/include/asm/barrier.h  | 58 ++++++++++++++++++++++++++++++++++++
- tools/include/linux/atomic.h |  3 ++
- 2 files changed, 61 insertions(+)
+ tools/include/linux/prefetch.h | 41 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 tools/include/linux/prefetch.h
 
-diff --git a/tools/include/asm/barrier.h b/tools/include/asm/barrier.h
-index 0c21678ac5e6..5150c955c1c9 100644
---- a/tools/include/asm/barrier.h
-+++ b/tools/include/asm/barrier.h
-@@ -63,3 +63,61 @@ do {						\
- 	___p1;					\
- })
- #endif
-+
-+#ifndef cpu_relax
-+#define cpu_relax() ({})
-+#endif
-+
-+/**
-+ * smp_acquire__after_ctrl_dep() - Provide ACQUIRE ordering after a control dependency
+diff --git a/tools/include/linux/prefetch.h b/tools/include/linux/prefetch.h
+new file mode 100644
+index 000000000000..1ed8678f4824
+--- /dev/null
++++ b/tools/include/linux/prefetch.h
+@@ -0,0 +1,41 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ *  Generic cache management functions. Everything is arch-specific,  
++ *  but this header exists to make sure the defines/functions can be
++ *  used in a generic way.
 + *
-+ * A control dependency provides a LOAD->STORE order, the additional RMB
-+ * provides LOAD->LOAD order, together they provide LOAD->{LOAD,STORE} order,
-+ * aka. (load)-ACQUIRE.
++ *  2000-11-13  Arjan van de Ven   <arjan@fenrus.demon.nl>
 + *
-+ * Architectures that do not do load speculation can have this be barrier().
 + */
-+#ifndef smp_acquire__after_ctrl_dep
-+#define smp_acquire__after_ctrl_dep()		smp_rmb()
++
++#ifndef _LINUX_PREFETCH_H
++#define _LINUX_PREFETCH_H
++
++/*
++	prefetch(x) attempts to pre-emptively get the memory pointed to
++	by address "x" into the CPU L1 cache. 
++	prefetch(x) should not cause any kind of exception, prefetch(0) is
++	specifically ok.
++
++	prefetch() should be defined by the architecture, if not, the 
++	#define below provides a no-op define.	
++	
++	There are 2 prefetch() macros:
++	
++	prefetch(x)  	- prefetches the cacheline at "x" for read
++	prefetchw(x)	- prefetches the cacheline at "x" for write
++	
++	there is also PREFETCH_STRIDE which is the architecure-preferred 
++	"lookahead" size for prefetching streamed operations.
++	
++*/
++
++#ifndef ARCH_HAS_PREFETCH
++#define prefetch(x) __builtin_prefetch(x)
 +#endif
 +
-+/**
-+ * smp_cond_load_relaxed() - (Spin) wait for cond with no ordering guarantees
-+ * @ptr: pointer to the variable to wait on
-+ * @cond: boolean expression to wait for
-+ *
-+ * Equivalent to using READ_ONCE() on the condition variable.
-+ *
-+ * Due to C lacking lambda expressions we load the value of *ptr into a
-+ * pre-named variable @VAL to be used in @cond.
-+ */
-+#ifndef smp_cond_load_relaxed
-+#define smp_cond_load_relaxed(ptr, cond_expr) ({		\
-+	typeof(ptr) __PTR = (ptr);				\
-+	__unqual_scalar_typeof(*ptr) VAL;			\
-+	for (;;) {						\
-+		VAL = READ_ONCE(*__PTR);			\
-+		if (cond_expr)					\
-+			break;					\
-+		cpu_relax();					\
-+	}							\
-+	(typeof(*ptr))VAL;					\
-+})
++#ifndef ARCH_HAS_PREFETCHW
++#define prefetchw(x) __builtin_prefetch(x,1)
 +#endif
 +
-+/**
-+ * smp_cond_load_acquire() - (Spin) wait for cond with ACQUIRE ordering
-+ * @ptr: pointer to the variable to wait on
-+ * @cond: boolean expression to wait for
-+ *
-+ * Equivalent to using smp_load_acquire() on the condition variable but employs
-+ * the control dependency of the wait to reduce the barrier on many platforms.
-+ */
-+#ifndef smp_cond_load_acquire
-+#define smp_cond_load_acquire(ptr, cond_expr) ({		\
-+	__unqual_scalar_typeof(*ptr) _val;			\
-+	_val = smp_cond_load_relaxed(ptr, cond_expr);		\
-+	smp_acquire__after_ctrl_dep();				\
-+	(typeof(*ptr))_val;					\
-+})
 +#endif
-diff --git a/tools/include/linux/atomic.h b/tools/include/linux/atomic.h
-index 332a34177995..6baee2c41b55 100644
---- a/tools/include/linux/atomic.h
-+++ b/tools/include/linux/atomic.h
-@@ -36,4 +36,7 @@ void atomic_long_set(atomic_long_t *v, long i);
- #define cmpxchg_release		cmpxchg
- #endif
- 
-+#define atomic_cond_read_acquire(v, c) smp_cond_load_acquire(&(v)->counter, (c))
-+#define atomic_cond_read_relaxed(v, c) smp_cond_load_relaxed(&(v)->counter, (c))
-+
- #endif /* __TOOLS_LINUX_ATOMIC_H */
 -- 
 2.50.1.487.gc89ff58d15-goog
 
