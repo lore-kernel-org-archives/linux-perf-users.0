@@ -1,161 +1,139 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B40627A46E
-	for <linux-perf-users@vger.kernel.org>; Tue, 29 Jul 2025 08:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610672673B9;
+	Tue, 29 Jul 2025 09:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753776802; cv=none; b=H8j82r1JvyXUAKvU2V2VoNGZ0Fy1kGgpHXzlhl88leHsbdq0jWTwZ2GBlv9Lh8CUXMnKN4z3F4Fe/vmlPUkxJLP0w+2ACunT7E2p4dxe18yeITJNDPRKSo32dIgNRMB78mHVpUzQ0Et1kUF7zkG3fkxwfua2/jSYynwJSUTHQlk=
+	t=1753781020; cv=none; b=Whb8GvNZv5yNVWIShDi3Qjykv5zILXfL6HE1yQTWuEEyXhZ0mFMylgXZm8ahIjobocepkumLpLwWaRqTI/rqwtSnskAOfMb079hhnfqJCLYYFghL+UMTnCeSrAs7CVLp2OWP/pe9aCK2Z5da/Ezr3rKXpq80H/Zcb1IdltLl4xI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753776802; c=relaxed/simple;
-	bh=71gbI6OjDsDmEknBgmdcYUx3bHKLr6/JDNXFwhVg5xw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=PXGrfUzz/6nwluHSuL7HMrPEll5OJAuObejECm6cdqJGLAgZlTiISREwLeE6zrLPHTRF46Dkp/X2eebGv8Axs5+WnhCGOxem0/okta9jejSr4rTJuBXCr+W4cLlgxlYQ15k+rXGIm2QokSWvAFqGBxqyD0i03NKF1ZetCTyEbqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LDFxErFO; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com
+	s=arc-20240116; t=1753781020; c=relaxed/simple;
+	bh=kBrxVm2sOKsediQJYDDB5wk7S0hagRKEn+9PQekDd+U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tgN/wxU5zGC9Aee+t9qz7PrmOSDMIzy3vQEhvVP0UpYvlLpAYrz703SsorNHEEXnI+yshZwmn9DUIUcxHXybNbB6PVHIrBibB7SneCw8i6AHvzYJ/RGaOhLZecufWniuPJmLfol5QdOOFSe3oRn4Ptac5ZE1rXJknHEfdxzFea8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h9xyRZeU; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LDFxErFO"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b3928ad6176so4872155a12.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Jul 2025 01:13:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753776800; x=1754381600; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Pppra4qoUIASFj11vi7hdy6H5kU0GOjurpfaQQiON1E=;
-        b=LDFxErFOuHwrAncmaLwtHbes4xPbjsjnlvjUHgFZB341VYtf2eDNWNlCbGadsl91sS
-         utEC4I94hswOW/2z9e4w7/hJlwegij1gxKdNiacSWM7nHv22ObHpN2ibeQbo85y1cYV+
-         Tp7t30AOPleQ/Rwh5LK3NJYMx0PU5ahqTbDhBQNBhAvs4jFwm7Pu7hT3Bey9MoYCgP6Y
-         meBmwWqwC70tus9NM/LDWYLtfTeiqi63WPk73cdRaDRVAeT6+6p49xvoj51nNbG1WTv2
-         /os/vkLQ/cFClBjaKKrW8PpCT4PkeDp5qPYH35VrbGLAj/yelXl3r+Y26GQ5QYUpCqtm
-         4epw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753776800; x=1754381600;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pppra4qoUIASFj11vi7hdy6H5kU0GOjurpfaQQiON1E=;
-        b=FrR2KdW2iySNgmR3gvt2+rukKALS7ZmW89K/aXUAr5yiKFPE/7jR2kHmUakzT/xpy0
-         juMmPCx3yBbpJeXKnFLX/9hXf5NGtQ5JqfQiAJh5DI542awTF8FzsoXGggJBdnS4QBWk
-         zB1tjhelfLZC8Lm78JRqK8Q2NJ/LJOdV4vo2klbwjSl6andssPtrL9egyFuSK+NB9TQk
-         4R/5JeoUP8sUONXv7tLLpnUjkeIDj4BpaCFbXmuMKnGQS/hf+TXe56s5b7ASRnNbIIKS
-         bGrnNhUr5hg5Jc5EckuQ5fIsyF6og54C5d2bMZIAUzt60ix7y30jkpLCGLjyup8ZOVks
-         2Y1g==
-X-Forwarded-Encrypted: i=1; AJvYcCVfoKf6jcXqUeF3SEBSnsx7qMAIBazFeWjrwV7x7sm78JeERkSJPjII17CGCBiSNbStT4O2lqwYMqXv90E3x+1Z@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsbDNJIj/KPjvBReIaw8U3MTObOpwqhPxHl6Cj7Bl8ww6eSS0x
-	N21iNrYC52qwWmwY2Rc1At3yIM1YjmACb3EojmD2n0lfz6A36v75a5+2bBj1rID+p5rIiax7gP9
-	5mzu39g==
-X-Google-Smtp-Source: AGHT+IEfcbCRh+gitWFUzwBX0TsCAZa6VaftFKxPs2lYtcqrCg750iVws+VPQQvAfHwiipfHwgOZPPrL9vU=
-X-Received: from pfbfh5.prod.google.com ([2002:a05:6a00:3905:b0:749:d28:4ca2])
- (user=yuzhuo job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3d1a:b0:21f:4ecc:11ab
- with SMTP id adf61e73a8af0-23d6ffdc7bemr23243429637.9.1753776800054; Tue, 29
- Jul 2025 01:13:20 -0700 (PDT)
-Date: Tue, 29 Jul 2025 01:12:56 -0700
-In-Reply-To: <20250729081256.3433892-1-yuzhuo@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h9xyRZeU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1753781018; x=1785317018;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=kBrxVm2sOKsediQJYDDB5wk7S0hagRKEn+9PQekDd+U=;
+  b=h9xyRZeUnXzo0YgIT8tuOUHPdAsrpEigq+QHi2QnkG+xRvIGzo0fGEba
+   D4WFcY/KvZKm3cQNrSfoCXMTZNY5UPvO850LoJdmdF4wwBud6h5Xn4mCK
+   X9rkneK0MSJoRWi7ld3elOg8nwdI2jEaasVBw5CzaPlNyHG9z3n+2TwxN
+   wiDPkUYdCBjxdrL4TRkY4YHKnx6mwA4k+Kq0FSQGbB/rabRZKpODPXRTT
+   v2LOpNHPdamklyNvOENaGtbKotcQU6wC2bwYaWuEXkbrUtqq7cSm+QEPE
+   1tJU7GtboQap+efy/lEjbNRS75AGCQoO9GMf3WEZp2/2xVu1PCXKGqGzV
+   Q==;
+X-CSE-ConnectionGUID: PkY9Js+qQU+qKPZDCfH11w==
+X-CSE-MsgGUID: 2DLso0lVTWqL3q0iVeXI7w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11505"; a="43649354"
+X-IronPort-AV: E=Sophos;i="6.16,348,1744095600"; 
+   d="scan'208";a="43649354"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2025 02:23:38 -0700
+X-CSE-ConnectionGUID: +kMwkbTOR/+vSDJ2f816ZA==
+X-CSE-MsgGUID: GxINhn5dQRO5letcuTCI2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,348,1744095600"; 
+   d="scan'208";a="167954486"
+Received: from zhengwen-mobl3.ccr.corp.intel.com (HELO [10.124.240.106]) ([10.124.240.106])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2025 02:23:34 -0700
+Message-ID: <db7043a4-f815-4178-8d81-2da1dda6236e@linux.intel.com>
+Date: Tue, 29 Jul 2025 17:23:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250729081256.3433892-1-yuzhuo@google.com>
-X-Mailer: git-send-email 2.50.1.487.gc89ff58d15-goog
-Message-ID: <20250729081256.3433892-4-yuzhuo@google.com>
-Subject: [PATCH v1 3/3] perf bench: Add 'bench sync ticket' subcommand
-From: Yuzhuo Jing <yuzhuo@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Liang Kan <kan.liang@linux.intel.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Yuzhuo Jing <yzj@umich.edu>, Yuzhuo Jing <yuzhuo@google.com>, 
-	Guo Ren <guoren@kernel.org>, Andrea Parri <parri.andrea@gmail.com>, 
-	Leonardo Bras <leobras@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [perf] fuzzer triggers "BUG: kernel NULL pointer dereference"
+To: Vince Weaver <vincent.weaver@maine.edu>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>
+References: <5baea1f7-6edd-d6fa-27ce-04eddb7e5199@maine.edu>
+ <fdcdd5a7-76b5-6c52-63dc-95fadddf7772@maine.edu>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <fdcdd5a7-76b5-6c52-63dc-95fadddf7772@maine.edu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Benchmark kernel ticket spinlock implementation in user space.
+Hi Vince,
 
-In resolution of arch_spin_* redefinition conflicts due to importing
-qspinlock and ticket spinlock together, the sync.c defines
-__no_arch_spinlock_redefine, following the usage in
-arch/riscv/include/asm/spinlock.h.
+Could you please provide more information about this issue?  Like HW
+information, how long can the issue be produced and whether the issue can
+be seen in latest kernel (6.16)? Thanks.
 
-Signed-off-by: Yuzhuo Jing <yuzhuo@google.com>
----
- tools/perf/bench/bench.h   |  1 +
- tools/perf/bench/sync.c    | 17 +++++++++++++++++
- tools/perf/builtin-bench.c |  1 +
- 3 files changed, 19 insertions(+)
+--
 
-diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
-index dd6c8b6126d3..42c0696b05fb 100644
---- a/tools/perf/bench/bench.h
-+++ b/tools/perf/bench/bench.h
-@@ -23,6 +23,7 @@ int bench_sched_messaging(int argc, const char **argv);
- int bench_sched_pipe(int argc, const char **argv);
- int bench_sched_seccomp_notify(int argc, const char **argv);
- int bench_sync_qspinlock(int argc, const char **argv);
-+int bench_sync_ticket(int argc, const char **argv);
- int bench_syscall_basic(int argc, const char **argv);
- int bench_syscall_getpgid(int argc, const char **argv);
- int bench_syscall_fork(int argc, const char **argv);
-diff --git a/tools/perf/bench/sync.c b/tools/perf/bench/sync.c
-index c85e9853c72a..581835451e5f 100644
---- a/tools/perf/bench/sync.c
-+++ b/tools/perf/bench/sync.c
-@@ -17,7 +17,9 @@
- #include "bench.h"
- #include "../util/tsc.h"
- 
-+#define __no_arch_spinlock_redefine
- #include "include/qspinlock.h"
-+#include "include/ticket_spinlock.h"
- 
- #define NS 1000000000ull
- #define CACHELINE_SIZE 64
-@@ -67,6 +69,7 @@ static const struct option options[] = {
- 
- static const char *const bench_sync_usage[] = {
- 	"perf bench sync qspinlock <options>",
-+	"perf bench sync ticket <options>",
- 	NULL
- };
- 
-@@ -106,6 +109,20 @@ int bench_sync_qspinlock(int argc, const char **argv)
- 	return bench_sync_lock_generic(&ops, argc, argv);
- }
- 
-+/*
-+ * Benchmark of linux kernel ticket spinlock in user land.
-+ */
-+int bench_sync_ticket(int argc, const char **argv)
-+{
-+	arch_spinlock_t lock = __ARCH_SPIN_LOCK_UNLOCKED;
-+	struct lock_ops ops = {
-+		.lock = (lock_fn)ticket_spin_lock,
-+		.unlock = (lock_fn)ticket_spin_unlock,
-+		.data = &lock,
-+	};
-+	return bench_sync_lock_generic(&ops, argc, argv);
-+}
-+
- /*
-  * A busy loop to acquire and release the given lock N times.
-  */
-diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
-index cfe6f6dc6ed4..8d945b846321 100644
---- a/tools/perf/builtin-bench.c
-+++ b/tools/perf/builtin-bench.c
-@@ -54,6 +54,7 @@ static struct bench sched_benchmarks[] = {
- 
- static struct bench sync_benchmarks[] = {
- 	{ "qspinlock",	"Benchmark for queued spinlock",		bench_sync_qspinlock	},
-+	{ "ticket",	"Benchmark for ticket spinlock",		bench_sync_ticket	},
- 	{ "all",	"Run all synchronization benchmarks",		NULL			},
- 	{ NULL,		NULL,						NULL			}
- };
--- 
-2.50.1.487.gc89ff58d15-goog
+Dapeng Mi
 
+On 7/22/2025 5:17 AM, Vince Weaver wrote:
+> I'm still tracking this fuzzer issue.  The fuzzer can reliably trigger the 
+> crash but only 32000 syscalls deep into a run and I am having a lot of 
+> trouble trying to gather a trace/testcase that can generate it.
+>
+> I was hoping the recent
+> 	[PATCH] perf/x86: Check if cpuc->events[*] pointer exists before accessing it
+> patch might fix things as the symptoms were vaguely similar but that 
+> particular patch does not fix the problem.
+>
+> Vince
+>
+> On Tue, 8 Jul 2025, Vince Weaver wrote:
+>
+>> Hello
+>>
+>> the perf_fuzzer can reliably trigger this on a 6.16-rc2 kernel.  It 
+>> doesn't look obviously perf related but since the perf_fuzzer triggered it 
+>> I thought I'd report it as a perf issue first.  I can work on a smaller 
+>> test case but that might take a bit especially as the machine locks up 
+>> super hard and requires being unplugged after it's triggered.
+>>
+>> let me know if there's any other info I can provide.  The dump below is 
+>> transcribed from a screenshot as I still haven't figured out a way to get 
+>> a serial console on this Raptorlake system.
+>>
+>> BUG: kernel NULL pointer dereference, address: 0000000000000008
+>> #PF: supervisor read access in kernel mode
+>> #PF: error_code(0x0000) - not-present page
+>> PGD 0 P4D 0
+>> Oops: Oops: 0000 [#1] SMP NOPTI
+>> CPU: 5 UID: 0 PID: 0 Comm: swapper/5 Not tainted 6.16.0-rc2+ #8 PREEMPT (voluntary)
+>> Hardware name: Dell Inc. Precision 3660/0VJ7G2
+>> RIP: 0010:rb_insert_color+0x18/0x130
+>> Code: 1f 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 48 8b 07
+>> RSP: 0018:ffffb5e5c01e3df8 EFLAGS: 00010046
+>> RAX: ffff93f1927f8168 .....
+>> ...
+>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> CR2: 000000000000008 CR3: 00000000596824001 CR4: 000000000000f72ef0
+>> DR0: 00000000a000001 ....
+>> PKRU: 55555554
+>> Call Trace:
+>>  <TASK>
+>>  timerqueue_add+0x66/0xb0
+>>  hrtimer_start_range_ns+0x102/0x420
+>>  ? next_zone+0x42/0x70
+>>  tick_nohz_stop_tick+0xce/0x230
+>>  tick_nohz_idle_stop_tick+0x70/0xd0
+>>  do_idle+0x1d3/240
+>>  cpu_startup_entry+0x29/0x30
+>>  start_secondary+0x119/0x140
+>>  common_startup_64+0x13e/0x141
+>>  </TASK>
+>>
+>>
+>>
