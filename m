@@ -1,204 +1,131 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F868275AE8
-	for <linux-perf-users@vger.kernel.org>; Mon, 28 Jul 2025 19:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C181CBEB9
+	for <linux-perf-users@vger.kernel.org>; Tue, 29 Jul 2025 02:26:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753730422; cv=none; b=gFBmg6pE2eZ3k/kyIMNxewO9agLi1PNxsMWFc70NoMW3lNfaWPAbm7MPOvM15F0iEHg+CDtV2XQQ41suXx1FNW8MB8oI84mGnV8M/lg5sqa7O9tlI151CgohCql3EScv/LpXFHWdqLt8OQkKWWgMCS3EVq7U0rXbseDlJu0dJAE=
+	t=1753756007; cv=none; b=JcUkZIzuOWUKLFQWmHX84cTyb+TVQBO5xyb4E5oWEfKO1MPDjjd6uJFnTN5TmiIipED2RBZ32b5Dpc2cfjMLvkoRY6448iuUN7rSgEbfFI1b02KZTwuE7Xm6+kY8ziE6cHF0CffkgwHGZ0Xyqfc51vZLaQ9UQuFujPc8ZXJsFPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753730422; c=relaxed/simple;
-	bh=q9SF8B/jc0yRXhsDhczNx/OADAi0lyIYi9pkvkZO2m8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sClMJSU/PN/zumrHffWVm3S/GfRRd/JB4Wn+y6Ey/Rd4zBwI995VSYRjZi53OsrkUgh0zmAaLNLNFlt5iOeUMzLqO8BhLjD5Bt7p8fhTm3u7Zff6DlUeCYWoaF716XaVHnAHxsADy5kvc80Iiz5P4Qv844NybhmgdzD/T8e1Qyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UISdtmcl; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1753756007; c=relaxed/simple;
+	bh=JFNJ0xY/gGJnj3Jd16Zi8loEorMlqJwViFDAB7w5AnU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=d6SoJaMPbgOWfqTNYjPugyb3Pdt5MKXRfz5Ll0qKZbykDwRvZbM6vHVpdcCPSKVjtExaAiB17VYIqj9P4ytHqTk8hyMkitKmZQgDonVUgR4pzi6F0XPoQc6ITQoV9uFwyRY7X2lrixRd5UbISto3ifF+3VuoL6bfzHYbTCtDM4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R/sZ907D; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UISdtmcl"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56SFE2fY029963;
-	Mon, 28 Jul 2025 19:20:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=JhZf/yjnp8dIEhq+mYpgDZsvlmICQ/
-	LsZyyUUxdk07U=; b=UISdtmclkqA+zsuuJvfHCXLrJtkWzykVIjfyFqwZ1HMo/L
-	mg2zR6EbYwpLGDjBZtccbcDVvDDlEyIKqmdLpbybfk1DOmt2rETLzu1NkjNRcoc9
-	Nzlsy1ofzJOSDYtxydbA3z7THXgz0iul57NssMbQ4A0TC0LmynCHpwToYJ4yCHc2
-	uWSREo9qMh9s+Bk8jtH32Dlg9SYwGijVXqmj0cE3R6f4kF7I9DP0oh9T+9HypFoj
-	NMzj1f0r3616Tpxh5QDeeARoSSiyCqMKJ3z7QxmUWS3/L2nUCXPuxvfHk5+6b9pd
-	jY4Y2RwxGp91ee8fDTQuavDNv7qMgRuU9rK+mCGA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 484qd5atrr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Jul 2025 19:20:15 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 56SJIPbr003398;
-	Mon, 28 Jul 2025 19:20:14 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 484qd5atrk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Jul 2025 19:20:14 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 56SFsiG9028755;
-	Mon, 28 Jul 2025 19:20:14 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 485c22eu4j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Jul 2025 19:20:14 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 56SJKCJt54788470
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 28 Jul 2025 19:20:12 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 71E162004B;
-	Mon, 28 Jul 2025 19:20:12 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1B59E20040;
-	Mon, 28 Jul 2025 19:20:12 +0000 (GMT)
-Received: from li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com (unknown [9.111.80.228])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 28 Jul 2025 19:20:12 +0000 (GMT)
-Date: Mon, 28 Jul 2025 21:20:10 +0200
-From: Jan Polensky <japo@linux.ibm.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: adrian.hunter@intel.com, irogers@google.com,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] perf test: Ensure lock contention using pipe mode
-Message-ID: <aIfNaheJ5REpoFE_@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
-References: <20250725170801.3176678-1-japo@linux.ibm.com>
- <aIRoR6j1qAfytIPC@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R/sZ907D"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b3f2e05fb78so3800128a12.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Jul 2025 19:26:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1753756005; x=1754360805; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NNV/MXzHp2SAdfvy4FLj9SvHj6RbtHppa2ktiqMYU9Q=;
+        b=R/sZ907DIt9pvrZvmEwoYagk8yR5pBLDfL0MLq10oeJEIw4HNVJsJ3+XZ/3vHyxcI4
+         /ElXB+cr2kqtGFU1mgmeVGX3kn6dErPCq80NFqklbzd3bsfib5/JkvSAArNbGHIBr6oz
+         v8YIO5fQDlHp5Q19K9J1veJdIyOYotO+8mNHWQZNLCBy8LjOUx+OE6uzUC6b4dyiq8Ys
+         PGW38AOPQyFeYsuRnbDANlwY1ZGsr97WOW8B/xUK0osK6kzBQ4YowEbnI9eyIV+SoQro
+         ItfUOxoT3a90A3wGwLc4UI4WyRZ+FFvl/h5T3hagRZ6Kgaw9/0bkF+W32h9Y+OqpscT+
+         aLnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753756005; x=1754360805;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NNV/MXzHp2SAdfvy4FLj9SvHj6RbtHppa2ktiqMYU9Q=;
+        b=AeRwjZ6habAIGLdgP7fq223RFguAd5zBrUe2GcV9L25ICSE74HWgc2qpcU4e9+0k5P
+         LsvNnFs56ptd+93OIooKvYgas0MImjLpF7Xyq+XyA5Tf0MJglnB2bRLZmrX46CruJZ2A
+         Z7wdhSG9oK28eqdYoSpbfwEQcdYsDmJBL3rCA/gQmKKvG8w8JiGJ2jvBB5joPhhFFiam
+         u7HROmjnW9WYqwQ+NLx6ICVLVNHevR+JY6yNEPuaPyp9Ms4lYHkSyUNNatyNnJ/WzvQh
+         wIRbwdn+t2/Fww7TOl63p/fEyJtkw/PScjbAyiefOsTJheTsWh/tR1Olg0ppt0UwbLjV
+         1mFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1FXWAOjJA4sYSbNr23zoOCa5laMFpUsyZClDcy/DwBkGDM1T6Zozh0DZ8IesKXlZCU1HvphQSlvsNqCZNXJxV@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVjjRSPzAdWBFaeiIIVqTC1Wc/abvAbbAN21K24C0P4CKQoYkx
+	ZtSnzrE7JorjrqmjGKcIvlrsCh1P3GHv8OfWNs6Y1qgVSmxqPi4qo+Xs0UtCqLJwB6CAR1cmdYo
+	ZUxornQ==
+X-Google-Smtp-Source: AGHT+IEKRFSFzLMwd8Cl8zS8v5bK04juZlQuScKDSBv7yZlW8dq70oQz+r7CxWdcnWIl9noUda0WH4TQWes=
+X-Received: from pjbph7.prod.google.com ([2002:a17:90b:3bc7:b0:312:df0e:5f09])
+ (user=yuzhuo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:57c5:b0:312:ffdc:42b2
+ with SMTP id 98e67ed59e1d1-31e77a20229mr16472400a91.23.1753756004947; Mon, 28
+ Jul 2025 19:26:44 -0700 (PDT)
+Date: Mon, 28 Jul 2025 19:26:33 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aIRoR6j1qAfytIPC@google.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzI4MDE0MiBTYWx0ZWRfX2tB5pYRdzQn4
- OTqLhmijZxz0nHTAHhDd8mrwbvqghdhXo2LTJQnJ6sQhPAbyUgLhUES9rHGdrhg5yQcp+qYf8Mo
- cM+y9pFS74p2xodloLJweZojwuD/FsVeWv1s6YhN4cyeZyIUfGilco90gm760NFEFyY8diMBoSP
- jixh5ipLrrLqTqitgyBrMeuYQhvmge1DEzUKDFnEt665xt/wc6t6Lf75iX3iMBCd1LTc//B8TpC
- hqWF6u0XqSx0byyKJNB0Gmt1HEZ5aUREdabPScJ8UTvsWV/XBrrDkKVScgiYRrw1awgyGD4OhDm
- 4gVJcfJl9+vOWlYCoBrqUMGv6wLCniVxispODjzvbY3bBNw08gkSfJfqnY9OzCN2qHG+bPjD23g
- 6qYgTO5kMX+ii1ZQYoKFZlS0xiyjy3Ui7W4y6wVFXI/gUIKj4iLNsQXa1ffyFf/bC+SPRp/0
-X-Proofpoint-ORIG-GUID: sklCIBsHRsPHwiq4n27NZk2GBXf90wg3
-X-Authority-Analysis: v=2.4 cv=B9q50PtM c=1 sm=1 tr=0 ts=6887cd6f cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=kj9zAlcOel0A:10 a=Wb1JkmetP80A:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
- a=qphFsQdMcfBamSn3BXEA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: zyUrmbcEUM34NA0bsg7pCo_vX8bAgNq9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-07-28_03,2025-07-28_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 mlxscore=0 spamscore=0 mlxlogscore=999
- suspectscore=0 clxscore=1015 impostorscore=0 bulkscore=0 lowpriorityscore=0
- malwarescore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507280142
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.1.487.gc89ff58d15-goog
+Message-ID: <20250729022640.3134066-1-yuzhuo@google.com>
+Subject: [PATCH v1 0/7] perf bench: Add qspinlock benchmark
+From: Yuzhuo Jing <yuzhuo@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Liang Kan <kan.liang@linux.intel.com>, Yuzhuo Jing <yzj@umich.edu>, 
+	Yuzhuo Jing <yuzhuo@google.com>, Andrea Parri <parri.andrea@gmail.com>, 
+	Palmer Dabbelt <palmer@rivosinc.com>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Barret Rhoden <brho@google.com>, 
+	Alexandre Ghiti <alexghiti@rivosinc.com>, Guo Ren <guoren@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jul 25, 2025 at 10:31:51PM -0700, Namhyung Kim wrote:
-> On Fri, Jul 25, 2025 at 07:08:01PM +0200, Jan Polensky wrote:
-> > The 'kernel lock contention analysis test' requires reliable triggering
-> > of lock contention. On some systems, previous benchmark calls failed to
-> > generate sufficient contention due to low system activity or resource
-> > limits.
->
-> Right, we need a reliable reproducer.
->
-> >
-> > This patch adds the -p (pipe) option to all calls of perf bench sched
-> > messaging, ensuring consistent lock contention without relying on
-> > socket-based communication.
->
-> But I don't understand why pipe is different than sockets.  Can you
-> please elaborate?
+As an effort to improve the perf bench subcommand, this patch series
+adds benchmark for the kernel's queued spinlock implementation.
 
-The solution suggested by v1 in
-https://lore.kernel.org/all/aIOvdQ003hRqFEH1@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com/
-can be significantly faster and more reproducible in some cases. However,
-on large systems it may fail with the error "perf: socketpair(): Too many
-open files", which in turn can lead to kernel lock contention. While this
-can be mitigated by increasing the file descriptor limit via ulimit -n
-<number>, we should avoid modifying system settings during testing.
+This series imports necessary kernel definitions such as atomics,
+introduces userspace per-cpu adapter, and imports the qspinlock
+implementation from the kernel tree to tools tree, with minimum
+adaptions.
 
-	[root@localhost perf]# ./perf stat -- perf bench sched messaging --group $(nproc) --thread
-	# Running 'sched/messaging' benchmark:
-	perf: socketpair(): Too many open files
+This subcommand enables convenient commands to investigate the
+performance of kernel lock implementations, such as using sampling:
 
-	 Performance counter stats for 'perf bench sched messaging --group 32 --thread':
+    perf record -- ./perf bench sync qspinlock -t5
+    perf report
 
-				 43.14 msec task-clock                       #    0.104 CPUs utilized
-				 1,013      context-switches                 #   23.483 K/sec
-				   900      cpu-migrations                   #   20.863 K/sec
-				 2,905      page-faults                      #   67.342 K/sec
-		   162,801,472      instructions                     #    0.74  insn per cycle
-		   220,427,613      cycles                           #    5.110 GHz
+Yuzhuo Jing (7):
+  tools: Import cmpxchg and xchg functions
+  tools: Import smp_cond_load and atomic_cond_read
+  tools: Partial import of prefetch.h
+  tools: Implement userspace per-cpu
+  perf bench: Import qspinlock from kernel
+  perf bench: Add 'bench sync qspinlock' subcommand
+  perf bench sync: Add latency histogram functionality
 
-		   0.414804757 seconds time elapsed
+ tools/arch/x86/include/asm/atomic.h           |  14 +
+ tools/arch/x86/include/asm/cmpxchg.h          | 113 +++++
+ tools/include/asm-generic/atomic-gcc.h        |  47 ++
+ tools/include/asm/barrier.h                   |  58 +++
+ tools/include/linux/atomic.h                  |  27 ++
+ tools/include/linux/compiler_types.h          |  30 ++
+ tools/include/linux/percpu-simulate.h         | 128 ++++++
+ tools/include/linux/prefetch.h                |  41 ++
+ tools/perf/bench/Build                        |   2 +
+ tools/perf/bench/bench.h                      |   1 +
+ .../perf/bench/include/mcs_spinlock-private.h | 115 +++++
+ tools/perf/bench/include/mcs_spinlock.h       |  19 +
+ tools/perf/bench/include/qspinlock-private.h  | 204 +++++++++
+ tools/perf/bench/include/qspinlock.h          | 153 +++++++
+ tools/perf/bench/include/qspinlock_types.h    |  98 +++++
+ tools/perf/bench/qspinlock.c                  | 411 ++++++++++++++++++
+ tools/perf/bench/sync.c                       | 329 ++++++++++++++
+ tools/perf/builtin-bench.c                    |   7 +
+ tools/perf/check-headers.sh                   |  32 ++
+ 19 files changed, 1829 insertions(+)
+ create mode 100644 tools/include/linux/percpu-simulate.h
+ create mode 100644 tools/include/linux/prefetch.h
+ create mode 100644 tools/perf/bench/include/mcs_spinlock-private.h
+ create mode 100644 tools/perf/bench/include/mcs_spinlock.h
+ create mode 100644 tools/perf/bench/include/qspinlock-private.h
+ create mode 100644 tools/perf/bench/include/qspinlock.h
+ create mode 100644 tools/perf/bench/include/qspinlock_types.h
+ create mode 100644 tools/perf/bench/qspinlock.c
+ create mode 100644 tools/perf/bench/sync.c
 
-		   0.004687000 seconds user
-		   0.071900000 seconds sys
+-- 
+2.50.1.487.gc89ff58d15-goog
 
-Analyzing the lock content w/o pipe:
-
-    [root@localhost ~]# perf record -e 'lock:contention*' -a -- perf bench sched messaging; perf script | wc -l
-    # Running 'sched/messaging' benchmark:
-    # 20 sender and receiver processes per group
-    # 10 groups == 400 processes run
-
-         Total time: 0.135 [sec]
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 0.363 MB perf.data ]
-    0
-
-Analyzing the lock content with pipe:
-
-    [root@localhost ~]# perf record -e 'lock:contention*' -a -- perf bench sched messaging -p; perf script | wc -l
-    # Running 'sched/messaging' benchmark:
-    # 20 sender and receiver processes per group
-    # 10 groups == 400 processes run
-
-         Total time: 0.108 [sec]
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 1.604 MB perf.data (14789 samples) ]
-    14789
-
-By using the -g option, we identified pipe as a good source of contention:
-
-    [skip]
-    sched-messaging 2028653 [003] 625253.243099: lock:contention_begin: 0x85846e40 (flags=SPIN|MUTEX)
-             3a211f16200 __traceiter_contention_begin+0x50 ([kernel.kallsyms])
-             3a212d92e0e __mutex_lock.constprop.0+0x1be ([kernel.kallsyms])
-             3a2122643f2 anon_pipe_write+0x52 ([kernel.kallsyms])
-             3a21225789a vfs_write+0x1ca ([kernel.kallsyms])
-             3a212257ca8 ksys_write+0xd8 ([kernel.kallsyms])
-             3a212d8c8f4 __do_syscall+0x164 ([kernel.kallsyms])
-             3a212d99154 system_call+0x74 ([kernel.kallsyms])
-             3ff8e2a9ba6 __internal_syscall_cancel+0xa6 (/usr/lib64/libc.so.6)
-
-	sched-messaging 2028652 [005] 625253.243099:   lock:contention_end: 0x85846e40 (ret=0)
-             3a211f16280 __traceiter_contention_end+0x50 ([kernel.kallsyms])
-             3a212d92fd6 __mutex_lock.constprop.0+0x386 ([kernel.kallsyms])
-             3a2122643f2 anon_pipe_write+0x52 ([kernel.kallsyms])
-             3a21225789a vfs_write+0x1ca ([kernel.kallsyms])
-             3a212257ca8 ksys_write+0xd8 ([kernel.kallsyms])
-             3a212d8c8f4 __do_syscall+0x164 ([kernel.kallsyms])
-             3a212d99154 system_call+0x74 ([kernel.kallsyms])
-             3ff8e2a9ba6 __internal_syscall_cancel+0xa6 (/usr/lib64/libc.so.6)
-	[skip]
-
-This suggests that sockets are better optimized to avoid such locking
-issues, and therefore are a poor choice in this specific benchmark
-scenario.
-
-> Thanks,
-> Namhyung
->
-[skip]
-> >
