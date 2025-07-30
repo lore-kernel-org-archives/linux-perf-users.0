@@ -1,182 +1,85 @@
 Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF792A1C9
-	for <linux-perf-users@vger.kernel.org>; Wed, 30 Jul 2025 00:31:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632D8129A78
+	for <linux-perf-users@vger.kernel.org>; Wed, 30 Jul 2025 00:38:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753835496; cv=none; b=mdW7xQBQgJ3RswgUIAg7+6La42MkPfg5vwyK9MttzQioja9gnySAbMmKFuNPAEXsL+Ff9BUryqp8iwBzAl0yAkeEEIZhAJPH9pIw4EYbpsNRm0IOn6BC2qwNpMKwHR8zuA2ltMiL6/fNe2FHCmFqR5VkogBjtCnF5ArfLO0bbPk=
+	t=1753835884; cv=none; b=bGCUjvNIfKbRuAVH9VMqtnl38Igb8EfrFtQ1G3jTJnKNRwnFHDsiM+FG0aABXBCagSzd7bhq+5eL93EsCWDouk5wGNcuR2qJ/k0jWW6I14MVQkOPu/xoFZRpfcL0Cao3MG4Dqxpr7+3aaMIHRy5mQEtlXhVZFAn4YlyBUKyQ9Fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753835496; c=relaxed/simple;
-	bh=xBqYcPOMq93xlyP7/znvTXGQJiBTxVO/kOVZXtDD+9o=;
+	s=arc-20240116; t=1753835884; c=relaxed/simple;
+	bh=PoyA0CcW92FoQ3I73ytTZfPzdZaHEfO3pw0xz04Rz34=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=uyPCJ5qeltvzYijdRTruLc0wbUNz2ViFRivHD9XAq7P9cdx2cgIRoijAHnJjLxzeXnbxjsSfrT7Hz5HkUmd6j8a7mGMEE7qhx69cInAbnqrxNjmymgGwPkbd0XKrCFvFHX3zm5pxfu6WiWDYG6vVG4iMEX3QiTEtPG3ckuivgzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qZjT7dil; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=uEyGKMntZcmDomPZbflreTuG/zeTKXo1kT3At1yIAiZL922l87xPi5bzDdQzK84u2UbuCdpCIU73mxtku7JnQ96q043eVNohEeAW3np++b3odzPtvj/pHon4WNgiBmOn7FJIw7Zzj+d5uVde3lUlxP/+lk7gGOT2mCYuKhrR3vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mcyuKJcO; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qZjT7dil"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-31ebadfb7f2so366621a91.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Jul 2025 17:31:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mcyuKJcO"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-315af0857f2so5716369a91.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Jul 2025 17:38:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753835494; x=1754440294; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1753835883; x=1754440683; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZsvMJHxi0Jk9Ob0YWIw4MQPlATsEKQhQD2Gx/yz9Pks=;
-        b=qZjT7dilcKyMf/lvgv27m7hyyBEdKOZnkBehHV4Mss+NyQ9odaIWC9lg0qEyfFPO7m
-         pYlXPEIgzrYA67FazKBqBUKrawlEfD1ncIIpQYewKOF8J/2PA/UP/EhE0HnmuGITW8z3
-         QjuD/GvaA7bpVN/J640iYJENKnqMRVztOx8KGpYYZ5iI8AqXWil4A1pCsTUpg6Q7AJHq
-         2dQGOzsjQxXR45pIGMrVlH5gHNtv7CTwoI9BoOF8WFRdgD1HZRcozqR97Td4NLW91Emh
-         fr3K32lr42r/hjszsPi5e4bs3Ab44FvJWENh581r7lheKE494WfqWv4RHLbAf6X0THIH
-         6kPA==
+        bh=PoyA0CcW92FoQ3I73ytTZfPzdZaHEfO3pw0xz04Rz34=;
+        b=mcyuKJcOLvd4KWcA6XbGTOORwXL7XY2Bymde0/RtCaPOAYnsibjcnompPYeGvyqiBR
+         sew8Ad6fOZq3KnLvmMOAK5GwJdtYUuK9nhreVb+xC4wVVwrTKSrCOUl/UZ3ihGFTBLvt
+         uNwk/fjxG0yw7vRVNCUtVnW4DKVirBEdJsLUXAh90tXkP0h6BWB6OHO0qlQ2PHs7pnKl
+         Hw+3KNmxLdyORTrz9RqYF+1BJKGHqLuQEf6xHNRtMpD5IE+BPcQ1wMh2jtqqow3efMOv
+         kLw45fT//yUtqmL7O2ZtwgqSgSvV6oDEEPMqlNeY73Jx2lekTPB88zgjhmnmS1HxFm3L
+         E3Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753835494; x=1754440294;
+        d=1e100.net; s=20230601; t=1753835883; x=1754440683;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZsvMJHxi0Jk9Ob0YWIw4MQPlATsEKQhQD2Gx/yz9Pks=;
-        b=s+6Nye0AvC558C9mV7iMkBgleSl0cz0u3rV3mvh1//t+94ufxPB/uo78Sk0YC4e/Zo
-         0Q/gj8ljD7HcCwcFXaZJcId+BmlgMajbO+WPzyTQTQNY9D+4hvY4lauL2BnKm8EmFkQF
-         GbCs9us9G+3bm1W8l6aTI5qMJpEwbvT1KcZcfrGUP8xZuYRg1HcrfULn5WXVWHx3qU15
-         vgIp4c6aDp1m+v7B/DqbqiRWXJUuTsczZrTBHij7TqRlrZvGanJkIV8NfhCM6lv78whC
-         8FI6EkzynmS51CLTk0WUZ9vJ8CHlqKPY0SQ3HmKYstm7VXGG2Wi8zKyygHXW9Pk52mj2
-         nLNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXLZ3t0XP3CVgt9BvygIfqR/kWHGt6p7m0vMpI1IAQOpSoXpHSSatelJUKav1RnV6lshogtIK/JsrxqKQsidjqH@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzYj94HFCvxEPKiJJW2z1wUJChHDYmTK9XLvdTOGGGjOV7dKdd
-	4w8E07YI9Y1kSTpo2PevjSbVfCC/ppcL+gDWvHkJvg7+I5uSpJ+KXwVlAQHLARKBmx8zlLlQLcL
-	RPrcv4A==
-X-Google-Smtp-Source: AGHT+IFCF3M3I1KqAW7n7dx3RKk9sCzbdlNYVQtyXACNkKIW9/xqHIXRzHtQZzgpVcJKkggbqyQ4NVMy3mQ=
-X-Received: from pjg6.prod.google.com ([2002:a17:90b:3f46:b0:31c:bd1d:516])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2784:b0:312:e76f:5213
- with SMTP id 98e67ed59e1d1-31f5de6c813mr1791644a91.28.1753835494079; Tue, 29
- Jul 2025 17:31:34 -0700 (PDT)
-Date: Tue, 29 Jul 2025 17:31:32 -0700
-In-Reply-To: <dacd4a8e-5104-4043-b647-63e2df6d6a94@linux.intel.com>
+        bh=PoyA0CcW92FoQ3I73ytTZfPzdZaHEfO3pw0xz04Rz34=;
+        b=qsDBusIoK39I9M45zvdlQZ4pw3CSGtl3PNLRt67RiN/ja2m5iO5TOPTZF8wLVvk/s6
+         lkxZBXDyQ9OoDk9Ad1VZmQikrKvT/oy9mAUZR/mrVB12BdPO10HCpG9dQdoRf31u4l1Y
+         bTxXHo/ahzEGQ6652uaJpxUnwSYLw2VEfTkRIQkHZtVMrxEgT49jMfSFJ+nMWKv4oVsr
+         YBA2DAgQHsAQkQ/dFVvKo8znhqn3NAoZuYAX34gnmcjeV4sC74Hcvil8eWi2bmnRVbgX
+         zj3UhSwIDzVtufzgbMloQwueG1Dsg1L2y2mfhndmS4ZyB4mLfyv4WrD4Wh4ruKVv2x9M
+         4eMw==
+X-Forwarded-Encrypted: i=1; AJvYcCV165xRIsnL0osR43QcAOohYM/GQh+Bnl61NxZ+jELSK31vLLnqzqzhzeX37Q/qQj182x6FN6whH7GKxB6RVTQd@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy97JGo2b8zGWXXMD2ax9ry2vYUWPC2WAx5IvIKF7NiB03ZfJZS
+	pNYRp1OYRqZRDsv7KLTZkD7/NnoGLTWSprckasBF+4AZ/fmG3ukwbo2TD3+H1Zu4PgXF4vWSV8S
+	ZSkkTZA==
+X-Google-Smtp-Source: AGHT+IFmEOk3LVUVJNWYxzRPuTmK+e+GHYpOt6lQopxXicjjLZ69T+VUxxaSfay3rEISbglMLxNY+x5v644=
+X-Received: from pjbcz8.prod.google.com ([2002:a17:90a:d448:b0:31f:d4f:b20d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:384e:b0:31f:2bd7:a4d2
+ with SMTP id 98e67ed59e1d1-31f5de69998mr1735098a91.35.1753835882538; Tue, 29
+ Jul 2025 17:38:02 -0700 (PDT)
+Date: Tue, 29 Jul 2025 17:38:00 -0700
+In-Reply-To: <7dc97db7-5eea-4b65-aed3-4fc2846e13a6@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-11-mizhang@google.com>
- <20250425111531.GG1166@noisy.programming.kicks-ass.net> <e2f3b1d5-ed91-47a1-aead-28675bcca2c8@linux.intel.com>
- <20250425134323.GA35881@noisy.programming.kicks-ass.net> <dacd4a8e-5104-4043-b647-63e2df6d6a94@linux.intel.com>
-Message-ID: <aIln5KlHYlIg3Ui-@google.com>
-Subject: Re: [PATCH v4 10/38] perf/x86: Support switch_guest_ctx interface
+References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-21-mizhang@google.com>
+ <a700ab4c-0e8d-499d-be71-f24c4a6439cf@amd.com> <aG6QeTXrd7Can8PK@google.com> <7dc97db7-5eea-4b65-aed3-4fc2846e13a6@linux.intel.com>
+Message-ID: <aIlpaL-yEU_0kgrD@google.com>
+Subject: Re: [PATCH v4 20/38] KVM: x86/pmu: Check if mediated vPMU can
+ intercept rdpmc
 From: Sean Christopherson <seanjc@google.com>
-To: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Mingwei Zhang <mizhang@google.com>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Sandipan Das <sandipan.das@amd.com>, Mingwei Zhang <mizhang@google.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
-	"H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, Yongwei Ma <yongwei.ma@intel.com>, 
-	Xiong Zhang <xiong.y.zhang@linux.intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>, 
-	Shukla Manali <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Jim Mattson <jmattson@google.com>, Zide Chen <zide.chen@intel.com>, 
+	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
 Content-Type: text/plain; charset="us-ascii"
 
-On Fri, Apr 25, 2025, Kan Liang wrote:
-> On 2025-04-25 9:43 a.m., Peter Zijlstra wrote:
-> > On Fri, Apr 25, 2025 at 09:06:26AM -0400, Liang, Kan wrote:
-> >>
-> >>
-> >> On 2025-04-25 7:15 a.m., Peter Zijlstra wrote:
-> >>> On Mon, Mar 24, 2025 at 05:30:50PM +0000, Mingwei Zhang wrote:
-> >>>> From: Kan Liang <kan.liang@linux.intel.com>
-> >>>>
-> >>>> Implement switch_guest_ctx interface for x86 PMU, switch PMI to dedicated
-> >>>> KVM_GUEST_PMI_VECTOR at perf guest enter, and switch PMI back to
-> >>>> NMI at perf guest exit.
-> >>>>
-> >>>> Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
-> >>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> >>>> Tested-by: Yongwei Ma <yongwei.ma@intel.com>
-> >>>> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> >>>> ---
-> >>>>  arch/x86/events/core.c | 12 ++++++++++++
-> >>>>  1 file changed, 12 insertions(+)
-> >>>>
-> >>>> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> >>>> index 8f218ac0d445..28161d6ff26d 100644
-> >>>> --- a/arch/x86/events/core.c
-> >>>> +++ b/arch/x86/events/core.c
-> >>>> @@ -2677,6 +2677,16 @@ static bool x86_pmu_filter(struct pmu *pmu, int cpu)
-> >>>>  	return ret;
-> >>>>  }
-> >>>>  
-> >>>> +static void x86_pmu_switch_guest_ctx(bool enter, void *data)
-> >>>> +{
-> >>>> +	u32 guest_lvtpc = *(u32 *)data;
-> >>>> +
-> >>>> +	if (enter)
-> >>>> +		apic_write(APIC_LVTPC, guest_lvtpc);
-> >>>> +	else
-> >>>> +		apic_write(APIC_LVTPC, APIC_DM_NMI);
-> >>>> +}
-> >>>
-> >>> This, why can't it use x86_pmu.guest_lvtpc here and call it a day? Why
-> >>> is that argument passed around through the generic code only to get back
-> >>> here?
-> >>
-> >> The vector has to be from the KVM. However, the current interfaces only
-> >> support KVM read perf variables, e.g., perf_get_x86_pmu_capability and
-> >> perf_get_hw_event_config.
-> >> We need to add an new interface to allow the KVM write a perf variable,
-> >> e.g., perf_set_guest_lvtpc.
-> > 
-> > But all that should remain in x86, there is no reason what so ever to
-> > leak this into generic code.
+On Tue, Jul 29, 2025, Dapeng Mi wrote:
+> BTW, Sean, may I know your plan about the mediated vPMU v5 patch set? Thanks.
 
-Finally prepping v5, and this is one of two <knock wood> comments that isn't fully
-addressed.
-
-The vector isn't a problem; that's *always* PERF_GUEST_MEDIATED_PMI_VECTOR and
-so doesn't even require anything in x86_pmu.
-
-But whether or not the entry should be masked comes from the guest's LVTPC entry,
-and I don't see a cleaner way to get that information into x86, especially since
-the switch between host and guest PMI needs to happen in the "perf context disabled"
-section.
-
-I think/hope I dressed up the code so that it's not _so_ ugly, and so that it's
-fully extensible in the unlikely event a non-x86 arch were to ever support a
-mediated vPMU, e.g. @data could be used to pass a pointer to a struct.
-
-  void perf_load_guest_context(unsigned long data)
-  {
-	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
-
-	lockdep_assert_irqs_disabled();
-
-	guard(perf_ctx_lock)(cpuctx, cpuctx->task_ctx);
-
-	if (WARN_ON_ONCE(__this_cpu_read(guest_ctx_loaded)))
-		return;
-
-	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
-	ctx_sched_out(&cpuctx->ctx, NULL, EVENT_GUEST);
-	if (cpuctx->task_ctx) {
-		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
-		task_ctx_sched_out(cpuctx->task_ctx, NULL, EVENT_GUEST);
-	}
-
-	arch_perf_load_guest_context(data);
-
-	...
-  }
-
-  void arch_perf_load_guest_context(unsigned long data)
-  {
-	u32 masked = data & APIC_LVT_MASKED;
-
-	apic_write(APIC_LVTPC,
-		   APIC_DM_FIXED | PERF_GUEST_MEDIATED_PMI_VECTOR | masked);
-	this_cpu_write(x86_guest_ctx_loaded, true);
-  }
-
-Holler if you have a better idea.  I'll plan on posting v5 in the next day or so
-no matter what, so that it's not delayed for this one thing (it's already been
-delayed more than I was hoping, and there are a lot of changes relative to v4).
+I'll get it out this week (hopefully tomorrow).
