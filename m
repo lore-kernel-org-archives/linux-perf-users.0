@@ -1,287 +1,97 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0604621B9DB;
-	Thu, 31 Jul 2025 08:38:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 142A1299928;
+	Thu, 31 Jul 2025 09:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753951129; cv=none; b=ncYo/yghCnDb7+OQxLG4TnVgAgS6nWMpMrnlOpRiV6l7PiWFPGMDJToY/fy2gOH58TVlEkl4D/BySatA+dzCcifTjrMMk/8Zfz6EH9j4MkwbjfmTHDWb+qmwjFkRxmOQUpApBYI2Y9G7+9RuQbGANCKuhHiSAIUqaFO3TlWiRbE=
+	t=1753953112; cv=none; b=KZaNXPFggjNkK4N4EdrY172gWMBcYX4jrTHDwWU0DmwkFIH+LRp1eYPF9cMcftFB42DaTdWbRKKAcYgLBk73I2GirsUSt8IGZG2VwMYzPYzL6esr6t26fzR7qx6ihSXTL3uArM/piPO1+e8K0cdm5PoyIc5pu/GiGfSY0xREnAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753951129; c=relaxed/simple;
-	bh=JIwukRnZ/f7adGcpZcqXVb42B8C8i7207UVcDKDRLeo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gahdsZJuX37aSKknu1eE7lAHkkWrIu3IkPTXtxh3GlwhfU8VsMCMVaB6FF1AsvTG+C3zGEPlO4y7ji0IPL1L/U+HpKN/eQOdD1cREZGsVD56RDfFUZzyWuFhEUUk0a9yEYB3/UCoSAw1oP9VEtw59PV7HBYJa6DcRLzUrPF6HFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=P2YVgJXH; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="P2YVgJXH"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56UM59aw008885;
-	Thu, 31 Jul 2025 08:38:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=LqmjbX
-	NGo11g+WI/lHJax7XLF7QOX1UqmbNrXUldX0o=; b=P2YVgJXHRjrynIzj3Xhkgs
-	ihRsi1sb92N/yugklPG2t+D8RDbx3mQPceSi8+tXLTAeuHw2OvSWSjg5A0yneM2c
-	2Gc8/i69JD0oYcA6vppZF1TTlFMktKkfUWh55iV865T0jtJEsMbDAXZj15oNcutO
-	yVaAeY5PX9FqMfVSjMnU0ux7NilJdLOAtl3I6WrWWQRvuEQuYxK0vwLPXUH/jlED
-	lyceb9yY3xCuDNV7DbETF9W7+rZ2XV8TwLngez4xu/4OV6lXcTAnRBzMQN8P7ouk
-	oa22P6cxmDIK/oQ+YlYSDPD+x2Qs5qNTtHVN264yvwxebgyetu8cWlKjisJZTfUw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 484qcg9ktd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 31 Jul 2025 08:38:34 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 56V8asMY011443;
-	Thu, 31 Jul 2025 08:38:33 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 484qcg9kt7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 31 Jul 2025 08:38:33 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 56V80hrd015956;
-	Thu, 31 Jul 2025 08:38:32 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 485aumuj3w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 31 Jul 2025 08:38:32 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 56V8cSMA57082170
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 31 Jul 2025 08:38:28 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9E52920043;
-	Thu, 31 Jul 2025 08:38:28 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AB42820040;
-	Thu, 31 Jul 2025 08:38:27 +0000 (GMT)
-Received: from [127.0.0.1] (unknown [9.152.108.100])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 31 Jul 2025 08:38:27 +0000 (GMT)
-Message-ID: <6018b52aec24000a751165f816dbd4522be8d06d.camel@linux.ibm.com>
-Subject: Re: [PATCH v2] perf/s390: Regression: Move uid filtering to BPF
- filters
-From: Ilya Leoshkevich <iii@linux.ibm.com>
-To: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, namhyung@kernel.org, andriin@fb.com,
-        irogers@google.com, bpf@vger.kernel.org
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, japo@linux.ibm.com, Jiri Olsa <jolsa@redhat.com>
-Date: Thu, 31 Jul 2025 10:38:27 +0200
-In-Reply-To: <20250728144340.711196-1-tmricht@linux.ibm.com>
-References: <20250728144340.711196-1-tmricht@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	s=arc-20240116; t=1753953112; c=relaxed/simple;
+	bh=Ni8Oy89hfU/Fa4xHF9Z6/77l7w9qX7lOD/bBloWQE68=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZPD3U3F35s9G4PC/kQf9T+yHcmyb05eETM7MJBPIHOJG0DsUc1HSe9Q4ZpuLBAwYcmyGUyOZAnpvYvQnMJJMsMfeUPBbU4caFMKEr1ftYXv2IY97yEVMyyirYeRod5uwvY1XzDROP9BGNm1bl/clTg0UhtIbZLLxsMI0+SsfHfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7795E1D13;
+	Thu, 31 Jul 2025 02:11:42 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 06B493F66E;
+	Thu, 31 Jul 2025 02:11:50 -0700 (PDT)
+Date: Thu, 31 Jul 2025 10:11:48 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: kernel test robot <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Matt Bobrowski <mattbobrowski@google.com>,
+	Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	James Clark <james.clark@linaro.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v3 5/6] perf record: Support AUX pause and resume
+ with BPF
+Message-ID: <20250731091148.GF143191@e132581.arm.com>
+References: <202507310818.a05d2380-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzMxMDA1NiBTYWx0ZWRfX8AP48oMAzBpJ
- 4GNoCTFdtdwFBHATzov0Y5S9gS7dGI8ESuLYtadfsz4J0MkwMmWlY9wtvHl4rqHYitkn6BV/M/y
- ra4kuzeGOQ0rLOllD2Lq8hrxFs5vejn8sWVB310iHSYfu6nRtFD73SHKkM737M3Bjv21WBQy3or
- Oqo6d4J4i89Ah+FkEW+VddBZXV6DbJvmFAwNB6z7mXG2KxeYO11I4JP0RExO4O3Rt0LF7hfnPGr
- M39YuZ9Ah5By03CAKLtg/u4yJL3YeK37c5B9axTqKp7wkCQeg36SVpApgZ/91qqmBLyzrwR/U0k
- UBvW64zzVXGixspIjuZBPz47doTWpRkzH4LWDuHoJ5zUnSNxPGu+LnDWKL3JlM5hMoRi5Gqlk86
- Iqg5p7q5zIuYI7RGX9vscvdR9yO12TwaCZXFu3vJ7X/f9l4RtPkmhjYZUKtlPp+CHJRtLo8+
-X-Proofpoint-ORIG-GUID: IqOkFLOW6M2YLECdffCu45miUb8ookcw
-X-Authority-Analysis: v=2.4 cv=Lp2Symdc c=1 sm=1 tr=0 ts=688b2b8a cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=FOH2dFAWAAAA:8 a=1XWaLZrsAAAA:8
- a=VnNF1IyMAAAA:8 a=20KFwNOVAAAA:8 a=nZeSn0eIVX808PMqqNYA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: f_0XGvQ_8mKbvkGJeHYuKaO_MppiIgOq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-07-31_01,2025-07-31_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 bulkscore=0 impostorscore=0 mlxscore=0 priorityscore=1501
- adultscore=0 clxscore=1011 lowpriorityscore=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507310056
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202507310818.a05d2380-lkp@intel.com>
 
-On Mon, 2025-07-28 at 16:43 +0200, Thomas Richter wrote:
-> V1 --> V2: Added Jiri Olsa's suggestion and introduced
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 member bpf_p=
-erf_event_opts::no_ioctl_enable.
->=20
-> On linux-next
-> commit b4c658d4d63d61 ("perf target: Remove uid from target")
-> introduces a regression on s390. In fact the regression exists
-> on all platforms when the event supports auxiliary data gathering.
->=20
-> Command
-> =C2=A0=C2=A0 # ./perf record -u 0 -aB --synth=3Dno -- ./perf test -w thlo=
-op
-> =C2=A0=C2=A0 [ perf record: Woken up 1 times to write data ]
-> =C2=A0=C2=A0 [ perf record: Captured and wrote 0.011 MB perf.data ]
-> =C2=A0=C2=A0 # ./perf report --stats | grep SAMPLE
-> =C2=A0=C2=A0 #
->=20
-> does not generate samples in the perf.data file.
-> On x86 command
-> =C2=A0 # sudo perf record -e intel_pt// -u 0 ls
-> is broken too.
->=20
-> Looking at the sequence of calls in 'perf record' reveals this
-> behavior:
-> 1. The event 'cycles' is created and enabled:
-> =C2=A0=C2=A0 record__open()
-> =C2=A0=C2=A0 +-> evlist__apply_filters()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-> perf_bpf_filter__prepare()
-> 	=C2=A0=C2=A0 +-> bpf_program.attach_perf_event()
-> 	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-> bpf_program.attach_perf_event_o=
-pts()
-> 	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-> __GI___=
-ioctl(..., PERF_EVENT_IOC_ENABLE, ...)
-> =C2=A0=C2=A0 The event 'cycles' is enabled and active now. However the ev=
-ent's
-> =C2=A0=C2=A0 ring-buffer to store the samples generated by hardware is no=
-t
-> =C2=A0=C2=A0 allocated yet. This happens now after enabling the event:
->=20
-> 2. The event's fd is mmap() to create the ring buffer:
-> =C2=A0=C2=A0 record__open()
-> =C2=A0=C2=A0 +-> record__mmap()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-> record__mmap_evlist()
-> 	=C2=A0=C2=A0 +-> evlist__mmap_ex()
-> 	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-> perf_evlist__mmap_ops()
-> 	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-> mmap_pe=
-r_cpu()
-> 	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 +-> mmap_per_evsel()
-> 	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-> mmap__mmap()
-> 	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-> perf_mmap_=
-_mmap()
-> 	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 +-> mmap()
->=20
-> =C2=A0=C2=A0 This allocates the ring-buffer for the event 'cycles'.=C2=A0=
- With
-> mmap()
-> =C2=A0=C2=A0 the kernel creates the ring buffer:
->=20
-> =C2=A0=C2=A0 perf_mmap(): kernel function to create the event's ring
-> =C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 buffer to save the sampled data.
-> =C2=A0=C2=A0 |
-> =C2=A0=C2=A0 +-> ring_buffer_attach(): Allocates memory for ring buffer.
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 The PMU has auxiliary data setup function. The
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 has_aux(event) condition is true and the PMU's
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 stop() is called to stop sampling. It is not
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 restarted:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 if (has_aux(event))
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 perf_event_stop(e=
-vent, 0);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-> cpumsf_pmu_stop():
->=20
-> =C2=A0=C2=A0 Hardware sampling is stopped. No samples are generated and s=
-aved
-> =C2=A0=C2=A0 anymore.
->=20
-> 3. After the event 'cycles' has been mapped, the event is enabled a
-> =C2=A0=C2=A0 second time in:
-> =C2=A0=C2=A0 __cmd_record()
-> =C2=A0=C2=A0 +-> evlist__enable()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-> __evlist__enable()
-> 	=C2=A0=C2=A0 +-> evsel__enable_cpu()
-> 	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-> perf_evsel__enable_cpu()
-> 	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-> perf_ev=
-sel__run_ioctl()
-> 	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 +-> perf_evsel__ioctl()
-> 	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-> __GI___ioctl(.,
-> PERF_EVENT_IOC_ENABLE, .)
-> =C2=A0=C2=A0 The second
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ioctl(fd, PERF_EVENT_IOC_ENABLE, 0);
-> =C2=A0=C2=A0 is just a NOP in this case. The first invocation in (1.) set=
-s the
-> =C2=A0=C2=A0 event::state to PERF_EVENT_STATE_ACTIVE. The kernel function=
-s
-> =C2=A0=C2=A0 perf_ioctl()
-> =C2=A0=C2=A0 +-> _perf_ioctl()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-> _perf_event_enable()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 +-> __perf_e=
-vent_enable() returns immediately because
-> 	=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 event::state is already set to
-> 		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PERF_EVENT_STATE_ACTIVE.
->=20
-> This happens on s390, because the event 'cycles' offers the
-> possibility
-> to save auxilary data. The PMU call backs setup_aux() and
-> free_aux() are defined. Without both call back functions,
-> cpumsf_pmu_stop() is not invoked and sampling continues.
->=20
-> To remedy this, remove the first invocation of
-> =C2=A0=C2=A0 ioctl(..., PERF_EVENT_IOC_ENABLE, ...).
-> in step (1.) Create the event in step (1.) and enable it in step (3.)
-> after the ring buffer has been mapped.
-> Make the change backward compatible and introduce a new structure
-> member bpf_perf_event_opts::no_ioctl_enable. It defaults to false and
-> only
-> bpf_program__attach_perf_event() sets it to true. This way only
-> perf tool invocation do not enable the sampling event.
->=20
-> Output after:
-> =C2=A0# ./perf record -aB --synth=3Dno -u 0 -- ./perf test -w thloop 2
-> =C2=A0[ perf record: Woken up 3 times to write data ]
-> =C2=A0[ perf record: Captured and wrote 0.876 MB perf.data ]
-> =C2=A0# ./perf=C2=A0 report --stats | grep SAMPLE
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 SAMPLE events:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 16200=C2=A0 (99.5%)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 SAMPLE events:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 16200
-> =C2=A0#
->=20
-> The software event succeeded before and after the patch:
-> =C2=A0# ./perf record -e cpu-clock -aB --synth=3Dno -u 0 -- \
-> 					=C2=A0 ./perf test -w thloop 2
-> =C2=A0[ perf record: Woken up 7 times to write data ]
-> =C2=A0[ perf record: Captured and wrote 2.870 MB perf.data ]
-> =C2=A0# ./perf=C2=A0 report --stats | grep SAMPLE
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 SAMPLE events:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 53506=C2=A0 (99.8%)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 SAMPLE events:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 53506
-> =C2=A0#
->=20
-> Fixes: 63f2f5ee856ba ("libbpf: add ability to attach/detach BPF
-> program to perf event")
-> To: Andrii Nakryiko <andriin@fb.com>
-> To: Ian Rogers <irogers@google.com>
-> To: Ilya Leoshkevich <iii@linux.ibm.com>
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Suggested-by: Jiri Olsa <jolsa@redhat.com>
-> ---
-> =C2=A0tools/lib/bpf/libbpf.c | 19 +++++++++++++------
-> =C2=A0tools/lib/bpf/libbpf.h |=C2=A0 3 ++-
-> =C2=A02 files changed, 15 insertions(+), 7 deletions(-)
+Hi,
 
-What do you think about rather calling the new field ioctl_enable?
-So that we don't get double negations in the API users and
-implementation - they are sometimes unnecessarily confusing.
+On Thu, Jul 31, 2025 at 03:26:01PM +0800, kernel test robot wrote:
 
-I also think enablement should be the default in
-bpf_program__attach_perf_event(), and perf should now call
-bpf_program__attach_perf_event_opts() instead.
+[...]
 
-Based on your request in v1, I can offer to take over the patch and
-send a v3 with the changes I suggested above.
+> 2025-07-30 19:06:25 sudo /usr/src/linux-perf-x86_64-rhel-9.4-bpf-e350af63969b875598f0656a20d801bbcaa7bd76/tools/perf/perf test 64 -v
+>  64: Convert perf time to TSC                                        :
+>  64.1: TSC support                                                   : Running (2 active)
+>  64.1: TSC support                                                   : Ok
+> --- start ---
+> test child forked, pid 7359
+> Using CPUID GenuineIntel-6-9E-D
+> evlist__open() failed
+> ---- end(-1) ----
+>  64.2: Perf time to TSC                                              : FAILED!
+
+I roughly read the job.yaml file, seems it does not install clang.
+Thus, the building will not enalbe the option BUILD_BPF_SKEL=1.
+
+As a result, auxtrace__update_bpf_map() will return a failure. I will
+fix this issue in next spin.
+
+Thanks for test and reporting.
+
+Leo
+
+> The kernel config and materials to reproduce are available at:
+> https://download.01.org/0day-ci/archive/20250731/202507310818.a05d2380-lkp@intel.com
+> 
+> 
+> 
+> -- 
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
+> 
