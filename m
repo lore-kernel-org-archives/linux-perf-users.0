@@ -1,120 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6ED621128D;
-	Wed, 30 Jul 2025 21:11:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ABEE1E51D;
+	Thu, 31 Jul 2025 04:51:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753909912; cv=none; b=eDsdenz1jdGKu/70krksL7NnWzmQYkvDrO7z/Fb66qfL6JMgrot7CeUbe0MwO8QQYsg7aqTpfqXgigPconuuH5h53SMQVohkFbtkm1dLWnUOzGvQMu1esE/DhuAFN+wTfnh0wEPL+iEG3OeJJtNS+r0ekRABHO83N6UYDEs8sxc=
+	t=1753937512; cv=none; b=cQIKK1chey1YiuIGWeuoW/icQ9IBQSJvGZuqI+p5vMfmROIqwCjk9mBmU78PPvqqz4Anjg0D/N+J28747s7fVMSotdZ5Q1EHCWTX9yjSpOl3Ejap+XP1YmIeUfRbKpF3A4rPT8PW2l3CyT0CfNStjqROnsr9UzoPImTI/TPTrCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753909912; c=relaxed/simple;
-	bh=sFIpHKRKR7Q2Kj3ofVG6atyA9wvqpFYGRwPhKFIISFo=;
+	s=arc-20240116; t=1753937512; c=relaxed/simple;
+	bh=+D8/5nG6PjqSbnTbpU0RdHsDPdSM3cCcRs/hvXTPLLo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dR5TBVRkoujU6EmsBi6FOXPsncyZKKEly0meSjOWImrv5cKLA81Cb3VcrHusAhERgfRPNNRjX+ESOv6xfVPqkzacfbrhbjF4WQcmGI5mx3z+npixfA2BZblGntA1lVZNWZBZlHvAfLaUDZpwWzQpFs4eZUmWmHmyv3o7T9bMT3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n3xABHcP; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UcAz0h0zoqiiRYaF/7pPyWVhJEMfkKRyKKqgssFu5CxyrjY1iryI4/Ni5Z6Pp+qC8vABjzdnxrG3Zt9dYTmsPseudLC0UagnuxS/XXRNUP99xeS5WseiK8SoMdp0Omhs3W9KY5p8BIhDubOK0S2iGMbD95YvVTg2c7XmMmUKVBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cz/V6E4g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n3xABHcP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2041AC4CEE3;
-	Wed, 30 Jul 2025 21:11:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cz/V6E4g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6A55C4CEEF;
+	Thu, 31 Jul 2025 04:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753909912;
-	bh=sFIpHKRKR7Q2Kj3ofVG6atyA9wvqpFYGRwPhKFIISFo=;
+	s=k20201202; t=1753937511;
+	bh=+D8/5nG6PjqSbnTbpU0RdHsDPdSM3cCcRs/hvXTPLLo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=n3xABHcPFOX3yvig7wmxjCuJPhi6RshxouhCDUYXPm3K6kFZz8yT/qMOan4XHRzh8
-	 gnHZ/FwNJiZkBmERRghPasQypZc8mRk7jASMb8Gi+qRcJQp06eIDLHe62Hc0ftkqQV
-	 usOByMpMJJ/qTgGgcOA0oMF7S94yAncpaSzEaDUhIrIP0LfctdsGFUw7yj9sC8q6n2
-	 aJiZjJ7+r/H1d51rWcYuVBBWfS5TP0CUPO6qIKHP+dElSAlSsO+EtUJzmL0kN/lUib
-	 hglSWftmmXtsFcN1/9fWViL13nc9pcqqKxAxv+Ko7NPxEilIU/v88wQ6ffVblg7KrU
-	 TETD/8/Y/SwOQ==
-Date: Wed, 30 Jul 2025 16:11:51 -0500
-From: Rob Herring <robh@kernel.org>
-To: =?iso-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Gatien Chevallier <gatien.chevallier@foss.st.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Gabriel Fernandez <gabriel.fernandez@foss.st.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Le Goffic <legoffic.clement@gmail.com>,
-	Julius Werner <jwerner@chromium.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-clk@vger.kernel.org
-Subject: Re: [PATCH v5 06/20] dt-bindings: memory: introduce DDR4
-Message-ID: <20250730211151.GA1749004-robh@kernel.org>
-References: <20250728-ddrperfm-upstream-v5-0-03f1be8ad396@foss.st.com>
- <20250728-ddrperfm-upstream-v5-6-03f1be8ad396@foss.st.com>
+	b=cz/V6E4gB8xsOyr31l9PEOJ75wdVr02VXKxsedXP5TWuCUdFAmafJqBt4pJdCNWzg
+	 k6cDt74QFCWK0xuyk1KhnX2JrJ/o+vg8f8b1PghbU4uQLuD7SMDSkIvIyLd8k5IR3M
+	 Fnzsm/CwT8uPLbRvWkWf844CGal09Uga172/g61A3jMF76nIQcUA+IBZVyzcmzPQXt
+	 yCiyeNvlXBkfmsSMM/hiwqsETWkp75fbDq9fjuSU/2uqoQ2750JKRJjdQWpu3ZcaFl
+	 N7eDx2c8jEETm3gqcWnaYEn1mPbTSw7MqAHMtkygJ+g2opRMf8Jse4oI1CSXaQsc6b
+	 y6LFjHGAgY73A==
+Date: Wed, 30 Jul 2025 21:51:49 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Yuzhuo Jing <yuzhuo@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Liang Kan <kan.liang@linux.intel.com>, Yuzhuo Jing <yzj@umich.edu>,
+	Andrea Parri <parri.andrea@gmail.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Barret Rhoden <brho@google.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Guo Ren <guoren@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1 0/7] perf bench: Add qspinlock benchmark
+Message-ID: <aIr2ZdxmuBoCmDhw@google.com>
+References: <20250729022640.3134066-1-yuzhuo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250728-ddrperfm-upstream-v5-6-03f1be8ad396@foss.st.com>
+In-Reply-To: <20250729022640.3134066-1-yuzhuo@google.com>
 
-On Mon, Jul 28, 2025 at 05:29:37PM +0200, Clément Le Goffic wrote:
-> Introduce JEDEC compliant DDR bindings, that use new memory-props binding.
+Hello,
+
+On Mon, Jul 28, 2025 at 07:26:33PM -0700, Yuzhuo Jing wrote:
+> As an effort to improve the perf bench subcommand, this patch series
+> adds benchmark for the kernel's queued spinlock implementation.
 > 
-> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
-> ---
->  .../memory-controllers/ddr/jedec,ddr4.yaml         | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
+> This series imports necessary kernel definitions such as atomics,
+> introduces userspace per-cpu adapter, and imports the qspinlock
+> implementation from the kernel tree to tools tree, with minimum
+> adaptions.
+
+But I'm curious how you handled difference in kernel vs. user space.
+For example, normally kernel spinlocks imply no preemption but we cannot
+guarantee that in userspace.
+
 > 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,ddr4.yaml b/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,ddr4.yaml
-> new file mode 100644
-> index 000000000000..f457066a2f8b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,ddr4.yaml
-> @@ -0,0 +1,34 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/memory-controllers/ddr/jedec,ddr4.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: DDR3 SDRAM compliant to JEDEC JESD79-4D
-> +
-> +maintainers:
-> +  - Krzysztof Kozlowski <krzk@kernel.org>
-> +
-> +allOf:
-> +  - $ref: jedec,sdram-props.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - pattern: "^ddr4-[0-9a-f]{2},[0-9a-f]{1}$"
+> This subcommand enables convenient commands to investigate the
+> performance of kernel lock implementations, such as using sampling:
+> 
+>     perf record -- ./perf bench sync qspinlock -t5
+>     perf report
 
-Shouldn't this be 'jedec,ddr4-...'
+It'd be nice if you can share an example output of the change.
 
-> +      - const: jedec,ddr4
-> +
-> +required:
-> +  - compatible
-> +  - density
-> +  - io-width
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    ddr {
-> +        compatible = "ddr4-ff,f", "jedec,ddr4";
-> +        density = <8192>;
-> +        io-width = <8>;
-> +    };
+Thanks,
+Namhyung
+
+> 
+> Yuzhuo Jing (7):
+>   tools: Import cmpxchg and xchg functions
+>   tools: Import smp_cond_load and atomic_cond_read
+>   tools: Partial import of prefetch.h
+>   tools: Implement userspace per-cpu
+>   perf bench: Import qspinlock from kernel
+>   perf bench: Add 'bench sync qspinlock' subcommand
+>   perf bench sync: Add latency histogram functionality
+> 
+>  tools/arch/x86/include/asm/atomic.h           |  14 +
+>  tools/arch/x86/include/asm/cmpxchg.h          | 113 +++++
+>  tools/include/asm-generic/atomic-gcc.h        |  47 ++
+>  tools/include/asm/barrier.h                   |  58 +++
+>  tools/include/linux/atomic.h                  |  27 ++
+>  tools/include/linux/compiler_types.h          |  30 ++
+>  tools/include/linux/percpu-simulate.h         | 128 ++++++
+>  tools/include/linux/prefetch.h                |  41 ++
+>  tools/perf/bench/Build                        |   2 +
+>  tools/perf/bench/bench.h                      |   1 +
+>  .../perf/bench/include/mcs_spinlock-private.h | 115 +++++
+>  tools/perf/bench/include/mcs_spinlock.h       |  19 +
+>  tools/perf/bench/include/qspinlock-private.h  | 204 +++++++++
+>  tools/perf/bench/include/qspinlock.h          | 153 +++++++
+>  tools/perf/bench/include/qspinlock_types.h    |  98 +++++
+>  tools/perf/bench/qspinlock.c                  | 411 ++++++++++++++++++
+>  tools/perf/bench/sync.c                       | 329 ++++++++++++++
+>  tools/perf/builtin-bench.c                    |   7 +
+>  tools/perf/check-headers.sh                   |  32 ++
+>  19 files changed, 1829 insertions(+)
+>  create mode 100644 tools/include/linux/percpu-simulate.h
+>  create mode 100644 tools/include/linux/prefetch.h
+>  create mode 100644 tools/perf/bench/include/mcs_spinlock-private.h
+>  create mode 100644 tools/perf/bench/include/mcs_spinlock.h
+>  create mode 100644 tools/perf/bench/include/qspinlock-private.h
+>  create mode 100644 tools/perf/bench/include/qspinlock.h
+>  create mode 100644 tools/perf/bench/include/qspinlock_types.h
+>  create mode 100644 tools/perf/bench/qspinlock.c
+>  create mode 100644 tools/perf/bench/sync.c
 > 
 > -- 
-> 2.43.0
+> 2.50.1.487.gc89ff58d15-goog
 > 
