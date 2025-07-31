@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3BFD13B284;
-	Thu, 31 Jul 2025 05:18:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE18F23E25B;
+	Thu, 31 Jul 2025 05:24:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753939130; cv=none; b=tYAq3cE1HTcoEBMqbsuQPKCTqp7FbmpuN5oXh6oQteSa1YNQRbdDupwJnVm8XDBOL4k76t9dCKtK068rXp27FJ6lXkthWBOOjjeK5q5kB+BtobEAU+vF4v/4k9j0u74Nns4KAjxApSfv3nS9og3czgSzk9LIEIwh9jzJ3EVh1W4=
+	t=1753939496; cv=none; b=G8E4ePxYT7HuLVHYQjQ0emI9+6/SAILPMb5RknYfLTj0JihXhgjnFs/lPwxsGXoUvmda81YYOK/cU6vJRe/QvhGCYhlfbTz9mrG9MahiBwhAxmrDrYpQy430Fq6vEZB8Oq5Whj3Qfn2Kays5naLvnjl8jD4Suhg0VhP/jfHYt4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753939130; c=relaxed/simple;
-	bh=WL9m46kzeIOCHjT8q6kEis2/MvgZLkAbdkolZ+W/uIc=;
+	s=arc-20240116; t=1753939496; c=relaxed/simple;
+	bh=24xQHVXxaEOP8OPxbxy+S6R7yjfRe6FGh+DmKLcXi20=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pbgRQzBK/t9ossngpxYnVoP9c49l/YQdMGHWJoNhLKuz76DVxIJr19PmJvljfuqrPniacYYPPIr2OrrXeNMfdf6T3/h944mkbnAd4yVh721bfRt1q1Nxg0aTqRga3sbngHGm4HwawEiiKozKZpqdFVmFdGeRJtRFNNESnDzoFV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A7MuAnq7; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=AMmO6WOB54i04RGDGESiB4w+WIw5HRC9X10lISmqUKref8WIECFaANudmUO5qNhbVB8UQrEA1FWyKc6PhnE5jV6KJ2TPKqTiRPKNfIukxSmAxbt1lpOkLHNdNfga33VJqJnpCx1yud6gqKOj4MHhQgiPADRZoJ19FLZTt4YXVOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OR8+3iTR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A7MuAnq7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6747FC4CEEF;
-	Thu, 31 Jul 2025 05:18:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OR8+3iTR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFC96C4CEEF;
+	Thu, 31 Jul 2025 05:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753939130;
-	bh=WL9m46kzeIOCHjT8q6kEis2/MvgZLkAbdkolZ+W/uIc=;
+	s=k20201202; t=1753939495;
+	bh=24xQHVXxaEOP8OPxbxy+S6R7yjfRe6FGh+DmKLcXi20=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A7MuAnq7M5V8YvUREBgwnbB0UEZOai28RTI7jFUKTdLXOCfNfDwLmUseAQdOnb8QB
-	 Am5Eihlty5X9xWyOgYHA66nHE/tvIOjOTrichSie88AbWFtRHRIp395FbOY8pcHOEO
-	 aiPsuj2pBpnd/0btYOWUBoTDivaWTP1QeRpc16MD9cWVH40zXpg/4n7JgyEDVaJT8j
-	 lfh5t31iqnNrK1aSimoIRWkuwHYlrxWIFSkhm7O8la36/utu9YJE5V8dh2BtRS5LB8
-	 X6cVKGRBiJWWtMAR8noFAQw2VD6bUilVQVsDjYOMVVnGHAg3vLxF6+V8fuMFSVcbQy
-	 J4b4gBGigzfpg==
-Date: Wed, 30 Jul 2025 22:18:48 -0700
+	b=OR8+3iTRv7197eVy8kUgC3HDWgvyWMKkEgpCmNmUGLWPWUySJqgxgcGXPggxXEqav
+	 FRm9M04ku6kE1FTE1+N4RdVQk40NW8UqIIhcvzSXHo0izD3VCAyC7mD2RZtOuIWGus
+	 ud8J6AIIsk7u4KiCjU5uT1TqtkjqrZnpOnby7g5soyF4tyYnbpXibLVXA/tBO9MWdx
+	 I1imLzyl35nPzXBQtBIHO2KU02jgLE0M0VIcnWr6VVokaacnW80BNyloqS01YeI1c4
+	 vpea1Fj2g61ZsW7ZRXI4QFyeBYY8y4JIQXMUkV6oG7eJgDKO42hkFvx+XGRE2uhNd8
+	 Y/EtbncYC/mtA==
+Date: Wed, 30 Jul 2025 22:24:53 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Yuzhuo Jing <yuzhuo@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -48,7 +48,7 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Subject: Re: [PATCH v1 7/7] perf bench sync: Add latency histogram
  functionality
-Message-ID: <aIr8uJlExTbjAxNN@google.com>
+Message-ID: <aIr-JTyuJBKPJN8c@google.com>
 References: <20250729022640.3134066-1-yuzhuo@google.com>
  <20250729022640.3134066-8-yuzhuo@google.com>
 Precedence: bulk
@@ -64,12 +64,6 @@ In-Reply-To: <20250729022640.3134066-8-yuzhuo@google.com>
 On Mon, Jul 28, 2025 at 07:26:40PM -0700, Yuzhuo Jing wrote:
 > Add an option to print the histogram of lock acquire latencies (unit in
 > TSCs).
-
-Same advice as of the previous patch.
-
-Thanks,
-Namhyung
-
 > 
 > Signed-off-by: Yuzhuo Jing <yuzhuo@google.com>
 > ---
@@ -105,6 +99,12 @@ Namhyung
 >  	struct barrier_t *barrier;
 >  	u64 runtime;		// in nanoseconds
 > +	u64 *lock_latency;	// in TSCs
+
+Why TSC?  Is it for x86 only?
+
+Thanks,
+Namhyung
+
 >  };
 >  
 >  static const struct option options[] = {
