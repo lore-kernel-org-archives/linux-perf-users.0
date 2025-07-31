@@ -1,195 +1,79 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9465D2C08DF
-	for <linux-perf-users@vger.kernel.org>; Thu, 31 Jul 2025 13:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5361E502;
+	Thu, 31 Jul 2025 13:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753968461; cv=none; b=CV/HU3v6ll2cPVZ0PqPwb6Pa0qdVuL3WnUPTUdlVg1XecKg4DmPYujN1wGwpkVZFeiRrl+BXzbeA7G7Yh/K4npmuLkO+VGDWUUamZudix08Qx41DIOhJKRPanhzMuqoW1SxGmcWsdug4kdMrpjBTHUeI+nYRjhDXYcj9H0we3zM=
+	t=1753969804; cv=none; b=t/fvFR7fmJM9O3XIz0BppctDmkqTlaerywGS7mNVaE5WLYHtPP1j7LMUmssor21pgpOgOvUbEl3bHtcHWQwTTCUhkVN1det0pdFbNkyngoSchobAS5Db94tyhMUuBIfDU7BOgurE68KftS3dphrfDzx+v3VW4+FAtpr7livlcE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753968461; c=relaxed/simple;
-	bh=DwDknRz+M+PM0kRQxaVsn+FUh1ULlnp1rQaeTIs9xco=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XbhaphNwqEmOC5fsKYrKhgdDZFwA2nFvcZULpmplAsr6DZa6XZMxKL0NE+zKyEUIweOF655E+ixOUaKXYGU3psoQNnHLUFgTc0eYcntOYTOxTx1PBlHnQak6nUwrr9aR4z1eBXC2J2ckwc3OihLcG60MnjI0FPst4/7hD9Kbg9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E93B92BC3;
-	Thu, 31 Jul 2025 06:27:30 -0700 (PDT)
-Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E4C7B3F66E;
-	Thu, 31 Jul 2025 06:27:36 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-Date: Thu, 31 Jul 2025 14:25:50 +0100
-Subject: [PATCH v4 15/15] perf arm_spe: Allow parsing both data source and
- events
+	s=arc-20240116; t=1753969804; c=relaxed/simple;
+	bh=jawTeo3jrKl31BlPRVIr+R1PBzhaxmiMePBk8kxuwVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TJzO03ywRHSBoj3AlxXLAACFF2YPRJl5cDxvekkMod9BZ5XrbTfBKEf/JQhbKqAhoI1C6259T7huHopdqPgqIbP+gXx+5FY9+ooy9X9QM/L+6tx7tsVcQIPhZSUt4F3fzGIUyenY3PyxIkz3S5moNwe6AQMKs6YB0lQUWKXYA3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OYvfVm/Z; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OYvfVm/Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 466DCC4CEEF;
+	Thu, 31 Jul 2025 13:50:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753969803;
+	bh=jawTeo3jrKl31BlPRVIr+R1PBzhaxmiMePBk8kxuwVE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OYvfVm/ZsnER1HAKkEC4ux4CBvQVHusXAIuQa7z1ZbnKXII3hVV0Vn6nrQDFfiX8s
+	 IRdZpm0EQQII1M9WaXzoygW+pWRitgstvVXD/ZlpibPf1tutHLt/QsaliYM4OU3u1w
+	 qBs4XJvMcr091e+bw3lFfjJr5tAIDLaOboOA8r+jbb8ev/LYEcDbA4keqduCjzqmdL
+	 87p7crjoiKMwL4dJ7CAtIp7BJ8bfAGCAtE9FYCezeSVRHNfEcSxoPRB0kF+Mg8B3Ud
+	 sHuncQm80xlb2D2GQQ2hL52M1WqmHfZ0HkZnwQ9KqTy5t+q6zDZXtJgCkz2Pu/yzqc
+	 oyDag2pTvuaUg==
+Date: Thu, 31 Jul 2025 08:50:02 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: =?iso-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	Michael Turquette <mturquette@baylibre.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Stephen Boyd <sboyd@kernel.org>, linux-doc@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Will Deacon <will@kernel.org>,
+	Julius Werner <jwerner@chromium.org>,
+	Gabriel Fernandez <gabriel.fernandez@foss.st.com>,
+	Le Goffic <legoffic.clement@gmail.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	Conor Dooley <conor+dt@kernel.org>,
+	Gatien Chevallier <gatien.chevallier@foss.st.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-clk@vger.kernel.org,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v5 02/20] dt-bindings: stm32: stm32mp25: add
+ `#access-controller-cells` property
+Message-ID: <175396980193.2134840.5721329894183158883.robh@kernel.org>
+References: <20250728-ddrperfm-upstream-v5-0-03f1be8ad396@foss.st.com>
+ <20250728-ddrperfm-upstream-v5-2-03f1be8ad396@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250731-arm_spe_support_hitm_overhead_v1_public-v4-15-58e5677a412b@arm.com>
-References: <20250731-arm_spe_support_hitm_overhead_v1_public-v4-0-58e5677a412b@arm.com>
-In-Reply-To: <20250731-arm_spe_support_hitm_overhead_v1_public-v4-0-58e5677a412b@arm.com>
-To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- James Clark <james.clark@linaro.org>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- German Gomez <german.gomez@arm.com>, Ali Saidi <alisaidi@amazon.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, 
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1753968422; l=4722;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=DwDknRz+M+PM0kRQxaVsn+FUh1ULlnp1rQaeTIs9xco=;
- b=OOKeWz+A9vVgpnRs33Uf4YarurcS1VAbmxuSDBLoawWkqgWvCZT9h7b1bJtYBgLGbU/EGR98i
- bkSymMQU/RTCp4qzAh5HVsYF1TeFvbFNEUXHWcdXe/uLnlTfTCsAjAF
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250728-ddrperfm-upstream-v5-2-03f1be8ad396@foss.st.com>
 
-Current code skips to parse events after generating data source. The
-reason is the data source packets have cache and snooping related info,
-the afterwards event packets might contain duplicate info.
 
-This commit changes to continue parsing the events after data source
-analysis. If data source does not give out memory level and snooping
-types, then the event info is used to synthesize the related fields.
+On Mon, 28 Jul 2025 17:29:33 +0200, Clément Le Goffic wrote:
+> RCC is able to check the availability of a clock.
+> Allow to query the RCC with a firewall ID.
+> 
+> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+> ---
+>  Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
 
-As a result, both the peer snoop option ('-d peer') and hitm options
-('-d tot/lcl/rmt') are supported by Arm SPE in the perf c2c.
-
-Reviewed-by: James Clark <james.clark@linaro.org>
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/perf/util/arm-spe.c | 75 ++++++++++++++++++++++++++++-------------------
- 1 file changed, 45 insertions(+), 30 deletions(-)
-
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 17d12bfa812c86a796dd79624a3d283f0cbac237..a2925a5cfe980f1c72a8748b02fbe238cc7b8e00 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -921,40 +921,56 @@ static void arm_spe__synth_memory_level(struct arm_spe_queue *speq,
- {
- 	struct arm_spe *spe = speq->spe;
- 
--	if (data_src->mem_op == PERF_MEM_OP_LOAD)
--		arm_spe__synth_ld_memory_level(record, data_src);
--	if (data_src->mem_op == PERF_MEM_OP_STORE)
--		arm_spe__synth_st_memory_level(record, data_src);
-+	/*
-+	 * The data source packet contains more info for cache levels for
-+	 * peer snooping. So respect the memory level if has been set by
-+	 * data source parsing.
-+	 */
-+	if (!data_src->mem_lvl) {
-+		if (data_src->mem_op == PERF_MEM_OP_LOAD)
-+			arm_spe__synth_ld_memory_level(record, data_src);
-+		if (data_src->mem_op == PERF_MEM_OP_STORE)
-+			arm_spe__synth_st_memory_level(record, data_src);
-+	}
- 
- 	if (!data_src->mem_lvl) {
- 		data_src->mem_lvl = PERF_MEM_LVL_NA;
- 		data_src->mem_lvl_num = PERF_MEM_LVLNUM_NA;
- 	}
- 
--	if (record->type & ARM_SPE_DATA_SNOOPED) {
--		if (record->type & ARM_SPE_HITM)
--			data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
--		else
--			data_src->mem_snoop = PERF_MEM_SNOOP_HIT;
--	} else {
--		u64 *metadata = arm_spe__get_metadata_by_cpu(spe, speq->cpu);
--
--		/*
--		 * Set NA ("Not available") mode if no meta data or the
--		 * SNOOPED event is not supported.
--		 */
--		if (!metadata ||
--		    !(metadata[ARM_SPE_CAP_EVENT_FILTER] & ARM_SPE_DATA_SNOOPED))
--			data_src->mem_snoop = PERF_MEM_SNOOP_NA;
--		else
--			data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
-+	/*
-+	 * If 'mem_snoop' has been set by data source packet, skip to set
-+	 * it at here.
-+	 */
-+	if (!data_src->mem_snoop) {
-+		if (record->type & ARM_SPE_DATA_SNOOPED) {
-+			if (record->type & ARM_SPE_HITM)
-+				data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
-+			else
-+				data_src->mem_snoop = PERF_MEM_SNOOP_HIT;
-+		} else {
-+			u64 *metadata =
-+				arm_spe__get_metadata_by_cpu(spe, speq->cpu);
-+
-+			/*
-+			 * Set NA ("Not available") mode if no meta data or the
-+			 * SNOOPED event is not supported.
-+			 */
-+			if (!metadata ||
-+			    !(metadata[ARM_SPE_CAP_EVENT_FILTER] & ARM_SPE_DATA_SNOOPED))
-+				data_src->mem_snoop = PERF_MEM_SNOOP_NA;
-+			else
-+				data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
-+		}
- 	}
- 
--	if (record->type & ARM_SPE_REMOTE_ACCESS)
--		data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
-+	if (!data_src->mem_remote) {
-+		if (record->type & ARM_SPE_REMOTE_ACCESS)
-+			data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
-+	}
- }
- 
--static bool arm_spe__synth_ds(struct arm_spe_queue *speq,
-+static void arm_spe__synth_ds(struct arm_spe_queue *speq,
- 			      const struct arm_spe_record *record,
- 			      union perf_mem_data_src *data_src)
- {
-@@ -973,19 +989,18 @@ static bool arm_spe__synth_ds(struct arm_spe_queue *speq,
- 	} else {
- 		metadata = arm_spe__get_metadata_by_cpu(spe, speq->cpu);
- 		if (!metadata)
--			return false;
-+			return;
- 
- 		midr = metadata[ARM_SPE_CPU_MIDR];
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(data_source_handles); i++) {
- 		if (is_midr_in_range_list(midr, data_source_handles[i].midr_ranges)) {
--			data_source_handles[i].ds_synth(record, data_src);
--			return true;
-+			return data_source_handles[i].ds_synth(record, data_src);
- 		}
- 	}
- 
--	return false;
-+	return;
- }
- 
- static union perf_mem_data_src
-@@ -1005,8 +1020,8 @@ arm_spe__synth_data_source(struct arm_spe_queue *speq,
- 	else
- 		return data_src;
- 
--	if (!arm_spe__synth_ds(speq, record, &data_src))
--		arm_spe__synth_memory_level(speq, record, &data_src);
-+	arm_spe__synth_ds(speq, record, &data_src);
-+	arm_spe__synth_memory_level(speq, record, &data_src);
- 
- 	if (record->type & (ARM_SPE_TLB_ACCESS | ARM_SPE_TLB_MISS)) {
- 		data_src.mem_dtlb = PERF_MEM_TLB_WK;
-
--- 
-2.34.1
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
