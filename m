@@ -1,243 +1,139 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCFB2D0C99
-	for <linux-perf-users@vger.kernel.org>; Thu, 31 Jul 2025 13:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6B922D2389
+	for <linux-perf-users@vger.kernel.org>; Thu, 31 Jul 2025 13:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753968424; cv=none; b=TUOujHZGRijmEpKW7L4gAmBaajjA1RkFS3DMxfXfADskSYSz8W0yYqDrB20qdXcqXFjyoZjp4LOuoB2cHzF5ARbHbB9Vu5Ska+btyOdTMoY00Jqkqh/UVGCuK29dD6VAubsAfQ/0gz1c43alVx383TShsYyPRhAWAxUOd+7ZoE8=
+	t=1753968428; cv=none; b=CtiRj7Qu8dsQik6uo0JysBWVAJ8D2noFY1TS22iCYMrfWcK2ana6PkCzdryFb8rzPS9RGrV/m/bw7R1GzXoFkObmtV7iZr7jOvWJHCTgszmiJZCLyCRCPbghXu5BUacynO9VCVuoXDC5Wma2ctZL2OcsfryjVbUw7KBw/1u4wao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753968424; c=relaxed/simple;
-	bh=IvE7wbOfiky5gP1/JdKf1HJsEXUXuz12TG0IoOAqx3U=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=P74hg9UeeG6cn/JE7XmRD/XK3UWqhWVxI1TdbervJJZQAPL4KXpot2uxXh8/q701FegUHbNvywMIGrZIfmGU70xsDDa9Nr/TJa+c+SWrD5oLoL8iumZ0OuJuAWnDJs4cXXcuQ4zpe8T11Iw6M9gnYYWYECLMF8F8YwU6DMcyijE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tMfqJ82Z; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tMfqJ82Z"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-74928291bc3so1058044b3a.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 31 Jul 2025 06:27:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1753968422; x=1754573222; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9D+1SkLUHFp3CL6p6s9XNodFOnizBfge5u1xSj5q/5M=;
-        b=tMfqJ82Z05i8Mg0BYhuYG0kBYmCOeFUL9mvvU5abyEG1YqbgDAxn1ApFiy6E90mfDn
-         EN/6DbGJmy1JLTksnZbnAIz3nDfHvP7/hjDEIKnxcQXuNERzy78jFsSlLXVs+2aVsDTS
-         f2fnllV8pqwibDbRCkrTxVOJlMoyLheMZBDiPaPy7XledeP7RvT21t9DZlGXDiL1Wp4U
-         gWQRbO8qs6IZ6K6cqCQKxiL0TQ7+ODh1GLTwyO+NnMNvPKLJKn4Fjn5iITzpP0XqL9kc
-         qqIDt44Osc3ADUKRae4vJGb31ektm+jLmWTr0Eda/xROokUGvO1Jv/eYelG3R3uKi73q
-         2InA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753968422; x=1754573222;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9D+1SkLUHFp3CL6p6s9XNodFOnizBfge5u1xSj5q/5M=;
-        b=VxifYO8mcIY9fU+DqR2ygqljpqkSbpgPOwLinasa8wPBmi5oWFstKHstRr25FJMHsQ
-         kidnFCatUQhz1AbgZN05S1ybGEpb+hUHBVFs7T2oGPXlBveRt1y6dUnOGc5swWGCvVll
-         vIHXZurv8MurVcPZUX9wQvgLYXOmusX4hMKnSzjlefS5g4xByFBZew6puvR04fKVgBzR
-         83MK90XH+aOec0XHACMhbl00K/EEVPC9YOCFppBI64tTLDC7RrxaGHmSvBZGd5kQrcBm
-         WKbxdRAe1rrIu8r7czaq1WII0ELUU7ZORooJlJ0ohJQKYI/BZZC/fchBra1cKkR8xP+R
-         eS0A==
-X-Forwarded-Encrypted: i=1; AJvYcCVjROLQEW6+zuPk5bTQgTKEHe9OQWeuSYIWdfsqnZGdbFUxsCgQ9neUPSW01FTToqWn7hAvStWnb84kpFkE9S2a@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdFYJNuKEr+wWFzRa7H2LSzRronu4bA1WM54N3HPColLePKVqW
-	AjtmRhc4qYXXzFUwCyg++LZuHZw62iPPEWTMDqPf8XD4mHQLrlnGZWaBRKQYZZvB3jr/WRwNhxG
-	Tulpteg==
-X-Google-Smtp-Source: AGHT+IHobDSGcus+S94g4r7tqFvwsqp38RnMHKYwOWfldZixh8KyWZx+bTZ3gtJnbMQKBH3kowT2EzQj/94=
-X-Received: from pgar7.prod.google.com ([2002:a05:6a02:2e87:b0:b2c:4548:13d0])
- (user=yuzhuo job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:258a:b0:232:ddc1:f22b
- with SMTP id adf61e73a8af0-23dc0d5f6bdmr10780967637.19.1753968422122; Thu, 31
- Jul 2025 06:27:02 -0700 (PDT)
-Date: Thu, 31 Jul 2025 06:26:15 -0700
-In-Reply-To: <20250731132615.938435-1-yuzhuo@google.com>
+	s=arc-20240116; t=1753968428; c=relaxed/simple;
+	bh=MGXl2cnLbu4zu2dy1/bFgNlB0vBOPNcA8WyrHKceQEM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YlIIbpjbq4y0oUf/ihCVJoEdxQX76/JKoMDTWHFZUi2H8A6PnzJsQXBDfkMlftz3fMT6mrfw0ficxMr1D2rq77VG/vBDpExTPc8ZTEAuMNiO8zYhpyQD4IxwVjqjw/KILJcLeVJFPUZ+iFG6qUlardrM79EN9KuQFbzEKML7mXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9BFD51D13;
+	Thu, 31 Jul 2025 06:26:56 -0700 (PDT)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9590E3F66E;
+	Thu, 31 Jul 2025 06:27:02 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v4 00/15] perf arm-spe: Support new events in FEAT_SPEv1p4
+Date: Thu, 31 Jul 2025 14:25:35 +0100
+Message-Id: <20250731-arm_spe_support_hitm_overhead_v1_public-v4-0-58e5677a412b@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250731132615.938435-1-yuzhuo@google.com>
-X-Mailer: git-send-email 2.50.1.565.gc32cd1483b-goog
-Message-ID: <20250731132615.938435-6-yuzhuo@google.com>
-Subject: [PATCH v1 5/5] perf bench: Add documentation for 'sync rcu' suite
-From: Yuzhuo Jing <yuzhuo@google.com>
-To: Davidlohr Bueso <dave@stgolabs.net>, "Paul E . McKenney" <paulmck@kernel.org>, 
-	Josh Triplett <josh@joshtriplett.org>, Frederic Weisbecker <frederic@kernel.org>, 
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Uladzislau Rezki <urezki@gmail.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Liang Kan <kan.liang@linux.intel.com>, Yuzhuo Jing <yzj@umich.edu>, 
-	Yuzhuo Jing <yuzhuo@google.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-kernel@vger.kernel.org, 
-	rcu@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAM9ui2gC/5XQQW7DIBAF0KtErEsFDLZpVr1HFSHA4xqpDggcl
+ Cjy3YtTqUl2zvKPNO+P5koyJo+Z7HdXkrD47MOxBvm2I240x2+kvq+ZCCYa1nJGTZp0jqjzKca
+ QZj36edKhYBrR9LpwHU/2xzvqpBEtgGokSFK1mHDw51vT16Hm0ec5pMutuIh1+npHEZTRjoleS
+ uta26jPuvnuwrQW/mnwoiaQm8FY4GA//rX13sIfb4TtKq9qOxh0AzOq65pnFe5qx7rtKlQVAI0
+ SvQGh2LMqH1Tg21VZVackSsaq6e7/PCzL8gvahYbmLAIAAA==
+X-Change-ID: 20250610-arm_spe_support_hitm_overhead_v1_public-c4a263385434
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ James Clark <james.clark@linaro.org>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ German Gomez <german.gomez@arm.com>, Ali Saidi <alisaidi@amazon.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, 
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1753968422; l=3708;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=MGXl2cnLbu4zu2dy1/bFgNlB0vBOPNcA8WyrHKceQEM=;
+ b=+JYI9uWYTJO9WrwmWrsWwJfv4HEfGmxWG1DWAYwnqNQQ3JSY9M+a54sa1lOH4kCwX3BWddZY6
+ PaRS+fK5vllBLikshvdbJjiFGmA3+OGROoQr+FMFs0HyixMzpc27qqy
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Add documentation for 'perf bench sync rcu'.  This benchmark has three
-modes or subcommands that takes positional arguments.  In addition,
-*kernel* module parameters are directly specified in the form of
-"name=value", without "--name".  Multiple subsections are thus added to
-the 'sync' section for illustration.
+This series adds support for new event types introduced in Arm SPE v1.4.
 
-Signed-off-by: Yuzhuo Jing <yuzhuo@google.com>
+The first two patches modify the SPE driver to expose 'event_filter'
+entry in SysFS caps folder. These patches are part of James' series
+"[PATCH v5 00/12] perf: arm_spe: Armv8.8 SPE features" [1]. In case this
+series will be merged independently of James' series, these patches have
+have been included here.
+
+Patches 03 ~ 15 are support new events in Perf tool:
+
+  * Patches 03 ~ 04: Fix for remote access.
+  * Patches 05 ~ 06: Refactor for data source and event bits.
+  * Patch 07       : Dump new event bits.
+  * Patches 08 ~ 14: Enhance memory-level info for the new events.
+  * Patch 15       : Combine analysis of data source and events.
+		     As a result, Arm SPE can support both HITM and peer
+		     modes (See the "--display" options in perf c2c).
+
+This series has been tested on FVP RevC platform.
+
+Note: for a local HITM event, the emulation does not provide any info
+for LLC. However, the perf c2c tool relies on LLC + HITM for accounting
+local HITM. I manually set the LLC HIT flag to verify the
+"perf c2c -d tot" command.
+
+[1] https://lore.kernel.org/linux-arm-kernel/20250721-james-perf-feat_spe_eft-v5-0-a7bc533485a1@linaro.org/
+
 ---
- tools/perf/Documentation/perf-bench.txt | 131 ++++++++++++++++++++++++
- 1 file changed, 131 insertions(+)
+Changes in v4:
+- Refactor exposing event filter in SPE driver (Will).
+- Rebased on latest perf-tools-next branch.
+- Link to v3: https://lore.kernel.org/r/20250707-arm_spe_support_hitm_overhead_v1_public-v3-0-33ea82da3280@arm.com
 
-diff --git a/tools/perf/Documentation/perf-bench.txt b/tools/perf/Documentation/perf-bench.txt
-index 8331bd28b10e..786c6e6880f5 100644
---- a/tools/perf/Documentation/perf-bench.txt
-+++ b/tools/perf/Documentation/perf-bench.txt
-@@ -49,6 +49,9 @@ SUBSYSTEM
- 'sched'::
- 	Scheduler and IPC mechanisms.
- 
-+'sync'::
-+	Synchronization primitives.
-+
- 'syscall'::
- 	System call performance (throughput).
- 
-@@ -162,6 +165,134 @@ Example of *pipe*
- 
- ---------------------
- 
-+SUITES FOR 'sync'
-+~~~~~~~~~~~~~~~~~
-+*rcu*::
-+Suite for RCU performance.  Depends on rcuscale kernel module.
-+This benchmark has three modes: once, range, ratio.  Usage is defined as below.
-+
-+'perf bench sync rcu' [options..] [-- <command>..]
-+'perf bench sync rcu' [options..] once  <gp_type> [<param=value>..] [-- <command>..]
-+'perf bench sync rcu' [options..] range <gp_type> [<param=range>..] [-- <command>..]
-+'perf bench sync rcu' [options..] ratio <gp_type> <total> <param1_range> <param1_name> <param2_name> [<param=value>..] [-- <command>..]
-+
-+Modes for *rcu*
-+^^^^^^^^^^^^^^^
-+
-+default::
-+Run 'once sync'.",
-+
-+once::
-+Run benchmark once, with all parameters passed through to the kernel rcuscale
-+module.
-+
-+range::
-+Run benchmark multiple times, with parameters as ranges.  Range format is
-+defined as start[:end[:step]], inclusive, non-negative.  The benchmark
-+instantiates all combinations of all ranges.
-+
-+ratio::
-+Run benchmark that changes the ratio between two parameters. 'total' specifies
-+the sum of 'param1' and 'param2', and 'param1_range' is the range of 'param1'
-+values.  'param2' is calculated by 'total-param1'.  Additional non-range
-+parameters may also be specified.
-+
-+Positional arguments for *rcu*
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+gp_type::
-+The type of grace period to use: sync, async, exp (expedited)
-+
-+param::
-+Any parameter of the rcuscale kernel module, except for "gp_exp",
-+"gp_async" and "block_start" that are managed by this benchmark.
-+Valid options can be found from "modinfo rcuscale".
-+
-+command::
-+A child command to run during the experiment.  If the command line
-+string contains {READER,WRITER,KFREE}_TASKS placeholders, they will be
-+substituted with the tasks PIDs, separated by comma.
-+
-+Options for *rcu*
-+^^^^^^^^^^^^^^^^^
-+-c::
-+--cooldown::
-+Sleep time between each experiment (default: 3 seconds).
-+
-+-n::
-+--dryrun::
-+Dry run mode.  Do not run experiments, but instead print what parameter
-+combination will run.
-+
-+--child-delay=::
-+Wait for child startup before starting experiment (default: 1 second).
-+
-+--debugfs=::
-+Debugfs mount point used to interact with the rcuscale kernel module. (default:
-+/sys/kernel/debug).
-+
-+--hist::
-+Show the histogram of writer durations.
-+
-+Example of *rcu*
-+^^^^^^^^^^^^^^^^
-+
-+---------------------
-+% perf bench sync rcu once exp nreaders=1 nwriters=1
-+# Running 'sync/rcu' benchmark:
-+Running experiment with options: gp_exp=1 nreaders=1 nwriters=1
-+Experiment finished.
-+Average grace-period duration: 124.236 microseconds
-+Minimum grace-period duration: 8.783
-+50th percentile grace-period duration: 9.033
-+90th percentile grace-period duration: 9.665
-+99th percentile grace-period duration: 20.911
-+Maximum grace-period duration: 6025.167
-+
-+% perf bench sync rcu range exp nreaders=1 nwriters=1 writer_cpu_offset=0:1 -- \
-+          perf stat -e ipi:ipi_send_cpu,rcu:rcu_grace_period \
-+          -t READER_TASKS,WRITER_TASKS
-+# Running 'sync/rcu' benchmark:
-+Running experiment with options: gp_exp=1 nreaders=1 nwriters=1 writer_cpu_offset=0
-+Running child command: perf stat -e ipi:ipi_send_cpu,rcu:rcu_grace_period -t 2061441,2061442
-+
-+ Performance counter stats for thread id '2061441,2061442':
-+
-+              2400      ipi:ipi_send_cpu
-+               100      rcu:rcu_grace_period
-+
-+       6.006040148 seconds time elapsed
-+
-+Experiment finished.
-+Waiting for child process to exit.
-+Average grace-period duration: 301.177 microseconds
-+Minimum grace-period duration: 9.064
-+50th percentile grace-period duration: 9.394
-+90th percentile grace-period duration: 10.977
-+99th percentile grace-period duration: 5926.781
-+Maximum grace-period duration: 6011.067
-+Cooling down (3s)..
-+
-+Running experiment with options: gp_exp=1 nreaders=1 nwriters=1 writer_cpu_offset=1
-+Running child command: perf stat -e ipi:ipi_send_cpu,rcu:rcu_grace_period -t 2061461,2061462
-+
-+ Performance counter stats for thread id '2061461,2061462':
-+
-+              2144      ipi:ipi_send_cpu
-+               201      rcu:rcu_grace_period
-+
-+       6.006110747 seconds time elapsed
-+
-+Experiment finished.
-+Waiting for child process to exit.
-+Average grace-period duration: 12.23 microseconds
-+Minimum grace-period duration: 9.134
-+50th percentile grace-period duration: 9.475
-+90th percentile grace-period duration: 11.897
-+99th percentile grace-period duration: 38.057
-+Maximum grace-period duration: 67.19
-+---------------------
-+
- SUITES FOR 'syscall'
- ~~~~~~~~~~~~~~~~~~
- *basic*::
+Changes in v3:
+- Retrieve CPU number from PMU type (Ian).
+- Link to v2: https://lore.kernel.org/r/20250630-arm_spe_support_hitm_overhead_v1_public-v2-0-2e1afab313b9@arm.com
+
+Changes in v2:
+- Dropped the kernel change for caching "pmsevfr_res0" (James)
+- Renamed the "events" entry to "event_filter" (James)
+- Added a new refactoring patch 04 (James)
+- Updated memory level info for remote access (James)
+- Link to v1: https://lore.kernel.org/r/20250613-arm_spe_support_hitm_overhead_v1_public-v1-0-6faecf0a8775@arm.com
+
+---
+James Clark (2):
+      perf: arm_spe: Support FEAT_SPEv1p4 filters
+      perf arm_spe: Use full type for data_src
+
+Leo Yan (13):
+      perf: arm_spe: Expose event filter
+      perf arm_spe: Correct setting remote access
+      perf arm_spe: Correct memory level for remote access
+      perf arm_spe: Directly propagate raw event
+      perf arm_spe: Decode event types for new features
+      perf arm_spe: Add "event_filter" entry in meta data
+      perf arm_spe: Refine memory level filling
+      perf arm_spe: Separate setting of memory levels for loads and stores
+      perf arm_spe: Fill memory levels for FEAT_SPEv1p4
+      perf arm_spe: Improve CPU number retrieving in per-thread mode
+      perf arm_spe: Refactor arm_spe__get_metadata_by_cpu()
+      perf arm_spe: Set HITM flag
+      perf arm_spe: Allow parsing both data source and events
+
+ arch/arm64/include/asm/sysreg.h                    |   9 -
+ drivers/perf/arm_spe_pmu.c                         |  45 +++--
+ tools/perf/arch/arm64/util/arm-spe.c               |   5 +
+ tools/perf/util/arm-spe-decoder/arm-spe-decoder.c  |  37 +---
+ tools/perf/util/arm-spe-decoder/arm-spe-decoder.h  |  33 ++--
+ .../util/arm-spe-decoder/arm-spe-pkt-decoder.c     |  14 ++
+ .../util/arm-spe-decoder/arm-spe-pkt-decoder.h     |   7 +
+ tools/perf/util/arm-spe.c                          | 220 ++++++++++++++++-----
+ tools/perf/util/arm-spe.h                          |   2 +
+ 9 files changed, 241 insertions(+), 131 deletions(-)
+---
+base-commit: e0c9c1e67156b257e9f1e97e4e372961e4e03fcf
+change-id: 20250610-arm_spe_support_hitm_overhead_v1_public-c4a263385434
+
+Best regards,
 -- 
-2.50.1.565.gc32cd1483b-goog
+Leo Yan <leo.yan@arm.com>
 
