@@ -1,26 +1,26 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F5FA2C3774
-	for <linux-perf-users@vger.kernel.org>; Thu, 31 Jul 2025 13:27:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E942C2C3770
+	for <linux-perf-users@vger.kernel.org>; Thu, 31 Jul 2025 13:27:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753968437; cv=none; b=jgpscAiZksBY0MXAK4g+9hVWOH76htZIWpjDBaVExwVHAuXVxQP9IZ0r8/o1rbc02HMYsEv94r+sESfhCuxIiSk6D8fC79fHMGZsJxlT4WkPnI+aifhj8vupPnVayz3BjgbZoqL5Ize/mganPc3l8m5wf0gBlZcc4diz5RqGCwY=
+	t=1753968441; cv=none; b=CuRAd9Bj2ytEUveNlcasPxa/XIedLxtBqaqU3/2J0lvYJbMKP80Qols06mM6nCghw7UCezXMAHIgF68pptW+cxCoic6TzunfjNWTid68bXi3c6l9zXB85zviO8XsTGSZfo3SsMGExCCBUQQGfdv5uwA+LgEt9xeQTwJayM33onY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753968437; c=relaxed/simple;
-	bh=nJU5kigoo7RLtBqj4cwlZeF8sB/Lo6viot1OJIrVX3M=;
+	s=arc-20240116; t=1753968441; c=relaxed/simple;
+	bh=A82OQ2BFXXAxnTr/n1kS9ARBrMRjwjgGM6jtBrrEcd0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GUNrdjsNGYj4kf+IV2kr02W1f5MzxSe+2ARW1/M/GThYXDpkJSkXolc/WyjAuhY8KrTP5q/aUCRIHEfBQPysQwwKwgGFzQ+4OUdhPaBAauCvBYNlkDPZh2Ty0SloMAhUeGuVg8NTgAiWD0KG3j/Bq8zM1XUsI1NEfdHmzmly+ws=
+	 In-Reply-To:To:Cc; b=dB7fOABy60NBMUJ0ilRIMkG8t2Iv7c2xaHgjcAdVOH/B37D+Pk+s6IMOiqRCP6PPnrBLBQwDBz5lrk13Rvw7tzIviwNDCkNP8AJU/thZZAHqYhSXDh1dRIe3Qk5sklSPD2Cp0XaGCkdxz+SLzlNXlf60WZovLva3d1JNHPOQZcc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12EE92C41;
-	Thu, 31 Jul 2025 06:27:08 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56A7C1D13;
+	Thu, 31 Jul 2025 06:27:10 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0EBDC3F66E;
-	Thu, 31 Jul 2025 06:27:13 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 54BB63F66E;
+	Thu, 31 Jul 2025 06:27:16 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Date: Thu, 31 Jul 2025 14:25:40 +0100
-Subject: [PATCH v4 05/15] perf arm_spe: Use full type for data_src
+Date: Thu, 31 Jul 2025 14:25:41 +0100
+Subject: [PATCH v4 06/15] perf arm_spe: Directly propagate raw event
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,7 +29,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250731-arm_spe_support_hitm_overhead_v1_public-v4-5-58e5677a412b@arm.com>
+Message-Id: <20250731-arm_spe_support_hitm_overhead_v1_public-v4-6-58e5677a412b@arm.com>
 References: <20250731-arm_spe_support_hitm_overhead_v1_public-v4-0-58e5677a412b@arm.com>
 In-Reply-To: <20250731-arm_spe_support_hitm_overhead_v1_public-v4-0-58e5677a412b@arm.com>
 To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -44,113 +44,122 @@ Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
  linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1753968422; l=3486;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1753968422; l=3995;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=dC1YJ8EUH5UByzXf2nNJG0iR9osDUbakif4x5pzmfVo=;
- b=kGQ5lkT1WubFtRqwed+9MzHepynPt9+pJeJX76FeJM0AIUcuxx0aXDKczFfYB8eEUbP78Adyk
- Zkb4SWWRLc/B961oPynpxtZ+vdgxqkRsSZ5XwQ7jiOdFK9NybERamBu
+ bh=A82OQ2BFXXAxnTr/n1kS9ARBrMRjwjgGM6jtBrrEcd0=;
+ b=67t3RmykjGkU/Z+UY4e8cjFY7PQ5wBKXyW0CfNYYawVXNrBeWymG1oWNJTUpS2L86ceeO0zhv
+ bFVjU3O7wozBxh7Q3zm9xTAdwKfVIBfo1jxHzn+dYk6/iSUCZHrIrT6
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-From: James Clark <james.clark@linaro.org>
+Two sets of event bits are defined: one for generating samples and
+another are raw event bits used in the backend decoder. Reduce the
+redundancy by using the raw event bits directly in the frontend code.
 
-data_src has an actual type rather than just being a u64. To help
-readers, delay decomposing it to a u64 until it's finally assigned to
-the sample.
+To avoid overflow issues, change the type of the event variable from
+enum to u64.
 
-Signed-off-by: James Clark <james.clark@linaro.org>
+Reviewed-by: James Clark <james.clark@linaro.org>
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/util/arm-spe.c | 25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+ tools/perf/util/arm-spe-decoder/arm-spe-decoder.c | 37 +----------------------
+ tools/perf/util/arm-spe-decoder/arm-spe-decoder.h | 28 ++++++++---------
+ 2 files changed, 14 insertions(+), 51 deletions(-)
 
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 3086dad92965af3981b1065f2892a3e67df7b616..8aed942a3da22f71f2c302586a4e84d68600e597 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -471,7 +471,8 @@ arm_spe_deliver_synth_event(struct arm_spe *spe,
- }
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+index 688fe6d7524416420a7c18d5f8a268492ce7c3b8..96eb7cced6fd1574f5d823e4c67b9051dcf183ed 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+@@ -229,42 +229,7 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
+ 			}
+ 			break;
+ 		case ARM_SPE_EVENTS:
+-			if (payload & BIT(EV_L1D_REFILL))
+-				decoder->record.type |= ARM_SPE_L1D_MISS;
+-
+-			if (payload & BIT(EV_L1D_ACCESS))
+-				decoder->record.type |= ARM_SPE_L1D_ACCESS;
+-
+-			if (payload & BIT(EV_TLB_WALK))
+-				decoder->record.type |= ARM_SPE_TLB_MISS;
+-
+-			if (payload & BIT(EV_TLB_ACCESS))
+-				decoder->record.type |= ARM_SPE_TLB_ACCESS;
+-
+-			if (payload & BIT(EV_LLC_MISS))
+-				decoder->record.type |= ARM_SPE_LLC_MISS;
+-
+-			if (payload & BIT(EV_LLC_ACCESS))
+-				decoder->record.type |= ARM_SPE_LLC_ACCESS;
+-
+-			if (payload & BIT(EV_REMOTE_ACCESS))
+-				decoder->record.type |= ARM_SPE_REMOTE_ACCESS;
+-
+-			if (payload & BIT(EV_MISPRED))
+-				decoder->record.type |= ARM_SPE_BRANCH_MISS;
+-
+-			if (payload & BIT(EV_NOT_TAKEN))
+-				decoder->record.type |= ARM_SPE_BRANCH_NOT_TAKEN;
+-
+-			if (payload & BIT(EV_TRANSACTIONAL))
+-				decoder->record.type |= ARM_SPE_IN_TXN;
+-
+-			if (payload & BIT(EV_PARTIAL_PREDICATE))
+-				decoder->record.type |= ARM_SPE_SVE_PARTIAL_PRED;
+-
+-			if (payload & BIT(EV_EMPTY_PREDICATE))
+-				decoder->record.type |= ARM_SPE_SVE_EMPTY_PRED;
+-
++			decoder->record.type = payload;
+ 			break;
+ 		case ARM_SPE_DATA_SOURCE:
+ 			decoder->record.source = payload;
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+index 881d9f29c1380b62486f0cd81498750ba06c4b50..03da55453da8fd2e7b9e2dcba3ddcf5243599e1c 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+@@ -13,20 +13,18 @@
  
- static int arm_spe__synth_mem_sample(struct arm_spe_queue *speq,
--				     u64 spe_events_id, u64 data_src)
-+				     u64 spe_events_id,
-+				     union perf_mem_data_src data_src)
- {
- 	struct arm_spe *spe = speq->spe;
- 	struct arm_spe_record *record = &speq->decoder->record;
-@@ -486,7 +487,7 @@ static int arm_spe__synth_mem_sample(struct arm_spe_queue *speq,
- 	sample.stream_id = spe_events_id;
- 	sample.addr = record->virt_addr;
- 	sample.phys_addr = record->phys_addr;
--	sample.data_src = data_src;
-+	sample.data_src = data_src.val;
- 	sample.weight = record->latency;
+ #include "arm-spe-pkt-decoder.h"
  
- 	ret = arm_spe_deliver_synth_event(spe, speq, event, &sample);
-@@ -519,7 +520,8 @@ static int arm_spe__synth_branch_sample(struct arm_spe_queue *speq,
- }
+-enum arm_spe_sample_type {
+-	ARM_SPE_L1D_ACCESS		= 1 << 0,
+-	ARM_SPE_L1D_MISS		= 1 << 1,
+-	ARM_SPE_LLC_ACCESS		= 1 << 2,
+-	ARM_SPE_LLC_MISS		= 1 << 3,
+-	ARM_SPE_TLB_ACCESS		= 1 << 4,
+-	ARM_SPE_TLB_MISS		= 1 << 5,
+-	ARM_SPE_BRANCH_MISS		= 1 << 6,
+-	ARM_SPE_REMOTE_ACCESS		= 1 << 7,
+-	ARM_SPE_SVE_PARTIAL_PRED	= 1 << 8,
+-	ARM_SPE_SVE_EMPTY_PRED		= 1 << 9,
+-	ARM_SPE_BRANCH_NOT_TAKEN	= 1 << 10,
+-	ARM_SPE_IN_TXN			= 1 << 11,
+-};
++#define ARM_SPE_L1D_ACCESS		BIT(EV_L1D_ACCESS)
++#define ARM_SPE_L1D_MISS		BIT(EV_L1D_REFILL)
++#define ARM_SPE_LLC_ACCESS		BIT(EV_LLC_ACCESS)
++#define ARM_SPE_LLC_MISS		BIT(EV_LLC_MISS)
++#define ARM_SPE_TLB_ACCESS		BIT(EV_TLB_ACCESS)
++#define ARM_SPE_TLB_MISS		BIT(EV_TLB_WALK)
++#define ARM_SPE_BRANCH_MISS		BIT(EV_MISPRED)
++#define ARM_SPE_BRANCH_NOT_TAKEN	BIT(EV_NOT_TAKEN)
++#define ARM_SPE_REMOTE_ACCESS		BIT(EV_REMOTE_ACCESS)
++#define ARM_SPE_SVE_PARTIAL_PRED	BIT(EV_PARTIAL_PREDICATE)
++#define ARM_SPE_SVE_EMPTY_PRED		BIT(EV_EMPTY_PREDICATE)
++#define ARM_SPE_IN_TXN			BIT(EV_TRANSACTIONAL)
  
- static int arm_spe__synth_instruction_sample(struct arm_spe_queue *speq,
--					     u64 spe_events_id, u64 data_src)
-+					     u64 spe_events_id,
-+					     union perf_mem_data_src data_src)
- {
- 	struct arm_spe *spe = speq->spe;
- 	struct arm_spe_record *record = &speq->decoder->record;
-@@ -542,7 +544,7 @@ static int arm_spe__synth_instruction_sample(struct arm_spe_queue *speq,
- 	sample.stream_id = spe_events_id;
- 	sample.addr = record->to_ip;
- 	sample.phys_addr = record->phys_addr;
--	sample.data_src = data_src;
-+	sample.data_src = data_src.val;
- 	sample.period = spe->instructions_sample_period;
- 	sample.weight = record->latency;
- 	sample.flags = speq->flags;
-@@ -891,21 +893,22 @@ static bool arm_spe__synth_ds(struct arm_spe_queue *speq,
- 	return false;
- }
+ enum arm_spe_op_type {
+ 	/* First level operation type */
+@@ -100,7 +98,7 @@ enum arm_spe_hisi_hip_data_source {
+ };
  
--static u64 arm_spe__synth_data_source(struct arm_spe_queue *speq,
--				      const struct arm_spe_record *record)
-+static union perf_mem_data_src
-+arm_spe__synth_data_source(struct arm_spe_queue *speq,
-+			   const struct arm_spe_record *record)
- {
--	union perf_mem_data_src	data_src = { .mem_op = PERF_MEM_OP_NA };
-+	union perf_mem_data_src	data_src = {};
- 
- 	/* Only synthesize data source for LDST operations */
- 	if (!is_ldst_op(record->op))
--		return 0;
-+		return data_src;
- 
- 	if (record->op & ARM_SPE_OP_LD)
- 		data_src.mem_op = PERF_MEM_OP_LOAD;
- 	else if (record->op & ARM_SPE_OP_ST)
- 		data_src.mem_op = PERF_MEM_OP_STORE;
- 	else
--		return 0;
-+		return data_src;
- 
- 	if (!arm_spe__synth_ds(speq, record, &data_src))
- 		arm_spe__synth_memory_level(record, &data_src);
-@@ -919,14 +922,14 @@ static u64 arm_spe__synth_data_source(struct arm_spe_queue *speq,
- 			data_src.mem_dtlb |= PERF_MEM_TLB_HIT;
- 	}
- 
--	return data_src.val;
-+	return data_src;
- }
- 
- static int arm_spe_sample(struct arm_spe_queue *speq)
- {
- 	const struct arm_spe_record *record = &speq->decoder->record;
- 	struct arm_spe *spe = speq->spe;
--	u64 data_src;
-+	union perf_mem_data_src data_src;
+ struct arm_spe_record {
+-	enum arm_spe_sample_type type;
++	u64 type;
  	int err;
- 
- 	arm_spe__sample_flags(speq);
+ 	u32 op;
+ 	u32 latency;
 
 -- 
 2.34.1
