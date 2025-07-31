@@ -1,26 +1,27 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 542232D0275
-	for <linux-perf-users@vger.kernel.org>; Thu, 31 Jul 2025 13:27:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98B6B2D0275
+	for <linux-perf-users@vger.kernel.org>; Thu, 31 Jul 2025 13:27:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753968442; cv=none; b=Z7hOViy/3UasqERqPSSDxQwzDfJdEru1jNto2BgVKg1OxTdyhK08ftmUANQB/KGqV/h7qr5vJqAunJkfdH0Xo9o3Ko/VqqcSzargl6kiDOrdQlfmySiqUWL/qMGeYJjd0Am5VwscaqQagShc6pi2Z0SOOusBmfsLr99ppbsiDAA=
+	t=1753968445; cv=none; b=kgefz/WLqZDX5yqLR7nFH5S3ywrECO6E0h5/Wun+kBw6DjoaXlCIMJgCLT4/h8hypOfGzm68mxb2VzIKhWwpRNGyR3r22EExvGGZLCg2ZmpSahVO8qke+zqK6lFlU5HmnsPoYo1NyuUYhbAcqvqyv30fl0t58XxhRBoBh7NJqC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753968442; c=relaxed/simple;
-	bh=ADTyZd+Ovzgz/cywd9MJrMdNJILrSR6Gvn3sCwr+kKk=;
+	s=arc-20240116; t=1753968445; c=relaxed/simple;
+	bh=VGGRJHZblz/9V5LGkwZro4arfQooktXiu3DOrHApktc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=R8HqVUs7CT7qQQH/gvOoBfeuRV4fqkFHrAPppF6Cse+nudiH9NahjJ5nPIhGhK08RA1jnbdyu+VtIFG8jSCHmX6FemC+o8COIzBhAWi3hxwldHYftLdKwJj5WGmeinlrzKz6t2v4TZxPRlmiPXWMu/Cav+/rS3Kt4xUhfC4hjcs=
+	 In-Reply-To:To:Cc; b=C3NlIPBfRZ47HaqQbaAECUJyQPr4XgP+cJ9IrHba3WDm69n4FfMd0IodU5OOqL61gABp2HtaSR3To43YjDmurTDP1b1TeQlpZL8g9x6QkCOeUas5vGIwGols8nMKbdO8s42cza+UoLkEj1leGhborlFkfWSAM2hesv305/2HZTY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A06292BC3;
-	Thu, 31 Jul 2025 06:27:12 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E64EF1D13;
+	Thu, 31 Jul 2025 06:27:14 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B29F3F66E;
-	Thu, 31 Jul 2025 06:27:18 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E1B6B3F66E;
+	Thu, 31 Jul 2025 06:27:20 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Date: Thu, 31 Jul 2025 14:25:42 +0100
-Subject: [PATCH v4 07/15] perf arm_spe: Decode event types for new features
+Date: Thu, 31 Jul 2025 14:25:43 +0100
+Subject: [PATCH v4 08/15] perf arm_spe: Add "event_filter" entry in meta
+ data
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,7 +30,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250731-arm_spe_support_hitm_overhead_v1_public-v4-7-58e5677a412b@arm.com>
+Message-Id: <20250731-arm_spe_support_hitm_overhead_v1_public-v4-8-58e5677a412b@arm.com>
 References: <20250731-arm_spe_support_hitm_overhead_v1_public-v4-0-58e5677a412b@arm.com>
 In-Reply-To: <20250731-arm_spe_support_hitm_overhead_v1_public-v4-0-58e5677a412b@arm.com>
 To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -44,72 +45,92 @@ Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
  linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1753968422; l=2686;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1753968422; l=2736;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=ADTyZd+Ovzgz/cywd9MJrMdNJILrSR6Gvn3sCwr+kKk=;
- b=1zk00KCjweGVCO2e699yrE3JXLH9/PxVGxvjN+YVDfBwF8HjMwljOoWYiL/ses9QbeClMPUVf
- sjP4f4ZYRwMBk8yxrq0ycieuMW0vAwSD7llszEXglgKvN63xjF6I/ti
+ bh=VGGRJHZblz/9V5LGkwZro4arfQooktXiu3DOrHApktc=;
+ b=HeN5m+a8gulZAfFgOr4kPQ0U5bYy/NoEQI2KDsGlg3rmQHWlk+uIniJwouJrKYuJWyAtD95Bx
+ ML422Qhd4wlB77O8ScaPf+V4svlVy/drJV2yPt7UMt6qUU3HaN37Kx6
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Decode new event types introduced by FEAT_SPEv1p4, FEAT_SPE_SME and
-FEAT_SPE_SME.
+Add a new "event_filter" entry in the meta data and dump it in raw data
+mode.
 
-The printed event names don't strictly follow the naming in the Arm ARM.
-For example, the "Cache data modified" event is shown as "HITM", and the
-"Data snooped" event is printed as "SNOOPED". Shorter names are easier
-to read while preserving core meanings.
+After:
+
+  # perf script -D
+  ...
+
+  0 0 0x470 [0x1f0]: PERF_RECORD_AUXTRACE_INFO type: 4
+    Header version     :2
+    Header size        :4
+    PMU type v2        :11
+    CPU number         :8
+      Magic            :0x1010101010101010
+      CPU #            :0
+      Num of params    :4
+      MIDR             :0x410fd0f0
+      PMU Type         :11
+      Min Interval     :256
+      Event Filter     :0x3fe08fe
+
+  ...
 
 Reviewed-by: James Clark <james.clark@linaro.org>
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c | 14 ++++++++++++++
- tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h |  7 +++++++
- 2 files changed, 21 insertions(+)
+ tools/perf/arch/arm64/util/arm-spe.c | 5 +++++
+ tools/perf/util/arm-spe.c            | 1 +
+ tools/perf/util/arm-spe.h            | 2 ++
+ 3 files changed, 8 insertions(+)
 
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-index 13cadb2f1ceac7a90e359c4d6aa1d5fc5169e142..80561630253dd5c46f7e99b24fc13b99f346459f 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-@@ -314,6 +314,20 @@ static int arm_spe_pkt_desc_event(const struct arm_spe_pkt *packet,
- 		arm_spe_pkt_out_string(&err, &buf, &buf_len, " SVE-PARTIAL-PRED");
- 	if (payload & BIT(EV_EMPTY_PREDICATE))
- 		arm_spe_pkt_out_string(&err, &buf, &buf_len, " SVE-EMPTY-PRED");
-+	if (payload & BIT(EV_L2D_ACCESS))
-+		arm_spe_pkt_out_string(&err, &buf, &buf_len, " L2D-ACCESS");
-+	if (payload & BIT(EV_L2D_MISS))
-+		arm_spe_pkt_out_string(&err, &buf, &buf_len, " L2D-MISS");
-+	if (payload & BIT(EV_CACHE_DATA_MODIFIED))
-+		arm_spe_pkt_out_string(&err, &buf, &buf_len, " HITM");
-+	if (payload & BIT(EV_RECENTLY_FETCHED))
-+		arm_spe_pkt_out_string(&err, &buf, &buf_len, " LFB");
-+	if (payload & BIT(EV_DATA_SNOOPED))
-+		arm_spe_pkt_out_string(&err, &buf, &buf_len, " SNOOPED");
-+	if (payload & BIT(EV_STREAMING_SVE_MODE))
-+		arm_spe_pkt_out_string(&err, &buf, &buf_len, " STREAMING-SVE");
-+	if (payload & BIT(EV_SMCU))
-+		arm_spe_pkt_out_string(&err, &buf, &buf_len, " SMCU");
+diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+index 4f2833b62ff55f3fd1dff3f032d6e06528460939..cac43cde7dbee94884938482d03989a2c69cb0b1 100644
+--- a/tools/perf/arch/arm64/util/arm-spe.c
++++ b/tools/perf/arch/arm64/util/arm-spe.c
+@@ -121,12 +121,17 @@ static int arm_spe_save_cpu_header(struct auxtrace_record *itr,
+ 		/* No Arm SPE PMU is found */
+ 		data[ARM_SPE_CPU_PMU_TYPE] = ULLONG_MAX;
+ 		data[ARM_SPE_CAP_MIN_IVAL] = 0;
++		data[ARM_SPE_CAP_EVENT_FILTER] = 0;
+ 	} else {
+ 		data[ARM_SPE_CPU_PMU_TYPE] = pmu->type;
  
- 	return err;
- }
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-index 2cdf9f6da2681244291445d54c5b13fe8a2e9d9a..d00c2481712dcc457eab2f5e9848ffc3150e6236 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-@@ -108,6 +108,13 @@ enum arm_spe_events {
- 	EV_TRANSACTIONAL	= 16,
- 	EV_PARTIAL_PREDICATE	= 17,
- 	EV_EMPTY_PREDICATE	= 18,
-+	EV_L2D_ACCESS		= 19,
-+	EV_L2D_MISS		= 20,
-+	EV_CACHE_DATA_MODIFIED	= 21,
-+	EV_RECENTLY_FETCHED	= 22,
-+	EV_DATA_SNOOPED		= 23,
-+	EV_STREAMING_SVE_MODE	= 24,
-+	EV_SMCU			= 25,
+ 		if (perf_pmu__scan_file(pmu, "caps/min_interval", "%lu", &val) != 1)
+ 			val = 0;
+ 		data[ARM_SPE_CAP_MIN_IVAL] = val;
++
++		if (perf_pmu__scan_file(pmu, "caps/event_filter", "%lx", &val) != 1)
++			val = 0;
++		data[ARM_SPE_CAP_EVENT_FILTER] = val;
+ 	}
+ 
+ 	free(cpuid);
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index 8aed942a3da22f71f2c302586a4e84d68600e597..727e43f538190cf5de8ef8d5ad3546a871c858eb 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -1535,6 +1535,7 @@ static const char * const metadata_per_cpu_fmts[] = {
+ 	[ARM_SPE_CPU_MIDR]		= "    MIDR             :0x%"PRIx64"\n",
+ 	[ARM_SPE_CPU_PMU_TYPE]		= "    PMU Type         :%"PRId64"\n",
+ 	[ARM_SPE_CAP_MIN_IVAL]		= "    Min Interval     :%"PRId64"\n",
++	[ARM_SPE_CAP_EVENT_FILTER]	= "    Event Filter     :0x%"PRIx64"\n",
  };
  
- /* Operation packet header */
+ static void arm_spe_print_info(struct arm_spe *spe, __u64 *arr)
+diff --git a/tools/perf/util/arm-spe.h b/tools/perf/util/arm-spe.h
+index 390679a4af2fb61419bc881b5dc43c01f1dd77d7..3966df1856d8234bb5fe580c3f128c4d238c6221 100644
+--- a/tools/perf/util/arm-spe.h
++++ b/tools/perf/util/arm-spe.h
+@@ -47,6 +47,8 @@ enum {
+ 	ARM_SPE_CPU_PMU_TYPE,
+ 	/* Minimal interval */
+ 	ARM_SPE_CAP_MIN_IVAL,
++	/* Event filter */
++	ARM_SPE_CAP_EVENT_FILTER,
+ 	ARM_SPE_CPU_PRIV_MAX,
+ };
+ 
 
 -- 
 2.34.1
