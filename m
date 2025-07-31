@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382691E51D;
-	Thu, 31 Jul 2025 04:54:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE0D198E81;
+	Thu, 31 Jul 2025 05:07:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753937662; cv=none; b=T/lSM/QscgkOgc1bDENogCB9IEWYxtrQuqcObiVwdrsZLUc0vLk5Qq2tevjZqdJD0O5DT5Xq84G8jzV7yVsvlYAwdc0tPH1SE4jJ3RW1PEb5CgOnWa4I/JSxXKA+qwFwRCgYrJBLNhUTG9Gqji0qZtSTBfzjKtkd7doKp9z83Pc=
+	t=1753938463; cv=none; b=cJXL8v2oKJvnfiO2I6AvYVXXdUA69WfEBss8cOlOkDNP5RK3yI6uLChRHFV4yk9Sx49MVs7cZkoSG4iMk+WX9YO2McYcsotEKdyd7vMmhiZSWbS6lhtCu8sWrzQWU+eVTohQfJ+oS/Xj0yidyZUpCz0Dw2f5A4idxxMTIiO/nS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753937662; c=relaxed/simple;
-	bh=xZMZeLw0gwPBfA4PhjfT0LcUxX4lQHPSCvNhei41giw=;
+	s=arc-20240116; t=1753938463; c=relaxed/simple;
+	bh=J8XH8c+tisSXBhUoA5RBsq2Rept4gnon3SkIS0FdLGE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YgZTQz7PbyQbrDvRWdfzQnwOWet1pjeUNZNT4OtPA/1LOSakERqHFcrkYXTB+eKAT9X1VmqdVryPy6BddS6iiZQKJ5oMv0Wr7xEPtAt7s388Wly8lGOZmc3LjmfMT7DNRyk+9IyuDBJ6NeyumWDrl1RNWSkwsnd23L2raGUIdJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uyMPFf3Q; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XfgTjsP3+s/f0ulmbo2U/JDS6oYPPN9vhhvOKPk6saMvnS/++1sHy+gmBshka6/QYhSPv3vyZS+9MgDgJvYn/LUy/Gj54tV5stL4Pix5g8yyzFQvcd50Xu6h9s8x1wEfLJyiik15cxpXBnuelpXxWYtBcEJVoaZTQ/+hb734qqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=szWpnu6q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uyMPFf3Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF080C4CEEF;
-	Thu, 31 Jul 2025 04:54:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="szWpnu6q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14333C4CEEF;
+	Thu, 31 Jul 2025 05:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753937661;
-	bh=xZMZeLw0gwPBfA4PhjfT0LcUxX4lQHPSCvNhei41giw=;
+	s=k20201202; t=1753938462;
+	bh=J8XH8c+tisSXBhUoA5RBsq2Rept4gnon3SkIS0FdLGE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uyMPFf3QE7ARDeB9v9RFRuv7ux/ehOW0yUzOIH2GDm/TrTEuRAivdqMb5ubQ1h/UK
-	 MiCrB7L/LwXp5eHjGWrxMAfPsb9Dtmq8E+0wms8ADh1KCGV2+rDCxqFAM3og+aYKPL
-	 MSjc5wvfg7es/03T2n0LQRXVZzkuESgqZXo2CMmzm0Xl7kvqQjpaRDyPkmYVyR+kzZ
-	 UxMlCGeSD5tox3hOYFrKMdOCL7p/J0oYuwlwioWv2LUT1o/SxU/gNbc6sxlFeGsokZ
-	 4JkzRlaGb5FizfwFjH2wom6NPBl8WAv1eT23wPsgQrmmlfuTbwAjJFPE5lnkV1L2cO
-	 O5lAG5Dq3q4qw==
-Date: Wed, 30 Jul 2025 21:54:19 -0700
+	b=szWpnu6qY8RxzEOTkXNjkmAh0TaXV6dOhpYBC8SP9u4i+DuiPiwAD3cpM7F5q3+WF
+	 yZK6V1IbuNsbLFlnVvwogfqwGN3LAvmKbRiFvSIgLwmTCVRZ555qI7PXTMPbegi4VA
+	 PdtM029/OOokfbliiIC6/9NiVENw9ikVjeaMEDRmn+C/8Ah0sjINBHzc3Rgiwx16ms
+	 AwjxJdiG+hzbnF5YrZT97oOQxKgbHH1PIDnEOHQiWf4MvlWW/5f5OWs3Ra6Gs4IQwU
+	 3qZ+v/bK6fAk8eTLCepOnVqa79DjdSsoAH5Wyr5pN/iQIAN9vuDJ+QBsGng7hU1Lis
+	 5nOMe3H0hp4vA==
+Date: Wed, 30 Jul 2025 22:07:40 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Yuzhuo Jing <yuzhuo@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -46,10 +46,10 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Alexandre Ghiti <alexghiti@rivosinc.com>,
 	Guo Ren <guoren@kernel.org>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 3/7] tools: Partial import of prefetch.h
-Message-ID: <aIr2-7842FIi2_8V@google.com>
+Subject: Re: [PATCH v1 4/7] tools: Implement userspace per-cpu
+Message-ID: <aIr6HEiqfYhgaec6@google.com>
 References: <20250729022640.3134066-1-yuzhuo@google.com>
- <20250729022640.3134066-4-yuzhuo@google.com>
+ <20250729022640.3134066-5-yuzhuo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,71 +58,185 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250729022640.3134066-4-yuzhuo@google.com>
+In-Reply-To: <20250729022640.3134066-5-yuzhuo@google.com>
 
-On Mon, Jul 28, 2025 at 07:26:36PM -0700, Yuzhuo Jing wrote:
-> Import only prefetch and prefetchw but not page and range related
-> methods.
+On Mon, Jul 28, 2025 at 07:26:37PM -0700, Yuzhuo Jing wrote:
+> Implement userspace per-cpu for imported kernel code.  Compared with
+> simple thread-local definition, the kernel per-cpu provides 1) a
+> guarantee of static lifetime even when thread exits, and 2) the ability
+> to access other CPU's per-cpu data.
+> 
+> This patch adds an alternative implementation and interface for
+> userspace per-cpu.  The kernel implementation uses special ELF sections
+> and offset calculation.  For simplicity, this version defines a
+> PERCPU_MAX length global array for each per-cpu data, and uses a
+> thread-local cpu id for indexing.
 > 
 > Signed-off-by: Yuzhuo Jing <yuzhuo@google.com>
 > ---
->  tools/include/linux/prefetch.h | 41 ++++++++++++++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 tools/include/linux/prefetch.h
+>  tools/include/linux/compiler_types.h  |   3 +
+>  tools/include/linux/percpu-simulate.h | 128 ++++++++++++++++++++++++++
+>  2 files changed, 131 insertions(+)
+>  create mode 100644 tools/include/linux/percpu-simulate.h
 > 
-> diff --git a/tools/include/linux/prefetch.h b/tools/include/linux/prefetch.h
+> diff --git a/tools/include/linux/compiler_types.h b/tools/include/linux/compiler_types.h
+> index 9a2a2f8d7b6c..46550c500b8c 100644
+> --- a/tools/include/linux/compiler_types.h
+> +++ b/tools/include/linux/compiler_types.h
+> @@ -31,6 +31,9 @@
+>  # define __cond_lock(x,c) (c)
+>  #endif /* __CHECKER__ */
+>  
+> +/* Per-cpu checker flag does not use address space attribute in userspace */
+> +#define __percpu
+> +
+>  /*
+>   * __unqual_scalar_typeof(x) - Declare an unqualified scalar type, leaving
+>   *			       non-scalar types unchanged.
+> diff --git a/tools/include/linux/percpu-simulate.h b/tools/include/linux/percpu-simulate.h
 > new file mode 100644
-> index 000000000000..1ed8678f4824
+> index 000000000000..a6af2f2211eb
 > --- /dev/null
-> +++ b/tools/include/linux/prefetch.h
-> @@ -0,0 +1,41 @@
+> +++ b/tools/include/linux/percpu-simulate.h
+> @@ -0,0 +1,128 @@
 > +/* SPDX-License-Identifier: GPL-2.0 */
 > +/*
-> + *  Generic cache management functions. Everything is arch-specific,  
-> + *  but this header exists to make sure the defines/functions can be
-> + *  used in a generic way.
+> + * Userspace implementation of per_cpu_ptr for adapted kernel code.
 > + *
-> + *  2000-11-13  Arjan van de Ven   <arjan@fenrus.demon.nl>
+> + * Userspace code does not have and does not need a per-cpu concept, but
+> + * instead can declare variables as thread-local.  However, the kernel per-cpu
+> + * further provides 1) the guarantee of static lifetime when thread exits, and
+> + * 2) the ability to access other CPU's per-cpu data.  This file provides a
+> + * simple implementation of such functionality, but with slightly different
+> + * APIs and without linker script changes.
 > + *
+> + * 2025  Yuzhuo Jing <yuzhuo@google.com>
 > + */
+> +#ifndef __PERCPU_SIMULATE_H__
+> +#define __PERCPU_SIMULATE_H__
 > +
-> +#ifndef _LINUX_PREFETCH_H
-> +#define _LINUX_PREFETCH_H
+> +#include <assert.h>
+> +
+> +#include <linux/compiler.h>
+> +#include <linux/types.h>
 > +
 > +/*
-> +	prefetch(x) attempts to pre-emptively get the memory pointed to
-> +	by address "x" into the CPU L1 cache. 
-> +	prefetch(x) should not cause any kind of exception, prefetch(0) is
-> +	specifically ok.
+> + * The maximum supported number of CPUs.  Per-cpu variables are defined as a
+> + * PERCPU_MAX length array, indexed by a thread-local cpu id.
+> + */
+> +#define PERCPU_MAX 4096
 > +
-> +	prefetch() should be defined by the architecture, if not, the 
-> +	#define below provides a no-op define.	
-> +	
-> +	There are 2 prefetch() macros:
-> +	
-> +	prefetch(x)  	- prefetches the cacheline at "x" for read
-> +	prefetchw(x)	- prefetches the cacheline at "x" for write
-> +	
-> +	there is also PREFETCH_STRIDE which is the architecure-preferred 
-> +	"lookahead" size for prefetching streamed operations.
-> +	
-> +*/
-> +
-> +#ifndef ARCH_HAS_PREFETCH
-> +#define prefetch(x) __builtin_prefetch(x)
+> +#ifdef ASSERT_PERCPU
+> +#define __check_cpu_id(cpu)						\
+> +({									\
+> +	u32 cpuid = (cpu);						\
+> +	assert(cpuid < PERCPU_MAX);					\
+> +	cpuid;								\
+> +})
+> +#else
+> +#define __check_cpu_id(cpu)	(cpu)
 > +#endif
+> +
+> +/*
+> + * Use weak symbol: only define __thread_per_cpu_id variable if any perf tool
+> + * includes this header file.
+> + */
+> +_Thread_local u32 __thread_per_cpu_id __weak;
 
-Do we have ARCH_HAS_PREFETCH somewhere?
+Is there any overhead (or some indirection) when using the thread local
+variable?
+
+> +
+> +static inline u32 get_this_cpu_id(void)
+> +{
+> +	return __thread_per_cpu_id;
+> +}
+> +
+> +/*
+> + * The user code must call this function inside of each thread that uses
+> + * per-cpu data structures.  The user code can choose an id of their choice,
+> + * but must ensure each thread uses a different id.
+> + *
+> + * Safety: asserts CPU id smaller than PERCPU_MAX if ASSERT_PERCPU is defined.
+> + */
+> +static inline void set_this_cpu_id(u32 id)
+> +{
+> +	__thread_per_cpu_id = __check_cpu_id(id);
+> +}
+> +
+> +/*
+> + * Declare a per-cpu data structure.  This only declares the data type and
+> + * array length. Different per-cpu data are differentiated by a key (identifer).
+> + *
+> + * Different from the kernel version, this API must be called before the actual
+> + * definition (i.e. DEFINE_PER_CPU_ALIGNED).
+> + *
+> + * Note that this implementation does not support prepending static qualifier,
+> + * or appending assignment expressions.
+> + */
+> +#define DECLARE_PER_CPU_ALIGNED(key, type, data) \
+> +	extern struct __percpu_type_##key { \
+> +		type data; \
+> +	} __percpu_data_##key[PERCPU_MAX]
+> +
+> +/*
+> + * Define the per-cpu data storage for a given key.  This uses a previously
+> + * defined data type in DECLARE_PER_CPU_ALIGNED.
+> + *
+> + * Different from the kernel version, this API only accepts a key name.
+> + */
+> +#define DEFINE_PER_CPU_ALIGNED(key) \
+> +	struct __percpu_type_##key __percpu_data_##key[PERCPU_MAX]
+
+How do these APIs guarantee the alignment?
 
 Thanks,
 Namhyung
 
 > +
-> +#ifndef ARCH_HAS_PREFETCHW
-> +#define prefetchw(x) __builtin_prefetch(x,1)
-> +#endif
+> +#define __raw_per_cpu_value(key, field, cpu) \
+> +	(__percpu_data_##key[cpu].field)
 > +
-> +#endif
+> +/*
+> + * Get a pointer of per-cpu data for a given key.
+> + *
+> + * Different from the kernel version, users of this API don't need to pass the
+> + * address of the base variable (through `&varname').
+> + *
+> + * Safety: asserts CPU id smaller than PERCPU_MAX if ASSERT_PERCPU is defined.
+> + */
+> +#define per_cpu_ptr(key, field, cpu) (&per_cpu_value(key, field, cpu))
+> +#define this_cpu_ptr(key, field) (&this_cpu_value(key, field))
+> +
+> +/*
+> + * Additional APIs for direct value access.  Effectively, `*per_cpu_ptr(...)'.
+> + *
+> + * Safety: asserts CPU id smaller than PERCPU_MAX if ASSERT_PERCPU is defined.
+> + */
+> +#define per_cpu_value(key, field, cpu) \
+> +	(__raw_per_cpu_value(key, field, __check_cpu_id(cpu)))
+> +#define this_cpu_value(key, field) \
+> +	(__raw_per_cpu_value(key, field, __thread_per_cpu_id))
+> +
+> +/*
+> + * Helper functions of simple per-cpu operations.
+> + *
+> + * The kernel version differentiates __this_cpu_* from this_cpu_* for
+> + * preemption/interrupt-safe contexts, but the userspace version defines them
+> + * as the same.
+> + */
+> +
+> +#define __this_cpu_add(key, field, val)	(this_cpu_value(key, field) += (val))
+> +#define __this_cpu_sub(key, field, val)	(this_cpu_value(key, field) -= (val))
+> +#define __this_cpu_inc(key, field)	(++this_cpu_value(key, field))
+> +#define __this_cpu_dec(key, field)	(--this_cpu_value(key, field))
+> +
+> +#define this_cpu_add	__this_cpu_add
+> +#define this_cpu_sub	__this_cpu_sub
+> +#define this_cpu_inc	__this_cpu_inc
+> +#define this_cpu_dec	__this_cpu_dec
+> +
+> +#endif /* __PERCPU_SIMULATE_H__ */
 > -- 
 > 2.50.1.487.gc89ff58d15-goog
 > 
