@@ -1,102 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFC31CEEB2;
-	Thu, 31 Jul 2025 09:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 517592BE7C7;
+	Thu, 31 Jul 2025 10:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753955916; cv=none; b=XxaQRWD4ejRF/5wFXrLFbk8BR+OJuVz8ld7FSR1BrveP0h/FLo8ivxhijuUMjfolsdVxvnQ/Z2ac5TNOjoyrSs21KOcCQTeaeKlOiAju9F/wCZ+b2bLq9DtWoRSUa5KKPT4CbC5KWo+aUApYNo622+I6sKIpXBZBvC/HLWdpTd8=
+	t=1753959462; cv=none; b=Xnb37jHN+hi68X96sBARpqksl9kW8dLTJScmukMYNYj+inCfE9oq+HqDMw6nUDsDUK39QhNh0wJvWG7RPRVfmSUXOn7CdcsxUUWLK3xP8om8RsNwZiGhqyd3UH3cthwlb6M1JHYBUSkxGHErFkQCa3Ldd0PnpIZvT76g0+ORDCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753955916; c=relaxed/simple;
-	bh=lmRS72UJUUKpO815Qg4RXtM84sy3hDuYsXqSE3qhZXE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UtflZfaju/TPpyq8pGF09zCieXIIXtKHTtnDsN5msRJo2kEEF0Xlmqb1M8X8ShXzbjak9b2cQD8EcvZ3Xj0vAu1JA0Ooj+g6Qdc/9bceWvGuZyswhb0dUWLTXhewfW7hs2iY1daR7/mqk2hNoRHYV2YibtwMmHW/mO7+Pc0Yulc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jed83p5c; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jed83p5c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 731C9C4CEEF;
-	Thu, 31 Jul 2025 09:58:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753955916;
-	bh=lmRS72UJUUKpO815Qg4RXtM84sy3hDuYsXqSE3qhZXE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=jed83p5cs9gCcaDy+JX4yh5RaGw7PXLXgD19Tn5tPdbvEbf2tCp3WlJkzVuvCB5RV
-	 /I+IHiblEPyK6tPfvn1C3rDT7ot3hlGd7uOrk8LaxoBcCYWZ1l657XxzcoQVMYCbga
-	 eQYXvmQzJy+vabFkqES/55Cfkav1fwsXNumhrT1vryDCmoyt5BlkoQqEhm0dNxnAaD
-	 k+EoLQBQQsB/il1/aDXIidq5QVSFYQUCtIIAKTJf98IAlT8sqDMndnIm9IFBQe9VCD
-	 EjwiQkM5SYLUiwlbKN54dCWPRtNMGMN/V8xBHc/na692DK8fxCvyZTbYsa35S3+Vvd
-	 rKCmadXXVbU4g==
-From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-To: mingo@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
+	s=arc-20240116; t=1753959462; c=relaxed/simple;
+	bh=XmRDefPS7256cXgbN7EdkkG/1Z2+f8NW1zw/oLbcdhc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iQPVTNFTxkg1eOcSVV3dhGFa4GrTGncQ4iwdYP1P+T8JiWDKJyj6xMmUrgJz/Gsdvhpa0+r+B4wXxFVRzVL1kbmP7vTpws0npI033ssoFZJRMXSOiPWiiNQPYQeRl3wKtOZ8l9fAnFt4NKmD6fKwHZnvnKFxH2nXVbHc4DxXGm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8FA71D13;
+	Thu, 31 Jul 2025 03:57:31 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 508213F66E;
+	Thu, 31 Jul 2025 03:57:39 -0700 (PDT)
+Date: Thu, 31 Jul 2025 11:57:37 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: kernel test robot <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	x86@kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf/x86/intel/uncore: remove dead check
-Date: Thu, 31 Jul 2025 11:58:30 +0200
-Message-ID: <20250731095830.2466139-1-jirislaby@kernel.org>
-X-Mailer: git-send-email 2.50.1
+	KP Singh <kpsingh@kernel.org>,
+	Matt Bobrowski <mattbobrowski@google.com>,
+	Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	James Clark <james.clark@linaro.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v3 5/6] perf record: Support AUX pause and resume
+ with BPF
+Message-ID: <20250731105737.GG143191@e132581.arm.com>
+References: <202507310818.a05d2380-lkp@intel.com>
+ <20250731091148.GF143191@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250731091148.GF143191@e132581.arm.com>
 
-pmu cannot be NULL as is taken as a pointer to an array. Remove the
-superfluous NULL check.
+Hi,
 
-Found by Coverity: CID#1497507.
+On Thu, Jul 31, 2025 at 10:11:48AM +0100, Leo Yan wrote:
+> Hi,
+> 
+> On Thu, Jul 31, 2025 at 03:26:01PM +0800, kernel test robot wrote:
+> 
+> [...]
+> 
+> > 2025-07-30 19:06:25 sudo /usr/src/linux-perf-x86_64-rhel-9.4-bpf-e350af63969b875598f0656a20d801bbcaa7bd76/tools/perf/perf test 64 -v
+> >  64: Convert perf time to TSC                                        :
+> >  64.1: TSC support                                                   : Running (2 active)
+> >  64.1: TSC support                                                   : Ok
+> > --- start ---
+> > test child forked, pid 7359
+> > Using CPUID GenuineIntel-6-9E-D
+> > evlist__open() failed
+> > ---- end(-1) ----
+> >  64.2: Perf time to TSC                                              : FAILED!
+> 
+> I roughly read the job.yaml file, seems it does not install clang.
+> Thus, the building will not enalbe the option BUILD_BPF_SKEL=1.
+> 
+> As a result, auxtrace__update_bpf_map() will return a failure. I will
+> fix this issue in next spin.
+> 
+> Thanks for test and reporting.
 
-Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
----
-Cc: x86@kernel.org
-Cc: linux-perf-users@vger.kernel.org
----
- arch/x86/events/intel/uncore.c | 2 --
- 1 file changed, 2 deletions(-)
+I played a bit and found that if with the option "BUILD_BPF_SKEL := 0",
+I even failed to build perf (I will fix in new version).
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index a762f7f5b161..9c08d86ea53a 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -1325,8 +1325,6 @@ static void uncore_pci_sub_driver_init(void)
- 				continue;
- 
- 			pmu = &type->pmus[UNCORE_PCI_DEV_IDX(ids->driver_data)];
--			if (!pmu)
--				continue;
- 
- 			if (uncore_pci_get_dev_die_info(pci_sub_dev, &die))
- 				continue;
--- 
-2.50.1
+I think you should have built perf with enabled BUILD_BPF_SKEL. However,
+in this case, I cannot reproduce the test failure, both on my x86_64 and
+Arm64 machines. I reviewed the code and have no clue this patch will
+cause the failure.
 
+Is it possible to run the test at your side with the option "perf test
+64 -vvv" for debugging info?  Or if it is possible related to the
+setting kernel.perf_event_paranoid?
+
+Thanks,
+Leo
