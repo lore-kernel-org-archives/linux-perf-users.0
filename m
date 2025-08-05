@@ -1,64 +1,64 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F6F22264D6
-	for <linux-perf-users@vger.kernel.org>; Tue,  5 Aug 2025 19:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25DAA23A58B
+	for <linux-perf-users@vger.kernel.org>; Tue,  5 Aug 2025 19:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754422806; cv=none; b=dJMsglOBEy3S/A5IE+xJp9Ye1dod9kl06X8zKO7+nO6wjNdLzTjvst39j+JAq+dwAQ7Em+/aRc7dLmybokUOPpKLOJrVlFV34tG8jC17gcv3aD68QRDW8xI8rpL+Fqpq3XzE9ufsC+0JYHexrGgJsQ26wYhtHbB388xAlqwx+6Q=
+	t=1754422807; cv=none; b=J3PMAwZnOYknp7CVVaFQdAgfMZpVRdKBf8zK70PJBXEjTztjkPLkss9ITklbPHrpwvAJn0t0rePX/B5OvXf9nOxBpKA9XvvqdN9NZFdP4WlHcPSt82F2TyzFdNErf3BTE8HvvO6KUtm97LQhQ5a9sl1rqgE/ghcIsZsTjVoYpD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754422806; c=relaxed/simple;
-	bh=3yynwp5xkX2tlPXadX9UGBNDDBTvMVZycNKpFPtm3RY=;
+	s=arc-20240116; t=1754422807; c=relaxed/simple;
+	bh=Mw1HF+WYqrZH50B60QETN97Z6Qf9c2O3cgvwGI4nSFg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ayo3udFcjEFOdwktVyNAM234adWB8dTiauu8xkPGoR7P7lgF0VKc8YL1jQUSspJTj8zupIB1OfiDEVCxLjUdhMZ3I8hefybLoOInQAERM3SkZ93ATZrqsrjX0f5HPpFWSWyW6cZdnun6xSyK7YY50dfci1Qkie1tM2eimqq8Z4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc.com header.i=@rivosinc.com header.b=Lz6no2bh; arc=none smtp.client-ip=209.85.222.175
+	 MIME-Version; b=hPKcqja5eZhNypHJbNM/K//f6o/mQbnJgZ0/3t+OyIlOCx/A9IETrUFSbvzmCsyrO0bxa7PwT72cZO/g+v+1xgrzaCUh+Pd/J5/ceTZTmxiuqo96uiSQPPU5wqSjVLc4QTMDYtpCC24twnYE3GQ3ffBdsZ1sCMtU6iyutPzhxRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc.com header.i=@rivosinc.com header.b=WcrIQikb; arc=none smtp.client-ip=209.85.222.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc.com header.i=@rivosinc.com header.b="Lz6no2bh"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7e344e0212eso30055485a.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 05 Aug 2025 12:40:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc.com header.i=@rivosinc.com header.b="WcrIQikb"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7e7f940a386so171993085a.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 05 Aug 2025 12:40:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc.com; s=google; t=1754422803; x=1755027603; darn=vger.kernel.org;
+        d=rivosinc.com; s=google; t=1754422805; x=1755027605; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MBx+S5U+eiCq8pUooPV2kB8TZrzcZaWUvNy/30cjCv8=;
-        b=Lz6no2bhsa1jJH8jZxqPZzw3Dy+jEShkPkGbr2xpO7yZmfg/EmJmBTdU4AKMwF4SZ2
-         Jp1aH6/3uCD+GK5l2mnVRV+X2Mf2Ttn+dFLEIz3zQwfrZZhN8D0P+YmQQNFIIHaq04TF
-         NjPS4cYh7xexa/uVR3g/EruKQLPo4FYuFg+UYyQrJHmbZ8OU7+ecTynfKoXfNjZgFTFX
-         ifV+JOYl830td9WF3lnPdhjZBYJ7o/4IgAOZmetAhaNmcaOIrnssYivNasrwoj6ZE6ve
-         fd7+2DDwDjdtWsQSgAYwsvtWk5CzUO3tIkGbyE3f4lLsPKU1ts7PkJF3VcRypCtllwM4
-         DYAA==
+        bh=CMI5Xwq0SqGXnmGRw5QTZMv+U2y6SNaFWej8c2zdngA=;
+        b=WcrIQikb0VFMCoabuN1q9WZT2QVr9aFu9ytV5kdo8aLXFxoGSoJjFuEyYWaR9xt3NB
+         ATrDEOAqwAaPCdLac/salE7Fmq73mMHJbpjHOaOL07Es7c9cVWGiWm+WZRvmbf7elDzF
+         BA8E7SOpTN58Qnpph6STZtRFPR64WNZxS/GsU8nuGdUuWDEm4HD1pbYlI+TjbwRY265F
+         CHO1yCnCbD2Eb/baWc/w2RTX5bElFPucouOGBDlyyFilTH14BdYJHZagOFWpmeX3QhOU
+         nEBkxH+SdVdvPEMxBXfiodL5gB8fR4voQmEzr92H6FjisvLdpvZ44cDSvfjztiP15wR9
+         /fxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754422803; x=1755027603;
+        d=1e100.net; s=20230601; t=1754422805; x=1755027605;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MBx+S5U+eiCq8pUooPV2kB8TZrzcZaWUvNy/30cjCv8=;
-        b=FFSdMAtakkaC4ksIw51y6SqiYGIF4Z928oFBbqoGfBUOZejNpjInZamH073G+zwb0S
-         IARQg1B063gNPEWCIGLoG847kdxjpUb/hDS5AhklY93vQJz+k1xFzVMyADpkbAl3WKVK
-         LFAwzRh56mh2bjRwx156SpClTSuQJVr1zsFk+aIwev7jN9FZcnlf2D1PGiltuEJCl9OE
-         B16mkmCrClagS7OIXj3cpm+nlpB+ki/HCYrmCSUuLsGgaGLeDaRTOq/D+SEhqu6XPtPW
-         E9XSCrZynEAv0q2JFWlnTm5e+w7a4mA18T/ttQ/3r2QTyF7lEFaSXt8AGJ/H9gXhWJYQ
-         B6yw==
-X-Forwarded-Encrypted: i=1; AJvYcCXEP0WGF42bTczzYpCkkZeRJXuCrF0vdH9JnPsXsO4RwFsCVZtaKS2d4tpeR7g40jMq0HMvK3srAfoI2JTmlWEf@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFxFACL053adnkVxDmrhPPj8/WWpN7Zj9GyvEkWtQ6hRtiDmtq
-	p1dX7GecO6ZG4JYI6EyAMHP6zSRSzji0PXlfDd98q16w5jZH9IOmaCWxbBv5lNC75sA=
-X-Gm-Gg: ASbGncvgEPsfH3ImIjBRG3vtH2GjrjyHp82rvP+sOgOnjcqDeTUUA0bAiKpGubTIDSH
-	i+YZrujQGIru6fTI8WB/Dm9gabrXw6UE4GCrRnEGDDNRubOwiSa/FRTizDpEmEnlGdt0J7/QSuU
-	HfqH7UcPBwdZczXDGuubnOygmarO3OP/xyI5Ynn7k8g2+v6INOcJbYKUCRR71gCcJ1zPeeNfvw6
-	eNTBVNIrnvbh0zWem/HHrfcjSnr4EE+lXexr1G+XXVuTh8dlAWFkmtJAlfizA6qpulOcJZVJDbe
-	nCQ9xcMnFD7ATejnrgfanWuXeg9Z3jY0zyysgxil5l7rcTL15gMB9gPJws2JytTF++F2Ds50Lju
-	YbZ+K6YUDzctACOUv2x1RfBSjJZJWn577RjY9RXfHOn7mDdQoe74jcZPW2bO49Hu9oXKoEE/k34
-	r6dNraMQ==
-X-Google-Smtp-Source: AGHT+IGX7OQglHEEPOq98awptA6J/9DSpmeeKDOZlvbBLWPX9HQBX2UPCjNuTmMSORoLz+090C2k2w==
-X-Received: by 2002:a05:620a:424c:b0:7e6:99d7:3340 with SMTP id af79cd13be357-7e8156bcaacmr32337785a.12.1754422802272;
-        Tue, 05 Aug 2025 12:40:02 -0700 (PDT)
+        bh=CMI5Xwq0SqGXnmGRw5QTZMv+U2y6SNaFWej8c2zdngA=;
+        b=VqMPRqhoRazIlHoJHJEL5FDxnKDMo+gITrHr7gSTwE+ZPk91xD+8+J6JOEYV0HZmsV
+         xKfKUXZmJ590C3JcXJ3pvSjYwFeQlwderGoh2h2WUSrtpozc21QCHm9SENiokLTJBfMX
+         +3iwmHxtRGp9T0x4K52mo5wkKLe54GvIH1IsCp3G3QN8PUUzOf7ao0qA2Pf9+lr4bdee
+         vpHm4wAQ+EIj0jOEd3E6S/G08IXkk61vYrIzUrjGCFx662FKGv7AV+anRCiuOANSiU+E
+         Dc3YppZjJqdYM8d8kNNCws8qKlme44FK8AGDZ/znZ6PVPcx21VnCyZVXzw7VIvTOAV8z
+         hmeA==
+X-Forwarded-Encrypted: i=1; AJvYcCWcDvO07p6uCwbXID8hhc4X6iEEVxMxYbNsJAGuWu1tJlyIyJcTL+Vc7lg9ToQQN6uBmoq7YgoI2DMPuoZlv4lt@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/zyw7+WQAyd0Iz/gKAzxb9EznWfahF3satl/JKXlGBLKlJufC
+	yS8/nbfk7KhlOavgyf5u6JLqLepGMdiVZoKissAXgAVAJH5xd+sNArqMb4aIAKsAUM0=
+X-Gm-Gg: ASbGncszItKBLghx5+Ki7EJ+73xA6BuI2BrD1LI/V5BqXGJkBTsyjTnL4jRFUi7Lm8n
+	x2Uq0MV+jMa9mfS4hddznz6TgPOeD5pP53Y1R7OGfzIQRCskPLnDRVCkCdgi3nmB/Ky9IVucnnX
+	H0+yJiZkUGCijve0hBObfFzUmlyfjdOCkgy/BD3dGgGc6iKTK0kaGe3n6pwUapOR2HtRD1U/SEi
+	EZul/GDI10jqKPn0VawRdd6aBuFiRWQizrd86ZKttvTLRwgzDk6gfwd8wOOxYsNDlLpTb+CJ1Hl
+	QbO8gCSIhS18AM5gvZXqc06JIv4vN/ztAQ2WdXl/2HXDWwxOJXBwn1S8h6eqCkOCYIEn4y8nzZu
+	QlJBxUUvlAs7qzpQjZAXIy4rXfRoMjicZCKN15sXPe3hObg6ZT8Salpbof1mqm40ilOce6J+/6r
+	s/ngjb2Q==
+X-Google-Smtp-Source: AGHT+IGslZriZ3OsEZBWmVfkk5oCBsMISvqP0jsnyJuJf09cg7efSarv3MBZUu5//ACqxd//7g3UxQ==
+X-Received: by 2002:a05:620a:430a:b0:7e8:2e5:feb3 with SMTP id af79cd13be357-7e814cf9504mr90508985a.1.1754422804849;
+        Tue, 05 Aug 2025 12:40:04 -0700 (PDT)
 Received: from jesse-lt.jtp-bos.lab (pool-108-26-215-125.bstnma.fios.verizon.net. [108.26.215.125])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e67f7064b0sm717855685a.54.2025.08.05.12.40.00
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e67f7064b0sm717855685a.54.2025.08.05.12.40.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Aug 2025 12:40:02 -0700 (PDT)
+        Tue, 05 Aug 2025 12:40:04 -0700 (PDT)
 From: Jesse Taube <jesse@rivosinc.com>
 To: linux-riscv@lists.infradead.org
 Cc: Paul Walmsley <paul.walmsley@sifive.com>,
@@ -113,9 +113,9 @@ Cc: Paul Walmsley <paul.walmsley@sifive.com>,
 	linux-mm@kvack.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH 2/8] riscv: Add SBI debug trigger extension and function ids
-Date: Tue,  5 Aug 2025 12:39:49 -0700
-Message-ID: <20250805193955.798277-3-jesse@rivosinc.com>
+Subject: [PATCH 3/8] riscv: insn: Add get_insn_nofault
+Date: Tue,  5 Aug 2025 12:39:50 -0700
+Message-ID: <20250805193955.798277-4-jesse@rivosinc.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250805193955.798277-1-jesse@rivosinc.com>
 References: <20250805193955.798277-1-jesse@rivosinc.com>
@@ -127,72 +127,65 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Himanshu Chauhan <hchauhan@ventanamicro.com>
+get_insn_nofault uses get_insn with pagefaults dissabled, allowing it to
+be called in an atomic context.
 
-Debug trigger extension is a proposed SBI extension to support
-native debugging in S-mode and VS-mode.
-
-The proposal for the extension can be found at:
-https://lists.riscv.org/g/sig-hypervisors/message/361
-
-This patch adds the extension and the function IDs defined
-by the extension.
-
-Signed-off-by: Himanshu Chauhan <hchauhan@ventanamicro.com>
+Signed-off-by: Jesse Taube <jesse@rivosinc.com>
 ---
+Unsure if copy_from_kernel_nofault is an acceptable replacement for
+direct dereference in __read_insn.
+
 RFC -> V1:
- - No change
+ - Add new function instead of using copy_from_user_nofault
 ---
- arch/riscv/include/asm/sbi.h | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ arch/riscv/include/asm/insn.h |  1 +
+ arch/riscv/kernel/insn.c      | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+)
 
-diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-index 3d250824178b..be2ca8e8a49e 100644
---- a/arch/riscv/include/asm/sbi.h
-+++ b/arch/riscv/include/asm/sbi.h
-@@ -35,6 +35,7 @@ enum sbi_ext_id {
- 	SBI_EXT_DBCN = 0x4442434E,
- 	SBI_EXT_STA = 0x535441,
- 	SBI_EXT_NACL = 0x4E41434C,
-+	SBI_EXT_DBTR = 0x44425452,
+diff --git a/arch/riscv/include/asm/insn.h b/arch/riscv/include/asm/insn.h
+index ba74e5b8262c..f87e0a48f786 100644
+--- a/arch/riscv/include/asm/insn.h
++++ b/arch/riscv/include/asm/insn.h
+@@ -553,6 +553,7 @@ static inline void riscv_insn_insert_utype_itype_imm(u32 *utype_insn, u32 *itype
+ #include <asm/ptrace.h>
  
- 	/* Experimentals extensions must lie within this range */
- 	SBI_EXT_EXPERIMENTAL_START = 0x08000000,
-@@ -402,6 +403,34 @@ enum sbi_ext_nacl_feature {
- #define SBI_NACL_SHMEM_SRET_X(__i)		((__riscv_xlen / 8) * (__i))
- #define SBI_NACL_SHMEM_SRET_X_LAST		31
+ int get_insn(struct pt_regs *regs, ulong epc, ulong *r_insn);
++int get_insn_nofault(struct pt_regs *regs, ulong epc, ulong *r_insn);
+ unsigned long get_step_address(struct pt_regs *regs, u32 code);
  
-+/* SBI debug triggers function IDs */
-+enum sbi_ext_dbtr_fid {
-+	SBI_EXT_DBTR_NUM_TRIGGERS = 0,
-+	SBI_EXT_DBTR_SETUP_SHMEM,
-+	SBI_EXT_DBTR_TRIG_READ,
-+	SBI_EXT_DBTR_TRIG_INSTALL,
-+	SBI_EXT_DBTR_TRIG_UPDATE,
-+	SBI_EXT_DBTR_TRIG_UNINSTALL,
-+	SBI_EXT_DBTR_TRIG_ENABLE,
-+	SBI_EXT_DBTR_TRIG_DISABLE,
-+};
+ #endif /* _ASM_RISCV_INSN_H */
+diff --git a/arch/riscv/kernel/insn.c b/arch/riscv/kernel/insn.c
+index dd2a6ef9fd25..c8f77c0093c9 100644
+--- a/arch/riscv/kernel/insn.c
++++ b/arch/riscv/kernel/insn.c
+@@ -2,6 +2,9 @@
+ /*
+  * Copyright 2025 Rivos, Inc
+  */
 +
-+struct sbi_dbtr_data_msg {
-+	unsigned long tstate;
-+	unsigned long tdata1;
-+	unsigned long tdata2;
-+	unsigned long tdata3;
-+};
++#include <linux/uaccess.h>
 +
-+struct sbi_dbtr_id_msg {
-+	unsigned long idx;
-+};
+ #include <asm/insn.h>
+ #include <asm/ptrace.h>
+ #include <asm/uaccess.h>
+@@ -74,6 +77,17 @@ int get_insn(struct pt_regs *regs, ulong epc, ulong *r_insn)
+ 	}
+ }
+ 
++int get_insn_nofault(struct pt_regs *regs, ulong epc, ulong *r_insn)
++{
++	int ret;
 +
-+union sbi_dbtr_shmem_entry {
-+	struct sbi_dbtr_data_msg data;
-+	struct sbi_dbtr_id_msg id;
-+};
++	pagefault_disable();
++	ret = get_insn(regs, epc, r_insn);
++	pagefault_enable();
 +
- /* SBI spec version fields */
- #define SBI_SPEC_VERSION_DEFAULT	0x1
- #define SBI_SPEC_VERSION_MAJOR_SHIFT	24
++	return ret;
++}
++
+ /* Calculate the new address for after a step */
+ unsigned long get_step_address(struct pt_regs *regs, u32 code)
+ {
 -- 
 2.43.0
 
