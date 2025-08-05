@@ -1,129 +1,145 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE09518E02A;
-	Tue,  5 Aug 2025 14:15:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B541D7E42;
+	Tue,  5 Aug 2025 16:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754403302; cv=none; b=i2GxmbLn5iKGcfMgq3IW3KNJ9Jmfar1sVXl4sHHySy6kbl+kpnFhZCfagN4GCZ21Y0pud/R7jPri0BQ9hiPGF4Eebm/AemqNEGJmP17k4ZadtRgfbWFeaG3vlEcIPELGSR7/lT+vnGU1Xv3eRu9SJpxg13Gob+dOfyphhNmaorM=
+	t=1754412374; cv=none; b=XcrXR5k/IsrySJkkYY+XdIvfLhzH/YQ/7RgfMEJWPG8PWCDBLspveWqVRfCKFBVIEihnRB3q2DVCWgmccRmU3ksgSsjNUd5ej7YR4fu12/Tb8t9YMflm1I+474+z1fbqQqpqlhGsFMlfXvnFdrDs+M5kFdw2O/6DIyhoj7Pm3B0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754403302; c=relaxed/simple;
-	bh=ZIV4PrIkQ/sqAVYnUdz9sNeokuVLIqJgwZtBTJ+6u2E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LPdTr9yZuA8KMEMgQUEYvFqyDhAApOg+PnyMMO4kX/9chJ8jkHb4rQKCt6dYsvLAwcmHknByQjJWGF2YBnEbGJ92EGaG7n6u7mGakb6GPkrfwrgzU0ifZvyaN5nECxDWRtvhQ1FXwNJBxMwBqkqAcoKskghWEQnfWW8F8lpIaV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tLEmOiHv; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1754412374; c=relaxed/simple;
+	bh=fNTTGuH5T5VaIxBP9KBV3HekRT0QG76qVsdrpa372uY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Sv88yu6f6gfHJw83gZSHqAkbU+Ws/39VxE5v2yPhOku/Z/wBlm6U6yRFvKlukTal8Jc6ipisimDJOMHjGpVs8d6jNJqGjw6HUzl4s3+NrIgzu8D1Lnq78UZ5r3nMLUTfjSWrwpbyfhZJV+B8gHV5MERuRBqiqiWWG0dGJ208zhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T2tYgUSG; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tLEmOiHv"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5757GWND028299;
-	Tue, 5 Aug 2025 14:14:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=ZIV4PrIkQ/sqAVYnUdz9sNeokuVLIq
-	JgwZtBTJ+6u2E=; b=tLEmOiHvPsVskpYSCnHSt+TXQ5WXurGiqV0e6dSbwyyuNb
-	amNR10vkZhXy3murs6ef4za/v61NYuM9OhfBrGoApMD1Tr4PcCzYAQIQPqHcCKzG
-	AO3jvHPDW7n9/8uTEGRzi2efKgFtzJF0Q86YJAwj7kp4rAy/tesIVgSRkE1oIGGV
-	+8nVGKM+7oZ3M7TUKppnxOo5ZsUDunwMLv7xIBRDCCD8Ze2kU2mfV0GwbTs5YasM
-	vInAYBeSX98YHkgnXTtwa2eLifwemdm8I/sLM1OO3VQL2U6ZWr1ObApcZmtPJh39
-	vn94HRGVTpvDq011QgKWpmGKZy+imA2cXH34ZogQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 489ab3pvuy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Aug 2025 14:14:46 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 575Dsw25019312;
-	Tue, 5 Aug 2025 14:14:45 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 489ab3pvuv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Aug 2025 14:14:45 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 575CqKKB009807;
-	Tue, 5 Aug 2025 14:14:44 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 489w0tjvyu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Aug 2025 14:14:44 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 575EEevv62849528
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 5 Aug 2025 14:14:41 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E1C072004B;
-	Tue,  5 Aug 2025 14:14:40 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8BE3220043;
-	Tue,  5 Aug 2025 14:14:40 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  5 Aug 2025 14:14:40 +0000 (GMT)
-Date: Tue, 5 Aug 2025 16:14:39 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Ilya Leoshkevich <iii@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>, Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH v3 2/2] perf bpf-filter: Enable events manually
-Message-ID: <4a7fc5ab-682d-4fac-a547-9e4b1263dba7-agordeev@linux.ibm.com>
-References: <20250805130346.1225535-1-iii@linux.ibm.com>
- <20250805130346.1225535-3-iii@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T2tYgUSG"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3b78bca0890so3562223f8f.3;
+        Tue, 05 Aug 2025 09:46:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754412371; x=1755017171; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8nBulG5qCHAkDb7LW5g6YF7Sb3IVW8hX0sdSxf4gY50=;
+        b=T2tYgUSGqCmFndAAa+X5fdZU9KpWw/gt/HwTcsF2MxHv7svn1Kjr7Kh6LVDwU9Cj9H
+         WyMyu6ndhiPVsiR0y7/YKcydgi0YaY60bDtw9FiIfKDYVH6AO2+c96eRF44KejZ4jbvf
+         yZ9RjIWqsPwD3H9Sk+KHTl9X/O9d4OJbljOdi0dG7ucVtEqbgxYGNe0ekL5YirR0S+if
+         A7EIc698zb0/aDxXGnISX6R4SLTJYicz2q8CFJIaUR3ELtLOHYyXSbkC5ptw7vUssPPD
+         xkof+68NwC7CNRjX7TTQZuoQHQHaVvVx+IBc14xzjWaSXTi9r9gsp1Tap3XiV0ko3zls
+         QOjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754412371; x=1755017171;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8nBulG5qCHAkDb7LW5g6YF7Sb3IVW8hX0sdSxf4gY50=;
+        b=HjUagCK4FaLxnlciGbgBJFeypPy44jIXQgytG+5WRgJDd3x4iJ7awHjgINx5IcsHSs
+         SwiwLk9+Pi9oa3PZCmMTazpW/FiLIy8M6OFgEa7NvG5ohOSRT6SDOPyjQeIpYL5C69OZ
+         QWk0X7+HXHxraKvohpw4Z2YY0nwQpSVAenIpKwsjfsA5oWLYlmC3DwfTnvO3Yq1+trZh
+         J1BNlVptR9M7Y4bdg+7CpXZh92W/VVqQzpkWH1ApxFmwMY8cpxIZfjOXpa3XubP2HFnS
+         e0InhqjjPGRi2eKdaZOsmMPfWVLK9ObD6cs7UOCbl6EP2Mze97Mkea5twvjc5sUGAvFn
+         pbbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2ni2OrRAFV34Z5jj0kYi2Op7Rk6O8IWMSqYKy6lwEdrszrxGSZdaaKhAvwEouhUKfvNRpB4WeupYDlbpK5ktWSw==@vger.kernel.org, AJvYcCV8Q9/vlYjI6W2TAD2tbAzmpn6JWZQ/xRiSfh9zb3VpfWuT0nR/UenEWm2rGxSpSgBVG/R3QZwH2KOZEw==@vger.kernel.org, AJvYcCV8mksTbN7yaEPIAFFWpxg2VumoKoBygThDa81Dkrm+Bafr5KqJNTpJCqocf2tiw5s61HZw9shAWUO+XtY+@vger.kernel.org, AJvYcCXCIVndV0baT6Ec0fqRVVMHGCEjjDfxDCtbKqJSSsBPeUchOzxUQ8VpqKX859oeGQxyMdY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxK3Heb0a+cjoVeZCRsLtZ+zbD+/M+9Ek0jZHFWarrpQA5tj/5b
+	CjcTh9RjUHxHRhZWcIcjlJGOMbiRHwz5nPKkZD8gVx9JAKRb4g4Ggfe+wA8aEiqrNJ2gBbhgfDZ
+	tiEKuj0eO+kiuFzGARnpj8n3iwokRHHU=
+X-Gm-Gg: ASbGncsVoFJkfUB0ChSNKZ3dkybABKYuS+P9j+tD4gZbRA2FwXheN5sRnreojBgU2gS
+	6Xsavy+zg2seuBkVl7oZ3JfuGtZs/Vd6nI3GyXY/rb1m9tZ40RhxLRcACuRufRWyu3fJwf49vYv
+	5eAdaOkaK1aauPKAbP1a0xnGGH01lFRH0Cp+fE3+JsgxOWr7L28C+XQ4Ca1KdyD9N6O1GtvxbtB
+	TEKwqBD1kZY6vxWxGd7v/s=
+X-Google-Smtp-Source: AGHT+IEHBZHpSZZ9fMnfoWTdmXCT4Gyd63CyUYE+7sMFEg8BShowdEVzs5HiMqqQuB9t8VpRz40xmohsAkK+PKb2WSs=
+X-Received: by 2002:a05:6000:24c1:b0:3b7:879c:c15c with SMTP id
+ ffacd0b85a97d-3b8d94c3a7cmr10647934f8f.47.1754412370844; Tue, 05 Aug 2025
+ 09:46:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250805130346.1225535-3-iii@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Z+jsHGRA c=1 sm=1 tr=0 ts=689211d6 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=kj9zAlcOel0A:10 a=2OwXVqhp2XgA:10 a=Olw93o9rWRkIKX_a7AgA:9
- a=CjuIK1q_8ugA:10
-X-Proofpoint-ORIG-GUID: uFtZZxHY_PzmP0bHgZtI1Fs1Wakfnw5Q
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA1MDEwMSBTYWx0ZWRfXwVRPg8prV1VK
- +6h1Xctu0hmzhFeel1c1SAb9gclq87zJo7YZBxggPijx+4tvv3fJyZDXboYCr9vnbM6zOVPIycD
- ouyyrKP5MJV8SvdJWrOWU0kklr+vAbaRumbiQiYbPryTqjbYOSRkgTtBNCWe2J4+U+B08mi3XJC
- wv9H+6rpiXqL+PQ9iYAO9Ax4jZAjOuE3ITtVE0swdnrz8BdJNSgtD+mOwVrr949XyBTrh5EWb2a
- JTSuXzNkkOufn/SBTAgiV/TsmBo5U1Hse1xPiB6jSsTnhBFkBoNAt1OHD8b7zugO2xOsfdSHet+
- qMpfprp8AlAUQi50ThpLfejOwrr0UA9qzG1t4M8gORL64kjMcpj8AoZMSFsDgf7AHT7EdGwmaid
- 46UJPz6c80DZWfdSQIa/Btb/4U0wygXEVPfH+QoDDzXBtHPvuYmjY844L1zJnydSi2Owu6/J
-X-Proofpoint-GUID: XncbsDdZayruZ7cNXMiyG4QoYoFpIUXY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-05_03,2025-08-04_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 spamscore=0 malwarescore=0 clxscore=1011 suspectscore=0
- priorityscore=1501 mlxlogscore=673 adultscore=0 phishscore=0 mlxscore=0
- bulkscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2508050101
+References: <20250805130346.1225535-1-iii@linux.ibm.com> <20250805130346.1225535-2-iii@linux.ibm.com>
+In-Reply-To: <20250805130346.1225535-2-iii@linux.ibm.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 5 Aug 2025 09:45:57 -0700
+X-Gm-Features: Ac12FXwRkwxxqRdNGVey4ba_nroVfaek1lncQ_KQ5v8My-UNlDYiA8oKB8OykdQ
+Message-ID: <CAADnVQ+6WuHrrAg1bQ+-6p1zZAWQVC_EGtt9ocv5aZE9=CxB5g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] libbpf: Add the ability to suppress perf event enablement
+To: Ilya Leoshkevich <iii@linux.ibm.com>, Eduard <eddyz87@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-s390 <linux-s390@vger.kernel.org>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 05, 2025 at 02:54:05PM +0200, Ilya Leoshkevich wrote:
+On Tue, Aug 5, 2025 at 6:04=E2=80=AFAM Ilya Leoshkevich <iii@linux.ibm.com>=
+ wrote:
+>
+> Automatically enabling a perf event after attaching a BPF prog to it is
+> not always desirable.
+>
+> Add a new no_ioctl_enable field to struct bpf_perf_event_opts. While
+> introducing ioctl_enable instead would be nicer in that it would avoid
+> a double negation in the implementation, it would make
+> DECLARE_LIBBPF_OPTS() less efficient.
+>
+> Suggested-by: Jiri Olsa <jolsa@kernel.org>
+> Co-developed-by: Thomas Richter <tmricht@linux.ibm.com>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+> ---
+>  tools/lib/bpf/libbpf.c | 13 ++++++++-----
+>  tools/lib/bpf/libbpf.h |  4 +++-
+>  2 files changed, 11 insertions(+), 6 deletions(-)
+>
+> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> index fb4d92c5c339..414c566c4650 100644
+> --- a/tools/lib/bpf/libbpf.c
+> +++ b/tools/lib/bpf/libbpf.c
+> @@ -10965,11 +10965,14 @@ struct bpf_link *bpf_program__attach_perf_event=
+_opts(const struct bpf_program *p
+>                 }
+>                 link->link.fd =3D pfd;
+>         }
+> -       if (ioctl(pfd, PERF_EVENT_IOC_ENABLE, 0) < 0) {
+> -               err =3D -errno;
+> -               pr_warn("prog '%s': failed to enable perf_event FD %d: %s=
+\n",
+> -                       prog->name, pfd, errstr(err));
+> -               goto err_out;
+> +
+> +       if (!OPTS_GET(opts, no_ioctl_enable, false)) {
+> +               if (ioctl(pfd, PERF_EVENT_IOC_ENABLE, 0) < 0) {
+> +                       err =3D -errno;
+> +                       pr_warn("prog '%s': failed to enable perf_event F=
+D %d: %s\n",
+> +                               prog->name, pfd, errstr(err));
+> +                       goto err_out;
+> +               }
+>         }
+>
+>         return &link->link;
+> diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
+> index d1cf813a057b..2d3cc436cdbf 100644
+> --- a/tools/lib/bpf/libbpf.h
+> +++ b/tools/lib/bpf/libbpf.h
+> @@ -499,9 +499,11 @@ struct bpf_perf_event_opts {
+>         __u64 bpf_cookie;
+>         /* don't use BPF link when attach BPF program */
+>         bool force_ioctl_attach;
+> +       /* don't automatically enable the event */
+> +       bool no_ioctl_enable;
 
-Hi Thomas,
+The patch logic looks fine, but I feel the knob name is too
+implementation oriented.
+imo "dont_auto_enable" is more descriptive and easier
+to reason about.
 
-The below comments date to the initial version, so the question is
-rather to you:
-
-> On linux-next
-
-This line is extra.
-
-> commit b4c658d4d63d61 ("perf target: Remove uid from target")
-> introduces a regression on s390. In fact the regression exists
-> on all platforms when the event supports auxiliary data gathering.
-
-So which commit it actually fixes: the above, the below or the both?
-
-> Fixes: 63f2f5ee856ba ("libbpf: add ability to attach/detach BPF program to perf event")
-
-Thanks!
+Let's wait for Eduard/Andrii reviews. This patch has to go
+via bpf trees first while the latter via perf.
