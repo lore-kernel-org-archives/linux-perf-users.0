@@ -1,262 +1,181 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11012063.outbound.protection.outlook.com [52.101.126.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 397C0341AA;
-	Tue,  5 Aug 2025 01:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754356267; cv=none; b=DwZwSv1k17U+r4HckCr0qGydw5ojMi//gRLYfTrs2KNZ25m88DKaOnmA69GfgsqLJG8geOC/765azpRSwnGMiM2NLDbWhW1wCOygj6jBUEeyz1u1HlOu9fNr6hyhL6BszH5rV/7oFFlmVpphpEaEACmtk9cOCKmYpXrU8OHgHz4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754356267; c=relaxed/simple;
-	bh=Q8eclBKC+Y5eKp2t/3rQb4iW+MQqhitRPf4lX/akBSE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XVc0Rzno/S71HIKkSWcSafKZEH+8gbagJIjYIwMOEMEv/bp44RSn9/iH45gVGoYnntVusPn8dgH16YPb2XlNltmvaiIgyErFcyRNozPAEvr1R5LdjY+6jUVxvVCpFjNogvw2lI3KHHLrzuW9Q/EWgubafVr3SAAw7bboY0NdvGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UxdbScLe; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112BD1F948;
+	Tue,  5 Aug 2025 02:50:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754362217; cv=fail; b=jCkYYimVfxOyUHnJi9jY3bCY4EQ3klDLiaVSVopmRFv0sBakmLm1nNpF148Q4fhlCyWL+aYULqJqUDsSCMDALzhUgVqZM967cbXsTnhq4pHkjr4YJesfamOKtvGUnG45+iZaHmtRvqUi6MME6OFQzDKyN80hn/UE3GdNASPh7Es=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754362217; c=relaxed/simple;
+	bh=by0vm03SNAg/TWt6wP1aP8zkA620MSYbzCLb1aESZBI=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=ehUZ6oOjFEgglgl9ymqG2tGM8PM8wRiP97ll1ZPm3dgIRHPjHRYnuYjbfE8BUoFgT6tUA7unjneizXrEwEA1mfyVyAKdfVH0d56So+L5y2qMCw2w68OXyAFHv4aSj9msA0mTUGOls4tv99yXmIHwXIbMI1keIji1BknL2a/yfSU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=q2LSSGHi; arc=fail smtp.client-ip=52.101.126.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UxdbScLe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754356266; x=1785892266;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Q8eclBKC+Y5eKp2t/3rQb4iW+MQqhitRPf4lX/akBSE=;
-  b=UxdbScLe4X4QXZsLrRVc0C7hDvgZeSHrvLZdy3Pu4+eM/E50Eukk92nT
-   oWMG0cxd3j/8hmc5NzZVgMk+AXro6q/mkFBYvq2xpsgXUNA3BPKusWTMJ
-   HxbIdVXR+Dt7NB8hdAnhouEhOp+FPL55tt5b5zR5H3xj/8NcJj/jpy4FZ
-   ZlUHafgvhC9Jr5VR8qPYD0uX80+5eMFEcza2PTZwvhlxSw+8R+ObQeRtM
-   lR4GTwe3wn+i3RBBJRqoKj2a4btEOUkuqrEBNNsl1frrdpGZvbXuchACT
-   jRuGB44XxbwPlhrJgvZd+2TkaRyM289LtZqY3adGt+oIcZhWy8b009ASc
-   w==;
-X-CSE-ConnectionGUID: qOPZQxMTSEihSFbH3hZjZA==
-X-CSE-MsgGUID: zV1XW3H+S8qndMA8cgaZZw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11512"; a="59250418"
-X-IronPort-AV: E=Sophos;i="6.17,265,1747724400"; 
-   d="scan'208";a="59250418"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 18:11:04 -0700
-X-CSE-ConnectionGUID: SpfHO0eYS9+bQZzYDC++Ug==
-X-CSE-MsgGUID: cu90An5dQB2cmFV2Oadwaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,265,1747724400"; 
-   d="scan'208";a="164305510"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.106]) ([10.124.240.106])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 18:11:00 -0700
-Message-ID: <f3db96ed-a06a-4eff-ae56-3c04566408bb@linux.intel.com>
-Date: Tue, 5 Aug 2025 09:10:57 +0800
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="q2LSSGHi"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fe5fbD5w09DGbJQlJI0q21k4ZMlfUIPA9SzE8llYl6vxu0UCVqmw4iA/ORvtP1qKDJA9Sq+pxp7SaIahaOgkpBs9PTdgDW5rIbeBE3XbedU1hbAbiesnHDVVUxdlnt4JiRKsLSERyaJ8H0eExmYZ3808p2zs7zZWtbmY3eiv7bDZl5Tr99ZB1pMTSmKnf8+WRXlVJXE8KdMBZZbgar2NC5ag0AgOJkbwk6qS4E/ndfoYIsNpmovqzcTRf8DwO577naMwVttwIcXq70s/Hv3gs33sIwlaiI/fU5qLmEremxociQFaVjppWhCQEreA4OR8WvbMzEoOZ5fkOwiyt0YXrg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cyODzpwGrlNlzAicTrUmSvO2+dCaMH9e4iFCa4JnlO4=;
+ b=f0d/oqqJ5qGLeIayEhwF85DusTkbunHeeDJAuzpqwK4fAOOzxP5sZYuKnIlRBX1kf9XZJBkTmZjOzl4XDGGXGqL5Mm5SSCaDYezT9dQ4w2jq9yhdmWGAe/rxBaGTSlO090PEnKhXigwOlriqNrW8CuWko7HgzuuESJ0IKD2kukbP72TXHCcRpucItd3pfjIb7Jz/DlbdNPubYat1dvbjShYUZml6I87DnTbvpVVzyA2eE898JS660pff3QOcx9fwkVTXBy/7vj7bABJkGOJwpuxEDj7xyzA3trWxh7YJhiLO/02O2U8orPATnF2APJlXJgYvvNGmQnPEXRF5QdrZzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cyODzpwGrlNlzAicTrUmSvO2+dCaMH9e4iFCa4JnlO4=;
+ b=q2LSSGHi0bcdpFgrrtTZKAd3njxvb6hUXbW0B0eYlOtxlLYcdhvrKMvmJmDHeE16CdBIlzB2vBn8MB9BJIKx/vDcB471yiMdkSZFCcR3H7HKmOpF4u9pmTTiwiVBDbhCadJMi6lSJpdgFrrvDyHh33q9SQX5blvn0PC6e6pjZTGxARSyggJux5NJkYuszXq2fLS1HQMgGjNfSD6xEZFqNZNrzpbwT5Q1dIWuJt3FUogUFtdOHWIuqZ8Yl/lmfUMZa6xSRDG7MhXhxalw6/LCBf2jUgKxEQn8q77PDR8yk2sxGnjWfLGt8fzdfBMAOhmHVQ9LyBQ5gghWIp35egQ2yQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SI2PR06MB5140.apcprd06.prod.outlook.com (2603:1096:4:1af::9) by
+ TY1PPF94D6C05EF.apcprd06.prod.outlook.com (2603:1096:408::91e) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8989.11; Tue, 5 Aug 2025 02:50:11 +0000
+Received: from SI2PR06MB5140.apcprd06.prod.outlook.com
+ ([fe80::468a:88be:bec:666]) by SI2PR06MB5140.apcprd06.prod.outlook.com
+ ([fe80::468a:88be:bec:666%4]) with mapi id 15.20.8989.018; Tue, 5 Aug 2025
+ 02:50:11 +0000
+From: Qianfeng Rong <rongqianfeng@vivo.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: willy@infradead.org,
+	Qianfeng Rong <rongqianfeng@vivo.com>
+Subject: [PATCH] uprobes: Remove redundant __GFP_NOWARN
+Date: Tue,  5 Aug 2025 10:50:00 +0800
+Message-Id: <20250805025000.346647-1-rongqianfeng@vivo.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYWPR01CA0047.jpnprd01.prod.outlook.com
+ (2603:1096:400:17f::12) To SI2PR06MB5140.apcprd06.prod.outlook.com
+ (2603:1096:4:1af::9)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 04/11] KVM: x86: Add emulation support for Extented LVT
- registers
-To: Manali Shukla <manali.shukla@amd.com>, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: seanjc@google.com, pbonzini@redhat.com, nikunj@amd.com, bp@alien8.de,
- peterz@infradead.org, mingo@redhat.com, mizhang@google.com,
- thomas.lendacky@amd.com, ravi.bangoria@amd.com, Sandipan.Das@amd.com
-References: <20250627162550.14197-1-manali.shukla@amd.com>
- <20250627162550.14197-5-manali.shukla@amd.com>
- <3b37d820-12cd-4f33-b059-66e12693b779@linux.intel.com>
- <afafc865-b42f-4a9d-82d7-a72de16bb47b@amd.com>
- <71d741d1-9250-4a64-b695-16f8bdc338e7@linux.intel.com>
- <e0af8ca8-c7ad-4ef9-a8eb-554593e07139@amd.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <e0af8ca8-c7ad-4ef9-a8eb-554593e07139@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SI2PR06MB5140:EE_|TY1PPF94D6C05EF:EE_
+X-MS-Office365-Filtering-Correlation-Id: c7bd8cc8-5ef9-42cc-766a-08ddd3cacbb4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|52116014|366016|1800799024|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?TG47vbZXQvdGnkxjLWVP+UM0tts2+yo6qEbCgrvNbkvaxpGNclV+6BUjSvjM?=
+ =?us-ascii?Q?uqdWgN3CINQXKPGnnDqWrtxveB9tvRxGmwbTpQraz3FD/AdbeSS+G1aJJCj/?=
+ =?us-ascii?Q?XnbZTVBywGTzr20EyA6ONFeh8Dd5jJBAkb0Xde4trgM+iP7AZ7BFmo5p1sfY?=
+ =?us-ascii?Q?j1VGljiVvq62kLpzkPhXSWJQ4/XpSaNUz2+qZlIVKuTYrjiIo0BxJLllnm9j?=
+ =?us-ascii?Q?GXVlNzExB7LqCH7HTvUoN2+rE4Yfzkewb6axHjCUZXh8x0tP1oQdQkUuklAc?=
+ =?us-ascii?Q?74us4Ma+HGBAdKewfDP3Y5YSxVeu0wAWlBEX8rzNNyUIgcok4l7AeWyZjMdK?=
+ =?us-ascii?Q?ggkmhMdL9AUg6KkEo2rV/OLONqVTDKAUrsSzTuSNiwYobjKynYBeRwgWqvsD?=
+ =?us-ascii?Q?eekfLI94MkaV7bPPFTJ+1q7HZ9+idS8X6IHv3fiiqjdgWNcKzpNSP8mnAz73?=
+ =?us-ascii?Q?oaYV7VWU4tObv7udd3SVT8EMjKFq0NVJ35T2gtORo26oCQJpypGCqRoXs3LD?=
+ =?us-ascii?Q?YJRY0I/gkHWD/SUyd+Ulhr2clD+83eliW13DfcS06igsn7ypRYvXPz1YVHVa?=
+ =?us-ascii?Q?FcTglFaSSgXlRrTkaaoOxCZvO4JbJ4y80gx9Of5XyDWjhlw6CxMBmxKCYAIr?=
+ =?us-ascii?Q?sb4ZwpBhMFDEmnZkuOObcPtmlAjlwhCdc8bkqVmfj571IL2/8y86kExpMxEF?=
+ =?us-ascii?Q?436VnKta0kT67fvBKFbUDJMgfZvOWWr2gJWLVRQMaR9RHKW8uupJ0+ZHVtCT?=
+ =?us-ascii?Q?iF5yyr6AXQJmqxBLFXH428o/V9oFbrkFmvIrFQAQFyqNtMvFIh+/HlUOq1SS?=
+ =?us-ascii?Q?VeqcK61j5BymAszbyb4jOzhdvcfNmiZJ+8EMjVaUgzHCdOyzolzl/HUsUcjx?=
+ =?us-ascii?Q?qeF6yJittte9elHJxGK0U7JRictFeGj7ZYFpMK+Nk/bOMbzh/zDRPeBtzBMe?=
+ =?us-ascii?Q?hDwwxXJ3PdsZ++MUHFf/Aso4swXs1zlmfUGJb7pjDRWA0/FwYMTVIr7zB+kW?=
+ =?us-ascii?Q?xqZvdSKP/rZuVrMgMU3O16sDngPQafeuErFuvc03zicqJ3tq7PDxc0lMzMq/?=
+ =?us-ascii?Q?KbRYNcpMpHvoGRyS9C366I2rUx9pVmvWFXyPnK3XRIjFsSCsfgZnYnjMU5pe?=
+ =?us-ascii?Q?tCrUZ1wgfcGwIKoBCTDbnwqdwEevrbWeYebfFFGFzxp6sCgHZsEyCZItSvht?=
+ =?us-ascii?Q?igXTajFKG6TbVvd6DxsKzIIMX2hA4cvxXpazUB8770QXh1u3O8PO/tV8DMkJ?=
+ =?us-ascii?Q?HFrQk2jDVl+3i4vrKS7j50Ftp4ofHhxl1p77V+AzulGtnI/AfLvdP2PovuR6?=
+ =?us-ascii?Q?njBYy2lpBJEpiuPv7WcjfSWj5iaEMcRtVnyTVrXhQGlxW60zfSJBm5VcjLC7?=
+ =?us-ascii?Q?SiY8ivshUBjN4A9J32CIS5K5Tm3F9IAHCj+vfqnzZ/h9lUXrwKK7dNNkO+zZ?=
+ =?us-ascii?Q?VfPYtJtk9QBU03q7MD4h8AxcWN4wUugespwPvmWKUMzCK/9Q/VhEAyxyMOC7?=
+ =?us-ascii?Q?N8cA23qS7zikQ1Q=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SI2PR06MB5140.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(366016)(1800799024)(921020)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?TqhI5c/Q0B/FKH8DWxojne6ksc6hkEFnViKHziTf9+fmYpveBs1iyEg4Nfm0?=
+ =?us-ascii?Q?qsyM9QsJKA1syL+nD0Mq4Y6NSwn8/MM8h6FU2/Wmwtlj2Fynq8mHvvKROjuy?=
+ =?us-ascii?Q?B9HgxOL3XFPaP0xEzxzrHLzEHyFn6RtOGRsJ7T3jr6lr78eQXKmJR6HR4j37?=
+ =?us-ascii?Q?AEWz4MCbjbuZJ4bJ3iG+3pNAkC7Dtio5vieqIlUMr5QCq+jDPF2H1HWTASfR?=
+ =?us-ascii?Q?93I+ATD7oXG3JAAun4m9KMQ50ZWj+Ryeud867p5WVMcRBs+TlgK4oclYVIku?=
+ =?us-ascii?Q?fg11B4SoHKTD3Akjg6Go96dXO7go/J/MFOHnbGBHlMO5kXsHXPCuy9ibUf6B?=
+ =?us-ascii?Q?FEuGyfLv22pVRvHB1nkFqKlcyGu1CMQVKHs1rL1Yzl+CdBZ6o17StEk/Jv5u?=
+ =?us-ascii?Q?a7g/oboTLQ/hYckvIgZ2MzjTu0KI4p2Kt6yrI2Y4spEE/Ils61w5psOVcXEp?=
+ =?us-ascii?Q?zNLGpHd80IhumiHN7cpiz+qhFPOqEB8iKDUyPbuUnDQhHXSWLErkWx29Zetl?=
+ =?us-ascii?Q?iY8oH8hmM4ekcrJBv62LIq3fVjaPsZvZ7hdfB2Qe4jAWI2swzF8XtKHS/SPZ?=
+ =?us-ascii?Q?DBRoZfuIY16BNgM3YpsHPNceJpQmow69RFgs0S/XRzIimfzqhkgeMYr3MT6E?=
+ =?us-ascii?Q?Z+QO0JH1I1Q+Tu4FOSYdAnS/nQhVV/leiUHgOI1zJ1CMStra3kNfJFYwRYq3?=
+ =?us-ascii?Q?2vUZSfxI0V5sJM2+IdFqhULH8UPU1acPg1Aa0VRd0trNn8epseEssIceJsmj?=
+ =?us-ascii?Q?h7OyYOk121KB3VRUlPHPfmP561nVazSJWJqkVArWRT7PQbTewToStBz/mA5U?=
+ =?us-ascii?Q?USSYcnnBZF4L2Xhv/2GGQjKC8tyN7PLqya8ad/6bCZWr1lntqvLr8Ocf+838?=
+ =?us-ascii?Q?be6ac4/ikH3OE1VqdQn2nVYtrK4uMAaOWWfqeSeC76xoOotHsG2FrgGwt8a8?=
+ =?us-ascii?Q?EfCqC7ru5ddBQ9gpnuQAnmR4g0EIa/vMw9nxSg8HSdEkqZUVF18CUGL/bASa?=
+ =?us-ascii?Q?QapDbNfeC0nyO4x0xdMS/vX7h8KFArxsCkfoQKQ8CcZbB6JvyEO94LaPRzR2?=
+ =?us-ascii?Q?odZ5hydU353ZRGikzW0G/sOvH2oLvqtzDGJI1Oa6dtrCbAE4CVtktH77Ca9Q?=
+ =?us-ascii?Q?FSDHgS27k73KXFS/aBD7pcMNosv+0U+xVfN1wJgL+ZR57QGQTsSi39ydXchg?=
+ =?us-ascii?Q?MzShgLKcyF1g6RPy/nSfnH0ZmNGqgNkuULqCWDblfyT+/fcXLwt0c+s4Ty4R?=
+ =?us-ascii?Q?qbkNEsBFQwf6lpghIFKXKnSEyWLzlYpE+ZQo7qYHDtke7vVvV2yuXYR82hhi?=
+ =?us-ascii?Q?SsjAQvqP3nbnfFf4iDqAxTVxL48OtGYRDxAu8eVvYKbx7IX9io2E2NCZM8Oj?=
+ =?us-ascii?Q?q+slIEM46KM8f5nGjQ1Q4cnLmazfmDJVo4ZUEGSr4Op7PZz4DU+HhC+scryg?=
+ =?us-ascii?Q?plBH7L7eAJifipGOW30nK7hq6sIroWVrwbFmfAAuOqxjcFuoG96ySrV5VomC?=
+ =?us-ascii?Q?5RTmK19m47gSycf9Eoj09qUu3N1xxX9o9zsRd+SYg3hYMAZjQn7AL0pztVc7?=
+ =?us-ascii?Q?68azW9lnOzKY3qR/Tshgx0SBsZqIWq6GsmsdlL5W?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c7bd8cc8-5ef9-42cc-766a-08ddd3cacbb4
+X-MS-Exchange-CrossTenant-AuthSource: SI2PR06MB5140.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Aug 2025 02:50:11.3502
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: n/iXvSkvk3Sp0EnYotvhJm2vnLDiT1q6sIrjp67TNGZmvhnsROTLU924zTXnX8yXNCZ9iM5SlSSMMZzVGKxEOQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PPF94D6C05EF
 
+Commit 16f5dfbc851b ("gfp: include __GFP_NOWARN in GFP_NOWAIT")
+made GFP_NOWAIT implicitly include __GFP_NOWARN.
 
-On 8/1/2025 5:33 PM, Manali Shukla wrote:
-> On 7/17/2025 7:32 AM, Mi, Dapeng wrote:
->> On 7/16/2025 6:10 PM, Manali Shukla wrote:
->>> Hi Dapeng Mi,
->>>
->>> Thanks for reviewing my patches.
->>>
->>> On 7/15/2025 8:28 AM, Mi, Dapeng wrote:
->>>> On 6/28/2025 12:25 AM, Manali Shukla wrote:
->>>>> From: Santosh Shukla <santosh.shukla@amd.com>
->>>>>
->>>>> The local interrupts are extended to include more LVT registers in
->>>>> order to allow additional interrupt sources, like Instruction Based
->>>>> Sampling (IBS) and many more.
->>>>>
->>>>> Currently there are four additional LVT registers defined and they are
->>>>> located at APIC offsets 400h-530h.
->>>>>
->>>>> AMD IBS driver is designed to use EXTLVT (Extended interrupt local
->>>>> vector table) by default for driver initialization.
->>>>>
->>>>> Extended LVT registers are required to be emulated to initialize the
->>>>> guest IBS driver successfully.
->>>>>
->>>>> Please refer to Section 16.4.5 in AMD Programmer's Manual Volume 2 at
->>>>> https://bugzilla.kernel.org/attachment.cgi?id=306250 for more details
->>>>> on Extended LVT.
->>>>>
->>>>> Signed-off-by: Santosh Shukla <santosh.shukla@amd.com>
->>>>> Co-developed-by: Manali Shukla <manali.shukla@amd.com>
->>>>> Signed-off-by: Manali Shukla <manali.shukla@amd.com>
->>>>> ---
->>>>>  arch/x86/include/asm/apicdef.h | 17 +++++++++
->>>>>  arch/x86/kvm/cpuid.c           |  6 +++
->>>>>  arch/x86/kvm/lapic.c           | 69 +++++++++++++++++++++++++++++++++-
->>>>>  arch/x86/kvm/lapic.h           |  1 +
->>>>>  arch/x86/kvm/svm/avic.c        |  4 ++
->>>>>  arch/x86/kvm/svm/svm.c         |  4 ++
->>>>>  6 files changed, 99 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/arch/x86/include/asm/apicdef.h b/arch/x86/include/asm/apicdef.h
->>>>> index 094106b6a538..4c0f580578aa 100644
->>>>> --- a/arch/x86/include/asm/apicdef.h
->>>>> +++ b/arch/x86/include/asm/apicdef.h
->>>>> @@ -146,6 +146,23 @@
->>>>>  #define		APIC_EILVT_MSG_EXT	0x7
->>>>>  #define		APIC_EILVT_MASKED	(1 << 16)
->>>>>  
->>>>> +/*
->>>>> + * Initialize extended APIC registers to the default value when guest
->>>>> + * is started and EXTAPIC feature is enabled on the guest.
->>>>> + *
->>>>> + * APIC_EFEAT is a read only Extended APIC feature register, whose
->>>>> + * default value is 0x00040007. However, bits 0, 1, and 2 represent
->>>>> + * features that are not currently emulated by KVM. Therefore, these
->>>>> + * bits must be cleared during initialization. As a result, the
->>>>> + * default value used for APIC_EFEAT in KVM is 0x00040000.
->>>>> + *
->>>>> + * APIC_ECTRL is a read-write Extended APIC control register, whose
->>>>> + * default value is 0x0.
->>>>> + */
->>>>> +
->>>>> +#define		APIC_EFEAT_DEFAULT	0x00040000
->>>>> +#define		APIC_ECTRL_DEFAULT	0x0
->>>>> +
->>>>>  #define APIC_BASE (fix_to_virt(FIX_APIC_BASE))
->>>>>  #define APIC_BASE_MSR		0x800
->>>>>  #define APIC_X2APIC_ID_MSR	0x802
->>>>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
->>>>> index eb7be340138b..7270d22fbf31 100644
->>>>> --- a/arch/x86/kvm/cpuid.c
->>>>> +++ b/arch/x86/kvm/cpuid.c
->>>>> @@ -458,6 +458,12 @@ void kvm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
->>>>>  	/* Invoke the vendor callback only after the above state is updated. */
->>>>>  	kvm_x86_call(vcpu_after_set_cpuid)(vcpu);
->>>>>  
->>>>> +	/*
->>>>> +	 * Initialize extended LVT registers at guest startup to support delivery
->>>>> +	 * of interrupts via the extended APIC space (offsets 0x400–0x530).
->>>>> +	 */
->>>>> +	kvm_apic_init_eilvt_regs(vcpu);
->>>>> +
->>>>>  	/*
->>>>>  	 * Except for the MMU, which needs to do its thing any vendor specific
->>>>>  	 * adjustments to the reserved GPA bits.
->>>>> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
->>>>> index 00ca2b0faa45..cffe44eb3f2b 100644
->>>>> --- a/arch/x86/kvm/lapic.c
->>>>> +++ b/arch/x86/kvm/lapic.c
->>>>> @@ -1624,9 +1624,13 @@ static inline struct kvm_lapic *to_lapic(struct kvm_io_device *dev)
->>>>>  }
->>>>>  
->>>>>  #define APIC_REG_MASK(reg)	(1ull << ((reg) >> 4))
->>>>> +#define APIC_REG_EXT_MASK(reg)	(1ull << (((reg) >> 4) - 0x40))
->>>> It seems there is no difference on the MASK definition between
->>>> APIC_REG_MASK() and APIC_REG_EXT_MASK(). Why not directly use the original
->>>> APIC_REG_MASK()?
->>>>
->>> The Extended LVT registers range from 0x400 to 0x530. When using
->>> APIC_REG_MASK(reg) with reg = 0x400 (as an example), the operation
->>> results in a right shift of 64(0x40) bits, causing an overflow. This was
->>> the actual reason of creating a new macro for extended APIC register space.
->> I see. Just ignored that the bit could extend 64 bits.
->>
->>
->>>> BTW, If we indeed need to define this new macro, could we define the macro
->>>> like blow?
->>>>
->>>> #define APIC_REG_EXT_MASK(reg)	(1ull << (((reg) - 0x400) >> 4))
->>>>
->>>> It's more easily to understand. 
->>>>
->>> I can define the macro in this way.
->>>
->>>>>  #define APIC_REGS_MASK(first, count) \
->>>>>  	(APIC_REG_MASK(first) * ((1ull << (count)) - 1))
->>>>>  
->>>>> +#define APIC_LAST_REG_OFFSET		0x3f0
->>>>> +#define APIC_EXT_LAST_REG_OFFSET	0x530
->>>>> +
->>>>>  u64 kvm_lapic_readable_reg_mask(struct kvm_lapic *apic)
->>>>>  {
->>>>>  	/* Leave bits '0' for reserved and write-only registers. */
->>>>> @@ -1668,6 +1672,8 @@ EXPORT_SYMBOL_GPL(kvm_lapic_readable_reg_mask);
->>>>>  static int kvm_lapic_reg_read(struct kvm_lapic *apic, u32 offset, int len,
->>>>>  			      void *data)
->>>>>  {
->>>>> +	u64 valid_reg_ext_mask = 0;
->>>>> +	unsigned int last_reg = APIC_LAST_REG_OFFSET;
->>>>>  	unsigned char alignment = offset & 0xf;
->>>>>  	u32 result;
->>>>>  
->>>>> @@ -1677,13 +1683,44 @@ static int kvm_lapic_reg_read(struct kvm_lapic *apic, u32 offset, int len,
->>>>>  	 */
->>>>>  	WARN_ON_ONCE(apic_x2apic_mode(apic) && offset == APIC_ICR);
->>>>>  
->>>>> +	/*
->>>>> +	 * The local interrupts are extended to include LVT registers to allow
->>>>> +	 * additional interrupt sources when the EXTAPIC feature bit is enabled.
->>>>> +	 * The Extended Interrupt LVT registers are located at APIC offsets 400-530h.
->>>>> +	 */
->>>>> +	if (guest_cpu_cap_has(apic->vcpu, X86_FEATURE_EXTAPIC)) {
->>>>> +		valid_reg_ext_mask =
->>>>> +			APIC_REG_EXT_MASK(APIC_EFEAT) |
->>>>> +			APIC_REG_EXT_MASK(APIC_ECTRL) |
->>>>> +			APIC_REG_EXT_MASK(APIC_EILVTn(0)) |
->>>>> +			APIC_REG_EXT_MASK(APIC_EILVTn(1)) |
->>>>> +			APIC_REG_EXT_MASK(APIC_EILVTn(2)) |
->>>>> +			APIC_REG_EXT_MASK(APIC_EILVTn(3));
->>>>> +		last_reg = APIC_EXT_LAST_REG_OFFSET;
->>>>> +	}
->>>> Why not move this code piece into kvm_lapic_readable_reg_mask() and
->>>> directly use APIC_REG_MASK() for these extended regs? Then we don't need to
->>>> modify the below code. 
->> I still think we should get a unified APIC reg mask even for the extended
->> APIC with kvm_lapic_readable_reg_mask() helper. We can extend current
->> kvm_lapic_readable_reg_mask() and let it return a 128 bits bitmap, maybe
->> like this,
->>
->> void kvm_lapic_readable_reg_mask(struct kvm_lapic *apic, u64 *mask)
->>
->> This makes code more easily maintain. 
->>
->>
-> Sorry for the delay.
->
-> The reason why I am wary of this approach is because
-> kvm_lapic_readable_reg_mask() is currently being used in
-> vmx_update_msr_bitmap_x2apic(), where we directly use its return value:
->
->     if (mode & MSR_BITMAP_MODE_X2APIC_APICV)
->         msr_bitmap[read_idx] =
-> ~kvm_lapic_readable_reg_mask(vcpu->arch.apic);
->     else
->         msr_bitmap[read_idx] = ~0ull;
->     msr_bitmap[write_idx] = ~0ull;
->
-> Where msr_bitmap is a u64 array.
->
-> Changing kvm_lapic_readable_reg_mask() to return a 128-bit mask would
-> require changes in vmx_update_msr_bitmap_x2apic() too.
+Therefore, explicit __GFP_NOWARN combined with GFP_NOWAIT
+(e.g., `GFP_NOWAIT | __GFP_NOWARN`) is now redundant. Let's clean
+up these redundant flags across subsystems.
 
-Yes, I know. IMO, it's worth to do it. 
+No functional changes.
 
+Signed-off-by: Qianfeng Rong <rongqianfeng@vivo.com>
+---
+ kernel/events/uprobes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->
-> - Manali
->
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 7ca1940607bd..5d12b9fdc917 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1210,7 +1210,7 @@ build_map_info(struct address_space *mapping, loff_t offset, bool is_register)
+ 			 * reclaim. This is optimistic, no harm done if it fails.
+ 			 */
+ 			prev = kmalloc(sizeof(struct map_info),
+-					GFP_NOWAIT | __GFP_NOMEMALLOC | __GFP_NOWARN);
++					GFP_NOWAIT | __GFP_NOMEMALLOC);
+ 			if (prev)
+ 				prev->next = NULL;
+ 		}
+-- 
+2.34.1
+
