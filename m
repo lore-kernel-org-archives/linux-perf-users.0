@@ -1,73 +1,73 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42EDF173;
-	Tue,  5 Aug 2025 22:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E0429B23F;
+	Tue,  5 Aug 2025 22:58:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754434684; cv=none; b=oOzH4JxPP9MgAQiyMf2swZYWJhT3Lgi5bTV/8EhmYffpOQ8RWwGoxLhB5sKDGaJ35ht2XptWDdj+YDTlCqsg1x3pGbOwSVhHPUSrwIPd/pY9XP0/zEVk4pLcumqXXNTFFqYMDHgJ94jzFC8bb07v475nZQ3bk29hhbdF6ak2fl4=
+	t=1754434694; cv=none; b=QL9HpfSu2UtH58pCSGHgDKOH8x2bebJJ9ZCyJXWzUnKrr11ERD3nIOV7u7bgrii4LnvC5ap1DmBAqUEaVP52IlF8z3/YFaR/ozm5iST0XJpDLDkOOjZBrmHY/e13SDPLoQ91WST8cXq8n/2rQh3lZJd/CvqVh7MakzfnOe8rfgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754434684; c=relaxed/simple;
-	bh=WdsnEcCFtlgxL/5iLPAEyDQ17lKNhewf1+1opIG6qmo=;
+	s=arc-20240116; t=1754434694; c=relaxed/simple;
+	bh=E4N4Ufuk1DIdYyoINIaGMG7JyQ9N0vJxC0DNXG8VBBI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gKVmmI+sY9AMYq7wTXjLELbwaPAvLbiAxhI5tZFe7BpOKn7tk/Ri/L5eMJ8T8eCBAgnCzW9ey/zo0vfdQw+ThBKMvVhlj45Zzma2H5Wys8ijMgW5Qs+aRzGJyqYuFl4xPJ+A6uWM8WIdPTwAthnVGA2+lDPu9OLGJUtFJXAsnrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=niSjNKge; arc=none smtp.client-ip=209.85.128.180
+	 To:Cc:Content-Type; b=IPvs6vAdUXMWyFo5mqh5taO7dKMotZTzOrNAFmNjBUrP//oea/bzyi4Xt31YU3C+uit4oAKJVFkku1bP8CkiDGwmG8tZcrOCRCFXGH3tOv63ztVDOg8j4I+tbpAUfvsHEQh55pRPstOiD31wCnNOl6MsCnk3OHBgE+NCnEWjiLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j0IK7JzE; arc=none smtp.client-ip=209.85.219.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="niSjNKge"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-71a4742d81aso46100457b3.2;
-        Tue, 05 Aug 2025 15:58:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j0IK7JzE"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e75668006b9so4934977276.3;
+        Tue, 05 Aug 2025 15:58:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754434682; x=1755039482; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1754434692; x=1755039492; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YW7FPgz1nGvqM+oNOjV2TNVUJqQjfQ7ik+2JJJtM64o=;
-        b=niSjNKgese0n0KHab9xiBaPbk8ZCyEx2U20Cx9TWXRekpaHyA26KilA8F6oZh0sOC9
-         v6Cm/OHhNJ2hQROVjQKGRHqYytjKHCOw/z6VY5CZOv0axN4zyJbXmBeK6al9U5AKCJ8J
-         JJgDxlAYYrECjJdnkDSpdRV9+2v2LyF5MEyVO7xZX8YHAL9UUYPMn1AHZaTeBZIITp84
-         ZoF6oVTas4nR8gUEyYuIIacCUCTU9Sz45plUrPNxHxtq0MBFNY86/wWn5JIITXWP5+Yi
-         0zMEZRJLwNfK5FhQCW+/wCd9b+JfJXm2j36F5NCGSma6KnIjSz0JNIlwXlUYQ0gbHYad
-         kcAQ==
+        bh=d+g8mVNaa2FoDRR5TSD6hZjwgQU4vlwZ93hFUn6W02s=;
+        b=j0IK7JzE3yVNk3IqcUkB+67L3Gau81hggnIOWPHu48+CYotmXHYAUyNLI2L0nh2m+l
+         xuNXKpaEr2YEYuv6wcn+4Q2b0gVpeMa6+R3TcCH/HfLDfyGffTK9piLw17NrMl9cRwpd
+         0Bxc2HCYVqvGcyEZaTc1ROmuyLEkqDtqrtPQt1MIDhy/3a8Vnhhbs+TQwlIzYUkK5GFy
+         UeHi40VdQgTcJ1cb4LKt4uyP42+g4svHbO+gAnje+DPwURnw2j4O46CKpG/78QxZfyxd
+         nCEIx7DODuzkwHcEuDoWHiDAB3FlgMBs9AcrT/xkjsgvTN0BLocEa2Vl9RPIHo9S4CAX
+         vdCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754434682; x=1755039482;
+        d=1e100.net; s=20230601; t=1754434692; x=1755039492;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YW7FPgz1nGvqM+oNOjV2TNVUJqQjfQ7ik+2JJJtM64o=;
-        b=w7Y7ZWkKxSy1kr3l6zdgYM85llFbWrqW1BftX+iidF8f4ykC6hNHSTIAQCs6qdaZTU
-         ZIcIOtigVIo72LQNe++2oI2Jh/Jo4Lp5yfFpXnZMoVf7sRqOSUnG0zVfNkED7owrqlJI
-         yvR1346u9qwAxKj2dnV7B6mO83j4JBvw5EfbWsZzRsLBe6zQTRDwRwA4oogcqUTo2/Aa
-         0V3DYxCrRXzOWU9acgrOJX2QFiBaCzhEtGTIywzzF+TdJKdyY1L6Izlpnadkx4/KMlOy
-         C6oOlh79juivxDsldH/A86NXgyVCB/yq02KQtblbzRRx+xarUvJDUmZT9DhUhWBE1JGE
-         tNVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW85yl/eDTaxcvolB8O/eTLHqBxxhXIfIj3swQBiIC9icEsi8UE2+AzcPmBIxaVRGlts3SosEyGRaJYHEs=@vger.kernel.org, AJvYcCWCPHflwpk6Cs3bnUlBJY3GYxvbh0IGiZ9zkrpz8KvpzKsaDHOySlGOInHVJzMlzZWkkrY8YkiVI1q+nXf46+gbFA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKMx8LDlWotnSQjiS+nbTyi54uC/Uc7JpiqHATooc+CR93TPjv
-	0zCvmTqEEDw7CXzN8x8Ux4aTmu588e7v7PDVPW89ubx9auU0oKeXsnhw8wG7i4YtKa10P280qXa
-	IxOe5socdR1CIhvUFnUIQGnwW6oEZe0M=
-X-Gm-Gg: ASbGncvZn4KlR//abKYTO+JT77zJKWajyM4vAvBylfSDCXgFPJE0q6lDn00ErdAd2bW
-	E8Ag3m2yfbgxJYbbC04uGx1JuM8zWWGh1yrgYraqBCOt17ZbHx+Ri2Z+1CJSQBrGyzBOr/OxxzC
-	dAAd1prJBQ/ctqUT46kmCJ5qcq6sPiegecw53Ed1GmVeR47r1YMzUMSEXvMHdrTIKtO2aZqadbg
-	4AOrM6eWYioYsWJ2NY=
-X-Google-Smtp-Source: AGHT+IHM+xh1QsyoxdXgiyKgk2jbiCFgBBnT2tLYN63igqT8GhKmIhWxeGHxhNgtP/hWv5xoWFMFmox0VEdNxXZJzDg=
-X-Received: by 2002:a05:690c:2701:b0:71a:51f:81a7 with SMTP id
- 00721157ae682-71bcc82c74amr3159567b3.26.1754434682274; Tue, 05 Aug 2025
- 15:58:02 -0700 (PDT)
+        bh=d+g8mVNaa2FoDRR5TSD6hZjwgQU4vlwZ93hFUn6W02s=;
+        b=L/04JcwoJw+hUFc4LsKJNUBhwIshr824qlyXgpX/1s2QQlaMUfimihvG8/ii1sA4j5
+         qnzsdrPUPct24lV+e00g9lGnGEjR71jynfja+r1O7autVqaoB/vQmyKkYzyAnNGDJJ/B
+         CGmqBIQ8JmZlfcv4q9XVqNmbeivnfquKgqGbr1xh5BK55KHr9kUPeoylyR6ZJgtHKE00
+         LG4e0xPQZyLmDa4ACWpfLpDfLAd2iySG3B9InsGWtdpLAtxxkwzrRbco1BoAW5/d2g4D
+         mHsq0c5qqKy2ZUhg+DTXqB5B9xJDyT8JegqA/ywxt3+zlLbRQXJSv+Rrkv25V+cEyvs9
+         6rWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVEuZTHV1wk42G31s2VffW/c3rzKCDaY399Bssa0Ngo38pmVGx+1LI7QmHUeRWECY8zi2lYnsVMRNexfIY=@vger.kernel.org, AJvYcCWRCjW7Fne/rPkG4BghiyHvwpt+d1Fpbkv7NUHKJ82XjCIv2vXIOKBKEziF5XOyufw0/xI/+vM9PGgDmuoV/Uea8g==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuGbl9AN67MktZfC2qAlglanzLt0oVUYHlL0+BwFNRUxJSYX4+
+	sVcJGDpWJTMFMOH2c2IKScCHEmeuqM1jKiQx6Pf+JfaqM1KEpcq2I3+687xzbFzu3RNt6baKGz1
+	jzBr5DnAbozPDD7lTFIblqrAJLpOKZhg=
+X-Gm-Gg: ASbGnctqC2R7/f93ez7DXgGdPJH8Hmia7DQ8y5Gogtdzcyho06kHiiBdMwsMDk1NFpq
+	mt0g1eNGnfFUO0HlqzBKl4yqjJYO2H0BUuoZj3Qa03Y0prnL+AhyriLw42fI+8+xtRo+ycsf8We
+	3TklkOLsTtlWA7R+nacMNLpgZBsktzfzEZFH3cJuXYwuCW4uJTULX8ssmFu7Ba85/UJhP0/PAEb
+	Q1HBUH8
+X-Google-Smtp-Source: AGHT+IEnshbv9S+bnG/n7yh+uM6sCkrBq6b6yVJDxZxpI8EdN48SF/yCU8aguToHY+XviQiLR5gEqYKauI9ZP+MIwFg=
+X-Received: by 2002:a05:690c:9692:b0:71a:22e1:b351 with SMTP id
+ 00721157ae682-71bcc7fdfb5mr3417547b3.24.1754434692066; Tue, 05 Aug 2025
+ 15:58:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250725185202.68671-1-irogers@google.com> <20250725185202.68671-5-irogers@google.com>
-In-Reply-To: <20250725185202.68671-5-irogers@google.com>
+References: <20250725185202.68671-1-irogers@google.com> <20250725185202.68671-11-irogers@google.com>
+In-Reply-To: <20250725185202.68671-11-irogers@google.com>
 From: Howard Chu <howardchu95@gmail.com>
-Date: Tue, 5 Aug 2025 15:57:51 -0700
-X-Gm-Features: Ac12FXwjhsT7kUibSskEewgvrknlXOMLvC9y39dd1apFH2jY0QK9Ru8nmw98ylg
-Message-ID: <CAH0uvohOy4GzV6Cezp1NKb57sD-H=ywFN51AaZg2BnVoczrJ-w@mail.gmail.com>
-Subject: Re: [PATCH v9 04/16] perf tp_pmu: Factor existing tracepoint logic to
- new file
+Date: Tue, 5 Aug 2025 15:58:01 -0700
+X-Gm-Features: Ac12FXzqO3egcG5PPOjSLcO5lg47ALbXMO-bE1XQlFWn0pImrBVibWS60O_GFbM
+Message-ID: <CAH0uvojcQ69hn1auu_9qbc8d-Atcc_o9mL4D=EaicZ+ix4S9iQ@mail.gmail.com>
+Subject: Re: [PATCH v9 10/16] perf python: Add function returning dictionary
+ of all events on a PMU
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -85,71 +85,125 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello Ian,
+Hello,
 
 On Fri, Jul 25, 2025 at 11:52=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
 ote:
 >
-> Start the creation of a tracepoint PMU abstraction. Tracepoint events
-> don't follow the regular sysfs perf conventions. Eventually the new
-> PMU abstraction will bridge the gap so tracepoint events look more
-> like regular perf ones.
+> Allow all events on a PMU to be gathered, similar to how perf list
+> gathers event information.
+>
+> An example usage:
+> ```
+> $ python
+> Python 3.12.9 (main, Feb  5 2025, 01:31:18) [GCC 14.2.0] on linux
+> >>> import perf
+> >>> for pmu in perf.pmus():
+> ...   print(pmu.events())
+> ...
+> [{'name': 'mem_load_retired.l3_hit', 'desc': 'Retired load instructions..=
+.
+> ```
 >
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-<SNIP>
-
-> +       while (!ret && (evt_ent =3D io_dir__readdir(&evt_dir))) {
-> +               if (!strcmp(evt_ent->d_name, ".")
-> +                   || !strcmp(evt_ent->d_name, "..")
-> +                   || !strcmp(evt_ent->d_name, "enable")
-> +                   || !strcmp(evt_ent->d_name, "filter"))
-> +                       continue;
+> ---
+>  tools/perf/util/python.c | 71 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 71 insertions(+)
+>
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index ddcb5d40ff14..d49b4401ab7e 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -660,6 +660,71 @@ static PyObject *pyrf_pmu__name(PyObject *self)
+>         return PyUnicode_FromString(ppmu->pmu->name);
+>  }
+>
+> +static bool add_to_dict(PyObject *dict, const char *key, const char *val=
+ue)
+> +{
+> +       PyObject *pkey, *pvalue;
+> +       bool ret;
 > +
-> +               ret =3D cb(state, sys, evt_ent->d_name);
-> +               if (ret)
-> +                       break;
-
-Don't think this breakage is needed.
-
-> +       }
-> +       close(evt_dir.dirfd);
+> +       if (value =3D=3D NULL)
+> +               return true;
+> +
+> +       pkey =3D PyUnicode_FromString(key);
+> +       pvalue =3D PyUnicode_FromString(value);
+> +
+> +       ret =3D pkey && pvalue && PyDict_SetItem(dict, pkey, pvalue) =3D=
+=3D 0;
+> +       Py_XDECREF(pkey);
+> +       Py_XDECREF(pvalue);
 > +       return ret;
 > +}
 > +
-> +int tp_pmu__for_each_tp_sys(void *state, tp_sys_callback cb)
+> +static int pyrf_pmu__events_cb(void *state, struct pmu_event_info *info)
 > +{
-> +       struct io_dirent64 *events_ent;
-> +       struct io_dir events_dir;
-> +       int ret =3D 0;
-> +       char *events_dir_path =3D get_tracing_file("events");
+> +       PyObject *py_list =3D state;
+> +       PyObject *dict =3D PyDict_New();
 > +
-> +       if (!events_dir_path)
-> +               return -errno;
+> +       if (!dict)
+> +               return -ENOMEM;
 > +
-> +       io_dir__init(&events_dir, open(events_dir_path, O_CLOEXEC | O_DIR=
-ECTORY | O_RDONLY));
-> +       if (events_dir.dirfd < 0) {
-> +               ret =3D -errno;
-> +               put_events_file(events_dir_path);
-> +               return ret;
+> +       if (!add_to_dict(dict, "name", info->name) ||
+> +           !add_to_dict(dict, "alias", info->alias) ||
+> +           !add_to_dict(dict, "scale_unit", info->scale_unit) ||
+> +           !add_to_dict(dict, "desc", info->desc) ||
+> +           !add_to_dict(dict, "long_desc", info->long_desc) ||
+> +           !add_to_dict(dict, "encoding_desc", info->encoding_desc) ||
+> +           !add_to_dict(dict, "topic", info->topic) ||
+> +           !add_to_dict(dict, "event_type_desc", info->event_type_desc) =
+||
+> +           !add_to_dict(dict, "str", info->str) ||
+> +           !add_to_dict(dict, "deprecated", info->deprecated ? "deprecat=
+ed" : NULL) ||
+> +           PyList_Append(py_list, dict) !=3D 0) {
+> +               Py_DECREF(dict);
+> +               return -ENOMEM;
 > +       }
-> +       put_events_file(events_dir_path);
+> +       Py_DECREF(dict);
+> +       return 0;
+> +}
 > +
-> +       while (!ret && (events_ent =3D io_dir__readdir(&events_dir))) {
-> +               if (!strcmp(events_ent->d_name, ".") ||
-> +                   !strcmp(events_ent->d_name, "..") ||
-> +                   !strcmp(events_ent->d_name, "enable") ||
-> +                   !strcmp(events_ent->d_name, "header_event") ||
-> +                   !strcmp(events_ent->d_name, "header_page"))
-> +                       continue;
+> +static PyObject *pyrf_pmu__events(PyObject *self)
+> +{
+> +       struct pyrf_pmu *ppmu =3D (void *)self;
+> +       PyObject *py_list =3D PyList_New(0);
+> +       int ret;
 > +
-> +               ret =3D cb(state, events_ent->d_name);
-> +               if (ret)
-> +                       break;
+> +       if (!py_list)
+> +               return NULL;
+> +
+> +       ret =3D perf_pmu__for_each_event(ppmu->pmu,
+> +                                      /*skip_duplicate_pmus=3D*/false,
+> +                                      py_list,
+> +                                      pyrf_pmu__events_cb);
+> +       if (ret) {
+> +               Py_DECREF(py_list);
+> +               errno =3D -ret;
+> +               PyErr_SetFromErrno(PyExc_OSError);
+> +               return NULL;
+> +       }
+> +       return py_list;
+> +}
+> +
+>  static PyObject *pyrf_pmu__repr(PyObject *self)
+>  {
+>         struct pyrf_pmu *ppmu =3D (void *)self;
+> @@ -670,6 +735,12 @@ static PyObject *pyrf_pmu__repr(PyObject *self)
+>  static const char pyrf_pmu__doc[] =3D PyDoc_STR("perf Performance Monito=
+ring Unit (PMU) object.");
+>
+>  static PyMethodDef pyrf_pmu__methods[] =3D {
+> +       {
+> +               .ml_name  =3D "events",
+> +               .ml_meth  =3D (PyCFunction)pyrf_pmu__events,
+> +               .ml_flags =3D METH_NOARGS,
+> +               .ml_doc   =3D PyDoc_STR("Name of the PMU including suffix=
+es.")
 
-Here as well.
+Pretty sure it's "General information about the PMU"
 
 Thanks,
 Howard
