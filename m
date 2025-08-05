@@ -1,245 +1,129 @@
-Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192F82045B7
-	for <linux-perf-users@vger.kernel.org>; Tue,  5 Aug 2025 08:58:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503BE2586C9;
+	Tue,  5 Aug 2025 09:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754384314; cv=none; b=H8GEDtgZz95ZIZGy/ngDz1PyLw7C7Rct7lVPAcoQ/td/ymysfsPFmcZKfbr97YhIW5uOWMXVCFI7Bch2iHVJKSlaiwJszVK/RBoYzWHu8sfSwibFx3quebKWZzM2e6tjodeBNiOaabdtpdyMRo3+dVHci2MoA+CXQs8G+hXfoJ0=
+	t=1754384653; cv=none; b=Q48YTQ/wdDY9SQfRPQHf/TZJvOb5PeavU/LXXwEywUng5n+nFAo103dMd2NXx6gP3ReDRlXQCPLKs8U1N2vTfvu2aPaNXM9zvsvjjvuHEBEVA3IeUtDNIUSUWm1dm+Aq2r3vjfmDEbKp0gvGhXNrTY2umygq70L9kziU0zoUW7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754384314; c=relaxed/simple;
-	bh=ROU4usAY7FLO4IEUuf/j0jcf3HhoyxppnIrnbW9Gg4E=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=QxBkx1H4BtFAorB0rwFTaDH7AtkE8XVZsWqmIvQGAhFkZehgOObaGRsMCw/7+peVLGDxvGXiZoo2eEjpUJjNkzHZRQKpLMNomRxW3R7k+yGG0oYcJaY57gtrKbcGQ0Xzkzn2hrg0uk1Wsfe8hv4lmkrozqywNOkiHuXzaBFxHKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-86a5def8869so1239113839f.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 05 Aug 2025 01:58:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754384312; x=1754989112;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=l1WNoAj0DpZzqc24ya6V8dghZm6KdpNb3dMMcndP+Qo=;
-        b=uQmbziBxhJY0Fok2Vlq84jqPBHPDDoUsijeyc806J9YlrMS1Mwq1jxBrmmul0snQWN
-         RJiztIHrnO2CqRQ7IYe5/qFrTFG/7wvAEbHpaU81dG13SJVr7HjpT6JTba09lL6I7Jdi
-         X3iWUYLtwQIoQQ0L/fBF4xA7l4eahxC41aq68+OwzC/+bKD74TZ90gNPeo4q5irvVwSx
-         BfmtHgIsD8VgfxkCmfooFtQEmoM64yLt1n8C/PJM2Pmo8k8qhnS56Xn1wyc63XiPLx6S
-         NUFPwx25TTzRvMG14uXseTTV+oVUiAdjMEHhj8f7zM3ZU8FMnPcGSCVlObXZKLpW/46Y
-         N2Sw==
-X-Forwarded-Encrypted: i=1; AJvYcCXHaXipZxORFLoYRluyXIhRV5r2N60qZeU6aSHJ2Z1g6PsnQ9Zk+BSjFWMvCInd+B0gnBf0Jsw50cIdxvkbfwkh@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnXfUH6/YtSidWo14kCHE6trO+D8oC1GAJX7T+ZJlFngE6mwPH
-	xqye7fvlJ2C3k+WEuiyLSR31xoxwa5gBPU/TqVT7N+dgqT3qXPX3nSWsUhp+J2HFuidXjz4g0A5
-	c8Bujyl4m9jujBAvecfFln2YIHmPs8LsFVwENlfVGPKYeFdNpJb6Iu5VJk9s=
-X-Google-Smtp-Source: AGHT+IFodmuJvtVjyVs52g4C10q8nTRHjv7OPiVkaIHbKXtYdeEhfRV8PP5epOXl5W2U5ZYRS4Pif1KtqJX7qOnNnnccBhtH8Peu
+	s=arc-20240116; t=1754384653; c=relaxed/simple;
+	bh=NUpfptKkWuTZM/PifetKSGfcOkDvXHVifVwI0o/vcLs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ODohm3mpm3yJcZCbeGfKQ1tfkK2YZjKml6wDBmEQcyr1k8X4747i7S3pnYaQ2vsnJBqJLhoxFGBBz79FKl2S8fvBHDurFyCF/jpZhe4AYdwWF3FMOXXnDAzji4f4V4fLp+sB2WAXx4mrK+jD+Yo3ea85A6Tbvy29BygMq8zl0OQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qXyRG3ax; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qXyRG3ax"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5758xqeG010877;
+	Tue, 5 Aug 2025 09:04:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=elaOjrB2plLMfQbXE+Lk2N8XqtfoumlKiKpuacXIZ
+	T8=; b=qXyRG3axLn6MB64VBggkMfnvWGsQ5aPk3W67GG7j+E720EK6GtAceARBc
+	K/DesLC19CSpY5CdFamZ4d5RPz+egwEF6aN3gqC+0/zh9uRgydBHPNhiCPlKpynN
+	3HVGkxKrgJ9R/70KAVxT7Ca8TGxjOSYBkrHPQuzn3fvBmASZFGtqU0DUyMLqrSN2
+	7lka0wvr2tmmJR4jdpeJhU1HwKD0dE4h24GwIdYukHfAj4oPBx+LsGiS9XpYcRpl
+	o3fovVrshK/9AP2rWIAbsDHBkvstPLyTr/mvPn0k9eES5WSFaSklA+N7hIiOGYdo
+	9b2HkEXX+FZv5DUm93s29ZhaGM4VA==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48a4aa1h8p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 05 Aug 2025 09:04:07 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5754T3FZ006823;
+	Tue, 5 Aug 2025 09:04:06 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 489xgmhm8v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 05 Aug 2025 09:04:06 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 575942mX53805552
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 5 Aug 2025 09:04:02 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EB8B920043;
+	Tue,  5 Aug 2025 09:04:01 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C40D120040;
+	Tue,  5 Aug 2025 09:04:01 +0000 (GMT)
+Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  5 Aug 2025 09:04:01 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, japo@linux.ibm.com,
+        Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf/docu: Update header documentation on BPF_PROG_INFO
+Date: Tue,  5 Aug 2025 11:03:49 +0200
+Message-ID: <20250805090349.361730-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2b89:b0:881:7c17:ef2b with SMTP id
- ca18e2360f4ac-8817c17f0abmr1355865739f.6.1754384312221; Tue, 05 Aug 2025
- 01:58:32 -0700 (PDT)
-Date: Tue, 05 Aug 2025 01:58:32 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6891c7b8.050a0220.7f033.001f.GAE@google.com>
-Subject: [syzbot] [perf?] KASAN: slab-use-after-free Read in __task_pid_nr_ns
-From: syzbot <syzbot+e0378d4f4fe57aa2bdd0@syzkaller.appspotmail.com>
-To: acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
-	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
-	namhyung@kernel.org, netdev@vger.kernel.org, peterz@infradead.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Ea2xIgP8pp8XjclC_aBc8dnKKfSInHZn
+X-Authority-Analysis: v=2.4 cv=dNummPZb c=1 sm=1 tr=0 ts=6891c907 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=2OwXVqhp2XgA:10 a=VnNF1IyMAAAA:8 a=85rDWHBjpAYECwts9QIA:9
+X-Proofpoint-ORIG-GUID: Ea2xIgP8pp8XjclC_aBc8dnKKfSInHZn
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA1MDA2NCBTYWx0ZWRfX6D9stS0W+OII
+ dujpK4omHQstZqeXjAQ8DMFWnaRldKju8W5dguMn8Fu8ENkO0uK6FRqi100K22IRZKQNR9f0Rrr
+ riXOGpXT7Pm7C+u2xuwzojGOYUYrMTllh6Mapl2JAvQ4Fawggtc+92RfSr1zJBU+wSUMgHQYza7
+ K9IBPHMJpn9Cp+QKU7Rq634EChjYwwzTIb9ac39/nGaVGuzwA55FtgrF52a7s6tUhO7eZyujXWo
+ z4BCoT6yvUdGPlMOZl9KVC/wtokcXdzMtMJLEBRPU6UJQrjjYLHMaj0zDHnqNLs9xNpMnG7okHA
+ pqG3yFrUi3cLsYeCaXr03lGNKnrGdpC9fCn5NLqpK41p42E50eoKrc12dZ1W2DUOiCrZ4xc0Zbp
+ OC86lAqKncb7hwl7Sw0Ig7Vbf1MF9NhAup7N5yyCvX2vv43lKn2OzB97GOM9sg78VRsayneG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-05_02,2025-08-04_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 bulkscore=0 mlxscore=0 clxscore=1015 mlxlogscore=908
+ malwarescore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0 spamscore=0
+ suspectscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2508050064
 
-Hello,
+Update the perf.data file format description on header
+section HEADER_BPF_PROG_INFO.
+The information is taken from process_bpf_prog_info()
+and write_bpf_prog_info() from file util/header.c.
 
-syzbot found the following issue on:
-
-HEAD commit:    e8d780dcd957 Merge tag 'slab-for-6.17' of git://git.kernel..
-git tree:       bpf-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=12392f82580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=287afdea79829fda
-dashboard link: https://syzkaller.appspot.com/bug?extid=e0378d4f4fe57aa2bdd0
-compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/5aa4922d60a2/disk-e8d780dc.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/f92a03738fad/vmlinux-e8d780dc.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/ac22ca9f709f/bzImage-e8d780dc.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+e0378d4f4fe57aa2bdd0@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-use-after-free in __task_pid_nr_ns+0x1da/0x470 kernel/pid.c:517
-Read of size 8 at addr ffff888066bbaa28 by task syz.5.936/10344
-
-CPU: 0 UID: 0 PID: 10344 Comm: syz.5.936 Not tainted 6.16.0-syzkaller-ge8d780dcd957 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 07/12/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:378 [inline]
- print_report+0xca/0x240 mm/kasan/report.c:482
- kasan_report+0x118/0x150 mm/kasan/report.c:595
- __task_pid_nr_ns+0x1da/0x470 kernel/pid.c:517
- perf_event_pid_type kernel/events/core.c:1431 [inline]
- perf_event_pid kernel/events/core.c:1440 [inline]
- perf_event_read_event kernel/events/core.c:8519 [inline]
- sync_child_event kernel/events/core.c:13962 [inline]
- perf_child_detach kernel/events/core.c:2339 [inline]
- __perf_remove_from_context+0x22e5/0x2a80 kernel/events/core.c:2510
- perf_remove_from_context+0x152/0x1d0 kernel/events/core.c:2559
- perf_event_release_kernel+0x2dd/0x510 kernel/events/core.c:5837
- perf_release+0x38/0x50 kernel/events/core.c:5870
- __fput+0x449/0xa70 fs/file_table.c:468
- task_work_run+0x1d1/0x260 kernel/task_work.c:227
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop+0xec/0x110 kernel/entry/common.c:43
- exit_to_user_mode_prepare include/linux/irq-entry-common.h:208 [inline]
- syscall_exit_to_user_mode_work include/linux/entry-common.h:175 [inline]
- syscall_exit_to_user_mode include/linux/entry-common.h:210 [inline]
- do_syscall_64+0x2bd/0x3b0 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f1fae18eb69
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fff16a52328 EFLAGS: 00000246 ORIG_RAX: 00000000000001b4
-RAX: 0000000000000000 RBX: 00007f1fae3b7ba0 RCX: 00007f1fae18eb69
-RDX: 0000000000000000 RSI: 000000000000001e RDI: 0000000000000003
-RBP: 00007f1fae3b7ba0 R08: 0000000000000200 R09: 0000001d16a5261f
-R10: 00007f1fae3b7ac0 R11: 0000000000000246 R12: 000000000005b884
-R13: 00007f1fae3b6320 R14: ffffffffffffffff R15: 00007fff16a52440
- </TASK>
-
-Allocated by task 10345:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
- unpoison_slab_object mm/kasan/common.c:319 [inline]
- __kasan_slab_alloc+0x6c/0x80 mm/kasan/common.c:345
- kasan_slab_alloc include/linux/kasan.h:250 [inline]
- slab_post_alloc_hook mm/slub.c:4179 [inline]
- slab_alloc_node mm/slub.c:4228 [inline]
- kmem_cache_alloc_noprof+0x1c1/0x3c0 mm/slub.c:4235
- copy_signal+0x50/0x630 kernel/fork.c:1651
- copy_process+0x16a6/0x3c00 kernel/fork.c:2169
- kernel_clone+0x21e/0x840 kernel/fork.c:2602
- __do_sys_clone kernel/fork.c:2745 [inline]
- __se_sys_clone kernel/fork.c:2729 [inline]
- __x64_sys_clone+0x18b/0x1e0 kernel/fork.c:2729
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Freed by task 10345:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
- kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:576
- poison_slab_object mm/kasan/common.c:247 [inline]
- __kasan_slab_free+0x62/0x70 mm/kasan/common.c:264
- kasan_slab_free include/linux/kasan.h:233 [inline]
- slab_free_hook mm/slub.c:2416 [inline]
- slab_free mm/slub.c:4679 [inline]
- kmem_cache_free+0x18f/0x400 mm/slub.c:4781
- copy_process+0x2953/0x3c00 kernel/fork.c:2455
- kernel_clone+0x21e/0x840 kernel/fork.c:2602
- __do_sys_clone kernel/fork.c:2745 [inline]
- __se_sys_clone kernel/fork.c:2729 [inline]
- __x64_sys_clone+0x18b/0x1e0 kernel/fork.c:2729
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-The buggy address belongs to the object at ffff888066bba880
- which belongs to the cache signal_cache of size 1544
-The buggy address is located 424 bytes inside of
- freed 1544-byte region [ffff888066bba880, ffff888066bbae88)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x66bb8
-head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-memcg:ffff88807df50c01
-flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 00fff00000000040 ffff88801b6dd780 ffffea00009cb000 dead000000000002
-raw: 0000000000000000 0000000080120012 00000000f5000000 ffff88807df50c01
-head: 00fff00000000040 ffff88801b6dd780 ffffea00009cb000 dead000000000002
-head: 0000000000000000 0000000080120012 00000000f5000000 ffff88807df50c01
-head: 00fff00000000003 ffffea00019aee01 00000000ffffffff 00000000ffffffff
-head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5203, tgid 5203 (S02sysctl), ts 31817104133, free_ts 28252177307
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x240/0x2a0 mm/page_alloc.c:1704
- prep_new_page mm/page_alloc.c:1712 [inline]
- get_page_from_freelist+0x21e4/0x22c0 mm/page_alloc.c:3669
- __alloc_frozen_pages_noprof+0x181/0x370 mm/page_alloc.c:4959
- alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2419
- alloc_slab_page mm/slub.c:2486 [inline]
- allocate_slab+0x8a/0x370 mm/slub.c:2654
- new_slab mm/slub.c:2708 [inline]
- ___slab_alloc+0xbeb/0x1410 mm/slub.c:3890
- __slab_alloc mm/slub.c:3980 [inline]
- __slab_alloc_node mm/slub.c:4055 [inline]
- slab_alloc_node mm/slub.c:4216 [inline]
- kmem_cache_alloc_noprof+0x283/0x3c0 mm/slub.c:4235
- copy_signal+0x50/0x630 kernel/fork.c:1651
- copy_process+0x16a6/0x3c00 kernel/fork.c:2169
- kernel_clone+0x21e/0x840 kernel/fork.c:2602
- __do_sys_clone kernel/fork.c:2745 [inline]
- __se_sys_clone kernel/fork.c:2729 [inline]
- __x64_sys_clone+0x18b/0x1e0 kernel/fork.c:2729
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-page last free pid 1 tgid 1 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1248 [inline]
- __free_frozen_pages+0xc71/0xe70 mm/page_alloc.c:2706
- __free_pages mm/page_alloc.c:5071 [inline]
- free_contig_range+0x1bd/0x4a0 mm/page_alloc.c:6927
- destroy_args+0x64/0x4a0 mm/debug_vm_pgtable.c:1009
- debug_vm_pgtable+0x3a7/0x3e0 mm/debug_vm_pgtable.c:1389
- do_one_initcall+0x233/0x820 init/main.c:1269
- do_initcall_level+0x104/0x190 init/main.c:1331
- do_initcalls+0x59/0xa0 init/main.c:1347
- kernel_init_freeable+0x334/0x4a0 init/main.c:1579
- kernel_init+0x1d/0x1d0 init/main.c:1469
- ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-Memory state around the buggy address:
- ffff888066bba900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888066bba980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff888066bbaa00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                  ^
- ffff888066bbaa80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888066bbab00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Reviewed-by: Jan Polensky <japo@linux.ibm.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ tools/perf/Documentation/perf.data-file-format.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
+index cd95ba09f727..0437eb5d9188 100644
+--- a/tools/perf/Documentation/perf.data-file-format.txt
++++ b/tools/perf/Documentation/perf.data-file-format.txt
+@@ -348,6 +348,16 @@ to special needs.
+ 
+ struct perf_bpil, which contains detailed information about
+ a BPF program, including type, id, tag, jited/xlated instructions, etc.
++The format of data in HEADER_BPF_PROG_INFO is as follows:
++	u32 count
++
++	struct perf_bpil {
++		u32 info_len;	/* size of struct bpf_prog_info, when the tool is compiled */
++		u32 data_len;	/* total bytes allocated for data, round up to 8 bytes */
++		u64 arrays;	/* which arrays are included in data */
++		struct bpf_prog_info info;
++		u8  data[];
++	}[count];
+ 
+         HEADER_BPF_BTF = 26,
+ 
+-- 
+2.48.1
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
