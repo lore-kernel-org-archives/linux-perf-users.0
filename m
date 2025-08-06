@@ -1,57 +1,57 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0E12BE64F
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Aug 2025 19:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3B52BE7CD
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 Aug 2025 19:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754510258; cv=none; b=BTBZHlssHnz7hJhIeyJJSahdrgQ516WUb5ngieOZZ3XUbg/RdjW9PR4jBhjj8YNfxQaMxsVjZFKHL6/tot1m1M0jMm7X+UpMNOmDvmzqJ+/3TMe/92d3vzGGEPACpkev3TEbqff8K8BlkL7G9nY8WLMO+Vu33Fc/6wSisFCO2eE=
+	t=1754510260; cv=none; b=UxU8B3YjmG93out9+twij+b9p4AgKo8t98U6AAkpaDSbo2HsbJ3xa9jDW8wGlLpw7q6CxzeWpU8T/MocqSLueUEMy3pytA61wEKVkk633tlIgrdbKx9PQXNhzm2q5ztMbEi1zVBNBgfJ18nYWAdcTi3LERy2ROki6BkSWsjLhks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754510258; c=relaxed/simple;
-	bh=jUBl1OA0dbcCe9Exxx/O066eDYx/qkeyxg/XjKFA/3U=;
+	s=arc-20240116; t=1754510260; c=relaxed/simple;
+	bh=UrgGnFtSniCNk74J85bXS6weeSIBAARTVjsD4XCec00=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bm6cyZwp747He5OUuqAhX9Fy3hw6U9u2HU3lw9MaLNJk02AqmM/8rA9xjTQHlpDjU5SyhJLtLP3QcbiuWwxGPQsL4i3u8EAd3UMnvkkQNfR5/JtQRKW1VRQODKTQGx3JLgX/gtGBqxBEyHQ/+SqxJqpTaCfMQL8zw9Xa4Ug1Pp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=krqFVzHx; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=f+/XuKjLCXbyEZfqco68RmLPn/qBcK4qLPRVGMbPlJ5sNeR63xT8EwZNESo5g2ClcfpBYqMzEDk2O6n8gAjxo1mKIfCuXZ6Pks4e53owAtj8frWuzIbOaesA4W2FpWqCDgNv3URepRTzHfdkewGH0Dy5yQfKMsDlOJqaGSWan+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2ZMhPiND; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="krqFVzHx"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-76bef13c254so290737b3a.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Aug 2025 12:57:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2ZMhPiND"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-31f4d0f60caso260617a91.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Aug 2025 12:57:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1754510252; x=1755115052; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1754510255; x=1755115055; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=3IAofGMjgJOHx6SdMcFjG4jFgSxJevKv5cJ/ErNkHsk=;
-        b=krqFVzHx48sFUhkTmv5ZdxVvJJbo9yybHXbJml4FKAfQUxzOY4jH1x4IujuldA6FMr
-         C0+zX0xKrvTclXv7jhBwPGfFMBwKz14JTJaEdBZ+70bCTbFbTQ5Xcu0limwYhQffnRT1
-         FCaCbpNmWYehwuLFuoJuSmpfOfKEHjXyqoWRlcCcYUhWpxWox9SHW9jhq5ivmdwOnlOi
-         M8VHe2C3cxVOVnnB16o4ieO9NP8RP8SSHnDvNPO8i3ftSat6W9nnq7VOVBrTtE1bSHEA
-         GW1sz/GYRCc8mL0hoHmzkx1cVT3yt0t/1gWrYDYckq2x7Gw1de223JzLbu7xVcmqkXsS
-         Ng6A==
+        bh=rYhmmFtojtIGRiNFVnTHHWtxjI2pG0Wx0DryIldmwBo=;
+        b=2ZMhPiNDAErmnwI2zROGgL8Evr67rVZeucWYoBU1LCBpoSLaePFK67B1/KTPIt6A0q
+         L0W474PI55LKgD+ls3PQ7OY59u8gHQ5LKgD4ZVVwMgPth6ke1rd0m4rKhBCma0piVHu8
+         6+KyQIacbW20biYZMFHnrBzppzKJvVVFNY4hVLxCl4O7JGXAkVzdGTJsfgOaE4hUeYfO
+         8Sp/veWbirp7nabFpeK8ovKmyqyRu4gXJ5CdjDW6UNmamzQ6Joqutt93IqG/gYwaT9R/
+         kL2myaYT2pWAHEwpVtPHzYqF3BjkRpL3AyuXfC4nBmGgZZRUDosfj2AC8B2fCaOsoJFR
+         VMzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754510252; x=1755115052;
+        d=1e100.net; s=20230601; t=1754510255; x=1755115055;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3IAofGMjgJOHx6SdMcFjG4jFgSxJevKv5cJ/ErNkHsk=;
-        b=nhCErLGcMSK2U59ctj63Y6HO87+ESF6MWxTcgvtTh5RqKwpUOR0HEqOoLgk5CySUtu
-         zD1ySqw1FpovAXcigWVIAXM5wopbAqJaXHjsy9KAhmKSYx4xTJuIUY9tfF6UzDwFPtyX
-         tLvn1SJTsAqMPc397DLMeOm+Oa1V+meXIlweWlBbbehfCOqxdncdVpQWGzC4vnZkKkRa
-         Jc403XVBtaK54scjuOdSBLB7TEdHg/+XCb61jxn44xDeVdW0kP/kUm/sHGHTpH8xJabc
-         6LMhsZzlTVbdXjeKI7ZJDf86pCl9t7KxKzKrxBoGHQ7LbwtaGRW0D6sDy2928MeM8Mhx
-         t5uw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxQLYVvdixRMXkJ4tffFrtSODgtOzsrdRA8at0jS+7k1HFa4xqHgxwiXGHN3PqvAZgdyViNRvsgns78vfiCJbY@vger.kernel.org
-X-Gm-Message-State: AOJu0YzM4rCbLY5gxf9EuucK/6a5rceFTf+89nIhGwYCDFhNo3ht89Cx
-	cn1sUxpzdnU6K3ah9jbvHDvZA1CI43Alj8gvqyA6lliIltJYet2Z8hAdLCql6npkhmmM94KHXqN
-	Nz4t7RQ==
-X-Google-Smtp-Source: AGHT+IGg8m1AYQ1T/bkneerdDiI2IWHPXHDhUcioTumR7faJkpYOSLNXQVSuuMxt1I5dkPrSi8WAHfNQ8i8=
-X-Received: from pgc3.prod.google.com ([2002:a05:6a02:2f83:b0:b42:2da2:8848])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:a103:b0:23f:f712:4103
- with SMTP id adf61e73a8af0-24041364f38mr1167741637.18.1754510252085; Wed, 06
- Aug 2025 12:57:32 -0700 (PDT)
+        bh=rYhmmFtojtIGRiNFVnTHHWtxjI2pG0Wx0DryIldmwBo=;
+        b=pApHyzsDQjq5VD+WqE4WHeb277bXib+S7qk5mv5LiwVldkDiGoFdNepEsE8nm8l89z
+         2HewD5Fmp5HcbnyXRGSfit3gu21WIuB/DZv5zb+r0mItIL97z0dXAvSrh5N9dhYt3n2c
+         yTJriiJRsvzgeQTOxweLYDlyxcIIiT6MqCkmK1H6JLhOM7HO3bWqXDq0o79AGBLhPQzs
+         WLbthJSSGGG6e59muaynCwdyyqQRT+aHr4jJkVp8YlCQhL4R7efQJcTbe+frRrhK2t3N
+         erbew5x888R4dir/57Emio/L0lcnyR9AFKXOkI39kEDC0F/rFBx9RYiZQmNxrb9Fpzw0
+         vucg==
+X-Forwarded-Encrypted: i=1; AJvYcCWdjJEt/0tHfeB+19HxPV9OxVxTyimkyQieAcIUiDV3bxXpV0/PQ1W/eI9tBw7x7i22DxyngMw7R4SQrsrnKOkc@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7kaRqQw1U0m9FXetMA7sZQv2CxP9EpsExubqhq3Kvtjm2KpUJ
+	3T5GC8isx2FuiewdVzAbArBw7MV0CTgz3aYMO0CsyxVwtQtWyBHWuBiACi2x/rx5Z7IRGqPOsjy
+	Q9YUODw==
+X-Google-Smtp-Source: AGHT+IE1JXMzx+3+mEhB/aRAtKWF6tsabKOHfV9vXr8D6RhEuIeRQytpFLmD0EN42AoRsIYuN8o0xUeAxdE=
+X-Received: from pjbso3.prod.google.com ([2002:a17:90b:1f83:b0:311:1a09:11ff])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4ac1:b0:31e:f193:1822
+ with SMTP id 98e67ed59e1d1-32166ccac82mr5176638a91.28.1754510255466; Wed, 06
+ Aug 2025 12:57:35 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed,  6 Aug 2025 12:56:24 -0700
+Date: Wed,  6 Aug 2025 12:56:26 -0700
 In-Reply-To: <20250806195706.1650976-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250806195706.1650976-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.1.565.gc32cd1483b-goog
-Message-ID: <20250806195706.1650976-3-seanjc@google.com>
-Subject: [PATCH v5 02/44] perf: Add generic exclude_guest support
+Message-ID: <20250806195706.1650976-5-seanjc@google.com>
+Subject: [PATCH v5 04/44] perf: Add APIs to create/release mediated guest vPMUs
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
@@ -83,61 +83,223 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Only KVM knows the exact time when a guest is entering/exiting. Expose
-two interfaces to KVM to switch the ownership of the PMU resources.
+Currently, exposing PMU capabilities to a KVM guest is done by emulating
+guest PMCs via host perf events, i.e. by having KVM be "just" another user
+of perf.  As a result, the guest and host are effectively competing for
+resources, and emulating guest accesses to vPMU resources requires
+expensive actions (expensive relative to the native instruction).  The
+overhead and resource competition results in degraded guest performance
+and ultimately very poor vPMU accuracy.
 
-All the pinned events must be scheduled in first. Extend the
-perf_event_sched_in() helper to support extra flag, e.g., EVENT_GUEST.
+To address the issues with the perf-emulated vPMU, introduce a "mediated
+vPMU", where the data plane (PMCs and enable/disable knobs) is exposed
+directly to the guest, but the control plane (event selectors and access
+to fixed counters) is managed by KVM (via MSR interceptions).  To allow
+host perf usage of the PMU to (partially) co-exist with KVM/guest usage
+of the PMU, KVM and perf will coordinate to a world switch between host
+perf context and guest vPMU context near VM-Enter/VM-Exit.
 
+Add two exported APIs, perf_{create,release}_mediated_pmu(), to allow KVM
+to create and release a mediated PMU instance (per VM).  Because host perf
+context will be deactivated while the guest is running, mediated PMU usage
+will be mutually exclusive with perf analysis of the guest, i.e. perf
+events that do NOT exclude the guest will not behave as expected.
+
+To avoid silent failure of !exclude_guest perf events, disallow creating a
+mediated PMU if there are active !exclude_guest events, and on the perf
+side, disallowing creating new !exclude_guest perf events while there is
+at least one active mediated PMU.
+
+Exempt PMU resources that do not support mediated PMU usage, i.e. that are
+outside the scope/view of KVM's vPMU and will not be swapped out while the
+guest is running.
+
+Guard mediated PMU with a new kconfig to help readers identify code paths
+that are unique to mediated PMU support, and to allow for adding arch-
+specific hooks without stubs.  KVM x86 is expected to be the only KVM
+architecture to support a mediated PMU in the near future (e.g. arm64 is
+trending toward a partitioned PMU implementation), and KVM x86 will select
+PERF_GUEST_MEDIATED_PMU unconditionally, i.e. won't need stubs.
+
+Immediately select PERF_GUEST_MEDIATED_PMU when KVM x86 is enabled so that
+all paths are compile tested.  Full KVM support is on its way...
+
+Suggested-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Mingwei Zhang <mizhang@google.com>
+[sean: add kconfig and WARNing, rewrite changelog, swizzle patch ordering]
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- kernel/events/core.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ arch/x86/kvm/Kconfig       |  1 +
+ include/linux/perf_event.h |  6 +++
+ init/Kconfig               |  4 ++
+ kernel/events/core.c       | 82 ++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 93 insertions(+)
 
+diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+index 2c86673155c9..ee67357b5e36 100644
+--- a/arch/x86/kvm/Kconfig
++++ b/arch/x86/kvm/Kconfig
+@@ -37,6 +37,7 @@ config KVM_X86
+ 	select SCHED_INFO
+ 	select PERF_EVENTS
+ 	select GUEST_PERF_EVENTS
++	select PERF_GUEST_MEDIATED_PMU
+ 	select HAVE_KVM_MSI
+ 	select HAVE_KVM_CPU_RELAX_INTERCEPT
+ 	select HAVE_KVM_NO_POLL
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index ec9d96025683..63097beb5f02 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -305,6 +305,7 @@ struct perf_event_pmu_context;
+ #define PERF_PMU_CAP_EXTENDED_HW_TYPE	0x0100
+ #define PERF_PMU_CAP_AUX_PAUSE		0x0200
+ #define PERF_PMU_CAP_AUX_PREFER_LARGE	0x0400
++#define PERF_PMU_CAP_MEDIATED_VPMU	0x0800
+ 
+ /**
+  * pmu::scope
+@@ -1914,6 +1915,11 @@ extern int perf_event_account_interrupt(struct perf_event *event);
+ extern int perf_event_period(struct perf_event *event, u64 value);
+ extern u64 perf_event_pause(struct perf_event *event, bool reset);
+ 
++#ifdef CONFIG_PERF_GUEST_MEDIATED_PMU
++int perf_create_mediated_pmu(void);
++void perf_release_mediated_pmu(void);
++#endif
++
+ #else /* !CONFIG_PERF_EVENTS: */
+ 
+ static inline void *
+diff --git a/init/Kconfig b/init/Kconfig
+index 666783eb50ab..1e3c90c3f24f 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1955,6 +1955,10 @@ config GUEST_PERF_EVENTS
+ 	bool
+ 	depends on HAVE_PERF_EVENTS
+ 
++config PERF_GUEST_MEDIATED_PMU
++	bool
++	depends on GUEST_PERF_EVENTS
++
+ config PERF_USE_VMALLOC
+ 	bool
+ 	help
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index d4528554528d..3a98e11d8efc 100644
+index 1753a97638a3..bf0347231bd9 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -2866,14 +2866,15 @@ static void task_ctx_sched_out(struct perf_event_context *ctx,
- 
- static void perf_event_sched_in(struct perf_cpu_context *cpuctx,
- 				struct perf_event_context *ctx,
--				struct pmu *pmu)
-+				struct pmu *pmu,
-+				enum event_type_t event_type)
- {
--	ctx_sched_in(&cpuctx->ctx, pmu, EVENT_PINNED);
-+	ctx_sched_in(&cpuctx->ctx, pmu, EVENT_PINNED | event_type);
- 	if (ctx)
--		 ctx_sched_in(ctx, pmu, EVENT_PINNED);
--	ctx_sched_in(&cpuctx->ctx, pmu, EVENT_FLEXIBLE);
-+		ctx_sched_in(ctx, pmu, EVENT_PINNED | event_type);
-+	ctx_sched_in(&cpuctx->ctx, pmu, EVENT_FLEXIBLE | event_type);
- 	if (ctx)
--		 ctx_sched_in(ctx, pmu, EVENT_FLEXIBLE);
-+		ctx_sched_in(ctx, pmu, EVENT_FLEXIBLE | event_type);
+@@ -5651,6 +5651,8 @@ static void __free_event(struct perf_event *event)
+ 	call_rcu(&event->rcu_head, free_event_rcu);
  }
  
++static void mediated_pmu_unaccount_event(struct perf_event *event);
++
+ DEFINE_FREE(__free_event, struct perf_event *, if (_T) __free_event(_T))
+ 
+ /* vs perf_event_alloc() success */
+@@ -5660,6 +5662,7 @@ static void _free_event(struct perf_event *event)
+ 	irq_work_sync(&event->pending_disable_irq);
+ 
+ 	unaccount_event(event);
++	mediated_pmu_unaccount_event(event);
+ 
+ 	if (event->rb) {
+ 		/*
+@@ -6182,6 +6185,81 @@ u64 perf_event_pause(struct perf_event *event, bool reset)
+ }
+ EXPORT_SYMBOL_GPL(perf_event_pause);
+ 
++#ifdef CONFIG_PERF_GUEST_MEDIATED_PMU
++static atomic_t nr_include_guest_events __read_mostly;
++
++static atomic_t nr_mediated_pmu_vms __read_mostly;
++static DEFINE_MUTEX(perf_mediated_pmu_mutex);
++
++/* !exclude_guest event of PMU with PERF_PMU_CAP_MEDIATED_VPMU */
++static inline bool is_include_guest_event(struct perf_event *event)
++{
++	if ((event->pmu->capabilities & PERF_PMU_CAP_MEDIATED_VPMU) &&
++	    !event->attr.exclude_guest)
++		return true;
++
++	return false;
++}
++
++static int mediated_pmu_account_event(struct perf_event *event)
++{
++	if (!is_include_guest_event(event))
++		return 0;
++
++	guard(mutex)(&perf_mediated_pmu_mutex);
++
++	if (atomic_read(&nr_mediated_pmu_vms))
++		return -EOPNOTSUPP;
++
++	atomic_inc(&nr_include_guest_events);
++	return 0;
++}
++
++static void mediated_pmu_unaccount_event(struct perf_event *event)
++{
++	if (!is_include_guest_event(event))
++		return;
++
++	atomic_dec(&nr_include_guest_events);
++}
++
++/*
++ * Currently invoked at VM creation to
++ * - Check whether there are existing !exclude_guest events of PMU with
++ *   PERF_PMU_CAP_MEDIATED_VPMU
++ * - Set nr_mediated_pmu_vms to prevent !exclude_guest event creation on
++ *   PMUs with PERF_PMU_CAP_MEDIATED_VPMU
++ *
++ * No impact for the PMU without PERF_PMU_CAP_MEDIATED_VPMU. The perf
++ * still owns all the PMU resources.
++ */
++int perf_create_mediated_pmu(void)
++{
++	guard(mutex)(&perf_mediated_pmu_mutex);
++	if (atomic_inc_not_zero(&nr_mediated_pmu_vms))
++		return 0;
++
++	if (atomic_read(&nr_include_guest_events))
++		return -EBUSY;
++
++	atomic_inc(&nr_mediated_pmu_vms);
++	return 0;
++}
++EXPORT_SYMBOL_GPL(perf_create_mediated_pmu);
++
++void perf_release_mediated_pmu(void)
++{
++	if (WARN_ON_ONCE(!atomic_read(&nr_mediated_pmu_vms)))
++		return;
++
++	atomic_dec(&nr_mediated_pmu_vms);
++}
++EXPORT_SYMBOL_GPL(perf_release_mediated_pmu);
++#else
++static int mediated_pmu_account_event(struct perf_event *event) { return 0; }
++static void mediated_pmu_unaccount_event(struct perf_event *event) {}
++#endif
++
  /*
-@@ -2929,7 +2930,7 @@ static void ctx_resched(struct perf_cpu_context *cpuctx,
- 	else if (event_type & EVENT_PINNED)
- 		ctx_sched_out(&cpuctx->ctx, pmu, EVENT_FLEXIBLE);
+  * Holding the top-level event's child_mutex means that any
+  * descendant process that has inherited this event will block
+@@ -13024,6 +13102,10 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 	if (err)
+ 		return ERR_PTR(err);
  
--	perf_event_sched_in(cpuctx, task_ctx, pmu);
-+	perf_event_sched_in(cpuctx, task_ctx, pmu, 0);
- 
- 	for_each_epc(epc, &cpuctx->ctx, pmu, 0)
- 		perf_pmu_enable(epc->pmu);
-@@ -4147,7 +4148,7 @@ static void perf_event_context_sched_in(struct task_struct *task)
- 		ctx_sched_out(&cpuctx->ctx, NULL, EVENT_FLEXIBLE);
- 	}
- 
--	perf_event_sched_in(cpuctx, ctx, NULL);
-+	perf_event_sched_in(cpuctx, ctx, NULL, 0);
- 
- 	perf_ctx_sched_task_cb(cpuctx->task_ctx, task, true);
++	err = mediated_pmu_account_event(event);
++	if (err)
++		return ERR_PTR(err);
++
+ 	/* symmetric to unaccount_event() in _free_event() */
+ 	account_event(event);
  
 -- 
 2.50.1.565.gc32cd1483b-goog
