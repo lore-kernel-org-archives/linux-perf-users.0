@@ -1,48 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A1D13A3F2;
-	Wed,  6 Aug 2025 22:53:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDA5145346;
+	Wed,  6 Aug 2025 23:07:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754520794; cv=none; b=TAzR9fBYvllJZ09sbu+bWizZAaHWNZhDiZPz/+Jd2RMLjkiCazarZSp9e53fgf0r+VND2q2a3rtVyfzeOaOfe4WQxWNxhA408vkaeI6z+FLG0uxj60fsY0jjnIuOynAd9p9o+QRE5lZmQ2PFskOp1l5OMKPtSLWuRU4e1/D0ezg=
+	t=1754521654; cv=none; b=Hn25L8pUhkL1msBIjMS69vrcxmPEija5ZZcM/HHJpeqrxGelGDpk1jNwaoK/D/TISskfsySvuq0RnXuoMtg1z5Qf+k4kAOS9kdfSSmJRP4ewk8EgEKG9dJnG3fR+Ct08tD1I2wTb/axaz34daRO2ob3LdRhilj0JV5OuqzvkhPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754520794; c=relaxed/simple;
-	bh=aQ/0Dh3y8KRuO5nNN3e4yGDJrs5zHxpjrom8VAttomI=;
+	s=arc-20240116; t=1754521654; c=relaxed/simple;
+	bh=cHHkNUdX5ABBCYVaM9AasQq9ZmnvcQpDHVK7JKWqoQI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F6tF1Fcnxvx+RhuSL/swA8l9oua6pyJ4MTXKhNLbdLJTH70QbITMptP37Q3Kb+lH1ZhVRSvrJyjA0VkOmRtZg0txE80V4CTBqxMbh2WdtF9ZPS+5Ns5rUTJ1dWyce0XKw/WDhyT1Y1o3DvFgsP18ijSM59RALIMytv2jJIVYJp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FIM0ppN8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=e0KRaMjoqqsWo2uFi+UBA8kAAXmMPfTlypbmnZeYCmouVaoIygmk5c4INg4UrcY2zAKH8mN6+KUKZzCoi7kgebU/xjg4+nBm4uUTcvYIxm6edVig2cyZM2HYaqg6TXYESBxB/LMiGypOyVSitJzkvMOJr6jg41SnEamp/4Jqu20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OTtkFL18; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FIM0ppN8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C1FEC4CEE7;
-	Wed,  6 Aug 2025 22:53:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OTtkFL18"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7710DC4CEE7;
+	Wed,  6 Aug 2025 23:07:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754520794;
-	bh=aQ/0Dh3y8KRuO5nNN3e4yGDJrs5zHxpjrom8VAttomI=;
+	s=k20201202; t=1754521654;
+	bh=cHHkNUdX5ABBCYVaM9AasQq9ZmnvcQpDHVK7JKWqoQI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FIM0ppN88Z7flsAgbKGOZcK6GIwviab7UaqjGLaSnHIRa1Yup7lsN5JZzecYTk/7j
-	 OcxABp1dPJ4Iw7UTtcHJCYD4eWVhHBvZwljJAH+ntNK1xpKRatojIViTxBKtKBV4+C
-	 np8iZu46T7YEkqoZgPMBC/Neb19nESIsqf5GB5IZkLd1dpvK3m7BNVB3shuSRR1MS+
-	 82CG69YMAAFg37R6qV6tp1X2aXm7Nm4VNyoif9+WxUGwsBLDl+G4e5DVb3EESqvD6q
-	 K/cq/0R/XJXpGMDOtdmqDqKkG7+EvG444pIHwJCXL4H9DG9Qy1PVgiL8eEVm8M3UpE
-	 k5CI8GNw/nqOg==
-Date: Wed, 6 Aug 2025 15:53:12 -0700
+	b=OTtkFL18R44z5CUf7sVzjXDn+YngyQalSxISIw9wqSnncpR/KNuzXuxraK7inQtn2
+	 MAIllp1RE+Zy6AWgKUNgdAa35rfQelX6ElvUaP0b+ntOLwxot35PE9J/Zu5NpTL99n
+	 BSy66cINqcPf677vTmTxxbySkSGz6KPzREeGqm/SZKizMCd0FkviP6bQTRrj/nheAO
+	 zV1qVuZUTQkT8vDYUefD6ywNb0J2qN9CIaBoCD05EOEGvOUlEiB4sEbeWuzUgnWAP2
+	 CrpVepauIGIqPRhTl/Jmeso6sudtAI6rWdY7JrEoN0zb3X75EH8IOn1mf0mswsKLch
+	 H0tK2EmddfqPw==
+Date: Wed, 6 Aug 2025 16:07:32 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
-	Jiri Olsa <jolsa@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: Re: [PATCH v4 2/2] perf bpf-filter: Enable events manually
-Message-ID: <aJPc2NvJqLOGaIKl@google.com>
-References: <20250806114227.14617-1-iii@linux.ibm.com>
- <20250806114227.14617-3-iii@linux.ibm.com>
+To: Jakub Brnak <jbrnak@redhat.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	irogers@google.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com,
+	howardchu95@gmail.com
+Subject: Re: [PATCH] perf: use standard syscall tracepoint structs for
+ augmentation
+Message-ID: <aJPgNMi-6J2ewGza@google.com>
+References: <20250806130017.541416-1-jbrnak@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,174 +47,292 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250806114227.14617-3-iii@linux.ibm.com>
+In-Reply-To: <20250806130017.541416-1-jbrnak@redhat.com>
 
 Hello,
 
-On Wed, Aug 06, 2025 at 01:40:35PM +0200, Ilya Leoshkevich wrote:
-> On s390, and, in general, on all platforms where the respective event
-> supports auxiliary data gathering, the command:
-> 
->    # ./perf record -u 0 -aB --synth=no -- ./perf test -w thloop
->    [ perf record: Woken up 1 times to write data ]
->    [ perf record: Captured and wrote 0.011 MB perf.data ]
->    # ./perf report --stats | grep SAMPLE
->    #
-> 
-> does not generate samples in the perf.data file. On x86 the command:
-> 
->   # sudo perf record -e intel_pt// -u 0 ls
-> 
-> is broken too.
-> 
-> Looking at the sequence of calls in 'perf record' reveals this
-> behavior:
-> 
-> 1. The event 'cycles' is created and enabled:
-> 
->    record__open()
->    +-> evlist__apply_filters()
->        +-> perf_bpf_filter__prepare()
-> 	   +-> bpf_program.attach_perf_event()
-> 	       +-> bpf_program.attach_perf_event_opts()
-> 	           +-> __GI___ioctl(..., PERF_EVENT_IOC_ENABLE, ...)
-> 
->    The event 'cycles' is enabled and active now. However the event's
->    ring-buffer to store the samples generated by hardware is not
->    allocated yet.
-> 
-> 2. The event's fd is mmap()ed to create the ring buffer:
-> 
->    record__open()
->    +-> record__mmap()
->        +-> record__mmap_evlist()
-> 	   +-> evlist__mmap_ex()
-> 	       +-> perf_evlist__mmap_ops()
-> 	           +-> mmap_per_cpu()
-> 	               +-> mmap_per_evsel()
-> 	                   +-> mmap__mmap()
-> 	                       +-> perf_mmap__mmap()
-> 	                           +-> mmap()
-> 
->    This allocates the ring buffer for the event 'cycles'. With mmap()
->    the kernel creates the ring buffer:
-> 
->    perf_mmap(): kernel function to create the event's ring
->    |            buffer to save the sampled data.
->    |
->    +-> ring_buffer_attach(): Allocates memory for ring buffer.
->        |        The PMU has auxiliary data setup function. The
->        |        has_aux(event) condition is true and the PMU's
->        |        stop() is called to stop sampling. It is not
->        |        restarted:
->        |
->        |        if (has_aux(event))
->        |                perf_event_stop(event, 0);
->        |
->        +-> cpumsf_pmu_stop():
-> 
->    Hardware sampling is stopped. No samples are generated and saved
->    anymore.
-> 
-> 3. After the event 'cycles' has been mapped, the event is enabled a
->    second time in:
-> 
->    __cmd_record()
->    +-> evlist__enable()
->        +-> __evlist__enable()
-> 	   +-> evsel__enable_cpu()
-> 	       +-> perf_evsel__enable_cpu()
-> 	           +-> perf_evsel__run_ioctl()
-> 	               +-> perf_evsel__ioctl()
-> 	                   +-> __GI___ioctl(., PERF_EVENT_IOC_ENABLE, .)
-> 
->    The second
-> 
->       ioctl(fd, PERF_EVENT_IOC_ENABLE, 0);
-> 
->    is just a NOP in this case. The first invocation in (1.) sets the
->    event::state to PERF_EVENT_STATE_ACTIVE. The kernel functions
-> 
->    perf_ioctl()
->    +-> _perf_ioctl()
->        +-> _perf_event_enable()
->            +-> __perf_event_enable()
-> 
->    return immediately because event::state is already set to
->    PERF_EVENT_STATE_ACTIVE.
-> 
-> This happens on s390, because the event 'cycles' offers the possibility
-> to save auxilary data. The PMU callbacks setup_aux() and free_aux() are
-> defined. Without both callback functions, cpumsf_pmu_stop() is not
-> invoked and sampling continues.
-> 
-> To remedy this, remove the first invocation of
-> 
->    ioctl(..., PERF_EVENT_IOC_ENABLE, ...).
-> 
-> in step (1.) Create the event in step (1.) and enable it in step (3.)
-> after the ring buffer has been mapped.
-> 
-> Output after:
-> 
->  # ./perf record -aB --synth=no -u 0 -- ./perf test -w thloop 2
->  [ perf record: Woken up 3 times to write data ]
->  [ perf record: Captured and wrote 0.876 MB perf.data ]
->  # ./perf  report --stats | grep SAMPLE
->               SAMPLE events:      16200  (99.5%)
->               SAMPLE events:      16200
->  #
-> 
-> The software event succeeded both before and after the patch:
-> 
->  # ./perf record -e cpu-clock -aB --synth=no -u 0 -- \
-> 					  ./perf test -w thloop 2
->  [ perf record: Woken up 7 times to write data ]
->  [ perf record: Captured and wrote 2.870 MB perf.data ]
->  # ./perf  report --stats | grep SAMPLE
->               SAMPLE events:      53506  (99.8%)
->               SAMPLE events:      53506
->  #
-> 
-> Fixes: b4c658d4d63d61 ("perf target: Remove uid from target")
-> Suggested-by: Jiri Olsa <jolsa@kernel.org>
-> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-> Co-developed-by: Thomas Richter <tmricht@linux.ibm.com>
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+On Wed, Aug 06, 2025 at 03:00:17PM +0200, Jakub Brnak wrote:
+> Replace custom syscall structs with the standard trace_event_raw_sys_enter
+> and trace_event_raw_sys_exit from vmlinux.h.
+> This fixes a data structure misalignment issue discovered on RHEL-9, which
+> prevented BPF programs from correctly accessing syscall arguments.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Can you explain what the alignment issue was?  It's not clear to me what
+makes it misaligned.
+
+
+> This change also aims to improve compatibility between different version
+> of the perf tool and kernel by using CO-RE so BPF code can correclty
+> adjust field offsets.
+> 
+> Signed-off-by: Jakub Brnak <jbrnak@redhat.com>
+> ---
+> The issue was encountered on RHEL-9 by failing trace enum augmentation tests.
+> 
+> Before change:
+> 113: perf trace enum augmentation tests:
+> --- start ---
+> test child forked, pid 92876
+> Checking if vmlinux exists
+> Tracing syscall landlock_add_rule
+> [syscall failure] Failed to trace syscall landlock_add_rule, output:
+> 
+> ---- end(-1) ----
+> 113: perf trace enum augmentation tests                              : FAILED!
+> 
+> After change:
+> 113: perf trace enum augmentation tests:
+> --- start ---
+> test child forked, pid 98369
+> Checking if vmlinux exists
+> Tracing syscall landlock_add_rule
+> Tracing non-syscall tracepoint timer:hrtimer_start
+> ---- end(0) ----
+> 113: perf trace enum augmentation tests                              : Ok
+> 
+>  .../bpf_skel/augmented_raw_syscalls.bpf.c     | 58 ++++++++-----------
+>  tools/perf/util/bpf_skel/vmlinux/vmlinux.h    | 14 +++++
+>  2 files changed, 37 insertions(+), 35 deletions(-)
+> 
+> diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> index cb86e261b4de..de397b3b0776 100644
+> --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> @@ -60,18 +60,6 @@ struct syscalls_sys_exit {
+>  	__uint(max_entries, 512);
+>  } syscalls_sys_exit SEC(".maps");
+>  
+> -struct syscall_enter_args {
+> -	unsigned long long common_tp_fields;
+> -	long		   syscall_nr;
+> -	unsigned long	   args[6];
+> -};
+> -
+> -struct syscall_exit_args {
+> -	unsigned long long common_tp_fields;
+> -	long		   syscall_nr;
+> -	long		   ret;
+> -};
+> -
+>  /*
+>   * Desired design of maximum size and alignment (see RFC2553)
+>   */
+> @@ -115,7 +103,7 @@ struct pids_filtered {
+>  } pids_filtered SEC(".maps");
+>  
+>  struct augmented_args_payload {
+> -	struct syscall_enter_args args;
+> +	struct trace_event_raw_sys_enter args;
+>  	struct augmented_arg arg, arg2; // We have to reserve space for two arguments (rename, etc)
+>  };
+>  
+> @@ -135,7 +123,7 @@ struct beauty_map_enter {
+>  } beauty_map_enter SEC(".maps");
+>  
+>  struct beauty_payload_enter {
+> -	struct syscall_enter_args args;
+> +	struct trace_event_raw_sys_enter args;
+>  	struct augmented_arg aug_args[6];
+>  };
+>  
+> @@ -192,7 +180,7 @@ unsigned int augmented_arg__read_str(struct augmented_arg *augmented_arg, const
+>  }
+>  
+>  SEC("tp/raw_syscalls/sys_enter")
+> -int syscall_unaugmented(struct syscall_enter_args *args)
+> +int syscall_unaugmented(struct trace_event_raw_sys_enter *args)
+>  {
+>  	return 1;
+>  }
+> @@ -204,7 +192,7 @@ int syscall_unaugmented(struct syscall_enter_args *args)
+>   * filename.
+>   */
+>  SEC("tp/syscalls/sys_enter_connect")
+> -int sys_enter_connect(struct syscall_enter_args *args)
+> +int sys_enter_connect(struct trace_event_raw_sys_enter *args)
+>  {
+>  	struct augmented_args_payload *augmented_args = augmented_args_payload();
+>  	const void *sockaddr_arg = (const void *)args->args[1];
+> @@ -225,7 +213,7 @@ int sys_enter_connect(struct syscall_enter_args *args)
+>  }
+>  
+>  SEC("tp/syscalls/sys_enter_sendto")
+> -int sys_enter_sendto(struct syscall_enter_args *args)
+> +int sys_enter_sendto(struct trace_event_raw_sys_enter *args)
+>  {
+>  	struct augmented_args_payload *augmented_args = augmented_args_payload();
+>  	const void *sockaddr_arg = (const void *)args->args[4];
+> @@ -243,7 +231,7 @@ int sys_enter_sendto(struct syscall_enter_args *args)
+>  }
+>  
+>  SEC("tp/syscalls/sys_enter_open")
+> -int sys_enter_open(struct syscall_enter_args *args)
+> +int sys_enter_open(struct trace_event_raw_sys_enter *args)
+>  {
+>  	struct augmented_args_payload *augmented_args = augmented_args_payload();
+>  	const void *filename_arg = (const void *)args->args[0];
+> @@ -258,7 +246,7 @@ int sys_enter_open(struct syscall_enter_args *args)
+>  }
+>  
+>  SEC("tp/syscalls/sys_enter_openat")
+> -int sys_enter_openat(struct syscall_enter_args *args)
+> +int sys_enter_openat(struct trace_event_raw_sys_enter *args)
+>  {
+>  	struct augmented_args_payload *augmented_args = augmented_args_payload();
+>  	const void *filename_arg = (const void *)args->args[1];
+> @@ -273,7 +261,7 @@ int sys_enter_openat(struct syscall_enter_args *args)
+>  }
+>  
+>  SEC("tp/syscalls/sys_enter_rename")
+> -int sys_enter_rename(struct syscall_enter_args *args)
+> +int sys_enter_rename(struct trace_event_raw_sys_enter *args)
+>  {
+>  	struct augmented_args_payload *augmented_args = augmented_args_payload();
+>  	const void *oldpath_arg = (const void *)args->args[0],
+> @@ -304,7 +292,7 @@ int sys_enter_rename(struct syscall_enter_args *args)
+>  }
+>  
+>  SEC("tp/syscalls/sys_enter_renameat2")
+> -int sys_enter_renameat2(struct syscall_enter_args *args)
+> +int sys_enter_renameat2(struct trace_event_raw_sys_enter *args)
+>  {
+>  	struct augmented_args_payload *augmented_args = augmented_args_payload();
+>  	const void *oldpath_arg = (const void *)args->args[1],
+> @@ -346,7 +334,7 @@ struct perf_event_attr_size {
+>  };
+>  
+>  SEC("tp/syscalls/sys_enter_perf_event_open")
+> -int sys_enter_perf_event_open(struct syscall_enter_args *args)
+> +int sys_enter_perf_event_open(struct trace_event_raw_sys_enter *args)
+>  {
+>  	struct augmented_args_payload *augmented_args = augmented_args_payload();
+>  	const struct perf_event_attr_size *attr = (const struct perf_event_attr_size *)args->args[0], *attr_read;
+> @@ -378,7 +366,7 @@ int sys_enter_perf_event_open(struct syscall_enter_args *args)
+>  }
+>  
+>  SEC("tp/syscalls/sys_enter_clock_nanosleep")
+> -int sys_enter_clock_nanosleep(struct syscall_enter_args *args)
+> +int sys_enter_clock_nanosleep(struct trace_event_raw_sys_enter *args)
+>  {
+>  	struct augmented_args_payload *augmented_args = augmented_args_payload();
+>  	const void *rqtp_arg = (const void *)args->args[2];
+> @@ -399,7 +387,7 @@ int sys_enter_clock_nanosleep(struct syscall_enter_args *args)
+>  }
+>  
+>  SEC("tp/syscalls/sys_enter_nanosleep")
+> -int sys_enter_nanosleep(struct syscall_enter_args *args)
+> +int sys_enter_nanosleep(struct trace_event_raw_sys_enter *args)
+>  {
+>  	struct augmented_args_payload *augmented_args = augmented_args_payload();
+>  	const void *req_arg = (const void *)args->args[0];
+> @@ -429,7 +417,7 @@ static bool pid_filter__has(struct pids_filtered *pids, pid_t pid)
+>  	return bpf_map_lookup_elem(pids, &pid) != NULL;
+>  }
+>  
+> -static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+> +static int augment_sys_enter(void *ctx, struct trace_event_raw_sys_enter *args)
+>  {
+>  	bool augmented, do_output = false;
+>  	int zero = 0, index, value_size = sizeof(struct augmented_arg) - offsetof(struct augmented_arg, value);
+> @@ -444,7 +432,7 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+>  		return 1;
+>  
+>  	/* use syscall number to get beauty_map entry */
+> -	nr             = (__u32)args->syscall_nr;
+> +	nr             = (__u32)args->id;
+>  	beauty_map     = bpf_map_lookup_elem(&beauty_map_enter, &nr);
+>  
+>  	/* set up payload for output */
+> @@ -454,8 +442,8 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+>  	if (beauty_map == NULL || payload == NULL)
+>  		return 1;
+>  
+> -	/* copy the sys_enter header, which has the syscall_nr */
+> -	__builtin_memcpy(&payload->args, args, sizeof(struct syscall_enter_args));
+> +	/* copy the sys_enter header, which has the id */
+> +	__builtin_memcpy(&payload->args, args, sizeof(struct trace_event_raw_sys_enter));
+
+I think we prefer sizeof(*args) than sizeof(<type-name>).
+
+>  
+>  	/*
+>  	 * Determine what type of argument and how many bytes to read from user space, using the
+> @@ -515,14 +503,14 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+>  		}
+>  	}
+>  
+> -	if (!do_output || (sizeof(struct syscall_enter_args) + output) > sizeof(struct beauty_payload_enter))
+> +	if (!do_output || (sizeof(struct trace_event_raw_sys_enter) + output) > sizeof(struct beauty_payload_enter))
+>  		return 1;
+>  
+> -	return augmented__beauty_output(ctx, payload, sizeof(struct syscall_enter_args) + output);
+> +	return augmented__beauty_output(ctx, payload, sizeof(struct trace_event_raw_sys_enter) + output);
+
+Ditto.
 
 Thanks,
 Namhyung
 
-> ---
->  tools/perf/util/bpf-filter.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
-> index d0e013eeb0f7..a0b11f35395f 100644
-> --- a/tools/perf/util/bpf-filter.c
-> +++ b/tools/perf/util/bpf-filter.c
-> @@ -451,6 +451,8 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
->  	struct bpf_link *link;
->  	struct perf_bpf_filter_entry *entry;
->  	bool needs_idx_hash = !target__has_cpu(target);
-> +	DECLARE_LIBBPF_OPTS(bpf_perf_event_opts, pe_opts,
-> +			    .dont_enable = true);
+>  }
 >  
->  	entry = calloc(MAX_FILTERS, sizeof(*entry));
->  	if (entry == NULL)
-> @@ -522,7 +524,8 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
->  	prog = skel->progs.perf_sample_filter;
->  	for (x = 0; x < xyarray__max_x(evsel->core.fd); x++) {
->  		for (y = 0; y < xyarray__max_y(evsel->core.fd); y++) {
-> -			link = bpf_program__attach_perf_event(prog, FD(evsel, x, y));
-> +			link = bpf_program__attach_perf_event_opts(prog, FD(evsel, x, y),
-> +								   &pe_opts);
->  			if (IS_ERR(link)) {
->  				pr_err("Failed to attach perf sample-filter program\n");
->  				ret = PTR_ERR(link);
+>  SEC("tp/raw_syscalls/sys_enter")
+> -int sys_enter(struct syscall_enter_args *args)
+> +int sys_enter(struct trace_event_raw_sys_enter *args)
+>  {
+>  	struct augmented_args_payload *augmented_args;
+>  	/*
+> @@ -550,16 +538,16 @@ int sys_enter(struct syscall_enter_args *args)
+>  	 * unaugmented tracepoint payload.
+>  	 */
+>  	if (augment_sys_enter(args, &augmented_args->args))
+> -		bpf_tail_call(args, &syscalls_sys_enter, augmented_args->args.syscall_nr);
+> +		bpf_tail_call(args, &syscalls_sys_enter, augmented_args->args.id);
+>  
+>  	// If not found on the PROG_ARRAY syscalls map, then we're filtering it:
+>  	return 0;
+>  }
+>  
+>  SEC("tp/raw_syscalls/sys_exit")
+> -int sys_exit(struct syscall_exit_args *args)
+> +int sys_exit(struct trace_event_raw_sys_exit *args)
+>  {
+> -	struct syscall_exit_args exit_args;
+> +	struct trace_event_raw_sys_exit exit_args;
+>  
+>  	if (pid_filter__has(&pids_filtered, getpid()))
+>  		return 0;
+> @@ -570,7 +558,7 @@ int sys_exit(struct syscall_exit_args *args)
+>  	 * "!raw_syscalls:unaugmented" that will just return 1 to return the
+>  	 * unaugmented tracepoint payload.
+>  	 */
+> -	bpf_tail_call(args, &syscalls_sys_exit, exit_args.syscall_nr);
+> +	bpf_tail_call(args, &syscalls_sys_exit, exit_args.id);
+>  	/*
+>  	 * If not found on the PROG_ARRAY syscalls map, then we're filtering it:
+>  	 */
+> diff --git a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+> index a59ce912be18..b8b234726863 100644
+> --- a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+> +++ b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+> @@ -212,4 +212,18 @@ struct pglist_data {
+>  	int nr_zones;
+>  } __attribute__((preserve_access_index));
+>  
+> +struct trace_event_raw_sys_enter {
+> +	struct trace_entry ent;
+> +	long int id;
+> +	long unsigned int args[6];
+> +	char __data[0];
+> +} __attribute__((preserve_access_index));
+> +
+> +struct trace_event_raw_sys_exit {
+> +	struct trace_entry ent;
+> +	long int id;
+> +	long int ret;
+> +	char __data[0];
+> +} __attribute__((preserve_access_index));
+> +
+>  #endif // __VMLINUX_H
 > -- 
 > 2.50.1
 > 
