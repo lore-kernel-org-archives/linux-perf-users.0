@@ -1,155 +1,299 @@
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazolkn19010021.outbound.protection.outlook.com [52.103.33.21])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 955AE207A20;
-	Wed,  6 Aug 2025 06:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.33.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754460585; cv=fail; b=mrZVpWOfwNCadYl3bQuy4Ak+4OHP2nF5lYNc+jitJ1rSq0ddBprXUwjzbvvT8TIMS0tg97Diohbua6z16T2JeFKGJUmZhSz1ZPyd8Gz6wcR5K3M95BIXfI96vhGJ+Lme1Sbb6Ej+E/+dTQQjeNfoK6ZK7pY1C2x1oi1TSkSzXF0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754460585; c=relaxed/simple;
-	bh=f9BTdT5zdQ7qzQ2spY4Vj6TGwgnrYRImE7IiC4nz7iM=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=N3MAICb9u2hd4hj8pabOa22McOUuxo0kEApRqESSRm1qpz///YAD93ZI+qP5qe+PAGYd6X/pLMnLfijc2f0/3bEwHNZAS9ZnjoR7GuszAuesplWk/5AqleIinYWz6SZNbrkFjc4GZEvUELyRfvtLkIX/Zg0OwwYSKLq9vGe6syY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=kZwUcfEz; arc=fail smtp.client-ip=52.103.33.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F95721ABA2;
+	Wed,  6 Aug 2025 08:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754469504; cv=none; b=X+QbvxKu4yQh7C1pTBfRD+pTezJq5pThd+Suru2c08tlnCHDEqgv5MFuUW4BHMA7Xm4Cr92cUnYiYxkDRS9X2GHYD+8v3AIfvUH0fDH7ZYM5T6ZqoSh5PlHkj4Hp7baC8YXuPvCJD6NGg2ATTKaq2l3wpwFhJ/BuQzEhuzIAmio=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754469504; c=relaxed/simple;
+	bh=INZZW86BTHBinp5CUjHA7l3SdNfTRdSs53V6aTM3PIc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nN30oYoPmDBwp8zvYck0K26AtT8fKmHk/3Q0dAkTl8KTO0oP8qt5QnbIv5LkO97ZRoayWC5Rrej/RUfxAwa84/efK10d10kSgb4wA0f9CWp9Q/G63Zg+jzlC+WYUCBo9ytaqpkX/HTHFa/e/4U9OldyuwDJ1LnyPEtB/vYD8WGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KjP+rwxK; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="kZwUcfEz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gQVHvu6jqOkAplh6gEH/GCDWHUD4c7If3CCqC6r9g9ecIyg/SyhlpJ8n1NHtmwazWAXiWZKsK0hRevb2V2GRCTtow9YQNPwlUe0PFMnIfxjuNqHkIsMHkkv6Hetgrnrv3bVwSb8txYup4tr0lpoPU4sGUaJO3+c+xcQYcVtfIxP5NKcEqJ1JSBocWv9TsVZvj3KH5+Qv58xNHzjRh45vIJbwKei8VmlxINZta4dcT3Vi8/zkSeGDPAy3Y2WUz97MtYoL5tRjRJl8ZDh/73cCEGWoBXzem270ZeXSIGGWejMdMA0Rf/nCbtkXyaDX8T98nUHqQ22rrJgyIo/fdfaPAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TxWq2uSUdn2Pc4z0yqPrV3J13BQHw4S+Yt96EN+Qha8=;
- b=Rm7GXer37WecflLHudtAwYBAs6LNTX/SQyevTMizFFbdK+IrLEAvEDNSGYoBnOlPYM06xAOE+G0c4iwkIT7n627cyTzKAFrqdR4PHOIXlS0MeRTzqirlp6y5JzYzTooAWRpR1dJ6gp2lqxCqhR9WoNBJQjPD/Zwr+YqwqoxPFvsOGZX2Lk4YMrX829AKnd84+qfp+8rjOXRYIQ4yMjt0dnnhT8tC9CKXHKpHGhPNC60SojSDirIa4nRW2plrUG0oxdbYeRUJ5iEFlhaRGULM8j1USlQy6U3lQaLKaYB84KMmGpw8IIU7+MQW9RbJWTzf909ifz5ktRmSzGJbImmciw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TxWq2uSUdn2Pc4z0yqPrV3J13BQHw4S+Yt96EN+Qha8=;
- b=kZwUcfEzM40bT21bKwchRyaicEBBmePJ8uiTTELpgAxL7YViEywe84Kn/jEOCBKkNx2ht42O2WwC++ok6u0jkjfw0DFX3mZzvTLTmx1fVeY2qMzc3EgxYd80wvvdQhCuCAfc+bLQeyzyxzdAlB54e6Djme0qLhRLTuxdTVsGCZRR5Ti+TZlRZceu03lGOxjzIJ1xvHZc46SOAUX9bDhh8X9f0JkgN2B5kdoD0soL82VndR5fe0Q4LSIMcKiiSSpg5aLcet2Cu6GyJ9MMkxf/2jNW8aDjbyGQZHQ7AOZ5IKFhCzoKnfKTUvUuWDh6bOVV0rpNX16KF+aZ+vfyMo1ZLQ==
-Received: from AS8PR02MB10217.eurprd02.prod.outlook.com
- (2603:10a6:20b:63e::17) by AS2PR02MB8789.eurprd02.prod.outlook.com
- (2603:10a6:20b:550::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8989.21; Wed, 6 Aug
- 2025 06:09:40 +0000
-Received: from AS8PR02MB10217.eurprd02.prod.outlook.com
- ([fe80::5556:4de5:6245:a3c]) by AS8PR02MB10217.eurprd02.prod.outlook.com
- ([fe80::5556:4de5:6245:a3c%7]) with mapi id 15.20.8989.018; Wed, 6 Aug 2025
- 06:09:40 +0000
-From: David Binderman <dcb314@hotmail.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	"acme@kernel.org" <acme@kernel.org>, "namhyung@kernel.org"
-	<namhyung@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>,
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"jolsa@kernel.org" <jolsa@kernel.org>, "irogers@google.com"
-	<irogers@google.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Linux
- Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-6.16/tools/perf/util/tool_pmu.c:242: Pointless test ?
-Thread-Topic: linux-6.16/tools/perf/util/tool_pmu.c:242: Pointless test ?
-Thread-Index: AQHcBpg9E5AKwgPdK0agL0hVJ+bmAg==
-Date: Wed, 6 Aug 2025 06:09:40 +0000
-Message-ID:
- <AS8PR02MB10217286997CFA78F802121F39C2DA@AS8PR02MB10217.eurprd02.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AS8PR02MB10217:EE_|AS2PR02MB8789:EE_
-x-ms-office365-filtering-correlation-id: 66f752ac-7fa2-426a-3678-08ddd4afd4a8
-x-ms-exchange-slblob-mailprops:
- 4VtScROZs21qKsZbQ/+3hOXi8TYtpWnwA1urBHetdbAO3imqI84DLEqMTTCw+Lc/vCg5o6g0FLhAw2j8p2w3O9jeS4/YiL9rHrebnKim5hdSWylk9gWUp7HmRUIlbSKg/LlxvDefbhoIVB3u6mmzLJQQcpMtT40hKYKCUV2j4t2DzIEw2tL9epMo3kp3IYm2ZH9u7PyorxoRBHE67oZlfmFPQJAjBVV4g/lqjeu/ivhyvMJhGI+DW5PiJ7MdNUycnntdSshWeA22qintdRo7LRYGF57Iv5FAtpAWUrcJ24DQVze/nRJcr64MjHtU8KihvKDyMzefO7O16VpCFzHWIvFrQ7b4yBOBy25rX2NOYVntc2/6ilunQhOwwO8chdM/khZY/KL5F43tjnfXnE0xRpRrhaAtPi3refFGdtvbs1KoBUOLoudzX74Jq9eolHr2PPIY4l0wruZEVrsDf92SAO+MOtZDmeQn5jTdl+fEo/ymmNUu0QNRRMgA9+wXHz9quQybpH69E1+NlDQCWMAvnTIwRVCUEeBKsnKQ6ce3WdNrIQjc/px0am/TcMdXGBRmcBDI5lv/RBY8F3NZRb8VnCZQFQKoMQWqgnPOx1600cFwSn9iu4iYLPz2s4Ii/QZFAyS4Hr+zWgYhWdY8Kkq/7ngtlmDPlDSeQ4C2uk2JQx0GL7VwEXA5nw==
-x-microsoft-antispam:
- BCL:0;ARA:14566002|461199028|8062599012|19110799012|15080799012|15030799006|8060799015|31061999003|3412199025|440099028|51005399003|41105399003|40105399003|39105399003|21999032|102099032;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?aAHLoJWzAwx7IzSRh/ua1jMEfjCfE4MkCqYElwKFm+0tys25aLfUG7o1P1?=
- =?iso-8859-1?Q?o+rX3275L3GPpe/fsxfW9iH638cXNrAMtKlb3mUChNsUZ7TLVylj2ah04m?=
- =?iso-8859-1?Q?5sNJPwcDnnPcHusViWIQkx9jzoh5DaI11WOtpzD1DGxJPVAcxxMKKGNuBW?=
- =?iso-8859-1?Q?2ehJ69kXSh81qBlPjnxqvzz5XSimCaAuI0vhAM04eaxGrWVAI9TYtpWg26?=
- =?iso-8859-1?Q?tyDWhR0nhGevryVTwwEK5eHCRY9EzDxmSiwMxO49TJt5II6dTHqJBdsJTx?=
- =?iso-8859-1?Q?1qJh+znwu1/Tv5IE0NjsuiCy7I+01qmzVVi2xJrr9tHRMVtcMvkixIxpJL?=
- =?iso-8859-1?Q?BuLsH1Avn84fAojZGI47W68427meKoOOD+7sdIA49Tnc2VrBbWhawOj9kp?=
- =?iso-8859-1?Q?I2XGEOPc13FOSoOfYsSsNsu+6J/4n8fhHO/nMMcH6xMujB/7Ajs+oF7tT3?=
- =?iso-8859-1?Q?K0zD+6G6gXD+dAF8Z3jUYDTdg9PZ11zTim7fVEEQXDEOswyN7WTaJzFXjx?=
- =?iso-8859-1?Q?pjFNMAty6RFKFZ/KvK7ZRpOGJJ9Th4d+few32pzFLPMPlAm3RAmo7HKIt0?=
- =?iso-8859-1?Q?Mym9UvQFOnWegedAQK/jPQyL+83P61samsk7w1sV1+91i4hN9EBEZDaMUK?=
- =?iso-8859-1?Q?EjuB97Nnre+U1U6bhazmarIJTEbpKtVlmfP5b3MJaZLJuEG7ySGs5uOHdU?=
- =?iso-8859-1?Q?IIukYGxgYFfHwHkLXtdVX2AGFyjNLk4VeEojOlrgbyrhMx604PMszzlfkR?=
- =?iso-8859-1?Q?8zk+63EuYp7mVS2xF7+mAY2DgFVkp4YWoM3oBhF69d3f+JFeROnn4eWM9F?=
- =?iso-8859-1?Q?qxV3F0CZaXk7PSP4MpvArQtXu4j8JM+NNia+UlIc9VMMTDjhowrc53zW2C?=
- =?iso-8859-1?Q?2fS8Bzq1F8x1uTLZLJ8EqzrZak2aI5aARWVStzFvSPPJ8+ep1f77IOdTvR?=
- =?iso-8859-1?Q?gwXW4w3C0jHr+qMTxpfVDfqWI9AWz7TlHx5J9Kn7f1tlqsjpMQxUdakei8?=
- =?iso-8859-1?Q?rTdmYtzupayC9ISTnwJfe7Lmdk0ROzIlqmOOF8husZRYCFcd5PlpDQ3yQ0?=
- =?iso-8859-1?Q?rjQvLJZxMVkRH4IwXqblMUL90Xu33OOtZYyFgWXTVVlQr0AE5tUyJcdWGk?=
- =?iso-8859-1?Q?2RMWLMZvhpykq4+wRMVV/rm5WZ4n7V05gVumwTp5rVu/Ma2sNj4k3xFcaF?=
- =?iso-8859-1?Q?okEN4fXy4NZ/FYjI7hAmWY7rJ2SiQDbTRM4PG6PGyK335pjnd/c+j4KlHm?=
- =?iso-8859-1?Q?LSXdl936QUyfkvDOZTaFgLzqWEkHY+uJs21+M6sy4X4qQ2o26f9RXN42yO?=
- =?iso-8859-1?Q?3qtO7CJQUd+CxSx8o3sylYxzaA=3D=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?8foZn+4NIoJ1TR/6QjHCmrWG1X1PyInBLuUfqnti6cNhhX8HHj0OhYF9Rw?=
- =?iso-8859-1?Q?aA+NZZ+VdVN0QaS+fD0cWF+1xyQdln6lGcEM7+Echcm0WxvuAAfwwVA0DE?=
- =?iso-8859-1?Q?98lffQJyG3PzzRs5wlZ0x6Q9PCDjRvASxqelJGgeWRAirfjgTfDWTM3gb3?=
- =?iso-8859-1?Q?uJHGrsgSCHRp5DZIush5qrJ/nlEyfGMs9tJ/mza7D4s6h+j92t4V6682NR?=
- =?iso-8859-1?Q?3Qi3NoOsO5JYcXspxh0l8hcQuGdB8O97COC2ThxqY77PPjVHpYsuAmXoPC?=
- =?iso-8859-1?Q?dSJgVpnJ0gPJ9galimtjzE7ay/Ql7Sx09gRLHjiRy4vj3ZZmaPhQHd9w5j?=
- =?iso-8859-1?Q?tgkIu/fAgcQdeAzA4u5SaidaqKe+QxPbkmqdDmgjp4ToQ79BdZXM4VlC9N?=
- =?iso-8859-1?Q?Zy0YXcd9iQ0xpQ8/VtPaL7qET9qrUV2MjaPJXHw9Mf2WsXT5p8NlPQzUwB?=
- =?iso-8859-1?Q?rlr2isdRmzl18Vh+r0+1TdF4/NsnU3P6EFFv9DRzRE5V/Idj2gv7mVK9sy?=
- =?iso-8859-1?Q?8kVnq961JrKYkfmAHJ2zUIoyC4/B6V4OkTKJeW48XZRTxO7Zbd22aIELlx?=
- =?iso-8859-1?Q?CCyLNGSUddJiJfSDr/3xNF2DDCcKWRaa6/0WV/Jhn1iX3hKiWoaNsOaygW?=
- =?iso-8859-1?Q?e2I8UvLbnJIA5+RK6bgyn1W0eTOZu8RMtFKGz6+4Tl/ZyPt3/i+u6mc0pY?=
- =?iso-8859-1?Q?H66ugeGmkAV9lQ4cAHzQ+e8/Pj9OTwbYUrIxMzX9ovCjoacfpLApe6wBtq?=
- =?iso-8859-1?Q?5bmkKx5w6P75tvgAQiPRzfjUPg9WVmR+VNL0aCQU5xYHPheVdi3BXyjJoN?=
- =?iso-8859-1?Q?dvBUfmJ2fFiMuMhs02dq78Zn4q43SwuBcaaj4FaBgw0EkNneUoKvePAQeq?=
- =?iso-8859-1?Q?iwMlYnAppjtp6Jiys6CtysoXZnecqNjqqJ0b6xpoHEp97nir56KPeDmIht?=
- =?iso-8859-1?Q?ocvJrx++BFmYw1QHMw2luO+xvdPC1qT6m7BrGeMpT7xTPMp3zEd+8JpEFK?=
- =?iso-8859-1?Q?9BIR+HcH5jklYJdqOwnsVP3Lt72CkVNnoh8KG9WmHyfLxqaoURkSeqVieS?=
- =?iso-8859-1?Q?M4g4C9q/mkXNHpjuv7KOwCm/Y7W8tRXD87Cgw7bqGv0zXFmsIGF0qdNA75?=
- =?iso-8859-1?Q?Qx+ENFydjlJAdakcp/QIp0YH9xAIgPZknvkaT+I56Yux6Q8Wh2p2JvwII8?=
- =?iso-8859-1?Q?IDT50R4vDP0hGqTCda3JYCdXggb0buheP4ZHmftJnAL4pyAqcWI7BBuknQ?=
- =?iso-8859-1?Q?nLJ5kKQ9ppQ/xVVbp9VQ=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KjP+rwxK"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5768QAHr021615;
+	Wed, 6 Aug 2025 08:38:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=BFRcT+PNR7FsIXduEUPRQV6M3wexi+
+	hFcjbQ3v0Iu0c=; b=KjP+rwxKxhPVJDapoCQhL/BHcamX30+0byZWwxaRoc79JG
+	6+zEBkpmP7xndvFCvCMZwwqN6z7YCX49FQMN1yJzzt1oA3e+PD3erfe++Zek+rEa
+	6AlYX0sLnOKj4npfmKTwSTspdEzo/ZC0XodZToH4rCUW1Lo1AACzK1RUzGEQBE2b
+	x9C9y/gdGPaWVA2fe+IAwFDcaSdj3ETL9pQSXlm3yGtP0T85Qn9q6IAbascPLv7B
+	cwuujKS2rBT8ELLLMboBozsi12IqXsNo5O9TJj9nFRCkqvTYTW7Aey8a/CDugnLW
+	6FlRQAYTQk4aJGHQjr1/38Vq5moUPaL5SqQ0cQtA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48bq61u11h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 06 Aug 2025 08:38:04 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5768KIiY004961;
+	Wed, 6 Aug 2025 08:38:04 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48bq61u10a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 06 Aug 2025 08:38:04 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57683FVA020612;
+	Wed, 6 Aug 2025 08:38:01 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 48bpwmtrkh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 06 Aug 2025 08:38:01 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5768bx8n53281060
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 6 Aug 2025 08:37:59 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9728C20043;
+	Wed,  6 Aug 2025 08:37:59 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0BF1E2004B;
+	Wed,  6 Aug 2025 08:37:59 +0000 (GMT)
+Received: from li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com (unknown [9.111.70.156])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed,  6 Aug 2025 08:37:58 +0000 (GMT)
+Date: Wed, 6 Aug 2025 10:37:57 +0200
+From: Sumanth Korikkar <sumanthk@linux.ibm.com>
+To: kan.liang@linux.intel.com
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+        irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, eranian@google.com,
+        ctshao@google.com, tmricht@linux.ibm.com, leo.yan@arm.com,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH V4 07/16] s390/perf: Remove driver-specific throttle
+ support
+Message-ID: <aJMUZTJ7FmB9FW9r@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+References: <20250520181644.2673067-1-kan.liang@linux.intel.com>
+ <20250520181644.2673067-8-kan.liang@linux.intel.com>
+ <aICYAqM5EQUlTqtX@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: sct-15-20-8534-20-msonline-outlook-5faa0.templateTenant
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB10217.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66f752ac-7fa2-426a-3678-08ddd4afd4a8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Aug 2025 06:09:40.8506
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR02MB8789
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aICYAqM5EQUlTqtX@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA2MDA1MCBTYWx0ZWRfXzLQszVLavcpk
+ MFZxR1mRWK8/PGyE/RAus43GApDs8wsIgKz59S79YaUGSBUBvI3q5/2EJvjezfpyxU0a7snHNhk
+ 1Ji1rckwlVvxdxefLMEvTd2F2dwKhS+qZSGU1oBBwqExEBFbnkgmVNtVU+bTeMEbTDZxbknr8wR
+ P0XX6YZDhEQ1JDCoSqWN/2Cn46jv7BjJteniA9+VwHEJ+qBiqBLu+Kz+hG1nbvCdq6v0JzjKueq
+ UpTkIYtte/0e0v8wg2QvKeZGuHL09atjhAMibgQlb4deSL3gUjrtQWm5FekO3j/lpSFzA8PapMK
+ uqq8uIeEyKmV55FcBcegoGaY6z/WfxegUN7uE+jbd5OWUR6q/baO2bQd4M/3Xo7GN/29My5a9P/
+ WkGSdA5R/rb2GyRYtW8iWZ2LsNZunmFWzx5tebB+0qwxntsPGB8hKMZh8wHKmqmEV/VcZSJU
+X-Proofpoint-GUID: hFnD0kb1fyAEcLYEHj9ZK07E2WjMpeGm
+X-Authority-Analysis: v=2.4 cv=BIuzrEQG c=1 sm=1 tr=0 ts=6893146c cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=kj9zAlcOel0A:10 a=2OwXVqhp2XgA:10 a=QyXUC8HyAAAA:8 a=VnNF1IyMAAAA:8
+ a=VwQbUJbxAAAA:8 a=Uf_jtusGSZTfHGq8c9EA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-ORIG-GUID: t7K-OPae5mdZWsx89JZINyHOaEdoW6Nm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-06_01,2025-08-04_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 impostorscore=0 priorityscore=1501 lowpriorityscore=0
+ suspectscore=0 spamscore=0 mlxlogscore=999 adultscore=0 clxscore=1015
+ malwarescore=0 phishscore=0 bulkscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2507300000 definitions=main-2508060050
 
-Hello there,=0A=
-=0A=
-Static analyser cppcheck says:=0A=
-=0A=
-linux-6.16/tools/perf/util/tool_pmu.c:242:15: warning: Opposite inner 'if' =
-condition leads to a dead code block. [oppositeInnerCondition]=0A=
-=0A=
-Source code is=0A=
-=0A=
-        for (thread =3D 0; thread < nthreads; thread++) {=0A=
-            if (thread >=3D nthreads)=0A=
-                break;=0A=
-=0A=
-Suggest remove if test.=0A=
-=0A=
-Regards=0A=
-=0A=
-David Binderman=0A=
+On Wed, Jul 23, 2025 at 10:06:26AM +0200, Sumanth Korikkar wrote:
+> On Tue, May 20, 2025 at 11:16:35AM -0700, kan.liang@linux.intel.com wrote:
+> > From: Kan Liang <kan.liang@linux.intel.com>
+> > 
+> > The throttle support has been added in the generic code. Remove
+> > the driver-specific throttle support.
+> > 
+> > Besides the throttle, perf_event_overflow may return true because of
+> > event_limit. It already does an inatomic event disable. The pmu->stop
+> > is not required either.
+> > 
+> > Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+> > Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> > Cc: Thomas Richter <tmricht@linux.ibm.com>
+> > Cc: linux-s390@vger.kernel.org
+> > ---
+> >  arch/s390/kernel/perf_cpum_cf.c | 2 --
+> >  arch/s390/kernel/perf_cpum_sf.c | 5 +----
+> >  2 files changed, 1 insertion(+), 6 deletions(-)
+> > 
+> > diff --git a/arch/s390/kernel/perf_cpum_cf.c b/arch/s390/kernel/perf_cpum_cf.c
+> > index e657fad7e376..6a262e198e35 100644
+> > --- a/arch/s390/kernel/perf_cpum_cf.c
+> > +++ b/arch/s390/kernel/perf_cpum_cf.c
+> > @@ -980,8 +980,6 @@ static int cfdiag_push_sample(struct perf_event *event,
+> >  	}
+> >  
+> >  	overflow = perf_event_overflow(event, &data, &regs);
+> > -	if (overflow)
+> > -		event->pmu->stop(event, 0);
+> >  
+> >  	perf_event_update_userpage(event);
+> >  	return overflow;
+> > diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
+> > index ad22799d8a7d..91469401f2c9 100644
+> > --- a/arch/s390/kernel/perf_cpum_sf.c
+> > +++ b/arch/s390/kernel/perf_cpum_sf.c
+> > @@ -1072,10 +1072,7 @@ static int perf_push_sample(struct perf_event *event,
+> >  	overflow = 0;
+> >  	if (perf_event_exclude(event, &regs, sde_regs))
+> >  		goto out;
+> > -	if (perf_event_overflow(event, &data, &regs)) {
+> > -		overflow = 1;
+> > -		event->pmu->stop(event, 0);
+> > -	}
+> > +	overflow = perf_event_overflow(event, &data, &regs);
+> >  	perf_event_update_userpage(event);
+> >  out:
+> >  	return overflow;
+> > -- 
+> > 2.38.1
+> 
+> Hi all,
+> 
+> This seems to break POLL_HUP delivery to userspace - when event_limit reaches 0
+> 
+> From perf_event_open man page:
+> PERF_EVENT_IOC_REFRESH
+>               Non-inherited overflow counters can use this to enable a
+>               counter for a number of overflows specified by the
+>               argument, after which it is disabled.  Subsequent calls of
+>               this ioctl add the argument value to the current count.  An
+>               overflow notification with POLL_IN set will happen on each
+>               overflow until the count reaches 0; when that happens a
+>               notification with POLL_HUP set is sent and the event is
+>               disabled.
+> 
+> When the event_limit reaches 0, the POLL_HUP signal is expected to be
+> sent. Prior to this patch, an explicit call to event->stop() was made,
+> which may have contributed to ensuring that the POLL_HUP signal was
+> ultimately delivered. However, after  this change, I often did not
+> observe the POLL_HUP signal being delivered as expected in the end
+> 
+> Example program:
+> output:
+> Computation result: 49951804672
+> count.hup: 0 count.pollin: 22
+> 
+> Expected output should be:
+> count.hup: 1 in the end
+> 
+> #define _GNU_SOURCE
+> #include <time.h>
+> #include <stdbool.h>
+> #include <signal.h>
+> #include <poll.h>
+> #include <fcntl.h>
+> #include <stdio.h>
+> #include <stdlib.h>
+> #include <string.h>
+> #include <unistd.h>
+> #include <time.h>
+> 
+> #include <sys/ioctl.h>
+> #include <sys/syscall.h>
+> #include <linux/perf_event.h>
+> 
+> static struct signal_counts {
+>         int in;
+> 	int out;
+> 	int hup;
+> 	int unknown;
+> } count;
+> 
+> 
+> static unsigned long sample_type = PERF_SAMPLE_IP | PERF_SAMPLE_TID |
+> 		PERF_SAMPLE_TIME | PERF_SAMPLE_ADDR | PERF_SAMPLE_READ |
+> 		PERF_SAMPLE_ID | PERF_SAMPLE_CPU |
+> 		PERF_SAMPLE_PERIOD | PERF_SAMPLE_STREAM_ID | PERF_SAMPLE_RAW;
+> 
+> static void sighandler(int signum, siginfo_t *info, void *uc)
+> {
+> 	switch(info->si_code) {
+>                 case POLL_IN:  count.in++;  break;
+>                 case POLL_OUT: count.out++; break;
+>                 case POLL_HUP: count.hup++; break;
+>                 default: count.unknown++; break;
+>         }
+> }
+> 
+> void generate_load(unsigned long long iterations) {
+>     unsigned long long sum = 0;
+>     srand(time(0));
+> 
+>     for (unsigned long long i = 0; i < iterations; ++i) {
+>         int rnd = rand();
+>         sum += (rnd ^ (rnd >> 3)) % 1000;
+>     }
+>     printf("Computation result: %llu\n", sum);
+> }
+> 
+> void perf_attr(struct perf_event_attr *pe,
+> 		       unsigned long config, unsigned long period, bool freq,
+> 		       unsigned long bits)
+> {
+> 	memset(pe, 0, sizeof(struct perf_event_attr));
+> 	pe->size = sizeof(struct perf_event_attr);
+> 	pe->type = PERF_TYPE_HARDWARE;
+> 	pe->config = PERF_COUNT_HW_CPU_CYCLES;
+> 	pe->exclude_kernel = 0;
+> 	pe->sample_period = 50000;
+> 	pe->freq = 1;
+> 	pe->disabled = 1;
+> 	pe->config = config;
+> 	pe->freq = freq;
+> 	pe->sample_type = bits;
+> }
+> 
+> int main(int argc, char **argv)
+> {
+> 	int fd, signo = SIGIO, rc = -1;
+> 	struct sigaction sa, sa_old;
+> 	struct perf_event_attr pe;
+> 
+> 	perf_attr(&pe, PERF_COUNT_HW_CPU_CYCLES, 50000, 1, sample_type);
+> 	/* Set up overflow handler */
+> 	memset(&sa, 0, sizeof(struct sigaction));
+> 	memset(&sa_old, 0, sizeof(struct sigaction));
+> 	sa.sa_sigaction = sighandler;
+> 	sa.sa_flags = SA_SIGINFO;
+> 	if (sigaction(signo, &sa, &sa_old) < 0)
+> 		goto out;
+> 
+> 	fd = syscall(__NR_perf_event_open, &pe, 0, -1, -1, 0);
+> 	if (fd < 0)
+> 		return rc;
+> 
+> 	rc = fcntl(fd, F_SETFL, O_RDWR | O_NONBLOCK | O_ASYNC);
+> 	rc |= fcntl(fd, F_SETSIG, signo);
+> 	rc |= fcntl(fd, F_SETOWN, getpid());
+> 	if (rc)
+> 		goto out;
+> 
+> 	rc = ioctl(fd, PERF_EVENT_IOC_REFRESH, 2500);
+> 	if (rc)
+> 		goto out;
+> 
+> 	generate_load(100000000ULL);
+> 	sigaction(signo, &sa_old, NULL);
+> 	printf("count.hup: %d count.pollin: %d\n", count.hup, count.in);
+> 	close(fd);
+> 	return 0;
+> out:
+> 	return rc;
+> }
+
+Hi Kan,
+
+It would be great if you could share your feedback on this issue.
+
+Thank you.
