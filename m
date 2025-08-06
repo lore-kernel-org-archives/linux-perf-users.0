@@ -1,224 +1,162 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CAE21C179;
-	Wed,  6 Aug 2025 23:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDE227703E;
+	Wed,  6 Aug 2025 23:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754523504; cv=none; b=ZMhH4hYZRN6HhmV2ZO7HsS6Ys6b/VTiHYGmVbCQ+ONXcmV+avP8TnaRC8EyX/eY3rNfitQjnXWjsVqTOoorMG+oLNK2iqHcRy+AccWaNBYH4iHWVxoMZEBcDUKWFzaKLuJCLBiADk+fyTw54rjavi3i1rE6eNz68JQ5C8c9sq0Q=
+	t=1754523608; cv=none; b=mOru2CYRVlsojSzUxiMwJThOVS+crGo0FhjWypmrS1r7RG8lHmM1aGTtuoIgOKye+MphlXFgHx+EwiHeTN5z055F6fC9MRC5ByqPq2Z/b9yLBKxVhoMw2VD6jjx2nZi5d2f+O+zPwf6PxMyovBtJJ5ov4wYVKqwd4oTwWcUg4tU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754523504; c=relaxed/simple;
-	bh=sqI/GEwdoGremF/OUWnATYq0HOTDGAs6joghp/SU8a4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k5w4nTG11mZZwYuCBUMwoi9qZe/I8hgxc0mTnVyrIOmXoxMqIRJDzRduwdfdAyHGSWWlsXI9IpJWkjR1CtTlPmrM3J6PtC2CIgPRMnRCJUmyH8bZ40XkS6FWQmOEGxIf2PZXzf/onNMbdkyBPrvEoi/BN6XUGbceShtxoTHNf1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ODqJWN5A; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1754523608; c=relaxed/simple;
+	bh=38fEaMQu3DP3UBV6Q/qLyG/nax+cnSD8Gp0DBlgTSWo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UJNg971bzgdusN442uV8iS/kE5cUp/VotU7Q3lppGNnXqUOUFHnuw6zuxurN11/jXuuhoAcwGSSxwvbBSBO/IQiBJ1EbuzlXZqJ+bHjfjkWkmCmSQ34War7UJtAZBwnMCrXUFIc0751pFTBIqp6uk8RAdvV9igMC8VyIMvc214o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WFOvBogi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODqJWN5A"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-af66f444488so61171766b.0;
-        Wed, 06 Aug 2025 16:38:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754523501; x=1755128301; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WhqBigQF9nZyV6MxdBcrgjMBesgYA66oBZ2ceJcbdZE=;
-        b=ODqJWN5AtSIb0A5kVojl0Yy0V5g2hPqCjk3+bSOkU5h92O0GRkAIkGsjB2GOtOIUf2
-         UoO3AfhfTUMkyKXxBSxnO5dP7HLBd8RzghftDep575BBfGt7pUNClpvjdh0bR1j392k4
-         E+Ej9eoe1zBAjVS8oul/qF9xYyVFs3zIG4kJ3SyScHiaFhJq0fROUQ+DH9E5RE09+Qzr
-         a5EfKWdhHiVgc2/mf836B5As/7NBle2vb73TNKd3TOZIf8oAwNzpEeBOGvgGBG7lY5G+
-         PWMe+Hds0REuzhc4sbTQIp7yBKGaf/6Zc+6JQY9EqHh8jFaKm6+CwAMEAZy2kxEoPx9v
-         A26g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754523501; x=1755128301;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WhqBigQF9nZyV6MxdBcrgjMBesgYA66oBZ2ceJcbdZE=;
-        b=Y3Z7/Yuah5KWrxePZla1UmU7LWf1CGN2jLvfN4D+Th1rVrDVrSi8GY5sbCang2M4WY
-         gdDQbbnNkt0k0Tltay8qC5Nt/AZPEIddZ4wOg7Z4ej2BiCHbKTAQH9ZjXHjIxuNUDmDy
-         k2GfXDXUaxpNh2tEQ+EGfa3vcBqMGP1dD9QyDhiTkwD4AofvTFOI/omS0bBzhWnWK1hW
-         rgNj/238nHCuekuM+g6lvvTaBkDQ2QcAnjden8rGkaX5EOEhP7tlnBbz7xwkgmqwUqe6
-         9Ju8qc92En3gm7Ti/sAGmNAdJh8OCC0t+Tbsk4F5aBKBCNwYpoKUN5xokJg3MrLgnW2F
-         5Ikg==
-X-Forwarded-Encrypted: i=1; AJvYcCUxMfPGoBI9oFbT7Cwsv30C8bWRfoCoPcY8leMHNf1gnT7r61h5/6DhFKzXJM8gptewHkI=@vger.kernel.org, AJvYcCV+rOcTP7UW/mNc7/oJlHDdrer8HPxo7DnHA9k+DWS4yxSvHcS6jK46I9867dvB7uZ1IuqqQLsfvp8Xow==@vger.kernel.org, AJvYcCWluwqtt3JlPKCW1yTyyGTQ7rM/JR5VoFOKUAwnl7514i+hRzPh5si6Mx+wC4trbTKClbvtIoVoQU98kUw1ZlgI6g==@vger.kernel.org, AJvYcCXq8EJEl36RU6HatblEDArkzadT7lizm8Xlwvrdgj2tMZgRYQf6CEZWxtP9VsqcoWi5ww/m940Zdo9UbcSI@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLVkaUAAmefeH9neYA+3L6c+kLp6KeY0vL/O9kX4KT6dkUG0M6
-	UidQTx7A5VSyU/82ijZGzJ+kWO4u3+eqwFTW/oU7EeBgFkdLAOIR46H1FLzRX6f9Zox2CNO+DqX
-	mXm0QqsrYiBuEUZpeklPoi4rQro1KpVo=
-X-Gm-Gg: ASbGncvAkwv+HtNmhDNNyONKDoUF8RiPQTsuoDtZkKk1tAHyTBJO1fTRstN3h9MBS8z
-	U98vu76lb+Yzcqa1z8Rnr4/Lm229bWn5wJh4m0iAs7e1EDa6bsoX7yliewHZv5S4R6gYZ3Pa+zm
-	CM5HtdR7U317AQaOZPXclsggm+BNsDZYSA7UEO5ku3fGkGrXsfFLQ6nltlMtnQOciJRQ8MUgNYx
-	ouFIcJrcGRqO3N6b+HMyWMKVOyrDloV0yZ4xi0UUhDeXRY=
-X-Google-Smtp-Source: AGHT+IHzqZa1neiF0uyaArNjeHnGfC3u3C63toQez4cHAhPKNPYYG8lWs+NBrvtwsMA4OL/MdhBzMkD1DLcLhev3JBQ=
-X-Received: by 2002:a17:906:9f8b:b0:ae3:f299:ba47 with SMTP id
- a640c23a62f3a-af992ba59a5mr376345166b.32.1754523500252; Wed, 06 Aug 2025
- 16:38:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WFOvBogi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56FE4C4CEE7;
+	Wed,  6 Aug 2025 23:40:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754523607;
+	bh=38fEaMQu3DP3UBV6Q/qLyG/nax+cnSD8Gp0DBlgTSWo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WFOvBogiTPW9YnC0223cEg1jcfCZ5qzAtLPh0TjmwWEi5XCQJ+F1u6V/HpZZOJ0Rm
+	 9rEn7kjKagp44EONcJvbZcGaXB9ebY9+YnYRFoYPptDKnwoAIwAbkqF3MrT4DvBr8P
+	 P8l1s2ZhUAoZQrR/bhL3oCTdJfYEUlH+G/nz+jvZfg496ECCzwF7AfXGJZD5y9ZmLM
+	 1NOuV7XxRHT7qhVsFZVLPBNUgMdA4OWYh+5LNSKZ/J1bfijJshOXdiaT2HQ2n4/V3e
+	 r1zp/bXpWAWLwGvp9otRNX2KQ/WEkWIPi79P3nlHJT2af61DbvKfcs/tkIf51zqyab
+	 dXwo9Jfe9Niog==
+Date: Wed, 6 Aug 2025 16:40:05 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Kevin Tian <kevin.tian@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>
+Subject: Re: [PATCH 1/5] perf tools kvm: Add missed memory allocation check
+ and free
+Message-ID: <aJPn1Z5zxqOjZ-Ym@google.com>
+References: <20250805004633.135904-1-dapeng1.mi@linux.intel.com>
+ <20250805004633.135904-2-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250806114227.14617-1-iii@linux.ibm.com> <20250806114227.14617-3-iii@linux.ibm.com>
- <aJPc2NvJqLOGaIKl@google.com>
-In-Reply-To: <aJPc2NvJqLOGaIKl@google.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 6 Aug 2025 16:38:09 -0700
-X-Gm-Features: Ac12FXz1F-Xdu0Kpt8aaIXgLMS8YVgSoQxycBjiK4rapVXOu8GkFrx9VZX0LA3A
-Message-ID: <CAADnVQJG6U6X1qarpbdXra12m-PhNJK5f-jyw695osnOm6AZnQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] perf bpf-filter: Enable events manually
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ilya Leoshkevich <iii@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-s390 <linux-s390@vger.kernel.org>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250805004633.135904-2-dapeng1.mi@linux.intel.com>
 
-On Wed, Aug 6, 2025 at 3:53=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> Hello,
->
-> On Wed, Aug 06, 2025 at 01:40:35PM +0200, Ilya Leoshkevich wrote:
-> > On s390, and, in general, on all platforms where the respective event
-> > supports auxiliary data gathering, the command:
-> >
-> >    # ./perf record -u 0 -aB --synth=3Dno -- ./perf test -w thloop
-> >    [ perf record: Woken up 1 times to write data ]
-> >    [ perf record: Captured and wrote 0.011 MB perf.data ]
-> >    # ./perf report --stats | grep SAMPLE
-> >    #
-> >
-> > does not generate samples in the perf.data file. On x86 the command:
-> >
-> >   # sudo perf record -e intel_pt// -u 0 ls
-> >
-> > is broken too.
-> >
-> > Looking at the sequence of calls in 'perf record' reveals this
-> > behavior:
-> >
-> > 1. The event 'cycles' is created and enabled:
-> >
-> >    record__open()
-> >    +-> evlist__apply_filters()
-> >        +-> perf_bpf_filter__prepare()
-> >          +-> bpf_program.attach_perf_event()
-> >              +-> bpf_program.attach_perf_event_opts()
-> >                  +-> __GI___ioctl(..., PERF_EVENT_IOC_ENABLE, ...)
-> >
-> >    The event 'cycles' is enabled and active now. However the event's
-> >    ring-buffer to store the samples generated by hardware is not
-> >    allocated yet.
-> >
-> > 2. The event's fd is mmap()ed to create the ring buffer:
-> >
-> >    record__open()
-> >    +-> record__mmap()
-> >        +-> record__mmap_evlist()
-> >          +-> evlist__mmap_ex()
-> >              +-> perf_evlist__mmap_ops()
-> >                  +-> mmap_per_cpu()
-> >                      +-> mmap_per_evsel()
-> >                          +-> mmap__mmap()
-> >                              +-> perf_mmap__mmap()
-> >                                  +-> mmap()
-> >
-> >    This allocates the ring buffer for the event 'cycles'. With mmap()
-> >    the kernel creates the ring buffer:
-> >
-> >    perf_mmap(): kernel function to create the event's ring
-> >    |            buffer to save the sampled data.
-> >    |
-> >    +-> ring_buffer_attach(): Allocates memory for ring buffer.
-> >        |        The PMU has auxiliary data setup function. The
-> >        |        has_aux(event) condition is true and the PMU's
-> >        |        stop() is called to stop sampling. It is not
-> >        |        restarted:
-> >        |
-> >        |        if (has_aux(event))
-> >        |                perf_event_stop(event, 0);
-> >        |
-> >        +-> cpumsf_pmu_stop():
-> >
-> >    Hardware sampling is stopped. No samples are generated and saved
-> >    anymore.
-> >
-> > 3. After the event 'cycles' has been mapped, the event is enabled a
-> >    second time in:
-> >
-> >    __cmd_record()
-> >    +-> evlist__enable()
-> >        +-> __evlist__enable()
-> >          +-> evsel__enable_cpu()
-> >              +-> perf_evsel__enable_cpu()
-> >                  +-> perf_evsel__run_ioctl()
-> >                      +-> perf_evsel__ioctl()
-> >                          +-> __GI___ioctl(., PERF_EVENT_IOC_ENABLE, .)
-> >
-> >    The second
-> >
-> >       ioctl(fd, PERF_EVENT_IOC_ENABLE, 0);
-> >
-> >    is just a NOP in this case. The first invocation in (1.) sets the
-> >    event::state to PERF_EVENT_STATE_ACTIVE. The kernel functions
-> >
-> >    perf_ioctl()
-> >    +-> _perf_ioctl()
-> >        +-> _perf_event_enable()
-> >            +-> __perf_event_enable()
-> >
-> >    return immediately because event::state is already set to
-> >    PERF_EVENT_STATE_ACTIVE.
-> >
-> > This happens on s390, because the event 'cycles' offers the possibility
-> > to save auxilary data. The PMU callbacks setup_aux() and free_aux() are
-> > defined. Without both callback functions, cpumsf_pmu_stop() is not
-> > invoked and sampling continues.
-> >
-> > To remedy this, remove the first invocation of
-> >
-> >    ioctl(..., PERF_EVENT_IOC_ENABLE, ...).
-> >
-> > in step (1.) Create the event in step (1.) and enable it in step (3.)
-> > after the ring buffer has been mapped.
-> >
-> > Output after:
-> >
-> >  # ./perf record -aB --synth=3Dno -u 0 -- ./perf test -w thloop 2
-> >  [ perf record: Woken up 3 times to write data ]
-> >  [ perf record: Captured and wrote 0.876 MB perf.data ]
-> >  # ./perf  report --stats | grep SAMPLE
-> >               SAMPLE events:      16200  (99.5%)
-> >               SAMPLE events:      16200
-> >  #
-> >
-> > The software event succeeded both before and after the patch:
-> >
-> >  # ./perf record -e cpu-clock -aB --synth=3Dno -u 0 -- \
-> >                                         ./perf test -w thloop 2
-> >  [ perf record: Woken up 7 times to write data ]
-> >  [ perf record: Captured and wrote 2.870 MB perf.data ]
-> >  # ./perf  report --stats | grep SAMPLE
-> >               SAMPLE events:      53506  (99.8%)
-> >               SAMPLE events:      53506
-> >  #
-> >
-> > Fixes: b4c658d4d63d61 ("perf target: Remove uid from target")
-> > Suggested-by: Jiri Olsa <jolsa@kernel.org>
-> > Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-> > Co-developed-by: Thomas Richter <tmricht@linux.ibm.com>
-> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> > Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
->
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+On Tue, Aug 05, 2025 at 08:46:29AM +0800, Dapeng Mi wrote:
+> Current code allocates rec_argv[] array, but doesn't check if the
+> allocation is successful and explicitly free the rec_argv[] array.
+> 
+> Add them back.
+> 
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> ---
+>  tools/perf/builtin-kvm.c | 29 +++++++++++++++++++++++------
+>  1 file changed, 23 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+> index 7b15b4a705e4..f78a67a199ff 100644
+> --- a/tools/perf/builtin-kvm.c
+> +++ b/tools/perf/builtin-kvm.c
+> @@ -1719,7 +1719,9 @@ kvm_events_record(struct perf_kvm_stat *kvm, int argc, const char **argv)
+>  	set_option_flag(record_options, 0, "transaction", PARSE_OPT_DISABLED);
+>  
+>  	record_usage = kvm_stat_record_usage;
+> -	return cmd_record(i, rec_argv);
+> +	ret = cmd_record(i, rec_argv);
+> +	free(rec_argv);
 
-Do you mind if I take the whole set through the bpf tree ?
+Well.. it's not enough just to free rec_argv.  You also need to free all
+items in the rec_argv[].  Probably you want to add more STRDUP_FAIL_EXIT
+when copying the original argv (here and other places).
 
-I'm planning to send bpf PR in a couple days, so by -rc1
-all trees will see the fix.
+Thanks,
+Namhyung
+
+
+> +	return ret;
+>  }
+>  
+>  static int
+> @@ -2006,6 +2008,9 @@ static int __cmd_record(const char *file_name, int argc, const char **argv)
+>  
+>  	rec_argc = argc + 2;
+>  	rec_argv = calloc(rec_argc + 1, sizeof(char *));
+> +	if (!rec_argv)
+> +		return -ENOMEM;
+> +
+>  	rec_argv[i++] = strdup("record");
+>  	rec_argv[i++] = strdup("-o");
+>  	rec_argv[i++] = strdup(file_name);
+> @@ -2014,16 +2019,21 @@ static int __cmd_record(const char *file_name, int argc, const char **argv)
+>  
+>  	BUG_ON(i != rec_argc);
+>  
+> -	return cmd_record(i, rec_argv);
+> +	ret = cmd_record(i, rec_argv);
+> +	free(rec_argv);
+> +	return ret;
+>  }
+>  
+>  static int __cmd_report(const char *file_name, int argc, const char **argv)
+>  {
+> -	int rec_argc, i = 0, j;
+> +	int rec_argc, i = 0, j, ret;
+>  	const char **rec_argv;
+>  
+>  	rec_argc = argc + 2;
+>  	rec_argv = calloc(rec_argc + 1, sizeof(char *));
+> +	if (!rec_argv)
+> +		return -ENOMEM;
+> +
+>  	rec_argv[i++] = strdup("report");
+>  	rec_argv[i++] = strdup("-i");
+>  	rec_argv[i++] = strdup(file_name);
+> @@ -2032,17 +2042,22 @@ static int __cmd_report(const char *file_name, int argc, const char **argv)
+>  
+>  	BUG_ON(i != rec_argc);
+>  
+> -	return cmd_report(i, rec_argv);
+> +	ret = cmd_report(i, rec_argv);
+> +	free(rec_argv);
+> +	return ret;
+>  }
+>  
+>  static int
+>  __cmd_buildid_list(const char *file_name, int argc, const char **argv)
+>  {
+> -	int rec_argc, i = 0, j;
+> +	int rec_argc, i = 0, j, ret;
+>  	const char **rec_argv;
+>  
+>  	rec_argc = argc + 2;
+>  	rec_argv = calloc(rec_argc + 1, sizeof(char *));
+> +	if (!rec_argv)
+> +		return -ENOMEM;
+> +
+>  	rec_argv[i++] = strdup("buildid-list");
+>  	rec_argv[i++] = strdup("-i");
+>  	rec_argv[i++] = strdup(file_name);
+> @@ -2051,7 +2066,9 @@ __cmd_buildid_list(const char *file_name, int argc, const char **argv)
+>  
+>  	BUG_ON(i != rec_argc);
+>  
+> -	return cmd_buildid_list(i, rec_argv);
+> +	ret = cmd_buildid_list(i, rec_argv);
+> +	free(rec_argv);
+> +	return ret;
+>  }
+>  
+>  int cmd_kvm(int argc, const char **argv)
+> -- 
+> 2.34.1
+> 
