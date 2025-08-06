@@ -1,57 +1,57 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9FA2D63FD
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Aug 2025 19:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B0A2D6614
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 Aug 2025 19:58:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754510291; cv=none; b=bkqQlma9QNFqj1tYcsmE6ROLRZP2vV0BEgG2nmOsoNAj3MgOUzrJ8tK5tNpFse5N1wJGi7hJvnJMzBrDdvh5DPaLjkweq8WCtH+eSvlccphAh31X+rPaidXQSmdKmu6WW/nsDu3Kc47U/apZ1HSrbhjNm7Q/2MVCVGt5HkeXziM=
+	t=1754510293; cv=none; b=P/11MD2h1iAJf9jQ7Y3afgkQI54ZOoUi9UdOaJ0ZHGj+zCAAiNG4PtXNT0lTA3te6P/KU/LRrfkAjzG1JH8ZNg1sDysvMiwf97UuMRFY5u1bM3Lonvkaj9H/UCXis/6iYaq5BNy9xiuWkxBCzJi6lAMM9tjRu2dEEXb68mulNqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754510291; c=relaxed/simple;
-	bh=C53ygBWjsMP+UcUorpUgoXrWlq5dJSRuSmIlt0jKd/U=;
+	s=arc-20240116; t=1754510293; c=relaxed/simple;
+	bh=C/4r70x0T0JzgUP1RnZOZXEA4d1zjXrhrDvqbtcZVy0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OIm1TKFWPSDlzPhnY0T3q7alg8owyEsRKkbTXYfyTJfG7b2IZIi26qa51A2e6jihQHJeqhOnmWmvkSXOh2tvKz60XlMEK04cz0us6WgowyhUQkErP7OaArJiGJD+q+qXIO8PBix3NDeqzOzVDHkOiPVMYw8WUM91NhXkMz7F+LE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BGx0X2k/; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=ABt3gVMVJSuVuiZ7NHd5Clp/t018HugOYnUrwWvBL99A/iH7Csnzzr2NcUVeBoisejLkIoo/ImHp0dRR00sFZl1CgOdFeunSheU/Sb1/mG7NOvm5VIxsnF9JM8b9U3IgEP4/ZTO3KG7c9atpvwzcRL1iFFUzTCJrQDJC9ToDepo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pxaoaxds; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BGx0X2k/"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-31eac278794so251726a91.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Aug 2025 12:58:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pxaoaxds"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-315af0857f2so334481a91.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Aug 2025 12:58:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1754510288; x=1755115088; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1754510290; x=1755115090; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=x5qdlfMt7f/v/zSfpvn0pZJb5j/BJcw1RvQoZStHDYU=;
-        b=BGx0X2k/F+R1x1yZosxwA7KSbUSa40GEAi1KWMmNGvwh8PHnwr3d4JNvHe3UdiH2nU
-         dM9gT99CwSIMm7skf/4bX6VZMfvV2FKF/htnbu6/g0lbS2ppNryTGUgq8m6WDppUBMfm
-         YIeezq2Jl2X/6iJHxMPxYpeB1UImS4ZeDYs+PRLIQ9YfhI7mt5EsXHfhHpOWF6LF3xts
-         MoYVgo/46US2PizxKvwDrpE42zPapC2JVtGe0PylRPivgvy4Tn4xLfjY1IurVkKa6mh9
-         8xy0WGAwdgO+jB/dK5sLkVFBi9peZqSmZEbD0TUQCZKpOh+T3IK0j+3bDSqOvlwDlaX4
-         94CA==
+        bh=ThGb/1cQlCkxXgvsmi9By0m3uFp5vZO1mPp34NlVQTI=;
+        b=pxaoaxdsqM3qDq0p82vQdGesaY5K5k9yAhyF44ZVSVGwdpsY2ZgvIyP9/hdDPGgVSm
+         0dXmP+Fk0QqbkEgfVjWc9wtipY6138MYASUoLceKATrWeu7cgcEexAHk56mqT0o3bqmD
+         4UpxSoE7wXBkug9J/SIi742y1Sa9fO1qYLNOjPdiB5PtpNxQ1j7Ks3hp7MkVPTQ11t3H
+         18v7zv7E0N+Oxkweq7ad9i0RSOOvcJ+UshJVExVE2I/pV60Oqk4mxy5MasyU9+LEt+kM
+         U9fISkY0guVtYVULf6jMdrnKa+ZXx6BpswpGZUEghC9Fvv6BpM9Nw9F7eEKfB7XbXbak
+         e9hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754510288; x=1755115088;
+        d=1e100.net; s=20230601; t=1754510290; x=1755115090;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=x5qdlfMt7f/v/zSfpvn0pZJb5j/BJcw1RvQoZStHDYU=;
-        b=YasiDx/rN8TDc53iEw4pF2sc2Um3ETNA2lbTVMgnKIt3Gdu6JPfi1drkxSjWMUk5d4
-         gfUb/cIH9bHwDtjPBRzbbKZqLioFhVAvIyb+OztmCZSIpUmnaCr+q+K1t4QIzoNXQ02q
-         /SoDPVukcEpWYKPTR3bFmQl7LvlnOCwEiGX4SuxyX6kDzbXwVdfG6md2df5hNnjlGU+D
-         +ICJIMJ0X2oqPjOogNeDrKc9puZaiPDe4pUyZGJn5cSGEE6gAMzOaJLOYXFtkeddZ++Q
-         0B2gRavI5+JLnxJRLT8EwETkZU6cJ+wBAROWWzRoCGmiMlQpaN/UGPPmKBzqWUqW7Y0n
-         L9Ew==
-X-Forwarded-Encrypted: i=1; AJvYcCVy2RJu+9s74xdhdaZ19xJbF6x89TzrqCk9DDKgNgGIrLAYdmFg2oNeqB27bxwS7Lc8VrNIEJiJbkI1Yq9LxirU@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIcPsSTJoyFgLWjm0x6GAgF2dd3Oa52BbEJAJscdsZn7bteXST
-	7TOcajSL1YILwzicBu95p7wcpPCywDk9zcjriBebpk7BZ4svXpDcZLCgJxI1I3HUrvkaMR3qPkm
-	npAnTAw==
-X-Google-Smtp-Source: AGHT+IFfF+d9RBweWfYhERWBY7pftrU4yG2unJrGI6enSH3CQtm8m01r3mZaRpes0DVZoNbRLzozGADRUKg=
-X-Received: from pjbeu16.prod.google.com ([2002:a17:90a:f950:b0:31e:dd67:e98])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4ac1:b0:31e:f193:1822
- with SMTP id 98e67ed59e1d1-32166ccac82mr5178351a91.28.1754510287763; Wed, 06
- Aug 2025 12:58:07 -0700 (PDT)
+        bh=ThGb/1cQlCkxXgvsmi9By0m3uFp5vZO1mPp34NlVQTI=;
+        b=PB6X8JE/bigKkBjIo2xzhL9mJezBwwVUyE7OInisaMr7bVP8hm9ctKCqDXIlWHkMX9
+         q2R8pEfqggq0+6zpU5gvqFWs4QqxLjzG4J6Af4dkV7bs7BXpPK8t0XkWySYkyiNkSUWg
+         mfZdwBKTESurkSYhzcz6OCC+Z6r92QkNX2ArititqK0k3DAh+0ZvK6leDrBT36/pGKPQ
+         IGeYV68HWbModMBy9eGZxHpFFZLO6iJvc9yEJS+B7xrkER5d0jFQ7RnhEAtCxPV/xkyC
+         Vhn5cLBaRoqwNAhf1t25oD8GhhqcLBvJ+ZZ86RciatHSBTSntYxo5Hj3XwQsiahYc0MS
+         cPUA==
+X-Forwarded-Encrypted: i=1; AJvYcCWETza5xya9azcjlbOSmu9NwCcC1EsuQdaoODttZoMp3cqCdQun8KqGNpk5oA+nL4CtwjRRASnr9rzPm3dxz4kL@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqCGHNVSZe5ojOMsa2Vyz9vLwyys38wU1rCpWSXZ88lDTqPDpM
+	ys6T1ataG/MLlRf+ZQJdxE7gJYybJsFH8cNQDWachDaTjVCGemGsgA+8A/qDhaC1AU66xgjOV5C
+	LUy3Bjg==
+X-Google-Smtp-Source: AGHT+IEDX7osU0iIbko+P3lNad2rdh21UdoQ7zV3q9ejnGRLDtg0+KAFySIgmFRbYCqEx1sz5hOKZCwZh1w=
+X-Received: from pjbci4.prod.google.com ([2002:a17:90a:fc84:b0:313:242b:1773])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1dce:b0:31f:5ebe:fa1c
+ with SMTP id 98e67ed59e1d1-32166d77ff2mr6724469a91.0.1754510289629; Wed, 06
+ Aug 2025 12:58:09 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed,  6 Aug 2025 12:56:43 -0700
+Date: Wed,  6 Aug 2025 12:56:44 -0700
 In-Reply-To: <20250806195706.1650976-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250806195706.1650976-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.1.565.gc32cd1483b-goog
-Message-ID: <20250806195706.1650976-22-seanjc@google.com>
-Subject: [PATCH v5 21/44] KVM: x86/pmu: Register PMI handler for mediated vPMU
+Message-ID: <20250806195706.1650976-23-seanjc@google.com>
+Subject: [PATCH v5 22/44] KVM: x86: Rename vmx_vmentry/vmexit_ctrl() helpers
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
@@ -81,78 +81,56 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-From: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Register a dedicated PMI handler with perf's callback when mediated PMU
-support is enabled.  Perf routes PMIs that arrive while guest context is
-loaded to the provided callback, by modifying the CPU's LVTPC to point at
-a dedicated mediated PMI IRQ vector.
+Rename the two helpers vmx_vmentry/vmexit_ctrl() to
+vmx_get_initial_vmentry/vmexit_ctrl() to represent their real meaning.
 
-WARN upon receipt of a mediated PMI if there is no active vCPU, or if the
-vCPU doesn't have a mediated PMU.  Even if a PMI manages to skid past
-VM-Exit, it should never be delayed all the way beyond unloading the vCPU.
-And while running vCPUs without a mediated PMU, the LVTPC should never be
-wired up to the mediated PMI IRQ vector, i.e. should always be routed
-through perf's NMI handler.
+No functional change intended.
 
-Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+Suggested-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Signed-off-by: Mingwei Zhang <mizhang@google.com>
-Co-developed-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/pmu.c | 10 ++++++++++
- arch/x86/kvm/pmu.h |  2 ++
- arch/x86/kvm/x86.c |  3 ++-
- 3 files changed, 14 insertions(+), 1 deletion(-)
+ arch/x86/kvm/vmx/vmx.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index 4d4bb9b17412..680523e9d11e 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -155,6 +155,16 @@ void kvm_init_pmu_capability(const struct kvm_pmu_ops *pmu_ops)
- 		perf_get_hw_event_config(PERF_COUNT_HW_BRANCH_INSTRUCTIONS);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 8c6343494e62..7b0b51809f0e 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -4304,7 +4304,7 @@ static u32 vmx_pin_based_exec_ctrl(struct vcpu_vmx *vmx)
+ 	return pin_based_exec_ctrl;
  }
  
-+void kvm_handle_guest_mediated_pmi(void)
-+{
-+	struct kvm_vcpu *vcpu = kvm_get_running_vcpu();
-+
-+	if (WARN_ON_ONCE(!vcpu || !kvm_vcpu_has_mediated_pmu(vcpu)))
-+		return;
-+
-+	kvm_make_request(KVM_REQ_PMI, vcpu);
-+}
-+
- static inline void __kvm_perf_overflow(struct kvm_pmc *pmc, bool in_pmi)
+-static u32 vmx_vmentry_ctrl(void)
++static u32 vmx_get_initial_vmentry_ctrl(void)
  {
- 	struct kvm_pmu *pmu = pmc_to_pmu(pmc);
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index f5b6181b772c..e038bce76b9e 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -46,6 +46,8 @@ struct kvm_pmu_ops {
+ 	u32 vmentry_ctrl = vmcs_config.vmentry_ctrl;
  
- void kvm_pmu_ops_update(const struct kvm_pmu_ops *pmu_ops);
+@@ -4321,7 +4321,7 @@ static u32 vmx_vmentry_ctrl(void)
+ 	return vmentry_ctrl;
+ }
  
-+void kvm_handle_guest_mediated_pmi(void);
-+
- static inline bool kvm_pmu_has_perf_global_ctrl(struct kvm_pmu *pmu)
+-static u32 vmx_vmexit_ctrl(void)
++static u32 vmx_get_initial_vmexit_ctrl(void)
  {
- 	/*
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 396d1aa81732..2c34dd3f0222 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9693,7 +9693,8 @@ int kvm_x86_vendor_init(struct kvm_x86_init_ops *ops)
- 		set_hv_tscchange_cb(kvm_hyperv_tsc_notifier);
- #endif
+ 	u32 vmexit_ctrl = vmcs_config.vmexit_ctrl;
  
--	__kvm_register_perf_callbacks(ops->handle_intel_pt_intr, NULL);
-+	__kvm_register_perf_callbacks(ops->handle_intel_pt_intr,
-+				      enable_mediated_pmu ? kvm_handle_guest_mediated_pmi : NULL);
+@@ -4686,10 +4686,10 @@ static void init_vmcs(struct vcpu_vmx *vmx)
+ 	if (vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_IA32_PAT)
+ 		vmcs_write64(GUEST_IA32_PAT, vmx->vcpu.arch.pat);
  
- 	if (IS_ENABLED(CONFIG_KVM_SW_PROTECTED_VM) && tdp_mmu_enabled)
- 		kvm_caps.supported_vm_types |= BIT(KVM_X86_SW_PROTECTED_VM);
+-	vm_exit_controls_set(vmx, vmx_vmexit_ctrl());
++	vm_exit_controls_set(vmx, vmx_get_initial_vmexit_ctrl());
+ 
+ 	/* 22.2.1, 20.8.1 */
+-	vm_entry_controls_set(vmx, vmx_vmentry_ctrl());
++	vm_entry_controls_set(vmx, vmx_get_initial_vmentry_ctrl());
+ 
+ 	vmx->vcpu.arch.cr0_guest_owned_bits = vmx_l1_guest_owned_cr0_bits();
+ 	vmcs_writel(CR0_GUEST_HOST_MASK, ~vmx->vcpu.arch.cr0_guest_owned_bits);
 -- 
 2.50.1.565.gc32cd1483b-goog
 
