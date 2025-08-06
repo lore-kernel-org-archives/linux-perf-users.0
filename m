@@ -1,125 +1,224 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6159F2E2EEB
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Aug 2025 19:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A1D13A3F2;
+	Wed,  6 Aug 2025 22:53:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754510331; cv=none; b=nDZwY6NuHkY6/3LKaiguKbxqfGkDcPZTAssxf7Jv+fr8n3awbdtU4IkWZeOTr3slx94Vm9szyFysIs4Uvtd2PkSryh28qcoEZZtsWsCPaKgQeljujzeNYLhShdy0IouAFsW1FEi2T6p6FREal8JvU1ItPPhHqujr0eXXrXhLbRY=
+	t=1754520794; cv=none; b=TAzR9fBYvllJZ09sbu+bWizZAaHWNZhDiZPz/+Jd2RMLjkiCazarZSp9e53fgf0r+VND2q2a3rtVyfzeOaOfe4WQxWNxhA408vkaeI6z+FLG0uxj60fsY0jjnIuOynAd9p9o+QRE5lZmQ2PFskOp1l5OMKPtSLWuRU4e1/D0ezg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754510331; c=relaxed/simple;
-	bh=UqKbQ/MEitFcIh6oJaDa5iQaYpCTlGUBLK908ME1g4Q=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Li9oUe/0hvFp42x0tjWQQHhOoaTo2rTRTrj6Yxz/m/QZDin1bkPytNRT9dksAKsUBcqv1TK9M1UKUbhdSHH5rMyHdRDz7BwSuA2mwWnLWBpb+6dD7/K/0fln80sEkK29nqt7W4fgg6FLmWy9leKNn6mX4TTIHmpIlrnAgY65pwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4DFPLcrp; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1754520794; c=relaxed/simple;
+	bh=aQ/0Dh3y8KRuO5nNN3e4yGDJrs5zHxpjrom8VAttomI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F6tF1Fcnxvx+RhuSL/swA8l9oua6pyJ4MTXKhNLbdLJTH70QbITMptP37Q3Kb+lH1ZhVRSvrJyjA0VkOmRtZg0txE80V4CTBqxMbh2WdtF9ZPS+5Ns5rUTJ1dWyce0XKw/WDhyT1Y1o3DvFgsP18ijSM59RALIMytv2jJIVYJp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FIM0ppN8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4DFPLcrp"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b421b03d498so121698a12.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Aug 2025 12:58:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1754510328; x=1755115128; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=FEfQdODxvc/WYDgKcBJNCqpRp5QcBVEYBtlnYDr8f+A=;
-        b=4DFPLcrpXC8nzPtT2ABri2kiMNcEVcSAxV5rGGrD+ycZK7+G/xw3XhsrSAq1GUn+KV
-         c3mpEz7/DDiuZDG7GsCIPbif7RO/cx41LAnNr0vTSFC6UyiRf85KJwYiHHN+6gMvD2x3
-         r/KZj9P6pt0zyfbT2R5csi8Lws+uVx2QP1ChHeoVC3qnHlqdtPqLRPMYbMDeSoA+untO
-         RvTmh5AQsiEoV3GWBjr95m3BQ/5EUFHIiRvNkBOZmvg7CjaLz86K424skxFJa2S2WDzF
-         5659bUKO7cI22AYTqU4s+3QVJ2DpO+fanRhX7RIBIsPgxSskBdF4PvKFLbevBywWkkOk
-         jgeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754510328; x=1755115128;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FEfQdODxvc/WYDgKcBJNCqpRp5QcBVEYBtlnYDr8f+A=;
-        b=Q2n2dJfYtfGs0MfKtuTXrkJHRxyLh6o+MO0rh9PKbS+9TetLhGRQPAzs4HaeXKnaaQ
-         2y8RVwgPWEcjSJlh92thGHpSwhtTfh0B+c8ZV5PZGRZlvyoAaNpbLcrKDlhy001aRNN/
-         MgL+QEYudIIs3NMsitkqWKNhvVPMiQSooWzcrD+7yf03mclCVkV3NF19fi/nsoWppjqb
-         mzMz2dbjxozXkWyUzQIpQWiPO+IihSysLPB2Ne134mWyCdWq61gsblF7GcxQuTsy+OoR
-         iH38+tzeA0cmjhSRTtiLDtqrB4y6Bxp9sRU29qttAWf6scQH9PU8fQddNSh3wQs7VVte
-         x4xQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXKS4/KPL5mfJzXExMCPZvh1fZ1u5mDpzhgpNNxFjHECtapMN2QpT97zhPmPFMuZbL1c7dFXoIoHXtleRXekeHp@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLZeCdFVfRB8IT7CNJnH8laba3sxBogFwWHx39WL15+arkZjrG
-	jkqJRaMhAPuCXTqFJKfR6EQc7rCDTkeE3mVyi+Dzvs8DRxSEHHAh5hx69TxGfEJBX9XPo8y5JHW
-	iWnjPlg==
-X-Google-Smtp-Source: AGHT+IHKT98t7sh+NJ88sddK4YezK7lHLHfrTfL2AYLv+RO+SAkhLkiCccC37Go9T+seI3ZwHUra06wFxFw=
-X-Received: from plbmp11.prod.google.com ([2002:a17:902:fd0b:b0:23f:fa41:1de3])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:3bcc:b0:234:c8ec:51b5
- with SMTP id d9443c01a7336-242a0bffb31mr47813405ad.53.1754510327813; Wed, 06
- Aug 2025 12:58:47 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed,  6 Aug 2025 12:57:06 -0700
-In-Reply-To: <20250806195706.1650976-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FIM0ppN8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C1FEC4CEE7;
+	Wed,  6 Aug 2025 22:53:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754520794;
+	bh=aQ/0Dh3y8KRuO5nNN3e4yGDJrs5zHxpjrom8VAttomI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FIM0ppN88Z7flsAgbKGOZcK6GIwviab7UaqjGLaSnHIRa1Yup7lsN5JZzecYTk/7j
+	 OcxABp1dPJ4Iw7UTtcHJCYD4eWVhHBvZwljJAH+ntNK1xpKRatojIViTxBKtKBV4+C
+	 np8iZu46T7YEkqoZgPMBC/Neb19nESIsqf5GB5IZkLd1dpvK3m7BNVB3shuSRR1MS+
+	 82CG69YMAAFg37R6qV6tp1X2aXm7Nm4VNyoif9+WxUGwsBLDl+G4e5DVb3EESqvD6q
+	 K/cq/0R/XJXpGMDOtdmqDqKkG7+EvG444pIHwJCXL4H9DG9Qy1PVgiL8eEVm8M3UpE
+	 k5CI8GNw/nqOg==
+Date: Wed, 6 Aug 2025 15:53:12 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ilya Leoshkevich <iii@linux.ibm.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
+	Jiri Olsa <jolsa@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>
+Subject: Re: [PATCH v4 2/2] perf bpf-filter: Enable events manually
+Message-ID: <aJPc2NvJqLOGaIKl@google.com>
+References: <20250806114227.14617-1-iii@linux.ibm.com>
+ <20250806114227.14617-3-iii@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250806195706.1650976-1-seanjc@google.com>
-X-Mailer: git-send-email 2.50.1.565.gc32cd1483b-goog
-Message-ID: <20250806195706.1650976-45-seanjc@google.com>
-Subject: [PATCH v5 44/44] KVM: x86/pmu: Elide WRMSRs when loading guest PMCs
- if values already match
-From: Sean Christopherson <seanjc@google.com>
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, loongarch@lists.linux.dev, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>, 
-	Yongwei Ma <yongwei.ma@intel.com>, Mingwei Zhang <mizhang@google.com>, 
-	Xiong Zhang <xiong.y.zhang@linux.intel.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250806114227.14617-3-iii@linux.ibm.com>
 
-When loading a mediated PMU state, elide the WRMSRs to load PMCs with the
-guest's value if the value in hardware already matches the guest's value.
-For the relatively common case where neither the guest nor the host is
-actively using the PMU, i.e. when all/many counters are '0', eliding the
-WRMSRs reduces the latency of handling VM-Exit by a measurable amount
-(WRMSR is significantly more expensive than RDPMC).
+Hello,
 
-As measured by KVM-Unit-Tests' CPUID VM-Exit testcase, this provides a
-a ~25% reduction in latency (4k => 3k cycles) on Intel Emerald Rapids,
-and a ~13% reduction (6.2k => 5.3k cycles) on AMD Turing.
+On Wed, Aug 06, 2025 at 01:40:35PM +0200, Ilya Leoshkevich wrote:
+> On s390, and, in general, on all platforms where the respective event
+> supports auxiliary data gathering, the command:
+> 
+>    # ./perf record -u 0 -aB --synth=no -- ./perf test -w thloop
+>    [ perf record: Woken up 1 times to write data ]
+>    [ perf record: Captured and wrote 0.011 MB perf.data ]
+>    # ./perf report --stats | grep SAMPLE
+>    #
+> 
+> does not generate samples in the perf.data file. On x86 the command:
+> 
+>   # sudo perf record -e intel_pt// -u 0 ls
+> 
+> is broken too.
+> 
+> Looking at the sequence of calls in 'perf record' reveals this
+> behavior:
+> 
+> 1. The event 'cycles' is created and enabled:
+> 
+>    record__open()
+>    +-> evlist__apply_filters()
+>        +-> perf_bpf_filter__prepare()
+> 	   +-> bpf_program.attach_perf_event()
+> 	       +-> bpf_program.attach_perf_event_opts()
+> 	           +-> __GI___ioctl(..., PERF_EVENT_IOC_ENABLE, ...)
+> 
+>    The event 'cycles' is enabled and active now. However the event's
+>    ring-buffer to store the samples generated by hardware is not
+>    allocated yet.
+> 
+> 2. The event's fd is mmap()ed to create the ring buffer:
+> 
+>    record__open()
+>    +-> record__mmap()
+>        +-> record__mmap_evlist()
+> 	   +-> evlist__mmap_ex()
+> 	       +-> perf_evlist__mmap_ops()
+> 	           +-> mmap_per_cpu()
+> 	               +-> mmap_per_evsel()
+> 	                   +-> mmap__mmap()
+> 	                       +-> perf_mmap__mmap()
+> 	                           +-> mmap()
+> 
+>    This allocates the ring buffer for the event 'cycles'. With mmap()
+>    the kernel creates the ring buffer:
+> 
+>    perf_mmap(): kernel function to create the event's ring
+>    |            buffer to save the sampled data.
+>    |
+>    +-> ring_buffer_attach(): Allocates memory for ring buffer.
+>        |        The PMU has auxiliary data setup function. The
+>        |        has_aux(event) condition is true and the PMU's
+>        |        stop() is called to stop sampling. It is not
+>        |        restarted:
+>        |
+>        |        if (has_aux(event))
+>        |                perf_event_stop(event, 0);
+>        |
+>        +-> cpumsf_pmu_stop():
+> 
+>    Hardware sampling is stopped. No samples are generated and saved
+>    anymore.
+> 
+> 3. After the event 'cycles' has been mapped, the event is enabled a
+>    second time in:
+> 
+>    __cmd_record()
+>    +-> evlist__enable()
+>        +-> __evlist__enable()
+> 	   +-> evsel__enable_cpu()
+> 	       +-> perf_evsel__enable_cpu()
+> 	           +-> perf_evsel__run_ioctl()
+> 	               +-> perf_evsel__ioctl()
+> 	                   +-> __GI___ioctl(., PERF_EVENT_IOC_ENABLE, .)
+> 
+>    The second
+> 
+>       ioctl(fd, PERF_EVENT_IOC_ENABLE, 0);
+> 
+>    is just a NOP in this case. The first invocation in (1.) sets the
+>    event::state to PERF_EVENT_STATE_ACTIVE. The kernel functions
+> 
+>    perf_ioctl()
+>    +-> _perf_ioctl()
+>        +-> _perf_event_enable()
+>            +-> __perf_event_enable()
+> 
+>    return immediately because event::state is already set to
+>    PERF_EVENT_STATE_ACTIVE.
+> 
+> This happens on s390, because the event 'cycles' offers the possibility
+> to save auxilary data. The PMU callbacks setup_aux() and free_aux() are
+> defined. Without both callback functions, cpumsf_pmu_stop() is not
+> invoked and sampling continues.
+> 
+> To remedy this, remove the first invocation of
+> 
+>    ioctl(..., PERF_EVENT_IOC_ENABLE, ...).
+> 
+> in step (1.) Create the event in step (1.) and enable it in step (3.)
+> after the ring buffer has been mapped.
+> 
+> Output after:
+> 
+>  # ./perf record -aB --synth=no -u 0 -- ./perf test -w thloop 2
+>  [ perf record: Woken up 3 times to write data ]
+>  [ perf record: Captured and wrote 0.876 MB perf.data ]
+>  # ./perf  report --stats | grep SAMPLE
+>               SAMPLE events:      16200  (99.5%)
+>               SAMPLE events:      16200
+>  #
+> 
+> The software event succeeded both before and after the patch:
+> 
+>  # ./perf record -e cpu-clock -aB --synth=no -u 0 -- \
+> 					  ./perf test -w thloop 2
+>  [ perf record: Woken up 7 times to write data ]
+>  [ perf record: Captured and wrote 2.870 MB perf.data ]
+>  # ./perf  report --stats | grep SAMPLE
+>               SAMPLE events:      53506  (99.8%)
+>               SAMPLE events:      53506
+>  #
+> 
+> Fixes: b4c658d4d63d61 ("perf target: Remove uid from target")
+> Suggested-by: Jiri Olsa <jolsa@kernel.org>
+> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+> Co-developed-by: Thomas Richter <tmricht@linux.ibm.com>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kvm/pmu.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index ddab1630a978..0e5048ae86fa 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -1299,13 +1299,15 @@ static void kvm_pmu_load_guest_pmcs(struct kvm_vcpu *vcpu)
- 	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
- 		pmc = &pmu->gp_counters[i];
- 
--		wrmsrl(gp_counter_msr(i), pmc->counter);
-+		if (pmc->counter != rdpmc(i))
-+			wrmsrl(gp_counter_msr(i), pmc->counter);
- 		wrmsrl(gp_eventsel_msr(i), pmc->eventsel_hw);
- 	}
- 	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
- 		pmc = &pmu->fixed_counters[i];
- 
--		wrmsrl(fixed_counter_msr(i), pmc->counter);
-+		if (pmc->counter != rdpmc(INTEL_PMC_FIXED_RDPMC_BASE | i))
-+			wrmsrl(fixed_counter_msr(i), pmc->counter);
- 	}
- }
- 
--- 
-2.50.1.565.gc32cd1483b-goog
+Thanks,
+Namhyung
 
+> ---
+>  tools/perf/util/bpf-filter.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
+> index d0e013eeb0f7..a0b11f35395f 100644
+> --- a/tools/perf/util/bpf-filter.c
+> +++ b/tools/perf/util/bpf-filter.c
+> @@ -451,6 +451,8 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
+>  	struct bpf_link *link;
+>  	struct perf_bpf_filter_entry *entry;
+>  	bool needs_idx_hash = !target__has_cpu(target);
+> +	DECLARE_LIBBPF_OPTS(bpf_perf_event_opts, pe_opts,
+> +			    .dont_enable = true);
+>  
+>  	entry = calloc(MAX_FILTERS, sizeof(*entry));
+>  	if (entry == NULL)
+> @@ -522,7 +524,8 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
+>  	prog = skel->progs.perf_sample_filter;
+>  	for (x = 0; x < xyarray__max_x(evsel->core.fd); x++) {
+>  		for (y = 0; y < xyarray__max_y(evsel->core.fd); y++) {
+> -			link = bpf_program__attach_perf_event(prog, FD(evsel, x, y));
+> +			link = bpf_program__attach_perf_event_opts(prog, FD(evsel, x, y),
+> +								   &pe_opts);
+>  			if (IS_ERR(link)) {
+>  				pr_err("Failed to attach perf sample-filter program\n");
+>  				ret = PTR_ERR(link);
+> -- 
+> 2.50.1
+> 
