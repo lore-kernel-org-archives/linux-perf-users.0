@@ -1,57 +1,57 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6670A2BEC4E
-	for <linux-perf-users@vger.kernel.org>; Wed,  6 Aug 2025 19:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA872C15B7
+	for <linux-perf-users@vger.kernel.org>; Wed,  6 Aug 2025 19:57:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754510264; cv=none; b=EUBTBmjbPeSYg1+q5/mRA1VQjW5BICkIPTBq9PvgzTUqH4VyqKQZOVTR1y/SZqXGHnL3k88Q9GnXXKevk/etQyQHFTRl2mNeuj6swzzRTdhS4xVU5XrEkFPScOzkSbPjKFGwbU2KKz3Wl0ok1Zttm5WFazqqxYin0lpoYezfZpc=
+	t=1754510264; cv=none; b=GzydMrySnpKzH9J6uLPFb0XdAJcvnl8y3jj2/IlMxC0K/vu9/vKUG5o2l7duZTJIwpM0TDmPOgD5f8LYCQu6vD9czribhN7tYBw0qqDQP+JgHsnKc9Dem1KOUCNDPxfpNJB2sFbeB4UUH8z4fUljv6eTNMFMr4o1InUbqIRNrdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1754510264; c=relaxed/simple;
-	bh=YYCe+4eLi35qElSGVX2EX5EoBQNPxGJxcMCI2Jk+YMU=;
+	bh=p9dwRoIkAdNKqXS3ork0V3QcmE8t7/wykyfY7BDBXjw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=hfi0KkoKmyJj5HOZ+zw7ylGyuwBHygBYJ0+zXHlD9dvXkgqsVLYwXsRjE/Gl3FPP6qJ4kfxjr+oQZsBm6sxzSZbuCNlmpCXbKlVgyqN0VADx4gHl80xCtqngFgROh9O/ESKsJbREM34lHmVtdIq1qwsftn8z4Mb7SgcIlZXwRPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nccQ4gdO; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=t+106IzmoNeyjsy1pvKIWNg8rYBE/jhUNp5yoEBjDGjIf26OAaKRyL9JwJN6cXbzfqBV6vszyd3+1mBZsr342bPaJFmcJbSHqvcFSTTl/QXGbVDQVsmKsuJNDlwzO1LcfoE5HcMz0miLMFvGThJwBqUbR7rxY9aK6/DxrRQXTnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i8IBTCHs; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nccQ4gdO"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-315af08594fso334212a91.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 06 Aug 2025 12:57:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i8IBTCHs"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2403e4c82ddso1466315ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 06 Aug 2025 12:57:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1754510258; x=1755115058; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1754510261; x=1755115061; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=RSqs7LjEbfI/o+XH+tbZdSeN9oFJhrETU4UrZ2e2+po=;
-        b=nccQ4gdOx7uh0LSzRCCErY+WkYMUzWQPyrPzXgmeXUaMjpScuM3iuk/GWTr0JX77nQ
-         5eQOmW1WR/uWMWWxAq61fCwW5nb7+XcHa7PVTM7kTNF+w7OC75pNZLjGcfzp9MwHlvdd
-         w61Hkzll6izQ1sfUNgiBjPAKnhSryGNtu0bYAmKuRjtH42myVvlhuOHqp6bxhv1MzExD
-         hOlK92XLSXM6J1o9LYiNlvPY1wIbiMtQ4TusJ0a/803hrk9Rty/PzmEDcQtGE8G+RvUJ
-         E++/mMN+0MHeEPSUSpjJOvZD2gBDZzKVJelAX+6ZGkKN0ccZhqLa5LMZW+3b9IQn8Sj9
-         w/QA==
+        bh=1cgAGvW2Sa5tNwASy1Md3TT+4FZc1wpWNQfNLgFp1cE=;
+        b=i8IBTCHsEt2DrcIcxVFbp7SFIHxRMBVKZRXNlv/Q/OQyKdNwpIdP2db8o7nwlILQTK
+         QuBOlCA7EPm3sQ6zh+Ss1qlwCp5NrB9BPwMNlIRBQrUQSQ9ioC3tM1VaKbcXHyk6snqd
+         hmXG7JGUCTvbHS6fpouMnHMYIHSPsl/9lmsPqc9U5Pft9REnjvnuhXAs/kVIzTydoauk
+         ol6Gl5XL9veybgYrnhyj9jS/RgHO4kUfNU2+bp0KYPkkERRQ1/BWcXGfPWwVi9wjT41J
+         QDtvF4djT+6eu1kP6aR7CzKHhr57d0b1TfkAMPhHLqV14Umg+NWAmNN/XmLEPeyXN8Un
+         2pNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754510258; x=1755115058;
+        d=1e100.net; s=20230601; t=1754510261; x=1755115061;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=RSqs7LjEbfI/o+XH+tbZdSeN9oFJhrETU4UrZ2e2+po=;
-        b=nlGrYiZ3/v64C4Q49He1Z9eDGTvvXBt1Hx8AfKIyazrd3KLW1erMWUzsuzyt/q0sGh
-         TSvHt8TQsnKf3Bah//RlWWhdBIgl9mITki35dq6NQqotpi6LhZbEAW3U3JMjheohvRJD
-         k3Vwk/cMg9P1/FbtaBuSuM0K6sgAA8NVKnK2T/hnPXu2y1dNpn/RjK6g1Pp0TuYxs0rS
-         d0K+5PxFWNRi5zxhFthpAtBAuv22wohAtDXDnI+yiFEQmnTJgTpgjE8vOQrG3umiKxTn
-         X6NRmJxE1y3Wh/h92n7AtPaAs+Xiui1ffcMBBKYpJtfyChX2OAkSH4hV2hhl+57GuXzK
-         ZLfw==
-X-Forwarded-Encrypted: i=1; AJvYcCXyIzLN2GuAUaYcx65Api/u5Ba0d7z8Q1SbFLtyWTH+xslJCyiO/qlSudKmFo5BHQwzE1LdhqmyiQfuVvnUJoY+@vger.kernel.org
-X-Gm-Message-State: AOJu0YwK4U/3glOveasicY329CpKnhPMb2zLE6YAihKWWvoPmkN654z2
-	U+Uij2i00gkrnWQp0Hkyq15wTfngRp7CCVPLWO0XRzau2cTjgau9j0m8oIo5Dtwtd+QTagWBWB0
-	km1y+HQ==
-X-Google-Smtp-Source: AGHT+IHRaSY+k4TAZbl8ZMQSCfgVDMYJiwgIqFCqRbteQRg9trtxOd4uQTojLJyQdeJPXNfHx0P6bSsh+7Q=
-X-Received: from pjqq16.prod.google.com ([2002:a17:90b:5850:b0:31c:2fe4:33bd])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1c10:b0:311:ef19:824d
- with SMTP id 98e67ed59e1d1-32166df97d9mr4595576a91.2.1754510257253; Wed, 06
- Aug 2025 12:57:37 -0700 (PDT)
+        bh=1cgAGvW2Sa5tNwASy1Md3TT+4FZc1wpWNQfNLgFp1cE=;
+        b=nNVbAA0vJ8SPjyvO0FdcmU6dhJ47sdtNWRCy0noOw983nj9kchaZcM7N79xDY3DtY3
+         +cWo+YbRt2QIh6WmN56rjLFse5vNI6Vc+huKM2tMNhGe1OpIwB7Ol2RlNLcPE7xjB055
+         mgDbyu+L5c/HPtzY7kN6jgV4gU4pj6q5W6vV8d9sHsLoQNf6iAcP+BfTmIacgG03cmVT
+         MwJCU2bHNiW34CBKNnStbqiVrpyFSVjXIUgfUYlSs7AJLJPGSDayiq6Lz7ZY7Wq3YOp3
+         Sefw3Gi5y43N9stVWJHXm1jrKHD+VmXOCALX2GiC5m0pbJ+0VFJXb0/u6RY9HiOiuP8Z
+         enHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWKddqGgYvbwBaSuwglcRizvkn+FY8xdzHzUeDI+14a+NTu1eutMBf1Hjtn2lqMpnoAaOF+ncoLpqZCR/aMTSYE@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWGAvQpYiTiuo5OhcZFmBcCslmgdzIJ2C8+DAAPARFUDeJVNVD
+	Vn5MFIa4cGErZGFpmoV0YwUyC4SCmimBi7lO6BASNi12YfvbmLBTk92m6/aEHkiUtiVxhA8nO/j
+	z4WILPQ==
+X-Google-Smtp-Source: AGHT+IEQshj25YWfgh8jlPDalwm585npWoyFxUPXBG4oqUn1ilItXjqTi+CTUz913BcUQcsY19RFz/4rdM8=
+X-Received: from plrj9.prod.google.com ([2002:a17:903:289:b0:242:abd5:b3bf])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c405:b0:240:b879:fed2
+ with SMTP id d9443c01a7336-2429f55daaamr65961135ad.16.1754510261485; Wed, 06
+ Aug 2025 12:57:41 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed,  6 Aug 2025 12:56:27 -0700
+Date: Wed,  6 Aug 2025 12:56:29 -0700
 In-Reply-To: <20250806195706.1650976-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250806195706.1650976-1-seanjc@google.com>
 X-Mailer: git-send-email 2.50.1.565.gc32cd1483b-goog
-Message-ID: <20250806195706.1650976-6-seanjc@google.com>
-Subject: [PATCH v5 05/44] perf: Clean up perf ctx time
+Message-ID: <20250806195706.1650976-8-seanjc@google.com>
+Subject: [PATCH v5 07/44] perf: Add APIs to load/put guest mediated PMU context
 From: Sean Christopherson <seanjc@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
@@ -83,224 +83,123 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The current perf tracks two timestamps for the normal ctx and cgroup.
-The same type of variables and similar codes are used to track the
-timestamps. In the following patch, the third timestamp to track the
-guest time will be introduced.
-To avoid the code duplication, add a new struct perf_time_ctx and factor
-out a generic function update_perf_time_ctx().
+Add exported APIs to load/put a guest mediated PMU context.  KVM will
+load the guest PMU shortly before VM-Enter, and put the guest PMU shortly
+after VM-Exit.
 
-No functional change.
+On the perf side of things, schedule out all exclude_guest events when the
+guest context is loaded, and schedule them back in when the guest context
+is put.  I.e. yield the hardware PMU resources to the guest, by way of KVM.
 
-Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Note, perf is only responsible for managing host context.  KVM is
+responsible for loading/storing guest state to/from hardware.
+
+Suggested-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Mingwei Zhang <mizhang@google.com>
+[sean: shuffle patches around, write changelog]
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- include/linux/perf_event.h | 13 +++----
- kernel/events/core.c       | 70 +++++++++++++++++---------------------
- 2 files changed, 39 insertions(+), 44 deletions(-)
+ include/linux/perf_event.h |  2 ++
+ kernel/events/core.c       | 61 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 63 insertions(+)
 
 diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 63097beb5f02..186a026fb7fb 100644
+index 0958b6d0a61c..42d019d70b42 100644
 --- a/include/linux/perf_event.h
 +++ b/include/linux/perf_event.h
-@@ -999,6 +999,11 @@ struct perf_event_groups {
- 	u64				index;
- };
+@@ -1925,6 +1925,8 @@ extern u64 perf_event_pause(struct perf_event *event, bool reset);
+ #ifdef CONFIG_PERF_GUEST_MEDIATED_PMU
+ int perf_create_mediated_pmu(void);
+ void perf_release_mediated_pmu(void);
++void perf_load_guest_context(unsigned long data);
++void perf_put_guest_context(void);
+ #endif
  
-+struct perf_time_ctx {
-+	u64		time;
-+	u64		stamp;
-+	u64		offset;
-+};
- 
- /**
-  * struct perf_event_context - event context structure
-@@ -1037,9 +1042,7 @@ struct perf_event_context {
- 	/*
- 	 * Context clock, runs when context enabled.
- 	 */
--	u64				time;
--	u64				timestamp;
--	u64				timeoffset;
-+	struct perf_time_ctx		time;
- 
- 	/*
- 	 * These fields let us detect when two contexts have both
-@@ -1172,9 +1175,7 @@ struct bpf_perf_event_data_kern {
-  * This is a per-cpu dynamically allocated data structure.
-  */
- struct perf_cgroup_info {
--	u64				time;
--	u64				timestamp;
--	u64				timeoffset;
-+	struct perf_time_ctx		time;
- 	int				active;
- };
- 
+ #else /* !CONFIG_PERF_EVENTS: */
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index bf0347231bd9..2cf988bdabf0 100644
+index 6875b56ddd6b..77398b1ad4c5 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -815,6 +815,24 @@ static void perf_ctx_enable(struct perf_event_context *ctx,
- static void ctx_sched_out(struct perf_event_context *ctx, struct pmu *pmu, enum event_type_t event_type);
- static void ctx_sched_in(struct perf_event_context *ctx, struct pmu *pmu, enum event_type_t event_type);
+@@ -469,10 +469,19 @@ static cpumask_var_t perf_online_pkg_mask;
+ static cpumask_var_t perf_online_sys_mask;
+ static struct kmem_cache *perf_event_cache;
  
-+static inline void update_perf_time_ctx(struct perf_time_ctx *time, u64 now, bool adv)
++#ifdef CONFIG_PERF_GUEST_MEDIATED_PMU
++static DEFINE_PER_CPU(bool, guest_ctx_loaded);
++
++static __always_inline bool is_guest_mediated_pmu_loaded(void)
 +{
-+	if (adv)
-+		time->time += now - time->stamp;
-+	time->stamp = now;
-+
-+	/*
-+	 * The above: time' = time + (now - timestamp), can be re-arranged
-+	 * into: time` = now + (time - timestamp), which gives a single value
-+	 * offset to compute future time without locks on.
-+	 *
-+	 * See perf_event_time_now(), which can be used from NMI context where
-+	 * it's (obviously) not possible to acquire ctx->lock in order to read
-+	 * both the above values in a consistent manner.
-+	 */
-+	WRITE_ONCE(time->offset, time->time - time->stamp);
++	return __this_cpu_read(guest_ctx_loaded);
 +}
++#else
+ static __always_inline bool is_guest_mediated_pmu_loaded(void)
+ {
+ 	return false;
+ }
++#endif
+ 
+ /*
+  * perf event paranoia level:
+@@ -6379,6 +6388,58 @@ void perf_release_mediated_pmu(void)
+ 	atomic_dec(&nr_mediated_pmu_vms);
+ }
+ EXPORT_SYMBOL_GPL(perf_release_mediated_pmu);
 +
- #ifdef CONFIG_CGROUP_PERF
- 
- static inline bool
-@@ -856,7 +874,7 @@ static inline u64 perf_cgroup_event_time(struct perf_event *event)
- 	struct perf_cgroup_info *t;
- 
- 	t = per_cpu_ptr(event->cgrp->info, event->cpu);
--	return t->time;
-+	return t->time.time;
- }
- 
- static inline u64 perf_cgroup_event_time_now(struct perf_event *event, u64 now)
-@@ -865,22 +883,11 @@ static inline u64 perf_cgroup_event_time_now(struct perf_event *event, u64 now)
- 
- 	t = per_cpu_ptr(event->cgrp->info, event->cpu);
- 	if (!__load_acquire(&t->active))
--		return t->time;
--	now += READ_ONCE(t->timeoffset);
-+		return t->time.time;
-+	now += READ_ONCE(t->time.offset);
- 	return now;
- }
- 
--static inline void __update_cgrp_time(struct perf_cgroup_info *info, u64 now, bool adv)
--{
--	if (adv)
--		info->time += now - info->timestamp;
--	info->timestamp = now;
--	/*
--	 * see update_context_time()
--	 */
--	WRITE_ONCE(info->timeoffset, info->time - info->timestamp);
--}
--
- static inline void update_cgrp_time_from_cpuctx(struct perf_cpu_context *cpuctx, bool final)
- {
- 	struct perf_cgroup *cgrp = cpuctx->cgrp;
-@@ -894,7 +901,7 @@ static inline void update_cgrp_time_from_cpuctx(struct perf_cpu_context *cpuctx,
- 			cgrp = container_of(css, struct perf_cgroup, css);
- 			info = this_cpu_ptr(cgrp->info);
- 
--			__update_cgrp_time(info, now, true);
-+			update_perf_time_ctx(&info->time, now, true);
- 			if (final)
- 				__store_release(&info->active, 0);
- 		}
-@@ -917,7 +924,7 @@ static inline void update_cgrp_time_from_event(struct perf_event *event)
- 	 * Do not update time when cgroup is not active
- 	 */
- 	if (info->active)
--		__update_cgrp_time(info, perf_clock(), true);
-+		update_perf_time_ctx(&info->time, perf_clock(), true);
- }
- 
- static inline void
-@@ -941,7 +948,7 @@ perf_cgroup_set_timestamp(struct perf_cpu_context *cpuctx)
- 	for (css = &cgrp->css; css; css = css->parent) {
- 		cgrp = container_of(css, struct perf_cgroup, css);
- 		info = this_cpu_ptr(cgrp->info);
--		__update_cgrp_time(info, ctx->timestamp, false);
-+		update_perf_time_ctx(&info->time, ctx->time.stamp, false);
- 		__store_release(&info->active, 1);
- 	}
- }
-@@ -1562,20 +1569,7 @@ static void __update_context_time(struct perf_event_context *ctx, bool adv)
- 
- 	lockdep_assert_held(&ctx->lock);
- 
--	if (adv)
--		ctx->time += now - ctx->timestamp;
--	ctx->timestamp = now;
--
--	/*
--	 * The above: time' = time + (now - timestamp), can be re-arranged
--	 * into: time` = now + (time - timestamp), which gives a single value
--	 * offset to compute future time without locks on.
--	 *
--	 * See perf_event_time_now(), which can be used from NMI context where
--	 * it's (obviously) not possible to acquire ctx->lock in order to read
--	 * both the above values in a consistent manner.
--	 */
--	WRITE_ONCE(ctx->timeoffset, ctx->time - ctx->timestamp);
-+	update_perf_time_ctx(&ctx->time, now, adv);
- }
- 
- static void update_context_time(struct perf_event_context *ctx)
-@@ -1593,7 +1587,7 @@ static u64 perf_event_time(struct perf_event *event)
- 	if (is_cgroup_event(event))
- 		return perf_cgroup_event_time(event);
- 
--	return ctx->time;
-+	return ctx->time.time;
- }
- 
- static u64 perf_event_time_now(struct perf_event *event, u64 now)
-@@ -1607,9 +1601,9 @@ static u64 perf_event_time_now(struct perf_event *event, u64 now)
- 		return perf_cgroup_event_time_now(event, now);
- 
- 	if (!(__load_acquire(&ctx->is_active) & EVENT_TIME))
--		return ctx->time;
-+		return ctx->time.time;
- 
--	now += READ_ONCE(ctx->timeoffset);
-+	now += READ_ONCE(ctx->time.offset);
- 	return now;
- }
- 
-@@ -11991,7 +11985,7 @@ static void task_clock_event_update(struct perf_event *event, u64 now)
- 
- static void task_clock_event_start(struct perf_event *event, int flags)
- {
--	local64_set(&event->hw.prev_count, event->ctx->time);
-+	local64_set(&event->hw.prev_count, event->ctx->time.time);
- 	perf_swevent_start_hrtimer(event);
- }
- 
-@@ -11999,7 +11993,7 @@ static void task_clock_event_stop(struct perf_event *event, int flags)
- {
- 	perf_swevent_cancel_hrtimer(event);
- 	if (flags & PERF_EF_UPDATE)
--		task_clock_event_update(event, event->ctx->time);
-+		task_clock_event_update(event, event->ctx->time.time);
- }
- 
- static int task_clock_event_add(struct perf_event *event, int flags)
-@@ -12019,8 +12013,8 @@ static void task_clock_event_del(struct perf_event *event, int flags)
- static void task_clock_event_read(struct perf_event *event)
- {
- 	u64 now = perf_clock();
--	u64 delta = now - event->ctx->timestamp;
--	u64 time = event->ctx->time + delta;
-+	u64 delta = now - event->ctx->time.stamp;
-+	u64 time = event->ctx->time.time + delta;
- 
- 	task_clock_event_update(event, time);
- }
++/* When loading a guest's mediated PMU, schedule out all exclude_guest events. */
++void perf_load_guest_context(unsigned long data)
++{
++	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
++
++	lockdep_assert_irqs_disabled();
++
++	guard(perf_ctx_lock)(cpuctx, cpuctx->task_ctx);
++
++	if (WARN_ON_ONCE(__this_cpu_read(guest_ctx_loaded)))
++		return;
++
++	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
++	ctx_sched_out(&cpuctx->ctx, NULL, EVENT_GUEST);
++	if (cpuctx->task_ctx) {
++		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
++		task_ctx_sched_out(cpuctx->task_ctx, NULL, EVENT_GUEST);
++	}
++
++	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
++	if (cpuctx->task_ctx)
++		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
++
++	__this_cpu_write(guest_ctx_loaded, true);
++}
++EXPORT_SYMBOL_GPL(perf_load_guest_context);
++
++void perf_put_guest_context(void)
++{
++	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
++
++	lockdep_assert_irqs_disabled();
++
++	guard(perf_ctx_lock)(cpuctx, cpuctx->task_ctx);
++
++	if (WARN_ON_ONCE(!__this_cpu_read(guest_ctx_loaded)))
++		return;
++
++	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
++	if (cpuctx->task_ctx)
++		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
++
++	perf_event_sched_in(cpuctx, cpuctx->task_ctx, NULL, EVENT_GUEST);
++
++	if (cpuctx->task_ctx)
++		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
++	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
++
++	__this_cpu_write(guest_ctx_loaded, false);
++}
++EXPORT_SYMBOL_GPL(perf_put_guest_context);
+ #else
+ static int mediated_pmu_account_event(struct perf_event *event) { return 0; }
+ static void mediated_pmu_unaccount_event(struct perf_event *event) {}
 -- 
 2.50.1.565.gc32cd1483b-goog
 
