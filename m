@@ -1,196 +1,214 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD23C133;
-	Thu,  7 Aug 2025 03:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526A93208;
+	Thu,  7 Aug 2025 05:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754536099; cv=none; b=SN6epNCz2VHePEa4+RSHjpTBTOquOcoJYrBvyYsubBeXlEcww57OmZVTcwZalkK+VeeLyharxN5i6PYtHvqYpZeVuJZ0pbkbW9WOVFS2EBDO11t7i0rKXRH7SU5L7Xg5FNfsH28zUCRU18gGP1/RQTD0yJ/eHH+0pfNz8vf2MU4=
+	t=1754542961; cv=none; b=fc1/5b5iBZJXfekC7xT9wn0ow6VcAjad4LZ67YLnO1hITVrqUr469Tt7rgDd273GFfP2lgz1QFJhXASlNf1CUeWXrhPJAszqCfpJBz6o96AFUFIHwO6ccAkYjP0ldoY1sCqE6MqttOQCgYAf4f/A/Pm/0UAhc7SQnJE08usgi40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754536099; c=relaxed/simple;
-	bh=GRk527uBL2x5DQixo/UdMSzo0YC2frEsKN6fDg6Cff0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=akX1GRmkjdd+6kpuGdgvJHDqt/0qkEmf9ljEepoG3KK96vF99eYLCa9RGOMwi+X3ozXCEDQVRLWy9W7BsQTqsVXumNq5djs8WTzJsejmKBDdxjtKzcbtQHX1CL5zPJaPzxHLYrIliqqZlTwLbsDEYQ/u3M0STLWsMGD4kZpBvww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FiwO/d4l; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1754542961; c=relaxed/simple;
+	bh=iLPBsrHPqBLwygLabAH3oPQ7LeYJ3hzY3ZqvBa5reBo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kfWuMDZEdhDl77N4/phLff/UtcVRnnImHvEPvf5eBj68eNS0sqk2TxP7sE/Qkp48h/mvetxFrtcy8eYexGNpPwjWJ58he+kFu9o0BrFsO2gdLrVOyZKgoKaZgdFg/lu+yek8E5zgFDynbJGQb7jk8AhEEGePrltXrFK+JBMAumY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CaBceNuY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FiwO/d4l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754536098; x=1786072098;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GRk527uBL2x5DQixo/UdMSzo0YC2frEsKN6fDg6Cff0=;
-  b=FiwO/d4l0/tv0xzTVNr4Z2rRmJDFVzbY7ynmfn9kGtlAlPmfZN1rh9TG
-   knoeNBB95ZQLJiutBYMbu0lncIBYky8QuhMAgLhSNCejGarXRQpQ9QW/y
-   zsbBIHqV+/2CW25VXhf12TyWIPSE9qI2ZttlpZXfjaNcFvh39IPMcZfaF
-   i8Hoc6qQ8nQtF6BJASKa8Tql+ncOJvAF9LeBIQXampeD65aVczP1HD9Cz
-   tod/MsGu96HabmRStNGGMk985gGGhkL+1d/iEPyNlQMscmoL196WTdAAe
-   u84vHXQnyrF5oJ+Pirp8JCIoYCRHo2hrzQx1mEHk5/uingwNn3NXwvx5j
-   A==;
-X-CSE-ConnectionGUID: 5N/EwZa9S3KNWAeqdDU2yg==
-X-CSE-MsgGUID: GB85AskfQm+aCUde3ZGJaw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="67562132"
-X-IronPort-AV: E=Sophos;i="6.17,271,1747724400"; 
-   d="scan'208";a="67562132"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 20:08:18 -0700
-X-CSE-ConnectionGUID: NEkFjQjTQPm+tJwfZnYgsA==
-X-CSE-MsgGUID: 0uspJoupTai29Vx6JfNEJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,271,1747724400"; 
-   d="scan'208";a="164588660"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.106]) ([10.124.240.106])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2025 20:08:15 -0700
-Message-ID: <154b59ee-0858-4caf-9972-3679db0a0c49@linux.intel.com>
-Date: Thu, 7 Aug 2025 11:08:11 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CaBceNuY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4929BC4CEEB;
+	Thu,  7 Aug 2025 05:02:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754542960;
+	bh=iLPBsrHPqBLwygLabAH3oPQ7LeYJ3hzY3ZqvBa5reBo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CaBceNuYPPe3whqcuZMdpvOiHx3vzbPyxVVozyRKnXOer4DMe3lomi2J7AnglQ23j
+	 zw7bsRNnCajR8+8mdSH4g0+ENpqD20WIg8oZaqJ7TcDFgVBUK8aeLRR5cKGxeLPf06
+	 Rq0YgoBGH43GkhfZRJrHj1evJhu+NvO94Lh5SrmrbhZrQ8aDJBkNBptjqBBIWS3Ifc
+	 adwQPtqElmJ4XwE16IgL3LkROF+xp7HrC9lYNQRbm4yXY6ak4irfDsPffKhmSBdssv
+	 0zrZj5gctdt68kVjiG817/B0qrkPW0UWHnct6rT6qyzyELeoIm32AdfKMiWT2I9Uic
+	 i4XIRlUdPU2xA==
+Date: Wed, 6 Aug 2025 22:02:38 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Ilya Leoshkevich <iii@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	bpf <bpf@vger.kernel.org>,
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-s390 <linux-s390@vger.kernel.org>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Jiri Olsa <jolsa@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>
+Subject: Re: [PATCH v4 2/2] perf bpf-filter: Enable events manually
+Message-ID: <aJQzbpV_NXCD5-Ob@google.com>
+References: <20250806114227.14617-1-iii@linux.ibm.com>
+ <20250806114227.14617-3-iii@linux.ibm.com>
+ <aJPc2NvJqLOGaIKl@google.com>
+ <CAADnVQJG6U6X1qarpbdXra12m-PhNJK5f-jyw695osnOm6AZnQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] perf tools kvm: Use "cycles" to sample guest for "kvm
- record" on Intel
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Kevin Tian <kevin.tian@intel.com>,
- Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250805004633.135904-1-dapeng1.mi@linux.intel.com>
- <20250805004633.135904-5-dapeng1.mi@linux.intel.com>
- <aJPuhpFK_ZjLk-ct@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aJPuhpFK_ZjLk-ct@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAADnVQJG6U6X1qarpbdXra12m-PhNJK5f-jyw695osnOm6AZnQ@mail.gmail.com>
 
+Hi Alexei,
 
-On 8/7/2025 8:08 AM, Namhyung Kim wrote:
-> On Tue, Aug 05, 2025 at 08:46:32AM +0800, Dapeng Mi wrote:
->> After KVM supports PEBS for guest on Intel platforms
->> (https://lore.kernel.org/all/20220411101946.20262-1-likexu@tencent.com/),
->> host loses the capability to sample guest with PEBS since all PEBS related
->> MSRs are switched to guest value after vm-entry, like IA32_DS_AREA MSR is
->> switched to guest GVA at vm-entry. This would lead to "perf kvm record"
->> fails to sample guest on Intel platforms since "cycles:P" event is used to
->> sample guest by default as below case shows.
-> Do you mean we cannot use "cycles:PG" for perf kvm record?
+On Wed, Aug 06, 2025 at 04:38:09PM -0700, Alexei Starovoitov wrote:
+> On Wed, Aug 6, 2025 at 3:53 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hello,
+> >
+> > On Wed, Aug 06, 2025 at 01:40:35PM +0200, Ilya Leoshkevich wrote:
+> > > On s390, and, in general, on all platforms where the respective event
+> > > supports auxiliary data gathering, the command:
+> > >
+> > >    # ./perf record -u 0 -aB --synth=no -- ./perf test -w thloop
+> > >    [ perf record: Woken up 1 times to write data ]
+> > >    [ perf record: Captured and wrote 0.011 MB perf.data ]
+> > >    # ./perf report --stats | grep SAMPLE
+> > >    #
+> > >
+> > > does not generate samples in the perf.data file. On x86 the command:
+> > >
+> > >   # sudo perf record -e intel_pt// -u 0 ls
+> > >
+> > > is broken too.
+> > >
+> > > Looking at the sequence of calls in 'perf record' reveals this
+> > > behavior:
+> > >
+> > > 1. The event 'cycles' is created and enabled:
+> > >
+> > >    record__open()
+> > >    +-> evlist__apply_filters()
+> > >        +-> perf_bpf_filter__prepare()
+> > >          +-> bpf_program.attach_perf_event()
+> > >              +-> bpf_program.attach_perf_event_opts()
+> > >                  +-> __GI___ioctl(..., PERF_EVENT_IOC_ENABLE, ...)
+> > >
+> > >    The event 'cycles' is enabled and active now. However the event's
+> > >    ring-buffer to store the samples generated by hardware is not
+> > >    allocated yet.
+> > >
+> > > 2. The event's fd is mmap()ed to create the ring buffer:
+> > >
+> > >    record__open()
+> > >    +-> record__mmap()
+> > >        +-> record__mmap_evlist()
+> > >          +-> evlist__mmap_ex()
+> > >              +-> perf_evlist__mmap_ops()
+> > >                  +-> mmap_per_cpu()
+> > >                      +-> mmap_per_evsel()
+> > >                          +-> mmap__mmap()
+> > >                              +-> perf_mmap__mmap()
+> > >                                  +-> mmap()
+> > >
+> > >    This allocates the ring buffer for the event 'cycles'. With mmap()
+> > >    the kernel creates the ring buffer:
+> > >
+> > >    perf_mmap(): kernel function to create the event's ring
+> > >    |            buffer to save the sampled data.
+> > >    |
+> > >    +-> ring_buffer_attach(): Allocates memory for ring buffer.
+> > >        |        The PMU has auxiliary data setup function. The
+> > >        |        has_aux(event) condition is true and the PMU's
+> > >        |        stop() is called to stop sampling. It is not
+> > >        |        restarted:
+> > >        |
+> > >        |        if (has_aux(event))
+> > >        |                perf_event_stop(event, 0);
+> > >        |
+> > >        +-> cpumsf_pmu_stop():
+> > >
+> > >    Hardware sampling is stopped. No samples are generated and saved
+> > >    anymore.
+> > >
+> > > 3. After the event 'cycles' has been mapped, the event is enabled a
+> > >    second time in:
+> > >
+> > >    __cmd_record()
+> > >    +-> evlist__enable()
+> > >        +-> __evlist__enable()
+> > >          +-> evsel__enable_cpu()
+> > >              +-> perf_evsel__enable_cpu()
+> > >                  +-> perf_evsel__run_ioctl()
+> > >                      +-> perf_evsel__ioctl()
+> > >                          +-> __GI___ioctl(., PERF_EVENT_IOC_ENABLE, .)
+> > >
+> > >    The second
+> > >
+> > >       ioctl(fd, PERF_EVENT_IOC_ENABLE, 0);
+> > >
+> > >    is just a NOP in this case. The first invocation in (1.) sets the
+> > >    event::state to PERF_EVENT_STATE_ACTIVE. The kernel functions
+> > >
+> > >    perf_ioctl()
+> > >    +-> _perf_ioctl()
+> > >        +-> _perf_event_enable()
+> > >            +-> __perf_event_enable()
+> > >
+> > >    return immediately because event::state is already set to
+> > >    PERF_EVENT_STATE_ACTIVE.
+> > >
+> > > This happens on s390, because the event 'cycles' offers the possibility
+> > > to save auxilary data. The PMU callbacks setup_aux() and free_aux() are
+> > > defined. Without both callback functions, cpumsf_pmu_stop() is not
+> > > invoked and sampling continues.
+> > >
+> > > To remedy this, remove the first invocation of
+> > >
+> > >    ioctl(..., PERF_EVENT_IOC_ENABLE, ...).
+> > >
+> > > in step (1.) Create the event in step (1.) and enable it in step (3.)
+> > > after the ring buffer has been mapped.
+> > >
+> > > Output after:
+> > >
+> > >  # ./perf record -aB --synth=no -u 0 -- ./perf test -w thloop 2
+> > >  [ perf record: Woken up 3 times to write data ]
+> > >  [ perf record: Captured and wrote 0.876 MB perf.data ]
+> > >  # ./perf  report --stats | grep SAMPLE
+> > >               SAMPLE events:      16200  (99.5%)
+> > >               SAMPLE events:      16200
+> > >  #
+> > >
+> > > The software event succeeded both before and after the patch:
+> > >
+> > >  # ./perf record -e cpu-clock -aB --synth=no -u 0 -- \
+> > >                                         ./perf test -w thloop 2
+> > >  [ perf record: Woken up 7 times to write data ]
+> > >  [ perf record: Captured and wrote 2.870 MB perf.data ]
+> > >  # ./perf  report --stats | grep SAMPLE
+> > >               SAMPLE events:      53506  (99.8%)
+> > >               SAMPLE events:      53506
+> > >  #
+> > >
+> > > Fixes: b4c658d4d63d61 ("perf target: Remove uid from target")
+> > > Suggested-by: Jiri Olsa <jolsa@kernel.org>
+> > > Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+> > > Co-developed-by: Thomas Richter <tmricht@linux.ibm.com>
+> > > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> > > Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+> >
+> > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> 
+> Do you mind if I take the whole set through the bpf tree ?
+> 
+> I'm planning to send bpf PR in a couple days, so by -rc1
+> all trees will see the fix.
 
-Yes. Here is the output on Intel Sapphire rapids.
+Sure, I don't think we have conflicting changes and we'll sync
+perf-tools-next once -rc1 is released.
 
-sudo ./perf record -e cycles:PG -a
-^C[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.801 MB perf.data ]
+Thanks,
+Namhyung
 
-No guest records are captured with PEBS, and guest PEBS records can be
-sampled only without PEBS.
-
-sudo ./perf record -e cycles:G -a
-^C[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.798 MB perf.data (60 samples) ]
-
-
->
->> sudo perf kvm record -a
->> ^C[ perf record: Woken up 1 times to write data ]
->> [ perf record: Captured and wrote 0.787 MB perf.data.guest ]
->>
->> So to ensure guest record can be sampled successfully, use "cycles"
->> instead of "cycles:P" to sample guest record by default on Intel
->> platforms. With this patch, the guest record can be sampled
->> successfully.
->>
->> sudo perf kvm record -a
->> ^C[ perf record: Woken up 1 times to write data ]
->> [ perf record: Captured and wrote 0.783 MB perf.data.guest (23 samples) ]
-> What if user already gave some events in the command line?  I think you
-> need to check if "-e" or "--event" (and "--pfm-events" too) is in the
-> argv[] before adding these.
-
-kvm_add_default_arch_event() would detect if user already sets events explicitly. If so, it won't add "cycles" event any more. Thanks.
-
->
-> Thanks,
-> Namhyung
->
->> Reported-by: Kevin Tian <kevin.tian@intel.com>
->> Fixes: 634d36f82517 ("perf record: Just use "cycles:P" as the default event")
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  tools/perf/arch/x86/util/kvm-stat.c | 46 +++++++++++++++++++++++++++++
->>  1 file changed, 46 insertions(+)
->>
->> diff --git a/tools/perf/arch/x86/util/kvm-stat.c b/tools/perf/arch/x86/util/kvm-stat.c
->> index 424716518b75..cdb5f3e1b5be 100644
->> --- a/tools/perf/arch/x86/util/kvm-stat.c
->> +++ b/tools/perf/arch/x86/util/kvm-stat.c
->> @@ -3,9 +3,11 @@
->>  #include <string.h>
->>  #include "../../../util/kvm-stat.h"
->>  #include "../../../util/evsel.h"
->> +#include "../../../util/env.h"
->>  #include <asm/svm.h>
->>  #include <asm/vmx.h>
->>  #include <asm/kvm.h>
->> +#include <subcmd/parse-options.h>
->>  
->>  define_exit_reasons_table(vmx_exit_reasons, VMX_EXIT_REASONS);
->>  define_exit_reasons_table(svm_exit_reasons, SVM_EXIT_REASONS);
->> @@ -211,3 +213,47 @@ int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid)
->>  
->>  	return 0;
->>  }
->> +
->> +/*
->> + * After KVM supports PEBS for guest on Intel platforms
->> + * (https://lore.kernel.org/all/20220411101946.20262-1-likexu@tencent.com/),
->> + * host loses the capability to sample guest with PEBS since all PEBS related
->> + * MSRs are switched to guest value after vm-entry, like IA32_DS_AREA MSR is
->> + * switched to guest GVA at vm-entry. This would lead to "perf kvm record"
->> + * fails to sample guest on Intel platforms since "cycles:P" event is used to
->> + * sample guest by default.
->> + *
->> + * So, to avoid this issue explicitly use "cycles" instead of "cycles:P" event
->> + * by default to sample guest on Intel platforms.
->> + */
->> +int kvm_add_default_arch_event(int *argc, const char **argv)
->> +{
->> +	const char **tmp;
->> +	bool event = false;
->> +	int i, j = *argc;
->> +
->> +	const struct option event_options[] = {
->> +		OPT_BOOLEAN('e', "event", &event, NULL),
->> +		OPT_END()
->> +	};
->> +
->> +	if (!x86__is_intel_cpu())
->> +		return 0;
->> +
->> +	tmp = calloc(j + 1, sizeof(char *));
->> +	if (!tmp)
->> +		return -EINVAL;
->> +
->> +	for (i = 0; i < j; i++)
->> +		tmp[i] = argv[i];
->> +
->> +	parse_options(j, tmp, event_options, NULL, PARSE_OPT_KEEP_UNKNOWN);
->> +	if (!event) {
->> +		argv[j++] = strdup("-e");
->> +		argv[j++] = strdup("cycles");
->> +		*argc += 2;
->> +	}
->> +
->> +	free(tmp);
->> +	return 0;
->> +}
->> -- 
->> 2.34.1
->>
