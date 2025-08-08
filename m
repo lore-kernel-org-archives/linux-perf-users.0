@@ -1,793 +1,308 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D18DF263F4E;
-	Fri,  8 Aug 2025 08:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=129.150.39.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754641862; cv=fail; b=OowADeJUhox/ExOa3S+p/BRmqtW0OEe7556mR8V6rEbbr8OEIzixnD/Ajf4mI0u7EAjWsbnMtSEsFhih0VraCwBthBuV8hQH1x7XWKN1X91jDXsju1FY3quoauKpLzh5EvEHlNY/5wuDaVN8IQxdEKG5YE13252yI48pHi5IiBw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754641862; c=relaxed/simple;
-	bh=JxowW1pQB5gR5PuDeqEExpfxd/fQu1rcp/oTn0Ucbbo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version:MIME-Version; b=sYei/7YOnmm+IHvcBGX3BXPweVO7kwXZaX/4WiSDy5y+O2ZiRwi7VSJw7ngK6O8K+E9e5fRZ3uIPxFVNflnhou6LR0Cho+zqyU74Auw1RaaGah2gb1Xd8sswz4NH5kFSK2bEug0pY/RKXGWWr/54sWv/ygx8T/x68SL21HYaiqI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=fail smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwAHnmGttZVo1Xj9BA--.53017S2;
-	Fri, 08 Aug 2025 16:30:37 +0800 (CST)
-Received: from phytium.com.cn (unknown [218.76.62.144])
-	by mail (Coremail) with SMTP id AQAAfwBH0gmNtZVoag0NAA--.18908S9;
-	Fri, 08 Aug 2025 16:30:22 +0800 (CST)
-From: wangyuquan <wangyuquan1236@phytium.com.cn>
-To: tangtao1634@phytium.com.cn,
-	linux-cxl@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linuxarm@huawei.com,
-	tongtiangen@huawei.com,
-	Yicong Yang <yangyicong@huawei.com>,
-	Niyas Sait <niyas.sait@huawei.com>,
-	ajayjoshi@micron.com,
-	Vandana Salve <vsalve@micron.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Gregory Price <gourry@gourry.net>,
-	Huang Ying <ying.huang@intel.com>
-Subject: [RFC PATCH 3/4] perf: Add support for CXL Hotness Monitoring Units (CHMU)
-Date: Fri,  8 Aug 2025 16:29:55 +0800
-Message-ID: <20241121101845.1815660-4-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
-References: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset="utf-8"
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7B21C32FF;
+	Fri,  8 Aug 2025 08:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1754642152; cv=none; b=I/X9YCBfjHdbCIgLjqYF8JfODGAoDWuyy1QaqBOMF5LkCH2HxV0aSM8qNBJjIZx23ZqoqV7R+9gq66k40U1CMvP4mayQMnsv74hWfAOyD6/UdeIFrn2wfkgBxkGusnfQ7aQTXptRtQXONArdIgQoPg3jzgxkb3nX82G9aQaaHik=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1754642152; c=relaxed/simple;
+	bh=gYkqwRyuf+mXfngwQT5Vz7JmhhNZ1YkE71ZvOwPr16c=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=nGKSF4bOOM2Vvdy4b+KmKZUT/pfksHoXYKBLwRtjt1kIOWJLzT6BIfaWiYwmDci5b5UjOQiI0hYsM10MGXTRAu8tWRgycNVq99It8rI9DQi0XH6bi8+NoOxGRKg4r89xthjFbL+1JQ5cHOnVWwYzuN/nPOLSD17Um4mkCYqgUcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UoDgcl2U; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UoDgcl2U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754642150; x=1786178150;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=gYkqwRyuf+mXfngwQT5Vz7JmhhNZ1YkE71ZvOwPr16c=;
+  b=UoDgcl2USefcslGnVrlnEneL0O9X0dTSyh/qmveQ1anbHdclCGPj1GIR
+   Uk5Akj7t8MesmSFuQu5sbUAMwCFMSF8xMVe+oTPd4FAmWRpGDJk4ekiMQ
+   ACC+ACGo9z7m9XRnoYiQw/A1rSeWV76yCnx3DuK7iFQLoAUb3LPnIRCwx
+   tzVs/i/hTYfsA/1rUdhNkRrJsP8l61lzK0XDMtpDcqQ7jX26Th+HxYr/m
+   5fB4Vk8BUMS9yLDESWb4OV+n+zK1T1I4Q8nJ6z6saexj9Dy5NxUtXcSWr
+   KSBOtyxi0mGjQfNlYVJCewQfucS9bAFGUwJioB9ZFQYLGJ/NsALkcdHGR
+   Q==;
+X-CSE-ConnectionGUID: b8jtjPA1RteSxTSm6EdeFQ==
+X-CSE-MsgGUID: HulQoDpaQAWZrSDQr3UInw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="56893396"
+X-IronPort-AV: E=Sophos;i="6.17,274,1747724400"; 
+   d="scan'208";a="56893396"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2025 01:35:50 -0700
+X-CSE-ConnectionGUID: Mtq1YVreTUW793Ca6IVT3Q==
+X-CSE-MsgGUID: 6ZsGI/1dREKrJ/YPUYiZ9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,274,1747724400"; 
+   d="scan'208";a="170664293"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.106]) ([10.124.240.106])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2025 01:35:42 -0700
+Message-ID: <463a0265-e854-4677-92f2-be17e46a3426@linux.intel.com>
+Date: Fri, 8 Aug 2025 16:35:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Patchwork-Submitter: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-X-Patchwork-Id: 13881831
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56]) (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits)) (No client certificate requested) by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D5B1CD202; Thu, 21 Nov 2024 10:20:23 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116; t=1732184426; cv=none; b=LD/SrYJw4K+4fHFhS6efl0UYPj+6w2HbPK0k7sZn+MVBkFWuOaYP3M6u2JkwDRBY5TDzzAVp5oYsncAA8Pj3/grfQv9ut8AASYNzDiaLtsAN84QoYU+M7uCqpaaPhLz6QRuuCChjKxU64LqWiCO0K3Ebqi9bVNTE9a086nJUvRE=
-ARC-Message-Signature: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116; t=1732184426; c=relaxed/simple; bh=wET4jVx2tdalfskgRlTBrhP5cfdwuvk8NCiNoM2i+Uw=; h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References: MIME-Version:Content-Type; b=mec+IWymKtogHJr5rDR05Up2TumdidaEsCHCuXhSSFWotlQd8sA1t/7tMze8pSBxLLV4OE0uhUpHSY5GAlAbkvP6GmnY5x0hQyY4KQakrkLCfWTNjZqGEASxsGaYVZhHyi9lyZX5Zxff+tQKOmG/2r2CiTfjbD4USX+iK0BmBlw=
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Received: from mail.maildlp.com (unknown [172.18.186.216]) by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XvDkP70XHz6L74P; Thu, 21 Nov 2024 18:19:57 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71]) by mail.maildlp.com (Postfix) with ESMTPS id CBE59140A86; Thu, 21 Nov 2024 18:20:21 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 21 Nov 2024 11:20:20 +0100
-X-Mailer: git-send-email 2.43.0
-Precedence: bulk
-MIME-Version: 1.0
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To frapeml500008.china.huawei.com (7.182.85.71)
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwBH0gmNtZVoag0NAA--.18908S9
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAQAWiU-30C6wACsF
-Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvAXoW3KrW3KF1UKrykAFWfAr17GFg_yoW8CrWfCo
-	WfZa1rXr4ktr409a1Dur1xWa43Z3Z8Wa4SyrW3GwsrXF1UC348Kr9rCry5Xa45Zrn5Wan8
-	ua18tw4Fqw4rXF97n29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
-	J3UbIjqfuFe4nvWSU8nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_UU
-	UUUUUUU==
-Message-ID: <20250808082955.dH2XC4tiNunxNyJkpY-SsntiQ8HJJf5BiGSFli5E4kU@z>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 00/44] KVM: x86: Add support for mediated vPMUs
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
+ <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Kan Liang <kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>,
+ Mingwei Zhang <mizhang@google.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Sandipan Das <sandipan.das@amd.com>
+References: <20250806195706.1650976-1-seanjc@google.com>
+ <a1df40e4-ae97-4b88-ad08-28b11d19c00a@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <a1df40e4-ae97-4b88-ad08-28b11d19c00a@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Based closely on existing support for hisi_ptt.
-Provides basic record and report --dump-raw-traces support.
+On 8/8/2025 4:28 PM, Mi, Dapeng wrote:
+> On 8/7/2025 3:56 AM, Sean Christopherson wrote:
+>> This series is based on the fastpath+PMU cleanups series[*] (which is based on
+>> kvm/queue), but the non-KVM changes apply cleanly on v6.16 or Linus' tree.
+>> I.e. if you only care about the perf changes, I would just apply on whatever
+>> branch is convenient and stop when you hit the KVM changes.
+>>
+>> My hope/plan is that the perf changes will go through the tip tree with a
+>> stable tag/branch, and the KVM changes will go the kvm-x86 tree.
+>>
+>> Non-x86 KVM folks, y'all are getting Cc'd due to minor changes in "KVM: Add a
+>> simplified wrapper for registering perf callbacks".
+>>
+>> The full set is also available at:
+>>
+>>   https://github.com/sean-jc/linux.git tags/mediated-vpmu-v5
+>>
+>> Add support for mediated vPMUs in KVM x86, where "mediated" aligns with the
+>> standard definition of intercepting control operations (e.g. event selectors),
+>> while allowing the guest to perform data operations (e.g. read PMCs, toggle
+>> counters on/off) without KVM getting involed.
+>>
+>> For an in-depth description of the what and why, please see the cover letter
+>> from the original RFC:
+>>
+>>   https://lore.kernel.org/all/20240126085444.324918-1-xiong.y.zhang@linux.intel.com
+>>
+>> All KVM tests pass (or fail the same before and after), and I've manually
+>> verified MSR/PMC are passed through as expected, but I haven't done much at all
+>> to actually utilize the PMU in a guest.  I'll be amazed if I didn't make at
+>> least one major goof.
+>>
+>> Similarly, I tried to address all feedback, but there are many, many changes
+>> relative to v4.  If I missed something, I apologize in advance.
+>>
+>> In other words, please thoroughly review and test.
+> Went through the whole patchset, it looks good to me.
+>
+> Run all PMU related kselftests and KUT tests on Intel Sapphire Rapids, no
+> issue is found. We would run broader tests on more Intel platforms. Thanks.
 
-Example output.  With a counter_width of 16 (0x10) the least significant
-4 bytes are the counter value and the unit index is bits 16-63.
-Here all units are over the threshold and the indexes are 0,1,2 etc.
+Forgot to say "all tests are run for both mediated vPMU and the legacy
+perf-based vPMU, no issue is found". Thanks.
 
-. ... CXL_HMU data: size 33512 bytes
-Header 0: units: 29c counter_width 10
-Header 1 : deadbeef
-0000000000000283
-0000000000010364
-0000000000020366
-000000000003033c
-0000000000040343
-00000000000502ff
-000000000006030d
-000000000007031a
 
-Note this is definitely RFC quality code. Before merging should reduce
-the code duplication that already exists and this code makes sorse.
-
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- tools/perf/arch/arm/util/auxtrace.c |  58 +++++
- tools/perf/arch/x86/util/auxtrace.c |  76 ++++++
- tools/perf/util/Build               |   1 +
- tools/perf/util/auxtrace.c          |   4 +
- tools/perf/util/auxtrace.h          |   1 +
- tools/perf/util/cxl-hmu.c           | 367 ++++++++++++++++++++++++++++
- tools/perf/util/cxl-hmu.h           |  18 ++
- 7 files changed, 525 insertions(+)
-
-diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
-index 3b8eca0ffb17..07ff41800808 100644
---- a/tools/perf/arch/arm/util/auxtrace.c
-+++ b/tools/perf/arch/arm/util/auxtrace.c
-@@ -18,6 +18,7 @@
- #include "cs-etm.h"
- #include "arm-spe.h"
- #include "hisi-ptt.h"
-+#include "cxl-hmu.h"
- 
- static struct perf_pmu **find_all_arm_spe_pmus(int *nr_spes, int *err)
- {
-@@ -99,6 +100,49 @@ static struct perf_pmu **find_all_hisi_ptt_pmus(int *nr_ptts, int *err)
- 	return hisi_ptt_pmus;
- }
- 
-+static struct perf_pmu **find_all_cxl_hmu_pmus(int *nr_hmus, int *err)
-+{
-+	struct perf_pmu **cxl_hmu_pmus = NULL;
-+	struct dirent *dent;
-+	char path[PATH_MAX];
-+	DIR *dir = NULL;
-+	int idx = 0;
-+
-+	perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
-+	dir = opendir(path);
-+	if (!dir) {
-+		*err = -EINVAL;
-+		return NULL;
-+	}
-+
-+	while ((dent = readdir(dir))) {
-+		if (strstr(dent->d_name, "cxl_hmu"))
-+			(*nr_hmus)++;
-+	}
-+
-+	if (!(*nr_hmus))
-+		goto out;
-+
-+	cxl_hmu_pmus = zalloc(sizeof(struct perf_pmu *) * (*nr_hmus));
-+	if (!cxl_hmu_pmus) {
-+		*err = -ENOMEM;
-+		goto out;
-+	}
-+
-+	rewinddir(dir);
-+	while ((dent = readdir(dir))) {
-+		if (strstr(dent->d_name, "cxl_hmu") && idx < *nr_hmus) {
-+			cxl_hmu_pmus[idx] = perf_pmus__find(dent->d_name);
-+			if (cxl_hmu_pmus[idx])
-+				idx++;
-+		}
-+	}
-+
-+out:
-+	closedir(dir);
-+	return cxl_hmu_pmus;
-+}
-+
- static struct perf_pmu *find_pmu_for_event(struct perf_pmu **pmus,
- 					   int pmu_nr, struct evsel *evsel)
- {
-@@ -121,13 +165,16 @@ struct auxtrace_record
- 	struct perf_pmu	*cs_etm_pmu = NULL;
- 	struct perf_pmu **arm_spe_pmus = NULL;
- 	struct perf_pmu **hisi_ptt_pmus = NULL;
-+	struct perf_pmu **chmu_pmus = NULL;
- 	struct evsel *evsel;
- 	struct perf_pmu *found_etm = NULL;
- 	struct perf_pmu *found_spe = NULL;
- 	struct perf_pmu *found_ptt = NULL;
-+	struct perf_pmu *found_chmu = NULL;
- 	int auxtrace_event_cnt = 0;
- 	int nr_spes = 0;
- 	int nr_ptts = 0;
-+	int nr_chmus = 0;
- 
- 	if (!evlist)
- 		return NULL;
-@@ -135,6 +182,7 @@ struct auxtrace_record
- 	cs_etm_pmu = perf_pmus__find(CORESIGHT_ETM_PMU_NAME);
- 	arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
- 	hisi_ptt_pmus = find_all_hisi_ptt_pmus(&nr_ptts, err);
-+	chmu_pmus = find_all_cxl_hmu_pmus(&nr_chmus, err);
- 
- 	evlist__for_each_entry(evlist, evsel) {
- 		if (cs_etm_pmu && !found_etm)
-@@ -145,10 +193,14 @@ struct auxtrace_record
- 
- 		if (hisi_ptt_pmus && !found_ptt)
- 			found_ptt = find_pmu_for_event(hisi_ptt_pmus, nr_ptts, evsel);
-+
-+		if (chmu_pmus && !found_chmu)
-+			found_chmu = find_pmu_for_event(chmu_pmus, nr_chmus, evsel);
- 	}
- 
- 	free(arm_spe_pmus);
- 	free(hisi_ptt_pmus);
-+	free(chmu_pmus);
- 
- 	if (found_etm)
- 		auxtrace_event_cnt++;
-@@ -159,6 +211,9 @@ struct auxtrace_record
- 	if (found_ptt)
- 		auxtrace_event_cnt++;
- 
-+	if (found_chmu)
-+		auxtrace_event_cnt++;
-+
- 	if (auxtrace_event_cnt > 1) {
- 		pr_err("Concurrent AUX trace operation not currently supported\n");
- 		*err = -EOPNOTSUPP;
-@@ -174,6 +229,9 @@ struct auxtrace_record
- 
- 	if (found_ptt)
- 		return hisi_ptt_recording_init(err, found_ptt);
-+
-+	if (found_chmu)
-+		return chmu_recording_init(err, found_chmu);
- #endif
- 
- 	/*
-diff --git a/tools/perf/arch/x86/util/auxtrace.c b/tools/perf/arch/x86/util/auxtrace.c
-index 354780ff1605..30d84ce41394 100644
---- a/tools/perf/arch/x86/util/auxtrace.c
-+++ b/tools/perf/arch/x86/util/auxtrace.c
-@@ -4,6 +4,7 @@
-  * Copyright (c) 2013-2014, Intel Corporation.
-  */
- 
-+#include <dirent.h>
- #include <errno.h>
- #include <stdbool.h>
- 
-@@ -14,6 +15,7 @@
- #include "../../../util/auxtrace.h"
- #include "../../../util/intel-pt.h"
- #include "../../../util/intel-bts.h"
-+#include "../../../util/cxl-hmu.h"
- #include "../../../util/evlist.h"
- 
- static
-@@ -51,14 +53,88 @@ struct auxtrace_record *auxtrace_record__init_intel(struct evlist *evlist,
- 	return NULL;
- }
- 
-+static struct perf_pmu **find_all_cxl_hmu_pmus(int *nr_hmus, int *err)
-+{
-+	struct perf_pmu **cxl_hmu_pmus = NULL;
-+	struct dirent *dent;
-+	char path[PATH_MAX];
-+	DIR *dir = NULL;
-+	int idx = 0;
-+
-+	perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
-+	dir = opendir(path);
-+	if (!dir) {
-+		*err = -EINVAL;
-+		return NULL;
-+	}
-+
-+	while ((dent = readdir(dir))) {
-+		if (strstr(dent->d_name, "cxl_hmu"))
-+			(*nr_hmus)++;
-+	}
-+
-+	if (!(*nr_hmus))
-+		goto out;
-+
-+	cxl_hmu_pmus = zalloc(sizeof(struct perf_pmu *) * (*nr_hmus));
-+	if (!cxl_hmu_pmus) {
-+		*err = -ENOMEM;
-+		goto out;
-+	}
-+
-+	rewinddir(dir);
-+	while ((dent = readdir(dir))) {
-+		if (strstr(dent->d_name, "cxl_hmu") && idx < *nr_hmus) {
-+			cxl_hmu_pmus[idx] = perf_pmus__find(dent->d_name);
-+			if (cxl_hmu_pmus[idx])
-+				idx++;
-+		}
-+	}
-+
-+out:
-+	closedir(dir);
-+	return cxl_hmu_pmus;
-+}
-+
-+static struct perf_pmu *find_pmu_for_event(struct perf_pmu **pmus,
-+					   int pmu_nr, struct evsel *evsel)
-+{
-+	int i;
-+
-+	if (!pmus)
-+		return NULL;
-+
-+	for (i = 0; i < pmu_nr; i++) {
-+		if (evsel->core.attr.type == pmus[i]->type)
-+			return pmus[i];
-+	}
-+
-+	return NULL;
-+}
-+
- struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
- 					      int *err)
- {
- 	char buffer[64];
- 	int ret;
-+	struct perf_pmu **chmu_pmus = NULL;
-+	struct perf_pmu *found_chmu = NULL;
-+	struct evsel *evsel;
-+	int nr_chmus = 0;
- 
- 	*err = 0;
- 
-+	chmu_pmus = find_all_cxl_hmu_pmus(&nr_chmus, err);
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (chmu_pmus && !found_chmu)
-+			found_chmu = find_pmu_for_event(chmu_pmus, nr_chmus, evsel);
-+	}
-+	free(chmu_pmus);
-+
-+	if (found_chmu)
-+		return chmu_recording_init(err, found_chmu);
-+
- 	ret = get_cpuid(buffer, sizeof(buffer));
- 	if (ret) {
- 		*err = ret;
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index dc616292b2dd..40c645fd0cb3 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -127,6 +127,7 @@ perf-util-$(CONFIG_AUXTRACE) += arm-spe.o
- perf-util-$(CONFIG_AUXTRACE) += arm-spe-decoder/
- perf-util-$(CONFIG_AUXTRACE) += hisi-ptt.o
- perf-util-$(CONFIG_AUXTRACE) += hisi-ptt-decoder/
-+perf-util-$(CONFIG_AUXTRACE) += cxl-hmu.o
- perf-util-$(CONFIG_AUXTRACE) += s390-cpumsf.o
- 
- ifdef CONFIG_LIBOPENCSD
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index ca8682966fae..0efc15732a03 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -53,6 +53,7 @@
- #include "intel-bts.h"
- #include "arm-spe.h"
- #include "hisi-ptt.h"
-+#include "cxl-hmu.h"
- #include "s390-cpumsf.h"
- #include "util/mmap.h"
- 
-@@ -1333,6 +1334,9 @@ int perf_event__process_auxtrace_info(struct perf_session *session,
- 	case PERF_AUXTRACE_HISI_PTT:
- 		err = hisi_ptt_process_auxtrace_info(event, session);
- 		break;
-+	case PERF_AUXTRACE_CXL_HMU:
-+		err = cxl_hmu_process_auxtrace_info(event, session);
-+		break;
- 	case PERF_AUXTRACE_UNKNOWN:
- 	default:
- 		return -EINVAL;
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index a1895a4f530b..8a7a5b7dc2d6 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -49,6 +49,7 @@ enum auxtrace_type {
- 	PERF_AUXTRACE_ARM_SPE,
- 	PERF_AUXTRACE_S390_CPUMSF,
- 	PERF_AUXTRACE_HISI_PTT,
-+	PERF_AUXTRACE_CXL_HMU,
- };
- 
- enum itrace_period_type {
-diff --git a/tools/perf/util/cxl-hmu.c b/tools/perf/util/cxl-hmu.c
-new file mode 100644
-index 000000000000..31844f16e4f9
---- /dev/null
-+++ b/tools/perf/util/cxl-hmu.c
-@@ -0,0 +1,367 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * CXL HMU support
-+ * Copyright (c) 2024 Huawei
-+ *
-+ * Based on:
-+ * HiSilicon PCIe Trace and Tuning (PTT) support
-+ * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
-+ */
-+
-+#include <byteswap.h>
-+#include <endian.h>
-+#include <errno.h>
-+#include <inttypes.h>
-+#include <linux/bitops.h>
-+#include <linux/kernel.h>
-+#include <linux/log2.h>
-+#include <linux/types.h>
-+#include <linux/zalloc.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+
-+#include "auxtrace.h"
-+#include "color.h"
-+#include "debug.h"
-+#include "evlist.h"
-+#include "evsel.h"
-+#include "cxl-hmu.h"
-+#include "machine.h"
-+#include "record.h"
-+#include "session.h"
-+#include "tool.h"
-+#include "tsc.h"
-+#include <internal/lib.h>
-+
-+#define KiB(x) ((x) * 1024)
-+#define MiB(x) ((x) * 1024 * 1024)
-+
-+struct chmu_recording {
-+	struct auxtrace_record	itr;
-+	struct perf_pmu *chmu_pmu;
-+	struct evlist *evlist;
-+};
-+
-+static size_t
-+chmu_info_priv_size(struct auxtrace_record *itr __maybe_unused,
-+			struct evlist *evlist __maybe_unused)
-+{
-+	return CXL_HMU_AUXTRACE_PRIV_SIZE;
-+}
-+
-+static int chmu_info_fill(struct auxtrace_record *itr,
-+			      struct perf_session *session,
-+			      struct perf_record_auxtrace_info *auxtrace_info,
-+			      size_t priv_size)
-+{
-+	struct chmu_recording *pttr =
-+			container_of(itr, struct chmu_recording, itr);
-+	struct perf_pmu *chmu_pmu = pttr->chmu_pmu;
-+
-+	if (priv_size != CXL_HMU_AUXTRACE_PRIV_SIZE)
-+		return -EINVAL;
-+
-+	if (!session->evlist->core.nr_mmaps)
-+		return -EINVAL;
-+
-+	auxtrace_info->type = PERF_AUXTRACE_CXL_HMU;
-+	auxtrace_info->priv[0] = chmu_pmu->type;
-+
-+	return 0;
-+}
-+
-+static int chmu_set_auxtrace_mmap_page(struct record_opts *opts)
-+{
-+	bool privileged = perf_event_paranoid_check(-1);
-+
-+	if (!opts->full_auxtrace)
-+		return 0;
-+
-+	if (opts->full_auxtrace && !opts->auxtrace_mmap_pages) {
-+		if (privileged) {
-+			opts->auxtrace_mmap_pages = MiB(16) / page_size;
-+		} else {
-+			opts->auxtrace_mmap_pages = KiB(128) / page_size;
-+			if (opts->mmap_pages == UINT_MAX)
-+				opts->mmap_pages = KiB(256) / page_size;
-+		}
-+	}
-+
-+	/* Validate auxtrace_mmap_pages */
-+	if (opts->auxtrace_mmap_pages) {
-+		size_t sz = opts->auxtrace_mmap_pages * (size_t)page_size;
-+		size_t min_sz = KiB(8);
-+
-+		if (sz < min_sz || !is_power_of_2(sz)) {
-+			pr_err("Invalid mmap size for CXL_HMU: must be at least %zuKiB and a power of 2\n",
-+			       min_sz / 1024);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int chmu_recording_options(struct auxtrace_record *itr,
-+				      struct evlist *evlist,
-+				      struct record_opts *opts)
-+{
-+	struct chmu_recording *pttr =
-+			container_of(itr, struct chmu_recording, itr);
-+	struct perf_pmu *chmu_pmu = pttr->chmu_pmu;
-+	struct evsel *evsel, *chmu_evsel = NULL;
-+	struct evsel *tracking_evsel;
-+	int err;
-+
-+	pttr->evlist = evlist;
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (evsel->core.attr.type == chmu_pmu->type) {
-+			if (chmu_evsel) {
-+				pr_err("There may be only one cxl_hmu x event\n");
-+				return -EINVAL;
-+			}
-+			evsel->core.attr.freq = 0;
-+			evsel->core.attr.sample_period = 1;
-+			evsel->needs_auxtrace_mmap = true;
-+			chmu_evsel = evsel;
-+			opts->full_auxtrace = true;
-+		}
-+	}
-+
-+	err = chmu_set_auxtrace_mmap_page(opts);
-+	if (err)
-+		return err;
-+	/*
-+	 * To obtain the auxtrace buffer file descriptor, the auxtrace event
-+	 * must come first.
-+	 */
-+	evlist__to_front(evlist, chmu_evsel);
-+	evsel__set_sample_bit(chmu_evsel, TIME);
-+
-+	/* Add dummy event to keep tracking */
-+	err = parse_event(evlist, "dummy:u");
-+	if (err)
-+		return err;
-+
-+	tracking_evsel = evlist__last(evlist);
-+	evlist__set_tracking_event(evlist, tracking_evsel);
-+
-+	tracking_evsel->core.attr.freq = 0;
-+	tracking_evsel->core.attr.sample_period = 1;
-+	evsel__set_sample_bit(tracking_evsel, TIME);
-+
-+	return 0;
-+}
-+
-+static u64 chmu_reference(struct auxtrace_record *itr __maybe_unused)
-+{
-+	return rdtsc();
-+}
-+
-+static void chmu_recording_free(struct auxtrace_record *itr)
-+{
-+	struct chmu_recording *pttr =
-+	  container_of(itr, struct chmu_recording, itr);
-+
-+	free(pttr);
-+}
-+
-+struct auxtrace_record *chmu_recording_init(int *err,
-+						struct perf_pmu *chmu_pmu)
-+{
-+	struct chmu_recording *pttr;
-+
-+	if (!chmu_pmu) {
-+		*err = -ENODEV;
-+		return NULL;
-+	}
-+
-+	pttr = zalloc(sizeof(*pttr));
-+	if (!pttr) {
-+		*err = -ENOMEM;
-+		return NULL;
-+	}
-+
-+	pttr->chmu_pmu = chmu_pmu;
-+	pttr->itr.recording_options = chmu_recording_options;
-+	pttr->itr.info_priv_size = chmu_info_priv_size;
-+	pttr->itr.info_fill = chmu_info_fill;
-+	pttr->itr.free = chmu_recording_free;
-+	pttr->itr.reference = chmu_reference;
-+	pttr->itr.read_finish = auxtrace_record__read_finish;
-+	pttr->itr.alignment = 0;
-+
-+	*err = 0;
-+	return &pttr->itr;
-+}
-+
-+struct cxl_hmu {
-+	struct auxtrace auxtrace;
-+	u32 auxtrace_type;
-+	struct perf_session *session;
-+	struct machine *machine;
-+	u32 pmu_type;
-+};
-+
-+struct cxl_hmu_queue {
-+	struct cxl_hmu *hmu;
-+	struct auxtrace_buffer *buffer;
-+};
-+
-+static void cxl_hmu_dump(struct cxl_hmu *hmu __maybe_unused,
-+			  unsigned char *buf, size_t len)
-+{
-+	const char *color = PERF_COLOR_BLUE;
-+	size_t pos = 0;
-+	size_t packet_offset = 0, hotlist_entries_in_packet;
-+
-+	len = round_down(len, 8);
-+	color_fprintf(stdout, color, ". ... CXL_HMU data: size %zu bytes\n",
-+		      len);
-+
-+	while (len > 0) {
-+		if (!packet_offset) {
-+			hotlist_entries_in_packet = ((uint64_t *)(buf + pos))[0] & 0xFFFF;
-+			color_fprintf(stdout, PERF_COLOR_BLUE,
-+				      "Header 0: units: %x counter_width %x\n",
-+				      hotlist_entries_in_packet,
-+				      (((uint64_t *)(buf + pos))[0] >> 16) & 0xFF);
-+		} else if (packet_offset == 1) {
-+			color_fprintf(stdout, PERF_COLOR_BLUE,
-+				      "Header 1 : %lx\n", ((uint64_t *)(buf + pos))[0]);
-+		} else {
-+			color_fprintf(stdout, PERF_COLOR_BLUE,
-+				      "%016lx\n", ((uint64_t *)(buf + pos))[0]);
-+		}
-+		pos += 8;
-+		len -= 8;
-+		packet_offset++;
-+		if (packet_offset == hotlist_entries_in_packet + 2)
-+			packet_offset = 0;
-+	}
-+}
-+
-+static void cxl_hmu_dump_event(struct cxl_hmu *hmu, unsigned char *buf,
-+			       size_t len)
-+{
-+	printf(".\n");
-+
-+	cxl_hmu_dump(hmu, buf, len);
-+}
-+
-+static int cxl_hmu_process_event(struct perf_session *session __maybe_unused,
-+				  union perf_event *event __maybe_unused,
-+				  struct perf_sample *sample __maybe_unused,
-+				  const struct perf_tool *tool __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+static int cxl_hmu_process_auxtrace_event(struct perf_session *session,
-+					  union perf_event *event,
-+					  const struct perf_tool *tool __maybe_unused)
-+{
-+	struct cxl_hmu *hmu = container_of(session->auxtrace, struct cxl_hmu,
-+					    auxtrace);
-+	int fd = perf_data__fd(session->data);
-+	int size = event->auxtrace.size;
-+	void *data = malloc(size);
-+	off_t data_offset;
-+	int err;
-+
-+	if (!data) {
-+		printf("no data\n");
-+		return -errno;
-+	}
-+
-+	if (perf_data__is_pipe(session->data)) {
-+		data_offset = 0;
-+	} else {
-+		data_offset = lseek(fd, 0, SEEK_CUR);
-+		if (data_offset == -1) {
-+			free(data);
-+			printf("failed to seek\n");
-+			return -errno;
-+		}
-+	}
-+
-+	err = readn(fd, data, size);
-+	if (err != (ssize_t)size) {
-+		free(data);
-+		printf("failed to rread\n");
-+		return -errno;
-+	}
-+
-+	if (dump_trace)
-+		cxl_hmu_dump_event(hmu, data, size);
-+
-+	free(data);
-+	return 0;
-+}
-+
-+static int cxl_hmu_flush(struct perf_session *session __maybe_unused,
-+			 const struct perf_tool *tool __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+static void cxl_hmu_free_events(struct perf_session *session __maybe_unused)
-+{
-+}
-+
-+static void cxl_hmu_free(struct perf_session *session)
-+{
-+	struct cxl_hmu *hmu = container_of(session->auxtrace, struct cxl_hmu,
-+					    auxtrace);
-+
-+	session->auxtrace = NULL;
-+	free(hmu);
-+}
-+
-+static bool cxl_hmu_evsel_is_auxtrace(struct perf_session *session,
-+				       struct evsel *evsel)
-+{
-+	struct cxl_hmu *hmu = container_of(session->auxtrace, struct cxl_hmu, auxtrace);
-+
-+	return evsel->core.attr.type == hmu->pmu_type;
-+}
-+
-+static void cxl_hmu_print_info(__u64 type)
-+{
-+	if (!dump_trace)
-+		return;
-+
-+	fprintf(stdout, "  PMU Type           %" PRId64 "\n", (s64) type);
-+}
-+
-+int cxl_hmu_process_auxtrace_info(union perf_event *event,
-+				   struct perf_session *session)
-+{
-+	struct perf_record_auxtrace_info *auxtrace_info = &event->auxtrace_info;
-+	struct cxl_hmu *hmu;
-+
-+	if (auxtrace_info->header.size < CXL_HMU_AUXTRACE_PRIV_SIZE +
-+				sizeof(struct perf_record_auxtrace_info))
-+		return -EINVAL;
-+
-+	hmu = zalloc(sizeof(*hmu));
-+	if (!hmu)
-+		return -ENOMEM;
-+
-+	hmu->session = session;
-+	hmu->machine = &session->machines.host; /* No kvm support */
-+	hmu->auxtrace_type = auxtrace_info->type;
-+	hmu->pmu_type = auxtrace_info->priv[0];
-+
-+	hmu->auxtrace.process_event = cxl_hmu_process_event;
-+	hmu->auxtrace.process_auxtrace_event = cxl_hmu_process_auxtrace_event;
-+	hmu->auxtrace.flush_events = cxl_hmu_flush;
-+	hmu->auxtrace.free_events = cxl_hmu_free_events;
-+	hmu->auxtrace.free = cxl_hmu_free;
-+	hmu->auxtrace.evsel_is_auxtrace = cxl_hmu_evsel_is_auxtrace;
-+	session->auxtrace = &hmu->auxtrace;
-+
-+	cxl_hmu_print_info(auxtrace_info->priv[0]);
-+
-+	return 0;
-+}
-diff --git a/tools/perf/util/cxl-hmu.h b/tools/perf/util/cxl-hmu.h
-new file mode 100644
-index 000000000000..9b4d83219711
---- /dev/null
-+++ b/tools/perf/util/cxl-hmu.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * CXL Hotness Monitoring Unit Support
-+ */
-+
-+#ifndef INCLUDE__PERF_CXL_HMU_H__
-+#define INCLUDE__PERF_CXL_HMU_H__
-+
-+#define CXL_HMU_PMU_NAME		"cxl_hmu"
-+#define CXL_HMU_AUXTRACE_PRIV_SIZE	sizeof(u64)
-+
-+struct auxtrace_record *chmu_recording_init(int *err,
-+					       struct perf_pmu *cxl_hmu_pmu);
-+
-+int cxl_hmu_process_auxtrace_info(union perf_event *event,
-+				   struct perf_session *session);
-+
-+#endif
-
+>
+>
+>> [*] https://lore.kernel.org/all/20250805190526.1453366-1-seanjc@google.com
+>>
+>> v5:
+>>  - Add a patch to call security_perf_event_free() from __free_event()
+>>    instead of _free_event() (necessitated by the __cleanup() changes).
+>>  - Add CONFIG_PERF_GUEST_MEDIATED_PMU to guard the new perf functionality.
+>>  - Ensure the PMU is fully disabled in perf_{load,put}_guest_context() when
+>>    when switching between guest and host context. [Kan, Namhyung]
+>>  - Route the new system IRQ, PERF_GUEST_MEDIATED_PMI_VECTOR, through perf,
+>>    not KVM, and play nice with FRED.
+>>  - Rename and combine perf_{guest,host}_{enter,exit}() to a single set of
+>>    APIs, perf_{load,put}_guest_context().
+>>  - Rename perf_{get,put}_mediated_pmu() to perf_{create,release}_mediated_pmu()
+>>    to (hopefully) better differentiate them from perf_{load,put}_guest_context().
+>>  - Change the param to the load/put APIs from "u32 guest_lvtpc" to
+>>    "unsigned long data" to decouple arch code as much as possible.  E.g. if
+>>    a non-x86 arch were to ever support a mediated vPMU, @data could be used
+>>    to pass a pointer to a struct.
+>>  - Use pmu->version to detect if a vCPU has a mediated PMU.
+>>  - Use a kvm_x86_ops hook to check for mediated PMU support.
+>>  - Cull "passthrough" from as many places as I could find.
+>>  - Improve the changelog/documentation related to RDPMC interception.
+>>  - Check harware capabilities, not KVM capabilities, when calculating
+>>    MSR and RDPMC intercepts.
+>>  - Rework intercept (re)calculation to use a request and the existing (well,
+>>    will be existing as of 6.17-rc1) vendor hooks for recalculating intercepts.
+>>  - Always read PERF_GLOBAL_CTRL on VM-Exit if writes weren't intercepted while
+>>    running the vCPU.
+>>  - Call setup_vmcs_config() before kvm_x86_vendor_init() so that the golden
+>>    VMCS configuration is known before kvm_init_pmu_capability() is called.
+>>  - Keep as much refresh/init code in common x86 as possible.
+>>  - Context switch PMCs and event selectors in common x86, not vendor code.
+>>  - Bail from the VM-Exit fastpath if the guest is counting instructions
+>>    retired and the mediated PMU is enabled (because guest state hasn't yet
+>>    been synchronized with hardware).
+>>  - Don't require an userspace to opt-in via KVM_CAP_PMU_CAPABILITY, and instead
+>>    automatically "create" a mediated PMU on the first KVM_CREATE_VCPU call if
+>>    the VM has an in-kernel local APIC.
+>>  - Add entries in kernel-parameters.txt for the PMU params.
+>>  - Add a patch to elide PMC writes when possible.
+>>  - Many more fixups and tweaks...
+>>
+>> v4:
+>>  - https://lore.kernel.org/all/20250324173121.1275209-1-mizhang@google.com
+>>  - Rebase whole patchset on 6.14-rc3 base.
+>>  - Address Peter's comments on Perf part.
+>>  - Address Sean's comments on KVM part.
+>>    * Change key word "passthrough" to "mediated" in all patches
+>>    * Change static enabling to user space dynamic enabling via KVM_CAP_PMU_CAPABILITY.
+>>    * Only support GLOBAL_CTRL save/restore with VMCS exec_ctrl, drop the MSR
+>>      save/retore list support for GLOBAL_CTRL, thus the support of mediated
+>>      vPMU is constrained to SapphireRapids and later CPUs on Intel side.
+>>    * Merge some small changes into a single patch.
+>>  - Address Sandipan's comment on invalid pmu pointer.
+>>  - Add back "eventsel_hw" and "fixed_ctr_ctrl_hw" to avoid to directly
+>>    manipulate pmc->eventsel and pmu->fixed_ctr_ctrl.
+>>
+>> v3: https://lore.kernel.org/all/20240801045907.4010984-1-mizhang@google.com
+>> v2: https://lore.kernel.org/all/20240506053020.3911940-1-mizhang@google.com
+>> v1: https://lore.kernel.org/all/20240126085444.324918-1-xiong.y.zhang@linux.intel.com
+>>
+>> Dapeng Mi (15):
+>>   KVM: x86/pmu: Start stubbing in mediated PMU support
+>>   KVM: x86/pmu: Implement Intel mediated PMU requirements and
+>>     constraints
+>>   KVM: x86: Rename vmx_vmentry/vmexit_ctrl() helpers
+>>   KVM: x86/pmu: Move PMU_CAP_{FW_WRITES,LBR_FMT} into msr-index.h header
+>>   KVM: VMX: Add helpers to toggle/change a bit in VMCS execution
+>>     controls
+>>   KVM: x86/pmu: Disable RDPMC interception for compatible mediated vPMU
+>>   KVM: x86/pmu: Load/save GLOBAL_CTRL via entry/exit fields for mediated
+>>     PMU
+>>   KVM: x86/pmu: Use BIT_ULL() instead of open coded equivalents
+>>   KVM: x86/pmu: Disable interception of select PMU MSRs for mediated
+>>     vPMUs
+>>   KVM: x86/pmu: Bypass perf checks when emulating mediated PMU counter
+>>     accesses
+>>   KVM: x86/pmu: Reprogram mediated PMU event selectors on event filter
+>>     updates
+>>   KVM: x86/pmu: Load/put mediated PMU context when entering/exiting
+>>     guest
+>>   KVM: x86/pmu: Handle emulated instruction for mediated vPMU
+>>   KVM: nVMX: Add macros to simplify nested MSR interception setting
+>>   KVM: x86/pmu: Expose enable_mediated_pmu parameter to user space
+>>
+>> Kan Liang (7):
+>>   perf: Skip pmu_ctx based on event_type
+>>   perf: Add generic exclude_guest support
+>>   perf: Add APIs to create/release mediated guest vPMUs
+>>   perf: Clean up perf ctx time
+>>   perf: Add a EVENT_GUEST flag
+>>   perf: Add APIs to load/put guest mediated PMU context
+>>   perf/x86/intel: Support PERF_PMU_CAP_MEDIATED_VPMU
+>>
+>> Mingwei Zhang (3):
+>>   perf/x86/core: Plumb mediated PMU capability from x86_pmu to
+>>     x86_pmu_cap
+>>   KVM: x86/pmu: Introduce eventsel_hw to prepare for pmu event filtering
+>>   KVM: nVMX: Disable PMU MSR interception as appropriate while running
+>>     L2
+>>
+>> Sandipan Das (3):
+>>   perf/x86/core: Do not set bit width for unavailable counters
+>>   perf/x86/amd: Support PERF_PMU_CAP_MEDIATED_VPMU for AMD host
+>>   KVM: x86/pmu: Always stuff GuestOnly=1,HostOnly=0 for mediated PMCs on
+>>     AMD
+>>
+>> Sean Christopherson (15):
+>>   perf: Move security_perf_event_free() call to __free_event()
+>>   perf: core/x86: Register a new vector for handling mediated guest PMIs
+>>   perf/x86: Switch LVTPC to/from mediated PMI vector on guest load/put
+>>     context
+>>   KVM: VMX: Setup canonical VMCS config prior to kvm_x86_vendor_init()
+>>   KVM: SVM: Check pmu->version, not enable_pmu, when getting PMC MSRs
+>>   KVM: Add a simplified wrapper for registering perf callbacks
+>>   KVM: x86/pmu: Snapshot host (i.e. perf's) reported PMU capabilities
+>>   KVM: x86/pmu: Implement AMD mediated PMU requirements
+>>   KVM: x86: Rework KVM_REQ_MSR_FILTER_CHANGED into a generic
+>>     RECALC_INTERCEPTS
+>>   KVM: x86: Use KVM_REQ_RECALC_INTERCEPTS to react to CPUID updates
+>>   KVM: x86/pmu: Move initialization of valid PMCs bitmask to common x86
+>>   KVM: x86/pmu: Restrict GLOBAL_{CTRL,STATUS}, fixed PMCs, and PEBS to
+>>     PMU v2+
+>>   KVM: x86/pmu: Disallow emulation in the fastpath if mediated PMCs are
+>>     active
+>>   KVM: nSVM: Disable PMU MSR interception as appropriate while running
+>>     L2
+>>   KVM: x86/pmu: Elide WRMSRs when loading guest PMCs if values already
+>>     match
+>>
+>> Xiong Zhang (1):
+>>   KVM: x86/pmu: Register PMI handler for mediated vPMU
+>>
+>>  .../admin-guide/kernel-parameters.txt         |  49 ++
+>>  arch/arm64/kvm/arm.c                          |   2 +-
+>>  arch/loongarch/kvm/main.c                     |   2 +-
+>>  arch/riscv/kvm/main.c                         |   2 +-
+>>  arch/x86/entry/entry_fred.c                   |   1 +
+>>  arch/x86/events/amd/core.c                    |   2 +
+>>  arch/x86/events/core.c                        |  32 +-
+>>  arch/x86/events/intel/core.c                  |   5 +
+>>  arch/x86/include/asm/hardirq.h                |   3 +
+>>  arch/x86/include/asm/idtentry.h               |   6 +
+>>  arch/x86/include/asm/irq_vectors.h            |   4 +-
+>>  arch/x86/include/asm/kvm-x86-ops.h            |   2 +-
+>>  arch/x86/include/asm/kvm-x86-pmu-ops.h        |   4 +
+>>  arch/x86/include/asm/kvm_host.h               |   7 +-
+>>  arch/x86/include/asm/msr-index.h              |  17 +-
+>>  arch/x86/include/asm/perf_event.h             |   1 +
+>>  arch/x86/include/asm/vmx.h                    |   1 +
+>>  arch/x86/kernel/idt.c                         |   3 +
+>>  arch/x86/kernel/irq.c                         |  19 +
+>>  arch/x86/kvm/Kconfig                          |   1 +
+>>  arch/x86/kvm/cpuid.c                          |   2 +
+>>  arch/x86/kvm/pmu.c                            | 272 ++++++++-
+>>  arch/x86/kvm/pmu.h                            |  37 +-
+>>  arch/x86/kvm/svm/nested.c                     |  18 +-
+>>  arch/x86/kvm/svm/pmu.c                        |  51 +-
+>>  arch/x86/kvm/svm/svm.c                        |  54 +-
+>>  arch/x86/kvm/vmx/capabilities.h               |  11 +-
+>>  arch/x86/kvm/vmx/main.c                       |  14 +-
+>>  arch/x86/kvm/vmx/nested.c                     |  65 ++-
+>>  arch/x86/kvm/vmx/pmu_intel.c                  | 169 ++++--
+>>  arch/x86/kvm/vmx/pmu_intel.h                  |  15 +
+>>  arch/x86/kvm/vmx/vmx.c                        | 143 +++--
+>>  arch/x86/kvm/vmx/vmx.h                        |  11 +-
+>>  arch/x86/kvm/vmx/x86_ops.h                    |   2 +-
+>>  arch/x86/kvm/x86.c                            |  69 ++-
+>>  arch/x86/kvm/x86.h                            |   1 +
+>>  include/linux/kvm_host.h                      |  11 +-
+>>  include/linux/perf_event.h                    |  38 +-
+>>  init/Kconfig                                  |   4 +
+>>  kernel/events/core.c                          | 521 ++++++++++++++----
+>>  .../beauty/arch/x86/include/asm/irq_vectors.h |   3 +-
+>>  virt/kvm/kvm_main.c                           |   6 +-
+>>  42 files changed, 1385 insertions(+), 295 deletions(-)
+>>
+>>
+>> base-commit: 53d61a43a7973f812caa08fa922b607574befef4
