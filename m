@@ -1,23 +1,23 @@
-Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ED2122759C;
-	Fri,  8 Aug 2025 08:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=209.97.181.73
+Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D18DF263F4E;
+	Fri,  8 Aug 2025 08:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=129.150.39.64
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754641843; cv=fail; b=UaR9epy82NjU/rls0mHEef2bfKywPx90lob2HwZCA5jBoWm6rEpz4UGOnMV8S+Hjqey1DdVY1d5V4QlGG8AceepWJ9Tgk6/qID+Pemc/4XFgtfXokQxqGrC6qI+P65JojK6loG/wvyHO/QCQcRfwkFDw162mu6iuCZpn/aBu1zw=
+	t=1754641862; cv=fail; b=OowADeJUhox/ExOa3S+p/BRmqtW0OEe7556mR8V6rEbbr8OEIzixnD/Ajf4mI0u7EAjWsbnMtSEsFhih0VraCwBthBuV8hQH1x7XWKN1X91jDXsju1FY3quoauKpLzh5EvEHlNY/5wuDaVN8IQxdEKG5YE13252yI48pHi5IiBw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754641843; c=relaxed/simple;
-	bh=5WLJ58+p3nOB839ip0FHS9sWkiDYPdLautEoOOvAg5s=;
+	s=arc-20240116; t=1754641862; c=relaxed/simple;
+	bh=JxowW1pQB5gR5PuDeqEExpfxd/fQu1rcp/oTn0Ucbbo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version:MIME-Version; b=fcU9NiVRIa756Itt5MG+aIKxf7h0SvvqMfr1bhw1b7htkGCtH5vShERvjpcLGRf750xVlX3DpCBS4dg61BRSYWes6//MH20kRdbwQFvTJHKLVRH3u+1sOG7dv2QsLSk7duWmD9H22D5jQeeAtk9bTkr/vR8Wz28yQrMTZxGLeeE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=fail smtp.client-ip=209.97.181.73
+	 Content-Type:MIME-Version:MIME-Version; b=sYei/7YOnmm+IHvcBGX3BXPweVO7kwXZaX/4WiSDy5y+O2ZiRwi7VSJw7ngK6O8K+E9e5fRZ3uIPxFVNflnhou6LR0Cho+zqyU74Auw1RaaGah2gb1Xd8sswz4NH5kFSK2bEug0pY/RKXGWWr/54sWv/ygx8T/x68SL21HYaiqI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=fail smtp.client-ip=129.150.39.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
 Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwD3jWGotZVoVHf9BA--.32022S2;
-	Fri, 08 Aug 2025 16:30:32 +0800 (CST)
+	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwAHnmGttZVo1Xj9BA--.53017S2;
+	Fri, 08 Aug 2025 16:30:37 +0800 (CST)
 Received: from phytium.com.cn (unknown [218.76.62.144])
-	by mail (Coremail) with SMTP id AQAAfwBH0gmNtZVoag0NAA--.18908S7;
-	Fri, 08 Aug 2025 16:30:13 +0800 (CST)
+	by mail (Coremail) with SMTP id AQAAfwBH0gmNtZVoag0NAA--.18908S9;
+	Fri, 08 Aug 2025 16:30:22 +0800 (CST)
 From: wangyuquan <wangyuquan1236@phytium.com.cn>
 To: tangtao1634@phytium.com.cn,
 	linux-cxl@vger.kernel.org,
@@ -43,9 +43,9 @@ Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Gregory Price <gourry@gourry.net>,
 	Huang Ying <ying.huang@intel.com>
-Subject: [RFC PATCH 1/4] cxl: Register devices for CXL Hotness Monitoring Units (CHMU)
-Date: Fri,  8 Aug 2025 16:29:53 +0800
-Message-ID: <20241121101845.1815660-2-Jonathan.Cameron@huawei.com>
+Subject: [RFC PATCH 3/4] perf: Add support for CXL Hotness Monitoring Units (CHMU)
+Date: Fri,  8 Aug 2025 16:29:55 +0800
+Message-ID: <20241121101845.1815660-4-Jonathan.Cameron@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
 References: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
@@ -57,265 +57,737 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Submitter: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-X-Patchwork-Id: 13881829
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56]) (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits)) (No client certificate requested) by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6701D279D; Thu, 21 Nov 2024 10:19:21 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116; t=1732184365; cv=none; b=hvQ9NxvHX7i5aCKj6VwUrxFzi50fdYOVq2KAvaCzAth9dRUbtP7K1mxQCHhCECsd3fIFjWIKTaClR2TWWsYfbVJzQemPVGv4iQCq00gfIlk3uo8avftjGlnuwc2lgb8RKWXkPM2yyVKzNCfyv3+1/BNVnZljn3eqJw8Lrtx5EGs=
-ARC-Message-Signature: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116; t=1732184365; c=relaxed/simple; bh=TQhKGdns8i2TCFG83ZPwfMERNwy4IVlHhhxiOHTkbV8=; h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References: MIME-Version:Content-Type; b=jwRFoTanNYtTYUnjFw9Kv2e6n5eEVtISKCZY0ZNyrHymCj6bzLAmV/+KMPxSfBPRq15oIvz62UnxxZC7aML/rSg4TIv4E1qc+t+cLtqe4VGjNzUqo4mG2vOwp7yg/Z6okU/XCc5ey0+WDT1t803/EgzhSPDUt32Jvk6c01h4DBQ=
+X-Patchwork-Id: 13881831
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56]) (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits)) (No client certificate requested) by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D5B1CD202; Thu, 21 Nov 2024 10:20:23 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116; t=1732184426; cv=none; b=LD/SrYJw4K+4fHFhS6efl0UYPj+6w2HbPK0k7sZn+MVBkFWuOaYP3M6u2JkwDRBY5TDzzAVp5oYsncAA8Pj3/grfQv9ut8AASYNzDiaLtsAN84QoYU+M7uCqpaaPhLz6QRuuCChjKxU64LqWiCO0K3Ebqi9bVNTE9a086nJUvRE=
+ARC-Message-Signature: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116; t=1732184426; c=relaxed/simple; bh=wET4jVx2tdalfskgRlTBrhP5cfdwuvk8NCiNoM2i+Uw=; h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References: MIME-Version:Content-Type; b=mec+IWymKtogHJr5rDR05Up2TumdidaEsCHCuXhSSFWotlQd8sA1t/7tMze8pSBxLLV4OE0uhUpHSY5GAlAbkvP6GmnY5x0hQyY4KQakrkLCfWTNjZqGEASxsGaYVZhHyi9lyZX5Zxff+tQKOmG/2r2CiTfjbD4USX+iK0BmBlw=
 ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Received: from mail.maildlp.com (unknown [172.18.186.231]) by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XvDdX6kKWz6K6Vd; Thu, 21 Nov 2024 18:15:44 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71]) by mail.maildlp.com (Postfix) with ESMTPS id 25ABD140AB8; Thu, 21 Nov 2024 18:19:19 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 21 Nov 2024 11:19:18 +0100
+Received: from mail.maildlp.com (unknown [172.18.186.216]) by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4XvDkP70XHz6L74P; Thu, 21 Nov 2024 18:19:57 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71]) by mail.maildlp.com (Postfix) with ESMTPS id CBE59140A86; Thu, 21 Nov 2024 18:20:21 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.19.247) by frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 21 Nov 2024 11:20:20 +0100
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 MIME-Version: 1.0
 X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To frapeml500008.china.huawei.com (7.182.85.71)
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwBH0gmNtZVoag0NAA--.18908S7
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAQAWiU-30C6wAAsH
+X-CM-TRANSID:AQAAfwBH0gmNtZVoag0NAA--.18908S9
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAQAWiU-30C6wACsF
 Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
 	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoW3XrWDAr1ktFWrur1UWrW7Jwb_yoWxWw1rpF
-	4xCay5Jr48GF97urW3Jay5ZF15W3ZY9a47CF92q34avFnrAFyDAF4UXayUAa45C3ykK3y7
-	GF15KFy8Ka45ur7anT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
-Message-ID: <20250808082953.mr1PIu-HxmdwGdDGRwRzBXZZiCypeae9fgujeo0VE0o@z>
+X-Coremail-Antispam: 1Uk129KBjvAXoW3KrW3KF1UKrykAFWfAr17GFg_yoW8CrWfCo
+	WfZa1rXr4ktr409a1Dur1xWa43Z3Z8Wa4SyrW3GwsrXF1UC348Kr9rCry5Xa45Zrn5Wan8
+	ua18tw4Fqw4rXF97n29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
+	J3UbIjqfuFe4nvWSU8nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_UU
+	UUUUUUU==
+Message-ID: <20250808082955.dH2XC4tiNunxNyJkpY-SsntiQ8HJJf5BiGSFli5E4kU@z>
 
 From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Basic registration using similar approach to how the CPMUs
-are registered.
+Based closely on existing support for hisi_ptt.
+Provides basic record and report --dump-raw-traces support.
+
+Example output.  With a counter_width of 16 (0x10) the least significant
+4 bytes are the counter value and the unit index is bits 16-63.
+Here all units are over the threshold and the indexes are 0,1,2 etc.
+
+. ... CXL_HMU data: size 33512 bytes
+Header 0: units: 29c counter_width 10
+Header 1 : deadbeef
+0000000000000283
+0000000000010364
+0000000000020366
+000000000003033c
+0000000000040343
+00000000000502ff
+000000000006030d
+000000000007031a
+
+Note this is definitely RFC quality code. Before merging should reduce
+the code duplication that already exists and this code makes sorse.
 
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/cxl/core/Makefile |  1 +
- drivers/cxl/core/hmu.c    | 64 +++++++++++++++++++++++++++++++++++++++
- drivers/cxl/core/regs.c   | 14 +++++++++
- drivers/cxl/cxl.h         |  4 +++
- drivers/cxl/cxlpci.h      |  1 +
- drivers/cxl/hmu.h         | 23 ++++++++++++++
- drivers/cxl/pci.c         | 26 +++++++++++++++-
- 7 files changed, 132 insertions(+), 1 deletion(-)
+ tools/perf/arch/arm/util/auxtrace.c |  58 +++++
+ tools/perf/arch/x86/util/auxtrace.c |  76 ++++++
+ tools/perf/util/Build               |   1 +
+ tools/perf/util/auxtrace.c          |   4 +
+ tools/perf/util/auxtrace.h          |   1 +
+ tools/perf/util/cxl-hmu.c           | 367 ++++++++++++++++++++++++++++
+ tools/perf/util/cxl-hmu.h           |  18 ++
+ 7 files changed, 525 insertions(+)
 
-diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-index 9259bcc6773c..d060abb773ae 100644
---- a/drivers/cxl/core/Makefile
-+++ b/drivers/cxl/core/Makefile
-@@ -12,6 +12,7 @@ cxl_core-y += memdev.o
- cxl_core-y += mbox.o
- cxl_core-y += pci.o
- cxl_core-y += hdm.o
-+cxl_core-y += hmu.o
- cxl_core-y += pmu.o
- cxl_core-y += cdat.o
- cxl_core-$(CONFIG_TRACING) += trace.o
-diff --git a/drivers/cxl/core/hmu.c b/drivers/cxl/core/hmu.c
-new file mode 100644
-index 000000000000..3ee938bb6c05
---- /dev/null
-+++ b/drivers/cxl/core/hmu.c
-@@ -0,0 +1,64 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Copyright(c) 2024 Huawei. All rights reserved. */
-+
-+#include <linux/device.h>
-+#include <linux/slab.h>
-+#include <linux/idr.h>
-+#include <cxlmem.h>
-+#include <hmu.h>
-+#include <cxl.h>
-+#include "core.h"
-+
-+static void cxl_hmu_release(struct device *dev)
-+{
-+	struct cxl_hmu *hmu = to_cxl_hmu(dev);
-+
-+	kfree(hmu);
-+}
-+
-+const struct device_type cxl_hmu_type = {
-+	.name = "cxl_hmu",
-+	.release = cxl_hmu_release,
-+};
-+
-+static void remove_dev(void *dev)
-+{
-+	device_unregister(dev);
-+}
-+
-+int devm_cxl_hmu_add(struct device *parent, struct cxl_hmu_regs *regs,
-+		     int assoc_id, int index)
-+{
-+	struct cxl_hmu *hmu;
-+	struct device *dev;
-+	int rc;
-+
-+	hmu = kzalloc(sizeof(*hmu), GFP_KERNEL);
-+	if (!hmu)
-+		return -ENOMEM;
-+
-+	hmu->assoc_id = assoc_id;
-+	hmu->index = index;
-+	hmu->base = regs->hmu;
-+	dev = &hmu->dev;
-+	device_initialize(dev);
-+	device_set_pm_not_required(dev);
-+	dev->parent = parent;
-+	dev->bus = &cxl_bus_type;
-+	dev->type = &cxl_hmu_type;
-+	rc = dev_set_name(dev, "hmu_mem%d.%d", assoc_id, index);
-+	if (rc)
-+		goto err;
-+
-+	rc = device_add(dev);
-+	if (rc)
-+		goto err;
-+
-+	return devm_add_action_or_reset(parent, remove_dev, dev);
-+
-+err:
-+	put_device(&hmu->dev);
-+	return rc;
-+}
-+EXPORT_SYMBOL_NS_GPL(devm_cxl_hmu_add, CXL);
-+
-diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-index e1082e749c69..c12afaa6ef98 100644
---- a/drivers/cxl/core/regs.c
-+++ b/drivers/cxl/core/regs.c
-@@ -401,6 +401,20 @@ int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_map_pmu_regs, CXL);
+diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
+index 3b8eca0ffb17..07ff41800808 100644
+--- a/tools/perf/arch/arm/util/auxtrace.c
++++ b/tools/perf/arch/arm/util/auxtrace.c
+@@ -18,6 +18,7 @@
+ #include "cs-etm.h"
+ #include "arm-spe.h"
+ #include "hisi-ptt.h"
++#include "cxl-hmu.h"
  
-+int cxl_map_hmu_regs(struct cxl_register_map *map, struct cxl_hmu_regs *regs)
-+{
-+	struct device *dev = map->host;
-+	resource_size_t phys_addr;
-+
-+	phys_addr = map->resource;
-+	regs->hmu = devm_cxl_iomap_block(dev, phys_addr, map->max_size);
-+	if (!regs->hmu)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_map_hmu_regs, CXL);
-+
- static int cxl_map_regblock(struct cxl_register_map *map)
+ static struct perf_pmu **find_all_arm_spe_pmus(int *nr_spes, int *err)
  {
- 	struct device *host = map->host;
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 5406e3ab3d4a..8172bc1f7a8d 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -227,6 +227,9 @@ struct cxl_regs {
- 	struct_group_tagged(cxl_pmu_regs, pmu_regs,
- 		void __iomem *pmu;
- 	);
-+	struct_group_tagged(cxl_hmu_regs, hmu_regs,
-+		void __iomem *hmu;
-+	);
+@@ -99,6 +100,49 @@ static struct perf_pmu **find_all_hisi_ptt_pmus(int *nr_ptts, int *err)
+ 	return hisi_ptt_pmus;
+ }
  
- 	/*
- 	 * RCH downstream port specific RAS register
-@@ -292,6 +295,7 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
- 			   unsigned long map_mask);
- int cxl_map_device_regs(const struct cxl_register_map *map,
- 			struct cxl_device_regs *regs);
-+int cxl_map_hmu_regs(struct cxl_register_map *map, struct cxl_hmu_regs *regs);
- int cxl_map_pmu_regs(struct cxl_register_map *map, struct cxl_pmu_regs *regs);
- 
- enum cxl_regloc_type;
-diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-index 4da07727ab9c..71f5e9620137 100644
---- a/drivers/cxl/cxlpci.h
-+++ b/drivers/cxl/cxlpci.h
-@@ -67,6 +67,7 @@ enum cxl_regloc_type {
- 	CXL_REGLOC_RBI_VIRT,
- 	CXL_REGLOC_RBI_MEMDEV,
- 	CXL_REGLOC_RBI_PMU,
-+	CXL_REGLOC_RBI_HMU,
- 	CXL_REGLOC_RBI_TYPES
- };
- 
-diff --git a/drivers/cxl/hmu.h b/drivers/cxl/hmu.h
-new file mode 100644
-index 000000000000..c4798ed9764b
---- /dev/null
-+++ b/drivers/cxl/hmu.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright(c) 2024 Huawei
-+ * CXL Specification rev 3.2 Setion 8.2.8 (CHMU Register Interface)
-+ */
-+#ifndef CXL_HMU_H
-+#define CXL_HMU_H
-+#include <linux/device.h>
++static struct perf_pmu **find_all_cxl_hmu_pmus(int *nr_hmus, int *err)
++{
++	struct perf_pmu **cxl_hmu_pmus = NULL;
++	struct dirent *dent;
++	char path[PATH_MAX];
++	DIR *dir = NULL;
++	int idx = 0;
 +
-+#define CXL_HMU_REGMAP_SIZE 0xe00 /* Table 8-32 CXL 3.0 specification */
-+struct cxl_hmu {
-+	struct device dev;
-+	void __iomem *base;
-+	int assoc_id;
-+	int index;
-+};
++	perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
++	dir = opendir(path);
++	if (!dir) {
++		*err = -EINVAL;
++		return NULL;
++	}
 +
-+#define to_cxl_hmu(dev) container_of(dev, struct cxl_hmu, dev)
-+struct cxl_hmu_regs;
-+int devm_cxl_hmu_add(struct device *parent, struct cxl_hmu_regs *regs,
-+		     int assoc_id, int idx);
++	while ((dent = readdir(dir))) {
++		if (strstr(dent->d_name, "cxl_hmu"))
++			(*nr_hmus)++;
++	}
 +
-+#endif
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 188412d45e0d..e89ea9d3f007 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -15,6 +15,7 @@
- #include "cxlmem.h"
- #include "cxlpci.h"
- #include "cxl.h"
-+#include "hmu.h"
- #include "pmu.h"
- 
- /**
-@@ -814,7 +815,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	struct cxl_dev_state *cxlds;
- 	struct cxl_register_map map;
- 	struct cxl_memdev *cxlmd;
--	int i, rc, pmu_count;
-+	int i, rc, hmu_count, pmu_count;
- 	bool irq_avail;
- 
- 	/*
-@@ -938,6 +939,29 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 		}
- 	}
- 
-+	hmu_count = cxl_count_regblock(pdev, CXL_REGLOC_RBI_HMU);
-+	for (i = 0; i < hmu_count; i++) {
-+		struct cxl_hmu_regs hmu_regs;
++	if (!(*nr_hmus))
++		goto out;
 +
-+		rc = cxl_find_regblock_instance(pdev, CXL_REGLOC_RBI_HMU, &map, i);
-+		if (rc) {
-+			dev_dbg(&pdev->dev, "Could not find HMU regblock\n");
-+			break;
-+		}
++	cxl_hmu_pmus = zalloc(sizeof(struct perf_pmu *) * (*nr_hmus));
++	if (!cxl_hmu_pmus) {
++		*err = -ENOMEM;
++		goto out;
++	}
 +
-+		rc = cxl_map_hmu_regs(&map, &hmu_regs);
-+		if (rc) {
-+			dev_dbg(&pdev->dev, "Could not map HMU regs\n");
-+			break;
-+		}
-+
-+		rc = devm_cxl_hmu_add(cxlds->dev, &hmu_regs, cxlmd->id, i);
-+		if (rc) {
-+			dev_dbg(&pdev->dev, "Could not add HMU instance\n");
-+			break;
++	rewinddir(dir);
++	while ((dent = readdir(dir))) {
++		if (strstr(dent->d_name, "cxl_hmu") && idx < *nr_hmus) {
++			cxl_hmu_pmus[idx] = perf_pmus__find(dent->d_name);
++			if (cxl_hmu_pmus[idx])
++				idx++;
 +		}
 +	}
 +
- 	rc = cxl_event_config(host_bridge, mds, irq_avail);
- 	if (rc)
- 		return rc;
++out:
++	closedir(dir);
++	return cxl_hmu_pmus;
++}
++
+ static struct perf_pmu *find_pmu_for_event(struct perf_pmu **pmus,
+ 					   int pmu_nr, struct evsel *evsel)
+ {
+@@ -121,13 +165,16 @@ struct auxtrace_record
+ 	struct perf_pmu	*cs_etm_pmu = NULL;
+ 	struct perf_pmu **arm_spe_pmus = NULL;
+ 	struct perf_pmu **hisi_ptt_pmus = NULL;
++	struct perf_pmu **chmu_pmus = NULL;
+ 	struct evsel *evsel;
+ 	struct perf_pmu *found_etm = NULL;
+ 	struct perf_pmu *found_spe = NULL;
+ 	struct perf_pmu *found_ptt = NULL;
++	struct perf_pmu *found_chmu = NULL;
+ 	int auxtrace_event_cnt = 0;
+ 	int nr_spes = 0;
+ 	int nr_ptts = 0;
++	int nr_chmus = 0;
+ 
+ 	if (!evlist)
+ 		return NULL;
+@@ -135,6 +182,7 @@ struct auxtrace_record
+ 	cs_etm_pmu = perf_pmus__find(CORESIGHT_ETM_PMU_NAME);
+ 	arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
+ 	hisi_ptt_pmus = find_all_hisi_ptt_pmus(&nr_ptts, err);
++	chmu_pmus = find_all_cxl_hmu_pmus(&nr_chmus, err);
+ 
+ 	evlist__for_each_entry(evlist, evsel) {
+ 		if (cs_etm_pmu && !found_etm)
+@@ -145,10 +193,14 @@ struct auxtrace_record
+ 
+ 		if (hisi_ptt_pmus && !found_ptt)
+ 			found_ptt = find_pmu_for_event(hisi_ptt_pmus, nr_ptts, evsel);
++
++		if (chmu_pmus && !found_chmu)
++			found_chmu = find_pmu_for_event(chmu_pmus, nr_chmus, evsel);
+ 	}
+ 
+ 	free(arm_spe_pmus);
+ 	free(hisi_ptt_pmus);
++	free(chmu_pmus);
+ 
+ 	if (found_etm)
+ 		auxtrace_event_cnt++;
+@@ -159,6 +211,9 @@ struct auxtrace_record
+ 	if (found_ptt)
+ 		auxtrace_event_cnt++;
+ 
++	if (found_chmu)
++		auxtrace_event_cnt++;
++
+ 	if (auxtrace_event_cnt > 1) {
+ 		pr_err("Concurrent AUX trace operation not currently supported\n");
+ 		*err = -EOPNOTSUPP;
+@@ -174,6 +229,9 @@ struct auxtrace_record
+ 
+ 	if (found_ptt)
+ 		return hisi_ptt_recording_init(err, found_ptt);
++
++	if (found_chmu)
++		return chmu_recording_init(err, found_chmu);
+ #endif
+ 
+ 	/*
+diff --git a/tools/perf/arch/x86/util/auxtrace.c b/tools/perf/arch/x86/util/auxtrace.c
+index 354780ff1605..30d84ce41394 100644
+--- a/tools/perf/arch/x86/util/auxtrace.c
++++ b/tools/perf/arch/x86/util/auxtrace.c
+@@ -4,6 +4,7 @@
+  * Copyright (c) 2013-2014, Intel Corporation.
+  */
+ 
++#include <dirent.h>
+ #include <errno.h>
+ #include <stdbool.h>
+ 
+@@ -14,6 +15,7 @@
+ #include "../../../util/auxtrace.h"
+ #include "../../../util/intel-pt.h"
+ #include "../../../util/intel-bts.h"
++#include "../../../util/cxl-hmu.h"
+ #include "../../../util/evlist.h"
+ 
+ static
+@@ -51,14 +53,88 @@ struct auxtrace_record *auxtrace_record__init_intel(struct evlist *evlist,
+ 	return NULL;
+ }
+ 
++static struct perf_pmu **find_all_cxl_hmu_pmus(int *nr_hmus, int *err)
++{
++	struct perf_pmu **cxl_hmu_pmus = NULL;
++	struct dirent *dent;
++	char path[PATH_MAX];
++	DIR *dir = NULL;
++	int idx = 0;
++
++	perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
++	dir = opendir(path);
++	if (!dir) {
++		*err = -EINVAL;
++		return NULL;
++	}
++
++	while ((dent = readdir(dir))) {
++		if (strstr(dent->d_name, "cxl_hmu"))
++			(*nr_hmus)++;
++	}
++
++	if (!(*nr_hmus))
++		goto out;
++
++	cxl_hmu_pmus = zalloc(sizeof(struct perf_pmu *) * (*nr_hmus));
++	if (!cxl_hmu_pmus) {
++		*err = -ENOMEM;
++		goto out;
++	}
++
++	rewinddir(dir);
++	while ((dent = readdir(dir))) {
++		if (strstr(dent->d_name, "cxl_hmu") && idx < *nr_hmus) {
++			cxl_hmu_pmus[idx] = perf_pmus__find(dent->d_name);
++			if (cxl_hmu_pmus[idx])
++				idx++;
++		}
++	}
++
++out:
++	closedir(dir);
++	return cxl_hmu_pmus;
++}
++
++static struct perf_pmu *find_pmu_for_event(struct perf_pmu **pmus,
++					   int pmu_nr, struct evsel *evsel)
++{
++	int i;
++
++	if (!pmus)
++		return NULL;
++
++	for (i = 0; i < pmu_nr; i++) {
++		if (evsel->core.attr.type == pmus[i]->type)
++			return pmus[i];
++	}
++
++	return NULL;
++}
++
+ struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
+ 					      int *err)
+ {
+ 	char buffer[64];
+ 	int ret;
++	struct perf_pmu **chmu_pmus = NULL;
++	struct perf_pmu *found_chmu = NULL;
++	struct evsel *evsel;
++	int nr_chmus = 0;
+ 
+ 	*err = 0;
+ 
++	chmu_pmus = find_all_cxl_hmu_pmus(&nr_chmus, err);
++
++	evlist__for_each_entry(evlist, evsel) {
++		if (chmu_pmus && !found_chmu)
++			found_chmu = find_pmu_for_event(chmu_pmus, nr_chmus, evsel);
++	}
++	free(chmu_pmus);
++
++	if (found_chmu)
++		return chmu_recording_init(err, found_chmu);
++
+ 	ret = get_cpuid(buffer, sizeof(buffer));
+ 	if (ret) {
+ 		*err = ret;
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index dc616292b2dd..40c645fd0cb3 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -127,6 +127,7 @@ perf-util-$(CONFIG_AUXTRACE) += arm-spe.o
+ perf-util-$(CONFIG_AUXTRACE) += arm-spe-decoder/
+ perf-util-$(CONFIG_AUXTRACE) += hisi-ptt.o
+ perf-util-$(CONFIG_AUXTRACE) += hisi-ptt-decoder/
++perf-util-$(CONFIG_AUXTRACE) += cxl-hmu.o
+ perf-util-$(CONFIG_AUXTRACE) += s390-cpumsf.o
+ 
+ ifdef CONFIG_LIBOPENCSD
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index ca8682966fae..0efc15732a03 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -53,6 +53,7 @@
+ #include "intel-bts.h"
+ #include "arm-spe.h"
+ #include "hisi-ptt.h"
++#include "cxl-hmu.h"
+ #include "s390-cpumsf.h"
+ #include "util/mmap.h"
+ 
+@@ -1333,6 +1334,9 @@ int perf_event__process_auxtrace_info(struct perf_session *session,
+ 	case PERF_AUXTRACE_HISI_PTT:
+ 		err = hisi_ptt_process_auxtrace_info(event, session);
+ 		break;
++	case PERF_AUXTRACE_CXL_HMU:
++		err = cxl_hmu_process_auxtrace_info(event, session);
++		break;
+ 	case PERF_AUXTRACE_UNKNOWN:
+ 	default:
+ 		return -EINVAL;
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index a1895a4f530b..8a7a5b7dc2d6 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -49,6 +49,7 @@ enum auxtrace_type {
+ 	PERF_AUXTRACE_ARM_SPE,
+ 	PERF_AUXTRACE_S390_CPUMSF,
+ 	PERF_AUXTRACE_HISI_PTT,
++	PERF_AUXTRACE_CXL_HMU,
+ };
+ 
+ enum itrace_period_type {
+diff --git a/tools/perf/util/cxl-hmu.c b/tools/perf/util/cxl-hmu.c
+new file mode 100644
+index 000000000000..31844f16e4f9
+--- /dev/null
++++ b/tools/perf/util/cxl-hmu.c
+@@ -0,0 +1,367 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * CXL HMU support
++ * Copyright (c) 2024 Huawei
++ *
++ * Based on:
++ * HiSilicon PCIe Trace and Tuning (PTT) support
++ * Copyright (c) 2022 HiSilicon Technologies Co., Ltd.
++ */
++
++#include <byteswap.h>
++#include <endian.h>
++#include <errno.h>
++#include <inttypes.h>
++#include <linux/bitops.h>
++#include <linux/kernel.h>
++#include <linux/log2.h>
++#include <linux/types.h>
++#include <linux/zalloc.h>
++#include <stdlib.h>
++#include <unistd.h>
++
++#include "auxtrace.h"
++#include "color.h"
++#include "debug.h"
++#include "evlist.h"
++#include "evsel.h"
++#include "cxl-hmu.h"
++#include "machine.h"
++#include "record.h"
++#include "session.h"
++#include "tool.h"
++#include "tsc.h"
++#include <internal/lib.h>
++
++#define KiB(x) ((x) * 1024)
++#define MiB(x) ((x) * 1024 * 1024)
++
++struct chmu_recording {
++	struct auxtrace_record	itr;
++	struct perf_pmu *chmu_pmu;
++	struct evlist *evlist;
++};
++
++static size_t
++chmu_info_priv_size(struct auxtrace_record *itr __maybe_unused,
++			struct evlist *evlist __maybe_unused)
++{
++	return CXL_HMU_AUXTRACE_PRIV_SIZE;
++}
++
++static int chmu_info_fill(struct auxtrace_record *itr,
++			      struct perf_session *session,
++			      struct perf_record_auxtrace_info *auxtrace_info,
++			      size_t priv_size)
++{
++	struct chmu_recording *pttr =
++			container_of(itr, struct chmu_recording, itr);
++	struct perf_pmu *chmu_pmu = pttr->chmu_pmu;
++
++	if (priv_size != CXL_HMU_AUXTRACE_PRIV_SIZE)
++		return -EINVAL;
++
++	if (!session->evlist->core.nr_mmaps)
++		return -EINVAL;
++
++	auxtrace_info->type = PERF_AUXTRACE_CXL_HMU;
++	auxtrace_info->priv[0] = chmu_pmu->type;
++
++	return 0;
++}
++
++static int chmu_set_auxtrace_mmap_page(struct record_opts *opts)
++{
++	bool privileged = perf_event_paranoid_check(-1);
++
++	if (!opts->full_auxtrace)
++		return 0;
++
++	if (opts->full_auxtrace && !opts->auxtrace_mmap_pages) {
++		if (privileged) {
++			opts->auxtrace_mmap_pages = MiB(16) / page_size;
++		} else {
++			opts->auxtrace_mmap_pages = KiB(128) / page_size;
++			if (opts->mmap_pages == UINT_MAX)
++				opts->mmap_pages = KiB(256) / page_size;
++		}
++	}
++
++	/* Validate auxtrace_mmap_pages */
++	if (opts->auxtrace_mmap_pages) {
++		size_t sz = opts->auxtrace_mmap_pages * (size_t)page_size;
++		size_t min_sz = KiB(8);
++
++		if (sz < min_sz || !is_power_of_2(sz)) {
++			pr_err("Invalid mmap size for CXL_HMU: must be at least %zuKiB and a power of 2\n",
++			       min_sz / 1024);
++			return -EINVAL;
++		}
++	}
++
++	return 0;
++}
++
++static int chmu_recording_options(struct auxtrace_record *itr,
++				      struct evlist *evlist,
++				      struct record_opts *opts)
++{
++	struct chmu_recording *pttr =
++			container_of(itr, struct chmu_recording, itr);
++	struct perf_pmu *chmu_pmu = pttr->chmu_pmu;
++	struct evsel *evsel, *chmu_evsel = NULL;
++	struct evsel *tracking_evsel;
++	int err;
++
++	pttr->evlist = evlist;
++	evlist__for_each_entry(evlist, evsel) {
++		if (evsel->core.attr.type == chmu_pmu->type) {
++			if (chmu_evsel) {
++				pr_err("There may be only one cxl_hmu x event\n");
++				return -EINVAL;
++			}
++			evsel->core.attr.freq = 0;
++			evsel->core.attr.sample_period = 1;
++			evsel->needs_auxtrace_mmap = true;
++			chmu_evsel = evsel;
++			opts->full_auxtrace = true;
++		}
++	}
++
++	err = chmu_set_auxtrace_mmap_page(opts);
++	if (err)
++		return err;
++	/*
++	 * To obtain the auxtrace buffer file descriptor, the auxtrace event
++	 * must come first.
++	 */
++	evlist__to_front(evlist, chmu_evsel);
++	evsel__set_sample_bit(chmu_evsel, TIME);
++
++	/* Add dummy event to keep tracking */
++	err = parse_event(evlist, "dummy:u");
++	if (err)
++		return err;
++
++	tracking_evsel = evlist__last(evlist);
++	evlist__set_tracking_event(evlist, tracking_evsel);
++
++	tracking_evsel->core.attr.freq = 0;
++	tracking_evsel->core.attr.sample_period = 1;
++	evsel__set_sample_bit(tracking_evsel, TIME);
++
++	return 0;
++}
++
++static u64 chmu_reference(struct auxtrace_record *itr __maybe_unused)
++{
++	return rdtsc();
++}
++
++static void chmu_recording_free(struct auxtrace_record *itr)
++{
++	struct chmu_recording *pttr =
++	  container_of(itr, struct chmu_recording, itr);
++
++	free(pttr);
++}
++
++struct auxtrace_record *chmu_recording_init(int *err,
++						struct perf_pmu *chmu_pmu)
++{
++	struct chmu_recording *pttr;
++
++	if (!chmu_pmu) {
++		*err = -ENODEV;
++		return NULL;
++	}
++
++	pttr = zalloc(sizeof(*pttr));
++	if (!pttr) {
++		*err = -ENOMEM;
++		return NULL;
++	}
++
++	pttr->chmu_pmu = chmu_pmu;
++	pttr->itr.recording_options = chmu_recording_options;
++	pttr->itr.info_priv_size = chmu_info_priv_size;
++	pttr->itr.info_fill = chmu_info_fill;
++	pttr->itr.free = chmu_recording_free;
++	pttr->itr.reference = chmu_reference;
++	pttr->itr.read_finish = auxtrace_record__read_finish;
++	pttr->itr.alignment = 0;
++
++	*err = 0;
++	return &pttr->itr;
++}
++
++struct cxl_hmu {
++	struct auxtrace auxtrace;
++	u32 auxtrace_type;
++	struct perf_session *session;
++	struct machine *machine;
++	u32 pmu_type;
++};
++
++struct cxl_hmu_queue {
++	struct cxl_hmu *hmu;
++	struct auxtrace_buffer *buffer;
++};
++
++static void cxl_hmu_dump(struct cxl_hmu *hmu __maybe_unused,
++			  unsigned char *buf, size_t len)
++{
++	const char *color = PERF_COLOR_BLUE;
++	size_t pos = 0;
++	size_t packet_offset = 0, hotlist_entries_in_packet;
++
++	len = round_down(len, 8);
++	color_fprintf(stdout, color, ". ... CXL_HMU data: size %zu bytes\n",
++		      len);
++
++	while (len > 0) {
++		if (!packet_offset) {
++			hotlist_entries_in_packet = ((uint64_t *)(buf + pos))[0] & 0xFFFF;
++			color_fprintf(stdout, PERF_COLOR_BLUE,
++				      "Header 0: units: %x counter_width %x\n",
++				      hotlist_entries_in_packet,
++				      (((uint64_t *)(buf + pos))[0] >> 16) & 0xFF);
++		} else if (packet_offset == 1) {
++			color_fprintf(stdout, PERF_COLOR_BLUE,
++				      "Header 1 : %lx\n", ((uint64_t *)(buf + pos))[0]);
++		} else {
++			color_fprintf(stdout, PERF_COLOR_BLUE,
++				      "%016lx\n", ((uint64_t *)(buf + pos))[0]);
++		}
++		pos += 8;
++		len -= 8;
++		packet_offset++;
++		if (packet_offset == hotlist_entries_in_packet + 2)
++			packet_offset = 0;
++	}
++}
++
++static void cxl_hmu_dump_event(struct cxl_hmu *hmu, unsigned char *buf,
++			       size_t len)
++{
++	printf(".\n");
++
++	cxl_hmu_dump(hmu, buf, len);
++}
++
++static int cxl_hmu_process_event(struct perf_session *session __maybe_unused,
++				  union perf_event *event __maybe_unused,
++				  struct perf_sample *sample __maybe_unused,
++				  const struct perf_tool *tool __maybe_unused)
++{
++	return 0;
++}
++
++static int cxl_hmu_process_auxtrace_event(struct perf_session *session,
++					  union perf_event *event,
++					  const struct perf_tool *tool __maybe_unused)
++{
++	struct cxl_hmu *hmu = container_of(session->auxtrace, struct cxl_hmu,
++					    auxtrace);
++	int fd = perf_data__fd(session->data);
++	int size = event->auxtrace.size;
++	void *data = malloc(size);
++	off_t data_offset;
++	int err;
++
++	if (!data) {
++		printf("no data\n");
++		return -errno;
++	}
++
++	if (perf_data__is_pipe(session->data)) {
++		data_offset = 0;
++	} else {
++		data_offset = lseek(fd, 0, SEEK_CUR);
++		if (data_offset == -1) {
++			free(data);
++			printf("failed to seek\n");
++			return -errno;
++		}
++	}
++
++	err = readn(fd, data, size);
++	if (err != (ssize_t)size) {
++		free(data);
++		printf("failed to rread\n");
++		return -errno;
++	}
++
++	if (dump_trace)
++		cxl_hmu_dump_event(hmu, data, size);
++
++	free(data);
++	return 0;
++}
++
++static int cxl_hmu_flush(struct perf_session *session __maybe_unused,
++			 const struct perf_tool *tool __maybe_unused)
++{
++	return 0;
++}
++
++static void cxl_hmu_free_events(struct perf_session *session __maybe_unused)
++{
++}
++
++static void cxl_hmu_free(struct perf_session *session)
++{
++	struct cxl_hmu *hmu = container_of(session->auxtrace, struct cxl_hmu,
++					    auxtrace);
++
++	session->auxtrace = NULL;
++	free(hmu);
++}
++
++static bool cxl_hmu_evsel_is_auxtrace(struct perf_session *session,
++				       struct evsel *evsel)
++{
++	struct cxl_hmu *hmu = container_of(session->auxtrace, struct cxl_hmu, auxtrace);
++
++	return evsel->core.attr.type == hmu->pmu_type;
++}
++
++static void cxl_hmu_print_info(__u64 type)
++{
++	if (!dump_trace)
++		return;
++
++	fprintf(stdout, "  PMU Type           %" PRId64 "\n", (s64) type);
++}
++
++int cxl_hmu_process_auxtrace_info(union perf_event *event,
++				   struct perf_session *session)
++{
++	struct perf_record_auxtrace_info *auxtrace_info = &event->auxtrace_info;
++	struct cxl_hmu *hmu;
++
++	if (auxtrace_info->header.size < CXL_HMU_AUXTRACE_PRIV_SIZE +
++				sizeof(struct perf_record_auxtrace_info))
++		return -EINVAL;
++
++	hmu = zalloc(sizeof(*hmu));
++	if (!hmu)
++		return -ENOMEM;
++
++	hmu->session = session;
++	hmu->machine = &session->machines.host; /* No kvm support */
++	hmu->auxtrace_type = auxtrace_info->type;
++	hmu->pmu_type = auxtrace_info->priv[0];
++
++	hmu->auxtrace.process_event = cxl_hmu_process_event;
++	hmu->auxtrace.process_auxtrace_event = cxl_hmu_process_auxtrace_event;
++	hmu->auxtrace.flush_events = cxl_hmu_flush;
++	hmu->auxtrace.free_events = cxl_hmu_free_events;
++	hmu->auxtrace.free = cxl_hmu_free;
++	hmu->auxtrace.evsel_is_auxtrace = cxl_hmu_evsel_is_auxtrace;
++	session->auxtrace = &hmu->auxtrace;
++
++	cxl_hmu_print_info(auxtrace_info->priv[0]);
++
++	return 0;
++}
+diff --git a/tools/perf/util/cxl-hmu.h b/tools/perf/util/cxl-hmu.h
+new file mode 100644
+index 000000000000..9b4d83219711
+--- /dev/null
++++ b/tools/perf/util/cxl-hmu.h
+@@ -0,0 +1,18 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * CXL Hotness Monitoring Unit Support
++ */
++
++#ifndef INCLUDE__PERF_CXL_HMU_H__
++#define INCLUDE__PERF_CXL_HMU_H__
++
++#define CXL_HMU_PMU_NAME		"cxl_hmu"
++#define CXL_HMU_AUXTRACE_PRIV_SIZE	sizeof(u64)
++
++struct auxtrace_record *chmu_recording_init(int *err,
++					       struct perf_pmu *cxl_hmu_pmu);
++
++int cxl_hmu_process_auxtrace_info(union perf_event *event,
++				   struct perf_session *session);
++
++#endif
 
