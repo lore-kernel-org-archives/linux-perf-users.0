@@ -1,84 +1,208 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754F42264AD
-	for <linux-perf-users@vger.kernel.org>; Fri,  8 Aug 2025 07:28:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0108B22A1D5;
+	Fri,  8 Aug 2025 07:30:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754638108; cv=none; b=MhvvBNgMCY2/KOZtBZej9KX/p+uNxjTTt5YF39gfEXtYnVLYq/GybJW/V9IqXTMaJMYvYBKW/NciMvEGYwweZmxjFGgwPJnhqT6fHZqMZHkTvndM20o+xoYQYTpRWQIJS/nIz1sLzqG/nLmruOSDEBIOgG7AQoONQV4/n0URMGY=
+	t=1754638251; cv=none; b=XwO1jHQMAPmzk7T8Ft4iQtznGFk4L7BUh3fZGGJ+CASnGhwkMmYG3M5Jy8G5NnNCm29XizmwsEB4+6iLwY87ZEg/+0DkZpvMRG5HJ1xGh1oEf9JxvD53OT+Vg7W+1akcsBmwHk6H9bsEqXSdQLcHsf/pH06lMg3k1QO+RWX5z64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754638108; c=relaxed/simple;
-	bh=WN1V6yRyJ3onv3rvnAMeyzF2zAArTPYEpwhlnOArAmM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=WNfGdFygMuDRKvUkCGGV2/rxS/iMKNcVDpxOTQn7pH9TbcGiNuSBNJ9sj83OD6FSPdqkmXCNzpEe/rLbJs4HxvnzJJ8k56jIctGeScRo0ykpsO0+VqkaGFizIaU3k0AEs/HTQ9u2sewJ1uz5bfGn+Ex9gBqzWx0P64BX9Z5y6Ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-881776a2c22so403263239f.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 08 Aug 2025 00:28:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754638106; x=1755242906;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=t/a35FeMXcLyPHOaDsyqFQMi+gYIhEq1it06M3z49ms=;
-        b=ARIV04CFwuoDtaXg8MYEqCwHKc7YYgAveMOB1h3hadAIoA5ILRYS5+dMq6kksGmcOd
-         EGq8Om1tM60nDtOX6qn4Nra5HH8k63DbapPeJhlfCH+u2NNdAtG0XYGLTlOAWP9jp+l8
-         KQuEN9Ar3XjO0Tjk7aph1KJfgDo4ifvA/qODMG1wo9MqzuwEdvA5G14HdipUNm1RgKr7
-         e2oeMOvWNoG5V9p/B2lBXmUhfEF4ZJWpmXiYR6c6uJp7zNagJZwY/7zfSrL2SHd7fKkC
-         8Jtw7WnjkCbjj3eTBq+vIcd+yk1Q2yZDjtUqAxYs9/7W6Wp3TAmBk3RDwMnRGUgT4TVY
-         b6gw==
-X-Forwarded-Encrypted: i=1; AJvYcCXtvRW5fTr6hA+BvVl9TH10l3qefcNhUwkD6BwFlDdCi1nspaPl3olfEmDKGTBu54ZO0l5QNHhnZOG0RQA7E5h/@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkBt7jWh27j2UHptlj6AG2X+bdfxhGBORA0oG310ip9H38UVe3
-	p4MelbXposC0W8+LgwmNlDzuYpCBe2SuIIq3JcsXbpLTtByJxzDX5rgYxWaL/eAqp8g6OiispHV
-	PjRlKo2bUbr2Qod83KJ+0IeNGqcDov8nZUDR0MczIcOhyFVTNGvOczh5QYok=
-X-Google-Smtp-Source: AGHT+IEp8c7QV3AN+fKWmFyPuh00UU3Ig82a4VQ9v8HNUDVelYcjEJjN1v5lCDAGIwJaemzQJj7Ran6EEVeqkf75mh7u3cxneHfN
+	s=arc-20240116; t=1754638251; c=relaxed/simple;
+	bh=N93jbXCfcX8tT1d6Si749lOVTvmyst9EjSTFBREX9yk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nruZ3qvapTGs62IZhreh8gMrvQGZErsFNmDD0BMVgUDTPnyc48WRSF4zKLz6ToSLnvijNNXzpo8yd2L53YX5q1IcMK7TIrdgMagoQgFHdeAKWxBZaLt8jDwAFL9INhr+B9NAAXBQOk5WRHP+ej0yvY9UyGkHIM7joKHXMq5jBVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QCzzD3i1; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QCzzD3i1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754638250; x=1786174250;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=N93jbXCfcX8tT1d6Si749lOVTvmyst9EjSTFBREX9yk=;
+  b=QCzzD3i1ZbnrUsaoWeChKbnC1N8x9UaGsrMi70uG1KNUlfB1lk3cxNuS
+   whO1L3uNXl5+RGB1Y7v6FMmYJRN+T82P5XvdT5XHcetVgRyLsuqQxVBnK
+   kiddcc0bzrOtY2oOp/MgLTljAL20f+LLMsKM9f3gyfb5aQASmGFJ2D4Mg
+   Oz3VN6rvs2BhUuHbcMNF0Oljy/N6UmKZGozlCenQgIY04M+Kwg2zC3dvn
+   3ywXd3gIjQe7jnYCFua+3wXRiedRLtBELpnF6dHzzngpPmjVdb3Z/r4Qj
+   3mXRUjDAj9WgTQvUaJxXIo8LkbRIHPWwIZpzTYtMRcdRJtm8Kevhh+xV6
+   g==;
+X-CSE-ConnectionGUID: jCqLyoTHR0eEEdyMNCz5Ig==
+X-CSE-MsgGUID: RwgnHLbQTwiXDxCzctC8nQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="56860991"
+X-IronPort-AV: E=Sophos;i="6.17,274,1747724400"; 
+   d="scan'208";a="56860991"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2025 00:30:50 -0700
+X-CSE-ConnectionGUID: nPT+neYWR5ic6FwTvd4gdw==
+X-CSE-MsgGUID: 3HIOr3NzSxqUGeU1ve8zNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,274,1747724400"; 
+   d="scan'208";a="165677254"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.106]) ([10.124.240.106])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2025 00:30:43 -0700
+Message-ID: <f3e09bef-8bc9-48ac-983e-7a18c2ff4ad2@linux.intel.com>
+Date: Fri, 8 Aug 2025 15:30:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:84c2:0:b0:881:7e3a:4a37 with SMTP id
- ca18e2360f4ac-883f11e38bdmr309075639f.6.1754638106549; Fri, 08 Aug 2025
- 00:28:26 -0700 (PDT)
-Date: Fri, 08 Aug 2025 00:28:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6895a71a.050a0220.7f033.0056.GAE@google.com>
-Subject: [syzbot] Monthly perf report (Aug 2025)
-From: syzbot <syzbot+list72eae33f52f6a337d370@syzkaller.appspotmail.com>
-To: acme@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mingo@redhat.com, namhyung@kernel.org, 
-	peterz@infradead.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 07/44] perf: Add APIs to load/put guest mediated PMU
+ context
+To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
+ <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ kvm@vger.kernel.org, loongarch@lists.linux.dev,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Kan Liang <kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>,
+ Mingwei Zhang <mizhang@google.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Sandipan Das <sandipan.das@amd.com>
+References: <20250806195706.1650976-1-seanjc@google.com>
+ <20250806195706.1650976-8-seanjc@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250806195706.1650976-8-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello perf maintainers/developers,
 
-This is a 31-day syzbot report for the perf subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/perf
+On 8/7/2025 3:56 AM, Sean Christopherson wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+>
+> Add exported APIs to load/put a guest mediated PMU context.  KVM will
+> load the guest PMU shortly before VM-Enter, and put the guest PMU shortly
+> after VM-Exit.
+>
+> On the perf side of things, schedule out all exclude_guest events when the
+> guest context is loaded, and schedule them back in when the guest context
+> is put.  I.e. yield the hardware PMU resources to the guest, by way of KVM.
+>
+> Note, perf is only responsible for managing host context.  KVM is
+> responsible for loading/storing guest state to/from hardware.
+>
+> Suggested-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> [sean: shuffle patches around, write changelog]
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  include/linux/perf_event.h |  2 ++
+>  kernel/events/core.c       | 61 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 63 insertions(+)
+>
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 0958b6d0a61c..42d019d70b42 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1925,6 +1925,8 @@ extern u64 perf_event_pause(struct perf_event *event, bool reset);
+>  #ifdef CONFIG_PERF_GUEST_MEDIATED_PMU
+>  int perf_create_mediated_pmu(void);
+>  void perf_release_mediated_pmu(void);
+> +void perf_load_guest_context(unsigned long data);
+> +void perf_put_guest_context(void);
+>  #endif
+>  
+>  #else /* !CONFIG_PERF_EVENTS: */
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 6875b56ddd6b..77398b1ad4c5 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -469,10 +469,19 @@ static cpumask_var_t perf_online_pkg_mask;
+>  static cpumask_var_t perf_online_sys_mask;
+>  static struct kmem_cache *perf_event_cache;
+>  
+> +#ifdef CONFIG_PERF_GUEST_MEDIATED_PMU
+> +static DEFINE_PER_CPU(bool, guest_ctx_loaded);
+> +
+> +static __always_inline bool is_guest_mediated_pmu_loaded(void)
+> +{
+> +	return __this_cpu_read(guest_ctx_loaded);
+> +}
+> +#else
+>  static __always_inline bool is_guest_mediated_pmu_loaded(void)
+>  {
+>  	return false;
+>  }
+> +#endif
+>  
+>  /*
+>   * perf event paranoia level:
+> @@ -6379,6 +6388,58 @@ void perf_release_mediated_pmu(void)
+>  	atomic_dec(&nr_mediated_pmu_vms);
+>  }
+>  EXPORT_SYMBOL_GPL(perf_release_mediated_pmu);
+> +
+> +/* When loading a guest's mediated PMU, schedule out all exclude_guest events. */
+> +void perf_load_guest_context(unsigned long data)
 
-During the period, 1 new issues were detected and 1 were fixed.
-In total, 3 issues are still open and 27 have already been fixed.
+nit: the "data" argument is not used in this patch, we may defer to
+introduce it in patch 09/44.
 
-Some of the still happening issues:
 
-Ref Crashes Repro Title
-<1> 7542    Yes   WARNING: suspicious RCU usage in get_callchain_entry
-                  https://syzkaller.appspot.com/bug?extid=72a43cdb78469f7fbad1
-<2> 43      Yes   WARNING in __perf_event_overflow (2)
-                  https://syzkaller.appspot.com/bug?extid=2524754f17993441bf66
-<3> 2       No    KASAN: slab-use-after-free Read in __task_pid_nr_ns
-                  https://syzkaller.appspot.com/bug?extid=e0378d4f4fe57aa2bdd0
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
+> +{
+> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+> +
+> +	lockdep_assert_irqs_disabled();
+> +
+> +	guard(perf_ctx_lock)(cpuctx, cpuctx->task_ctx);
+> +
+> +	if (WARN_ON_ONCE(__this_cpu_read(guest_ctx_loaded)))
+> +		return;
+> +
+> +	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
+> +	ctx_sched_out(&cpuctx->ctx, NULL, EVENT_GUEST);
+> +	if (cpuctx->task_ctx) {
+> +		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
+> +		task_ctx_sched_out(cpuctx->task_ctx, NULL, EVENT_GUEST);
+> +	}
+> +
+> +	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
+> +	if (cpuctx->task_ctx)
+> +		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
+> +
+> +	__this_cpu_write(guest_ctx_loaded, true);
+> +}
+> +EXPORT_SYMBOL_GPL(perf_load_guest_context);
+> +
+> +void perf_put_guest_context(void)
+> +{
+> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+> +
+> +	lockdep_assert_irqs_disabled();
+> +
+> +	guard(perf_ctx_lock)(cpuctx, cpuctx->task_ctx);
+> +
+> +	if (WARN_ON_ONCE(!__this_cpu_read(guest_ctx_loaded)))
+> +		return;
+> +
+> +	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
+> +	if (cpuctx->task_ctx)
+> +		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
+> +
+> +	perf_event_sched_in(cpuctx, cpuctx->task_ctx, NULL, EVENT_GUEST);
+> +
+> +	if (cpuctx->task_ctx)
+> +		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
+> +	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
+> +
+> +	__this_cpu_write(guest_ctx_loaded, false);
+> +}
+> +EXPORT_SYMBOL_GPL(perf_put_guest_context);
+>  #else
+>  static int mediated_pmu_account_event(struct perf_event *event) { return 0; }
+>  static void mediated_pmu_unaccount_event(struct perf_event *event) {}
