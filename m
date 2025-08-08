@@ -1,54 +1,49 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 852262750E5;
-	Fri,  8 Aug 2025 11:47:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE7381DFF7;
+	Fri,  8 Aug 2025 12:37:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754653660; cv=none; b=UeL7F5nAH77wMORWhbkpm2nTUF8bQMdPhm0mLW/tzAEOXwvYCPFwoXccGM9VNYeBlX9e5WurSH4tSzGb3AOhGOgpAxHRmFcIPQ0Iyulr6LT90qU0/xbkDJxj5+3cdC4BVLdoIIOqo7Chmf0ygN9AyXz0cIGbKygtnT4MUgYR86k=
+	t=1754656629; cv=none; b=Y3pNDKFnQPUCXzWLzEjwwwh98FXEf8/hOnhtGn3aZwsMIYU5TpbFBLRAJmEIA2ef6RzkHuGqN9bKFh5HDcPVDWrvObR5dQ5sCfy+yrUXp2WyXIduBSMPnTt9J4OlszC+JyBT3GevH7tS+ByjxOpt88ENAUPSp7nyjqokTaE5Snk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754653660; c=relaxed/simple;
-	bh=fw0LMFAx6/CelKIeGgsPTOu4keOgrwh72hmn0s1QYnE=;
+	s=arc-20240116; t=1754656629; c=relaxed/simple;
+	bh=hSZfRs7QxjiBbqw4t9VGZPhMQaXckK6qsNAKECTWHxQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iAMsMJey+xauUicgPRJndYf+xF6GA2omgsqjK1/H1QXrZDB/0t+auhvXEkY+8WS1kLCh42of82mknYI1hOI+TkUH3okuThBdaguOzQ8FK9ROIBvbaZeS5WN7JGg4P9KcB1u4DCZNd6Vbdcj8FOZUF+M3Q6A2fAOPXVIeRYze1ig=
+	 Content-Type:Content-Disposition:In-Reply-To; b=YFP1YmOSAeSskojqU7bVwZfVj4cP6mCD84Ztq/gYtxDvtXp8J+4zjX5g/GKtFpsDsMxXATez8jurc5pxXWxJqWeISh9BT6gBH1l8N9itomEUA9W1xfdl9nTt9qzdngcFGBuWBZliPqRPh7VfD04ZzmubR+0xOR3G6J+tdYnumy8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72FF016F8;
-	Fri,  8 Aug 2025 04:47:28 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 040D816F8;
+	Fri,  8 Aug 2025 05:36:59 -0700 (PDT)
 Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 290483F673;
-	Fri,  8 Aug 2025 04:47:36 -0700 (PDT)
-Date: Fri, 8 Aug 2025 12:47:34 +0100
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC0AD3F738;
+	Fri,  8 Aug 2025 05:37:06 -0700 (PDT)
+Date: Fri, 8 Aug 2025 13:37:04 +0100
 From: Leo Yan <leo.yan@arm.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>, KP Singh <kpsingh@kernel.org>,
-	Matt Bobrowski <mattbobrowski@google.com>,
-	Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	James Clark <james.clark@linaro.org>,
+To: James Clark <james.clark@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
 	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] perf auxtrace: Support AUX pause and resume with
- BPF
-Message-ID: <20250808114734.GB3420125@e132581.arm.com>
-References: <20250725-perf_aux_pause_resume_bpf_rebase-v3-0-9fc84c0f4b3a@arm.com>
- <fd7c39d2-64b4-480e-8a29-abefcdc7d10a@intel.com>
- <20250730182623.GE143191@e132581.arm.com>
- <0a0ed9d4-6511-4f0b-868f-22a3f95697f8@intel.com>
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH v6 12/12] perf docs: arm-spe: Document new SPE filtering
+ features
+Message-ID: <20250808123704.GC3420125@e132581.arm.com>
+References: <20250808-james-perf-feat_spe_eft-v6-0-6daf498578c8@linaro.org>
+ <20250808-james-perf-feat_spe_eft-v6-12-6daf498578c8@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,59 +52,12 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0a0ed9d4-6511-4f0b-868f-22a3f95697f8@intel.com>
+In-Reply-To: <20250808-james-perf-feat_spe_eft-v6-12-6daf498578c8@linaro.org>
 
-On Tue, Aug 05, 2025 at 10:16:29PM +0300, Adrian Hunter wrote:
-> On 30/07/2025 21:26, Leo Yan wrote:
-> > Hi Adrian,
-> > 
-> > On Mon, Jul 28, 2025 at 08:02:51PM +0300, Adrian Hunter wrote:
-> >> On 25/07/2025 12:59, Leo Yan wrote:
-> >>> This series extends Perf for fine-grained tracing by using BPF program
-> >>> to pause and resume AUX tracing. The BPF program can be attached to
-> >>> tracepoints (including ftrace tracepoints and dynamic tracepoints, like
-> >>> kprobe, kretprobe, uprobe and uretprobe).
-> >>
-> >> Using eBPF to pause/resume AUX tracing seems like a great idea.
-> >>
-> >> AFAICT with this patch set, there is just support for pause/resume
-> >> much like what could be done directly without eBPF, so I wonder if you
-> >> could share a bit more on how you see this evolving, and what your
-> >> future plans are?
-> > 
-> > IIUC, here you mean the tool can use `perf probe` to firstly create
-> > probes, then enable tracepoints as PMU event for AUX pause and resume.
-> 
-> Yes, like:
-> 
-> $ sudo perf probe 'do_sys_openat2 how->flags how->mode'
-> Added new event:
->   probe:do_sys_openat2 (on do_sys_openat2 with flags=how->flags mode=how->mode)
-> 
-> You can now use it in all perf tools, such as:
-> 
->         perf record -e probe:do_sys_openat2 -aR sleep 1
-> 
-> $ sudo perf probe do_sys_openat2%return
-> Added new event:
->   probe:do_sys_openat2__return (on do_sys_openat2%return)
-> 
-> You can now use it in all perf tools, such as:
-> 
->         perf record -e probe:do_sys_openat2__return -aR sleep 1
-> 
-> $ sudo perf record --kcore -e intel_pt/aux-action=start-paused/k -e probe:do_sys_openat2/aux-action=resume/ --filter='flags==0x98800' -e probe:do_sys_openat2__return/aux-action=pause/ -- ls
+On Fri, Aug 08, 2025 at 12:23:09PM +0100, James Clark wrote:
 
-Thanks a lot for sharing the commands. I was able to replicate them
-using CoreSight.
+[...]
 
-Given that we can achieve the same result without using BPF, I am not
-sure how useful this series is. It may give us a base for exploring
-profiling that combines AUX trace and BPF, but I am fine with holding
-on until we have clear requirements for it.
+> +  data_src_filter=<mask> - mask to filter from 0-63 possible data sources (PMSDSFR, FEAT_SPE_FDS) - See 'Data source filtering'
 
-I would get suggestion from you and maintainers before proceeding
-further.
-
-Thanks,
-Leo
+A typo: s/data_src_filter/inv_data_src_filter
