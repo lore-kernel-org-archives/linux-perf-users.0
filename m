@@ -1,308 +1,208 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7B21C32FF;
-	Fri,  8 Aug 2025 08:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAB63239E60;
+	Fri,  8 Aug 2025 08:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754642152; cv=none; b=I/X9YCBfjHdbCIgLjqYF8JfODGAoDWuyy1QaqBOMF5LkCH2HxV0aSM8qNBJjIZx23ZqoqV7R+9gq66k40U1CMvP4mayQMnsv74hWfAOyD6/UdeIFrn2wfkgBxkGusnfQ7aQTXptRtQXONArdIgQoPg3jzgxkb3nX82G9aQaaHik=
+	t=1754642763; cv=none; b=Pypy0TuWCXDYx2azMyEX623yivHt/SyqREewVj3pyGT9OuLqoWBhGArgoAaTgyMLrBjX4FY61oUEGMt1zrEkbOoRcCsVaezNx4VMarG7ji+4rotiTTzFZRVR0UFoVV4RbRsoFnnwq5bChkSlCt89fOwALMEoAZVMDLqrMdhnRBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754642152; c=relaxed/simple;
-	bh=gYkqwRyuf+mXfngwQT5Vz7JmhhNZ1YkE71ZvOwPr16c=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=nGKSF4bOOM2Vvdy4b+KmKZUT/pfksHoXYKBLwRtjt1kIOWJLzT6BIfaWiYwmDci5b5UjOQiI0hYsM10MGXTRAu8tWRgycNVq99It8rI9DQi0XH6bi8+NoOxGRKg4r89xthjFbL+1JQ5cHOnVWwYzuN/nPOLSD17Um4mkCYqgUcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UoDgcl2U; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UoDgcl2U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754642150; x=1786178150;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=gYkqwRyuf+mXfngwQT5Vz7JmhhNZ1YkE71ZvOwPr16c=;
-  b=UoDgcl2USefcslGnVrlnEneL0O9X0dTSyh/qmveQ1anbHdclCGPj1GIR
-   Uk5Akj7t8MesmSFuQu5sbUAMwCFMSF8xMVe+oTPd4FAmWRpGDJk4ekiMQ
-   ACC+ACGo9z7m9XRnoYiQw/A1rSeWV76yCnx3DuK7iFQLoAUb3LPnIRCwx
-   tzVs/i/hTYfsA/1rUdhNkRrJsP8l61lzK0XDMtpDcqQ7jX26Th+HxYr/m
-   5fB4Vk8BUMS9yLDESWb4OV+n+zK1T1I4Q8nJ6z6saexj9Dy5NxUtXcSWr
-   KSBOtyxi0mGjQfNlYVJCewQfucS9bAFGUwJioB9ZFQYLGJ/NsALkcdHGR
-   Q==;
-X-CSE-ConnectionGUID: b8jtjPA1RteSxTSm6EdeFQ==
-X-CSE-MsgGUID: HulQoDpaQAWZrSDQr3UInw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11514"; a="56893396"
-X-IronPort-AV: E=Sophos;i="6.17,274,1747724400"; 
-   d="scan'208";a="56893396"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2025 01:35:50 -0700
-X-CSE-ConnectionGUID: Mtq1YVreTUW793Ca6IVT3Q==
-X-CSE-MsgGUID: 6ZsGI/1dREKrJ/YPUYiZ9Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,274,1747724400"; 
-   d="scan'208";a="170664293"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.106]) ([10.124.240.106])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2025 01:35:42 -0700
-Message-ID: <463a0265-e854-4677-92f2-be17e46a3426@linux.intel.com>
-Date: Fri, 8 Aug 2025 16:35:39 +0800
+	s=arc-20240116; t=1754642763; c=relaxed/simple;
+	bh=q3oBaN4J00g6EaNSCm4UnrwAByLavililg0b/sDCRn8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=slUtSdBgaEIuDa3DiMObxrWW7L5oMxmaQusb06+wpqHw2h8UJF1iFhI9gfCpDy2qiSh1T0gVni0aylNnyJWxBrHukaKGK66lO6nnC/f7+b+GN19L8RqiH2qX8Av7Rp2V2mPI6iTXMyJrmB4jCbwlfNT3zEKfLBGDrGMlGt4MMbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=209.97.181.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwAHD7c+uZVoGHmUBQ--.4S2;
+	Fri, 08 Aug 2025 16:45:50 +0800 (CST)
+Received: from wangyuquan1236$phytium.com.cn ( [218.76.62.144] ) by
+ ajax-webmail-mail (Coremail) ; Fri, 8 Aug 2025 16:45:45 +0800 (GMT+08:00)
+Date: Fri, 8 Aug 2025 16:45:45 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: "Yuquan Wang" <wangyuquan1236@phytium.com.cn>
+To: tangtao1634@phytium.com.cn, linux-cxl@vger.kernel.org,
+	linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: "Jonathan Cameron" <Jonathan.Cameron@huawei.com>
+Subject: Re: [RFC PATCH 1/4] cxl: Register devices for CXL Hotness
+ Monitoring Units (CHMU)
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.3-cmXT6 build
+ 20250512(e7b47ee3) Copyright (c) 2002-2025 www.mailtech.cn
+ mispb-8dfce572-2f24-404d-b59d-0dd2e304114c-icoremail.cn
+In-Reply-To: <20241121101845.1815660-2-Jonathan.Cameron@huawei.com>
+References: <20241121101845.1815660-1-Jonathan.Cameron@huawei.com>
+ <20241121101845.1815660-2-Jonathan.Cameron@huawei.com>
+Content-Transfer-Encoding: base64
+X-CM-CTRLDATA: Ggh90mZvb3Rlcl90eHQ9NzkyNTozODM=
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 00/44] KVM: x86: Add support for mediated vPMUs
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
- <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- kvm@vger.kernel.org, loongarch@lists.linux.dev,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Kan Liang <kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>,
- Mingwei Zhang <mizhang@google.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Sandipan Das <sandipan.das@amd.com>
-References: <20250806195706.1650976-1-seanjc@google.com>
- <a1df40e4-ae97-4b88-ad08-28b11d19c00a@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <a1df40e4-ae97-4b88-ad08-28b11d19c00a@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Message-ID: <130350f4.17a2.19888db8773.Coremail.wangyuquan1236@phytium.com.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:AQAAfwAHkwo5uZVoeBINAA--.5276W
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAQAWiU-30DD
+	AAAsh
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvAXoW3CF4Uur17ur13Xw45Kw4kZwb_yoW8Cw13Zo
+	ZrCFn5Gr1DJwsrAr95uF1UGF15WFZ5JrW8AryDCwn5Xa4DAr10vrW2yw4fArnrJ393Xa40
+	qw1DtF10qrWDJ3WUn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
+	J3UbIjqfuFe4nvWSU8nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2KfnxnUUI43ZEXa7xR_UU
+	UUUUUUU==
 
+U29ycnkgZm9yIGRpc3R1cmJpbmchIEkgdHJpZWQgdG8gdGVzdCBzZW5kIG1vcmUgdGhhbiAxMCBl
+bWFpbHMgb24gbXkgc210cCBzZXJ2ZXLvvIEKCgo+IC0tLS0t5Y6f5aeL6YKu5Lu2LS0tLS0KPiDl
+j5Hku7bkuro6IHdhbmd5dXF1YW4gPHdhbmd5dXF1YW4xMjM2QHBoeXRpdW0uY29tLmNuPgo+IOWP
+kemAgeaXtumXtDoyMDI1LTA4LTA4IDE2OjI5OjUzICjmmJ/mnJ/kupQpCj4g5pS25Lu25Lq6OiB0
+YW5ndGFvMTYzNEBwaHl0aXVtLmNvbS5jbiwgbGludXgtY3hsQHZnZXIua2VybmVsLm9yZywgbGlu
+dXgtbW1Aa3ZhY2sub3JnLCBsaW51eC1wZXJmLXVzZXJzQHZnZXIua2VybmVsLm9yZywgbGludXgt
+a2VybmVsQHZnZXIua2VybmVsLm9yZwo+IOaKhOmAgTogIkpvbmF0aGFuIENhbWVyb24iIDxKb25h
+dGhhbi5DYW1lcm9uQGh1YXdlaS5jb20+LCBsaW51eGFybUBodWF3ZWkuY29tLCB0b25ndGlhbmdl
+bkBodWF3ZWkuY29tLCAiWWljb25nIFlhbmciIDx5YW5neWljb25nQGh1YXdlaS5jb20+LCAiTml5
+YXMgU2FpdCIgPG5peWFzLnNhaXRAaHVhd2VpLmNvbT4sIGFqYXlqb3NoaUBtaWNyb24uY29tLCAi
+VmFuZGFuYSBTYWx2ZSIgPHZzYWx2ZUBtaWNyb24uY29tPiwgIkRhdmlkbG9ociBCdWVzbyIgPGRh
+dmVAc3Rnb2xhYnMubmV0PiwgIkRhdmUgSmlhbmciIDxkYXZlLmppYW5nQGludGVsLmNvbT4sICJB
+bGlzb24gU2Nob2ZpZWxkIiA8YWxpc29uLnNjaG9maWVsZEBpbnRlbC5jb20+LCAiSXJhIFdlaW55
+IiA8aXJhLndlaW55QGludGVsLmNvbT4sICJEYW4gV2lsbGlhbXMiIDxkYW4uai53aWxsaWFtc0Bp
+bnRlbC5jb20+LCAiQWxleGFuZGVyIFNoaXNoa2luIiA8YWxleGFuZGVyLnNoaXNoa2luQGxpbnV4
+LmludGVsLmNvbT4sICJQZXRlciBaaWpsc3RyYSIgPHBldGVyekBpbmZyYWRlYWQub3JnPiwgIklu
+Z28gTW9sbmFyIiA8bWluZ29AcmVkaGF0LmNvbT4sICJBcm5hbGRvIENhcnZhbGhvIGRlIE1lbG8i
+IDxhY21lQGtlcm5lbC5vcmc+LCAiTWFyayBSdXRsYW5kIiA8bWFyay5ydXRsYW5kQGFybS5jb20+
+LCAiR3JlZ29yeSBQcmljZSIgPGdvdXJyeUBnb3VycnkubmV0PiwgIkh1YW5nIFlpbmciIDx5aW5n
+Lmh1YW5nQGludGVsLmNvbT4KPiDkuLvpopg6IFtSRkMgUEFUQ0ggMS80XSBjeGw6IFJlZ2lzdGVy
+IGRldmljZXMgZm9yIENYTCBIb3RuZXNzIE1vbml0b3JpbmcgVW5pdHMgKENITVUpCj4gCj4gRnJv
+bTogSm9uYXRoYW4gQ2FtZXJvbiA8Sm9uYXRoYW4uQ2FtZXJvbkBodWF3ZWkuY29tPgo+IAo+IEJh
+c2ljIHJlZ2lzdHJhdGlvbiB1c2luZyBzaW1pbGFyIGFwcHJvYWNoIHRvIGhvdyB0aGUgQ1BNVXMK
+PiBhcmUgcmVnaXN0ZXJlZC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKb25hdGhhbiBDYW1lcm9uIDxK
+b25hdGhhbi5DYW1lcm9uQGh1YXdlaS5jb20+Cj4gLS0tCj4gIGRyaXZlcnMvY3hsL2NvcmUvTWFr
+ZWZpbGUgfCAgMSArCj4gIGRyaXZlcnMvY3hsL2NvcmUvaG11LmMgICAgfCA2NCArKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgZHJpdmVycy9jeGwvY29yZS9yZWdzLmMg
+ICB8IDE0ICsrKysrKysrKwo+ICBkcml2ZXJzL2N4bC9jeGwuaCAgICAgICAgIHwgIDQgKysrCj4g
+IGRyaXZlcnMvY3hsL2N4bHBjaS5oICAgICAgfCAgMSArCj4gIGRyaXZlcnMvY3hsL2htdS5oICAg
+ICAgICAgfCAyMyArKysrKysrKysrKysrKwo+ICBkcml2ZXJzL2N4bC9wY2kuYyAgICAgICAgIHwg
+MjYgKysrKysrKysrKysrKysrLQo+ICA3IGZpbGVzIGNoYW5nZWQsIDEzMiBpbnNlcnRpb25zKCsp
+LCAxIGRlbGV0aW9uKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY3hsL2NvcmUvTWFrZWZp
+bGUgYi9kcml2ZXJzL2N4bC9jb3JlL01ha2VmaWxlCj4gaW5kZXggOTI1OWJjYzY3NzNjLi5kMDYw
+YWJiNzczYWUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9jeGwvY29yZS9NYWtlZmlsZQo+ICsrKyBi
+L2RyaXZlcnMvY3hsL2NvcmUvTWFrZWZpbGUKPiBAQCAtMTIsNiArMTIsNyBAQCBjeGxfY29yZS15
+ICs9IG1lbWRldi5vCj4gIGN4bF9jb3JlLXkgKz0gbWJveC5vCj4gIGN4bF9jb3JlLXkgKz0gcGNp
+Lm8KPiAgY3hsX2NvcmUteSArPSBoZG0ubwo+ICtjeGxfY29yZS15ICs9IGhtdS5vCj4gIGN4bF9j
+b3JlLXkgKz0gcG11Lm8KPiAgY3hsX2NvcmUteSArPSBjZGF0Lm8KPiAgY3hsX2NvcmUtJChDT05G
+SUdfVFJBQ0lORykgKz0gdHJhY2Uubwo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2N4bC9jb3JlL2ht
+dS5jIGIvZHJpdmVycy9jeGwvY29yZS9obXUuYwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5k
+ZXggMDAwMDAwMDAwMDAwLi4zZWU5MzhiYjZjMDUKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvZHJp
+dmVycy9jeGwvY29yZS9obXUuYwo+IEBAIC0wLDAgKzEsNjQgQEAKPiArLy8gU1BEWC1MaWNlbnNl
+LUlkZW50aWZpZXI6IEdQTC0yLjAtb25seQo+ICsvKiBDb3B5cmlnaHQoYykgMjAyNCBIdWF3ZWku
+IEFsbCByaWdodHMgcmVzZXJ2ZWQuICovCj4gKwo+ICsjaW5jbHVkZSA8bGludXgvZGV2aWNlLmg+
+Cj4gKyNpbmNsdWRlIDxsaW51eC9zbGFiLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9pZHIuaD4KPiAr
+I2luY2x1ZGUgPGN4bG1lbS5oPgo+ICsjaW5jbHVkZSA8aG11Lmg+Cj4gKyNpbmNsdWRlIDxjeGwu
+aD4KPiArI2luY2x1ZGUgImNvcmUuaCIKPiArCj4gK3N0YXRpYyB2b2lkIGN4bF9obXVfcmVsZWFz
+ZShzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gK3sKPiArCXN0cnVjdCBjeGxfaG11ICpobXUgPSB0b19j
+eGxfaG11KGRldik7Cj4gKwo+ICsJa2ZyZWUoaG11KTsKPiArfQo+ICsKPiArY29uc3Qgc3RydWN0
+IGRldmljZV90eXBlIGN4bF9obXVfdHlwZSA9IHsKPiArCS5uYW1lID0gImN4bF9obXUiLAo+ICsJ
+LnJlbGVhc2UgPSBjeGxfaG11X3JlbGVhc2UsCj4gK307Cj4gKwo+ICtzdGF0aWMgdm9pZCByZW1v
+dmVfZGV2KHZvaWQgKmRldikKPiArewo+ICsJZGV2aWNlX3VucmVnaXN0ZXIoZGV2KTsKPiArfQo+
+ICsKPiAraW50IGRldm1fY3hsX2htdV9hZGQoc3RydWN0IGRldmljZSAqcGFyZW50LCBzdHJ1Y3Qg
+Y3hsX2htdV9yZWdzICpyZWdzLAo+ICsJCSAgICAgaW50IGFzc29jX2lkLCBpbnQgaW5kZXgpCj4g
+K3sKPiArCXN0cnVjdCBjeGxfaG11ICpobXU7Cj4gKwlzdHJ1Y3QgZGV2aWNlICpkZXY7Cj4gKwlp
+bnQgcmM7Cj4gKwo+ICsJaG11ID0ga3phbGxvYyhzaXplb2YoKmhtdSksIEdGUF9LRVJORUwpOwo+
+ICsJaWYgKCFobXUpCj4gKwkJcmV0dXJuIC1FTk9NRU07Cj4gKwo+ICsJaG11LT5hc3NvY19pZCA9
+IGFzc29jX2lkOwo+ICsJaG11LT5pbmRleCA9IGluZGV4Owo+ICsJaG11LT5iYXNlID0gcmVncy0+
+aG11Owo+ICsJZGV2ID0gJmhtdS0+ZGV2Owo+ICsJZGV2aWNlX2luaXRpYWxpemUoZGV2KTsKPiAr
+CWRldmljZV9zZXRfcG1fbm90X3JlcXVpcmVkKGRldik7Cj4gKwlkZXYtPnBhcmVudCA9IHBhcmVu
+dDsKPiArCWRldi0+YnVzID0gJmN4bF9idXNfdHlwZTsKPiArCWRldi0+dHlwZSA9ICZjeGxfaG11
+X3R5cGU7Cj4gKwlyYyA9IGRldl9zZXRfbmFtZShkZXYsICJobXVfbWVtJWQuJWQiLCBhc3NvY19p
+ZCwgaW5kZXgpOwo+ICsJaWYgKHJjKQo+ICsJCWdvdG8gZXJyOwo+ICsKPiArCXJjID0gZGV2aWNl
+X2FkZChkZXYpOwo+ICsJaWYgKHJjKQo+ICsJCWdvdG8gZXJyOwo+ICsKPiArCXJldHVybiBkZXZt
+X2FkZF9hY3Rpb25fb3JfcmVzZXQocGFyZW50LCByZW1vdmVfZGV2LCBkZXYpOwo+ICsKPiArZXJy
+Ogo+ICsJcHV0X2RldmljZSgmaG11LT5kZXYpOwo+ICsJcmV0dXJuIHJjOwo+ICt9Cj4gK0VYUE9S
+VF9TWU1CT0xfTlNfR1BMKGRldm1fY3hsX2htdV9hZGQsIENYTCk7Cj4gKwo+IGRpZmYgLS1naXQg
+YS9kcml2ZXJzL2N4bC9jb3JlL3JlZ3MuYyBiL2RyaXZlcnMvY3hsL2NvcmUvcmVncy5jCj4gaW5k
+ZXggZTEwODJlNzQ5YzY5Li5jMTJhZmFhNmVmOTggMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9jeGwv
+Y29yZS9yZWdzLmMKPiArKysgYi9kcml2ZXJzL2N4bC9jb3JlL3JlZ3MuYwo+IEBAIC00MDEsNiAr
+NDAxLDIwIEBAIGludCBjeGxfbWFwX3BtdV9yZWdzKHN0cnVjdCBjeGxfcmVnaXN0ZXJfbWFwICpt
+YXAsIHN0cnVjdCBjeGxfcG11X3JlZ3MgKnJlZ3MpCj4gIH0KPiAgRVhQT1JUX1NZTUJPTF9OU19H
+UEwoY3hsX21hcF9wbXVfcmVncywgQ1hMKTsKPiAgCj4gK2ludCBjeGxfbWFwX2htdV9yZWdzKHN0
+cnVjdCBjeGxfcmVnaXN0ZXJfbWFwICptYXAsIHN0cnVjdCBjeGxfaG11X3JlZ3MgKnJlZ3MpCj4g
+K3sKPiArCXN0cnVjdCBkZXZpY2UgKmRldiA9IG1hcC0+aG9zdDsKPiArCXJlc291cmNlX3NpemVf
+dCBwaHlzX2FkZHI7Cj4gKwo+ICsJcGh5c19hZGRyID0gbWFwLT5yZXNvdXJjZTsKPiArCXJlZ3Mt
+PmhtdSA9IGRldm1fY3hsX2lvbWFwX2Jsb2NrKGRldiwgcGh5c19hZGRyLCBtYXAtPm1heF9zaXpl
+KTsKPiArCWlmICghcmVncy0+aG11KQo+ICsJCXJldHVybiAtRU5PTUVNOwo+ICsKPiArCXJldHVy
+biAwOwo+ICt9Cj4gK0VYUE9SVF9TWU1CT0xfTlNfR1BMKGN4bF9tYXBfaG11X3JlZ3MsIENYTCk7
+Cj4gKwo+ICBzdGF0aWMgaW50IGN4bF9tYXBfcmVnYmxvY2soc3RydWN0IGN4bF9yZWdpc3Rlcl9t
+YXAgKm1hcCkKPiAgewo+ICAJc3RydWN0IGRldmljZSAqaG9zdCA9IG1hcC0+aG9zdDsKPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9jeGwvY3hsLmggYi9kcml2ZXJzL2N4bC9jeGwuaAo+IGluZGV4IDU0
+MDZlM2FiM2Q0YS4uODE3MmJjMWY3YThkIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvY3hsL2N4bC5o
+Cj4gKysrIGIvZHJpdmVycy9jeGwvY3hsLmgKPiBAQCAtMjI3LDYgKzIyNyw5IEBAIHN0cnVjdCBj
+eGxfcmVncyB7Cj4gIAlzdHJ1Y3RfZ3JvdXBfdGFnZ2VkKGN4bF9wbXVfcmVncywgcG11X3JlZ3Ms
+Cj4gIAkJdm9pZCBfX2lvbWVtICpwbXU7Cj4gIAkpOwo+ICsJc3RydWN0X2dyb3VwX3RhZ2dlZChj
+eGxfaG11X3JlZ3MsIGhtdV9yZWdzLAo+ICsJCXZvaWQgX19pb21lbSAqaG11Owo+ICsJKTsKPiAg
+Cj4gIAkvKgo+ICAJICogUkNIIGRvd25zdHJlYW0gcG9ydCBzcGVjaWZpYyBSQVMgcmVnaXN0ZXIK
+PiBAQCAtMjkyLDYgKzI5NSw3IEBAIGludCBjeGxfbWFwX2NvbXBvbmVudF9yZWdzKGNvbnN0IHN0
+cnVjdCBjeGxfcmVnaXN0ZXJfbWFwICptYXAsCj4gIAkJCSAgIHVuc2lnbmVkIGxvbmcgbWFwX21h
+c2spOwo+ICBpbnQgY3hsX21hcF9kZXZpY2VfcmVncyhjb25zdCBzdHJ1Y3QgY3hsX3JlZ2lzdGVy
+X21hcCAqbWFwLAo+ICAJCQlzdHJ1Y3QgY3hsX2RldmljZV9yZWdzICpyZWdzKTsKPiAraW50IGN4
+bF9tYXBfaG11X3JlZ3Moc3RydWN0IGN4bF9yZWdpc3Rlcl9tYXAgKm1hcCwgc3RydWN0IGN4bF9o
+bXVfcmVncyAqcmVncyk7Cj4gIGludCBjeGxfbWFwX3BtdV9yZWdzKHN0cnVjdCBjeGxfcmVnaXN0
+ZXJfbWFwICptYXAsIHN0cnVjdCBjeGxfcG11X3JlZ3MgKnJlZ3MpOwo+ICAKPiAgZW51bSBjeGxf
+cmVnbG9jX3R5cGU7Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY3hsL2N4bHBjaS5oIGIvZHJpdmVy
+cy9jeGwvY3hscGNpLmgKPiBpbmRleCA0ZGEwNzcyN2FiOWMuLjcxZjVlOTYyMDEzNyAxMDA2NDQK
+PiAtLS0gYS9kcml2ZXJzL2N4bC9jeGxwY2kuaAo+ICsrKyBiL2RyaXZlcnMvY3hsL2N4bHBjaS5o
+Cj4gQEAgLTY3LDYgKzY3LDcgQEAgZW51bSBjeGxfcmVnbG9jX3R5cGUgewo+ICAJQ1hMX1JFR0xP
+Q19SQklfVklSVCwKPiAgCUNYTF9SRUdMT0NfUkJJX01FTURFViwKPiAgCUNYTF9SRUdMT0NfUkJJ
+X1BNVSwKPiArCUNYTF9SRUdMT0NfUkJJX0hNVSwKPiAgCUNYTF9SRUdMT0NfUkJJX1RZUEVTCj4g
+IH07Cj4gIAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2N4bC9obXUuaCBiL2RyaXZlcnMvY3hsL2ht
+dS5oCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLmM0Nzk4ZWQ5
+NzY0Ygo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL2N4bC9obXUuaAo+IEBAIC0wLDAg
+KzEsMjMgQEAKPiArLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb25seSAqLwo+
+ICsvKgo+ICsgKiBDb3B5cmlnaHQoYykgMjAyNCBIdWF3ZWkKPiArICogQ1hMIFNwZWNpZmljYXRp
+b24gcmV2IDMuMiBTZXRpb24gOC4yLjggKENITVUgUmVnaXN0ZXIgSW50ZXJmYWNlKQo+ICsgKi8K
+PiArI2lmbmRlZiBDWExfSE1VX0gKPiArI2RlZmluZSBDWExfSE1VX0gKPiArI2luY2x1ZGUgPGxp
+bnV4L2RldmljZS5oPgo+ICsKPiArI2RlZmluZSBDWExfSE1VX1JFR01BUF9TSVpFIDB4ZTAwIC8q
+IFRhYmxlIDgtMzIgQ1hMIDMuMCBzcGVjaWZpY2F0aW9uICovCj4gK3N0cnVjdCBjeGxfaG11IHsK
+PiArCXN0cnVjdCBkZXZpY2UgZGV2Owo+ICsJdm9pZCBfX2lvbWVtICpiYXNlOwo+ICsJaW50IGFz
+c29jX2lkOwo+ICsJaW50IGluZGV4Owo+ICt9Owo+ICsKPiArI2RlZmluZSB0b19jeGxfaG11KGRl
+dikgY29udGFpbmVyX29mKGRldiwgc3RydWN0IGN4bF9obXUsIGRldikKPiArc3RydWN0IGN4bF9o
+bXVfcmVnczsKPiAraW50IGRldm1fY3hsX2htdV9hZGQoc3RydWN0IGRldmljZSAqcGFyZW50LCBz
+dHJ1Y3QgY3hsX2htdV9yZWdzICpyZWdzLAo+ICsJCSAgICAgaW50IGFzc29jX2lkLCBpbnQgaWR4
+KTsKPiArCj4gKyNlbmRpZgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2N4bC9wY2kuYyBiL2RyaXZl
+cnMvY3hsL3BjaS5jCj4gaW5kZXggMTg4NDEyZDQ1ZTBkLi5lODllYTlkM2YwMDcgMTAwNjQ0Cj4g
+LS0tIGEvZHJpdmVycy9jeGwvcGNpLmMKPiArKysgYi9kcml2ZXJzL2N4bC9wY2kuYwo+IEBAIC0x
+NSw2ICsxNSw3IEBACj4gICNpbmNsdWRlICJjeGxtZW0uaCIKPiAgI2luY2x1ZGUgImN4bHBjaS5o
+Igo+ICAjaW5jbHVkZSAiY3hsLmgiCj4gKyNpbmNsdWRlICJobXUuaCIKPiAgI2luY2x1ZGUgInBt
+dS5oIgo+ICAKPiAgLyoqCj4gQEAgLTgxNCw3ICs4MTUsNyBAQCBzdGF0aWMgaW50IGN4bF9wY2lf
+cHJvYmUoc3RydWN0IHBjaV9kZXYgKnBkZXYsIGNvbnN0IHN0cnVjdCBwY2lfZGV2aWNlX2lkICpp
+ZCkKPiAgCXN0cnVjdCBjeGxfZGV2X3N0YXRlICpjeGxkczsKPiAgCXN0cnVjdCBjeGxfcmVnaXN0
+ZXJfbWFwIG1hcDsKPiAgCXN0cnVjdCBjeGxfbWVtZGV2ICpjeGxtZDsKPiAtCWludCBpLCByYywg
+cG11X2NvdW50Owo+ICsJaW50IGksIHJjLCBobXVfY291bnQsIHBtdV9jb3VudDsKPiAgCWJvb2wg
+aXJxX2F2YWlsOwo+ICAKPiAgCS8qCj4gQEAgLTkzOCw2ICs5MzksMjkgQEAgc3RhdGljIGludCBj
+eGxfcGNpX3Byb2JlKHN0cnVjdCBwY2lfZGV2ICpwZGV2LCBjb25zdCBzdHJ1Y3QgcGNpX2Rldmlj
+ZV9pZCAqaWQpCj4gIAkJfQo+ICAJfQo+ICAKPiArCWhtdV9jb3VudCA9IGN4bF9jb3VudF9yZWdi
+bG9jayhwZGV2LCBDWExfUkVHTE9DX1JCSV9ITVUpOwo+ICsJZm9yIChpID0gMDsgaSA8IGhtdV9j
+b3VudDsgaSsrKSB7Cj4gKwkJc3RydWN0IGN4bF9obXVfcmVncyBobXVfcmVnczsKPiArCj4gKwkJ
+cmMgPSBjeGxfZmluZF9yZWdibG9ja19pbnN0YW5jZShwZGV2LCBDWExfUkVHTE9DX1JCSV9ITVUs
+ICZtYXAsIGkpOwo+ICsJCWlmIChyYykgewo+ICsJCQlkZXZfZGJnKCZwZGV2LT5kZXYsICJDb3Vs
+ZCBub3QgZmluZCBITVUgcmVnYmxvY2tcbiIpOwo+ICsJCQlicmVhazsKPiArCQl9Cj4gKwo+ICsJ
+CXJjID0gY3hsX21hcF9obXVfcmVncygmbWFwLCAmaG11X3JlZ3MpOwo+ICsJCWlmIChyYykgewo+
+ICsJCQlkZXZfZGJnKCZwZGV2LT5kZXYsICJDb3VsZCBub3QgbWFwIEhNVSByZWdzXG4iKTsKPiAr
+CQkJYnJlYWs7Cj4gKwkJfQo+ICsKPiArCQlyYyA9IGRldm1fY3hsX2htdV9hZGQoY3hsZHMtPmRl
+diwgJmhtdV9yZWdzLCBjeGxtZC0+aWQsIGkpOwo+ICsJCWlmIChyYykgewo+ICsJCQlkZXZfZGJn
+KCZwZGV2LT5kZXYsICJDb3VsZCBub3QgYWRkIEhNVSBpbnN0YW5jZVxuIik7Cj4gKwkJCWJyZWFr
+Owo+ICsJCX0KPiArCX0KPiArCj4gIAlyYyA9IGN4bF9ldmVudF9jb25maWcoaG9zdF9icmlkZ2Us
+IG1kcywgaXJxX2F2YWlsKTsKPiAgCWlmIChyYykKPiAgCQlyZXR1cm4gcmM7Cg0KDQrkv6Hmga/l
+ronlhajlo7DmmI7vvJrmnKzpgq7ku7bljIXlkKvkv6Hmga/lvZLlj5Hku7bkurrmiYDlnKjnu4Tn
+u4fmiYDmnIks5Y+R5Lu25Lq65omA5Zyo57uE57uH5a+56K+l6YKu5Lu25oul5pyJ5omA5pyJ5p2D
+5Yip44CC6K+35o6l5pS26ICF5rOo5oSP5L+d5a+GLOacque7j+WPkeS7tuS6uuS5pumdouiuuOWP
+ryzkuI3lvpflkJHku7vkvZXnrKzkuInmlrnnu4Tnu4flkozkuKrkurrpgI/pnLLmnKzpgq7ku7bm
+iYDlkKvkv6Hmga/jgIINCkluZm9ybWF0aW9uIFNlY3VyaXR5IE5vdGljZTogVGhlIGluZm9ybWF0
+aW9uIGNvbnRhaW5lZCBpbiB0aGlzIG1haWwgaXMgc29sZWx5IHByb3BlcnR5IG9mIHRoZSBzZW5k
+ZXIncyBvcmdhbml6YXRpb24uVGhpcyBtYWlsIGNvbW11bmljYXRpb24gaXMgY29uZmlkZW50aWFs
+LlJlY2lwaWVudHMgbmFtZWQgYWJvdmUgYXJlIG9ibGlnYXRlZCB0byBtYWludGFpbiBzZWNyZWN5
+IGFuZCBhcmUgbm90IHBlcm1pdHRlZCB0byBkaXNjbG9zZSB0aGUgY29udGVudHMgb2YgdGhpcyBj
+b21tdW5pY2F0aW9uIHRvIG90aGVycy4=
 
-On 8/8/2025 4:28 PM, Mi, Dapeng wrote:
-> On 8/7/2025 3:56 AM, Sean Christopherson wrote:
->> This series is based on the fastpath+PMU cleanups series[*] (which is based on
->> kvm/queue), but the non-KVM changes apply cleanly on v6.16 or Linus' tree.
->> I.e. if you only care about the perf changes, I would just apply on whatever
->> branch is convenient and stop when you hit the KVM changes.
->>
->> My hope/plan is that the perf changes will go through the tip tree with a
->> stable tag/branch, and the KVM changes will go the kvm-x86 tree.
->>
->> Non-x86 KVM folks, y'all are getting Cc'd due to minor changes in "KVM: Add a
->> simplified wrapper for registering perf callbacks".
->>
->> The full set is also available at:
->>
->>   https://github.com/sean-jc/linux.git tags/mediated-vpmu-v5
->>
->> Add support for mediated vPMUs in KVM x86, where "mediated" aligns with the
->> standard definition of intercepting control operations (e.g. event selectors),
->> while allowing the guest to perform data operations (e.g. read PMCs, toggle
->> counters on/off) without KVM getting involed.
->>
->> For an in-depth description of the what and why, please see the cover letter
->> from the original RFC:
->>
->>   https://lore.kernel.org/all/20240126085444.324918-1-xiong.y.zhang@linux.intel.com
->>
->> All KVM tests pass (or fail the same before and after), and I've manually
->> verified MSR/PMC are passed through as expected, but I haven't done much at all
->> to actually utilize the PMU in a guest.  I'll be amazed if I didn't make at
->> least one major goof.
->>
->> Similarly, I tried to address all feedback, but there are many, many changes
->> relative to v4.  If I missed something, I apologize in advance.
->>
->> In other words, please thoroughly review and test.
-> Went through the whole patchset, it looks good to me.
->
-> Run all PMU related kselftests and KUT tests on Intel Sapphire Rapids, no
-> issue is found. We would run broader tests on more Intel platforms. Thanks.
-
-Forgot to say "all tests are run for both mediated vPMU and the legacy
-perf-based vPMU, no issue is found". Thanks.
-
-
->
->
->> [*] https://lore.kernel.org/all/20250805190526.1453366-1-seanjc@google.com
->>
->> v5:
->>  - Add a patch to call security_perf_event_free() from __free_event()
->>    instead of _free_event() (necessitated by the __cleanup() changes).
->>  - Add CONFIG_PERF_GUEST_MEDIATED_PMU to guard the new perf functionality.
->>  - Ensure the PMU is fully disabled in perf_{load,put}_guest_context() when
->>    when switching between guest and host context. [Kan, Namhyung]
->>  - Route the new system IRQ, PERF_GUEST_MEDIATED_PMI_VECTOR, through perf,
->>    not KVM, and play nice with FRED.
->>  - Rename and combine perf_{guest,host}_{enter,exit}() to a single set of
->>    APIs, perf_{load,put}_guest_context().
->>  - Rename perf_{get,put}_mediated_pmu() to perf_{create,release}_mediated_pmu()
->>    to (hopefully) better differentiate them from perf_{load,put}_guest_context().
->>  - Change the param to the load/put APIs from "u32 guest_lvtpc" to
->>    "unsigned long data" to decouple arch code as much as possible.  E.g. if
->>    a non-x86 arch were to ever support a mediated vPMU, @data could be used
->>    to pass a pointer to a struct.
->>  - Use pmu->version to detect if a vCPU has a mediated PMU.
->>  - Use a kvm_x86_ops hook to check for mediated PMU support.
->>  - Cull "passthrough" from as many places as I could find.
->>  - Improve the changelog/documentation related to RDPMC interception.
->>  - Check harware capabilities, not KVM capabilities, when calculating
->>    MSR and RDPMC intercepts.
->>  - Rework intercept (re)calculation to use a request and the existing (well,
->>    will be existing as of 6.17-rc1) vendor hooks for recalculating intercepts.
->>  - Always read PERF_GLOBAL_CTRL on VM-Exit if writes weren't intercepted while
->>    running the vCPU.
->>  - Call setup_vmcs_config() before kvm_x86_vendor_init() so that the golden
->>    VMCS configuration is known before kvm_init_pmu_capability() is called.
->>  - Keep as much refresh/init code in common x86 as possible.
->>  - Context switch PMCs and event selectors in common x86, not vendor code.
->>  - Bail from the VM-Exit fastpath if the guest is counting instructions
->>    retired and the mediated PMU is enabled (because guest state hasn't yet
->>    been synchronized with hardware).
->>  - Don't require an userspace to opt-in via KVM_CAP_PMU_CAPABILITY, and instead
->>    automatically "create" a mediated PMU on the first KVM_CREATE_VCPU call if
->>    the VM has an in-kernel local APIC.
->>  - Add entries in kernel-parameters.txt for the PMU params.
->>  - Add a patch to elide PMC writes when possible.
->>  - Many more fixups and tweaks...
->>
->> v4:
->>  - https://lore.kernel.org/all/20250324173121.1275209-1-mizhang@google.com
->>  - Rebase whole patchset on 6.14-rc3 base.
->>  - Address Peter's comments on Perf part.
->>  - Address Sean's comments on KVM part.
->>    * Change key word "passthrough" to "mediated" in all patches
->>    * Change static enabling to user space dynamic enabling via KVM_CAP_PMU_CAPABILITY.
->>    * Only support GLOBAL_CTRL save/restore with VMCS exec_ctrl, drop the MSR
->>      save/retore list support for GLOBAL_CTRL, thus the support of mediated
->>      vPMU is constrained to SapphireRapids and later CPUs on Intel side.
->>    * Merge some small changes into a single patch.
->>  - Address Sandipan's comment on invalid pmu pointer.
->>  - Add back "eventsel_hw" and "fixed_ctr_ctrl_hw" to avoid to directly
->>    manipulate pmc->eventsel and pmu->fixed_ctr_ctrl.
->>
->> v3: https://lore.kernel.org/all/20240801045907.4010984-1-mizhang@google.com
->> v2: https://lore.kernel.org/all/20240506053020.3911940-1-mizhang@google.com
->> v1: https://lore.kernel.org/all/20240126085444.324918-1-xiong.y.zhang@linux.intel.com
->>
->> Dapeng Mi (15):
->>   KVM: x86/pmu: Start stubbing in mediated PMU support
->>   KVM: x86/pmu: Implement Intel mediated PMU requirements and
->>     constraints
->>   KVM: x86: Rename vmx_vmentry/vmexit_ctrl() helpers
->>   KVM: x86/pmu: Move PMU_CAP_{FW_WRITES,LBR_FMT} into msr-index.h header
->>   KVM: VMX: Add helpers to toggle/change a bit in VMCS execution
->>     controls
->>   KVM: x86/pmu: Disable RDPMC interception for compatible mediated vPMU
->>   KVM: x86/pmu: Load/save GLOBAL_CTRL via entry/exit fields for mediated
->>     PMU
->>   KVM: x86/pmu: Use BIT_ULL() instead of open coded equivalents
->>   KVM: x86/pmu: Disable interception of select PMU MSRs for mediated
->>     vPMUs
->>   KVM: x86/pmu: Bypass perf checks when emulating mediated PMU counter
->>     accesses
->>   KVM: x86/pmu: Reprogram mediated PMU event selectors on event filter
->>     updates
->>   KVM: x86/pmu: Load/put mediated PMU context when entering/exiting
->>     guest
->>   KVM: x86/pmu: Handle emulated instruction for mediated vPMU
->>   KVM: nVMX: Add macros to simplify nested MSR interception setting
->>   KVM: x86/pmu: Expose enable_mediated_pmu parameter to user space
->>
->> Kan Liang (7):
->>   perf: Skip pmu_ctx based on event_type
->>   perf: Add generic exclude_guest support
->>   perf: Add APIs to create/release mediated guest vPMUs
->>   perf: Clean up perf ctx time
->>   perf: Add a EVENT_GUEST flag
->>   perf: Add APIs to load/put guest mediated PMU context
->>   perf/x86/intel: Support PERF_PMU_CAP_MEDIATED_VPMU
->>
->> Mingwei Zhang (3):
->>   perf/x86/core: Plumb mediated PMU capability from x86_pmu to
->>     x86_pmu_cap
->>   KVM: x86/pmu: Introduce eventsel_hw to prepare for pmu event filtering
->>   KVM: nVMX: Disable PMU MSR interception as appropriate while running
->>     L2
->>
->> Sandipan Das (3):
->>   perf/x86/core: Do not set bit width for unavailable counters
->>   perf/x86/amd: Support PERF_PMU_CAP_MEDIATED_VPMU for AMD host
->>   KVM: x86/pmu: Always stuff GuestOnly=1,HostOnly=0 for mediated PMCs on
->>     AMD
->>
->> Sean Christopherson (15):
->>   perf: Move security_perf_event_free() call to __free_event()
->>   perf: core/x86: Register a new vector for handling mediated guest PMIs
->>   perf/x86: Switch LVTPC to/from mediated PMI vector on guest load/put
->>     context
->>   KVM: VMX: Setup canonical VMCS config prior to kvm_x86_vendor_init()
->>   KVM: SVM: Check pmu->version, not enable_pmu, when getting PMC MSRs
->>   KVM: Add a simplified wrapper for registering perf callbacks
->>   KVM: x86/pmu: Snapshot host (i.e. perf's) reported PMU capabilities
->>   KVM: x86/pmu: Implement AMD mediated PMU requirements
->>   KVM: x86: Rework KVM_REQ_MSR_FILTER_CHANGED into a generic
->>     RECALC_INTERCEPTS
->>   KVM: x86: Use KVM_REQ_RECALC_INTERCEPTS to react to CPUID updates
->>   KVM: x86/pmu: Move initialization of valid PMCs bitmask to common x86
->>   KVM: x86/pmu: Restrict GLOBAL_{CTRL,STATUS}, fixed PMCs, and PEBS to
->>     PMU v2+
->>   KVM: x86/pmu: Disallow emulation in the fastpath if mediated PMCs are
->>     active
->>   KVM: nSVM: Disable PMU MSR interception as appropriate while running
->>     L2
->>   KVM: x86/pmu: Elide WRMSRs when loading guest PMCs if values already
->>     match
->>
->> Xiong Zhang (1):
->>   KVM: x86/pmu: Register PMI handler for mediated vPMU
->>
->>  .../admin-guide/kernel-parameters.txt         |  49 ++
->>  arch/arm64/kvm/arm.c                          |   2 +-
->>  arch/loongarch/kvm/main.c                     |   2 +-
->>  arch/riscv/kvm/main.c                         |   2 +-
->>  arch/x86/entry/entry_fred.c                   |   1 +
->>  arch/x86/events/amd/core.c                    |   2 +
->>  arch/x86/events/core.c                        |  32 +-
->>  arch/x86/events/intel/core.c                  |   5 +
->>  arch/x86/include/asm/hardirq.h                |   3 +
->>  arch/x86/include/asm/idtentry.h               |   6 +
->>  arch/x86/include/asm/irq_vectors.h            |   4 +-
->>  arch/x86/include/asm/kvm-x86-ops.h            |   2 +-
->>  arch/x86/include/asm/kvm-x86-pmu-ops.h        |   4 +
->>  arch/x86/include/asm/kvm_host.h               |   7 +-
->>  arch/x86/include/asm/msr-index.h              |  17 +-
->>  arch/x86/include/asm/perf_event.h             |   1 +
->>  arch/x86/include/asm/vmx.h                    |   1 +
->>  arch/x86/kernel/idt.c                         |   3 +
->>  arch/x86/kernel/irq.c                         |  19 +
->>  arch/x86/kvm/Kconfig                          |   1 +
->>  arch/x86/kvm/cpuid.c                          |   2 +
->>  arch/x86/kvm/pmu.c                            | 272 ++++++++-
->>  arch/x86/kvm/pmu.h                            |  37 +-
->>  arch/x86/kvm/svm/nested.c                     |  18 +-
->>  arch/x86/kvm/svm/pmu.c                        |  51 +-
->>  arch/x86/kvm/svm/svm.c                        |  54 +-
->>  arch/x86/kvm/vmx/capabilities.h               |  11 +-
->>  arch/x86/kvm/vmx/main.c                       |  14 +-
->>  arch/x86/kvm/vmx/nested.c                     |  65 ++-
->>  arch/x86/kvm/vmx/pmu_intel.c                  | 169 ++++--
->>  arch/x86/kvm/vmx/pmu_intel.h                  |  15 +
->>  arch/x86/kvm/vmx/vmx.c                        | 143 +++--
->>  arch/x86/kvm/vmx/vmx.h                        |  11 +-
->>  arch/x86/kvm/vmx/x86_ops.h                    |   2 +-
->>  arch/x86/kvm/x86.c                            |  69 ++-
->>  arch/x86/kvm/x86.h                            |   1 +
->>  include/linux/kvm_host.h                      |  11 +-
->>  include/linux/perf_event.h                    |  38 +-
->>  init/Kconfig                                  |   4 +
->>  kernel/events/core.c                          | 521 ++++++++++++++----
->>  .../beauty/arch/x86/include/asm/irq_vectors.h |   3 +-
->>  virt/kvm/kvm_main.c                           |   6 +-
->>  42 files changed, 1385 insertions(+), 295 deletions(-)
->>
->>
->> base-commit: 53d61a43a7973f812caa08fa922b607574befef4
