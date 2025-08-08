@@ -1,151 +1,181 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9278145329;
-	Fri,  8 Aug 2025 11:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B07D52737F9
+	for <linux-perf-users@vger.kernel.org>; Fri,  8 Aug 2025 11:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754651666; cv=none; b=o3ZAS4XAz+wkNswJhHf6Qjb5LCRP/yP81uRsorLWhsXiP+DaF4Zeq7o8u8HE6ELm9zgc6d9C08Uycq0pEzufOazb6jhPhDv3gWKDB8tY9gQz31sTwTmdsZh0VNVHOju9/L/xIXmh342cEr+iWwAHaUzSUcblc+TqgqNL6eGR1is=
+	t=1754652228; cv=none; b=bwnNEoBA8cYFg6EQvHczIVx+PXrVz/0LN4VBzAJ2SQUc/kF7yaQnpDgvRl2DYlDs0KcqGdWnV33on88c8EDy7+YbffN2tPBVxd0Cf0dSE7uHZ1bDy79DwmRcmiLBQQzdUAnotRAbtx93N9wqtyHp3CTpOSSyNobvEYe/bGh1tfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754651666; c=relaxed/simple;
-	bh=R06DB1k7Nsf6Xd6cNpFhaIM0QPB+aGfks2d2CYwSgfA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K1iyVwXTsqyIHtlgUCkdHBssBxXFgxaW02xXMJChowp72vrYEACJst/F5TtH3YlUvz5ePeD+i5ou8CxIon0gDNKbU74PjKv87Yao6VhJCxLDSboE9MdX/lW8M1ubJnsePBiLpsn0vquJUVn2QSSii2Ykk3XrWK1UZOJlepAKcHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SaoqjUi3; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1754652228; c=relaxed/simple;
+	bh=3Up3kwRIerg9fg4YQW6lOfJHj5P0kMfll1euXunJB6g=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=qwHkxUfbC2rToltpTj/CxubOuMgTbJ/Ntbdq44T/HBQRiPUG9WduT9t9uAjmt4QHuSdwV1Sh+GByn6hafdUYHrSxXivogHJAiCr5W/Yx+KXN/yB71AN4oRKZgIzJdjb/Pn0B0nuTfa8EbrYApyD/v54r8jbNz/i7m1Ho/MWZJ14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ep0V4Rb3; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SaoqjUi3"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5783BTDv019460;
-	Fri, 8 Aug 2025 11:14:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=GjCnjo04A1Cr+U7z0J+HZile9njCaw
-	Nwe+p/nblK1Tk=; b=SaoqjUi3eL03/RLGxToniSp7773W2YC5tPkObOxdo/NphM
-	WRdSc6qnswm3IJznyBiv+Axe40HmH7CBH8HK0/ziqTav5/TROzv5N4+5lRP+Evck
-	G/t3JUBtZgitYx8V7WTDD1ujFxkMQU13S3AT27pW0Q6bpPimRdOwc7lScWQtncvD
-	bW+lMIAGGmzmUzQzae3e9jaFY/muTmzHixqGPwnIss9J8qmmuHe5DCD4dohYguNq
-	5mvJSmikmzJsKuVm7NnARF60Mk3foAIrPAVxSbv35C2Mph09RSZNgWXs74JgWpac
-	bxm5AbmxMHVs4PzjRRPlHukgX39xbEN03Ljnk+RA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48c26u5bxn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Aug 2025 11:14:13 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 578BBmkj027700;
-	Fri, 8 Aug 2025 11:14:12 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48c26u5bxg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Aug 2025 11:14:12 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 578A3oZ1025897;
-	Fri, 8 Aug 2025 11:14:11 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 48bpwndc4u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 08 Aug 2025 11:14:11 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 578BE9JK34341516
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 8 Aug 2025 11:14:10 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D73D12004F;
-	Fri,  8 Aug 2025 11:14:09 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C5BDA20040;
-	Fri,  8 Aug 2025 11:14:06 +0000 (GMT)
-Received: from li-e7e2bd4c-2dae-11b2-a85c-bfd29497117c.ibm.com (unknown [9.39.29.218])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri,  8 Aug 2025 11:14:06 +0000 (GMT)
-Date: Fri, 8 Aug 2025 16:44:03 +0530
-From: Amit Machhiwal <amachhiw@linux.ibm.com>
-To: Gautam Menghani <gautam@linux.ibm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf auxtrace: Avoid redundant NULL check in
- auxtrace_mmap_params__set_idx()
-Message-ID: <20250808164216.a982f3d0-5d-amachhiw@linux.ibm.com>
-Mail-Followup-To: Gautam Menghani <gautam@linux.ibm.com>, 
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250804110602.23422-1-gautam@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ep0V4Rb3"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4563cfac2d2so16740065e9.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 08 Aug 2025 04:23:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1754652224; x=1755257024; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kRspYZ6QAEJaF7pYavgjx3m5cWsrC6eyWll+Yl4bXuI=;
+        b=ep0V4Rb3UvqR3X9QnvF0AeM/8ahsbgOcC5NDWcGQxehtKtXcAme+O96ZORWIYhTNJP
+         GFjalDaLDkzTRQE66/FL1Q2N+LaT/Y2CJrQXI0OAleD+qHsd8bMXIqeFtCzSJmU8Hx4Z
+         hmIXQM8u5pHYA0agO9Ox8QERdyA/oSCHtAYLSoJ2DZ5pJy1lZ7CGhQ8g9m2D3mxBWc2x
+         MvvH4ORJSxHMAghI7H358os81+Z/XXhlPh9TxU/NCpSzwNTt39x1hqc3zF0TtC5AU0fN
+         eONDLhTI+y4S8X1xQbPS+9oOf1W5ZCNWsO2A16Lbiad5Nmh4a/mKm33rdfMW7ZodCGfM
+         WNyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754652224; x=1755257024;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kRspYZ6QAEJaF7pYavgjx3m5cWsrC6eyWll+Yl4bXuI=;
+        b=AX6vHKKxuKajHIWrAOVjicn4RJanSAP9eU4/7a9yNTtSyovGRxL6+pystWexBGDKyn
+         jaBEJKEvarm5chn/e9uN8YboM8ru3ooipcoGLV/xd4eSt96yJLpmaa+3yjyDvZNDxKA2
+         GzMdApWj2k9dwImNUGlmnmCc5s4HuwO9zZh0PnV4DHt7MIqOIuhCVcsCiIaPnpp5PRW+
+         VkKag5gZVwUOLvP07a4tTs+3sk6fulOY+GhEjOdklO8Ur83r1B1dQmHOl9jbPVEOnXtQ
+         /CqwU5S/PPP/GldRcmsxkIwI9RYLnn3XwQIheZjMUHihQ2IhgOzzdKCjGriicudcnQsn
+         82Zw==
+X-Forwarded-Encrypted: i=1; AJvYcCWVwBiAsWCK0oM73jmm1IntAyko2R+/gvdvKh/G/DitcYJrOOu5aUiB43rDEuosAWK4gGMuZ5KIjXiRMt9CGwR6@vger.kernel.org
+X-Gm-Message-State: AOJu0YyL0lCjFtRStJ9PolXtX6Co0Ev9gIjBRQtsxJ4OclmkQr9wv/W2
+	v6RtqKrs6f5kUGTyQBDol00CHkAwjpapq1i1FACys+MhpRD0UqmyNOl+IKkfWtGlcvQ=
+X-Gm-Gg: ASbGnctqQ6EHoKJ2Skmk8PokDNYqLOuIDgEuHYQZBptjPwWBZaWl527LOtMswHe5RmA
+	b31qf6SUpY3yQ+yzjJlnvB3u8KnBYc6WWNm4s564PNS7KJZeLzMaRYT/kPEMqEH3nsFJpn474R4
+	Kei9JA+rQ01egUcnsEgcrMrkB8twXSKOgs6IZ2X0R8ilJ13DIHiNlWMRRBh8ZKjG/DoH4XNEDD9
+	U6mJ9Tkyn+j8jAWDuxT6ew7M1yMfYC5gZswlHiRd4pT7b/5x8fX/UqaCrfw4thdeMtjpyaLZnhn
+	wXAcsj28NiXHcSPu4JdV29zV+dei+gWLCQH5ACs5QpscvxtZDd2JcRGJthNqgTtRkCHnS2NJgvP
+	WhLmbT8dDkpxYbTPHad1cIQlwzfd43mE=
+X-Google-Smtp-Source: AGHT+IFCMozOTwE+MxJzqrobvwL8Tio0dUjvbjpt5tE0xDuzGkAjBw2SFMGp7HYlkEU8CksYHLPAsw==
+X-Received: by 2002:a05:600c:474a:b0:456:dc0:7d4e with SMTP id 5b1f17b1804b1-459f4f0376fmr25391795e9.18.1754652223952;
+        Fri, 08 Aug 2025 04:23:43 -0700 (PDT)
+Received: from ho-tower-lan.lan ([185.48.76.109])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45923c34af8sm233482635e9.24.2025.08.08.04.23.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Aug 2025 04:23:43 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+Subject: [PATCH v6 00/12] perf: arm_spe: Armv8.8 SPE features
+Date: Fri, 08 Aug 2025 12:22:57 +0100
+Message-Id: <20250808-james-perf-feat_spe_eft-v6-0-6daf498578c8@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250804110602.23422-1-gautam@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: MP8F7KRGLUVyWRI-RkwoKFBAcnRaOp8s
-X-Authority-Analysis: v=2.4 cv=F/xXdrhN c=1 sm=1 tr=0 ts=6895dc05 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=kj9zAlcOel0A:10 a=2OwXVqhp2XgA:10 a=VnNF1IyMAAAA:8 a=3B45m_xtiCOFTJ9Nk4UA:9
- a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: 5UzG9qcwQ5UN-9JpAfdtjsBwdw8qfKPa
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA4MDA4OCBTYWx0ZWRfX/gOXPhA3RnU5
- py+sgm093ddNkpyCFEa1HTXepX0h+jOCfXg1Qoq8UDKc9yIxvE4yTD6/qmvFkUOSKlKPASX2YI1
- C1J7d+DQ2zVH1oNDYoA4x24++kDo935jv4ThOiOuq65VlvFXpp4Oqm3WDcYkmfvuRGNedvS+tJR
- nfckgZV23L0ktFK3PJF47hSVWrHgu7uGbJ22OYrmU9zk4I5KngSvUj5q9eiruVMJhuNpSodIOL9
- bQUcei5iAMjxzbVuICF2h6SU8p8Gg8JFVxgAo3r1/rdQ5qLjMWAvGNX65JDKeYT7XLk4VYOQEQP
- TFjJTgi5hsAAEDHbEUDF+D+0ciwntr53bj01t4glhNTh/O3y5xbfzAqE8W/giR3b/b8bwQHkFVT
- 0jFg8YFZJCxGTsQsu1xtTG5xiU6Fw1ovj8ZP0UmxPtB0W+ad0I4a4Q5g90yFMOeOGZjJ+C1U
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-08_03,2025-08-06_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound
- score=100 mlxscore=100 lowpriorityscore=0 priorityscore=1501 impostorscore=0
- clxscore=1011 spamscore=100 bulkscore=0 adultscore=0 mlxlogscore=-999
- malwarescore=0 phishscore=0 suspectscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2507300000 definitions=main-2508080088
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABHelWgC/43Q20rEMBAG4FdZcm1kcmzile8hsqTJZDfitiUpR
+ Vn67qYFqVIqXv4D883hTgrmhIU8ne4k45RK6rsa9MOJ+KvrLkhTqJlw4AoE4/TN3bDQAXOkEd1
+ 4LgOeMY5Uax+iDCaitaR2Dxlj+ljll9ear6mMff5cB01sqX6b4tCcGAXKnecQJDTem+f31LncP
+ /b5ssxYAQX6byAEaQANSqPYT2DZauLbJorbY4hXyAFztnUugHY7SGyQBnUMiQo1rAVvozVgxQ6
+ SG9RwdgzJCoFTvJEMoolhB6l/Qmo5rWm9EqK+yP3+0TzPX5Op3I8kAgAA
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
+ Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Zenghui Yu <yuzenghui@huawei.com>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>, 
+ Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org, 
+ kvmarm@lists.linux.dev, James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.14.0
 
-On 2025/08/04 04:36 PM, Gautam Menghani wrote:
-> Since commit eead8a011477 ("libperf threadmap: Don't segv for index 0 for the
-> NULL 'struct perf_thread_map' pointer"), perf_thread_map__pid() can
-> check for a NULL map and return -1 if idx is 0. Cleanup
-> auxtrace_mmap_params__set_idx() and remove the redundant NULL check.
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+Support 3 new SPE features: FEAT_SPEv1p4 filters, FEAT_SPE_EFT extended
+filtering, and SPE_FEAT_FDS data source filtering. The features are
+independent can be applied separately:
 
-LGTM.
+  * Prerequisite sysreg changes - patch 1
+  * FEAT_SPEv1p4 - patches 2 - 3
+  * FEAT_SPE_EFT - patch 4
+  * FEAT_SPE_FDS - patches 5 - 9
+  * FEAT_SPE_FDS Perf tool changes - patches 10 - 12
 
-Reviewed-by: Amit Machhiwal <amachhiw@linux.ibm.com>
+The first two features will work with old Perfs but a Perf change to
+parse the new config4 is required for the last feature.
 
-Regards,
-Amit
+---
+Changes in v6:
+- Rebase to resolve conflict with BRBE changes in el2_setup.h
+- Link to v5: https://lore.kernel.org/r/20250721-james-perf-feat_spe_eft-v5-0-a7bc533485a1@linaro.org
 
-> ---
->  tools/perf/util/auxtrace.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-> index ebd32f1b8f12..5e437133c753 100644
-> --- a/tools/perf/util/auxtrace.c
-> +++ b/tools/perf/util/auxtrace.c
-> @@ -185,10 +185,7 @@ void auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp,
->  
->  	if (per_cpu) {
->  		mp->cpu = perf_cpu_map__cpu(evlist->core.all_cpus, idx);
-> -		if (evlist->core.threads)
-> -			mp->tid = perf_thread_map__pid(evlist->core.threads, 0);
-> -		else
-> -			mp->tid = -1;
-> +		mp->tid = perf_thread_map__pid(evlist->core.threads, 0);
->  	} else {
->  		mp->cpu.cpu = -1;
->  		mp->tid = perf_thread_map__pid(evlist->core.threads, idx);
-> -- 
-> 2.49.0
-> 
+Changes in v5:
+- Forgot to pickup tags from v4
+- Forgot to drop test and review tags on v4 patches that were
+  significantly modified
+- Update commit message for data source filtering to mention inversion
+- Link to v4: https://lore.kernel.org/r/20250721-james-perf-feat_spe_eft-v4-0-0a527410f8fd@linaro.org
+
+Changes in v4:
+- Rewrite "const u64 feat_spe_eft_bits" inline
+- Invert data source filter so that it's possible to exclude all data
+  sources without adding an additional 'enable filter' flag
+- Add a macro in el2_setup.h to check for an SPE version
+- Probe valid filter bits instead of hardcoding them
+- Take in Leo's commit to expose the filter bits as it depends on the
+  new filter probing
+- Link to v3: https://lore.kernel.org/r/20250605-james-perf-feat_spe_eft-v3-0-71b0c9f98093@linaro.org
+
+Changes in v3:
+- Use PMSIDR_EL1_FDS instead of 1 << PMSIDR_EL1_FDS_SHIFT
+- Add VNCR offsets
+- Link to v2: https://lore.kernel.org/r/20250529-james-perf-feat_spe_eft-v2-0-a01a9baad06a@linaro.org
+
+Changes in v2:
+- Fix detection of FEAT_SPE_FDS in el2_setup.h
+- Pickup Marc Z's sysreg change instead which matches the json
+- Restructure and expand docs changes
+- Link to v1: https://lore.kernel.org/r/20250506-james-perf-feat_spe_eft-v1-0-dd480e8e4851@linaro.org
+
+---
+James Clark (11):
+      arm64: sysreg: Add new PMSFCR_EL1 fields and PMSDSFR_EL1 register
+      perf: arm_spe: Support FEAT_SPEv1p4 filters
+      perf: arm_spe: Add support for FEAT_SPE_EFT extended filtering
+      arm64/boot: Factor out a macro to check SPE version
+      arm64/boot: Enable EL2 requirements for SPE_FEAT_FDS
+      KVM: arm64: Add trap configs for PMSDSFR_EL1
+      perf: Add perf_event_attr::config4
+      perf: arm_spe: Add support for filtering on data source
+      tools headers UAPI: Sync linux/perf_event.h with the kernel sources
+      perf tools: Add support for perf_event_attr::config4
+      perf docs: arm-spe: Document new SPE filtering features
+
+Leo Yan (1):
+      perf: arm_spe: Expose event filter
+
+ Documentation/arch/arm64/booting.rst      |  11 +++
+ arch/arm64/include/asm/el2_setup.h        |  28 ++++--
+ arch/arm64/include/asm/sysreg.h           |   9 --
+ arch/arm64/include/asm/vncr_mapping.h     |   2 +
+ arch/arm64/kvm/emulate-nested.c           |   1 +
+ arch/arm64/kvm/sys_regs.c                 |   1 +
+ arch/arm64/tools/sysreg                   |  13 ++-
+ drivers/perf/arm_spe_pmu.c                | 148 ++++++++++++++++++++++++++----
+ include/uapi/linux/perf_event.h           |   2 +
+ tools/include/uapi/linux/perf_event.h     |   2 +
+ tools/perf/Documentation/perf-arm-spe.txt | 104 +++++++++++++++++++--
+ tools/perf/tests/parse-events.c           |  14 ++-
+ tools/perf/util/parse-events.c            |  11 +++
+ tools/perf/util/parse-events.h            |   1 +
+ tools/perf/util/parse-events.l            |   1 +
+ tools/perf/util/pmu.c                     |   8 ++
+ tools/perf/util/pmu.h                     |   1 +
+ 17 files changed, 312 insertions(+), 45 deletions(-)
+---
+base-commit: 37816488247ddddbc3de113c78c83572274b1e2e
+change-id: 20250312-james-perf-feat_spe_eft-66cdf4d8fe99
+
+Best regards,
+-- 
+James Clark <james.clark@linaro.org>
+
