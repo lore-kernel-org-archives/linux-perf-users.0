@@ -1,48 +1,81 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 342E020C010;
-	Fri,  8 Aug 2025 09:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9278145329;
+	Fri,  8 Aug 2025 11:14:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754644717; cv=none; b=IIK/qqHkk7awPYLwjI0tLqMCURDDLCEUd+7DNUOPTLZXIXZcehlCC6RwflzJasDKxKVOtDQNEk2XSyppx0Vf6vzu6SMAle11mP/tWsaMpkERwVun3sJZhyYhBwRpQunE1rQZB8jLgtwdgu/3EKuZrcpGzXeqb5XeDT9gOKUJ810=
+	t=1754651666; cv=none; b=o3ZAS4XAz+wkNswJhHf6Qjb5LCRP/yP81uRsorLWhsXiP+DaF4Zeq7o8u8HE6ELm9zgc6d9C08Uycq0pEzufOazb6jhPhDv3gWKDB8tY9gQz31sTwTmdsZh0VNVHOju9/L/xIXmh342cEr+iWwAHaUzSUcblc+TqgqNL6eGR1is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754644717; c=relaxed/simple;
-	bh=t5KuL+94ednlQJ7Ve5CREJRT/5Xc6aurxRM+6BLf38c=;
+	s=arc-20240116; t=1754651666; c=relaxed/simple;
+	bh=R06DB1k7Nsf6Xd6cNpFhaIM0QPB+aGfks2d2CYwSgfA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RL39qvDBq2ySrU+IgAHMTez64NkXWKwDV34aJC27znNEZ56oJjV7CCJVgY86favye0sUhcPQVEIo1VpabjpPKi0i+/18yMGHqh9TcNwvtoTjQeDi2pBEkpExHHIgQ/v5TNcLRDo0WOKSr3cRZ5266kxiSyP79/kMsVk1jxCCbCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 329B416F2;
-	Fri,  8 Aug 2025 02:18:26 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9A8E3F673;
-	Fri,  8 Aug 2025 02:18:33 -0700 (PDT)
-Date: Fri, 8 Aug 2025 10:18:32 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH v5 05/12] arm64/boot: Factor out a macro to check SPE
- version
-Message-ID: <20250808091832.GA3420125@e132581.arm.com>
-References: <20250721-james-perf-feat_spe_eft-v5-0-a7bc533485a1@linaro.org>
- <20250721-james-perf-feat_spe_eft-v5-5-a7bc533485a1@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=K1iyVwXTsqyIHtlgUCkdHBssBxXFgxaW02xXMJChowp72vrYEACJst/F5TtH3YlUvz5ePeD+i5ou8CxIon0gDNKbU74PjKv87Yao6VhJCxLDSboE9MdX/lW8M1ubJnsePBiLpsn0vquJUVn2QSSii2Ykk3XrWK1UZOJlepAKcHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SaoqjUi3; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SaoqjUi3"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5783BTDv019460;
+	Fri, 8 Aug 2025 11:14:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=GjCnjo04A1Cr+U7z0J+HZile9njCaw
+	Nwe+p/nblK1Tk=; b=SaoqjUi3eL03/RLGxToniSp7773W2YC5tPkObOxdo/NphM
+	WRdSc6qnswm3IJznyBiv+Axe40HmH7CBH8HK0/ziqTav5/TROzv5N4+5lRP+Evck
+	G/t3JUBtZgitYx8V7WTDD1ujFxkMQU13S3AT27pW0Q6bpPimRdOwc7lScWQtncvD
+	bW+lMIAGGmzmUzQzae3e9jaFY/muTmzHixqGPwnIss9J8qmmuHe5DCD4dohYguNq
+	5mvJSmikmzJsKuVm7NnARF60Mk3foAIrPAVxSbv35C2Mph09RSZNgWXs74JgWpac
+	bxm5AbmxMHVs4PzjRRPlHukgX39xbEN03Ljnk+RA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48c26u5bxn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 08 Aug 2025 11:14:13 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 578BBmkj027700;
+	Fri, 8 Aug 2025 11:14:12 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48c26u5bxg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 08 Aug 2025 11:14:12 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 578A3oZ1025897;
+	Fri, 8 Aug 2025 11:14:11 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 48bpwndc4u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 08 Aug 2025 11:14:11 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 578BE9JK34341516
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 8 Aug 2025 11:14:10 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D73D12004F;
+	Fri,  8 Aug 2025 11:14:09 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C5BDA20040;
+	Fri,  8 Aug 2025 11:14:06 +0000 (GMT)
+Received: from li-e7e2bd4c-2dae-11b2-a85c-bfd29497117c.ibm.com (unknown [9.39.29.218])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri,  8 Aug 2025 11:14:06 +0000 (GMT)
+Date: Fri, 8 Aug 2025 16:44:03 +0530
+From: Amit Machhiwal <amachhiw@linux.ibm.com>
+To: Gautam Menghani <gautam@linux.ibm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf auxtrace: Avoid redundant NULL check in
+ auxtrace_mmap_params__set_idx()
+Message-ID: <20250808164216.a982f3d0-5d-amachhiw@linux.ibm.com>
+Mail-Followup-To: Gautam Menghani <gautam@linux.ibm.com>, 
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250804110602.23422-1-gautam@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,75 +84,68 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250721-james-perf-feat_spe_eft-v5-5-a7bc533485a1@linaro.org>
+In-Reply-To: <20250804110602.23422-1-gautam@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: MP8F7KRGLUVyWRI-RkwoKFBAcnRaOp8s
+X-Authority-Analysis: v=2.4 cv=F/xXdrhN c=1 sm=1 tr=0 ts=6895dc05 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=kj9zAlcOel0A:10 a=2OwXVqhp2XgA:10 a=VnNF1IyMAAAA:8 a=3B45m_xtiCOFTJ9Nk4UA:9
+ a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: 5UzG9qcwQ5UN-9JpAfdtjsBwdw8qfKPa
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODA4MDA4OCBTYWx0ZWRfX/gOXPhA3RnU5
+ py+sgm093ddNkpyCFEa1HTXepX0h+jOCfXg1Qoq8UDKc9yIxvE4yTD6/qmvFkUOSKlKPASX2YI1
+ C1J7d+DQ2zVH1oNDYoA4x24++kDo935jv4ThOiOuq65VlvFXpp4Oqm3WDcYkmfvuRGNedvS+tJR
+ nfckgZV23L0ktFK3PJF47hSVWrHgu7uGbJ22OYrmU9zk4I5KngSvUj5q9eiruVMJhuNpSodIOL9
+ bQUcei5iAMjxzbVuICF2h6SU8p8Gg8JFVxgAo3r1/rdQ5qLjMWAvGNX65JDKeYT7XLk4VYOQEQP
+ TFjJTgi5hsAAEDHbEUDF+D+0ciwntr53bj01t4glhNTh/O3y5xbfzAqE8W/giR3b/b8bwQHkFVT
+ 0jFg8YFZJCxGTsQsu1xtTG5xiU6Fw1ovj8ZP0UmxPtB0W+ad0I4a4Q5g90yFMOeOGZjJ+C1U
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-08_03,2025-08-06_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound
+ score=100 mlxscore=100 lowpriorityscore=0 priorityscore=1501 impostorscore=0
+ clxscore=1011 spamscore=100 bulkscore=0 adultscore=0 mlxlogscore=-999
+ malwarescore=0 phishscore=0 suspectscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2507300000 definitions=main-2508080088
 
-On Mon, Jul 21, 2025 at 02:04:59PM +0100, James Clark wrote:
-> We check the version of SPE twice, and we'll add one more check in the
-> next commit so factor out a macro to do this. Change the #3 magic number
-> to the actual SPE version define (V1p2) to make it more readable.
+On 2025/08/04 04:36 PM, Gautam Menghani wrote:
+> Since commit eead8a011477 ("libperf threadmap: Don't segv for index 0 for the
+> NULL 'struct perf_thread_map' pointer"), perf_thread_map__pid() can
+> check for a NULL map and return -1 if idx is 0. Cleanup
+> auxtrace_mmap_params__set_idx() and remove the redundant NULL check.
 > 
-> No functional changes intended.
+> No functional change intended.
+> 
+> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
 
-I failed to apply this patch on the mailine kernel, seems like this is
-because your local tree does not include the commit:
+LGTM.
 
-  ae344bcb0d49 ("arm64: Handle BRBE booting requirements")
+Reviewed-by: Amit Machhiwal <amachhiw@linux.ibm.com>
 
-Please note the commit above has updated __init_el2_fgt so you might
-need to update this patch.
+Regards,
+Amit
 
-Thanks,
-Leo
-
-> Signed-off-by: James Clark <james.clark@linaro.org>
 > ---
->  arch/arm64/include/asm/el2_setup.h | 17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
+>  tools/perf/util/auxtrace.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
 > 
-> diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
-> index 9f38340d24c2..2bb0d28952e4 100644
-> --- a/arch/arm64/include/asm/el2_setup.h
-> +++ b/arch/arm64/include/asm/el2_setup.h
-> @@ -103,8 +103,7 @@
->  	csel	x2, xzr, x0, eq			// all PMU counters from EL1
+> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+> index ebd32f1b8f12..5e437133c753 100644
+> --- a/tools/perf/util/auxtrace.c
+> +++ b/tools/perf/util/auxtrace.c
+> @@ -185,10 +185,7 @@ void auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp,
 >  
->  	/* Statistical profiling */
-> -	ubfx	x0, x1, #ID_AA64DFR0_EL1_PMSVer_SHIFT, #4
-> -	cbz	x0, .Lskip_spe_\@		// Skip if SPE not present
-> +	__spe_vers_imp .Lskip_spe_\@, ID_AA64DFR0_EL1_PMSVer_IMP, x0 // Skip if SPE not present
->  
->  	mrs_s	x0, SYS_PMBIDR_EL1              // If SPE available at EL2,
->  	and	x0, x0, #(1 << PMBIDR_EL1_P_SHIFT)
-> @@ -189,6 +188,14 @@
->  .Lskip_set_cptr_\@:
->  .endm
->  
-> +/* Branch to skip_label if SPE version is less than given version */
-> +.macro __spe_vers_imp skip_label, version, tmp
-> +    mrs    \tmp, id_aa64dfr0_el1
-> +    ubfx   \tmp, \tmp, #ID_AA64DFR0_EL1_PMSVer_SHIFT, #4
-> +    cmp    \tmp, \version
-> +    b.lt   \skip_label
-> +.endm
-> +
->  /* Disable any fine grained traps */
->  .macro __init_el2_fgt
->  	mrs	x1, id_aa64mmfr0_el1
-> @@ -196,10 +203,8 @@
->  	cbz	x1, .Lskip_fgt_\@
->  
->  	mov	x0, xzr
-> -	mrs	x1, id_aa64dfr0_el1
-> -	ubfx	x1, x1, #ID_AA64DFR0_EL1_PMSVer_SHIFT, #4
-> -	cmp	x1, #3
-> -	b.lt	.Lskip_spe_fgt_\@
-> +	/* If SPEv1p2 is implemented, */
-> +	__spe_vers_imp .Lskip_spe_fgt_\@, #ID_AA64DFR0_EL1_PMSVer_V1P2, x1
->  	/* Disable PMSNEVFR_EL1 read and write traps */
->  	orr	x0, x0, #(1 << 62)
->  
-> 
+>  	if (per_cpu) {
+>  		mp->cpu = perf_cpu_map__cpu(evlist->core.all_cpus, idx);
+> -		if (evlist->core.threads)
+> -			mp->tid = perf_thread_map__pid(evlist->core.threads, 0);
+> -		else
+> -			mp->tid = -1;
+> +		mp->tid = perf_thread_map__pid(evlist->core.threads, 0);
+>  	} else {
+>  		mp->cpu.cpu = -1;
+>  		mp->tid = perf_thread_map__pid(evlist->core.threads, idx);
 > -- 
-> 2.34.1
-> 
+> 2.49.0
 > 
