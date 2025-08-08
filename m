@@ -1,49 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DD22E370A;
-	Fri,  8 Aug 2025 22:10:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A5E80BEC;
+	Fri,  8 Aug 2025 22:21:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754691051; cv=none; b=E1vIp2R7cQNH0spfqWG29AJjnJj3erYnt6yorMNMuEK6NBaCJzQYgxXtlCNLeyuxyup7X3PuyyvsNg5oRvSdWLpYbZk8hQpFloZMUBkaGXMcMl37CGefXIajlyZSYvgFOJ0KCuNbhxyWnSFr9JpGsKMugrzvsPxXra6yO43ojGo=
+	t=1754691715; cv=none; b=o76qTSehJrYjC3hHeYwIGAmFY2loZNNmgnMpoyc14glY+g1Ymh+FnLMq4KdrKnDot9m0cdfCm80Vj9YTpoJtxjtVEnfrZdRB0kG5RPuWmVIUpT8mFIHaFm8QQYkXuJmYiVKniNhTnNvcy+3f4I80aCNQjABIT9tktYPMywH/dvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754691051; c=relaxed/simple;
-	bh=b6Szy6iFdiBEMmksstIHJtJaQqOImx+an/ADCiwmFJ0=;
+	s=arc-20240116; t=1754691715; c=relaxed/simple;
+	bh=fNAp7xZNr7w0+ZIJmblEMbM01V1xqVpwRC08lJdSRio=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FgvVF2ypHadomw+YH4pI8oJrqMoMcmQKKrTrLS/MK8PFjF/yZhWtejXId3qmlpXVLp5XHDsuSnFvDXFBNgE2RMnJY23WDU4MlifwpgxnDf6pE6H+bSo5UQxqfLvloGXYwp3qbyHQfr0u4dyNzxG/Y/93FBDFrC9Wo/SZQFLMuSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UaoapQ2p; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=h3OPvdhmL8TGOjHz7PqfXZS4eOulT0vL1+Bfy0xcqIxEDbKDBKY2p19DmjAAUh/MReq4wm0lgSJYOcpVqYlZOraudjaYVMirRxDSqyQl8DJtVWDipjwV0xOl6JwWfZ9NGmHVvxXc4zyhbK7OmH6gYdu7gatykmZClFT6nAZY5iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MTHlVTF/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UaoapQ2p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 142F3C4CEED;
-	Fri,  8 Aug 2025 22:10:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MTHlVTF/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9682DC4CEED;
+	Fri,  8 Aug 2025 22:21:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754691050;
-	bh=b6Szy6iFdiBEMmksstIHJtJaQqOImx+an/ADCiwmFJ0=;
+	s=k20201202; t=1754691715;
+	bh=fNAp7xZNr7w0+ZIJmblEMbM01V1xqVpwRC08lJdSRio=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UaoapQ2p809nC9ok17nuQy2BOY0/X0HEddZSxM2d75q+yPaeLOCpoH626+Zr5uk9V
-	 gV7kRQTlBtr45x7LIjoUqRSjs6JRC4Tm3uV6cV/5YUb3KcYI/6l5Xdzo804vHQh6wz
-	 OR7yf3IdXr85mOWPgKCZAHQyO+478I3DsIpNzrMz8qqsjnI82nVsEaubFRK520Faed
-	 TA12pWE7H05bzWwgZ6EHOXKS2AS6QaQBopdAeOfDpAZJ8DXE1RVza65vb3ojZ8xxab
-	 n/Xy9oD7UGpv5Dbdgn1vXzFH8EEzPb5dgIErvJ4/DRbm62peyyHGDBi8Pf908Mu+Zh
-	 kk0tABUmYU0iA==
-Date: Fri, 8 Aug 2025 15:10:48 -0700
+	b=MTHlVTF/lTQ7jSgVqnMtt94RiZMpGpYLK9viQ0CnV3xl9+E5YHJwDh/7WpPTI6BPx
+	 dtcSeaQvqu+iDHCFbyYBHVjkaOq5AjoWXbJmBQLI19yaGe58OnLqkOwIur0SypddUQ
+	 PaayWybUjt1oangxRREynFPRA20P8wM8+uoV6n/wmIu2GpjEAZmmajPOFP9jKySvVl
+	 7GCH/SKGNsqWB1uRKBkKArY/mLgONoQ0CoxYMQK/TyLTeHPdEbqwAsWwxUEtvLEPaI
+	 ocsmmlm6Xthu4A7JcOx03lVXHVUV2HgOiwxCk3zHD2+pVOY53YU5d22SvBqXk1WWVH
+	 mBRe/rHN5QzZg==
+Date: Fri, 8 Aug 2025 15:21:53 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Kevin Tian <kevin.tian@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>
-Subject: Re: [PATCH 4/5] perf tools kvm: Use "cycles" to sample guest for
- "kvm record" on Intel
-Message-ID: <aJZ16DZXNI1pvt5-@google.com>
-References: <20250805004633.135904-1-dapeng1.mi@linux.intel.com>
- <20250805004633.135904-5-dapeng1.mi@linux.intel.com>
- <aJPuhpFK_ZjLk-ct@google.com>
- <154b59ee-0858-4caf-9972-3679db0a0c49@linux.intel.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jakub Brnak <jbrnak@redhat.com>, peterz@infradead.org, mingo@redhat.com,
+	irogers@google.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com,
+	howardchu95@gmail.com
+Subject: Re: [PATCH] perf: use standard syscall tracepoint structs for
+ augmentation
+Message-ID: <aJZ4gXyOftCV9tHw@google.com>
+References: <20250806130017.541416-1-jbrnak@redhat.com>
+ <aJPgNMi-6J2ewGza@google.com>
+ <aJUJh8oDaH-2Ptll@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,57 +49,105 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <154b59ee-0858-4caf-9972-3679db0a0c49@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aJUJh8oDaH-2Ptll@x1>
 
-On Thu, Aug 07, 2025 at 11:08:11AM +0800, Mi, Dapeng wrote:
+On Thu, Aug 07, 2025 at 05:16:07PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, Aug 06, 2025 at 04:07:32PM -0700, Namhyung Kim wrote:
+> > Hello,
+> > 
+> > On Wed, Aug 06, 2025 at 03:00:17PM +0200, Jakub Brnak wrote:
+> > > Replace custom syscall structs with the standard trace_event_raw_sys_enter
+> > > and trace_event_raw_sys_exit from vmlinux.h.
+> > > This fixes a data structure misalignment issue discovered on RHEL-9, which
+> > > prevented BPF programs from correctly accessing syscall arguments.
+> > 
+> > Can you explain what the alignment issue was?  It's not clear to me what
+> > makes it misaligned.
 > 
-> On 8/7/2025 8:08 AM, Namhyung Kim wrote:
-> > On Tue, Aug 05, 2025 at 08:46:32AM +0800, Dapeng Mi wrote:
-> >> After KVM supports PEBS for guest on Intel platforms
-> >> (https://lore.kernel.org/all/20220411101946.20262-1-likexu@tencent.com/),
-> >> host loses the capability to sample guest with PEBS since all PEBS related
-> >> MSRs are switched to guest value after vm-entry, like IA32_DS_AREA MSR is
-> >> switched to guest GVA at vm-entry. This would lead to "perf kvm record"
-> >> fails to sample guest on Intel platforms since "cycles:P" event is used to
-> >> sample guest by default as below case shows.
-> > Do you mean we cannot use "cycles:PG" for perf kvm record?
+> Yeah, mentioning a "misalignment" and then not spelling it out precisely
+> doesn't help.
 > 
-> Yes. Here is the output on Intel Sapphire rapids.
+> Showing the pahole output of the expected structure layout in both
+> kernels and what was being used would help us to understand the problem.
 > 
-> sudo ./perf record -e cycles:PG -a
-> ^C[ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.801 MB perf.data ]
+> For instance, here I have:
 > 
-> No guest records are captured with PEBS, and guest PEBS records can be
-> sampled only without PEBS.
+> acme@x1:~/git/bpf-next$ uname -r
+> 6.15.5-200.fc42.x86_64
+> acme@x1:~/git/bpf-next$ pahole -E trace_event_raw_sys_enter
+> struct trace_event_raw_sys_enter {
+> 	struct trace_entry {
+> 		short unsigned int type;                 /*     0     2 */
+> 		unsigned char      flags;                /*     2     1 */
+> 		unsigned char      preempt_count;        /*     3     1 */
+> 		int                pid;                  /*     4     4 */
+> 	} ent; /*     0     8 */
+> 	long int                   id;                   /*     8     8 */
+> 	long unsigned int          args[6];              /*    16    48 */
+> 	/* --- cacheline 1 boundary (64 bytes) --- */
+> 	char                       __data[];             /*    64     0 */
 > 
-> sudo ./perf record -e cycles:G -a
-> ^C[ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.798 MB perf.data (60 samples) ]
+> 	/* size: 64, cachelines: 1, members: 4 */
+> };
 > 
+> acme@x1:~/git/bpf-next$
 > 
-> >
-> >> sudo perf kvm record -a
-> >> ^C[ perf record: Woken up 1 times to write data ]
-> >> [ perf record: Captured and wrote 0.787 MB perf.data.guest ]
-> >>
-> >> So to ensure guest record can be sampled successfully, use "cycles"
-> >> instead of "cycles:P" to sample guest record by default on Intel
-> >> platforms. With this patch, the guest record can be sampled
-> >> successfully.
-> >>
-> >> sudo perf kvm record -a
-> >> ^C[ perf record: Woken up 1 times to write data ]
-> >> [ perf record: Captured and wrote 0.783 MB perf.data.guest (23 samples) ]
-> > What if user already gave some events in the command line?  I think you
-> > need to check if "-e" or "--event" (and "--pfm-events" too) is in the
-> > argv[] before adding these.
+> And:
 > 
-> kvm_add_default_arch_event() would detect if user already sets events explicitly. If so, it won't add "cycles" event any more. Thanks.
+> ⬢ [acme@toolbx linux]$ pahole -C syscall_enter_args /tmp/build/linux/util/bpf_skel/.tmp/augmented_raw_syscalls.bpf.o 
+> struct syscall_enter_args {
+> 	unsigned long long         common_tp_fields;     /*     0     8 */
+> 	long                       syscall_nr;           /*     8     8 */
+> 	unsigned long              args[6];              /*    16    48 */
+> 
+> 	/* size: 64, cachelines: 1, members: 3 */
+> };
+> 
+> ⬢ [acme@toolbx linux]$
+> 
+> So yes, it is "aligned", the 'id' is the 'syscall_nr' and both are at
+> offset 8, then we have the syscall args starting at offset 16 in both
+> cases.
+> 
+> The layout for rhel9 then we see the issue, the id, syscall_nr, is at
+> offset 16, there is the misalignment:
+> 
+> sh-5.1# pahole -E -C trace_event_raw_sys_enter /usr/lib/debug/lib/modules/5.14.0-570.32.1.el9_6.x86_64/vmlinux
+> struct trace_event_raw_sys_enter {
+> 	struct trace_entry {
+> 		short unsigned int type;                 /*     0     2 */
+> 		unsigned char      flags;                /*     2     1 */
+> 		unsigned char      preempt_count;        /*     3     1 */
+> 		int                pid;                  /*     4     4 */
+> 		unsigned char      preempt_lazy_count;   /*     8     1 */
 
-Oh, ok.  I can see you called parse_options to check the option.
-You'd better to check "--pfm-events" as well.
+Oh.. RHEL9 has this new field.
 
-Thanks,
+
+> 	} ent; /*     0    12 */
+> 
+> 	/* XXX last struct has 3 bytes of padding */
+> 	/* XXX 4 bytes hole, try to pack */
+> 
+> 	long int                   id;                   /*    16     8 */
+> 	long unsigned int          args[6];              /*    24    48 */
+> 	/* --- cacheline 1 boundary (64 bytes) was 8 bytes ago --- */
+> 	char                       __data[];             /*    72     0 */
+> 
+> 	/* size: 72, cachelines: 2, members: 4 */
+> 	/* sum members: 68, holes: 1, sum holes: 4 */
+> 	/* paddings: 1, sum paddings: 3 */
+> 	/* last cacheline: 8 bytes */
+> };
+> 
+> sh-5.1#
+> 
+> So if we always use 'struct trace_event_raw_sys_enter' from the
+> vmlinux.h generated from the BTF info and have it all as CO-RE enabled
+> (preserving the access index of fields, etc) it will work on any kernel
+> you install on machine.
+
+Agreed, thanks.
 Namhyung
 
