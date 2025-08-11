@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 124391A5BBA;
-	Mon, 11 Aug 2025 14:10:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C9ED1EFF8D;
+	Mon, 11 Aug 2025 14:10:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754921426; cv=none; b=SRC9YJ07Qvfe7onr/YN4bAMcqYD6AatdIGBtX5/comxdJMS9fhc4uSZ8Yzodh0acOtKTbCcas56ryqMbOM1v0W8P4PNIPa0YGvvuDovLCXQkYrKnorzrihyGuCl3wFfPp0oYD4gcDOkt4ZXOeLKAlH8d3MDjvdOKwQ28nOT4Z3s=
+	t=1754921427; cv=none; b=V/tdVp3muzUdA4VEM8zPO7SiRTtIl9wH5Hv2AYjDHw3S8Ozc5XpJHjd4mKKo5A5AbpvO/kSG5jp0cJkWNtQee3SkYzCL/9scsPTCrDutvvlpxz+NsgBk0W7opGRi9wI6/pz6Il/X/MKesdfgVUZi2iGV7jOwygfmndFb+UUxZ5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754921426; c=relaxed/simple;
-	bh=AbCmTU2WGCZBoY9NASa9L9cUCAS0wFLXwztVBLdMe88=;
+	s=arc-20240116; t=1754921427; c=relaxed/simple;
+	bh=o/J3AIauwZISDz24dz2ZCs1NXZEsIxgEPkC+hkXyiyM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mdVElwo3gE4jzyWvMUjTMBLb3d2AJFYVd1hsKlFdF204qZME7BZfm974dL0VvdQRBlA1JW8AJfy52OUz1aMvO1G9SmayJow+AoUq+ug0LI4amZXyGi6GMrPIMv/zAZIEsm6GREyhawNfUCuR7+JmUmECuyaaOBhv5WB3RTm18I8=
+	 MIME-Version; b=cxuugcZ/+kYhOZIMzi4Vk0NHo44rM+OFNVmkre39P56fVNYtsG5NrrUR8DZbykji7TUfigA8y3vARLVab4U4HE4zHXD4itMU4+86wiHHEc0ALrBAiJnqd0X/AV7UlegdZiJfhvmrMmjRpCRbzyrEO6YkcrNLK6Ygl3KQrj/okuI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 471892641;
-	Mon, 11 Aug 2025 07:10:16 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65C0E2661;
+	Mon, 11 Aug 2025 07:10:17 -0700 (PDT)
 Received: from u200865.usa.arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE1EF3F738;
-	Mon, 11 Aug 2025 07:10:23 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F04893F738;
+	Mon, 11 Aug 2025 07:10:24 -0700 (PDT)
 From: Jeremy Linton <jeremy.linton@arm.com>
 To: linux-trace-kernel@vger.kernel.org
 Cc: linux-perf-users@vger.kernel.org,
@@ -43,9 +43,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Jeremy Linton <jeremy.linton@arm.com>
-Subject: [PATCH v5 1/7] arm64: probes: Break ret out from bl/blr
-Date: Mon, 11 Aug 2025 09:10:04 -0500
-Message-ID: <20250811141010.741989-2-jeremy.linton@arm.com>
+Subject: [PATCH v5 2/7] arm64: uaccess: Move existing GCS accessors definitions to gcs.h
+Date: Mon, 11 Aug 2025 09:10:05 -0500
+Message-ID: <20250811141010.741989-3-jeremy.linton@arm.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250811141010.741989-1-jeremy.linton@arm.com>
 References: <20250811141010.741989-1-jeremy.linton@arm.com>
@@ -57,78 +57,117 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Prepare for GCS by breaking RET out into its own function, where
-it makes more sense to encapsulate the new behavior independent
-from the branch instructions.
+We are going to add some additional GCS access helpers to gcs.h in
+order to avoid some forward reference problems with uaccess.
+
+In preparation for that, lets move the existing gcssttr() and
+put_user_gcs() routines into gcs.h where it makes sense to keep all
+the accessors together. Further, the code which uses them already
+includes gcs.h and there is an existing CONFIG_ARM64_GCS check we can
+reuse.
 
 Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
 Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 ---
- arch/arm64/kernel/probes/decode-insn.c   |  7 ++++---
- arch/arm64/kernel/probes/simulate-insn.c | 10 +++++++++-
- arch/arm64/kernel/probes/simulate-insn.h |  3 ++-
- 3 files changed, 15 insertions(+), 5 deletions(-)
+ arch/arm64/include/asm/gcs.h     | 35 ++++++++++++++++++++++++++++
+ arch/arm64/include/asm/uaccess.h | 40 --------------------------------
+ 2 files changed, 35 insertions(+), 40 deletions(-)
 
-diff --git a/arch/arm64/kernel/probes/decode-insn.c b/arch/arm64/kernel/probes/decode-insn.c
-index 6438bf62e753..4137cc5ef031 100644
---- a/arch/arm64/kernel/probes/decode-insn.c
-+++ b/arch/arm64/kernel/probes/decode-insn.c
-@@ -108,9 +108,10 @@ arm_probe_decode_insn(u32 insn, struct arch_probe_insn *api)
- 	    aarch64_insn_is_bl(insn)) {
- 		api->handler = simulate_b_bl;
- 	} else if (aarch64_insn_is_br(insn) ||
--	    aarch64_insn_is_blr(insn) ||
--	    aarch64_insn_is_ret(insn)) {
--		api->handler = simulate_br_blr_ret;
-+		aarch64_insn_is_blr(insn)) {
-+		api->handler = simulate_br_blr;
-+	} else if (aarch64_insn_is_ret(insn)) {
-+		api->handler = simulate_ret;
- 	} else {
- 		/*
- 		 * Instruction cannot be stepped out-of-line and we don't
-diff --git a/arch/arm64/kernel/probes/simulate-insn.c b/arch/arm64/kernel/probes/simulate-insn.c
-index 4c6d2d712fbd..09a0b36122d0 100644
---- a/arch/arm64/kernel/probes/simulate-insn.c
-+++ b/arch/arm64/kernel/probes/simulate-insn.c
-@@ -126,7 +126,7 @@ simulate_b_cond(u32 opcode, long addr, struct pt_regs *regs)
+diff --git a/arch/arm64/include/asm/gcs.h b/arch/arm64/include/asm/gcs.h
+index 5bc432234d3a..e3b360c9dba4 100644
+--- a/arch/arm64/include/asm/gcs.h
++++ b/arch/arm64/include/asm/gcs.h
+@@ -81,6 +81,41 @@ static inline int gcs_check_locked(struct task_struct *task,
+ 	return 0;
  }
  
- void __kprobes
--simulate_br_blr_ret(u32 opcode, long addr, struct pt_regs *regs)
-+simulate_br_blr(u32 opcode, long addr, struct pt_regs *regs)
- {
- 	int xn = (opcode >> 5) & 0x1f;
- 
-@@ -138,6 +138,14 @@ simulate_br_blr_ret(u32 opcode, long addr, struct pt_regs *regs)
- 		set_x_reg(regs, 30, addr + 4);
- }
- 
-+void __kprobes
-+simulate_ret(u32 opcode, long addr, struct pt_regs *regs)
++static inline int gcssttr(unsigned long __user *addr, unsigned long val)
 +{
-+	int xn = (opcode >> 5) & 0x1f;
++	register unsigned long __user *_addr __asm__ ("x0") = addr;
++	register unsigned long _val __asm__ ("x1") = val;
++	int err = 0;
 +
-+	instruction_pointer_set(regs, get_x_reg(regs, xn));
++	/* GCSSTTR x1, x0 */
++	asm volatile(
++		"1: .inst 0xd91f1c01\n"
++		"2: \n"
++		_ASM_EXTABLE_UACCESS_ERR(1b, 2b, %w0)
++		: "+r" (err)
++		: "rZ" (_val), "r" (_addr)
++		: "memory");
++
++	return err;
 +}
 +
- void __kprobes
- simulate_cbz_cbnz(u32 opcode, long addr, struct pt_regs *regs)
- {
-diff --git a/arch/arm64/kernel/probes/simulate-insn.h b/arch/arm64/kernel/probes/simulate-insn.h
-index efb2803ec943..9e772a292d56 100644
---- a/arch/arm64/kernel/probes/simulate-insn.h
-+++ b/arch/arm64/kernel/probes/simulate-insn.h
-@@ -11,7 +11,8 @@
- void simulate_adr_adrp(u32 opcode, long addr, struct pt_regs *regs);
- void simulate_b_bl(u32 opcode, long addr, struct pt_regs *regs);
- void simulate_b_cond(u32 opcode, long addr, struct pt_regs *regs);
--void simulate_br_blr_ret(u32 opcode, long addr, struct pt_regs *regs);
-+void simulate_br_blr(u32 opcode, long addr, struct pt_regs *regs);
-+void simulate_ret(u32 opcode, long addr, struct pt_regs *regs);
- void simulate_cbz_cbnz(u32 opcode, long addr, struct pt_regs *regs);
- void simulate_tbz_tbnz(u32 opcode, long addr, struct pt_regs *regs);
- void simulate_ldr_literal(u32 opcode, long addr, struct pt_regs *regs);
++static inline void put_user_gcs(unsigned long val, unsigned long __user *addr,
++				int *err)
++{
++	int ret;
++
++	if (!access_ok((char __user *)addr, sizeof(u64))) {
++		*err = -EFAULT;
++		return;
++	}
++
++	uaccess_ttbr0_enable();
++	ret = gcssttr(addr, val);
++	if (ret != 0)
++		*err = ret;
++	uaccess_ttbr0_disable();
++}
++
+ #else
+ 
+ static inline bool task_gcs_el0_enabled(struct task_struct *task)
+diff --git a/arch/arm64/include/asm/uaccess.h b/arch/arm64/include/asm/uaccess.h
+index 5b91803201ef..1aa4ecb73429 100644
+--- a/arch/arm64/include/asm/uaccess.h
++++ b/arch/arm64/include/asm/uaccess.h
+@@ -502,44 +502,4 @@ static inline size_t probe_subpage_writeable(const char __user *uaddr,
+ 
+ #endif /* CONFIG_ARCH_HAS_SUBPAGE_FAULTS */
+ 
+-#ifdef CONFIG_ARM64_GCS
+-
+-static inline int gcssttr(unsigned long __user *addr, unsigned long val)
+-{
+-	register unsigned long __user *_addr __asm__ ("x0") = addr;
+-	register unsigned long _val __asm__ ("x1") = val;
+-	int err = 0;
+-
+-	/* GCSSTTR x1, x0 */
+-	asm volatile(
+-		"1: .inst 0xd91f1c01\n"
+-		"2: \n"
+-		_ASM_EXTABLE_UACCESS_ERR(1b, 2b, %w0)
+-		: "+r" (err)
+-		: "rZ" (_val), "r" (_addr)
+-		: "memory");
+-
+-	return err;
+-}
+-
+-static inline void put_user_gcs(unsigned long val, unsigned long __user *addr,
+-				int *err)
+-{
+-	int ret;
+-
+-	if (!access_ok((char __user *)addr, sizeof(u64))) {
+-		*err = -EFAULT;
+-		return;
+-	}
+-
+-	uaccess_ttbr0_enable();
+-	ret = gcssttr(addr, val);
+-	if (ret != 0)
+-		*err = ret;
+-	uaccess_ttbr0_disable();
+-}
+-
+-
+-#endif /* CONFIG_ARM64_GCS */
+-
+ #endif /* __ASM_UACCESS_H */
 -- 
 2.50.1
 
