@@ -1,223 +1,203 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA202D2387;
-	Mon, 11 Aug 2025 11:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B545C1F583D;
+	Mon, 11 Aug 2025 13:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754911588; cv=none; b=WayCHd7fL/crFC0in0rxmPgtOeTxPLqEHziYKFzN7JhoOLMdQeO3+Znmy+8gO+IYnqNlBPPz8nRt4Ml/NTkpk+TtOVLMHLnzkWjrajMWl1kJef8+/RLNQvH6vioc6+rEA57ZfKFNBVz3rBleCeZNueMz+qxVcBh6SbgF1AS4WXg=
+	t=1754920523; cv=none; b=s7+xjyLt3LKCqUIvH5rvgUdJDVLsM64pnZtHUZBde+gurMhavWjK4TIlvF7JmRd/390lfQMt4jwglDD88z2sz4lCppmE/D4OevmZQfyc/kfWtoqueQ6WyWcS/nBGMDM4c9tD4gFPgFp9xyRGQr8N0HcooJTfdecNPTBg3iTa0LU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754911588; c=relaxed/simple;
-	bh=TDDUh3YZA77tPJQoxh3MNl7VnFCf8Gr5sBYtPCwEosw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VI2ySLhJh7qtvh7uIC+9Zmh0GElsZ97IeAruYvw9eGYNrrFC7I5Qmk+XwEyVdDhrKvqkq9W5gVV6iT39ApQG7d3YEkYnU7tDRk7HN00qLenjVv6dfZdYpFxwMJmQ1IH29guModv4s6pjVOUyMU2x/S2ZBd5b5QRDfIOJDXJeCyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YjJGXcdx; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1754920523; c=relaxed/simple;
+	bh=+LAKu174f1xhSbC2VdiHkWIZYXz3wYKQPJAQC4FzNig=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XV0oMZvpfpXwJIInLTbwlAT621k6AV7XgczjJOtAHqd4nCVdEQa+Hp1/tfH/DMU3bsBbUOYKV5t5vj9dG9tK/2rJ9dfY6uOflNzwHvrrSqA4uwKrukIp7e8TVE9zjyhe0zLVJ+qsTYJ+l3tHl7gSc5L4ZlPH9agfPHz2AWa9h0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Imoov6qF; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YjJGXcdx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754911587; x=1786447587;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TDDUh3YZA77tPJQoxh3MNl7VnFCf8Gr5sBYtPCwEosw=;
-  b=YjJGXcdxL5zQSExJWrtTsNozjS9Hogm3eiXSygXbJXpDjSJ/fgoQJ4o5
-   e9mKCucVL5JySP+dwMcgcwV52LRLNbToxlYIy3/tP+vB25U7yIatDxaqx
-   E2NUyMVigt/xJ/PZ3W08bHPWj9DHcNPjkmCfDDixmFl4CXf5RZKap7hAe
-   Ip1oSA1zAHjjFdF4hhFZxI4yhtm3+ozwIBH9KGTUxT0/x2GNeoIVJOXJ7
-   VjKhm5zF6YxzNxfAfzeOrEfwTHDLrKBJMi0KmeyEFqlsKAvFMiAb+Ucjx
-   d9VEF0N10HPl2gQ75iLHw/sWw1a7nHuK4U1ZiQjlA4gUVag2gn8SYX5mr
-   g==;
-X-CSE-ConnectionGUID: voZBCBAmRC6Hf4fakHTmjA==
-X-CSE-MsgGUID: 3AplfPQlSn+PjkJd5sl1JQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="56367441"
-X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
-   d="scan'208";a="56367441"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 04:26:26 -0700
-X-CSE-ConnectionGUID: XMSe7Xf8Rv6ifGt2ii8ehQ==
-X-CSE-MsgGUID: GliJBp2qTrqFhVTD6cagFA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
-   d="scan'208";a="166251272"
-Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 11 Aug 2025 04:26:19 -0700
-Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ulQfQ-0005oq-2S;
-	Mon, 11 Aug 2025 11:26:16 +0000
-Date: Mon, 11 Aug 2025 19:25:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bhupesh <bhupesh@igalia.com>, akpm@linux-foundation.org
-Cc: oe-kbuild-all@lists.linux.dev, bhupesh@igalia.com,
-	kernel-dev@igalia.com, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	oliver.sang@intel.com, lkp@intel.com, laoar.shao@gmail.com,
-	pmladek@suse.com, rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
-	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
-	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
-	david@redhat.com, viro@zeniv.linux.org.uk, keescook@chromium.org,
-	ebiederm@xmission.com, brauner@kernel.org, jack@suse.cz,
-	mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com,
-	mgorman@suse.de
-Subject: Re: [PATCH v7 3/4] treewide: Replace 'get_task_comm()' with
- 'strscpy_pad()'
-Message-ID: <202508111835.JFL8DgKY-lkp@intel.com>
-References: <20250811064609.918593-4-bhupesh@igalia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Imoov6qF"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-76bd9d723bfso3753250b3a.1;
+        Mon, 11 Aug 2025 06:55:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1754920521; x=1755525321; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8imCO2VyYcb1j5phQLrLVVRIepCgCLAAPrEPMDTG34Y=;
+        b=Imoov6qFfYe6JWyePDTLeGYQMzUPURDbgQ6xQbMenF66PYuGIKCKrB7z7v7154xZfR
+         ibpbn5rYQu12zDQIULlsUUXkS214SBntp/c03uIuWmbU9gLH2rwMkUkcVymLxLP0wwZS
+         EbMdVJt1AOl5oU02MDMnItv++bRD2fkpgmSpUEYlHLZmEopgItgMPBwu3yk/HIJkR1Dm
+         bCDpOR2yYhym2pYxaaj8Sm5e/oRY+Ivkoe8QenF/IqItlH5K7UH02uMzPHPozodtrQTW
+         2wPMSFWyEPKl5f88BeltJZTxG9P8dntA+03rvWt7hgr63uR7gcDmo7xQJuOaOQDTKEbK
+         sYOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754920521; x=1755525321;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8imCO2VyYcb1j5phQLrLVVRIepCgCLAAPrEPMDTG34Y=;
+        b=Fq5No7+QauY7yd+baZrfonZIC5qdMoWdW43zbiTQbYZUJfqvkxtztyt8mSMF2GcwfS
+         LThGFIwsfFVg4v1IL3LOrcGT9Ixm6PwR5e3pXnHiJfcptmqK8Asjuv/fZlMQiKquAuZD
+         v9ogy4hAeLJwjblWpA7qftvDL4UQGulIU3U3Qxei/CUXfs4/LXbNd0QxEfmHA1bfQjys
+         +/VXxYdY9JXtxq+Rva5gqG/DxfICDq1tGniEDC3O/0keMSY5pnzrbkWJf+6SjrMJqiKq
+         79e24CGj9g1rrHXZpQnywnaRgrQyd+6JclU24Jt+BYH+e+zcyw8XmoOsulcEp97Th6Zh
+         sucQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVReWrbp34WBMdKPmM7OvONqidipx9NE9cIUVOAIyKtfN0uX4g3yQqU3WMdzXHFeXG3fBk+EIhpKlU1@vger.kernel.org, AJvYcCXTWQnmKm3/eDryElDiLOSffUvjHqdLEJxXWAVZTUS9tiFERcXgf5a07wwpDehPOUZUUN02mGs7btGayl03@vger.kernel.org, AJvYcCXlNePyvxYK8lcVQc/Sq/WouOB9EWlAIDb88HAWNN214zbE0kp0dW1oO5Tkd6JRKbk7E7gBrJlMkJ0+8A9h7ZTT2A==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwR9l41zz9kusxm1k4o0hhBnHkRPVfuR00BZuOkcdfpqsAhpn8p
+	sHnZznal8oT0E0kYFUmQCSIODq/0R3/qDyv3lL6W5O68pTuUob2bJak5
+X-Gm-Gg: ASbGnctuotCduGXU58xhWrz4BiD/UbWIPMANv+5bt50untsq2MKryq6GpXwLt2jsvsv
+	ztCnD6FXPFkg4+RGLMbZ8avRYsqNebW0mXLMij4eSbtlvEscVCpFOS/q6ZIp8558GhBr8/nLvGK
+	5MDwrdO+OfQeTXb2wAy5AJn6wUTbSE7caaPyflng4f35LIhtowvh+KaKX9cy5ZvU8+sDdfl5l/D
+	EYwgXt1e/kVc0fNjk45tbjKlPrv0x8scVsSHGZUos9Udl2hrL8E/NJkoOp/1XYrOlfWK0qzH0ZW
+	geTmEtn6FnpjhG8pHfLlqDR+BUcCKsdbX12Tuy/GFm/8CN7sXelseuH75mvkE3ILYAwFmWO7+8t
+	zL5EP4YpRRnPyqmdPPXUMYLVlFyKgkV/kkQkDUAmMNP6PTKr1R0uXIQso0A==
+X-Google-Smtp-Source: AGHT+IENxJyKg8e2tAP2l4pvGlyIwFK3L3UGuIA5zM1QHUrPj8V2EFyRgxWPSC9CGd+swIwok6HwCQ==
+X-Received: by 2002:a05:6a20:6a0a:b0:23d:cf88:e31e with SMTP id adf61e73a8af0-2405500e280mr21954086637.8.1754920520924;
+        Mon, 11 Aug 2025 06:55:20 -0700 (PDT)
+Received: from [127.0.1.1] (061092221177.ctinets.com. [61.92.221.177])
+        by smtp.googlemail.com with ESMTPSA id 41be03b00d2f7-b422bb1133fsm23585496a12.56.2025.08.11.06.55.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Aug 2025 06:55:20 -0700 (PDT)
+From: Nick Chan <towinchenmi@gmail.com>
+Subject: [PATCH v8 00/21] drivers/perf: apple_m1: Add Apple A7-A11, T2 SoC
+ support
+Date: Mon, 11 Aug 2025 21:54:32 +0800
+Message-Id: <20250811-apple-cpmu-v8-0-c560ebd9ca46@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250811064609.918593-4-bhupesh@igalia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABj2mWgC/3XPQWrDMBAF0KsErasijSRr3FXvEbqQR6NEEMfGb
+ k1K8N0rB0psly7/wPv8uYuRh8yjeDvcxcBTHnN3LQFfDoLO4XpimWPJAhQ4BVrL0PcXltS3X9I
+ FF0wMprZoRAH9wCnfHmXHj5LPefzshu9H96SX628NrGsmLZVMSD5BIO2teT+1IV9eqWvFUjPBm
+ poNhULRN6bStQFG3FPzPzWFNuwThsgRddpTu6Z2Q+0yOFFQbJ22nvfUrSjghrpCa9ZgKQJytHt
+ aPalVfkOrQgMjQQJw9Hewf1Kn1Yb65ddY7tRU5ECt6TzPP8dqajwGAgAA
+X-Change-ID: 20250211-apple-cpmu-5a5a3da39483
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Janne Grunau <j@jannau.net>, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
+ Sven Peter <sven@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+ linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, 
+ asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Nick Chan <towinchenmi@gmail.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4373; i=towinchenmi@gmail.com;
+ h=from:subject:message-id; bh=+LAKu174f1xhSbC2VdiHkWIZYXz3wYKQPJAQC4FzNig=;
+ b=owEBbQKS/ZANAwAKAQHKCLemxQgkAcsmYgBomfZAzeYECu3q9NXPYbpcYcvwUCODSxZ5a4119
+ wtG+Jdk0MSJAjMEAAEKAB0WIQRLUnh4XJes95w8aIMBygi3psUIJAUCaJn2QAAKCRABygi3psUI
+ JIh2EACPm7iZczQOtNsl2grpezfen4As7n0d//LN0qy3Ld3fMEkyBoW9c5vVIsSm7X03a35pPtq
+ 3a3dIbo5xCsN61OmqliYDNotIpnMXzslz+7jtgdfTdM/qygjXB0q/ZEUQpSUO/Eg/G1JeV5QsAI
+ iBdrY0BaokZnPbg13soaR9dO9r8rWlEpHkzj4XOwiD3gvZ/sFjKSJGnMEsm0MQgxpFVc7cty2sz
+ 9C2QXBvMXSUjFVzQCIPsrj50Y08lfpL72kadxbGolxpe2x4/zfTIGS7oJhz4smU54IMakcwznjl
+ VebELeykl8bm4BDv/m/RPz9KgebuabPPi4/WyQGYkMfj2WTY8RObTmg9l8gbneuM2D132ZruiON
+ QxNcXSlseDl5TBIWRcXkrw0DlHvxAsw+OTqIY/EOV0+ih81PSQHtVxx1IfgKPY7P/U/v0M1GioU
+ FG6UxNVff6odUQu7OLONzY0Twmc7tCgOiwm2BQDHnDLmSgsxHeeVbPmLKrxmQ0mg6QAfNLT1Hcu
+ TEPOsKAm8CR5EO6d6ERkN1hYsrWGOqOR3dPU4fINpCdEkBbt+CouNYtPkdZE5SSL5KKYezyDaOb
+ XPUA3ZpMxMKYaAD7FZEHxwj3kOf39SJxxZ/KMsSRn+T1WkXqR4hZ65wmcz5W4894H9poMX4T6sV
+ aiBYe2hh5qgTWXw==
+X-Developer-Key: i=towinchenmi@gmail.com; a=openpgp;
+ fpr=4B5278785C97ACF79C3C688301CA08B7A6C50824
 
-Hi Bhupesh,
+This series adds support for the CPU PMU in the older Apple A7-A11, T2
+SoCs. These PMUs may have a different event layout, less counters, or
+deliver their interrupts via IRQ instead of a FIQ. Since some of those
+older SoCs support 32-bit EL0, counting for 32-bit EL0 also need to
+be enabled by the driver where applicable.
 
-kernel test robot noticed the following build errors:
+Patch 1 adds the DT bindings.
+Patch 2-7 prepares the driver to allow adding support for those
+older SoCs.
+Patch 8-12 adds support for the older SoCs.
+Patch 13-21 are the DT changes.
 
-[auto build test ERROR on next-20250808]
-[cannot apply to trace/for-next tip/sched/core brauner-vfs/vfs.all linus/master v6.17-rc1 v6.16 v6.16-rc7 v6.17-rc1]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Signed-off-by: Nick Chan <towinchenmi@gmail.com>
+---
+Changes in v8:
+- Rebased on top of v6.17-rc1
+- Collect Ivaylo's Tested-by
+- Drop #define PMCR1_COUNT_A64_EL3_0_7
+- Reword reason to not initialize PMUv3 remap in EL1
+- Link to v7: https://lore.kernel.org/r/20250510-apple-cpmu-v7-0-bd505cb6c520@gmail.com
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bhupesh/exec-Remove-obsolete-comments/20250811-144920
-base:   next-20250808
-patch link:    https://lore.kernel.org/r/20250811064609.918593-4-bhupesh%40igalia.com
-patch subject: [PATCH v7 3/4] treewide: Replace 'get_task_comm()' with 'strscpy_pad()'
-config: sh-randconfig-002-20250811 (https://download.01.org/0day-ci/archive/20250811/202508111835.JFL8DgKY-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250811/202508111835.JFL8DgKY-lkp@intel.com/reproduce)
+Changes in v7:
+- Fix a W=1 compile warning in apple_pmu_get_event_idx() as appearently using GENMASK()
+in a function prototype causes a warning in GCC.
+- Link to v6: https://lore.kernel.org/r/20250407-apple-cpmu-v6-0-ae8c2f225c1f@gmail.com
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202508111835.JFL8DgKY-lkp@intel.com/
+Changes in v6:
+- Rebased on top of v6.15-rc1 (Conflict with FEAT_PMUv3 support for KVM on Apple Hardware)
+- Add patch to skip initialization of PMUv3 remap in EL1 even though not strictly needed
+- Include DT patches
+- Link to v5: https://lore.kernel.org/r/20250228-apple-cpmu-v5-0-9e124cd28ed4@gmail.com
 
-All errors (new ones prefixed by >>):
+Changes in v5:
+- Slightly change "drivers/perf: apple_m1: Add Apple A11 Support", to keep things in
+chronological order.
+- Link to v4: https://lore.kernel.org/r/20250214-apple-cpmu-v4-0-ffca0e45147e@gmail.com
 
-   In file included from include/linux/bitmap.h:13,
-                    from include/linux/cpumask.h:12,
-                    from include/linux/smp.h:13,
-                    from include/linux/lockdep.h:14,
-                    from include/linux/spinlock.h:63,
-                    from include/linux/mmzone.h:8,
-                    from include/linux/gfp.h:7,
-                    from include/linux/umh.h:4,
-                    from include/linux/kmod.h:9,
-                    from include/linux/module.h:18,
-                    from net/netfilter/nf_tables_api.c:8:
-   net/netfilter/nf_tables_api.c: In function 'nf_tables_fill_gen_info':
->> include/linux/string.h:116:50: error: passing argument 3 of 'nla_put_string' makes pointer from integer without a cast [-Wint-conversion]
-     116 | #define sized_strscpy_pad(dest, src, count)     ({                      \
-         |                                                 ~^~~~~~~~~~~~~~~~~~~~~~~~
-         |                                                  |
-         |                                                  ssize_t {aka int}
-     117 |         char *__dst = (dest);                                           \
-         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     118 |         const char *__src = (src);                                      \
-         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     119 |         const size_t __count = (count);                                 \
-         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     120 |         ssize_t __wrote;                                                \
-         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     121 |                                                                         \
-         |                                                                         ~
-     122 |         __wrote = sized_strscpy(__dst, __src, __count);                 \
-         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     123 |         if (__wrote >= 0 && __wrote < __count)                          \
-         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     124 |                 memset(__dst + __wrote + 1, 0, __count - __wrote - 1);  \
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     125 |         __wrote;                                                        \
-         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     126 | })
-         | ~~                                                
-   include/linux/string.h:86:9: note: in expansion of macro 'sized_strscpy_pad'
-      86 |         sized_strscpy_pad(dst, src, sizeof(dst) + __must_be_array(dst) +        \
-         |         ^~~~~~~~~~~~~~~~~
-   include/linux/args.h:25:24: note: in expansion of macro '__strscpy_pad0'
-      25 | #define __CONCAT(a, b) a ## b
-         |                        ^
-   include/linux/args.h:26:27: note: in expansion of macro '__CONCAT'
-      26 | #define CONCATENATE(a, b) __CONCAT(a, b)
-         |                           ^~~~~~~~
-   include/linux/string.h:149:9: note: in expansion of macro 'CONCATENATE'
-     149 |         CONCATENATE(__strscpy_pad, COUNT_ARGS(__VA_ARGS__))(dst, src, __VA_ARGS__)
-         |         ^~~~~~~~~~~
-   net/netfilter/nf_tables_api.c:9661:53: note: in expansion of macro 'strscpy_pad'
-    9661 |             nla_put_string(skb, NFTA_GEN_PROC_NAME, strscpy_pad(buf, current->comm)))
-         |                                                     ^~~~~~~~~~~
-   In file included from include/linux/netfilter/nfnetlink.h:7,
-                    from net/netfilter/nf_tables_api.c:17:
-   include/net/netlink.h:1655:46: note: expected 'const char *' but argument is of type 'ssize_t' {aka 'int'}
-    1655 |                                  const char *str)
-         |                                  ~~~~~~~~~~~~^~~
+Changes in v4:
+- Support per-implementation event attr group
+- Fix Apple A7 event attr groups
+- Link to v3: https://lore.kernel.org/r/20250213-apple-cpmu-v3-0-be7f8aded81f@gmail.com
 
+Changes in v3:
+- Configure PMC8 and PMC9 for 32-bit EL0
+- Remove redundant _common suffix from shared functions
+- Link to v2: https://lore.kernel.org/r/20250213-apple-cpmu-v2-0-87b361932e88@gmail.com
 
-vim +/nla_put_string +116 include/linux/string.h
+Changes in v2:
+- Remove unused flags parameter from apple_pmu_init_common()
+- Link to v1: https://lore.kernel.org/r/20250212-apple-cpmu-v1-0-f8c7f2ac1743@gmail.com
 
-e6584c3964f2ff Kees Cook        2023-09-20   74  
-e6584c3964f2ff Kees Cook        2023-09-20   75  /*
-e6584c3964f2ff Kees Cook        2023-09-20   76   * The 2 argument style can only be used when dst is an array with a
-e6584c3964f2ff Kees Cook        2023-09-20   77   * known size.
-e6584c3964f2ff Kees Cook        2023-09-20   78   */
-e6584c3964f2ff Kees Cook        2023-09-20   79  #define __strscpy0(dst, src, ...)	\
-559048d156ff33 Kees Cook        2024-08-05   80  	sized_strscpy(dst, src, sizeof(dst) + __must_be_array(dst) +	\
-559048d156ff33 Kees Cook        2024-08-05   81  				__must_be_cstr(dst) + __must_be_cstr(src))
-559048d156ff33 Kees Cook        2024-08-05   82  #define __strscpy1(dst, src, size)	\
-559048d156ff33 Kees Cook        2024-08-05   83  	sized_strscpy(dst, src, size + __must_be_cstr(dst) + __must_be_cstr(src))
-e6584c3964f2ff Kees Cook        2023-09-20   84  
-8366d124ec937c Kees Cook        2024-02-02   85  #define __strscpy_pad0(dst, src, ...)	\
-559048d156ff33 Kees Cook        2024-08-05   86  	sized_strscpy_pad(dst, src, sizeof(dst) + __must_be_array(dst) +	\
-559048d156ff33 Kees Cook        2024-08-05   87  				    __must_be_cstr(dst) + __must_be_cstr(src))
-559048d156ff33 Kees Cook        2024-08-05   88  #define __strscpy_pad1(dst, src, size)	\
-559048d156ff33 Kees Cook        2024-08-05   89  	sized_strscpy_pad(dst, src, size + __must_be_cstr(dst) + __must_be_cstr(src))
-458a3bf82df4fe Tobin C. Harding 2019-04-05   90  
-e6584c3964f2ff Kees Cook        2023-09-20   91  /**
-e6584c3964f2ff Kees Cook        2023-09-20   92   * strscpy - Copy a C-string into a sized buffer
-e6584c3964f2ff Kees Cook        2023-09-20   93   * @dst: Where to copy the string to
-e6584c3964f2ff Kees Cook        2023-09-20   94   * @src: Where to copy the string from
-e6584c3964f2ff Kees Cook        2023-09-20   95   * @...: Size of destination buffer (optional)
-e6584c3964f2ff Kees Cook        2023-09-20   96   *
-e6584c3964f2ff Kees Cook        2023-09-20   97   * Copy the source string @src, or as much of it as fits, into the
-e6584c3964f2ff Kees Cook        2023-09-20   98   * destination @dst buffer. The behavior is undefined if the string
-e6584c3964f2ff Kees Cook        2023-09-20   99   * buffers overlap. The destination @dst buffer is always NUL terminated,
-e6584c3964f2ff Kees Cook        2023-09-20  100   * unless it's zero-sized.
-e6584c3964f2ff Kees Cook        2023-09-20  101   *
-e6584c3964f2ff Kees Cook        2023-09-20  102   * The size argument @... is only required when @dst is not an array, or
-e6584c3964f2ff Kees Cook        2023-09-20  103   * when the copy needs to be smaller than sizeof(@dst).
-e6584c3964f2ff Kees Cook        2023-09-20  104   *
-e6584c3964f2ff Kees Cook        2023-09-20  105   * Preferred to strncpy() since it always returns a valid string, and
-e6584c3964f2ff Kees Cook        2023-09-20  106   * doesn't unnecessarily force the tail of the destination buffer to be
-e6584c3964f2ff Kees Cook        2023-09-20  107   * zero padded. If padding is desired please use strscpy_pad().
-e6584c3964f2ff Kees Cook        2023-09-20  108   *
-e6584c3964f2ff Kees Cook        2023-09-20  109   * Returns the number of characters copied in @dst (not including the
-e6584c3964f2ff Kees Cook        2023-09-20  110   * trailing %NUL) or -E2BIG if @size is 0 or the copy from @src was
-e6584c3964f2ff Kees Cook        2023-09-20  111   * truncated.
-e6584c3964f2ff Kees Cook        2023-09-20  112   */
-e6584c3964f2ff Kees Cook        2023-09-20  113  #define strscpy(dst, src, ...)	\
-e6584c3964f2ff Kees Cook        2023-09-20  114  	CONCATENATE(__strscpy, COUNT_ARGS(__VA_ARGS__))(dst, src, __VA_ARGS__)
-458a3bf82df4fe Tobin C. Harding 2019-04-05  115  
-8366d124ec937c Kees Cook        2024-02-02 @116  #define sized_strscpy_pad(dest, src, count)	({			\
-8366d124ec937c Kees Cook        2024-02-02  117  	char *__dst = (dest);						\
-8366d124ec937c Kees Cook        2024-02-02  118  	const char *__src = (src);					\
-8366d124ec937c Kees Cook        2024-02-02  119  	const size_t __count = (count);					\
-8366d124ec937c Kees Cook        2024-02-02  120  	ssize_t __wrote;						\
-8366d124ec937c Kees Cook        2024-02-02  121  									\
-8366d124ec937c Kees Cook        2024-02-02  122  	__wrote = sized_strscpy(__dst, __src, __count);			\
-8366d124ec937c Kees Cook        2024-02-02  123  	if (__wrote >= 0 && __wrote < __count)				\
-8366d124ec937c Kees Cook        2024-02-02  124  		memset(__dst + __wrote + 1, 0, __count - __wrote - 1);	\
-8366d124ec937c Kees Cook        2024-02-02  125  	__wrote;							\
-8366d124ec937c Kees Cook        2024-02-02  126  })
-8366d124ec937c Kees Cook        2024-02-02  127  
+---
+Nick Chan (21):
+      dt-bindings: arm: pmu: Add Apple A7-A11 SoC CPU PMU compatibles
+      drivers/perf: apple_m1: Only init PMUv3 remap when EL2 is available
+      drivers/perf: apple_m1: Support per-implementation event tables
+      drivers/perf: apple_m1: Support a per-implementation number of counters
+      drivers/perf: apple_m1: Support configuring counters for 32-bit EL0
+      drivers/perf: apple_m1: Support per-implementation PMU startup
+      drivers/perf: apple_m1: Support per-implementation event attr group
+      drivers/perf: apple_m1: Add Apple A7 support
+      drivers/perf: apple_m1: Add Apple A8/A8X support
+      drivers/perf: apple_m1: Add A9/A9X support
+      drivers/perf: apple_m1: Add Apple A10/A10X/T2 Support
+      drivers/perf: apple_m1: Add Apple A11 Support
+      arm64: dts: apple: s5l8960x: Add CPU PMU nodes
+      arm64: dts: apple: t7000: Add CPU PMU nodes
+      arm64: dts: apple: t7001: Add CPU PMU nodes
+      arm64: dts: apple: s800-0-3: Add CPU PMU nodes
+      arm64: dts: apple: s8001: Add CPU PMU nodes
+      arm64: dts: apple: t8010: Add CPU PMU nodes
+      arm64: dts: apple: t8011: Add CPU PMU nodes
+      arm64: dts: apple: t8012: Add CPU PMU nodes
+      arm64: dts: apple: t8015: Add CPU PMU nodes
 
+ Documentation/devicetree/bindings/arm/pmu.yaml |   6 +
+ arch/arm64/boot/dts/apple/s5l8960x.dtsi        |   8 +
+ arch/arm64/boot/dts/apple/s800-0-3.dtsi        |   8 +
+ arch/arm64/boot/dts/apple/s8001.dtsi           |   8 +
+ arch/arm64/boot/dts/apple/t7000.dtsi           |   8 +
+ arch/arm64/boot/dts/apple/t7001.dtsi           |   9 +
+ arch/arm64/boot/dts/apple/t8010.dtsi           |   8 +
+ arch/arm64/boot/dts/apple/t8011.dtsi           |   9 +
+ arch/arm64/boot/dts/apple/t8012.dtsi           |   8 +
+ arch/arm64/boot/dts/apple/t8015.dtsi           |  24 +
+ arch/arm64/include/asm/apple_m1_pmu.h          |   2 +
+ drivers/perf/apple_m1_cpu_pmu.c                | 807 +++++++++++++++++++++++--
+ 12 files changed, 870 insertions(+), 35 deletions(-)
+---
+base-commit: 8f5ae30d69d7543eee0d70083daf4de8fe15d585
+change-id: 20250211-apple-cpmu-5a5a3da39483
+
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Nick Chan <towinchenmi@gmail.com>
+
