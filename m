@@ -1,161 +1,223 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2358223DFF
-	for <linux-perf-users@vger.kernel.org>; Mon, 11 Aug 2025 09:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA202D2387;
+	Mon, 11 Aug 2025 11:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754905302; cv=none; b=KPKZj8MEKddNi0yPV/j0yfGg2ZwR+uMy9LFP5PL3HdGkiQOTCnO+yMvOgadN9vHBkdmCX/gz48GoGNsXPYdjSp2XCCGr2Ra/y0phdCA99hfV2T7t0uIA1gCJCacreKUjAZyjQY884bUuOWY1RYR3v7uUBmC3XF8TXSiQc6vpz70=
+	t=1754911588; cv=none; b=WayCHd7fL/crFC0in0rxmPgtOeTxPLqEHziYKFzN7JhoOLMdQeO3+Znmy+8gO+IYnqNlBPPz8nRt4Ml/NTkpk+TtOVLMHLnzkWjrajMWl1kJef8+/RLNQvH6vioc6+rEA57ZfKFNBVz3rBleCeZNueMz+qxVcBh6SbgF1AS4WXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754905302; c=relaxed/simple;
-	bh=FegSiZ/uTFpjfSl6w3mw++RAIeSoUOFcA93L/NfHQZ8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CbbeAHiSk582gh0Xlm04fViQ/8vYRj31OXXdj71ecJGbOnXWJACWF4/SxJ1P05tUEQyf8iYv+OSbWKzYOgHxQpyiY+MnYRka6sQrly1bPAAOyeqgByaMBAasBMhAdz8/RrTMvqwrb7ESlqLXlxwNVYiFt0yfMcwYmWCuy5P+Vg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=AbljZKnb; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1754911588; c=relaxed/simple;
+	bh=TDDUh3YZA77tPJQoxh3MNl7VnFCf8Gr5sBYtPCwEosw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VI2ySLhJh7qtvh7uIC+9Zmh0GElsZ97IeAruYvw9eGYNrrFC7I5Qmk+XwEyVdDhrKvqkq9W5gVV6iT39ApQG7d3YEkYnU7tDRk7HN00qLenjVv6dfZdYpFxwMJmQ1IH29guModv4s6pjVOUyMU2x/S2ZBd5b5QRDfIOJDXJeCyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YjJGXcdx; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="AbljZKnb"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-55b8a0f36fcso4470996e87.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 11 Aug 2025 02:41:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1754905299; x=1755510099; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cy59ORjyXtIVFFgfYeqm1wmJyEdmnPmaEOXMVqFckn4=;
-        b=AbljZKnbDcKb7rjVsQSH4FwsC4jB1y+FTmw/znt5dyJFeR20/8cxkzVFF/phMbgXHR
-         F/3fALREVG+MqUobCe+7Oo9lcbH8ldP+EhGd0Lxh2okKC5MG+bY9fS6i47YN0+WlMsv0
-         B3z66gns21qhGlLBx54jv5p9WX3Nw+HFh+y+3/l8VKAj/LeapLFaSklMaYvFH+vceozn
-         V8RFVeE8mESbVKKznQbi0DGzzjmeAILEAfjOaXuQbHDHxR2CEUr9mbCI20H9DFBh30hX
-         KDx9dUrYl7f/DEnbqFYaOQqhzpD3lBu8sSDXYOzmk74PjPtSewPQprXnzy1zcZOYXU7d
-         3wsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754905299; x=1755510099;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Cy59ORjyXtIVFFgfYeqm1wmJyEdmnPmaEOXMVqFckn4=;
-        b=v33XgB/CnVllmr2iueO+sOKU2wkgKyzizkdHDU+LAF9GWU8SEeg3wyxaGmXbYC9clu
-         0XkFiKBo2T6QCGcE+2y618SF54jISF4gCE1DpiiP4jbH9562mhulrEZY5Zv8AilWGkto
-         loxtJovSS1o/D81t+OxKMcp2QLFNL0nnsPkzARON+UxLwoRSsoowdOt7ei608676IA+Q
-         jJIX7kTwA4AIs/5X0KUSAkf2pMNys/jkB8wxr01zM1MtU1a4xS9vwY6PDi4Xo6+l0Bst
-         9J0evqysJdxBCtbYw5WKUYkw6YL5+d6YNANkGzuCVNWQV09jUok+UsJ22lIz1z/4lwov
-         81EA==
-X-Forwarded-Encrypted: i=1; AJvYcCXCQnMCjpJBHUkOWPSjbQqJk8G2SOqO2Sq3/a1EOkWowoUNnLqZ1kkA8suZ87MTksocQHZ3ofr/ORJz7ireM9/S@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFzPKJTMwBMn5IhB142tACemktE5f740eDcoh0Wx8LUQB5Zkff
-	Mom0FA6Msib3SjuiopNgJCkrKDPCeEkg7lRuFANIomF69gBkz4sLLvBDt06HAzjaXC5fYQXw8wy
-	FPmxnKpWf3yYJ30UHqF9cnO7cX/VuQspHTWrRq/6ZNg==
-X-Gm-Gg: ASbGncv34wO5+BhbjNuQ5L9d09xmF7X2br/n4uqiVuBsunkNj6s6ywsFjuF3bNRoWrk
-	K+8YMH9egBQB8cgJMGndMTmN/ggkUfrLlABkL9c5sHrmWU0s6n4FBmw2gFfeVpepX+aAKsGWJRo
-	3qap/CLSKSChPdhJSxRMuVoCfZ+gU8L3n97EzjVbdrgZYkaNorvQbIYDDNIeTCLAAkGOi8I1ZGe
-	KQsZQyLfICSB+N3ty0=
-X-Google-Smtp-Source: AGHT+IGmUn3ZM7jBX7D1YyhKjvaPN2e4dHa6K9n92Zz8n8QotO81v1sGyRseqSkkKtsFNnDYwv8ehf88vLMTTISTp9c=
-X-Received: by 2002:a05:6512:2316:b0:553:3a0a:1892 with SMTP id
- 2adb3069b0e04-55cc008637dmr3351518e87.15.1754905298946; Mon, 11 Aug 2025
- 02:41:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YjJGXcdx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754911587; x=1786447587;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TDDUh3YZA77tPJQoxh3MNl7VnFCf8Gr5sBYtPCwEosw=;
+  b=YjJGXcdxL5zQSExJWrtTsNozjS9Hogm3eiXSygXbJXpDjSJ/fgoQJ4o5
+   e9mKCucVL5JySP+dwMcgcwV52LRLNbToxlYIy3/tP+vB25U7yIatDxaqx
+   E2NUyMVigt/xJ/PZ3W08bHPWj9DHcNPjkmCfDDixmFl4CXf5RZKap7hAe
+   Ip1oSA1zAHjjFdF4hhFZxI4yhtm3+ozwIBH9KGTUxT0/x2GNeoIVJOXJ7
+   VjKhm5zF6YxzNxfAfzeOrEfwTHDLrKBJMi0KmeyEFqlsKAvFMiAb+Ucjx
+   d9VEF0N10HPl2gQ75iLHw/sWw1a7nHuK4U1ZiQjlA4gUVag2gn8SYX5mr
+   g==;
+X-CSE-ConnectionGUID: voZBCBAmRC6Hf4fakHTmjA==
+X-CSE-MsgGUID: 3AplfPQlSn+PjkJd5sl1JQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="56367441"
+X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
+   d="scan'208";a="56367441"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 04:26:26 -0700
+X-CSE-ConnectionGUID: XMSe7Xf8Rv6ifGt2ii8ehQ==
+X-CSE-MsgGUID: GliJBp2qTrqFhVTD6cagFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
+   d="scan'208";a="166251272"
+Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
+  by fmviesa009.fm.intel.com with ESMTP; 11 Aug 2025 04:26:19 -0700
+Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ulQfQ-0005oq-2S;
+	Mon, 11 Aug 2025 11:26:16 +0000
+Date: Mon, 11 Aug 2025 19:25:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bhupesh <bhupesh@igalia.com>, akpm@linux-foundation.org
+Cc: oe-kbuild-all@lists.linux.dev, bhupesh@igalia.com,
+	kernel-dev@igalia.com, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	oliver.sang@intel.com, lkp@intel.com, laoar.shao@gmail.com,
+	pmladek@suse.com, rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
+	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
+	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
+	david@redhat.com, viro@zeniv.linux.org.uk, keescook@chromium.org,
+	ebiederm@xmission.com, brauner@kernel.org, jack@suse.cz,
+	mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com,
+	mgorman@suse.de
+Subject: Re: [PATCH v7 3/4] treewide: Replace 'get_task_comm()' with
+ 'strscpy_pad()'
+Message-ID: <202508111835.JFL8DgKY-lkp@intel.com>
+References: <20250811064609.918593-4-bhupesh@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250805193955.798277-1-jesse@rivosinc.com> <20250805193955.798277-6-jesse@rivosinc.com>
-In-Reply-To: <20250805193955.798277-6-jesse@rivosinc.com>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Mon, 11 Aug 2025 15:11:27 +0530
-X-Gm-Features: Ac12FXzX2WBI8Efn8ZEvJJb1ujk-ZIhK3W3ZYl12yeFcZ1SpyaqkJna1l4oNLS8
-Message-ID: <CAK9=C2X2J4ROJ7nKB0hcD9dVav7ZMFWw2Qy+GEsmYN_Tt8DxPQ@mail.gmail.com>
-Subject: Re: [PATCH 5/8] riscv: hw_breakpoint: Use icount for single stepping
-To: Jesse Taube <jesse@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Oleg Nesterov <oleg@redhat.com>, Kees Cook <kees@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"Liang, Kan" <kan.liang@linux.intel.com>, Shuah Khan <shuah@kernel.org>, 
-	Himanshu Chauhan <hchauhan@ventanamicro.com>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Samuel Holland <samuel.holland@sifive.com>, Conor Dooley <conor.dooley@microchip.com>, 
-	Deepak Gupta <debug@rivosinc.com>, Andrew Jones <ajones@ventanamicro.com>, 
-	Atish Patra <atishp@rivosinc.com>, Mayuresh Chitale <mchitale@ventanamicro.com>, 
-	Evan Green <evan@rivosinc.com>, WangYuli <wangyuli@uniontech.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Nam Cao <namcao@linutronix.de>, 
-	Yunhui Cui <cuiyunhui@bytedance.com>, Joel Granados <joel.granados@kernel.org>, 
-	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Celeste Liu <coelacanthushex@gmail.com>, 
-	Chunyan Zhang <zhangchunyan@iscas.ac.cn>, Nylon Chen <nylon.chen@sifive.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Joey Gouly <joey.gouly@arm.com>, 
-	Akihiko Odaki <akihiko.odaki@daynix.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250811064609.918593-4-bhupesh@igalia.com>
 
-Hi Jesse,
+Hi Bhupesh,
 
-On Wed, Aug 6, 2025 at 1:10=E2=80=AFAM Jesse Taube <jesse@rivosinc.com> wro=
-te:
->
-> The Sdtrig RISC-V ISA extension does not have a resume flag for
-> returning to and executing the instruction at the breakpoint.
-> To avoid skipping the instruction or looping, it is necessary to remove
-> the hardware breakpoint and single step. Use the icount feature of
-> Sdtrig to accomplish this. Use icount as default with an option to allow
-> software-based single stepping when hardware or SBI does not have
-> icount functionality, as it may cause unwanted side effects when reading
-> the instruction from memory.
->
-> Signed-off-by: Jesse Taube <jesse@rivosinc.com>
-> ---
-> OpenSBI implementation of sbi_debug_read_triggers does not return the
-> updated CSR values. There needs to be a check for working
-> sbi_debug_read_triggers before this works.
->
-> https://lists.riscv.org/g/tech-prs/message/1476
->
-> RFC -> V1:
->  - Add dbtr_mode to rv_init_icount_trigger
->  - Add icount_triggered to check which breakpoint was triggered
->  - Fix typo: s/affects/effects
->  - Move HW_BREAKPOINT_COMPUTE_STEP to Platform type
-> ---
->  arch/riscv/Kconfig                |  11 ++
->  arch/riscv/kernel/hw_breakpoint.c | 179 +++++++++++++++++++++++++++---
->  2 files changed, 172 insertions(+), 18 deletions(-)
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index fd8b62cdc6f5..37f01ed199f3 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -546,6 +546,17 @@ config RISCV_COMBO_SPINLOCKS
->
->  endchoice
->
-> +config HW_BREAKPOINT_COMPUTE_STEP
-> +       bool "Allow computing hardware breakpoint step address"
-> +       default n
-> +       depends on HAVE_HW_BREAKPOINT
-> +       help
-> +         Select this option if hardware breakpoints are desired, but
-> +         hardware or SBI does not have icount functionality. This may ca=
-use
-> +         unwanted side effects when reading the instruction from memory.
-> +
-> +         If unsure, say N.
-> +
+kernel test robot noticed the following build errors:
 
-We expect the same kernel image to work on a platform with
-icount triggers and without icount triggers.
+[auto build test ERROR on next-20250808]
+[cannot apply to trace/for-next tip/sched/core brauner-vfs/vfs.all linus/master v6.17-rc1 v6.16 v6.16-rc7 v6.17-rc1]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Please drop this kconfig option. The decision of falling back to
-computing hardware breakpoint step address should be at
-boot-time and not compile-time.
+url:    https://github.com/intel-lab-lkp/linux/commits/Bhupesh/exec-Remove-obsolete-comments/20250811-144920
+base:   next-20250808
+patch link:    https://lore.kernel.org/r/20250811064609.918593-4-bhupesh%40igalia.com
+patch subject: [PATCH v7 3/4] treewide: Replace 'get_task_comm()' with 'strscpy_pad()'
+config: sh-randconfig-002-20250811 (https://download.01.org/0day-ci/archive/20250811/202508111835.JFL8DgKY-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250811/202508111835.JFL8DgKY-lkp@intel.com/reproduce)
 
-Regards,
-Anup
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202508111835.JFL8DgKY-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/bitmap.h:13,
+                    from include/linux/cpumask.h:12,
+                    from include/linux/smp.h:13,
+                    from include/linux/lockdep.h:14,
+                    from include/linux/spinlock.h:63,
+                    from include/linux/mmzone.h:8,
+                    from include/linux/gfp.h:7,
+                    from include/linux/umh.h:4,
+                    from include/linux/kmod.h:9,
+                    from include/linux/module.h:18,
+                    from net/netfilter/nf_tables_api.c:8:
+   net/netfilter/nf_tables_api.c: In function 'nf_tables_fill_gen_info':
+>> include/linux/string.h:116:50: error: passing argument 3 of 'nla_put_string' makes pointer from integer without a cast [-Wint-conversion]
+     116 | #define sized_strscpy_pad(dest, src, count)     ({                      \
+         |                                                 ~^~~~~~~~~~~~~~~~~~~~~~~~
+         |                                                  |
+         |                                                  ssize_t {aka int}
+     117 |         char *__dst = (dest);                                           \
+         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     118 |         const char *__src = (src);                                      \
+         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     119 |         const size_t __count = (count);                                 \
+         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     120 |         ssize_t __wrote;                                                \
+         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     121 |                                                                         \
+         |                                                                         ~
+     122 |         __wrote = sized_strscpy(__dst, __src, __count);                 \
+         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     123 |         if (__wrote >= 0 && __wrote < __count)                          \
+         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     124 |                 memset(__dst + __wrote + 1, 0, __count - __wrote - 1);  \
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     125 |         __wrote;                                                        \
+         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     126 | })
+         | ~~                                                
+   include/linux/string.h:86:9: note: in expansion of macro 'sized_strscpy_pad'
+      86 |         sized_strscpy_pad(dst, src, sizeof(dst) + __must_be_array(dst) +        \
+         |         ^~~~~~~~~~~~~~~~~
+   include/linux/args.h:25:24: note: in expansion of macro '__strscpy_pad0'
+      25 | #define __CONCAT(a, b) a ## b
+         |                        ^
+   include/linux/args.h:26:27: note: in expansion of macro '__CONCAT'
+      26 | #define CONCATENATE(a, b) __CONCAT(a, b)
+         |                           ^~~~~~~~
+   include/linux/string.h:149:9: note: in expansion of macro 'CONCATENATE'
+     149 |         CONCATENATE(__strscpy_pad, COUNT_ARGS(__VA_ARGS__))(dst, src, __VA_ARGS__)
+         |         ^~~~~~~~~~~
+   net/netfilter/nf_tables_api.c:9661:53: note: in expansion of macro 'strscpy_pad'
+    9661 |             nla_put_string(skb, NFTA_GEN_PROC_NAME, strscpy_pad(buf, current->comm)))
+         |                                                     ^~~~~~~~~~~
+   In file included from include/linux/netfilter/nfnetlink.h:7,
+                    from net/netfilter/nf_tables_api.c:17:
+   include/net/netlink.h:1655:46: note: expected 'const char *' but argument is of type 'ssize_t' {aka 'int'}
+    1655 |                                  const char *str)
+         |                                  ~~~~~~~~~~~~^~~
+
+
+vim +/nla_put_string +116 include/linux/string.h
+
+e6584c3964f2ff Kees Cook        2023-09-20   74  
+e6584c3964f2ff Kees Cook        2023-09-20   75  /*
+e6584c3964f2ff Kees Cook        2023-09-20   76   * The 2 argument style can only be used when dst is an array with a
+e6584c3964f2ff Kees Cook        2023-09-20   77   * known size.
+e6584c3964f2ff Kees Cook        2023-09-20   78   */
+e6584c3964f2ff Kees Cook        2023-09-20   79  #define __strscpy0(dst, src, ...)	\
+559048d156ff33 Kees Cook        2024-08-05   80  	sized_strscpy(dst, src, sizeof(dst) + __must_be_array(dst) +	\
+559048d156ff33 Kees Cook        2024-08-05   81  				__must_be_cstr(dst) + __must_be_cstr(src))
+559048d156ff33 Kees Cook        2024-08-05   82  #define __strscpy1(dst, src, size)	\
+559048d156ff33 Kees Cook        2024-08-05   83  	sized_strscpy(dst, src, size + __must_be_cstr(dst) + __must_be_cstr(src))
+e6584c3964f2ff Kees Cook        2023-09-20   84  
+8366d124ec937c Kees Cook        2024-02-02   85  #define __strscpy_pad0(dst, src, ...)	\
+559048d156ff33 Kees Cook        2024-08-05   86  	sized_strscpy_pad(dst, src, sizeof(dst) + __must_be_array(dst) +	\
+559048d156ff33 Kees Cook        2024-08-05   87  				    __must_be_cstr(dst) + __must_be_cstr(src))
+559048d156ff33 Kees Cook        2024-08-05   88  #define __strscpy_pad1(dst, src, size)	\
+559048d156ff33 Kees Cook        2024-08-05   89  	sized_strscpy_pad(dst, src, size + __must_be_cstr(dst) + __must_be_cstr(src))
+458a3bf82df4fe Tobin C. Harding 2019-04-05   90  
+e6584c3964f2ff Kees Cook        2023-09-20   91  /**
+e6584c3964f2ff Kees Cook        2023-09-20   92   * strscpy - Copy a C-string into a sized buffer
+e6584c3964f2ff Kees Cook        2023-09-20   93   * @dst: Where to copy the string to
+e6584c3964f2ff Kees Cook        2023-09-20   94   * @src: Where to copy the string from
+e6584c3964f2ff Kees Cook        2023-09-20   95   * @...: Size of destination buffer (optional)
+e6584c3964f2ff Kees Cook        2023-09-20   96   *
+e6584c3964f2ff Kees Cook        2023-09-20   97   * Copy the source string @src, or as much of it as fits, into the
+e6584c3964f2ff Kees Cook        2023-09-20   98   * destination @dst buffer. The behavior is undefined if the string
+e6584c3964f2ff Kees Cook        2023-09-20   99   * buffers overlap. The destination @dst buffer is always NUL terminated,
+e6584c3964f2ff Kees Cook        2023-09-20  100   * unless it's zero-sized.
+e6584c3964f2ff Kees Cook        2023-09-20  101   *
+e6584c3964f2ff Kees Cook        2023-09-20  102   * The size argument @... is only required when @dst is not an array, or
+e6584c3964f2ff Kees Cook        2023-09-20  103   * when the copy needs to be smaller than sizeof(@dst).
+e6584c3964f2ff Kees Cook        2023-09-20  104   *
+e6584c3964f2ff Kees Cook        2023-09-20  105   * Preferred to strncpy() since it always returns a valid string, and
+e6584c3964f2ff Kees Cook        2023-09-20  106   * doesn't unnecessarily force the tail of the destination buffer to be
+e6584c3964f2ff Kees Cook        2023-09-20  107   * zero padded. If padding is desired please use strscpy_pad().
+e6584c3964f2ff Kees Cook        2023-09-20  108   *
+e6584c3964f2ff Kees Cook        2023-09-20  109   * Returns the number of characters copied in @dst (not including the
+e6584c3964f2ff Kees Cook        2023-09-20  110   * trailing %NUL) or -E2BIG if @size is 0 or the copy from @src was
+e6584c3964f2ff Kees Cook        2023-09-20  111   * truncated.
+e6584c3964f2ff Kees Cook        2023-09-20  112   */
+e6584c3964f2ff Kees Cook        2023-09-20  113  #define strscpy(dst, src, ...)	\
+e6584c3964f2ff Kees Cook        2023-09-20  114  	CONCATENATE(__strscpy, COUNT_ARGS(__VA_ARGS__))(dst, src, __VA_ARGS__)
+458a3bf82df4fe Tobin C. Harding 2019-04-05  115  
+8366d124ec937c Kees Cook        2024-02-02 @116  #define sized_strscpy_pad(dest, src, count)	({			\
+8366d124ec937c Kees Cook        2024-02-02  117  	char *__dst = (dest);						\
+8366d124ec937c Kees Cook        2024-02-02  118  	const char *__src = (src);					\
+8366d124ec937c Kees Cook        2024-02-02  119  	const size_t __count = (count);					\
+8366d124ec937c Kees Cook        2024-02-02  120  	ssize_t __wrote;						\
+8366d124ec937c Kees Cook        2024-02-02  121  									\
+8366d124ec937c Kees Cook        2024-02-02  122  	__wrote = sized_strscpy(__dst, __src, __count);			\
+8366d124ec937c Kees Cook        2024-02-02  123  	if (__wrote >= 0 && __wrote < __count)				\
+8366d124ec937c Kees Cook        2024-02-02  124  		memset(__dst + __wrote + 1, 0, __count - __wrote - 1);	\
+8366d124ec937c Kees Cook        2024-02-02  125  	__wrote;							\
+8366d124ec937c Kees Cook        2024-02-02  126  })
+8366d124ec937c Kees Cook        2024-02-02  127  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
