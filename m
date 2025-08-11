@@ -1,22 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23E161A314B;
-	Mon, 11 Aug 2025 14:10:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 124391A5BBA;
+	Mon, 11 Aug 2025 14:10:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754921426; cv=none; b=ry2TIJxA+ITD8w6Z8pApPweu96OIeyAjTtaM6ZBZbSsfBJwBeNPvM5+pq2JneSrt1wZvYW2ooH/5N5jiLS+6R207pnOJFT3VZoDC5NPHrGtOcOdKi1MCIpBNPJhpN0P3VKRXQZ14Mo1+HAiVnsOUOquICBEO3mK90FcqEtTJ4og=
+	t=1754921426; cv=none; b=SRC9YJ07Qvfe7onr/YN4bAMcqYD6AatdIGBtX5/comxdJMS9fhc4uSZ8Yzodh0acOtKTbCcas56ryqMbOM1v0W8P4PNIPa0YGvvuDovLCXQkYrKnorzrihyGuCl3wFfPp0oYD4gcDOkt4ZXOeLKAlH8d3MDjvdOKwQ28nOT4Z3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1754921426; c=relaxed/simple;
-	bh=PqOif4n6dhkjVJrz7stPxn20AD/68S05JuHGOWUPVtk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J43rRZMl5AjWY1RiU5EImeSqz1Q1018GCwN3FBilGgyCFv2fdTlzHD/zpV5DLOy60OxUFeuZQAEMevSmPhncJ6h4ywWYBh8yE08TuSIPrc67x6L+6TrfdUsiBXSg1gRWE5QCwvcrQtvIEGcJxSNmC2d/MED7RGLqiNeBtWCgY4o=
+	bh=AbCmTU2WGCZBoY9NASa9L9cUCAS0wFLXwztVBLdMe88=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mdVElwo3gE4jzyWvMUjTMBLb3d2AJFYVd1hsKlFdF204qZME7BZfm974dL0VvdQRBlA1JW8AJfy52OUz1aMvO1G9SmayJow+AoUq+ug0LI4amZXyGi6GMrPIMv/zAZIEsm6GREyhawNfUCuR7+JmUmECuyaaOBhv5WB3RTm18I8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D98271A32;
-	Mon, 11 Aug 2025 07:10:14 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 471892641;
+	Mon, 11 Aug 2025 07:10:16 -0700 (PDT)
 Received: from u200865.usa.arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 669FF3F738;
-	Mon, 11 Aug 2025 07:10:22 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE1EF3F738;
+	Mon, 11 Aug 2025 07:10:23 -0700 (PDT)
 From: Jeremy Linton <jeremy.linton@arm.com>
 To: linux-trace-kernel@vger.kernel.org
 Cc: linux-perf-users@vger.kernel.org,
@@ -42,10 +43,12 @@ Cc: linux-perf-users@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Jeremy Linton <jeremy.linton@arm.com>
-Subject: [PATCH v5 0/7] arm64: Enable UPROBES with GCS
-Date: Mon, 11 Aug 2025 09:10:03 -0500
-Message-ID: <20250811141010.741989-1-jeremy.linton@arm.com>
+Subject: [PATCH v5 1/7] arm64: probes: Break ret out from bl/blr
+Date: Mon, 11 Aug 2025 09:10:04 -0500
+Message-ID: <20250811141010.741989-2-jeremy.linton@arm.com>
 X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20250811141010.741989-1-jeremy.linton@arm.com>
+References: <20250811141010.741989-1-jeremy.linton@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,56 +57,78 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently uprobes and the Arm Guarded Control Stack (GCS) feature are
-exclusive of each other. This restriction needs to be lifted in order
-to utilize GCS for generic Linux distro images where the expectation
-is that core debugging features like uprobes work.
+Prepare for GCS by breaking RET out into its own function, where
+it makes more sense to encapsulate the new behavior independent
+from the branch instructions.
 
-This series adds some user accessors to read/push/pop the userspace
-shadow stack. It then utilizes those functions in the uprobe paths as
-needed to synchronize GCS with the changes in control flow at probe
-locations.
+Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+---
+ arch/arm64/kernel/probes/decode-insn.c   |  7 ++++---
+ arch/arm64/kernel/probes/simulate-insn.c | 10 +++++++++-
+ arch/arm64/kernel/probes/simulate-insn.h |  3 ++-
+ 3 files changed, 15 insertions(+), 5 deletions(-)
 
-The KCONFIG restriction is then dropped.
-
-v4->v5: Fix ret xn handing
-	Renames, comment tweaks, formatting, per review comments
-	rebase 6.17, drop first patch
-	Add reviewed-by's
-
-v3->v4: Much delayed v4 rebased to 6.16
-	Move existing gcs accessors to gcs.h and then add the new
-	     ones. This fixes some of the forward reference issues,
-	     the build break and keeps them all together.
-
-v2->v3: Cleanup RET logic to alwaays use LR, and not update IP on aborts
-	Correct generic uprobe_warn bug even though we aren't using it
-
-v1->v2:
-	Drop uprobe_warn() patch
-	Fix copy_thread_gcs() bug created by fixing task_gcs_el0_enabled()
-	Comments, now describe issues with reading userspace GCS pages
-	Rebased to 6.15
-
-Jeremy Linton (7):
-  arm64: probes: Break ret out from bl/blr
-  arm64: uaccess: Move existing GCS accessors definitions to gcs.h
-  arm64: uaccess: Add additional userspace GCS accessors
-  arm64: probes: Add GCS support to bl/blr/ret
-  arm64: uprobes: Add GCS support to uretprobes
-  arm64: Kconfig: Remove GCS restrictions on UPROBES
-  uprobes: uprobe_warn should use passed task
-
- arch/arm64/Kconfig                       |  1 -
- arch/arm64/include/asm/gcs.h             | 89 ++++++++++++++++++++++++
- arch/arm64/include/asm/uaccess.h         | 40 -----------
- arch/arm64/kernel/probes/decode-insn.c   |  7 +-
- arch/arm64/kernel/probes/simulate-insn.c | 50 ++++++++++---
- arch/arm64/kernel/probes/simulate-insn.h |  3 +-
- arch/arm64/kernel/probes/uprobes.c       | 33 +++++++++
- kernel/events/uprobes.c                  |  2 +-
- 8 files changed, 171 insertions(+), 54 deletions(-)
-
+diff --git a/arch/arm64/kernel/probes/decode-insn.c b/arch/arm64/kernel/probes/decode-insn.c
+index 6438bf62e753..4137cc5ef031 100644
+--- a/arch/arm64/kernel/probes/decode-insn.c
++++ b/arch/arm64/kernel/probes/decode-insn.c
+@@ -108,9 +108,10 @@ arm_probe_decode_insn(u32 insn, struct arch_probe_insn *api)
+ 	    aarch64_insn_is_bl(insn)) {
+ 		api->handler = simulate_b_bl;
+ 	} else if (aarch64_insn_is_br(insn) ||
+-	    aarch64_insn_is_blr(insn) ||
+-	    aarch64_insn_is_ret(insn)) {
+-		api->handler = simulate_br_blr_ret;
++		aarch64_insn_is_blr(insn)) {
++		api->handler = simulate_br_blr;
++	} else if (aarch64_insn_is_ret(insn)) {
++		api->handler = simulate_ret;
+ 	} else {
+ 		/*
+ 		 * Instruction cannot be stepped out-of-line and we don't
+diff --git a/arch/arm64/kernel/probes/simulate-insn.c b/arch/arm64/kernel/probes/simulate-insn.c
+index 4c6d2d712fbd..09a0b36122d0 100644
+--- a/arch/arm64/kernel/probes/simulate-insn.c
++++ b/arch/arm64/kernel/probes/simulate-insn.c
+@@ -126,7 +126,7 @@ simulate_b_cond(u32 opcode, long addr, struct pt_regs *regs)
+ }
+ 
+ void __kprobes
+-simulate_br_blr_ret(u32 opcode, long addr, struct pt_regs *regs)
++simulate_br_blr(u32 opcode, long addr, struct pt_regs *regs)
+ {
+ 	int xn = (opcode >> 5) & 0x1f;
+ 
+@@ -138,6 +138,14 @@ simulate_br_blr_ret(u32 opcode, long addr, struct pt_regs *regs)
+ 		set_x_reg(regs, 30, addr + 4);
+ }
+ 
++void __kprobes
++simulate_ret(u32 opcode, long addr, struct pt_regs *regs)
++{
++	int xn = (opcode >> 5) & 0x1f;
++
++	instruction_pointer_set(regs, get_x_reg(regs, xn));
++}
++
+ void __kprobes
+ simulate_cbz_cbnz(u32 opcode, long addr, struct pt_regs *regs)
+ {
+diff --git a/arch/arm64/kernel/probes/simulate-insn.h b/arch/arm64/kernel/probes/simulate-insn.h
+index efb2803ec943..9e772a292d56 100644
+--- a/arch/arm64/kernel/probes/simulate-insn.h
++++ b/arch/arm64/kernel/probes/simulate-insn.h
+@@ -11,7 +11,8 @@
+ void simulate_adr_adrp(u32 opcode, long addr, struct pt_regs *regs);
+ void simulate_b_bl(u32 opcode, long addr, struct pt_regs *regs);
+ void simulate_b_cond(u32 opcode, long addr, struct pt_regs *regs);
+-void simulate_br_blr_ret(u32 opcode, long addr, struct pt_regs *regs);
++void simulate_br_blr(u32 opcode, long addr, struct pt_regs *regs);
++void simulate_ret(u32 opcode, long addr, struct pt_regs *regs);
+ void simulate_cbz_cbnz(u32 opcode, long addr, struct pt_regs *regs);
+ void simulate_tbz_tbnz(u32 opcode, long addr, struct pt_regs *regs);
+ void simulate_ldr_literal(u32 opcode, long addr, struct pt_regs *regs);
 -- 
 2.50.1
 
