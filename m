@@ -1,152 +1,218 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D40B255E27;
-	Mon, 11 Aug 2025 14:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A86E555;
+	Mon, 11 Aug 2025 14:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754923216; cv=none; b=JaIhXO0fOpmOxk3sICfC8CCh2aZHX2qlCJhLZPPsQbXjp1CL4NBJpUBCJY/OzpRb0Qtq327P+9XIv7Bedn7ICxoiqi0iNyW7R8fko/ABbk+QX33fmfUEYt9bQ81CYJsPzK5O1FGTNEzcrTTaGB4YzrJZNunahwn1U5gPcO2pCMA=
+	t=1754923772; cv=none; b=HayNjwo1KM750HSAKjyXmzcExFr/q1MiRGp7G7LeaVAF5YAqtKb6ZS4YsyiUz99jZfbatCMb3gOzuhJX8FVNqHFLFTxQuNugyzewnuHOdGBKTHuFnn+Mmwh+dx3s8A+7Kft5ASqvQc4FTbHgkCjGtqobiVWmOVEHaNWN87pNyNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754923216; c=relaxed/simple;
-	bh=lv/+AvXX14yIM310jrpu6bxshU2CXaTmX9NexPJVOls=;
+	s=arc-20240116; t=1754923772; c=relaxed/simple;
+	bh=P3HAzNCi/lnV527V9D2Kvsw3Wjl1CbW7cJ5bgFhE7so=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p+3pVpr+Wr5vzCzwLz8b4wJq6mvLF66Dwb39FJasxt7XueqOt+libvaB0caZ5DitqmYlnF7kZopRTg9zwfVcwqUOJbrz4tLjxFvk16B0ZazsXkRivAZvhri0aLYuy0gw3rqPl8vg2u6LT0itKgVtbgmlBQ4wXoFajQroxrSRa14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E88BA2641;
-	Mon, 11 Aug 2025 07:40:04 -0700 (PDT)
-Received: from [192.168.20.57] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 74CAB3F738;
-	Mon, 11 Aug 2025 07:40:10 -0700 (PDT)
-Message-ID: <6904cf39-6c48-44cc-8884-f79d845508de@arm.com>
-Date: Mon, 11 Aug 2025 09:40:10 -0500
+	 In-Reply-To:Content-Type; b=uhl2fUTUXsQOiBhjTzgaT8jaL/GTI8Q08LCro0yEIgKEXdyLUei9mqB3qLhDYVTffbwhq46YnCyRqMZulIQa36vLQytwP/+EnZxF4MLs1SM5Dfax6U0mGT/eEJPRenwdimvYoT7fLkIi59Jhumd41rQq452TeljKDZ7BxTLWiMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=fFsSvodw; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="fFsSvodw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=qlFzUxPWHjx5grAM+2JEnhzKMq/lcSztmTKoL3AWCPo=; b=fFsSvodway9dLw4r27bUqyziiM
+	ZFFt0NVoqQRzfTiHDy9Nv5/CwKTYc3aJHBm1s0dLRGK80/rCteCvbAsljVEr50AWbO92XvTLeHgUq
+	I+lgvtPAFEQdyxe4y1n98IaxIJeK+OXEAWVfkS8Ek+4RVAyGD3es2IudckEa8WP12PhNoWl8YDtFh
+	tvuyjWNdYOXZhMucOwRfdnFwbgBeq1D7Hv5y7InFFx9VAPz7KUUaOyxB17HKkzTjTsm2gq8a49tia
+	B2yF+r+kJB/EShwuNwTdDMFcdEVuhq+7ZoaZmXpHNAaBm14PyLNV+5VcwfTNTyz/YtySAcdF6/1iF
+	XQ6F59bg==;
+Received: from [223.233.72.183] (helo=[192.168.1.12])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1ulTpt-00CpHZ-13; Mon, 11 Aug 2025 16:49:17 +0200
+Message-ID: <6b5c92c4-2170-8ce9-3c9f-45c0e1893e03@igalia.com>
+Date: Mon, 11 Aug 2025 20:19:08 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/7] arm64: uaccess: Add additional userspace GCS
- accessors
-To: linux-trace-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org, mhiramat@kernel.org, oleg@redhat.com,
- peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com,
- thiago.bauermann@linaro.org, broonie@kernel.org, yury.khrustalev@arm.com,
- kristina.martsenko@arm.com, liaochang1@huawei.com, catalin.marinas@arm.com,
- will@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250811141010.741989-1-jeremy.linton@arm.com>
- <20250811141010.741989-4-jeremy.linton@arm.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v7 3/4] treewide: Replace 'get_task_comm()' with
+ 'strscpy_pad()'
 Content-Language: en-US
-From: Jeremy Linton <jeremy.linton@arm.com>
-In-Reply-To: <20250811141010.741989-4-jeremy.linton@arm.com>
+To: kernel test robot <lkp@intel.com>, Bhupesh <bhupesh@igalia.com>,
+ akpm@linux-foundation.org
+Cc: oe-kbuild-all@lists.linux.dev, kernel-dev@igalia.com,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, oliver.sang@intel.com, laoar.shao@gmail.com,
+ pmladek@suse.com, rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+ arnaldo.melo@gmail.com, alexei.starovoitov@gmail.com,
+ andrii.nakryiko@gmail.com, mirq-linux@rere.qmqm.pl, peterz@infradead.org,
+ willy@infradead.org, david@redhat.com, viro@zeniv.linux.org.uk,
+ keescook@chromium.org, ebiederm@xmission.com, brauner@kernel.org,
+ jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com,
+ mgorman@suse.de
+References: <20250811064609.918593-4-bhupesh@igalia.com>
+ <202508111835.JFL8DgKY-lkp@intel.com>
+From: Bhupesh Sharma <bhsharma@igalia.com>
+In-Reply-To: <202508111835.JFL8DgKY-lkp@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 8/11/25 9:10 AM, Jeremy Linton wrote:
-> Uprobes need more advanced read, push, and pop userspace GCS
-> functionality. Implement those features using the existing gcsstr()
-> and copy_from_user().
-> 
-> Its important to note that GCS pages can be read by normal
-> instructions, but the hardware validates that pages used by GCS
-> specific operations, have a GCS privilege set. We aren't validating this
-> in load_user_gcs because it requires stabilizing the VMA over the read
-> which may fault.
-> 
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> ---
->   arch/arm64/include/asm/gcs.h | 54 ++++++++++++++++++++++++++++++++++++
->   1 file changed, 54 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/gcs.h b/arch/arm64/include/asm/gcs.h
-> index e3b360c9dba4..bd9ff1dedcd9 100644
-> --- a/arch/arm64/include/asm/gcs.h
-> +++ b/arch/arm64/include/asm/gcs.h
-> @@ -116,6 +116,47 @@ static inline void put_user_gcs(unsigned long val, unsigned long __user *addr,
->   	uaccess_ttbr0_disable();
->   }
->   
-> +static inline void push_user_gcs(unsigned long val, int *err)
-> +{
-> +	u64 gcspr = read_sysreg_s(SYS_GCSPR_EL0);
-> +
-> +	gcspr -= sizeof(u64);
-> +	put_user_gcs(val, (unsigned long __user *)gcspr, err);
-> +	if (!*err)
-> +		write_sysreg_s(gcspr, SYS_GCSPR_EL0);
-> +}
-> +
-> +/*
-> + * Unlike put/push_user_gcs() above, get/pop_user_gsc() doesn't
-> + * validate the GCS permission is set on the page being read.  This
-> + * differs from how the hardware works when it consumes data stored at
-> + * GCSPR. Callers should assure this is acceptable.
-> + */
-> +static inline u64 get_user_gcs(unsigned long __user *addr, int *err)
-> +{
-> +	unsigned long ret;
-> +	u64 load = 0;
-> +
-> +	/* Ensure previous GCS operation are visible before we read the page */
-> +	gcsb_dsync();
-> +	ret = copy_from_user(&load, addr, sizeof(load));
-> +	if (ret != 0)
-> +		*err = ret;
-> +	return load;
-> +}
-> +
-> +static inline u64 pop_user_gcs(int *err)
-> +{
-> +	u64 gcspr = read_sysreg_s(SYS_GCSPR_EL0);
-> +	u64 read_val;
-> +
-> +	read_val = get_user_gcs((unsigned long __user *)gcspr, err);
-> +	if (!*err)
-> +		write_sysreg_s(gcspr + sizeof(u64), SYS_GCSPR_EL0);
-> +
-> +	return read_val;
-> +}
-> +
->   #else
->   
->   static inline bool task_gcs_el0_enabled(struct task_struct *task)
-> @@ -126,6 +167,10 @@ static inline bool task_gcs_el0_enabled(struct task_struct *task)
->   static inline void gcs_set_el0_mode(struct task_struct *task) { }
->   static inline void gcs_free(struct task_struct *task) { }
->   static inline void gcs_preserve_current_state(void) { }
-> +static inline void put_user_gcs(unsigned long val, unsigned long __user *addr,
-> +				int *err) { }
-> +static inline void push_user_gcs(unsigned long val, int *err) { }
-> +
->   static inline unsigned long gcs_alloc_thread_stack(struct task_struct *tsk,
->   						   const struct kernel_clone_args *args)
->   {
-> @@ -136,6 +181,15 @@ static inline int gcs_check_locked(struct task_struct *task,
->   {
->   	return 0;
->   }
-> +static inline u64 load_user_gcs(unsigned long __user *addr, int *err)
-> +{
-> +	*err = -EFAULT;
-> +	return 0;
-> +}
+Hi,
 
-I sent an old version sine this was sitting around during the merge 
-window. This should have been renamed along with the version above to
-'get_user_gcs'.
+On 8/11/25 4:55 PM, kernel test robot wrote:
+> Hi Bhupesh,
+>
+> kernel test robot noticed the following build errors:
+>
+> [auto build test ERROR on next-20250808]
+> [cannot apply to trace/for-next tip/sched/core brauner-vfs/vfs.all linus/master v6.17-rc1 v6.16 v6.16-rc7 v6.17-rc1]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>
+> url:    https://github.com/intel-lab-lkp/linux/commits/Bhupesh/exec-Remove-obsolete-comments/20250811-144920
+> base:   next-20250808
+> patch link:    https://lore.kernel.org/r/20250811064609.918593-4-bhupesh%40igalia.com
+> patch subject: [PATCH v7 3/4] treewide: Replace 'get_task_comm()' with 'strscpy_pad()'
+> config: sh-randconfig-002-20250811 (https://download.01.org/0day-ci/archive/20250811/202508111835.JFL8DgKY-lkp@intel.com/config)
+> compiler: sh4-linux-gcc (GCC) 15.1.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250811/202508111835.JFL8DgKY-lkp@intel.com/reproduce)
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202508111835.JFL8DgKY-lkp@intel.com/
+>
+> All errors (new ones prefixed by >>):
+>
+>     In file included from include/linux/bitmap.h:13,
+>                      from include/linux/cpumask.h:12,
+>                      from include/linux/smp.h:13,
+>                      from include/linux/lockdep.h:14,
+>                      from include/linux/spinlock.h:63,
+>                      from include/linux/mmzone.h:8,
+>                      from include/linux/gfp.h:7,
+>                      from include/linux/umh.h:4,
+>                      from include/linux/kmod.h:9,
+>                      from include/linux/module.h:18,
+>                      from net/netfilter/nf_tables_api.c:8:
+>     net/netfilter/nf_tables_api.c: In function 'nf_tables_fill_gen_info':
+>>> include/linux/string.h:116:50: error: passing argument 3 of 'nla_put_string' makes pointer from integer without a cast [-Wint-conversion]
+>       116 | #define sized_strscpy_pad(dest, src, count)     ({                      \
+>           |                                                 ~^~~~~~~~~~~~~~~~~~~~~~~~
+>           |                                                  |
+>           |                                                  ssize_t {aka int}
+>       117 |         char *__dst = (dest);                                           \
+>           |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>       118 |         const char *__src = (src);                                      \
+>           |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>       119 |         const size_t __count = (count);                                 \
+>           |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>       120 |         ssize_t __wrote;                                                \
+>           |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>       121 |                                                                         \
+>           |                                                                         ~
+>       122 |         __wrote = sized_strscpy(__dst, __src, __count);                 \
+>           |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>       123 |         if (__wrote >= 0 && __wrote < __count)                          \
+>           |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>       124 |                 memset(__dst + __wrote + 1, 0, __count - __wrote - 1);  \
+>           |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>       125 |         __wrote;                                                        \
+>           |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>       126 | })
+>           | ~~
+>     include/linux/string.h:86:9: note: in expansion of macro 'sized_strscpy_pad'
+>        86 |         sized_strscpy_pad(dst, src, sizeof(dst) + __must_be_array(dst) +        \
+>           |         ^~~~~~~~~~~~~~~~~
+>     include/linux/args.h:25:24: note: in expansion of macro '__strscpy_pad0'
+>        25 | #define __CONCAT(a, b) a ## b
+>           |                        ^
+>     include/linux/args.h:26:27: note: in expansion of macro '__CONCAT'
+>        26 | #define CONCATENATE(a, b) __CONCAT(a, b)
+>           |                           ^~~~~~~~
+>     include/linux/string.h:149:9: note: in expansion of macro 'CONCATENATE'
+>       149 |         CONCATENATE(__strscpy_pad, COUNT_ARGS(__VA_ARGS__))(dst, src, __VA_ARGS__)
+>           |         ^~~~~~~~~~~
+>     net/netfilter/nf_tables_api.c:9661:53: note: in expansion of macro 'strscpy_pad'
+>      9661 |             nla_put_string(skb, NFTA_GEN_PROC_NAME, strscpy_pad(buf, current->comm)))
+>           |                                                     ^~~~~~~~~~~
+>     In file included from include/linux/netfilter/nfnetlink.h:7,
+>                      from net/netfilter/nf_tables_api.c:17:
+>     include/net/netlink.h:1655:46: note: expected 'const char *' but argument is of type 'ssize_t' {aka 'int'}
+>      1655 |                                  const char *str)
+>           |                                  ~~~~~~~~~~~~^~~
+>
+>
+> vim +/nla_put_string +116 include/linux/string.h
+>
+> e6584c3964f2ff Kees Cook        2023-09-20   74
+> e6584c3964f2ff Kees Cook        2023-09-20   75  /*
+> e6584c3964f2ff Kees Cook        2023-09-20   76   * The 2 argument style can only be used when dst is an array with a
+> e6584c3964f2ff Kees Cook        2023-09-20   77   * known size.
+> e6584c3964f2ff Kees Cook        2023-09-20   78   */
+> e6584c3964f2ff Kees Cook        2023-09-20   79  #define __strscpy0(dst, src, ...)	\
+> 559048d156ff33 Kees Cook        2024-08-05   80  	sized_strscpy(dst, src, sizeof(dst) + __must_be_array(dst) +	\
+> 559048d156ff33 Kees Cook        2024-08-05   81  				__must_be_cstr(dst) + __must_be_cstr(src))
+> 559048d156ff33 Kees Cook        2024-08-05   82  #define __strscpy1(dst, src, size)	\
+> 559048d156ff33 Kees Cook        2024-08-05   83  	sized_strscpy(dst, src, size + __must_be_cstr(dst) + __must_be_cstr(src))
+> e6584c3964f2ff Kees Cook        2023-09-20   84
+> 8366d124ec937c Kees Cook        2024-02-02   85  #define __strscpy_pad0(dst, src, ...)	\
+> 559048d156ff33 Kees Cook        2024-08-05   86  	sized_strscpy_pad(dst, src, sizeof(dst) + __must_be_array(dst) +	\
+> 559048d156ff33 Kees Cook        2024-08-05   87  				    __must_be_cstr(dst) + __must_be_cstr(src))
+> 559048d156ff33 Kees Cook        2024-08-05   88  #define __strscpy_pad1(dst, src, size)	\
+> 559048d156ff33 Kees Cook        2024-08-05   89  	sized_strscpy_pad(dst, src, size + __must_be_cstr(dst) + __must_be_cstr(src))
+> 458a3bf82df4fe Tobin C. Harding 2019-04-05   90
+> e6584c3964f2ff Kees Cook        2023-09-20   91  /**
+> e6584c3964f2ff Kees Cook        2023-09-20   92   * strscpy - Copy a C-string into a sized buffer
+> e6584c3964f2ff Kees Cook        2023-09-20   93   * @dst: Where to copy the string to
+> e6584c3964f2ff Kees Cook        2023-09-20   94   * @src: Where to copy the string from
+> e6584c3964f2ff Kees Cook        2023-09-20   95   * @...: Size of destination buffer (optional)
+> e6584c3964f2ff Kees Cook        2023-09-20   96   *
+> e6584c3964f2ff Kees Cook        2023-09-20   97   * Copy the source string @src, or as much of it as fits, into the
+> e6584c3964f2ff Kees Cook        2023-09-20   98   * destination @dst buffer. The behavior is undefined if the string
+> e6584c3964f2ff Kees Cook        2023-09-20   99   * buffers overlap. The destination @dst buffer is always NUL terminated,
+> e6584c3964f2ff Kees Cook        2023-09-20  100   * unless it's zero-sized.
+> e6584c3964f2ff Kees Cook        2023-09-20  101   *
+> e6584c3964f2ff Kees Cook        2023-09-20  102   * The size argument @... is only required when @dst is not an array, or
+> e6584c3964f2ff Kees Cook        2023-09-20  103   * when the copy needs to be smaller than sizeof(@dst).
+> e6584c3964f2ff Kees Cook        2023-09-20  104   *
+> e6584c3964f2ff Kees Cook        2023-09-20  105   * Preferred to strncpy() since it always returns a valid string, and
+> e6584c3964f2ff Kees Cook        2023-09-20  106   * doesn't unnecessarily force the tail of the destination buffer to be
+> e6584c3964f2ff Kees Cook        2023-09-20  107   * zero padded. If padding is desired please use strscpy_pad().
+> e6584c3964f2ff Kees Cook        2023-09-20  108   *
+> e6584c3964f2ff Kees Cook        2023-09-20  109   * Returns the number of characters copied in @dst (not including the
+> e6584c3964f2ff Kees Cook        2023-09-20  110   * trailing %NUL) or -E2BIG if @size is 0 or the copy from @src was
+> e6584c3964f2ff Kees Cook        2023-09-20  111   * truncated.
+> e6584c3964f2ff Kees Cook        2023-09-20  112   */
+> e6584c3964f2ff Kees Cook        2023-09-20  113  #define strscpy(dst, src, ...)	\
+> e6584c3964f2ff Kees Cook        2023-09-20  114  	CONCATENATE(__strscpy, COUNT_ARGS(__VA_ARGS__))(dst, src, __VA_ARGS__)
+> 458a3bf82df4fe Tobin C. Harding 2019-04-05  115
+> 8366d124ec937c Kees Cook        2024-02-02 @116  #define sized_strscpy_pad(dest, src, count)	({			\
+> 8366d124ec937c Kees Cook        2024-02-02  117  	char *__dst = (dest);						\
+> 8366d124ec937c Kees Cook        2024-02-02  118  	const char *__src = (src);					\
+> 8366d124ec937c Kees Cook        2024-02-02  119  	const size_t __count = (count);					\
+> 8366d124ec937c Kees Cook        2024-02-02  120  	ssize_t __wrote;						\
+> 8366d124ec937c Kees Cook        2024-02-02  121  									\
+> 8366d124ec937c Kees Cook        2024-02-02  122  	__wrote = sized_strscpy(__dst, __src, __count);			\
+> 8366d124ec937c Kees Cook        2024-02-02  123  	if (__wrote >= 0 && __wrote < __count)				\
+> 8366d124ec937c Kees Cook        2024-02-02  124  		memset(__dst + __wrote + 1, 0, __count - __wrote - 1);	\
+> 8366d124ec937c Kees Cook        2024-02-02  125  	__wrote;							\
+> 8366d124ec937c Kees Cook        2024-02-02  126  })
+> 8366d124ec937c Kees Cook        2024-02-02  127
+>
 
+As mentioned in the accompanying cover letter, this patchset is based on 
+'linux-next/master' (the exact sha-id used for rebase is: 
+b1549501188cc9eba732c25b033df7a53ccc341f ).
 
-> +static inline u64 pop_user_gcs(int *err)
-> +{
-> +	return 0;
-> +}
->   
->   #endif
->   
-
+Thanks,
+Bhupesh
