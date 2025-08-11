@@ -1,67 +1,50 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207241E32B9;
-	Sun, 10 Aug 2025 16:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E1E1DF98F;
+	Mon, 11 Aug 2025 05:35:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754842156; cv=none; b=F6jfLa11SBv5csG8KYiV0+NMsi9ZeXotoqDbuntOTia//mlc8Fdf7CtDqFF/DPc3YftkRzRWhZZfeZLuP1vbkdc6lliXzkW08Yn1KVM3vp43jfEw2FbAoxDDcCXqylZoFfM3iaT0+YnO4JCTOuvm+JUF+QaPKQgPfN3vnlerIBw=
+	t=1754890544; cv=none; b=lpS+v4ecM3daXAJcbTQOeQTxrJ3hJcRoIYajRe+ulKltXL9pzleOtnR5mZGUPcChjyde6NHGKQCsptZJ1XF25mLSptOeatSonXBq2MBdUa3qhjA/WYLdsu952gN99Qzqfldz4jFZXLk+ZMfQs79zdi6F8dloCp1JYG7xNaGaVWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754842156; c=relaxed/simple;
-	bh=iNEZMkRAwa9NNxtNxZOMxbo9qgjn9DPyf2np5vh35Jo=;
+	s=arc-20240116; t=1754890544; c=relaxed/simple;
+	bh=CgnpQJDp35+7yJ8e+t0ZWHvTAN3cVTjQGaI66k5AzaM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MDyP/cae9dKWuSLC/RqY5QF68LCcjQyp3tP0uJ3/rsRsCWwr9enTy6j5Nq7oGC44cwsQJ4QlRhlJDh6DNFglW1P2acXiRUq+OhxGsSM/8XVjtB+dxrRVK/lFkvtRSgninu3Z8LXqjS2YskHwkrSf4lxebZHIKsgtxQ3O69DuM1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BclEYCMG; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=lMq7hIVmrX5iYwrsgAuTy4U1TyORfiS+bIxzazl4CUfHs2K+76ay87k9NCp1FZK6bX2nQVDzdWwZhESTti8TbKIoCVlbIeJXW0eJJdlSG61bswK9Vh0AKAUIBJm9C3Y1o9zrbdtI2TAvNCnn2KpUdzXv1bJ/Hxw9r9GyTl0GjDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PwK4pVcd; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BclEYCMG"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57AFNgm8008143;
-	Sun, 10 Aug 2025 16:09:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=tgzC2y
-	I/MF9coSbtIS/FuZVwgTWSWN7MU391hjnl1Ws=; b=BclEYCMG0yg9Qu/h8FqDQ2
-	wPbS6GCoY4PB0KraKbq31yOh/iLedT/ORzSvhrGA9uPbrtrVBZtR21e4rA01VxjD
-	+S6veD1oBh59kq5Q60HtHoFyfCWDRgbfrSSw6Uv75nsC9l0kf3xfaPaaycVnrWiA
-	dTzchc+07xRH40wLLKr3Ns7/BLSKBhucouOlWukw+6fqId34DTUHVvvpWKfH2Bcv
-	VhT49jozdMhPi1DPfcgvXvObHkiCfjuWFy7TYrq+9K0JU9B/XYjD9emAG1KwCchZ
-	Wu0pszxUcptgLUducc5BBqEF71DGOMOyPqkHiRSWlss9QK15mf0/5jI9AYtrFBIA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48eha9t3w3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 10 Aug 2025 16:09:01 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 57AG91Uj022130;
-	Sun, 10 Aug 2025 16:09:01 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48eha9t3w1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 10 Aug 2025 16:09:01 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57AELopM025667;
-	Sun, 10 Aug 2025 16:09:00 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 48ejvm25aa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 10 Aug 2025 16:09:00 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 57AG8wr835914380
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 10 Aug 2025 16:08:58 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9F3C32004B;
-	Sun, 10 Aug 2025 16:08:58 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 45DCB20040;
-	Sun, 10 Aug 2025 16:08:56 +0000 (GMT)
-Received: from [9.43.79.85] (unknown [9.43.79.85])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 10 Aug 2025 16:08:56 +0000 (GMT)
-Message-ID: <40b96722-a304-443f-966a-b155950fcbd9@linux.ibm.com>
-Date: Sun, 10 Aug 2025 21:38:55 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PwK4pVcd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1754890543; x=1786426543;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=CgnpQJDp35+7yJ8e+t0ZWHvTAN3cVTjQGaI66k5AzaM=;
+  b=PwK4pVcdV/YjcVPPGu7VgkacVDk4RxVTv+VXsUzCCWbtNldCWR5tLLDt
+   WRz4gF2/vEDkG52TwTbB2lNJRcRwDhSt1sCRRVU6EKIVTzViLORj43gtZ
+   acejAYRJ8IEpDB3xvkHyrQr9xaSgHuUJJsCTLJKocmQhOMtioLbNsJ2/a
+   ibclg9Lq/if78OsctD9ov7M8nYCxm1wPZAlUUFc5NALgd6opPPxyByGNp
+   nUMM/IvIFE+3Ojx/NZsbXSrYzTjKhLUAl5XAEDimb3mePjg/8Q+4leYBn
+   TtZFeE/0ajl7kV3bzcBAQkN6xJDSIGSzgKWVqK/3/5HAarKh8VDKaqCBF
+   A==;
+X-CSE-ConnectionGUID: dxXgwY22Q2iJS0wLUpNn4A==
+X-CSE-MsgGUID: bHlXsM5mSy+rTob6JqsLgg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="57093290"
+X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
+   d="scan'208";a="57093290"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2025 22:35:42 -0700
+X-CSE-ConnectionGUID: NsK0+QoxQ/uwXoOXbmhH7g==
+X-CSE-MsgGUID: kLUmAcXWTQC4HGA8ZtrqYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,278,1747724400"; 
+   d="scan'208";a="171178693"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.240.106]) ([10.124.240.106])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2025 22:35:39 -0700
+Message-ID: <3bce547c-cde8-4779-b7cc-2da025db9484@linux.intel.com>
+Date: Mon, 11 Aug 2025 13:35:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,76 +52,78 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf auxtrace: Avoid redundant NULL check in
- auxtrace_mmap_params__set_idx()
-To: Gautam Menghani <gautam@linux.ibm.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        kan.liang@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250804110602.23422-1-gautam@linux.ibm.com>
+Subject: Re: [PATCH 4/5] perf tools kvm: Use "cycles" to sample guest for "kvm
+ record" on Intel
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Kevin Tian <kevin.tian@intel.com>,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250805004633.135904-1-dapeng1.mi@linux.intel.com>
+ <20250805004633.135904-5-dapeng1.mi@linux.intel.com>
+ <aJPuhpFK_ZjLk-ct@google.com>
+ <154b59ee-0858-4caf-9972-3679db0a0c49@linux.intel.com>
+ <aJZ16DZXNI1pvt5-@google.com>
 Content-Language: en-US
-From: Aditya Bodkhe <adityab1@linux.ibm.com>
-In-Reply-To: <20250804110602.23422-1-gautam@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aJZ16DZXNI1pvt5-@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=KPRaDEFo c=1 sm=1 tr=0 ts=6898c41d cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=VnNF1IyMAAAA:8 a=3B45m_xtiCOFTJ9Nk4UA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: koHLIe8CZxvcfPJ99sol1offNMVOtdje
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEwMDExNSBTYWx0ZWRfXy59u5RhCtzhd
- VJ+mgx7cEauc1JgWlxbLlD78nRwxuym8LP3FNuwcediPbro86XYhFELdfAFCIOk16gkXJ5b8YIF
- h7KMuSA9lnkbDjXWVKmlepeK8ahq6BtjSS3wFAxO3l87ZsGMw8F8KXq0RvMiI6Hzqc5m5cTlOpW
- 2ORTHrBbcZ3QV2A/2WD7RJCHHI6mCLPoEB/ZumjmziMttvLN0B0EV7YwcuGH41tZJTKmxt+xxOb
- S2vcSgVOWcYOsx5FIAsfErNkmr4QpCGMUjeqqXJd7Lmf3+F4oNRIeAeDjcJLgwzqZoVGlei92Gb
- IoZuG0XAcllBjXa5y2+dlVqXdkhV4nzNKI2iS42eGwVyGI3BP8E3UcxNPz0jOmFxzd1WK6mMo6J
- 4SNgtDQWWNlxAdkwlL4jeBhMnVRBHsghh3Dz7I4R69CHpgkOnT2XaJCcQvWLGTV+Yuwu+3Ho
-X-Proofpoint-GUID: sFWV954d6K42-v_kHEDN3jaP_UOxB1cI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-10_05,2025-08-06_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 impostorscore=0 bulkscore=0 mlxlogscore=999 spamscore=0
- clxscore=1011 adultscore=0 priorityscore=1501 malwarescore=0
- lowpriorityscore=0 mlxscore=0 suspectscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2507300000 definitions=main-2508100115
 
 
-On 04/08/25 4:36 pm, Gautam Menghani wrote:
-> Since commit eead8a011477 ("libperf threadmap: Don't segv for index 0 for the
-> NULL 'struct perf_thread_map' pointer"), perf_thread_map__pid() can
-> check for a NULL map and return -1 if idx is 0. Cleanup
-> auxtrace_mmap_params__set_idx() and remove the redundant NULL check.
+On 8/9/2025 6:10 AM, Namhyung Kim wrote:
+> On Thu, Aug 07, 2025 at 11:08:11AM +0800, Mi, Dapeng wrote:
+>> On 8/7/2025 8:08 AM, Namhyung Kim wrote:
+>>> On Tue, Aug 05, 2025 at 08:46:32AM +0800, Dapeng Mi wrote:
+>>>> After KVM supports PEBS for guest on Intel platforms
+>>>> (https://lore.kernel.org/all/20220411101946.20262-1-likexu@tencent.com/),
+>>>> host loses the capability to sample guest with PEBS since all PEBS related
+>>>> MSRs are switched to guest value after vm-entry, like IA32_DS_AREA MSR is
+>>>> switched to guest GVA at vm-entry. This would lead to "perf kvm record"
+>>>> fails to sample guest on Intel platforms since "cycles:P" event is used to
+>>>> sample guest by default as below case shows.
+>>> Do you mean we cannot use "cycles:PG" for perf kvm record?
+>> Yes. Here is the output on Intel Sapphire rapids.
+>>
+>> sudo ./perf record -e cycles:PG -a
+>> ^C[ perf record: Woken up 1 times to write data ]
+>> [ perf record: Captured and wrote 0.801 MB perf.data ]
+>>
+>> No guest records are captured with PEBS, and guest PEBS records can be
+>> sampled only without PEBS.
+>>
+>> sudo ./perf record -e cycles:G -a
+>> ^C[ perf record: Woken up 1 times to write data ]
+>> [ perf record: Captured and wrote 0.798 MB perf.data (60 samples) ]
+>>
+>>
+>>>> sudo perf kvm record -a
+>>>> ^C[ perf record: Woken up 1 times to write data ]
+>>>> [ perf record: Captured and wrote 0.787 MB perf.data.guest ]
+>>>>
+>>>> So to ensure guest record can be sampled successfully, use "cycles"
+>>>> instead of "cycles:P" to sample guest record by default on Intel
+>>>> platforms. With this patch, the guest record can be sampled
+>>>> successfully.
+>>>>
+>>>> sudo perf kvm record -a
+>>>> ^C[ perf record: Woken up 1 times to write data ]
+>>>> [ perf record: Captured and wrote 0.783 MB perf.data.guest (23 samples) ]
+>>> What if user already gave some events in the command line?  I think you
+>>> need to check if "-e" or "--event" (and "--pfm-events" too) is in the
+>>> argv[] before adding these.
+>> kvm_add_default_arch_event() would detect if user already sets events explicitly. If so, it won't add "cycles" event any more. Thanks.
+> Oh, ok.  I can see you called parse_options to check the option.
+> You'd better to check "--pfm-events" as well.
+
+Sure. Thanks.
+
+
 >
-> No functional change intended.
+> Thanks,
+> Namhyung
 >
-> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
-> ---
->   tools/perf/util/auxtrace.c | 5 +----
->   1 file changed, 1 insertion(+), 4 deletions(-)
 >
-> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-> index ebd32f1b8f12..5e437133c753 100644
-> --- a/tools/perf/util/auxtrace.c
-> +++ b/tools/perf/util/auxtrace.c
-> @@ -185,10 +185,7 @@ void auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp,
->   
->   	if (per_cpu) {
->   		mp->cpu = perf_cpu_map__cpu(evlist->core.all_cpus, idx);
-> -		if (evlist->core.threads)
-> -			mp->tid = perf_thread_map__pid(evlist->core.threads, 0);
-> -		else
-> -			mp->tid = -1;
-> +		mp->tid = perf_thread_map__pid(evlist->core.threads, 0);
->   	} else {
->   		mp->cpu.cpu = -1;
->   		mp->tid = perf_thread_map__pid(evlist->core.threads, idx);
-
-LGTM.
-
-Reviewed-by: Aditya Bodkhe <adityab1@linux.ibm.com>
-
