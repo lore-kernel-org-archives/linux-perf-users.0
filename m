@@ -1,127 +1,114 @@
-Received: from out28-83.mail.aliyun.com (out28-83.mail.aliyun.com [115.124.28.83])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E181A9F99;
-	Tue, 12 Aug 2025 07:32:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227BB2C3265;
+	Tue, 12 Aug 2025 07:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754983930; cv=none; b=KYOB9rGqbM8kJUliGsmmXeRfgEab5Sb8CRt49U2HJzQa74qHlB5lY4M8XBHjpP9yQ7HNmIG0y/UNpXUheQgh6vrgFVY1keQP98FfyveTiPNT28BtVEHWyo/Gvov+/I3juh8zTtT/OXVKo+QNfNzrvwPFn3hAxnTGJGYQXBzWa/A=
+	t=1754985427; cv=none; b=WQ3uNOqWM1jEegOU+uqA20pMrf9+tFa0J8XrsOuPYJ9gjer+9mBCjEed2XtvEk2MaJ5tbR2SWe4fMTnD3SXpEU/DmShS1PiH//P9Mmtkrmne+kOaLbU2Oi/wmwv8fCByueSDVX9o0AJb9Drxp7VIf75FgsOrroChCrxFFU8dJfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754983930; c=relaxed/simple;
-	bh=CCa9Ci3J5QHDFddhdCFeCywPPj7C95oJwqOE6D7d/3w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HmwKwV3ss5yI6zSZloEUyT4l/eUz6etXRGKMBXnccAHEI2WvEVDww+e3X+SZ9vCBhSnSkkaniy8Gt4jB8eDyyffQCU9XTB2Kn4M86hcjVMkKEoQQ2bunW7XELSZHIBjgvxk21Itwzp2Pk0l7bUFxsJhI3gS7tSaSs3CvlGd5OoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pascal-lab.net; spf=pass smtp.mailfrom=pascal-lab.net; dkim=pass (1024-bit key) header.d=pascal-lab.net header.i=@pascal-lab.net header.b=VQPG+mGb; arc=none smtp.client-ip=115.124.28.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pascal-lab.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pascal-lab.net
+	s=arc-20240116; t=1754985427; c=relaxed/simple;
+	bh=uND59x9ZQ5rkqPTf5MVpzM2uV3BtQWtHn7hG4Nn7W54=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZStd5s7tQyCOxeDKfKOIpPVPpdlCNYzr2OLbwQrSYPfZSaIq7eHLtvxzp+6g81QmnFvayKk16jsG/JWnTvzMhiZW0BZ5nioA7CFAp5DSS6T2aLUoL3UI/mFZI17HQ/AgXCFnEGFQnNIOy3dpx8lS3m4ddVF/c1CMRDWoeek4FA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=n38cBToB; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pascal-lab.net header.i=@pascal-lab.net header.b="VQPG+mGb"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=pascal-lab.net; s=default;
-	t=1754983916; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=j3T37CffnhSQE5FtkbQoa66mwv8d5798OrQGY72RZOw=;
-	b=VQPG+mGbqnhsxNzwTXCEbSLMO8Y6Eh6SF7FNWqHaWXV/FR9nlT76lG/WYzIcEMxobJzFmtBaQLTbCUXVUTRiH6J8NR6m5DjyRC2X8JAW/Lqk9ipSFKa2WLwqzmrpZO7CEdKzv3Ihg11hAK7ms08BdBkZ0M4YCljt5rAOMijbb8A=
-Received: from 192.168.0.105(mailfrom:yujundong@pascal-lab.net fp:SMTPD_---.eDV-wna_1754983914 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Tue, 12 Aug 2025 15:31:55 +0800
-Message-ID: <1f73657c-74b3-44a7-bee4-b7cda1a75a02@pascal-lab.net>
-Date: Tue, 12 Aug 2025 15:31:54 +0800
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n38cBToB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=xFzUS7aI0hvY4j9wtcgEliFgmjU3wq4f3XK0sCbKOPY=; b=n38cBToBaEhHuXspah2SPNjIMU
+	EEugFiYSXEKxezGCVOK+gY9KGRtUQeIuB5RecgDax/hlt9Zw0apZ0dQoVk2+t/P9R/XiX97vi0J7x
+	NPeawwhdnvVGNj+TxMa+gFz6a7ceCUQj+oMhGH4PjZd6Q4/qtQLt2zosZpV1lv+Io4u/NSyeJm6AD
+	LAHds1atVaPw1SRccOr3Ja7YseBtRA0JGORrBuqNOJK0rJAz50bbFqGkmC82OIYWLmMVjnTlpWyD4
+	E1rndUbqd+CfDUEy9tRxqmUp81imHFkKcPoWfEXcTGcWsjwB/KHi6oSreyqAQz0tMtSGlgEbtxw1E
+	tiJKDFrg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uljsO-0000000E7eN-2fF3;
+	Tue, 12 Aug 2025 07:56:57 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 56FD53002D4; Tue, 12 Aug 2025 09:56:56 +0200 (CEST)
+Date: Tue, 12 Aug 2025 09:56:56 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Yunseong Kim <ysk@kzalloc.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Liang Kan <kan.liang@linux.intel.com>,
+	Will Deacon <will@kernel.org>, Yeoreum Yun <yeoreum.yun@arm.com>,
+	Austin Kim <austindh.kim@gmail.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	syzkaller@googlegroups.com
+Subject: Re: [PATCH v2] perf: Avoid undefined behavior from stopping/starting
+ inactive events
+Message-ID: <20250812075656.GE4067720@noisy.programming.kicks-ass.net>
+References: <20250812012722.127646-1-ysk@kzalloc.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf branch: Fix heap out-of-bounds write in
- branch_type_count()
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- linux-perf-users@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org
-References: <20250809093812.308027-1-yujundong@pascal-lab.net>
- <17bdc644-329a-42fb-aba2-d7f80f2a1037@arm.com>
-Content-Language: en-US
-From: Yujun Dong <yujundong@pascal-lab.net>
-In-Reply-To: <17bdc644-329a-42fb-aba2-d7f80f2a1037@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250812012722.127646-1-ysk@kzalloc.com>
 
-On 2025/8/11 15:03, Anshuman Khandual wrote:
- > On 09/08/25 3:08 PM, Yujun Dong wrote:
- > > The branch_type_count() function writes to 
-st->new_counts[flags->new_type]
- > > when flags->type is PERF_BR_EXTEND_ABI. However, while the array
- > > st->new_counts is sized for PERF_BR_NEW_MAX (8) entries, the field
- > > flags->new_type is a 4-bit unsigned value and may hold values up to 15.
- > >
- > > This mismatch allows crafted perf data to trigger a heap out-of-bounds
- > > write when flags->new_type >= 8, leading to memory corruption.
- >
- > Crafted ? How could flags->new_type >= 8 when PERF_BR_NEW_MAX is 
-capped at 8.
- > Is this a real scenario that happened on a system ?
- >
+On Tue, Aug 12, 2025 at 01:27:22AM +0000, Yunseong Kim wrote:
+> Calling pmu->start()/stop() on events in PERF_EVENT_STATE_OFF can leave
+> event->hw.idx at -1, which may lead to UBSAN shift-out-of-bounds reports
+> when the PMU code later shifts by a negative exponent.
 
-Thanks for your review and for raising that question. The new_type field
-in struct branch_flags is declared as a 4-bit bitfield (u64 new_type:4),
-meaning it can hold values from 0 to 15, even though PERF_BR_NEW_MAX is
-defined as 8. So, it's entirely possible for flags->new_type to be >= 8.
+Yeah, but how do we get there? I suppose there is a race somewhere?
+Please describe.
 
-In fact, I've observed such cases when running real-world perf record/top,
-where perf.data produced contains invalid new_type values, likely due to
-other bugs or unexpected data corruption. Additionally, a maliciously
-crafted perf.data file can also force this out-of-bounds write.
+> Move the state check into perf_event_throttle()/perf_event_unthrottle() so
+> that inactive events are skipped entirely. This ensures only active events
+> with a valid hw.idx are processed, preventing undefined behavior and
+> silencing UBSAN warnings.
+> The problem can be reproduced with the syzkaller reproducer:
+> Link: https://lore.kernel.org/lkml/714b7ba2-693e-42e4-bce4-feef2a5e7613@kzalloc.com/
+> 
+> Fixes: 9734e25fbf5a ("perf: Fix the throttle logic for a group")
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Yunseong Kim <ysk@kzalloc.com>
+> ---
+>  kernel/events/core.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 8060c2857bb2..c9322029a8ae 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2665,6 +2665,9 @@ static void perf_log_itrace_start(struct perf_event *event);
+>  
+>  static void perf_event_unthrottle(struct perf_event *event, bool start)
+>  {
+> +	if (event->state <= PERF_EVENT_STATE_OFF)
+> +		return;
 
- > >
- > > Add a bounds check to ensure flags->new_type is less than
- > > PERF_BR_NEW_MAX before accessing the new_counts array.
- >
- > But it might make sense to add this check just to be on the safer side.
- >
+This seems wrong. We should only {,un}throttle ACTIVE events, no?
 
-Notably, new_type is only used in two places:
-1. In branch_new_type_name(), where the bounds are already validated.
-2. In branch_type_count(), where the current patch now adds the
-necessary check.
-
-Admittedly, the mismatch between the bit-field width (0-15) and
-PERF_BR_NEW_MAX (8) is the root cause. While adjusting the bit-field
-to match PERF_BR_NEW_MAX would also resolve the mismatch, that risks
-breaking existing compatibility. Therefore, adding a bounds check at
-the use site is the least disruptive correction.
-
- > >
- > > Fixes: 0ddea8e2a0c2 ("perf branch: Extend branch type classification")
- > > Signed-off-by: Yujun Dong <yujundong@pascal-lab.net>
- > > ---
- > >  tools/perf/util/branch.c | 8 +++++---
- > >  1 file changed, 5 insertions(+), 3 deletions(-)
- > >
- > > diff --git a/tools/perf/util/branch.c b/tools/perf/util/branch.c
- > > index 3712be067464..8ea6628c7735 100644
- > > --- a/tools/perf/util/branch.c
- > > +++ b/tools/perf/util/branch.c
- > > @@ -21,10 +21,12 @@ void branch_type_count(struct branch_type_stat 
-*st, struct branch_flags *flags,
- > >      if (flags->type == PERF_BR_UNKNOWN || from == 0)
- > >          return;
- > >
- > > -    if (flags->type == PERF_BR_EXTEND_ABI)
- > > -        st->new_counts[flags->new_type]++;
- > > -    else
- > > +    if (flags->type == PERF_BR_EXTEND_ABI) {
- > > +        if (flags->new_type < PERF_BR_NEW_MAX)
- > > +            st->new_counts[flags->new_type]++;
- > > +    } else {
- > >          st->counts[flags->type]++;
- > > +    }
- > >
- > >      if (flags->type == PERF_BR_COND) {
- > >          if (to > from)
- >
+>  	event->hw.interrupts = 0;
+>  	if (start)
+>  		event->pmu->start(event, 0);
+> @@ -2674,6 +2677,9 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
+>  
+>  static void perf_event_throttle(struct perf_event *event)
+>  {
+> +	if (event->state <= PERF_EVENT_STATE_OFF)
+> +		return;
+> +
+>  	event->hw.interrupts = MAX_INTERRUPTS;
+>  	event->pmu->stop(event, 0);
+>  	if (event == event->group_leader)
+> -- 
+> 2.50.0
+> 
