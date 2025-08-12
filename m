@@ -1,168 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C885C28EA72;
-	Tue, 12 Aug 2025 00:00:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C954722332E;
+	Tue, 12 Aug 2025 01:27:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754956818; cv=none; b=Jw3ATpIllridUm1FyTtZxqFgiYxaZ7hxddqfLCHRYYXTyhAYD5jKOIiAMZbNmddrlkvX9bDn5QNO+jKz4zwksYL9jaa72MQfLG4g1CpkaSySqpg0msqyV28kb1e08VW7iCdfp+3BnrQ9X9eneHOQk2tmqoM5Cvowgpe0V8PAVDU=
+	t=1754962063; cv=none; b=OoUkLoaEN6f+j7in768ggIllZf7CGAmhaU2F06QxrH1187QX9cqWLeNcSaEWeNJs1ZSNeTYcRLX0A4+Q5/k7px9hgzgYovxwXGdJ6tOLCgvR9jvq5WmwKEkpdHD37v/2yP6eu9hiTWxA4tY7lWu5w3vQ4jQLK/Fpj3y2owxU5tE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754956818; c=relaxed/simple;
-	bh=JKSS5BhhnouCxp94xQ9hwJyMDXsBN6DcFUARmFsQeK0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IwUks/uY5L6jJSnuVmy7FtrPYKZCxVFYq5+Dy5VYF4om6EkAC726ccnWf+nKiL8ZYcbkakX0P+nPspJC12mopja6erFbyKC0Ci7Hja3/kDN4iOcgnHtoqKoFJ2qPZW49u2HC1pCEipYBccyJ3/HwoHi9bJCHpUNzH/sYJZEFc8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D/x1B/D5; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D/x1B/D5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1754956817; x=1786492817;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=JKSS5BhhnouCxp94xQ9hwJyMDXsBN6DcFUARmFsQeK0=;
-  b=D/x1B/D5qd5lyE9qr/Lzyeapxx/v4hoX4S97ipFQqdYObzX9Jv4uzCc+
-   qHsp+7/RrHtS6PC0kZZ42Ep5Jk0wkq4jLT/Y1YhktDPoq5hUewOsHegdM
-   I5z+3q7rkDwZ+ueeIYxGgX1OqYRsxGvDAusI7GXaHtIvulzSKAm/wCY5M
-   /D81daOp+uh63YEAT4AJerSENhzg40F+xFfENKRy5a5Wm1Wlmlir2EJGq
-   0qJtDbXAdCLpajRPU/tn8rz429JdKrg3HXrlPGtfaZemxmrqFQcOcRL70
-   kSFFary8QKFogVqMX+xWcJ7X8OWz4CGPtstxcKyLmHMbuGLPVKgE7c+3x
-   Q==;
-X-CSE-ConnectionGUID: IHxzdF7ySNOgG+4WtX4jkA==
-X-CSE-MsgGUID: yurOA08iQeG2khHBm8hgCA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11518"; a="68592842"
-X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
-   d="scan'208";a="68592842"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 17:00:16 -0700
-X-CSE-ConnectionGUID: 7iLeg3hORT2dJ4onOUtL+A==
-X-CSE-MsgGUID: bH/qdpoeQYisIC0QF+LT8A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,284,1747724400"; 
-   d="scan'208";a="166340782"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2025 17:00:16 -0700
-Received: from [10.124.35.105] (kliang2-mobl1.ccr.corp.intel.com [10.124.35.105])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 0F1FE20B571C;
-	Mon, 11 Aug 2025 17:00:15 -0700 (PDT)
-Message-ID: <8c32c5be-02a4-4f4c-9a81-1afe649e88bb@linux.intel.com>
-Date: Mon, 11 Aug 2025 17:00:14 -0700
+	s=arc-20240116; t=1754962063; c=relaxed/simple;
+	bh=RoxD1aG1RWQxFWWsFZz7qapdHfFLS3SnVyou3HTXxZM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=afwJACBR2ITEW65HN2/5MIJcwbSP8Z2YPTi5j+18aa38qtcaXXMzFF8QIh6PKdRqIa+kTV3WXSP8M24c3ellkHMbkNwEhtEaD1fI2kNU517WD3L0nBne+1UNF28J9cgfQOlIo6A9lM/mmkMMZd7u/RaZkEgl2f6E75KHNTwvxRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-31f5ed172daso931382a91.2;
+        Mon, 11 Aug 2025 18:27:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754962061; x=1755566861;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JVuTHpo8HlQXIpXQibhEcFczkCHN73jjtQMy1pV6lPk=;
+        b=W8n4FHZkoWDVBY7Mo8aL5wrkIwKR/fDjSC56MuLLgdypYJJD1nfZM6kzOphZcsYUps
+         ZiMtp6x1o9WxbHn0yI7JJcNUPelGB6R3TmC9K8rJljemaY+kGS3DUSWbJPK8TEfyoSo5
+         DPPMYaaal+AMAQryeNg72eyY6NCd+Y9shlB5rSTh03xaisPGJyf5d2w3fnCneR2YxaIv
+         rUpCngI2qOIC2ogl6hS9Dz0SqK5T52AZ994EMVNMRW1zP3PVjJOLpc2kdisyXw8Q9Cnj
+         frJ2aPdnWDGnQUkS5uZJjNyqYW7hP7NAXioZSdlT5V9ZsTXTuJH0UIpu1I+l46DyWTD2
+         eg7w==
+X-Forwarded-Encrypted: i=1; AJvYcCVmPTE4LwuDG/tlygFqVkNVGKlPKkVzZrmcz0KReh81Yj+exklCoSDhdrC1dsEB1wqG6V/p4nz6N24/Mm2D+MsMBw==@vger.kernel.org, AJvYcCXSt/l+u/+FxSliO2fTOc6KMXODSJyZ6RV1n5q2wqI5kUiyi3xWcIXSRu6lFWaHjVF6NeQXTP5CeB3w1VY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0TBahUTMgEMpDsOHolX/Iw1pOJRHvKrkcMA0eJDZ4wJnOYRcj
+	naloqRnykXQxcpYY3SSRmPd+rfzGLJRtPhwou6CRxvjp8ybdinqyKS2ELBPFpX1W
+X-Gm-Gg: ASbGncsflX/NYGxXygqDfwj/Sz/9qso1cWI4Vg0E/Bp7bkjOEnwl4IQox6nGP/L/32o
+	SUN5maST2LuH8T4pAybbHT6k7BswBsewIpRrlH7rIzC3E0dksaxAQm3WfQHOST7rolOvfbrKme8
+	VS4OE1pLzsTOWn2QcteRkIG+DbbeEbeGeO6BIi4gwYyK72xBK1rUTeVbUvL7gdJJGmTOpBbOjqf
+	6Qo/dy2e5X2xziu6O8DMwicEsPAh0e68JwiPYONk3Be9hx1T+17dYSDZr4Yjr/JqYMKnGTqbWvy
+	cUlwBSHlV3yEawEaxQpcyQFF0FB2HEM6IWPgj/XJrU9WhlnUiRZx9qhels5HAfbDrTQMPdq/yzj
+	OxHPsivlBF3O0
+X-Google-Smtp-Source: AGHT+IH+sHU+p6EE9tLJ69xDjRQjSaP6OQiHInaa4IyLnxW+9kjONfmq9qED3fS22qoiduoFsDg71w==
+X-Received: by 2002:a05:6a20:914a:b0:235:5818:66a3 with SMTP id adf61e73a8af0-2409aaf5c23mr1286557637.8.1754962061095;
+        Mon, 11 Aug 2025 18:27:41 -0700 (PDT)
+Received: from localhost ([218.152.98.97])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b424ca987desm19134173a12.40.2025.08.11.18.27.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Aug 2025 18:27:40 -0700 (PDT)
+From: Yunseong Kim <ysk@kzalloc.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Liang Kan <kan.liang@linux.intel.com>,
+	Will Deacon <will@kernel.org>,
+	Yeoreum Yun <yeoreum.yun@arm.com>,
+	Austin Kim <austindh.kim@gmail.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzkaller@googlegroups.com,
+	Yunseong Kim <ysk@kzalloc.com>
+Subject: [PATCH v2] perf: Avoid undefined behavior from stopping/starting inactive events
+Date: Tue, 12 Aug 2025 01:27:22 +0000
+Message-ID: <20250812012722.127646-1-ysk@kzalloc.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 6/6] perf/x86/intel: Add ICL_FIXED_0_ADAPTIVE bit into
- INTEL_FIXED_BITS_MASK
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Yi Lai <yi1.lai@intel.com>
-References: <20250811090034.51249-1-dapeng1.mi@linux.intel.com>
- <20250811090034.51249-7-dapeng1.mi@linux.intel.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250811090034.51249-7-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Calling pmu->start()/stop() on events in PERF_EVENT_STATE_OFF can leave
+event->hw.idx at -1, which may lead to UBSAN shift-out-of-bounds reports
+when the PMU code later shifts by a negative exponent.
 
+Move the state check into perf_event_throttle()/perf_event_unthrottle() so
+that inactive events are skipped entirely. This ensures only active events
+with a valid hw.idx are processed, preventing undefined behavior and
+silencing UBSAN warnings.
 
-On 2025-08-11 2:00 a.m., Dapeng Mi wrote:
-> ICL_FIXED_0_ADAPTIVE is missed to be added into INTEL_FIXED_BITS_MASK,
-> add it and opportunistically refine fixed counter enabling code.
-> 
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Tested-by: Yi Lai <yi1.lai@intel.com>
-> ---
->  arch/x86/events/intel/core.c      | 10 +++-------
->  arch/x86/include/asm/perf_event.h |  6 +++++-
->  arch/x86/kvm/pmu.h                |  2 +-
->  3 files changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index cdd10370ed95..1a91b527d3c5 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -2849,8 +2849,8 @@ static void intel_pmu_enable_fixed(struct perf_event *event)
->  {
->  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->  	struct hw_perf_event *hwc = &event->hw;
-> -	u64 mask, bits = 0;
->  	int idx = hwc->idx;
-> +	u64 bits = 0;
->  
->  	if (is_topdown_idx(idx)) {
->  		struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-> @@ -2889,14 +2889,10 @@ static void intel_pmu_enable_fixed(struct perf_event *event)
->  
->  	idx -= INTEL_PMC_IDX_FIXED;
->  	bits = intel_fixed_bits_by_idx(idx, bits);
-> -	mask = intel_fixed_bits_by_idx(idx, INTEL_FIXED_BITS_MASK);
-> -
-> -	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip) {
-> +	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip)
->  		bits |= intel_fixed_bits_by_idx(idx, ICL_FIXED_0_ADAPTIVE);
-> -		mask |= intel_fixed_bits_by_idx(idx, ICL_FIXED_0_ADAPTIVE);
-> -	}
->  
+The problem can be reproduced with the syzkaller reproducer:
+Link: https://lore.kernel.org/lkml/714b7ba2-693e-42e4-bce4-feef2a5e7613@kzalloc.com/
 
-This changes the behavior. The mask will always include the ADAPTIVE bit
-even on a platform which doesn't support adaptive pebs.
-The description doesn't mention why it's OK.
+Fixes: 9734e25fbf5a ("perf: Fix the throttle logic for a group")
+Cc: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Yunseong Kim <ysk@kzalloc.com>
+---
+ kernel/events/core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Thanks,
-Kan> -	cpuc->fixed_ctrl_val &= ~mask;
-> +	cpuc->fixed_ctrl_val &= ~intel_fixed_bits_by_idx(idx, INTEL_FIXED_BITS_MASK);
->  	cpuc->fixed_ctrl_val |= bits;
->  }
->  
-> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-> index f8247ac276c4..49a4d442f3fc 100644
-> --- a/arch/x86/include/asm/perf_event.h
-> +++ b/arch/x86/include/asm/perf_event.h
-> @@ -35,7 +35,6 @@
->  #define ARCH_PERFMON_EVENTSEL_EQ			(1ULL << 36)
->  #define ARCH_PERFMON_EVENTSEL_UMASK2			(0xFFULL << 40)
->  
-> -#define INTEL_FIXED_BITS_MASK				0xFULL
->  #define INTEL_FIXED_BITS_STRIDE			4
->  #define INTEL_FIXED_0_KERNEL				(1ULL << 0)
->  #define INTEL_FIXED_0_USER				(1ULL << 1)
-> @@ -48,6 +47,11 @@
->  #define ICL_EVENTSEL_ADAPTIVE				(1ULL << 34)
->  #define ICL_FIXED_0_ADAPTIVE				(1ULL << 32)
->  
-> +#define INTEL_FIXED_BITS_MASK					\
-> +	(INTEL_FIXED_0_KERNEL | INTEL_FIXED_0_USER |		\
-> +	 INTEL_FIXED_0_ANYTHREAD | INTEL_FIXED_0_ENABLE_PMI |	\
-> +	 ICL_FIXED_0_ADAPTIVE)
-> +
->  #define intel_fixed_bits_by_idx(_idx, _bits)			\
->  	((_bits) << ((_idx) * INTEL_FIXED_BITS_STRIDE))
->  
-> diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-> index ad89d0bd6005..103604c4b33b 100644
-> --- a/arch/x86/kvm/pmu.h
-> +++ b/arch/x86/kvm/pmu.h
-> @@ -13,7 +13,7 @@
->  #define MSR_IA32_MISC_ENABLE_PMU_RO_MASK (MSR_IA32_MISC_ENABLE_PEBS_UNAVAIL |	\
->  					  MSR_IA32_MISC_ENABLE_BTS_UNAVAIL)
->  
-> -/* retrieve the 4 bits for EN and PMI out of IA32_FIXED_CTR_CTRL */
-> +/* retrieve a fixed counter bits out of IA32_FIXED_CTR_CTRL */
->  #define fixed_ctrl_field(ctrl_reg, idx) \
->  	(((ctrl_reg) >> ((idx) * INTEL_FIXED_BITS_STRIDE)) & INTEL_FIXED_BITS_MASK)
->  
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 8060c2857bb2..c9322029a8ae 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2665,6 +2665,9 @@ static void perf_log_itrace_start(struct perf_event *event);
+ 
+ static void perf_event_unthrottle(struct perf_event *event, bool start)
+ {
++	if (event->state <= PERF_EVENT_STATE_OFF)
++		return;
++
+ 	event->hw.interrupts = 0;
+ 	if (start)
+ 		event->pmu->start(event, 0);
+@@ -2674,6 +2677,9 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
+ 
+ static void perf_event_throttle(struct perf_event *event)
+ {
++	if (event->state <= PERF_EVENT_STATE_OFF)
++		return;
++
+ 	event->hw.interrupts = MAX_INTERRUPTS;
+ 	event->pmu->stop(event, 0);
+ 	if (event == event->group_leader)
+-- 
+2.50.0
 
