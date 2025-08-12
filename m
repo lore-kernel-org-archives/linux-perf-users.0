@@ -1,111 +1,96 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2BC2311C34;
-	Tue, 12 Aug 2025 05:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05AE920C001;
+	Tue, 12 Aug 2025 06:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754976166; cv=none; b=h35Dh09QU30nxwG3oMlELReim6Ivba57JrkfxohnMdpkyECghjQlRb6we9T0ynvePHSrvm0Ji/aXsPe7/k5UbKTNVwthHML8pVRFF2XKi9rPIRSN1pYWKw7nHBJb8BHv2JP65bnpQyspVyYZRxIZv0gbDnG3LX2bhRhIlDpN8+g=
+	t=1754980571; cv=none; b=fqKhrMMNlYbxhJN+iMjSDMtA3jC4Qi68R36BL3YY+Py2OUEGmtK0Gz060Gfvt6ovpL2sFY5klGwRQHRdoQfhYY7g06MMPZHBl7Z26lT57OzgLLpAnml6YRhh+OVms5JxrJHGVbxhp9uK+pCO8K1s5zc6uVkdgNXDPcy8ej38U60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754976166; c=relaxed/simple;
-	bh=xKGtxk14qWbIxBnbnD7lvK6dle3f9/QDyUPqoK06VWc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qkNRtzmSUEjpO9yznz9TSx3hHt9rriiVIOynIb9f2FBjzTDz+sNntbJ6872H7sANuMS4x5Cy/QPNffW8EDIfP8UVMzRPoXClPyHB0EAqOBXBNbgEla+kd6fItRKVPwO0Qaf5ghOYHoO/a85+5leYTlHlpigJY5kTMPpyIjhbFk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OXvC01V1; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OXvC01V1"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57C07u3a004660;
-	Tue, 12 Aug 2025 05:22:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=xKGtxk14qWbIxBnbnD7lvK6dle3f9/
-	QDyUPqoK06VWc=; b=OXvC01V1wgcAkEwFeDktK/qmKxIDK2dv77roheOf1O5KgS
-	QBTu8iEdRL/78+FJ6hQC3ZqxxYMpm1yJpv2cnMc3c7T4eKxaGWHTHcLM6VgRf30e
-	LIelJ0B4MOCnnxSMEqBVQW4aKFYxmI7HRX/fuHmCogsyC/cqbvtuaGWTlEmocsTp
-	oU9W0r+GJrd+yt2eC/bqqgIKnyXL2yvACPfgiX9MnPDW82l/5n6tDKZt9Ln3bW98
-	K1ZbpcANK72ZqwzJqU3DqCQkIpp63++QZurwoLtRw8bXixXWZ/LFT/L5wGbonNK9
-	HoFXIvBq8jDyU1t0lTnEYYSAKiQbrR97sqtl3PTQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48dvrnvff8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Aug 2025 05:22:29 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 57C5LTYV013997;
-	Tue, 12 Aug 2025 05:22:28 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48dvrnvff4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Aug 2025 05:22:28 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57C1h7gx017588;
-	Tue, 12 Aug 2025 05:22:27 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 48ekc3gman-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Aug 2025 05:22:27 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 57C5MQwK27918598
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 12 Aug 2025 05:22:26 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2F55B2004B;
-	Tue, 12 Aug 2025 05:22:26 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B71B820040;
-	Tue, 12 Aug 2025 05:22:23 +0000 (GMT)
-Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.ibm.com (unknown [9.124.216.188])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 12 Aug 2025 05:22:23 +0000 (GMT)
-Date: Tue, 12 Aug 2025 10:52:19 +0530
-From: Gautam Menghani <gautam@linux.ibm.com>
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com
-Cc: maddy@linux.ibm.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] perf python: Add an example for sampling
-Message-ID: <aJrPixEe8V-oFK_O@li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.ibm.com>
-References: <20250728055937.58531-1-gautam@linux.ibm.com>
+	s=arc-20240116; t=1754980571; c=relaxed/simple;
+	bh=PqRBrCjuPPipQqbUjPrWWJCYZSDA5+ULEgdTcRC0Z84=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QcSiKdZ+5Lb/PO/FHPmV5lJc4j5lYMqjhvGtEoTJVUuoNUDvYJlnY1GcrlT1J4WpxZHDeS+Id9Sf8vUMJla7LAWDezCREdL0oLA3on9SF9PTafJyLjNcP6YkaJiJ8vxcJKvSW23vNIvw86sVMzFRztq3Ka3lasTlekO+ZG5FnPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 9bdcc792774611f0b29709d653e92f7d-20250812
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:a156faad-1cdd-447b-aa95-3a03135fa44c,IP:0,U
+	RL:0,TC:0,Content:0,EDM:-25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-25
+X-CID-META: VersionHash:6493067,CLOUDID:ca2de71062e30d2de27ae29bbae5efd9,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:1,IP:nil,URL
+	:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SP
+	R:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 9bdcc792774611f0b29709d653e92f7d-20250812
+Received: from node2.com.cn [(10.44.16.197)] by mailgw.kylinos.cn
+	(envelope-from <zhaoguohan@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1047693736; Tue, 12 Aug 2025 14:35:59 +0800
+Received: from node2.com.cn (localhost [127.0.0.1])
+	by node2.com.cn (NSMail) with SMTP id 37199B8258E7;
+	Tue, 12 Aug 2025 14:35:59 +0800 (CST)
+X-ns-mid: postfix-689AE0CE-987816144
+Received: from localhost.localdomain (unknown [10.42.12.87])
+	by node2.com.cn (NSMail) with ESMTPA id 9B798B812916;
+	Tue, 12 Aug 2025 06:35:52 +0000 (UTC)
+From: zhaoguohan@kylinos.cn
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	GuoHan Zhao <zhaoguohan@kylinos.cn>
+Subject: [PATCH] perf drm_pmu: fix fd_dir leaks in for_each_drm_fdinfo_in_dir()
+Date: Tue, 12 Aug 2025 14:35:46 +0800
+Message-ID: <20250812063546.13797-1-zhaoguohan@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250728055937.58531-1-gautam@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEyMDA0OCBTYWx0ZWRfX+DH7CG0D2NIG
- jZjplNYinTnZd7wV7j4zOM26wL1YCjt1KIeWZifMxulrUF9hL5cGEHCznd8534t/3HqN0RPNkXU
- GmsdnQjzxr8j9fr0JLPzAG5NUL+Q4xi6F7FJeTKTavB8t0F+p0QiJThyAjotFoK513ibIHaNK3U
- VtDzVcoOsnrQ6jOpsfmI/+WvPTtLcSFo6Kd0lhQYJB4m8yf2Vj0AQD/LSzJPJXO1BREKBzdgps9
- m4eQAyZ/xQr5V9NrhDYAYS6dRvKWnZiVIf5p7R8Glh46llqG5WTxKvZ4G7c5bizL2GEcdwKzrWc
- fFBPtMe1IPgImY45pbGd3lLN3PedWJUcctzHCgOdBpzbFbUu0X7GN+58F2JUCgttdiiGykpyPUz
- riXd8C7jz1n2lY9rVyPZkEAPpTyHgoPVDigcFtAeSVL+7E9gIPmCf4EtweDIRB+hjm406fC8
-X-Authority-Analysis: v=2.4 cv=GrpC+l1C c=1 sm=1 tr=0 ts=689acf95 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=kj9zAlcOel0A:10 a=2OwXVqhp2XgA:10 a=ksViGgUnWK_QOdP0v_MA:9
- a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: sFETTEih0as8YD_2vJo2jeMLMK5FdFwU
-X-Proofpoint-ORIG-GUID: 6p3ttzUjRn_RS9O2GgLzOmpTikUpQ5Vi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-12_01,2025-08-11_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 suspectscore=0 phishscore=0 bulkscore=0 mlxlogscore=742
- malwarescore=0 clxscore=1015 adultscore=0 mlxscore=0 spamscore=0
- lowpriorityscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2507300000 definitions=main-2508120048
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+From: GuoHan Zhao <zhaoguohan@kylinos.cn>
 
-Please do review this series and let me know if any changes are needed.
+Fix file descriptor leak when callback function returns error. The
+function was directly returning without closing fdinfo_dir_fd and
+fd_dir when cb() returned non-zero value.
 
-Thanks,
-Gautam
+Signed-off-by: GuoHan Zhao <zhaoguohan@kylinos.cn>
+---
+ tools/perf/util/drm_pmu.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/drm_pmu.c b/tools/perf/util/drm_pmu.c
+index 988890f37ba7..424a76d1a953 100644
+--- a/tools/perf/util/drm_pmu.c
++++ b/tools/perf/util/drm_pmu.c
+@@ -458,8 +458,10 @@ static int for_each_drm_fdinfo_in_dir(int (*cb)(void=
+ *args, int fdinfo_dir_fd, c
+ 		}
+ 		ret =3D cb(args, fdinfo_dir_fd, fd_entry->d_name);
+ 		if (ret)
+-			return ret;
++			goto cleanup;
+ 	}
++
++cleanup:
+ 	if (fdinfo_dir_fd !=3D -1)
+ 		close(fdinfo_dir_fd);
+ 	closedir(fd_dir);
+--=20
+2.43.0
+
