@@ -1,40 +1,52 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7441D2E8DEF;
-	Tue, 12 Aug 2025 09:23:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15AB27FD72;
+	Tue, 12 Aug 2025 13:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754990598; cv=none; b=JytYUZQ1EajFyqBsaNkh752GhqgdBz321Bb+gKIwhZFJEeofzkYg1I4BmCDJ2pKAXnc8RqcqLo8+F2sYj3qLaJwlMy5EQsxI+8MET1RcXpvPqQb5hLW+ryzRzN5yNksivxRdi94BbzIAndBAr4w6C5jOU3y6BVeQ6RX/OcIA9XI=
+	t=1755006024; cv=none; b=CFMxTpV6KPnvm+w3ATNRZtzSNO6TpKzyPjg3NLhuqJbuzqvg2F0yYZrFGVFx7jZVa4H7FTffNkmfmImrw3CPwqbLhciCdNDU5mF/l9gL5TGWPIe26gH0V1B8hzDta4HfyTZnVcE5K2Tnr/ozleZILWtnesIWVhb4KcevhX6Is8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754990598; c=relaxed/simple;
-	bh=F0JCsvxp2KSiNsqw+e6p8pqMJjyP4dxWClz/SZQ4STg=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=kZdIPZ0gMCq0gx77nzn0SYFRHqj8xh3O5nRU2EOuj+EaVDdTVSMDJoWqWrBoAMjaHJR5OIZ3UamPVyR5f+2dctBUffxvMoYLOXsUZt/cVIGFpmiqQ6a1zoTD8ArfCynbiQguW0P81OKTaLMRoRbFdj1FIaNYIj3Q7lFPxlIvrMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=etulDBWh; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="etulDBWh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1754990570; x=1755595370; i=markus.elfring@web.de;
-	bh=DlQ74IAYyuXXvfkcXZAxGgtcU70uGcbNe3fwcVohW3w=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=etulDBWhaVEtgSmEWvcqJI3Fz51dCkQzup1mBNOovot4AQELy3+bMJPqJ5IvdeHo
-	 0yU3qJH2z8exkF/7PiCX1VNK4uJ1RyRLjIuCDP+6LzjXlo1/X4B9eiHcKLa/S1eT0
-	 VD0RTPVgC6ADnX0tUzLfmp87uIi6q0+RPmFqUdF0o/d+jiuFo78m+/3QyF/8KeQtt
-	 JfP2q7RYvmfXLSsSBdtfl+kIQjIr0YUnhMXlVecfRtp3qYY3QG8ImsdFatyuzNVMa
-	 nPajrgMy07l7QX1wPUUqCLZAC5E06ClXplEZmuXls4IcZTWyGsbCPn8cpKN3xLxmM
-	 Qvjn4zX1UXX3izKPZw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.69.213]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M4bUg-1umIuq3RmI-008SPM; Tue, 12
- Aug 2025 11:22:50 +0200
-Message-ID: <2d1c8222-cfc6-40e1-b26e-9cb1adc90202@web.de>
-Date: Tue, 12 Aug 2025 11:22:43 +0200
+	s=arc-20240116; t=1755006024; c=relaxed/simple;
+	bh=h+1RXMbw424li1OarsefMJHtM9EXvMmgbeIoNTHRHWU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C4OMVylhDfiw+ue/cvLbC4wRpbK+itaMFrpKCeEoHcUJdOoS6whSiPljZMtXCN9TP71gTDFMdKGtFpuvMEs0NvK13agfiUzMH/zS2df/vKgQs6ND13yN3pbps4rpGzjvvSfBO24ozl3gB8nPqWPnv3SmV26DkPwsTbl4RMx73qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-76c0387f1edso552831b3a.3;
+        Tue, 12 Aug 2025 06:40:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755006022; x=1755610822;
+        h=content-transfer-encoding:in-reply-to:organization:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e8rK2E+jm7j471B3AnObKgT85KTYfe6f4io/jt1DHyM=;
+        b=UD31PCIRGrLrpjIoCKqXEMDX0CML/u10/ETGpQ8oM9URVZM/+H8LKAYKxEontF6m5B
+         1SyZgKvgMRM4qGtcWU5+Oyct4+ayy+XbtJ5W+uxVbzP0SBuZYhWmzWK6/BvEUxPzCjsY
+         u9JHtU37ZWvQOj7Uwz7n/7aOnxUK+x8O5gt6qy3QEiIcbGcAWK6iDEHRpc0UI3br8sKi
+         VPOUVtrM4O6addIiDebFiM291LlgwK/jihxn0kEknJi6J/u3p1D6E2i0A9DHrPAiDJKv
+         UjBELhYJRLlYO680n4kdQzGDeC2aIu005aE9/IqRab/3mdFhvcr/aM12/x1wfAHxb5pE
+         yRiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBikXKTU9odulkHY7kW6mi6fYjhxP3tkRCudJZDjLKWiYkcIFA/C/B1O4WQ4+WFOiZDkt8oww76VlZ4Mo=@vger.kernel.org, AJvYcCXPRk55tMLd1q9PWOwyUlhXSvu+v0ekJn/+u7rZntus/Nc64VoGojp0LY6j3mK559TaYcjvTNZJeSEVz4oF2F+S3Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcXXs288GDJmQMYW9qEV7WqK/5bzZrWO1NxVGsb5Pb2wKjqvV5
+	4L9oZFK6sj+DBjRcNdhDOa+N2xpY1oz+gUfQHJ9GYUE278NJgiQHmtAyxjURFA==
+X-Gm-Gg: ASbGncv3KmtBaOATxak56kdASpMkWIasv1bIAM/L5Oj3hFqDQu7+9/8S+eNoMY9EC7U
+	9YykQ1fXcisDiK5wqIxQ748Au4OI1O8gui1eqB9+/k6fbqC1Ci55hPnflkQQaHctccEc42XzXKS
+	mdxj1kpXztXcm7xTaEkMssRWMu42o5w+XEVahKoBq36gxcmYcQyvLBpJFOuqgcyxwWW5WfCOTiy
+	QwV5yBjvJizZ4l5rZbLR5de4Isp1itpxJFKKr+TWCnqyhoykJ7xJ31edWr2PyFsXFUUfpqdChsd
+	XfECHJyscfxPwQz7wC9kkhz7b82khae6075i5THvnPx4FdVDhotJnIOq0XKrOvTQsLSmrMIA+iB
+	+lgKQBuVu9FhZHqyn0VZI1oTYKuMVWG9P
+X-Google-Smtp-Source: AGHT+IF6T5PJaLoAOGxUmcqIfeeZRaSySTl2WRNi3/6OpG31KSzDrfitRxWX/mjS2qmW0U+/CIdQsw==
+X-Received: by 2002:a05:6a00:1912:b0:76b:f23f:6591 with SMTP id d2e1a72fcca58-76e1844e4c0mr767224b3a.6.1755006021810;
+        Tue, 12 Aug 2025 06:40:21 -0700 (PDT)
+Received: from [192.168.50.136] ([118.32.98.101])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-76bcce8fa92sm29618675b3a.45.2025.08.12.06.40.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Aug 2025 06:40:21 -0700 (PDT)
+Message-ID: <757932d2-50ae-4e7b-93df-121199cda023@kzalloc.com>
+Date: Tue, 12 Aug 2025 22:40:15 +0900
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -42,91 +54,125 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: GuoHan Zhao <zhaoguohan@kylinos.cn>, linux-perf-users@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
+Subject: Re: [PATCH v2] perf: Avoid undefined behavior from stopping/starting
+ inactive events
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
- Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
- Kan Liang <kan.liang@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>,
- Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Falcon <thomas.falcon@intel.com>
-References: <20250812085941.19982-1-zhaoguohan@kylinos.cn>
-Subject: Re: [PATCH] perf parse-events: Fix potential null pointer dereference
- in __add_event()
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250812085941.19982-1-zhaoguohan@kylinos.cn>
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Liang Kan <kan.liang@linux.intel.com>, Will Deacon <will@kernel.org>,
+ Yeoreum Yun <yeoreum.yun@arm.com>, Austin Kim <austindh.kim@gmail.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ syzkaller@googlegroups.com
+References: <20250812012722.127646-1-ysk@kzalloc.com>
+ <20250812075656.GE4067720@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: Yunseong Kim <ysk@kzalloc.com>
+Organization: kzalloc
+In-Reply-To: <20250812075656.GE4067720@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:repsrdyvNaflICgSBMKjor80pa66cCn/EuIVK/eEt3ah92dd/Nw
- AtlXS++diGmWc9ISY5OB1/tcBv8lqo/Z6pyi+9sPUp0loRSz4RBkuQrU9rv8tfCiK9QSqWd
- mniYnpeA44tRL+6F1ECsLwdfMDoAFEcFZHBX2eyDmCCOHeLOMoXePKC/w3eZIPCkPO9kxzn
- 4j19NyqG5f3j+ez6FxrgQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:L27j632a4xU=;KW2w6k2bvCahaEqkvDx+yBK6RMe
- 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
+Content-Transfer-Encoding: 7bit
 
-=E2=80=A6
-> Add a null check before accessing evsel members in the error path.
+Hi Peter,
 
-* Please extend the goto chain instead for better exception handling.
-  You may reorder jump targets accordingly.
+Thank you so much for the code review!
 
-* How do you think about to add any tags (like =E2=80=9CFixes=E2=80=9D and=
- =E2=80=9CCc=E2=80=9D) accordingly?
+On 8/12/25 4:56 PM, Peter Zijlstra wrote:
+> On Tue, Aug 12, 2025 at 01:27:22AM +0000, Yunseong Kim wrote:
+>> Calling pmu->start()/stop() on events in PERF_EVENT_STATE_OFF can leave
+>> event->hw.idx at -1, which may lead to UBSAN shift-out-of-bounds reports
+>> when the PMU code later shifts by a negative exponent.
+> 
+> Yeah, but how do we get there? I suppose there is a race somewhere?
+> Please describe.
 
-* Would a summary phrase like =E2=80=9CPrevent null pointer dereference in=
- __add_event()=E2=80=9D
-  be nicer?
+It appears to be an issue in how event groups handle throttling when some
+members are intentionally disabled, rather than a race condition.
 
+Based on the analysis and the reproducer provided by Mark Rutland
+(this issue on both arm64 and x86-64), the scenario unfolds as follows:
 
-Regards,
-Markus
+ 1. A group leader event is configured with a very aggressive sampling
+    period(e.g., sample_period = 1). This causes frequent interrupts and
+    triggers the throttling mechanism.
+
+ 2. A child event in the same group is created in a disabled state
+    (.disabled = 1). This event remains in PERF_EVENT_STATE_OFF. Since it
+    hasn't been scheduled onto the PMU, its event->hw.idx remains
+    initialized at -1.
+
+ 3. When throttling occurs, perf_event_throttle_group() and later
+    perf_event_unthrottle_group() iterates through all siblings, including
+    the disabled child event.
+
+ 4. perf_event_throttle()/unthrottle() are called on this inactive child
+    event, which then call event->pmu->start()/stop().
+
+ 5. The PMU driver receives the event with hw.idx == -1 and attempts to use
+    it as a shift exponent, leading to the UBSAN report.
+
+The core issue is that the throttling mechanism attempts to start/stop
+events that are not actively scheduled on the hardware.
+
+>> Move the state check into perf_event_throttle()/perf_event_unthrottle() so
+>> that inactive events are skipped entirely. This ensures only active events
+>> with a valid hw.idx are processed, preventing undefined behavior and
+>> silencing UBSAN warnings.
+>> The problem can be reproduced with the syzkaller reproducer:
+>> Link: https://lore.kernel.org/lkml/714b7ba2-693e-42e4-bce4-feef2a5e7613@kzalloc.com/
+>>
+>> Fixes: 9734e25fbf5a ("perf: Fix the throttle logic for a group")
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Signed-off-by: Yunseong Kim <ysk@kzalloc.com>
+>> ---
+>>  kernel/events/core.c | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 8060c2857bb2..c9322029a8ae 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -2665,6 +2665,9 @@ static void perf_log_itrace_start(struct perf_event *event);
+>>  
+>>  static void perf_event_unthrottle(struct perf_event *event, bool start)
+>>  {
+>> +	if (event->state <= PERF_EVENT_STATE_OFF)
+>> +		return;
+> 
+> This seems wrong. We should only {,un}throttle ACTIVE events, no?
+
+You are absolutely correct. Throttling should only manage events that are
+actively running on the hardware. My proposed check <= PERF_EVENT_STATE_OFF
+was too permissive. As you pointed out, we must ensure we only attempt to
+throttle or unthrottle events that are currently active.
+
+I'm going to make changes and test it, before sending the next patch.
+
++	if (event->state != PERF_EVENT_STATE_ACTIVE)
++		return;
+
+>>  	event->hw.interrupts = 0;
+>>  	if (start)
+>>  		event->pmu->start(event, 0);
+>> @@ -2674,6 +2677,9 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
+>>  
+>>  static void perf_event_throttle(struct perf_event *event)
+>>  {
+>> +	if (event->state <= PERF_EVENT_STATE_OFF)
+>> +		return;
+>> +
+>>  	event->hw.interrupts = MAX_INTERRUPTS;
+>>  	event->pmu->stop(event, 0);
+>>  	if (event == event->group_leader)
+>> -- 
+>> 2.50.0
+>>
+
+I will send v3 shortly with this correction and an updated commit message
+detailing the root cause analysis above.
+
+Thanks,
+Yunseong Kim
