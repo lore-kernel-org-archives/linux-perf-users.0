@@ -1,110 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E1C2F0661;
-	Tue, 12 Aug 2025 22:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FC42F0682;
+	Tue, 12 Aug 2025 23:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755039153; cv=none; b=dFaudrFafl1wQgmpGfDv89FmmwjapiuG+fRtET02D+x9MEiZGQHg/slplTuoN8fQSrOfI/IX351g2KK4hcGYmRTgiJq80XQ8vzqFTvG32WzFd+FKzBJaZSdApcRm9oXyVhf4jFvQU8kggJ5lM/zOrmQwR9Hq4JW3egIPtrCSejs=
+	t=1755042702; cv=none; b=kLDnmm2bYerKWqSH0PxuEnN+Tc2Top2Gr5gKWkV2UBG3kdpFFNqynOuC5DjKFeHRyy2VP7Y02Z98qihY4KPC6v0c4239kkyJfqYJGuQ1S7IjtvKflfGYDiRwqvDdxf/LNw4gmKAAAc1KNeQUC3YQmqCBkhySNQLKUBbqbwgNv7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755039153; c=relaxed/simple;
-	bh=4QcopLUUVGIVRRCSZ4jv8Sl09V42iH0FB+VA3/a1kZI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=UMbJjJOw6feHKJGPiblFVbMUd80U79UIYm461AxmxQNrIX9MEnFsIu5gruIHsmOk84tbnuu/rlO+z3dt5GgvXUx/ET6Pvcu0ZOT6GwNOcnPcootQ+qXUW7I1E9JaflxGnxnVoMrhWEyUHeW8oJEqoPpkBcMSIbvHLWGbNQ5Sd1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=a+VJflJa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755042702; c=relaxed/simple;
+	bh=TY/UNLEZcNr8XTP7+W7T8G0WnkVyOrUfbEJm1Kdh1nk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aVjN3+MhogMYwR8AU45MyKZT/l4HRU8tp1w5XvEOZ+pA+j8G6wLldbnZYFBKJfpYnNqnFQgIeLUsiFttW2HuGmhEf6Jp0pfUTrWfE6m4G1njTM6c+Q1INnb8hXwr1Om6B9YhBn31U4av1W7IidJg20OoXdsqn5guhwJLKytEyaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d1Cboved; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="a+VJflJa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48B46C4CEF0;
-	Tue, 12 Aug 2025 22:52:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1755039153;
-	bh=4QcopLUUVGIVRRCSZ4jv8Sl09V42iH0FB+VA3/a1kZI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=a+VJflJavF7yIMQioCGtFvNcvBDFfTx45hCKkTusYA2BdnqZ4kWT38UBmlbg+oIZ8
-	 J7h9f7rapCJ5U4FK5B6scoDK/gC4UcmFx7+jCF9mS1b8IzhQgiAFmp5Exg01cPkPBS
-	 9/DB97qAo9nryrBGFF/USiAc3gsuzO/6GNmoq6vM=
-Date: Tue, 12 Aug 2025 15:52:30 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer
- <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily
- Gorbik <gor@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>,
- "David S . Miller" <davem@davemloft.net>, Andreas Larsson
- <andreas@gaisler.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy
- Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Alexander Viro
- <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
- <jack@suse.cz>, Kees Cook <kees@kernel.org>, David Hildenbrand
- <david@redhat.com>, Zi Yan <ziy@nvidia.com>, Baolin Wang
- <baolin.wang@linux.alibaba.com>, "Liam R . Howlett"
- <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>, Ryan Roberts
- <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song
- <baohua@kernel.org>, Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou
- <chengming.zhou@linux.dev>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
- <mhocko@suse.com>, David Rientjes <rientjes@google.com>, Shakeel Butt
- <shakeel.butt@linux.dev>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, Masami
- Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Juri
- Lelli <juri.lelli@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel
- Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, Jason
- Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, Peter Xu
- <peterx@redhat.com>, Jann Horn <jannh@google.com>, Pedro Falcato
- <pfalcato@suse.de>, Matthew Wilcox <willy@infradead.org>, Mateusz Guzik
- <mjguzik@gmail.com>, linux-s390@vger.kernel.org,
- linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 02/10] mm: convert core mm to mm_flags_*() accessors
-Message-Id: <20250812155230.f955c6470db223bb371ac683@linux-foundation.org>
-In-Reply-To: <1eb2266f4408798a55bda00cb04545a3203aa572.1755012943.git.lorenzo.stoakes@oracle.com>
-References: <cover.1755012943.git.lorenzo.stoakes@oracle.com>
-	<1eb2266f4408798a55bda00cb04545a3203aa572.1755012943.git.lorenzo.stoakes@oracle.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d1Cboved"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755042701; x=1786578701;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=TY/UNLEZcNr8XTP7+W7T8G0WnkVyOrUfbEJm1Kdh1nk=;
+  b=d1CbovedC6sNqX1UVtr4TFy5t3S/wtxYcCILPkhQh7z1rrZyrvIt4+/i
+   vxijctH9p0l2WBzqKEh2pHhEsDKjNph1NgeUWxykcbsn4kBslncDwBqVv
+   Oon62p0v+AEEyP1L2KMzaKN9IpEtEgveHB0f7lxDPG4GC4k6cDxhZaGZN
+   uYU7r18c3ohNcOIPiM24azP3kAWtTIfVmfnLn0pKnEOTO6f1RXZo2rkyJ
+   nJl0RF+jB7yAl5fEwNdSDPrrKxmwqwx72xsq6c4/zf4m+IvKVM4/uTHmw
+   pOJU+DUsJ1TwGFpqnlvhYslYp0zKu+kwdIqVylYqTchPHdekMfq2fCP4f
+   A==;
+X-CSE-ConnectionGUID: OZmjcZ96ScuoFDBool5EKA==
+X-CSE-MsgGUID: 4S7yJewWRRucWoBmK+w+MA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11520"; a="56355031"
+X-IronPort-AV: E=Sophos;i="6.17,285,1747724400"; 
+   d="scan'208";a="56355031"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 16:51:37 -0700
+X-CSE-ConnectionGUID: 2iBUw5OvS5KTbmo+SKW8mw==
+X-CSE-MsgGUID: Hz2jtjzeTESLxIAz7EgT3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,285,1747724400"; 
+   d="scan'208";a="166695571"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 16:51:32 -0700
+Received: from [10.246.163.36] (kliang2-mobl1.ccr.corp.intel.com [10.246.163.36])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id C02A220B571C;
+	Tue, 12 Aug 2025 16:51:29 -0700 (PDT)
+Message-ID: <922f69f6-e290-46f6-af6f-5a71e4508cf0@linux.intel.com>
+Date: Tue, 12 Aug 2025 16:51:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] perf: Avoid undefined behavior from stopping/starting
+ inactive events
+To: Yunseong Kim <ysk@kzalloc.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Will Deacon <will@kernel.org>,
+ Yeoreum Yun <yeoreum.yun@arm.com>, Austin Kim <austindh.kim@gmail.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ syzkaller@googlegroups.com
+References: <20250812181046.292382-2-ysk@kzalloc.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250812181046.292382-2-ysk@kzalloc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Tue, 12 Aug 2025 16:44:11 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
 
-> As part of the effort to move to mm->flags becoming a bitmap field, convert
-> existing users to making use of the mm_flags_*() accessors which will, when
-> the conversion is complete, be the only means of accessing mm_struct flags.
+
+On 2025-08-12 11:10 a.m., Yunseong Kim wrote:
+> Calling pmu->start()/stop() on perf events in PERF_EVENT_STATE_OFF can
+> leave event->hw.idx at -1. When PMU drivers later attempt to use this
+> negative index as a shift exponent in bitwise operations, it leads to UBSAN
+> shift-out-of-bounds reports.
 > 
-> This will result in the debug output being that of a bitmap output, which
-> will result in a minor change here, but since this is for debug only, this
-> should have no bearing.
+> The issue is a logical flaw in how event groups handle throttling when some
+> members are intentionally disabled. Based on the analysis and the
+> reproducer provided by Mark Rutland (this issue on both arm64 and x86-64).
 > 
-> Otherwise, no functional changes intended.
+> The scenario unfolds as follows:
+> 
+>  1. A group leader event is configured with a very aggressive sampling
+>     period (e.g., sample_period = 1). This causes frequent interrupts and
+>     triggers the throttling mechanism.
+>  2. A child event in the same group is created in a disabled state
+>     (.disabled = 1). This event remains in PERF_EVENT_STATE_OFF.
+>     Since it hasn't been scheduled onto the PMU, its event->hw.idx remains
+>     initialized at -1.
+>  3. When throttling occurs, perf_event_throttle_group() and later
+>     perf_event_unthrottle_group() iterate through all siblings, including
+>     the disabled child event.
+>  4. perf_event_throttle()/unthrottle() are called on this inactive child
+>     event, which then call event->pmu->start()/stop().
+>  5. The PMU driver receives the event with hw.idx == -1 and attempts to
+>     use it as a shift exponent. e.g., in macros like PMCNTENSET(idx),
+>     leading to the UBSAN report.
+> 
+> The throttling mechanism attempts to start/stop events that are not
+> actively scheduled on the hardware.
+> 
+> Move the state check into perf_event_throttle()/perf_event_unthrottle() so
+> that inactive events are skipped entirely. This ensures only active events
+> with a valid hw.idx are processed, preventing undefined behavior and
+> silencing UBSAN warnings. The corrected check ensures true before
+> proceeding with PMU operations.
+> 
+> The problem can be reproduced with the syzkaller reproducer:
+> Link: https://lore.kernel.org/lkml/714b7ba2-693e-42e4-bce4-feef2a5e7613@kzalloc.com/
+> 
+> Fixes: 9734e25fbf5a ("perf: Fix the throttle logic for a group")
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Yunseong Kim <ysk@kzalloc.com>
 
-Code is obviously buggy - you cannot possibly have tested it.
+Thanks for the fix.
 
---- a/mm/khugepaged.c~mm-convert-core-mm-to-mm_flags_-accessors-fix
-+++ a/mm/khugepaged.c
-@@ -1459,7 +1459,7 @@ static void collect_mm_slot(struct khuge
- 		/*
- 		 * Not strictly needed because the mm exited already.
- 		 *
--		 * mm_clear(mm, MMF_VM_HUGEPAGE);
-+		 * mm_flags_clear(MMF_VM_HUGEPAGE, mm);
- 		 */
- 
- 		/* khugepaged_mm_lock actually not necessary for the below */
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-there, fixed.
+Thanks,
+Kan
 
-I applied the series to mm-new, thanks.  Emails were suppressed out of
-kindness.
+> ---
+>  kernel/events/core.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 8060c2857bb2..872122e074e5 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2665,6 +2665,9 @@ static void perf_log_itrace_start(struct perf_event *event);
+>  
+>  static void perf_event_unthrottle(struct perf_event *event, bool start)
+>  {
+> +	if (event->state != PERF_EVENT_STATE_ACTIVE)
+> +		return;
+> +
+>  	event->hw.interrupts = 0;
+>  	if (start)
+>  		event->pmu->start(event, 0);
+> @@ -2674,6 +2677,9 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
+>  
+>  static void perf_event_throttle(struct perf_event *event)
+>  {
+> +	if (event->state != PERF_EVENT_STATE_ACTIVE)
+> +		return;
+> +
+>  	event->hw.interrupts = MAX_INTERRUPTS;
+>  	event->pmu->stop(event, 0);
+>  	if (event == event->group_leader)
 
