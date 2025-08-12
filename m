@@ -1,106 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E152F0673;
-	Tue, 12 Aug 2025 20:13:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45CB41F9A89;
+	Tue, 12 Aug 2025 22:12:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755029609; cv=none; b=f+t5OakJvHg2tdZdYK1Cb5Q33bj15u3NXbgdA2soajct3WCtpMlDYwMxX8Mz31g3gEYEMXpla4dPU14/wPPGHxIp7Bq+Da7SN6yalTKc4SSFG3DtfmYw3wnQqximghMPGlaQft2lPFBR3zT/XpboyPwLhw1+G98b851rs15WciY=
+	t=1755036755; cv=none; b=nd6jBAqykvWRP5inhCFAOqlV0BI1TELS0RiPvK+pcpbm8jaGDb+usgU0n+zQtiMmGaszBtLvMNBAuvWrxHfSJ59GralvZVldPCMZuVR3p8rYZ0F6j2F770KpYImFNDw5uKeofQQgQiibOVyonlVTd9Sa55k3FVBUH95ihsjp+Rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755029609; c=relaxed/simple;
-	bh=67thnts7t0DLgkZq/Ii6wBw0jrSFJtM5mUMWCYrbVS8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gpmu5EpKg06/gjEnOBvYRUSECSS0AJpSo/Jg3E7SPM8lTzATPALntaAnVPGdHWcgOzWNPc20gGgrlIszCa4t6mbqeg6AKSECBHM8/1zTkWeQfXOyivUjt+GsgkdQAZFYi9G019HsjrBqFBLJOhvpehSAn9VhdAx9tf/AMsODE3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gZk5s4qd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755036755; c=relaxed/simple;
+	bh=INSAUmyfMNmpHOAYNt1O0K2kCVD5UJVG2qd1v8Pzt0s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=stn4aJwCyxfsKIfJdmsvlOhiGcdMIGyvQ3GjNtNDIJ7U1rNpGilbDJ9zVtywQ/+8zdECaWGQr7XfQxKPZ2pNmy50JuazthgFC/J4qgka/6tIDwtmzPg9b8S34ZriWE3pAtcnIVu3qkZ3XPEu3waKiWWrUtKQTYQikyvAZakxj5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sLueRq7M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gZk5s4qd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AD26C4CEF0;
-	Tue, 12 Aug 2025 20:13:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sLueRq7M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E20AC4CEF0;
+	Tue, 12 Aug 2025 22:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755029609;
-	bh=67thnts7t0DLgkZq/Ii6wBw0jrSFJtM5mUMWCYrbVS8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gZk5s4qdbM6pcT8YroWmQOKRLwIIFGieYYi0v9aoNi2ICJDuc3wg8bhKf+s6pvQNd
-	 c+i3MR/y/FAagcjMfROfPVLTOsoG3YlP79F/PpCEZGyFDsyuBtQtypuh96jit6toX0
-	 v+aQUOZ71f1sVS4LLJKLKq+8hdeGPjE2mpVgs/FuY2KZSzhX/6T7dzeh6CvpLmMDoF
-	 weuTiAVwv1mVOxNZA1KKoDpEA1hk0wwazemaioBJiDYkvkx74pTiTr9+YupNxQLK8F
-	 rz5RHVzbW4bBYKxh5nyMODvXXmIYvJS3DB65gwqyMSJvM3wUZw/6uqpQTB/gIvOiXG
-	 Gs3FPiwr7oo7A==
-From: SeongJae Park <sj@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Kees Cook <kees@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Nico Pache <npache@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>,
-	Barry Song <baohua@kernel.org>,
-	Xu Xin <xu.xin16@zte.com.cn>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	David Rientjes <rientjes@google.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Peter Xu <peterx@redhat.com>,
-	Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	Matthew Wilcox <willy@infradead.org>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	linux-s390@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 00/10] mm: make mm->flags a bitmap and 64-bit on all arches
-Date: Tue, 12 Aug 2025 13:13:26 -0700
-Message-Id: <20250812201326.60843-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <cover.1755012943.git.lorenzo.stoakes@oracle.com>
-References: 
+	s=k20201202; t=1755036753;
+	bh=INSAUmyfMNmpHOAYNt1O0K2kCVD5UJVG2qd1v8Pzt0s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sLueRq7MKL5nLFQgpAHbemJlAADEiThpXF8m3BdO9Px6rkDhJfR/8LWXm9PsH1geh
+	 XWAks/p1QArJURN6lzBt+fkmcZVHIi9gUu5MpICWFEJZk/bVS5J6ol2T+/vl/SESI8
+	 ug/+Na09a2YohrON8Kz8rbp5LpCmGl0KVIzSgxSZMuU/Td82sncQnpuZG/KCcuihcq
+	 ZAF9WDi9nWTJTdvnJ8SVm7aTTecxuJoirJQSir0WDPF/7VXYARBowTWBu9H4DkNCw8
+	 BN4uRwyCIfqAocKXbfXAGUCXcInbbC/TxmZXyclyM55/b6QFAh5MOAtmLGd6KC+Vsd
+	 zSqQGse+rpROQ==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: syzbot+a9ed3d9132939852d0df@syzkaller.appspotmail.com,
+	bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Martin KaFai Lau <kafai@fb.com>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>
+Subject: [PATCH bpf] bpf: Check the helper function is valid in get_helper_proto
+Date: Wed, 13 Aug 2025 00:12:20 +0200
+Message-ID: <20250812221220.581452-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -109,50 +50,50 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Tue, 12 Aug 2025 16:44:09 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+From: Jiri Olsa <olsajiri@gmail.com>
 
-> We are currently in the bizarre situation where we are constrained on the
-> number of flags we can set in an mm_struct based on whether this is a
-> 32-bit or 64-bit kernel.
-> 
-> This is because mm->flags is an unsigned long field, which is 32-bits on a
-> 32-bit system and 64-bits on a 64-bit system.
-> 
-> In order to keep things functional across both architectures, we do not
-> permit mm flag bits to be set above flag 31 (i.e. the 32nd bit).
-> 
-> This is a silly situation, especially given how profligate we are in
-> storing metadata in mm_struct, so let's convert mm->flags into a bitmap and
-> allow ourselves as many bits as we like.
+syzbot reported an verifier bug [1] where the helper func pointer
+could be NULL due to disabled config option.
 
-I like this conversion.
+As Alexei suggested we could check on that in get_helper_proto
+directly. Excluding tail_call helper from the check, because it
+is NULL by design and valid in all configs.
 
-[...]
-> 
-> In order to execute this change, we introduce a new opaque type -
-> mm_flags_t - which wraps a bitmap.
+[1] https://lore.kernel.org/bpf/68904050.050a0220.7f033.0001.GAE@google.com/
+Reported-by: syzbot+a9ed3d9132939852d0df@syzkaller.appspotmail.com
+Suggested-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ kernel/bpf/verifier.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-I have no strong opinion here, but I think coding-style.rst[1] has one?  To
-quote,
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index c4f69a9e9af6..5e38489656e2 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -11344,6 +11344,13 @@ static bool can_elide_value_nullness(enum bpf_map_type type)
+ 	}
+ }
+ 
++static bool is_valid_proto(const struct bpf_func_proto *fn)
++{
++	if (fn == &bpf_tail_call_proto)
++		return true;
++	return fn && fn->func;
++}
++
+ static int get_helper_proto(struct bpf_verifier_env *env, int func_id,
+ 			    const struct bpf_func_proto **ptr)
+ {
+@@ -11354,7 +11361,7 @@ static int get_helper_proto(struct bpf_verifier_env *env, int func_id,
+ 		return -EINVAL;
+ 
+ 	*ptr = env->ops->get_func_proto(func_id, env->prog);
+-	return *ptr ? 0 : -EINVAL;
++	return is_valid_proto(*ptr) ? 0 : -EINVAL;
+ }
+ 
+ static int check_helper_call(struct bpf_verifier_env *env, struct bpf_insn *insn,
+-- 
+2.50.1
 
-    Please don't use things like ``vps_t``.
-    It's a **mistake** to use typedef for structures and pointers. 
-
-checkpatch.pl also complains similarly.
-
-Again, I have no strong opinion, but I think adding a clarification about why
-we use typedef despite of the documented recommendation here might be nice?
-
-[...]
-> For mm->flags initialisation on fork, we adjust the logic to ensure all
-> bits are cleared correctly, and then adjust the existing intialisation
-
-Nit.  s/intialisation/initialisation/ ?
-
-[...]
-
-[1] https://docs.kernel.org/process/coding-style.html#typedefs
-
-
-Thanks,
-SJ
