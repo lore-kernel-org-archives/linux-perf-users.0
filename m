@@ -1,286 +1,148 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E033F2FDC2B
-	for <linux-perf-users@vger.kernel.org>; Tue, 12 Aug 2025 17:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755020629; cv=fail; b=CNCV1SXDbp3yiK6aWBlPPgraljf6m5gu0sh7IiEk82efelAs+/f6JHuWiMCGX36G+RCwXwTcKt3K1bOW8vaS5zM+6Idz+PJkGGmkug0xPuI8OHN7whhsr04e8oRI533+jSJPrTXeCvVFKFTATVIWesCLy2pv+qzfEBD0UxSR/i8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755020629; c=relaxed/simple;
-	bh=SlxiZ3HZgA7ShL7fS+sGEtEx7fEWzpugMBQVRM28O0U=;
-	h=Date:From:To:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=RxTEtYCRVkCry4MV6QfYFIJgMRZrLDSHZy5b1FZS4VOslS8Znj72Zdd/B4XvJ2mpKhJq5kjGg5rwqSxPWWB/zXZDmP6pLMgkhuR08R1w8s2YUzlQUg0udS+p5itGR8jduU/ToTutRM8trAoGu1yaCwFeRZ9TdxriQuUnGf9jEKw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=KJ7ZivsN; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=JJKtCVm8; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KJ7ZivsN";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="JJKtCVm8"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57CDCDuB011189;
-	Tue, 12 Aug 2025 17:43:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
-	content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=ArIHj7KNHl3qyqveLl
-	U1Ri+5epa40PlP1QC2D1MYhZs=; b=KJ7ZivsNv2vVpMSBYkz2SxMVjmxUpYu4Jg
-	WMYPypSxad/R5HtXxTmtyMIAWcgxgZq/QtLZfLviSj0BuWcluGQHqG3Einwh/+Xp
-	f63639GQbVa4xmL+MkppzMdLKGCvG7VIrbvuZ/WnIliAfLEIURlVJEvtL4wPims8
-	QMmpvP0xnETUOqA7Qejk/XgAVu9E7WJ5iIDxfPBjKT+Vy3bjC/FmmjyEstRaWk8k
-	bly4e4lx357HMaIJxrosvHJpNZSamBmpFSvvLEGrTqyLgT6QMLZOTL+kLGoZit/l
-	/cmh0N4LOtr63PGOerx9HDKmb4gVnXf2hIMlhzw+BZUqultraBww==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 48dw8ed8jv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 12 Aug 2025 17:43:32 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 57CGIU6A009657;
-	Tue, 12 Aug 2025 17:43:30 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10on2069.outbound.protection.outlook.com [40.107.92.69])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 48dvsgk9us-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 12 Aug 2025 17:43:30 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=O+CuVjuTbRtr9mtIGPeauGBp7tJ0Pv1ZkN/RvM6nyRanCQ9alXLjvU/SMM5vgrzSPfjIAYjNwmAicGt9QsZGthPoCk6IxxhOVhLr/D1Km3DUfWYK0r9Et/UdO0NcwRGN6c0tGZFhYRqEjAzAnICGuIu77LHpClqM5wR7tuQ6/Z8waNx1wy6YGTq82vcmsK9WTg0FG1/JANf84z/mqrQDNk1mVc+G3CfLUi+97BnwxhhbgcbcsFjOY3NpAIPyIdByDxaTFyylCrBVZPYpzdEc2iV3Bx/66RekF5mLhaK4/W3ltPckopO0g+nAvnoxLv99hADnBP1ToGbN5Dh+hjZTAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ArIHj7KNHl3qyqveLlU1Ri+5epa40PlP1QC2D1MYhZs=;
- b=JFgHMcGBnnl3Y8OlZdCmWFG6LDVQMxt4rQ2dsT/AC/q3wj5lAOdzOpIMtYwvfmah1+8vS6YlAkpPri7n+MgKI0ifvgI6nFdqGxLkTvXfI+6U5QLXTE6MPjyLsG9Xlskv+MJAs8LZ78zGxR9yc0O5as7s1Eg2N5+qOaSyRNH7ou2xpluUNJK939sTYpH5PzpoJSDYCQistL95QEEhPDnsMVCbU7shboLzs4KIk3s6nGGF+usVcBaLihq5rgYmumKTDU+xg1rJzTB6lssCHdKLLvL//KQN37OcrE03m8jrwlgeESkRcEBYCHakqCEa8gMRfvDI+hDR+v12rjlUQMg4gA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ArIHj7KNHl3qyqveLlU1Ri+5epa40PlP1QC2D1MYhZs=;
- b=JJKtCVm8MSOYc7mvVtxSZYB2aziYMbpdAww/DjSc2rVVcTGVso1Kr3a9pA/CZp472Es5TfoVcyV18sCaT56aagZBKqB9ld4X0Tm4LcAoRWhbTTHTSSLdLc0G7a2SRSXUQt1EUzp8ragyjVPdeg545yMtBGqRD5STjUiWAkpWnNA=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by SA2PR10MB4810.namprd10.prod.outlook.com (2603:10b6:806:11c::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9031.13; Tue, 12 Aug
- 2025 17:43:27 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.9031.012; Tue, 12 Aug 2025
- 17:43:27 +0000
-Date: Tue, 12 Aug 2025 18:43:23 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        Kees Cook <kees@kernel.org>, David Hildenbrand <david@redhat.com>,
-        Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-        Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-        Xu Xin <xu.xin16@zte.com.cn>,
-        Chengming Zhou <chengming.zhou@linux.dev>,
-        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeel.butt@linux.dev>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-        Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>,
-        Pedro Falcato <pfalcato@suse.de>, Matthew Wilcox <willy@infradead.org>,
-        Mateusz Guzik <mjguzik@gmail.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 10/10] mm: replace mm->flags with bitmap entirely and set
- to 64 bits
-Message-ID: <15ffaac2-9e83-4f96-8e3a-2aaebb8bb227@lucifer.local>
-References: <cover.1755012943.git.lorenzo.stoakes@oracle.com>
- <e1f6654e016d36c43959764b01355736c5cbcdf8.1755012943.git.lorenzo.stoakes@oracle.com>
- <scl3mdbh3atwaky5ae7sh2gyru6nomx6pulnifnmbj6hd4ug2n@ykbzkzo7e3bt>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <scl3mdbh3atwaky5ae7sh2gyru6nomx6pulnifnmbj6hd4ug2n@ykbzkzo7e3bt>
-X-ClientProxiedBy: GVZP280CA0097.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:150:275::11) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7464282E1;
+	Tue, 12 Aug 2025 18:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755022312; cv=none; b=OCbAmL+c9L6NadqO6JZI3HrxaPEmc7RKPWAz9bAMzRh02AtWZurOWtHDhKGFl9P7ptm6qUXZlwGT5vneV/sijMfdEw1QzzreEAs5E0szPQPqrLy4e1DCzZnrSbRqmRis4qSH5O7f4pv0Ao4JDcV+d6IlGsELyqXpvf5HqYKq5ro=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755022312; c=relaxed/simple;
+	bh=IPuyGTmGXMHr2tPOmZNLid39cwl5Ro+vwFkF52X02UU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oZEDyeG2bZQXwH615QRIwmDXDhN/B9xAQxO6ze27gG1grhuAkZS+M6mAKB2GL6nr/+i4hR7HuKqw6AARP+4W8Q48rp0tcS8T6wvX0+TnkyxxFRxIzW/7G/lK++4kKhF0lRCptGSRKu8PXT502UresJsErPlKW4rQDAzPRuelbuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-76ba6200813so495883b3a.0;
+        Tue, 12 Aug 2025 11:11:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755022310; x=1755627110;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7Sc0iVOrEVFOByaHU7AVFmw7/jwWHw2s7ViclReSH2Q=;
+        b=V0V5T3ZLquqogwp3KiqYZX4mY3suSloKcaxZTD5BR3fcdweRP9pBUaXmUchIp4p+jd
+         Y0suiyZrKjAxpDFYHqT/3/wRANaidSNKvCtOiS2hHo1fmKwbkBEqXrBdUeXvwIU+bwmW
+         VEoDzN3vrS4xGQKzfIvEifovoZe234LPCHFlVV6fsD+aQndz1/GfUDV1IuqrRh4cv+Kw
+         4xAkpe77Ic7+UN7GlUuVhe7U5nFgcs3J4fELnLVTgOQVB36WouALHeNANb6DMuZVnkrQ
+         LJMgSOrjQE/388E77eUlUrjHUd39MiS5/jl8FlFsKcCxyvDdqwjxsV5Eg18TqrqbWpWG
+         qCmg==
+X-Forwarded-Encrypted: i=1; AJvYcCWkcTWfzL/ZYiXIqjGEMfaAb3MoNIHi3oa/4iR8o2p9IPh63JKk+/d/dcXdfHdObsJYiGbAfDfWUkL20B4=@vger.kernel.org, AJvYcCX55PWVzA4LaO/H7avyoLUMQzX2KGWgwXvy8YAPphTg+wgHk10+hXzo8IQ+yPhvcnhqU7qIQMvzRmZskXhi1SGj+g==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwckHC3xP70Hwf4ibsn5vyiMB7+beR6s15SdLZeYaUMadXKQpHV
+	E5+ysYHTstpMm67IK91WPUJQwWD9yJhCk6rneF+BrBASF6mc8NCPC6pr
+X-Gm-Gg: ASbGncttuNLcPOjiGjQDML8RPFvTwOdfOFsOyWryMoL/0FKWUQaSDEhd7/3zJgN5xOO
+	5HfkIM6e8FvdOz4hDMDGgp7LUNR3vf+YNmIebRWed1Uweuk9mX1qzyhWSrsvZV/iEbBYpLUb0nA
+	OMssX9F32Su2fDFL6Tuq0kg61VEyT+McZDa8qkUf7QwBfAeje2RBwQn1N0Vh1AYPJ/CtncyDGeS
+	LeKD7natmL01ad14NZD7Cmj+LXA8Mgd369g0yAlP5FgeHKhEs7qWfkpQ55jE8pqLVwr+W/zdFON
+	Jy9g3SdRSrkUp+RGUGMD2AqWMwn/4E6Ke5ItkDrf9vPYGb4yyGVCpGKzKtwQ21RFZoPQxzvrU+3
+	LZMuqlHPh0O7iQKSypmZXBbU=
+X-Google-Smtp-Source: AGHT+IGjJiOgFGABGQ9x06XkqaQHRFpKGeWGp1hYW0cDylnclyQZGbxcp9GEIjL1o/o42pInwYYYEw==
+X-Received: by 2002:a05:6a20:7d86:b0:23d:da6d:b050 with SMTP id adf61e73a8af0-240a8b4fda3mr131209637.6.1755022310014;
+        Tue, 12 Aug 2025 11:11:50 -0700 (PDT)
+Received: from localhost ([218.152.98.97])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b422bb1133fsm26177530a12.56.2025.08.12.11.11.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Aug 2025 11:11:49 -0700 (PDT)
+From: Yunseong Kim <ysk@kzalloc.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Liang Kan <kan.liang@linux.intel.com>,
+	Will Deacon <will@kernel.org>,
+	Yeoreum Yun <yeoreum.yun@arm.com>,
+	Austin Kim <austindh.kim@gmail.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzkaller@googlegroups.com,
+	Yunseong Kim <ysk@kzalloc.com>
+Subject: [PATCH v3] perf: Avoid undefined behavior from stopping/starting inactive events
+Date: Tue, 12 Aug 2025 18:10:47 +0000
+Message-ID: <20250812181046.292382-2-ysk@kzalloc.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|SA2PR10MB4810:EE_
-X-MS-Office365-Filtering-Correlation-Id: e724b4f3-5ac2-41b4-c820-08ddd9c7be10
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?GB09iGf+uc5eGf/C9RXl2vjSDGPGwXAqjyjC4/wy4hTFmeHFkSu6OQ+TxMb+?=
- =?us-ascii?Q?khqOIZsY7F+k/7P/mcC+kcadJ/WH8cVF5hn/iPy44zR3yaFy0EeeFSRK6QgQ?=
- =?us-ascii?Q?yvhIVLpSwGheN2YNtpGSaukDnTB/0xpYe0VdiXDpY+iv789syGHWauuHzB0U?=
- =?us-ascii?Q?5ELV+qspT2dLKh8iYCVDJg/Wc+qPN8quD3offIwOgI8LsD+bqDaA5PbK2atk?=
- =?us-ascii?Q?PlkjlWE2g46WiNOj5fXkuOrSiQvOswV42G4OTHcOUM2WaPlGGfTqFpXfNadT?=
- =?us-ascii?Q?TujEx/WDmKIADXybnpmiVr/+GTeiw9+G7qy7ahl1b1SBEQjh/BoDbLvoxkiA?=
- =?us-ascii?Q?rAbyTDjdKPiaCuPpvsfusNz/LXhFdeW5/lHcfyBRM2jQ1POuCD/b9fJtEktu?=
- =?us-ascii?Q?WLDfq3snK2d+2srAnIuIsG45bjfIFluBtV0gvYSlfFudPaBgljsYgmIYbHgs?=
- =?us-ascii?Q?vIfyiPOVoa6JuXjPiT+72LkcNVl1FGTS3lR4VSLD+SL26BQ0L0jm4RyimfIL?=
- =?us-ascii?Q?cTq0TlnuVcwjPw34oBZiCSU6aLvE6v/kL2H1wQy/sqHYAxS5vfILMOcJFY2f?=
- =?us-ascii?Q?cz/2BCWYY7Nsp+L9K19SRt/zrZl0VXfXZajAMzZkuG/y0qK0Xqd/Yav3Yaz+?=
- =?us-ascii?Q?7FoXTKKgeRTcY1+kmKEv1AnkIT7aqsC03XekKy9TCQ4laoaDoUrtwH/VlnG7?=
- =?us-ascii?Q?YNNHUVPFSaVJOScSUJH5mGE+O26as0cvaPTFdEvJUtCrZ4fHLj+g2ATLUPyp?=
- =?us-ascii?Q?2fOjCUvGFPUEWI3wiLac9l3TZOmOPIshFW8RbjdA4/SIfOaII9NdHttiDuNy?=
- =?us-ascii?Q?9KfeBwk1TVej53RK7SoGkhsmtpve5aL2kObPuK5/Q8Fao1yP2Qd56ypNCf9g?=
- =?us-ascii?Q?2Hh65MwIsL2WJ8n+HWxRH+l1AR+ouM0JZ4LMiSg0JorK5tM31oPSMSvhK7q3?=
- =?us-ascii?Q?n9Dh98HM42mEP/1L31ls6ybJ2QdAFTYEz4OalwZFVp+y00bBf0bP3bX62ElY?=
- =?us-ascii?Q?YT/4E2KMsBA0PVUvSIsVbhftzXUYPl/O5S2RBQwhbhk42yZm+NSae2LrkPBm?=
- =?us-ascii?Q?SPfdg0H4FpjAgGOs6sZC/jBmnn6SWNpSs200n2KcpILu2POLpe0WQ3uQl5j3?=
- =?us-ascii?Q?VS7/1ipZpoT7qCw2Q0UhwGCbLe4VEFQPBJbDfn395xkiMHEmkXms+MDfOFn3?=
- =?us-ascii?Q?WUt7dMgjM1HGisIC1MXQcZTE0kX+D8belW9pBfQlFmBQjWi2i1yl9X3dW6mj?=
- =?us-ascii?Q?0RBIJ0G5Fw1qPU1YmB6fQFHURhOrv0c0qrYIeC38sd9eXXUZTGtYCn9Q1jjs?=
- =?us-ascii?Q?cvRSLQcwj7yPKMFdXu0Vp1Hlj4btfc7YHAEN5tmfhH7U7TPULT67kBT3eDQX?=
- =?us-ascii?Q?shJQf51Bn+n/gRl0XSBXfHLpPQkTlhOPfkCGGiuuK8I8TC7oxJBXNuL13WVm?=
- =?us-ascii?Q?o4svhXE0FB329RjGRCgH94YVxbYZtq0EGbyTc/8npXOn3HW2M8s9Xw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?kA0hXcfJsMa0z2gnWZn0SroBroloY6f32Ptg6O8H3sitV4uBvUSXtOdVZbX8?=
- =?us-ascii?Q?Vapix3y/blbZZ/LrxjNm2IA544ghcQxft4aHdWcUtt37dmS4dKp6c7TSKuDW?=
- =?us-ascii?Q?LysMnXJN2bW56bEQod84NWbhGUMui/eRJq0dNijlrVmr6IAKFXXTA8+zRUkX?=
- =?us-ascii?Q?toR93FALGFhUHueINhPeR1x6zY+Veqri94Skp4LhDXFhWP7+1U4pvSH7+bQS?=
- =?us-ascii?Q?3LkJ4lV0qAWdroOB27nLM8tzwnG7wRerLKyigMJzDxroWVw17MjRQlEotSWF?=
- =?us-ascii?Q?QaIFZxc2Itvotbc+8HNiYhLSPU/XJoIg7WrhQbPIoDMPPjeNU3kIaans6Ls9?=
- =?us-ascii?Q?Pu3M6VdZD+GSdkx5DdnkDPUTTQZ3dQWfI7iB7QYI9DZz2bC9JvQuoKU60vhB?=
- =?us-ascii?Q?LPwMfBPIuCgps4xyLkj61mhBhP5riz+XdRzGqfXY/8pYz/chN8BABkoB0Hh/?=
- =?us-ascii?Q?3ubc1cSBWgo7uvqiE/xE/YBEdX8Xw4b5JtKxBjwdqTjj8S24DnvpUa4tcizr?=
- =?us-ascii?Q?zUr+Oo2qGhyZqbmRWjSc6ig4rvPj7vMqjuLXrU3CK6lmjJBpnD0SZ46XNxkw?=
- =?us-ascii?Q?q/LcK5Kok6oc6DsNpwoMVUapyM4+2OhZhQt34KH5RkhC0qLTeyVeKyujw6r4?=
- =?us-ascii?Q?mjKT/AybL6D44GDG/XUZH2hPCK4Tq/SEz5/nUrVhgsG9Kbf0lC5049RNf++e?=
- =?us-ascii?Q?xkOWA5ZjXi8rV118fKtT7Zf1n/pfQ5cGHJMfgi3S4yfR3slKgdjcb1cghuH1?=
- =?us-ascii?Q?QS9BuMsg9e9b7EkVYVrZRqCRsRLG6bsmjlJQsAGODEoPnyL4Xa1KAcZf6ofy?=
- =?us-ascii?Q?4Vah0mNOJW/HqzMIR5u1UycAWWtn3a1LduS2UuPYq/Lnx+MqHTkpAenYOf3T?=
- =?us-ascii?Q?GY1itKbbcJ+dRTi6WyxL81jvuVei3FV+0nu9jBt+FPR6YDdjUf1sTk8jxOam?=
- =?us-ascii?Q?NTqtphtVYD7HKud+Ux8YytN8WkT4SGihtBpVMPqxKqf8EfO/EYgD5CMgew0R?=
- =?us-ascii?Q?s0YmLAmCpsrZHolr4YFxSiFOAbO13LguRfuvbcLe+kZaUllM6iNpFKee83iA?=
- =?us-ascii?Q?E/0YQEmWlRlzdfingk1p34+paw8Y62hkbcaYxBB6vG4cNhjRiSG+OSAxHXPy?=
- =?us-ascii?Q?ve72DyEXntzJmhRYWKa0aqfONxjiKXQHBX0aUr8M1Me0KGzyKvRfggrK9mNG?=
- =?us-ascii?Q?5vjd8LiVcEnlqr1HhN1G3cVZqhoPlTG8xLEppze8171AIt6JTXFrpdK7Zn3L?=
- =?us-ascii?Q?lGu1KEGCXqgTtmOU4QFOGeKmo5fsWUl6fA0f4FGRI1bJmMocL2Avr4KZwMMf?=
- =?us-ascii?Q?iOoxK9T3MsTp+N5zNZVFYqBwIOyRRT1La0oqvFJBc6thQWFqGNvy7fteFz5l?=
- =?us-ascii?Q?VaRdRvfpk8VAFyIpwZb6HZ1TClB1oTy7zfCxPtnR8VS3ddw33KyA3gEICBXS?=
- =?us-ascii?Q?/jmusnWvLTN7BwBYFLdDGU8n0mZ5zCapb0lXsDUhmDQXHIgEFL2GPFmWsG7C?=
- =?us-ascii?Q?z6HA6Ww7TvjJv15tPvRQ04Z+FVnODppU1PN2hCr/3Z3Rnmj+tysO5aS2DOtI?=
- =?us-ascii?Q?OfUF3+5HEp3Yrs274tMLmdUkLg1xpFdR7Q8AVfJHdCmBtOJ1VlHWARcxa8Ix?=
- =?us-ascii?Q?Wg=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	1UBjNw/Rl9ikB75H05hRWlx4JPgig9w7XxJ9xTTshypP4KP75rHqsAqVj6bwjhA4xK0keD3AuWwnfGo6E3F5JWs2Xyst8Y8P1cO3St1NIulOmydCkE+ng8PpX2o9u1nUZyn8reZ5TczBWcL22Ie4BW4iXe53ZfsMHj6JTZmxqaCJafM3sftZAynkDcFiQIKcyDGFmCwZBBvftlpNTwVwuaH+CmRoOSgCtLOlb0JYTbDs8YnE+EyyJfTGG4BUTdmi8ceXaen9onBhywaFA5A8uPTdmP5FV+ojkBMUL4dp9DGLyuqcoJJmmry0u0qCXVqx0jz2OeM0kA+JpGY5c4401Wo1mrONTMotyYSlg6ellgDyYiDCo1j9I1QL4Rt4bp5OVlDF+MXTD59ZRilL99R4fkJtsLHfQXXvodN7nXw87nkaEB9X/fXDItxzwulXwyVw+/SVDi40OByjE+Px6h6/u12y6pdckbJ3gj5bzsV6mFKW+GDdmYPtXKVn/11fFY0ZmZdP/UhN+/VsxBZiWxlYX57wCxQh2Tzijvx7AhhGLIEBkoSZXqAg5BSO7jFRPmAxzdwZg/PfGI61H5nGqDAJUJFwbCMtamE/bJcJq4JXFKY=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e724b4f3-5ac2-41b4-c820-08ddd9c7be10
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2025 17:43:27.0781
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7cvCCz1UsY6eFjROCJfWhrTlEXh5dxCTRSA15Wr3srT6ZvZWnhpJYuIpxPh8dyuTmzvARLEbS/Q7vebCA+uYrCADbKv8FJBcR5xqokAzcFM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4810
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-12_07,2025-08-11_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
- adultscore=0 mlxscore=0 phishscore=0 spamscore=0 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2507300000 definitions=main-2508120170
-X-Proofpoint-GUID: svn41aclOHRQyyXaeuHjqDy4974d1ZZJ
-X-Proofpoint-ORIG-GUID: svn41aclOHRQyyXaeuHjqDy4974d1ZZJ
-X-Authority-Analysis: v=2.4 cv=ePQTjGp1 c=1 sm=1 tr=0 ts=689b7d44 b=1 cx=c_pps
- a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=2OwXVqhp2XgA:10 a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=Ef1f8lSEwX7UL4L_uaAA:9
- a=CjuIK1q_8ugA:10 cc=ntf awl=host:12069
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEyMDE3MCBTYWx0ZWRfX1Oq2FJX/aAl3
- y/c56ZdeZtIyi7fCsHq+TMvolIUI/OhUeJaveh2EsHNnFRfDmOSosZsSbePnPF7FhO8B3otw4bW
- 1T1JdDvRGSpJIaQbL7stA4oOvEeySWsAoKC8gtvYhxIHoiP4/UtHHjGH5p0iRqaTOzZ/J3gBEH7
- JXemnvZ9u78qTMJCXsD+ZAf6BS/F+cJAagWboAJG8zERhB5ceEqAKq7s9GZaxF8lvVpoittSdpi
- J/GlfQs5JxxBC14QWts/HyBtHwV+owqaO1oqjMyjJ3e7g/NjsyFXLn0v8pq/ZMZHA58fzC2Xlpn
- flR1nA7QTJrk5UrcAwt6zL+0aYZpZ1LGqLeo4Ylr8DQypV6+MBvKkV0hUdQo8FH7VsHHgP61cd+
- 7m8UaT+5r8fjCb1gInKMbYvtyJ3I5+SgT3syZYbN0q3C8jSXOrzcNG35k+BHCR9qfpmDZfUT
+Content-Transfer-Encoding: 8bit
 
-On Tue, Aug 12, 2025 at 01:35:18PM -0400, Liam R. Howlett wrote:
-> * Lorenzo Stoakes <lorenzo.stoakes@oracle.com> [250812 11:48]:
-> > Now we have updated all users of mm->flags to use the bitmap accessors,
-> > repalce it with the bitmap version entirely.
-> >
-> > We are then able to move to having 64 bits of mm->flags on both 32-bit and
-> > 64-bit architectures.
-> >
-> > We also update the VMA userland tests to ensure that everything remains
-> > functional there.
-> >
-> > No functional changes intended, other than there now being 64 bits of
-> > available mm_struct flags.
-> >
-> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
->
-> A nit below, but..
->
-> Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
+Calling pmu->start()/stop() on perf events in PERF_EVENT_STATE_OFF can
+leave event->hw.idx at -1. When PMU drivers later attempt to use this
+negative index as a shift exponent in bitwise operations, it leads to UBSAN
+shift-out-of-bounds reports.
 
-Thanks!
+The issue is a logical flaw in how event groups handle throttling when some
+members are intentionally disabled. Based on the analysis and the
+reproducer provided by Mark Rutland (this issue on both arm64 and x86-64).
 
-[snip]
+The scenario unfolds as follows:
 
-> > diff --git a/tools/testing/vma/vma_internal.h b/tools/testing/vma/vma_internal.h
-> > index cb1c2a8afe26..f13354bf0a1e 100644
-> > --- a/tools/testing/vma/vma_internal.h
-> > +++ b/tools/testing/vma/vma_internal.h
-> > @@ -249,6 +249,14 @@ struct mutex {};
-> >  #define DEFINE_MUTEX(mutexname) \
-> >  	struct mutex mutexname = {}
-> >
-> > +#define DECLARE_BITMAP(name, bits) \
-> > +	unsigned long name[BITS_TO_LONGS(bits)]
-> > +
-> > +#define NUM_MM_FLAG_BITS (64)
-> > +typedef struct {
-> > +	__private DECLARE_BITMAP(__mm_flags, NUM_MM_FLAG_BITS);
-> > +} mm_flags_t;
-> > +
->
-> nit, This might be better in common test code?  Probably just leave it
-> here until it's needed elsewhere.
+ 1. A group leader event is configured with a very aggressive sampling
+    period (e.g., sample_period = 1). This causes frequent interrupts and
+    triggers the throttling mechanism.
+ 2. A child event in the same group is created in a disabled state
+    (.disabled = 1). This event remains in PERF_EVENT_STATE_OFF.
+    Since it hasn't been scheduled onto the PMU, its event->hw.idx remains
+    initialized at -1.
+ 3. When throttling occurs, perf_event_throttle_group() and later
+    perf_event_unthrottle_group() iterate through all siblings, including
+    the disabled child event.
+ 4. perf_event_throttle()/unthrottle() are called on this inactive child
+    event, which then call event->pmu->start()/stop().
+ 5. The PMU driver receives the event with hw.idx == -1 and attempts to
+    use it as a shift exponent. e.g., in macros like PMCNTENSET(idx),
+    leading to the UBSAN report.
 
-Yeah, I think we need to figure this out in a more sensible way so we keep
-things vaguely synced for this stuff more generally. I'll add a todo for
-this!
+The throttling mechanism attempts to start/stop events that are not
+actively scheduled on the hardware.
 
-I think fine for now, key point here is keeping the tests working.
+Move the state check into perf_event_throttle()/perf_event_unthrottle() so
+that inactive events are skipped entirely. This ensures only active events
+with a valid hw.idx are processed, preventing undefined behavior and
+silencing UBSAN warnings. The corrected check ensures true before
+proceeding with PMU operations.
 
-Cheers, Lorenzo
+The problem can be reproduced with the syzkaller reproducer:
+Link: https://lore.kernel.org/lkml/714b7ba2-693e-42e4-bce4-feef2a5e7613@kzalloc.com/
+
+Fixes: 9734e25fbf5a ("perf: Fix the throttle logic for a group")
+Cc: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Yunseong Kim <ysk@kzalloc.com>
+---
+ kernel/events/core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 8060c2857bb2..872122e074e5 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2665,6 +2665,9 @@ static void perf_log_itrace_start(struct perf_event *event);
+ 
+ static void perf_event_unthrottle(struct perf_event *event, bool start)
+ {
++	if (event->state != PERF_EVENT_STATE_ACTIVE)
++		return;
++
+ 	event->hw.interrupts = 0;
+ 	if (start)
+ 		event->pmu->start(event, 0);
+@@ -2674,6 +2677,9 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
+ 
+ static void perf_event_throttle(struct perf_event *event)
+ {
++	if (event->state != PERF_EVENT_STATE_ACTIVE)
++		return;
++
+ 	event->hw.interrupts = MAX_INTERRUPTS;
+ 	event->pmu->stop(event, 0);
+ 	if (event == event->group_leader)
+-- 
+2.50.0
+
