@@ -1,70 +1,45 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7464282E1;
-	Tue, 12 Aug 2025 18:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F25932FDC35;
+	Tue, 12 Aug 2025 18:14:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755022312; cv=none; b=OCbAmL+c9L6NadqO6JZI3HrxaPEmc7RKPWAz9bAMzRh02AtWZurOWtHDhKGFl9P7ptm6qUXZlwGT5vneV/sijMfdEw1QzzreEAs5E0szPQPqrLy4e1DCzZnrSbRqmRis4qSH5O7f4pv0Ao4JDcV+d6IlGsELyqXpvf5HqYKq5ro=
+	t=1755022465; cv=none; b=qIeI5HlXknh7EA9ziKnaitoipcrTOcRQqkPkbVnDHWd7d515xfAoXoMuwINbzN+XK7X2CgVdgKX5bxppzftTyWw0E1m6XuOce2MNeFD1pCOsuu3Q9ScYaGcpdWGD6qgsclu+juYFiV9bFQBbhgMco5siehb9PoN2q4RnddfxbGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755022312; c=relaxed/simple;
-	bh=IPuyGTmGXMHr2tPOmZNLid39cwl5Ro+vwFkF52X02UU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oZEDyeG2bZQXwH615QRIwmDXDhN/B9xAQxO6ze27gG1grhuAkZS+M6mAKB2GL6nr/+i4hR7HuKqw6AARP+4W8Q48rp0tcS8T6wvX0+TnkyxxFRxIzW/7G/lK++4kKhF0lRCptGSRKu8PXT502UresJsErPlKW4rQDAzPRuelbuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-76ba6200813so495883b3a.0;
-        Tue, 12 Aug 2025 11:11:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755022310; x=1755627110;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7Sc0iVOrEVFOByaHU7AVFmw7/jwWHw2s7ViclReSH2Q=;
-        b=V0V5T3ZLquqogwp3KiqYZX4mY3suSloKcaxZTD5BR3fcdweRP9pBUaXmUchIp4p+jd
-         Y0suiyZrKjAxpDFYHqT/3/wRANaidSNKvCtOiS2hHo1fmKwbkBEqXrBdUeXvwIU+bwmW
-         VEoDzN3vrS4xGQKzfIvEifovoZe234LPCHFlVV6fsD+aQndz1/GfUDV1IuqrRh4cv+Kw
-         4xAkpe77Ic7+UN7GlUuVhe7U5nFgcs3J4fELnLVTgOQVB36WouALHeNANb6DMuZVnkrQ
-         LJMgSOrjQE/388E77eUlUrjHUd39MiS5/jl8FlFsKcCxyvDdqwjxsV5Eg18TqrqbWpWG
-         qCmg==
-X-Forwarded-Encrypted: i=1; AJvYcCWkcTWfzL/ZYiXIqjGEMfaAb3MoNIHi3oa/4iR8o2p9IPh63JKk+/d/dcXdfHdObsJYiGbAfDfWUkL20B4=@vger.kernel.org, AJvYcCX55PWVzA4LaO/H7avyoLUMQzX2KGWgwXvy8YAPphTg+wgHk10+hXzo8IQ+yPhvcnhqU7qIQMvzRmZskXhi1SGj+g==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwckHC3xP70Hwf4ibsn5vyiMB7+beR6s15SdLZeYaUMadXKQpHV
-	E5+ysYHTstpMm67IK91WPUJQwWD9yJhCk6rneF+BrBASF6mc8NCPC6pr
-X-Gm-Gg: ASbGncttuNLcPOjiGjQDML8RPFvTwOdfOFsOyWryMoL/0FKWUQaSDEhd7/3zJgN5xOO
-	5HfkIM6e8FvdOz4hDMDGgp7LUNR3vf+YNmIebRWed1Uweuk9mX1qzyhWSrsvZV/iEbBYpLUb0nA
-	OMssX9F32Su2fDFL6Tuq0kg61VEyT+McZDa8qkUf7QwBfAeje2RBwQn1N0Vh1AYPJ/CtncyDGeS
-	LeKD7natmL01ad14NZD7Cmj+LXA8Mgd369g0yAlP5FgeHKhEs7qWfkpQ55jE8pqLVwr+W/zdFON
-	Jy9g3SdRSrkUp+RGUGMD2AqWMwn/4E6Ke5ItkDrf9vPYGb4yyGVCpGKzKtwQ21RFZoPQxzvrU+3
-	LZMuqlHPh0O7iQKSypmZXBbU=
-X-Google-Smtp-Source: AGHT+IGjJiOgFGABGQ9x06XkqaQHRFpKGeWGp1hYW0cDylnclyQZGbxcp9GEIjL1o/o42pInwYYYEw==
-X-Received: by 2002:a05:6a20:7d86:b0:23d:da6d:b050 with SMTP id adf61e73a8af0-240a8b4fda3mr131209637.6.1755022310014;
-        Tue, 12 Aug 2025 11:11:50 -0700 (PDT)
-Received: from localhost ([218.152.98.97])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b422bb1133fsm26177530a12.56.2025.08.12.11.11.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Aug 2025 11:11:49 -0700 (PDT)
-From: Yunseong Kim <ysk@kzalloc.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Liang Kan <kan.liang@linux.intel.com>,
-	Will Deacon <will@kernel.org>,
-	Yeoreum Yun <yeoreum.yun@arm.com>,
-	Austin Kim <austindh.kim@gmail.com>,
+	s=arc-20240116; t=1755022465; c=relaxed/simple;
+	bh=cbioamJT3IVDLAVzUrO/mAFSoEzHiRSuAKFCjOj6Q68=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f1hXg7mceuqL+8moamCTFUoFC/cAJzZqyx09CuUxyZ5q6eqcTsULZUQuxjzL7/dN97gEEe+cS2xxTB1lgwRXvvlu+tbEBOTX/0Sf6TgAfmQ2/8L7oHW9IXI1kbzVHL8aHQeqMYBXsRpUnSFEpCs9g451jk/l+SgHhQvwdCx0Thc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=el8NBOBZ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="el8NBOBZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7FF7C4CEF0;
+	Tue, 12 Aug 2025 18:14:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755022464;
+	bh=cbioamJT3IVDLAVzUrO/mAFSoEzHiRSuAKFCjOj6Q68=;
+	h=From:To:Cc:Subject:Date:From;
+	b=el8NBOBZ5qUsm6x1GnjGe+Tz6n7q4AacW6lD4SzxnzA0emsLs8nRmHK3BR5hp0dkb
+	 IU87dsNWPyHxr4d0Gqa0O1K5wZgjBzP4KcNttr7hrLxoDF2VTs3kT25csHusI1LTwl
+	 +UQHV/YL5UExdDzQJBk5REsd4H76EiMQ6Wna9fEJzilTvbENXbSlhS7j7Dh7mg+uF3
+	 Zm4cR4V8eM66HRvXvX5jIu+rAMXa8LuXdVMGVy/IUklkgViwR3OY24SD+3ezvTP86o
+	 M/tuF95P/6zzUWx9s2S6Vm+T/PoNBjZhiNhLRDqe5dQoD2njFydoe6zKtVycOKE7id
+	 CiNnRBBHJ+sfw==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Khuong Dinh <khuong@os.amperecomputing.com>,
+	Tai Nguyen <ttnguyen@apm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzkaller@googlegroups.com,
-	Yunseong Kim <ysk@kzalloc.com>
-Subject: [PATCH v3] perf: Avoid undefined behavior from stopping/starting inactive events
-Date: Tue, 12 Aug 2025 18:10:47 +0000
-Message-ID: <20250812181046.292382-2-ysk@kzalloc.com>
-X-Mailer: git-send-email 2.50.0
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: perf: Convert apm,xgene-pmu to DT schema
+Date: Tue, 12 Aug 2025 13:14:20 -0500
+Message-ID: <20250812181422.68286-1-robh@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -73,76 +48,283 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Calling pmu->start()/stop() on perf events in PERF_EVENT_STATE_OFF can
-leave event->hw.idx at -1. When PMU drivers later attempt to use this
-negative index as a shift exponent in bitwise operations, it leads to UBSAN
-shift-out-of-bounds reports.
+Convert the Applied Micro X-Gene PMU binding to DT schema format. It is
+a straightforward conversion.
 
-The issue is a logical flaw in how event groups handle throttling when some
-members are intentionally disabled. Based on the analysis and the
-reproducer provided by Mark Rutland (this issue on both arm64 and x86-64).
-
-The scenario unfolds as follows:
-
- 1. A group leader event is configured with a very aggressive sampling
-    period (e.g., sample_period = 1). This causes frequent interrupts and
-    triggers the throttling mechanism.
- 2. A child event in the same group is created in a disabled state
-    (.disabled = 1). This event remains in PERF_EVENT_STATE_OFF.
-    Since it hasn't been scheduled onto the PMU, its event->hw.idx remains
-    initialized at -1.
- 3. When throttling occurs, perf_event_throttle_group() and later
-    perf_event_unthrottle_group() iterate through all siblings, including
-    the disabled child event.
- 4. perf_event_throttle()/unthrottle() are called on this inactive child
-    event, which then call event->pmu->start()/stop().
- 5. The PMU driver receives the event with hw.idx == -1 and attempts to
-    use it as a shift exponent. e.g., in macros like PMCNTENSET(idx),
-    leading to the UBSAN report.
-
-The throttling mechanism attempts to start/stop events that are not
-actively scheduled on the hardware.
-
-Move the state check into perf_event_throttle()/perf_event_unthrottle() so
-that inactive events are skipped entirely. This ensures only active events
-with a valid hw.idx are processed, preventing undefined behavior and
-silencing UBSAN warnings. The corrected check ensures true before
-proceeding with PMU operations.
-
-The problem can be reproduced with the syzkaller reproducer:
-Link: https://lore.kernel.org/lkml/714b7ba2-693e-42e4-bce4-feef2a5e7613@kzalloc.com/
-
-Fixes: 9734e25fbf5a ("perf: Fix the throttle logic for a group")
-Cc: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Yunseong Kim <ysk@kzalloc.com>
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- kernel/events/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../bindings/perf/apm,xgene-pmu.yaml          | 142 ++++++++++++++++++
+ .../bindings/perf/apm-xgene-pmu.txt           | 112 --------------
+ 2 files changed, 142 insertions(+), 112 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/perf/apm,xgene-pmu.yaml
+ delete mode 100644 Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 8060c2857bb2..872122e074e5 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2665,6 +2665,9 @@ static void perf_log_itrace_start(struct perf_event *event);
- 
- static void perf_event_unthrottle(struct perf_event *event, bool start)
- {
-+	if (event->state != PERF_EVENT_STATE_ACTIVE)
-+		return;
+diff --git a/Documentation/devicetree/bindings/perf/apm,xgene-pmu.yaml b/Documentation/devicetree/bindings/perf/apm,xgene-pmu.yaml
+new file mode 100644
+index 000000000000..01f0373eac7d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/perf/apm,xgene-pmu.yaml
+@@ -0,0 +1,142 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/perf/apm,xgene-pmu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	event->hw.interrupts = 0;
- 	if (start)
- 		event->pmu->start(event, 0);
-@@ -2674,6 +2677,9 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
- 
- static void perf_event_throttle(struct perf_event *event)
- {
-+	if (event->state != PERF_EVENT_STATE_ACTIVE)
-+		return;
++title: APM X-Gene SoC PMU
 +
- 	event->hw.interrupts = MAX_INTERRUPTS;
- 	event->pmu->stop(event, 0);
- 	if (event == event->group_leader)
++maintainers:
++  - Tai Nguyen <ttnguyen@apm.com>
++
++description: |
++  This is APM X-Gene SoC PMU (Performance Monitoring Unit) module.
++  The following PMU devices are supported:
++
++    L3C            - L3 cache controller
++    IOB            - IO bridge
++    MCB            - Memory controller bridge
++    MC             - Memory controller
++
++properties:
++  compatible:
++    enum:
++      - apm,xgene-pmu
++      - apm,xgene-pmu-v2
++
++  "#address-cells":
++    const: 2
++
++  "#size-cells":
++    const: 2
++
++  ranges: true
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  regmap-csw:
++    $ref: /schemas/types.yaml#/definitions/phandle
++
++  regmap-mcba:
++    $ref: /schemas/types.yaml#/definitions/phandle
++
++  regmap-mcbb:
++    $ref: /schemas/types.yaml#/definitions/phandle
++
++required:
++  - compatible
++  - regmap-csw
++  - regmap-mcba
++  - regmap-mcbb
++  - reg
++  - interrupts
++
++additionalProperties:
++  type: object
++  additionalProperties: false
++
++  properties:
++    compatible:
++      enum:
++        - apm,xgene-pmu-l3c
++        - apm,xgene-pmu-iob
++        - apm,xgene-pmu-mcb
++        - apm,xgene-pmu-mc
++
++    reg:
++      maxItems: 1
++
++    enable-bit-index:
++      description:
++        Specifies which bit enables the associated resource in MCB or MC subnodes.
++      $ref: /schemas/types.yaml#/definitions/uint32
++      maximum: 31
++
++examples:
++  - |
++    bus {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        pmu@78810000 {
++            compatible = "apm,xgene-pmu-v2";
++            reg = <0x0 0x78810000 0x0 0x1000>;
++            #address-cells = <2>;
++            #size-cells = <2>;
++            ranges;
++            regmap-csw = <&csw>;
++            regmap-mcba = <&mcba>;
++            regmap-mcbb = <&mcbb>;
++            interrupts = <0x0 0x22 0x4>;
++
++            pmul3c@7e610000 {
++                compatible = "apm,xgene-pmu-l3c";
++                reg = <0x0 0x7e610000 0x0 0x1000>;
++            };
++
++            pmuiob@7e940000 {
++                compatible = "apm,xgene-pmu-iob";
++                reg = <0x0 0x7e940000 0x0 0x1000>;
++            };
++
++            pmucmcb@7e710000 {
++                compatible = "apm,xgene-pmu-mcb";
++                reg = <0x0 0x7e710000 0x0 0x1000>;
++                enable-bit-index = <0>;
++            };
++
++            pmucmcb@7e730000 {
++                compatible = "apm,xgene-pmu-mcb";
++                reg = <0x0 0x7e730000 0x0 0x1000>;
++                enable-bit-index = <1>;
++            };
++
++            pmucmc@7e810000 {
++                compatible = "apm,xgene-pmu-mc";
++                reg = <0x0 0x7e810000 0x0 0x1000>;
++                enable-bit-index = <0>;
++            };
++
++            pmucmc@7e850000 {
++                compatible = "apm,xgene-pmu-mc";
++                reg = <0x0 0x7e850000 0x0 0x1000>;
++                enable-bit-index = <1>;
++            };
++
++            pmucmc@7e890000 {
++                compatible = "apm,xgene-pmu-mc";
++                reg = <0x0 0x7e890000 0x0 0x1000>;
++                enable-bit-index = <2>;
++            };
++
++            pmucmc@7e8d0000 {
++                compatible = "apm,xgene-pmu-mc";
++                reg = <0x0 0x7e8d0000 0x0 0x1000>;
++                enable-bit-index = <3>;
++            };
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt b/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
+deleted file mode 100644
+index afb11cf693c0..000000000000
+--- a/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
++++ /dev/null
+@@ -1,112 +0,0 @@
+-* APM X-Gene SoC PMU bindings
+-
+-This is APM X-Gene SoC PMU (Performance Monitoring Unit) module.
+-The following PMU devices are supported:
+-
+-  L3C			- L3 cache controller
+-  IOB			- IO bridge
+-  MCB			- Memory controller bridge
+-  MC			- Memory controller
+-
+-The following section describes the SoC PMU DT node binding.
+-
+-Required properties:
+-- compatible		: Shall be "apm,xgene-pmu" for revision 1 or
+-                          "apm,xgene-pmu-v2" for revision 2.
+-- regmap-csw		: Regmap of the CPU switch fabric (CSW) resource.
+-- regmap-mcba		: Regmap of the MCB-A (memory bridge) resource.
+-- regmap-mcbb		: Regmap of the MCB-B (memory bridge) resource.
+-- reg			: First resource shall be the CPU bus PMU resource.
+-- interrupts            : Interrupt-specifier for PMU IRQ.
+-
+-Required properties for L3C subnode:
+-- compatible		: Shall be "apm,xgene-pmu-l3c".
+-- reg			: First resource shall be the L3C PMU resource.
+-
+-Required properties for IOB subnode:
+-- compatible		: Shall be "apm,xgene-pmu-iob".
+-- reg			: First resource shall be the IOB PMU resource.
+-
+-Required properties for MCB subnode:
+-- compatible		: Shall be "apm,xgene-pmu-mcb".
+-- reg			: First resource shall be the MCB PMU resource.
+-- enable-bit-index	: The bit indicates if the according MCB is enabled.
+-
+-Required properties for MC subnode:
+-- compatible		: Shall be "apm,xgene-pmu-mc".
+-- reg			: First resource shall be the MC PMU resource.
+-- enable-bit-index	: The bit indicates if the according MC is enabled.
+-
+-Example:
+-	csw: csw@7e200000 {
+-		compatible = "apm,xgene-csw", "syscon";
+-		reg = <0x0 0x7e200000 0x0 0x1000>;
+-	};
+-
+-	mcba: mcba@7e700000 {
+-		compatible = "apm,xgene-mcb", "syscon";
+-		reg = <0x0 0x7e700000 0x0 0x1000>;
+-	};
+-
+-	mcbb: mcbb@7e720000 {
+-		compatible = "apm,xgene-mcb", "syscon";
+-		reg = <0x0 0x7e720000 0x0 0x1000>;
+-	};
+-
+-	pmu: pmu@78810000 {
+-		compatible = "apm,xgene-pmu-v2";
+-		#address-cells = <2>;
+-		#size-cells = <2>;
+-		ranges;
+-		regmap-csw = <&csw>;
+-		regmap-mcba = <&mcba>;
+-		regmap-mcbb = <&mcbb>;
+-		reg = <0x0 0x78810000 0x0 0x1000>;
+-		interrupts = <0x0 0x22 0x4>;
+-
+-		pmul3c@7e610000 {
+-			compatible = "apm,xgene-pmu-l3c";
+-			reg = <0x0 0x7e610000 0x0 0x1000>;
+-		};
+-
+-		pmuiob@7e940000 {
+-			compatible = "apm,xgene-pmu-iob";
+-			reg = <0x0 0x7e940000 0x0 0x1000>;
+-		};
+-
+-		pmucmcb@7e710000 {
+-			compatible = "apm,xgene-pmu-mcb";
+-			reg = <0x0 0x7e710000 0x0 0x1000>;
+-			enable-bit-index = <0>;
+-		};
+-
+-		pmucmcb@7e730000 {
+-			compatible = "apm,xgene-pmu-mcb";
+-			reg = <0x0 0x7e730000 0x0 0x1000>;
+-			enable-bit-index = <1>;
+-		};
+-
+-		pmucmc@7e810000 {
+-			compatible = "apm,xgene-pmu-mc";
+-			reg = <0x0 0x7e810000 0x0 0x1000>;
+-			enable-bit-index = <0>;
+-		};
+-
+-		pmucmc@7e850000 {
+-			compatible = "apm,xgene-pmu-mc";
+-			reg = <0x0 0x7e850000 0x0 0x1000>;
+-			enable-bit-index = <1>;
+-		};
+-
+-		pmucmc@7e890000 {
+-			compatible = "apm,xgene-pmu-mc";
+-			reg = <0x0 0x7e890000 0x0 0x1000>;
+-			enable-bit-index = <2>;
+-		};
+-
+-		pmucmc@7e8d0000 {
+-			compatible = "apm,xgene-pmu-mc";
+-			reg = <0x0 0x7e8d0000 0x0 0x1000>;
+-			enable-bit-index = <3>;
+-		};
+-	};
 -- 
-2.50.0
+2.47.2
 
