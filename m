@@ -1,160 +1,158 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C52025B1DC
-	for <linux-perf-users@vger.kernel.org>; Wed, 13 Aug 2025 15:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58DA285053;
+	Wed, 13 Aug 2025 16:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755100737; cv=none; b=GTX88mdHNYS7aWk17MC7twzn2SeUkwaaiuUmRG3M9zoQdGA+8JJyk0MgShqbmjJAK+fhrFyNbqwjzpRjubtim7R/AmkFqZu95ZgumbjI+PvbP+5ZaG1Bx+erh07mjI1dkGIWmoyoNOjwbEAzPvRmmUCnWdD39RIFoTC5XMmKo1g=
+	t=1755102287; cv=none; b=BT2zSSBRmMuHJk0IYcx55iT99Sanfzg788ljfC+vtTq+OTMyolekrwfMgjCv3N+TzxuBi97AjlBuRrZb7R0qsTjrXR6+x9Shk2h3m1/ByFXgWe913y7XGgCX9vGc+ClAkhLCnJxHyPd7Sy5RERAL+bct9CWoGDePjx9ouxxfMIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755100737; c=relaxed/simple;
-	bh=JCJTW/Ucx88U/k5zzDsfVlKugMbj9mbeM3mUGqS/nCg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m4ed/d61zsDd+cdSoKxRwwVOfPXoXY89l5zZY/sxIgD52gXgAJ7S4JipiAE8XdJ+/GWSoIzRdH15Q34CxbyHnY/YHTCS7ieyLgZJN/ILNuoTb0CgibtxKjQRZVdubxO04J6696gzVAEAU3cQWbQYyZASYv1TJ48KRGzBxAQAzzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NirD4G37; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1755102287; c=relaxed/simple;
+	bh=K1Qnz6FeiAMe891bHx38SnseQkGtn7jJpOFA1e7ci+8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=TtNIV5327wJHOdlMm1X42tiRJtmpG9VZcmdBhq5G1HocIebBSMha/Qk75hKuaedodYuOgHTxel+F5pO6OVrVYYVkmKmsl3J3rIWdgxAHG+btFJKt5ysW57qqKk34WVjjCoXwjTn1wkwtrKyEGeKe4Ng8ft57CLpuLHItjLaqaJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NowuzJLv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NirD4G37"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-459e20ec1d9so65497585e9.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Aug 2025 08:58:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1755100733; x=1755705533; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cp6XeG0MyOuXPRX2EUNgzHzmYyd18LTitGQ6mKDCv5k=;
-        b=NirD4G370wM0PVwO0+6k38cBSEWnpq4rq435W+rqUERDZ/xul1Lsm8AOr/TjSotCpK
-         d70IdvxGMDhGcuquJtiIjWvIQTeF0I/hY1u3kQV6QVe5+xip9cimOWkZ/wi3213JXWDL
-         4Fx+rs968PBViKBDgtCsN3+cEr9eTwHDP4zOmg2Y2wpgkha6Ny/+8Z7DGCwz//VZw/iP
-         e7d9LaGppCP3QOmW+fsE7rfq97pHDz+pBr1QbLS1H4U7D0ymBzwPpY2s3KEKH8SoENJu
-         eGviXitSx6wcnRDPSpnWSulz7yVXy/5PSKXWPLHwM0/frZXd6ld+11GXCfybwXcghy0D
-         m5bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755100733; x=1755705533;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cp6XeG0MyOuXPRX2EUNgzHzmYyd18LTitGQ6mKDCv5k=;
-        b=Uqyb2eEjN1bWseV/wTJFUo/4q3rbldtjl+pf1YzNjO4rZH/QP4XtEpVZ5iakmkO9YA
-         nCugptmEPiRfTG+mYAJKSA3OfhdCWr9BbuGqxz6kkb1W8QEODiZbBBFtS86hv/bh6X5k
-         x8jBaTj5t83Fhd1yVEW6dTY7cnKqZlFompHalTK94Cr3jxZXavOcEm8i57QSFFo3PFzY
-         h4Aa/fTyLe1tLsOE1fZrL2lZYdolzEbeIBKH+GINRxHv12x6/WbO0fNNidQUFphGAxo9
-         JxomipQTFClzF0YKtHoqcghfEEs3acsPNsQ+wJs8ipa3DcB1R+F99SgyiNfTTNHrnMXY
-         Dt4A==
-X-Forwarded-Encrypted: i=1; AJvYcCXi7x/HFRi3p8++Sq/6M7Owgg+pmxJV6zoxziUC/SpzwtrWe3tXyfFPc8WTeCqLiycnDiDOZxPjKin29tqGdDyp@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDUnzLHQXd2v9aa0xbh7Z2BGTMe1FkdEJS4lxXyaCzqN2cenmV
-	ZLi12RWaEuAOMnRRuR+mRzVZzlZ8JDoMGCcbbsyOgk7i7is1R7U3LDHRRZqkvvhszNM=
-X-Gm-Gg: ASbGncvJ3xbXHKzkBR600Ksz0/5Pc5AbdwIBDaJnsG3sjv9BKpeBhlXAv6WPjASCZ5g
-	/5ddvksc3ea8cV7MnVuqqtJeTU9aSStzOKSsXyV6afVBIgzOf2IjIzPfMkRtG56U8mys83NfDya
-	FOE1AC+FtaPng2akWf17wqutpcDqqm51NtRPyuTFzn99/29qFEkh5Zog8jDJEqlEisGWTLMdcJS
-	t9bWu7CGT0iP8XT3qHxN4CEcAr7GZ34j1MYiE5bPDD/n+IaQj8U9sUXkmm5pYgAUVORaS/pQYVJ
-	0gww/WJwUXbUTl6TwHMOit+Ryxexq0WMg6CJ0aztmOXm1l96k+zoJjr3iRUbBVhxA3SUZhK7CFG
-	XfnB4LPhqqcHC1YSoek6Yn4WWhJb5cYKk686Kxg5mSeE=
-X-Google-Smtp-Source: AGHT+IFmDnHCSl5CKkyh/D1IvMDkhgbQzh6CQ86Hu6D5gyD/dtG5m2liXMYcw3pmw6tZ+PFrvCebxA==
-X-Received: by 2002:a5d:5f95:0:b0:3b7:8dd7:55ad with SMTP id ffacd0b85a97d-3b917f14804mr2882432f8f.39.1755100733462;
-        Wed, 13 Aug 2025 08:58:53 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3b91b05b28fsm1789186f8f.21.2025.08.13.08.58.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Aug 2025 08:58:53 -0700 (PDT)
-Date: Wed, 13 Aug 2025 18:58:49 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, stable@vger.kernel.org,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	hargar@microsoft.com, broonie@kernel.org, achill@achill.org,
-	qemu-devel@nongnu.org,
-	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Ben Copeland <benjamin.copeland@linaro.org>,
-	LTP List <ltp@lists.linux.it>, chrubis <chrubis@suse.cz>,
-	Petr Vorel <pvorel@suse.cz>, Ian Rogers <irogers@google.com>,
-	linux-perf-users@vger.kernel.org,
-	Zhang Yi <yi.zhang@huaweicloud.com>,
-	Joseph Qi <jiangqi903@gmail.com>, Jan Kara <jack@suse.cz>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NowuzJLv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09AF3C4CEEB;
+	Wed, 13 Aug 2025 16:24:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755102287;
+	bh=K1Qnz6FeiAMe891bHx38SnseQkGtn7jJpOFA1e7ci+8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=NowuzJLvoDcytU2mnlkUjH9a3VkVMtm7ue/1JeEievbLShowGrZYKS4ljQgIc4Tvt
+	 3+vYZnNOWzD9UQ8pSH9fEmYwxPiiGspKJ3H0P32SvVzl8AqitUBhqFYwGCZ45kSKAJ
+	 87/gu7vuZjna5FtZYWWUpp9S1G/8o7Ty64t0lObmjPlPr2MXYLPDtH4Sc4eAU6xND8
+	 ThhzDQ4hSAh1VB48U+GqBbKfJNoQAGi7b1yhwF4mFVAalvl713Ll6uzzSrl8gdzvsB
+	 qxd/OanAUdPmrliRUlwzqp8QiFiC+SAvfzE7ZdQVKX6a28IsBlnq34Yk6UcqsLFVxB
+	 8m4KWJEM4NWXw==
+From: SeongJae Park <sj@kernel.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Kees Cook <kees@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Nico Pache <npache@redhat.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>,
+	Barry Song <baohua@kernel.org>,
+	Xu Xin <xu.xin16@zte.com.cn>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	David Rientjes <rientjes@google.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Peter Xu <peterx@redhat.com>,
+	Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>,
+	Matthew Wilcox <willy@infradead.org>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	sparclinux@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org,
-	linux-ext4 <linux-ext4@vger.kernel.org>,
-	Zhang Yi <yi.zhang@huawei.com>, Theodore Ts'o <tytso@mit.edu>,
-	Baokun Li <libaokun1@huawei.com>
-Subject: Re: [PATCH 6.16 000/627] 6.16.1-rc1 review
-Message-ID: <aJy2OVhg4RUYbHHR@stanley.mountain>
-References: <20250812173419.303046420@linuxfoundation.org>
- <CA+G9fYtBnCSa2zkaCn-oZKYz8jz5FZj0HS7DjSfMeamq3AXqNg@mail.gmail.com>
- <2025081300-frown-sketch-f5bd@gregkh>
- <CA+G9fYuEb7Y__CVHxZ8VkWGqfA4imWzXsBhPdn05GhOandg0Yw@mail.gmail.com>
- <2025081311-purifier-reviver-aeb2@gregkh>
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 00/10] mm: make mm->flags a bitmap and 64-bit on all arches
+Date: Wed, 13 Aug 2025 09:24:45 -0700
+Message-Id: <20250813162445.5456-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <af5492d4-f8dc-4270-a4c6-73d76f098942@lucifer.local>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025081311-purifier-reviver-aeb2@gregkh>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Aug 13, 2025 at 04:53:37PM +0200, Greg Kroah-Hartman wrote:
-> On Wed, Aug 13, 2025 at 08:01:51PM +0530, Naresh Kamboju wrote:
-> > Hi Greg,
-> > 
-> > > > 2)
-> > > >
-> > > > The following list of LTP syscalls failure noticed on qemu-arm64 with
-> > > > stable-rc 6.16.1-rc1 with CONFIG_ARM64_64K_PAGES=y build configuration.
-> > > >
-> > > > Most failures report ENOSPC (28) or mkswap errors, which may be related
-> > > > to disk space handling in the 64K page configuration on qemu-arm64.
-> > > >
-> > > > The issue is reproducible on multiple runs.
-> > > >
-> > > > * qemu-arm64, ltp-syscalls - 64K page size test failures list,
-> > > >
-> > > >   - fallocate04
-> > > >   - fallocate05
-> > > >   - fdatasync03
-> > > >   - fsync01
-> > > >   - fsync04
-> > > >   - ioctl_fiemap01
-> > > >   - swapoff01
-> > > >   - swapoff02
-> > > >   - swapon01
-> > > >   - swapon02
-> > > >   - swapon03
-> > > >   - sync01
-> > > >   - sync_file_range02
-> > > >   - syncfs01
-> > > >
-> > > > Reproducibility:
-> > > >  - 64K config above listed test fails
-> > > >  - 4K config above listed test pass.
-> > > >
-> > > > Regression Analysis:
-> > > > - New regression? yes
-> > >
-> > > Regression from 6.16?  Or just from 6.15.y?
-> > 
-> > Based on available data, the issue is not present in v6.16 or v6.15.
-> > 
-> > Anders, bisected this regression and found,
-> > 
-> >   ext4: correct the reserved credits for extent conversion
-> >     [ Upstream commit 95ad8ee45cdbc321c135a2db895d48b374ef0f87 ]
-> > 
-> > Report lore link,
-> > 
-> > https://lore.kernel.org/stable/CA+G9fYtBnCSa2zkaCn-oZKYz8jz5FZj0HS7DjSfMeamq3AXqNg@mail.gmail.com/
+On Wed, 13 Aug 2025 05:18:31 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+
+> On Tue, Aug 12, 2025 at 01:13:26PM -0700, SeongJae Park wrote:
+> > On Tue, 12 Aug 2025 16:44:09 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+[...]
+> > > In order to execute this change, we introduce a new opaque type -
+> > > mm_flags_t - which wraps a bitmap.
+> >
+> > I have no strong opinion here, but I think coding-style.rst[1] has one?  To
+> > quote,
+> >
+> >     Please don't use things like ``vps_t``.
+> >     It's a **mistake** to use typedef for structures and pointers.
 > 
-> Great, and that's also affecting 6.17-rc1 so we are "bug compatible"?
-> :)
+> You stopped reading the relevant section in [1] :) Keep going and you see:
+> 
+> 	Lots of people think that typedefs help readability. Not so. They
+> 	are useful only for: totally opaque objects (where the typedef is
+> 	actively used to hide what the object is).  Example: pte_t
+> 	etc. opaque objects that you can only access using the proper
+> 	accessor functions.
+> 
+> So this is what this is.
+> 
+> The point is that it's opaque, that is you aren't supposed to know about or
+> care about what's inside, you use the accessors.
+> 
+> This means we can extend the size of this thing as we like, and can enforce
+> atomicity through the accessors.
+> 
+> We further highlight the opaqueness through the use of the __private.
+> 
+> >
+> > checkpatch.pl also complains similarly.
+> >
+> > Again, I have no strong opinion, but I think adding a clarification about why
+> > we use typedef despite of the documented recommendation here might be nice?
+> 
+> I already gave one, I clearly indicate it's opaque.
 
-Lol.
+You're completely right and I agree all the points.  Thank you for kindly
+enlightening me :)
 
-regards,
-dan carpenter
 
+Thanks,
+SJ
+
+[...]
