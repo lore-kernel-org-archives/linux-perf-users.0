@@ -1,69 +1,65 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709E9286D5E;
-	Wed, 13 Aug 2025 16:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D74E622DF9E;
+	Wed, 13 Aug 2025 17:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755102808; cv=none; b=T77l/Xu8/X8DDsNcBiEHcletYP0mI1dyM/OUxFMsICHuaMMesDz5KWe8FzW4MUaYzJvFDMzyMWUSTUOipETbMN8Uf1TWdT3t6bydmxZqiKIJyhEi0bUHgUx6jUE9bzUNLX7L5esn+Fu1CC6V9zrXyfxPvJMqGMFrenfFA/iFJxM=
+	t=1755104487; cv=none; b=MikvVOR+bL/opdP5p4U0CmuUZT+GXSWgAyc3+cW9FvWNEVpuBTqMAFQldCLALD/bM2tDoUAODqqta1iRaP8m8FLhkJfnR9KQbskJiuo6fecHo1eq4IjTgS4J5EDtUrxY2r5PK20VyLzWsbtpjuUBF2r0B/JLMFT6l7FGOsh5vTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755102808; c=relaxed/simple;
-	bh=x1ZKOZTYJGF/U2kjdvtZsaZAne1mqWiZ05vJsY4xHOE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WVsOcEre/a6xoqLOdzkVIAyzIc6dAyBFqJbBiQvIBOle2SRB49eHVkEsqg7oNyrZQRhUmGSUjWTxAL1xwxSJbkzYd7/AAZQOybJ1ufdf4RQ8GP0c3IMDtxmxMOACNptachcpB/SeHO9qxR4yngjESq/sSaWOjFOLtdw6D7GE+aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-76e2ead79b5so8379b3a.3;
-        Wed, 13 Aug 2025 09:33:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755102806; x=1755707606;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AAxyR26sD/UmhZtDKgGa8VSqHxpVk6CfvVa4/B4m1GI=;
-        b=peYtGTO0GSwqtuKojFgX84qYGwua6po1nat/1aQuMBhekJ8rDuz9MqG3Pe+Yr+oOwh
-         USAeIRDAMbXkrqrScrxslJuZjtjtimn86eX8xBGnXEOlhQM5SAWKd48XUheKzRWwAb7H
-         wQhtilb5PeF5id6o8IY0iQqW1FLL1DoWZJAlfHkzEJq/mlS/ujPOBvs12DGMLocveevD
-         ltsdBtaUeKMBSQ1n8Bf4V3TJk9AvgBz+f5n3WhZ9U3V2vNFCgEMq0mF0KskuRHuHOEUn
-         6olJK95oMori4JZckuvRXohbRW3LpuM+7tnOtk68Bd4fuwwdyahN3utlADnbPCiv/cya
-         48Mw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+K7v3xGCbbESLXTKtcftqAxF04WKqT7x4jc8FUOixFPdcKo676XAACZl06/9AVj2ka25PNg2QKR6cD9Z6aTr5dg==@vger.kernel.org, AJvYcCWAjIKB5mOjwYgvD3qJpfUlVlgdSHBXOP9Asv4xpySKApEzlpVNZpJqkIDeCIMMTkmwrgFaOMLYdhX7FD4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnhepjIeVXPnfug7b7BeKsWLq+vUrQgCeDUdmu6Qn0eu+6oGXV
-	nnu8SMKRzmdzHq0nqUf7CENYpamQ1l7R1qkahre9CzeUqBfVFqWMHvdh
-X-Gm-Gg: ASbGncvo170/oR6L+lC9iYxxE4r7w6bJBBstjz1/6O1tDLFcDccQEmaTASv3HY+cpIA
-	a+cXUvTdV0+0zOLP4/JsV4eLL+M5hlKbnD+OjyznYARmnz0Ycxui4KNbXFstfts7r1eO/sPidCV
-	JLIKqNoXZpmFXB8sCrALRqSebEqq1UXKIyB7Nw3MCyEKK7ebiT4HTk+HwgLyaQwgjSglX9bQqm2
-	vWrr6innf2L8XhjOAZ9mHxGBbe7xphYqJ9IwHE6RZDpr29RDZ0bzadFLCDjhkXYNYP4BgnLbzEe
-	Vc3a8f2liPBzc5wRLvdc1Cs5wHYV4Jmq5SGdOGvA4uvRRIv1nAHI+o2d+rK5ofm6C/5uPM99lFM
-	pzyCw283fCJ0j
-X-Google-Smtp-Source: AGHT+IFd3ois8abXh2r0TeOVO5d30+2A5zCsUiP9wARw2gZzASwYYVLMa1p6/doAC9ierLEznR1A5g==
-X-Received: by 2002:a05:6a00:b82:b0:76b:cdf5:f4ba with SMTP id d2e1a72fcca58-76e20f8c3b9mr2347472b3a.4.1755102805573;
-        Wed, 13 Aug 2025 09:33:25 -0700 (PDT)
-Received: from localhost ([218.152.98.97])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-76bccd45dffsm32483556b3a.0.2025.08.13.09.33.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Aug 2025 09:33:25 -0700 (PDT)
-From: Yunseong Kim <ysk@kzalloc.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Liang Kan <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Collin Funk <collin.funk1@gmail.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
+	s=arc-20240116; t=1755104487; c=relaxed/simple;
+	bh=9Z/RmbrVLmkjIv2T64d6k3xZWFq+o5FbpjFxow0TKU4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uNb1YOWvgQo3IvoG5yOhVHm4TtQfnCxonaWfpXNgVsdlhFaUAoqRCP8Tas8pKGZ+qkugrW2bxv9bs1Fh6WbxkN1K+8tGnCEX6HwIQ1zCBpca1YXc30Q5ycnu67446Bo6rlghBaX8bkwhF7SvxgOJvjiHDudVdre81AG6QLiGaHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0CD3A12FC;
+	Wed, 13 Aug 2025 10:01:17 -0700 (PDT)
+Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.50])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E4DF23F738;
+	Wed, 13 Aug 2025 10:01:20 -0700 (PDT)
+From: Robin Murphy <robin.murphy@arm.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	will@kernel.org,
+	mark.rutland@arm.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Yunseong Kim <ysk@kzalloc.com>
-Subject: [PATCH] perf test: Add test case for event group throttling with inactive events
-Date: Wed, 13 Aug 2025 16:32:52 +0000
-Message-ID: <20250813163251.490451-2-ysk@kzalloc.com>
-X-Mailer: git-send-email 2.50.0
+	linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev,
+	linux-csky@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	dmaengine@vger.kernel.org,
+	linux-fpga@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	coresight@lists.linaro.org,
+	iommu@lists.linux.dev,
+	linux-amlogic@lists.infradead.org,
+	linux-cxl@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH 00/19] perf: Rework event_init checks
+Date: Wed, 13 Aug 2025 18:00:52 +0100
+Message-Id: <cover.1755096883.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -72,225 +68,138 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A recent UBSAN shift-out-of-bounds report was identified when throttling
-event groups that included inactive (PERF_EVENT_STATE_OFF) events.
-This occurred because pmu->start()/stop() could be called on these events,
-potentially leaving event->hw.idx at -1. This leads to undefined behavior
-when PMU code later uses this negative index as a shift exponent.
+Hi all,
 
-The issue need to ensuring perf_event_throttle() and
-perf_event_unthrottle() skip inactive events entirely.
+[ Note I'm only CC'ing lists for now to avoid spamming nearly 100 
+  individual maintainers/reviewers while we work out the basics ]
 
-Introduce a new perf test suite, "event group throttle", to verify this
-fix and prevent regressions.
+Reviving my idea from a few years back, the aim here is to minimise
+the amount of event_init boilerplate that most new drivers have to
+implement (and so many get wrong), while also trying to establish
+some more consistent and easy-to-follow patterns for the things that
+drivers should still care about (mostly group validation).
 
-The test sets up a scenario designed to trigger frequent throttling:
-1. A parent event (leader) is created with sample_period = 1.
-2. A child event is created in the same group but initialized with
-   disabled = 1 (inactive).
+It's ended up somewhat big and ugly, so to start with I've tried to
+optimise for ease of review - based on the typical "fixes, cleanup,
+new development" order the split of the current patches is like so:
 
-A process opens these events and runs in a tight loop. The frequent
-sampling of the leader causes the entire group, including the inactive
-child event, to be rapidly throttled and unthrottled by the kernel.
+* Group validation rework (patches #1-#15)
+  - Specific drivers with functional issues by inspection (#1-#7)
+  - Specific drivers where cleanup changes were non-trivial (#8-#11)
+  - Common patterns across remaining drivers (#12-#15)
+* Capabilities rework (patches #16-#18)
+* Giant bonfire of remaining boilerplate! (patch #19)
 
-The test monitors /dev/kmsg during execution, looking for "UBSAN",
-"Invalid PMEV" "WARNING:", or "BUG:" messages.
+If the overall idea is acceptable then a more relaxed merge strategy
+might be to look at landing the common parts first (#16-#18 and maybe
+#13), then rearrange the rest into per-driver patches, but I'm sure
+nobody wants a ~70-patch series out of the gate :)
 
-To ensure robustness and avoid false positives from unrelated prior kernel
-messages, the test opens /dev/kmsg and uses lseek(SEEK_END) to skip all
-existing log entries before starting the test loop. If /dev/kmsg cannot be
-accessed or seeked (e.g., lack of CAP_SYSLOG), the test handles it
-appropriately by skipping or failing.
+Thanks,
+Robin.
 
-Related Reproducer by Mark Rutland
-Link: https://lore.kernel.org/lkml/aIEePonPatjNrJVk@J2N7QTR9R3/
 
-Related Kernel Fix
-Link: https://lore.kernel.org/lkml/20250812012722.127646-1-ysk@kzalloc.com/
-Cc: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Yunseong Kim <ysk@kzalloc.com>
----
- tools/perf/tests/Build                  |   1 +
- tools/perf/tests/builtin-test.c         |   1 +
- tools/perf/tests/event_group_throttle.c | 132 ++++++++++++++++++++++++
- tools/perf/tests/tests.h                |   1 +
- 4 files changed, 135 insertions(+)
- create mode 100644 tools/perf/tests/event_group_throttle.c
+Robin Murphy (19):
+  perf/arm-cmn: Fix event validation
+  perf/hisilicon: Fix group validation
+  perf/imx8_ddr: Fix group validation
+  perf/starfive: Fix group validation
+  iommu/vt-d: Fix perfmon group validation
+  ARM: l2x0: Fix group validation
+  ARM: imx: Fix MMDC PMU group validation
+  perf/arm_smmu_v3: Improve group validation
+  perf/qcom: Improve group validation
+  perf/arm-ni: Improve event validation
+  perf/arm-cci: Tidy up event validation
+  perf: Ignore event state for group validation
+  perf: Add helper for checking grouped events
+  perf: Clean up redundant group validation
+  perf: Simplify group validation
+  perf: Introduce positive capability for sampling
+  perf: Retire PERF_PMU_CAP_NO_INTERRUPT
+  perf: Introduce positive capability for raw events
+  perf: Garbage-collect event_init checks
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index 3e8394be15ae..e22e2f285500 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -70,6 +70,7 @@ perf-test-y += util.o
- perf-test-y += hwmon_pmu.o
- perf-test-y += tool_pmu.o
- perf-test-y += subcmd-help.o
-+perf-test-y += event_group_throttle.o
- 
- ifeq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc))
- perf-test-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 85142dfb3e01..d302bf9d1535 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -141,6 +141,7 @@ static struct test_suite *generic_tests[] = {
- 	&suite__symbols,
- 	&suite__util,
- 	&suite__subcmd_help,
-+	&suite__event_group_throttle,
- 	NULL,
- };
- 
-diff --git a/tools/perf/tests/event_group_throttle.c b/tools/perf/tests/event_group_throttle.c
-new file mode 100644
-index 000000000000..7d5191d7e812
---- /dev/null
-+++ b/tools/perf/tests/event_group_throttle.c
-@@ -0,0 +1,132 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <time.h>
-+#include <sys/wait.h>
-+#include <signal.h>
-+#include <sys/syscall.h>
-+#include <sys/types.h>
-+#include <string.h>
-+#include <stdio.h>
-+#include <fcntl.h>
-+#include <unistd.h>
-+#include <errno.h>
-+#include <linux/perf_event.h>
-+#include "perf-sys.h"
-+#include "tests.h"
-+#include "debug.h"
-+
-+static struct perf_event_attr attr_parent = {
-+	.type = PERF_TYPE_HARDWARE,
-+	.size = sizeof(attr_parent),
-+	.config = PERF_COUNT_HW_CPU_CYCLES,
-+	.sample_period = 1,
-+	.exclude_kernel = 1,
-+};
-+
-+static struct perf_event_attr attr_child = {
-+	.type = PERF_TYPE_HARDWARE,
-+	.size = sizeof(attr_child),
-+	.config = PERF_COUNT_HW_CPU_CYCLES,
-+	.exclude_kernel = 1,
-+	.disabled = 1,
-+};
-+
-+static pid_t run_event_group_throttle(void)
-+{
-+	pid_t pid = fork();
-+
-+	if (pid == 0) {
-+		int parent, child;
-+
-+		parent = sys_perf_event_open(&attr_parent, 0, -1, -1, 0);
-+		if (parent < 0) {
-+			pr_debug("Unable to create event: %d\n", parent);
-+			exit(-1);
-+		}
-+
-+		child = sys_perf_event_open(&attr_child, 0, -1, parent, 0);
-+		if (child < 0) {
-+			pr_debug("Unable to create event: %d\n", child);
-+			exit(-1);
-+		}
-+
-+		for (;;)
-+			asm("" ::: "memory");
-+
-+		_exit(0);
-+	}
-+	return pid;
-+}
-+
-+static bool is_kmsg_err(int fd)
-+{
-+	char buf[1024];
-+	ssize_t len;
-+
-+	while ((len = read(fd, buf, sizeof(buf) - 1)) > 0) {
-+		buf[len] = '\0';
-+
-+		if (strstr(buf, "UBSAN") || strstr(buf, "WARNING:") ||
-+		    strstr(buf, "BUG:") || strstr(buf, "Invalid PMEV")) {
-+			pr_debug("Kernel log error detected: %s", buf);
-+			return true;
-+		}
-+	}
-+
-+	if (len < 0 && errno != EAGAIN) {
-+		pr_debug("Error reading /dev/kmsg: %s\n", strerror(errno));
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
-+static int test__event_group_throttle(struct test_suite *test __maybe_unused,
-+				int subtest __maybe_unused)
-+{
-+	time_t start;
-+	pid_t pid;
-+	int fd;
-+
-+	fd = open("/dev/kmsg", O_RDONLY | O_NONBLOCK);
-+	if (fd < 0) {
-+		/*
-+		 * If /dev/kmsg cannot be opened (e.g. permission denied), skip the test
-+		 * as we cannot verify the absence of kernel errors.
-+		 */
-+		pr_debug("Failed to open /dev/kmsg: %s. Skipping test.\n", strerror(errno));
-+		return TEST_SKIP;
-+	}
-+
-+	/*
-+	 * Seek to the end to ignore past events (like EFI boot warnings).
-+	 * This typically requires CAP_SYSLOG.
-+	 */
-+	if (lseek(fd, 0, SEEK_END) < 0) {
-+		pr_debug("Failed to seek to end of /dev/kmsg: %s\n", strerror(errno));
-+		return TEST_FAIL;
-+	}
-+
-+	start = time(NULL);
-+	do {
-+		pr_debug("Starting event group throttling...\n");
-+		pid = run_event_group_throttle();
-+
-+		sleep(8);
-+
-+		pr_debug("event group throttler(PID=%d)\n", pid);
-+		kill(pid, SIGKILL);
-+		waitpid(pid, NULL, 0);
-+
-+		/* Check for errors during the run */
-+		if (is_kmsg_err(fd)) {
-+			close(fd);
-+			return TEST_FAIL;
-+		}
-+	} while (time(NULL) - start < 10);
-+
-+	return TEST_OK;
-+}
-+
-+DEFINE_SUITE("event group throttle", event_group_throttle);
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 97e62db8764a..031856a710b2 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -179,6 +179,7 @@ DECLARE_SUITE(event_groups);
- DECLARE_SUITE(symbols);
- DECLARE_SUITE(util);
- DECLARE_SUITE(subcmd_help);
-+DECLARE_SUITE(event_group_throttle);
- 
- /*
-  * PowerPC and S390 do not support creation of instruction breakpoints using the
+ arch/alpha/kernel/perf_event.c                |  5 +-
+ arch/arc/kernel/perf_event.c                  |  4 +-
+ arch/arm/mach-imx/mmdc.c                      | 29 ++----
+ arch/arm/mm/cache-l2x0-pmu.c                  | 19 +---
+ arch/csky/kernel/perf_event.c                 |  3 +-
+ arch/loongarch/kernel/perf_event.c            |  1 +
+ arch/mips/kernel/perf_event_mipsxx.c          |  1 +
+ arch/powerpc/perf/8xx-pmu.c                   |  3 +-
+ arch/powerpc/perf/core-book3s.c               |  4 +-
+ arch/powerpc/perf/core-fsl-emb.c              |  4 +-
+ arch/powerpc/perf/hv-24x7.c                   | 11 ---
+ arch/powerpc/perf/hv-gpci.c                   | 11 ---
+ arch/powerpc/perf/imc-pmu.c                   | 31 +-----
+ arch/powerpc/perf/kvm-hv-pmu.c                |  5 +-
+ arch/powerpc/perf/vpa-pmu.c                   | 13 +--
+ arch/powerpc/platforms/pseries/papr_scm.c     | 18 +---
+ arch/s390/kernel/perf_cpum_cf.c               |  8 +-
+ arch/s390/kernel/perf_cpum_sf.c               |  2 +
+ arch/s390/kernel/perf_pai_crypto.c            |  1 +
+ arch/s390/kernel/perf_pai_ext.c               |  1 +
+ arch/sh/kernel/perf_event.c                   |  1 -
+ arch/sparc/kernel/perf_event.c                |  4 +-
+ arch/x86/events/amd/ibs.c                     | 32 ++-----
+ arch/x86/events/amd/iommu.c                   | 15 ---
+ arch/x86/events/amd/power.c                   |  7 --
+ arch/x86/events/amd/uncore.c                  | 12 +--
+ arch/x86/events/core.c                        |  7 +-
+ arch/x86/events/intel/bts.c                   |  3 -
+ arch/x86/events/intel/cstate.c                | 16 +---
+ arch/x86/events/intel/pt.c                    |  3 -
+ arch/x86/events/intel/uncore.c                | 16 +---
+ arch/x86/events/intel/uncore_snb.c            | 18 ----
+ arch/x86/events/msr.c                         |  8 +-
+ arch/x86/events/rapl.c                        | 11 ---
+ arch/xtensa/kernel/perf_event.c               |  1 +
+ drivers/devfreq/event/rockchip-dfi.c          | 13 +--
+ drivers/dma/idxd/perfmon.c                    | 17 +---
+ drivers/fpga/dfl-fme-perf.c                   | 18 +---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_pmu.c       |  4 -
+ drivers/gpu/drm/i915/i915_pmu.c               | 13 ---
+ drivers/gpu/drm/xe/xe_pmu.c                   | 13 ---
+ .../hwtracing/coresight/coresight-etm-perf.c  |  5 -
+ drivers/hwtracing/ptt/hisi_ptt.c              |  8 --
+ drivers/iommu/intel/perfmon.c                 | 28 +++---
+ drivers/perf/alibaba_uncore_drw_pmu.c         | 28 +-----
+ drivers/perf/amlogic/meson_ddr_pmu_core.c     |  9 --
+ drivers/perf/arm-cci.c                        | 56 +++--------
+ drivers/perf/arm-ccn.c                        | 34 -------
+ drivers/perf/arm-cmn.c                        | 15 +--
+ drivers/perf/arm-ni.c                         | 35 +++----
+ drivers/perf/arm_cspmu/arm_cspmu.c            | 34 +------
+ drivers/perf/arm_dmc620_pmu.c                 | 28 +-----
+ drivers/perf/arm_dsu_pmu.c                    | 26 +----
+ drivers/perf/arm_pmu.c                        | 19 +---
+ drivers/perf/arm_pmu_platform.c               |  2 +-
+ drivers/perf/arm_smmuv3_pmu.c                 | 35 ++-----
+ drivers/perf/arm_spe_pmu.c                    |  7 +-
+ drivers/perf/cxl_pmu.c                        |  6 --
+ drivers/perf/dwc_pcie_pmu.c                   | 21 +---
+ drivers/perf/fsl_imx8_ddr_perf.c              | 32 +------
+ drivers/perf/fsl_imx9_ddr_perf.c              | 27 ------
+ drivers/perf/hisilicon/hisi_pcie_pmu.c        | 25 ++---
+ drivers/perf/hisilicon/hisi_uncore_pmu.c      | 41 ++------
+ drivers/perf/hisilicon/hns3_pmu.c             | 24 ++---
+ drivers/perf/marvell_cn10k_ddr_pmu.c          | 18 ----
+ drivers/perf/marvell_cn10k_tad_pmu.c          | 12 +--
+ drivers/perf/marvell_pem_pmu.c                | 22 +----
+ drivers/perf/qcom_l2_pmu.c                    | 96 ++++++-------------
+ drivers/perf/qcom_l3_pmu.c                    | 33 ++-----
+ drivers/perf/riscv_pmu_legacy.c               |  1 -
+ drivers/perf/riscv_pmu_sbi.c                  |  3 +-
+ drivers/perf/starfive_starlink_pmu.c          | 32 ++-----
+ drivers/perf/thunderx2_pmu.c                  | 45 ++-------
+ drivers/perf/xgene_pmu.c                      | 29 ------
+ drivers/powercap/intel_rapl_common.c          |  9 +-
+ include/linux/perf_event.h                    | 10 +-
+ kernel/events/core.c                          | 35 +++++--
+ kernel/events/hw_breakpoint.c                 |  1 +
+ 78 files changed, 244 insertions(+), 1053 deletions(-)
+
 -- 
-2.50.0
+2.39.2.101.g768bb238c484.dirty
 
