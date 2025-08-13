@@ -1,144 +1,138 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B73136347
-	for <linux-perf-users@vger.kernel.org>; Wed, 13 Aug 2025 12:27:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D700D1547D2;
+	Wed, 13 Aug 2025 12:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755088049; cv=none; b=jZV2sesIhJ/7uCWKg1Cc09F+St+27Vz3NH9O5BF52MozwS9+UCfKRkCq9U48Rcq6Jv+E8gHnIyoy2c38hLDYFNBVuYZSTgBlKyqKIFQHs+XBn0ps6WdNfcX1fqY1bwU1sAuwKcekZlgz5yBZmjrqZCZVKOUoXlbEZST3gUiulz4=
+	t=1755089453; cv=none; b=CknsgSvJgl1Zh59hOpLfYfRAuYQ8Yj5W7+EKf2yXWOrz5e8imxfb6zSuccQ2tQBFvqBeTWmzReWKClmzTMSky6SgpA8IJGIvWbWtVyCTiw6oyekgq/6qiVJvCyugJGYteJ1vkIQXGyjVVRUtG8PqUu6xsIR19d+zD2ab/ou76/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755088049; c=relaxed/simple;
-	bh=GbIxYmRopA1e1pkCw99AIa0AOpqQOxAdFJZSVIlkITI=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=k9KECt75An/u0NHIDkExQw0agM400Sf2vcyaUjE7Re9I8GNUmD24w+ZDMhKLm6+CsFCd99rcRgD3DWxZNoFYEp7FsjaSzMJSSXn8MZnrIqi70OXzkaVM5FqktlhjXZeNRzfbNVfW9EdadkVLVZt3EoMWC976/6RjOpneScIDNaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fFfpxGjG; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1755089453; c=relaxed/simple;
+	bh=1sFEp7tfTZsLqsEbQ6yN/DfqybrcqHWTfRSt7pluUnU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WBMMPo6Dgs6KU48wanigWveFyU0ke3mw2WIRfJXi/Mywb36at153DHjZEIkG+6kzcYj2lurLyu3X1P3PtOxZeqOeqEzjvpyLN71JdgAnnF82zg+d0ECUUsVAapadPWOLvhYbau4YaAlmXXrz5wHh12dolrQbIE4C3mtxv7z6epw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=G/lvod9q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fFfpxGjG"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2430926b53eso9013925ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Aug 2025 05:27:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755088047; x=1755692847; darn=vger.kernel.org;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dCRSIhSzDr4RKLGt92FHYYSQf942VJvJALBglFUAMhc=;
-        b=fFfpxGjGZUBeNCM/fByRB6mPQt7b2fBCcXzXuvSUaJhGUBJExWJcSM3nei4UEiPA7H
-         3+xTXrn2H+VVtXmbKWtrAUH2J2s3BrNWuzbkPwVpsJJxijdQefNrvP79sgjEwcKYgugI
-         CmYiOAQ1ahjHoIpFi+vHvKpLQ9GWCzdLq+isZUjE7uw7xmA8c16N2d8dXcKlel0rciHT
-         BOU/Xx0gdjZqIRJK+PogUK1GJrw4/+h8mbAa88BqZj0CtKMBYodsWQlViAnr0ipIasBD
-         LnHT/5vhHRODhshMF/ZT4JvdkNYpykhdEpFK39E8Hl75hkbOmhHKtyLnLFWvZnZMVyD8
-         xhLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755088047; x=1755692847;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=dCRSIhSzDr4RKLGt92FHYYSQf942VJvJALBglFUAMhc=;
-        b=V6oZ/B9C8NgiPTJmmmS3Fmfb8MjDxOWHRqS38nT+YLlp8hvenRq786iuTgPtkug8So
-         vFD6T6ej9nSyZcc8nga51ox322WPmM18GnWgTzwHRUJXVKhi6U0OAoPqw8QaUMTWKwvG
-         Ppi2vgN6Bavt0oa+L7lAghYJyTp3rnrjvzGtxP5ZIZv5Qsr9u6/Xug11KR25/juh07n8
-         5/+ou3yRrQtquItQVqdP3lUdiS3FRD8FnxVDtcRg2DxsCMzjG61f1LS3vbKkpwCAKCtg
-         BKteB/jnsgKpAOsdEs7VJPH7KdpaMbAjEF6OwWZM70AxAi9nTjqgnslNYY/RzvvWMF5v
-         urQQ==
-X-Gm-Message-State: AOJu0YxNCoRaUdooKo20s5oPScBtNCTgCw0cnFajmfw36Wa1vY0d3BiB
-	xjewKmDi9m4oIXL2KI7MD+9s75TnQ9+hl+ktCPG3JnlOtkso7c5M3PXdOXGPBQ==
-X-Gm-Gg: ASbGnctBoU59O7AGt8N5WhwCDr9IzNxJST40akE2mjwuGJAAmU2H3GLnmyi91nBll6B
-	ur48Pxz+hv2aHyC+xjzpaTlUA07irMaTJpBXhfcdhOUVGwG/8F80CkvBOO9C2yjVxyNnxOMGkbi
-	KQsJ3+xjL7WJy7P+H5ZdXcev02L2B8mDLrKVAgdQghbEzc0VyF5Yk+Vsr1SjtOtNp5+TMBoYqne
-	5Dirs9u3gKFbOzsDtYE5ohE7pePVhVDQ7kQLBtMp8thnGv++wPyCK460EW6ClJwwtyIVXApuBvT
-	w8yHGtoS288H+yXytB+hkZ+mNXN6YGkP2m8EQflv1J7q2o7VO0gSwbixNmjpojV+NUjBscRWyjj
-	Iw512XwEKSIC3uXKnl6gsLeuyIkcsuGyivW8=
-X-Google-Smtp-Source: AGHT+IEan/2QdEZVsrN2M5rSU6ynytg77ubEyRTTnsfIThPVpEWHCMco+Wce2nG0m+tPsXLG23fFEQ==
-X-Received: by 2002:a17:902:c40f:b0:240:9dd8:219b with SMTP id d9443c01a7336-2430d27e445mr49953705ad.49.1755088046475;
-        Wed, 13 Aug 2025 05:27:26 -0700 (PDT)
-Received: from [192.168.1.3] ([203.220.234.102])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241e899b783sm323279825ad.133.2025.08.13.05.27.25
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Aug 2025 05:27:26 -0700 (PDT)
-Message-ID: <6312afd2-18d8-4e11-96a8-0ceed284634c@gmail.com>
-Date: Wed, 13 Aug 2025 22:27:23 +1000
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="G/lvod9q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9B4EC4CEF6;
+	Wed, 13 Aug 2025 12:50:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1755089452;
+	bh=1sFEp7tfTZsLqsEbQ6yN/DfqybrcqHWTfRSt7pluUnU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G/lvod9qaNFe8MgiqMNtSrnZl6ICr4ny7PsTyyOhzVZeCv/MZyhfDLlgNxCv37Z7r
+	 GYSIKBF/pteVt/vjuJB94/MdSefsCgRAQaRxWEIW2/awDVXuZZFSfXB+5rMnnQexLI
+	 cxOX0SSrpyCPB+x6DMMiVzgiv5VergRxG6Bl2MhE=
+Date: Wed, 13 Aug 2025 14:50:49 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+	achill@achill.org, qemu-devel@nongnu.org,
+	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Ben Copeland <benjamin.copeland@linaro.org>,
+	LTP List <ltp@lists.linux.it>, chrubis <chrubis@suse.cz>,
+	Petr Vorel <pvorel@suse.cz>, Ian Rogers <irogers@google.com>,
+	linux-perf-users@vger.kernel.org,
+	Zhang Yi <yi.zhang@huaweicloud.com>,
+	Joseph Qi <jiangqi903@gmail.com>, Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org,
+	linux-ext4 <linux-ext4@vger.kernel.org>
+Subject: Re: [PATCH 6.16 000/627] 6.16.1-rc1 review
+Message-ID: <2025081300-frown-sketch-f5bd@gregkh>
+References: <20250812173419.303046420@linuxfoundation.org>
+ <CA+G9fYtBnCSa2zkaCn-oZKYz8jz5FZj0HS7DjSfMeamq3AXqNg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: linux-perf-users@vger.kernel.org
-From: Zixian Cai <fzczx123@gmail.com>
-Subject: perf probe fails to add events due to "File exists"
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYtBnCSa2zkaCn-oZKYz8jz5FZj0HS7DjSfMeamq3AXqNg@mail.gmail.com>
 
-Hi all,
+On Wed, Aug 13, 2025 at 05:46:26PM +0530, Naresh Kamboju wrote:
+> Long story:
+> 1)
+> The perf gcc-13 build failed on x86_64 and i386.
+> 
+> Build regression: qemu-arm64 ARM64_64K_PAGES ltp syscalls swap fsync
+> fallocate failed.
+> 
+> > Ian Rogers <irogers@google.com>
+> >     perf topdown: Use attribute to see an event is a topdown metic or slots
+> 
+> Build error:
+> 
+> arch/x86/tests/topdown.c: In function 'event_cb':
+> arch/x86/tests/topdown.c:53:25: error: implicit declaration of
+> function 'pr_debug' [-Werror=implicit-function-declaration]
+>    53 |                         pr_debug("Broken topdown information
+> for '%s'\n", evsel__name(evsel));
+>       |                         ^~~~~~~~
+> cc1: all warnings being treated as errors
 
-My apologies in advance if this has been addressed in newer kernels. Likewise, I realize that this might be a problem in kernel/trace instead of in the perf userland.
-But I will appreciate any pointer.
+Already fixed.
 
-I'm trying to use `perf record` to trace USDT events in OpenJDK (in libjvm.so). See the below entries in .note.stapsdt section.
+> 2)
+> 
+> The following list of LTP syscalls failure noticed on qemu-arm64 with
+> stable-rc 6.16.1-rc1 with CONFIG_ARM64_64K_PAGES=y build configuration.
+> 
+> Most failures report ENOSPC (28) or mkswap errors, which may be related
+> to disk space handling in the 64K page configuration on qemu-arm64.
+> 
+> The issue is reproducible on multiple runs.
+> 
+> * qemu-arm64, ltp-syscalls - 64K page size test failures list,
+> 
+>   - fallocate04
+>   - fallocate05
+>   - fdatasync03
+>   - fsync01
+>   - fsync04
+>   - ioctl_fiemap01
+>   - swapoff01
+>   - swapoff02
+>   - swapon01
+>   - swapon02
+>   - swapon03
+>   - sync01
+>   - sync_file_range02
+>   - syncfs01
+> 
+> Reproducibility:
+>  - 64K config above listed test fails
+>  - 4K config above listed test pass.
+> 
+> Regression Analysis:
+> - New regression? yes
 
- stapsdt              0x0000002f       NT_STAPSDT (SystemTap probe descriptors)
-    Provider: hotspot
-    Name: gc__begin
-    Location: 0x0000000000874144, Base: 0x00000000012014f8, Semaphore: 0x0000000000000000
-    Arguments: 1@$1
-  stapsdt              0x0000002f       NT_STAPSDT (SystemTap probe descriptors)
-    Provider: hotspot
-    Name: gc__begin
-    Location: 0x00000000008741c2, Base: 0x00000000012014f8, Semaphore: 0x0000000000000000
-    Arguments: 1@$0
-  stapsdt              0x00000031       NT_STAPSDT (SystemTap probe descriptors)
-    Provider: hotspot
-    Name: gc__begin
-    Location: 0x0000000000874274, Base: 0x00000000012014f8, Semaphore: 0x0000000000000000
-    Arguments: 1@%dil
-  stapsdt              0x0000002f       NT_STAPSDT (SystemTap probe descriptors)
-    Provider: hotspot
-    Name: gc__begin
-    Location: 0x0000000000874634, Base: 0x00000000012014f8, Semaphore: 0x0000000000000000
-    Arguments: 1@$1
+Regression from 6.16?  Or just from 6.15.y?
 
-I tried
-1. `perf buildid-cache --add libjvm.so` first, and then `perf probe --add sdt_hotspot:gc__begin`, or
-2. `perf probe -x libjvm.so --add sdt_hotspot:gc__begin`.
+> 3)
+> 
+> Test regression: stable-rc 6.16.1-rc1 WARNING fs jbd2 transaction.c
+> start_this_handle
+> 
+> Kernel warning noticed on this stable-rc 6.16.1-rc1 this regression was
+> reported last month on the Linux next,
+> 
+> - https://lore.kernel.org/all/CA+G9fYsyYQ3ZL4xaSg1-Tt5Evto7Zd+hgNWZEa9cQLbahA1+xg@mail.gmail.com/
 
-Both result in
+Ok, no real regression here if this was already in 6.16.
 
-Failed to write event: File exists
-  Error: Failed to add events.
+Doesn't look like it got fixed in 6.17-rc1 either :(
 
-Here is the verbose log with some removed for brevity. 
+thanks,
 
-perf probe --verbose --add sdt_hotspot:gc__begin
-probe-definition(0): sdt_hotspot:gc__begin
-0 arguments
-symbol:throw file:(null) line:0 offset:0 return:0 lazy:(null)
-<snip>
-symbol:rethrow file:(null) line:0 offset:0 return:0 lazy:(null)
-symbol:catch file:(null) line:0 offset:0 return:0 lazy:(null)
-Parsing probe_events: p:sdt_hotspot/gc__begin /home/zixianc/jdk-21.0.9/lib/server/libjvm.so:0x874144
-Group:sdt_hotspot Event:gc__begin probe:p
-Parsing probe_events: p:sdt_hotspot/gc__begin /home/zixianc/jdk-21.0.9/lib/server/libjvm.so:0x8741c2
-Group:sdt_hotspot Event:gc__begin probe:p
-Parsing probe_events: p:sdt_hotspot/gc__begin /home/zixianc/jdk-21.0.9/lib/server/libjvm.so:0x874274 arg1=%di:u8
-Group:sdt_hotspot Event:gc__begin probe:p
-Parsing probe_events: p:sdt_hotspot/gc__begin /home/zixianc/jdk-21.0.9/lib/server/libjvm.so:0x874634
-Group:sdt_hotspot Event:gc__begin probe:p
-symbol:throw file:(null) line:0 offset:0 return:0 lazy:(null)
-symbol:rethrow file:(null) line:0 offset:0 return:0 lazy:(null)
-symbol:catch file:(null) line:0 offset:0 return:0 lazy:(null)
-Opening /sys/kernel/tracing//uprobe_events write=1
-Opening /sys/kernel/tracing//README write=0
-Writing event: p:sdt_hotspot/gc__begin /home/zixianc/jdk-21.0.9/lib/server/libjvm.so:0x874144
-Writing event: p:sdt_hotspot/gc__begin /home/zixianc/jdk-21.0.9/lib/server/libjvm.so:0x8741c2
-Writing event: p:sdt_hotspot/gc__begin /home/zixianc/jdk-21.0.9/lib/server/libjvm.so:0x874274 arg1=%di:u8
-Failed to write event: File exists
-  Error: Failed to add events. Reason: File exists (Code: -17)
-
-Here is the content of /sys/kernel/tracing/uprobe_events after running `perf probe`.
-
-p:sdt_hotspot/gc__begin /home/zixianc/jdk-21.0.9/lib/server/libjvm.so:0x0000000000874144
-p:sdt_hotspot/gc__begin /home/zixianc/jdk-21.0.9/lib/server/libjvm.so:0x00000000008741c2
+greg k-h
