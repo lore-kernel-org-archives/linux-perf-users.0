@@ -1,152 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B8A136347;
-	Wed, 13 Aug 2025 12:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C34214EC5B
+	for <linux-perf-users@vger.kernel.org>; Wed, 13 Aug 2025 13:24:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755089483; cv=none; b=Vs7PDXoXnnb8XFYMvIdPzB5tEMWjLmTuIVBFvLFTLRffwpVUCRTIC9rd04EKGoT+wPPQ1sQNKJoeiJUu/HDTA5O6QJ6dPeoU9Q1TFiPj6wsj9mr3iAvVTp7/vl8OszJSqttyGiMlBmFgxzyizkLkL8BMh6G2a0OyWB3hbnbK0NY=
+	t=1755091488; cv=none; b=qjuazX/sseks4tp8y4BKhkT75PjJxX7ZtZLxA4Tuftl15/XWxxTyo/Jd5xwSP5QLk6G/5P0ms3jsg4CC+ghGTg+IOqCDkBmLWpRsbNL3gRe26Le5J1Id8VenSfZ6iFAyoJeGidZ4Hd/wQlvicz2h1ydHeOCRiOqTxxxWx+mQutg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755089483; c=relaxed/simple;
-	bh=UMjaZSS4sd8UG4kwOViWpJphe7Bwr3FK+8uuEvptObY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rLw3Ic4DmX9M/jPzj2yHzBbe4rEayB6W4YG+4NOXrUmDKvfEINIqayTy1SPovmThfNBq/Nknj+YAR1PzS1oLmD7XIvw+1glyt0/TF1YOs81x40U8N/xyWc5L0oEaJMrNkEfIfchjw64aMVbeoFMvstBvK8N0jXCdjNH5u9KGl9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JsZ+37HB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755091488; c=relaxed/simple;
+	bh=FTGJx2ci5UwBiw7lRUgttATgya8FzeHMyOb9K70OohM=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=l+BxpY0qac2rFJtpH3ZBwq8qFf4A7AuMf3+m9Qiu8Za085kuy/OM47NlcXUHss04esKfFSsJqvuvsVe5KQiubi2CPjZ16wq1qLUXncQxF1WZU/f9MiX5fE3LG77JVA6LGxD3BBcOtFFy+RupH2fTB3s72cxf1SPU8J9aiQzx2Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZjXzjWIe; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JsZ+37HB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3288CC4CEEB;
-	Wed, 13 Aug 2025 12:51:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755089483;
-	bh=UMjaZSS4sd8UG4kwOViWpJphe7Bwr3FK+8uuEvptObY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JsZ+37HBd8CyLifn1Zgw1gjmmahHJ/PUjqGvPg/A/GugA+FnkH3U3P9C7LOuwSSy3
-	 Fsuhxkz+47NJqpf0hpdFHW6Scew12iDmedLeXW7B+PCArEXcXtqRyJhsUtdSZoQ4wv
-	 TvNWjTY7kqttCbgxhGu3GBoaWfrW35eHQGet4JTdgjhegOZM+aFJ9g5R1jppHZwbZj
-	 sV5udSiONnk839IrMB5r8E/SX0WdpPfTM9RRhzLEfT72HTwb+ff81cJIg1pR3+EHfh
-	 MQGo7gCZkySDY+MQEcqEFD62yI0jxMD0ZOEpo8FgLCNaxyofJXQDN9IpcJB1gFPfpd
-	 ay7k8QWarr0lw==
-Date: Wed, 13 Aug 2025 13:51:11 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	hargar@microsoft.com, achill@achill.org, qemu-devel@nongnu.org,
-	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Ben Copeland <benjamin.copeland@linaro.org>,
-	LTP List <ltp@lists.linux.it>, chrubis <chrubis@suse.cz>,
-	Petr Vorel <pvorel@suse.cz>, Ian Rogers <irogers@google.com>,
-	linux-perf-users@vger.kernel.org,
-	Zhang Yi <yi.zhang@huaweicloud.com>,
-	Joseph Qi <jiangqi903@gmail.com>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org,
-	linux-ext4 <linux-ext4@vger.kernel.org>
-Subject: Re: [PATCH 6.16 000/627] 6.16.1-rc1 review
-Message-ID: <bf9ccc7d-036d-46eb-85a1-b46317e2d556@sirena.org.uk>
-Mail-Followup-To: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, achill@achill.org,
-	qemu-devel@nongnu.org,
-	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Ben Copeland <benjamin.copeland@linaro.org>,
-	LTP List <ltp@lists.linux.it>, chrubis <chrubis@suse.cz>,
-	Petr Vorel <pvorel@suse.cz>, Ian Rogers <irogers@google.com>,
-	linux-perf-users@vger.kernel.org,
-	Zhang Yi <yi.zhang@huaweicloud.com>,
-	Joseph Qi <jiangqi903@gmail.com>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org,
-	linux-ext4 <linux-ext4@vger.kernel.org>
-References: <20250812173419.303046420@linuxfoundation.org>
- <CA+G9fYtBnCSa2zkaCn-oZKYz8jz5FZj0HS7DjSfMeamq3AXqNg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZjXzjWIe"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57DCncIU029606;
+	Wed, 13 Aug 2025 13:24:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=KHtx0KeCB7hPY38xLvMBUDJmEnqb
+	5S3273DoLEIUgsM=; b=ZjXzjWIe0Ar4w5c2wfJgd1aeYDxuS7ZYSopRmLWsOzTz
+	EkLKaKHfFUyGi8BqE3a2hSdF0q+dUw1icuYoZnTHvdkRGHZRZRPvEqvkURUAVNVY
+	dt1DlAQL1Vh9zSNjOs+oqSL18nsm3U61rFyMtnJ8lY12AVwtEcSKoSUIDUJkirpM
+	9jKH2gq9xDbTxQID0eSL+4ub2svQsI5xf18373lTeYR6ruqeiZNLCx0JpMCdiKEA
+	TmYndrYK/BkHgtUVjsyoQ1tg1J8ZhU8YqYOmDgJvCDCSakomVsuCodSi75YNiIMm
+	rWVYyRgRrO1WsJAKz8PMxIhqnXW6h9cKBVoQUctr5w==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48dwudcpcr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Aug 2025 13:24:43 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57DC9I0T028658;
+	Wed, 13 Aug 2025 13:24:42 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 48ej5n7afk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 13 Aug 2025 13:24:42 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 57DDOceY51773862
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 13 Aug 2025 13:24:38 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8327D20063;
+	Wed, 13 Aug 2025 13:24:38 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 60ECA20040;
+	Wed, 13 Aug 2025 13:24:38 +0000 (GMT)
+Received: from [9.152.212.130] (unknown [9.152.212.130])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 13 Aug 2025 13:24:38 +0000 (GMT)
+Message-ID: <f6541c46-d194-4f1f-b4d8-030828f9b272@linux.ibm.com>
+Date: Wed, 13 Aug 2025 15:24:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jpbELjH1qfe0Wb2r"
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYtBnCSa2zkaCn-oZKYz8jz5FZj0HS7DjSfMeamq3AXqNg@mail.gmail.com>
-X-Cookie: Turn the other cheek.
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Jan Polensky <japo@linux.ibm.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: Regression: perf script report flamegraph dumps core
+Organization: IBM
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEyMDIyNCBTYWx0ZWRfXwFK9gpuz0UDA
+ I3arROS0X2AYswMwK+Jqw3L95oe1Fn74BAKuLC9T+yk14K8tRL8eYL1+a3/vJAT78BDTkRzum4Q
+ xjrwm/kRieXykEEFRt9u5SDZuU99ti8UxZ2ZxL9mT2DUM8XtA9SHAYkbqsR4vQAyjsLSUVGeV6d
+ C+CkuzLal2UbRaqPo9SwT/Qj3ADidprmzPZyWOtmduCpkEV+jXDilHdWdwFZLZ/Sm01B5wnAIuh
+ NXH80tE6ad7HfA++RFLdHHMlTjRChnvw0IkdGo4QCvwGK/i1Dxy9ao73f6RdRXmpGPhvOH9dA7/
+ 39moviQLTKkMxAzpi+vuONbcDVb+0IuiFNEdfIZ/f/de5/qOhRE1tF0UOsorKSXplAnrtzRGOVz
+ zGNQSVWf
+X-Authority-Analysis: v=2.4 cv=d/31yQjE c=1 sm=1 tr=0 ts=689c921b cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=nTytL9qogadzHEVTUOIA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: repQTBwX3vN_oAbafyMRLJ_gD1Z4L5D0
+X-Proofpoint-ORIG-GUID: repQTBwX3vN_oAbafyMRLJ_gD1Z4L5D0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-13_01,2025-08-11_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 suspectscore=0 impostorscore=0 priorityscore=1501 phishscore=0
+ spamscore=0 adultscore=0 bulkscore=0 malwarescore=0 classifier=typeunknown
+ authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2507300000 definitions=main-2508120224
+
+Hi all,
+
+Running the following commands on 6.17.0rc1 produces a core dump
+sometimes (actually almost on every invocation on my system):
+
+ # perf record -- find / -xdev > /dev/null
+ [ perf record: Woken up 2 times to write data ]
+ [ perf record: Captured and wrote 0.104 MB perf.data (2321 samples) ]
+ #
+ # perf script -s /usr/libexec/perf-core/scripts/python/flamegraph.py -i perf.data
+ Segmentation fault (core dumped)
+
+ # perf script report flamegraph
+ /usr/libexec/perf-core/scripts/python/bin/flamegraph-report: line 3: \
+ 206665 Segmentation fault      (core dumped)
+ #
 
 
---jpbELjH1qfe0Wb2r
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+However when option -d is specified, the commands succeed:
 
-On Wed, Aug 13, 2025 at 05:46:26PM +0530, Naresh Kamboju wrote:
-> On Tue, 12 Aug 2025 at 23:57, Greg Kroah-Hartman
+ # perf script report flamegraph -d
+ Misordered timestamps: 0
+ dumping data to flamegraph.html
 
-> The following list of LTP syscalls failure noticed on qemu-arm64 with
-> stable-rc 6.16.1-rc1 with CONFIG_ARM64_64K_PAGES=3Dy build configuration.
->=20
-> Most failures report ENOSPC (28) or mkswap errors, which may be related
-> to disk space handling in the 64K page configuration on qemu-arm64.
->=20
-> The issue is reproducible on multiple runs.
->=20
-> * qemu-arm64, ltp-syscalls - 64K page size test failures list,
->=20
->   - fallocate04
->   - fallocate05
->   - fdatasync03
->   - fsync01
->   - fsync04
->   - ioctl_fiemap01
->   - swapoff01
->   - swapoff02
->   - swapon01
->   - swapon02
->   - swapon03
->   - sync01
->   - sync_file_range02
->   - syncfs01
+ # ll flamegraph.html
+ -rw-r--r--. 1 root root 69686 Aug 13 15:02 flamegraph.html
 
-I'm also seeing epoll_ctl04 failing on Raspberry Pi 4, there's a bisect
-still running but I suspect given the error message:
+ # perf script -s /usr/libexec/perf-core/scripts/python/flamegraph.py -d -i perf.data
+ Misordered timestamps: 0
+ dumping data to flamegraph.html
 
-epoll_ctl04.c:59: TFAIL: epoll_ctl(..., EPOLL_CTL_ADD, ...) with number of =
-nesting is 5 expected EINVAL: ELOOP (40)
+ # ll flamegraph.html
+ -rw-r--r--. 1 root root 69686 Aug 13 15:02 flamegraph.html
 
-that it might be:
+Again executing
+ # perf script -s /usr/libexec/perf-core/scripts/python/flamegraph.py -D -i perf.data
+reveals
+ ....
+ many entries
+ ...
+ 23874506376796 0x42c0 [0x28]: PERF_RECORD_SAMPLE(IP, 0x1): \
+                 209863/209863: 0x1da6f281d0c period: 1250000 addr: 0
+ ... thread: find:209863
+ ...... dso: /usr/lib/debug/lib/modules/6.17.0-20250812.rc1.git4.2810b7c15886.63.fc42.s390x/vmlinux
 
-# bad: [b47ce23d38c737a2f84af2b18c5e6b6e09e4932d] eventpoll: Fix semi-unbou=
-nded recursion
+ 0x42e8@perf.data [0x28]: event: 9
+.
+. ... raw event: size 40 bytes
+.  0000:  00 00 00 09 00 01 00 28 00 00 01 d9 ee e3 70 ea  .......(......p.
+.  0010:  00 03 33 c7 00 03 33 c7 00 00 15 b6 b7 78 c8 c2  ..3...3......x..
+.  0020:  00 00 00 00 00 13 12 d0                          ........
 
-which already got tested, or something adjacent.
+23874506377410 0x42e8 [0x28]: PERF_RECORD_SAMPLE(IP, 0x1): \
+                209863/209863: 0x1d9eee370ea period: 1250000 addr: 0
+ ... thread: find:209863
+ ...... dso:
+Segmentation fault (core dumped)
 
---jpbELjH1qfe0Wb2r
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+Is this a known issue? Just asking before I start digging.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmicij4ACgkQJNaLcl1U
-h9CPsgf/Zm8iW2xqCXTg33TAp9VCD0jKTGbQODneT3brIHHC/UoNghK+9mMfsEn6
-SQQlgHE0a6ZGj+K7TQchCqcoaN87Mghuxa9RZlBnnu5nGG6FbY0RG05FAbrkPbkz
-+47tdqfnsePdRTgKlgMUBFlTXJAlQu+xosyM9AaVZbisvUFd9gAayCNTvRNmMYQA
-XUGFqqqc2K2z/9UvbkZ5rFAp7MfwZUk9dEeVspaTLScb8nQOkk3EiqvxJ/JGvHNN
-QOG0n41MlgWguQ9swGbUdaemvLZHkx5jAkLMYoOH8g1/sL/IM6mwmQfj5QA51SZW
-rjvQmjeNodIoT5+qzsyvvKz8qHav3w==
-=zk6G
------END PGP SIGNATURE-----
+Thanks a lot.
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
 
---jpbELjH1qfe0Wb2r--
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+
