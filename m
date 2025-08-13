@@ -1,147 +1,144 @@
-Received: from mail-io1-f73.google.com (mail-io1-f73.google.com [209.85.166.73])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF7B3009DA
-	for <linux-perf-users@vger.kernel.org>; Wed, 13 Aug 2025 22:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1202BE05B;
+	Wed, 13 Aug 2025 22:44:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755122515; cv=none; b=X5Zu5lKdllIERd2yVshFZlzvovJhecelnboGFIAKf3Ex5Z4AXbxpB4qnMrmJgtakstyHPKmzRyAdwWU+2VGnBkElES5rpGnAdicBqbykhctqsEOqoMfQVOsjoNstBJAbYAJx5JRb+OROY0JF9d7ki3Ntk3YkniODiO7KXWqkQ0w=
+	t=1755125100; cv=none; b=rddKesYuJ8mCiiYvsw7VAcqC8kmqpuw21k/7aZLLD4it9uW+ygjRUyQ6J0N3SFyaDLFNaPTVIiQDRViDEs8lUAfYToqSlWDRRrm9IMCgGFSlrBIx5d0C+uGGXUdWJRaswXQpRMvb5EDc/EqRES9cHuEnMpIPl3D/12F0eFlGwlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755122515; c=relaxed/simple;
-	bh=RH+90nQ0r0rQd7AUFhTs/1Hi439AwUXYx50x6ncYXEk=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=GlciB/3jF42+ybAxhgq+JvBlvBrKow4QM/dmIREee4p9LncT3fAoikKJDJB2U5jX1Sr3iLrb8KI2vbbaxgUl/nNKnSg8Be8JgdOK0ypq0vafQBIEkcstNzlj0ubWCtfd28880sTVMi8TJQNwRCAaWzpKPy9PbvosqWVnb8kEe/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2rQFB0Av; arc=none smtp.client-ip=209.85.166.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+	s=arc-20240116; t=1755125100; c=relaxed/simple;
+	bh=OV/ycrOYoNGwhQ5MzDYQKEDIUDuWrki4AJ0O9zrmkks=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r618nIQiqqgfI4VhKYwwx8JS+JvVQAhz4jyIy5BSZDdi0nt15VUmFl9JD+aYTdWHGZ+IdfI0Q8huWxO1FdqKOwqod/zxeWV7jwf3fex1wOeMsVc9YQXA+ybCnvVNzFLnYJkgAZgVyXBG+Su1CEusPGQEgRmNaL3SlL9/LNSb2Gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b/B19HLK; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2rQFB0Av"
-Received: by mail-io1-f73.google.com with SMTP id ca18e2360f4ac-88432ccc211so38861839f.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Aug 2025 15:01:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b/B19HLK"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-323266d2d9eso334229a91.0;
+        Wed, 13 Aug 2025 15:44:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755122512; x=1755727312; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Lffc0WMub0rTiOOasAgzp27lbUXwGqsfsYixfeu01z4=;
-        b=2rQFB0Av6IF5cKZLwYnHy9c5DAgTC/EGmKX9NrhCQ19OVnkVxZwtam3XIc8OfgqHQf
-         axpYHg+9S6MgCmqeCZbP84McFEjflPBBk2IQLIBBl4uFU/YKtBj+fNky2pYu30u30IqP
-         aHpYtcssUihfEMNKwF0oinMArgvHv6TnFfkVw7Y3Ts4mIbNEfWJjcLS9LdN2J/NM7EpV
-         2QvmXFTdwMy7drVEq7aX5dVbLWwCSxDVDJh/79B14F4hul6/BfjpD7TWkm3RuRvJ7UiV
-         UkpW0Rv3N/hWh6S8k24QtgZ86G9sExnRQvafVbeyLfEHhzQ3SNySGscO08E8I2kqLa6L
-         knrw==
+        d=gmail.com; s=20230601; t=1755125098; x=1755729898; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yd35egmN4CDcVZKEMWmqSyca6/vnlaqT06CZE8Rd4hc=;
+        b=b/B19HLKmeclIMpF/h9ynnFPSbai4TyF0+cGjyYgkSN4/fYxCcsVshp8WUylYKHx0o
+         vhzu7FM50kd9ziDUsQY0opEMudqxwXcT+QBCzZRlpVfOwyJ92t3l2VzpdRvFgXOfCvJI
+         fmHGV8G9FUenajIUidXLU3R59sBP/kVePriV1YCFj5zkI2F8qyTudnPLDIEY6JEAYcXz
+         DpG58DZeGiEYwF9mUNVfzCYaRacK3S4clF9rnl2ig56k4l6Y6CLNDaXBxRMKr1H8UpOu
+         G4QBWEaxcFSLR6yZsWekX1dcbFzlc8jdliomwIRojmTiBFRS5xnmej6cj0LM3L3Mjx6v
+         NgPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755122512; x=1755727312;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lffc0WMub0rTiOOasAgzp27lbUXwGqsfsYixfeu01z4=;
-        b=MPsBgnulmRIJN3TeCKAakvriu7Ul29DfkimkxyDLLsr1s+wODFDVLyLhpIIb5Fgl1d
-         LHmPz15aNiU3inKzZTtVX4k2+4QxtozUDjX0xjOdEED8hHXri76/BMLwetqsSOYxgcJw
-         e+vwYP742SWWr18BqEnbbN2Zk0abbJlqT2juoz6qs8AsapKur/KL2p6c9NVCDCRNtdln
-         T1g1zCfZ8uQZ4vAF5rcaQLChUeXElciRDvo3lwAvIU9qSTGzjjTl5o8Aw8HLld1GlF/s
-         46ajK03BuggQ0ZHdkl4xmAm+7Z6nUemy9vvkZF0LKvn/ZuMiQBk/J6R7BsETMw3G5vZb
-         b+aQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUrCNqlbnqI4yWVtiXFJdlQHbEx1TByLHnf+aBV9s1IpRQ732HAlG6ETjh72uQWbDUAd9kdPAyL9bNTMlHS5tzz@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRbG8DhmlgF+MCF2ypVd5vi+32Dr13S8VXrZTJCFdseBeKzeLS
-	kGQVzxmWgJBJqCAcDaDFEBNYLQA3TcQFJRiWnMmTvauu96YuC/+c+S3OKxD2wNglli2lylAnILR
-	zbRP37F8vMXRQWyNniMSxpkpz3Q==
-X-Google-Smtp-Source: AGHT+IG5r8vYJD9ejnNmOkd2D/b3gPNw0HLwazt4Xo6qZB5BPCocG+3nQgDyMNKMBq/qXmrpxMezac4YdgIdTVzxSA==
-X-Received: from iosu8.prod.google.com ([2002:a05:6602:29a8:b0:87c:58a2:24c5])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6602:26cd:b0:86a:84f:7a45 with SMTP id ca18e2360f4ac-8843382aa8cmr146631439f.8.1755122511931;
- Wed, 13 Aug 2025 15:01:51 -0700 (PDT)
-Date: Wed, 13 Aug 2025 22:01:50 +0000
-In-Reply-To: <20250714225917.1396543-11-coltonlewis@google.com> (message from
- Colton Lewis on Mon, 14 Jul 2025 22:59:04 +0000)
+        d=1e100.net; s=20230601; t=1755125098; x=1755729898;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yd35egmN4CDcVZKEMWmqSyca6/vnlaqT06CZE8Rd4hc=;
+        b=DyskXqycyMnrEyoeW/1MFK8b4ywU2IWvtunZ/NLv8I4Vo0eXxW9S5X5u3fLXTFFg14
+         WklDH2VA9O3kH28XLy7zpikWR+mzKSuU1MW7ffM6LDMS1fDy7bYB5L5XGLkboTQqfVRy
+         8mZNsWSqp/jRdO7SHtspm9PXllZUTmmzkQ/WOVDSNZI5gurks+YZEQXoqVoVYwHbhGhY
+         +Zav1epinrREKeeD86lOGPm7PBUxLOIRHy0vENfkqG2leBMqi1vIkNKow47WNHNSSStj
+         cWavNchTxf7Gm7qDji2wWrETbPU+vevxEggu4OigJ3IasooDS1sXHyy45yeVghexn6/5
+         LMQg==
+X-Forwarded-Encrypted: i=1; AJvYcCUEhgystEJlRjcHNzAv6V93tSG0nRS4U7WEbwqXqAUxRfdgZJ0JZhocHU5XRA0O1tFmce0=@vger.kernel.org, AJvYcCWqNgsjuE64C4qrDYkXOjkZBE2RXG0phNE8ZV3wHCHrklUCzQ3mVgQojux0VZUg7oS4tcXXJQBnDSEnVBqzzAbPLQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjC10bwWmgr8edomsB0zNyANrdOvsLtCoaFN1MMrlwQk1n7tSu
+	EZ/yxl/CyTKHLiDKTMJ3wzHRFiIu2sJXfaNVRYeGDLf6wptcvNb1dsnB2KQ379eNcWc7PbAqg0K
+	g4h+UUwdS3jsPhiitBqpRpEZTvyH/ozE=
+X-Gm-Gg: ASbGnctPNsh58ZjnqK/ognSlAynxh89TYEigEC8SXWwvy9lqG238nZmu0AzEyWHnxgv
+	Iqpe5JgbZaB0n/MSjF/e8/tDcvVvNu0b6uXNnlDCcJvFL6bKPTk0NleNdnsdycF0SZMC6NElQWx
+	4e923y4SygECEV/i6asQ+2ZCWxpCyPE7QWPcXAaQVmSH3oFnYm2xvzy8nK9qnzZ25YBztDFKnxe
+	EIEW+AravdXbhtb+MP/ck/LmUnekAGehw==
+X-Google-Smtp-Source: AGHT+IEJ4gucRc0WVd7WCFDuWVfhyS5mg1YHXbANwvz4e0fcj21tvta+1mAsqKLmUq7uTcNuWUpFEP2FQGRJzud+2G4=
+X-Received: by 2002:a17:90b:384e:b0:323:264f:bc42 with SMTP id
+ 98e67ed59e1d1-32327998e38mr1375144a91.3.1755125097905; Wed, 13 Aug 2025
+ 15:44:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <gsntwm76ricx.fsf@coltonlewis-kvm.c.googlers.com>
-Subject: Re: [PATCH v4 10/23] KVM: arm64: Writethrough trapped PMEVTYPER register
-From: Colton Lewis <coltonlewis@google.com>
-To: Colton Lewis <coltonlewis@google.com>
-Cc: kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net, 
-	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, 
-	maz@kernel.org, oliver.upton@linux.dev, mizhang@google.com, 
-	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, 
-	mark.rutland@arm.com, shuah@kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+MIME-Version: 1.0
+References: <20250813133832.755428-1-jolsa@kernel.org>
+In-Reply-To: <20250813133832.755428-1-jolsa@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 13 Aug 2025 15:44:43 -0700
+X-Gm-Features: Ac12FXzdPMZLJrtvyY1a9fVClNy9bi-m8rUfcsctoVtDz1T5yLFWSAXPYA9ismg
+Message-ID: <CAEf4BzbRL47Qm1T1BQrvG6K3itqFHfSdXbOeFG5vKj4yB0QtbA@mail.gmail.com>
+Subject: Re: [PATCHv2 bpf] bpf: Check the helper function is valid in get_helper_proto
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, syzbot+a9ed3d9132939852d0df@syzkaller.appspotmail.com, 
+	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Martin KaFai Lau <kafai@fb.com>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <songliubraving@fb.com>, 
+	Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Colton Lewis <coltonlewis@google.com> writes:
-
-> With FGT in place, the remaining trapped registers need to be written
-> through to the underlying physical registers as well as the virtual
-> ones. Failing to do this means delaying when guest writes take effect.
-
-> Signed-off-by: Colton Lewis <coltonlewis@google.com>
+On Wed, Aug 13, 2025 at 6:38=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> From: Jiri Olsa <olsajiri@gmail.com>
+>
+> syzbot reported an verifier bug [1] where the helper func pointer
+> could be NULL due to disabled config option.
+>
+> As Alexei suggested we could check on that in get_helper_proto
+> directly. Excluding tail_call helper from the check, because it
+> is NULL by design and valid in all configs.
+>
+> [1] https://lore.kernel.org/bpf/68904050.050a0220.7f033.0001.GAE@google.c=
+om/
+> Reported-by: syzbot+a9ed3d9132939852d0df@syzkaller.appspotmail.com
+> Suggested-by: Alexei Starovoitov <ast@kernel.org>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
->   arch/arm64/kvm/sys_regs.c | 28 +++++++++++++++++++++++++++-
->   1 file changed, 27 insertions(+), 1 deletion(-)
+> v2 changes:
+> - set bpf_tail_call_proto.func to -1 so we can skip the extra check [Andr=
+ii]
+>
+>  kernel/bpf/core.c     | 5 ++++-
+>  kernel/bpf/verifier.c | 2 +-
+>  2 files changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> index 5d1650af899d..0f6e9a3d9960 100644
+> --- a/kernel/bpf/core.c
+> +++ b/kernel/bpf/core.c
+> @@ -3024,7 +3024,10 @@ EXPORT_SYMBOL_GPL(bpf_event_output);
+>
+>  /* Always built-in helper functions. */
+>  const struct bpf_func_proto bpf_tail_call_proto =3D {
+> -       .func           =3D NULL,
+> +       /* func is unused for tail_call, we set it to pass the
+> +        * get_helper_proto check
+> +        */
+> +       .func           =3D (void *) 1,
 
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index b3f97980b11f..704e5d45ce52 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -1036,6 +1036,30 @@ static bool access_pmu_evcntr(struct kvm_vcpu  
-> *vcpu,
->   	return true;
->   }
+we seem to have BPF_PTR_POISON in include/linux/poison.h, let's use
+that instead of 1?
 
-> +static bool writethrough_pmevtyper(struct kvm_vcpu *vcpu, struct  
-> sys_reg_params *p,
-> +				   u64 reg, u64 idx)
-> +{
-> +	u64 eventsel;
-> +
-> +	if (idx == ARMV8_PMU_CYCLE_IDX)
-> +		eventsel = ARMV8_PMUV3_PERFCTR_CPU_CYCLES;
-> +	else
-> +		eventsel = p->regval & kvm_pmu_evtyper_mask(vcpu->kvm);
-> +
-> +	if (vcpu->kvm->arch.pmu_filter &&
-> +	    !test_bit(eventsel, vcpu->kvm->arch.pmu_filter))
-> +		return false;
+pw-bot: cr
 
-I made a mistake here. The thing tested in the pmu_filter should be &
-kvm_pmu_event_mask(), not & kvm_pmu_evtyper_mask()
 
-Then, the value written to the register should be &
-kvm_pmu_evtyper_mask()
-
-There might be a similar mistake in Patch 17 where I enforce the filter
-at vcpu load time.
-
-> +
-> +	__vcpu_assign_sys_reg(vcpu, reg, eventsel);
-> +
-> +	if (idx == ARMV8_PMU_CYCLE_IDX)
-> +		write_pmccfiltr(eventsel);
-> +	else
-> +		write_pmevtypern(idx, eventsel);
-> +
-> +	return true;
-> +}
-> +
->   static bool access_pmu_evtyper(struct kvm_vcpu *vcpu, struct  
-> sys_reg_params *p,
->   			       const struct sys_reg_desc *r)
->   {
-> @@ -1062,7 +1086,9 @@ static bool access_pmu_evtyper(struct kvm_vcpu  
-> *vcpu, struct sys_reg_params *p,
->   	if (!pmu_counter_idx_valid(vcpu, idx))
->   		return false;
-
-> -	if (p->is_write) {
-> +	if (kvm_vcpu_pmu_is_partitioned(vcpu) && p->is_write) {
-> +		writethrough_pmevtyper(vcpu, p, reg, idx);
-> +	} else if (p->is_write) {
->   		kvm_pmu_set_counter_event_type(vcpu, p->regval, idx);
->   		kvm_vcpu_pmu_restore_guest(vcpu);
->   	} else {
+>         .gpl_only       =3D false,
+>         .ret_type       =3D RET_VOID,
+>         .arg1_type      =3D ARG_PTR_TO_CTX,
+> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> index c4f69a9e9af6..c89e2b1bc644 100644
+> --- a/kernel/bpf/verifier.c
+> +++ b/kernel/bpf/verifier.c
+> @@ -11354,7 +11354,7 @@ static int get_helper_proto(struct bpf_verifier_e=
+nv *env, int func_id,
+>                 return -EINVAL;
+>
+>         *ptr =3D env->ops->get_func_proto(func_id, env->prog);
+> -       return *ptr ? 0 : -EINVAL;
+> +       return *ptr && (*ptr)->func ? 0 : -EINVAL;
+>  }
+>
+>  static int check_helper_call(struct bpf_verifier_env *env, struct bpf_in=
+sn *insn,
 > --
-> 2.50.0.727.gbf7dc18ff4-goog
+> 2.50.1
+>
