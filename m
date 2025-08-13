@@ -1,308 +1,164 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1141A9F94
-	for <linux-perf-users@vger.kernel.org>; Wed, 13 Aug 2025 04:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755058742; cv=fail; b=iC2JVa+uT5J1NXMvK5IjwiksJ0D6E3q+qgVaAknWlWLFwzsnrlX4NLKK29lGheb78Z6EQNgIZSG/EO9F1Yl0ymvVwORgMO6FCNwRLjUZWPO4TbRNQjWODmjqsOdFE4UdMNMk66JEgGiTXdy9Gb2ZGT7yyqjKn9qOfRuL40yvqhA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755058742; c=relaxed/simple;
-	bh=/TEAiX4hqOsUNmjHlLjMYLgHNL+7k7gNinaTphfgJPU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=F9+Flsy+U9NfTLzgKqQtcajGdydUPgiIMX3kHEbjjYaiohd2lnifh/XjjcDRB18EHeETJJXe0IQ1duvzwdeCryPxGC4vrY9XI3++E91UPqKXoZYLp1J+rdUbEUJWfc+WkLA8Oy8w+Sk4dbjsnxpZxuh3bHRbfLXhc2Di0m7YTAs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=pN7x/fNf; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=XVIxr6Oc; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0E4CA6F;
+	Wed, 13 Aug 2025 06:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1755065562; cv=none; b=iIszH4FMRlxP+J7Ia+nKSuXgneLDfN63L66tY4bbXX1GXj/R1JUpiJCzu3wO5ALx/ElyaUV684y0kRB3U7xsmj7wEaM8SrxU54F6FHb325fYvHqVOKlBxidbXVHT6itt3/FZDXLkxaD7oUfQhIhMr7Q0F1lt2MR1f5OEi8xwBfY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1755065562; c=relaxed/simple;
+	bh=WEjIl95UqMxFbzW3h7AnyHICcK65Ko5Swc2ymIiErOo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sSFEair1Vtf5rhpSf8zyxJKpqvUAfMv5vo3fSbNe9TqF/5lfON4+s9oCNu9kc2iF7VOr/j9j+Uhuto0QjmqDRo9X9jKHdYwO4/4Rkgo5zbsLaZk1VgtwJ6dCXglULDFF8teU8MLwcgKLUGoZ6F/T3YqEAELa4XmxmiENkFe63uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k26+XLrG; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pN7x/fNf";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="XVIxr6Oc"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57CLQpBx011211;
-	Wed, 13 Aug 2025 04:18:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=yAFb4O9gCBsZ7O8n+y
-	cCAGMnpWOpQVnMKu38kePo8JU=; b=pN7x/fNf2Un+SV0810f39vf2vPRqYkbd2I
-	tBubg/0hAG77B63i6wAfGVS3wI7EHYY++qnD7z0oJoS+YTiNo/uoUTVOhloQdsH5
-	jb8t4OtYZAjpkeUwFwzIlLcFoKgiXWWx1j0IEZlVQeEDqdRvjGrVtY7f8LjYi6Q8
-	evZShkk9B66qEpNNaKXLGiyHrFKeYIGh12us0G2OG07kpHndIVdciPCfyoD9pneE
-	uN6q5n9na+Ly2RdgWcjnJe0N0i+gr9vIhdaSQFJaK486d20JwV/5Y0I86AnCd5fe
-	OK4CyIRGfSIn43i4aXbTBvELayLbZBcNyQxoyIbGJaKVzAz/NsbA==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 48dxvwx91w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 13 Aug 2025 04:18:42 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 57D40mJd016848;
-	Wed, 13 Aug 2025 04:18:41 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10on2071.outbound.protection.outlook.com [40.107.93.71])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 48dvsaueh0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 13 Aug 2025 04:18:41 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=N6sygIJsTaoS1czWCkxUGBLUAMRkR9zR4fnYrUeWg3YxN1SVaHBy5fdhr2Mc9F+0f5ZTesxl32qUXh+FDwgg/fywP2j3eN2ozxc0scgsNpEBsK8fPH9desmajckA6BG1trkb8IZJLQyIgPs/6qZhgWIM09fhv/tC321D7mtk/BefzeqMxw7Ny0m7njXRRJpUTAQLWlXQJT0A50M8m0kyNt7wLTKS57ghoS0Oww2YxRdY/vmD+coPDAesvnWYDMPsgEnsOlOax/aWHHDrrg5NmBNkonehKHQr0ZTjSJDWYjjvtMuG0B5FR6ySEHQYyJmKE9G9qq+a9NuC/5c7e0q8sA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yAFb4O9gCBsZ7O8n+ycCAGMnpWOpQVnMKu38kePo8JU=;
- b=Ydi65EyVqUfPVH+2CXqKy3E1lnjSTQG52YFxA8Gsj0gPOEgoH6QWoFnChRQTcmu8huAMbS1c+ToTGymjAT+FgA14gmIqPE3OXff4qUlk1lkeIWx4bvM7zxlUId79U1dmGSO+1/Rx6XJyqZR/Qgp96jviwQzgAMaFIYq0Cus8K3TIWz4RLX2OeUSbjsSl8QoareP6EVoogyFOQrWUealBWEbpQYa1qxd1nayBaYAF31wu08+uOWlDUFmJqQ7ciT5Bsa++YOXGjbiUJFImAdmrRnirHierrmXurHThDPN5N20TTBHSD9q8Q9RtD/BQ1vCAL9NWsIJezuHtIZtl/2I2oQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yAFb4O9gCBsZ7O8n+ycCAGMnpWOpQVnMKu38kePo8JU=;
- b=XVIxr6OcFsex9lVtnIm47ybPDY4VxgqbF4UgTzwrEw9QIjVaRIiJk4e4pXBzTA8y5KJ52v1ED8X8LwbTYuo795ydZxS+0pH6nWSi25NbDyrN6BK/9GEcUmuuf3f1jQoGr/QL6rF2NgIcFCOxP+WMpWFjd5TjkSazJzPuT332H+I=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by DM6PR10MB4265.namprd10.prod.outlook.com (2603:10b6:5:217::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9031.15; Wed, 13 Aug
- 2025 04:18:34 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.9031.012; Wed, 13 Aug 2025
- 04:18:34 +0000
-Date: Wed, 13 Aug 2025 05:18:31 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: SeongJae Park <sj@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        Kees Cook <kees@kernel.org>, David Hildenbrand <david@redhat.com>,
-        Zi Yan <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-        Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-        Xu Xin <xu.xin16@zte.com.cn>,
-        Chengming Zhou <chengming.zhou@linux.dev>,
-        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeel.butt@linux.dev>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-        Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>,
-        Pedro Falcato <pfalcato@suse.de>, Matthew Wilcox <willy@infradead.org>,
-        Mateusz Guzik <mjguzik@gmail.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 00/10] mm: make mm->flags a bitmap and 64-bit on all
- arches
-Message-ID: <af5492d4-f8dc-4270-a4c6-73d76f098942@lucifer.local>
-References: <cover.1755012943.git.lorenzo.stoakes@oracle.com>
- <20250812201326.60843-1-sj@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250812201326.60843-1-sj@kernel.org>
-X-ClientProxiedBy: AM0PR01CA0109.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:168::14) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k26+XLrG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755065561; x=1786601561;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WEjIl95UqMxFbzW3h7AnyHICcK65Ko5Swc2ymIiErOo=;
+  b=k26+XLrGbtkXeRqZEnT3Uh7YceBjjUqo5IUeKj7yGAk3sUtboernw/Fy
+   ms4szbxQyth4TLC/zhLZoAeG2I49sSc/Ec1fJ2DzdMfBUyhiw1TGxariW
+   5tASW61t5RSCyku35KyaKcxt5ODMhtuZJTRyKlHXXUqH0u8ZjuenhBQOB
+   /Lp03Th9D10QlP2E//tRvJO4eJNQI7FL3PjBnpDK5QuIssr1k1LcgplB+
+   RqijrPuDCH7B0NJGAm8iIOLk4Evx/A/tZoCLi8aX+hCdGyHN1uCixmKKj
+   CqQZPw22A2xEBgD4W63TDBn8Bw0G6YCha7X4NljwDkmtzOiRg80nmmQJs
+   Q==;
+X-CSE-ConnectionGUID: JJHNLjLXRfaHfXLpkPr79w==
+X-CSE-MsgGUID: ljy4Un02SKqnuFzWchEwGw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11520"; a="67955599"
+X-IronPort-AV: E=Sophos;i="6.17,285,1747724400"; 
+   d="scan'208";a="67955599"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2025 23:12:38 -0700
+X-CSE-ConnectionGUID: +WW94DxgSR+S6rEfDZyLDQ==
+X-CSE-MsgGUID: bYLOqADlRSeTUjYPXRWrFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,285,1747724400"; 
+   d="scan'208";a="170591939"
+Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
+  by fmviesa005.fm.intel.com with ESMTP; 12 Aug 2025 23:12:33 -0700
+Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1um4is-0009aq-1w;
+	Wed, 13 Aug 2025 06:12:30 +0000
+Date: Wed, 13 Aug 2025 14:12:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jeremy Linton <jeremy.linton@arm.com>,
+	linux-trace-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org,
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, thiago.bauermann@linaro.org,
+	broonie@kernel.org, yury.khrustalev@arm.com,
+	kristina.martsenko@arm.com, liaochang1@huawei.com,
+	catalin.marinas@arm.com, will@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Jeremy Linton <jeremy.linton@arm.com>,
+	Steve Capper <steve.capper@arm.com>
+Subject: Re: [PATCH v5 5/7] arm64: uprobes: Add GCS support to uretprobes
+Message-ID: <202508131334.FfoZQ27h-lkp@intel.com>
+References: <20250811141010.741989-6-jeremy.linton@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|DM6PR10MB4265:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6832ace3-4b8c-415a-1918-08ddda2077aa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ftu3FEiNoUMkyrILPbB10HFUlNa46pnvU/0cvdYfg1tC7f9BdoQlaZQtROPH?=
- =?us-ascii?Q?vHWd+rjhJAE0E/yyNnLYqGQc4IEF7c+W6uVZSW6hphCCpjd4MMJFTkDXVvKX?=
- =?us-ascii?Q?B6DP8SUkI3oN/rEbLl+mp38LcZ5ZroTmKnMAuzVRTEMG+m16PpUm7ZcZHNIs?=
- =?us-ascii?Q?9xLzw7/1RVLVFMLa9EXjg6raueBrlhGq5zQod2BJpHwAnF+qpkDaxAz9Vl1Y?=
- =?us-ascii?Q?2vRCga88r+vCkxk7UwUZTPj8+l2mav7H2uKgFwafMwhV1hwyLW/64I/rEDTw?=
- =?us-ascii?Q?aOwZMXDDv6QEdfCiYXPzaO4lsNKaxg0jceZG7sIlPHLugX0o8vKJlJSsA6yJ?=
- =?us-ascii?Q?v2D5HcYP0H9vXsVL6xN9C4O3zDo9r40IOEt7G1n5W7zMibBQs03xB78BAKEf?=
- =?us-ascii?Q?2vA5dn0VdzR/w9Osa0wTjlbhJR0ShWUGuVHPVX1Wnb+QPGzWB1gLn7o4D/bv?=
- =?us-ascii?Q?Y6ymZVygh8jsTTtmpyu6pucnHHB/RgXj9F82tfXXXs/ZEmK3nRx17Ve4b7AX?=
- =?us-ascii?Q?aCbiXFVJnXx2ZdQwD5fJCQm7XsSy4Se1/0lXhhljmlBfaGdNjFriaky6ePPv?=
- =?us-ascii?Q?feCa562c1UQ+GkManWg7xybk/cxYdDYsW63Ld3JtFBjrumAzkb4hsYx7LwcE?=
- =?us-ascii?Q?ZsKzLVnegDI2aedw/ZcCOhRcbU8QuWwFUHNJvYkKb2UMDyf9+K5///kVvZd2?=
- =?us-ascii?Q?Xx30qaYAdzmIqa+vkWmvHSXgXxSQvs+DsSQ7ytwNzU9WcErscO1RK61yT1zm?=
- =?us-ascii?Q?rg6HSvTuqE/YHXWi7AU21kyWzdmueRSlIailY03qAhjY4QprJXBAMQ+Kiq1u?=
- =?us-ascii?Q?Iv+pj5+wWqNZQBQRwkZg5eMX4K9o2Z8YRPnA27X9hOhcpVlNVsI8IuWpWkSI?=
- =?us-ascii?Q?dCfie8Q8PNJnGZoJhI4pLsljx2ex92NNL6S8nWmKG2J5VmTWeLodpA1pxoop?=
- =?us-ascii?Q?PNHzb9CAIvXYBhRQ64gMfIg9fA+7OW/hFLIlVhpdi75wGwYwsG8WArydXwA/?=
- =?us-ascii?Q?cidDnoDEIRctPIhQNj2+0RkiNdnpwyj2Tx8YMtcjWhuntIk1TCv9IoIkLwHy?=
- =?us-ascii?Q?hM2UsQAtK4eW9+0y2xcyyqvf6Jml65EF9846Bv5wHwP2DZJECNssZCaXCURk?=
- =?us-ascii?Q?dMRR+2Ev/Du1pTj3DFcSq4Jlq3rNHY10nWKtcAArkZS7DgijAtqhY6N7qt5P?=
- =?us-ascii?Q?+rYwJBnalwZnkCJaSOGXfKbwGSQxTLRKCYI4AdqAo4z2OGLsKYGoqo/02AI3?=
- =?us-ascii?Q?2awErhjy16kiI9ScKBpePVJtyWAbJv7sXlmbEdQSMmaMUjCzco9l1C1942xL?=
- =?us-ascii?Q?Yhu8c6ueRDLWn9AB1BZVQvaA/+rQq1O0YFppdnR3zjuMgo3Eqc260PWshNLE?=
- =?us-ascii?Q?76oZylg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?a2Uh6NLuwYoIyTh2V0woH9y5Wcjvbi2nCyecoIWp+zt9LT+8IgDsNnaNDriV?=
- =?us-ascii?Q?+0UvteRCjXquLqYIgGXpXwtOMTS9TwT7GHXFjEuNl6tLbaHGZdww5ime6FA8?=
- =?us-ascii?Q?bJ5ZTz5tInr1CTkjKtqfN7dpqwJcZ+2tIihLHC8GMs7s+K/r59b01JSepiNS?=
- =?us-ascii?Q?LI+dNveZ+aNSOU7Jhkphj9AcI19jLe821wCNkNF67JTOC/l04dj1Bds3jP8s?=
- =?us-ascii?Q?O7NCqZkdJ4G/Fn62B87+DFGVqxIIYgrBpvM+gcZ3TSyJ2GgCBO5dTQS+9+GQ?=
- =?us-ascii?Q?Ok+VwU8QKnPbTRqE4GzAcI3CVRSmKwL2T7BhCXcW6s9jVOdeESwphyDv6Lyb?=
- =?us-ascii?Q?m5OZ/Az30Mc675uWuBUXy178W3fyUL7SZFm4BbyAyTXePxgMdFzi5AhLLSMV?=
- =?us-ascii?Q?bo3D8kur7Hi63XvPOmYsVrcvhq/iF1bpoUMEX8/MRxGH7lx3Fbyul1NG2x2R?=
- =?us-ascii?Q?93i/ZB1Fm1M4gYpC59uxUvWEQK9JJR1VlsXDtkceinAv7wEtEHSBZVSTYjel?=
- =?us-ascii?Q?mDM52wluLLIGlvZdRToxQHjueOR5eXQo1kANF2h21ybFVoRaQ0kkt5928uij?=
- =?us-ascii?Q?4+oNoaDF0Sbm1am1mgMTxshHBl4oz0m6z+bAxXSIbj6HuwvJtlk089Qg8Bns?=
- =?us-ascii?Q?PtHzWcgeYfUnoR0XznOq0nBtnIx4Ox4/IjPUQT2Pz56hZ+e3u3XFngpjqn+y?=
- =?us-ascii?Q?kSsn+2X2dakMEGHEGIt3lONd9NkNTEgmrpIWtAy4iDHu3Dr9asmzWF6OPNfh?=
- =?us-ascii?Q?low/vCQFWmSEHWbXgrxFDCL4Q5tU0tplRyZslumbkG4EFbEp87NiLFRIO7jL?=
- =?us-ascii?Q?dMlDdxmZGCfKTAaq2GiJDZQo97ZlcdPmst9Dd8ny7cADj1k1o46K2PL4pX9Z?=
- =?us-ascii?Q?8b/r9eFPQyXQSzpK24gkBLfThvCDbtt++PVPOLuX91sWkKMRFL/1MqnHYUKw?=
- =?us-ascii?Q?o4amhBXksCrKsM1Gwtex2syGQAmH1XTFXMy6TXS0ISTDIJltbRnJPQ/xKcX4?=
- =?us-ascii?Q?Mpjy3R6EMhb9XqcJrF8HFrnb2Aq9ux4uVFLpMTDcMhln6b2VRsr3qalFpJF6?=
- =?us-ascii?Q?XbipFpgvN9nKpNbP9NZ8XZYMxnAbFDZYC/8Ri/yZ0TMUzXDr+dKrD9sTFDB0?=
- =?us-ascii?Q?nzhXUX0C6eta9OYjQ4y1mduwbAXqE1tDgKyMO4bf+lZBGxqV4QnHIah8NJK5?=
- =?us-ascii?Q?N1m7hBiUBEARRmvBiWfGvApIRDjM66RRt+h99EM3drWWL47UOI3AomSimzOD?=
- =?us-ascii?Q?YKFapTe37Km1Z5ib+UVu4/IkqeB2cRjB31rLQgbx1V1sbwFbLBJBPic/UQXt?=
- =?us-ascii?Q?A/BC51bv3tZJSRMNj5dAbh8/y9eic2Jio7SLuhZlbyL4n7FJ3HQGf2q822V2?=
- =?us-ascii?Q?DCDiJ+e9MnYnjhZ/aSjb6QoEp9JEDbrxh40nFoaNxCtCpGIJ8ghvXZT1s2YO?=
- =?us-ascii?Q?qSF6PHYdp04vxVzD0t7DEEI6+e9IdIGJIePFCKBveyIWC17op8TcGUJ/QKXc?=
- =?us-ascii?Q?/wPKfO0uBeA/OJOBj3NiFcjkSWNQJkAxvEp77FXyUBfLFlf066xab6MG/1dy?=
- =?us-ascii?Q?8T5uKjwWdf89yMQyNOUZVKLw66T3ViDR05BUnybYsqWY5DEWgo2SGhyShLxb?=
- =?us-ascii?Q?2w=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	r31RXHcsoMf+JdfyP+V9hcLj2SfEOPfkKkKq3SP/CY01zBz836wy2Wylz4Os+hZD3r7b5PEJbRluzVE94Sv15Waoc1z3A15kyWrYbTWeiqvbZTO9kNojylVwrIGd5JwGNJzuDUXXaskIRtufETff3muC6LjuQu4YP4qHETlEz31nXSk4C7J73GttVnAgzlZEEPB0la6gaIbJ+XK6grYMYeAlAdURxRVg6IUXQyKbFJVn1+Z2oGWm2X/5EGlNKV+VgFgrX1rCzzJeJcN9dspjUEAXSej4lDQTsb83pYXV64N0djtWtHhgvteH7PzK3KKKGycaVOVcPqQqdWVMxgOkOWeK9giNmwkFr4Rpj6LZm6XRYUfSLOlsSl0maCQ6KcX7u9D/PxqR4aXNA/kLcPqUiQbFFatV21z+jAr7FEAGaYhrrhgZqXePnv3cDxbiGS4BZj143cF7mrbMJKcZuAeJhhATcSFEu9K/sf+54TFFs/0Bkt6FZKzD3Gtr/g9k36ji80jg/d53o0dgFTn1becSYmZUW/YVyWk/YLGLoqsgBVeCYRUw2DOZ0Ey1P0QYlT15Ofzl4Py4mmrgBWxaPJS9KjsdMFZIPwUgVilwtXa/s9Q=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6832ace3-4b8c-415a-1918-08ddda2077aa
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Aug 2025 04:18:33.9720
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: s9wh1EpkDmg3pUcuZ1YZ0JXid/kuOT/CH55Tbv/aC/kwxcN/V8gNLTKIoA44NazUYc9ZPEmNgfyGp1FDHXKOIoaxrwjSRnjNQjcgf7bhuuI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR10MB4265
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-12_08,2025-08-11_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 bulkscore=0
- phishscore=0 suspectscore=0 mlxlogscore=918 adultscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2507300000
- definitions=main-2508130039
-X-Proofpoint-GUID: Xsg46lFHLpRBH9jGW931TYdOhelWiSZh
-X-Proofpoint-ORIG-GUID: Xsg46lFHLpRBH9jGW931TYdOhelWiSZh
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEzMDAzOSBTYWx0ZWRfXwr36+OKcTSFm
- AvO5R7deXlnIdBYamwy+TJFiJlOPBKbraVWr7FhdIeZVXV2hw2J5vfK+iWxXBCR9hQp6K+Z1cWk
- hJeAG3RMO7y970ZOUU4n0VngBR+mDdwLGCrFkvJ9GF5UxENWdWkHIsw4j3nR37HrPyAGJ8dO4W6
- dtgPFXZwOvHjh/u/T3eFJFkxJlZSlUPhCMyC67rRfuCtcQHHcLWDM1+JkA1Cp4Qjf1nAeLk2Rp2
- rRL94rekXsuj52LaFiibrsyJV/Xh77GJcQBtV3B8EDLrYte+fCXNBdXERJY7DExjgvWKnBDXfug
- wJvWhhceGqI/iTKyX2Kx6xysR3qyoSxWMgmxYU0Q9tjFCDyO66x1RutDFJeIn28/FYMUPwGWsyu
- TkYocjshj3XSFS60TCu7vhjZj74/ivkXlNcZ7YcKWhBGsVO2bNVqsFpZfRprMeRXxA9ZyDza
-X-Authority-Analysis: v=2.4 cv=dpnbC0g4 c=1 sm=1 tr=0 ts=689c1222 b=1 cx=c_pps
- a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=2OwXVqhp2XgA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8
- a=62kRN-2s6hhlVKekPs4A:9 a=CjuIK1q_8ugA:10 a=mDVER0IZTAoA:10
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250811141010.741989-6-jeremy.linton@arm.com>
 
-On Tue, Aug 12, 2025 at 01:13:26PM -0700, SeongJae Park wrote:
-> On Tue, 12 Aug 2025 16:44:09 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
->
-> > We are currently in the bizarre situation where we are constrained on the
-> > number of flags we can set in an mm_struct based on whether this is a
-> > 32-bit or 64-bit kernel.
-> >
-> > This is because mm->flags is an unsigned long field, which is 32-bits on a
-> > 32-bit system and 64-bits on a 64-bit system.
-> >
-> > In order to keep things functional across both architectures, we do not
-> > permit mm flag bits to be set above flag 31 (i.e. the 32nd bit).
-> >
-> > This is a silly situation, especially given how profligate we are in
-> > storing metadata in mm_struct, so let's convert mm->flags into a bitmap and
-> > allow ourselves as many bits as we like.
->
-> I like this conversion.
+Hi Jeremy,
 
-Thanks!
+kernel test robot noticed the following build errors:
 
->
-> [...]
-> >
-> > In order to execute this change, we introduce a new opaque type -
-> > mm_flags_t - which wraps a bitmap.
->
-> I have no strong opinion here, but I think coding-style.rst[1] has one?  To
-> quote,
->
->     Please don't use things like ``vps_t``.
->     It's a **mistake** to use typedef for structures and pointers.
+[auto build test ERROR on arm64/for-next/core]
+[also build test ERROR on perf-tools-next/perf-tools-next tip/perf/core perf-tools/perf-tools linus/master v6.17-rc1 next-20250812]
+[cannot apply to acme/perf/core]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-You stopped reading the relevant section in [1] :) Keep going and you see:
+url:    https://github.com/intel-lab-lkp/linux/commits/Jeremy-Linton/arm64-probes-Break-ret-out-from-bl-blr/20250811-221529
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
+patch link:    https://lore.kernel.org/r/20250811141010.741989-6-jeremy.linton%40arm.com
+patch subject: [PATCH v5 5/7] arm64: uprobes: Add GCS support to uretprobes
+config: arm64-randconfig-r111-20250813 (https://download.01.org/0day-ci/archive/20250813/202508131334.FfoZQ27h-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 13.4.0
+reproduce: (https://download.01.org/0day-ci/archive/20250813/202508131334.FfoZQ27h-lkp@intel.com/reproduce)
 
-	Lots of people think that typedefs help readability. Not so. They
-	are useful only for: totally opaque objects (where the typedef is
-	actively used to hide what the object is).  Example: pte_t
-	etc. opaque objects that you can only access using the proper
-	accessor functions.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202508131334.FfoZQ27h-lkp@intel.com/
 
-So this is what this is.
+All errors (new ones prefixed by >>):
 
-The point is that it's opaque, that is you aren't supposed to know about or
-care about what's inside, you use the accessors.
+   arch/arm64/kernel/probes/uprobes.c: In function 'arch_uretprobe_hijack_return_addr':
+>> arch/arm64/kernel/probes/uprobes.c:171:33: error: implicit declaration of function 'get_user_gcs'; did you mean 'put_user_gcs'? [-Werror=implicit-function-declaration]
+     171 |                 gcs_ret_vaddr = get_user_gcs((unsigned long __user *)gcspr, &err);
+         |                                 ^~~~~~~~~~~~
+         |                                 put_user_gcs
+   cc1: some warnings being treated as errors
 
-This means we can extend the size of this thing as we like, and can enforce
-atomicity through the accessors.
 
-We further highlight the opaqueness through the use of the __private.
+vim +171 arch/arm64/kernel/probes/uprobes.c
 
->
-> checkpatch.pl also complains similarly.
->
-> Again, I have no strong opinion, but I think adding a clarification about why
-> we use typedef despite of the documented recommendation here might be nice?
+   157	
+   158	unsigned long
+   159	arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr,
+   160					  struct pt_regs *regs)
+   161	{
+   162		unsigned long orig_ret_vaddr;
+   163		unsigned long gcs_ret_vaddr;
+   164		int err = 0;
+   165		u64 gcspr;
+   166	
+   167		orig_ret_vaddr = procedure_link_pointer(regs);
+   168	
+   169		if (task_gcs_el0_enabled(current)) {
+   170			gcspr = read_sysreg_s(SYS_GCSPR_EL0);
+ > 171			gcs_ret_vaddr = get_user_gcs((unsigned long __user *)gcspr, &err);
+   172			if (err) {
+   173				force_sig(SIGSEGV);
+   174				goto out;
+   175			}
+   176	
+   177			/*
+   178			 * If the LR and GCS return addr don't match, then some kind of PAC
+   179			 * signing or control flow occurred since entering the probed function.
+   180			 * Likely because the user is attempting to retprobe on an instruction
+   181			 * that isn't a function boundary or inside a leaf function. Explicitly
+   182			 * abort this retprobe because it will generate a GCS exception.
+   183			 */
+   184			if (gcs_ret_vaddr != orig_ret_vaddr) {
+   185				orig_ret_vaddr = -1;
+   186				goto out;
+   187			}
+   188	
+   189			put_user_gcs(trampoline_vaddr, (unsigned long __user *)gcspr, &err);
+   190			if (err) {
+   191				force_sig(SIGSEGV);
+   192				goto out;
+   193			}
+   194		}
+   195	
+   196		/* Replace the return addr with trampoline addr */
+   197		procedure_link_pointer_set(regs, trampoline_vaddr);
+   198	
+   199	out:
+   200		return orig_ret_vaddr;
+   201	}
+   202	
 
-I already gave one, I clearly indicate it's opaque.
-
->
-> [...]
-> > For mm->flags initialisation on fork, we adjust the logic to ensure all
-> > bits are cleared correctly, and then adjust the existing intialisation
->
-> Nit.  s/intialisation/initialisation/ ?
-
-Ack thanks!
-
->
-> [...]
->
-> [1] https://docs.kernel.org/process/coding-style.html#typedefs
->
->
-> Thanks,
-> SJ
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
