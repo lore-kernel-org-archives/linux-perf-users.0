@@ -1,361 +1,144 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2677D136672
-	for <linux-perf-users@vger.kernel.org>; Wed, 13 Aug 2025 12:16:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B73136347
+	for <linux-perf-users@vger.kernel.org>; Wed, 13 Aug 2025 12:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755087404; cv=none; b=J8+iT2pMza8xjIXDqWVqlsBlSvtIp4fyreko94TvY4oLQNF5nve7iMiSsjVZkuzw4B9zDIck+gyy/0Y3fhBcEE/xe3a5aRsEwOZVZuGIxdqk6OqcCjxFPKhiIS8s83X+eXApc1gOAk8gczCBUUHAbqh6l6urTAPOWmo9hkw1+Oc=
+	t=1755088049; cv=none; b=jZV2sesIhJ/7uCWKg1Cc09F+St+27Vz3NH9O5BF52MozwS9+UCfKRkCq9U48Rcq6Jv+E8gHnIyoy2c38hLDYFNBVuYZSTgBlKyqKIFQHs+XBn0ps6WdNfcX1fqY1bwU1sAuwKcekZlgz5yBZmjrqZCZVKOUoXlbEZST3gUiulz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755087404; c=relaxed/simple;
-	bh=5/qgc59oD8soUgBaYKa9gXVnBOWyFLGpMZ+wpMO2kD4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fzPxwbU3k8B91Z45EYQZTRwCG5TgfV//a63krFygJk++mCT3/f2bYGh2pQh8aKgsXqg/4Gzu0dh6cXbqa+JWkHxjSzPFpwBYxezMjxGgQpKvkxGqSuS6TUhk2ZsTRsomc/hvo9bNWZP+WxrGkCImiWoh9LUvdbw+YqDdHAtpwh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MU03yWID; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1755088049; c=relaxed/simple;
+	bh=GbIxYmRopA1e1pkCw99AIa0AOpqQOxAdFJZSVIlkITI=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=k9KECt75An/u0NHIDkExQw0agM400Sf2vcyaUjE7Re9I8GNUmD24w+ZDMhKLm6+CsFCd99rcRgD3DWxZNoFYEp7FsjaSzMJSSXn8MZnrIqi70OXzkaVM5FqktlhjXZeNRzfbNVfW9EdadkVLVZt3EoMWC976/6RjOpneScIDNaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fFfpxGjG; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MU03yWID"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-76bdea88e12so5550743b3a.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 13 Aug 2025 05:16:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fFfpxGjG"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2430926b53eso9013925ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 13 Aug 2025 05:27:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1755087400; x=1755692200; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=IbnSBztKB/ky+HfHfoiCEKZibcC+VHhc0U9rmRsC39Q=;
-        b=MU03yWIDeYtVHuUc80o9ZFdzCVZquy0SEmXRHmdB2xt7uom0jDg38ofZnTiGWD+xIV
-         AyDe9bJjxYpsCnbGTM5hnUkuUTVGTeJKtPHoyTgdWZdR5vqftDElzqG0kXAJn5DG1q+z
-         vQjPGJtBiAEAl8S3rViySW9d2Pp1s/8eWVx3FoacAVHBJM4p6RFCxkGWygbJzHPyqgT9
-         3KGKbGG8UQzWvingJwXKJMu4BwflIB9b3D5fIWchC3Y0mNZNYakt1kJXAd8FWdyzMApS
-         6b74hmY/9o+SMkhQJ5HE8/+iAltRy6GECe6Aj1iweM6PzC7ndR2seO0F1r4bEG/gMCT9
-         ml2w==
+        d=gmail.com; s=20230601; t=1755088047; x=1755692847; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dCRSIhSzDr4RKLGt92FHYYSQf942VJvJALBglFUAMhc=;
+        b=fFfpxGjGZUBeNCM/fByRB6mPQt7b2fBCcXzXuvSUaJhGUBJExWJcSM3nei4UEiPA7H
+         3+xTXrn2H+VVtXmbKWtrAUH2J2s3BrNWuzbkPwVpsJJxijdQefNrvP79sgjEwcKYgugI
+         CmYiOAQ1ahjHoIpFi+vHvKpLQ9GWCzdLq+isZUjE7uw7xmA8c16N2d8dXcKlel0rciHT
+         BOU/Xx0gdjZqIRJK+PogUK1GJrw4/+h8mbAa88BqZj0CtKMBYodsWQlViAnr0ipIasBD
+         LnHT/5vhHRODhshMF/ZT4JvdkNYpykhdEpFK39E8Hl75hkbOmhHKtyLnLFWvZnZMVyD8
+         xhLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755087400; x=1755692200;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IbnSBztKB/ky+HfHfoiCEKZibcC+VHhc0U9rmRsC39Q=;
-        b=oZe2/u1p3mdnPrFbKmV26fw2xs9zY1uPQ9LXvcTJC67n9pZkDXqJDoCsHuH9Fwa4P7
-         x6gE+da4ls3LLxwKKyLYrxavE0a7LeyoLDdimG7dQxUmvteFCF0jvNbltH9pn/S4cZSO
-         +hle3xnj9HeXxxy0CHvly+ye7wHVZXTpMiBUBeU5MevV99qAC/xIPmPrVFgeYd5xxCMH
-         mjlx1hV6GN9U/1JosbSg4UfnVWlFCjPVjycwdPFmXeeDjh6mo67viVn94YTloFkYVNre
-         dWONXTZy/4kXtE5Tg4fGQfNfEafSCH1Zi5yth/PnvB4t12IDZwXiSv0G05LxCHx+Go4+
-         xVkw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKHvSU1oiyYX2lejfdB3zdlxAqQafdLYep+Dbv2w8XNmuB4sRHupnT/Gnx5AJ7TE5TItIqPuDHNDAPDI/XrZuG@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrWdkzyqwqF98Y82czuuyC2eEKacaWrrxPPvpTEy/tP1kKF0GJ
-	kSj5ivs8GR8YxpLtXOrayVBwpI+4f07syJFWWZgJgqISgGz8SnDm/7Uz+gP7WBTTkaaVbWYOq4b
-	wdQgy+k3JxJZ6S0IR+UqYfdD9vb1t+a8NoS0t2lI4YQ==
-X-Gm-Gg: ASbGnctjFjCrtbHhunksP+T7V9LqIKsX5zneeanrhM2z+yRCPzSZUuXwFi0KTZTDB7H
-	vBdjrHUwM2SCkYwf92UuwtG8eEYb+WATpSySmi3EXQ6umaM2qddMEtNnZAQQhaH/qxzAnz9FuGV
-	C/WSyDy795eQDa2NJhkE6Gs84HZJL72gwL6xGKrj7LjiOnJJdKA5Bu+YSSIxjOsuPvB3eR52atB
-	l0ro6bisznyB7BCeIRoh8a2kuqBHAKYqJN8BmT91NITm106TRA=
-X-Google-Smtp-Source: AGHT+IEqRlX1hXQvIAC8z4ap56R3F6zBfHl+FK5wqB5WBXqk2utT/Iy+dcR7aD5xv5GmvhMOoS30o/Rmi8/TkNbCz1I=
-X-Received: by 2002:a17:902:fc47:b0:242:a0b0:3c28 with SMTP id
- d9443c01a7336-2430d262dd1mr40863255ad.51.1755087400321; Wed, 13 Aug 2025
- 05:16:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1755088047; x=1755692847;
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=dCRSIhSzDr4RKLGt92FHYYSQf942VJvJALBglFUAMhc=;
+        b=V6oZ/B9C8NgiPTJmmmS3Fmfb8MjDxOWHRqS38nT+YLlp8hvenRq786iuTgPtkug8So
+         vFD6T6ej9nSyZcc8nga51ox322WPmM18GnWgTzwHRUJXVKhi6U0OAoPqw8QaUMTWKwvG
+         Ppi2vgN6Bavt0oa+L7lAghYJyTp3rnrjvzGtxP5ZIZv5Qsr9u6/Xug11KR25/juh07n8
+         5/+ou3yRrQtquItQVqdP3lUdiS3FRD8FnxVDtcRg2DxsCMzjG61f1LS3vbKkpwCAKCtg
+         BKteB/jnsgKpAOsdEs7VJPH7KdpaMbAjEF6OwWZM70AxAi9nTjqgnslNYY/RzvvWMF5v
+         urQQ==
+X-Gm-Message-State: AOJu0YxNCoRaUdooKo20s5oPScBtNCTgCw0cnFajmfw36Wa1vY0d3BiB
+	xjewKmDi9m4oIXL2KI7MD+9s75TnQ9+hl+ktCPG3JnlOtkso7c5M3PXdOXGPBQ==
+X-Gm-Gg: ASbGnctBoU59O7AGt8N5WhwCDr9IzNxJST40akE2mjwuGJAAmU2H3GLnmyi91nBll6B
+	ur48Pxz+hv2aHyC+xjzpaTlUA07irMaTJpBXhfcdhOUVGwG/8F80CkvBOO9C2yjVxyNnxOMGkbi
+	KQsJ3+xjL7WJy7P+H5ZdXcev02L2B8mDLrKVAgdQghbEzc0VyF5Yk+Vsr1SjtOtNp5+TMBoYqne
+	5Dirs9u3gKFbOzsDtYE5ohE7pePVhVDQ7kQLBtMp8thnGv++wPyCK460EW6ClJwwtyIVXApuBvT
+	w8yHGtoS288H+yXytB+hkZ+mNXN6YGkP2m8EQflv1J7q2o7VO0gSwbixNmjpojV+NUjBscRWyjj
+	Iw512XwEKSIC3uXKnl6gsLeuyIkcsuGyivW8=
+X-Google-Smtp-Source: AGHT+IEan/2QdEZVsrN2M5rSU6ynytg77ubEyRTTnsfIThPVpEWHCMco+Wce2nG0m+tPsXLG23fFEQ==
+X-Received: by 2002:a17:902:c40f:b0:240:9dd8:219b with SMTP id d9443c01a7336-2430d27e445mr49953705ad.49.1755088046475;
+        Wed, 13 Aug 2025 05:27:26 -0700 (PDT)
+Received: from [192.168.1.3] ([203.220.234.102])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241e899b783sm323279825ad.133.2025.08.13.05.27.25
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Aug 2025 05:27:26 -0700 (PDT)
+Message-ID: <6312afd2-18d8-4e11-96a8-0ceed284634c@gmail.com>
+Date: Wed, 13 Aug 2025 22:27:23 +1000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250812173419.303046420@linuxfoundation.org>
-In-Reply-To: <20250812173419.303046420@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 13 Aug 2025 17:46:26 +0530
-X-Gm-Features: Ac12FXybqNMQTflDlQz__4h-ypQooKNx0q_GNsw0wCT1xS6QPkD-sG6dIOKmaWc
-Message-ID: <CA+G9fYtBnCSa2zkaCn-oZKYz8jz5FZj0HS7DjSfMeamq3AXqNg@mail.gmail.com>
-Subject: Re: [PATCH 6.16 000/627] 6.16.1-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org, achill@achill.org, qemu-devel@nongnu.org, 
-	=?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>, Ben Copeland <benjamin.copeland@linaro.org>, 
-	LTP List <ltp@lists.linux.it>, chrubis <chrubis@suse.cz>, Petr Vorel <pvorel@suse.cz>, 
-	Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org, 
-	Zhang Yi <yi.zhang@huaweicloud.com>, Joseph Qi <jiangqi903@gmail.com>, Jan Kara <jack@suse.cz>, 
-	linux-fsdevel@vger.kernel.org, linux-ext4 <linux-ext4@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: linux-perf-users@vger.kernel.org
+From: Zixian Cai <fzczx123@gmail.com>
+Subject: perf probe fails to add events due to "File exists"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 12 Aug 2025 at 23:57, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.16.1 release.
-> There are 627 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 14 Aug 2025 17:32:40 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.16.1-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.16.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Hi all,
 
-LKFT found three regressions on stable-rc 6.16.1-rc1.
+My apologies in advance if this has been addressed in newer kernels. Likewise, I realize that this might be a problem in kernel/trace instead of in the perf userland.
+But I will appreciate any pointer.
 
-Short version:
-1) Pef build regressions on x86_64 and i386
-2) LTP syscalls failures with 64k Page size on qemu-arm64
-3) Kernel warning at fs/jbd2/transaction.c start_this_handle x86, qemu-arm64
+I'm trying to use `perf record` to trace USDT events in OpenJDK (in libjvm.so). See the below entries in .note.stapsdt section.
 
-Long story:
-1)
-The perf gcc-13 build failed on x86_64 and i386.
+ stapsdt              0x0000002f       NT_STAPSDT (SystemTap probe descriptors)
+    Provider: hotspot
+    Name: gc__begin
+    Location: 0x0000000000874144, Base: 0x00000000012014f8, Semaphore: 0x0000000000000000
+    Arguments: 1@$1
+  stapsdt              0x0000002f       NT_STAPSDT (SystemTap probe descriptors)
+    Provider: hotspot
+    Name: gc__begin
+    Location: 0x00000000008741c2, Base: 0x00000000012014f8, Semaphore: 0x0000000000000000
+    Arguments: 1@$0
+  stapsdt              0x00000031       NT_STAPSDT (SystemTap probe descriptors)
+    Provider: hotspot
+    Name: gc__begin
+    Location: 0x0000000000874274, Base: 0x00000000012014f8, Semaphore: 0x0000000000000000
+    Arguments: 1@%dil
+  stapsdt              0x0000002f       NT_STAPSDT (SystemTap probe descriptors)
+    Provider: hotspot
+    Name: gc__begin
+    Location: 0x0000000000874634, Base: 0x00000000012014f8, Semaphore: 0x0000000000000000
+    Arguments: 1@$1
 
-Build regression: qemu-arm64 ARM64_64K_PAGES ltp syscalls swap fsync
-fallocate failed.
+I tried
+1. `perf buildid-cache --add libjvm.so` first, and then `perf probe --add sdt_hotspot:gc__begin`, or
+2. `perf probe -x libjvm.so --add sdt_hotspot:gc__begin`.
 
-> Ian Rogers <irogers@google.com>
->     perf topdown: Use attribute to see an event is a topdown metic or slots
+Both result in
 
-Build error:
+Failed to write event: File exists
+  Error: Failed to add events.
 
-arch/x86/tests/topdown.c: In function 'event_cb':
-arch/x86/tests/topdown.c:53:25: error: implicit declaration of
-function 'pr_debug' [-Werror=implicit-function-declaration]
-   53 |                         pr_debug("Broken topdown information
-for '%s'\n", evsel__name(evsel));
-      |                         ^~~~~~~~
-cc1: all warnings being treated as errors
+Here is the verbose log with some removed for brevity. 
 
-2)
+perf probe --verbose --add sdt_hotspot:gc__begin
+probe-definition(0): sdt_hotspot:gc__begin
+0 arguments
+symbol:throw file:(null) line:0 offset:0 return:0 lazy:(null)
+<snip>
+symbol:rethrow file:(null) line:0 offset:0 return:0 lazy:(null)
+symbol:catch file:(null) line:0 offset:0 return:0 lazy:(null)
+Parsing probe_events: p:sdt_hotspot/gc__begin /home/zixianc/jdk-21.0.9/lib/server/libjvm.so:0x874144
+Group:sdt_hotspot Event:gc__begin probe:p
+Parsing probe_events: p:sdt_hotspot/gc__begin /home/zixianc/jdk-21.0.9/lib/server/libjvm.so:0x8741c2
+Group:sdt_hotspot Event:gc__begin probe:p
+Parsing probe_events: p:sdt_hotspot/gc__begin /home/zixianc/jdk-21.0.9/lib/server/libjvm.so:0x874274 arg1=%di:u8
+Group:sdt_hotspot Event:gc__begin probe:p
+Parsing probe_events: p:sdt_hotspot/gc__begin /home/zixianc/jdk-21.0.9/lib/server/libjvm.so:0x874634
+Group:sdt_hotspot Event:gc__begin probe:p
+symbol:throw file:(null) line:0 offset:0 return:0 lazy:(null)
+symbol:rethrow file:(null) line:0 offset:0 return:0 lazy:(null)
+symbol:catch file:(null) line:0 offset:0 return:0 lazy:(null)
+Opening /sys/kernel/tracing//uprobe_events write=1
+Opening /sys/kernel/tracing//README write=0
+Writing event: p:sdt_hotspot/gc__begin /home/zixianc/jdk-21.0.9/lib/server/libjvm.so:0x874144
+Writing event: p:sdt_hotspot/gc__begin /home/zixianc/jdk-21.0.9/lib/server/libjvm.so:0x8741c2
+Writing event: p:sdt_hotspot/gc__begin /home/zixianc/jdk-21.0.9/lib/server/libjvm.so:0x874274 arg1=%di:u8
+Failed to write event: File exists
+  Error: Failed to add events. Reason: File exists (Code: -17)
 
-The following list of LTP syscalls failure noticed on qemu-arm64 with
-stable-rc 6.16.1-rc1 with CONFIG_ARM64_64K_PAGES=y build configuration.
+Here is the content of /sys/kernel/tracing/uprobe_events after running `perf probe`.
 
-Most failures report ENOSPC (28) or mkswap errors, which may be related
-to disk space handling in the 64K page configuration on qemu-arm64.
-
-The issue is reproducible on multiple runs.
-
-* qemu-arm64, ltp-syscalls - 64K page size test failures list,
-
-  - fallocate04
-  - fallocate05
-  - fdatasync03
-  - fsync01
-  - fsync04
-  - ioctl_fiemap01
-  - swapoff01
-  - swapoff02
-  - swapon01
-  - swapon02
-  - swapon03
-  - sync01
-  - sync_file_range02
-  - syncfs01
-
-Reproducibility:
- - 64K config above listed test fails
- - 4K config above listed test pass.
-
-Regression Analysis:
-- New regression? yes
-- Reproducibility? yes
-
-Test regression: qemu-arm64 ARM64_64K_PAGES ltp syscalls swap fsync
-fallocate failed.
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-swapoff01:
-libswap.c:198: TINFO: create a swapfile size of 1 megabytes (MB)
-tst_ioctl.c:26: TINFO: FIBMAP ioctl is supported
-libswap.c:218: TFAIL: mkswap on ext2/ext3/ext4 failed
-swapoff01.c:44: TINFO: create a swapfile with 65536 block numbers
-swapoff01.c:44: TCONF: Insufficient disk space to create swap file
-
-swapoff02:
-libswap.c:198: TINFO: create a swapfile size of 1 megabytes (MB)
-tst_ioctl.c:26: TINFO: FIBMAP ioctl is supported
-libswap.c:218: TFAIL: mkswap on ext2/ext3/ext4 failed
-swapoff02.c:88: TINFO: create a swapfile size of 1 megabytes (MB)
-
-swapon01:
-libswap.c:198: TINFO: create a swapfile size of 1 megabytes (MB)
-tst_ioctl.c:26: TINFO: FIBMAP ioctl is supported
-libswap.c:218: TFAIL: mkswap on ext2/ext3/ext4 failed
-swapon01.c:39: TINFO: create a swapfile size of 128 megabytes (MB)
-tst_cmd.c:111: TBROK: 'mkswap' exited with a non-zero code 1 at tst_cmd.c:111
-
-swapon02:
-tst_ioctl.c:26: TINFO: FIBMAP ioctl is supported
-libswap.c:218: TFAIL: mkswap on ext2/ext3/ext4 failed
-swapon02.c:52: TINFO: create a swapfile size of 1 megabytes (MB)
-tst_cmd.c:111: TBROK: 'mkswap' exited with a non-zero code 1 at tst_cmd.c:111
-
-swapon03:
-tst_ioctl.c:26: TINFO: FIBMAP ioctl is supported
-libswap.c:218: TFAIL: mkswap on ext2/ext3/ext4 failed
-tst_kconfig.c:88: TINFO: Parsing kernel config '/proc/config.gz'
-tst_kconfig.c:88: TINFO: Parsing kernel config '/proc/config.gz'
-tst_kconfig.c:88: TINFO: Parsing kernel config '/proc/config.gz'
-tst_kconfig.c:88: TINFO: Parsing kernel config '/proc/config.gz'
-swapon03.c:51: TINFO: create a swapfile size of 1 megabytes (MB)
-tst_cmd.c:111: TBROK: 'mkswap' exited with a non-zero code 1 at tst_cmd.c:111
-
-sync01:
-sync01.c:49: TFAIL: Synced 11403264, expected 33554432
-
-syncfs01:
-syncfs01.c:53: TFAIL: Synced 4096, expected 33554432
-
-sync_file_range02:
-sync_file_range02.c:60: TFAIL: sync_file_range() failed: ENOSPC (28)
-
-fdatasync03:
-fdatasync03.c:43: TFAIL: fdatasync(fd) failed: ENOSPC (28)
-
-fsync01:
-tst_test.c:1888: TINFO: === Testing on ext4 ===
-tst_test.c:1217: TINFO: Formatting /dev/loop0 with ext4 opts='' extra opts=''
-mke2fs 1.47.2 (1-Jan-2025)
-tst_test.c:1229: TINFO: Mounting /dev/loop0 to
-/tmp/LTP_fsyX4HNML/mntpoint fstyp=ext4 flags=0
-fsync01.c:28: TFAIL: fsync failed: ENOSPC (28)
-fsync01.c:28: TFAIL: fsync failed: ENOSPC (28)
-fsync01.c:28: TFAIL: fsync failed: ENOSPC (28)
-fsync01.c:28: TFAIL: fsync failed: ENOSPC (28)
-fsync01.c:28: TFAIL: fsync failed: ENOSPC (28)
-fsync01.c:28: TFAIL: fsync failed: ENOSPC (28)
-fsync01.c:28: TFAIL: fsync failed: ENOSPC (28)
-fsync01.c:28: TFAIL: fsync failed: ENOSPC (28)
-fsync01.c:28: TFAIL: fsync failed: ENOSPC (28)
-fsync01.c:28: TFAIL: fsync failed: ENOSPC (28)
-
-fsync04:
-tst_test.c:1229: TINFO: Mounting /dev/loop0 to
-/tmp/LTP_fsydyQA53/mnt_point fstyp=ext4 flags=0
-fsync04.c:43: TFAIL: fsync(fd) failed: ENOSPC (28)
-
-fallocate04:
-fallocate04.c:198: TFAIL: fallocate failed: ENOSPC (28)
-
-fallocate05:
-tst_fill_fs.c:53: TBROK: fsync(4) failed: ENOSPC (28)
-
-ioctl_fiemap01
-tst_test.c:1217: TINFO: Formatting /dev/loop0 with ext4 opts='' extra opts=''
-mke2fs 1.47.2 (1-Jan-2025)
-tst_test.c:1229: TINFO: Mounting /dev/loop0 to
-/tmp/LTP_iocjRR3ot/mntpoint fstyp=ext4 flags=0
-ioctl_fiemap01.c:74: TPASS: ioctl(fd, FS_IOC_FIEMAP, fiemap) : EBADR (53)
-ioctl_fiemap01.c:77: TPASS: ioctl(fd, FS_IOC_FIEMAP, fiemap) passed
-ioctl_fiemap01.c:79: TPASS: Expect: Empty file should have 0 extends mapped
-ioctl_fiemap01.c:86: TFAIL: ioctl(fd, FS_IOC_FIEMAP, fiemap) failed: ENOSPC (28)
-ioctl_fiemap01.c:41: TFAIL: Expect: extent fm_mapped_extents is 1
-ioctl_fiemap01.c:50: TFAIL: (extent->fe_flags & fe_mask) (0) != fe_flags (1)
-ioctl_fiemap01.c:51: TPASS: Expect: fe_physical > 1
-ioctl_fiemap01.c:52: TFAIL: extent->fe_length (4702687395951105107) !=
-fe_length (1024)
-ioctl_fiemap01.c:96: TFAIL: ioctl(fd, FS_IOC_FIEMAP, fiemap) failed: ENOSPC (28)
-ioctl_fiemap01.c:41: TFAIL: Expect: extent fm_mapped_extents is 3
-ioctl_fiemap01.c:50: TPASS: (extent->fe_flags & fe_mask) == fe_flags (0)
-ioctl_fiemap01.c:51: TPASS: Expect: fe_physical > 1
-ioctl_fiemap01.c:52: TFAIL: extent->fe_length (4702687395951105107) !=
-fe_length (1024)
-ioctl_fiemap01.c:50: TPASS: (extent->fe_flags & fe_mask) == fe_flags (0)
-ioctl_fiemap01.c:51: TPASS: Expect: fe_physical > 1
-ioctl_fiemap01.c:52: TFAIL: extent->fe_length (5136714152143953955) !=
-fe_length (1024)
-ioctl_fiemap01.c:50: TFAIL: (extent->fe_flags & fe_mask) (0) != fe_flags (1)
-ioctl_fiemap01.c:51: TPASS: Expect: fe_physical > 1
-ioctl_fiemap01.c:52: TFAIL: extent->fe_length (8387236464277024288) !=
-fe_length (1024)
-
-
-Links,
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.16.y/build/v6.16-628-gcd8771110407/testrun/29470711/suite/ltp-syscalls/tests/
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.16.y/build/v6.16-628-gcd8771110407/testrun/29470720/suite/ltp-syscalls/tests/
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.16.y/build/v6.16-628-gcd8771110407/testrun/29470711/suite/ltp-syscalls/test/sync01/log
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.16.y/build/v6.16-628-gcd8771110407/testrun/29470720/suite/ltp-syscalls/test/fdatasync03/log
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.16.y/build/v6.16-628-gcd8771110407/testrun/29470711/suite/ltp-syscalls/test/swapon01/details/
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.16.y/build/v6.16-628-gcd8771110407/testrun/29471488/suite/ltp-syscalls/tests/
-
-
-3)
-
-Test regression: stable-rc 6.16.1-rc1 WARNING fs jbd2 transaction.c
-start_this_handle
-
-Kernel warning noticed on this stable-rc 6.16.1-rc1 this regression was
-reported last month on the Linux next,
-
-- https://lore.kernel.org/all/CA+G9fYsyYQ3ZL4xaSg1-Tt5Evto7Zd+hgNWZEa9cQLbahA1+xg@mail.gmail.com/
-
-Kernel warnings:
-
-------------[ cut here ]------------
-[   34.805150] WARNING: CPU: 1 PID: 627 at fs/jbd2/transaction.c:334
-start_this_handle (fs/jbd2/transaction.c:334 (discriminator 1))
-[   34.807683] Modules linked in: btrfs blake2b_generic xor xor_neon
-raid6_pq zstd_compress sm3_ce sha3_ce sha512_ce fuse drm backlight
-ip_tables x_tables
-[   34.809152] CPU: 1 UID: 0 PID: 627 Comm: io_control01 Not tainted
-6.16.1-rc1 #1 PREEMPT
-[   34.809652] Hardware name: linux,dummy-virt (DT)
-[   34.809961] pstate: 63402009 (nZCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
-[   34.810205] pc : start_this_handle (fs/jbd2/transaction.c:334
-(discriminator 1))
-[   34.810395] lr : start_this_handle (fs/jbd2/transaction.c:334
-(discriminator 1))
-[   34.810798] sp : ffff800080e2f7e0
-[   34.810962] x29: ffff800080e2f820 x28: fff00000c4b43000 x27: ffffa9c145dca000
-[   34.811259] x26: 0000000000000658 x25: 0000000000000629 x24: 0000000000000002
-[   34.811507] x23: 0000000000000629 x22: 0000000000000c40 x21: 0000000000000008
-[   34.811750] x20: fff00000d0800348 x19: fff00000d0800348 x18: 0000000000000000
-[   34.811992] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
-[   34.812234] x14: 0000000000000000 x13: 00000000ffffffff x12: 0000000000000000
-[   34.812858] x11: 0000000000000000 x10: ffffa9c1456a8c08 x9 : ffffa9c142b54b84
-[   34.813572] x8 : ffff800080e2f408 x7 : 0000000000000000 x6 : 0000000000000001
-[   34.814462] x5 : ffffa9c145629000 x4 : ffffa9c1456293d0 x3 : 0000000000000000
-[   34.815093] x2 : 0000000000000000 x1 : fff00000c4fd0000 x0 : 0000000000000050
-[   34.815812] Call trace:
-[   34.816213] start_this_handle (fs/jbd2/transaction.c:334
-(discriminator 1)) (P)
-[   34.816719] jbd2__journal_start (fs/jbd2/transaction.c:501)
-[   34.817124] __ext4_journal_start_sb (fs/ext4/ext4_jbd2.c:117)
-[   34.817687] ext4_do_writepages (fs/ext4/ext4_jbd2.h:242 fs/ext4/inode.c:2847)
-[   34.818109] ext4_writepages (fs/ext4/inode.c:2954)
-[   34.818549] do_writepages (mm/page-writeback.c:2636)
-[   34.818983] filemap_fdatawrite_wbc (mm/filemap.c:386 mm/filemap.c:376)
-[   34.819520] __filemap_fdatawrite_range (mm/filemap.c:420)
-[   34.819942] file_write_and_wait_range (mm/filemap.c:794)
-[   34.820349] ext4_sync_file (fs/ext4/fsync.c:154)
-[   34.820486] vfs_fsync_range (fs/sync.c:188)
-[   34.820624] do_fsync (fs/sync.c:201 fs/sync.c:212)
-[   34.820743] __arm64_sys_fsync (fs/sync.c:215)
-[   34.820882] invoke_syscall.constprop.0
-(arch/arm64/include/asm/syscall.h:61 arch/arm64/kernel/syscall.c:54)
-[   34.821046] do_el0_svc (include/linux/thread_info.h:135
-(discriminator 2) arch/arm64/kernel/syscall.c:140 (discriminator 2)
-arch/arm64/kernel/syscall.c:151 (discriminator 2))
-[   34.821172] el0_svc (arch/arm64/include/asm/irqflags.h:82
-(discriminator 1) arch/arm64/include/asm/irqflags.h:123 (discriminator
-1) arch/arm64/include/asm/irqflags.h:136 (discriminator 1)
-arch/arm64/kernel/entry-common.c:165 (discriminator 1)
-arch/arm64/kernel/entry-common.c:178 (discriminator 1)
-arch/arm64/kernel/entry-common.c:768 (discriminator 1))
-[   34.821307] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:787)
-[   34.821460] el0t_64_sync (arch/arm64/kernel/entry.S:600)
-[   34.821712] ---[ end trace 0000000000000000 ]---
-
-Link:
- -  https://regressions.linaro.org/lkft/linux-stable-rc-linux-6.16.y/v6.16-628-gcd8771110407/log-parser-test/exception-warning-cpu-pid-at-fsjbd2transaction-start_this_handle/
-
---
-Linaro LKFT
-https://lkft.linaro.org
+p:sdt_hotspot/gc__begin /home/zixianc/jdk-21.0.9/lib/server/libjvm.so:0x0000000000874144
+p:sdt_hotspot/gc__begin /home/zixianc/jdk-21.0.9/lib/server/libjvm.so:0x00000000008741c2
