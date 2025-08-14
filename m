@@ -1,193 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE48F1A0BFA
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 Aug 2025 20:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61D8258CF7;
+	Thu, 14 Aug 2025 20:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755203006; cv=none; b=SL3tvDCQvSqKXXrEOLYJi6+p+F37buB4tm/jBSv6jkXzr83x/hDWPZuFUHoTxlMo89CycWyq3+icrCijidgSOCbiIzEUIbsq2NL/pkrKrXV/XN0kVJaBAjNr845ICDHaoGNLDSxA6SPtGGrehBtNva1xy3PDZe/zAeWzpsUUdtE=
+	t=1755203035; cv=none; b=rkKC8Lv+C07YAkS4vNjeqbEQnZAxa0WsWH1xIyb7mBczBF4MJIWYvJJQzXihKXwpjgsgobQ8V7Och7MVWjk/wYDxrotb1nIHdrLAW64aoFtR56xFbxB0IBJ9FwEexb2X7uJyScBVjSbeaiPVOqFkPP/eGObOCvDpangaxV0D1VE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755203006; c=relaxed/simple;
-	bh=ZobPmOUZU8ExKgCDse1yAOzwgR+hdb1Uqj8OkEFsQY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=td33O5xAbycw6jdIMOJEPLUIdQfvSVI5G4ey5lPRAzvulSOdJE0RkMhs4VDRJCS5rnuiaTsrd6ybZlfTD+wTPjQSa8ldl0a8P1EvnR3zgxY0Ym7vBuDkF9900H/OhDNTQNcXTcz85zgqXD42L5enjzFQiearvr+NWIFoKGrS95I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U5+xUXvp; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U5+xUXvp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF3A6C4CEED;
-	Thu, 14 Aug 2025 20:23:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755203006;
-	bh=ZobPmOUZU8ExKgCDse1yAOzwgR+hdb1Uqj8OkEFsQY8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U5+xUXvpOhSAUIm+VKg+3SuC5orRAUERbeAyjBxmZmamdQhYPo0XoCzDseJTxctCD
-	 0aqjBxV3hvBCJLxm6znpiRwbv2r9vsrN9ka9Gg5Gq4WDnJOB/7eAIrpaVZEP6j00bY
-	 BM1IsyOZOgkfZkc9tqIwFnrXv4YWWTEjcirAtJY1fNSFu25YTlrighDUvj2yVJuqBt
-	 ndZz9mmJzQOqxTh1Z7HJeNsj3phreFzKE29SpwYRuIncFfBoj6lOoqfmlE5kkHHRTl
-	 5swO8v85DH6fACCxu+RA6XeARTWCTby948pUSTxeRsThkJyQL1v0hYS9zFiNjikFSU
-	 w6m8ITkkcLHBQ==
-Date: Thu, 14 Aug 2025 13:23:24 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Athira Rajeev <atrajeev@linux.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-	irogers@google.com, linux-perf-users@vger.kernel.org,
-	maddy@linux.ibm.com, kjain@linux.ibm.com,
-	hbathini@linux.vnet.ibm.com, Aditya.Bodkhe1@ibm.com,
-	Tejas Manhas <tejas05@linux.ibm.com>
-Subject: Re: [PATCH] tools/perf/tests: Update perf record testcase to fix
- usage of affinity for machines with #CPUs > 1K
-Message-ID: <aJ5FvBa4LPhMO0u-@google.com>
-References: <20250814114908.45648-1-atrajeev@linux.ibm.com>
+	s=arc-20240116; t=1755203035; c=relaxed/simple;
+	bh=pUCA2eTYm8o0pa+luMX7DYe58517nKcKOs6FdCxkmIE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K1n8D5siB2IDPwWQsmNZR08WlGRuJZuf4Kmu6kn/0s+kxyYaDurQRSMnjIyYaFptatkZ0zGIa42v3BIcahs0qha0vBlb/HaexZ4gIE14pFaaO+pBmlKdUlQhApN4zMpWtQB6vkfoyBbmSIagM8+fRe2Fi0JyZhPBXy8i/NqNHxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-244581fdfd8so2117535ad.3;
+        Thu, 14 Aug 2025 13:23:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755203030; x=1755807830;
+        h=content-transfer-encoding:in-reply-to:organization:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/WpHv0j9aeid55lLyRqzHbxWvK34fp9Ff0OVpQqjLLo=;
+        b=mTLPc8rwdT0kIfZb0pa5aoaXlAlUQAGAzM+Yex54XvveSg6oG6PPs2fftw/WCJXrPJ
+         SMf/VvbLsSBqDl+WOnHV5bUUyO1/KFV46cwNRsrbw1jcACjS0i71a2kHg1JhkGvdOQyO
+         1r8/Qo9VaF8AN4aQxpBWEdREEFxQvObkCMLty0R7wVcxShkj7HECIKPiyCao7gfdDr/b
+         R3DIGdLViEQGzM3hcIgT4VPWyCNuYPnL9K3GDXWpIZKuHEvtMi/PflJm+A3IeRIY2QOj
+         CZxFqcPhl0x6qqpn4pLTMgUYEWTQOUlVVAPh+OOxjLHD0q4k2y8Si1FT33ugcYg2M+MB
+         /+Ig==
+X-Forwarded-Encrypted: i=1; AJvYcCVqEPIpcgLgjg0CCIOdXRjZoyc2QKkIyGPG+2A4NCD0qrESvRtXZKO1dHdDBmJToHimK4p8BTWqJoB1ae8=@vger.kernel.org, AJvYcCVwlH4qC65daFt005AD+C/hr0PIM/pDy3ZNuNSahK33eg5YtIEoDOY+B6asLA9XwzON5ySTYsJk9MffA8TxU14qlw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMvqUtEOIpbSr8qvYi5ZVjnGp7CbrhChL7M7hBMu6NJYnm6OQ2
+	KUtUf/hiLYehrustx7gdcp2duZ13uddTDvt2B8S2iQl06E0ghnhoa79i
+X-Gm-Gg: ASbGnctdzvO87EP6FYOh3llL5i00ZaY3ty8hKjEt7Em+GMm/np1gEb2xnvfaQ5r+cbM
+	PSMFtPArAeq2tDAe43ubqpUyw+6OmqYID12zFARFuhvosgBSTjw/8oijC+3H/2bm5Dg4YG1FCxV
+	LMLhmNhWbhZbf/8RUp1F9Az51KFbXuZ4qzyBpR2DqlfAMuRIGKVKpiD4xYav7fjp41rxUuOzAKJ
+	Bdd/QFf+eiyq9VlYvFpT1JRUdZLkeDsCu9kORdDcdLKOGVw8X14smnp9BWERnBUYpmCLHJ/u086
+	ww2okAEM9waG1kKintWtZw7Vnmtxzif9krrXr2JlkQZCunT0v04C3ymVUS46N6ALGHXrRU9KXjV
+	dM4QPPSp2ri6jJ4d794ua1cAzv4UAtJ/2
+X-Google-Smtp-Source: AGHT+IGZkLRgquIg8BqkOF8dVsleVvpUt/TPYto81cReQ9ZJpyO3/wRhsiyHLGpAhf6apUoA3ULbGw==
+X-Received: by 2002:a17:902:ced2:b0:240:b9c0:bc6f with SMTP id d9443c01a7336-244587dc253mr31116575ad.10.1755203030081;
+        Thu, 14 Aug 2025 13:23:50 -0700 (PDT)
+Received: from [192.168.50.136] ([118.32.98.101])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241e8976cfdsm356954895ad.101.2025.08.14.13.23.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Aug 2025 13:23:49 -0700 (PDT)
+Message-ID: <a40f008e-d552-4ce2-8279-5a25183b7726@kzalloc.com>
+Date: Fri, 15 Aug 2025 05:23:44 +0900
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250814114908.45648-1-atrajeev@linux.ibm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf test: Add test case for event group throttling with
+ inactive events
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Liang Kan <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>,
+ Collin Funk <collin.funk1@gmail.com>, Ravi Bangoria <ravi.bangoria@amd.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20250813163251.490451-2-ysk@kzalloc.com>
+ <aJ5Bt1q3AZFxxz_U@google.com>
+Content-Language: en-US
+From: Yunseong Kim <ysk@kzalloc.com>
+Organization: kzalloc
+In-Reply-To: <aJ5Bt1q3AZFxxz_U@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi Namhyung,
 
-On Thu, Aug 14, 2025 at 05:19:08PM +0530, Athira Rajeev wrote:
-> The perf record testcase fails on systems with more than 1K CPUs.
-> 
-> Testcase: perf test -vv "PERF_RECORD_* events & perf_sample fields"
-> 
->   PERF_RECORD_* events & perf_sample fields                       :
->   --- start ---
->   test child forked, pid 272482
->   sched_getaffinity: Invalid argument
->   sched__get_first_possible_cpu: Invalid argument
->   test child finished with -1
->   ---- end ----
->   PERF_RECORD_* events & perf_sample fields: FAILED!
-> 
-> sched__get_first_possible_cpu uses "sched_getaffinity" to get the
-> cpumask and this call is returning EINVAL (Invalid argument).
-> This happens because the default mask size in glibc is 1024.  To
-> overcome this 1024 CPUs mask size limitation of cpu_set_t, change the
-> mask size using the CPU_*_S macros ie, use CPU_ALLOC to allocate
-> cpumask, CPU_ALLOC_SIZE for size. Same fix needed for mask which is
-> used to setaffinity so that mask size is large enough to represent
-> number of possible CPU's in the system.
-> 
-> Reported-by: Tejas Manhas <tejas05@linux.ibm.com>
-> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+Thanks for your reply.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks,
-Namhyung
-
-> ---
->  tools/perf/tests/perf-record.c | 36 ++++++++++++++++++++++++----------
->  1 file changed, 26 insertions(+), 10 deletions(-)
+On 8/15/25 5:06 AM, Namhyung Kim wrote:
+> Hi Yunseong,
 > 
-> diff --git a/tools/perf/tests/perf-record.c b/tools/perf/tests/perf-record.c
-> index 0b3c37e66871..d895df037707 100644
-> --- a/tools/perf/tests/perf-record.c
-> +++ b/tools/perf/tests/perf-record.c
-> @@ -13,15 +13,19 @@
->  #include "tests.h"
->  #include "util/mmap.h"
->  #include "util/sample.h"
-> +#include "util/cpumap.h"
->  
->  static int sched__get_first_possible_cpu(pid_t pid, cpu_set_t *maskp)
->  {
-> -	int i, cpu = -1, nrcpus = 1024;
-> +	int i, cpu = -1;
-> +	int nrcpus = cpu__max_cpu().cpu;
-> +	size_t size = CPU_ALLOC_SIZE(nrcpus);
-> +
->  realloc:
-> -	CPU_ZERO(maskp);
-> +	CPU_ZERO_S(size, maskp);
->  
-> -	if (sched_getaffinity(pid, sizeof(*maskp), maskp) == -1) {
-> -		if (errno == EINVAL && nrcpus < (1024 << 8)) {
-> +	if (sched_getaffinity(pid, size, maskp) == -1) {
-> +		if (errno == EINVAL && nrcpus < (cpu__max_cpu().cpu << 8)) {
->  			nrcpus = nrcpus << 2;
->  			goto realloc;
->  		}
-> @@ -30,11 +34,11 @@ static int sched__get_first_possible_cpu(pid_t pid, cpu_set_t *maskp)
->  	}
->  
->  	for (i = 0; i < nrcpus; i++) {
-> -		if (CPU_ISSET(i, maskp)) {
-> +		if (CPU_ISSET_S(i, size, maskp)) {
->  			if (cpu == -1)
->  				cpu = i;
->  			else
-> -				CPU_CLR(i, maskp);
-> +				CPU_CLR_S(i, size, maskp);
->  		}
->  	}
->  
-> @@ -50,8 +54,9 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
->  		.no_buffering = true,
->  		.mmap_pages   = 256,
->  	};
-> -	cpu_set_t cpu_mask;
-> -	size_t cpu_mask_size = sizeof(cpu_mask);
-> +	int nrcpus = cpu__max_cpu().cpu;
-> +	cpu_set_t *cpu_mask;
-> +	size_t cpu_mask_size;
->  	struct evlist *evlist = evlist__new_dummy();
->  	struct evsel *evsel;
->  	struct perf_sample sample;
-> @@ -69,12 +74,22 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
->  	int total_events = 0, nr_events[PERF_RECORD_MAX] = { 0, };
->  	char sbuf[STRERR_BUFSIZE];
->  
-> +	cpu_mask = CPU_ALLOC(nrcpus);
-> +	if (!cpu_mask) {
-> +		pr_debug("failed to create cpumask\n");
-> +		goto out;
-> +	}
-> +
-> +	cpu_mask_size = CPU_ALLOC_SIZE(nrcpus);
-> +	CPU_ZERO_S(cpu_mask_size, cpu_mask);
-> +
->  	perf_sample__init(&sample, /*all=*/false);
->  	if (evlist == NULL) /* Fallback for kernels lacking PERF_COUNT_SW_DUMMY */
->  		evlist = evlist__new_default();
->  
->  	if (evlist == NULL) {
->  		pr_debug("Not enough memory to create evlist\n");
-> +		CPU_FREE(cpu_mask);
->  		goto out;
->  	}
->  
-> @@ -111,7 +126,7 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
->  	evsel__set_sample_bit(evsel, TIME);
->  	evlist__config(evlist, &opts, NULL);
->  
-> -	err = sched__get_first_possible_cpu(evlist->workload.pid, &cpu_mask);
-> +	err = sched__get_first_possible_cpu(evlist->workload.pid, cpu_mask);
->  	if (err < 0) {
->  		pr_debug("sched__get_first_possible_cpu: %s\n",
->  			 str_error_r(errno, sbuf, sizeof(sbuf)));
-> @@ -123,7 +138,7 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
->  	/*
->  	 * So that we can check perf_sample.cpu on all the samples.
->  	 */
-> -	if (sched_setaffinity(evlist->workload.pid, cpu_mask_size, &cpu_mask) < 0) {
-> +	if (sched_setaffinity(evlist->workload.pid, cpu_mask_size, cpu_mask) < 0) {
->  		pr_debug("sched_setaffinity: %s\n",
->  			 str_error_r(errno, sbuf, sizeof(sbuf)));
->  		goto out_delete_evlist;
-> @@ -328,6 +343,7 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
->  		++errs;
->  	}
->  out_delete_evlist:
-> +	CPU_FREE(cpu_mask);
->  	evlist__delete(evlist);
->  out:
->  	perf_sample__exit(&sample);
-> -- 
-> 2.43.7
+> On Wed, Aug 13, 2025 at 04:32:52PM +0000, Yunseong Kim wrote:
+>> A recent UBSAN shift-out-of-bounds report was identified when throttling
+>> event groups that included inactive (PERF_EVENT_STATE_OFF) events.
+>> This occurred because pmu->start()/stop() could be called on these events,
+>> potentially leaving event->hw.idx at -1. This leads to undefined behavior
+>> when PMU code later uses this negative index as a shift exponent.
+>>
+>> The issue need to ensuring perf_event_throttle() and
+>> perf_event_unthrottle() skip inactive events entirely.
+>>
+>> Introduce a new perf test suite, "event group throttle", to verify this
+>> fix and prevent regressions.
 > 
+> Thanks for your work!
+> 
+> I'm curious what happens if it runs on unfixed kernels.  I suspect this
+> should be in the selftest so that it can tie with the kernel fix.
+
+I agree with your point. I believe it's more appropriate for this test to
+be included in "kself test" alongside the kernel fix. I'll modify the
+test case based on Liang's suggestion.
+
+> By having this in the perf tools test suite, you cannot guarantee if the
+> kernel has the fix.  And it may turn the kernel into an unstable state
+> easily.
+
+Would it be possible to add this test if it were changed to focus on
+a different aspect?
+
+> Thanks,
+> Namhyung
+
+Thank you,
+Yunseong Kim
