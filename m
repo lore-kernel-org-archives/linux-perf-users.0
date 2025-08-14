@@ -1,290 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54F01459EA;
-	Thu, 14 Aug 2025 08:44:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B66427FD76
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 Aug 2025 09:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755161047; cv=none; b=eIymfKwifjgSPW0YnL9NsE3DeyhfAaOxtrIXoubxHF2gtJJuEUFf9INq3+B1l9vFNcTyGFFkpDGQ+wBqg/YZ/pG4FVczAHgfkFznQ9IaCYGCQHM+OGSo8J2+XvO+muvb+Z3T07dKbZju6EFtadpJG3/cKTtgG8MfvK75IURteMY=
+	t=1755163561; cv=none; b=qLrhyLixDQpzx+2to2/FGUukKIyrNHB4jmz0dKGnqdtaQWm7Bj5AN7HV6eOJog9wXiCDqg8Zic7CQuJpBPkcTklahXGHd+SaazjhUc9jIkdxf+hsNMSXj6t3HIENI/M1nR6sn163sT0xIQDFnBfLnxMpDlWqPsuDVv6UGG1o6U0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755161047; c=relaxed/simple;
-	bh=CTmqLMuj0bCvkwKZAg1Un//8JJ/uJlUZHANgFIqPtcA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qeF/Q1kRSCnDuVF0OhfJ4WeG0uCTsOJXzehPnv//cZgQrWnppRIcAceU3D+tuVoiHckSfaWiQhBWBu4SUibJ40v2Go0LDJTqD3vMzviBKK88nRuyhDhYfE+sZ5fyR1gqMf7Ub+eh1icUVpkOH9oXwLzD3QOEz8DhmoJUtKjeaDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nbIckPkp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755163561; c=relaxed/simple;
+	bh=vZt4y1xzXM2B0r7bPL4MAJjGUGj9Xtb3vhQWkxkwSiA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ayY2adtdVhTH+CgjVDH6jAu4SC03923988nha7efR+tqOZCvkK+P03s4cDs232Awk1MshW47Umw7+OBk72MRIHce3OEg3iyACMqgGQ63djKOtoX5dmVhjMFfQkGg+7tOZ/RRhpLwGlia0iu2EFBEJfr/suSwEaMHHg9mU5u5fi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e1/GBGIt; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nbIckPkp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 599B6C4CEEF;
-	Thu, 14 Aug 2025 08:43:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755161047;
-	bh=CTmqLMuj0bCvkwKZAg1Un//8JJ/uJlUZHANgFIqPtcA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nbIckPkpIEKyJ2nMayYZEQWySgIgwvq+Q87fMBsC5439jXwx7UjxtP6/3aRizI0iv
-	 ijsnrrrpc8/3O6G/xs9aYaXyUBJeY0IX4fqyj3/x/rGOzs3QvqOtEfqO4IsrCj1EJJ
-	 vVTmwcSsXtJ+0YCx16H+VWsKJOqsPoCy1fgAXOLlGkTP8ir2BQUm7OaO8V1W2MBlEh
-	 imVNM6O/c1ae9lGeBjLpZoDfgKf1bT+2dj2T7y2GbzlYFwT1eLdqkINwalGzjVIgUn
-	 KmVdVPjlyrTerI/WOq7DBLaaWbpmX/v+w8GbjVLyRf5VAICnpi3ce09BCy/VxWeJ9r
-	 2nFsXdboCSbeg==
-Date: Thu, 14 Aug 2025 11:43:42 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Kees Cook <kees@kernel.org>, David Hildenbrand <david@redhat.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-	Xu Xin <xu.xin16@zte.com.cn>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	David Rientjes <rientjes@google.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-	Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	Matthew Wilcox <willy@infradead.org>,
-	Mateusz Guzik <mjguzik@gmail.com>, linux-s390@vger.kernel.org,
-	linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 10/10] mm: replace mm->flags with bitmap entirely and set
- to 64 bits
-Message-ID: <aJ2hvmqj-wREpqXH@kernel.org>
-References: <cover.1755012943.git.lorenzo.stoakes@oracle.com>
- <e1f6654e016d36c43959764b01355736c5cbcdf8.1755012943.git.lorenzo.stoakes@oracle.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e1/GBGIt"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-45a1b066b5eso3225125e9.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 14 Aug 2025 02:25:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1755163557; x=1755768357; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=caKBHp5j7/gqOP8pJYBB+m+OwHzfEzblmPGpxjdh1VA=;
+        b=e1/GBGItkOPuB/BOxvbBsSA+3Mp/+EGDKezCfzDumtsfOnDymU1qQsuqp1h3m4ins/
+         uSwWVQWecGGmv4gRfnTPnD52WrHG6pl12jc2dww6h8dXvs6+DbBCFiiHTotynHsyCQLy
+         T+U9BRpjk70eW33WGkk8KnWzOdzn0GHFm73b8MqOAg+FYPpoWdUKLemeWZXGaSd7ZqOL
+         vq4d8OaJ1Sl1vQAORBl6dCI1UycWjppSi2/8eUl2y7eDImUovShwkaQK7pRQTPDr7mQ0
+         Z18IC69loFOlgKsNGhX04LR8ySiSB4ocxzFkVtePP8567M1FYp6yXTMR4Zz8EhfzhTJE
+         euxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755163557; x=1755768357;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=caKBHp5j7/gqOP8pJYBB+m+OwHzfEzblmPGpxjdh1VA=;
+        b=ZMQqf6IUrsCiK7zEDENjurGiusJqCetJTkQYwVxYFegr56Xt2S/OQm6gkbQ2bPu4HS
+         e/hOpZ7EL9VO8e3JczElTGV19yBVjaPX0+vJGncZmZVdezl413HWhn20KueRL7blSwXf
+         t/d5ZqN0sseb5hG212AJ7G9SfbCaHt1CyX8LcOELwnkH6oFOcqLSHwyYvEMqF4On8UUZ
+         nGrMI3Iqf16HgV9uz7whR1N1Riqw27UDnQKqYFPlMtWxz2Okz4JBtTn53xMc3wtEdMxL
+         +jUEOl3XtzCO4fbig8isN9/OO08kK13J0BQIl7XtGfgA3pBsgdIlGWJU8rwTcl0oFO5T
+         3+iw==
+X-Forwarded-Encrypted: i=1; AJvYcCW+tl29iUplTTgxKTSGtwyew9HiZlNOWri6gyr+9R3FRxoaST/tD84+0ABRzOLJf0/D49cegIGcKYyuU2t69SA5@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjkLpUIUvQKa9Hc/dUxSR6szgQnbo1KRhsoA3X/N1hpGZnu4v3
+	zOQtE5MxIkOFJa5n7aBpTGoeB2sCz3F4qv+/PTpfM5VIuhAxRzObNG2rW2ahQ1Sj90I=
+X-Gm-Gg: ASbGnctapSn7QJwAl7kGhEqGv+zBEah4tfC7Ayus8anMxjjKyuMi1VfTjRBIuGJa/PW
+	FlYIhWlQTcjRiR4bNjZZ3+ww6ydvjFUq7zwE0CRa0edTUUha1iw6iGSY/XgxcWgNrtXhFT1m75f
+	ZG7p4O7oqHUFHznQjNVZiJ9EVErB87KEGkOog2/sSqNI89W7XvXBAGtJSh+LGH+DqriT0tFpPhK
+	cFG14eoLiPSVErf1KEwiaepKcUAkH4+LW2T54xJLaf3QJ3RwAtBNrIv6OUlrQ4oSU/VXw/IcSkr
+	xtoHRKSYng5czTCCkuym/OFa6lyEx3ZtJr0kzWQzA+f3sEeKaaanfLFVn6axarrzBsj5DYFggt3
+	c1T6TANpV7cYBIx1bMXCqKkdke+F7lXU=
+X-Google-Smtp-Source: AGHT+IFFjX/pyxO97kvg4fUgCnvfBjzIV9RmUUCrFRLJzwl3KMUkNYunWOuq124cI/SZDDfNBj88iQ==
+X-Received: by 2002:a05:600c:450e:b0:456:496:2100 with SMTP id 5b1f17b1804b1-45a1b6753a2mr19665655e9.31.1755163557196;
+        Thu, 14 Aug 2025 02:25:57 -0700 (PDT)
+Received: from ho-tower-lan.lan ([185.48.76.109])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45a1c76e9basm14536775e9.21.2025.08.14.02.25.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Aug 2025 02:25:56 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+Subject: [PATCH v7 00/12] perf: arm_spe: Armv8.8 SPE features
+Date: Thu, 14 Aug 2025 10:25:22 +0100
+Message-Id: <20250814-james-perf-feat_spe_eft-v7-0-6a743f7fa259@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e1f6654e016d36c43959764b01355736c5cbcdf8.1755012943.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIKrnWgC/43R20oDMRAG4Fcpe21kck688j2klGkyaSO6uyRlU
+ Urf3WxBVllWvPwD880h165SyVS7p921KzTlmoe+Bfuw68IZ+xOxHFvuBAgNkgv2iu9U2UglsUR
+ 4OdSRDpQuzJgQk4oukfddqx4Lpfxxl1/2LZ9zvQzl895o4vPrtyk3zYkzYAKDgKjAhuCe33KPZ
+ XgcymnucQc0mL+BGJUDcqSc5j+BeapJLJNo4bch0SAEjv6IGMHgCpILZEBvQ7JBlh8h+OQdeLm
+ C1AJZwbch1SBALazikFyKK0j/E9LzavYYtJTtRLi+kVkgB24bMg0yEZPyTlv3+7f2t9vtCzTYw
+ CptAgAA
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
+ Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Zenghui Yu <yuzenghui@huawei.com>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>, 
+ Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org, 
+ kvmarm@lists.linux.dev, James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.14.0
 
-On Tue, Aug 12, 2025 at 04:44:19PM +0100, Lorenzo Stoakes wrote:
-> Now we have updated all users of mm->flags to use the bitmap accessors,
-> repalce it with the bitmap version entirely.
-> 
-> We are then able to move to having 64 bits of mm->flags on both 32-bit and
-> 64-bit architectures.
-> 
-> We also update the VMA userland tests to ensure that everything remains
-> functional there.
-> 
-> No functional changes intended, other than there now being 64 bits of
-> available mm_struct flags.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Support 3 new SPE features: FEAT_SPEv1p4 filters, FEAT_SPE_EFT extended
+filtering, and SPE_FEAT_FDS data source filtering. The features are
+independent can be applied separately:
 
-Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+  * Prerequisite sysreg changes - patch 1
+  * FEAT_SPEv1p4 - patches 2 - 3
+  * FEAT_SPE_EFT - patch 4
+  * FEAT_SPE_FDS - patches 5 - 9
+  * FEAT_SPE_FDS Perf tool changes - patches 10 - 12
 
-> ---
->  include/linux/mm.h               | 12 ++++++------
->  include/linux/mm_types.h         | 14 +++++---------
->  include/linux/sched/coredump.h   |  2 +-
->  tools/testing/vma/vma_internal.h | 19 +++++++++++++++++--
->  4 files changed, 29 insertions(+), 18 deletions(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 34311ebe62cc..b61e2d4858cf 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -724,32 +724,32 @@ static inline void assert_fault_locked(struct vm_fault *vmf)
->  
->  static inline bool mm_flags_test(int flag, const struct mm_struct *mm)
->  {
-> -	return test_bit(flag, ACCESS_PRIVATE(&mm->_flags, __mm_flags));
-> +	return test_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
->  }
->  
->  static inline bool mm_flags_test_and_set(int flag, struct mm_struct *mm)
->  {
-> -	return test_and_set_bit(flag, ACCESS_PRIVATE(&mm->_flags, __mm_flags));
-> +	return test_and_set_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
->  }
->  
->  static inline bool mm_flags_test_and_clear(int flag, struct mm_struct *mm)
->  {
-> -	return test_and_clear_bit(flag, ACCESS_PRIVATE(&mm->_flags, __mm_flags));
-> +	return test_and_clear_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
->  }
->  
->  static inline void mm_flags_set(int flag, struct mm_struct *mm)
->  {
-> -	set_bit(flag, ACCESS_PRIVATE(&mm->_flags, __mm_flags));
-> +	set_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
->  }
->  
->  static inline void mm_flags_clear(int flag, struct mm_struct *mm)
->  {
-> -	clear_bit(flag, ACCESS_PRIVATE(&mm->_flags, __mm_flags));
-> +	clear_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
->  }
->  
->  static inline void mm_flags_clear_all(struct mm_struct *mm)
->  {
-> -	bitmap_zero(ACCESS_PRIVATE(&mm->_flags, __mm_flags), NUM_MM_FLAG_BITS);
-> +	bitmap_zero(ACCESS_PRIVATE(&mm->flags, __mm_flags), NUM_MM_FLAG_BITS);
->  }
->  
->  extern const struct vm_operations_struct vma_dummy_vm_ops;
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 25577ab39094..47d2e4598acd 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -932,7 +932,7 @@ struct mm_cid {
->   * Opaque type representing current mm_struct flag state. Must be accessed via
->   * mm_flags_xxx() helper functions.
->   */
-> -#define NUM_MM_FLAG_BITS BITS_PER_LONG
-> +#define NUM_MM_FLAG_BITS (64)
->  typedef struct {
->  	__private DECLARE_BITMAP(__mm_flags, NUM_MM_FLAG_BITS);
->  } mm_flags_t;
-> @@ -1119,11 +1119,7 @@ struct mm_struct {
->  		/* Architecture-specific MM context */
->  		mm_context_t context;
->  
-> -		/* Temporary union while we convert users to mm_flags_t. */
-> -		union {
-> -			unsigned long flags; /* Must use atomic bitops to access */
-> -			mm_flags_t _flags;   /* Must use mm_flags_* helpers to access */
-> -		};
-> +		mm_flags_t flags; /* Must use mm_flags_* hlpers to access */
->  
->  #ifdef CONFIG_AIO
->  		spinlock_t			ioctx_lock;
-> @@ -1236,7 +1232,7 @@ struct mm_struct {
->  /* Read the first system word of mm flags, non-atomically. */
->  static inline unsigned long __mm_flags_get_word(struct mm_struct *mm)
->  {
-> -	unsigned long *bitmap = ACCESS_PRIVATE(&mm->_flags, __mm_flags);
-> +	unsigned long *bitmap = ACCESS_PRIVATE(&mm->flags, __mm_flags);
->  
->  	return bitmap_read(bitmap, 0, BITS_PER_LONG);
->  }
-> @@ -1245,7 +1241,7 @@ static inline unsigned long __mm_flags_get_word(struct mm_struct *mm)
->  static inline void __mm_flags_set_word(struct mm_struct *mm,
->  				       unsigned long value)
->  {
-> -	unsigned long *bitmap = ACCESS_PRIVATE(&mm->_flags, __mm_flags);
-> +	unsigned long *bitmap = ACCESS_PRIVATE(&mm->flags, __mm_flags);
->  
->  	bitmap_copy(bitmap, &value, BITS_PER_LONG);
->  }
-> @@ -1253,7 +1249,7 @@ static inline void __mm_flags_set_word(struct mm_struct *mm,
->  /* Obtain a read-only view of the bitmap. */
->  static inline const unsigned long *__mm_flags_get_bitmap(const struct mm_struct *mm)
->  {
-> -	return (const unsigned long *)ACCESS_PRIVATE(&mm->_flags, __mm_flags);
-> +	return (const unsigned long *)ACCESS_PRIVATE(&mm->flags, __mm_flags);
->  }
->  
->  #define MM_MT_FLAGS	(MT_FLAGS_ALLOC_RANGE | MT_FLAGS_LOCK_EXTERN | \
-> diff --git a/include/linux/sched/coredump.h b/include/linux/sched/coredump.h
-> index 19ecfcceb27a..079ae5a97480 100644
-> --- a/include/linux/sched/coredump.h
-> +++ b/include/linux/sched/coredump.h
-> @@ -20,7 +20,7 @@ static inline unsigned long __mm_flags_get_dumpable(struct mm_struct *mm)
->  
->  static inline void __mm_flags_set_mask_dumpable(struct mm_struct *mm, int value)
->  {
-> -	unsigned long *bitmap = ACCESS_PRIVATE(&mm->_flags, __mm_flags);
-> +	unsigned long *bitmap = ACCESS_PRIVATE(&mm->flags, __mm_flags);
->  
->  	set_mask_bits(bitmap, MMF_DUMPABLE_MASK, value);
->  }
-> diff --git a/tools/testing/vma/vma_internal.h b/tools/testing/vma/vma_internal.h
-> index cb1c2a8afe26..f13354bf0a1e 100644
-> --- a/tools/testing/vma/vma_internal.h
-> +++ b/tools/testing/vma/vma_internal.h
-> @@ -249,6 +249,14 @@ struct mutex {};
->  #define DEFINE_MUTEX(mutexname) \
->  	struct mutex mutexname = {}
->  
-> +#define DECLARE_BITMAP(name, bits) \
-> +	unsigned long name[BITS_TO_LONGS(bits)]
-> +
-> +#define NUM_MM_FLAG_BITS (64)
-> +typedef struct {
-> +	__private DECLARE_BITMAP(__mm_flags, NUM_MM_FLAG_BITS);
-> +} mm_flags_t;
-> +
->  struct mm_struct {
->  	struct maple_tree mm_mt;
->  	int map_count;			/* number of VMAs */
-> @@ -260,7 +268,7 @@ struct mm_struct {
->  
->  	unsigned long def_flags;
->  
-> -	unsigned long flags; /* Must use atomic bitops to access */
-> +	mm_flags_t flags; /* Must use mm_flags_* helpers to access */
->  };
->  
->  struct vm_area_struct;
-> @@ -1333,6 +1341,13 @@ static inline void userfaultfd_unmap_complete(struct mm_struct *mm,
->  {
->  }
->  
-> +# define ACCESS_PRIVATE(p, member) ((p)->member)
-> +
-> +static inline bool mm_flags_test(int flag, const struct mm_struct *mm)
-> +{
-> +	return test_bit(flag, ACCESS_PRIVATE(&mm->flags, __mm_flags));
-> +}
-> +
->  /*
->   * Denies creating a writable executable mapping or gaining executable permissions.
->   *
-> @@ -1363,7 +1378,7 @@ static inline void userfaultfd_unmap_complete(struct mm_struct *mm,
->  static inline bool map_deny_write_exec(unsigned long old, unsigned long new)
->  {
->  	/* If MDWE is disabled, we have nothing to deny. */
-> -	if (!test_bit(MMF_HAS_MDWE, &current->mm->flags))
-> +	if (mm_flags_test(MMF_HAS_MDWE, current->mm))
->  		return false;
->  
->  	/* If the new VMA is not executable, we have nothing to deny. */
-> -- 
-> 2.50.1
-> 
+The first two features will work with old Perfs but a Perf change to
+parse the new config4 is required for the last feature.
 
+---
+Changes in v7:
+- Fix typo in docs: s/data_src_filter/inv_data_src_filter
+- Pickup trailers
+- Link to v6: https://lore.kernel.org/r/20250808-james-perf-feat_spe_eft-v6-0-6daf498578c8@linaro.org
+
+Changes in v6:
+- Rebase to resolve conflict with BRBE changes in el2_setup.h
+- Link to v5: https://lore.kernel.org/r/20250721-james-perf-feat_spe_eft-v5-0-a7bc533485a1@linaro.org
+
+Changes in v5:
+- Forgot to pickup tags from v4
+- Forgot to drop test and review tags on v4 patches that were
+  significantly modified
+- Update commit message for data source filtering to mention inversion
+- Link to v4: https://lore.kernel.org/r/20250721-james-perf-feat_spe_eft-v4-0-0a527410f8fd@linaro.org
+
+Changes in v4:
+- Rewrite "const u64 feat_spe_eft_bits" inline
+- Invert data source filter so that it's possible to exclude all data
+  sources without adding an additional 'enable filter' flag
+- Add a macro in el2_setup.h to check for an SPE version
+- Probe valid filter bits instead of hardcoding them
+- Take in Leo's commit to expose the filter bits as it depends on the
+  new filter probing
+- Link to v3: https://lore.kernel.org/r/20250605-james-perf-feat_spe_eft-v3-0-71b0c9f98093@linaro.org
+
+Changes in v3:
+- Use PMSIDR_EL1_FDS instead of 1 << PMSIDR_EL1_FDS_SHIFT
+- Add VNCR offsets
+- Link to v2: https://lore.kernel.org/r/20250529-james-perf-feat_spe_eft-v2-0-a01a9baad06a@linaro.org
+
+Changes in v2:
+- Fix detection of FEAT_SPE_FDS in el2_setup.h
+- Pickup Marc Z's sysreg change instead which matches the json
+- Restructure and expand docs changes
+- Link to v1: https://lore.kernel.org/r/20250506-james-perf-feat_spe_eft-v1-0-dd480e8e4851@linaro.org
+
+---
+James Clark (11):
+      arm64: sysreg: Add new PMSFCR_EL1 fields and PMSDSFR_EL1 register
+      perf: arm_spe: Support FEAT_SPEv1p4 filters
+      perf: arm_spe: Add support for FEAT_SPE_EFT extended filtering
+      arm64/boot: Factor out a macro to check SPE version
+      arm64/boot: Enable EL2 requirements for SPE_FEAT_FDS
+      KVM: arm64: Add trap configs for PMSDSFR_EL1
+      perf: Add perf_event_attr::config4
+      perf: arm_spe: Add support for filtering on data source
+      tools headers UAPI: Sync linux/perf_event.h with the kernel sources
+      perf tools: Add support for perf_event_attr::config4
+      perf docs: arm-spe: Document new SPE filtering features
+
+Leo Yan (1):
+      perf: arm_spe: Expose event filter
+
+ Documentation/arch/arm64/booting.rst      |  11 +++
+ arch/arm64/include/asm/el2_setup.h        |  28 ++++--
+ arch/arm64/include/asm/sysreg.h           |   9 --
+ arch/arm64/include/asm/vncr_mapping.h     |   2 +
+ arch/arm64/kvm/emulate-nested.c           |   1 +
+ arch/arm64/kvm/sys_regs.c                 |   1 +
+ arch/arm64/tools/sysreg                   |  13 ++-
+ drivers/perf/arm_spe_pmu.c                | 148 ++++++++++++++++++++++++++----
+ include/uapi/linux/perf_event.h           |   2 +
+ tools/include/uapi/linux/perf_event.h     |   2 +
+ tools/perf/Documentation/perf-arm-spe.txt | 104 +++++++++++++++++++--
+ tools/perf/tests/parse-events.c           |  14 ++-
+ tools/perf/util/parse-events.c            |  11 +++
+ tools/perf/util/parse-events.h            |   1 +
+ tools/perf/util/parse-events.l            |   1 +
+ tools/perf/util/pmu.c                     |   8 ++
+ tools/perf/util/pmu.h                     |   1 +
+ 17 files changed, 312 insertions(+), 45 deletions(-)
+---
+base-commit: 0cc53520e68bea7fb80fdc6bdf8d226d1b6a98d9
+change-id: 20250312-james-perf-feat_spe_eft-66cdf4d8fe99
+
+Best regards,
 -- 
-Sincerely yours,
-Mike.
+James Clark <james.clark@linaro.org>
+
