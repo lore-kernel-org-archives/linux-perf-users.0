@@ -1,84 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD371C5499;
-	Thu, 14 Aug 2025 17:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2092231986E;
+	Thu, 14 Aug 2025 20:06:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755191450; cv=none; b=isPCHPZlBZAfMX8Qf00/uOOFfwNL3eA/kCFhRFt4ZBSICyTHu4RGDVDshFqzgvRpmhJEcBceIOUFXht54TtS2RszNfdFhyMaMrivPL8xpS5qtABMAryTQHnhVyJ0SWlZjBC7xjjuIe2ozviyQmZCuifTXBfRlFyB8VBmUrL9hHU=
+	t=1755201979; cv=none; b=qb2BN2vX8ZI+qjILIGyDKdwqlRSj5bl47PJnFXVdJlw7zSVQOSLwczEhsw7zG+ccr8CgQKRhlLggQN4J2H9WCuvaai5rfo/mipSAVxlhZFEg+R0FsV7byIJe+8OZROuZDbMeUYFQ7AchDqhq7vjpSRZ88J1m2T2sBoPsGYlBhrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755191450; c=relaxed/simple;
-	bh=0UilVLBRQmcUeYVcORqikEOE/4O5h1ywi0EL0oU6T/I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OqirpuPy44Bi8PH9nOp6XNba1E9rvXm3EdX4M2AJWrEGmiWYgn18WIq/TtU0Y4DbvHQemogh5cDZtsF9oQ+rezpqifJ6vjTHv2zXGwHpMo8KO/l+1IYlkZpkcx01/mmpt6DfiRGaqeSodQ4gyRCH9NWKr1KwzB4smtWy//3HoiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZDpYYgn2; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1755201979; c=relaxed/simple;
+	bh=DSEVssbYUW7EyFNuLSgJP6Mv9qIDhRmUfjzP270dk4A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZpzUqrR8hfIFm64HhJNqvt5mA+QW02diLDOes83Xv5fk8Kb9kaM9znRHNEqkfYbtXdyfeRKC3q3W9JqxjaZvwKMhKOKDXUoLlFkpFuLy1cMzgZu4tYS20TV1RApSGoK9v0rDoDo5S11hR/V1Xhjt2TEsKNdJJMLfJOdPlbmA1X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XP9lAoce; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZDpYYgn2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755191449; x=1786727449;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=0UilVLBRQmcUeYVcORqikEOE/4O5h1ywi0EL0oU6T/I=;
-  b=ZDpYYgn2Tg65fZv1o0jIQPWB6jUXwCUbGVHifCVbol4RdRNIC9NgeON5
-   +mvhNZZyE7RD7MUYDWN51pSgi5IIxuxSBDAMbtUS4Fex4LFjsbZhv2t3o
-   LDGavOYwdjC9XmkCu3CqbvnV3hZEXYdnors/vNM3rJFXI3MOAVyNLrThN
-   uYyq7UpCYcTkNsVlER0g+d1qzy/rPBNCsNtAB49NGGDmBvUepNI2NikkY
-   YDRj46LxVJy+dfM8flTzGLX2t0IbIuZjb+0Xc6BMYiSIdoI1v8ZlNocyy
-   0dNNJmoNRXcIQXz+FH5okRttAF6sTEob/Nl+vbuOPj9AovXzlx1b5eG3N
-   w==;
-X-CSE-ConnectionGUID: eE6hNtUUQ9aIfk8DdFuXjw==
-X-CSE-MsgGUID: FpPPPn2PR1ST+l4h0BaXxg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11522"; a="61146678"
-X-IronPort-AV: E=Sophos;i="6.17,290,1747724400"; 
-   d="scan'208";a="61146678"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2025 10:10:47 -0700
-X-CSE-ConnectionGUID: s38axFLNR+u9VkMeyz1vbw==
-X-CSE-MsgGUID: iWDVuTODRmCXvlttYl9MbQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,290,1747724400"; 
-   d="scan'208";a="165996379"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2025 10:10:47 -0700
-Received: from [10.246.149.5] (kliang2-mobl1.ccr.corp.intel.com [10.246.149.5])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 23A0420B571C;
-	Thu, 14 Aug 2025 10:10:46 -0700 (PDT)
-Message-ID: <2166dd91-7838-4ba9-9a5f-43b7ba4a5ce2@linux.intel.com>
-Date: Thu, 14 Aug 2025 10:10:45 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XP9lAoce"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A05CC4CEED;
+	Thu, 14 Aug 2025 20:06:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755201977;
+	bh=DSEVssbYUW7EyFNuLSgJP6Mv9qIDhRmUfjzP270dk4A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XP9lAocefRcO21s2gc28mBdiZ0ZRwcyh8VXqxXpvYSfNV/hPuWrIxJzLm35ed38Pi
+	 /hJmwnzZyNeXbuVFF5FMp4WeN70XS5uaOUs1DXquSIBBv9FeRZ0UetCAgKewNE8RX9
+	 4rrHdY/pFMBzHKfH7NUekomLyG+JdLojM4zuEDgJdsHj9aGh5AzriobGPfw8sKdUcT
+	 60ph8erWUjJILDOOYSrc3nUXlGPvnF6nK04EeR3PCAJfY3XxcLhtFB60aULie5WRgR
+	 HpfdBypBrQflldgb+IeMQC8vRChl8KsdEojDigStV2yiUCQyY8gPfAyMnhUJXRnPK8
+	 /mONfczzJGqdw==
+Date: Thu, 14 Aug 2025 13:06:15 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Yunseong Kim <ysk@kzalloc.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Liang Kan <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Collin Funk <collin.funk1@gmail.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf test: Add test case for event group throttling with
+ inactive events
+Message-ID: <aJ5Bt1q3AZFxxz_U@google.com>
+References: <20250813163251.490451-2-ysk@kzalloc.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf test: Add test case for event group throttling with
- inactive events
-To: Yunseong Kim <ysk@kzalloc.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
- James Clark <james.clark@linaro.org>, Collin Funk <collin.funk1@gmail.com>,
- Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20250813163251.490451-2-ysk@kzalloc.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 In-Reply-To: <20250813163251.490451-2-ysk@kzalloc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
+Hi Yunseong,
 
-
-On 2025-08-13 9:32 a.m., Yunseong Kim wrote:
+On Wed, Aug 13, 2025 at 04:32:52PM +0000, Yunseong Kim wrote:
 > A recent UBSAN shift-out-of-bounds report was identified when throttling
 > event groups that included inactive (PERF_EVENT_STATE_OFF) events.
 > This occurred because pmu->start()/stop() could be called on these events,
@@ -90,6 +68,19 @@ On 2025-08-13 9:32 a.m., Yunseong Kim wrote:
 > 
 > Introduce a new perf test suite, "event group throttle", to verify this
 > fix and prevent regressions.
+
+Thanks for your work!
+
+I'm curious what happens if it runs on unfixed kernels.  I suspect this
+should be in the selftest so that it can tie with the kernel fix.
+
+By having this in the perf tools test suite, you cannot guarantee if the
+kernel has the fix.  And it may turn the kernel into an unstable state
+easily.
+
+Thanks,
+Namhyung
+
 > 
 > The test sets up a scenario designed to trigger frequent throttling:
 > 1. A parent event (leader) is created with sample_period = 1.
@@ -102,20 +93,7 @@ On 2025-08-13 9:32 a.m., Yunseong Kim wrote:
 > 
 > The test monitors /dev/kmsg during execution, looking for "UBSAN",
 > "Invalid PMEV" "WARNING:", or "BUG:" messages.
-
-I don't think the test case should focus on the error messages. It can
-easily be found by many other ways.
-Also, the current bug can trigger errors in kmsg. You cannot guarantee
-that all the failing cases trigger an error message.
-
-I think the test should make sure that the closed event cannot be
-accidentally reopened by the throttling mechanism.
-If so, I think it would be better to compare the results of the disabled
-event before and after throttling. There should be noting count.
-The enabled event should be count normally.
-
-Thanks,
-Kan>
+> 
 > To ensure robustness and avoid false positives from unrelated prior kernel
 > messages, the test opens /dev/kmsg and uses lseek(SEEK_END) to skip all
 > existing log entries before starting the test loop. If /dev/kmsg cannot be
@@ -311,4 +289,6 @@ Kan>
 >  
 >  /*
 >   * PowerPC and S390 do not support creation of instruction breakpoints using the
-
+> -- 
+> 2.50.0
+> 
