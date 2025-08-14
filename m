@@ -1,257 +1,101 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA922FAC07
-	for <linux-perf-users@vger.kernel.org>; Thu, 14 Aug 2025 09:26:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F9661459EA;
+	Thu, 14 Aug 2025 09:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755163578; cv=none; b=rg6m69UeTmuYCVZcV8O0XqRAi4keaq83R7nexIcbYwikNuSVdTSfSKWDhVKKAsfsG2Z6/hi/8X/4aXXTjaOnopuELRHTfHXe2dCgiieaPK12O08M8vXbLbquaR3DXmHwZP7Hz5b6ZFbTaXXibxMCSR2gM/NR7kki3iqIrclD2ZY=
+	t=1755164026; cv=none; b=WzJtG/h6CsVBlTyYTDVc7qK42oTQMPBCDoHc34jJmiab8/L3YrLnPXSsuWVAX0fLB//BuZOP3jfwa3AQeZ2G/ypDBcPY7a4bO999pPRXzIsrVKBVL46AfYhEyqjLUNQltKnMcE8Cpp7KOWkJcccZ05t8+bWB6Wa7X3kCY4riP2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755163578; c=relaxed/simple;
-	bh=aRUWGynzXd2I0iPJ8E252lMe7rGfIx7dGynoHirUSWM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=G3XG78s1NzFP62l3S09mdJ7s8NWhwG2lUpk3SJtlWnFtJlVrNoE/wxcdojtjBTMYWLIw5d0bIppn5dykhPv8bR4p1lnbpUxH4pLvR6mZDUvTaHN4I9HAcg5QHv6YtiqzAkn6IFPuJt+XvzOe5YrUYkCtUvTk9ezGs5xvMs3UsL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j4LEOplN; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1755164026; c=relaxed/simple;
+	bh=7iaTzwlnmhwbA+apBzSECwy15FMAd1JlpcZ8t4dIBdQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VZ0BpCj+JvaxConaVeGpq0HuA+pra7A9UHshRYl+LFkeulebxXkuscddLbAjcszl3/xnruyjhM8w0h6diOcItV+XOKpkrsv7RHzQOf37xlIyR+KndWVoPSWGMxuEJ4XdNc3ssz+WSjSZ1goTKLq6SOtVJGuy3rU1gaBeUSaMloc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=myO30dyp; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j4LEOplN"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-45a1abf5466so4566905e9.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 14 Aug 2025 02:26:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1755163574; x=1755768374; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aJMmlptoopG7uLnpNHx3BFeWdRFU3hEImM+p7yUrZvk=;
-        b=j4LEOplNcrW7X8kwb1CnXfaTbEajo03DB6g7x6QZwdzE/a38HKx97UupxLT/NUIIlG
-         qxNIDWbLJSk90hnzTmUSHOulWTFuScvLFfNpAQdDCRstlDx1tmOAy/tuwRwuUCeu3NXd
-         VlAE/QJ9CuCfU0oVVOq2eoTzz/G4i9Ll0AYTS9XUCEbGRLT8QegIvpKHUKuCzkQXrHna
-         bH71/jCbgq4666O2BcycxEISrukrFtAaAjWbFRDfKAMjnvc2xLRabayGhD/X7XkJ1bzS
-         uuY75busUZurog/HkA+rDz/Nx6GueHkdgtNVawU/aF8n6/Eizlo2ZqHplKNZb8vpbW/P
-         uFDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755163574; x=1755768374;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aJMmlptoopG7uLnpNHx3BFeWdRFU3hEImM+p7yUrZvk=;
-        b=FGjwqTkXerh3UbiNvShgboNaqYVl3L4zEnJDN3aJY3072kt07zqVq51JyIpaejnr7B
-         dUXqGrcLTRysc+S94AWjjX8PcH9tfpKQC57e6Jq3tvSHDU6Ar20EX79vVFsI2GiHbdhn
-         D+hG0jXHfReRJVihmW1sKrnN3XVbGnzCr8x7Xfotwlh3Mr74FtlbUKxGfaVDHEx3wJC3
-         /AWM/6SNCc+NhOJ7M7FTr6LG5gJKm280E+Fu/mH/oirjQ4o1Fh17JHsWTS5f+Ok1oILp
-         +w5Kylht5A/xcCABGSfdD3LMrP+kCVYjnafHN6sauxsZJD/noisELIaHjfk3BW8jLkJ2
-         LV+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUL0Ruaer26wFUUgY8/IY0NM+48B3MzDIGUNr6DI399zDBfMrcM+JsWBcFIGMm4pDbb6OsU2s/erZA8FrRhJ4l3@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywi8nBjd9QgXs9x6lj5JEgAXsEwu3fYU/dUdHkfQ007olvocCr9
-	jzu0p0zUT90hHAr8J703BJ0+YDwCV2ZjeX0LFrDhRQUAJ4w64pVBg7ArnFTrM3UkflI=
-X-Gm-Gg: ASbGnctzXc7jAjAjd9JYw35iF7oAbZb5UUinlHzjYcZ/q5PRSOxVLlmylCVUFxmbDoN
-	LjRSu7zv/IAEvvmBDjOKwdEU+1LO68MqVH5F9mQxz+TiQeI/m2Ih/nzS8AhHgvPyrStnTrgfM7f
-	Ap+NdLIYwzpvjHWQUG1Elyx/j/jB2zZKjgM9ExCKTXxwb2ufpjDvZJ9n5EyYJ7a+hz+evijHJRK
-	CKVC9KgLYFxbDZ5dVk6v5fVVTApeJEIUXfPXDY4ZxaYHqkEISTYpXsTlIAL/lvfq2TOlNN7HWkT
-	20FAGVnZa7scDTszJVFicFzebglKuegwYX0bD4ufncu6oVKvvwDgak5KmUQ50BqPqMqEeobAjVU
-	G2i+Ov1W/qM/uo+x/LeMxxT7pnhnj5RA=
-X-Google-Smtp-Source: AGHT+IGGwcoMzDXS1HdgNpJCFBXwesMKa6+WGWKlGGM+FBXwvfsNCs5rIY/Vzr6H0lhl8WHOxlwXhg==
-X-Received: by 2002:a05:600c:3006:b0:459:db88:c4ca with SMTP id 5b1f17b1804b1-45a1b65c7c9mr13077885e9.3.1755163573684;
-        Thu, 14 Aug 2025 02:26:13 -0700 (PDT)
-Received: from ho-tower-lan.lan ([185.48.76.109])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45a1c76e9basm14536775e9.21.2025.08.14.02.26.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Aug 2025 02:26:13 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Thu, 14 Aug 2025 10:25:34 +0100
-Subject: [PATCH v7 12/12] perf docs: arm-spe: Document new SPE filtering
- features
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="myO30dyp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=PO
+	6/s9/udkUFFSSjh/2mbrajibVc2GAUeD7nVCqBEb0=; b=myO30dypPoDV2Da2zT
+	ihBgwTJ5v+slnYd9+qv2ZtqiEXYKmo3AruGuLNCjD1aYQZmtx6phlV1Huja70Gy6
+	qMX+C1/W0IHr+8iYic6R4mYpLEjLGg/OC9tAjQUpVOEGvcyHBE5vZJi+N4wnPDbm
+	+yS8O12XTQKvWxfKF7BR4xkP8=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wCH7ltXrZ1oPpJrBw--.9386S2;
+	Thu, 14 Aug 2025 17:33:13 +0800 (CST)
+From: tanze0x01@163.com
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	tanze <tanze0x01@163.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH v4] perf/x86/zhaoxin: Fix instructions error by missing fixedctr member
+Date: Thu, 14 Aug 2025 17:33:09 +0800
+Message-Id: <20250814093309.1580835-1-tanze0x01@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250814-james-perf-feat_spe_eft-v7-12-6a743f7fa259@linaro.org>
-References: <20250814-james-perf-feat_spe_eft-v7-0-6a743f7fa259@linaro.org>
-In-Reply-To: <20250814-james-perf-feat_spe_eft-v7-0-6a743f7fa259@linaro.org>
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
- Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Zenghui Yu <yuzenghui@huawei.com>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>, 
- Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org, 
- kvmarm@lists.linux.dev, James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.14.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wCH7ltXrZ1oPpJrBw--.9386S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7KF4fAr1kuFWfZry7Gry5twb_yoW8WrW5pF
+	nrJwnxtFW8WanFq34rtan7A3yY9r4fKayqgr1UJw13X3s8Xwn2qFW8Kry5uasxJry29Fyf
+	WwnFv343Z398Aa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jTmhOUUUUU=
+X-CM-SenderInfo: xwdq6vkq0qiqqrwthudrp/xtbBzxWpqmidRI+m8gABsy
 
-FEAT_SPE_EFT and FEAT_SPE_FDS etc have new user facing format attributes
-so document them. Also document existing 'event_filter' bits that were
-missing from the doc and the fact that latency values are stored in the
-weight field.
+From: tanze <tanze0x01@163.com>
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
-Tested-by: Leo Yan <leo.yan@arm.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: James Clark <james.clark@linaro.org>
+Perf's instructions event tests on Zhaoxin CPUs may exhibit:
+
+  $perf stat -e instructions,cycles ls -l
+
+  ......
+  Performance counter stats for 'ls -l':
+
+                 0      instructions                     #    0.00  insn per cycle
+         9,488,278      cycles
+
+       0.004365407 seconds time elapsed
+
+       0.003303000 seconds user
+       0.001099000 seconds sys
+
+The absence of the fixedctr member leads to an incorrect hwc->event_base
+value on Zhaoxin CPUs, causing a discrepancy in the instruction count
+reported by perf stat. This commit resolves the instruction count issue
+by properly initializing the fixedctr member.
+
+Fixes: 149fd4712bcd ("perf/x86/intel: Support Perfmon MSRs aliasing")
+Signed-off-by: tanze <tanze0x01@163.com>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+
 ---
- tools/perf/Documentation/perf-arm-spe.txt | 104 +++++++++++++++++++++++++++---
- 1 file changed, 95 insertions(+), 9 deletions(-)
+v1-v3:https://lore.kernel.org/all/20250620023757.1429898-1-tanze@kylinos.cn/
 
-diff --git a/tools/perf/Documentation/perf-arm-spe.txt b/tools/perf/Documentation/perf-arm-spe.txt
-index 37afade4f1b2..c7d1032ff219 100644
---- a/tools/perf/Documentation/perf-arm-spe.txt
-+++ b/tools/perf/Documentation/perf-arm-spe.txt
-@@ -141,27 +141,65 @@ Config parameters
- These are placed between the // in the event and comma separated. For example '-e
- arm_spe/load_filter=1,min_latency=10/'
- 
--  branch_filter=1     - collect branches only (PMSFCR.B)
--  event_filter=<mask> - filter on specific events (PMSEVFR) - see bitfield description below
-+  event_filter=<mask> - logical AND filter on specific events (PMSEVFR) - see bitfield description below
-+  inv_event_filter=<mask> - logical OR to filter out specific events (PMSNEVFR, FEAT_SPEv1p2) - see bitfield description below
-   jitter=1            - use jitter to avoid resonance when sampling (PMSIRR.RND)
--  load_filter=1       - collect loads only (PMSFCR.LD)
-   min_latency=<n>     - collect only samples with this latency or higher* (PMSLATFR)
-   pa_enable=1         - collect physical address (as well as VA) of loads/stores (PMSCR.PA) - requires privilege
-   pct_enable=1        - collect physical timestamp instead of virtual timestamp (PMSCR.PCT) - requires privilege
--  store_filter=1      - collect stores only (PMSFCR.ST)
-   ts_enable=1         - enable timestamping with value of generic timer (PMSCR.TS)
-   discard=1           - enable SPE PMU events but don't collect sample data - see 'Discard mode' (PMBLIMITR.FM = DISCARD)
-+  data_src_filter=<mask> - mask to filter from 0-63 possible data sources (PMSDSFR, FEAT_SPE_FDS) - See 'Data source filtering'
- 
- +++*+++ Latency is the total latency from the point at which sampling started on that instruction, rather
- than only the execution latency.
- 
--Only some events can be filtered on; these include:
--
--  bit 1     - instruction retired (i.e. omit speculative instructions)
-+Only some events can be filtered on using 'event_filter' bits. The overall
-+filter is the logical AND of these bits, for example if bits 3 and 5 are set
-+only samples that have both 'L1D cache refill' AND 'TLB walk' are recorded. When
-+FEAT_SPEv1p2 is implemented 'inv_event_filter' can also be used to exclude
-+events that have any (OR) of the filter's bits set. For example setting bits 3
-+and 5 in 'inv_event_filter' will exclude any events that are either L1D cache
-+refill OR TLB walk. If the same bit is set in both filters it's UNPREDICTABLE
-+whether the sample is included or excluded. Filter bits for both event_filter
-+and inv_event_filter are:
-+
-+  bit 1     - Instruction retired (i.e. omit speculative instructions)
-+  bit 2     - L1D access (FEAT_SPEv1p4)
-   bit 3     - L1D refill
-+  bit 4     - TLB access (FEAT_SPEv1p4)
-   bit 5     - TLB refill
--  bit 7     - mispredict
--  bit 11    - misaligned access
-+  bit 6     - Not taken event (FEAT_SPEv1p2)
-+  bit 7     - Mispredict
-+  bit 8     - Last level cache access (FEAT_SPEv1p4)
-+  bit 9     - Last level cache miss (FEAT_SPEv1p4)
-+  bit 10    - Remote access (FEAT_SPEv1p4)
-+  bit 11    - Misaligned access (FEAT_SPEv1p1)
-+  bit 12-15 - IMPLEMENTATION DEFINED events (when implemented)
-+  bit 16    - Transaction (FEAT_TME)
-+  bit 17    - Partial or empty SME or SVE predicate (FEAT_SPEv1p1)
-+  bit 18    - Empty SME or SVE predicate (FEAT_SPEv1p1)
-+  bit 19    - L2D access (FEAT_SPEv1p4)
-+  bit 20    - L2D miss (FEAT_SPEv1p4)
-+  bit 21    - Cache data modified (FEAT_SPEv1p4)
-+  bit 22    - Recently fetched (FEAT_SPEv1p4)
-+  bit 23    - Data snooped (FEAT_SPEv1p4)
-+  bit 24    - Streaming SVE mode event (when FEAT_SPE_SME is implemented), or
-+              IMPLEMENTATION DEFINED event 24 (when implemented, only versions
-+              less than FEAT_SPEv1p4)
-+  bit 25    - SMCU or external coprocessor operation event when FEAT_SPE_SME is
-+              implemented, or IMPLEMENTATION DEFINED event 25 (when implemented,
-+              only versions less than FEAT_SPEv1p4)
-+  bit 26-31 - IMPLEMENTATION DEFINED events (only versions less than FEAT_SPEv1p4)
-+  bit 48-63 - IMPLEMENTATION DEFINED events (when implemented)
-+
-+For IMPLEMENTATION DEFINED bits, refer to the CPU TRM if these bits are
-+implemented.
-+
-+The driver will reject events if requested filter bits require unimplemented SPE
-+versions, but will not reject filter bits for unimplemented IMPDEF bits or when
-+their related feature is not present (e.g. SME). For example, if FEAT_SPEv1p2 is
-+not implemented, filtering on "Not taken event" (bit 6) will be rejected.
- 
- So to sample just retired instructions:
- 
-@@ -171,6 +209,31 @@ or just mispredicted branches:
- 
-   perf record -e arm_spe/event_filter=0x80/ -- ./mybench
- 
-+When set, the following filters can be used to select samples that match any of
-+the operation types (OR filtering). If only one is set then only samples of that
-+type are collected:
-+
-+  branch_filter=1     - Collect branches (PMSFCR.B)
-+  load_filter=1       - Collect loads (PMSFCR.LD)
-+  store_filter=1      - Collect stores (PMSFCR.ST)
-+
-+When extended filtering is supported (FEAT_SPE_EFT), SIMD and float
-+pointer operations can also be selected:
-+
-+  simd_filter=1         - Collect SIMD loads, stores and operations (PMSFCR.SIMD)
-+  float_filter=1        - Collect floating point loads, stores and operations (PMSFCR.FP)
-+
-+When extended filtering is supported (FEAT_SPE_EFT), operation type filters can
-+be changed to AND using _mask fields. For example samples could be selected if
-+they are store AND SIMD by setting 'store_filter=1,simd_filter=1,
-+store_filter_mask=1,simd_filter_mask=1'. The new masks are as follows:
-+
-+  branch_filter_mask=1  - Change branch filter behavior from OR to AND (PMSFCR.Bm)
-+  load_filter_mask=1    - Change load filter behavior from OR to AND (PMSFCR.LDm)
-+  store_filter_mask=1   - Change store filter behavior from OR to AND (PMSFCR.STm)
-+  simd_filter_mask=1    - Change SIMD filter behavior from OR to AND (PMSFCR.SIMDm)
-+  float_filter_mask=1   - Change floating point filter behavior from OR to AND (PMSFCR.FPm)
-+
- Viewing the data
- ~~~~~~~~~~~~~~~~~
- 
-@@ -204,6 +267,10 @@ Memory access details are also stored on the samples and this can be viewed with
- 
-   perf report --mem-mode
- 
-+The latency value from the SPE sample is stored in the 'weight' field of the
-+Perf samples and can be displayed in Perf script and report outputs by enabling
-+its display from the command line.
-+
- Common errors
- ~~~~~~~~~~~~~
- 
-@@ -247,6 +314,25 @@ to minimize output. Then run perf stat:
-   perf record -e arm_spe/discard/ -a -N -B --no-bpf-event -o - > /dev/null &
-   perf stat -e SAMPLE_FEED_LD
- 
-+Data source filtering
-+~~~~~~~~~~~~~~~~~~~~~
-+
-+When FEAT_SPE_FDS is present, 'inv_data_src_filter' can be used as a mask to
-+filter on a subset (0 - 63) of possible data source IDs. The full range of data
-+sources is 0 - 65535 although these are unlikely to be used in practice. Data
-+sources are IMPDEF so refer to the TRM for the mappings. Each bit N of the
-+filter maps to data source N. The filter is an OR of all the bits, and the value
-+provided inv_data_src_filter is inverted before writing to PMSDSFR_EL1 so that
-+set bits exclude that data source and cleared bits include that data source.
-+Therefore the default value of 0 is equivalent to no filtering (all data sources
-+included).
-+
-+For example, to include only data sources 0 and 3, clear bits 0 and 3
-+(0xFFFFFFFFFFFFFFF6)
-+
-+When 'inv_data_src_filter' is set to 0xFFFFFFFFFFFFFFFF, any samples with any
-+data source set are excluded.
-+
- SEE ALSO
- --------
- 
+This patch does not modify the previous code,
+Do you have any other suggestions?
 
+---
+ arch/x86/events/zhaoxin/core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/core.c
+index 4bdfcf091200..3fc3f9abece9 100644
+--- a/arch/x86/events/zhaoxin/core.c
++++ b/arch/x86/events/zhaoxin/core.c
+@@ -467,6 +467,7 @@ static const struct x86_pmu zhaoxin_pmu __initconst = {
+ 	.schedule_events	= x86_schedule_events,
+ 	.eventsel		= MSR_ARCH_PERFMON_EVENTSEL0,
+ 	.perfctr		= MSR_ARCH_PERFMON_PERFCTR0,
++	.fixedctr		= MSR_ARCH_PERFMON_FIXED_CTR0,
+ 	.event_map		= zhaoxin_pmu_event_map,
+ 	.max_events		= ARRAY_SIZE(zx_pmon_event_map),
+ 	.apic			= 1,
 -- 
-2.34.1
+2.25.1
 
