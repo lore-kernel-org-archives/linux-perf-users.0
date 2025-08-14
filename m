@@ -1,60 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F6921C176;
-	Thu, 14 Aug 2025 20:19:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE48F1A0BFA
+	for <linux-perf-users@vger.kernel.org>; Thu, 14 Aug 2025 20:23:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755202749; cv=none; b=PwPqgoOW3+8m83v2FKSr1GNO+A6ctPAF9tcp8zk478cYGtinbT4cj72WbPQXt1jZW+V1zqMDMf76wrK1P3nnooEYwbaN2Nei55AMrl787GJ8QUlyev+WqOXHKV8HUfMZIN3mcyCJ/zLlSi4nMX1Gjr/o6QNgoDoTlkPN1eWQYus=
+	t=1755203006; cv=none; b=SL3tvDCQvSqKXXrEOLYJi6+p+F37buB4tm/jBSv6jkXzr83x/hDWPZuFUHoTxlMo89CycWyq3+icrCijidgSOCbiIzEUIbsq2NL/pkrKrXV/XN0kVJaBAjNr845ICDHaoGNLDSxA6SPtGGrehBtNva1xy3PDZe/zAeWzpsUUdtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755202749; c=relaxed/simple;
-	bh=OHrO9CYBzmjrP66VACTYaSpcj8ifkdq3OgNAHusx3JQ=;
+	s=arc-20240116; t=1755203006; c=relaxed/simple;
+	bh=ZobPmOUZU8ExKgCDse1yAOzwgR+hdb1Uqj8OkEFsQY8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cl/mriYBWRu1zW/Y9PWeVytJdJe66gOPTK2MjA9tBEdulRweR/f1xzklqmF6RlD/dZUcAe7cwkiqyPULokxeMkvYgFVRxyInFE+biUwk0fDEsTXHMUC7+khTDQXZle8w/VNsSDstLAXqePi1ZWQIekCWM74I676jy1KYd09PVbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y7hyQGZy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=td33O5xAbycw6jdIMOJEPLUIdQfvSVI5G4ey5lPRAzvulSOdJE0RkMhs4VDRJCS5rnuiaTsrd6ybZlfTD+wTPjQSa8ldl0a8P1EvnR3zgxY0Ym7vBuDkF9900H/OhDNTQNcXTcz85zgqXD42L5enjzFQiearvr+NWIFoKGrS95I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U5+xUXvp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y7hyQGZy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 672F9C4CEED;
-	Thu, 14 Aug 2025 20:19:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U5+xUXvp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF3A6C4CEED;
+	Thu, 14 Aug 2025 20:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755202748;
-	bh=OHrO9CYBzmjrP66VACTYaSpcj8ifkdq3OgNAHusx3JQ=;
+	s=k20201202; t=1755203006;
+	bh=ZobPmOUZU8ExKgCDse1yAOzwgR+hdb1Uqj8OkEFsQY8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y7hyQGZy4wJOUZwphyJ1zqJnMhPkpykp6rMI1llau9JN9K1hTU9fbXk1wEcwcEbkX
-	 thotSCZ6wWOIJ6Q3j7XV7Ipv4F1k/8BPo50sKt3VlEn4bsSFVgAfTvuu/YqmfX906f
-	 Fwejtesxl1N4j1RXmgcq+cxUTA/Okk/knKVrky/3YwePFuRnpaJGrgE+LcjYr6GvhW
-	 Ep7GoSvIwOFQmRKGuuoh7Y1etIbuMCtDGntHuouK0da3/w6NUql4AYBeV96G5cppxB
-	 FQUr5dVHSAsM3WkIK9MormninvpPwy/jO+OOi4HKo/Dj4AwDU3czKZglNBwMrs7R2x
-	 xVbdtOshIOa2Q==
-Date: Thu, 14 Aug 2025 13:19:06 -0700
+	b=U5+xUXvpOhSAUIm+VKg+3SuC5orRAUERbeAyjBxmZmamdQhYPo0XoCzDseJTxctCD
+	 0aqjBxV3hvBCJLxm6znpiRwbv2r9vsrN9ka9Gg5Gq4WDnJOB/7eAIrpaVZEP6j00bY
+	 BM1IsyOZOgkfZkc9tqIwFnrXv4YWWTEjcirAtJY1fNSFu25YTlrighDUvj2yVJuqBt
+	 ndZz9mmJzQOqxTh1Z7HJeNsj3phreFzKE29SpwYRuIncFfBoj6lOoqfmlE5kkHHRTl
+	 5swO8v85DH6fACCxu+RA6XeARTWCTby948pUSTxeRsThkJyQL1v0hYS9zFiNjikFSU
+	 w6m8ITkkcLHBQ==
+Date: Thu, 14 Aug 2025 13:23:24 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, stable@vger.kernel.org,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	hargar@microsoft.com, broonie@kernel.org, achill@achill.org,
-	qemu-devel@nongnu.org,
-	Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Ben Copeland <benjamin.copeland@linaro.org>,
-	LTP List <ltp@lists.linux.it>, chrubis <chrubis@suse.cz>,
-	Petr Vorel <pvorel@suse.cz>, Ian Rogers <irogers@google.com>,
-	linux-perf-users@vger.kernel.org,
-	Zhang Yi <yi.zhang@huaweicloud.com>,
-	Joseph Qi <jiangqi903@gmail.com>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org,
-	linux-ext4 <linux-ext4@vger.kernel.org>
-Subject: Re: [PATCH 6.16 000/627] 6.16.1-rc1 review
-Message-ID: <aJ5EupUV9t0jToY3@google.com>
-References: <20250812173419.303046420@linuxfoundation.org>
- <CA+G9fYtBnCSa2zkaCn-oZKYz8jz5FZj0HS7DjSfMeamq3AXqNg@mail.gmail.com>
- <2025081300-frown-sketch-f5bd@gregkh>
+To: Athira Rajeev <atrajeev@linux.ibm.com>
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+	irogers@google.com, linux-perf-users@vger.kernel.org,
+	maddy@linux.ibm.com, kjain@linux.ibm.com,
+	hbathini@linux.vnet.ibm.com, Aditya.Bodkhe1@ibm.com,
+	Tejas Manhas <tejas05@linux.ibm.com>
+Subject: Re: [PATCH] tools/perf/tests: Update perf record testcase to fix
+ usage of affinity for machines with #CPUs > 1K
+Message-ID: <aJ5FvBa4LPhMO0u-@google.com>
+References: <20250814114908.45648-1-atrajeev@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -63,41 +46,148 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <2025081300-frown-sketch-f5bd@gregkh>
+In-Reply-To: <20250814114908.45648-1-atrajeev@linux.ibm.com>
 
 Hello,
 
-Thanks for the report!
-
-On Wed, Aug 13, 2025 at 02:50:49PM +0200, Greg Kroah-Hartman wrote:
-> On Wed, Aug 13, 2025 at 05:46:26PM +0530, Naresh Kamboju wrote:
-> > Long story:
-> > 1)
-> > The perf gcc-13 build failed on x86_64 and i386.
-> > 
-> > Build regression: qemu-arm64 ARM64_64K_PAGES ltp syscalls swap fsync
-> > fallocate failed.
-> > 
-> > > Ian Rogers <irogers@google.com>
-> > >     perf topdown: Use attribute to see an event is a topdown metic or slots
-> > 
-> > Build error:
-> > 
-> > arch/x86/tests/topdown.c: In function 'event_cb':
-> > arch/x86/tests/topdown.c:53:25: error: implicit declaration of
-> > function 'pr_debug' [-Werror=implicit-function-declaration]
-> >    53 |                         pr_debug("Broken topdown information
-> > for '%s'\n", evsel__name(evsel));
-> >       |                         ^~~~~~~~
-> > cc1: all warnings being treated as errors
+On Thu, Aug 14, 2025 at 05:19:08PM +0530, Athira Rajeev wrote:
+> The perf record testcase fails on systems with more than 1K CPUs.
 > 
-> Already fixed.
+> Testcase: perf test -vv "PERF_RECORD_* events & perf_sample fields"
+> 
+>   PERF_RECORD_* events & perf_sample fields                       :
+>   --- start ---
+>   test child forked, pid 272482
+>   sched_getaffinity: Invalid argument
+>   sched__get_first_possible_cpu: Invalid argument
+>   test child finished with -1
+>   ---- end ----
+>   PERF_RECORD_* events & perf_sample fields: FAILED!
+> 
+> sched__get_first_possible_cpu uses "sched_getaffinity" to get the
+> cpumask and this call is returning EINVAL (Invalid argument).
+> This happens because the default mask size in glibc is 1024.  To
+> overcome this 1024 CPUs mask size limitation of cpu_set_t, change the
+> mask size using the CPU_*_S macros ie, use CPU_ALLOC to allocate
+> cpumask, CPU_ALLOC_SIZE for size. Same fix needed for mask which is
+> used to setaffinity so that mask size is large enough to represent
+> number of possible CPU's in the system.
+> 
+> Reported-by: Tejas Manhas <tejas05@linux.ibm.com>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
 
-Are you sure?  I'm not seeing the fix.  Can you share the commit id?
-
-I don't see the failure on my machine with gcc 14 but I also cannot
-find what's the fix.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
+> ---
+>  tools/perf/tests/perf-record.c | 36 ++++++++++++++++++++++++----------
+>  1 file changed, 26 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/perf/tests/perf-record.c b/tools/perf/tests/perf-record.c
+> index 0b3c37e66871..d895df037707 100644
+> --- a/tools/perf/tests/perf-record.c
+> +++ b/tools/perf/tests/perf-record.c
+> @@ -13,15 +13,19 @@
+>  #include "tests.h"
+>  #include "util/mmap.h"
+>  #include "util/sample.h"
+> +#include "util/cpumap.h"
+>  
+>  static int sched__get_first_possible_cpu(pid_t pid, cpu_set_t *maskp)
+>  {
+> -	int i, cpu = -1, nrcpus = 1024;
+> +	int i, cpu = -1;
+> +	int nrcpus = cpu__max_cpu().cpu;
+> +	size_t size = CPU_ALLOC_SIZE(nrcpus);
+> +
+>  realloc:
+> -	CPU_ZERO(maskp);
+> +	CPU_ZERO_S(size, maskp);
+>  
+> -	if (sched_getaffinity(pid, sizeof(*maskp), maskp) == -1) {
+> -		if (errno == EINVAL && nrcpus < (1024 << 8)) {
+> +	if (sched_getaffinity(pid, size, maskp) == -1) {
+> +		if (errno == EINVAL && nrcpus < (cpu__max_cpu().cpu << 8)) {
+>  			nrcpus = nrcpus << 2;
+>  			goto realloc;
+>  		}
+> @@ -30,11 +34,11 @@ static int sched__get_first_possible_cpu(pid_t pid, cpu_set_t *maskp)
+>  	}
+>  
+>  	for (i = 0; i < nrcpus; i++) {
+> -		if (CPU_ISSET(i, maskp)) {
+> +		if (CPU_ISSET_S(i, size, maskp)) {
+>  			if (cpu == -1)
+>  				cpu = i;
+>  			else
+> -				CPU_CLR(i, maskp);
+> +				CPU_CLR_S(i, size, maskp);
+>  		}
+>  	}
+>  
+> @@ -50,8 +54,9 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
+>  		.no_buffering = true,
+>  		.mmap_pages   = 256,
+>  	};
+> -	cpu_set_t cpu_mask;
+> -	size_t cpu_mask_size = sizeof(cpu_mask);
+> +	int nrcpus = cpu__max_cpu().cpu;
+> +	cpu_set_t *cpu_mask;
+> +	size_t cpu_mask_size;
+>  	struct evlist *evlist = evlist__new_dummy();
+>  	struct evsel *evsel;
+>  	struct perf_sample sample;
+> @@ -69,12 +74,22 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
+>  	int total_events = 0, nr_events[PERF_RECORD_MAX] = { 0, };
+>  	char sbuf[STRERR_BUFSIZE];
+>  
+> +	cpu_mask = CPU_ALLOC(nrcpus);
+> +	if (!cpu_mask) {
+> +		pr_debug("failed to create cpumask\n");
+> +		goto out;
+> +	}
+> +
+> +	cpu_mask_size = CPU_ALLOC_SIZE(nrcpus);
+> +	CPU_ZERO_S(cpu_mask_size, cpu_mask);
+> +
+>  	perf_sample__init(&sample, /*all=*/false);
+>  	if (evlist == NULL) /* Fallback for kernels lacking PERF_COUNT_SW_DUMMY */
+>  		evlist = evlist__new_default();
+>  
+>  	if (evlist == NULL) {
+>  		pr_debug("Not enough memory to create evlist\n");
+> +		CPU_FREE(cpu_mask);
+>  		goto out;
+>  	}
+>  
+> @@ -111,7 +126,7 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
+>  	evsel__set_sample_bit(evsel, TIME);
+>  	evlist__config(evlist, &opts, NULL);
+>  
+> -	err = sched__get_first_possible_cpu(evlist->workload.pid, &cpu_mask);
+> +	err = sched__get_first_possible_cpu(evlist->workload.pid, cpu_mask);
+>  	if (err < 0) {
+>  		pr_debug("sched__get_first_possible_cpu: %s\n",
+>  			 str_error_r(errno, sbuf, sizeof(sbuf)));
+> @@ -123,7 +138,7 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
+>  	/*
+>  	 * So that we can check perf_sample.cpu on all the samples.
+>  	 */
+> -	if (sched_setaffinity(evlist->workload.pid, cpu_mask_size, &cpu_mask) < 0) {
+> +	if (sched_setaffinity(evlist->workload.pid, cpu_mask_size, cpu_mask) < 0) {
+>  		pr_debug("sched_setaffinity: %s\n",
+>  			 str_error_r(errno, sbuf, sizeof(sbuf)));
+>  		goto out_delete_evlist;
+> @@ -328,6 +343,7 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
+>  		++errs;
+>  	}
+>  out_delete_evlist:
+> +	CPU_FREE(cpu_mask);
+>  	evlist__delete(evlist);
+>  out:
+>  	perf_sample__exit(&sample);
+> -- 
+> 2.43.7
+> 
