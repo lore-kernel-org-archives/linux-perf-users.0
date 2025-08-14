@@ -1,124 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D5ED23815C;
-	Thu, 14 Aug 2025 15:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ACC9221F11;
+	Thu, 14 Aug 2025 15:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755185736; cv=none; b=EAXvtYtPQsX1iLm+u0/cxxnU0LRC2rF5QME/4MYZcqUGxRiilSxmUoS4+YObqHWqDnk+CSsoJa66X/j/haNqJbfrVWBbDFzyKVMXzfW60vw6JGBhVUL2SC8uzan8Cz1N9vUHRICqhh8ah5hdzvE5btftRP4HLDI3BWotfnAGIbA=
+	t=1755186010; cv=none; b=oUbQDc+iXbLRIvmg91A8xSz+9JsM8obqDo7hBrPKpdVkiaTadNEsELfYhNA5DKztzld/z5UwYiak/VFCDGmigeOG6ondmTIeV57tSzRd9EDsn1vz7YOuMftA6qp6Ua+fMSRqLLNYrMR/w4BvGBiVc1/DUViqJ69YCoW3XRdYlr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755185736; c=relaxed/simple;
-	bh=gDxvjWIgXlyBLWgV2QQr23LJcSGf4vc5YOroiJL6BHQ=;
+	s=arc-20240116; t=1755186010; c=relaxed/simple;
+	bh=ZXGUYhzt1VUdgKBWFHoGfMvtYQGXd2TgUb5VX/wC7PA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V5NHdUvoZB8y+WseKQCF9GzQ12L08R3VHewug8rMhQ0E9KeBmB2i9t7yhulllCAa6V4q4zJaH1itjWNHM5KNW2f7bC0M0OzmLbsbDXJUWyCG4n6OJZ+iN57e9yCqZ48YMRqNilJMgYDfiwDuCmYwSF2kKAa64tjuPoJKip4CzJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DJNPGlis; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=SLrABj5QAJE/NWqXUJLO8P5WEzlX7ycILhYTNdX3j+7lvXIWnyqWh1OxPK48cXnC6GitFgKh2uSDMZXCx2+JGniGDzN4s8NrEASXGMiXBu2++cNQTy+bo+Oh3voMDRCwjs2bjHoiqwxxdl+1nhXV/UOkWuZF2h6nL7DCHSiGF7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lOOOEQ6t; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DJNPGlis"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2644BC4CEED;
-	Thu, 14 Aug 2025 15:35:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1755185735;
-	bh=gDxvjWIgXlyBLWgV2QQr23LJcSGf4vc5YOroiJL6BHQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DJNPGlisvjw88EiXwDk2RuS15vYBkAcU5305MBsWPMCbM6/W7E4E6L+9JlKljpuRX
-	 zwzpCawOznOaYHkMchEhfqmMwpvf3R8wIoHWBbG1N63zmB6JfoOL8GnfoT0t/6j8PQ
-	 QQbPrxKsabXo4dWZwuKLd92OEcSIPH/lHm05gpHI=
-Date: Thu, 14 Aug 2025 17:35:32 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, achill@achill.org,
-	qemu-devel@nongnu.org,
-	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Ben Copeland <benjamin.copeland@linaro.org>,
-	LTP List <ltp@lists.linux.it>, chrubis <chrubis@suse.cz>,
-	Petr Vorel <pvorel@suse.cz>, Ian Rogers <irogers@google.com>,
-	linux-perf-users@vger.kernel.org,
-	Zhang Yi <yi.zhang@huaweicloud.com>,
-	Joseph Qi <jiangqi903@gmail.com>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org,
-	linux-ext4 <linux-ext4@vger.kernel.org>
-Subject: Re: [PATCH 6.16 000/627] 6.16.1-rc1 review
-Message-ID: <2025081416-wing-bakery-3205@gregkh>
-References: <20250812173419.303046420@linuxfoundation.org>
- <CA+G9fYtBnCSa2zkaCn-oZKYz8jz5FZj0HS7DjSfMeamq3AXqNg@mail.gmail.com>
- <bf9ccc7d-036d-46eb-85a1-b46317e2d556@sirena.org.uk>
- <CA+G9fYtjAWpeFfb3DesEY8y6aOefkLOVBE=zxsROWLzP_V_iDg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lOOOEQ6t"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b47174edb2bso743939a12.3;
+        Thu, 14 Aug 2025 08:40:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755186008; x=1755790808; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=mBHs3tZTa/z7QKa1vW09fgwDqXxY/YWMdhLXeWTfw9k=;
+        b=lOOOEQ6tMg+bLZIAfQ7obUaKBZt9oDRAOnvJ3M8npIFHa80rYu/pDJ/Gse0tknNrVX
+         KLU9fhBYfuVAZy2QfF3Iv4bVklYwDQm7sVZrn6thfwWoXznEIT06uwLt/nC+gFD9DpzJ
+         oROWIqcdH3+ljodmW/R78DcphT8yerFxH5ucBs5RGG/ASh3fsSQu5xa3eEt9CZO+2osE
+         3lwgivEPoLPO6EEpNg16fgJeV3PVx9vvp8+DG3c9hMO6nYrXxe618NLNkhb/N/HwHBWI
+         w2B6hrZsZ9A1FuwcplirqM6E1+77yeZLSgksix+Zcq6U3Fwm3qZeJzxVtGMutOC+JhS+
+         mGRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755186008; x=1755790808;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mBHs3tZTa/z7QKa1vW09fgwDqXxY/YWMdhLXeWTfw9k=;
+        b=Rr/g71DUM5vzMquI9oE24ZR0/7KQfLdaY3XFE2DWQIzQZZ2KVEKINLUr13vDiPsobs
+         P0mZ/pTFnAH9dEPQSSh8Wcnyu6NCI9mt1eIhP8cZcPDv9rjVh0xJNsINpcRz742GkXvY
+         kR4TGrOZ37t8we/39tT3xejI79TD75+yiWv1pEKy0R4cZLNt5rwO3rshVJVfOvZS/CKr
+         3A7AteXsxbNhgEVHmn9Tpt+kNUGqyrZ1NTN2jMXcT2lOGTSNsLTIlRW3xejjCvDZBRux
+         tmb2z76efNbv+NwCWh4Vnc/O9NifQqHXWc4yr1X5mf/NHM8SaAjoExPvVFGNoJCNtcXJ
+         ohUw==
+X-Forwarded-Encrypted: i=1; AJvYcCWeAG06kSc1oBw5B0XfUNppEgQ/67V4eNExFi1DxzRL7V5ostdL3Tmc38/nVPK7s4Yapndt2S0FA3/D2SdpWR3kHw==@vger.kernel.org, AJvYcCXVYWS+uAEIf/YE4ZXKbdLeSxeME/7Qwgjnx9mQeWt0ckphY/1uwRu7L0FrYEcRE7z6nNtJXM653CCplA0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyC2qHpgM+RviYGijxe+GkmwqZHKm965DenROMo1mWAeyKktPfL
+	zk7ZJNVcdO+1JPqorXgoRW9Dv8Udx7lg8eZp1COtxuVWZDfIjKJghV6/
+X-Gm-Gg: ASbGnctKmyctn+so+fvNl4MFechIiksWdHqeR6ZMXZtaGNh/za6D6V9/LTTqjWr3+cD
+	ufn439+ryajTlH/ukSRbL8WN9Tkx36Ut/kBwgBeEDBPov8Xo57WhAFVRycvkQ9RZzxw0AxIVP9B
+	7EgsX2yECFWTezVyzp7t3E9LVU3aVjxrHeV0nP3JMUc4eaaNDV9fnq4WyOJrjQkQjZe32htOfM+
+	TGJ+x5mLTToep1f31Rbyy0q/cclm5uOe01vzz/BB9vc1TDQBpPPucpEGbAKySIKtaq+hcrjheGu
+	KNjFVCGew/xvCSTdfm8Nubnzr1IwK5ZpUmgf2t55l2w2Sr9I3K1QBbIdYLdX5udK+cYMkwto1p1
+	obO+qkFnd
+X-Google-Smtp-Source: AGHT+IF6sZWbal1ps5VoVoCJdklaMfP+Xu1/4uvgtaG+zDgi1W0yrHZyjTNjGfZ4lavi7gHShEcWng==
+X-Received: by 2002:a17:902:cccb:b0:23f:f065:f2be with SMTP id d9443c01a7336-244586a0e5bmr50115645ad.26.1755186008243;
+        Thu, 14 Aug 2025 08:40:08 -0700 (PDT)
+Received: from gmail.com ([2406:5900:2:f21::2a1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-241d1f21b69sm357717545ad.71.2025.08.14.08.40.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Aug 2025 08:40:07 -0700 (PDT)
+Date: Fri, 15 Aug 2025 00:40:00 +0900
+From: Ryan Chung <seokwoo.chung130@gmail.com>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org
+Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] event/core.c: fix warning format specifier to use %llu
+ instead of %lld for u64 values.
+Message-ID: <aJ4DUJD8SXdB3gjn@gmail.com>
+References: <20250729070620.527482-1-seokwoo.chung130@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CA+G9fYtjAWpeFfb3DesEY8y6aOefkLOVBE=zxsROWLzP_V_iDg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250729070620.527482-1-seokwoo.chung130@gmail.com>
 
-On Wed, Aug 13, 2025 at 07:11:05PM +0530, Naresh Kamboju wrote:
-> On Wed, 13 Aug 2025 at 18:21, Mark Brown <broonie@kernel.org> wrote:
-> >
-> > On Wed, Aug 13, 2025 at 05:46:26PM +0530, Naresh Kamboju wrote:
-> > > On Tue, 12 Aug 2025 at 23:57, Greg Kroah-Hartman
-> >
-> > > The following list of LTP syscalls failure noticed on qemu-arm64 with
-> > > stable-rc 6.16.1-rc1 with CONFIG_ARM64_64K_PAGES=y build configuration.
-> > >
-> > > Most failures report ENOSPC (28) or mkswap errors, which may be related
-> > > to disk space handling in the 64K page configuration on qemu-arm64.
-> > >
-> > > The issue is reproducible on multiple runs.
-> > >
-> > > * qemu-arm64, ltp-syscalls - 64K page size test failures list,
-> > >
-> > >   - fallocate04
-> > >   - fallocate05
-> > >   - fdatasync03
-> > >   - fsync01
-> > >   - fsync04
-> > >   - ioctl_fiemap01
-> > >   - swapoff01
-> > >   - swapoff02
-> > >   - swapon01
-> > >   - swapon02
-> > >   - swapon03
-> > >   - sync01
-> > >   - sync_file_range02
-> > >   - syncfs01
-> 
-> These test failures are not seen on Linus tree v6.16 or v6.15.
-> 
-> >
-> > I'm also seeing epoll_ctl04 failing on Raspberry Pi 4, there's a bisect
-> > still running but I suspect given the error message:
-> 
-> Right !
-> LTP syscalls epoll_ctl04 test is failing on Linux mainline as well
-> with this error on LKFT CI system on several platforms.
-> 
-> >
-> > epoll_ctl04.c:59: TFAIL: epoll_ctl(..., EPOLL_CTL_ADD, ...) with number of nesting is 5 expected EINVAL: ELOOP (40)
-> >
-> > that it might be:
-> >
-> > # bad: [b47ce23d38c737a2f84af2b18c5e6b6e09e4932d] eventpoll: Fix semi-unbounded recursion
-> >
-> > which already got tested, or something adjacent.
-> 
-> A patch has been proposed to update the LTP test case to align with
-> recent changes in the Linux kernel code.
-> 
-> [LTP] [PATCH] syscalls/epoll_ctl04: add ELOOP to expected errnos
-> 
-> -https://lore.kernel.org/ltp/39ee7abdee12e22074b40d46775d69d37725b932.1754386027.git.jstancek@redhat.com/
+Hi all,
 
-Great, thanks for letting us know that this is just a test-case issue.
+Just wondering if there’s any feedback on this patch.
 
-greg k-h
+Thanks,
+Ryan Chung
+
+On Tue, Jul 29, 2025 at 04:06:03PM +0900, Ryan Chung wrote:
+> Updates the perf duration warning to use the unsigned 64‑bit format specifier `%llu` instead of `%lld`, ensuring the format matches the `u64` types.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Ryan Chung <seokwoo.chung130@gmail.com>
+> ---
+>  kernel/events/core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 22fdf0c187cd..b8d7c4a64c44 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -602,7 +602,7 @@ static u64 __report_allowed;
+>  static void perf_duration_warn(struct irq_work *w)
+>  {
+>  	printk_ratelimited(KERN_INFO
+> -		"perf: interrupt took too long (%lld > %lld), lowering "
+> +		"perf: interrupt took too long (%llu > %llu), lowering "
+>  		"kernel.perf_event_max_sample_rate to %d\n",
+>  		__report_avg, __report_allowed,
+>  		sysctl_perf_event_sample_rate);
+> @@ -655,7 +655,7 @@ void perf_sample_event_took(u64 sample_len_ns)
+>  	perf_sample_period_ns = NSEC_PER_SEC / sysctl_perf_event_sample_rate;
+>  
+>  	if (!irq_work_queue(&perf_duration_work)) {
+> -		early_printk("perf: interrupt took too long (%lld > %lld), lowering "
+> +		early_printk("perf: interrupt took too long (%llu > %llu), lowering "
+>  			     "kernel.perf_event_max_sample_rate to %d\n",
+>  			     __report_avg, __report_allowed,
+>  			     sysctl_perf_event_sample_rate);
+> -- 
+> 2.43.0
+> 
