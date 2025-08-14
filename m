@@ -1,144 +1,155 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1202BE05B;
-	Wed, 13 Aug 2025 22:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB19189F3F;
+	Thu, 14 Aug 2025 01:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755125100; cv=none; b=rddKesYuJ8mCiiYvsw7VAcqC8kmqpuw21k/7aZLLD4it9uW+ygjRUyQ6J0N3SFyaDLFNaPTVIiQDRViDEs8lUAfYToqSlWDRRrm9IMCgGFSlrBIx5d0C+uGGXUdWJRaswXQpRMvb5EDc/EqRES9cHuEnMpIPl3D/12F0eFlGwlU=
+	t=1755134878; cv=none; b=RbX7uUmbs1q804UJ+wZ/2ytNttUOddW7mFRDNM8iqh4sHYq3I2l2u4FPT3Kc4KX4J0LFiqyyDMKkWB/YuS6Ljby/b18Y249fNWx5Bll3c9ipSmLDPhSDKEAE8zQK1jczuhL0yHOtuuC0HMAVJkd25GYCQoWDuVFHAD8lGBLs5ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755125100; c=relaxed/simple;
-	bh=OV/ycrOYoNGwhQ5MzDYQKEDIUDuWrki4AJ0O9zrmkks=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r618nIQiqqgfI4VhKYwwx8JS+JvVQAhz4jyIy5BSZDdi0nt15VUmFl9JD+aYTdWHGZ+IdfI0Q8huWxO1FdqKOwqod/zxeWV7jwf3fex1wOeMsVc9YQXA+ybCnvVNzFLnYJkgAZgVyXBG+Su1CEusPGQEgRmNaL3SlL9/LNSb2Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b/B19HLK; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b/B19HLK"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-323266d2d9eso334229a91.0;
-        Wed, 13 Aug 2025 15:44:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755125098; x=1755729898; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yd35egmN4CDcVZKEMWmqSyca6/vnlaqT06CZE8Rd4hc=;
-        b=b/B19HLKmeclIMpF/h9ynnFPSbai4TyF0+cGjyYgkSN4/fYxCcsVshp8WUylYKHx0o
-         vhzu7FM50kd9ziDUsQY0opEMudqxwXcT+QBCzZRlpVfOwyJ92t3l2VzpdRvFgXOfCvJI
-         fmHGV8G9FUenajIUidXLU3R59sBP/kVePriV1YCFj5zkI2F8qyTudnPLDIEY6JEAYcXz
-         DpG58DZeGiEYwF9mUNVfzCYaRacK3S4clF9rnl2ig56k4l6Y6CLNDaXBxRMKr1H8UpOu
-         G4QBWEaxcFSLR6yZsWekX1dcbFzlc8jdliomwIRojmTiBFRS5xnmej6cj0LM3L3Mjx6v
-         NgPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755125098; x=1755729898;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yd35egmN4CDcVZKEMWmqSyca6/vnlaqT06CZE8Rd4hc=;
-        b=DyskXqycyMnrEyoeW/1MFK8b4ywU2IWvtunZ/NLv8I4Vo0eXxW9S5X5u3fLXTFFg14
-         WklDH2VA9O3kH28XLy7zpikWR+mzKSuU1MW7ffM6LDMS1fDy7bYB5L5XGLkboTQqfVRy
-         8mZNsWSqp/jRdO7SHtspm9PXllZUTmmzkQ/WOVDSNZI5gurks+YZEQXoqVoVYwHbhGhY
-         +Zav1epinrREKeeD86lOGPm7PBUxLOIRHy0vENfkqG2leBMqi1vIkNKow47WNHNSSStj
-         cWavNchTxf7Gm7qDji2wWrETbPU+vevxEggu4OigJ3IasooDS1sXHyy45yeVghexn6/5
-         LMQg==
-X-Forwarded-Encrypted: i=1; AJvYcCUEhgystEJlRjcHNzAv6V93tSG0nRS4U7WEbwqXqAUxRfdgZJ0JZhocHU5XRA0O1tFmce0=@vger.kernel.org, AJvYcCWqNgsjuE64C4qrDYkXOjkZBE2RXG0phNE8ZV3wHCHrklUCzQ3mVgQojux0VZUg7oS4tcXXJQBnDSEnVBqzzAbPLQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjC10bwWmgr8edomsB0zNyANrdOvsLtCoaFN1MMrlwQk1n7tSu
-	EZ/yxl/CyTKHLiDKTMJ3wzHRFiIu2sJXfaNVRYeGDLf6wptcvNb1dsnB2KQ379eNcWc7PbAqg0K
-	g4h+UUwdS3jsPhiitBqpRpEZTvyH/ozE=
-X-Gm-Gg: ASbGnctPNsh58ZjnqK/ognSlAynxh89TYEigEC8SXWwvy9lqG238nZmu0AzEyWHnxgv
-	Iqpe5JgbZaB0n/MSjF/e8/tDcvVvNu0b6uXNnlDCcJvFL6bKPTk0NleNdnsdycF0SZMC6NElQWx
-	4e923y4SygECEV/i6asQ+2ZCWxpCyPE7QWPcXAaQVmSH3oFnYm2xvzy8nK9qnzZ25YBztDFKnxe
-	EIEW+AravdXbhtb+MP/ck/LmUnekAGehw==
-X-Google-Smtp-Source: AGHT+IEJ4gucRc0WVd7WCFDuWVfhyS5mg1YHXbANwvz4e0fcj21tvta+1mAsqKLmUq7uTcNuWUpFEP2FQGRJzud+2G4=
-X-Received: by 2002:a17:90b:384e:b0:323:264f:bc42 with SMTP id
- 98e67ed59e1d1-32327998e38mr1375144a91.3.1755125097905; Wed, 13 Aug 2025
- 15:44:57 -0700 (PDT)
+	s=arc-20240116; t=1755134878; c=relaxed/simple;
+	bh=HYvlknKOx1rKjvQkyNkvqhaEdoRV/o3tuBi9L0Uo+rg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pWlRcGlWOKUMSZpr2OlkiaN/SozXDS5YGW7NCY7hiekzWfl8MY8jgXbtEIU0CJb3IoZhFdp3X5iXYDIn/Db8oRS1SnvcyE3sUQbF4TJKpIgfEk5cgwxUOyuSpw7jgzNS7sTH/iA4BU5aSahfD0OGUcJXuO05GSXr9OjiNw/IAUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4c2SKl5B90zYQv10;
+	Thu, 14 Aug 2025 09:27:55 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 5084F1A12D9;
+	Thu, 14 Aug 2025 09:27:54 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP4 (Coremail) with SMTP id gCh0CgAHgxOVO51oPzBtDg--.8664S3;
+	Thu, 14 Aug 2025 09:27:52 +0800 (CST)
+Message-ID: <42aace87-1b89-4b17-96f1-3efbabc4acf3@huaweicloud.com>
+Date: Thu, 14 Aug 2025 09:27:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250813133832.755428-1-jolsa@kernel.org>
-In-Reply-To: <20250813133832.755428-1-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 13 Aug 2025 15:44:43 -0700
-X-Gm-Features: Ac12FXzdPMZLJrtvyY1a9fVClNy9bi-m8rUfcsctoVtDz1T5yLFWSAXPYA9ismg
-Message-ID: <CAEf4BzbRL47Qm1T1BQrvG6K3itqFHfSdXbOeFG5vKj4yB0QtbA@mail.gmail.com>
-Subject: Re: [PATCHv2 bpf] bpf: Check the helper function is valid in get_helper_proto
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, syzbot+a9ed3d9132939852d0df@syzkaller.appspotmail.com, 
-	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Martin KaFai Lau <kafai@fb.com>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <songliubraving@fb.com>, 
-	Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.16 000/627] 6.16.1-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+ linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+ akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+ patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+ jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+ srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+ hargar@microsoft.com, broonie@kernel.org, achill@achill.org,
+ qemu-devel@nongnu.org, =?UTF-8?Q?Alex_Benn=C3=A9e?=
+ <alex.bennee@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+ Dan Carpenter <dan.carpenter@linaro.org>,
+ Anders Roxell <anders.roxell@linaro.org>,
+ Ben Copeland <benjamin.copeland@linaro.org>, LTP List <ltp@lists.linux.it>,
+ chrubis <chrubis@suse.cz>, Petr Vorel <pvorel@suse.cz>,
+ Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
+ Joseph Qi <jiangqi903@gmail.com>, Jan Kara <jack@suse.cz>,
+ linux-fsdevel@vger.kernel.org, linux-ext4 <linux-ext4@vger.kernel.org>,
+ Zhang Yi <yi.zhang@huawei.com>, Theodore Ts'o <tytso@mit.edu>,
+ Baokun Li <libaokun1@huawei.com>
+References: <20250812173419.303046420@linuxfoundation.org>
+ <CA+G9fYtBnCSa2zkaCn-oZKYz8jz5FZj0HS7DjSfMeamq3AXqNg@mail.gmail.com>
+ <2025081300-frown-sketch-f5bd@gregkh>
+ <CA+G9fYuEb7Y__CVHxZ8VkWGqfA4imWzXsBhPdn05GhOandg0Yw@mail.gmail.com>
+ <2025081311-purifier-reviver-aeb2@gregkh>
+Content-Language: en-US
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+In-Reply-To: <2025081311-purifier-reviver-aeb2@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgAHgxOVO51oPzBtDg--.8664S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7KF1fAFW7tF4UtrWrWr1DGFg_yoW8Zw4xpF
+	WrCF98tr45X345ArsFvw4IgFyUtrZ8Krn5Wr1rtw17C39IkryDZF4SgF1Y9F97Jr4DCFyr
+	ZrsFv3sIyryDAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26rWY6Fy7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8
+	Jr1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v2
+	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07
+	j6a0PUUUUU=
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On Wed, Aug 13, 2025 at 6:38=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> From: Jiri Olsa <olsajiri@gmail.com>
->
-> syzbot reported an verifier bug [1] where the helper func pointer
-> could be NULL due to disabled config option.
->
-> As Alexei suggested we could check on that in get_helper_proto
-> directly. Excluding tail_call helper from the check, because it
-> is NULL by design and valid in all configs.
->
-> [1] https://lore.kernel.org/bpf/68904050.050a0220.7f033.0001.GAE@google.c=
-om/
-> Reported-by: syzbot+a9ed3d9132939852d0df@syzkaller.appspotmail.com
-> Suggested-by: Alexei Starovoitov <ast@kernel.org>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
-> v2 changes:
-> - set bpf_tail_call_proto.func to -1 so we can skip the extra check [Andr=
-ii]
->
->  kernel/bpf/core.c     | 5 ++++-
->  kernel/bpf/verifier.c | 2 +-
->  2 files changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-> index 5d1650af899d..0f6e9a3d9960 100644
-> --- a/kernel/bpf/core.c
-> +++ b/kernel/bpf/core.c
-> @@ -3024,7 +3024,10 @@ EXPORT_SYMBOL_GPL(bpf_event_output);
->
->  /* Always built-in helper functions. */
->  const struct bpf_func_proto bpf_tail_call_proto =3D {
-> -       .func           =3D NULL,
-> +       /* func is unused for tail_call, we set it to pass the
-> +        * get_helper_proto check
-> +        */
-> +       .func           =3D (void *) 1,
+On 2025/8/13 22:53, Greg Kroah-Hartman wrote:
+> On Wed, Aug 13, 2025 at 08:01:51PM +0530, Naresh Kamboju wrote:
+>> Hi Greg,
+>>
+>>>> 2)
+>>>>
+>>>> The following list of LTP syscalls failure noticed on qemu-arm64 with
+>>>> stable-rc 6.16.1-rc1 with CONFIG_ARM64_64K_PAGES=y build configuration.
+>>>>
+>>>> Most failures report ENOSPC (28) or mkswap errors, which may be related
+>>>> to disk space handling in the 64K page configuration on qemu-arm64.
+>>>>
+>>>> The issue is reproducible on multiple runs.
+>>>>
+>>>> * qemu-arm64, ltp-syscalls - 64K page size test failures list,
+>>>>
+>>>>   - fallocate04
+>>>>   - fallocate05
+>>>>   - fdatasync03
+>>>>   - fsync01
+>>>>   - fsync04
+>>>>   - ioctl_fiemap01
+>>>>   - swapoff01
+>>>>   - swapoff02
+>>>>   - swapon01
+>>>>   - swapon02
+>>>>   - swapon03
+>>>>   - sync01
+>>>>   - sync_file_range02
+>>>>   - syncfs01
+>>>>
+>>>> Reproducibility:
+>>>>  - 64K config above listed test fails
+>>>>  - 4K config above listed test pass.
+>>>>
+>>>> Regression Analysis:
+>>>> - New regression? yes
+>>>
+>>> Regression from 6.16?  Or just from 6.15.y?
+>>
+>> Based on available data, the issue is not present in v6.16 or v6.15.
+>>
+>> Anders, bisected this regression and found,
+>>
+>>   ext4: correct the reserved credits for extent conversion
+>>     [ Upstream commit 95ad8ee45cdbc321c135a2db895d48b374ef0f87 ]
+>>
+>> Report lore link,
+>>
+>> https://lore.kernel.org/stable/CA+G9fYtBnCSa2zkaCn-oZKYz8jz5FZj0HS7DjSfMeamq3AXqNg@mail.gmail.com/
+> 
+> Great, and that's also affecting 6.17-rc1 so we are "bug compatible"?
+> :)
+> 
 
-we seem to have BPF_PTR_POISON in include/linux/poison.h, let's use
-that instead of 1?
+Hi,
 
-pw-bot: cr
+This issue has already fixed in 6.17-rc1 through this series:
+
+https://lore.kernel.org/linux-ext4/20250707140814.542883-1-yi.zhang@huaweicloud.com/
 
 
->         .gpl_only       =3D false,
->         .ret_type       =3D RET_VOID,
->         .arg1_type      =3D ARG_PTR_TO_CTX,
-> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> index c4f69a9e9af6..c89e2b1bc644 100644
-> --- a/kernel/bpf/verifier.c
-> +++ b/kernel/bpf/verifier.c
-> @@ -11354,7 +11354,7 @@ static int get_helper_proto(struct bpf_verifier_e=
-nv *env, int func_id,
->                 return -EINVAL;
->
->         *ptr =3D env->ops->get_func_proto(func_id, env->prog);
-> -       return *ptr ? 0 : -EINVAL;
-> +       return *ptr && (*ptr)->func ? 0 : -EINVAL;
->  }
->
->  static int check_helper_call(struct bpf_verifier_env *env, struct bpf_in=
-sn *insn,
-> --
-> 2.50.1
->
+To fix this issue in 6.16, it's necessary to backport the whole series
+instead of just pick 5137d6c8906b ("ext4: fix insufficient credits
+calculation in ext4_meta_trans_blocks()") and 95ad8ee45cdb {"ext4: correct
+the reserved credits for extent conversion").  Otherwise, this will make
+the problem more likely to occur.
+
+Thanks,
+Yi.
+
