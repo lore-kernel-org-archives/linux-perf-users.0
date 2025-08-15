@@ -1,103 +1,137 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3863F2192F9;
-	Fri, 15 Aug 2025 06:08:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC061219EB;
+	Fri, 15 Aug 2025 07:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755238095; cv=none; b=WW6Ry5Im25Uq4K5L1Dc/sYPObCMliQWFuo6nCihtzr//EevLTWoBFZqeFRqMJ3JhEpBwMFBsRy+Uz/6VE9Z+F99+DXxREJdap7hAd6BusF0nCrp+jynQg8Me+bla96Y77IPCC5v98c1JIM3eDCb9GSIZ+KC2BVK20ZsnG/wkpQA=
+	t=1755242440; cv=none; b=PMWy/Kj2u6fb5myxm8I0w+oZJ8QzgKbYIG/eXbtQgGfDkvxeRKYBstcJr2iyCnhmHNzb+R62ljG+wfw00elY5ldxkX8O/1Cof4eB0DL8EKnBHbd1ogV2GkAKf0BnM24bACg7eM49ZxWENhAOO03+krc7q7KEm+KwdEw36dNNZYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755238095; c=relaxed/simple;
-	bh=tbJHKmM4HLfO48fOXVQkSO6aTHrBMsni/C0VTIkbqSg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jw9McsKRbpsoybHDC3v9Eht9hccY4mDEaEWfhZwvViww0+V3d21RHpR2eUblR+y4nBext1IpzMljP2jHDOmht9KY3ZDT3NlmPryOJVL6RphzM7CYcNfNvD6n6fTq9mKB2k/X7oihL+2gUmV/iyB1KdOr370o83rPQo2+XIyfF54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=E6SWROy/; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="E6SWROy/"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1755238083; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=c6Xki8soLW+vw63qx0n+Ld6/faF33zlxnTUtiZxzosw=;
-	b=E6SWROy/yb8tUTn5zKyYzwVtC358UkDJZGtD9bSklYxUIbfbvAfaL4KDYTrZWdRP0BlGeYuGXpB6hWPBRwxIv5l8NQOsuXuhQ0xRaJEGKA5tqB44PMu2fvsTShPFbHNwhyTdvKW2G4mICD1CThc+MmBU/wXK3O6Q/UOOuMRzfJA=
-Received: from 30.74.144.112(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wlnr11M_1755238078 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 15 Aug 2025 14:07:59 +0800
-Message-ID: <0e26b400-e477-4722-a524-8a3c520f5429@linux.alibaba.com>
-Date: Fri, 15 Aug 2025 14:07:57 +0800
+	s=arc-20240116; t=1755242440; c=relaxed/simple;
+	bh=LJ5hwcVtv8L4QJbMAkLE+n3yrJ6SMbNWpVFjDzuDzAA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kU3W2VVH0SipnG7GGD85RPHklH9G2fH5EXVFVIJ0bKi+Gcsawm7d/DKYiGh5qiLDA+1Gb+4cUfbvGM29VZCfhSzqZZ2RSExynxN7BCjLOSWnMHLNbIaReaBMuvxAg0CSjpCDIaNWqLJjj5UnWVr9hZiveSlx5yt4BnAaK5dTTUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 5395d6ae79a811f0b29709d653e92f7d-20250815
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:612345b8-8f28-4ac7-88c9-7afc108cde8f,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:8d7f38ea3075bad0b42d9549ab5de2cc,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:nil,UR
+	L:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,S
+	PR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 5395d6ae79a811f0b29709d653e92f7d-20250815
+Received: from node2.com.cn [(10.44.16.197)] by mailgw.kylinos.cn
+	(envelope-from <zhaoguohan@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1737500474; Fri, 15 Aug 2025 15:20:31 +0800
+Received: from node2.com.cn (localhost [127.0.0.1])
+	by node2.com.cn (NSMail) with SMTP id F3E90B8258E7;
+	Fri, 15 Aug 2025 15:20:30 +0800 (CST)
+X-ns-mid: postfix-689EDFBE-875798283
+Received: from localhost.localdomain (unknown [10.42.12.87])
+	by node2.com.cn (NSMail) with ESMTPA id BD49CB812916;
+	Fri, 15 Aug 2025 07:20:28 +0000 (UTC)
+From: zhaoguohan@kylinos.cn
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	thomas.falcon@intel.com,
+	linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM),
+	GuoHan Zhao <zhaoguohan@kylinos.cn>
+Subject: [PATCH v2] perf parse-events: Prevent null pointer dereference in __add_event()
+Date: Fri, 15 Aug 2025 15:20:08 +0800
+Message-ID: <20250815072008.20214-1-zhaoguohan@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/10] mm: convert core mm to mm_flags_*() accessors
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, "David S . Miller"
- <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Kees Cook <kees@kernel.org>, David Hildenbrand <david@redhat.com>,
- Zi Yan <ziy@nvidia.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- David Rientjes <rientjes@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, Matthew Wilcox <willy@infradead.org>,
- Mateusz Guzik <mjguzik@gmail.com>, linux-s390@vger.kernel.org,
- linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <cover.1755012943.git.lorenzo.stoakes@oracle.com>
- <1eb2266f4408798a55bda00cb04545a3203aa572.1755012943.git.lorenzo.stoakes@oracle.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <1eb2266f4408798a55bda00cb04545a3203aa572.1755012943.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
+From: GuoHan Zhao <zhaoguohan@kylinos.cn>
 
+In the error handling path of __add_event(), if evsel__new_idx() fails
+and returns NULL, the subsequent calls to zfree(&evsel->name) and
+zfree(&evsel->metric_id) will cause null pointer dereference.
 
-On 2025/8/12 23:44, Lorenzo Stoakes wrote:
-> As part of the effort to move to mm->flags becoming a bitmap field, convert
-> existing users to making use of the mm_flags_*() accessors which will, when
-> the conversion is complete, be the only means of accessing mm_struct flags.
-> 
-> This will result in the debug output being that of a bitmap output, which
-> will result in a minor change here, but since this is for debug only, this
-> should have no bearing.
-> 
-> Otherwise, no functional changes intended.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> ---
+Extend the goto chain to properly handle the case where evsel allocation
+fails, avoiding unnecessary cleanup operations on a NULL pointer.
 
-LGTM.
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Fixes: cd63c2216825 ("perf parse-events: Minor __add_event refactoring")
+Signed-off-by: GuoHan Zhao <zhaoguohan@kylinos.cn>
+
+Changes in V2:
+- Extended the goto chain with separate error handling labels instead of =
+using null pointer check
+- Reordered jump targets to avoid accessing NULL evsel members
+- Added Fixes tag
+- Updated commit subject to use "Prevent" instead of "Fix"
+---
+ tools/perf/util/parse-events.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
+s.c
+index 8282ddf68b98..8a1fc5d024bf 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -277,18 +277,18 @@ __add_event(struct list_head *list, int *idx,
+=20
+ 	evsel =3D evsel__new_idx(attr, *idx);
+ 	if (!evsel)
+-		goto out_err;
++		goto out_free_cpus;
+=20
+ 	if (name) {
+ 		evsel->name =3D strdup(name);
+ 		if (!evsel->name)
+-			goto out_err;
++			goto out_free_evsel;
+ 	}
+=20
+ 	if (metric_id) {
+ 		evsel->metric_id =3D strdup(metric_id);
+ 		if (!evsel->metric_id)
+-			goto out_err;
++			goto out_free_evsel;
+ 	}
+=20
+ 	(*idx)++;
+@@ -310,12 +310,15 @@ __add_event(struct list_head *list, int *idx,
+ 		evsel__warn_user_requested_cpus(evsel, user_cpus);
+=20
+ 	return evsel;
+-out_err:
+-	perf_cpu_map__put(cpus);
+-	perf_cpu_map__put(pmu_cpus);
++
++out_free_evsel:
+ 	zfree(&evsel->name);
+ 	zfree(&evsel->metric_id);
+ 	free(evsel);
++out_free_cpus:
++	perf_cpu_map__put(cpus);
++	perf_cpu_map__put(pmu_cpus);
++
+ 	return NULL;
+ }
+=20
+--=20
+2.43.0
 
