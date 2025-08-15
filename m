@@ -1,104 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B17242D66;
-	Fri, 15 Aug 2025 05:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1ECB253F00;
+	Fri, 15 Aug 2025 05:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755236026; cv=none; b=aDIFft0T6Cg3fXvbuev38nqdRipyie8CdYp3lnYKJlkhOISOl1WgIK0lpHPNGIut+8/Jp299GWGsYZ2MTc9bcXL0Z63Y6RBFcuR0KdytQdTEfIKw1+xdhjm1eUGXKm1eUyPCFL1FvxCMgbff/Jjw7nY6ltGoCFb0NMYvZX7eVUY=
+	t=1755236552; cv=none; b=oZ/ZwF6ViVGRgRS5+T9VW5vk1puUsqzsK7oh2WQ6MCDdhfIokmUxiEYUGwps2qZitqjK6kdTtgBiqrjbezOF3MP0ReZAhz7yvLZ39VOBOrWsm/Di0I0H0mGgoy33yPx9O1oZ7lDX8K+drd7+HwP2LQ49n/QG3ZRij+i3JBSuqmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755236026; c=relaxed/simple;
-	bh=5pmEnpk4P+ndbonyan2VBiYanHohRCT0mNUzn8ef6Jw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uCn6sfAbMdp/+dXyCLQicymWGZ1eXdu4ngGWFuh3qavEdnPGwE6iMHVq/Kr2jvYLHcf67W15z35bgX+ZkIV5+fX4RNUQ34+q60KKJKmLn0RQvbvGFkOrsQzC7t2155+eLosrA+G/e4c5jXj6P8wj2h3THga7SsSU0hIo3S7DZ2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1acX8gnF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755236552; c=relaxed/simple;
+	bh=Ks40N5tXrBbzyWwTiZYVBvNXCKL6TfUycUcyTgffazg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GpgzO9jnIN+RUgblU9X75Qk8TllRo8w2N408tH8HScy/hbND00FXHWfXFs/kk5OjKuVwUlvx+hhCSD8XgWs9XPKSDsJM3iUVhl35wossXcMK7ynzOMlBkzVr4x5i+oZNQstlF9u4sCbLQdwbBp1EYu2fzVuyeF3Je3uZ9yOxDrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jms.id.au; spf=pass smtp.mailfrom=gmail.com; dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b=ABxCVxS3; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jms.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1acX8gnF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 923C0C4CEF4;
-	Fri, 15 Aug 2025 05:33:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1755236026;
-	bh=5pmEnpk4P+ndbonyan2VBiYanHohRCT0mNUzn8ef6Jw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=1acX8gnFQCkziGbYVwXTdj9BgkJt06DgtflG9KQNRnqNIt+UE43nvvq7RtqS8j+TO
-	 DIT37U+VhXVk1Tmo2KjQJ/IaQC3QxZHPJnNumrOKk9NIFQf1jf3eWt9D8ct/fb16Pq
-	 xhXRyIEUjs6wiBS4B4K5vjigRUpIaLwvw1zT2g0k=
-Date: Fri, 15 Aug 2025 07:33:41 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, stable@vger.kernel.org,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	hargar@microsoft.com, broonie@kernel.org, achill@achill.org,
-	qemu-devel@nongnu.org,
-	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Ben Copeland <benjamin.copeland@linaro.org>,
-	LTP List <ltp@lists.linux.it>, chrubis <chrubis@suse.cz>,
-	Petr Vorel <pvorel@suse.cz>, Ian Rogers <irogers@google.com>,
-	linux-perf-users@vger.kernel.org,
-	Zhang Yi <yi.zhang@huaweicloud.com>,
-	Joseph Qi <jiangqi903@gmail.com>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org,
-	linux-ext4 <linux-ext4@vger.kernel.org>
-Subject: Re: [PATCH 6.16 000/627] 6.16.1-rc1 review
-Message-ID: <2025081536-resonate-wafer-6699@gregkh>
-References: <20250812173419.303046420@linuxfoundation.org>
- <CA+G9fYtBnCSa2zkaCn-oZKYz8jz5FZj0HS7DjSfMeamq3AXqNg@mail.gmail.com>
- <2025081300-frown-sketch-f5bd@gregkh>
- <aJ5EupUV9t0jToY3@google.com>
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="ABxCVxS3"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-afcb7ae31caso290924466b.3;
+        Thu, 14 Aug 2025 22:42:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google; t=1755236548; x=1755841348; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ao0nHqySVR1z1mkQWgkIv+zrEyClYUPdZ2AVw92mKw4=;
+        b=ABxCVxS3Pm11eoXkLyl7eij3bAdWXrGjL1z/PP8pqmYC2v2vDiXivn8DxwWf+8rOSn
+         DaGSFP93wecypGZyCzzDg0CJSi0MeQRWA0xNmvda8frH+qgDAQStyFzlDGxler1Tx6O/
+         4kXzql82hisLlvX2z+AxXOL2T8nshh3i28P/w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755236548; x=1755841348;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ao0nHqySVR1z1mkQWgkIv+zrEyClYUPdZ2AVw92mKw4=;
+        b=NNsDETCL6TuahFBChTYX9v2tS3dtdpxR8oGRJXjPEHEz0IKzAkYL/AcmaK4/lJqC2O
+         wUeYyyYZJKcUKqRXqepMi3ArDjcc64/vXU8MCQQ/gdHHdTSEsamHo6rpM/nOEE9TPcYQ
+         M3jUzNpTPhpeYxrWCri/kT8gIcufeaOKxI2Gs71GhqFQS+iBhAI/hBwjzHH1AfhXhiXX
+         bmK1Syrm8I9P81Qx7BsATon9DqWV9dW/E4Zy6FDzN96BwUsq89nKFNN7AOXsHlTSfml7
+         49OmQanR2KxKvC5eJH1sz5YVdPOzXR7oeYKmt+4nEyxw3weL/DQe+zTli+wgmO8sOsHc
+         FwgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8/goXDi1VN4SNpvaqhR6xZcpxQtQi7lI+2V8f0LFO27c1Pg+bJCxVPbVpOj1kACsJnZCaL5i4ENNfnCCgRmWa0g==@vger.kernel.org, AJvYcCUFc2GTMOeFZNDcGRI579z+KD0vzapoLLZEqN0gE+o3/8eXb3Qa2Tc++3Wp7Vkn1yNZkwp1AgGXsehOGR8=@vger.kernel.org, AJvYcCWiltz5Iy9Zj6LUgpLr3FiZCl/kM+dyNMchtkKGyWANbgXh3izXdnsxV3BUQEpQlQ5bML+kffnymb0vS/j3VbLs@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0p/nI/lK0X8zcB/qFmMPFHzXUn4Eos2wbD0a6oWEo1qnyqe6S
+	gxCZnpi2QAN1U9adulivuYPyf8PqrjdwUORWck0OPPqIvLB13MXKrXuYL2fbD3quoao6MOnhwmb
+	v+rYBdVrmXn74O13lp3MZ5XSv9SCGu4I=
+X-Gm-Gg: ASbGncv6Sb9l2SeXa6bTwwuZhOjyGWCQkLDl0o72Ewe7T9jzFQd2TwcUYxp4PL9lrRM
+	N4T8dxGLrLcDFYT3O0DOeoMKOoCHGIGRWpI/XCt0PmT6jgnzeNpQm/i242YxcL0KZ+reS63X6Jg
+	JS77wuXdm2QjRriXvHylGmSE1/L8fJ2N3dKRoJu0OdYASOZqhSF5EcyeAHi9B4p8cT5jqrgwpY7
+	/SOnhGGM3YaBxiVVLBu+kCQWayTWEyWxF8=
+X-Google-Smtp-Source: AGHT+IHfJpD0Y3cKBjtoKB/TD0jiobIEw7Qext8zDoq1Qo4cR9mUtcGGxBbzZHvlUvY1u2ZejaJkKgOvEKCU+6YsJSs=
+X-Received: by 2002:a17:906:6a0e:b0:afc:d209:37f2 with SMTP id
+ a640c23a62f3a-afcdc359d12mr55071366b.61.1755236548083; Thu, 14 Aug 2025
+ 22:42:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aJ5EupUV9t0jToY3@google.com>
+References: <20250805193955.798277-1-jesse@rivosinc.com> <20250805193955.798277-9-jesse@rivosinc.com>
+In-Reply-To: <20250805193955.798277-9-jesse@rivosinc.com>
+From: Joel Stanley <joel@jms.id.au>
+Date: Fri, 15 Aug 2025 15:42:16 +1000
+X-Gm-Features: Ac12FXw8XUjBVkZPAHSLVno0uMPz2dM9vKDf4fisVFB6fiah4HK821c7ZHoR6ik
+Message-ID: <CACPK8Xd2QfL460LY2T0ia7Akb79fEXKF2+=B27M8q5j7jUoouQ@mail.gmail.com>
+Subject: Re: [PATCH 8/8] selftests: riscv: Add test for hardware breakpoints
+To: Jesse Taube <jesse@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Aug 14, 2025 at 01:19:06PM -0700, Namhyung Kim wrote:
-> Hello,
-> 
-> Thanks for the report!
-> 
-> On Wed, Aug 13, 2025 at 02:50:49PM +0200, Greg Kroah-Hartman wrote:
-> > On Wed, Aug 13, 2025 at 05:46:26PM +0530, Naresh Kamboju wrote:
-> > > Long story:
-> > > 1)
-> > > The perf gcc-13 build failed on x86_64 and i386.
-> > > 
-> > > Build regression: qemu-arm64 ARM64_64K_PAGES ltp syscalls swap fsync
-> > > fallocate failed.
-> > > 
-> > > > Ian Rogers <irogers@google.com>
-> > > >     perf topdown: Use attribute to see an event is a topdown metic or slots
-> > > 
-> > > Build error:
-> > > 
-> > > arch/x86/tests/topdown.c: In function 'event_cb':
-> > > arch/x86/tests/topdown.c:53:25: error: implicit declaration of
-> > > function 'pr_debug' [-Werror=implicit-function-declaration]
-> > >    53 |                         pr_debug("Broken topdown information
-> > > for '%s'\n", evsel__name(evsel));
-> > >       |                         ^~~~~~~~
-> > > cc1: all warnings being treated as errors
-> > 
-> > Already fixed.
-> 
-> Are you sure?  I'm not seeing the fix.  Can you share the commit id?
+Hi Jesse,
 
-I dropped the offending perf patch:
-	https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/commit/?id=4199b872a5585e025f62886724f4f9ae80e014ae
+We had a pretty huge cc list on the thread, I've trimmed it right
+back. Feel free to add some people back but keep it focused.
 
-Did that not work for you?
+On Wed, 6 Aug 2025 at 05:42, Jesse Taube <jesse@rivosinc.com> wrote:
+>
+> Add riscv specific selftest for hardhardware breakpoints.
 
-thanks,
+nit: double hardware
 
-greg k-h
+> These tests are based on:
+> tools/testing/selftests/breakpoints/breakpoint_test_arm64.c
+
+The sefltest didn't build for me. There's a few suggested fixes below.
+
+> Signed-off-by: Jesse Taube <jesse@rivosinc.com>
+> ---
+> The selftest fails as register_user_hw_breakpoint seemingly does not
+> call arch_install_hw_breakpoint. The test also seems to fail on arm64
+> in the same way when I tested it.
+
+Is this still a problem with your patchset?
+
+Do you test in qemu? Can you share your version, command line, etc?
+
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/breakpoints/Makefile
+> @@ -0,0 +1,12 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (C) 2021 ARM Limited
+> +# Originally tools/testing/arm64/abi/Makefile
+
+CFLAGS += $(KHDR_INCLUDES)
+
+This adds -isystem to include local headers for the up to date
+ptrace.h and elf.h definitions.
+
+ $ make headers
+ $ make -C tools/testing/selftests CROSS_COMPILE=riscv64-linux-gnu-
+ARCH=riscv TARGETS=riscv/breakpoints
+     make: Entering directory 'tools/testing/selftests'
+     riscv64-linux-gnu-gcc -static
+-otools/testing/selftests/riscv/breakpoints/breakpoint_test
+     -isystem usr/include -Itools/testing/selftests/../../../tools/include
+     -D_GNU_SOURCE=   breakpoint_test.c
+
+> +
+> +CFLAGS += -I$(top_srcdir)/tools/include
+> +
+> +TEST_GEN_PROGS := breakpoint_test
+> +
+> +include ../../lib.mk
+> +
+> +$(OUTPUT)/breakpoint_test: breakpoint_test.c
+> +       $(CC) -static -o$@ $(CFLAGS) $(LDFLAGS) $^
+> diff --git a/tools/testing/selftests/riscv/breakpoints/breakpoint_test.c b/tools/testing/selftests/riscv/breakpoints/breakpoint_test.c
+> new file mode 100644
+> index 000000000000..faeecc72da12
+> --- /dev/null
+> +++ b/tools/testing/selftests/riscv/breakpoints/breakpoint_test.c
+> @@ -0,0 +1,246 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2016 Google, Inc.
+> + *
+> + * Original Code by Pavel Labath <labath@google.com>
+> + *
+> + * Code modified by Pratyush Anand <panand@redhat.com>
+> + * for testing different byte select for each access size.
+> + * Originally tools/testing/selftests/breakpoints/breakpoint_test_arm64.c
+> + */
+> +
+> +#define _GNU_SOURCE
+> +
+> +#include <asm/ptrace.h>
+> +#include <sys/types.h>
+> +#include <sys/wait.h>
+> +#include <sys/ptrace.h>
+> +#include <sys/param.h>
+> +#include <sys/uio.h>
+> +#include <stdint.h>
+> +#include <stdbool.h>
+> +#include <stddef.h>
+> +#include <string.h>
+> +#include <stdio.h>
+> +#include <unistd.h>
+> +#include <elf.h>
+
+This is the wrong elf.h, we want the one with NT_RISCV_HW_BREAK.
+
+-#include <elf.h>
++#include <linux/elf.h>
+
+
+> +#include <errno.h>
+> +#include <signal.h>
+> +
+> +#include "../../kselftest.h"
+> +
+> +#define MAX_BP_SIZE 8
+> +
