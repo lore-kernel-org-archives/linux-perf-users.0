@@ -1,56 +1,67 @@
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236B32C3264;
-	Fri, 15 Aug 2025 10:56:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C7D28851B;
+	Fri, 15 Aug 2025 11:40:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755255381; cv=none; b=fT38TkK0lN6A/GzgFUawFhKTaqof/Bd0/Rno4xLpeo3sQyITI+vbfTT0fqLyaq8eSwmrxqfbiu898PheNoXA5KJf3Rc9sy7KvF4vqbHyk9WfR5PeHUyr1tXbRzxfGJte1W+covJ5UHiZWAfvzQc9yomU4gVNWYsPW7oTnAxk27k=
+	t=1755258004; cv=none; b=FWgq+IJIROqzB7b3MNCVq2UaohpvUZOeHVstEvfhunBrwANBV4qXGupbUjs20Zy0ftcV7q+LwY36WZ3rZG8EF5nWXFTBl4VdL+PhR91MYWszDf44Z0MQr4XopH3FHSpbxc16dZfBy9vF4MYOtg2t2HLeApz9xI5jGci4R2tF/3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755255381; c=relaxed/simple;
-	bh=tzXbTWV8qNFqQb2QpXq90iV5Cbg9kO1VG9m6vpVQ65U=;
+	s=arc-20240116; t=1755258004; c=relaxed/simple;
+	bh=C0oqbcfX48QjFch6cP3OL9Hcj4yxxWdACAmpuRqOXXg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WgRqYoNPSMX3etW9l0NiAf41eD/Equ4J0td7HI+bpBAWeQ7QnZQJ5GAn3ySCuuzc0eRFHMaa2ZcUpb4+Ov99tLb5wGZOoE8lUlJKzIOv7ZHahGXenvy9Ce496VDdah15bzY1A0WJ0T7xJ2D3W7n0td6rltWXGF4wFkf8U463v8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LMQpZwT6; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jglev1DmALDJHto87a1lE+Mi9xj8mg3cxAwE4Ar1lD23owThyZfnSVApcQ0yVGk7qU6YtLnlGd1LkYfItoRY8bNov1Z9UjBywnNddBPpYZBFBk43QNfiXinObKz0nMb3B17e3K5STYAwBpQ6f2WU6OUSoIpCDqH6Vr4WHNfbmsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=d3ilS2jy; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LMQpZwT6"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d3ilS2jy"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=I9wd9JD5yaWspOFUNaW5j2BV7yycEibPeUF2FP6pZ7w=; b=LMQpZwT6yw/fL2wv0AFCPtHWs0
-	GrQ9WJEZJtI48c8epzwgaidC5KYSR732nI3AhY7lHDYs9i0Vkah8ng70rwmUuKSpwlBLOYqEi17ju
-	656rA6NVfX8Ar0KW9QjXs+Erh26UaMMzlCrTSz3ZI4haiw7VqMrHp8vny9MmzyPOiMwbfCxbyk4IC
-	46P7eqsbu11tsR+edLjyNmYyoch5Ktd6zyf3GMzgYRgz9nKlpsM72y1jnUmERldbuZISbftbxlAty
-	As4diWfbDvxG+whcoplG6kujMwcXjt6dDst9uUAgYKDjOxzLamSN1V/vsxxJGIMJ2vHwcyXG/L6dd
-	lqceHwyQ==;
+	bh=xjeTweJ3rpt6YpKV/vEnlA7rHRaCcvmve7oDl2/k04A=; b=d3ilS2jyupRTcEOmUlOqZKAjGM
+	0Qpsy+V+NIZ7r6wlbtVd3Bs2iHwdCFkGwOzPWg/E2TAHZ67IJq2YhPzRZLCrutdbF3TTo6Ag01Y2W
+	1nm6Ojyl7/9b6VntcO58DVhpiGFVPl2ElJHVYxgEeTGc8hwoxm/DVbquUrLBrlRCd8IxRmRpiSCGk
+	BCnawrZK+2z68e1v28tE9DnwMzqA2hI+I/uT3IoQAQMiZw9XSrIWuzhqt23Vw4AXDCCgR5yHUbRaG
+	NjrBmHQQaGA99TukqezyXSwAkPtTSWNAPQvvxlXehSLtU2ZtPtGN1X2zSR6LZZPcTEdzcBYYoOc+w
+	rt1YgSRw==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
 	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ums6Q-0000000Ggbl-32FU;
-	Fri, 15 Aug 2025 10:56:07 +0000
+	id 1umsmm-0000000GhAl-3JcF;
+	Fri, 15 Aug 2025 11:39:53 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 57DB03002ED; Fri, 15 Aug 2025 12:56:05 +0200 (CEST)
-Date: Fri, 15 Aug 2025 12:56:05 +0200
+	id C287B3002ED; Fri, 15 Aug 2025 13:39:51 +0200 (CEST)
+Date: Fri, 15 Aug 2025 13:39:51 +0200
 From: Peter Zijlstra <peterz@infradead.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Yunseong Kim <ysk@kzalloc.com>, Ingo Molnar <mingo@redhat.com>,
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Anup Patel <anup@brainfault.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Will Deacon <will@kernel.org>, Yeoreum Yun <yeoreum.yun@arm.com>,
-	Austin Kim <austindh.kim@gmail.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	syzkaller@googlegroups.com
-Subject: Re: [PATCH v3] perf: Avoid undefined behavior from stopping/starting
- inactive events
-Message-ID: <20250815105605.GA3245006@noisy.programming.kicks-ass.net>
-References: <20250812181046.292382-2-ysk@kzalloc.com>
- <922f69f6-e290-46f6-af6f-5a71e4508cf0@linux.intel.com>
+	Paolo Bonzini <pbonzini@redhat.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org, loongarch@lists.linux.dev,
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Yongwei Ma <yongwei.ma@intel.com>,
+	Mingwei Zhang <mizhang@google.com>,
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v5 09/44] perf/x86: Switch LVTPC to/from mediated PMI
+ vector on guest load/put context
+Message-ID: <20250815113951.GC4067720@noisy.programming.kicks-ass.net>
+References: <20250806195706.1650976-1-seanjc@google.com>
+ <20250806195706.1650976-10-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,57 +70,107 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <922f69f6-e290-46f6-af6f-5a71e4508cf0@linux.intel.com>
+In-Reply-To: <20250806195706.1650976-10-seanjc@google.com>
 
-On Tue, Aug 12, 2025 at 04:51:28PM -0700, Liang, Kan wrote:
+On Wed, Aug 06, 2025 at 12:56:31PM -0700, Sean Christopherson wrote:
+> Add arch hooks to the mediated vPMU load/put APIs, and use the hooks to
+> switch PMIs to the dedicated mediated PMU IRQ vector on load, and back to
+> perf's standard NMI when the guest context is put.  I.e. route PMIs to
+> PERF_GUEST_MEDIATED_PMI_VECTOR when the guest context is active, and to
+> NMIs while the host context is active.
 > 
+> While running with guest context loaded, ignore all NMIs (in perf).  Any
+> NMI that arrives while the LVTPC points at the mediated PMU IRQ vector
+> can't possibly be due to a host perf event.
 > 
-> On 2025-08-12 11:10 a.m., Yunseong Kim wrote:
-> > Calling pmu->start()/stop() on perf events in PERF_EVENT_STATE_OFF can
-> > leave event->hw.idx at -1. When PMU drivers later attempt to use this
-> > negative index as a shift exponent in bitwise operations, it leads to UBSAN
-> > shift-out-of-bounds reports.
-> > 
-> > The issue is a logical flaw in how event groups handle throttling when some
-> > members are intentionally disabled. Based on the analysis and the
-> > reproducer provided by Mark Rutland (this issue on both arm64 and x86-64).
-> > 
-> > The scenario unfolds as follows:
-> > 
-> >  1. A group leader event is configured with a very aggressive sampling
-> >     period (e.g., sample_period = 1). This causes frequent interrupts and
-> >     triggers the throttling mechanism.
-> >  2. A child event in the same group is created in a disabled state
-> >     (.disabled = 1). This event remains in PERF_EVENT_STATE_OFF.
-> >     Since it hasn't been scheduled onto the PMU, its event->hw.idx remains
-> >     initialized at -1.
-> >  3. When throttling occurs, perf_event_throttle_group() and later
-> >     perf_event_unthrottle_group() iterate through all siblings, including
-> >     the disabled child event.
-> >  4. perf_event_throttle()/unthrottle() are called on this inactive child
-> >     event, which then call event->pmu->start()/stop().
-> >  5. The PMU driver receives the event with hw.idx == -1 and attempts to
-> >     use it as a shift exponent. e.g., in macros like PMCNTENSET(idx),
-> >     leading to the UBSAN report.
-> > 
-> > The throttling mechanism attempts to start/stop events that are not
-> > actively scheduled on the hardware.
-> > 
-> > Move the state check into perf_event_throttle()/perf_event_unthrottle() so
-> > that inactive events are skipped entirely. This ensures only active events
-> > with a valid hw.idx are processed, preventing undefined behavior and
-> > silencing UBSAN warnings. The corrected check ensures true before
-> > proceeding with PMU operations.
-> > 
-> > The problem can be reproduced with the syzkaller reproducer:
-> > Link: https://lore.kernel.org/lkml/714b7ba2-693e-42e4-bce4-feef2a5e7613@kzalloc.com/
-> > 
-> > Fixes: 9734e25fbf5a ("perf: Fix the throttle logic for a group")
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Signed-off-by: Yunseong Kim <ysk@kzalloc.com>
+> Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> [sean: use arch hook instead of per-PMU callback]
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  arch/x86/events/core.c     | 27 +++++++++++++++++++++++++++
+>  include/linux/perf_event.h |  3 +++
+>  kernel/events/core.c       |  4 ++++
+>  3 files changed, 34 insertions(+)
 > 
-> Thanks for the fix.
-> 
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 7610f26dfbd9..9b0525b252f1 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -55,6 +55,8 @@ DEFINE_PER_CPU(struct cpu_hw_events, cpu_hw_events) = {
+>  	.pmu = &pmu,
+>  };
+>  
+> +static DEFINE_PER_CPU(bool, x86_guest_ctx_loaded);
+> +
+>  DEFINE_STATIC_KEY_FALSE(rdpmc_never_available_key);
+>  DEFINE_STATIC_KEY_FALSE(rdpmc_always_available_key);
+>  DEFINE_STATIC_KEY_FALSE(perf_is_hybrid);
+> @@ -1756,6 +1758,16 @@ perf_event_nmi_handler(unsigned int cmd, struct pt_regs *regs)
+>  	u64 finish_clock;
+>  	int ret;
+>  
+> +	/*
+> +	 * Ignore all NMIs when a guest's mediated PMU context is loaded.  Any
+> +	 * such NMI can't be due to a PMI as the CPU's LVTPC is switched to/from
+> +	 * the dedicated mediated PMI IRQ vector while host events are quiesced.
+> +	 * Attempting to handle a PMI while the guest's context is loaded will
+> +	 * generate false positives and clobber guest state.
+> +	 */
+> +	if (this_cpu_read(x86_guest_ctx_loaded))
+> +		return NMI_DONE;
+> +
+>  	/*
+>  	 * All PMUs/events that share this PMI handler should make sure to
+>  	 * increment active_events for their events.
+> @@ -2727,6 +2739,21 @@ static struct pmu pmu = {
+>  	.filter			= x86_pmu_filter,
+>  };
+>  
+> +void arch_perf_load_guest_context(unsigned long data)
+> +{
+> +	u32 masked = data & APIC_LVT_MASKED;
+> +
+> +	apic_write(APIC_LVTPC,
+> +		   APIC_DM_FIXED | PERF_GUEST_MEDIATED_PMI_VECTOR | masked);
+> +	this_cpu_write(x86_guest_ctx_loaded, true);
+> +}
+> +
+> +void arch_perf_put_guest_context(void)
+> +{
+> +	this_cpu_write(x86_guest_ctx_loaded, false);
+> +	apic_write(APIC_LVTPC, APIC_DM_NMI);
+> +}
+> +
+>  void arch_perf_update_userpage(struct perf_event *event,
+>  			       struct perf_event_mmap_page *userpg, u64 now)
+>  {
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 0c529fbd97e6..3a9bd9c4c90e 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1846,6 +1846,9 @@ static inline unsigned long perf_arch_guest_misc_flags(struct pt_regs *regs)
+>  # define perf_arch_guest_misc_flags(regs)	perf_arch_guest_misc_flags(regs)
+>  #endif
+>  
+> +extern void arch_perf_load_guest_context(unsigned long data);
+> +extern void arch_perf_put_guest_context(void);
+> +
+>  static inline bool needs_branch_stack(struct perf_event *event)
+>  {
+>  	return event->attr.branch_sample_type != 0;
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index e1df3c3bfc0d..ad22b182762e 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -6408,6 +6408,8 @@ void perf_load_guest_context(unsigned long data)
+>  		task_ctx_sched_out(cpuctx->task_ctx, NULL, EVENT_GUEST);
+>  	}
+>  
+> +	arch_perf_load_guest_context(data);
 
-Thanks both!
+So I still don't understand why this ever needs to reach the generic
+code. x86 pmu driver and x86 kvm can surely sort this out inside of x86,
+no?
+
