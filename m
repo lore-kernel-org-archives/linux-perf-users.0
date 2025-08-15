@@ -1,172 +1,103 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1ECB253F00;
-	Fri, 15 Aug 2025 05:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3863F2192F9;
+	Fri, 15 Aug 2025 06:08:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755236552; cv=none; b=oZ/ZwF6ViVGRgRS5+T9VW5vk1puUsqzsK7oh2WQ6MCDdhfIokmUxiEYUGwps2qZitqjK6kdTtgBiqrjbezOF3MP0ReZAhz7yvLZ39VOBOrWsm/Di0I0H0mGgoy33yPx9O1oZ7lDX8K+drd7+HwP2LQ49n/QG3ZRij+i3JBSuqmk=
+	t=1755238095; cv=none; b=WW6Ry5Im25Uq4K5L1Dc/sYPObCMliQWFuo6nCihtzr//EevLTWoBFZqeFRqMJ3JhEpBwMFBsRy+Uz/6VE9Z+F99+DXxREJdap7hAd6BusF0nCrp+jynQg8Me+bla96Y77IPCC5v98c1JIM3eDCb9GSIZ+KC2BVK20ZsnG/wkpQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755236552; c=relaxed/simple;
-	bh=Ks40N5tXrBbzyWwTiZYVBvNXCKL6TfUycUcyTgffazg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GpgzO9jnIN+RUgblU9X75Qk8TllRo8w2N408tH8HScy/hbND00FXHWfXFs/kk5OjKuVwUlvx+hhCSD8XgWs9XPKSDsJM3iUVhl35wossXcMK7ynzOMlBkzVr4x5i+oZNQstlF9u4sCbLQdwbBp1EYu2fzVuyeF3Je3uZ9yOxDrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jms.id.au; spf=pass smtp.mailfrom=gmail.com; dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b=ABxCVxS3; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jms.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1755238095; c=relaxed/simple;
+	bh=tbJHKmM4HLfO48fOXVQkSO6aTHrBMsni/C0VTIkbqSg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Jw9McsKRbpsoybHDC3v9Eht9hccY4mDEaEWfhZwvViww0+V3d21RHpR2eUblR+y4nBext1IpzMljP2jHDOmht9KY3ZDT3NlmPryOJVL6RphzM7CYcNfNvD6n6fTq9mKB2k/X7oihL+2gUmV/iyB1KdOr370o83rPQo2+XIyfF54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=E6SWROy/; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="ABxCVxS3"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-afcb7ae31caso290924466b.3;
-        Thu, 14 Aug 2025 22:42:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google; t=1755236548; x=1755841348; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ao0nHqySVR1z1mkQWgkIv+zrEyClYUPdZ2AVw92mKw4=;
-        b=ABxCVxS3Pm11eoXkLyl7eij3bAdWXrGjL1z/PP8pqmYC2v2vDiXivn8DxwWf+8rOSn
-         DaGSFP93wecypGZyCzzDg0CJSi0MeQRWA0xNmvda8frH+qgDAQStyFzlDGxler1Tx6O/
-         4kXzql82hisLlvX2z+AxXOL2T8nshh3i28P/w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755236548; x=1755841348;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ao0nHqySVR1z1mkQWgkIv+zrEyClYUPdZ2AVw92mKw4=;
-        b=NNsDETCL6TuahFBChTYX9v2tS3dtdpxR8oGRJXjPEHEz0IKzAkYL/AcmaK4/lJqC2O
-         wUeYyyYZJKcUKqRXqepMi3ArDjcc64/vXU8MCQQ/gdHHdTSEsamHo6rpM/nOEE9TPcYQ
-         M3jUzNpTPhpeYxrWCri/kT8gIcufeaOKxI2Gs71GhqFQS+iBhAI/hBwjzHH1AfhXhiXX
-         bmK1Syrm8I9P81Qx7BsATon9DqWV9dW/E4Zy6FDzN96BwUsq89nKFNN7AOXsHlTSfml7
-         49OmQanR2KxKvC5eJH1sz5YVdPOzXR7oeYKmt+4nEyxw3weL/DQe+zTli+wgmO8sOsHc
-         FwgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU8/goXDi1VN4SNpvaqhR6xZcpxQtQi7lI+2V8f0LFO27c1Pg+bJCxVPbVpOj1kACsJnZCaL5i4ENNfnCCgRmWa0g==@vger.kernel.org, AJvYcCUFc2GTMOeFZNDcGRI579z+KD0vzapoLLZEqN0gE+o3/8eXb3Qa2Tc++3Wp7Vkn1yNZkwp1AgGXsehOGR8=@vger.kernel.org, AJvYcCWiltz5Iy9Zj6LUgpLr3FiZCl/kM+dyNMchtkKGyWANbgXh3izXdnsxV3BUQEpQlQ5bML+kffnymb0vS/j3VbLs@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0p/nI/lK0X8zcB/qFmMPFHzXUn4Eos2wbD0a6oWEo1qnyqe6S
-	gxCZnpi2QAN1U9adulivuYPyf8PqrjdwUORWck0OPPqIvLB13MXKrXuYL2fbD3quoao6MOnhwmb
-	v+rYBdVrmXn74O13lp3MZ5XSv9SCGu4I=
-X-Gm-Gg: ASbGncv6Sb9l2SeXa6bTwwuZhOjyGWCQkLDl0o72Ewe7T9jzFQd2TwcUYxp4PL9lrRM
-	N4T8dxGLrLcDFYT3O0DOeoMKOoCHGIGRWpI/XCt0PmT6jgnzeNpQm/i242YxcL0KZ+reS63X6Jg
-	JS77wuXdm2QjRriXvHylGmSE1/L8fJ2N3dKRoJu0OdYASOZqhSF5EcyeAHi9B4p8cT5jqrgwpY7
-	/SOnhGGM3YaBxiVVLBu+kCQWayTWEyWxF8=
-X-Google-Smtp-Source: AGHT+IHfJpD0Y3cKBjtoKB/TD0jiobIEw7Qext8zDoq1Qo4cR9mUtcGGxBbzZHvlUvY1u2ZejaJkKgOvEKCU+6YsJSs=
-X-Received: by 2002:a17:906:6a0e:b0:afc:d209:37f2 with SMTP id
- a640c23a62f3a-afcdc359d12mr55071366b.61.1755236548083; Thu, 14 Aug 2025
- 22:42:28 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="E6SWROy/"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1755238083; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=c6Xki8soLW+vw63qx0n+Ld6/faF33zlxnTUtiZxzosw=;
+	b=E6SWROy/yb8tUTn5zKyYzwVtC358UkDJZGtD9bSklYxUIbfbvAfaL4KDYTrZWdRP0BlGeYuGXpB6hWPBRwxIv5l8NQOsuXuhQ0xRaJEGKA5tqB44PMu2fvsTShPFbHNwhyTdvKW2G4mICD1CThc+MmBU/wXK3O6Q/UOOuMRzfJA=
+Received: from 30.74.144.112(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wlnr11M_1755238078 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 15 Aug 2025 14:07:59 +0800
+Message-ID: <0e26b400-e477-4722-a524-8a3c520f5429@linux.alibaba.com>
+Date: Fri, 15 Aug 2025 14:07:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250805193955.798277-1-jesse@rivosinc.com> <20250805193955.798277-9-jesse@rivosinc.com>
-In-Reply-To: <20250805193955.798277-9-jesse@rivosinc.com>
-From: Joel Stanley <joel@jms.id.au>
-Date: Fri, 15 Aug 2025 15:42:16 +1000
-X-Gm-Features: Ac12FXw8XUjBVkZPAHSLVno0uMPz2dM9vKDf4fisVFB6fiah4HK821c7ZHoR6ik
-Message-ID: <CACPK8Xd2QfL460LY2T0ia7Akb79fEXKF2+=B27M8q5j7jUoouQ@mail.gmail.com>
-Subject: Re: [PATCH 8/8] selftests: riscv: Add test for hardware breakpoints
-To: Jesse Taube <jesse@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/10] mm: convert core mm to mm_flags_*() accessors
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, "David S . Miller"
+ <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
+ <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Kees Cook <kees@kernel.org>, David Hildenbrand <david@redhat.com>,
+ Zi Yan <ziy@nvidia.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ David Rientjes <rientjes@google.com>, Shakeel Butt <shakeel.butt@linux.dev>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, Matthew Wilcox <willy@infradead.org>,
+ Mateusz Guzik <mjguzik@gmail.com>, linux-s390@vger.kernel.org,
+ linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <cover.1755012943.git.lorenzo.stoakes@oracle.com>
+ <1eb2266f4408798a55bda00cb04545a3203aa572.1755012943.git.lorenzo.stoakes@oracle.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <1eb2266f4408798a55bda00cb04545a3203aa572.1755012943.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Jesse,
 
-We had a pretty huge cc list on the thread, I've trimmed it right
-back. Feel free to add some people back but keep it focused.
 
-On Wed, 6 Aug 2025 at 05:42, Jesse Taube <jesse@rivosinc.com> wrote:
->
-> Add riscv specific selftest for hardhardware breakpoints.
-
-nit: double hardware
-
-> These tests are based on:
-> tools/testing/selftests/breakpoints/breakpoint_test_arm64.c
-
-The sefltest didn't build for me. There's a few suggested fixes below.
-
-> Signed-off-by: Jesse Taube <jesse@rivosinc.com>
+On 2025/8/12 23:44, Lorenzo Stoakes wrote:
+> As part of the effort to move to mm->flags becoming a bitmap field, convert
+> existing users to making use of the mm_flags_*() accessors which will, when
+> the conversion is complete, be the only means of accessing mm_struct flags.
+> 
+> This will result in the debug output being that of a bitmap output, which
+> will result in a minor change here, but since this is for debug only, this
+> should have no bearing.
+> 
+> Otherwise, no functional changes intended.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 > ---
-> The selftest fails as register_user_hw_breakpoint seemingly does not
-> call arch_install_hw_breakpoint. The test also seems to fail on arm64
-> in the same way when I tested it.
 
-Is this still a problem with your patchset?
+LGTM.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 
-Do you test in qemu? Can you share your version, command line, etc?
-
-> --- /dev/null
-> +++ b/tools/testing/selftests/riscv/breakpoints/Makefile
-> @@ -0,0 +1,12 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (C) 2021 ARM Limited
-> +# Originally tools/testing/arm64/abi/Makefile
-
-CFLAGS += $(KHDR_INCLUDES)
-
-This adds -isystem to include local headers for the up to date
-ptrace.h and elf.h definitions.
-
- $ make headers
- $ make -C tools/testing/selftests CROSS_COMPILE=riscv64-linux-gnu-
-ARCH=riscv TARGETS=riscv/breakpoints
-     make: Entering directory 'tools/testing/selftests'
-     riscv64-linux-gnu-gcc -static
--otools/testing/selftests/riscv/breakpoints/breakpoint_test
-     -isystem usr/include -Itools/testing/selftests/../../../tools/include
-     -D_GNU_SOURCE=   breakpoint_test.c
-
-> +
-> +CFLAGS += -I$(top_srcdir)/tools/include
-> +
-> +TEST_GEN_PROGS := breakpoint_test
-> +
-> +include ../../lib.mk
-> +
-> +$(OUTPUT)/breakpoint_test: breakpoint_test.c
-> +       $(CC) -static -o$@ $(CFLAGS) $(LDFLAGS) $^
-> diff --git a/tools/testing/selftests/riscv/breakpoints/breakpoint_test.c b/tools/testing/selftests/riscv/breakpoints/breakpoint_test.c
-> new file mode 100644
-> index 000000000000..faeecc72da12
-> --- /dev/null
-> +++ b/tools/testing/selftests/riscv/breakpoints/breakpoint_test.c
-> @@ -0,0 +1,246 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2016 Google, Inc.
-> + *
-> + * Original Code by Pavel Labath <labath@google.com>
-> + *
-> + * Code modified by Pratyush Anand <panand@redhat.com>
-> + * for testing different byte select for each access size.
-> + * Originally tools/testing/selftests/breakpoints/breakpoint_test_arm64.c
-> + */
-> +
-> +#define _GNU_SOURCE
-> +
-> +#include <asm/ptrace.h>
-> +#include <sys/types.h>
-> +#include <sys/wait.h>
-> +#include <sys/ptrace.h>
-> +#include <sys/param.h>
-> +#include <sys/uio.h>
-> +#include <stdint.h>
-> +#include <stdbool.h>
-> +#include <stddef.h>
-> +#include <string.h>
-> +#include <stdio.h>
-> +#include <unistd.h>
-> +#include <elf.h>
-
-This is the wrong elf.h, we want the one with NT_RISCV_HW_BREAK.
-
--#include <elf.h>
-+#include <linux/elf.h>
-
-
-> +#include <errno.h>
-> +#include <signal.h>
-> +
-> +#include "../../kselftest.h"
-> +
-> +#define MAX_BP_SIZE 8
-> +
