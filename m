@@ -1,64 +1,64 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C15F1DF979
-	for <linux-perf-users@vger.kernel.org>; Fri, 15 Aug 2025 08:36:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DD322330F
+	for <linux-perf-users@vger.kernel.org>; Fri, 15 Aug 2025 08:36:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755246988; cv=none; b=sngu4fmHuSBehUiwp3Qd9KrZMJkF6Mz4otXz1Chhvw4I902CtFSTAQCzIJKVtkf23o5A2PsvJffudeHhC3xhK+zy5HvXB9zcd/3t1bpiwJvuUk/vXm0k4+ulufFtr0D4tcmTNgSJ65Wxpr8tjoHLv+iP0BeK/7KicC0/V0IP2DU=
+	t=1755246999; cv=none; b=bVsxR5Yy9YFoY4/DyPWOM6ENsof+k8cU3v9PqK7PIDWtv2GVNLA6NFug3QeK91Pg7Jkil9w7rq6ENjDiD/xDn/Nk33gHHxMQHf4riuBVCWo8z49jaC6b2MCtbrflaQCMbdN3rIryHVFOGL0CJnbbnBHpZrsVAHa6kcHkE/pwZ+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755246988; c=relaxed/simple;
-	bh=eeyQkaN4FWPDvE9HVa2hXOJ19PUh/kaAhPs4qwr+jOI=;
+	s=arc-20240116; t=1755246999; c=relaxed/simple;
+	bh=ix9EzAal/ppn1SX6UcFVZT6oUGaG/ZAJW8cqHgNrhTY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Kws7M4K728j49M7bq39RcHY43GDRe0wvL4C9rlmC3dn/fgOUs2mkOWh3TW/bOdWf6+q9reeqGZ1aFZS7ngE0X81+poOyvPrlRA35fLtjswaIPOVcIQNBjtJXxlN1gK+PYLWoPcnfBUshVN8s/B9+KaEvI7gagbRK677D0nPk6Cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AOeuSTyh; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=MGTHI1Mh0kxoIe3ZwTOl+yiBKLPm6KXCUD8r5jVK9+u473QVExspEJ7mG8tBJ78/CYs/rW0lKeKQI8M1/f4birgerBhe1Bfh3XN6JchXCz8N1fpBRiIY1Sa17FZCkxvxRvZUOUmNV6uHjpU5aBpUBywzIjYCSIzuwKDlCEuD9bY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ph2VR0nZ; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AOeuSTyh"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57F029uT022440;
-	Fri, 15 Aug 2025 08:36:23 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ph2VR0nZ"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57EKkOI1019291;
+	Fri, 15 Aug 2025 08:36:30 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=M5IaTxOHGkc63KME0
-	wpS6L5Sokecu4r4FIvK612qxIk=; b=AOeuSTyhpsl+WO/dPDCSOdgiLkp98nGVN
-	GywFa+7H+/tjU9z+q8fAQnvj20lKTcwVEw6rR7fe+VNWB7lyMvAHPvVKZQ3Ca/yO
-	HA8xJa2gHQ6ARjx5FryLzlro3OxmXiWqD8hPyA43mPtML51uoFaxNMpMUbGW/W4N
-	bVGPpAkc1ikcwEpsqDZLAzuhEkvmV5ukz2OG6FzfWrl1w+LydnjJ/SfIaanJDksl
-	hUBT2KZncEfIRZcC17siwhiOTZh//r4NKLRvCe/2zBxIv+kMPyw+cLJpOQqyzJDg
-	/Nm3bJPTEZmggDf8sl4lRF9ZuoXjShpqhG1f0fwrLi7mGGjiBJd3g==
+	:mime-version:references:subject:to; s=pp1; bh=wkTVIt4sqtBahtUKB
+	UUpb0WCwDlegHfu9wdcB61B/pM=; b=Ph2VR0nZCVDAynQTzmwVVMXGl5kqAWfgM
+	ltW1ePNjmdY/CtMa9ereXFG2RhwXLm347iPmflk93shgN2xUn1rg8gds0++6Soux
+	X4cFaMl6/kOf4w3b+vuc8NsDt7dfTIrRb6yBRLKlV6P288g3+q7IT8CD/NtQ7sBk
+	q8mB55sQUBQNnN7z9jkCK9IKNvVr1fJVGO3mkLiOhjeGfPmNsHJHAxtepxUC+w9w
+	sR9B6f2JA5Jn2dcDEmwie1TGvramiinxwJwi31KjfxJotCga5W5NhVjKF+kQhVZs
+	AZa9KRfmlOY6WUwwytiCVAJeH2aTVm9atdNuCU6J4vViTAHbVHClA==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48dx14xgy9-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48gypegh0r-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 15 Aug 2025 08:36:23 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 57F8XpDc031563;
-	Fri, 15 Aug 2025 08:36:22 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48dx14xgy7-1
+	Fri, 15 Aug 2025 08:36:30 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 57F8YKEi000832;
+	Fri, 15 Aug 2025 08:36:30 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48gypegh0p-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 15 Aug 2025 08:36:22 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57F73tOQ020632;
-	Fri, 15 Aug 2025 08:36:21 GMT
+	Fri, 15 Aug 2025 08:36:30 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57F6Tkxc026279;
+	Fri, 15 Aug 2025 08:36:28 GMT
 Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 48ehnq83ph-1
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 48eh21ga2d-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 15 Aug 2025 08:36:21 +0000
+	Fri, 15 Aug 2025 08:36:28 +0000
 Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 57F8aHa035324614
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 57F8aO8f20447998
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 15 Aug 2025 08:36:17 GMT
+	Fri, 15 Aug 2025 08:36:24 GMT
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8489120043;
-	Fri, 15 Aug 2025 08:36:17 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id BF5DB20043;
+	Fri, 15 Aug 2025 08:36:24 +0000 (GMT)
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B5F5B20040;
-	Fri, 15 Aug 2025 08:36:10 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 5ED2F20040;
+	Fri, 15 Aug 2025 08:36:18 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.61.240.145])
 	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 15 Aug 2025 08:36:10 +0000 (GMT)
+	Fri, 15 Aug 2025 08:36:17 +0000 (GMT)
 From: Athira Rajeev <atrajeev@linux.ibm.com>
 To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
         maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org
@@ -66,9 +66,9 @@ Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         aboorvad@linux.ibm.com, sshegde@linux.ibm.com, atrajeev@linux.ibm.com,
         kjain@linux.ibm.com, hbathini@linux.vnet.ibm.com,
         Aditya.Bodkhe1@ibm.com, venkat88@linux.ibm.com
-Subject: [PATCH 13/14] tools/perf: Enable perf script to present the DTL entries
-Date: Fri, 15 Aug 2025 14:04:06 +0530
-Message-Id: <20250815083407.27953-14-atrajeev@linux.ibm.com>
+Subject: [PATCH 14/14] powerpc/perf/vpa-dtl: Add documentation for VPA dispatch trace log PMU
+Date: Fri, 15 Aug 2025 14:04:07 +0530
+Message-Id: <20250815083407.27953-15-atrajeev@linux.ibm.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20250815083407.27953-1-atrajeev@linux.ibm.com>
 References: <20250815083407.27953-1-atrajeev@linux.ibm.com>
@@ -80,159 +80,212 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: xD30sNIm8Y16RZMcP7pDdCY6_zm3sDJD
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEyMDIyNCBTYWx0ZWRfX/XjrzUwhTPha
- asFP9r0wf0a6EE3EbrK1DfR0s2vcw8kdSIBHFxEM4GEPPvKcg5v7B21/hV5yu3kbZarTYN7xFLZ
- CRDZ5BdQ6G1MgAqk54QQzrZrfukXGzIv9huUnoHXVZxnvitg3p9AosF/yUZlBE2McuJ90xq5Inw
- Yinr6oTQAx8GTk6VX7hvR5McpgwY8s+zPcouw2cZqgM3zNt23cGyHQXHlLC7BA+ObAiwiK7N78Z
- tZUt12ERk5+m3R0/qQpsw5J7Pgt8hghO2ZMCGN+U7tuFIVbfGXsDns7MvsMhYK/2UB2MDH8Fx0Z
- Fyr0XkvzForwl3dxenZysaZn2D5XeXMGkDWAtJaw9LPg5OEnpIm7o1WI0r98Ij0sN5satKlr7Z6
- 6QHDAh0i
-X-Proofpoint-GUID: TJuOYSTC6L8THmSwqJ517o1h5T1Tw7lS
-X-Authority-Analysis: v=2.4 cv=fLg53Yae c=1 sm=1 tr=0 ts=689ef187 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=2OwXVqhp2XgA:10 a=VnNF1IyMAAAA:8 a=u1D-RBGd0xOBWWY2JRAA:9
+X-Authority-Analysis: v=2.4 cv=eaU9f6EH c=1 sm=1 tr=0 ts=689ef18e cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=2OwXVqhp2XgA:10 a=VnNF1IyMAAAA:8 a=02MW3PgXJqTBV82uIr0A:9
+X-Proofpoint-GUID: 1v4feIjL6Wm934-dTkgdE0HTKENlitpU
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODEzMDE2NyBTYWx0ZWRfX7aCPVC4P4aq3
+ ELahHv4RkBTsYCqKwFdsOQYfnwVEg372f6Mo7ksw18JprOk9LclVYS6zcxDzj0k8SXerjZJP/JI
+ 4ti/H6HWPGRbOOhxsGob9skXotg5NWBrIw0DsA1E3WH9xgLShoo9AtC8UuXaavPrDOYWkqJeQxL
+ S+tj4cIxgPVYFOsE9zwxjpRpKqijMrwMgBRBZNTXZ64X1lhgs4KFCWDHBpnPJEncWarnDF/Oi9M
+ YmswBQIYF3yYjxs9DWF9BQznpSjgmOHEvIxTNW7uC42ZjuZRyws61LEqG/I7ZEHCnRD8SU0OKNo
+ 6JPbsi+IUz4lF7WkfCy0RWTM3V0eVEIdKPQknwjOZiTy2Ki9e/FQOPs2JSSfeY0cwuTJmZq4PA4
+ NKhrbQjz
+X-Proofpoint-ORIG-GUID: MyQar_O-nESpIi9AlO7xZ7QphQq595k5
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
  definitions=2025-08-15_02,2025-08-14_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 clxscore=1015 spamscore=0 priorityscore=1501 impostorscore=0
- phishscore=0 malwarescore=0 bulkscore=0 suspectscore=0 classifier=typeunknown
- authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2507300000 definitions=main-2508120224
+ suspectscore=0 phishscore=0 clxscore=1015 priorityscore=1501 spamscore=0
+ bulkscore=0 malwarescore=0 adultscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508130167
 
-Enable perf script to present the DTL entries. Process the
-dispatch trace log details in arch_perf_sample__fprintf_synth_evt()
-defined in buiultin-script.c file for config value:
-PERF_SYNTH_POWERPC_VPA_DTL.
-
-Sample output:
-
-   ./perf record -a -e sched:*,vpa_dtl/dtl_all/ -c 1000000000 sleep 1
-   [ perf record: Woken up 1 times to write data ]
-   [ perf record: Captured and wrote 0.300 MB perf.data ]
-
-   ./perf script
-            perf   13322 [002]   233.835807:                     sched:sched_switch: perf:13322 [120] R ==> migration/2:27 [0]
-     migration/2      27 [002]   233.835811:               sched:sched_migrate_task: comm=perf pid=13322 prio=120 orig_cpu=2 dest_cpu=3
-     migration/2      27 [002]   233.835818:               sched:sched_stat_runtime: comm=migration/2 pid=27 runtime=9214 [ns]
-     migration/2      27 [002]   233.835819:                     sched:sched_switch: migration/2:27 [0] S ==> swapper/2:0 [120]
-         swapper       0 [002]   233.835822:                                vpa-dtl: timebase: 338954486062657 dispatch_reason:decrementer_interrupt, preempt_reason:H_CEDE, enqueue_to_dispatch_time:435,			ready_to_enqueue_time:0, waiting_to_ready_time:34775058, processor_id: 202 c0000000000f8094 plpar_hcall_norets_notrace+0x18 ([kernel.kallsyms])
-         swapper       0 [001]   233.835886:                                vpa-dtl: timebase: 338954486095398 dispatch_reason:priv_doorbell, preempt_reason:H_CEDE, enqueue_to_dispatch_time:542,			ready_to_enqueue_time:0, waiting_to_ready_time:1245360, processor_id: 201 c0000000000f8094 plpar_hcall_norets_notrace+0x18 ([kernel.kallsyms])
+Documentation for vpa-dtl (Virtual Processor Area - Dispatch Trace Log)
+PMU interface. And how it can be used to collect the distrace trace log
+entries in perf data, how to process/report as part of perf report/perf
+script.
 
 Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
 ---
- tools/perf/builtin-script.c      | 23 +++++++++++++++++++++--
- tools/perf/util/powerpc-vpadtl.c | 16 ----------------
- tools/perf/util/powerpc-vpadtl.h | 19 +++++++++++++++++++
- 3 files changed, 40 insertions(+), 18 deletions(-)
+ Documentation/arch/powerpc/index.rst   |   1 +
+ Documentation/arch/powerpc/vpa-dtl.rst | 155 +++++++++++++++++++++++++
+ 2 files changed, 156 insertions(+)
+ create mode 100644 Documentation/arch/powerpc/vpa-dtl.rst
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index eff584735980..a0faadaadc4d 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -66,6 +66,7 @@
- #include "util/cgroup.h"
- #include "util/annotate.h"
- #include "perf.h"
-+#include "util/powerpc-vpadtl.h"
+diff --git a/Documentation/arch/powerpc/index.rst b/Documentation/arch/powerpc/index.rst
+index 53fc9f89f3e4..1be2ee3f0361 100644
+--- a/Documentation/arch/powerpc/index.rst
++++ b/Documentation/arch/powerpc/index.rst
+@@ -37,6 +37,7 @@ powerpc
+     vas-api
+     vcpudispatch_stats
+     vmemmap_dedup
++    vpa-dtl
  
- #include <linux/ctype.h>
- #ifdef HAVE_LIBTRACEEVENT
-@@ -2004,8 +2005,26 @@ static int perf_sample__fprintf_synth_iflag_chg(struct perf_sample *sample, FILE
- }
+     features
  
- static void arch_perf_sample__fprintf_synth_evt(struct perf_sample *data __maybe_unused,
--		 FILE *fp __maybe_unused, u64 config __maybe_unused)
-+		 FILE *fp __maybe_unused, u64 config __maybe_unused, struct perf_env *env)
- {
-+	const char *arch = perf_env__arch(env);
+diff --git a/Documentation/arch/powerpc/vpa-dtl.rst b/Documentation/arch/powerpc/vpa-dtl.rst
+new file mode 100644
+index 000000000000..98a8550ae1cc
+--- /dev/null
++++ b/Documentation/arch/powerpc/vpa-dtl.rst
+@@ -0,0 +1,155 @@
++.. SPDX-License-Identifier: GPL-2.0
++.. _htm:
 +
-+	if (!strcmp("powerpc", arch)) {
-+		struct dtl_entry *dtl = (struct dtl_entry *)data->raw_data;
++===================================
++DTL (Dispatch Trace Log)
++===================================
 +
-+		if (config != PERF_SYNTH_POWERPC_VPA_DTL)
-+			return;
-+		fprintf(fp, "timebase: %" PRIu64 "dispatch_reason:%s, preempt_reason:%s, enqueue_to_dispatch_time:%d,\
-+				ready_to_enqueue_time:%d, waiting_to_ready_time:%d, processor_id: %d",\
-+				be64_to_cpu(dtl->timebase),
-+				dispatch_reasons[dtl->dispatch_reason],
-+				preempt_reasons[dtl->preempt_reason],
-+				be32_to_cpu(dtl->enqueue_to_dispatch_time),
-+				be32_to_cpu(dtl->ready_to_enqueue_time),
-+				be32_to_cpu(dtl->waiting_to_ready_time),
-+				be16_to_cpu(dtl->processor_id));
-+	}
++Athira Rajeev, 19 April 2025
 +
- 	return;
- }
- 
-@@ -2032,7 +2051,7 @@ static int perf_sample__fprintf_synth(struct perf_sample *sample,
- 	case PERF_SYNTH_INTEL_IFLAG_CHG:
- 		return perf_sample__fprintf_synth_iflag_chg(sample, fp);
- 	default:
--		arch_perf_sample__fprintf_synth_evt(sample, fp, evsel->core.attr.config);
-+		arch_perf_sample__fprintf_synth_evt(sample, fp, evsel->core.attr.config, evsel__env(evsel));
- 		break;
- 	}
- 
-diff --git a/tools/perf/util/powerpc-vpadtl.c b/tools/perf/util/powerpc-vpadtl.c
-index 370c566f9ac2..482ddf1a2d51 100644
---- a/tools/perf/util/powerpc-vpadtl.c
-+++ b/tools/perf/util/powerpc-vpadtl.c
-@@ -30,22 +30,6 @@
- #include "symbol.h"
- #include "tool.h"
- 
--/*
-- * The DTL entries are of below format
-- */
--struct dtl_entry {
--	u8      dispatch_reason;
--	u8      preempt_reason;
--	u16     processor_id;
--	u32     enqueue_to_dispatch_time;
--	u32     ready_to_enqueue_time;
--	u32     waiting_to_ready_time;
--	u64     timebase;
--	u64     fault_addr;
--	u64     srr0;
--	u64     srr1;
--};
--
- /*
-  * Structure to save the auxtrace queue
-  */
-diff --git a/tools/perf/util/powerpc-vpadtl.h b/tools/perf/util/powerpc-vpadtl.h
-index 625172adaba5..497f704787a5 100644
---- a/tools/perf/util/powerpc-vpadtl.h
-+++ b/tools/perf/util/powerpc-vpadtl.h
-@@ -20,6 +20,25 @@ union perf_event;
- struct perf_session;
- struct perf_pmu;
- 
-+/*
-+ * The DTL entries are of below format
-+ */
++.. contents::
++    :depth: 3
++
++
++Basic overview
++==============
++
++The pseries Shared Processor Logical Partition(SPLPAR) machines can
++retrieve a log of dispatch and preempt events from the hypervisor
++using data from Disptach Trace Log(DTL) buffer. With this information,
++user can retrieve when and why each dispatch & preempt has occurred.
++The vpa-dtl PMU exposes the Virtual Processor Area(VPA) DTL counters
++via perf.
++
++Infrastructure used
++===================
++
++The VPA DTL PMU counters do not interrupt on overflow or generate any
++PMI interrupts. Therefore, hrtimer is used to poll the DTL data. The timer
++nterval can be provided by user via sample_period field in nano seconds.
++vpa dtl pmu has one hrtimer added per vpa-dtl pmu thread. DTL (Dispatch
++Trace Log) contains information about dispatch/preempt, enqueue time etc.
++We directly copy the DTL buffer data as part of auxiliary buffer and it
++will be processed later. This will avoid time taken to create samples
++in the kernel space. The PMU driver collecting Dispatch Trace Log (DTL)
++entries makes use of AUX support in perf infrastructure. On the tools side,
++this data is made available as PERF_RECORD_AUXTRACE records.
++
++To correlate each DTL entry with other events across CPU's, an auxtrace_queue
++is created for each CPU. Each auxtrace queue has a array/list of auxtrace buffers.
++All auxtrace queues is maintained in auxtrace heap. The queues are sorted
++based on timestamp. When the different PERF_RECORD_XX records are processed,
++compare the timestamp of perf record with timestamp of top element in the
++auxtrace heap so that DTL events can be co-related with other events
++Process the auxtrace queue if the timestamp of element from heap is
++lower than timestamp from entry in perf record. Sometimes it could happen that
++one buffer is only partially processed. if the timestamp of occurrence of
++another event is more than currently processed element in the queue, it will
++move on to next perf record. So keep track of position of buffer to continue
++processing next time. Update the timestamp of the auxtrace heap with the timestamp
++of last processed entry from the auxtrace buffer.
++
++This infrastructure ensures dispatch trace log entries can be correlated
++and presented along with other events like sched.
++
++vpa-dtl PMU example usage
++=========================
++
++.. code-block:: sh
++
++  # ls /sys/devices/vpa_dtl/
++  events  format  perf_event_mux_interval_ms  power  subsystem  type  uevent
++
++
++To capture the DTL data using perf record:
++.. code-block:: sh
++
++  # ./perf record -a -e sched:*,vpa_dtl/dtl_all/ -c 1000000000 sleep 1
++
++The result can be interpreted using perf record. Snippet of perf report -D:
++
++.. code-block:: sh
++
++  # ./perf report -D
++
++There are different PERF_RECORD_XX records. In that records corresponding to
++auxtrace buffers includes:
++
++1. PERF_RECORD_AUX
++   Conveys that new data is available in AUX area
++
++2. PERF_RECORD_AUXTRACE_INFO
++   Describes offset and size of auxtrace data in the buffers
++
++3. PERF_RECORD_AUXTRACE
++   This is the record that defines the auxtrace data which here in case of
++   vpa-dtl pmu is dispatch trace log data.
++
++Snippet from perf report -D showing the PERF_RECORD_AUXTRACE dump
++
++.. code-block:: sh
++
++0 0 0x39b10 [0x30]: PERF_RECORD_AUXTRACE size: 0x690  offset: 0  ref: 0  idx: 0  tid: -1  cpu: 0
++.
++. ... VPA DTL PMU data: size 1680 bytes, entries is 35
++.  00000000: boot_tb: 21349649546353231, tb_freq: 512000000
++.  00000030: dispatch_reason:decrementer interrupt, preempt_reason:H_CEDE, enqueue_to_dispatch_time:7064, ready_to_enqueue_time:187, waiting_to_ready_time:6611773
++.  00000060: dispatch_reason:priv doorbell, preempt_reason:H_CEDE, enqueue_to_dispatch_time:146, ready_to_enqueue_time:0, waiting_to_ready_time:15359437
++.  00000090: dispatch_reason:decrementer interrupt, preempt_reason:H_CEDE, enqueue_to_dispatch_time:4868, ready_to_enqueue_time:232, waiting_to_ready_time:5100709
++.  000000c0: dispatch_reason:priv doorbell, preempt_reason:H_CEDE, enqueue_to_dispatch_time:179, ready_to_enqueue_time:0, waiting_to_ready_time:30714243
++.  000000f0: dispatch_reason:priv doorbell, preempt_reason:H_CEDE, enqueue_to_dispatch_time:197, ready_to_enqueue_time:0, waiting_to_ready_time:15350648
++.  00000120: dispatch_reason:priv doorbell, preempt_reason:H_CEDE, enqueue_to_dispatch_time:213, ready_to_enqueue_time:0, waiting_to_ready_time:15353446
++.  00000150: dispatch_reason:priv doorbell, preempt_reason:H_CEDE, enqueue_to_dispatch_time:212, ready_to_enqueue_time:0, waiting_to_ready_time:15355126
++.  00000180: dispatch_reason:decrementer interrupt, preempt_reason:H_CEDE, enqueue_to_dispatch_time:6368, ready_to_enqueue_time:164, waiting_to_ready_time:5104665
++
++Above is representation of dtl entry of below format:
++
 +struct dtl_entry {
-+	u8      dispatch_reason;
-+	u8      preempt_reason;
-+	u16     processor_id;
-+	u32     enqueue_to_dispatch_time;
-+	u32     ready_to_enqueue_time;
-+	u32     waiting_to_ready_time;
-+	u64     timebase;
-+	u64     fault_addr;
-+	u64     srr0;
-+	u64     srr1;
++        u8      dispatch_reason;
++        u8      preempt_reason;
++        u16     processor_id;
++        u32     enqueue_to_dispatch_time;
++        u32     ready_to_enqueue_time;
++        u32     waiting_to_ready_time;
++        u64     timebase;
++        u64     fault_addr;
++        u64     srr0;
++        u64     srr1;
 +};
 +
-+extern const char *dispatch_reasons[11];
-+extern const char *preempt_reasons[10];
++First two fields represent the dispatch reason and preempt reason. The post
++processing of PERF_RECORD_AUXTRACE records will translate to meaningful data
++for user to consume.
 +
- int powerpc_vpadtl_process_auxtrace_info(union perf_event *event,
- 				  struct perf_session *session);
- 
++Visualize the dispatch trace log entries with perf report
++=========================================================
++
++.. code-block:: sh
++
++  # ./perf record -a -e sched:*,vpa_dtl/dtl_all/ -c 1000000000 sleep 1
++  [ perf record: Woken up 1 times to write data ]
++  [ perf record: Captured and wrote 0.300 MB perf.data ]
++
++  # ./perf report
++  # Samples: 321  of event 'vpa-dtl'
++  # Event count (approx.): 321
++  #
++  # Children      Self  Command  Shared Object      Symbol
++  # ........  ........  .......  .................  ..............................
++  #
++     100.00%   100.00%  swapper  [kernel.kallsyms]  [k] plpar_hcall_norets_notrace
++
++Visualize the dispatch trace log entries with perf script
++=========================================================
++
++.. code-block:: sh
++
++   # ./perf script
++     migration/9      67 [009] 105373.359903:                     sched:sched_waking: comm=perf pid=13418 prio=120 target_cpu=009
++     migration/9      67 [009] 105373.359904:               sched:sched_migrate_task: comm=perf pid=13418 prio=120 orig_cpu=9 dest_cpu=10
++     migration/9      67 [009] 105373.359907:               sched:sched_stat_runtime: comm=migration/9 pid=67 runtime=4050 [ns]
++     migration/9      67 [009] 105373.359908:                     sched:sched_switch: prev_comm=migration/9 prev_pid=67 prev_prio=0 prev_state=S ==> next_comm=swapper/9 next_pid=0 next_prio=120
++            :256     256 [016] 105373.359913:                                vpa-dtl: timebase: 21403600706628832 dispatch_reason:decrementer interrupt, preempt_reason:H_CEDE, enqueue_to_dispatch_time:4854,                        ready_to_enqueue_time:139, waiting_to_ready_time:511842115 c0000000000fcd28 plpar_hcall_norets_notrace+0x18 ([kernel.kallsyms])
++            :256     256 [017] 105373.360012:                                vpa-dtl: timebase: 21403600706679454 dispatch_reason:priv doorbell, preempt_reason:H_CEDE, enqueue_to_dispatch_time:236,                         ready_to_enqueue_time:0, waiting_to_ready_time:133864583 c0000000000fcd28 plpar_hcall_norets_notrace+0x18 ([kernel.kallsyms])
++            perf   13418 [010] 105373.360048:               sched:sched_stat_runtime: comm=perf pid=13418 runtime=139748 [ns]
++            perf   13418 [010] 105373.360052:                     sched:sched_waking: comm=migration/10 pid=72 prio=0 target_cpu=010
 -- 
 2.47.1
 
