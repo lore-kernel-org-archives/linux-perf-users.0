@@ -1,93 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA4F302CCC;
-	Fri, 15 Aug 2025 13:52:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20E486344;
+	Fri, 15 Aug 2025 14:08:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755265975; cv=none; b=UBK5P2qdFbUTHty8421H2kFgPzZC5m99+hsmFd2mwNxNt+5evYV5qH8Bf/nhW31mthPdcbBNeHpNtfIlNuHoWjf9eB16PY+z8Qr1304+tC0JHoL31/uHvS9RvbuqgIkvHikE/uwEC6kG/9o5ISXhlr2L41TXbkNlMpjnqekuZos=
+	t=1755266927; cv=none; b=EAb33Qv696EMYGJoiJ0iCy2r4MfDueQUieYTHDaN5xGPv0a07VNeAdz1PulSWQ7q3X5++QI+uZFTpdk4O5VR+D6Lg+guwsTsHIfjsc41wo2qPHWieSfbhOJgyrq9UzvAKbWeeQcLCCcTRWMN5naVw5qHxPOkzTjVb2MmzjZ4L5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755265975; c=relaxed/simple;
-	bh=YyAwX9d0yrQxt1AtdEKMS1xfPyYGo9E0HQVrmo6HFio=;
+	s=arc-20240116; t=1755266927; c=relaxed/simple;
+	bh=NrDxS+nEV24yOQvxvSGpYB/9OTb59CnDqOJpdYh1gVE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HZap3y4w+c8lM7HBMn7fjznP1B8hbg1sZuzNO2/JMK0xf/DCbPUqv6Kp85fQExXHCPi6/Dtwoq1Xnwp1gxkPgA0dY72z5nPrke2egGs6NuFfmXr5bccBlGJ6OjnQpATVR5Sr94B2GiGwdS3/IGBJ+o75uG1HUgAY98fzoRp7Pr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ay1VIO4M; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ay1VIO4M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78F1DC4CEEB;
-	Fri, 15 Aug 2025 13:52:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755265974;
-	bh=YyAwX9d0yrQxt1AtdEKMS1xfPyYGo9E0HQVrmo6HFio=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ay1VIO4MZKIssq2DXmkvb9Y5xzxbYbHSJCMx9Q+b7drYxS0RvJmoAhIX4KjmakUQD
-	 QzyQueMvVtMnt4CD8QUWt1ncIY7GzX+bMM6KNhI3V+tcPnmJvtFwLtp46R9R3gxiZF
-	 3xIe+KY2D47BPbZ50ZN0iAnaesGtehgttZhCq/iPJutrQcQvt9m83DGGPzu/OZTCrR
-	 DZlc3Alk6BOGyuxr0/JijZf3WjBiZfjGF0RPKBZUjw+TxNH0tUFogTt9YLewsZJ8ll
-	 kEZOkiaQqQTz6JEEKBs+xEe0l4CwHvOCfp+vLj4AXKkBdI/lKEVhCBfwoOR44gZC/E
-	 dRwzDtGpoOXqw==
-Date: Fri, 15 Aug 2025 15:52:38 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	"David S . Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Jan Kara <jack@suse.cz>, Kees Cook <kees@kernel.org>, 
-	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
-	Barry Song <baohua@kernel.org>, Xu Xin <xu.xin16@zte.com.cn>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, David Rientjes <rientjes@google.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>, 
-	Pedro Falcato <pfalcato@suse.de>, Matthew Wilcox <willy@infradead.org>, 
-	Mateusz Guzik <mjguzik@gmail.com>, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 06/10] mm: update coredump logic to correctly use bitmap
- mm flags
-Message-ID: <20250815-neuzugang-gegessen-ff4c08a08ec0@brauner>
-References: <cover.1755012943.git.lorenzo.stoakes@oracle.com>
- <2a5075f7e3c5b367d988178c79a3063d12ee53a9.1755012943.git.lorenzo.stoakes@oracle.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=k2gJV7UYCdx1gyfjijHQjKPNgAyRx5fdvRhDT7Hidy3mt9fQb+wNx09lCU2b/7sNrIzmVnxvCQijRT41g6ef/RDGL/epGRSkODXtIpAj8PMStr2+9y8Y9CZVPQch1zFrJm8uYLCMc54tMK+R6Wfc0AMU+FmfSLA2OlLC22va9To=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDEB6C4CEEB;
+	Fri, 15 Aug 2025 14:08:42 +0000 (UTC)
+Date: Fri, 15 Aug 2025 15:08:40 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Jeremy Linton <jeremy.linton@arm.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org,
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, thiago.bauermann@linaro.org,
+	broonie@kernel.org, yury.khrustalev@arm.com,
+	kristina.martsenko@arm.com, liaochang1@huawei.com, will@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 4/7] arm64: probes: Add GCS support to bl/blr/ret
+Message-ID: <aJ8_aH7ncFfznl8S@arm.com>
+References: <20250811141010.741989-1-jeremy.linton@arm.com>
+ <20250811141010.741989-5-jeremy.linton@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2a5075f7e3c5b367d988178c79a3063d12ee53a9.1755012943.git.lorenzo.stoakes@oracle.com>
+In-Reply-To: <20250811141010.741989-5-jeremy.linton@arm.com>
 
-On Tue, Aug 12, 2025 at 04:44:15PM +0100, Lorenzo Stoakes wrote:
-> The coredump logic is slightly different from other users in that it both
-> stores mm flags and additionally sets and gets using masks.
+On Mon, Aug 11, 2025 at 09:10:07AM -0500, Jeremy Linton wrote:
+> The arm64 probe simulation doesn't currently have logic in place
+> to deal with GCS and this results in core dumps if probes are inserted
+> at control flow locations. Fix-up bl, blr and ret to manipulate the
+> shadow stack as needed.
 > 
-> Since the MMF_DUMPABLE_* flags must remain as they are for uABI reasons,
-> and of course these are within the first 32-bits of the flags, it is
-> reasonable to provide access to these in the same fashion so this logic can
-> all still keep working as it has been.
+> While we manipulate and validate the shadow stack correctly, the
+> hardware provides additional security by only allowing GCS operations
+> against pages which are marked to support GCS. For writing there is
+> gcssttr() which enforces this, but there isn't an equivalent for
+> reading. This means that uprobe users should be aware that probing on
+> control flow instructions which require reading the shadow stack (ex:
+> ret) offers lower security guarantees than what is achieved without
+> the uprobe active.
 > 
-> Therefore, introduce coredump-specific helpers __mm_flags_get_dumpable()
-> and __mm_flags_set_mask_dumpable() for this purpose, and update all core
+> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
 
-Why the double underscore here? Just looks a bit ugly so if we can avoid
-it I would but if not:
-
-Reviewed-by: Christian Brauner <brauner@kernel.org>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
