@@ -1,47 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B40270548;
-	Fri, 15 Aug 2025 20:02:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC30531770C;
+	Fri, 15 Aug 2025 20:07:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755288179; cv=none; b=c+Bo+hIKyZn3VhabghVPVpx33upVPOYtkEuhWDPhPYA738n2Jg5amIqLr6imKHWNRT4EFMfkHMRBqqORFMrhTSg388PM+/Y6prgJjyZah0XUfl+Tmvc3iVkH0M+/dRsD3CF3K2wIq8KuXjhUe1uNeawiEOmmYlgHt9fRNoy3rx4=
+	t=1755288431; cv=none; b=l051ZfHZYvjK07oELh3i+K1iXUldH57bG6MYd4JvHooysk6dwhHtbmzqCV1E5siXmWUGiLshqW8ETTInEswSuGmauWZCqab/ZEfv/CIGp4rB0VHuPu3N/jve+p4Y/VPDFVWQa9lshzQ/jW4Z6aGChImhPVxf/Sa1LMhO+0iAu3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755288179; c=relaxed/simple;
-	bh=be6Z+JaouOJVE3f+RWzpBxVj1NE79aYm+OuV+AsEfnY=;
+	s=arc-20240116; t=1755288431; c=relaxed/simple;
+	bh=LB0I6qgS47+4b3ACqA7gDZLekADLJqAEu/NklHRK1Lk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gOaxTAtPc1GVnMGhuX9U0feAMb0acnOegoaEkLPvl4anEp+Wys1E2eka0rU0TIsZSIja0IBLSkDFbVpt+NlAXJKjkg/4WWrkPo52v1oe9e679xegOfL8xOU/wTh7kcGOZDmmrjsSjj2KxmqZpX8cjPfZmi5wzVfEFuJyVeFOhrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KgrZhln9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UpmSwlvxTXd7EWqVDpQD606wypJUkkBhxuQL6toDKUxU1lx7mj0vdoJUIq/MPAcLgf8UO93ooWPRDhX6Zxg6jkDVjaOf3Pwh5cvup6txoQtWcSoEHcMGrKrrMtU0sbkI1UdSObmBfsDuQVEkXX108J2ZJrpBPs6ZqyoHU5T6tYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U1TuKXV0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KgrZhln9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC057C4CEEB;
-	Fri, 15 Aug 2025 20:02:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U1TuKXV0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2174C4CEF1;
+	Fri, 15 Aug 2025 20:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755288178;
-	bh=be6Z+JaouOJVE3f+RWzpBxVj1NE79aYm+OuV+AsEfnY=;
+	s=k20201202; t=1755288429;
+	bh=LB0I6qgS47+4b3ACqA7gDZLekADLJqAEu/NklHRK1Lk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KgrZhln9EWqW26u3laNIrqswrW3VFQLifij7Y8RzhmCLnPLEED92ekMhguM835om5
-	 4UbDVkTmZ1dU88wfQymmXaTAty2c76ksxpxfrfaquF9jbiB37RGuX1snx+GxAzlsMg
-	 1YDFD9ZTOUo9KixQrNUS7k/r0m2lo1mD7M3+CU5crMMOEceN1KdrF0+VGXWOMjgx+t
-	 XrW+Em64tmvZAaUTJ+8N5pxdYWv7PkjSzDEEPwy8C1codCaGYzs4HxnPP9rf1UhdaJ
-	 QCpn5uOBpSkaH8whe0qEdMH8YJQioRrMalTB8ixx7lFopCu0mlYthAZ92XS1VdxbgI
-	 eT90vNihdy6sg==
-Date: Fri, 15 Aug 2025 13:02:56 -0700
+	b=U1TuKXV0zuuYuQ/xu1AQw/+dHKcdmW2RTSrfktt1nAvi9dPKB3gDkrI2bjYk+cdvO
+	 fPLLRmDY2KamWJ2CW9g/dk1ewvK8EDrLnQQ/SCqYd2+Ch7wcetEaQjV6qpaI6A35Lw
+	 E2wypstacgBT53z8hx+6Hj+BbTBd6U1vlzQ5/oQa/E0gvWhxdHgAvGn58X8aIDl9GA
+	 BOTuBFuQAcEQfinY4VFkQbCEaQ7fvIuy6d532xdpG/EqrltyWqOEnqvu7YWcMcERqj
+	 rtX0mqjNTssg8gec0gXC2H6mdBG9XQoE2gdZlMRnN6kJmOQjEFqDYtsGhsfhZeh5V2
+	 EtfAHe0za9x7A==
+Date: Fri, 15 Aug 2025 13:07:07 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Suchit Karunakaran <suchitkarunakaran@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, paul.walmsley@sifive.com,
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
-	guoren@kernel.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-csky@vger.kernel.org, skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH RESEND] perf/util: make TYPE_STATE_MAX_REGS
- architecture-dependent
-Message-ID: <aJ-ScOp3ZCG6PQmD@google.com>
-References: <20250815182742.45541-1-suchitkarunakaran@gmail.com>
+To: Yunseong Kim <ysk@kzalloc.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Liang Kan <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Collin Funk <collin.funk1@gmail.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf test: Add test case for event group throttling with
+ inactive events
+Message-ID: <aJ-Ta0axsWXH2b6p@google.com>
+References: <20250813163251.490451-2-ysk@kzalloc.com>
+ <aJ5Bt1q3AZFxxz_U@google.com>
+ <a40f008e-d552-4ce2-8279-5a25183b7726@kzalloc.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,86 +54,47 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250815182742.45541-1-suchitkarunakaran@gmail.com>
+In-Reply-To: <a40f008e-d552-4ce2-8279-5a25183b7726@kzalloc.com>
 
-Hello,
+On Fri, Aug 15, 2025 at 05:23:44AM +0900, Yunseong Kim wrote:
+> Hi Namhyung,
+> 
+> Thanks for your reply.
+> 
+> On 8/15/25 5:06 AM, Namhyung Kim wrote:
+> > Hi Yunseong,
+> > 
+> > On Wed, Aug 13, 2025 at 04:32:52PM +0000, Yunseong Kim wrote:
+> >> A recent UBSAN shift-out-of-bounds report was identified when throttling
+> >> event groups that included inactive (PERF_EVENT_STATE_OFF) events.
+> >> This occurred because pmu->start()/stop() could be called on these events,
+> >> potentially leaving event->hw.idx at -1. This leads to undefined behavior
+> >> when PMU code later uses this negative index as a shift exponent.
+> >>
+> >> The issue need to ensuring perf_event_throttle() and
+> >> perf_event_unthrottle() skip inactive events entirely.
+> >>
+> >> Introduce a new perf test suite, "event group throttle", to verify this
+> >> fix and prevent regressions.
+> > 
+> > Thanks for your work!
+> > 
+> > I'm curious what happens if it runs on unfixed kernels.  I suspect this
+> > should be in the selftest so that it can tie with the kernel fix.
+> 
+> I agree with your point. I believe it's more appropriate for this test to
+> be included in "kself test" alongside the kernel fix. I'll modify the
+> test case based on Liang's suggestion.
+> 
+> > By having this in the perf tools test suite, you cannot guarantee if the
+> > kernel has the fix.  And it may turn the kernel into an unstable state
+> > easily.
+> 
+> Would it be possible to add this test if it were changed to focus on
+> a different aspect?
 
-On Fri, Aug 15, 2025 at 11:57:42PM +0530, Suchit Karunakaran wrote:
-> Replace the fixed definition of TYPE_STATE_MAX_REGS with architecture-
-> specific values for better accuracy across multiple CPU architectures
-> including PowerPC, ARM, x86, RISC-V, MIPS, and others. This change ensures
-> the type state registers array size matches the actual register count of
-> the target platform.
-
-Thanks for the patch.  Unfortunately we support x86 and powerpc only but
-this looks like good information for later work. :)
+It depends on how you change it.  Can you please share your idea first?
 
 Thanks,
 Namhyung
 
-> 
-> Signed-off-by: Suchit Karunakaran <suchitkarunakaran@gmail.com>
-> ---
->  tools/perf/util/annotate-data.h | 45 ++++++++++++++++++++++++++++++---
->  1 file changed, 41 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-> index 541fee1a5f0a..0dfb12a8f1cc 100644
-> --- a/tools/perf/util/annotate-data.h
-> +++ b/tools/perf/util/annotate-data.h
-> @@ -189,11 +189,48 @@ struct type_state_stack {
->  	u8 kind;
->  };
->  
-> -/* FIXME: This should be arch-dependent */
-> -#ifdef __powerpc__
-> -#define TYPE_STATE_MAX_REGS  32
-> +#if defined(__powerpc__) || defined(__powerpc64__)
-> +#define TYPE_STATE_MAX_REGS 32
-> +#elif defined(__aarch64__)
-> +#define TYPE_STATE_MAX_REGS 31
-> +#elif defined(__arm__)
-> +#define TYPE_STATE_MAX_REGS 16
-> +#elif defined(__x86_64__)
-> +#define TYPE_STATE_MAX_REGS 16
-> +#elif defined(__i386__)
-> +#define TYPE_STATE_MAX_REGS 8
-> +#elif defined(__riscv)
-> +#define TYPE_STATE_MAX_REGS 32
-> +#elif defined(__mips__)
-> +#define TYPE_STATE_MAX_REGS 32
-> +#elif defined(__sparc__) || defined(__sparc64__)
-> +#define TYPE_STATE_MAX_REGS 32
-> +#elif defined(__alpha__)
-> +#define TYPE_STATE_MAX_REGS 32
-> +#elif defined(__s390__) || defined(__s390x__)
-> +#define TYPE_STATE_MAX_REGS 16
-> +#elif defined(__sh__)
-> +#define TYPE_STATE_MAX_REGS 16
-> +#elif defined(__nios2__)
-> +#define TYPE_STATE_MAX_REGS 32
-> +#elif defined(__hexagon__)
-> +#define TYPE_STATE_MAX_REGS 32
-> +#elif defined(__openrisc__)
-> +#define TYPE_STATE_MAX_REGS 32
-> +#elif defined(__csky__)
-> +#define TYPE_STATE_MAX_REGS 32
-> +#elif defined(__loongarch__)
-> +#define TYPE_STATE_MAX_REGS 32
-> +#elif defined(__arc__)
-> +#define TYPE_STATE_MAX_REGS 32
-> +#elif defined(__microblaze__)
-> +#define TYPE_STATE_MAX_REGS 32
-> +#elif defined(__xtensa__)
-> +#define TYPE_STATE_MAX_REGS 16
-> +#elif defined(__m68k__)
-> +#define TYPE_STATE_MAX_REGS 16
->  #else
-> -#define TYPE_STATE_MAX_REGS  16
-> +#define TYPE_STATE_MAX_REGS 16
->  #endif
->  
->  /*
-> -- 
-> 2.50.1
-> 
