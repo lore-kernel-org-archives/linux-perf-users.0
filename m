@@ -1,123 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0195E31986E;
-	Thu, 14 Aug 2025 20:42:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B17242D66;
+	Fri, 15 Aug 2025 05:33:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755204123; cv=none; b=HkzUu7kXZkrpd5ZWD2qFEs7Kb5Aht0fOrm7kHRfdGLpXiDxNL4oF9JyYSmRNKlJ4+DYeEHSQWRniaXAz/u+R90Cu33ITNwnLofr+oitosOn9SwxrBg+8bfHi/18ozk3g8SWmtCGd+7wiH0KnYB3oyZA9Av/3muaD7O/FQ7UEQzA=
+	t=1755236026; cv=none; b=aDIFft0T6Cg3fXvbuev38nqdRipyie8CdYp3lnYKJlkhOISOl1WgIK0lpHPNGIut+8/Jp299GWGsYZ2MTc9bcXL0Z63Y6RBFcuR0KdytQdTEfIKw1+xdhjm1eUGXKm1eUyPCFL1FvxCMgbff/Jjw7nY6ltGoCFb0NMYvZX7eVUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755204123; c=relaxed/simple;
-	bh=TvCzjtkjaLNqUYR6A3xtnIpIbwyxrlnjjkYC2IjUKYw=;
+	s=arc-20240116; t=1755236026; c=relaxed/simple;
+	bh=5pmEnpk4P+ndbonyan2VBiYanHohRCT0mNUzn8ef6Jw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iU7K52jbAUutDbtyJ4wv1eqwJOCePmF9J6JTul4JIG7KPCls/DKkMM80M/BXipI0tL1RuoqXitdngvoQG2GVUmYJJva1Pgw0qskDGEfFyanxcFuxeLvQfuHoPsFo7W6PKS4VZoXKKc4SRZ3/4yJc/j2q1zVFTwayRwXzLvOz+dE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MyBscmNz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=uCn6sfAbMdp/+dXyCLQicymWGZ1eXdu4ngGWFuh3qavEdnPGwE6iMHVq/Kr2jvYLHcf67W15z35bgX+ZkIV5+fX4RNUQ34+q60KKJKmLn0RQvbvGFkOrsQzC7t2155+eLosrA+G/e4c5jXj6P8wj2h3THga7SsSU0hIo3S7DZ2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1acX8gnF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MyBscmNz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C66AAC4CEED;
-	Thu, 14 Aug 2025 20:42:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755204122;
-	bh=TvCzjtkjaLNqUYR6A3xtnIpIbwyxrlnjjkYC2IjUKYw=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1acX8gnF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 923C0C4CEF4;
+	Fri, 15 Aug 2025 05:33:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1755236026;
+	bh=5pmEnpk4P+ndbonyan2VBiYanHohRCT0mNUzn8ef6Jw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MyBscmNzmJ/jLs1DkRKYVMZifcxVALZDTck9Oa7U2IzeUS9Np8Q5bCVnmHcvW94Eo
-	 PxW+whPKhIAVj+ygzfYjz72ZN5QsRT90ksFd2x4vD0jdb0Z/UuvvXX1Fcov0pbuGO1
-	 p7kI69NxUbj9XcZBJoAZde9D2nd5upQDkpRUJuTacYO90NgJJsnwEDodDO4V0m10c8
-	 Pb1N2ruq90SvVJvdioSBK2HFiUwsaZ2VL5B7TjjNlGPMebvaMeLcAS/htWhMRpXrJT
-	 g4LtcPJJtfZyVEXbTeM6+oeAewRrDZMH42anQFdaneOp675tlQD8abJjY2YTt91D0p
-	 ZPPONQEAa8z7A==
-Date: Thu, 14 Aug 2025 13:42:00 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Sergio Perez Gonzalez <sperezglz@gmail.com>, zhaoguohan@kylinos.cn
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, colin.i.king@gmail.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf drm_pmu: Prevent resource leak in
- for_each_drm_fdinfo_in_dir()
-Message-ID: <aJ5KGPxzXZtyIO3k@google.com>
-References: <20250814060614.450696-1-sperezglz@gmail.com>
- <aJ5HhZsRPN-ZY_cK@google.com>
+	b=1acX8gnFQCkziGbYVwXTdj9BgkJt06DgtflG9KQNRnqNIt+UE43nvvq7RtqS8j+TO
+	 DIT37U+VhXVk1Tmo2KjQJ/IaQC3QxZHPJnNumrOKk9NIFQf1jf3eWt9D8ct/fb16Pq
+	 xhXRyIEUjs6wiBS4B4K5vjigRUpIaLwvw1zT2g0k=
+Date: Fri, 15 Aug 2025 07:33:41 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, stable@vger.kernel.org,
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	hargar@microsoft.com, broonie@kernel.org, achill@achill.org,
+	qemu-devel@nongnu.org,
+	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Ben Copeland <benjamin.copeland@linaro.org>,
+	LTP List <ltp@lists.linux.it>, chrubis <chrubis@suse.cz>,
+	Petr Vorel <pvorel@suse.cz>, Ian Rogers <irogers@google.com>,
+	linux-perf-users@vger.kernel.org,
+	Zhang Yi <yi.zhang@huaweicloud.com>,
+	Joseph Qi <jiangqi903@gmail.com>, Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org,
+	linux-ext4 <linux-ext4@vger.kernel.org>
+Subject: Re: [PATCH 6.16 000/627] 6.16.1-rc1 review
+Message-ID: <2025081536-resonate-wafer-6699@gregkh>
+References: <20250812173419.303046420@linuxfoundation.org>
+ <CA+G9fYtBnCSa2zkaCn-oZKYz8jz5FZj0HS7DjSfMeamq3AXqNg@mail.gmail.com>
+ <2025081300-frown-sketch-f5bd@gregkh>
+ <aJ5EupUV9t0jToY3@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aJ5HhZsRPN-ZY_cK@google.com>
+In-Reply-To: <aJ5EupUV9t0jToY3@google.com>
 
-On Thu, Aug 14, 2025 at 01:31:01PM -0700, Namhyung Kim wrote:
+On Thu, Aug 14, 2025 at 01:19:06PM -0700, Namhyung Kim wrote:
 > Hello,
 > 
-> On Thu, Aug 14, 2025 at 12:06:11AM -0600, Sergio Perez Gonzalez wrote:
-> > Close fdinfo_dir_fd and fd_dir prior to exit, in the event of
-> > cb() error.
+> Thanks for the report!
+> 
+> On Wed, Aug 13, 2025 at 02:50:49PM +0200, Greg Kroah-Hartman wrote:
+> > On Wed, Aug 13, 2025 at 05:46:26PM +0530, Naresh Kamboju wrote:
+> > > Long story:
+> > > 1)
+> > > The perf gcc-13 build failed on x86_64 and i386.
+> > > 
+> > > Build regression: qemu-arm64 ARM64_64K_PAGES ltp syscalls swap fsync
+> > > fallocate failed.
+> > > 
+> > > > Ian Rogers <irogers@google.com>
+> > > >     perf topdown: Use attribute to see an event is a topdown metic or slots
+> > > 
+> > > Build error:
+> > > 
+> > > arch/x86/tests/topdown.c: In function 'event_cb':
+> > > arch/x86/tests/topdown.c:53:25: error: implicit declaration of
+> > > function 'pr_debug' [-Werror=implicit-function-declaration]
+> > >    53 |                         pr_debug("Broken topdown information
+> > > for '%s'\n", evsel__name(evsel));
+> > >       |                         ^~~~~~~~
+> > > cc1: all warnings being treated as errors
 > > 
-> > Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
+> > Already fixed.
 > 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> Are you sure?  I'm not seeing the fix.  Can you share the commit id?
 
-Just found another fix was posted already:
+I dropped the offending perf patch:
+	https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/commit/?id=4199b872a5585e025f62886724f4f9ae80e014ae
 
-https://lore.kernel.org/r/20250813033432.8943-1-zhaoguohan@kylinos.cn
+Did that not work for you?
 
-Thanks,
-Namhyung
+thanks,
 
-> 
-> Only a nitpick below.
-> 
-> > ---
-> >  tools/perf/util/drm_pmu.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/drm_pmu.c b/tools/perf/util/drm_pmu.c
-> > index 988890f37ba7..416aeac7956e 100644
-> > --- a/tools/perf/util/drm_pmu.c
-> > +++ b/tools/perf/util/drm_pmu.c
-> > @@ -403,7 +403,7 @@ static int for_each_drm_fdinfo_in_dir(int (*cb)(void *args, int fdinfo_dir_fd, c
-> >  	DIR *fd_dir;
-> >  	struct dirent *fd_entry;
-> >  	int fd_dir_fd, fdinfo_dir_fd = -1;
-> > -
-> > +	int ret = 0;
-> >  
-> >  	scnprintf(buf, sizeof(buf), "%s/fd", pid_name);
-> >  	fd_dir_fd = openat(proc_dir, buf, O_DIRECTORY);
-> > @@ -418,7 +418,6 @@ static int for_each_drm_fdinfo_in_dir(int (*cb)(void *args, int fdinfo_dir_fd, c
-> >  		struct stat stat;
-> >  		unsigned int minor;
-> >  		bool is_dup = false;
-> > -		int ret;
-> >  
-> >  		if (fd_entry->d_type != DT_LNK)
-> >  			continue;
-> > @@ -458,12 +457,13 @@ static int for_each_drm_fdinfo_in_dir(int (*cb)(void *args, int fdinfo_dir_fd, c
-> >  		}
-> >  		ret = cb(args, fdinfo_dir_fd, fd_entry->d_name);
-> >  		if (ret)
-> > -			return ret;
-> > +			goto out;
-> 
-> It could be just 'break'.
-> 
-> Thanks,
-> Namhyung
-> 
-> 
-> >  	}
-> > +out:
-> >  	if (fdinfo_dir_fd != -1)
-> >  		close(fdinfo_dir_fd);
-> >  	closedir(fd_dir);
-> > -	return 0;
-> > +	return ret;
-> >  }
-> >  
-> >  static int for_each_drm_fdinfo(bool skip_all_duplicates,
-> > -- 
-> > 2.43.0
-> > 
+greg k-h
