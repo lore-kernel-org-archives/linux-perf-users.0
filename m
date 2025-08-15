@@ -1,133 +1,111 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9BB308F21
-	for <linux-perf-users@vger.kernel.org>; Fri, 15 Aug 2025 15:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3A31607A4;
+	Fri, 15 Aug 2025 16:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755273328; cv=none; b=aVEfErmnTaFgz3tdWcdPgYhUMiXkQfUU8s+f95zJr9yqHz7A+n9w2Wzn2I+FNhb7JlI0l5QuPBfZowRBVzeqe0V7+6AitS2IzV+bGRsSBhGTOdjJHlBo8X0aLWNqFf47UMAaosQI1jveQL+7hOKTe7GiYRfOwFtSmFqXXCzGseE=
+	t=1755275045; cv=none; b=Q0yQwC8ZBR05TtXsxm8UItkRMCq1D6wp+UNIcodEnENn9gDfLLaZltaBXop1WgjVhE3u1chSkXQG7WiTiOzqm6oIAjVjM6LAp9juYbhbHaL4550c6UR6xDxtGQmqo5Gta6r2CALkykRoYx0JI8XCwPYDR13I/z8EOLJCnLaVij8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755273328; c=relaxed/simple;
-	bh=wGA20jXRveGy5A3RdSltG8Mhq+1vci/NEVKX+vkU7E8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Kl7dQ6JVqn7DhK9ZjfXYQlNc6QDABG04Sckix8cIYLBF6rzth+sU5/7437vY0c0HdL+db5e7tUsvT2Kohy480Rh/cUnTmWQflD7/82920VwjBSIHdF9/Oo2ZtGU8n3oaNkei0tSXSCBDYYZIXcXe21fzS7BU1XHoSulBZigWLhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x3oYtxMa; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1755275045; c=relaxed/simple;
+	bh=4W3MexmDLIj0LLuVBsUoXVIfys/oLMGtURiFQUEH13U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lDr6JeuicKkTay8B93GF1HoJVzfVG3Jt+ftyGNYNCHyvD5tduuAoONrIjcPreD4cD4jEf1wMTmTZbhW7MEGqDsFkv5XuoU/12LhuqBGISuKNdZZ9g+bIz8EJNtmxyr/dxC9LDUFGY46h9SihH1gocl3NxrmiLyclVh3NAxOhNfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nUphFxrW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x3oYtxMa"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-32326e2506aso2064047a91.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 15 Aug 2025 08:55:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755273327; x=1755878127; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=z7Sa/kyYZ4LkgwyCX9rJEJ7u8HAAn0SslzIHQ/FhmRM=;
-        b=x3oYtxMaycpQa+ZiFdutQkYdge2OTwH6KHNjeAXf7z48MhvczOS6w7AZRYD71S2rIX
-         o00TZfrvCIHMcRe6fxP1zBLFeT3jY/DPHV7OCD0ZOKveJnmMqJ166nqKOMAKAtDOm10J
-         RFQnqOETLIJPtCxNK1XXlQEQDireX42B/nYkEMgAkJ6zDz7em7l1lFSrH3l2bQtHvsh7
-         pUFIaYWdGCIvTEx/vM0NZITlN00HB3nAueFVvWWtFB0r4bTn4AY1DspH8rbs9BxoFYjH
-         iilCdbjPjxgPTF/bocZ259O8Q4KpRTPq+hY4/1vK9KqTjDh7ZS4EoNQAMLy0kYV1bgF5
-         QUuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755273327; x=1755878127;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z7Sa/kyYZ4LkgwyCX9rJEJ7u8HAAn0SslzIHQ/FhmRM=;
-        b=kx8TT49D7sG5C/ijMQNttOTkZ45D+7ZS6ahVmvKYbVOVb0I3PvePfCfMvC0GDGXRPw
-         NoMXQGu/UU7WP9JC+vCICK5echxWUNLuBlCKvmz/HdoKhZwcactTkS1Hu9I6aQ5ghz3Y
-         dUV1BsA6/RNjv1+jCOwnRjjoBUiDIAH1TaQ9APJFVa36jNoXrtJO9Xsk/2C6f7szH7w+
-         LrHY8Dt6mESxV3o4q/RLZlNodmmPJh18uIJxdTMzOeaDndAZF9Hl3Vi8Fivm3Hfzp0du
-         VRj92v+azDwhlI/4mGBdri3e7xdvGur83b1BCV8siGeN6xG+ob86peR/MtVLox7+A008
-         8LkA==
-X-Forwarded-Encrypted: i=1; AJvYcCUiJTw4yXXTsgaUHIn4BVRcnpOGtMriE1xPrrEirF4YPism2OL7VhlP72QWWQGI5VqWXpDzAmzntdY/Cvv5UP/J@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQlTsCDTYVhnPivwdxdqoUarV92ejlMqM2imxMGbO70/iTNy4B
-	0UYQsQaG7j+SeT+E0M5SRpupXE7xPh7CN3o5xnuUEpnqVXhuImEuA5XOyDrzKsfw4FLX6yx9g5r
-	IkHsveg==
-X-Google-Smtp-Source: AGHT+IEdU+o+jxQRQjpxYUV2M2swV17WB5j94o9nqbjzzuHzapwMPWAh/lqVZpiY/Ko0sm3v0aaj/KNyHyA=
-X-Received: from pjbpl10.prod.google.com ([2002:a17:90b:268a:b0:321:370d:cae5])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:ec86:b0:313:dcf4:37bc
- with SMTP id 98e67ed59e1d1-323421229eamr3334693a91.34.1755273326710; Fri, 15
- Aug 2025 08:55:26 -0700 (PDT)
-Date: Fri, 15 Aug 2025 08:55:25 -0700
-In-Reply-To: <aJ9VQH87ytkWf1dH@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nUphFxrW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1B60C4CEEB;
+	Fri, 15 Aug 2025 16:24:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755275045;
+	bh=4W3MexmDLIj0LLuVBsUoXVIfys/oLMGtURiFQUEH13U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nUphFxrWKV+6n7KpkD3VVRbo27xzyyN/vWebfUiwoAS3RvQSWcpYef5mbG32vq0xD
+	 Hj0/e3bePcSFamI9nK1ma1Z1tJgmnKrGZNeX7nNEd7c2k/TECv6Usta5G6k2J1kTXq
+	 LsLm0KSBqNf5NIpDJGBe/pMGF4IRBd7RfiQ0AFAHXmAiB/AdFCFFEAZWTG5KJ1UEeH
+	 gx7uzJLw+iJTkPJ6nbo75iUvpli22kP4Ea4eVzyFa0QL+rwrRi3uUMsyrZOzUynbnX
+	 vzx4mQ8pLbKA4C23C8MVuQVsKobT/zIxnc9HN1TNS3GmfWQ6VfTQjsBHkx+jBmRUuP
+	 bmqcMI4Wr142Q==
+Date: Fri, 15 Aug 2025 09:24:01 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, stable@vger.kernel.org,
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	hargar@microsoft.com, broonie@kernel.org, achill@achill.org,
+	qemu-devel@nongnu.org,
+	Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Ben Copeland <benjamin.copeland@linaro.org>,
+	LTP List <ltp@lists.linux.it>, chrubis <chrubis@suse.cz>,
+	Petr Vorel <pvorel@suse.cz>, Ian Rogers <irogers@google.com>,
+	linux-perf-users@vger.kernel.org,
+	Zhang Yi <yi.zhang@huaweicloud.com>,
+	Joseph Qi <jiangqi903@gmail.com>, Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org,
+	linux-ext4 <linux-ext4@vger.kernel.org>
+Subject: Re: [PATCH 6.16 000/627] 6.16.1-rc1 review
+Message-ID: <aJ9fIUkM04HhRgSR@google.com>
+References: <20250812173419.303046420@linuxfoundation.org>
+ <CA+G9fYtBnCSa2zkaCn-oZKYz8jz5FZj0HS7DjSfMeamq3AXqNg@mail.gmail.com>
+ <2025081300-frown-sketch-f5bd@gregkh>
+ <aJ5EupUV9t0jToY3@google.com>
+ <2025081536-resonate-wafer-6699@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250806195706.1650976-1-seanjc@google.com> <20250806195706.1650976-10-seanjc@google.com>
- <20250815113951.GC4067720@noisy.programming.kicks-ass.net> <aJ9VQH87ytkWf1dH@google.com>
-Message-ID: <aJ9YbZTJAg66IiVh@google.com>
-Subject: Re: [PATCH v5 09/44] perf/x86: Switch LVTPC to/from mediated PMI
- vector on guest load/put context
-From: Sean Christopherson <seanjc@google.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Kan Liang <kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>, 
-	Mingwei Zhang <mizhang@google.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2025081536-resonate-wafer-6699@gregkh>
 
-On Fri, Aug 15, 2025, Sean Christopherson wrote:
-> On Fri, Aug 15, 2025, Peter Zijlstra wrote:
-> > > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > > index e1df3c3bfc0d..ad22b182762e 100644
-> > > --- a/kernel/events/core.c
-> > > +++ b/kernel/events/core.c
-> > > @@ -6408,6 +6408,8 @@ void perf_load_guest_context(unsigned long data)
-> > >  		task_ctx_sched_out(cpuctx->task_ctx, NULL, EVENT_GUEST);
-> > >  	}
-> > >  
-> > > +	arch_perf_load_guest_context(data);
+On Fri, Aug 15, 2025 at 07:33:41AM +0200, Greg Kroah-Hartman wrote:
+> On Thu, Aug 14, 2025 at 01:19:06PM -0700, Namhyung Kim wrote:
+> > Hello,
 > > 
-> > So I still don't understand why this ever needs to reach the generic
-> > code. x86 pmu driver and x86 kvm can surely sort this out inside of x86,
-> > no?
+> > Thanks for the report!
+> > 
+> > On Wed, Aug 13, 2025 at 02:50:49PM +0200, Greg Kroah-Hartman wrote:
+> > > On Wed, Aug 13, 2025 at 05:46:26PM +0530, Naresh Kamboju wrote:
+> > > > Long story:
+> > > > 1)
+> > > > The perf gcc-13 build failed on x86_64 and i386.
+> > > > 
+> > > > Build regression: qemu-arm64 ARM64_64K_PAGES ltp syscalls swap fsync
+> > > > fallocate failed.
+> > > > 
+> > > > > Ian Rogers <irogers@google.com>
+> > > > >     perf topdown: Use attribute to see an event is a topdown metic or slots
+> > > > 
+> > > > Build error:
+> > > > 
+> > > > arch/x86/tests/topdown.c: In function 'event_cb':
+> > > > arch/x86/tests/topdown.c:53:25: error: implicit declaration of
+> > > > function 'pr_debug' [-Werror=implicit-function-declaration]
+> > > >    53 |                         pr_debug("Broken topdown information
+> > > > for '%s'\n", evsel__name(evsel));
+> > > >       |                         ^~~~~~~~
+> > > > cc1: all warnings being treated as errors
+> > > 
+> > > Already fixed.
+> > 
+> > Are you sure?  I'm not seeing the fix.  Can you share the commit id?
 > 
-> It's definitely possible to handle this entirely within x86, I just don't love
-> switching the LVTPC without the protection of perf_ctx_lock and perf_ctx_disable().
-> It's not a sticking point for me if you strongly prefer something like this: 
+> I dropped the offending perf patch:
+> 	https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/commit/?id=4199b872a5585e025f62886724f4f9ae80e014ae
 > 
-> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> index 0e5048ae86fa..86b81c217b97 100644
-> --- a/arch/x86/kvm/pmu.c
-> +++ b/arch/x86/kvm/pmu.c
-> @@ -1319,7 +1319,9 @@ void kvm_mediated_pmu_load(struct kvm_vcpu *vcpu)
->  
->         lockdep_assert_irqs_disabled();
->  
-> -       perf_load_guest_context(kvm_lapic_get_reg(vcpu->arch.apic, APIC_LVTPC));
-> +       perf_load_guest_context();
-> +
-> +       perf_load_guest_lvtpc(kvm_lapic_get_reg(vcpu->arch.apic, APIC_LVTPC));
+> Did that not work for you?
 
-Hmm, an argument for providing a dedicated perf_load_guest_lvtpc() APIs is that
-it would allow KVM to handle LVTPC writes in KVM's VM-Exit fastpath, i.e. without
-having to do a full put+reload of the guest context.
+Oh sorry, I misunderstood you.  I thought you have a fix.
 
-So if we're confident that switching the host LVTPC outside of
-perf_{load,put}_guest_context() is functionally safe, I'm a-ok with it.
+Thanks,
+Namhyung
 
->         /*
->          * Disable all counters before loading event selectors and PMCs so that
-> @@ -1380,5 +1382,7 @@ void kvm_mediated_pmu_put(struct kvm_vcpu *vcpu)
->  
->         kvm_pmu_put_guest_pmcs(vcpu);
->  
-> +       perf_put_guest_lvtpc();
-> +
->         perf_put_guest_context();
->  }
-> 
