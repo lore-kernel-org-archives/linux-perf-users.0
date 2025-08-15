@@ -1,97 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC7D23C8A0;
-	Fri, 15 Aug 2025 16:35:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9851330E0E0;
+	Fri, 15 Aug 2025 16:41:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755275703; cv=none; b=IiN1FzW6dKnujLAKHS9vydOjDcGKgMKB0KmEfZPdztLJXjJwTd5ep0ep4VTBYcJK7LxHUrD60WtHp68TdbQIHXxmi2VZVgmn0oLxM0xiVMz1Z/iclVf5x7wQwXoK1/hIcWwIM7r1U5KP03Z3NK1dloifI7v7ih0sOQXV5qQqM8U=
+	t=1755276084; cv=none; b=vC+VITfKItpxt0CgBeRkKEvCUE5hxX37cm+910MIk5xZdSEwp4qbXUa4EoHFEspI3i1+mSjhgfxn7eufUZ1VU6ragx+ClVw3acV9NUJmvxJzqoR8Av5103uwxp5zL9UJxk+Gn7+mF9DH24TcXgeMVoDh9ZXxpZTGZw9WI04bXl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755275703; c=relaxed/simple;
-	bh=c6AnaVW0ZV2bZhNVW8y09FERUFZfx/4V3uxv731vMxA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nzft2AxZC2fM3+c51SuznWkvQoFGb3r9+GYR27LZ97XdtDvqeBUynNVMf7NwPyJFQk1TDnUnbBr7z3STypvO8X91g2G0swIukZPYv6nO91FitsyH0O5nC5RUgUuG1WA+CEIVHjo5M3nIaHy1OgIEJzSCvope5CQZOjWHjsO4fL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CZNTpYrC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755276084; c=relaxed/simple;
+	bh=G2+P3O6+HLhnBVQKWNhl2UUxxMGZ0VVsYc3ID5h45Iw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DDA/kdozqp7PN9wCapp3ZZEQoO9o6qvDG61H+6WxHQ/cqQtL8KHPdgW7NIIXsVJDW8LSiY9C2m2E2bEOgl96SbFsJlWUsCrvq7fwh5JBWMci9MnKjawfPvsKDc6uiq4qZ+PE67A1x5SqWd00Y0m+hkNxppC9MvDqRPQTPfj0rbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lDiV3e+t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CZNTpYrC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A871CC4CEEB;
-	Fri, 15 Aug 2025 16:34:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lDiV3e+t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9F3BC4CEEB;
+	Fri, 15 Aug 2025 16:41:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755275702;
-	bh=c6AnaVW0ZV2bZhNVW8y09FERUFZfx/4V3uxv731vMxA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CZNTpYrC7uzJh4JhWIB25/N0THV592WApA7/xXznh7slnR59Co2/zY7/8b6kCpJNS
-	 MlrEZvJHoCuVKG0dxOCkt/hunVvc0E0BJvdlurcuX7vx4Zgv3wlgVIL/UQdnTSLB7g
-	 /qeO+9lFZW/8aaXVYzgAkU/sK68tppao0BRif1IB/zyKQDqezz1a5cFnYkMWQQxv84
-	 zAMIq2DhtU8Duc4x60N0tAzsORG856wiaMSmQVs5rbnMTdNEfaupAHTG822+A9fuSm
-	 X8ZRuSmnf6u9M0RsYu8uJK2FrvK2iq9r5dKhqWIhDDa0IduC5p58a5d36HzsQwofJ4
-	 36JxKZTfKtGdA==
-Date: Fri, 15 Aug 2025 17:34:53 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Xu Yang <xu.yang_2@nxp.com>, Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	John Garry <john.g.garry@oracle.com>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	s=k20201202; t=1755276084;
+	bh=G2+P3O6+HLhnBVQKWNhl2UUxxMGZ0VVsYc3ID5h45Iw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lDiV3e+tdZFs6/MLz3byswVkxq0TaLGXDks3m5jgdNg6nlNdwKdFutbKfeFI0wDJC
+	 Aephdy6X2FPnZXa9vkFCQxTfK32MrghDPXs64FLU46tyFIR9SnrSyEVWO37NEFjsX2
+	 OVh6HKlWyYmnTYjrWCrAq2E0b0SfQB32ItqbSQ/BlwsoZULbeETibXCzDXFiRk4NeP
+	 ZdkIlM5VEExmBLpCGPx+IiXzrFJMiOwsLU9mpTK4eDn6Q7wUXDX8mRzdjUBxquIRb7
+	 BW8eCobPrJKqN4JZKfxwJK/pYffcZffDdslrCPD58owRDT8rQ/OYF1p+oYNO0f2+2W
+	 SqVGryGW8gsfw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 1/5] dt-bindings: perf: fsl-imx-ddr: Add i.MX94 compatible
-Message-ID: <20250815-eclair-expansion-1a680769045f@spud>
-References: <20250815-imx94-ddr-pmu-v1-0-edb22be0b997@nxp.com>
- <20250815-imx94-ddr-pmu-v1-1-edb22be0b997@nxp.com>
- <aJ9ftYVhcuUsKoa3@lizhi-Precision-Tower-5810>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Naresh Kamboju <naresh.kamboju@linaro.org>
+Subject: [PATCH for-v6.17] perf test: Fix a build error in x86 topdown test
+Date: Fri, 15 Aug 2025 09:41:22 -0700
+Message-ID: <20250815164122.289651-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.51.0.rc1.163.g2494970778-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cGjM10/Wt+uqqu9p"
-Content-Disposition: inline
-In-Reply-To: <aJ9ftYVhcuUsKoa3@lizhi-Precision-Tower-5810>
+Content-Transfer-Encoding: 8bit
 
+There's an environment that caused the following build error.  Include
+"debug.h" (under util directory) to fix it.
 
---cGjM10/Wt+uqqu9p
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  arch/x86/tests/topdown.c: In function 'event_cb':
+  arch/x86/tests/topdown.c:53:25: error: implicit declaration of function 'pr_debug'
+                                         [-Werror=implicit-function-declaration]
+     53 |                         pr_debug("Broken topdown information for '%s'\n", evsel__name(evsel));
+        |                         ^~~~~~~~
+  cc1: all warnings being treated as errors
 
-On Fri, Aug 15, 2025 at 12:26:29PM -0400, Frank Li wrote:
-> On Fri, Aug 15, 2025 at 05:36:27PM +0800, Xu Yang wrote:
-> > i.MX94 has a DDR Performance Monitor Unit which is compatible with i.MX=
-93.
-> > This will add a compatible for i.MX94.
->=20
-> Add a compatible string fsl,imx94-ddr-pmu for i.MX94
->=20
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Fixes: 5b546de9cc177936 ("perf topdown: Use attribute to see an event is a topdown metic or slots")
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/arch/x86/tests/topdown.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+diff --git a/tools/perf/arch/x86/tests/topdown.c b/tools/perf/arch/x86/tests/topdown.c
+index 8d0ea7a4bbc1cd46..1eba3b4594ef2ba9 100644
+--- a/tools/perf/arch/x86/tests/topdown.c
++++ b/tools/perf/arch/x86/tests/topdown.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "arch-tests.h"
+ #include "../util/topdown.h"
++#include "debug.h"
+ #include "evlist.h"
+ #include "parse-events.h"
+ #include "pmu.h"
+-- 
+2.51.0.rc1.163.g2494970778-goog
 
---cGjM10/Wt+uqqu9p
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaJ9hrQAKCRB4tDGHoIJi
-0vTQAQDnyoEjdwJ/vnNuGgwM/Xitf2HIbielj3wLvSJIhkhZAQD6AzPZ25JuX0Pn
-MFuj5SHSUlrVhHFslCuT1dCkiPp2vwU=
-=ewOy
------END PGP SIGNATURE-----
-
---cGjM10/Wt+uqqu9p--
