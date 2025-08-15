@@ -1,77 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8763176FE
-	for <linux-perf-users@vger.kernel.org>; Fri, 15 Aug 2025 20:38:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0312225A2C4;
+	Fri, 15 Aug 2025 21:39:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755290327; cv=none; b=XD5KVFWz/N4W3RBK0rgvRBmTvvgofLuv1N71Jw8G9GJtLWc89hXK73g2J83NLTe6jYPNqXzZHiM2CCO1R8Nvyfz4iSIYgmPhyruDElq/CGpNCLun62/YgTJmqBjJJBhmSfJWtvMKbk4NLPmcHKBCZ7Q1CjoYqwxhI4udb7Ki60k=
+	t=1755293986; cv=none; b=YSgLvJMyhRNbDU1MwsFutPkOw/wmvGt+nw+YlUk2OPGrnGkm0TOWI3rg76jiCDx+TbiUvQlB8mxjojZCjnH65piBhrXOGD1mHcm2D5p4tlfNQNoc4VuQnaXtGB/L4QobZ7UJd/PxmkA6jLGmy/55wpHNQb+CYB1Gt2IBu/VScCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755290327; c=relaxed/simple;
-	bh=81295dDm/Nq5IaGxrf4exqjWaiFe6tACBP0OaSIv1dM=;
+	s=arc-20240116; t=1755293986; c=relaxed/simple;
+	bh=RHSgGU/H2Md4KfOMvY3PmLoZ4WtUGhjnNbXf3Vo1KWk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZTR8dOrxW8nOTniNXFmc4nUGs+NRZcnaJj4o78DHytQWwGU5PBQ64bJW/kLJwvNltFaaAxmiPIZ+x9SVMZqcWa3/IIwzgp9xdBodxbzbdj7yUHgl3Kibw64PMk1wLYqV7blBVWb9kIyeeR6gNb/i5EyzyWu6izesPgCxuGA3AJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BkRVt4/m; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=YECuW2NCMFdy/pHFLPTvEM5BwxeqVIjqmQJGzwbk2er5G51jCDIn5Q108omMJTHwVoZnKEKpTNpGdQosf2d/n8AE523zvxDDOomC+pJr3EENyYpYCt7j44vkeYjEHrmAG1hPV6N2YkYSpokVf4H/4t3voSlST7NLV9uR+foyclE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LcWMctY5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BkRVt4/m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53E0EC4CEEB;
-	Fri, 15 Aug 2025 20:38:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LcWMctY5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 766E1C4CEEB;
+	Fri, 15 Aug 2025 21:39:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755290324;
-	bh=81295dDm/Nq5IaGxrf4exqjWaiFe6tACBP0OaSIv1dM=;
+	s=k20201202; t=1755293985;
+	bh=RHSgGU/H2Md4KfOMvY3PmLoZ4WtUGhjnNbXf3Vo1KWk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BkRVt4/m0WkCQdw3EYZtzbE3IjAnI8xQa8r3yyAwAlAaxsUomaOqNj+4g8h8+6D9j
-	 sQTqJqnWANoJNDd6/6sT8WrCRthvjy/G2YN5Xab4rbpWHrEAcp6cQ6HCmWsgLgGz0I
-	 +JzDuqSj7QnF/StUTh4Mooykm6ZVn0Cm7+XXs6ChGyXqkDx/vIkdVl4381J5FX4fNT
-	 Dprzk9iAlkHlEKi7GiHLGyvWQAMs3plaM5X42MRHrZjAhvq7u12YMvU+SokAnJtCXN
-	 NxwYYwfkrw8jXYVVuJk13xvqNCP4A3cfhesJOieI+NKsxvdEbd+jsJLHNrdwZtyBZA
-	 mVaonpHYSyJQg==
-Date: Fri, 15 Aug 2025 13:38:42 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Devaansh Kumar <devaanshk840@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, peterz@infradead.org,
-	mingo@redhat.com, acme@kernel.org, skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] perf test: Added .gitignore to shell base_report
-Message-ID: <aJ-a0of7IdpssEuI@google.com>
-References: <20250804174157.319224-1-devaanshk840@gmail.com>
+	b=LcWMctY5bFdFnyiObAHh3RpTUuciXUOWOTB2M/Xo6pbxF65Gg9q0lwJspO/Frdcc/
+	 DCnL8KtVE3tWNaFP5lasyMPGASNluN/ufhhjJewGZfKYyp0MvHO06EX7Zje5PuAjJ7
+	 nt08RGfoz9uzuNG9ZBQkWq1RbpS8U1SauSSw6m3tG6sjls/jQIRaCbp04Uk9B3SG2h
+	 4xRtg66Qz6KoNt967pUjLWXs+sa8u5vZDEhJ5HcFGzrpA11vCsmOM6DRciIuDuqgio
+	 qbs/QaJcaclaqtL/5l1JFCi12PCvtX2tpAQgBajmqOZqoRXYOmOkGbnWR+8GO4NufF
+	 H8k78ZjkWTiuw==
+Date: Fri, 15 Aug 2025 16:39:44 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Khuong Dinh <khuong@os.amperecomputing.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Tai Nguyen <ttnguyen@apm.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>
+Subject: Re: [PATCH] dt-bindings: perf: Convert apm,xgene-pmu to DT schema
+Message-ID: <175529362733.3232575.8797760861967373560.robh@kernel.org>
+References: <20250812181422.68286-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250804174157.319224-1-devaanshk840@gmail.com>
+In-Reply-To: <20250812181422.68286-1-robh@kernel.org>
 
-Hello,
 
-On Mon, Aug 04, 2025 at 11:11:55PM +0530, Devaansh Kumar wrote:
-> Created .gitignore to include base_report files so
-> git status doesn't gripe about untracked files.
+On Tue, 12 Aug 2025 13:14:20 -0500, Rob Herring (Arm) wrote:
+> Convert the Applied Micro X-Gene PMU binding to DT schema format. It is
+> a straightforward conversion.
 > 
-> Signed-off-by: Devaansh Kumar <devaanshk840@gmail.com>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 > ---
->  tools/perf/tests/shell/base_report/.gitignore | 2 ++
->  1 file changed, 2 insertions(+)
->  create mode 100644 tools/perf/tests/shell/base_report/.gitignore
+>  .../bindings/perf/apm,xgene-pmu.yaml          | 142 ++++++++++++++++++
+>  .../bindings/perf/apm-xgene-pmu.txt           | 112 --------------
+>  2 files changed, 142 insertions(+), 112 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/perf/apm,xgene-pmu.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
 > 
-> diff --git a/tools/perf/tests/shell/base_report/.gitignore b/tools/perf/tests/shell/base_report/.gitignore
-> new file mode 100644
-> index 000000000000..8d3ce1278d83
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/base_report/.gitignore
 
-Probably better to put this in tools/perf/tests.
+Also updated MAINTAINERS and applied, thanks!
 
-Thanks
-Namhyung
-
-
-> @@ -0,0 +1,2 @@
-> +*.log
-> +*.err
-> -- 
-> 2.49.0
-> 
