@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63D415ECD7;
-	Sat, 16 Aug 2025 03:16:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBE618DF9D;
+	Sat, 16 Aug 2025 03:16:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755314201; cv=none; b=vDB5CfmnUZnMzDot8eElgcmUk0gOjlk5mRkDPhc5fncPydJXPtBFBl2Q2Dvgsn7/cAeoC4uaqtVaSW/7L8o70ZG0XG0nlsU5a3IYlm1c8+cQn7OsEXMCvWfUjvMvqKfQ5IdEwj2mIEj9L3a6brYW40SiyA8sy6mCPXtieoVXxx4=
+	t=1755314206; cv=none; b=bsLFIe5W7gZKdbBYzCezCSYw2d5LvyQ+ulUdrXfBD5zqH5oCOooxn/8eCaJfNwczeF6KIL3aJ7A07AiPypx01tTYxqK5FUv1X7zTmMsiqeB7IakCtuCWALDmZ92xqF1JwiZy/0SnidVlUKAEE5VxLIJ9qnyyhAzjdjVfwo5A16k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755314201; c=relaxed/simple;
-	bh=NFD6hde2HewAQQPNS9+iLbK5cknXHkrysgrIbDhm46g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uD8aUm4A4aPoN2W47LPMp5xPwabCex9gFYseGpe07BZDdz58twd3ZPNnNzondLQTCNz3FxhcJVegZz2m4n5QCbojGhcHQOsEujeH6wGejFlPiZ3rltkGvY5GT+RVOn9u+vIah3kRw0Q3ZqwkGnFy2R1JXSD/RmtoHtbKEhNYQ1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mXlEq53K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755314206; c=relaxed/simple;
+	bh=QECyPubR/tntQ5r5osUsf57sJgrlHghmrbJxowtVoQw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=od9VoXOXQKQle3IezBu1DZiTIVoElYeDsRA9qnMh9UGTIBw64fYX2+LAx1yz0QCIF2d6pWpU/nk7FZ3+Qq08X0i9gP1cFQjpCvcIomkrtbkQ/vX7hgTUMeOL2zER4i2bf1lPZTFgxHr8IuCbqrSMHXfz8gUravmkYbbFPp9p+cM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QvP7pgQz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mXlEq53K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C7B3C4CEEB;
-	Sat, 16 Aug 2025 03:16:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QvP7pgQz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9428C4CEF5;
+	Sat, 16 Aug 2025 03:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755314201;
-	bh=NFD6hde2HewAQQPNS9+iLbK5cknXHkrysgrIbDhm46g=;
-	h=From:To:Cc:Subject:Date:From;
-	b=mXlEq53KYpbmiFtVYHXKQ4UODSmfac+Q8wkMntpd61yp5DEnlkQdKJZVDrMbhP4EX
-	 THV49OfdO2vISv456ejQxFakNVAtPXMVy0SwmPANdJDu4qXchxilD9umF+fo3LZ4kZ
-	 P7egAhNWZ+YHCPV86QW8KBWbpIzc2TSD6GhJTc3jzZ5iC4kUvw8wTsm/byegG/R9Np
-	 qpD63U7AMPj65obM4s5FrJMM5qR4FY7bf0rStapC1UrsWhNICRT7eSxbxXVXpt/svW
-	 vac9+5obtfByuFkiHAIkBuW/VUt5n6sOPBMaB07id+ZiRaALC6nAgg0w9KzYHUhmrY
-	 Wnrq2G6jvizEg==
+	s=k20201202; t=1755314206;
+	bh=QECyPubR/tntQ5r5osUsf57sJgrlHghmrbJxowtVoQw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=QvP7pgQzHQ7AuYhQocI+ideIDY+T+fp33uT5nuSbWIKgpTw+AUTYYv4SiAeUyDQVp
+	 XGc8PERp4zVazgWykwwe5mTQD4WdkCCaY85Bk39eNoZRMOjSIIFpBhJoFDO4Nj2D7K
+	 5CaKl9zkh6ys0LIxfWg7Db7qZFDbW6tXev5E2RcqxbQwopXgbkYu40IVFA+MuZczU0
+	 v2y6Hbv5s2NKdIF5hk7HFCxLqgTKTP7qVeJZSj1wEUiCi0OGeZQEJQ0B0kPunxKn/Y
+	 27H8jjikg8vVos7Zyx2jObJApw0VIveCn+rGsApBJtVvubXxFxuNwOmg60yebqUVsq
+	 gC0pf4PsdsjKg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -35,10 +36,12 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCHSET v5 00/12] perf annotate: Support --code-with-type on TUI
-Date: Fri, 15 Aug 2025 20:16:23 -0700
-Message-ID: <20250816031635.25318-1-namhyung@kernel.org>
+Subject: [PATCH v5 02/12] perf annotate: Remove annotation_print_data.start
+Date: Fri, 15 Aug 2025 20:16:25 -0700
+Message-ID: <20250816031635.25318-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20250816031635.25318-1-namhyung@kernel.org>
+References: <20250816031635.25318-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,70 +50,54 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+The start field is to control whether the output shows full address or
+offset from the function start.  But actually it can be changed
+dynamically in annotation__toggle_full_addr().  The informaiton should
+be available through struct annotation.  Let's use it directly.
 
-Hello,
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/annotate.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-The --code-with-type option is to show normal annotate output with type
-information.  It was supported only on --stdio, but this change adds it
-to TUI as well.
-
-Arnaldo, please tell me if you still don't like the
-__hist_entry__tui_annotate() but I don't have a better idea for now.
-
-v5 changes)
- * use a copy of hist entry for perf top  (Ian)
- * split disasm_line__write() change  (Ian)
- * constify annotation_write_ops parameter  (Ian)
- * update printed length calculation  (Ian)
- * remove annotation_print_data.start
- * add a hashmap to skip duplicate processing
-
-v4 changes)
- * add dso__debuginfo() helper  (Ian)
-
-v3 changes)
- * hide stack operation and stack canary by default
-
-v2 changes)
- * use 'T' key to toggle data type display  (Arnaldo)
- * display '[Type]' in the title line when it's enabled  (Arnaldo)
- * show warning when debug info is not available  (Arnaldo)
- * fix a typo  (Arnaldo)
-
-Actually the command line option sets the default behavior and users can
-change it by pressing 'T' key in the TUI annotate browser.
-
-The code is also available at 'perf/annotate-code-type-tui-v5' branch at
-https://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-
-Thanks,
-Namhyung
-
-
-Namhyung Kim (12):
-  perf annotate: Rename to __hist_entry__tui_annotate()
-  perf annotate: Remove annotation_print_data.start
-  perf annotate: Remove __annotation_line__write()
-  perf annotate: Pass annotation_print_data to annotation_line__write()
-  perf annotate: Simplify width calculation in annotation_line__write()
-  perf annotate: Return printed number from disasm_line__write()
-  perf annotate: Add --code-with-type support for TUI
-  perf annotate: Add 'T' hot key to toggle data type display
-  perf annotate: Show warning when debuginfo is not available
-  perf annotate: Hide data-type for stack operation and canary
-  perf annotate: Add dso__debuginfo() helper
-  perf annotate: Use a hashmap to save type data
-
- tools/perf/Documentation/perf-annotate.txt |   1 -
- tools/perf/builtin-annotate.c              |   5 -
- tools/perf/ui/browsers/annotate.c          | 117 ++++++++++++--
- tools/perf/ui/browsers/hists.c             |   2 +-
- tools/perf/util/annotate.c                 | 178 +++++++++++++++------
- tools/perf/util/annotate.h                 |  29 ++--
- tools/perf/util/dso.h                      |  21 +++
- tools/perf/util/hist.h                     |  12 +-
- 8 files changed, 273 insertions(+), 92 deletions(-)
-
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 0dd475a744b6dfac..b699e14102b0587a 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -770,7 +770,6 @@ struct annotation_print_data {
+ 	struct evsel *evsel;
+ 	struct arch *arch;
+ 	struct debuginfo *dbg;
+-	u64 start;
+ 	int addr_fmt_width;
+ };
+ 
+@@ -845,7 +844,7 @@ annotation_line__print(struct annotation_line *al, struct annotation_print_data
+ 
+ 		printf(" : ");
+ 
+-		disasm_line__print(dl, apd->start, apd->addr_fmt_width);
++		disasm_line__print(dl, notes->src->start, apd->addr_fmt_width);
+ 
+ 		if (opts->code_with_type && apd->dbg) {
+ 			struct annotated_data_type *data_type;
+@@ -1230,7 +1229,6 @@ int hist_entry__annotate_printf(struct hist_entry *he, struct evsel *evsel)
+ 	struct annotation_print_data apd = {
+ 		.he = he,
+ 		.evsel = evsel,
+-		.start = map__rip_2objdump(map, sym->start),
+ 	};
+ 	int printed = 2, queue_len = 0;
+ 	int more = 0;
+@@ -1267,7 +1265,7 @@ int hist_entry__annotate_printf(struct hist_entry *he, struct evsel *evsel)
+ 		symbol__annotate_hits(sym, evsel);
+ 
+ 	apd.addr_fmt_width = annotated_source__addr_fmt_width(&notes->src->source,
+-							      apd.start);
++							      notes->src->start);
+ 	evsel__get_arch(evsel, &apd.arch);
+ 	apd.dbg = debuginfo__new(filename);
+ 
 -- 
 2.50.1
 
