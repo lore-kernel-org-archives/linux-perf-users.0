@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D0DF15ECD7;
-	Sat, 16 Aug 2025 03:16:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203EC1F2B8D;
+	Sat, 16 Aug 2025 03:16:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755314210; cv=none; b=iYluR3vu6k9ggcq402NG6hLEAT2yMTKa/NGpXqu8L3EX+zdjXuxUCDNtbJLKWyo0FsPKhLBrcnKl4UnDFq1I8didzQ8XU4GEuoSa9uAtAkogsUjpwAA1k480YLk6MZESztg7ZLD3can5gps38WDojHfzRluMvTZPqHbHgAONeqE=
+	t=1755314211; cv=none; b=H8JVBfYFRNHzDBjRKmE67GmISwybd1IH9EZy3LNqJJywA5taKGJ+oa1G1Z3AmvmkrvSP9A+Tl42Jz9bc1a8wNmX7PTdbE1vlIShd3StjOOcwrxFgYH7jWBhYkrFOo7ms74BPZf5zzRvD8/y9Pi17oosueIkJAYjwhEncmnnfAwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755314210; c=relaxed/simple;
-	bh=TFn+AkeCWJxWEIXjxpP39LZNlBV3hJRx78OUGBy8puE=;
+	s=arc-20240116; t=1755314211; c=relaxed/simple;
+	bh=d4MR7IarDUQWcMZzNUI3SIJc3F04Njj30gYOkDquj+w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bcoXe53fq34zyx8Nco6vTtHcUEky0AV5NIEMjw9vmXKwooTs2KbgWnSQXyVWtM4UAM/At5wpu8DgtndwqJFr7PjvtRRh7C6jDKwHBDMrPJKOpgdwCXpiytZRy0DoWlVxjqHKIOdoVrwAiiHECmg92O5ERA0Wuck/QC1wwptPsMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cmphe5G4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jnsWFG8+aRjQVYFcgyyafcYeDQy2XWIuozIWXlh+3qQlaznLSxUB3aWT4+mwZCkmX8W4sVVpl5WdH1lwoeXVliZ0iV3xdKwis9eiUzVQSMuWmYbnwKf9i2p1AtJt2kRzcSjQxHAM+UzjveOhQn//POxIPNzMNLicWVe/lCidBjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qBZ8Ur7d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cmphe5G4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33AC2C4CEF7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qBZ8Ur7d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5B06C4CEF5;
 	Sat, 16 Aug 2025 03:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755314210;
-	bh=TFn+AkeCWJxWEIXjxpP39LZNlBV3hJRx78OUGBy8puE=;
+	s=k20201202; t=1755314211;
+	bh=d4MR7IarDUQWcMZzNUI3SIJc3F04Njj30gYOkDquj+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cmphe5G4FucFklBNAoa04onGP4LfkrGx5Alg4J42pe9d4T9tEM8WrtCxF2qztGN4X
-	 6ZehTEX+VxW+gzoLArUTY/+dTiXvyAuqXKyArWPWMb2l8GseCNdaH7vIPtLdgEKkW4
-	 0esctm0r9dtcQCrAiy3EEWnseVZSsh72r4dhGnHVXivYVNyNaCmmcHVXAVaFGYMnfc
-	 XEgP3pne1K/wm67bONP4/NNR+bgU6i5zZpsxKiUNnIHbZW3GIYllG9H+XQkcLuWC0U
-	 6wprYftWjXhgb3BIbcAgeytp6PHZiEiaKtgWaJ73cDg1SFG0T5xcf1PK1DgtI++tm0
-	 dvJOMcujInE/Q==
+	b=qBZ8Ur7d2FxufiFUAdLqc7iH6IyzGz2RMR46MZn/Z5Hi/oVfqSFfihtfep0uiszr7
+	 Kugozp2I+DUeiY/JtHGyZ1sGivNDZ16/KLH6ylK92x7czhEpKax78o6UL7bQkx6/8C
+	 8EgUhnx/nLfOd+JNSgb6cQkn2dXDp0R09WJsZlSOfy9UECcnIgKN83Vj54leY/JIYY
+	 Ih1aCz+ibKtL0J4LzVGtR8v3eMSdueZcRpNao8MY9FzRDEZRzIfgTe+KR6wv13ucPW
+	 b/zH3ysA5niWbwSXKDMqb0TIhGicQnQHIFKU+0PJjf5Uju5ibmUiNQCjKfrjni8sBT
+	 1abTAwDkFkFjQ==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,9 +36,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v5 11/12] perf annotate: Add dso__debuginfo() helper
-Date: Fri, 15 Aug 2025 20:16:34 -0700
-Message-ID: <20250816031635.25318-12-namhyung@kernel.org>
+Subject: [PATCH v5 12/12] perf annotate: Use a hashmap to save type data
+Date: Fri, 15 Aug 2025 20:16:35 -0700
+Message-ID: <20250816031635.25318-13-namhyung@kernel.org>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20250816031635.25318-1-namhyung@kernel.org>
 References: <20250816031635.25318-1-namhyung@kernel.org>
@@ -50,98 +50,177 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It'd be great if it can get the correct debug information using DSO
-build-Id not just the path name.  Instead of adding new callsites of
-debuginfo__new(), let's add dso__debuginfo() which can hide the access
-using the pathname and help the future conversion.
+It can slowdown annotation browser if objdump is processing large DWARF
+data.  Let's add a hashmap to save the data type info for each line.
 
-Suggested-by: Ian Rogers <irogers@google.com>
+Note that this is needed for TUI only because stdio only processes each
+line once.  TUI will display the same line whenever it refreshes the
+screen.
+
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/ui/browsers/annotate.c |  4 ++--
- tools/perf/util/annotate.c        |  6 +++---
- tools/perf/util/dso.h             | 10 ++++++++++
- 3 files changed, 15 insertions(+), 5 deletions(-)
+ tools/perf/ui/browsers/annotate.c | 34 ++++++++++++++++++++++++++++++-
+ tools/perf/util/annotate.c        | 27 ++++++++++++++++++++++--
+ tools/perf/util/annotate.h        |  2 ++
+ 3 files changed, 60 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index e3e7004f32251666..9aa3c1ba22f52789 100644
+index 9aa3c1ba22f52789..9677a3763a290a3d 100644
 --- a/tools/perf/ui/browsers/annotate.c
 +++ b/tools/perf/ui/browsers/annotate.c
-@@ -1050,7 +1050,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 		case 'T':
+@@ -6,6 +6,7 @@
+ #include "../../util/debug.h"
+ #include "../../util/debuginfo.h"
+ #include "../../util/dso.h"
++#include "../../util/hashmap.h"
+ #include "../../util/hist.h"
+ #include "../../util/sort.h"
+ #include "../../util/map.h"
+@@ -15,6 +16,7 @@
+ #include "../../util/evlist.h"
+ #include "../../util/thread.h"
+ #include <inttypes.h>
++#include <linux/err.h>
+ #include <linux/kernel.h>
+ #include <linux/string.h>
+ #include <linux/zalloc.h>
+@@ -36,6 +38,7 @@ struct annotate_browser {
+ 	struct hist_entry	   *he;
+ 	struct debuginfo	   *dbg;
+ 	struct evsel		   *evsel;
++	struct hashmap		   *type_hash;
+ 	bool			    searching_backwards;
+ 	char			    search_bf[128];
+ };
+@@ -43,6 +46,16 @@ struct annotate_browser {
+ /* A copy of target hist_entry for perf top. */
+ static struct hist_entry annotate_he;
+ 
++static size_t type_hash(long key, void *ctx __maybe_unused)
++{
++	return key;
++}
++
++static bool type_equal(long key1, long key2, void *ctx __maybe_unused)
++{
++	return key1 == key2;
++}
++
+ static inline struct annotation *browser__annotation(struct ui_browser *browser)
+ {
+ 	struct map_symbol *ms = browser->priv;
+@@ -130,6 +143,9 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
+ 	if (!browser->navkeypressed)
+ 		ops.width += 1;
+ 
++	if (!IS_ERR_OR_NULL(ab->type_hash))
++		apd.type_hash = ab->type_hash;
++
+ 	annotation_line__write(al, notes, &ops, &apd);
+ 
+ 	if (ops.current_entry)
+@@ -1051,6 +1067,10 @@ static int annotate_browser__run(struct annotate_browser *browser,
  			annotate_opts.code_with_type ^= 1;
  			if (browser->dbg == NULL)
--				browser->dbg = debuginfo__new(dso__long_name(map__dso(ms->map)));
-+				browser->dbg = dso__debuginfo(map__dso(ms->map));
+ 				browser->dbg = dso__debuginfo(map__dso(ms->map));
++			if (browser->type_hash == NULL) {
++				browser->type_hash = hashmap__new(type_hash, type_equal,
++								  /*ctx=*/NULL);
++			}
  			annotate_browser__show(&browser->b, title, help);
  			annotate_browser__debuginfo_warning(browser);
  			continue;
-@@ -1146,7 +1146,7 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+@@ -1145,8 +1165,10 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+ 
  	ui_helpline__push("Press ESC to exit");
  
- 	if (annotate_opts.code_with_type)
--		browser.dbg = debuginfo__new(dso__long_name(dso));
-+		browser.dbg = dso__debuginfo(dso);
+-	if (annotate_opts.code_with_type)
++	if (annotate_opts.code_with_type) {
+ 		browser.dbg = dso__debuginfo(dso);
++		browser.type_hash = hashmap__new(type_hash, type_equal, /*ctx=*/NULL);
++	}
  
  	browser.b.width = notes->src->widths.max_line_len;
  	browser.b.nr_entries = notes->src->nr_entries;
+@@ -1159,6 +1181,16 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+ 	ret = annotate_browser__run(&browser, evsel, hbt);
+ 
+ 	debuginfo__delete(browser.dbg);
++
++	if (!IS_ERR_OR_NULL(browser.type_hash)) {
++		struct hashmap_entry *cur;
++		size_t bkt;
++
++		hashmap__for_each_entry(browser.type_hash, cur, bkt)
++			free(cur->pvalue);
++		hashmap__free(browser.type_hash);
++	}
++
+ 	if (not_annotated && !notes->src->tried_source)
+ 		annotated_source__purge(notes->src);
+ 
 diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index ea68b32da7ce584a..bea3457a00632fd7 100644
+index bea3457a00632fd7..77414e04d99bb4f2 100644
 --- a/tools/perf/util/annotate.c
 +++ b/tools/perf/util/annotate.c
-@@ -1270,7 +1270,7 @@ int hist_entry__annotate_printf(struct hist_entry *he, struct evsel *evsel)
- 	apd.addr_fmt_width = annotated_source__addr_fmt_width(&notes->src->source,
- 							      notes->src->start);
- 	evsel__get_arch(evsel, &apd.arch);
--	apd.dbg = debuginfo__new(filename);
-+	apd.dbg = dso__debuginfo(dso);
+@@ -1954,11 +1954,17 @@ int annotation_br_cntr_entry(char **str, int br_cntr_nr,
+ 	return -ENOMEM;
+ }
  
- 	list_for_each_entry(pos, &notes->src->source, node) {
- 		int err;
-@@ -1375,7 +1375,7 @@ static int symbol__annotate_fprintf2(struct symbol *sym, FILE *fp,
- 
- 	if (annotate_opts.code_with_type) {
- 		evsel__get_arch(apd->evsel, &apd->arch);
--		apd->dbg = debuginfo__new(dso__long_name(map__dso(apd->he->ms.map)));
-+		apd->dbg = dso__debuginfo(map__dso(apd->he->ms.map));
- 	}
- 
- 	list_for_each_entry(al, &notes->src->source, node) {
-@@ -2882,7 +2882,7 @@ struct annotated_data_type *hist_entry__get_data_type(struct hist_entry *he)
- 		di_cache.dso = dso__get(map__dso(ms->map));
- 
- 		debuginfo__delete(di_cache.dbg);
--		di_cache.dbg = debuginfo__new(dso__long_name(di_cache.dso));
-+		di_cache.dbg = dso__debuginfo(di_cache.dso);
- 	}
- 
- 	if (di_cache.dbg == NULL) {
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index 7df1673f08d3ddb4..fd8e95de77f78dfc 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -10,6 +10,7 @@
- #include <stdio.h>
- #include <linux/bitops.h>
- #include "build-id.h"
-+#include "debuginfo.h"
- #include "mutex.h"
- #include <internal/rc_check.h>
- 
-@@ -914,4 +915,13 @@ u64 dso__findnew_global_type(struct dso *dso, u64 addr, u64 offset);
- bool perf_pid_map_tid(const char *dso_name, int *tid);
- bool is_perf_pid_map_name(const char *dso_name);
- 
-+/*
-+ * In the future, we may get debuginfo using build-ID (w/o path).
-+ * Add this helper is for the smooth conversion.
-+ */
-+static inline struct debuginfo *dso__debuginfo(struct dso *dso)
-+{
-+	return debuginfo__new(dso__long_name(dso));
-+}
++struct type_hash_entry {
++	struct annotated_data_type *type;
++	int offset;
++};
 +
- #endif /* __PERF_DSO */
+ static int disasm_line__snprint_type_info(struct disasm_line *dl,
+ 					  char *buf, int len,
+ 					  struct annotation_print_data *apd)
+ {
+-	struct annotated_data_type *data_type;
++	struct annotated_data_type *data_type = NULL;
++	struct type_hash_entry *entry = NULL;
+ 	char member[256];
+ 	int offset = 0;
+ 	int printed;
+@@ -1968,7 +1974,24 @@ static int disasm_line__snprint_type_info(struct disasm_line *dl,
+ 	if (!annotate_opts.code_with_type || apd->dbg == NULL)
+ 		return 1;
+ 
+-	data_type = __hist_entry__get_data_type(apd->he, apd->arch, apd->dbg, dl, &offset);
++	if (apd->type_hash) {
++		hashmap__find(apd->type_hash, dl->al.offset, &entry);
++		if (entry != NULL) {
++			data_type = entry->type;
++			offset = entry->offset;
++		}
++	}
++	if (data_type == NULL)
++		data_type = __hist_entry__get_data_type(apd->he, apd->arch, apd->dbg, dl, &offset);
++	if (apd->type_hash && entry == NULL) {
++		entry = malloc(sizeof(*entry));
++		if (entry != NULL) {
++			entry->type = data_type;
++			entry->offset = offset;
++			hashmap__add(apd->type_hash, dl->al.offset, entry);
++		}
++	}
++
+ 	if (!needs_type_info(data_type))
+ 		return 1;
+ 
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index 86e858f5bf173152..eaf6c8aa7f473959 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -204,6 +204,8 @@ struct annotation_print_data {
+ 	struct evsel *evsel;
+ 	struct arch *arch;
+ 	struct debuginfo *dbg;
++	/* save data type info keyed by al->offset */
++	struct hashmap *type_hash;
+ 	/* It'll be set in hist_entry__annotate_printf() */
+ 	int addr_fmt_width;
+ };
 -- 
 2.50.1
 
