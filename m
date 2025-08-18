@@ -1,116 +1,162 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 550882701C3;
-	Mon, 18 Aug 2025 10:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B772E228D;
+	Mon, 18 Aug 2025 14:32:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755512436; cv=none; b=Go0DY2+uQTglUCIjA2L9GI+Ih0YlmKpFpO0kYL2vax7jDevAnCGWZF4em0dtYPeU7jHgcYA2C7tYUrd+qIDvcJbifaMzAva8GW3pZ2j3JutdHLZWkuTfxsTPmsN3jfZtPhOl4dUfXLCdAelcWZmlSGL5+/XoUzKfZMD2zjn1E1Y=
+	t=1755527539; cv=none; b=noxV84yZJiRyrp0Zu/SxrPv8cLI/NGBnFqX4i2DQWs3FC0MG11Sw//Poobudg6nzt+Igz6LB9VASv5H4DM6JRItauvLsVZmyPyNdrIc6mmHx38dbGLLqZBQ7VY4a8hPPYyvYUs6CyvTkQ03kn8HTvll44fMbRen6cyxEnYjUz9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755512436; c=relaxed/simple;
-	bh=+XhdQ/6Cv07xh5XJuWky6AAJAqEv9jeFuZbvrkyhrmk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NmrConCPHoZ0QvDOSw+17TN7p+GxnCEzaHGp2F2o2azGaVrHbE2NrzxpAjW3CkpY67ui1gw+Mj0LnNxDc8M5mVY8O+s+5BzfjtlIquSmal7c83RQSQTc1oShHK63uT6LwYvQIMg26M7NpIAqlR5C6lTeYx8BYubaEA0s57HUr+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4c57Rd3yS1z9sSd;
-	Mon, 18 Aug 2025 11:57:17 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id h80lqdebdhir; Mon, 18 Aug 2025 11:57:17 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4c57Rd3CJwz9sRs;
-	Mon, 18 Aug 2025 11:57:17 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 5050A8B764;
-	Mon, 18 Aug 2025 11:57:17 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id tlZNreI0Ep2e; Mon, 18 Aug 2025 11:57:17 +0200 (CEST)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [10.25.207.160])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 2436D8B763;
-	Mon, 18 Aug 2025 11:57:17 +0200 (CEST)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Peter Zijlstra <peterz@infradead.org>,
+	s=arc-20240116; t=1755527539; c=relaxed/simple;
+	bh=rJq1PLFg1Jl8mhEVCyIXsTV8k6n43w+l6BpugcpqbW8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=anIK/enQGvTM2OMt66aHl8sAsLiYonzJ2oV7SnK1ocCV+s2qGiNRMCUqwzEF1nsJZjDEtpchoKf2x5Re313dkDH7cB4qjtmAH3Qxu7i66NQTG3+NQnCiIWPjq2MhgjpUJCk0eqeJNJb8bwHQD/egBt9GF3pb3k4+ZVf0FDhAFDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nTwJBQDM; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nTwJBQDM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=6/EIRFg9PLgH5wwlMqWFKmPwTY6Y/F+Dlmaynssm+2Y=; b=nTwJBQDMyEiWOl9UKDS8McJeti
+	nj2X7/q6CCyGsURq8PcmJKXeUUPIGn1OIHoJm93+vT3hwGJB/j6uSWZyqTNkmObWD5hUoZFcLuuqv
+	FDy6H/gOMAsxcb0nNNyzDeOEjs3qBBIvRCTnxZNQG4RgiZgY4h3Tl+whMPf7vRLFHfsGBo0dtF63J
+	b9a4itPxIPqRAa3/rFEEiJCCB1HWg+ppbiRYrSeF6BxqBVPvItmbtmMAUuckFZZXb1iaPxtZV3irs
+	UTjM7zKpuSyaFmkEsXTgejffm/Nqdx4etJkPDN0uMWcooNWwfQqSfINnPGbas/DAJX/d6G8BuDVHY
+	Gbz6qISA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uo0u5-00000007DeO-2MJS;
+	Mon, 18 Aug 2025 14:32:06 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id EC54630029B; Mon, 18 Aug 2025 16:32:04 +0200 (CEST)
+Date: Mon, 18 Aug 2025 16:32:04 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Anup Patel <anup@brainfault.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Leo Yan <leo.yan@arm.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH RESEND] perf: Completely remove possibility to override MAX_NR_CPUS
-Date: Mon, 18 Aug 2025 11:57:15 +0200
-Message-ID: <b205802edbb6fcc78822f558dff7104e64b29864.1755510867.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.49.0
+	Paolo Bonzini <pbonzini@redhat.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org, loongarch@lists.linux.dev,
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Yongwei Ma <yongwei.ma@intel.com>,
+	Mingwei Zhang <mizhang@google.com>,
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v5 09/44] perf/x86: Switch LVTPC to/from mediated PMI
+ vector on guest load/put context
+Message-ID: <20250818143204.GH3289052@noisy.programming.kicks-ass.net>
+References: <20250806195706.1650976-1-seanjc@google.com>
+ <20250806195706.1650976-10-seanjc@google.com>
+ <20250815113951.GC4067720@noisy.programming.kicks-ass.net>
+ <aJ9VQH87ytkWf1dH@google.com>
+ <aJ9YbZTJAg66IiVh@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1755511036; l=1837; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=+XhdQ/6Cv07xh5XJuWky6AAJAqEv9jeFuZbvrkyhrmk=; b=zdPN0IV1SNTGhsT/B/ZD7T275sgUgqXxPLny2G78OqJ6BvMFbf5LABG+tvEdnb5BCwv3d3520 PCs+mIsM2s9DbHVPxqJ5mL+Z3bGQ2YafBB+1s8Vay76lq2zTo774wof
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aJ9YbZTJAg66IiVh@google.com>
 
-Commit 21b8732eb447 ("perf tools: Allow overriding MAX_NR_CPUS at
-compile time") added the capability to override MAX_NR_CPUS. At
-that time it was necessary to reduce the huge amount of RAM used
-by static stats variables.
+On Fri, Aug 15, 2025 at 08:55:25AM -0700, Sean Christopherson wrote:
+> On Fri, Aug 15, 2025, Sean Christopherson wrote:
+> > On Fri, Aug 15, 2025, Peter Zijlstra wrote:
+> > > > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > > > index e1df3c3bfc0d..ad22b182762e 100644
+> > > > --- a/kernel/events/core.c
+> > > > +++ b/kernel/events/core.c
+> > > > @@ -6408,6 +6408,8 @@ void perf_load_guest_context(unsigned long data)
+> > > >  		task_ctx_sched_out(cpuctx->task_ctx, NULL, EVENT_GUEST);
+> > > >  	}
+> > > >  
+> > > > +	arch_perf_load_guest_context(data);
+> > > 
+> > > So I still don't understand why this ever needs to reach the generic
+> > > code. x86 pmu driver and x86 kvm can surely sort this out inside of x86,
+> > > no?
+> > 
+> > It's definitely possible to handle this entirely within x86, I just don't love
+> > switching the LVTPC without the protection of perf_ctx_lock and perf_ctx_disable().
+> > It's not a sticking point for me if you strongly prefer something like this: 
+> > 
+> > diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> > index 0e5048ae86fa..86b81c217b97 100644
+> > --- a/arch/x86/kvm/pmu.c
+> > +++ b/arch/x86/kvm/pmu.c
+> > @@ -1319,7 +1319,9 @@ void kvm_mediated_pmu_load(struct kvm_vcpu *vcpu)
+> >  
+> >         lockdep_assert_irqs_disabled();
+> >  
+> > -       perf_load_guest_context(kvm_lapic_get_reg(vcpu->arch.apic, APIC_LVTPC));
+> > +       perf_load_guest_context();
+> > +
+> > +       perf_load_guest_lvtpc(kvm_lapic_get_reg(vcpu->arch.apic, APIC_LVTPC));
+> 
+> Hmm, an argument for providing a dedicated perf_load_guest_lvtpc() APIs is that
+> it would allow KVM to handle LVTPC writes in KVM's VM-Exit fastpath, i.e. without
+> having to do a full put+reload of the guest context.
+> 
+> So if we're confident that switching the host LVTPC outside of
+> perf_{load,put}_guest_context() is functionally safe, I'm a-ok with it.
 
-But this has been unnecessary since commit 6a1e2c5c2673 ("perf stat:
-Remove a set of shadow stats static variables"), and
-commit e8399d34d568 ("libperf cpumap: Hide/reduce scope of
-MAX_NR_CPUS") broke the build in that case because it failed to
-add the guard around the new definition of MAX_NR_CPUS.
+Let me see. So the hardware sets Masked when it raises the interrupt.
 
-So cleanup things and remove guards completely to officialise it
-is not necessary anymore to override MAX_NR_CPUS.
+The interrupt handler clears it from software -- depending on uarch in 3
+different places:
+ 1) right at the start of the PMI
+ 2) in the middle, right before enabling the PMU (writing global control)
+ 3) at the end of the PMI
 
-Link: https://lore.kernel.org/all/8c8553387ebf904a9e5a93eaf643cb01164d9fb3.1736188471.git.christophe.leroy@csgroup.eu/
-Fixes: e8399d34d568 ("libperf cpumap: Hide/reduce scope of MAX_NR_CPUS")
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- tools/perf/perf.h                        | 2 --
- tools/perf/util/bpf_skel/kwork_top.bpf.c | 2 --
- 2 files changed, 4 deletions(-)
+the various changelogs adding that code mention spurious PMIs and
+malformed PEBS records.
 
-diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-index 3cb40965549f..e004178472d9 100644
---- a/tools/perf/perf.h
-+++ b/tools/perf/perf.h
-@@ -2,9 +2,7 @@
- #ifndef _PERF_PERF_H
- #define _PERF_PERF_H
- 
--#ifndef MAX_NR_CPUS
- #define MAX_NR_CPUS			4096
--#endif
- 
- enum perf_affinity {
- 	PERF_AFFINITY_SYS = 0,
-diff --git a/tools/perf/util/bpf_skel/kwork_top.bpf.c b/tools/perf/util/bpf_skel/kwork_top.bpf.c
-index 73e32e063030..6673386302e2 100644
---- a/tools/perf/util/bpf_skel/kwork_top.bpf.c
-+++ b/tools/perf/util/bpf_skel/kwork_top.bpf.c
-@@ -18,9 +18,7 @@ enum kwork_class_type {
- };
- 
- #define MAX_ENTRIES     102400
--#ifndef MAX_NR_CPUS
- #define MAX_NR_CPUS     4096
--#endif
- #define PF_KTHREAD      0x00200000
- #define MAX_COMMAND_LEN 16
- 
--- 
-2.49.0
+So the fun all happens when the guest is doing PMI and gets a VM-exit
+while still Masked.
 
+At that point, we can come in and completely rewrite the PMU state,
+reroute the PMI and enable things again. Then later, we 'restore' the
+PMU state, re-set LVTPC masked to the guest interrupt and 'resume'.
+
+What could possibly go wrong :/ Kan, I'm assuming, but not knowing, that
+writing all the PMU MSRs is somehow serializing state sufficient to not
+cause the above mentioned fails? Specifically, clearing PEBS_ENABLE
+should inhibit those malformed PEBS records or something? What if the
+host also has PEBS and we don't actually clear the bit?
+
+The current order ensures we rewrite LVTPC when global control is unset;
+I think we want to keep that.
+
+While staring at this, I note that perf_load_guest_context() will clear
+global ctrl, clear all the counter programming, and re-enable an empty
+pmu. Now, an empty PMU should result in global control being zero --
+there is nothing run after all.
+
+But then kvm_mediated_pmu_load() writes an explicit 0 again. Perhaps
+replace this with asserting it is 0 instead?
+
+Anyway, this means that moving the LVTPC writing into
+kvm_mediated_pmu_load() as you suggest is identical.
+perf_load_guest_context() results in global control being 0, we then
+assert it is 0, and write LVTPC while it is still 0.
+kvm_pmu_load_guest_pmcs() will then frob the MSRs.
+
+OK, so *IF* doing the VM-exit during PMI is sound, this is something
+that needs a comment somewhere. Then going back again, is the easy part,
+since on the host side, we can never transition into KVM during a PMI.
