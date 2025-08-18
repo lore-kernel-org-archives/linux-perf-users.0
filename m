@@ -1,157 +1,102 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB4D255F28
-	for <linux-perf-users@vger.kernel.org>; Mon, 18 Aug 2025 16:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93562278146;
+	Mon, 18 Aug 2025 16:12:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755533010; cv=none; b=sImFoA2IgaNkhDl7TSxavAtyyAEvmik8dL3riB7wOJsT95On+U++z6aZNNyJonzmpTox3iD4vMuRs41e64PFRBAhvPHgyW1RnPaNydTuN5Z7noKEOBrE/QKKGD7yL+GaXJkUqyEW8+UdsD5nqyHVSC9H2fnJ+rrHVCRbcoQXqDI=
+	t=1755533544; cv=none; b=N7MdopQ93NHrWR9USgWpOwpGCYONSAs00DaH/m2vrgtTjgqnmHQ5N26pzuVubXsVOxkjJQ8XFvo4wWX1gFiNqZ2Cw3HJMR6fqGSAgvJmLsUAkELaS7N7dP+gJMQZwRqw1krFWYxuKKXqKhq+u7u1WF2dXOFFmSVDMd/h1QvpX+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755533010; c=relaxed/simple;
-	bh=C5r0WHOtFObLFpKCMhNyDDNdrXKyoewOu/87RMDqYBA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qfPtEkJQjRr1Kftm6Jp5PA4oBQz13KN7EHLAniLw10GwSvkPvsJGhuzAnTd2ZRemQr7fKZsYyy8Hdcs2+UyLRZ5cFzVsdP42H+AvDDrPbf8CTM/+NMVlC7iPN1nYCN9BYj3R43p0Vbpzr2n9QKvrbqhn1Fy8wiXwcn/uqlbqig0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QjnHGDAz; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1755533544; c=relaxed/simple;
+	bh=0KlOKuDfOUdk5ngaWQoAWmJ0VU24ir66fy6JVhYV5wA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k8bENesrk8fvnY5ZrXgxxu8jcUj5jQH6VwPcjZNvgxrtSiV8EQKJBPeu6nWPGpDzQk6LuGsnn6KMak/+BH1chGv/HbKeKjclcHb62uawrbJ+4QJZj1Dgyool5htm6s/YZ+cz1uoIfLdhBTSaxM69VMuGa+L50fP98SoviNz6TuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bwEc88ku; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QjnHGDAz"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-242d1e947feso387515ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Aug 2025 09:03:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755533009; x=1756137809; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vy6Ekik4wtxdU/sGrdmJ5Z/mbLCDvKAO6pGEYg8MRYc=;
-        b=QjnHGDAzl+nxno+dqXnshxozgbcrgdgg3zUKEeC8r//WaltXZRe3ZwwbjGTdr3wCft
-         GJ9MXT1LkSZhoC3aVHd01s76cvrwcUYCYiI4C9jXqnVeuaROGA+PXPrZ6BgxPPrX8dzO
-         QYON+QwkBZyYaY5eamMzQMvM9nWjE4L2OjmSlCLLBzZPHMYeGlcbNkOXimwuo+TvdDAn
-         z0ZuQjDAq9c8yjJDZBQmsL8lud7Q35pb8vzvbtPj/goEzDgQOw6Td88axLsKTmJwBSsy
-         IWEqGt076VZNF5p4rBFs5SGKXxf6ywgUWBUBJFeeCCTovXTRu+v3J02zdYWL4u/oLief
-         8EKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755533009; x=1756137809;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vy6Ekik4wtxdU/sGrdmJ5Z/mbLCDvKAO6pGEYg8MRYc=;
-        b=LCxD4XYtAC01EhvEWZUxHTm/emYNRAmm2aH4Eq8bmCs58w5HJRMRRIu0giuazoNMBi
-         hjMWnxv2oSXhSw/tdmVWvEbMbwHEWVN2hEbzcds78FU0QYMLt9ogcj7hpI9PitxTviV8
-         O8Yb5CW2MxgwVJr2URGsRP5grcrx9HYhyIY8JnSId3cmye4W/l93YPLKapeGn8WKIKI8
-         NVYq8EaOFOt/k6/Odj9tmEoHOC/s9OdpLmUU1AMGG3WfKarGRBP41pQJc4SdUPP3AWpg
-         y6qHoQVZdTV1oEbj9UeXw1eb6b/Mnrpweuk4ai/BWsLNoeNkCrcZIR0hsfCXgirk7vVz
-         YCig==
-X-Forwarded-Encrypted: i=1; AJvYcCU1GiGsBjjgKmrFDmVaXc5HiXzCCIHp/rM2ghNJ01dKKBT1htICa1XUvER6yqTjVrEuwBVfjjh2wca8+zIKZl9K@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbmKJd2Z7Kv00z+XyNdmALJShNZPR4eitfXpWmZfvKwFSN/EEc
-	qKRJoOcqINfUk8EEJhe+g3dyB0+3yobLEr47PXgV+VVUSIHe166rzmdo4ALdX751xSj2rwWt36/
-	vkUQ14yjgofIXSlhVEwhYfuVdUd1mc6BqnlQBg/Ae
-X-Gm-Gg: ASbGncsK0rOSe/M7ZL+71BOCDaL/gu+WjxfITQFscw4FK2E/FzZKCfNJPqtZhNC9VkZ
-	VpsrkBmu4GSxFVWcWLy+IXlmEq47Ro/Zk11U3NMVNcYuutA/sKf9ga3M/1zI5mBVF9XUCvtGEZK
-	rbLXObQxJy0qGaE3dUQlE0ke2tswWI0fkFfmtMEWM9CcVDLbYA1Y7e4ZXHvhvWTLDQtC9yGaqTJ
-	Y7ErmNo/QxUVUv6vIWYQpeXI3tXrMvXNOCID0STIX068RI=
-X-Google-Smtp-Source: AGHT+IFveFdgcbnAa0xdAeel5El0U/UpEV28fWYRdt1wjZXR/9I3EHWlOUiuyZoLjhTOw+/kwb0Rj4OlzWrWcdRxPtw=
-X-Received: by 2002:a17:903:2302:b0:231:f6bc:5c84 with SMTP id
- d9443c01a7336-24478e4ace3mr6846525ad.8.1755533007752; Mon, 18 Aug 2025
- 09:03:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bwEc88ku"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=KmfCSi8O/XddsGKdRcKOqeDj7Pe6vE7Gax1joOuFhh4=; b=bwEc88kumrWiUkBPFis3R2xC8x
+	1VSU964ojxy4pizILXyaiupvjmCF+9S/j3hMn/7+0O6Nq5XCPfRh9SWhm98h0t2UFUjmA1dzWRZgt
+	tbkFmQuB/mZqY6ky3oZFaXzKbsxU61JtKuUNYn7rd7psdx+2eesyLw8rFRzpJQ1Win9JV+gpfxIJX
+	B0ERXsVVo7c2wl1HSeiIdqRZ4++3ImaZyhHbocKrxLR1Y5j1GlmqWCDYwxZ0RlMOOcuzzqa8ePrTH
+	qkSXaxaLa6fA1jK8eqoW/9WZ9mA8to8qlNfcQ4735MGvUb9ThF8/IOfNGNvoRXzwQSiekxnBpg4fR
+	SmVuRZ6Q==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uo2Sx-0000000HRhy-0oaa;
+	Mon, 18 Aug 2025 16:12:11 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 7731030029B; Mon, 18 Aug 2025 18:12:10 +0200 (CEST)
+Date: Mon, 18 Aug 2025 18:12:10 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+	Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
+	Anup Patel <anup@brainfault.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	kvm@vger.kernel.org, loongarch@lists.linux.dev,
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Yongwei Ma <yongwei.ma@intel.com>,
+	Mingwei Zhang <mizhang@google.com>,
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v5 09/44] perf/x86: Switch LVTPC to/from mediated PMI
+ vector on guest load/put context
+Message-ID: <20250818161210.GJ3289052@noisy.programming.kicks-ass.net>
+References: <20250806195706.1650976-1-seanjc@google.com>
+ <20250806195706.1650976-10-seanjc@google.com>
+ <20250815113951.GC4067720@noisy.programming.kicks-ass.net>
+ <aJ9VQH87ytkWf1dH@google.com>
+ <aJ9YbZTJAg66IiVh@google.com>
+ <20250818143204.GH3289052@noisy.programming.kicks-ass.net>
+ <aKNF7jc4qr9ab-Es@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250626054826.433453-2-irogers@google.com> <202507050736.b4hX0Xks-lkp@intel.com>
- <87o6tcrzh2.ffs@tglx> <CAP-5=fWbmo3ejmeWbweSk5waPtS2VTc1obtaWiibZC3cVmvVvg@mail.gmail.com>
- <CAP-5=fWeK4RnL8=BQm3o3u0KoONYEptwEYFBC5_DkJTbgpbx9g@mail.gmail.com>
-In-Reply-To: <CAP-5=fWeK4RnL8=BQm3o3u0KoONYEptwEYFBC5_DkJTbgpbx9g@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 18 Aug 2025 09:03:16 -0700
-X-Gm-Features: Ac12FXzxrkQN2qF-Ga-gtgg0Fff-w28PrY7z1q2GVj_JWSudKFY9dllqpgV61kk
-Message-ID: <CAP-5=fW=tWLwLoozZfVHQ7QgKS3ACf0_LxztGcs5mhpAO23sww@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] vdso: Switch get/put unaligned from packed struct
- to memcpy
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: kernel test robot <lkp@intel.com>, Eric Biggers <ebiggers@google.com>, Yuzhuo Jing <yuzhuo@google.com>, 
-	Andy Lutomirski <luto@kernel.org>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aKNF7jc4qr9ab-Es@google.com>
 
-On Tue, Jul 22, 2025 at 10:00=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> On Tue, Jul 22, 2025 at 9:44=E2=80=AFAM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > On Tue, Jul 22, 2025 at 8:56=E2=80=AFAM Thomas Gleixner <tglx@linutroni=
-x.de> wrote:
-> > >
-> > > Ian!
-> > >
-> > > On Sat, Jul 05 2025 at 08:05, kernel test robot wrote:
-> > > > kernel test robot noticed the following build warnings:
-> > > >
-> > > > [auto build test WARNING on linus/master]
-> > > > [also build test WARNING on tip/timers/vdso v6.16-rc4 next-20250704=
-]
-> > > > [cannot apply to acme/perf/core]
-> > > > [If your patch is applied to the wrong git tree, kindly drop us a n=
-ote.
-> > > > And when submitting patch, we suggest to use '--base' as documented=
- in
-> > > > https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> > > >
-> > > > url:    https://github.com/intel-lab-lkp/linux/commits/Ian-Rogers/v=
-dso-Switch-get-put-unaligned-from-packed-struct-to-memcpy/20250626-135005
-> > > > base:   linus/master
-> > > > patch link:    https://lore.kernel.org/r/20250626054826.433453-2-ir=
-ogers%40google.com
-> > > > patch subject: [PATCH v3 1/3] vdso: Switch get/put unaligned from p=
-acked struct to memcpy
-> > > > config: s390-randconfig-002-20250705 (https://download.01.org/0day-=
-ci/archive/20250705/202507050736.b4hX0Xks-lkp@intel.com/config)
-> > > > compiler: clang version 21.0.0git (https://github.com/llvm/llvm-pro=
-ject 61529d9e36fa86782a2458e6bdeedf7f376ef4b5)
-> > > > reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci=
-/archive/20250705/202507050736.b4hX0Xks-lkp@intel.com/reproduce)
-> > > >
-> > > > If you fix the issue in a separate patch/commit (i.e. not just a ne=
-w version of
-> > > > the same patch/commit), kindly add following tags
-> > > > | Reported-by: kernel test robot <lkp@intel.com>
-> > > > | Closes: https://lore.kernel.org/oe-kbuild-all/202507050736.b4hX0X=
-ks-lkp@intel.com/
-> > > >
-> > > > All warnings (new ones prefixed by >>):
-> > > >
-> > > >    In file included from arch/s390/boot/decompressor.c:48:
-> > > >    In file included from arch/s390/include/uapi/../../../../lib/dec=
-ompress_unlz4.c:10:
-> > > >    In file included from arch/s390/include/uapi/../../../../lib/lz4=
-/lz4_decompress.c:36:
-> > > >>> arch/s390/include/uapi/../../../../lib/lz4/lz4defs.h:109:9: warni=
-ng: default initialization of an object of type 'typeof (*((const U16 *)ptr=
-))' (aka 'const unsigned short') leaves the object uninitialized [-Wdefault=
--const-init-var-unsafe]
-> > > >      109 |         return get_unaligned((const U16 *)ptr);
-> > > >          |                ^
-> > >
-> > > Any update on this one?
+On Mon, Aug 18, 2025 at 08:25:34AM -0700, Sean Christopherson wrote:
 
-Hi Thomas,
+> > OK, so *IF* doing the VM-exit during PMI is sound, this is something
+> > that needs a comment somewhere. 
+> 
+> I'm a bit lost here.  Are you essentially asking if it's ok to take a VM-Exit
+> while the guest is handling a PMI?  If so, that _has_ to work, because there are
+> myriad things that can/will trigger a VM-Exit at any point while the guest is
+> active.
 
-I sent out a v4 patch set:
-https://lore.kernel.org/lkml/20250722215754.672330-1-irogers@google.com/
-which has no bot complaints but also no reviews. It side stepped some
-of the challenges by always operating on pointer types. If people
-could PTAL it would be appreciated as then we can pick up the changes
-in tools and drop:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/commit/tools/perf/Makefile.config?h=3Dperf-tools-next&id=3D55a18d2f3ff79c=
-9082225f44e0abbaea6286bf99
+Yes, that's what I'm asking. Why is this VM-exit during PMI nonsense not
+subject to the same failures that mandates the mid/late PMI ACK.
 
-Thanks,
-Ian
+And yes, I realize this needs to work. But so far I'm not sure I
+understand why that is a safe thing to do.
+
+Like I wrote, I suspect writing all the PMU MSRs serializes things
+sufficiently, but if that is the case, that needs to be explicitly
+mentioned. Because that also doesn't explain why we needs mid-ack
+instead of late-ack on ADL e-cores for instance.
+
+Could it perhaps be that we don't let the guests do PEBS because DS
+doesn't virtualize? And thus we don't have the malformed PEBS record?
