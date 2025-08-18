@@ -1,102 +1,141 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93562278146;
-	Mon, 18 Aug 2025 16:12:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3A432C31C;
+	Mon, 18 Aug 2025 17:14:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755533544; cv=none; b=N7MdopQ93NHrWR9USgWpOwpGCYONSAs00DaH/m2vrgtTjgqnmHQ5N26pzuVubXsVOxkjJQ8XFvo4wWX1gFiNqZ2Cw3HJMR6fqGSAgvJmLsUAkELaS7N7dP+gJMQZwRqw1krFWYxuKKXqKhq+u7u1WF2dXOFFmSVDMd/h1QvpX+A=
+	t=1755537250; cv=none; b=WVe9XA2HJEnixOvbu6OmoDNZQ+pnwo7JaW777lXuqiOPEQJORJ1nF3IHCNRcTYuFKd3yAZEZNTmabkr5rApVwp12BTilAwL8d/B0GFvMNzhz6zT33+w246iAfJvlTTyoS8fBzLWx9KmNebjXWNddFDhosdpjhaje7buXQREjrgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755533544; c=relaxed/simple;
-	bh=0KlOKuDfOUdk5ngaWQoAWmJ0VU24ir66fy6JVhYV5wA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k8bENesrk8fvnY5ZrXgxxu8jcUj5jQH6VwPcjZNvgxrtSiV8EQKJBPeu6nWPGpDzQk6LuGsnn6KMak/+BH1chGv/HbKeKjclcHb62uawrbJ+4QJZj1Dgyool5htm6s/YZ+cz1uoIfLdhBTSaxM69VMuGa+L50fP98SoviNz6TuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bwEc88ku; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1755537250; c=relaxed/simple;
+	bh=3gFsUEU4Xg6d5vQrEOsWIkbWaaUZWsSenDNCYqPYVT0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HaP5N1UNoXwPfkzxTEDDCl1EG6WYbR1t9fTwmc5xq3ixGsn0C9DBUiJD7dF/JAMRHx6mSOOravkJYIsXj2WlyjQ7MqFcDqHoGvfAbInyNDpaHRCFUp1qh6SH/m+2ucaDI7UgWrVIZrEFlecWxfuGjphv1XxtMzmY8Jc6smviq58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NLkCK1XA; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bwEc88ku"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=KmfCSi8O/XddsGKdRcKOqeDj7Pe6vE7Gax1joOuFhh4=; b=bwEc88kumrWiUkBPFis3R2xC8x
-	1VSU964ojxy4pizILXyaiupvjmCF+9S/j3hMn/7+0O6Nq5XCPfRh9SWhm98h0t2UFUjmA1dzWRZgt
-	tbkFmQuB/mZqY6ky3oZFaXzKbsxU61JtKuUNYn7rd7psdx+2eesyLw8rFRzpJQ1Win9JV+gpfxIJX
-	B0ERXsVVo7c2wl1HSeiIdqRZ4++3ImaZyhHbocKrxLR1Y5j1GlmqWCDYwxZ0RlMOOcuzzqa8ePrTH
-	qkSXaxaLa6fA1jK8eqoW/9WZ9mA8to8qlNfcQ4735MGvUb9ThF8/IOfNGNvoRXzwQSiekxnBpg4fR
-	SmVuRZ6Q==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uo2Sx-0000000HRhy-0oaa;
-	Mon, 18 Aug 2025 16:12:11 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 7731030029B; Mon, 18 Aug 2025 18:12:10 +0200 (CEST)
-Date: Mon, 18 Aug 2025 18:12:10 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
-	Anup Patel <anup@brainfault.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NLkCK1XA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755537248; x=1787073248;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=3gFsUEU4Xg6d5vQrEOsWIkbWaaUZWsSenDNCYqPYVT0=;
+  b=NLkCK1XAHmrs+0V8CLEP2Z66YDwlwPZC37Q+2vBiqC/KW1aX6VO9s/kX
+   lpB42nIRoOgV5vzKFzQw4LZOi4ZkevJ3uvXYbQXyQ1fB2oSkl1LI1lV+5
+   urS+6Rzg8ZJOFRoX9yxUh/LsSupfhZdSgOilziBk9vNSxEuY5WKVi56jY
+   zc88vAAFZQx3ypF0nA1tkMdFneUylDb1tF2N4DyA6enCKcMFpH+KNvF95
+   pSr4cPJ+u+5PDAmAR4KA02KdYDdB+esLqZ0ixcQ5G3D4J8yKCRYakLv16
+   dx6Z92RiiWyt5sjDYUfdw5rar1SDKTkadD+q/gYfAPG79591klLhc+tst
+   A==;
+X-CSE-ConnectionGUID: yXDH3U5bRM2oFuIxt/urIg==
+X-CSE-MsgGUID: 7pIGm8IeRQaYbnm+tHfPQQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11526"; a="80350256"
+X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
+   d="scan'208";a="80350256"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2025 10:14:07 -0700
+X-CSE-ConnectionGUID: C/Zab/TGSXOcxCABzElzAg==
+X-CSE-MsgGUID: V/73e2sBSqGKpNOsAy5U9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,300,1747724400"; 
+   d="scan'208";a="167137036"
+Received: from tfalcon-desk.amr.corp.intel.com (HELO tfalcon-desk.attlocal.net) ([10.125.108.14])
+  by fmviesa007.fm.intel.com with ESMTP; 18 Aug 2025 10:14:06 -0700
+From: Thomas Falcon <thomas.falcon@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	kvm@vger.kernel.org, loongarch@lists.linux.dev,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Yongwei Ma <yongwei.ma@intel.com>,
-	Mingwei Zhang <mizhang@google.com>,
-	Xiong Zhang <xiong.y.zhang@linux.intel.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [PATCH v5 09/44] perf/x86: Switch LVTPC to/from mediated PMI
- vector on guest load/put context
-Message-ID: <20250818161210.GJ3289052@noisy.programming.kicks-ass.net>
-References: <20250806195706.1650976-1-seanjc@google.com>
- <20250806195706.1650976-10-seanjc@google.com>
- <20250815113951.GC4067720@noisy.programming.kicks-ass.net>
- <aJ9VQH87ytkWf1dH@google.com>
- <aJ9YbZTJAg66IiVh@google.com>
- <20250818143204.GH3289052@noisy.programming.kicks-ass.net>
- <aKNF7jc4qr9ab-Es@google.com>
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	ak@linux.intel.com,
+	Thomas Falcon <thomas.falcon@intel.com>
+Subject: [PATCH v2 0/2] perf record: ratio-to-prev event term for auto counter reload
+Date: Mon, 18 Aug 2025 12:13:53 -0500
+Message-ID: <20250818171358.332331-1-thomas.falcon@intel.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aKNF7jc4qr9ab-Es@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Aug 18, 2025 at 08:25:34AM -0700, Sean Christopherson wrote:
+The Auto Counter Reload (ACR)[1] feature is used to track the
+relative rates of two or more perf events, only sampling
+when a given threshold is exceeded. This helps reduce overhead
+and unnecessary samples. However, enabling this feature
+currently requires setting two parameters:
 
-> > OK, so *IF* doing the VM-exit during PMI is sound, this is something
-> > that needs a comment somewhere. 
-> 
-> I'm a bit lost here.  Are you essentially asking if it's ok to take a VM-Exit
-> while the guest is handling a PMI?  If so, that _has_ to work, because there are
-> myriad things that can/will trigger a VM-Exit at any point while the guest is
-> active.
+ -- Event sampling period ("period")
+ -- acr_mask, which determines which events get reloaded
+    when the sample period is reached.
 
-Yes, that's what I'm asking. Why is this VM-exit during PMI nonsense not
-subject to the same failures that mandates the mid/late PMI ACK.
+For example, in the following command:
 
-And yes, I realize this needs to work. But so far I'm not sure I
-understand why that is a safe thing to do.
+perf record -e "{cpu_atom/branch-misses,period=200000,\
+acr_mask=0x2/ppu,cpu_atom/branch-instructions,period=1000000,\
+acr_mask=0x3/u}" -- ./mispredict
 
-Like I wrote, I suspect writing all the PMU MSRs serializes things
-sufficiently, but if that is the case, that needs to be explicitly
-mentioned. Because that also doesn't explain why we needs mid-ack
-instead of late-ack on ADL e-cores for instance.
+The goal is to limit event sampling to cases when the
+branch miss rate exceeds 20%. If the branch instructions
+sample period is exceeded first, both events are reloaded.
+If branch misses exceed their threshold first, only the
+second counter is reloaded, and a sample is taken.
 
-Could it perhaps be that we don't let the guests do PEBS because DS
-doesn't virtualize? And thus we don't have the malformed PEBS record?
+To simplify this, provide a new “ratio-to-prev” event term
+that works alongside the period event option or -c option.
+This would allow users to specify the desired relative rate
+between events as a ratio, making configuration more intuitive.
+
+With this enhancement, the equivalent command would be:
+
+perf record -e "{cpu_atom/branch-misses/ppu,\
+cpu_atom/branch-instructions,period=1000000,ratio_to_prev=5/u}" \
+-- ./mispredict
+
+or
+
+perf record -e "{cpu_atom/branch-misses/ppu,\
+cpu_atom/branch-instructions,ratio-to-prev=5/u}" -c 1000000 \
+-- ./mispredict
+
+[1] https://lore.kernel.org/lkml/20250327195217.2683619-1-kan.liang@linux.intel.com/
+
+Changes in v2 (mostly suggested by Ian Rogers):
+
+-- Add documentation explaining acr_mask bitmask used by ACR
+-- Move ACR specific implementation to arch/x86/
+-- Provide test cases for event parsing and perf record tests
+
+Thomas Falcon (2):
+  perf record: Add ratio-to-prev term
+  perf record: add auto counter reload parse and regression tests
+
+ tools/perf/Documentation/intel-acr.txt | 53 ++++++++++++++++++
+ tools/perf/Documentation/perf-list.txt |  2 +
+ tools/perf/arch/x86/util/evsel.c       | 53 ++++++++++++++++++
+ tools/perf/tests/parse-events.c        | 54 ++++++++++++++++++
+ tools/perf/tests/shell/record.sh       | 40 ++++++++++++++
+ tools/perf/util/evsel.c                | 76 ++++++++++++++++++++++++++
+ tools/perf/util/evsel.h                |  1 +
+ tools/perf/util/evsel_config.h         |  1 +
+ tools/perf/util/parse-events.c         | 22 ++++++++
+ tools/perf/util/parse-events.h         |  3 +-
+ tools/perf/util/parse-events.l         |  1 +
+ tools/perf/util/pmu.c                  |  3 +-
+ 12 files changed, 307 insertions(+), 2 deletions(-)
+ create mode 100644 tools/perf/Documentation/intel-acr.txt
+
+-- 
+2.50.1
+
