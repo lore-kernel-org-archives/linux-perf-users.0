@@ -1,109 +1,133 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9A66275860;
-	Tue, 19 Aug 2025 10:26:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2719322DA6
+	for <linux-perf-users@vger.kernel.org>; Tue, 19 Aug 2025 11:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755599206; cv=none; b=Tk/B4rs8jiv1IazhNpvo7sTbJ2tNyMGO1P5SXu3j6gJaNKJU47pcZe/9JUcWXatgm8xlD8bGzK58fj2IT8xu0stgGoVJ5jtiE0FT6ZSGPYTmd2IFb/34IR68TML2d9uo4DtgdtLBMe/aG9f/dRyPD1cza8I3+uWQyuOIhAGHNrk=
+	t=1755602556; cv=none; b=rgppW/Huw4gGEDi8h4935JFeU8+q2JcCFl8NylPSJ+xmmP3ixq5+e7TQtR1WcDESwF/Z4dKpSErQYcHbhu8gixTDCR/xaQeHPqdk59tAX53xPIelFopgM+OJ6XqJIfYjg81Ycp3WdGL/QlVardHuY2eaQIz/XvYSCdq5f286b8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755599206; c=relaxed/simple;
-	bh=7yoFpviv7y4iqdmS6H1TONkysfR98qLahaGcdvZS2eQ=;
+	s=arc-20240116; t=1755602556; c=relaxed/simple;
+	bh=ljNmmhgO9RaVR5EfsrA+jtClGqwH4Ncw0+lLHEpMKhk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PuTZHyZxnhGO0Q6gQqJ+0DPeI/Naduaq33C31+TsX6yhzy6XCAa0LezeoMX7QxlX/1irZSXbAtovVCQyCypfHw4pFNkhoUf2FVx3RHYNbrnCNQx8poKiRGfbrqyWb3bZSfvq56pWkPkkAKkr/VpdxaYIJPmnFV5wei8zO7wECrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E64BD1BD0;
-	Tue, 19 Aug 2025 03:26:35 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F1DB33F63F;
-	Tue, 19 Aug 2025 03:26:34 -0700 (PDT)
-Date: Tue, 19 Aug 2025 11:26:18 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Chengdong Li <chengdongli@optimatist.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/core: Improve arguments checking of inherited
- per-task counters when sampling.
-Message-ID: <aKRRSsEJxb1LZDV1@J2N7QTR9R3>
-References: <20250814110625.84622-1-chengdongli@optimatist.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fv70o3Y8qrUUDvvWfb5Ej+2C5QVFNcoDxgUzti4G6J/IIQPJLP3pvU02Aug/Qd7xtQiUwzhFukJ4Hhdls1FQ+JfktWDGBeCWXAtZdURoMKkuvM6Rqrp01GTwiBq2ZJKAFtlKStE0v0cFNZYtKteY4L6k770lByeq+cCIlrIvtbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hJBkTHKC; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hJBkTHKC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1755602552;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jdBinzdAYenwJX8OAfplMqIPm3EH+LTM0TGcBywLoj0=;
+	b=hJBkTHKC7xxyZ4/aReLPGO6dnGHI0VuzD9ue40LzqzTUCaFa22oEO+Aee5LY4H7avjoocK
+	xy4G/qOfFTpBUgzk4wz+fb4Ijnogh/P5EFr5ruyD8aC0fO2nbR9qlcaTvhMt3M93UAZm+W
+	VIQn9OPz+nipXbShXDeQqGDr5t1csLY=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-154-X9UDdFmhM8i4lJmDEyZKzA-1; Tue, 19 Aug 2025 07:22:31 -0400
+X-MC-Unique: X9UDdFmhM8i4lJmDEyZKzA-1
+X-Mimecast-MFC-AGG-ID: X9UDdFmhM8i4lJmDEyZKzA_1755602550
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3b9d41bda7bso3158255f8f.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 19 Aug 2025 04:22:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755602550; x=1756207350;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jdBinzdAYenwJX8OAfplMqIPm3EH+LTM0TGcBywLoj0=;
+        b=BswkAccErs2WEpBnFU5milCLbmOeKrjYqacUjeuxFGyIh1HDUDW7P9Sl1f2E+Kj9er
+         7Z5l/eznLSaW7l0ohC5W+V87s6IyAb+NmpuUUbpgEXlM3DpE4XYsGSEmRySkLVKZXEM0
+         D8qgx7l6YzLZjiqqc/bIJQ0N4wyCr6ZI56AtQ/kLxqDBhqsRcL5q76Bkedw6Cwik3Sfr
+         QgbAa9cqcY7X+oHWadgpEWx/0sa5Zds60L5FBgyW2iG37FW+7yV4eKVmmk41wEBo5WZU
+         utVTfutaVwYfZOKGLJcbGmPFmSe8BDV6gFoVDkG4Xi7jA2HtDY63cOEOG+UoUEM/5Gc5
+         NhHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVyWt9R7sWpOcRXfLK6jBaTvzkD4+S3fRBe3c0ISHt8AxINqkmSJnnXMsO4EMl2LaP17bBK9uJA2jzfNK5/y9K/@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLl9VN4a0/ooVtym2I0zzNvs/yDYcCYSlu/4WbB+f0KRU5lABu
+	DieZRSaxnereq4kIIxNTuDFtAiKEyJcPOgIl8IQux0pYONNXlcuyyFIo9N4YyVrm8Z3eNoBHGj8
+	ffOeyaEUbbP63FAETaSqE9GUvponBu6VtTV0tRQ05gMu0uk8f4zXo7PT/NVR5N0EfG68UNyk=
+X-Gm-Gg: ASbGncvrdy2JAaUtGlUzo1sbpchPxIcyvaY5Bc5QqhAEpz8ey7wbRhGCfTgI97WNZ24
+	D3YnBTdZzqxm0Cirtls7eIRFpAF00TBD6o0fype+kIKo6FsaFR2W4sS4Vpven4Wu75p4RwhSfa7
+	wi4BnvjV0H/F4FDuj+RDOZgo0PPkRmozHJIrP+vcKdZsP3CqmBn3/adduRGUvaS7e4OsaamcqZi
+	xNo9Sj5DDfPRZhLbTMv5zu+0dfweyB26CMsbpoGYOAGhxjCpiqkguNt6ZV/gznoOF8mhJiPj7wt
+	jq5p8xrA6qjwnlzT1ET1zPxFFhN9rJ1e
+X-Received: by 2002:a05:6000:2387:b0:3b7:9aff:ef22 with SMTP id ffacd0b85a97d-3c0ecc3206dmr1914968f8f.27.1755602549996;
+        Tue, 19 Aug 2025 04:22:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFv8ySp3Cp9nuKkaFnxvZbN6GvUwPZexJl3kz+HR/Y9XxHDTyVom8LjTJyyFuYXs6XeX/e9Gg==
+X-Received: by 2002:a05:6000:2387:b0:3b7:9aff:ef22 with SMTP id ffacd0b85a97d-3c0ecc3206dmr1914938f8f.27.1755602549506;
+        Tue, 19 Aug 2025 04:22:29 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1515:7300:62e6:253a:2a96:5e3])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b42a84417sm36364775e9.13.2025.08.19.04.22.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Aug 2025 04:22:29 -0700 (PDT)
+Date: Tue, 19 Aug 2025 07:22:26 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH] vhost: Fix ioctl # for VHOST_[GS]ET_FORK_FROM_OWNER
+Message-ID: <20250819072216-mutt-send-email-mst@kernel.org>
+References: <CACGkMEvm-wFV8TqX039CZU1JKnztft5Hp7kt6hqoqHCNyn3=jg@mail.gmail.com>
+ <20250819063958.833770-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250814110625.84622-1-chengdongli@optimatist.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250819063958.833770-1-namhyung@kernel.org>
 
-On Thu, Aug 14, 2025 at 07:06:25PM +0800, Chengdong Li wrote:
-> It's not allowed to mmap() of inherited per-task counters with CPU ==
-> -1, this would create a performance issue. But it is not friendly to
-> developers as current implementation postponed the arguments checking to
-> perf_mmap(), developer can get an -EINVAL from mmap() but without
-> any previous error returned from perf_event_open().
+On Mon, Aug 18, 2025 at 11:39:57PM -0700, Namhyung Kim wrote:
+> The VHOST_[GS]ET_FEATURES_ARRAY ioctl already took 0x83 and it would
+> result in a build error when the vhost uapi header is used for perf tool
+> build like below.
 > 
-> This patch improves it by moving the arguments checking from perf_mmap()
-> to perf_event_open().
-
-Why is that an improvement?
-
-IIUC before this patch, it would be possible to read() the event,
-whereas now the event cannot be opened at all.
-
-AFAICT this is removing functionality people could legitimately use, so
-this doesn't seem like an improvement.
-
-Mark.
-
+>   In file included from trace/beauty/ioctl.c:93:
+>   tools/perf/trace/beauty/generated/ioctl/vhost_virtio_ioctl_array.c: In function ‘ioctl__scnprintf_vhost_virtio_cmd’:
+>   tools/perf/trace/beauty/generated/ioctl/vhost_virtio_ioctl_array.c:36:18: error: initialized field overwritten [-Werror=override-init]
+>      36 |         [0x83] = "SET_FORK_FROM_OWNER",
+>         |                  ^~~~~~~~~~~~~~~~~~~~~
+>   tools/perf/trace/beauty/generated/ioctl/vhost_virtio_ioctl_array.c:36:18: note: (near initialization for ‘vhost_virtio_ioctl_cmds[131]’)
 > 
-> Signed-off-by: Chengdong Li <chengdongli@optimatist.com>
+> Fixes: 7d9896e9f6d02d8a ("vhost: Reintroduce kthread API and add mode selection")
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+
+Applied, thanks a lot!
+
 > ---
->  kernel/events/core.c | 20 ++++++++++++--------
->  1 file changed, 12 insertions(+), 8 deletions(-)
+>  include/uapi/linux/vhost.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 8060c2857bb2..f102adb395ec 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -6941,14 +6941,6 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
->  	int ret, flags = 0;
->  	mapped_f mapped;
+> diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
+> index 283348b64af9ac59..c57674a6aa0dbbea 100644
+> --- a/include/uapi/linux/vhost.h
+> +++ b/include/uapi/linux/vhost.h
+> @@ -260,7 +260,7 @@
+>   * When fork_owner is set to VHOST_FORK_OWNER_KTHREAD:
+>   *   - Vhost will create vhost workers as kernel threads.
+>   */
+> -#define VHOST_SET_FORK_FROM_OWNER _IOW(VHOST_VIRTIO, 0x83, __u8)
+> +#define VHOST_SET_FORK_FROM_OWNER _IOW(VHOST_VIRTIO, 0x84, __u8)
 >  
-> -	/*
-> -	 * Don't allow mmap() of inherited per-task counters. This would
-> -	 * create a performance issue due to all children writing to the
-> -	 * same rb.
-> -	 */
-> -	if (event->cpu == -1 && event->attr.inherit)
-> -		return -EINVAL;
-> -
->  	if (!(vma->vm_flags & VM_SHARED))
->  		return -EINVAL;
+>  /**
+>   * VHOST_GET_FORK_OWNER - Get the current fork_owner flag for the vhost device.
+> @@ -268,6 +268,6 @@
+>   *
+>   * @return: An 8-bit value indicating the current thread mode.
+>   */
+> -#define VHOST_GET_FORK_FROM_OWNER _IOR(VHOST_VIRTIO, 0x84, __u8)
+> +#define VHOST_GET_FORK_FROM_OWNER _IOR(VHOST_VIRTIO, 0x85, __u8)
 >  
-> @@ -13392,6 +13384,18 @@ SYSCALL_DEFINE5(perf_event_open,
->  			return -EACCES;
->  	}
->  
-> +	/*
-> +	 * Don't allow perf_event_open() of inherited per-task counters
-> +	 * with cpu == 1 when sampling. Otherwise, this would create a
-> +	 * performance issue due to all children writing to the same mmap()
-> +	 * created ring buffer.
-> +	 *
-> +	 * We recommend to call perf_event_open() for all cpus when sampling on
-> +	 * inherited per-task counters.
-> +	 */
-> +	if (attr.sample_freq && attr.inherit && cpu == -1)
-> +		return -EINVAL;
-> +
->  	if (attr.freq) {
->  		if (attr.sample_freq > sysctl_perf_event_sample_rate)
->  			return -EINVAL;
+>  #endif
 > -- 
-> 2.43.0
-> 
+> 2.51.0.rc1.167.g924127e9c0-goog
+
