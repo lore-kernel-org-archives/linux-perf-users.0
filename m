@@ -1,133 +1,250 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2719322DA6
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 Aug 2025 11:22:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB6C3314AF
+	for <linux-perf-users@vger.kernel.org>; Tue, 19 Aug 2025 11:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755602556; cv=none; b=rgppW/Huw4gGEDi8h4935JFeU8+q2JcCFl8NylPSJ+xmmP3ixq5+e7TQtR1WcDESwF/Z4dKpSErQYcHbhu8gixTDCR/xaQeHPqdk59tAX53xPIelFopgM+OJ6XqJIfYjg81Ycp3WdGL/QlVardHuY2eaQIz/XvYSCdq5f286b8c=
+	t=1755604602; cv=none; b=GAD0bkE3l6B3h3SEH6QMtRLzwzR8BIiK8QwWxBgLDELzXRGoGfqQr4CHmC4HA8RO5ln5434ZqI9ZF25Hkyos3DTvvm54m0XPmYGLgm7AWrXR4O5U0VgCGSB/7YGrTStaUoCxHLuK4fLNcDHcLXhkpCBSGMmuvlLGIcqLP4t5TGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755602556; c=relaxed/simple;
-	bh=ljNmmhgO9RaVR5EfsrA+jtClGqwH4Ncw0+lLHEpMKhk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fv70o3Y8qrUUDvvWfb5Ej+2C5QVFNcoDxgUzti4G6J/IIQPJLP3pvU02Aug/Qd7xtQiUwzhFukJ4Hhdls1FQ+JfktWDGBeCWXAtZdURoMKkuvM6Rqrp01GTwiBq2ZJKAFtlKStE0v0cFNZYtKteY4L6k770lByeq+cCIlrIvtbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hJBkTHKC; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1755604602; c=relaxed/simple;
+	bh=rb1SGl8FNOi+DNy3nHjlYUIv3bHD11uyZ+xyxyhrrRY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TRStTxwVm+40K8Zp75E17bgY1O4jmT5hws4Rdv2JolmD70s0uTQMwfdJsG43V/yAmBY1WuZwehjesw33JNo0jQeYFjCjaqJxEQnHVe3K1FmhNR9mULNDT1vqlvgDjEvcoPaHVhEhnpvUf5CgF8cNPUi9sG/7KHsAFniCKpD28ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MtMu2W0l; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hJBkTHKC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1755602552;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jdBinzdAYenwJX8OAfplMqIPm3EH+LTM0TGcBywLoj0=;
-	b=hJBkTHKC7xxyZ4/aReLPGO6dnGHI0VuzD9ue40LzqzTUCaFa22oEO+Aee5LY4H7avjoocK
-	xy4G/qOfFTpBUgzk4wz+fb4Ijnogh/P5EFr5ruyD8aC0fO2nbR9qlcaTvhMt3M93UAZm+W
-	VIQn9OPz+nipXbShXDeQqGDr5t1csLY=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-154-X9UDdFmhM8i4lJmDEyZKzA-1; Tue, 19 Aug 2025 07:22:31 -0400
-X-MC-Unique: X9UDdFmhM8i4lJmDEyZKzA-1
-X-Mimecast-MFC-AGG-ID: X9UDdFmhM8i4lJmDEyZKzA_1755602550
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3b9d41bda7bso3158255f8f.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 19 Aug 2025 04:22:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755602550; x=1756207350;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jdBinzdAYenwJX8OAfplMqIPm3EH+LTM0TGcBywLoj0=;
-        b=BswkAccErs2WEpBnFU5milCLbmOeKrjYqacUjeuxFGyIh1HDUDW7P9Sl1f2E+Kj9er
-         7Z5l/eznLSaW7l0ohC5W+V87s6IyAb+NmpuUUbpgEXlM3DpE4XYsGSEmRySkLVKZXEM0
-         D8qgx7l6YzLZjiqqc/bIJQ0N4wyCr6ZI56AtQ/kLxqDBhqsRcL5q76Bkedw6Cwik3Sfr
-         QgbAa9cqcY7X+oHWadgpEWx/0sa5Zds60L5FBgyW2iG37FW+7yV4eKVmmk41wEBo5WZU
-         utVTfutaVwYfZOKGLJcbGmPFmSe8BDV6gFoVDkG4Xi7jA2HtDY63cOEOG+UoUEM/5Gc5
-         NhHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVyWt9R7sWpOcRXfLK6jBaTvzkD4+S3fRBe3c0ISHt8AxINqkmSJnnXMsO4EMl2LaP17bBK9uJA2jzfNK5/y9K/@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLl9VN4a0/ooVtym2I0zzNvs/yDYcCYSlu/4WbB+f0KRU5lABu
-	DieZRSaxnereq4kIIxNTuDFtAiKEyJcPOgIl8IQux0pYONNXlcuyyFIo9N4YyVrm8Z3eNoBHGj8
-	ffOeyaEUbbP63FAETaSqE9GUvponBu6VtTV0tRQ05gMu0uk8f4zXo7PT/NVR5N0EfG68UNyk=
-X-Gm-Gg: ASbGncvrdy2JAaUtGlUzo1sbpchPxIcyvaY5Bc5QqhAEpz8ey7wbRhGCfTgI97WNZ24
-	D3YnBTdZzqxm0Cirtls7eIRFpAF00TBD6o0fype+kIKo6FsaFR2W4sS4Vpven4Wu75p4RwhSfa7
-	wi4BnvjV0H/F4FDuj+RDOZgo0PPkRmozHJIrP+vcKdZsP3CqmBn3/adduRGUvaS7e4OsaamcqZi
-	xNo9Sj5DDfPRZhLbTMv5zu+0dfweyB26CMsbpoGYOAGhxjCpiqkguNt6ZV/gznoOF8mhJiPj7wt
-	jq5p8xrA6qjwnlzT1ET1zPxFFhN9rJ1e
-X-Received: by 2002:a05:6000:2387:b0:3b7:9aff:ef22 with SMTP id ffacd0b85a97d-3c0ecc3206dmr1914968f8f.27.1755602549996;
-        Tue, 19 Aug 2025 04:22:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFv8ySp3Cp9nuKkaFnxvZbN6GvUwPZexJl3kz+HR/Y9XxHDTyVom8LjTJyyFuYXs6XeX/e9Gg==
-X-Received: by 2002:a05:6000:2387:b0:3b7:9aff:ef22 with SMTP id ffacd0b85a97d-3c0ecc3206dmr1914938f8f.27.1755602549506;
-        Tue, 19 Aug 2025 04:22:29 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1515:7300:62e6:253a:2a96:5e3])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b42a84417sm36364775e9.13.2025.08.19.04.22.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Aug 2025 04:22:29 -0700 (PDT)
-Date: Tue, 19 Aug 2025 07:22:26 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-	virtualization@lists.linux.dev, linux-perf-users@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH] vhost: Fix ioctl # for VHOST_[GS]ET_FORK_FROM_OWNER
-Message-ID: <20250819072216-mutt-send-email-mst@kernel.org>
-References: <CACGkMEvm-wFV8TqX039CZU1JKnztft5Hp7kt6hqoqHCNyn3=jg@mail.gmail.com>
- <20250819063958.833770-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MtMu2W0l"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57JA9sWd010863;
+	Tue, 19 Aug 2025 11:56:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=DmVgUE
+	BeGJMJbKnwbtyE6NXok77mFjGDpIQb0FwbZF8=; b=MtMu2W0lPMo+WGl9vkHdkb
+	EL90JsOP45U7qR12KFEsxWa1t6AJvMzgQul6UgfdFMe+NtZfWeurnqMm/aBDfFLd
+	3A/C5dcD+x/E4JkrqSyG/brZ5/ZKW2Uh7pYARpL2Z5FUTVtUKL0VyYLO5EIaQcnZ
+	bUWVbuUoDnUe4t1+ateovRsxgx6V31bC+doLJtGSSD5KwGOCsIAEqRTKqHn7MSCw
+	+n/yebeiF+yiOQ/7eT7Ee8mzYCbPwoTjinJ1EfuiN/uklpRwOqHcwypWYamqUjVQ
+	vBaVqhKD5TFzU8cXadXMrciLpB5oXC5ISIDkszGxHWJDNdmUN610P1M+O1GjpXzA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48jhny6m68-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Aug 2025 11:56:37 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 57JBtJRN001304;
+	Tue, 19 Aug 2025 11:56:37 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48jhny6m67-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Aug 2025 11:56:37 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57JAGAb1014720;
+	Tue, 19 Aug 2025 11:56:36 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 48k5tmt033-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Aug 2025 11:56:36 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 57JBuW5a46531058
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 19 Aug 2025 11:56:32 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2AA2220040;
+	Tue, 19 Aug 2025 11:56:32 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5285A20043;
+	Tue, 19 Aug 2025 11:56:30 +0000 (GMT)
+Received: from [9.79.202.156] (unknown [9.79.202.156])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 19 Aug 2025 11:56:30 +0000 (GMT)
+Message-ID: <eeaaf0e1-00ea-459f-b4e7-7167e88b8b1e@linux.ibm.com>
+Date: Tue, 19 Aug 2025 17:26:29 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250819063958.833770-1-namhyung@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tools/perf/tests: Update perf record testcase to fix
+ usage of affinity for machines with #CPUs > 1K
+To: Athira Rajeev <atrajeev@linux.ibm.com>, acme@kernel.org, jolsa@kernel.org,
+        adrian.hunter@intel.com, irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, maddy@linux.ibm.com, kjain@linux.ibm.com,
+        hbathini@linux.vnet.ibm.com, Aditya.Bodkhe1@ibm.com
+References: <20250814114908.45648-1-atrajeev@linux.ibm.com>
+Content-Language: en-US
+From: tejas05 <tejas05@linux.ibm.com>
+In-Reply-To: <20250814114908.45648-1-atrajeev@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=XbqJzJ55 c=1 sm=1 tr=0 ts=68a46676 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=VnNF1IyMAAAA:8 a=STefjNa7gtbzDs6x5UoA:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: rs84PFXSOKg0MA3LEeb7O-789jNjb4b0
+X-Proofpoint-GUID: peFYuAwNKiI3Lyg6ByzGiQ4AfOniygiS
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODE2MDAyNyBTYWx0ZWRfX5glu4YIQNppm
+ 8460LKicgS+gyUxt4UdCqz1nFjUqcyPe+HctZy0vQxx1YP8YVQFuj/hdxrnP2C4YQGg861P0mIx
+ zdvq8XPIhutVxNufcklPknF/3s+Q9UVnxibRANnn3tr/we+mPe7htiFaN9dkxVG0v8Llz+8nGhb
+ Ep2ljwLZZxt+iRSuCR6GymLSGpYEvS9Vllx3XHy6hxjbHhUyYbQ5MjgzQVLI2bMurf/7hu/eZzV
+ tW3FKSLtmBWGk9t9VuWBesb4uD6m3o9GSSuVSHIgbJ52OSpR9mot1hgDrjhbQi3KxyPwDs39NXX
+ K9e1IIFlHJS1j7wCU1n/rK4+B2x16xd0Gf+VlJg+0lu4zEzSwE+FbsHxXUZPgCVN1lnQ2wlfkcE
+ 06+0Z3+m
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-19_02,2025-08-14_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 adultscore=0 suspectscore=0 priorityscore=1501 bulkscore=0
+ clxscore=1015 malwarescore=0 spamscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508160027
 
-On Mon, Aug 18, 2025 at 11:39:57PM -0700, Namhyung Kim wrote:
-> The VHOST_[GS]ET_FEATURES_ARRAY ioctl already took 0x83 and it would
-> result in a build error when the vhost uapi header is used for perf tool
-> build like below.
-> 
->   In file included from trace/beauty/ioctl.c:93:
->   tools/perf/trace/beauty/generated/ioctl/vhost_virtio_ioctl_array.c: In function ‘ioctl__scnprintf_vhost_virtio_cmd’:
->   tools/perf/trace/beauty/generated/ioctl/vhost_virtio_ioctl_array.c:36:18: error: initialized field overwritten [-Werror=override-init]
->      36 |         [0x83] = "SET_FORK_FROM_OWNER",
->         |                  ^~~~~~~~~~~~~~~~~~~~~
->   tools/perf/trace/beauty/generated/ioctl/vhost_virtio_ioctl_array.c:36:18: note: (near initialization for ‘vhost_virtio_ioctl_cmds[131]’)
-> 
-> Fixes: 7d9896e9f6d02d8a ("vhost: Reintroduce kthread API and add mode selection")
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+On 8/14/25 17:19, Athira Rajeev wrote:
 
-Applied, thanks a lot!
-
+> The perf record testcase fails on systems with more than 1K CPUs.
+>
+> Testcase: perf test -vv "PERF_RECORD_* events & perf_sample fields"
+>
+>    PERF_RECORD_* events & perf_sample fields                       :
+>    --- start ---
+>    test child forked, pid 272482
+>    sched_getaffinity: Invalid argument
+>    sched__get_first_possible_cpu: Invalid argument
+>    test child finished with -1
+>    ---- end ----
+>    PERF_RECORD_* events & perf_sample fields: FAILED!
+>
+> sched__get_first_possible_cpu uses "sched_getaffinity" to get the
+> cpumask and this call is returning EINVAL (Invalid argument).
+> This happens because the default mask size in glibc is 1024.  To
+> overcome this 1024 CPUs mask size limitation of cpu_set_t, change the
+> mask size using the CPU_*_S macros ie, use CPU_ALLOC to allocate
+> cpumask, CPU_ALLOC_SIZE for size. Same fix needed for mask which is
+> used to setaffinity so that mask size is large enough to represent
+> number of possible CPU's in the system.
+>
+> Reported-by: Tejas Manhas <tejas05@linux.ibm.com>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
 > ---
->  include/uapi/linux/vhost.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
-> index 283348b64af9ac59..c57674a6aa0dbbea 100644
-> --- a/include/uapi/linux/vhost.h
-> +++ b/include/uapi/linux/vhost.h
-> @@ -260,7 +260,7 @@
->   * When fork_owner is set to VHOST_FORK_OWNER_KTHREAD:
->   *   - Vhost will create vhost workers as kernel threads.
->   */
-> -#define VHOST_SET_FORK_FROM_OWNER _IOW(VHOST_VIRTIO, 0x83, __u8)
-> +#define VHOST_SET_FORK_FROM_OWNER _IOW(VHOST_VIRTIO, 0x84, __u8)
->  
->  /**
->   * VHOST_GET_FORK_OWNER - Get the current fork_owner flag for the vhost device.
-> @@ -268,6 +268,6 @@
->   *
->   * @return: An 8-bit value indicating the current thread mode.
->   */
-> -#define VHOST_GET_FORK_FROM_OWNER _IOR(VHOST_VIRTIO, 0x84, __u8)
-> +#define VHOST_GET_FORK_FROM_OWNER _IOR(VHOST_VIRTIO, 0x85, __u8)
->  
->  #endif
-> -- 
-> 2.51.0.rc1.167.g924127e9c0-goog
+>   tools/perf/tests/perf-record.c | 36 ++++++++++++++++++++++++----------
+>   1 file changed, 26 insertions(+), 10 deletions(-)
+>
+> diff --git a/tools/perf/tests/perf-record.c b/tools/perf/tests/perf-record.c
+> index 0b3c37e66871..d895df037707 100644
+> --- a/tools/perf/tests/perf-record.c
+> +++ b/tools/perf/tests/perf-record.c
+> @@ -13,15 +13,19 @@
+>   #include "tests.h"
+>   #include "util/mmap.h"
+>   #include "util/sample.h"
+> +#include "util/cpumap.h"
+>   
+>   static int sched__get_first_possible_cpu(pid_t pid, cpu_set_t *maskp)
+>   {
+> -	int i, cpu = -1, nrcpus = 1024;
+> +	int i, cpu = -1;
+> +	int nrcpus = cpu__max_cpu().cpu;
+> +	size_t size = CPU_ALLOC_SIZE(nrcpus);
+> +
+>   realloc:
+> -	CPU_ZERO(maskp);
+> +	CPU_ZERO_S(size, maskp);
+>   
+> -	if (sched_getaffinity(pid, sizeof(*maskp), maskp) == -1) {
+> -		if (errno == EINVAL && nrcpus < (1024 << 8)) {
+> +	if (sched_getaffinity(pid, size, maskp) == -1) {
+> +		if (errno == EINVAL && nrcpus < (cpu__max_cpu().cpu << 8)) {
+>   			nrcpus = nrcpus << 2;
+>   			goto realloc;
+>   		}
+> @@ -30,11 +34,11 @@ static int sched__get_first_possible_cpu(pid_t pid, cpu_set_t *maskp)
+>   	}
+>   
+>   	for (i = 0; i < nrcpus; i++) {
+> -		if (CPU_ISSET(i, maskp)) {
+> +		if (CPU_ISSET_S(i, size, maskp)) {
+>   			if (cpu == -1)
+>   				cpu = i;
+>   			else
+> -				CPU_CLR(i, maskp);
+> +				CPU_CLR_S(i, size, maskp);
+>   		}
+>   	}
+>   
+> @@ -50,8 +54,9 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
+>   		.no_buffering = true,
+>   		.mmap_pages   = 256,
+>   	};
+> -	cpu_set_t cpu_mask;
+> -	size_t cpu_mask_size = sizeof(cpu_mask);
+> +	int nrcpus = cpu__max_cpu().cpu;
+> +	cpu_set_t *cpu_mask;
+> +	size_t cpu_mask_size;
+>   	struct evlist *evlist = evlist__new_dummy();
+>   	struct evsel *evsel;
+>   	struct perf_sample sample;
+> @@ -69,12 +74,22 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
+>   	int total_events = 0, nr_events[PERF_RECORD_MAX] = { 0, };
+>   	char sbuf[STRERR_BUFSIZE];
+>   
+> +	cpu_mask = CPU_ALLOC(nrcpus);
+> +	if (!cpu_mask) {
+> +		pr_debug("failed to create cpumask\n");
+> +		goto out;
+> +	}
+> +
+> +	cpu_mask_size = CPU_ALLOC_SIZE(nrcpus);
+> +	CPU_ZERO_S(cpu_mask_size, cpu_mask);
+> +
+>   	perf_sample__init(&sample, /*all=*/false);
+>   	if (evlist == NULL) /* Fallback for kernels lacking PERF_COUNT_SW_DUMMY */
+>   		evlist = evlist__new_default();
+>   
+>   	if (evlist == NULL) {
+>   		pr_debug("Not enough memory to create evlist\n");
+> +		CPU_FREE(cpu_mask);
+>   		goto out;
+>   	}
+>   
+> @@ -111,7 +126,7 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
+>   	evsel__set_sample_bit(evsel, TIME);
+>   	evlist__config(evlist, &opts, NULL);
+>   
+> -	err = sched__get_first_possible_cpu(evlist->workload.pid, &cpu_mask);
+> +	err = sched__get_first_possible_cpu(evlist->workload.pid, cpu_mask);
+>   	if (err < 0) {
+>   		pr_debug("sched__get_first_possible_cpu: %s\n",
+>   			 str_error_r(errno, sbuf, sizeof(sbuf)));
+> @@ -123,7 +138,7 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
+>   	/*
+>   	 * So that we can check perf_sample.cpu on all the samples.
+>   	 */
+> -	if (sched_setaffinity(evlist->workload.pid, cpu_mask_size, &cpu_mask) < 0) {
+> +	if (sched_setaffinity(evlist->workload.pid, cpu_mask_size, cpu_mask) < 0) {
+>   		pr_debug("sched_setaffinity: %s\n",
+>   			 str_error_r(errno, sbuf, sizeof(sbuf)));
+>   		goto out_delete_evlist;
+> @@ -328,6 +343,7 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
+>   		++errs;
+>   	}
+>   out_delete_evlist:
+> +	CPU_FREE(cpu_mask);
+>   	evlist__delete(evlist);
+>   out:
+>   	perf_sample__exit(&sample);
+
+
+Hi,
+
+I have tested the patch on the setup where the issue was seen, the patch fixes the issue. Please add the tested-by tag as below.
+Tested-by: Tejas Manhas<tejas05@linux.ibm.com>
+
+Thanks & Regards
+Tejas
+
 
