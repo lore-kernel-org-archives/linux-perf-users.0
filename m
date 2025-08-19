@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378AA27A931
-	for <linux-perf-users@vger.kernel.org>; Tue, 19 Aug 2025 01:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4666227B4EE
+	for <linux-perf-users@vger.kernel.org>; Tue, 19 Aug 2025 01:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755567633; cv=none; b=lNA7sET1CK2Xi/5txT+KJ6ZnicGL8jHN9zJ6ISP+MK5C5phgS3WALCnPDrGbuLDYpocn+8h4n9uJFP24ojW/tbE1tjcVOz8EMdnQ5gZ+eV67Xxr0QFumJeX69685152zZaqU6r8AfjRoXA7go1Uu89Q0eIsb/+FGLVOFLW1vjng=
+	t=1755567635; cv=none; b=VGLN14Rk1Jd+9LBoJWFx+St6q//IQLO30qbVkhCHxcFJd3EyfB0krWU/3pryFAbFlYE59OjlqR+EpZhUboXRLqhMUOA1QeAGTY39js9+78Ww6GUBxYnNsRkiQQMVJVF6TVZ9vy3Jng9Ahfjh4gLc+Azx+9BQWawkvTE2jIR9pho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755567633; c=relaxed/simple;
-	bh=9m3NIbf6G+NKc23GI7ySDayLKzAPlzW0J8oYNOOwiYg=;
+	s=arc-20240116; t=1755567635; c=relaxed/simple;
+	bh=IReQ/gDzDf181XNqMbXCjWaObwn2+z97Mfoo3hhvrIo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lEpqtyyJoDDiL3++GIK5umSaoQKAC2SXl0kAP1NzmortPVcFnwdSg4NTqqZCUoydAs8h+WYA2wIebinDWPo7Cvb0FAb6rFprIWBLNh9FOkEtH1BY5T26sWJc0fF2DZ4rLocGNVGtzTnm46qaLPkaLWqjv74qJbZwFmfv9BumZQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YFXb/5Rf; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=AUOn0uwOgDLrexgjYzh1Y2qPXiwLk+xMMliqTddI7c0cDF7IA0d16bVg3amfQ2kieoKyP7zTiFSM7em26b7BeaeQlvGidojn0gOoNJWWeNzGCLpK9OgZt4hN5VqDvrMszcGyPnU+wUjAme4fxNIV94CR3hrr7X7xuDNWBceZQsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pSszm8Yx; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YFXb/5Rf"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-24456ebed7bso56249945ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Aug 2025 18:40:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pSszm8Yx"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-24458297be0so111381475ad.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 18 Aug 2025 18:40:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755567631; x=1756172431; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1755567633; x=1756172433; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bLttyQpmtQ9ns5JcMBOEWKXtf65aFs4f20L8xnCqtm8=;
-        b=YFXb/5Rf7oBPJ+f65jUrnJI6l6J7HzKiWofJpgJY60YxYY0T0tn2Lp+7xbPiblZpT1
-         ukOUuq58jGtbb+5QjOv9jsA1FVJcj52yJccSC9XXVCjSBVpDXsf1U3VV3qpBbttz2X2W
-         XX5eCAcBoafVt7JxQBjwQqDqxzYryIROyuRORb63rO8V3aExIENPZcdPRaSdMN1rnOlC
-         cKOc+omwFumoURFhzM/vAYltH8QiY5O5s5CiD0lHPQiCsQcic/FSVfNjF13E+mf7Hm0q
-         bHzd7jG9J2MlhfXAZqkhP4QW970PHltDtFQl2LxMZ09HKLWqvBxJ9Y6aMKyLvnZPXyS/
-         UZpA==
+        bh=r6OQKtyJgp17iiv1Y1ZPyP7AI0CwVjct8ec+x0FCacg=;
+        b=pSszm8Yx2OZhFwXGGSdsAhGRwlkzk7/6hivvrNQa+Q7Ql+jLoA32uumyhyktP0R0VB
+         jxOmkmiL/9B2mXcmnBvuJer1kzkvqwDyBTx57b3ugnxqz2VIH1903g66ZSa9mCGnHlgs
+         f5mI2k9hXPKTC7G3Z78TJRqR+5kEvdX8v8202XEXUfISx4KGJCzborQP5ax8Hodue4ON
+         arSYtUgMqydCRUzZdPEjVZLIcQ7C5KzKFXTZz4ScIg/IPhZTY69IKPHu7u4Z0EOVwaEB
+         LUMmMRgtq9F3K6kpAXT2OTIx9sV7IVP9xPBaFP//tAkxdlPVMD0wqMuoqD0Xlg2TIG3m
+         hW4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755567631; x=1756172431;
+        d=1e100.net; s=20230601; t=1755567633; x=1756172433;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bLttyQpmtQ9ns5JcMBOEWKXtf65aFs4f20L8xnCqtm8=;
-        b=iMahUUKL86EUi2+1BvG9P90YFrwzbJAOCkxRxSZUmPIFpgmpvuyTEMyw7PaeMxUbIr
-         vYnfEdJW/bqqu7VquIkLfjNoxihR0gNkNZyRukF+qOi9tjCup7QIt1cQfww9SbVpsqJW
-         SoE8L4t2QfufPTFHt+fdglftmSQnlV3IsQQUpJPrzGzMXma9Se/TpMGmFHEp18KDTar9
-         BcpgRKk1DimejnUgIOHYcS2YXgf/okyh0F0pLjAeiCRCULrWCcv2CNvIYSxWV5mMoeXx
-         7oOldBDsDl9rLn4cBrBx6sfmvfyMuTdLcd0iCvkZAqOvpgQr5IjiLg+hJxK/f9um177a
-         PR1A==
-X-Forwarded-Encrypted: i=1; AJvYcCV1ZRQu85DgvI/GUeMuum7Wm54jma3I5456VA+lNzyyi5mjSAlBq1dZ1bSvQ212A07HuvPtPHV0ZNf5yfbarCUh@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGKBEd52phOfxGAWHWxywqDWHjuptI5AIakK7QLQPXm4rNG2UA
-	USld6VNUqLoV1Ey3w5aeqszF3sMgwgeS986699J6TFBykul22uPplaGaAGVqalv5E1wk/e2znhw
-	KxR+lSgIMfQ==
-X-Google-Smtp-Source: AGHT+IEBnLBRfX+O18qzMr8TEjJTaUqakya01MzrAg/MQihzbOmYI0CPTllurPyMzJs1Wj5L618BZe69bcdP
-X-Received: from plwp11.prod.google.com ([2002:a17:903:248b:b0:235:ee71:80d5])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:90f:b0:235:f091:11e5
- with SMTP id d9443c01a7336-245e0e98b88mr7165465ad.10.1755567631203; Mon, 18
- Aug 2025 18:40:31 -0700 (PDT)
-Date: Mon, 18 Aug 2025 18:39:37 -0700
+        bh=r6OQKtyJgp17iiv1Y1ZPyP7AI0CwVjct8ec+x0FCacg=;
+        b=VrpwNN39r1dlq+JnLCMlyCDGvOfVvg5eaFE8XefUgkJ+iyrFIgonOub5BqpVcyMnUY
+         gMdoGft+XOe1fauPCiUsK4iHCHCrSyWUZBBhXSDp9D3j7FFUVuuTJOL6JzjLfqeOTS9U
+         ARzllOHZSwt4pA6n+CO2LEDrPBW3TC1RaA7DF8tIKPHHwgpUqLCyurr9kLly5wBYVZKD
+         BQ3WL9XoDp3OzW4LsDDzsMjghYqWsTQXCKAsOQkUeb0uGXfZ58ncWlpy2CsHqZSuSnU1
+         RZq1GNRiXURplBAaPMBtPtKBbF/jtIWHbhEForSjYuPvq8Vz4CVxTmXp7eTpo5RhYNpO
+         zpWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVelu46WJUkPLM6gHFLLkaqOohQqJVqLTwy2SiVO23pITevBRZCVcR0tgGIPHCQdKuYj4S8n5VaTwafsqMPhdw4@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKVHf/zfrXw2ZoewrE/19zisrm92B5nCWI9cCu2Hfozwe7CqTv
+	EyVasZYCGyMYiR1xNLZ1zL7hEL8Wxp9eN94tY4PTnPqxNqKde6lu3X3qnAsH8AQa6TCdNk2Y0Lm
+	AgxLq+cf/PA==
+X-Google-Smtp-Source: AGHT+IGB0qnLyrcD6hO1Jw97YHzv6tq7Xzuf4h17QXCNH+lxWlw/lRt8SYFEkMyo/+Eur40pWUYWjVycAEBq
+X-Received: from plbkc6.prod.google.com ([2002:a17:903:33c6:b0:240:7619:64aa])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2443:b0:242:8a7:6a6c
+ with SMTP id d9443c01a7336-245e02d7629mr10950045ad.17.1755567633423; Mon, 18
+ Aug 2025 18:40:33 -0700 (PDT)
+Date: Mon, 18 Aug 2025 18:39:38 -0700
 In-Reply-To: <20250819013941.209033-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250819013941.209033-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.rc1.167.g924127e9c0-goog
-Message-ID: <20250819013941.209033-8-irogers@google.com>
-Subject: [PATCH v10 07/11] perf python: Add evlist metrics function
+Message-ID: <20250819013941.209033-9-irogers@google.com>
+Subject: [PATCH v10 08/11] perf python: Add evlist compute_metric
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -78,68 +78,173 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The function returns a list of the names of metrics within the
-evlist. For example:
+Add a compute_metric function that computes a metric double value for a
+given evlist, metric name, CPU and thread. For example:
 ```
 >>> import perf
->>> perf.parse_metrics("TopdownL1").metrics()
+>>> x = perf.parse_metrics("TopdownL1")
+>>> x.open()
+>>> x.enable()
+>>> x.disable()
+>>> x.metrics()
 ['tma_bad_speculation', 'tma_frontend_bound', 'tma_backend_bound', 'tma_retiring']
+>>> x.compute_metric('tma_bad_speculation', 0, -1)
+0.08605342847131037
 ```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Reviewed-by: Howard Chu <howardchu95@gmail.com>
 ---
- tools/perf/util/python.c | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ tools/perf/util/python.c | 125 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 125 insertions(+)
 
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 48308ed4e1c7..31089f8e5519 100644
+index 31089f8e5519..e0769538b8d9 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -1303,6 +1303,33 @@ static PyObject *pyrf_evlist__all_cpus(struct pyrf_evlist *pevlist)
- 	return (PyObject *)pcpu_map;
+@@ -14,6 +14,7 @@
+ #include "evlist.h"
+ #include "evsel.h"
+ #include "event.h"
++#include "expr.h"
+ #include "print_binary.h"
+ #include "record.h"
+ #include "strbuf.h"
+@@ -1330,6 +1331,124 @@ static PyObject *pyrf_evlist__metrics(struct pyrf_evlist *pevlist)
+ 	return list;
  }
  
-+static PyObject *pyrf_evlist__metrics(struct pyrf_evlist *pevlist)
++static int prepare_metric(const struct metric_expr *mexp,
++			  const struct evsel *evsel,
++			  struct expr_parse_ctx *pctx,
++			  int cpu_idx, int thread_idx)
 +{
-+	PyObject *list = PyList_New(/*len=*/0);
-+	struct rb_node *node;
++	struct evsel * const *metric_events = mexp->metric_events;
++	struct metric_ref *metric_refs = mexp->metric_refs;
 +
-+	if (!list)
++	for (int i = 0; metric_events[i]; i++) {
++		char *n = strdup(evsel__metric_id(metric_events[i]));
++		double val, ena, run;
++		int source_count = evsel__source_count(metric_events[i]);
++		int ret;
++		struct perf_counts_values *old_count, *new_count;
++
++		if (!n)
++			return -ENOMEM;
++
++		if (source_count == 0)
++			source_count = 1;
++
++		ret = evsel__ensure_counts(metric_events[i]);
++		if (ret)
++			return ret;
++
++		/* Set up pointers to the old and newly read counter values. */
++		old_count = perf_counts(metric_events[i]->prev_raw_counts, cpu_idx, thread_idx);
++		new_count = perf_counts(metric_events[i]->counts, cpu_idx, thread_idx);
++		/* Update the value in metric_events[i]->counts. */
++		evsel__read_counter(metric_events[i], cpu_idx, thread_idx);
++
++		val = new_count->val - old_count->val;
++		ena = new_count->ena - old_count->ena;
++		run = new_count->run - old_count->run;
++
++		if (ena != run && run != 0)
++			val = val * ena / run;
++		ret = expr__add_id_val_source_count(pctx, n, val, source_count);
++		if (ret)
++			return ret;
++	}
++
++	for (int i = 0; metric_refs && metric_refs[i].metric_name; i++) {
++		int ret = expr__add_ref(pctx, &metric_refs[i]);
++
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static PyObject *pyrf_evlist__compute_metric(struct pyrf_evlist *pevlist,
++					     PyObject *args, PyObject *kwargs)
++{
++	int ret, cpu = 0, cpu_idx, thread = 0, thread_idx;
++	const char *metric;
++	struct rb_node *node;
++	struct metric_expr *mexp = NULL;
++	struct expr_parse_ctx *pctx;
++	double result = 0;
++
++	if (!PyArg_ParseTuple(args, "sii", &metric, &cpu, &thread))
 +		return NULL;
 +
-+	for (node = rb_first_cached(&pevlist->evlist.metric_events.entries); node;
++	for (node = rb_first_cached(&pevlist->evlist.metric_events.entries);
++	     mexp == NULL && node;
 +	     node = rb_next(node)) {
 +		struct metric_event *me = container_of(node, struct metric_event, nd);
 +		struct list_head *pos;
 +
 +		list_for_each(pos, &me->head) {
-+			struct metric_expr *expr = container_of(pos, struct metric_expr, nd);
-+			PyObject *str = PyUnicode_FromString(expr->metric_name);
++			struct metric_expr *e = container_of(pos, struct metric_expr, nd);
 +
-+			if (!str || PyList_Append(list, str) != 0) {
-+				Py_DECREF(list);
-+				return NULL;
-+			}
-+			Py_DECREF(str);
++			if (strcmp(e->metric_name, metric))
++				continue;
++
++			if (e->metric_events[0] == NULL)
++				continue;
++
++			cpu_idx = perf_cpu_map__idx(e->metric_events[0]->core.cpus,
++						    (struct perf_cpu){.cpu = cpu});
++			if (cpu_idx < 0)
++				continue;
++
++			thread_idx = perf_thread_map__idx(e->metric_events[0]->core.threads,
++							  thread);
++			if (thread_idx < 0)
++				continue;
++
++			mexp = e;
++			break;
 +		}
 +	}
-+	return list;
++	if (!mexp) {
++		PyErr_Format(PyExc_TypeError, "Unknown metric '%s' for CPU '%d' and thread '%d'",
++			     metric, cpu, thread);
++		return NULL;
++	}
++
++	pctx = expr__ctx_new();
++	if (!pctx)
++		return PyErr_NoMemory();
++
++	ret = prepare_metric(mexp, mexp->metric_events[0], pctx, cpu_idx, thread_idx);
++	if (ret) {
++		expr__ctx_free(pctx);
++		errno = -ret;
++		PyErr_SetFromErrno(PyExc_OSError);
++		return NULL;
++	}
++	if (expr__parse(&result, pctx, mexp->metric_expr))
++		result = 0.0;
++
++	expr__ctx_free(pctx);
++	return PyFloat_FromDouble(result);
 +}
 +
  static PyObject *pyrf_evlist__mmap(struct pyrf_evlist *pevlist,
  				   PyObject *args, PyObject *kwargs)
  {
-@@ -1531,6 +1558,12 @@ static PyMethodDef pyrf_evlist__methods[] = {
+@@ -1564,6 +1683,12 @@ static PyMethodDef pyrf_evlist__methods[] = {
  		.ml_flags = METH_NOARGS,
- 		.ml_doc	  = PyDoc_STR("CPU map union of all evsel CPU maps.")
+ 		.ml_doc	  = PyDoc_STR("List of metric names within the evlist.")
  	},
 +	{
-+		.ml_name  = "metrics",
-+		.ml_meth  = (PyCFunction)pyrf_evlist__metrics,
-+		.ml_flags = METH_NOARGS,
-+		.ml_doc	  = PyDoc_STR("List of metric names within the evlist.")
++		.ml_name  = "compute_metric",
++		.ml_meth  = (PyCFunction)pyrf_evlist__compute_metric,
++		.ml_flags = METH_VARARGS | METH_KEYWORDS,
++		.ml_doc	  = PyDoc_STR("compute metric for given name, cpu and thread")
 +	},
  	{
  		.ml_name  = "mmap",
