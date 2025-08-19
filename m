@@ -1,123 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from out198-22.us.a.mail.aliyun.com (out198-22.us.a.mail.aliyun.com [47.90.198.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 722812D3743;
-	Wed, 20 Aug 2025 02:31:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476C7353349;
+	Wed, 20 Aug 2025 03:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755657116; cv=none; b=TdAklhiCrSltNZSzLhU8GiN9rhBCMGC/j9olhZW/ySSAu0fwF/akXnMETlPUY8RWCT6ehqYDiGZllnNSnWlAwJ0V+E9EmFhEqV92s5YA+7HPSMFJMcyBMo524qYYnZijZzUSZL+rAGylXEufmh41UcM8LmSABbQTKL86ZNdEKks=
+	t=1755660369; cv=none; b=raoW4NmyJ+5ZLrZ3IctFaMsoOLuQbyJme73PDeBD3pQ7l66R5/aQEuM9/P393cmSaTeunHRDnN6bIf7ojeSFiTozwc9kWKmZoK6Xe7IPS3gTR9rHky7mLBMZqLT+kOrcMsEsKMDBSZBOigE9ROvW+/KrIMn45m4kuTlXZGwhKPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755657116; c=relaxed/simple;
-	bh=YzXg9t3Y9pO52HXNZcUkI4xWTH2uo3hvGksKmi75rL4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FdF8tWTKMy7b3FkNzkuUqwBeRTNBoiHleEYRC71ghYR8Q486NnMmw6+QwhtsuY67H2Im7MPJnMuLc7rjIdkXFse6aT02HJKCXqDlBnRQOAMU6DVcmUCmK8yx26jcjpF9Zl+TzTYGVLCiQqsTGZUjlvw7V/6g6GseOPAM0df3GOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MFCBtAR+; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MFCBtAR+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755657116; x=1787193116;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=YzXg9t3Y9pO52HXNZcUkI4xWTH2uo3hvGksKmi75rL4=;
-  b=MFCBtAR+WMMPzKbnsrlJdJlTgw506wIKQQaINPriKYIffu3xqofelaMu
-   dOcBsYXPTBKlKK3mn4SD3dxHqDvvor3ksyo2MQMznCKan3g6gevIHLfIF
-   HyEtE6HhOuv3gXr8uG7m43jocKodkafJpl3eggN5TVG6xCapaY+jyWC32
-   csb8dymyx43SCCW8xtV4nsFoYvIdDsgCRmtQnD8snK8kGTGXEHqSz43aN
-   I53o+H0au8okK/vtnIS1icPizAQjbPnCLIWcjogTknu8XDQFnWX5nIxjv
-   lZ/H/ekLbEOUIZWZNIZYMdX4PKAJbUAN/wN1Yl1pAiMfQ2ujQJyIxF1DI
-   g==;
-X-CSE-ConnectionGUID: YfYEMMSCRDmybPOrXXwi2A==
-X-CSE-MsgGUID: LJA2FgJRTXuwyqVmm1xd2g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11527"; a="57625494"
-X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
-   d="scan'208";a="57625494"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 19:31:56 -0700
-X-CSE-ConnectionGUID: k2knp2gCTkauCA2QlC4tmQ==
-X-CSE-MsgGUID: yWIRZC8uT62OkqOVaCEBNw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
-   d="scan'208";a="167629052"
-Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa009.jf.intel.com with ESMTP; 19 Aug 2025 19:31:52 -0700
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v3 7/7] perf/x86: Print PMU counters bitmap in x86_pmu_show_pmu_cap()
-Date: Wed, 20 Aug 2025 10:30:32 +0800
-Message-Id: <20250820023032.17128-8-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250820023032.17128-1-dapeng1.mi@linux.intel.com>
-References: <20250820023032.17128-1-dapeng1.mi@linux.intel.com>
+	s=arc-20240116; t=1755660369; c=relaxed/simple;
+	bh=FF5mNWnc8QirEA07hOdzn02EtD0ltqNBcOMxKO4o4sk=;
+	h=Date:Subject:From:To:CC:Message-ID:References:In-Reply-To:
+	 Mime-version:Content-type; b=g/kQ2C5vEmdZ8UIp/NXz7AMID3cpGhgU7xQByJqo1DsvzUyTQyu+jA3pjECtIHFcEFM6M3cEXhqXutUkQjDDM3IexdKNNJtBsgS4rg5Mjwt0NiViBtt08y5F0MbiFlUWD8OLicBJmCleU9atWthjcDDH5F6Z2/kBM/rZRC/EJI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=optimatist.com; spf=pass smtp.mailfrom=optimatist.com; arc=none smtp.client-ip=47.90.198.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=optimatist.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=optimatist.com
+Received: from 192.168.0.107(mailfrom:chengdongli@optimatist.com fp:SMTPD_---.eKXugmB_1755660350 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Wed, 20 Aug 2025 11:25:51 +0800
+User-Agent: Microsoft-MacOutlook/16.99.25072714
+Date: Tue, 19 Aug 2025 21:31:46 +0800
+Subject: Re: [PATCH] perf/core: Improve arguments checking of inherited
+ per-task counters when sampling.
+From: "Chengdong Li(=?UTF-8?B?5p2O5oiQ5qCL?=)" <chengdongli@optimatist.com>
+To: Mark Rutland <mark.rutland@arm.com>
+CC: <peterz@infradead.org>,
+	<mingo@redhat.com>,
+	<acme@kernel.org>,
+	<namhyung@kernel.org>,
+	<alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>,
+	<irogers@google.com>,
+	<adrian.hunter@intel.com>,
+	<kan.liang@linux.intel.com>,
+	<linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Message-ID: <D1D50EA0-EFC3-4FAB-A898-A61BD081B527@optimatist.com>
+Thread-Topic: [PATCH] perf/core: Improve arguments checking of inherited
+ per-task counters when sampling.
+References: <20250814110625.84622-1-chengdongli@optimatist.com>
+ <aKRRSsEJxb1LZDV1@J2N7QTR9R3>
+In-Reply-To: <aKRRSsEJxb1LZDV1@J2N7QTR9R3>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-version: 1.0
+Content-type: text/plain;
+	charset="UTF-8"
+Content-transfer-encoding: 7bit
 
-Along with the introduction Perfmon v6, pmu counters could be
-incontinuous, like fixed counters on CWF, only fixed counters 0-3 and
-5-7 are supported, there is no fixed counter 4 on CWF. To accommodate
-this change, archPerfmonExt CPUID (0x23) leaves are introduced to
-enumerate the true-view of counters bitmap.
+Hi Mark,
 
-Current perf code already supports archPerfmonExt CPUID and uses
-counters-bitmap to enumerate HW really supported counters, but
-x86_pmu_show_pmu_cap() still only dumps the absolute counter number
-instead of true-view bitmap, it's out-dated and may mislead readers.
+On 2025/8/19, 18:26, "Mark Rutland" <mark.rutland@arm.com <mailto:mark.rutland@arm.com>> wrote:
 
-So dump counters true-view bitmap in x86_pmu_show_pmu_cap() and
-opportunistically change the dump sequence and words.
 
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- arch/x86/events/core.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+>On Thu, Aug 14, 2025 at 07:06:25PM +0800, Chengdong Li wrote:
+>> It's not allowed to mmap() of inherited per-task counters with CPU ==
+>> -1, this would create a performance issue. But it is not friendly to
+>> developers as current implementation postponed the arguments checking to
+>> perf_mmap(), developer can get an -EINVAL from mmap() but without
+>> any previous error returned from perf_event_open().
+>>
+>> This patch improves it by moving the arguments checking from perf_mmap()
+>> to perf_event_open().
+>
+>
+>Why is that an improvement?
+>
+>
+>IIUC before this patch, it would be possible to read() the event,
+>whereas now the event cannot be opened at all.
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 7610f26dfbd9..745caa6c15a3 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2069,13 +2069,15 @@ static void _x86_pmu_read(struct perf_event *event)
- 
- void x86_pmu_show_pmu_cap(struct pmu *pmu)
- {
--	pr_info("... version:                %d\n",     x86_pmu.version);
--	pr_info("... bit width:              %d\n",     x86_pmu.cntval_bits);
--	pr_info("... generic registers:      %d\n",     x86_pmu_num_counters(pmu));
--	pr_info("... value mask:             %016Lx\n", x86_pmu.cntval_mask);
--	pr_info("... max period:             %016Lx\n", x86_pmu.max_period);
--	pr_info("... fixed-purpose events:   %d\n",     x86_pmu_num_counters_fixed(pmu));
--	pr_info("... event mask:             %016Lx\n", hybrid(pmu, intel_ctrl));
-+	pr_info("... version:                   %d\n", x86_pmu.version);
-+	pr_info("... bit width:                 %d\n", x86_pmu.cntval_bits);
-+	pr_info("... generic counters:          %d\n", x86_pmu_num_counters(pmu));
-+	pr_info("... generic bitmap:            %016llx\n", hybrid(pmu, cntr_mask64));
-+	pr_info("... fixed-purpose counters:    %d\n", x86_pmu_num_counters_fixed(pmu));
-+	pr_info("... fixed-purpose bitmap:      %016llx\n", hybrid(pmu, fixed_cntr_mask64));
-+	pr_info("... value mask:                %016llx\n", x86_pmu.cntval_mask);
-+	pr_info("... max period:                %016llx\n", x86_pmu.max_period);
-+	pr_info("... global_ctrl mask:          %016llx\n", hybrid(pmu, intel_ctrl));
- }
- 
- static int __init init_hw_perf_events(void)
--- 
-2.34.1
+That's true, could you provide a use case that using sampling mode but without
+ring buffer? From my best knowledge, I think counting mode is more suitable
+for read() only.
+
+>
+>
+>AFAICT this is removing functionality people could legitimately use, so
+>this doesn't seem like an improvement.
+
+The problem is that using inherit per-task counter with sampling mode would lead
+developer hard to debug why mmap() returns -EINVAL. There is not error returned from
+perf_event_open(), everything done seems right but failed at mmap(), and there is
+no clue in man open_event_open() as well.
+
+Thanks,
+Chengdong
+
+>
+>
+>Mark.
+>
+>
+>>
+>> Signed-off-by: Chengdong Li <chengdongli@optimatist.com <mailto:chengdongli@optimatist.com>>
+>> ---
+>> kernel/events/core.c | 20 ++++++++++++--------
+>> 1 file changed, 12 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 8060c2857bb2..f102adb395ec 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -6941,14 +6941,6 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
+>> int ret, flags = 0;
+>> mapped_f mapped;
+>>
+>> - /*
+>> - * Don't allow mmap() of inherited per-task counters. This would
+>> - * create a performance issue due to all children writing to the
+>> - * same rb.
+>> - */
+>> - if (event->cpu == -1 && event->attr.inherit)
+>> - return -EINVAL;
+>> -
+>> if (!(vma->vm_flags & VM_SHARED))
+>> return -EINVAL;
+>>
+>> @@ -13392,6 +13384,18 @@ SYSCALL_DEFINE5(perf_event_open,
+>> return -EACCES;
+>> }
+>>
+>> + /*
+>> + * Don't allow perf_event_open() of inherited per-task counters
+>> + * with cpu == 1 when sampling. Otherwise, this would create a
+>> + * performance issue due to all children writing to the same mmap()
+>> + * created ring buffer.
+>> + *
+>> + * We recommend to call perf_event_open() for all cpus when sampling on
+>> + * inherited per-task counters.
+>> + */
+>> + if (attr.sample_freq && attr.inherit && cpu == -1)
+>> + return -EINVAL;
+>> +
+>> if (attr.freq) {
+>> if (attr.sample_freq > sysctl_perf_event_sample_rate)
+>> return -EINVAL;
+>> --
+>> 2.43.0
+>>
+
 
