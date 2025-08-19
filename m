@@ -1,52 +1,35 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F05A22236E3;
-	Tue, 19 Aug 2025 10:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9A66275860;
+	Tue, 19 Aug 2025 10:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755598530; cv=none; b=N8+SOPlCnMEYurAjpvYg5aYXxzC2vfiHJAMGNdRiVi2hYQIIB9HTquqFyqbPpitndS5pyg60TsKiJDwQn0DJbK7FLQ6tCgOKpy8up08CgvKHCtLsx8KgpmN40jkjImrWEhg9jL9fxu1NZc6JGB4PdDe4lChlN7YbBvVeHLaj9ks=
+	t=1755599206; cv=none; b=Tk/B4rs8jiv1IazhNpvo7sTbJ2tNyMGO1P5SXu3j6gJaNKJU47pcZe/9JUcWXatgm8xlD8bGzK58fj2IT8xu0stgGoVJ5jtiE0FT6ZSGPYTmd2IFb/34IR68TML2d9uo4DtgdtLBMe/aG9f/dRyPD1cza8I3+uWQyuOIhAGHNrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755598530; c=relaxed/simple;
-	bh=vpLOTu6ZuSIscsnYbHpLOnSo0w7zb/mTZyGvaB0D0Mg=;
+	s=arc-20240116; t=1755599206; c=relaxed/simple;
+	bh=7yoFpviv7y4iqdmS6H1TONkysfR98qLahaGcdvZS2eQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LW6zPCQIAM4m3np0vXCqrCyrxkHXuBIgmXInTDw/8OpWZLR6aFSEICReeXDru3qEwDOA47qj7xpA79+HYKzh19MEf9LnEFLcfpy2k5aSK0A8AZPxIJ+OjSNhRgswWJPYF4HlX+Lj+SUAQW+UOka5MtWTU1v5zGrwG80GAlorOuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qtQbQwan; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qtQbQwan"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C43B9C4CEF1;
-	Tue, 19 Aug 2025 10:15:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755598529;
-	bh=vpLOTu6ZuSIscsnYbHpLOnSo0w7zb/mTZyGvaB0D0Mg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qtQbQwanw50GY2R5i426Q4AmJOuIULqWkIexyYP0lavMM714U79QUAPNF25KsZdqd
-	 woUR3d/4ieMbU5F+mIBwUq6l4lLkHY7bCw+i0/6Zx8mZHeg+K1MKbmoqgRKdY6qy9y
-	 SYuErEu27tyQbptl96WEu+GrnLn2ORH9icoda41EGtjQs7wc83DEc1iVDyNHRBQmg3
-	 cCHMTa24ZUNpT6L+KoqjHB+iohVWV7pXlBu7eKCIP2giF3/ysBEZLlRNGqFXnq1mS0
-	 tZRz47/LMeMQ1dwbg+sUdh5GH6+7ByH23X41etxnlyVNRjWkwCQocixaHUHHdBLBAe
-	 eJ0J+HSA74IPg==
-Date: Tue, 19 Aug 2025 11:15:22 +0100
-From: Will Deacon <will@kernel.org>
-To: Yunseong Kim <ysk@kzalloc.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	John Garry <john.g.garry@oracle.com>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Yeoreum Yun <yeoreum.yun@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: arm64: Sync ESR_ELx_EC_* macros in
- arm64_exception_types.h with esr.h
-Message-ID: <aKROus1HA4ch9XJz@willie-the-truck>
-References: <20250814151452.618765-2-ysk@kzalloc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=PuTZHyZxnhGO0Q6gQqJ+0DPeI/Naduaq33C31+TsX6yhzy6XCAa0LezeoMX7QxlX/1irZSXbAtovVCQyCypfHw4pFNkhoUf2FVx3RHYNbrnCNQx8poKiRGfbrqyWb3bZSfvq56pWkPkkAKkr/VpdxaYIJPmnFV5wei8zO7wECrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E64BD1BD0;
+	Tue, 19 Aug 2025 03:26:35 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F1DB33F63F;
+	Tue, 19 Aug 2025 03:26:34 -0700 (PDT)
+Date: Tue, 19 Aug 2025 11:26:18 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Chengdong Li <chengdongli@optimatist.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf/core: Improve arguments checking of inherited
+ per-task counters when sampling.
+Message-ID: <aKRRSsEJxb1LZDV1@J2N7QTR9R3>
+References: <20250814110625.84622-1-chengdongli@optimatist.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,21 +38,72 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250814151452.618765-2-ysk@kzalloc.com>
+In-Reply-To: <20250814110625.84622-1-chengdongli@optimatist.com>
 
-On Thu, Aug 14, 2025 at 03:14:53PM +0000, Yunseong Kim wrote:
-> Update perf util arm64_exception_types.h to match the exception class
-> macros defined in tools/arch/arm64/include/asm/esr.h. This ensures
-> consistency between perf tooling and the kernel header definitions for
-> ESR_ELx_EC_* values.
+On Thu, Aug 14, 2025 at 07:06:25PM +0800, Chengdong Li wrote:
+> It's not allowed to mmap() of inherited per-task counters with CPU ==
+> -1, this would create a performance issue. But it is not friendly to
+> developers as current implementation postponed the arguments checking to
+> perf_mmap(), developer can get an -EINVAL from mmap() but without
+> any previous error returned from perf_event_open().
 > 
-> Signed-off-by: Yunseong Kim <ysk@kzalloc.com>
+> This patch improves it by moving the arguments checking from perf_mmap()
+> to perf_event_open().
+
+Why is that an improvement?
+
+IIUC before this patch, it would be possible to read() the event,
+whereas now the event cannot be opened at all.
+
+AFAICT this is removing functionality people could legitimately use, so
+this doesn't seem like an improvement.
+
+Mark.
+
+> 
+> Signed-off-by: Chengdong Li <chengdongli@optimatist.com>
 > ---
->  tools/perf/arch/arm64/util/arm64_exception_types.h | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-
-This looks consistent with asm/esr.h on arm64, so:
-
-Acked-by: Will Deacon <will@kernel.org>
-
-Will
+>  kernel/events/core.c | 20 ++++++++++++--------
+>  1 file changed, 12 insertions(+), 8 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 8060c2857bb2..f102adb395ec 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -6941,14 +6941,6 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
+>  	int ret, flags = 0;
+>  	mapped_f mapped;
+>  
+> -	/*
+> -	 * Don't allow mmap() of inherited per-task counters. This would
+> -	 * create a performance issue due to all children writing to the
+> -	 * same rb.
+> -	 */
+> -	if (event->cpu == -1 && event->attr.inherit)
+> -		return -EINVAL;
+> -
+>  	if (!(vma->vm_flags & VM_SHARED))
+>  		return -EINVAL;
+>  
+> @@ -13392,6 +13384,18 @@ SYSCALL_DEFINE5(perf_event_open,
+>  			return -EACCES;
+>  	}
+>  
+> +	/*
+> +	 * Don't allow perf_event_open() of inherited per-task counters
+> +	 * with cpu == 1 when sampling. Otherwise, this would create a
+> +	 * performance issue due to all children writing to the same mmap()
+> +	 * created ring buffer.
+> +	 *
+> +	 * We recommend to call perf_event_open() for all cpus when sampling on
+> +	 * inherited per-task counters.
+> +	 */
+> +	if (attr.sample_freq && attr.inherit && cpu == -1)
+> +		return -EINVAL;
+> +
+>  	if (attr.freq) {
+>  		if (attr.sample_freq > sysctl_perf_event_sample_rate)
+>  			return -EINVAL;
+> -- 
+> 2.43.0
+> 
