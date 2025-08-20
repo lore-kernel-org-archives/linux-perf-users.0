@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192542E0B48;
-	Wed, 20 Aug 2025 23:38:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51992765E3;
+	Wed, 20 Aug 2025 23:43:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755733135; cv=none; b=u55jIkHGC01drosOuRT15VaW59PeS+ixRbZsJLgV+PSzvlMcsl1AOHbCWA/uVgfzHmQwMsQMgtr/AjOPRgt3TWJ2u6zpc3DEovAA/nmcxQHDmAim6M/Ge17xqLEtAOLpieckqXudavbyBicoa0nBvUc21amUklW5q9Uny1bKJlU=
+	t=1755733389; cv=none; b=fFSMv477I4JXCCIDjhlOoLFzh2H1UOt3QTZjBVgZtSuAvIMpD6Ix87YRdkJPwT4vJdxkP/NKuPx7IdVuEftHGJh5tH8TVWCZuY81PpCdB4CeSNEISKo6cAyAbZAbokc170CF1X4Iekbgadp/aiLtkgKLKhvw7x/g5pWF91oH0+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755733135; c=relaxed/simple;
-	bh=Gx14nRpjQZohcF74zyHh+xLcM1zVvJmpDjMTrKsOzXI=;
+	s=arc-20240116; t=1755733389; c=relaxed/simple;
+	bh=/TpHuLfcHmrK+eeqFIMicwvfRxrY9ctMe24v5i4nTrY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eX9tlsw1fEFJPmdo26wBXYw74VjQLEoHal1Y3UaQhsQKKb1Mc0/Ivpy/tuqMKFgnUhKYdCEgCCRmS78bJd8MxvCO6h0z0/V6rvFKAQRdGF962nXKcIUP3//2dQHqT+94W3eWD15w6JHBy0J2UD78ubcbf3kzBdU7/SeecSF7lsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K/r3tTFz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RZ7TmEyLG/sBpXJc/1PPutFhsD6M+tFzOQA1KsSYmdkpMwqYpKWGTmSHfop7PBbsn9UVcMYxNsT0dZImu7aawtw5/+JLvzwGtstHKGzAnTp/4bzGlJOar4OLDYh3e10BGODoT/fmYhiTicCnulprVdAHt6JiSVjQNqDrDz8xzVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bNi8BTvt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K/r3tTFz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AA84C4CEE7;
-	Wed, 20 Aug 2025 23:38:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bNi8BTvt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A55AFC4CEE7;
+	Wed, 20 Aug 2025 23:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755733134;
-	bh=Gx14nRpjQZohcF74zyHh+xLcM1zVvJmpDjMTrKsOzXI=;
+	s=k20201202; t=1755733389;
+	bh=/TpHuLfcHmrK+eeqFIMicwvfRxrY9ctMe24v5i4nTrY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K/r3tTFzn3iQIGRC4mbelwAc7MGO84La4goyv4A/NUQ4xpKMM9k94W/MkBj/izKhQ
-	 ViZjXauAdi7kPn3uE+17PZ0A+j+t7GUDvkI22maeFKiOOAf/DqHdhwg/ZhKjkzjzmt
-	 Bz9Z9eR11Oz++CZ2zAC5UaAYbSJT0RhrH45Nd532ls+D3F0kifor1pAne/4l0ziTat
-	 Po12NjL/f/gApY7w+2JGZws5A2wq4El7lYM1NKUeOU0IJ9NGCES6CNC9NgKhn4Av0t
-	 FxEu2TQzC1nwDlDBIzNg5TlB295gbB0gKJbMeee/ZZE6n+61+r6Qb++Xk+cjRFRmSh
-	 1hDj9cth/2l7w==
-Date: Wed, 20 Aug 2025 16:38:50 -0700
+	b=bNi8BTvtSafZRq2YEWlg/InGC4/7aRot7zwMhZTCUmNil4vn7leYAuW3esqeUbBVR
+	 lFs92rNMAfuJdtg2bAGTunLfHM3uZnNF0f2G5yIj/xWjQHkmGciXOlIPLzmbr4+9Hx
+	 lukZRkefQNooDvIVYClpjCT+ZiTCW3HN32XBX7JUoMGwbtZOPQ9u3VuFFL/ORE97TY
+	 36bg6MCFxTdJaZalWeVVHU3zYQFzoE38ezhDNPpN1tJPwtY5KTIKdxJlO8kSOkf4aY
+	 5D1nnAEFtPYMJ5pNNakqdgsYEVQ4I6bkaoGrKnt8p4Hn2lEw/xxNvBStrrO3Oj1ANw
+	 hcgXHhnmJBUQA==
+Date: Wed, 20 Aug 2025 16:43:05 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
@@ -35,12 +35,12 @@ Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v5 07/12] perf annotate: Add --code-with-type support for
- TUI
-Message-ID: <aKZcig1ZIjZV8f1y@google.com>
+Subject: Re: [PATCH v5 08/12] perf annotate: Add 'T' hot key to toggle data
+ type display
+Message-ID: <aKZdiXgwWPwGEvLg@google.com>
 References: <20250816031635.25318-1-namhyung@kernel.org>
- <20250816031635.25318-8-namhyung@kernel.org>
- <aKYZ-dhGJvWoIres@x1>
+ <20250816031635.25318-9-namhyung@kernel.org>
+ <aKY6a0ELxX3jru1q@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,80 +50,56 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aKYZ-dhGJvWoIres@x1>
+In-Reply-To: <aKY6a0ELxX3jru1q@x1>
 
-Hi Arnaldo,
-
-On Wed, Aug 20, 2025 at 03:54:49PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Fri, Aug 15, 2025 at 08:16:30PM -0700, Namhyung Kim wrote:
-> > Until now, the --code-with-type option is available only on stdio.
-> > But it was an artifical limitation because of an implemention issue.
-> > 
-> > Implement the same logic in annotation_line__write() for stdio2/TUI
-> > and remove the limitation and update the man page.
+On Wed, Aug 20, 2025 at 06:13:15PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Fri, Aug 15, 2025 at 08:16:31PM -0700, Namhyung Kim wrote:
+> > Support data type display with a key press so that users can toggle the
+> > output dynamically on TUI.  Also display "[Type]" in the title line if
+> > it's enabled.
 > 
-> Samples: 54K of event 'cycles:P', 4000 Hz, Event count (approx.): 25749717559
-> poll_idle  /usr/lib/debug/lib/modules/6.15.9-201.fc42.x86_64/vmlinux [Percent: local period]
-> Percent │      mov     %rdi,%rbx                                                                                                                                        ▒
->         │    → call    local_clock_noinstr              # data-type: (stack operation)                                                                                  ▒
->         │      andb    $0xfb,(%rbx)             # data-type: struct cpuidle_device +0 (registered:1)                                                                    ▒
->         │      mov     %rax,%rbp                                                                                                                                        ▒
->         │    → call    *0x1342a22(%rip)        # ffffffff8384f778 <pv_ops+0xf8>         # data-type: (stack operation)                                                  ▒
->         │      mov     current_task,%r14                # data-type: struct task_struct* +0                                                                             ▒
->         │      lock    orb     $0x20,0x2(%r14)          # data-type: struct task_struct +0x2 (thread_info.flags)                                                        ▒
->         │      mov     (%r14),%rax              # data-type: struct task_struct +0 (thread_info.flags)                                                                  ▒
->         │      test    $0x8,%al                                                                                                                                         ▒
->         │    ↓ jne     6d                                                                                                                                               ▒
->         │      mov     %r12,%rdi                                                                                                                                        ▒
->         │      mov     %rbx,%rsi                                                                                                                                        ▒
->         │    → call    cpuidle_poll_time                # data-type: (stack operation)                                                                                  ▒
->         │      mov     %rax,%r12                                                                                                                                        ▒
->         │49:   mov     $0xc9,%eax                                                                                                                                       ▒
->    0.75 │4e:   mov     (%r14),%rdx              # data-type: struct task_struct +0 (thread_info.flags)                                                                  ▒
->    0.42 │      and     $0x8,%edx                                                                                                                                        ▒
->         │    ↓ jne     6d                                                                                                                                               ▒
->   97.81 │      pause                                                                                                                                                    ▒
->    0.70 │      sub     $0x1,%eax                                                                                                                                        ▒
->    0.04 │    ↑ jne     4e                                                                                                                                               ▒
->    0.14 │    → call    local_clock_noinstr              # data-type: (stack operation)                                                                                  ▒
->    0.01 │      sub     %rbp,%rax                                                                                                                                        ▒
->    0.05 │      cmp     %rax,%r12                                                                                                                                        ▒
->         │    ↑ jae     49                                                                                                                                               ▒
->         │      orb     $0x4,(%rbx)              # data-type: struct cpuidle_device +0 (registered:1)                                                                    ▒
->         │6d: → call    *0x13429cd(%rip)        # ffffffff8384f770 <pv_ops+0xf0>         # data-type: (stack operation)                                                  ▒
->         │      lock    andb    $0xdf,0x2(%r14)          # data-type: struct task_struct +0x2 (thread_info.flags)                                                        ▒
->         │      mov     (%r14),%rax              # data-type: struct task_struct +0 (thread_info.flags) 
+> Testing here I see:
 > 
+>    0.81 │       mov     0x9c(%r8),%r11d         # data-type: struct cfs_rq +0x9c
 > 
-> Some suggestions:
+> If I ask for source code by pressing 's':
 > 
-> Align the # data-type: annotations.
-
-I was thinking about this but then probably it needs to align to the
-longest line like call instruction.  It can be annoying if you are
-using a small terminal.
-
+>         │     delta += sa->period_contrib;                                                                                                                              ▒
+>    0.97 │       mov     0x9c(%r8),%r11d         # data-type: struct cfs_rq +0x9c
 > 
-> Remove the "data-type: " part, just uses space and it should be obvious
-> what that type refers to.
-
-I think it's better to have some kind of signature to find the info
-deterministically as I need to extract them in a script.
-
+> So it is the 'period_contrib' field of 'struct cfs_rq', humm, not:
 > 
-> At some point, if we can do it super cheaply, maybe BTF, do this by
-> default.
-
-BTF doesn't have variables and locations so it's impossible to match
-instructions to types currently.
-
+> root@number:~# pahole -E --hex cfs_rq | grep 0x9c -B 10 -A10
+> 	struct sched_entity *      next;                                                 /*  0x60   0x8 */
 > 
-> The 'T' hotkey looks great, but perhaps we should have more visibility
-> for it? Like what I suggested in:
+> 	/* XXX 24 bytes hole, try to pack */
 > 
-> https://lore.kernel.org/all/aBvx-J-ISifmw0NS@google.com/T/#u
+> 	/* --- cacheline 2 boundary (128 bytes) --- */
+> 	struct sched_avg {
+> 		/* typedef u64 -> __u64 */ long long unsigned int last_update_time;      /*  0x80   0x8 */
+> 		/* typedef u64 -> __u64 */ long long unsigned int load_sum;              /*  0x88   0x8 */
+> 		/* typedef u64 -> __u64 */ long long unsigned int runnable_sum;          /*  0x90   0x8 */
+> 		/* typedef u32 -> __u32 */ unsigned int       util_sum;                  /*  0x98   0x4 */
+> 		/* typedef u32 -> __u32 */ unsigned int       period_contrib;            /*  0x9c   0x4 */
+> 		long unsigned int  load_avg;                                             /*  0xa0   0x8 */
+> 		long unsigned int  runnable_avg;                                         /*  0xa8   0x8 */
+> 		long unsigned int  util_avg;                                             /*  0xb0   0x8 */
+> 		unsigned int       util_est;                                             /*  0xb8   0x4 */
+> 	} avg __attribute__((__aligned__(64))); /*  0x80  0x40 */
+> 
+> 	/* XXX last struct has 4 bytes of padding */
+> 
+> 	/* --- cacheline 3 boundary (192 bytes) --- */
+> 	struct {
+> root@number:~#
+> 
+> So it is in a subtype and probably this is an improvement to be made,
+> right?
 
-Yep, in the next patch. :)
+It seems %r8 contains a pointer to cfs_rq and there's a variable for sa
+(sched_avg) but it actually uses the same register as it's embeded.  I
+think DWARF has correct location expression to find the containing data
+type and the output looks ok.  In general, I'd prefer seeing outer types.
 
 Thanks,
 Namhyung
