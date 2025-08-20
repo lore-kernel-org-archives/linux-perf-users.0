@@ -1,136 +1,122 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 737C02206B8;
-	Tue, 19 Aug 2025 17:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E9B23AB81;
+	Wed, 20 Aug 2025 02:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755625757; cv=none; b=TWHBLcq0Gx3x8clSJkLLPfNmgS5SG1v/cwwScY4/JJeAS5u9WreIdTfcAXkgKa5NuDubaY65bbq2f4zjD+IyfKLqLeQb2U2wnmfcwTYg8arXHQ4lAXfzFiIQQv1lws1ktlc0TaUHdHon1b94GVnm0R7KRDw3jvN5zavjoDPwFWc=
+	t=1755657093; cv=none; b=jT3yo8leEos/5Kmm/B2QoNfgQGmhDdsiX+PlJsiY+84n2IJxBnbxWtL2siz1F80FQNmIN+QH88RAxbSimvHgBwlalOVjfEUBJGCsmBuaiX4Px9WZjqCIP+TmS250xKUutJQa9Q8qCJe1Jp5NENAFMwjvIZfJm7b+VPHlHS04M1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755625757; c=relaxed/simple;
-	bh=yfhPbDJoc+6CdAo/HUDbAHjm5EOHsprDS0bgOVBPTUo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u1ggeva+JSjhmo79XKXV92uGsDx2Tdb8tuc4mz+mpH+ImeqLDAPjyuBirabjGLv44dFqqLANceqyhF4DxjP72whhJ+U9T2aEbizeuZrAWMJAbT6xkzIpg4oyVAazkCowyJKO8xToNxIFDhibYKPFUXzL/oWUVdYGz1k3gngk5Lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E877152B;
-	Tue, 19 Aug 2025 10:49:06 -0700 (PDT)
-Received: from [10.1.196.50] (e121345-lin.cambridge.arm.com [10.1.196.50])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 475103F738;
-	Tue, 19 Aug 2025 10:49:10 -0700 (PDT)
-Message-ID: <cdb7b1e7-6e51-4c0e-bffb-b0d4b654a623@arm.com>
-Date: Tue, 19 Aug 2025 18:49:08 +0100
+	s=arc-20240116; t=1755657093; c=relaxed/simple;
+	bh=ya0zmDcFvNi2I50AfYu4NFeHWr8hhrqjQpzBwIfFagQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hAg338Q2M6JoxRxNNtZSyba/LCln8FdUoo/nJ/FwKfENF50j9T8kdwx+KSdDXMYdAPpc8mkYGlesrlsOt1X2GXEDo5x2jayQPb/U+oM1lqkDsLcw6Nb2M51xbLwZkXkjFQ1aiNIrwz9DDCt9JUeIN9UdJ7l04/I7hRO1+xZW4+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q37oU/7s; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q37oU/7s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755657092; x=1787193092;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ya0zmDcFvNi2I50AfYu4NFeHWr8hhrqjQpzBwIfFagQ=;
+  b=Q37oU/7sW8Lpk5c/59bYpsq3gp3WIcYIe8ERU3N4X6MKxNRMH+ocv6sq
+   99FtgCGzri/fI34YF90q/fMyoZnoBIOo6YHMtoAqBNJJvGvFn4AYgW5Iu
+   KilYFlue/oazxzbWCBP8x5X/6g8CjkS2lUbfS0VyNYF7i7hoaxJSgzpDy
+   7hH2iAsrl/IsfRB+HWW8N2BQP4oMzmNF2U+a+I0ywR6dyiBofHByDEilb
+   MKvf737AtMpXgBuW17sFh4X2vA3dA0TUannYC5c9907EuARvalmkCoHHf
+   vegM6Liv0Ssx8phrInEJSo+wS6J5khS//qKR/z5jYoxKlSYkboCqElzzs
+   A==;
+X-CSE-ConnectionGUID: 8G+cN0tERAOpaUtU+7hTCA==
+X-CSE-MsgGUID: dkbqrs1tQ7+hFumpQzm1aA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11527"; a="57625428"
+X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
+   d="scan'208";a="57625428"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 19:31:31 -0700
+X-CSE-ConnectionGUID: Y8/uN0vMTbewZZQKWDj4wQ==
+X-CSE-MsgGUID: 7r4TXjKsQkOiWJLzv3O7TQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
+   d="scan'208";a="167628983"
+Received: from spr.sh.intel.com ([10.112.229.196])
+  by orviesa009.jf.intel.com with ESMTP; 19 Aug 2025 19:31:28 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [Patch v3 0/7] x86 perf bug fixes and optimization
+Date: Wed, 20 Aug 2025 10:30:25 +0800
+Message-Id: <20250820023032.17128-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 19/19] perf: Garbage-collect event_init checks
-To: kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
- dmaengine@vger.kernel.org, linux-fpga@vger.kernel.org,
- amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
- iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
- linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-pm@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
- will@kernel.org, mark.rutland@arm.com, acme@kernel.org, namhyung@kernel.org,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com,
- linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
- imx@lists.linux.dev, linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
- linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
- sparclinux@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-riscv@lists.infradead.org
-References: <202508190403.33c83ece-lkp@intel.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <202508190403.33c83ece-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 19/08/2025 3:44 am, kernel test robot wrote:
-> 
-> 
-> Hello,
-> 
-> kernel test robot noticed "BUG:unable_to_handle_page_fault_for_address" on:
-> 
-> commit: 1ba20479196e5af3ebbedf9321de6b26f2a0cdd3 ("[PATCH 19/19] perf: Garbage-collect event_init checks")
-> url: https://github.com/intel-lab-lkp/linux/commits/Robin-Murphy/perf-arm-cmn-Fix-event-validation/20250814-010626
-> base: https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git 91325f31afc1026de28665cf1a7b6e157fa4d39d
-> patch link: https://lore.kernel.org/all/ace3532a8a438a96338bf349a27636d8294c7111.1755096883.git.robin.murphy@arm.com/
-> patch subject: [PATCH 19/19] perf: Garbage-collect event_init checks
+Changes:
+  v2 -> v3:
+  * Rebase to latest tip perf/core tree.
+  * Rewrite commit message to explain why NULL access happens and
+    refine code (Patch 3/7)
+  * Refine commit message of patch 6/7
+  * Dump counters bitmap instead of absolute counter in boot message
+    (patch 7/7)
 
-OK, after looking a bit more deeply at x86 and PowerPC, I think it
-probably is nicest to solve this commonly too. Below is what I've cooked
-up for a v2 (I'll save reposting the whole series this soon...)
+  v1 -> v2:
+  * Rebase to 6.17-rc1.
+  * No code changes.
 
-Thanks,
-Robin.
+Tests:
+  * Run perf stats/record commands on Intel Sapphire Rapids platform, no
+    issue is found.
 
------>8-----
-Subject: [PATCH 18.5/19] perf: Add common uncore-CPU check
+History:
+  v2: https://lore.kernel.org/all/20250811090034.51249-1-dapeng1.mi@linux.intel.com/ 
+  v1:
+  * Patch 1/6: https://lore.kernel.org/all/20250606111606.84350-1-dapeng1.mi@linux.intel.com/
+  * Patch 2/6: https://lore.kernel.org/all/20250529080236.2552247-1-dapeng1.mi@linux.intel.com/
+  * Patch 3/6: https://lore.kernel.org/all/20250718062602.21444-1-dapeng1.mi@linux.intel.com/
+  * Patches 4-6/6: https://lore.kernel.org/all/20250717090302.11316-1-dapeng1.mi@linux.intel.com/
 
-Many uncore drivers depend on event->cpu being valid in order to look
-up various data in their event_init call. Since we've now factored out
-common PMU identification, we can factor out this check in the correct
-order too. While it might technically be possible to hoist the general
-task/cgroup check up here now, that would be horribly messy, so for
-clarity let's keep these as distinct (albeit related) concerns.
+Dapeng Mi (7):
+  perf/x86/intel: Use early_initcall() to hook bts_init()
+  perf/x86/intel: Fix IA32_PMC_x_CFG_B MSRs access error
+  perf/x86: Check if cpuc->events[*] pointer exists before accessing it
+  perf/x86: Add PERF_CAP_PEBS_TIMING_INFO flag
+  perf/x86/intel: Change macro GLOBAL_CTRL_EN_PERF_METRICS to
+    BIT_ULL(48)
+  perf/x86/intel: Add ICL_FIXED_0_ADAPTIVE bit into
+    INTEL_FIXED_BITS_MASK
+  perf/x86: Print PMU counters bitmap in x86_pmu_show_pmu_cap()
 
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202508190403.33c83ece-lkp@intel.com
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
-  kernel/events/core.c | 12 +++++++++++-
-  1 file changed, 11 insertions(+), 1 deletion(-)
+ arch/x86/events/core.c                 | 16 +++++++++-------
+ arch/x86/events/intel/bts.c            |  2 +-
+ arch/x86/events/intel/core.c           | 21 +++++++++------------
+ arch/x86/events/intel/ds.c             | 10 ++++++++++
+ arch/x86/include/asm/msr-index.h       | 14 ++++++++------
+ arch/x86/include/asm/perf_event.h      |  8 ++++++--
+ arch/x86/kvm/pmu.h                     |  2 +-
+ tools/arch/x86/include/asm/msr-index.h | 14 ++++++++------
+ 8 files changed, 52 insertions(+), 35 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 5f7eb526d87c..ddf045ad4d83 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -12562,6 +12562,11 @@ static bool is_raw_pmu(const struct pmu *pmu)
-  	       pmu->capabilities & PERF_PMU_CAP_RAW_EVENTS;
-  }
-  
-+static bool is_uncore_pmu(const struct pmu *pmu)
-+{
-+	return pmu->task_ctx_nr == perf_invalid_context;
-+}
-+
-  static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
-  {
-  	struct perf_event_context *ctx = NULL;
-@@ -12571,11 +12576,16 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
-  	 * Before touching anything, we can safely skip:
-  	 * - any event for a specific PMU which is not this one
-  	 * - any common event if this PMU doesn't support them
-+	 * - non-CPU-bound uncore events (so drivers can assume event->cpu is
-+	 *   valid; we'll check the actual task/cgroup attach state later)
-  	 */
-  	if (event->attr.type != pmu->type &&
-  	    (event->attr.type >= PERF_TYPE_MAX || !is_raw_pmu(pmu)))
-  		return -ENOENT;
-  
-+	if (is_uncore_pmu(pmu) && event->cpu < 0)
-+		return -EINVAL;
-+
-  	if (!try_module_get(pmu->module))
-  		return -ENODEV;
-  
-@@ -12990,7 +13000,7 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
-  	 * events (they don't make sense as the cgroup will be different
-  	 * on other CPUs in the uncore mask).
-  	 */
--	if (pmu->task_ctx_nr == perf_invalid_context && (task || cgroup_fd != -1))
-+	if (is_uncore_pmu(pmu) && (task || cgroup_fd != -1))
-  		return ERR_PTR(-EINVAL);
-  
-  	if (event->attr.aux_output &&
+
+base-commit: 448f97fba9013ffa13f5dd82febd18836b189499
 -- 
+2.34.1
+
