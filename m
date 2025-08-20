@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475412C11C1;
-	Wed, 20 Aug 2025 02:31:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B282C11EA;
+	Wed, 20 Aug 2025 02:31:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755657096; cv=none; b=Hx9IcX7PHGpAMM7hiXiE3GjmtbUpsyWdMKcGWNyFIIm0dqpmOJToEqcLT/GP8MJG1KUdH+VZ1yKYf7PB0rTpNIAzZXxaprhAQxb3QdrPJg5HHFOWnwnYjbYnzgB1oF6e8mHpKGdb8pjeZ8hLhWxYmgPOEiuzMzf1dzEZXpUFetA=
+	t=1755657099; cv=none; b=qQnuG0IW889KQR5IqiVzGwpubjAVaDXAO8PuXsTPgFxtQPD6HqzhBJH63AMdBuIA6xHtpPiXnc+7cMINsBS3zl9HVfoy3dVvHbOyS7rbP6sO09PYqYY2Od4VmHGkTIUgz40uJaE7q22uj6i+uiSmdAVYfr+mwwVNz+Nk05VpdoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755657096; c=relaxed/simple;
-	bh=AIVkug2vJfK1kkjVROGHj3pbwPQGLM2oRGiF3Almj/Q=;
+	s=arc-20240116; t=1755657099; c=relaxed/simple;
+	bh=sZRpO4rbclFWtzr9ZWXs4UzuQzYyrXnLfzfs+08PKFk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VPVYku/rivQmvk6Xr8zh06vUZfaw2VblbRc1cuQyDOX2gpKtVRqLrRYM0h5sGvY1Si9z5ox4vnykpSBHhQcnxM1BeTCBBhASS37jrESd99saAWgXauCWKiCe936bkK7wdvyUV6WCc6UNkzHoTiyF4JI8T7926L+rEUtmx4K0xjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PDezDFIf; arc=none smtp.client-ip=198.175.65.20
+	 MIME-Version; b=lwffj5l5Dev+1uAv7cpybD2u6cAgeAjhLBKwPMaKW+u7MWC4ehOrCAz+PcG49xduDRj3JIazfp8RISmufqsxVkxs3l94V6/UU94b6E0SDDXkLZCTPFzJb4FzhPhJKP9K+pUvsLZAzTwu/uTMTdqWhyprm8QgDwDtfy4HjE94HWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bb/lYRc6; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PDezDFIf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bb/lYRc6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755657095; x=1787193095;
+  t=1755657098; x=1787193098;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=AIVkug2vJfK1kkjVROGHj3pbwPQGLM2oRGiF3Almj/Q=;
-  b=PDezDFIfmLhbj26o8L0vh+kj6JUZNU1bU5y3BwpLcXQxVeuEmnAk58RM
-   RvBfHU40p625ht7rKVcsjVOPpgTGJIExw3DfBlTr3e0usJv7cUhV6FByM
-   /2YbpFJqQxBGpytpI7TI8q/aakg1mu1gAU/eB04YLGpuddYTPJMnjKow6
-   rhBPBFJPJRorykJAZS6I7QLHz+XuuQvG6ViEgFraBOe7PuVa2CBjcmy6T
-   Uamg5vlskt5/S21Azj24YXOwt69g/uHDkVJFd0RJpnuowLsYLeSCTqKp2
-   Hzc49EK6mwswpfHM14d6Ly5n6coPJRBK4Vl6T5hrJIw7jJFn2g2T9xSjo
-   Q==;
-X-CSE-ConnectionGUID: O84Xy6h0RW2Z9PiP2OVW3A==
-X-CSE-MsgGUID: sMvqzeSdRd+0kmZDr3g20Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11527"; a="57625434"
+  bh=sZRpO4rbclFWtzr9ZWXs4UzuQzYyrXnLfzfs+08PKFk=;
+  b=Bb/lYRc6PgprJAfnaATfv/X1ze2d3kcqJhj5EmPzQ+0EitbXIEZviJzp
+   mKIGXqhaq4iIbmyc61Vm/T7br1aQn9V0BWKuzv/eX+OxaxVKSBFrR85AY
+   B7x0NSla4HBxbub/VImcrjqP03khnj82t3slZGJJeRd6TsIgi68WO9pu7
+   Cdmf7OVIk2zAAZdhzhops6imOyPfSCJfbh1C2obtonR3/Di0Pfxbmat66
+   siIas2L/cypwXzE8jlQ4SgurGa6iyL89i6Gm3FfSPayihHwqsM/NL7r0e
+   sGcy/qt5/FiVLwNwraMfelScU3cwd6pXJwh8kz71N30Rps8x069PWjSpX
+   A==;
+X-CSE-ConnectionGUID: bZ3K4WugQCiw95iD04LEAQ==
+X-CSE-MsgGUID: rQP75l/BScyeNKPMDA4nNQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11527"; a="57625441"
 X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
-   d="scan'208";a="57625434"
+   d="scan'208";a="57625441"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 19:31:34 -0700
-X-CSE-ConnectionGUID: xugsQn/+RiihOGkAUZ0y2g==
-X-CSE-MsgGUID: 7iBbQKcnSQGBVNBvHEvI+w==
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2025 19:31:38 -0700
+X-CSE-ConnectionGUID: Ps6Yf5vrSgeQ5P9ArFr6LQ==
+X-CSE-MsgGUID: I/14b8UsS1SjkDSxz9UjEQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.17,302,1747724400"; 
-   d="scan'208";a="167628988"
+   d="scan'208";a="167629002"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa009.jf.intel.com with ESMTP; 19 Aug 2025 19:31:31 -0700
+  by orviesa009.jf.intel.com with ESMTP; 19 Aug 2025 19:31:34 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -58,9 +58,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v3 1/7] perf/x86/intel: Use early_initcall() to hook bts_init()
-Date: Wed, 20 Aug 2025 10:30:26 +0800
-Message-Id: <20250820023032.17128-2-dapeng1.mi@linux.intel.com>
+Subject: [Patch v3 2/7] perf/x86/intel: Fix IA32_PMC_x_CFG_B MSRs access error
+Date: Wed, 20 Aug 2025 10:30:27 +0800
+Message-Id: <20250820023032.17128-3-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250820023032.17128-1-dapeng1.mi@linux.intel.com>
 References: <20250820023032.17128-1-dapeng1.mi@linux.intel.com>
@@ -72,38 +72,83 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-After the commit 'd971342d38bf ("perf/x86/intel: Decouple BTS
- initialization from PEBS initialization")' is introduced, x86_pmu.bts
-would initialized in bts_init() which is hooked by arch_initcall().
+When running perf_fuzzer on PTL, sometimes the below "unchecked MSR
+ access error" is seen when accessing IA32_PMC_x_CFG_B MSRs.
 
-Whereas init_hw_perf_events() is hooked by early_initcall(). Once the
-core PMU is initialized, nmi watchdog initialization is called
-immediately before bts_init() is called. It leads to the BTS buffer is
-not really initialized since bts_init() is not called and x86_pmu.bts is
-still false at that time. Worse, BTS buffer would never be initialized
-then unless all core PMU events are freed and reserve_ds_buffers()
-is called again.
+[   55.611268] unchecked MSR access error: WRMSR to 0x1986 (tried to write 0x0000000200000001) at rIP: 0xffffffffac564b28 (native_write_msr+0x8/0x30)
+[   55.611280] Call Trace:
+[   55.611282]  <TASK>
+[   55.611284]  ? intel_pmu_config_acr+0x87/0x160
+[   55.611289]  intel_pmu_enable_acr+0x6d/0x80
+[   55.611291]  intel_pmu_enable_event+0xce/0x460
+[   55.611293]  x86_pmu_start+0x78/0xb0
+[   55.611297]  x86_pmu_enable+0x218/0x3a0
+[   55.611300]  ? x86_pmu_enable+0x121/0x3a0
+[   55.611302]  perf_pmu_enable+0x40/0x50
+[   55.611307]  ctx_resched+0x19d/0x220
+[   55.611309]  __perf_install_in_context+0x284/0x2f0
+[   55.611311]  ? __pfx_remote_function+0x10/0x10
+[   55.611314]  remote_function+0x52/0x70
+[   55.611317]  ? __pfx_remote_function+0x10/0x10
+[   55.611319]  generic_exec_single+0x84/0x150
+[   55.611323]  smp_call_function_single+0xc5/0x1a0
+[   55.611326]  ? __pfx_remote_function+0x10/0x10
+[   55.611329]  perf_install_in_context+0xd1/0x1e0
+[   55.611331]  ? __pfx___perf_install_in_context+0x10/0x10
+[   55.611333]  __do_sys_perf_event_open+0xa76/0x1040
+[   55.611336]  __x64_sys_perf_event_open+0x26/0x30
+[   55.611337]  x64_sys_call+0x1d8e/0x20c0
+[   55.611339]  do_syscall_64+0x4f/0x120
+[   55.611343]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-Thus aligning with init_hw_perf_events(), use early_initcall() to hook
-bts_init() to ensure x86_pmu.bts is initialized before nmi watchdog
-initialization.
+On PTL, GP counter 0 and 1 doesn't support auto counter reload feature,
+thus it would trigger a #GP when trying to write 1 on bit 0 of CFG_B MSR
+which requires to enable auto counter reload on GP counter 0.
 
-Fixes: d971342d38bf ("perf/x86/intel: Decouple BTS initialization from PEBS initialization")
+The root cause of causing this issue is the check for auto counter
+reload (ACR) counter mask from user space is incorrect in
+intel_pmu_acr_late_setup() helper. It leads to an invalid ACR counter
+mask from user space could be set into hw.config1 and then written into
+CFG_B MSRs and trigger the MSR access warning.
+
+e.g., User may create a perf event with ACR counter mask (config2=0xcb),
+and there is only 1 event created, so "cpuc->n_events" is 1.
+
+The correct check condition should be "i + idx >= cpuc->n_events"
+instead of "i + idx > cpuc->n_events" (it looks a typo). Otherwise,
+the counter mask would traverse twice and an invalid "cpuc->assign[1]"
+bit (bit 0) is set into hw.config1 and cause MSR accessing error.
+
+Besides, also check if the ACR counter mask corresponding events are
+ACR events. If not, filter out these counter mask. If a event is not a
+ACR event, it could be scheduled to an HW counter which doesn't support
+ACR. It's invalid to add their counter index in ACR counter mask.
+
+Furthermore, remove the WARN_ON_ONCE() since it's easily triggered as
+user could set any invalid ACR counter mask and the warning message
+could mislead users.
+
+Fixes: ec980e4facef ("perf/x86/intel: Support auto counter reload")
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- arch/x86/events/intel/bts.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/events/intel/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
-index 61da6b8a3d51..cbac54cb3a9e 100644
---- a/arch/x86/events/intel/bts.c
-+++ b/arch/x86/events/intel/bts.c
-@@ -643,4 +643,4 @@ static __init int bts_init(void)
- 
- 	return perf_pmu_register(&bts_pmu, "intel_bts", -1);
- }
--arch_initcall(bts_init);
-+early_initcall(bts_init);
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index c2fb729c270e..15da60cf69f2 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2997,7 +2997,8 @@ static void intel_pmu_acr_late_setup(struct cpu_hw_events *cpuc)
+ 			if (event->group_leader != leader->group_leader)
+ 				break;
+ 			for_each_set_bit(idx, (unsigned long *)&event->attr.config2, X86_PMC_IDX_MAX) {
+-				if (WARN_ON_ONCE(i + idx > cpuc->n_events))
++				if (i + idx >= cpuc->n_events ||
++				    !is_acr_event_group(cpuc->event_list[i + idx]))
+ 					return;
+ 				__set_bit(cpuc->assign[i + idx], (unsigned long *)&event->hw.config1);
+ 			}
 -- 
 2.34.1
 
