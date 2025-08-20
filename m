@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063571BC4E;
-	Wed, 20 Aug 2025 18:54:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A83428489B;
+	Wed, 20 Aug 2025 21:13:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755716094; cv=none; b=YhQv+wEUYTwr9899VbOVsgydLxx4k3J1YlTeSoHeUnux/GW/RJs7vjz3dN5pGWnxRF6AWr4kD11g1ZyhKWQ4QkOczktJa7tOWBXhxIzyNv55Ebc6eU7zGbWhj0TIFrjn6RpCy5DsX91v0tRozLykx1hsV/Nv717FAl84q1xn0g4=
+	t=1755724399; cv=none; b=DsBwGEHkO+SbJgXSHLpXL0fvZVNwQJyPr5E44+xuQZ36Jy1U2ay/JF/QSUH+mUP/nraaW8jLQ1eOkLhd27eXgRB660MAxPXLZyaj2Vhs4h7haSG6D2HlQuiLzbIWz4DKlvMNBIv+5BOMjtCC69ViEkISvNio96VoLCfovSIBR8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755716094; c=relaxed/simple;
-	bh=wl3iwnE/eHNLAeTrFaFOB88YHL+idesNYrQ128g2vAM=;
+	s=arc-20240116; t=1755724399; c=relaxed/simple;
+	bh=swTgXjyVEFW0wP1Js/acWsQ7tBKvZztqaKDArXFL87s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qs12FzvkKDY29aYJoWdEKY7y8BJI0tO5LhzeIJUumAnTSooxqn0h87Q9Z0HHg89dS4OM357m5IlXpS7pKUaTEQf4vzxZ28JsHgamAfMLbLyl/mjYrK4JU1fvzY5O9g2tBuDbP9jYFyASodqy2RWGyrJ2pIVtab19OCJgK/i31d0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h/fcumCW; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=iybISTTxWCZG2pwdfmjY1oTfVzI+2OF9WsO6b3vKQLH2ILPGIniLKXNGOwMJz/c8ZptBJoMphGTa3pV2Nxr6FOGeSOBrYzdAOfj0bhhMZJ/UA00LWWJeNss3qWh8TIZxj16G8IUSsMA9ePIf4yJJ9VPEsbfGr+Xssq6COa6CCy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GapdvAIF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h/fcumCW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4D62C4CEE7;
-	Wed, 20 Aug 2025 18:54:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GapdvAIF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A205C4CEE7;
+	Wed, 20 Aug 2025 21:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755716093;
-	bh=wl3iwnE/eHNLAeTrFaFOB88YHL+idesNYrQ128g2vAM=;
+	s=k20201202; t=1755724398;
+	bh=swTgXjyVEFW0wP1Js/acWsQ7tBKvZztqaKDArXFL87s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h/fcumCWFk3YE20q0c0XUMa3uyW7eJnFBXpIC73zq3pDSBjePAom1k6EOIjHPahqg
-	 ibrre3rBY/3ytHNnQyAGGVQt0KdLxYK9yqZWYJse9i0m/ccd64fPGnSppknUArXrs8
-	 pMeY9wp7qaHuuMCR9cmB9wP8pEQWOWkVcDzZWpkGfMClmEzYI77L0UqJlaG1l9EQlt
-	 wKc1Nu2oFn8PCcSNkRZD+dEiTLflHcVzEsigl2LJrZuPw5I+OBblu0JycrcZZdIARO
-	 Tc3dTEuTnUKDxszCoWZjhWIbl7RBsSDSIdZqcd2VLTVv3rHfbUnbG5ORLV0UcaOD9D
-	 gN20dAh0zsOjg==
-Date: Wed, 20 Aug 2025 15:54:49 -0300
+	b=GapdvAIFyvkhNCfQDWs8oBKjZFFEVzsXPYFcEVH4t39FFa2mrfzYPI2yIFgl+usOQ
+	 vwuONbmBnmai3pCQst9jNrFjrpIa8sgUWeBrnwTV5tg0g3+xSuLh3ygax/e5LOt3yf
+	 +7JiVZ0azKIpKESa+vuk6Fae7I/uYGmsWW7lcDtNP6GDx1YjeGbeRQ47cv7jJJzaJD
+	 BgXu4yRcG2yKLUcZ1U2Dql6DSPH3LalUcykssEdI8yKgA0oBGODlY+Q1VkY4+qDM0K
+	 9SlXrv+fm0La9zgrhkpCgiC0+yrVY3ISt0SmIqUw/7AIkEOC1g7SEUiZ+X7yWbIlZ8
+	 206MzxWE687QA==
+Date: Wed, 20 Aug 2025 18:13:15 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
@@ -35,11 +35,11 @@ Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v5 07/12] perf annotate: Add --code-with-type support for
- TUI
-Message-ID: <aKYZ-dhGJvWoIres@x1>
+Subject: Re: [PATCH v5 08/12] perf annotate: Add 'T' hot key to toggle data
+ type display
+Message-ID: <aKY6a0ELxX3jru1q@x1>
 References: <20250816031635.25318-1-namhyung@kernel.org>
- <20250816031635.25318-8-namhyung@kernel.org>
+ <20250816031635.25318-9-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,212 +49,107 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250816031635.25318-8-namhyung@kernel.org>
+In-Reply-To: <20250816031635.25318-9-namhyung@kernel.org>
 
-On Fri, Aug 15, 2025 at 08:16:30PM -0700, Namhyung Kim wrote:
-> Until now, the --code-with-type option is available only on stdio.
-> But it was an artifical limitation because of an implemention issue.
-> 
-> Implement the same logic in annotation_line__write() for stdio2/TUI
-> and remove the limitation and update the man page.
+On Fri, Aug 15, 2025 at 08:16:31PM -0700, Namhyung Kim wrote:
+> Support data type display with a key press so that users can toggle the
+> output dynamically on TUI.  Also display "[Type]" in the title line if
+> it's enabled.
 
-Samples: 54K of event 'cycles:P', 4000 Hz, Event count (approx.): 25749717559
-poll_idle  /usr/lib/debug/lib/modules/6.15.9-201.fc42.x86_64/vmlinux [Percent: local period]
-Percent │      mov     %rdi,%rbx                                                                                                                                        ▒
-        │    → call    local_clock_noinstr              # data-type: (stack operation)                                                                                  ▒
-        │      andb    $0xfb,(%rbx)             # data-type: struct cpuidle_device +0 (registered:1)                                                                    ▒
-        │      mov     %rax,%rbp                                                                                                                                        ▒
-        │    → call    *0x1342a22(%rip)        # ffffffff8384f778 <pv_ops+0xf8>         # data-type: (stack operation)                                                  ▒
-        │      mov     current_task,%r14                # data-type: struct task_struct* +0                                                                             ▒
-        │      lock    orb     $0x20,0x2(%r14)          # data-type: struct task_struct +0x2 (thread_info.flags)                                                        ▒
-        │      mov     (%r14),%rax              # data-type: struct task_struct +0 (thread_info.flags)                                                                  ▒
-        │      test    $0x8,%al                                                                                                                                         ▒
-        │    ↓ jne     6d                                                                                                                                               ▒
-        │      mov     %r12,%rdi                                                                                                                                        ▒
-        │      mov     %rbx,%rsi                                                                                                                                        ▒
-        │    → call    cpuidle_poll_time                # data-type: (stack operation)                                                                                  ▒
-        │      mov     %rax,%r12                                                                                                                                        ▒
-        │49:   mov     $0xc9,%eax                                                                                                                                       ▒
-   0.75 │4e:   mov     (%r14),%rdx              # data-type: struct task_struct +0 (thread_info.flags)                                                                  ▒
-   0.42 │      and     $0x8,%edx                                                                                                                                        ▒
-        │    ↓ jne     6d                                                                                                                                               ▒
-  97.81 │      pause                                                                                                                                                    ▒
-   0.70 │      sub     $0x1,%eax                                                                                                                                        ▒
-   0.04 │    ↑ jne     4e                                                                                                                                               ▒
-   0.14 │    → call    local_clock_noinstr              # data-type: (stack operation)                                                                                  ▒
-   0.01 │      sub     %rbp,%rax                                                                                                                                        ▒
-   0.05 │      cmp     %rax,%r12                                                                                                                                        ▒
-        │    ↑ jae     49                                                                                                                                               ▒
-        │      orb     $0x4,(%rbx)              # data-type: struct cpuidle_device +0 (registered:1)                                                                    ▒
-        │6d: → call    *0x13429cd(%rip)        # ffffffff8384f770 <pv_ops+0xf0>         # data-type: (stack operation)                                                  ▒
-        │      lock    andb    $0xdf,0x2(%r14)          # data-type: struct task_struct +0x2 (thread_info.flags)                                                        ▒
-        │      mov     (%r14),%rax              # data-type: struct task_struct +0 (thread_info.flags) 
+Testing here I see:
 
+   0.81 │       mov     0x9c(%r8),%r11d         # data-type: struct cfs_rq +0x9c
 
-Some suggestions:
+If I ask for source code by pressing 's':
 
-Align the # data-type: annotations.
+        │     delta += sa->period_contrib;                                                                                                                              ▒
+   0.97 │       mov     0x9c(%r8),%r11d         # data-type: struct cfs_rq +0x9c
 
-Remove the "data-type: " part, just uses space and it should be obvious
-what that type refers to.
+So it is the 'period_contrib' field of 'struct cfs_rq', humm, not:
 
-At some point, if we can do it super cheaply, maybe BTF, do this by
-default.
+root@number:~# pahole -E --hex cfs_rq | grep 0x9c -B 10 -A10
+	struct sched_entity *      next;                                                 /*  0x60   0x8 */
 
-The 'T' hotkey looks great, but perhaps we should have more visibility
-for it? Like what I suggested in:
+	/* XXX 24 bytes hole, try to pack */
 
-https://lore.kernel.org/all/aBvx-J-ISifmw0NS@google.com/T/#u
+	/* --- cacheline 2 boundary (128 bytes) --- */
+	struct sched_avg {
+		/* typedef u64 -> __u64 */ long long unsigned int last_update_time;      /*  0x80   0x8 */
+		/* typedef u64 -> __u64 */ long long unsigned int load_sum;              /*  0x88   0x8 */
+		/* typedef u64 -> __u64 */ long long unsigned int runnable_sum;          /*  0x90   0x8 */
+		/* typedef u32 -> __u32 */ unsigned int       util_sum;                  /*  0x98   0x4 */
+		/* typedef u32 -> __u32 */ unsigned int       period_contrib;            /*  0x9c   0x4 */
+		long unsigned int  load_avg;                                             /*  0xa0   0x8 */
+		long unsigned int  runnable_avg;                                         /*  0xa8   0x8 */
+		long unsigned int  util_avg;                                             /*  0xb0   0x8 */
+		unsigned int       util_est;                                             /*  0xb8   0x4 */
+	} avg __attribute__((__aligned__(64))); /*  0x80  0x40 */
+
+	/* XXX last struct has 4 bytes of padding */
+
+	/* --- cacheline 3 boundary (192 bytes) --- */
+	struct {
+root@number:~#
+
+So it is in a subtype and probably this is an improvement to be made,
+right?
 
 - Arnaldo
  
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  tools/perf/Documentation/perf-annotate.txt |  1 -
->  tools/perf/builtin-annotate.c              |  5 ---
->  tools/perf/ui/browsers/annotate.c          |  6 +++
->  tools/perf/util/annotate.c                 | 47 ++++++++++++++++++++--
->  4 files changed, 50 insertions(+), 9 deletions(-)
+>  tools/perf/ui/browsers/annotate.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
 > 
-> diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
-> index 46090c5b42b4762f..547f1a2680185e3c 100644
-> --- a/tools/perf/Documentation/perf-annotate.txt
-> +++ b/tools/perf/Documentation/perf-annotate.txt
-> @@ -170,7 +170,6 @@ include::itrace.txt[]
->  
->  --code-with-type::
->  	Show data type info in code annotation (for memory instructions only).
-> -	Currently it only works with --stdio option.
->  
->  
->  SEE ALSO
-> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-> index 5d57d2913f3d9a33..646f43b0f7c4c9b0 100644
-> --- a/tools/perf/builtin-annotate.c
-> +++ b/tools/perf/builtin-annotate.c
-> @@ -917,11 +917,6 @@ int cmd_annotate(int argc, const char **argv)
->  		symbol_conf.annotate_data_sample = true;
->  	} else if (annotate_opts.code_with_type) {
->  		symbol_conf.annotate_data_member = true;
-> -
-> -		if (!annotate.use_stdio) {
-> -			pr_err("--code-with-type only works with --stdio.\n");
-> -			goto out_delete;
-> -		}
->  	}
->  
->  	setup_browser(true);
 > diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-> index 3e8b111e3f12b030..e5b35336f0d33d7e 100644
+> index e5b35336f0d33d7e..dfe869c20e35da77 100644
 > --- a/tools/perf/ui/browsers/annotate.c
 > +++ b/tools/perf/ui/browsers/annotate.c
-> @@ -4,6 +4,7 @@
->  #include "../ui.h"
->  #include "../../util/annotate.h"
->  #include "../../util/debug.h"
-> +#include "../../util/debuginfo.h"
->  #include "../../util/dso.h"
->  #include "../../util/hist.h"
->  #include "../../util/sort.h"
-> @@ -1119,6 +1120,9 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+> @@ -533,9 +533,10 @@ static void ui_browser__init_asm_mode(struct ui_browser *browser)
+>  static int sym_title(struct symbol *sym, struct map *map, char *title,
+>  		     size_t sz, int percent_type)
+>  {
+> -	return snprintf(title, sz, "%s  %s [Percent: %s]", sym->name,
+> +	return snprintf(title, sz, "%s  %s [Percent: %s] %s", sym->name,
+>  			dso__long_name(map__dso(map)),
+> -			percent_type_str(percent_type));
+> +			percent_type_str(percent_type),
+> +			annotate_opts.code_with_type ? "[Type]" : "");
+>  }
 >  
->  	ui_helpline__push("Press ESC to exit");
->  
-> +	if (annotate_opts.code_with_type)
-> +		browser.dbg = debuginfo__new(dso__long_name(dso));
-> +
->  	browser.b.width = notes->src->widths.max_line_len;
->  	browser.b.nr_entries = notes->src->nr_entries;
->  	browser.b.entries = &notes->src->source;
-> @@ -1129,6 +1133,8 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+>  /*
+> @@ -909,7 +910,8 @@ static int annotate_browser__run(struct annotate_browser *browser,
+>  		"b             Toggle percent base [period/hits]\n"
+>  		"B             Branch counter abbr list (Optional)\n"
+>  		"?             Search string backwards\n"
+> -		"f             Toggle showing offsets to full address\n");
+> +		"f             Toggle showing offsets to full address\n"
+> +		"T             Toggle data type display\n");
+>  			continue;
+>  		case 'r':
+>  			script_browse(NULL, NULL);
+> @@ -1029,6 +1031,12 @@ static int annotate_browser__run(struct annotate_browser *browser,
+>  		case 'f':
+>  			annotation__toggle_full_addr(notes, ms);
+>  			continue;
+> +		case 'T':
+> +			annotate_opts.code_with_type ^= 1;
+> +			if (browser->dbg == NULL)
+> +				browser->dbg = debuginfo__new(dso__long_name(map__dso(ms->map)));
+> +			annotate_browser__show(&browser->b, title, help);
+> +			continue;
+>  		case K_LEFT:
+>  		case '<':
+>  		case '>':
+> @@ -1133,8 +1141,7 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
 >  
 >  	ret = annotate_browser__run(&browser, evsel, hbt);
 >  
-> +	if (annotate_opts.code_with_type)
-> +		debuginfo__delete(browser.dbg);
+> -	if (annotate_opts.code_with_type)
+> -		debuginfo__delete(browser.dbg);
+> +	debuginfo__delete(browser.dbg);
 >  	if (not_annotated && !notes->src->tried_source)
 >  		annotated_source__purge(notes->src);
 >  
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index 698bc4f559e83043..99e976d254493de2 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -1362,6 +1362,11 @@ static int symbol__annotate_fprintf2(struct symbol *sym, FILE *fp,
->  	};
->  	struct annotation_line *al;
->  
-> +	if (annotate_opts.code_with_type) {
-> +		evsel__get_arch(apd->evsel, &apd->arch);
-> +		apd->dbg = debuginfo__new(dso__long_name(map__dso(apd->he->ms.map)));
-> +	}
-> +
->  	list_for_each_entry(al, &notes->src->source, node) {
->  		if (annotation_line__filter(al))
->  			continue;
-> @@ -1370,6 +1375,9 @@ static int symbol__annotate_fprintf2(struct symbol *sym, FILE *fp,
->  		wops.first_line = false;
->  	}
->  
-> +	if (annotate_opts.code_with_type)
-> +		debuginfo__delete(apd->dbg);
-> +
->  	return 0;
->  }
->  
-> @@ -1935,6 +1943,36 @@ int annotation_br_cntr_entry(char **str, int br_cntr_nr,
->  	return -ENOMEM;
->  }
->  
-> +static int disasm_line__snprint_type_info(struct disasm_line *dl,
-> +					  char *buf, int len,
-> +					  struct annotation_print_data *apd)
-> +{
-> +	struct annotated_data_type *data_type;
-> +	char member[256];
-> +	int offset = 0;
-> +	int printed;
-> +
-> +	scnprintf(buf, len, " ");
-> +
-> +	if (!annotate_opts.code_with_type || apd->dbg == NULL)
-> +		return 1;
-> +
-> +	data_type = __hist_entry__get_data_type(apd->he, apd->arch, apd->dbg, dl, &offset);
-> +	if (data_type == NULL || data_type == NO_TYPE)
-> +		return 1;
-> +
-> +	printed = scnprintf(buf, len, "\t\t# data-type: %s", data_type->self.type_name);
-> +
-> +	if (data_type != &stackop_type && data_type != &canary_type && len > printed)
-> +		printed += scnprintf(buf + printed, len - printed, " +%#x", offset);
-> +
-> +	if (annotated_data_type__get_member_name(data_type, member, sizeof(member), offset) &&
-> +	    len > printed) {
-> +		printed += scnprintf(buf + printed, len - printed, " (%s)", member);
-> +	}
-> +	return printed;
-> +}
-> +
->  void annotation_line__write(struct annotation_line *al, struct annotation *notes,
->  			    const struct annotation_write_ops *wops,
->  			    struct annotation_print_data *apd)
-> @@ -2118,11 +2156,14 @@ void annotation_line__write(struct annotation_line *al, struct annotation *notes
->  
->  		width -= printed;
->  
-> -		disasm_line__write(disasm_line(al), notes, obj, bf, sizeof(bf), obj__printf, obj__write_graph);
-> +		printed = disasm_line__write(disasm_line(al), notes, obj, bf, sizeof(bf),
-> +					     obj__printf, obj__write_graph);
->  
-> -		obj__printf(obj, "%-*s", width, bf);
-> +		obj__printf(obj, "%s", bf);
-> +		width -= printed;
->  
-> -		(void)apd;
-> +		disasm_line__snprint_type_info(disasm_line(al), bf, sizeof(bf), apd);
-> +		obj__printf(obj, "%-*s", width, bf);
->  	}
->  
->  }
 > -- 
 > 2.50.1
