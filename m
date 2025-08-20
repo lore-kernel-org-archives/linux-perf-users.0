@@ -1,99 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E78256C70;
-	Wed, 20 Aug 2025 17:24:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCBA2272E7F;
+	Wed, 20 Aug 2025 18:04:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755710672; cv=none; b=C//Wy0Bz+Hua1h/nCnELLJf00oLOlBDlifF2/GA0smjzKc/spdryA6DVP49ygGg2T31okpuYZj5Ca060gNTwqz6+6Lnav447E4qzwjZ5BYfyCLmJewV2mc2zy1kozS8d0JaRGDH8zULJZwdcpIZlIkbBNlh84bwbsLyONUu/CXM=
+	t=1755713066; cv=none; b=pNuR9q3xFRfK6Gfpb/7m0cpHAOXbAzk+wcRFyV2tAc8ZHJuM3RHfNeznyurMokRZhHI9q3NdKTvbs+vvXBsTEYSh2coexRzayjgerrezRQgxQ/DZX9ccuS329e+EtMa39k5WpGtdJsLQbfm30/8EseTJ2fMbQyWuKmeR52n7LKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755710672; c=relaxed/simple;
-	bh=zK2/t7pB5uRi95w0k0HULqrZQXZoKb6HKfmiVR24b+k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HdjIzD7dnBOmqZC86hWHao62J7KYg9zB0EHB0Zs7KJm718SZajqrGHKNPazPrY8e4dUgBhkI3QKtHbWH4jFdMtaEZ+i1S9rQ+6zAv8QrlH0JNPJ6zkdDXLibIdxDFfh6XdGnL4+giPVlvSDznvVBTEwkzptccxww76zytQgp+A8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dt7gdEqT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755713066; c=relaxed/simple;
+	bh=ZPPxOS8JJqyE2lskJsv5zWXilVEAeOpsd6+esNUD/68=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=hb6W6vDT8uXf6vSmlQyqBiX8cC4EUlniFrz82MiUCuW1NHOh6eCFAlmNuytENKr8shm/iWD1HfLzxMmvvQtMtCzdf2JwgMSrd+yckohVe7JiwCupHI5/gVMI0Yv2fKF7qjp9GLJ0qjDgb43lgQPiaWi5Z1KcwRrsH0Usn71zCjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ui72LFHT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dt7gdEqT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29CE3C4CEE7;
-	Wed, 20 Aug 2025 17:24:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ui72LFHT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85D32C113CF;
+	Wed, 20 Aug 2025 18:04:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755710671;
-	bh=zK2/t7pB5uRi95w0k0HULqrZQXZoKb6HKfmiVR24b+k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dt7gdEqTTlWr9uPsmbh5dC5JHyQ4ajY1BeBLVEaA84XW568wCEGwP59iZSsYbHZIa
-	 Fg2vygO7X8vp2m0Cm8YNFm4BhJ0cPlOHCvQXCj08/3tNm8Sxc4iKm6wZCiDOLd0f+Q
-	 1mUo6JG+1d3EvgEjhlPdbZq2YQeh51uVV/NZel0Mz4AGEFZ9gSJf71pS09llaBr1tY
-	 ErI0mCisKCney0RRErNlxuIam2AH6ODhP72wMuuXXpqF4K2jA3yjtOQ+NBoc/Vodlh
-	 Q7h/cj0WBupi6f8SVmwzot9Vv7r6LhQ6Jk/BHLy4+BjC4dpexOyvP8xLGC9M1B1MRY
-	 J5/PE82VmYVaA==
-Date: Wed, 20 Aug 2025 18:24:24 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Jeremy Linton <jeremy.linton@arm.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org,
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, thiago.bauermann@linaro.org,
-	yury.khrustalev@arm.com, kristina.martsenko@arm.com,
-	liaochang1@huawei.com, catalin.marinas@arm.com, will@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 3/7] arm64: uaccess: Add additional userspace GCS
- accessors
-Message-ID: <7bc27e3d-7667-4366-89bc-93a084808ace@sirena.org.uk>
-References: <20250818213452.50439-1-jeremy.linton@arm.com>
- <20250818213452.50439-4-jeremy.linton@arm.com>
+	s=k20201202; t=1755713065;
+	bh=ZPPxOS8JJqyE2lskJsv5zWXilVEAeOpsd6+esNUD/68=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ui72LFHTrEyucOAjH+63pKF0+H1jsbQ8U33Fmgd4fMFTN8T8HXJHe8NCezt7EWAdq
+	 ajkFxidjQ11PqkYivi6WFoF3qUPbfSCLmU7UvXiwWbACMuXZ/+c3wkJuMx9H2sANgs
+	 euXL2XPa0sFyJTSmbOQiyGwb6OBfvMBxeZsbb2rQaC1PDliXkwktTmqBV6JApA1rD5
+	 xLR7EQgBV0FZxONrjA49bQlqkUFh6SgYeDJJL/zj8FRq3kbpPC6P0j4GeTHzS6KlrT
+	 mCwft/S798JmV3uTv8IcucaZmP1QpFTwoyuC+fMVDfRb6nBD7Smg6CGJGxDJSR45i3
+	 N5sqLnC3sUf1A==
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@kernel.org>)
+	id 1uonAi-00000000rsk-0y1X;
+	Wed, 20 Aug 2025 14:04:28 -0400
+Message-ID: <20250820180338.701352023@kernel.org>
+User-Agent: quilt/0.68
+Date: Wed, 20 Aug 2025 14:03:38 -0400
+From: Steven Rostedt <rostedt@kernel.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>
+Subject: [RESEND][PATCH 0/5] perf: Clean ups and simplifications
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="CxxZay3cgRaUrHlW"
-Content-Disposition: inline
-In-Reply-To: <20250818213452.50439-4-jeremy.linton@arm.com>
-X-Cookie: Whoever dies with the most toys wins.
 
 
---CxxZay3cgRaUrHlW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is a resend from: https://lore.kernel.org/linux-trace-kernel/20250717173125.434618999@kernel.org/
 
-On Mon, Aug 18, 2025 at 04:34:48PM -0500, Jeremy Linton wrote:
+It cleanly applied on top of the latest tip/perf/core:
+  448f97fba901 ("perf: Convert mmap() refcounts to refcount_t")
 
-> Its important to note that GCS pages can be read by normal
-> instructions, but the hardware validates that pages used by GCS
-> specific operations, have a GCS privilege set. We aren't validating this
-> in load_user_gcs because it requires stabilizing the VMA over the read
-> which may fault.
+The ongoing work to support sframes[1] in the kernel required a few clean ups
+to the perf kernel side. Instead of having these changes in the ongoing
+work, there's no reason they cannot be applied now.
 
-I think in the context of uprobes this is reasonable.  We can always go
-back later and tighten things up.
+These are just clean ups to the perf code to help simplify the updates that
+will be made later.
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
+[1] https://lore.kernel.org/linux-trace-kernel/20250708020003.565862284@kernel.org
 
-> +/*
-> + * Unlike put/push_user_gcs() above, get/pop_user_gsc() doesn't
-> + * validate the GCS permission is set on the page being read.  This
-> + * differs from how the hardware works when it consumes data stored at
-> + * GCSPR. Callers should assure this is acceptable.
 
-s/assure/ensure/
+Josh Poimboeuf (4):
+      perf: Remove get_perf_callchain() init_nr argument
+      perf: Have get_perf_callchain() return NULL if crosstask and user are set
+      perf: Simplify get_perf_callchain() user logic
+      perf: Skip user unwind if the task is a kernel thread
 
---CxxZay3cgRaUrHlW
-Content-Type: application/pgp-signature; name="signature.asc"
+Steven Rostedt (1):
+      perf: Use current->flags & PF_KTHREAD|PF_USER_WORKER instead of current->mm == NULL
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmimBMcACgkQJNaLcl1U
-h9DStgf6A0dCzGu8uuMoynkApBSWEG4f5HAlmVPAHWXzCcGU2w83eDn+Q9HoQHoV
-JY8tRaql2Xt08gBFi2xdoJIsgVGy5vSpAqXC0gA62YDv9sjsyKAsklb8D0bv+9kw
-2Omq5CiJDjBCH0eREe52xvExTcCazZeiXpI18GXPU9/D5t8cWNwIqCaQojQoEqFV
-pJN+543otg+v8NN9fFgwkGlQ1vfdnIHa8ERKEYykCdx1oQ98dXonsbWnwhH1WYyw
-Om6XvXeDLfnRajhgFM7gSSp1jK900upFFXeOQRPwaNgRnCcwQOeVCC+1zfIp6P1v
-IfNStDtyZvXvoMdlMY7QrIB/yBbLVg==
-=igX0
------END PGP SIGNATURE-----
-
---CxxZay3cgRaUrHlW--
+----
+ include/linux/perf_event.h |  2 +-
+ kernel/bpf/stackmap.c      |  4 ++--
+ kernel/events/callchain.c  | 40 +++++++++++++++++++---------------------
+ kernel/events/core.c       |  9 +++++----
+ 4 files changed, 27 insertions(+), 28 deletions(-)
