@@ -1,88 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC45341667;
-	Wed, 20 Aug 2025 17:23:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E78256C70;
+	Wed, 20 Aug 2025 17:24:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755710633; cv=none; b=Jr7TQ2cUoXgHX95jw0maOOLLk1J6ejb2vC8pZfNnYJKlsrZ5rlLlj15b6ikf/+M3niHgUwOb8wD/vgbEZ5Q6cbqT82MMPfFxZYihrvk8OsfaqrEzvI8cuEK6v+WPB89HPP+9/tVJXkd676CjeTKcegRsD+Flu4ytctRPNC6d/hY=
+	t=1755710672; cv=none; b=C//Wy0Bz+Hua1h/nCnELLJf00oLOlBDlifF2/GA0smjzKc/spdryA6DVP49ygGg2T31okpuYZj5Ca060gNTwqz6+6Lnav447E4qzwjZ5BYfyCLmJewV2mc2zy1kozS8d0JaRGDH8zULJZwdcpIZlIkbBNlh84bwbsLyONUu/CXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755710633; c=relaxed/simple;
-	bh=/03dgkBvv5oPv0wNVSIarGhRbX5wiLgST2mS5jll5Mw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=SsTCkIrHGds3RNjSleIxi/x4N7OEur/lL0nbmrOGI6Pnn/gcdzkwd0DSimT+g0TPG8U9R/pJHG+1z+qjJoPOsqBnARbsSQghDt5Bkc7OJO1Gc1A0eMYDAxsECFBuf3H+u7eNGFQJmWogGQ0a8W+hLqkN8rvT44y8ArfnN6zZJdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VQm5gESB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1755710672; c=relaxed/simple;
+	bh=zK2/t7pB5uRi95w0k0HULqrZQXZoKb6HKfmiVR24b+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HdjIzD7dnBOmqZC86hWHao62J7KYg9zB0EHB0Zs7KJm718SZajqrGHKNPazPrY8e4dUgBhkI3QKtHbWH4jFdMtaEZ+i1S9rQ+6zAv8QrlH0JNPJ6zkdDXLibIdxDFfh6XdGnL4+giPVlvSDznvVBTEwkzptccxww76zytQgp+A8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dt7gdEqT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VQm5gESB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9B05C4CEE7;
-	Wed, 20 Aug 2025 17:23:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dt7gdEqT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29CE3C4CEE7;
+	Wed, 20 Aug 2025 17:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755710633;
-	bh=/03dgkBvv5oPv0wNVSIarGhRbX5wiLgST2mS5jll5Mw=;
-	h=Date:From:To:Cc:Subject:From;
-	b=VQm5gESBG5RVfr+2AxatPxDnIWWh4PwGIa/IZPIHlwh3+TK6QYPji5GVe+MIwHLNU
-	 R06WiHBGXZu1eyKRCIQ20FeBRAiqa0lphjNf6l5LQs32OpubSGqk1VHWWtl1DupEwy
-	 wVaTFUNK6VhaY3plBUnm97/yFXl30HyKWPcq1spbf8DsEa+/oRpSAEuHfnAEzK6KWd
-	 kegTUjW+LeeDqERnZk1zNvH2PT+CZrZ68+PO/W5JcPEbRgdChY4Dwv/9a0imk8sfDn
-	 ldhQwSlOVrAIfuPoPmVUyj27sMLV24TWWxnkNoLIHP1TcePWAHDwBkX5MrKW1RyUVV
-	 +qZKIJWY+SIkg==
-Date: Wed, 20 Aug 2025 14:23:49 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>, Dmitry Vyukov <dvyukov@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1] Revert "perf hist: Fix bogus profiles when filters are
- enabled"
-Message-ID: <aKYEpf7xp3NnkBWm@x1>
+	s=k20201202; t=1755710671;
+	bh=zK2/t7pB5uRi95w0k0HULqrZQXZoKb6HKfmiVR24b+k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Dt7gdEqTTlWr9uPsmbh5dC5JHyQ4ajY1BeBLVEaA84XW568wCEGwP59iZSsYbHZIa
+	 Fg2vygO7X8vp2m0Cm8YNFm4BhJ0cPlOHCvQXCj08/3tNm8Sxc4iKm6wZCiDOLd0f+Q
+	 1mUo6JG+1d3EvgEjhlPdbZq2YQeh51uVV/NZel0Mz4AGEFZ9gSJf71pS09llaBr1tY
+	 ErI0mCisKCney0RRErNlxuIam2AH6ODhP72wMuuXXpqF4K2jA3yjtOQ+NBoc/Vodlh
+	 Q7h/cj0WBupi6f8SVmwzot9Vv7r6LhQ6Jk/BHLy4+BjC4dpexOyvP8xLGC9M1B1MRY
+	 J5/PE82VmYVaA==
+Date: Wed, 20 Aug 2025 18:24:24 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Jeremy Linton <jeremy.linton@arm.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org,
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, thiago.bauermann@linaro.org,
+	yury.khrustalev@arm.com, kristina.martsenko@arm.com,
+	liaochang1@huawei.com, catalin.marinas@arm.com, will@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 3/7] arm64: uaccess: Add additional userspace GCS
+ accessors
+Message-ID: <7bc27e3d-7667-4366-89bc-93a084808ace@sirena.org.uk>
+References: <20250818213452.50439-1-jeremy.linton@arm.com>
+ <20250818213452.50439-4-jeremy.linton@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="CxxZay3cgRaUrHlW"
+Content-Disposition: inline
+In-Reply-To: <20250818213452.50439-4-jeremy.linton@arm.com>
+X-Cookie: Whoever dies with the most toys wins.
+
+
+--CxxZay3cgRaUrHlW
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-This reverts commit 8b4799e4f0f40a4ec737bf870aa38d06288bf0fb.
+On Mon, Aug 18, 2025 at 04:34:48PM -0500, Jeremy Linton wrote:
 
-Not combining entries in 'perf top', so we're getting multiple lines for
-the same symbol, with the same address.
+> Its important to note that GCS pages can be read by normal
+> instructions, but the hardware validates that pages used by GCS
+> specific operations, have a GCS privilege set. We aren't validating this
+> in load_user_gcs because it requires stabilizing the VMA over the read
+> which may fault.
 
-To test it, simply run 'perf top', then do /acpi to see just symbols
-starting with acpi_ and notice that there are various lines with the
-same symbol, press V to see the address and its the same.
+I think in the context of uprobes this is reasonable.  We can always go
+back later and tighten things up.
 
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/hist.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+Reviewed-by: Mark Brown <broonie@kernel.org>
 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 64ff427040c34112..f3f64aff9b882303 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -1391,16 +1391,7 @@ hist_entry__cmp_impl(struct perf_hpp_list *hpp_list, struct hist_entry *left,
- 	struct hists *hists = left->hists;
- 	struct perf_hpp_fmt *fmt;
- 	perf_hpp_fmt_cmp_t *fn;
--	int64_t cmp;
--
--	/*
--	 * Never collapse filtered and non-filtered entries.
--	 * Note this is not the same as having an extra (invisible) fmt
--	 * that corresponds to the filtered status.
--	 */
--	cmp = (int64_t)!!left->filtered - (int64_t)!!right->filtered;
--	if (cmp)
--		return cmp;
-+	int64_t cmp = 0;
- 
- 	perf_hpp_list__for_each_sort_list(hpp_list, fmt) {
- 		if (ignore_dynamic && perf_hpp__is_dynamic_entry(fmt) &&
--- 
-2.50.1
+> +/*
+> + * Unlike put/push_user_gcs() above, get/pop_user_gsc() doesn't
+> + * validate the GCS permission is set on the page being read.  This
+> + * differs from how the hardware works when it consumes data stored at
+> + * GCSPR. Callers should assure this is acceptable.
 
+s/assure/ensure/
+
+--CxxZay3cgRaUrHlW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmimBMcACgkQJNaLcl1U
+h9DStgf6A0dCzGu8uuMoynkApBSWEG4f5HAlmVPAHWXzCcGU2w83eDn+Q9HoQHoV
+JY8tRaql2Xt08gBFi2xdoJIsgVGy5vSpAqXC0gA62YDv9sjsyKAsklb8D0bv+9kw
+2Omq5CiJDjBCH0eREe52xvExTcCazZeiXpI18GXPU9/D5t8cWNwIqCaQojQoEqFV
+pJN+543otg+v8NN9fFgwkGlQ1vfdnIHa8ERKEYykCdx1oQ98dXonsbWnwhH1WYyw
+Om6XvXeDLfnRajhgFM7gSSp1jK900upFFXeOQRPwaNgRnCcwQOeVCC+1zfIp6P1v
+IfNStDtyZvXvoMdlMY7QrIB/yBbLVg==
+=igX0
+-----END PGP SIGNATURE-----
+
+--CxxZay3cgRaUrHlW--
