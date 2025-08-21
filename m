@@ -1,55 +1,55 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED8562E1757
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 Aug 2025 16:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB44224225
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 Aug 2025 16:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755794318; cv=none; b=T12jygBfh3M6UvXraA7fBhLEqloHr/uBHrcPgqjB/RQ01Xl+NCR7bFnS9O3yhMW3HqWAHMdaI7y+00RY/5nNI5J8qQugZvinsP7gtDacvrDBeU3TK7ESAK1cYfKuAgjKUapmCvBWzo8aP1NPI6frSo4/8duzx4Vs/YyaNIihonM=
+	t=1755794334; cv=none; b=XHxZN1W/mW/5okxO+J3lybNVCg1jzKGfTa/HXJB7MsHxUytBkssCz0X/N8Q3kTYsIcLe+JggO1Z89Q9vqCvSpCt5p/d+rfMc0c3VDPVjnEi1xw8hmKhj2zGXNhETZyYzYgCroA28hoOUvObzKF1cBbDNlIPqEpqfO1qh8rtdcxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755794318; c=relaxed/simple;
-	bh=NTnQ9k5u7R42OUwbz6h2J8KHt5rVMSa96bg96BbPHI8=;
+	s=arc-20240116; t=1755794334; c=relaxed/simple;
+	bh=3YKELvxuxV1PLL+vU0ZK9NzmOjLBL5HGYpAzwG/O+C8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=qdst/Us9P0RIG+aKY0ARR+NwS51npZxjgFRFUVu+1xxeUskAvXzOWMhRgYhSZsMxrxhRaqaG8L/Y2nsWsjklWbu4ZFy5Fts9xG5vyBrwGLuZIvV/q27ZKN25EJqMHMSbjiKfAeiTyHFZ+yU4zqi9WLkyy+RJkPY/uv3Cp3exlbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Mmf703Z9; arc=none smtp.client-ip=209.85.215.202
+	 To:Content-Type; b=Rv/rBaGrnGq/sIB91MnNJUWkp0CYht2gfd6z0EI3i+5pgzRS6sOZ8VdIvcKXeiZdpjfXA5V6zZeWfVxYFFrQfVcuupKroktWqmp7eRd1mySTDJsfh1Xad9Tby+lMY4Mvfn4Li8FM9B6k7vydwz87q8IkxM4/EzSY7V6fBHw7KqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RQ6cb4Oc; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mmf703Z9"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b47173a00e8so910571a12.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 21 Aug 2025 09:38:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RQ6cb4Oc"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b4716fc08abso985406a12.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 21 Aug 2025 09:38:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755794316; x=1756399116; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1755794332; x=1756399132; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=MCudO0lfsSIQDEPb/Z/odYNnD8Vvb98DSCImnP79+vg=;
-        b=Mmf703Z9tiWAt8POjfmeVU2aeqvya8mb5rML1vBKQtoTyk4DJeoGONgorCcfWzztKZ
-         p2pge+KSqNx4esEH6zMedLU8xj8/hAM2Utv/asf3jGrs/A2fgjWHJZ/Maht3F3XWRH9W
-         5bEMCWC6pCAGGHqG3KYKmuVHLKoj4yZv1de0dumuSuAaOA9+HBjZ5HwLxpqsH/vI1XAb
-         CsHxqGH+4n4DV7mlOGJIYCYscagF84riFScDQ2BSMXT1xtMqU+iCO2tUft1w9wGEvUJ4
-         mYBLcpxaj++jgWPjtaTwg+icnXfsxFpDmmx1YI6yS8jf1fg0lvAS2qaB7u3x3IRM5Yqy
-         F/Mg==
+        bh=HBnlfMNnAXJvRMri5tmfNXUyqLPNFnaI1ehQvuqCmqU=;
+        b=RQ6cb4OcYVTVdMBxN2oZGQXvq56q+jDOYtBsiXaPozHpckbPSlj3/kubP729gDMIev
+         Ph1pOBd2uJqeC3hVwAjGe7QHGvQg//CVVjjoO36/wEjVNCLFaETJpv/88yj7gAMsd+V/
+         Tg3M2ydxSp5SuQX4ppBZ+bzaWigpDbvFizISWfldt25PBJPTMa95SO+62Ii3FoALDRNt
+         LYRxaEWVkZu2YzrLJiD/9mp/QY0hZgvWHmT9faOEbHhN7pHaeUJ1zZw+PgjxnYNz/ZI3
+         89KLApcgmS3aOQL4OtbeR5lsZkJplGrTlSLobVc2acXs+sfn5QioN1/4CVJwA1zXySw/
+         gK/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755794316; x=1756399116;
+        d=1e100.net; s=20230601; t=1755794332; x=1756399132;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MCudO0lfsSIQDEPb/Z/odYNnD8Vvb98DSCImnP79+vg=;
-        b=a2wtwyapY9+gWTvM9flGLcchnt4wJd2N8VEy30tbvsVWc5QJIlSwEIiUv+ZeqkXFfc
-         ZgERve57a1XDLG8j8SFw/3GHM+vhdiVtuaLq2ihGDkf7XaemjNHaH3VCdcbNH3yZgsBh
-         mZeCJL4f3nq55LUdq6GqooWrcj37Hek9JFZr7mxXY7oqulR4GhBc8QRVBYqrq0GMX2Nn
-         t/eut2HXs8jrmA4VbEZSi0J3/PWbVZTPmY7T9Z6SvcYgdbL05p2fJME+isjdVnEuJ3xt
-         mpxvCVYlUHvfRzJOrEE8ku+EqVAGGKbszg0KL2WTDMGeHPEcwDBlq1mZczdok7zuVz+E
-         4ceg==
-X-Forwarded-Encrypted: i=1; AJvYcCU2eemC4UXvhsEv99HAvQRYQExZoXV9O4wB4hOiDRBQ5ee0EXu9ahPJL1usC6CEYKoNYPNTwp0TJiwDgl8UUwfW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzc51ibXC3+MYqq1cul4czMuWUV+FD8pnUJLD0gGy6KP9D/YEmw
-	ybBh9hpDZM42N53n932gtx49mV/t7J1D1tjUcFBJ4LBLUv/p76pgWvB6r8MvddIbAXXrjLKDhT8
-	23BAn08MrFQ==
-X-Google-Smtp-Source: AGHT+IEeCnJ7b7Yhroqp8lnq2iRmwlgzQFOIRcCjMoaZ7MBplMnR6IPn6gc3uaSySrJy+SPVwdt4sO/70rsg
-X-Received: from pgbfm17.prod.google.com ([2002:a05:6a02:4991:b0:b47:68a7:75e3])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:7d9b:b0:232:e6ab:8de8
- with SMTP id adf61e73a8af0-24330890004mr4446962637.18.1755794316246; Thu, 21
- Aug 2025 09:38:36 -0700 (PDT)
-Date: Thu, 21 Aug 2025 09:38:18 -0700
+        bh=HBnlfMNnAXJvRMri5tmfNXUyqLPNFnaI1ehQvuqCmqU=;
+        b=BoOsbRNlyezBkKn0kza15FgRUXHRlqYndt6+CnTcATXawPPtJqpRRHjQxl14Ot5Yum
+         W86LkV+l0nGl43dI0ScCmkecNj0cdcQTziJb6YNXuCTuK6ZmneVKqe/l4cg0MKDNQFZC
+         Tz+p+dNbcs51RTHAU9XOilo5Ex4oJPDFthbFLX9AelLH4ldlpQKmbISsPic3+624kqKz
+         iVuK5sA+1vvYM3+5m06x1SKr+SJVmZZF1AvCQPpjzapiH7a7kw8SRRp19nMs3A9w9EZ3
+         uItd8vJMbUWDUHuFQDT2UIh1bsOn9dthV+Y1SzEwJvu48p3Pb0Z1vt+56X6ZrguIwScs
+         FXSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV7KjB51n4aNPwGvTfp8mnVBuEx6eTkFPS/Q4o0bz2Tk+4vPz5voKKZNaDNCDMl0vFpEEeUpnky36PTnAbtWmcv@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQp32Ly6CdrQEwqnLYC28il8vN/jIhDpXLHGak1j7JIwcv1mYp
+	UE03OMobMHvzfHcxUxRJG08aFQcsacI2mr0jU3u5F3CXH75r8KCVdfdZYZmSZHFbj2WCgFSgd1D
+	FVvanNk2xYg==
+X-Google-Smtp-Source: AGHT+IHvI/QHnU0J+1JnVYyGfrBbKwfv6jXDDIgr4Q/WIz4zqzZnImtQy88yiDm7axpXD3oCDs3aSJ3xNyFN
+X-Received: from pfbhc8.prod.google.com ([2002:a05:6a00:6508:b0:76e:7044:f5e6])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:a106:b0:238:3f54:78e7
+ with SMTP id adf61e73a8af0-24330b219f1mr4841106637.45.1755794332330; Thu, 21
+ Aug 2025 09:38:52 -0700 (PDT)
+Date: Thu, 21 Aug 2025 09:38:19 -0700
 In-Reply-To: <20250821163820.1132977-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250821163820.1132977-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.rc1.193.gad69d77794-goog
-Message-ID: <20250821163820.1132977-5-irogers@google.com>
-Subject: [PATCH v2 4/5] perf test shell lock_contention: Extra debug diagnostics
+Message-ID: <20250821163820.1132977-6-irogers@google.com>
+Subject: [PATCH v2 5/5] libperf event: Ensure tracing data is multiple of 8 sized
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,55 +76,30 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-In test_record_concurrent, as stderr is sent to /dev/null, error
-messages are hidden. Change this to gather the error messages and dump
-them on failure.
+Perf's synthetic-events.c will ensure 8-byte alignment of tracing
+data, writing it after a perf_record_header_tracing_data event. Add
+padding to struct perf_record_header_tracing_data to make it 16-byte
+rather than 12-byte sized.
 
-Some minor sh->bash changes to add some more diagnostics in
-trap_cleanup.
-
+Fixes: 055c67ed3988 ("perf tools: Move event synthesizing routines to separate .c file")
 Signed-off-by: Ian Rogers <irogers@google.com>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/tests/shell/lock_contention.sh | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ tools/lib/perf/include/perf/event.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
-index d33d9e4392b0..7248a74ca2a3 100755
---- a/tools/perf/tests/shell/lock_contention.sh
-+++ b/tools/perf/tests/shell/lock_contention.sh
-@@ -7,14 +7,17 @@ set -e
- err=0
- perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
- result=$(mktemp /tmp/__perf_test.result.XXXXX)
-+errout=$(mktemp /tmp/__perf_test.errout.XXXXX)
+diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
+index 6608f1e3701b..aa1e91c97a22 100644
+--- a/tools/lib/perf/include/perf/event.h
++++ b/tools/lib/perf/include/perf/event.h
+@@ -291,6 +291,7 @@ struct perf_record_header_event_type {
+ struct perf_record_header_tracing_data {
+ 	struct perf_event_header header;
+ 	__u32			 size;
++	__u32			 pad;
+ };
  
- cleanup() {
- 	rm -f ${perfdata}
- 	rm -f ${result}
-+	rm -f ${errout}
- 	trap - EXIT TERM INT
- }
- 
- trap_cleanup() {
-+	echo "Unexpected signal in ${FUNCNAME[1]}"
- 	cleanup
- 	exit ${err}
- }
-@@ -75,10 +78,12 @@ test_bpf()
- test_record_concurrent()
- {
- 	echo "Testing perf lock record and perf lock contention at the same time"
--	perf lock record -o- -- perf bench sched messaging -p 2> /dev/null | \
-+	perf lock record -o- -- perf bench sched messaging -p 2> ${errout} | \
- 	perf lock contention -i- -E 1 -q 2> ${result}
- 	if [ "$(cat "${result}" | wc -l)" != "1" ]; then
- 		echo "[Fail] Recorded result count is not 1:" "$(cat "${result}" | wc -l)"
-+		cat ${errout}
-+		cat ${result}
- 		err=1
- 		exit
- 	fi
+ #define PERF_RECORD_MISC_BUILD_ID_SIZE (1 << 15)
 -- 
 2.51.0.rc1.193.gad69d77794-goog
 
