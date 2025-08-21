@@ -1,55 +1,55 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E16B2E172A
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 Aug 2025 16:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED8562E1757
+	for <linux-perf-users@vger.kernel.org>; Thu, 21 Aug 2025 16:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755794316; cv=none; b=Ab39lIdPxNc9g8KWVzU3Es3mYBX/NNwRmXVODXEoT5xcvFe7fqz7+uNwWJSvAWXmANCzK0Q/3SjhLBS2jUkekLghWcPEYSYc539rvoPYQNS1vf4MZU+Pw3Fas0z1zn+eQG8nqQm4/ZKRSsfKQYPduPaEo9sgal7sVoHr2vy7N64=
+	t=1755794318; cv=none; b=T12jygBfh3M6UvXraA7fBhLEqloHr/uBHrcPgqjB/RQ01Xl+NCR7bFnS9O3yhMW3HqWAHMdaI7y+00RY/5nNI5J8qQugZvinsP7gtDacvrDBeU3TK7ESAK1cYfKuAgjKUapmCvBWzo8aP1NPI6frSo4/8duzx4Vs/YyaNIihonM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755794316; c=relaxed/simple;
-	bh=/XHeoHniz2hBdtYofNudV0JeJY6QjauvRcJwRTYu2UE=;
+	s=arc-20240116; t=1755794318; c=relaxed/simple;
+	bh=NTnQ9k5u7R42OUwbz6h2J8KHt5rVMSa96bg96BbPHI8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=VOA2zwikB2Xgk8kW+Or042Q08RnsmU/LVHv1sc3QmEJUFx03wEzMxxQBISt19ItFduwgE0CRrKpgNZaKwdKugonSUQbTmX4krZ3nZsazO+5b66BGNRWPHUCs3l/ugGeLaJvl7JdJUjt8Ev3d44mwLy6YgAzt/hYiEnPmus6JY+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hNduSHfc; arc=none smtp.client-ip=209.85.210.201
+	 To:Content-Type; b=qdst/Us9P0RIG+aKY0ARR+NwS51npZxjgFRFUVu+1xxeUskAvXzOWMhRgYhSZsMxrxhRaqaG8L/Y2nsWsjklWbu4ZFy5Fts9xG5vyBrwGLuZIvV/q27ZKN25EJqMHMSbjiKfAeiTyHFZ+yU4zqi9WLkyy+RJkPY/uv3Cp3exlbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Mmf703Z9; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hNduSHfc"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-76e2ea91aa9so2055433b3a.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 21 Aug 2025 09:38:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mmf703Z9"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b47173a00e8so910571a12.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 21 Aug 2025 09:38:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755794315; x=1756399115; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1755794316; x=1756399116; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=A7qhyTA0zygdF9hzKzi42ziwY4qouIjpoYn63u/5P6Y=;
-        b=hNduSHfcpDFXohBpbRAecXoPxwbpSflX2EJpyIwQZSA8VCdT/hnc2n2Ly73mKmKQWF
-         6PcU4s3SqPau0p9TeLLPixBWINb6cOj2BIvnTH4QJeE77/5539Gf4bHOEt50iZ2JrwWN
-         /LvtRKKFi4jordhuYzdjI1NCCmHujEkkkHahYdYbpLQrgV4oFHspSvvL+KSInxo0b3YM
-         sxMo2fe75jSRFqsEmKqwhO6tUwUY9+hGmT4IFeihayK/0Bul2t9O/KzEhRQTid/mQsDx
-         QdPHcfYDwfIswxwkqPCsG+jFHNf2yyHRm0emMwpAqT3d7SmD+P/Z2qy43smlq9AnWQSa
-         mJbw==
+        bh=MCudO0lfsSIQDEPb/Z/odYNnD8Vvb98DSCImnP79+vg=;
+        b=Mmf703Z9tiWAt8POjfmeVU2aeqvya8mb5rML1vBKQtoTyk4DJeoGONgorCcfWzztKZ
+         p2pge+KSqNx4esEH6zMedLU8xj8/hAM2Utv/asf3jGrs/A2fgjWHJZ/Maht3F3XWRH9W
+         5bEMCWC6pCAGGHqG3KYKmuVHLKoj4yZv1de0dumuSuAaOA9+HBjZ5HwLxpqsH/vI1XAb
+         CsHxqGH+4n4DV7mlOGJIYCYscagF84riFScDQ2BSMXT1xtMqU+iCO2tUft1w9wGEvUJ4
+         mYBLcpxaj++jgWPjtaTwg+icnXfsxFpDmmx1YI6yS8jf1fg0lvAS2qaB7u3x3IRM5Yqy
+         F/Mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755794315; x=1756399115;
+        d=1e100.net; s=20230601; t=1755794316; x=1756399116;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A7qhyTA0zygdF9hzKzi42ziwY4qouIjpoYn63u/5P6Y=;
-        b=X2wuIW0h0TnWG0woU4cIIKjG5vzWxoS3/GeqBowc7dM3jnETqcB4duXLqZWUr601jS
-         ZAeL6SBML3SoRjDqY6p0tOeZEky40EDuZSxHX41qk67QuzMzpxvRnPlBgW6gITXuxQv8
-         cFRm3Iv8IGmYwe1RsZmy1EUDhOuxNBr5BsRjW0XswCxpC/bYh9oq9TV6bmcnhfQX6U/p
-         LyK5Qd0MqffG4kKbC5fyDJsM0tlENgyG1kwmV3QKB1XFBG5LQ8SMTahbnrCAbFR6nGvv
-         nO1emiLg6nXrXW/VY3eA+GU4+1ziMFn8Au8kHTnx+mDWybXtWnB0ypGpzcrEM4VG0w3V
-         BVNw==
-X-Forwarded-Encrypted: i=1; AJvYcCUhVtCcLRml0uOIr+sk9sEJRZg6qi0AFOM3q89O2Am78h7iaPwTnk1m5OuuvowBB2UvtHv4C6Qs3rbuGvvdGyV3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3iQCTaaaglK/Nx3NjOyOQUhKoRLOchjyErK92nUYYhlRXiQ+i
-	/eTi7uSfeMhWW6teMGPiOg+QsXI3nb7BBw6cVPkWtbqwaNHBEUUvsKPsS38L05rw03dy1z09/kD
-	1Z2LPs7PNPg==
-X-Google-Smtp-Source: AGHT+IHIkd9mETHe77XFTQ371bKp8jF0bgpsL3CAoJoJulWTHQL0Nn0cdjJMp2YVLIScwYqmgUFadePBjTzM
-X-Received: from pfbkx15.prod.google.com ([2002:a05:6a00:6f0f:b0:767:efa:8329])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:4b0f:b0:76e:8b0e:bfff
- with SMTP id d2e1a72fcca58-7702fa07addmr56400b3a.13.1755794314448; Thu, 21
- Aug 2025 09:38:34 -0700 (PDT)
-Date: Thu, 21 Aug 2025 09:38:17 -0700
+        bh=MCudO0lfsSIQDEPb/Z/odYNnD8Vvb98DSCImnP79+vg=;
+        b=a2wtwyapY9+gWTvM9flGLcchnt4wJd2N8VEy30tbvsVWc5QJIlSwEIiUv+ZeqkXFfc
+         ZgERve57a1XDLG8j8SFw/3GHM+vhdiVtuaLq2ihGDkf7XaemjNHaH3VCdcbNH3yZgsBh
+         mZeCJL4f3nq55LUdq6GqooWrcj37Hek9JFZr7mxXY7oqulR4GhBc8QRVBYqrq0GMX2Nn
+         t/eut2HXs8jrmA4VbEZSi0J3/PWbVZTPmY7T9Z6SvcYgdbL05p2fJME+isjdVnEuJ3xt
+         mpxvCVYlUHvfRzJOrEE8ku+EqVAGGKbszg0KL2WTDMGeHPEcwDBlq1mZczdok7zuVz+E
+         4ceg==
+X-Forwarded-Encrypted: i=1; AJvYcCU2eemC4UXvhsEv99HAvQRYQExZoXV9O4wB4hOiDRBQ5ee0EXu9ahPJL1usC6CEYKoNYPNTwp0TJiwDgl8UUwfW@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzc51ibXC3+MYqq1cul4czMuWUV+FD8pnUJLD0gGy6KP9D/YEmw
+	ybBh9hpDZM42N53n932gtx49mV/t7J1D1tjUcFBJ4LBLUv/p76pgWvB6r8MvddIbAXXrjLKDhT8
+	23BAn08MrFQ==
+X-Google-Smtp-Source: AGHT+IEeCnJ7b7Yhroqp8lnq2iRmwlgzQFOIRcCjMoaZ7MBplMnR6IPn6gc3uaSySrJy+SPVwdt4sO/70rsg
+X-Received: from pgbfm17.prod.google.com ([2002:a05:6a02:4991:b0:b47:68a7:75e3])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:7d9b:b0:232:e6ab:8de8
+ with SMTP id adf61e73a8af0-24330890004mr4446962637.18.1755794316246; Thu, 21
+ Aug 2025 09:38:36 -0700 (PDT)
+Date: Thu, 21 Aug 2025 09:38:18 -0700
 In-Reply-To: <20250821163820.1132977-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250821163820.1132977-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.rc1.193.gad69d77794-goog
-Message-ID: <20250821163820.1132977-4-irogers@google.com>
-Subject: [PATCH v2 3/5] perf evsel: Avoid container_of on a NULL leader
+Message-ID: <20250821163820.1132977-5-irogers@google.com>
+Subject: [PATCH v2 4/5] perf test shell lock_contention: Extra debug diagnostics
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,30 +76,55 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-An evsel should typically have a leader of itself, however, in tests
-like 'Sample parsing' a NULL leader may occur and the container_of
-will return a corrupt pointer. Avoid this with an explicit NULL test.
+In test_record_concurrent, as stderr is sent to /dev/null, error
+messages are hidden. Change this to gather the error messages and dump
+them on failure.
+
+Some minor sh->bash changes to add some more diagnostics in
+trap_cleanup.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
-Fixes: fba7c86601e2 ("libperf: Move 'leader' from tools/perf to perf_evsel::leader")
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/evsel.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/tests/shell/lock_contention.sh | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index d264c143b592..496f42434327 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -3935,6 +3935,8 @@ bool evsel__is_hybrid(const struct evsel *evsel)
+diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
+index d33d9e4392b0..7248a74ca2a3 100755
+--- a/tools/perf/tests/shell/lock_contention.sh
++++ b/tools/perf/tests/shell/lock_contention.sh
+@@ -7,14 +7,17 @@ set -e
+ err=0
+ perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+ result=$(mktemp /tmp/__perf_test.result.XXXXX)
++errout=$(mktemp /tmp/__perf_test.errout.XXXXX)
  
- struct evsel *evsel__leader(const struct evsel *evsel)
- {
-+	if (evsel->core.leader == NULL)
-+		return NULL;
- 	return container_of(evsel->core.leader, struct evsel, core);
+ cleanup() {
+ 	rm -f ${perfdata}
+ 	rm -f ${result}
++	rm -f ${errout}
+ 	trap - EXIT TERM INT
  }
  
+ trap_cleanup() {
++	echo "Unexpected signal in ${FUNCNAME[1]}"
+ 	cleanup
+ 	exit ${err}
+ }
+@@ -75,10 +78,12 @@ test_bpf()
+ test_record_concurrent()
+ {
+ 	echo "Testing perf lock record and perf lock contention at the same time"
+-	perf lock record -o- -- perf bench sched messaging -p 2> /dev/null | \
++	perf lock record -o- -- perf bench sched messaging -p 2> ${errout} | \
+ 	perf lock contention -i- -E 1 -q 2> ${result}
+ 	if [ "$(cat "${result}" | wc -l)" != "1" ]; then
+ 		echo "[Fail] Recorded result count is not 1:" "$(cat "${result}" | wc -l)"
++		cat ${errout}
++		cat ${result}
+ 		err=1
+ 		exit
+ 	fi
 -- 
 2.51.0.rc1.193.gad69d77794-goog
 
