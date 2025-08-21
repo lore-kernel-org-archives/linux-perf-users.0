@@ -1,121 +1,92 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6741D5ADE
-	for <linux-perf-users@vger.kernel.org>; Thu, 21 Aug 2025 01:14:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D501DDC0B;
+	Thu, 21 Aug 2025 01:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755738865; cv=none; b=WJVhMuWkTCke3loHRyzIUvxmJr5qBV5ejn8UX1R+GyYbKNIhGf6fuxi/HF7m0tz8ZEkyPIrePPs1sjCsPxsA3XGbyHlc8nrjfrix53T5dKUAe+rQ9rKJi4eg00vgTotCJvprE4BzrogRgh5dZ8Q8Az+98mqQJLzzf3EKuwCBwDY=
+	t=1755741105; cv=none; b=jkmeYjzO45vSjIHrSQdpjh9LJyG+rjfXZE6GtqNYW338nYuW2VyFFYdM3fRnDe0eCDOTKoJapun4ItXW7hz2PpcGzraYQvkPHbOJcu1qiNZUYDrS69NUwGoNaFwj0Fi4B6DJ3OPjTrzyARNXdO3rqnP0Egn75jDdUO8JqurMk3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755738865; c=relaxed/simple;
-	bh=RYNH5Fn80bdsRjGGIR09BiBns06z0WrpWMzLI0Wu/GE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nMc8aa6xSMNeVtlQifJYYFZ6ryJtuxSnLhnjJUcLUgODo8RnNs+UJjZMjXBNogsv+x9FzHGV8lJs90HQvLnNer0Gcmp7kOMp4dm9N18HAzTpbA7fosXIabUL2q4xqdxt/8OtTKimKEhtaZI+RaYIXMoVovLCIhQOM3mrp9PLxV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zmebX3HN; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1755741105; c=relaxed/simple;
+	bh=4AKDPWqATzK1Hsj9qLvg8hUknNHF8JNcg5P0w4J1UCE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FZ1eyob5gFkHuglZGY+/XE73K8Yf24w87wLhTQGU2/ibVcmMcf5KNGLfwoYsRU6EFkIxndbGd47UfMfdKWVWbb7kHDOLP2dsifJATrxkJkEaUfD0mkpa8lFJFWbtPiGjlqD3W2j/qqwjPT4KSDh9pV10YwPi/t5pdp1MJ4+xMIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GzJwQksa; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zmebX3HN"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-333f8f5ca72so3459821fa.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 20 Aug 2025 18:14:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755738861; x=1756343661; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KCYpRny3qA+sjxXdlk4UywqmKcgpUts7E2+CnSYsDQM=;
-        b=zmebX3HN4+lNFfDOrvveHpImIuAXvZsx8SnIm0vqHFrYuou1CuJVejDbNvo6DxyCvH
-         /XIhUeBtWCn98kwjCXIrU9rJdy5JWKgdTAJ83CQeA3pStF8GxaXSw9LlhZpvkU+KtMRP
-         fGU0zoiBOT6B2SwZl81Qk22sx5JTXsYlvUa8qEtmpOa88bhh+SnI+/7sWWne/4hv7qK0
-         Gz+lSgbi4aBghNVWvaL63J7I4FUjuyD5ZD+VZhF/93lYEioYrN1B9UpUxx0wvhDcX4xu
-         Ak3aeL7b9PC5RgY9J3mSkdkB9bI+Rb+kh4AWFM1mfAvu9y8MkT7xsKJViQQoFVqK43m3
-         f7XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755738861; x=1756343661;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KCYpRny3qA+sjxXdlk4UywqmKcgpUts7E2+CnSYsDQM=;
-        b=WOw3zU7B4P2yR74P1qGBw3WzZw/1phyLwxsC029Z6OX98CwX13ijOTZfrhAQa0toU3
-         PMZnOCwAGHgL6NtiSMAHE4CzSIaGlFCoNAtfI0TdtaYOHf8UbmTtNf/RuwDH7zHTH3A0
-         zV9thyHPwiBK266haX5/L7T4ldoG9gkGfLNowqedt4HFdV6wJ1JKk51AQlJJSsjoopwC
-         z/n8U8a+NtzmWGb213VAilwZGGHOWAMVgCUwfjXwDaMhnCP/IeZmJxfYB8cLq+WWH7VZ
-         fc84pL3+1quz4cUbP5jdOy/L7cx3kuKj2M7XeyfJJFz+n37z7Nk3mkJ99P02p7IeGUi6
-         LKLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUlqUT31sJeafmzhACzeKp0bKvNsR1EvltMA59oL1wugUCLRocgkrobaySMXfFh3dIaMNvchMWPXFgtt2YHy2O7@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFVR/s0cimNGbDiSze8gKSd0ssU/ifyKb7wK/ti5KrJy8cNdnf
-	ymYh8YrQRFVUnY8gfoP8igBSZ0fNWHruorRnxh//ek2XlGvlBCEgKhv3FTZx0y1dip5Qn8DqSbC
-	qxCw3tjWbk6z6QL4NUCdcUDDOSetpCKkn0O+pVLxE
-X-Gm-Gg: ASbGncuap3sVRCnqBbH0epK6E1L75Iv37KnE+mwvABnjEPy0INeEXeUuM7kH5gDC/l6
-	VuisAGmeNJnZxXFU+xc84LnCTQKmm3UC1k4FfwIvvTqsFXCfuW3cFvhFNjr2WvtWYf8/uKEyqCm
-	lOmuCjswIJdP9YeJ/PbH4jh6npDtdMvgGO4MsPX6Hv+2yntCr/QnuIpfV7L0owGurzPaxfn7q/d
-	yxCNX6oo8jO4LOeC2Lg+9Ei5ZZ4gqLcMe48Rnp/Z01T
-X-Google-Smtp-Source: AGHT+IETu+WGJrhtRV9VHuwi/ck8JYd8pX3ll/eT1ROeF1CZnsMIRL00vhQjhg2HXjIPlxreYuVZ+8/vGfYAVUBxe/Q=
-X-Received: by 2002:a2e:a541:0:b0:32c:e253:20cc with SMTP id
- 38308e7fff4ca-33549e926a5mr1677211fa.11.1755738861280; Wed, 20 Aug 2025
- 18:14:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GzJwQksa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755741103; x=1787277103;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4AKDPWqATzK1Hsj9qLvg8hUknNHF8JNcg5P0w4J1UCE=;
+  b=GzJwQksaBjxw8jVF9vcnhokpRnwQoReT6ZN50z5NE95REMVl+GtSaC0y
+   uuwguJuAOeKG0k/aM7IQNxa4GxsminkXWVT8mczmdyQq9G2Inif8s6toJ
+   QKGvYo0r+lCF0LP2XORXQJoQ7f1AOvAEzRwuzx4hqWnYYZvk97OaT9QVo
+   8A/lonHwL4M8sX1PIh3goxVP/Z33XXiebAgKiVPZtgfC2+ZQw423PQ8Rm
+   8xK7iWVDaQwQJ97KPQfKtPPyvxVpgj8ZuSS0GdQ4t2T+jgm198hn5Jfix
+   ZkeRQM0W1qrwoZvHijtg5HyPNZtXJ9Ax6SbVA3rlpSE4ES53++OVmOQIB
+   w==;
+X-CSE-ConnectionGUID: bI4kJQrYQEmVw7iXpawabQ==
+X-CSE-MsgGUID: Js1e3nMtQxOOFWzgy/Sg2A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11527"; a="68290614"
+X-IronPort-AV: E=Sophos;i="6.17,306,1747724400"; 
+   d="scan'208";a="68290614"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2025 18:51:40 -0700
+X-CSE-ConnectionGUID: T8b1BdI7TIiBzajZQD/6hA==
+X-CSE-MsgGUID: AWjOEuNzQ7mcc38JzYs6WA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,306,1747724400"; 
+   d="scan'208";a="168537534"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2025 18:51:33 -0700
+Date: Wed, 20 Aug 2025 18:51:30 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
+	kernel test robot <oliver.sang@intel.com>
+Subject: Re: [Patch v3 3/7] perf/x86: Check if cpuc->events[*] pointer exists
+ before accessing it
+Message-ID: <aKZ7omM0-3i72hfr@tassilo>
+References: <20250820023032.17128-1-dapeng1.mi@linux.intel.com>
+ <20250820023032.17128-4-dapeng1.mi@linux.intel.com>
+ <aKVD4ATXW4LmhDJm@tassilo>
+ <aedbcbb5-f0b4-4bf6-bc33-c8c3bf3f20bc@linux.intel.com>
+ <aKVgyV4XWfJGR6uK@tassilo>
+ <fab2a035-5ab3-4e24-bd3e-760a4b9be5e8@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aKYEpf7xp3NnkBWm@x1>
-In-Reply-To: <aKYEpf7xp3NnkBWm@x1>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Wed, 20 Aug 2025 18:14:08 -0700
-X-Gm-Features: Ac12FXzOF28RR6xZa7Q2rFIJD-4EFx1-2GTlpbXjfttBrprj8oDB-Hsf_xlfQEc
-Message-ID: <CACT4Y+YX-ROx0cW4pkDnqbdfbigVycwPLwO12RNbbtX9-Qp73A@mail.gmail.com>
-Subject: Re: [PATCH 1/1] Revert "perf hist: Fix bogus profiles when filters
- are enabled"
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fab2a035-5ab3-4e24-bd3e-760a4b9be5e8@linux.intel.com>
 
-On Wed, 20 Aug 2025 at 10:23, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
->
-> This reverts commit 8b4799e4f0f40a4ec737bf870aa38d06288bf0fb.
->
-> Not combining entries in 'perf top', so we're getting multiple lines for
-> the same symbol, with the same address.
->
-> To test it, simply run 'perf top', then do /acpi to see just symbols
-> starting with acpi_ and notice that there are various lines with the
-> same symbol, press V to see the address and its the same.
+On Wed, Aug 20, 2025 at 01:54:17PM +0800, Mi, Dapeng wrote:
+> 
+> On 8/20/2025 1:44 PM, Andi Kleen wrote:
+> >> Andi, I didn't fully get the exact meaning about the "log" here. When
+> >> throttle is triggered, perf_event_throttle() has already called
+> >> perf_log_throttle() to log the throttle event although only for the group
+> >> leader. Is it enough?
+> > Throttle normally doesn't involve data loss, just less samples. But this
+> > is data loss, so it's an overflow.
+> 
+> IIUC, there should be no data loss, the unprocessed PEBS records of these
+> throttled events would be still processed eventually by calling
+> intel_pmu_drain_pebs_buffer() when stopping the event.
 
-With this revert, does it show 1 entry but with a wrong percent?
-I am not sure why there are 2 entries for the same symbol, but if we
-merge them, we can sum of percents. Is it the right thing to do?
-
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/util/hist.c | 11 +----------
->  1 file changed, 1 insertion(+), 10 deletions(-)
->
-> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> index 64ff427040c34112..f3f64aff9b882303 100644
-> --- a/tools/perf/util/hist.c
-> +++ b/tools/perf/util/hist.c
-> @@ -1391,16 +1391,7 @@ hist_entry__cmp_impl(struct perf_hpp_list *hpp_list, struct hist_entry *left,
->         struct hists *hists = left->hists;
->         struct perf_hpp_fmt *fmt;
->         perf_hpp_fmt_cmp_t *fn;
-> -       int64_t cmp;
-> -
-> -       /*
-> -        * Never collapse filtered and non-filtered entries.
-> -        * Note this is not the same as having an extra (invisible) fmt
-> -        * that corresponds to the filtered status.
-> -        */
-> -       cmp = (int64_t)!!left->filtered - (int64_t)!!right->filtered;
-> -       if (cmp)
-> -               return cmp;
-> +       int64_t cmp = 0;
->
->         perf_hpp_list__for_each_sort_list(hpp_list, fmt) {
->                 if (ignore_dynamic && perf_hpp__is_dynamic_entry(fmt) &&
-> --
-> 2.50.1
->
+Makes sense. Thanks,
+-Andi
