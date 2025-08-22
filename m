@@ -1,217 +1,92 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18DD2F49EC
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 Aug 2025 10:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8972B2FB608;
+	Fri, 22 Aug 2025 12:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755858783; cv=none; b=DXKZN69uEf1dFymIOHI85hyu9LyNUbm/nZ+sN2qHDcUpso8cn+haYOUtBjEUpE3+i8Vj6LaNsFBcF/hRC0IqNT6iovMgQt45gXw/m69vWH0OwsHa3bQRA3rn4WvS9IVTy/t5SjLXmhVlpF0IVAgFjWbLP8pnXY/pt6apnv9C5IQ=
+	t=1755864345; cv=none; b=UiKYw7hnzgTccnVQfxLldiPfIviya6ccsaxcRj6ZUrU0KdEbb6bubiv3ZKVdvyqVidpafF0CM3PNo2L4k1/l/KWxm5mAcw8VncbkR6G0CYxg+9/D6Ovv2QkvSqw9krEOJYjjyMQ83Wf8r4sB6UVHx1OqeHkm/MB+A7rLpDgItJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755858783; c=relaxed/simple;
-	bh=CU41YE7iOuiEUBXAR1fHUTzQP9FmIAESCXuQePsKguE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Oakf6xg0tpsfhFiIgoGtMU4BzobzTDnG6qysX8j3QZZGJhuctLRHTau5yjb8Hf/C7RzJwVriyC4ue/kmHyLuVm5K2jtsM4+i6T9t3ZKqTyJw6vxmV2HKnfcSTif648fk+hkIkB8efWp364BrUbx3X4hW2wv4ei7APKFITRYG0jE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=IPNhGFuT; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1755864345; c=relaxed/simple;
+	bh=NXecumbx6Sfl6rCCGMzLn/SDJTV7Pg6hzMJP0TOSLjg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uxh5eq97dKYZTJkyByWsXMNKhkmN3KoF9tyyYeQQsMmWwJbFZBGr4JEYqL/yNsVeiZT8bpxroVu6W72SrI8ciI07hLHz/gRptJeE/8bm0tObb1SAQZppp8vRIPxn3BV15SksogkMOcNr3msjuqI+K+rOhU3QCHN0oZRRy3v3IVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=I77P1uKU; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="IPNhGFuT"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3e57376f655so17909845ab.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 22 Aug 2025 03:33:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1755858781; x=1756463581; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LpW5veLMLPdr6OKMte0tGA4PuK4ym/yIcC2Y9SUMkpQ=;
-        b=IPNhGFuTvwlRZDywjyRsnBvCuYN04DJDwRFCCA/GWupO12Cj2rOTNw8Sysg1wxPxM+
-         p2Z94UVD+Y3eQ5Zm2KfanHUdHBVRj2+3rH39/wk0kkyZTTN8KCmJmiRCVr3G53VCZLm1
-         OHnTaVpqxBGFEqAjx/UFvH3MhVQMM/rA+09377gL8fNNJqb+8Ga6tN3FmSNYgxTrdc61
-         lYvZRRJyiur+tFnt8kLBc9CeIHg5pz/f+XiVuIpAdRYmk/QpcS0qKXgydUeCKy22Ge3L
-         KG4D3YwM0JVfiqol5UyvQl6eUlgBwUCeNz7fogCnr0N3GaHVJFwJHMVI7qKDnc/bZvwP
-         whvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755858781; x=1756463581;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LpW5veLMLPdr6OKMte0tGA4PuK4ym/yIcC2Y9SUMkpQ=;
-        b=TfkW2syiZowTo0VyBfcgqnKHWvddWO8LojG3njFpf8MMY0b0/ytKzFs6Bt+hrvRe7Q
-         r3Qs0I9b9mlZBGL8chVjRxyxzwyQacof6iXht40im1W8KWZKPC27HdvWgbegbeLsVS0z
-         8wbFMgIycvETS1GYmA2sZCc5mYeTltTaGeYITAyvFOyLNlb3IWxxIgwHl11/adV993O6
-         A/O9hUvWhbDXDGqNh4x4O8mDioTV4HWOE+l6uloBJ4le8w5I2wPb3lVGe0Wknxc5O9MN
-         AYywPZ35yVXqeV22GT+UYmiQLHnOCn3Zs2E+s0aEYdXn93bf6se9kl4FvNhkElFJyfDf
-         nwhA==
-X-Forwarded-Encrypted: i=1; AJvYcCVvyIAybpWr2Idg7xCTC0TYc/J06Fcx4qt05xkfYImsGwJX5JUuel0aatzSgvYgs7fGmjXmglRPq8Eu2Z7VFoHD@vger.kernel.org
-X-Gm-Message-State: AOJu0YytovH8EJMaAkc+gA8iEjAF7lGJ2lA4astD1OftN8G+mHz3jMa+
-	w3QhVh5Ebz8vueE3vWIbqCF59vsBvVgPgZ6qzei1VToF3WqiUFubAWXth9TUnNujZhJZph2KUJu
-	TT08wFVvAYPo4Qvwo1luWNiWTpWyD1qDoPYhjQyFMAw==
-X-Gm-Gg: ASbGncsfP8LQBpp7dApFsq2up/TiQ9VTpgvHtSzc4lLQzFVNFdS+KINRDR8ACQk1Ux5
-	N+lvhXaMf271vmteIBvCzo+xH7OLf+JT/PwQ5zV0TzNAIx/6fofVH4OWGUcvSEmPLckbuDdSj7D
-	2QcWJ7iHkimA88f2p8ccY3ZpAaZDmDsCGCQyF00yK0uTgTFfXDcHATALZNeMVx5NNw7AYmOtSbX
-	lxBR/M2
-X-Google-Smtp-Source: AGHT+IFxa3sIYy8GmbrliB9vOURhQsISjHNbjP8q123c5R9HRTAMf+tU9qbPOd1N7VsCfi+G9RwFcCmvT1G6Qpsac28=
-X-Received: by 2002:a05:6e02:1607:b0:3e3:fd25:f6a with SMTP id
- e9e14a558f8ab-3e921a5c447mr39155945ab.11.1755858780756; Fri, 22 Aug 2025
- 03:33:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="I77P1uKU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=/sjXBtj1MOzw/AdZxeUjWL1KE7gNgPG1VCq31ysNWqM=; b=I77P1uKUeWLsabWoudzQTPby7H
+	3I7AFVwd4agPdtzptBCL4RkqscYDOJdDiy1tSDcKZxzWplHulsHNgu6RFrKaMpCKzqZX6KUQ+YEoV
+	d6VMpuehLAsJ3UWSzv79R2uqym63+DVN+2zgOYqp4PRJFRkjYGwDk7651LHm8rNlQCMD3b2VRZz3Q
+	PrLzmNWi0iJVguvflNR5j+mGWUbQn1Mqrx37UuuYMq3DBTiiCgCbTsWX6Wn3qmhx3+8WFWwGC9R5F
+	2xdnEe6nAQAdMO6OUiyMs5flaPyxsFMMTizHEGM/Xb8asUBQVtqNggtLasYWq6hUDaNAhOZzoR0Co
+	/bNNZ1Mg==;
+Received: from [223.233.71.242] (helo=[192.168.1.8])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1upQWL-0005V1-MJ; Fri, 22 Aug 2025 14:05:25 +0200
+Message-ID: <3dd2e56c-667c-63cd-2103-44265b34c45c@igalia.com>
+Date: Fri, 22 Aug 2025 17:35:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250806195706.1650976-1-seanjc@google.com> <20250806195706.1650976-17-seanjc@google.com>
-In-Reply-To: <20250806195706.1650976-17-seanjc@google.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Fri, 22 Aug 2025 16:02:49 +0530
-X-Gm-Features: Ac12FXz94_OmeQku-x70DMZyHIHAiBydPtfIxKmb7IUME7_u-QmNy8EiX87dBF4
-Message-ID: <CAAhSdy3Ee1K7kfwFUhdcjoe+c4oi06Tm+Jo7CE2ycqHjuBou-A@mail.gmail.com>
-Subject: Re: [PATCH v5 16/44] KVM: Add a simplified wrapper for registering
- perf callbacks
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Kan Liang <kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>, 
-	Mingwei Zhang <mizhang@google.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v8 4/5] treewide: Switch memcpy() users of 'task->comm' to
+ a more safer implementation
+To: Steven Rostedt <rostedt@goodmis.org>, Bhupesh <bhupesh@igalia.com>
+Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
+ laoar.shao@gmail.com, pmladek@suse.com, mathieu.desnoyers@efficios.com,
+ arnaldo.melo@gmail.com, alexei.starovoitov@gmail.com,
+ andrii.nakryiko@gmail.com, mirq-linux@rere.qmqm.pl, peterz@infradead.org,
+ willy@infradead.org, david@redhat.com, viro@zeniv.linux.org.uk,
+ keescook@chromium.org, ebiederm@xmission.com, brauner@kernel.org,
+ jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com,
+ mgorman@suse.de, vschneid@redhat.com, linux-trace-kernel@vger.kernel.org,
+ kees@kernel.org, torvalds@linux-foundation.org
+References: <20250821102152.323367-1-bhupesh@igalia.com>
+ <20250821102152.323367-5-bhupesh@igalia.com>
+ <20250821124319.07843e17@gandalf.local.home>
+Content-Language: en-US
+From: Bhupesh Sharma <bhsharma@igalia.com>
+In-Reply-To: <20250821124319.07843e17@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Aug 7, 2025 at 1:27=E2=80=AFAM Sean Christopherson <seanjc@google.c=
-om> wrote:
->
-> Add a parameter-less API for registering perf callbacks in anticipation o=
-f
-> introducing another x86-only parameter for handling mediated PMU PMIs.
->
-> No functional change intended.
->
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
 
-For KVM RISC-V:
-Acked-by: Anup Patel <anup@brainfault.org>
 
-Regards,
-Anup
+On 8/21/25 10:13 PM, Steven Rostedt wrote:
+> On Thu, 21 Aug 2025 15:51:51 +0530
+> Bhupesh <bhupesh@igalia.com> wrote:
+>
+>> +static __always_inline void
+>> +	__cstr_array_copy(char *dst, const char *src,
+>> +			  __kernel_size_t size)
+>> +{
+>> +	memcpy(dst, src, size);
+>> +	dst[size] = 0;
+> Shouldn't this be: dst[size - 1] = 0;
+>
+> ?
+>
+> Perhaps also add:
+>
+> 	BUILD_BUG_ON(size == 0);
+>
+>
+Ok, will add this in v9.
 
-> ---
->  arch/arm64/kvm/arm.c      |  2 +-
->  arch/loongarch/kvm/main.c |  2 +-
->  arch/riscv/kvm/main.c     |  2 +-
->  arch/x86/kvm/x86.c        |  2 +-
->  include/linux/kvm_host.h  | 11 +++++++++--
->  virt/kvm/kvm_main.c       |  5 +++--
->  6 files changed, 16 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> index 888f7c7abf54..6c604b5214f2 100644
-> --- a/arch/arm64/kvm/arm.c
-> +++ b/arch/arm64/kvm/arm.c
-> @@ -2328,7 +2328,7 @@ static int __init init_subsystems(void)
->         if (err)
->                 goto out;
->
-> -       kvm_register_perf_callbacks(NULL);
-> +       kvm_register_perf_callbacks();
->
->  out:
->         if (err)
-> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
-> index 80ea63d465b8..f62326fe29fa 100644
-> --- a/arch/loongarch/kvm/main.c
-> +++ b/arch/loongarch/kvm/main.c
-> @@ -394,7 +394,7 @@ static int kvm_loongarch_env_init(void)
->         }
->
->         kvm_init_gcsr_flag();
-> -       kvm_register_perf_callbacks(NULL);
-> +       kvm_register_perf_callbacks();
->
->         /* Register LoongArch IPI interrupt controller interface. */
->         ret =3D kvm_loongarch_register_ipi_device();
-> diff --git a/arch/riscv/kvm/main.c b/arch/riscv/kvm/main.c
-> index 67c876de74ef..cbe842c2f615 100644
-> --- a/arch/riscv/kvm/main.c
-> +++ b/arch/riscv/kvm/main.c
-> @@ -159,7 +159,7 @@ static int __init riscv_kvm_init(void)
->                 kvm_info("AIA available with %d guest external interrupts=
-\n",
->                          kvm_riscv_aia_nr_hgei);
->
-> -       kvm_register_perf_callbacks(NULL);
-> +       kvm_register_perf_callbacks();
->
->         rc =3D kvm_init(sizeof(struct kvm_vcpu), 0, THIS_MODULE);
->         if (rc) {
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 5af2c5aed0f2..d80bbd5e0859 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -9689,7 +9689,7 @@ int kvm_x86_vendor_init(struct kvm_x86_init_ops *op=
-s)
->                 set_hv_tscchange_cb(kvm_hyperv_tsc_notifier);
->  #endif
->
-> -       kvm_register_perf_callbacks(ops->handle_intel_pt_intr);
-> +       __kvm_register_perf_callbacks(ops->handle_intel_pt_intr, NULL);
->
->         if (IS_ENABLED(CONFIG_KVM_SW_PROTECTED_VM) && tdp_mmu_enabled)
->                 kvm_caps.supported_vm_types |=3D BIT(KVM_X86_SW_PROTECTED=
-_VM);
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 15656b7fba6c..20c50eaa0089 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -1731,10 +1731,17 @@ static inline bool kvm_arch_intc_initialized(stru=
-ct kvm *kvm)
->  #ifdef CONFIG_GUEST_PERF_EVENTS
->  unsigned long kvm_arch_vcpu_get_ip(struct kvm_vcpu *vcpu);
->
-> -void kvm_register_perf_callbacks(unsigned int (*pt_intr_handler)(void));
-> +void __kvm_register_perf_callbacks(unsigned int (*pt_intr_handler)(void)=
-,
-> +                                  void (*mediated_pmi_handler)(void));
-> +
-> +static inline void kvm_register_perf_callbacks(void)
-> +{
-> +       __kvm_register_perf_callbacks(NULL, NULL);
-> +}
-> +
->  void kvm_unregister_perf_callbacks(void);
->  #else
-> -static inline void kvm_register_perf_callbacks(void *ign) {}
-> +static inline void kvm_register_perf_callbacks(void) {}
->  static inline void kvm_unregister_perf_callbacks(void) {}
->  #endif /* CONFIG_GUEST_PERF_EVENTS */
->
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index ecafab2e17d9..d477a7fda0ae 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -6429,10 +6429,11 @@ static struct perf_guest_info_callbacks kvm_guest=
-_cbs =3D {
->         .handle_mediated_pmi    =3D NULL,
->  };
->
-> -void kvm_register_perf_callbacks(unsigned int (*pt_intr_handler)(void))
-> +void __kvm_register_perf_callbacks(unsigned int (*pt_intr_handler)(void)=
-,
-> +                                  void (*mediated_pmi_handler)(void))
->  {
->         kvm_guest_cbs.handle_intel_pt_intr =3D pt_intr_handler;
-> -       kvm_guest_cbs.handle_mediated_pmi =3D NULL;
-> +       kvm_guest_cbs.handle_mediated_pmi =3D mediated_pmi_handler;
->
->         perf_register_guest_info_callbacks(&kvm_guest_cbs);
->  }
-> --
-> 2.50.1.565.gc32cd1483b-goog
->
+Thanks.
