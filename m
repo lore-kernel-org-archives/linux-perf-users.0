@@ -1,157 +1,139 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB2E2FFDE1;
-	Fri, 22 Aug 2025 13:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BC933471E;
+	Fri, 22 Aug 2025 14:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755871200; cv=none; b=L8LQpr0JcJHB85wO4iPum2wh7SOI2B09JDu3krb1CdcoQHepdpdZKIWDPsyrBHE96p12RAjnE+7QTJ9h3O4/YnoPmXz/BRIEEkrH9PL+LBGBz2JGuovO7ja65lneVAT8ILM9E5+SiOfhyxfeGWNXNfkkD7y41qZwD0sc0M18HfU=
+	t=1755874796; cv=none; b=ggwy8Kv09aYsl0Hz55K8V1NRfVCHMAC3tF/VUoThGL7lbWn6BPRQK1DEQ9Zid9d/AOyq7/rfTR2gHgKPDhkUem5eMpo0IQV7tRnezhv2fpSntRbJqlSOOIbWg2AdjqJ424a2dUd4pmzJFkeVittxz7/pLay0vE0tzUnWrYo/oR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755871200; c=relaxed/simple;
-	bh=ooBVDyCPVijQzqFh2YdlTtUqe8TbMbgu6QzXF734j6w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T4QaSEDMg4j0f4rBIgOXXsP61gz9we+lsBGsAgIT7T3DNnCXp2XZBuFM1XjSEpbl6ZM7Dv2eYKCVajdvOKfvOEPwwUexvCcGTCj/+dsrAMss92d7pBC1vf3sF6OgmyqWY8XJ77dlOfOMH3VYo9xR5uKKWoZBTgt9/bmpzMwjRFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CY01tBhL; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1755874796; c=relaxed/simple;
+	bh=/xCek3fDaugS9j14gmmxhpU2Pg36DmMgVepdkfNgU9o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XpW0irjR0GZ01T8bD8gtoh9ASV2d9bzV6sfXpnHmnr8Hb2QR0gSbUf4W8RsY1fJf8ovNiuJ57ReV0rRauTaP0E27zLZQNZzdzr14yWt7sgOY1Jz3KwI2asiBIKAH53DdAsSEWHU58zLYeAi6FhoT0hLrP23Sk9DwK4CR0x5aYm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kzalloc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CY01tBhL"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-afcb78d5e74so356961166b.1;
-        Fri, 22 Aug 2025 06:59:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755871197; x=1756475997; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V014dFiaSCDPs2i3+HfkIg6rp9m74x/8h2rQVVO+dUk=;
-        b=CY01tBhLtmiJRYe2yuSbNFEB4OM7tvUO+EbpHgHTsEp+ZrWzCu94d40cE6UfiuArmh
-         JsoOtShJIukVqvFMZTeQ3RFHSqrwQG5BDLouHbLfzesiAqt3rjr9FhLyL3EKDSW1Y8nQ
-         s/dJote3zySfWAcMA9Nx1poquTqgz4sU8LB1gfKMzAM+wJAQmnncKv8bvEjmRN04x112
-         xOzyk4vdsfdowUYF/rSUxldH0eMtodcjTqql3b1G3IrIXgJ76Xr0TSv51GhFIZ6Mi/u0
-         Q+Q0FjG9XYt6lCf9asuR7CLRpAEC8GHC/l+0jcbFSyPR8oYIfGbULWCe2uRS6dfOtAAl
-         h8eA==
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-770351ba0beso18459b3a.1;
+        Fri, 22 Aug 2025 07:59:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755871197; x=1756475997;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V014dFiaSCDPs2i3+HfkIg6rp9m74x/8h2rQVVO+dUk=;
-        b=Kv60hQPRgs1lFVKOfbi8zIX14mX9L95jvG807o1OkvvLP7dJc24WXQCREiwvSgH6fh
-         02pE5ohPLXlIJU6dc6DBdvDpZqzoRvwdFPgtJP+R7SVOSB8xHq3ihvPsZbyH3cQxvJ1O
-         0YwqERhaQUEEyPaR/B7pMpcNwZQOTh4CWqfm50aaRcadoY3ugU/6SsJ/A+HKyzBSbnLM
-         iSRNSAqOWsoWmB1JX/BF0/TDI7KtyY2N6HnEhv9/7A7amQDtdcvXUKDu742lsNYUsziZ
-         Su0SCIW/UOoawHmiXUr51+0qS0MKW0c+aaoVFZlZEgQL+OOel8slzcL7lF83LYxMDqyT
-         yBIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUD+czqgMrsxCmj4Wusb+S1b11vY5F4U4gr/GiVGtCwBp0QB2wvwOI5mC80rCpfRGCkWfe+4CTbxTNVLHxhxcQuSg==@vger.kernel.org, AJvYcCUOLDP7dM468thK8gWpFAC3xv1lcM6rVLi0Y6VfPC7FVdht1H++tN9scG9heTxI1ym/Wq0PV6fN5qRl@vger.kernel.org, AJvYcCUXt74T4U1Asdf21wqCJaBOmLZZprrn3uaFpr3U3DjfHbUxbhSGzYPy6RIePel7JmZrSoaXsxhAEO2G@vger.kernel.org, AJvYcCWDx1zYNzUyJYhrm5VhsroKh7GAsi2ubwGrW2dXK3BzPOd7NjkZ4/c3+Np0JC5Ty9NL7W3tL2oFOi2skAA2@vger.kernel.org, AJvYcCX7OH2G91unIT0xpWBlK8TmJFP+Bv2kM0EFgfZna0BLm5mTIhxpYJS17vDKeuk3+CUwyec/s0k3bkNL@vger.kernel.org
-X-Gm-Message-State: AOJu0YxK7gB9GLN+21tFYw6eODWeHMi75EMMQo0X9+NOaVoGyX78FXAd
-	NcSMLegBjQVFYR5HV3B5QlJoNzLaXpJTTa8fozGUqPS29nJmpSClw6br
-X-Gm-Gg: ASbGncvKzXuKjiw4d5psX+u1qKOgplRtuk401qBs1MwL6IB7WXVajg0nllJNPzOZxi9
-	ioMWmgNm++Xg9HZudppRz06k3ocOK/WCLQeB5oeTg6sqo8OnObVoXUizsX07ZusqAwCgE4GoImy
-	21v4jOwtSNxIaj/1mim7+ktrZ33xvPd3tYVR55ALILxLZ6Hft5d9h9cwpCMoZixtzMrwr9CcBLi
-	16BlKwlZONqGxFRngI6H8VfKpZbJIEHg0mm37FHNSiw7WjWOnBh1OKdk3OngzCLvObFTAptqMtY
-	iP78AwitIfDw5Rxy+NyLhsO2iGdIWdMXVLnIif8UhCZqMlb+vgdiDQwzXGBWCAw/cRiGg2r4kJ8
-	yqMvIsZiQLG4sryr/qbzV6dnfM8D5vpeB4joOy1xGQtW1F78fi7vCOg4oI5mPtxFTV2JG3bsVsP
-	VCFQnqIKc30zv/7XCRSJ6kkIFxUqpIFZvqBipHXim84UfrIHYYB0vTyEx/6ZVZ2UyvkpLywYWGw
-	qvU
-X-Google-Smtp-Source: AGHT+IEf+0iTczeJWYRvKTzbPjuHcrR0Q/vZbiX0S4rQLygBrUblykK/q9qnm/yelo9JpR8nUFhBWw==
-X-Received: by 2002:a17:907:60d3:b0:af9:e3d3:a450 with SMTP id a640c23a62f3a-afe28f77734mr245587666b.6.1755871197072;
-        Fri, 22 Aug 2025 06:59:57 -0700 (PDT)
-Received: from ?IPV6:2a02:8440:714a:ca26:61e9:f2d7:67f6:fe9d? (2a02-8440-714a-ca26-61e9-f2d7-67f6-fe9d.rev.sfr.net. [2a02:8440:714a:ca26:61e9:f2d7:67f6:fe9d])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afded4796f3sm607923666b.61.2025.08.22.06.59.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Aug 2025 06:59:56 -0700 (PDT)
-Message-ID: <6a10616b-3234-4336-aff6-4e60047ebcb6@gmail.com>
-Date: Fri, 22 Aug 2025 15:59:53 +0200
+        d=1e100.net; s=20230601; t=1755874794; x=1756479594;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FEvn+Gbfb0UDIIFxIedzzNWMkkwAYLkahWLt3v36TAg=;
+        b=e6JT3PdJziEpew6zRgCOVLW6f7JmFQyQ4TfZcPtyEcwl2LSyWYTppWttHwiuJkQmls
+         jYrOL4XLgdtdT6gAIkNicUelh4QMoRk4r9eXe11wA8F0/oqqiUo48Ey3IphtmJEaAnoY
+         SV/+2gemVjo+SDIHChTsnGeXc/x7mY7CxhAUi0YipTxzYakiMrbb/XzUjVwwQdGjgF6U
+         AAoCrX7T94F7IsPHzR2huM6JaMigjD2cevl0x5bGbG/9oQgVV73HWBth727KXW1IEvvB
+         +Tr5OWt7+tCU1BnDyGP0A6V2JEbSRvcDjYwfbcbC2SNgQrVpYmpbUzjBmdy8wHQCXMvE
+         8cog==
+X-Forwarded-Encrypted: i=1; AJvYcCVn6ycQVJ8LXvaV0nY2H6HOVh7P/HkiwFHirlchqYhYxT05ybNeiSVlpl9vTL7W4Mhi7MoYvE3OcakaCq4=@vger.kernel.org, AJvYcCXHioK/JIgc9O0b05cUZT+ESVbeAD8jwt2R67vk8nKxZpTF9MT4V1q7xgR7kc8eZ/r18vv+feLdejcbSxF5qfy8uw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwR4tTmUhBXKWDbPyhM3Ro2Z0dnCtFoYN1GzrRl93Fmyw2JgrBO
+	V2x7VvRJ87CvDVkHlptMyCePm269Cpml8KwAGQJZ1W6eLAMV82lxKd+b
+X-Gm-Gg: ASbGncuTMQO3R+YDJVZyVqPOpCczI9571+p7IjKE/xe5Tkw1UEocOMvYr3gK7Oy5Vt3
+	LShpreu968C0vxrA0suvSVMDwaLaE3xXR7+R22YvLutPHHxO8nHMtLFvX4Qmp23//9JxHtJnrHi
+	DVOrgP4aC+jg8T9BnkbVyua7+24l0We3xuEqxW3enSUUnRhbfadESA39QBuPcBp/oUbbL6r8/uJ
+	5ZXFNtIFn0doEImu+OrBoKsN77wRUBpAz/3DyOb/DyhreF4doXDymW1Btc+YhZiRAgkx7WQoJ5j
+	HlJ9SrsGk3GXCJfwnhK8mhqxq3tbHts0OlH8OCYebl6a50KkPASQ+T5rv379H/S7i7m1ZVoJqjh
+	ytK8dpOlEE0KHv4cVb3dcV+2x9HIWnpiH2apB7Nll45rl+1nGMfCmPPX6Jopvc3duo29GVHh2dg
+	Zm
+X-Google-Smtp-Source: AGHT+IEdY6GYMUDXUE6DhIkIlb1bJoH8Ip1ND56GcMjAbMwyaSQzX1SxHfEzJmSA3OVl515mt8xfPQ==
+X-Received: by 2002:a05:6a00:391f:b0:730:87b2:e848 with SMTP id d2e1a72fcca58-7702fb0043emr2208518b3a.5.1755874793688;
+        Fri, 22 Aug 2025 07:59:53 -0700 (PDT)
+Received: from Mac ([118.32.98.101])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7703ffb477dsm184978b3a.17.2025.08.22.07.59.48
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 22 Aug 2025 07:59:53 -0700 (PDT)
+From: Yunseong Kim <ysk@kzalloc.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>,
+	Leo Yan <leo.yan@linux.dev>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Yeoreum Yun <yeoreum.yun@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yunseong Kim <ysk@kzalloc.com>
+Subject: [PATCH v2] perf: arm64: Sync ESR_ELx_EC_* macros in arm64_exception_types.h with esr.h
+Date: Fri, 22 Aug 2025 23:58:56 +0900
+Message-ID: <20250822145855.53071-2-ysk@kzalloc.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 06/20] dt-bindings: memory: introduce DDR4
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
- =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>,
- Gatien Chevallier <gatien.chevallier@foss.st.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Gabriel Fernandez <gabriel.fernandez@foss.st.com>,
- Julius Werner <jwerner@chromium.org>, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
-References: <20250728-ddrperfm-upstream-v5-0-03f1be8ad396@foss.st.com>
- <20250728-ddrperfm-upstream-v5-6-03f1be8ad396@foss.st.com>
- <20250730211151.GA1749004-robh@kernel.org>
- <da8578ae-3f79-4082-b0fb-760553004c93@gmail.com>
- <fb5083ff-4bee-4a0f-8774-54b492cd9a6d@kernel.org>
-Content-Language: en-US
-From: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <legoffic.clement@gmail.com>
-In-Reply-To: <fb5083ff-4bee-4a0f-8774-54b492cd9a6d@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi Krzysztof,
+Update perf util arm64_exception_types.h to match the exception class
+macros defined in tools/arch/arm64/include/asm/esr.h. This ensures
+consistency between perf tooling and the kernel header definitions for
+ESR_ELx_EC_* values.
 
-On 17/08/2025 09:19, Krzysztof Kozlowski wrote:
-> On 14/08/2025 16:42, Clément Le Goffic wrote:
->> Hi Rob,
->>
->> On 30/07/2025 23:11, Rob Herring wrote:
->>> On Mon, Jul 28, 2025 at 05:29:37PM +0200, Clément Le Goffic wrote:
->>>> Introduce JEDEC compliant DDR bindings, that use new memory-props binding.
->>>>
->>>> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
->>>> ---
->>>>    .../memory-controllers/ddr/jedec,ddr4.yaml         | 34 ++++++++++++++++++++++
->>>>    1 file changed, 34 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,ddr4.yaml b/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,ddr4.yaml
->>>> new file mode 100644
->>>> index 000000000000..f457066a2f8b
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,ddr4.yaml
->>>> @@ -0,0 +1,34 @@
->>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/memory-controllers/ddr/jedec,ddr4.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: DDR3 SDRAM compliant to JEDEC JESD79-4D
->>>> +
->>>> +maintainers:
->>>> +  - Krzysztof Kozlowski <krzk@kernel.org>
->>>> +
->>>> +allOf:
->>>> +  - $ref: jedec,sdram-props.yaml#
->>>> +
->>>> +properties:
->>>> +  compatible:
->>>> +    items:
->>>> +      - pattern: "^ddr4-[0-9a-f]{2},[0-9a-f]{1}$"
->>>
->>> Shouldn't this be 'jedec,ddr4-...'
->>
->> That's not the case for lpddr bindings, I wanted both lpddr and ddr
->> bindings to be similar but this can change.
-> 
-> For LPDDR Julius introduced in commit 686fe63b2280 ("dt-bindings:
-> memory: Add numeric LPDDR compatible string variant") ddr4-VENDORID
-> pattern to distinguish individual manufacturers.
-> 
-> Jedec is not really the vendor here.
-> 
-> Is it the same case in DDR? You have a defined list of vendor IDs (also
-> 1 byte)?
+In v2, ESR_ELx_EC_OTHER and ESR_ELx_EC_GCS, which were missing in v1, were
+included.
 
-There is no defined list of vendor IDs.
-The way the compatible string is created is explained in
-jedec,sdram-props.yaml file which is created in patch 5 of this series.
+Signed-off-by: Yunseong Kim <ysk@kzalloc.com>
+---
+ .../perf/arch/arm64/util/arm64_exception_types.h  | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-Best regards,
-Clément
+diff --git a/tools/perf/arch/arm64/util/arm64_exception_types.h b/tools/perf/arch/arm64/util/arm64_exception_types.h
+index 27c981ebe401..bf827f19ace0 100644
+--- a/tools/perf/arch/arm64/util/arm64_exception_types.h
++++ b/tools/perf/arch/arm64/util/arm64_exception_types.h
+@@ -31,9 +31,10 @@
+ #define ESR_ELx_EC_FP_ASIMD	(0x07)
+ #define ESR_ELx_EC_CP10_ID	(0x08)	/* EL2 only */
+ #define ESR_ELx_EC_PAC		(0x09)	/* EL2 and above */
+-/* Unallocated EC: 0x0A - 0x0B */
++#define ESR_ELx_EC_OTHER	(0x0A)
++/* Unallocated EC: 0x0B */
+ #define ESR_ELx_EC_CP14_64	(0x0C)
+-/* Unallocated EC: 0x0d */
++#define ESR_ELx_EC_BTI		(0x0D)
+ #define ESR_ELx_EC_ILL		(0x0E)
+ /* Unallocated EC: 0x0F - 0x10 */
+ #define ESR_ELx_EC_SVC32	(0x11)
+@@ -46,7 +47,10 @@
+ #define ESR_ELx_EC_SYS64	(0x18)
+ #define ESR_ELx_EC_SVE		(0x19)
+ #define ESR_ELx_EC_ERET		(0x1a)	/* EL2 only */
+-/* Unallocated EC: 0x1b - 0x1E */
++/* Unallocated EC: 0x1B */
++#define ESR_ELx_EC_FPAC		(0x1C)	/* EL1 and above */
++#define ESR_ELx_EC_SME		(0x1D)
++/* Unallocated EC: 0x1E */
+ #define ESR_ELx_EC_IMP_DEF	(0x1f)	/* EL3 only */
+ #define ESR_ELx_EC_IABT_LOW	(0x20)
+ #define ESR_ELx_EC_IABT_CUR	(0x21)
+@@ -55,11 +59,12 @@
+ #define ESR_ELx_EC_DABT_LOW	(0x24)
+ #define ESR_ELx_EC_DABT_CUR	(0x25)
+ #define ESR_ELx_EC_SP_ALIGN	(0x26)
+-/* Unallocated EC: 0x27 */
++#define ESR_ELx_EC_MOPS		(0x27)
+ #define ESR_ELx_EC_FP_EXC32	(0x28)
+ /* Unallocated EC: 0x29 - 0x2B */
+ #define ESR_ELx_EC_FP_EXC64	(0x2C)
+-/* Unallocated EC: 0x2D - 0x2E */
++#define ESR_ELx_EC_GCS		(0x2D)
++/* Unallocated EC: 0x2E */
+ #define ESR_ELx_EC_SERROR	(0x2F)
+ #define ESR_ELx_EC_BREAKPT_LOW	(0x30)
+ #define ESR_ELx_EC_BREAKPT_CUR	(0x31)
+-- 
+2.50.1
+
