@@ -1,200 +1,217 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4E52EB5D9;
-	Fri, 22 Aug 2025 08:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18DD2F49EC
+	for <linux-perf-users@vger.kernel.org>; Fri, 22 Aug 2025 10:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755851022; cv=none; b=CYoBzu4hgFpl2PIWYYHy+k2UAUdcRO7AWmNn/srHH2ilPr9CER62OFx5G7DwTtp6fxF9m/bp82LCdP2DUMAjgOw/J+tjCwNmF/bQLIK8Z/T+pw/jBl4fHAWuVYOa+crGoKpDsHpRPAc6pholL8hbDJ6MapK1U1iLymPamqEQMiY=
+	t=1755858783; cv=none; b=DXKZN69uEf1dFymIOHI85hyu9LyNUbm/nZ+sN2qHDcUpso8cn+haYOUtBjEUpE3+i8Vj6LaNsFBcF/hRC0IqNT6iovMgQt45gXw/m69vWH0OwsHa3bQRA3rn4WvS9IVTy/t5SjLXmhVlpF0IVAgFjWbLP8pnXY/pt6apnv9C5IQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755851022; c=relaxed/simple;
-	bh=l271mH/2s7sZVR71jaM1oYJGsIzB3Y8dxH+x8mjAV6s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D2a5mGDLRv3QhDrz8VddLk0vQ11smP2lKeGLN15Ghck/FwPhvAf5ZgUd226EuXodAvcyVNAXHDHk7DZbZe2CJp0ttt2//xecOoXGpEt1tc8tLxOiRZiuLnuOpoPRCeBHKC4Zs6f7nd2ufQdAm64xkqEu4Prd03syN2AuFawRpsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NkW2hxq3; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1755858783; c=relaxed/simple;
+	bh=CU41YE7iOuiEUBXAR1fHUTzQP9FmIAESCXuQePsKguE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Oakf6xg0tpsfhFiIgoGtMU4BzobzTDnG6qysX8j3QZZGJhuctLRHTau5yjb8Hf/C7RzJwVriyC4ue/kmHyLuVm5K2jtsM4+i6T9t3ZKqTyJw6vxmV2HKnfcSTif648fk+hkIkB8efWp364BrUbx3X4hW2wv4ei7APKFITRYG0jE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=IPNhGFuT; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NkW2hxq3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1755851021; x=1787387021;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=l271mH/2s7sZVR71jaM1oYJGsIzB3Y8dxH+x8mjAV6s=;
-  b=NkW2hxq3tcJyQmxEdCdc8ba+TBRHqjQJaSmjui9YU0LDgnZY1q+c/O/y
-   FKO3sn/Gr44Ntc4zee84R4uJbPjUvfLAgciGdDkzHKFp6XI0cz0Ya01nR
-   zJAK0g7FsuZLQokP+nhhHSxttYAtU7SV4v5OdtMuRzO++3pQx4P33y3EM
-   CG3/q28+cwpWzEh0FtY8ObH2+3RRtf6CXUmcNCDqck3K24FD51Y1hlRFg
-   5DnL1RiuAF/EX7ldcEBcojDurgsAQgHQOQGEjTiqq+XT/yOR18uJnsPPZ
-   vV8kwzZ7jcsAoX+NjWSIx2zYdJzuxJwpA2mBN5BmlsrpfWS2vEIiEt+Eh
-   A==;
-X-CSE-ConnectionGUID: YyFvuBazTrO+AMW0a2UQxg==
-X-CSE-MsgGUID: g2O47t3SQKWVmIvyEpf3Lw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11529"; a="58303326"
-X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="58303326"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2025 01:23:40 -0700
-X-CSE-ConnectionGUID: p6OjpZoKQoufk2J58ZAd1w==
-X-CSE-MsgGUID: XSwHC0FrSDOVsCM14AZ4+g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,309,1747724400"; 
-   d="scan'208";a="168157908"
-Received: from spr.sh.intel.com ([10.112.229.196])
-  by fmviesa007.fm.intel.com with ESMTP; 22 Aug 2025 01:23:37 -0700
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Xudong Hao <xudong.hao@intel.com>
-Subject: [PATCH] perf tools topdown: Fix incorrect topdown slots regroup
-Date: Fri, 22 Aug 2025 16:22:33 +0800
-Message-Id: <20250822082233.1850417-1-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="IPNhGFuT"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3e57376f655so17909845ab.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 22 Aug 2025 03:33:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1755858781; x=1756463581; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LpW5veLMLPdr6OKMte0tGA4PuK4ym/yIcC2Y9SUMkpQ=;
+        b=IPNhGFuTvwlRZDywjyRsnBvCuYN04DJDwRFCCA/GWupO12Cj2rOTNw8Sysg1wxPxM+
+         p2Z94UVD+Y3eQ5Zm2KfanHUdHBVRj2+3rH39/wk0kkyZTTN8KCmJmiRCVr3G53VCZLm1
+         OHnTaVpqxBGFEqAjx/UFvH3MhVQMM/rA+09377gL8fNNJqb+8Ga6tN3FmSNYgxTrdc61
+         lYvZRRJyiur+tFnt8kLBc9CeIHg5pz/f+XiVuIpAdRYmk/QpcS0qKXgydUeCKy22Ge3L
+         KG4D3YwM0JVfiqol5UyvQl6eUlgBwUCeNz7fogCnr0N3GaHVJFwJHMVI7qKDnc/bZvwP
+         whvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755858781; x=1756463581;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LpW5veLMLPdr6OKMte0tGA4PuK4ym/yIcC2Y9SUMkpQ=;
+        b=TfkW2syiZowTo0VyBfcgqnKHWvddWO8LojG3njFpf8MMY0b0/ytKzFs6Bt+hrvRe7Q
+         r3Qs0I9b9mlZBGL8chVjRxyxzwyQacof6iXht40im1W8KWZKPC27HdvWgbegbeLsVS0z
+         8wbFMgIycvETS1GYmA2sZCc5mYeTltTaGeYITAyvFOyLNlb3IWxxIgwHl11/adV993O6
+         A/O9hUvWhbDXDGqNh4x4O8mDioTV4HWOE+l6uloBJ4le8w5I2wPb3lVGe0Wknxc5O9MN
+         AYywPZ35yVXqeV22GT+UYmiQLHnOCn3Zs2E+s0aEYdXn93bf6se9kl4FvNhkElFJyfDf
+         nwhA==
+X-Forwarded-Encrypted: i=1; AJvYcCVvyIAybpWr2Idg7xCTC0TYc/J06Fcx4qt05xkfYImsGwJX5JUuel0aatzSgvYgs7fGmjXmglRPq8Eu2Z7VFoHD@vger.kernel.org
+X-Gm-Message-State: AOJu0YytovH8EJMaAkc+gA8iEjAF7lGJ2lA4astD1OftN8G+mHz3jMa+
+	w3QhVh5Ebz8vueE3vWIbqCF59vsBvVgPgZ6qzei1VToF3WqiUFubAWXth9TUnNujZhJZph2KUJu
+	TT08wFVvAYPo4Qvwo1luWNiWTpWyD1qDoPYhjQyFMAw==
+X-Gm-Gg: ASbGncsfP8LQBpp7dApFsq2up/TiQ9VTpgvHtSzc4lLQzFVNFdS+KINRDR8ACQk1Ux5
+	N+lvhXaMf271vmteIBvCzo+xH7OLf+JT/PwQ5zV0TzNAIx/6fofVH4OWGUcvSEmPLckbuDdSj7D
+	2QcWJ7iHkimA88f2p8ccY3ZpAaZDmDsCGCQyF00yK0uTgTFfXDcHATALZNeMVx5NNw7AYmOtSbX
+	lxBR/M2
+X-Google-Smtp-Source: AGHT+IFxa3sIYy8GmbrliB9vOURhQsISjHNbjP8q123c5R9HRTAMf+tU9qbPOd1N7VsCfi+G9RwFcCmvT1G6Qpsac28=
+X-Received: by 2002:a05:6e02:1607:b0:3e3:fd25:f6a with SMTP id
+ e9e14a558f8ab-3e921a5c447mr39155945ab.11.1755858780756; Fri, 22 Aug 2025
+ 03:33:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250806195706.1650976-1-seanjc@google.com> <20250806195706.1650976-17-seanjc@google.com>
+In-Reply-To: <20250806195706.1650976-17-seanjc@google.com>
+From: Anup Patel <anup@brainfault.org>
+Date: Fri, 22 Aug 2025 16:02:49 +0530
+X-Gm-Features: Ac12FXz94_OmeQku-x70DMZyHIHAiBydPtfIxKmb7IUME7_u-QmNy8EiX87dBF4
+Message-ID: <CAAhSdy3Ee1K7kfwFUhdcjoe+c4oi06Tm+Jo7CE2ycqHjuBou-A@mail.gmail.com>
+Subject: Re: [PATCH v5 16/44] KVM: Add a simplified wrapper for registering
+ perf callbacks
+To: Sean Christopherson <seanjc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Kan Liang <kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>, 
+	Mingwei Zhang <mizhang@google.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When running the command "perf stat -e "slots,slots" -C0 sleep 1", we
-see below error.
+On Thu, Aug 7, 2025 at 1:27=E2=80=AFAM Sean Christopherson <seanjc@google.c=
+om> wrote:
+>
+> Add a parameter-less API for registering perf callbacks in anticipation o=
+f
+> introducing another x86-only parameter for handling mediated PMU PMIs.
+>
+> No functional change intended.
+>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 
-perf stat -e "slots,slots" -C0 sleep 1
-WARNING: events were regrouped to match PMUs
- Performance counter stats for 'CPU(s) 0':
-     <not counted>      slots
-   <not supported>      slots
+For KVM RISC-V:
+Acked-by: Anup Patel <anup@brainfault.org>
 
-     1.002265769 seconds time elapsed
+Regards,
+Anup
 
-The topdown slots events are not correctly counted. The root cause is
-that perf tools incorrectly regroup these 2 slots events into a group.
-If there are only topdown slots events but no topdown metrics events,
-the regroup should not be done since topdown slots event can only be
-programed on fixed counter 3 and multiple slots events can only be
-multiplexed to run on fixed counter 3, but grouping them blocks
-multiplexing.
-
-So avoid to regroup topdown slots events if there is no topdown metrics
-events.
-
-With this change, above command can be run successfully.
-
-perf stat -e "slots,slots" -C0 sleep 1
- Performance counter stats for 'CPU(s) 0':
-       103,973,791      slots
-       106,488,170      slots
-
-       1.003517284 seconds time elapsed
-
-Besides, run perf stats/record test on SPR and PTL, both passed.
-
-Reported-by: Xudong Hao <xudong.hao@intel.com>
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- tools/perf/arch/x86/util/topdown.h |  2 --
- tools/perf/util/evsel.c            | 10 ++++++++++
- tools/perf/util/evsel.h            |  2 ++
- tools/perf/util/parse-events.c     | 11 +++++++++++
- 4 files changed, 23 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/arch/x86/util/topdown.h b/tools/perf/arch/x86/util/topdown.h
-index 69035565e649..6a917b2066f7 100644
---- a/tools/perf/arch/x86/util/topdown.h
-+++ b/tools/perf/arch/x86/util/topdown.h
-@@ -8,8 +8,6 @@ struct evsel;
- struct list_head;
- 
- bool topdown_sys_has_perf_metrics(void);
--bool arch_is_topdown_slots(const struct evsel *evsel);
--bool arch_is_topdown_metrics(const struct evsel *evsel);
- int topdown_insert_slots_event(struct list_head *list, int idx, struct evsel *metric_event);
- 
- #endif
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index d264c143b592..6aaae1ac026e 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -3965,6 +3965,16 @@ int evsel__source_count(const struct evsel *evsel)
- 	return count;
- }
- 
-+bool __weak arch_is_topdown_slots(const struct evsel *evsel __maybe_unused)
-+{
-+	return false;
-+}
-+
-+bool __weak arch_is_topdown_metrics(const struct evsel *evsel __maybe_unused)
-+{
-+	return false;
-+}
-+
- bool __weak arch_evsel__must_be_in_group(const struct evsel *evsel __maybe_unused)
- {
- 	return false;
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 5797a02e5d6a..33f8aab675a9 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -556,6 +556,8 @@ void evsel__set_leader(struct evsel *evsel, struct evsel *leader);
- int evsel__source_count(const struct evsel *evsel);
- void evsel__remove_from_group(struct evsel *evsel, struct evsel *leader);
- 
-+bool arch_is_topdown_slots(const struct evsel *evsel);
-+bool arch_is_topdown_metrics(const struct evsel *evsel);
- bool arch_evsel__must_be_in_group(const struct evsel *evsel);
- 
- bool evsel__set_needs_uniquify(struct evsel *counter, const struct perf_stat_config *config);
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 8282ddf68b98..bd09fc47ea90 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2127,6 +2127,8 @@ static int parse_events__sort_events_and_fix_groups(struct list_head *list)
- 	int ret;
- 	struct evsel *force_grouped_leader = NULL;
- 	bool last_event_was_forced_leader = false;
-+	bool has_slots = false;
-+	bool has_metrics = false;
- 
- 	/* On x86 topdown metrics events require a slots event. */
- 	ret = arch_evlist__add_required_events(list);
-@@ -2147,6 +2149,11 @@ static int parse_events__sort_events_and_fix_groups(struct list_head *list)
- 		if (pos == pos_leader)
- 			orig_num_leaders++;
- 
-+		if (!has_slots)
-+			has_slots = arch_is_topdown_slots(pos);
-+		if (!has_metrics)
-+			has_metrics = arch_is_topdown_metrics(pos);
-+
- 		/*
- 		 * Ensure indexes are sequential, in particular for multiple
- 		 * event lists being merged. The indexes are used to detect when
-@@ -2163,6 +2170,10 @@ static int parse_events__sort_events_and_fix_groups(struct list_head *list)
- 			force_grouped_idx = pos_leader->core.idx;
- 	}
- 
-+	/* Don't regroup if there are only topdown slots events. */
-+	if (force_grouped_idx != -1 && has_slots && !has_metrics)
-+		force_grouped_idx = -1;
-+
- 	/* Sort events. */
- 	list_sort(&force_grouped_idx, list, evlist__cmp);
- 
-
-base-commit: 6235ce77749f45cac27f630337e2fdf04e8a6c73
--- 
-2.34.1
-
+> ---
+>  arch/arm64/kvm/arm.c      |  2 +-
+>  arch/loongarch/kvm/main.c |  2 +-
+>  arch/riscv/kvm/main.c     |  2 +-
+>  arch/x86/kvm/x86.c        |  2 +-
+>  include/linux/kvm_host.h  | 11 +++++++++--
+>  virt/kvm/kvm_main.c       |  5 +++--
+>  6 files changed, 16 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+> index 888f7c7abf54..6c604b5214f2 100644
+> --- a/arch/arm64/kvm/arm.c
+> +++ b/arch/arm64/kvm/arm.c
+> @@ -2328,7 +2328,7 @@ static int __init init_subsystems(void)
+>         if (err)
+>                 goto out;
+>
+> -       kvm_register_perf_callbacks(NULL);
+> +       kvm_register_perf_callbacks();
+>
+>  out:
+>         if (err)
+> diff --git a/arch/loongarch/kvm/main.c b/arch/loongarch/kvm/main.c
+> index 80ea63d465b8..f62326fe29fa 100644
+> --- a/arch/loongarch/kvm/main.c
+> +++ b/arch/loongarch/kvm/main.c
+> @@ -394,7 +394,7 @@ static int kvm_loongarch_env_init(void)
+>         }
+>
+>         kvm_init_gcsr_flag();
+> -       kvm_register_perf_callbacks(NULL);
+> +       kvm_register_perf_callbacks();
+>
+>         /* Register LoongArch IPI interrupt controller interface. */
+>         ret =3D kvm_loongarch_register_ipi_device();
+> diff --git a/arch/riscv/kvm/main.c b/arch/riscv/kvm/main.c
+> index 67c876de74ef..cbe842c2f615 100644
+> --- a/arch/riscv/kvm/main.c
+> +++ b/arch/riscv/kvm/main.c
+> @@ -159,7 +159,7 @@ static int __init riscv_kvm_init(void)
+>                 kvm_info("AIA available with %d guest external interrupts=
+\n",
+>                          kvm_riscv_aia_nr_hgei);
+>
+> -       kvm_register_perf_callbacks(NULL);
+> +       kvm_register_perf_callbacks();
+>
+>         rc =3D kvm_init(sizeof(struct kvm_vcpu), 0, THIS_MODULE);
+>         if (rc) {
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 5af2c5aed0f2..d80bbd5e0859 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -9689,7 +9689,7 @@ int kvm_x86_vendor_init(struct kvm_x86_init_ops *op=
+s)
+>                 set_hv_tscchange_cb(kvm_hyperv_tsc_notifier);
+>  #endif
+>
+> -       kvm_register_perf_callbacks(ops->handle_intel_pt_intr);
+> +       __kvm_register_perf_callbacks(ops->handle_intel_pt_intr, NULL);
+>
+>         if (IS_ENABLED(CONFIG_KVM_SW_PROTECTED_VM) && tdp_mmu_enabled)
+>                 kvm_caps.supported_vm_types |=3D BIT(KVM_X86_SW_PROTECTED=
+_VM);
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 15656b7fba6c..20c50eaa0089 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -1731,10 +1731,17 @@ static inline bool kvm_arch_intc_initialized(stru=
+ct kvm *kvm)
+>  #ifdef CONFIG_GUEST_PERF_EVENTS
+>  unsigned long kvm_arch_vcpu_get_ip(struct kvm_vcpu *vcpu);
+>
+> -void kvm_register_perf_callbacks(unsigned int (*pt_intr_handler)(void));
+> +void __kvm_register_perf_callbacks(unsigned int (*pt_intr_handler)(void)=
+,
+> +                                  void (*mediated_pmi_handler)(void));
+> +
+> +static inline void kvm_register_perf_callbacks(void)
+> +{
+> +       __kvm_register_perf_callbacks(NULL, NULL);
+> +}
+> +
+>  void kvm_unregister_perf_callbacks(void);
+>  #else
+> -static inline void kvm_register_perf_callbacks(void *ign) {}
+> +static inline void kvm_register_perf_callbacks(void) {}
+>  static inline void kvm_unregister_perf_callbacks(void) {}
+>  #endif /* CONFIG_GUEST_PERF_EVENTS */
+>
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index ecafab2e17d9..d477a7fda0ae 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -6429,10 +6429,11 @@ static struct perf_guest_info_callbacks kvm_guest=
+_cbs =3D {
+>         .handle_mediated_pmi    =3D NULL,
+>  };
+>
+> -void kvm_register_perf_callbacks(unsigned int (*pt_intr_handler)(void))
+> +void __kvm_register_perf_callbacks(unsigned int (*pt_intr_handler)(void)=
+,
+> +                                  void (*mediated_pmi_handler)(void))
+>  {
+>         kvm_guest_cbs.handle_intel_pt_intr =3D pt_intr_handler;
+> -       kvm_guest_cbs.handle_mediated_pmi =3D NULL;
+> +       kvm_guest_cbs.handle_mediated_pmi =3D mediated_pmi_handler;
+>
+>         perf_register_guest_info_callbacks(&kvm_guest_cbs);
+>  }
+> --
+> 2.50.1.565.gc32cd1483b-goog
+>
