@@ -1,157 +1,157 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009A72D7DC5;
-	Fri, 22 Aug 2025 12:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB2E2FFDE1;
+	Fri, 22 Aug 2025 13:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755865573; cv=none; b=iXjJBYlq/m5cRkEtg67OUl3fAG60bjmRBJwsYVMxeaSLwKRWyx/IWbHd7NAZVGh4jcChYPIoUdPAY+Jsr197dljRlFpV/ibufrw48nKtPs6e/dB+ehHvVxjlvWsrblrR0HGSaNCuj+/oNUhZWKGyeWf7Tv+TJNgwl3Ko0mz/MCo=
+	t=1755871200; cv=none; b=L8LQpr0JcJHB85wO4iPum2wh7SOI2B09JDu3krb1CdcoQHepdpdZKIWDPsyrBHE96p12RAjnE+7QTJ9h3O4/YnoPmXz/BRIEEkrH9PL+LBGBz2JGuovO7ja65lneVAT8ILM9E5+SiOfhyxfeGWNXNfkkD7y41qZwD0sc0M18HfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755865573; c=relaxed/simple;
-	bh=UY/L2tRKcOALJRVQf2k9KAYHGNaFT19Gm20vR020zPw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ri9Vy0XaRzJUkrIVChAje805+1P4Bm4Z8Zsh2zUKOA6y9hT0sTwn40j9ssUHnuWVWX+8jMtRtw6AjXRY1CFfsSY8+2B0cXgCYxnLtFMEIAxcy6yYBR5PlREZudnVz45vl/3XOkWJUTA+5i8YpDkZDpi4cmQFEt2nhFUs4P75eIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=RxWGqOSz; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1755871200; c=relaxed/simple;
+	bh=ooBVDyCPVijQzqFh2YdlTtUqe8TbMbgu6QzXF734j6w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T4QaSEDMg4j0f4rBIgOXXsP61gz9we+lsBGsAgIT7T3DNnCXp2XZBuFM1XjSEpbl6ZM7Dv2eYKCVajdvOKfvOEPwwUexvCcGTCj/+dsrAMss92d7pBC1vf3sF6OgmyqWY8XJ77dlOfOMH3VYo9xR5uKKWoZBTgt9/bmpzMwjRFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CY01tBhL; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RxWGqOSz"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57M7pStI012363;
-	Fri, 22 Aug 2025 12:25:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=HJ26CL98BAEdjjPC26V3xabEO8vZWHtSFpQwDNtDX
-	ak=; b=RxWGqOSz0te8m2Ixjfu8QPZNIpaQoJ9DP8fJ0JUbvkCrSfPZDTVmqXgcn
-	x0WPMoaTGlOyoFzxXcsi2+VNOPbmMVp28nk51ic0E/JiVXC0V/uSCQyuV1EzQn7Z
-	RVcMAj3dyb9u0EdYsS3K7CB+lX99PvXd2ulxMrz+2I3mhboINUkaCVA3C66uIEf0
-	Nlm6U3HbXNefzW6xrYwn4hJ+ybhkXxudSkk7S5KOqXSxuoloAhga3pM4XO7uhZ+D
-	wUufm2nsVFauFZC8rGvneuZ2d9NM1JykWQ/tlW7tIwnFsZdgxRk9Pokhz0ggF4r2
-	b9F84fkK6hvj+RQe2HcFty1FZ4+Qw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48n38vx7fy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Aug 2025 12:25:54 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 57MCMVGQ001349;
-	Fri, 22 Aug 2025 12:25:54 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48n38vx7fx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Aug 2025 12:25:54 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57MCIWUt024740;
-	Fri, 22 Aug 2025 12:25:53 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 48my5w56ra-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 22 Aug 2025 12:25:53 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 57MCPn1P29557460
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 22 Aug 2025 12:25:49 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 53A6B20043;
-	Fri, 22 Aug 2025 12:25:49 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 272C020040;
-	Fri, 22 Aug 2025 12:25:49 +0000 (GMT)
-Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 22 Aug 2025 12:25:49 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
-        blakejones@google.com
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, japo@linux.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [Ping][PATCH] perf test: Checking BPF metadata collection fails on version string
-Date: Fri, 22 Aug 2025 14:25:39 +0200
-Message-ID: <20250822122540.4104658-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CY01tBhL"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-afcb78d5e74so356961166b.1;
+        Fri, 22 Aug 2025 06:59:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755871197; x=1756475997; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=V014dFiaSCDPs2i3+HfkIg6rp9m74x/8h2rQVVO+dUk=;
+        b=CY01tBhLtmiJRYe2yuSbNFEB4OM7tvUO+EbpHgHTsEp+ZrWzCu94d40cE6UfiuArmh
+         JsoOtShJIukVqvFMZTeQ3RFHSqrwQG5BDLouHbLfzesiAqt3rjr9FhLyL3EKDSW1Y8nQ
+         s/dJote3zySfWAcMA9Nx1poquTqgz4sU8LB1gfKMzAM+wJAQmnncKv8bvEjmRN04x112
+         xOzyk4vdsfdowUYF/rSUxldH0eMtodcjTqql3b1G3IrIXgJ76Xr0TSv51GhFIZ6Mi/u0
+         Q+Q0FjG9XYt6lCf9asuR7CLRpAEC8GHC/l+0jcbFSyPR8oYIfGbULWCe2uRS6dfOtAAl
+         h8eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755871197; x=1756475997;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V014dFiaSCDPs2i3+HfkIg6rp9m74x/8h2rQVVO+dUk=;
+        b=Kv60hQPRgs1lFVKOfbi8zIX14mX9L95jvG807o1OkvvLP7dJc24WXQCREiwvSgH6fh
+         02pE5ohPLXlIJU6dc6DBdvDpZqzoRvwdFPgtJP+R7SVOSB8xHq3ihvPsZbyH3cQxvJ1O
+         0YwqERhaQUEEyPaR/B7pMpcNwZQOTh4CWqfm50aaRcadoY3ugU/6SsJ/A+HKyzBSbnLM
+         iSRNSAqOWsoWmB1JX/BF0/TDI7KtyY2N6HnEhv9/7A7amQDtdcvXUKDu742lsNYUsziZ
+         Su0SCIW/UOoawHmiXUr51+0qS0MKW0c+aaoVFZlZEgQL+OOel8slzcL7lF83LYxMDqyT
+         yBIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUD+czqgMrsxCmj4Wusb+S1b11vY5F4U4gr/GiVGtCwBp0QB2wvwOI5mC80rCpfRGCkWfe+4CTbxTNVLHxhxcQuSg==@vger.kernel.org, AJvYcCUOLDP7dM468thK8gWpFAC3xv1lcM6rVLi0Y6VfPC7FVdht1H++tN9scG9heTxI1ym/Wq0PV6fN5qRl@vger.kernel.org, AJvYcCUXt74T4U1Asdf21wqCJaBOmLZZprrn3uaFpr3U3DjfHbUxbhSGzYPy6RIePel7JmZrSoaXsxhAEO2G@vger.kernel.org, AJvYcCWDx1zYNzUyJYhrm5VhsroKh7GAsi2ubwGrW2dXK3BzPOd7NjkZ4/c3+Np0JC5Ty9NL7W3tL2oFOi2skAA2@vger.kernel.org, AJvYcCX7OH2G91unIT0xpWBlK8TmJFP+Bv2kM0EFgfZna0BLm5mTIhxpYJS17vDKeuk3+CUwyec/s0k3bkNL@vger.kernel.org
+X-Gm-Message-State: AOJu0YxK7gB9GLN+21tFYw6eODWeHMi75EMMQo0X9+NOaVoGyX78FXAd
+	NcSMLegBjQVFYR5HV3B5QlJoNzLaXpJTTa8fozGUqPS29nJmpSClw6br
+X-Gm-Gg: ASbGncvKzXuKjiw4d5psX+u1qKOgplRtuk401qBs1MwL6IB7WXVajg0nllJNPzOZxi9
+	ioMWmgNm++Xg9HZudppRz06k3ocOK/WCLQeB5oeTg6sqo8OnObVoXUizsX07ZusqAwCgE4GoImy
+	21v4jOwtSNxIaj/1mim7+ktrZ33xvPd3tYVR55ALILxLZ6Hft5d9h9cwpCMoZixtzMrwr9CcBLi
+	16BlKwlZONqGxFRngI6H8VfKpZbJIEHg0mm37FHNSiw7WjWOnBh1OKdk3OngzCLvObFTAptqMtY
+	iP78AwitIfDw5Rxy+NyLhsO2iGdIWdMXVLnIif8UhCZqMlb+vgdiDQwzXGBWCAw/cRiGg2r4kJ8
+	yqMvIsZiQLG4sryr/qbzV6dnfM8D5vpeB4joOy1xGQtW1F78fi7vCOg4oI5mPtxFTV2JG3bsVsP
+	VCFQnqIKc30zv/7XCRSJ6kkIFxUqpIFZvqBipHXim84UfrIHYYB0vTyEx/6ZVZ2UyvkpLywYWGw
+	qvU
+X-Google-Smtp-Source: AGHT+IEf+0iTczeJWYRvKTzbPjuHcrR0Q/vZbiX0S4rQLygBrUblykK/q9qnm/yelo9JpR8nUFhBWw==
+X-Received: by 2002:a17:907:60d3:b0:af9:e3d3:a450 with SMTP id a640c23a62f3a-afe28f77734mr245587666b.6.1755871197072;
+        Fri, 22 Aug 2025 06:59:57 -0700 (PDT)
+Received: from ?IPV6:2a02:8440:714a:ca26:61e9:f2d7:67f6:fe9d? (2a02-8440-714a-ca26-61e9-f2d7-67f6-fe9d.rev.sfr.net. [2a02:8440:714a:ca26:61e9:f2d7:67f6:fe9d])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-afded4796f3sm607923666b.61.2025.08.22.06.59.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Aug 2025 06:59:56 -0700 (PDT)
+Message-ID: <6a10616b-3234-4336-aff6-4e60047ebcb6@gmail.com>
+Date: Fri, 22 Aug 2025 15:59:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 06/20] dt-bindings: memory: introduce DDR4
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
+ =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>,
+ Gatien Chevallier <gatien.chevallier@foss.st.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Gabriel Fernandez <gabriel.fernandez@foss.st.com>,
+ Julius Werner <jwerner@chromium.org>, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
+References: <20250728-ddrperfm-upstream-v5-0-03f1be8ad396@foss.st.com>
+ <20250728-ddrperfm-upstream-v5-6-03f1be8ad396@foss.st.com>
+ <20250730211151.GA1749004-robh@kernel.org>
+ <da8578ae-3f79-4082-b0fb-760553004c93@gmail.com>
+ <fb5083ff-4bee-4a0f-8774-54b492cd9a6d@kernel.org>
+Content-Language: en-US
+From: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <legoffic.clement@gmail.com>
+In-Reply-To: <fb5083ff-4bee-4a0f-8774-54b492cd9a6d@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODE5MDIyMiBTYWx0ZWRfX4+kIeLuQeUpb
- AYE7fZ5YQTv9hAJyu3bCTEMDboH12QuNBZCgV5WgLb5S9Sy5hvGLVIPl8eHlyFEePLc1HpvOYjQ
- evb1cDMa23OG4IGAvk/watRqAJNRc1GCabnl5QaeuCxbL1KfRw90wJ7odrdSJRX2QTMZGju801w
- DERruEWBzs5iaWBzljbL71q9UTC7Xf0UxV+hcoF0nbHl3jVLWCivL4WhqziC54MOdWcmHP59gvm
- gcVFmJwG0nFGVkfi/yo+LqCKnTLnJR6UZX32owU4Yb31yv7iuxFw0mY8oP5+OI//ubuUz+y4NRj
- lqfearS11BCeY9zgBB8NNXATFrAbfuB9wG4F+VKBNKBRSfztIqJYY3K7xvQuGcQ+J8YC3OpmnYn
- HjRZ+ZoA61Zn71oDZ7mfR4HpBckFPA==
-X-Proofpoint-ORIG-GUID: KisYOD35_syNFIe_H5JHe_L_1NJm5-wu
-X-Authority-Analysis: v=2.4 cv=T9nVj/KQ c=1 sm=1 tr=0 ts=68a861d2 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=2OwXVqhp2XgA:10 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8 a=UquQ6J-m-umW9Fh778UA:9
- a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-GUID: 9vGB0RlN6JaLlk2fVT6EpBrqly0DtsSl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-22_04,2025-08-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 malwarescore=0 phishscore=0 spamscore=0 clxscore=1015
- bulkscore=0 suspectscore=0 lowpriorityscore=0 priorityscore=1501 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2508110000 definitions=main-2508190222
 
-commit edf2cadf01e8f ("perf test: add test for BPF metadata collection")
+Hi Krzysztof,
 
-fails consistently on the version string check. The perf version
-string on some of the constant integration test machines contains
-characters with special meaning in grep's extended regular expression
-matching algorithm. The output of perf version is:
+On 17/08/2025 09:19, Krzysztof Kozlowski wrote:
+> On 14/08/2025 16:42, Clément Le Goffic wrote:
+>> Hi Rob,
+>>
+>> On 30/07/2025 23:11, Rob Herring wrote:
+>>> On Mon, Jul 28, 2025 at 05:29:37PM +0200, Clément Le Goffic wrote:
+>>>> Introduce JEDEC compliant DDR bindings, that use new memory-props binding.
+>>>>
+>>>> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+>>>> ---
+>>>>    .../memory-controllers/ddr/jedec,ddr4.yaml         | 34 ++++++++++++++++++++++
+>>>>    1 file changed, 34 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,ddr4.yaml b/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,ddr4.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..f457066a2f8b
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/memory-controllers/ddr/jedec,ddr4.yaml
+>>>> @@ -0,0 +1,34 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: http://devicetree.org/schemas/memory-controllers/ddr/jedec,ddr4.yaml#
+>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>> +
+>>>> +title: DDR3 SDRAM compliant to JEDEC JESD79-4D
+>>>> +
+>>>> +maintainers:
+>>>> +  - Krzysztof Kozlowski <krzk@kernel.org>
+>>>> +
+>>>> +allOf:
+>>>> +  - $ref: jedec,sdram-props.yaml#
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    items:
+>>>> +      - pattern: "^ddr4-[0-9a-f]{2},[0-9a-f]{1}$"
+>>>
+>>> Shouldn't this be 'jedec,ddr4-...'
+>>
+>> That's not the case for lpddr bindings, I wanted both lpddr and ddr
+>> bindings to be similar but this can change.
+> 
+> For LPDDR Julius introduced in commit 686fe63b2280 ("dt-bindings:
+> memory: Add numeric LPDDR compatible string variant") ddr4-VENDORID
+> pattern to distinguish individual manufacturers.
+> 
+> Jedec is not really the vendor here.
+> 
+> Is it the same case in DDR? You have a defined list of vendor IDs (also
+> 1 byte)?
 
- # perf version
- perf version 6.17.0-20250814.rc1.git20.24ea63ea3877.63.fc42.s390x+git
- #
+There is no defined list of vendor IDs.
+The way the compatible string is created is explained in
+jedec,sdram-props.yaml file which is created in patch 5 of this series.
 
-and the '+' character has special meaning in egrep command.
-Also the use of egrep is deprecated.
-
-Change the perf version string check to fixed character matching
-and get rid of egrep's warning being deprecated. Use grep -F instead.
-
-Output before:
- # perf test -F 102
- Checking BPF metadata collection
- egrep: warning: egrep is obsolescent; using grep -E
- Basic BPF metadata test [Failed invalid output]
- 102: BPF metadata collection test             : FAILED!
- #
-
-Output after:
- # perf test -F 102
- Checking BPF metadata collection
- Basic BPF metadata test [Success]
- 102: BPF metadata collection test             : Ok
- #
-
-Fixes: edf2cadf01e8f ("perf test: add test for BPF metadata collection")
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
-Cc: Blake Jones <blakejones@google.com>
----
- tools/perf/tests/shell/test_bpf_metadata.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/shell/test_bpf_metadata.sh b/tools/perf/tests/shell/test_bpf_metadata.sh
-index 69e3c2055134..be67d56e0f09 100755
---- a/tools/perf/tests/shell/test_bpf_metadata.sh
-+++ b/tools/perf/tests/shell/test_bpf_metadata.sh
-@@ -61,7 +61,7 @@ test_bpf_metadata() {
- 		/perf_version/ {
- 			if (entry) print $NF;
- 		}
--	' | egrep "$VERS" > /dev/null
-+	' | grep -qF "$VERS"
- 	then
- 		echo "Basic BPF metadata test [Failed invalid output]"
- 		err=1
--- 
-2.50.1
-
+Best regards,
+Clément
