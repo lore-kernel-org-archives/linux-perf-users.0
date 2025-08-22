@@ -1,114 +1,157 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32E02FABE5;
-	Fri, 22 Aug 2025 12:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009A72D7DC5;
+	Fri, 22 Aug 2025 12:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755864384; cv=none; b=tm/X7pmwSug0B562ytBAe87KO62HxM7VMzL2Ilzs/fR/ADwqpr16YPi8fB06TGsyzAK68lDSlv7nnIBbANsDZ+Ig/1SBxOPZgBuDgcG6OV/U/7poeFfDF9YtKUnAAVFKIjRViKZL5iz9vrtLFOJp4hOI3Hjx0agDAe3wQJZU7ms=
+	t=1755865573; cv=none; b=iXjJBYlq/m5cRkEtg67OUl3fAG60bjmRBJwsYVMxeaSLwKRWyx/IWbHd7NAZVGh4jcChYPIoUdPAY+Jsr197dljRlFpV/ibufrw48nKtPs6e/dB+ehHvVxjlvWsrblrR0HGSaNCuj+/oNUhZWKGyeWf7Tv+TJNgwl3Ko0mz/MCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755864384; c=relaxed/simple;
-	bh=oo7a9LMl6LvKVsaPP9YxoC1Kx8MNfiAwhl5ihmWoLPI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MILUTqCBLYHrDFLxNT/0pt0VWxjzZqvyhXhL+9G9MDS+b3MflaI83NuBh/xixdA7yDMVq2Icx2RoxVYYqze7sXRhWPWE59/2qFLmlYxIsTLCOIXiQ2DJw6zjLn4+yNK3wgC7aaIr/YlR9wFWXt19a6FfAxTPO8FfxpRFjb8/yNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=N1or8S1w; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1755865573; c=relaxed/simple;
+	bh=UY/L2tRKcOALJRVQf2k9KAYHGNaFT19Gm20vR020zPw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ri9Vy0XaRzJUkrIVChAje805+1P4Bm4Z8Zsh2zUKOA6y9hT0sTwn40j9ssUHnuWVWX+8jMtRtw6AjXRY1CFfsSY8+2B0cXgCYxnLtFMEIAxcy6yYBR5PlREZudnVz45vl/3XOkWJUTA+5i8YpDkZDpi4cmQFEt2nhFUs4P75eIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=RxWGqOSz; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="N1or8S1w"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ccPu4bTJVH4YGNhd1S906YfRzpqLPlcWMDklK0KtHtk=; b=N1or8S1wu8Iw+g1rx1tY+aHF+Y
-	OzAyfUAzK8J2Z61/AEiyJ3Qk24qEEMGRAcZMNoCMxWGUI+CTgbX4i7JUQ0KnbKcB9nRGSsFNxEwJM
-	3Aan6Zj4SGMOu4KtTD8+6UrIpJW3T0pIRUCJPsRGRrrohotkoktao3y22E35AB9Qgb9w7oaSp9Ge4
-	Ibuj0BDOpw7fglFc9tC65j9f2iqNQA3l2JZo+9p8xIHB17VLqigEljZP3VvEO4tGeRlVD5vhgjxU8
-	QVUTc8TjdG3G/jlvRiGzO5xlmDUm38alEBLzxfHR8J6okyKECwdU69yPqalxl5125kJeQbJqkhBii
-	sxSTDzlg==;
-Received: from [223.233.71.242] (helo=[192.168.1.8])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1upQX9-0005Vq-8O; Fri, 22 Aug 2025 14:06:15 +0200
-Message-ID: <dfb52ed4-8f18-1489-e6b4-56180cfa5440@igalia.com>
-Date: Fri, 22 Aug 2025 17:36:09 +0530
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RxWGqOSz"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57M7pStI012363;
+	Fri, 22 Aug 2025 12:25:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=HJ26CL98BAEdjjPC26V3xabEO8vZWHtSFpQwDNtDX
+	ak=; b=RxWGqOSz0te8m2Ixjfu8QPZNIpaQoJ9DP8fJ0JUbvkCrSfPZDTVmqXgcn
+	x0WPMoaTGlOyoFzxXcsi2+VNOPbmMVp28nk51ic0E/JiVXC0V/uSCQyuV1EzQn7Z
+	RVcMAj3dyb9u0EdYsS3K7CB+lX99PvXd2ulxMrz+2I3mhboINUkaCVA3C66uIEf0
+	Nlm6U3HbXNefzW6xrYwn4hJ+ybhkXxudSkk7S5KOqXSxuoloAhga3pM4XO7uhZ+D
+	wUufm2nsVFauFZC8rGvneuZ2d9NM1JykWQ/tlW7tIwnFsZdgxRk9Pokhz0ggF4r2
+	b9F84fkK6hvj+RQe2HcFty1FZ4+Qw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48n38vx7fy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 22 Aug 2025 12:25:54 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 57MCMVGQ001349;
+	Fri, 22 Aug 2025 12:25:54 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48n38vx7fx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 22 Aug 2025 12:25:54 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57MCIWUt024740;
+	Fri, 22 Aug 2025 12:25:53 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 48my5w56ra-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 22 Aug 2025 12:25:53 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 57MCPn1P29557460
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 22 Aug 2025 12:25:49 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 53A6B20043;
+	Fri, 22 Aug 2025 12:25:49 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 272C020040;
+	Fri, 22 Aug 2025 12:25:49 +0000 (GMT)
+Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 22 Aug 2025 12:25:49 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+        blakejones@google.com
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, japo@linux.ibm.com,
+        Thomas Richter <tmricht@linux.ibm.com>
+Subject: [Ping][PATCH] perf test: Checking BPF metadata collection fails on version string
+Date: Fri, 22 Aug 2025 14:25:39 +0200
+Message-ID: <20250822122540.4104658-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v8 3/5] treewide: Replace 'get_task_comm()' with
- 'strscpy_pad()'
-Content-Language: en-US
-To: kernel test robot <lkp@intel.com>, Bhupesh <bhupesh@igalia.com>,
- akpm@linux-foundation.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
- kernel-dev@igalia.com, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, oliver.sang@intel.com, laoar.shao@gmail.com,
- pmladek@suse.com, rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
- arnaldo.melo@gmail.com, alexei.starovoitov@gmail.com,
- andrii.nakryiko@gmail.com, mirq-linux@rere.qmqm.pl, peterz@infradead.org,
- willy@infradead.org, david@redhat.com, viro@zeniv.linux.org.uk,
- keescook@chromium.org, ebiederm@xmission.com, brauner@kernel.org,
- jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com, bsegall@google.com,
- mgorman@suse.de
-References: <20250821102152.323367-4-bhupesh@igalia.com>
- <202508221127.LiaxcbdW-lkp@intel.com>
-From: Bhupesh Sharma <bhsharma@igalia.com>
-In-Reply-To: <202508221127.LiaxcbdW-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODE5MDIyMiBTYWx0ZWRfX4+kIeLuQeUpb
+ AYE7fZ5YQTv9hAJyu3bCTEMDboH12QuNBZCgV5WgLb5S9Sy5hvGLVIPl8eHlyFEePLc1HpvOYjQ
+ evb1cDMa23OG4IGAvk/watRqAJNRc1GCabnl5QaeuCxbL1KfRw90wJ7odrdSJRX2QTMZGju801w
+ DERruEWBzs5iaWBzljbL71q9UTC7Xf0UxV+hcoF0nbHl3jVLWCivL4WhqziC54MOdWcmHP59gvm
+ gcVFmJwG0nFGVkfi/yo+LqCKnTLnJR6UZX32owU4Yb31yv7iuxFw0mY8oP5+OI//ubuUz+y4NRj
+ lqfearS11BCeY9zgBB8NNXATFrAbfuB9wG4F+VKBNKBRSfztIqJYY3K7xvQuGcQ+J8YC3OpmnYn
+ HjRZ+ZoA61Zn71oDZ7mfR4HpBckFPA==
+X-Proofpoint-ORIG-GUID: KisYOD35_syNFIe_H5JHe_L_1NJm5-wu
+X-Authority-Analysis: v=2.4 cv=T9nVj/KQ c=1 sm=1 tr=0 ts=68a861d2 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=2OwXVqhp2XgA:10 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8 a=UquQ6J-m-umW9Fh778UA:9
+ a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-GUID: 9vGB0RlN6JaLlk2fVT6EpBrqly0DtsSl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-22_04,2025-08-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 malwarescore=0 phishscore=0 spamscore=0 clxscore=1015
+ bulkscore=0 suspectscore=0 lowpriorityscore=0 priorityscore=1501 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2508110000 definitions=main-2508190222
 
-On 8/22/25 9:29 AM, kernel test robot wrote:
-> Hi Bhupesh,
->
-> kernel test robot noticed the following build errors:
->
-> [auto build test ERROR on 5303936d609e09665deda94eaedf26a0e5c3a087]
->
-> url:    https://github.com/intel-lab-lkp/linux/commits/Bhupesh/exec-Remove-obsolete-comments/20250821-182426
-> base:   5303936d609e09665deda94eaedf26a0e5c3a087
-> patch link:    https://lore.kernel.org/r/20250821102152.323367-4-bhupesh%40igalia.com
-> patch subject: [PATCH v8 3/5] treewide: Replace 'get_task_comm()' with 'strscpy_pad()'
-> config: x86_64-buildonly-randconfig-001-20250822 (https://download.01.org/0day-ci/archive/20250822/202508221127.LiaxcbdW-lkp@intel.com/config)
-> compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250822/202508221127.LiaxcbdW-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202508221127.LiaxcbdW-lkp@intel.com/
->
-> All errors (new ones prefixed by >>):
->
->>> drivers/gpu/drm/panthor/panthor_sched.c:3420:2: error: call to undeclared function 'get_task_comm'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
->      3420 |         get_task_comm(group->task_info.comm, task);
->           |         ^
->     drivers/gpu/drm/panthor/panthor_sched.c:3420:2: note: did you mean 'get_task_mm'?
->     include/linux/sched/mm.h:151:26: note: 'get_task_mm' declared here
->       151 | extern struct mm_struct *get_task_mm(struct task_struct *task);
->           |                          ^
->     1 error generated.
->
->
-> vim +/get_task_comm +3420 drivers/gpu/drm/panthor/panthor_sched.c
->
-> de85488138247d Boris Brezillon 2024-02-29  3414
-> 33b9cb6dcda252 Chia-I Wu       2025-07-17  3415  static void group_init_task_info(struct panthor_group *group)
-> 33b9cb6dcda252 Chia-I Wu       2025-07-17  3416  {
-> 33b9cb6dcda252 Chia-I Wu       2025-07-17  3417  	struct task_struct *task = current->group_leader;
-> 33b9cb6dcda252 Chia-I Wu       2025-07-17  3418
-> 33b9cb6dcda252 Chia-I Wu       2025-07-17  3419  	group->task_info.pid = task->pid;
-> 33b9cb6dcda252 Chia-I Wu       2025-07-17 @3420  	get_task_comm(group->task_info.comm, task);
-> 33b9cb6dcda252 Chia-I Wu       2025-07-17  3421  }
-> 33b9cb6dcda252 Chia-I Wu       2025-07-17  3422
->
-Ok, let me check the same and fix it in v9.
+commit edf2cadf01e8f ("perf test: add test for BPF metadata collection")
 
-Thanks.
+fails consistently on the version string check. The perf version
+string on some of the constant integration test machines contains
+characters with special meaning in grep's extended regular expression
+matching algorithm. The output of perf version is:
+
+ # perf version
+ perf version 6.17.0-20250814.rc1.git20.24ea63ea3877.63.fc42.s390x+git
+ #
+
+and the '+' character has special meaning in egrep command.
+Also the use of egrep is deprecated.
+
+Change the perf version string check to fixed character matching
+and get rid of egrep's warning being deprecated. Use grep -F instead.
+
+Output before:
+ # perf test -F 102
+ Checking BPF metadata collection
+ egrep: warning: egrep is obsolescent; using grep -E
+ Basic BPF metadata test [Failed invalid output]
+ 102: BPF metadata collection test             : FAILED!
+ #
+
+Output after:
+ # perf test -F 102
+ Checking BPF metadata collection
+ Basic BPF metadata test [Success]
+ 102: BPF metadata collection test             : Ok
+ #
+
+Fixes: edf2cadf01e8f ("perf test: add test for BPF metadata collection")
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Cc: Blake Jones <blakejones@google.com>
+---
+ tools/perf/tests/shell/test_bpf_metadata.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/tests/shell/test_bpf_metadata.sh b/tools/perf/tests/shell/test_bpf_metadata.sh
+index 69e3c2055134..be67d56e0f09 100755
+--- a/tools/perf/tests/shell/test_bpf_metadata.sh
++++ b/tools/perf/tests/shell/test_bpf_metadata.sh
+@@ -61,7 +61,7 @@ test_bpf_metadata() {
+ 		/perf_version/ {
+ 			if (entry) print $NF;
+ 		}
+-	' | egrep "$VERS" > /dev/null
++	' | grep -qF "$VERS"
+ 	then
+ 		echo "Basic BPF metadata test [Failed invalid output]"
+ 		err=1
+-- 
+2.50.1
+
