@@ -1,272 +1,194 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F5928750C
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 Aug 2025 17:35:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF3727A127
+	for <linux-perf-users@vger.kernel.org>; Fri, 22 Aug 2025 17:47:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755884160; cv=none; b=NrARBGSFKn4YhvSYmTv4yQM6aXZz2ShmyTdEICmsZ3Q5SwfcK0Hax58EnwtaEC+s+4wuqHhCe+5XoTs0CdGxDX4YeQXp8JVZTfsQwPSYPbidJNeX/mBifBcUqhhvTDov2If2+yNWkUvC1cshBRj78dZq6ddgGRhblDM+nY03LDM=
+	t=1755884840; cv=none; b=B7PDD3Hea0hHmlSdj5W+6HnMclNH+qAd8W48eUkLJffZBfjA/5PFHSGFJEsFZ+CxvxEcTT+BhufR76o5urP6ZDd6oBV9eaygyQrq4YbYiWksYZWkU76sP2GUNYp/d4b6jfC2wKRwbfm64kvmfhgxQZOWThQQ+f3YlojHX1XVjL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755884160; c=relaxed/simple;
-	bh=eJsMynx83l0LBznNXYP1HGV979DlG3NlfRAfiPZlRkg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=girP09UqcDOmX6SbWAly+LpoRxygINY6/B/4JuppD5S9gBbSS88AGOMwoVTrfeD8S/sgZhm6u4pJbkj73xUXf1prmQa48Iu8N2tAqOERTt8bv1BCmGtWPqAEET5ad586rssP9sXMbTg8j/2ZGRLNJVoKfOSpP/uK3YDBxszCDq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Su7hx7+C; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1755884840; c=relaxed/simple;
+	bh=UgFHRDjkDkg06sIoVrJh/as+4V75o1if/J/a4MOlfQA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e8uL2HFhyvVlTO8h5wfsQsTTjKdtJ3MQIF1nMc0Z+zHRNLrxm76jaqydfRI6O+iQDo29DPaD7AvnVPr7+7eEsNONoEaYGATYgmbgiuqdHJEWGBv/0bgS26kLrctR6Ua+hDqKlmrQzStv9OJqpra+hz06Ub/6wOp5mSAbp3cOtfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc.com header.i=@rivosinc.com header.b=gnyQ+SEB; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Su7hx7+C"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-246013de800so15255ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 22 Aug 2025 10:35:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc.com header.i=@rivosinc.com header.b="gnyQ+SEB"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4b297962b20so21364831cf.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 22 Aug 2025 10:47:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755884158; x=1756488958; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TxMIAYsmBX7pQetf20qwDs7pp1uN+xZt/escuuakgQs=;
-        b=Su7hx7+CStv37at5uCI8iBUqAOe7Pqx1QM0vUWxQewWSUuQ5uFqvmiQUs8kIKfQor0
-         EK7z7CTTHONAMyh9O++vSGoxdiYKVFj8tVxhEiFm0emFHcw6SAQQOYUrhLBkdnHTYwf/
-         dO6YHQOjkEalr4Zh9hAZnA8o8iE/bFLhnSX2GNdozAcctKyhywYoxWsc30gU8P1j+HNw
-         cOv2LpFDh3E/w6H49nRduv5wm7E7prZzR+25eBJCYrpqkLIaDd3hCHlgVHTFKcGbzf8M
-         oeAn8g+KFqVYWut7PESQJjQKbIevLS1Bp0r2Rsp5i8TxDm8D4uETm0GbR6ok7et+TlNg
-         JsZg==
+        d=rivosinc.com; s=google; t=1755884838; x=1756489638; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7xWd683exLd05Xd2k+2/c9D8N3YKjun132TYqkPk7vQ=;
+        b=gnyQ+SEBSGjqtQfjPpLg+SSoyjTrq/CKSxCHUcvhwICLIzG7SES4SSl7C+9QWRcGws
+         A1GtTYyEv8Ri7XvBIdnEp7cHSUZIO2kibTiBhFn6arMCWiTdauBfMBHx8Let3ZznE0+V
+         v9sjsZJpHlysvs9CHVvoJIaFQoKmZpy52BXrln6jE0pJjaQMcQrNOC0t/GrbiT2p//KX
+         aWC8pKVqckivW9OsuZZS9I+YjgYU2Tm/YTkFcBI6r1WQRWcll2KWfNtouHAUU/AdVgTe
+         WqkaGhIi/bFof7uZDAl6MbhbUP+P7k9ypKYJCGriKDmbv4Lq/JutyFdr9qroTWyhNeq2
+         nNVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755884158; x=1756488958;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TxMIAYsmBX7pQetf20qwDs7pp1uN+xZt/escuuakgQs=;
-        b=chTe3/T3jKaWp5olhdEed6PRxmOPhwPnVjkQBwr0S8Jd4G/HUJ5evIxLoKzwrg1av2
-         l604Gt/oNWpWYbPJLUMBtUY71AYCucMEJb/UOTTiZR2+ogrxbYNTvgSgLxtHDDXuJmHD
-         VSHIvNCK1gNuSNJHiAYFpqDx/Fk1WRJ8EnNPQfaSxBe/mSbCreo9on5b/hXyl/vtGQlE
-         Eu/I8UiA8aTFLUQ8rm+/OnzT1/m4Tr48TZKuyXrSUaM3gPFlw85gwUAOqNP7lE1cgdiK
-         m6R7JQol+610K09uCuaYShmHjqx/ZDblILDugy8drq9Ra4IAbqMse3UmsiFyrvnjmObg
-         aCew==
-X-Forwarded-Encrypted: i=1; AJvYcCUGdn4OH7fB3zF2CXpZ1G0EXKd5xcddOv1/S6wThCuXvGZA2ITsxvInDcXvl/7/y3aHXs3PwH0QiTIrooxujE47@vger.kernel.org
-X-Gm-Message-State: AOJu0YwH9oI/SdX2htg45tkJFB0Mb5UtNzE8nNxAR0MhUwITnZT0sgQ9
-	yEG1USHEA1ZoRQ0kikUXRrTGvHTzAOb94ghOjTdcFJ2wVfKS6joIAe59vxhbeRGaq4aeCrLgm0l
-	UpvjBfrzffKzEVVWlTpoiX6ycGjzVe8PYbh5xkPcDP5lKFRjZ/X9n67rXkYE=
-X-Gm-Gg: ASbGnct2u+PAqefushKafjshj+s6ol0OFGmLn3n7Ad/jxeoFJWgA2C6KJg82SQRWDzg
-	JcrmjYW6QyU5Umn41KHWlADRpDtXbpIP1bdQLM0jaEGJOQrlmfCm31kEVyWGzEO3TeKl6ZWgopE
-	84ZlAQXgpCua6n9O5FxgZ7LCSyf4OcmNsmwPzwu+JV2E2csP1nfjPasYDGqXq+GjdDWhH8UNgJW
-	K4y6BdFTahFeN0=
-X-Google-Smtp-Source: AGHT+IGzGTMvlHX2cgWkj/d+BDv4aPkPacgILHNz/inq23p+dXXG8eVDIN3nVmeYKRVb+nyH2Y5WHPASBq1Vm3O3ITw=
-X-Received: by 2002:a17:902:ceca:b0:240:8f2:6442 with SMTP id
- d9443c01a7336-24639fc92d8mr4117895ad.15.1755884157656; Fri, 22 Aug 2025
- 10:35:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1755884838; x=1756489638;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7xWd683exLd05Xd2k+2/c9D8N3YKjun132TYqkPk7vQ=;
+        b=B0+lC4NY4vdj2Rx2UnqwdyXr8e4SQNvIwKSC+frK/QUDMdEngZLEYQhsjJrx29CZdT
+         DThysASRRaVVbJxFKIZOk8XHASOqhEhOnnBAY+iO21EtXfB2aMaiNFR1I1ByTuprHP//
+         va2Ygixcq7coNOzdtcFzNoupSY+dFVbnRBxIcLUfk+pEF72sTOAI9eYnox2+ty+s8m4h
+         03NgTTpMQuM6YPNoTHgfdxGpOrPXS5xh22xOsG3v8C6fLqN/kLJZ2IOmhzGdlaa8saF9
+         wpVM+EVrq5+Ce8Q5Dh165z2RZcX+K5kCVGcnatCJjZzrzaOwaucnzAuW3stO/Z4TMU7b
+         S5FA==
+X-Forwarded-Encrypted: i=1; AJvYcCXzc0AoHDcFvm/GQaMRzfV9uoSo9xyKG9Gm6XJ6OJZ+LgjQ1OAHZZT3JvwGWTzx6kOZ23St2Vy6ATrYBt82a04e@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzpr+gu4cxN5wNhyi7CU4zr5aQDqXsH4itxDe38FOLepM6fUBgn
+	/WvF+OOcQNM8w1hVM7VMrrAnEtBc9cSegfPAygnAQglxiTIT7AjuJZOGBxIW+qPu5to=
+X-Gm-Gg: ASbGnctkNmEms8fhn2ltimtZv/ZK37fcCLTkGJ878EWS/FeE+3IumdHZWZ+/1aHQehQ
+	UXWdcd+2ufJGuhavUzGy17Q+/BWYrph7kV3qPNyLvm50xm1Ywl/yHby6a1FOKxsD7u3Kd3WuB3o
+	Bf9k3CT0cd7UtuREIEVlDOn5Kf693TvMW6c0ua+Dwg95E3WG03zyFartx66M7wvUSoPZdu3jrEs
+	YpnK2ywKWuW2QhxwgnAKYZjztxWdH4UoCNIGGm/xnWwyKbz22yrr6S1EhglJxnHvXO2OZKY+FUM
+	lx9Cg4TAf90jQdQO6pQEebKJG45i99lVIdqLYBwqXOXHlF/xtqASouTdzPiqMLYSXJd7EsIrY56
+	NpltP8vqTKA9HMEbvceZ4tX7b6EbDfVFyYpZPYZMl0xioJmhweIPiN2PPx8kv7GI15FIojoTP2Y
+	8AgpGV++uJpqEWvDxZ
+X-Google-Smtp-Source: AGHT+IERB8md7pMPxdX8kJ5ivrUWSgGAVukLkHuaDgpDlvNNBoFxuibBgYX+uodyqeWSfvVnl+l5kA==
+X-Received: by 2002:a05:622a:1885:b0:4b2:8ac5:2586 with SMTP id d75a77b69052e-4b2aab78821mr43353651cf.77.1755884838018;
+        Fri, 22 Aug 2025 10:47:18 -0700 (PDT)
+Received: from jesse-lt.jtp-bos.lab (pool-108-26-215-125.bstnma.fios.verizon.net. [108.26.215.125])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4b2b8e6023asm3121361cf.53.2025.08.22.10.47.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Aug 2025 10:47:17 -0700 (PDT)
+From: Jesse Taube <jesse@rivosinc.com>
+To: linux-riscv@lists.infradead.org
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Kees Cook <kees@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang Kan" <kan.liang@linux.intel.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Jesse Taube <jesse@rivosinc.com>,
+	Himanshu Chauhan <hchauhan@ventanamicro.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Deepak Gupta <debug@rivosinc.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Atish Patra <atishp@rivosinc.com>,
+	Anup Patel <apatel@ventanamicro.com>,
+	Mayuresh Chitale <mchitale@ventanamicro.com>,
+	Evan Green <evan@rivosinc.com>,
+	WangYuli <wangyuli@uniontech.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Nam Cao <namcao@linutronix.de>,
+	Yunhui Cui <cuiyunhui@bytedance.com>,
+	Joel Granados <joel.granados@kernel.org>,
+	=?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Celeste Liu <coelacanthushex@gmail.com>,
+	Chunyan Zhang <zhangchunyan@iscas.ac.cn>,
+	Nylon Chen <nylon.chen@sifive.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Joel Stanley <joel@jms.id.au>
+Subject: [PATCH 0/8] riscv: add initial support for hardware breakpoints
+Date: Fri, 22 Aug 2025 10:47:07 -0700
+Message-ID: <20250822174715.1269138-1-jesse@rivosinc.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250822082233.1850417-1-dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250822082233.1850417-1-dapeng1.mi@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 22 Aug 2025 10:35:45 -0700
-X-Gm-Features: Ac12FXysTUm0GAbFNO6Cf4WvcoN9Lpc0qV80egGEyKFhkBN6cdDaYlaM9UbojHM
-Message-ID: <CAP-5=fW6N+eE0KTyV7F4wm=KBwk46QbXjwwG9POtZxEDhbRqRQ@mail.gmail.com>
-Subject: Re: [PATCH] perf tools topdown: Fix incorrect topdown slots regroup
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dapeng Mi <dapeng1.mi@intel.com>, Xudong Hao <xudong.hao@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Aug 22, 2025 at 1:23=E2=80=AFAM Dapeng Mi <dapeng1.mi@linux.intel.c=
-om> wrote:
->
-> When running the command "perf stat -e "slots,slots" -C0 sleep 1", we
-> see below error.
->
-> perf stat -e "slots,slots" -C0 sleep 1
-> WARNING: events were regrouped to match PMUs
->  Performance counter stats for 'CPU(s) 0':
->      <not counted>      slots
->    <not supported>      slots
->
->      1.002265769 seconds time elapsed
->
-> The topdown slots events are not correctly counted. The root cause is
-> that perf tools incorrectly regroup these 2 slots events into a group.
-> If there are only topdown slots events but no topdown metrics events,
-> the regroup should not be done since topdown slots event can only be
-> programed on fixed counter 3 and multiple slots events can only be
-> multiplexed to run on fixed counter 3, but grouping them blocks
-> multiplexing.
->
-> So avoid to regroup topdown slots events if there is no topdown metrics
-> events.
->
-> With this change, above command can be run successfully.
->
-> perf stat -e "slots,slots" -C0 sleep 1
->  Performance counter stats for 'CPU(s) 0':
->        103,973,791      slots
->        106,488,170      slots
->
->        1.003517284 seconds time elapsed
->
-> Besides, run perf stats/record test on SPR and PTL, both passed.
->
-> Reported-by: Xudong Hao <xudong.hao@intel.com>
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+This patchset adds initial support for hardware breakpoints and
+watchpoints to the  RISC-V architecture. The framework is built on
+top of perf subsystem and SBI debug trigger extension.
 
-I don't think we should do this and if we were to do it we shouldn't
-do it in the common code. The perf metrics requiring a slots event is
-a massive mess that never seems to end. What should we do with:
-```
-$ perf stat -e "topdown-fe-bound,topdown-fe-bound" true
+Currently following features are not supported and are in works:
+ - icount for single stepping
+ - Virtualization of debug triggers
+ - kernel space debug triggers
 
-Performance counter stats for 'true':
+The SBI debug trigger extension can be found at:
+https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-debug-triggers.adoc
 
-    <not counted>      slots
-    <not counted>      topdown-fe-bound
-  <not supported>      topdown-fe-bound
+The Sdtrig ISA is part of RISC-V debug specification which can be
+found at:
+https://github.com/riscv/riscv-debug-spec
 
-      0.000960472 seconds time elapsed
+based off the original RFC by Himanshu Chauhan here:
+https://lore.kernel.org/lkml/20240222125059.13331-1-hchauhan@ventanamicro.com/
 
-      0.001060000 seconds user
-      0.000000000 seconds sys
+Second RFC by Jesse Taube here:
+https://lore.kernel.org/lkml/20250722173829.984082-1-jesse@rivosinc.com/
 
+Himanshu Chauhan (2):
+  riscv: Add SBI debug trigger extension and function ids
+  riscv: Introduce support for hardware break/watchpoints
 
-Some events weren't counted. Try disabling the NMI watchdog:
-       echo 0 > /proc/sys/kernel/nmi_watchdog
-       perf stat ...
-       echo 1 > /proc/sys/kernel/nmi_watchdog
-```
+Jesse Taube (6):
+  riscv: Add insn.c, consolidate instruction decoding
+  riscv: insn: Add get_insn_nofault
+  riscv: hw_breakpoint: Use icount for single stepping
+  riscv: ptrace: Add hw breakpoint support
+  riscv: ptrace: Add hw breakpoint regset
+  selftests: riscv: Add test for hardware breakpoints
 
-We've injected the slots event but the repeated topdown-fe-bound
-causes the group to fail in a similar way. Why is repeating slots a
-case we care about more?
-Were we to say, okay slots is more special than the other perf metric
-events then I'd prefer arch_evsel__must_be_in_group to return false
-for the slots event when there are no other perf metric events in the
-evlist. But then what do you do if the slots event is in a different
-group like:
-```
-$ perf stat -e "slots,{slots,topdown-fe-bound}" true
-```
-It is pretty easy to teach the code to deduplicate events, but then
-again, what about the group behavior?
-It is not clear to me we can ever clean up all the mess that the perf
-metric events on p-cores create and I'm in favor of having the code be
-no more complex than it needs to be, so I'm not sure we should be
-solving this problem.
+ arch/riscv/Kconfig                            |   2 +
+ arch/riscv/include/asm/bug.h                  |  12 -
+ arch/riscv/include/asm/hw_breakpoint.h        |  59 ++
+ arch/riscv/include/asm/insn.h                 | 132 ++-
+ arch/riscv/include/asm/kdebug.h               |   3 +-
+ arch/riscv/include/asm/processor.h            |   4 +
+ arch/riscv/include/asm/sbi.h                  |  33 +-
+ arch/riscv/include/uapi/asm/ptrace.h          |   9 +
+ arch/riscv/kernel/Makefile                    |   2 +
+ arch/riscv/kernel/hw_breakpoint.c             | 763 ++++++++++++++++++
+ arch/riscv/kernel/insn.c                      | 165 ++++
+ arch/riscv/kernel/kgdb.c                      | 102 +--
+ arch/riscv/kernel/probes/kprobes.c            |   1 +
+ arch/riscv/kernel/process.c                   |   4 +
+ arch/riscv/kernel/ptrace.c                    | 169 ++++
+ arch/riscv/kernel/traps.c                     |  11 +-
+ arch/riscv/kernel/traps_misaligned.c          |  93 +--
+ include/uapi/linux/elf.h                      |   2 +
+ tools/include/uapi/linux/elf.h                |   1 +
+ tools/perf/tests/tests.h                      |   3 +-
+ tools/testing/selftests/riscv/Makefile        |   2 +-
+ .../selftests/riscv/breakpoints/.gitignore    |   1 +
+ .../selftests/riscv/breakpoints/Makefile      |  13 +
+ .../riscv/breakpoints/breakpoint_test.c       | 246 ++++++
+ 24 files changed, 1641 insertions(+), 191 deletions(-)
+ create mode 100644 arch/riscv/include/asm/hw_breakpoint.h
+ create mode 100644 arch/riscv/kernel/hw_breakpoint.c
+ create mode 100644 arch/riscv/kernel/insn.c
+ create mode 100644 tools/testing/selftests/riscv/breakpoints/.gitignore
+ create mode 100644 tools/testing/selftests/riscv/breakpoints/Makefile
+ create mode 100644 tools/testing/selftests/riscv/breakpoints/breakpoint_test.c
 
-Thanks,
-Ian
+-- 
+2.43.0
 
-> ---
->  tools/perf/arch/x86/util/topdown.h |  2 --
->  tools/perf/util/evsel.c            | 10 ++++++++++
->  tools/perf/util/evsel.h            |  2 ++
->  tools/perf/util/parse-events.c     | 11 +++++++++++
->  4 files changed, 23 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/arch/x86/util/topdown.h b/tools/perf/arch/x86/uti=
-l/topdown.h
-> index 69035565e649..6a917b2066f7 100644
-> --- a/tools/perf/arch/x86/util/topdown.h
-> +++ b/tools/perf/arch/x86/util/topdown.h
-> @@ -8,8 +8,6 @@ struct evsel;
->  struct list_head;
->
->  bool topdown_sys_has_perf_metrics(void);
-> -bool arch_is_topdown_slots(const struct evsel *evsel);
-> -bool arch_is_topdown_metrics(const struct evsel *evsel);
->  int topdown_insert_slots_event(struct list_head *list, int idx, struct e=
-vsel *metric_event);
->
->  #endif
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index d264c143b592..6aaae1ac026e 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -3965,6 +3965,16 @@ int evsel__source_count(const struct evsel *evsel)
->         return count;
->  }
->
-> +bool __weak arch_is_topdown_slots(const struct evsel *evsel __maybe_unus=
-ed)
-> +{
-> +       return false;
-> +}
-> +
-> +bool __weak arch_is_topdown_metrics(const struct evsel *evsel __maybe_un=
-used)
-> +{
-> +       return false;
-> +}
-> +
->  bool __weak arch_evsel__must_be_in_group(const struct evsel *evsel __may=
-be_unused)
->  {
->         return false;
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index 5797a02e5d6a..33f8aab675a9 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -556,6 +556,8 @@ void evsel__set_leader(struct evsel *evsel, struct ev=
-sel *leader);
->  int evsel__source_count(const struct evsel *evsel);
->  void evsel__remove_from_group(struct evsel *evsel, struct evsel *leader)=
-;
->
-> +bool arch_is_topdown_slots(const struct evsel *evsel);
-> +bool arch_is_topdown_metrics(const struct evsel *evsel);
->  bool arch_evsel__must_be_in_group(const struct evsel *evsel);
->
->  bool evsel__set_needs_uniquify(struct evsel *counter, const struct perf_=
-stat_config *config);
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
-s.c
-> index 8282ddf68b98..bd09fc47ea90 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -2127,6 +2127,8 @@ static int parse_events__sort_events_and_fix_groups=
-(struct list_head *list)
->         int ret;
->         struct evsel *force_grouped_leader =3D NULL;
->         bool last_event_was_forced_leader =3D false;
-> +       bool has_slots =3D false;
-> +       bool has_metrics =3D false;
->
->         /* On x86 topdown metrics events require a slots event. */
->         ret =3D arch_evlist__add_required_events(list);
-> @@ -2147,6 +2149,11 @@ static int parse_events__sort_events_and_fix_group=
-s(struct list_head *list)
->                 if (pos =3D=3D pos_leader)
->                         orig_num_leaders++;
->
-> +               if (!has_slots)
-> +                       has_slots =3D arch_is_topdown_slots(pos);
-> +               if (!has_metrics)
-> +                       has_metrics =3D arch_is_topdown_metrics(pos);
-> +
->                 /*
->                  * Ensure indexes are sequential, in particular for multi=
-ple
->                  * event lists being merged. The indexes are used to dete=
-ct when
-> @@ -2163,6 +2170,10 @@ static int parse_events__sort_events_and_fix_group=
-s(struct list_head *list)
->                         force_grouped_idx =3D pos_leader->core.idx;
->         }
->
-> +       /* Don't regroup if there are only topdown slots events. */
-> +       if (force_grouped_idx !=3D -1 && has_slots && !has_metrics)
-> +               force_grouped_idx =3D -1;
-> +
->         /* Sort events. */
->         list_sort(&force_grouped_idx, list, evlist__cmp);
->
->
-> base-commit: 6235ce77749f45cac27f630337e2fdf04e8a6c73
-> --
-> 2.34.1
->
