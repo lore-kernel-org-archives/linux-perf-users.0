@@ -1,149 +1,101 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94523213E90;
-	Sat, 23 Aug 2025 22:04:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D537F15747D;
+	Sat, 23 Aug 2025 23:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755986656; cv=none; b=XU3CF8g9/sx0iQVovZy85kQqblkyg2H0FgbMoyS7h1oX1kQYAa8kIi4A8l3MCgqaKeUq7fK67P+G/EHXajxUBbvkJMViOkLdyKQtUo40deNMiBwsl6s/aM4uOS5xQtEA1LklFZGzvBR7AnM5Yo9GFZmPWOhSyk+rJ17Ct8D1r0w=
+	t=1755992055; cv=none; b=JC7mVC3CpN7v4Wp2IoeAe/gjIvYJQx8qFenJJxEUh8vtvNhlp/2EUG44C8+tb1BpsEa9Co6aQQFOzw6JpYwUWGAT2rBgqqwzDjd5VdWoeUQUi9fV5YJtoa79bSJ3uzOAxy4y0ac5jASsxHd2xGbkrrVE/LaxO6iGaroAB6mQV2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755986656; c=relaxed/simple;
-	bh=p8FPxRkpiveFIPvuznvmmdtULMo3VmRFVUcfwq1IO/c=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HTBwcCSh9ErVzbLitwrcN/K2bOh4kE7uFBk7pkj+EysO5NgOSnhSjYJI4OcgBtxQbOoTg4bKSKv2ShjYc/xMCPH3ZLx+70uLDQrwIP1GXUpjHV4nMoeblCrqnnrom/9NTWcDB/QnV4rxqYldC63gu85Ytk/Wryir25WsuGLwfCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from mop.sam.mop (2.8.3.0.0.0.0.0.0.0.0.0.0.0.0.0.a.5.c.d.c.d.9.1.0.b.8.0.1.0.0.2.ip6.arpa [IPv6:2001:8b0:19dc:dc5a::382])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sam)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 1DA29340E2B;
-	Sat, 23 Aug 2025 22:04:08 +0000 (UTC)
-From: Sam James <sam@gentoo.org>
-To: Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>
-Cc: acme@kernel.org,  adityag@linux.ibm.com,  adrian.hunter@intel.com,
-  ak@linux.intel.com,  alexander.shishkin@linux.intel.com,
-  amadio@gentoo.org,  atrajeev@linux.vnet.ibm.com,  bpf@vger.kernel.org,
-  chaitanyas.prakash@arm.com,  changbin.du@huawei.com,
-  charlie@rivosinc.com,  dvyukov@google.com,  james.clark@linaro.org,
-  jolsa@kernel.org,  justinstitt@google.com,  kan.liang@linux.intel.com,
-  kjain@linux.ibm.com,  lihuafei1@huawei.com,
-  linux-kernel@vger.kernel.org,  linux-perf-users@vger.kernel.org,
-  llvm@lists.linux.dev,  mark.rutland@arm.com,  mhiramat@kernel.org,
-  mingo@redhat.com,  morbo@google.com,  namhyung@kernel.org,
-  nathan@kernel.org,  nick.desaulniers+lkml@gmail.com,
-  peterz@infradead.org,  sesse@google.com,  song@kernel.org
-Subject: Re: [PATCH v5 00/19] Support dynamic opening of capstone/llvm
- remove BUILD_NONDISTRO
-In-Reply-To: <CAP-5=fV+-VZ+SsGL1SJGYMEv-gwkv1AKk_6MZJ4tLBrCXFnMQA@mail.gmail.com>
-Organization: Gentoo
-References: <87ldnacz33.fsf@gentoo.org> <87cy8mcyy4.fsf@gentoo.org>
-	<CAP-5=fV+-VZ+SsGL1SJGYMEv-gwkv1AKk_6MZJ4tLBrCXFnMQA@mail.gmail.com>
-User-Agent: mu4e 1.12.12; emacs 31.0.50
-Date: Sat, 23 Aug 2025 23:04:06 +0100
-Message-ID: <87zfbpae5l.fsf@gentoo.org>
+	s=arc-20240116; t=1755992055; c=relaxed/simple;
+	bh=Ou3GlU1zQOJmmU8eVp2MTK0zN6BUCjEfv4fi+1eMtfw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FWhVU/tXsH7mDSNGM7I994De+SGMALfBa+Bx1wQbRy0Wa/LkEWfPIIy6/qQGY1KqGpkvdKO3Lj5ZIXBKtk/cAnlFQoSZm5KcN3OeMigGfQOzvi5vCkrkpiRayCNyC3/CGqWtg49vla3zkO5nlFyFJSrQv2VpvcF+3HrIt7XySQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bcr34Lfp; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bcr34Lfp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1755992054; x=1787528054;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Ou3GlU1zQOJmmU8eVp2MTK0zN6BUCjEfv4fi+1eMtfw=;
+  b=Bcr34Lfpdm0vT/cd4AeZygOGwO6Gp+pTP4ydVS82TgV65pZgHO9/23LI
+   hVbsGuV1W/pq7nq+/dkJH9SE1DOY1+0wUPQclnr+kd181O+YJi1DiT0zM
+   ukoyD28f4FKfLfky69XvCgINU3u1xBdB9i6KY50ZCK7b7P7yKsTWIQqZ5
+   +HrSFHtl//2Q3I7i2C2Lm++QSb6NGpExZbycwlckCEAycfRopPN1LDyaX
+   H592LAmRbpzltguZxWzF+iVNjJNdqZJL5ivIkdXCrrfwCs68f5YhMvah6
+   YVuIZzMX1Wujgl27H/9IxWJMS3I7TNlb4BteGqDXo5uTmArbClQ/wJhet
+   Q==;
+X-CSE-ConnectionGUID: tEsf2KUjRHKivExVJLJObw==
+X-CSE-MsgGUID: WYgvD3MKQCCv1qiYBd6wBg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="58321427"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="58321427"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2025 16:34:13 -0700
+X-CSE-ConnectionGUID: NCL5O3N7ToavV6fTIcGBhQ==
+X-CSE-MsgGUID: /IWkKDaTTIe/tD0cjwJ2Ig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="168502721"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2025 16:34:12 -0700
+Date: Sat, 23 Aug 2025 16:34:11 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Aditya Gupta <adityag@linux.ibm.com>,
+	"Steinar H. Gunderson" <sesse@google.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Changbin Du <changbin.du@huawei.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Li Huafei <lihuafei1@huawei.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Chaitanya S Prakash <chaitanyas.prakash@arm.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	llvm@lists.linux.dev, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v5 00/19] Support dynamic opening of capstone/llvm remove
+ BUILD_NONDISTRO
+Message-ID: <aKpP8yn7hoyQJe9h@tassilo>
+References: <20250823003216.733941-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250823003216.733941-1-irogers@google.com>
 
-Ian Rogers <irogers@google.com> writes:
+> BUILD_NONDISTRO is used to build perf against the license incompatible
+> libbfd and libiberty libraries. As this has been opt-in for nearly 2
+> years, commit dd317df07207 ("perf build: Make binutil libraries opt
+> in"), remove the code to simplify the code base.
 
-> On Fri, Aug 22, 2025 at 11:52=E2=80=AFPM Sam James <sam@gentoo.org> wrote:
->>
->> > A few months ago, objdump was the only way to get
->> > source line support [0]. Is that still the case?
->>
->> ... or is this perhaps handled by "[PATCH v5 18/19] perf srcline:
->> Fallback between addr2line implementations", in which case, shouldn't
->> that really land first so people can try the LLVM impl and use the
->> binutils one if it fails?
->
-> So my opinion, BUILD_NON_DISTRO isn't supported and the code behind it
-> should go away. Please don't do anything to the contrary or enable it
-> for your distribution - this was supposed to be implied by the name.
+The last time I tried the LLVM stuff was totally broken, couldn't
+resolve many things. The only workaround was to go back to the actually
+working libbfd. Please don't remove the only working option.
 
-We're principally a source-based distribution, so it's not as much of an
-issue.
+Thanks,
 
-> The forking and running addr2line gets around the license issue that
-> is GPLv3* but comes with a performance overhead. It also has a
-> maintenance overhead supporting llvm and binutil addr2line, when the
-> addr2line output changes things break, etc. (LLVM has been evolving
-> their output but I'm not aware of it breaking things yet). We should
-> (imo) delete the forking and running addr2line support, it fits the
-> billing of something we can do when capstone and libLLVM support
-> aren't there but the code is a hot mess and we don't do exhaustive
-> testing against the many addr2line flavors, the best case is buyer
-> beware. Capstone is derived from libLLVM, I'm not sure it makes sense
-> having 2 libraries for this stuff. There's libLLVM but what it
-> provides through a C API is a mess requiring the C++ shimming. Tbh, I
-> think most of what these libraries provide we should just get over
-> ourselves and provide in perf itself. For example, does it make sense
-> to be trying to add type annotations to objdump output, to just update
-> objdump or have a disassembler library where we can annotate things as
-> we see fit? Library bindings don't break when text output formats get
-> tweaked. Given we're doing so much dwarf processing, do we need a
-> library for that or should that just be in-house? We can side step
-> most of this mess by starting again in python as is being shown in the
-> textual changes that bring with it stuff like console flame graphs:
-> https://lore.kernel.org/lkml/CAP-5=3DfU=3Dz8kcY4zjezoxSwYf9vczYzHztiMSBvJ=
-xdwwBPVWv2Q@mail.gmail.com/
-> So I think long term we make the perf tool minimal with minimal
-> dependencies (ie no addr2line, libLLVM, etc.), we work on having nice
-> stuff in the python stuff where we can reuse or build new libraries
-> for addr2line, objdump-ing, etc. Use >1 thread, use asyncio, etc.
+-Andi
 
-Yeah, this absolutely sounds like the right direction indeed. I'm glad
-to hear it.
-
->
-> For where we are now, ie no python stuff, BUILD_NON_DISTRO should go
-> away as nobody is maintaining it and hasn't for 2 years (what happens
-> when libbfd and libiberty change?)
-
-They don't change often, though. The fixes are usually trivial when they
-do arise.
-
-> We should focus on making the best
-> of what we have via libraries/tools that are supported - while not
-> forcing the libraries to be there or making the perf binary massive by
-> dragging in say libLLVM. The patch series pushes in that direction and
-> I commend it to the reader.
->
-> No, reordering the patches to compare performance of binutils doesn't
-> make sense, just build with and without the patch series if you want
-> to do this, but also don't do this as BUILD_NON_DISTRO should go away.
-
-I was asking purely because of the *functionality loss*, though, not
-performance. In the thread I linked from just a few months ago with Ingo
-Molnar, there was a real issue with llvm or capstone-based disassembly
-not showing source information. I'd hit the same problem. Is that fixed now?
-
-This is my principal concern rather than the LLVM dependency (even if
-I'd love to avoid that, I understand and appreciate the arguments you're
-making above and intent on future direction).
-
->
-> Thanks,
-> Ian
->
-> * (As I understand the issue IANAL) GPLv3 and GPLv2 can't be linked
-> together. Why not just use GPLv3? A major issue for me is that GPLv3
-> adds a requirement for =E2=80=9CInstallation Information=E2=80=9D to be p=
-rovided,
-> which means placing a binary in a cryptographically signed OS
-> partition you'd need to reveal the signing key which defeats the
-> purpose of signing the partition to ensure you aren't hacked. I like
-> open source and using the code, I don't want to be hacked by giving to
-> the hackers my signing keys.
-
-I think the way people usually handle this is allowing a custom key to
-be added, but then it taints the device. That's how I think routers seem
-to handle it often anyway.
