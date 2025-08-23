@@ -1,16 +1,16 @@
 Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A91821A457;
-	Sat, 23 Aug 2025 06:49:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CC672623;
+	Sat, 23 Aug 2025 06:52:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755931753; cv=none; b=L11/OYc3vLDnRX2ONr40VkL6q02bTRMKAweFwYEuh/wAhzbEPmPxxFRUcBIZODB/FCem4SbOhDrL53FN0/nlMrF7y21TcRuE/pYObzCh7JY1kHMKnKaXhbnJRj8XUv75Hqmc3E2LCgXCPzZTgNwddGvydqHRLQIDvmhWO+cXyOg=
+	t=1755931933; cv=none; b=Ad0+PwPS0s32Tn87OVfhDHBJ8C8H+WVCJ6etvZ0kU4LG7o14YQtmJnpPMpBMhcZ5g2dxV6WregT9i0vCRqCwBcDwrMu2+0yoJ8crqHReHHfBL1XjTOFuFuHS3g4vl+LshP9zSmArNDwlk0WCqcgqmB4aoex3nCxVfpsx7h0TGCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755931753; c=relaxed/simple;
-	bh=JuPmb3uHuzsOvpA/Et1mzggjy+NHYvPepLmklmkPxAw=;
+	s=arc-20240116; t=1755931933; c=relaxed/simple;
+	bh=WWjVB3yFJIdS6R9JonpnjV7Az6tTIUBsiyXY8fEo234=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:MIME-Version:
-	 Content-Type; b=XRMQeuV0W7v3IvZaY4AaGFTlMl6zRIL3CrFLD+cMlsLTjJ9bCSwCdl/eS+r2J6pYC7y5gs6gVcv+De4ri+/1fQi0fzsBz3rJUt8ezte5XXvUr1giLbzU8ZGIp+ghdKo431Rg25Sc03QFTs9eP7fMGuHwnjIuLXe5d5mfqDUvKkI=
+	 Content-Type; b=oaA2lXsHSbqJE5cFeWle8Jba7gdR+xswHioWYWp+BR1RIscieOYibBtv5+EkKRS32CRzzaAWwZ0gIvrB8WxEL5AEDVoC+UxM9XLi26JaNpW0B4boHl+esoinkyzB5cG+pqOF2qdaxFQJqnQVwh4Bz8sNdUDeJIBvpatnhL4K3LY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
@@ -19,18 +19,18 @@ Received: from mop.sam.mop (2.8.3.0.0.0.0.0.0.0.0.0.0.0.0.0.a.5.c.d.c.d.9.1.0.b.
 	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: sam)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 13BC0340D54;
-	Sat, 23 Aug 2025 06:49:06 +0000 (UTC)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 068BD340D7F;
+	Sat, 23 Aug 2025 06:52:05 +0000 (UTC)
 From: Sam James <sam@gentoo.org>
-To: irogers@google.com, amadio@gentoo.org
-Cc: acme@kernel.org,adityag@linux.ibm.com,adrian.hunter@intel.com,ak@linux.intel.com,alexander.shishkin@linux.intel.com,atrajeev@linux.vnet.ibm.com,bpf@vger.kernel.org,chaitanyas.prakash@arm.com,changbin.du@huawei.com,charlie@rivosinc.com,dvyukov@google.com,james.clark@linaro.org,jolsa@kernel.org,justinstitt@google.com,kan.liang@linux.intel.com,kjain@linux.ibm.com,lihuafei1@huawei.com,linux-kernel@vger.kernel.org,linux-perf-users@vger.kernel.org,llvm@lists.linux.dev,mark.rutland@arm.com,mhiramat@kernel.org,mingo@redhat.com,morbo@google.com,namhyung@kernel.org,nathan@kernel.org,nick.desaulniers+lkml@gmail.com,peterz@infradead.org,sesse@google.com,song@kernel.org
+To: sam@gentoo.org
+Cc: acme@kernel.org,adityag@linux.ibm.com,adrian.hunter@intel.com,ak@linux.intel.com,alexander.shishkin@linux.intel.com,amadio@gentoo.org,atrajeev@linux.vnet.ibm.com,bpf@vger.kernel.org,chaitanyas.prakash@arm.com,changbin.du@huawei.com,charlie@rivosinc.com,dvyukov@google.com,irogers@google.com,james.clark@linaro.org,jolsa@kernel.org,justinstitt@google.com,kan.liang@linux.intel.com,kjain@linux.ibm.com,lihuafei1@huawei.com,linux-kernel@vger.kernel.org,linux-perf-users@vger.kernel.org,llvm@lists.linux.dev,mark.rutland@arm.com,mhiramat@kernel.org,mingo@redhat.com,morbo@google.com,namhyung@kernel.org,nathan@kernel.org,nick.desaulniers+lkml@gmail.com,peterz@infradead.org,sesse@google.com,song@kernel.org
 Subject: Re: [PATCH v5 00/19] Support dynamic opening of capstone/llvm
  remove BUILD_NONDISTRO
-In-Reply-To: <20250823003216.733941-1-irogers@google.com>
+In-Reply-To: <87ldnacz33.fsf@gentoo.org>
 Organization: Gentoo
 User-Agent: mu4e 1.12.12; emacs 31.0.50
-Date: Sat, 23 Aug 2025 07:49:04 +0100
-Message-ID: <87ldnacz33.fsf@gentoo.org>
+Date: Sat, 23 Aug 2025 07:52:03 +0100
+Message-ID: <87cy8mcyy4.fsf@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -39,14 +39,10 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-> As this has been opt-in for nearly 2 years, commit dd317df07207 ("perf build: Make binutil libraries opt
-> in"), remove the code to simplify the code base.
+> A few months ago, objdump was the only way to get
+> source line support [0]. Is that still the case?
 
-I don't think this is a reason to remove it by itself. We've been
-enabling it in Gentoo and happily using it.
-
-Anyway, my main concern (though I have a few) is that annotate support
-will be lacking. A few months ago, objdump was the only way to get
-source line support [0]. Is that still the case?
-
-[0] https://lore.kernel.org/all/Z_S_JB_L_t9viciV@google.com/
+... or is this perhaps handled by "[PATCH v5 18/19] perf srcline:
+Fallback between addr2line implementations", in which case, shouldn't
+that really land first so people can try the LLVM impl and use the
+binutils one if it fails?
