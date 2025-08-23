@@ -1,145 +1,103 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372D129B214
-	for <linux-perf-users@vger.kernel.org>; Fri, 22 Aug 2025 18:02:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71682B9BA
+	for <linux-perf-users@vger.kernel.org>; Sat, 23 Aug 2025 00:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755885761; cv=none; b=mBKtUEBZ6slhYbOe4lLyNclEO9Af8Jchk+U+PnvG/kCygugnFNuQMiJMWMVQC5NT9UdaJsRRf0ZyJVuIqBRcM0pWLqvxzD29pSWpYeCYcYUw/Qef8rbGsaKf92vKmaLxH06+m/2RV9sdJGUBkWLx4QZrS6crZp4eL/n5h1KOJMQ=
+	t=1755907240; cv=none; b=XZk8mO0cAIG0jBmjygzwfeEvFVjenp8DUcEPr4Q/iMEbG8Ip6aGuFWGPMwAmahrivtGXdMk/+IZo5AoGfKWQgrXgS0Zk2uFh5wfWN0aIHOZBfKgl8QBE1sbWnq1R9NHBMWywAdRmw3IkkNMt6r+MzebqIzwI735BeVn4jkXuZlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755885761; c=relaxed/simple;
-	bh=Tb1rxvji81DhNvos9+34Dpiz+Ba65Rcpm8zkhIppG0Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tWpwj6L8wxaTvj8UThVENc5DyFkmjp1p4CXdLUrZueeyYTK9RCR4Cwnac6MAxclWU9lmJ3g+gFtNcqUN0jMGq+mIP8ISkWJSv8qJ+BlDA3y54t5Je108f7ApnoLzORMn7uuscTqSTWgMrPymgijUd/ZcgMprHKilB/wfNMY2JEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q2IsVA4u; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1755907240; c=relaxed/simple;
+	bh=nc5wVeijK9Wjrn+uLqWACfEooHV8FiDKIuhW3vIA6SE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=eyfsb64GnhOmum0ybQu/7Y+FjqPo3j+/AJq8FdS4S6ubUxpGJJmVdWIElCVk1ocmQJMGnPY4mempoiZ3haJ6ODBUGwtLVGAJVfPydB0B4tslYd6vwU8VsJmCM5ERqiFhywdRp0VKUikLAZFP3407SUeBgW6RBUw8xjSCwx60kVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p/YGDR2Q; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q2IsVA4u"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-246257e49c8so22435ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 22 Aug 2025 11:02:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p/YGDR2Q"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2445820337cso28415975ad.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 22 Aug 2025 17:00:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755885759; x=1756490559; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wWb7ujFJINgkd2DMZmp5XVtgDqGOY0d1N6wa3FF1s2Y=;
-        b=q2IsVA4uk7cAFQyRT8/zD5kkaWNv1H7tnRqdHK6frrKyZpDmpAX3ASRhPpVgPnp+F7
-         UxXg8ZWXnVnn93ZNqpRPrJfXC+q1dGh/Ekh/1QGBzsn5pQLAfkEpIzCKvVdAl8VNb5Ek
-         +A8Bihb4cixZdjz4p7sbaOoBjn1USipl8C9PUqlcrtmhplKf14KijV5ELIBSXXl6kqv6
-         CcV3QgD6m0eiA69MGn8nDfZiNTGbI2dj32Wm7RrjWPTis3E8qX6H5bvOvUaots9dPHQt
-         ISzlYhrK4njCGjFMeG756/SfhcUukKI3g9VMOi//0uyWEpGa70lC405sMlwFIMb40geP
-         hw5g==
+        d=google.com; s=20230601; t=1755907238; x=1756512038; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=CfWFIMVz0mm2fZwbJirBIf2BOl0V5TcQ24dxKezr25Q=;
+        b=p/YGDR2QA8CKJQC1AdsFEprBOqrIC+VCpohBrnfIX/m62QIKvIfuJ6RM5moS3k7WyL
+         V6LIrjpegqoEB4QeKB+mrkC7UllwAg7INYXz6MwIaLVIF/EhuIpo4r4Ri6Y+TY7gb5Ev
+         knscJg0lcJUZHsQCJ94efaT/s3eIVlpxU+q1aeW5eoA9oul/oD/K1fo9f/xHp2J86dEG
+         KNzSzV9HOd/+3guE5u6MeKePJ9ttDAZaPP2um5j+hBZhy5j136kuUd08bmUwqNQr8rQA
+         i4LE9rO5D1JcEtHtrybAC0b98MlTOhrgLdHdCYUOlo+BhPmcAN4o7sb3v8DiEifpy8zk
+         BEZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755885759; x=1756490559;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wWb7ujFJINgkd2DMZmp5XVtgDqGOY0d1N6wa3FF1s2Y=;
-        b=mwl43ErTyN3wSf3LzXsjdCiR1RpzGi0h8FvxgMVYnFmjNjxHxaagVu5l5SZ4XOvoaB
-         aU0AuWJRR2s2lg8qpw0kpVfzubl/mISuioMBlCWrlgTt+oLw8/bRcwkXWCqq5acxesu4
-         Q0EKYs0zE37iwT0MOzGnM4taLNKAngnaG9wvqSleBAWpin7VtpqS1rl4nqvqhaoe21+X
-         vH+fAwf5Db+b9PM5fUBwLjUsqQxt7cunuaqzaI+4qi51NJLHjq24+8Ym7Ep065uI6KVT
-         XqtmtVcBSpJkX9G/hhy4kbXK2ryX6b5KIbScmgj8VikIJdyzxLSRm1BWTZdLwY4izGb4
-         ryGw==
-X-Forwarded-Encrypted: i=1; AJvYcCXPbgRjeTUGVckkXnQ31VdRh6/cSdLHDZIVh9SMchGq/McRdNWemqownQg29RWHRMcJGCwhGeEI2mpYh1NLEnl1@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDTRJD7+wTjtslWa8ul39+nBExjj91APOuE2ELjHKCzK7ulhUU
-	QsSesIXf8wTvyfQvWoOourgZtcj83fgR34z+keciL8uX5Hg+kKebDVOC+Nxw3E8gZcrlmdUKeLe
-	XHBSq3VczWO1Ra5ryPBr26o187c6ki03rqebY5Gce
-X-Gm-Gg: ASbGnct2ikKRYgss+b3BJ9UsOgfQ3RkokP/7lmhClDwPMMPGfJ1xvL1NUCAr98CmANm
-	2BV1iqiLGygy7ZvcijLxx4P5FlhCQ5NPcVjB7XjldoOK5go8PeMGe2NzrskSbWOqWVQwy4KNO+W
-	rr4ZgXYvN6q0dcgXg5EapgHSFKeB+sY3zFJCpMsnLkfdE9YhMLPkW4Obo2QJzKzO+n6dNVdvoid
-	934SLKUNjrRHgc=
-X-Google-Smtp-Source: AGHT+IFA2af6rcs83KxLB8fpKojCpWMKu9Z76RWMk+J7SWpv7uZ/ZhBHV2AkeRZ3bikP+3HIPQPdbu4m0lj7cvNT4m0=
-X-Received: by 2002:a17:903:2f82:b0:240:520b:3cbc with SMTP id
- d9443c01a7336-2466fa251e2mr168825ad.14.1755885759046; Fri, 22 Aug 2025
- 11:02:39 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1755907238; x=1756512038;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CfWFIMVz0mm2fZwbJirBIf2BOl0V5TcQ24dxKezr25Q=;
+        b=JqbeawXGgTz+VvxG7qCRU0wBTcLLM88ogd/aLAGzpRTRDZmozabzXjuZ3UhYOPlEpB
+         ReO7VCz9vDZzChd9ofaLDAPK/RtZiW1q5shq45RxP+jmP14JrIRZ3MYN+ijo+6LDKVts
+         0hQ6b2dKWZgBIgsNAkbAtZ9diyKnrY3jFWhbTk0Iew+tlbDkaJ4dZih4bILrpyvhDMna
+         jaFhJ0V9H6zlA2PtvPn0kN+B537Lyv90yMKIRCGqgUbc+5ViDnA5lAg7URmWx3aVbaM5
+         lZ5C/fu0iGnORKWx8rPj6e74ahDvShfrRaLB00WwZKFFnNxplaaDIpn9c3KyNEFoKlBT
+         C6VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5y0mBUWtPePVBF+gApwWO9E/uOe7J2RM9d96ScVXPM35RhZtg7SO94awdy4wz8Nwe4XkMfSU1mQPdkkjItVAV@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxblgsPNLLr3bT+OthAcPeq8nhun8AiSTW4UYQxGwFuRzJAcwN
+	VPHgzaibLixnXC96PuL/UkYuGML2HeEewnNi7d/FT6e0GySPH3Fg/TFCc3lBdsRLzMqAi8ONN2F
+	F9A4zdCz+KQ==
+X-Google-Smtp-Source: AGHT+IG/VGthMy/qmvxyNzqmFHntL0M8KkI/7D+gED1RZgKsZVo3/xXoLaEGAswtOFcHoSsKkiL04hwQRIBl
+X-Received: from pldp2.prod.google.com ([2002:a17:902:eac2:b0:245:f002:d659])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d4ca:b0:234:cf24:3be8
+ with SMTP id d9443c01a7336-2462ef0380amr64931075ad.28.1755907237930; Fri, 22
+ Aug 2025 17:00:37 -0700 (PDT)
+Date: Fri, 22 Aug 2025 17:00:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250822122540.4104658-1-tmricht@linux.ibm.com>
-In-Reply-To: <20250822122540.4104658-1-tmricht@linux.ibm.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.51.0.rc2.233.g662b1ed5c5-goog
+Message-ID: <20250823000024.724394-1-irogers@google.com>
+Subject: [PATCH v1 0/2] Build ID mmap related fixes
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 22 Aug 2025 11:02:27 -0700
-X-Gm-Features: Ac12FXyykAui8r7AO-hPS1XawpXPdLCTa7zC7cWNH1M5PInPONEDUvbV_1htBbE
-Message-ID: <CAP-5=fW43ZAguuB-FB2F6CFTCgd1Fy1Xd+WAt4WSA-fMRTwG5A@mail.gmail.com>
-Subject: Re: [Ping][PATCH] perf test: Checking BPF metadata collection fails
- on version string
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org, 
-	blakejones@google.com, agordeev@linux.ibm.com, gor@linux.ibm.com, 
-	sumanthk@linux.ibm.com, hca@linux.ibm.com, japo@linux.ibm.com
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Collin Funk <collin.funk1@gmail.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	Stephen Brennan <stephen.s.brennan@oracle.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Haibo Xu <haibo1.xu@intel.com>, Dmitry Vyukov <dvyukov@google.com>, Song Liu <song@kernel.org>, 
+	Thomas Falcon <thomas.falcon@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 22, 2025 at 5:26=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
-om> wrote:
->
-> commit edf2cadf01e8f ("perf test: add test for BPF metadata collection")
->
-> fails consistently on the version string check. The perf version
-> string on some of the constant integration test machines contains
-> characters with special meaning in grep's extended regular expression
-> matching algorithm. The output of perf version is:
->
->  # perf version
->  perf version 6.17.0-20250814.rc1.git20.24ea63ea3877.63.fc42.s390x+git
->  #
->
-> and the '+' character has special meaning in egrep command.
-> Also the use of egrep is deprecated.
->
-> Change the perf version string check to fixed character matching
-> and get rid of egrep's warning being deprecated. Use grep -F instead.
->
-> Output before:
->  # perf test -F 102
->  Checking BPF metadata collection
->  egrep: warning: egrep is obsolescent; using grep -E
->  Basic BPF metadata test [Failed invalid output]
->  102: BPF metadata collection test             : FAILED!
->  #
->
-> Output after:
->  # perf test -F 102
->  Checking BPF metadata collection
->  Basic BPF metadata test [Success]
->  102: BPF metadata collection test             : Ok
->  #
->
-> Fixes: edf2cadf01e8f ("perf test: add test for BPF metadata collection")
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
-> Cc: Blake Jones <blakejones@google.com>
+Now that build ID mmap is the default I was seeing hangs during event
+synthesis in the perftool-testsuite_report. The hang was happening due
+to data pages giving block device file paths and opening the file to
+read a build ID was blocking in the open. In investigating this issue
+a bug in symbol-minimal was found. These 2 patches fix both issues. As
+the issues are present in v6.17-rc2, I think it would be worthwhile to
+add the patches as v6.17 fixes.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Ian Rogers (2):
+  perf symbol-minimal: Fix ehdr reading in filename__read_build_id
+  perf symbol: Add blocking argument to filename__read_build_id
 
-Thanks,
-Ian
+ tools/perf/bench/inject-buildid.c  |  2 +-
+ tools/perf/builtin-buildid-cache.c |  8 ++--
+ tools/perf/builtin-inject.c        |  4 +-
+ tools/perf/tests/sdt.c             |  2 +-
+ tools/perf/util/build-id.c         |  4 +-
+ tools/perf/util/debuginfo.c        |  8 +++-
+ tools/perf/util/dsos.c             |  4 +-
+ tools/perf/util/symbol-elf.c       |  9 +++--
+ tools/perf/util/symbol-minimal.c   | 59 +++++++++++++++---------------
+ tools/perf/util/symbol.c           |  8 ++--
+ tools/perf/util/symbol.h           |  2 +-
+ tools/perf/util/synthetic-events.c |  2 +-
+ 12 files changed, 58 insertions(+), 54 deletions(-)
 
-> ---
->  tools/perf/tests/shell/test_bpf_metadata.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/tests/shell/test_bpf_metadata.sh b/tools/perf/tes=
-ts/shell/test_bpf_metadata.sh
-> index 69e3c2055134..be67d56e0f09 100755
-> --- a/tools/perf/tests/shell/test_bpf_metadata.sh
-> +++ b/tools/perf/tests/shell/test_bpf_metadata.sh
-> @@ -61,7 +61,7 @@ test_bpf_metadata() {
->                 /perf_version/ {
->                         if (entry) print $NF;
->                 }
-> -       ' | egrep "$VERS" > /dev/null
-> +       ' | grep -qF "$VERS"
->         then
->                 echo "Basic BPF metadata test [Failed invalid output]"
->                 err=3D1
-> --
-> 2.50.1
->
->
+-- 
+2.51.0.rc2.233.g662b1ed5c5-goog
+
