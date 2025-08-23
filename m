@@ -1,377 +1,198 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7C424CEEA
-	for <linux-perf-users@vger.kernel.org>; Sat, 23 Aug 2025 00:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE3EFBF6
+	for <linux-perf-users@vger.kernel.org>; Sat, 23 Aug 2025 00:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755907244; cv=none; b=SegM6mH/bAuplGIznRgnz23oI2Kn0CU9EOE26uKANIBwgy0IB2cQAh0GarZQuzE5CHqToJyIT9ct9NiLX1AzFOfxnUJYeTeTRFaiERMtDWcj6E9r2r5V0lAl9DZejvJJZXRAI6b++QmPNcHfWxSWu4nKsvCUFAdv1QMSh/Rx0Ic=
+	t=1755909152; cv=none; b=qInNfWH2b0InDGxM9WzuhJg7CmwCEyQ59rN16nzCVglfGefhU8YGntV2GjB/LfYCKLC+gefrNi7vBBRXLoAUA2sOJ3VXK0t8YJW4DFkQwmE0MD/8HDuudDiyXTtRZj+OtjdmaDktIr2wqXI6WhOX4HyPgk0MwcTLth2bIbRGOFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755907244; c=relaxed/simple;
-	bh=NM3DeuEEtAaAuRHK2RaSfe/aDNVsrnZNl/fWVpPhJkw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=cN4va8+Op8aqyPFNMz8iJihZLEjxGD7sxuXwwQ7Lj2+BI70LI0vmrGW6/ev8I7C1UMKqtgBQyJh1dJo7lDeECwu0F/17c5CP9b3l3CCBNMvKmh34NvawnrgaD4XOsYfnhlQpHfD+ptsv3LOTumHXb/N2GfzUbDCjT/ffHwlJbgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Is3HS8RH; arc=none smtp.client-ip=209.85.214.201
+	s=arc-20240116; t=1755909152; c=relaxed/simple;
+	bh=mZ5k/3Vkyfz8Z4KJVL7joRVzBpIaiSreRWEnmU1umtk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=oQ75z2iY/4uoTZS4qwaAC/vPmfl4vlOUl1sazNdFbztby+4OuyaD+EbeDc7bAGsPm9bTToiAP4JOJ8UuXZWY5MRZqrgz/sVhERHe+F8LHBz92vwAYZ4Qct26lrEeyzkhN1YHjgTF4h7zugSDkj9A/DS5h9G13vYmvD+7waLJ0nM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aETvgwLV; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Is3HS8RH"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-244581ce388so57267945ad.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 22 Aug 2025 17:00:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aETvgwLV"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-24457ef983fso53504635ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 22 Aug 2025 17:32:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1755907242; x=1756512042; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ouvN9Z/KSAqQFTzs2r7I/5ZrSF7aA646JZI4/Fn2ePU=;
-        b=Is3HS8RHwHzdcDRxsbuZpkOAdrKTiVUqrRLGv9Fh9pluxO+BHB7JWd/Ds5T7MHwDVB
-         5wpkjBVlsh26UyQOj9dK0OjWBZXD2e1ckRZj0Roq2Jw8lph9CLQvfsH5EhkpaRQlqB5l
-         g5+aXurOW8VyXq57IxpocS2XGwv+3raApRn1Ql9LS6QfkILPOLsEr1ak1zrO9HFYeQ/U
-         1dpmSNFshX/KikY/Tv1SqOnhJqCxw4n2PNmvevgQ59YYzglyrWI+cRiB4gWIy+Lpql18
-         Mt+j7ZNHoaq7ixOTD100kikTILOz62g9LDCMHvdkAlJVscaUo+P8f3MHRmiQwF/vukIG
-         Xxtw==
+        d=google.com; s=20230601; t=1755909149; x=1756513949; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=YShzOxlKe/FmAZPtZyBmMwoWni8azVcezuusK/af7Dk=;
+        b=aETvgwLVbGEKsa6VrOlPSE9COytVEI2kxbOd9e9uQfhD1o9GVdUuP3ZcSi7GAjaHQ/
+         JI8eslp/vsmzP8m6TbNwWYCsRGdedgI20/m9RfeFjoC7ylECO0uL8DJqFMQa0PkwN+7b
+         rc6pQ2tp+g4oMmauySVJKBSfNS+gwAaAEvaT5hzjs0zNirUA7bFXtpnEoodMuJarkkpU
+         L+NZiXxeFDOZvuELzmTRVAyGpOxrPErx0OigvbIIt5lEMqWvipQwIvpwhvAkth9jWTR2
+         8Xyb5FUvEwUx9cqs7CGXQrv4p7Uc1GmLzSHiVbyGw000WhL9SA1RbhfmrzTfRAaFczIu
+         JDyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755907242; x=1756512042;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ouvN9Z/KSAqQFTzs2r7I/5ZrSF7aA646JZI4/Fn2ePU=;
-        b=g9UW8kzdf4HUP46PbOCKA3+ggrbgOb8FQTlxD+BZoBBGB2eRe77rvhQH8zEXdpa9aX
-         kRRR4MMTH3ZyBLB9UaPpw1Ns0nB+oQNqGPv9WTzaieYwhbw/rkeCirp5i5ia4h6nUo9g
-         wQYmbmJg9n15bhKsdDHkxE0iiKKWpHtOqKmxamqlJwMhSoUZruHMbLn1GJTNs5+lxtu4
-         91vGqs3HFIU6WucJN7G71LT4py3qJYpBNoTDT03SLn7ja7oNSThAtj6QmY5ihMuOgVC+
-         FCPYkOVtt3JFIuTvgOUD5Bw4CJlbLTqra72U/UlsZvlpY011y4rNHwRnEfoMNp6eXQxY
-         UJCg==
-X-Forwarded-Encrypted: i=1; AJvYcCW/AjnvS5md3MEk9QCbLzRLROJ88IrGOYgOvw2qZ3VInJmhxk2NNGYuU4KohiEC6IgoB2+d8cvAVF0ATn9snfF+@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPD/x+LW2JJoso625Y1SvnJFNC8hALBYXqk5xgq0Ex+hEaAKev
-	AVJi6QzyBOn+TRCFDtO62zxyGQJBI4NDIeXTac0zkjegEPaUODaA3asykov+tZBckc+DjbrkHKd
-	YF+WX7/OaxQ==
-X-Google-Smtp-Source: AGHT+IHBE+a/Nwo51dwHhNmlO51ZDKIzz+BjXguGQZ6jdUmxmLzkgl3rDdG548uoUhX4kHE8w87O0lFUxGRq
-X-Received: from plgv17.prod.google.com ([2002:a17:902:e8d1:b0:23f:f68b:fa0c])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2f44:b0:240:1850:cb18
- with SMTP id d9443c01a7336-2462efaee75mr68904135ad.53.1755907242498; Fri, 22
- Aug 2025 17:00:42 -0700 (PDT)
-Date: Fri, 22 Aug 2025 17:00:24 -0700
-In-Reply-To: <20250823000024.724394-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1755909149; x=1756513949;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YShzOxlKe/FmAZPtZyBmMwoWni8azVcezuusK/af7Dk=;
+        b=TDV33aZm5E8B/C7X6mY2LliFzblDzzWGqo5ohVAwRtZYyRgt5PzfmTftEob9cNLtU5
+         LNKnhuTiv6N4/Yi63OSmCACArBtsp4SvCSjYhFuLinVWKB762afV7hAxDQYdT3CmpjKC
+         yL6p02LEdkWemGWw3OLQbT5IAqWJda5Xet5LP1BOqtanw60DN73u3VxvJMZkvD2FvBrE
+         gzDAtcuRN2j67q50k2Vkd4waqnpOfUu1yXDKxjVPMMlN1POV6beu5zFzHu/ZsnlkrgUY
+         tFTMX21C2pZONsy5iRlngFah9iGqqmHtFw0AtlSsPBYGyaXcx8vLcr+evrv3bMa2++jD
+         pgcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW5/VVOQlWrkkaL1CJnkVOHJnNle9cfCU/p3+hL925lyih8CtRy6iLij6lx2qMRR5uwjmMgLL6tgXdtyPl2619I@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzgu2Vtz1nTYgWkoP0+lQDiJLrHqayrHqk3YB/KLwH+QFnvKeP4
+	1RP9z46bnM3W3T9Q7Jc0QueY4rflW00Qb1XQMtEncz8iufPZKWGMkolVNL83+MntYaaP2UF/oR7
+	1gxGprqIhfQ==
+X-Google-Smtp-Source: AGHT+IGzr6GhJucF9cOZgIikuIRQUPQ/76/GCNWGjtrx0aVv6U1BMzYz9dndilEDmun6oUSPS7zZGIkHIVj6
+X-Received: from plbd18.prod.google.com ([2002:a17:902:f152:b0:23f:fded:852b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d4cf:b0:244:9c9e:3c6d
+ with SMTP id d9443c01a7336-2462ef1307cmr63652425ad.46.1755909148861; Fri, 22
+ Aug 2025 17:32:28 -0700 (PDT)
+Date: Fri, 22 Aug 2025 17:31:56 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250823000024.724394-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.rc2.233.g662b1ed5c5-goog
-Message-ID: <20250823000024.724394-3-irogers@google.com>
-Subject: [PATCH v1 2/2] perf symbol: Add blocking argument to filename__read_build_id
+Message-ID: <20250823003216.733941-1-irogers@google.com>
+Subject: [PATCH v5 00/19] Support dynamic opening of capstone/llvm remove BUILD_NONDISTRO
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Collin Funk <collin.funk1@gmail.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
-	Stephen Brennan <stephen.s.brennan@oracle.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Haibo Xu <haibo1.xu@intel.com>, Dmitry Vyukov <dvyukov@google.com>, Song Liu <song@kernel.org>, 
-	Thomas Falcon <thomas.falcon@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	Kan Liang <kan.liang@linux.intel.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Aditya Gupta <adityag@linux.ibm.com>, 
+	"Steinar H. Gunderson" <sesse@google.com>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Changbin Du <changbin.du@huawei.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	James Clark <james.clark@linaro.org>, Kajol Jain <kjain@linux.ibm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Li Huafei <lihuafei1@huawei.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, 
+	Chaitanya S Prakash <chaitanyas.prakash@arm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev, 
+	Song Liu <song@kernel.org>, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-When synthesizing build-ids, for build ID mmap2 events, they will be
-added for data mmaps if -d/--data is specified. The files opened for
-their build IDs may block on the open causing perf to hang during
-synthesis. There is some robustness in existing calls to
-filename__read_build_id by checking the file path is to a regular
-file, which unfortunately fails for symlinks. Rather than adding more
-is_regular_file calls, switch filename__read_build_id to take a
-"block" argument and specify O_NONBLOCK when this is false. The
-existing is_regular_file checking callers and the event synthesis
-callers are made to pass false and thereby avoiding the hang.
+Linking against libcapstone and libLLVM can be a significant increase
+in dependencies and file size if building statically. For something
+like `perf record` the disassembler and addr2line functionality won't
+be used. Support dynamically loading these libraries using dlopen and
+then calling the appropriate functions found using dlsym.
 
-Fixes: 53b00ff358dc ("perf record: Make --buildid-mmap the default")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/bench/inject-buildid.c  | 2 +-
- tools/perf/builtin-buildid-cache.c | 8 ++++----
- tools/perf/builtin-inject.c        | 4 ++--
- tools/perf/tests/sdt.c             | 2 +-
- tools/perf/util/build-id.c         | 4 ++--
- tools/perf/util/debuginfo.c        | 8 ++++++--
- tools/perf/util/dsos.c             | 4 ++--
- tools/perf/util/symbol-elf.c       | 9 +++++----
- tools/perf/util/symbol-minimal.c   | 6 +++---
- tools/perf/util/symbol.c           | 8 ++++----
- tools/perf/util/symbol.h           | 2 +-
- tools/perf/util/synthetic-events.c | 2 +-
- 12 files changed, 32 insertions(+), 27 deletions(-)
+BUILD_NONDISTRO is used to build perf against the license incompatible
+libbfd and libiberty libraries. As this has been opt-in for nearly 2
+years, commit dd317df07207 ("perf build: Make binutil libraries opt
+in"), remove the code to simplify the code base.
 
-diff --git a/tools/perf/bench/inject-buildid.c b/tools/perf/bench/inject-buildid.c
-index aad572a78d7f..12387ea88b9a 100644
---- a/tools/perf/bench/inject-buildid.c
-+++ b/tools/perf/bench/inject-buildid.c
-@@ -85,7 +85,7 @@ static int add_dso(const char *fpath, const struct stat *sb __maybe_unused,
- 	if (typeflag == FTW_D || typeflag == FTW_SL)
- 		return 0;
- 
--	if (filename__read_build_id(fpath, &bid) < 0)
-+	if (filename__read_build_id(fpath, &bid, /*block=*/true) < 0)
- 		return 0;
- 
- 	dso->name = realpath(fpath, NULL);
-diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
-index c98104481c8a..2e0f2004696a 100644
---- a/tools/perf/builtin-buildid-cache.c
-+++ b/tools/perf/builtin-buildid-cache.c
-@@ -180,7 +180,7 @@ static int build_id_cache__add_file(const char *filename, struct nsinfo *nsi)
- 	struct nscookie nsc;
- 
- 	nsinfo__mountns_enter(nsi, &nsc);
--	err = filename__read_build_id(filename, &bid);
-+	err = filename__read_build_id(filename, &bid, /*block=*/true);
- 	nsinfo__mountns_exit(&nsc);
- 	if (err < 0) {
- 		pr_debug("Couldn't read a build-id in %s\n", filename);
-@@ -204,7 +204,7 @@ static int build_id_cache__remove_file(const char *filename, struct nsinfo *nsi)
- 	int err;
- 
- 	nsinfo__mountns_enter(nsi, &nsc);
--	err = filename__read_build_id(filename, &bid);
-+	err = filename__read_build_id(filename, &bid, /*block=*/true);
- 	nsinfo__mountns_exit(&nsc);
- 	if (err < 0) {
- 		pr_debug("Couldn't read a build-id in %s\n", filename);
-@@ -280,7 +280,7 @@ static bool dso__missing_buildid_cache(struct dso *dso, int parm __maybe_unused)
- 	if (!dso__build_id_filename(dso, filename, sizeof(filename), false))
- 		return true;
- 
--	if (filename__read_build_id(filename, &bid) == -1) {
-+	if (filename__read_build_id(filename, &bid, /*block=*/true) == -1) {
- 		if (errno == ENOENT)
- 			return false;
- 
-@@ -309,7 +309,7 @@ static int build_id_cache__update_file(const char *filename, struct nsinfo *nsi)
- 	int err;
- 
- 	nsinfo__mountns_enter(nsi, &nsc);
--	err = filename__read_build_id(filename, &bid);
-+	err = filename__read_build_id(filename, &bid, /*block=*/true);
- 	nsinfo__mountns_exit(&nsc);
- 	if (err < 0) {
- 		pr_debug("Couldn't read a build-id in %s\n", filename);
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 40ba6a94f719..a114b3fa1bea 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -680,12 +680,12 @@ static int dso__read_build_id(struct dso *dso)
- 
- 	mutex_lock(dso__lock(dso));
- 	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
--	if (filename__read_build_id(dso__long_name(dso), &bid) > 0)
-+	if (filename__read_build_id(dso__long_name(dso), &bid, /*block=*/true) > 0)
- 		dso__set_build_id(dso, &bid);
- 	else if (dso__nsinfo(dso)) {
- 		char *new_name = dso__filename_with_chroot(dso, dso__long_name(dso));
- 
--		if (new_name && filename__read_build_id(new_name, &bid) > 0)
-+		if (new_name && filename__read_build_id(new_name, &bid, /*block=*/true) > 0)
- 			dso__set_build_id(dso, &bid);
- 		free(new_name);
- 	}
-diff --git a/tools/perf/tests/sdt.c b/tools/perf/tests/sdt.c
-index 93baee2eae42..6132f1af3e22 100644
---- a/tools/perf/tests/sdt.c
-+++ b/tools/perf/tests/sdt.c
-@@ -31,7 +31,7 @@ static int build_id_cache__add_file(const char *filename)
- 	struct build_id bid = { .size = 0, };
- 	int err;
- 
--	err = filename__read_build_id(filename, &bid);
-+	err = filename__read_build_id(filename, &bid, /*block=*/true);
- 	if (err < 0) {
- 		pr_debug("Failed to read build id of %s\n", filename);
- 		return err;
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index a7018a3b0437..bf7f3268b9a2 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -115,7 +115,7 @@ int filename__snprintf_build_id(const char *pathname, char *sbuild_id, size_t sb
- 	struct build_id bid = { .size = 0, };
- 	int ret;
- 
--	ret = filename__read_build_id(pathname, &bid);
-+	ret = filename__read_build_id(pathname, &bid, /*block=*/true);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -841,7 +841,7 @@ static int filename__read_build_id_ns(const char *filename,
- 	int ret;
- 
- 	nsinfo__mountns_enter(nsi, &nsc);
--	ret = filename__read_build_id(filename, bid);
-+	ret = filename__read_build_id(filename, bid, /*block=*/true);
- 	nsinfo__mountns_exit(&nsc);
- 
- 	return ret;
-diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
-index a44c70f93156..bb9ebd84ec2d 100644
---- a/tools/perf/util/debuginfo.c
-+++ b/tools/perf/util/debuginfo.c
-@@ -110,8 +110,12 @@ struct debuginfo *debuginfo__new(const char *path)
- 	if (!dso)
- 		goto out;
- 
--	/* Set the build id for DSO_BINARY_TYPE__BUILDID_DEBUGINFO */
--	if (is_regular_file(path) && filename__read_build_id(path, &bid) > 0)
-+	/*
-+	 * Set the build id for DSO_BINARY_TYPE__BUILDID_DEBUGINFO. Don't block
-+	 * incase the path isn't for a regular file.
-+	 */
-+	assert(!dso__has_build_id(dso));
-+	if (filename__read_build_id(path, &bid, /*block=*/false) > 0)
- 		dso__set_build_id(dso, &bid);
- 
- 	for (type = distro_dwarf_types;
-diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-index 0a7645c7fae7..64c1d65b0149 100644
---- a/tools/perf/util/dsos.c
-+++ b/tools/perf/util/dsos.c
-@@ -81,13 +81,13 @@ static int dsos__read_build_ids_cb(struct dso *dso, void *data)
- 		return 0;
- 	}
- 	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
--	if (filename__read_build_id(dso__long_name(dso), &bid) > 0) {
-+	if (filename__read_build_id(dso__long_name(dso), &bid, /*block=*/true) > 0) {
- 		dso__set_build_id(dso, &bid);
- 		args->have_build_id = true;
- 	} else if (errno == ENOENT && dso__nsinfo(dso)) {
- 		char *new_name = dso__filename_with_chroot(dso, dso__long_name(dso));
- 
--		if (new_name && filename__read_build_id(new_name, &bid) > 0) {
-+		if (new_name && filename__read_build_id(new_name, &bid, /*block=*/true) > 0) {
- 			dso__set_build_id(dso, &bid);
- 			args->have_build_id = true;
- 		}
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 6d2c280a1730..033c79231a54 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -902,7 +902,7 @@ static int read_build_id(const char *filename, struct build_id *bid)
- 
- #else // HAVE_LIBBFD_BUILDID_SUPPORT
- 
--static int read_build_id(const char *filename, struct build_id *bid)
-+static int read_build_id(const char *filename, struct build_id *bid, bool block)
- {
- 	size_t size = sizeof(bid->data);
- 	int fd, err = -1;
-@@ -911,7 +911,7 @@ static int read_build_id(const char *filename, struct build_id *bid)
- 	if (size < BUILD_ID_SIZE)
- 		goto out;
- 
--	fd = open(filename, O_RDONLY);
-+	fd = open(filename, block ? O_RDONLY : (O_RDONLY | O_NONBLOCK));
- 	if (fd < 0)
- 		goto out;
- 
-@@ -934,7 +934,7 @@ static int read_build_id(const char *filename, struct build_id *bid)
- 
- #endif // HAVE_LIBBFD_BUILDID_SUPPORT
- 
--int filename__read_build_id(const char *filename, struct build_id *bid)
-+int filename__read_build_id(const char *filename, struct build_id *bid, bool block)
- {
- 	struct kmod_path m = { .name = NULL, };
- 	char path[PATH_MAX];
-@@ -958,9 +958,10 @@ int filename__read_build_id(const char *filename, struct build_id *bid)
- 		}
- 		close(fd);
- 		filename = path;
-+		block = true;
- 	}
- 
--	err = read_build_id(filename, bid);
-+	err = read_build_id(filename, bid, block);
- 
- 	if (m.comp)
- 		unlink(filename);
-diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
-index 8d41bd7842df..41e4ebe5eac5 100644
---- a/tools/perf/util/symbol-minimal.c
-+++ b/tools/perf/util/symbol-minimal.c
-@@ -85,7 +85,7 @@ int filename__read_debuglink(const char *filename __maybe_unused,
- /*
-  * Just try PT_NOTE header otherwise fails
-  */
--int filename__read_build_id(const char *filename, struct build_id *bid)
-+int filename__read_build_id(const char *filename, struct build_id *bid, bool block)
- {
- 	int fd, ret = -1;
- 	bool need_swap = false, elf32;
-@@ -102,7 +102,7 @@ int filename__read_build_id(const char *filename, struct build_id *bid)
- 	void *phdr, *buf = NULL;
- 	ssize_t phdr_size, ehdr_size, buf_size = 0;
- 
--	fd = open(filename, O_RDONLY);
-+	fd = open(filename, block ? O_RDONLY : (O_RDONLY | O_NONBLOCK));
- 	if (fd < 0)
- 		return -1;
- 
-@@ -323,7 +323,7 @@ int dso__load_sym(struct dso *dso, struct map *map __maybe_unused,
- 	if (ret >= 0)
- 		RC_CHK_ACCESS(dso)->is_64_bit = ret;
- 
--	if (filename__read_build_id(ss->name, &bid) > 0)
-+	if (filename__read_build_id(ss->name, &bid, /*block=*/true) > 0)
- 		dso__set_build_id(dso, &bid);
- 	return 0;
- }
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index e816e4220d33..3fed54de5401 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -1869,14 +1869,14 @@ int dso__load(struct dso *dso, struct map *map)
- 
- 	/*
- 	 * Read the build id if possible. This is required for
--	 * DSO_BINARY_TYPE__BUILDID_DEBUGINFO to work
-+	 * DSO_BINARY_TYPE__BUILDID_DEBUGINFO to work. Don't block in case path
-+	 * isn't for a regular file.
- 	 */
--	if (!dso__has_build_id(dso) &&
--	    is_regular_file(dso__long_name(dso))) {
-+	if (!dso__has_build_id(dso)) {
- 		struct build_id bid = { .size = 0, };
- 
- 		__symbol__join_symfs(name, PATH_MAX, dso__long_name(dso));
--		if (filename__read_build_id(name, &bid) > 0)
-+		if (filename__read_build_id(name, &bid, /*block=*/false) > 0)
- 			dso__set_build_id(dso, &bid);
- 	}
- 
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 3fb5d146d9b1..347106218799 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -140,7 +140,7 @@ struct symbol *dso__next_symbol(struct symbol *sym);
- 
- enum dso_type dso__type_fd(int fd);
- 
--int filename__read_build_id(const char *filename, struct build_id *id);
-+int filename__read_build_id(const char *filename, struct build_id *id, bool block);
- int sysfs__read_build_id(const char *filename, struct build_id *bid);
- int modules__parse(const char *filename, void *arg,
- 		   int (*process_module)(void *arg, const char *name,
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index cb2c1ace304a..fcd1fd13c30e 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -401,7 +401,7 @@ static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
- 	nsi = nsinfo__new(event->pid);
- 	nsinfo__mountns_enter(nsi, &nc);
- 
--	rc = filename__read_build_id(event->filename, &bid) > 0 ? 0 : -1;
-+	rc = filename__read_build_id(event->filename, &bid, /*block=*/false) > 0 ? 0 : -1;
- 
- 	nsinfo__mountns_exit(&nc);
- 	nsinfo__put(nsi);
+The patch series:
+1) does some initial clean up;
+2) moves the capstone and LLVM code to their own C files,
+3) simplifies a little the capstone code;
+4) adds perf_ variants of the functions that will either directly call
+   the function or use dlsym to discover it;
+5) adds BPF JIT disassembly support to LLVM and capstone disassembly;
+6) removes the BUILD_NONDISTRO code, reduces scope and removes what's possible;
+7) adds fallback to srcline's addr2line so that llvm_addr2line is
+   tried first and then the forked command tried next, moving the code
+   for forking out of the main srcline.c file in the process.
+
+The addr2line LLVM functionality is written in C++. To avoid linking
+against libLLVM for this, a new LIBLLVM_DYNAMIC option is added where
+the C++ code with the libLLVM dependency will be built into a
+libperf-llvm.so and that dlsym-ed and called against. Ideally LLVM
+would extend their C API to avoid this.
+
+The libbfd BPF disassembly supported source lines, this wasn't ported
+to the capstone and LLVM disassembly.
+
+v5: Rebase and comment typo fix.
+v4: Rebase and addition of a patch removing an unused struct variable.
+v3: Add srcline addr2line fallback trying LLVM first then forking a
+    process. This came up in conversation with Steinar Gunderson
+    <sesse@google.com>.
+    Tweak the cover letter message to try to address Andi Kleen's
+    <ak@linux.intel.com> feedback that the series doesn't really
+    achieve anything.
+v2: Add mangling of the function names in libperf-llvm.so to avoid
+    potential infinite recursion. Add BPF JIT disassembly support to
+    LLVM and capstone. Add/rebase the BUILD_NONDISTRO cleanup onto the
+    series from:
+    https://lore.kernel.org/lkml/20250111202851.1075338-1-irogers@google.com/
+    Some other minor additional clean up.
+
+Ian Rogers (19):
+  perf build: Remove libtracefs configuration
+  perf map: Constify objdump offset/address conversion APIs
+  perf capstone: Move capstone functionality into its own file
+  perf llvm: Move llvm functionality into its own file
+  perf capstone: Remove open_capstone_handle
+  perf capstone: Support for dlopen-ing libcapstone.so
+  perf llvm: Support for dlopen-ing libLLVM.so
+  perf llvm: Mangle libperf-llvm.so function names
+  perf dso: Move read_symbol from llvm/capstone to dso
+  perf dso: Support BPF programs in dso__read_symbol
+  perf llvm: Disassemble cleanup
+  perf dso: Clean up read_symbol error handling
+  perf build: Remove libbfd support
+  perf build: Remove libiberty support
+  perf build: Remove unused defines
+  perf disasm: Remove disasm_bpf
+  perf disasm: Make ins__scnprintf and ins__is_nop static
+  perf srcline: Fallback between addr2line implementations
+  perf disasm: Remove unused evsel from annotate_args
+
+ tools/perf/Documentation/perf-check.txt |   1 -
+ tools/perf/Makefile.config              |  95 +--
+ tools/perf/Makefile.perf                |  35 +-
+ tools/perf/builtin-check.c              |   1 -
+ tools/perf/builtin-script.c             |   2 -
+ tools/perf/tests/Build                  |   1 -
+ tools/perf/tests/builtin-test.c         |   1 -
+ tools/perf/tests/make                   |   4 +-
+ tools/perf/tests/pe-file-parsing.c      | 101 ----
+ tools/perf/tests/tests.h                |   1 -
+ tools/perf/util/Build                   |   6 +-
+ tools/perf/util/addr2line.c             | 439 ++++++++++++++
+ tools/perf/util/addr2line.h             |  20 +
+ tools/perf/util/annotate.c              |   1 -
+ tools/perf/util/annotate.h              |   1 -
+ tools/perf/util/capstone.c              | 682 +++++++++++++++++++++
+ tools/perf/util/capstone.h              |  24 +
+ tools/perf/util/config.c                |   2 +-
+ tools/perf/util/demangle-cxx.cpp        |  22 +-
+ tools/perf/util/disasm.c                | 628 +------------------
+ tools/perf/util/disasm.h                |   6 +-
+ tools/perf/util/disasm_bpf.c            | 195 ------
+ tools/perf/util/disasm_bpf.h            |  12 -
+ tools/perf/util/dso.c                   |  98 +++
+ tools/perf/util/dso.h                   |   4 +
+ tools/perf/util/llvm-c-helpers.cpp      | 120 +++-
+ tools/perf/util/llvm-c-helpers.h        |  24 +-
+ tools/perf/util/llvm.c                  | 484 +++++++++++++++
+ tools/perf/util/llvm.h                  |  21 +
+ tools/perf/util/map.c                   |  19 +-
+ tools/perf/util/map.h                   |   6 +-
+ tools/perf/util/print_insn.c            | 117 +---
+ tools/perf/util/srcline.c               | 772 +-----------------------
+ tools/perf/util/srcline.h               |   7 +-
+ tools/perf/util/symbol-elf.c            |  85 ---
+ tools/perf/util/symbol.c                | 145 -----
+ tools/perf/util/symbol.h                |   4 -
+ 37 files changed, 2020 insertions(+), 2166 deletions(-)
+ delete mode 100644 tools/perf/tests/pe-file-parsing.c
+ create mode 100644 tools/perf/util/addr2line.c
+ create mode 100644 tools/perf/util/addr2line.h
+ create mode 100644 tools/perf/util/capstone.c
+ create mode 100644 tools/perf/util/capstone.h
+ delete mode 100644 tools/perf/util/disasm_bpf.c
+ delete mode 100644 tools/perf/util/disasm_bpf.h
+ create mode 100644 tools/perf/util/llvm.c
+ create mode 100644 tools/perf/util/llvm.h
+
 -- 
 2.51.0.rc2.233.g662b1ed5c5-goog
 
