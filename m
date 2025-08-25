@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857152BDC28;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64692BE62C;
 	Mon, 25 Aug 2025 21:59:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756159148; cv=none; b=aAtHModUMXMUInKyNE7pYdQvckZa0IyyoUnqVnOPxns0/kICbF2nPtaM0mmSSh1kG2MhV0RKjLBirG3i3rTU9LKCMKy2wSCYKnhfv27dg882HFW+Y3Zs5/pGs22WefOjIwCKqhyXCfWrD/EGIzMWqAcAPK055pc/ScEQw1QOfSw=
+	t=1756159148; cv=none; b=fBsc4bAa0SeDzJgDnucTn5xcTYXZthbLMbE0Yi2uD90HUbVXFXaZYmBFxP9lfQHw3md8pnuNeBlfFJTMhY3189HvebIcHjWriyo1qR6VFQVVE3zcZWlI+xQrnBhDFxe5/luoCmjMNjENF405lxQvXv5VCLx8z1Y9IhLIajnlmb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1756159148; c=relaxed/simple;
-	bh=LYuUlL/4j71mwTqF59AOgVT+CQ085OA7+H045tIbRPU=;
+	bh=tN98BMYgIunDMpO3igY5wDeEoG5Z4FNdrUFxdTBmyfk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gu+GXgWp3z0LtPa2lCVB9IGq9QpFe8mNzJWqUbAKIMBOuVvKWP2yiKYpUKn7ky1381T1MTiA59cJYsERqJkCl53CpE6H+ofcVJddcS8BK8kUraDU6YX8rB2qTQYWzMrUCVglsCTHcwvj/Xpji5cBQyDBYBCbNtcnzbV2RvX4wV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ddie5KjX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hiq0vQDPBwMZ1rLNZuRyn+8IgAjahqS9j+ohLpElOVZZOj1jHfFuF0BIANmGG7OL1v7842tPIKE/AKVS5fPczxRXUSdMc23RV0Ml1TsdCzvhN8Z3vvNl0qeCk/IaGdab+SIF1vjfz1D3ATuVRvpHCX3Af4aFMm2FBBvlx7zxae0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fd8NVWmu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ddie5KjX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0AECC116B1;
-	Mon, 25 Aug 2025 21:59:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fd8NVWmu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27FDAC4CEED;
+	Mon, 25 Aug 2025 21:59:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1756159148;
-	bh=LYuUlL/4j71mwTqF59AOgVT+CQ085OA7+H045tIbRPU=;
+	bh=tN98BMYgIunDMpO3igY5wDeEoG5Z4FNdrUFxdTBmyfk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ddie5KjX34+IeoV+IbrDg5rK7E2OT1syJKf7lFx5SZDzNiKv4MTzC3BlENRxIfcln
-	 eDb3yab6UwpIQnwlEunsBOMyfhWLVSWda5JLCmhx5U2qx2DpMMAaoji2k/pUiizmUR
-	 Kv/ofaAnsVIzjXfcqcuFdQwtl0dNWpNt+C8yallC7CLyYd9DdklImtU/BxaQL3c5rA
-	 YX2svEdzePd4/1jrqMrPvuUE6ZoxJYXMNEg5SUYbAmTS1bFRgJuQz4Ur48Gjeanley
-	 MJ/P+fRslyEw5uZI5KU07r/gTP2E5CIPXseSpjYesMVVzDKOB10kUMoUz76P1RynET
-	 JAUceHkmQ0hsw==
+	b=Fd8NVWmujbvT1oso4QBUsqB3OanAtvi8+ma4omzKMLzA+/6XQhS+sllGgoaYu5i1O
+	 tZ4xoi7PxddI9n6zHXibLPclbNNYBQ/7UNIQIZ77OoXE0mYu/vdqYy8XBwLxIjKHRs
+	 Cou08UdKFZt95864zFLxZ7MmffnmM5mr6YPckB4Ku3unSNEJoJ1gATj+ZZqq7rCutM
+	 KiOLH4SrFkpFv5oLXjT5BxCfzhOpfwCOXeYuNExNHtWdwh6S28RhXdrvGR15cKFbSN
+	 Iv40gVb8qg8Hsc1k2/0tW1XLzWnp4UZpzoKr2rrFOF8zGprmnenqW44ddlPFE6bdYy
+	 DAn0NSNfy3HVg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -35,11 +35,10 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	kvm@vger.kernel.org
-Subject: [PATCH 01/11] tools headers: Sync KVM headers with the kernel source
-Date: Mon, 25 Aug 2025 14:58:53 -0700
-Message-ID: <20250825215904.2594216-2-namhyung@kernel.org>
+	Yury Norov <yury.norov@gmail.com>
+Subject: [PATCH 02/11] tools headers: Sync linux/bits.h with the kernel source
+Date: Mon, 25 Aug 2025 14:58:54 -0700
+Message-ID: <20250825215904.2594216-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.51.0.261.g7ce5a0a67e-goog
 In-Reply-To: <20250825215904.2594216-1-namhyung@kernel.org>
 References: <20250825215904.2594216-1-namhyung@kernel.org>
@@ -53,99 +52,83 @@ Content-Transfer-Encoding: 8bit
 
 To pick up the changes in this cset:
 
-  f55ce5a6cd33211c KVM: arm64: Expose new KVM cap for cacheable PFNMAP
-  28224ef02b56fcee KVM: TDX: Report supported optional TDVMCALLs in TDX capabilities
-  4580dbef5ce0f95a KVM: TDX: Exit to userspace for SetupEventNotifyInterrupt
-  25e8b1dd4883e6c2 KVM: TDX: Exit to userspace for GetTdVmCallInfo
-  cf207eac06f661fb KVM: TDX: Handle TDG.VP.VMCALL<GetQuote>
+  104ea1c84b91c9f4 bits: unify the non-asm GENMASK*()
+  6d4471252ccc1722 bits: split the definition of the asm and non-asm GENMASK*()
 
 This addresses these perf build warnings:
 
   Warning: Kernel ABI header differences:
-    diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
-    diff -u tools/arch/x86/include/uapi/asm/kvm.h arch/x86/include/uapi/asm/kvm.h
+    diff -u tools/include/linux/bits.h include/linux/bits.h
 
 Please see tools/include/uapi/README for further details.
 
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org
+Cc: Yury Norov <yury.norov@gmail.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/arch/x86/include/uapi/asm/kvm.h |  8 +++++++-
- tools/include/uapi/linux/kvm.h        | 27 +++++++++++++++++++++++++++
- 2 files changed, 34 insertions(+), 1 deletion(-)
+ tools/include/linux/bits.h | 29 ++++++-----------------------
+ 1 file changed, 6 insertions(+), 23 deletions(-)
 
-diff --git a/tools/arch/x86/include/uapi/asm/kvm.h b/tools/arch/x86/include/uapi/asm/kvm.h
-index 6f3499507c5efb56..0f15d683817d6a77 100644
---- a/tools/arch/x86/include/uapi/asm/kvm.h
-+++ b/tools/arch/x86/include/uapi/asm/kvm.h
-@@ -965,7 +965,13 @@ struct kvm_tdx_cmd {
- struct kvm_tdx_capabilities {
- 	__u64 supported_attrs;
- 	__u64 supported_xfam;
--	__u64 reserved[254];
+diff --git a/tools/include/linux/bits.h b/tools/include/linux/bits.h
+index 7ad0562191153471..a40cc861b3a7c60f 100644
+--- a/tools/include/linux/bits.h
++++ b/tools/include/linux/bits.h
+@@ -2,10 +2,8 @@
+ #ifndef __LINUX_BITS_H
+ #define __LINUX_BITS_H
+ 
+-#include <linux/const.h>
+ #include <vdso/bits.h>
+ #include <uapi/linux/bits.h>
+-#include <asm/bitsperlong.h>
+ 
+ #define BIT_MASK(nr)		(UL(1) << ((nr) % BITS_PER_LONG))
+ #define BIT_WORD(nr)		((nr) / BITS_PER_LONG)
+@@ -50,10 +48,14 @@
+ 	     (type_max(t) << (l) &				\
+ 	      type_max(t) >> (BITS_PER_TYPE(t) - 1 - (h)))))
+ 
++#define GENMASK(h, l)		GENMASK_TYPE(unsigned long, h, l)
++#define GENMASK_ULL(h, l)	GENMASK_TYPE(unsigned long long, h, l)
 +
-+	__u64 kernel_tdvmcallinfo_1_r11;
-+	__u64 user_tdvmcallinfo_1_r11;
-+	__u64 kernel_tdvmcallinfo_1_r12;
-+	__u64 user_tdvmcallinfo_1_r12;
-+
-+	__u64 reserved[250];
+ #define GENMASK_U8(h, l)	GENMASK_TYPE(u8, h, l)
+ #define GENMASK_U16(h, l)	GENMASK_TYPE(u16, h, l)
+ #define GENMASK_U32(h, l)	GENMASK_TYPE(u32, h, l)
+ #define GENMASK_U64(h, l)	GENMASK_TYPE(u64, h, l)
++#define GENMASK_U128(h, l)	GENMASK_TYPE(u128, h, l)
  
- 	/* Configurable CPUID bits for userspace */
- 	struct kvm_cpuid2 cpuid;
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index 7415a3863891c042..f0f0d49d25443552 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -178,6 +178,7 @@ struct kvm_xen_exit {
- #define KVM_EXIT_NOTIFY           37
- #define KVM_EXIT_LOONGARCH_IOCSR  38
- #define KVM_EXIT_MEMORY_FAULT     39
-+#define KVM_EXIT_TDX              40
+ /*
+  * Fixed-type variants of BIT(), with additional checks like GENMASK_TYPE(). The
+@@ -79,28 +81,9 @@
+  * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
+  * disable the input check if that is the case.
+  */
+-#define GENMASK_INPUT_CHECK(h, l) 0
++#define GENMASK(h, l)		__GENMASK(h, l)
++#define GENMASK_ULL(h, l)	__GENMASK_ULL(h, l)
  
- /* For KVM_EXIT_INTERNAL_ERROR */
- /* Emulate instruction failed. */
-@@ -447,6 +448,31 @@ struct kvm_run {
- 			__u64 gpa;
- 			__u64 size;
- 		} memory_fault;
-+		/* KVM_EXIT_TDX */
-+		struct {
-+			__u64 flags;
-+			__u64 nr;
-+			union {
-+				struct {
-+					__u64 ret;
-+					__u64 data[5];
-+				} unknown;
-+				struct {
-+					__u64 ret;
-+					__u64 gpa;
-+					__u64 size;
-+				} get_quote;
-+				struct {
-+					__u64 ret;
-+					__u64 leaf;
-+					__u64 r11, r12, r13, r14;
-+				} get_tdvmcall_info;
-+				struct {
-+					__u64 ret;
-+					__u64 vector;
-+				} setup_event_notify;
-+			};
-+		} tdx;
- 		/* Fix the size of the union. */
- 		char padding[256];
- 	};
-@@ -935,6 +961,7 @@ struct kvm_enable_cap {
- #define KVM_CAP_ARM_EL2 240
- #define KVM_CAP_ARM_EL2_E2H0 241
- #define KVM_CAP_RISCV_MP_STATE_RESET 242
-+#define KVM_CAP_ARM_CACHEABLE_PFNMAP_SUPPORTED 243
+ #endif /* !defined(__ASSEMBLY__) */
  
- struct kvm_irq_routing_irqchip {
- 	__u32 irqchip;
+-#define GENMASK(h, l) \
+-	(GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+-#define GENMASK_ULL(h, l) \
+-	(GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
+-
+-#if !defined(__ASSEMBLY__)
+-/*
+- * Missing asm support
+- *
+- * __GENMASK_U128() depends on _BIT128() which would not work
+- * in the asm code, as it shifts an 'unsigned __int128' data
+- * type instead of direct representation of 128 bit constants
+- * such as long and unsigned long. The fundamental problem is
+- * that a 128 bit constant will get silently truncated by the
+- * gcc compiler.
+- */
+-#define GENMASK_U128(h, l) \
+-	(GENMASK_INPUT_CHECK(h, l) + __GENMASK_U128(h, l))
+-#endif
+-
+ #endif	/* __LINUX_BITS_H */
 -- 
 2.51.0.261.g7ce5a0a67e-goog
 
