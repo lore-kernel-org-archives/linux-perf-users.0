@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94106305E24;
-	Mon, 25 Aug 2025 21:59:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B60630AAD4;
+	Mon, 25 Aug 2025 21:59:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756159152; cv=none; b=PznqKSOq36/CcnIWMR981D/dNRIy6Ub4/de0j4XD7frovFslrmQhFk8zx2KmDMDCVShq4CPFz1DnjYuPZyR1gGMMJvEr2OAYz5A9qOJZ6954XmtkveTfPE4PY/HfPnOxBieVAfURj8tq3cokR8XOLnWz8KnHWBwsk+DdL/nyhFs=
+	t=1756159153; cv=none; b=u9Gg7hipZ2WBwi+VDNt+9d0KN15MMTVcT28FcQT5NLSBVZNU/3TqMTWKnORQqQduhEiOjWmd3RpF6iECN9lw9ckKmEYuYv1mz4WVxJ9x5/LhHfLC0gnI6LMCE/0j+9D6qV/QmEdIyw5TP4MmJHDhnNuNrLm9xNWBEaCd4X9gf+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756159152; c=relaxed/simple;
-	bh=BylEFT7xAr00ob7Nl2FVnVd/6nD83KmV1M+p9haUowI=;
+	s=arc-20240116; t=1756159153; c=relaxed/simple;
+	bh=16EPmrHdMEr6M3sM1MYmbbFsavhSkZ1KC1VkNUsuyoI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oW97tjAncJ5oA+gWH4xFV3jRHLa+J+OPUWBno35osjb7Q1rX561D5d3g8lED2GshZaR2gL0BXk/+y16SJNkKgqvwbTx6wiBDTklBITHB/glrrBmwUSiR+PIYfARIvFNLizBY+jVxgf8lJWYgDxMNOwm1EFkgYOX6i29YqSHfGOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qtvU/m4r; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=X57k8sAib1H9li7vL3MZblVfamMVLxTB7693vbSuXmd878eDRaqS3ztuDpbEMUbjHJrHlq8Yr7SsIkDaWDGuWr+7g78/3lwCKAeM/HRGtJoVLp6ijrogAFuSn5Uges+eDXBIKjqZzqSCAdViltUsXUyg9HB7lPW63RsqbfRmv/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UbiU5j0v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qtvU/m4r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D329C4CEED;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UbiU5j0v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C683C113D0;
 	Mon, 25 Aug 2025 21:59:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756159152;
-	bh=BylEFT7xAr00ob7Nl2FVnVd/6nD83KmV1M+p9haUowI=;
+	s=k20201202; t=1756159153;
+	bh=16EPmrHdMEr6M3sM1MYmbbFsavhSkZ1KC1VkNUsuyoI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qtvU/m4ryGX/ao/nnuMOVG+tpYsK1t4tMO3pI8GXIzJ887gPElyaoV4Ohb5++Sav1
-	 X2vnbogJ+MqLdNuk1wGF64r5CXr4XXRwB++8fqBmd/R77D3uYWJ8Yldi4QBxPMrQ7E
-	 a7sUUccxFwTJL//nqcHqLRtldcjg0RizomP4i0mayuPYhMbVramlwZbimH3j+YFWZp
-	 6zr+nuKYWfUsJ0imPr/GMLcQX1OY62+9DV6fTxuFc4vYkD5hr+ADJCWKSVODIvi8c+
-	 YZee5/TYk74d8vnpMNOt5CeqLsrs7cFCmHbr4SffWMivRhWpvoedbTuoLIpTlSXb06
-	 0G8OcFb1wOl5Q==
+	b=UbiU5j0vJ3AJEAOSTsxd2W6/CTIR+XIRNKEvOnBYNra7He8lRJIPJGqH4+KOX3Zh5
+	 ji9pQOfmCyT4xh+Son4fcpUEpOk6UIs3rtYLLYlcwxTiIxIcOxUFKw3UJMM9ZQ3P7z
+	 y6Vj/9SKq+/gQlsKlAU09j+YpYBYHGedhJzVcR3I7IviSExr/a8ojvOrHRwd2++2/6
+	 l7dhuPBkdVf/uS9PULid/UmpjflC/JBahaqKiu1I/I/IAH9ajkupkWmX6mZsyFux43
+	 rqFTTr5VT/o/gML6oin9loXLfBn3rpcqr6Iwp47Gx6JUjS8CbdFUyh9fxlPmkQw3ae
+	 Y5pYpV92nfWCQ==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -34,10 +34,14 @@ Cc: Ian Rogers <irogers@google.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 10/11] tools headers: Sync uapi/linux/prctl.h with the kernel source
-Date: Mon, 25 Aug 2025 14:59:02 -0700
-Message-ID: <20250825215904.2594216-11-namhyung@kernel.org>
+	linux-perf-users@vger.kernel.org,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	kvm@vger.kernel.org,
+	virtualization@lists.linux.dev
+Subject: [PATCH 11/11] tools headers: Sync uapi/linux/vhost.h with the kernel source
+Date: Mon, 25 Aug 2025 14:59:03 -0700
+Message-ID: <20250825215904.2594216-12-namhyung@kernel.org>
 X-Mailer: git-send-email 2.51.0.261.g7ce5a0a67e-goog
 In-Reply-To: <20250825215904.2594216-1-namhyung@kernel.org>
 References: <20250825215904.2594216-1-namhyung@kernel.org>
@@ -51,48 +55,72 @@ Content-Transfer-Encoding: 8bit
 
 To pick up the changes in this cset:
 
-  b1fabef37bd504f3 prctl: Introduce PR_MTE_STORE_ONLY
-  a2fc422ed75748ee syscall_user_dispatch: Add PR_SYS_DISPATCH_INCLUSIVE_ON
+  7d9896e9f6d02d8a vhost: Reintroduce kthread API and add mode selection
+  333c515d189657c9 vhost-net: allow configuring extended features
 
 This addresses these perf build warnings:
 
   Warning: Kernel ABI header differences:
-    diff -u tools/perf/trace/beauty/include/uapi/linux/prctl.h include/uapi/linux/prctl.h
+    diff -u tools/perf/trace/beauty/include/uapi/linux/vhost.h include/uapi/linux/vhost.h
 
 Please see tools/include/uapi/README for further details.
 
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: kvm@vger.kernel.org
+Cc: virtualization@lists.linux.dev
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/trace/beauty/include/uapi/linux/prctl.h | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+* This is on top of the fix below:
+  https://lore.kernel.org/r/20250819063958.833770-1-namhyung@kernel.org
 
-diff --git a/tools/perf/trace/beauty/include/uapi/linux/prctl.h b/tools/perf/trace/beauty/include/uapi/linux/prctl.h
-index 3b93fb906e3c51a9..ed3aed264aeb2881 100644
---- a/tools/perf/trace/beauty/include/uapi/linux/prctl.h
-+++ b/tools/perf/trace/beauty/include/uapi/linux/prctl.h
-@@ -244,6 +244,8 @@ struct prctl_mm_map {
- # define PR_MTE_TAG_MASK		(0xffffUL << PR_MTE_TAG_SHIFT)
- /* Unused; kept only for source compatibility */
- # define PR_MTE_TCF_SHIFT		1
-+/* MTE tag check store only */
-+# define PR_MTE_STORE_ONLY		(1UL << 19)
- /* RISC-V pointer masking tag length */
- # define PR_PMLEN_SHIFT			24
- # define PR_PMLEN_MASK			(0x7fUL << PR_PMLEN_SHIFT)
-@@ -255,7 +257,12 @@ struct prctl_mm_map {
- /* Dispatch syscalls to a userspace handler */
- #define PR_SET_SYSCALL_USER_DISPATCH	59
- # define PR_SYS_DISPATCH_OFF		0
--# define PR_SYS_DISPATCH_ON		1
-+/* Enable dispatch except for the specified range */
-+# define PR_SYS_DISPATCH_EXCLUSIVE_ON	1
-+/* Enable dispatch for the specified range */
-+# define PR_SYS_DISPATCH_INCLUSIVE_ON	2
-+/* Legacy name for backwards compatibility */
-+# define PR_SYS_DISPATCH_ON		PR_SYS_DISPATCH_EXCLUSIVE_ON
- /* The control values for the user space selector when dispatch is enabled */
- # define SYSCALL_DISPATCH_FILTER_ALLOW	0
- # define SYSCALL_DISPATCH_FILTER_BLOCK	1
+ .../trace/beauty/include/uapi/linux/vhost.h   | 35 +++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+
+diff --git a/tools/perf/trace/beauty/include/uapi/linux/vhost.h b/tools/perf/trace/beauty/include/uapi/linux/vhost.h
+index d4b3e2ae1314d1fc..c57674a6aa0dbbea 100644
+--- a/tools/perf/trace/beauty/include/uapi/linux/vhost.h
++++ b/tools/perf/trace/beauty/include/uapi/linux/vhost.h
+@@ -235,4 +235,39 @@
+  */
+ #define VHOST_VDPA_GET_VRING_SIZE	_IOWR(VHOST_VIRTIO, 0x82,	\
+ 					      struct vhost_vring_state)
++
++/* Extended features manipulation */
++#define VHOST_GET_FEATURES_ARRAY _IOR(VHOST_VIRTIO, 0x83, \
++				       struct vhost_features_array)
++#define VHOST_SET_FEATURES_ARRAY _IOW(VHOST_VIRTIO, 0x83, \
++				       struct vhost_features_array)
++
++/* fork_owner values for vhost */
++#define VHOST_FORK_OWNER_KTHREAD 0
++#define VHOST_FORK_OWNER_TASK 1
++
++/**
++ * VHOST_SET_FORK_FROM_OWNER - Set the fork_owner flag for the vhost device,
++ * This ioctl must called before VHOST_SET_OWNER.
++ * Only available when CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL=y
++ *
++ * @param fork_owner: An 8-bit value that determines the vhost thread mode
++ *
++ * When fork_owner is set to VHOST_FORK_OWNER_TASK(default value):
++ *   - Vhost will create vhost worker as tasks forked from the owner,
++ *     inheriting all of the owner's attributes.
++ *
++ * When fork_owner is set to VHOST_FORK_OWNER_KTHREAD:
++ *   - Vhost will create vhost workers as kernel threads.
++ */
++#define VHOST_SET_FORK_FROM_OWNER _IOW(VHOST_VIRTIO, 0x84, __u8)
++
++/**
++ * VHOST_GET_FORK_OWNER - Get the current fork_owner flag for the vhost device.
++ * Only available when CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL=y
++ *
++ * @return: An 8-bit value indicating the current thread mode.
++ */
++#define VHOST_GET_FORK_FROM_OWNER _IOR(VHOST_VIRTIO, 0x85, __u8)
++
+ #endif
 -- 
 2.51.0.261.g7ce5a0a67e-goog
 
