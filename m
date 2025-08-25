@@ -1,95 +1,84 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF2426D4EB
-	for <linux-perf-users@vger.kernel.org>; Mon, 25 Aug 2025 05:44:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6D418DF62;
+	Mon, 25 Aug 2025 06:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756100646; cv=none; b=CjoFxbK+qwnJvCHGJCI2jk9I9HVsoTeTmkcJjtFZgAKz61xmn2v7DIMKxaN+DSSEr0SG7cyvZMnWcyXvGpnLVLTxXdgETr20OQxMTtjHHN6uOWpw4ryiAPO3GetN0lUIYNzOGtJhS6qSKNL2PXSfqAxfUQf/atdlcTK2Dga7b+c=
+	t=1756102425; cv=none; b=RKuKNen3FvX4a9XPlP0nYu07SqmvbWJW+u+9i+sVssCSgx9VKC0kjCJeF4DeLTNr91fB6HQf9yNZ+T8flrE765sw/ULsDQ/5LfWkYeIanhYK+u3RFEtZP3UHADdSoGnopKfgjBdleQMptSK26UCEcMlSUIHrUxVEcLfFahFZ5c8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756100646; c=relaxed/simple;
-	bh=I0MhP9f7dnL7COJfnTufg5YYZ9Elr3vP56QL7XCysUM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=UEtWxgBWJj8s7YmtMdlAFH9fMbhlYTZo74qugF1Z6uOTN0Quwt1ToM16tUKacxmY5Ol4u1++AXVH4ASBq/GNQn3fqVZ5kbKajKgk/3WVWYQIvmhHCSZ9Pcq01gXOn4Jnhbkl4iYoGcMABLEwvpRRrEwT3YEfPZYqUmmiCETfoRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NAQVp6hD; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1756102425; c=relaxed/simple;
+	bh=xL/wfTZE59TZruXlPkYR+9AazibCZMjAqAiETRoNGHE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f+563U1ODxIygoEldCDc1Rpygtz1jfEhyxtcdFR7GA/eJfGPWPwaiBlU7ltNMIvSxOMwTX31lRTbVgnboUEVwzwwobUR6yAuutY07qfZa4YtNe5t7YZZUrAaA4dCzhE4Zc+4bWZv58rdQfai25q0NeMWKM/NlQRq1reCrY/UvcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MF3ihf4i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NAQVp6hD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756100643;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=ArQ1XD7lQrTyXjxiVaJcLedWY+cw60Vir2yFbupmOGo=;
-	b=NAQVp6hD8gtmdRYsP2Zpd5u3W751As11znbiHrOf2YmPX/RKQp7twb3cgMmShcraUU8lg8
-	STr92KGyp0oLN0MUktsSUtRwPqFUmigimi51y4y1cINJ6vZ3I8LU7D/L0kBrQRpd5W2r64
-	xMIwomDzXjJxuTTqkxXCrQTdNukD7+U=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-632-E2LeOM8sPzedCkfzHVT8GQ-1; Mon, 25 Aug 2025 01:44:01 -0400
-X-MC-Unique: E2LeOM8sPzedCkfzHVT8GQ-1
-X-Mimecast-MFC-AGG-ID: E2LeOM8sPzedCkfzHVT8GQ_1756100641
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-324fbd47789so3405853a91.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 24 Aug 2025 22:44:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756100640; x=1756705440;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ArQ1XD7lQrTyXjxiVaJcLedWY+cw60Vir2yFbupmOGo=;
-        b=JdMNn79rgPjga0cQNZMq5QOUQ2EhiPW46i4Cle+ixTzcsErxVBERkCDSd0+C64zcxQ
-         txAgL6H6POKXrkFFJyyoHRcfnn6ccNaRl8VejyL5U07zWJCyhS/z0LVAFM+ExwrhcJGQ
-         4mEiNYyzKUEFK5KiOFKkwWwRBInP7NcRR9lewZsRL5uLelAac7IH6o4e9nLjzI25xW1I
-         p6rUjBhIrAns5qS8DOY1kpYzLnjz8vKmPbQA37Viq3wJK9+yAYYZO3KOLVDBe7DzHCcC
-         o0HWi0rgZxguMUcSncYGJrTdMG7zJ4fXpNPX8Q6Ctd2qGws80PkWOpeqb9BBZcAUp5jB
-         EzOw==
-X-Gm-Message-State: AOJu0Yy+XnZ70Hhhj6tfG2L4K3mfVxKsTp6oxgs9MBYb8Q62pHFrK1mr
-	TCWQK5Vemhh5QKlS2nvHmFaqJWlESElRL7mPczIgnIEQUsBVmmClKNzBxX4ECB85wioryAeyUzI
-	+19dhB+09IWzH4SBFYZG0zkcNXfEryLf1+g7BldY083iInDBhEvvkTVkD1eg9+btXp661cFZz+V
-	axAXHs6sChzykofm4QCwotywHimjIGg8BeOa8I0e6mMzTRXzBg+yW0JiEkMrc=
-X-Gm-Gg: ASbGncu6gQvWjwag1U4yJurzTPEYxAThWFCf1p2MQtn8H6Tz7DfKZQLrW2NIGs9sWs9
-	Ko2lex99zLMxGFfBQ8RhLBEApzNzlI7KEwvo8DDGP6QnWpNXcoSevkKjui6l8kkEgUY1EWk1U9s
-	4bw7G1QOTMsDpGPK+cnqkbfg==
-X-Received: by 2002:a17:90b:3d87:b0:311:ed2:b758 with SMTP id 98e67ed59e1d1-32515edd782mr11432015a91.3.1756100640442;
-        Sun, 24 Aug 2025 22:44:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGyouNXYw35emijI92qjiIgGkTlvloGBgPRN4PFMpoOIf3dt84qC1IvpQcaieoop4y1alkByLWYhqKWyAZCDxY=
-X-Received: by 2002:a17:90b:3d87:b0:311:ed2:b758 with SMTP id
- 98e67ed59e1d1-32515edd782mr11431995a91.3.1756100640071; Sun, 24 Aug 2025
- 22:44:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MF3ihf4i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E073C4CEED;
+	Mon, 25 Aug 2025 06:13:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756102425;
+	bh=xL/wfTZE59TZruXlPkYR+9AazibCZMjAqAiETRoNGHE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MF3ihf4iHTDmwdgfAiHRsLoUwCr1BFsFnrJJKEoPKF8IOvQ3AjdqefskKEQe4XeQM
+	 a9kwFnrdv7zTevE3SqTYAIH6JwtIgXEEwHIb6gaz8H4UMrdUsxjzsau4r+yXAVfaYU
+	 QwYFsrJKaykDmCD4F7eq/b7Q1HBomLm4wd/DxtDMULU4La/HS23A7wdNAarAubwrG+
+	 BTip0TrbTWRjVBO+67Zrq7GYqnXY5YK+UjoO5dw0cw7bq71rzZPjkfECJKTOCi68yk
+	 H7nnh7yCAYt0sMf+ihrtXbPA8S8/oLbF3JJpc4qh4YDr3XkrLfKldvniE71yj+4s82
+	 nARgQ+FUOvfSw==
+Date: Sun, 24 Aug 2025 23:13:42 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/1] Revert "perf hist: Fix bogus profiles when filters
+ are enabled"
+Message-ID: <aKv_FjtkPIR86inu@google.com>
+References: <aKYEpf7xp3NnkBWm@x1>
+ <CACT4Y+YX-ROx0cW4pkDnqbdfbigVycwPLwO12RNbbtX9-Qp73A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Qiao Zhao <qzhao@redhat.com>
-Date: Mon, 25 Aug 2025 13:43:48 +0800
-X-Gm-Features: Ac12FXw1u3CtLXfcCajj7TRAgg1AVLOIKCypv9wLIHKvovWeCJ8XsQxHNcdGUJM
-Message-ID: <CAATMXfn-txra32FbKfOi6vutU0SeXBM0Jay=C0v5E+_8kLeHcw@mail.gmail.com>
-Subject: [ISSUE] Question about perf test exit code behavior
-To: linux-perf-users <linux-perf-users@vger.kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, irogers@google.com, 
-	Michael Petlan <mpetlan@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+YX-ROx0cW4pkDnqbdfbigVycwPLwO12RNbbtX9-Qp73A@mail.gmail.com>
 
 Hello,
 
-I just noticed an issue when running perf self test. The command seems
-to always return an exit code of 0 (PASS), even if the test result
-shows FAILED. For example:
-```
-# perf test 108
-108: perf all metrics test         : FAILED!
-# echo $?
-0
-```
-Kernel/perf version: linux-next tag: next-20250822
+On Wed, Aug 20, 2025 at 06:14:08PM -0700, Dmitry Vyukov wrote:
+> On Wed, 20 Aug 2025 at 10:23, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >
+> > This reverts commit 8b4799e4f0f40a4ec737bf870aa38d06288bf0fb.
+> >
+> > Not combining entries in 'perf top', so we're getting multiple lines for
+> > the same symbol, with the same address.
+> >
+> > To test it, simply run 'perf top', then do /acpi to see just symbols
+> > starting with acpi_ and notice that there are various lines with the
+> > same symbol, press V to see the address and its the same.
+> 
+> With this revert, does it show 1 entry but with a wrong percent?
+> I am not sure why there are 2 entries for the same symbol, but if we
+> merge them, we can sum of percents. Is it the right thing to do?
 
-Is this the expected behavior by design, or could it be a bug in perf?
-I would like to confirm whether the exit code should reflect the test
-result (non-zero on failure), and if not, what the intended usage is.
+I don't think it'd have a wrong percent.  The hists maintain stats for
+filtered entries separately.
 
-Thanks in advance for your clarification.
+Based on the position of filtered entries in the RB tree, I think it
+might not merge correct samples together and create multiple entries
+with the same info.
 
-Best regards,
-Qiao
+Filtering by unused sort keys would be undefined.  We probably want to
+warn users instead.
+
+Thanks,
+Namhyung
 
