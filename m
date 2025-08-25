@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B922FE58D;
-	Mon, 25 Aug 2025 21:59:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18ED2BE62C;
+	Mon, 25 Aug 2025 21:59:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756159151; cv=none; b=YaZeiQKarfZ42QUCyEfltf01Ugv7knT4Du484kHSv+iLsXOcNf+UWO2cTHGJiWVoBsWegcNcjMVwwXTgoIc9+cGmmzrsq/yIkSyJCmV6ByoE4Kb9KWh89NnLFH/5gVwD5Y2FbcHDSoArMuKLAXVWt0yKJpDijdg5bA8UR1DIpMA=
+	t=1756159152; cv=none; b=qmq9kxp46RWW79fLP1tsht9s0p9Vp7V6jf5YFbGF3h/gGPZsev1OBhP1gi0bxPtc+Ip3FnQa8NRG/nt4wJX/QzcLT/sXMbEDJQMCbqOw87ef/59sYUZ1ek1wnnCyqU1JpgE9fIrV9JlhcgPlqutnxtxqK+NqKB8dHOVU7LQfIU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756159151; c=relaxed/simple;
-	bh=nVCrffrR+DUX0JkeKJS/+8PysmYnJ/7dUNKSEtKrCoM=;
+	s=arc-20240116; t=1756159152; c=relaxed/simple;
+	bh=u8H/POAkJXnqexD0Vo2T0kBej6xh78KY+6A9Mc8aNYU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dA+WhcGB2Xjvm8wzcIXrHZXmfZej0jQT3NoSn5JRGfGxS7yMt/JwHpkfRUCvRAKyqc9w44VzOO3jGJhJ7RbMHEjS9wdQ9DA7T0UgP8ySRDBi7KKQJRy0rolRJlX7sgGP7rx5tppoJnocgHv9LaJuEu72FTCHPC3LmCoHWmPLLi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kqFyfybE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RJs5LknS176VBTrQgeWSoxAfOFlpyPFiriMLQmGW935GOj3MaA1wTl/1k8LKoHWOhDe2Rp5KyPF2eAMop5iI3TgDG/w/s/wERr/ORs3Ce2RbpMSiD6cH7PbmZtx5XOCyx6fGVS+C0P/bAz1KbJqNn7riBwhrM7v6hKDTM/bm/0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=abChkQEz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kqFyfybE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28856C2BC86;
-	Mon, 25 Aug 2025 21:59:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="abChkQEz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22EA6C113D0;
+	Mon, 25 Aug 2025 21:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756159151;
-	bh=nVCrffrR+DUX0JkeKJS/+8PysmYnJ/7dUNKSEtKrCoM=;
+	s=k20201202; t=1756159150;
+	bh=u8H/POAkJXnqexD0Vo2T0kBej6xh78KY+6A9Mc8aNYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kqFyfybE6YrJtV+sQ+pU5uNwmRKtogdDT2PMTX8N6GNgDYAwYHjNyv1IRn6qXN8kU
-	 MjeD73au5c18Q7Eqi4WYtaqZ7Fi7fWWplc4A9T8K07y2Rhx5Vry4odu+eyv4NW8pvh
-	 cHsqYe2RFZ3ZJIYO3+o0zRpQ36GgiTt8zycxRm2/lk0bbJfRHyCrkf821r6icKOes2
-	 2Gwr3RCeDENFvqjzk+B29r761X0sZXQdgPX6APFA5VDABqhmLWugSGM8zE8Z7n7kS8
-	 v/oiKt+dockBoReLqhR4kAtu0M/K0VCxVKvetSMX2vYVJQutbw4FWj63pwnRnYyhim
-	 YAeT6/vY2bYAg==
+	b=abChkQEzU5PNu5yh5V5zz4XaRUE6mimBliaIxCekwJuh0MLwa/xPzXMchzTd8A4Ml
+	 Vwib2mNxW88e5ZXuA8SOFewTKrlNPBfmCTSMfByl9mcu5ZL1e6Ea8dC8rQEYrePu4B
+	 ajp0QuFs7cE9wRwT4gkQXR/zgKyBGJdVpKiLjMXw6L8JYgINQUxu3ZLPfSNQNq7TFs
+	 GuGyojSO/SnBdr8kRliTaSROa1FkKolRnOwukNLVmx/Jwf4frlPZifu3rW/PtDwUh3
+	 MN4bUOOvVkrSzYb7uJ17H9kScX0QTZ4u9unlmj5ja/kimatMDgFgI0vBiuzx3DfCqz
+	 4I+F7CG8/QW9g==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -35,11 +35,11 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH 08/11] tools headers: Sync uapi/linux/fcntl.h with the kernel source
-Date: Mon, 25 Aug 2025 14:59:00 -0700
-Message-ID: <20250825215904.2594216-9-namhyung@kernel.org>
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 06/11] tools headers: Sync powerpc headers with the kernel source
+Date: Mon, 25 Aug 2025 14:58:58 -0700
+Message-ID: <20250825215904.2594216-7-namhyung@kernel.org>
 X-Mailer: git-send-email 2.51.0.261.g7ce5a0a67e-goog
 In-Reply-To: <20250825215904.2594216-1-namhyung@kernel.org>
 References: <20250825215904.2594216-1-namhyung@kernel.org>
@@ -53,58 +53,45 @@ Content-Transfer-Encoding: 8bit
 
 To pick up the changes in this cset:
 
-  3941e37f62fe2c3c uapi/fcntl: add FD_PIDFS_ROOT
-  cd5d2006327b6d84 uapi/fcntl: add FD_INVALID
-  67fcec2919e4ed31 fcntl/pidfd: redefine PIDFD_SELF_THREAD_GROUP
-  a4c746f06853f91d uapi/fcntl: mark range as reserved
+  69bf2053608423cb powerpc: Drop GPL boilerplate text with obsolete FSF address
 
 This addresses these perf build warnings:
 
   Warning: Kernel ABI header differences:
-    diff -u tools/perf/trace/beauty/include/uapi/linux/fcntl.h include/uapi/linux/fcntl.h
+    diff -u tools/arch/powerpc/include/uapi/asm/kvm.h arch/powerpc/include/uapi/asm/kvm.h
 
 Please see tools/include/uapi/README for further details.
 
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- .../trace/beauty/include/uapi/linux/fcntl.h    | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ tools/arch/powerpc/include/uapi/asm/kvm.h | 13 -------------
+ 1 file changed, 13 deletions(-)
 
-diff --git a/tools/perf/trace/beauty/include/uapi/linux/fcntl.h b/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
-index a15ac2fa4b202fa0..f291ab4f94ebccac 100644
---- a/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
-+++ b/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
-@@ -90,10 +90,28 @@
- #define DN_ATTRIB	0x00000020	/* File changed attibutes */
- #define DN_MULTISHOT	0x80000000	/* Don't remove notifier */
- 
-+/* Reserved kernel ranges [-100], [-10000, -40000]. */
- #define AT_FDCWD		-100    /* Special value for dirfd used to
- 					   indicate openat should use the
- 					   current working directory. */
- 
-+/*
-+ * The concept of process and threads in userland and the kernel is a confusing
-+ * one - within the kernel every thread is a 'task' with its own individual PID,
-+ * however from userland's point of view threads are grouped by a single PID,
-+ * which is that of the 'thread group leader', typically the first thread
-+ * spawned.
-+ *
-+ * To cut the Gideon knot, for internal kernel usage, we refer to
-+ * PIDFD_SELF_THREAD to refer to the current thread (or task from a kernel
-+ * perspective), and PIDFD_SELF_THREAD_GROUP to refer to the current thread
-+ * group leader...
-+ */
-+#define PIDFD_SELF_THREAD		-10000 /* Current thread. */
-+#define PIDFD_SELF_THREAD_GROUP		-10001 /* Current thread group leader. */
-+
-+#define FD_PIDFS_ROOT			-10002 /* Root of the pidfs filesystem */
-+#define FD_INVALID			-10009 /* Invalid file descriptor: -10000 - EBADF = -10009 */
- 
- /* Generic flags for the *at(2) family of syscalls. */
- 
+diff --git a/tools/arch/powerpc/include/uapi/asm/kvm.h b/tools/arch/powerpc/include/uapi/asm/kvm.h
+index eaeda001784ebb6f..077c5437f5219b05 100644
+--- a/tools/arch/powerpc/include/uapi/asm/kvm.h
++++ b/tools/arch/powerpc/include/uapi/asm/kvm.h
+@@ -1,18 +1,5 @@
+ /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+ /*
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License, version 2, as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+- *
+  * Copyright IBM Corp. 2007
+  *
+  * Authors: Hollis Blanchard <hollisb@us.ibm.com>
 -- 
 2.51.0.261.g7ce5a0a67e-goog
 
