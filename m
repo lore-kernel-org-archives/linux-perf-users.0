@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22CA02EA17D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B922FE58D;
 	Mon, 25 Aug 2025 21:59:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756159151; cv=none; b=UqQsen78pInCQWwu9i1I1vzhuLW/L9CHHayavkP/iHdXKfeaU1wlddSyWgM3BYWWq4q2iUS3qrg0hwehaI4MKW5EAQbkCqvl3m4Eit0VB/bQOwWevauqKo135Y6hdgzP4QbH63Ro0qNTjwlJP7WKfrj+o5CmxaWlEQzCjuCzPZs=
+	t=1756159151; cv=none; b=YaZeiQKarfZ42QUCyEfltf01Ugv7knT4Du484kHSv+iLsXOcNf+UWO2cTHGJiWVoBsWegcNcjMVwwXTgoIc9+cGmmzrsq/yIkSyJCmV6ByoE4Kb9KWh89NnLFH/5gVwD5Y2FbcHDSoArMuKLAXVWt0yKJpDijdg5bA8UR1DIpMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1756159151; c=relaxed/simple;
-	bh=fuWodoezyKYbYfnkUdVqccH9E/vnBfXHjLS7NnAZvqI=;
+	bh=nVCrffrR+DUX0JkeKJS/+8PysmYnJ/7dUNKSEtKrCoM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UJvHQ1IZsY12HbnL+b5QTmzFDlxuJn/5sX8sJFRaqiT6Pa+xw45v6NnOecVOKOX0RIkPPGaTtPDYQ3INJOBA7ZxT/9UmNJqXtbRqFjgKlsN3Zl69AOE4ocbElU/6boZeFFsS3WDTkh3ovuNoPuU1/aeNZJ1k9T3VbZE8xDZLAY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a2+qNrEB; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dA+WhcGB2Xjvm8wzcIXrHZXmfZej0jQT3NoSn5JRGfGxS7yMt/JwHpkfRUCvRAKyqc9w44VzOO3jGJhJ7RbMHEjS9wdQ9DA7T0UgP8ySRDBi7KKQJRy0rolRJlX7sgGP7rx5tppoJnocgHv9LaJuEu72FTCHPC3LmCoHWmPLLi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kqFyfybE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a2+qNrEB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A06F0C19424;
-	Mon, 25 Aug 2025 21:59:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kqFyfybE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28856C2BC86;
+	Mon, 25 Aug 2025 21:59:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1756159151;
-	bh=fuWodoezyKYbYfnkUdVqccH9E/vnBfXHjLS7NnAZvqI=;
+	bh=nVCrffrR+DUX0JkeKJS/+8PysmYnJ/7dUNKSEtKrCoM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=a2+qNrEBufRq1nhjs2Ht3LnH8jbC2q0f2dNRFWVuNjutvTttheS+xpLnrZxO32Iv5
-	 paMQAJdS7nmyWNsKiO1rH0jd7gdLxxm1vP+Nmbqbck0FQaoMSu83WIJrglSPI0idRL
-	 1XqyhxhexSGS1hQsKquyVKD2eEBw1Nu6MQio80m3ikLowpu1ytaZxCzS2dO41HAHVK
-	 Hoya3KSthExOTZgTY7rcN7Ht82oAJWRONoMokq5IANahzLN/FJaEicwc/yI479Zq4N
-	 +oWXBlop4jC40xqgaMJXVgN3oPRSfDdojkCayNSBT2C3sfm8rifGB5R1lOj0NPSNYX
-	 slYezDLv2Fejw==
+	b=kqFyfybE6YrJtV+sQ+pU5uNwmRKtogdDT2PMTX8N6GNgDYAwYHjNyv1IRn6qXN8kU
+	 MjeD73au5c18Q7Eqi4WYtaqZ7Fi7fWWplc4A9T8K07y2Rhx5Vry4odu+eyv4NW8pvh
+	 cHsqYe2RFZ3ZJIYO3+o0zRpQ36GgiTt8zycxRm2/lk0bbJfRHyCrkf821r6icKOes2
+	 2Gwr3RCeDENFvqjzk+B29r761X0sZXQdgPX6APFA5VDABqhmLWugSGM8zE8Z7n7kS8
+	 v/oiKt+dockBoReLqhR4kAtu0M/K0VCxVKvetSMX2vYVJQutbw4FWj63pwnRnYyhim
+	 YAeT6/vY2bYAg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -35,11 +35,11 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>,
-	linux-api@vger.kernel.org
-Subject: [PATCH 07/11] tools headers: Sync syscall tables with the kernel source
-Date: Mon, 25 Aug 2025 14:58:59 -0700
-Message-ID: <20250825215904.2594216-8-namhyung@kernel.org>
+	Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org
+Subject: [PATCH 08/11] tools headers: Sync uapi/linux/fcntl.h with the kernel source
+Date: Mon, 25 Aug 2025 14:59:00 -0700
+Message-ID: <20250825215904.2594216-9-namhyung@kernel.org>
 X-Mailer: git-send-email 2.51.0.261.g7ce5a0a67e-goog
 In-Reply-To: <20250825215904.2594216-1-namhyung@kernel.org>
 References: <20250825215904.2594216-1-namhyung@kernel.org>
@@ -53,165 +53,58 @@ Content-Transfer-Encoding: 8bit
 
 To pick up the changes in this cset:
 
-  be7efb2d20d67f33 fs: introduce file_getattr and file_setattr syscalls
+  3941e37f62fe2c3c uapi/fcntl: add FD_PIDFS_ROOT
+  cd5d2006327b6d84 uapi/fcntl: add FD_INVALID
+  67fcec2919e4ed31 fcntl/pidfd: redefine PIDFD_SELF_THREAD_GROUP
+  a4c746f06853f91d uapi/fcntl: mark range as reserved
 
 This addresses these perf build warnings:
 
   Warning: Kernel ABI header differences:
-    diff -u tools/include/uapi/asm-generic/unistd.h include/uapi/asm-generic/unistd.h
-    diff -u tools/scripts/syscall.tbl scripts/syscall.tbl
-    diff -u tools/perf/arch/x86/entry/syscalls/syscall_32.tbl arch/x86/entry/syscalls/syscall_32.tbl
-    diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/x86/entry/syscalls/syscall_64.tbl
-    diff -u tools/perf/arch/powerpc/entry/syscalls/syscall.tbl arch/powerpc/kernel/syscalls/syscall.tbl
-    diff -u tools/perf/arch/s390/entry/syscalls/syscall.tbl arch/s390/kernel/syscalls/syscall.tbl
-    diff -u tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl arch/mips/kernel/syscalls/syscall_n64.tbl
-    diff -u tools/perf/arch/arm/entry/syscalls/syscall.tbl arch/arm/tools/syscall.tbl
-    diff -u tools/perf/arch/sh/entry/syscalls/syscall.tbl arch/sh/kernel/syscalls/syscall.tbl
-    diff -u tools/perf/arch/sparc/entry/syscalls/syscall.tbl arch/sparc/kernel/syscalls/syscall.tbl
-    diff -u tools/perf/arch/xtensa/entry/syscalls/syscall.tbl arch/xtensa/kernel/syscalls/syscall.tbl
+    diff -u tools/perf/trace/beauty/include/uapi/linux/fcntl.h include/uapi/linux/fcntl.h
 
 Please see tools/include/uapi/README for further details.
 
-Cc: Arnd Bergmann <arnd@arndb.de>
-CC: linux-api@vger.kernel.org
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/include/uapi/asm-generic/unistd.h             | 8 +++++++-
- tools/perf/arch/arm/entry/syscalls/syscall.tbl      | 2 ++
- tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl | 2 ++
- tools/perf/arch/powerpc/entry/syscalls/syscall.tbl  | 2 ++
- tools/perf/arch/s390/entry/syscalls/syscall.tbl     | 2 ++
- tools/perf/arch/sh/entry/syscalls/syscall.tbl       | 2 ++
- tools/perf/arch/sparc/entry/syscalls/syscall.tbl    | 2 ++
- tools/perf/arch/x86/entry/syscalls/syscall_32.tbl   | 2 ++
- tools/perf/arch/x86/entry/syscalls/syscall_64.tbl   | 2 ++
- tools/perf/arch/xtensa/entry/syscalls/syscall.tbl   | 2 ++
- tools/scripts/syscall.tbl                           | 2 ++
- 11 files changed, 27 insertions(+), 1 deletion(-)
+ .../trace/beauty/include/uapi/linux/fcntl.h    | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/tools/include/uapi/asm-generic/unistd.h b/tools/include/uapi/asm-generic/unistd.h
-index 2892a45023af6d3e..04e0077fb4c97a4d 100644
---- a/tools/include/uapi/asm-generic/unistd.h
-+++ b/tools/include/uapi/asm-generic/unistd.h
-@@ -852,8 +852,14 @@ __SYSCALL(__NR_removexattrat, sys_removexattrat)
- #define __NR_open_tree_attr 467
- __SYSCALL(__NR_open_tree_attr, sys_open_tree_attr)
+diff --git a/tools/perf/trace/beauty/include/uapi/linux/fcntl.h b/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
+index a15ac2fa4b202fa0..f291ab4f94ebccac 100644
+--- a/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
++++ b/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
+@@ -90,10 +90,28 @@
+ #define DN_ATTRIB	0x00000020	/* File changed attibutes */
+ #define DN_MULTISHOT	0x80000000	/* Don't remove notifier */
  
-+/* fs/inode.c */
-+#define __NR_file_getattr 468
-+__SYSCALL(__NR_file_getattr, sys_file_getattr)
-+#define __NR_file_setattr 469
-+__SYSCALL(__NR_file_setattr, sys_file_setattr)
++/* Reserved kernel ranges [-100], [-10000, -40000]. */
+ #define AT_FDCWD		-100    /* Special value for dirfd used to
+ 					   indicate openat should use the
+ 					   current working directory. */
+ 
++/*
++ * The concept of process and threads in userland and the kernel is a confusing
++ * one - within the kernel every thread is a 'task' with its own individual PID,
++ * however from userland's point of view threads are grouped by a single PID,
++ * which is that of the 'thread group leader', typically the first thread
++ * spawned.
++ *
++ * To cut the Gideon knot, for internal kernel usage, we refer to
++ * PIDFD_SELF_THREAD to refer to the current thread (or task from a kernel
++ * perspective), and PIDFD_SELF_THREAD_GROUP to refer to the current thread
++ * group leader...
++ */
++#define PIDFD_SELF_THREAD		-10000 /* Current thread. */
++#define PIDFD_SELF_THREAD_GROUP		-10001 /* Current thread group leader. */
 +
- #undef __NR_syscalls
--#define __NR_syscalls 468
-+#define __NR_syscalls 470
++#define FD_PIDFS_ROOT			-10002 /* Root of the pidfs filesystem */
++#define FD_INVALID			-10009 /* Invalid file descriptor: -10000 - EBADF = -10009 */
  
- /*
-  * 32 bit systems traditionally used different
-diff --git a/tools/perf/arch/arm/entry/syscalls/syscall.tbl b/tools/perf/arch/arm/entry/syscalls/syscall.tbl
-index 27c1d5ebcd91c8c2..b07e699aaa3c2840 100644
---- a/tools/perf/arch/arm/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/arm/entry/syscalls/syscall.tbl
-@@ -482,3 +482,5 @@
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
- 467	common	open_tree_attr			sys_open_tree_attr
-+468	common	file_getattr			sys_file_getattr
-+469	common	file_setattr			sys_file_setattr
-diff --git a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-index 1e8c44c7b61492ea..7a7049c2c307885f 100644
---- a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-+++ b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-@@ -382,3 +382,5 @@
- 465	n64	listxattrat			sys_listxattrat
- 466	n64	removexattrat			sys_removexattrat
- 467	n64	open_tree_attr			sys_open_tree_attr
-+468	n64	file_getattr			sys_file_getattr
-+469	n64	file_setattr			sys_file_setattr
-diff --git a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-index 9a084bdb892694bc..b453e80dfc003796 100644
---- a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-@@ -558,3 +558,5 @@
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
- 467	common	open_tree_attr			sys_open_tree_attr
-+468	common	file_getattr			sys_file_getattr
-+469	common	file_setattr			sys_file_setattr
-diff --git a/tools/perf/arch/s390/entry/syscalls/syscall.tbl b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-index a4569b96ef06c54c..8a6744d658db3986 100644
---- a/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-@@ -470,3 +470,5 @@
- 465  common	listxattrat		sys_listxattrat			sys_listxattrat
- 466  common	removexattrat		sys_removexattrat		sys_removexattrat
- 467  common	open_tree_attr		sys_open_tree_attr		sys_open_tree_attr
-+468  common	file_getattr		sys_file_getattr		sys_file_getattr
-+469  common	file_setattr		sys_file_setattr		sys_file_setattr
-diff --git a/tools/perf/arch/sh/entry/syscalls/syscall.tbl b/tools/perf/arch/sh/entry/syscalls/syscall.tbl
-index 52a7652fcff6394b..5e9c9eff5539e241 100644
---- a/tools/perf/arch/sh/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/sh/entry/syscalls/syscall.tbl
-@@ -471,3 +471,5 @@
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
- 467	common	open_tree_attr			sys_open_tree_attr
-+468	common	file_getattr			sys_file_getattr
-+469	common	file_setattr			sys_file_setattr
-diff --git a/tools/perf/arch/sparc/entry/syscalls/syscall.tbl b/tools/perf/arch/sparc/entry/syscalls/syscall.tbl
-index 83e45eb6c095a36b..ebb7d06d1044fa9b 100644
---- a/tools/perf/arch/sparc/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/sparc/entry/syscalls/syscall.tbl
-@@ -513,3 +513,5 @@
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
- 467	common	open_tree_attr			sys_open_tree_attr
-+468	common	file_getattr			sys_file_getattr
-+469	common	file_setattr			sys_file_setattr
-diff --git a/tools/perf/arch/x86/entry/syscalls/syscall_32.tbl b/tools/perf/arch/x86/entry/syscalls/syscall_32.tbl
-index ac007ea00979dc28..4877e16da69a50f2 100644
---- a/tools/perf/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/tools/perf/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -473,3 +473,5 @@
- 465	i386	listxattrat		sys_listxattrat
- 466	i386	removexattrat		sys_removexattrat
- 467	i386	open_tree_attr		sys_open_tree_attr
-+468	i386	file_getattr		sys_file_getattr
-+469	i386	file_setattr		sys_file_setattr
-diff --git a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-index cfb5ca41e30de1a4..92cf0fe2291eb99b 100644
---- a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -391,6 +391,8 @@
- 465	common	listxattrat		sys_listxattrat
- 466	common	removexattrat		sys_removexattrat
- 467	common	open_tree_attr		sys_open_tree_attr
-+468	common	file_getattr		sys_file_getattr
-+469	common	file_setattr		sys_file_setattr
+ /* Generic flags for the *at(2) family of syscalls. */
  
- #
- # Due to a historical design error, certain syscalls are numbered differently
-diff --git a/tools/perf/arch/xtensa/entry/syscalls/syscall.tbl b/tools/perf/arch/xtensa/entry/syscalls/syscall.tbl
-index f657a77314f8667f..374e4cb788d8a6d4 100644
---- a/tools/perf/arch/xtensa/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/xtensa/entry/syscalls/syscall.tbl
-@@ -438,3 +438,5 @@
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
- 467	common	open_tree_attr			sys_open_tree_attr
-+468	common	file_getattr			sys_file_getattr
-+469	common	file_setattr			sys_file_setattr
-diff --git a/tools/scripts/syscall.tbl b/tools/scripts/syscall.tbl
-index 580b4e246aecd5f0..d1ae5e92c615b58e 100644
---- a/tools/scripts/syscall.tbl
-+++ b/tools/scripts/syscall.tbl
-@@ -408,3 +408,5 @@
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
- 467	common	open_tree_attr			sys_open_tree_attr
-+468	common	file_getattr			sys_file_getattr
-+469	common	file_setattr			sys_file_setattr
 -- 
 2.51.0.261.g7ce5a0a67e-goog
 
