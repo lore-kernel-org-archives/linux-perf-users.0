@@ -1,172 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58BBD26A08C;
-	Mon, 25 Aug 2025 14:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5402FABE4;
+	Mon, 25 Aug 2025 14:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756130510; cv=none; b=duq1Vx9z+ylAMPq62Js/v0npqI8v8CWLlvCX5M52q7ZbYYUBpQklHe2oGE4bLWnRaAKcn9gMBfhMyQjyMJJ61T/cgy8Fsd6HFJX+KnTyoAxLeq/L5rSb+U2b4wGq1QYd02m5vwVSxdt26Upmb2/UV3fBoQvHUcCDAMISPi2IQ30=
+	t=1756131456; cv=none; b=g2mKEhvJjC3whozZ+va9bk2+qyGn8hSLRUK36vsUm5UAQbw8ZaFQbZhJ8gcoZoA4hbD5SLMxUBW7H48cP8hY26D5EsTcGKnpX0wP8YvXEKmfqeCWF0GzYPno1lNUQQe4sxI4sgDYeKRvWpQ9VYoNqUpqREa1juyMP9PvePN2sc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756130510; c=relaxed/simple;
-	bh=JYK5oZx2jKAoGrqaNkjjnyjA3UiseVMaOJbii9Eo/aw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OfFHoYhyzoRfdFdw7Z8jZyOTOvONdvXtP+lahUdRhY7A2sdEirqLB76NKxQf57utU8yP0oi3ijzLWaqxjnb8dEicv9nhpERaDwBboYVxRvrInaYE8SfZusbmuMaAquL0kdQASu1widz5+Dhs2oVCU9G/KCytBzUcJPr6RH33xyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+P4bdmi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756131456; c=relaxed/simple;
+	bh=XfZ62tLuxByRPYy6WjHQSXBDg1A/cx9UlgBoxSwnUEY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V3HvVA+7/GJCVj5/bPochLz6kdpsRqcr7bDJF/Kq8liDrz2oZDjAD00XQcvorG4vqTdPJ2/HPbj07uD46uS2/sVtIdV5QF7dRYCkC4wut8P6gJ4yga0w1roADay8F/q6hddkjGpN+p/3mUzuhi/F3D07FXcxQXE7WtQpXzgFqcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nqjuvOQG; arc=none smtp.client-ip=209.85.160.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+P4bdmi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D597AC4CEED;
-	Mon, 25 Aug 2025 14:01:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756130509;
-	bh=JYK5oZx2jKAoGrqaNkjjnyjA3UiseVMaOJbii9Eo/aw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=B+P4bdmi9cT5ft6PawuA6vnhqp21nyGNK7WDeDtmw/FLomN9WHQc3dbJhc8Lg5HyH
-	 7rb0HFOIuHa8mmRXv2Wx+Tnu5lI7xBC/AM1kAi+pGpfMM83+QiGVohyp0ecbYqQ2jp
-	 Nk5UrKQDuAU3UdohGu9UC9C5Yn/SRowMZBtKLhbwtaKtc8tZbLqTvylx9zG1cTUldH
-	 YFcgx2q0G2YBuHgRmwCebPdVUlkne55rdbRsNPOpFB5NhboHVIbtHXQyG28pi3Fz1f
-	 dmvyqcOz+ybEWaNi3pkk10d/0vm2aXBe62lUAdUeXqJgDd/T6qCRwUAMuzVvQe+35m
-	 rVYnNuaHDYJow==
-Date: Mon, 25 Aug 2025 07:01:49 -0700
-From: Kees Cook <kees@kernel.org>
-To: Bhupesh <bhupesh@igalia.com>
-Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
-	laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
-	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
-	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
-	david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
-	brauner@kernel.org, jack@suse.cz, mingo@redhat.com,
-	juri.lelli@redhat.com, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, linux-trace-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org
-Subject: Re: [PATCH v8 4/5] treewide: Switch memcpy() users of 'task->comm'
- to a more safer implementation
-Message-ID: <202508250656.9D56526@keescook>
-References: <20250821102152.323367-1-bhupesh@igalia.com>
- <20250821102152.323367-5-bhupesh@igalia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nqjuvOQG"
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-30ccea8f43cso2971609fac.1;
+        Mon, 25 Aug 2025 07:17:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756131453; x=1756736253; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=XfZ62tLuxByRPYy6WjHQSXBDg1A/cx9UlgBoxSwnUEY=;
+        b=nqjuvOQGsZ8yGSkrbFuKBvZmZykg/wRhf61/OxgT0jspq21ctZk6zq2Mn0jR26aLkn
+         nwLxhJ/k+0XI1+uN1ARqaMXRT9c2JFFe2m4QhlWjqK+NMX6E+QgB2jMToMTpBxoI8vfG
+         J34+TFOKcnohTB9XVoehSSCGo7ANcX9ycSRGrjIIeh3lxrNddXcT3yTop3xAc66N9pNK
+         pnwLD0PDamg+RRBkdI/QIFE5RClQg4sq9xKK5pMBE4Eb5R5yh9hHsZ/CWZkiiU83pFo5
+         FNgbYuyVjbsFopukbnc1bvZxDhNmZqtUqkJ4Yvc08arr1dGBts9TmLINhO6kGqeIIYxv
+         LFGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756131453; x=1756736253;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XfZ62tLuxByRPYy6WjHQSXBDg1A/cx9UlgBoxSwnUEY=;
+        b=oLoFWPI5XmKhVehnFS1D3jLGCq5vktC05ovmYK2Wrg3L68FT7QxzoBFRKsOnLdybMz
+         9eo3k1wSNQ/rskh3HjVE4dN0DjFebOxeIl3G6dX+xDx9eLQbHu2l9b50pJJC5KSxnTGT
+         B0vLMWO8Ebt3r+D6rWpLVKFmomfEiFi/TWb60EX3Gy5NaL+BtqNL8Qm7Um6V11A5Cl+1
+         nk4iQQZmInhQNkolkG09CaQaOWlwrdQ+lGSMmhM36mz8BHltwm27MHfVT+W8LZlyfOvS
+         Ix82MFkNN10nwNJrKfTWsW9mHz4345RHAu3UYPWQgroxNj5zLawgcSoBed21kuAR0HNP
+         7KpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUEtmjdpAO4d7l8nLkw2PLCUb3aQbcgXrteOHNSvz4cvZe0tD0RiQgqNSa3bWKi9Eiquv0Z8KQbFyNfJHjMDAmfLA==@vger.kernel.org, AJvYcCVxWMmpBp1Oj8R/XcxQkj0R3eETcc8oQ/URYBy573iMjz/kF5wiZ2dCODgMMuONqAgK98gRDVNqTCNhOn3Y@vger.kernel.org, AJvYcCX6W4JQLabjNidKgUgZFWwy0l0620kz+ke/92zz1uIBwR5yXIdJ6THq1Phh9mIFN+73vyRS+x2CTx1w@vger.kernel.org
+X-Gm-Message-State: AOJu0YyS/1/gnS28moYFJXwWWLpsPx48IB/qqbQ3hO1hBcfsDIyL84Bn
+	gins/X5qqgw0aUqAhNURyYUQw0NcvBMaNxsY5JXoHqMCqApbfqYYQtjOV73GwKMhQThFhj2CYCI
+	Rm8NGGEO5AxdhbN+a3E6Q6a5wYAy8PgA=
+X-Gm-Gg: ASbGncsngZ+ah+vstbuw7T3i24QfyjG3lDMeH8jpNezz0DG2y7UabD3yLr0yE1VU4Nb
+	q5XcbHMfH23pwQWTnqSMB5nyBadqZnuE5zHA7Wb9aSnKlo1OaA+QhyHNyRthQlUFQNYW29rvlaA
+	tcB5eT4+a452FAhKLnrNRUtz24hkOCMahyvrEmvlScFdHHAGqxZTFC7aymvPsDtJtFtXXAHjLTb
+	3EBjJ5r/Q==
+X-Google-Smtp-Source: AGHT+IFSc8yJZYP5++oyX3zmrWa4FAQwXR273vNyQxNEoAE2cLriN8WjmSnBc4L7oE7eTe5khl35lhborZFipbzMxh0=
+X-Received: by 2002:a05:6870:9a86:b0:30b:9efd:caaf with SMTP id
+ 586e51a60fabf-314dd684ff3mr6566294fac.19.1756131453427; Mon, 25 Aug 2025
+ 07:17:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250821102152.323367-5-bhupesh@igalia.com>
+References: <20250815182742.45541-1-suchitkarunakaran@gmail.com>
+ <aJ-ScOp3ZCG6PQmD@google.com> <CAO9wTFj7S7G2bqbiuKbR+o7Y0u1EkYY5GsHasJZLmAo5ZuCx9w@mail.gmail.com>
+In-Reply-To: <CAO9wTFj7S7G2bqbiuKbR+o7Y0u1EkYY5GsHasJZLmAo5ZuCx9w@mail.gmail.com>
+From: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+Date: Mon, 25 Aug 2025 19:47:22 +0530
+X-Gm-Features: Ac12FXx8FORsgG-UWpSZaL1OSNZ7sKM_Gyr2_7qwAfsu43fTiyQJX4R9qb9Mtrk
+Message-ID: <CAO9wTFiJmi7YzeukT0VtnpqcJcE3sSueO3owYUAd+H4wjcYZeQ@mail.gmail.com>
+Subject: Re: [PATCH RESEND] perf/util: make TYPE_STATE_MAX_REGS architecture-dependent
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	alex@ghiti.fr, guoren@kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-csky@vger.kernel.org, skhan@linuxfoundation.org, 
+	linux-kernel-mentees@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Aug 21, 2025 at 03:51:51PM +0530, Bhupesh wrote:
-> As Linus mentioned in [1], currently we have several memcpy() use-cases
-> which use 'current->comm' to copy the task name over to local copies.
-> For an example:
-> 
->  ...
->  char comm[TASK_COMM_LEN];
->  memcpy(comm, current->comm, TASK_COMM_LEN);
->  ...
-> 
-> These should be rather calling a wrappper like "get_task_array()",
-> which is implemented as:
-> 
->    static __always_inline void
->        __cstr_array_copy(char *dst,
->             const char *src, __kernel_size_t size)
->    {
->         memcpy(dst, src, size);
->         dst[size] = 0;
->    }
-> 
->    #define get_task_array(dst,src) \
->       __cstr_array_copy(dst, src, __must_be_array(dst))
-> 
-> The relevant 'memcpy()' users were identified using the following search
-> pattern:
->  $ git grep 'memcpy.*->comm\>'
-> 
-> Link: https://lore.kernel.org/all/CAHk-=wi5c=_-FBGo_88CowJd_F-Gi6Ud9d=TALm65ReN7YjrMw@mail.gmail.com/ #1
-> 
-> Signed-off-by: Bhupesh <bhupesh@igalia.com>
-> ---
->  include/linux/coredump.h                      |  2 +-
->  include/linux/sched.h                         | 32 +++++++++++++++++++
->  include/linux/tracepoint.h                    |  4 +--
->  include/trace/events/block.h                  | 10 +++---
->  include/trace/events/oom.h                    |  2 +-
->  include/trace/events/osnoise.h                |  2 +-
->  include/trace/events/sched.h                  | 13 ++++----
->  include/trace/events/signal.h                 |  2 +-
->  include/trace/events/task.h                   |  4 +--
->  tools/bpf/bpftool/pids.c                      |  6 ++--
->  .../bpf/test_kmods/bpf_testmod-events.h       |  2 +-
->  11 files changed, 54 insertions(+), 25 deletions(-)
-> 
-> diff --git a/include/linux/coredump.h b/include/linux/coredump.h
-> index 68861da4cf7c..bcee0afc5eaf 100644
-> --- a/include/linux/coredump.h
-> +++ b/include/linux/coredump.h
-> @@ -54,7 +54,7 @@ extern void vfs_coredump(const kernel_siginfo_t *siginfo);
->  	do {	\
->  		char comm[TASK_COMM_LEN];	\
->  		/* This will always be NUL terminated. */ \
-> -		memcpy(comm, current->comm, sizeof(comm)); \
-> +		get_task_array(comm, current->comm); \
->  		printk_ratelimited(Level "coredump: %d(%*pE): " Format "\n",	\
->  			task_tgid_vnr(current), (int)strlen(comm), comm, ##__VA_ARGS__);	\
->  	} while (0)	\
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 5a58c1270474..d26d1dfb9904 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1960,12 +1960,44 @@ extern void wake_up_new_task(struct task_struct *tsk);
->  
->  extern void kick_process(struct task_struct *tsk);
->  
-> +/*
-> + * - Why not use task_lock()?
-> + *   User space can randomly change their names anyway, so locking for readers
-> + *   doesn't make sense. For writers, locking is probably necessary, as a race
-> + *   condition could lead to long-term mixed results.
-> + *   The logic inside __set_task_comm() should ensure that the task comm is
-> + *   always NUL-terminated and zero-padded. Therefore the race condition between
-> + *   reader and writer is not an issue.
-> + */
-> +
->  extern void __set_task_comm(struct task_struct *tsk, const char *from, bool exec);
->  #define set_task_comm(tsk, from) ({			\
->  	BUILD_BUG_ON(sizeof(from) < TASK_COMM_LEN);	\
->  	__set_task_comm(tsk, from, false);		\
->  })
->  
-> +/*
-> + * 'get_task_array' can be 'data-racy' in the destination and
-> + * should not be used for cases where a 'stable NUL at the end'
-> + * is needed. Its better to use strscpy and friends for such
-> + * use-cases.
-> + *
-> + * It is suited mainly for a 'just copy comm to a constant-sized
-> + * array' case - especially in performance sensitive use-cases,
-> + * like tracing.
-> + */
-> +
-> +static __always_inline void
-> +	__cstr_array_copy(char *dst, const char *src,
-> +			  __kernel_size_t size)
-> +{
-> +	memcpy(dst, src, size);
-> +	dst[size] = 0;
-> +}
+On Sat, 16 Aug 2025 at 12:16, Suchit Karunakaran
+<suchitkarunakaran@gmail.com> wrote:
+>
+> Hi Namhyung,
+> Thanks for reviewing the patch. I'd like to ask if there's anything
+> else I should do regarding this patch, given that it's supported only
+> for x86 and powerpc?
+>
+> Thanks,
+> Suchit
 
-Please don't reinvent the wheel. :) We already have memtostr, please use
-that (or memtostr_pad).
 
-> +
-> +#define get_task_array(dst, src) \
-> +	__cstr_array_copy(dst, src, __must_be_array(dst))
+Hi Namhyung,
+Following up on this patch. I would appreciate any guidance on further
+actions needed, considering its current support is only for x86 and
+PowerPC.
 
-Uh, __must_be_array(dst) returns 0 on success. :P Are you sure you
-tested this?
-
--- 
-Kees Cook
+Thanks,
+Suchit
