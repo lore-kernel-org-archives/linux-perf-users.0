@@ -1,48 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE084275B08;
-	Tue, 26 Aug 2025 02:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C7F14A8B;
+	Tue, 26 Aug 2025 03:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756175427; cv=none; b=ALW4ustb5cxgbnPAjabnPfo9TcbCvziskdpqwig0uU97XOPUXVviUZXGAtOB1ONM3AV5pMXoR6U+TN/x+UGrwPctfmrscvWssx8y9byFxzOb35vObsURzOvYoDHy/zPLDAA2wr7tmXdbvEi7s2QUBKkJjdTStY217KI2hNDir64=
+	t=1756180038; cv=none; b=idNq3xiAkbe3zTdXd08dZT+JJu9Ey7FF01uW7SzwofYKoZPV0WVHbe68hDx9iEXMLvo0e34wZK/zDDRKvbwDOlCauucL5axBgs1Rh6PkLZHadK+8GX6tIez9mvLxRGAiQc1ZfQQrBt17XF6rW/R6kq9hdxTKNSfrZxL1wjsdz+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756175427; c=relaxed/simple;
-	bh=PDYGgURrqD8Pekg5PAD5urHgYBmmDCYBZYK8k66bJf0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=b+RupR8jQoTNndfJEe+Ny/8Vwarvb6ziIS4umAXpj/fBQwq+b2v8GIKO8WT/kGeiZZPUTNH/Dh12Hqtp4TJJNiM6WdNkHYnFA2EFMPJZke9kWHPCFLNyV9/8Vg5kGM7RTvTEfCmuqToJinPKCq3u0iTcjHlmNAOVQI8JFOrkxtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ejk/0Y3s; arc=none smtp.client-ip=192.198.163.13
+	s=arc-20240116; t=1756180038; c=relaxed/simple;
+	bh=/lj8+5pRdz0WOnEM/CczMlrpwVEcLuC+VwleZS1xfRg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=JGkGwUdrTycSSaOt33nCJyrIMgIK9+py9Jyet24YqnjZh5XPRb92DA6w7TV7HDu6RSKjwVOjDQkTKm26vRsxg6TbV5kgLNqsSV/tTBe+4YY0I/bXDfMfXLM3NYS/kul7DHHC/gSPkrMZCqAr1aE+qQHWoAlA6SgxcW1eHSmjHWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TdvE5i14; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ejk/0Y3s"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TdvE5i14"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756175424; x=1787711424;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=PDYGgURrqD8Pekg5PAD5urHgYBmmDCYBZYK8k66bJf0=;
-  b=Ejk/0Y3sK/ZvosyuiJrGUeyIFl0K1hCw4apMVIXgVMzebh1dxhqi5ZCo
-   qN7F8vlp0N3YmUwvjEyUZzsjmC3vfKJ+SJdXFpCto67px+tHgEAVzadso
-   zLw/1zRvhiuK3LiVvrY1VuvSLUOdiBSYzh8yhsMYgrzv8AtEH07vSLqdZ
-   thuR7tNKupb+fI3pn5gFJAV+LrXvQUhAN5TqFrCvI53bYB1tcPC+E7vBC
-   74KOlZrZcI7l5wxamhiUZa3IVOEgT7Le1gYVrVQxp4zpgrvj7cT4AbIV7
-   YVox0RzsJ/17g4G5xMgci9dbOqGadJaBWLEzBj117paHCw+wlHNnIAbPU
-   g==;
-X-CSE-ConnectionGUID: QwN7ziN2Rl+EdTb33G0/4g==
-X-CSE-MsgGUID: XtAChPMASvy/mhDPwBQ71w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11533"; a="61035643"
+  t=1756180037; x=1787716037;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=/lj8+5pRdz0WOnEM/CczMlrpwVEcLuC+VwleZS1xfRg=;
+  b=TdvE5i14kh33OSCTJvSaavAAa9mF15pZ3TPm7NNjHs9pWu1y3Wz9jwNC
+   7txTiciUu2ycUJNWe15IFXLXNAHMe4ybJeou2QJhbZ2jqYFeo6UJR+qKl
+   E9FO1Y8xgbeVC/n8cHfqX6Lz0YAvYVDSBrT9IfeK4KPKolmBGlMCDr7on
+   gei/jqcOApYt99jmDFLH4jdIxrs3weVl2v8m6JCw+pe6+ogcPmFUCMRcK
+   28gxDLNgd38XSUfWpiBMQQ5h0b+1qy4SqhLYTkWyS0xegl4s/deo/gPYx
+   HS1U4a5t+/3g0qX3+FK9cDuheU39NmHluwDCFeBEG6zrp/NVMSDuIRfG8
+   Q==;
+X-CSE-ConnectionGUID: cZf2m+/0TlWRCkWjP24hHQ==
+X-CSE-MsgGUID: 3zhuIqOXQK+9fYCBFPAi7A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11533"; a="68997482"
 X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
-   d="scan'208";a="61035643"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 19:30:23 -0700
-X-CSE-ConnectionGUID: iQ5vnswFQo+dhkSAx8v53Q==
-X-CSE-MsgGUID: 9QUIfZPYQ2Obk/PdSKg0LQ==
+   d="scan'208";a="68997482"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 20:47:16 -0700
+X-CSE-ConnectionGUID: aub2pnIPRrCpngnR/uNegQ==
+X-CSE-MsgGUID: fIwU9QVbTCq9to20wtxAzQ==
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
+   d="scan'208";a="200412408"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.233.125]) ([10.124.233.125])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 19:30:19 -0700
-Message-ID: <3f481d00-2c9f-45a5-807b-037930903b1c@linux.intel.com>
-Date: Tue, 26 Aug 2025 10:30:10 +0800
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 20:47:12 -0700
+Message-ID: <a935ee9e-790f-471c-9077-16a0cc73ff41@linux.intel.com>
+Date: Tue, 26 Aug 2025 11:47:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,122 +52,146 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/3] Improve event groups for topdown, add X event
- modifier
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Yoshihiro Furudera <fj5100bi@fujitsu.com>, Howard Chu
- <howardchu95@gmail.com>, Thomas Falcon <thomas.falcon@intel.com>,
- Andi Kleen <ak@linux.intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250825211204.2784695-1-irogers@google.com>
-Content-Language: en-US
+Subject: Re: [Patch v3 3/7] perf/x86: Check if cpuc->events[*] pointer exists
+ before accessing it
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250825211204.2784695-1-irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
+ kernel test robot <oliver.sang@intel.com>
+References: <20250820023032.17128-1-dapeng1.mi@linux.intel.com>
+ <20250820023032.17128-4-dapeng1.mi@linux.intel.com>
+ <20250821133514.GP4067720@noisy.programming.kicks-ass.net>
+ <683367fc-4295-41f5-b10d-3c120f54ca0f@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <683367fc-4295-41f5-b10d-3c120f54ca0f@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
-On 8/26/2025 5:12 AM, Ian Rogers wrote:
-> In:
-> https://lore.kernel.org/lkml/20250822082233.1850417-1-dapeng1.mi@linux.intel.com/#t
-> Dapeng Mi and Xudong Hao reported that Intel topdown events have
-> issues with parsing when events are duplicated. While some of that is
-> intended, things could be better. These patches:
+On 8/22/2025 1:26 PM, Mi, Dapeng wrote:
+> On 8/21/2025 9:35 PM, Peter Zijlstra wrote:
+>> On Wed, Aug 20, 2025 at 10:30:28AM +0800, Dapeng Mi wrote:
+>>> When intel_pmu_drain_pebs_icl() is called to drain PEBS records, the
+>>> perf_event_overflow() could be called to process the last PEBS record.
+>>>
+>>> While perf_event_overflow() could trigger the interrupt throttle and
+>>> stop all events of the group, like what the below call-chain shows.
+>>>
+>>> perf_event_overflow()
+>>>   -> __perf_event_overflow()
+>>>     ->__perf_event_account_interrupt()
+>>>       -> perf_event_throttle_group()
+>>>         -> perf_event_throttle()
+>>>           -> event->pmu->stop()
+>>>             -> x86_pmu_stop()
+>>>
+>>> The side effect of stopping the events is that all corresponding event
+>>> pointers in cpuc->events[] array are cleared to NULL.
+>>>
+>>> Assume there are two PEBS events (event a and event b) in a group. When
+>>> intel_pmu_drain_pebs_icl() calls perf_event_overflow() to process the
+>>> last PEBS record of PEBS event a, interrupt throttle is triggered and
+>>> all pointers of event a and event b are cleared to NULL. Then
+>>> intel_pmu_drain_pebs_icl() tries to process the last PEBS record of
+>>> event b and encounters NULL pointer access.
+>>>
+>>> Since the left PEBS records have been processed when stopping the event,
+>>> check and skip to process the last PEBS record if cpuc->events[*] is
+>>> NULL.
+>>>
+>>> Reported-by: kernel test robot <oliver.sang@intel.com>
+>>> Closes: https://lore.kernel.org/oe-lkp/202507042103.a15d2923-lkp@intel.com
+>>> Fixes: 9734e25fbf5a ("perf: Fix the throttle logic for a group")
+>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>>> Tested-by: kernel test robot <oliver.sang@intel.com>
+>>> ---
+>>>  arch/x86/events/intel/ds.c | 10 ++++++++++
+>>>  1 file changed, 10 insertions(+)
+>>>
+>>> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+>>> index c0b7ac1c7594..dcf29c099ad2 100644
+>>> --- a/arch/x86/events/intel/ds.c
+>>> +++ b/arch/x86/events/intel/ds.c
+>>> @@ -2663,6 +2663,16 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_d
+>>>  			continue;
+>>>  
+>>>  		event = cpuc->events[bit];
+>>> +		/*
+>>> +		 * perf_event_overflow() called by below __intel_pmu_pebs_last_event()
+>>> +		 * could trigger interrupt throttle and clear all event pointers of the
+>>> +		 * group in cpuc->events[] to NULL. So need to re-check if cpuc->events[*]
+>>> +		 * is NULL, if so it indicates the event has been throttled (stopped) and
+>>> +		 * the corresponding last PEBS records have been processed in stopping
+>>> +		 * event, don't need to process it again.
+>>> +		 */
+>>> +		if (!event)
+>>> +			continue;
+>>>  
+>>>  		__intel_pmu_pebs_last_event(event, iregs, regs, data, last[bit],
+>>>  					    counts[bit], setup_pebs_adaptive_sample_data);
+>> So if this is due to __intel_pmu_pebs_last_event() calling into
+>> perf_event_overflow(); then isn't intel_pmu_drain_pebs_nhm() similarly
+>> affected?
+>>
+>> And worse, the _nhm() version would loose all events for that counter,
+>> not just the last.
+> hmm, Yes. After double check, I suppose I made a mistake for the answer to
+> Andi. It indeed has data loss since the "ds->pebs_index" is reset at the
+> head of _nhm()/_icl() these drain_pebs helper instead of the end of the
+> drain_pebs helper.  :(
 >
-> 1) give error messages specific to topdown event grouping constraints,
-> 2) fail groups if non-leaders fail to open (this appears to be old tech debt),
-> 3) adds an 'X' event modifier to allow events to opt-out of being regrouped.
+>> I'm really thinking this isn't the right thing to do.
+>>
+>>
+>> How about we audit the entirety of arch/x86/events/ for cpuc->events[]
+>> usage and see if we can get away with changing x86_pmu_stop() to simply
+>> not clearing that field.
+> Checking current code, I suppose it's fine that we don't clear
+> cpuc->events[] in x86_pmu_stop() since we already have another variable
+> "cpuc->active_mask" which is used to indicate if the corresponding
+> cpuc->events[*] is active. But in current code, the cpuc->active_mask is
+> not always checked.
 >
-> The 'X' modifier should also give a means to side-step future issues
-> in parse_events__sort_events_and_fix_groups should they come up.
+> So if we select not to clear cpuc->events[] in x86_pmu_stop(), then it's a
+> must to check cpuc->active_mask before really accessing cpuc->events[]
+> represented event. Maybe we can add an inline function got check this.
 >
-> Ian Rogers (3):
->   perf evsel: Give warning for broken Intel topdown event grouping
->   perf stat: Don't skip failing group events
->   perf parse-events: Add 'X' modifier to exclude an event from being
->     regrouped
+> bool inline x86_pmu_cntr_event_active(int idx)
+> {
+>     struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
 >
->  tools/perf/Documentation/perf-list.txt |  1 +
->  tools/perf/arch/x86/util/evsel.c       | 62 ++++++++++++++++++++++++--
->  tools/perf/builtin-stat.c              | 48 +++++++++-----------
->  tools/perf/util/evsel.c                |  7 ++-
->  tools/perf/util/evsel.h                |  3 +-
->  tools/perf/util/parse-events.c         |  5 ++-
->  tools/perf/util/parse-events.h         |  1 +
->  tools/perf/util/parse-events.l         |  5 ++-
->  8 files changed, 94 insertions(+), 38 deletions(-)
+>     return cpuc->events[idx] && test_bit(idx, cpuc->active_mask);
+> }
 
-The whole patch-set looks good to me.
+Just think twice about this method, it breaks the original logic about
+cpuc->events[] (setting at x86_pmu_start() and clearing at x86_pmu_stop())
+and this leaves the cpuc->events[] is never cleared, this is ambiguous.
+Besides checking cpuc->events[idx] and cpuc->active_mask is not atomic,
+this may bring potential risks especially considering cpuc->events[] are
+broadly used in x86/perf code. 
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Talked with Kan offline, he suggests to get a events[] snapshot from
+cpuc->events[] before calling perf_event_overflow() and then use the
+events[] snapshot to process all left PEBS records. That seems a better and
+safer method to fix this issue for me. 
 
-Tested the patches on Intel Sapphire Rapids and Panther Lake, all results
-are expected.
+Peter, if you don't object this method, I would follow Kan's suggestion.
+Thanks.
 
-Tested-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Test results on Sapphire Rapids.
-
-1. sudo ./perf stat -e slots,slots -a sleep 1
-
-WARNING: events were regrouped to match PMUs
-Error:
-Topdown slots event can only be group leader in '{slots,slots}'.
-
-2. sudo ./perf stat -e slots,slots:X -a sleep 1
- Performance counter stats for 'system wide':
-
-    55,734,800,895      slots                                             
-                     (49.99%)
-    57,217,900,875      slots:X                                           
-                     (50.01%)
-
-       1.009697323 seconds time elapsed
-
-3.  sudo ./perf stat -e slots,topdown-fe-bound,topdown-fe-bound -a sleep 1
-
-WARNING: events were regrouped to match PMUs
-Error:
-Perf metric event 'topdown-fe-bound' is duplicated in the same group (only
-one event is allowed) in '{slots,topdown-fe-bound,topdown-fe-bound}'.
-
-4. Perf stats test
-
-sudo ./perf test 100
-100: perf stat tests                                                 : Ok
-
-Test results on Panther Lake.
-
-1. sudo ./perf stat -e slots,slots -a sleep 1
-WARNING: events were regrouped to match PMUs
-Error:
-Topdown slots event can only be group leader in
-'{cpu_core/slots/,cpu_core/slots/}'.
-
-2. sudo ./perf stat -e slots,slots:X -a sleep 1
-
- Performance counter stats for 'system wide':
-
-     1,592,899,478      cpu_core/slots/                                   
-                     (49.98%)
-     1,682,298,980      cpu_core/slots/X                                   
-                    (50.02%)
-
-       1.002821768 seconds time elapsed
-
-3. sudo ./perf stat -e slots,topdown-fe-bound,topdown-fe-bound -a sleep 1
-WARNING: events were regrouped to match PMUs
-Error:
-Perf metric event 'cpu_core/topdown-fe-bound/' is duplicated in the same
-group (only one event is allowed) in
-'{cpu_core/slots/,cpu_core/topdown-fe-bound/,cpu_core/topdown-fe-bound/},cpu_atom/topdown-fe-bound/,cpu_atom/topdown-fe-bound/'.
-
-4. sudo ./perf test 99
- 99: perf stat tests                                                 : Ok
-
+>
+>> Or perhaps move the setting and clearing into x86_pmu_{add,del}() rather
+>> than x86_pmu_{start,stop}(). After all, the latter don't affect the
+>> counter placement, they just stop/start the event.
+> IIUC, we could not move the setting into x86_pmu_add() from x86_pmu_stop()
+> since the counter index is not finalized at x86_pmu_add() is called. The
+> counter index could change for each adding a new event.
+>
+>
+>>
