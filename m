@@ -1,50 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C7F14A8B;
-	Tue, 26 Aug 2025 03:47:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B9123506F;
+	Tue, 26 Aug 2025 04:02:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756180038; cv=none; b=idNq3xiAkbe3zTdXd08dZT+JJu9Ey7FF01uW7SzwofYKoZPV0WVHbe68hDx9iEXMLvo0e34wZK/zDDRKvbwDOlCauucL5axBgs1Rh6PkLZHadK+8GX6tIez9mvLxRGAiQc1ZfQQrBt17XF6rW/R6kq9hdxTKNSfrZxL1wjsdz+g=
+	t=1756180948; cv=none; b=h7Gw0Hs2h/eDJscoGj5g5u0FwJJ2QaSPNKXJ0f+/LbqjzAxCSEQPaSUFk/hkhGHH49QkNT/fQYfXavvvsS//nwlvztyjoz6qQVJUH5UEezPMop3iijtEYOab4lIDpKOKVeAsHiSGK/rMzQBmtWCjIOm47mYwY4NPv8VIU/fKdMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756180038; c=relaxed/simple;
-	bh=/lj8+5pRdz0WOnEM/CczMlrpwVEcLuC+VwleZS1xfRg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=JGkGwUdrTycSSaOt33nCJyrIMgIK9+py9Jyet24YqnjZh5XPRb92DA6w7TV7HDu6RSKjwVOjDQkTKm26vRsxg6TbV5kgLNqsSV/tTBe+4YY0I/bXDfMfXLM3NYS/kul7DHHC/gSPkrMZCqAr1aE+qQHWoAlA6SgxcW1eHSmjHWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TdvE5i14; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1756180948; c=relaxed/simple;
+	bh=Vkp7bKYS7B836rWMUnkl9DrBLTWbnfbQcktrkquBl00=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g+6QcK7KV9e2f2V4af5JRBbI5b9WO+bcmJe9pcKBvNvDu0+yO/2RqJwIbAKzN+dqbbdkWL6O9ZnJwu1BMsYnZxDs82kGXX9mpM5Dht86cNzSQrcEKSWe3IfMouEW6/FyWqfqgBXuvsKe4uXx2fH7KbdJBLgM43eCJqHJw+SdZUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KEvHDxwV; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TdvE5i14"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756180037; x=1787716037;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=/lj8+5pRdz0WOnEM/CczMlrpwVEcLuC+VwleZS1xfRg=;
-  b=TdvE5i14kh33OSCTJvSaavAAa9mF15pZ3TPm7NNjHs9pWu1y3Wz9jwNC
-   7txTiciUu2ycUJNWe15IFXLXNAHMe4ybJeou2QJhbZ2jqYFeo6UJR+qKl
-   E9FO1Y8xgbeVC/n8cHfqX6Lz0YAvYVDSBrT9IfeK4KPKolmBGlMCDr7on
-   gei/jqcOApYt99jmDFLH4jdIxrs3weVl2v8m6JCw+pe6+ogcPmFUCMRcK
-   28gxDLNgd38XSUfWpiBMQQ5h0b+1qy4SqhLYTkWyS0xegl4s/deo/gPYx
-   HS1U4a5t+/3g0qX3+FK9cDuheU39NmHluwDCFeBEG6zrp/NVMSDuIRfG8
-   Q==;
-X-CSE-ConnectionGUID: cZf2m+/0TlWRCkWjP24hHQ==
-X-CSE-MsgGUID: 3zhuIqOXQK+9fYCBFPAi7A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11533"; a="68997482"
-X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
-   d="scan'208";a="68997482"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 20:47:16 -0700
-X-CSE-ConnectionGUID: aub2pnIPRrCpngnR/uNegQ==
-X-CSE-MsgGUID: fIwU9QVbTCq9to20wtxAzQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,214,1751266800"; 
-   d="scan'208";a="200412408"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.233.125]) ([10.124.233.125])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2025 20:47:12 -0700
-Message-ID: <a935ee9e-790f-471c-9077-16a0cc73ff41@linux.intel.com>
-Date: Tue, 26 Aug 2025 11:47:10 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KEvHDxwV"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57PMN3vp009468;
+	Tue, 26 Aug 2025 04:02:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=YfeP+O
+	6BaUVB+uLXFLt7iv8l0N49hfo+cNYJaKgKXMs=; b=KEvHDxwVkNiPNd4MQzPzkJ
+	ZfrLzE+d3ulEzkJgkTfxlZkpjADuH7DGoCYWkSN+SrncPe6itC/+y4dSuUs3ZVo4
+	bYDhcOMK05pNwJGxRmVcD4mISI3weUdYQRvRgbW301ei6Gm0RYfUvJetvz2O6YT5
+	dx1N3CaxzcXwcr6GAXuOuER+Aq6XPSgZN/jiaQu5H1CFKdPmj9T+iL6b54tEuT34
+	mCGTgsmqFnkNfMB97N5hTvKixpk1qrFQAG2YPRKLGipZ2VY2vdq+RDCC1UmMJNGf
+	hWYck71xGrfj7PynmLMuZTqAKM6Bs4yM3jpIT64rWTHMragS3+5GRKnuSxOSJiow
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48q42hveae-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Aug 2025 04:02:06 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 57Q4258n006480;
+	Tue, 26 Aug 2025 04:02:05 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48q42hveaa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Aug 2025 04:02:05 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57Q40HPY002571;
+	Tue, 26 Aug 2025 04:02:05 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 48qt6m8r4c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Aug 2025 04:02:04 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 57Q424Tv11338886
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 26 Aug 2025 04:02:04 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4E91558059;
+	Tue, 26 Aug 2025 04:02:04 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7E6455804B;
+	Tue, 26 Aug 2025 04:02:00 +0000 (GMT)
+Received: from [9.43.67.173] (unknown [9.43.67.173])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 26 Aug 2025 04:02:00 +0000 (GMT)
+Message-ID: <77eb1eb6-6ccc-451b-a8c6-bb05a8fbb309@linux.ibm.com>
+Date: Tue, 26 Aug 2025 09:31:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,146 +69,95 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3 3/7] perf/x86: Check if cpuc->events[*] pointer exists
- before accessing it
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
- Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
- kernel test robot <oliver.sang@intel.com>
-References: <20250820023032.17128-1-dapeng1.mi@linux.intel.com>
- <20250820023032.17128-4-dapeng1.mi@linux.intel.com>
- <20250821133514.GP4067720@noisy.programming.kicks-ass.net>
- <683367fc-4295-41f5-b10d-3c120f54ca0f@linux.intel.com>
+Subject: Re: [PATCH 06/11] tools headers: Sync powerpc headers with the kernel
+ source
+To: Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+References: <20250825215904.2594216-1-namhyung@kernel.org>
+ <20250825215904.2594216-7-namhyung@kernel.org>
 Content-Language: en-US
-In-Reply-To: <683367fc-4295-41f5-b10d-3c120f54ca0f@linux.intel.com>
+From: Madhavan Srinivasan <maddy@linux.ibm.com>
+In-Reply-To: <20250825215904.2594216-7-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODIzMDAxMCBTYWx0ZWRfX6+WJqBmcuEjX
+ LFMCyXpSS1nfnZMm4Go4qgjTKO2MjMWjUyBZGls7alAIDyx6Qy7GuhuQs85DWtsR8/BPJ+iwL0y
+ zRViy0xFOfdmWZmHifhNCiV+cxhvhMeVdlFz1wZ6j3OVUOKBDEj4ZzAcrOC6eXpHKonnqUXRh5j
+ LP6hk7HqkZp9SwqTdZNljh82HGx8gqoqlitMofrt7DNUwaqxgUIrnDC2P5KIA4JvH+fWuK6D5YI
+ wCeFXJvVIXtYRgDMiDySFoXYEXXXudAuT1oslYgWAxz5Xp0I5uaSd8hpl7E2qXRihwY4F6e2wQL
+ pmET4TSF85ev79hLOsfk9ZCszxvlv2f1W0yepFOKzlpfKqW85IYvSxU63IiSW5Rk0JRKIuQ0Bfg
+ LHJjkMri
+X-Proofpoint-ORIG-GUID: WyYRZnz7c_1Ckcqm9GS_H-jZPMC8XZ1W
+X-Proofpoint-GUID: lsKkDTWoiQJ77dGWmuptvpdz28NzaBSw
+X-Authority-Analysis: v=2.4 cv=evffzppX c=1 sm=1 tr=0 ts=68ad31be cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=VnNF1IyMAAAA:8 a=voM4FWlXAAAA:8
+ a=VwQbUJbxAAAA:8 a=tchKjDB3tBMYg2FPuD4A:9 a=QEXdDO2ut3YA:10
+ a=IC2XNlieTeVoXbcui8wp:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-26_01,2025-08-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 adultscore=0 malwarescore=0 spamscore=0 bulkscore=0
+ impostorscore=0 clxscore=1011 priorityscore=1501 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508230010
 
 
-On 8/22/2025 1:26 PM, Mi, Dapeng wrote:
-> On 8/21/2025 9:35 PM, Peter Zijlstra wrote:
->> On Wed, Aug 20, 2025 at 10:30:28AM +0800, Dapeng Mi wrote:
->>> When intel_pmu_drain_pebs_icl() is called to drain PEBS records, the
->>> perf_event_overflow() could be called to process the last PEBS record.
->>>
->>> While perf_event_overflow() could trigger the interrupt throttle and
->>> stop all events of the group, like what the below call-chain shows.
->>>
->>> perf_event_overflow()
->>>   -> __perf_event_overflow()
->>>     ->__perf_event_account_interrupt()
->>>       -> perf_event_throttle_group()
->>>         -> perf_event_throttle()
->>>           -> event->pmu->stop()
->>>             -> x86_pmu_stop()
->>>
->>> The side effect of stopping the events is that all corresponding event
->>> pointers in cpuc->events[] array are cleared to NULL.
->>>
->>> Assume there are two PEBS events (event a and event b) in a group. When
->>> intel_pmu_drain_pebs_icl() calls perf_event_overflow() to process the
->>> last PEBS record of PEBS event a, interrupt throttle is triggered and
->>> all pointers of event a and event b are cleared to NULL. Then
->>> intel_pmu_drain_pebs_icl() tries to process the last PEBS record of
->>> event b and encounters NULL pointer access.
->>>
->>> Since the left PEBS records have been processed when stopping the event,
->>> check and skip to process the last PEBS record if cpuc->events[*] is
->>> NULL.
->>>
->>> Reported-by: kernel test robot <oliver.sang@intel.com>
->>> Closes: https://lore.kernel.org/oe-lkp/202507042103.a15d2923-lkp@intel.com
->>> Fixes: 9734e25fbf5a ("perf: Fix the throttle logic for a group")
->>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>> Tested-by: kernel test robot <oliver.sang@intel.com>
->>> ---
->>>  arch/x86/events/intel/ds.c | 10 ++++++++++
->>>  1 file changed, 10 insertions(+)
->>>
->>> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
->>> index c0b7ac1c7594..dcf29c099ad2 100644
->>> --- a/arch/x86/events/intel/ds.c
->>> +++ b/arch/x86/events/intel/ds.c
->>> @@ -2663,6 +2663,16 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_d
->>>  			continue;
->>>  
->>>  		event = cpuc->events[bit];
->>> +		/*
->>> +		 * perf_event_overflow() called by below __intel_pmu_pebs_last_event()
->>> +		 * could trigger interrupt throttle and clear all event pointers of the
->>> +		 * group in cpuc->events[] to NULL. So need to re-check if cpuc->events[*]
->>> +		 * is NULL, if so it indicates the event has been throttled (stopped) and
->>> +		 * the corresponding last PEBS records have been processed in stopping
->>> +		 * event, don't need to process it again.
->>> +		 */
->>> +		if (!event)
->>> +			continue;
->>>  
->>>  		__intel_pmu_pebs_last_event(event, iregs, regs, data, last[bit],
->>>  					    counts[bit], setup_pebs_adaptive_sample_data);
->> So if this is due to __intel_pmu_pebs_last_event() calling into
->> perf_event_overflow(); then isn't intel_pmu_drain_pebs_nhm() similarly
->> affected?
->>
->> And worse, the _nhm() version would loose all events for that counter,
->> not just the last.
-> hmm, Yes. After double check, I suppose I made a mistake for the answer to
-> Andi. It indeed has data loss since the "ds->pebs_index" is reset at the
-> head of _nhm()/_icl() these drain_pebs helper instead of the end of the
-> drain_pebs helper.  :(
->
->> I'm really thinking this isn't the right thing to do.
->>
->>
->> How about we audit the entirety of arch/x86/events/ for cpuc->events[]
->> usage and see if we can get away with changing x86_pmu_stop() to simply
->> not clearing that field.
-> Checking current code, I suppose it's fine that we don't clear
-> cpuc->events[] in x86_pmu_stop() since we already have another variable
-> "cpuc->active_mask" which is used to indicate if the corresponding
-> cpuc->events[*] is active. But in current code, the cpuc->active_mask is
-> not always checked.
->
-> So if we select not to clear cpuc->events[] in x86_pmu_stop(), then it's a
-> must to check cpuc->active_mask before really accessing cpuc->events[]
-> represented event. Maybe we can add an inline function got check this.
->
-> bool inline x86_pmu_cntr_event_active(int idx)
-> {
->     struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->
->     return cpuc->events[idx] && test_bit(idx, cpuc->active_mask);
-> }
 
-Just think twice about this method, it breaks the original logic about
-cpuc->events[] (setting at x86_pmu_start() and clearing at x86_pmu_stop())
-and this leaves the cpuc->events[] is never cleared, this is ambiguous.
-Besides checking cpuc->events[idx] and cpuc->active_mask is not atomic,
-this may bring potential risks especially considering cpuc->events[] are
-broadly used in x86/perf code. 
+On 8/26/25 3:28 AM, Namhyung Kim wrote:
+> To pick up the changes in this cset:
+> 
+>   69bf2053608423cb powerpc: Drop GPL boilerplate text with obsolete FSF address
+> 
+> This addresses these perf build warnings:
+> 
+>   Warning: Kernel ABI header differences:
+>     diff -u tools/arch/powerpc/include/uapi/asm/kvm.h arch/powerpc/include/uapi/asm/kvm.h
+> 
+> Please see tools/include/uapi/README for further details.
+> 
 
-Talked with Kan offline, he suggests to get a events[] snapshot from
-cpuc->events[] before calling perf_event_overflow() and then use the
-events[] snapshot to process all left PEBS records. That seems a better and
-safer method to fix this issue for me. 
+Nice catch. I missed to remove in tools side. My bad. 
+Thanks for fixing.
 
-Peter, if you don't object this method, I would follow Kan's suggestion.
-Thanks.
+Acked-by: Madhavan Srinivasan <maddy@linux.ibm.com>
 
 
->
->> Or perhaps move the setting and clearing into x86_pmu_{add,del}() rather
->> than x86_pmu_{start,stop}(). After all, the latter don't affect the
->> counter placement, they just stop/start the event.
-> IIUC, we could not move the setting into x86_pmu_add() from x86_pmu_stop()
-> since the counter index is not finalized at x86_pmu_add() is called. The
-> counter index could change for each adding a new event.
->
->
->>
+> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/arch/powerpc/include/uapi/asm/kvm.h | 13 -------------
+>  1 file changed, 13 deletions(-)
+> 
+> diff --git a/tools/arch/powerpc/include/uapi/asm/kvm.h b/tools/arch/powerpc/include/uapi/asm/kvm.h
+> index eaeda001784ebb6f..077c5437f5219b05 100644
+> --- a/tools/arch/powerpc/include/uapi/asm/kvm.h
+> +++ b/tools/arch/powerpc/include/uapi/asm/kvm.h
+> @@ -1,18 +1,5 @@
+>  /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+>  /*
+> - * This program is free software; you can redistribute it and/or modify
+> - * it under the terms of the GNU General Public License, version 2, as
+> - * published by the Free Software Foundation.
+> - *
+> - * This program is distributed in the hope that it will be useful,
+> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> - * GNU General Public License for more details.
+> - *
+> - * You should have received a copy of the GNU General Public License
+> - * along with this program; if not, write to the Free Software
+> - * Foundation, 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+> - *
+>   * Copyright IBM Corp. 2007
+>   *
+>   * Authors: Hollis Blanchard <hollisb@us.ibm.com>
+
