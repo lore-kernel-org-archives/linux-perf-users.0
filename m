@@ -1,167 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D915F2E7F32
-	for <linux-perf-users@vger.kernel.org>; Tue, 26 Aug 2025 07:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF52E2F3C35;
+	Tue, 26 Aug 2025 08:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756193940; cv=none; b=PK9mXIr24z1XPq41GL9ClRklnSsloTVAqrdT+5aNmtUSfUqIkQ+KVmeu+yS567/dwUJ2A8rVMJo7NCfPJdv1wz44IOMNeVwIV5DaxaZsuCRl0IvSDg0POuiGPo0pv5nMWkmjWCBrlzmObqyewFW+Ia4vd0325ofgKMifaQG6zdw=
+	t=1756195702; cv=none; b=bTVrejok8/J2/vkSJU7FT2EpT5qtHw/2kYop3rxFgcVmIGPXMk5t6V3cC+t87ALnxTeaxWo3osLQzKNhUmOJQ1BrN9ql3t9osdvXnjSAHulgLm8qFJpT4jeo9EnY3KY32fA5B1FpsmCj4mC6m5n+TP8jlTO8kQKWdZRtm5eE2Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756193940; c=relaxed/simple;
-	bh=uP5dMqsHSqXNlw+qX5Xqd1i4XVlTxybaVEVYi61d/5w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q/Q15mLTgWVmTW4fLxCu8szaNxCmUDcedWcwMyiRdDWTAWNVtVuj0epQEfezBIolAIET8q6HjJU26zqhbU37GEpyKA8s/P5sEaW4CO/+KIyWpIUBzp7TItZwdABVllsvtfWd5yze1Ge8CFtQGzPReYbczI/LIwyWiYW0DGsejXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QEh5DK/Y; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1756195702; c=relaxed/simple;
+	bh=7+5r1zYFOphbK0Dba01TqfpC9JdzjFYrrWWFnT6mSGs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P9Trnf/C8/9a7CZJoeufjovKgE0+7oKCgPzo85L/lSWXpOMLz18Y364RNcYJZm8UjHqwjmWLSvTiniIS6irFVWa9ieWBddZXUONYbgswDs74wlvk+CvbQyWfXWdSvHftYk0f5SUZ8Nnrx6Stz7UWPTPwLRf+V5fjl0RX1EhgkvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UYY9lPiT; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QEh5DK/Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1756193937;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/d6oLABXMDTE73AAJmn9nTIS3+npYIzihKgU/wI/Iwk=;
-	b=QEh5DK/YDwMy2tOVAV6/5NboS7c7jZPGl/GZzadZGmJ6CIWPMXdAGM6m9ksToTnzF6x0G+
-	a6UDA7hYGTeLWCPplfct8zNXWeu4uWGh3/hUHY3OmwubwUk2nHec3efpTNgZNiy44W8fQ5
-	vIrFKjP7VVI/KRiQ+KKU60OGLweFB4I=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-326-ToRPY8f7O4-ekBVg__m1Vw-1; Tue, 26 Aug 2025 03:38:54 -0400
-X-MC-Unique: ToRPY8f7O4-ekBVg__m1Vw-1
-X-Mimecast-MFC-AGG-ID: ToRPY8f7O4-ekBVg__m1Vw_1756193932
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3c8bc2914a9so1013726f8f.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 26 Aug 2025 00:38:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UYY9lPiT"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-45a286135c8so31610585e9.0;
+        Tue, 26 Aug 2025 01:08:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756195699; x=1756800499; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=x+cliAhH1nZQCponEjjB0FBBU7QtumwgLuFSUngTqvc=;
+        b=UYY9lPiTma23r6sEpvktDI10r4OlevCya9uTLWzopSZL08i4Js8hD+m9M67IaRIKjz
+         j5+7ZusRfaSWUL5EHHENGvgejhrzox+x7rYELUHcabU1LkyludkWcOhbmH5gc3kegCsp
+         awDbY2TcwmoToyHNx0zCJK9oy97jkdUJ7lyto7OskxaKtK8qQIXglt5e+srYm/lhhZjV
+         I49knzWURfKbJlZAh58L5Z7Uw4QHd/i8ztjFe0D/go5m/zI78NQzgzs4uYM+j9sYxYi4
+         1OJ9Hw9lXPSllVuU4yOS1LxOyvHDPxHqXon+CVuUGCLfzKwTKQ7wRSy3XoDfhxT/AjBU
+         w7eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756193932; x=1756798732;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/d6oLABXMDTE73AAJmn9nTIS3+npYIzihKgU/wI/Iwk=;
-        b=btsghj9I3/Bu+h3pZsxiZLthlSkHovsyl/LSguq+Lk8/CELHzkiP2f7WQet8txamkn
-         OaBt+TICxZ7l7PBVOJFSjqRFNjxFMVTgrzMOCLAhkqujslfwfhADFtzSnv68zkIpRO3s
-         1OEXBYBgbrVK22bAasDTA1NeTPR9vkbUZUSEcrAXN/yjnkusrAYA56OmJ4kABTU7H1+M
-         Abneh2r/MIq7npz4NvzowUrr6wQ6SMDtTQCbpBNwr3Pa59HGP68EBAyFARrrH4fRUM7m
-         MYJq/R/9c2fYlUT4YE+L9VZe+apfPR+q25wPIB0oxm6VzypyFAVES6uS3p7xbLtq0cki
-         ZYaA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0RxtTXoRMC5qcAyLU2GCaaAbYhS/yc+zual+dLimf2aYNxkp1Gg+hlC8vff3bH5JX6paVOj/Z/GHX/9MrmkIz@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuNfJlrQA4f6fyABXQBxWELta5aWgV8pkFHO9bzrepfheRlkTO
-	G6l+A6hNwmpCtMQt4ckYNVltZNC6Zc0K55aVgv3M/e6C7nUEP7unrWxMJ0tbOrx0cQIDcMBlGr8
-	nvqkKlyLnlnZdJmY3SLq/Bxo0X2HYEkcEsEEZSyijm3LfpkDReLRdCznsfGbKkUirM4X2CQU=
-X-Gm-Gg: ASbGncul3nGMAxKlnCZcQugAtdQk+enZcMj749Pr5WcUvYYEX+wiEpNJAips5CjbnAe
-	vdjcJAEyrxD8nUU0PS7j4Fs68doFDyXoZ6M8RWTbCFrs4Vmen8xsqF3n+mIfKILbMAQb2gGu4Lg
-	bAG588MuuLsq32hfpDnvh/nmOZ1ktDiTZE4i9WBMpcBCQ1zQ3bIDXR+RfHfucsaXe2PKDhJVXpE
-	iEBjc3iDqOL/XYou5vLCO7roc73oABroOClhflWuP3Okp+I/ZPtQ4f9wA9/hl7rFgL1wZwP92SY
-	0NkRuRlkO3hWjg9c+f+TscNnAa/XKWk=
-X-Received: by 2002:a5d:5d81:0:b0:3b8:893f:a185 with SMTP id ffacd0b85a97d-3c5dce05cc8mr11272226f8f.53.1756193931854;
-        Tue, 26 Aug 2025 00:38:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFHe+NtzZIdZcDMX+QmPMWtx5hDKS6iQR+ufYxm1cVDTFyfIzaA+q1XTB2lol3XvRHtPrWxGw==
-X-Received: by 2002:a5d:5d81:0:b0:3b8:893f:a185 with SMTP id ffacd0b85a97d-3c5dce05cc8mr11272202f8f.53.1756193931395;
-        Tue, 26 Aug 2025 00:38:51 -0700 (PDT)
-Received: from redhat.com ([185.128.27.233])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b6133d9f1sm66813785e9.14.2025.08.26.00.38.47
+        d=1e100.net; s=20230601; t=1756195699; x=1756800499;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=x+cliAhH1nZQCponEjjB0FBBU7QtumwgLuFSUngTqvc=;
+        b=lv24ZOB7bomcmR7/zbF1tXRcRuzOabECP6rNr88OtZIMqTAerp0tjrNpFWAykduVVE
+         AQaOtSw38OBaisqgbGkFVNgkfsQXLqI0FL7hGzL3BuYpiAEn+6d7NEsdF5w55Wo9Ce+c
+         bcH/lDo53yUm9pKqLCXZXqIophrCd/4WoSjVVJFgCht3JFuzkJJr6TDelszIPaWTUQ5h
+         jhGycGGco6+L0INgUzQZwtZjSi/5TASt8uxq5XQ7fCflSJOAmxhjPembtpmPhuyecSW9
+         QZzWdzsFy0lpxrLhev3yw/BDIk2u3eUTYDiJElF4mwrgefiNkl4ojyQ/U3coVR0GoLfk
+         kwEg==
+X-Forwarded-Encrypted: i=1; AJvYcCXkqKwBQbLZiI1Gd3WQ7NfwD1V9kR0dn4mUWTr56Io7xeenDl85f/rQPtMujG3OY0sOpmYtQHC2ttO+3qU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydKwX5cnhDhQuLN0sj53+ZxKoYo8LqfoD/gJfgvDnAdf8pUfup
+	/2FD3/C9xOjB7ccmMw51aRHj9sF+xlAw0uWR+5+N9qrtwTSbsOlPrEbx
+X-Gm-Gg: ASbGncubSIb0FS73qGFzmEoaLIzFZRE/50XZaMhK0sloRsj49ncbDvKiMGWldtGAd3+
+	4m38u6DjNrgyzmdWW6ssYA/X1WshysS1RuwqjpDjeUjQ1UuQEfcJIh8pljFZFGUvZpnKKbUltnI
+	YQpe12prWir9COOoHgdkq49GqWxF6b2lIImLc6GUWJTR6kihGQMBlQcCKOf48IiCfHf63yjyjbC
+	oPlmlPkdGlSQUs0T2ARp6IcZqk5fpmp7frcCESFCIkWJ51zswmTeva+CJvBxfpzgnk/kT8re4GC
+	6ViGDEffe8g1voeHL+XNg/gWdwAOTd76SgEu8lzpCyjeVVuApqVlBwtbfGAHSvTwPi07Por0pqj
+	pCFvsTzWmAkkTiivG53tskJ5h6wb4EctxV3gGLmXP0po=
+X-Google-Smtp-Source: AGHT+IGsMNs0mTJBoU7Sof2X26cuy4xcAwnxlGxjKnf+0KhijelhrT/mE+bhJrgXkTLmY4Z+P3SL8Q==
+X-Received: by 2002:a05:600c:c09c:b0:459:dd1d:2ee0 with SMTP id 5b1f17b1804b1-45b68d29f47mr2521465e9.0.1756195699054;
+        Tue, 26 Aug 2025 01:08:19 -0700 (PDT)
+Received: from acer-Nitro-AN515-58.. ([156.210.11.80])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b575928b0sm138595665e9.24.2025.08.26.01.08.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Aug 2025 00:38:50 -0700 (PDT)
-Date: Tue, 26 Aug 2025 03:38:44 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-	kvm@vger.kernel.org, virtualization@lists.linux.dev
-Subject: Re: [PATCH 11/11] tools headers: Sync uapi/linux/vhost.h with the
- kernel source
-Message-ID: <20250826033710-mutt-send-email-mst@kernel.org>
-References: <20250825215904.2594216-1-namhyung@kernel.org>
- <20250825215904.2594216-12-namhyung@kernel.org>
+        Tue, 26 Aug 2025 01:08:18 -0700 (PDT)
+From: Ahmed Atef El-Emary <ahmed.software.engineer1@gmail.com>
+To: acme@kernel.org
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	jolsa@kernel.org,
+	adrian.hunter@intel.com,
+	ahmed.software.engineer1@gmail.com
+Subject: [PATCH] perf trace: Use consistent print_opts formatting in trace__fprintf_callchain()
+Date: Tue, 26 Aug 2025 11:08:11 +0300
+Message-ID: <20250826080811.27650-1-ahmed.software.engineer1@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250825215904.2594216-12-namhyung@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Aug 25, 2025 at 02:59:03PM -0700, Namhyung Kim wrote:
-> To pick up the changes in this cset:
-> 
->   7d9896e9f6d02d8a vhost: Reintroduce kthread API and add mode selection
->   333c515d189657c9 vhost-net: allow configuring extended features
-> 
-> This addresses these perf build warnings:
-> 
->   Warning: Kernel ABI header differences:
->     diff -u tools/perf/trace/beauty/include/uapi/linux/vhost.h include/uapi/linux/vhost.h
-> 
-> Please see tools/include/uapi/README for further details.
-> 
-> Cc: "Michael S. Tsirkin" <mst@redhat.com>
-> Cc: Jason Wang <jasowang@redhat.com>
-> Cc: kvm@vger.kernel.org
-> Cc: virtualization@lists.linux.dev
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+trace__fprintf_callchain() previously omitted IP and symoffset from its
+print_opts, unlike other callchain printers in perf. This resulted in
+less detailed and inconsistent callchain output.
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Add EVSEL__PRINT_IP and EVSEL__PRINT_SYMOFFSET to make the output more
+consistent and informative. The callchain output now includes IP, symbol
+offset, DSO, and falls back to the raw address when no symbol is found,
+matching the detail level of other perf callchain outputs.
 
-Should I queue it?
+Signed-off-by: Ahmed Atef El-Emary <ahmed.software.engineer1@gmail.com>
+---
+ tools/perf/builtin-trace.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-> ---
-> * This is on top of the fix below:
->   https://lore.kernel.org/r/20250819063958.833770-1-namhyung@kernel.org
-> 
->  .../trace/beauty/include/uapi/linux/vhost.h   | 35 +++++++++++++++++++
->  1 file changed, 35 insertions(+)
-> 
-> diff --git a/tools/perf/trace/beauty/include/uapi/linux/vhost.h b/tools/perf/trace/beauty/include/uapi/linux/vhost.h
-> index d4b3e2ae1314d1fc..c57674a6aa0dbbea 100644
-> --- a/tools/perf/trace/beauty/include/uapi/linux/vhost.h
-> +++ b/tools/perf/trace/beauty/include/uapi/linux/vhost.h
-> @@ -235,4 +235,39 @@
->   */
->  #define VHOST_VDPA_GET_VRING_SIZE	_IOWR(VHOST_VIRTIO, 0x82,	\
->  					      struct vhost_vring_state)
-> +
-> +/* Extended features manipulation */
-> +#define VHOST_GET_FEATURES_ARRAY _IOR(VHOST_VIRTIO, 0x83, \
-> +				       struct vhost_features_array)
-> +#define VHOST_SET_FEATURES_ARRAY _IOW(VHOST_VIRTIO, 0x83, \
-> +				       struct vhost_features_array)
-> +
-> +/* fork_owner values for vhost */
-> +#define VHOST_FORK_OWNER_KTHREAD 0
-> +#define VHOST_FORK_OWNER_TASK 1
-> +
-> +/**
-> + * VHOST_SET_FORK_FROM_OWNER - Set the fork_owner flag for the vhost device,
-> + * This ioctl must called before VHOST_SET_OWNER.
-> + * Only available when CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL=y
-> + *
-> + * @param fork_owner: An 8-bit value that determines the vhost thread mode
-> + *
-> + * When fork_owner is set to VHOST_FORK_OWNER_TASK(default value):
-> + *   - Vhost will create vhost worker as tasks forked from the owner,
-> + *     inheriting all of the owner's attributes.
-> + *
-> + * When fork_owner is set to VHOST_FORK_OWNER_KTHREAD:
-> + *   - Vhost will create vhost workers as kernel threads.
-> + */
-> +#define VHOST_SET_FORK_FROM_OWNER _IOW(VHOST_VIRTIO, 0x84, __u8)
-> +
-> +/**
-> + * VHOST_GET_FORK_OWNER - Get the current fork_owner flag for the vhost device.
-> + * Only available when CONFIG_VHOST_ENABLE_FORK_OWNER_CONTROL=y
-> + *
-> + * @return: An 8-bit value indicating the current thread mode.
-> + */
-> +#define VHOST_GET_FORK_FROM_OWNER _IOR(VHOST_VIRTIO, 0x85, __u8)
-> +
->  #endif
-> -- 
-> 2.51.0.261.g7ce5a0a67e-goog
-
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index fe737b3ac6e6..20f3488d4a21 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2892,8 +2892,10 @@ static int trace__fprintf_callchain(struct trace *trace, struct perf_sample *sam
+ {
+ 	/* TODO: user-configurable print_opts */
+ 	const unsigned int print_opts = EVSEL__PRINT_SYM |
+-				        EVSEL__PRINT_DSO |
+-				        EVSEL__PRINT_UNKNOWN_AS_ADDR;
++				EVSEL__PRINT_DSO |
++				EVSEL__PRINT_UNKNOWN_AS_ADDR |
++				EVSEL__PRINT_IP |
++				EVSEL__PRINT_SYMOFFSET;
+ 
+ 	return sample__fprintf_callchain(sample, 38, print_opts, get_tls_callchain_cursor(), symbol_conf.bt_stop_list, trace->output);
+ }
+-- 
+2.43.0
