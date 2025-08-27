@@ -1,209 +1,103 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B92276048
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Aug 2025 15:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B275521FF55;
+	Wed, 27 Aug 2025 17:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756307747; cv=none; b=RDIWqOWluZeYd+ocOwIfMQ5K2TanJr6CWr17eprKzkAV3q4eFuAzPkoWFdQoIY+OTrMgUiO4gPLjvEfHdvbOWShcS7aCC4V/z7OQ5Lu2YwQHuFj5I10nyotJvoLmhOnqwaJmferK1jy9GthyGTXXgCNN1sR/K2dwevk3XcHhnsI=
+	t=1756315694; cv=none; b=is3CilPsb1IJNIGx75InV3WF8RGsqQ3kCOf5B5BQFfqr+pLwiAl2L3/Rt8Yu6EFzTZIlOTjqgEV9t1anaQWcmUwhV+geVt/CCWVFRplpuN5NOY0rUWrwIwrpjX2nta96BzmSfMW2VClnyjoLriL36queHktVW5Vj/x5yl6vmrys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756307747; c=relaxed/simple;
-	bh=PgEPxKHnOwEJrisDshuEuJU9SWQbfG1NSTYMYsAtWZE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qKeruX+Lv4TGirzv7RXxsCHI92rmn7Dz79kLDXhsJsinCV3c6V3w+Hc2Lcgl0b9W4JCX8dI1Sr3wDone9Oy7K/6PXu6cI+2DTRSd3rFK2qXTdX+IOlxlCoZjDlZ+9dWinwOufF/p0BgTthPz1/1uDfPQZ985oicVYOaE0QAodAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SSFbhUaY; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1756315694; c=relaxed/simple;
+	bh=Y+WRbM0Av3TYxIZ0+HcIYsryUVDHh/DopvC0d2C5448=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U8Suv9a1YxF8yVe+sOgTpIZjdS2+OESdl5kYcBCF0uOEn9P8VSpVh7R3W+uxoBs5R09CzCNN4HCUozHtBQRG8OnAOi1SOqd2D63keZUSTL0LA2mI8FFCrZUUQyJmBc0TjUI+rmb3TIncE6+PwY2fxw4Cl90osC2R56bSRQIiwoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lG1FAEOT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SSFbhUaY"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-24611734e50so164695ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 27 Aug 2025 08:15:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756307744; x=1756912544; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aGPhYDWt388RttmicU0o24RVsxY/twdNMb4O/vzImCs=;
-        b=SSFbhUaYSdGFBbG5CfGErl8PBJrdJ0XQ6Ofi8i4VHffvxMFqpxvd+tBC70A4/nMPRf
-         ybU1ppZn3tbfrOKYfvpliGhWaHEjfd5gmSxVQ/LbuKHpjRkSVK/4QDjzT58X9EiCYNwA
-         VD20oxfdWFrKFhsWdsiCSaeb4dGSHE6WYM7wX1tKv/9tXSTFRPgl7S0bV6soxF8q1uLR
-         qxqz6E2uiRoLyV2iMsgCO9EDPozzvbWTmTIFD9Mqi0RfocbBhhawnxcyQPOk098SvjNw
-         4KYeQe65GchDlKYvnMaty9HoninLLGNTawIlgfvoFCkk4VwTfWXkTNirqjX14LEt8qKn
-         OHIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756307744; x=1756912544;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aGPhYDWt388RttmicU0o24RVsxY/twdNMb4O/vzImCs=;
-        b=r6H5mvIkcL8dyoaeQ5hJtyluunB6B7+g71Q98YrFQkXrWUInywzkc7hY9YdyDVwZwG
-         qsT3c4dlvTWybibYVQ6IDSLsEbSkYFrY4F8/AEg6/YfY4f+TSwrJ/Pfmx1e+m49Z0Dj4
-         8eGqgYsD5W6B1OLGBCRNHRjQmvCpu45zRDqZ9SzhDvB3bDVI/NoYDmq7pTRB3BVPDBGH
-         y6SrPEHqERGZ5oGGq7hV+hQq9IkCs1+CJzixcbVv7dE+QcZz3sg/9pJXghKcd3QhHXd9
-         E1PcXpXb9P/gH7i2csXqjNtnM7BvU/d5lCf1kazFL8JiCMS0/LGYOxmvOTjnzHeTVFqE
-         qz2g==
-X-Forwarded-Encrypted: i=1; AJvYcCVv9AoyaVpOyrcptJPhY1JrBkJoqyVeRgzxYUSBstqC1o/4dG/weOIZes6r3Dm8/RmHlGczRt/E+AIrxFeSVE80@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw59D8/7qfvzMa6hoo4wEHXEEYcfGUfabvF8Mj2PM+L5ZLFitIi
-	CWKC82qq12yuKMt32FW5GeLmZSSqDZlhX6SfO8DB511djiWIecDdd5djCMr2MRbrzXvExfLUcHh
-	vleLljROAdoEPQYkMNEEoNlNSm9IBKh8D/UJPxNyEivngQ6kUkt8D1O57+04=
-X-Gm-Gg: ASbGnctlo/ojRgwh44K7Ikk/RI7scYnKiJuxqmBOJi44hTwN5CeWD4P85CZ92L3IKwP
-	PTCYQrRPvRZY4F4/4/s5H+bK0dEFJRR3hynP4+pdFz7Kb7W/o9tjGj6Y0pc5c9g5HFFxwEql1iE
-	PgoJKNPUzIGiG7jtmqWxhLmIBjbkRkXoGmGlhsbIm5FLnvep0qSGWJ3FHMPXTLYQfkXqdMu/Ca4
-	lo8twSzhAipSR7gZzovuSIa5xSU1OCQ0xoaxQFI1VY=
-X-Google-Smtp-Source: AGHT+IExi0QgPJP/5AblrVahQdACSVklatzIIhzDoM8PROF9H/mRXxhxpv9GhjknP28Wz6ljzGsei6gbP7f3oTXJLVM=
-X-Received: by 2002:a17:902:ec87:b0:246:a8ac:1a36 with SMTP id
- d9443c01a7336-2485ba5311amr9397575ad.2.1756307741849; Wed, 27 Aug 2025
- 08:15:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lG1FAEOT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9907C4CEEB;
+	Wed, 27 Aug 2025 17:28:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756315694;
+	bh=Y+WRbM0Av3TYxIZ0+HcIYsryUVDHh/DopvC0d2C5448=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lG1FAEOTYoYLojqKFHHz395F+UUmtL5cHE5X8Z4OFzNR26pWRILL8Gk7oMudvwEqm
+	 WDLDZuHgnrUosXlmhS8Wo+f/d5OtYeGwYlgHLPc6ssMNM4fojaNKuRgz1ZZKlf4VA2
+	 r8gvFsczsDNUVe6IThHZXqnMzsf9wcLnfjZb+Oo0KtQLxIZHixXJKSORANrq6semJL
+	 Qus9X2Dw3ieJ25im3k/YejPs/hSGHs/8134DAFw5zq+2/qW0uPJs1o4yrz5rEncKpL
+	 1M3dMdb85zggOkrS76RvvMyTh+3kOIgIMQkyfPR05acDEHYMyyadMKptw1IeNsgNk5
+	 jlk5ZR4hy2rjg==
+Date: Wed, 27 Aug 2025 10:28:12 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 05/11] tools headers: Sync arm64 headers with the kernel
+ source
+Message-ID: <aK9ALIkD95ignpzq@google.com>
+References: <20250825215904.2594216-1-namhyung@kernel.org>
+ <20250825215904.2594216-6-namhyung@kernel.org>
+ <20250827081252.GD745921@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1755096883.git.robin.murphy@arm.com> <d6cda4e2999aba5794c8178f043c91068fa8080c.1755096883.git.robin.murphy@arm.com>
- <20250826130329.GX4067720@noisy.programming.kicks-ass.net>
- <6080e45d-032e-48c2-8efc-3d7e5734d705@arm.com> <CAP-5=fXF2x3hW4Sk+A362T-50cBbw6HVd7KY+QEUjFwT+JL37Q@mail.gmail.com>
- <aK6_XrA_OaLnoFkr@J2N7QTR9R3>
-In-Reply-To: <aK6_XrA_OaLnoFkr@J2N7QTR9R3>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 27 Aug 2025 08:15:29 -0700
-X-Gm-Features: Ac12FXwUZ4TrRSXyzgr8XTQRkesJ87wwMtoKHvx086ZRlV4GbvgOq2WSyedNfZ4
-Message-ID: <CAP-5=fU0-QDMP-VG3O1qBvJ8uzHHYCQ8j1Vrzy9a0YUk=UMvHw@mail.gmail.com>
-Subject: Re: [PATCH 12/19] perf: Ignore event state for group validation
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com, 
-	will@kernel.org, acme@kernel.org, namhyung@kernel.org, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	imx@lists.linux.dev, linux-csky@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org, 
-	linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
-	intel-xe@lists.freedesktop.org, coresight@lists.linaro.org, 
-	iommu@lists.linux.dev, linux-amlogic@lists.infradead.org, 
-	linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250827081252.GD745921@e132581.arm.com>
 
-On Wed, Aug 27, 2025 at 1:18=E2=80=AFAM Mark Rutland <mark.rutland@arm.com>=
- wrote:
->
-> On Tue, Aug 26, 2025 at 11:48:48AM -0700, Ian Rogers wrote:
-> > On Tue, Aug 26, 2025 at 8:32=E2=80=AFAM Robin Murphy <robin.murphy@arm.=
-com> wrote:
-> > >
-> > > On 2025-08-26 2:03 pm, Peter Zijlstra wrote:
-> > > > On Wed, Aug 13, 2025 at 06:01:04PM +0100, Robin Murphy wrote:
-> > > >> It may have been different long ago, but today it seems wrong for =
-these
-> > > >> drivers to skip counting disabled sibling events in group validati=
-on,
-> > > >> given that perf_event_enable() could make them schedulable again, =
-and
-> > > >> thus increase the effective size of the group later. Conversely, i=
-f a
-> > > >> sibling event is truly dead then it stands to reason that the whol=
-e
-> > > >> group is dead, so it's not worth going to any special effort to tr=
-y to
-> > > >> squeeze in a new event that's never going to run anyway. Thus, we =
-can
-> > > >> simply remove all these checks.
-> > > >
-> > > > So currently you can do sort of a manual event rotation inside an
-> > > > over-sized group and have it work.
-> > > >
-> > > > I'm not sure if anybody actually does this, but its possible.
-> > > >
-> > > > Eg. on a PMU that supports only 4 counters, create a group of 5 and
-> > > > periodically cycle which of the 5 events is off.
-> >
-> > I'm not sure this is true, I thought this would fail in the
-> > perf_event_open when adding the 5th event and there being insufficient
-> > counters for the group.
->
-> We're talking specifically about cases where the logic in a pmu's
-> pmu::event_init() callback doesn't count events in specific states, and
-> hence the 5th even doesn't get rejected when it is initialised.
->
-> For example, in arch/x86/events/core.c, validate_group() uses
-> collect_events(), which has:
->
->         for_each_sibling_event(event, leader) {
->                 if (!is_x86_event(event) || event->state <=3D PERF_EVENT_=
-STATE_OFF)
->                         continue;
->
->                 if (collect_event(cpuc, event, max_count, n))
->                         return -EINVAL;
->
->                 n++;
->         }
->
-> ... and so where an event's state is <=3D PERF_EVENT_STATE_OFF at init
-> time, that event is not counted to see if it fits into HW counters.
+Hi Leo,
 
-Hmm.. Thinking out loud. So it looked like perf with weak groups could
-be broken then:
-```
-$ sudo perf stat -vv -e '{instructions,cycles}:W' true
-...
-perf_event_attr:
- type                             0 (PERF_TYPE_HARDWARE)
- size                             136
- config                           0x400000001
-(cpu_core/PERF_COUNT_HW_INSTRUCTIONS/)
- sample_type                      IDENTIFIER
- read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|=
-GROUP
- disabled                         1
- inherit                          1
- enable_on_exec                   1
-------------------------------------------------------------
-sys_perf_event_open: pid 3337764  cpu -1  group_fd -1  flags 0x8 =3D 5
-------------------------------------------------------------
-perf_event_attr:
- type                             0 (PERF_TYPE_HARDWARE)
- size                             136
- config                           0x400000000
-(cpu_core/PERF_COUNT_HW_CPU_CYCLES/)
- sample_type                      IDENTIFIER
- read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|=
-GROUP
- inherit                          1
-------------------------------------------------------------
-sys_perf_event_open: pid 3337764  cpu -1  group_fd 5  flags 0x8 =3D 7
-...
-```
-Note, the group leader (instructions) is disabled because of:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/stat.c?h=3Dperf-tools-next#n761
-```
-/*
-* Disabling all counters initially, they will be enabled
-* either manually by us or by kernel via enable_on_exec
-* set later.
-*/
-if (evsel__is_group_leader(evsel)) {
-        attr->disabled =3D 1;
-```
-but the checking of being disabled (PERF_EVENT_STATE_OFF) is only done
-on siblings in the code you show above. So yes, you can disable the
-group events to allow the perf_event_open to succeed but not on the
-leader which is always checked (no PERF_EVENT_STATE_OFF check):
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/arch/x86/events/core.c?h=3Dperf-tools-next#n1204
-```
-if (is_x86_event(leader)) {
-        if (collect_event(cpuc, leader, max_count, n))
-                return -EINVAL;
-```
+On Wed, Aug 27, 2025 at 09:12:52AM +0100, Leo Yan wrote:
+> On Mon, Aug 25, 2025 at 02:58:57PM -0700, Namhyung Kim wrote:
+> 
+> [...]
+> 
+> > But the following two changes cannot be applied since they introduced
+> > new build errors in util/arm-spe.c.  So it still has the warning after
+> > this change.
+> > 
+> >   c8c2647e69bedf80 arm64: Make  _midr_in_range_list() an exported function
+> >   e3121298c7fcaf48 arm64: Modify _midr_range() functions to read MIDR/REVIDR internally
+> 
+> Hi Namhyung,
+> 
+> Thanks for working on this. It is on our todo list for automatic
+> generating MIDR. Sorry for any troubling during the syncing.
+
+No worries, and thanks for your review.  I'm glad you noticed the issue
+and have it in you TODO list. :)
+
+> 
+> Just a minor comment below.
+> 
+> [...]
+> 
+> > +struct target_impl_cpu {
+> > +	u64 midr;
+> > +	u64 revidr;
+> > +	u64 aidr;
+> > +};
+> > +
+> > +bool cpu_errata_set_target_impl(u64 num, void *impl_cpus);
+> > +
+> 
+> Currently, no one uses this API. It seems to me that we don't need to
+> sync this code chunk.
+
+Ok, but it'd be easier for me just to have the change anyway.
+
+> 
+> Otherwise, other changes LGTM.
 
 Thanks,
-Ian
+Namhyung
+
