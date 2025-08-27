@@ -1,77 +1,95 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C489342CA3;
-	Wed, 27 Aug 2025 09:36:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7C02345736;
+	Wed, 27 Aug 2025 09:37:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756287405; cv=none; b=MEkGvirusOutJvuoyofIBYJn9F68H5AIDrDPwflygyRt61yRQgBPDV323IhcnwqfIoAe9O9Y5uu4yv/Y4Nyq4UEba2/mUg/4kQ2/i83Aj5GhHI1SdJSea3xxgIF/SkTZA2odAWjNdxHsGWEGJIKtJNaYn/K9nBm1j2/swbd2Ew0=
+	t=1756287441; cv=none; b=S9441KaIviwodksAn3vdCov27QiriUI09TMu+GpeWvXCgCRSaxk3+xboqQyBCJmlhY13FVNOrXIrMolCJXaeTXB483YFMpPUwaMHAAJgm9D0UzuVHoHIfYdbcF+ibqkgsB66UQC9u9DfL5qV8MS6FTd7RfBqikyBN9j5Qla1cqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756287405; c=relaxed/simple;
-	bh=iSUf8Gw5Sp+DAbiZyhAnBJ3UUczThdhyX3g627Tzm5w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b45QVUwUAya/ce+WdSwIKxn1rq+KDZobXYEW4Q5fsQA/zlU3oFNpkklsB8WJ7GBC+KA4HkD/AKIiMrpwKI6nip1PzhltFadafMA9sILyUS1VlCE6gqAeFEG4OFTsxatSaJ55pamxWSZsDFwGYDl62yBlp0j7m8ZPVzBV/pRPbkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77F3D15A1;
-	Wed, 27 Aug 2025 02:36:35 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 466153F738;
-	Wed, 27 Aug 2025 02:36:42 -0700 (PDT)
-Date: Wed, 27 Aug 2025 10:36:16 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Xichao Zhao <zhao.xichao@vivo.com>
-Cc: will@kernel.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, robin.murphy@arm.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] drivers: perf: use us_to_ktime() where appropriate
-Message-ID: <aK7RkB5p6L17Ffuw@J2N7QTR9R3>
-References: <20250813083257.504573-1-zhao.xichao@vivo.com>
+	s=arc-20240116; t=1756287441; c=relaxed/simple;
+	bh=QGIvsupPmz63Jm1MiaO7dnT5D6m3u6cvtDy8Q+9Fn10=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aLhIXvXowV2ODqM950rgoqLKawB82/N/nHwasW+JqZa6ySVLePGiU0HYnuB6XlT4MBEhntBvub60xIysB9oPFrtB+ooT1IRh3Ghz6YfEAZKjUvw6Ks+FmixdSwjjprfylkWCoMGhVwU8w223SQMbPOwCNSBI9XdsjN8FRKg43x8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=NeMj9Zfd; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="NeMj9Zfd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=rNblryP2zTorqEMMoVezsZPEN3D9lsa1QGERpk6A280=;
+	b=NeMj9ZfdluaOilp6YmACoE3X75z+W6AoeQpAG8X6NBlNtiGnFPlaQX3bFrAQHr
+	Br+6nLMfY9p2+TCJqyNVz3HcGN7XuUtzDTLQVa13VAK/9yvV0Gk7WUGH/EH7pUxo
+	0szywf8wfZkc7chpuYY3MvVTxaYshbFsYSjjFGWnx/C5k=
+Received: from [10.42.20.57] (unknown [])
+	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wD3n_en0a5oet1EEw--.20983S2;
+	Wed, 27 Aug 2025 17:36:39 +0800 (CST)
+Message-ID: <692c463d-69e4-4044-b13b-3538bd695283@163.com>
+Date: Wed, 27 Aug 2025 17:36:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250813083257.504573-1-zhao.xichao@vivo.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] perf/x86/zhaoxin: Fix instructions error by missing
+ fixedctr member
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Kan Liang <kan.liang@linux.intel.com>
+References: <20250814093309.1580835-1-tanze0x01@163.com>
+From: tanze <tanze0x01@163.com>
+In-Reply-To: <20250814093309.1580835-1-tanze0x01@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3n_en0a5oet1EEw--.20983S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7JF1rXrWUAw1xtryUtw1kZrb_yoWkKrb_uF
+	yvkryfurW5Ka1rtr1Ik3W2vrZ3KrZ8W34kAryjyrnav3W5Jan8uFs5Ar9a9a1UWws7KrZ5
+	t3Z5XF9xCw12vjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUeWa0PUUUUU==
+X-CM-SenderInfo: xwdq6vkq0qiqqrwthudrp/1tbioA+1qmitC+JGAQABsa
 
-[adding Robin and LAKML]
 
-On Wed, Aug 13, 2025 at 04:32:57PM +0800, Xichao Zhao wrote:
-> The arm_ccn_pmu_poll_period_us are more suitable for using
-> the us_to_ktime(). This can make the code more concise and
-> enhance readability.
+
+在 2025/8/14 17:33, tanze0x01@163.com 写道:
+> From: tanze <tanze0x01@163.com>
 > 
-> Signed-off-by: Xichao Zhao <zhao.xichao@vivo.com>
-
-Superficially this looks fine to me, so:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Will, I assume that (if no-one complains) you'll pick this up when
-queueing PMU patches.
-
-Mark.
-
+> Perf's instructions event tests on Zhaoxin CPUs may exhibit:
+> 
+>    $perf stat -e instructions,cycles ls -l
+> 
+>    ......
+>    Performance counter stats for 'ls -l':
+> 
+>                   0      instructions                     #    0.00  insn per cycle
+>           9,488,278      cycles
+> 
+>         0.004365407 seconds time elapsed
+> 
+>         0.003303000 seconds user
+>         0.001099000 seconds sys
+> 
+> The absence of the fixedctr member leads to an incorrect hwc->event_base
+> value on Zhaoxin CPUs, causing a discrepancy in the instruction count
+> reported by perf stat. This commit resolves the instruction count issue
+> by properly initializing the fixedctr member.
+> 
+> Fixes: 149fd4712bcd ("perf/x86/intel: Support Perfmon MSRs aliasing")
+> Signed-off-by: tanze <tanze0x01@163.com>
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> 
 > ---
->  drivers/perf/arm-ccn.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> v1-v3:https://lore.kernel.org/all/20250620023757.1429898-1-tanze@kylinos.cn/
 > 
-> diff --git a/drivers/perf/arm-ccn.c b/drivers/perf/arm-ccn.c
-> index 1a0d0e1a2263..8af3563fdf60 100644
-> --- a/drivers/perf/arm-ccn.c
-> +++ b/drivers/perf/arm-ccn.c
-> @@ -565,7 +565,7 @@ module_param_named(pmu_poll_period_us, arm_ccn_pmu_poll_period_us, uint,
->  
->  static ktime_t arm_ccn_pmu_timer_period(void)
->  {
-> -	return ns_to_ktime((u64)arm_ccn_pmu_poll_period_us * 1000);
-> +	return us_to_ktime((u64)arm_ccn_pmu_poll_period_us);
->  }
->  
->  
-> -- 
-> 2.34.1
+> This patch does not modify the previous code,
+> Do you have any other suggestions?
 > 
+Hi peterz,
+
+This is a friendly ping on this patch.
+
+It has been reviewed by Kan Liang a couple of months ago. Is there 
+anything I can do to help get it merged?
+
+Thanks,
+
