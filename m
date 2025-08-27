@@ -1,64 +1,63 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826AA322774
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Aug 2025 10:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0601F346A15
+	for <linux-perf-users@vger.kernel.org>; Wed, 27 Aug 2025 10:10:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756289438; cv=none; b=YNji1apWHIxdo3UHLTAWV3sDy3G+wwzLFEJ1Bqiwe3Vc7QQ6VfSC+PVWmFKqBC2Nzi1rNeEQ8F65B1wQvhp9pSipNzYqI2NuPyTVTPw6pvuyaZiQ3nR6D+ZV1kEEvSZfBQut3836jGaFSUOE6MddYR1OLU7ZyVH4VULl9gdFxf4=
+	t=1756289441; cv=none; b=lrEE30i+YyiMSEihpzP9oYNq0DUeMgS6E6EExDIZKI3yqLNSMda6zq8KAtk04xqVOdhTX7sVOLKgy6U+kywE04ZgA5KqBdthsJ72HI9MaJ2zUCgZzhNLf4fdkyFm1AB8vjxMwT2XDvrwlKH4cKPE0Uu3ChpJoMwnI0n3RakfT1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756289438; c=relaxed/simple;
-	bh=yeNan5k0cgSuNlvIrb3yh43RXINtEjul/GDw0ykoYZ4=;
+	s=arc-20240116; t=1756289441; c=relaxed/simple;
+	bh=ob1mm/QZIvYurNgvoNKtvTajPGjDoJT+DigHtqvCg5Q=;
 	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mdL4CQMaBRP2ClvlxGGp0wsU986cOmBV108uT5bVHXK+Pg2srLSwGirfGgZ7YoNAlD09WICdSCtTUzj7fR9hZ8UEutdIkLDtYi9uRX5uSqeFgsAssS/6boBrhLi2tpSYNuxcELzvr3l7xGHV6JH/4gHq8aS6MUvClm0eB+lfaE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=PZU0Pg0S; arc=none smtp.client-ip=209.85.210.180
+	 MIME-Version; b=Iy5uT5StYNV/7+30vBOvU/FtPPil7/+ZWz02AeyH8s0K45+YBy5GsNx8vnJVE9dykQhB7Hjg0Qi3iBFDAMLg4ZxJMelmRFvyZkKYETevyYln32yURntB6P82d7TxvZQBkEp6E8sFzpb5uBXwGNGEbu96CHza3CvD3lY77wKxqv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=EnSH9XQv; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="PZU0Pg0S"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7720c9e2900so283214b3a.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 27 Aug 2025 03:10:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="EnSH9XQv"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-76e2ea933b7so657696b3a.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 27 Aug 2025 03:10:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1756289436; x=1756894236; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1756289439; x=1756894239; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ogvjFdajJu5uEleDwj80v3hZV9fH5TDAuXMS6jOc2pE=;
-        b=PZU0Pg0SiNeql1j9loQYsNasHG9jCfC4ukwLG4oceAtFMTGMjnVxaM9WaiNOe358Ya
-         j2MCkBWA9qxFLLAl2FkvpBK0wPFmSvj8/2PCDBuTWoal+bd+AYRR9WeGkLmlS0a0lJ/q
-         +dJmaACtlslillsCfXfEAn+5u3ZHAwX6Y7HCUwMMd/YKnir5Ix6EWpcLHxAjLd+gRw2S
-         P57nFjMHm5djIH0jXsBrsFrrHF0cDcERfhe4I4Q1oLg/oTc7sOD4K2HJQ5tWY6Za8rMC
-         I6U0rUAQ+zcpwM18boD6ni70g+D15uE1WY7lDyoyYP4g0MFl/dRBvcE698btdRUVKO32
-         NHGA==
+        bh=JM7gSlpkCi+0kyKyklIFOqWTnKhlvxmA1qdlwzNde30=;
+        b=EnSH9XQv1YMXQhBFHrLfMGiqI4mEKdKdB2aK7vuZKSXuXARtQT7rpozk7vMehNT3dw
+         XH+6zuUNxpUWFVe/K7OA4TnJpKwjqgSXuyhHXyLs/0geC3Ten9Y+BKQTq3Oh56kMODS4
+         vp0lU37WyqKWdV+0uNhKhpU0voBOS6ex1188NKesv3U1Z18fmyE07TdZd4NK89T/Odic
+         ZYKEqP2NaEzc4axYmwifp9bEAMo9K9E1CvojpXBvEo8apgqBveW284aD2CtCnuzSOdhK
+         G3TSnReuYAQv9g1Oq0BxIY8JfbZbTWDwcYoGrVv6gSXZPfr8yvQZgXVCoXKuc5EzUXdd
+         QETg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756289436; x=1756894236;
+        d=1e100.net; s=20230601; t=1756289439; x=1756894239;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ogvjFdajJu5uEleDwj80v3hZV9fH5TDAuXMS6jOc2pE=;
-        b=YhpzkP8tFrsvw7mlW7PS7tb/rash3RZpaufRasw2ALuB1XXBsiJ853lsmG+Da80pq1
-         TT7ugipwubAWHDCd91x82EX+45jKF5PmfaXzkh6Rs+TY6Wowm49bHYln7a2HwbvTnPq0
-         xPxOBIgJW0ZGjG5Sami0cNAE2f/Jr+a4hXeoUBcVEWMUglTlH1zSl+225S2Ps3jhd3QL
-         2Q0ev6vJ6oPS2sQYp3DCaxyO3xo2mWGS6dW93uGqbePucs5NNNV+3Nc9gSueFaL+FisP
-         h+q48cUp2UAndwyGYsqn3GmfO+B/ub32neCQz2iV3VLZrvs8HkRwdLZAY9Tf1uTYE81Y
-         cb2g==
-X-Forwarded-Encrypted: i=1; AJvYcCV7hzHeI/OELMFGVHo9AxK6NnYwZmg7I8KpY5N40SRsjFOnsGFGOnBIyX1USNQOWGnbTZTNxQA4RH6UYVHl6rAv@vger.kernel.org
-X-Gm-Message-State: AOJu0YxX8pWw35W7t7m1LDHFqRXritSmNMIel9ZJb7Co0CVVTchnpYIf
-	ppER+HfdfONV4/c8v98+H6BnILOiWISPsIAZxwjeY/AA8QOT+YLJtSgkxM3C2AsPgEA=
-X-Gm-Gg: ASbGncuu37QTgMLCXxTOK1J5j4RSoyyga/nQorp5g3m3ReYjlq1fhpIeq0eXGxmOgCs
-	f3YZM927ajbSrSNCYFAJFrALYD6dtk+JbuqB+6RGfMsI7UY9vaz30zYw1ML7vTkBdn73t4lmGPW
-	FOr4R5wQL/a35bhdLUxNLrqYVQAbE9A6WbbaSGD0EgEzSnfCMYnYnxN6MAlGKz5vqxhf5Us01T6
-	zsYeAz493vjDaYJMHhdtQLS/twIcP+mG5MetfMnD7l8qhM7tqERxatE2izSQYZj7NFgyV4/DLHa
-	+vE2g3KctmmvlelAQAke0xq4e8+tcV/7y2ZMIl/4uc1HBoCF+vujPnCOdm/FO/LYhKpzYJ7u9Nk
-	ELv2ST2QjH06jlcVQbhXD1axzOyT5byv3JKY7HrEKh0NrCT9g5PalZqxeA8lstuiWsreX5zQ2Kg
-	==
-X-Google-Smtp-Source: AGHT+IGKq+xCbT38FLHdMDvm1hcp5EAcutLkJLn66CFHjFRgZpXlNTya/iJ1ORo8WxdEG7UC3P6/tQ==
-X-Received: by 2002:a05:6a00:929d:b0:771:fbb0:b1cf with SMTP id d2e1a72fcca58-771fbb0b2b0mr7265480b3a.17.1756289429909;
-        Wed, 27 Aug 2025 03:10:29 -0700 (PDT)
+        bh=JM7gSlpkCi+0kyKyklIFOqWTnKhlvxmA1qdlwzNde30=;
+        b=tIq2uWv3VYQjJUAd2a/lbyUuaYsApbAW2u//QsZ5VCIcAY9ONzDJHl70yI0880Wmz1
+         wtVW7fVOTQqiCzUpOB41NM6sap0MbFR1ugM9FpCAOwnN13rX0KlqZoCnrYLQZ+croz+O
+         uxdckf40aWWo98mX1sLiiuDlVqctw/RN4VoLhcRjzlgtrt78LXxTnn/bPB3WyLg2wn5u
+         ts5OaYcd3SK+lVXsuqyq1qMJk512IqAK1+S9hp7p63VSZYPgC0RBxcibHImj9OIH6Uer
+         wm/oW110EVq8MuqOdN4J/OR98Upn32eCGLmbkPUKCsfe+sDjYQRqptYEms9zvLpby0PY
+         he6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVlty1I3l8RNtuscJygXnEeoirKchsFtg4sJqHrA2PP+7cH+3Fhz2U7P1FgOodd2ersF7HPj2er9DWks1ryDEqJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgNOAtoamQEGJntEsYr0+wjb6J+MTrIQODGz1LdxI5d6diL+FD
+	SCJF1grsyV43T5v3wkHQiFkb/3gjPYHPl6S38K/+oipbT9VfhtfhC5HsUuRMKFY9psQ=
+X-Gm-Gg: ASbGncuoERZB57xnHM+mevTpZLcHWZBSMjasK24HN6UxM/Nqt/HyUWrOr7tEsEMQRLA
+	fstcZRiH5RbucPE3icvu7ree7B1xk1IDtjwjwYOi+j+O1rv3FiEXRMQ5fCKrKdNvKuNt/b87xTn
+	PUq45SnRv9WEym71opZj5feqPU/RLXc0t92Sy5dPfYMtxqGHrNBET7RcT2daJ93hDJ0odUuTixa
+	CihDCNkhyMurVx22vFUMFKtsNkcvNxQRF6jxjWEZC+qPo6x5CL8e4XerdT1+msRO/uXj99dF4Mu
+	VpvlG5/t8qOP6VIaUAN1Kbg9okrsr1Ry1kvKBB9J76Kb6Jbba4acUp/k5JF5iRLkSDABXSgmeqd
+	9NYnq7YgFRwM68X8a64BpHR28NqaGSxD17/CPD37Ot1ZmtgjRhHiiRg9QOYMVzRQ=
+X-Google-Smtp-Source: AGHT+IGdtKUBscgA9xYMmV3962XLu6gCj63wXPK/4bKpP1nVTjXzqxHi4UVk2L8ckDMtXKsc3B7ldA==
+X-Received: by 2002:aa7:88c2:0:b0:771:e341:ce68 with SMTP id d2e1a72fcca58-771fc292e89mr6337778b3a.5.1756289439091;
+        Wed, 27 Aug 2025 03:10:39 -0700 (PDT)
 Received: from L6YN4KR4K9.bytedance.net ([139.177.225.229])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-770401eb20dsm12813462b3a.79.2025.08.27.03.10.21
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-770401eb20dsm12813462b3a.79.2025.08.27.03.10.30
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 27 Aug 2025 03:10:29 -0700 (PDT)
+        Wed, 27 Aug 2025 03:10:38 -0700 (PDT)
 From: Yunhui Cui <cuiyunhui@bytedance.com>
 To: paul.walmsley@sifive.com,
 	palmer@dabbelt.com,
@@ -87,9 +86,9 @@ To: paul.walmsley@sifive.com,
 	rppt@kernel.org,
 	kees@kernel.org,
 	thomas.weissschuh@linutronix.de
-Subject: [PATCH 1/2] watchdog: refactor watchdog_hld functionality
-Date: Wed, 27 Aug 2025 18:09:58 +0800
-Message-Id: <20250827100959.83023-2-cuiyunhui@bytedance.com>
+Subject: [PATCH 2/2] riscv: add HARDLOCKUP_DETECTOR_PERF support
+Date: Wed, 27 Aug 2025 18:09:59 +0800
+Message-Id: <20250827100959.83023-3-cuiyunhui@bytedance.com>
 X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 In-Reply-To: <20250827100959.83023-1-cuiyunhui@bytedance.com>
 References: <20250827100959.83023-1-cuiyunhui@bytedance.com>
@@ -101,119 +100,62 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move watchdog_hld.c to kernel/, and rename arm_pmu_irq_is_nmi()
-to arch_pmu_irq_is_nmi() for cross-arch reusability.
+Reuse watchdog_hld.c to enable HARDLOCKUP_DETECTOR_PERF and
+add Kconfig selections for RISC-V.
 
 Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
 ---
- arch/arm64/kernel/Makefile                   | 1 -
- drivers/perf/arm_pmu.c                       | 2 +-
- include/linux/nmi.h                          | 1 +
- include/linux/perf/arm_pmu.h                 | 2 --
- kernel/Makefile                              | 2 +-
- {arch/arm64/kernel => kernel}/watchdog_hld.c | 8 ++++++--
- 6 files changed, 9 insertions(+), 7 deletions(-)
- rename {arch/arm64/kernel => kernel}/watchdog_hld.c (97%)
+ arch/riscv/Kconfig           | 3 +++
+ drivers/perf/riscv_pmu_sbi.c | 8 ++++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index 76f32e424065e..12d77f373fea4 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -44,7 +44,6 @@ obj-$(CONFIG_KUSER_HELPERS)		+= kuser32.o
- obj-$(CONFIG_FUNCTION_TRACER)		+= ftrace.o entry-ftrace.o
- obj-$(CONFIG_MODULES)			+= module.o module-plts.o
- obj-$(CONFIG_PERF_EVENTS)		+= perf_regs.o perf_callchain.o
--obj-$(CONFIG_HARDLOCKUP_DETECTOR_PERF)	+= watchdog_hld.o
- obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
- obj-$(CONFIG_CPU_PM)			+= sleep.o suspend.o
- obj-$(CONFIG_KGDB)			+= kgdb.o
-diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index 5c310e803dd78..4fd7f88d44543 100644
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -696,7 +696,7 @@ static int armpmu_get_cpu_irq(struct arm_pmu *pmu, int cpu)
- 	return per_cpu(hw_events->irq, cpu);
- }
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 451eb23d86c96..214b1ead5781a 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -184,6 +184,9 @@ config RISCV
+ 	select HAVE_PAGE_SIZE_4KB
+ 	select HAVE_PCI
+ 	select HAVE_PERF_EVENTS
++	select PERF_EVENTS
++	select HAVE_PERF_EVENTS_NMI if RISCV_SSE && RISCV_PMU_SSE
++	select HAVE_HARDLOCKUP_DETECTOR_PERF if PERF_EVENTS && HAVE_PERF_EVENTS_NMI
+ 	select HAVE_PERF_REGS
+ 	select HAVE_PERF_USER_STACK_DUMP
+ 	select HAVE_POSIX_CPU_TIMERS_TASK_WORK
+diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+index 8c1ac7985df6c..c5423a046d016 100644
+--- a/drivers/perf/riscv_pmu_sbi.c
++++ b/drivers/perf/riscv_pmu_sbi.c
+@@ -22,6 +22,7 @@
+ #include <linux/sched/clock.h>
+ #include <linux/soc/andes/irq.h>
+ #include <linux/workqueue.h>
++#include <linux/nmi.h>
  
--bool arm_pmu_irq_is_nmi(void)
+ #include <asm/errata_list.h>
+ #include <asm/sbi.h>
+@@ -1102,6 +1103,11 @@ static int pmu_sbi_setup_sse(struct riscv_pmu *pmu)
+ }
+ #endif
+ 
 +bool arch_pmu_irq_is_nmi(void)
- {
- 	return has_nmi;
- }
-diff --git a/include/linux/nmi.h b/include/linux/nmi.h
-index cf3c6ab408aac..c34bdc4f43f6d 100644
---- a/include/linux/nmi.h
-+++ b/include/linux/nmi.h
-@@ -207,6 +207,7 @@ static inline bool trigger_single_cpu_backtrace(int cpu)
- #ifdef CONFIG_HARDLOCKUP_DETECTOR_PERF
- u64 hw_nmi_get_sample_period(int watchdog_thresh);
- bool arch_perf_nmi_is_available(void);
-+bool arch_pmu_irq_is_nmi(void);
- #endif
- 
- #if defined(CONFIG_HARDLOCKUP_CHECK_TIMESTAMP) && \
-diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-index 93c9a26492fcf..6b53fb453fd63 100644
---- a/include/linux/perf/arm_pmu.h
-+++ b/include/linux/perf/arm_pmu.h
-@@ -184,8 +184,6 @@ void kvm_host_pmu_init(struct arm_pmu *pmu);
- #define kvm_host_pmu_init(x)	do { } while(0)
- #endif
- 
--bool arm_pmu_irq_is_nmi(void);
--
- /* Internal functions only for core arm_pmu code */
- struct arm_pmu *armpmu_alloc(void);
- void armpmu_free(struct arm_pmu *pmu);
-diff --git a/kernel/Makefile b/kernel/Makefile
-index c60623448235f..4ec7702b00aa1 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -101,7 +101,7 @@ obj-$(CONFIG_KGDB) += debug/
- obj-$(CONFIG_DETECT_HUNG_TASK) += hung_task.o
- obj-$(CONFIG_LOCKUP_DETECTOR) += watchdog.o
- obj-$(CONFIG_HARDLOCKUP_DETECTOR_BUDDY) += watchdog_buddy.o
--obj-$(CONFIG_HARDLOCKUP_DETECTOR_PERF) += watchdog_perf.o
-+obj-$(CONFIG_HARDLOCKUP_DETECTOR_PERF) += watchdog_perf.o watchdog_hld.o
- obj-$(CONFIG_SECCOMP) += seccomp.o
- obj-$(CONFIG_RELAY) += relay.o
- obj-$(CONFIG_SYSCTL) += utsname_sysctl.o
-diff --git a/arch/arm64/kernel/watchdog_hld.c b/kernel/watchdog_hld.c
-similarity index 97%
-rename from arch/arm64/kernel/watchdog_hld.c
-rename to kernel/watchdog_hld.c
-index 3093037dcb7be..f3864e604a6b5 100644
---- a/arch/arm64/kernel/watchdog_hld.c
-+++ b/kernel/watchdog_hld.c
-@@ -1,7 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/nmi.h>
- #include <linux/cpufreq.h>
--#include <linux/perf/arm_pmu.h>
- 
- /*
-  * Safe maximum CPU frequency in case a particular platform doesn't implement
-@@ -25,6 +24,11 @@ u64 hw_nmi_get_sample_period(int watchdog_thresh)
- 	return (u64)max_cpu_freq * watchdog_thresh;
- }
- 
-+__weak bool arch_pmu_irq_is_nmi(void)
 +{
-+	return false;
++	return IS_ENABLED(CONFIG_RISCV_PMU_SSE);
 +}
 +
- bool __init arch_perf_nmi_is_available(void)
+ static int pmu_sbi_starting_cpu(unsigned int cpu, struct hlist_node *node)
  {
- 	/*
-@@ -32,7 +36,7 @@ bool __init arch_perf_nmi_is_available(void)
- 	 * however, the pmu interrupts will act like a normal interrupt instead of
- 	 * NMI and the hardlockup detector would be broken.
- 	 */
--	return arm_pmu_irq_is_nmi();
-+	return arch_pmu_irq_is_nmi();
- }
+ 	struct riscv_pmu *pmu = hlist_entry_safe(node, struct riscv_pmu, node);
+@@ -1525,6 +1531,8 @@ static int __init pmu_sbi_devinit(void)
+ 	/* Notify legacy implementation that SBI pmu is available*/
+ 	riscv_pmu_legacy_skip_init();
  
- static int watchdog_perf_update_period(void *data)
++	lockup_detector_retry_init();
++
+ 	return ret;
+ }
+ device_initcall(pmu_sbi_devinit)
 -- 
 2.39.5
 
