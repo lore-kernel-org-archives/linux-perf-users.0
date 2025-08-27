@@ -1,83 +1,107 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88C5B30CD90;
-	Wed, 27 Aug 2025 08:12:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66E3E192B84;
+	Wed, 27 Aug 2025 08:18:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756282376; cv=none; b=SwYrbxtoNOTVGA+Ac30SWeUxLmbVSwxx+2FF6fkRUH5auIhCkmI60UW2rRiZEhR0Y+ct7OgdcY47utLNCfINciWSs1c5GwKIKu07SFkyiFp8mFeGWMXgDbxOYbPavKgFSpBEXKSPhnfQmWxd1k4Nc4Rn+3D0lkJGiK0qXPAUx7A=
+	t=1756282732; cv=none; b=F1u28dZJOF+FB9Wg+54w5ldsmb91UV06i7ADydi/odQ0/FJD8bZpXquVEh8aT1bkooWufIReDX0tr9F3Aag0PdFw35TZMLV3nipBah3PCarI6yAOCv6rdGxQIXncL5vMYQrACaFJ3WMA1gv+gr3AK0gMfWbYIKJrIwHaxIDmXg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756282376; c=relaxed/simple;
-	bh=QyQhFx8B3bKhrD6YrWj2wpyUU88MY9HsPrDbHArlac8=;
+	s=arc-20240116; t=1756282732; c=relaxed/simple;
+	bh=CHy7QFSPgSRnuJKdtSIc/yYznxQB2FrFp5irQRpgBE0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BP55SCrWoYaYkb0xahCr65HW/IXypireK3gFGZI75qeVnJ0Nsos2VIGHErBUW8OW8w6+Fj738f1DitLvq7DJKNw0zuBYtwMmXjjWZuvrI7Ioane5I8ebO5AHCX5gdyQ8zxFTdn8GhnUDK5EakXiHrOgDRp1DcdYsTaqS5jbVKL4=
+	 Content-Type:Content-Disposition:In-Reply-To; b=kT1lQP4FEQI6GbRdrqBrjMlxgL3VvsYcrHwKMExboOEXTJBHLXW+W1SqBJVb6HiFgbnFTGw8dcHl5MA+0A/8a7ddB+zbZoABjBeSIn0+nCE0ENLdZhy7TU/z8WBdxcN5lF/Mov6N+iMsDtaXkcopMcXiKOd1bMgg1XQc4MPgn6g=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D7381691;
-	Wed, 27 Aug 2025 01:12:46 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8316E3F694;
-	Wed, 27 Aug 2025 01:12:54 -0700 (PDT)
-Date: Wed, 27 Aug 2025 09:12:52 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 05/11] tools headers: Sync arm64 headers with the kernel
- source
-Message-ID: <20250827081252.GD745921@e132581.arm.com>
-References: <20250825215904.2594216-1-namhyung@kernel.org>
- <20250825215904.2594216-6-namhyung@kernel.org>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 875DD1515;
+	Wed, 27 Aug 2025 01:18:41 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C8D1A3F694;
+	Wed, 27 Aug 2025 01:18:41 -0700 (PDT)
+Date: Wed, 27 Aug 2025 09:18:38 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Robin Murphy <robin.murphy@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>, mingo@redhat.com,
+	will@kernel.org, acme@kernel.org, namhyung@kernel.org,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org,
+	linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
+	iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
+	linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 12/19] perf: Ignore event state for group validation
+Message-ID: <aK6_XrA_OaLnoFkr@J2N7QTR9R3>
+References: <cover.1755096883.git.robin.murphy@arm.com>
+ <d6cda4e2999aba5794c8178f043c91068fa8080c.1755096883.git.robin.murphy@arm.com>
+ <20250826130329.GX4067720@noisy.programming.kicks-ass.net>
+ <6080e45d-032e-48c2-8efc-3d7e5734d705@arm.com>
+ <CAP-5=fXF2x3hW4Sk+A362T-50cBbw6HVd7KY+QEUjFwT+JL37Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250825215904.2594216-6-namhyung@kernel.org>
+In-Reply-To: <CAP-5=fXF2x3hW4Sk+A362T-50cBbw6HVd7KY+QEUjFwT+JL37Q@mail.gmail.com>
 
-On Mon, Aug 25, 2025 at 02:58:57PM -0700, Namhyung Kim wrote:
-
-[...]
-
-> But the following two changes cannot be applied since they introduced
-> new build errors in util/arm-spe.c.  So it still has the warning after
-> this change.
+On Tue, Aug 26, 2025 at 11:48:48AM -0700, Ian Rogers wrote:
+> On Tue, Aug 26, 2025 at 8:32â€¯AM Robin Murphy <robin.murphy@arm.com> wrote:
+> >
+> > On 2025-08-26 2:03 pm, Peter Zijlstra wrote:
+> > > On Wed, Aug 13, 2025 at 06:01:04PM +0100, Robin Murphy wrote:
+> > >> It may have been different long ago, but today it seems wrong for these
+> > >> drivers to skip counting disabled sibling events in group validation,
+> > >> given that perf_event_enable() could make them schedulable again, and
+> > >> thus increase the effective size of the group later. Conversely, if a
+> > >> sibling event is truly dead then it stands to reason that the whole
+> > >> group is dead, so it's not worth going to any special effort to try to
+> > >> squeeze in a new event that's never going to run anyway. Thus, we can
+> > >> simply remove all these checks.
+> > >
+> > > So currently you can do sort of a manual event rotation inside an
+> > > over-sized group and have it work.
+> > >
+> > > I'm not sure if anybody actually does this, but its possible.
+> > >
+> > > Eg. on a PMU that supports only 4 counters, create a group of 5 and
+> > > periodically cycle which of the 5 events is off.
 > 
->   c8c2647e69bedf80 arm64: Make  _midr_in_range_list() an exported function
->   e3121298c7fcaf48 arm64: Modify _midr_range() functions to read MIDR/REVIDR internally
+> I'm not sure this is true, I thought this would fail in the
+> perf_event_open when adding the 5th event and there being insufficient
+> counters for the group.
 
-Hi Namhyung,
+We're talking specifically about cases where the logic in a pmu's
+pmu::event_init() callback doesn't count events in specific states, and
+hence the 5th even doesn't get rejected when it is initialised.
 
-Thanks for working on this. It is on our todo list for automatic
-generating MIDR. Sorry for any troubling during the syncing.
+For example, in arch/x86/events/core.c, validate_group() uses
+collect_events(), which has:
 
-Just a minor comment below.
+	for_each_sibling_event(event, leader) {
+		if (!is_x86_event(event) || event->state <= PERF_EVENT_STATE_OFF)
+			continue;
 
-[...]
+		if (collect_event(cpuc, event, max_count, n))
+			return -EINVAL;
 
-> +struct target_impl_cpu {
-> +	u64 midr;
-> +	u64 revidr;
-> +	u64 aidr;
-> +};
-> +
-> +bool cpu_errata_set_target_impl(u64 num, void *impl_cpus);
-> +
+		n++;
+	}
 
-Currently, no one uses this API. It seems to me that we don't need to
-sync this code chunk.
+... and so where an event's state is <= PERF_EVENT_STATE_OFF at init
+time, that event is not counted to see if it fits into HW counters.
 
-Otherwise, other changes LGTM.
-
-Thanks,
-Leo
+Mark.
