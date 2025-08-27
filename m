@@ -1,457 +1,93 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72FB2318149
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Aug 2025 08:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40B9732276F;
+	Wed, 27 Aug 2025 08:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756281896; cv=none; b=JIpn8uGtFYmLwZdneAEvCRHYzp5U0CB6iAhXoEiDYIUY6CyjZQ8+Znt3XgwGwfsxQiDcfOHe/UHZ0KdY7SRKwtpSif3nCbPAjgBgOWZxyZjJUAExXq4Zzfn7e7IvVxXficQrF5GBzeChsTzTNuNFfH9K4TWsCMz8QFFYhvFz05c=
+	t=1756281995; cv=none; b=b9OPfqL6d4HtEvtbvELGOVN2CINzaRbMh9kioG4BM96BhKBmEfgSoShAEl/karsaIAKBsMkw1GhqoMDRvQESsKuM124rz9YUU9d+tF0+gsyTrJNTwBfetZG4RALGyYe7H1CUI70uszn42Ia8ohKS2rDevgBWl27TOTBfmeLXjuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756281896; c=relaxed/simple;
-	bh=gbcLll/AnyN4KW9wexFQ+zB4uHl2kSWRwMWKLL+G/5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Zsy6q1zPCEzNxKizd4gEWx3RcKEWXuji5wTkKxGJmIA0Bvi/hT+o4/OBC6euaAZHCtaqfeUAhYJB/rjSLIwYG/RrfAsFKelquVKazUHZXwbMDjHKtUy+oF3eWOyXkTRIdkt5eRp2tMTgXy7g49KrAuDxiKSAvZjop0KtxxmZ4zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc.com header.i=@rivosinc.com header.b=JY6Qh7AL; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc.com header.i=@rivosinc.com header.b="JY6Qh7AL"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b49e0686139so2978768a12.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 27 Aug 2025 01:04:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc.com; s=google; t=1756281893; x=1756886693; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=zjK51+2A52fHet//FxjRNjwkcJGNCioQhxdhxLuT9Eg=;
-        b=JY6Qh7ALDARDMDq5mhQDsBmWmGpzjlml1fR/cZ2TdkRkoLWBG7J5qmlnlihRp3sCNK
-         xgMYNFAXTdZ7TO9gbm+TWFd2uFFAyAUsqEvPu4wtapE6oV8iCt30Tg/HKxV+hSpzQx/C
-         hTKGVXr4ltHRv8cOHua+ETQHSbVCu3rCf07b2KUj6fC6cd764va+uo1SdtKosMhDbUNF
-         hIkf6V38j81C0jrqrJkJQ9l+RXaNGeXPLdlTkWWiF0d15dSaTUgxIXBp5Fo2okGVIbCI
-         nfbuGY/C7tiP/5DoesvwD05ge8o8WatwaFreLcrm20VnCzT6/C+74zV6JMIAnDi5z3+S
-         6JoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756281893; x=1756886693;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zjK51+2A52fHet//FxjRNjwkcJGNCioQhxdhxLuT9Eg=;
-        b=KXyuR1lfC0qXa+dpzHUysoUvEvjl2sQw5yHi9QlSbrf0Rk3ohRbRJxbpMSlXkk+6EQ
-         9FD7/+thsjgC4EeLSng/5K8Eq+pNKFrBeo5n1C9/qJSRwZCjaFkekx3eu/lrLvFRW4kH
-         5kuiGqTIoeV4KgtnKGzw21j7ecKOnTMCdCT1R7wNYRirG1zRxWeJPEP8qtnKAT3Hfx4m
-         xcXAML+Ko6XEdZeNQFnL6kup3CpOe871Nv2mMRKwICi3nIcMQknZgYlbJ8qNGX7JUdL2
-         xDULgnK2XNoFuDWGKzsSAMHjkcRbEbTNgIPuAWCyiYtPymrmbkjToM/jfl+yxBMV6UxY
-         juag==
-X-Forwarded-Encrypted: i=1; AJvYcCVbJbBgLFDO7skrTXUWifhfCe1+iGMpKDA1WaXFpbW4p5w74iTbS0B9xHljmagkc/okew1uy/3VREBMemPI3zoE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2CmD+2nGDmvAMMwThUTCP4Fihb6S61SKYdNfkWDOfZ9airxWF
-	Wqhg2yPYwu3qEdSXwM6WJahIk44C5hmvjMVfNonuorOs7qZ61Wm2/Ei1dYyDc1MP49I=
-X-Gm-Gg: ASbGncv9i81yP2FgclF/q+8SLj27h8CRb028LcfBW5+u6Nqb9/ZIT+plSTc1q35w6u/
-	koI8g698Pj/gFdZCSl6G8QJz3cNAb2Zyi+bNN3tMfFEnQLm49pdizDoeknGsmOq5neOey8OPAR3
-	ytRfMLrBnwnItLOTK1ZIOdgFHiGeFu0cwRwftLXGQsZneh5crcpu/yGDfw7HIk5GA35bSHzkWge
-	d0MueMUDLX43xGXaO+2jNPXYAYkPDsPhj/8OQ0mqnKYhzpkJ7QZbCgBZQO5ENLoXCViw7S/c1s4
-	K7+HQ30Nqj/e6yFKHVdAgAsA4SIjF7RSICX0DQk5qMNYvuWBNkoBSYpXuIZU+rNceyuLKfToRcO
-	3DAZNPj1HLKzgu1W2cg==
-X-Google-Smtp-Source: AGHT+IFmLVeBhKzJEqSUf1IlkeKSrgzItqcCx7zQbQCgDi+N7L9pd7Nncg0iDwIKNaLuKX3UWq7WIQ==
-X-Received: by 2002:a17:90b:4fd0:b0:325:c92:4a89 with SMTP id 98e67ed59e1d1-32515e3cad8mr20990981a91.5.1756281892340;
-        Wed, 27 Aug 2025 01:04:52 -0700 (PDT)
-Received: from ghost ([2601:647:6700:64d0:c960:881a:73ea:37d7])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3276f6b7458sm1367809a91.12.2025.08.27.01.04.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Aug 2025 01:04:51 -0700 (PDT)
-Date: Wed, 27 Aug 2025 01:04:48 -0700
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Himanshu Chauhan <hchauhan@ventanamicro.com>,
-	Jesse Taube <Mr.Bossman075@gmail.com>
-Cc: linux-riscv@lists.infradead.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Oleg Nesterov <oleg@redhat.com>, Kees Cook <kees@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Liang Kan <kan.liang@linux.intel.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Deepak Gupta <debug@rivosinc.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Atish Patra <atishp@rivosinc.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Mayuresh Chitale <mchitale@ventanamicro.com>,
-	WangYuli <wangyuli@uniontech.com>,
-	Huacai Chen <chenhuacai@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Nam Cao <namcao@linutronix.de>,
-	Yunhui Cui <cuiyunhui@bytedance.com>,
-	Joel Granados <joel.granados@kernel.org>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Celeste Liu <coelacanthushex@gmail.com>,
-	Chunyan Zhang <zhangchunyan@iscas.ac.cn>,
-	Nylon Chen <nylon.chen@sifive.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH 5/8] riscv: hw_breakpoint: Use icount for single stepping
-Message-ID: <aK68IJPqa4YOo1S_@ghost>
+	s=arc-20240116; t=1756281995; c=relaxed/simple;
+	bh=mnqpdBh8LH7F6O6rDf98eADOJtLStOn4BOPmUubZFMA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=djfqTvZbL9u0OlMsDQqACLVzFfkIFG0qLd1pmm6HW3ql7qlDiCw7sNvvCbZudKe9oY16XOLd8ovtb04jNpCh9KqseUzcVf839bMV+hsxB1PK8rFFDFMpnBtvAkJVI+HhzkRuLPZ9ndOVqWvGQL6dis9pzLSerUJ3jTFLi1UdEj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35FE122FC;
+	Wed, 27 Aug 2025 01:06:24 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B8693F694;
+	Wed, 27 Aug 2025 01:06:32 -0700 (PDT)
+Date: Wed, 27 Aug 2025 09:06:30 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+	mark.rutland@arm.com, acme@kernel.org, namhyung@kernel.org,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org,
+	linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
+	iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
+	linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 16/19] perf: Introduce positive capability for sampling
+Message-ID: <20250827080630.GC745921@e132581.arm.com>
+References: <cover.1755096883.git.robin.murphy@arm.com>
+ <ae81cb65b38555c628e395cce67ac6c7eaafdd23.1755096883.git.robin.murphy@arm.com>
+ <20250826131124.GB745921@e132581.arm.com>
+ <983df32a-ba74-421d-bc20-06e778b4d2c9@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPd4Wexw_DtndDqRZzXK0PEOAkb4yWB4x8rf5eRdJOLMS-+8SQ@mail.gmail.com>
+In-Reply-To: <983df32a-ba74-421d-bc20-06e778b4d2c9@arm.com>
 
-On Tue, Aug 26, 2025 at 10:08:04AM +0530, Himanshu Chauhan wrote:
-> On Fri, Aug 22, 2025 at 11:17 PM Jesse Taube <jesse@rivosinc.com> wrote:
-> >
-> > The Sdtrig RISC-V ISA extension does not have a resume flag for
-> > returning to and executing the instruction at the breakpoint.
-> > To avoid skipping the instruction or looping, it is necessary to remove
-> > the hardware breakpoint and single step. Use the icount feature of
-> > Sdtrig to accomplish this. Use icount as default with an option to allow
-> > software-based single stepping when hardware or SBI does not have
-> > icount functionality, as it may cause unwanted side effects when reading
-> > the instruction from memory.
+On Tue, Aug 26, 2025 at 04:53:51PM +0100, Robin Murphy wrote:
+
+[...]
+
+> > Genearlly, AUX events generate interrupts based on AUX ring buffer
+> > watermark but not the period. Seems to me, it is correct to set the
+> > PERF_PMU_CAP_SAMPLING flag for them.
 > 
-> Can you please elaborate on this? I remember noticing the absence of
-> the resume flag which was causing loops.
+> This cap is given to drivers which handle event->attr.sample_period and call
+> perf_event_overflow() - or in a few rare cases, perf_output_sample()
+> directly - to do something meaningful with it, since the intent is to convey
+> "I properly handle events for which is_sampling_event() is true". My
+> understanding is that aux events are something else entirely, but I'm happy
+> to be corrected.
 
-Thank you for your feedback. Jesse's internship came to an end last
-Friday (August 22nd) so I will be picking up these patches, but I have
-also added her personal email onto this thread.
+If the discussion is based only on this patch, my understanding is
+that the PERF_PMU_CAP_SAMPLING flag replaces the
+PERF_PMU_CAP_NO_INTERRUPT flag for checking whether a PMU event needs
+to be re-enabled in perf_adjust_freq_unthr_context().
 
-When a breakpoint is triggered and the kernel gains control, the last
-instruction to execute was the instruction before the instruction where
-the breakpoint is installed. If execution was to be resumed at this
-stage, the same breakpoint would be triggered again. So single stepping
-requires a careful dance of enabling and disabling breakpoints. However,
-we can avoid this overhead and code complexity can be reduced by using
-the icount trigger which allows a direct method for single stepping.
+AUX events can trigger a large number of interrupts under certain
+conditions (e.g., if we set a very small watermark). This is why I
+conclude that we need to set the PERF_PMU_CAP_SAMPLING flag to ensure
+that AUX events are re-enabled properly after throttling (see
+perf_adjust_freq_unthr_events()).
 
-> 
-> >
-> > Signed-off-by: Jesse Taube <jesse@rivosinc.com>
-> > ---
-> > OpenSBI implementation of sbi_debug_read_triggers does not return the
-> > updated CSR values. There needs to be a check for working
-> > sbi_debug_read_triggers before this works.
-> >
-> > https://lists.riscv.org/g/tech-prs/message/1476
-> >
-> > RFC -> V1:
-> >  - Add dbtr_mode to rv_init_icount_trigger
-> >  - Add icount_triggered to check which breakpoint was triggered
-> >  - Fix typo: s/affects/effects
-> >  - Move HW_BREAKPOINT_COMPUTE_STEP to Platform type
-> > V1 -> V2:
-> >  - Remove HW_BREAKPOINT_COMPUTE_STEP kconfig option
-> > ---
-> >  arch/riscv/kernel/hw_breakpoint.c | 173 ++++++++++++++++++++++++++----
-> >  1 file changed, 155 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/arch/riscv/kernel/hw_breakpoint.c b/arch/riscv/kernel/hw_breakpoint.c
-> > index 3f96e744a711..f12306247436 100644
-> > --- a/arch/riscv/kernel/hw_breakpoint.c
-> > +++ b/arch/riscv/kernel/hw_breakpoint.c
-> > @@ -20,6 +20,7 @@
-> >  #define DBTR_TDATA1_DMODE              BIT_UL(__riscv_xlen - 5)
-> >
-> >  #define DBTR_TDATA1_TYPE_MCONTROL      (2UL << DBTR_TDATA1_TYPE_SHIFT)
-> > +#define DBTR_TDATA1_TYPE_ICOUNT                (3UL << DBTR_TDATA1_TYPE_SHIFT)
-> >  #define DBTR_TDATA1_TYPE_MCONTROL6     (6UL << DBTR_TDATA1_TYPE_SHIFT)
-> >
-> >  #define DBTR_TDATA1_MCONTROL6_LOAD             BIT(0)
-> > @@ -62,6 +63,14 @@
-> >         (FIELD_PREP(DBTR_TDATA1_MCONTROL_SIZELO_FIELD, lo) | \
-> >          FIELD_PREP(DBTR_TDATA1_MCONTROL_SIZEHI_FIELD, hi))
-> >
-> > +#define DBTR_TDATA1_ICOUNT_U                   BIT(6)
-> > +#define DBTR_TDATA1_ICOUNT_S                   BIT(7)
-> > +#define DBTR_TDATA1_ICOUNT_PENDING             BIT(8)
-> > +#define DBTR_TDATA1_ICOUNT_M                   BIT(9)
-> > +#define DBTR_TDATA1_ICOUNT_COUNT_FIELD         GENMASK(23, 10)
-> > +#define DBTR_TDATA1_ICOUNT_VU                  BIT(25)
-> > +#define DBTR_TDATA1_ICOUNT_VS                  BIT(26)
-> > +
-> >  enum dbtr_mode {
-> >         DBTR_MODE_U = 0,
-> >         DBTR_MODE_S,
-> > @@ -79,6 +88,7 @@ static DEFINE_PER_CPU(union sbi_dbtr_shmem_entry, sbi_dbtr_shmem);
-> >
-> >  /* number of debug triggers on this cpu . */
-> >  static int dbtr_total_num __ro_after_init;
-> > +static bool have_icount __ro_after_init;
-> >  static unsigned long dbtr_type __ro_after_init;
-> >  static unsigned long dbtr_init __ro_after_init;
-> >
-> > @@ -129,6 +139,7 @@ static int arch_smp_teardown_sbi_shmem(unsigned int cpu)
-> >  static void init_sbi_dbtr(void)
-> >  {
-> >         struct sbiret ret;
-> > +       unsigned long dbtr_count = 0;
-> >
-> >         /*
-> >          * Called by hw_breakpoint_slots and arch_hw_breakpoint_init.
-> > @@ -143,6 +154,19 @@ static void init_sbi_dbtr(void)
-> >                 return;
-> >         }
-> >
-> > +       ret = sbi_ecall(SBI_EXT_DBTR, SBI_EXT_DBTR_NUM_TRIGGERS,
-> > +               DBTR_TDATA1_TYPE_ICOUNT, 0, 0, 0, 0, 0);
-> > +       if (ret.error) {
-> > +               pr_warn("%s: failed to detect icount triggers. error: %ld.\n",
-> > +                       __func__, ret.error);
-> > +       } else if (!ret.value) {
-> > +               pr_warn("%s: No icount triggers available. "
-> > +                       "Falling-back to computing single step address.\n", __func__);
-> > +       } else {
-> > +               dbtr_count = ret.value;
-> > +               have_icount = true;
-> > +       }
-> > +
-> >         ret = sbi_ecall(SBI_EXT_DBTR, SBI_EXT_DBTR_NUM_TRIGGERS,
-> >                         DBTR_TDATA1_TYPE_MCONTROL6, 0, 0, 0, 0, 0);
-> >         if (ret.error) {
-> > @@ -151,7 +175,7 @@ static void init_sbi_dbtr(void)
-> >         } else if (!ret.value) {
-> >                 pr_warn("%s: No mcontrol6 triggers available.\n", __func__);
-> >         } else {
-> > -               dbtr_total_num = ret.value;
-> > +               dbtr_total_num = min_not_zero((unsigned long)ret.value, dbtr_count);
-> >                 dbtr_type = DBTR_TDATA1_TYPE_MCONTROL6;
-> >                 return;
-> >         }
-> > @@ -166,7 +190,7 @@ static void init_sbi_dbtr(void)
-> >                 pr_err("%s: No mcontrol triggers available.\n", __func__);
-> >                 dbtr_total_num = 0;
-> >         } else {
-> > -               dbtr_total_num = ret.value;
-> > +               dbtr_total_num = min_not_zero((unsigned long)ret.value, dbtr_count);
-> >                 dbtr_type = DBTR_TDATA1_TYPE_MCONTROL;
-> >         }
-> >  }
-> > @@ -320,6 +344,36 @@ static int rv_init_mcontrol6_trigger(const struct perf_event_attr *attr,
-> >         return 0;
-> >  }
-> >
-> > +static int rv_init_icount_trigger(struct arch_hw_breakpoint *hw, enum dbtr_mode mode)
-> > +{
-> > +       unsigned long tdata1 = DBTR_TDATA1_TYPE_ICOUNT;
-> > +
-> > +       /* Step one instruction */
-> > +       tdata1 |= FIELD_PREP(DBTR_TDATA1_ICOUNT_COUNT_FIELD, 1);
-> > +
-> > +       switch (mode) {
-> > +       case DBTR_MODE_U:
-> > +               tdata1 |= DBTR_TDATA1_ICOUNT_U;
-> > +               break;
-> > +       case DBTR_MODE_S:
-> > +               tdata1 |= DBTR_TDATA1_ICOUNT_S;
-> > +               break;
-> > +       case DBTR_MODE_VS:
-> > +               tdata1 |= DBTR_TDATA1_ICOUNT_VS;
-> > +               break;
-> > +       case DBTR_MODE_VU:
-> > +               tdata1 |= DBTR_TDATA1_ICOUNT_VU;
-> > +               break;
-> > +       default:
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       hw->tdata1 = tdata1;
-> > +       hw->tdata2 = 0;
-> > +
-> > +       return 0;
-> > +}
-> > +
-> >  int hw_breakpoint_arch_parse(struct perf_event *bp,
-> >                              const struct perf_event_attr *attr,
-> >                              struct arch_hw_breakpoint *hw)
-> > @@ -372,24 +426,28 @@ static int setup_singlestep(struct perf_event *event, struct pt_regs *regs)
-> >         /* Remove breakpoint even if return error as not to loop */
-> >         arch_uninstall_hw_breakpoint(event);
-> >
-> > -       ret = get_insn_nofault(regs, regs->epc, &insn);
-> > -       if (ret < 0)
-> > -               return ret;
-> > +       if (have_icount) {
-> > +               rv_init_icount_trigger(bp, DBTR_MODE_U);
-> > +       } else {
-> > +               ret = get_insn_nofault(regs, regs->epc, &insn);
-> > +               if (ret < 0)
-> > +                       return ret;
-> >
-> > -       next_addr = get_step_address(regs, insn);
-> > +               next_addr = get_step_address(regs, insn);
-> >
-> > -       ret = get_insn_nofault(regs, next_addr, &insn);
-> > -       if (ret < 0)
-> > -               return ret;
-> > +               ret = get_insn_nofault(regs, next_addr, &insn);
-> > +               if (ret < 0)
-> > +                       return ret;
-> >
-> > -       bp_insn.bp_type = HW_BREAKPOINT_X;
-> > -       bp_insn.bp_addr = next_addr;
-> > -       /* Get the size of the intruction */
-> > -       bp_insn.bp_len = GET_INSN_LENGTH(insn);
-> > +               bp_insn.bp_type = HW_BREAKPOINT_X;
-> > +               bp_insn.bp_addr = next_addr;
-> > +               /* Get the size of the intruction */
-> > +               bp_insn.bp_len = GET_INSN_LENGTH(insn);
-> >
-> > -       ret = hw_breakpoint_arch_parse(NULL, &bp_insn, bp);
-> > -       if (ret)
-> > -               return ret;
-> > +               ret = hw_breakpoint_arch_parse(NULL, &bp_insn, bp);
-> > +               if (ret)
-> > +                       return ret;
-> > +       }
-> >
-> >         ret = arch_install_hw_breakpoint(event);
-> >         if (ret)
-> > @@ -400,6 +458,79 @@ static int setup_singlestep(struct perf_event *event, struct pt_regs *regs)
-> >         return 0;
-> >  }
-> >
-> > +/**
-> > + * icount_triggered - Check if event's icount was triggered.
-> > + * @event: Perf event to check
-> > + *
-> > + * Check the given perf event's icount breakpoint was triggered.
-> > + *
-> > + * Returns:    1 if icount was triggered.
-> > + *             0 if icount was not triggered.
-> > + *             negative on failure.
-> > + */
-> > +static int icount_triggered(struct perf_event *event)
-> > +{
-> > +       union sbi_dbtr_shmem_entry *shmem = this_cpu_ptr(&sbi_dbtr_shmem);
-> > +       struct sbiret ret;
-> > +       struct perf_event **slot;
-> > +       unsigned long tdata1;
-> > +       int i;
-> > +
-> > +       for (i = 0; i < dbtr_total_num; i++) {
-> > +               slot = this_cpu_ptr(&pcpu_hw_bp_events[i]);
-> > +
-> > +               if (*slot == event)
-> > +                       break;
-> > +       }
-> > +
-> > +       if (i == dbtr_total_num) {
-> > +               pr_warn("%s: Breakpoint not installed.\n", __func__);
-> > +               return -ENOENT;
-> > +       }
-> > +
-> > +       raw_spin_lock_irqsave(this_cpu_ptr(&ecall_lock),
-> > +                             *this_cpu_ptr(&ecall_lock_flags));
-> > +
-> > +       ret = sbi_ecall(SBI_EXT_DBTR, SBI_EXT_DBTR_TRIG_READ,
-> > +                       i, 1, 0, 0, 0, 0);
-> > +       tdata1 = shmem->data.tdata1;
-> > +
-> > +       raw_spin_unlock_irqrestore(this_cpu_ptr(&ecall_lock),
-> > +                                  *this_cpu_ptr(&ecall_lock_flags));
-> > +       if (ret.error) {
-> > +               pr_warn("%s: failed to read trigger. error: %ld\n", __func__, ret.error);
-> > +               return sbi_err_map_linux_errno(ret.error);
-> 
-> To avoid a flurry of events or messages, it would probably be good to
-> disable the trigger.
+> Otherwise, perhaps this suggests it deserves to be named a little more
+> specifically for clarity, maybe PERF_CAP_SAMPLING_EVENTS?
 
-That is a good point.
+Seems to me, the naming is not critical. If without setting the
+PERF_PMU_CAP_SAMPLING flag, AUX events might lose chance to be
+re-enabled after throttling.
 
-> 
-> > +       }
-> > +
-> > +       /*
-> > +        * The RISC-V Debug Specification
-> > +        * Tim Newsome, Paul Donahue (Ventana Micro Systems)
-> > +        * Version 1.0, Revised 2025-02-21: Ratified
-> I think mentioning the version number and section would be enough.
-
-Agreed.
-
-> 
-> > +        * 5.7.13. Instruction Count (icount, at 0x7a1)
-> > +        * When count is 1 and the trigger matches, then pending becomes set.
-> > +        * In addition count will become 0 unless it is hard-wired to 1.
-> > +        * When pending is set, the trigger fires just before any further
-> > +        * instructions are executed in a mode where the trigger is enabled.
-> > +        * As the trigger fires, pending is cleared. In addition, if count is
-> > +        * hard-wired to 1 then m, s, u, vs, and vu are all cleared.
-> > +        */
-> > +       if (FIELD_GET(DBTR_TDATA1_ICOUNT_COUNT_FIELD, tdata1) == 0)
-> > +               return 1;
-> > +
-> > +       if (FIELD_GET(DBTR_TDATA1_ICOUNT_COUNT_FIELD, tdata1) != 1)
-> > +               return 0;
-> > +
-> > +       if (tdata1 & DBTR_TDATA1_ICOUNT_U)
-> > +               return 0;
-> > +       if (tdata1 & DBTR_TDATA1_ICOUNT_S)
-> > +               return 0;
-> > +       if (tdata1 & DBTR_TDATA1_ICOUNT_VU)
-> > +               return 0;
-> > +       if (tdata1 & DBTR_TDATA1_ICOUNT_VU)
-> > +               return 0;
-> > +       return 1;
-> > +}
-> > +
-> >  /*
-> >   * HW Breakpoint/watchpoint handler
-> >   */
-> > @@ -460,7 +591,10 @@ static int hw_breakpoint_handler(struct pt_regs *regs)
-> >
-> >                 if (bp->in_callback) {
-> >                         expecting_callback = true;
-> > -                       if (regs->epc != bp->next_addr) {
-> > +                       if (have_icount) {
-> > +                               if (icount_triggered(event) != 1)
-> > +                                       continue;
-> > +                       } else if (regs->epc != bp->next_addr) {
-> >                                 continue;
-> >                         }
-> >
-> > @@ -477,7 +611,10 @@ static int hw_breakpoint_handler(struct pt_regs *regs)
-> >
-> >         }
-> >
-> > -       if (expecting_callback) {
-> > +       if (expecting_callback && have_icount) {
-> > +               pr_err("%s: in_callback was set, but icount was not triggered, epc (%lx).\n",
-> > +                      __func__, regs->epc);
-> > +       } else if (expecting_callback) {
-> >                 pr_err("%s: in_callback was set, but epc (%lx) was not at next address(%lx).\n",
-> >                        __func__, regs->epc, bp->next_addr);
-> >         }
-> 
-> Is this just for debugging or do you want to commit it?
-
-I believe this was intentional, but perhaps it is not a useful print.
-
-- Charlie
-
-> 
-> Regards
-> Himanshu
-> > --
-> > 2.43.0
-> >
+Thanks,
+Leo
