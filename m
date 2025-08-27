@@ -1,100 +1,201 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8321A1D5CD9;
-	Wed, 27 Aug 2025 01:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5612430F941;
+	Wed, 27 Aug 2025 05:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756258150; cv=none; b=CZzfcIO2Exd5HzD9R+Gc80hZg78AQPEo63XHvjw4koaHFz8+wyqwTEV2Jm8aJpnNizaLklYPRJL84z0PeQuk4koAPDAPLmU4Nob4VsCfB+HtH6lXV3l2bM8TBCSpIdEVRDIQnhze7s8IlAwE6spWDVTrXgun2DbDfFQXBrNbYPE=
+	t=1756272460; cv=none; b=FGICX/Qc4V8BVhSlnN4c7QJlEL7qkGS3IZO04/lkhMLsEOrRjQIZpEnb57zmVc1gbtYjlmOtTCGk1RGOjDvH82+JPKm0Ado0RfQ40Ux0gHX9CkfBjYEjpvFpEl4vF9g9pCC8auJGy5clikLip0Cl+QQochIumJsksaufqScXVCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756258150; c=relaxed/simple;
-	bh=aEZsdHKctgEmw2cdsNlOfSwu8BbltbTEYEj+KUDSzXc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rdfgOuD/YUzcLzQTdsbRMY46ugbLCZq9SQ4dDrwojxePLFb4eAh6VOMouCDdOGqk26jv0633Zdr1BamGRA5xo6HtfVu8IESxOt+Y+N8X3RHwuikB0HMlqAqvvwaUh8eEtPsC+5st30H4iW2qQ4zM0MpC8V3nSbZB25nCacheuAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N902gQjV; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1756272460; c=relaxed/simple;
+	bh=+pAURm+gSzUePMcSSAf3SHQZLY9qMhpS2XZkBkV2krw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dhtd3JwEEiBiPtMFMcvHfmbhK90l1F1v/Y3ZyX2/FuvUhwGFjQCkwo1bOGFhpuw2HHWSulcocUfw+Hn8mhqtfC9/WnnmBt23dUfqNKWZ6PrMQtQPg2Q44n9UL2GjTyJveN33NsGiuLiAMDGbK3htJGjMBn1m0KHj2QQ00OgNMaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fFfa87uM; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N902gQjV"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b49d98691faso2236768a12.1;
-        Tue, 26 Aug 2025 18:29:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756258149; x=1756862949; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=slICnE+v33GsIBXPz8FikU+2GjnEm7QwJXAIDftMKn8=;
-        b=N902gQjV3jWk66MjPOzNKO7e4TdsNCs3paaY7uKdYn39lvMBfCEFi0Jbf325R/JABL
-         SAgx/Aa71R3bRf5adq/ZnSJqnlAKXd3ZejDK+Eb4u9hUp+DtLgbLRsHKx26G29UCoM75
-         cmDsXoeZqn2gING1ENGwddOkCYF/G1m0Z/GKxl/VC/hJZO/kBdsUtZ1am9T5nPR7PbGS
-         dg1SnYHRnkD1YMhq1Bvo7SpgOqzDKX+OwIE0H7XBzCgBMk66hgJfhfEd9GJX2ixxhkEm
-         CVbvfke0XM8bii9ETxfC6wmcdgYkIQzFXfO4k34O2ZSOGOoVkijk+WFF56nYSqDv4opu
-         dnMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756258149; x=1756862949;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=slICnE+v33GsIBXPz8FikU+2GjnEm7QwJXAIDftMKn8=;
-        b=HB4okxdk102/2kBDx0BUy7+MFlAEzHDZd2TEwbUEMtCeolN8rWByXSn7RFfuHvaT/H
-         9HgjpHauR6g84lI9jZEmQugg/5DQwLP7ZUbnzuhAI/XPnM2YaOqpNa5vNR4nnUqlMjCZ
-         EFsQFNcwIZNV1P/X9g/bqkm+am2pjVMS4KjAk/QqVszjn61wXPiUMl1TbGVt4NEIV4GQ
-         7pr3nY7oYqtMGlnKoI99hE4UumZuQRVEKY50csWd4Y4yFmvMXyGpcHNfu+YvMvNFsOzJ
-         TZW9S45thM5IZV1mxpxOw519x8D20ntVz5gzONsRK7w9HDaY4h90reJ8qJ4ZiRQxnTce
-         O34Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV3uWm+msNDCF2VIh9tTNwnQaODvf/35r4FVtr6ha0bGMytQacIp2GZrFZqEwfuPsZlQwwqyR1lEFU+BOJMtYsqqw==@vger.kernel.org, AJvYcCW2AFXev46I1ClLxrWWecjcioTAY98ErFzVwVRB4mI9WQfNqFEXQG4p6+XSshBjBuZpd1qKzuN5btUo0Fk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJsGti7WYpnJRf7IOgQRg6ba8P3tXVWF6lehoaTUlzPoqyEn1n
-	oZP6J+uRn/x0MuGbjyM+SelAXMyKTA2qF/f3HXhj1BRpVKSiKHmAI5nu
-X-Gm-Gg: ASbGnct/nOF6NboRCKwT+HWGUiMxZnQNmbNRD3VGOM96QCMyNPqablPgJIpbCd7KsKt
-	xl1w/WhUrL0UdmaCVFIX9fylBl2TJ2IY8n0CbH6GQVhb43YnXCrsPtM8qwsGg/JVNpSGdUHO7lI
-	KBJ4CVRJcQpnrZKvLWavFKs+n/gzry+1YoOEsWhbYLQHzrUI714MubACaYahPmEYObXLInIS3ZQ
-	UZkbulXD3PipV+nJrqVXtOrGo81jpf0xr7+h/CVge62uQWPlrgxIQoMKSx29XhtPiZZZoQZYWcn
-	oYsNIsDJnmSt704zVmOgI6N3Or36s90VJO1dk9cUDyBofyQB/7eknkTG/85ASI1G1d991+fYVJk
-	4I9wXW5XLdQzC9Zq5tZBdRA==
-X-Google-Smtp-Source: AGHT+IGE5GtWtmXV3TppDNuqIwNbKfhuc5Hm5JcE59wnGpdV0vLMOGvQYToBz1oP6WKdgfkPbGDbNw==
-X-Received: by 2002:a17:903:f85:b0:244:6a96:6912 with SMTP id d9443c01a7336-2462ee7b50bmr227931895ad.20.1756258148760;
-        Tue, 26 Aug 2025 18:29:08 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-24873ceb334sm26287875ad.51.2025.08.26.18.29.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Aug 2025 18:29:08 -0700 (PDT)
-Date: Tue, 26 Aug 2025 21:29:06 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 02/11] tools headers: Sync linux/bits.h with the kernel
- source
-Message-ID: <aK5fYlox4cbXaSVm@yury>
-References: <20250825215904.2594216-1-namhyung@kernel.org>
- <20250825215904.2594216-3-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fFfa87uM"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57QJuQZo029875;
+	Wed, 27 Aug 2025 05:27:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=jxijss
+	tmEiNGZJKG6yltOja4dBZKrqMyUi/HgZLz1Sk=; b=fFfa87uMu8acvDC8OVnLiF
+	3Gw7T94UM/oONEZ9FfO6ESJm9dykU5EYEWzJ6thKl8AEybeSnU7jVczC+OsbSmIg
+	U1DTm1ikvBxQhtMsBkqiirIjOSbWdtCJnpSDht3JKVzPoBOjH3KPPIjRZwjgIoz4
+	PIz+4T0pathmf8bjMQQcBo9Nngpp8r0YuSt99tds0+EviRwkVU+5p0dMPKzJ5SJZ
+	NqSby3CqAv1CiFuqsjN+UtUj0P6MofPcWemNISQn5nz/ZN8twBsE28xbYF1o/y5D
+	T+rxMTdyXFQiS1FQNk9wuoFsc0iqqXm08NakEBDb3JoIMWYZ+sB++DfGZXvYi8bQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48q42j2cs9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Aug 2025 05:27:07 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 57R5K8Rl017639;
+	Wed, 27 Aug 2025 05:27:06 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 48q42j2cs6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Aug 2025 05:27:06 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 57R3lXEH029924;
+	Wed, 27 Aug 2025 05:27:05 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 48qsfmpe9d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Aug 2025 05:27:05 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 57R5R1oh53739874
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 27 Aug 2025 05:27:01 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6821520049;
+	Wed, 27 Aug 2025 05:27:01 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A772520040;
+	Wed, 27 Aug 2025 05:27:00 +0000 (GMT)
+Received: from [9.152.212.92] (unknown [9.152.212.92])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 27 Aug 2025 05:27:00 +0000 (GMT)
+Message-ID: <ac6dfaec-38ea-486d-89a0-ab02768cee42@linux.ibm.com>
+Date: Wed, 27 Aug 2025 07:27:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250825215904.2594216-3-namhyung@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 18/19] perf: Introduce positive capability for raw events
+To: Mark Rutland <mark.rutland@arm.com>, Robin Murphy <robin.murphy@arm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Jan Polensky <japo@linux.ibm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org, acme@kernel.org,
+        namhyung@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+        linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org,
+        linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
+        iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
+        linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+References: <cover.1755096883.git.robin.murphy@arm.com>
+ <542787fd188ea15ef41c53d557989c962ed44771.1755096883.git.robin.murphy@arm.com>
+ <aK259PrpyxguQzdN@J2N7QTR9R3>
+Content-Language: en-US
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <aK259PrpyxguQzdN@J2N7QTR9R3>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODIzMDAxMCBTYWx0ZWRfXx7bT3ieVYWZ1
+ FvRIJn/6odyl76gPtjq2fdUI3+ddgoyBguazv17xAc0h1PWPsciO7Io1+yf38004HJX48EZKQe4
+ jjqa2jsZ613Il7PEWWZLmHVXl0DVElauSgaXsW2jrn5unNTZZAgCkgP5ixkSnbssGkUA98RWoHK
+ 6CllyViFj8nmb4/kmZamtgDzlo/xirMdIPTqK1ytIy748E4TyQcONzfTAVM6cDoHbAMLdYuTHtD
+ UT6EmBwE8Tz6Ajw1M3OeNTbMk21jMwITf/ouwlMB6Q/Hm12FuudC6E2iwfSIPWm8nU5cvD4JBmw
+ ghpRUxLnbbdBrU5mCsCpBm2H2yjaVRWCqCxRNsBxe1xCwhV1Oev6PUoPQ5TLoGumXLZUFEfuXwo
+ /BJHYr+T
+X-Proofpoint-ORIG-GUID: Z1OBCqtS81HxjTSNcENNGRKeOQ0QzPO9
+X-Proofpoint-GUID: 4pnWswYamnTcgbcPVqCp3LQWR1ph9h16
+X-Authority-Analysis: v=2.4 cv=evffzppX c=1 sm=1 tr=0 ts=68ae972b cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=7CQSdrXTAAAA:8 a=KByoUL483hSIROooWq4A:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=a-qgeE7W1pNrGK8U0ZQC:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-08-26_02,2025-08-26_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 adultscore=0 malwarescore=0 spamscore=0 bulkscore=0
+ impostorscore=0 clxscore=1015 priorityscore=1501 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2508230010
 
-On Mon, Aug 25, 2025 at 02:58:54PM -0700, Namhyung Kim wrote:
-> To pick up the changes in this cset:
+On 8/26/25 15:43, Mark Rutland wrote:
+> On Wed, Aug 13, 2025 at 06:01:10PM +0100, Robin Murphy wrote:
+>> Only a handful of CPU PMUs accept PERF_TYPE_{RAW,HARDWARE,HW_CACHE}
+>> events without registering themselves as PERF_TYPE_RAW in the first
+>> place. Add an explicit opt-in for these special cases, so that we can
+>> make life easier for every other driver (and probably also speed up the
+>> slow-path search) by having perf_try_init_event() do the basic type
+>> checking to cover the majority of cases.
+>>
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 > 
->   104ea1c84b91c9f4 bits: unify the non-asm GENMASK*()
->   6d4471252ccc1722 bits: split the definition of the asm and non-asm GENMASK*()
 > 
-> This addresses these perf build warnings:
+> To bikeshed a little here, I'm not keen on the PERF_PMU_CAP_RAW_EVENTS
+> name, because it's not clear what "RAW" really means, and people will
+> definitely read that to mean something else.
 > 
->   Warning: Kernel ABI header differences:
->     diff -u tools/include/linux/bits.h include/linux/bits.h
+> Could we go with something like PERF_PMU_CAP_COMMON_CPU_EVENTS, to make
+> it clear that this is about opting into CPU-PMU specific event types (of
+> which PERF_TYPE_RAW is one of)?
 > 
-> Please see tools/include/uapi/README for further details.
+> Likewise, s/is_raw_pmu()/pmu_supports_common_cpu_events()/.
 > 
-> Cc: Yury Norov <yury.norov@gmail.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+>> ---
+>>
+>> A further possibility is to automatically add the cap to PERF_TYPE_RAW
+>> PMUs in perf_pmu_register() to have a single point-of-use condition; I'm
+>> undecided...
+> 
+> I reckon we don't need to automagically do that, but I reckon that
+> is_raw_pmu()/pmu_supports_common_cpu_events() should only check the cap,
+> and we don't read anything special into any of
+> PERF_TYPE_{RAW,HARDWARE,HW_CACHE}.
+> 
+>> ---
+>>  arch/s390/kernel/perf_cpum_cf.c    |  1 +
+>>  arch/s390/kernel/perf_pai_crypto.c |  2 +-
+>>  arch/s390/kernel/perf_pai_ext.c    |  2 +-
+>>  arch/x86/events/core.c             |  2 +-
+>>  drivers/perf/arm_pmu.c             |  1 +
+>>  include/linux/perf_event.h         |  1 +
+>>  kernel/events/core.c               | 15 +++++++++++++++
+>>  7 files changed, 21 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/s390/kernel/perf_cpum_cf.c b/arch/s390/kernel/perf_cpum_cf.c
+>> index 1a94e0944bc5..782ab755ddd4 100644
+>> --- a/arch/s390/kernel/perf_cpum_cf.c
+>> +++ b/arch/s390/kernel/perf_cpum_cf.c
+>> @@ -1054,6 +1054,7 @@ static void cpumf_pmu_del(struct perf_event *event, int flags)
+>>  /* Performance monitoring unit for s390x */
+>>  static struct pmu cpumf_pmu = {
+>>  	.task_ctx_nr  = perf_sw_context,
+>> +	.capabilities = PERF_PMU_CAP_RAW_EVENTS,
+>>  	.pmu_enable   = cpumf_pmu_enable,
+>>  	.pmu_disable  = cpumf_pmu_disable,
+>>  	.event_init   = cpumf_pmu_event_init,
+> 
+> Tangential, but use of perf_sw_context here looks bogus.
+> 
 
-Acked-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+It might look strange, but it was done on purpose. For details see
+commit 9254e70c4ef1 ("s390/cpum_cf: use perf software context for hardware counters")
+
+Background was a WARN_ON() statement which fired, because several PMU device drivers
+existed in parallel on s390x platform.
+Not sure if this condition is still true after all these years...
+
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
+
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
