@@ -1,355 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536612BD5AD
-	for <linux-perf-users@vger.kernel.org>; Wed, 27 Aug 2025 17:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756315861; cv=fail; b=HCvBzzVLYYMFtTLogA8swS7RghvsV5Lhwej/VD+aIDEdLZcBfv9Wp7Ijs8i7HNdtJG3zfrOBuZvbiXEsRFWZM8DV+BBjjmAGzqOl6Je4Bqr2NZkNVusYxwpeGFr91D28SAQgSuIMUs57kCDa5Zjtue2/zENPSnuCOGNSDYXR6yM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756315861; c=relaxed/simple;
-	bh=+LBFgEJL2R1W7sNWDnD2+L7sooD6O3N1OFdmGz3froE=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=d4/F6JLRKnnLst9CS5hbvRQYbXjOYGyeDIWlS++bckjht8buwCkRs2cy1blcbCXFVrJTLmpbqNaVwXsqelF0PTL12j7CqvLItmTXnG+7kVyOEgmiX60tX15rlzd06CNuEJGE06Nq0irW+RJ1/m0+VMsM5oG6NNN/8ORTJ7z6QN0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jQuCAXbb; arc=fail smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4E97260A;
+	Wed, 27 Aug 2025 23:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756338502; cv=none; b=bTg2In5CbCPfAMfUnu0XEGkwhDYmyZNsFKE9EBY5T6WN4LNtR3f+EpvL/oUNTLGsBfWYMss32tC2+4t1ADNcoZHDrebTOtUPrwQKSIXh8swE73CAK93SRxNcCEujMmLOksdzUZWJWxj2WNe8HlhdPsoVZFLA+hBZWB4eL5ptaP8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756338502; c=relaxed/simple;
+	bh=HYsAii2/HLSQBeXT+P2UaCT6xr1iko5uLaQwFjvygSw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hkCiHkpD8q2Kh5/LQQa/VynyLCreSXfR3ouHt0Wb2Vbz5avXzYdauqkNXGmZU2H4BCZ307231OIKnzM8iNkqcBA8MYycfuhd6ixJd7By2Nj57JmQANnO0w5+0xwsW98pjEnbDkfnnoK4cuImJoV7SOFziYYvBvvxZhyF06qbAeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aMIT8nuJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jQuCAXbb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756315859; x=1787851859;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=+LBFgEJL2R1W7sNWDnD2+L7sooD6O3N1OFdmGz3froE=;
-  b=jQuCAXbbxq+B/cDjJzGaa2OnBi7bi5AaVjyk90oa3PWeWvfkyGlFt08B
-   y6NzczZpSb5p4bG85aTVq0qQtK77Zz4Wxt2bDhqKOrn/VL3YreWpG/0PN
-   Aai/4Gk0/kVqXYHAUY+L0nGKURjSenzzSeaYDsJrfr01xHCg9a39LPsDp
-   MBLD1Hdeq9fUIZgfkLjajv2kfZOtyzpa3O4Hh+lanDzhz/et568IKiwDl
-   TV9oR1IusRiX/luNNsFvhWhF/lxzRzxavlBdgkpOTIdGlafgBN5xrcpqe
-   gIz4vsDLRia86S0SV1YU5yaPvhurodeERHzVyw4gE7xu4xkRE025/TXYT
-   g==;
-X-CSE-ConnectionGUID: kNBl0mK1ROmPVbJkNRB1Ng==
-X-CSE-MsgGUID: /KI36VPWSTqEw/utK6atSA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11535"; a="69286422"
-X-IronPort-AV: E=Sophos;i="6.18,217,1751266800"; 
-   d="scan'208";a="69286422"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2025 10:30:58 -0700
-X-CSE-ConnectionGUID: Jdf0krVNTre51UKMdF+ptA==
-X-CSE-MsgGUID: UKXIHwjgR+6yKev8b9Xkrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,217,1751266800"; 
-   d="scan'208";a="174282312"
-Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2025 10:30:58 -0700
-Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
- fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Wed, 27 Aug 2025 10:30:56 -0700
-Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
- FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17 via Frontend Transport; Wed, 27 Aug 2025 10:30:56 -0700
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (40.107.101.45)
- by edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Wed, 27 Aug 2025 10:30:46 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Jpoo7IYc9OK5IzSZX0xuIBHZa+SGoLO1DCwH9JDIU29e+wZwilH6q3nThJFawUXVV9s7mMmq+RXstUOagsp1Ahyn2TvKcnT2+EDvsl9HyhkNd23XcXKZnnZ4Y7hnAKLKYnPQb7shRLdFO0fD3maWVQP8uzFg5QA5lRDDDDCJEURVrTk8T+//dtnlqKd1lboSKSUwlNVkxomtVQXdImTE8apOcM7QUvnbkG1NZ/aU/69dFTZKSN7giG9/T7iJa0Vm7ddENhFdx84vHG7EoDUe7GohZYzn1WDCD/WS15+ReeFJTMD4WhVZIzhtL93CqgPQGdpzDjQ9BD6rPEXx8GTZTw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZbEFnCckFnjdfMGwiBcSEadmdV/F3CKV+IOXDc6xOGY=;
- b=MA1ore9eh/k7pBqvr2Gt+QnQs4QtUM7vrFIDViRVYYp1fSePAfGDCpeaj7zf7/r8x7bicgrmr6uLrUicTTkjGCDHMVU9byG248p86nTKZWnKIC+/O4jyj4OIBbP8tRwyyrUjz314zQy/LYkoat9PBBTJrUWxk/OZfxJUzF3v/Kizd1TVT6rBvDEGUdCL3F869HnlWuEstKwHelaBvHz6V+ufNZl0onTgcScSCQGE0Z17bWSTzMWkel1gyFann9VChwyiVCCt/bO0C9/PlabFHwSnwibOwQ/WrfOCxOoVmqyScgMaIbISFy6+Y3oto52sJzDBgFr1FZu+TXSHV/1WVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from IA1PR11MB7198.namprd11.prod.outlook.com (2603:10b6:208:419::15)
- by CY8PR11MB7339.namprd11.prod.outlook.com (2603:10b6:930:9f::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.21; Wed, 27 Aug
- 2025 17:30:43 +0000
-Received: from IA1PR11MB7198.namprd11.prod.outlook.com
- ([fe80::eeac:69b0:1990:4905]) by IA1PR11MB7198.namprd11.prod.outlook.com
- ([fe80::eeac:69b0:1990:4905%5]) with mapi id 15.20.9073.010; Wed, 27 Aug 2025
- 17:30:43 +0000
-Message-ID: <4adc8413-e2c8-4c5b-9bb4-f425a6bed875@intel.com>
-Date: Wed, 27 Aug 2025 20:30:38 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 13/14] tools/perf: Enable perf script to present the DTL
- entries
-To: Athira Rajeev <atrajeev@linux.ibm.com>, <acme@kernel.org>,
-	<jolsa@kernel.org>, <maddy@linux.ibm.com>, <irogers@google.com>,
-	<namhyung@kernel.org>
-CC: <linux-perf-users@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-	<aboorvad@linux.ibm.com>, <sshegde@linux.ibm.com>, <kjain@linux.ibm.com>,
-	<hbathini@linux.vnet.ibm.com>, <Aditya.Bodkhe1@ibm.com>,
-	<venkat88@linux.ibm.com>
-References: <20250815083407.27953-1-atrajeev@linux.ibm.com>
- <20250815083407.27953-14-atrajeev@linux.ibm.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
- 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
- 4, Domiciled in Helsinki
-In-Reply-To: <20250815083407.27953-14-atrajeev@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DU2PR04CA0255.eurprd04.prod.outlook.com
- (2603:10a6:10:28e::20) To IA1PR11MB7198.namprd11.prod.outlook.com
- (2603:10b6:208:419::15)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aMIT8nuJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB17BC4CEEB;
+	Wed, 27 Aug 2025 23:48:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756338502;
+	bh=HYsAii2/HLSQBeXT+P2UaCT6xr1iko5uLaQwFjvygSw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=aMIT8nuJR0oR8XiverHENSD1rBE8lVUzZ/wr8/EHJO1Wf3ss3wnSDeNRA0tvtEWWt
+	 kqv/gXrYdmg3sjgMXGavGYhiSa8FtdQq+OrrruTZ84pEPZBCXBiEVx8XXaQq09T/56
+	 P6IAJqaK6oOxZClyczCUKSMV4LNNwFEvDoGz4yhLgU0LTm3HfqxnESvqxOfoqFruK8
+	 4DzzPXUSRjU6fgiOIv4dpT6Df0nA5QRS4MNqxaB+3Ti2B40kn5MhSzy7HcwFRgtj2k
+	 W4ihyDegNaY3WOCReGaFEDFHqCQrLzSRm9/X3WfJZq6u2keHEwzhPT4TyPhWL1fhR7
+	 CQZRvLBaeg/HQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [GIT PULL] perf-tools fixes for v6.17-rc4
+Date: Wed, 27 Aug 2025 16:48:17 -0700
+Message-ID: <20250827234817.4156091-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.51.0.268.g9569e192d0-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR11MB7198:EE_|CY8PR11MB7339:EE_
-X-MS-Office365-Filtering-Correlation-Id: a73d10b1-b171-495d-c27f-08dde58f7333
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?VUV4V3E0MlNhVGFIZVZ3dHg4eEUrVSttRnZZaXIvT1pDT01DMDUzNVQ4cFhu?=
- =?utf-8?B?RG5NS2JrSFZpQlF4TkRFcjEzWllSU3hpRkc5SFFscDB2Q0ZSNUFIU0RRSFFZ?=
- =?utf-8?B?blVPZjhqdnhXS24vOVpiQlhZYktvRnVqaGJxV3U5ang4RUZ4dlBCKzdhTm82?=
- =?utf-8?B?SExtUWYyTjQyaFNUMXRUdmZ2dW1TT0dvWG92Ukk5K2d6eC9QaTIwQkhzQzJr?=
- =?utf-8?B?bVd1dTI4YWhtVWtYUGsrdEZkZzNucDJKZ2NJeTlsUVk3UVpmamxFaUZjWVdX?=
- =?utf-8?B?RkhoVmQ5S0hMcUNrcXJva044NE5YT0VEcTBmZGNoZW5yaUtGWHFEVDBCL3BK?=
- =?utf-8?B?eCtMUmdmaU9tQkpQbE5NYTZQQmV4MWdpVFl0RXcwNDV1MTJHczZUOXdxYnB2?=
- =?utf-8?B?bXNzamF2cU1keUpPcU0wanBLdVhWZ2NnWXdCSVlKMTNpT1c2emhMMldIZVFo?=
- =?utf-8?B?cElPRW5KRnRrWHBwVGU1VkNodVJBSmlGV1ZmUEF4dmhuSVQ2WUpMZGxTMVo3?=
- =?utf-8?B?aXlQTGpGbldVVG1VQlRUMHdaL0dXVXRjaXNZU2JRNC91b3pzbTBvSHhzQ3Ex?=
- =?utf-8?B?U0ZrbWJHcDZQZFEzMGI3b21kVzBzVlhGeFZhRThxZ0xFSHBjbEVvT2ZJWVJh?=
- =?utf-8?B?cm1ta3NlanJJanQwWXAzZDZROCsvKzE5ZC8rZ1l0TFQxa2xoNGF1VXQ4YjNY?=
- =?utf-8?B?ZnNwQ2xITDNzM0I0L0t1aERJaVI1VUFFU0MrdE02MWJFZGMycnYwOVhCd1dQ?=
- =?utf-8?B?NHJxTDFaMG5OZVBkMkVNZjFLUmxzUWw1Y0R5YXZCU2JYUm9sNkNoNVFXRnVU?=
- =?utf-8?B?N1pEeWlWUFcrMnVIdEh3d3JGMzFpZWtObFFPUk5wS0g0d3R2Mk11dnhxY29H?=
- =?utf-8?B?b3c5QUZ0SmtiQllGcXJIcXlESkozTkdzU0txNjNjQ1gyc2g0QjJBN2haTVBZ?=
- =?utf-8?B?L2R5RC9sd3poTDFvMFVMRGx3L0Raa1ViMGU0VlB2NHlBRktmY00zLzJUMlhi?=
- =?utf-8?B?S2M0TnhYN1ZReXh3azNOSkNsSUVqYzU0SVlFWWpqSk1vQWt1aGdYTWN5RXpR?=
- =?utf-8?B?OW0xMUtDKyt2K0tCMUVHSUJJVGdjYzJiWkhHWGRUb0h5QmVBcHlsVFJITUQ3?=
- =?utf-8?B?cjgrOWdhQWhOeEZXOHdzVVlLSVY4MmhnOTBobmZjeVpPaVMzZE5JZ0JnS2NN?=
- =?utf-8?B?ZURsMEQzV0dROU80emY0czNBRFlDc0FWZFpmYTR6cGVqaUNIaUdUbGpTbmUz?=
- =?utf-8?B?K0gwSGNtYmRXL2RRZEdFTU02TkF2blZrbEJ2TWlQNTQ2eThIbzJ3V1FEUmJl?=
- =?utf-8?B?RUpCdjkxQlBGVGhrQTNGL3E1YmRkUmhpQllNV1k3Q3hVRjRtcjZoc2NqMUdo?=
- =?utf-8?B?VXZyVVZlWnk0ZnZST0xtdVhYQ1BmMVRQMHIvVUFpVDR5MmEvZlpRUmRtNkJu?=
- =?utf-8?B?SVA2U3pVNHF1a1RVUVZVdVY1N2VuN1loZks1ZThzWXpQaFZEWU5vaGZqRGRl?=
- =?utf-8?B?bFRGRkFoTm1EUHN5Q0hiQnhxenNVYi94WjcvL0doZEFPVjZzWGpSVjM1OFBs?=
- =?utf-8?B?YmZaTlFCUGlVVWN2dml3OEsyNHZlVVc1NDFtUTBRTnNYR1NNcThYQ2crZWVT?=
- =?utf-8?B?T2ovcjFPMTE0VmtNRmNGOFppY09LcUdWaHFwZk1iQTZMN3hQY25DZTVEMVk5?=
- =?utf-8?B?T05qeTR3VWkvQW15L2VoTzRIZW95MkY5U2hTQkMxN0pKOWxSWGNiR1lvNkE3?=
- =?utf-8?B?THpVOGZzeVhSc3Y2U1ZFMnZZSWtjZnhIVDdqTVlBREdLL1lkZk9VL1BVWXJU?=
- =?utf-8?B?VEUydGtra2E5Mi85ZExOT0xKbXp5dlpERGREU2VQNVd2elJMVEkzMi9OQUdu?=
- =?utf-8?B?eFFMSHZoNWEvTldlRHFaUWRzVnp3WXlHdDI0aU9GUHplVnlFbUhEdnk5aGFl?=
- =?utf-8?Q?F083t3HhdSE=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB7198.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QU56VTI3RkFRalZqMWYvcWdYc3pGNXROeGowb3RqTkFFNGxCcXdHL08yKy9C?=
- =?utf-8?B?MnJ1WS9RK2k2cFFlNlU0UW1PbWphWFgwMTVSZ0xEd1JLN0dPVDR4dytBcEFX?=
- =?utf-8?B?Zk5DaXczdGpGREtvcEQrVk1SOVhUaHBnbTA1TmZPMUNGdHdEZjFBbUFEbkd5?=
- =?utf-8?B?VXdnbFZNTFpRSTBEeE03Y3UwRVpCUTNyTHJjaE9qSjIzOEMvSk5lUnZyN3h2?=
- =?utf-8?B?MVV0OEt3NnBxQllqY1k4Zi9pRzlCQ05vcmhxMzlTam5PUGdnSlR5SVl3aEo5?=
- =?utf-8?B?cVNFTElVczBwbnNGK211SmhLQlZubTI1ODJkd2JwVEd1ZThPRTFDQ1hBTkRI?=
- =?utf-8?B?ZGh5MHJmS1M3MXFESldzZ01mUnZvZnBpYVlYNCtnNHR5aUEwUGUxWHZPTHRM?=
- =?utf-8?B?ZlAwMSt4SllEaUdyWjBhRldZTDlqODE5TVBIb3E5T2t5RFFXeU1ZbkcyNU96?=
- =?utf-8?B?Zm92bnFIemxFc1daKzVzb2lYbHRqVnpKc2tMR0k3QWZIZk1JMjJocEltakZF?=
- =?utf-8?B?ODlCVTV2YXF0aGVlNUVTYWRmbnp4cFNFZU91M2cxV1p1NDVIZTh4U2FFMHN1?=
- =?utf-8?B?K25lWmpBdUZmQkJsa0hqSVIwM2NadWZJd0ZyOHdFcWVLSGorWGRXU1IwTXFW?=
- =?utf-8?B?UjVWSzVEVGd0cnJWK2xETC8xUG9sZ2Ywem1kV3pVR0ZVOUNLd0s3NnhpaTJ5?=
- =?utf-8?B?RFNuMHUvQUdyYUgva1NsdFBWQ3ppdlVBbVQ1bUNPWTdPeExoS29ZM1owbXBS?=
- =?utf-8?B?M0lncElnNitieERjdkErbkt2SjlOckxvUzY3UUgzMUxueG9WcHBhdlA0Skxh?=
- =?utf-8?B?a0swUHNFeUpnckpyT0ljZFdxVFl4UEFNanpRTVpWdG5XVGtZNUwvUWV2N0dG?=
- =?utf-8?B?WFA3ZVJ2V3hsbnhOOTN1K2E2SjZVT0hkYkExT09YSnJpMEYvbnVhWURPRFFR?=
- =?utf-8?B?MmxFNzl3SlRWYi9jNzBMbjRHT3dEWU01Q01adXVMNkxFdmYwbmlvdDZvVVBD?=
- =?utf-8?B?Q0I1bXBTWER6RHpDdjkvN2ZtdTlodXRhcWgrdytwQmdXODFxSlNZVFJIM3pM?=
- =?utf-8?B?VGc1YWFJSWtBOU9iT0FsRWdTTVBpeFJkWlBhVHRqSnBod0RDdjd0azFZeFQw?=
- =?utf-8?B?OFNZcWdnUk1YU1VDSFlublYrNUc5S2FoM0JtUmZiV2NTeGZVQWgzVEdFWitv?=
- =?utf-8?B?d1ZWOUYxSk9xaDV0NXNSLzNiYWNuWVc1N0RxTHlpQkVpeU90WGVGMlFrek00?=
- =?utf-8?B?V3hRVzl5UFVLZy90WWxrblhpOUg4S3F6Z05oaEF1WG5nbUxleHVLMGY1TWlQ?=
- =?utf-8?B?R05PN3owdjJVSWdpVk9WMktWa0tUQW9zZzFuZm8ybTZXemdYVUNXZUlDUFZP?=
- =?utf-8?B?am9FZnNCWmsyOUxmY3dPT0V3MGQxaGRGK0pjeWJOOXg0ZTE1bDk3UjdpaitJ?=
- =?utf-8?B?L2JKRVN4VlZXY1czMGVDYjRreXFYaHkzaXQ0Uk5HS0ZBNHVENERoWDZOT0tP?=
- =?utf-8?B?TUJsQTEyR01LNVRGNlVQZ243VDF0N1RxdFEwTkNKNFZVVFQzYXdDM2pDTTIv?=
- =?utf-8?B?Mmo4RG1RYzE2RTBXb2NiOHRKSnJ6RlBTMFhGeTQ0Mm82YlNQWW5hd2lFcTd2?=
- =?utf-8?B?REs0MEtSQnU2QnpjNXpHTFRSRkpiOWhwcnNJQmY1b015SzBUck9JNnVKbUh0?=
- =?utf-8?B?OUtZZzc2Y1hRUXo3YXkrSXZQREEwQUMzbXJGK2VUbnpzQjRnQk9ZSVpRWlFx?=
- =?utf-8?B?NncvKzl3Z1k5Y0VLMTVuZWNXb3BnWTVJTE15V0hMazVFKzBxdmQ0T0piZytM?=
- =?utf-8?B?THdHeGhNUTBzdWxITE9FQWVVaGtiODRxTEhYRnZPeGM2dkhIYjh0SkZiVjNB?=
- =?utf-8?B?eFZUM09XK2RYczQrQkxTUkhYWE50R1U5S0wzM2NiTCtMUmJVamM0TEUwTGtI?=
- =?utf-8?B?OEZWcjh2anlMQ0EvYVZITURIbVR3cWFWbHlZUXRybGV6Z2FybmtPeGljSWVs?=
- =?utf-8?B?eE9sR3VrSXBISWxEWnZFY05RamhhWXFYRW5CSWcwVWxvQkVUM3gwTjVaUEIw?=
- =?utf-8?B?OGhOYnUwL2NZaEpaMmhvNFQwMEhGWWNKQW1sTTlHVDdxOEJtSWRsRGJrRnhY?=
- =?utf-8?B?THVRVUk0dUhiNlp3TDUzRDZRdWpHNmtaSXR0R0J4ZGNpOGRhWmdseUhzZ08x?=
- =?utf-8?B?dUE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a73d10b1-b171-495d-c27f-08dde58f7333
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB7198.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2025 17:30:43.4087
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: doMhruiidAN5ua7u9u56JrYQMaWmtk43bf8Mu8lcqzzE29f64+d61rjlpXfb5NIo3ttPCTMdvdLRndez7jL3FA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7339
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-On 15/08/2025 11:34, Athira Rajeev wrote:
-> Enable perf script to present the DTL entries. Process the
-> dispatch trace log details in arch_perf_sample__fprintf_synth_evt()
-> defined in buiultin-script.c file for config value:
-> PERF_SYNTH_POWERPC_VPA_DTL.
-> 
-> Sample output:
-> 
->    ./perf record -a -e sched:*,vpa_dtl/dtl_all/ -c 1000000000 sleep 1
->    [ perf record: Woken up 1 times to write data ]
->    [ perf record: Captured and wrote 0.300 MB perf.data ]
-> 
->    ./perf script
->             perf   13322 [002]   233.835807:                     sched:sched_switch: perf:13322 [120] R ==> migration/2:27 [0]
->      migration/2      27 [002]   233.835811:               sched:sched_migrate_task: comm=perf pid=13322 prio=120 orig_cpu=2 dest_cpu=3
->      migration/2      27 [002]   233.835818:               sched:sched_stat_runtime: comm=migration/2 pid=27 runtime=9214 [ns]
->      migration/2      27 [002]   233.835819:                     sched:sched_switch: migration/2:27 [0] S ==> swapper/2:0 [120]
->          swapper       0 [002]   233.835822:                                vpa-dtl: timebase: 338954486062657 dispatch_reason:decrementer_interrupt, preempt_reason:H_CEDE, enqueue_to_dispatch_time:435,			ready_to_enqueue_time:0, waiting_to_ready_time:34775058, processor_id: 202 c0000000000f8094 plpar_hcall_norets_notrace+0x18 ([kernel.kallsyms])
->          swapper       0 [001]   233.835886:                                vpa-dtl: timebase: 338954486095398 dispatch_reason:priv_doorbell, preempt_reason:H_CEDE, enqueue_to_dispatch_time:542,			ready_to_enqueue_time:0, waiting_to_ready_time:1245360, processor_id: 201 c0000000000f8094 plpar_hcall_norets_notrace+0x18 ([kernel.kallsyms])
-> 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
-> ---
->  tools/perf/builtin-script.c      | 23 +++++++++++++++++++++--
->  tools/perf/util/powerpc-vpadtl.c | 16 ----------------
->  tools/perf/util/powerpc-vpadtl.h | 19 +++++++++++++++++++
->  3 files changed, 40 insertions(+), 18 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index eff584735980..a0faadaadc4d 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -66,6 +66,7 @@
->  #include "util/cgroup.h"
->  #include "util/annotate.h"
->  #include "perf.h"
-> +#include "util/powerpc-vpadtl.h"
->  
->  #include <linux/ctype.h>
->  #ifdef HAVE_LIBTRACEEVENT
-> @@ -2004,8 +2005,26 @@ static int perf_sample__fprintf_synth_iflag_chg(struct perf_sample *sample, FILE
->  }
->  
->  static void arch_perf_sample__fprintf_synth_evt(struct perf_sample *data __maybe_unused,
-> -		 FILE *fp __maybe_unused, u64 config __maybe_unused)
-> +		 FILE *fp __maybe_unused, u64 config __maybe_unused, struct perf_env *env)
->  {
-> +	const char *arch = perf_env__arch(env);
-> +
-> +	if (!strcmp("powerpc", arch)) {
+Hi Linus,
 
-Not needed.  PERF_SYNTH_POWERPC_VPA_DTL is unique.
+Please consider pulling the following changes in perf tools for v6.17.
 
-> +		struct dtl_entry *dtl = (struct dtl_entry *)data->raw_data;
-> +
-> +		if (config != PERF_SYNTH_POWERPC_VPA_DTL)
-> +			return;
-> +		fprintf(fp, "timebase: %" PRIu64 "dispatch_reason:%s, preempt_reason:%s, enqueue_to_dispatch_time:%d,\
-> +				ready_to_enqueue_time:%d, waiting_to_ready_time:%d, processor_id: %d",\
-> +				be64_to_cpu(dtl->timebase),
+I've noticed a number of test failures when preparing this pull request.
+I didn't notice it since it happens when running the tests in parallel.
+So far git bisect couldn't find the correct bad commit but I don't think
+it belongs to this series.  I'll keep investigating.
 
-If the output were ever to be injected into another
-perf.data file (by adding support in perf inject) then it
-would be aligned to 4 bytes not 8, so for 64-bit access it
-would be safer to use get_unaligned_be64()
+Thanks,
+Namhyung
 
-> +				dispatch_reasons[dtl->dispatch_reason],
-> +				preempt_reasons[dtl->preempt_reason],
-> +				be32_to_cpu(dtl->enqueue_to_dispatch_time),
-> +				be32_to_cpu(dtl->ready_to_enqueue_time),
-> +				be32_to_cpu(dtl->waiting_to_ready_time),
-> +				be16_to_cpu(dtl->processor_id));
-> +	}
-> +
->  	return;
->  }
->  
-> @@ -2032,7 +2051,7 @@ static int perf_sample__fprintf_synth(struct perf_sample *sample,
->  	case PERF_SYNTH_INTEL_IFLAG_CHG:
->  		return perf_sample__fprintf_synth_iflag_chg(sample, fp);
->  	default:
-> -		arch_perf_sample__fprintf_synth_evt(sample, fp, evsel->core.attr.config);
-> +		arch_perf_sample__fprintf_synth_evt(sample, fp, evsel->core.attr.config, evsel__env(evsel));
->  		break;
->  	}
->  
-> diff --git a/tools/perf/util/powerpc-vpadtl.c b/tools/perf/util/powerpc-vpadtl.c
-> index 370c566f9ac2..482ddf1a2d51 100644
-> --- a/tools/perf/util/powerpc-vpadtl.c
-> +++ b/tools/perf/util/powerpc-vpadtl.c
-> @@ -30,22 +30,6 @@
->  #include "symbol.h"
->  #include "tool.h"
->  
-> -/*
-> - * The DTL entries are of below format
-> - */
-> -struct dtl_entry {
-> -	u8      dispatch_reason;
-> -	u8      preempt_reason;
-> -	u16     processor_id;
-> -	u32     enqueue_to_dispatch_time;
-> -	u32     ready_to_enqueue_time;
-> -	u32     waiting_to_ready_time;
-> -	u64     timebase;
-> -	u64     fault_addr;
-> -	u64     srr0;
-> -	u64     srr1;
-> -};
-> -
->  /*
->   * Structure to save the auxtrace queue
->   */
-> diff --git a/tools/perf/util/powerpc-vpadtl.h b/tools/perf/util/powerpc-vpadtl.h
-> index 625172adaba5..497f704787a5 100644
-> --- a/tools/perf/util/powerpc-vpadtl.h
-> +++ b/tools/perf/util/powerpc-vpadtl.h
-> @@ -20,6 +20,25 @@ union perf_event;
->  struct perf_session;
->  struct perf_pmu;
->  
-> +/*
-> + * The DTL entries are of below format
-> + */
-> +struct dtl_entry {
-> +	u8      dispatch_reason;
-> +	u8      preempt_reason;
-> +	u16     processor_id;
-> +	u32     enqueue_to_dispatch_time;
-> +	u32     ready_to_enqueue_time;
-> +	u32     waiting_to_ready_time;
-> +	u64     timebase;
-> +	u64     fault_addr;
-> +	u64     srr0;
-> +	u64     srr1;
-> +};
 
-As mentioned for patch 8, maybe call it vpadtl_entry or powerpc_vpadtl_entry and
-put it in perf/util/event.h
+The following changes since commit c17b750b3ad9f45f2b6f7e6f7f4679844244f0b9:
 
-> +
-> +extern const char *dispatch_reasons[11];
-> +extern const char *preempt_reasons[10];
+  Linux 6.17-rc2 (2025-08-17 15:22:10 -0700)
 
-These are in perf/util/powerpc-vpadtl.c which is conditionally compiled
-depending on CONFIG_AUXTRACE.  So this happens when building with
-NO_AUXTRACE=1 :
+are available in the Git repository at:
 
-  usr/bin/ld: perf-in.o: in function `process_sample_event':
-  builtin-script.c:(.text+0x379a6): undefined reference to `preempt_reasons'
-  /usr/bin/ld: builtin-script.c:(.text+0x379d5): undefined reference to `dispatch_reasons
+  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.17-2025-08-27
 
-> +
->  int powerpc_vpadtl_process_auxtrace_info(union perf_event *event,
->  				  struct perf_session *session);
->  
+for you to fetch changes up to 2c369d91d0933aaff96b6b807b22363e6a38a625:
 
+  perf symbol: Add blocking argument to filename__read_build_id (2025-08-25 15:07:18 -0700)
+
+----------------------------------------------------------------
+perf-tools fixes for v6.17-rc4
+
+A list of kernel header sync changes and two build-id fixes.
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+
+----------------------------------------------------------------
+Ian Rogers (2):
+      perf symbol-minimal: Fix ehdr reading in filename__read_build_id
+      perf symbol: Add blocking argument to filename__read_build_id
+
+Namhyung Kim (12):
+      perf test: Fix a build error in x86 topdown test
+      tools headers: Sync KVM headers with the kernel source
+      tools headers: Sync linux/bits.h with the kernel source
+      tools headers: Sync linux/cfi_types.h with the kernel source
+      tools headers: Sync x86 headers with the kernel source
+      tools headers: Sync arm64 headers with the kernel source
+      tools headers: Sync powerpc headers with the kernel source
+      tools headers: Sync syscall tables with the kernel source
+      tools headers: Sync uapi/linux/fcntl.h with the kernel source
+      tools headers: Sync uapi/linux/fs.h with the kernel source
+      tools headers: Sync uapi/linux/prctl.h with the kernel source
+      tools headers: Sync uapi/linux/vhost.h with the kernel source
+
+ tools/arch/arm64/include/asm/cputype.h             | 28 +++++++
+ tools/arch/powerpc/include/uapi/asm/kvm.h          | 13 ----
+ tools/arch/x86/include/asm/cpufeatures.h           | 10 ++-
+ tools/arch/x86/include/asm/msr-index.h             |  7 ++
+ tools/arch/x86/include/uapi/asm/kvm.h              |  8 +-
+ tools/include/linux/bits.h                         | 29 ++-----
+ tools/include/linux/cfi_types.h                    | 23 ++++++
+ tools/include/uapi/asm-generic/unistd.h            |  8 +-
+ tools/include/uapi/linux/kvm.h                     | 27 +++++++
+ tools/perf/arch/arm/entry/syscalls/syscall.tbl     |  2 +
+ .../perf/arch/mips/entry/syscalls/syscall_n64.tbl  |  2 +
+ tools/perf/arch/powerpc/entry/syscalls/syscall.tbl |  2 +
+ tools/perf/arch/s390/entry/syscalls/syscall.tbl    |  2 +
+ tools/perf/arch/sh/entry/syscalls/syscall.tbl      |  2 +
+ tools/perf/arch/sparc/entry/syscalls/syscall.tbl   |  2 +
+ tools/perf/arch/x86/entry/syscalls/syscall_32.tbl  |  2 +
+ tools/perf/arch/x86/entry/syscalls/syscall_64.tbl  |  2 +
+ tools/perf/arch/x86/tests/topdown.c                |  1 +
+ tools/perf/arch/xtensa/entry/syscalls/syscall.tbl  |  2 +
+ tools/perf/bench/inject-buildid.c                  |  2 +-
+ tools/perf/builtin-buildid-cache.c                 |  8 +-
+ tools/perf/builtin-inject.c                        |  4 +-
+ tools/perf/tests/sdt.c                             |  2 +-
+ tools/perf/trace/beauty/include/uapi/linux/fcntl.h | 18 +++++
+ tools/perf/trace/beauty/include/uapi/linux/fs.h    | 88 ++++++++++++++++++++++
+ tools/perf/trace/beauty/include/uapi/linux/prctl.h |  9 ++-
+ tools/perf/trace/beauty/include/uapi/linux/vhost.h | 35 +++++++++
+ tools/perf/util/build-id.c                         |  4 +-
+ tools/perf/util/debuginfo.c                        |  8 +-
+ tools/perf/util/dsos.c                             |  4 +-
+ tools/perf/util/symbol-elf.c                       |  9 ++-
+ tools/perf/util/symbol-minimal.c                   | 59 +++++++--------
+ tools/perf/util/symbol.c                           |  8 +-
+ tools/perf/util/symbol.h                           |  2 +-
+ tools/perf/util/synthetic-events.c                 |  2 +-
+ tools/scripts/syscall.tbl                          |  2 +
+ 36 files changed, 342 insertions(+), 94 deletions(-)
