@@ -1,91 +1,116 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C0D3343D62;
-	Wed, 27 Aug 2025 10:45:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D1E02777FD;
+	Wed, 27 Aug 2025 14:03:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756291507; cv=none; b=ab1otppxeuqGIpI8XCovi0uo6W5cu8TpvDzSMfeNObVL2QHoSRBr2UFlwGhg8mYlVQy7XcGvd9Aw3ZJ2z9zuCTfZEzaf3FRmwXkXk9anENZ0vR5SiuqvAz25cDMGOkwRGX5gsy/es4TjuZbPMcQEUhsXOkXIzbLpm9VVNbGuKsQ=
+	t=1756303427; cv=none; b=YuIkowAHhNFN8sAC3wHQJoukNZ/UvCk9JQwpihFHJnnImCRJnipAeY/729UmcBShrr8/GlEBGSJI/8Ejy3naxzZTuwLJ5t2i1Z2bBAR/ira5nFLVwSCrISxd6k00mZARtuBfwXG5H34AK0B4dH0TXmHfoURWvhlj2ICAqnVA90c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756291507; c=relaxed/simple;
-	bh=mTHdHp88cfulmKlg6hi2N+BqqmTIwWb7wo7FeEhOdyc=;
+	s=arc-20240116; t=1756303427; c=relaxed/simple;
+	bh=Raut/Y3QhFz4pCtCI4WlrGPrxYFCg/MxG6p0mRrxWl4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G97fw2PDKwQ1HIUW/ddZdtSPbFG4TYn4xr0Vt/qozvq4xXkIUDkUiVOUAOxwCb8JKFavQDl0GqlwvGp3gDM4OgCgUSjvI/joJULJxvoVxeXmjWZZB+5iUXajcKrXzxQ5o58B9YCKzA58stPzLN8gHBkPXZ4hO9feIcmp6miM1Iw=
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZjIuRSZZnm3YZ2e9Gbe7ZVrcI76yluX0INvboYOL3liQ1R9BQQ29B8d365OgBOlHnmNlr1Jw5FnQ38jfYW8lETTN53A1V4VhVpxncfv+MZfq5wJLegXclL7CFB1klFQz3cwlKERM/ZhM7GpSRlCQGTa4knjabGPIbqRPVRLnCDQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67C571688;
-	Wed, 27 Aug 2025 03:44:55 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 417AD2720;
+	Wed, 27 Aug 2025 07:03:36 -0700 (PDT)
 Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A7C5D3F738;
-	Wed, 27 Aug 2025 03:44:59 -0700 (PDT)
-Date: Wed, 27 Aug 2025 11:44:52 +0100
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 662DB3F738;
+	Wed, 27 Aug 2025 07:03:37 -0700 (PDT)
+Date: Wed, 27 Aug 2025 15:03:22 +0100
 From: Mark Rutland <mark.rutland@arm.com>
-To: Chengdong =?utf-8?B?TGko5p2O5oiQ5qCLKQ==?= <chengdongli@optimatist.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+	acme@kernel.org, namhyung@kernel.org,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
 	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/core: Improve arguments checking of inherited
- per-task counters when sampling.
-Message-ID: <aK7hpARhr5RxVveA@J2N7QTR9R3>
-References: <20250814110625.84622-1-chengdongli@optimatist.com>
- <aKRRSsEJxb1LZDV1@J2N7QTR9R3>
- <D1D50EA0-EFC3-4FAB-A898-A61BD081B527@optimatist.com>
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	linux-csky@vger.kernel.org, loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, dmaengine@vger.kernel.org,
+	linux-fpga@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, coresight@lists.linaro.org,
+	iommu@lists.linux.dev, linux-amlogic@lists.infradead.org,
+	linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 02/19] perf/hisilicon: Fix group validation
+Message-ID: <aK8QKlGsjB4WWg2e@J2N7QTR9R3>
+References: <cover.1755096883.git.robin.murphy@arm.com>
+ <c7b877e66ba0d34d8558c5af8bbb620e8c0e47d9.1755096883.git.robin.murphy@arm.com>
+ <aK2XS_GhLw1EQ2ml@J2N7QTR9R3>
+ <ab80cb84-42b2-4ce8-aa6c-4ce6be7a12b7@arm.com>
+ <aK3TS3s5_Pczx1nu@J2N7QTR9R3>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <D1D50EA0-EFC3-4FAB-A898-A61BD081B527@optimatist.com>
+In-Reply-To: <aK3TS3s5_Pczx1nu@J2N7QTR9R3>
 
-On Tue, Aug 19, 2025 at 09:31:46PM +0800, Chengdong Li(李成栋) wrote:
-> Hi Mark,
-> 
-> On 2025/8/19, 18:26, "Mark Rutland" <mark.rutland@arm.com <mailto:mark.rutland@arm.com>> wrote:
-> 
-> 
-> >On Thu, Aug 14, 2025 at 07:06:25PM +0800, Chengdong Li wrote:
-> >> It's not allowed to mmap() of inherited per-task counters with CPU ==
-> >> -1, this would create a performance issue. But it is not friendly to
-> >> developers as current implementation postponed the arguments checking to
-> >> perf_mmap(), developer can get an -EINVAL from mmap() but without
-> >> any previous error returned from perf_event_open().
-> >>
-> >> This patch improves it by moving the arguments checking from perf_mmap()
-> >> to perf_event_open().
-> >
-> >Why is that an improvement?
-> >
-> >IIUC before this patch, it would be possible to read() the event,
-> >whereas now the event cannot be opened at all.
-> 
-> That's true, could you provide a use case that using sampling mode but without
-> ring buffer? From my best knowledge, I think counting mode is more suitable
-> for read() only.
+On Tue, Aug 26, 2025 at 04:31:23PM +0100, Mark Rutland wrote:
+> On Tue, Aug 26, 2025 at 03:35:48PM +0100, Robin Murphy wrote:
+> > On 2025-08-26 12:15 pm, Mark Rutland wrote:
+> > > On Wed, Aug 13, 2025 at 06:00:54PM +0100, Robin Murphy wrote:
 
-I could be mistaken, but IIRC the RR folk were using sampling mode to
-get notifications upon each sample/overflow, but they don't really care
-about the sample itself. They might not care about inherited counters
-for that workload, but I'm fairly sure that sampling without mmap is a
-real (albeit unusual) use-case.
+> > > > diff --git a/drivers/perf/hisilicon/hisi_pcie_pmu.c b/drivers/perf/hisilicon/hisi_pcie_pmu.c
+> > > > index c5394d007b61..3b0b2f7197d0 100644
+> > > > --- a/drivers/perf/hisilicon/hisi_pcie_pmu.c
+> > > > +++ b/drivers/perf/hisilicon/hisi_pcie_pmu.c
+> > > > @@ -338,21 +338,16 @@ static bool hisi_pcie_pmu_validate_event_group(struct perf_event *event)
+> > > >   	int counters = 1;
+> > > >   	int num;
+> > > > -	event_group[0] = leader;
+> > > > -	if (!is_software_event(leader)) {
+> > > > -		if (leader->pmu != event->pmu)
+> > > > -			return false;
+> > > > +	if (leader == event)
+> > > > +		return true;
+> > > > -		if (leader != event && !hisi_pcie_pmu_cmp_event(leader, event))
+> > > > -			event_group[counters++] = event;
+> > > > -	}
+> > > > +	event_group[0] = event;
+> > > > +	if (leader->pmu == event->pmu && !hisi_pcie_pmu_cmp_event(leader, event))
+> > > > +		event_group[counters++] = leader;
+> > > 
+> > > Looking at this, the existing logic to share counters (which
+> > > hisi_pcie_pmu_cmp_event() is trying to permit) looks to be bogus, given
+> > > that the start/stop callbacks will reprogram the HW counters (and hence
+> > > can fight with one another).
 
-> >AFAICT this is removing functionality people could legitimately use, so
-> >this doesn't seem like an improvement.
+> > It does seem somewhat nonsensical to have multiple copies of the same event
+> > in the same group, but I imagine it could happen with some sort of scripted
+> > combination of metrics, and supporting it at this level saves needing
+> > explicit deduplication further up. So even though my initial instinct was to
+> > rip it out too, in the end I concluded that that doesn't seem justified.
 > 
-> The problem is that using inherit per-task counter with sampling mode would lead
-> developer hard to debug why mmap() returns -EINVAL. There is not error returned from
-> perf_event_open(), everything done seems right but failed at mmap(), and there is
-> no clue in man open_event_open() as well.
+> As above, I think it's clearly bogus. I don't think we should have
+> merged it as-is and it's not something I'd like to see others copy.
+> Other PMUs don't do this sort of event deduplication, and in general it
+> should be up to the user or userspace software to do that rather than
+> doing that badly in the kernel.
+> 
+> Given it was implemented with no rationale I think we should rip it out.
+> If that breaks someone's scripting, then we can consider implementing
+> something that actually works.
 
-Ok, but presumably they do that mmap() shortly after doing the relavant
-perf_event_open() calls?
+Having dug some more, I see that this was intended to handle the way
+the hardware shares a single config register between pairs of counter
+and counter_ext registers, with the idea being that two related events
+could be allocated into the same counter pair (but would only occupy a
+single counter each).
 
-When do people hit this in practice? Do they actually see this when
-deploying a workload, or just when developing code that uses sampling?
+I still think the code is wrong, but it is more complex than I made it
+out to be, and you're right that we should leave it as-is for now. I can
+follow up after we've got this series in.
 
 Mark.
