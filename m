@@ -1,552 +1,1453 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2054.outbound.protection.outlook.com [40.107.243.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A240BA4A;
-	Thu, 28 Aug 2025 04:43:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756356214; cv=fail; b=PPS3L9fTWAxcVw+MyHnPV1lMmi/TbplRVV3weVzCPv3h6iOPeJupTYF31+sBZpmwCFgzNnkdTF02Vn1SSrlFZXA+FdNbysl11lY+u/2V4I1/orOrLW5z3cSRkGQSit43uPNtIeFCClIA+kjT3A3iBQTv/iLcWSWZkp4dpqHjlEc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756356214; c=relaxed/simple;
-	bh=K8cAbK3hYIV+EjJrqPWM43spZIQIBbUOq4YeRHSTm40=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DTsyCAcK8kyPpIAoX0H5NLQ+FinHn2tv6Oj33jc5W4+IfOfzMDzSYoMrcZ7ISCF/DRKYFjeTr/VDSuRU6Q90eenfdBKxD+4XY8OaRYkPCcrPNo/r7VN8/3e2GeZUg2CEn+gAnrBJgqr3m3sjxsc+22N6Zlftm/GnqEq7MDmva4U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=B4Uk/7hw; arc=fail smtp.client-ip=40.107.243.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8324413DDAA
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 06:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756363358; cv=none; b=fh1gf7wHMkk9S9urRgg4glzqWuJPl8pfKTViTeyy9g0is6dVt60WRs4AqA+91HL0s9YKD35jW6qOgaTeqe07kp2uEEFIeGgdRrIRYYpGyhNq9JqConV4HjZ8LOwusUpHHXef2019vJd6EcD02hRJRJ3rqeEVFSUGE3JvuE7VA3M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756363358; c=relaxed/simple;
+	bh=t1M+f2xRnS8zztJzavA/0ed9pYjRbVpNZN4/vCSwL3g=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=Lrpkcf0TKK9MORAYReP+Ft7Ol+JpLxO6exdjeoQoFqbNiQO7xeil/EXqYzags/NZDuTP9jkbeEbLkV0oUmep0Hpwb9/6/zo+gVTp0/ENjY7MmqXTXkuRjAKUEzbShYQaofVKnZJjI86FBdy/ZKcA33BjWclASsIJltTGy9FqYis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UzqoFQ6k; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="B4Uk/7hw"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fM+vtl9tZisi/rCccWdGv/fD4ZWoiRlYBYCn66tm7QsBtkHJ+0eu8tglvkNx4A6duUW1MluCIwYA4dfwg3BN2pG8GTOnCC4UNUKcR7+zwTSwhmgWR4zbZ1KT1Xa2sXtiMAhA3LRkKIJHOI0OobFFw+ozi8lXf0hcaWP/WMHbztOnPVpX6fLLWrECsr77vFFX97laSHWvmtmQgz7oloSp5k0DwwZb76uUblat5ptEWau3a1rG8BZserI3D4KF7Dv88z3kuQq+1CJFTKFO0dhNEJNQ/TBZEMtkNFJKMq2rpcJMdS5btXWwtvDyVSrOPkr8Hih3zCXF/YFf3I7XqtAHcg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0fol2b0g22oCJClEYvi5wC9JF7hJcihdWzWEfk8mWEM=;
- b=pC5wwBzcflgJn85wIoBb5zkFvSoJ2boYWjLGuAnVtVPGxLa9KCrIuiU+ml70IdRnGtq7gB/0nc3/sHe/+4Qo8nkmL+qBfFtczvfk5GA062/t3ljFnlbDD9QXPOEcc2rQCAPf1JtFFuqOeiqMw+cD4I6WECML/V92IT66mdghCaVTIH6Ry74hBYUAyWwGzjem2ppGR/caPBLSuz4Zeh5ilVIFtcZjcOqRvFxrCcE7kXseGAezInFrdZj5Pa49t3JqWZF4oWaT6ArBg4/bykNJPzil/V42DD9tRmyqpBtvGqQiHbNcg8oA4hRnTZWHG7JriNlZH6JolO4d1FZh9355Dg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0fol2b0g22oCJClEYvi5wC9JF7hJcihdWzWEfk8mWEM=;
- b=B4Uk/7hwr7gPm4fDv/it4AObMkjyNYTGTwJTqwXbYbzQs7C079Is7baFQxZoUK6dBSFCp7Q13ZQzpa7ooJ/dwCcriIuRIHV8W9KStF4WR0sC1JhYDaw+um2eU5Vuf263wLhBKNFr7brHJosIOtelUB6CgMinDHInyjix/33NKBk=
-Received: from MW4PR04CA0307.namprd04.prod.outlook.com (2603:10b6:303:82::12)
- by SJ2PR12MB8781.namprd12.prod.outlook.com (2603:10b6:a03:4d0::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.15; Thu, 28 Aug
- 2025 04:43:25 +0000
-Received: from SJ5PEPF00000204.namprd05.prod.outlook.com
- (2603:10b6:303:82:cafe::55) by MW4PR04CA0307.outlook.office365.com
- (2603:10b6:303:82::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9073.16 via Frontend Transport; Thu,
- 28 Aug 2025 04:43:25 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF00000204.mail.protection.outlook.com (10.167.244.37) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.9073.11 via Frontend Transport; Thu, 28 Aug 2025 04:43:25 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 27 Aug
- 2025 23:43:24 -0500
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 27 Aug
- 2025 23:43:24 -0500
-Received: from [10.143.196.47] (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Wed, 27 Aug 2025 23:43:14 -0500
-Message-ID: <cc87d705-0409-4451-b95d-8a9af94f0c1c@amd.com>
-Date: Thu, 28 Aug 2025 10:13:12 +0530
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UzqoFQ6k"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b4c20148c54so533588a12.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 27 Aug 2025 23:42:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1756363355; x=1756968155; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=HmQ98ikckj0X+Nh+EPf1MzU7pWhsDlhpKkFUCFW/Wko=;
+        b=UzqoFQ6k1i6IT6Jqhb9C1ljNCRAjloXiybXSQGLNnf8qE9TK9zZxHXGer5B+7z1/Eo
+         U/4t48K7duuTR57W7qlTtxKqZQ7+UPZ4BJSlSRZ5QdGGiI7cTjl1Tzapy6y01qow3RJD
+         24ouKiKD6RYJfGWx9586tmTWG1wpjljKZtCZw0X4wLtt6YnNyzkPJvbSwy9/hb83w+aL
+         n+9HGhhO0msbRAipMqp70V1e9Eo+wHZpA38+HQyQPDQEzQuZSW+VTc+fm2Y4i2CDn2pH
+         twgm2+XTm7SACyxVwXHNRvl0dzNqbamvxAVpglUVhoUuNBbbm8tvL9P6nii4jjoe9YCL
+         +pYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756363355; x=1756968155;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HmQ98ikckj0X+Nh+EPf1MzU7pWhsDlhpKkFUCFW/Wko=;
+        b=O7qUS//sFi6GC5889u8ZwPvIeQrxti7+DDCFREaT9VvNmRpxa573cIr641jp4JD5YE
+         EIxTkzAZ8WlczQ//2wCJgcxhkmwll+jzEX4b51AH4QcN9LLrezj5sl4LpBmEiv2/MoM8
+         x7VIYh9yNGZPOH6nMhn9uFLM85VoiS5cDcqGMVN6jgUeCsnhntvX6vFqtsvKASS8WQK2
+         XaGOUzthhj5FFuriEKw1ZEgZ+/Okfu1d/TJKh2vZUqoyDCWDMUSGpSTaJjM7qCKiWRZl
+         SObQSJ/LRPrl6lYQ/wyTTspIni+7j7Z8Zq01ddihafvBQ7cEbokqcROVLfOyyX8iEPKW
+         /4YA==
+X-Forwarded-Encrypted: i=1; AJvYcCWmuNVy65TlZqxYL0ZiQL47fMGcbyhPlZAKVY4QeOCcxbk+AXLF9DcDViulnqpRNgBjBjov6CrL+z5oBnRUTvNI@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRsNA5E0JLo12LJqs8wrYOUMW+L/Zrtb5oBZTxwqlPYmJADjtv
+	eCeSt8YB4iBEba1k5GZSLzkPd62gZTo6BFnIygZpr91RqU3F+TMogco/t+oWEMLxJ7a0GmfAoSX
+	VjeytbjwIBQ==
+X-Google-Smtp-Source: AGHT+IEDiR8z9X43uwtAZR4ePaK3XYkBfqFQFbKfC0/guT06VjZzb6RtcQSTHywLjTn1v1+inR4rooFCxkI9
+X-Received: from plkq6.prod.google.com ([2002:a17:902:edc6:b0:240:1f2a:423f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:943:b0:244:6c39:3361
+ with SMTP id d9443c01a7336-2462ef8aeb1mr275023105ad.44.1756363354865; Wed, 27
+ Aug 2025 23:42:34 -0700 (PDT)
+Date: Wed, 27 Aug 2025 23:42:18 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 00/11] perf sched: Introduce stats tool
-To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <irogers@google.com>, <james.clark@arm.com>
-CC: <ravi.bangoria@amd.com>, <swapnil.sapkal@amd.com>, <yu.c.chen@intel.com>,
-	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-	<jolsa@kernel.org>, <rostedt@goodmis.org>, <vincent.guittot@linaro.org>,
-	<adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<gautham.shenoy@amd.com>, <kprateek.nayak@amd.com>, <juri.lelli@redhat.com>,
-	<yangjihong@bytedance.com>, <void@manifault.com>, <tj@kernel.org>,
-	<sshegde@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <santosh.shukla@amd.com>,
-	<sandipan.das@amd.com>, Cristian Prundeanu <cpru@amazon.com>
-References: <20250826051039.2626894-1-swapnil.sapkal@amd.com>
-Content-Language: en-US
-From: "Sapkal, Swapnil" <swapnil.sapkal@amd.com>
-In-Reply-To: <20250826051039.2626894-1-swapnil.sapkal@amd.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Received-SPF: None (SATLEXMB05.amd.com: swapnil.sapkal@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF00000204:EE_|SJ2PR12MB8781:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4864f486-ef69-49f0-9b53-08dde5ed6ce2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|7416014|36860700013|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dzVnOGFzQkdtSXNjdGlkVjB4NHU1ek5KTWYxTHo0allXTzE0aG11ZWdGcnVX?=
- =?utf-8?B?TTBsUllsemt0a3dpQldoajRNMlI3QkkydTJZLzNESHhPaTVuWDczZ1Z2S2Vp?=
- =?utf-8?B?R1FnMWtqZTdpYTlxTDVQYll3Z0MrZVVyQXg3YWIyU1BYU1FXZFRvWGtWcURF?=
- =?utf-8?B?UDJXeUdGbnpyLzFzMHRKL0JhWUcvaytxREZGbDZDUkxaNUZTa3g1YU8xZW54?=
- =?utf-8?B?M2ZYeXFKdElNeldUOFpJcUp3TFBieVk2bnBjVEVZb3A4VmxvNjExTG1zSU1Y?=
- =?utf-8?B?YVhwODYrUnFsSiswaWpNY1FYSG9EWmNMNTRMalBIdG1TN2lSQUpNODRucEg2?=
- =?utf-8?B?OG1NdlhwdVJZKzNJSlpoQ2Qwd0dGb2JIb1FBZDVUblQ0QnJ5SUtxWGc4YVE3?=
- =?utf-8?B?Nzd3WVkwUjhSQ0xwSEMrL0tPUm8zU1RCb3VaTFlVWjBIZGRRSXRJSXhEdDBZ?=
- =?utf-8?B?K3FkaVdaQ3VTTFdrbGYrNlVVTUVSamRSNUp6Tmx4WmU2Q1JERk9hSFpGV0FO?=
- =?utf-8?B?cDBOR2UyU0J1S3NkdThTNXlRUGVlQzNMUG9ITzY4eGlqZGZRWGJad0Zvb1Jy?=
- =?utf-8?B?a1JmaExMZ21aeFBZaEwzZjI5bEc2R0ZDemVMYVoyYVdnYTRlSjhXbFphWDVG?=
- =?utf-8?B?R0VwRlk4elB1cEs1dndodzkwNjVJb01SNUV2Q0xTV3JLTXVIc2pySlhLaklJ?=
- =?utf-8?B?U2d0VUhIVlVXTTRMVHdiTnFNRDVBbUZoSmNhRGIwaDl2a2E0bnF1cG1DM1hi?=
- =?utf-8?B?OGRLR2s4VVU5SFJoOWlkd3Z0YjBIenVLL0pseGwzL0QrMVAxY2s3R2pBSnFE?=
- =?utf-8?B?OHNsT2I5R2dackNnRExOdnBWVmErT2FHemdFbEtiMTVxWVROemN2c0FTUFNq?=
- =?utf-8?B?aDlaeCtjZlZwTXZwNGIyZU00WTRjREhIWTRzOUNZNExBK1EzOVpXVzIvRzhh?=
- =?utf-8?B?NU1jY1dtN080c21kL2xIY0RXdnlIRDVvU2FtUmVPbDhacElCOGdHSWxzVEVL?=
- =?utf-8?B?Yk9oandzbFN0dGwxUmIrbDgvM2lOb1hhTm0va0dHMmhhODFyT2NBV0pVUzlO?=
- =?utf-8?B?OGpsUDJLWlhUdER5LzRrZDZ0MmwzWHFOUml0dVpjei9VYWE2WkRiTmhFeWl2?=
- =?utf-8?B?akV5bFV5czBzOFB3cWNkbXMzL1F2bHlRam5Da0dLNktCYkhXdmVrWGphLzVu?=
- =?utf-8?B?dlhBcmR5K2tPREpnQ0czd0p2eENhNDJURGJNN29waUp1a1dlclVHR0VKSldF?=
- =?utf-8?B?ZU5sYlVJUXU3NU5iNkFqV0lrczR1SUdjdVF5V0krN0hNZEtoNUxEQjJ1VlQ4?=
- =?utf-8?B?TS9oNnhSaUxQSlVlMzlaYW5qKzdDYm9OT0UySTJVNm5yMlNWWFlpYTJPWU5u?=
- =?utf-8?B?ZjBpSXdIc1l1ZjE0SmFaWGh1WnVscXRlZDVlbnR6MHFWRVJnSlBpeDR0V1Z0?=
- =?utf-8?B?aG1sdThwTXRCcHd6ZVo1SXVIeGZXMWIzR01UVE9EdDdkdlR3SXBJQlJ4bEtw?=
- =?utf-8?B?djcyTGN6djdEdkxNZDIxVWNGMVdZY2tEMXZpR0l4MklnL1RZdVUrakpmNHN2?=
- =?utf-8?B?MEpRYWJVOHpIUjJZYUw3YWlUeHpCeWxyMUVPR1N0QWYxcG13M1h0dnRtdkhp?=
- =?utf-8?B?WnhtSVp2YTFsNjByRHZJak9FOUxUa3FxRitkcEMyUWkrWUhsaW94NkF2Q1FD?=
- =?utf-8?B?TDhYcjVNWVVUL3lWWUZHSllRZ09YQXFhWmI0NVZ4TXhOV0t0Ym1IbDhJcWFN?=
- =?utf-8?B?aS84UHJBZncxQ0t4TmxGWFhzVzFkYUR3VFRBOWpNNE1Cc1VpTk05K2VaSTZh?=
- =?utf-8?B?OEgzRWFib1FkdDVsMUhyc2Z0WmZhd28xN0taeFdFZ3hCUU5vZnhsMlRDWEhy?=
- =?utf-8?B?N0EycHZqeFZPT2haWnZBdzBYazNCZkt5dTkrQkxUTG94cG5odnFFWDB1UkJp?=
- =?utf-8?B?UW5IakdwTStRVmVqNG5qU0l3S3d5ZXV3Ky9ZM0VnajRDLzlXdFJkK2RnbHI5?=
- =?utf-8?B?SHluUUFIaTJnPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(7416014)(36860700013)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2025 04:43:25.1932
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4864f486-ef69-49f0-9b53-08dde5ed6ce2
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF00000204.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8781
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.51.0.268.g9569e192d0-goog
+Message-ID: <20250828064231.1762997-1-irogers@google.com>
+Subject: [PATCH v1 00/13] Legacy hardware/cache events as json
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Xu Yang <xu.yang_2@nxp.com>, Thomas Falcon <thomas.falcon@intel.com>, 
+	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
+	Atish Patra <atishp@rivosinc.com>, Beeman Strong <beeman@rivosinc.com>, Leo Yan <leo.yan@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello all,
+Mirroring similar work for software events in commit 6e9fa4131abb
+("perf parse-events: Remove non-json software events"). These changes
+migrate the legacy hardware and cache events to json.  With no hard
+coded legacy hardware or cache events the wild card, case
+insensitivity, etc. is consistent for events. This does, however, mean
+events like cycles will wild card against all PMUs. A change does the
+same was originally posted and merged from:
+https://lore.kernel.org/r/20240416061533.921723-10-irogers@google.com
+and reverted by Linus in commit 4f1b067359ac ("Revert "perf
+parse-events: Prefer sysfs/JSON hardware events over legacy"") due to
+his dislike for the cycles behavior on ARM. Earlier patches in this
+series make perf record event opening failures non-fatal and hide the
+cycles event's failure to open on ARM in perf record, so it is
+expected the behavior will now be transparent in perf record on
+ARM. perf stat with a cycles event will wildcard open the event on all
+PMUs.
 
-Missed to add perf folks to the list. Adding them here. Sorry about that.
+The change to support legacy events with PMUs was done to clean up
+Intel's hybrid PMU implementation.  Having sysfs/json events with
+increased priority to legacy was requested by Mark Rutland
+ <mark.rutland@arm.com> to fix Apple-M PMU issues wrt broken legacy
+events on that PMU. It was requested that RISC-V be able to add events
+to the perf tool json so the PMU driver didn't need to map legacy
+events to config encodings:
+https://lore.kernel.org/lkml/20240217005738.3744121-1-atishp@rivosinc.com/
 
---
-Thanks and Regards,
-Swapnil
+A previous series of patches decreasing legacy hardware event
+priorities was posted in:
+https://lore.kernel.org/lkml/20250416045117.876775-1-irogers@google.com/
+Namhyung Kim <namhyung@kernel.org> mentioned that hardware and
+software events can be implemented similarly:
+https://lore.kernel.org/lkml/aIJmJns2lopxf3EK@google.com/
+and this patch series achieves this.
 
-On 8/26/2025 10:40 AM, Swapnil Sapkal wrote:
-> Apologies for long delay, I was side tracked on some other items. I was
-> not able to focus on this.
-> 
-> MOTIVATION
-> ----------
-> 
-> Existing `perf sched` is quite exhaustive and provides lot of insights
-> into scheduler behavior but it quickly becomes impractical to use for
-> long running or scheduler intensive workload. For ex, `perf sched record`
-> has ~7.77% overhead on hackbench (with 25 groups each running 700K loops
-> on a 2-socket 128 Cores 256 Threads 3rd Generation EPYC Server), and it
-> generates huge 56G perf.data for which perf takes ~137 mins to prepare
-> and write it to disk [1].
-> 
-> Unlike `perf sched record`, which hooks onto set of scheduler tracepoints
-> and generates samples on a tracepoint hit, `perf sched stats record` takes
-> snapshot of the /proc/schedstat file before and after the workload, i.e.
-> there is almost zero interference on workload run. Also, it takes very
-> minimal time to parse /proc/schedstat, convert it into perf samples and
-> save those samples into perf.data file. Result perf.data file is much
-> smaller. So, overall `perf sched stats record` is much more light weight
-> compare to `perf sched record`.
-> 
-> We, internally at AMD, have been using this (a variant of this, known as
-> "sched-scoreboard"[2]) and found it to be very useful to analyse impact
-> of any scheduler code changes[3][4]. Prateek used v2[5] of this patch
-> series to report the analysis[6][7].
-> 
-> Please note that, this is not a replacement of perf sched record/report.
-> The intended users of the new tool are scheduler developers, not regular
-> users.
-> 
-> USAGE
-> -----
-> 
->    # perf sched stats record
->    # perf sched stats report
->    # perf sched stats diff
-> 
-> Note: Although `perf sched stats` tool supports workload profiling syntax
-> (i.e. -- <workload> ), the recorded profile is still systemwide since the
-> /proc/schedstat is a systemwide file.
-> 
-> HOW TO INTERPRET THE REPORT
-> ---------------------------
-> 
-> The `perf sched stats report` starts with description of the columns
-> present in the report. These column names are given before cpu and
-> domain stats to improve the readability of the report.
-> 
->    ----------------------------------------------------------------------------------------------------
->    DESC                    -> Description of the field
->    COUNT                   -> Value of the field
->    PCT_CHANGE              -> Percent change with corresponding base value
->    AVG_JIFFIES             -> Avg time in jiffies between two consecutive occurrence of event
->    ----------------------------------------------------------------------------------------------------
-> 
-> Next is the total profiling time in terms of jiffies:
-> 
->    ----------------------------------------------------------------------------------------------------
->    Time elapsed (in jiffies)                                   :       24537
->    ----------------------------------------------------------------------------------------------------
-> 
-> Next is CPU scheduling statistics. These are simple diffs of
-> /proc/schedstat CPU lines along with description. The report also
-> prints % relative to base stat.
-> 
-> In the example below, schedule() left the CPU0 idle 36.58% of the time.
-> 0.45% of total try_to_wake_up() was to wakeup local CPU. And, the total
-> waittime by tasks on CPU0 is 48.70% of the total runtime by tasks on the
-> same CPU.
-> 
->    ----------------------------------------------------------------------------------------------------
->    CPU 0
->    ----------------------------------------------------------------------------------------------------
->    DESC                                                                     COUNT   PCT_CHANGE
->    ----------------------------------------------------------------------------------------------------
->    yld_count                                                        :           0
->    array_exp                                                        :           0
->    sched_count                                                      :      402267
->    sched_goidle                                                     :      147161  (    36.58% )
->    ttwu_count                                                       :      236309
->    ttwu_local                                                       :        1062  (     0.45% )
->    rq_cpu_time                                                      :  7083791148
->    run_delay                                                        :  3449973971  (    48.70% )
->    pcount                                                           :      255035
->    ----------------------------------------------------------------------------------------------------
-> 
-> Next is load balancing statistics. For each of the sched domains
-> (eg: `SMT`, `MC`, `DIE`...), the scheduler computes statistics under
-> the following three categories:
-> 
->    1) Idle Load Balance: Load balancing performed on behalf of a long
->                          idling CPU by some other CPU.
->    2) Busy Load Balance: Load balancing performed when the CPU was busy.
->    3) New Idle Balance : Load balancing performed when a CPU just became
->                          idle.
-> 
-> Under each of these three categories, sched stats report provides
-> different load balancing statistics. Along with direct stats, the
-> report also contains derived metrics prefixed with *. Example:
-> 
->    ----------------------------------------------------------------------------------------------------
->    CPU 0, DOMAIN SMT CPUS 0,64
->    ----------------------------------------------------------------------------------------------------
->    DESC                                                                     COUNT    AVG_JIFFIES
->    ----------------------------------------- <Category busy> ------------------------------------------
->    busy_lb_count                                                    :         136  $       17.08 $
->    busy_lb_balanced                                                 :         131  $       17.73 $
->    busy_lb_failed                                                   :           0  $        0.00 $
->    busy_lb_imbalance_load                                           :          58
->    busy_lb_imbalance_util                                           :           0
->    busy_lb_imbalance_task                                           :           0
->    busy_lb_imbalance_misfit                                         :           0
->    busy_lb_gained                                                   :           7
->    busy_lb_hot_gained                                               :           0
->    busy_lb_nobusyq                                                  :           2  $     1161.50 $
->    busy_lb_nobusyg                                                  :         129  $       18.01 $
->    *busy_lb_success_count                                           :           5
->    *busy_lb_avg_pulled                                              :        1.40
->    ----------------------------------------- <Category idle> ------------------------------------------
->    idle_lb_count                                                    :         449  $        5.17 $
->    idle_lb_balanced                                                 :         382  $        6.08 $
->    idle_lb_failed                                                   :           3  $      774.33 $
->    idle_lb_imbalance_load                                           :           0
->    idle_lb_imbalance_util                                           :           0
->    idle_lb_imbalance_task                                           :          71
->    idle_lb_imbalance_misfit                                         :           0
->    idle_lb_gained                                                   :          67
->    idle_lb_hot_gained                                               :           0
->    idle_lb_nobusyq                                                  :           0  $        0.00 $
->    idle_lb_nobusyg                                                  :         382  $        6.08 $
->    *idle_lb_success_count                                           :          64
->    *idle_lb_avg_pulled                                              :        1.05
->    ---------------------------------------- <Category newidle> ----------------------------------------
->    newidle_lb_count                                                 :       30471  $        0.08 $
->    newidle_lb_balanced                                              :       28490  $        0.08 $
->    newidle_lb_failed                                                :         633  $        3.67 $
->    newidle_lb_imbalance_load                                        :           0
->    newidle_lb_imbalance_util                                        :           0
->    newidle_lb_imbalance_task                                        :        2040
->    newidle_lb_imbalance_misfit                                      :           0
->    newidle_lb_gained                                                :        1348
->    newidle_lb_hot_gained                                            :           0
->    newidle_lb_nobusyq                                               :           6  $      387.17 $
->    newidle_lb_nobusyg                                               :       26634  $        0.09 $
->    *newidle_lb_success_count                                        :        1348
->    *newidle_lb_avg_pulled                                           :        1.00
->    ----------------------------------------------------------------------------------------------------
-> 
-> Consider following line:
-> 
-> newidle_lb_balanced                                              :       28490  $        0.08 $
-> 
-> While profiling was active, the load-balancer found 28490 times the load
-> needs to be balanced on a newly idle CPU 0. Following value encapsulated
-> inside $ is average jiffies between two events (28490 / 24537 = 0.08).
-> 
-> Next are active_load_balance() stats. alb did not trigger while the
-> profiling was active, hence it's all 0s.
-> 
-> 
->    --------------------------------- <Category active_load_balance()> ---------------------------------
->    alb_count                                                        :           0
->    alb_failed                                                       :           0
->    alb_pushed                                                       :           0
->    ----------------------------------------------------------------------------------------------------
-> 
-> Next are sched_balance_exec() and sched_balance_fork() stats. They are
-> not used but we kept it in RFC just for legacy purpose. Unless opposed,
-> we plan to remove them in next revision.
-> 
-> Next are wakeup statistics. For every domain, the report also shows
-> task-wakeup statistics. Example:
-> 
->    ------------------------------------------ <Wakeup Info> -------------------------------------------
->    ttwu_wake_remote                                                 :        1590
->    ttwu_move_affine                                                 :          84
->    ttwu_move_balance                                                :           0
->    ----------------------------------------------------------------------------------------------------
-> 
-> Same set of stats are reported for each CPU and each domain level.
-> 
-> HOW TO INTERPRET THE DIFF
-> -------------------------
-> 
-> The `perf sched stats diff` will also start with explaining the columns
-> present in the diff. Then it will show the diff in time in terms of
-> jiffies. The order of the values depends on the order of input data
-> files. Example:
-> 
->    ----------------------------------------------------------------------------------------------------
->    Time elapsed (in jiffies)                                        :        2763,       2763
->    ----------------------------------------------------------------------------------------------------
-> 
-> Below is the sample representing the difference in cpu and domain stats of
-> two runs. Here third column or the values enclosed in `|...|` shows the
-> percent change between the two. Second and fourth columns shows the
-> side-by-side representions of the corresponding fields from `perf sched
-> stats report`.
-> 
->    ----------------------------------------------------------------------------------------------------
->    CPU <ALL CPUS SUMMARY>
->    ----------------------------------------------------------------------------------------------------
->    DESC                                                                    COUNT1      COUNT2   PCT_CHANG>
->    ----------------------------------------------------------------------------------------------------
->    yld_count                                                        :           0,          0  |     0.00>
->    array_exp                                                        :           0,          0  |     0.00>
->    sched_count                                                      :      528533,     412573  |   -21.94>
->    sched_goidle                                                     :      193426,     146082  |   -24.48>
->    ttwu_count                                                       :      313134,     385975  |    23.26>
->    ttwu_local                                                       :        1126,       1282  |    13.85>
->    rq_cpu_time                                                      :  8257200244, 8301250047  |     0.53>
->    run_delay                                                        :  4728347053, 3997100703  |   -15.47>
->    pcount                                                           :      335031,     266396  |   -20.49>
->    ----------------------------------------------------------------------------------------------------
-> 
-> Below is the sample of domain stats diff:
-> 
->    ----------------------------------------------------------------------------------------------------
->    CPU <ALL CPUS SUMMARY>, DOMAIN SMT
->    ----------------------------------------------------------------------------------------------------
->    DESC                                                                    COUNT1      COUNT2   PCT_CHANG>
->    ----------------------------------------- <Category busy> ------------------------------------------
->    busy_lb_count                                                    :         122,         80  |   -34.43>
->    busy_lb_balanced                                                 :         115,         76  |   -33.91>
->    busy_lb_failed                                                   :           1,          3  |   200.00>
->    busy_lb_imbalance_load                                           :          35,         49  |    40.00>
->    busy_lb_imbalance_util                                           :           0,          0  |     0.00>
->    busy_lb_imbalance_task                                           :           0,          0  |     0.00>
->    busy_lb_imbalance_misfit                                         :           0,          0  |     0.00>
->    busy_lb_gained                                                   :           7,          2  |   -71.43>
->    busy_lb_hot_gained                                               :           0,          0  |     0.00>
->    busy_lb_nobusyq                                                  :           0,          0  |     0.00>
->    busy_lb_nobusyg                                                  :         115,         76  |   -33.91>
->    *busy_lb_success_count                                           :           6,          1  |   -83.33>
->    *busy_lb_avg_pulled                                              :        1.17,       2.00  |    71.43>
->    ----------------------------------------- <Category idle> ------------------------------------------
->    idle_lb_count                                                    :         568,        620  |     9.15>
->    idle_lb_balanced                                                 :         462,        449  |    -2.81>
->    idle_lb_failed                                                   :          11,         21  |    90.91>
->    idle_lb_imbalance_load                                           :           0,          0  |     0.00>
->    idle_lb_imbalance_util                                           :           0,          0  |     0.00>
->    idle_lb_imbalance_task                                           :         115,        189  |    64.35>
->    idle_lb_imbalance_misfit                                         :           0,          0  |     0.00>
->    idle_lb_gained                                                   :         103,        169  |    64.08>
->    idle_lb_hot_gained                                               :           0,          0  |     0.00>
->    idle_lb_nobusyq                                                  :           0,          0  |     0.00>
->    idle_lb_nobusyg                                                  :         462,        449  |    -2.81>
->    *idle_lb_success_count                                           :          95,        150  |    57.89>
->    *idle_lb_avg_pulled                                              :        1.08,       1.13  |     3.92>
->    ---------------------------------------- <Category newidle> ----------------------------------------
->    newidle_lb_count                                                 :       16961,       3155  |   -81.40>
->    newidle_lb_balanced                                              :       15646,       2556  |   -83.66>
->    newidle_lb_failed                                                :         397,        142  |   -64.23>
->    newidle_lb_imbalance_load                                        :           0,          0  |     0.00>
->    newidle_lb_imbalance_util                                        :           0,          0  |     0.00>
->    newidle_lb_imbalance_task                                        :        1376,        655  |   -52.40>
->    newidle_lb_imbalance_misfit                                      :           0,          0  |     0.00>
->    newidle_lb_gained                                                :         917,        457  |   -50.16>
->    newidle_lb_hot_gained                                            :           0,          0  |     0.00>
->    newidle_lb_nobusyq                                               :           3,          1  |   -66.67>
->    newidle_lb_nobusyg                                               :       14480,       2103  |   -85.48>
->    *newidle_lb_success_count                                        :         918,        457  |   -50.22>
->    *newidle_lb_avg_pulled                                           :        1.00,       1.00  |     0.11>
->    --------------------------------- <Category active_load_balance()> ---------------------------------
->    alb_count                                                        :           0,          1  |     0.00>
->    alb_failed                                                       :           0,          0  |     0.00>
->    alb_pushed                                                       :           0,          1  |     0.00>
->    --------------------------------- <Category sched_balance_exec()> ----------------------------------
->    sbe_count                                                        :           0,          0  |     0.00>
->    sbe_balanced                                                     :           0,          0  |     0.00>
->    sbe_pushed                                                       :           0,          0  |     0.00>
->    --------------------------------- <Category sched_balance_fork()> ----------------------------------
->    sbf_count                                                        :           0,          0  |     0.00>
->    sbf_balanced                                                     :           0,          0  |     0.00>
->    sbf_pushed                                                       :           0,          0  |     0.00>
->    ------------------------------------------ <Wakeup Info> -------------------------------------------
->    ttwu_wake_remote                                                 :        2031,       2914  |    43.48>
->    ttwu_move_affine                                                 :          73,        124  |    69.86>
->    ttwu_move_balance                                                :           0,          0  |     0.00>
->    ----------------------------------------------------------------------------------------------------
-> 
-> v3: https://lore.kernel.org/all/20250311120230.61774-1-swapnil.sapkal@amd.com/
-> v3->v4:
->   - All the review comments from v3 are addressed [Namhyung Kim].
->   - Print short names instead of field descripion in the report [Peter Zijlstra]
->   - Fix the double free issue [Cristian Prundeanu]
->   - Documentation update related to `perf sched stats diff` [Chen yu]
->   - Bail out `perf sched stats diff` if perf.data files have different schedstat
->     versions [Peter Zijlstra]
-> 
-> v2: https://lore.kernel.org/all/20241122084452.1064968-1-swapnil.sapkal@amd.com/
-> v2->v3:
->   - Add perf unit test for basic sched stats functionalities
->   - Describe new tool, it's usage and interpretation of report data in the
->     perf-sched man page.
->   - Add /proc/schedstat version 17 support.
-> 
-> v1: https://lore.kernel.org/lkml/20240916164722.1838-1-ravi.bangoria@amd.com
-> v1->v2
->   - Add the support for `perf sched stats diff`
->   - Add column header in report for better readability. Use
->     procfs__mountpoint for consistency. Add hint for enabling
->     CONFIG_SCHEDSTAT if disabled. [James Clark]
->   - Use a single header file for both cpu and domain fileds. Change
->     the layout of structs to minimise the padding. I tried changing
->     `v15` to `15` in the header files but it was not giving any
->     benefits so drop the idea. [Namhyung Kim]
->   - Add tested-by.
-> 
-> RFC: https://lore.kernel.org/r/20240508060427.417-1-ravi.bangoria@amd.com
-> RFC->v1:
->   - [Kernel] Print domain name along with domain number in /proc/schedstat
->     file.
->   - s/schedstat/stats/ for the subcommand.
->   - Record domain name and cpumask details, also show them in report.
->   - Add CPU filtering capability at record and report time.
->   - Add /proc/schedstat v16 support.
->   - Live mode support. Similar to perf stat command, live mode prints the
->     sched stats on the stdout.
->   - Add pager support in `perf sched stats report` for better scrolling.
->   - Some minor cosmetic changes in report output to improve readability.
->   - Rebase to latest perf-tools-next/perf-tools-next (1de5b5dcb835).
-> 
-> TODO:
->   - perf sched stats records /proc/schedstat which is a CPU and domain
->     level scheduler statistic. We are planning to add taskstat tool which
->     reads task stats from procfs and generate scheduler statistic report
->     at task granularity. this will probably a standalone tool, something
->     like `perf sched taskstat record/report`.
->   - Except pre-processor related checkpatch warnings, we have addressed
->     most of the other possible warnings.
->   - This version supports diff for two perf.data files captured for same
->     schedstats version but the target is to show diff for multiple
->     perf.data files. Plan is to support diff if perf.data files provided
->     has different schedstat versions.
-> 
-> Patches are prepared on v6.17-rc3 (1b237f190eb3).
-> 
-> [1] https://youtu.be/lg-9aG2ajA0?t=283
-> [2] https://github.com/AMDESE/sched-scoreboard
-> [3] https://lore.kernel.org/lkml/c50bdbfe-02ce-c1bc-c761-c95f8e216ca0@amd.com/
-> [4] https://lore.kernel.org/lkml/3e32bec6-5e59-c66a-7676-7d15df2c961c@amd.com/
-> [5] https://lore.kernel.org/all/20241122084452.1064968-1-swapnil.sapkal@amd.com/
-> [6] https://lore.kernel.org/lkml/3170d16e-eb67-4db8-a327-eb8188397fdb@amd.com/
-> [7] https://lore.kernel.org/lkml/feb31b6e-6457-454c-a4f3-ce8ad96bf8de@amd.com/
-> 
-> Swapnil Sapkal (11):
->    perf: Add print_separator to util
->    tools/lib: Add list_is_first()
->    perf header: Support CPU DOMAIN relation info
->    perf sched stats: Add record and rawdump support
->    perf sched stats: Add schedstat v16 support
->    perf sched stats: Add schedstat v17 support
->    perf sched stats: Add support for report subcommand
->    perf sched stats: Add support for live mode
->    perf sched stats: Add support for diff subcommand
->    perf sched stats: Add basic perf sched stats test
->    perf sched stats: Add details in man page
-> 
->   tools/include/linux/list.h                    |   10 +
->   tools/lib/perf/Documentation/libperf.txt      |    2 +
->   tools/lib/perf/Makefile                       |    1 +
->   tools/lib/perf/include/perf/event.h           |   69 ++
->   tools/lib/perf/include/perf/schedstat-v15.h   |  146 +++
->   tools/lib/perf/include/perf/schedstat-v16.h   |  146 +++
->   tools/lib/perf/include/perf/schedstat-v17.h   |  164 +++
->   tools/perf/Documentation/perf-sched.txt       |  261 ++++-
->   .../Documentation/perf.data-file-format.txt   |   17 +
->   tools/perf/builtin-inject.c                   |    3 +
->   tools/perf/builtin-kwork.c                    |   13 +-
->   tools/perf/builtin-sched.c                    | 1027 ++++++++++++++++-
->   tools/perf/tests/shell/perf_sched_stats.sh    |   64 +
->   tools/perf/util/env.h                         |   16 +
->   tools/perf/util/event.c                       |   52 +
->   tools/perf/util/event.h                       |    2 +
->   tools/perf/util/header.c                      |  304 +++++
->   tools/perf/util/header.h                      |    6 +
->   tools/perf/util/session.c                     |   22 +
->   tools/perf/util/synthetic-events.c            |  196 ++++
->   tools/perf/util/synthetic-events.h            |    3 +
->   tools/perf/util/tool.c                        |   18 +
->   tools/perf/util/tool.h                        |    4 +-
->   tools/perf/util/util.c                        |   48 +
->   tools/perf/util/util.h                        |    5 +
->   25 files changed, 2587 insertions(+), 12 deletions(-)
->   create mode 100644 tools/lib/perf/include/perf/schedstat-v15.h
->   create mode 100644 tools/lib/perf/include/perf/schedstat-v16.h
->   create mode 100644 tools/lib/perf/include/perf/schedstat-v17.h
->   create mode 100755 tools/perf/tests/shell/perf_sched_stats.sh
-> 
+The perf list behavior before is:
+```
+$ perf list hw
+
+List of pre-defined events (to be used in -e or -M):
+
+  branch-instructions OR branches                    [Hardware event]
+  branch-misses                                      [Hardware event]
+  bus-cycles                                         [Hardware event]
+  cache-misses                                       [Hardware event]
+  cache-references                                   [Hardware event]
+  cpu-cycles OR cycles                               [Hardware event]
+  instructions                                       [Hardware event]
+  ref-cycles                                         [Hardware event]
+$ perf list hwcache
+
+List of pre-defined events (to be used in -e or -M):
+
+
+cache:
+  L1-dcache-loads OR cpu/L1-dcache-loads/
+  L1-dcache-load-misses OR cpu/L1-dcache-load-misses/
+  L1-dcache-stores OR cpu/L1-dcache-stores/
+  L1-icache-load-misses OR cpu/L1-icache-load-misses/
+  LLC-loads OR cpu/LLC-loads/
+  LLC-load-misses OR cpu/LLC-load-misses/
+  LLC-stores OR cpu/LLC-stores/
+  LLC-store-misses OR cpu/LLC-store-misses/
+  dTLB-loads OR cpu/dTLB-loads/
+  dTLB-load-misses OR cpu/dTLB-load-misses/
+  dTLB-stores OR cpu/dTLB-stores/
+  dTLB-store-misses OR cpu/dTLB-store-misses/
+  iTLB-load-misses OR cpu/iTLB-load-misses/
+  branch-loads OR cpu/branch-loads/
+  branch-load-misses OR cpu/branch-load-misses/
+  node-loads OR cpu/node-loads/
+  node-load-misses OR cpu/node-load-misses/
+  node-stores OR cpu/node-stores/
+  node-store-misses OR cpu/node-store-misses/
+```
+and after it is:
+```
+$ perf list hw
+
+legacy hardware:
+  branch-instructions
+       [Retired branch instructions [This event is an alias of branches].
+        Unit: cpu]
+  branch-misses
+       [Mispredicted branch instructions. Unit: cpu]
+  branches
+       [Retired branch instructions [This event is an alias of
+        branch-instructions]. Unit: cpu]
+  bus-cycles
+       [Bus cycles,which can be different from total cycles. Unit: cpu]
+  cache-misses
+       [Cache misses. Usually this indicates Last Level Cache misses; this is
+        intended to be used in conjunction with the
+        PERF_COUNT_HW_CACHE_REFERENCES event to calculate cache miss rates.
+        Unit: cpu]
+  cache-references
+       [Cache accesses. Usually this indicates Last Level Cache accesses but
+        this may vary depending on your CPU. This may include prefetches and
+        coherency messages; again this depends on the design of your CPU.
+        Unit: cpu]
+  cpu-cycles
+       [Total cycles. Be wary of what happens during CPU frequency scaling
+        [This event is an alias of cycles]. Unit: cpu]
+  cycles
+       [Total cycles. Be wary of what happens during CPU frequency scaling
+        [This event is an alias of cpu-cycles]. Unit: cpu]
+  instructions
+       [Retired instructions. Be careful,these can be affected by various
+        issues,most notably hardware interrupt counts. Unit: cpu]
+  ref-cycles
+       [Total cycles; not affected by CPU frequency scaling. Unit: cpu]
+$ perf list hwcache
+
+legacy cache:
+  bpc
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpc-access
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpc-load
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpc-load-access
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpc-load-miss
+       [Branch prediction unit read misses. Unit: cpu]
+  bpc-load-misses
+       [Branch prediction unit read misses. Unit: cpu]
+  bpc-load-ops
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpc-load-reference
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpc-load-refs
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpc-loads
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpc-loads-access
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpc-loads-miss
+       [Branch prediction unit read misses. Unit: cpu]
+  bpc-loads-misses
+       [Branch prediction unit read misses. Unit: cpu]
+  bpc-loads-ops
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpc-loads-reference
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpc-loads-refs
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpc-miss
+       [Branch prediction unit read misses. Unit: cpu]
+  bpc-misses
+       [Branch prediction unit read misses. Unit: cpu]
+  bpc-ops
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpc-read
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpc-read-access
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpc-read-miss
+       [Branch prediction unit read misses. Unit: cpu]
+  bpc-read-misses
+       [Branch prediction unit read misses. Unit: cpu]
+  bpc-read-ops
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpc-read-reference
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpc-read-refs
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpc-reference
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpc-refs
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpu
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpu-access
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpu-load
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpu-load-access
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpu-load-miss
+       [Branch prediction unit read misses. Unit: cpu]
+  bpu-load-misses
+       [Branch prediction unit read misses. Unit: cpu]
+  bpu-load-ops
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpu-load-reference
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpu-load-refs
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpu-loads
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpu-loads-access
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpu-loads-miss
+       [Branch prediction unit read misses. Unit: cpu]
+  bpu-loads-misses
+       [Branch prediction unit read misses. Unit: cpu]
+  bpu-loads-ops
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpu-loads-reference
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpu-loads-refs
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpu-miss
+       [Branch prediction unit read misses. Unit: cpu]
+  bpu-misses
+       [Branch prediction unit read misses. Unit: cpu]
+  bpu-ops
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpu-read
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpu-read-access
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpu-read-miss
+       [Branch prediction unit read misses. Unit: cpu]
+  bpu-read-misses
+       [Branch prediction unit read misses. Unit: cpu]
+  bpu-read-ops
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpu-read-reference
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpu-read-refs
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpu-reference
+       [Branch prediction unit read accesses. Unit: cpu]
+  bpu-refs
+       [Branch prediction unit read accesses. Unit: cpu]
+  branch
+       [Branch prediction unit read accesses. Unit: cpu]
+  branch-access
+       [Branch prediction unit read accesses. Unit: cpu]
+  branch-load
+       [Branch prediction unit read accesses. Unit: cpu]
+  branch-load-access
+       [Branch prediction unit read accesses. Unit: cpu]
+  branch-load-miss
+       [Branch prediction unit read misses. Unit: cpu]
+  branch-load-misses
+       [Branch prediction unit read misses. Unit: cpu]
+  branch-load-ops
+       [Branch prediction unit read accesses. Unit: cpu]
+  branch-load-reference
+       [Branch prediction unit read accesses. Unit: cpu]
+  branch-load-refs
+       [Branch prediction unit read accesses. Unit: cpu]
+  branch-loads
+       [Branch prediction unit read accesses. Unit: cpu]
+  branch-loads-access
+       [Branch prediction unit read accesses. Unit: cpu]
+  branch-loads-miss
+       [Branch prediction unit read misses. Unit: cpu]
+  branch-loads-misses
+       [Branch prediction unit read misses. Unit: cpu]
+  branch-loads-ops
+       [Branch prediction unit read accesses. Unit: cpu]
+  branch-loads-reference
+       [Branch prediction unit read accesses. Unit: cpu]
+  branch-loads-refs
+       [Branch prediction unit read accesses. Unit: cpu]
+  branch-miss
+       [Branch prediction unit read misses. Unit: cpu]
+  branch-ops
+       [Branch prediction unit read accesses. Unit: cpu]
+  branch-read
+       [Branch prediction unit read accesses. Unit: cpu]
+  branch-read-access
+       [Branch prediction unit read accesses. Unit: cpu]
+  branch-read-miss
+       [Branch prediction unit read misses. Unit: cpu]
+  branch-read-misses
+       [Branch prediction unit read misses. Unit: cpu]
+  branch-read-ops
+       [Branch prediction unit read accesses. Unit: cpu]
+  branch-read-reference
+       [Branch prediction unit read accesses. Unit: cpu]
+  branch-read-refs
+       [Branch prediction unit read accesses. Unit: cpu]
+  branch-reference
+       [Branch prediction unit read accesses. Unit: cpu]
+  branch-refs
+       [Branch prediction unit read accesses. Unit: cpu]
+  branches-access
+       [Branch prediction unit read accesses. Unit: cpu]
+  branches-load
+       [Branch prediction unit read accesses. Unit: cpu]
+  branches-load-access
+       [Branch prediction unit read accesses. Unit: cpu]
+  branches-load-miss
+       [Branch prediction unit read misses. Unit: cpu]
+  branches-load-misses
+       [Branch prediction unit read misses. Unit: cpu]
+  branches-load-ops
+       [Branch prediction unit read accesses. Unit: cpu]
+  branches-load-reference
+       [Branch prediction unit read accesses. Unit: cpu]
+  branches-load-refs
+       [Branch prediction unit read accesses. Unit: cpu]
+  branches-loads
+       [Branch prediction unit read accesses. Unit: cpu]
+  branches-loads-access
+       [Branch prediction unit read accesses. Unit: cpu]
+  branches-loads-miss
+       [Branch prediction unit read misses. Unit: cpu]
+  branches-loads-misses
+       [Branch prediction unit read misses. Unit: cpu]
+  branches-loads-ops
+       [Branch prediction unit read accesses. Unit: cpu]
+  branches-loads-reference
+       [Branch prediction unit read accesses. Unit: cpu]
+  branches-loads-refs
+       [Branch prediction unit read accesses. Unit: cpu]
+  branches-miss
+       [Branch prediction unit read misses. Unit: cpu]
+  branches-misses
+       [Branch prediction unit read misses. Unit: cpu]
+  branches-ops
+       [Branch prediction unit read accesses. Unit: cpu]
+  branches-read
+       [Branch prediction unit read accesses. Unit: cpu]
+  branches-read-access
+       [Branch prediction unit read accesses. Unit: cpu]
+  branches-read-miss
+       [Branch prediction unit read misses. Unit: cpu]
+  branches-read-misses
+       [Branch prediction unit read misses. Unit: cpu]
+  branches-read-ops
+       [Branch prediction unit read accesses. Unit: cpu]
+  branches-read-reference
+       [Branch prediction unit read accesses. Unit: cpu]
+  branches-read-refs
+       [Branch prediction unit read accesses. Unit: cpu]
+  branches-reference
+       [Branch prediction unit read accesses. Unit: cpu]
+  branches-refs
+       [Branch prediction unit read accesses. Unit: cpu]
+  btb
+       [Branch prediction unit read accesses. Unit: cpu]
+  btb-access
+       [Branch prediction unit read accesses. Unit: cpu]
+  btb-load
+       [Branch prediction unit read accesses. Unit: cpu]
+  btb-load-access
+       [Branch prediction unit read accesses. Unit: cpu]
+  btb-load-miss
+       [Branch prediction unit read misses. Unit: cpu]
+  btb-load-misses
+       [Branch prediction unit read misses. Unit: cpu]
+  btb-load-ops
+       [Branch prediction unit read accesses. Unit: cpu]
+  btb-load-reference
+       [Branch prediction unit read accesses. Unit: cpu]
+  btb-load-refs
+       [Branch prediction unit read accesses. Unit: cpu]
+  btb-loads
+       [Branch prediction unit read accesses. Unit: cpu]
+  btb-loads-access
+       [Branch prediction unit read accesses. Unit: cpu]
+  btb-loads-miss
+       [Branch prediction unit read misses. Unit: cpu]
+  btb-loads-misses
+       [Branch prediction unit read misses. Unit: cpu]
+  btb-loads-ops
+       [Branch prediction unit read accesses. Unit: cpu]
+  btb-loads-reference
+       [Branch prediction unit read accesses. Unit: cpu]
+  btb-loads-refs
+       [Branch prediction unit read accesses. Unit: cpu]
+  btb-miss
+       [Branch prediction unit read misses. Unit: cpu]
+  btb-misses
+       [Branch prediction unit read misses. Unit: cpu]
+  btb-ops
+       [Branch prediction unit read accesses. Unit: cpu]
+  btb-read
+       [Branch prediction unit read accesses. Unit: cpu]
+  btb-read-access
+       [Branch prediction unit read accesses. Unit: cpu]
+  btb-read-miss
+       [Branch prediction unit read misses. Unit: cpu]
+  btb-read-misses
+       [Branch prediction unit read misses. Unit: cpu]
+  btb-read-ops
+       [Branch prediction unit read accesses. Unit: cpu]
+  btb-read-reference
+       [Branch prediction unit read accesses. Unit: cpu]
+  btb-read-refs
+       [Branch prediction unit read accesses. Unit: cpu]
+  btb-reference
+       [Branch prediction unit read accesses. Unit: cpu]
+  btb-refs
+       [Branch prediction unit read accesses. Unit: cpu]
+  d-tlb
+       [Data TLB read accesses. Unit: cpu]
+  d-tlb-access
+       [Data TLB read accesses. Unit: cpu]
+  d-tlb-load
+       [Data TLB read accesses. Unit: cpu]
+  d-tlb-load-access
+       [Data TLB read accesses. Unit: cpu]
+  d-tlb-load-miss
+       [Data TLB read misses. Unit: cpu]
+  d-tlb-load-misses
+       [Data TLB read misses. Unit: cpu]
+  d-tlb-load-ops
+       [Data TLB read accesses. Unit: cpu]
+  d-tlb-load-reference
+       [Data TLB read accesses. Unit: cpu]
+  d-tlb-load-refs
+       [Data TLB read accesses. Unit: cpu]
+  d-tlb-loads
+       [Data TLB read accesses. Unit: cpu]
+  d-tlb-loads-access
+       [Data TLB read accesses. Unit: cpu]
+  d-tlb-loads-miss
+       [Data TLB read misses. Unit: cpu]
+  d-tlb-loads-misses
+       [Data TLB read misses. Unit: cpu]
+  d-tlb-loads-ops
+       [Data TLB read accesses. Unit: cpu]
+  d-tlb-loads-reference
+       [Data TLB read accesses. Unit: cpu]
+  d-tlb-loads-refs
+       [Data TLB read accesses. Unit: cpu]
+  d-tlb-miss
+       [Data TLB read misses. Unit: cpu]
+  d-tlb-misses
+       [Data TLB read misses. Unit: cpu]
+  d-tlb-ops
+       [Data TLB read accesses. Unit: cpu]
+  d-tlb-read
+       [Data TLB read accesses. Unit: cpu]
+  d-tlb-read-access
+       [Data TLB read accesses. Unit: cpu]
+  d-tlb-read-miss
+       [Data TLB read misses. Unit: cpu]
+  d-tlb-read-misses
+       [Data TLB read misses. Unit: cpu]
+  d-tlb-read-ops
+       [Data TLB read accesses. Unit: cpu]
+  d-tlb-read-reference
+       [Data TLB read accesses. Unit: cpu]
+  d-tlb-read-refs
+       [Data TLB read accesses. Unit: cpu]
+  d-tlb-reference
+       [Data TLB read accesses. Unit: cpu]
+  d-tlb-refs
+       [Data TLB read accesses. Unit: cpu]
+  d-tlb-store
+       [Data TLB write accesses. Unit: cpu]
+  d-tlb-store-access
+       [Data TLB write accesses. Unit: cpu]
+  d-tlb-store-miss
+       [Data TLB write misses. Unit: cpu]
+  d-tlb-store-misses
+       [Data TLB write misses. Unit: cpu]
+  d-tlb-store-ops
+       [Data TLB write accesses. Unit: cpu]
+  d-tlb-store-reference
+       [Data TLB write accesses. Unit: cpu]
+  d-tlb-store-refs
+       [Data TLB write accesses. Unit: cpu]
+  d-tlb-stores
+       [Data TLB write accesses. Unit: cpu]
+  d-tlb-stores-access
+       [Data TLB write accesses. Unit: cpu]
+  d-tlb-stores-miss
+       [Data TLB write misses. Unit: cpu]
+  d-tlb-stores-misses
+       [Data TLB write misses. Unit: cpu]
+  d-tlb-stores-ops
+       [Data TLB write accesses. Unit: cpu]
+  d-tlb-stores-reference
+       [Data TLB write accesses. Unit: cpu]
+  d-tlb-stores-refs
+       [Data TLB write accesses. Unit: cpu]
+  d-tlb-write
+       [Data TLB write accesses. Unit: cpu]
+  d-tlb-write-access
+       [Data TLB write accesses. Unit: cpu]
+  d-tlb-write-miss
+       [Data TLB write misses. Unit: cpu]
+  d-tlb-write-misses
+       [Data TLB write misses. Unit: cpu]
+  d-tlb-write-ops
+       [Data TLB write accesses. Unit: cpu]
+  d-tlb-write-reference
+       [Data TLB write accesses. Unit: cpu]
+  d-tlb-write-refs
+       [Data TLB write accesses. Unit: cpu]
+  data-tlb
+       [Data TLB read accesses. Unit: cpu]
+  data-tlb-access
+       [Data TLB read accesses. Unit: cpu]
+  data-tlb-load
+       [Data TLB read accesses. Unit: cpu]
+  data-tlb-load-access
+       [Data TLB read accesses. Unit: cpu]
+  data-tlb-load-miss
+       [Data TLB read misses. Unit: cpu]
+  data-tlb-load-misses
+       [Data TLB read misses. Unit: cpu]
+  data-tlb-load-ops
+       [Data TLB read accesses. Unit: cpu]
+  data-tlb-load-reference
+       [Data TLB read accesses. Unit: cpu]
+  data-tlb-load-refs
+       [Data TLB read accesses. Unit: cpu]
+  data-tlb-loads
+       [Data TLB read accesses. Unit: cpu]
+  data-tlb-loads-access
+       [Data TLB read accesses. Unit: cpu]
+  data-tlb-loads-miss
+       [Data TLB read misses. Unit: cpu]
+  data-tlb-loads-misses
+       [Data TLB read misses. Unit: cpu]
+  data-tlb-loads-ops
+       [Data TLB read accesses. Unit: cpu]
+  data-tlb-loads-reference
+       [Data TLB read accesses. Unit: cpu]
+  data-tlb-loads-refs
+       [Data TLB read accesses. Unit: cpu]
+  data-tlb-miss
+       [Data TLB read misses. Unit: cpu]
+  data-tlb-misses
+       [Data TLB read misses. Unit: cpu]
+  data-tlb-ops
+       [Data TLB read accesses. Unit: cpu]
+  data-tlb-read
+       [Data TLB read accesses. Unit: cpu]
+  data-tlb-read-access
+       [Data TLB read accesses. Unit: cpu]
+  data-tlb-read-miss
+       [Data TLB read misses. Unit: cpu]
+  data-tlb-read-misses
+       [Data TLB read misses. Unit: cpu]
+  data-tlb-read-ops
+       [Data TLB read accesses. Unit: cpu]
+  data-tlb-read-reference
+       [Data TLB read accesses. Unit: cpu]
+  data-tlb-read-refs
+       [Data TLB read accesses. Unit: cpu]
+  data-tlb-reference
+       [Data TLB read accesses. Unit: cpu]
+  data-tlb-refs
+       [Data TLB read accesses. Unit: cpu]
+  data-tlb-store
+       [Data TLB write accesses. Unit: cpu]
+  data-tlb-store-access
+       [Data TLB write accesses. Unit: cpu]
+  data-tlb-store-miss
+       [Data TLB write misses. Unit: cpu]
+  data-tlb-store-misses
+       [Data TLB write misses. Unit: cpu]
+  data-tlb-store-ops
+       [Data TLB write accesses. Unit: cpu]
+  data-tlb-store-reference
+       [Data TLB write accesses. Unit: cpu]
+  data-tlb-store-refs
+       [Data TLB write accesses. Unit: cpu]
+  data-tlb-stores
+       [Data TLB write accesses. Unit: cpu]
+  data-tlb-stores-access
+       [Data TLB write accesses. Unit: cpu]
+  data-tlb-stores-miss
+       [Data TLB write misses. Unit: cpu]
+  data-tlb-stores-misses
+       [Data TLB write misses. Unit: cpu]
+  data-tlb-stores-ops
+       [Data TLB write accesses. Unit: cpu]
+  data-tlb-stores-reference
+       [Data TLB write accesses. Unit: cpu]
+  data-tlb-stores-refs
+       [Data TLB write accesses. Unit: cpu]
+  data-tlb-write
+       [Data TLB write accesses. Unit: cpu]
+  data-tlb-write-access
+       [Data TLB write accesses. Unit: cpu]
+  data-tlb-write-miss
+       [Data TLB write misses. Unit: cpu]
+  data-tlb-write-misses
+       [Data TLB write misses. Unit: cpu]
+  data-tlb-write-ops
+       [Data TLB write accesses. Unit: cpu]
+  data-tlb-write-reference
+       [Data TLB write accesses. Unit: cpu]
+  data-tlb-write-refs
+       [Data TLB write accesses. Unit: cpu]
+  dtlb
+       [Data TLB read accesses. Unit: cpu]
+  dtlb-access
+       [Data TLB read accesses. Unit: cpu]
+  dtlb-load
+       [Data TLB read accesses. Unit: cpu]
+  dtlb-load-access
+       [Data TLB read accesses. Unit: cpu]
+  dtlb-load-miss
+       [Data TLB read misses. Unit: cpu]
+  dtlb-load-misses
+       [Data TLB read misses. Unit: cpu]
+  dtlb-load-ops
+       [Data TLB read accesses. Unit: cpu]
+  dtlb-load-reference
+       [Data TLB read accesses. Unit: cpu]
+  dtlb-load-refs
+       [Data TLB read accesses. Unit: cpu]
+  dtlb-loads
+       [Data TLB read accesses. Unit: cpu]
+  dtlb-loads-access
+       [Data TLB read accesses. Unit: cpu]
+  dtlb-loads-miss
+       [Data TLB read misses. Unit: cpu]
+  dtlb-loads-misses
+       [Data TLB read misses. Unit: cpu]
+  dtlb-loads-ops
+       [Data TLB read accesses. Unit: cpu]
+  dtlb-loads-reference
+       [Data TLB read accesses. Unit: cpu]
+  dtlb-loads-refs
+       [Data TLB read accesses. Unit: cpu]
+  dtlb-miss
+       [Data TLB read misses. Unit: cpu]
+  dtlb-misses
+       [Data TLB read misses. Unit: cpu]
+  dtlb-ops
+       [Data TLB read accesses. Unit: cpu]
+  dtlb-read
+       [Data TLB read accesses. Unit: cpu]
+  dtlb-read-access
+       [Data TLB read accesses. Unit: cpu]
+  dtlb-read-miss
+       [Data TLB read misses. Unit: cpu]
+  dtlb-read-misses
+       [Data TLB read misses. Unit: cpu]
+  dtlb-read-ops
+       [Data TLB read accesses. Unit: cpu]
+  dtlb-read-reference
+       [Data TLB read accesses. Unit: cpu]
+  dtlb-read-refs
+       [Data TLB read accesses. Unit: cpu]
+  dtlb-reference
+       [Data TLB read accesses. Unit: cpu]
+  dtlb-refs
+       [Data TLB read accesses. Unit: cpu]
+  dtlb-store
+       [Data TLB write accesses. Unit: cpu]
+  dtlb-store-access
+       [Data TLB write accesses. Unit: cpu]
+  dtlb-store-miss
+       [Data TLB write misses. Unit: cpu]
+  dtlb-store-misses
+       [Data TLB write misses. Unit: cpu]
+  dtlb-store-ops
+       [Data TLB write accesses. Unit: cpu]
+  dtlb-store-reference
+       [Data TLB write accesses. Unit: cpu]
+  dtlb-store-refs
+       [Data TLB write accesses. Unit: cpu]
+  dtlb-stores
+       [Data TLB write accesses. Unit: cpu]
+  dtlb-stores-access
+       [Data TLB write accesses. Unit: cpu]
+  dtlb-stores-miss
+       [Data TLB write misses. Unit: cpu]
+  dtlb-stores-misses
+       [Data TLB write misses. Unit: cpu]
+  dtlb-stores-ops
+       [Data TLB write accesses. Unit: cpu]
+  dtlb-stores-reference
+       [Data TLB write accesses. Unit: cpu]
+  dtlb-stores-refs
+       [Data TLB write accesses. Unit: cpu]
+  dtlb-write
+       [Data TLB write accesses. Unit: cpu]
+  dtlb-write-access
+       [Data TLB write accesses. Unit: cpu]
+  dtlb-write-miss
+       [Data TLB write misses. Unit: cpu]
+  dtlb-write-misses
+       [Data TLB write misses. Unit: cpu]
+  dtlb-write-ops
+       [Data TLB write accesses. Unit: cpu]
+  dtlb-write-reference
+       [Data TLB write accesses. Unit: cpu]
+  dtlb-write-refs
+       [Data TLB write accesses. Unit: cpu]
+  i-tlb-load-miss
+       [Instruction TLB read misses. Unit: cpu]
+  i-tlb-load-misses
+       [Instruction TLB read misses. Unit: cpu]
+  i-tlb-loads-miss
+       [Instruction TLB read misses. Unit: cpu]
+  i-tlb-loads-misses
+       [Instruction TLB read misses. Unit: cpu]
+  i-tlb-miss
+       [Instruction TLB read misses. Unit: cpu]
+  i-tlb-misses
+       [Instruction TLB read misses. Unit: cpu]
+  i-tlb-read-miss
+       [Instruction TLB read misses. Unit: cpu]
+  i-tlb-read-misses
+       [Instruction TLB read misses. Unit: cpu]
+  instruction-tlb-load-miss
+       [Instruction TLB read misses. Unit: cpu]
+  instruction-tlb-load-misses
+       [Instruction TLB read misses. Unit: cpu]
+  instruction-tlb-loads-miss
+       [Instruction TLB read misses. Unit: cpu]
+  instruction-tlb-loads-misses
+       [Instruction TLB read misses. Unit: cpu]
+  instruction-tlb-miss
+       [Instruction TLB read misses. Unit: cpu]
+  instruction-tlb-misses
+       [Instruction TLB read misses. Unit: cpu]
+  instruction-tlb-read-miss
+       [Instruction TLB read misses. Unit: cpu]
+  instruction-tlb-read-misses
+       [Instruction TLB read misses. Unit: cpu]
+  itlb-load-miss
+       [Instruction TLB read misses. Unit: cpu]
+  itlb-load-misses
+       [Instruction TLB read misses. Unit: cpu]
+  itlb-loads-miss
+       [Instruction TLB read misses. Unit: cpu]
+  itlb-loads-misses
+       [Instruction TLB read misses. Unit: cpu]
+  itlb-miss
+       [Instruction TLB read misses. Unit: cpu]
+  itlb-misses
+       [Instruction TLB read misses. Unit: cpu]
+  itlb-read-miss
+       [Instruction TLB read misses. Unit: cpu]
+  itlb-read-misses
+       [Instruction TLB read misses. Unit: cpu]
+  l1-d
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-d-access
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-d-load
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-d-load-access
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-d-load-miss
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-d-load-misses
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-d-load-ops
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-d-load-reference
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-d-load-refs
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-d-loads
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-d-loads-access
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-d-loads-miss
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-d-loads-misses
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-d-loads-ops
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-d-loads-reference
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-d-loads-refs
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-d-miss
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-d-misses
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-d-ops
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-d-read
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-d-read-access
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-d-read-miss
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-d-read-misses
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-d-read-ops
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-d-read-reference
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-d-read-refs
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-d-reference
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-d-refs
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-d-store
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-d-store-access
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-d-store-ops
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-d-store-reference
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-d-store-refs
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-d-stores
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-d-stores-access
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-d-stores-ops
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-d-stores-reference
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-d-stores-refs
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-d-write
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-d-write-access
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-d-write-ops
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-d-write-reference
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-d-write-refs
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-data
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-data-access
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-data-load
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-data-load-access
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-data-load-miss
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-data-load-misses
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-data-load-ops
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-data-load-reference
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-data-load-refs
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-data-loads
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-data-loads-access
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-data-loads-miss
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-data-loads-misses
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-data-loads-ops
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-data-loads-reference
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-data-loads-refs
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-data-miss
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-data-misses
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-data-ops
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-data-read
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-data-read-access
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-data-read-miss
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-data-read-misses
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-data-read-ops
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-data-read-reference
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-data-read-refs
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-data-reference
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-data-refs
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-data-store
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-data-store-access
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-data-store-ops
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-data-store-reference
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-data-store-refs
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-data-stores
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-data-stores-access
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-data-stores-ops
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-data-stores-reference
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-data-stores-refs
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-data-write
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-data-write-access
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-data-write-ops
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-data-write-reference
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-data-write-refs
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-dcache
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-dcache-access
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-dcache-load
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-dcache-load-access
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-dcache-load-miss
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-dcache-load-misses
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-dcache-load-ops
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-dcache-load-reference
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-dcache-load-refs
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-dcache-loads
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-dcache-loads-access
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-dcache-loads-miss
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-dcache-loads-misses
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-dcache-loads-ops
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-dcache-loads-reference
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-dcache-loads-refs
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-dcache-miss
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-dcache-misses
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-dcache-ops
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-dcache-read
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-dcache-read-access
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-dcache-read-miss
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-dcache-read-misses
+       [Level 1 data cache read misses. Unit: cpu]
+  l1-dcache-read-ops
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-dcache-read-reference
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-dcache-read-refs
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-dcache-reference
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-dcache-refs
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1-dcache-store
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-dcache-store-access
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-dcache-store-ops
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-dcache-store-reference
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-dcache-store-refs
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-dcache-stores
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-dcache-stores-access
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-dcache-stores-ops
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-dcache-stores-reference
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-dcache-stores-refs
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-dcache-write
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-dcache-write-access
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-dcache-write-ops
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-dcache-write-reference
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-dcache-write-refs
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1-i-load-miss
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-i-load-misses
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-i-loads-miss
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-i-loads-misses
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-i-miss
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-i-misses
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-i-read-miss
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-i-read-misses
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-icache-load-miss
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-icache-load-misses
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-icache-loads-miss
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-icache-loads-misses
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-icache-miss
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-icache-misses
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-icache-read-miss
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-icache-read-misses
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-instruction-load-miss
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-instruction-load-misses
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-instruction-loads-miss
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-instruction-loads-misses
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-instruction-miss
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-instruction-misses
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-instruction-read-miss
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1-instruction-read-misses
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1d
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1d-access
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1d-load
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1d-load-access
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1d-load-miss
+       [Level 1 data cache read misses. Unit: cpu]
+  l1d-load-misses
+       [Level 1 data cache read misses. Unit: cpu]
+  l1d-load-ops
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1d-load-reference
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1d-load-refs
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1d-loads
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1d-loads-access
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1d-loads-miss
+       [Level 1 data cache read misses. Unit: cpu]
+  l1d-loads-misses
+       [Level 1 data cache read misses. Unit: cpu]
+  l1d-loads-ops
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1d-loads-reference
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1d-loads-refs
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1d-miss
+       [Level 1 data cache read misses. Unit: cpu]
+  l1d-misses
+       [Level 1 data cache read misses. Unit: cpu]
+  l1d-ops
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1d-read
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1d-read-access
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1d-read-miss
+       [Level 1 data cache read misses. Unit: cpu]
+  l1d-read-misses
+       [Level 1 data cache read misses. Unit: cpu]
+  l1d-read-ops
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1d-read-reference
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1d-read-refs
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1d-reference
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1d-refs
+       [Level 1 data cache read accesses. Unit: cpu]
+  l1d-store
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1d-store-access
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1d-store-ops
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1d-store-reference
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1d-store-refs
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1d-stores
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1d-stores-access
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1d-stores-ops
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1d-stores-reference
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1d-stores-refs
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1d-write
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1d-write-access
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1d-write-ops
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1d-write-reference
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1d-write-refs
+       [Level 1 data cache write accesses. Unit: cpu]
+  l1i-load-miss
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1i-load-misses
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1i-loads-miss
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1i-loads-misses
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1i-miss
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1i-misses
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1i-read-miss
+       [Level 1 instruction cache read misses. Unit: cpu]
+  l1i-read-misses
+       [Level 1 instruction cache read misses. Unit: cpu]
+  llc
+       [Last level cache read accesses. Unit: cpu]
+  llc-access
+       [Last level cache read accesses. Unit: cpu]
+  llc-load
+       [Last level cache read accesses. Unit: cpu]
+  llc-load-access
+       [Last level cache read accesses. Unit: cpu]
+  llc-load-miss
+       [Last level cache read misses. Unit: cpu]
+  llc-load-misses
+       [Last level cache read misses. Unit: cpu]
+  llc-load-ops
+       [Last level cache read accesses. Unit: cpu]
+  llc-load-reference
+       [Last level cache read accesses. Unit: cpu]
+  llc-load-refs
+       [Last level cache read accesses. Unit: cpu]
+  llc-loads
+       [Last level cache read accesses. Unit: cpu]
+  llc-loads-access
+       [Last level cache read accesses. Unit: cpu]
+  llc-loads-miss
+       [Last level cache read misses. Unit: cpu]
+  llc-loads-misses
+       [Last level cache read misses. Unit: cpu]
+  llc-loads-ops
+       [Last level cache read accesses. Unit: cpu]
+  llc-loads-reference
+       [Last level cache read accesses. Unit: cpu]
+  llc-loads-refs
+       [Last level cache read accesses. Unit: cpu]
+  llc-miss
+       [Last level cache read misses. Unit: cpu]
+  llc-misses
+       [Last level cache read misses. Unit: cpu]
+  llc-ops
+       [Last level cache read accesses. Unit: cpu]
+  llc-read
+       [Last level cache read accesses. Unit: cpu]
+  llc-read-access
+       [Last level cache read accesses. Unit: cpu]
+  llc-read-miss
+       [Last level cache read misses. Unit: cpu]
+  llc-read-misses
+       [Last level cache read misses. Unit: cpu]
+  llc-read-ops
+       [Last level cache read accesses. Unit: cpu]
+  llc-read-reference
+       [Last level cache read accesses. Unit: cpu]
+  llc-read-refs
+       [Last level cache read accesses. Unit: cpu]
+  llc-reference
+       [Last level cache read accesses. Unit: cpu]
+  llc-refs
+       [Last level cache read accesses. Unit: cpu]
+  llc-store
+       [Last level cache write accesses. Unit: cpu]
+  llc-store-access
+       [Last level cache write accesses. Unit: cpu]
+  llc-store-miss
+       [Last level cache write misses. Unit: cpu]
+  llc-store-misses
+       [Last level cache write misses. Unit: cpu]
+  llc-store-ops
+       [Last level cache write accesses. Unit: cpu]
+  llc-store-reference
+       [Last level cache write accesses. Unit: cpu]
+  llc-store-refs
+       [Last level cache write accesses. Unit: cpu]
+  llc-stores
+       [Last level cache write accesses. Unit: cpu]
+  llc-stores-access
+       [Last level cache write accesses. Unit: cpu]
+  llc-stores-miss
+       [Last level cache write misses. Unit: cpu]
+  llc-stores-misses
+       [Last level cache write misses. Unit: cpu]
+  llc-stores-ops
+       [Last level cache write accesses. Unit: cpu]
+  llc-stores-reference
+       [Last level cache write accesses. Unit: cpu]
+  llc-stores-refs
+       [Last level cache write accesses. Unit: cpu]
+  llc-write
+       [Last level cache write accesses. Unit: cpu]
+  llc-write-access
+       [Last level cache write accesses. Unit: cpu]
+  llc-write-miss
+       [Last level cache write misses. Unit: cpu]
+  llc-write-misses
+       [Last level cache write misses. Unit: cpu]
+  llc-write-ops
+       [Last level cache write accesses. Unit: cpu]
+  llc-write-reference
+       [Last level cache write accesses. Unit: cpu]
+  llc-write-refs
+       [Last level cache write accesses. Unit: cpu]
+  node
+       [Local memory read accesses. Unit: cpu]
+  node-access
+       [Local memory read accesses. Unit: cpu]
+  node-load
+       [Local memory read accesses. Unit: cpu]
+  node-load-access
+       [Local memory read accesses. Unit: cpu]
+  node-load-miss
+       [Local memory read misses. Unit: cpu]
+  node-load-misses
+       [Local memory read misses. Unit: cpu]
+  node-load-ops
+       [Local memory read accesses. Unit: cpu]
+  node-load-reference
+       [Local memory read accesses. Unit: cpu]
+  node-load-refs
+       [Local memory read accesses. Unit: cpu]
+  node-loads
+       [Local memory read accesses. Unit: cpu]
+  node-loads-access
+       [Local memory read accesses. Unit: cpu]
+  node-loads-miss
+       [Local memory read misses. Unit: cpu]
+  node-loads-misses
+       [Local memory read misses. Unit: cpu]
+  node-loads-ops
+       [Local memory read accesses. Unit: cpu]
+  node-loads-reference
+       [Local memory read accesses. Unit: cpu]
+  node-loads-refs
+       [Local memory read accesses. Unit: cpu]
+  node-miss
+       [Local memory read misses. Unit: cpu]
+  node-misses
+       [Local memory read misses. Unit: cpu]
+  node-ops
+       [Local memory read accesses. Unit: cpu]
+  node-read
+       [Local memory read accesses. Unit: cpu]
+  node-read-access
+       [Local memory read accesses. Unit: cpu]
+  node-read-miss
+       [Local memory read misses. Unit: cpu]
+  node-read-misses
+       [Local memory read misses. Unit: cpu]
+  node-read-ops
+       [Local memory read accesses. Unit: cpu]
+  node-read-reference
+       [Local memory read accesses. Unit: cpu]
+  node-read-refs
+       [Local memory read accesses. Unit: cpu]
+  node-reference
+       [Local memory read accesses. Unit: cpu]
+  node-refs
+       [Local memory read accesses. Unit: cpu]
+  node-store
+       [Local memory write accesses. Unit: cpu]
+  node-store-access
+       [Local memory write accesses. Unit: cpu]
+  node-store-miss
+       [Local memory write misses. Unit: cpu]
+  node-store-misses
+       [Local memory write misses. Unit: cpu]
+  node-store-ops
+       [Local memory write accesses. Unit: cpu]
+  node-store-reference
+       [Local memory write accesses. Unit: cpu]
+  node-store-refs
+       [Local memory write accesses. Unit: cpu]
+  node-stores
+       [Local memory write accesses. Unit: cpu]
+  node-stores-access
+       [Local memory write accesses. Unit: cpu]
+  node-stores-miss
+       [Local memory write misses. Unit: cpu]
+  node-stores-misses
+       [Local memory write misses. Unit: cpu]
+  node-stores-ops
+       [Local memory write accesses. Unit: cpu]
+  node-stores-reference
+       [Local memory write accesses. Unit: cpu]
+  node-stores-refs
+       [Local memory write accesses. Unit: cpu]
+  node-write
+       [Local memory write accesses. Unit: cpu]
+  node-write-access
+       [Local memory write accesses. Unit: cpu]
+  node-write-miss
+       [Local memory write misses. Unit: cpu]
+  node-write-misses
+       [Local memory write misses. Unit: cpu]
+  node-write-ops
+       [Local memory write accesses. Unit: cpu]
+  node-write-reference
+       [Local memory write accesses. Unit: cpu]
+  node-write-refs
+       [Local memory write accesses. Unit: cpu]
+```
+
+Ian Rogers (13):
+  perf parse-events: Fix legacy cache events if event is duplicated in a
+    PMU
+  perf perf_api_probe: Avoid scanning all PMUs, try software PMU first
+  perf record: Skip don't fail for events that don't open
+  perf jevents: Support copying the source json files to OUTPUT
+  perf pmu: Don't eagerly parse event terms
+  perf pmu: Factor term parsing into a perf_event_attr into a helper
+  perf parse-events: Add terms for legacy hardware and cache config
+    values
+  perf jevents: Add legacy json terms and default_core event table
+    helper
+  perf pmu: Add and use legacy_terms in alias information
+  perf jevents: Add legacy-hardware and legacy-cache json
+  perf print-events: Remove print_hwcache_events
+  perf print-events: Remove print_symbol_events
+  perf parse-events: Remove hard coded legacy hardware and cache parsing
+
+ tools/perf/Makefile.perf                      |   21 +-
+ tools/perf/builtin-list.c                     |   34 +-
+ tools/perf/builtin-record.c                   |   89 +-
+ tools/perf/pmu-events/Build                   |   24 +-
+ .../arch/common/common/legacy-hardware.json   |   72 +
+ tools/perf/pmu-events/empty-pmu-events.c      | 2763 ++++++++++++++++-
+ tools/perf/pmu-events/jevents.py              |   24 +
+ tools/perf/pmu-events/make_legacy_cache.py    |  131 +
+ tools/perf/pmu-events/pmu-events.h            |    1 +
+ tools/perf/tests/pmu-events.c                 |   24 +-
+ tools/perf/util/parse-events.c                |  265 +-
+ tools/perf/util/parse-events.h                |   13 +-
+ tools/perf/util/parse-events.l                |   54 +-
+ tools/perf/util/parse-events.y                |  114 +-
+ tools/perf/util/perf_api_probe.c              |   27 +-
+ tools/perf/util/pmu.c                         |  282 +-
+ tools/perf/util/print-events.c                |  112 -
+ tools/perf/util/print-events.h                |    4 -
+ 18 files changed, 3313 insertions(+), 741 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/common/common/legacy-hardware.json
+ create mode 100755 tools/perf/pmu-events/make_legacy_cache.py
+
+-- 
+2.51.0.268.g9569e192d0-goog
 
