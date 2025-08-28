@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B32013957E;
-	Thu, 28 Aug 2025 06:52:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8420C2D640E;
+	Thu, 28 Aug 2025 07:19:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756363924; cv=none; b=QIchLcpNkafHypHtqlG2o0bkIzofOa9PcRyrl7T9UOqC2muuyoCFdRak3WcVEb1/ro7S0SW0u1dnQ+ZOKdFia0D/FuJo7PFFUbsPwVCgu0/fSZ0vkWkNm8qZayW9U3D30r3iBkwfYKHZIXPNXxZ7R9r3DW8VuAoXPopQHee00YY=
+	t=1756365540; cv=none; b=fWAdh/kQZkLb/CILyrFFeP8dAQRza6TwM1Gm/jqkFK6WJ3cktB0HTPhoKu+5KXyH00HDC4GgGDX85vuVICcPiaKozmKbehcDtErMMSN/uZcY2q44pbd3ZMQ5+/1vWy8beTNFYBRZVT9Deo4KrXi5EeJ90Na/YiJuB3OmCHkscro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756363924; c=relaxed/simple;
-	bh=fCVOV/aa9kx2YHBGI2L4+nLbGmu/QgZ/y4517/LJAMU=;
+	s=arc-20240116; t=1756365540; c=relaxed/simple;
+	bh=zfz+QHV4zEPWS1bSGkbWjz8xGBzvSXS3sMBjjUuLtQw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e+YxYvawtnCpns+WGESwbfXlw4YLW1zrDnrgyBtBkMhWaaK9YrL+TAM4sl18gMNAueyCqj+R4TrJFtVSA9dxAAaD9BdAI4zvSMm3cUFWz83GLieff00YECMbxcLEUa8XAvsQxVuuAHfUkYTIEmPn1+yiJgwdpLXy3u6q9n8MOuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z0bgw7Qr; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z1z6oGZcHDwq9sJaGLtnMkvMuZgLFgbkUqVVvbMIMe1ntyozH8R+fTwhVSWleMWT3DplrqjNge8NS+zSs0bfRc2/R6Ljh0NcLI39uvvvhQrxmYKvjw5t5DyKl0WMyKMyXaFJ6xq/xPnI1xJmecHVN9mESNSYFPriCmvPTKE7IH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XHhPfr6w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z0bgw7Qr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81CCFC4CEEB;
-	Thu, 28 Aug 2025 06:52:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XHhPfr6w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99F81C4CEEB;
+	Thu, 28 Aug 2025 07:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756363924;
-	bh=fCVOV/aa9kx2YHBGI2L4+nLbGmu/QgZ/y4517/LJAMU=;
+	s=k20201202; t=1756365540;
+	bh=zfz+QHV4zEPWS1bSGkbWjz8xGBzvSXS3sMBjjUuLtQw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z0bgw7Qr3AD2hv+fsiJGK8Ys6ytPdZ7CMfQua6XlwiwoBuwGF0scXSJqL7UxqTSbS
-	 +lhEMGZojY5wQpppzYa9rkNolKrSZ5ikVGA5hhYSygWZSYiBD3ErGekt6ao27wELb8
-	 oL7FNWkSj+SrI7gpEJ56hrqqHSR5JCVtWu3r0HE5gNCNqcgB74gyCNuB5IwjVH3ezL
-	 3Q51xbTuMPb3c1rA/2d7W09u0R8mKU/3sMyWiVi6Ic5AxjpuEu0gzlX3Xuj/UlbyQu
-	 OQ/jcKSxHmC0NSS3CJn1+05V/S12KsKjS2s5tqDy58HqLUsUiBacUqCkVnC7W6/raN
-	 sHuFtgg2u0tsQ==
-Date: Wed, 27 Aug 2025 23:52:02 -0700
+	b=XHhPfr6wnryhYSLOLkCyHP3FgHuMnHxeQFCVu51hpNKHcNwAa9BTM7qlAWXDLclXr
+	 plu2InNTVd7CcR7MdFIZSGN0XFYfEKen9pv/VuJyn7KeClpCm44uRrZ7B/DQ+xwXBK
+	 ErWfkyvmd2AcOW3hzCTtWskEdqYTF+bFfLYgzA1ni4Fojo5E4m86FaZhn04cT3Sw5K
+	 8H33TwfCDQjNr9RaqxLqvFGq+JVHX6Yi++JhpSmXIeWOu9Q45u3f1Y31TlpQxto98C
+	 zzLL81fHyPI8FccN4BJe45zAP+wk5z84Xisoj8cWCjxUwFq9obOr+0EQAzMzo2PIv/
+	 XtnL3Wr+/y7iw==
+Date: Thu, 28 Aug 2025 00:18:58 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Zecheng Li <zecheng@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -39,11 +39,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Xu Liu <xliuprof@google.com>, linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 01/10] perf dwarf-aux: Use signed variable types in
- match_var_offset
-Message-ID: <aK_8kt5Yf9MDoPdu@google.com>
+Subject: Re: [PATCH v2 02/10] perf dwarf-aux: More accurate variable type
+ match for breg
+Message-ID: <aLAC4pKRVyzFR8nZ@google.com>
 References: <20250825195412.223077-1-zecheng@google.com>
- <20250825195412.223077-2-zecheng@google.com>
+ <20250825195412.223077-3-zecheng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,78 +52,143 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250825195412.223077-2-zecheng@google.com>
+In-Reply-To: <20250825195412.223077-3-zecheng@google.com>
 
-On Mon, Aug 25, 2025 at 07:54:03PM +0000, Zecheng Li wrote:
-> match_var_offset compares address offsets to determine if an access
-> falls within a variable's bounds. The offsets involved for those
-> relative to base registers from DW_OP_breg can be negative.
+On Mon, Aug 25, 2025 at 07:54:04PM +0000, Zecheng Li wrote:
+> Introduces the function is_breg_access_indirect to determine whether a
+> memory access involving a DW_OP_breg* operation refers to the variable's
+> value directly or requires dereferencing the variable's type as a
+> pointer based on the DWARF expression. Previously, all breg based
+> accesses were assumed to directly access the variable's value
+> (is_pointer = false).
 > 
-> The current implementation uses unsigned types (u64) for these offsets,
-> which rejects almost all negative values.
+> The is_breg_access_indirect function handles three cases:
+> 
+> 1. Base register + offset only: (e.g., DW_OP_breg7 RSP+88) The
+>    calculated address is the location of the variable. The access is
+>    direct, so no type dereference is needed. Returns false.
 
-Right, I thought it cannot get negative offsets except for stack access
-(e.g. fbreg).  But it turns out that container_of() trick can generate
-them with optimizing compilers.
+I'm afraid there may be cases that the base register doesn't point to
+the stack.  In that case it may return true, right?
+
+I think struct find_var_data already has 'is_fbreg' field.  Maybe you
+can add 'is_stack' or 'is_stack_reg' field if the target.  Currently we
+hardcoded X86_REG_SP but it should be arch-dependent.
 
 > 
-> Change the signature of match_var_offset to use signed types (s64). This
-> ensures correct behavior when addr_offset or addr_type are negative.
+> 2. Base register + offset, followed by other operations ending in
+>    DW_OP_stack_value, including DW_OP_deref: (e.g., DW_OP_breg*,
+>    DW_OP_deref, DW_OP_stack_value) The DWARF expression computes the
+>    variable's value, but that value requires a dereference. The memory
+>    access is fetching that value, so no type dereference is needed.
+>    Returns false.
+> 
+> 3. Base register + offset, followed only by DW_OP_stack_value: (e.g.,
+>    DW_OP_breg13 R13+256, DW_OP_stack_value) This indicates the value at
+>    the base + offset is the variable's value. Since this value is being
+>    used as an address in the memory access, the variable's type is
+>    treated as a pointer and requires a type dereference. Returns true.
+> 
+> The is_pointer argument passed to match_var_offset is now set by
+> is_breg_access_indirect for breg accesses.
+> 
+> There are more complex expressions that includes multiple operations and
+> may require additional handling, such as DW_OP_deref without a
+> DW_OP_stack_value, or including multiple base registers. They are less
+> common in the Linux kernel dwarf and are skipped in check_allowed_ops.
 > 
 > Signed-off-by: Zecheng Li <zecheng@google.com>
+> ---
+>  tools/perf/util/dwarf-aux.c | 38 ++++++++++++++++++++++++++++++++-----
+>  1 file changed, 33 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index 920054425578..449bc9ad7aff 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+> @@ -1423,6 +1423,34 @@ static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
+>  	return true;
+>  }
+>  
+> +/**
+> + * is_breg_access_indirect - Check if breg based access implies type
+> + * dereference
+> + * @ops: DWARF operations array
+> + * @nops: Number of operations in @ops
+> + *
+> + * Returns true if the DWARF expression evaluates to the variable's
+> + * value, so the memory access on that register needs type dereference.
+> + * Returns false if the expression evaluates to the variable's address.
+> + * This is called after check_allowed_ops.
+> + */
+> +static bool is_breg_access_indirect(Dwarf_Op *ops, size_t nops)
+> +{
+> +	/* only the base register */
+> +	if (nops == 1)
+> +		return false;
 
-I've confirmed it produced slightly better results on my test sets.
+Then it could be like below:
 
-Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+	if (nops == 1) {
+		int reg = reg_from_dwarf_op(ops);
+		return !(reg == DWARF_REG_FB || data->is_fbreg || reg == data->is_stack);
+	}
 
 Thanks,
 Namhyung
 
-> ---
->  tools/perf/util/dwarf-aux.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> index 559c953ca172..920054425578 100644
-> --- a/tools/perf/util/dwarf-aux.c
-> +++ b/tools/perf/util/dwarf-aux.c
-> @@ -1388,18 +1388,19 @@ struct find_var_data {
->  #define DWARF_OP_DIRECT_REGS  32
->  
->  static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
-> -			     u64 addr_offset, u64 addr_type, bool is_pointer)
-> +			     s64 addr_offset, s64 addr_type, bool is_pointer)
+> +
+> +	if (nops == 2 && ops[1].atom == DW_OP_stack_value)
+> +		return true;
+> +
+> +	if (nops == 3 && (ops[1].atom == DW_OP_deref ||
+> +		ops[1].atom == DW_OP_deref_size) &&
+> +		ops[2].atom == DW_OP_stack_value)
+> +		return false;
+> +	/* unreachable, OP not supported */
+> +	return false;
+> +}
+> +
+>  /* Only checks direct child DIEs in the given scope. */
+>  static int __die_find_var_reg_cb(Dwarf_Die *die_mem, void *arg)
 >  {
->  	Dwarf_Die type_die;
->  	Dwarf_Word size;
-> +	s64 offset = addr_offset - addr_type;
+> @@ -1451,7 +1479,7 @@ static int __die_find_var_reg_cb(Dwarf_Die *die_mem, void *arg)
+>  		if (data->is_fbreg && ops->atom == DW_OP_fbreg &&
+>  		    check_allowed_ops(ops, nops) &&
+>  		    match_var_offset(die_mem, data, data->offset, ops->number,
+> -				     /*is_pointer=*/false))
+> +				     is_breg_access_indirect(ops, nops)))
+>  			return DIE_FIND_CB_END;
 >  
-> -	if (addr_offset == addr_type) {
-> +	if (offset == 0) {
->  		/* Update offset relative to the start of the variable */
->  		data->offset = 0;
->  		return true;
+>  		/* Only match with a simple case */
+> @@ -1463,11 +1491,11 @@ static int __die_find_var_reg_cb(Dwarf_Die *die_mem, void *arg)
+>  					     /*is_pointer=*/true))
+>  				return DIE_FIND_CB_END;
+>  
+> -			/* Local variables accessed by a register + offset */
+> +			/* variables accessed by a register + offset */
+>  			if (ops->atom == (DW_OP_breg0 + data->reg) &&
+>  			    check_allowed_ops(ops, nops) &&
+>  			    match_var_offset(die_mem, data, data->offset, ops->number,
+> -					     /*is_pointer=*/false))
+> +					     is_breg_access_indirect(ops, nops)))
+>  				return DIE_FIND_CB_END;
+>  		} else {
+>  			/* pointer variables saved in a register 32 or above */
+> @@ -1477,11 +1505,11 @@ static int __die_find_var_reg_cb(Dwarf_Die *die_mem, void *arg)
+>  					     /*is_pointer=*/true))
+>  				return DIE_FIND_CB_END;
+>  
+> -			/* Local variables accessed by a register + offset */
+> +			/* variables accessed by a register + offset */
+>  			if (ops->atom == DW_OP_bregx && data->reg == ops->number &&
+>  			    check_allowed_ops(ops, nops) &&
+>  			    match_var_offset(die_mem, data, data->offset, ops->number2,
+> -					     /*is_poitner=*/false))
+> +					     is_breg_access_indirect(ops, nops)))
+>  				return DIE_FIND_CB_END;
+>  		}
 >  	}
->  
-> -	if (addr_offset < addr_type)
-> +	if (offset < 0)
->  		return false;
->  
->  	if (die_get_real_type(die_mem, &type_die) == NULL)
-> @@ -1414,11 +1415,11 @@ static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
->  	if (dwarf_aggregate_size(&type_die, &size) < 0)
->  		return false;
->  
-> -	if (addr_offset >= addr_type + size)
-> +	if ((u64)offset >= size)
->  		return false;
->  
->  	/* Update offset relative to the start of the variable */
-> -	data->offset = addr_offset - addr_type;
-> +	data->offset = offset;
->  	return true;
->  }
->  
 > -- 
 > 2.51.0.261.g7ce5a0a67e-goog
 > 
