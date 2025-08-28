@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FB6340D8D
-	for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 21:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F992D6409
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 21:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756414808; cv=none; b=iafOOoKuMwVQ2HWCEYo1VR2uOWEr50QmTA0RsGsUx+MEK2snpyklXZBhougzU3mWa6HoT9rOdzmubiEQIeiSKwc4rW2h52zmNnKJhWcxcmW1XUmMdGXBR10CyLq6CgaPlQF0q8Q3YLcQbko0uAAnaAbpGJhOsMaXZPkDfq2OqXE=
+	t=1756414810; cv=none; b=TV38FNcMEX6dbd/nUotEq3jiIgqyH6UFO7TXRk/UHaSS0BOpiQoxyITz9JWGwUU8gpaTeodj49OFN0ne01Nc1v1j/y5JdbnhmPQC04DKQzuoM5ZwoXbBOZIWQ1NSTk8Eoul+taFQvc6tBFvix6t5NJD4iB5GbIdZIgor9SET5c4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756414808; c=relaxed/simple;
-	bh=OAN+8LPMukdu5dgxkvakBf+/9iFJXuGvrK7tSR9LUbU=;
+	s=arc-20240116; t=1756414810; c=relaxed/simple;
+	bh=1YfEmHI4Uy2vFFO0+JK7swMQARnybRABQBKgXst1srQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=BGy4z/+CO2slz6IAH0mYMXUjGvTlXju1aR+Tum53V265HAkgMH6MHZeY0y+Wif7N7IWoLdkx8BRx36RlNCjGfstcE+3QKMz8wIoUbROUwydKh3ffJw8JogtGAgNCqcvEMvk2Qy3RrNg7zXo+7pguJ9zVxgfLQLg2u6CzxJbZLs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s2w+VL1h; arc=none smtp.client-ip=209.85.214.201
+	 To:Content-Type; b=YpVR4RdK+eXR5EHsBPTFEEIOIRM4wtYYHrXvB+FBwmnUFS/d0+QkfkCYpVJEP/qXLGI5zTc5wl0GRCyKUhcFRBYeExopHtsQSA/HwRvBfiZ1pn5zJoR0rN+oAkC3vrATYO6ohi5EMd6vpPYLzbsvnOupSoNJP/DzsjuGWcjcv10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Am798Kkg; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s2w+VL1h"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-24458274406so25904395ad.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 14:00:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Am798Kkg"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-327d1fea06eso517753a91.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 14:00:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756414806; x=1757019606; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1756414808; x=1757019608; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6dys8Aa/90XBuzSMjRwrAygLQHbdLbHxpcpKidAhuPA=;
-        b=s2w+VL1h5dXSx2Fq96FS8KHJL+QOkkv/722dSoSQAi8CvjeMM5ESgdK7zO53Ss4vLM
-         Biy969GViU/wjgyJ4Mym3OdqjJJeV/ZUAEb1nvkKo91ps9o4t985VBZ4b08z/JlSVKdA
-         DE19XewweAhlikqF4xuM8mUO5zsNOUVdjQFzwx3boabajzJ+XM/qmloLMtCEY4W2BRzm
-         ChAMZfk0uCUGN+zr2olUVNs8uoib8ThUkDOJ0A31du6ujjOS1CpTfHRzvrsNaRAgKjWA
-         IiDdlawL0yPNCEan8gBLsXBmROehZv+rYSMFo41BficXwXVdrfrfunBGs32t8enYo5QV
-         brRg==
+        bh=yBs0PRHAkWTSJvYcU2kUxuzj8mrp6f+56Zk47OKuWSk=;
+        b=Am798KkggTztQ0gcShBiDJE46Ii0QEjzPFHpWW2SvGOzfWgjSXhU7KZ7ZQPYnA3I1s
+         heOZzwZAg/A3JAbhkBs/ScCk0sLD3uC5/36nxB7+ANy+TV85wYSNouvSNSNLLRE4kd//
+         hh4fcBaUmFzT/MkxVDMnMElTm3Gd3o+wG82rEnFSHDyGfE3qilnKc46MbzyhcDDLmxtf
+         D+wmP7Kl9+lRydmluuntoAULPiaUYUHUDUpItU8F0MWC39n6UT+xreYKdJeLJ+ePJ3t0
+         klC6jq1YGRFqOZTX4H84zh7WFsLvgqFdzZ5jKm1Uy4CjEBBh4f5DBWYLTEIEy/qtrrtk
+         VzNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756414806; x=1757019606;
+        d=1e100.net; s=20230601; t=1756414808; x=1757019608;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6dys8Aa/90XBuzSMjRwrAygLQHbdLbHxpcpKidAhuPA=;
-        b=F/Yugcu9T0wsBY7ZXBqr7t0+1o+2t6Pc8rHefFDAEgAeBbjnIw/c0E/CevNXtCdiql
-         olOA96fj7QetGxtUEFr8uiXwgXZ3ESAraVa5VF5bUEyZN7wqj0vUYDEqCdf8NRfLZQ9D
-         23ef/2lihjQAdaQEIOC3lN6BklO7WhxF21qJTRVIjBZ5IsI8wum3tUumvik0hk6XUYjd
-         D6LLDbs1Bofd/8KTv/Z5YRLmVIf5qf6HklN/PKjYLYvECtYzTgbwkE5ozSUlfDAcPLUx
-         8drWX/yilIxc6v+89Ge4BWYj2F/CfSZb+qLHzqkTFt7g1ks5AaQnq3kFWIjKc+C8xXwJ
-         5OSA==
-X-Forwarded-Encrypted: i=1; AJvYcCWjakNjOcC0ZSIrO+jXayGIeuWUGrfbjJTtT/fTd/KwSe2c3m9Nm0FN+bsydUraApC+Q4mtAovwFGLafCjdZGA2@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzztokfr/wNpS4PvVzaqHJTBtW0nDFcXyEX94Bt0AKCgRNaQWU2
-	20DUxiEJUhGyjcEW5W2ZJW8g5eqiIpbnAmG2RL9K61SX/wrgRsxIEAxFSjCYnoLsLoQho3B78nO
-	YDpe5qJzpvA==
-X-Google-Smtp-Source: AGHT+IGcNCtFhdq4mrjQsHNV3i+iE7zcBUKuNgZSUJJ5JnvCwFPV38o/29+7WGktv6aOFkDV7xmYESVWKjVr
-X-Received: from plbki12.prod.google.com ([2002:a17:903:68c:b0:248:7b22:d928])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:240d:b0:248:9983:fd9c
- with SMTP id d9443c01a7336-2489983fea6mr122425635ad.57.1756414806184; Thu, 28
- Aug 2025 14:00:06 -0700 (PDT)
-Date: Thu, 28 Aug 2025 13:59:22 -0700
+        bh=yBs0PRHAkWTSJvYcU2kUxuzj8mrp6f+56Zk47OKuWSk=;
+        b=OlPJyeSrfGGdP6GmvrQg92RSqMKarBBb+6SFo0aF66wGnzMg62TwTDXv10MCFzUlp3
+         oZBzd+L3GDX+7WIErGWLno/hownp6m/YvR0VaCxs6Vw/yAZbn3aDIXQHe6huxRzHcn+a
+         957LNqEnURs5RmitSfe6kX14QlB4TOBg/wW04myUuWkLShFZiOIac1GLudszOOVU5cc2
+         pT2/kz/I/Vy9CHmdw9E7nPocCRRLD7R6ILHHtqM1T/a2bAJwg5AFIW+T5+Q2YIEvpL9d
+         jNRkXHJscW4HqKyJE5l+z0Fhwz7v/K5ZDd6r89Sbf6Jd3zhvH3Obr2MFJyzc91Yfe0ja
+         uyxw==
+X-Forwarded-Encrypted: i=1; AJvYcCXgexdJQTVxiI/7BPADhxCZEWgzCFzSPPb6spUkLs2SrThU63leFjmn6SjJOKAzjUwIERpFbECW4eQpzrZTDthi@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOpnPC26i3Sw1GNzbY6UQUT+y9XXPK747hfkF+LuOXPQidjQBi
+	y4Q7JMUuIwTtBUqXQKkTWkyptIdlWNih5y7Ru2n6owsDakxveirfQQhr4vNHlLcgmvXw4zwn7zg
+	I561ALvMqiQ==
+X-Google-Smtp-Source: AGHT+IGuPwLkOkQo0DJt7x8cNegFJuftnP1xNEIw9iOMCKI99ZduyIjWNQ+zrz0cmtgY1a9ytGVF8xuJp87t
+X-Received: from pjx8.prod.google.com ([2002:a17:90b:5688:b0:327:5037:f8c2])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:e7cb:b0:327:a665:da89
+ with SMTP id 98e67ed59e1d1-327a665dc18mr5865595a91.18.1756414808028; Thu, 28
+ Aug 2025 14:00:08 -0700 (PDT)
+Date: Thu, 28 Aug 2025 13:59:23 -0700
 In-Reply-To: <20250828205930.4007284-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250828205930.4007284-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.318.gd7df087d1a-goog
-Message-ID: <20250828205930.4007284-8-irogers@google.com>
-Subject: [PATCH v3 07/15] perf pmu: Use fd rather than FILE from new_alias
+Message-ID: <20250828205930.4007284-9-irogers@google.com>
+Subject: [PATCH v3 08/15] perf pmu: Factor term parsing into a perf_event_attr
+ into a helper
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -75,91 +76,65 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Vince Weaver <vincent.weaver@maine.edu>
 Content-Type: text/plain; charset="UTF-8"
 
-The FILE argument was necessary for the scanner but now that
-functionality is not being used we can switch to just using
-io__getline which should cut down on stdio buffer usage.
+Factor existing functionality in perf_pmu__name_from_config into a
+helper that will be used in later patches.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/pmu.c | 23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
+ tools/perf/util/pmu.c | 33 +++++++++++++++++++--------------
+ 1 file changed, 19 insertions(+), 14 deletions(-)
 
 diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index b44dfe4c73fc..818be59db2c6 100644
+index 818be59db2c6..36b880bf6bbf 100644
 --- a/tools/perf/util/pmu.c
 +++ b/tools/perf/util/pmu.c
-@@ -563,7 +563,7 @@ static int update_alias(const struct pmu_event *pe,
- }
- 
- static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
--				const char *desc, const char *val, FILE *val_fd,
-+				const char *desc, const char *val, int val_fd,
- 			        const struct pmu_event *pe, enum event_source src)
- {
- 	struct perf_pmu_alias *alias, *old_alias;
-@@ -614,12 +614,15 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
- 	if (ret)
- 		return ret;
- 
--	if (!val_fd) {
-+	if (val_fd < 0) {
- 		alias->terms = strdup(val);
- 	} else {
-+		char buf[256];
-+		struct io io;
- 		size_t line_len;
- 
--		ret = getline(&alias->terms, &line_len, val_fd) < 0 ? -errno : 0;
-+		io__init(&io, val_fd, buf, sizeof(buf));
-+		ret = io__getline(&io, &alias->terms, &line_len) < 0 ? -errno : 0;
- 		if (ret) {
- 			pr_err("Failed to read alias %s\n", name);
- 			return ret;
-@@ -698,7 +701,6 @@ static int __pmu_aliases_parse(struct perf_pmu *pmu, int events_dir_fd)
- 	while ((evt_ent = io_dir__readdir(&event_dir))) {
- 		char *name = evt_ent->d_name;
- 		int fd;
--		FILE *file;
- 
- 		if (!strcmp(name, ".") || !strcmp(name, ".."))
- 			continue;
-@@ -714,17 +716,12 @@ static int __pmu_aliases_parse(struct perf_pmu *pmu, int events_dir_fd)
- 			pr_debug("Cannot open %s\n", name);
- 			continue;
- 		}
--		file = fdopen(fd, "r");
--		if (!file) {
--			close(fd);
--			continue;
--		}
- 
- 		if (perf_pmu__new_alias(pmu, name, /*desc=*/ NULL,
--					/*val=*/ NULL, file, /*pe=*/ NULL,
-+					/*val=*/ NULL, fd, /*pe=*/ NULL,
- 					EVENT_SRC_SYSFS) < 0)
- 			pr_debug("Cannot set up %s\n", name);
--		fclose(file);
-+		close(fd);
- 	}
- 
- 	pmu->sysfs_aliases_loaded = true;
-@@ -1041,7 +1038,7 @@ static int pmu_add_cpu_aliases_map_callback(const struct pmu_event *pe,
- {
- 	struct perf_pmu *pmu = vdata;
- 
--	perf_pmu__new_alias(pmu, pe->name, pe->desc, pe->event, /*val_fd=*/ NULL,
-+	perf_pmu__new_alias(pmu, pe->name, pe->desc, pe->event, /*val_fd=*/ -1,
- 			    pe, EVENT_SRC_CPU_JSON);
+@@ -1763,6 +1763,24 @@ static int check_info_data(struct perf_pmu *pmu,
  	return 0;
  }
-@@ -1090,7 +1087,7 @@ static int pmu_add_sys_aliases_iter_fn(const struct pmu_event *pe,
- 				pe->name,
- 				pe->desc,
- 				pe->event,
--				/*val_fd=*/ NULL,
-+				/*val_fd=*/ -1,
- 				pe,
- 				EVENT_SRC_SYS_JSON);
+ 
++static int perf_pmu__parse_terms_to_attr(struct perf_pmu *pmu, const char *terms_str,
++					 struct perf_event_attr *attr)
++{
++	struct parse_events_terms terms;
++	int ret;
++
++	parse_events_terms__init(&terms);
++	ret = parse_events_terms(&terms, terms_str);
++	if (ret) {
++		pr_debug("Failed to parse terms '%s': %d\n", terms_str, ret);
++		parse_events_terms__exit(&terms);
++		return ret;
++	}
++	ret = perf_pmu__config(pmu, attr, &terms, /*apply_hardcoded=*/true, /*err=*/NULL);
++	parse_events_terms__exit(&terms);
++	return ret;
++}
++
+ /*
+  * Find alias in the terms list and replace it with the terms
+  * defined for the alias
+@@ -2595,21 +2613,8 @@ const char *perf_pmu__name_from_config(struct perf_pmu *pmu, u64 config)
+ 	hashmap__for_each_entry(pmu->aliases, entry, bkt) {
+ 		struct perf_pmu_alias *event = entry->pvalue;
+ 		struct perf_event_attr attr = {.config = 0,};
+-		struct parse_events_terms terms;
+-		int ret;
++		int ret = perf_pmu__parse_terms_to_attr(pmu, event->terms, &attr);
+ 
+-		parse_events_terms__init(&terms);
+-		ret = parse_events_terms(&terms, event->terms);
+-		if (ret) {
+-			pr_debug("Failed to parse '%s' terms '%s': %d\n",
+-				event->name, event->terms, ret);
+-			parse_events_terms__exit(&terms);
+-			continue;
+-		}
+-		ret = perf_pmu__config(pmu, &attr, &terms, /*apply_hardcoded=*/true,
+-				       /*err=*/NULL);
+-
+-		parse_events_terms__exit(&terms);
+ 		if (ret == 0 && config == attr.config)
+ 			return event->name;
  	}
 -- 
 2.51.0.318.gd7df087d1a-goog
