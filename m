@@ -1,494 +1,251 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3F422F01;
-	Thu, 28 Aug 2025 17:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0452765D0
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 18:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756403221; cv=none; b=Tj/0ezm80qVWyQOQbFLYcL5pFRhY9FEftAFWBoLCsiKHy1BF04T2qmwK4rQiFk/EE79Dx7f8vt9lzuya2r5Zfrp6Xycu+4aMU80O7uqoSQsS/m2OjhrT5ez7jniLTb7byUUo4vVSludwHAHhAolwVASLHHMNlyg6VZ1Jb0qaE58=
+	t=1756406208; cv=none; b=WxamgWjJZ9OjHVYV7+y+pHm5gu2EwaYlHQ4kqadGKYooC992CUjlnQfPhJBK9iaUP3Jue5+oVsaU5RnqtQwSrlvmGoT5+mPEX/qsm+gGB0jvNiqAHElnC4Xa/vi54IeibQPLBGvpKiUe3Gv60HrstfJrPWCM3F0E6SksGv0pjtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756403221; c=relaxed/simple;
-	bh=rZP6qTbqGtSIo/j16m46eXXWlP8S9wPoOQ4vZa5lhCU=;
+	s=arc-20240116; t=1756406208; c=relaxed/simple;
+	bh=bvhPWX3894/1cLC+TB+lwb7jSVxlvq91YvDHkvtjR5Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jxXLMWHRn29ZJyxYpLLtebt6MFtajiAQd/T2z31TQI6AkRC4s4AQEL38+RIwlOgjX5JEJUJOTrU8BsjMPZYXRs+uaHz9kUQw5G7IlABDrKX2xuNQP3u4Dmz4fIwxmvM1T8/6UuS+lp2fZODq7eMiGsb33dXMWM1FNJy6XW6+IUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Su5q8iz/; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=kmV7v3oEF1NHSbaYAzv4zFEkMVaOmkSTO7W+suuWpytB7e8jW4L02M1ont4ioiassUP1UcgsD3AKMHY2UH1vcsbmeASnG/HVtW5/68ZTc22YXNNP0h7ZGP5FADDALi1if9nekCJA+McxpS3+pVH1gooMgtrpM13GhXe8QB/awQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iNw98LZ8; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Su5q8iz/"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3c68ac7e238so632724f8f.1;
-        Thu, 28 Aug 2025 10:46:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iNw98LZ8"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-afcb7a16441so187136766b.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 11:36:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756403218; x=1757008018; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1756406205; x=1757011005; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=W5BQ+lgCm+hFgInYum/X7ZXkFamcbZPOD/z43fL4xMo=;
-        b=Su5q8iz/xMrLnGpMMWZmED+5CS2RucTG1CZDQb1kgAZEmD7ZVXiYRXofx7pg6RgKgG
-         I/iGvylw7exYqt80JII7iBRjrHIMS3/vwOO95hQuaThRpNVlrCKZfVvl64ZDvU+dBs6d
-         9oBOBQYmNyr1XdSqXX43R+TJKSqooopqHVIbVblMUipHfamEO/86NZBTvWTKm6fYTZkj
-         xPkVsSH9BoBOL8Uu3uzVxxc8nBzMOiUcVQPACgpkPaKNdecSjKHGkXHYjvVQRRKSQh/L
-         d9Ic4rrjdKRxj0UF7rmAyHY3ipQm3gGR9k9Xj2/NM+Tpw0es/zJAiaF/WShY1mRxG0mC
-         aCGw==
+        bh=hHW66vik/XOF/b5a9eA0c5HxElogAXhATll56cjYuUc=;
+        b=iNw98LZ85Mpd5Q8SMSlr4EgeGQ0zY130a2bpfQ2GMaYcnoZJivH+CX6Mp+WthPCP77
+         iW71PlTySqzBibHZz1fpci1oGDniPwzOEhxkgocMIwqIXfwwARCjoyMj/snLPs2Y3wX+
+         ex8yJubWcb+H/eZBspCGWaFYh1OxV98AWLNLbeQjhIlsjzwpccB0bQbSCrjnfVX0ek8o
+         0+fmHxboXx4PxNCm6ZE4j3wIi6RErpbB97j+a7G6HB1M94dDWy1gAInzDqGiwJe0nc5R
+         HyEmqYO8QFMS6Lm2tj0OCAfJ1NOLEJO8cYEynZtxhhVHdw16dK6SBN7ItvwrQg1mjSGd
+         NKpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756403218; x=1757008018;
+        d=1e100.net; s=20230601; t=1756406205; x=1757011005;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=W5BQ+lgCm+hFgInYum/X7ZXkFamcbZPOD/z43fL4xMo=;
-        b=hubqoVX6cqM7pZpr1QIAPgIPkqh/lb2vPdEtAL3PQZyUjDKGERbvRtLuruBBmPkZGb
-         qTnYtmhYi68J0AW99sGOkSjfUO2ygvj5+WEX1+7e0e57iQoccwysBSR0zLQP1D2mkxIT
-         umFA3CogqQZ7H2+uY2P5cuPLS1WknX34oLmOe3vaQhHonKbsOahGr7OSc4ZZxDnkybKV
-         M5QMjbkxk+HHLKIWXn3bFb+uQ5aKWARTG0NTVBNXYJbq5oazwj4WRoOY5rgYvRAIp71F
-         UlWwumifBsEvQyXztf6lqVQpnl4jGSo734iD5Saa996K3HtYWCSl/Wei4MU4gBD86ill
-         +56w==
-X-Forwarded-Encrypted: i=1; AJvYcCW41KouZW9aWW57oL+c7R3cmyOH4VQYIH8hAPUO/CP8JBop4uAinet9H64iVWpbfElTALdHtD1QZWrZajdpbco4cg==@vger.kernel.org, AJvYcCX2se59qse08woPxrYcFgOEuoIh2TadSxfSqZI1lCwVuhKXwyUhM5u1rDJuDAoJw+4K3RHdBLN1HUfNvQs7V+IE@vger.kernel.org, AJvYcCXj1PKO8Wcf6Pgr7UH9+DnQLd+cafc4fbAy/4qHU/Z+eIowtkRBb4eUwom5CR5RKjtnpvnel3fZpRa6/Vc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQAHSJQKfPQ6oezVLHT5dYa7VOiaBP8MCfPyNdJIM0GadNFtZ1
-	GR13ok57NbQMdpu0a7KV0firlTvbUT5U4GKk2N1oRNluBDIHuZ0fjkiWz5erBjBpVLL7Q8WP1KG
-	p55ee9WVHB/9rbgY0RPuuCaOFkqCy7JY=
-X-Gm-Gg: ASbGncsCmg4foRmCw0vVqW/5YZXQz/JISyWfNdAEmmO4lXbKuMrTHuopBI+S+aIxxDP
-	tjPrMeCUX6bspSEbhXZZEFYxNSd88x/eAvFQFf4gV1XjaYA42C5/Rq+4qLBNSGrylZQy5J1L6eS
-	r7z+/B4/IALJ2juaTt9aNHEqDjrrjE/E8sFWcaEcW1fjTsswHKQDkD9knvO5anmuwutVz0QX+iV
-	Q1rkY2z
-X-Google-Smtp-Source: AGHT+IHvqyc3pb900sJBUTlrQWedECpbYpMB5xKIU+44UTfcRa//ZihI5MLQ29+opQFj6apn6sL8VahQFE2wKNg2fAw=
-X-Received: by 2002:a5d:5d0a:0:b0:3b8:f358:e80d with SMTP id
- ffacd0b85a97d-3c5db8ab097mr20611204f8f.5.1756403217733; Thu, 28 Aug 2025
- 10:46:57 -0700 (PDT)
+        bh=hHW66vik/XOF/b5a9eA0c5HxElogAXhATll56cjYuUc=;
+        b=VkVd4gic1ZV1FL+NGG9hx71ruWDBnKEIYtWU5ggAQPhcvTnp2XhR2I6aBGWRCPaSDI
+         bXd6iyA8J+Rww5JJoE22+NsQ9XsGj0im6AJQlFXc9kAFYjWC0zq0RAc3uX4vMYWwpbKM
+         jQhR3MEzpSgaODxu+QY6gbon8pXrLoUha/MNEDqMxnWo0Gv4YMdq4J5kxAfyrhca0AOe
+         ZMCKVj6oxKivmlSbQpRDaiIaOiAxjjMI0Ld36mUsNTZm0Ie2emvShVTbyFc46kCwFPPr
+         XhWYz/Ct8wYBnXDWF5LwWnKv2nHKz9Ot7e0OL9/3b9LE2FMUOwh+4+g4RppD4scYRElB
+         nFHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVYlHJmh2h91MaORsbtJ1wv6RFTqeT3IxeGMS3AX8EQADIfQO7Ms+C1auz5O125Hg+8wOkDpsvN4CNgmXnpUTqJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YztwsIQMqPxXLkW1W5MaUdxIyDXnmVn4g74nJTKCaqEkMoRBm3x
+	wT/Rte8R3D3h13ES++C8dpjcRrHbbvcbbVJFfOht7LzeoYb7i2VkhKtYEBbKPQ4le2YJfqr7ajd
+	96m0V3TdrX8oZYrfOUCsEMlQYQtWE1s8cFLg+LIPo
+X-Gm-Gg: ASbGnctbuGanJsxvDGXRYEavd04qC5eTSuC1rgJztjmeFMmYFq6Dy/cYwSwxh+iD6cC
+	h7oUpFGn+ePp2Wf3zEHEAb1N38/8uuK4dDCcI7jrJOpF+VhFpVx9KF0bEta9H7HcTz+BddDd6te
+	FP7PVlgTmdd0hLHxGLPHsyRtoZwcavfrlsOZFJU+dRzmDpT/Qkwhr6GL7NdpEpdkHZ9I1MS2BiY
+	q5mgpPdvT7+F5ShIrUFuv96MupIOUo1NAm3vqcXMpkzOld7tREjCHo4Wa5LyUX4bw==
+X-Google-Smtp-Source: AGHT+IGMiMWlNBMZzKgGFJuPkN5U8PL7qDthlThh6NkESps4kFZfJXlrZ3T4dW9Uddef46UXYdRba/Pa4HgyNIMDCFk=
+X-Received: by 2002:a17:906:8f8a:b0:afe:c2e7:3709 with SMTP id
+ a640c23a62f3a-afec2e7433amr686859166b.18.1756406204609; Thu, 28 Aug 2025
+ 11:36:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAPd4Wexw_DtndDqRZzXK0PEOAkb4yWB4x8rf5eRdJOLMS-+8SQ@mail.gmail.com>
- <aK68IJPqa4YOo1S_@ghost>
-In-Reply-To: <aK68IJPqa4YOo1S_@ghost>
-From: Jesse T <mr.bossman075@gmail.com>
-Date: Thu, 28 Aug 2025 13:46:21 -0400
-X-Gm-Features: Ac12FXy3BQPFYJAdE_d0UGKSqV1g-N92aO_29KxePtztahgp0gtMrPVagjhdXHs
-Message-ID: <CAJFTR8QKhMVVGa2BRpBcDvXggq5anX5wjTGH7V0_ex0JZfa7sw@mail.gmail.com>
-Subject: Re: [PATCH 5/8] riscv: hw_breakpoint: Use icount for single stepping
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Himanshu Chauhan <hchauhan@ventanamicro.com>, linux-riscv@lists.infradead.org, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Oleg Nesterov <oleg@redhat.com>, 
-	Kees Cook <kees@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
+References: <20250825195412.223077-1-zecheng@google.com> <20250825195412.223077-3-zecheng@google.com>
+ <aLAC4pKRVyzFR8nZ@google.com>
+In-Reply-To: <aLAC4pKRVyzFR8nZ@google.com>
+From: Zecheng Li <zecheng@google.com>
+Date: Thu, 28 Aug 2025 14:36:32 -0400
+X-Gm-Features: Ac12FXyOmG6qOzijGmOY98Fs0TzVvdyjlqP-oeOBptUFoEa_KQU99z-KiieCows
+Message-ID: <CAJUgMyK2wTiEZB__dtgCELmaNGFWhG1j0g9rv_C=cLD6Zq4_5w@mail.gmail.com>
+Subject: Re: [PATCH v2 02/10] perf dwarf-aux: More accurate variable type
+ match for breg
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Liang Kan <kan.liang@linux.intel.com>, Shuah Khan <shuah@kernel.org>, 
-	Samuel Holland <samuel.holland@sifive.com>, Conor Dooley <conor.dooley@microchip.com>, 
-	Deepak Gupta <debug@rivosinc.com>, Andrew Jones <ajones@ventanamicro.com>, 
-	Atish Patra <atishp@rivosinc.com>, Anup Patel <apatel@ventanamicro.com>, 
-	Mayuresh Chitale <mchitale@ventanamicro.com>, WangYuli <wangyuli@uniontech.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Nam Cao <namcao@linutronix.de>, 
-	Yunhui Cui <cuiyunhui@bytedance.com>, Joel Granados <joel.granados@kernel.org>, 
-	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Celeste Liu <coelacanthushex@gmail.com>, 
-	Chunyan Zhang <zhangchunyan@iscas.ac.cn>, Nylon Chen <nylon.chen@sifive.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Joey Gouly <joey.gouly@arm.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Joel Stanley <joel@jms.id.au>
+	"Liang, Kan" <kan.liang@linux.intel.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Xu Liu <xliuprof@google.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 27, 2025 at 4:04=E2=80=AFAM Charlie Jenkins <charlie@rivosinc.c=
-om> wrote:
+On Thu, Aug 28, 2025 at 3:19=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> On Tue, Aug 26, 2025 at 10:08:04AM +0530, Himanshu Chauhan wrote:
-> > On Fri, Aug 22, 2025 at 11:17=E2=80=AFPM Jesse Taube <jesse@rivosinc.co=
-m> wrote:
-> > >
-> > > The Sdtrig RISC-V ISA extension does not have a resume flag for
-> > > returning to and executing the instruction at the breakpoint.
-> > > To avoid skipping the instruction or looping, it is necessary to remo=
-ve
-> > > the hardware breakpoint and single step. Use the icount feature of
-> > > Sdtrig to accomplish this. Use icount as default with an option to al=
-low
-> > > software-based single stepping when hardware or SBI does not have
-> > > icount functionality, as it may cause unwanted side effects when read=
-ing
-> > > the instruction from memory.
+> On Mon, Aug 25, 2025 at 07:54:04PM +0000, Zecheng Li wrote:
+> > Introduces the function is_breg_access_indirect to determine whether a
+> > memory access involving a DW_OP_breg* operation refers to the variable'=
+s
+> > value directly or requires dereferencing the variable's type as a
+> > pointer based on the DWARF expression. Previously, all breg based
+> > accesses were assumed to directly access the variable's value
+> > (is_pointer =3D false).
 > >
-> > Can you please elaborate on this? I remember noticing the absence of
-> > the resume flag which was causing loops.
-
-Yes, signal handler based hardware debugging doesn't work, only ptrace base=
-d.
-ARM64 and ARM also don't support signal handler based hardware
-debugging as seen in a later patch.
-
-> Thank you for your feedback. Jesse's internship came to an end last
-> Friday (August 22nd) so I will be picking up these patches, but I have
-> also added her personal email onto this thread.
-
-I forgot to CC my personal email sorry....
-
-> When a breakpoint is triggered and the kernel gains control, the last
-> instruction to execute was the instruction before the instruction where
-> the breakpoint is installed. If execution was to be resumed at this
-> stage, the same breakpoint would be triggered again. So single stepping
-> requires a careful dance of enabling and disabling breakpoints. However,
-> we can avoid this overhead and code complexity can be reduced by using
-> the icount trigger which allows a direct method for single stepping.
+> > The is_breg_access_indirect function handles three cases:
+> >
+> > 1. Base register + offset only: (e.g., DW_OP_breg7 RSP+88) The
+> >    calculated address is the location of the variable. The access is
+> >    direct, so no type dereference is needed. Returns false.
 >
-> >
-> > >
-> > > Signed-off-by: Jesse Taube <jesse@rivosinc.com>
-> > > ---
-> > > OpenSBI implementation of sbi_debug_read_triggers does not return the
-> > > updated CSR values. There needs to be a check for working
-> > > sbi_debug_read_triggers before this works.
-> > >
-> > > https://lists.riscv.org/g/tech-prs/message/1476
-> > >
-> > > RFC -> V1:
-> > >  - Add dbtr_mode to rv_init_icount_trigger
-> > >  - Add icount_triggered to check which breakpoint was triggered
-> > >  - Fix typo: s/affects/effects
-> > >  - Move HW_BREAKPOINT_COMPUTE_STEP to Platform type
-> > > V1 -> V2:
-> > >  - Remove HW_BREAKPOINT_COMPUTE_STEP kconfig option
-> > > ---
-> > >  arch/riscv/kernel/hw_breakpoint.c | 173 ++++++++++++++++++++++++++--=
---
-> > >  1 file changed, 155 insertions(+), 18 deletions(-)
-> > >
-> > > diff --git a/arch/riscv/kernel/hw_breakpoint.c b/arch/riscv/kernel/hw=
-_breakpoint.c
-> > > index 3f96e744a711..f12306247436 100644
-> > > --- a/arch/riscv/kernel/hw_breakpoint.c
-> > > +++ b/arch/riscv/kernel/hw_breakpoint.c
-> > > @@ -20,6 +20,7 @@
-> > >  #define DBTR_TDATA1_DMODE              BIT_UL(__riscv_xlen - 5)
-> > >
-> > >  #define DBTR_TDATA1_TYPE_MCONTROL      (2UL << DBTR_TDATA1_TYPE_SHIF=
-T)
-> > > +#define DBTR_TDATA1_TYPE_ICOUNT                (3UL << DBTR_TDATA1_T=
-YPE_SHIFT)
-> > >  #define DBTR_TDATA1_TYPE_MCONTROL6     (6UL << DBTR_TDATA1_TYPE_SHIF=
-T)
-> > >
-> > >  #define DBTR_TDATA1_MCONTROL6_LOAD             BIT(0)
-> > > @@ -62,6 +63,14 @@
-> > >         (FIELD_PREP(DBTR_TDATA1_MCONTROL_SIZELO_FIELD, lo) | \
-> > >          FIELD_PREP(DBTR_TDATA1_MCONTROL_SIZEHI_FIELD, hi))
-> > >
-> > > +#define DBTR_TDATA1_ICOUNT_U                   BIT(6)
-> > > +#define DBTR_TDATA1_ICOUNT_S                   BIT(7)
-> > > +#define DBTR_TDATA1_ICOUNT_PENDING             BIT(8)
-> > > +#define DBTR_TDATA1_ICOUNT_M                   BIT(9)
-> > > +#define DBTR_TDATA1_ICOUNT_COUNT_FIELD         GENMASK(23, 10)
-> > > +#define DBTR_TDATA1_ICOUNT_VU                  BIT(25)
-> > > +#define DBTR_TDATA1_ICOUNT_VS                  BIT(26)
-> > > +
-> > >  enum dbtr_mode {
-> > >         DBTR_MODE_U =3D 0,
-> > >         DBTR_MODE_S,
-> > > @@ -79,6 +88,7 @@ static DEFINE_PER_CPU(union sbi_dbtr_shmem_entry, s=
-bi_dbtr_shmem);
-> > >
-> > >  /* number of debug triggers on this cpu . */
-> > >  static int dbtr_total_num __ro_after_init;
-> > > +static bool have_icount __ro_after_init;
-> > >  static unsigned long dbtr_type __ro_after_init;
-> > >  static unsigned long dbtr_init __ro_after_init;
-> > >
-> > > @@ -129,6 +139,7 @@ static int arch_smp_teardown_sbi_shmem(unsigned i=
-nt cpu)
-> > >  static void init_sbi_dbtr(void)
-> > >  {
-> > >         struct sbiret ret;
-> > > +       unsigned long dbtr_count =3D 0;
-> > >
-> > >         /*
-> > >          * Called by hw_breakpoint_slots and arch_hw_breakpoint_init.
-> > > @@ -143,6 +154,19 @@ static void init_sbi_dbtr(void)
-> > >                 return;
-> > >         }
-> > >
-> > > +       ret =3D sbi_ecall(SBI_EXT_DBTR, SBI_EXT_DBTR_NUM_TRIGGERS,
-> > > +               DBTR_TDATA1_TYPE_ICOUNT, 0, 0, 0, 0, 0);
-> > > +       if (ret.error) {
-> > > +               pr_warn("%s: failed to detect icount triggers. error:=
- %ld.\n",
-> > > +                       __func__, ret.error);
-> > > +       } else if (!ret.value) {
-> > > +               pr_warn("%s: No icount triggers available. "
-> > > +                       "Falling-back to computing single step addres=
-s.\n", __func__);
-> > > +       } else {
-> > > +               dbtr_count =3D ret.value;
-> > > +               have_icount =3D true;
-> > > +       }
-> > > +
-> > >         ret =3D sbi_ecall(SBI_EXT_DBTR, SBI_EXT_DBTR_NUM_TRIGGERS,
-> > >                         DBTR_TDATA1_TYPE_MCONTROL6, 0, 0, 0, 0, 0);
-> > >         if (ret.error) {
-> > > @@ -151,7 +175,7 @@ static void init_sbi_dbtr(void)
-> > >         } else if (!ret.value) {
-> > >                 pr_warn("%s: No mcontrol6 triggers available.\n", __f=
-unc__);
-> > >         } else {
-> > > -               dbtr_total_num =3D ret.value;
-> > > +               dbtr_total_num =3D min_not_zero((unsigned long)ret.va=
-lue, dbtr_count);
-> > >                 dbtr_type =3D DBTR_TDATA1_TYPE_MCONTROL6;
-> > >                 return;
-> > >         }
-> > > @@ -166,7 +190,7 @@ static void init_sbi_dbtr(void)
-> > >                 pr_err("%s: No mcontrol triggers available.\n", __fun=
-c__);
-> > >                 dbtr_total_num =3D 0;
-> > >         } else {
-> > > -               dbtr_total_num =3D ret.value;
-> > > +               dbtr_total_num =3D min_not_zero((unsigned long)ret.va=
-lue, dbtr_count);
-> > >                 dbtr_type =3D DBTR_TDATA1_TYPE_MCONTROL;
-> > >         }
-> > >  }
-> > > @@ -320,6 +344,36 @@ static int rv_init_mcontrol6_trigger(const struc=
-t perf_event_attr *attr,
-> > >         return 0;
-> > >  }
-> > >
-> > > +static int rv_init_icount_trigger(struct arch_hw_breakpoint *hw, enu=
-m dbtr_mode mode)
-> > > +{
-> > > +       unsigned long tdata1 =3D DBTR_TDATA1_TYPE_ICOUNT;
-> > > +
-> > > +       /* Step one instruction */
-> > > +       tdata1 |=3D FIELD_PREP(DBTR_TDATA1_ICOUNT_COUNT_FIELD, 1);
-> > > +
-> > > +       switch (mode) {
-> > > +       case DBTR_MODE_U:
-> > > +               tdata1 |=3D DBTR_TDATA1_ICOUNT_U;
-> > > +               break;
-> > > +       case DBTR_MODE_S:
-> > > +               tdata1 |=3D DBTR_TDATA1_ICOUNT_S;
-> > > +               break;
-> > > +       case DBTR_MODE_VS:
-> > > +               tdata1 |=3D DBTR_TDATA1_ICOUNT_VS;
-> > > +               break;
-> > > +       case DBTR_MODE_VU:
-> > > +               tdata1 |=3D DBTR_TDATA1_ICOUNT_VU;
-> > > +               break;
-> > > +       default:
-> > > +               return -EINVAL;
-> > > +       }
-> > > +
-> > > +       hw->tdata1 =3D tdata1;
-> > > +       hw->tdata2 =3D 0;
-> > > +
-> > > +       return 0;
-> > > +}
-> > > +
-> > >  int hw_breakpoint_arch_parse(struct perf_event *bp,
-> > >                              const struct perf_event_attr *attr,
-> > >                              struct arch_hw_breakpoint *hw)
-> > > @@ -372,24 +426,28 @@ static int setup_singlestep(struct perf_event *=
-event, struct pt_regs *regs)
-> > >         /* Remove breakpoint even if return error as not to loop */
-> > >         arch_uninstall_hw_breakpoint(event);
-> > >
-> > > -       ret =3D get_insn_nofault(regs, regs->epc, &insn);
-> > > -       if (ret < 0)
-> > > -               return ret;
-> > > +       if (have_icount) {
-> > > +               rv_init_icount_trigger(bp, DBTR_MODE_U);
-> > > +       } else {
-> > > +               ret =3D get_insn_nofault(regs, regs->epc, &insn);
-> > > +               if (ret < 0)
-> > > +                       return ret;
-> > >
-> > > -       next_addr =3D get_step_address(regs, insn);
-> > > +               next_addr =3D get_step_address(regs, insn);
-> > >
-> > > -       ret =3D get_insn_nofault(regs, next_addr, &insn);
-> > > -       if (ret < 0)
-> > > -               return ret;
-> > > +               ret =3D get_insn_nofault(regs, next_addr, &insn);
-> > > +               if (ret < 0)
-> > > +                       return ret;
-> > >
-> > > -       bp_insn.bp_type =3D HW_BREAKPOINT_X;
-> > > -       bp_insn.bp_addr =3D next_addr;
-> > > -       /* Get the size of the intruction */
-> > > -       bp_insn.bp_len =3D GET_INSN_LENGTH(insn);
-> > > +               bp_insn.bp_type =3D HW_BREAKPOINT_X;
-> > > +               bp_insn.bp_addr =3D next_addr;
-> > > +               /* Get the size of the intruction */
-> > > +               bp_insn.bp_len =3D GET_INSN_LENGTH(insn);
-> > >
-> > > -       ret =3D hw_breakpoint_arch_parse(NULL, &bp_insn, bp);
-> > > -       if (ret)
-> > > -               return ret;
-> > > +               ret =3D hw_breakpoint_arch_parse(NULL, &bp_insn, bp);
-> > > +               if (ret)
-> > > +                       return ret;
-> > > +       }
-> > >
-> > >         ret =3D arch_install_hw_breakpoint(event);
-> > >         if (ret)
-> > > @@ -400,6 +458,79 @@ static int setup_singlestep(struct perf_event *e=
-vent, struct pt_regs *regs)
-> > >         return 0;
-> > >  }
-> > >
-> > > +/**
-> > > + * icount_triggered - Check if event's icount was triggered.
-> > > + * @event: Perf event to check
-> > > + *
-> > > + * Check the given perf event's icount breakpoint was triggered.
-> > > + *
-> > > + * Returns:    1 if icount was triggered.
-> > > + *             0 if icount was not triggered.
-> > > + *             negative on failure.
-> > > + */
-> > > +static int icount_triggered(struct perf_event *event)
-> > > +{
-> > > +       union sbi_dbtr_shmem_entry *shmem =3D this_cpu_ptr(&sbi_dbtr_=
-shmem);
-> > > +       struct sbiret ret;
-> > > +       struct perf_event **slot;
-> > > +       unsigned long tdata1;
-> > > +       int i;
-> > > +
-> > > +       for (i =3D 0; i < dbtr_total_num; i++) {
-> > > +               slot =3D this_cpu_ptr(&pcpu_hw_bp_events[i]);
-> > > +
-> > > +               if (*slot =3D=3D event)
-> > > +                       break;
-> > > +       }
-> > > +
-> > > +       if (i =3D=3D dbtr_total_num) {
-> > > +               pr_warn("%s: Breakpoint not installed.\n", __func__);
-> > > +               return -ENOENT;
-> > > +       }
-> > > +
-> > > +       raw_spin_lock_irqsave(this_cpu_ptr(&ecall_lock),
-> > > +                             *this_cpu_ptr(&ecall_lock_flags));
-> > > +
-> > > +       ret =3D sbi_ecall(SBI_EXT_DBTR, SBI_EXT_DBTR_TRIG_READ,
-> > > +                       i, 1, 0, 0, 0, 0);
-> > > +       tdata1 =3D shmem->data.tdata1;
-> > > +
-> > > +       raw_spin_unlock_irqrestore(this_cpu_ptr(&ecall_lock),
-> > > +                                  *this_cpu_ptr(&ecall_lock_flags));
-> > > +       if (ret.error) {
-> > > +               pr_warn("%s: failed to read trigger. error: %ld\n", _=
-_func__, ret.error);
-> > > +               return sbi_err_map_linux_errno(ret.error);
-> >
-> > To avoid a flurry of events or messages, it would probably be good to
-> > disable the trigger.
->
-> That is a good point.
+> I'm afraid there may be cases that the base register doesn't point to
+> the stack.  In that case it may return true, right?
 
-Agreed
+Hi Namhyung,
+
+In this case, the DWARF specification for a DW_OP_breg* operation is
+to always calculate a memory address. So, even if the base register
+isn't the stack pointer, the expression still resolves to the
+variable's location, meaning the access is direct (is_pointer =3D
+false).
+
+> I think struct find_var_data already has 'is_fbreg' field.  Maybe you
+> can add 'is_stack' or 'is_stack_reg' field if the target.  Currently we
+> hardcoded X86_REG_SP but it should be arch-dependent.
+
+Therefore we don't need to check if the register is a stack or frame base.
 
 > >
-> > > +       }
-> > > +
-> > > +       /*
-> > > +        * The RISC-V Debug Specification
-> > > +        * Tim Newsome, Paul Donahue (Ventana Micro Systems)
-> > > +        * Version 1.0, Revised 2025-02-21: Ratified
-> > I think mentioning the version number and section would be enough.
->
-> Agreed.
-
-I wasn't sure the best way to cite this, Version number and section is
-ok with me.
-
-> > > +        * 5.7.13. Instruction Count (icount, at 0x7a1)
-> > > +        * When count is 1 and the trigger matches, then pending beco=
-mes set.
-> > > +        * In addition count will become 0 unless it is hard-wired to=
- 1.
-> > > +        * When pending is set, the trigger fires just before any fur=
-ther
-> > > +        * instructions are executed in a mode where the trigger is e=
-nabled.
-> > > +        * As the trigger fires, pending is cleared. In addition, if =
-count is
-> > > +        * hard-wired to 1 then m, s, u, vs, and vu are all cleared.
-> > > +        */
-> > > +       if (FIELD_GET(DBTR_TDATA1_ICOUNT_COUNT_FIELD, tdata1) =3D=3D =
-0)
-> > > +               return 1;
-> > > +
-> > > +       if (FIELD_GET(DBTR_TDATA1_ICOUNT_COUNT_FIELD, tdata1) !=3D 1)
-> > > +               return 0;
-> > > +
-> > > +       if (tdata1 & DBTR_TDATA1_ICOUNT_U)
-> > > +               return 0;
-> > > +       if (tdata1 & DBTR_TDATA1_ICOUNT_S)
-> > > +               return 0;
-> > > +       if (tdata1 & DBTR_TDATA1_ICOUNT_VU)
-> > > +               return 0;
-> > > +       if (tdata1 & DBTR_TDATA1_ICOUNT_VU)
-> > > +               return 0;
-> > > +       return 1;
-> > > +}
-> > > +
-> > >  /*
-> > >   * HW Breakpoint/watchpoint handler
-> > >   */
-> > > @@ -460,7 +591,10 @@ static int hw_breakpoint_handler(struct pt_regs =
-*regs)
-> > >
-> > >                 if (bp->in_callback) {
-> > >                         expecting_callback =3D true;
-> > > -                       if (regs->epc !=3D bp->next_addr) {
-> > > +                       if (have_icount) {
-> > > +                               if (icount_triggered(event) !=3D 1)
-> > > +                                       continue;
-> > > +                       } else if (regs->epc !=3D bp->next_addr) {
-> > >                                 continue;
-> > >                         }
-> > >
-> > > @@ -477,7 +611,10 @@ static int hw_breakpoint_handler(struct pt_regs =
-*regs)
-> > >
-> > >         }
-> > >
-> > > -       if (expecting_callback) {
-> > > +       if (expecting_callback && have_icount) {
-> > > +               pr_err("%s: in_callback was set, but icount was not t=
-riggered, epc (%lx).\n",
-> > > +                      __func__, regs->epc);
-> > > +       } else if (expecting_callback) {
-> > >                 pr_err("%s: in_callback was set, but epc (%lx) was no=
-t at next address(%lx).\n",
-> > >                        __func__, regs->epc, bp->next_addr);
-> > >         }
+> > 2. Base register + offset, followed by other operations ending in
+> >    DW_OP_stack_value, including DW_OP_deref: (e.g., DW_OP_breg*,
+> >    DW_OP_deref, DW_OP_stack_value) The DWARF expression computes the
+> >    variable's value, but that value requires a dereference. The memory
+> >    access is fetching that value, so no type dereference is needed.
+> >    Returns false.
 > >
-> > Is this just for debugging or do you want to commit it?
->
-> I believe this was intentional, but perhaps it is not a useful print.
-
-It is for someone to find out that a spurious debug trigger event
-happened as it is expecting either an icount event or
-a mcontrol event at next_addr if this did not happen it will send a
-SIG_DEBUG to the user process.
-
-Ignore my previous response as it was HTML.
-
-Thanks,
-Jesse
-
-> - Charlie
->
+> > 3. Base register + offset, followed only by DW_OP_stack_value: (e.g.,
+> >    DW_OP_breg13 R13+256, DW_OP_stack_value) This indicates the value at
+> >    the base + offset is the variable's value. Since this value is being
+> >    used as an address in the memory access, the variable's type is
+> >    treated as a pointer and requires a type dereference. Returns true.
 > >
-> > Regards
-> > Himanshu
-> > > --
-> > > 2.43.0
-> > >
+> > The is_pointer argument passed to match_var_offset is now set by
+> > is_breg_access_indirect for breg accesses.
+> >
+> > There are more complex expressions that includes multiple operations an=
+d
+> > may require additional handling, such as DW_OP_deref without a
+> > DW_OP_stack_value, or including multiple base registers. They are less
+> > common in the Linux kernel dwarf and are skipped in check_allowed_ops.
+> >
+> > Signed-off-by: Zecheng Li <zecheng@google.com>
+> > ---
+> >  tools/perf/util/dwarf-aux.c | 38 ++++++++++++++++++++++++++++++++-----
+> >  1 file changed, 33 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> > index 920054425578..449bc9ad7aff 100644
+> > --- a/tools/perf/util/dwarf-aux.c
+> > +++ b/tools/perf/util/dwarf-aux.c
+> > @@ -1423,6 +1423,34 @@ static bool match_var_offset(Dwarf_Die *die_mem,=
+ struct find_var_data *data,
+> >       return true;
+> >  }
+> >
+> > +/**
+> > + * is_breg_access_indirect - Check if breg based access implies type
+> > + * dereference
+> > + * @ops: DWARF operations array
+> > + * @nops: Number of operations in @ops
+> > + *
+> > + * Returns true if the DWARF expression evaluates to the variable's
+> > + * value, so the memory access on that register needs type dereference=
+.
+> > + * Returns false if the expression evaluates to the variable's address=
+.
+> > + * This is called after check_allowed_ops.
+> > + */
+> > +static bool is_breg_access_indirect(Dwarf_Op *ops, size_t nops)
+> > +{
+> > +     /* only the base register */
+> > +     if (nops =3D=3D 1)
+> > +             return false;
+>
+> Then it could be like below:
+>
+>         if (nops =3D=3D 1) {
+>                 int reg =3D reg_from_dwarf_op(ops);
+>                 return !(reg =3D=3D DWARF_REG_FB || data->is_fbreg || reg=
+ =3D=3D data->is_stack);
+>         }
+>
+> Thanks,
+> Namhyung
+>
+> > +
+> > +     if (nops =3D=3D 2 && ops[1].atom =3D=3D DW_OP_stack_value)
+> > +             return true;
+> > +
+> > +     if (nops =3D=3D 3 && (ops[1].atom =3D=3D DW_OP_deref ||
+> > +             ops[1].atom =3D=3D DW_OP_deref_size) &&
+> > +             ops[2].atom =3D=3D DW_OP_stack_value)
+> > +             return false;
+> > +     /* unreachable, OP not supported */
+> > +     return false;
+> > +}
+> > +
+> >  /* Only checks direct child DIEs in the given scope. */
+> >  static int __die_find_var_reg_cb(Dwarf_Die *die_mem, void *arg)
+> >  {
+> > @@ -1451,7 +1479,7 @@ static int __die_find_var_reg_cb(Dwarf_Die *die_m=
+em, void *arg)
+> >               if (data->is_fbreg && ops->atom =3D=3D DW_OP_fbreg &&
+> >                   check_allowed_ops(ops, nops) &&
+> >                   match_var_offset(die_mem, data, data->offset, ops->nu=
+mber,
+> > -                                  /*is_pointer=3D*/false))
+> > +                                  is_breg_access_indirect(ops, nops)))
+> >                       return DIE_FIND_CB_END;
+> >
+> >               /* Only match with a simple case */
+> > @@ -1463,11 +1491,11 @@ static int __die_find_var_reg_cb(Dwarf_Die *die=
+_mem, void *arg)
+> >                                            /*is_pointer=3D*/true))
+> >                               return DIE_FIND_CB_END;
+> >
+> > -                     /* Local variables accessed by a register + offse=
+t */
+> > +                     /* variables accessed by a register + offset */
+> >                       if (ops->atom =3D=3D (DW_OP_breg0 + data->reg) &&
+> >                           check_allowed_ops(ops, nops) &&
+> >                           match_var_offset(die_mem, data, data->offset,=
+ ops->number,
+> > -                                          /*is_pointer=3D*/false))
+> > +                                          is_breg_access_indirect(ops,=
+ nops)))
+> >                               return DIE_FIND_CB_END;
+> >               } else {
+> >                       /* pointer variables saved in a register 32 or ab=
+ove */
+> > @@ -1477,11 +1505,11 @@ static int __die_find_var_reg_cb(Dwarf_Die *die=
+_mem, void *arg)
+> >                                            /*is_pointer=3D*/true))
+> >                               return DIE_FIND_CB_END;
+> >
+> > -                     /* Local variables accessed by a register + offse=
+t */
+> > +                     /* variables accessed by a register + offset */
+> >                       if (ops->atom =3D=3D DW_OP_bregx && data->reg =3D=
+=3D ops->number &&
+> >                           check_allowed_ops(ops, nops) &&
+> >                           match_var_offset(die_mem, data, data->offset,=
+ ops->number2,
+> > -                                          /*is_poitner=3D*/false))
+> > +                                          is_breg_access_indirect(ops,=
+ nops)))
+> >                               return DIE_FIND_CB_END;
+> >               }
+> >       }
+> > --
+> > 2.51.0.261.g7ce5a0a67e-goog
+> >
