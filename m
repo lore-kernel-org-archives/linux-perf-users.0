@@ -1,55 +1,55 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0A732C315
-	for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 16:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7877F32C331
+	for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 16:32:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756398774; cv=none; b=jRGGAgZaNK+hiOtEX2A9+XpViSo1xEA1gNJGQb34IJRYuarTjzOYIM+8zJ90Q9OwD1xr87uWro0gf3LpzRbEf/EIQiMBMLSfPTJef6Lw5Gv202n5dA6aXgFrQBN1NJHVrbSSgB19vD43GYqv3S8Hl/uyn5WURY/wEw4TikK0NbI=
+	t=1756398775; cv=none; b=bg4Pl1Iy4HmcoYw47kUnkRIe98xQPwRkphUK3pZWksiVjXggv0XDP23x6gDnK6Xoabr81LRGulZbipIHtY3ny/HQ0n3Anc24KdHZCI3sRCAhaHdY+dOqZ3bKKuw+km/ZGB8uIyBxYrQ/BzBDpax2jACz/hZAZnowWSMVC7uf9NU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756398774; c=relaxed/simple;
-	bh=kAT02dDDWsSGP9sGI7I247Ndnj+YB4J+E7aqX6xLsqw=;
+	s=arc-20240116; t=1756398775; c=relaxed/simple;
+	bh=tzmw2oJ1J8Nlv7ewzHwz5IiTw7iVULUwfwHrsVrWjQI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=aT7NWAPYBEAbr2kkIpqwBfOqCrSzfhNPYswhcL8droDo09kodHPPgSwA2JJ1nPvNlKyXxYPnL9MP9i32pFwp7fCSxdGxC+2gXFsUlBHial00UGNKvJqZo+AHp30xgwnYKBLD1xU1fZbYrWd4fH+mL6H8BceQty05Kkz4ji19JCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ySY2B5il; arc=none smtp.client-ip=209.85.216.74
+	 To:Content-Type; b=g9yZFuAjdUie5wjYWGrZmY5lBctx8CnasSs7RRJunn70J+pKNJ5/z/vbskC8z3eghIGstoGATZmVePYS2AoeaP7c6EKhTGfCsennqC1ZcPsxBq3fxZg8lO+tv8zkS8QK3D7tReuXVMUkvwbFYSX5GSP8Ykw5zcMG2tIKrMI85Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0VTp0q05; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ySY2B5il"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-325ce108e16so1830098a91.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 09:32:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0VTp0q05"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-327a60cef33so1083329a91.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 09:32:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756398771; x=1757003571; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1756398773; x=1757003573; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=/gF9feMjUqWwRH6NwL2mVQB58/A0Uxdl0uj3m+TeYl8=;
-        b=ySY2B5ild+0Q74eBHAHCTRbvspR02WzWXIIBDCCIZPlydmFQcdAft5SvC7EHxEE1sp
-         h5FgMW2Cvokxm4ZsaRLe2WI9r3759u1wI6OmKrFcbMlLAYL6z3oR34aisUEWCYcH0YBW
-         aw0pu/JbVcGIIsuuwSRB5G2DWjbhlBli82tBfJVzr1aQUU7w+onjN61iEjtaBU+U4WJj
-         kVO2NrEf4SENUoWldvKtwaoK1WtYoWJrnHH+EvDsbuf66R/0phipN1UqmrNlfDcVcUOl
-         J/9v1R5bQIZcHswcQSlDMFvP7Dj1otyoezy8E053gyIg8fzTTTdp3f5PkIZkqYmj6Xds
-         kmLQ==
+        bh=o8gifwonm5nD53uhdwlbZ/djYkNx9hhdBbSGbpiNkeA=;
+        b=0VTp0q05+chNnmIcQewAUZJD7tYIGp6QuZYhms14ggLJX8UrYON4HK71GIemvE/oni
+         gWIeFIKskmlMlcJq1pOR3QIjFA/UAKY7S3C1f0x+XVGenu9XKYCdm2qOR+ZyGuhPomne
+         IA3dMZhOxiUAYj3XKGOwfYBO4EYmiZjv1CneEQnTCQpFtHGdyvhaQzr9Nj/Qm+1Ga1Ak
+         YZhSnY2kP/8DqLOGVP3NsWkZNkPzHy8ZEe9XWb0IRpKVyf8QYy4obarF2r0skRsv9M7s
+         T0yHp9rAe4ShCh8IS+4eJKnN8echpLgeXjJPbYBHBd3tLLnFBZA3H4mjuDSlD8alWvN+
+         /h3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756398771; x=1757003571;
+        d=1e100.net; s=20230601; t=1756398773; x=1757003573;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/gF9feMjUqWwRH6NwL2mVQB58/A0Uxdl0uj3m+TeYl8=;
-        b=YHuOIO8dLJd+n9lY3JANGadVZBcGGwl10R7Z3wUme7JDMoNp8PzjlhaV0JcmDrhxiE
-         4/QD2yD0E8I7BReJLn9pUbfLMTp2f5zTipH3MaFHjnCBPTgnGFR3qJCxNTe8zKfTOivg
-         GlyYARqNuRoF2/MA7uSq0VHsE08k+3bzozVk6twhsyMSbXWOl/OHkleXW2/ItqX1Uo0O
-         lp9wjkWUMercJLh5mnk643pYbws5zQeLEEaRawi7XV4QQ7qZ8GpwryaQfyTsASoCAuzz
-         j5edYR1XyRCynbnHAiQr73DLdOWT38DwBjQVDrtvLiH50bB8gWZX/9b+mQrbV0K9jXSp
-         GGGA==
-X-Forwarded-Encrypted: i=1; AJvYcCUuzqbR9rAfc4RiW0BpOAZ3aOaoAhhcWrNaxj0iltWOBWj/pHoxRIVCHRucJwMuJHmABmv3GkwdVOuamlf6dAh+@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVqjAgHjzY+JBkA/lXL03I8r5xeO5IKYETE6qNb0e2x6nEzqjk
-	RprJ2HdCqsQzRuN+eWE119KaC0KcvAn1e0p9nj0MeYRg077/qYMS2nDOx3CpazFQ96c1rmkDfRf
-	fyTDO2PUe5Q==
-X-Google-Smtp-Source: AGHT+IE0v4od/mcaU6jEyOVFC6H0CCLb2ZOMT7hAQd857YTP7OFzVIAX6rb21I3P/cdfnca8C3TJUawx4UOh
-X-Received: from pjbsk5.prod.google.com ([2002:a17:90b:2dc5:b0:325:9cb3:419e])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5828:b0:327:50c8:7c1b
- with SMTP id 98e67ed59e1d1-32750c87ec7mr11359736a91.31.1756398771135; Thu, 28
- Aug 2025 09:32:51 -0700 (PDT)
-Date: Thu, 28 Aug 2025 09:32:15 -0700
+        bh=o8gifwonm5nD53uhdwlbZ/djYkNx9hhdBbSGbpiNkeA=;
+        b=fpYTbgym+cUS1oterHQKV1PS18XtvevSjlziT23Fq9fLzhbR5fCq3dma5XfuVQbE9L
+         nU0B9xpKZfog3MJZFpNK1m89iyzQasmaxJNh0Np5JO9k+VJrIzvnakwAi5s1MI+C8oes
+         32b9/5Zp38d6hVEnvbFHm++TanxahuIz7qfmAbgpz0cn+2LdLfFxBo0y7ILBbPG1nD0f
+         05iRIsR8S0Yxm43e6vDIqx67SQewa3THzn+gjzg6ZTMTbsFSLwXzekMLayAQ5eycMwou
+         IfxXD9NmYxhRGyI6OF2yP/EJi4kcZQieGN+AxR3h6AqO2nAFWGc0CC9bBQOlbv3AdPsM
+         gzAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUlMNdMCINFSHQY6nWfVaFv2giXgSHhz+LYgD+zTRZqMaijMC3K3CNeVCTpE9SszGhDZTyEqYiCvtZhK1jQYOYX@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOsC+ILXzqr76dd9/GqRQj6QalvIQThby9G0oNYAVDTgr2X/u8
+	yyWgsUSNyY+651iJRpYPHMxtHHs6+Do5UXM+au27jtTrg1QobvETu65Rq+nGGPFUrXU5bLNOOHd
+	WbM3mQtZRaw==
+X-Google-Smtp-Source: AGHT+IHNeZLB1gqDaEFwmRI+M7BZSjuo+UXCgJaWvSG5RHwxSKLQ+py07YVUyIH1D3TNI9TWywdHr2UmhvPS
+X-Received: from pjbov14.prod.google.com ([2002:a17:90b:258e:b0:324:eb0d:70e8])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1649:b0:321:4182:2b9e
+ with SMTP id 98e67ed59e1d1-32515e37410mr30626631a91.12.1756398772749; Thu, 28
+ Aug 2025 09:32:52 -0700 (PDT)
+Date: Thu, 28 Aug 2025 09:32:16 -0700
 In-Reply-To: <20250828163225.3839073-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250828163225.3839073-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.268.g9569e192d0-goog
-Message-ID: <20250828163225.3839073-6-irogers@google.com>
-Subject: [PATCH v2 05/15] perf pmu: Don't eagerly parse event terms
+Message-ID: <20250828163225.3839073-7-irogers@google.com>
+Subject: [PATCH v2 06/15] perf parse-events: Remove unused FILE input argument
+ to scanner
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -75,446 +76,176 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Vince Weaver <vincent.weaver@maine.edu>
 Content-Type: text/plain; charset="UTF-8"
 
-When an event/alias is created for a PMU the terms are eagerly parsed
-using parse_events_terms. For a command like perf stat or perf record,
-the particularly event/alias will be found, the terms parsed, the
-terms cloned for use in the event parsing, and then the terms used to
-configure the perf_event_attr. Events/aliases may be eagerly loaded,
-such as from sysfs or in perf list, in which case the aliases terms
-will be little or never used. To avoid redundant work, to avoid
-cloning, and to reduce memory overhead, hold the terms for an event as
-a string until they need handling as a term list. This may introduce
-duplicate parsing if an event is repeated in a list, but this
-situation is expected to be uncommon.
-
-Measuring the number of instructions before and after with a sysfs
-event and perf stat, there is a minor reduction in the number of
-instructions executed by 0.3%.
+Now the events file isn't directly parsed from a FILE but stored in a
+string prior to parsing, remove the FILE argument to the associated
+scanner functions as they only ever pass NULL.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/pmu-events.c  |  24 +------
- tools/perf/util/parse-events.c |   3 +-
- tools/perf/util/parse-events.h |   1 -
- tools/perf/util/pmu.c          | 111 ++++++++++++++++++++-------------
- 4 files changed, 70 insertions(+), 69 deletions(-)
+ tools/perf/arch/x86/util/intel-pt.c |  2 +-
+ tools/perf/tests/parse-events.c     |  2 +-
+ tools/perf/tests/pmu.c              |  3 +--
+ tools/perf/util/parse-events.c      | 18 ++++++------------
+ tools/perf/util/parse-events.h      |  3 +--
+ tools/perf/util/pmu.c               |  6 +++---
+ 6 files changed, 13 insertions(+), 21 deletions(-)
 
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index 95fd9f671a22..f40a828c9861 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -22,10 +22,6 @@ struct perf_pmu_test_event {
- 	/* used for matching against events from generated pmu-events.c */
- 	struct pmu_event event;
+diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
+index add33cb5d1da..2d7c0dec86b0 100644
+--- a/tools/perf/arch/x86/util/intel-pt.c
++++ b/tools/perf/arch/x86/util/intel-pt.c
+@@ -72,7 +72,7 @@ static int intel_pt_parse_terms_with_default(const struct perf_pmu *pmu,
+ 	int err;
  
--	/* used for matching against event aliases */
--	/* extra events for aliases */
--	const char *alias_str;
--
- 	/*
- 	 * Note: For when PublicDescription does not exist in the JSON, we
- 	 * will have no long_desc in pmu_event.long_desc, but long_desc may
-@@ -52,7 +48,6 @@ static const struct perf_pmu_test_event bp_l1_btb_correct = {
- 		.desc = "L1 BTB Correction",
- 		.topic = "branch",
- 	},
--	.alias_str = "event=0x8a",
- };
+ 	parse_events_terms__init(&terms);
+-	err = parse_events_terms(&terms, str, /*input=*/ NULL);
++	err = parse_events_terms(&terms, str);
+ 	if (err)
+ 		goto out_free;
  
- static const struct perf_pmu_test_event bp_l2_btb_correct = {
-@@ -63,7 +58,6 @@ static const struct perf_pmu_test_event bp_l2_btb_correct = {
- 		.desc = "L2 BTB Correction",
- 		.topic = "branch",
- 	},
--	.alias_str = "event=0x8b",
- };
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index bb8004397650..4e55b0d295bd 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -2556,7 +2556,7 @@ static int test_term(const struct terms_test *t)
  
- static const struct perf_pmu_test_event segment_reg_loads_any = {
-@@ -74,7 +68,6 @@ static const struct perf_pmu_test_event segment_reg_loads_any = {
- 		.desc = "Number of segment register loads",
- 		.topic = "other",
- 	},
--	.alias_str = "event=0x6,period=0x30d40,umask=0x80",
- };
  
- static const struct perf_pmu_test_event dispatch_blocked_any = {
-@@ -85,7 +78,6 @@ static const struct perf_pmu_test_event dispatch_blocked_any = {
- 		.desc = "Memory cluster signals to block micro-op dispatch for any reason",
- 		.topic = "other",
- 	},
--	.alias_str = "event=0x9,period=0x30d40,umask=0x20",
- };
- 
- static const struct perf_pmu_test_event eist_trans = {
-@@ -96,7 +88,6 @@ static const struct perf_pmu_test_event eist_trans = {
- 		.desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
- 		.topic = "other",
- 	},
--	.alias_str = "event=0x3a,period=0x30d40",
- };
- 
- static const struct perf_pmu_test_event l3_cache_rd = {
-@@ -108,7 +99,6 @@ static const struct perf_pmu_test_event l3_cache_rd = {
- 		.long_desc = "Attributable Level 3 cache access, read",
- 		.topic = "cache",
- 	},
--	.alias_str = "event=0x40",
- 	.alias_long_desc = "Attributable Level 3 cache access, read",
- };
- 
-@@ -130,7 +120,6 @@ static const struct perf_pmu_test_event uncore_hisi_ddrc_flux_wcmd = {
- 		.topic = "uncore",
- 		.pmu = "hisi_sccl,ddrc",
- 	},
--	.alias_str = "event=0x2",
- 	.matching_pmu = "hisi_sccl1_ddrc2",
- };
- 
-@@ -142,7 +131,6 @@ static const struct perf_pmu_test_event unc_cbo_xsnp_response_miss_eviction = {
- 		.topic = "uncore",
- 		.pmu = "uncore_cbox",
- 	},
--	.alias_str = "event=0x22,umask=0x81",
- 	.matching_pmu = "uncore_cbox_0",
- };
- 
-@@ -154,7 +142,6 @@ static const struct perf_pmu_test_event uncore_hyphen = {
- 		.topic = "uncore",
- 		.pmu = "uncore_cbox",
- 	},
--	.alias_str = "event=0xe0",
- 	.matching_pmu = "uncore_cbox_0",
- };
- 
-@@ -166,7 +153,6 @@ static const struct perf_pmu_test_event uncore_two_hyph = {
- 		.topic = "uncore",
- 		.pmu = "uncore_cbox",
- 	},
--	.alias_str = "event=0xc0",
- 	.matching_pmu = "uncore_cbox_0",
- };
- 
-@@ -178,7 +164,6 @@ static const struct perf_pmu_test_event uncore_hisi_l3c_rd_hit_cpipe = {
- 		.topic = "uncore",
- 		.pmu = "hisi_sccl,l3c",
- 	},
--	.alias_str = "event=0x7",
- 	.matching_pmu = "hisi_sccl3_l3c7",
- };
- 
-@@ -190,7 +175,6 @@ static const struct perf_pmu_test_event uncore_imc_free_running_cache_miss = {
- 		.topic = "uncore",
- 		.pmu = "uncore_imc_free_running",
- 	},
--	.alias_str = "event=0x12",
- 	.matching_pmu = "uncore_imc_free_running_0",
- };
- 
-@@ -202,7 +186,6 @@ static const struct perf_pmu_test_event uncore_imc_cache_hits = {
- 		.topic = "uncore",
- 		.pmu = "uncore_imc",
- 	},
--	.alias_str = "event=0x34",
- 	.matching_pmu = "uncore_imc_0",
- };
- 
-@@ -226,7 +209,6 @@ static const struct perf_pmu_test_event sys_ddr_pmu_write_cycles = {
- 		.pmu = "uncore_sys_ddr_pmu",
- 		.compat = "v8",
- 	},
--	.alias_str = "event=0x2b",
- 	.matching_pmu = "uncore_sys_ddr_pmu0",
- };
- 
-@@ -239,7 +221,6 @@ static const struct perf_pmu_test_event sys_ccn_pmu_read_cycles = {
- 		.pmu = "uncore_sys_ccn_pmu",
- 		.compat = "0x01",
- 	},
--	.alias_str = "config=0x2c",
- 	.matching_pmu = "uncore_sys_ccn_pmu4",
- };
- 
-@@ -252,7 +233,6 @@ static const struct perf_pmu_test_event sys_cmn_pmu_hnf_cache_miss = {
- 		.pmu = "uncore_sys_cmn_pmu",
- 		.compat = "(434|436|43c|43a).*",
- 	},
--	.alias_str = "eventid=0x1,type=0x5",
- 	.matching_pmu = "uncore_sys_cmn_pmu0",
- };
- 
-@@ -374,9 +354,9 @@ static int compare_alias_to_test_event(struct pmu_event_info *alias,
- 		return -1;
+ 	parse_events_terms__init(&terms);
+-	ret = parse_events_terms(&terms, t->str, /*input=*/ NULL);
++	ret = parse_events_terms(&terms, t->str);
+ 	if (ret) {
+ 		pr_debug("failed to parse terms '%s', err %d\n",
+ 			 t->str , ret);
+diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
+index 4a9f8e090cf4..cbded2c6faa4 100644
+--- a/tools/perf/tests/pmu.c
++++ b/tools/perf/tests/pmu.c
+@@ -169,8 +169,7 @@ static int test__pmu_format(struct test_suite *test __maybe_unused, int subtest
+ 	parse_events_terms__init(&terms);
+ 	if (parse_events_terms(&terms,
+ 				"krava01=15,krava02=170,krava03=1,krava11=27,krava12=1,"
+-				"krava13=2,krava21=119,krava22=11,krava23=2",
+-				NULL)) {
++				"krava13=2,krava21=119,krava22=11,krava23=2")) {
+ 		pr_err("Term parsing failed\n");
+ 		goto err_out;
  	}
- 
--	if (!is_same(alias->str, test_event->alias_str)) {
-+	if (!is_same(alias->str, test_event->event.event)) {
- 		pr_debug("testing aliases PMU %s: mismatched str, %s vs %s\n",
--			  pmu_name, alias->str, test_event->alias_str);
-+			  pmu_name, alias->str, test_event->event.event);
- 		return -1;
- 	}
- 
 diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index c219e3ffae65..cc677d9b2d5a 100644
+index cc677d9b2d5a..37aa392ddaf2 100644
 --- a/tools/perf/util/parse-events.c
 +++ b/tools/perf/util/parse-events.c
-@@ -40,6 +40,7 @@ static int get_config_terms(const struct parse_events_terms *head_config,
- 			    struct list_head *head_terms);
- static int parse_events_terms__copy(const struct parse_events_terms *src,
- 				    struct parse_events_terms *dest);
-+static int parse_events_terms__to_strbuf(const struct parse_events_terms *terms, struct strbuf *sb);
- 
- const struct event_symbol event_symbols_hw[PERF_COUNT_HW_MAX] = {
- 	[PERF_COUNT_HW_CPU_CYCLES] = {
-@@ -2849,7 +2850,7 @@ void parse_events_terms__delete(struct parse_events_terms *terms)
- 	free(terms);
+@@ -1956,7 +1956,6 @@ int parse_events__set_default_name(struct list_head *list, char *name)
  }
  
--int parse_events_terms__to_strbuf(const struct parse_events_terms *terms, struct strbuf *sb)
-+static int parse_events_terms__to_strbuf(const struct parse_events_terms *terms, struct strbuf *sb)
+ static int parse_events__scanner(const char *str,
+-				 FILE *input,
+ 				 struct parse_events_state *parse_state)
  {
- 	struct parse_events_term *term;
- 	bool first = true;
+ 	YY_BUFFER_STATE buffer;
+@@ -1967,10 +1966,7 @@ static int parse_events__scanner(const char *str,
+ 	if (ret)
+ 		return ret;
+ 
+-	if (str)
+-		buffer = parse_events__scan_string(str, scanner);
+-	else
+-	        parse_events_set_in(input, scanner);
++	buffer = parse_events__scan_string(str, scanner);
+ 
+ #ifdef PARSER_DEBUG
+ 	parse_events_debug = 1;
+@@ -1978,10 +1974,8 @@ static int parse_events__scanner(const char *str,
+ #endif
+ 	ret = parse_events_parse(parse_state, scanner);
+ 
+-	if (str) {
+-		parse_events__flush_buffer(buffer, scanner);
+-		parse_events__delete_buffer(buffer, scanner);
+-	}
++	parse_events__flush_buffer(buffer, scanner);
++	parse_events__delete_buffer(buffer, scanner);
+ 	parse_events_lex_destroy(scanner);
+ 	return ret;
+ }
+@@ -1989,7 +1983,7 @@ static int parse_events__scanner(const char *str,
+ /*
+  * parse event config string, return a list of event terms.
+  */
+-int parse_events_terms(struct parse_events_terms *terms, const char *str, FILE *input)
++int parse_events_terms(struct parse_events_terms *terms, const char *str)
+ {
+ 	struct parse_events_state parse_state = {
+ 		.terms  = NULL,
+@@ -1997,7 +1991,7 @@ int parse_events_terms(struct parse_events_terms *terms, const char *str, FILE *
+ 	};
+ 	int ret;
+ 
+-	ret = parse_events__scanner(str, input, &parse_state);
++	ret = parse_events__scanner(str, &parse_state);
+ 	if (!ret)
+ 		list_splice(&parse_state.terms->terms, &terms->terms);
+ 
+@@ -2302,7 +2296,7 @@ int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filte
+ 	};
+ 	int ret, ret2;
+ 
+-	ret = parse_events__scanner(str, /*input=*/ NULL, &parse_state);
++	ret = parse_events__scanner(str, &parse_state);
+ 
+ 	if (!ret && list_empty(&parse_state.list)) {
+ 		WARN_ONCE(true, "WARNING: event parser found nothing\n");
 diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index c498d896badf..34a5ec21d5e8 100644
+index 34a5ec21d5e8..660303e591ad 100644
 --- a/tools/perf/util/parse-events.h
 +++ b/tools/perf/util/parse-events.h
-@@ -199,7 +199,6 @@ void parse_events_terms__delete(struct parse_events_terms *terms);
+@@ -9,7 +9,6 @@
+ #include <stdbool.h>
+ #include <linux/types.h>
+ #include <linux/perf_event.h>
+-#include <stdio.h>
+ #include <string.h>
+ #include <sys/types.h>
+ 
+@@ -198,7 +197,7 @@ void parse_events_term__delete(struct parse_events_term *term);
+ void parse_events_terms__delete(struct parse_events_terms *terms);
  void parse_events_terms__init(struct parse_events_terms *terms);
  void parse_events_terms__exit(struct parse_events_terms *terms);
- int parse_events_terms(struct parse_events_terms *terms, const char *str, FILE *input);
--int parse_events_terms__to_strbuf(const struct parse_events_terms *terms, struct strbuf *sb);
+-int parse_events_terms(struct parse_events_terms *terms, const char *str, FILE *input);
++int parse_events_terms(struct parse_events_terms *terms, const char *str);
  
  struct parse_events_modifier {
  	u8 precise;	/* Number of repeated 'p' for precision. */
 diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 5a291f1380ed..ddcd4918832d 100644
+index ddcd4918832d..b44dfe4c73fc 100644
 --- a/tools/perf/util/pmu.c
 +++ b/tools/perf/util/pmu.c
-@@ -67,8 +67,8 @@ struct perf_pmu_alias {
- 	 * json events.
- 	 */
- 	char *topic;
--	/** @terms: Owned list of the original parsed parameters. */
--	struct parse_events_terms terms;
-+	/** @terms: Owned copy of the event terms. */
-+	char *terms;
- 	/**
- 	 * @pmu_name: The name copied from the json struct pmu_event. This can
- 	 * differ from the PMU name as it won't have suffixes.
-@@ -429,7 +429,7 @@ static void perf_pmu_free_alias(struct perf_pmu_alias *alias)
- 	zfree(&alias->long_desc);
- 	zfree(&alias->topic);
- 	zfree(&alias->pmu_name);
--	parse_events_terms__exit(&alias->terms);
-+	zfree(&alias->terms);
- 	free(alias);
- }
+@@ -777,7 +777,7 @@ static int pmu_alias_terms(struct perf_pmu_alias *alias, struct list_head *terms
+ 	int ret;
  
-@@ -537,8 +537,8 @@ static int update_alias(const struct pmu_event *pe,
- 	assign_str(pe->name, "topic", &data->alias->topic, pe->topic);
- 	data->alias->per_pkg = pe->perpkg;
- 	if (pe->event) {
--		parse_events_terms__exit(&data->alias->terms);
--		ret = parse_events_terms(&data->alias->terms, pe->event, /*input=*/NULL);
-+		zfree(&data->alias->terms);
-+		data->alias->terms = strdup(pe->event);
- 	}
- 	if (!ret && pe->unit) {
- 		char *unit;
-@@ -590,7 +590,6 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
- 	if (!alias)
- 		return -ENOMEM;
- 
--	parse_events_terms__init(&alias->terms);
- 	alias->scale = 1.0;
- 	alias->unit[0] = '\0';
- 	alias->per_pkg = perpkg;
-@@ -615,11 +614,16 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
- 	if (ret)
- 		return ret;
- 
--	ret = parse_events_terms(&alias->terms, val, val_fd);
--	if (ret) {
--		pr_err("Cannot parse alias %s: %d\n", val, ret);
--		free(alias);
--		return ret;
-+	if (!val_fd) {
-+		alias->terms = strdup(val);
-+	} else {
-+		size_t line_len;
-+
-+		ret = getline(&alias->terms, &line_len, val_fd) < 0 ? -errno : 0;
-+		if (ret) {
-+			pr_err("Failed to read alias %s\n", name);
-+			return ret;
-+		}
+ 	parse_events_terms__init(&alias_terms);
+-	ret = parse_events_terms(&alias_terms, alias->terms, /*input=*/NULL);
++	ret = parse_events_terms(&alias_terms, alias->terms);
+ 	if (ret) {
+ 		pr_err("Cannot parse '%s' terms '%s': %d\n",
+ 		       alias->name, alias->terms, ret);
+@@ -2045,7 +2045,7 @@ static char *format_alias(char *buf, int len, const struct perf_pmu *pmu,
  	}
  
- 	alias->name = strdup(name);
-@@ -767,29 +771,21 @@ static int pmu_aliases_parse_eager(struct perf_pmu *pmu, int sysfs_fd)
- 	return ret;
- }
+ 	parse_events_terms__init(&terms);
+-	ret = parse_events_terms(&terms, alias->terms, /*input=*/NULL);
++	ret = parse_events_terms(&terms, alias->terms);
+ 	if (ret) {
+ 		pr_err("Failure to parse '%s' terms '%s': %d\n",
+ 			alias->name, alias->terms, ret);
+@@ -2602,7 +2602,7 @@ const char *perf_pmu__name_from_config(struct perf_pmu *pmu, u64 config)
+ 		int ret;
  
--static int pmu_alias_terms(struct perf_pmu_alias *alias, int err_loc, struct list_head *terms)
-+static int pmu_alias_terms(struct perf_pmu_alias *alias, struct list_head *terms)
- {
--	struct parse_events_term *term, *cloned;
--	struct parse_events_terms clone_terms;
--
--	parse_events_terms__init(&clone_terms);
--	list_for_each_entry(term, &alias->terms.terms, list) {
--		int ret = parse_events_term__clone(&cloned, term);
-+	struct parse_events_terms alias_terms;
-+	int ret;
- 
--		if (ret) {
--			parse_events_terms__exit(&clone_terms);
--			return ret;
--		}
--		/*
--		 * Weak terms don't override command line options,
--		 * which we don't want for implicit terms in aliases.
--		 */
--		cloned->weak = true;
--		cloned->err_term = cloned->err_val = err_loc;
--		list_add_tail(&cloned->list, &clone_terms.terms);
-+	parse_events_terms__init(&alias_terms);
-+	ret = parse_events_terms(&alias_terms, alias->terms, /*input=*/NULL);
-+	if (ret) {
-+		pr_err("Cannot parse '%s' terms '%s': %d\n",
-+		       alias->name, alias->terms, ret);
-+		parse_events_terms__exit(&alias_terms);
-+		return ret;
- 	}
--	list_splice_init(&clone_terms.terms, terms);
--	parse_events_terms__exit(&clone_terms);
-+	list_splice_init(&alias_terms.terms, terms);
-+	parse_events_terms__exit(&alias_terms);
- 	return 0;
- }
- 
-@@ -1813,10 +1809,10 @@ int perf_pmu__check_alias(struct perf_pmu *pmu, struct parse_events_terms *head_
- 		alias = pmu_find_alias(pmu, term);
- 		if (!alias)
- 			continue;
--		ret = pmu_alias_terms(alias, term->err_term, &term->list);
-+		ret = pmu_alias_terms(alias, &term->list);
+ 		parse_events_terms__init(&terms);
+-		ret = parse_events_terms(&terms, event->terms, /*input=*/NULL);
++		ret = parse_events_terms(&terms, event->terms);
  		if (ret) {
- 			parse_events_error__handle(err, term->err_term,
--						strdup("Failure to duplicate terms"),
-+						strdup("Failed to parse terms"),
- 						NULL);
- 			return ret;
- 		}
-@@ -2035,18 +2031,37 @@ static int sub_non_neg(int a, int b)
- static char *format_alias(char *buf, int len, const struct perf_pmu *pmu,
- 			  const struct perf_pmu_alias *alias, bool skip_duplicate_pmus)
- {
-+	struct parse_events_terms terms;
- 	struct parse_events_term *term;
-+	int ret, used;
- 	size_t pmu_name_len = pmu_deduped_name_len(pmu, pmu->name,
- 						   skip_duplicate_pmus);
--	int used = snprintf(buf, len, "%.*s/%s", (int)pmu_name_len, pmu->name, alias->name);
- 
--	list_for_each_entry(term, &alias->terms.terms, list) {
-+	/* Paramemterized events have the parameters shown. */
-+	if (strstr(alias->terms, "=?")) {
-+		/* No parameters. */
-+		snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, pmu->name, alias->name);
-+		return buf;
-+	}
-+
-+	parse_events_terms__init(&terms);
-+	ret = parse_events_terms(&terms, alias->terms, /*input=*/NULL);
-+	if (ret) {
-+		pr_err("Failure to parse '%s' terms '%s': %d\n",
-+			alias->name, alias->terms, ret);
-+		parse_events_terms__exit(&terms);
-+		snprintf(buf, len, "%.*s/%s/", (int)pmu_name_len, pmu->name, alias->name);
-+		return buf;
-+	}
-+	used = snprintf(buf, len, "%.*s/%s", (int)pmu_name_len, pmu->name, alias->name);
-+
-+	list_for_each_entry(term, &terms.terms, list) {
- 		if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR)
- 			used += snprintf(buf + used, sub_non_neg(len, used),
- 					",%s=%s", term->config,
- 					term->val.str);
- 	}
--
-+	parse_events_terms__exit(&terms);
- 	if (sub_non_neg(len, used) > 0) {
- 		buf[used] = '/';
- 		used++;
-@@ -2069,7 +2084,6 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
- 		.event_type_desc = "Kernel PMU event",
- 	};
- 	int ret = 0;
--	struct strbuf sb;
- 	struct hashmap_entry *entry;
- 	size_t bkt;
- 
-@@ -2080,7 +2094,6 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
- 	if (perf_pmu__is_drm(pmu))
- 		return drm_pmu__for_each_event(pmu, state, cb);
- 
--	strbuf_init(&sb, /*hint=*/ 0);
- 	pmu_aliases_parse(pmu);
- 	pmu_add_cpu_aliases(pmu);
- 	hashmap__for_each_entry(pmu->aliases, entry, bkt) {
-@@ -2115,16 +2128,14 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
- 		info.desc = event->desc;
- 		info.long_desc = event->long_desc;
- 		info.encoding_desc = buf + buf_used;
--		parse_events_terms__to_strbuf(&event->terms, &sb);
- 		buf_used += snprintf(buf + buf_used, sizeof(buf) - buf_used,
--				"%.*s/%s/", (int)pmu_name_len, info.pmu_name, sb.buf) + 1;
-+				"%.*s/%s/", (int)pmu_name_len, info.pmu_name, event->terms) + 1;
-+		info.str = event->terms;
- 		info.topic = event->topic;
--		info.str = sb.buf;
- 		info.deprecated = event->deprecated;
- 		ret = cb(state, &info);
- 		if (ret)
- 			goto out;
--		strbuf_setlen(&sb, /*len=*/ 0);
- 	}
- 	if (pmu->selectable) {
- 		info.name = buf;
-@@ -2140,7 +2151,6 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
- 		ret = cb(state, &info);
- 	}
- out:
--	strbuf_release(&sb);
- 	return ret;
- }
- 
-@@ -2588,10 +2598,21 @@ const char *perf_pmu__name_from_config(struct perf_pmu *pmu, u64 config)
- 	hashmap__for_each_entry(pmu->aliases, entry, bkt) {
- 		struct perf_pmu_alias *event = entry->pvalue;
- 		struct perf_event_attr attr = {.config = 0,};
-+		struct parse_events_terms terms;
-+		int ret;
- 
--		int ret = perf_pmu__config(pmu, &attr, &event->terms, /*apply_hardcoded=*/true,
--					   /*err=*/NULL);
-+		parse_events_terms__init(&terms);
-+		ret = parse_events_terms(&terms, event->terms, /*input=*/NULL);
-+		if (ret) {
-+			pr_debug("Failed to parse '%s' terms '%s': %d\n",
-+				event->name, event->terms, ret);
-+			parse_events_terms__exit(&terms);
-+			continue;
-+		}
-+		ret = perf_pmu__config(pmu, &attr, &terms, /*apply_hardcoded=*/true,
-+				       /*err=*/NULL);
- 
-+		parse_events_terms__exit(&terms);
- 		if (ret == 0 && config == attr.config)
- 			return event->name;
- 	}
+ 			pr_debug("Failed to parse '%s' terms '%s': %d\n",
+ 				event->name, event->terms, ret);
 -- 
 2.51.0.268.g9569e192d0-goog
 
