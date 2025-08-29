@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C14623ED75
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Aug 2025 04:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78958242D72
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 Aug 2025 04:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756440706; cv=none; b=OWWfPc03YiOsq38LiX9t5Vd9TBiIb9msV8DbP/rzrLbNXR5XsE4oHHzYnFmhNOxYOAMtjwSTLC3qGmGXwfMG9bA7IzbfPoP8KY4bWpDPX9+644Pv3zDPAxx0XneVhWA8Czx4sXyitkwZ7brIyAMmD7Z4MFGFi+/eez/4z7obQJU=
+	t=1756440708; cv=none; b=cfeCaKS6Kt9L7hBya4luh64bxCIrB6bABymzYyJSd+L5+e4Vy8WvMZXNZtgyEN7Xux6rqdf/s3OfGUIhSs+jr60SYJdkPKKXX/qGMn8Z7SBXFMOUB8TSaUs2CVuT9b/xyK0Iq/0t+mFB0JsYT+2CmbkvVS2ZyjLtxhwpwOijCK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756440706; c=relaxed/simple;
-	bh=JVvQ5aWyqS8ABkGdJPYJAdFSP+crBiS5W5abbZcmtwk=;
+	s=arc-20240116; t=1756440708; c=relaxed/simple;
+	bh=zfYwywDhmS19+ihI/5ySZ/K6DgzjXK/uqOpp9y8XCrQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=eEo0HaWpLdKpCgFnT5ecjG485zq0KgD+2FSYIG1mXgaptSUTjByYaIQxMf2FeGpBduBW2rbcYwBaOZecxi27Y85rufeWUEOQ0KO5n9naClIfKHG7uyT+016do4CKAPpqmdxdDCqoJvGQIAAEISJnTeopeeToSCLuzr8j5i8TxGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mCJz0U6h; arc=none smtp.client-ip=209.85.214.201
+	 To:Content-Type; b=urwoTX6kw9o9hle+wAM5H9Y0FAi/iOI3wmusraqD8qaDPLYk3Dc+gPmDTRUFTNgmYpI6EqaR5fAzI5CDca2RCw+y6jqI31lx7XksFmonu57hWF7w9BBp/hMt3UZ02T13Nxiiqa7HGebx8ib8sCApLXXZqrn0PIzCo3ekg3yh/IA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t6cvOE4V; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mCJz0U6h"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-24457ef983fso33039385ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 21:11:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t6cvOE4V"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-76e55665b05so1479620b3a.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 21:11:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756440704; x=1757045504; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1756440706; x=1757045506; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=J11/c7k6d7NRkZubqaZjO1lfgt3+pUlQA9Rm7sQ3hB8=;
-        b=mCJz0U6hLGumUFn4lP0MQYSJJHtijwVASyoOSGH3SpOiiOwgzpZafvy4J8i3pW8u4P
-         PprdkC0bo4ZZ0RV2j0vX7BoD1KEYmNdkFcFgM1UZxIv5egbxBXzV/7DQsD/5nbIdvcJI
-         S7DPSr5g++mEVVTOWyV1TBnZK8Fy+PN09sr7LY5gIy3zsFgV2aL3xN/UpsTzkp64QTQW
-         2wC12NP1wb/MhHWUnIMaMpH0huVqoSlijwQeJmEW5LGTul8VtvnZM4mzK23oARwxUEoy
-         AhYNCfGzPm/z7DhPhL71mGAIxzmCG8YixnXB1nwMsn8RG1rE49Y5cjDHcrxptG5GVTGi
-         eRoA==
+        bh=UhKeHAvUy0hnoIlAuEt/dp1Klyhju1nBf8M9CfS8ME0=;
+        b=t6cvOE4VY7XkaqIGO8P0bSq+PMr9nOZc7VLUy7MMCTTsAPej3QpKM61a/c2tvF854T
+         YY0YL5Hh1BSac3J0ooUiJg4FisQGBLuV4vOKZuZAdEwKAN7vkSQ6tH6ChdOja3m3LBcD
+         CF3ENYUf29Jhu+6LZdGu0kHByPpFxcwtDINt7YrLeuX/MFmUEVZ3BeaDLv5haIO0Bjay
+         XMHnb8Bofrrdi7Xm3EaGRc6Af2E3qP71k1SfgXeHUZE10+3PP9lpol4XQRcNlXSrZfxp
+         hdYj1h6clqSDSe8jBSqD4T2OM/6vPrqHVOB4VuFKnZkOR64PDSWsh+tRsDqHttwB1TLB
+         floA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756440704; x=1757045504;
+        d=1e100.net; s=20230601; t=1756440706; x=1757045506;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J11/c7k6d7NRkZubqaZjO1lfgt3+pUlQA9Rm7sQ3hB8=;
-        b=koVFsvIzdazXNAnkecmRSdqNxPfiDW5Ed/mL7JEFqP6LwfYwRI+pgpvW/6xwhQY12D
-         VuWmMYilrTpETG84Kaf/mBN9nfKnZWR8nk/BIGKopomiYQ1r5iTyNagN85sffb3WZ+LY
-         2WqrWDaJATPlrkOpT37DYEg17Znjuc9yu1zJdl7P46w6GOPxNB6TY3UZd+bi5JGGxwaj
-         LNkv7vH3piLUfczkYJpufGMM0tc+G4c+mQ7c872dzb/QC4hT0+386kgLyZZ/pnk/1Ros
-         Bkb0D4ZuK4fsQ99SAd+XBmrPbTygWRuwjIkKoo9p0XbTjB2/GHwvC8ZICT/By+WgzQ52
-         B3AA==
-X-Forwarded-Encrypted: i=1; AJvYcCVkHfRNGZ+GNz0R6P8yn18dUurlmQTGAB+j4QdNapnj4E6xyMeS1dZ8u7LWHL36mQkbGl2Nrgi6o7sEYEQRHrCD@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMZlddMo7NS3//Ck8SAUVJkpDHtsmxnUaFpioiQLC2yMF8ueiT
-	ZXqtbIUUnV118mpG8LIBuF+zt3b+INOwaI+FxhbDg7G6JrWBXq/5wTRMNs8/pP3hVvHWDG9ARfC
-	hxCOnC/BuOQ==
-X-Google-Smtp-Source: AGHT+IHFTTxHsWmKNhUSnlrlYAzP8F9m9gYEW5W/LHMaOY+uFVOd1rPMKJ56T26sIn1vCi2rmYMG8qCLMFGo
-X-Received: from plbkg5.prod.google.com ([2002:a17:903:605:b0:246:9673:3625])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2389:b0:249:18a:baad
- with SMTP id d9443c01a7336-249018abd51mr39805395ad.1.1756440704070; Thu, 28
- Aug 2025 21:11:44 -0700 (PDT)
-Date: Thu, 28 Aug 2025 21:10:49 -0700
+        bh=UhKeHAvUy0hnoIlAuEt/dp1Klyhju1nBf8M9CfS8ME0=;
+        b=LzyjAxkcyIaUhwZ0QELxP5u0HTQC5qr/Qo+7G2EqhyY5GPl00hzlJsr+CxWIl/pYYx
+         Djo+luWEyp5ZuokF0kOb+k8spdsb3Z2r3XYNSNI5TuGQqXIWKK4HqxfBsB1MFXSNnL3L
+         BetDZAJNtOb0pfdsfg0RG6t/QS1COa0ovP7Z5+xdSu8+nQO401QyG7+IXb7gvCBMbIOE
+         lPW2SOYmPNINDjfPmh05Uf186gUR0uqjVqLW/5zKO+gxO1R2V5q2aUHx7oYbYxl7rf8i
+         FQvU+0eT/oNlrMVhXg3OfGHczmab6DBy8kivX6vqEzo9bxV1iRbOfnc7WZr78ClnO6iG
+         /A/w==
+X-Forwarded-Encrypted: i=1; AJvYcCW0S9GU7Z3EDRPa8nQdxQLI5EMeSROeEWfyVS0PmK5r3bw/ntEB6eO/sgeUaAFs03oJxwrHR96niqbV1xofk0OU@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjA3NmP6suWp2zT4rPBU+CJSTMvWCsQWX1oOKDlLfPd+UuxLMC
+	pAikwk5klB/7DLFnqm6o33KSVKDddrtoOMiSg1LoQjAHgkUiIvo3dKNFbOU370S9ZK3MzrR7T+y
+	17gBcUugXFQ==
+X-Google-Smtp-Source: AGHT+IEmlXJ0ceJYM48S+eToRHxpgYs5lELUmy1KTtYP3hiRwrvVoykzf2TNA73kX+gCQtzXj7UqdHnIIn31
+X-Received: from pjx5.prod.google.com ([2002:a17:90b:5685:b0:31f:3227:1724])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:7286:b0:243:ae10:2433
+ with SMTP id adf61e73a8af0-243ae1026c0mr8637290637.40.1756440705784; Thu, 28
+ Aug 2025 21:11:45 -0700 (PDT)
+Date: Thu, 28 Aug 2025 21:10:50 -0700
 In-Reply-To: <20250829041104.4186320-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,9 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250829041104.4186320-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.318.gd7df087d1a-goog
-Message-ID: <20250829041104.4186320-9-irogers@google.com>
-Subject: [PATCH v5 08/22] perf jevents: Add software prefetch (swpf) metric
- group for Intel
+Message-ID: <20250829041104.4186320-10-irogers@google.com>
+Subject: [PATCH v5 09/22] perf jevents: Add ports metric group giving
+ utilization on Intel
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -78,95 +78,76 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Thomas Falcon <thomas.falcon@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add metrics that breakdown software prefetch instruction use.
+The ports metric group contains a metric for each port giving its
+utilization as a ratio of cycles. The metrics are created by looking
+for UOPS_DISPATCHED.PORT events.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/intel_metrics.py | 65 ++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
+ tools/perf/pmu-events/intel_metrics.py | 33 ++++++++++++++++++++++++--
+ 1 file changed, 31 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index 53b9606ef1a2..cfeafb58e8b4 100755
+index cfeafb58e8b4..288903707bc8 100755
 --- a/tools/perf/pmu-events/intel_metrics.py
 +++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -261,6 +261,70 @@ def IntelBr():
+@@ -1,12 +1,13 @@
+ #!/usr/bin/env python3
+ # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+ from metric import (d_ratio, has_event, max, CheckPmu, Event, JsonEncodeMetric,
+-                    JsonEncodeMetricGroupDescriptions, LoadEvents, Metric,
+-                    MetricGroup, MetricRef, Select)
++                    JsonEncodeMetricGroupDescriptions, Literal, LoadEvents,
++                    Metric, MetricGroup, MetricRef, Select)
+ import argparse
+ import json
+ import math
+ import os
++import re
+ from typing import Optional
+ 
+ # Global command line arguments.
+@@ -261,6 +262,33 @@ def IntelBr():
                       description="breakdown of retired branch instructions")
  
  
-+def IntelSwpf() -> Optional[MetricGroup]:
-+  ins = Event("instructions")
-+  try:
-+    s_ld = Event("MEM_INST_RETIRED.ALL_LOADS", "MEM_UOPS_RETIRED.ALL_LOADS")
-+    s_nta = Event("SW_PREFETCH_ACCESS.NTA")
-+    s_t0 = Event("SW_PREFETCH_ACCESS.T0")
-+    s_t1 = Event("SW_PREFETCH_ACCESS.T1_T2")
-+    s_w = Event("SW_PREFETCH_ACCESS.PREFETCHW")
-+  except:
++def IntelPorts() -> Optional[MetricGroup]:
++  pipeline_events = json.load(open(f"{_args.events_path}/x86/{_args.model}/pipeline.json"))
++
++  core_cycles = Event("CPU_CLK_UNHALTED.THREAD_P_ANY",
++                      "CPU_CLK_UNHALTED.DISTRIBUTED",
++                      "cycles")
++  # Number of CPU cycles scaled for SMT.
++  smt_cycles = Select(core_cycles / 2, Literal("#smt_on"), core_cycles)
++
++  metrics = []
++  for x in pipeline_events:
++    if "EventName" in x and re.search("^UOPS_DISPATCHED.PORT", x["EventName"]):
++      name = x["EventName"]
++      port = re.search(r"(PORT_[0-9].*)", name).group(0).lower()
++      if name.endswith("_CORE"):
++        cyc = core_cycles
++      else:
++        cyc = smt_cycles
++      metrics.append(Metric(f"lpm_{port}", f"{port} utilization (higher is better)",
++                            d_ratio(Event(name), cyc), "100%"))
++  if len(metrics) == 0:
 +    return None
 +
-+  all_sw = s_nta + s_t0 + s_t1 + s_w
-+  swp_r = d_ratio(all_sw, interval_sec)
-+  ins_r = d_ratio(ins, all_sw)
-+  ld_r = d_ratio(s_ld, all_sw)
-+
-+  return MetricGroup("lpm_swpf", [
-+      MetricGroup("lpm_swpf_totals", [
-+          Metric("lpm_swpf_totals_exec", "Software prefetch instructions per second",
-+                swp_r, "swpf/s"),
-+          Metric("lpm_swpf_totals_insn_per_pf",
-+                 "Average number of instructions between software prefetches",
-+                 ins_r, "insn/swpf"),
-+          Metric("lpm_swpf_totals_loads_per_pf",
-+                 "Average number of loads between software prefetches",
-+                 ld_r, "loads/swpf"),
-+      ]),
-+      MetricGroup("lpm_swpf_bkdwn", [
-+          MetricGroup("lpm_swpf_bkdwn_nta", [
-+              Metric("lpm_swpf_bkdwn_nta_per_swpf",
-+                     "Software prefetch NTA instructions as a percent of all prefetch instructions",
-+                     d_ratio(s_nta, all_sw), "100%"),
-+              Metric("lpm_swpf_bkdwn_nta_rate",
-+                     "Software prefetch NTA instructions per second",
-+                     d_ratio(s_nta, interval_sec), "insn/s"),
-+          ]),
-+          MetricGroup("lpm_swpf_bkdwn_t0", [
-+              Metric("lpm_swpf_bkdwn_t0_per_swpf",
-+                     "Software prefetch T0 instructions as a percent of all prefetch instructions",
-+                     d_ratio(s_t0, all_sw), "100%"),
-+              Metric("lpm_swpf_bkdwn_t0_rate",
-+                     "Software prefetch T0 instructions per second",
-+                     d_ratio(s_t0, interval_sec), "insn/s"),
-+          ]),
-+          MetricGroup("lpm_swpf_bkdwn_t1_t2", [
-+              Metric("lpm_swpf_bkdwn_t1_t2_per_swpf",
-+                     "Software prefetch T1 or T2 instructions as a percent of all prefetch instructions",
-+                     d_ratio(s_t1, all_sw), "100%"),
-+              Metric("lpm_swpf_bkdwn_t1_t2_rate",
-+                     "Software prefetch T1 or T2 instructions per second",
-+                     d_ratio(s_t1, interval_sec), "insn/s"),
-+          ]),
-+          MetricGroup("lpm_swpf_bkdwn_w", [
-+              Metric("lpm_swpf_bkdwn_w_per_swpf",
-+                     "Software prefetch W instructions as a percent of all prefetch instructions",
-+                     d_ratio(s_w, all_sw), "100%"),
-+              Metric("lpm_swpf_bkdwn_w_rate",
-+                     "Software prefetch W instructions per second",
-+                     d_ratio(s_w, interval_sec), "insn/s"),
-+          ]),
-+      ]),
-+  ], description="Software prefetch instruction breakdown")
++  return MetricGroup("lpm_ports", metrics, "functional unit (port) utilization -- "
++                     "fraction of cycles each port is utilized (higher is better)")
 +
 +
- def main() -> None:
-   global _args
- 
-@@ -289,6 +353,7 @@ def main() -> None:
+ def IntelSwpf() -> Optional[MetricGroup]:
+   ins = Event("instructions")
+   try:
+@@ -353,6 +381,7 @@ def main() -> None:
        Smi(),
        Tsx(),
        IntelBr(),
-+      IntelSwpf(),
++      IntelPorts(),
+       IntelSwpf(),
    ])
- 
  
 -- 
 2.51.0.318.gd7df087d1a-goog
