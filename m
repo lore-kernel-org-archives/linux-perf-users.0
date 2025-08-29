@@ -1,123 +1,120 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CA84207A
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Aug 2025 21:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B61E6261B8F;
+	Fri, 29 Aug 2025 21:59:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756503627; cv=none; b=eA97U3NfgVFcFYc1wp6CBvp5Jx4T04n5KTYzuWmQ9R4lwRtQhUW8OgbcY5f8ljJ7hVgaPbHE8DBfxu4hBOBiZtUw7kZKSzTqH7tclRbb/o2i4L2iPJEqeuPmaQVIaq3NOiWWzY2w3HEd4NfUbZ7pIisdHjfft+us7RpClrX74Zc=
+	t=1756504777; cv=none; b=Y92w3Mb3znS19sgYtuu2RrjDfRk5zpj2t/ARUePZ32/IlM0FAqnGf8nXE2W5qeyJUFMrENNhnhk5387Bv9NiEaT5EGit/fqqstMxW0ORxJOYW0m2xuYWWIoI7BMPtI6pdpMs7C9jowEDY0pe/pwuAt0spjqxt0CqpcMxraQP7wA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756503627; c=relaxed/simple;
-	bh=von6eHvl6KgBL/4WwjFrHfO6TT4yQpG/ETSfXa6LoEI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q8cSVZ3GlGhcWAuHJOxY2lo4Dga4HAqgi1DZ7s3cNC5DnNWj03V83Anvb8MJdtQA7hunaCfeqLpJUebkoyhwc780R1W5kiRonDqlHAdaCc2RAMvyAwCeKYire9LjfFnKQrzqnKnNPT3mWfjOLMhzlxFWKJV1GHev/0xRmQ2kteU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fwjDwVNs; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1756504777; c=relaxed/simple;
+	bh=cFAA4SZK0e0ADYm34jdaLmr5RXVYxybFAkJwwLtUHGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NQFf6Ee++Bq3CG7DoyosmdvkAdo5XRVOSo2UkbcMowUy2azZv8xgroTvWqThNzL8tFWajDIbC7SgRtUwdHQZxkT5UY/ExHCAqxIUCy616iPSluaYsLVhK6em34SEQclZ1bGJ+u1VU/49M3eCOJ7fr/CN5t40NDGYsMC7ORAZb0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sa3ZdiVv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fwjDwVNs"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-70def63ec87so18843436d6.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 29 Aug 2025 14:40:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1756503624; x=1757108424; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dis7nbiiCt2fP4GWwjgCXhTEHKxInIHXXX1XONaAGoM=;
-        b=fwjDwVNsAM8VL5PI+FWWUZdIDJKczQp0SLCKnunMqaHoIkXJR+SoS+cv5KcZBrEGf9
-         W4z7Cz90H+GO70rv6WXrFfuURRSQ2YInzF/zfcksdzmkDT/mlIdRKXd7BPE4pgNrotqj
-         8xHIaZrj4b7ImNO3SbM3hINIpvZpepGBgLBcA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756503624; x=1757108424;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dis7nbiiCt2fP4GWwjgCXhTEHKxInIHXXX1XONaAGoM=;
-        b=GiIphfb+RLNJQm5Lekgt5If2AYZtzDE9FIaFtE0d6mOF6RbIo2ZcU5MYkoSx7M09MT
-         WcQ4bCaJ+4K7yn1nJqhquoBiNq/ORKKSqADWQ1flpGDoP8xBTMXPN7kPJ+YvFzKP1DRG
-         lBaQkIGi+bvyUrxQ4fAGCpACNdMrANwYciDL0M1AIhtHAgIZMWLMNwpgtHiIpD2M3hGY
-         MDB460yrwpYusrVXb7jL9+MkLTjHZpJgmHE+l+Iw8CuRlJl89VVLLLNyjAcXJi5Zx+e1
-         RHtORRbRIvbRgeQCpjqdTAfLBKuUguPtYdrrQLxwElTAIxDeIEdsoYC55SPgt96mSsm4
-         zbYg==
-X-Forwarded-Encrypted: i=1; AJvYcCVDCD7B2amArb/AXaHiqO9Z0ekhhrm09FxJIochlAQHAVf4YE7N6/Ww6qH29pohzZaLjcF2lSxcofpDu4Qs3KEQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxk2F32EbuCoFZnwTn/GDPl7kj6f90gwuGKMdiHlJlAirlDkt4+
-	sWAOlR0CP3DXN5p6r3bwxa7rlOyXVqfhmwl8xsSgVjVlY8QyPuzuVwsuOVxo6Awo3abutT6SXxv
-	DaAk=
-X-Gm-Gg: ASbGnculrppYLAP0Xu5Ss6IH0U+XUQDxq5+BqraSck5fYGtwiF/t6fznctu4oVpsbp6
-	Pb3J8NWYL0ZaCzAdH3zYhLuPfxoOEfyRqWeBIWJLnek3wuPjYxUuU8Uq7vD+UnK6VxoYyUhQRWf
-	SiQWy/cWi/CZUqkZFurf2UFzDz6thOxvRS8owAdUBb2egnf3QgiqWgqI9GCYsSTCjn0/+em/XuN
-	ZNq91T9XrltZbXdb3yf98f45+jldFBVV4KPmOt5B4PHVqnWYGjA1RkopN66vRIBXM+BR+KxTmqj
-	Meg0unx9t79Zlvxif3veMmUc/9+Yh5pbgNq6NItGw2Yk9zLsexJvHTZgAIOJW0zRqpgaAN/0lMO
-	go5iLW4wsPzd6l/g6X1tnuN51kdvYBRWnQsMtJuGZOkrTThxzlFGCo3+FAtDDBCOWlHzx8Otztw
-	oB
-X-Google-Smtp-Source: AGHT+IEZeC1PptIPoCqZOCCdN7KcI8xc5S3Es+DFfi+L8mcukcrmf/8OsHDVrnc4JLU4s9Q2thySeg==
-X-Received: by 2002:a05:6214:1d2e:b0:70d:6de2:50ce with SMTP id 6a1803df08f44-70fac946ecfmr950806d6.59.1756503624436;
-        Fri, 29 Aug 2025 14:40:24 -0700 (PDT)
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com. [209.85.222.173])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-70e6251d0f4sm23123846d6.51.2025.08.29.14.40.24
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 29 Aug 2025 14:40:24 -0700 (PDT)
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7f6f367a248so231352985a.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 29 Aug 2025 14:40:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUKFW6MofMJLkd/HUWXqXU0wO7k1hLpYqRcd45zEuqwLkmeDjyJ4dr0xTGqOKmEhtaBx+WkHYon/uf+cqchfkB/@vger.kernel.org
-X-Received: by 2002:a17:903:1a2b:b0:245:f7a8:bc68 with SMTP id
- d9443c01a7336-24944b1f682mr902835ad.57.1756503250127; Fri, 29 Aug 2025
- 14:34:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sa3ZdiVv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0158C4CEF0;
+	Fri, 29 Aug 2025 21:59:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756504777;
+	bh=cFAA4SZK0e0ADYm34jdaLmr5RXVYxybFAkJwwLtUHGY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Sa3ZdiVvlmX8G+S1CLmrOUmczhmjP59H4+erHrIZwYmkq9tgjnLEOCMayA1NKsKTW
+	 oIxnrjEPhHUVkpJyjbn1egGOqgVRemnmh1gjvplO9IxRdjMYoHnb9uBcb7Dqf2taP0
+	 llu+AHZs3ZTiHsANsX0zqd0yd+5VuNzn6CrwXyNgbJbY+khJyW/vpLlr0m07Ucqx47
+	 HHKKWnYkNpFN26BHatrO5b1NC3moFgA/4c6sZwwcScv+t82xFoGC8Zh6d4h0Of/5vO
+	 nFXwb9I0VqFHo8t8t7aFpwJL70YwLpV1z3aEemW5Eyl74ZXsOd9K4JWDoi+F0yDIFP
+	 Q5PQ+60Y9uVsA==
+Date: Fri, 29 Aug 2025 14:59:35 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/1] Revert "perf hist: Fix bogus profiles when filters
+ are enabled"
+Message-ID: <aLIixyZOYD3ZE1gh@google.com>
+References: <aKYEpf7xp3NnkBWm@x1>
+ <CACT4Y+YX-ROx0cW4pkDnqbdfbigVycwPLwO12RNbbtX9-Qp73A@mail.gmail.com>
+ <aKv_FjtkPIR86inu@google.com>
+ <CACT4Y+ZxqgqAGoSgUaVKk6_=h1dO7iV8qrVHDOrmbBS3VW8-=g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250827100959.83023-1-cuiyunhui@bytedance.com> <20250827100959.83023-2-cuiyunhui@bytedance.com>
-In-Reply-To: <20250827100959.83023-2-cuiyunhui@bytedance.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 29 Aug 2025 14:33:57 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WiZ5=4Ck3G2gme=ey6uYQhi-3Wo32DpLj9P53wxGCojw@mail.gmail.com>
-X-Gm-Features: Ac12FXwa45bnt2Fo7fophuQQG1oKhw1sdW41Dqgu52LADz5-5chJEPC22bATC7M
-Message-ID: <CAD=FV=WiZ5=4Ck3G2gme=ey6uYQhi-3Wo32DpLj9P53wxGCojw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] watchdog: refactor watchdog_hld functionality
-To: Yunhui Cui <cuiyunhui@bytedance.com>
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	alex@ghiti.fr, atish.patra@linux.dev, anup@brainfault.org, will@kernel.org, 
-	mark.rutland@arm.com, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, catalin.marinas@arm.com, 
-	masahiroy@kernel.org, suzuki.poulose@arm.com, maz@kernel.org, 
-	zhanjie9@hisilicon.com, yangyicong@hisilicon.com, mingo@kernel.org, 
-	lihuafei1@huawei.com, akpm@linux-foundation.org, jpoimboe@kernel.org, 
-	rppt@kernel.org, kees@kernel.org, thomas.weissschuh@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+ZxqgqAGoSgUaVKk6_=h1dO7iV8qrVHDOrmbBS3VW8-=g@mail.gmail.com>
 
-Hi,
+On Fri, Aug 29, 2025 at 07:59:19AM +0200, Dmitry Vyukov wrote:
+> On Mon, 25 Aug 2025 at 08:13, Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hello,
+> >
+> > On Wed, Aug 20, 2025 at 06:14:08PM -0700, Dmitry Vyukov wrote:
+> > > On Wed, 20 Aug 2025 at 10:23, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > > >
+> > > > This reverts commit 8b4799e4f0f40a4ec737bf870aa38d06288bf0fb.
+> > > >
+> > > > Not combining entries in 'perf top', so we're getting multiple lines for
+> > > > the same symbol, with the same address.
+> > > >
+> > > > To test it, simply run 'perf top', then do /acpi to see just symbols
+> > > > starting with acpi_ and notice that there are various lines with the
+> > > > same symbol, press V to see the address and its the same.
+> > >
+> > > With this revert, does it show 1 entry but with a wrong percent?
+> > > I am not sure why there are 2 entries for the same symbol, but if we
+> > > merge them, we can sum of percents. Is it the right thing to do?
+> >
+> > I don't think it'd have a wrong percent.  The hists maintain stats for
+> > filtered entries separately.
+> 
+> I still don't fully follow.
+> 
+> If we merge a filtered entry into non-filtered entry (with the
+> revert), now we attribute what was filtered out to the non-filtered
+> entry, and the non-filtered entry has wrong overhead, no?
 
-On Wed, Aug 27, 2025 at 3:10=E2=80=AFAM Yunhui Cui <cuiyunhui@bytedance.com=
-> wrote:
->
-> Move watchdog_hld.c to kernel/, and rename arm_pmu_irq_is_nmi()
-> to arch_pmu_irq_is_nmi() for cross-arch reusability.
->
-> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> ---
->  arch/arm64/kernel/Makefile                   | 1 -
->  drivers/perf/arm_pmu.c                       | 2 +-
->  include/linux/nmi.h                          | 1 +
->  include/linux/perf/arm_pmu.h                 | 2 --
->  kernel/Makefile                              | 2 +-
->  {arch/arm64/kernel =3D> kernel}/watchdog_hld.c | 8 ++++++--
->  6 files changed, 9 insertions(+), 7 deletions(-)
->  rename {arch/arm64/kernel =3D> kernel}/watchdog_hld.c (97%)
+Oh, my bad.  I thought we track both periods in the hist_entry, but it
+seems it's only in the hists for total.
 
-I'm not a huge fan of the perf hardlockup detector and IMO we should
-maybe just delete it. Thus spreading it to support a new architecture
-isn't my favorite thing to do. Can't you use the buddy hardlockup
-detector?
+> 
+> If we merge the other way around: non-filtered entry into filtered
+> entry, then we won't show it at all.
+> 
+> > Based on the position of filtered entries in the RB tree, I think it
+> > might not merge correct samples together and create multiple entries
+> > with the same info.
+> 
+> The second thing I don't understand: without this revert we don't
+> merge filtered and non-filtered entries, top shows duplicate entries,
+> does it mean it shows filtered out entries? This also looks wrong...
 
-That being said, I did a quick look at your patch. I'm pretty sure you
-can't just move the arm64 "watchdog_hld.c" to be generic. Won't
-hw_nmi_get_sample_period() conflict with everyone else's (x86 and
-powerpc)?
+I checked those duplicated entries all non-filtered (filtered = 0).
+I suspect an entry can miss existing one (to be merged) when it sees
+unrelated filtered entries in the middle of RB tree traversal.
 
--Doug
+> 
+> > Filtering by unused sort keys would be undefined.  We probably want to
+> > warn users instead.
+> 
+> Do you mean that the filtered=1 is set incorrectly in this case?
+> Do you mean that with this revert 2 bugs just compensate each other by
+> luck: we wrongly set filtered=1, and then wrongly merge them together,
+> so it all works out in the end?
+
+I mean you should not allow users to use filters not listed in the sort
+keys.  For example, `perf report -s comm --tid=123` would return error.
+They can use `perf report -s tid` or `perf report -s comm,tid -H`.
+
+Thanks,
+Namhyung
+
