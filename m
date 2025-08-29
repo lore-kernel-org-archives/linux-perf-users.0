@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C91822F386
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Aug 2025 04:11:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001C922FE18
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 Aug 2025 04:11:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756440717; cv=none; b=rYfI2TiZU6ZTjdG+rMqkr+x0CZGUyHHNhHXsJDF6PXm2BLRAIioAmB6EW+X3bDOqY5SmPtSbuwjCfzTr3RF0fF5Kh++CHwrcrEBWcILXPUs8rwDoSqpodDGH4c5FWQhqpPoaVcI/QacvYtByT/GHL+jCADDJRpEYR6+XQ9hVTm8=
+	t=1756440719; cv=none; b=swH1imke8uiBRndwSk06TVN2AcuLtIz2rIfBP/7AnV6NL7DW6/FWAF+IZtrnxhyf82fCHQpEdnhqDE7ASmLAEItbKtFNI6IqKFOEpmWhO1PVCLS/RlTh0P899iWHsXmWbHO3fILlQKz0S2Mn2v399+wvjCwkFx9261HewV5/Dlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756440717; c=relaxed/simple;
-	bh=q83pyc9GwTrguYLrYC4MdMLJFIeKfzXqJnH4QUMmSJI=;
+	s=arc-20240116; t=1756440719; c=relaxed/simple;
+	bh=RAqBTlsz7iTfkuh3j5uys67bv7j8iaCJTuIX6mNvt/g=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=p7RHlqMUptfZvMX4QVJVHsSDtXe8n0ATTtJIY6bvdH8f7gzM4cKqE5+wR4089fRhZ+Kkz1nnxqG0+9of/VrQlEloJGPSy4I7l/7LP5V3v3bWSnxfyGFbfgfseRI98visjM/EzkaW9FnrxI+SdBB1PjJqSNPdEW0PAOFElGaplfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pj7+Qh4M; arc=none smtp.client-ip=209.85.214.201
+	 To:Content-Type; b=Mimdein/TFJnSPhj6N8MD4mToutFk4W7Qrxt8hvJd+rO01Z+m+qVHsNVzV+JV6cv5qmS0LRcqP4xZYEAo205qOrNwe9n8dRTXmcW4zA+kcM8dZdtCX244TWkrzARPaOYNz3Yd2Obvc+RYX6Wgq+vRSUuXjqB2GIwOPZ6cgWqYAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3golQaZf; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pj7+Qh4M"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-246f49067bdso17369375ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 21:11:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3golQaZf"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-327ceb05e9dso909108a91.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 21:11:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756440715; x=1757045515; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1756440717; x=1757045517; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=j0cMwOEM/cnBM/HBeAizuwInf3eDMHHlC2/oycrMsIo=;
-        b=pj7+Qh4MKt0+8pd04SGb8waXgLXlalzROEBOZQgr2IJUBAfgKO/yRAnv7uNDimoI0u
-         Ig901m5PRNdGOZPMK/3R+bnaRIncieUwcpPOcKN1jjxzzxN5Dpf1LE34Rn+6vgdPAOC/
-         9aLXHRh927fRkINu9YrdSLEZESM99f3BepsstOupjhNqa0d5McCYQ/unRCAsMDmMSHx5
-         B/lCvupDG1GI8+gFwO8aBmwkoOyOFnPtbWniaAZSRIPZ0O9GEzB6oBsw2tJy0Q04LF3O
-         AU3hVdATYriXCs7asvlrdUBIS+9r7fwrBLdYlRVehQrkYDOYOKiphvCkt2S6lTFRsfAr
-         9Ymw==
+        bh=M37/BCr0G7wFUjtgs9TA1CPDOATBHqDUNx+A2nDCLDk=;
+        b=3golQaZfn9ZLUWwFQj37b/zzBBQ53wbnAi1ENsoiTFAVaGd5x2cJ2TsINelaNsRpXw
+         PPkjUyeTlKPQvG1vQxra4cuupWh4eBmBsw4BlxgmSHMuc2FJfYlNQqBaGGESRGfwycFB
+         5whEPhsp23VIhVCyQUF2Nho+XHKUfXet3VIHZvCQwSfs66pWYIkSLcNyZMzL5xsXpPkU
+         zslmgnJ4o9ZomnFD3u1ndgmmkfUlCLM6E3PToqyGZDmZntm7OjZZYc/hTS9ZLTyMT0UZ
+         siGvoNvJwMxNRkAj+5MDiF4rMjGmHhsnPA44lnaFblA0jQtST/m14X0o0Ty6DHNjrivU
+         QdWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756440715; x=1757045515;
+        d=1e100.net; s=20230601; t=1756440717; x=1757045517;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=j0cMwOEM/cnBM/HBeAizuwInf3eDMHHlC2/oycrMsIo=;
-        b=FkvQGVYN7Px00dg0qmrgBX2ZWyx4jdBss6IH9wPbSffDbCADR27Fgl+jtp1gMXMlcr
-         NvfvWLGa3tuV1k3/YAzIEB77sXzHN2vrsAToCqgN9MfwEYrux6hPu5nK/uME4wVS0zFc
-         lNOZCwKd2OFCtf19lXnKmLjy8SJG2IJ5TjNKjNnUeuLIY+zMxLnZ5cziXK7abDMcZKVk
-         HDC/gb1diy2axiIJh0B/XAghmEz9ketRziLBpGeYGtYM0FI4fm5Xq6FMbZtw+dl8Zp3v
-         +6v4jzXdptQ8upCd24By5yPwNjyb3l1WV6dmMnDUNYOz2HRxBmh2qwQkCXlsRudJJNa3
-         zYxg==
-X-Forwarded-Encrypted: i=1; AJvYcCXt7TqeNHHAxwnNl6i5QxNislF4cgQAmzC3NCFK6Rv6XftyavxcHxTaN0BQhqtb3Bpf1v75WQB6MGbrbp0MIVX4@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywc48NEKZIa1R8anKYoyQ/0Kyfa52czz6YdhRd7YRPn363+fuo8
-	UxwhUHvUU7Z+gjevoUxyVH5d6GIGl78Z+ORGsJKU0bn1J9zWgcDbICW7mRiIWD/KTLsZTop5OzE
-	hzd88Dsv3oA==
-X-Google-Smtp-Source: AGHT+IFG1itPkTtQQbyHmTn92hb5Gzvbg2Y1UdKnwq/4E07DnXRMz62rPxrZ++zHt3/Of539sE4behT8oMfB
-X-Received: from plbml4.prod.google.com ([2002:a17:903:34c4:b0:246:8cb:7c1])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1c5:b0:23f:df33:21cb
- with SMTP id d9443c01a7336-2462ef4bf58mr321491015ad.44.1756440715457; Thu, 28
- Aug 2025 21:11:55 -0700 (PDT)
-Date: Thu, 28 Aug 2025 21:10:55 -0700
+        bh=M37/BCr0G7wFUjtgs9TA1CPDOATBHqDUNx+A2nDCLDk=;
+        b=cH09LGjAhpPvAyFBmYWNs0Vx2lbovvZGN1kICVnoGC+xiyZyKzMyp6hnFzLCedqG5l
+         rI5klgEneJY4+a29myiCfv1JxKclTv0oN/OwXXUkSj2fb+x5thEVLoMjZOvwQg6Xu4kB
+         mBUvUT3Jl1FcY4F3NT9vmSowoEQ5RfJhky5WLtthZwlRLQF3WAMoD0bEWmZ+0m4xwjuT
+         PMtM6vcMUgYe2SUew7f5Mgg0pTZWGgPVDAvr2PNvU10yOYecD4Z/BNXHwwh55RKulDJp
+         n+/xAOpL61hfit9OsugzjlZBiG/QYLdpaiqyLcLr/1OWisBzKT4Px7egBYqGGjH3oEtI
+         1Zaw==
+X-Forwarded-Encrypted: i=1; AJvYcCVBoxQxASShv4bOw6U4QH6el3cWCkp2UZDnem0xvP26ozZQytBXMfPNzoHaeaZAvuTqDWhaDMplljyUB/H8gzQX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2NNaFqxxbN28r7mN8M68SDBFqIQvxsQnJp/jy93uA/e3SYhRY
+	yiIBVg6PaelZJL1hXCF8v38zi5j90cmnYmnN04wHHTx4LO8kKqpT9dOwOZAiP77lUO58g0ErrRN
+	+CasH0kf6SQ==
+X-Google-Smtp-Source: AGHT+IFaF8U3qHBbGql+g0XBidJWc2JoLHuvwPhanDRiVWnkGTBDVCZ99T8uFipFHHukDL9yt7SvOBC9ZHNg
+X-Received: from pjbnc12.prod.google.com ([2002:a17:90b:37cc:b0:31f:2a78:943])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3ece:b0:327:c0b6:305b
+ with SMTP id 98e67ed59e1d1-327c0b632b3mr4490721a91.36.1756440717275; Thu, 28
+ Aug 2025 21:11:57 -0700 (PDT)
+Date: Thu, 28 Aug 2025 21:10:56 -0700
 In-Reply-To: <20250829041104.4186320-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250829041104.4186320-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.318.gd7df087d1a-goog
-Message-ID: <20250829041104.4186320-15-irogers@google.com>
-Subject: [PATCH v5 14/22] perf jevents: Add FPU metrics for Intel
+Message-ID: <20250829041104.4186320-16-irogers@google.com>
+Subject: [PATCH v5 15/22] perf jevents: Add Miss Level Parallelism (MLP)
+ metric for Intel
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,121 +78,46 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Thomas Falcon <thomas.falcon@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Metrics break down of floating point operations.
+Number of outstanding load misses per cycle.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/intel_metrics.py | 90 ++++++++++++++++++++++++++
- 1 file changed, 90 insertions(+)
+ tools/perf/pmu-events/intel_metrics.py | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
 diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index 31ef0373d982..f4d0676cdb77 100755
+index f4d0676cdb77..262bfd539262 100755
 --- a/tools/perf/pmu-events/intel_metrics.py
 +++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -316,6 +316,95 @@ def IntelCtxSw() -> MetricGroup:
-                                     "retired & core cycles between context switches"))
+@@ -612,6 +612,20 @@ def IntelL2() -> Optional[MetricGroup]:
+   ], description = "L2 data cache analysis")
  
  
-+def IntelFpu() -> Optional[MetricGroup]:
-+  cyc = Event("cycles")
++def IntelMlp() -> Optional[Metric]:
 +  try:
-+    s_64 = Event("FP_ARITH_INST_RETIRED.SCALAR_SINGLE",
-+                 "SIMD_INST_RETIRED.SCALAR_SINGLE")
++    l1d = Event("L1D_PEND_MISS.PENDING")
++    l1dc = Event("L1D_PEND_MISS.PENDING_CYCLES")
 +  except:
 +    return None
-+  d_64 = Event("FP_ARITH_INST_RETIRED.SCALAR_DOUBLE",
-+               "SIMD_INST_RETIRED.SCALAR_DOUBLE")
-+  s_128 = Event("FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE",
-+                "SIMD_INST_RETIRED.PACKED_SINGLE")
 +
-+  flop = s_64 + d_64 + 4 * s_128
-+
-+  d_128 = None
-+  s_256 = None
-+  d_256 = None
-+  s_512 = None
-+  d_512 = None
-+  try:
-+    d_128 = Event("FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE")
-+    flop += 2 * d_128
-+    s_256 = Event("FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE")
-+    flop += 8 * s_256
-+    d_256 = Event("FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE")
-+    flop += 4 * d_256
-+    s_512 = Event("FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE")
-+    flop += 16 * s_512
-+    d_512 = Event("FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE")
-+    flop += 8 * d_512
-+  except:
-+    pass
-+
-+  f_assist = Event("ASSISTS.FP", "FP_ASSIST.ANY", "FP_ASSIST.S")
-+  if f_assist in [
-+      "ASSISTS.FP",
-+      "FP_ASSIST.S",
-+  ]:
-+    f_assist += "/cmask=1/"
-+
-+  flop_r = d_ratio(flop, interval_sec)
-+  flop_c = d_ratio(flop, cyc)
-+  nmi_constraint = MetricConstraint.GROUPED_EVENTS
-+  if f_assist.name == "ASSISTS.FP": # Icelake+
-+    nmi_constraint = MetricConstraint.NO_GROUP_EVENTS_NMI
-+  def FpuMetrics(group: str, fl: Optional[Event], mult: int, desc: str) -> Optional[MetricGroup]:
-+    if not fl:
-+      return None
-+
-+    f = fl * mult
-+    fl_r = d_ratio(f, interval_sec)
-+    r_s = d_ratio(fl, interval_sec)
-+    return MetricGroup(group, [
-+        Metric(f"{group}_of_total", desc + " floating point operations per second",
-+               d_ratio(f, flop), "100%"),
-+        Metric(f"{group}_flops", desc + " floating point operations per second",
-+               fl_r, "flops/s"),
-+        Metric(f"{group}_ops", desc + " operations per second",
-+               r_s, "ops/s"),
-+    ])
-+
-+  return MetricGroup("lpm_fpu", [
-+      MetricGroup("lpm_fpu_total", [
-+          Metric("lpm_fpu_total_flops", "Floating point operations per second",
-+                 flop_r, "flops/s"),
-+          Metric("lpm_fpu_total_flopc", "Floating point operations per cycle",
-+                 flop_c, "flops/cycle", constraint=nmi_constraint),
-+      ]),
-+      MetricGroup("lpm_fpu_64", [
-+          FpuMetrics("lpm_fpu_64_single", s_64, 1, "64-bit single"),
-+          FpuMetrics("lpm_fpu_64_double", d_64, 1, "64-bit double"),
-+      ]),
-+      MetricGroup("lpm_fpu_128", [
-+          FpuMetrics("lpm_fpu_128_single", s_128, 4, "128-bit packed single"),
-+          FpuMetrics("lpm_fpu_128_double", d_128, 2, "128-bit packed double"),
-+      ]),
-+      MetricGroup("lpm_fpu_256", [
-+          FpuMetrics("lpm_fpu_256_single", s_256, 8, "128-bit packed single"),
-+          FpuMetrics("lpm_fpu_256_double", d_256, 4, "128-bit packed double"),
-+      ]),
-+      MetricGroup("lpm_fpu_512", [
-+          FpuMetrics("lpm_fpu_512_single", s_512, 16, "128-bit packed single"),
-+          FpuMetrics("lpm_fpu_512_double", d_512, 8, "128-bit packed double"),
-+      ]),
-+      Metric("lpm_fpu_assists", "FP assists as a percentage of cycles",
-+             d_ratio(f_assist, cyc), "100%"),
-+  ])
++  l1dc = Select(l1dc / 2, Literal("#smt_on"), l1dc)
++  ml = d_ratio(l1d, l1dc)
++  return Metric("lpm_mlp",
++                "Miss level parallelism - number of outstanding load misses per cycle (higher is better)",
++                ml, "load_miss_pending/cycle")
 +
 +
- def IntelIlp() -> MetricGroup:
-   tsc = Event("msr/tsc/")
-   c0 = Event("msr/mperf/")
-@@ -726,6 +815,7 @@ def main() -> None:
-       Tsx(),
-       IntelBr(),
-       IntelCtxSw(),
-+      IntelFpu(),
+ def IntelPorts() -> Optional[MetricGroup]:
+   pipeline_events = json.load(open(f"{_args.events_path}/x86/{_args.model}/pipeline.json"))
+ 
+@@ -819,6 +833,7 @@ def main() -> None:
        IntelIlp(),
        IntelL2(),
        IntelLdSt(),
++      IntelMlp(),
+       IntelPorts(),
+       IntelSwpf(),
+   ])
 -- 
 2.51.0.318.gd7df087d1a-goog
 
