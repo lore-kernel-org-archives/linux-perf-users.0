@@ -1,67 +1,63 @@
 Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E3B26CE28
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Aug 2025 04:12:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAE118BC0C
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 Aug 2025 05:32:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756440733; cv=none; b=cAdDHw1unM0F15qsMoIKq5eglGyC9hXUGRwujJYs6JHr9a3d1xOTmtWYHywCahW+SjpX9mxQyn45gEEuWHhK0Xp/f6Tfg2+Bfgjt0xIR8eM5RB7pN1xDZ0Khp4htrvqVnG2LRQEoVsP0jcpZQnwChG3MDyYmPBRZyReIaYa5MQw=
+	t=1756445568; cv=none; b=fUuub3jmub0cyquHIJAyqijjPuGuX1Fi9g3XZfHfs3H3+jM+mus15qscAqCdjO5F/oDtTk7E7R+OMjKLlMEHrF92PQesNwfIgM78jsKUtPIP08+N5zyofPsVgGq+HyrwT8MX6U0dV9qS4MerBa0rjSo5cITJz29OCmjxOnBqXrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756440733; c=relaxed/simple;
-	bh=qC9qZKKpYDUm+kJyCEJpPENdOECbimVQo+edYHDXXIc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=oVqiZelnqvVn54qhab5n5k+m34Iy34gxg+4rl2GVNDtg8aqr+8NRPdopaSoEFQW7y6773PDnbrDWU2YXl3rxhV/Q0AC5TXlb52dIYKHZGiWTRfRoLkwpcA02XYvQov0Qnp1Fu/UJVbSbFZtptoc4Sdf8ArqpCwFKBj7vz/IIASw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p97Magzl; arc=none smtp.client-ip=209.85.214.202
+	s=arc-20240116; t=1756445568; c=relaxed/simple;
+	bh=I4QACpBICmQCZ3S3+6kNYNVqT3g7uhIV3rIB9wDjn0Y=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=KxLA4x2cJ7cS4iJLnfiAxTEOKvpUA2s0CzxgDomBZnPBLweFOyG2FUvN/rxh86/0ujzsTytLOS+FUplBDJX26vyrr9o4wER7WVx3vsntToZm/YpTUNZJdarcJLWbqLQhwADhkOxzRg00CWhUQHaeVku9FWySR1PXow7FshV7XAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U0NtR0LG; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p97Magzl"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-248abeb9242so14234075ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 21:12:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U0NtR0LG"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-248fbfc35ddso16829225ad.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 22:32:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756440730; x=1757045530; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oLMEPbiOl1CA0uGgkj22XdQGVWtN3/kulLXNUlnyl2g=;
-        b=p97Magzl/nKZgt0COjJuR2mu8LNzhjoPoIuFwDCA/vtxJNJ/nyjZ90Ck5VqdK+StU4
-         LIjDOW3fsNqmG2vCV9/n3ZaX6wXkXLrQsy/33sl2GeevMNk++mjXmQzINtp6vQIM4+0u
-         fcUOZi19AFvu4AKeCjrLbzdNYo/n+ADPmocbCaWcIIqQuSJ1ZVdMKVXzwkwqWoun4sEx
-         HGQbBooKilUn6yPULNctJH0mxHZz3jmyL0lmbm7Wy7MA6192vCU4ejEPRjuDrU7g5ZBP
-         p92hGMTuZxXB/Y0cmglp6zqeuUGYXBYgLLSJ16jzWcxyniUo8Y0FWnbRKM9obM6B4Gtd
-         VYag==
+        d=google.com; s=20230601; t=1756445566; x=1757050366; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=dJ7X49u7UEhmM6SEYeosieinrxfPKdIK7XnxPLDzBZA=;
+        b=U0NtR0LGRb8KcGgWj2uwz9LbuOkP1NkmYc/0Q3Fs4hTa7djhwTtMPnLwD75Zbcysun
+         HPID4RvDEqu8MWEBlF95Pc0CILKU+HSoSyddkZLfQBZDnmuzmlbR6t23lXB+90nYPoMQ
+         jkL3ozjQRt/EJ0XU5633H0UVOecV2Vpwxo+WXxCtNRoYnkwUY9uBu0swCkNhO29iHwi1
+         MPUXhh4Cb2Dy/LT/OoGJ0FWHALYO2510OrDeyTPpRdqNpUQXZVrBjyW7+P1e1lid28u8
+         FSoYq7G0V1z77gGBtHRSlODNJkoFScuATUDPcRTWUfnGVm7yfZjRv5ap07h1HgjANuQf
+         8Y4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756440730; x=1757045530;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oLMEPbiOl1CA0uGgkj22XdQGVWtN3/kulLXNUlnyl2g=;
-        b=B6uds7nnuGbkEUGndvWTK2AK8bGRNhnfK3jb9rnxGlSW4TgWZ3caVrXrjEpEIRvgv4
-         3ZYZ//2acujXW2Uzmlo1n48B0ypoFZkwa/oLAKTWSkY8478SwXg1J/Ej79H9RpL7ZKcJ
-         fPmZ4gSP8DMcgWTpSa1zoz8T+OJBxVPejYvhHgsAAX1qtDKuyetTh+7GPiJRUeW/GwBb
-         oyJ0ppPIL6X8Sx6UOeH4D3gj8KqANdKUMrlhPw5LwZ0EW03gcwyR1xhLlMszBBAcjDvw
-         lm3SlXndQsqmexL6+yPlj+CLOTjIqGg6lqEHd2pWbaKgpH3m+3ryG9p1eIhisvoqx9vn
-         IOJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXeF7XTfHOn7tTca8vwW1YibWcBIvi7zSL4vfn2hDhxAmR6A7Zi0UX/e0bFm1Mpphp6lsXKA0tlfR3SYx5h/KtQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzqzJysmpaaILlhJqiwJCXQlq6+noe1dpHPlJoLfJ+sJ7AipdQ
-	1cXqSe9U0znNLiIkPSPGe6U+YUqCokla9ikxeH+z7yuOyRQNFEWgu2N623D7cT7BKYkBnILe7d8
-	rDDFaIyJGFQ==
-X-Google-Smtp-Source: AGHT+IHDsva2lKFanEaCvFFadJFWsw5tY+H9T7b+ytrl0xjAXY/bleP9SdCSpagPCUKeSl3MKOb5pT7fhOqm
-X-Received: from plbbg1.prod.google.com ([2002:a17:902:8e81:b0:248:7880:829c])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:17c3:b0:23f:f96d:7579
- with SMTP id d9443c01a7336-2462ef446c2mr321044585ad.37.1756440729973; Thu, 28
- Aug 2025 21:12:09 -0700 (PDT)
-Date: Thu, 28 Aug 2025 21:11:03 -0700
-In-Reply-To: <20250829041104.4186320-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1756445566; x=1757050366;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dJ7X49u7UEhmM6SEYeosieinrxfPKdIK7XnxPLDzBZA=;
+        b=C3ZP9bFkhj+ei5hjyWbt6Dsf6BZJr9vETdApqyB4FQv5e0EtiSeTNgMNWnhBrvNkTL
+         lRGjHZqeUAfdpfoqbT3xVEbTqgD2r2BiYERV5XJ1pmAO6qRAHZN9HM2NnHVy71ySJUvO
+         ynRiFqP4KD0KeiX/WwWhb3aK5jmcXRRfjLgZJGcxgDkY1yrFbXULPddMTQhuEIFF877+
+         pkgFMo3NfOc6V0duzD99WPr7RPPhuevdqQP07hzpA34gpUm2Tgp6/rNatuRfR2itlMF2
+         kNJI+bbG2OcAS3XTVDJp8h7LcZ+v4TcwRDzQrcOBRe+R80PGCglWZRp51TIsTl5JBe9w
+         qUmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxUKuxKjXWRjTWR6V4kuW/G970xQ5mkhSkh1IJtmip8uVWkvJ4BJz1pu57X4fJp5q20HwQkdFQl5Zf+dnnrlbn@vger.kernel.org
+X-Gm-Message-State: AOJu0YybfMZY5QLL0XLyuC54VjLSxPZNoN1j8zT+PCJSyUQ5xqo4Fnho
+	XsVvVm4U7FnI0FHXDeY/qFhdpEa3SVzPD85OruHs6nKNPOYHdS4B/BuVcWAnVFKqoXUoq2Oab5G
+	SBCOaqts1Rg==
+X-Google-Smtp-Source: AGHT+IEN14rLTCmLlMH2oT9k8izuGJ0QZ4GViZai6MMVnBcx2oVyIfxAYI54jTZklbOPpkrCRBszj6EDXpzq
+X-Received: from plha14.prod.google.com ([2002:a17:902:ecce:b0:248:9ee8:cee5])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1a45:b0:246:ddd6:f8b9
+ with SMTP id d9443c01a7336-246ddd6fd04mr238874905ad.43.1756445566290; Thu, 28
+ Aug 2025 22:32:46 -0700 (PDT)
+Date: Thu, 28 Aug 2025 22:32:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250829041104.4186320-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.318.gd7df087d1a-goog
-Message-ID: <20250829041104.4186320-23-irogers@google.com>
-Subject: [PATCH v5 22/22] perf jevents: Add mesh bandwidth saturation metric
- for Intel
+Message-ID: <20250829053235.21994-1-irogers@google.com>
+Subject: [PATCH v5 0/3] Python generated Arm64 metrics
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,56 +68,54 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Xu Yang <xu.yang_2@nxp.com>, linux-kernel@vger.kernel.org, 
 	linux-perf-users@vger.kernel.org, John Garry <john.g.garry@oracle.com>, 
 	Jing Zhang <renyu.zj@linux.alibaba.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Benjamin Gray <bgray@linux.ibm.com>, Perry Taylor <perry.taylor@intel.com>, 
-	Samantha Alt <samantha.alt@intel.com>, Caleb Biggers <caleb.biggers@intel.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Edward Baker <edward.baker@intel.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>
+	Benjamin Gray <bgray@linux.ibm.com>, Leo Yan <leo.yan@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Memory bandwidth saturation from CBOX/CHA events present in
-broadwellde, broadwellx, cascadelakex, haswellx, icelakex, skylakex
-and snowridgex.
+Generate two sets of additional metrics for Arm64, where the topdown
+set decomposes yet further. The metrcs primarily use json events,
+where the json contains architecture standard events. Not all events
+are in the json, such as for a53 where the events are in
+sysfs. Workaround this by adding the sysfs events to the metrics but
+longer-term such events should be added to the json.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/intel_metrics.py | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+The patches should be applied on top of:
+https://lore.kernel.org/lkml/20250829041104.4186320-1-irogers@google.com/
 
-diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index 19c7357c496a..7250e8c8eeba 100755
---- a/tools/perf/pmu-events/intel_metrics.py
-+++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -1009,6 +1009,22 @@ def UncoreMemBw() -> Optional[MetricGroup]:
-   ], description = "Memory Bandwidth")
- 
- 
-+def UncoreMemSat() -> Optional[Metric]:
-+  try:
-+    clocks = Event("UNC_CHA_CLOCKTICKS", "UNC_C_CLOCKTICKS")
-+    sat = Event("UNC_CHA_DISTRESS_ASSERTED.VERT", "UNC_CHA_FAST_ASSERTED.VERT",
-+                "UNC_C_FAST_ASSERTED")
-+  except:
-+    return None
-+
-+  desc = ("Mesh Bandwidth saturation (% CBOX cycles with FAST signal asserted, "
-+          "include QPI bandwidth saturation), lower is better")
-+  if "UNC_CHA_" in sat.name:
-+    desc = ("Mesh Bandwidth saturation (% CHA cycles with FAST signal asserted, "
-+            "include UPI bandwidth saturation), lower is better")
-+  return Metric("lpm_mem_sat", desc, d_ratio(sat, clocks), "100%")
-+
-+
- def UncoreUpiBw() -> Optional[MetricGroup]:
-   try:
-     upi_rds = Event("UNC_UPI_RxL_FLITS.ALL_DATA")
-@@ -1071,6 +1087,7 @@ def main() -> None:
-       UncoreDir(),
-       UncoreMem(),
-       UncoreMemBw(),
-+      UncoreMemSat(),
-       UncoreUpiBw(),
-   ])
- 
+v5. Rebase. Address review comments from Leo Yan
+    <leo.yan@arm.com>. Prefix all metric names with lpm_ (short for
+    Linux Perf Metric) so that python generated metrics are clearly
+    namespaced. Use cpu-cycles rather than cycles legacy event for
+    cycles metrics to avoid confusion with ARM PMUs. Add patch that
+    checks events to ensure all possible event names are present in at
+    least one json file.
+
+v4. Tweak to build dependencies and rebase.
+    https://lore.kernel.org/lkml/20240926175709.410022-1-irogers@google.com/
+
+v3. Some minor code cleanup changes.
+    https://lore.kernel.org/lkml/20240314055801.1973422-1-irogers@google.com/
+
+v2. The cycles metrics are now made common and shared with AMD and
+    Intel, suggested by Kan Liang <kan.liang@linux.intel.com>. This
+    assumes these patches come after the AMD and Intel sets.
+    https://lore.kernel.org/lkml/20240301184942.2660478-1-irogers@google.com/
+
+v1. https://lore.kernel.org/lkml/20240229001325.4157655-1-irogers@google.com/
+
+Ian Rogers (3):
+  perf jevents: Add collection of topdown like metrics for arm64
+  perf jevents: Add cycles breakdown metric for arm64/AMD/Intel
+  perf jevents: Validate that all names given an Event
+
+ tools/perf/pmu-events/Build             |   2 +-
+ tools/perf/pmu-events/amd_metrics.py    |   3 +
+ tools/perf/pmu-events/arm64_metrics.py  | 150 +++++++++++++++++++++++-
+ tools/perf/pmu-events/common_metrics.py |  18 +++
+ tools/perf/pmu-events/intel_metrics.py  |   2 +
+ tools/perf/pmu-events/metric.py         |  37 ++++++
+ 6 files changed, 207 insertions(+), 5 deletions(-)
+ create mode 100644 tools/perf/pmu-events/common_metrics.py
+
 -- 
 2.51.0.318.gd7df087d1a-goog
 
