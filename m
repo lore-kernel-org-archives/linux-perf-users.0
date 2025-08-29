@@ -1,55 +1,55 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52C5267B94
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Aug 2025 04:12:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E3B26CE28
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 Aug 2025 04:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756440730; cv=none; b=sD4LZvJtwxf4IfxejFFw8XuRZja7sq0hf3txVj6UvyenBXeyuApv5brRp8tWLFFEW2UtZfDz91cQ9ZNvYfQ/O8Rac0IfnXOeXzhhxEnQ9CgMx5xzmJ44t1xOByhMrbVkpd3zJMTO3tI9GpPMDBWlSfIsH4dDacVdoh7Og2rkCmw=
+	t=1756440733; cv=none; b=cAdDHw1unM0F15qsMoIKq5eglGyC9hXUGRwujJYs6JHr9a3d1xOTmtWYHywCahW+SjpX9mxQyn45gEEuWHhK0Xp/f6Tfg2+Bfgjt0xIR8eM5RB7pN1xDZ0Khp4htrvqVnG2LRQEoVsP0jcpZQnwChG3MDyYmPBRZyReIaYa5MQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756440730; c=relaxed/simple;
-	bh=xIhJxu1okP+jiRU9C+WmdMmdDqHNc9R7YxUxYrfj3SM=;
+	s=arc-20240116; t=1756440733; c=relaxed/simple;
+	bh=qC9qZKKpYDUm+kJyCEJpPENdOECbimVQo+edYHDXXIc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=TmtnmLX27YZu3Bz+jsVP2FqpC++RR+9SnbqLpQr97NOH+ziOGUKx/8McRXYTTFnZkun4FnZmqSMaE2TCqBHvIA6kSPnB3kkqy4gjxRKkaCJ1/I/nkeqryMyKkfEmyyAwtKq9E7gJRGESVDVWGdAJTwolixUKjjW1irIIRL27ClI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i9GSKTtM; arc=none smtp.client-ip=209.85.216.74
+	 To:Content-Type; b=oVqiZelnqvVn54qhab5n5k+m34Iy34gxg+4rl2GVNDtg8aqr+8NRPdopaSoEFQW7y6773PDnbrDWU2YXl3rxhV/Q0AC5TXlb52dIYKHZGiWTRfRoLkwpcA02XYvQov0Qnp1Fu/UJVbSbFZtptoc4Sdf8ArqpCwFKBj7vz/IIASw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p97Magzl; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i9GSKTtM"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-327594fd627so1693731a91.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 21:12:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p97Magzl"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-248abeb9242so14234075ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 21:12:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756440728; x=1757045528; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1756440730; x=1757045530; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=1A7jpEsvPE0kUPbvgwyciQy7SJ0zGAJFAhGVF7g/pGo=;
-        b=i9GSKTtMBEjeZKqVarxWBZCawiQOvx+4KAnLxJbZYQj1Igcyg0ZwEoeiLsgCygSxDy
-         UsWcvIq1SwBdo1WAp40TYFQHBbiBqaUzJT2cdcneGpyuy7UIf5cjzWkQd6oSV70HJ7Qd
-         UGQbyMlCEMWGPVkQg5lDUDCQhf7CFH5JLZeGmbAJxC1u/27KaFqxMJWsUwhm2kdknA8q
-         lQLL+oFlqF8IQ+8pwiRXqJW8ARzck+Jdsi+gibKKKItJA6gW7QsC7ATlb7eGVGscntTl
-         //YALD5rR50Q1Q1IdGd5S4MXd1cWU8KpUR361aNlgyCG/F5j/vZMysOGAKlqiOiL15bQ
-         3uCw==
+        bh=oLMEPbiOl1CA0uGgkj22XdQGVWtN3/kulLXNUlnyl2g=;
+        b=p97Magzl/nKZgt0COjJuR2mu8LNzhjoPoIuFwDCA/vtxJNJ/nyjZ90Ck5VqdK+StU4
+         LIjDOW3fsNqmG2vCV9/n3ZaX6wXkXLrQsy/33sl2GeevMNk++mjXmQzINtp6vQIM4+0u
+         fcUOZi19AFvu4AKeCjrLbzdNYo/n+ADPmocbCaWcIIqQuSJ1ZVdMKVXzwkwqWoun4sEx
+         HGQbBooKilUn6yPULNctJH0mxHZz3jmyL0lmbm7Wy7MA6192vCU4ejEPRjuDrU7g5ZBP
+         p92hGMTuZxXB/Y0cmglp6zqeuUGYXBYgLLSJ16jzWcxyniUo8Y0FWnbRKM9obM6B4Gtd
+         VYag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756440728; x=1757045528;
+        d=1e100.net; s=20230601; t=1756440730; x=1757045530;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1A7jpEsvPE0kUPbvgwyciQy7SJ0zGAJFAhGVF7g/pGo=;
-        b=ceLLflCbpM9CHNTZCb6Zw90locYj8tv3EdDVl35sLZzOM1yhleMha05d44IAGnH4cb
-         xdOOI17tP2l19tPZxZaNuUPmLepTX4fmil0TUcVHcM9J3qtC+2s+q6GMf3YGTpbf3xBW
-         Tsn736Ssv1OpPAbkyFVupyMbk4bPvobT/TrNFD/Ga+kgX/AQlBA4ys8GclTpYx7r6DAw
-         /epsrUOmQudb8Cr2cZOceiqlwljWrI3FQySRP7FRGKz/Umi1aky9OTtVVvEplM0YNpJ5
-         i0gtxz8Kab9sxBIdKh0ibLAXCjHZBeUBEzB2q3cLq7TOJtdQzqQtNe9tuFYqkPebfkhY
-         KZnA==
-X-Forwarded-Encrypted: i=1; AJvYcCVNNYcejL/xz3r7dwA6Uilcg7aGIk6yreG/U1Rp/fp918yxgyewNBTo/B5tHRQP3E/836iz5M5WNcQsF8/VWwbP@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoSPvEe2Tq1+wVvsxPY6Jgv+mqnOpYCnkjANnsSDD5TquExcdi
-	SX6hTfG5O3Wxur19r3AY5+MuGfXYcajqe/jnwX9TRLFMN7Ysafp/Wb/FZ4Fak7bXKn6Y4CIngjV
-	6Ax6eZ0GZ1w==
-X-Google-Smtp-Source: AGHT+IEzLLnWtYKPlJDbm1c/YIWiALK7KVZJf/m9NNUyDV1q+iWH89NyCUe7GtxofPmfCB1d/dyAXN7CEpXm
-X-Received: from pjh15.prod.google.com ([2002:a17:90b:3f8f:b0:327:d54a:8c93])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3848:b0:327:e21c:dd6
- with SMTP id 98e67ed59e1d1-327e21c0e50mr2232836a91.23.1756440728087; Thu, 28
- Aug 2025 21:12:08 -0700 (PDT)
-Date: Thu, 28 Aug 2025 21:11:02 -0700
+        bh=oLMEPbiOl1CA0uGgkj22XdQGVWtN3/kulLXNUlnyl2g=;
+        b=B6uds7nnuGbkEUGndvWTK2AK8bGRNhnfK3jb9rnxGlSW4TgWZ3caVrXrjEpEIRvgv4
+         3ZYZ//2acujXW2Uzmlo1n48B0ypoFZkwa/oLAKTWSkY8478SwXg1J/Ej79H9RpL7ZKcJ
+         fPmZ4gSP8DMcgWTpSa1zoz8T+OJBxVPejYvhHgsAAX1qtDKuyetTh+7GPiJRUeW/GwBb
+         oyJ0ppPIL6X8Sx6UOeH4D3gj8KqANdKUMrlhPw5LwZ0EW03gcwyR1xhLlMszBBAcjDvw
+         lm3SlXndQsqmexL6+yPlj+CLOTjIqGg6lqEHd2pWbaKgpH3m+3ryG9p1eIhisvoqx9vn
+         IOJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXeF7XTfHOn7tTca8vwW1YibWcBIvi7zSL4vfn2hDhxAmR6A7Zi0UX/e0bFm1Mpphp6lsXKA0tlfR3SYx5h/KtQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzqzJysmpaaILlhJqiwJCXQlq6+noe1dpHPlJoLfJ+sJ7AipdQ
+	1cXqSe9U0znNLiIkPSPGe6U+YUqCokla9ikxeH+z7yuOyRQNFEWgu2N623D7cT7BKYkBnILe7d8
+	rDDFaIyJGFQ==
+X-Google-Smtp-Source: AGHT+IHDsva2lKFanEaCvFFadJFWsw5tY+H9T7b+ytrl0xjAXY/bleP9SdCSpagPCUKeSl3MKOb5pT7fhOqm
+X-Received: from plbbg1.prod.google.com ([2002:a17:902:8e81:b0:248:7880:829c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:17c3:b0:23f:f96d:7579
+ with SMTP id d9443c01a7336-2462ef446c2mr321044585ad.37.1756440729973; Thu, 28
+ Aug 2025 21:12:09 -0700 (PDT)
+Date: Thu, 28 Aug 2025 21:11:03 -0700
 In-Reply-To: <20250829041104.4186320-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250829041104.4186320-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.318.gd7df087d1a-goog
-Message-ID: <20250829041104.4186320-22-irogers@google.com>
-Subject: [PATCH v5 21/22] perf jevents: Add upi_bw metric for Intel
+Message-ID: <20250829041104.4186320-23-irogers@google.com>
+Subject: [PATCH v5 22/22] perf jevents: Add mesh bandwidth saturation metric
+ for Intel
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,52 +78,49 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Thomas Falcon <thomas.falcon@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Break down UPI read and write bandwidth using uncore_upi counters.
+Memory bandwidth saturation from CBOX/CHA events present in
+broadwellde, broadwellx, cascadelakex, haswellx, icelakex, skylakex
+and snowridgex.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/intel_metrics.py | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ tools/perf/pmu-events/intel_metrics.py | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
 diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index ea7749d34081..19c7357c496a 100755
+index 19c7357c496a..7250e8c8eeba 100755
 --- a/tools/perf/pmu-events/intel_metrics.py
 +++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -1009,6 +1009,27 @@ def UncoreMemBw() -> Optional[MetricGroup]:
+@@ -1009,6 +1009,22 @@ def UncoreMemBw() -> Optional[MetricGroup]:
    ], description = "Memory Bandwidth")
  
  
-+def UncoreUpiBw() -> Optional[MetricGroup]:
++def UncoreMemSat() -> Optional[Metric]:
 +  try:
-+    upi_rds = Event("UNC_UPI_RxL_FLITS.ALL_DATA")
-+    upi_wrs = Event("UNC_UPI_TxL_FLITS.ALL_DATA")
++    clocks = Event("UNC_CHA_CLOCKTICKS", "UNC_C_CLOCKTICKS")
++    sat = Event("UNC_CHA_DISTRESS_ASSERTED.VERT", "UNC_CHA_FAST_ASSERTED.VERT",
++                "UNC_C_FAST_ASSERTED")
 +  except:
 +    return None
 +
-+  upi_total = upi_rds + upi_wrs
-+
-+  # From "Uncore Performance Monitoring": When measuring the amount of
-+  # bandwidth consumed by transmission of the data (i.e. NOT including
-+  # the header), it should be .ALL_DATA / 9 * 64B.
-+  scale = (64 / 9) / 1_000_000
-+  return MetricGroup("lpm_upi_bw", [
-+      Metric("lpm_upi_bw_read", "UPI read bandwidth",
-+             d_ratio(upi_rds, interval_sec), f"{scale}MB/s"),
-+      Metric("lpm_upi_bw_write", "DDR memory write bandwidth",
-+             d_ratio(upi_wrs, interval_sec), f"{scale}MB/s"),
-+  ], description = "UPI Bandwidth")
++  desc = ("Mesh Bandwidth saturation (% CBOX cycles with FAST signal asserted, "
++          "include QPI bandwidth saturation), lower is better")
++  if "UNC_CHA_" in sat.name:
++    desc = ("Mesh Bandwidth saturation (% CHA cycles with FAST signal asserted, "
++            "include UPI bandwidth saturation), lower is better")
++  return Metric("lpm_mem_sat", desc, d_ratio(sat, clocks), "100%")
 +
 +
- def main() -> None:
-   global _args
- 
-@@ -1050,6 +1071,7 @@ def main() -> None:
+ def UncoreUpiBw() -> Optional[MetricGroup]:
+   try:
+     upi_rds = Event("UNC_UPI_RxL_FLITS.ALL_DATA")
+@@ -1071,6 +1087,7 @@ def main() -> None:
        UncoreDir(),
        UncoreMem(),
        UncoreMemBw(),
-+      UncoreUpiBw(),
++      UncoreMemSat(),
+       UncoreUpiBw(),
    ])
- 
  
 -- 
 2.51.0.318.gd7df087d1a-goog
