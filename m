@@ -1,162 +1,124 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ECDC225397
-	for <linux-perf-users@vger.kernel.org>; Fri, 29 Aug 2025 05:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489021D8A10
+	for <linux-perf-users@vger.kernel.org>; Fri, 29 Aug 2025 05:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756445574; cv=none; b=a6nwV0W1ndf6WDKcvVvw7VzQH/zwJ1YoAtLTibkSVnIOD5inwiZAcMrmWBl8n0ow4YQnAh0TqYAJbo1tXAecYQ7nO64AD7QGQUttaT8gvEuVZ2cLR39GvFK6WSiPePNK6tJn6V3k05MktNaUw/OQQi/H3S2TKrluNhj6iJ+/Poc=
+	t=1756447175; cv=none; b=GwgX5fUY0H1EptaLVMDoRGUcuAxc1QYPSoxv0fkjGMcgJQc8MGw99p4kiFv2qswnxPhpSr5tu/fe6eAAOtuuvAuzSTSg4NNKeUktkLiDPL0kVZhU1itttN+t4uGW7MvRBnMxHixs+WTaUZ+clQWp7s2hEFbYmGB1zb+MFk/HhzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756445574; c=relaxed/simple;
-	bh=fwAL01LE19lhQ9UMyPpq4PFhYNoK6DT1X94dohuXWL0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=cau2wNBXib2MHAbC+VOXGMMYBHc/E5F/5P047GCLsdG2KAoCDKJqt1WiZlF6nTstdNfBCq4WOjL1IPo2xejmIMGd2KfqAd3sbK4mo1RoeMrduMAXXPsrobHb+Wfqm3BpxwC69ZNOOpI+gW9LEDMHQRxiSjRFyKytCsYgDAyHT+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LHMMB876; arc=none smtp.client-ip=209.85.214.202
+	s=arc-20240116; t=1756447175; c=relaxed/simple;
+	bh=HQHfXVXKCqm565Dn42Z59+LNgV1U4UlkiCvPgaZSeQk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aTbQaPHhm0F6QNOIQuqFkTfCQOfn9sgTuiCTdFzAl5Od+6KtUhp1NjwJSmo4CQlb/xIU3mPgl64EhyF7idqkKv4YVVuLZCqs4MRbyuO96c9q2UBUHE1A2lbytjeYjjbtPAIF3sG0QTc1BV8IJStqCQQbgmar/L34KTXv3+/37YM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=flugKghJ; arc=none smtp.client-ip=209.85.208.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LHMMB876"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-24457ef983fso34129535ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 22:32:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="flugKghJ"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-336b82c03ecso2115971fa.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 28 Aug 2025 22:59:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756445572; x=1757050372; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pU2fAeE5oM19Gv08YDHyl9/3IFT39lq/g2I7zGvb/Xc=;
-        b=LHMMB876jLun872dFqLtXNrEzb9/HB65UEX79j0mbz5/J4QQGCbUrxdHb0OcvORILu
-         h29CaKSkfMun6ysZGw6Gh+Szf3u8bWE6+4pVTULYwF+aOe+jbi9OLKlc0qGPVVwpL/P2
-         Ppy2FOrYRDDcqy+Ytug/hE7ypGBkrYK4POqbL3kMl16/eBFRL+DeImk4VAelLxkpb9V5
-         isYCFRpSHohY64aFgDwr7fZihMvbXbYbmdcmEpzD+OaT/DH66YyciMPmN/3J/LNhDtcl
-         KmyT+ULgNEgvucHUXQk5k+y1yQnsLAX9Dxq5gh/oxS0RKCGKiOevybP4gLiZezEyBtOZ
-         dc+A==
+        d=google.com; s=20230601; t=1756447171; x=1757051971; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=P9b89mWcH1WRoi8NB6LCKkiGizr7phQg5j8xmHQXvrc=;
+        b=flugKghJYfGrHrmWu5n6xDWoYY4uL0G/5bmZOOtwiqKdHk+Kb6vfw428PSR60W91Z1
+         xXFqqG3HScK+ibXsuKTmfjGCNPu/a7edeGERKa4Dz3QGIv5u5Nj1muqxW/uBO8zmA7JS
+         vaxBY5uetsyvTpmIbeDIx5g/z/r2DkOlXf4m5kSLSYGiR+Uv3W6x6+tUy4+25SjwTVz3
+         iQGNrVgnTTnoi2x2PJSG6HPasEKrYM6AVTQTTGiQU+Pv4xjTjPOfXLK+8LGGDDLp5+E4
+         U+TICFsJ0fO7AsDtgRNRmpGrHbRMy7Rw0rzPyjT+/MMUjYLtW54pUO2bujM827yvqrAM
+         qxJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756445572; x=1757050372;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pU2fAeE5oM19Gv08YDHyl9/3IFT39lq/g2I7zGvb/Xc=;
-        b=WCsPoyUdD1vvPwoy6Avz9TfkJ25QIk2QEj4SxSbDMgMYpiF69vcBYbpbl8DRFa5Icl
-         f7qYq4SRXdNl8GMfAZEZs+bvZL8u5tHArwrmbZmjFBSWZEsb02TuJprLljzo/jRbTm8W
-         oHS8Ag2HpJQuzCVutFlVGSZ17FWeV8Mi4DRxY32brsUIxkfvYJwMpNqdIrJeM8eMeyz2
-         zhLWBe00PkNBLzmqqZsfxynr2dPCZ64mHRI40xCoi5x6LBp9oDrhm01Mpd+SrvSt8EV2
-         i2SwjTRxBU3cVTreXLIrcrlj7FhtPkPEq0pm1m/LFb2WzNHY+hE72FwgOs1vbJc3b5gC
-         Fz3w==
-X-Forwarded-Encrypted: i=1; AJvYcCW4VFxOjADlU0LLFiy5mpSKUuSDW+Bn8cOuO7k/yEDPdoFEJMBiiqgz3liV04pUUHVixrmPIuqDv9vbLvFG6c1Q@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7jlzSdFKEYKOj5BbFgbDwQy7UDOksK0fei/LM3+WrIekMRRnQ
-	xHEf08pXCyB7LNc+lydIiQo43hHGy8790VbzfSY+KMa14k1AlfcpI6m/yPLYP3f40aC7iRS3jdf
-	TBGC2nB7lvA==
-X-Google-Smtp-Source: AGHT+IEXo8lujkPD6NwKIYSQQ44USgnCa80S8P2/L/lAYZbF7W+ElqRCMv4FbfFb51L26IXnQPyD74pxYC28
-X-Received: from pjbdb3.prod.google.com ([2002:a17:90a:d643:b0:327:5941:b2fd])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c403:b0:242:9bca:863c
- with SMTP id d9443c01a7336-2462ef47b04mr396377635ad.54.1756445571769; Thu, 28
- Aug 2025 22:32:51 -0700 (PDT)
-Date: Thu, 28 Aug 2025 22:32:35 -0700
-In-Reply-To: <20250829053235.21994-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1756447171; x=1757051971;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=P9b89mWcH1WRoi8NB6LCKkiGizr7phQg5j8xmHQXvrc=;
+        b=edsol1aRKUVJ0dgkFiOOYtfMlgEZaZ5QZVCiH2gzq2KkYi22F7XleBDPlJbCNoWl7B
+         0FOqbzwk5NCfWROEnzF+y1KHRdesbzZZ74yUspRFJti/DMMRIk+nBpFDtMmEXjkCxeIy
+         I+S6ys82mQf6UpApBbz/JwPdZ36iJiEmNfUbpKVLt/JHGZLziKVGdniToAsJM3ELICI4
+         CtHYr5USqRj0ZSsf27XLR8fYwEFLgzp9ws130sZaMGCeGpJf6JDfiAogbMiABL7bzNct
+         E68BO/5tCRPSpgH60t9OryUmm+VKIAEDyEEPB9Yq+zLv+wGu8sa/Ova3ibgB+NEh4K40
+         +Upw==
+X-Forwarded-Encrypted: i=1; AJvYcCVXlUKjVuRcJY1JyBxmKNF3L4uqFwAJ4x9s5GVmWehLVHuOz2xHF4QVAvqFgPrybLmNR5ViQVftgqei1Koug+4w@vger.kernel.org
+X-Gm-Message-State: AOJu0YzI6VVpokXcFr9Ev2/DPxYUkLwGSq/KafIIFenJ5JHlcTa7pWmH
+	znOdw69J36dF9z6RIRVl/XuuWdbIJ0EpzKc7lKsXFat28d0MuN6A1NTOy3gzNlEmU8ORQjjKMbf
+	lmS+W4PQ7jtJ4mblsrjTqS4hyte7UHKwxtxZitp29
+X-Gm-Gg: ASbGncsfj0YCR24n2/AQmAsaBWb28mpCg47J03vY+qRYvGaXL97UfhfjleqpExyFga2
+	grxYY+qWE9m3SW9jk3SxiTsga6dP+wH1vUtteJFB0wcnlBVwdbhumHwTZB4JZDHxOAhaIUAlFmG
+	TkSv+NaaZxFiFwE2Rdl3ej1IkHVmteXVYhHueEZSlUIWkQK7xnaDogD2iXs6RxEQ2/Cug0KbRcj
+	X1zqRg5SoHO1qrgmHQryrmX7S6tenBSrXXNppqWyA8OP81zYAjdv7sxBw==
+X-Google-Smtp-Source: AGHT+IGpsSHWaCkR84qNI3V45LpCTM6KTwnsCQMP483IEziQLGCDzdNJpFNTpDClHjL7Rp31C5D88TK18RjtyhkTPDc=
+X-Received: by 2002:a05:651c:1118:10b0:333:7e5b:15c0 with SMTP id
+ 38308e7fff4ca-33650ea0b23mr53475191fa.13.1756447171269; Thu, 28 Aug 2025
+ 22:59:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250829053235.21994-1-irogers@google.com>
-X-Mailer: git-send-email 2.51.0.318.gd7df087d1a-goog
-Message-ID: <20250829053235.21994-4-irogers@google.com>
-Subject: [PATCH v5 3/3] perf jevents: Validate that all names given an Event
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Xu Yang <xu.yang_2@nxp.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, John Garry <john.g.garry@oracle.com>, 
-	Jing Zhang <renyu.zj@linux.alibaba.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Benjamin Gray <bgray@linux.ibm.com>, Leo Yan <leo.yan@arm.com>
+MIME-Version: 1.0
+References: <aKYEpf7xp3NnkBWm@x1> <CACT4Y+YX-ROx0cW4pkDnqbdfbigVycwPLwO12RNbbtX9-Qp73A@mail.gmail.com>
+ <aKv_FjtkPIR86inu@google.com>
+In-Reply-To: <aKv_FjtkPIR86inu@google.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Fri, 29 Aug 2025 07:59:19 +0200
+X-Gm-Features: Ac12FXzOVh7BPaHMQclLjPZcl1R6uL53TzQPya8c8MkZgMLcA8AbQsulHRMdbNg
+Message-ID: <CACT4Y+ZxqgqAGoSgUaVKk6_=h1dO7iV8qrVHDOrmbBS3VW8-=g@mail.gmail.com>
+Subject: Re: [PATCH 1/1] Revert "perf hist: Fix bogus profiles when filters
+ are enabled"
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Validate they exist in a json file from one directory found from one
-directory above the model's json directory. This avoids broken
-fallback encodings being created.
+On Mon, 25 Aug 2025 at 08:13, Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> Hello,
+>
+> On Wed, Aug 20, 2025 at 06:14:08PM -0700, Dmitry Vyukov wrote:
+> > On Wed, 20 Aug 2025 at 10:23, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > >
+> > > This reverts commit 8b4799e4f0f40a4ec737bf870aa38d06288bf0fb.
+> > >
+> > > Not combining entries in 'perf top', so we're getting multiple lines for
+> > > the same symbol, with the same address.
+> > >
+> > > To test it, simply run 'perf top', then do /acpi to see just symbols
+> > > starting with acpi_ and notice that there are various lines with the
+> > > same symbol, press V to see the address and its the same.
+> >
+> > With this revert, does it show 1 entry but with a wrong percent?
+> > I am not sure why there are 2 entries for the same symbol, but if we
+> > merge them, we can sum of percents. Is it the right thing to do?
+>
+> I don't think it'd have a wrong percent.  The hists maintain stats for
+> filtered entries separately.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/metric.py | 36 +++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+I still don't fully follow.
 
-diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
-index 315350f3b6ed..92dcd4cd9d54 100644
---- a/tools/perf/pmu-events/metric.py
-+++ b/tools/perf/pmu-events/metric.py
-@@ -11,12 +11,14 @@ from typing import Dict, List, Optional, Set, Tuple, Union
- all_pmus = set()
- all_events = set()
- experimental_events = set()
-+all_events_all_models = set()
- 
- def LoadEvents(directory: str) -> None:
-   """Populate a global set of all known events for the purpose of validating Event names"""
-   global all_pmus
-   global all_events
-   global experimental_events
-+  global all_events_all_models
-   all_events = {
-       "context\-switches",
-       "cycles",
-@@ -42,6 +44,20 @@ def LoadEvents(directory: str) -> None:
-         # The generated directory may be the same as the input, which
-         # causes partial json files. Ignore errors.
-         pass
-+  all_events_all_models = all_events.copy()
-+  for root, dirs, files in os.walk(directory + ".."):
-+    for filename in files:
-+      if filename.endswith(".json"):
-+        try:
-+          for x in json.load(open(f"{root}/{filename}")):
-+            if "EventName" in x:
-+              all_events_all_models.add(x["EventName"])
-+            elif "ArchStdEvent" in x:
-+              all_events_all_models.add(x["ArchStdEvent"])
-+        except json.decoder.JSONDecodeError:
-+          # The generated directory may be the same as the input, which
-+          # causes partial json files. Ignore errors.
-+          pass
- 
- 
- def CheckPmu(name: str) -> bool:
-@@ -64,6 +80,25 @@ def CheckEvent(name: str) -> bool:
- 
-   return name in all_events
- 
-+def CheckEveryEvent(*names: str) -> None:
-+  """Check all the events exist in at least one json file"""
-+  global all_events_all_models
-+  if len(all_events_all_models) == 0:
-+    assert len(names) == 1, f"Cannot determine valid events in {names}"
-+    # No events loaded so assume any event is good.
-+    return
-+
-+  for name in names:
-+    # Remove trailing modifier.
-+    if ':' in name:
-+      name = name[:name.find(':')]
-+    elif '/' in name:
-+      name = name[:name.find('/')]
-+      if any([name.startswith(x) for x in ['amd', 'arm', 'cpu', 'msr', 'power']]):
-+        continue
-+    if name not in all_events_all_models:
-+      raise Exception(f"Is {name} a named json event?")
-+
- 
- def IsExperimentalEvent(name: str) -> bool:
-   global experimental_events
-@@ -403,6 +438,7 @@ class Event(Expression):
- 
-   def __init__(self, *args: str):
-     error = ""
-+    CheckEveryEvent(*args)
-     for name in args:
-       if CheckEvent(name):
-         self.name = _FixEscapes(name)
--- 
-2.51.0.318.gd7df087d1a-goog
+If we merge a filtered entry into non-filtered entry (with the
+revert), now we attribute what was filtered out to the non-filtered
+entry, and the non-filtered entry has wrong overhead, no?
 
+If we merge the other way around: non-filtered entry into filtered
+entry, then we won't show it at all.
+
+> Based on the position of filtered entries in the RB tree, I think it
+> might not merge correct samples together and create multiple entries
+> with the same info.
+
+The second thing I don't understand: without this revert we don't
+merge filtered and non-filtered entries, top shows duplicate entries,
+does it mean it shows filtered out entries? This also looks wrong...
+
+> Filtering by unused sort keys would be undefined.  We probably want to
+> warn users instead.
+
+Do you mean that the filtered=1 is set incorrectly in this case?
+Do you mean that with this revert 2 bugs just compensate each other by
+luck: we wrongly set filtered=1, and then wrongly merge them together,
+so it all works out in the end?
