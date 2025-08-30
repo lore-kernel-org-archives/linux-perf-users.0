@@ -1,168 +1,115 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-oa1-f74.google.com (mail-oa1-f74.google.com [209.85.160.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5A578F52
-	for <linux-perf-users@vger.kernel.org>; Sat, 30 Aug 2025 05:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FDDD1F1505
+	for <linux-perf-users@vger.kernel.org>; Sat, 30 Aug 2025 05:35:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756531171; cv=none; b=gfuoJ+K61A12IB2LYgb7pJ95DmglAqyQeEHb/7nTVWQO2Owctd+BZhzt5nbtJVdtOC2Gy7zuFXI7K9s1NUBpRNa3m1ouNkCwxat0PCBJp7JJEyNCRheNHTMYYnPSdeSQA7wkw2D9TDQohWO/aoSC+SpvJD2YLCImMUfQXqR4soQ=
+	t=1756532156; cv=none; b=lSm8gTnm6PGHb9ErYhU1/dfufi3omKiLDPIBDOQ3epCYUYW6aGG2N5ga7mLIwkA2rF0tScaOAXkCX/bdlmhOTgqMkfjG6GSgTkeyC7rPNzHr+yBvWVvmTONnDohw3vs45TyjBhYKtrxFBaZt05AUNavzQA4d4QPtokoDPFVuqKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756531171; c=relaxed/simple;
-	bh=fE+9JJqLH4AQ9yTHjvttQQsxKEwxCv6Db6kes/Tc860=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lJ4BmRLfPE16rG90eMWwo7EB/jVa4VLJqSg4Ei/ikKNVwYUu+XXA+Q8/AR4VP6GIdq2N5h6mbfvaZra08Chn0Y37C8iFbCsBSvo3cpMKoGFOG7g96XyjC/Y2XQws0aG4iyv7+yy8ydyr/msWnWtVfGH6lOskj5Ji7ENMH6OYxiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L8egTAxP; arc=none smtp.client-ip=209.85.214.176
+	s=arc-20240116; t=1756532156; c=relaxed/simple;
+	bh=QmYI0zj/X4Kwrmbx/4/heNHuxCp9kC0znQJ9RD/CgSs=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=ejmokVNLqOOJ01LikITkycdizNQkilyjk6LzvKNskPnd3ftUuEd4yvnqtXdduDXw+71XVnTN8PaKM5bh/cyy8AcefJG2xT7VwGLpwxkTAv8e59EOARlnQWNBhChYxLQ/jeJvBzO+bZmh3cCIEjk+lSZCgnSNvPppP0dc6wt642E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PhBQFXuv; arc=none smtp.client-ip=209.85.160.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L8egTAxP"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-24936b6f321so44015ad.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 29 Aug 2025 22:19:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PhBQFXuv"
+Received: by mail-oa1-f74.google.com with SMTP id 586e51a60fabf-31962614250so354908fac.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 29 Aug 2025 22:35:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756531169; x=1757135969; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ppN7OhUjuwHgBU0fuTlsVS0risiTxfXqL+QgvTWau90=;
-        b=L8egTAxPr0WIy5pNuc5gQUltr/T9ORnc5hnVMhBXpZFNQ0qhwQQA5daPw+FlOV48F9
-         0sBQLQGDuweO3lfPQL2YWzN1taO8CENYldjfmwM7zlLSETevk0ifYgPgznhbTxQbCymN
-         9H5zxyZO+fRGYmKcJtUPF7kPe4OOTTrOdgzaIxRfiiHv5YT4rbl0uFpiaK/vFcUauQNl
-         D1oJgwhFpCDC29ArB3+m601FesF2qo4oJl5rCOkuBmlMAFxAsJYqP+MgguBEG0gRGp3V
-         iii1v7UsYPm1GfrlY5qkKsBBzn9eaUq8vVeOHsq9xHwr8jczBicdyZfLfVuRTEOwYDRF
-         NmQg==
+        d=google.com; s=20230601; t=1756532154; x=1757136954; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=X5nOW4iK3c1eBL10WZVuLjDvECTNyCoJ5GM8pDiglm8=;
+        b=PhBQFXuvxA3KAHag+m2TwTpGX79feG7rVRS+R+DD8+aMClmE9IC58XfoKbsTo8Tgw1
+         r6uiaDAFCf75P7yOwrHs3Khv9yyHnm70n7Np52MOZbTosLy/dKpyemrypZmL15hAQNRX
+         bHfXo70f9aiIbMM1jGWqqlCE2gyCKBT7cFXtNUM3jPfcaokld/2L71JXRN5bLX+AQJSq
+         Xjn0hmUIlZjLSdoj26E6QeJvkA5om2frsvQauGL7ASG3A7ZYhVfI+eKna/F0eB0PMCZF
+         SBA+zoOE0GOZReUFpeqXyXYSfT+eRUUuaU+V2yGZ4R58ruT9jT7J2VWdbB298MUyPNDG
+         1NDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756531169; x=1757135969;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ppN7OhUjuwHgBU0fuTlsVS0risiTxfXqL+QgvTWau90=;
-        b=Yrc3yQRPdKqCOjGVRvyMxAtWVMvA6L3UGqC7Ok+gzNaShWXycvy/OjeoOKwCroisrG
-         B1lpwqkyIRHzhz4lI6IqAPh/TsGlIjTFDebooEoQObfMErMtgAsKrwltqqzNiuXQtQ+f
-         pDrRVTg0C11BZRFy/OxyulvwDLLcX/e2T1urmKSkffSad8dCCU+Ahi0ubz4bFZ5Y8rB5
-         pszsBbjOApfBMQyBM2+JeB24NCvzbWcwJyy/AF/I+0TdzyR0LdCo0i98uISlwOH+9n5n
-         PRIYpaRHWSZsaqtx1KYhAHeeQbvUdwIZ5MJO7WBllqXP5UtMe84xMzkCwr6/VPx27VOC
-         39pw==
-X-Forwarded-Encrypted: i=1; AJvYcCWfwB4ioKXyy3RZGKeqCKdSraV2oh08Z4IW9VfxItW+XedCetb3NndYQXStfLJ50MCu81L/Fxe9NkpOoj7ApykP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzg2/mg8PIwksc0rmXmOT5vMNWNhjB8JsRr9ob7RpmFIJoen8y8
-	AMVhlegmOdBX6lXnDlwiF6x9puBbzXFYNlWKUSHsfL6jieQi6f+weea0dDsnhY/+AclZKM5xs53
-	sWrmh1DrP+B4YxdKKKT6LA9jwFc8g28FXH4V6P1XZ
-X-Gm-Gg: ASbGncvi3Ru+DinqokSOCx0SuBbaznPOvktAVomXGrH7BPv8+dnwSJdYxmb92gbEDmc
-	Mzis2AhyxVPERtKvydtrOb7ywTQ7jZFv8RZ++zQKlpZdiVNRHzL8mEuUUxPqMogac/YHVdk7VBN
-	vS2PR+rUfDzQaUwWnZNsYMscOBtJ1/bEYevrLghlwoOkVb53v+lGBydXG9ElEhu/bCUcfsIoFMj
-	TB7f6yrGP99Ukw=
-X-Google-Smtp-Source: AGHT+IGxJC9u3UnyTAxH/e5Fi0JDjKy84Qim0fFYobeDU62gk8OfykmppY/rr47My6krEuZYmNTSezladEhD1cMLYmA=
-X-Received: by 2002:a17:902:dac6:b0:240:640a:c564 with SMTP id
- d9443c01a7336-2493e7c6cb6mr2055445ad.3.1756531168997; Fri, 29 Aug 2025
- 22:19:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1756532154; x=1757136954;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=X5nOW4iK3c1eBL10WZVuLjDvECTNyCoJ5GM8pDiglm8=;
+        b=OeHk/OWl/5lCSv7ktvzvfVwIF7CiDVDC/Nke8fzxQqRn7MX7XjU+rlOcEIBBrHwMuf
+         iCRRvZIzpoAX6K/gR65AInKRe+tXW3xkxvuX5ksGfWnU3npyq4vK19GhZuod9zZZezHK
+         8EXTOoZQFuiv4BUQKoPlS5RX0zcXH+0d+x8dWtIbpgp6x5F+el3QyxwAikoRPYWXaXLa
+         /+Xd+vee5wOj6N/XS2F/1obtPc9s4rV9n6+ZFXJ/uZ8DuafEso5k9gwtyeWmMVpG31Mr
+         US8PQWU3ZvkyQ+om2/gRm1+BExgILJS+/D+C98jq7yhxWLFGmosg/tLx5vAkXkldXUY5
+         MPdg==
+X-Forwarded-Encrypted: i=1; AJvYcCXfhQuyEXnNLkbrvoyyiD+Qo/k9XPgCVvcndi4NqWtjGvgdf5d+iL3voxtUokcUAw9J4veJtVbUsYg2n0fFLLar@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9qYsZt8d/YUuD7Y55aeRq7CjuBmxEwCxDcVz83dDXF0t2lU/c
+	78TWEMv7tZYEKzan2kK4Zny2sXXrNZBlQsFbfaTDqCKrg40eM9oJPbQ+SjUeaaJfiaD+blNXW2U
+	L0XiDNmmJ1w==
+X-Google-Smtp-Source: AGHT+IEc1GIA49XbBalZevG878g4TPyrLDAk/JyZXXK/zHcAZRkDvhFlv5+yj3+9nhHnmcLmNFb4G7tNK70h
+X-Received: from oabhi24.prod.google.com ([2002:a05:6870:c998:b0:315:aed6:7f83])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:171a:b0:315:b768:bd1d
+ with SMTP id 586e51a60fabf-3196307eeb4mr441687fac.6.1756532154143; Fri, 29
+ Aug 2025 22:35:54 -0700 (PDT)
+Date: Fri, 29 Aug 2025 22:35:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250603203701.520541-1-blakejones@google.com> <174915723301.3244853.343931856692302765.git-patchwork-notify@kernel.org>
-In-Reply-To: <174915723301.3244853.343931856692302765.git-patchwork-notify@kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.51.0.318.gd7df087d1a-goog
+Message-ID: <20250830053549.1966520-1-irogers@google.com>
+Subject: [PATCH v1] perf bpf-filter: Fix opts declaration on older libbpfs
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 29 Aug 2025 22:19:17 -0700
-X-Gm-Features: Ac12FXwkB-c6nRSHHpBV2DQ1VDfQ04aGKYqJraiFmYlTg8c4hP6BoccqgTTCdoM
-Message-ID: <CAP-5=fWJQcmUOP7MuCA2ihKnDAHUCOBLkQFEkQES-1ZZTrgf8Q@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] libbpf: add support for printing BTF character
- arrays as strings
-To: Blake Jones <blakejones@google.com>, namhyung@kernel.org, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
-	martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
-	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
-	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, mykolal@fb.com, 
-	shuah@kernel.org, ihor.solodrai@linux.dev, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-perf-users <linux-perf-users@vger.kernel.org>, Howard Chu <howardchu95@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Ilya Leoshkevich <iii@linux.ibm.com>, Hao Ge <gehao@kylinos.cn>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 5, 2025 at 2:00=E2=80=AFPM <patchwork-bot+netdevbpf@kernel.org>=
- wrote:
->
-> Hello:
->
-> This series was applied to bpf/bpf-next.git (master)
-> by Andrii Nakryiko <andrii@kernel.org>:
->
-> On Tue,  3 Jun 2025 13:37:00 -0700 you wrote:
-> > The BTF dumper code currently displays arrays of characters as just tha=
-t -
-> > arrays, with each character formatted individually. Sometimes this is w=
-hat
-> > makes sense, but it's nice to be able to treat that array as a string.
-> >
-> > This change adds a special case to the btf_dump functionality to allow
-> > 0-terminated arrays of single-byte integer values to be printed as
-> > character strings. Characters for which isprint() returns false are
-> > printed as hex-escaped values. This is enabled when the new ".emit_stri=
-ngs"
-> > is set to 1 in the btf_dump_type_data_opts structure.
-> >
-> > [...]
->
-> Here is the summary with links:
->   - [v3,1/2] libbpf: add support for printing BTF character arrays as str=
-ings
->     https://git.kernel.org/bpf/bpf-next/c/87c9c79a02b4
->   - [v3,2/2] Tests for the ".emit_strings" functionality in the BTF dumpe=
-r.
->     https://git.kernel.org/bpf/bpf-next/c/a570f386f3d1
->
-> You are awesome, thank you!
+Building perf with LIBBPF_DYNAMIC (ie not the default static linking
+of libbpf with perf) is breaking as the libbpf isn't version 1.7 or
+newer, where dont_enable is added to bpf_perf_event_opts. To avoid
+this breakage add a compile time version check and don't declare the
+variable when not present.
 
-I believe this patch is responsible for segvs occurring in v6.17 in
-various perf tests when the perf tests run in parallel. There's lots
-of BPF things happening in parallel in the test but the failures are
-happening in a shell and I did get to attach a debugger. I've not seen
-this problem earlier as the patches weren't in the perf-tools-next
-tree. Through bisection I was able to blame the patch and I came up
-with this minimal fix:
-```
-diff --git a/tools/lib/bpf/btf.h b/tools/lib/bpf/btf.h
-index ccfd905f03df..71e198b30c5f 100644
---- a/tools/lib/bpf/btf.h
-+++ b/tools/lib/bpf/btf.h
-@@ -326,10 +326,10 @@ struct btf_dump_type_data_opts {
-       bool compact;           /* no newlines/indentation */
-       bool skip_names;        /* skip member/type names */
-       bool emit_zeroes;       /* show 0-valued fields */
--       bool emit_strings;      /* print char arrays as strings */
-+       //bool emit_strings;    /* print char arrays as strings */
-       size_t :0;
-};
--#define btf_dump_type_data_opts__last_field emit_strings
-+#define btf_dump_type_data_opts__last_field emit_zeroes
+Fixes: 5e2ac8e8571d ("perf bpf-filter: Enable events manually")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/bpf-filter.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-LIBBPF_API int
-btf_dump__dump_type_data(struct btf_dump *d, __u32 id,
-diff --git a/tools/lib/bpf/btf_dump.c b/tools/lib/bpf/btf_dump.c
-index f09f25eccf3c..c7b5a376642f 100644
---- a/tools/lib/bpf/btf_dump.c
-+++ b/tools/lib/bpf/btf_dump.c
-@@ -2599,7 +2599,7 @@ int btf_dump__dump_type_data(struct btf_dump *d, __u3=
-2 id,
-       d->typed_dump->compact =3D OPTS_GET(opts, compact, false);
-       d->typed_dump->skip_names =3D OPTS_GET(opts, skip_names, false);
-       d->typed_dump->emit_zeroes =3D OPTS_GET(opts, emit_zeroes, false);
--       d->typed_dump->emit_strings =3D OPTS_GET(opts, emit_strings, false)=
-;
-+       d->typed_dump->emit_strings =3D true; // OPTS_GET(opts,
-emit_strings, false);
+diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
+index a0b11f35395f..92308c38fbb5 100644
+--- a/tools/perf/util/bpf-filter.c
++++ b/tools/perf/util/bpf-filter.c
+@@ -443,6 +443,10 @@ static int create_idx_hash(struct evsel *evsel, struct perf_bpf_filter_entry *en
+ 	return -1;
+ }
+ 
++#define LIBBPF_CURRENT_VERSION_GEQ(major, minor)			\
++	(LIBBPF_MAJOR_VERSION > (major) ||				\
++	 (LIBBPF_MAJOR_VERSION == (major) && LIBBPF_MINOR_VERSION >= (minor)))
++
+ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
+ {
+ 	int i, x, y, fd, ret;
+@@ -451,8 +455,12 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
+ 	struct bpf_link *link;
+ 	struct perf_bpf_filter_entry *entry;
+ 	bool needs_idx_hash = !target__has_cpu(target);
++#if LIBBPF_CURRENT_VERSION_GEQ(1, 7)
+ 	DECLARE_LIBBPF_OPTS(bpf_perf_event_opts, pe_opts,
+ 			    .dont_enable = true);
++#else
++	DECLARE_LIBBPF_OPTS(bpf_perf_event_opts, pe_opts);
++#endif
+ 
+ 	entry = calloc(MAX_FILTERS, sizeof(*entry));
+ 	if (entry == NULL)
+-- 
+2.51.0.318.gd7df087d1a-goog
 
-       ret =3D btf_dump_dump_type_data(d, NULL, t, id, data, 0, 0);
-
-
-```
-So I think the problem relates to modifying struct
-btf_dump_type_data_opts. Given I'm statically linking libbpf into perf
-I'm not sure on the exact route of the segv, no doubt this report will
-be enough for someone else to figure it out.
-
-Given this is a regression what should the fix be?
-
-Thanks,
-Ian
