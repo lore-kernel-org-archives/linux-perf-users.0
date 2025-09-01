@@ -1,127 +1,97 @@
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28F3239E63
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Sep 2025 05:57:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BED2566F7;
+	Mon,  1 Sep 2025 07:11:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756706254; cv=none; b=TVZC5/wyLIIGKxD3x+REBu8mMSnrvRV2OMyXMsUpztBLWoIYYwN3j7RggWDM+ZT7JEHeGE/PaCGDUTJIS9+DKwTsC1xAvgrf+wr++i7kWSJWzZU1LioGjdNMt80KS/Zt5+mvEr9HZgehQ93LhrmIOMUuyYzSz1VaHYiI5QXrHZo=
+	t=1756710671; cv=none; b=JFgrupIXvxWsslPTD9VsGICIPM4BsYCH+4Z+x0AWq4YThRDWzK8VsfjVt5vbvaEBLHYq0nnx9p9L2zc+VumiG6BraeWrr7cJE8+OKI2KiIsvJORDXw3IV+NBFdZ1z0va8q7iF6oOaH6GdvluKT9wLg01nCF9cQzsZSFEgOhv5nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756706254; c=relaxed/simple;
-	bh=FyAsHeoe/zeL0dZKiAKYHqGwqBTz8WBo6jni7UhNvo4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y4z22OFW1EQGdAfpBfXn0+S0H9IoQxo8LGrZEtT6FVv9UHp1gM0SO0fXkgZBJ3lIL2tagUgf4/e7lq/xzSaiIvJ3rH8JwafCn0wXhQo9TPGKnp9ZTwrFZi6lvVVe2GOhqLg8D5Cda+hWeUkKqND//sjqu1BBW9xv8clW3uGLeDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=YyYfO+UE; arc=none smtp.client-ip=209.85.161.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="YyYfO+UE"
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-61e27fee909so780321eaf.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 31 Aug 2025 22:57:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1756706251; x=1757311051; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AeQYWbY1S4fZ+YczB8KbzZBm49i+mRKtPu5B3WoNWrY=;
-        b=YyYfO+UELD5VAVOmS2U2dcNZPe/V8rFIdi7bo0gMa6NhRJTi9LqzlnVVkvJpX/lHIv
-         Bk3kyz44pkHSvnB1N48TpgAmcM9MnxclEN0kpzuyznV2SfI6xSlA6bU2gOEk+c1xL1+9
-         W36uHBTYhkZr/C+tHigzXbiOB/AQPk7phZDRbw9a3Z5fQUar/8yGWfyhkfc1Hcei3nuH
-         Ll81OUN7TgFtHPY9qhbbKUAFO5h0Wl5vFM/FQY7i0rmlWD325yuE4zjNuGKjfeCBQRT0
-         TIPV/jNDSVjN3bpY92nEDhStDDkrw6QS9Jx3il4VEB4cUvqn7qLgd9YiI6KaTTtZRUSW
-         Mmuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756706251; x=1757311051;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AeQYWbY1S4fZ+YczB8KbzZBm49i+mRKtPu5B3WoNWrY=;
-        b=DHtqOynw0T0493iA9yyrpW7Fbep0Antspi0Z71OT8rU7wGcRUR4up655kIsaQdYn6e
-         SSDoZ3kvCq4+FmSpd5zlVMl+bGyp1YWJTfcjBX6JwKJeSn4TNyrU9IZwGu6yMGUhocp6
-         e/uaVpoAsBjsYyEwSQ2JRsm7AcUT8O9eaiJ1qO+zalkwa0cvTOiCyGaUolWJqX0Ts5Se
-         yrKN1AEpV+IxdH1KWgnhj6eTdxhGDG0OpQowokXM347R85+hyNNwgtokBNFTTubh6FFA
-         TZv9B+E+vQaQyP/QrshT7N2JxQBgAnOf1kw8Q2aWaj+GLVe3wA/CI8wzTFG7TulNoj88
-         2qJg==
-X-Forwarded-Encrypted: i=1; AJvYcCVIHFUy1TgZS9YmNe+cAXP0SKtMAnaJuG7MlnvQfZT99pHX6Jfg4nySwsx292mL/+qHLEMr2b0/kUH0SPRKahzD@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYxnLfys+N41isKwEKvkT+tfVL5X0VmeV/G4BBxvYVQYmI+t8P
-	ExgktDZkmM+622SHef3PqqT32fkAThvhqqU3W9rit3qlXspWgeX5BBbXlMFKM4ww/OE+IyaxSF0
-	KeS/bPZVg/zP8Ua9M/Xox+02xF4Fch99N/dOZ7g6yFA==
-X-Gm-Gg: ASbGncs0tyeynn+tpCGeM0xYU1w4iWCDmYAh77xrAVXhJK6K5/RAfE3yjqyLwz/Gk93
-	HhPQ+znnQpxjQ7KONIccakpFTPqQhT2PcjkqbLmVXhTwMCllw++mkO3oznPWiCaBWg+TvxKmrkO
-	jU1RMs7x1q7zyJyiGGc2pQ7A1tIwbj0Aws9uaOF47utxuA968iNRcCSrxuXix3Fxps4XtC6lnFM
-	JP8A+XTB7RzKOwJ2Udfb2HFX1Nc/A==
-X-Google-Smtp-Source: AGHT+IEtvyL0v+dIqPd4cVuA9FY2MWzZGsXTxWqPBDg5RCf2ntrVdCNu37vpIo27yokw6idnCUTUmPkUJc2WW9ZSX9I=
-X-Received: by 2002:a05:6808:14c2:b0:437:75a1:34ff with SMTP id
- 5614622812f47-437f7dc9eadmr3255975b6e.43.1756706251452; Sun, 31 Aug 2025
- 22:57:31 -0700 (PDT)
+	s=arc-20240116; t=1756710671; c=relaxed/simple;
+	bh=ckvERna5M/VSS3unkR5kmJ0GIdvm9j9J64cn3oC7Svs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ShG4PZx22n9aHL+pUT+zWp8diipFIwlIc1TtdD+P5F1B+yF5W/S5NAt0oRytN0zRVQ8yc4za1S9TcOX5Imb+9gsSvKzKqwLF4bJqL40/qbfI1Xb86qb4278DI+TqDSya3BMKuf79/M5YHvwOZvEqGU9Cg9lkQFKiRE+aE2ho6GU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: cbac8fd6870211f0b29709d653e92f7d-20250901
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_UNTRUSTED, SA_LOWREP
+	SA_EXISTED, SN_UNTRUSTED, SN_LOWREP, SN_EXISTED, SPF_NOPASS
+	DKIM_NOPASS, DMARC_NOPASS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:3c2429f1-7d65-434c-985f-1190ab0992f7,IP:10,
+	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:0
+X-CID-INFO: VERSION:1.1.45,REQID:3c2429f1-7d65-434c-985f-1190ab0992f7,IP:10,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:098bc28d336bdd55a66c3303ecff55e1,BulkI
+	D:250901151055TLJ643JH,BulkQuantity:0,Recheck:0,SF:19|24|38|44|66|72|78|10
+	2|850,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:n
+	il,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC
+	:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: cbac8fd6870211f0b29709d653e92f7d-20250901
+X-User: lihongfu@kylinos.cn
+Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <lihongfu@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1183434738; Mon, 01 Sep 2025 15:10:52 +0800
+From: Hongfu Li <lihongfu@kylinos.cn>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hongfu Li <lihongfu@kylinos.cn>
+Subject: [PATCH] perf: make pmu_bus constant
+Date: Mon,  1 Sep 2025 15:10:10 +0800
+Message-Id: <20250901071010.350947-1-lihongfu@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250827100959.83023-1-cuiyunhui@bytedance.com>
- <20250827100959.83023-2-cuiyunhui@bytedance.com> <CAD=FV=WiZ5=4Ck3G2gme=ey6uYQhi-3Wo32DpLj9P53wxGCojw@mail.gmail.com>
-In-Reply-To: <CAD=FV=WiZ5=4Ck3G2gme=ey6uYQhi-3Wo32DpLj9P53wxGCojw@mail.gmail.com>
-From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Mon, 1 Sep 2025 13:57:20 +0800
-X-Gm-Features: Ac12FXztNIRPMxCTXiinwhNyATXzi2utzF9owhxKyx-0keFQXx7jGWYBvVSkODg
-Message-ID: <CAEEQ3wmBvevbkP8XmwR0_q_1QWQsie5g0UUxTFm6ovS1m41pEQ@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH 1/2] watchdog: refactor watchdog_hld functionality
-To: Doug Anderson <dianders@chromium.org>
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	alex@ghiti.fr, atish.patra@linux.dev, anup@brainfault.org, will@kernel.org, 
-	mark.rutland@arm.com, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, catalin.marinas@arm.com, 
-	masahiroy@kernel.org, suzuki.poulose@arm.com, maz@kernel.org, 
-	zhanjie9@hisilicon.com, yangyicong@hisilicon.com, mingo@kernel.org, 
-	lihuafei1@huawei.com, akpm@linux-foundation.org, jpoimboe@kernel.org, 
-	rppt@kernel.org, kees@kernel.org, thomas.weissschuh@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Doug,
+Since commit d492cc2573a0 ("driver core: device.h: make struct bus_type
+a const *"), the driver core can properly handle constant struct
+bus_type, move the pmu_bus variable to be a constant structure as well,
+placing it into read-only memory which can not be modifie at runtime.
 
-On Sat, Aug 30, 2025 at 5:34=E2=80=AFAM Doug Anderson <dianders@chromium.or=
-g> wrote:
->
-> Hi,
->
-> On Wed, Aug 27, 2025 at 3:10=E2=80=AFAM Yunhui Cui <cuiyunhui@bytedance.c=
-om> wrote:
-> >
-> > Move watchdog_hld.c to kernel/, and rename arm_pmu_irq_is_nmi()
-> > to arch_pmu_irq_is_nmi() for cross-arch reusability.
-> >
-> > Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> > ---
-> >  arch/arm64/kernel/Makefile                   | 1 -
-> >  drivers/perf/arm_pmu.c                       | 2 +-
-> >  include/linux/nmi.h                          | 1 +
-> >  include/linux/perf/arm_pmu.h                 | 2 --
-> >  kernel/Makefile                              | 2 +-
-> >  {arch/arm64/kernel =3D> kernel}/watchdog_hld.c | 8 ++++++--
-> >  6 files changed, 9 insertions(+), 7 deletions(-)
-> >  rename {arch/arm64/kernel =3D> kernel}/watchdog_hld.c (97%)
->
-> I'm not a huge fan of the perf hardlockup detector and IMO we should
-> maybe just delete it. Thus spreading it to support a new architecture
-> isn't my favorite thing to do. Can't you use the buddy hardlockup
-> detector?
+Signed-off-by: Hongfu Li <lihongfu@kylinos.cn>
+---
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Why is there a plan to remove CONFIG_HARDLOCKUP_DETECTOR_PERF? Could
-you explain the specific reasons? Is the community's future plan to
-favor CONFIG_HARDLOCKUP_DETECTOR_BUDDY?
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 872122e074e5..155bb686c8ce 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -12216,7 +12216,7 @@ static const struct attribute_group *pmu_dev_groups[] = {
+ };
+ 
+ static int pmu_bus_running;
+-static struct bus_type pmu_bus = {
++static const struct bus_type pmu_bus = {
+ 	.name		= "event_source",
+ 	.dev_groups	= pmu_dev_groups,
+ };
+-- 
+2.25.1
 
->
-> That being said, I did a quick look at your patch. I'm pretty sure you
-> can't just move the arm64 "watchdog_hld.c" to be generic. Won't
-> hw_nmi_get_sample_period() conflict with everyone else's (x86 and
-> powerpc)?
->
-> -Doug
->
-
-Thanks,
-Yunhui
