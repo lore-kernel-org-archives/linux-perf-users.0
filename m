@@ -1,24 +1,24 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27A6C30DEB4;
-	Mon,  1 Sep 2025 10:06:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1D6130BB96;
+	Mon,  1 Sep 2025 10:19:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756721162; cv=none; b=USFhG5kqzrC1s6XLFGE0k2kPkNDJLpJNP//U4RAMR53xDPh+gi7HeuFEudTo4hI7HdQxPwia+aIVcXcETtn12jxfvvOj25Y9XIOtgwsMJIj8tliSi+D4LfK7BPWTjizJ7tsm1RhGdegbRznGTseTxQ9F2p6dxSY+jMUzx85rJ8A=
+	t=1756721949; cv=none; b=bETGgNul5hUwlVWp8kpcSactaRjHOqzXd783Loj9QvN5Eq4E+2k/mrmyH8S3DKqWRHb3pGJRFLqRgpAteBmyNMdtKuVqoqNM+Mb/xUlQEjSBFqsuu5DZsqXToBXW6Xhn3lC9wf/v/fFTWn0q/p/8TnOxdaTQ0i6BtFtTulxl+IQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756721162; c=relaxed/simple;
-	bh=qqxlfHhKAhMZStIBcjXn0E21C1VTEww9NkrL79A/zCM=;
+	s=arc-20240116; t=1756721949; c=relaxed/simple;
+	bh=KpoPdnF2+ctpKyW+VaW2pLm9WEkCvj2Er+FLCx058mw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fXfEochgms5vXf1jjor3l3l0BoQczYMuL87t/LEtUa7DT2sozCC1ahoaGeq/PlVCEVBRJ59YVBgVKaTWYc7L3R/xRpWYrdYYzvGvtcJqXeB47mDQBOYSxdz742YAVXTEK377d0sSXiy1Rt30V2ENusqDFRQRnzP/covA2M7JVmk=
+	 Content-Type:Content-Disposition:In-Reply-To; b=NvvRtZZmY0dwsi6hWYdl1ICTbUR43Z2m32eFZ/eMxY6sI1ba0Hu0oCIaQlNhmJJXxEI+27mDKVIWVRrW5PYOfiY91qrRcXR1RP1+kgnFxlBUJ3DcGubogisu1YD599u+XQN7CPf8SOWrTjHIEp/2uxqK/Jrn3jyfDYUGnz0hHeA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 41EA62680;
-	Mon,  1 Sep 2025 03:05:52 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C72B31A25;
+	Mon,  1 Sep 2025 03:18:58 -0700 (PDT)
 Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 30E3F3F6A8;
-	Mon,  1 Sep 2025 03:06:00 -0700 (PDT)
-Date: Mon, 1 Sep 2025 11:05:58 +0100
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B57893F6A8;
+	Mon,  1 Sep 2025 03:19:06 -0700 (PDT)
+Date: Mon, 1 Sep 2025 11:19:04 +0100
 From: Leo Yan <leo.yan@arm.com>
 To: James Clark <james.clark@linaro.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>,
@@ -39,11 +39,11 @@ Cc: Catalin Marinas <catalin.marinas@arm.com>,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
 	kvmarm@lists.linux.dev
-Subject: Re: [PATCH v7 05/12] arm64/boot: Factor out a macro to check SPE
- version
-Message-ID: <20250901100558.GJ745921@e132581.arm.com>
+Subject: Re: [PATCH v7 06/12] arm64/boot: Enable EL2 requirements for
+ SPE_FEAT_FDS
+Message-ID: <20250901101904.GK745921@e132581.arm.com>
 References: <20250814-james-perf-feat_spe_eft-v7-0-6a743f7fa259@linaro.org>
- <20250814-james-perf-feat_spe_eft-v7-5-6a743f7fa259@linaro.org>
+ <20250814-james-perf-feat_spe_eft-v7-6-6a743f7fa259@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,71 +52,42 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250814-james-perf-feat_spe_eft-v7-5-6a743f7fa259@linaro.org>
+In-Reply-To: <20250814-james-perf-feat_spe_eft-v7-6-6a743f7fa259@linaro.org>
 
-On Thu, Aug 14, 2025 at 10:25:27AM +0100, James Clark wrote:
-> We check the version of SPE twice, and we'll add one more check in the
-> next commit so factor out a macro to do this. Change the #3 magic number
-> to the actual SPE version define (V1p2) to make it more readable.
-> 
-> No functional changes intended.
-> 
-> Tested-by: Leo Yan <leo.yan@arm.com>
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
->  arch/arm64/include/asm/el2_setup.h | 17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
-> 
+On Thu, Aug 14, 2025 at 10:25:28AM +0100, James Clark wrote:
+
+[...]
+
 > diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
-> index 46033027510c..3a4ca7f9acfb 100644
+> index 3a4ca7f9acfb..a0361ddcdca4 100644
 > --- a/arch/arm64/include/asm/el2_setup.h
 > +++ b/arch/arm64/include/asm/el2_setup.h
-> @@ -103,8 +103,7 @@
->  	csel	x2, xzr, x0, eq			// all PMU counters from EL1
->  
->  	/* Statistical profiling */
-> -	ubfx	x0, x1, #ID_AA64DFR0_EL1_PMSVer_SHIFT, #4
-> -	cbz	x0, .Lskip_spe_\@		// Skip if SPE not present
-> +	__spe_vers_imp .Lskip_spe_\@, ID_AA64DFR0_EL1_PMSVer_IMP, x0 // Skip if SPE not present
->  
->  	mrs_s	x0, SYS_PMBIDR_EL1              // If SPE available at EL2,
->  	and	x0, x0, #(1 << PMBIDR_EL1_P_SHIFT)
-> @@ -255,6 +254,14 @@
->  .Lskip_brbe_\@:
->  .endm
->  
-> +/* Branch to skip_label if SPE version is less than given version */
-> +.macro __spe_vers_imp skip_label, version, tmp
-> +    mrs    \tmp, id_aa64dfr0_el1
-> +    ubfx   \tmp, \tmp, #ID_AA64DFR0_EL1_PMSVer_SHIFT, #4
-> +    cmp    \tmp, \version
-> +    b.lt   \skip_label
-> +.endm
-> +
+> @@ -392,6 +392,17 @@
+>  	orr	x0, x0, #HDFGRTR2_EL2_nPMICFILTR_EL0
+>  	orr	x0, x0, #HDFGRTR2_EL2_nPMUACR_EL1
+>  .Lskip_pmuv3p9_\@:
+> +	/* If SPE is implemented, */
+> +	__spe_vers_imp .Lskip_spefds_\@, ID_AA64DFR0_EL1_PMSVer_IMP, x1
+> +	/* we can read PMSIDR and */
+> +	mrs_s	x1, SYS_PMSIDR_EL1
+> +	and	x1, x1,  #PMSIDR_EL1_FDS
+> +	/* if FEAT_SPE_FDS is implemented, */
+> +	cbz	x1, .Lskip_spefds_\@
+> +	/* disable traps to PMSDSFR. */
 
-Just wondering if we need to move the macro to the beginning of the
-file, so that we can define it first and call it afterwards.
+Nitpick: the comment is a bit ambiguous for me. Would it be better to
+say "disable traps to EL2" or "set the PMSDSFR bit to disable trapping" ?
 
 Otherwise, LGTM:
 
 Reviewed-by: Leo Yan <leo.yan@arm.com>
 
->  /* Disable any fine grained traps */
->  .macro __init_el2_fgt
->  	mrs	x1, id_aa64mmfr0_el1
-> @@ -263,10 +270,8 @@
->  
->  	mov	x0, xzr
->  	mov	x2, xzr
-> -	mrs	x1, id_aa64dfr0_el1
-> -	ubfx	x1, x1, #ID_AA64DFR0_EL1_PMSVer_SHIFT, #4
-> -	cmp	x1, #3
-> -	b.lt	.Lskip_spe_fgt_\@
-> +	/* If SPEv1p2 is implemented, */
-> +	__spe_vers_imp .Lskip_spe_fgt_\@, #ID_AA64DFR0_EL1_PMSVer_V1P2, x1
->  	/* Disable PMSNEVFR_EL1 read and write traps */
->  	orr	x0, x0, #HDFGRTR_EL2_nPMSNEVFR_EL1_MASK
->  	orr	x2, x2, #HDFGWTR_EL2_nPMSNEVFR_EL1_MASK
+> +	orr	x0, x0, #HDFGRTR2_EL2_nPMSDSFR_EL1
+> +
+> +.Lskip_spefds_\@:
+>  	msr_s   SYS_HDFGRTR2_EL2, x0
+>  	msr_s   SYS_HDFGWTR2_EL2, x0
+>  	msr_s   SYS_HFGRTR2_EL2, xzr
 > 
 > -- 
 > 2.34.1
