@@ -1,184 +1,176 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E96733CE8E;
-	Mon,  1 Sep 2025 13:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C722EF653;
+	Mon,  1 Sep 2025 14:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756735121; cv=none; b=p8myWMRv021lBeeFX36nJctacuR2N0Fc8JxpJah+XfSwCAfc6CvRcWUeFGW+/Gj9fPN3JjBHpvrCmIj+yYtFaQGMv5eU8LY0MW37uzRA/zdqWzNzIIMWTQ1yZvumcpVy7vzgG6LkAOWgVrvcbvTmXEK4vwI2Nv+ljPY4lzw9usM=
+	t=1756737880; cv=none; b=IegbCq4PK074yQDH8vwiW4QYUxrSVjV/LTS+b0DdKb3B8NafP2WsPF3/drnIgkKxXZAVga34j3Y0E0sLU1zlZTsHbzutMABwFb51xY3rUJgGu9TzeQnl0Ds5fNTPOqG2BjqYH+sl4Knz+c2mR5ZHT2+LjOI67CiWRkgorMldbdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756735121; c=relaxed/simple;
-	bh=oUIhwrLYwstlzlY55FK1ZW41MS2asLYsST3xVM4ctTc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TmMOEnLWS5DUAxAXIHggxgGsFCo6JdM2ALfcpCibpy0SGTw14eqETYC+W3usYj3GY5L+1+HSZB/iMHh2glZ9jTkb9Q7Vv01E70AsoBSKMAUea7QHOrmBMoLxGwjlUT0Jkb21Sfwf9so6ub2QIhrzcbd6Jv8sL+15y97HrprQnug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3ea8b3a64b5so37258755ab.2;
-        Mon, 01 Sep 2025 06:58:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756735118; x=1757339918;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NmDip3pK7R1bCI3jhASK9yPIU2OeMFz+fVnQvMU5RZM=;
-        b=ookCPzvg4cb5ovsdKebhU9K1Jellm/G19uG0vP9BQQd5+2BvVH/x/LbzCj/FX3czQU
-         D56X+ZNQR7t7AVnlBd956tJMelVCbbrRJGozIquP7a//oFufEZ0nAPJPay1Cjy3MPG3W
-         opeW/AwAjHbpXcaPkhEMhyjYURdxax0GksqLu3ku76N3QQhkljfXw23BRWrgqNoC0GPO
-         nYSHznM2/yatV/Py7Ad9ScpoRF3Tdc9qERGrKCrCmXaMxY/cWl9X/3vhazam6F41YZTC
-         kgVW6itpB1+DuYTrG64iiKVbNdK9wG2GLajqrGfhVbcs6p0uTM72mdNfRYEB8U9/Nsy2
-         TPbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPk72/MJ1XL3orkt1h30T5dNqDAG1qze7Ps6g0NLrj8nImuVqFVYOTYHZQp4W2X5SZyJ8FeKOD/6qkD6cht9k=@vger.kernel.org, AJvYcCVmSHHSt0VVUuLIVw0i8yLvBfUJw2EhT3oKbfHEnyuFrkXS1+z49GCGRPz99IAhnr6GqfhqLDGopU9JGZjW@vger.kernel.org, AJvYcCVnrDmBmUXjqoQGDIMhoMipYV/LX5YaskjBvZOpPmEdqk2u4Rm3oiE/ErkIbAKeNT4+g0W3Ba7gJIXPwA==@vger.kernel.org, AJvYcCWJ/QPcMNYaQAF0GSkT8o4Cml92E+oPD/FCUCVuqUJ+bI+dvZAkYTTlZgdUNueRcib0zmIJG0khaGzgTpXP@vger.kernel.org, AJvYcCWJOwfMQy0qWS3M9oRdV9FNrUl7qPanIqNpnQkL+OOLqliwzB3tob4ZUD6rtSpnLa0uchOag+jZEmfygQ==@vger.kernel.org, AJvYcCWq0KyV93N6QOXX1OrDyT1klUvQ26lgsdAF37wkwJAQLXnr2pQQVDhwcJO4xm+pe53Yd+CcVMZ+7Ql1Zb8=@vger.kernel.org, AJvYcCWrQAYj8WGWxIR7AUxBgeWBPxKjrBdvdcflvQrq+mj1lItZCZnHZJCwjjk4T+2PjB7GRJyn/tAp@vger.kernel.org, AJvYcCWsduK2I9NsCHHGe5HItJOxFRex8ufP21bnwGEtPtynq7ZzPs3aqWNiftxK9W6DNxffoUqKuFafsp2MlU4=@vger.kernel.org, AJvYcCX+v0Gn/VSMF8kaFdc21KTXDdyJqZzeg/kwfVIIr3mNvEZ+uC5Nc5bLdGcFE+vwiInmKO0iQvhtkA==@vger.kernel.org, AJvYcCX0Dn1kBR7hrJOAciV1qKjHqcnS5MXJAAhc4sgEOPZE/JY3XuIdaFf9qjYPuxZ5ZV+Qk8vWCvm9@vger.kernel.org, AJvYcCXBEbf5r102sOi+/VhZEgxB8NTRa5AJMJRlmaTRlvrM9ERsZH+/6UrQJxe/1c9o6+gurzx7aAKqw//85Q==@vger.kernel.org, AJvYcCXEDC2OdkZbDzDZ3Jqp/dx3nhb2cBTRwIr1ROGDMF4AP8TOnU3RueUZb0qSYav73wSbdll5XEozbp1RDA==@vger.kernel.org, AJvYcCXGW+ChK4FRj6QsFSo4YvUb2sRNw9YHJvJqTHsZt7AOmuwDDjXiThnsNZLn9GZMD8KIY72brkgfqdjz1DfDrQ==@vger.kernel.org, AJvYcCXNb9gJWF099r/WlJ1U4rkeEbZrflQ2STzzvSSQCcghkie2xVoKCx1uCWXdrEz5JASBr8kBXmGizUM=@vger.kernel.org, AJvYcCXOnpq0fM1hPHETsIvAEp/fFtS6s1HtQB//tCqJxxK4MBI68hTqZnW1fsX+R4PSxEOvv6fBuWvipGME6r2fvT7nVOOClU4R@vger.kernel.org, AJvYcCXYAiRGiLEB4I5uZCecFQWCWyPlBk33XCItexigMxdnGZU+OP9tuL7UbBLnTFtUKVaQgrkLxBHp2ihAdwq9XA==@vger.kernel.org, AJvYcCXb6UgBlEMzvCZ3VCRBZwJm9kLfr8fvtVWcS7lPagqcXLWb0SytKF7dgrP+/7+zY1RgnkNCSOy4etam8dEIPMifQw==@vger.kernel.org, AJvYcCXwSDbsq6XqXbKbWoC/d6nEeJizTQq8OBf2TYK+Dh29G6NpyxSQXVUXMjug1kWDE5JwbPpaLtnPMe/qFNVHna+Rctqx@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUyk8HjxOOjTH5RoSbkckQLqIq9/b5p9QDj8sFrmWXDSbd7zBb
-	RETIIEF1qtNcOhY1hj/SXpae0sbMVoX4Dcq4lG2XuhI4ix+CuuSuuTnDj/0lfYYPZ+8=
-X-Gm-Gg: ASbGncsTq2wOGyoDJ3IhiHCsLAo73elOod8a4B9S63dCuNP0ZZfoAjVxwfy2iVMIUZ0
-	uqN/qO/BTDNzAXIMPqC4wmgNLVoRcmbO09FVOPzzuphm4yWUMS6M86y5mo5D02nf8UPVOptdtgC
-	G//RVSHD53Wq8heqh8ewsk+4hs9X+Zj/0Kt01bUAGt+uirjehtnTAdszj8LB7bUtVXyPrB7UCa8
-	2N2IJaBZS+hIvgsd4IjNBFgfv6sDpXf317pgLAsH42sGLFNfXa8+eq7jdpphoyCRWSP1h7ZRVcu
-	hmQM6yR9JKzsB3Md+5jkCF7wBPiW/ohQq2D8fR4bmbbCxJH8wLD/n7kg/0a/6vf2G076dhgOARd
-	nB9+t1Z4tQ1BBKqtpX7Fx/5MEWCdawtuDcuW64D1xVN7iYYlw8AKAEAolgDnh
-X-Google-Smtp-Source: AGHT+IE1J+AW0AMEEiqaet6OiGOZk/hzIXBMdylebzV2SmaVtuyinJakXg/+9VDOjnZLVzI4feXpcQ==
-X-Received: by 2002:a05:6e02:1a4c:b0:3ed:eab:439a with SMTP id e9e14a558f8ab-3f400475d88mr158077645ab.12.1756735105932;
-        Mon, 01 Sep 2025 06:58:25 -0700 (PDT)
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com. [209.85.166.50])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3f3e07ea04fsm29940595ab.25.2025.09.01.06.58.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Sep 2025 06:58:25 -0700 (PDT)
-Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-8873044d611so46683239f.1;
-        Mon, 01 Sep 2025 06:58:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUS5YqmU67qM4/ABmrAkAJCKdOCvdDtgVK2AFgFiwihzx21YfOZ0W+rZQbXYLPi5E4xKvQ43jTFSeCck+15@vger.kernel.org,
- AJvYcCUg/+3jdpYxm4bpCGgWJ7aVbv69npnj7c5DUZmlsppOoQ6FxzTrUDiJUuxlabquLMCQt1RwDYQJGg==@vger.kernel.org,
- AJvYcCUn2CbUvtkyFG88YuUQYnva+624tedkL0Qd+KxmDG0r7vboKSUecYLeu/3DsaPnAO0lBF6xwySMiBjg/51E@vger.kernel.org,
- AJvYcCUrgt2NVbgowDyxI9LPiIsxJiN6AhN1NymMkUftPY53HaSzECRDbq7NtifZBAmyszYsp6MlQX4iTQ4=@vger.kernel.org,
- AJvYcCUuEvr87UeSno31ysMo6JkpPqSyt5paj4yx1hSiLNQjaSUTyArEjU3eMYRRk1mp29ss9czxhq8zEgxEjw==@vger.kernel.org,
- AJvYcCV+ts6sMYcJOnntCRU3vJsQDvt+iVy58SmJHi5hwLabDYIf0hW6m7dqKLBfQPoM+TyP/jt9oog4DYimOg==@vger.kernel.org,
- AJvYcCV9ffK3RX8jSxXMalgnqigWjFcWRh22J+Emh4yqH9RC89FkBSXz+/fzTYJ8YLFErNdoUz9c+xtU@vger.kernel.org,
- AJvYcCVAao1Qttj7NHcENAyE8JRuBJufneZFHwKpczRuX8NvJOlNj9R3U8ER+E9TwOQR0TCjqBioOEWUFwJGGTcsFWYWgQ==@vger.kernel.org,
- AJvYcCVnucVCiFAMk46UDvr6gHeKu2x9RyjujKsjeFO68G9dpzS+eWoclRD3LLN2DVz/Il91fpVcpuGV@vger.kernel.org,
- AJvYcCVtFxTLZAMeU+l5eMn3Ad+L6orDWE2PO71aHWYWqDEt+nFG/Jap+NcQXfIHcYdjRN50AJeFjgL/LQh7fw==@vger.kernel.org,
- AJvYcCVtqsSdCSpF9AF3XYjtVg0ktspu38/42kOz7riEI0Foc1aLh7hHZl9m2yJxIuGyc9bGcB+mFVW9YqO/z10=@vger.kernel.org,
- AJvYcCVvoLYodC8U/JcsCmFFu2AdJvLnt1hsvHCYICYysx4qd7UnUMW2W22MRI+Tuq3cWlg6CCc82b7iReVcRmgFVg==@vger.kernel.org,
- AJvYcCVwxUaV4TERRuoLaXpiRwUkQNN5P3+Op8Ve4/TxnnQ6+1VEd1atmnWGJpx9qq9ZBFD7/MRECqW66XJxZQ==@vger.kernel.org,
- AJvYcCW2hwihokiau9oJoZLUwL6S0pFYtLt7TpGkZhSestGKgUpav9QW+cug26Ax7pexr5/GEUfq+vWJrSvGuFmidK8=@vger.kernel.org,
- AJvYcCWAMFF+j80ZiO88t2JPIF0QxDmQWvWMJ7730a4AcruwNz5tww3fttvVoBsvuXzOKolzTxO6kMLAtOqsqqve4g==@vger.kernel.org,
- AJvYcCWFMqLfYqkrqukIzoFX9uHfJ8NxuKFCKENdkvRFL3kbFejcrbL6mwOru3uJo++oDsrO5UboYATBQi8YPcw=@vger.kernel.org,
- AJvYcCXBW+kMjmply+YARH3geGX0gj2rM8QakCmir//t5q9DtT+RObNyGsWo1kUlZ09Z+mYLX7BdAFPAYPS1UQLtS763539D@vger.kernel.org,
- AJvYcCXBWYTcLnG07iyMSiB2MoZFjcHdmtPgK+exmYc1V3jJNtAU45g1rgGiXuR2QiI+XQ2i4OaqiBab+xd1OyaWbe9o239AVzvZ@vger.kernel.org
-X-Received: by 2002:a05:6102:3053:b0:52a:c340:11db with SMTP id
- ada2fe7eead31-52b1bb24afcmr2206016137.27.1756734711158; Mon, 01 Sep 2025
- 06:51:51 -0700 (PDT)
+	s=arc-20240116; t=1756737880; c=relaxed/simple;
+	bh=rOQuaa8RDkK43QH4byDdVI+QZow0U6m4AZGslI0lojk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BjBv9aM98h3OtWKlICoJ4vJxS+yOz76IdcHrO3stpBNc9jCsbp50ZFL/W39BOMhUnlRIHYaKfC3Qo29Md8DvHW3uDF40bZMcVENW05Xj+0z1mYXT/67N7Un4RBgXsi8zpd43+lpTEPuPduukqSi1gKd4WMF++t18/99AhLGl1fI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rE/UMgkN; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rE/UMgkN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54952C4CEF0;
+	Mon,  1 Sep 2025 14:44:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756737880;
+	bh=rOQuaa8RDkK43QH4byDdVI+QZow0U6m4AZGslI0lojk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rE/UMgkNnYVi4ZNLy8sjvPBhINyu5faw4K0yw857IeiDzM82os/aOyNuW6Wj8YdH6
+	 3QGsDyOpCCQAqmq43Bk5LlQ0cVMl5Q7jZki+gmCkk7lZL2citbZSzH0Wow5q8oUgga
+	 7LGVs4CURcQ7X06kjMbR+lOIcXVH+jDsK+BZeJfi0Jffg3Rtl2fx7OoPwKt2ojGBWI
+	 I59xIKRMfFJa4SLxDXI+y/yidmO6aKwfGpqciBpWLJ957jHbJCqSjrNcOD3pHkMsje
+	 z5QtHULPQ7rpw0DGpMQO/wiGuWKI4mmTDz67K4fha8Sar6ZPt0xrrURTe7OWsq3/Y8
+	 RYcAsnZouu0GQ==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	x86@kernel.org
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [RFC PATCH 0/6] tracing: wprobe: Add wprobe for watchpoint
+Date: Mon,  1 Sep 2025 23:44:35 +0900
+Message-ID: <175673787502.478080.3342912952394010967.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250901-nios2-implement-clone3-v2-0-53fcf5577d57@siemens-energy.com>
- <20250901-nios2-implement-clone3-v2-3-53fcf5577d57@siemens-energy.com>
-In-Reply-To: <20250901-nios2-implement-clone3-v2-3-53fcf5577d57@siemens-energy.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 1 Sep 2025 15:51:38 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWyCbOgs6XyW=8PG2pVw1-zhWP_VtsXsGz1HeFrZ6kjdA@mail.gmail.com>
-X-Gm-Features: Ac12FXxyJUafI_d6iF6chcUi31LuXt_e8cojxsF4wFcxCNHCg2s17r6RQqbjdms
-Message-ID: <CAMuHMdWyCbOgs6XyW=8PG2pVw1-zhWP_VtsXsGz1HeFrZ6kjdA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] arch: copy_thread: pass clone_flags as u64
-To: schuster.simon@siemens-energy.com
-Cc: Dinh Nguyen <dinguyen@kernel.org>, Christian Brauner <brauner@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Kees Cook <kees@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Guo Ren <guoren@kernel.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Jens Axboe <axboe@kernel.dk>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Tejun Heo <tj@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
-	Paul Moore <paul@paul-moore.com>, Serge Hallyn <sergeh@kernel.org>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	John Johansen <john.johansen@canonical.com>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
-	Kentaro Takeda <takedakn@nttdata.co.jp>, Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>, 
-	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
-	Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Brian Cain <bcain@kernel.org>, 
-	Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
-	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Jonas Bonn <jonas@southpole.se>, 
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-csky@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	cgroups@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, apparmor@lists.ubuntu.com, 
-	selinux@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-um@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, 1 Sept 2025 at 15:10, Simon Schuster via B4 Relay
-<devnull+schuster.simon.siemens-energy.com@kernel.org> wrote:
-> From: Simon Schuster <schuster.simon@siemens-energy.com>
->
-> With the introduction of clone3 in commit 7f192e3cd316 ("fork: add
-> clone3") the effective bit width of clone_flags on all architectures was
-> increased from 32-bit to 64-bit, with a new type of u64 for the flags.
-> However, for most consumers of clone_flags the interface was not
-> changed from the previous type of unsigned long.
->
-> While this works fine as long as none of the new 64-bit flag bits
-> (CLONE_CLEAR_SIGHAND and CLONE_INTO_CGROUP) are evaluated, this is still
-> undesirable in terms of the principle of least surprise.
->
-> Thus, this commit fixes all relevant interfaces of the copy_thread
-> function that is called from copy_process to consistently pass
-> clone_flags as u64, so that no truncation to 32-bit integers occurs on
-> 32-bit architectures.
->
-> Signed-off-by: Simon Schuster <schuster.simon@siemens-energy.com>
+Hi,
 
-Fixes: c5febea0956fd387 ("fork: Pass struct kernel_clone_args into copy_thread")
+Here is an RFC series for adding new wprobe (watch probe) which
+provides memory access tracing event. Moreover, this can be used via
+event trigger. Thus it can trace memory access on a dynamically
+allocated objects too.
 
->  arch/m68k/kernel/process.c       | 2 +-
+In this version, I reuse Jinchao's arch_reinstall_hw_breakpoint()
+patch[1].
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
+[1] https://lore.kernel.org/all/20250828073311.1116593-6-wangjinchao600@gmail.com/
 
-Gr{oetje,eeting}s,
+The basic usage of this wprobe is similar to other probes;
 
-                        Geert
+  w:[GRP/][EVENT] [r|w|rw]@<ADDRESS|SYMBOL[+OFFS]> [FETCHARGS]
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+This defines a new wprobe event. For example, to trace jiffies update,
+you can do;
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+ echo 'w:my_jiffies w@jiffies:8 value=+0($addr)' >> dynamic_events
+ echo 1 > events/wprobes/my_jiffies/enable
+
+Moreover, this can be combined with event trigger to trace the memory
+accecss on slab objects. The trigger syntax is;
+
+  set_wprobe:WPROBE_EVENT:FIELD[+ADJUST]
+  clear_wprobe:WPROBE_EVENT
+
+For example, trace the first 8 byte of the dentry data structure passed
+to do_truncate() until it is deleted by __dentry_kill().
+(Note: all tracefs setup uses '>>' so that it does not kick do_truncate())
+
+  # echo 'w:watch rw@0:8 address=$addr value=+0($addr)' > dynamic_events
+
+  # echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
+  # echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
+
+  # echo 'f:dentry_kill __dentry_kill dentry=$arg1' >> dynamic_events
+  # echo 'clear_wprobe:watch' >> events/fprobes/dentry_kill/trigger
+
+  # echo 1 >> events/fprobes/truncate/enable
+  # echo 1 >> events/fprobes/dentry_kill/enable
+
+  # echo aaa > /tmp/hoge
+  # echo bbb > /tmp/hoge
+  # echo ccc > /tmp/hoge
+  # rm /tmp/hoge
+
+Then, the trace data will show;
+
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 16/16   #P:8
+#
+#                                _-----=> irqs-off/BH-disabled
+#                               / _----=> need-resched
+#                              | / _---=> hardirq/softirq
+#                              || / _--=> preempt-depth
+#                              ||| / _-=> migrate-disable
+#                              |||| /     delay
+#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+#    [    7.026136] sh (113) used greatest stack depth: 12912 bytes left
+          | |         |   |||||     |         |
+              sh-113     [002] .....     7.024402: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880069194b8
+              sh-113     [002] ..Zff     7.024822: watch: (lookup_fast+0xaa/0x150) address=0xffff8880069194b8 value=0x200008
+              sh-113     [002] ..Zff     7.024830: watch: (step_into+0x82/0x360) address=0xffff8880069194b8 value=0x200008
+              sh-113     [002] ..Zff     7.024834: watch: (step_into+0x9f/0x360) address=0xffff8880069194b8 value=0x200008
+              sh-113     [002] ..Zff     7.024839: watch: (path_openat+0xb3a/0xe70) address=0xffff8880069194b8 value=0x200008
+              sh-113     [002] ..Zff     7.024843: watch: (path_openat+0xb9a/0xe70) address=0xffff8880069194b8 value=0x200008
+              sh-113     [002] .....     7.024847: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880069194b8
+              sh-113     [002] ...1.     7.025364: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff888006919380
+              sh-113     [002] ...1.     7.025511: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880069195f0
+              rm-118     [003] ...1.     7.027543: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880069194b8
+              sh-113     [002] ...2.     7.027825: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880044429c0
+              sh-113     [002] ...2.     7.027833: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff888004442270
+
+
+Thank you,
+
+---
+
+Jinchao Wang (1):
+      x86/HWBP: introduce arch_reinstall_hw_breakpoint() for atomic context
+
+Masami Hiramatsu (Google) (5):
+      tracing: wprobe: Add watchpoint probe event based on hardware breakpoint
+      HWBP: Add modify_wide_hw_breakpoint_local() API
+      tracing: wprobe: Add wprobe event trigger
+      selftests: tracing: Add a basic testcase for wprobe
+      selftests: tracing: Add syntax testcase for wprobe
+
+
+ Documentation/trace/index.rst                      |    1 
+ Documentation/trace/wprobetrace.rst                |  129 ++
+ arch/Kconfig                                       |   10 
+ arch/x86/Kconfig                                   |    1 
+ arch/x86/include/asm/hw_breakpoint.h               |    3 
+ arch/x86/kernel/hw_breakpoint.c                    |   61 +
+ include/linux/hw_breakpoint.h                      |    6 
+ include/linux/trace_events.h                       |    3 
+ kernel/events/hw_breakpoint.c                      |   36 +
+ kernel/trace/Kconfig                               |   24 
+ kernel/trace/Makefile                              |    1 
+ kernel/trace/trace.c                               |    9 
+ kernel/trace/trace.h                               |    5 
+ kernel/trace/trace_probe.c                         |   20 
+ kernel/trace/trace_probe.h                         |    8 
+ kernel/trace/trace_wprobe.c                        | 1111 ++++++++++++++++++++
+ .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   68 +
+ .../test.d/dynevent/wprobes_syntax_errors.tc       |   20 
+ 18 files changed, 1513 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/trace/wprobetrace.rst
+ create mode 100644 kernel/trace/trace_wprobe.c
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
