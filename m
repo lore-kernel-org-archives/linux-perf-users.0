@@ -1,67 +1,66 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D1A3314DE
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Sep 2025 12:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E761334385
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Sep 2025 12:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756730521; cv=none; b=ttc23JCtVayd9UWnn4i9TaY3u6kEehwq7mqG6R+Sv8yJ9xgul1frqA6hcuEXWetljlAI+RyMsBF2ZuPhgIFR1oo6jWo6nUeCOp4zkFuCWMNp0nTIgo1+QRo64RQis/LrUf10XE6/QL/C4wUdooduC/mAeh0Mx0Z8mwdu2E2Tsuo=
+	t=1756730522; cv=none; b=sqf4QWzumIcRohGugFXiG1uysmbmPNTaENT66oSBk/gdCdxmUJfKPv32CG1b6FmmlAuNhAdT6Z0hifiXRknPibu1CEN/RJHbfdL0Fl9rAgNGq5KaPTxhIL1opa+OsDxAgJUy0kjGCZq06VAnqfHjBROpqlj8lSYV3INDsyXVzNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756730521; c=relaxed/simple;
-	bh=hHJpIJlIFEz6CSYyOaizP0+u4TVXaro/PALZLQfLUyE=;
+	s=arc-20240116; t=1756730522; c=relaxed/simple;
+	bh=CrtUTDi45Qns4EGcNkps9RWbCufp7alE0/jGYmVMHDE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LL+Eg8UpW6N+0yNym49dDYuYn2E4OpGCex3HRM1e8qH7APcgRETjc9dGFrIEL4JS+pXJ8A7NJjcIz2c5+x5FtLlhA8U/Mnxfkn+41xkYsbhgc9IW59iF0RXoxJMs9jCyVwu0ytIVUwxwP8O77Mt3bSQwNZsVr61NV8bUuNMQNBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tGzKKMuN; arc=none smtp.client-ip=209.85.128.51
+	 In-Reply-To:To:Cc; b=rlFzCzBtRn+egyq+MSYa5xTrgQpSDduWaeWLKIl+jW1vaTM7pLeh7gb3Nc/dksUcop8dRBjh2bMrn01gED5RdBx5vauv34LhqSLd2GC04uQSqKzN/MunV82oVr20a9idkSlcBp2MuJaDABJ7qNxdcFJGVuOY2TLu4fVENrqImwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VVa7P+mX; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tGzKKMuN"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-45b7d87b90fso27015115e9.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 01 Sep 2025 05:41:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VVa7P+mX"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-45b8b2712d8so13534875e9.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 01 Sep 2025 05:42:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1756730517; x=1757335317; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1756730518; x=1757335318; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=OSNn3QEar0+QuKyDmtURSQ4BVOB8JOPxQiblvR548LM=;
-        b=tGzKKMuN73bqybJ2SbOIMdNZ5i0hurffWI2ph4yCsvcjkKuUgQRkQnAYCoLXqrtJrW
-         jPKjr8djh9GiXy1bDxU4raXSsIyDhfsAKIOLvkukL62QTMLJ/x6MAl3HzZ8TJhl4m2Tm
-         sqYjF0CToRzrFZkWAUfsLnPtgiG9+UZJ6btzX8f9pjbU/v6JtIjnbRtfUf1eMk5QYQZA
-         pfd2ZiBb2/+gghHp0YRrxu1t6WnSxo7aBY4pVjzd0J8Cof+15AKB1HTrvIhFXJP4ZmI5
-         DryN9SHDlS1f0Eq9GjiaygkqxHSK2GTyGgRFZfMaesSGgovF+OptRgA3EsARfZ/SPHyG
-         aAgg==
+        bh=roHZTPEwCGJoEFzevhfwMCKmJqGfJWiT+6yPYuF1kKY=;
+        b=VVa7P+mXvPA6KblTmWgTBWqU2VFhG1epBpozYO4eQE9Vnk7myZaDUKSslTH9K1L56s
+         v/n4GiTpsmnWU2omHc0WG5PwpxnY3kfQQMH/2neOZx4j+un0KA1G8dYPnIckkWRw4Epq
+         ko29dLX9437Fm96pf1DJQp9CgHwPnnZ5Ptl6EQLY9VhDc4+sQ+CNDTI5Vdz3wfPwvuYY
+         cnxYl+Z3VJ3CuhCWMFuK0pyXnZ4v96PqeFDo/n0nQ0Xe5MzpMzzPqSZx5lwC/E9pns50
+         6rQWd9BXuJFLV1tT6U8eO9YJj0ekktZQYAdD3i/f/RSztWajY89/E/iRMC/IojPqdrZ6
+         INFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756730517; x=1757335317;
+        d=1e100.net; s=20230601; t=1756730518; x=1757335318;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OSNn3QEar0+QuKyDmtURSQ4BVOB8JOPxQiblvR548LM=;
-        b=jHWoIS74DhplpSUo0J2MXm1ht4iCtszqFg3kxI9Gb9MmA8hvzq74SCSYsYcQb3gN6t
-         lxm+wP9MhoORPy+XSCoRqMbn7scvZvcXMTwuHq9cgn7pp2qHMiExjKmOnEISKohHKYAB
-         0PzQJvAk0FWI/W18kRlaCfucIbpIlTVTef6Su0hpOrP6H4UEn4LFxf4OB9a0zdaS2UPM
-         Sl88p1tIneKPbucP4NkhcShRMPCdHQoWZYLgobpnHv+RiZZV0wMzQfZycmsOGwJkDTEQ
-         AiaJ/z/JmaqWr0moYFzpJ8p34I/f3krMwOqlDu+ybMg/3CKxAl/PVNx/aymqmfZbicv9
-         4Z/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVJt6JKVfdVVW4PoXq6B+XcUrznZ1ISDnHd6lZZNEW90nadHW/I0xqtbNbipXbiBLM7dBp0A87/vK3vVECTJdhl@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfUUqnzwnBIeBuuszmuu9pz/4GRS6sKpFkhlMbkJtjta7mSWDN
-	MyCaCWqYkz2jad7CU3nR3AYiPjxIg9wK35vIcpfRLq0mq+q5DvD4TChngKPmkthHSWg=
-X-Gm-Gg: ASbGncvgEsguezxt9G/d5b5EUORVBbpZMj48PZlon37VusrFHq/d4YPDy25bpxcv+JV
-	ul3BUA/D4x9a5W76vn0PMzd0n6Qtx67QQgEfhBCaBGGv9WeHX79fZLazwYbHan8w64J2Sv6uGJx
-	zz87vcbCK4YPWgOCNnjwrHe0qF4uXUKSTcLj4oDGPu3Td5SrV0r/Ga1rHWJ+rrPPIJZYy1SYiup
-	bW2PPuOcmRvp8YcCdfaKHF0aLdmlJ2gPQi/ekZ4CntLLFrXEuDUYovZb1DK4IeefOpmdUQwbOg4
-	wi5geZfG7efLkxRI7RMLmAVQxScJB84ST8ik9rcGuLfdHlXkyYyfiFbD/rypYFDKSszDBDNAwCO
-	rbJG4LBno5zrUL07VqGGmyDFolXBN61CjtY75N0Q70QP644EOhxFi
-X-Google-Smtp-Source: AGHT+IFhQWkNlLbN+/KIksY266G8T+wNBjSFtPM3Dq8DGWiTprcVcLD3OEdLOpKY4eMNn6tRYHKpVg==
-X-Received: by 2002:a05:600c:810c:b0:45b:92a6:63e3 with SMTP id 5b1f17b1804b1-45b92a665f4mr3191135e9.9.1756730517057;
-        Mon, 01 Sep 2025 05:41:57 -0700 (PDT)
+        bh=roHZTPEwCGJoEFzevhfwMCKmJqGfJWiT+6yPYuF1kKY=;
+        b=ig6Llh+5vJVgJOj6YCasyDSBMk6mb1s3ajdh5qsevt1VUAtrx6/CliQn1VGgWWVJhk
+         ciEodhA3vrx3Sm/2r00OuEsIjOfJOv0QAo83fuaLg4E8YGLc2H/SWihbONtIaZH6ovDl
+         BrZHv1N+bzT0AvlKmR0qUmiGRmgsZyUKHTdwXVR1VBJXd6UbBsPmkaYdNwOEkUEhYE3V
+         f2m93yV798ue2wgBYegoEgC1C2K0T6MySV7HrDIbnEHReMgQ1s0yUkXGFdlTZ5VLz013
+         0tHtgu8nNBc9rX6eE21KcSSrLOlC3/h3HvJTkyJpt/l6PAZKMQldSK0Ynf6Gt04DK6SN
+         1u2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUf4xWhVygr8EhB2QYd1IuvNJcGl7oHJ5ogbJbrTPe6REktEyMEsYb+j3mvkvOtqRHFUJECMB/F0xPP0vDYS5qD@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyf68Pm0tYk5VOb7+8BloVo3tBl/s9tYhYuU7hNfdC7m0yjd5dv
+	PHrixAcY74uZQSscb2HmzuxBm6EkjK7Tx6L05xr4XNawG3KI4a5L8v/c8vr9LuJtEVA=
+X-Gm-Gg: ASbGnctz9A/mAj6/czY5XbJj7FA5KpMFeepE2afXh+g+Sv9MP6FB5BAojJtrEfgfCFb
+	MpUbpH/eFWlhhqp+8ckvvlYeX3UxkKCDiVSBPmk4lcK6ZHBsdj5YfR/W18rsAKJ7q3vN4867ECl
+	b6tYFs6hOIuLY5GOFAz7lvOkuQjkg2i95LBrkGYxjQmzB+pba7EDWMjhVWWQyFkSxfzybs1HBor
+	6Wn9D1hnn0BwGTxAbcIS2yeZfPysT337xJE71Jp0KBKX/T1PbnmNoubcBSK4kPpMevOcRxl46Pb
+	UH9eT0nmisUhitoFR1L+q/zG3vE7+QEC/BsdR+AxIOVAG4tHcC9h6hqG1TVuDj6znYb2URIuv0A
+	C51CkUQMArivA7Z/x0ZfL2sqllIQ0mgRITfDvZx/5sg==
+X-Google-Smtp-Source: AGHT+IEYsYRoLgxLqyTVy0NzxTp86n2JBRtVW7sZ408sdKUcLSuGVXIbslWs4Mhg9uhS8qt4f2Cbrg==
+X-Received: by 2002:a05:600c:19ca:b0:45b:8aad:d604 with SMTP id 5b1f17b1804b1-45b8aadd867mr37637205e9.33.1756730518458;
+        Mon, 01 Sep 2025 05:41:58 -0700 (PDT)
 Received: from ho-tower-lan.lan ([185.48.76.109])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b7e898b99sm154946315e9.19.2025.09.01.05.41.55
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b7e898b99sm154946315e9.19.2025.09.01.05.41.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Sep 2025 05:41:56 -0700 (PDT)
+        Mon, 01 Sep 2025 05:41:58 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
-Date: Mon, 01 Sep 2025 13:40:35 +0100
-Subject: [PATCH v8 06/12] arm64/boot: Enable EL2 requirements for
- SPE_FEAT_FDS
+Date: Mon, 01 Sep 2025 13:40:36 +0100
+Subject: [PATCH v8 07/12] KVM: arm64: Add trap configs for PMSDSFR_EL1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -70,7 +69,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250901-james-perf-feat_spe_eft-v8-6-2e2738f24559@linaro.org>
+Message-Id: <20250901-james-perf-feat_spe_eft-v8-7-2e2738f24559@linaro.org>
 References: <20250901-james-perf-feat_spe_eft-v8-0-2e2738f24559@linaro.org>
 In-Reply-To: <20250901-james-perf-feat_spe_eft-v8-0-2e2738f24559@linaro.org>
 To: Catalin Marinas <catalin.marinas@arm.com>, 
@@ -90,62 +89,55 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
  kvmarm@lists.linux.dev, James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.14.0
 
-SPE data source filtering (optional from Armv8.8) requires that traps to
-the filter register PMSDSFR be disabled. Document the requirements and
-disable the traps if the feature is present.
+SPE data source filtering (SPE_FEAT_FDS) adds a new register
+PMSDSFR_EL1, add the trap configs for it. PMSNEVFR_EL1 was also missing
+its VNCR offset so add it along with PMSDSFR_EL1.
 
 Tested-by: Leo Yan <leo.yan@arm.com>
-Reviewed-by: Leo Yan <leo.yan@arm.com>
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- Documentation/arch/arm64/booting.rst | 11 +++++++++++
- arch/arm64/include/asm/el2_setup.h   | 11 +++++++++++
- 2 files changed, 22 insertions(+)
+ arch/arm64/include/asm/vncr_mapping.h | 2 ++
+ arch/arm64/kvm/emulate-nested.c       | 1 +
+ arch/arm64/kvm/sys_regs.c             | 1 +
+ 3 files changed, 4 insertions(+)
 
-diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/arm64/booting.rst
-index 2f666a7c303c..e4f953839f71 100644
---- a/Documentation/arch/arm64/booting.rst
-+++ b/Documentation/arch/arm64/booting.rst
-@@ -466,6 +466,17 @@ Before jumping into the kernel, the following conditions must be met:
-     - HDFGWTR2_EL2.nPMICFILTR_EL0 (bit 3) must be initialised to 0b1.
-     - HDFGWTR2_EL2.nPMUACR_EL1 (bit 4) must be initialised to 0b1.
+diff --git a/arch/arm64/include/asm/vncr_mapping.h b/arch/arm64/include/asm/vncr_mapping.h
+index f6ec500ad3fa..c2485a862e69 100644
+--- a/arch/arm64/include/asm/vncr_mapping.h
++++ b/arch/arm64/include/asm/vncr_mapping.h
+@@ -94,6 +94,8 @@
+ #define VNCR_PMSICR_EL1         0x838
+ #define VNCR_PMSIRR_EL1         0x840
+ #define VNCR_PMSLATFR_EL1       0x848
++#define VNCR_PMSNEVFR_EL1       0x850
++#define VNCR_PMSDSFR_EL1        0x858
+ #define VNCR_TRFCR_EL1          0x880
+ #define VNCR_MPAM1_EL1          0x900
+ #define VNCR_MPAMHCR_EL2        0x930
+diff --git a/arch/arm64/kvm/emulate-nested.c b/arch/arm64/kvm/emulate-nested.c
+index af69c897c2c3..834f13fb1fb7 100644
+--- a/arch/arm64/kvm/emulate-nested.c
++++ b/arch/arm64/kvm/emulate-nested.c
+@@ -1185,6 +1185,7 @@ static const struct encoding_to_trap_config encoding_to_cgt[] __initconst = {
+ 	SR_TRAP(SYS_PMSIRR_EL1,		CGT_MDCR_TPMS),
+ 	SR_TRAP(SYS_PMSLATFR_EL1,	CGT_MDCR_TPMS),
+ 	SR_TRAP(SYS_PMSNEVFR_EL1,	CGT_MDCR_TPMS),
++	SR_TRAP(SYS_PMSDSFR_EL1,	CGT_MDCR_TPMS),
+ 	SR_TRAP(SYS_TRFCR_EL1,		CGT_MDCR_TTRF),
+ 	SR_TRAP(SYS_TRBBASER_EL1,	CGT_MDCR_E2TB),
+ 	SR_TRAP(SYS_TRBLIMITR_EL1,	CGT_MDCR_E2TB),
+diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+index b29f72478a50..4732ee1ad7fd 100644
+--- a/arch/arm64/kvm/sys_regs.c
++++ b/arch/arm64/kvm/sys_regs.c
+@@ -3238,6 +3238,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+ 	{ SYS_DESC(SYS_PMBLIMITR_EL1), undef_access },
+ 	{ SYS_DESC(SYS_PMBPTR_EL1), undef_access },
+ 	{ SYS_DESC(SYS_PMBSR_EL1), undef_access },
++	{ SYS_DESC(SYS_PMSDSFR_EL1), undef_access },
+ 	/* PMBIDR_EL1 is not trapped */
  
-+  For CPUs with SPE data source filtering (FEAT_SPE_FDS):
-+
-+  - If EL3 is present:
-+
-+    - MDCR_EL3.EnPMS3 (bit 42) must be initialised to 0b1.
-+
-+  - If the kernel is entered at EL1 and EL2 is present:
-+
-+    - HDFGRTR2_EL2.nPMSDSFR_EL1 (bit 19) must be initialised to 0b1.
-+    - HDFGWTR2_EL2.nPMSDSFR_EL1 (bit 19) must be initialised to 0b1.
-+
-   For CPUs with Memory Copy and Memory Set instructions (FEAT_MOPS):
- 
-   - If the kernel is entered at EL1 and EL2 is present:
-diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
-index a305386eb2e3..b37da3ee8529 100644
---- a/arch/arm64/include/asm/el2_setup.h
-+++ b/arch/arm64/include/asm/el2_setup.h
-@@ -392,6 +392,17 @@
- 	orr	x0, x0, #HDFGRTR2_EL2_nPMICFILTR_EL0
- 	orr	x0, x0, #HDFGRTR2_EL2_nPMUACR_EL1
- .Lskip_pmuv3p9_\@:
-+	/* If SPE is implemented, */
-+	__spe_vers_imp .Lskip_spefds_\@, ID_AA64DFR0_EL1_PMSVer_IMP, x1
-+	/* we can read PMSIDR and */
-+	mrs_s	x1, SYS_PMSIDR_EL1
-+	and	x1, x1,  #PMSIDR_EL1_FDS
-+	/* if FEAT_SPE_FDS is implemented, */
-+	cbz	x1, .Lskip_spefds_\@
-+	/* disable traps of PMSDSFR to EL2. */
-+	orr	x0, x0, #HDFGRTR2_EL2_nPMSDSFR_EL1
-+
-+.Lskip_spefds_\@:
- 	msr_s   SYS_HDFGRTR2_EL2, x0
- 	msr_s   SYS_HDFGWTR2_EL2, x0
- 	msr_s   SYS_HFGRTR2_EL2, xzr
+ 	{ PMU_SYS_REG(PMINTENSET_EL1),
 
 -- 
 2.34.1
