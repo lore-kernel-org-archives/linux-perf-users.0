@@ -1,166 +1,196 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2046.outbound.protection.outlook.com [40.107.243.46])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6846B237707;
-	Mon,  1 Sep 2025 05:26:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756704409; cv=fail; b=C6XAUJM3GtzSwrV2X/y5lO95U9EAyUfkBT8Yc0CXSRltXU+zjpfjFGdMDLR4RGea7oUOtTkgpWy/OIB0iKU46GHxkSv4gX/BILqjHbmCaVIr66hFZXcuMkUXXfkv3y0dSPc/XsIG0so1HrJJfZ1QlZr+9Pgq3vSlAHMHiNtMRA4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756704409; c=relaxed/simple;
-	bh=SK+nO04lINbWwl9dYy1FbToZ3lySpVm913wk1Koso0A=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QEkmwLg4J1iHikRtiNfiwvASOkm3ieZGRImCwZ9bY9L7sBlAY3OA4q1ilUe8q4Rk/eS4d3w//S/Mn+s0jYCaSTj9FXhI/2lFzIVtJrzNnJBum8NQTWdPBW5HJbdmvhTi1SkVidmAmGqqZC10pcwIxJ43b/lz9zE005v8YxOnxT0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OjZQaXVx; arc=fail smtp.client-ip=40.107.243.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3AC21FF44;
+	Mon,  1 Sep 2025 05:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1756704525; cv=none; b=shxF8iWdWtCSDmrML03BQMWz4vDhwMtZR/LNpkw3iyTHRMtSqL9OSdsnVRSNyN4uCVMiETeqKdDtkngGNDimGVlzPXDmaoUEIXrIwUn2+qknOy1nuA8QH7/9a5mfqvBfaY+Gx1GOum3fQTQcZDBl6LBpc9+wIGzTGM0RFm1/0og=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1756704525; c=relaxed/simple;
+	bh=VH+6KCioF7nPyFiaGHvYI106SEQk852VC3TqE8gkjzk=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=BxBcMMgzxR1k4kt4S4XEJUO62kSUoLPB7L1XrecpLWWaPFRtR248PpYjpV7dekSbWan8VxvYWYSLOzzz9Qat9r3KkLG7VYXUWfsXKay0p73wRJKdE1lsAcpzlAv4hEGOIfN2RSL8xw7cpvfIXTRrJ41pdNWuf0ckdUm1jmIgrbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=glE3PBsn; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OjZQaXVx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EjvjUVz00Wd+dUFpEF/nMv9ouuraDXnTrDz+RaCEbIYGoNrGDDI/XZB4UoA2/CJELJEk6Cnj13TOmZAFDcnC8x/LnAvs9qZ20nIDgMq0Yq+uD9tyzg4SfZh2E0LlaHDjRP6Ryto5RXapYC4oEM7RQvZF0ijt7hk1qnNVxzJKt0JFIfYUbooo1OChiObeDs8iHv/PsP5U/Mi+fscbXnZLp+d5mM04yp+52UeJB2mWqu02oA4NUofbuYVUf1wHfTxDIH8pNx4+3k+zwzCvQagODrqH1c5hz6xMFptKxj6gDc0EC1eFGd3IGkygW4o2hV+cj6fmFiPn4tO7Q8DZmxErLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZWOvjQIrXiIFZR8ntNgh/yarX/qNVa2fItPvblWY+oA=;
- b=wVFXWrYMlTFrxFJvo6BvDsEBv4hxLPXgViEkJKIZjAnpmbHI9YyHuxO7nkknk6Rb7e6K1enjwikNqKHmK1+WZmM0A9DZSrbx8z1Zwaw7hUA2yWVlIN+ZuyzmWbyFqcjdWlyWwiZHo7h6EtA1aMu1RBylxn+sLKkBcqOktRnIEj7xhytm0rLECKJFa2fsBWum/XOqQVDQ3repqMGjJyaIaukChsdw3Qf37W7mTob8rs8hn/8yGbka9Xtez9iFXukxcqrtGoNotNLnTIb/yEaFu8QvPSpdxIxc8SHRLezX9LIUVpMTLWpXxGlzUVwBwFO6GaZbgNX6zZqyY0JIBrwJgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZWOvjQIrXiIFZR8ntNgh/yarX/qNVa2fItPvblWY+oA=;
- b=OjZQaXVxXuNF+hJWj4vHfFV9NZcACatpcqgDbfSUb105YU4+vQOkXxQGItQopSS1EB6C4xI37e7OkMlAsX8EUV4xCf8pPG6aYgX41lwvvabwoZhXmn0iEn9Vq7UAwix/2E7F9FpMQ/Uak4NapDNI19vQR7pG2DWNhKQLkgH2mCo=
-Received: from SJ0PR03CA0040.namprd03.prod.outlook.com (2603:10b6:a03:33e::15)
- by IA1PR12MB7589.namprd12.prod.outlook.com (2603:10b6:208:42b::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9073.24; Mon, 1 Sep
- 2025 05:26:45 +0000
-Received: from CY4PEPF0000E9D4.namprd03.prod.outlook.com
- (2603:10b6:a03:33e:cafe::83) by SJ0PR03CA0040.outlook.office365.com
- (2603:10b6:a03:33e::15) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9073.26 via Frontend Transport; Mon,
- 1 Sep 2025 05:26:44 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- CY4PEPF0000E9D4.mail.protection.outlook.com (10.167.241.139) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.9094.14 via Frontend Transport; Mon, 1 Sep 2025 05:26:44 +0000
-Received: from Satlexmb09.amd.com (10.181.42.218) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 1 Sep
- 2025 00:26:44 -0500
-Received: from BLR-L-MASHUKLA.amd.com (10.180.168.240) by satlexmb09.amd.com
- (10.181.42.218) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1748.10; Sun, 31 Aug
- 2025 22:26:39 -0700
-From: Manali Shukla <manali.shukla@amd.com>
-To: <kvm@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>
-CC: <seanjc@google.com>, <pbonzini@redhat.com>, <nikunj@amd.com>,
-	<manali.shukla@amd.com>, <bp@alien8.de>, <peterz@infradead.org>,
-	<mingo@redhat.com>, <mizhang@google.com>, <thomas.lendacky@amd.com>,
-	<ravi.bangoria@amd.com>, <Sandipan.Das@amd.com>
-Subject: [PATCH v2 12/12] perf/x86/amd: Remove exclude_guest check from perf_ibs_init()
-Date: Mon, 1 Sep 2025 10:56:25 +0530
-Message-ID: <20250901052625.209277-1-manali.shukla@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250901051656.209083-1-manali.shukla@amd.com>
-References: <20250901051656.209083-1-manali.shukla@amd.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="glE3PBsn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:
+	Cc:To:Subject:From:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=0RpMW/QmoSWZmxGRn2TYP438jGsUybJgguDX0wk4nWE=; b=glE3PBsns+8CeBPeVzCFehbg3A
+	bMwdEcHS+cK1l3/Fc4rZ1OAItsxMPvqRHYMbGl6VrP+hIgyv7CFXmlPJWM3uqsfyIYzqUt8mgaHk2
+	d46b/jEBJaSXRtzq9ztcRdmzDF+qT5XOM/ReU481SKEL7cDJkixL0z816Hv6o3ALJfD80FFLxsmqM
+	u1Y65lk+Lu00QeqFa8Ou3mZWqx4aJ56egqx0mw1aYaP4niRoPBzz/Tooz9afPJ3DveEQ9XzUM3oRE
+	Sm4KLe95n+KMsuXO73IoFIW8NQtxR6X5Io/DBLV7Gj8/n1Wm1VkYH4rzOF5pREspa0sOB2CxduujR
+	nkasc42A==;
+Received: from [223.233.71.70] (helo=[192.168.1.8])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1usx5f-0058MA-4e; Mon, 01 Sep 2025 07:28:27 +0200
+Message-ID: <d48f66cf-9843-1575-bcf0-5117a5527004@igalia.com>
+Date: Mon, 1 Sep 2025 10:58:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To satlexmb09.amd.com
- (10.181.42.218)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D4:EE_|IA1PR12MB7589:EE_
-X-MS-Office365-Filtering-Correlation-Id: a26f3166-339a-4fe0-59f0-08dde91823c5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?mWYbdnPEchLWwaZ5iOoWUqHapjIgSjVSE8tGzkHNJJfeuiewxUGIjsQytU1V?=
- =?us-ascii?Q?RweLjFHDwN0z9XTDzZftWh/PWMV6TP5scgjidaEZSHeO0sQqLBrXXLQUGwgf?=
- =?us-ascii?Q?8tflF6jmVAC1eceSdToxhxIVN1kRz4Wf9b/yd3sUCez7ajZyOkbnG8ZEGGze?=
- =?us-ascii?Q?w7bXib2pHDVGj4e8PUI1KtreHwRWuCFQsPEot81Az+0aODnrJCIKIbCuMTcb?=
- =?us-ascii?Q?/1SlK47yBsqEJACrgRBKE9e5MQXPafWRndpR6bVv4GjMwXyj3E5PbQJvr7ei?=
- =?us-ascii?Q?M57UCdoQGMBANnisU6mSDzSWr3sznPAuEaU0ku7M+QbyVYBIrIpmk3fG86HM?=
- =?us-ascii?Q?IMkh64hKFGWtPoiMd6MgmUZgS5V89x2x6eWUwSlRl8UUUq2PQn1qwrH54deI?=
- =?us-ascii?Q?BlAfqIzLuqxtTWeQJPJ3BWxrMM+v+IOKJNvHHLxSkH6kFJblI/nw1AKUnlZR?=
- =?us-ascii?Q?RJVfS1H+Kft2oCBhR48WFxc3vpVF1qlRGAA77XZcr90KvFqvoB+/QVe0VFEj?=
- =?us-ascii?Q?CtRGTv1BkYBuOa0GsWinJIfPEYBR1pDqiQKEqHICi864KEuKDum/qNoF64zn?=
- =?us-ascii?Q?4zGi/aJS47I0/NemU+uStjOitPuhwPIlpiltnkmixC+GhmGslKNyLe49TpAP?=
- =?us-ascii?Q?WG3jzFv7XfTnlzE1+xeQXVO2kK4A/SIF1whaS5d6L7sA61ZSt9uSiefCNudT?=
- =?us-ascii?Q?ON/cY0h+V1fW+bs2/WCkDEiMetMxqEZDLg6Wy3A5HbV9m0wPmaXjqpSHJVgH?=
- =?us-ascii?Q?XnIZaX+k1Ejw0H7F6ES3L7PgRg6wUYUPXhn6aC1Ps5KNV3gjJBUnclu31EDl?=
- =?us-ascii?Q?Jumf1foDTfo/fTdvQLrV6tIeLHBsQZOjMTFFsTpl7pHXK02NAEifZzXjW5uB?=
- =?us-ascii?Q?tgNhP+hHYE7i10ETHZ3xXmL+XzIvPep5fEUEiUheRcOYchvv7/2QJRTAj/Ot?=
- =?us-ascii?Q?B86HosnusqcBfbfAzcdlR41QBUDFy2cjxxM77+4mLNBIabip67HEqd6ba566?=
- =?us-ascii?Q?qnJZIeRiN8xP9FI6Nw5AN9rMORTk3eC7gLP64BWWwRe0b6hdwrsVwZRY72pu?=
- =?us-ascii?Q?tJoxdiDKEbXakKKNmLBkeC64v7rxqxSOa9b6TDQrN+J0uNhwqCEsHewQDGp8?=
- =?us-ascii?Q?C31vwpOe4sbwoy9WXnGC+knhJTYrvoaBsEOzPb/AQpbd0GGpMVQyKNjsRZKC?=
- =?us-ascii?Q?m5SSh/gcHmMtuRFctePeiciOBUPzmgSaQ9YiE1E/I4wgBbsufLUp7PvdFuXe?=
- =?us-ascii?Q?Bfiad5A+u/LltsYJy5oXKKfRySII8VgCAOz2ezPAvaUl5GJ0Y7bttr5n/XA/?=
- =?us-ascii?Q?PiSKw0BN8xxRTGAhn5UuhXTavGLXnwOx4AJwiuPzQZlLM1BxS2z7c97hLG2r?=
- =?us-ascii?Q?d9J7k17073RpbNP9qX3AU2+dWd7Ych7KCLGKIwUJBpd8AZ9Vx6ZttGuEaFuq?=
- =?us-ascii?Q?v++9MSj/Y7w+PdjhjG2wkax5LbfhsYZ47YlUyyoiCQO4nCUI7E+eG9uA7ttv?=
- =?us-ascii?Q?6V7T29VhmTt5IZZgP7/ldP248YCZMBMZRpQ8?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2025 05:26:44.4226
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a26f3166-339a-4fe0-59f0-08dde91823c5
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000E9D4.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7589
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+From: Bhupesh Sharma <bhsharma@igalia.com>
+Subject: Re: [PATCH v8 4/5] treewide: Switch memcpy() users of 'task->comm' to
+ a more safer implementation
+To: Kees Cook <kees@kernel.org>, Bhupesh <bhupesh@igalia.com>
+Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
+ laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
+ mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
+ alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
+ mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
+ david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
+ brauner@kernel.org, jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+ linux-trace-kernel@vger.kernel.org, torvalds@linux-foundation.org
+References: <20250821102152.323367-1-bhupesh@igalia.com>
+ <20250821102152.323367-5-bhupesh@igalia.com> <202508250656.9D56526@keescook>
+Content-Language: en-US
+In-Reply-To: <202508250656.9D56526@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Currently IBS driver doesn't allow the creation of IBS event with
-exclue_guest set. As a result, amd_ibs_init() returns -EINVAL if
-IBS event is created with exclude_guest set.
+Hi Kees,
 
-With the introduction of mediated PMU support, software-based handling
-of exclude_guest is permitted for PMUs that have the
-PERF_PMU_CAP_MEDIATED_VPMU capability.
+On 8/25/25 7:31 PM, Kees Cook wrote:
+> On Thu, Aug 21, 2025 at 03:51:51PM +0530, Bhupesh wrote:
+>> As Linus mentioned in [1], currently we have several memcpy() use-cases
+>> which use 'current->comm' to copy the task name over to local copies.
+>> For an example:
+>>
+>>   ...
+>>   char comm[TASK_COMM_LEN];
+>>   memcpy(comm, current->comm, TASK_COMM_LEN);
+>>   ...
+>>
+>> These should be rather calling a wrappper like "get_task_array()",
+>> which is implemented as:
+>>
+>>     static __always_inline void
+>>         __cstr_array_copy(char *dst,
+>>              const char *src, __kernel_size_t size)
+>>     {
+>>          memcpy(dst, src, size);
+>>          dst[size] = 0;
+>>     }
+>>
+>>     #define get_task_array(dst,src) \
+>>        __cstr_array_copy(dst, src, __must_be_array(dst))
+>>
+>> The relevant 'memcpy()' users were identified using the following search
+>> pattern:
+>>   $ git grep 'memcpy.*->comm\>'
+>>
+>> Link:https://lore.kernel.org/all/CAHk-=wi5c=_-FBGo_88CowJd_F-Gi6Ud9d=TALm65ReN7YjrMw@mail.gmail.com/  #1
+>>
+>> Signed-off-by: Bhupesh<bhupesh@igalia.com>
+>> ---
+>>   include/linux/coredump.h                      |  2 +-
+>>   include/linux/sched.h                         | 32 +++++++++++++++++++
+>>   include/linux/tracepoint.h                    |  4 +--
+>>   include/trace/events/block.h                  | 10 +++---
+>>   include/trace/events/oom.h                    |  2 +-
+>>   include/trace/events/osnoise.h                |  2 +-
+>>   include/trace/events/sched.h                  | 13 ++++----
+>>   include/trace/events/signal.h                 |  2 +-
+>>   include/trace/events/task.h                   |  4 +--
+>>   tools/bpf/bpftool/pids.c                      |  6 ++--
+>>   .../bpf/test_kmods/bpf_testmod-events.h       |  2 +-
+>>   11 files changed, 54 insertions(+), 25 deletions(-)
+>>
+>> diff --git a/include/linux/coredump.h b/include/linux/coredump.h
+>> index 68861da4cf7c..bcee0afc5eaf 100644
+>> --- a/include/linux/coredump.h
+>> +++ b/include/linux/coredump.h
+>> @@ -54,7 +54,7 @@ extern void vfs_coredump(const kernel_siginfo_t *siginfo);
+>>   	do {	\
+>>   		char comm[TASK_COMM_LEN];	\
+>>   		/* This will always be NUL terminated. */ \
+>> -		memcpy(comm, current->comm, sizeof(comm)); \
+>> +		get_task_array(comm, current->comm); \
+>>   		printk_ratelimited(Level "coredump: %d(%*pE): " Format "\n",	\
+>>   			task_tgid_vnr(current), (int)strlen(comm), comm, ##__VA_ARGS__);	\
+>>   	} while (0)	\
+>> diff --git a/include/linux/sched.h b/include/linux/sched.h
+>> index 5a58c1270474..d26d1dfb9904 100644
+>> --- a/include/linux/sched.h
+>> +++ b/include/linux/sched.h
+>> @@ -1960,12 +1960,44 @@ extern void wake_up_new_task(struct task_struct *tsk);
+>>   
+>>   extern void kick_process(struct task_struct *tsk);
+>>   
+>> +/*
+>> + * - Why not use task_lock()?
+>> + *   User space can randomly change their names anyway, so locking for readers
+>> + *   doesn't make sense. For writers, locking is probably necessary, as a race
+>> + *   condition could lead to long-term mixed results.
+>> + *   The logic inside __set_task_comm() should ensure that the task comm is
+>> + *   always NUL-terminated and zero-padded. Therefore the race condition between
+>> + *   reader and writer is not an issue.
+>> + */
+>> +
+>>   extern void __set_task_comm(struct task_struct *tsk, const char *from, bool exec);
+>>   #define set_task_comm(tsk, from) ({			\
+>>   	BUILD_BUG_ON(sizeof(from) < TASK_COMM_LEN);	\
+>>   	__set_task_comm(tsk, from, false);		\
+>>   })
+>>   
+>> +/*
+>> + * 'get_task_array' can be 'data-racy' in the destination and
+>> + * should not be used for cases where a 'stable NUL at the end'
+>> + * is needed. Its better to use strscpy and friends for such
+>> + * use-cases.
+>> + *
+>> + * It is suited mainly for a 'just copy comm to a constant-sized
+>> + * array' case - especially in performance sensitive use-cases,
+>> + * like tracing.
+>> + */
+>> +
+>> +static __always_inline void
+>> +	__cstr_array_copy(char *dst, const char *src,
+>> +			  __kernel_size_t size)
+>> +{
+>> +	memcpy(dst, src, size);
+>> +	dst[size] = 0;
+>> +}
+> Please don't reinvent the wheel. :) We already have memtostr, please use
+> that (or memtostr_pad).
 
-Since ibs_op and ibs_fetch pmus has PERF_PMU_CAP_MEDIATED_VPMU
-capability set, update perf_ibs_init() to remove exclude_guest check.
+Sure, but wouldn't we get a static assertion failure: "must be array" 
+for memtostr() usage, because of the following:
 
-Signed-off-by: Manali Shukla <manali.shukla@amd.com>
----
- arch/x86/events/amd/ibs.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) + 
+__must_be_array(arr))
 
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 6dc2d1cb8b09..fad2200ddc72 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -300,8 +300,7 @@ static int perf_ibs_init(struct perf_event *event)
- 		return -EOPNOTSUPP;
- 
- 	/* handle exclude_{user,kernel} in the IRQ handler */
--	if (event->attr.exclude_host || event->attr.exclude_guest ||
--	    event->attr.exclude_idle)
-+	if (event->attr.exclude_host || event->attr.exclude_idle)
- 		return -EINVAL;
- 
- 	if (!(event->attr.config2 & IBS_SW_FILTER_MASK) &&
--- 
-2.43.0
+I think it would be easier just to set:
+
+   memcpy(dst, src, size);
+   dst[size -1] = 0;
+
+instead as Linus and Steven suggested.
+
+Thanks,
+Bhupesh
+
+>> +
+>> +#define get_task_array(dst, src) \
+>> +	__cstr_array_copy(dst, src, __must_be_array(dst))
+> Uh, __must_be_array(dst) returns 0 on success. :P Are you sure you
+> tested this?
+>
 
