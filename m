@@ -1,188 +1,287 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209B22DAFA1;
-	Tue,  2 Sep 2025 14:02:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6EA2DE6F3;
+	Tue,  2 Sep 2025 15:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756821729; cv=none; b=nollm/QliW0WWazLxzMieIXTTyJ0Boa+D3WjxHgmHpTYZeLXOWN3QYsUY1Ae3tChT9YnKyAcWgp93pTF6q7DE1Dp1TPACOA5yFl3dRb8CJN4B0LymI1dp8cqDVeMBS9JWZtLfRdAeN3u4/PynlnpHRp1WnUtWdp301SyXGHdgZg=
+	t=1756826130; cv=none; b=Koq1E4UyHoQXQ3A7nLZeIgI3sQLPDUhZQAhX+VP8yF/DTU0iMLffYUwi5ARRnPzjGTopZZjNeh0fuppqV69pPsjl+zhKOXefd42JxsfzhMwTZn82kEl0+fT7cDvVuBDREI6xem0PTRl91YB9BjEZyAPqTpbM1o+y70iafPrEDkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756821729; c=relaxed/simple;
-	bh=TnrmD0mhc59HwXLL9zQn0KMma7lkRp9WlnF7msqnTk0=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=mxOnWf8pu6FFXnUy3jAm7JjGD3wjrcOCtHb/frjFKMx5roK3XwmqOG4plxk+10qkl+RI1xvT75LkP0r4jjqkQGsSPEa7mkQh2nRIog297VJGIZwaY6dGITldgXxKi1Z+M0IEEdkL1h2yNjyLuAvykUZgtDpaHq3RIIO5Xlsb1lo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s/PqbcY0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756826130; c=relaxed/simple;
+	bh=CKRJGACJWHK8Hlud48RR8jl/VtJ79lLFYLx1AJc/+NA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rZG7OVd9KYL71W7qGjQjQGHIb/xpuYxNxZj4bwEPSHFYfJs1V2aI5i6T1nwOBBtfX50UCsV7uSWeV+At4zqm8oH4kqgL/cNb3zyKJTuTTJjEAutAO6xJFcnSgNBvQzOidB3iRxZw6TIQBfsAork77mt3/6dYbRowCfjVByDXGCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BCG4c3MY; arc=none smtp.client-ip=209.85.210.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s/PqbcY0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE567C4CEED;
-	Tue,  2 Sep 2025 14:02:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756821728;
-	bh=TnrmD0mhc59HwXLL9zQn0KMma7lkRp9WlnF7msqnTk0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=s/PqbcY0vhfmLt+MTvs45AIvcGukmlyuQN0QGHJP8151KheaWM6hvgZGOiloF0LpU
-	 vNc+GOxDZGmMSAUJUDKQ+RnROiLy1f6uC8LgkHXj+j2G15RBFfQd9AWFkReYd3B9jt
-	 sO1v9Sz+F7F5xPQ8Gxxe4EWbtStaxGSib49Z9b9Lv8As2AYgD2kgX4WbAzn2kfB6i3
-	 OZyBJgk4UCJMDTKhqPjrpYqZZjxGGgxpIV2RS5SAaZE2aWwKa5W9nvyrxj+XCAjUOr
-	 M1PjZy7Mq7zZREQgVyVc9Q2gH1dTOADP7UHzeq+LJrLsvsH0lbjL9trGt3nkAUx/Xp
-	 D0OzcWFWi9eEg==
-Date: Tue, 2 Sep 2025 23:02:04 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jinchao Wang <wangjinchao600@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Thomas Gleixner
- <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers
- <irogers@google.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-perf-users@vger.kernel.org, "Masami Hiramatsu (Google)"
- <mhiramat@kernel.org>
-Subject: Re: [RFC PATCH 0/6] tracing: wprobe: Add wprobe for watchpoint
-Message-Id: <20250902230204.f3e81b03e7f6805caba1b717@kernel.org>
-In-Reply-To: <175673787502.478080.3342912952394010967.stgit@devnote2>
-References: <175673787502.478080.3342912952394010967.stgit@devnote2>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BCG4c3MY"
+Received: by mail-pf1-f196.google.com with SMTP id d2e1a72fcca58-771fa8e4190so3670761b3a.1;
+        Tue, 02 Sep 2025 08:15:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756826127; x=1757430927; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ISvkKKWDIq4+oW79gR956cg3AZDUxj8RaDon4KWZSA4=;
+        b=BCG4c3MYRAK+Na++owkth3+rgNG+Xyi/aUfWVo22pZYhwQp7PSuwLOWyiksZ6zEIrs
+         Pz9cC4PBxguCi0LtGkq6/4qVwS7r78+eGd3bItYdEWyNEfA7KRFV/yeL2XeqG1az3NdF
+         bkEvIc/I7mUbNUcPtMV4vn/li7bUTbsMzKZd0v61KRrTiMMTk7iSWjI5xpqlQnGf4yJE
+         PHBsWfH4Zwe3XBWKkBfxyUPqWFflFo+fm/LWchw86pcV6AqEMjZSE4IT/FJXCap9YlmJ
+         whEl60mBN7wMzCVPEuZGyyeUNGq7EM27IesEsJYZ3sBiTYe3Su7UXhYB1lIjIkq16IU7
+         hCGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756826127; x=1757430927;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ISvkKKWDIq4+oW79gR956cg3AZDUxj8RaDon4KWZSA4=;
+        b=J40qrz9RlAHNA+/LOb700QfhDcYg7ok0LGp9lysz8P1TLU1ISfA7y3yGrN59P62RoK
+         TjfGW+6sPfddUF1jkESQ11KBAo+JmnYCch6jtQ1AC6ffsZ1DdHVFUpB5otKBoBkTFpEo
+         VbrYTfi55IowUadTHV6v/LYChyZ6s2vUr3XAQynDmitH8eSsgDwFjKrcyMTUyJpXJ244
+         9eCytuc0blZ+EiuTw0ailsuWXYG8LA8zFJ3G3B2vxuTZqlTsuFYdIlqUxwVtnf3mAyJt
+         hAxMGDrYQKavVDNtWaaryQxm7eMGHkkOhgU7RWxHGh9zXQVBH/lvntkUnBWTRI5IZmY0
+         uEqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVYhPFcmtjTihf8JOpFcV99pFZExt+QRUlCX9SW8JP5fx8Mya9wzK0D5P1oyR+eXFt0TQEZEj8wtSkqDhM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaN0XYcp4vRTohNVRMJuX325vxq8gRwvuW97uwLHEmSZ+6qkyg
+	S67u3AqLlHCgLVoDium7cfLbdeDGPw+q0I7YTf69TavKjaXER22wFWuW
+X-Gm-Gg: ASbGncua1scIXBTpleNgTMJqc9RjDsQHPBPZ8VoHXmdqR38oM+ioBygGuZxcg7Qh4e2
+	F8zf9qZ6KnCEzrrN5MtdtllI2sY+AKZWinDOxVxo1lL+bseG4OYKrlZ01LxKhGlSMqnhT5ifQUY
+	PLg8Lpy7GyNBPBlzG8a27vglJ/pXlnFJWMTpcmp2D5pvVqOsev1ngChZswerWztVU4N+87jxFpZ
+	V8BoMQEm2GDjpNoYNkJbkHftie2B+Rp3SLXTKXXKs8yMovasv9/Erdqs9ZWg3w6mhWXJ0q6TqG1
+	L7295ii3+Gq9MuOExXgR47blInze5WKt2LegdVQzxWt+jhwChZ4ApHFOHhI3YZBac43sPY9CmML
+	Ju35I+SdgdGtJSHcX41BvHT8LIW6NpaGQrhWZVrJ8IdpDRRWNkhtv0t+5z42vwe3yHhXD55crk9
+	WOdVNJT4QPO4HhydiMKCa6MBI=
+X-Google-Smtp-Source: AGHT+IHD/kMDE3gbLZYtH72UCAc8RJvLlzXy2nNXNk5ONXs9WsZINLIRyVS84hwdbwo3Y+p6pZ64JQ==
+X-Received: by 2002:a05:6a20:394a:b0:246:458:8531 with SMTP id adf61e73a8af0-24604588bb9mr1031513637.4.1756826125731;
+        Tue, 02 Sep 2025 08:15:25 -0700 (PDT)
+Received: from nixos (ec2-18-179-42-135.ap-northeast-1.compute.amazonaws.com. [18.179.42.135])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-77274171cf4sm1990505b3a.76.2025.09.02.08.15.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Sep 2025 08:15:24 -0700 (PDT)
+From: Thaumy Cheng <thaumy.love@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thaumy Cheng <thaumy.love@gmail.com>
+Subject: [PATCH v2 RESEND] perf/core: Fix missing read event generation on task exit
+Date: Tue,  2 Sep 2025 23:15:17 +0800
+Message-ID: <20250902151517.384635-1-thaumy.love@gmail.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-(Adding Jinchao)
+For events with inherit_stat enabled, a "read" event will be generated
+to collect per task event counts on task exit.
 
-On Mon,  1 Sep 2025 23:44:35 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+The call chain is as follows:
 
-> Hi,
-> 
-> Here is an RFC series for adding new wprobe (watch probe) which
-> provides memory access tracing event. Moreover, this can be used via
-> event trigger. Thus it can trace memory access on a dynamically
-> allocated objects too.
+do_exit
+  -> perf_event_exit_task
+    -> perf_event_exit_task_context
+      -> perf_event_exit_event
+        -> perf_remove_from_context
+          -> perf_child_detach
+            -> sync_child_event
+              -> perf_event_read_event
 
-BTW, this series is on the top of probes/for-next branch in the
-linux-trace tree.
+However, the child event context detaches the task too early in
+perf_event_exit_task_context, which causes sync_child_event to never
+generate the read event in this case, since child_event->ctx->task is
+always set to TASK_TOMBSTONE. Fix that by moving context lock section
+backward to ensure ctx->task is not set to TASK_TOMBSTONE before
+generating the read event.
 
-Thanks,
+Because perf_event_free_task calls perf_event_exit_task_context with
+exit = false to tear down all child events from the context, and the
+task never lived, accessing the task PID can lead to a use-after-free.
 
-> 
-> In this version, I reuse Jinchao's arch_reinstall_hw_breakpoint()
-> patch[1].
-> 
-> [1] https://lore.kernel.org/all/20250828073311.1116593-6-wangjinchao600@gmail.com/
-> 
-> The basic usage of this wprobe is similar to other probes;
-> 
->   w:[GRP/][EVENT] [r|w|rw]@<ADDRESS|SYMBOL[+OFFS]> [FETCHARGS]
-> 
-> This defines a new wprobe event. For example, to trace jiffies update,
-> you can do;
-> 
->  echo 'w:my_jiffies w@jiffies:8 value=+0($addr)' >> dynamic_events
->  echo 1 > events/wprobes/my_jiffies/enable
-> 
-> Moreover, this can be combined with event trigger to trace the memory
-> accecss on slab objects. The trigger syntax is;
-> 
->   set_wprobe:WPROBE_EVENT:FIELD[+ADJUST]
->   clear_wprobe:WPROBE_EVENT
-> 
-> For example, trace the first 8 byte of the dentry data structure passed
-> to do_truncate() until it is deleted by __dentry_kill().
-> (Note: all tracefs setup uses '>>' so that it does not kick do_truncate())
-> 
->   # echo 'w:watch rw@0:8 address=$addr value=+0($addr)' > dynamic_events
-> 
->   # echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
->   # echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
-> 
->   # echo 'f:dentry_kill __dentry_kill dentry=$arg1' >> dynamic_events
->   # echo 'clear_wprobe:watch' >> events/fprobes/dentry_kill/trigger
-> 
->   # echo 1 >> events/fprobes/truncate/enable
->   # echo 1 >> events/fprobes/dentry_kill/enable
-> 
->   # echo aaa > /tmp/hoge
->   # echo bbb > /tmp/hoge
->   # echo ccc > /tmp/hoge
->   # rm /tmp/hoge
-> 
-> Then, the trace data will show;
-> 
-> # tracer: nop
-> #
-> # entries-in-buffer/entries-written: 16/16   #P:8
-> #
-> #                                _-----=> irqs-off/BH-disabled
-> #                               / _----=> need-resched
-> #                              | / _---=> hardirq/softirq
-> #                              || / _--=> preempt-depth
-> #                              ||| / _-=> migrate-disable
-> #                              |||| /     delay
-> #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-> #    [    7.026136] sh (113) used greatest stack depth: 12912 bytes left
->           | |         |   |||||     |         |
->               sh-113     [002] .....     7.024402: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880069194b8
->               sh-113     [002] ..Zff     7.024822: watch: (lookup_fast+0xaa/0x150) address=0xffff8880069194b8 value=0x200008
->               sh-113     [002] ..Zff     7.024830: watch: (step_into+0x82/0x360) address=0xffff8880069194b8 value=0x200008
->               sh-113     [002] ..Zff     7.024834: watch: (step_into+0x9f/0x360) address=0xffff8880069194b8 value=0x200008
->               sh-113     [002] ..Zff     7.024839: watch: (path_openat+0xb3a/0xe70) address=0xffff8880069194b8 value=0x200008
->               sh-113     [002] ..Zff     7.024843: watch: (path_openat+0xb9a/0xe70) address=0xffff8880069194b8 value=0x200008
->               sh-113     [002] .....     7.024847: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880069194b8
->               sh-113     [002] ...1.     7.025364: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff888006919380
->               sh-113     [002] ...1.     7.025511: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880069195f0
->               rm-118     [003] ...1.     7.027543: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880069194b8
->               sh-113     [002] ...2.     7.027825: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880044429c0
->               sh-113     [002] ...2.     7.027833: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff888004442270
-> 
-> 
-> Thank you,
-> 
-> ---
-> 
-> Jinchao Wang (1):
->       x86/HWBP: introduce arch_reinstall_hw_breakpoint() for atomic context
-> 
-> Masami Hiramatsu (Google) (5):
->       tracing: wprobe: Add watchpoint probe event based on hardware breakpoint
->       HWBP: Add modify_wide_hw_breakpoint_local() API
->       tracing: wprobe: Add wprobe event trigger
->       selftests: tracing: Add a basic testcase for wprobe
->       selftests: tracing: Add syntax testcase for wprobe
-> 
-> 
->  Documentation/trace/index.rst                      |    1 
->  Documentation/trace/wprobetrace.rst                |  129 ++
->  arch/Kconfig                                       |   10 
->  arch/x86/Kconfig                                   |    1 
->  arch/x86/include/asm/hw_breakpoint.h               |    3 
->  arch/x86/kernel/hw_breakpoint.c                    |   61 +
->  include/linux/hw_breakpoint.h                      |    6 
->  include/linux/trace_events.h                       |    3 
->  kernel/events/hw_breakpoint.c                      |   36 +
->  kernel/trace/Kconfig                               |   24 
->  kernel/trace/Makefile                              |    1 
->  kernel/trace/trace.c                               |    9 
->  kernel/trace/trace.h                               |    5 
->  kernel/trace/trace_probe.c                         |   20 
->  kernel/trace/trace_probe.h                         |    8 
->  kernel/trace/trace_wprobe.c                        | 1111 ++++++++++++++++++++
->  .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   68 +
->  .../test.d/dynevent/wprobes_syntax_errors.tc       |   20 
->  18 files changed, 1513 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/trace/wprobetrace.rst
->  create mode 100644 kernel/trace/trace_wprobe.c
->  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
->  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
-> 
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To address that, need an extra exit parameter for perf_event_exit_event
+to teach it to distinguish callers. Only the caller that needs to exit
+the task will trigger the read event, which will set the newly added
+sync_child parameter of perf_child_detach.
 
+Since now perf_event_exit_event may not carry DETACH_EXIT, rename it to
+a more appropriate name "perf_event_detach_event".
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+This bug can be reproduced by running "perf record -s" and attaching to
+any program that generates perf events in its child tasks. If we check
+the result with "perf report -T", the last line of the report will leave
+an empty table like "# PID  TID", which is expected to contain the
+per-task event counts by design.
+
+Fixes: ef54c1a476ae ("perf: Rework perf_event_exit_event()")
+Signed-off-by: Thaumy Cheng <thaumy.love@gmail.com>
+---
+Changes in v2:
+- Only trigger read event on task exit.
+- Rename perf_event_exit_event to perf_event_detach_event.
+
+Changes in v1:
+- Set TASK_TOMBSTONE after the read event is tirggered.
+- Link to v1: https://lore.kernel.org/all/20250720000424.12572-1-thaumy.love@gmail.com/
+
+ kernel/events/core.c | 53 ++++++++++++++++++++++++--------------------
+ 1 file changed, 29 insertions(+), 24 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 8060c2857bb2..2e17883f2439 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1306,7 +1306,7 @@ static void put_ctx(struct perf_event_context *ctx)
+  * perf_event_context::mutex nests and those are:
+  *
+  *  - perf_event_exit_task_context()	[ child , 0 ]
+- *      perf_event_exit_event()
++ *      perf_event_detach_event()
+  *        put_event()			[ parent, 1 ]
+  *
+  *  - perf_event_init_context()		[ parent, 0 ]
+@@ -2318,7 +2318,7 @@ static void perf_group_detach(struct perf_event *event)
+
+ static void sync_child_event(struct perf_event *child_event);
+
+-static void perf_child_detach(struct perf_event *event)
++static void perf_child_detach(struct perf_event *event, bool sync_child)
+ {
+ 	struct perf_event *parent_event = event->parent;
+
+@@ -2336,7 +2336,9 @@ static void perf_child_detach(struct perf_event *event)
+ 	lockdep_assert_held(&parent_event->child_mutex);
+ 	 */
+
+-	sync_child_event(event);
++	if (sync_child)
++		sync_child_event(event);
++
+ 	list_del_init(&event->child_list);
+ }
+
+@@ -2507,7 +2509,7 @@ __perf_remove_from_context(struct perf_event *event,
+ 	if (flags & DETACH_GROUP)
+ 		perf_group_detach(event);
+ 	if (flags & DETACH_CHILD)
+-		perf_child_detach(event);
++		perf_child_detach(event, (flags & DETACH_EXIT) != 0);
+ 	list_del_event(event, ctx);
+
+ 	if (!pmu_ctx->nr_events) {
+@@ -2613,7 +2615,7 @@ static void __perf_event_disable(struct perf_event *event,
+  * remains valid.  This condition is satisfied when called through
+  * perf_event_for_each_child or perf_event_for_each because they
+  * hold the top-level event's child_mutex, so any descendant that
+- * goes to exit will block in perf_event_exit_event().
++ * goes to exit will block in perf_event_detach_event().
+  *
+  * When called from perf_pending_disable it's OK because event->ctx
+  * is the current context on this CPU and preemption is disabled,
+@@ -4579,9 +4581,9 @@ static void perf_event_enable_on_exec(struct perf_event_context *ctx)
+ }
+
+ static void perf_remove_from_owner(struct perf_event *event);
+-static void perf_event_exit_event(struct perf_event *event,
++static void perf_event_detach_event(struct perf_event *event,
+ 				  struct perf_event_context *ctx,
+-				  bool revoke);
++				  bool revoke, bool exit);
+
+ /*
+  * Removes all events from the current task that have been marked
+@@ -4608,7 +4610,7 @@ static void perf_event_remove_on_exec(struct perf_event_context *ctx)
+
+ 		modified = true;
+
+-		perf_event_exit_event(event, ctx, false);
++		perf_event_detach_event(event, ctx, false, true);
+ 	}
+
+ 	raw_spin_lock_irqsave(&ctx->lock, flags);
+@@ -6178,7 +6180,7 @@ EXPORT_SYMBOL_GPL(perf_event_pause);
+ /*
+  * Holding the top-level event's child_mutex means that any
+  * descendant process that has inherited this event will block
+- * in perf_event_exit_event() if it goes to exit, thus satisfying the
++ * in perf_event_detach_event() if it goes to exit, thus satisfying the
+  * task existence requirements of perf_event_enable/disable.
+  */
+ static void perf_event_for_each_child(struct perf_event *event,
+@@ -12413,7 +12415,7 @@ static void __pmu_detach_event(struct pmu *pmu, struct perf_event *event,
+ 	/*
+ 	 * De-schedule the event and mark it REVOKED.
+ 	 */
+-	perf_event_exit_event(event, ctx, true);
++	perf_event_detach_event(event, ctx, true, true);
+
+ 	/*
+ 	 * All _free_event() bits that rely on event->pmu:
+@@ -13995,13 +13997,16 @@ static void sync_child_event(struct perf_event *child_event)
+ }
+
+ static void
+-perf_event_exit_event(struct perf_event *event,
+-		      struct perf_event_context *ctx, bool revoke)
++perf_event_detach_event(struct perf_event *event,
++		      struct perf_event_context *ctx, bool revoke, bool exit)
+ {
+ 	struct perf_event *parent_event = event->parent;
+-	unsigned long detach_flags = DETACH_EXIT;
++	unsigned long detach_flags = 0;
+ 	unsigned int attach_state;
+
++	if (exit)
++		detach_flags |= DETACH_EXIT;
++
+ 	if (parent_event) {
+ 		/*
+ 		 * Do not destroy the 'original' grouping; because of the
+@@ -14077,6 +14082,17 @@ static void perf_event_exit_task_context(struct task_struct *task, bool exit)
+ 	 */
+ 	mutex_lock(&ctx->mutex);
+
++	/*
++	 * Report the task dead after unscheduling the events so that we
++	 * won't get any samples after PERF_RECORD_EXIT. We can however still
++	 * get a few PERF_RECORD_READ events.
++	 */
++	if (exit)
++		perf_event_task(task, ctx, 0);
++
++	list_for_each_entry_safe(child_event, next, &ctx->event_list, event_entry)
++		perf_event_detach_event(child_event, ctx, false, exit);
++
+ 	/*
+ 	 * In a single ctx::lock section, de-schedule the events and detach the
+ 	 * context from the task such that we cannot ever get it scheduled back
+@@ -14101,17 +14117,6 @@ static void perf_event_exit_task_context(struct task_struct *task, bool exit)
+ 	if (clone_ctx)
+ 		put_ctx(clone_ctx);
+
+-	/*
+-	 * Report the task dead after unscheduling the events so that we
+-	 * won't get any samples after PERF_RECORD_EXIT. We can however still
+-	 * get a few PERF_RECORD_READ events.
+-	 */
+-	if (exit)
+-		perf_event_task(task, ctx, 0);
+-
+-	list_for_each_entry_safe(child_event, next, &ctx->event_list, event_entry)
+-		perf_event_exit_event(child_event, ctx, false);
+-
+ 	mutex_unlock(&ctx->mutex);
+
+ 	if (!exit) {
+--
+2.50.1
+
