@@ -1,130 +1,188 @@
-Received: from smtpfb1-g21.free.fr (smtpfb1-g21.free.fr [212.27.42.9])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E60128489D;
-	Tue,  2 Sep 2025 11:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.9
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209B22DAFA1;
+	Tue,  2 Sep 2025 14:02:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756814178; cv=none; b=uNFm0z48aJGSpCXZTTkP0wqaNO0I6ReOe8RpZWIqMLbCBQTOvacxtoYqQaa4NtTOf+/kTzf/TarK931bX3eWahCI3H0HsMgFHcYCyIxZ1vOSUfO6pVR3SHiTaeR1SQAtyiKggED84lgTw++J/3+9oJnV7EixlfPUgqQLjdME+YA=
+	t=1756821729; cv=none; b=nollm/QliW0WWazLxzMieIXTTyJ0Boa+D3WjxHgmHpTYZeLXOWN3QYsUY1Ae3tChT9YnKyAcWgp93pTF6q7DE1Dp1TPACOA5yFl3dRb8CJN4B0LymI1dp8cqDVeMBS9JWZtLfRdAeN3u4/PynlnpHRp1WnUtWdp301SyXGHdgZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756814178; c=relaxed/simple;
-	bh=USlvZvEcvktPaDZdc5sQZBY1RYFuLDu7/foa35q4LKs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ug77SD9aPaEzrMzioE00xNQajOug/1XSR+Tm0uN9kO3RBcMOxHW5mVwWrfOTPoWxgQNygUiQttGjwyfbmxWv4fJXyH1JpXySUT0dcM46KyWcP1YdVAUEhuTCbAwtQ0YGAVUaYImB5EIVhIWSHF8W9+LtTk3dtJ8OoMuqiJ1RAQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sifflez.org; spf=pass smtp.mailfrom=sifflez.org; arc=none smtp.client-ip=212.27.42.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sifflez.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifflez.org
-Received: from smtp3-g21.free.fr (smtp3-g21.free.fr [212.27.42.3])
-	by smtpfb1-g21.free.fr (Postfix) with ESMTP id 39C6B834F2D;
-	Tue,  2 Sep 2025 13:49:16 +0200 (CEST)
-Received: from ix.ufr-stq-vauban.uvsq.fr (unknown [193.51.39.209])
-	(Authenticated sender: pablo.deoliveiracastro@free.fr)
-	by smtp3-g21.free.fr (Postfix) with ESMTPSA id 2A08513F8B9;
-	Tue,  2 Sep 2025 13:48:52 +0200 (CEST)
-From: Pablo de Oliveira Castro <pablo@sifflez.org>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Pablo de Oliveira Castro <pablo@sifflez.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf stat: fix JSON output with non-C locales
-Date: Tue,  2 Sep 2025 13:48:37 +0200
-Message-ID: <20250902114837.274786-1-pablo@sifflez.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1756821729; c=relaxed/simple;
+	bh=TnrmD0mhc59HwXLL9zQn0KMma7lkRp9WlnF7msqnTk0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=mxOnWf8pu6FFXnUy3jAm7JjGD3wjrcOCtHb/frjFKMx5roK3XwmqOG4plxk+10qkl+RI1xvT75LkP0r4jjqkQGsSPEa7mkQh2nRIog297VJGIZwaY6dGITldgXxKi1Z+M0IEEdkL1h2yNjyLuAvykUZgtDpaHq3RIIO5Xlsb1lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s/PqbcY0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s/PqbcY0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE567C4CEED;
+	Tue,  2 Sep 2025 14:02:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756821728;
+	bh=TnrmD0mhc59HwXLL9zQn0KMma7lkRp9WlnF7msqnTk0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=s/PqbcY0vhfmLt+MTvs45AIvcGukmlyuQN0QGHJP8151KheaWM6hvgZGOiloF0LpU
+	 vNc+GOxDZGmMSAUJUDKQ+RnROiLy1f6uC8LgkHXj+j2G15RBFfQd9AWFkReYd3B9jt
+	 sO1v9Sz+F7F5xPQ8Gxxe4EWbtStaxGSib49Z9b9Lv8As2AYgD2kgX4WbAzn2kfB6i3
+	 OZyBJgk4UCJMDTKhqPjrpYqZZjxGGgxpIV2RS5SAaZE2aWwKa5W9nvyrxj+XCAjUOr
+	 M1PjZy7Mq7zZREQgVyVc9Q2gH1dTOADP7UHzeq+LJrLsvsH0lbjL9trGt3nkAUx/Xp
+	 D0OzcWFWi9eEg==
+Date: Tue, 2 Sep 2025 23:02:04 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jinchao Wang <wangjinchao600@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers
+ <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, "Masami Hiramatsu (Google)"
+ <mhiramat@kernel.org>
+Subject: Re: [RFC PATCH 0/6] tracing: wprobe: Add wprobe for watchpoint
+Message-Id: <20250902230204.f3e81b03e7f6805caba1b717@kernel.org>
+In-Reply-To: <175673787502.478080.3342912952394010967.stgit@devnote2>
+References: <175673787502.478080.3342912952394010967.stgit@devnote2>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-When running `perf stat -j` under a locale that uses ',' as radix point
-separator (e.g. LC_NUMERIC=fr_FR.UTF-8), the JSON output becomes
-invalid. This is reproducible with perf test "perf stat JSON output
-linter", which fails which such locales.
+(Adding Jinchao)
 
-Example failure:
+On Mon,  1 Sep 2025 23:44:35 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-  $ LC_NUMERIC=fr_FR.UTF-8 perf test "JSON output" -v
+> Hi,
+> 
+> Here is an RFC series for adding new wprobe (watch probe) which
+> provides memory access tracing event. Moreover, this can be used via
+> event trigger. Thus it can trace memory access on a dynamically
+> allocated objects too.
 
-  Checking json output: no args Test failed for input:
+BTW, this series is on the top of probes/for-next branch in the
+linux-trace tree.
 
-  {"counter-value" : "1,202545", "unit" : "msec", "event" :
-   "task-clock", "event-runtime" : 1202545, "pcnt-running" : 100,00,
-   "metric-value" : "0,473483", "metric-unit" : "CPUs utilized"}
+Thanks,
 
-  json.decoder.JSONDecodeError: Expecting property name enclosed in
-  double quotes: line 2 column 121 (char 122)
+> 
+> In this version, I reuse Jinchao's arch_reinstall_hw_breakpoint()
+> patch[1].
+> 
+> [1] https://lore.kernel.org/all/20250828073311.1116593-6-wangjinchao600@gmail.com/
+> 
+> The basic usage of this wprobe is similar to other probes;
+> 
+>   w:[GRP/][EVENT] [r|w|rw]@<ADDRESS|SYMBOL[+OFFS]> [FETCHARGS]
+> 
+> This defines a new wprobe event. For example, to trace jiffies update,
+> you can do;
+> 
+>  echo 'w:my_jiffies w@jiffies:8 value=+0($addr)' >> dynamic_events
+>  echo 1 > events/wprobes/my_jiffies/enable
+> 
+> Moreover, this can be combined with event trigger to trace the memory
+> accecss on slab objects. The trigger syntax is;
+> 
+>   set_wprobe:WPROBE_EVENT:FIELD[+ADJUST]
+>   clear_wprobe:WPROBE_EVENT
+> 
+> For example, trace the first 8 byte of the dentry data structure passed
+> to do_truncate() until it is deleted by __dentry_kill().
+> (Note: all tracefs setup uses '>>' so that it does not kick do_truncate())
+> 
+>   # echo 'w:watch rw@0:8 address=$addr value=+0($addr)' > dynamic_events
+> 
+>   # echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
+>   # echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
+> 
+>   # echo 'f:dentry_kill __dentry_kill dentry=$arg1' >> dynamic_events
+>   # echo 'clear_wprobe:watch' >> events/fprobes/dentry_kill/trigger
+> 
+>   # echo 1 >> events/fprobes/truncate/enable
+>   # echo 1 >> events/fprobes/dentry_kill/enable
+> 
+>   # echo aaa > /tmp/hoge
+>   # echo bbb > /tmp/hoge
+>   # echo ccc > /tmp/hoge
+>   # rm /tmp/hoge
+> 
+> Then, the trace data will show;
+> 
+> # tracer: nop
+> #
+> # entries-in-buffer/entries-written: 16/16   #P:8
+> #
+> #                                _-----=> irqs-off/BH-disabled
+> #                               / _----=> need-resched
+> #                              | / _---=> hardirq/softirq
+> #                              || / _--=> preempt-depth
+> #                              ||| / _-=> migrate-disable
+> #                              |||| /     delay
+> #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+> #    [    7.026136] sh (113) used greatest stack depth: 12912 bytes left
+>           | |         |   |||||     |         |
+>               sh-113     [002] .....     7.024402: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880069194b8
+>               sh-113     [002] ..Zff     7.024822: watch: (lookup_fast+0xaa/0x150) address=0xffff8880069194b8 value=0x200008
+>               sh-113     [002] ..Zff     7.024830: watch: (step_into+0x82/0x360) address=0xffff8880069194b8 value=0x200008
+>               sh-113     [002] ..Zff     7.024834: watch: (step_into+0x9f/0x360) address=0xffff8880069194b8 value=0x200008
+>               sh-113     [002] ..Zff     7.024839: watch: (path_openat+0xb3a/0xe70) address=0xffff8880069194b8 value=0x200008
+>               sh-113     [002] ..Zff     7.024843: watch: (path_openat+0xb9a/0xe70) address=0xffff8880069194b8 value=0x200008
+>               sh-113     [002] .....     7.024847: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880069194b8
+>               sh-113     [002] ...1.     7.025364: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff888006919380
+>               sh-113     [002] ...1.     7.025511: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880069195f0
+>               rm-118     [003] ...1.     7.027543: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880069194b8
+>               sh-113     [002] ...2.     7.027825: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880044429c0
+>               sh-113     [002] ...2.     7.027833: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff888004442270
+> 
+> 
+> Thank you,
+> 
+> ---
+> 
+> Jinchao Wang (1):
+>       x86/HWBP: introduce arch_reinstall_hw_breakpoint() for atomic context
+> 
+> Masami Hiramatsu (Google) (5):
+>       tracing: wprobe: Add watchpoint probe event based on hardware breakpoint
+>       HWBP: Add modify_wide_hw_breakpoint_local() API
+>       tracing: wprobe: Add wprobe event trigger
+>       selftests: tracing: Add a basic testcase for wprobe
+>       selftests: tracing: Add syntax testcase for wprobe
+> 
+> 
+>  Documentation/trace/index.rst                      |    1 
+>  Documentation/trace/wprobetrace.rst                |  129 ++
+>  arch/Kconfig                                       |   10 
+>  arch/x86/Kconfig                                   |    1 
+>  arch/x86/include/asm/hw_breakpoint.h               |    3 
+>  arch/x86/kernel/hw_breakpoint.c                    |   61 +
+>  include/linux/hw_breakpoint.h                      |    6 
+>  include/linux/trace_events.h                       |    3 
+>  kernel/events/hw_breakpoint.c                      |   36 +
+>  kernel/trace/Kconfig                               |   24 
+>  kernel/trace/Makefile                              |    1 
+>  kernel/trace/trace.c                               |    9 
+>  kernel/trace/trace.h                               |    5 
+>  kernel/trace/trace_probe.c                         |   20 
+>  kernel/trace/trace_probe.h                         |    8 
+>  kernel/trace/trace_wprobe.c                        | 1111 ++++++++++++++++++++
+>  .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   68 +
+>  .../test.d/dynevent/wprobes_syntax_errors.tc       |   20 
+>  18 files changed, 1513 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/trace/wprobetrace.rst
+>  create mode 100644 kernel/trace/trace_wprobe.c
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
+> 
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Fix this by always using the POSIX numeric locale in json_out(),
-ensuring that '.' is consistently used as the radix point in all JSON
-numbers.
 
-Signed-off-by: Pablo de Oliveira Castro <pablo@sifflez.org>
----
- tools/perf/util/stat-display.c | 35 +++++++++++++++++++++++++++++++++-
- 1 file changed, 34 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index a67b991f4e81..ff8225e7435c 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -1,6 +1,8 @@
- #include <stdlib.h>
- #include <stdio.h>
-+#include <stdarg.h>
- #include <inttypes.h>
-+#include <locale.h>
- #include <linux/string.h>
- #include <linux/time64.h>
- #include <math.h>
-@@ -149,7 +151,38 @@ static const char *json_sep(struct outstate *os)
- 	return sep;
- }
- 
--#define json_out(os, format, ...) fprintf((os)->fh, "%s" format, json_sep(os), ##__VA_ARGS__)
-+/* Print formatted output using the POSIX numeric locale */
-+static int clocale_fprintf(FILE *os, const char *fmt, ...)
-+{
-+	int ret;
-+	va_list ap;
-+
-+	/* Create and temporarily switch to a POSIX numeric locale */
-+	locale_t posix_numeric = newlocale(LC_NUMERIC_MASK, "C", (locale_t)0);
-+
-+	if (posix_numeric) {
-+		locale_t prev = uselocale(posix_numeric);
-+
-+		va_start(ap, fmt);
-+		ret = vfprintf(os, fmt, ap);
-+		va_end(ap);
-+
-+		/* restore previous locale */
-+		uselocale(prev);
-+		freelocale(posix_numeric);
-+		return ret;
-+	}
-+
-+	/* If newlocale() failed, just print with the current locale */
-+	va_start(ap, fmt);
-+	ret = vfprintf(os, fmt, ap);
-+	va_end(ap);
-+	return ret;
-+}
-+
-+/* use clocale_fprintf so the radix point is always . as required by JSON */
-+#define json_out(os, format, ...) \
-+	clocale_fprintf((os)->fh, "%s" format, json_sep(os), ##__VA_ARGS__)
- 
- static void print_running_json(struct outstate *os, u64 run, u64 ena)
- {
 -- 
-2.43.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
