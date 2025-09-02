@@ -1,386 +1,162 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F3C324B01
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Sep 2025 16:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506D8341AA0;
+	Tue,  2 Sep 2025 16:55:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756831652; cv=none; b=iMcykpRQcOx9Bi+JUkCvH+eN0YQvK8MQzKy4D9zwcvMWro85vF2vnHo8FN5XABVECguQ0W6sHcz4gNhq0GEihaj8dzDr4qrGqXctk/BlFK3DzqaisRDACJfxRe8JhKq1QDUMXj1g76jGLDIXpiT0ikWd+9iv4HuUSZghhi0Iqjg=
+	t=1756832128; cv=none; b=BNnUzMaqk1ZvMVztD5Hq+MGPW02+o+s6y59rnM+kYhf4fsgwT671Khv2YIX9AmEJ8WMw1TpOCcRw/7RS05OvbxxHg90jd0pumgMnv5AIu0a04AEE4Tv9DZ5YTgkYIpQZoqsiwkKb7bQzB9DaBao7KQe7ycae6hq6EIXXKOGOg/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756831652; c=relaxed/simple;
-	bh=vJdN4aFngzTskRPWi73VuFR0pt7F21ZL6WABtIpqI8o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TUEhdIL1R5g45mBQCvvzdR/+jy/CCT5NnOiQn4grZDK8hUbj5w6FcUsFXedvadnvRHmxfytMtbMCua7C1ILw9AAfWhNL7fhOnlP3VzVFZ0gnj5HupRNiz642AOMnuHBEUf+LoTt2QW4uHsUdv+06uBfMcD0QvXsBrX4eR5p3J5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kPosayci; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1756832128; c=relaxed/simple;
+	bh=hOXIjXDcHemoDuQVpQfH4FLHi3Dx3YgyHLSPWbJksbw=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=C3Wdzzbk3AdCX70IWEsO6oJrhWBPwAQCl9NTgMXL84IWNQTNVoTW3WcVgnAiEUDP5/iwKQIkWGeYJUhzg5erLkwcxfN8zgFVp57+m36Pv/3A5M0OJJiUFXPmMCwb4padQiAgIxq039Lcs8L18aWBqW0hQfStqkt9wxTok1jWT2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=K8anpn03; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kPosayci"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-24936b6f29bso2935ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Sep 2025 09:47:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756831650; x=1757436450; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m7wbahk73cKnPK3dR5KuGsOmOcYX7wfKMEr43Kl+X2c=;
-        b=kPosaycidl0hIQWgN1U4VQM5n7JP7YHRRJTnEIothb/QO2UVTnKj4CqEyY2ge52VLD
-         yBlAnJpZodMnhNeD4QB2VDRFq1V7bBxa94LdeRP3fo98RjZnv+qz4sjgMIYm5SPFAX5O
-         pYTzy8Y+8DBtVLXbuKGgBjp9aDbkRhqRI2PY9MhSaRivznmqtkPMKhnUgwMsWRqMByXe
-         gLTUGp7usNusEKjLaXENQFAsdSd1gFMacfmd/qVLGE7n3HUic1PRuq0L++dIwhH3v9dV
-         JS7nr8Vpab/vg8B+TnZe9IyjAJbJpstQemCfl5jLlHx/o4npJgbgrxioOSxMUXgyA1pO
-         JZYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756831650; x=1757436450;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=m7wbahk73cKnPK3dR5KuGsOmOcYX7wfKMEr43Kl+X2c=;
-        b=gcpK8e+zB78deAs7904x2sVJHnowotUFkdnB0syU3fbac0h4lF/tv6NgcuEAm6G28n
-         V4xnAmEqbJykFvqreJdToTKOJrbcKyQUYE9MNz+p6uh/OVbc7psQ8fENBWudYRb7vVok
-         eLH5DZJ3ifbJdVGQjgBIBCF2TKLE98xD0yUWMTckwgCc0VPInj0C+wjg0PgBtwRnJzIf
-         EleyPCIF2mCuEUa+qDEzZXidmV7MlF3KBZS6lUGbgaFM5c7MtRzRnkIZjoXmFQP8jFwC
-         oPs8U3ej3CMGMjOhkS99TjROdOpzpgwP9opJU2WJ1Cr6MyQseNYRL+ai/OyGHth4QFKE
-         cT7A==
-X-Forwarded-Encrypted: i=1; AJvYcCXmuZhWqdIxt/mIepKcGyzxCgOUtO1LohWrEGS11NHJQ/xT51MozCkxWBxY26xND3WRe/Uak04PKaxsLd8nUwcc@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUwf3wZnVllzEbuw+kIo9XZAWGFiReokzzT15joxpTq74cPTl3
-	WFWhtw8G1u6PzZZeHErAK1TN1h05JbcTcmih7uTHJteXTRvYfaAnQqnm0pHXoycyIn4TmyU6fUJ
-	WAJoNQd1hr1alpYMMgm0naHc2OWfP3ADtGw6wMoG7
-X-Gm-Gg: ASbGncuBwkP92E16JdOt+eplAcTQdevi8HlU+G0i0Iu5iJJ5qcW7QduRv3jj8BOZxJY
-	s+7iha6feK52AVxwiORrHU6XCPMPIumvtMxMyESm9yJoa4IXHxG116m968T57PjZMCMlO3pcOyn
-	l3SzVTIsj0Dar6seVi2cEU0HwGCWD9Qbes99ECudYSugG2KXSH1nFv+Z8bUoozosiImNqVtTr4b
-	D0MGbv56W7GF/e3Kc6m61xYTdAt0VSEGVo/8Sq046eNacA8IGUg
-X-Google-Smtp-Source: AGHT+IFlWytMNRpJ+W5etnxGnSMVwTu3Roq4RhqpxRJvK82mRn8zbyCoD8S1hd4xaod7fMolCZT5mFJ/kAZFSnXeBk8=
-X-Received: by 2002:a17:902:f689:b0:248:a039:b6e3 with SMTP id
- d9443c01a7336-2493e9af74bmr10462235ad.10.1756831649858; Tue, 02 Sep 2025
- 09:47:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="K8anpn03"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1756832096; x=1757436896; i=markus.elfring@web.de;
+	bh=BqH/yVnzvINWl7qLhs3lEAi4WytCsdI+N7zfaNpCiNw=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=K8anpn03MuWYsZ0i9OKUQ9XDEwnioTRjbW9xBL4rXszbFFvzY4haM8958aELYkJU
+	 7vuKpOzg0jGX3yjg5lDtY6vv9AEhn9f89VM0FghzkF487pMnSFVLcrQ7M17iawhLU
+	 7+s42vjGBeXTYhZJOILWxiiZ/LYxJ8WiQMFUB8wuEWcLR96D2dIP/eW/FCFPogXT/
+	 fEKzvzPK/oKE9oeMGHEtJkddg+JFj7KyHNcNcLgHWR2MCwyf34eM2fiT1B9vVxzNm
+	 VKK9J1H9OQ3HM3F5n3IvZ/eNcf6TKd/kWDicmXQjgpCIvIVb4cvxkDTZ7XqlBI21U
+	 u8sfrRQo2cwvYygvDQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.69.184]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1My6lX-1uY0A307aB-00vMan; Tue, 02
+ Sep 2025 18:54:56 +0200
+Message-ID: <eab90856-7066-4de9-9080-f2479225ad00@web.de>
+Date: Tue, 2 Sep 2025 18:54:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250603203701.520541-1-blakejones@google.com>
- <174915723301.3244853.343931856692302765.git-patchwork-notify@kernel.org>
- <CAP-5=fWJQcmUOP7MuCA2ihKnDAHUCOBLkQFEkQES-1ZZTrgf8Q@mail.gmail.com>
- <466d45ae-ce97-4256-9444-9f25f3328c51@linux.dev> <aLVR0-CUGgwHvFpF@google.com>
- <CAP-5=fX8pw91DQCW0sva_U4A2UGXynNApOHcb3SVT8eRZ=DtyA@mail.gmail.com>
-In-Reply-To: <CAP-5=fX8pw91DQCW0sva_U4A2UGXynNApOHcb3SVT8eRZ=DtyA@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 2 Sep 2025 09:47:18 -0700
-X-Gm-Features: Ac12FXznmz5gusdkym-cgOyI9DnEm1bOqgsHdHcQ-zfBZqouH499cLFWhANzSIE
-Message-ID: <CAP-5=fWPSHVGBcqBC0x0VXOzYPRfOLiZ_dZsNxfEMhMBRs6=ZA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] libbpf: add support for printing BTF character
- arrays as strings
-To: Namhyung Kim <namhyung@kernel.org>, song@kernel.org, 
-	Yonghong Song <yonghong.song@linux.dev>, jolsa@kernel.org, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Blake Jones <blakejones@google.com>, ast@kernel.org, daniel@iogearbox.net, 
-	andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, 
-	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
-	haoluo@google.com, mykolal@fb.com, shuah@kernel.org, ihor.solodrai@linux.dev, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, 
-	linux-perf-users <linux-perf-users@vger.kernel.org>, Howard Chu <howardchu95@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: Liao Yuanhong <liaoyuanhong@vivo.com>, linux-perf-users@vger.kernel.org,
+ x86@kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+ Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
+ Mark Rutland <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
+References: <20250901131714.646988-1-liaoyuanhong@vivo.com>
+Subject: Re: [PATCH] perf/x86/intel: Use guard() instead of mutex_lock() to
+ simplify code
+Content-Language: en-GB, de-DE
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250901131714.646988-1-liaoyuanhong@vivo.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:8YI8hO7Q/OKEl3TxqcDjT5ieQ12+4nnLdngSGziaDt9yDA9twBz
+ IvWG3LvtJzmiH9mgE49AMzmG2ePykFzVTCCZQ8PttIyqMYkdYoOOxLl+PmN74SP86OVObjt
+ 3Toigwfj+T1GMkV1jEfLBhhPhiGeKGq/ULeWBJn7AEhDdtRaoY7yorO8jrHXRjAtWhjo9Al
+ Rr4wzhVPnaHEdsMq6WWTQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:/qmT5/1JdzQ=;qQUzZ7U4N/nOc11zFoOpiVPLIfZ
+ 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
 
-On Mon, Sep 1, 2025 at 10:04=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Mon, Sep 1, 2025 at 12:57=E2=80=AFAM Namhyung Kim <namhyung@kernel.org=
-> wrote:
-> >
-> > Hello,
-> >
-> > On Sun, Aug 31, 2025 at 09:17:34PM -0700, Yonghong Song wrote:
-> > >
-> > >
-> > > On 8/29/25 10:19 PM, Ian Rogers wrote:
-> > > > On Thu, Jun 5, 2025 at 2:00=E2=80=AFPM <patchwork-bot+netdevbpf@ker=
-nel.org> wrote:
-> > > > > Hello:
-> > > > >
-> > > > > This series was applied to bpf/bpf-next.git (master)
-> > > > > by Andrii Nakryiko <andrii@kernel.org>:
-> > > > >
-> > > > > On Tue,  3 Jun 2025 13:37:00 -0700 you wrote:
-> > > > > > The BTF dumper code currently displays arrays of characters as =
-just that -
-> > > > > > arrays, with each character formatted individually. Sometimes t=
-his is what
-> > > > > > makes sense, but it's nice to be able to treat that array as a =
-string.
-> > > > > >
-> > > > > > This change adds a special case to the btf_dump functionality t=
-o allow
-> > > > > > 0-terminated arrays of single-byte integer values to be printed=
- as
-> > > > > > character strings. Characters for which isprint() returns false=
- are
-> > > > > > printed as hex-escaped values. This is enabled when the new ".e=
-mit_strings"
-> > > > > > is set to 1 in the btf_dump_type_data_opts structure.
-> > > > > >
-> > > > > > [...]
-> > > > > Here is the summary with links:
-> > > > >    - [v3,1/2] libbpf: add support for printing BTF character arra=
-ys as strings
-> > > > >      https://git.kernel.org/bpf/bpf-next/c/87c9c79a02b4
-> > > > >    - [v3,2/2] Tests for the ".emit_strings" functionality in the =
-BTF dumper.
-> > > > >      https://git.kernel.org/bpf/bpf-next/c/a570f386f3d1
-> > > > >
-> > > > > You are awesome, thank you!
-> > > > I believe this patch is responsible for segvs occurring in v6.17 in
-> > > > various perf tests when the perf tests run in parallel. There's lot=
-s
-> > >
-> > > Could you share the command line to reproduce this failure?
-> > > This will help debugging. Thanks!
-> >
-> > My reproducer is below:
-> >
-> > terminal 1: run perf trace in a loop.
-> >
-> >   $ while true; do sudo ./perf trace true; done
-> >
-> > terminal 2: run perf record in a loop until hit the segfault.
-> >
-> >   $ while true; do sudo ./perf record true || break; done
-> >   ...
-> >   perf: Segmentation fault
-> >       #0 0x560b2db790e4 in dump_stack debug.c:366
-> >       #1 0x560b2db7915a in sighandler_dump_stack debug.c:378
-> >       #2 0x560b2d973b1b in sigsegv_handler builtin-record.c:722
-> >       #3 0x7f975f249df0 in __restore_rt libc_sigaction.c:0
-> >       #4 0x560b2dca1ee6 in snprintf_hex bpf-event.c:39
-> >       #5 0x560b2dca2306 in synthesize_bpf_prog_name bpf-event.c:144
-> >       #6 0x560b2dca2d92 in bpf_metadata_create bpf-event.c:401
-> >       #7 0x560b2dca3838 in perf_event__synthesize_one_bpf_prog bpf-even=
-t.c:673
-> >       #8 0x560b2dca3dd5 in perf_event__synthesize_bpf_events bpf-event.=
-c:798
-> >       #9 0x560b2d977ef5 in record__synthesize builtin-record.c:2131
-> >       #10 0x560b2d9797c1 in __cmd_record builtin-record.c:2581
-> >       #11 0x560b2d97db30 in cmd_record builtin-record.c:4376
-> >       #12 0x560b2da0672e in run_builtin perf.c:349
-> >       #13 0x560b2da069c6 in handle_internal_command perf.c:401
-> >       #14 0x560b2da06b1f in run_argv perf.c:448
-> >       #15 0x560b2da06e68 in main perf.c:555
-> >       #16 0x7f975f233ca8 in __libc_start_call_main libc_start_call_main=
-.h:74
-> >       #17 0x7f975f233d65 in __libc_start_main_alias_2 libc-start.c:128
-> >       #18 0x560b2d959b11 in _start perf[4cb11]
-> >
-> >
-> > I manually ran it with gdb to get some more hints.
-> >
-> >   Thread 1 "perf" received signal SIGSEGV, Segmentation fault.
-> >   0x00005555558e8ee6 in snprintf_hex (buf=3D0x5555562c1d79 "", size=3D5=
-03, data=3D0x40 <error: Cannot access memory at address 0x40>, len=3D8)
-> >       at util/bpf-event.c:39
-> >   39                    ret +=3D snprintf(buf + ret, size - ret, "%02x"=
-, data[i]);
-> >
-> > The data is bpf_prog_info->prog_tags and it's called from
-> > synthesize_bpf_prog_name().
-> >
-> >   (gdb) bt
-> >   #0  0x00005555558e8ee6 in snprintf_hex (buf=3D0x5555562c1d79 "", size=
-=3D503, data=3D0x40 <error: Cannot access memory at address 0x40>,
-> >       len=3D8) at util/bpf-event.c:39
-> >   #1  0x00005555558e9306 in synthesize_bpf_prog_name (buf=3D0x5555562c1=
-d70 "bpf_prog_", size=3D512, info=3D0x55555665e400, btf=3D0x5555562c5630,
-> >       sub_id=3D0) at util/bpf-event.c:144
-> >   #2  0x00005555558e9db5 in bpf_metadata_create (info=3D0x55555665e400)=
- at util/bpf-event.c:403
-> >   #3  0x00005555558ea85b in perf_event__synthesize_one_bpf_prog (sessio=
-n=3D0x555556178510,
-> >       process=3D0x5555555ba7ab <process_synthesized_event>, machine=3D0=
-x555556178728, fd=3D25, event=3D0x5555561b73a0,
-> >       opts=3D0x5555560d33a8 <record+328>) at util/bpf-event.c:674
-> >   #4  0x00005555558eadf8 in perf_event__synthesize_bpf_events (session=
-=3D0x555556178510,
-> >       process=3D0x5555555ba7ab <process_synthesized_event>, machine=3D0=
-x555556178728, opts=3D0x5555560d33a8 <record+328>)
-> >       at util/bpf-event.c:799
-> >   #5  0x00005555555beef5 in record__synthesize (rec=3D0x5555560d3260 <r=
-ecord>, tail=3Dfalse) at builtin-record.c:2131
-> >   #6  0x00005555555c07c1 in __cmd_record (rec=3D0x5555560d3260 <record>=
-, argc=3D1, argv=3D0x7fffffffe2e0) at builtin-record.c:2581
-> >   #7  0x00005555555c4b30 in cmd_record (argc=3D1, argv=3D0x7fffffffe2e0=
-) at builtin-record.c:4376
-> >   #8  0x000055555564d72e in run_builtin (p=3D0x5555560d63c0 <commands+2=
-88>, argc=3D6, argv=3D0x7fffffffe2e0) at perf.c:349
-> >   #9  0x000055555564d9c6 in handle_internal_command (argc=3D6, argv=3D0=
-x7fffffffe2e0) at perf.c:401
-> >   #10 0x000055555564db1f in run_argv (argcp=3D0x7fffffffe0dc, argv=3D0x=
-7fffffffe0d0) at perf.c:445
-> >   #11 0x000055555564de68 in main (argc=3D6, argv=3D0x7fffffffe2e0) at p=
-erf.c:553
-> >
-> > I seems bpf_prog_info is broken for some reason.
-> >
-> >   (gdb) up
-> >   #1  0x00005555558e9306 in synthesize_bpf_prog_name (buf=3D0x555556330=
-5b0 "bpf_prog_", size=3D512, info=3D0x55555664e1d0, btf=3D0x55555637ad40,
-> >       sub_id=3D0) at util/bpf-event.c:144
-> >   144           name_len +=3D snprintf_hex(buf + name_len, size - name_=
-len,
-> >
-> >   (gdb) p *info
-> >   $1 =3D {type =3D 68, id =3D 80, tag =3D "\\\000\000\000\214\000\000",=
- jited_prog_len =3D 152, xlated_prog_len =3D 164,
-> >     jited_prog_insns =3D 824633721012, xlated_prog_insns =3D 1185410973=
-912, load_time =3D 1305670058276, created_by_uid =3D 352,
-> >     nr_map_ids =3D 364, map_ids =3D 1975684956608, name =3D "\330\001\0=
-00\000\350\001\000\000$\002\000\0004\002\000", ifindex =3D 576,
-> >     gpl_compatible =3D 0, netns_dev =3D 2697239462496, netns_ino =3D 28=
-34678416000, nr_jited_ksyms =3D 756, nr_jited_func_lens =3D 768,
-> >     jited_ksyms =3D 3418793968396, jited_func_lens =3D 3573412791092, b=
-tf_id =3D 844, func_info_rec_size =3D 880, func_info =3D 3934190044028,
-> >     nr_func_info =3D 928, nr_line_info =3D 952, line_info =3D 429496729=
-6988, jited_line_info =3D 4449586119680, nr_jited_line_info =3D 1060,
-> >     line_info_rec_size =3D 1076, jited_line_info_rec_size =3D 1092, nr_=
-prog_tags =3D 1108, prog_tags =3D 4861902980192,
-> >     run_time_ns =3D 5085241279632, run_cnt =3D 5257039971512, recursion=
-_misses =3D 5360119186644, verified_insns =3D 1264,
-> >     attach_btf_obj_id =3D 1288, attach_btf_id =3D 1312}
->
-> Thanks Namhyung!
->
-> So it looks like my "fix" was breaking the tools/perf build feature
-> test for btf_dump_type_data_opts opts.emit_strings and that was
-> avoiding this code.
->
-> Having terminal 1 run perf trace is going to be loading/unloading a
-> BPF program for system call augmentation. This must be creating the
-> race condition that is causing perf record to segv when it is
-> inspecting the bpf_prog_info.
->
-> The cast in:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
-ee/tools/perf/util/bpf-event.c#n135
-> ```
-> static int synthesize_bpf_prog_name(char *buf, int size,
->     struct bpf_prog_info *info,
->     struct btf *btf,
->     u32 sub_id)
-> {
-> u8 (*prog_tags)[BPF_TAG_SIZE] =3D (void *)(uintptr_t)(info->prog_tags);
-> ```
-> looks concerning given the bad address comes from:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
-ee/tools/perf/util/bpf-event.c#n144
-> ```
-> name_len +=3D snprintf_hex(buf + name_len, size - name_len,
-> prog_tags[sub_id], BPF_TAG_SIZE);
-> ```
-> Checking git blame this code has existed since 2019, commit
-> 7b612e291a5a ("perf tools: Synthesize PERF_RECORD_* for loaded BPF
-> programs"):
-> http://lkml.kernel.org/r/20190117161521.1341602-8-songliubraving@fb.com
-> it was refactored in 2019 to a single memory allocation commit
-> ("a742258af131 perf bpf: Synthesize bpf events with
-> bpf_program__get_prog_info_linear()")
-> http://lkml.kernel.org/r/20190312053051.2690567-5-songliubraving@fb.com
->
-> There seems like a potential race here:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
-ee/tools/perf/util/bpf-utils.c#n123
-> ```
-> /* step 1: get array dimensions */
-> err =3D bpf_obj_get_info_by_fd(fd, &info, &info_len);
-> ```
-> and later:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
-ee/tools/perf/util/bpf-utils.c#n185
-> ```
-> /* step 5: call syscall again to get required arrays */
-> err =3D bpf_obj_get_info_by_fd(fd, &info_linear->info, &info_len);
-> ```
-> There's a verification step that looks to cover issues with the race.
-> I thought making those warnings fatal may help, but no:
-> ```
-> --- a/tools/perf/util/bpf-utils.c
-> +++ b/tools/perf/util/bpf-utils.c
-> @@ -202,14 +202,20 @@ get_bpf_prog_info_linear(int fd, __u64 arrays)
->                 v1 =3D bpf_prog_info_read_offset_u32(&info, desc->count_o=
-ffset);
->                 v2 =3D bpf_prog_info_read_offset_u32(&info_linear->info,
->                                                    desc->count_offset);
-> -               if (v1 !=3D v2)
-> +               if (v1 !=3D v2) {
->                         pr_warning("%s: mismatch in element count\n", __f=
-unc__);
-> +                       free(info_linear);
-> +                       return ERR_PTR(-EFAULT);
-> +               }
->
->                 v1 =3D bpf_prog_info_read_offset_u32(&info, desc->size_of=
-fset);
->                 v2 =3D bpf_prog_info_read_offset_u32(&info_linear->info,
->                                                    desc->size_offset);
-> -               if (v1 !=3D v2)
-> +               if (v1 !=3D v2) {
->                         pr_warning("%s: mismatch in rec size\n", __func__=
-);
-> +                       free(info_linear);
-> +                       return ERR_PTR(-EFAULT);
-> +               }
->         }
->
->         /* step 7: update info_len and data_len */
-> ```
->
-> Fwiw, the address of "data=3D0x40" in the stack trace makes it looks
-> like an offset has been applied to NULL. 0x40 is 64 which corresponds
-> with "name" info a bpf_prog_info by way of pahole:
-> ```
-> struct bpf_prog_info {
->         __u32                      type;                 /*     0     4 *=
-/
->         /* --- cacheline 1 boundary (64 bytes) --- */
-> ...
->         char                       name[16];             /*    64    16 *=
-/
-> ```
->
-> I feel we're relatively close to discovering a proper fix for the
-> issue, if others could lend a hand as I'm not overly familiar with the
-> BPF code. I'm wondering if the second bpf_obj_get_info_by_fd could be
-> filling in offsets relative to NULL rather than returning an error,
-> but this would be (I believe) a kernel issue :-(
+> Using guard(mutex) instead of mutex_lock/mutex_unlock pair. Simplifies t=
+he
+=E2=80=A6
+  Use?                          Parentheses behind identifiers?
 
-It's a use-after-free perf bug:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/bpf-event.c?h=3Dperf-tools-next#n660
-```
-/* save bpf_prog_info to env */
-info_node =3D malloc(sizeof(struct bpf_prog_info_node));
-if (!info_node) {
-err =3D -1;
-goto out;
-}
 
-info_node->info_linear =3D info_linear;
-info_node->metadata =3D NULL;
-if (!perf_env__insert_bpf_prog_info(env, info_node)) {
-free(info_linear);
-free(info_node);
-}
-info_linear =3D NULL;
-...
-/* Synthesize PERF_RECORD_BPF_METADATA */
-metadata =3D bpf_metadata_create(info);
-```
-The insert can fail due to a duplicated BPF program (the sideband data
-thread is racing with the synthesizing thread in perf) leading to
-info_linear to be freed which the info points into. The later use of
-the freed memory leads to the crash.
+=E2=80=A6
+> +++ b/arch/x86/events/intel/core.c
+> @@ -6107,18 +6107,16 @@ static ssize_t freeze_on_smi_store(struct device=
+ *cdev,
+=E2=80=A6
+>  	cpus_read_lock();
+>  	on_each_cpu(flip_smm_bit, &val, 1);
+>  	cpus_read_unlock();
+> -done:
+> -	mutex_unlock(&freeze_on_smi_mutex);
+=E2=80=A6
 
-I hope that's all it is and I'll work on a fix.
+How do you think about to apply another lock guard by a subsequent update =
+step?
+https://elixir.bootlin.com/linux/v6.17-rc4/source/include/linux/cpuhplock.=
+h#L47
 
-Thanks,
-Ian
+Regards,
+Markus
