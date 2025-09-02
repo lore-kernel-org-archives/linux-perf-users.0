@@ -1,63 +1,66 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-oo1-f73.google.com (mail-oo1-f73.google.com [209.85.161.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E0F341651
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Sep 2025 18:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0687034DCCF
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Sep 2025 18:17:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756837075; cv=none; b=YQa8P5Rr0h+mEpwmPlRP0N9Dn1wvTyGLV+4Z3nM3NdExpWiL/SJnH5BW8n6cu7ZiyLb3mqFtSI8MVJw663sZM5DWfEJznoxBlUtPQKHByJX2KqIHVjxMrWz8wW2yKi1/Dp9WWEkSjGRdx+J17jKiEtVv1ky+xDylKhZ89GfQNno=
+	t=1756837079; cv=none; b=UZ7khrjF2EseOzfTSp63p9MPTQlHJHcCb8CRFu6/bwyqPR4KHDtF3nIDXTOcVMb143P6PmG7KlPIZEpeNi1OGclKZOJZD5xAn97k1QVjjs15vHwli55+vdpkDvMLiVZ7cZtNihzfF6biQzKW/pnaEfCdhQLsZHQdjpFouW0vbxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756837075; c=relaxed/simple;
-	bh=1pc5MJq/DOmEEO9qJbY5qbt8bUEssrESLh7t0NAJFuE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=OTGjYCEYaYP1aq2FfeQ5pMahPFPeeEMtN1tICIuBVWG9TePLv8VcH4qeesoxkkP94BTo1yW0SxiZmBNGBxz/23g59FixrHZwUXRBHDKgKWwcWZe4YNvQexZQ+Tt0pWlJ/uRoD7QaOEkwEYZ5J621k5C/io2QubFet9lCvpdPrHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p8P1hzXN; arc=none smtp.client-ip=209.85.215.202
+	s=arc-20240116; t=1756837079; c=relaxed/simple;
+	bh=SW0b26VMfjHwsZ9uitQCtKd1Xk3hYByNXZLW5ZTvqTE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=R8m7uhshX+gmIMn8WTyr/0ZmIDHP2DTIuFlUq08XZi7hRGaq53QLiSiP9zYF5YKx1/inTEH8cLtZnCNt95ltR6SslGGcsmAKh0kQyl3rAUoxv7/JJTjgZAWWaXtbf3sBfpT5bvDpMAYKPICK12QUuhKfPG/V5S73UcAqN+Z7VmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H4SkIzYB; arc=none smtp.client-ip=209.85.161.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p8P1hzXN"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b47173afd90so7750320a12.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Sep 2025 11:17:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H4SkIzYB"
+Received: by mail-oo1-f73.google.com with SMTP id 006d021491bc7-61bd4e3145fso5076797eaf.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 Sep 2025 11:17:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756837073; x=1757441873; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NYRDGWUEa7FzMyNE6ErUXI1q4yIWe6EsYB+9O3a0jhc=;
-        b=p8P1hzXNgyH5VaZ3q/Xa05sDfTIBRJ8gsBz5P3YKjWRtH/9NVktKVNhh86+WfJKAv/
-         5Oly1SIi7MCiWZzg14d/D6CrxlU8AKCxcocIDpJ4sZbNCBgp9DgpEFbdporuijX5fy2e
-         rOF0NEcVDdQ2+rkNYH5dggUYUXvEqj5QknSrXez6lX9id1EaCNuEBUEtCJ/zxNJYFpFH
-         vkhurv5GAMQggfrvWAoK1TKbKs4ZO9WUUWCalQebcA0Ptn4QWBFrrIKc7H4Za0iJCvGO
-         HWWwbgg4oSkhLgsaJI7dj8vTyOjDj9ofGOPPMbYSciFrvRnUy+KSVsg+Wox/8f0Pq0kg
-         fUgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756837073; x=1757441873;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1756837077; x=1757441877; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=NYRDGWUEa7FzMyNE6ErUXI1q4yIWe6EsYB+9O3a0jhc=;
-        b=AQqZQrAVcLeatQv+VwT8VJhCmH5iTL7gKLXEsVLgsXjSztv8Z0Ib9ZW3Jd3fILudXi
-         SC7kLHWKpQj1wMdyoUuHJkVWyDcuAjRDUYdANvJPIGNLCKhF4Pc8exMzzQ/UcQr4XQnj
-         Zi3av/nayLYlMmeHYxlUHxyXHATzjJADbvPE5i+WLEPBsHLpBkttOK3yymM0mu49oUre
-         OFDBRJMDcOBiG6Nn96PXS85TY3EEDq1CShHTd9F0c3dlwBgKiRAcybqienuMFGJNaj0S
-         k5r+2yfAO4Hd5JobKwaCoqaGEstEKxXT56dsxXiBu0q67W8XfziW5M5T7PoIrT9A8xNl
-         IU9A==
-X-Forwarded-Encrypted: i=1; AJvYcCVlH9KRgcuD79x7ZLpdnV0CGE45HYjjfujnpwWPSekucVUtyzyd4vJtdRayIXsksM+AncUuyDNNBaiACQGTSrbp@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx97HBqyJyazPvp/YDSOad2PB3Z/1FCFyCtOvoDXZ+pivdRmQ/4
-	I1/ADWRJGgwkd7uyqyBmw7cyFHc1SRKqAiRx5jvgmM3Hx7lT0mhzii1ZNbXKBiOXtl2HTHSDCMe
-	cO6sUqkJ5+Q==
-X-Google-Smtp-Source: AGHT+IEct/ZgBY5J6uSU7NxFc0iEGBl0tZPLIQ9NRRouOzI9G05tCQbxGLMxy1HPjR5iF2k6sMpYooV71Wel
-X-Received: from pjbpt6.prod.google.com ([2002:a17:90b:3d06:b0:327:c20a:364])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2785:b0:31f:b51:eef9
- with SMTP id 98e67ed59e1d1-328156c5fbbmr19449455a91.17.1756837073381; Tue, 02
- Sep 2025 11:17:53 -0700 (PDT)
-Date: Tue,  2 Sep 2025 11:17:10 -0700
+        bh=6fJ6F2Zo1Rl5YqU+YLRmyxNhHYiro+j86SsEqve7WLE=;
+        b=H4SkIzYBkepxl0Vrr6ntlofUbKOUz5Seal7sbYGtuZ2y0w0PBlDswffzNd99pc9/Gu
+         k4E0ygXuHJx6TQlKPrAPH3WIkB4RWw0F4Z2/f0i+BzJ1fVroYcyXEzVzvdqPDzLgNpz1
+         B+97BfSlRZxVg2y6zP2k9N4jQe7E7vetIYZe7hMh5GuR1jXcyr2tKs+BoQ2ggySfwhPy
+         kMrtQbCnN+5VsrnChfoibnGwfnHkL8WZA/OHIob4bLbp7I38quHj5qdIvxBmBSiQCG7E
+         hgvbQUIbK6/5U9VCz8UQt7O4Zto6upfnLgaCV1N1qxmJyhrLHAofIaGCl9pDBba5/YX9
+         g+OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756837077; x=1757441877;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6fJ6F2Zo1Rl5YqU+YLRmyxNhHYiro+j86SsEqve7WLE=;
+        b=QjYht6N8TPmvftBL1tnwkUvhaqgfP/6tnyH/2z97jlZNRbozpUhyScAAhpeV+vWrJr
+         JZfBNEPnFwP3QE7Fnx6enPY9gz7IkKtraoDDGtXiwJ+OmXAYOXv5gfA6844izMAGFjT4
+         xwoIepI+qFeKnhzF7ifIvxJSZYrmj8VOdqMJreiN+ikvH1/aosnQcbcL/7rKHYA1OXQ+
+         lauNqRH3G7kclfaKJyBz3+EQf7QUXTrxeIwKfD2o1OzMQXxUDUfWRcaohnGaJrrkq1JQ
+         epENG/JflBCUjGXzvhtrpzUQfhjRiaEXBuzJ5BEDuJ6dVwiuOj/Js3F6AtnB8PRyB/TY
+         p9qQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUg/w69sBQNPK50xt9gaEu2xGWQpxQ8kg4LZ/YbVlT88dTLGu/On/QgGSpc0jTa+YlTf1L9H6ctV6jZwGASgu/Z@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG0eg93XGezm6qMi9hATgKbRUrLgEvB0iAWcGjyEc8MCsxf1Vs
+	4iaVzSTBQYbQ1gxrC/KA2VXPnwc2IsH26qv8rO8jbyxpaiWJmroyo7nj/mL5iZRg5hiZuWxouu1
+	VRoy1/yWF/A==
+X-Google-Smtp-Source: AGHT+IEdTO+xqdEcvEbC6ccVCFQ9YfFZThHAwhuqZuFa4L5/g5yckG2owGfEDKDo1c1TEd1HPgbX3g81Z3qM
+X-Received: from oabpd23.prod.google.com ([2002:a05:6870:1f17:b0:302:431d:f0cc])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:ad03:b0:30b:a81d:b56
+ with SMTP id 586e51a60fabf-319633c847cmr6153004fac.38.1756837077033; Tue, 02
+ Sep 2025 11:17:57 -0700 (PDT)
+Date: Tue,  2 Sep 2025 11:17:12 -0700
+In-Reply-To: <20250902181713.309797-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250902181713.309797-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.355.g5224444f11-goog
-Message-ID: <20250902181713.309797-1-irogers@google.com>
-Subject: [PATCH v1 0/3] Fix use-after-free race in bpf_prog_info synthesis
+Message-ID: <20250902181713.309797-3-irogers@google.com>
+Subject: [PATCH v1 2/3] perf bpf-utils: Constify bpil_array_desc
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,40 +75,101 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Yonghong Song <yonghong.song@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 
-The addition of more use of bpf_prog_info for gather BPF metadata in:
-https://lore.kernel.org/all/20250612194939.162730-1-blakejones@google.com/
-and the ever richer perf trace testing, such as:
-https://lore.kernel.org/all/20250528191148.89118-1-howardchu95@gmail.com/
-frequently triggered a latent perf bug in v6.17 when the perf and
-libbpf updates came together. The bug would cause segvs and was reported here:
-https://lore.kernel.org/lkml/CAP-5=fWJQcmUOP7MuCA2ihKnDAHUCOBLkQFEkQES-1ZZTrgf8Q@mail.gmail.com/
+The array's contents is a compile time constant. Constify to make the
+code more intention revealing and avoid unintended errors.
 
-To fix the issue the 1st and 3rd patch are necessary. Both patches
-address a race of either the sideband thread updating perf's state or
-the kernel state changing over two system calls.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/bpf-utils.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-The use-after-free was introduced by:
-https://lore.kernel.org/r/20241205084500.823660-4-quic_zhonhan@quicinc.com
-The lack of failing getting the bpf_prog_info for changes in the
-kernel was introduced in:
-https://lore.kernel.org/r/20211011082031.4148337-4-davemarchevsky@fb.com
-
-As v6.17 is currently actively segv-ing in perf test I'd recommend
-these patches go into v6.17 asap.
-
-When running the perf tests on v6.17 I frequently see less critical
-test failures addressed in:
-https://lore.kernel.org/all/20250821221834.1312002-1-irogers@google.com/
-
-Ian Rogers (3):
-  perf bpf-event: Fix use-after-free in synthesis
-  perf bpf-utils: Constify bpil_array_desc
-  perf bpf-utils: Harden get_bpf_prog_info_linear
-
- tools/perf/util/bpf-event.c | 39 ++++++++++++++++--------
- tools/perf/util/bpf-utils.c | 61 ++++++++++++++++++++++++-------------
- 2 files changed, 66 insertions(+), 34 deletions(-)
-
+diff --git a/tools/perf/util/bpf-utils.c b/tools/perf/util/bpf-utils.c
+index 80b1d2b3729b..64a558344696 100644
+--- a/tools/perf/util/bpf-utils.c
++++ b/tools/perf/util/bpf-utils.c
+@@ -20,7 +20,7 @@ struct bpil_array_desc {
+ 				 */
+ };
+ 
+-static struct bpil_array_desc bpil_array_desc[] = {
++static const struct bpil_array_desc bpil_array_desc[] = {
+ 	[PERF_BPIL_JITED_INSNS] = {
+ 		offsetof(struct bpf_prog_info, jited_prog_insns),
+ 		offsetof(struct bpf_prog_info, jited_prog_len),
+@@ -129,12 +129,10 @@ get_bpf_prog_info_linear(int fd, __u64 arrays)
+ 
+ 	/* step 2: calculate total size of all arrays */
+ 	for (i = PERF_BPIL_FIRST_ARRAY; i < PERF_BPIL_LAST_ARRAY; ++i) {
++		const struct bpil_array_desc *desc = &bpil_array_desc[i];
+ 		bool include_array = (arrays & (1UL << i)) > 0;
+-		struct bpil_array_desc *desc;
+ 		__u32 count, size;
+ 
+-		desc = bpil_array_desc + i;
+-
+ 		/* kernel is too old to support this field */
+ 		if (info_len < desc->array_offset + sizeof(__u32) ||
+ 		    info_len < desc->count_offset + sizeof(__u32) ||
+@@ -163,13 +161,12 @@ get_bpf_prog_info_linear(int fd, __u64 arrays)
+ 	ptr = info_linear->data;
+ 
+ 	for (i = PERF_BPIL_FIRST_ARRAY; i < PERF_BPIL_LAST_ARRAY; ++i) {
+-		struct bpil_array_desc *desc;
++		const struct bpil_array_desc *desc = &bpil_array_desc[i];
+ 		__u32 count, size;
+ 
+ 		if ((arrays & (1UL << i)) == 0)
+ 			continue;
+ 
+-		desc  = bpil_array_desc + i;
+ 		count = bpf_prog_info_read_offset_u32(&info, desc->count_offset);
+ 		size  = bpf_prog_info_read_offset_u32(&info, desc->size_offset);
+ 		bpf_prog_info_set_offset_u32(&info_linear->info,
+@@ -192,13 +189,12 @@ get_bpf_prog_info_linear(int fd, __u64 arrays)
+ 
+ 	/* step 6: verify the data */
+ 	for (i = PERF_BPIL_FIRST_ARRAY; i < PERF_BPIL_LAST_ARRAY; ++i) {
+-		struct bpil_array_desc *desc;
++		const struct bpil_array_desc *desc = &bpil_array_desc[i];
+ 		__u32 v1, v2;
+ 
+ 		if ((arrays & (1UL << i)) == 0)
+ 			continue;
+ 
+-		desc = bpil_array_desc + i;
+ 		v1 = bpf_prog_info_read_offset_u32(&info, desc->count_offset);
+ 		v2 = bpf_prog_info_read_offset_u32(&info_linear->info,
+ 						   desc->count_offset);
+@@ -224,13 +220,12 @@ void bpil_addr_to_offs(struct perf_bpil *info_linear)
+ 	int i;
+ 
+ 	for (i = PERF_BPIL_FIRST_ARRAY; i < PERF_BPIL_LAST_ARRAY; ++i) {
+-		struct bpil_array_desc *desc;
++		const struct bpil_array_desc *desc = &bpil_array_desc[i];
+ 		__u64 addr, offs;
+ 
+ 		if ((info_linear->arrays & (1UL << i)) == 0)
+ 			continue;
+ 
+-		desc = bpil_array_desc + i;
+ 		addr = bpf_prog_info_read_offset_u64(&info_linear->info,
+ 						     desc->array_offset);
+ 		offs = addr - ptr_to_u64(info_linear->data);
+@@ -244,13 +239,12 @@ void bpil_offs_to_addr(struct perf_bpil *info_linear)
+ 	int i;
+ 
+ 	for (i = PERF_BPIL_FIRST_ARRAY; i < PERF_BPIL_LAST_ARRAY; ++i) {
+-		struct bpil_array_desc *desc;
++		const struct bpil_array_desc *desc = &bpil_array_desc[i];
+ 		__u64 addr, offs;
+ 
+ 		if ((info_linear->arrays & (1UL << i)) == 0)
+ 			continue;
+ 
+-		desc = bpil_array_desc + i;
+ 		offs = bpf_prog_info_read_offset_u64(&info_linear->info,
+ 						     desc->array_offset);
+ 		addr = offs + ptr_to_u64(info_linear->data);
 -- 
 2.51.0.355.g5224444f11-goog
 
