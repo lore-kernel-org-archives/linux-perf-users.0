@@ -1,151 +1,86 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D91929A9FE
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Sep 2025 16:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF9D2BD034;
+	Wed,  3 Sep 2025 16:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756915709; cv=none; b=hNZF5dsQowJjcTh87aVRPPDaOfe8RKglTSi7LK/ciz3rRsDtu/TaI2OkCgfFQmvUu4XQsV0iBhDlrL9dmRZCDrPLXi+0IWRBh8HtRAEqZiBy7/sawdv9VFjY9/g48+mQAMKMJXNbYR953JhZbVjCbsG50ZXng3tuo9jGpfKasVM=
+	t=1756916240; cv=none; b=t1/UtEjPGsDMYnru9x7C/tiW9oJem0QiTFAuatgw6NBao/pZsh/Vpd/bUZryWu73k2tpP4YBEkEFZNv+znNSNSW8gM0Niv3xnscovFUCrH9nd+p/3hzZbXk8PJzUew6dNG+RHYwvH4MX7cIUmiEC9dqrdDilgv6qya/4pI/wTKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756915709; c=relaxed/simple;
-	bh=TcnOqHnxWtRRf9NT+MerUvHTwyfwaLmdD3fXWcz/5rU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rvQ6asAbjDM34sRp4aNAGjrpy0rmMDjXJuW1HskA8OuEnfxWNtoNPJD9+rcgaYIF1wDKbmprcWQvrQyMwcNtJ79Oa7+YsbIAbwR38AJmM5yxCKAxHI07G1ZyolMZfv8KJ60W63hQEOHRVaVmY4EqOCTlOz5AIKdJmiGf0Cqf6Ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wS/PGVh2; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1756916240; c=relaxed/simple;
+	bh=o+WvopKUkDO5D+QjLVhF9kUeHK4AramhRlHQ5c8Yiv4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=moKGQaMnPgA/10jmukcxRsBv3SYlLVI3inHd8aUIpCJdxZPG6lyJo7rC00Kd/zObSeMnKG0GWF8Y3xYB33Lj06aEIeYEskye7jSyX505/d8MebaXCcokis0tXccOrBWqE4embcx9sqbNkJ6gwoVZIP8QV9J6kGdyfqsEmiDROLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RWKkp6A5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wS/PGVh2"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-24b2337d1bfso215375ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Sep 2025 09:08:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756915707; x=1757520507; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N4oEAPOJhyq1/T6c/PPsWOSFUUJWRnUyjFcO2apuW1o=;
-        b=wS/PGVh22PJRIzDq0hCSGIKALbg7w6cbkw2fRA4MeSsWP2DZegKdpGOz6ZOpIZu96K
-         V6vjjEBXH6aOSxcboq9qLpuyXLC1Jo2ZXwdGSUPPmhPF/n5CD7nnBjRct4Mpi9zhMPoS
-         ASwaAKpVm05h9YYu9hhGhPSRiEZ6otMFek3U0V/dHkiGQdOki5za0BDMcoGFm0gv720q
-         K5isr/SmPZoNzQNSOFfwPgh1VBp62X2GmWuI7xiHgs1ztRSrjGBEct1IeEoc+T2+dMhT
-         xXJKkMM3w8BXsi5sS3SktKegQ9mBVpnw3HtC9ZlNuRc6VODq7skyoGKVEd6SXaipgUxx
-         K6TQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756915707; x=1757520507;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N4oEAPOJhyq1/T6c/PPsWOSFUUJWRnUyjFcO2apuW1o=;
-        b=nQCd4MGcZqi+O0iK7BC9QWKD7dy+2GwAcSXJ0vfQMAcr67VSuJUamTRm617AcKEfZh
-         ArKL2ro7UxYKVcwIORygRtRkl0OfYvMV7/gh8nbKYtCvDjmRRAq9hpgnmsgNnKniwey7
-         +j02AmT1iN0+TVLhtLXxq45RBUf7JOYLtzHrwfmemGLe2HpQ/OO7HgwBy8HaYcNYYY19
-         Jhc5sGAf0py+Jo6LTcDDifKuaYh7XuNt1aMKU1jgkAruN0EKdRqOR66G1OMRGIvrnk7c
-         PSue1KTFHq9K5eDvyocJH1Wi45xQyxEBaGZupkm9zFnvtVhzvEhp+g+tysdckTaQQOhG
-         n7Ew==
-X-Forwarded-Encrypted: i=1; AJvYcCWo8Anjg9WMiaPuVAHbe7sJkbM+2RGFNN1Xs6PL5OmVagtNubG5wcH2+uAv1sgBKBnUVxjf2vSO64psOCjXu2c+@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZuakmJEdjSmWIdffWHtA15DgW6Pf8x/9k5ptGACOfgUgrXmaM
-	lKNk4JANctMOZjuR7rZ7aQMp6oIalfLd2M6O7DCQMsc4hvSes4WYEplAgffy61llsHf1v9KP9Ky
-	nbEd4MF/IvdbTS20qJpdqEJ4nk6PL/4ofGcZJBbQc
-X-Gm-Gg: ASbGncse1oAlQ7wMh6nCBU1nQfkI8umOuem9iliEp/3Ab2HeZnxTA6cbdpzG5DtdF1v
-	adtB9fx02Z8PassuU7twDT3hjJzLrLAOhBRFxZrGEllD4IT8e2hRGtVlx4Ow2wJjd4syBfdiiLI
-	0fnjAzOyjoheZDFYp+IUZJrZDZdcTxPcoC3iVl4b/DAoyGWe4y0IJJ4hatknAOOruXOGHfp6TT4
-	HMmnuxQciLT5IaEtr0Ut5N7D9TAdbiPjoP5pTIUbnIL53tDCUIoQIU=
-X-Google-Smtp-Source: AGHT+IENJInbMwsLUHTnIJnRhiUAa7cm9vbNoqrqt8ITIvS5UFXyo67xRMtE2rrpaCdKkatE3lcGXTFlCVlawA3h0U0=
-X-Received: by 2002:a17:902:ced2:b0:231:f6bc:5c84 with SMTP id
- d9443c01a7336-2493e9224f5mr16770495ad.8.1756915706497; Wed, 03 Sep 2025
- 09:08:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RWKkp6A5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F1F6C4CEE7;
+	Wed,  3 Sep 2025 16:17:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756916240;
+	bh=o+WvopKUkDO5D+QjLVhF9kUeHK4AramhRlHQ5c8Yiv4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RWKkp6A5vgddDRQlniZKC6pI70tMJoOPjQuWVRH5ajLvR0xLSNablNQXRSXv1oUxD
+	 6WCH4L626uu2LneArQHjBsV9aI1l9swjLvjgycrb8Gp2vXtLlbvK6oi89NOhqtZelt
+	 8SgDlj5aEn5m5RQ2m1hI9Sde6phKz5Ogkih5AbMriaizRIgqLsASGppyPVWC2qmROO
+	 VA4/U1kO8RhCtzUkatSKrxRc94K3k2G0II360tA81zVgc8WAq35wBnb67mTVkQ5wXz
+	 F9u/OkJIZ3adnL+jxkEwUIwQYjJk+asftLDI0rq7bhMw6bh22NNKcIWI79gcnv84gP
+	 hh2YixVMyQqnA==
+Date: Wed, 3 Sep 2025 13:17:16 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Thomas Richter <tmricht@linux.ibm.com>,
+	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, namhyung@kernel.org,
+	blakejones@google.com, agordeev@linux.ibm.com, gor@linux.ibm.com,
+	sumanthk@linux.ibm.com, hca@linux.ibm.com, japo@linux.ibm.com
+Subject: Re: [PATCH v6.17-rc] perf test: Checking BPF metadata collection
+ fails on version string
+Message-ID: <aLhqDDnG4Nu9-h7C@x1>
+References: <20250822122540.4104658-1-tmricht@linux.ibm.com>
+ <CAP-5=fW43ZAguuB-FB2F6CFTCgd1Fy1Xd+WAt4WSA-fMRTwG5A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250829033138.4166591-1-irogers@google.com> <efb8ef2a-f5e4-4d7d-ba8e-fee5055f7c20@amd.com>
-In-Reply-To: <efb8ef2a-f5e4-4d7d-ba8e-fee5055f7c20@amd.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 3 Sep 2025 09:08:14 -0700
-X-Gm-Features: Ac12FXw05mbX-2WBsT9OXc79YW05EK_HXIDNJcJcMhrjtnv_6s36hT6DAMsOy4s
-Message-ID: <CAP-5=fW6Pzd0mpdXbZmvNjx=UEY__qfcoFZGTsv6SJ4R=ngwfg@mail.gmail.com>
-Subject: Re: [PATCH v5 00/13] Python generated AMD Zen metrics
-To: Sandipan Das <sandidas@amd.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, John Garry <john.g.garry@oracle.com>, 
-	Jing Zhang <renyu.zj@linux.alibaba.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Benjamin Gray <bgray@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fW43ZAguuB-FB2F6CFTCgd1Fy1Xd+WAt4WSA-fMRTwG5A@mail.gmail.com>
 
-On Wed, Sep 3, 2025 at 7:26=E2=80=AFAM Sandipan Das <sandidas@amd.com> wrot=
-e:
->
-> On 8/29/2025 9:01 AM, Ian Rogers wrote:
-> > Generate thirteen sets of additional metrics for AMD zen.  Rapl and
-> > Idle metrics aren't specific to AMD but are placed here for ease and
-> > convenience. Uncore L3 metrics are added along with the majority of
-> > core metrics.
-> >
-> > The patches should be applied on top of:
-> > https://lore.kernel.org/lkml/20250829030727.4159703-1-irogers@google.co=
-m/
-> >
-> > v5. Rebase. Add uop cache hit/miss rates patch. Prefix all metric
-> >     names with lpm_ (short for Linux Perf Metric) so that python
-> >     generated metrics are clearly namespaced.
-> >
-> > v4. Rebase.
-> >     https://lore.kernel.org/lkml/20240926174101.406874-1-irogers@google=
-.com/
-> >
-> > v3. Some minor code cleanup changes.
-> >     https://lore.kernel.org/lkml/20240314055839.1975063-1-irogers@googl=
-e.com/
-> >
-> > v2. Drop the cycles breakdown in favor of having it as a common
-> >     metric, suggested by Kan Liang <kan.liang@linux.intel.com>.
-> >     https://lore.kernel.org/lkml/20240301184737.2660108-1-irogers@googl=
-e.com/
-> >
-> > v1. https://lore.kernel.org/lkml/20240229001537.4158049-1-irogers@googl=
-e.com/
-> >
-> > Ian Rogers (13):
-> >   perf jevents: Add RAPL event metric for AMD zen models
-> >   perf jevents: Add idle metric for AMD zen models
-> >   perf jevents: Add upc metric for uops per cycle for AMD
-> >   perf jevents: Add br metric group for branch statistics on AMD
-> >   perf jevents: Add software prefetch (swpf) metric group for AMD
-> >   perf jevents: Add hardware prefetch (hwpf) metric group for AMD
-> >   perf jevents: Add itlb metric group for AMD
-> >   perf jevents: Add dtlb metric group for AMD
-> >   perf jevents: Add uncore l3 metric group for AMD
-> >   perf jevents: Add load store breakdown metrics ldst for AMD
-> >   perf jevents: Add ILP metrics for AMD
-> >   perf jevents: Add context switch metrics for AMD
-> >   perf jevents: Add uop cache hit/miss rates for AMD
-> >
-> >  tools/perf/pmu-events/amd_metrics.py | 654 ++++++++++++++++++++++++++-
-> >  1 file changed, 651 insertions(+), 3 deletions(-)
-> >
->
-> For clean builds, I am seeing some warnings for the "context-switches" an=
-d
-> "energy-pkg" events.
->
-> ...
-> /home/sandipan/linux/tools/perf/pmu-events/amd_metrics.py:124: SyntaxWarn=
-ing: invalid escape sequence '\-'
->   cs =3D Event("context\-switches")
-> ...
-> /home/sandipan/linux/tools/perf/pmu-events/amd_metrics.py:615: SyntaxWarn=
-ing: invalid escape sequence '\-'
->   pkg =3D Event("power/energy\-pkg/")
-> ...
+On Fri, Aug 22, 2025 at 11:02:27AM -0700, Ian Rogers wrote:
+> On Fri, Aug 22, 2025 at 5:26 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+> > commit edf2cadf01e8f ("perf test: add test for BPF metadata collection")
 
-Thanks Sandipan, I'll fix the warning in v6.
+> > fails consistently on the version string check. The perf version
+> > string on some of the constant integration test machines contains
+> > characters with special meaning in grep's extended regular expression
+> > matching algorithm. The output of perf version is:
 
-Ian
+> >  # perf version
+> >  perf version 6.17.0-20250814.rc1.git20.24ea63ea3877.63.fc42.s390x+git
+
+> > and the '+' character has special meaning in egrep command.
+> > Also the use of egrep is deprecated.
+
+> > Change the perf version string check to fixed character matching
+> > and get rid of egrep's warning being deprecated. Use grep -F instead.
+
+<SNIP>
+
+> > Fixes: edf2cadf01e8f ("perf test: add test for BPF metadata collection")
+> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> > Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+> > Cc: Blake Jones <blakejones@google.com>
+ 
+> Reviewed-by: Ian Rogers <irogers@google.com>
+
+Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+Namhyung, I think this should go into v6.17-rc.
+
+Thanks,
+
+- Arnaldo
