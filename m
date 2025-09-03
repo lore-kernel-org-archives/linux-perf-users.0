@@ -1,131 +1,81 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3493B2E7651
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Sep 2025 16:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE66E289E17;
+	Wed,  3 Sep 2025 17:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756916937; cv=none; b=GDSzVdaSJnxCwDYL5d9ah2FbuEmvvztOviejHHMR2b8lFER+30Tv7TfggrJmxm6spc/lddwXTalngfG9WThnk9W3Lyrb3yZYF9YZEevpBAbpSWyPFNclj99bpl5VhTPMF8LV7zgQIUAhk14JAZHCJKEjXh6XrKXfNj41ISqaAs0=
+	t=1756921665; cv=none; b=rJNOmmIc6tLVn48DkaiOLZhbE0RelihTkvzwO+phVoVbZp5WiPHK8rQ86sBO2xnxd1oOkk8aukXjgwxU19TC2IDWxXqldsu+nr10COlx89yjhq1RESyVZH/63eOhW67aD3wTYJmVg+5SNFA7ciifGNQYLX1mOWZsxe6z3BKrVXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756916937; c=relaxed/simple;
-	bh=gHqDPrgBowyiL/sR10xX7tCoLg/UtZOXeCKXzFhG97Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R5F3QRHZ5BpnY5hONF5J35T5dfSdzaPhl7I9DX7HnJnezBYBFCg3bLDCaiegjk/wTXhHjoVSu0gmySYGuJNUOhB1SaIFby+kC9rCNpPz+jBhI6ylaPc8c8HHysA1PtJiMiUaQaeMV2iulOV8FK2bhS7i8hoPI32pHy/tIhJ+RbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Mt827w6v; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1756921665; c=relaxed/simple;
+	bh=LSPcx/b4GxO1reo0OroCmCKmkpmZRyqb5S7uud1x2ec=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mY/PQWG/qix7ALc3iG0Qtjqvf/a2QOq9XBuEnHMJSfQMf7EHugsE9wA9oQ5nc/NCZ5OvuHqRqaxyG6ELWYOP2T2rmHsS3+O95e3dMBDHHG9Hw+R9KNP80aKiV+iwMDIRwOIH9taUqVq9fctHV8QIr12DLih8iLRbr17hJNynwvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D78hzjcl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mt827w6v"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-24b2d018f92so193345ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Sep 2025 09:28:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756916935; x=1757521735; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fkzaQdVLnKFZXbvLfVWTo4jS+1+R+7yKNhtbqs6gLsA=;
-        b=Mt827w6vF0i26syQa7LEhglHJKz0of3DkFIlkfTZp9rSgQnrN4HepjSqpDvWO1GEjy
-         yDMRJnJ7ghI7IBUnyQgYpvzWNhmXAR1G6210JuNvQ7lzap53HJj+FAaYP2Ibl0sIGZT7
-         /wSxQNaxGCumXHeXRlbgpmK0x/K+M9pDLnO9E0fGMAq1WDeLSxqwFwMn9FLTi09AWevM
-         XyiDjOG6ZX9LUfj2RqoUxPvenCLYGUzhJptaMD9deuCef7aoQnqmOpG0yr4BDtwl+VKI
-         lBGlcdaT9sf0l/Tefy0nB592WtwozVAiEBvHHdhui8EeiDJDjSDoCr7a0C7hgUn+qnUN
-         OQjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756916935; x=1757521735;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fkzaQdVLnKFZXbvLfVWTo4jS+1+R+7yKNhtbqs6gLsA=;
-        b=X7WuzlKs6AUVTEbezuD/HTSEIibsE7IxMaHhJBZU1aQxmKt/OW5YfRz1XD6fisIBoX
-         FUAvlq9cCISxjydj2ZVbPnmDmM+RMXesisoTWIRbS2bfc9GL8y3x1QhhWUNJ53A7T6ym
-         ip89gOIgKFwhPB0OiKfPHyWW25RbxDJ2Zw5GL0P6Sx0wWvfUIwjQ4TLzHTZ9NlV6P3vx
-         Ko5AE2CgoZckORMExfMyRwDncTR3dZ1dTiQziB6ZXl60bsgxa4kl2O6nBrhPz6WVpZlG
-         uoNO3oVluHLLi1+9FsA0Tbbe+QlL42395o8+pGHxhJoQcunAtAWzfcoMWok2lXu88pGQ
-         NqRA==
-X-Forwarded-Encrypted: i=1; AJvYcCXzVNbSkT143hotSl4fLtSBROSyRBctyGvxizJWZ5/2gZxPr6pDg5zskrb6PQ9ynq7gW5zG4FHn0gqVOCHE/aoY@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+YCeenqmSi4a0eDnz8PiqgsD1FaW+P3TlC4PVtafT6JmildUr
-	7R1vvUwQhGPdmcrTR5tGdy/lkY7t1+Sn3vZx9o2nghV+KEWPLkYFLL//tOWEJtqi7XfK03zsHR6
-	eVB4E3pjrt1MfE1zDF9rKH5x33H0UsKOWDus/egvc
-X-Gm-Gg: ASbGnctivv5k0t+r1a36YSv+i5NPfcNuK9D5C2/dGvkwIFXv0ffHEtn0rYVDDFcAp/I
-	cZlV4SndXq66Dq7i83W3CgnrB5zWiWvtXvWwjBZwgPwE/569LalMmuAM7KIFcS169Iivp4N+jS4
-	XOURg2f7QqvPEfri+sWrWxyTMnBQgclhlPOvJghfiVrPu7pBnCA9f4hXMONmgShMGM3uR3oXxoy
-	2v6dW1ZJGsAmerioX00TaoD3qIMVpqNh/SZwQiPy6fO
-X-Google-Smtp-Source: AGHT+IFLvogXoWj7bYgIYljO7Kq06b7Mx2huDYeeQfQOxWOFq1fwFiBFqisnFFT1giElvHyfpoFKP1+sUC4j9uhlhrw=
-X-Received: by 2002:a17:902:c404:b0:248:f683:e980 with SMTP id
- d9443c01a7336-2493e7bec60mr5863425ad.2.1756916935150; Wed, 03 Sep 2025
- 09:28:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D78hzjcl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5936C4CEE7;
+	Wed,  3 Sep 2025 17:47:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756921665;
+	bh=LSPcx/b4GxO1reo0OroCmCKmkpmZRyqb5S7uud1x2ec=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D78hzjclQIczvxXs4uwWIrxbbcqejaoP0HObyt4n8xjnCGr9+Br1Puryux9582/mz
+	 59JmzZeHxd6qsS5M+cVnHV6TOXKZFO0gi7WTwYzdrR4AigGxfrQ/o7W+60XGry3P+1
+	 L7mDIfal42JRB+bhNgs3UDosPDYgeohXDVria/i7gxUKutk/mdwvsh7RsMmU7pRqXX
+	 LQFzhU6RkcskvTxnCEAR6yfHQ9ctk0OO+m9f+1oV72YbAxT9ywManM8y1fLUPz9sm/
+	 mbJYEZXCZ5+9VzeEm3LTozfm5fTBxCR9FzUs/zc6Q8GH9sDhAoEfbjcsprApZ3S/1a
+	 bRvLFYcTHDzRA==
+Date: Wed, 3 Sep 2025 10:47:43 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2 v6.17-rc] perf tools: read_build_id() blocking
+ argument fixes
+Message-ID: <aLh_Px017dpHgNMC@google.com>
+References: <20250903-james-perf-read-build-id-fix-v1-0-6a694d0a980f@linaro.org>
+ <aLhf9wc3_1OIFGkZ@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250903-james-perf-read-build-id-fix-v1-0-6a694d0a980f@linaro.org>
- <20250903-james-perf-read-build-id-fix-v1-1-6a694d0a980f@linaro.org>
-In-Reply-To: <20250903-james-perf-read-build-id-fix-v1-1-6a694d0a980f@linaro.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 3 Sep 2025 09:28:43 -0700
-X-Gm-Features: Ac12FXxbJVOMs9ZoCA7IT5qWj0pUUT4GbYHwevYbRn2uBnh2ATV_lVvROKlpx8Q
-Message-ID: <CAP-5=fXVw4zokEM2hUpbBbJyxQmE3YgyEf-umVzsFhw7vaSK9g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf tests: Fix "PE file support" test build
-To: James Clark <james.clark@linaro.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aLhf9wc3_1OIFGkZ@x1>
 
-On Wed, Sep 3, 2025 at 8:15=E2=80=AFAM James Clark <james.clark@linaro.org>=
- wrote:
->
-> filename__read_build_id() now takes a blocking/non-blocking argument.
-> The original behavior of filename__read_build_id() was blocking so add
-> block=3Dtrue to fix the build.
->
-> Fixes: 2c369d91d093 ("perf symbol: Add blocking argument to filename__rea=
-d_build_id")
-> Signed-off-by: James Clark <james.clark@linaro.org>
+Hello,
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+On Wed, Sep 03, 2025 at 12:34:15PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, Sep 03, 2025 at 04:15:25PM +0100, James Clark wrote:
+> > The function now takes an argument for O_NONBLOCK. The first fix seems
+> > straightforward. The second one is _probably_ fine, but I can't really
+> > see any easy way to fix it because libbfd handles all its own IO. Maybe
+> > we need to compile in both versions of read_build_id() and only call the
+> > libbfd one on regular files? Or maybe in that specific use case it
+> > doesn't care, the commit message for adding libbfd there mentioned Wine
+> > PE binaries.
+> 
+> I noticed that yesterday and have this in the tmp.perf-tools-next
+> (thought that had sent to the list but didn't) branch:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/commit/?h=tmp.perf-tools-next&id=4bfe653aa3fefd429671aa27413a1124fe65b9d1
+> 
+> But since this affects 6.17, even being opt-in, I think it should go
+> there together with other patches that Namhyung is collecting in
+> perf-tools.
+> 
+> Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Thanks for the fix!
-Ian
+Yep, sure.  I'll queue them to perf-tools.
 
-> ---
->  tools/perf/tests/pe-file-parsing.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/tests/pe-file-parsing.c b/tools/perf/tests/pe-fil=
-e-parsing.c
-> index 30c7da79e109..8b31d1d05f90 100644
-> --- a/tools/perf/tests/pe-file-parsing.c
-> +++ b/tools/perf/tests/pe-file-parsing.c
-> @@ -37,7 +37,7 @@ static int run_dir(const char *d)
->         size_t idx;
->
->         scnprintf(filename, PATH_MAX, "%s/pe-file.exe", d);
-> -       ret =3D filename__read_build_id(filename, &bid);
-> +       ret =3D filename__read_build_id(filename, &bid, /*block=3D*/true)=
-;
->         TEST_ASSERT_VAL("Failed to read build_id",
->                         ret =3D=3D sizeof(expect_build_id));
->         TEST_ASSERT_VAL("Wrong build_id", !memcmp(bid.data, expect_build_=
-id,
-> @@ -49,7 +49,7 @@ static int run_dir(const char *d)
->                         !strcmp(debuglink, expect_debuglink));
->
->         scnprintf(debugfile, PATH_MAX, "%s/%s", d, debuglink);
-> -       ret =3D filename__read_build_id(debugfile, &bid);
-> +       ret =3D filename__read_build_id(debugfile, &bid, /*block=3D*/true=
-);
->         TEST_ASSERT_VAL("Failed to read debug file build_id",
->                         ret =3D=3D sizeof(expect_build_id));
->         TEST_ASSERT_VAL("Wrong build_id", !memcmp(bid.data, expect_build_=
-id,
->
-> --
-> 2.34.1
->
+Thanks,
+Namhyung
+
