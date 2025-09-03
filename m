@@ -1,63 +1,63 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80DF12E175F;
-	Wed,  3 Sep 2025 07:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205472E6CA2;
+	Wed,  3 Sep 2025 07:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756885925; cv=none; b=ut8ZRY95Y7F3Oy9H9ZKRDzwHeKqH0XraNBgnAGM5ZLKxU05kfuzz1KoP/hgadwrG/0fBGQmeqOk35MxiVYWm3qgZr7o+WBiRphHEYg7WFVexnn4c/UeaJDqLYPX13Mu7kxamfoDKcfT1+x5X4s9FsKmwvWIwT2/yWMT5mZTrF48=
+	t=1756885929; cv=none; b=IH7bz7fBBnDUlelfR/1Pz5AUxFyYbbra6bYT9vfPcKcQz4J4cPFBt5GSJVj2k1p3/0PvESbHSidyZ4brn/vYPlPdbfAe5m/FzXR7rex5RnasGfMniraTFCQjqvgfHW15UCPyACBpvDCplwPfdr1XaDEub8ldACwoUahV7gdUHx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756885925; c=relaxed/simple;
-	bh=snFeoODT9BJH68tR+iP0pMSIayjTcR3o9mxxuFpWSE4=;
+	s=arc-20240116; t=1756885929; c=relaxed/simple;
+	bh=ijv3XrZLm2/TJnChmh37riflNbEO0YahbExZZisEp2M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iJOnLLuAg+IoskN5dzQOv1BPoPoxJU/59abwNWk+0Bm/4wQ90vb0XUBvi6WIvd65Yc0vck8wbgOqZxP82LevAvPqSi1cU8oLbLjIVRw0bWvjmpG7FW6QoQ2wa6CSXgp78yYdUqzP0BLs4SEM14HTRtgHWZw+m01Dmu4BokmdRfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H4qupqUW; arc=none smtp.client-ip=209.85.219.171
+	 MIME-Version; b=GnHqt836ExISGAIpvrPY2wvdCwmP1BJrv2FK+LasbvgHDFjzRFQB2ZmsS0beKW6r4Wz0AAE30/BWgr/7V8FweJphSdjp/6S34jCcLFBYRsbUNGCI1BMoGcySfy4soEptGGO70Ql8ZGlvc6WeSusWymZs2TuCsRIccxCihqpO+rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gTX4NkmG; arc=none smtp.client-ip=209.85.219.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H4qupqUW"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e98a18faa35so4087576276.0;
-        Wed, 03 Sep 2025 00:52:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gTX4NkmG"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e97021a3695so4872283276.3;
+        Wed, 03 Sep 2025 00:52:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756885922; x=1757490722; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1756885927; x=1757490727; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sOZrAAm7MRXs3mhO/TBGbkWZ+JqR99C9rh5CL922LRU=;
-        b=H4qupqUWRgK/5ltHN/Uw4rtw7K8J1I7mbYVpVI+kOSv+apjIM9hJBszLKvxQcfERTR
-         haEo1U7YiHpzgqekjmwELfK2pNKsoo+Y5HKqLq7tde8cjC0DFHEhCPp2U9ZsEzATDdOg
-         y1hM6aaFz6F26e+UbyXbORNy4LHWfY8njF7yDH95lmxmPr64pXiYwjp90KgnfhiC+sQi
-         gyuQAcdPoS/SaBnJEl9/khrlL/fX+GrsPzeiaVKC1eUw/qhuIVbqykHvD+vXTn81YHCz
-         N8hngowmh7Ik4HyEPN+/+jKfZeCl4GaINDR061mzmIMwSbnhnaYMBbL2E39IN9rGUMH/
-         TZFA==
+        bh=WevYTlCPqTL1WxoQFVrzF+MsCB7RWtW+mPaqKFqA5Z0=;
+        b=gTX4NkmGUgeebsu6zyqtV3UC07/2YEMzS1HOc1+njJdUiEFdySHjA3/0EbIdpKCDUB
+         IUM+iZ1XI+zJsXtfZQVWiNZ504/DCxDt/iuGUV/iglJZM86h0lMfHnEMN4sdSx2kh111
+         ahyzK38gjaafDgC4agMJe84JysFNUDmTqhpHVcToF3YK1DuYkJ96iUatw7HkMjrlOGqT
+         5kyC1zbUSrgSUpJavcw8qnRSHo9k6iD0Q4mxD/bvecphv2jj7mCvts3AhP4Ku2wq0HC2
+         gQkoH/RvT2mmYy0n7UCp8pJxdE6TSAy3yjsq6CadkrPkIvKOPGHcyUc1Tau+Z91Olg0Q
+         /oCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756885922; x=1757490722;
+        d=1e100.net; s=20230601; t=1756885927; x=1757490727;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sOZrAAm7MRXs3mhO/TBGbkWZ+JqR99C9rh5CL922LRU=;
-        b=GZMpW22BX8qTBnHY6Ba1EeIcxkTbsAQZJegNdxbVCn+sxULvPzuzdMEQSZSlM0h12N
-         Aa7iDvmIi5lt5PQH/xQxkZ0+dutVHrSL7RKmzD7oWwaSoDrJZxvmGf742Q8xIoAvP3qL
-         c5ohOlXE6xYMqZaZieiMIbD789aiqvkWNHkSOWzcrt8uLxI1kSqzCelweWfHa2GdClxC
-         fwR0J0Hz6fKuS5ZNSr6lbv2SRciOQNyAIzju4B9Wj7mZftDPFhYhtB3vNALj2RgvByL2
-         0VuKOWDlsUBVVuEb4dkiz6k+9XI2u5zwutsFEa9CRZLZXkUhtj+PIoe/BcxUwRB5XZMn
-         /tGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWaQg+876CrcXe7MRAFeaWN6lUMmO+UpkaqEG/havyzeM/3gN+WHc32ENmhYMqwLF6yKx0bRbqOjEActM6hNURx@vger.kernel.org
-X-Gm-Message-State: AOJu0YyT5W82jJS9HJxmQfFcbwHjVluR5hVO2WLytk162nrc+8G8zZ3+
-	GEElYVj95vDJZjCW8YyaXZgj4N/BL3YUxYECrnH7ad4CYiqIhsS3sUUC
-X-Gm-Gg: ASbGncuK6iwRfn4sHNZ8RfGXMI1J4+2EHqFiJ2DjzvPDC/4jIDAZFPwMuGG3wI1uJY1
-	1Rdv6hlkNZ2+ixJBsOWEsW1ClEdDKiWNpUHYCudzD/YZ/b1e4EerH0D0aovrI1fgc/9sxJfd6jo
-	Zxi3lQ2ZwT23bv+yUg4ArO2RifhbemrzujD6NlYNEeqsOuDjUBz7O8XoBhNiVrenQH5oZ9WPOes
-	k9Aiu90ts3rOVdL52HoFNCA58sRahzkQnBlnmuSnFmFESK9aNwz0ZROpjh1eP90cbC0yfpj/Dpr
-	C/wKlLk2byxTjePVi47d+MCzWLhVlr3LdMDGFLjrusmtNotV/HAEAYqhR9l62XcDX/iY2ERQako
-	u20KG5Ghs1jDnSnG6qVfFBkU5USmZyOdQzmUyc7ayqSw=
-X-Google-Smtp-Source: AGHT+IGGlCydcbCwnYjVP4S78cXr3DYHM86OjR2Ma+Y6m0u1jhxiHyX2LJKGAS25ZQhtAPDCxTvu7w==
-X-Received: by 2002:a05:6902:3188:b0:e96:fee4:5204 with SMTP id 3f1490d57ef6-e98a575a7d6mr13556559276.2.1756885922454;
-        Wed, 03 Sep 2025 00:52:02 -0700 (PDT)
+        bh=WevYTlCPqTL1WxoQFVrzF+MsCB7RWtW+mPaqKFqA5Z0=;
+        b=OuJTZp1iKNYYOiKGcqadIggchbtBZpibLnJuB5xZI447CZTeR7hEkP/iD4xO2ByYb8
+         2bDsEz2SnpOIZna5rYDht1ySsiqg4vFLnZXhFwMTJUgpP4gyv8payhOOwa1cc6nM3lj4
+         YU0WBjPLsa1LarNKMw4/qronQWY4qXHv1a2tu8NFBHPZTeCQySho8/mrWU9NeQCvBXcA
+         zU5ZvdEkALuF0omB1PkUeW14byNhXRO63hZ6AJsmJ+kxriJg0gU1EsFT/LzIry1gN8e1
+         JBEQNhS5b44vBuFSbL2ihWjAnaEiIA7S+Amw8etOTO52mFYlSXicdKHDJ3C1IEbQprTT
+         LaMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVeE1MjssGhDzXAoJogFvcpe4DL9CP13nGS/Tyuf3pFKVId25AqaUPYbVDjAmG+rqDBpT9zBGtjeKVtkTqTMSQO@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeB/qPDAuPES0rb4YOZjCkuODk79hXcvzQ9rGxF/6VhvRz5eic
+	Gd0fVoNw9UomlAZirXiem59cprxYvrLPFDfhwM7ij3H0tN8qykchiI7Y
+X-Gm-Gg: ASbGncse8GcLYzkCQXPcdI2ZHE3AwfuGTsVkTuw+xpr1S3q5WruWV/5UzxD4HH34u5L
+	oU/ozKqfWE10qDwSpNgGGU4/dJRDGqTrMt3WWC39nuz8taejKUt84bwXYWh7AZ23WXDVUBori4g
+	vzGmE3figuF1xX00QDuyLaEXmgpqXuI8SDcSqocSrxSEs+HS+A9uCIDQSLtKGs1fgAsRf5lzxRo
+	ZBp6c2nfvRKQriQfmt0MVziPtA4UKwMPEGLSKHeCde19cFP5I18nclAhVlhIpOVihPEAamJUVnR
+	aMhoMUFMeLeHfwvdme+qaviLAxKDoz2WtYGDR2wTGs6oSXO60QosybVUWGjMr8TEX6f11/yjC7a
+	hpB5Z+NLJiU2XUN5jiRR7hlQA0kXmOZt8
+X-Google-Smtp-Source: AGHT+IFR6m7sMRYq60YYdiwNHcTGZgBDSJvdiB2hyzS/2PlASgOEutBAVhyy9tEnlPYj2g+a/4aHxQ==
+X-Received: by 2002:a05:6902:18d3:b0:e93:3a40:8d49 with SMTP id 3f1490d57ef6-e98a5839762mr14591292276.40.1756885927052;
+        Wed, 03 Sep 2025 00:52:07 -0700 (PDT)
 Received: from localhost.localdomain ([2a12:a301:1000::20f3])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e9bbe08c80bsm1288391276.29.2025.09.03.00.51.58
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e9bbe08c80bsm1288391276.29.2025.09.03.00.52.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Sep 2025 00:52:01 -0700 (PDT)
+        Wed, 03 Sep 2025 00:52:06 -0700 (PDT)
 From: Jinchao Wang <wangjinchao600@gmail.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -72,9 +72,9 @@ To: Peter Zijlstra <peterz@infradead.org>,
 	linux-perf-users@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Jinchao Wang <wangjinchao600@gmail.com>
-Subject: [PATCH 2/3] perf/hw_breakpoint: Parse before reserving slots
-Date: Wed,  3 Sep 2025 15:51:39 +0800
-Message-ID: <20250903075144.3722848-2-wangjinchao600@gmail.com>
+Subject: [PATCH 3/3] perf/hw_breakpoint: Skip modify_bp_slot() if slot index unchanged
+Date: Wed,  3 Sep 2025 15:51:40 +0800
+Message-ID: <20250903075144.3722848-3-wangjinchao600@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250903075144.3722848-1-wangjinchao600@gmail.com>
 References: <20250903075144.3722848-1-wangjinchao600@gmail.com>
@@ -86,42 +86,39 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Reserve operations update global slot accounting across CPUs and are more
-expensive than local parsing. Parsing only validates and decodes attributes
-for the given breakpoint.
+Only call modify_bp_slot() when the old and new breakpoint types map to
+different slot indices.
 
-By moving parsing ahead of reserving, invalid attributes are rejected
-before touching global state. This not only fails fast but also avoids
-unnecessary reserve and release cycles.
+This avoids unnecessary release/reserve operations and improves efficiency.
 
 Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 ---
- kernel/events/hw_breakpoint.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ kernel/events/hw_breakpoint.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
-index 6066aff38eec..1db2c5e24d0e 100644
+index 1db2c5e24d0e..6fed9521baf2 100644
 --- a/kernel/events/hw_breakpoint.c
 +++ b/kernel/events/hw_breakpoint.c
-@@ -706,15 +706,13 @@ int register_perf_hw_breakpoint(struct perf_event *bp)
+@@ -752,6 +752,7 @@ modify_user_hw_breakpoint_check(struct perf_event *bp, struct perf_event_attr *a
+ {
  	struct arch_hw_breakpoint hw = { };
  	int err;
++	enum bp_type_idx old_type_idx, new_type_idx;
  
--	err = reserve_bp_slot(bp);
-+	err = hw_breakpoint_parse(bp, &bp->attr, &hw);
+ 	err = hw_breakpoint_parse(bp, attr, &hw);
  	if (err)
- 		return err;
+@@ -766,7 +767,9 @@ modify_user_hw_breakpoint_check(struct perf_event *bp, struct perf_event_attr *a
+ 			return -EINVAL;
+ 	}
  
--	err = hw_breakpoint_parse(bp, &bp->attr, &hw);
--	if (err) {
--		release_bp_slot(bp);
-+	err = reserve_bp_slot(bp);
-+	if (err)
- 		return err;
--	}
- 
- 	bp->hw.info = hw;
- 
+-	if (bp->attr.bp_type != attr->bp_type) {
++	old_type_idx = find_slot_idx(bp->attr.bp_type);
++	new_type_idx = find_slot_idx(attr->bp_type);
++	if (old_type_idx != new_type_idx) {
+ 		err = modify_bp_slot(bp, bp->attr.bp_type, attr->bp_type);
+ 		if (err)
+ 			return err;
 -- 
 2.43.0
 
