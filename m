@@ -1,90 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2D22D9795;
-	Wed,  3 Sep 2025 17:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3BA368092
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Sep 2025 18:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756921982; cv=none; b=SZfIDO2UIUws8B8VoT+SPkwLuExYL1OgrDQSentHu/9TXQVXmnm1tEmMEgxXlbU2vTx+bWqg/So5TWfRsFtAWnKnVsKd+nIz/FNVU8SkswU3R38jFRzQppMS3RQ12sGidipBAgpiSatM5yAeDBN/3O2gUyQ8volBlLG1UAYMFcw=
+	t=1756924981; cv=none; b=ruPq55nTrdEbN2azecNAOrcdfYszyugUJywH+oEIDeDNJ4nkE7H/TJlJjEdiz5Ffkf0NdIg0mCM8hvkqphvb/vvOkV5YgL7LiaR3lhxxo1JwosbvwMjRQ1wNk61Rwrx0EmCsocrm/CcUt4iMd+ZCqjSfJsFxhjSX0kUwh1jDVHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756921982; c=relaxed/simple;
-	bh=K6zuvZBYxoN1PbngGb2nApov5U4Byc+4zm0S8NaTk6Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IQH8QTeCxt4BoF1pQsGLdXnQ6Dgpgy5FFI/7FamCSGNn7RLga7vAV38Y2tWQXGdPFJd7yYy3i2oi1p1pV3NxEixR2eHg1FV3WalVweXB1WI9ekU5cA+UnM94F8UC6XcayMpQIBlRssSUXnKF8ubF7O36TzetlNrDNMx5iCtv/eI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EXGKWm47; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1756924981; c=relaxed/simple;
+	bh=Dp47Bw4LhXp29qV4lfEDG5HOY3Q+6+YPzTiMrwpA2DA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=NPLPHqJDfhKimCxiMxQgiaRc+VQq7hSskjCq1GndMLAcnZMUIp78+64MKnFxxDYf9hbuvpMySkXNYoqouyCg4uZws7kGZYNpsT0JXMc17XhwC7pbq++oUfLinKT64ukwwmS+uAJ9VPgQSmGCt8gR8o0/Xr5W+gGolozifjKTVUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4Tn/UbA3; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EXGKWm47"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2393FC4CEE7;
-	Wed,  3 Sep 2025 17:53:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756921982;
-	bh=K6zuvZBYxoN1PbngGb2nApov5U4Byc+4zm0S8NaTk6Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EXGKWm47g3NfiexJyTHs4QRjix47kTc4OmnfhjbyVpD347vjCoHF2CxRKmYip8nZR
-	 B27pBRDT4T8l101wBXtdUMTDahAT3sKmURn4MV72rG09nXRUaVUOBBBmZZsZNnb9cC
-	 EzrhvPbWwXNOh82sAKkLO7ihg0HVVGQR3FzMuLFEkBi0T2lgClnRDdP9VIrEKqVLB4
-	 /wv+4gVBcr/YxCiaVFfHPJuxr1GZizE8LY9wPwxq2XuTbWYwGQoqh7MvjQXThkGfry
-	 tGMXej5HCwqKdHRnUpNv7MC/BDG38VwcYN0QhIRIgQLjWkN3uh/3sUW5BU8C2UxcZn
-	 6X1WxAJAXUPDg==
-Date: Wed, 3 Sep 2025 10:53:00 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Thomas Richter <tmricht@linux.ibm.com>,
-	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, blakejones@google.com,
-	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-	hca@linux.ibm.com, japo@linux.ibm.com
-Subject: Re: [PATCH v6.17-rc] perf test: Checking BPF metadata collection
- fails on version string
-Message-ID: <aLiAfPvqghcTF-te@google.com>
-References: <20250822122540.4104658-1-tmricht@linux.ibm.com>
- <CAP-5=fW43ZAguuB-FB2F6CFTCgd1Fy1Xd+WAt4WSA-fMRTwG5A@mail.gmail.com>
- <aLhqDDnG4Nu9-h7C@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4Tn/UbA3"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-32811874948so97571a91.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Sep 2025 11:42:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1756924979; x=1757529779; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=l5aN7djIkkUT2sBdfyx1qSEcAbRYo6zyioJkgOjgjEc=;
+        b=4Tn/UbA3LOeB5b6sjrsE7M+vzZAoP5N0HnjlMs43Kzq236kDoA/IpCfNQkbzntQkuM
+         ++dYvMjPvcheBKSJOZ9GkKD90JcG4zAFlC920FcD7vG0cefq0vvg+kpVINuSeWbbG3Vu
+         jZzSYnXVBn/tAHT51Dw+eHotTtfp4iR6PV9qNcc/be1RRhO+d8u4t8TUTj1KjCwFrO85
+         8P3VgIJgyInBfML/LXriLQDzIPaaWMb601+RuGQXHq326c3SpeHUAHNwILcDBm/0DEj9
+         eYWAcCaG91Ctu8WKm6pNfwA9yv65BfRb+8llYdkKt/Cz6PeBNEBFojBhN4pcoIYvE5hD
+         G5eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756924979; x=1757529779;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=l5aN7djIkkUT2sBdfyx1qSEcAbRYo6zyioJkgOjgjEc=;
+        b=J6mOa2/iBpz+vx9bzWU6TudeWyEXd45+si0/I3rpkRkqV+wWRNJFTFPI8TSyAUwMG2
+         xBeHMwy0Nc1qvFA2DKyD1vGNopvTOcSeJCBtJ9LdD8/GrZwukB9wFqRUhmX3EdyQLoJc
+         6aev+ZJZws5JYZUTZJVZDyL4kXVDr+keP7GQXBmQEEOlLm/N6Pt16daHnEsOehP1c1mF
+         usWYTUhnWAlRFrLIlGM4sXfbDYLAQIx5KCVbRBsjBqz7LCq5eiIJfuoQXY3cYztbpohQ
+         J8cW4+V7YmPxoLMA0UH8PKNUrcoONH/ZMlh3GPxUW9qzhxLCrxUI6yVUt7wCZKpTdxCC
+         Cvdw==
+X-Forwarded-Encrypted: i=1; AJvYcCU7v8QpetkIcKHEDwyM6q46OjbS3lyQDwiMtCf+YdmeFhrDIiqmW8zkQwQrHT2TSXr5Pxu8Uqz8YRzl9V6RN615@vger.kernel.org
+X-Gm-Message-State: AOJu0YwU+6JqhcoMXEpbFRgA7a1WQNs60qNiooCCqGXC5gp8J+Bl8z9j
+	7P6gCilxPlIuTS91r7epqIw4ZPqLe7pir6J17nqPGzbieNDPcCOSDUobMHOSiTiln/H5BSnl7f9
+	hsZQs1kSESQ==
+X-Google-Smtp-Source: AGHT+IE82ZLItzbcwVjR6xjPMcTS9kABRExAjPt9nXLxYjTqAax/qoSHCG+MF4EpCY9h8hZnLVp7XgNX2Loz
+X-Received: from pjad23.prod.google.com ([2002:a17:90a:1117:b0:329:7289:8bdb])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1a8b:b0:327:e8d0:cb18
+ with SMTP id 98e67ed59e1d1-328156cc9f7mr20206450a91.29.1756924978715; Wed, 03
+ Sep 2025 11:42:58 -0700 (PDT)
+Date: Wed,  3 Sep 2025 11:42:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aLhqDDnG4Nu9-h7C@x1>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.51.0.338.gd7d06c2dae-goog
+Message-ID: <20250903184248.695267-1-irogers@google.com>
+Subject: [PATCH v1 1/2] perf test: Add an 'import perf' test shell script
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Collin Funk <collin.funk1@gmail.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Sep 03, 2025 at 01:17:16PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Fri, Aug 22, 2025 at 11:02:27AM -0700, Ian Rogers wrote:
-> > On Fri, Aug 22, 2025 at 5:26 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
-> > > commit edf2cadf01e8f ("perf test: add test for BPF metadata collection")
-> 
-> > > fails consistently on the version string check. The perf version
-> > > string on some of the constant integration test machines contains
-> > > characters with special meaning in grep's extended regular expression
-> > > matching algorithm. The output of perf version is:
-> 
-> > >  # perf version
-> > >  perf version 6.17.0-20250814.rc1.git20.24ea63ea3877.63.fc42.s390x+git
-> 
-> > > and the '+' character has special meaning in egrep command.
-> > > Also the use of egrep is deprecated.
-> 
-> > > Change the perf version string check to fixed character matching
-> > > and get rid of egrep's warning being deprecated. Use grep -F instead.
-> 
-> <SNIP>
-> 
-> > > Fixes: edf2cadf01e8f ("perf test: add test for BPF metadata collection")
-> > > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> > > Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
-> > > Cc: Blake Jones <blakejones@google.com>
->  
-> > Reviewed-by: Ian Rogers <irogers@google.com>
-> 
-> Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> Namhyung, I think this should go into v6.17-rc.
+The 'import perf' test needs to set up a path to the python module as
+well as to know the python command to invoke. These are hard coded at
+build time to be build a directory and the python used in the build,
+which is less than desirable. Avoid the hard coded values by reusing
+the existing shell script python setup and determine a potential built
+python module via the path of the perf executable.
 
-Sorry for the delay, will add.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/shell/python-use.sh | 36 ++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100755 tools/perf/tests/shell/python-use.sh
 
-Thanks,
-Namhyung
+diff --git a/tools/perf/tests/shell/python-use.sh b/tools/perf/tests/shell/python-use.sh
+new file mode 100755
+index 000000000000..fd2ee5390060
+--- /dev/null
++++ b/tools/perf/tests/shell/python-use.sh
+@@ -0,0 +1,36 @@
++#!/bin/bash
++# 'import perf' in python
++# SPDX-License-Identifier: GPL-2.0
++# Just test if we can load the python binding.
++set -e
++
++shelldir=$(dirname "$0")
++# shellcheck source=lib/setup_python.sh
++. "${shelldir}"/lib/setup_python.sh
++
++MODULE_DIR=$(dirname "$(which perf)")/python
++
++if [ -d "$MODULE_DIR" ]
++then
++    CMD=$(cat <<EOF
++import sys
++sys.path.insert(0, '$MODULE_DIR')
++import perf
++print('success!')
++EOF
++    )
++else
++    CMD=$(cat <<EOF
++import perf
++print('success!')
++EOF
++    )
++fi
++
++echo -e "Testing 'import perf' with:\n$CMD"
++
++if ! echo "$CMD" | $PYTHON | grep -q "success!"
++then
++  exit 1
++fi
++exit 0
+-- 
+2.51.0.338.gd7d06c2dae-goog
 
