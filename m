@@ -1,165 +1,114 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FBF368098
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Sep 2025 18:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C25D2DE718
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Sep 2025 20:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756924982; cv=none; b=b/LrR/pRf+UfD2OJBx/bLYLPkjFK5eBQwQ7wceCN7u+hyHgYdP+ehOp67yYB4Iqex6XpXkBiAAAYxbNByRpmqakK8gp5tQH24xU9ND3nYgo25np6kDEOnCRrwzucnKwYiTzGB3IzeJm/brkonAxaxj3Q771ZKE49BnO4d+2oWwg=
+	t=1756931227; cv=none; b=snbnxeKs5k+fpaWIiLfPqE3wAxj25sYJLZseB58F/PmIwfOCAD4Cyw2pEG1fDtnps6a7aAc3+V7XzQUIjSgvG+U3mO8NV8RkgnlepJasmdFipRw55JYaWt9gewFKOoqVlHMhbq9zVrakuJoHCMP9rP5V/uZ9yukpogTcfLj7evk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756924982; c=relaxed/simple;
-	bh=+/4V1TnkaJE6dJlPtdCaVs2/y027qYyexTsOM8eV/88=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=NBhTT1usL+w7iB4krA3O++AtGT1TZr2BqDN+h2eg+N3VawtzoTbaXeUgBxStva/kPMyEEgDU2Po9GRw9ueSLrLPU5nR34AVd1lqM4xZWq8qTC4kTSVmJlLoERk07X6FYDiaReS9vlMM4bCNMq43OBzcStkgN7JU2E9CWWYea1Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F8GtgIWC; arc=none smtp.client-ip=209.85.214.201
+	s=arc-20240116; t=1756931227; c=relaxed/simple;
+	bh=K5cb2Ag3Ltt8vqf0qcYqu7qQhHK83SWemQp0eng8oe8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V/7dFQXt7fe+0Pk084v5/Q4nt9OCwNtKSCjW/WQfNA9FaeqG1JrAAD+N1X367LKB3E5wZC+QYpY9ndu2FPm1MrWiUe/BP0dXzNDMzm1dp6/MHfoAbms7qI+QJPYbbidnWTKQJSe0IVWBZsVONh+SBsWPO29+rnv9Pp5u0bmTnPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qJppgZuh; arc=none smtp.client-ip=209.85.218.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F8GtgIWC"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-24c99f6521dso2584735ad.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Sep 2025 11:43:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qJppgZuh"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b0418f6fc27so43629266b.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Sep 2025 13:27:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756924980; x=1757529780; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SMuEm8Xw//lz4NUX5kNhF0+ljXCstooczXL6JPzhXbY=;
-        b=F8GtgIWCoW72IJPLOfdM+rGzRCGBT03CUEP+3OE18Mh8NW8ZYj6UUJXG15oXDfqhmx
-         3vI9nP3YQm3lhzJqsPkNsrRjQW94ed5cnKTLPyaSBvSJgkn2uwzcP+JiK22MkHjCmmbO
-         dAROUp9KT0c3aGsjoCc2wMhUgicr58zKahvqr7SZegD7RcZFWqvS1Orp1eOhJGehWLfU
-         X7Cskc9ZzbUM4zKekswtvGP4b9VjKqYPEH6s8KevZOD9go1DdL98vxO5VGPqkyzpgKUj
-         zIVjdZ/dLCIFv7PskS9TN7tS60x+MtNumMfqr1oFoMSK3CNVOdVe3dzAgZ6FGi8cG3Km
-         mEvQ==
+        d=google.com; s=20230601; t=1756931224; x=1757536024; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=yDlCIvq84MKyXPm8Ow1snYfB2SvaU48Tu2aP8oyfTO4=;
+        b=qJppgZuhmHO1G8cGw4WAeTJWU68v0DPYAwN/suRpnPOX8FDZrSKcTQH3SYIckAV9h+
+         XxMhVvSLO1RUYkJ/YUuXDdDUHtmQ6MmyDc5sNTIY0WfToXGL1yNjW2tWL98G6BR2CoI2
+         Ptwh8BdikudSl1T+RBIlUln8yv/9TNIWhsfraX3Tf+xOpqq/EzcODzZ86ne/WNU3vPt1
+         j8jmOmrYop7Wd9z288JU+LD+6iYhNiASIvFRIi0YfcltU/EQS+e0CIlMadKajAxoSgCG
+         RKBqVPFE/6kU0RgKhtoeeGo1rfAI/ebfw7eXj5LWlbpBjkxZNfticiY3amxedA+BP1lB
+         Y6wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756924980; x=1757529780;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SMuEm8Xw//lz4NUX5kNhF0+ljXCstooczXL6JPzhXbY=;
-        b=ahcyUKjnCgdyNds2K545Ux+dxkXIzBvOYZThg6XanXLkz0oRKJ4WW4T1xizoUkeueQ
-         PD44kE7tM6H4wUt/ZVET1l7hfQIEfLPQ5x+cCIeBLM8YQ0pi+nMUIB6LAt+kb/cFZJX6
-         FlG7DqwwCLyWnCuuVuTYaBhhS2zKg+tzdkkMLkPBYwRjVqM9aDkAlP3H5wiBbizfQPPg
-         E2962FtZ5N3Kw+KOkzOoEwv89J70LAo5eGnqcLvS+3Zle36oGxy3QqDjiTGkhsm4ANKs
-         uZlNt34yzhl+2+Edpv9c3GB1GjkgOqzBlvPJNF35YgfkhyWlXX4jjxN87mpfUCp3asyP
-         bX+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVZt2JJpB9aDgHJSdVdH0+qQ/qJZR5w9UzlAJY/nO6/OBW/iB9c0JAh0pZRnxp9acBajHDvIwmd+PGxTHt6lO5H@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfvOfjqcNA91muw8P1ZKStbri71ae8Rch+/G9pfDDGn85uWyvp
-	AIQnNtNoya/HGlkuiUffmFQPDc3HJv1PDeGTFOEBHfBic1iC7pedgaslGOFaPE/BhCfbVk+Ox+M
-	0kfqTmQFBqw==
-X-Google-Smtp-Source: AGHT+IG2Xh8nMC8Yttp8497v8vS1VI/rD3BoINqu67RTeFSF+xQ9MjBvrvIya2fLPQUfpqpvCfNI/pkOZT+q
-X-Received: from pjur7.prod.google.com ([2002:a17:90a:d407:b0:31f:b2f:aeed])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1c1:b0:249:112c:f947
- with SMTP id d9443c01a7336-249448e49a4mr199749675ad.19.1756924980399; Wed, 03
- Sep 2025 11:43:00 -0700 (PDT)
-Date: Wed,  3 Sep 2025 11:42:48 -0700
-In-Reply-To: <20250903184248.695267-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1756931224; x=1757536024;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yDlCIvq84MKyXPm8Ow1snYfB2SvaU48Tu2aP8oyfTO4=;
+        b=QUne49D3+ll995teKL6TppN373r+PEc08IK2DsNPp/xh6n1Nwh0+IUYfCTSEwsSoIL
+         Qp/b/S+zoqCePkOEdQJihqgDtyoXX3EGIAdXzd16NpKZlVF+k/L4pEysrDoLk6WISjMN
+         Qt9Z3YlSyVbeFdMJeZ7x/Kb9KZYej/XmmJCx7vXEWPX14luIZzi0MKH4RxW41rxdb5Ij
+         2q4AICgJ8TGejIyYkHXGkdrMsZmIHwOj5xiWkoM46ej5OMhH4AZ2a46z9zPk7Nr9+EUZ
+         ScGH5X+vYZpFoIoWxWb67MQVS41qDCM4wPWDb+KGgnmvbvvhZtLBv7WbYMou0s7fGqaW
+         pxDw==
+X-Forwarded-Encrypted: i=1; AJvYcCX1j0fG11vKxUWAXYnc5GVS38jxhwcNzNt6SfxK+IugRKCIIl5G8Hj+ujvlPt7dBORL4MX1OOclzgSTqr1Ov9yS@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaMl5tquYwDji10hMeV92p9qDXRN+HTYFnsLkfUOwDOMdtHXrO
+	fqDInrHXC8dZCKvg5MblCWYzPsa3ipsMYqZGIh984+/2vUDoh4Gjpdbv9d3LrTH3s70E7nuEvSi
+	PaWzH8215w+bG5Zp6XUzlHhDjIIFlcnzOx5SfHJco
+X-Gm-Gg: ASbGncv2gOuukVG+Pj/1cbL/4HQvJTNRNvB8n3gL8PXleGbCsbdi3Ve0jUhWsczI6ub
+	cc466FrccHyEJTL/lbZQJ0MrykQpcxoQeCkoh1vcmRAUC0cjHkgrruwMdsi5SbsgMLVHJHLUinl
+	Yz53cRBM76UC3pf+G9ITTFdLLWX5EkH8qTHGipR6gMXEkizLbB5iqPtlvtCbi2W2JI1xUWz+YdB
+	yoiNPvl+7wO1CZk9tlCL6jbZGLVWt8lI7VDZhdp6/oXCMx/FwrgU4rW6fYyndJyYQ==
+X-Google-Smtp-Source: AGHT+IEbHaCIIe299yWYOSoPqR47Z4thD9poSLa3/b87xSS9PPrV/EzUbSMB8e9hNc7scJxAqa4KQvg2xsR5ZR4LgL4=
+X-Received: by 2002:a17:907:da9:b0:b04:7880:3e88 with SMTP id
+ a640c23a62f3a-b04788056a3mr133873766b.18.1756931224249; Wed, 03 Sep 2025
+ 13:27:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250903184248.695267-1-irogers@google.com>
-X-Mailer: git-send-email 2.51.0.338.gd7d06c2dae-goog
-Message-ID: <20250903184248.695267-2-irogers@google.com>
-Subject: [PATCH v1 2/2] perf test: Remove C python_use test
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
+MIME-Version: 1.0
+References: <20250825195737.225824-1-zecheng@google.com> <aLKknf6qFxVgN3gJ@google.com>
+In-Reply-To: <aLKknf6qFxVgN3gJ@google.com>
+From: Zecheng Li <zecheng@google.com>
+Date: Wed, 3 Sep 2025 16:26:50 -0400
+X-Gm-Features: Ac12FXykccIYcG9bPxZD3cwKt34GI_MEBjFLOzP5gRg53pY0R13CjgOBsUMBK2c
+Message-ID: <CAJUgMyKBFkF9rKFnzP6S_c9ma3P7a-NsCubV1DiTwoGUbByk+w@mail.gmail.com>
+Subject: Re: [PATCH v2 06/10] perf annotate: Track arithmetic instructions on pointers
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Collin Funk <collin.funk1@gmail.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+	"Liang, Kan" <kan.liang@linux.intel.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Xu Liu <xliuprof@google.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Removed in favor of the shell script version.
+> I was thinking we can use TSR_KIND_POINTER here.  Probably we need to
+> distinguish it from the existing percpu base use case. Maybe you want
+> to rename it.  Then you don't need to find a pointer type in the DWARF.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/Build          |  2 --
- tools/perf/tests/builtin-test.c |  1 -
- tools/perf/tests/python-use.c   | 27 ---------------------------
- tools/perf/tests/tests.h        |  1 -
- 4 files changed, 31 deletions(-)
- delete mode 100644 tools/perf/tests/python-use.c
+Hi Namhyung, thanks for the review.
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index 3e8394be15ae..af67f8ef74b4 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -20,7 +20,6 @@ perf-test-y += hists_link.o
- perf-test-y += hists_filter.o
- perf-test-y += hists_output.o
- perf-test-y += hists_cumulate.o
--perf-test-y += python-use.o
- perf-test-y += bp_signal.o
- perf-test-y += bp_signal_overflow.o
- perf-test-y += bp_account.o
-@@ -75,7 +74,6 @@ ifeq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc))
- perf-test-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
- endif
- 
--CFLAGS_python-use.o   += -DPYTHONPATH="BUILD_STR($(OUTPUT)python)" -DPYTHON="BUILD_STR($(PYTHON_WORD))"
- CFLAGS_dwarf-unwind.o += -fno-optimize-sibling-calls
- 
- perf-test-y += workloads/
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 85142dfb3e01..cb09b8f40b41 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -84,7 +84,6 @@ static struct test_suite *generic_tests[] = {
- 	&suite__syscall_openat_tp_fields,
- #endif
- 	&suite__hists_link,
--	&suite__python_use,
- 	&suite__bp_signal,
- 	&suite__bp_signal_overflow,
- 	&suite__bp_accounting,
-diff --git a/tools/perf/tests/python-use.c b/tools/perf/tests/python-use.c
-deleted file mode 100644
-index 0ebc22ac8d5b..000000000000
---- a/tools/perf/tests/python-use.c
-+++ /dev/null
-@@ -1,27 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * Just test if we can load the python binding.
-- */
--
--#include <stdio.h>
--#include <stdlib.h>
--#include <linux/compiler.h>
--#include "tests.h"
--#include "util/debug.h"
--
--static int test__python_use(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
--{
--	char *cmd;
--	int ret;
--
--	if (asprintf(&cmd, "echo \"import sys ; sys.path.insert(0, '%s'); import perf\" | %s %s",
--		     PYTHONPATH, PYTHON, verbose > 0 ? "" : "2> /dev/null") < 0)
--		return -1;
--
--	pr_debug("python usage test: \"%s\"\n", cmd);
--	ret = system(cmd) ? -1 : 0;
--	free(cmd);
--	return ret;
--}
--
--DEFINE_SUITE("'import perf' in python", python_use);
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 97e62db8764a..e17594352b13 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -120,7 +120,6 @@ DECLARE_SUITE(dso_data_cache);
- DECLARE_SUITE(dso_data_reopen);
- DECLARE_SUITE(parse_events);
- DECLARE_SUITE(hists_link);
--DECLARE_SUITE(python_use);
- DECLARE_SUITE(bp_signal);
- DECLARE_SUITE(bp_signal_overflow);
- DECLARE_SUITE(bp_accounting);
--- 
-2.51.0.338.gd7d06c2dae-goog
+Yes. I think that's a better way to represent a pointer to a type.
+With that tag we can also support registers representing addresses
+(is_reg_var_addr == true). And when moving an address register to a
+memory location we probably can simply add the * to denote a pointer
+without finding the exact pointer type.
 
+>
+> > +                     tsr->offset = 0;
+>
+> I think it can refer to a member in a struct.  How about this?
+>
+>                         tsr->offset = state->offset - offset;
+
+True, it may load an address of a struct member. Do you mean
+stack->offset - offset?
+
+> > @@ -388,6 +493,7 @@ static void update_insn_state_x86(struct type_state *state,
+> >               tsr->type = state->regs[src->reg1].type;
+> >               tsr->kind = state->regs[src->reg1].kind;
+> >               tsr->imm_value = state->regs[src->reg1].imm_value;
+> > +             tsr->offset = 0;
+> >               tsr->ok = true;
+
+I also find for mov register to register this should be
+
+tsr->offset = state->regs[src->reg1].offset;
+
+Let me update the patch.
+
+Zecheng
