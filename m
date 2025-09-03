@@ -1,114 +1,90 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FF0225765
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Sep 2025 15:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0C01E1E12;
+	Wed,  3 Sep 2025 15:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756912551; cv=none; b=FVZS1HfpW9//M2s/aCsv3m53tD00wNuZq1ifCIE6u3w7751seZrkjdWWfGbt8MS2VB3XQu7OkRPXoGW8MtpczyJFXaJpwoNCg6cvqbkJtvQlrUV37RiNGv/Yvk50NcFaJeimmg+0sst4gbnfL78J7eo+U+4RnethKI7qaVcy8nI=
+	t=1756913659; cv=none; b=kEMvQVQ2xKytN+xd1LyqEdR9cGwJ4sVmvoRQwAPqikcHPkr7kdNSaONMGCSJ2VUuObBhCSJp5rF8HC2NbeKd1vL9OmemKOM1ocS0QYndBf13WsgW0cjoOSR9deMjlrgB9HATDbOekZHl0eAZ2ZMESW9lO9vVV70KASeQGnGqvuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756912551; c=relaxed/simple;
-	bh=l5JR3+UPUEJ2ClCwj8ex+lrVpnlr8I65tG5mWXGoWUU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WFDXaxEsf85HJCHm5BxmnMJji9irLbl/Gt2GS1FuQmx8JVC35zag64F3Y6QyrJlkmXOjqltzn/94HVhmypIXqh1NKZf9OfWD3iAaoHhEZIiKu9SKSVeKKbTPIgVLzkyjCzqR72lQVjVLJ56IhG4LeinQrXY4HZJvxVfgQsT50DA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GA1sAcT3; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1756913659; c=relaxed/simple;
+	bh=wBet7mCa9VG8LA9BJWwoQmQ7KaYw25zY4cKiQVpM2hk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fnoS0BqLVbcq8f9ZHhCgj7mtjU5YMmpTuyCG/aNBRXVWESor19XgtavX8gXXzmXZoPWGRZodIQpk9SYTRmE0qGKra/knUkIdhYTveBxChOnNNPVCTHw95Z9mrCB+HWhU7GWcbWZQrJHHiAsCxOvtcfhTgvT0Q58Yx0WjQRgBJ5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nXHnucGW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GA1sAcT3"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-45b7722ea37so6560515e9.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Sep 2025 08:15:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1756912547; x=1757517347; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fMR5sXuAMQlcJIniIrDARobJ0FFiLjcpiPVUSqhd9zk=;
-        b=GA1sAcT3ccTSs2srYyACOmN28J7qbl1PHVLGf5113S5hPo3R8/WgzMjHTylDPyiwMR
-         rXfTB2/8D/BILYR2lmdC6QjBTH8eIGuQUvgXknfsMDL9fPXnqaBZtEfqMP6gAvcZmQSD
-         Q45srAuWBQ58+9i0LLLRlXy3M6McU96jtu32VAEHmHeEvId0UsG0QNC1Xcap+v0S5FvF
-         DckdgkdZ8Iv0dAjpiio2SHoOsGUCeAinyoNoImuvRJs9E9aqPRanWOTAD1wIVmKH08Qf
-         mWUZED9dbwXbrk481LjVZXs+gkJpZdYxbDiv1BTFQeHS5b3FBG+swqkWHE6/IGna9PPe
-         ICEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756912547; x=1757517347;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fMR5sXuAMQlcJIniIrDARobJ0FFiLjcpiPVUSqhd9zk=;
-        b=INrClHM1gdNNX76jV+S4ksTErSzJlc0xpPQAI7SBX5CNOdFCN9u7dVa82XP8sddK/x
-         UU4lB5In0OhmemGqRgH3ljsweIJxdvawPBn5Y9nGja0T8ZKN0cm/24O39fh4/je/CNhY
-         HnLWvdNTOBPk7Ek4wpSdiQd39AWrCZSy2cDJSfWeuGoENZpIuvA/xP2WCvLBydQoCiaK
-         pHpOi1xYgZ+plt0xhY3xatjboVTIxhJ18J+HzYf3ANMQ8W/LxCIGr1wJQ10vVB1+YiTb
-         69Ul+ZdC7aJxDmxUDiV/HlsXSxNlxxmsJ8yXwAI68w6QgPjUXUTvYF63wY9UKBVcHN/2
-         318w==
-X-Gm-Message-State: AOJu0Yx2QqGwV9nTo/equdgneg/y+kHbN38wBZjMUPU64JfMvZHzk53J
-	7sbZ9w0tAoJtGqkjf9hWNPIl9Kp848zzwnt87mOQY6/VeawYttqSML3XFHalqSSMBbU=
-X-Gm-Gg: ASbGncs8VWDOX3xtyYgMRXLNX4VT/LLS+NURwTJdX4uQTF8vlEVEPAEH97qb+1NTr0Z
-	4p+tkEqMXAhP6Sh77TJA6DSwBxmkX82cfalExx+leW6NBjZFGGIM4D5p2EBB7OsxAu4ii++UYhe
-	Jq+J8y4XiMMANZj4f2SPJNUfPkkc/whn5DsJq38YiYwKax2QFODGztF4Iak3zgE4ksCclTnJ86O
-	yiRTb/W4NWhhs5UihQEPynIJruJEhOlwpVUpDkHPQ/pPNSI+n0XIeDcn2YBMJ5TLo120OIuGi8m
-	wZ3b/rY6ZjChY92CgM0KMxFXJcK5tQwNLVkMKxOVsOzSf6d7vSGlL/TJKZUl+QEHoHVv696CXPm
-	O1rLo+81gGzvDn1KfErFJrDKcQgSO31Ovl6iRDDRy+Q==
-X-Google-Smtp-Source: AGHT+IGqmlvtcSgBojPlbYZQhWtD2pJ/2FpKNNBsSoYyGicnvhdImai5K6SAb/1Au4J2gguwRAbk9g==
-X-Received: by 2002:a05:600c:648a:b0:45c:b523:5a09 with SMTP id 5b1f17b1804b1-45cb5235bfbmr28123975e9.16.1756912546581;
-        Wed, 03 Sep 2025 08:15:46 -0700 (PDT)
-Received: from ho-tower-lan.lan ([185.48.76.109])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3d0f85c287fsm22090097f8f.52.2025.09.03.08.15.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Sep 2025 08:15:46 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Wed, 03 Sep 2025 16:15:27 +0100
-Subject: [PATCH 2/2] perf symbols: Fix HAVE_LIBBFD_BUILDID_SUPPORT build
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nXHnucGW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 538A2C4CEE7;
+	Wed,  3 Sep 2025 15:34:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756913658;
+	bh=wBet7mCa9VG8LA9BJWwoQmQ7KaYw25zY4cKiQVpM2hk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nXHnucGWb58rN60JPQdQfI4H0ByFbMqVmXO+mMFihjJ47cqY2oqUoGX5vrxrE5p9B
+	 +3lx+tsW6sHJ3U4uNCMX9OlWsNnnGUCMDqNWHHnnbwoKPFPDC51J7tPJGCVSeAqVQS
+	 kA0JcndCynWf5jqBiPXoW+wwAtQp8vJxO+JeApgkRWhNIhOzw4m4BGxrG8VG0Ofg5d
+	 T9fro74z+KpxOLoCf8mxNLYz9yVFPtwTTi22kzn7qAKVz8Zp3w0aGut/OYzqA/X6OW
+	 7EXzhR+xVo7G8PUNmRerSmvAk2hUJ7UvX8ZKvgP71ujYlhPfXcAQk3jRFCJvTOPzb5
+	 WwXfBysENFX4A==
+Date: Wed, 3 Sep 2025 12:34:15 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: James Clark <james.clark@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2 v6.17-rc] perf tools: read_build_id() blocking
+ argument fixes
+Message-ID: <aLhf9wc3_1OIFGkZ@x1>
+References: <20250903-james-perf-read-build-id-fix-v1-0-6a694d0a980f@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250903-james-perf-read-build-id-fix-v1-2-6a694d0a980f@linaro.org>
-References: <20250903-james-perf-read-build-id-fix-v1-0-6a694d0a980f@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20250903-james-perf-read-build-id-fix-v1-0-6a694d0a980f@linaro.org>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.14.0
 
-read_build_id() now has a blocking argument, but libbfd uses fopen()
-internally which doesn't support O_NONBLOCK. Fix the build by adding the
-argument and ignoring it:
+On Wed, Sep 03, 2025 at 04:15:25PM +0100, James Clark wrote:
+> The function now takes an argument for O_NONBLOCK. The first fix seems
+> straightforward. The second one is _probably_ fine, but I can't really
+> see any easy way to fix it because libbfd handles all its own IO. Maybe
+> we need to compile in both versions of read_build_id() and only call the
+> libbfd one on regular files? Or maybe in that specific use case it
+> doesn't care, the commit message for adding libbfd there mentioned Wine
+> PE binaries.
 
-  util/symbol-elf.c:964:8: error: too many arguments to function ‘read_build_id’
-    964 |  err = read_build_id(filename, bid, block);
+I noticed that yesterday and have this in the tmp.perf-tools-next
+(thought that had sent to the list but didn't) branch:
 
-Fixes: 2c369d91d093 ("perf symbol: Add blocking argument to filename__read_build_id")
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- tools/perf/util/symbol-elf.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/commit/?h=tmp.perf-tools-next&id=4bfe653aa3fefd429671aa27413a1124fe65b9d1
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 033c79231a54..e0d6ff7d0acf 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -873,7 +873,8 @@ static int elf_read_build_id(Elf *elf, void *bf, size_t size)
- 
- #ifdef HAVE_LIBBFD_BUILDID_SUPPORT
- 
--static int read_build_id(const char *filename, struct build_id *bid)
-+static int read_build_id(const char *filename, struct build_id *bid,
-+			 bool block __maybe_unused)
- {
- 	size_t size = sizeof(bid->data);
- 	int err = -1;
+But since this affects 6.17, even being opt-in, I think it should go
+there together with other patches that Namhyung is collecting in
+perf-tools.
 
--- 
-2.34.1
+Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
+- Arnaldo
+
+> Signed-off-by: James Clark <james.clark@linaro.org>
+> ---
+> James Clark (2):
+>       perf tests: Fix "PE file support" test build
+>       perf symbols: Fix HAVE_LIBBFD_BUILDID_SUPPORT build
+> 
+>  tools/perf/tests/pe-file-parsing.c | 4 ++--
+>  tools/perf/util/symbol-elf.c       | 3 ++-
+>  2 files changed, 4 insertions(+), 3 deletions(-)
+> ---
+> base-commit: 07d9df80082b8d1f37e05658371b087cb6738770
+> change-id: 20250903-james-perf-read-build-id-fix-0ef6fbce0432
+> 
+> Best regards,
+> -- 
+> James Clark <james.clark@linaro.org>
