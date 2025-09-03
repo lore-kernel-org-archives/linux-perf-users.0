@@ -1,289 +1,497 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5719C2F4A0B;
-	Wed,  3 Sep 2025 13:36:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6732C2FDC57;
+	Wed,  3 Sep 2025 13:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756906564; cv=none; b=FWEsg7oj91f6D8ZeXiv3wgonDlnmNO/mImnVofzGRoVPe2QONUhxWWAlmOYquGsbJtAJ/LiKHqcqd4C5/yKuAVVdCihm/wn6E/yiYFHVSG3bDuVhzyP5xM/eZ09j1UV+IIrJu2m4qYvunQOUcL17aKfiRDxbCw2jw4LiBErxKug=
+	t=1756907457; cv=none; b=hVpd4lwBV0N3ZnjMf37T1nNPAgRvuz+cj3L/AVHlceStjMaydKDl7hmfQXWWlUT0g9p3rlzAcZ8xG1nvmA9X9iuLWUV2rL/4+9bfK4Fqz7jIBRFzUPJ+LI5oprxVhWNXdn4BRCXjGj5p4ae+SZ0GW6/fyedoqGOGmvY32Czoz08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756906564; c=relaxed/simple;
-	bh=vGFz3odNyr8060Aa2TccDkThKx77JB9ylQrhp0r0nC8=;
+	s=arc-20240116; t=1756907457; c=relaxed/simple;
+	bh=TmMoN3jaJXkCxT3acTPJatmykuSFe/MeK6yjMiaO8ic=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T+HwRYBo5d2pyO/rzF3d8t2K/JrIpD2SCUe9M0qMeObxePb1Y94g412BWFslQilxOg3BorRu3kJg/fSl8m9tJ68N2EpR7Oj1ChtzDFrE9C/9+mDOggykQcUHC5u5vXF+A3/nFq47GQ6CdFxWmMyoI+VJGMoV3msVvk31PEPH7NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mz8tPaow; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=KsV1mAz1/0n4/LKGUGIIddbVwBWlgjUQh97WdElyD1aL0Hoqxtfb+mRRRzDBV6h9IuuEtQPluPPfNglwp1pb8vuJER8TkYhEVS7YojQnBwQvcP6ENCO/AW51sHOcr1MczC5iZw9h/bXKsnzKemc89HkCJsgiWELpofjdHPKYFyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jWweAxY/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mz8tPaow"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52123C4CEF0;
-	Wed,  3 Sep 2025 13:36:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jWweAxY/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E036C4CEE7;
+	Wed,  3 Sep 2025 13:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756906560;
-	bh=vGFz3odNyr8060Aa2TccDkThKx77JB9ylQrhp0r0nC8=;
+	s=k20201202; t=1756907457;
+	bh=TmMoN3jaJXkCxT3acTPJatmykuSFe/MeK6yjMiaO8ic=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mz8tPaowswg6VTNwTTlRgZusJ5DA7a65+mPIW3iirWWm6b+sfIs4RhyeNJXtLvFjn
-	 dDpao0baMbTU3nz6gWxHn6Dz2ZfLT0nhgwkB5TKBQJsB5QYfrzICmNgODpOoAAp+MM
-	 pFGuZRGroPiqM3+5hUTSDXun1xDoWyQGG1WcCC9Eqhb1c9OgQqtPWJNBrg9wM9tLhw
-	 7pFRoCi9PvbVk/7kGPBwxHx4g0cq1UtLyNHnA98bFCwfxD3Je0nu/1ZBv5/WSKjTUD
-	 51IJtZbTlfQkhsVgERCUCeJdJltRflNaxd4KIXbBUWa2J3hAYgzHDR6n0eU3XTfV5U
-	 TJZ7r8yJRV5Rw==
-Date: Wed, 3 Sep 2025 10:35:57 -0300
+	b=jWweAxY/HYLraUnpWYsClLhoIr4Lq4/tkq4Lh9r+OJysO54au9kPL4cN5EVIJKrkh
+	 HY5eb914/FMAzaIQrj4IpSV08mi31Wp1DnOJlazCR1FhXiR4dRMfURWy22/tem0EdY
+	 8MwiyFTFLKOwXa/v4YXFFFVB0N7yXNgZpBD96xYNOeqLhQip8c4C28PXxEVptJ25Yx
+	 Wk3ezOKcbe5njTfKqwOEP0ZQMof1JIs+Yhvmp2PuOfFj+QApRg1Xouv9LSGlI6XyJf
+	 kRMitGSvRZAWwoUYargwclqMnTgiX4OsJPwbFQYXET20CXdDzr8KMJRVEbFJCZlbQx
+	 N8HX2GuSdrlNw==
+Date: Wed, 3 Sep 2025 10:50:53 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
+To: Tianyou Li <tianyou.li@intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Collin Funk <collin.funk1@gmail.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	Gautam Menghani <gautam@linux.ibm.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v10 08/11] perf python: Add evlist compute_metric
-Message-ID: <aLhEPS6T-Sxnujrp@x1>
-References: <20250819013941.209033-1-irogers@google.com>
- <20250819013941.209033-9-irogers@google.com>
+	Kan Liang <kan.liang@linux.intel.com>, wangyang.guo@intel.com,
+	pan.deng@intel.com, zhiguo.zhou@intel.com, jiebin.sun@intel.com,
+	thomas.falcon@intel.com, dapeng1.mi@intel.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf tools c2c: Add annotation support to perf c2c
+ report
+Message-ID: <aLhHvWTnxGA-_6Ew@x1>
+References: <20250801075158.218441-1-tianyou.li@intel.com>
+ <20250819080014.515277-1-tianyou.li@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250819013941.209033-9-irogers@google.com>
+In-Reply-To: <20250819080014.515277-1-tianyou.li@intel.com>
 
-On Mon, Aug 18, 2025 at 06:39:38PM -0700, Ian Rogers wrote:
-> Add a compute_metric function that computes a metric double value for a
-> given evlist, metric name, CPU and thread. For example:
-> ```
-> >>> import perf
-> >>> x = perf.parse_metrics("TopdownL1")
-> >>> x.open()
-> >>> x.enable()
-> >>> x.disable()
-> >>> x.metrics()
-> ['tma_bad_speculation', 'tma_frontend_bound', 'tma_backend_bound', 'tma_retiring']
-> >>> x.compute_metric('tma_bad_speculation', 0, -1)
-> 0.08605342847131037
-> ```
+On Tue, Aug 19, 2025 at 04:00:14PM +0800, Tianyou Li wrote:
+> Perf c2c report currently specified the code address and source:line
+> information in the cacheline browser, while it is lack of annotation
+> support like perf report to directly show the disassembly code for
+> the particular symbol shared that same cacheline. This patches add
+> a key 'a' binding to the cacheline browser which reuse the annotation
+> browser to show the disassembly view for easier analysis of cacheline
+> contentions. By default, the 'TAB' key navigate to the code address
+> where the contentions detected.
 
-Added the following to fix the build on the still not EOLed OpenSUSE
-15, ok?
+There were changes in that codebase recently, can you please consider
+rebasing your work?
 
-- Arnaldo
+This is something I really want to see in place, almost did it myself at
+some point :-)
 
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 56102034d5b8c469..47178404802f4069 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -1386,7 +1386,7 @@ static int prepare_metric(const struct metric_expr *mexp,
- static PyObject *pyrf_evlist__compute_metric(struct pyrf_evlist *pevlist,
- 					     PyObject *args, PyObject *kwargs)
- {
--	int ret, cpu = 0, cpu_idx, thread = 0, thread_idx;
-+	int ret, cpu = 0, cpu_idx = 0, thread = 0, thread_idx = 0;
- 	const char *metric;
- 	struct rb_node *node;
- 	struct metric_expr *mexp = NULL;
+Please use what is in:
 
-Committer notes:
-
-Initialize thread_idx and cpu_idx to zero as albeit them not possibly
-coming out unitialized from the loop as mexp would be not NULL only if
-they were initialized, some older compilers don't notice that and error
-with:
-
-    GEN     /tmp/build/perf/python/perf.cpython-36m-x86_64-linux-gnu.so
-  /git/perf-6.17.0-rc3/tools/perf/util/python.c: In function ‘pyrf_evlist__compute_metric’:
-  /git/perf-6.17.0-rc3/tools/perf/util/python.c:1363:3: error: ‘thread_idx’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
-     evsel__read_counter(metric_events[i], cpu_idx, thread_idx);
-     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  /git/perf-6.17.0-rc3/tools/perf/util/python.c:1389:41: note: ‘thread_idx’ was declared here
-    int ret, cpu = 0, cpu_idx, thread = 0, thread_idx;
-                                           ^~~~~~~~~~
-  /git/perf-6.17.0-rc3/tools/perf/util/python.c:1363:3: error: ‘cpu_idx’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
-     evsel__read_counter(metric_events[i], cpu_idx, thread_idx);
-     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  /git/perf-6.17.0-rc3/tools/perf/util/python.c:1389:20: note: ‘cpu_idx’ was declared here
-    int ret, cpu = 0, cpu_idx, thread = 0, thread_idx;
-                      ^~~~~~~
-  /git/perf-6.17.0-rc3/tools/perf/util/python.c: At top level:
-  cc1: error: unrecognized command line option ‘-Wno-cast-function-type’ [-Werror]
-  cc1: all warnings being treated as errors
-  error: command 'gcc' failed with exit status 1
-  cp: cannot stat '/tmp/build/perf/python_ext_build/lib/perf*.so': No such file or directory
+https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/log/?h=tmp.perf-tools-next
 
 - Arnaldo
  
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Reviewed-by: Howard Chu <howardchu95@gmail.com>
+> Signed-off-by: Tianyou Li <tianyou.li@intel.com>
+> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Reviewed-by: Thomas Falcon <thomas.falcon@intel.com>
+> Reviewed-by: Jiebin Sun <jiebin.sun@intel.com>
+> Reviewed-by: Pan Deng <pan.deng@intel.com>
+> Reviewed-by: Zhiguo Zhou <zhiguo.zhou@intel.com>
+> Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
 > ---
->  tools/perf/util/python.c | 125 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 125 insertions(+)
+>  tools/perf/builtin-annotate.c     |   2 +-
+>  tools/perf/builtin-c2c.c          | 124 ++++++++++++++++++++++++++++--
+>  tools/perf/ui/browsers/annotate.c |  30 ++++++--
+>  tools/perf/ui/browsers/hists.c    |   2 +-
+>  tools/perf/util/annotate.c        |   2 +-
+>  tools/perf/util/annotate.h        |   4 +-
+>  tools/perf/util/hist.h            |   6 +-
+>  7 files changed, 153 insertions(+), 17 deletions(-)
 > 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 31089f8e5519..e0769538b8d9 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
-> @@ -14,6 +14,7 @@
->  #include "evlist.h"
->  #include "evsel.h"
->  #include "event.h"
-> +#include "expr.h"
->  #include "print_binary.h"
->  #include "record.h"
->  #include "strbuf.h"
-> @@ -1330,6 +1331,124 @@ static PyObject *pyrf_evlist__metrics(struct pyrf_evlist *pevlist)
->  	return list;
+> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+> index 5d57d2913f3d..8c896fbe76b7 100644
+> --- a/tools/perf/builtin-annotate.c
+> +++ b/tools/perf/builtin-annotate.c
+> @@ -519,7 +519,7 @@ static void hists__find_annotations(struct hists *hists,
+>  			/* skip missing symbols */
+>  			nd = rb_next(nd);
+>  		} else if (use_browser == 1) {
+> -			key = hist_entry__tui_annotate(he, evsel, NULL);
+> +			key = hist_entry__tui_annotate(he, evsel, NULL, NO_INITIAL_IP);
+>  
+>  			switch (key) {
+>  			case -1:
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index 9e9ff471ddd1..f753ec50b967 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+> @@ -45,6 +45,8 @@
+>  #include "pmus.h"
+>  #include "string2.h"
+>  #include "util/util.h"
+> +#include "util/symbol.h"
+> +#include "util/annotate.h"
+>  
+>  struct c2c_hists {
+>  	struct hists		hists;
+> @@ -62,6 +64,7 @@ struct compute_stats {
+>  
+>  struct c2c_hist_entry {
+>  	struct c2c_hists	*hists;
+> +	struct evsel		*evsel;
+>  	struct c2c_stats	 stats;
+>  	unsigned long		*cpuset;
+>  	unsigned long		*nodeset;
+> @@ -225,6 +228,12 @@ he__get_c2c_hists(struct hist_entry *he,
+>  	return hists;
 >  }
 >  
-> +static int prepare_metric(const struct metric_expr *mexp,
-> +			  const struct evsel *evsel,
-> +			  struct expr_parse_ctx *pctx,
-> +			  int cpu_idx, int thread_idx)
+> +static void c2c_he__set_evsel(struct c2c_hist_entry *c2c_he,
+> +				struct evsel *evsel)
 > +{
-> +	struct evsel * const *metric_events = mexp->metric_events;
-> +	struct metric_ref *metric_refs = mexp->metric_refs;
-> +
-> +	for (int i = 0; metric_events[i]; i++) {
-> +		char *n = strdup(evsel__metric_id(metric_events[i]));
-> +		double val, ena, run;
-> +		int source_count = evsel__source_count(metric_events[i]);
-> +		int ret;
-> +		struct perf_counts_values *old_count, *new_count;
-> +
-> +		if (!n)
-> +			return -ENOMEM;
-> +
-> +		if (source_count == 0)
-> +			source_count = 1;
-> +
-> +		ret = evsel__ensure_counts(metric_events[i]);
-> +		if (ret)
-> +			return ret;
-> +
-> +		/* Set up pointers to the old and newly read counter values. */
-> +		old_count = perf_counts(metric_events[i]->prev_raw_counts, cpu_idx, thread_idx);
-> +		new_count = perf_counts(metric_events[i]->counts, cpu_idx, thread_idx);
-> +		/* Update the value in metric_events[i]->counts. */
-> +		evsel__read_counter(metric_events[i], cpu_idx, thread_idx);
-> +
-> +		val = new_count->val - old_count->val;
-> +		ena = new_count->ena - old_count->ena;
-> +		run = new_count->run - old_count->run;
-> +
-> +		if (ena != run && run != 0)
-> +			val = val * ena / run;
-> +		ret = expr__add_id_val_source_count(pctx, n, val, source_count);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	for (int i = 0; metric_refs && metric_refs[i].metric_name; i++) {
-> +		int ret = expr__add_ref(pctx, &metric_refs[i]);
-> +
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
+> +	c2c_he->evsel = evsel;
 > +}
 > +
-> +static PyObject *pyrf_evlist__compute_metric(struct pyrf_evlist *pevlist,
-> +					     PyObject *args, PyObject *kwargs)
+>  static void c2c_he__set_cpu(struct c2c_hist_entry *c2c_he,
+>  			    struct perf_sample *sample)
+>  {
+> @@ -334,6 +343,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+>  
+>  	c2c_he__set_cpu(c2c_he, sample);
+>  	c2c_he__set_node(c2c_he, sample);
+> +	c2c_he__set_evsel(c2c_he, evsel);
+>  
+>  	hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
+>  	ret = hist_entry__append_callchain(he, sample);
+> @@ -371,6 +381,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+>  
+>  		c2c_he__set_cpu(c2c_he, sample);
+>  		c2c_he__set_node(c2c_he, sample);
+> +		c2c_he__set_evsel(c2c_he, evsel);
+>  
+>  		hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
+>  		ret = hist_entry__append_callchain(he, sample);
+> @@ -2606,6 +2617,28 @@ c2c_cacheline_browser__new(struct hists *hists, struct hist_entry *he)
+>  	return browser;
+>  }
+>  
+> +static int perf_c2c__toggle_annotation(struct hist_browser *browser)
 > +{
-> +	int ret, cpu = 0, cpu_idx, thread = 0, thread_idx;
-> +	const char *metric;
-> +	struct rb_node *node;
-> +	struct metric_expr *mexp = NULL;
-> +	struct expr_parse_ctx *pctx;
-> +	double result = 0;
+> +	struct hist_entry *he = browser->he_selection;
+> +	struct symbol *sym = NULL;
+> +	struct c2c_hist_entry *c2c_he = NULL;
 > +
-> +	if (!PyArg_ParseTuple(args, "sii", &metric, &cpu, &thread))
-> +		return NULL;
+> +	if (!he) {
+> +		ui_browser__help_window(&browser->b, "No entry selected for annotation");
+> +		return 0;
+> +	}
+> +	sym = (&he->ms)->sym;
 > +
-> +	for (node = rb_first_cached(&pevlist->evlist.metric_events.entries);
-> +	     mexp == NULL && node;
-> +	     node = rb_next(node)) {
-> +		struct metric_event *me = container_of(node, struct metric_event, nd);
-> +		struct list_head *pos;
+> +	if (sym == NULL) {
+> +		ui_browser__help_window(&browser->b, "Can not annotate, no symbol found");
+> +		return 0;
+> +	}
 > +
-> +		list_for_each(pos, &me->head) {
-> +			struct metric_expr *e = container_of(pos, struct metric_expr, nd);
+> +	symbol__hists(sym, 0);
+> +	c2c_he = container_of(he, struct c2c_hist_entry, he);
+> +	return hist_entry__tui_annotate(he, c2c_he->evsel, NULL, he->ip);
+> +}
 > +
-> +			if (strcmp(e->metric_name, metric))
-> +				continue;
-> +
-> +			if (e->metric_events[0] == NULL)
-> +				continue;
-> +
-> +			cpu_idx = perf_cpu_map__idx(e->metric_events[0]->core.cpus,
-> +						    (struct perf_cpu){.cpu = cpu});
-> +			if (cpu_idx < 0)
-> +				continue;
-> +
-> +			thread_idx = perf_thread_map__idx(e->metric_events[0]->core.threads,
-> +							  thread);
-> +			if (thread_idx < 0)
-> +				continue;
-> +
-> +			mexp = e;
+>  static int perf_c2c__browse_cacheline(struct hist_entry *he)
+>  {
+>  	struct c2c_hist_entry *c2c_he;
+> @@ -2617,6 +2650,7 @@ static int perf_c2c__browse_cacheline(struct hist_entry *he)
+>  	" ENTER         Toggle callchains (if present) \n"
+>  	" n             Toggle Node details info \n"
+>  	" s             Toggle full length of symbol and source line columns \n"
+> +	" a             Toggle annotation view \n"
+>  	" q             Return back to cacheline list \n";
+>  
+>  	if (!he)
+> @@ -2651,6 +2685,9 @@ static int perf_c2c__browse_cacheline(struct hist_entry *he)
+>  			c2c.node_info = (c2c.node_info + 1) % 3;
+>  			setup_nodes_header();
+>  			break;
+> +		case 'a':
+> +			perf_c2c__toggle_annotation(browser);
 > +			break;
+>  		case 'q':
+>  			goto out;
+>  		case '?':
+> @@ -2989,6 +3026,11 @@ static int setup_coalesce(const char *coalesce, bool no_source)
+>  	return 0;
+>  }
+>  
+> +static bool perf_c2c__has_annotation(void)
+> +{
+> +	return use_browser == 1;
+> +}
+> +
+>  static int perf_c2c__report(int argc, const char **argv)
+>  {
+>  	struct itrace_synth_opts itrace_synth_opts = {
+> @@ -3006,6 +3048,8 @@ static int perf_c2c__report(int argc, const char **argv)
+>  	const char *display = NULL;
+>  	const char *coalesce = NULL;
+>  	bool no_source = false;
+> +	const char *disassembler_style = NULL, *objdump_path = NULL, *addr2line_path = NULL;
+> +
+>  	const struct option options[] = {
+>  	OPT_STRING('k', "vmlinux", &symbol_conf.vmlinux_name,
+>  		   "file", "vmlinux pathname"),
+> @@ -3033,6 +3077,12 @@ static int perf_c2c__report(int argc, const char **argv)
+>  	OPT_BOOLEAN(0, "stitch-lbr", &c2c.stitch_lbr,
+>  		    "Enable LBR callgraph stitching approach"),
+>  	OPT_BOOLEAN(0, "double-cl", &chk_double_cl, "Detect adjacent cacheline false sharing"),
+> +	OPT_STRING('M', "disassembler-style", &disassembler_style, "disassembler style",
+> +		   "Specify disassembler style (e.g. -M intel for intel syntax)"),
+> +	OPT_STRING(0, "objdump", &objdump_path, "path",
+> +		   "objdump binary to use for disassembly and annotations"),
+> +	OPT_STRING(0, "addr2line", &addr2line_path, "path",
+> +		   "addr2line binary to use for line numbers"),
+>  	OPT_PARENT(c2c_options),
+>  	OPT_END()
+>  	};
+> @@ -3040,6 +3090,12 @@ static int perf_c2c__report(int argc, const char **argv)
+>  	const char *output_str, *sort_str = NULL;
+>  	struct perf_env *env;
+>  
+> +	annotation_options__init();
+> +
+> +	err = hists__init();
+> +	if (err < 0)
+> +		goto out;
+> +
+>  	argc = parse_options(argc, argv, options, report_c2c_usage,
+>  			     PARSE_OPT_STOP_AT_NON_OPTION);
+>  	if (argc)
+> @@ -3052,6 +3108,36 @@ static int perf_c2c__report(int argc, const char **argv)
+>  	if (c2c.stats_only)
+>  		c2c.use_stdio = true;
+>  
+> +	/**
+> +	 * Annotation related options
+> +	 * disassembler_style, objdump_path, addr2line_path
+> +	 * are set in the c2c_options, so we can use them here.
+> +	 */
+> +	if (disassembler_style) {
+> +		annotate_opts.disassembler_style = strdup(disassembler_style);
+> +		if (!annotate_opts.disassembler_style) {
+> +			err = -ENOMEM;
+> +			pr_err("Failed to allocate memory for annotation options\n");
+> +			goto out;
 > +		}
 > +	}
-> +	if (!mexp) {
-> +		PyErr_Format(PyExc_TypeError, "Unknown metric '%s' for CPU '%d' and thread '%d'",
-> +			     metric, cpu, thread);
-> +		return NULL;
+> +	if (objdump_path) {
+> +		annotate_opts.objdump_path = strdup(objdump_path);
+> +		if (!annotate_opts.objdump_path) {
+> +			err = -ENOMEM;
+> +			pr_err("Failed to allocate memory for annotation options\n");
+> +			goto out;
+> +		}
+> +	}
+> +	if (addr2line_path) {
+> +		symbol_conf.addr2line_path = strdup(addr2line_path);
+> +		if (!symbol_conf.addr2line_path) {
+> +			err = -ENOMEM;
+> +			pr_err("Failed to allocate memory for annotation options\n");
+> +			goto out;
+> +		}
 > +	}
 > +
-> +	pctx = expr__ctx_new();
-> +	if (!pctx)
-> +		return PyErr_NoMemory();
+>  	err = symbol__validate_sym_arguments();
+>  	if (err)
+>  		goto out;
+> @@ -3126,6 +3212,38 @@ static int perf_c2c__report(int argc, const char **argv)
+>  	if (err)
+>  		goto out_mem2node;
+>  
+> +	if (c2c.use_stdio)
+> +		use_browser = 0;
+> +	else
+> +		use_browser = 1;
 > +
-> +	ret = prepare_metric(mexp, mexp->metric_events[0], pctx, cpu_idx, thread_idx);
-> +	if (ret) {
-> +		expr__ctx_free(pctx);
-> +		errno = -ret;
-> +		PyErr_SetFromErrno(PyExc_OSError);
-> +		return NULL;
+> +	/*
+> +	 * Only in the TUI browser we are doing integrated annotation,
+> +	 * so don't allocate extra space that won't be used in the stdio
+> +	 * implementation.
+> +	 */
+> +	if (perf_c2c__has_annotation()) {
+> +		int ret = symbol__annotation_init();
+> +
+> +		if (ret < 0)
+> +			goto out_mem2node;
+> +		/*
+> +		 * For searching by name on the "Browse map details".
+> +		 * providing it only in verbose mode not to bloat too
+> +		 * much struct symbol.
+> +		 */
+> +		if (verbose > 0) {
+> +			/*
+> +			 * XXX: Need to provide a less kludgy way to ask for
+> +			 * more space per symbol, the u32 is for the index on
+> +			 * the ui browser.
+> +			 * See symbol__browser_index.
+> +			 */
+> +			symbol_conf.priv_size += sizeof(u32);
+> +		}
+> +		annotation_config__init();
 > +	}
-> +	if (expr__parse(&result, pctx, mexp->metric_expr))
-> +		result = 0.0;
 > +
-> +	expr__ctx_free(pctx);
-> +	return PyFloat_FromDouble(result);
-> +}
+>  	if (symbol__init(env) < 0)
+>  		goto out_mem2node;
+>  
+> @@ -3135,11 +3253,6 @@ static int perf_c2c__report(int argc, const char **argv)
+>  		goto out_mem2node;
+>  	}
+>  
+> -	if (c2c.use_stdio)
+> -		use_browser = 0;
+> -	else
+> -		use_browser = 1;
+> -
+>  	setup_browser(false);
+>  
+>  	err = perf_session__process_events(session);
+> @@ -3210,6 +3323,7 @@ static int perf_c2c__report(int argc, const char **argv)
+>  out_session:
+>  	perf_session__delete(session);
+>  out:
+> +	annotation_options__exit();
+>  	return err;
+>  }
+>  
+> diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+> index 183902dac042..7eb659c76b53 100644
+> --- a/tools/perf/ui/browsers/annotate.c
+> +++ b/tools/perf/ui/browsers/annotate.c
+> @@ -557,7 +557,7 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
+>  	target_ms.map = ms->map;
+>  	target_ms.sym = dl->ops.target.sym;
+>  	annotation__unlock(notes);
+> -	symbol__tui_annotate(&target_ms, evsel, hbt);
+> +	symbol__tui_annotate(&target_ms, evsel, hbt, NO_INITIAL_IP);
+>  	sym_title(ms->sym, ms->map, title, sizeof(title), annotate_opts.percent_type);
+>  	ui_browser__show_title(&browser->b, title);
+>  	return true;
+> @@ -814,6 +814,11 @@ static int annotate_browser__run(struct annotate_browser *browser,
+>  
+>  	annotate_browser__calc_percent(browser, evsel);
+>  
+> +	if (browser->curr_hot == NULL && browser->selection) {
+> +		disasm_rb_tree__insert(browser, browser->selection);
+> +		browser->curr_hot = rb_last(&browser->entries);
+> +	}
 > +
->  static PyObject *pyrf_evlist__mmap(struct pyrf_evlist *pevlist,
->  				   PyObject *args, PyObject *kwargs)
+>  	if (browser->curr_hot) {
+>  		annotate_browser__set_rb_top(browser, browser->curr_hot);
+>  		browser->b.navkeypressed = false;
+> @@ -1033,27 +1038,28 @@ static int annotate_browser__run(struct annotate_browser *browser,
+>  }
+>  
+>  int map_symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
+> -			     struct hist_browser_timer *hbt)
+> +			     struct hist_browser_timer *hbt, u64 init_ip)
 >  {
-> @@ -1564,6 +1683,12 @@ static PyMethodDef pyrf_evlist__methods[] = {
->  		.ml_flags = METH_NOARGS,
->  		.ml_doc	  = PyDoc_STR("List of metric names within the evlist.")
->  	},
-> +	{
-> +		.ml_name  = "compute_metric",
-> +		.ml_meth  = (PyCFunction)pyrf_evlist__compute_metric,
-> +		.ml_flags = METH_VARARGS | METH_KEYWORDS,
-> +		.ml_doc	  = PyDoc_STR("compute metric for given name, cpu and thread")
-> +	},
->  	{
->  		.ml_name  = "mmap",
->  		.ml_meth  = (PyCFunction)pyrf_evlist__mmap,
+> -	return symbol__tui_annotate(ms, evsel, hbt);
+> +	return symbol__tui_annotate(ms, evsel, hbt, init_ip);
+>  }
+>  
+>  int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
+> -			     struct hist_browser_timer *hbt)
+> +			     struct hist_browser_timer *hbt, u64 init_ip)
+>  {
+>  	/* reset abort key so that it can get Ctrl-C as a key */
+>  	SLang_reset_tty();
+>  	SLang_init_tty(0, 0, 0);
+>  	SLtty_set_suspend_state(true);
+>  
+> -	return map_symbol__tui_annotate(&he->ms, evsel, hbt);
+> +	return map_symbol__tui_annotate(&he->ms, evsel, hbt, init_ip);
+>  }
+>  
+>  int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
+> -			 struct hist_browser_timer *hbt)
+> +			 struct hist_browser_timer *hbt, u64 init_ip)
+>  {
+>  	struct symbol *sym = ms->sym;
+>  	struct annotation *notes = symbol__annotation(sym);
+> +	struct disasm_line *dl = NULL;
+>  	struct annotate_browser browser = {
+>  		.b = {
+>  			.refresh = annotate_browser__refresh,
+> @@ -1093,6 +1099,18 @@ int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
+>  		}
+>  	}
+>  
+> +	/*
+> +	 * If init_ip is set, it means that there should be a line
+> +	 * intentionally selected, not based on the percentages
+> +	 * which caculated by the event sampling. In this case, we
+> +	 * convey this information into the browser selection, where
+> +	 * the selection in other cases should be empty.
+> +	 */
+> +	if (init_ip != NO_INITIAL_IP) {
+> +		dl = find_disasm_line(sym, init_ip, false);
+> +		browser.selection = &dl->al;
+> +	}
+> +
+>  	ui_helpline__push("Press ESC to exit");
+>  
+>  	browser.b.width = notes->src->widths.max_line_len;
+> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+> index d9d3fb44477a..eec1b5c12a28 100644
+> --- a/tools/perf/ui/browsers/hists.c
+> +++ b/tools/perf/ui/browsers/hists.c
+> @@ -2484,7 +2484,7 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
+>  	else
+>  		evsel = hists_to_evsel(browser->hists);
+>  
+> -	err = map_symbol__tui_annotate(&act->ms, evsel, browser->hbt);
+> +	err = map_symbol__tui_annotate(&act->ms, evsel, browser->hbt, NO_INITIAL_IP);
+>  	he = hist_browser__selected_entry(browser);
+>  	/*
+>  	 * offer option to annotate the other branch source or target
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index 0dd475a744b6..682100196134 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -2544,7 +2544,7 @@ int annotate_get_insn_location(struct arch *arch, struct disasm_line *dl,
+>  	return 0;
+>  }
+>  
+> -static struct disasm_line *find_disasm_line(struct symbol *sym, u64 ip,
+> +struct disasm_line *find_disasm_line(struct symbol *sym, u64 ip,
+>  					    bool allow_update)
+>  {
+>  	struct disasm_line *dl;
+> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+> index 8b5131d257b0..c4c897745698 100644
+> --- a/tools/perf/util/annotate.h
+> +++ b/tools/perf/util/annotate.h
+> @@ -170,6 +170,8 @@ static inline struct disasm_line *disasm_line(struct annotation_line *al)
+>  	return al ? container_of(al, struct disasm_line, al) : NULL;
+>  }
+>  
+> +struct disasm_line *find_disasm_line(struct symbol *sym, u64 ip,
+> +					    bool allow_update);
+>  /*
+>   * Is this offset in the same function as the line it is used?
+>   * asm functions jump to other functions, for instance.
+> @@ -473,7 +475,7 @@ int hist_entry__tty_annotate2(struct hist_entry *he, struct evsel *evsel);
+>  
+>  #ifdef HAVE_SLANG_SUPPORT
+>  int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
+> -			 struct hist_browser_timer *hbt);
+> +			 struct hist_browser_timer *hbt, u64 init_ip);
+>  #else
+>  static inline int symbol__tui_annotate(struct map_symbol *ms __maybe_unused,
+>  				struct evsel *evsel  __maybe_unused,
+> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+> index 70438d03ca9c..aca1e3151bcc 100644
+> --- a/tools/perf/util/hist.h
+> +++ b/tools/perf/util/hist.h
+> @@ -713,11 +713,13 @@ struct block_hist {
+>  #include "../ui/keysyms.h"
+>  void attr_to_script(char *buf, struct perf_event_attr *attr);
+>  
+> +#define NO_INITIAL_IP 0
+> +
+>  int map_symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
+> -			     struct hist_browser_timer *hbt);
+> +			     struct hist_browser_timer *hbt, u64 init_ip);
+>  
+>  int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
+> -			     struct hist_browser_timer *hbt);
+> +			     struct hist_browser_timer *hbt, u64 init_ip);
+>  
+>  int evlist__tui_browse_hists(struct evlist *evlist, const char *help, struct hist_browser_timer *hbt,
+>  			     float min_pcnt, struct perf_env *env, bool warn_lost_event);
 > -- 
-> 2.51.0.rc1.167.g924127e9c0-goog
+> 2.47.1
+> 
