@@ -1,146 +1,289 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA192FC86B
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Sep 2025 11:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5719C2F4A0B;
+	Wed,  3 Sep 2025 13:36:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756900603; cv=none; b=Vfc+U+6+39AHRZuz7uAl5tNEbpIzdE6m7sYb0Fl3jjKM11xjaGzt5FYSvh5J0BCgFZutcWoxwjZT6qguFLuK1kMwgI8M2dXQQ0hM0gJ7TWmsv3Pl908+USXtljnXLAJXmJ1IqL7njr3QfeO2UyAKvyOA3F1I/PB7MzxoB2wdcsc=
+	t=1756906564; cv=none; b=FWEsg7oj91f6D8ZeXiv3wgonDlnmNO/mImnVofzGRoVPe2QONUhxWWAlmOYquGsbJtAJ/LiKHqcqd4C5/yKuAVVdCihm/wn6E/yiYFHVSG3bDuVhzyP5xM/eZ09j1UV+IIrJu2m4qYvunQOUcL17aKfiRDxbCw2jw4LiBErxKug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756900603; c=relaxed/simple;
-	bh=QhtuA5fceXCkweMbThx5ayqE1iE7t/8jfmLDQDkaoMA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bfpN1QqzfSESlHCb/hlNEOvJHsZu8xsf91sQ+wG1HrzWgDEfubYfqnvRh5up+E+PpAXYWmPs1nxF+hAfLUsK34UB81CPio2QXS9PDuNstR/lMTE/+XstbcAVqcqlbbLod8MNeNXLeuYNVmTDqH8YlG3P4bffvqF5m9C0nT7ovPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=BHMuVxse; arc=none smtp.client-ip=209.85.160.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1756906564; c=relaxed/simple;
+	bh=vGFz3odNyr8060Aa2TccDkThKx77JB9ylQrhp0r0nC8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T+HwRYBo5d2pyO/rzF3d8t2K/JrIpD2SCUe9M0qMeObxePb1Y94g412BWFslQilxOg3BorRu3kJg/fSl8m9tJ68N2EpR7Oj1ChtzDFrE9C/9+mDOggykQcUHC5u5vXF+A3/nFq47GQ6CdFxWmMyoI+VJGMoV3msVvk31PEPH7NA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mz8tPaow; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="BHMuVxse"
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-30ccec928f6so3050410fac.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Sep 2025 04:56:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1756900600; x=1757505400; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=APKSuSS/fVxVxNIRz7xmQz/WCEFPilAmQiDv33UmZds=;
-        b=BHMuVxseSQ1RlceO1M/8Pl/Sjh85pCTxqfGII7rCkcoPYGbNLeeKZe7yHEgA5u8dQQ
-         iE0+YtM3iin2bZocN6UxoqArShW0lxf5R1E1fkcEb+l0qKg/2HmzxK6hLKIppCnrBrLe
-         DUnsE3nqnXmgekXPqIJqCA2JTpEhU9bmN8gM9BBz0UFwETiOynawJPt0zF6gl6ug8kxZ
-         MbgX8AMZOOYDNN7vKsZEcYw67mh37qd2jlt4K8aj3ZpYsX2pLO310qI3hHU8OoYyD9J9
-         y2wkMsQ+5PXDHktbnIfzxEjgd892HfE4Yyn1pG8l1WKSjKd/5BtQ4cQ9kwRjPrfRPDWR
-         aHvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756900600; x=1757505400;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=APKSuSS/fVxVxNIRz7xmQz/WCEFPilAmQiDv33UmZds=;
-        b=UEIwPFfoFbo9Wqz8nJFTp20j9W4eZcImPkhrdDsneNDZi1A/P0giEs3T6QyyB/4K+O
-         YxDHgpWz3nYKUZ04kfsmBn/MsmlG3q3gpw1eDzq5sGRK2QOVierFych1XN0TdlL/eZ9J
-         /B0VHQGbaPu8fD6HcFndkFbLiu0m7iI+BblCd4q3tWBry1izuPi8l+vNuK7gYZ6x1/NO
-         5oCu5veIXHTVIJiF5Rjhvl0+vKVVeFGI+jmcb2QMqJYif/PvQ8SdccmnfLD9hcBm6ZEF
-         a2QL9ftDyucYrnrDWnXKGG1QKEh0yRPNDFzi6Ys0mvGG5MtwAaUCIBZ7Qg6N3826SSEq
-         sGOw==
-X-Forwarded-Encrypted: i=1; AJvYcCV4dAVKhCyUdqCehn/VaSvejjNGc4N11XRaRTF9yTU9dvLZx9UpyLNCGaU1cLl++8IaJcFVN01DSCwuvXtSDTrE@vger.kernel.org
-X-Gm-Message-State: AOJu0YxH18hNx4H4XxSvCnjfCN648nFzhqKYiXb0yNx7MvW9teDjMPEI
-	NDcI7CvmbQ/pG5UdJhkwtWJg6FAUOmu35OMxd96gJ+Ks8m1cOm+IUePxhD/r0nYS/K34MFmzVdu
-	IHFPe1Bo1ocw2yoM5gBWujtvLLEtNucltJriYoNPWmw==
-X-Gm-Gg: ASbGncuX6hyi2f3FAsGtVffLxwfcpHMQaNKrDxd8hlVYRLb2qol33TT8nXt06skT1vz
-	tPMYMS1OiZ1IICRMM8XXnxKGeLK26921qEB43T5kK0atZFhrDR0MbUX56Uzwhmbc41KdEPW8q9N
-	n2GEjFT2FflZ82sIKw6uUt1jwqfVEq3f7j+maUdIw5G8+4Nk7gSX4PNKLqulAbvHcVbA8YuqDuN
-	Vbnzw38HrwV+xDwq7g3Vi2WoM8vdmA=
-X-Google-Smtp-Source: AGHT+IHzNG/bae/flkHEvpbYr0cWRiFGYBcRlfIUCA0hkHWscwORrD9erXClVYnAWO9a+v6BZHjoa+d3ZcNUM1a30FA=
-X-Received: by 2002:a05:6871:3686:b0:314:b6a6:68a8 with SMTP id
- 586e51a60fabf-31963480bf7mr6232182fac.48.1756900599934; Wed, 03 Sep 2025
- 04:56:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mz8tPaow"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52123C4CEF0;
+	Wed,  3 Sep 2025 13:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1756906560;
+	bh=vGFz3odNyr8060Aa2TccDkThKx77JB9ylQrhp0r0nC8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mz8tPaowswg6VTNwTTlRgZusJ5DA7a65+mPIW3iirWWm6b+sfIs4RhyeNJXtLvFjn
+	 dDpao0baMbTU3nz6gWxHn6Dz2ZfLT0nhgwkB5TKBQJsB5QYfrzICmNgODpOoAAp+MM
+	 pFGuZRGroPiqM3+5hUTSDXun1xDoWyQGG1WcCC9Eqhb1c9OgQqtPWJNBrg9wM9tLhw
+	 7pFRoCi9PvbVk/7kGPBwxHx4g0cq1UtLyNHnA98bFCwfxD3Je0nu/1ZBv5/WSKjTUD
+	 51IJtZbTlfQkhsVgERCUCeJdJltRflNaxd4KIXbBUWa2J3hAYgzHDR6n0eU3XTfV5U
+	 TJZ7r8yJRV5Rw==
+Date: Wed, 3 Sep 2025 10:35:57 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Collin Funk <collin.funk1@gmail.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	Gautam Menghani <gautam@linux.ibm.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v10 08/11] perf python: Add evlist compute_metric
+Message-ID: <aLhEPS6T-Sxnujrp@x1>
+References: <20250819013941.209033-1-irogers@google.com>
+ <20250819013941.209033-9-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250827100959.83023-1-cuiyunhui@bytedance.com>
- <20250827100959.83023-2-cuiyunhui@bytedance.com> <CAD=FV=WiZ5=4Ck3G2gme=ey6uYQhi-3Wo32DpLj9P53wxGCojw@mail.gmail.com>
- <CAEEQ3wmBvevbkP8XmwR0_q_1QWQsie5g0UUxTFm6ovS1m41pEQ@mail.gmail.com> <CAD=FV=UzUCPtwuQRFR0SkAkh63MbzMefxNYmiOBxCemL3P_+EQ@mail.gmail.com>
-In-Reply-To: <CAD=FV=UzUCPtwuQRFR0SkAkh63MbzMefxNYmiOBxCemL3P_+EQ@mail.gmail.com>
-From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Wed, 3 Sep 2025 19:56:28 +0800
-X-Gm-Features: Ac12FXxqD3B_4az_DfqpBxwMDURjxHr7LFapX1M6NDjnkBWeIMm-90QquXtdgEE
-Message-ID: <CAEEQ3wmLOjZxVh_vBhmctH-u_ZSxnyg0GiN-_e_4v8_pfxcbSw@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH 1/2] watchdog: refactor watchdog_hld functionality
-To: Doug Anderson <dianders@chromium.org>
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	alex@ghiti.fr, atish.patra@linux.dev, anup@brainfault.org, will@kernel.org, 
-	mark.rutland@arm.com, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, catalin.marinas@arm.com, 
-	masahiroy@kernel.org, suzuki.poulose@arm.com, maz@kernel.org, 
-	zhanjie9@hisilicon.com, yangyicong@hisilicon.com, mingo@kernel.org, 
-	lihuafei1@huawei.com, akpm@linux-foundation.org, jpoimboe@kernel.org, 
-	rppt@kernel.org, kees@kernel.org, thomas.weissschuh@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250819013941.209033-9-irogers@google.com>
 
-Hi Doug=EF=BC=8C
+On Mon, Aug 18, 2025 at 06:39:38PM -0700, Ian Rogers wrote:
+> Add a compute_metric function that computes a metric double value for a
+> given evlist, metric name, CPU and thread. For example:
+> ```
+> >>> import perf
+> >>> x = perf.parse_metrics("TopdownL1")
+> >>> x.open()
+> >>> x.enable()
+> >>> x.disable()
+> >>> x.metrics()
+> ['tma_bad_speculation', 'tma_frontend_bound', 'tma_backend_bound', 'tma_retiring']
+> >>> x.compute_metric('tma_bad_speculation', 0, -1)
+> 0.08605342847131037
+> ```
 
-On Wed, Sep 3, 2025 at 1:04=E2=80=AFAM Doug Anderson <dianders@chromium.org=
-> wrote:
->
-> Hi,
->
-> On Sun, Aug 31, 2025 at 10:57=E2=80=AFPM yunhui cui <cuiyunhui@bytedance.=
-com> wrote:
-> >
-> > Hi Doug,
-> >
-> > On Sat, Aug 30, 2025 at 5:34=E2=80=AFAM Doug Anderson <dianders@chromiu=
-m.org> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Wed, Aug 27, 2025 at 3:10=E2=80=AFAM Yunhui Cui <cuiyunhui@bytedan=
-ce.com> wrote:
-> > > >
-> > > > Move watchdog_hld.c to kernel/, and rename arm_pmu_irq_is_nmi()
-> > > > to arch_pmu_irq_is_nmi() for cross-arch reusability.
-> > > >
-> > > > Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> > > > ---
-> > > >  arch/arm64/kernel/Makefile                   | 1 -
-> > > >  drivers/perf/arm_pmu.c                       | 2 +-
-> > > >  include/linux/nmi.h                          | 1 +
-> > > >  include/linux/perf/arm_pmu.h                 | 2 --
-> > > >  kernel/Makefile                              | 2 +-
-> > > >  {arch/arm64/kernel =3D> kernel}/watchdog_hld.c | 8 ++++++--
-> > > >  6 files changed, 9 insertions(+), 7 deletions(-)
-> > > >  rename {arch/arm64/kernel =3D> kernel}/watchdog_hld.c (97%)
-> > >
-> > > I'm not a huge fan of the perf hardlockup detector and IMO we should
-> > > maybe just delete it. Thus spreading it to support a new architecture
-> > > isn't my favorite thing to do. Can't you use the buddy hardlockup
-> > > detector?
-> >
-> > Why is there a plan to remove CONFIG_HARDLOCKUP_DETECTOR_PERF? Could
-> > you explain the specific reasons? Is the community's future plan to
-> > favor CONFIG_HARDLOCKUP_DETECTOR_BUDDY?
->
-> I don't think there are any concrete plans, but there was some discussion=
- here:
->
-> https://lore.kernel.org/all/CAD=3DFV=3DWWUiCi6bZCs_gseFpDDWNkuJMoL6XCftEo=
-6W7q6jRCkg@mail.gmail.com/
->
-> -Doug
->
+Added the following to fix the build on the still not EOLed OpenSUSE
+15, ok?
 
-I=E2=80=99ve read your linked content, which details the pros and cons of p=
-erf
-watchdog and buddy watchdog.
-I think everyone will agree on choosing one as the default.
-It seems there=E2=80=99s no kernel/watchdog entry in MAINTAINERS=E2=80=94wh=
-at=E2=80=99s next
-for these two approaches?
+- Arnaldo
 
-Thanks,
-Yunhui
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 56102034d5b8c469..47178404802f4069 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -1386,7 +1386,7 @@ static int prepare_metric(const struct metric_expr *mexp,
+ static PyObject *pyrf_evlist__compute_metric(struct pyrf_evlist *pevlist,
+ 					     PyObject *args, PyObject *kwargs)
+ {
+-	int ret, cpu = 0, cpu_idx, thread = 0, thread_idx;
++	int ret, cpu = 0, cpu_idx = 0, thread = 0, thread_idx = 0;
+ 	const char *metric;
+ 	struct rb_node *node;
+ 	struct metric_expr *mexp = NULL;
+
+Committer notes:
+
+Initialize thread_idx and cpu_idx to zero as albeit them not possibly
+coming out unitialized from the loop as mexp would be not NULL only if
+they were initialized, some older compilers don't notice that and error
+with:
+
+    GEN     /tmp/build/perf/python/perf.cpython-36m-x86_64-linux-gnu.so
+  /git/perf-6.17.0-rc3/tools/perf/util/python.c: In function ‘pyrf_evlist__compute_metric’:
+  /git/perf-6.17.0-rc3/tools/perf/util/python.c:1363:3: error: ‘thread_idx’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
+     evsel__read_counter(metric_events[i], cpu_idx, thread_idx);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /git/perf-6.17.0-rc3/tools/perf/util/python.c:1389:41: note: ‘thread_idx’ was declared here
+    int ret, cpu = 0, cpu_idx, thread = 0, thread_idx;
+                                           ^~~~~~~~~~
+  /git/perf-6.17.0-rc3/tools/perf/util/python.c:1363:3: error: ‘cpu_idx’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
+     evsel__read_counter(metric_events[i], cpu_idx, thread_idx);
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /git/perf-6.17.0-rc3/tools/perf/util/python.c:1389:20: note: ‘cpu_idx’ was declared here
+    int ret, cpu = 0, cpu_idx, thread = 0, thread_idx;
+                      ^~~~~~~
+  /git/perf-6.17.0-rc3/tools/perf/util/python.c: At top level:
+  cc1: error: unrecognized command line option ‘-Wno-cast-function-type’ [-Werror]
+  cc1: all warnings being treated as errors
+  error: command 'gcc' failed with exit status 1
+  cp: cannot stat '/tmp/build/perf/python_ext_build/lib/perf*.so': No such file or directory
+
+- Arnaldo
+ 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Reviewed-by: Howard Chu <howardchu95@gmail.com>
+> ---
+>  tools/perf/util/python.c | 125 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 125 insertions(+)
+> 
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index 31089f8e5519..e0769538b8d9 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -14,6 +14,7 @@
+>  #include "evlist.h"
+>  #include "evsel.h"
+>  #include "event.h"
+> +#include "expr.h"
+>  #include "print_binary.h"
+>  #include "record.h"
+>  #include "strbuf.h"
+> @@ -1330,6 +1331,124 @@ static PyObject *pyrf_evlist__metrics(struct pyrf_evlist *pevlist)
+>  	return list;
+>  }
+>  
+> +static int prepare_metric(const struct metric_expr *mexp,
+> +			  const struct evsel *evsel,
+> +			  struct expr_parse_ctx *pctx,
+> +			  int cpu_idx, int thread_idx)
+> +{
+> +	struct evsel * const *metric_events = mexp->metric_events;
+> +	struct metric_ref *metric_refs = mexp->metric_refs;
+> +
+> +	for (int i = 0; metric_events[i]; i++) {
+> +		char *n = strdup(evsel__metric_id(metric_events[i]));
+> +		double val, ena, run;
+> +		int source_count = evsel__source_count(metric_events[i]);
+> +		int ret;
+> +		struct perf_counts_values *old_count, *new_count;
+> +
+> +		if (!n)
+> +			return -ENOMEM;
+> +
+> +		if (source_count == 0)
+> +			source_count = 1;
+> +
+> +		ret = evsel__ensure_counts(metric_events[i]);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* Set up pointers to the old and newly read counter values. */
+> +		old_count = perf_counts(metric_events[i]->prev_raw_counts, cpu_idx, thread_idx);
+> +		new_count = perf_counts(metric_events[i]->counts, cpu_idx, thread_idx);
+> +		/* Update the value in metric_events[i]->counts. */
+> +		evsel__read_counter(metric_events[i], cpu_idx, thread_idx);
+> +
+> +		val = new_count->val - old_count->val;
+> +		ena = new_count->ena - old_count->ena;
+> +		run = new_count->run - old_count->run;
+> +
+> +		if (ena != run && run != 0)
+> +			val = val * ena / run;
+> +		ret = expr__add_id_val_source_count(pctx, n, val, source_count);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	for (int i = 0; metric_refs && metric_refs[i].metric_name; i++) {
+> +		int ret = expr__add_ref(pctx, &metric_refs[i]);
+> +
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static PyObject *pyrf_evlist__compute_metric(struct pyrf_evlist *pevlist,
+> +					     PyObject *args, PyObject *kwargs)
+> +{
+> +	int ret, cpu = 0, cpu_idx, thread = 0, thread_idx;
+> +	const char *metric;
+> +	struct rb_node *node;
+> +	struct metric_expr *mexp = NULL;
+> +	struct expr_parse_ctx *pctx;
+> +	double result = 0;
+> +
+> +	if (!PyArg_ParseTuple(args, "sii", &metric, &cpu, &thread))
+> +		return NULL;
+> +
+> +	for (node = rb_first_cached(&pevlist->evlist.metric_events.entries);
+> +	     mexp == NULL && node;
+> +	     node = rb_next(node)) {
+> +		struct metric_event *me = container_of(node, struct metric_event, nd);
+> +		struct list_head *pos;
+> +
+> +		list_for_each(pos, &me->head) {
+> +			struct metric_expr *e = container_of(pos, struct metric_expr, nd);
+> +
+> +			if (strcmp(e->metric_name, metric))
+> +				continue;
+> +
+> +			if (e->metric_events[0] == NULL)
+> +				continue;
+> +
+> +			cpu_idx = perf_cpu_map__idx(e->metric_events[0]->core.cpus,
+> +						    (struct perf_cpu){.cpu = cpu});
+> +			if (cpu_idx < 0)
+> +				continue;
+> +
+> +			thread_idx = perf_thread_map__idx(e->metric_events[0]->core.threads,
+> +							  thread);
+> +			if (thread_idx < 0)
+> +				continue;
+> +
+> +			mexp = e;
+> +			break;
+> +		}
+> +	}
+> +	if (!mexp) {
+> +		PyErr_Format(PyExc_TypeError, "Unknown metric '%s' for CPU '%d' and thread '%d'",
+> +			     metric, cpu, thread);
+> +		return NULL;
+> +	}
+> +
+> +	pctx = expr__ctx_new();
+> +	if (!pctx)
+> +		return PyErr_NoMemory();
+> +
+> +	ret = prepare_metric(mexp, mexp->metric_events[0], pctx, cpu_idx, thread_idx);
+> +	if (ret) {
+> +		expr__ctx_free(pctx);
+> +		errno = -ret;
+> +		PyErr_SetFromErrno(PyExc_OSError);
+> +		return NULL;
+> +	}
+> +	if (expr__parse(&result, pctx, mexp->metric_expr))
+> +		result = 0.0;
+> +
+> +	expr__ctx_free(pctx);
+> +	return PyFloat_FromDouble(result);
+> +}
+> +
+>  static PyObject *pyrf_evlist__mmap(struct pyrf_evlist *pevlist,
+>  				   PyObject *args, PyObject *kwargs)
+>  {
+> @@ -1564,6 +1683,12 @@ static PyMethodDef pyrf_evlist__methods[] = {
+>  		.ml_flags = METH_NOARGS,
+>  		.ml_doc	  = PyDoc_STR("List of metric names within the evlist.")
+>  	},
+> +	{
+> +		.ml_name  = "compute_metric",
+> +		.ml_meth  = (PyCFunction)pyrf_evlist__compute_metric,
+> +		.ml_flags = METH_VARARGS | METH_KEYWORDS,
+> +		.ml_doc	  = PyDoc_STR("compute metric for given name, cpu and thread")
+> +	},
+>  	{
+>  		.ml_name  = "mmap",
+>  		.ml_meth  = (PyCFunction)pyrf_evlist__mmap,
+> -- 
+> 2.51.0.rc1.167.g924127e9c0-goog
