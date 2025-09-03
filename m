@@ -1,71 +1,73 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C25D2DE718
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Sep 2025 20:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE80296BA2
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Sep 2025 20:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756931227; cv=none; b=snbnxeKs5k+fpaWIiLfPqE3wAxj25sYJLZseB58F/PmIwfOCAD4Cyw2pEG1fDtnps6a7aAc3+V7XzQUIjSgvG+U3mO8NV8RkgnlepJasmdFipRw55JYaWt9gewFKOoqVlHMhbq9zVrakuJoHCMP9rP5V/uZ9yukpogTcfLj7evk=
+	t=1756932895; cv=none; b=mRn1fMpMXZZXrsTQJyGOTlC7LF2SHax2kNoudFiMT/Q0TVwXlH5uK42KaROcscDg9VIeaglch5pP5ycEt/U70nPCiV+Jyqj4uiT2gAKG3/h9evsytnRkyf2Q7AKDf85rAbocjoy8LlS74yM2w8NLTB6p5YT2gm6m9XrejTuE7fI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756931227; c=relaxed/simple;
-	bh=K5cb2Ag3Ltt8vqf0qcYqu7qQhHK83SWemQp0eng8oe8=;
+	s=arc-20240116; t=1756932895; c=relaxed/simple;
+	bh=L/f3EFrAw09+O/f4UEAO4Ok+aRzLY87xvNEocmB8skg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V/7dFQXt7fe+0Pk084v5/Q4nt9OCwNtKSCjW/WQfNA9FaeqG1JrAAD+N1X367LKB3E5wZC+QYpY9ndu2FPm1MrWiUe/BP0dXzNDMzm1dp6/MHfoAbms7qI+QJPYbbidnWTKQJSe0IVWBZsVONh+SBsWPO29+rnv9Pp5u0bmTnPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qJppgZuh; arc=none smtp.client-ip=209.85.218.43
+	 To:Cc:Content-Type; b=DmQ7sXZb/NLrQIauvVhKQH4t92phJ1qtunHgL080XFqo4ng9wj7EwQxqOxmu2icJABUuW5T3qzXqjNNQTIfTYpP2SEWVJqLq+4tntl1ZbV9mREUsnaNtIU22cWIlLg8HTqrS7lWG9XLHfsSC54qb7vap/Opz+pP5iWuRyrIt2Qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W5yAoGCK; arc=none smtp.client-ip=209.85.208.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qJppgZuh"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b0418f6fc27so43629266b.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Sep 2025 13:27:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W5yAoGCK"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-6188b5ae1e8so311551a12.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Sep 2025 13:54:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756931224; x=1757536024; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=yDlCIvq84MKyXPm8Ow1snYfB2SvaU48Tu2aP8oyfTO4=;
-        b=qJppgZuhmHO1G8cGw4WAeTJWU68v0DPYAwN/suRpnPOX8FDZrSKcTQH3SYIckAV9h+
-         XxMhVvSLO1RUYkJ/YUuXDdDUHtmQ6MmyDc5sNTIY0WfToXGL1yNjW2tWL98G6BR2CoI2
-         Ptwh8BdikudSl1T+RBIlUln8yv/9TNIWhsfraX3Tf+xOpqq/EzcODzZ86ne/WNU3vPt1
-         j8jmOmrYop7Wd9z288JU+LD+6iYhNiASIvFRIi0YfcltU/EQS+e0CIlMadKajAxoSgCG
-         RKBqVPFE/6kU0RgKhtoeeGo1rfAI/ebfw7eXj5LWlbpBjkxZNfticiY3amxedA+BP1lB
-         Y6wQ==
+        d=google.com; s=20230601; t=1756932892; x=1757537692; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1PlibY4hkoznhQk7xjmUe2E9ZHsCDSlVQQXjHQI0tNM=;
+        b=W5yAoGCKlj7HqPeuf87FhchKXM3cqQhJ6uc6ErGiJgiZ4ZsVNfh7zQxm/nimUI3ouI
+         k4kxzzMN9gGFbMJ1S64FK/MmVGM3y1LK+6leOZpExiLuEVQqd0ktLISeyE0Cp2r1H4Vj
+         jxsorNk/h4daW2urbax2e7Lxn4G7pj+46xWL53mTxNsEiOeVaYZiJhg/7pD8CwF6CaXx
+         uGNJu2Ky1qT8Anv8dtj7G9LqPaA52/s/BG5Pu8cwZKHd71UdaOUf/5LR7fulfDK5/io5
+         azlDkQZUUAfAQm3DW0SpZG9CsgwjMURuVQWPuApBsauPH43/Tx48ZmkL2KaSDFOeLrP8
+         hYeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756931224; x=1757536024;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yDlCIvq84MKyXPm8Ow1snYfB2SvaU48Tu2aP8oyfTO4=;
-        b=QUne49D3+ll995teKL6TppN373r+PEc08IK2DsNPp/xh6n1Nwh0+IUYfCTSEwsSoIL
-         Qp/b/S+zoqCePkOEdQJihqgDtyoXX3EGIAdXzd16NpKZlVF+k/L4pEysrDoLk6WISjMN
-         Qt9Z3YlSyVbeFdMJeZ7x/Kb9KZYej/XmmJCx7vXEWPX14luIZzi0MKH4RxW41rxdb5Ij
-         2q4AICgJ8TGejIyYkHXGkdrMsZmIHwOj5xiWkoM46ej5OMhH4AZ2a46z9zPk7Nr9+EUZ
-         ScGH5X+vYZpFoIoWxWb67MQVS41qDCM4wPWDb+KGgnmvbvvhZtLBv7WbYMou0s7fGqaW
-         pxDw==
-X-Forwarded-Encrypted: i=1; AJvYcCX1j0fG11vKxUWAXYnc5GVS38jxhwcNzNt6SfxK+IugRKCIIl5G8Hj+ujvlPt7dBORL4MX1OOclzgSTqr1Ov9yS@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaMl5tquYwDji10hMeV92p9qDXRN+HTYFnsLkfUOwDOMdtHXrO
-	fqDInrHXC8dZCKvg5MblCWYzPsa3ipsMYqZGIh984+/2vUDoh4Gjpdbv9d3LrTH3s70E7nuEvSi
-	PaWzH8215w+bG5Zp6XUzlHhDjIIFlcnzOx5SfHJco
-X-Gm-Gg: ASbGncv2gOuukVG+Pj/1cbL/4HQvJTNRNvB8n3gL8PXleGbCsbdi3Ve0jUhWsczI6ub
-	cc466FrccHyEJTL/lbZQJ0MrykQpcxoQeCkoh1vcmRAUC0cjHkgrruwMdsi5SbsgMLVHJHLUinl
-	Yz53cRBM76UC3pf+G9ITTFdLLWX5EkH8qTHGipR6gMXEkizLbB5iqPtlvtCbi2W2JI1xUWz+YdB
-	yoiNPvl+7wO1CZk9tlCL6jbZGLVWt8lI7VDZhdp6/oXCMx/FwrgU4rW6fYyndJyYQ==
-X-Google-Smtp-Source: AGHT+IEbHaCIIe299yWYOSoPqR47Z4thD9poSLa3/b87xSS9PPrV/EzUbSMB8e9hNc7scJxAqa4KQvg2xsR5ZR4LgL4=
-X-Received: by 2002:a17:907:da9:b0:b04:7880:3e88 with SMTP id
- a640c23a62f3a-b04788056a3mr133873766b.18.1756931224249; Wed, 03 Sep 2025
- 13:27:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1756932892; x=1757537692;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1PlibY4hkoznhQk7xjmUe2E9ZHsCDSlVQQXjHQI0tNM=;
+        b=n8ULNvOol2u32C7yT78cblAB36UULvXSsEopvAemcpWyyGPxSgmxCA5EvI03swKaDt
+         f8Uze20Pqe9Eaksy8mOFiPVL2JK3MB8t08XVt8RieDTv4NSeE4PaPqSwUnX16Av7kL5k
+         h8MaHTUVLXMTYKestpQSNRP52CLCheJB4KwwxGTAI9Bv5cSkovD88y5JWNB4qnouMIlh
+         YLTBIe5bBWsVkqBuhZr8VI5xteoht1y70Q1JQOKZqwQtFGrhOp9O6Y8ExzX4yxEFLo2s
+         WWDvJCcq28BgHMKXZCOwxhuhA9vrq9+qbkzsU6ydZemFBmZB9gGzN6G1/ajtLTkb3O06
+         rC0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXG+cHR8KOtAR0myeoj4wW8XTYjrDFNrWcmEMlYFwtSReB6Hxzxg1Ikxv07nYFbG/qeyyIGyZ47J07v4hwESs/r@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzd2f/Q5/AYTosIuJ/WNz1/HemS4tM8CbnWyW1IW0hAH0p90frO
+	+t3BOXoqz+XJzE3nhTK6eZCnxBUh7DdS+pG17YPgSeP10wXD0gdPc3FNg0VLjFPohsUc/oj08vw
+	dJP6fgSMbn33l/kDbB6G7MyRG9x9IojFolqtfOTM9
+X-Gm-Gg: ASbGncu1nNxlmPVODLFfL9XlAz2G2BKAAoivs18v/8Jc6pmuTNXe8QQ8yViQOI9eS/O
+	8yhTzHd0ZFyur6RE1EQPVzvrstVmh0YR/YHYWhzZt9+rKoOBLsaGxBYKCEOErI338qaaPmsC1Hl
+	hLTTU+htejtDeH9FzynwvxYGGP894jybJ3s8PpQmVjzyiwwV6UUBYV9L2m+artDBzDd1a/3Ixew
+	KHmvQG81p0Hxlny83RVvHHsdDcMQtjJHmP+Wj9AbdUm0gRC9yOQeCpyPrSNOBzrLQ==
+X-Google-Smtp-Source: AGHT+IEI3Fx1TfPdtSP8cwFaLXhRsPNeMgppWmLkffm7Gt3QDYT8AObIIGU4tWbRSXgwRcjJ5KAuwFicXR3sHmkFDLk=
+X-Received: by 2002:a17:906:1856:b0:b04:f5a:8c13 with SMTP id
+ a640c23a62f3a-b040f5a91a1mr1274086366b.15.1756932891853; Wed, 03 Sep 2025
+ 13:54:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250825195737.225824-1-zecheng@google.com> <aLKknf6qFxVgN3gJ@google.com>
-In-Reply-To: <aLKknf6qFxVgN3gJ@google.com>
+References: <20250825195748.226052-1-zecheng@google.com> <aLKlDp6bl9Qjiziy@google.com>
+In-Reply-To: <aLKlDp6bl9Qjiziy@google.com>
 From: Zecheng Li <zecheng@google.com>
-Date: Wed, 3 Sep 2025 16:26:50 -0400
-X-Gm-Features: Ac12FXykccIYcG9bPxZD3cwKt34GI_MEBjFLOzP5gRg53pY0R13CjgOBsUMBK2c
-Message-ID: <CAJUgMyKBFkF9rKFnzP6S_c9ma3P7a-NsCubV1DiTwoGUbByk+w@mail.gmail.com>
-Subject: Re: [PATCH v2 06/10] perf annotate: Track arithmetic instructions on pointers
+Date: Wed, 3 Sep 2025 16:54:39 -0400
+X-Gm-Features: Ac12FXznFlkbSdTQajUShoNbD3chK6JOxofiRzlUCxDs4xSkJ3lGUBJ5KvdObxo
+Message-ID: <CAJUgMy++zvbgcuzyQUiVHdaTZMa8o=LtSUzy9PXe_sqXHqK7nQ@mail.gmail.com>
+Subject: Re: [PATCH v2 07/10] perf annotate: Invalidate register states for
+ unsupported instructions
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -75,40 +77,37 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Xu Liu <xliuprof@google.com>, linux-perf-users@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> I was thinking we can use TSR_KIND_POINTER here.  Probably we need to
-> distinguish it from the existing percpu base use case. Maybe you want
-> to rename it.  Then you don't need to find a pointer type in the DWARF.
-
-Hi Namhyung, thanks for the review.
-
-Yes. I think that's a better way to represent a pointer to a type.
-With that tag we can also support registers representing addresses
-(is_reg_var_addr == true). And when moving an address register to a
-memory location we probably can simply add the * to denote a pointer
-without finding the exact pointer type.
-
+On Sat, Aug 30, 2025 at 3:15=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> > +                     tsr->offset = 0;
+> On Mon, Aug 25, 2025 at 07:57:48PM +0000, Zecheng Li wrote:
+> > Invalidate register states when encountering unsupported instructions
+> > that modify pointers, to prevent propagating incorrect pointer types.
+> >
+> > On x86, the 'xor' instruction may appear in a predecessor basic block
+> > and zero out a register that invalidates the target register state. Thi=
+s
+> > sometimes relates to tagged pointers and normal programs should not
+> > dereference NULL pointers, so we assume such execution paths are invali=
+d
+> > and do not invalidate states for 'xor' instructions.
 >
-> I think it can refer to a member in a struct.  How about this?
+> Probably we can set it to 0 with TSR_KIND_CONST.
 >
->                         tsr->offset = state->offset - offset;
+It seems TSR_KIND_CONST doesn't relate to a type. Although the value
+was set to 0, it still has the pointer type. I see regressions that
+has this pattern
 
-True, it may load an address of a struct member. Do you mean
-stack->offset - offset?
+xorl    %rax, %rax
+mov    %rax, (%rsp)
 
-> > @@ -388,6 +493,7 @@ static void update_insn_state_x86(struct type_state *state,
-> >               tsr->type = state->regs[src->reg1].type;
-> >               tsr->kind = state->regs[src->reg1].kind;
-> >               tsr->imm_value = state->regs[src->reg1].imm_value;
-> > +             tsr->offset = 0;
-> >               tsr->ok = true;
+and sometimes
 
-I also find for mov register to register this should be
+xorl    %rax, %rax
+... (some branches)
+mov    (%rax), %rbx
 
-tsr->offset = state->regs[src->reg1].offset;
-
-Let me update the patch.
-
-Zecheng
+Normally NULL pointer dereference should not happen, so I assume such
+execution paths are invalid.
