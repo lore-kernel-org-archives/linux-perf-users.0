@@ -1,157 +1,143 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E8C1FA272
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Sep 2025 22:34:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647942D3739;
+	Wed,  3 Sep 2025 06:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756852448; cv=none; b=UAmHQoPmpsVRHA5jCqU217JEf6Ck65ki8LdAnhh+cvoVOLydHY7ld/50g1vwlFVAZ8dJ2oyZD4jg5EA/D8hHwht/hM0mTfotmmX936CbMmxbmdFaUeKrCfJdGK5LXBPiQOHVC3kt9bmfLVun5m39TuLs5pa0nLZzsQEC0ARtZ4w=
+	t=1756881145; cv=none; b=H2xbfmWab3FiBUgMW8YXwWigD/2R0FLal/ZIGatF1M88zqCF7Pb/kTsnq/fUuJjt4U7Rj2+HERq7j0sqQQS2kCUI3uhsr3FA2J+Q5SUD4VaR6zJK3o2Wyzxtlq5jgZ+JhqVJyshXn1c7Fbaq1S9av3TvWzd+Kl2tp0vj9TdDT18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756852448; c=relaxed/simple;
-	bh=/8TA1P2bCQqRrScQ3PxUJ/vjFwbifaNVSpuE7rsUTac=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ODoT+kBs31XlVZkXxBRyHsu2zVK/6MNFy0V1KzIPeI01weAMrj+mP8WtBCFzW0neD29DGwEhmXGhNyqxhb8mOt5gZevF2SKjCBIUr1zq6UCzZfgUlHcuf+nFH4ZHJuglzEHb+5BWWqmvY1unJ4+fye7qHodYWbyYApAM986IOBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vYFGOMIJ; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1756881145; c=relaxed/simple;
+	bh=iE2AOaV38XaT3YBp6FoCLbXtDdyIZWlACJ84QPR1q9A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KbWJngZEVUFeET+IfCHcNMQ4rYCbs90tiCx3QNdw3Uoke5S2DEZXTnzV++Tn/5OqpiqU7V2u0SOhZ58jH92xILqX7WI0qzws94n2RpSRSad2/XNeaLEJwVHnYS1JxYlKA08d1e7HdZtlq95lNDt3UwrqQnUBVTEfsveMKevPIwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DXR1gVNF; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vYFGOMIJ"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-24b2d018f92so32215ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 Sep 2025 15:34:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756852445; x=1757457245; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AwQ/at18FIblK/tgi9XetIAK3KtPwa7sgyRz+Z/3xyo=;
-        b=vYFGOMIJbTNxghJYHa2Iiwnxsn7xqPMN+Ej1NkM0WpXR5m8Ai694s2D7//tHZVSy0k
-         03rQSWpJIDFIpiNtzrKWZzWnjFHy1h+0fTqhGnY9vx336SSZrHyW7PIuMwttJ7Q3Iva7
-         luyG5v4zdGmoUeMkQRJnGh3RZnWvTp6KhPQHnJJG2UF1bGjMzW3A8CYafS8ML695dkZF
-         xNGktA+RteZOg8D91cVKdTVFasPRBXlGYKC5OmpwMGTtURDscI8pWlYZzgpx1WH9mWGt
-         aJu9Qv72xKGDkz9VvysNwAU00kQMKG5PpuLJp/gMhR6n+r16MZeuAec3//j/S7SUNsAD
-         NSIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756852445; x=1757457245;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AwQ/at18FIblK/tgi9XetIAK3KtPwa7sgyRz+Z/3xyo=;
-        b=t+1sX8itkXSy7qji2/AM19W2p4YChNheTAPnZ4g8TmqWCsAtHqyRuUqsykLjD8TVGc
-         WkOLYwm7JnqskGfMHKpusGOR/Q6laW76OYcixtWpGI8BsZMHXufnFY1FkLuOQwIAGPAr
-         Yys7mIuxeWx36yDPtVx2uQk73rwX2D28g0Xa20o9XQvitO5iew+uTHs8cNPzBUqefeg9
-         jNydHER7HTLqKrnvpkgrganFAyMJsaiZkYO2dpT7+w3SdxacjdAthM0qwy/mqowcPWxP
-         4oB3h46bBPJUhnh1l+8dGm3Is8HJP3yAY7eZHiHrtWV+JqsYL1Euhc90PDwsd7x0iXns
-         nj4A==
-X-Forwarded-Encrypted: i=1; AJvYcCWlwXAnlrh6dBfusviQXnXr5620eF10GOgKzhgQ8r6N4vBukUxaLuUWBGZuXverpXau7w6sx3gJNf+Res8PblSI@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8rs5a7Ma9/wpR4jsmLbP74FOY8QchLyPXu04/EMh++dNtfN7Q
-	+JOORy7z1UD49GN33hqAjxufwgqox70BdKNhqdprTV2KQdkb52XFOrpuRNM0Y2aPUDfGBZJEjR5
-	Gn+UcGnxwNiSRrK+H9OUo9KSkY0gJ7INFtw2bHTlx
-X-Gm-Gg: ASbGnctKJ4Bv2yj9hvoNzesHyVYBufoo+Be5/1fPtCnSqFzm4CZCeZ7mFqCfnyZHGhd
-	aPuWu3p32cb0L1ndtrLb4s+wYw+ZzaISc/eabCe1v7Sl0d5hQIS5nB23yiW/lC/cb/ULHcoxYyL
-	b0Vdcs2GvRatYIi/ekFZPHYzU8TobRx6216CTPZe11XR3ApMZMMbOovBY2TYm6Xer156s7zEJQB
-	gnSiB1wzPkdFSM=
-X-Google-Smtp-Source: AGHT+IFG7aJekNbPeZ3zrD9yBb0El5RJSWiZDyOVLTvWc0X4CyZkR8/7VFoDDShPW4Y+4DQQubKSvwsEhXywzqThL+w=
-X-Received: by 2002:a17:902:e746:b0:24b:1741:1a4c with SMTP id
- d9443c01a7336-24b17411d75mr2197085ad.0.1756852445298; Tue, 02 Sep 2025
- 15:34:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DXR1gVNF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1756881144; x=1788417144;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=iE2AOaV38XaT3YBp6FoCLbXtDdyIZWlACJ84QPR1q9A=;
+  b=DXR1gVNFUhinlCwLZHftIM3o7qKu1YxJUxKqxenD/R8dNe+ADu4Cp94d
+   qrB8muwTPJoBG+NwliptkXphcnleFR7ff6oZYdlfF/LMZzyIzZVrCSi7d
+   Pm9+HPPaymHF1QS1Ol8qRLaVe+Ljd7OBZwZhDkW5FfKpEEFvpzGQXlZ/R
+   WiNzZgyB0gH8h1l5ZACQJRDIyOh5+y5zD50zGeGuU9HJKwj1PRTjLwn1i
+   mFKRRB4XoU9Mprfx+QqtiD/zngJj75CeLuw/R18o2dY3i6NQ9B6WeM5VX
+   Be92hM28GH4RrYTCbjoAS3Hl2OVBxwj0dZNcTukZylCNfT5lkU2UKbSE9
+   g==;
+X-CSE-ConnectionGUID: WItH1XIDQVenL6BRUwWYfQ==
+X-CSE-MsgGUID: V+kP1vY3SOOL+LFIR0u1PA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11541"; a="58881624"
+X-IronPort-AV: E=Sophos;i="6.18,233,1751266800"; 
+   d="scan'208";a="58881624"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 23:32:23 -0700
+X-CSE-ConnectionGUID: PRjj6JmkRuSZh71mtVnQ1Q==
+X-CSE-MsgGUID: 2Mj8wNelTLi/FHctBE05qw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,233,1751266800"; 
+   d="scan'208";a="195138127"
+Received: from unknown (HELO [10.238.3.254]) ([10.238.3.254])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2025 23:32:20 -0700
+Message-ID: <28bf94c1-3b8f-4036-9aa2-b64b9f6edb0c@linux.intel.com>
+Date: Wed, 3 Sep 2025 14:32:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250902181713.309797-1-irogers@google.com> <aLdnq7EayjFVbGYp@google.com>
-In-Reply-To: <aLdnq7EayjFVbGYp@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 2 Sep 2025 15:33:53 -0700
-X-Gm-Features: Ac12FXwcV_pMAqigJmUR8sDLOVc4AD5DFIqCUhQJKaWcOBmKRHrGo-fxzjx7PAI
-Message-ID: <CAP-5=fVwFw0ZjCcvakmk_Ay+v8U_W_HKc+irqw-jR2hMTxqWZA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] Fix use-after-free race in bpf_prog_info synthesis
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v2 0/6] Perf kvm commands bug fix
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Blake Jones <blakejones@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Song Liu <songliubraving@fb.com>, 
-	Dave Marchevsky <davemarchevsky@fb.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	Howard Chu <howardchu95@gmail.com>, song@kernel.org, 
-	Yonghong Song <yonghong.song@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Kevin Tian <kevin.tian@intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250811055546.296678-1-dapeng1.mi@linux.intel.com>
+ <aJ-VWevppm9Srjmr@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aJ-VWevppm9Srjmr@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Sep 2, 2025 at 2:54=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> Hi Ian,
->
-> On Tue, Sep 02, 2025 at 11:17:10AM -0700, Ian Rogers wrote:
-> > The addition of more use of bpf_prog_info for gather BPF metadata in:
-> > https://lore.kernel.org/all/20250612194939.162730-1-blakejones@google.c=
-om/
-> > and the ever richer perf trace testing, such as:
-> > https://lore.kernel.org/all/20250528191148.89118-1-howardchu95@gmail.co=
-m/
-> > frequently triggered a latent perf bug in v6.17 when the perf and
-> > libbpf updates came together. The bug would cause segvs and was reporte=
-d here:
-> > https://lore.kernel.org/lkml/CAP-5=3DfWJQcmUOP7MuCA2ihKnDAHUCOBLkQFEkQE=
-S-1ZZTrgf8Q@mail.gmail.com/
-> >
-> > To fix the issue the 1st and 3rd patch are necessary. Both patches
-> > address a race of either the sideband thread updating perf's state or
-> > the kernel state changing over two system calls.
->
-> Thanks a lot for the fix!
 
-Thanks, your reproduction was a great help.
+On 8/16/2025 4:15 AM, Namhyung Kim wrote:
+> On Mon, Aug 11, 2025 at 01:55:40PM +0800, Dapeng Mi wrote:
+>> his patch-set fixes perf kvm commands issues, like missed memory
+>> allocation check/free, out of range memory access and especially the
+>> issue that fails to sample guest with "perf kvm record/top" commands on
+>> Intel platforms.
+>>
+>> The commit 634d36f82517 ("perf record: Just use "cycles:P" as the
+>>  default event") changes to use PEBS event to do sampling by default
+>> including guest sampling. This breaks host to sample guest with commands
+>> "perf kvm record/top" on Intel platforms.
+>>
+>> Since the change "KVM: x86/pmu: Add basic support to enable guest PEBS
+>>  via DS"[1] starts, host loses the capability to sample guest with PEBS
+>> since all PEBS related MSRs are switched to guest value after vm-entry,
+>> like IA32_DS_AREA MSR is switched to guest GVA at vm-entry. This leads
+>> to PEBS events can't be used to sample guest by host, otherwise no guest
+>> PEBS records can be really sampled. The patches 5-6/6 fix this issue by
+>> using "cycles" event instead of PEBS event "cycles:P" to sample guest on
+>> Intel platforms.
+>>
+>> Changes:
+>>   v1 -> v2:
+>>   * Free memory allocated by strdup().
+>>   * Check "--pfm-events" in kvm_add_default_arch_event() as well.
+>>   * Opportunistically fix the missed memory allocation and free issue in
+>>     builtin-kwork.
+>>   * Comments refine. 
+>>
+>>
+>> Tests:
+>>   * Run command "perf kvm record -a && perf kvm report" and "perf kvm
+>>     top" on Intel Sapphire Rapids platform, guest records can be
+>>     captured successfully.
+>>   * Since no powerpc platforms on hand, doesn't check the patches on
+>>     powerpc. Any test on powerpc is appreciated.
+>>
+>> Ref:
+>>   [1] https://lore.kernel.org/all/20220411101946.20262-1-likexu@tencent.com/
+>>
+>>
+>> Dapeng Mi (6):
+>>   perf tools kvm: Add missed memory allocation check and free
+>>   perf tools kwork: Add missed memory allocation check and free
+>>   perf tools kvm: Fix the potential out of range memory access issue
+>>   perf tools: Add helper x86__is_intel_cpu()
+>>   perf tools kvm: Use "cycles" to sample guest for "kvm record" on Intel
+>>   perf tools kvm: Use "cycles" to sample guest for "kvm top" on Intel
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-> >
-> > The use-after-free was introduced by:
-> > https://lore.kernel.org/r/20241205084500.823660-4-quic_zhonhan@quicinc.=
-com
-> > The lack of failing getting the bpf_prog_info for changes in the
-> > kernel was introduced in:
-> > https://lore.kernel.org/r/20211011082031.4148337-4-davemarchevsky@fb.co=
-m
-> >
-> > As v6.17 is currently actively segv-ing in perf test I'd recommend
-> > these patches go into v6.17 asap.
->
-> Sure, I'll add them to perf-tools tree.
->
-> >
-> > When running the perf tests on v6.17 I frequently see less critical
-> > test failures addressed in:
-> > https://lore.kernel.org/all/20250821221834.1312002-1-irogers@google.com=
-/
->
-> Are they all from v6.17?
+Namhyung, thanks for your ack. Do you think is it good to be queued or
+still need other acks? 
 
-We could wait for the backports to v6.17.1, they all have fixes tags.
-They are more cosmetic things than this set of fixes.
 
-Thanks,
-Ian
-
->
-> >
-> > Ian Rogers (3):
-> >   perf bpf-event: Fix use-after-free in synthesis
-> >   perf bpf-utils: Constify bpil_array_desc
-> >   perf bpf-utils: Harden get_bpf_prog_info_linear
->
-> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 >
 > Thanks,
 > Namhyung
 >
-> >
-> >  tools/perf/util/bpf-event.c | 39 ++++++++++++++++--------
-> >  tools/perf/util/bpf-utils.c | 61 ++++++++++++++++++++++++-------------
-> >  2 files changed, 66 insertions(+), 34 deletions(-)
-> >
-> > --
-> > 2.51.0.355.g5224444f11-goog
-> >
+>>  tools/perf/arch/x86/util/kvm-stat.c |  51 +++++++++++
+>>  tools/perf/builtin-kvm.c            | 130 ++++++++++++++++++++--------
+>>  tools/perf/builtin-kwork.c          |  27 ++++--
+>>  tools/perf/util/env.c               |  22 +++++
+>>  tools/perf/util/env.h               |   2 +
+>>  tools/perf/util/kvm-stat.h          |  10 +++
+>>  6 files changed, 203 insertions(+), 39 deletions(-)
+>>
+>>
+>> base-commit: 6235ce77749f45cac27f630337e2fdf04e8a6c73
+>> -- 
+>> 2.34.1
+>>
