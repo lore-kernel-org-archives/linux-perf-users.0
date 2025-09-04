@@ -1,55 +1,55 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D386E242D79
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Sep 2025 04:47:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E413D279789
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Sep 2025 04:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756961254; cv=none; b=Nqf0xN9YDZHAwk6dC/+LM00DBBA7rWJVvHEPNHMGAICRnOZrJJPXVgSgrf4uzStc3cEOspG1Ia1A4vlF62lOBqCv9PfcYv2Pl89FynXYogmEd6CP8zMON2trOq1vvreAxTNby5G5Hi1FdZm714IGiOdhvMyToJbCMZs5GDbk2sg=
+	t=1756961256; cv=none; b=Xf3kSAnmwlEdckRaivEQHtoa+lffEZx448ACD6O7ohkSMNF9IhRVKjkLJxY5tQ/d7ZHMKKv/x4IiHVdmLbi2wKEDR5dcfq5YwQCL4KMsNmhWW+xfGPYo9Bybhcz7SlfI3GJaOZm37lAZfiIf1qUSnRznQuwOuBe0ZcJF68olPxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756961254; c=relaxed/simple;
-	bh=eCeE/2YA1gW3yikph8tyIv9Qo87llAzuCgL/jet0ORQ=;
+	s=arc-20240116; t=1756961256; c=relaxed/simple;
+	bh=k/LoRE9LKJb9pgXdFQrX4Vgw4BybtXTPIpuakLBhaK8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=fEvNi2i+jzt16J0g7Bn1Trfa6FGecpVr67wen/Ra0S6wxWBGfd3DqMhXO7lWAF+5KzPP0LVbIXPmCxOFGre8FjeanwAjmmnjKHyXsELit7yRrWsRFaERbUWirYMquaxCO0hD16bP6OgRfjZg4S5KbiUPF+q0jpHd7cNzgq5CPc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g/RSaRXT; arc=none smtp.client-ip=209.85.216.74
+	 To:Content-Type; b=pwMk51y10+ibGjzNrsTARjs7vF9rw/zLfBGALLv5gwMbGQhlZh1pd183xLB9JNKih5vvZTiI2NVpE2Dbe4BXvlsOqUOrgAuZwb1PFI1a0xoXbTi8LQl1LCgmiEJ5KhiL7P+wgfdpuTIAaJ1MR8gd8cJ97z8IuAo0cfnql2oiVS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dfn2ymuF; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g/RSaRXT"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3234811cab3so637748a91.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Sep 2025 21:47:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dfn2ymuF"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-24868b07b5bso15164795ad.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Sep 2025 21:47:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756961252; x=1757566052; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1756961254; x=1757566054; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=41eHmEOBCKxz0FQX8SK2j27zDRY5OHr/EQpAd6DfRhw=;
-        b=g/RSaRXTs7UZ23v/atNMPUhIFiVHNPRDjhkcjQiokjzOlb5CTO3TtakqiiMmwXQ1ZU
-         NJQohxytIzPtIZVsiqIDe422iCcZLGYYp+DBH0NGlmYmxCeUjQiLqaYvFEwy7wNHhRqu
-         JPW7VtCL+0tdRMFeuTexIM5pt9vGI9xhenhWTtRv3XuZ2qTzcE6NW23KVhFpxMwg179S
-         diPUVCgo3Kse2dLozfeRIRF8jSBI7SZk++3ARmFIbiJQX/x0yVExEjUeEEn8zPC94+Cm
-         jHx+H0Rfc2JFqlXeTFKYtzPetNHM8jfcu67OUhOtFm1Uc84ObVkp47zs+fRVtCEexEB8
-         mIEA==
+        bh=a/I9QWCdSsiagbzi91mQV5Lxu5w6XmpsGaYWx/t/qFo=;
+        b=dfn2ymuFCJXp++Yww2SK+BUbXtSa/BKmbIBwxWaG7/tzrbqRG//tdnhL42+uMmtPpV
+         PNQCi19F4xEQOyYah864wNNcBtP0NYuHf46q/hDFmqPhF+3ETI3N4gKzcezP/HHt+zoz
+         5Y6oGdnFEmQfO3ErrZhIcLKkJyuPQxEuTMCRaiHtNCyhPI+6eVu+9FRFaUEDPhXAT5Vj
+         oi6AaSwsXYmd4+UxpwbsV3Flstb7cL/VTU9gnimVKW2QEaENOcb3OO9Ov3nAOrnPN3xD
+         2zB9XjHpyR0nwsjtMh6KtDUiqUzUY3El0kP94VuJHZvESRhIaXNJXgsSOBpjiEs2aqcC
+         2Y5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756961252; x=1757566052;
+        d=1e100.net; s=20230601; t=1756961254; x=1757566054;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=41eHmEOBCKxz0FQX8SK2j27zDRY5OHr/EQpAd6DfRhw=;
-        b=hvX+g+7PhiSDg91CkqvAAB0yDlYPm/glANRAtia2pH52gtO6uuQ+vsEeA/v6o6S6Az
-         vOdkrEU3VprNJDs3Off38P/gQpysMzEd6pky3hKno82Zcfmi01MbJ3OZxsjmtzlypd64
-         OWUNczsPLVAf22YsH/Z2/IVG2sn1S1KmD2q9mswXSR1gNG7B8eNxhxahOy14rqwF8Mvl
-         2xJwusDmgaavRi+oWAytMm6hbLq8uca5UQ0bW0Qj+SLJ28Isaf+l48FLNZ3YTj673ooO
-         6xgIFhM9Ol0HpM5uvMnyGNk5u2DksjA+VwBiUz99RWxW/NiJysTcLvOC52wMTwCwcWOE
-         FWsw==
-X-Forwarded-Encrypted: i=1; AJvYcCVXVOxeovSFAheeJIwN70HSzesJjPMmkemRcbazOBc2OlZ8pe6UnlpA1HaJizeGPBLE4ieYBate7hSHwMRFNv+T@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMvqv1jmHFBNUPfQzbQsfF479vCNWvoypXbfFouUxl5CwSRIFv
-	JeleDXAcPHtimQWNNEW2nPhga42BdO9XOj3Pe8l+ndthz+h4FdRIoE6fJxitikBrf2BX1+0JMm4
-	ncm1MdUWbmg==
-X-Google-Smtp-Source: AGHT+IFMGvdDOM894XFlRC4C8ABn2l/2js1gvMdb3naZGms4QkhWcuW7svL1yywkey+lraXUjRQta+HUkNvQ
-X-Received: from pjhu32.prod.google.com ([2002:a17:90a:51a3:b0:329:7dfc:f4e1])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1b4b:b0:32b:656f:5a5d
- with SMTP id 98e67ed59e1d1-32b656f5b5fmr5026346a91.29.1756961252229; Wed, 03
- Sep 2025 21:47:32 -0700 (PDT)
-Date: Wed,  3 Sep 2025 21:46:49 -0700
+        bh=a/I9QWCdSsiagbzi91mQV5Lxu5w6XmpsGaYWx/t/qFo=;
+        b=mTXu9Sn/m7jFWGEhbHsYdK+18tj97/h1JRvUuZxWZQgm+1CO3RqyxSTkNl8fyYl3QR
+         Nt9/B89W5Ft9IbnQg+09+6h7ybq89JckR5vyBVWc5ave8pFNWTlhPQMG1wEKEe4DQpj6
+         AmD0KXT7AaxV/i5FrjUK8OfoOv2c7MNqsmU1YAOSdfM21ev2xJu6dE7YneNG/ipPVBmi
+         AnQHU9sVCcZjkL2U93/m6+VuqERy04CXg55Mp6YcBAx7jpckDBVQb/CFx/9BzpzoqzcO
+         THDreKLMlT9Uh2ZVwJicqAimlq9+rPuuolQ6jRSBs5FPo05zyR+EssdtQS5zFqtTQ3/m
+         2e6g==
+X-Forwarded-Encrypted: i=1; AJvYcCUMrHSwK1PhraXpwks9U+fpeRiO92yn6zIBCduKtgNVLnGD8LKU0J1VC880lODXWXuo8WoRB3Cjf/CJKoBAlomJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdUmYy//0jD+WkHKqLsLkdI5C+EnMJ5WgnkaSzO1IxgX6pXJsH
+	3kAGw5RiJHOOW05oIA+19S6Y5mQgXQHuXUx+TjKKXv5P9Yg/v/rhQoUtKTLgqqSbS3grRHXRp7B
+	vNyGD2UryIA==
+X-Google-Smtp-Source: AGHT+IE/N6MAKEsx+XK77LYz++Lo9hdGu6bLFSU5sb1Lb2ne7u2hi/FDM1GhURNwOObmL2M/3v+fFsv7zKmk
+X-Received: from plbh15.prod.google.com ([2002:a17:902:eecf:b0:24c:c013:50b5])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c94d:b0:246:bce2:e837
+ with SMTP id d9443c01a7336-24944b55120mr261214965ad.49.1756961254122; Wed, 03
+ Sep 2025 21:47:34 -0700 (PDT)
+Date: Wed,  3 Sep 2025 21:46:50 -0700
 In-Reply-To: <20250904044653.1002362-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250904044653.1002362-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.338.gd7d06c2dae-goog
-Message-ID: <20250904044653.1002362-19-irogers@google.com>
-Subject: [PATCH v6 18/22] perf jevents: Add dir breakdown metrics for Intel
+Message-ID: <20250904044653.1002362-20-irogers@google.com>
+Subject: [PATCH v6 19/22] perf jevents: Add C-State metrics from the PCU PMU
+ for Intel
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,69 +78,61 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Thomas Falcon <thomas.falcon@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Breakdown directory hit, misses and requests. The implementation uses
-the M2M and CHA PMUs present in server models broadwellde, broadwellx
-cascadelakex, emeraldrapids, icelakex, sapphirerapids and skylakex.
+Use occupancy events fixed in:
+https://lore.kernel.org/lkml/20240226201517.3540187-1-irogers@google.com/
+
+Metrics are at the socket level referring to cores, not hyperthreads.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/intel_metrics.py | 36 ++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ tools/perf/pmu-events/intel_metrics.py | 27 ++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
 diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
-index 30cf668c7769..669b5668a753 100755
+index 669b5668a753..befaf0fcd961 100755
 --- a/tools/perf/pmu-events/intel_metrics.py
 +++ b/tools/perf/pmu-events/intel_metrics.py
-@@ -800,6 +800,41 @@ def IntelLdSt() -> Optional[MetricGroup]:
+@@ -800,6 +800,32 @@ def IntelLdSt() -> Optional[MetricGroup]:
    ], description = "Breakdown of load/store instructions")
  
  
-+def UncoreDir() -> Optional[MetricGroup]:
++def UncoreCState() -> Optional[MetricGroup]:
 +  try:
-+    m2m_upd = Event("UNC_M2M_DIRECTORY_UPDATE.ANY")
-+    m2m_hits = Event("UNC_M2M_DIRECTORY_HIT.DIRTY_I")
-+    # Turn the umask into a ANY rather than DIRTY_I filter.
-+    m2m_hits.name += "/umask=0xFF,name=UNC_M2M_DIRECTORY_HIT.ANY/"
-+    m2m_miss = Event("UNC_M2M_DIRECTORY_MISS.DIRTY_I")
-+    # Turn the umask into a ANY rather than DIRTY_I filter.
-+    m2m_miss.name += "/umask=0xFF,name=UNC_M2M_DIRECTORY_MISS.ANY/"
-+    cha_upd = Event("UNC_CHA_DIR_UPDATE.HA")
-+    # Turn the umask into a ANY rather than HA filter.
-+    cha_upd.name += "/umask=3,name=UNC_CHA_DIR_UPDATE.ANY/"
++    pcu_ticks = Event("UNC_P_CLOCKTICKS")
++    c0 = Event("UNC_P_POWER_STATE_OCCUPANCY.CORES_C0")
++    c3 = Event("UNC_P_POWER_STATE_OCCUPANCY.CORES_C3")
++    c6 = Event("UNC_P_POWER_STATE_OCCUPANCY.CORES_C6")
 +  except:
 +    return None
 +
-+  m2m_total = m2m_hits + m2m_miss
-+  upd = m2m_upd + cha_upd # in cache lines
-+  upd_r = upd / interval_sec
-+  look_r = m2m_total / interval_sec
++  num_cores = Literal("#num_cores") / Literal("#num_packages")
 +
-+  scale = 64 / 1_000_000 # Cache lines to MB
-+  return MetricGroup("lpm_dir", [
-+      Metric("lpm_dir_lookup_rate", "",
-+             d_ratio(m2m_total, interval_sec), "requests/s"),
-+      Metric("lpm_dir_lookup_hits", "",
-+             d_ratio(m2m_hits, m2m_total), "100%"),
-+      Metric("lpm_dir_lookup_misses", "",
-+             d_ratio(m2m_miss, m2m_total), "100%"),
-+      Metric("lpm_dir_update_requests", "",
-+             d_ratio(m2m_upd + cha_upd, interval_sec), "requests/s"),
-+      Metric("lpm_dir_update_bw", "",
-+             d_ratio(m2m_upd + cha_upd, interval_sec), f"{scale}MB/s"),
++  max_cycles   = pcu_ticks * num_cores;
++  total_cycles = c0 + c3 + c6
++
++  # remove fused-off cores which show up in C6/C7.
++  c6 = Select(max(c6 - (total_cycles - max_cycles), 0),
++              total_cycles > max_cycles,
++              c6)
++
++  return MetricGroup("lpm_cstate", [
++      Metric("lpm_cstate_c0", "C-State cores in C0/C1", d_ratio(c0, pcu_ticks), "cores"),
++      Metric("lpm_cstate_c3", "C-State cores in C3", d_ratio(c3, pcu_ticks), "cores"),
++      Metric("lpm_cstate_c6", "C-State cores in C6/C7", d_ratio(c6, pcu_ticks), "cores"),
 +  ])
 +
 +
- def UncoreMem() -> Optional[MetricGroup]:
+ def UncoreDir() -> Optional[MetricGroup]:
    try:
-     loc_rds = Event("UNC_CHA_REQUESTS.READS_LOCAL", "UNC_H_REQUESTS.READS_LOCAL")
-@@ -923,6 +958,7 @@ def main() -> None:
+     m2m_upd = Event("UNC_M2M_DIRECTORY_UPDATE.ANY")
+@@ -958,6 +984,7 @@ def main() -> None:
        IntelMlp(),
        IntelPorts(),
        IntelSwpf(),
-+      UncoreDir(),
++      UncoreCState(),
+       UncoreDir(),
        UncoreMem(),
        UncoreMemBw(),
-   ])
 -- 
 2.51.0.338.gd7d06c2dae-goog
 
