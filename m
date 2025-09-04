@@ -1,119 +1,190 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C93E234966
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Sep 2025 16:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491492F3C38;
+	Thu,  4 Sep 2025 16:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757002664; cv=none; b=Elqhuux13+CHmcPugDNRnFflSl9IL7UH0SU8BfFD4F4OlyXqsLDsnTsaRoKfH7gt85Em5eO3Zmxy/QN/8McsdCTihX4em4mOBzX2x0saRm4vpmMLRDkIb/a4tCLFsQdUWCbYbuoHpWyuDrtBOnsqEphENyCTTYQdr2uPVyRxJQM=
+	t=1757003887; cv=none; b=uMrvdn674Lp9YGEU7AkZu1D088puqH+PDWRw1UppHHFiBHRBavRZ4P9i39CZZk84ipE05jR0e6YfKKp9ek9W4wld8F5aEH58RKomM72X61YpLW+d5Da3AiwG0s9Cnutu79bQtjl6xE9fNukArwHq0dPmo880FufvQb0OFNTTMww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757002664; c=relaxed/simple;
-	bh=WbwuewpY10icGQu/W7sUvcToRo1R4qP9KKJtQKyOM0s=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=nbKclL6E7GC0yi6ss1GKzvuhRnKY+++Chi7/iZFLlzva8Kn9m9ogNkpTLKf9PFXXvx1ol0NbEOdepv5eGcrpXjykaB3e5xt29dzxsc6MAiI0B2z6I4evCCsjJR/iIpCqSjr9ziSJ9hvGhzrFdIhtpKqBKfOuJowTA02+pv/At6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fBMKu5he; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1757003887; c=relaxed/simple;
+	bh=GM8BVc/lCUz3JRvFBhTmIBDA+zKVOyBTKFKiYcWAtQY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NEGconv1KCcejJKsLKpiFD6bmugX6BD/2rSFxLGOcVikYQVnL0KJXyB2HeuDOgRa5Bx5UnmqBgCuPFsb1NAoiaroGIXaAojiRNC9eao+0z0iDeLochpelTvtBDxiiL3V8J7dXEq/R8htmCmUDSCEfoIjarA9WyudzUxX92AW+K4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O6UxRI+f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fBMKu5he"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-24c9e2213f8so16457485ad.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Sep 2025 09:17:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1757002662; x=1757607462; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/UOanZ2PmR3kMJHnHNKLCAes3a/LIBraz6jr4hqu0OQ=;
-        b=fBMKu5hehv14p9IF60YoyWG0JCH37j/QF4rfp9k5yfoH9U/zU6Dwq3M5Wsyu7zCVk5
-         9gu9Rq3Jbf0FnO8CRvXzikJJ6S91Ta02n0U7lr+D5I7pmbFHiYdBtbx/P/dYlEcINkng
-         Fzmpej1sIL22cQ7dJuV/gfRKx7x3EdNQ3bwSLfyug3p10bKDtGzmrBgYqsFBPYon/iGH
-         V/d4gHmWb3WMQxeM+hcvO9l/J5PDLkIjiGxvDWtxrRBdSvIs8F4Rw3wzlETm8kLaKtS9
-         70p5y+ANcfUErJ2r4RUDNAuysjblY+mQDwq0ZaaW0oWRSXpslRdqAa4lc7leX+S6ydQK
-         7hvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757002662; x=1757607462;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/UOanZ2PmR3kMJHnHNKLCAes3a/LIBraz6jr4hqu0OQ=;
-        b=bL3LxLoLsIUX/xXzcdOBlDjS7UlEiyVtKOCWNSuz7Kg8fIV/LmmBh/LWavrM+FtUVA
-         s2tqZCPtRNxc2R/AntStKtBjh+9S5dtnemiQkzk7UHWgi2R8LQHk9ijWP3NuUJcCxf5G
-         Wj62rhD/D3w5pv+hRRtFRIXHtm65O1ho10SIA0jPLYNWAqsVJIKXe/CWau+CSgLfvNhR
-         muOTB6xy+e8fQck9Xh/43SXJzeXBPY4JlgWJL7PE0XEG478Atnpr7ZU4Ua84kBkwz60K
-         V6lqllNUEbTo1bd+5yPh9K83Bi7f4AT1P9307l/jAqAKoq1tQglBWHkO4MkUC4Vgs1+6
-         2AYw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5kL7TTIoaFBN6h5fpGDubBKaIb8dlvzhITuD1xD0Y1Hhw/jFM/kA7FzoREgS5E5NqDZZg8eKzVIxCjD2b8SuR@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTVHSViVitYPDaMwSICTReg2rHxUKCmhkVxkJU2rOTwKAbq1M8
-	U4UOstWP2Xn+3jfpH9FWSPL8Y+LXMC0qiNrceSbRS/TMbppLZcVdkH6IRmnK/JAS2nsfb2AX93+
-	aNwHND00YeQ==
-X-Google-Smtp-Source: AGHT+IHve4jHgJ8Ftz3JzIwawxkAlew/pKxKturHnhBrtdGSG7IWbPfF3US/ysEaBUE4Mj9is3lfpj8gS3tt
-X-Received: from plpl17.prod.google.com ([2002:a17:903:3dd1:b0:24c:8b0f:b5e4])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:dac2:b0:24a:b5a1:10cd
- with SMTP id d9443c01a7336-24ab5a1122fmr220398345ad.52.1757002662335; Thu, 04
- Sep 2025 09:17:42 -0700 (PDT)
-Date: Thu,  4 Sep 2025 09:17:31 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O6UxRI+f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE1EEC4CEF0;
+	Thu,  4 Sep 2025 16:38:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757003886;
+	bh=GM8BVc/lCUz3JRvFBhTmIBDA+zKVOyBTKFKiYcWAtQY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O6UxRI+fgNAd2wy+m9iIzJ7lycQIEDH0R6sDvZmDJNttg0I8+hO4a6T/GWHExgqvZ
+	 HmwvPTeyO+K0OY8heQ7LC+LdBM+4tNQ4fOOYLbZUzgEN3eVT3w0h/FHlDsWHfJMS+v
+	 hbsMQIsEhPgdoAaZwcyGpwLBJJ1Xvb2RreyirE36/rHrReRVmov0Jm5J8WGIoszPLD
+	 bgonwrTevIDpAtvv18gwnztq3XE6JqNESmzaRjL2D9Rj4IRogNJkRNID/+LYrnIl2S
+	 q5Z5R+QV0iEBCN2W7ukqilJvJ5SQqiQYkd1KOgDe1cMALW2HLblTVnrWajNfVd0Wem
+	 h2MtuzzWIHdew==
+Date: Thu, 4 Sep 2025 13:38:03 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Tomas Glozar <tglozar@redhat.com>, KP Singh <kpsingh@kernel.org>,
+	Matt Bobrowski <mattbobrowski@google.com>,
+	Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	James Clark <james.clark@linaro.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] perf auxtrace: Support AUX pause and resume with
+ BPF
+Message-ID: <aLnAazxkczTFSMcL@x1>
+References: <20250725-perf_aux_pause_resume_bpf_rebase-v3-0-9fc84c0f4b3a@arm.com>
+ <fd7c39d2-64b4-480e-8a29-abefcdc7d10a@intel.com>
+ <20250730182623.GE143191@e132581.arm.com>
+ <0a0ed9d4-6511-4f0b-868f-22a3f95697f8@intel.com>
+ <20250808114734.GB3420125@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.51.0.338.gd7d06c2dae-goog
-Message-ID: <20250904161731.1193729-1-irogers@google.com>
-Subject: [PATCH v1] perf symbol-elf: Add support for the block argument for libbfd
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Haibo Xu <haibo1.xu@intel.com>, 
-	Stephen Brennan <stephen.s.brennan@oracle.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	"=?UTF-8?q?R=C3=A9mi=20Bernon?=" <rbernon@codeweavers.com>, Sam James <sam@gentoo.org>, 
-	James Clark <james.clark@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250808114734.GB3420125@e132581.arm.com>
 
-James Clark caught that the BUILD_NONDISTRO=1 build with libbfd was
-broken due to an update to the read_build_id function adding a
-blocking argument. Add support for this argument by first opening the
-file blocking or non-blocking, then switching from bfd_openr to
-bfd_fdopenr and passing the opened fd. bfd_fdopenr closes the fd on
-error and when bfd_close are called.
+On Fri, Aug 08, 2025 at 12:47:34PM +0100, Leo Yan wrote:
+> On Tue, Aug 05, 2025 at 10:16:29PM +0300, Adrian Hunter wrote:
+> > On 30/07/2025 21:26, Leo Yan wrote:
+> > > On Mon, Jul 28, 2025 at 08:02:51PM +0300, Adrian Hunter wrote:
+> > >> On 25/07/2025 12:59, Leo Yan wrote:
+> > >>> This series extends Perf for fine-grained tracing by using BPF program
+> > >>> to pause and resume AUX tracing. The BPF program can be attached to
+> > >>> tracepoints (including ftrace tracepoints and dynamic tracepoints, like
+> > >>> kprobe, kretprobe, uprobe and uretprobe).
 
-Reported-by: James Clark <james.clark@linaro.org>
-Closes: https://lore.kernel.org/lkml/20250903-james-perf-read-build-id-fix-v1-2-6a694d0a980f@linaro.org/
-Fixes: 2c369d91d093 ("perf symbol: Add blocking argument to filename__read_build_id")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
-This patch should be applied after:
-https://lore.kernel.org/lkml/20250903-james-perf-read-build-id-fix-v1-1-6a694d0a980f@linaro.org/
----
- tools/perf/util/symbol-elf.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+> > >> Using eBPF to pause/resume AUX tracing seems like a great idea.
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 033c79231a54..1346fd180653 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -873,13 +873,17 @@ static int elf_read_build_id(Elf *elf, void *bf, size_t size)
- 
- #ifdef HAVE_LIBBFD_BUILDID_SUPPORT
- 
--static int read_build_id(const char *filename, struct build_id *bid)
-+static int read_build_id(const char *filename, struct build_id *bid, bool block)
- {
- 	size_t size = sizeof(bid->data);
--	int err = -1;
-+	int err = -1, fd;
- 	bfd *abfd;
- 
--	abfd = bfd_openr(filename, NULL);
-+	fd = open(filename, block ? O_RDONLY : (O_RDONLY | O_NONBLOCK));
-+	if (fd < 0)
-+		return -1;
-+
-+	abfd = bfd_fdopenr(filename, /*target=*/NULL, fd);
- 	if (!abfd)
- 		return -1;
- 
--- 
-2.51.0.338.gd7d06c2dae-goog
+> > >> AFAICT with this patch set, there is just support for pause/resume
+> > >> much like what could be done directly without eBPF, so I wonder if you
+> > >> could share a bit more on how you see this evolving, and what your
+> > >> future plans are?
 
+> > > IIUC, here you mean the tool can use `perf probe` to firstly create
+> > > probes, then enable tracepoints as PMU event for AUX pause and resume.
+
+> > Yes, like:
+
+> > $ sudo perf probe 'do_sys_openat2 how->flags how->mode'
+> > Added new event:
+> >   probe:do_sys_openat2 (on do_sys_openat2 with flags=how->flags mode=how->mode)
+
+> > You can now use it in all perf tools, such as:
+
+> >         perf record -e probe:do_sys_openat2 -aR sleep 1
+
+> > $ sudo perf probe do_sys_openat2%return
+> > Added new event:
+> >   probe:do_sys_openat2__return (on do_sys_openat2%return)
+
+> > You can now use it in all perf tools, such as:
+
+> >         perf record -e probe:do_sys_openat2__return -aR sleep 1
+
+> > $ sudo perf record --kcore -e intel_pt/aux-action=start-paused/k -e probe:do_sys_openat2/aux-action=resume/ --filter='flags==0x98800' -e probe:do_sys_openat2__return/aux-action=pause/ -- ls
+
+> Thanks a lot for sharing the commands. I was able to replicate them
+> using CoreSight.
+
+> Given that we can achieve the same result without using BPF, I am not
+> sure how useful this series is. It may give us a base for exploring
+> profiling that combines AUX trace and BPF, but I am fine with holding
+> on until we have clear requirements for it.
+
+> I would get suggestion from you and maintainers before proceeding
+> further.
+
+Maybe retrofit this for starting stopping profiling non HW tracing
+sections?
+
+We have now:
+
+⬢ [acme@toolbx perf-tools-next]$ perf record -h switch
+
+ Usage: perf record [<options>] [<command>]
+    or: perf record [<options>] -- <command> [<options>]
+
+        --switch-events   Record context switch events
+        --switch-max-files <n>
+                          Limit number of switch output generated files
+        --switch-output[=<signal or size[BKMG] or time[smhd]>]
+                          Switch output when receiving SIGUSR2 (signal) or cross a size or time threshold
+        --switch-output-event <switch output event>
+                          switch output event selector. use 'perf list' to list available events
+
+⬢ [acme@toolbx perf-tools-next]$
+
+That will dump a snapshot when some event takes place, but that is done
+with a sideband thread, from 'man perf-record':
+
+--switch-output-event::
+Events that will cause the switch of the perf.data file, auto-selecting
+--switch-output=signal, the results are similar as internally the side band
+thread will also send a SIGUSR2 to the main one.
+
+Uses the same syntax as --event, it will just not be recorded, serving only to
+switch the perf.data file as soon as the --switch-output event is processed by
+a separate sideband thread.
+
+This sideband thread is also used to other purposes, like processing the
+PERF_RECORD_BPF_EVENT records as they happen, asking the kernel for extra BPF
+information, etc.
+
+----------------------
+
+And in perf-report we have:
+
+----
+
+--switch-on EVENT_NAME::
+        Only consider events after this event is found.
+
+        This may be interesting to measure a workload only after some initialization
+        phase is over, i.e. insert a perf probe at that point and then using this
+        option with that probe.
+
+--switch-off EVENT_NAME::
+        Stop considering events after this event is found.
+
+--show-on-off-events::
+        Show the --switch-on/off events too. This has no effect in 'perf report' now
+        but probably we'll make the default not to show the switch-on/off events
+        on the --group mode and if there is only one event besides the off/on ones,
+        go straight to the histogram browser, just like 'perf report' with no events
+        explicitly specified does.
+
+----
+
+If we had it in 'perf record' then we would have reduced perf.data
+files.
+
+I.e. we would have something like '-e {cycles,instructions}/action=start-paused/k' -e probe:do_sys_openat2/action=resume/ --filter='flags==0x98800' -e probe:do_sys_openat2__return/action=pause/
+
+- Arnaldo
