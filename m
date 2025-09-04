@@ -1,38 +1,38 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C1823D7EC;
-	Thu,  4 Sep 2025 06:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6422E27FB3A;
+	Thu,  4 Sep 2025 06:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756967937; cv=none; b=s2hLqEZv21Xpk3nJn3ScOWH825aBoJUgFw169UoEA/pTCZ/L91GqBpml9j6h0Iq0hcHEicZH8Pzc3wi0wAd0GXkzCXUvnZX7J1JtiLutDP0JCxW7XT8Xyxsuvtdh/diJUqtOb6rrqXzulvZWYS0Fl7sVawROclqAsztct4hmD94=
+	t=1756968317; cv=none; b=jpJ6EKZ+Y3xJN9Rhc8NryxZ/StOvU0ORrASxX7TjX5NaU/K4ThmRO0y+bxq0lXtr5GwceXw6eHKkOHgJxD2EpwVcw2yO5haLR5oEyRCnBmns+he+ku93AfgfCQMEhdusCXTqJO1eRnvaGtyUY9H2w3KSj5bm6MxrY6ije3v1mGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756967937; c=relaxed/simple;
-	bh=mpimo695aXQfzG5brAJcrTJCFlxU223RcVt2D69ZLV4=;
+	s=arc-20240116; t=1756968317; c=relaxed/simple;
+	bh=y6AssyltUEJd/EJo8LBycypmE5jb0bS6gHIzXyIwEOU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IhfxQKEEIKemBUKfRo2+dkD0ThqehUZ5gJp4yW9jOUJus/oOdp/g9/B0KAgpKKp9RUYy4COCBuoxyVK2lYJwE6md8R0SZ5Vvc+1Y/tOktAtfs1syrCWMt9YuSwOVGiHEYg2P8lx6i9yczqkD8T27AJKfplvtWvjN9yOOyDDiL+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TEEa2VkP; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:Content-Disposition:In-Reply-To; b=oyx33gjAvAQ7s5OCKCOeyOxxdynAIvJLKY7b4Ya7wUfbN4XSXlPApAijq+MPLLjpqUofEjyGx8Z35cO2/N3xz0qY7hC9E4Q7SHHZCUFo+LZtWMBTfatJridceRcAi7B6hNPA8NvLk+7HjmWClMXjHqaHfG+iVH/TSqpGZ/k6sJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LV+1vr5T; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TEEa2VkP"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LV+1vr5T"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=V2XVkscTs+i5+vJ4MKvvhrBrD/Sub/SqyCqSzizvVaI=; b=TEEa2VkPTiHLXKQrgzL4vG3QGH
-	gaGelYhttVsACG0Oxs7GvaX1pKbt9vf/ogJSTh7jCe67bdXmvGAHLL6R4TFru0IQdfxzjaygKBkoi
-	cPZ/vInmWvN9w3pJ7k8u6s/D9pCM4SgicC975q5p7GW+kKYCn2g3HuN7TjzB9wiTFrIuprW0p9JKE
-	vo0OLncH+axpSmIImS0pJdSIq220xc0FDW/rXZ4IYrNblbUOwgFe4ZP3sgP80fEJPUsTceVC+OXPK
-	bV2LTSSXu4+XsieyC/CIOaJ03D7WvHybOtbqZfsRXxZl628Yys0i72q+o17rgodLPRr6Cro4dYAtt
-	b/sNSGRQ==;
+	bh=gZmrHXi/l2Bu3uwxMTV4r6fmpaXludQwzjRHMWeCses=; b=LV+1vr5TnEbOLwYDucpF+T7OIM
+	LWIWn5X6Bnn9lXD+SOBNZPAjiFQE9u79hY8ceIoaYVBB+rG4wxes3Rm2SIO/T9SMXtDz1WDDJMAgR
+	sEqyVAiZ8dOIT3rwh/d00dqxQja9pydA/vSzSy2tGohH0cMhzwqcl2EOSnawGlVX5x1IoMtLugTxx
+	knHvZleoFEyGIIr00wSpr62kKCud3XmrUPYtIXF21hHRhmNQqk8Cn3ZbMtE3wh9dH+km5SACk+lgx
+	OZSQvvdwMxJdlJ327jl9dk44f6BgII0+XrrASFOQRMxTzEYlx2jX3U6L47hw44gV4EoJHUl0mah0s
+	hU3DEftg==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uu3c9-0000000EDik-0fUS;
-	Thu, 04 Sep 2025 06:38:33 +0000
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uu3iD-00000004IW4-1Zu6;
+	Thu, 04 Sep 2025 06:44:50 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E43A63002BF; Thu, 04 Sep 2025 08:38:32 +0200 (CEST)
-Date: Thu, 4 Sep 2025 08:38:32 +0200
+	id 78BB03002BF; Thu, 04 Sep 2025 08:44:48 +0200 (CEST)
+Date: Thu, 4 Sep 2025 08:44:48 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: Jinchao Wang <wangjinchao600@gmail.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
@@ -57,11 +57,11 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Michal Hocko <mhocko@suse.com>, linux-perf-users@vger.kernel.org,
 	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 05/18] x86/hw_breakpoint: introduce
- arch_reinstall_hw_breakpoint() for atomic context
-Message-ID: <20250904063832.GT4067720@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH v2 06/18] perf/hw_breakpoint: add arch-independent
+ hw_breakpoint_modify_local()
+Message-ID: <20250904064448.GU4067720@noisy.programming.kicks-ass.net>
 References: <20250904002126.1514566-1-wangjinchao600@gmail.com>
- <20250904002126.1514566-6-wangjinchao600@gmail.com>
+ <20250904002126.1514566-7-wangjinchao600@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -70,94 +70,81 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250904002126.1514566-6-wangjinchao600@gmail.com>
+In-Reply-To: <20250904002126.1514566-7-wangjinchao600@gmail.com>
 
-On Thu, Sep 04, 2025 at 08:21:02AM +0800, Jinchao Wang wrote:
-> Introduce arch_reinstall_hw_breakpoint() to update hardware breakpoint
-> parameters (address, length, type) without freeing and reallocating the
-> debug register slot.
+On Thu, Sep 04, 2025 at 08:21:03AM +0800, Jinchao Wang wrote:
+> Introduce hw_breakpoint_modify_local() as a generic helper to modify an
+> existing hardware breakpoint. The function invokes
+> hw_breakpoint_arch_parse() and delegates the reinstall step to the
+> architecture via arch_reinstall_hw_breakpoint().
 > 
-> This allows atomic updates in contexts where memory allocation is not
-> permitted, such as kprobe handlers.
+> A weak default implementation of arch_reinstall_hw_breakpoint() is
+> provided, returning -EOPNOTSUPP on architectures without support.
+> 
+> This makes the interface arch-independent while allowing x86 (and others)
+> to provide their own implementation.
 > 
 > Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 > ---
->  arch/x86/include/asm/hw_breakpoint.h |  1 +
->  arch/x86/kernel/hw_breakpoint.c      | 50 ++++++++++++++++++++++++++++
->  2 files changed, 51 insertions(+)
+>  include/linux/hw_breakpoint.h |  1 +
+>  kernel/events/hw_breakpoint.c | 18 ++++++++++++++++++
+>  2 files changed, 19 insertions(+)
 > 
-> diff --git a/arch/x86/include/asm/hw_breakpoint.h b/arch/x86/include/asm/hw_breakpoint.h
-> index 0bc931cd0698..bb7c70ad22fe 100644
-> --- a/arch/x86/include/asm/hw_breakpoint.h
-> +++ b/arch/x86/include/asm/hw_breakpoint.h
-> @@ -59,6 +59,7 @@ extern int hw_breakpoint_exceptions_notify(struct notifier_block *unused,
+> diff --git a/include/linux/hw_breakpoint.h b/include/linux/hw_breakpoint.h
+> index db199d653dd1..9453b5bdb443 100644
+> --- a/include/linux/hw_breakpoint.h
+> +++ b/include/linux/hw_breakpoint.h
+> @@ -67,6 +67,7 @@ extern int
+>  modify_user_hw_breakpoint_check(struct perf_event *bp, struct perf_event_attr *attr,
+>  				bool check);
 >  
->  
->  int arch_install_hw_breakpoint(struct perf_event *bp);
-> +int arch_reinstall_hw_breakpoint(struct perf_event *bp);
->  void arch_uninstall_hw_breakpoint(struct perf_event *bp);
->  void hw_breakpoint_pmu_read(struct perf_event *bp);
->  void hw_breakpoint_pmu_unthrottle(struct perf_event *bp);
-> diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
-> index b01644c949b2..89135229ed21 100644
-> --- a/arch/x86/kernel/hw_breakpoint.c
-> +++ b/arch/x86/kernel/hw_breakpoint.c
-> @@ -132,6 +132,56 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
->  	return 0;
+> +int hw_breakpoint_modify_local(struct perf_event *bp, struct perf_event_attr *attr);
+>  /*
+>   * Kernel breakpoints are not associated with any particular thread.
+>   */
+> diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
+> index 8ec2cb688903..ff428739f71e 100644
+> --- a/kernel/events/hw_breakpoint.c
+> +++ b/kernel/events/hw_breakpoint.c
+> @@ -983,6 +983,24 @@ static void hw_breakpoint_del(struct perf_event *bp, int flags)
+>  	arch_uninstall_hw_breakpoint(bp);
 >  }
 >  
-> +/*
-> + * Reinstall a hardware breakpoint on the current CPU.
-> + *
-> + * This function is used to re-establish a perf counter hardware breakpoint.
-> + * It finds the debug address register slot previously allocated for the
-> + * breakpoint and re-enables it by writing the address to the debug register
-> + * and setting the corresponding bits in the debug control register (DR7).
-> + *
-> + * It is expected that the breakpoint's event context lock is already held
-> + * and interrupts are disabled, ensuring atomicity and safety from other
-> + * event handlers.
-> + */
-> +int arch_reinstall_hw_breakpoint(struct perf_event *bp)
+> +int hw_breakpoint_modify_local(struct perf_event *bp, struct perf_event_attr *attr)
 > +{
-> +	struct arch_hw_breakpoint *info = counter_arch_bp(bp);
-> +	unsigned long *dr7;
-> +	int i;
+> +	int err;
 > +
-> +	lockdep_assert_irqs_disabled();
+> +	err = hw_breakpoint_arch_parse(bp, attr, counter_arch_bp(bp));
+> +	if (err)
+> +		return err;
 > +
-> +	for (i = 0; i < HBP_NUM; i++) {
-> +		struct perf_event **slot = this_cpu_ptr(&bp_per_reg[i]);
-> +
-> +		if (*slot == bp)
-> +			break;
-> +	}
-> +
-> +	if (WARN_ONCE(i == HBP_NUM, "Can't find a matching breakpoint slot"))
-> +		return -EINVAL;
-> +
-> +	set_debugreg(info->address, i);
-> +	__this_cpu_write(cpu_debugreg[i], info->address);
-> +
-> +	dr7 = this_cpu_ptr(&cpu_dr7);
-> +	*dr7 |= encode_dr7(i, info->len, info->type);
-> +
-> +	/*
-> +	 * Ensure we first write cpu_dr7 before we set the DR7 register.
-> +	 * This ensures an NMI never see cpu_dr7 0 when DR7 is not.
-> +	 */
-> +	barrier();
-> +
-> +	set_debugreg(*dr7, 7);
-> +	if (info->mask)
-> +		amd_set_dr_addr_mask(info->mask, i);
-> +
-> +	return 0;
+> +	return arch_reinstall_hw_breakpoint(bp);
 > +}
-> +EXPORT_SYMBOL_GPL(arch_reinstall_hw_breakpoint);
+> +EXPORT_SYMBOL(hw_breakpoint_modify_local);
+> +
+> +/* weak fallback for arches without support */
+> +__weak int arch_reinstall_hw_breakpoint(struct perf_event *bp)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
 
-Yeah, I think not. For one this is an almost verbatim copy of
-arch_install_hw_breakpoint() with zero re-use. Surely you've been taught
-better?
+Again, so much fail :/
 
-And why would we want to export guts like this?
+So we have:
+
+{register,modify,unregister}_user_hw_breakpoint()
+
+and
+
+{register,unregister}_wide_hw_breakpoint()
+
+And you choose to extend this latter with hw_breakpoint_modify_local()
+instead of sticking with the naming scheme and say adding:
+
+modify_wide_hw_breakpoint_local().
+
+Also, again, that EXPORT is a fail, these other interfaces are all
+EXPORT_SYMBOL_GPL().
+
+Also note that modify_user_hw_breakpoint() doesn't seem to need new arch
+hooks. Yet you fail to explain why you think you do.
