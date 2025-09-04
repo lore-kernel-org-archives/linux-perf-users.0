@@ -1,63 +1,63 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759511DF723;
-	Thu,  4 Sep 2025 00:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6651E2614;
+	Thu,  4 Sep 2025 00:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756945401; cv=none; b=uE1EbT+N7SUVZFJwo10ykPVMVNcV1ReGTOEtUztZ1TUyppJt89l96cDZAv6PBmfcTSwzAwyDaf3y/mZrzpjla/sOf0SByml2FG9Nvvc5eEyqE11juT1q+6sZRO3uw1FcYQayFFAnYz0H1IVPKlCJaKfiDF8FEg3bhj/6kwVhBLM=
+	t=1756945410; cv=none; b=jMI1dhUHAFRJ8vgWEgUDgGI/HXO3yJa1i8JdM0iM+s7cn1eWjeaKyDb31k88TaQTIAZEZmxDuYQVH0zgY0zC3ogmmPCeU8BokPZ6dFmtHH+ZjbOfksTRd5IfrwV06/IbckER8XI8aDLP/jZy+0G8XY0DZBy85f1PmJ5M8XI1fZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756945401; c=relaxed/simple;
-	bh=U7CutZhDSDeFyrxaFAIBsWLB2f2n69YdYMG7rkCCFZg=;
+	s=arc-20240116; t=1756945410; c=relaxed/simple;
+	bh=IGZGRl7SPv8QYEkfF81MfJQSk3f6SOpoIfAg9jVan/I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nI+WRyTHcLg2ZVPey9ugX8Nacm9mum3gljoJBHNohufGaBYdxAlxs8RBLiXo54n7b4qkXQTB9EUy6AbFBJJ2Ybf3QWDCsYLqK5SrHmM5DxZWLHo4EUI5L4pgCGqmyYT4ex42xKrYhHgfXm1EKzBdz4di859KmJHgEEeWBZZRxxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CTx3t0Hi; arc=none smtp.client-ip=209.85.210.171
+	 MIME-Version; b=cmZZWzMLYJd+4gyKI7wKJXEsLaoc2vMM6NXypMJKwiZ1HZAFlT/D6+k/SsRiO/nzlHmMJU1pXUIeXHUAMH2fnH7NzeqK95elgxz1JENHE5bqxDJVdvwTLXH3r+aTwzeN2IQi1qPiDKYHQkhZKcx8g5KRVkQrekmFWWs2yRG8vGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IVgZJlqA; arc=none smtp.client-ip=209.85.210.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CTx3t0Hi"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-772481b2329so570227b3a.2;
-        Wed, 03 Sep 2025 17:23:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IVgZJlqA"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-76e4f2e4c40so408335b3a.2;
+        Wed, 03 Sep 2025 17:23:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1756945399; x=1757550199; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1756945408; x=1757550208; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=18zaW3moNW/J2OB76TZ6MBmnN/MPkuC7bfXPlyWG+/g=;
-        b=CTx3t0HiVxEY9Gt7Tm3NdKOobOYNjqf9+Mr48lRdisFhPl8n8R4iCmwmDmArcssj66
-         eMtCaI6BnT1qS7DvxZcKSTSAC1Mjg/EYi9wPAhQimgwnKzOWtSxJNAqi9rIK3GrUIaKb
-         6roB4sjl/KsNhdJCfi7u5xRoxuHzNMsFUaApmC/KDPur8J1buxVfjaH7YX0xfR2fiE6c
-         jspd+CH+QEiQ+TyNJxEJgHhvVgai/PyQ2chZIwdfjoTYFRldA7IXPDo8CwgYNB/yxTcM
-         PzH46EnhIlTNu7YBPi0aXiGXpG9KOdYB+0Sub/qVwIctIXgt9ydtEAZjtQ7Zi92qSLpM
-         vApg==
+        bh=y7709ieFUlS+2MrC1zNfTfKDbThJkcQv3sQ/PEEU3R8=;
+        b=IVgZJlqAKY5X+VEgxEIMICMjvAxkG10uzdijXFUPdCGT/JQQF5OxYyOXbqGGBAgYyi
+         4ICdEe0+QGksRpsLXqvxooeDPZAFBoJtoDx8bkeovx8/UsttDQiRncNGAhiPCnNJAMVt
+         Kdy/7R29yYWhFA2DYsMvYOvqIfg+zhT8yJsGtOGS8PRXInv+i5TDRyQHuw8/SifCFK+W
+         MclI2bL01D4MeCO27QikT1DAuhMU3sfkp+hM9vA0w5lgt6ZvSMoea+Wisqn/z0zLoLvV
+         G77JqYQ0K2I29XkMbhdnO2ZyW6197Lpf0Nb0eGKRB1/aLlWWIe5JkTPfN8MUqr0/5gFX
+         DSIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756945399; x=1757550199;
+        d=1e100.net; s=20230601; t=1756945408; x=1757550208;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=18zaW3moNW/J2OB76TZ6MBmnN/MPkuC7bfXPlyWG+/g=;
-        b=O3t14s1cR3r7sfqmiuE8Ob3+hjY8Yt9pys/SMf3x7Xh100cWdW/C3DBeTTR7VyqY8M
-         pj7GpiTJwlBjpK1tMw8mzB9dPaxZWcXQTtHNvp4xYO4UKK/FWz8355oFDmb1NhY9hG3e
-         B11atQfCQ/OS1XXQeYZZ/VYVyvm2bSxJ0bVQG1ugoN37mFi36TBqa/wFb/47EoqrW6BA
-         ioloYT32YWFlTbKWOimHv3hzNSk2qs6IN74Zo+8tcCDngllCvuNL5qPfXMfseo/KhxgA
-         y/BAUj0slGm+1R5odB1rdTcDSWtZPXSIXAKxvicsHWE5zCSUAoQjGd1Md4ZUghnr9qSO
-         njgw==
-X-Forwarded-Encrypted: i=1; AJvYcCWC3vzosVw/A8eWhCwkuVtXCV9sofI8hjuIIktS5D32+u92+ZjB11JSUIAPgog9JhcRMsvB1z3wBwbzEFDFFopuClUj@vger.kernel.org, AJvYcCWcFm5+0QX8P/x1mDkUMg3IyDkRXVVoIVUFNrxigK1snSvOZ8aO1NBx0Rdi/vOAKqLO0/LxaoXKIxKmO5vFx4TP@vger.kernel.org
-X-Gm-Message-State: AOJu0YweMP4VrCrcWhNPT3YwhjQYZbbaSs1Hbp3Gra31NX0/3TPLpwOq
-	KZ/Ii4iv7X2M9eEKgF2LrH1Uh84J07eKihwrVE5Ujw8RWKB9zi/oimihugfVD0RYGbxUkw==
-X-Gm-Gg: ASbGncsQcziw0U7y4VRu07VkLhm8p3WqJop6GC22EGtFIIFSd6IHl1MGlBBF6u5QvN/
-	beaYDpas8w0Ro2Mb4gSwX/KMcB/6JUJJ0g9fJ8eA0BRyX5pokQsBUQ5MI6EZQSoDpR4FlKWQHYX
-	Dt6NSa/E1DEpv00vmvMpzVCYFv40dAJOGy1Y0qM8DEqmK+OJAVc/Xys7ykyZNgR5QiI1tVCUf4s
-	r5NKj7fEMD4UQq3MOJVLxNw06CsuSExYVF8q6sMPJFZKKjOukV8Ann5UvTpwc6ENiNTnMOLQMw0
-	R1DmKHYZvoKAM8eyaKSKf66PXo750pQJaiCCAq10+xeptKQClE+an82GRd5gpH2/SLrczCGlXtZ
-	rp1SsgS6qX9YLt/DzI4jV0lPjEC4YxKA62NRQNbyr5WyRS9ur5F16
-X-Google-Smtp-Source: AGHT+IFn+y2P+lkSjCxmHbNPVMFNCQGc4aVUADK0EWUrb+8UNHFLYez+kqXUbc2XvO+u3VVteAjfqA==
-X-Received: by 2002:a05:6a00:3492:b0:772:5899:eae8 with SMTP id d2e1a72fcca58-772589a2e50mr16425370b3a.27.1756945398629;
-        Wed, 03 Sep 2025 17:23:18 -0700 (PDT)
+        bh=y7709ieFUlS+2MrC1zNfTfKDbThJkcQv3sQ/PEEU3R8=;
+        b=qY0jbsy7xXVnKKng2T8beVFiPmQXecrC/B+NaNmhFFSXW3JPLway0SDYttKlZynP2W
+         ZfJtZfaK9hJ95HZ5DEE8dDgqulsQ2vpH7LbMvFrhAlCNmMqSTgK5ZRNIro8Ajs/OkxP3
+         VD1Rsy8UkFrfZnddxtvTeE7oDMOr0WVpoTla60dMPPYwWvP2nnF3K4DTwvDnPTr12tUf
+         uDd+b1ARj6CigZCtK0V+9k40MO74xq4rQaOr/UsJ6sq6rTy6UptMKz9ZtKHuWWQ0tbdp
+         LKsLwe4V8PHFBHKGy9YlrRguukKkGax9U3tlAAZlAtDns8lIJGHZ1TssFT2a55cM1fuq
+         yO6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUpYyqOro/axT0oY3ei61JUx9pkAPVfimW7tqSyn1urBEK8iNCZT+ktJKxiD33966mgrIh2Vdofo0dHey57Yf/Y3kwc@vger.kernel.org, AJvYcCVU+Sd/VZVh/eE+CNcW4cfgJ0qb4G96AQkeH0oJtZUPOTCAFGM0UaKQNxwEUDfNf6lschEd/RAOclQn8KbdVl6z@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJGwQlhflyZHD+fT7W3lur92+ETUWdTNm8/XY8rS9qs8Tb4XQ7
+	YeymTcPVOOn6HUzgI2cmoVd6wn97Zj2CuSLibRjZhoz/n/0LGrf2bypm
+X-Gm-Gg: ASbGncvXjfCeJ68LWCsRNZ+c1sW2+xh17YqWFgPxNmnJZ0biWSfx4IebUfiGWCt2txs
+	S91/DMjOT6Jld4oOyebq9Lbmh8t1UKCXUiuseuizdwQrvfVMQNrPjN/NPSpM5YPS0Dr6SY/hNt1
+	yScdzZAWYWiDwlbYtdRIdKMfXCWSwT9qVIwGPs7M/uPkB7c3crTng+gfSYGsxKzLGv47VS+V1/0
+	CIFWj9NfAfpB18n7AXPL1W3G00CZzbkuLdKXKl/nVakJkrtaR9mZeZicwM1SdR1tBNaltvGrwMy
+	NOWRy4VYs6bPFowvmq6vKi0G7DsgzsXWvw1xvVKOnhZvUb5cXHmwemM94ca9jHGAziTEPl3vfGo
+	OXA4x+S3HXte4BPY8fkkNHenYGlIQJ/CyNKZXvV4xTBnuVhMfHclQ
+X-Google-Smtp-Source: AGHT+IHhppPhCunvFzVZDYZ67D6HMJaD+bYACrgmc8Txd1zbRbMjBjJcCjKS/dJR/OMmvBRDlXJzhw==
+X-Received: by 2002:a05:6a21:6daa:b0:243:d5ab:d1fc with SMTP id adf61e73a8af0-243d6dd7a45mr24329846637.7.1756945407888;
+        Wed, 03 Sep 2025 17:23:27 -0700 (PDT)
 Received: from localhost.localdomain ([45.142.165.62])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7722a4bd2aesm17579551b3a.48.2025.09.03.17.23.10
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7722a4bd2aesm17579551b3a.48.2025.09.03.17.23.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Sep 2025 17:23:18 -0700 (PDT)
+        Wed, 03 Sep 2025 17:23:27 -0700 (PDT)
 From: Jinchao Wang <wangjinchao600@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -89,9 +89,9 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 	linux-trace-kernel@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Jinchao Wang <wangjinchao600@gmail.com>
-Subject: [PATCH v2 10/18] mm/ksw: add per-task recursion depth tracking
-Date: Thu,  4 Sep 2025 08:21:07 +0800
-Message-ID: <20250904002126.1514566-11-wangjinchao600@gmail.com>
+Subject: [PATCH v2 11/18] mm/ksw: coordinate watch and stack for full functionality
+Date: Thu,  4 Sep 2025 08:21:08 +0800
+Message-ID: <20250904002126.1514566-12-wangjinchao600@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250904002126.1514566-1-wangjinchao600@gmail.com>
 References: <20250904002126.1514566-1-wangjinchao600@gmail.com>
@@ -103,179 +103,71 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Implement depth tracking for KStackWatch to support stack-level filtering.
-Each task's recursive entry depth is stored in a global hash table keyed by
-pid:
-
- - get_recursive_depth()/set_recursive_depth() manage per-task depth
- - reset_recursive_depth() clears all tracked entries
- - entry/exit handlers increment or decrement depth and skip  if the
-   current depth does not match the configured depth.
-
-This works even across task scheduling or in interrupt context, since depth
-is tracked per-task, ensuring KStackWatch can selectively monitor a
-specific recursion level without redundant triggers.
+This patch connects the watch and stack so that all components function
+together.
 
 Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 ---
- mm/kstackwatch/stack.c | 105 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 103 insertions(+), 2 deletions(-)
+ mm/kstackwatch/kernel.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/mm/kstackwatch/stack.c b/mm/kstackwatch/stack.c
-index 00cb38085a9f..8758b8b94f7f 100644
---- a/mm/kstackwatch/stack.c
-+++ b/mm/kstackwatch/stack.c
-@@ -1,6 +1,8 @@
+diff --git a/mm/kstackwatch/kernel.c b/mm/kstackwatch/kernel.c
+index 95ade95abde1..4c5fbcaddab0 100644
+--- a/mm/kstackwatch/kernel.c
++++ b/mm/kstackwatch/kernel.c
+@@ -1,10 +1,13 @@
  // SPDX-License-Identifier: GPL-2.0
++#include <linux/kern_levels.h>
++#include <linux/kernel.h>
+ #include <linux/kstrtox.h>
+ #include <linux/module.h>
+ #include <linux/proc_fs.h>
+ #include <linux/seq_file.h>
+ #include <linux/string.h>
+ #include <linux/uaccess.h>
++#include <linux/utsname.h>
  
- #include <linux/fprobe.h>
-+#include <linux/hashtable.h>
-+#include <linux/hash.h>
- #include <linux/interrupt.h>
- #include <linux/kprobes.h>
- #include <linux/percpu.h>
-@@ -12,6 +14,81 @@
+ #include "kstackwatch.h"
  
- struct ksw_config *probe_config;
+@@ -22,6 +25,29 @@ MODULE_PARM_DESC(panic_on_catch,
  
-+#define DEPTH_HASH_BITS 8
-+#define DEPTH_HASH_SIZE BIT(DEPTH_HASH_BITS)
-+
-+struct depth_entry {
-+	pid_t pid;
-+	int depth; /* starts from 0 */
-+	struct hlist_node node;
-+};
-+
-+static DEFINE_HASHTABLE(depth_hash, DEPTH_HASH_BITS);
-+static DEFINE_SPINLOCK(depth_hash_lock);
-+
-+static int get_recursive_depth(void)
-+{
-+	struct depth_entry *entry;
-+	pid_t pid = current->pid;
-+	int depth = 0;
-+
-+	spin_lock(&depth_hash_lock);
-+	hash_for_each_possible(depth_hash, entry, node,
-+			       hash_32(pid, DEPTH_HASH_BITS)) {
-+		if (entry->pid == pid) {
-+			depth = entry->depth;
-+			break;
-+		}
-+	}
-+	spin_unlock(&depth_hash_lock);
-+	return depth;
-+}
-+
-+static void set_recursive_depth(int depth)
-+{
-+	struct depth_entry *entry;
-+	pid_t pid = current->pid;
-+	bool found = false;
-+
-+	spin_lock(&depth_hash_lock);
-+	hash_for_each_possible(depth_hash, entry, node,
-+			       hash_32(pid, DEPTH_HASH_BITS)) {
-+		if (entry->pid == pid) {
-+			entry->depth = depth;
-+			found = true;
-+			break;
-+		}
-+	}
-+
-+	if (!found && depth > 0) {
-+		entry = kmalloc(sizeof(*entry), GFP_ATOMIC);
-+		if (entry) {
-+			entry->pid = pid;
-+			entry->depth = depth;
-+			hash_add(depth_hash, &entry->node,
-+				 hash_32(pid, DEPTH_HASH_BITS));
-+		}
-+	} else if (found && depth == 0) {
-+		hash_del(&entry->node);
-+		kfree(entry);
-+	}
-+	spin_unlock(&depth_hash_lock);
-+}
-+
-+static void reset_recursive_depth(void)
-+{
-+	struct depth_entry *entry;
-+	struct hlist_node *tmp;
-+	int bkt;
-+
-+	spin_lock(&depth_hash_lock);
-+	hash_for_each_safe(depth_hash, bkt, tmp, entry, node) {
-+		hash_del(&entry->node);
-+		kfree(entry);
-+	}
-+	spin_unlock(&depth_hash_lock);
-+}
-+
- /* Find canary address in current stack frame */
- static unsigned long ksw_stack_find_canary(struct pt_regs *regs)
+ static int ksw_start_watching(void)
  {
-@@ -119,10 +196,21 @@ static struct fprobe exit_probe_fprobe;
- static void ksw_stack_entry_handler(struct kprobe *p, struct pt_regs *regs,
- 				    unsigned long flags)
- {
-+	int cur_depth;
- 	int ret;
- 	u64 watch_addr;
- 	u64 watch_len;
- 
-+	cur_depth = get_recursive_depth();
-+	set_recursive_depth(cur_depth + 1);
++	int ret;
 +
-+	/* depth start from 0 */
-+	if (cur_depth != probe_config->depth) {
-+		pr_info("KSW: config_depth:%u cur_depth:%d entry skipping\n",
-+			probe_config->depth, cur_depth);
-+		return;
++	if (strlen(ksw_config->function) == 0) {
++		pr_err("KSW: no target function specified\n");
++		return -EINVAL;
 +	}
 +
- 	ret = ksw_stack_prepare_watch(regs, probe_config, &watch_addr,
- 				      &watch_len);
- 	if (ret) {
-@@ -132,8 +220,8 @@ static void ksw_stack_entry_handler(struct kprobe *p, struct pt_regs *regs,
- 
- 	ret = ksw_watch_on(watch_addr, watch_len);
- 	if (ret) {
--		pr_err("KSW: failed to watch on addr:0x%llx len:%llx %d\n",
--		       watch_addr, watch_len, ret);
-+		pr_err("KSW: failed to watch on depth:%d addr:0x%llx len:%llx %d\n",
-+		       cur_depth, watch_addr, watch_len, ret);
- 		return;
- 	}
- }
-@@ -142,6 +230,17 @@ static void ksw_stack_exit_handler(struct fprobe *fp, unsigned long ip,
- 				   unsigned long ret_ip,
- 				   struct ftrace_regs *regs, void *data)
- {
-+	int cur_depth;
-+
-+	cur_depth = get_recursive_depth() - 1;
-+	set_recursive_depth(cur_depth);
-+
-+	if (cur_depth != probe_config->depth) {
-+		pr_info("KSW: config_depth:%u cur_depth:%d exit skipping\n",
-+			probe_config->depth, cur_depth);
-+		return;
++	/*
++	 * Watch init will preallocate the HWBP,
++	 * so it must happen before stack init
++	 */
++	ret = ksw_watch_init(ksw_config);
++	if (ret) {
++		pr_err("KSW: ksw_watch_init ret: %d\n", ret);
++		return ret;
 +	}
 +
- 	ksw_watch_off();
- }
++	ret = ksw_stack_init(ksw_config);
++	if (ret) {
++		pr_err("KSW: ksw_stack_init_fprobe ret: %d\n", ret);
++		ksw_watch_exit();
++		return ret;
++	}
+ 	watching_active = true;
  
-@@ -150,6 +249,8 @@ int ksw_stack_init(struct ksw_config *config)
- 	int ret;
- 	char *symbuf = NULL;
+ 	pr_info("KSW: start watching %s\n", ksw_config->config_str);
+@@ -30,6 +56,8 @@ static int ksw_start_watching(void)
  
-+	reset_recursive_depth();
-+
- 	/* Setup entry probe */
- 	memset(&entry_probe, 0, sizeof(entry_probe));
- 	entry_probe.symbol_name = config->function;
+ static void ksw_stop_watching(void)
+ {
++	ksw_stack_exit();
++	ksw_watch_exit();
+ 	watching_active = false;
+ 
+ 	pr_info("KSW: stop watching %s\n", ksw_config->config_str);
 -- 
 2.43.0
 
