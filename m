@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884902874E6;
-	Thu,  4 Sep 2025 07:46:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B4B2BD5A8;
+	Thu,  4 Sep 2025 07:47:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756972005; cv=none; b=ppoeWbUKc+Ia8/t+w7skwba94A9wq4851sXoHibREYrHJR57sg0051czEt5UtyXWG5ntlX3hxB713RuTIa+mvLlWdl6rDNAeGsnMbg1wz5ACWwno66Y3ML8kntM7nCvpTcy88qwWCo0ZBJt/3ZUHl8FVCdYeerJo5Ousw7sZjqk=
+	t=1756972041; cv=none; b=KrI+k/UBY36eaQ9VhrjG9BCae8PX7MRIGb9OP3U2t01o3pNdrKLVcKZ++8tY7nPOGyn8xT2Jgfat5TRqB9SmTnncRvPqNZp9mWkAXZiW8teu9mjD6IsXjkFAfPYOmsgBMy0DOXyve9A/h5UCDZCqeq8ifv1vO0a2HzEa9mbKr2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756972005; c=relaxed/simple;
-	bh=ayhnFOvBI35lN1QuVk6R0qQPQ85LgwB6FlWmSDytSD8=;
+	s=arc-20240116; t=1756972041; c=relaxed/simple;
+	bh=RdxnZN7SSA8WBmRvG93DF96dGRkqV/lygyU5uiMSXd4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qf0qAZH+/ZRvJwGs+ov0NfigN4AVqyzPjVDDGZdglKTLNpj7jhu5+fZSOeCSS1PIUvUs98E/rkyjyTAGtnXw0i7uzajZA+4qp7EzTuYVBsYdaoHuv3rWpud52zr/bWwmLBZN+qu7V/yTm/3Rx+H6Urp9F3QtDAo4ybPhROl+vz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ei8kWMgv; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=e6kw+HWdflthJoS7hpkvWYOP9MopytbEZ0Q64Dd6eDw9fet3NOoCGCxMqvHIdQB2j5rJ0G0wB7iMKHG7KZ2tolnRJBispphQUbs9OL/jqAI9h9LmU8fW0US3HzuBfqhSHuIITfi7+x8uRlj3BFPdTzKpsLsOwT9z5vE7i/7QKG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mrGnfIHy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ei8kWMgv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3113CC4CEF0;
-	Thu,  4 Sep 2025 07:46:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mrGnfIHy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06C7CC4CEF0;
+	Thu,  4 Sep 2025 07:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756972005;
-	bh=ayhnFOvBI35lN1QuVk6R0qQPQ85LgwB6FlWmSDytSD8=;
+	s=k20201202; t=1756972041;
+	bh=RdxnZN7SSA8WBmRvG93DF96dGRkqV/lygyU5uiMSXd4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ei8kWMgvmOrl55vH/goejl0rRfHpQQ1VmNfXzvHDz+lTW0OMkPved487WEfKf7TiY
-	 KUNMyus/fVOJTuujNmC9bMhq+b90A2Zz5no4E5gchShcIjFAp3C0qq8ONOlyrsP3tQ
-	 +ximJtJTMRJlFQCtfQD537bk775UQQ2nitfJpfBZ+gtDiQZdBjVO7lZcQnf4SNLq/0
-	 UXxcYiDXmQJczRfJTfZuX7iYkFm6I1ypem81PHfCTyHAkg8RENBZZ4TOux6iEpx9cV
-	 hQLAvTaqU+wqtlSd7RHiRrc05M7CVuS00EFQrenJKysh14aiq2C+dxydSw3KfDUySQ
-	 1cUCcdAhFXjgw==
-Date: Thu, 4 Sep 2025 10:46:32 +0300
+	b=mrGnfIHy/ew3+TDD2Q+GIWT/eihpT0m8aQUi7r/kFJ2QGsPaaHuRfGx9hSOOlwEo6
+	 a7M7QvX24FuWzY1GyGMrKeVe6AdzkSU9QxfZO44RrMDkjocqSFykak+lxA1G/r+xwv
+	 qUNNMt9lvCPq6b2locszWGgIF5qgLQnuAC46fb3NcSI7F0brH96Fdz5nymg7nkEyjA
+	 a6XAH+KyIkm2RwwNlWVT9Iz2x2uc8rv7zHQ6JXW0UDOngW0z0tRUiheYtEOvsmPvjA
+	 N2PcW/4cpdALn8PVZGwyYPV2w4yEHSJKDq4e8+LmY6qZZisv6e/jO9a4sWjrG++op3
+	 tx4tEm4HPgv0Q==
+Date: Thu, 4 Sep 2025 10:47:07 +0300
 From: Mike Rapoport <rppt@kernel.org>
 To: Jinchao Wang <wangjinchao600@gmail.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
@@ -52,10 +52,10 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Michal Hocko <mhocko@suse.com>, linux-perf-users@vger.kernel.org,
 	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 01/18] mm/ksw: add build system support
-Message-ID: <aLlD2CDengxSl4fS@kernel.org>
+Subject: Re: [PATCH v2 02/18] mm/ksw: add ksw_config struct and parser
+Message-ID: <aLlD-74aBdb-ZD5K@kernel.org>
 References: <20250904002126.1514566-1-wangjinchao600@gmail.com>
- <20250904002126.1514566-2-wangjinchao600@gmail.com>
+ <20250904002126.1514566-3-wangjinchao600@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -64,25 +64,31 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250904002126.1514566-2-wangjinchao600@gmail.com>
+In-Reply-To: <20250904002126.1514566-3-wangjinchao600@gmail.com>
 
-On Thu, Sep 04, 2025 at 08:20:58AM +0800, Jinchao Wang wrote:
-> Add Kconfig and Makefile infrastructure for KStackWatch, a real-time tool
-> for debugging kernel stack corruption.
-
-...
-
-> +static int __init kstackwatch_init(void)
-> +{
-> +	pr_info("KSW: module loaded\n");
-> +	pr_info("KSW: usage:\n");
-> +	pr_info("KSW: echo 'function+ip_offset[+depth] [local_var_offset:local_var_len]' > /proc/kstackwatch\n");
-
-It feels like this belongs to Documentation/ rather than the kernel log.
-
-> +	return 0;
-> +}
+On Thu, Sep 04, 2025 at 08:20:59AM +0800, Jinchao Wang wrote:
+> Add struct ksw_config and ksw_parse_config() to parse user string.
+> 
+> Update `Makefile` to pass compilation.
+> 
+> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
+> ---
+>  mm/kstackwatch/Makefile      |  2 ++
+>  mm/kstackwatch/kernel.c      | 70 +++++++++++++++++++++++++++++++++++-
+>  mm/kstackwatch/kstackwatch.h | 34 ++++++++++++++++++
+>  3 files changed, 105 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/kstackwatch/Makefile b/mm/kstackwatch/Makefile
+> index 84a46cb9a766..d422f0e114dd 100644
+> --- a/mm/kstackwatch/Makefile
+> +++ b/mm/kstackwatch/Makefile
+> @@ -1,2 +1,4 @@
+>  obj-$(CONFIG_KSTACK_WATCH)	+= kstackwatch.o
+>  kstackwatch-y := kernel.o stack.o watch.o
 > +
+> +CFLAGS_kernel.o := -Wno-error=unused-function
+
+Can't you just add the function along with the code that uses it?
 
 -- 
 Sincerely yours,
