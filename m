@@ -1,102 +1,117 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2593F1D63C2
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Sep 2025 17:44:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412EA340D8D;
+	Thu,  4 Sep 2025 17:53:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757007876; cv=none; b=T/71m7VX7kBHTvS9oOyynlaU6potbE83C5LtsRYgbMnDmpUujBvxdG4JLRfZqBB9ikfxDP6zMqLTcjNrApwSw05+OA2G8O85L8UQy7WGXnz+W8WneAZd04MdwYctxBQZv/3PFP89Oblt+jTAt+QzfKReLsgDWINldB8Mh/c1Cos=
+	t=1757008420; cv=none; b=bGYQ0YdnWm5JB81FOfytOzBsDb50yDOqD9aA2cPQhpZHQVAfTgAc8UUkWvzTdXzeBRh7vujceOJv9DZFh0PMZKIm3VG0pVtC1YBrlMhz7Ngr7gtee9uAGGhZfHt1O0FeUdKUictneQaIQBYr+XGfbpTbYozy+Un3uXix2OgS4lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757007876; c=relaxed/simple;
-	bh=ZKzsIufUEOLeYnMN7PYlDNwg4uU1BvyvUUSfm9lDFjU=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=fq/DaiV66q0pyTEw/M/TlEWk06OkaVu+x03l0GBZrSJlvk2hcFFrYEZcPrrOIRpgmt6mlu71uzurWJcKxVuQl/qMLbKDjMIuNj6ydemM2aZWwtJDXE9t+QH/25z5E3EWeF/o4uj90K9zvaKH05eqZVhZlu5CaEnlxl/bEYXk3WY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S0rytNIE; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S0rytNIE"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-24458345f5dso16642935ad.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Sep 2025 10:44:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1757007874; x=1757612674; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=SOoQFcA4C0PZlP5Wo7OwHrsZwmtLMnPursiG/Sfczk4=;
-        b=S0rytNIEyhOkJoZsS/0i5XJMmj5Mab9T31BPVIYDjN5YnynbQRj3CFKknOaxVecj39
-         vXY/kOh+oH98KScsn+BNPzqSvpFbqhlOQLtpWASNd9udZ9PbFiQJuM230/bZEgmsp6oD
-         C0qkwUZrE7P1ijte28e74/SinrwXrOh0NfDHA2XsALKzRoH1UqIoEWMq+M15z2zcV31j
-         6WY59dtv1FviAA13u5rjw/bg+Ws+J/qQVoRQKvYZyzbGtDveaY6M0tMBahFqoA7VCp+h
-         HHkUTvVyp1wQVAk40rnf6V9Nu/z6iEbQo4euOngCREhHQjlt78IdXrzJ1e1LKrt14K2G
-         fP/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757007874; x=1757612674;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SOoQFcA4C0PZlP5Wo7OwHrsZwmtLMnPursiG/Sfczk4=;
-        b=oImhlXVrwU5TzvpG/+OdymFLqBaqaKCHMSQIx4VeYdKikUkTbuwygWkydher8fBzRn
-         JeeqZjWM0aCTDemrFcRebEaKfSeEn8JZIu/k3I1l/HT3sslNSHhFas02Yt61tVUgQMGF
-         kljJR3PyGJzbQYBjcxjICsVxCybuzkc8kVTZzG5hDk7+JkY5sceavcjrTK/YuL0tzDF6
-         lM8k3DvMR9b8oGXyLmmQYB1X9j0OxVE//UClQG574YELRBKBuq6ICN2NynRZnMzqMJch
-         ahyzFIaME3ELpVSm2D8kBOEfMbwv7CHSmM4ViRaY24M/Q/H6sSOy2kKrXfaxuTYbw8Rw
-         Gtug==
-X-Forwarded-Encrypted: i=1; AJvYcCUAIXor0tMgFE1bKtKrkxygX5y5i3aubhqxTVsYrXGz5PniWi5Oe53wHlvHG5WB/XHDyQ1gq6lUXgng3OGZTeEh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1Dczw26+C5N72omZhaAReiiUsbCOe37gadD/iZCeOp5hfh7YN
-	4she+gp5802CoM/MkqvyJTQnNNLOuuTqjd6MIaL135YEwNYdyFXsh0uyTadh9dZchBz+hTKC499
-	vqAsqAmdXrA==
-X-Google-Smtp-Source: AGHT+IFBb2psCKNN3slDyaKnws/ctZgf2KF+t0qeMf9cQfM42rspz0lcgrWIBbhcy6T/3Y7uhLSj3aTC2/8J
-X-Received: from plsu2.prod.google.com ([2002:a17:902:bf42:b0:246:39b5:1d8])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c407:b0:24c:7b94:2f53
- with SMTP id d9443c01a7336-24c7b9432d6mr117093795ad.6.1757007874447; Thu, 04
- Sep 2025 10:44:34 -0700 (PDT)
-Date: Thu,  4 Sep 2025 10:44:30 -0700
+	s=arc-20240116; t=1757008420; c=relaxed/simple;
+	bh=+8hnTNAfGxD28SiMG6Wv5m9VqZr1vU5rTDf1pWmRUy0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ETH0DOTVEk44PAK6DPFq3v5YHgp5sVcFdSGKyZ8oUXXHJeTZhZFFLZRaVqXDHZ1KZoUSdcwCaVZpJ5UXnUyWhnvKR+JRBA10UiOtvhKd8QwosVPbCIah2zy0xD27nKRSS3ic0ICV8V0EktKnSQyNXYEpQw1WVvELvTx6wrq1IBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from mop.sam.mop (2.8.3.0.0.0.0.0.0.0.0.0.0.0.0.0.a.5.c.d.c.d.9.1.0.b.8.0.1.0.0.2.ip6.arpa [IPv6:2001:8b0:19dc:dc5a::382])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sam)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 50F2C340CE7;
+	Thu, 04 Sep 2025 17:53:36 +0000 (UTC)
+From: Sam James <sam@gentoo.org>
+To: Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
+ amadio@gentoo.org, dlan@gentoo.org
+Cc: James Clark <james.clark@linaro.org>,  Peter Zijlstra
+ <peterz@infradead.org>,  Ingo Molnar <mingo@redhat.com>,  Arnaldo Carvalho
+ de Melo <acme@kernel.org>,  Namhyung Kim <namhyung@kernel.org>,  Mark
+ Rutland <mark.rutland@arm.com>,  Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>,  Jiri Olsa <jolsa@kernel.org>,
+  Adrian Hunter <adrian.hunter@intel.com>,  Leo Yan <leo.yan@arm.com>,
+  linux-perf-users@vger.kernel.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] perf symbols: Fix HAVE_LIBBFD_BUILDID_SUPPORT build
+In-Reply-To: <CAP-5=fWHGFBaCgiRcj8zVy196OE07F8jnSUbjvsO_HerdqeyTg@mail.gmail.com>
+Organization: Gentoo
+References: <20250903-james-perf-read-build-id-fix-v1-0-6a694d0a980f@linaro.org>
+	<20250903-james-perf-read-build-id-fix-v1-2-6a694d0a980f@linaro.org>
+	<CAP-5=fWHGFBaCgiRcj8zVy196OE07F8jnSUbjvsO_HerdqeyTg@mail.gmail.com>
+User-Agent: mu4e 1.12.12; emacs 31.0.50
+Date: Thu, 04 Sep 2025 18:53:33 +0100
+Message-ID: <87o6rqkste.fsf@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.51.0.355.g5224444f11-goog
-Message-ID: <20250904174430.1414548-1-irogers@google.com>
-Subject: [PATCH v1] perf build: Revert "enable -fno-strict-aliasing"
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Eric Biggers <ebiggers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-This reverts commit 55a18d2f3ff7 ("perf build: enable
--fno-strict-aliasing"). With (get|put)_unaligned_* using memcpy
--fno-strict-aliasing is no longer necessary as memcpys are assumed to
-possibly alias.
+Ian Rogers <irogers@google.com> writes:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
-This patch needs:
-https://lore.kernel.org/lkml/20250722215754.672330-1-irogers@google.com/
-which have been merged into the tip timers/vdso branch.
----
- tools/perf/Makefile.config | 4 ----
- 1 file changed, 4 deletions(-)
+> On Wed, Sep 3, 2025 at 8:15=E2=80=AFAM James Clark <james.clark@linaro.or=
+g> wrote:
+>>
+>> read_build_id() now has a blocking argument, but libbfd uses fopen()
+>> internally which doesn't support O_NONBLOCK. Fix the build by adding the
+>> argument and ignoring it:
+>>
+>>   util/symbol-elf.c:964:8: error: too many arguments to function =E2=80=
+=98read_build_id=E2=80=99
+>>     964 |  err =3D read_build_id(filename, bid, block);
+>>
+>> Fixes: 2c369d91d093 ("perf symbol: Add blocking argument to filename__re=
+ad_build_id")
+>> Signed-off-by: James Clark <james.clark@linaro.org>
+>
+> Libbfd should go away:
+> https://lore.kernel.org/lkml/20250823003216.733941-14-irogers@google.com/
+> but I can imagine that currently this is hit in a build test - sorry
+> for missing that and thanks for the fix!
+>
+> We should probably honor the blocking argument (use fdopen) as the
+> probe perf tests will invoke perf record system wide with data pages
+> and predictably hang on this for files like mmap-ed in sound devices.
+> That said, maybe this hanging will serve as an indication not to use
+> the deprecated libbfd code. From the sounds of things this will break
+> gentoo :-(
+> https://lore.kernel.org/lkml/87ldnacz33.fsf@gentoo.org/
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 5a5832ee7b53..306b8334b788 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -19,10 +19,6 @@ detected_var = $(shell echo "$(1)=$($(1))" >> $(OUTPUT).config-detected)
- CFLAGS := $(EXTRA_CFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
- HOSTCFLAGS := $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
- 
--# This is required because the kernel is built with this and some of the code
--# borrowed from kernel headers depends on it, e.g. put_unaligned_*().
--CFLAGS += -fno-strict-aliasing
--
- # Enabled Wthread-safety analysis for clang builds.
- ifeq ($(CC_NO_CLANG), 0)
-   CFLAGS += -Wthread-safety
--- 
-2.51.0.355.g5224444f11-goog
+Just want to say I haven't forgot about this, I need to find a moment to
+compare the bfd and nonbfd builds to see if everything works OK
+now. Will try do that in the next few days.
 
+The disassembler/objdump use was definitely the biggest problem so if
+support for binutils is here to say there, that puts my mind at ease.
+
+Has Andi mentioned what issue he had? amadio/dlan, can you weigh in as well?
+
+>
+> Thanks,
+> Ian
+>
+>> ---
+>>  tools/perf/util/symbol-elf.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+>> index 033c79231a54..e0d6ff7d0acf 100644
+>> --- a/tools/perf/util/symbol-elf.c
+>> +++ b/tools/perf/util/symbol-elf.c
+>> @@ -873,7 +873,8 @@ static int elf_read_build_id(Elf *elf, void *bf, siz=
+e_t size)
+>>
+>>  #ifdef HAVE_LIBBFD_BUILDID_SUPPORT
+>>
+>> -static int read_build_id(const char *filename, struct build_id *bid)
+>> +static int read_build_id(const char *filename, struct build_id *bid,
+>> +                        bool block __maybe_unused)
+>>  {
+>>         size_t size =3D sizeof(bid->data);
+>>         int err =3D -1;
+>>
+>> --
+>> 2.34.1
+>>
