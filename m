@@ -1,161 +1,690 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3792E2C0323
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Sep 2025 21:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357C628468D;
+	Thu,  4 Sep 2025 21:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757021618; cv=none; b=JJm3Ba5ScDBzlgdngW/QjFur8+uq1qaT2jtymylUVyWfjwNqk/1V+QYi8bub3KXql3p/e8iPO87oxnmEE57rH33fq+BqAywHi6zsKdg1pgZA+xED1xj4xd/iJLvLrJs9zK517lwP8FVcrpkWJEXGRtnNNi7tsTHGVpW9UlBtp9U=
+	t=1757021677; cv=none; b=RCrunrxgJ9sSWuzte0WBukPU1vb7iafoIydELUj5yuI8vSmNiwpIXEWKdZFs0hDIpWNUPZqglfnLi3Oh9PSkosAY5gSTb9WJF0IakMeA5gtaW94hDAKO4AEDiFlthJdpfdXsxIu+/7DCQ7qnJv5/u0ThNU5rl51Eho1BMB+d6ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757021618; c=relaxed/simple;
-	bh=PqVLHo5CPSR85HHC5DHtcCHy8ewqDlEjk0LgdeCzP3w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sMqDna/ed56YMd7xNA4W5VU75goMFFjv/ZG+Q0uFQZbYxgrF6QhJ+FIC9QigxK08P+oUUhx+zzRCunCQIDhaCfoQX22mMJkDsaFpL+EAKysxe/JCzbKWhQFwvvfDQyMujzq1vOTHwftuK36SOr1716Pdq/oLiBMXfTlLu1as764=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=skSKxo/0; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1757021677; c=relaxed/simple;
+	bh=XiQrGSF6SyBObJx++EVY4eibfmQBo6UNQpyZ88apUPc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VfStVMQQ0R8zwVfwrLCbxeclNMXpL2T0kxiOdfXKhiXLarpD3nKmB/zubPulrazO7ntEVmRBxDSN/AcRDRk+AJENmjXMi+eJ5O4l4IeXitA8Bis21/gXtOIO3C9n01X18qXyf2bFNv0loulm8Sqt+l2YYAuMnio+1kRMf2gY1o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QMWwovI4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="skSKxo/0"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-24cf5bcfb60so45725ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Sep 2025 14:33:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1757021616; x=1757626416; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6zG76W1jomTU5mpaT41jEFnyrs6Anr9kT/wRqoSffro=;
-        b=skSKxo/0CNUr/rlxUl5R1ZShJnPzHPUcR7N9RkX0q9FoXnoPdMpYqgEQ7sgz2EepHd
-         YDzslYLk44vGzcUMzp2j+OI+ATJVsI+1+wKu6MIA+wQXtOWjvhzlp/32kozGtYAy8QCf
-         bMAVWsfWXAuDzblK9N36/KmUqlqOkqM16rYhXjAjxWxzzD3NT+az1jD+TmuL/t1Zt+U5
-         JuA/AAt6KZj5PEhjfeX9XW7gLwFmkYqcNGvxKufdi1nZbUVjn9ZNE44Eii5OVuKU6XCW
-         mYW64zvxojkr2JGAFTbjvFMxz6NuDca62ZwOdB0404KRyTkIPhq3lNREn/YDbCB10cXL
-         Hm0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757021616; x=1757626416;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6zG76W1jomTU5mpaT41jEFnyrs6Anr9kT/wRqoSffro=;
-        b=Pd5KCugvnosc5h3XIQQHkV8+Zhhj1YymKX1TfIqs2tcuE87xknpYbObzk+Sy6d2Jdf
-         2tr0uLD6ne9X5iC4Z/QOPwDHi9dxKetY7Oel4CrdXEfEyQF52lqsnITuGOxHV/nfQGty
-         J48tYq41f8WX1oQVZIjW3YR+o+hqdXssVKdY5Q8VwrPuAtDdwL6k6MOsZ0lwFzvMF9SN
-         O5/ZZj9CkFdRO51XKaw00i38nLKfYw95n8cpcBpQcR9HzKTvdaD+kqvfDeSWolNkO01V
-         5V24pRn7oKZCDXgXTud9gdFocfE2F6eZNpJbbTLB4lF4bBiJaxR2LTKF3EsEf1USDwJF
-         TDdw==
-X-Forwarded-Encrypted: i=1; AJvYcCVtF3KFDfcBVnYUaVCOc0rye9Jx0k6k1WV2onLuRhtsSj9WqnXAVOsCc8VHBCX7ioGCFwI/gtaFEp78VlJmkoc6@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCHYsS31yJDvGta/l3LvsDfJwrvpGL8rvN7h2GYXDmGEvTDjNu
-	pVRfXrw4mIbS3KvIR2csK/xAias6vC89/j0PlymNQJHo2eIg7pTvMQST/YpiETvh0pT9zZzTa2Q
-	yyEU+qQT06cavnwqCs6MDJabis0N+dGT/P2nLPlDA
-X-Gm-Gg: ASbGncugMgMTy7pKS03I1zduRL8nvR7t+a/wdYiMb7EScx29BC3KTV8z79Wy23AfQ8W
-	FgwnRLXLSM5JwwHNyKUnXd6WTrzDPFPfs3fJnPvc9DitQdvgMOxcC+KGdLTJRECHBYPIi9x8NGg
-	4IV71p464QGSMskCDmDIW58QjF1wYlJsSbhICTx2IUTy95TwSOChO4xzS/MY/w/3gwwOEw7OE2t
-	8Eyt8QH/KWsymKwnNEnCbMq6uTitHY/egGOIfIEmO6i0V6zhvUVmho=
-X-Google-Smtp-Source: AGHT+IEAi1buQEt6c6lTvS9UBO9bvlQdRmjUWdOf0PquuTMedsYvCLBFG+qnF2Bhz7XgAVg01cR8YHV0rKomIqlJA68=
-X-Received: by 2002:a17:902:ea08:b0:234:bfa1:da3e with SMTP id
- d9443c01a7336-24d3ae4107emr381405ad.5.1757021615914; Thu, 04 Sep 2025
- 14:33:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QMWwovI4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17CEAC4CEF0;
+	Thu,  4 Sep 2025 21:34:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757021676;
+	bh=XiQrGSF6SyBObJx++EVY4eibfmQBo6UNQpyZ88apUPc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QMWwovI4/HINrHDethhxn1q9Ev2uZ4ZNZGEsT0NseGyHVx4g+xLesMJaBfD6O5+X5
+	 7DB0kQ5nG+R6/Yd4oab5nNF/+sBocF21ufYtP0Ii5SGTXhmgYEjRTgJ9YCbP2eErua
+	 C3tKeuteAzzn+CCcGoDzaDtrYK4gnaC6imw/5v0BDVZd26Km5wHRVxcO1PsmyBeILh
+	 WBC985vLFccGEQy67UTh6G80b+cP8sD2uMSiErX17ZQCAzwyaylUBlWB6djr70ws2P
+	 TIXIpLowAbkByXsmOFvU+H6fsyYV1WYfZ+z2XnHSkrLEbNNrcpfiv4kH/bghjd56V/
+	 mEjRmbvBD8x4g==
+Date: Thu, 4 Sep 2025 18:34:33 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+	Song Liu <song@kernel.org>, Howard Chu <howardchu95@gmail.com>,
+	Jakub Brnak <jbrnak@redhat.com>
+Subject: Re: [PATCH 1/5] perf trace: use standard syscall tracepoint structs
+ for augmentation
+Message-ID: <aLoF6TMuzWCOku1Q@x1>
+References: <20250814071754.193265-1-namhyung@kernel.org>
+ <20250814071754.193265-2-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250904174430.1414548-1-irogers@google.com> <20250904204117.GC4067720@noisy.programming.kicks-ass.net>
- <20250904205924.GO4068168@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250904205924.GO4068168@noisy.programming.kicks-ass.net>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 4 Sep 2025 14:33:24 -0700
-X-Gm-Features: Ac12FXw6DScmpvcc6457h5dDGfQuEEAVlaaKR7yJzp_tmfqCgA-SjzzYwDjCYrk
-Message-ID: <CAP-5=fXneV5fawTncLH13p_8-9OAxwpTERXk5ty=8m0s8U1ANg@mail.gmail.com>
-Subject: Re: [PATCH v1] perf build: Revert "enable -fno-strict-aliasing"
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Eric Biggers <ebiggers@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250814071754.193265-2-namhyung@kernel.org>
 
-On Thu, Sep 4, 2025 at 1:59=E2=80=AFPM Peter Zijlstra <peterz@infradead.org=
-> wrote:
->
-> On Thu, Sep 04, 2025 at 10:41:17PM +0200, Peter Zijlstra wrote:
-> > On Thu, Sep 04, 2025 at 10:44:30AM -0700, Ian Rogers wrote:
-> > > This reverts commit 55a18d2f3ff7 ("perf build: enable
-> > > -fno-strict-aliasing"). With (get|put)_unaligned_* using memcpy
-> > > -fno-strict-aliasing is no longer necessary as memcpys are assumed to
-> > > possibly alias.
-> >
-> > I don't think this is a good idea. Much of tools/ includes kernel
-> > headers and various kernel code, all of which is written in the
-> > understanding that this (often called broken) C language feature does
-> > not exist.
-> >
-> > As such, I would strongly suggest all of tools is built with
-> > -fno-strict-aliasing.
->
-> Similarly I would strongly suggest having -fwrapv on all code that
-> includes kernel headers.
+On Thu, Aug 14, 2025 at 12:17:50AM -0700, Namhyung Kim wrote:
+> From: Jakub Brnak <jbrnak@redhat.com>
+> 
+> Replace custom syscall structs with the standard trace_event_raw_sys_enter
+> and trace_event_raw_sys_exit from vmlinux.h.
+> This fixes a data structure misalignment issue discovered on RHEL-9, which
+> prevented BPF programs from correctly accessing syscall arguments.
+> This change also aims to improve compatibility between different version
+> of the perf tool and kernel by using CO-RE so BPF code can correclty
+> adjust field offsets.
 
-Given we can build and run with sanitizers, ubsan covers fwrapv and
-type sanitizer is in development to detect strict aliasing violations.
-So we can have correct code without hamstringing the compiler.
+Before this patch:
 
-There's lots wrong with C, a particular favorite of mine is:
-```
-void foo(const int *p) {
-   int x =3D *p;
-   if (x =3D=3D 10) {
-      mutex_lock(&global_mutex);
-      if (x =3D=3D 10) {
-          // Code should always run ...
-```
-The compiler can save registers by re-loading from p in the code
-above, meaning the second "if" may not always run.
+root@number:~# perf trace -e clock_nanosleep sleep 1
+     0.000 (1000.053 ms): sleep/1137353 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 0 }, rmtp: 0x7fffa088d160) = 0
+root@number:~#
 
-Anyway, the intent with adding -fno-strict-aliasing was that it was
-temporary as part of removing the libcrypto dependency and when the
-unaligned code landed we'd do this revert.
+After:
 
-Wrt the kernel headers, I think we may be better breaking away from
-them. I can see sense in using stdint types rather than __u32 or u32,
-using stdatomic.h rather than linux/atomic.h, etc. This wasn't an
-option 15 years ago, but things have progressed a little since then.
-
-Thanks,
-Ian
-
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > > This patch needs:
-> > > https://lore.kernel.org/lkml/20250722215754.672330-1-irogers@google.c=
-om/
-> > > which have been merged into the tip timers/vdso branch.
-> > > ---
-> > >  tools/perf/Makefile.config | 4 ----
-> > >  1 file changed, 4 deletions(-)
-> > >
-> > > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> > > index 5a5832ee7b53..306b8334b788 100644
-> > > --- a/tools/perf/Makefile.config
-> > > +++ b/tools/perf/Makefile.config
-> > > @@ -19,10 +19,6 @@ detected_var =3D $(shell echo "$(1)=3D$($(1))" >> =
-$(OUTPUT).config-detected)
-> > >  CFLAGS :=3D $(EXTRA_CFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WA=
-RNINGS))
-> > >  HOSTCFLAGS :=3D $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
-> > >
-> > > -# This is required because the kernel is built with this and some of=
- the code
-> > > -# borrowed from kernel headers depends on it, e.g. put_unaligned_*()=
-.
-> > > -CFLAGS +=3D -fno-strict-aliasing
-> > > -
-> > >  # Enabled Wthread-safety analysis for clang builds.
-> > >  ifeq ($(CC_NO_CLANG), 0)
-> > >    CFLAGS +=3D -Wthread-safety
-> > > --
-> > > 2.51.0.355.g5224444f11-goog
-> > >
+root@number:~# perf trace -e clock_nanosleep sleep 1
+libbpf: prog 'sys_enter': BPF program load failed: -E2BIG
+libbpf: prog 'sys_enter': -- BEGIN PROG LOAD LOG --
+0: R1=ctx() R10=fp0
+; int sys_enter(struct trace_event_raw_sys_enter *args) @ augmented_raw_syscalls.bpf.c:515
+0: (bf) r7 = r1                       ; R1=ctx() R7_w=ctx()
+; return bpf_get_current_pid_tgid(); @ augmented_raw_syscalls.bpf.c:412
+1: (85) call bpf_get_current_pid_tgid#14      ; R0_w=scalar()
+2: (63) *(u32 *)(r10 -4) = r0         ; R0_w=scalar() R10=fp0 fp-8=mmmm????
+3: (bf) r2 = r10                      ; R2_w=fp0 R10=fp0
+4: (07) r2 += -4                      ; R2_w=fp-4
+; return bpf_map_lookup_elem(pids, &pid) != NULL; @ augmented_raw_syscalls.bpf.c:417
+5: (18) r1 = 0xffff8a0857596400       ; R1_w=map_ptr(map=pids_filtered,ks=4,vs=1)
+7: (85) call bpf_map_lookup_elem#1    ; R0=map_value_or_null(id=1,map=pids_filtered,ks=4,vs=1)
+8: (bf) r1 = r0                       ; R0=map_value_or_null(id=1,map=pids_filtered,ks=4,vs=1) R1_w=map_value_or_null(id=1,map=pids_filtered,ks=4,vs=1)
+9: (b4) w0 = 0                        ; R0_w=0
+; if (pid_filter__has(&pids_filtered, getpid())) @ augmented_raw_syscalls.bpf.c:528
+10: (55) if r1 != 0x0 goto pc+153     ; R1_w=0
+11: (b4) w6 = 0                       ; R6_w=0
+; int key = 0; @ augmented_raw_syscalls.bpf.c:139
+12: (63) *(u32 *)(r10 -4) = r6        ; R6_w=0 R10=fp0 fp-8=0000????
+13: (bf) r2 = r10                     ; R2_w=fp0 R10=fp0
+14: (07) r2 += -4                     ; R2_w=fp-4
+; return bpf_map_lookup_elem(&augmented_args_tmp, &key); @ augmented_raw_syscalls.bpf.c:140
+15: (18) r1 = 0xffff8a0854afae00      ; R1_w=map_ptr(map=augmented_args_,ks=4,vs=8272)
+17: (85) call bpf_map_lookup_elem#1   ; R0=map_value(map=augmented_args_,ks=4,vs=8272)
+18: (bf) r8 = r0                      ; R0=map_value(map=augmented_args_,ks=4,vs=8272) R8_w=map_value(map=augmented_args_,ks=4,vs=8272)
+19: (b4) w0 = 1                       ; R0_w=1
+; if (augmented_args == NULL) @ augmented_raw_syscalls.bpf.c:532
+20: (15) if r8 == 0x0 goto pc+143     ; R8_w=map_value(map=augmented_args_,ks=4,vs=8272)
+; bpf_probe_read_kernel(&augmented_args->args, sizeof(augmented_args->args), args); @ augmented_raw_syscalls.bpf.c:535
+21: (bf) r1 = r8                      ; R1_w=map_value(map=augmented_args_,ks=4,vs=8272) R8_w=map_value(map=augmented_args_,ks=4,vs=8272)
+22: (b4) w2 = 64                      ; R2_w=64
+23: (bf) r3 = r7                      ; R3_w=ctx() R7=ctx()
+24: (85) call bpf_probe_read_kernel#113       ; R0_w=scalar()
+; int zero = 0, index, value_size = sizeof(struct augmented_arg) - offsetof(struct augmented_arg, value); @ augmented_raw_syscalls.bpf.c:423
+25: (63) *(u32 *)(r10 -4) = r6        ; R6=0 R10=fp0 fp-8=0000????
+26: (7b) *(u64 *)(r10 -24) = r8       ; R8_w=map_value(map=augmented_args_,ks=4,vs=8272) R10=fp0 fp-24_w=map_value(map=augmented_args_,ks=4,vs=8272)
+; nr             = (__u32)args->id; @ augmented_raw_syscalls.bpf.c:435
+27: (79) r1 = *(u64 *)(r8 +8)         ; R1_w=scalar() R8_w=map_value(map=augmented_args_,ks=4,vs=8272)
+28: (63) *(u32 *)(r10 -8) = r1        ; R1_w=scalar() R10=fp0 fp-8=0000scalar()
+29: (bf) r2 = r10                     ; R2_w=fp0 R10=fp0
+30: (07) r2 += -8                     ; R2_w=fp-8
+; beauty_map     = bpf_map_lookup_elem(&beauty_map_enter, &nr); @ augmented_raw_syscalls.bpf.c:436
+31: (18) r1 = 0xffff8a0857592000      ; R1_w=map_ptr(map=beauty_map_ente,ks=4,vs=24)
+33: (85) call bpf_map_lookup_elem#1   ; R0=map_value_or_null(id=2,map=beauty_map_ente,ks=4,vs=24)
+34: (bf) r6 = r0                      ; R0=map_value_or_null(id=2,map=beauty_map_ente,ks=4,vs=24) R6_w=map_value_or_null(id=2,map=beauty_map_ente,ks=4,vs=24)
+35: (bf) r2 = r10                     ; R2_w=fp0 R10=fp0
+36: (07) r2 += -4                     ; R2_w=fp-4
+; payload        = bpf_map_lookup_elem(&beauty_payload_enter_map, &zero); @ augmented_raw_syscalls.bpf.c:439
+37: (18) r1 = 0xffff8a0854afb400      ; R1_w=map_ptr(map=beauty_payload_,ks=4,vs=24688)
+39: (85) call bpf_map_lookup_elem#1   ; R0_w=map_value(map=beauty_payload_,ks=4,vs=24688)
+; if (beauty_map == NULL || payload == NULL) @ augmented_raw_syscalls.bpf.c:442
+40: (15) if r6 == 0x0 goto pc+103     ; R6_w=map_value(map=beauty_map_ente,ks=4,vs=24)
+41: (15) if r0 == 0x0 goto pc+102     ; R0_w=map_value(map=beauty_payload_,ks=4,vs=24688)
+42: (79) r2 = *(u64 *)(r10 -24)       ; R2_w=map_value(map=augmented_args_,ks=4,vs=8272) R10=fp0 fp-24=map_value(map=augmented_args_,ks=4,vs=8272)
+; __builtin_memcpy(&payload->args, args, sizeof(*args)); @ augmented_raw_syscalls.bpf.c:446
+43: (79) r1 = *(u64 *)(r2 +56)        ; R1_w=scalar() R2_w=map_value(map=augmented_args_,ks=4,vs=8272)
+44: (7b) *(u64 *)(r0 +56) = r1        ; R0_w=map_value(map=beauty_payload_,ks=4,vs=24688) R1_w=scalar()
+45: (79) r1 = *(u64 *)(r2 +48)        ; R1_w=scalar() R2_w=map_value(map=augmented_args_,ks=4,vs=8272)
+46: (7b) *(u64 *)(r0 +48) = r1        ; R0_w=map_value(map=beauty_payload_,ks=4,vs=24688) R1_w=scalar()
+47: (79) r1 = *(u64 *)(r2 +40)        ; R1_w=scalar() R2_w=map_value(map=augmented_args_,ks=4,vs=8272)
+48: (7b) *(u64 *)(r0 +40) = r1        ; R0_w=map_value(map=beauty_payload_,ks=4,vs=24688) R1_w=scalar()
+49: (79) r1 = *(u64 *)(r2 +32)        ; R1_w=scalar() R2_w=map_value(map=augmented_args_,ks=4,vs=8272)
+50: (7b) *(u64 *)(r0 +32) = r1        ; R0_w=map_value(map=beauty_payload_,ks=4,vs=24688) R1_w=scalar()
+51: (79) r1 = *(u64 *)(r2 +24)        ; R1_w=scalar() R2_w=map_value(map=augmented_args_,ks=4,vs=8272)
+52: (7b) *(u64 *)(r0 +24) = r1        ; R0_w=map_value(map=beauty_payload_,ks=4,vs=24688) R1_w=scalar()
+53: (79) r1 = *(u64 *)(r2 +16)        ; R1_w=scalar() R2_w=map_value(map=augmented_args_,ks=4,vs=8272)
+54: (7b) *(u64 *)(r0 +16) = r1        ; R0_w=map_value(map=beauty_payload_,ks=4,vs=24688) R1_w=scalar()
+55: (79) r1 = *(u64 *)(r2 +8)         ; R1_w=scalar() R2_w=map_value(map=augmented_args_,ks=4,vs=8272)
+56: (7b) *(u64 *)(r0 +8) = r1         ; R0_w=map_value(map=beauty_payload_,ks=4,vs=24688) R1_w=scalar()
+57: (79) r1 = *(u64 *)(r2 +0)         ; R1_w=scalar() R2_w=map_value(map=augmented_args_,ks=4,vs=8272)
+58: (7b) *(u64 *)(r0 +0) = r1         ; R0_w=map_value(map=beauty_payload_,ks=4,vs=24688) R1_w=scalar()
+59: (b4) w1 = 0                       ; R1_w=0
+60: (63) *(u32 *)(r10 -64) = r1       ; R1_w=0 R10=fp0 fp-64=????0
+61: (b7) r8 = 0                       ; R8_w=0
+; payload_offset = (void *)&payload->aug_args; @ augmented_raw_syscalls.bpf.c:440
+62: (bf) r3 = r0                      ; R0_w=map_value(map=beauty_payload_,ks=4,vs=24688) R3_w=map_value(map=beauty_payload_,ks=4,vs=24688)
+63: (07) r3 += 64                     ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=64)
+64: (b7) r1 = 16                      ; R1_w=16
+65: (0f) r2 += r1                     ; R1_w=16 R2_w=map_value(map=augmented_args_,ks=4,vs=8272,off=16)
+66: (7b) *(u64 *)(r10 -32) = r2       ; R2_w=map_value(map=augmented_args_,ks=4,vs=8272,off=16) R10=fp0 fp-32_w=map_value(map=augmented_args_,ks=4,vs=8272,off=16)
+67: (b7) r9 = 0                       ; R9_w=0
+68: (7b) *(u64 *)(r10 -48) = r7       ; R7=ctx() R10=fp0 fp-48_w=ctx()
+69: (7b) *(u64 *)(r10 -56) = r0       ; R0_w=map_value(map=beauty_payload_,ks=4,vs=24688) R10=fp0 fp-56_w=map_value(map=beauty_payload_,ks=4,vs=24688)
+70: (7b) *(u64 *)(r10 -80) = r6       ; R6=map_value(map=beauty_map_ente,ks=4,vs=24) R10=fp0 fp-80=map_value(map=beauty_map_ente,ks=4,vs=24)
+71: (7b) *(u64 *)(r10 -40) = r9       ; R9=0 R10=fp0 fp-40_w=0
+; for (int i = 0; i < 6; i++) { @ augmented_raw_syscalls.bpf.c:457
+72: (bf) r1 = r8                      ; R1_w=0 R8=0
+73: (67) r1 <<= 3                     ; R1_w=0
+74: (79) r7 = *(u64 *)(r10 -24)       ; R7_w=map_value(map=augmented_args_,ks=4,vs=8272) R10=fp0 fp-24=map_value(map=augmented_args_,ks=4,vs=8272)
+75: (0f) r7 += r1                     ; R1_w=0 R7_w=map_value(map=augmented_args_,ks=4,vs=8272)
+76: (bf) r1 = r8                      ; R1_w=0 R8=0
+77: (67) r1 <<= 2                     ; R1_w=0
+78: (0f) r6 += r1                     ; R1_w=0 R6_w=map_value(map=beauty_map_ente,ks=4,vs=24)
+79: (07) r8 += 1                      ; R8_w=1
+80: (7b) *(u64 *)(r10 -72) = r3       ; R3=map_value(map=beauty_payload_,ks=4,vs=24688,off=64) R10=fp0 fp-72_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=64)
+81: (07) r3 += 8                      ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=72)
+82: (7b) *(u64 *)(r10 -16) = r3       ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=72) R10=fp0 fp-16_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=72)
+83: (05) goto pc+8
+; arg = (void *)args->args[i]; @ augmented_raw_syscalls.bpf.c:458
+92: (79) r3 = *(u64 *)(r7 +16)        ; R3_w=scalar() R7_w=map_value(map=augmented_args_,ks=4,vs=8272)
+; size = beauty_map[i]; @ augmented_raw_syscalls.bpf.c:460
+93: (61) r9 = *(u32 *)(r6 +0)         ; R6_w=map_value(map=beauty_map_ente,ks=4,vs=24) R9_w=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+; if (size == 0 || arg == NULL) @ augmented_raw_syscalls.bpf.c:463
+94: (16) if w9 == 0x0 goto pc-7       ; R9_w=scalar(smin=umin=umin32=1,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+95: (15) if r3 == 0x0 goto pc-8       ; R3=scalar(umin=1)
+; if (size == 1) { /* string */ @ augmented_raw_syscalls.bpf.c:466
+96: (56) if w9 != 0x1 goto pc+7 104: R0=map_value(map=beauty_payload_,ks=4,vs=24688) R1=0 R2=map_value(map=augmented_args_,ks=4,vs=8272,off=16) R3=scalar(umin=1) R6=map_value(map=beauty_map_ente,ks=4,vs=24) R7=map_value(map=augmented_args_,ks=4,vs=8272) R8=1 R9=scalar(smin=umin=umin32=2,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R10=fp0 fp-8=0000scalar() fp-16=map_value(map=beauty_payload_,ks=4,vs=24688,off=72) fp-24=map_value(map=augmented_args_,ks=4,vs=8272) fp-32=map_value(map=augmented_args_,ks=4,vs=8272,off=16) fp-40=0 fp-48=ctx() fp-56=map_value(map=beauty_payload_,ks=4,vs=24688) fp-64=????0 fp-72=map_value(map=beauty_payload_,ks=4,vs=24688,off=64) fp-80=map_value(map=beauty_map_ente,ks=4,vs=24)
+; } else if (size > 0 && size <= value_size) { /* struct */ @ augmented_raw_syscalls.bpf.c:473
+104: (26) if w9 > 0x1000 goto pc+5 110: R0=map_value(map=beauty_payload_,ks=4,vs=24688) R1=0 R2=map_value(map=augmented_args_,ks=4,vs=8272,off=16) R3=scalar(umin=1) R6=map_value(map=beauty_map_ente,ks=4,vs=24) R7=map_value(map=augmented_args_,ks=4,vs=8272) R8=1 R9=scalar(smin=umin=umin32=4097,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R10=fp0 fp-8=0000scalar() fp-16=map_value(map=beauty_payload_,ks=4,vs=24688,off=72) fp-24=map_value(map=augmented_args_,ks=4,vs=8272) fp-32=map_value(map=augmented_args_,ks=4,vs=8272,off=16) fp-40=0 fp-48=ctx() fp-56=map_value(map=beauty_payload_,ks=4,vs=24688) fp-64=????0 fp-72=map_value(map=beauty_payload_,ks=4,vs=24688,off=64) fp-80=map_value(map=beauty_map_ente,ks=4,vs=24)
+; } else if ((int)size < 0 && size >= -6) { /* buffer */ @ augmented_raw_syscalls.bpf.c:476
+110: (66) if w9 s> 0xffffffff goto pc-23      ; R9=scalar(smin=umin=umin32=0x80000000,smax=umax=0xffffffff,smax32=-1,var_off=(0x80000000; 0x7fffffff))
+; index = -(size + 1); @ augmented_raw_syscalls.bpf.c:477
+111: (a4) w9 ^= -1                    ; R9_w=scalar(smin=smin32=0,smax=umax=umax32=0x7fffffff,var_off=(0x0; 0x7fffffff))
+; index &= 7;	    // Satisfy the bounds checking with the verifier in some kernels. @ augmented_raw_syscalls.bpf.c:479
+112: (54) w9 &= 7                     ; R9_w=scalar(smin=smin32=0,smax=umax=smax32=umax32=7,var_off=(0x0; 0x7))
+; aug_size = args->args[index]; @ augmented_raw_syscalls.bpf.c:480
+113: (67) r9 <<= 3                    ; R9_w=scalar(smin=smin32=0,smax=umax=smax32=umax32=56,var_off=(0x0; 0x38))
+114: (79) r1 = *(u64 *)(r10 -32)      ; R1_w=map_value(map=augmented_args_,ks=4,vs=8272,off=16) R10=fp0 fp-32=map_value(map=augmented_args_,ks=4,vs=8272,off=16)
+115: (0f) r1 += r9                    ; R1_w=map_value(map=augmented_args_,ks=4,vs=8272,off=16,smin=smin32=0,smax=umax=smax32=umax32=56,var_off=(0x0; 0x38)) R9_w=scalar(smin=smin32=0,smax=umax=smax32=umax32=56,var_off=(0x0; 0x38))
+116: (79) r9 = *(u64 *)(r1 +0)        ; R1_w=map_value(map=augmented_args_,ks=4,vs=8272,off=16,smin=smin32=0,smax=umax=smax32=umax32=56,var_off=(0x0; 0x38)) R9_w=scalar()
+; if (aug_size > 0) { @ augmented_raw_syscalls.bpf.c:482
+117: (c5) if r9 s< 0x1 goto pc-30     ; R9_w=scalar(smin=umin=1,umax=0x7fffffffffffffff,var_off=(0x0; 0x7fffffffffffffff))
+; if (aug_size > TRACE_AUG_MAX_BUF) @ augmented_raw_syscalls.bpf.c:483
+118: (a5) if r9 < 0x20 goto pc-35     ; R9=scalar(smin=umin=32,umax=0x7fffffffffffffff,var_off=(0x0; 0x7fffffffffffffff))
+119: (b7) r9 = 32                     ; R9_w=32
+120: (05) goto pc-37
+; if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, aug_size, arg)) @ augmented_raw_syscalls.bpf.c:485
+84: (79) r1 = *(u64 *)(r10 -16)       ; R1_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=72) R10=fp0 fp-16=map_value(map=beauty_payload_,ks=4,vs=24688,off=72)
+85: (bc) w2 = w9                      ; R2_w=32 R9_w=32
+86: (85) call bpf_probe_read_user#112         ; R0_w=scalar()
+87: (15) if r0 == 0x0 goto pc+33 121: R0=0 R6=map_value(map=beauty_map_ente,ks=4,vs=24) R7=map_value(map=augmented_args_,ks=4,vs=8272) R8=1 R9=32 R10=fp0 fp-8=0000scalar() fp-16=map_value(map=beauty_payload_,ks=4,vs=24688,off=72) fp-24=map_value(map=augmented_args_,ks=4,vs=8272) fp-32=map_value(map=augmented_args_,ks=4,vs=8272,off=16) fp-40=0 fp-48=ctx() fp-56=map_value(map=beauty_payload_,ks=4,vs=24688) fp-64=????0 fp-72=map_value(map=beauty_payload_,ks=4,vs=24688,off=64) fp-80=map_value(map=beauty_map_ente,ks=4,vs=24)
+; if (aug_size > value_size) @ augmented_raw_syscalls.bpf.c:491
+121: (a5) if r9 < 0x1000 goto pc+1    ; R9=32
+123: (79) r3 = *(u64 *)(r10 -72)      ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=64) R10=fp0 fp-72=map_value(map=beauty_payload_,ks=4,vs=24688,off=64)
+; ((struct augmented_arg *)payload_offset)->size = aug_size; @ augmented_raw_syscalls.bpf.c:501
+124: (63) *(u32 *)(r3 +0) = r9        ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=64) R9=32
+; int written = offsetof(struct augmented_arg, value) + aug_size; @ augmented_raw_syscalls.bpf.c:496
+125: (07) r9 += 8                     ; R9_w=40
+; payload_offset += written; @ augmented_raw_syscalls.bpf.c:503
+126: (0f) r3 += r9                    ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=104) R9_w=40
+; output += written; @ augmented_raw_syscalls.bpf.c:502
+127: (79) r1 = *(u64 *)(r10 -40)      ; R1_w=0 R10=fp0 fp-40=0
+128: (0f) r9 += r1                    ; R1_w=0 R9_w=40
+129: (b4) w1 = 1                      ; R1_w=1
+130: (63) *(u32 *)(r10 -64) = r1      ; R1_w=1 R10=fp0 fp-64=????1
+131: (79) r7 = *(u64 *)(r10 -48)      ; R7_w=ctx() R10=fp0 fp-48=ctx()
+132: (79) r0 = *(u64 *)(r10 -56)      ; R0_w=map_value(map=beauty_payload_,ks=4,vs=24688) R10=fp0 fp-56=map_value(map=beauty_payload_,ks=4,vs=24688)
+133: (79) r6 = *(u64 *)(r10 -80)      ; R6_w=map_value(map=beauty_map_ente,ks=4,vs=24) R10=fp0 fp-80=map_value(map=beauty_map_ente,ks=4,vs=24)
+; for (int i = 0; i < 6; i++) { @ augmented_raw_syscalls.bpf.c:457
+134: (15) if r8 == 0x6 goto pc+7      ; R8=1
+135: (05) goto pc-65
+; payload_offset = (void *)&payload->aug_args; @ augmented_raw_syscalls.bpf.c:440
+71: (7b) *(u64 *)(r10 -40) = r9       ; R9=40 R10=fp0 fp-40_w=40
+; for (int i = 0; i < 6; i++) { @ augmented_raw_syscalls.bpf.c:457
+72: (bf) r1 = r8                      ; R1_w=1 R8=1
+73: (67) r1 <<= 3                     ; R1_w=8
+74: (79) r7 = *(u64 *)(r10 -24)       ; R7_w=map_value(map=augmented_args_,ks=4,vs=8272) R10=fp0 fp-24=map_value(map=augmented_args_,ks=4,vs=8272)
+75: (0f) r7 += r1                     ; R1_w=8 R7_w=map_value(map=augmented_args_,ks=4,vs=8272,off=8)
+76: (bf) r1 = r8                      ; R1_w=1 R8=1
+77: (67) r1 <<= 2                     ; R1_w=4
+78: (0f) r6 += r1                     ; R1_w=4 R6_w=map_value(map=beauty_map_ente,ks=4,vs=24,off=4)
+79: (07) r8 += 1                      ; R8_w=2
+80: (7b) *(u64 *)(r10 -72) = r3       ; R3=map_value(map=beauty_payload_,ks=4,vs=24688,off=104) R10=fp0 fp-72_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=104)
+81: (07) r3 += 8                      ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=112)
+82: (7b) *(u64 *)(r10 -16) = r3       ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=112) R10=fp0 fp-16_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=112)
+83: (05) goto pc+8
+; arg = (void *)args->args[i]; @ augmented_raw_syscalls.bpf.c:458
+92: (79) r3 = *(u64 *)(r7 +16)        ; R3_w=scalar() R7_w=map_value(map=augmented_args_,ks=4,vs=8272,off=8)
+; size = beauty_map[i]; @ augmented_raw_syscalls.bpf.c:460
+93: (61) r9 = *(u32 *)(r6 +0)         ; R6_w=map_value(map=beauty_map_ente,ks=4,vs=24,off=4) R9_w=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+; if (size == 0 || arg == NULL) @ augmented_raw_syscalls.bpf.c:463
+94: (16) if w9 == 0x0 goto pc-7       ; R9_w=scalar(smin=umin=umin32=1,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+95: (15) if r3 == 0x0 goto pc-8       ; R3_w=scalar(umin=1)
+; if (size == 1) { /* string */ @ augmented_raw_syscalls.bpf.c:466
+96: (56) if w9 != 0x1 goto pc+7       ; R9=1
+; aug_size = bpf_probe_read_user_str(((struct augmented_arg *)payload_offset)->value, value_size, arg); @ augmented_raw_syscalls.bpf.c:467
+97: (79) r1 = *(u64 *)(r10 -16)       ; R1_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=112) R10=fp0 fp-16=map_value(map=beauty_payload_,ks=4,vs=24688,off=112)
+98: (b4) w2 = 4096                    ; R2_w=4096
+99: (85) call bpf_probe_read_user_str#114     ; R0_w=scalar(smin=smin32=-4095,smax=smax32=4096)
+100: (bf) r9 = r0                     ; R0_w=scalar(id=28510,smin=smin32=-4095,smax=smax32=4096) R9_w=scalar(id=28510,smin=smin32=-4095,smax=smax32=4096)
+; if (aug_size < 0) @ augmented_raw_syscalls.bpf.c:469
+101: (65) if r9 s> 0x0 goto pc+19     ; R9_w=scalar(id=28510,smin=smin32=-4095,smax=smax32=0)
+102: (b7) r9 = 0                      ; R9_w=0
+103: (05) goto pc+17
+; if (aug_size > value_size) @ augmented_raw_syscalls.bpf.c:491
+121: (a5) if r9 < 0x1000 goto pc+1    ; R9_w=0
+123: (79) r3 = *(u64 *)(r10 -72)      ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=104) R10=fp0 fp-72=map_value(map=beauty_payload_,ks=4,vs=24688,off=104)
+; ((struct augmented_arg *)payload_offset)->size = aug_size; @ augmented_raw_syscalls.bpf.c:501
+124: (63) *(u32 *)(r3 +0) = r9        ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=104) R9=0
+; int written = offsetof(struct augmented_arg, value) + aug_size; @ augmented_raw_syscalls.bpf.c:496
+125: (07) r9 += 8                     ; R9_w=8
+; payload_offset += written; @ augmented_raw_syscalls.bpf.c:503
+126: (0f) r3 += r9                    ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=112) R9_w=8
+; output += written; @ augmented_raw_syscalls.bpf.c:502
+127: (79) r1 = *(u64 *)(r10 -40)      ; R1_w=40 R10=fp0 fp-40=40
+128: (0f) r9 += r1                    ; R1_w=40 R9_w=48
+129: (b4) w1 = 1                      ; R1_w=1
+130: (63) *(u32 *)(r10 -64) = r1      ; R1_w=1 R10=fp0 fp-64=????1
+131: (79) r7 = *(u64 *)(r10 -48)      ; R7_w=ctx() R10=fp0 fp-48=ctx()
+132: (79) r0 = *(u64 *)(r10 -56)      ; R0_w=map_value(map=beauty_payload_,ks=4,vs=24688) R10=fp0 fp-56=map_value(map=beauty_payload_,ks=4,vs=24688)
+133: (79) r6 = *(u64 *)(r10 -80)      ; R6_w=map_value(map=beauty_map_ente,ks=4,vs=24) R10=fp0 fp-80=map_value(map=beauty_map_ente,ks=4,vs=24)
+; for (int i = 0; i < 6; i++) { @ augmented_raw_syscalls.bpf.c:457
+134: (15) if r8 == 0x6 goto pc+7      ; R8=2
+135: (05) goto pc-65
+; payload_offset = (void *)&payload->aug_args; @ augmented_raw_syscalls.bpf.c:440
+71: (7b) *(u64 *)(r10 -40) = r9       ; R9_w=48 R10=fp0 fp-40_w=48
+; for (int i = 0; i < 6; i++) { @ augmented_raw_syscalls.bpf.c:457
+72: (bf) r1 = r8                      ; R1_w=2 R8=2
+73: (67) r1 <<= 3                     ; R1_w=16
+74: (79) r7 = *(u64 *)(r10 -24)       ; R7_w=map_value(map=augmented_args_,ks=4,vs=8272) R10=fp0 fp-24=map_value(map=augmented_args_,ks=4,vs=8272)
+75: (0f) r7 += r1                     ; R1_w=16 R7_w=map_value(map=augmented_args_,ks=4,vs=8272,off=16)
+76: (bf) r1 = r8                      ; R1_w=2 R8=2
+77: (67) r1 <<= 2                     ; R1_w=8
+78: (0f) r6 += r1                     ; R1_w=8 R6_w=map_value(map=beauty_map_ente,ks=4,vs=24,off=8)
+79: (07) r8 += 1                      ; R8_w=3
+80: (7b) *(u64 *)(r10 -72) = r3       ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=112) R10=fp0 fp-72_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=112)
+81: (07) r3 += 8                      ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=120)
+82: (7b) *(u64 *)(r10 -16) = r3       ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=120) R10=fp0 fp-16_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=120)
+83: (05) goto pc+8
+; arg = (void *)args->args[i]; @ augmented_raw_syscalls.bpf.c:458
+92: (79) r3 = *(u64 *)(r7 +16)        ; R3_w=scalar() R7=map_value(map=augmented_args_,ks=4,vs=8272,off=16)
+; size = beauty_map[i]; @ augmented_raw_syscalls.bpf.c:460
+93: (61) r9 = *(u32 *)(r6 +0)         ; R6=map_value(map=beauty_map_ente,ks=4,vs=24,off=8) R9_w=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+; if (size == 0 || arg == NULL) @ augmented_raw_syscalls.bpf.c:463
+94: (16) if w9 == 0x0 goto pc-7       ; R9_w=scalar(smin=umin=umin32=1,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+95: (15) if r3 == 0x0 goto pc-8       ; R3_w=scalar(umin=1)
+; if (size == 1) { /* string */ @ augmented_raw_syscalls.bpf.c:466
+96: (56) if w9 != 0x1 goto pc+7       ; R9_w=1
+; aug_size = bpf_probe_read_user_str(((struct augmented_arg *)payload_offset)->value, value_size, arg); @ augmented_raw_syscalls.bpf.c:467
+97: (79) r1 = *(u64 *)(r10 -16)       ; R1_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=120) R10=fp0 fp-16=map_value(map=beauty_payload_,ks=4,vs=24688,off=120)
+98: (b4) w2 = 4096                    ; R2_w=4096
+99: (85) call bpf_probe_read_user_str#114     ; R0=scalar(smin=smin32=-4095,smax=smax32=4096)
+100: (bf) r9 = r0                     ; R0=scalar(id=28511,smin=smin32=-4095,smax=smax32=4096) R9_w=scalar(id=28511,smin=smin32=-4095,smax=smax32=4096)
+; if (aug_size < 0) @ augmented_raw_syscalls.bpf.c:469
+101: (65) if r9 s> 0x0 goto pc+19 121: R0=scalar(id=28511,smin=umin=smin32=umin32=1,smax=umax=smax32=umax32=4096,var_off=(0x0; 0x1fff)) R6=map_value(map=beauty_map_ente,ks=4,vs=24,off=8) R7=map_value(map=augmented_args_,ks=4,vs=8272,off=16) R8=3 R9_w=scalar(id=28511,smin=umin=smin32=umin32=1,smax=umax=smax32=umax32=4096,var_off=(0x0; 0x1fff)) R10=fp0 fp-8=0000scalar() fp-16=map_value(map=beauty_payload_,ks=4,vs=24688,off=120) fp-24=map_value(map=augmented_args_,ks=4,vs=8272) fp-32=map_value(map=augmented_args_,ks=4,vs=8272,off=16) fp-40=48 fp-48=ctx() fp-56=map_value(map=beauty_payload_,ks=4,vs=24688) fp-64=????1 fp-72=map_value(map=beauty_payload_,ks=4,vs=24688,off=112) fp-80=map_value(map=beauty_map_ente,ks=4,vs=24)
+; if (aug_size > value_size) @ augmented_raw_syscalls.bpf.c:491
+121: (a5) if r9 < 0x1000 goto pc+1 123: R0=scalar(id=28511,smin=umin=smin32=umin32=1,smax=umax=smax32=umax32=4095,var_off=(0x0; 0xfff)) R6=map_value(map=beauty_map_ente,ks=4,vs=24,off=8) R7=map_value(map=augmented_args_,ks=4,vs=8272,off=16) R8=3 R9_w=scalar(id=28511,smin=umin=smin32=umin32=1,smax=umax=smax32=umax32=4095,var_off=(0x0; 0xfff)) R10=fp0 fp-8=0000scalar() fp-16=map_value(map=beauty_payload_,ks=4,vs=24688,off=120) fp-24=map_value(map=augmented_args_,ks=4,vs=8272) fp-32=map_value(map=augmented_args_,ks=4,vs=8272,off=16) fp-40=48 fp-48=ctx() fp-56=map_value(map=beauty_payload_,ks=4,vs=24688) fp-64=????1 fp-72=map_value(map=beauty_payload_,ks=4,vs=24688,off=112) fp-80=map_value(map=beauty_map_ente,ks=4,vs=24)
+; if (aug_size > value_size) @ augmented_raw_syscalls.bpf.c:491
+123: (79) r3 = *(u64 *)(r10 -72)      ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=112) R10=fp0 fp-72=map_value(map=beauty_payload_,ks=4,vs=24688,off=112)
+; ((struct augmented_arg *)payload_offset)->size = aug_size; @ augmented_raw_syscalls.bpf.c:501
+124: (63) *(u32 *)(r3 +0) = r9        ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=112) R9_w=scalar(id=28511,smin=umin=smin32=umin32=1,smax=umax=smax32=umax32=4095,var_off=(0x0; 0xfff))
+; int written = offsetof(struct augmented_arg, value) + aug_size; @ augmented_raw_syscalls.bpf.c:496
+125: (07) r9 += 8                     ; R9_w=scalar(id=28511+8,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff))
+; payload_offset += written; @ augmented_raw_syscalls.bpf.c:503
+126: (0f) r3 += r9                    ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=112,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff)) R9_w=scalar(id=28511+8,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff))
+; output += written; @ augmented_raw_syscalls.bpf.c:502
+127: (79) r1 = *(u64 *)(r10 -40)      ; R1_w=48 R10=fp0 fp-40=48
+128: (0f) r9 += r1                    ; R1_w=48 R9_w=scalar(smin=umin=smin32=umin32=57,smax=umax=smax32=umax32=4151,var_off=(0x0; 0x1fff))
+129: (b4) w1 = 1                      ; R1_w=1
+130: (63) *(u32 *)(r10 -64) = r1      ; R1_w=1 R10=fp0 fp-64=????1
+131: (79) r7 = *(u64 *)(r10 -48)      ; R7_w=ctx() R10=fp0 fp-48=ctx()
+132: (79) r0 = *(u64 *)(r10 -56)      ; R0_w=map_value(map=beauty_payload_,ks=4,vs=24688) R10=fp0 fp-56=map_value(map=beauty_payload_,ks=4,vs=24688)
+133: (79) r6 = *(u64 *)(r10 -80)      ; R6=map_value(map=beauty_map_ente,ks=4,vs=24) R10=fp0 fp-80=map_value(map=beauty_map_ente,ks=4,vs=24)
+; for (int i = 0; i < 6; i++) { @ augmented_raw_syscalls.bpf.c:457
+134: (15) if r8 == 0x6 goto pc+7      ; R8=3
+135: (05) goto pc-65
+; payload_offset = (void *)&payload->aug_args; @ augmented_raw_syscalls.bpf.c:440
+71: (7b) *(u64 *)(r10 -40) = r9       ; R9=scalar(id=28869,smin=umin=smin32=umin32=57,smax=umax=smax32=umax32=4151,var_off=(0x0; 0x1fff)) R10=fp0 fp-40_w=scalar(id=28869,smin=umin=smin32=umin32=57,smax=umax=smax32=umax32=4151,var_off=(0x0; 0x1fff))
+; for (int i = 0; i < 6; i++) { @ augmented_raw_syscalls.bpf.c:457
+72: (bf) r1 = r8                      ; R1_w=3 R8=3
+73: (67) r1 <<= 3                     ; R1_w=24
+74: (79) r7 = *(u64 *)(r10 -24)       ; R7_w=map_value(map=augmented_args_,ks=4,vs=8272) R10=fp0 fp-24=map_value(map=augmented_args_,ks=4,vs=8272)
+75: (0f) r7 += r1                     ; R1_w=24 R7_w=map_value(map=augmented_args_,ks=4,vs=8272,off=24)
+76: (bf) r1 = r8                      ; R1_w=3 R8=3
+77: (67) r1 <<= 2                     ; R1_w=12
+78: (0f) r6 += r1                     ; R1_w=12 R6_w=map_value(map=beauty_map_ente,ks=4,vs=24,off=12)
+79: (07) r8 += 1                      ; R8_w=4
+80: (7b) *(u64 *)(r10 -72) = r3       ; R3=map_value(map=beauty_payload_,ks=4,vs=24688,off=112,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff)) R10=fp0 fp-72_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=112,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff))
+81: (07) r3 += 8                      ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=120,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff))
+82: (7b) *(u64 *)(r10 -16) = r3       ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=120,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff)) R10=fp0 fp-16_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=120,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff))
+83: (05) goto pc+8
+; arg = (void *)args->args[i]; @ augmented_raw_syscalls.bpf.c:458
+92: (79) r3 = *(u64 *)(r7 +16)        ; R3_w=scalar() R7_w=map_value(map=augmented_args_,ks=4,vs=8272,off=24)
+; size = beauty_map[i]; @ augmented_raw_syscalls.bpf.c:460
+93: (61) r9 = *(u32 *)(r6 +0)         ; R6=map_value(map=beauty_map_ente,ks=4,vs=24,off=12) R9=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+; if (size == 0 || arg == NULL) @ augmented_raw_syscalls.bpf.c:463
+94: (16) if w9 == 0x0 goto pc-7       ; R9=scalar(smin=umin=umin32=1,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+95: (15) if r3 == 0x0 goto pc-8       ; R3=scalar(umin=1)
+; if (size == 1) { /* string */ @ augmented_raw_syscalls.bpf.c:466
+96: (56) if w9 != 0x1 goto pc+7       ; R9=1
+; aug_size = bpf_probe_read_user_str(((struct augmented_arg *)payload_offset)->value, value_size, arg); @ augmented_raw_syscalls.bpf.c:467
+97: (79) r1 = *(u64 *)(r10 -16)       ; R1_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=120,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff)) R10=fp0 fp-16=map_value(map=beauty_payload_,ks=4,vs=24688,off=120,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff))
+98: (b4) w2 = 4096                    ; R2_w=4096
+99: (85) call bpf_probe_read_user_str#114     ; R0_w=scalar(smin=smin32=-4095,smax=smax32=4096)
+100: (bf) r9 = r0                     ; R0_w=scalar(id=28870,smin=smin32=-4095,smax=smax32=4096) R9_w=scalar(id=28870,smin=smin32=-4095,smax=smax32=4096)
+; if (aug_size < 0) @ augmented_raw_syscalls.bpf.c:469
+101: (65) if r9 s> 0x0 goto pc+19     ; R9_w=scalar(id=28870,smin=smin32=-4095,smax=smax32=0)
+102: (b7) r9 = 0                      ; R9_w=0
+103: (05) goto pc+17
+; if (aug_size > value_size) @ augmented_raw_syscalls.bpf.c:491
+121: (a5) if r9 < 0x1000 goto pc+1    ; R9_w=0
+123: (79) r3 = *(u64 *)(r10 -72)      ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=112,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff)) R10=fp0 fp-72=map_value(map=beauty_payload_,ks=4,vs=24688,off=112,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff))
+; ((struct augmented_arg *)payload_offset)->size = aug_size; @ augmented_raw_syscalls.bpf.c:501
+124: (63) *(u32 *)(r3 +0) = r9        ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=112,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff)) R9_w=0
+; int written = offsetof(struct augmented_arg, value) + aug_size; @ augmented_raw_syscalls.bpf.c:496
+125: (07) r9 += 8                     ; R9_w=8
+; payload_offset += written; @ augmented_raw_syscalls.bpf.c:503
+126: (0f) r3 += r9                    ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=120,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff)) R9_w=8
+; output += written; @ augmented_raw_syscalls.bpf.c:502
+127: (79) r1 = *(u64 *)(r10 -40)      ; R1_w=scalar(id=28869,smin=umin=smin32=umin32=57,smax=umax=smax32=umax32=4151,var_off=(0x0; 0x1fff)) R10=fp0 fp-40=scalar(id=28869,smin=umin=smin32=umin32=57,smax=umax=smax32=umax32=4151,var_off=(0x0; 0x1fff))
+128: (0f) r9 += r1                    ; R1_w=scalar(id=28869,smin=umin=smin32=umin32=57,smax=umax=smax32=umax32=4151,var_off=(0x0; 0x1fff)) R9_w=scalar(smin=umin=smin32=umin32=65,smax=umax=smax32=umax32=4159,var_off=(0x0; 0x1fff))
+129: (b4) w1 = 1                      ; R1_w=1
+130: (63) *(u32 *)(r10 -64) = r1      ; R1_w=1 R10=fp0 fp-64=????1
+131: (79) r7 = *(u64 *)(r10 -48)      ; R7_w=ctx() R10=fp0 fp-48=ctx()
+132: (79) r0 = *(u64 *)(r10 -56)      ; R0_w=map_value(map=beauty_payload_,ks=4,vs=24688) R10=fp0 fp-56=map_value(map=beauty_payload_,ks=4,vs=24688)
+133: (79) r6 = *(u64 *)(r10 -80)      ; R6_w=map_value(map=beauty_map_ente,ks=4,vs=24) R10=fp0 fp-80=map_value(map=beauty_map_ente,ks=4,vs=24)
+; for (int i = 0; i < 6; i++) { @ augmented_raw_syscalls.bpf.c:457
+134: (15) if r8 == 0x6 goto pc+7      ; R8=4
+135: (05) goto pc-65
+; payload_offset = (void *)&payload->aug_args; @ augmented_raw_syscalls.bpf.c:440
+71: (7b) *(u64 *)(r10 -40) = r9       ; R9_w=scalar(id=28871,smin=umin=smin32=umin32=65,smax=umax=smax32=umax32=4159,var_off=(0x0; 0x1fff)) R10=fp0 fp-40_w=scalar(id=28871,smin=umin=smin32=umin32=65,smax=umax=smax32=umax32=4159,var_off=(0x0; 0x1fff))
+; for (int i = 0; i < 6; i++) { @ augmented_raw_syscalls.bpf.c:457
+72: (bf) r1 = r8                      ; R1_w=4 R8=4
+73: (67) r1 <<= 3                     ; R1_w=32
+74: (79) r7 = *(u64 *)(r10 -24)       ; R7_w=map_value(map=augmented_args_,ks=4,vs=8272) R10=fp0 fp-24=map_value(map=augmented_args_,ks=4,vs=8272)
+75: (0f) r7 += r1                     ; R1_w=32 R7_w=map_value(map=augmented_args_,ks=4,vs=8272,off=32)
+76: (bf) r1 = r8                      ; R1_w=4 R8=4
+77: (67) r1 <<= 2                     ; R1_w=16
+78: (0f) r6 += r1                     ; R1_w=16 R6_w=map_value(map=beauty_map_ente,ks=4,vs=24,off=16)
+79: (07) r8 += 1                      ; R8_w=5
+80: (7b) *(u64 *)(r10 -72) = r3       ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=120,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff)) R10=fp0 fp-72_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=120,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff))
+81: (07) r3 += 8                      ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=128,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff))
+82: (7b) *(u64 *)(r10 -16) = r3       ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=128,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff)) R10=fp0 fp-16_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=128,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff))
+83: (05) goto pc+8
+; arg = (void *)args->args[i]; @ augmented_raw_syscalls.bpf.c:458
+92: (79) r3 = *(u64 *)(r7 +16)        ; R3_w=scalar() R7_w=map_value(map=augmented_args_,ks=4,vs=8272,off=32)
+; size = beauty_map[i]; @ augmented_raw_syscalls.bpf.c:460
+93: (61) r9 = *(u32 *)(r6 +0)         ; R6_w=map_value(map=beauty_map_ente,ks=4,vs=24,off=16) R9_w=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+; if (size == 0 || arg == NULL) @ augmented_raw_syscalls.bpf.c:463
+94: (16) if w9 == 0x0 goto pc-7       ; R9_w=scalar(smin=umin=umin32=1,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+95: (15) if r3 == 0x0 goto pc-8       ; R3_w=scalar(umin=1)
+; if (size == 1) { /* string */ @ augmented_raw_syscalls.bpf.c:466
+96: (56) if w9 != 0x1 goto pc+7 104: R0_w=map_value(map=beauty_payload_,ks=4,vs=24688) R1_w=16 R3_w=scalar(umin=1) R6_w=map_value(map=beauty_map_ente,ks=4,vs=24,off=16) R7_w=map_value(map=augmented_args_,ks=4,vs=8272,off=32) R8_w=5 R9_w=scalar(smin=umin=umin32=2,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R10=fp0 fp-8=0000scalar() fp-16_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=128,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff)) fp-24=map_value(map=augmented_args_,ks=4,vs=8272) fp-32=map_value(map=augmented_args_,ks=4,vs=8272,off=16) fp-40_w=scalar(id=28871,smin=umin=smin32=umin32=65,smax=umax=smax32=umax32=4159,var_off=(0x0; 0x1fff)) fp-48=ctx() fp-56=map_value(map=beauty_payload_,ks=4,vs=24688) fp-64=????1 fp-72_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=120,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff)) fp-80=map_value(map=beauty_map_ente,ks=4,vs=24)
+; } else if (size > 0 && size <= value_size) { /* struct */ @ augmented_raw_syscalls.bpf.c:473
+104: (26) if w9 > 0x1000 goto pc+5    ; R9_w=scalar(smin=umin=smin32=umin32=2,smax=umax=smax32=umax32=4096,var_off=(0x0; 0x1fff))
+; if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, size, arg)) @ augmented_raw_syscalls.bpf.c:474
+105: (79) r1 = *(u64 *)(r10 -16)      ; R1_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=128,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff)) R10=fp0 fp-16_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=128,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff))
+106: (bc) w2 = w9                     ; R2_w=scalar(id=28880,smin=umin=smin32=umin32=2,smax=umax=smax32=umax32=4096,var_off=(0x0; 0x1fff)) R9_w=scalar(id=28880,smin=umin=smin32=umin32=2,smax=umax=smax32=umax32=4096,var_off=(0x0; 0x1fff))
+107: (85) call bpf_probe_read_user#112        ; R0=scalar()
+108: (15) if r0 == 0x0 goto pc+12 121: R0=0 R6=map_value(map=beauty_map_ente,ks=4,vs=24,off=16) R7=map_value(map=augmented_args_,ks=4,vs=8272,off=32) R8=5 R9=scalar(id=28880,smin=umin=smin32=umin32=2,smax=umax=smax32=umax32=4096,var_off=(0x0; 0x1fff)) R10=fp0 fp-8=0000scalar() fp-16=map_value(map=beauty_payload_,ks=4,vs=24688,off=128,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff)) fp-24=map_value(map=augmented_args_,ks=4,vs=8272) fp-32=map_value(map=augmented_args_,ks=4,vs=8272,off=16) fp-40=scalar(id=28871,smin=umin=smin32=umin32=65,smax=umax=smax32=umax32=4159,var_off=(0x0; 0x1fff)) fp-48=ctx() fp-56=map_value(map=beauty_payload_,ks=4,vs=24688) fp-64=????1 fp-72=map_value(map=beauty_payload_,ks=4,vs=24688,off=120,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff)) fp-80=map_value(map=beauty_map_ente,ks=4,vs=24)
+; if (aug_size > value_size) @ augmented_raw_syscalls.bpf.c:491
+121: (a5) if r9 < 0x1000 goto pc+1    ; R9=4096
+122: (b7) r9 = 4096                   ; R9_w=4096
+123: (79) r3 = *(u64 *)(r10 -72)      ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=120,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff)) R10=fp0 fp-72=map_value(map=beauty_payload_,ks=4,vs=24688,off=120,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff))
+; ((struct augmented_arg *)payload_offset)->size = aug_size; @ augmented_raw_syscalls.bpf.c:501
+124: (63) *(u32 *)(r3 +0) = r9        ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=120,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff)) R9_w=4096
+; int written = offsetof(struct augmented_arg, value) + aug_size; @ augmented_raw_syscalls.bpf.c:496
+125: (07) r9 += 8                     ; R9_w=4104
+; payload_offset += written; @ augmented_raw_syscalls.bpf.c:503
+126: (0f) r3 += r9                    ; R3_w=map_value(map=beauty_payload_,ks=4,vs=24688,off=4224,smin=umin=smin32=umin32=9,smax=umax=smax32=umax32=4103,var_off=(0x0; 0x1fff)) R9_w=4104
+; output += written; @ augmented_raw_syscalls.bpf.c:502
+127: (79) r1 = *(u64 *)(r10 -40)      ; R1_w=scalar(id=28871,smin=umin=smin32=umin32=65,smax=umax=smax32=umax32=4159,var_off=(0x0; 0x1fff)) R10=fp0 fp-40=scalar(id=28871,smin=umin=smin32=umin32=65,smax=umax=smax32=umax32=4159,var_off=(0x0; 0x1fff))
+128: (0f) r9 += r1
+BPF program is too large. Processed 1000001 insn
+processed 1000001 insns (limit 1000000) max_states_per_insn 32 total_states 34758 peak_states 202 mark_read 14
+-- END PROG LOAD LOG --
+libbpf: prog 'sys_enter': failed to load: -E2BIG
+libbpf: failed to load object 'augmented_raw_syscalls_bpf'
+libbpf: failed to load BPF skeleton 'augmented_raw_syscalls_bpf': -E2BIG
+Error: failed to get syscall or beauty map fd
+     0.000 (1000.055 ms): sleep/1139114 clock_nanosleep(rqtp: 0x7fff2269d5d0, rmtp: 0x7fff2269d5c0)           = 0
+ 
+> Signed-off-by: Jakub Brnak <jbrnak@redhat.com>
+> [ coding style updates and fix a BPF verifier issue ]
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  .../bpf_skel/augmented_raw_syscalls.bpf.c     | 62 ++++++++-----------
+>  tools/perf/util/bpf_skel/vmlinux/vmlinux.h    | 14 +++++
+>  2 files changed, 40 insertions(+), 36 deletions(-)
+> 
+> diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> index cb86e261b4de0685..2c9bcc6b8cb0c06c 100644
+> --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> @@ -60,18 +60,6 @@ struct syscalls_sys_exit {
+>  	__uint(max_entries, 512);
+>  } syscalls_sys_exit SEC(".maps");
+>  
+> -struct syscall_enter_args {
+> -	unsigned long long common_tp_fields;
+> -	long		   syscall_nr;
+> -	unsigned long	   args[6];
+> -};
+> -
+> -struct syscall_exit_args {
+> -	unsigned long long common_tp_fields;
+> -	long		   syscall_nr;
+> -	long		   ret;
+> -};
+> -
+>  /*
+>   * Desired design of maximum size and alignment (see RFC2553)
+>   */
+> @@ -115,7 +103,7 @@ struct pids_filtered {
+>  } pids_filtered SEC(".maps");
+>  
+>  struct augmented_args_payload {
+> -	struct syscall_enter_args args;
+> +	struct trace_event_raw_sys_enter args;
+>  	struct augmented_arg arg, arg2; // We have to reserve space for two arguments (rename, etc)
+>  };
+>  
+> @@ -135,7 +123,7 @@ struct beauty_map_enter {
+>  } beauty_map_enter SEC(".maps");
+>  
+>  struct beauty_payload_enter {
+> -	struct syscall_enter_args args;
+> +	struct trace_event_raw_sys_enter args;
+>  	struct augmented_arg aug_args[6];
+>  };
+>  
+> @@ -192,7 +180,7 @@ unsigned int augmented_arg__read_str(struct augmented_arg *augmented_arg, const
+>  }
+>  
+>  SEC("tp/raw_syscalls/sys_enter")
+> -int syscall_unaugmented(struct syscall_enter_args *args)
+> +int syscall_unaugmented(struct trace_event_raw_sys_enter *args)
+>  {
+>  	return 1;
+>  }
+> @@ -204,7 +192,7 @@ int syscall_unaugmented(struct syscall_enter_args *args)
+>   * filename.
+>   */
+>  SEC("tp/syscalls/sys_enter_connect")
+> -int sys_enter_connect(struct syscall_enter_args *args)
+> +int sys_enter_connect(struct trace_event_raw_sys_enter *args)
+>  {
+>  	struct augmented_args_payload *augmented_args = augmented_args_payload();
+>  	const void *sockaddr_arg = (const void *)args->args[1];
+> @@ -225,7 +213,7 @@ int sys_enter_connect(struct syscall_enter_args *args)
+>  }
+>  
+>  SEC("tp/syscalls/sys_enter_sendto")
+> -int sys_enter_sendto(struct syscall_enter_args *args)
+> +int sys_enter_sendto(struct trace_event_raw_sys_enter *args)
+>  {
+>  	struct augmented_args_payload *augmented_args = augmented_args_payload();
+>  	const void *sockaddr_arg = (const void *)args->args[4];
+> @@ -243,7 +231,7 @@ int sys_enter_sendto(struct syscall_enter_args *args)
+>  }
+>  
+>  SEC("tp/syscalls/sys_enter_open")
+> -int sys_enter_open(struct syscall_enter_args *args)
+> +int sys_enter_open(struct trace_event_raw_sys_enter *args)
+>  {
+>  	struct augmented_args_payload *augmented_args = augmented_args_payload();
+>  	const void *filename_arg = (const void *)args->args[0];
+> @@ -258,7 +246,7 @@ int sys_enter_open(struct syscall_enter_args *args)
+>  }
+>  
+>  SEC("tp/syscalls/sys_enter_openat")
+> -int sys_enter_openat(struct syscall_enter_args *args)
+> +int sys_enter_openat(struct trace_event_raw_sys_enter *args)
+>  {
+>  	struct augmented_args_payload *augmented_args = augmented_args_payload();
+>  	const void *filename_arg = (const void *)args->args[1];
+> @@ -273,7 +261,7 @@ int sys_enter_openat(struct syscall_enter_args *args)
+>  }
+>  
+>  SEC("tp/syscalls/sys_enter_rename")
+> -int sys_enter_rename(struct syscall_enter_args *args)
+> +int sys_enter_rename(struct trace_event_raw_sys_enter *args)
+>  {
+>  	struct augmented_args_payload *augmented_args = augmented_args_payload();
+>  	const void *oldpath_arg = (const void *)args->args[0],
+> @@ -304,7 +292,7 @@ int sys_enter_rename(struct syscall_enter_args *args)
+>  }
+>  
+>  SEC("tp/syscalls/sys_enter_renameat2")
+> -int sys_enter_renameat2(struct syscall_enter_args *args)
+> +int sys_enter_renameat2(struct trace_event_raw_sys_enter *args)
+>  {
+>  	struct augmented_args_payload *augmented_args = augmented_args_payload();
+>  	const void *oldpath_arg = (const void *)args->args[1],
+> @@ -346,7 +334,7 @@ struct perf_event_attr_size {
+>  };
+>  
+>  SEC("tp/syscalls/sys_enter_perf_event_open")
+> -int sys_enter_perf_event_open(struct syscall_enter_args *args)
+> +int sys_enter_perf_event_open(struct trace_event_raw_sys_enter *args)
+>  {
+>  	struct augmented_args_payload *augmented_args = augmented_args_payload();
+>  	const struct perf_event_attr_size *attr = (const struct perf_event_attr_size *)args->args[0], *attr_read;
+> @@ -378,7 +366,7 @@ int sys_enter_perf_event_open(struct syscall_enter_args *args)
+>  }
+>  
+>  SEC("tp/syscalls/sys_enter_clock_nanosleep")
+> -int sys_enter_clock_nanosleep(struct syscall_enter_args *args)
+> +int sys_enter_clock_nanosleep(struct trace_event_raw_sys_enter *args)
+>  {
+>  	struct augmented_args_payload *augmented_args = augmented_args_payload();
+>  	const void *rqtp_arg = (const void *)args->args[2];
+> @@ -399,7 +387,7 @@ int sys_enter_clock_nanosleep(struct syscall_enter_args *args)
+>  }
+>  
+>  SEC("tp/syscalls/sys_enter_nanosleep")
+> -int sys_enter_nanosleep(struct syscall_enter_args *args)
+> +int sys_enter_nanosleep(struct trace_event_raw_sys_enter *args)
+>  {
+>  	struct augmented_args_payload *augmented_args = augmented_args_payload();
+>  	const void *req_arg = (const void *)args->args[0];
+> @@ -429,7 +417,7 @@ static bool pid_filter__has(struct pids_filtered *pids, pid_t pid)
+>  	return bpf_map_lookup_elem(pids, &pid) != NULL;
+>  }
+>  
+> -static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+> +static int augment_sys_enter(void *ctx, struct trace_event_raw_sys_enter *args)
+>  {
+>  	bool augmented, do_output = false;
+>  	int zero = 0, index, value_size = sizeof(struct augmented_arg) - offsetof(struct augmented_arg, value);
+> @@ -444,7 +432,7 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+>  		return 1;
+>  
+>  	/* use syscall number to get beauty_map entry */
+> -	nr             = (__u32)args->syscall_nr;
+> +	nr             = (__u32)args->id;
+>  	beauty_map     = bpf_map_lookup_elem(&beauty_map_enter, &nr);
+>  
+>  	/* set up payload for output */
+> @@ -454,8 +442,8 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+>  	if (beauty_map == NULL || payload == NULL)
+>  		return 1;
+>  
+> -	/* copy the sys_enter header, which has the syscall_nr */
+> -	__builtin_memcpy(&payload->args, args, sizeof(struct syscall_enter_args));
+> +	/* copy the sys_enter header, which has the id */
+> +	__builtin_memcpy(&payload->args, args, sizeof(*args));
+>  
+>  	/*
+>  	 * Determine what type of argument and how many bytes to read from user space, using the
+> @@ -489,9 +477,11 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+>  			index = -(size + 1);
+>  			barrier_var(index); // Prevent clang (noticed with v18) from removing the &= 7 trick.
+>  			index &= 7;	    // Satisfy the bounds checking with the verifier in some kernels.
+> -			aug_size = args->args[index] > TRACE_AUG_MAX_BUF ? TRACE_AUG_MAX_BUF : args->args[index];
+> +			aug_size = args->args[index];
+>  
+>  			if (aug_size > 0) {
+> +				if (aug_size > TRACE_AUG_MAX_BUF)
+> +					aug_size = TRACE_AUG_MAX_BUF;
+>  				if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, aug_size, arg))
+>  					augmented = true;
+>  			}
+> @@ -515,14 +505,14 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+>  		}
+>  	}
+>  
+> -	if (!do_output || (sizeof(struct syscall_enter_args) + output) > sizeof(struct beauty_payload_enter))
+> +	if (!do_output || (sizeof(*args) + output) > sizeof(*payload))
+>  		return 1;
+>  
+> -	return augmented__beauty_output(ctx, payload, sizeof(struct syscall_enter_args) + output);
+> +	return augmented__beauty_output(ctx, payload, sizeof(*args) + output);
+>  }
+>  
+>  SEC("tp/raw_syscalls/sys_enter")
+> -int sys_enter(struct syscall_enter_args *args)
+> +int sys_enter(struct trace_event_raw_sys_enter *args)
+>  {
+>  	struct augmented_args_payload *augmented_args;
+>  	/*
+> @@ -550,16 +540,16 @@ int sys_enter(struct syscall_enter_args *args)
+>  	 * unaugmented tracepoint payload.
+>  	 */
+>  	if (augment_sys_enter(args, &augmented_args->args))
+> -		bpf_tail_call(args, &syscalls_sys_enter, augmented_args->args.syscall_nr);
+> +		bpf_tail_call(args, &syscalls_sys_enter, augmented_args->args.id);
+>  
+>  	// If not found on the PROG_ARRAY syscalls map, then we're filtering it:
+>  	return 0;
+>  }
+>  
+>  SEC("tp/raw_syscalls/sys_exit")
+> -int sys_exit(struct syscall_exit_args *args)
+> +int sys_exit(struct trace_event_raw_sys_exit *args)
+>  {
+> -	struct syscall_exit_args exit_args;
+> +	struct trace_event_raw_sys_exit exit_args;
+>  
+>  	if (pid_filter__has(&pids_filtered, getpid()))
+>  		return 0;
+> @@ -570,7 +560,7 @@ int sys_exit(struct syscall_exit_args *args)
+>  	 * "!raw_syscalls:unaugmented" that will just return 1 to return the
+>  	 * unaugmented tracepoint payload.
+>  	 */
+> -	bpf_tail_call(args, &syscalls_sys_exit, exit_args.syscall_nr);
+> +	bpf_tail_call(args, &syscalls_sys_exit, exit_args.id);
+>  	/*
+>  	 * If not found on the PROG_ARRAY syscalls map, then we're filtering it:
+>  	 */
+> diff --git a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+> index a59ce912be18cd0f..b8b2347268633cdf 100644
+> --- a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+> +++ b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+> @@ -212,4 +212,18 @@ struct pglist_data {
+>  	int nr_zones;
+>  } __attribute__((preserve_access_index));
+>  
+> +struct trace_event_raw_sys_enter {
+> +	struct trace_entry ent;
+> +	long int id;
+> +	long unsigned int args[6];
+> +	char __data[0];
+> +} __attribute__((preserve_access_index));
+> +
+> +struct trace_event_raw_sys_exit {
+> +	struct trace_entry ent;
+> +	long int id;
+> +	long int ret;
+> +	char __data[0];
+> +} __attribute__((preserve_access_index));
+> +
+>  #endif // __VMLINUX_H
+> -- 
+> 2.51.0.rc1.167.g924127e9c0-goog
