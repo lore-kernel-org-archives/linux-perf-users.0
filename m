@@ -1,141 +1,102 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18613115AF
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Sep 2025 17:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2593F1D63C2
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Sep 2025 17:44:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757007518; cv=none; b=kEcSiB3Ea9/TLNyDA7WjXm6sg8L+l2q01/2vQ6yyZM3FU7zXZGA06E7wSKD44gPJQeOiZl2urol0KdQ/gbxH7Epnv5ZhKA55ghr5Og+X61j5j18o2jUh++2YugE3Op9Ej1db8f2BgdCVpWj3dER8W+gL4P9dGQEEx7Qdm7cwCoE=
+	t=1757007876; cv=none; b=T/71m7VX7kBHTvS9oOyynlaU6potbE83C5LtsRYgbMnDmpUujBvxdG4JLRfZqBB9ikfxDP6zMqLTcjNrApwSw05+OA2G8O85L8UQy7WGXnz+W8WneAZd04MdwYctxBQZv/3PFP89Oblt+jTAt+QzfKReLsgDWINldB8Mh/c1Cos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757007518; c=relaxed/simple;
-	bh=eW65k+VLxlVXZoV17Fj7k9z5JFDPDnN8w2k8mCjd9J8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=Qx42r0yUPG7A/mWeqnc8IqMsa7GIorQg+cfGCikmb61l5nLCQueJktTWPVDBAS7IYK+pISQhHW4lsEkZ718MaR6lRS9zR4dmgp71SlMWEacicKnJT5wiEh3HJfhPXcSMiuI+HOlNO6c09aVBidTiG+fDNBh3R0KB0sIRajV7YpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AsDhFZB/; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1757007876; c=relaxed/simple;
+	bh=ZKzsIufUEOLeYnMN7PYlDNwg4uU1BvyvUUSfm9lDFjU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=fq/DaiV66q0pyTEw/M/TlEWk06OkaVu+x03l0GBZrSJlvk2hcFFrYEZcPrrOIRpgmt6mlu71uzurWJcKxVuQl/qMLbKDjMIuNj6ydemM2aZWwtJDXE9t+QH/25z5E3EWeF/o4uj90K9zvaKH05eqZVhZlu5CaEnlxl/bEYXk3WY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S0rytNIE; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AsDhFZB/"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3cf991e8c82so1221150f8f.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 Sep 2025 10:38:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S0rytNIE"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-24458345f5dso16642935ad.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 Sep 2025 10:44:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757007515; x=1757612315; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=UtXXSwtOMhpB/JfdDza+Bmm2bnj1nuhwUXXf1VpvGF8=;
-        b=AsDhFZB/Ftbs7s8t/gWSJcLaK6IG/onxH29pXpok4Z63cqy4dksBz3puAbn+ce+Qm7
-         UwqcIX1hen/Ef+NF18pk3h58T6e/PnA93gKIZhWsFzI4yZaOkJJmXIZNYcwHMpHHUsYr
-         /e4bCbzzQPoB1yaA/Iykg6odbQpJf0prmd0yWTJTW9LJXsMvayiVej4gWoyD2DRvBqrj
-         DF2IgkpiOfts0oL4jW8xJyWPR1HT1f5t8JsKwkodmgGyN0B2ASqCZ6plQ2qdyJl+vGAN
-         5DrNUbXhyjGW+jEBjVn0kHSOm6WuaBsNdWsn9aJUq7WY64UGC8BsF2za+REbGDcvEuFy
-         jMEA==
+        d=google.com; s=20230601; t=1757007874; x=1757612674; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=SOoQFcA4C0PZlP5Wo7OwHrsZwmtLMnPursiG/Sfczk4=;
+        b=S0rytNIEyhOkJoZsS/0i5XJMmj5Mab9T31BPVIYDjN5YnynbQRj3CFKknOaxVecj39
+         vXY/kOh+oH98KScsn+BNPzqSvpFbqhlOQLtpWASNd9udZ9PbFiQJuM230/bZEgmsp6oD
+         C0qkwUZrE7P1ijte28e74/SinrwXrOh0NfDHA2XsALKzRoH1UqIoEWMq+M15z2zcV31j
+         6WY59dtv1FviAA13u5rjw/bg+Ws+J/qQVoRQKvYZyzbGtDveaY6M0tMBahFqoA7VCp+h
+         HHkUTvVyp1wQVAk40rnf6V9Nu/z6iEbQo4euOngCREhHQjlt78IdXrzJ1e1LKrt14K2G
+         fP/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757007515; x=1757612315;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UtXXSwtOMhpB/JfdDza+Bmm2bnj1nuhwUXXf1VpvGF8=;
-        b=bpReR/Ejm1j7zelzKOxmHWJr454bZ4vKRDM1LOsWoZx3bjjpXIW7SJVdRZQrzM9mtE
-         egG9Jg7cDkNR3R+V3sO5s+bUkGKbwaAKQBSo1oyyl4xCna6qMjmaKUmZuRrhhsCzNncz
-         Qb2klB2+G3L2TqwBDU3ePvLM9AbDSllhIJNraz1pl91iv804LjB1T1ZV1+JN0G78P6hQ
-         cN+vt/Ofc1vQwbE2dRUv4zP3U+sM1/NtHetMZg8PS1MVKLA/xUwejpTF1Oh9IlEfju06
-         h6GUKgjFzBMlyvYfsQCXZhXrTn2Hz+Ntg4jwAfjhy35J+deT22G9u3YPjfnB0TJEAsLZ
-         QXLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWPykRn+woiIRIqkhdEaj6GIGzl7aT9ECP99Io3KnGy2SXlLWVCq5LxmhMED/pqgr1W/Hwx8d+dBTXaAGcwXy5W@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzw06iRbdk2jS4MFcSS+I8UUVnmHuNO1Gr0J4jDoptvzySfOU0w
-	tWmMOEbSl2/LrEB/aWSzGN5ROom9QleKBRLH1mdYQJoVOp/t/2EDALxndFu3cPPHHu4=
-X-Gm-Gg: ASbGnct4pYqIe5GXTBMiTXosb8p+Xi/XJsOrM1kvh/q7+U0hoKZPNNT8+ipxo+Fck/S
-	j1PSP6SE6YqmjxKlSi9VZWNJ4aalydncpKxvfxMbw2YVExQCTmJAe51EdhNEAf1mnOwNm7lwTnY
-	fmgCKpZLbvrbF82LfT+iyxbB4Bo1apxNf0ymy0X389KQcGwiVaLFaDYK53LKLQklomt0rZ3/uYR
-	hEVZGGGLcKQyQ0z5p9GzffPKJ8g0WauK0L49aLghwjtvS7/7v3dmfooxY6xv0n8AKcEZ4Z+QqOg
-	pzUXa6MMmejyHHlyvOPv9ZDszZ75hpsHG7tzZkC0mqCGOXoPyRXWd6Jp3j4L+TF7SbMW4tEnGcq
-	ztBeute+CBLsLABpmJy9QUZy/vJKr4iBqFFUQMQ==
-X-Google-Smtp-Source: AGHT+IHfB59Ivm+mMfjEV6WrGYct7tMLyzEnUysui6rpi3Q4B82Cp6TFvFTQAOMx8IN0h9rl8HXcqw==
-X-Received: by 2002:a05:6000:2c06:b0:3e0:a5a2:ecb9 with SMTP id ffacd0b85a97d-3e0a5a2f627mr3616989f8f.13.1757007515110;
-        Thu, 04 Sep 2025 10:38:35 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.76.109])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3cf276d204asm28651472f8f.24.2025.09.04.10.38.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Sep 2025 10:38:34 -0700 (PDT)
-Message-ID: <2be96cf8-39fe-4499-9e6b-97268c685698@linaro.org>
-Date: Thu, 4 Sep 2025 18:38:33 +0100
+        d=1e100.net; s=20230601; t=1757007874; x=1757612674;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SOoQFcA4C0PZlP5Wo7OwHrsZwmtLMnPursiG/Sfczk4=;
+        b=oImhlXVrwU5TzvpG/+OdymFLqBaqaKCHMSQIx4VeYdKikUkTbuwygWkydher8fBzRn
+         JeeqZjWM0aCTDemrFcRebEaKfSeEn8JZIu/k3I1l/HT3sslNSHhFas02Yt61tVUgQMGF
+         kljJR3PyGJzbQYBjcxjICsVxCybuzkc8kVTZzG5hDk7+JkY5sceavcjrTK/YuL0tzDF6
+         lM8k3DvMR9b8oGXyLmmQYB1X9j0OxVE//UClQG574YELRBKBuq6ICN2NynRZnMzqMJch
+         ahyzFIaME3ELpVSm2D8kBOEfMbwv7CHSmM4ViRaY24M/Q/H6sSOy2kKrXfaxuTYbw8Rw
+         Gtug==
+X-Forwarded-Encrypted: i=1; AJvYcCUAIXor0tMgFE1bKtKrkxygX5y5i3aubhqxTVsYrXGz5PniWi5Oe53wHlvHG5WB/XHDyQ1gq6lUXgng3OGZTeEh@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1Dczw26+C5N72omZhaAReiiUsbCOe37gadD/iZCeOp5hfh7YN
+	4she+gp5802CoM/MkqvyJTQnNNLOuuTqjd6MIaL135YEwNYdyFXsh0uyTadh9dZchBz+hTKC499
+	vqAsqAmdXrA==
+X-Google-Smtp-Source: AGHT+IFBb2psCKNN3slDyaKnws/ctZgf2KF+t0qeMf9cQfM42rspz0lcgrWIBbhcy6T/3Y7uhLSj3aTC2/8J
+X-Received: from plsu2.prod.google.com ([2002:a17:902:bf42:b0:246:39b5:1d8])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c407:b0:24c:7b94:2f53
+ with SMTP id d9443c01a7336-24c7b9432d6mr117093795ad.6.1757007874447; Thu, 04
+ Sep 2025 10:44:34 -0700 (PDT)
+Date: Thu,  4 Sep 2025 10:44:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf symbol-elf: Add support for the block argument
- for libbfd
-To: Ian Rogers <irogers@google.com>
-References: <20250904161731.1193729-1-irogers@google.com>
-Content-Language: en-US
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Haibo Xu <haibo1.xu@intel.com>,
- Stephen Brennan <stephen.s.brennan@oracle.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- =?UTF-8?Q?R=C3=A9mi_Bernon?= <rbernon@codeweavers.com>,
- Sam James <sam@gentoo.org>
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250904161731.1193729-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.51.0.355.g5224444f11-goog
+Message-ID: <20250904174430.1414548-1-irogers@google.com>
+Subject: [PATCH v1] perf build: Revert "enable -fno-strict-aliasing"
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Eric Biggers <ebiggers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
+This reverts commit 55a18d2f3ff7 ("perf build: enable
+-fno-strict-aliasing"). With (get|put)_unaligned_* using memcpy
+-fno-strict-aliasing is no longer necessary as memcpys are assumed to
+possibly alias.
 
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+This patch needs:
+https://lore.kernel.org/lkml/20250722215754.672330-1-irogers@google.com/
+which have been merged into the tip timers/vdso branch.
+---
+ tools/perf/Makefile.config | 4 ----
+ 1 file changed, 4 deletions(-)
 
-On 04/09/2025 5:17 pm, Ian Rogers wrote:
-> James Clark caught that the BUILD_NONDISTRO=1 build with libbfd was
-> broken due to an update to the read_build_id function adding a
-> blocking argument. Add support for this argument by first opening the
-> file blocking or non-blocking, then switching from bfd_openr to
-> bfd_fdopenr and passing the opened fd. bfd_fdopenr closes the fd on
-> error and when bfd_close are called.
-> 
-> Reported-by: James Clark <james.clark@linaro.org>
-> Closes: https://lore.kernel.org/lkml/20250903-james-perf-read-build-id-fix-v1-2-6a694d0a980f@linaro.org/
-> Fixes: 2c369d91d093 ("perf symbol: Add blocking argument to filename__read_build_id")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
-> This patch should be applied after:
-> https://lore.kernel.org/lkml/20250903-james-perf-read-build-id-fix-v1-1-6a694d0a980f@linaro.org/
-> ---
->   tools/perf/util/symbol-elf.c | 10 +++++++---
->   1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index 033c79231a54..1346fd180653 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -873,13 +873,17 @@ static int elf_read_build_id(Elf *elf, void *bf, size_t size)
->   
->   #ifdef HAVE_LIBBFD_BUILDID_SUPPORT
->   
-> -static int read_build_id(const char *filename, struct build_id *bid)
-> +static int read_build_id(const char *filename, struct build_id *bid, bool block)
->   {
->   	size_t size = sizeof(bid->data);
-> -	int err = -1;
-> +	int err = -1, fd;
->   	bfd *abfd;
->   
-> -	abfd = bfd_openr(filename, NULL);
-> +	fd = open(filename, block ? O_RDONLY : (O_RDONLY | O_NONBLOCK));
-> +	if (fd < 0)
-> +		return -1;
-> +
-> +	abfd = bfd_fdopenr(filename, /*target=*/NULL, fd);
->   	if (!abfd)
->   		return -1;
->   
-
-Oh that was less awkward than I thought then. Assuming it doesn't mind 
-an fd opened with NONBLOCK?
-
-Reviewed-by: James Clark <james.clark@linaro.org>
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 5a5832ee7b53..306b8334b788 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -19,10 +19,6 @@ detected_var = $(shell echo "$(1)=$($(1))" >> $(OUTPUT).config-detected)
+ CFLAGS := $(EXTRA_CFLAGS) $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
+ HOSTCFLAGS := $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
+ 
+-# This is required because the kernel is built with this and some of the code
+-# borrowed from kernel headers depends on it, e.g. put_unaligned_*().
+-CFLAGS += -fno-strict-aliasing
+-
+ # Enabled Wthread-safety analysis for clang builds.
+ ifeq ($(CC_NO_CLANG), 0)
+   CFLAGS += -Wthread-safety
+-- 
+2.51.0.355.g5224444f11-goog
 
