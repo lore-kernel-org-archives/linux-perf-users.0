@@ -1,162 +1,265 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08917213E6A
-	for <linux-perf-users@vger.kernel.org>; Thu,  4 Sep 2025 04:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921C12417E6
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Sep 2025 05:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756961590; cv=none; b=PmYXYhl5UqPkr/UMSXOZKmbAsM1pwiG+j8Y1ty5WnZFdT4Und50oZolKGNhOq3IpPilhKOf2sF727/V38zpmsGq9uBjBz2/ORVMCWZpjt1BAxfCX8bOdulKHQ9dSy6iKcA7CjCO2eRSpNwbIXP9/Jsx1m5VDYAgoxA6a2L5IwHY=
+	t=1756963878; cv=none; b=t8euDc5K17E2uL0n/I0KQlsmhBagvRcueY8ohx+ieNdhBG2SrJedxSyoLaR01AJGDHfT/uVjkwx4r2OTxpqGRYEIKG+0M5+nJqrfTBBHAgLgWMgE/7WUkLJpfjtCDYFuORTy2GSmWoi+soHXOquzxzAra8eI2Lg470h5ecasOYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756961590; c=relaxed/simple;
-	bh=2nRqbW0WkwURucWNeXjSn7fOr+Pzwf5yXF518XDNXM4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=IIiL+Nw9t/kTQ7RPyrJdJQrw3lKJlV5h3bkwfqEuNAUkQl2TWdVoHcbFjxmsgZpxIdXt8XrpgJOMQ7Flhb7Z408C4rxFEtEd5Byz6JaTox8/mRBFvHy5VfNi4fT8cx/ZZ3vUbXS84eaa9XC2wrgvQFV+pxShf9IFsgOHNSSAw3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qnqrWyrv; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1756963878; c=relaxed/simple;
+	bh=vGcbX+I0w1fuEqR/qXTtav6XoGYX3rGtlVX/FK6XFuI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Qnhzd3WJI9pc5ukJnNmKETx0hktyE6PP+LDKRKsGC3ImQg9agoDZ8ZEMjBPNbKOKdhVwqDUpJZmDFctqu1sR5EBQk5voQrOKGHaaia4F/f9mORtKzhp3N1ZrRnJUkodnoWUnT1NB91I3rrTso8eKjsX5g+l3TCbHXUpTImMYoMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=V1AcFyeG; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qnqrWyrv"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b4fae9f22c2so780390a12.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Sep 2025 21:53:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="V1AcFyeG"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-55f6b0049fbso734918e87.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Sep 2025 22:31:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1756961588; x=1757566388; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TtHpdxRTquFPiYRPRab1l8zsx1u08uaZD16J/LBQO3w=;
-        b=qnqrWyrv2tPKm7zoL3dlRGiJgeFZ8SzO5KH1k3WjqxwbJCy3JWiloQPajd1g++0/Fy
-         x7NOnQscchTAux6qZ3q3KKZjT7ylscXb4CpEY0uucwmNAzlmQi+s9eQVaqjDIAeq1a6O
-         Qj43t0z4lV9CTYawGvsHTVRW00wPC4qT2U+3vNfSLchvrG2eQ4LpDGli/Y4q9ie+cckU
-         aI9vT2U6BRF6Nj2QBgseU8CEoV5ecu8Gr8k0yLDy3r/nv28lHMJGCWNxis4AJmb4uCyV
-         EB8vRLOmXtQqQgP7mzr+QwRTcKGcrkTWpSSsVj04aME7FK0V4dJbjcok/OwQv6nFquZt
-         +pNw==
+        d=ventanamicro.com; s=google; t=1756963875; x=1757568675; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bUS5HOLhW/VpyZE9onIdkx0oHXwb/D4QXFFEiFH3pRQ=;
+        b=V1AcFyeGzS1iy+U1HenPzqA9mkeuvziFn2degKBzdcqowmOCCjGnQp9XUrdWkk54lE
+         bzdzaqC+sRHPMQZpc3RUDTxYtsHv/0NNw40ot7r9ZGBEtP8GjQXP5iv696cHhzyy80mN
+         t5tcTsTYK43ml5vyR4h3GgNVWJp6qUm/Osfy0SuRSBZfaWOdej+51T7wzciR8IofR4RR
+         XeujSl/A04wxcQy6BvF1jCSwqbOii3b66Cuu1ihMYGxc6iGfJwciUNC9L+22E6i5XjaX
+         InTrUMZPt6x/LBXCeH6sxLhM4JBcM4DUyVLCO4XJdrsVPc20pGC18XwW5kj9u+3Guy5G
+         nx3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1756961588; x=1757566388;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TtHpdxRTquFPiYRPRab1l8zsx1u08uaZD16J/LBQO3w=;
-        b=eiNjtU/bLjEgnBA686+TA1Xmla8fiyVHMpEzk+xQmzhlvnxjjZp1e9VM0PerlieCz6
-         m1dY2kTlKCoC19yY1TS+XWKnSI+u9uclOQOGmL0FclGrR0LmeTLLuOm5/7InH52CEsMi
-         hseAskPv3Nn9ZDji3/zMGR4BzGSB0550mstmNx44vbEjsSdblp1b4ke1V3VecGuXPd6x
-         OTceEzzUqjaOyLca7EqSrEI4lh2Q1j5ZWMBrgOwyO1l2S4VfzHHYVrVODujUbCOCccfq
-         PyaYBhydlMjzrgyo24rspLXioQWjL74GHpcr9BsopS1B5P5HEl4LsMSiYuMzCgcNQZMo
-         TAbg==
-X-Forwarded-Encrypted: i=1; AJvYcCXW90MAFHkInOGXO8IZtYzGdxydLczU/n0oFnTkRliepyGtJcQNz58j2017ebUohTal1g3j1fhl6sW5TSjp4uuR@vger.kernel.org
-X-Gm-Message-State: AOJu0YxocFvSLPxXs4bjNOIwGAwn9qIlVhwgvDDokt93kr2oY1AkbYv5
-	Za77kcki01aJop/DC8eIg5d1sdIgdJY0FHEPIOUyWSC0umPogj6u6RIegF3/hYLJ/eiHXdvtRyP
-	XR/pYKuI38Q==
-X-Google-Smtp-Source: AGHT+IFfn8Z/EBKXtxnsGTFeSUhOaMoxR9/CtQzY5LIl4n+S7uUV99sy7Ex91B89Eo6PSM9JfdFgb+9St60E
-X-Received: from plcz17.prod.google.com ([2002:a17:903:4091:b0:24c:b394:50e4])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e543:b0:24a:9b12:5248
- with SMTP id d9443c01a7336-24a9b125499mr209610835ad.54.1756961588337; Wed, 03
- Sep 2025 21:53:08 -0700 (PDT)
-Date: Wed,  3 Sep 2025 21:52:53 -0700
-In-Reply-To: <20250904045253.1007052-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1756963875; x=1757568675;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bUS5HOLhW/VpyZE9onIdkx0oHXwb/D4QXFFEiFH3pRQ=;
+        b=gdyWpDBX7b1/Wbhk1C1DBaMOmnT/w5HuYEvi5iVL1IiOVxHpRw7eSJm9ZTbCDnTsLU
+         Ng9H1TjTh5S12aaPT16VuR8J4hpmPcH6rQZfIdahFGuWL/V3cDBZHrMHEwwnTPM4RuG1
+         jbSgKDxpoXcVTRAGkzazOp8H/lz/fPIJ5kvomjVmYshpxgJevfPrTD0vRlDM5zZ0Icq8
+         y9E73E5TTwQWLqjxJ1UZ2ubS2DsZt3U/desgacVxhcDlXQC6bbLIBXFVPSKL8Qpd/PQ5
+         sVeat7suSbmXIRgAfoFsZ6kp1BXCIbX/0kGq5Qw6GTZ8nglGB7yX0qu3ghcZDh+uVuFg
+         H27Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUXEfHjwvIgt75EAPQNwgJfqkl92oKWyv4TJ3Wdd6U2HrRb/2hg2bXAPM8JtoDDi6vAikDL4WQ5IGl82XkaXdq/@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7FN3f3mK5U4tR0EBtw+YFM0ujvzfn+CmUZ3iUDW2eiHXPahia
+	YEZm2i9yPC30ciPWXoqDBSRzFYAE7ShJmffWpJ/HOlZ+6YJrtYb/8zuQuj50e7e93x0pRiG+16F
+	aCjSX66nv+KzhLH5Ms05UTKZ0euTL9y3uz9d9lQJlog==
+X-Gm-Gg: ASbGncs2PK3VZUA2BLkKFUF8dofxzs1ElN3jbec8tGa1DpDyJLhzAm7S7hrN2h65f7L
+	wq8W6nziS9VKMz4+lEJpmkHmZEfzXS1iMmlHl5eAm1dQBZ44vg5JpKTzfixrAWTFM3t6boCjfid
+	ckr5JmQy35dOb5iZhLeXODvvIBeEmBpzouKMffde4ZMZ+Zcx+L+7ptZaE2BJ7e5MF7eeMeohWWg
+	xaV6ERIUNKy8PcpOQo=
+X-Google-Smtp-Source: AGHT+IHpG/4DLLscFeJxg9oiSMyrT9Ei4giIfqBu/oq/vW7+cyJh5b4Qc/vs+psL1BC6wQvPjI60Gtk/quL0fGjGJtU=
+X-Received: by 2002:a05:6512:1594:b0:55f:6831:6ef4 with SMTP id
+ 2adb3069b0e04-55f7089c47amr5218029e87.12.1756963874604; Wed, 03 Sep 2025
+ 22:31:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250904045253.1007052-1-irogers@google.com>
-X-Mailer: git-send-email 2.51.0.338.gd7d06c2dae-goog
-Message-ID: <20250904045253.1007052-4-irogers@google.com>
-Subject: [PATCH v6 3/3] perf jevents: Validate that all names given an Event
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+MIME-Version: 1.0
+References: <20250822174715.1269138-1-jesse@rivosinc.com> <20250822174715.1269138-5-jesse@rivosinc.com>
+In-Reply-To: <20250822174715.1269138-5-jesse@rivosinc.com>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Thu, 4 Sep 2025 11:01:02 +0530
+X-Gm-Features: Ac12FXz_-ibvebvqMYm5-3Nr_6futqZOiLsqEgz-5uDfiWQDjH2HOgDMSF197Fg
+Message-ID: <CAK9=C2X=SmJeYqZtUNHuDBZRrUpONCm6Z=qVPH8C1ckz=r6hCw@mail.gmail.com>
+Subject: Re: [PATCH 4/8] riscv: Introduce support for hardware break/watchpoints
+To: Jesse Taube <jesse@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Oleg Nesterov <oleg@redhat.com>, Kees Cook <kees@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Xu Yang <xu.yang_2@nxp.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, John Garry <john.g.garry@oracle.com>, 
-	Jing Zhang <renyu.zj@linux.alibaba.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Benjamin Gray <bgray@linux.ibm.com>, Leo Yan <leo.yan@arm.com>
+	Liang Kan <kan.liang@linux.intel.com>, Shuah Khan <shuah@kernel.org>, 
+	Himanshu Chauhan <hchauhan@ventanamicro.com>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Samuel Holland <samuel.holland@sifive.com>, Conor Dooley <conor.dooley@microchip.com>, 
+	Deepak Gupta <debug@rivosinc.com>, Andrew Jones <ajones@ventanamicro.com>, 
+	Atish Patra <atishp@rivosinc.com>, Mayuresh Chitale <mchitale@ventanamicro.com>, 
+	Evan Green <evan@rivosinc.com>, WangYuli <wangyuli@uniontech.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Andrew Morton <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Nam Cao <namcao@linutronix.de>, 
+	Yunhui Cui <cuiyunhui@bytedance.com>, Joel Granados <joel.granados@kernel.org>, 
+	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Celeste Liu <coelacanthushex@gmail.com>, 
+	Chunyan Zhang <zhangchunyan@iscas.ac.cn>, Nylon Chen <nylon.chen@sifive.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Joey Gouly <joey.gouly@arm.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Joel Stanley <joel@jms.id.au>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Validate they exist in a json file from one directory found from one
-directory above the model's json directory. This avoids broken
-fallback encodings being created.
+On Fri, Aug 22, 2025 at 11:17=E2=80=AFPM Jesse Taube <jesse@rivosinc.com> w=
+rote:
+>
+> From: Himanshu Chauhan <hchauhan@ventanamicro.com>
+>
+> RISC-V hardware breakpoint framework is built on top of perf subsystem an=
+d uses
+> SBI debug trigger extension to install/uninstall/update/enable/disable ha=
+rdware
+> triggers as specified in Sdtrig ISA extension.
+>
+> Signed-off-by: Himanshu Chauhan <hchauhan@ventanamicro.com>
+> Signed-off-by: Jesse Taube <jesse@rivosinc.com>
+> ---
+> RFC -> V1:
+>  - Add dbtr_mode to rv_init_mcontrol(6)_trigger
+>  - Add select HAVE_MIXED_BREAKPOINTS_REGS
+>  - Add TDATA1_MCTRL_SZ and TDATA1_MCTRL6_SZ
+>  - Capitalize F in Fallback comment
+>  - Fix in_callback code to allow multiple breakpoints
+>  - Move perf_bp_event above setup_singlestep to save the correct state
+>  - Use sbi_err_map_linux_errno for arch_smp_teardown/setup_sbi_shmem
+> V1 -> V2:
+>  - No change
+> ---
+>  arch/riscv/Kconfig                     |   2 +
+>  arch/riscv/include/asm/hw_breakpoint.h |  59 +++
+>  arch/riscv/include/asm/kdebug.h        |   3 +-
+>  arch/riscv/include/asm/sbi.h           |   4 +-
+>  arch/riscv/kernel/Makefile             |   1 +
+>  arch/riscv/kernel/hw_breakpoint.c      | 614 +++++++++++++++++++++++++
+>  arch/riscv/kernel/traps.c              |   6 +
+>  7 files changed, 687 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/riscv/include/asm/hw_breakpoint.h
+>  create mode 100644 arch/riscv/kernel/hw_breakpoint.c
+>
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index bbec87b79309..fd8b62cdc6f5 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -163,6 +163,7 @@ config RISCV
+>         select HAVE_FUNCTION_ERROR_INJECTION
+>         select HAVE_GCC_PLUGINS
+>         select HAVE_GENERIC_VDSO if MMU && 64BIT
+> +       select HAVE_HW_BREAKPOINT if PERF_EVENTS && RISCV_SBI
+>         select HAVE_IRQ_TIME_ACCOUNTING
+>         select HAVE_KERNEL_BZIP2 if !XIP_KERNEL && !EFI_ZBOOT
+>         select HAVE_KERNEL_GZIP if !XIP_KERNEL && !EFI_ZBOOT
+> @@ -176,6 +177,7 @@ config RISCV
+>         select HAVE_KRETPROBES if !XIP_KERNEL
+>         # https://github.com/ClangBuiltLinux/linux/issues/1881
+>         select HAVE_LD_DEAD_CODE_DATA_ELIMINATION if !LD_IS_LLD
+> +       select HAVE_MIXED_BREAKPOINTS_REGS
+>         select HAVE_MOVE_PMD
+>         select HAVE_MOVE_PUD
+>         select HAVE_PAGE_SIZE_4KB
+> diff --git a/arch/riscv/include/asm/hw_breakpoint.h b/arch/riscv/include/=
+asm/hw_breakpoint.h
+> new file mode 100644
+> index 000000000000..cde6688b91d2
+> --- /dev/null
+> +++ b/arch/riscv/include/asm/hw_breakpoint.h
+> @@ -0,0 +1,59 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (C) 2024 Ventana Micro Systems Inc.
+> + */
+> +
+> +#ifndef __RISCV_HW_BREAKPOINT_H
+> +#define __RISCV_HW_BREAKPOINT_H
+> +
+> +struct task_struct;
+> +
+> +#ifdef CONFIG_HAVE_HW_BREAKPOINT
+> +
+> +#include <uapi/linux/hw_breakpoint.h>
+> +
+> +#if __riscv_xlen =3D=3D 64
+> +#define cpu_to_le cpu_to_le64
+> +#define le_to_cpu le64_to_cpu
+> +#elif __riscv_xlen =3D=3D 32
+> +#define cpu_to_le cpu_to_le32
+> +#define le_to_cpu le32_to_cpu
+> +#else
+> +#error "Unexpected __riscv_xlen"
+> +#endif
+> +
+> +struct arch_hw_breakpoint {
+> +       unsigned long address;
+> +       unsigned long len;
+> +
+> +       /* Callback info */
+> +       unsigned long next_addr;
+> +       bool in_callback;
+> +
+> +       /* Trigger configuration data */
+> +       unsigned long tdata1;
+> +       unsigned long tdata2;
+> +       unsigned long tdata3;
+> +};
+> +
+> +/* Maximum number of hardware breakpoints supported */
+> +#define RV_MAX_TRIGGERS 32
+> +
+> +struct perf_event_attr;
+> +struct notifier_block;
+> +struct perf_event;
+> +struct pt_regs;
+> +
+> +int hw_breakpoint_slots(int type);
+> +int arch_check_bp_in_kernelspace(struct arch_hw_breakpoint *hw);
+> +int hw_breakpoint_arch_parse(struct perf_event *bp,
+> +                            const struct perf_event_attr *attr,
+> +                            struct arch_hw_breakpoint *hw);
+> +int hw_breakpoint_exceptions_notify(struct notifier_block *unused,
+> +                                   unsigned long val, void *data);
+> +int arch_install_hw_breakpoint(struct perf_event *bp);
+> +void arch_uninstall_hw_breakpoint(struct perf_event *bp);
+> +void hw_breakpoint_pmu_read(struct perf_event *bp);
+> +
+> +#endif /* CONFIG_HAVE_HW_BREAKPOINT */
+> +#endif /* __RISCV_HW_BREAKPOINT_H */
+> diff --git a/arch/riscv/include/asm/kdebug.h b/arch/riscv/include/asm/kde=
+bug.h
+> index 85ac00411f6e..53e989781aa1 100644
+> --- a/arch/riscv/include/asm/kdebug.h
+> +++ b/arch/riscv/include/asm/kdebug.h
+> @@ -6,7 +6,8 @@
+>  enum die_val {
+>         DIE_UNUSED,
+>         DIE_TRAP,
+> -       DIE_OOPS
+> +       DIE_OOPS,
+> +       DIE_DEBUG
+>  };
+>
+>  #endif
+> diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+> index be2ca8e8a49e..64fa7a82aa45 100644
+> --- a/arch/riscv/include/asm/sbi.h
+> +++ b/arch/riscv/include/asm/sbi.h
+> @@ -282,7 +282,9 @@ struct sbi_sta_struct {
+>         u8 pad[47];
+>  } __packed;
+>
+> -#define SBI_SHMEM_DISABLE              -1
+> +#define SBI_SHMEM_DISABLE      (-1UL)
+> +#define SBI_SHMEM_LO(pa)       ((unsigned long)lower_32_bits(pa))
+> +#define SBI_SHMEM_HI(pa)       ((unsigned long)upper_32_bits(pa))
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/metric.py | 36 +++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+These definitions of SBI_SHMEM_LO() and SBI_SHMEM_HI() are
+broken for RV64 platforms where a good amount of RAM is beyond
+first 4GB.
 
-diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
-index 2029b6e28365..585454828c2f 100644
---- a/tools/perf/pmu-events/metric.py
-+++ b/tools/perf/pmu-events/metric.py
-@@ -11,12 +11,14 @@ from typing import Dict, List, Optional, Set, Tuple, Union
- all_pmus = set()
- all_events = set()
- experimental_events = set()
-+all_events_all_models = set()
- 
- def LoadEvents(directory: str) -> None:
-   """Populate a global set of all known events for the purpose of validating Event names"""
-   global all_pmus
-   global all_events
-   global experimental_events
-+  global all_events_all_models
-   all_events = {
-       "context\\-switches",
-       "cpu\\-cycles",
-@@ -42,6 +44,20 @@ def LoadEvents(directory: str) -> None:
-         # The generated directory may be the same as the input, which
-         # causes partial json files. Ignore errors.
-         pass
-+  all_events_all_models = all_events.copy()
-+  for root, dirs, files in os.walk(directory + ".."):
-+    for filename in files:
-+      if filename.endswith(".json"):
-+        try:
-+          for x in json.load(open(f"{root}/{filename}")):
-+            if "EventName" in x:
-+              all_events_all_models.add(x["EventName"])
-+            elif "ArchStdEvent" in x:
-+              all_events_all_models.add(x["ArchStdEvent"])
-+        except json.decoder.JSONDecodeError:
-+          # The generated directory may be the same as the input, which
-+          # causes partial json files. Ignore errors.
-+          pass
- 
- 
- def CheckPmu(name: str) -> bool:
-@@ -64,6 +80,25 @@ def CheckEvent(name: str) -> bool:
- 
-   return name in all_events
- 
-+def CheckEveryEvent(*names: str) -> None:
-+  """Check all the events exist in at least one json file"""
-+  global all_events_all_models
-+  if len(all_events_all_models) == 0:
-+    assert len(names) == 1, f"Cannot determine valid events in {names}"
-+    # No events loaded so assume any event is good.
-+    return
-+
-+  for name in names:
-+    # Remove trailing modifier.
-+    if ':' in name:
-+      name = name[:name.find(':')]
-+    elif '/' in name:
-+      name = name[:name.find('/')]
-+      if any([name.startswith(x) for x in ['amd', 'arm', 'cpu', 'msr', 'power']]):
-+        continue
-+    if name not in all_events_all_models:
-+      raise Exception(f"Is {name} a named json event?")
-+
- 
- def IsExperimentalEvent(name: str) -> bool:
-   global experimental_events
-@@ -403,6 +438,7 @@ class Event(Expression):
- 
-   def __init__(self, *args: str):
-     error = ""
-+    CheckEveryEvent(*args)
-     for name in args:
-       if CheckEvent(name):
-         self.name = _FixEscapes(name)
--- 
-2.51.0.338.gd7d06c2dae-goog
+This should be:
 
+#ifdef CONFIG_32BIT
+#define SBI_SHMEM_LO(pa)       ((unsigned long)lower_32_bits(pa))
+#define SBI_SHMEM_HI(pa)       ((unsigned long)upper_32_bits(pa))
+#else
+#define SBI_SHMEM_LO(pa)       ((unsigned long)pa)
+#define SBI_SHMEM_HI(pa)       0UL
+#endif
+
+Regards,
+Anup
