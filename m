@@ -1,112 +1,108 @@
-Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BEBA2C2353;
-	Thu,  4 Sep 2025 08:45:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.36.192.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514522C2343;
+	Thu,  4 Sep 2025 09:09:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756975524; cv=none; b=p78hkeRjX1/1Vp2RTP+E1nkn052w8xWKGhifLqvMV7t7whPi++D+e9JcIQYWaKe1WBRqHCSe+2+5bmJvRfW9EcwRbDsOgvt1UeOuIsNF1/IMibULyDMoTrRDstbSoAMpt2T/zkCzl9WJE+KJmQtcOQjJCatTZssZ9KHdgPVbeTQ=
+	t=1756976994; cv=none; b=hk6EMVJgs+NsdzsKydsQ2UpFNnNGHZh9aAQ0IqUBIKG2yjVpidg040HzYpFT5kOYJUGSva7SGOlDiJ3NfEqoRb43Pcq4oHeJIebt+Zt7IxN1b3kqZqxy6UdP3QzJhl0/Niamip8dyhkRWl3CAVlgkzd/0QHId+r6IXdYWz7hl8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756975524; c=relaxed/simple;
-	bh=0Zkxv3e0c498Bfy2dnYSmnT0FhKSenEt5q7Sh6NS6fU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QAvknQpd7zXd0ep4x/91419swc/Cm/+F5PHdq1BSYJy4rBIVWndV+ty/Tc8FGy9hN8QjsK0x/6DzgWEZZLIB460ciX3GE9Gb3Y1Mj4PgvWAsJbYEX/YkNQTywE6h/cyHChHiT+D69aRiLhCgx1Uk77bAeg8cTkrmnst5ATKvDHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=js0XzQkh; arc=none smtp.client-ip=4.36.192.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=codeweavers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
+	s=arc-20240116; t=1756976994; c=relaxed/simple;
+	bh=cL1nL8yxdfh4MeO0vTFBHBhjeSeXwUEbzSFnpkvqw90=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Sulk/JhHKSv8zOu8MLm995LorY54xfU/L+NIBuYfprSjsPvhO6GXMTejsOyxBZSTnT+DyxWN9S1lpIOJq4Yb2Qkv6hd715hEyf2mKwnsp7dLSzylJJqY7fiLfiG9ExwaPjS5jTkdcvz4PkEcKmerlU43/7wO0l9M+VKVOEI3Fyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lWDcjjfa; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="js0XzQkh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=codeweavers.com; s=s1; h=Content-Transfer-Encoding:Content-Type:In-Reply-To
-	:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=J/bn/zYjokNNkh2+bhloO0t0BfHU6p3Y8J0E+7oNy1Y=; b=js0XzQkhoxMGZ80VXbDdfC2Kfe
-	SbLCAtVJFQHDPhjSDFWAOwgSHEnxZyiSNVXLa86jwh8ENO9pJ1jwNW2Nsfp1O1lvVTeqvIdg8xE4O
-	DgWgwucxmtY3NoWREKG2XKxzCyvSfEPueV6ful7MrdxDNH2J+HAQe+XU8G6d0coxMkD+9n7fPl1kZ
-	YkepvgZ51D5oZnVouwrZvADgpWjkiUGLK3kjYMkii/yhSSwKGIvTXI+5H0SoWO/Hm406Dw3nrh7Eb
-	emFriHLXxmSYQpJ4ki+hx8AuMCoG+ikx66obfY+4mW2M/n2fSWXUILXbd64Z6X8QQNTIpN+m78z34
-	YrEUVdvA==;
-Received: from cw141ip122.vpn.codeweavers.com ([10.69.141.122])
-	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <rbernon@codeweavers.com>)
-	id 1uu5Jq-008uJK-1v;
-	Thu, 04 Sep 2025 03:27:46 -0500
-Message-ID: <2b958dec-7ba9-41a3-b11b-43b5e8418849@codeweavers.com>
-Date: Thu, 4 Sep 2025 10:27:43 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lWDcjjfa"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-45b9a856dc2so5500105e9.0;
+        Thu, 04 Sep 2025 02:09:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756976990; x=1757581790; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=efuw0B0wZxUoEGTeuf9+BIFXghhpdqisLNXE4+ry2Xk=;
+        b=lWDcjjfaW6QkW7+9/1iw2KYomEstql4l+CRqx/OrLRI1w5vCMFafMx1PU9LZblPrH+
+         UUjX17RSDeoxjt/kkAWWbZfOddYhK8kt9z2gXmShUA9gigxbn6YUF45Atj3Pl0P4Ftqt
+         7qBR0jJrprcxYbA6PJomDWoz+6gdKh44RPGUZsBlghoj2uDjNWlzFjm69lGXkPeQxhoX
+         lLUn5+SpJrENs/S94hRJCQebwxmA3SilmXiXUDObIHtIF8RL7cJpBCoccsc0xzN1TEUx
+         Eoi9jffs6oZr3A0xYmJxV+HaeFndlgWZK1S6bvNrewTrTAPHGVlajAdWyk8/CYiGD2/o
+         4HJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756976990; x=1757581790;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=efuw0B0wZxUoEGTeuf9+BIFXghhpdqisLNXE4+ry2Xk=;
+        b=wqLDoXqe/yIt03BGckRjclxP9Yz+x2n/dbP7lSF2uXpuMfTkGKSRDuceZbBGRa17+/
+         ZNAhoemExyZYm/H0UxMxvio/i66WzDFh6BecYav/4F7B49amFi/+9df/j27N1E2yEblt
+         Ndo6blagamoaYTSX/QyryVVb+eHW21L5tgOQDM6XHvgjB5Qw9LcKiI+3cAICSJtX4O9M
+         gmtFr4TtNw2dS2tHAm/sPNr0ZKFS4Z0tXKZUJXo09R6MFlQ2kBpIGD0nJDzYuGAcZSJq
+         ov+emIqWALWEcjhCVeH4mEWwyUl+708zFA8MBcafeFL7bMebQGCKTlaS0BBBltA4J1le
+         DM+g==
+X-Forwarded-Encrypted: i=1; AJvYcCU7vmbvmRmmwm1AmFxMzcKEa8E38Rs+zdzJSle+/mskFxvxW85m82N4ENYNCZ8/UU8aFQ1YMJJpN8JoMSo=@vger.kernel.org, AJvYcCWeld44KFpo/oI39wDYCUVPquFyzNFHKdsQy26nqKnnzhr3UQVOTQMC5KsU3Li/C83W4mAdr8epuG948fUx9eUKpA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YytIcIe67QVAdrHVvdhGKd05OcKH6oE5L98ZgtKyTvQ101MJKEi
+	/YAlBPma5CAuNQXs0SFUv8qiZuzVSzaixO0FrAO8Qg09J9SD74r8OwRS
+X-Gm-Gg: ASbGnctVmU+vmK7umGQ8USiuBiymd135nd04mE7XEuGesnLtSjC/2OkLE3EHVBNVZQB
+	XlJNJ6IvmE4dtt11SgtEPep/Ft5f8nGIXB0HhVG2eUUP1nDR/tqa2Fqvyv19vyUNKBPOqZd2IjU
+	gCSh6cL4wie5J4ve4Iu2J+6hOnV1MbJe1JMZbDKlIPPz+bxA86PW6HbiAEOYuvPKxzNcYrJEZjs
+	ghuvaU0ldFpDPqZirwVef8QwQDbHnUXdwiVj5MtpqohONK6zIHmNuVqvn/7+4UMC8EiokdHhr2U
+	J15KNDpvQl3I8+Q+w2RSpgL6w9nWtXUgcgjARLAakHA+9fom268e/hNEwEPhpY7/GNyFwhLniQM
+	0Bz5/g2GO0cwFWpS/rVR22iYwi1nZsio=
+X-Google-Smtp-Source: AGHT+IGe0zJR6YVP6t6Z+0JvVpiOQbWitSetUHbGA1LwBTKO24ex51i/jNJMmRq8ohz9YHPqIiHCtQ==
+X-Received: by 2002:a05:600c:4fc9:b0:45d:cfc6:5166 with SMTP id 5b1f17b1804b1-45dcfc6564fmr18564055e9.23.1756976990380;
+        Thu, 04 Sep 2025 02:09:50 -0700 (PDT)
+Received: from localhost ([87.254.0.133])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-45dd061ee2esm13647725e9.5.2025.09.04.02.09.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Sep 2025 02:09:49 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] perf python: Fix spelling mistake "metics" -> "metrics"
+Date: Thu,  4 Sep 2025 10:09:04 +0100
+Message-ID: <20250904090904.2782814-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] perf symbols: Fix HAVE_LIBBFD_BUILDID_SUPPORT build
-To: James Clark <james.clark@linaro.org>, Ian Rogers <irogers@google.com>,
- Sam James <sam@gentoo.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250903-james-perf-read-build-id-fix-v1-0-6a694d0a980f@linaro.org>
- <20250903-james-perf-read-build-id-fix-v1-2-6a694d0a980f@linaro.org>
- <CAP-5=fWHGFBaCgiRcj8zVy196OE07F8jnSUbjvsO_HerdqeyTg@mail.gmail.com>
- <70bd9eea-905a-4fa9-8265-f84ab9894b12@linaro.org>
-Content-Language: en-US
-From: =?UTF-8?Q?R=C3=A9mi_Bernon?= <rbernon@codeweavers.com>
-In-Reply-To: <70bd9eea-905a-4fa9-8265-f84ab9894b12@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hi!
+There is a spelling mistake in a Python doc string. Fix it.
 
-On 9/4/25 10:13, James Clark wrote:
-> 
-> 
-> On 03/09/2025 5:07 pm, Ian Rogers wrote:
->> On Wed, Sep 3, 2025 at 8:15 AM James Clark <james.clark@linaro.org> 
->> wrote:
->>>
->>> read_build_id() now has a blocking argument, but libbfd uses fopen()
->>> internally which doesn't support O_NONBLOCK. Fix the build by adding the
->>> argument and ignoring it:
->>>
->>>    util/symbol-elf.c:964:8: error: too many arguments to function 
->>> ‘read_build_id’
->>>      964 |  err = read_build_id(filename, bid, block);
->>>
->>> Fixes: 2c369d91d093 ("perf symbol: Add blocking argument to 
->>> filename__read_build_id")
->>> Signed-off-by: James Clark <james.clark@linaro.org>
->>
->> Libbfd should go away:
->> https://lore.kernel.org/lkml/20250823003216.733941-14-irogers@google.com/
->> but I can imagine that currently this is hit in a build test - sorry
->> for missing that and thanks for the fix!
->>
-> 
-> Yeah just one of the build tests, I'm not actually using it.
-> 
-> Remi are you still using this? To be fair the addition for PE support is 
-> fairly recent and even includes a binary for testing it so I'm not sure 
-> if we should be so quick to remove it.
-> 
-Yes, I'm still using it occasionally, and I think it's generally useful 
-for Wine profiling purposes and I would rather prefer that it's not removed.
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ tools/perf/util/python.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I know it's not built by default because of license conflicts. I didn't 
-realize that was an issue when contributing the changes, and it is quite 
-unfortunate (and silly IMO).
-
-Then I'm not particularly attached to libbfd and any other option that 
-would let perf read PE files would be alright, as long as PE support is 
-kept.
-
-Cheers,
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 47178404802f..779fe1280a56 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -2187,7 +2187,7 @@ static PyMethodDef perf__methods[] = {
+ 		.ml_meth  = (PyCFunction) pyrf__parse_metrics,
+ 		.ml_flags = METH_VARARGS,
+ 		.ml_doc	  = PyDoc_STR(
+-			"Parse a string of metics or metric groups and return an evlist.")
++			"Parse a string of metrics or metric groups and return an evlist.")
+ 	},
+ 	{
+ 		.ml_name  = "pmus",
 -- 
-Rémi Bernon <rbernon@codeweavers.com>
+2.51.0
+
