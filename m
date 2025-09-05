@@ -1,101 +1,136 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF0DF1F61C;
-	Fri,  5 Sep 2025 16:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41B023BF91;
+	Fri,  5 Sep 2025 16:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757089117; cv=none; b=JV87xqv1LxFZvPXrz7L1qqqgLqcqAkZKk1MUxdMbORTqAgp0wdLlyeFCGhpR11Yfdf8VgzYl/gESbE6ieA3SZTmzSyoxr/G3U07Mu5/a36VsXtNaHNxPgG/QoE7knrEaCJxIcQchajVsgs2B9Z0SE+AtQP80x2sqoXNNUbevJT4=
+	t=1757089125; cv=none; b=JeyXDqlBo97L6ENXAYSWMCXA9zMGSJ5K/jncWYR1JCXiADTYsRDQNXs9SWKBGWg4W6f6OfLZnpPRearXnO893yn4dI2KA+1Ocs6stGvCbnjF8kUftPg4aGi71hIlPTdpV9V+JpIdUlY2v9/sFQrO/bBkHHQO7ptXXfPS4A7KTUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757089117; c=relaxed/simple;
-	bh=WdpLG7wX8l/TXJRm2yFFtzya3FCCPZBcf2UO2HIN6jo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iBCbxVRQivUJh/EtGo7CcEEvKpPha5pFbJqtwwzjQU1a05+BbyIJCNlatB2PF7TWJJ5mfBRxU1MgMaD64dyVKaaGU9nrXutUYVLkGW242TAWdyUpNBtSX9scZB7A8I13S06BeLYNBv8KNnWg5zqVY4xV2b/UnE4ql1v8H6DKzCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cJM2643hSz6L4wb;
-	Sat,  6 Sep 2025 00:17:34 +0800 (CST)
-Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
-	by mail.maildlp.com (Postfix) with ESMTPS id BAAD01402F1;
-	Sat,  6 Sep 2025 00:18:33 +0800 (CST)
-Received: from a2303103017.china.huawei.com (10.202.66.105) by
- frapeml500003.china.huawei.com (7.182.85.28) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 5 Sep 2025 18:18:31 +0200
-From: Alireza Sanaee <alireza.sanaee@huawei.com>
-To: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <coresight@lists.linaro.org>, <dianders@chromium.org>,
-	<james.clark@linaro.org>, <jonathan.cameron@huawei.com>, <krzk@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
-	<linuxarm@huawei.com>, <mark.rutland@arm.com>, <mike.leach@linaro.org>,
-	<robh@kernel.org>, <ruanjinjie@huawei.com>, <saravanak@google.com>,
-	<suzuki.poulose@arm.com>
-Subject: [PATCH v4 0/6] Refactoring finding CPU phandles in DT
-Date: Fri, 5 Sep 2025 17:18:23 +0100
-Message-ID: <20250905161830.37-1-alireza.sanaee@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1757089125; c=relaxed/simple;
+	bh=ehK6v8309NAGVNpv3YQq74SGs25kaSg5kTmdvmyAT68=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nPTm0KjelDiHKjYgyRNBflSO9vNaLWSCwSdoKM4dEkJ9YBUV2BgHl0uAbeY1ANfY6U4PVikwqSFuP/+eJfOuT8kcBFwY7D6k9nXmeJYcugZCmZuHRmBsyqTAGjwwIILuZnZgihKTH28i/KF+8VV7FaFzwwCI2Ez6mrWzVsnrmOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tn71JmtI; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tn71JmtI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757089124; x=1788625124;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ehK6v8309NAGVNpv3YQq74SGs25kaSg5kTmdvmyAT68=;
+  b=Tn71JmtIyc3W8wDLn3Nj6U+QFK3swJiJn8plFj68eQKROVZpLfH5xOLB
+   i8HhohNfVn8f/DAspCABzwXTCqIJ7nuuo6kWw1t99KFPt3c6WEGRW9KAs
+   jxdEcNqGfncCuikj+SLI1lazxJQ5Kid90OZHzU0K38smG1OchisUfMHNx
+   w7pSsOw/HSizuttHH0wN+zASlcSUHvTEfsUAmySYM+JIqzXVoxEpnuyy4
+   supKnSOFU4F3RkoiH62oEOvXTIsTB/BKbIAC89rOD6zPkA7BQ7YBDnyt1
+   HP6r7ErvmnXTkKGdyAniRcXlLFcvcYPoV5PS5Bl6Uu57bGwthF9yHPNAn
+   A==;
+X-CSE-ConnectionGUID: 4l/nhHI8TzSfaHaGnsYfBw==
+X-CSE-MsgGUID: axvZviLzQZCkqa0T4crqqw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11544"; a="70062402"
+X-IronPort-AV: E=Sophos;i="6.18,241,1751266800"; 
+   d="scan'208";a="70062402"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2025 09:18:43 -0700
+X-CSE-ConnectionGUID: Z6FviSNcQaiHuPqeR2e2Vg==
+X-CSE-MsgGUID: 0E2/mkFAQQu9I0wc4t+Uwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,241,1751266800"; 
+   d="scan'208";a="176537467"
+Received: from lkp-server01.sh.intel.com (HELO 114d98da2b6c) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 05 Sep 2025 09:18:36 -0700
+Received: from kbuild by 114d98da2b6c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uuZ8z-0000c3-2A;
+	Fri, 05 Sep 2025 16:18:33 +0000
+Date: Sat, 6 Sep 2025 00:18:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jinchao Wang <wangjinchao600@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	"Naveen N . Rao" <naveen@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, linux-perf-users@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linux-kernel@vger.kernel.org,
+	Jinchao Wang <wangjinchao600@gmail.com>
+Subject: Re: [PATCH v2 06/18] perf/hw_breakpoint: add arch-independent
+ hw_breakpoint_modify_local()
+Message-ID: <202509052351.KuHBWdAF-lkp@intel.com>
+References: <20250904002126.1514566-7-wangjinchao600@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- frapeml500003.china.huawei.com (7.182.85.28)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250904002126.1514566-7-wangjinchao600@gmail.com>
 
-This series refactor the way CPU IDs are retrieved from the device
-tree.
+Hi Jinchao,
 
-Usually, there is a for loop that goes over every single CPU that can be
-avoided. This also reduces the amount of NULL pointer checks in drivers.
-I have abstracted away that loop and introduced a new function
-(of_cpu_node_to_id) for this.
+kernel test robot noticed the following build warnings:
 
-This patchset is a subset of [1], where I removed content and patches
-relevant to hyper-threaded cores for DT. Based on the discussion, the
-code refactor is still useful, hence this patchset.
+[auto build test WARNING on akpm-mm/mm-everything]
 
-[1]
-https://lore.kernel.org/all/20250512080715.82-1-alireza.sanaee@huawei.co
+url:    https://github.com/intel-lab-lkp/linux/commits/Jinchao-Wang/mm-ksw-add-build-system-support/20250904-082544
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20250904002126.1514566-7-wangjinchao600%40gmail.com
+patch subject: [PATCH v2 06/18] perf/hw_breakpoint: add arch-independent hw_breakpoint_modify_local()
+config: sh-randconfig-001-20250905 (https://download.01.org/0day-ci/archive/20250905/202509052351.KuHBWdAF-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250905/202509052351.KuHBWdAF-lkp@intel.com/reproduce)
 
-Changes since v3:
-    - Rebased to d69eb204c255c35abd9e8cb621484e8074c75eaa
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202509052351.KuHBWdAF-lkp@intel.com/
 
-Changes since v2:
-    - Addressed Jonathan Cameron's comments.
-    - Added reviewed-by tags.
-    - Added a new commit where I suggest simplfing the code in
-      arch_topology.c to remove the use of cpu_node on failure path.
-    - Improve documentation.
-    - Caught a bug in patch 1.
-    - Commit message fixed for patch 2.
+All warnings (new ones prefixed by >>):
 
-Changes since v1:
-    - Rebased on top of the latest mainline.
-    - Addressed Krzysztof Kozlowski's comments -- Hopefully :-)
-    - Addressed Jonathan Cameron's comments.
+   kernel/events/hw_breakpoint.c: In function 'hw_breakpoint_modify_local':
+   kernel/events/hw_breakpoint.c:994:16: error: implicit declaration of function 'arch_reinstall_hw_breakpoint'; did you mean 'arch_uninstall_hw_breakpoint'? [-Wimplicit-function-declaration]
+     994 |         return arch_reinstall_hw_breakpoint(bp);
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         |                arch_uninstall_hw_breakpoint
+   kernel/events/hw_breakpoint.c: At top level:
+>> kernel/events/hw_breakpoint.c:999:12: warning: no previous prototype for 'arch_reinstall_hw_breakpoint' [-Wmissing-prototypes]
+     999 | __weak int arch_reinstall_hw_breakpoint(struct perf_event *bp)
+         |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-Alireza Sanaee (6):
-  of: add infra for finding CPU id from phandle
-  arch_topology: drop the use of cpu_node in the pr_info
-  arch_topology: update CPU map to use of_cpu_phandle_to_id
-  coresight: cti: Use of_cpu_phandle_to_id for grabbing CPU id
-  coresight: Use of_cpu_phandle_to_id for grabbing CPU ID
-  perf/arm-dsu: refactor cpu id retrieval via new API
-    of_cpu_phandle_to_id
+vim +/arch_reinstall_hw_breakpoint +999 kernel/events/hw_breakpoint.c
 
- drivers/base/arch_topology.c                  | 22 ++++-----
- .../coresight/coresight-cti-platform.c        | 13 +----
- .../hwtracing/coresight/coresight-platform.c  | 15 +-----
- drivers/of/cpu.c                              | 48 +++++++++++++++++++
- drivers/perf/arm_dsu_pmu.c                    |  7 +--
- include/linux/of.h                            |  9 ++++
- 6 files changed, 71 insertions(+), 43 deletions(-)
+   997	
+   998	/* weak fallback for arches without support */
+ > 999	__weak int arch_reinstall_hw_breakpoint(struct perf_event *bp)
+  1000	{
+  1001		return -EOPNOTSUPP;
+  1002	}
+  1003	
 
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
