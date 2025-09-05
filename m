@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EFB1248176;
-	Fri,  5 Sep 2025 19:53:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0A5280A5F;
+	Fri,  5 Sep 2025 20:09:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757102036; cv=none; b=WLBA75AtblCRFNJvwq1wfE9wYY9N/hUn2rKKXkrs3TK5cD3u8ok7yjJ7iVCGa4Hihst0mKUCdMuNcicEvyuPiFCB0e87N3n5uc6A3uvPPAh3WrRhXkKlocSHtOaZp89JuDS53qYsb++iMpfLiUzouITx1XvLXyZfWQGNi0hv/+s=
+	t=1757102946; cv=none; b=JnGq5icDzcK743Q04f5/nRDzgR939oRbUoxdwHI5CXNiwn0wGK3xGSEV4P/4YoH0Gd7DU2AAQoxtSqfSIK4BKLrdzwoXObdb+0HUWVOzHl9Gx3HvwCWR/eHoScYn9KX5kU/aNTqeVuayQINZaKTUIAPlJCiw6r8WBXNUUL2n3gY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757102036; c=relaxed/simple;
-	bh=cK7wgkHR+iPtZaN+skCDQj5o95KjhZGfeAVtHtFDT2o=;
+	s=arc-20240116; t=1757102946; c=relaxed/simple;
+	bh=Li7bM5SQHqjbRpCJToYrtYTRr5PgxJgR1Ff2r6AoN9U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fVCeF/xiUCCWcjk7r+SdISRi4arJTQfYrkiQASzHAQHpFQeeUd5Q/9bIwv9hN91YuvseiyUeu5PTGrThlj/qpxYQM3R2tbaPACNTkKVtXfA/SqRML+9JuM2bYAbEGbGnwyG4xKGPI7yWIQFQhycB/S8gajW1lDC3Yykzj1zETbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dOL2RLyY; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=FPo0p7m6aa5tJtg+NkemqYtHdp26tcL+Xd+gp5C58w5cZOXGZq3cmRofnnfEPvIBxuHTJUb9vLs8Ag69T6Ow8aaTSA9zbBcnM50GuhuTi54rGvbvOKRqpXhyjd8XhaRuE4Yjd+5a4W4Y88KBB1hBieZUkVhOcmiQ2dk0MpDwS/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GShNvFcV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dOL2RLyY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB826C4CEF1;
-	Fri,  5 Sep 2025 19:53:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GShNvFcV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B15B4C4CEF1;
+	Fri,  5 Sep 2025 20:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757102036;
-	bh=cK7wgkHR+iPtZaN+skCDQj5o95KjhZGfeAVtHtFDT2o=;
+	s=k20201202; t=1757102946;
+	bh=Li7bM5SQHqjbRpCJToYrtYTRr5PgxJgR1Ff2r6AoN9U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dOL2RLyYuvigrBAaAairC2NPTtbIf3e/4TtrMCVyAOGLLZnRQGc/dpOulDNo0XnWx
-	 pbPrYqjLmsBn498jkrM+oEt7cgu5T6bj+gXQr8IliPlbewgNRoMzcL1TE+mHlVziid
-	 tmfi0/j/O24NiNIw6ENe4qNFZP7qytN/oWPcRHJigLpGoKujFUIlL9sBw94+O2xFzt
-	 /APORlLXzBe9dJJC9Lov3YkYQMwi83zw0ZTn2KWxK7E83y/vTAPi04DupSm8d0f1WR
-	 hML/CI8lMxLw9pHniVCmay7gq/loFJpmstPUe6WhJDB+sKGUMDbVvsSsOK0KO2qdTL
-	 icYwg3GHmGDyg==
-Date: Fri, 5 Sep 2025 12:53:54 -0700
+	b=GShNvFcVVEyuIUXPWLss5knF52KhZt+jKuUpQNJGBuFjQ6ywhxA8VgeJ2eJmnDAus
+	 89J7/QU5uehFZmxzeD9Nz3vUZ3xGE9C6z858aCAPrPEMRQ2prsQFvtYxFlvfI9JoBl
+	 rUQpo7l4pWuO3TZUemIlxjfkbAGhDIDU3iBRcz8GkjY82lCID+123RrWXLA7eLI3qZ
+	 ICaRHNHKUZRyGeA6RcKgxRo594g2xbNCiqCF+dfOPq+IzjELNmAsY298HLagg0xwOz
+	 cY7RIuhJI4v1FHEr1zqCoTR3i1Oppbh0k6hQQbNdQiAVYLhvuffu7hJUwDi/0DLW8H
+	 BUKl3uyuoZjBQ==
+Date: Fri, 5 Sep 2025 13:09:03 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Zecheng Li <zecheng@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -39,12 +39,12 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Xu Liu <xliuprof@google.com>, linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 07/10] perf annotate: Invalidate register states for
- unsupported instructions
-Message-ID: <aLs_0g8yHblKWxyB@google.com>
-References: <20250825195748.226052-1-zecheng@google.com>
- <aLKlDp6bl9Qjiziy@google.com>
- <CAJUgMy++zvbgcuzyQUiVHdaTZMa8o=LtSUzy9PXe_sqXHqK7nQ@mail.gmail.com>
+Subject: Re: [PATCH v2 08/10] perf dwarf-aux: Skip check_variable for
+ die_find_variable_by_reg
+Message-ID: <aLtDX0W0DMMr6BE4@google.com>
+References: <20250825195806.226328-1-zecheng@google.com>
+ <aLKot1esgc3HHubX@google.com>
+ <CAJUgMy+jTTAQ+=F=ddryLrftyB0h==pezZdvnZAT-UHmSU994w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,41 +54,68 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJUgMy++zvbgcuzyQUiVHdaTZMa8o=LtSUzy9PXe_sqXHqK7nQ@mail.gmail.com>
+In-Reply-To: <CAJUgMy+jTTAQ+=F=ddryLrftyB0h==pezZdvnZAT-UHmSU994w@mail.gmail.com>
 
-On Wed, Sep 03, 2025 at 04:54:39PM -0400, Zecheng Li wrote:
-> On Sat, Aug 30, 2025 at 3:15 AM Namhyung Kim <namhyung@kernel.org> wrote:
+On Wed, Sep 03, 2025 at 05:23:01PM -0400, Zecheng Li wrote:
+> On Sat, Aug 30, 2025 at 3:31 AM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > On Mon, Aug 25, 2025 at 07:57:48PM +0000, Zecheng Li wrote:
-> > > Invalidate register states when encountering unsupported instructions
-> > > that modify pointers, to prevent propagating incorrect pointer types.
-> > >
-> > > On x86, the 'xor' instruction may appear in a predecessor basic block
-> > > and zero out a register that invalidates the target register state. This
-> > > sometimes relates to tagged pointers and normal programs should not
-> > > dereference NULL pointers, so we assume such execution paths are invalid
-> > > and do not invalidate states for 'xor' instructions.
+> > > - In match_var_offset, use __die_get_real_type instead of
+> > >   die_get_real_type to preserve typedefs. Move the (offset == 0) branch
 > >
-> > Probably we can set it to 0 with TSR_KIND_CONST.
-> >
-> It seems TSR_KIND_CONST doesn't relate to a type. Although the value
-> was set to 0, it still has the pointer type. I see regressions that
-> has this pattern
+> > Why do you want to preserve typedefs?  I think a variable type can be
+> > typedef to a pointer then now it won't resolve that target type anymore.
 > 
-> xorl    %rax, %rax
-> mov    %rax, (%rsp)
-> 
-> and sometimes
-> 
-> xorl    %rax, %rax
-> ... (some branches)
-> mov    (%rax), %rbx
-> 
-> Normally NULL pointer dereference should not happen, so I assume such
-> execution paths are invalid.
+> check_variable preserves the typedefs. It would sometimes resolve to
+> an unnamed struct if we remove the typedefs. 
 
-Agreed, I think there should be a place to set the pointer to a valid
-value again (before use).
+Ah, that's unfortunate.
+
+> Let me test if it will
+> affect the dwarf_tag(&data->type) == DW_TAG_pointer_type check. Also I
+> found calling dwarf_aggregate_size on typedef'd types gives the
+> correct result, so maybe we don't need the sized_type in
+> check_variable?
+
+You're right.
+
+> 
+> > > - When comparing types from different scopes, first compare their type
+> > >   offsets. A larger offset means the field belongs to an outer
+> > >   (enclosing) struct. This helps resolve cases where a pointer is found
+> > >   in an inner scope, but a struct containing that pointer exists in an
+> > >   outer scope. Previously, is_better_type would prefer the pointer type,
+> > >   but the struct type is actually more complete and should be chosen.
+> >
+> > Can we improve is_better_type() then?
+> 
+> Here we are comparing two types with the extra access offset
+> information. In other contexts, the calls to is_better_type compares
+> two types only, so I think we don't need to add two new parameters to
+> is_better_type?
+
+Right, I meant just about pointer type and struct type.  It compares two
+types take the same location so I didn't expect they can be a pointer
+and a struct.  My intention was about a pointer and a base type.
+
+Also you may consider typedef and struct.  I think we prefer struct
+since it can access the member field.  But as you said we should use
+typedef if it's an unnamed struct.  It'd be great if we can get members
+even for typedefs (for structs).
+
+> 
+> > > -                     if (!found || is_better_type(type_die, &mem_die)) {
+> > > +                     if (!found || dloc->type_offset < type_offset ||
+> > > +                             (dloc->type_offset == type_offset &&
+> > > +                              is_better_type(type_die, &mem_die))) {
+> > >                               *type_die = mem_die;
+> > >                               dloc->type_offset = type_offset;
+> > >                               found = true;
+> 
+> I find changing the is_better_type call to !is_better_type(&mem_die,
+> type_die) would yield better results: prefer types from outer scope if
+> the current one is not "better" than the new one.
+
+Ok, sounds good.
 
 Thanks,
 Namhyung
