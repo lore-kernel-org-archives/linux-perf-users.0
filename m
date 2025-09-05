@@ -1,28 +1,28 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177B0296BB7;
-	Fri,  5 Sep 2025 16:10:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF0DF1F61C;
+	Fri,  5 Sep 2025 16:18:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757088638; cv=none; b=KcC0g6ff0DrgmCwgT6G1DUr4NyNdC1xZa5n5E8D6L7J0BPEDxgKw+5ukDXOZZ03k89411vFZ0bKi4sHRyxfXnqNKqD4EhTt3klGSXHbyNc8Xw+exv6NCVna4MQrOtRZsbRJKBStAD/3+EWcX6RUYmhR0v4LPiIYDQwxH0ulyaNQ=
+	t=1757089117; cv=none; b=JV87xqv1LxFZvPXrz7L1qqqgLqcqAkZKk1MUxdMbORTqAgp0wdLlyeFCGhpR11Yfdf8VgzYl/gESbE6ieA3SZTmzSyoxr/G3U07Mu5/a36VsXtNaHNxPgG/QoE7knrEaCJxIcQchajVsgs2B9Z0SE+AtQP80x2sqoXNNUbevJT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757088638; c=relaxed/simple;
+	s=arc-20240116; t=1757089117; c=relaxed/simple;
 	bh=WdpLG7wX8l/TXJRm2yFFtzya3FCCPZBcf2UO2HIN6jo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JlvGQsoXfUvQzzJaYaCKZqQVFVn74/Rl3X1pS0witOBfGcy+++WEk1qcDwSVDzHMIEiqG483+2og4BYtN6lf4FWEpkwK1HTJ8iJrVpqKgquaUvCEqdVXqwV7/Rp0EUs9sFFaSDq2IzanqalsptO+iLCgYegb3ZOycB85H5r4n5I=
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iBCbxVRQivUJh/EtGo7CcEEvKpPha5pFbJqtwwzjQU1a05+BbyIJCNlatB2PF7TWJJ5mfBRxU1MgMaD64dyVKaaGU9nrXutUYVLkGW242TAWdyUpNBtSX9scZB7A8I13S06BeLYNBv8KNnWg5zqVY4xV2b/UnE4ql1v8H6DKzCQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cJLrs43nPz6L51Y;
-	Sat,  6 Sep 2025 00:09:33 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cJM2643hSz6L4wb;
+	Sat,  6 Sep 2025 00:17:34 +0800 (CST)
 Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
-	by mail.maildlp.com (Postfix) with ESMTPS id B62D21400D4;
-	Sat,  6 Sep 2025 00:10:32 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id BAAD01402F1;
+	Sat,  6 Sep 2025 00:18:33 +0800 (CST)
 Received: from a2303103017.china.huawei.com (10.202.66.105) by
  frapeml500003.china.huawei.com (7.182.85.28) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 5 Sep 2025 18:10:30 +0200
+ 15.1.2507.39; Fri, 5 Sep 2025 18:18:31 +0200
 From: Alireza Sanaee <alireza.sanaee@huawei.com>
 To: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <coresight@lists.linaro.org>, <dianders@chromium.org>,
@@ -32,8 +32,8 @@ CC: <coresight@lists.linaro.org>, <dianders@chromium.org>,
 	<robh@kernel.org>, <ruanjinjie@huawei.com>, <saravanak@google.com>,
 	<suzuki.poulose@arm.com>
 Subject: [PATCH v4 0/6] Refactoring finding CPU phandles in DT
-Date: Fri, 5 Sep 2025 17:10:22 +0100
-Message-ID: <20250905161028.649-1-alireza.sanaee@huawei.com>
+Date: Fri, 5 Sep 2025 17:18:23 +0100
+Message-ID: <20250905161830.37-1-alireza.sanaee@huawei.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
