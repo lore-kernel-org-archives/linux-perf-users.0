@@ -1,63 +1,66 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC2929A31D
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Sep 2025 22:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E1F2BD030
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Sep 2025 22:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757112464; cv=none; b=H+Svg7unt7dI95sYShQscyp13JiGxVrTIuDGw3Y6TFanYXtGZ+DZbnS7Oq57E+Z7JPSXLmQF8Sr1t4iWzEInZ/XRYp9LMPXShQX4R0lF8x4U/nnptuja/X7w+1MTZVtsVFbC3YVb08lv7BDudMCJsQ0awNfGQPWLvQKYBOsXf/w=
+	t=1757112466; cv=none; b=rRiUTdZSBQGTeBBrUdY1kBdDz0eZMDJ+lXLXlhfZkh+6QT24wU+5yy4WuyneMtTyYQa6+uULN5hU/TtEL7UqMWSud0mj3NkNcBcWu0KRaakz0arHRsZb4cn7givLGk5v5fIk5uP2EuO1Vsbm1lnVR+Ddfxfztiqwmb2pGQg4wMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757112464; c=relaxed/simple;
-	bh=1qEENq51KcrDUXNZwje7lxyTf8mqEp73otnktCFs+yQ=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=h3Y9gHMK1qULcUbW6kTN2aa3gZMQrMeoEJkj8pQmNb5DvFj0goJAol9GIy00yXc8ia2hsrWwZKJWLhIbxLd9u/rcJ4OUeNQblK5l+Az+2bMRNIv+desVIfun6Frh5+U1SA8CvyQPLP/1DMpeNoS08wqd3FhTGnzhQB42j8a0URI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R5pisFY9; arc=none smtp.client-ip=209.85.214.201
+	s=arc-20240116; t=1757112466; c=relaxed/simple;
+	bh=+5NpxcP9jnj9qKT3QZ4Bqj9fuj7vqjFeNcFJ/my8LuQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=MKwiSMxNORkbzA+VViXGw1MqWLjKmmIDSk16mo9p+1daTWonFKt4PDqdtzh0Ie/St7g43N757yTmeXCezveJlODZTgg24L/lxg0uqFxvnmwbJbL6gOLdq7qd7NspyS+bT2aIki0GLRgHIBnR1npKaMaPB+PAWJ+/UZxanKU2zGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G//KPMMH; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R5pisFY9"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-25177b75e38so948635ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 Sep 2025 15:47:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G//KPMMH"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b47630f9aa7so2183686a12.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 Sep 2025 15:47:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1757112462; x=1757717262; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=gmx3wlIJ1eDwZ4XBZbMsVjYFEQidwm1ewtHh14rsYe0=;
-        b=R5pisFY9lvoHzNh4dY912OmPpT1W8MNywn5Pi87aMnrj381/m3LXokmXLh4af/pkcB
-         Xk5CrV/OCnoTfSk7k4/dMG8QI1ycLTFKK2ku33NiUa8+VkGr1RdXNSsBE/PbmNF/lC/T
-         zcOU8zEGQ4zTg6YYK1zC0nrJkEaxthrTdk7/kpBYa48Bjwrn7uyL8QXrrcxdwmdkqni9
-         gBaLj7CCL7NcQyubifz4RGWslINF7hZKvDR6QijQYT7uRoWnV6+5IF30fbfKECtqaxPP
-         ae/RELbZuiSdMMvs91yE14bYcpIji47JtbCh7ExhLABu385a/P1t1qDzdhlIDtt775S4
-         tbJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757112462; x=1757717262;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1757112464; x=1757717264; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=gmx3wlIJ1eDwZ4XBZbMsVjYFEQidwm1ewtHh14rsYe0=;
-        b=sgSDF16Fq9udg3S+LmZ3qyxzQh/iDI8qVaNqnCIoOVtKLBzx4YFeo29m9JZzya9btn
-         lTuudHnSKJCCjB7dq8vNaAB5OPgQOyBkrqsd47iWG/qSAULWMXmcofhBx+j3hLj6haSf
-         R5HYNuLfbUwH7fBJ5Wa+aDrOUfZtYzE6VLralRs3aLivaFQIJsUf5ymKdDpRDjdhGJ3f
-         cVgLiGx6jaQnnvKO8iZjCSVAseHsYVuSqx1lE1zEB3XVRV1U6VLmlcFeqjH48Yy4s5Ku
-         nytxf+l0im2LYZrb1Lk37gIhwgJaw3JFsb0ioTR8qQtznKRmbe/+e8IH+Lj2n7hOF1DH
-         fDrg==
-X-Forwarded-Encrypted: i=1; AJvYcCU250IdEv2MxJS8oRh3SGjoCAEcQBr0nb4e93eynirLg2YnRACf42860qgIkki6tSXsDt7VkiuFi+mxaYeORfne@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0L8pSSu9DhZwgkqGT4U4Lms0LbZ6eJH3sG+LpC6i6Uyy5bOqm
-	L6Q0yQJBff5iCZGAJlOiBOvW5tAlRY+KJA1NOk6pBbB5FZIrgQ4b8GpYTcIuhDusSYHvkFU2ort
-	5nzfz7PddGw==
-X-Google-Smtp-Source: AGHT+IFxVMXZNiowTRquBEGq3NjyT+CYIXxvPnTvjh9qSatvFbQBMQOwqtw/9eKbbSMaD9wkYdEdrABaLYAf
-X-Received: from pjbst4.prod.google.com ([2002:a17:90b:1fc4:b0:32b:5e07:ca10])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ce89:b0:24e:229e:204e
- with SMTP id d9443c01a7336-2516da05c43mr3530465ad.16.1757112462153; Fri, 05
- Sep 2025 15:47:42 -0700 (PDT)
-Date: Fri,  5 Sep 2025 15:47:04 -0700
+        bh=SIMim81pQReDOt0+L3Rj0SLjBTyQCKyPXsqTC1Lqb1I=;
+        b=G//KPMMHqrKS8H19uDqg8eHtPPpc4FfdZ3svWkT4FYdP3sRGDETS7O++ggdc6xbpro
+         81LsYbdDzuIvpunhMFOF++ppRp6vl8Vm69TTlmGNWh8MJPjO4J07lbm1vD8eZTP0V1Eg
+         lVpB2v90men5J9U/c5Xs/WlalhrNBYXtOVpDd775WxuwukBjWAIuNxJWBOW8banGwbcG
+         OWr37HswfkHG3JOwWa/MrPUXENfqtfgorQnAllCkUCl+UledOUgPN53y8Ax0CuJ38ROH
+         9kpCDTgsxO8knalVqH3k08jGeZ5cUYAo9Wya1kWd0ygRMzQLwbKRm8gEd/EfSSY0z+df
+         2V8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757112464; x=1757717264;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SIMim81pQReDOt0+L3Rj0SLjBTyQCKyPXsqTC1Lqb1I=;
+        b=YoU1EgQ0HvNgHxWQw3dC3qDnuUMoO+g2IVOUOOU/qgjldoEaMdzfvWeAEqHfA5lxsk
+         PmH5L48n9yTq52MrbaZ957t/0hzo9EYWz1Xej1LO2VMaVCR6Q6FbcOQ32WtHNX/zY6t1
+         mQzJX6wmNVLRFKO1GjlU5Ak3Yv8wSu6tnYODuJBiLAkNvXuyNP1Iq912rAXJRQHxNtjw
+         8W7CXDlpvffz4sOUtvzcl49341XvlyFUUnEZtaH97A2U108acCpfqqrdggRVSuZnVQTt
+         PebQ+hR74LC43L/kfVaCqGHcfnOQAyzpQGA9huv15Xg4ne5ZC1QQpKnVJ6a5cY5JLKms
+         ERZg==
+X-Forwarded-Encrypted: i=1; AJvYcCWVAoQk1rj0SbvMxEa1u05+YVQTCpngS93UG420biQj2tmTaqtSjNTZinOLaaiJDJqoI/1lC7nioo1C3Q58RCCw@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1QpioU58+fj/aGmaZFuJP/pR6rxUjYX39P4eSGK9E9Hl0wuWp
+	ewd+xlfvASOfArlml71GCs66k1SX9uAm/kBwy1QEw2oWU2sRrZyQHx6wh7QptYiKo1byvfb7vVI
+	gks7Kopuq5A==
+X-Google-Smtp-Source: AGHT+IF4jzY6mRc/AB5FSBYfW8L+P81GFGI8tfKxroAVbasaAzh00quVtqRegIyo6LThcr8QIaE1PJCYJh+C
+X-Received: from plsl3.prod.google.com ([2002:a17:903:2443:b0:24c:a63d:ed5e])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1585:b0:24a:8d5e:932
+ with SMTP id d9443c01a7336-2516e981584mr3792745ad.23.1757112464206; Fri, 05
+ Sep 2025 15:47:44 -0700 (PDT)
+Date: Fri,  5 Sep 2025 15:47:05 -0700
+In-Reply-To: <20250905224708.2469021-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250905224708.2469021-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.355.g5224444f11-goog
-Message-ID: <20250905224708.2469021-1-irogers@google.com>
-Subject: [PATCH v1 0/4] perf/tools build related fixes
+Message-ID: <20250905224708.2469021-2-irogers@google.com>
+Subject: [PATCH v1 1/4] perf bench futex: Add missing stdbool.h
 From: Ian Rogers <irogers@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
@@ -77,33 +80,26 @@ To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.d
 	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add missing header files and #includes to fix the build in some
-environments like bazel.
+futex.h uses bool but lacks stdbool.h which causes build failures in
+some build systems. Add the missing #include.
 
-Ian Rogers (4):
-  perf bench futex: Add missing stdbool.h
-  tools bitmap: Add missing asm-generic/bitsperlong.h include
-  tools include: Replace tools linux/gfp_types.h with kernel version
-  tools include: Add headers to make tools builds more hermetic
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/bench/futex.h | 1 +
+ 1 file changed, 1 insertion(+)
 
- tools/include/linux/bitmap.h             |   1 +
- tools/include/linux/gfp_types.h          | 393 ++++++++++-
- tools/include/uapi/linux/genetlink.h     | 103 +++
- tools/include/uapi/linux/if_addr.h       |  79 +++
- tools/include/uapi/linux/neighbour.h     | 229 ++++++
- tools/include/uapi/linux/netfilter.h     |  80 +++
- tools/include/uapi/linux/netfilter_arp.h |  23 +
- tools/include/uapi/linux/rtnetlink.h     | 848 +++++++++++++++++++++++
- tools/perf/bench/futex.h                 |   1 +
- tools/perf/check-headers.sh              |   9 +-
- 10 files changed, 1764 insertions(+), 2 deletions(-)
- create mode 100644 tools/include/uapi/linux/genetlink.h
- create mode 100644 tools/include/uapi/linux/if_addr.h
- create mode 100644 tools/include/uapi/linux/neighbour.h
- create mode 100644 tools/include/uapi/linux/netfilter.h
- create mode 100644 tools/include/uapi/linux/netfilter_arp.h
- create mode 100644 tools/include/uapi/linux/rtnetlink.h
-
+diff --git a/tools/perf/bench/futex.h b/tools/perf/bench/futex.h
+index dd295d27044a..fcb72d682cf8 100644
+--- a/tools/perf/bench/futex.h
++++ b/tools/perf/bench/futex.h
+@@ -8,6 +8,7 @@
+ #ifndef _FUTEX_H
+ #define _FUTEX_H
+ 
++#include <stdbool.h>
+ #include <unistd.h>
+ #include <sys/syscall.h>
+ #include <sys/types.h>
 -- 
 2.51.0.355.g5224444f11-goog
 
