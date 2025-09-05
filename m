@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9892275AE3;
-	Fri,  5 Sep 2025 19:52:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EFB1248176;
+	Fri,  5 Sep 2025 19:53:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757101927; cv=none; b=GJpdFlKDH2IkxRML0EsrEvqlQPx4QXgdf/PMY6qjORihcoHgCmhakbQ6J2SSLNkqNUGGdeRVbMZo71e709VqOjoHQ+SEobfYEAXaP1noMKBmacRzwAL1mHaMEP+BYwufNUqD+dTWPbG3VCeugRaOj+RAjH/usXRzA4vh0amqZwY=
+	t=1757102036; cv=none; b=WLBA75AtblCRFNJvwq1wfE9wYY9N/hUn2rKKXkrs3TK5cD3u8ok7yjJ7iVCGa4Hihst0mKUCdMuNcicEvyuPiFCB0e87N3n5uc6A3uvPPAh3WrRhXkKlocSHtOaZp89JuDS53qYsb++iMpfLiUzouITx1XvLXyZfWQGNi0hv/+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757101927; c=relaxed/simple;
-	bh=EcEhZQkcRDrFURtJpI4hMt6Rl+zj9Pnnl0nP7zN8uKs=;
+	s=arc-20240116; t=1757102036; c=relaxed/simple;
+	bh=cK7wgkHR+iPtZaN+skCDQj5o95KjhZGfeAVtHtFDT2o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aPaTjE6+kZVMt/OfkkslW6qAH//fNR4FlhDa9Fco1AP3nD06cFHxtLEEDZezbDMRoojVylP7u/YUcg+YP/to5yofmQyVdMEIiktpjrrHg5uwGhjhv11uwXpz5eh9iN9wNFDfioHouv0WL8fbHk/cvC9/eNT5Ex7KV8AWeYkQLVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xvwp4pn5; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fVCeF/xiUCCWcjk7r+SdISRi4arJTQfYrkiQASzHAQHpFQeeUd5Q/9bIwv9hN91YuvseiyUeu5PTGrThlj/qpxYQM3R2tbaPACNTkKVtXfA/SqRML+9JuM2bYAbEGbGnwyG4xKGPI7yWIQFQhycB/S8gajW1lDC3Yykzj1zETbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dOL2RLyY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xvwp4pn5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A57DEC4CEF1;
-	Fri,  5 Sep 2025 19:52:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dOL2RLyY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB826C4CEF1;
+	Fri,  5 Sep 2025 19:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757101927;
-	bh=EcEhZQkcRDrFURtJpI4hMt6Rl+zj9Pnnl0nP7zN8uKs=;
+	s=k20201202; t=1757102036;
+	bh=cK7wgkHR+iPtZaN+skCDQj5o95KjhZGfeAVtHtFDT2o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xvwp4pn5VqxumoX8m7AtKvpO3NJty2v5GiPpQzI/Y8oB3SZiUi+SpMlTMKLX7M0d5
-	 +fM1qgMDz1vadPq15toieUqpKq836VRgl8DaXu2+aq+0oHs3PpoUJiTgjveDl38EDQ
-	 ZJVYw0bpoVFvNa5EKV+EgRqVt3uY1/M6K0Yp92p3FjjpfJdgAPIN9ZuotplH7sqn2i
-	 yAU8DaOd7LVo4JTc62TqjpRYwq3eQSNrDzHyOS5tNI+3pb5q4YOq4ueQOLTrm2KI7X
-	 f6maP+qbqBTJCICYHoognGVUEYoiL07Fx8jfMj9zkCXsNr95F0l/zyN0JPoaCIUURm
-	 fxj1KA8ZXUsaw==
-Date: Fri, 5 Sep 2025 12:52:05 -0700
+	b=dOL2RLyYuvigrBAaAairC2NPTtbIf3e/4TtrMCVyAOGLLZnRQGc/dpOulDNo0XnWx
+	 pbPrYqjLmsBn498jkrM+oEt7cgu5T6bj+gXQr8IliPlbewgNRoMzcL1TE+mHlVziid
+	 tmfi0/j/O24NiNIw6ENe4qNFZP7qytN/oWPcRHJigLpGoKujFUIlL9sBw94+O2xFzt
+	 /APORlLXzBe9dJJC9Lov3YkYQMwi83zw0ZTn2KWxK7E83y/vTAPi04DupSm8d0f1WR
+	 hML/CI8lMxLw9pHniVCmay7gq/loFJpmstPUe6WhJDB+sKGUMDbVvsSsOK0KO2qdTL
+	 icYwg3GHmGDyg==
+Date: Fri, 5 Sep 2025 12:53:54 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Zecheng Li <zecheng@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -39,12 +39,12 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Xu Liu <xliuprof@google.com>, linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 06/10] perf annotate: Track arithmetic instructions on
- pointers
-Message-ID: <aLs_ZeRBzNvgfbqK@google.com>
-References: <20250825195737.225824-1-zecheng@google.com>
- <aLKknf6qFxVgN3gJ@google.com>
- <CAJUgMyKBFkF9rKFnzP6S_c9ma3P7a-NsCubV1DiTwoGUbByk+w@mail.gmail.com>
+Subject: Re: [PATCH v2 07/10] perf annotate: Invalidate register states for
+ unsupported instructions
+Message-ID: <aLs_0g8yHblKWxyB@google.com>
+References: <20250825195748.226052-1-zecheng@google.com>
+ <aLKlDp6bl9Qjiziy@google.com>
+ <CAJUgMy++zvbgcuzyQUiVHdaTZMa8o=LtSUzy9PXe_sqXHqK7nQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,49 +53,43 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAJUgMyKBFkF9rKFnzP6S_c9ma3P7a-NsCubV1DiTwoGUbByk+w@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJUgMy++zvbgcuzyQUiVHdaTZMa8o=LtSUzy9PXe_sqXHqK7nQ@mail.gmail.com>
 
-Hi Zecheng,
-
-On Wed, Sep 03, 2025 at 04:26:50PM -0400, Zecheng Li wrote:
-> > I was thinking we can use TSR_KIND_POINTER here.  Probably we need to
-> > distinguish it from the existing percpu base use case. Maybe you want
-> > to rename it.  Then you don't need to find a pointer type in the DWARF.
-> 
-> Hi Namhyung, thanks for the review.
-> 
-> Yes. I think that's a better way to represent a pointer to a type.
-> With that tag we can also support registers representing addresses
-> (is_reg_var_addr == true). And when moving an address register to a
-> memory location we probably can simply add the * to denote a pointer
-> without finding the exact pointer type.
-> 
+On Wed, Sep 03, 2025 at 04:54:39PM -0400, Zecheng Li wrote:
+> On Sat, Aug 30, 2025 at 3:15 AM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > > +                     tsr->offset = 0;
+> > On Mon, Aug 25, 2025 at 07:57:48PM +0000, Zecheng Li wrote:
+> > > Invalidate register states when encountering unsupported instructions
+> > > that modify pointers, to prevent propagating incorrect pointer types.
+> > >
+> > > On x86, the 'xor' instruction may appear in a predecessor basic block
+> > > and zero out a register that invalidates the target register state. This
+> > > sometimes relates to tagged pointers and normal programs should not
+> > > dereference NULL pointers, so we assume such execution paths are invalid
+> > > and do not invalidate states for 'xor' instructions.
 > >
-> > I think it can refer to a member in a struct.  How about this?
+> > Probably we can set it to 0 with TSR_KIND_CONST.
 > >
-> >                         tsr->offset = state->offset - offset;
+> It seems TSR_KIND_CONST doesn't relate to a type. Although the value
+> was set to 0, it still has the pointer type. I see regressions that
+> has this pattern
 > 
-> True, it may load an address of a struct member. Do you mean
-> stack->offset - offset?
+> xorl    %rax, %rax
+> mov    %rax, (%rsp)
+> 
+> and sometimes
+> 
+> xorl    %rax, %rax
+> ... (some branches)
+> mov    (%rax), %rbx
+> 
+> Normally NULL pointer dereference should not happen, so I assume such
+> execution paths are invalid.
 
-Yep.
+Agreed, I think there should be a place to set the pointer to a valid
+value again (before use).
 
-> 
-> > > @@ -388,6 +493,7 @@ static void update_insn_state_x86(struct type_state *state,
-> > >               tsr->type = state->regs[src->reg1].type;
-> > >               tsr->kind = state->regs[src->reg1].kind;
-> > >               tsr->imm_value = state->regs[src->reg1].imm_value;
-> > > +             tsr->offset = 0;
-> > >               tsr->ok = true;
-> 
-> I also find for mov register to register this should be
-> 
-> tsr->offset = state->regs[src->reg1].offset;
-> 
-> Let me update the patch.
-
-Great, thanks!
+Thanks,
 Namhyung
 
