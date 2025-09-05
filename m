@@ -1,55 +1,55 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E1F2BD030
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Sep 2025 22:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC73F2BEFE1
+	for <linux-perf-users@vger.kernel.org>; Fri,  5 Sep 2025 22:47:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757112466; cv=none; b=rRiUTdZSBQGTeBBrUdY1kBdDz0eZMDJ+lXLXlhfZkh+6QT24wU+5yy4WuyneMtTyYQa6+uULN5hU/TtEL7UqMWSud0mj3NkNcBcWu0KRaakz0arHRsZb4cn7givLGk5v5fIk5uP2EuO1Vsbm1lnVR+Ddfxfztiqwmb2pGQg4wMI=
+	t=1757112468; cv=none; b=Hv/bcb7j7OtJ0mgBHQgW9L5VhwVM2S+itEWMnExCO4x4UavA8zf4aDVxpsfmQP4ffC+Ebg/FGuDgm08h7VTBv2FSffcM+tXpMYAK2pK5MAZ0PMkGQRaOBO5KQxRsrvcTwB59DhYsUTxcDcN55QPY4OAw6u8yg2o9axr4EewUT50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757112466; c=relaxed/simple;
-	bh=+5NpxcP9jnj9qKT3QZ4Bqj9fuj7vqjFeNcFJ/my8LuQ=;
+	s=arc-20240116; t=1757112468; c=relaxed/simple;
+	bh=kDf2PBFUBHXl016g8dwIQvjQR4iisda19HAybZxyWgs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=MKwiSMxNORkbzA+VViXGw1MqWLjKmmIDSk16mo9p+1daTWonFKt4PDqdtzh0Ie/St7g43N757yTmeXCezveJlODZTgg24L/lxg0uqFxvnmwbJbL6gOLdq7qd7NspyS+bT2aIki0GLRgHIBnR1npKaMaPB+PAWJ+/UZxanKU2zGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G//KPMMH; arc=none smtp.client-ip=209.85.215.202
+	 To:Content-Type; b=FsvzNkA3l+JdIihZy/eGUldtQUpNVNfSHN0pM0fgJqcCeQ+OPz/w0Nzy4W1qvkx5k/XBt65BRvWV+E0Uh3uzeh5HhQ7824xC8Up0FVoR4QLlRGZU9Ytt/xMYEgibhHbSaRXeftxVs8CLh4IpJ4gEkJqHqnGCdN3ngtArfh0HHP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=enq1WSN/; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G//KPMMH"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b47630f9aa7so2183686a12.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 Sep 2025 15:47:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="enq1WSN/"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-244581953b8so29613005ad.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 Sep 2025 15:47:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1757112464; x=1757717264; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1757112466; x=1757717266; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=SIMim81pQReDOt0+L3Rj0SLjBTyQCKyPXsqTC1Lqb1I=;
-        b=G//KPMMHqrKS8H19uDqg8eHtPPpc4FfdZ3svWkT4FYdP3sRGDETS7O++ggdc6xbpro
-         81LsYbdDzuIvpunhMFOF++ppRp6vl8Vm69TTlmGNWh8MJPjO4J07lbm1vD8eZTP0V1Eg
-         lVpB2v90men5J9U/c5Xs/WlalhrNBYXtOVpDd775WxuwukBjWAIuNxJWBOW8banGwbcG
-         OWr37HswfkHG3JOwWa/MrPUXENfqtfgorQnAllCkUCl+UledOUgPN53y8Ax0CuJ38ROH
-         9kpCDTgsxO8knalVqH3k08jGeZ5cUYAo9Wya1kWd0ygRMzQLwbKRm8gEd/EfSSY0z+df
-         2V8w==
+        bh=c1mAO5A1gn91KXDnH98r+B5g3x8oPbaMvEMjp5ywFmI=;
+        b=enq1WSN/MY6K4k78KuiPkUCrL2ksdTAbeT1TQ7q4vBvRv6VcCpEcMqgu58baHPw7EY
+         EuB9mGy0BBoJZGhMaPBnh+p79PGQgVf353RoUmmvEySy8jl73Iat/UOF7Xz3C46fGdvt
+         Zwad2MQSXytTwmMoRnVrHJu3nK5myGmwHUZBXX2gfLuPHKc3F/jzu9YXkjhX+7bbARVh
+         JTs0Fo8ZX0JczimNB8w4vkZ6UITtoZ7Ajg9VZvyjvPSovdE+goZQqIKzFods5eYzMGHQ
+         A3PX18aT3fXjneSd5fQiGxYNd9nKRql3tWan/fEoRFX7F3jrss/54SgEyLErIxJeXFew
+         cXdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757112464; x=1757717264;
+        d=1e100.net; s=20230601; t=1757112466; x=1757717266;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SIMim81pQReDOt0+L3Rj0SLjBTyQCKyPXsqTC1Lqb1I=;
-        b=YoU1EgQ0HvNgHxWQw3dC3qDnuUMoO+g2IVOUOOU/qgjldoEaMdzfvWeAEqHfA5lxsk
-         PmH5L48n9yTq52MrbaZ957t/0hzo9EYWz1Xej1LO2VMaVCR6Q6FbcOQ32WtHNX/zY6t1
-         mQzJX6wmNVLRFKO1GjlU5Ak3Yv8wSu6tnYODuJBiLAkNvXuyNP1Iq912rAXJRQHxNtjw
-         8W7CXDlpvffz4sOUtvzcl49341XvlyFUUnEZtaH97A2U108acCpfqqrdggRVSuZnVQTt
-         PebQ+hR74LC43L/kfVaCqGHcfnOQAyzpQGA9huv15Xg4ne5ZC1QQpKnVJ6a5cY5JLKms
-         ERZg==
-X-Forwarded-Encrypted: i=1; AJvYcCWVAoQk1rj0SbvMxEa1u05+YVQTCpngS93UG420biQj2tmTaqtSjNTZinOLaaiJDJqoI/1lC7nioo1C3Q58RCCw@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1QpioU58+fj/aGmaZFuJP/pR6rxUjYX39P4eSGK9E9Hl0wuWp
-	ewd+xlfvASOfArlml71GCs66k1SX9uAm/kBwy1QEw2oWU2sRrZyQHx6wh7QptYiKo1byvfb7vVI
-	gks7Kopuq5A==
-X-Google-Smtp-Source: AGHT+IF4jzY6mRc/AB5FSBYfW8L+P81GFGI8tfKxroAVbasaAzh00quVtqRegIyo6LThcr8QIaE1PJCYJh+C
-X-Received: from plsl3.prod.google.com ([2002:a17:903:2443:b0:24c:a63d:ed5e])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1585:b0:24a:8d5e:932
- with SMTP id d9443c01a7336-2516e981584mr3792745ad.23.1757112464206; Fri, 05
- Sep 2025 15:47:44 -0700 (PDT)
-Date: Fri,  5 Sep 2025 15:47:05 -0700
+        bh=c1mAO5A1gn91KXDnH98r+B5g3x8oPbaMvEMjp5ywFmI=;
+        b=epVrHgXCA14pd/ijm+xDtJobYvBAfNn7QBXaC26WK4ywFQXoTCxXO/G76yZhrQ3VlP
+         LQQQjXYb3Hg5PDqa8NjwWCNuiJyy+NFVGa27VLhblaY6kMwGTZWcQe0ABgCwrgncl+T8
+         eUMG+Hm6VhtOCDA0n6sU9B45Ki+7Vo80CxglBK1I0C/kbCae5HxZhZptmM4VNWSHWo4Z
+         P2AYBAfYpGgcFkYIDqPYVWVa5BDhoaecUmfmOJiGAq+5cWTvhDNlO2xIOgxaSnn3wsLl
+         v7WT989GNquhMCcpscKQwW8irkIJCdk20s8O75XvbMUdohMDHP/kVOvfWccpy//MD2z1
+         f3tg==
+X-Forwarded-Encrypted: i=1; AJvYcCXLlqRLHyl/B+o0IBMkpQPkE78pLv1kmSAyhVfUuc66iPbdPoq2PSpJzr+nlEFPZXS8+9shSctB2Ewf+u/AutfR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzt4i1+l6RYwtrgAIlpBLn/6L7ryx+OUghsqe0Ay7ivTWyxoGNQ
+	J9MbzeO6rsNVeW0e0yqdqy0jQ1/29G3WuKJQ7ezI7NA9/Hahs9esZ4GkwZ0OBqaF6xG4XECh9MD
+	KoB2+ZK6A9w==
+X-Google-Smtp-Source: AGHT+IGP5tyQbAz6/a9kr27M1VLSua7UJmD76sbYZ8gqjEgBJ+ixv5i48QkWZvjdLFaVw5r9391d9KQRui1V
+X-Received: from plbcp6.prod.google.com ([2002:a17:902:e786:b0:24c:8f0c:bd97])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f706:b0:24c:7bf0:6e6b
+ with SMTP id d9443c01a7336-251751ea241mr3179395ad.53.1757112466196; Fri, 05
+ Sep 2025 15:47:46 -0700 (PDT)
+Date: Fri,  5 Sep 2025 15:47:06 -0700
 In-Reply-To: <20250905224708.2469021-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250905224708.2469021-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.355.g5224444f11-goog
-Message-ID: <20250905224708.2469021-2-irogers@google.com>
-Subject: [PATCH v1 1/4] perf bench futex: Add missing stdbool.h
+Message-ID: <20250905224708.2469021-3-irogers@google.com>
+Subject: [PATCH v1 2/4] tools bitmap: Add missing asm-generic/bitsperlong.h include
 From: Ian Rogers <irogers@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
@@ -80,26 +80,30 @@ To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.d
 	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-futex.h uses bool but lacks stdbool.h which causes build failures in
-some build systems. Add the missing #include.
+small_const_nbits is defined in asm-generic/bitsperlong.h which
+bitmap.h uses but doesn't include causing build failures in some build
+systems. Add the missing #include.
+
+Note the bitmap.h in tools has diverged from that of the kernel, so no
+changes are made there.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/bench/futex.h | 1 +
+ tools/include/linux/bitmap.h | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/bench/futex.h b/tools/perf/bench/futex.h
-index dd295d27044a..fcb72d682cf8 100644
---- a/tools/perf/bench/futex.h
-+++ b/tools/perf/bench/futex.h
-@@ -8,6 +8,7 @@
- #ifndef _FUTEX_H
- #define _FUTEX_H
+diff --git a/tools/include/linux/bitmap.h b/tools/include/linux/bitmap.h
+index d4d300040d01..0d992245c600 100644
+--- a/tools/include/linux/bitmap.h
++++ b/tools/include/linux/bitmap.h
+@@ -3,6 +3,7 @@
+ #define _TOOLS_LINUX_BITMAP_H
  
-+#include <stdbool.h>
- #include <unistd.h>
- #include <sys/syscall.h>
- #include <sys/types.h>
+ #include <string.h>
++#include <asm-generic/bitsperlong.h>
+ #include <linux/align.h>
+ #include <linux/bitops.h>
+ #include <linux/find.h>
 -- 
 2.51.0.355.g5224444f11-goog
 
