@@ -1,122 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0A5280A5F;
-	Fri,  5 Sep 2025 20:09:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057D0315D25;
+	Fri,  5 Sep 2025 20:20:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757102946; cv=none; b=JnGq5icDzcK743Q04f5/nRDzgR939oRbUoxdwHI5CXNiwn0wGK3xGSEV4P/4YoH0Gd7DU2AAQoxtSqfSIK4BKLrdzwoXObdb+0HUWVOzHl9Gx3HvwCWR/eHoScYn9KX5kU/aNTqeVuayQINZaKTUIAPlJCiw6r8WBXNUUL2n3gY=
+	t=1757103618; cv=none; b=GJTCgAiIUdo455jTTJAUqwOOSe9EopfzzyqU0pfsO9+MXs7iNBkDwQBhzbn09e/5BNKQOMX3gIbZiLv6w8UTTykyV6tqnPydla4HKzQcNIpqLn4d3z7Qv1tfFg2jn4afFR2QKyltl4P30/+9CT9K7fI59pObDdsqgmbbeat5ZhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757102946; c=relaxed/simple;
-	bh=Li7bM5SQHqjbRpCJToYrtYTRr5PgxJgR1Ff2r6AoN9U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FPo0p7m6aa5tJtg+NkemqYtHdp26tcL+Xd+gp5C58w5cZOXGZq3cmRofnnfEPvIBxuHTJUb9vLs8Ag69T6Ow8aaTSA9zbBcnM50GuhuTi54rGvbvOKRqpXhyjd8XhaRuE4Yjd+5a4W4Y88KBB1hBieZUkVhOcmiQ2dk0MpDwS/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GShNvFcV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757103618; c=relaxed/simple;
+	bh=9pHesOHkR5mAh2Wyj6pq8fayBw5SKI5QpASkLp7zRLg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QvhM7vgj8WY0N1NZAXZB3ny9VkwLD38UTj8JraLotCWzSfTyH6hYv1Fz6g8ARWov0ioJ6z3pdoXyI9TB9IcYR7uOnpsQNJN33kZpiGuiBIbIWwnSIgtD9cnJAVaZC2mNEOUEj+E43vhr1yvi/KE3xq3J+MopNbIGYSBLwaHiVBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mk1d0UGk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GShNvFcV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B15B4C4CEF1;
-	Fri,  5 Sep 2025 20:09:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mk1d0UGk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17923C4CEF1;
+	Fri,  5 Sep 2025 20:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757102946;
-	bh=Li7bM5SQHqjbRpCJToYrtYTRr5PgxJgR1Ff2r6AoN9U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GShNvFcVVEyuIUXPWLss5knF52KhZt+jKuUpQNJGBuFjQ6ywhxA8VgeJ2eJmnDAus
-	 89J7/QU5uehFZmxzeD9Nz3vUZ3xGE9C6z858aCAPrPEMRQ2prsQFvtYxFlvfI9JoBl
-	 rUQpo7l4pWuO3TZUemIlxjfkbAGhDIDU3iBRcz8GkjY82lCID+123RrWXLA7eLI3qZ
-	 ICaRHNHKUZRyGeA6RcKgxRo594g2xbNCiqCF+dfOPq+IzjELNmAsY298HLagg0xwOz
-	 cY7RIuhJI4v1FHEr1zqCoTR3i1Oppbh0k6hQQbNdQiAVYLhvuffu7hJUwDi/0DLW8H
-	 BUKl3uyuoZjBQ==
-Date: Fri, 5 Sep 2025 13:09:03 -0700
+	s=k20201202; t=1757103616;
+	bh=9pHesOHkR5mAh2Wyj6pq8fayBw5SKI5QpASkLp7zRLg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Mk1d0UGkmKjB3Oi20UhqkeabvmKtwD8PpWSWpfV0YjZ6EqsrefvCe887rejvG9Jdo
+	 IyRX/BdsoquwWGEjtmz8kfaroBAMrKSLY+On/qu0b1dS6bfuTT946PTig5UUrEnyx4
+	 DN06R3j9J5zEfyIVL7+Ggh9Z9HzESmirn7Sc69L2NhX1WOz2p9hOicg+EI8DQ4R9J5
+	 +JA96edOCJD1siKCzwhg10GVLzoWJhgcyR75mxH/QEqMKGqKIuNyT+LJYsOuPRAXge
+	 d5JRWwOnbSHqVMrluRhO+kP9YgjYoW3i3EObqtdDFflnw7X1r6JzMcU9CrJu2RBl6M
+	 S2b+TrBbnfguA==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Zecheng Li <zecheng@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Xu Liu <xliuprof@google.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 08/10] perf dwarf-aux: Skip check_variable for
- die_find_variable_by_reg
-Message-ID: <aLtDX0W0DMMr6BE4@google.com>
-References: <20250825195806.226328-1-zecheng@google.com>
- <aLKot1esgc3HHubX@google.com>
- <CAJUgMy+jTTAQ+=F=ddryLrftyB0h==pezZdvnZAT-UHmSU994w@mail.gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [GIT PULL] perf-tools fixes for v6.17-rc5
+Date: Fri,  5 Sep 2025 13:20:12 -0700
+Message-ID: <20250905202012.2341155-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.51.0.384.g4c02a37b29-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJUgMy+jTTAQ+=F=ddryLrftyB0h==pezZdvnZAT-UHmSU994w@mail.gmail.com>
 
-On Wed, Sep 03, 2025 at 05:23:01PM -0400, Zecheng Li wrote:
-> On Sat, Aug 30, 2025 at 3:31 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > > - In match_var_offset, use __die_get_real_type instead of
-> > >   die_get_real_type to preserve typedefs. Move the (offset == 0) branch
-> >
-> > Why do you want to preserve typedefs?  I think a variable type can be
-> > typedef to a pointer then now it won't resolve that target type anymore.
-> 
-> check_variable preserves the typedefs. It would sometimes resolve to
-> an unnamed struct if we remove the typedefs. 
+Hi Linus,
 
-Ah, that's unfortunate.
-
-> Let me test if it will
-> affect the dwarf_tag(&data->type) == DW_TAG_pointer_type check. Also I
-> found calling dwarf_aggregate_size on typedef'd types gives the
-> correct result, so maybe we don't need the sized_type in
-> check_variable?
-
-You're right.
-
-> 
-> > > - When comparing types from different scopes, first compare their type
-> > >   offsets. A larger offset means the field belongs to an outer
-> > >   (enclosing) struct. This helps resolve cases where a pointer is found
-> > >   in an inner scope, but a struct containing that pointer exists in an
-> > >   outer scope. Previously, is_better_type would prefer the pointer type,
-> > >   but the struct type is actually more complete and should be chosen.
-> >
-> > Can we improve is_better_type() then?
-> 
-> Here we are comparing two types with the extra access offset
-> information. In other contexts, the calls to is_better_type compares
-> two types only, so I think we don't need to add two new parameters to
-> is_better_type?
-
-Right, I meant just about pointer type and struct type.  It compares two
-types take the same location so I didn't expect they can be a pointer
-and a struct.  My intention was about a pointer and a base type.
-
-Also you may consider typedef and struct.  I think we prefer struct
-since it can access the member field.  But as you said we should use
-typedef if it's an unnamed struct.  It'd be great if we can get members
-even for typedefs (for structs).
-
-> 
-> > > -                     if (!found || is_better_type(type_die, &mem_die)) {
-> > > +                     if (!found || dloc->type_offset < type_offset ||
-> > > +                             (dloc->type_offset == type_offset &&
-> > > +                              is_better_type(type_die, &mem_die))) {
-> > >                               *type_die = mem_die;
-> > >                               dloc->type_offset = type_offset;
-> > >                               found = true;
-> 
-> I find changing the is_better_type call to !is_better_type(&mem_die,
-> type_die) would yield better results: prefer types from outer scope if
-> the current one is not "better" than the new one.
-
-Ok, sounds good.
+Please consider pulling the following changes in perf tools for v6.17.
+This includes fixes for segfaults that I reported earlier.
 
 Thanks,
 Namhyung
 
+
+The following changes since commit 2c369d91d0933aaff96b6b807b22363e6a38a625:
+
+  perf symbol: Add blocking argument to filename__read_build_id (2025-08-25 15:07:18 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.17-2025-09-05
+
+for you to fetch changes up to ca81e74dc34734078d34485d4aa123561ba75b15:
+
+  perf symbol-elf: Add support for the block argument for libbfd (2025-09-04 16:37:35 -0700)
+
+----------------------------------------------------------------
+perf-tools fixes for v6.17-rc5
+
+This series contains fixes for use-after-free resulted in segfaults
+after merging the bpf tree.  Also a couple of build and test fixes.
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+
+----------------------------------------------------------------
+Ian Rogers (4):
+      perf bpf-event: Fix use-after-free in synthesis
+      perf bpf-utils: Constify bpil_array_desc
+      perf bpf-utils: Harden get_bpf_prog_info_linear
+      perf symbol-elf: Add support for the block argument for libbfd
+
+James Clark (1):
+      perf tests: Fix "PE file support" test build
+
+Thomas Richter (1):
+      perf test: Checking BPF metadata collection fails on version string
+
+ tools/perf/tests/pe-file-parsing.c          |  4 +-
+ tools/perf/tests/shell/test_bpf_metadata.sh |  2 +-
+ tools/perf/util/bpf-event.c                 | 39 ++++++++++++------
+ tools/perf/util/bpf-utils.c                 | 61 ++++++++++++++++++-----------
+ tools/perf/util/symbol-elf.c                | 10 +++--
+ 5 files changed, 76 insertions(+), 40 deletions(-)
