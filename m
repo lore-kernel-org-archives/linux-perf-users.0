@@ -1,177 +1,238 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1CC54654
-	for <linux-perf-users@vger.kernel.org>; Fri,  5 Sep 2025 23:57:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330EF27B32B;
+	Sat,  6 Sep 2025 11:14:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757116674; cv=none; b=njctltnhazIzkoiR9/TpfgulE1XtLJO+SCBcNH6tC7NsN5IfFlfAThHsl9NqIX1vsNT4Kj4pp+SMj7KWpofG993w5RDDq54h0hoE3OIbGMbYnQqCSYeOaV02QalAy3roVLYKPnsXJJ+rByFCms8SLyakePw1H7Zok5faHvlKAvI=
+	t=1757157253; cv=none; b=V+KmJ5exg2Tpm9lQ0ut4I0ovwXLEVr+HPYZFUDFrTcTeW7YMfAvuTkLlaYUulol2Wi5cAmsz5ZHanjd/Kw9NgabCQGDDi5WkXeigFm9XHIgnyd+Nhzlj/TOXid7rRgBinUU4RhSz4apcyUudZuyMVjl2poIeo1o6nt/3tdsooD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757116674; c=relaxed/simple;
-	bh=X6FjyOREsMiWyTGUz8ui40PctBG9QEdoLDLoZRzJHIE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D0/Sp+EYbHquzt7gP6LHBVg/EtF/0OFqS+c2vxV01//au/QEBwnVVH0K9mPJcd97nDs/wFDAsF0yWebvcCbLXV7wiaDld6eU1gz+xasi0csKvyO0A+4FB7F/8Dfli/NCcQxQJoZAZCukKr8eey/hkm8BoEiMqKFD8UdUFFEMXW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PvbxhA/U; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1757157253; c=relaxed/simple;
+	bh=79tZSDjissr69qWLTtGDszHMBwdmGZrw62SonGZBniU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MEti/0Mnn034YwLslcXgxptf6lZeiA5fPMYixv/EoVHT0W04u8sc5ZvKOldh9dWzqJupm05PHuM2HRcDVnPzjd4rz8VucZfgnRJHLaC7Aqk88p+K0LYg76HXwl3Sf+qiUHtu2whypAY8ugGIcW8o33U60ticFX0i/OgTSXxYaW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CYbvkvGn; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PvbxhA/U"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7725147ec88so1195157b3a.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 Sep 2025 16:57:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CYbvkvGn"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-45cb5e1adf7so23942925e9.0;
+        Sat, 06 Sep 2025 04:14:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1757116671; x=1757721471; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1757157249; x=1757762049; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7pLX9mNLE1Old2BsaUGh3Hjem0q5L//LE3ZX0hufywI=;
-        b=PvbxhA/UdV9j8AJ7Lkg9QxwUmHA4ZlqX6fjc1KHsXXrpdBnZtlB2bOGfqPLhs849u+
-         lqfI9jCmjT42Teu4jUsdQ0q1CElxp/9R+Ur2u+dCKgRrBY6UOx2ZwkxsT+ShS0VcWQ2K
-         P5lu+gHmhSAA6djv1NJfbxXZdSKPufJsZW4XQ=
+        bh=WK+GAzkyID6tHGg5RxAC2Li9CcM3O7oCVmbbRYNKra8=;
+        b=CYbvkvGninhN3Z6wZDkqj1ky315/omElwOsnJhbHb6iC9VwVpkmMYAAjrAjWjIvhTZ
+         aRHYBMK50v+otki+AXE4aZa0zm53auBCH45ZIhHXh+JoBSF1PMnKCe9R+iQZ2L8gwgUg
+         eYustfZ0nmh6TmVZl5ux2ulECwz3Uanm3Cm8Wv2Hn6BKtqUYU/ftnVEZp2ut61xOa0ER
+         kmaLRdodfwcaNGdh/rMosPqH6F8ngIo/rzQVrWW/ecoJXCsUbVQh38eCxJlpCzvH3uIE
+         YE9d4cS+yz7M471SqXjXC+qz0PA/Zzc6c+Qh6eiZYcQA+a2jwj0boGnkPJXAM5nMhese
+         gEeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757116671; x=1757721471;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1757157249; x=1757762049;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7pLX9mNLE1Old2BsaUGh3Hjem0q5L//LE3ZX0hufywI=;
-        b=Kfvpovyjs8B12Oi5kh+KXAlE3fnH0AEQ6Sx5ruAHHGlHIPQvgkg6sHUHZUQK0Kk7YF
-         e9F+k4XIJQqtl2fAdYuNBYOfKhfoJHrM1NyIrWx0iw+w8vK2R4oUxfMA0LT2SwPVlY4S
-         h5HOATv4KYEJFgRAaXFHZCD34dZu1Q37TBNW5Qe3J89AiqEjT/GoCD2GC58oNrweeQQm
-         Uf/odSFErMqcrPGGgyjeLVelsc2dw/i2+qHGFVgAjF0ZGXKy9THYldGtgewPk1q8+55I
-         KdwrzRvI+4bCD9QHa9ygg7ToD/xBFjEMVORo72Dysb5AMzjzSrVvB+BV+U4C/Ib31Qxk
-         fc7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUwE1ZbrsOFhwSCkfuqTNkpKz0YSJEV1URrRW5uiVJTUJ1FjDSfvM2OkMykt09zNQAx3RWUNbaN0TlXleGrQs6E@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqkPK5dy7jPIVkrL2Wnc9Mlbpv1oe7U5aXr+5hNEZWaAPdnjtm
-	S6SqbnNuUhO+9uHKrzRzN50ro/X1N6TVQZfCZ2xVTkRVx/b1eDUT0pora25lZFf1rHtKae94nA0
-	9PfY=
-X-Gm-Gg: ASbGncvsSjxYy7thqqVl3CdXhwlKdq8QG/yYOKGsVWM41YNGE+m5bEBcvUsdEvSsyIB
-	qAPgT10S0FTQw6F7o0CnqGB+DhKvlBFPPIxy0FyKGW+VIRR2FiZBBpDzg5anumglIh5GTMXz54B
-	EjPRkrYPpJTafnwlkkozMWVsqMkAiF+K8tdBCMnBTHsITxaNTT9qszVuQDn3drnpEUmlErI9kCd
-	TAGryPsuEGrExNmgSjucrSR9qLGTHA4FewO4bJZTyGkGAKOmbB1cmccqQ7S9OiCSc/c4V/B5/EH
-	LhTIVYvioWfxCuZtpK6neijII1xl6fmZkqMkAQlwjsjCsUwKyjN3BzmvwJA8W+7KdQixU9w6SK2
-	/MrcgBj1pGx4xczeuhvhYiHNuLYgEGZjg3jqVLHGZA4BLNErRGiR3+bQ9UI1PNRRkV9doWOFec1
-	Y1
-X-Google-Smtp-Source: AGHT+IHwUcJA+bnomrUbZUNNMJPKcxbW7tZaNFk4us8fc9n4wSkbFwL98oC6wduCp6fE3KX005st0Q==
-X-Received: by 2002:a05:6a20:7f83:b0:243:d3d3:61d4 with SMTP id adf61e73a8af0-2537be02c97mr500519637.16.1757116671317;
-        Fri, 05 Sep 2025 16:57:51 -0700 (PDT)
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com. [209.85.215.169])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-772447058dbsm19120766b3a.38.2025.09.05.16.57.50
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Sep 2025 16:57:50 -0700 (PDT)
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b4c29d2ea05so2673648a12.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 Sep 2025 16:57:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX/IlaLEiQs8H76HtfKdkJxeQUfUNIKIb1TUCrQ9PpyeXGVBft5WcT9IoDsCTxPTKyvGSb4WpJdilV42DwnIFd/@vger.kernel.org
-X-Received: by 2002:a17:90b:4fd0:b0:325:15bf:4dc2 with SMTP id
- 98e67ed59e1d1-32d44f86e71mr623965a91.0.1757116669514; Fri, 05 Sep 2025
- 16:57:49 -0700 (PDT)
+        bh=WK+GAzkyID6tHGg5RxAC2Li9CcM3O7oCVmbbRYNKra8=;
+        b=B2Yh9tDz+2Wi5MZ/gZ1utsFGKfXnhmZFCPVg20iyLOv0JrRxvLxTwyecM72xU8zL93
+         bPMCG0IUiTvYNMu63XdfDS7j7C2BxXq5yii+IbLUFOzn4XK25ouKLc0SvxaYypkZUn5T
+         mKCI9o547JAeMNKtuy7jOgsuxsxcC2ydAgUMmM1PM0O0wdMmo69BzqJhYpB2ia2rxUyb
+         w7oKaNJ3iapwIAIVOe2hrcb+9mV9Vt4awtQ1K4gRp4z/NAoLOJ2qGbAUgtrCt2JwNtgm
+         Tz0ZIbM7UcmSVb0dgD21nEtTfAQBcojyd3L2DrzIxOoggaw29d0QIrL8hHQOA/8lwAxN
+         Kslg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlVkvx5e5RYNKIFjUdywuFx0LlfqiNS5qafon1j5KFKn/80sXMcTsdy3YtuNjE2FCqWRE=@vger.kernel.org, AJvYcCWXFB6v0Z5svnbmn/2GbZAaC4xGP4vbN8Y4V7SBMsfq+MeQazIVT5U7JFEEVWLiEXcPUnrr0hx0bhSbpOPT2jfUzfyW@vger.kernel.org, AJvYcCWmIfRjO72M8PIGCPzCa+4BlY+/BTZYnVLWbsf0PoJvqvVKDg8PuLque4IMxjh0to4dRXx/2EigVInvt6L8mQ==@vger.kernel.org, AJvYcCWpruacRg6IZEmkWP3K+KGTHTrg+tg6RuEjEYiZaiR6RxRf4Qc+6W+UlM0I98RSq7e6XNiTSY2SkwEgs5NS@vger.kernel.org, AJvYcCX3qQg9FvRn/9yRYM6FtzpWydoqN42V5A/v1a5gYP2nBiz7zw48sgMzwSS61x+ixmkRzGE2znPW62St9fzzO6h3LQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIMSBWptRKUoIU0Nt0FUM+ucUvK6TB/0O629xdrxAwSuYfRDtD
+	0s5nsCP7PY1EFDKJNv5fisHINAfVaOAmyfagv+QnCMNv4zZ9KHKrmAtm
+X-Gm-Gg: ASbGncvuXlpomYSjclIG1pwbLoGuhMZmy2vbT92ptLY6JFwcVnnc7DxCq2niBz0x5Cq
+	/OsMbWOsmAwrFOyIxVuq95U/TMgQ9b7i44S/V6RyfN6pQZVcc6gAdgXa7NAx4vk18aZ10OLt5u1
+	ghkeEF5xj3d0CDgKhxr/V898GquisNLBSDFA9Y31SySpdyTyiSWhlgxNp94R+jjQ1x7Q7XcKEQ8
+	b90JHuEgZx+zkBpHW/Q3xedopHmjlPIyOdA3I4N1zNrfG3/yM3eXKrccJkd/bY4KlEGJxJ+VXdo
+	uTAQRmZkJ4NnTAUyOWJC3y8R6oU5Ip7bqxbQjnh869ZXGw8LgVXjRVBgOIURxhSQjJOJ5TcsPn/
+	90O2LC2wGpeMB8tlJb6VMqkyAFIdOClXPjM9AHDvEo4YBjNwJKEHqT7KE0/HJfOkw
+X-Google-Smtp-Source: AGHT+IFW/5FOxyFqj1+gS4iZbWkrMnNm7SEPeZdXIRSlHu3qHTX/3ekqpxHZW/pRpI0qkbfG1hNoJg==
+X-Received: by 2002:a05:600c:4fc9:b0:45b:7aae:7a92 with SMTP id 5b1f17b1804b1-45ddded75e1mr12963215e9.21.1757157249223;
+        Sat, 06 Sep 2025 04:14:09 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b7e898b99sm361608935e9.19.2025.09.06.04.14.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Sep 2025 04:14:08 -0700 (PDT)
+Date: Sat, 6 Sep 2025 12:13:46 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Bhupesh Sharma <bhsharma@igalia.com>
+Cc: Kees Cook <kees@kernel.org>, Bhupesh <bhupesh@igalia.com>,
+ akpm@linux-foundation.org, kernel-dev@igalia.com,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
+ laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
+ mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
+ alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
+ mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
+ david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
+ brauner@kernel.org, jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+ linux-trace-kernel@vger.kernel.org, torvalds@linux-foundation.org
+Subject: Re: [PATCH v8 4/5] treewide: Switch memcpy() users of 'task->comm'
+ to a more safer implementation
+Message-ID: <20250906121346.3fa6ea16@pumpkin>
+In-Reply-To: <d48f66cf-9843-1575-bcf0-5117a5527004@igalia.com>
+References: <20250821102152.323367-1-bhupesh@igalia.com>
+	<20250821102152.323367-5-bhupesh@igalia.com>
+	<202508250656.9D56526@keescook>
+	<d48f66cf-9843-1575-bcf0-5117a5527004@igalia.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250827100959.83023-1-cuiyunhui@bytedance.com>
- <20250827100959.83023-2-cuiyunhui@bytedance.com> <CAD=FV=WiZ5=4Ck3G2gme=ey6uYQhi-3Wo32DpLj9P53wxGCojw@mail.gmail.com>
- <CAEEQ3wmBvevbkP8XmwR0_q_1QWQsie5g0UUxTFm6ovS1m41pEQ@mail.gmail.com>
- <CAD=FV=UzUCPtwuQRFR0SkAkh63MbzMefxNYmiOBxCemL3P_+EQ@mail.gmail.com> <CAEEQ3wmLOjZxVh_vBhmctH-u_ZSxnyg0GiN-_e_4v8_pfxcbSw@mail.gmail.com>
-In-Reply-To: <CAEEQ3wmLOjZxVh_vBhmctH-u_ZSxnyg0GiN-_e_4v8_pfxcbSw@mail.gmail.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 5 Sep 2025 16:57:37 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XaSP2A7Dufrxt1DUUznF9Yk-qdBY3wbE03x4_L8HJLSQ@mail.gmail.com>
-X-Gm-Features: Ac12FXzUu2N-pcZbzJSHRvrPWYA7cVEhjyHs0eCe7xSTQbillcbYzLxLmPy77G0
-Message-ID: <CAD=FV=XaSP2A7Dufrxt1DUUznF9Yk-qdBY3wbE03x4_L8HJLSQ@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH 1/2] watchdog: refactor watchdog_hld functionality
-To: yunhui cui <cuiyunhui@bytedance.com>
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	alex@ghiti.fr, atish.patra@linux.dev, anup@brainfault.org, will@kernel.org, 
-	mark.rutland@arm.com, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, catalin.marinas@arm.com, 
-	masahiroy@kernel.org, suzuki.poulose@arm.com, maz@kernel.org, 
-	zhanjie9@hisilicon.com, yangyicong@hisilicon.com, mingo@kernel.org, 
-	lihuafei1@huawei.com, akpm@linux-foundation.org, jpoimboe@kernel.org, 
-	rppt@kernel.org, kees@kernel.org, thomas.weissschuh@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On Mon, 1 Sep 2025 10:58:17 +0530
+Bhupesh Sharma <bhsharma@igalia.com> wrote:
 
-On Wed, Sep 3, 2025 at 4:56=E2=80=AFAM yunhui cui <cuiyunhui@bytedance.com>=
- wrote:
->
-> Hi Doug=EF=BC=8C
->
-> On Wed, Sep 3, 2025 at 1:04=E2=80=AFAM Doug Anderson <dianders@chromium.o=
-rg> wrote:
-> >
-> > Hi,
-> >
-> > On Sun, Aug 31, 2025 at 10:57=E2=80=AFPM yunhui cui <cuiyunhui@bytedanc=
-e.com> wrote:
-> > >
-> > > Hi Doug,
-> > >
-> > > On Sat, Aug 30, 2025 at 5:34=E2=80=AFAM Doug Anderson <dianders@chrom=
-ium.org> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > On Wed, Aug 27, 2025 at 3:10=E2=80=AFAM Yunhui Cui <cuiyunhui@byted=
-ance.com> wrote:
-> > > > >
-> > > > > Move watchdog_hld.c to kernel/, and rename arm_pmu_irq_is_nmi()
-> > > > > to arch_pmu_irq_is_nmi() for cross-arch reusability.
-> > > > >
-> > > > > Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> > > > > ---
-> > > > >  arch/arm64/kernel/Makefile                   | 1 -
-> > > > >  drivers/perf/arm_pmu.c                       | 2 +-
-> > > > >  include/linux/nmi.h                          | 1 +
-> > > > >  include/linux/perf/arm_pmu.h                 | 2 --
-> > > > >  kernel/Makefile                              | 2 +-
-> > > > >  {arch/arm64/kernel =3D> kernel}/watchdog_hld.c | 8 ++++++--
-> > > > >  6 files changed, 9 insertions(+), 7 deletions(-)
-> > > > >  rename {arch/arm64/kernel =3D> kernel}/watchdog_hld.c (97%)
-> > > >
-> > > > I'm not a huge fan of the perf hardlockup detector and IMO we shoul=
-d
-> > > > maybe just delete it. Thus spreading it to support a new architectu=
-re
-> > > > isn't my favorite thing to do. Can't you use the buddy hardlockup
-> > > > detector?
-> > >
-> > > Why is there a plan to remove CONFIG_HARDLOCKUP_DETECTOR_PERF? Could
-> > > you explain the specific reasons? Is the community's future plan to
-> > > favor CONFIG_HARDLOCKUP_DETECTOR_BUDDY?
-> >
-> > I don't think there are any concrete plans, but there was some discussi=
-on here:
-> >
-> > https://lore.kernel.org/all/CAD=3DFV=3DWWUiCi6bZCs_gseFpDDWNkuJMoL6XCft=
-Eo6W7q6jRCkg@mail.gmail.com/
-> >
-> > -Doug
-> >
->
-> I=E2=80=99ve read your linked content, which details the pros and cons of=
- perf
-> watchdog and buddy watchdog.
-> I think everyone will agree on choosing one as the default.
-> It seems there=E2=80=99s no kernel/watchdog entry in MAINTAINERS=E2=80=94=
-what=E2=80=99s next
-> for these two approaches?
+> Hi Kees,
+> 
+> On 8/25/25 7:31 PM, Kees Cook wrote:
+> > On Thu, Aug 21, 2025 at 03:51:51PM +0530, Bhupesh wrote:  
+> >> As Linus mentioned in [1], currently we have several memcpy() use-cases
+> >> which use 'current->comm' to copy the task name over to local copies.
+> >> For an example:
+> >>
+> >>   ...
+> >>   char comm[TASK_COMM_LEN];
+> >>   memcpy(comm, current->comm, TASK_COMM_LEN);
+> >>   ...
+> >>
+> >> These should be rather calling a wrappper like "get_task_array()",
+> >> which is implemented as:
+> >>
+> >>     static __always_inline void
+> >>         __cstr_array_copy(char *dst,
+> >>              const char *src, __kernel_size_t size)
+> >>     {
+> >>          memcpy(dst, src, size);
+> >>          dst[size] = 0;
+> >>     }
+> >>
+> >>     #define get_task_array(dst,src) \
+> >>        __cstr_array_copy(dst, src, __must_be_array(dst))
+> >>
+> >> The relevant 'memcpy()' users were identified using the following search
+> >> pattern:
+> >>   $ git grep 'memcpy.*->comm\>'
+> >>
+> >> Link:https://lore.kernel.org/all/CAHk-=wi5c=_-FBGo_88CowJd_F-Gi6Ud9d=TALm65ReN7YjrMw@mail.gmail.com/  #1
+> >>
+> >> Signed-off-by: Bhupesh<bhupesh@igalia.com>
+> >> ---
+> >>   include/linux/coredump.h                      |  2 +-
+> >>   include/linux/sched.h                         | 32 +++++++++++++++++++
+> >>   include/linux/tracepoint.h                    |  4 +--
+> >>   include/trace/events/block.h                  | 10 +++---
+> >>   include/trace/events/oom.h                    |  2 +-
+> >>   include/trace/events/osnoise.h                |  2 +-
+> >>   include/trace/events/sched.h                  | 13 ++++----
+> >>   include/trace/events/signal.h                 |  2 +-
+> >>   include/trace/events/task.h                   |  4 +--
+> >>   tools/bpf/bpftool/pids.c                      |  6 ++--
+> >>   .../bpf/test_kmods/bpf_testmod-events.h       |  2 +-
+> >>   11 files changed, 54 insertions(+), 25 deletions(-)
+> >>
+> >> diff --git a/include/linux/coredump.h b/include/linux/coredump.h
+> >> index 68861da4cf7c..bcee0afc5eaf 100644
+> >> --- a/include/linux/coredump.h
+> >> +++ b/include/linux/coredump.h
+> >> @@ -54,7 +54,7 @@ extern void vfs_coredump(const kernel_siginfo_t *siginfo);
+> >>   	do {	\
+> >>   		char comm[TASK_COMM_LEN];	\
+> >>   		/* This will always be NUL terminated. */ \
+> >> -		memcpy(comm, current->comm, sizeof(comm)); \
+> >> +		get_task_array(comm, current->comm); \
+> >>   		printk_ratelimited(Level "coredump: %d(%*pE): " Format "\n",	\
+> >>   			task_tgid_vnr(current), (int)strlen(comm), comm, ##__VA_ARGS__);	\
+> >>   	} while (0)	\
+> >> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> >> index 5a58c1270474..d26d1dfb9904 100644
+> >> --- a/include/linux/sched.h
+> >> +++ b/include/linux/sched.h
+> >> @@ -1960,12 +1960,44 @@ extern void wake_up_new_task(struct task_struct *tsk);
+> >>   
+> >>   extern void kick_process(struct task_struct *tsk);
+> >>   
+> >> +/*
+> >> + * - Why not use task_lock()?
+> >> + *   User space can randomly change their names anyway, so locking for readers
+> >> + *   doesn't make sense. For writers, locking is probably necessary, as a race
+> >> + *   condition could lead to long-term mixed results.
+> >> + *   The logic inside __set_task_comm() should ensure that the task comm is
+> >> + *   always NUL-terminated and zero-padded. Therefore the race condition between
+> >> + *   reader and writer is not an issue.
+> >> + */
+> >> +
+> >>   extern void __set_task_comm(struct task_struct *tsk, const char *from, bool exec);
+> >>   #define set_task_comm(tsk, from) ({			\
+> >>   	BUILD_BUG_ON(sizeof(from) < TASK_COMM_LEN);	\
+> >>   	__set_task_comm(tsk, from, false);		\
+> >>   })
+> >>   
+> >> +/*
+> >> + * 'get_task_array' can be 'data-racy' in the destination and
+> >> + * should not be used for cases where a 'stable NUL at the end'
+> >> + * is needed. Its better to use strscpy and friends for such
+> >> + * use-cases.
+> >> + *
+> >> + * It is suited mainly for a 'just copy comm to a constant-sized
+> >> + * array' case - especially in performance sensitive use-cases,
+> >> + * like tracing.
+> >> + */
+> >> +
+> >> +static __always_inline void
+> >> +	__cstr_array_copy(char *dst, const char *src,
+> >> +			  __kernel_size_t size)
+> >> +{
+> >> +	memcpy(dst, src, size);
+> >> +	dst[size] = 0;
+> >> +}  
+> > Please don't reinvent the wheel. :) We already have memtostr, please use
+> > that (or memtostr_pad).  
+> 
+> Sure, but wouldn't we get a static assertion failure: "must be array" 
+> for memtostr() usage, because of the following:
+> 
+> #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) + 
+> __must_be_array(arr))
+> 
+> I think it would be easier just to set:
+> 
+>    memcpy(dst, src, size);
+>    dst[size -1] = 0;
+> 
+> instead as Linus and Steven suggested.
 
-I guess to start, someone (you?) should send some patches to the list.
-Maybe one patch to make buddy the default and one to change the
-description of the "perf" lockup detector say that its usage is
-discouraged, that it might be removed, that people should use the
-"buddy" detector instead, and that if there's a reason someone needs
-the "perf" detector instead of the buddy one then they should make
-some loud noises.
+The compiler is still likely to make a mess of it.
+You really want:
+	*(u64 *)dst = *(u64 *)src;
+	*(u64 *)(dst + 8) = *(u64 *)(src + 8) & ~htobe64(0xff);
+That may need something to force 8 byte alignment.
+Or force 4 byte alignment and use a u64 type with 4 byte alignment.
 
-You'd want to CC folks who were involved in recent watchdog changes
-and make sure to CC Andrew (akpm). If folks react positive and Andrew
-agrees then he'll likely land the the patches and we'll have made
-forward progress. :-)
+	David
 
--Doug
+> 
+> Thanks,
+> Bhupesh
+> 
+> >> +
+> >> +#define get_task_array(dst, src) \
+> >> +	__cstr_array_copy(dst, src, __must_be_array(dst))  
+> > Uh, __must_be_array(dst) returns 0 on success. :P Are you sure you
+> > tested this?
+> >  
+> 
+> 
+
