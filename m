@@ -1,106 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41ABA306B35;
-	Mon,  8 Sep 2025 13:46:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 065952264B6
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Sep 2025 13:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757339196; cv=none; b=m186y7nxLlOJ17K3LBy7h9zfRXJzObvpoU3ZrHO2h5LLu08Yu7tcZiKxzvUS+w9Z77tDbtnLoBShac7X/b67HTL8Fu0ui3ZNwJal20Vl00+9zheLgI/+vw/UEowY1Oaun1u3jREOSa95TCnlFuc7lywK2LtyZMuIDwDVgZkOkKU=
+	t=1757339676; cv=none; b=cZ1mJnkhKgsyVwecyDaq1KtKblbtRSsyKuCfS3gIlFyut4qMD3mZxJD6rAgIX3TZ4s0PgCvVQxCSSEchTWn8uXB1kQmknyKiQhI5GcCXVGCvk5KR4AF0M8wjpbExXU0oQ/H7oL92RedoyJknu4fh9A+Utpd51G6NQTK4kh3RCac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757339196; c=relaxed/simple;
-	bh=CTe4rGRu7tQeVsXNFvoCD5+pC/mdlOMNsYbe3nACYh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SdWz5aIogjzwDSbHGfHB4CMa9Y1elwA9TIYi/cX1WVfNPcX+iBgQFziiaaNN8Sci9Add91BcoG1LcR9h7C0Om2PrJmwiLisUbA2NcwigdrkO7sVGwKN6X/5Ell7HguePpjqplTIZuqxzUh+8oHiZGxYJSkk25S5mCFJn1Ny6XSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j8lRMQMZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757339676; c=relaxed/simple;
+	bh=dJu5haeXP/GbMsCGjaEPTCUARkEEutJkdZ6n7JJnInk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DnjDqQkxPXkWCYeh+mQKq0R4OTHyNzO05NnIKcfzZtZ9GPDieeON7OPKzEok91qhLpZKtmwz+exrMVW5NLUC4l0/zCRdXhqQWoplTQ2JEfbCLbqisG5yQvW5XTy+wmQWxTMzigz5EfK8ODD+WBApeYuDryoqGGll30K7RC9kPzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XryH/dZC; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j8lRMQMZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED23CC4CEF7;
-	Mon,  8 Sep 2025 13:46:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757339195;
-	bh=CTe4rGRu7tQeVsXNFvoCD5+pC/mdlOMNsYbe3nACYh0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j8lRMQMZKzJAMXGs2/yg5yLBIF9HGu4r5h1bpyMi/dedTvIpmB+GJXqR7cfrxwLX+
-	 SxEo1u0zexPUAF1FLCt/3h4a4TyQVeGg4BQZ0SsciXD+3LlSvAUiPFnrPbWjJPA4r6
-	 iCRHb82NqfQy/LQJDb1vybEXprBtJLnMUOZNKKh6kA2oNXV/6MLaXz60awMBLlnyXN
-	 tfUJTJbuvPnKWDOMbrvGe6hX1RnupFViXIpnTQg+L0OLaS5NXA659feS7HhAcRclQi
-	 eOt2ZDFkrj/+EjPxAVvO564l9/gf6NNMBD1XpgDEXzSqOqPNGl2SiYzVW9r4/dXbPL
-	 FGqBaGlfiTM9w==
-Date: Mon, 8 Sep 2025 19:11:55 +0530
-From: Naveen N Rao <naveen@kernel.org>
-To: Manali Shukla <manali.shukla@amd.com>
-Cc: kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-doc@vger.kernel.org, seanjc@google.com, pbonzini@redhat.com, nikunj@amd.com, 
-	bp@alien8.de, peterz@infradead.org, mingo@redhat.com, mizhang@google.com, 
-	thomas.lendacky@amd.com, ravi.bangoria@amd.com, Sandipan.Das@amd.com
-Subject: Re: [PATCH v2 05/12] KVM: x86: Add emulation support for Extented
- LVT registers
-Message-ID: <xnwr5tch7yeme3feo6m4irp46ju5lu6gr4kurn6oxlgoutvabt@3k3xh2pbdbje>
-References: <20250901051656.209083-1-manali.shukla@amd.com>
- <20250901052238.209184-1-manali.shukla@amd.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XryH/dZC"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-45de1f2cdeeso8564795e9.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Sep 2025 06:54:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1757339673; x=1757944473; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tCHpJvxz6Qb8QBxhEywwqTxUHZsPubTDT4UbMJARa5E=;
+        b=XryH/dZCrAly1hwlkUGNZGOzB1js/FPdmgTvwc6IEhWYxXHjY4WoEDEhgOxhwK/6QR
+         jz3TjiXMTLAymKFIKdAGPSnShY5Gj1P28H8hfh4bM8OMdQiI6ylQPvVvi1OrBrWSuaMf
+         1Lo+NE7rJfD7ohljBuasx+4+L/m9C7JuFVv4MpaN5/DH6sbBuPYUT9mjNv/wd33t7glD
+         qZhJZtwgzJaTvKpBpPB8zLFTtUEdxc6PgbfVB1fNR0BAsrMjjFZRX8QyEOYInJrr0RCr
+         UH9dw90cXhIPKYKYPvdPCC94DDvTdpk7akFsnOhk2pOBXKruha3+xRKD34DZVSkHqghF
+         F0Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757339673; x=1757944473;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tCHpJvxz6Qb8QBxhEywwqTxUHZsPubTDT4UbMJARa5E=;
+        b=KS3EfjXus4e/kql6h/mB1W6EW+ZGGSrgOER4N0ue3KN7oQT51sNHrxWjxpDFmG7mSK
+         avY559dvhS3gNhlGxUw9c9J8aRv+0yHWo9UTPZJuvuf7FhrKdFJgpdbd+G7aVeTFO1fj
+         XqNotT2Qo7FmnSygW/F5WNXOHIYECPwEXT3qIBom4Phu02qzV/mV7XlTstIyCOEh0TfJ
+         c2DkdRlbAbntAHq76Go2SveRR8nJW7I9D04/joF1Z51hzkuvxEPNJgbHsv7g5vetnZqb
+         Jij4K2Gq9rho17szsGfCeczgzf0DdkG5pLITfpAPtgcmZBsRlyCnXTI2tInH3nL2KoT3
+         45Yg==
+X-Forwarded-Encrypted: i=1; AJvYcCUf8EIzODBjCWC7WN9We/zb/y+NBXWFn221W+WxZY+F3OVf1wMls0hEqz8jMZ9A3CfgF3pSVq0UxP/NiHl/Cfk/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtIWUquVx+B4yYchS2LM7X/Bx+XVvXvmQA7AZDymK/CaLK7XdF
+	QPSuFYIBE6uCkwGiejiEKsvP8JzyYIvZjSAerHD6A6FuKpAIWbrDlCn1NcJ0vTCSyg4=
+X-Gm-Gg: ASbGncv0gRxVEp4XWtypnDEp1+sTRNrREbOIfSaPn2WrfizV7xGuMcG9C3fShJLCmU/
+	W8jCfoYWHxSek18ZO1yyATl7MudrcHcoaGN7GnYGwxic8Z3Lkf38yWya9hb/RaKxyuTYFrcryI8
+	HECRu8XCmxbH0WSQBPpDGfIIYTCsUGmN42CfGOLeSlo0/nw+po+7wZb+i4OHyeN95LwbKBcHyqq
+	q4JhqDxLU5Zh5LsgYfcwT8NzmqUKL1Ay2V3Vw5lswGodTV6PwFFqwK5l5S+FQ9OJaTzyOdLoExJ
+	pOYUyleOUpeSvDUirztFlCZlwOa6M6q0njpVaeit3KSY8ovQlrHxV5eHqL3fBdrym5nL0dnrivq
+	fHjziJwOEUDfrcQpDOCIMMtoRZXA=
+X-Google-Smtp-Source: AGHT+IF+ypPVfQCAEOxwFI3Zr/SauvJzp3o2msqjq7oBAEzx5/Zdo6XXLDnm5bhPV93Qax8SeMujHg==
+X-Received: by 2002:a05:600c:4f8b:b0:456:19be:5e8 with SMTP id 5b1f17b1804b1-45dddecd860mr67247425e9.20.1757339673359;
+        Mon, 08 Sep 2025 06:54:33 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.76.109])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45dd296ed51sm189909035e9.3.2025.09.08.06.54.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Sep 2025 06:54:33 -0700 (PDT)
+Message-ID: <b4bcb7cf-da03-4263-9101-feec6d0e0d8d@linaro.org>
+Date: Mon, 8 Sep 2025 14:54:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250901052238.209184-1-manali.shukla@amd.com>
-
-On Mon, Sep 01, 2025 at 10:52:38AM +0530, Manali Shukla wrote:
-> From: Santosh Shukla <santosh.shukla@amd.com>
-> 
-> The local interrupts are extended to include more LVT registers in
-> order to allow additional interrupt sources, like Instruction Based
-> Sampling (IBS) and many more.
-> 
-> Currently there are four additional LVT registers defined and they are
-> located at APIC offsets 400h-530h.
-> 
-> AMD IBS driver is designed to use EXTLVT (Extended interrupt local
-> vector table) by default for driver initialization.
-> 
-> Extended LVT registers are required to be emulated to initialize the
-> guest IBS driver successfully.
-> 
-> Please refer to Section 16.4.5 in AMD Programmer's Manual Volume 2 at
-> https://bugzilla.kernel.org/attachment.cgi?id=306250 for more details
-> on Extended LVT.
-> 
-> Signed-off-by: Santosh Shukla <santosh.shukla@amd.com>
-> Co-developed-by: Manali Shukla <manali.shukla@amd.com>
-> Signed-off-by: Manali Shukla <manali.shukla@amd.com>
-> ---
->  arch/x86/include/asm/apicdef.h | 17 ++++++++++++++
->  arch/x86/kvm/cpuid.c           |  6 +++++
->  arch/x86/kvm/lapic.c           | 42 ++++++++++++++++++++++++++++++++++
->  arch/x86/kvm/lapic.h           |  1 +
->  arch/x86/kvm/svm/avic.c        |  4 ++++
->  arch/x86/kvm/svm/svm.c         |  6 +++++
->  6 files changed, 76 insertions(+)
-> 
-
-<snip>
-
-> diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
-> index a34c5c3b164e..1b46de10e328 100644
-> --- a/arch/x86/kvm/svm/avic.c
-> +++ b/arch/x86/kvm/svm/avic.c
-> @@ -669,6 +669,10 @@ static bool is_avic_unaccelerated_access_trap(u32 offset)
->  	case APIC_LVTERR:
->  	case APIC_TMICT:
->  	case APIC_TDCR:
-> +	case APIC_EILVTn(0):
-> +	case APIC_EILVTn(1):
-> +	case APIC_EILVTn(2):
-> +	case APIC_EILVTn(3):
-
-This should actually be conditional on X86_FEATURE_EXTLVT.
-
-I also forgot to add for the previous patch: the feature name needs to 
-be changed to reflect the true nature of the feature bit.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] perf: arm_spe: Add barrier before enabling profiling
+ buffer
+To: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Alexandru Elisei <Alexandru.Elisei@arm.com>,
+ Anshuman Khandual <Anshuman.Khandual@arm.com>,
+ Rob Herring <Rob.Herring@arm.com>, Suzuki Poulose <Suzuki.Poulose@arm.com>,
+ Robin Murphy <Robin.Murphy@arm.com>, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250701-james-spe-vm-interface-v1-0-52a2cd223d00@linaro.org>
+ <20250701-james-spe-vm-interface-v1-1-52a2cd223d00@linaro.org>
+ <aL7dFIzEgiEETcIb@willie-the-truck>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <aL7dFIzEgiEETcIb@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-- Naveen
+
+On 08/09/2025 2:41 pm, Will Deacon wrote:
+> On Tue, Jul 01, 2025 at 04:31:57PM +0100, James Clark wrote:
+>> DEN0154 states that PMBPTR_EL1 must not be modified while the profiling
+>> buffer is enabled. Ensure that enabling the buffer comes after setting
+>> PMBPTR_EL1 by inserting an isb().
+>>
+>> This only applies to guests for now, but in future versions of the
+>> architecture the PE will be allowed to behave in the same way.
+>>
+>> Fixes: d5d9696b0380 ("drivers/perf: Add support for ARMv8.2 Statistical Profiling Extension")
+>> Signed-off-by: James Clark <james.clark@linaro.org>
+>> ---
+>>   drivers/perf/arm_spe_pmu.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+>> index 3efed8839a4e..6235ca7ecd48 100644
+>> --- a/drivers/perf/arm_spe_pmu.c
+>> +++ b/drivers/perf/arm_spe_pmu.c
+>> @@ -537,6 +537,7 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
+>>   	limit += (u64)buf->base;
+>>   	base = (u64)buf->base + PERF_IDX2OFF(handle->head, buf);
+>>   	write_sysreg_s(base, SYS_PMBPTR_EL1);
+>> +	isb();
+> 
+> 
+> Hmm.
+> 
+> arm_spe_perf_aux_output_begin() is only called in two places:
+> 
+> 1. From arm_spe_pmu_start()
+> 2. From arm_spe_pmu_irq_handler()
+> 
+> For (1), we know that profiling is disabled by PMSCR_EL1.ExSPE.
+> For (2), we know that profiling is disabled by PMBSR_EL1.S.
+> 
+> In both cases, we already have an isb() before enabling profiling again
+> so I don't understand what this additional isb() is achieving.
+> 
+> Will
+
+It's to prevent PMBPTR_EL1 from being written to after the PMBLIMITR_EL1 
+write than enables the buffer again. So you're right it's already 
+disabled up to this point, which is why we didn't need to add another 
+isb(). This change is only for the re-enabling bit.
+
+If the instructions were reordered you could get this ordering at the 
+end of arm_spe_perf_aux_output_begin():
+
+   write_sysreg_s(limit, SYS_PMBLIMITR_EL1); // Enables buffer
+
+   write_sysreg_s(base, SYS_PMBPTR_EL1);  // Invalid write to PMBPTR
+
+Instead of the new version with the barrier where PMBPTR must come before:
+
+   write_sysreg_s(base, SYS_PMBPTR_EL1);
+   isb()
+   write_sysreg_s(limit, SYS_PMBLIMITR_EL1);
+
+Thanks
+James
 
