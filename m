@@ -1,156 +1,163 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F77303A1F;
-	Mon,  8 Sep 2025 10:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B668C2F3C32;
+	Mon,  8 Sep 2025 10:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.36.192.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757325743; cv=none; b=n12Npj1MkwXkNynXZfdojVke9dEBnNcoYameIoUjFQJ1AOlh6Rexsu/Y4XBiXtgZuP7zSnarAW2lCD0zgfFN1Kxt/it4cHxvm8UngLrDFXnCeLUvamTNGlggW0LF49ID7F/f4mfYG3VBtDIeQ92zGhUIQBxfZdSn1nxQqNmHLyk=
+	t=1757327101; cv=none; b=hCzdxJNEJ11MXrhPFEluuXcHM0ydUl24Hd4LSXLXYcKY4yC1e4w+ypASMzyrr1idnIzqvrqQtNYILzo7rnvgw8hXgMlWNk5fBWOdxnajwgdbCps2QJQocDEVJmUpiY9kZ9oCNznP8OXECrHOKxySpZAAEPXocoS3u0o1Zlx7Uig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757325743; c=relaxed/simple;
-	bh=NgiaadnBWzmQWHLVGXTkghr12q4e2Z2pGwu46CpKaLI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mfeddLp6cedU+eWyfyW/MOGsp055erqq0IPZxxZNVYkDXSgoqLMbK7nDpinrTVNBNziHIgR6NJI4rzqScr3EdqJ6Sl5AUAQ0/4so68V9A6hcwEGqKMuiujbjIu0Fy1B33QBdCtbYFQ1t4BQXf7z4aBbGT5yuur4UAn+rQVygWME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HVjvDSrF; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1757327101; c=relaxed/simple;
+	bh=7XwAMwHH5guQVH4NlQeVLDaBQni8VA4GO34QBkjSrsg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EjesAv1oJtYS7kKQPpkKbbMg3nA9QJE0D7CHw9eHQIIuqhWxv/8h4Vk8CzhADALzBOi/5fSlDTqA8pChJCbdQ+65iDyaPR22vRHPBuZaCU3/8ntYBK2hgEK2Tn8YGh4q16Opv9cg8FyEit+xhrlNfoCMp36BTJQWKtYX+RxrPFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=I9Rn3OCS; arc=none smtp.client-ip=4.36.192.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=codeweavers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HVjvDSrF"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b4f9d61e7deso2629591a12.2;
-        Mon, 08 Sep 2025 03:02:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757325741; x=1757930541; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kj7fG7XAER68na8hgLjfPolxfyD9eQkGEiz9N4R6m0U=;
-        b=HVjvDSrFdL/X+lxzvOqmuXGns3mSoQrH3PtVrxFWToE6QCh/gVKqOu8XHWkOuzWj1S
-         f4DalBwZyjyLJZYwgFys+7B7qjvfoGFpxPDwnLSbFYx+LMEuKeZClyJrrYWGI2WGDrCe
-         LzAIW75amZSacwRYNsrjLU9s6Bk+ec9v9dmTZkKaUWaLyw6IlAFqtx3Q311R2gUcQR17
-         Jou47pTiOP39kyUb2RWdPXoDYpeT20vmrFR9EFRxvXn9hmamjz+lc76oK0lppqtmRGn6
-         rt+HaEG+r3nWuGktv9BkoluIYy3PXKxeCavnqzWf6BYhf3mbCgahsKrCiQyxI+phatuB
-         ZMPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757325741; x=1757930541;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kj7fG7XAER68na8hgLjfPolxfyD9eQkGEiz9N4R6m0U=;
-        b=oUUz0lWxh4JWRYfbWZq8ZPRr5M169R40G0xW7VSQT58YagFJuyppuS8MbvDvAd+0wZ
-         YgspIvNAmUANynkCgfx+mHMOMoHw8DkWZnlEGsJUUsWyItVJNqbWfRcYF9AHvMW7Krx9
-         qXp7xdDYIt4b1r1LqHuxY6hLKTztUFrC47KZ/XYsPx2c2VO4SHL2SKOIDpIxvcYxCc7h
-         DuaYfkcZ0XsYi4Tl+9PV5fHu+lNsmzPNyORT4xK4RmvbVzhAdhxFe4EcqiiHyx/cqQIp
-         VgqrVvNdAvDnc/xiLbSISkp7kyg8JMlBHkgneN0rtvswA/dShf7n6poSBF/qcfFZoNVy
-         1YUw==
-X-Forwarded-Encrypted: i=1; AJvYcCVyQMb9/0oxZLgym0aUyC4IBqxo/BcDqoJpeKM4EOAb+DrpCd8mKXpK+xKO2cdJcPbotMsIzUAbRp6oPlWpTKTaFQ==@vger.kernel.org, AJvYcCWYl+r7q6Rbn5oE0/chrFZcayhbGpjBhWml6N/tKUc3DFWhT5qr9W2pKZolZ6aifNr4y41gbL3DYpHF@vger.kernel.org, AJvYcCXN0b5ELcbrPdzb/RuD0jWZnkINnsAP+lX1B/Co1yZl6G0zVTYwmvwOd0CVB841N2quvtqAtJobrBGfxkGH@vger.kernel.org
-X-Gm-Message-State: AOJu0YyW3j1RQXzMCVbBCMJgSKm6qRBxoKzIiMs0U6NtPujet6uX8LdV
-	dbll9/q2luT7TrWEOSzYsuZvnB8SoCbuAytE4ihz27/c8ufyt2oXEkvM
-X-Gm-Gg: ASbGncvWKe+hMZEbCpviaZ70OH16N3KnWG0ZpVVYtF3Xybd9/Wu05TsFn66VEXQtIf8
-	I/Ol7GpXEADHQsO07HLwZhaH6ASsSiJo3cNHLUfcd0aQjzQbk1qAS43WHNg/mPNG8VQ01UY/Q3v
-	4CTINqd6OW4ed9q1ElRbj2vQ2IfwyMG84wBoZHNlf2w+p8Z1rk7r2EmfbHqZ4oX6VbCI6PANClN
-	8dwvs8G6YyGCqqvWbgEZgYXM4/FHRG5MLQ+x0V3c/d3VlQXqYa1BlVVMQsSiMTlGByMvIhqwVbp
-	LQPZEmhqqtIMxvd90dYnxVyXah5f4g14kyupY+PnmETsxGawbc+UW9PjSWUCD3I74Kro5U+IKYj
-	Sp1sXqrjzHzPzXrA+cnhzV1LklD9bqXdYuZRrqd8EtYA3KO1v
-X-Google-Smtp-Source: AGHT+IFzBnyCeoSUT4/jKqak6Ru0Kvj/hbUWjk5gn0379Y2ihPn96fH4hCkaATJ2yH9Os2NuxascEQ==
-X-Received: by 2002:a17:903:1a26:b0:24d:4a96:7b30 with SMTP id d9443c01a7336-25170e41046mr103171265ad.35.1757325740700;
-        Mon, 08 Sep 2025 03:02:20 -0700 (PDT)
-Received: from [127.0.1.1] ([59.188.211.98])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-24ccfc7f993sm107826545ad.63.2025.09.08.03.02.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Sep 2025 03:02:20 -0700 (PDT)
-From: Nick Chan <towinchenmi@gmail.com>
-Date: Mon, 08 Sep 2025 17:58:45 +0800
-Subject: [PATCH RESEND v8 21/21] arm64: dts: apple: t8015: Add CPU PMU
- nodes
+	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="I9Rn3OCS"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codeweavers.com; s=s1; h=Content-Transfer-Encoding:Content-Type:In-Reply-To
+	:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=kjodhArTHkwbk89MoyDDCGDQOaiGSJEGaIfs9n6I2Mg=; b=I9Rn3OCSgrJ0Pdcj4Q07t3xkDv
+	qBFpaMV5kzWu21Y1mqebjExdZPKkUR7WhOfAV+OsojDTpEGWctSQHiLWl2vvvv8ylIuW6WP1UYEqO
+	YuDZ5uhnh1FeW6EIwoyb/Dmx/c2ciV8oYgWX/iEYO0nC36eSITtJGxCCgaAMOlXb27KpNRLeTrVdr
+	IYdFqdvXEtsbDrynWBTWzfelq+rrABu7i8Eq4S0uIqlCnpZwlnn2QQ/bIVDMth8SOUgEoBmWIX/0H
+	QbXy7YtazEJBbARMfR+D/pQcOg4n6RSyspOF6P23iW547C/rwE3BKZHyjvNGE7zUjGu7L7IeVKOSD
+	2pDkvH7g==;
+Received: from cw141ip160.vpn.codeweavers.com ([10.69.141.160])
+	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <bmcgrath@codeweavers.com>)
+	id 1uvZ3K-005Fa0-1f;
+	Mon, 08 Sep 2025 05:24:50 -0500
+Message-ID: <3db2d6af-3b21-4ce2-be1f-668270adbbeb@codeweavers.com>
+Date: Mon, 8 Sep 2025 20:24:45 +1000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250908-apple-cpmu-v8-21-d83b4544dc14@gmail.com>
-References: <20250908-apple-cpmu-v8-0-d83b4544dc14@gmail.com>
-In-Reply-To: <20250908-apple-cpmu-v8-0-d83b4544dc14@gmail.com>
-To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Catalin Marinas <catalin.marinas@arm.com>, Janne Grunau <j@jannau.net>, 
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
- Sven Peter <sven@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org, 
- linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, 
- asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Nick Chan <towinchenmi@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1462; i=towinchenmi@gmail.com;
- h=from:subject:message-id; bh=NgiaadnBWzmQWHLVGXTkghr12q4e2Z2pGwu46CpKaLI=;
- b=owEBbQKS/ZANAwAKAQHKCLemxQgkAcsmYgBovqlFI+V4GoFFzmg6iekYjO3wUQsQ2NoToVu02
- /eVS2sSy3OJAjMEAAEKAB0WIQRLUnh4XJes95w8aIMBygi3psUIJAUCaL6pRQAKCRABygi3psUI
- JAaID/9rrnrkkgZNvzI0FIXkGSX4gBtvI+S+ZUhZpHoHLNx5mYa6SzSgxgGtFVh/RB3Ws6QCf2v
- QGDci6rsLtSmWAjeQ+uCoaMJcuSXbGTSiTxM2apn/N3Qa4oRhy96wHLRUCOq+zCdg9ST0POvKGD
- MU2QrOVTS/xAzulU2W6Veml9cV05aLbPnSgAdmlom+gXmZqWsicFUuun1bQzeP4YNj3tYfN85gL
- Kofv7w0kuwRAr6gePgu0je9RzyJZGzY8PhjJho1XYqKM2sboHNKtJOwjHQaOu9zKp1YysVomMA7
- a7x3EwE1STEqEZK3KFwIHFQvYNzVPSSbZJX2thGtvHTmjmdfgEJN3RoO+6YFRclhBoR3YY5l+Ez
- 10S/GLNWdQ7MVEbO4C8mBHFrrc370ZfIoqyP3UgvZZFP5itHr/ByW8ENdblvZRvHL1WeCQKZGQE
- 3UdpaW3pj2RP417YZdpur7CQmv8YdTxdj0v6EXOxqE+e+IZMp3Jda2PHs2jWOpFfT2QCRfFeQ/7
- RajECtYAJvCdQpNmkemfRYw+APevsJeyXEQhKifsPYISo2NkHZXg/lBZB7UQDBY5v2KPjf54Jk5
- a6R8wk8dredST8Wb+UBF5e028+i6SkVwrsnKOjn/zcu/fu42nEfKXCQJ4bEBlHwf6eIcMY4iqzH
- DF9ti+Uugiot7DA==
-X-Developer-Key: i=towinchenmi@gmail.com; a=openpgp;
- fpr=4B5278785C97ACF79C3C688301CA08B7A6C50824
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] perf symbols: Fix HAVE_LIBBFD_BUILDID_SUPPORT build
+To: Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>
+Cc: =?UTF-8?Q?R=C3=A9mi_Bernon?= <rbernon@codeweavers.com>,
+ Sam James <sam@gentoo.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250903-james-perf-read-build-id-fix-v1-0-6a694d0a980f@linaro.org>
+ <20250903-james-perf-read-build-id-fix-v1-2-6a694d0a980f@linaro.org>
+ <CAP-5=fWHGFBaCgiRcj8zVy196OE07F8jnSUbjvsO_HerdqeyTg@mail.gmail.com>
+ <70bd9eea-905a-4fa9-8265-f84ab9894b12@linaro.org>
+ <2b958dec-7ba9-41a3-b11b-43b5e8418849@codeweavers.com>
+ <549d3812-a606-4981-83f5-0a99b0ff9f6a@linaro.org>
+ <CAP-5=fXKthsZe3J4_UHHGwDafBq7pHzM18Mh=_2QrnSfCT3nOg@mail.gmail.com>
+Content-Language: en-US
+From: Brendan McGrath <bmcgrath@codeweavers.com>
+In-Reply-To: <CAP-5=fXKthsZe3J4_UHHGwDafBq7pHzM18Mh=_2QrnSfCT3nOg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Add CPU PMU nodes for Apple A11 SoC.
 
-Signed-off-by: Nick Chan <towinchenmi@gmail.com>
----
- arch/arm64/boot/dts/apple/t8015.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/apple/t8015.dtsi b/arch/arm64/boot/dts/apple/t8015.dtsi
-index 12acf8fc8bc6bcde6b11773cadd97e9ee115f510..9bf5157f0e504b7394ef5354411d3d37e8d5760a 100644
---- a/arch/arm64/boot/dts/apple/t8015.dtsi
-+++ b/arch/arm64/boot/dts/apple/t8015.dtsi
-@@ -284,6 +284,18 @@ aic: interrupt-controller@232100000 {
- 			#interrupt-cells = <3>;
- 			interrupt-controller;
- 			power-domains = <&ps_aic>;
-+
-+			affinities {
-+				e-core-pmu-affinity {
-+					apple,fiq-index = <AIC_CPU_PMU_E>;
-+					cpus = <&cpu_e0 &cpu_e1 &cpu_e2 &cpu_e3>;
-+				};
-+
-+				p-core-pmu-affinity {
-+					apple,fiq-index = <AIC_CPU_PMU_P>;
-+					cpus = <&cpu_p0 &cpu_p1>;
-+				};
-+			};
- 		};
- 
- 		pmgr: power-management@232000000 {
-@@ -412,6 +424,18 @@ timer {
- 		interrupts = <AIC_FIQ AIC_TMR_GUEST_PHYS IRQ_TYPE_LEVEL_HIGH>,
- 			     <AIC_FIQ AIC_TMR_GUEST_VIRT IRQ_TYPE_LEVEL_HIGH>;
- 	};
-+
-+	pmu-e {
-+		compatible = "apple,mistral-pmu";
-+		interrupt-parent = <&aic>;
-+		interrupts = <AIC_FIQ AIC_CPU_PMU_E IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	pmu-p {
-+		compatible = "apple,monsoon-pmu";
-+		interrupt-parent = <&aic>;
-+		interrupts = <AIC_FIQ AIC_CPU_PMU_P IRQ_TYPE_LEVEL_HIGH>;
-+	};
- };
- 
- #include "t8015-pmgr.dtsi"
+On 9/5/25 01:53, Ian Rogers wrote:
+> On Thu, Sep 4, 2025 at 7:18 AM James Clark <james.clark@linaro.org> wrote:
+>>
+>>
+>>
+>> On 04/09/2025 9:27 am, Rémi Bernon wrote:
+>>> Hi!
+>>>
+>>> On 9/4/25 10:13, James Clark wrote:
+>>>>
+>>>>
+>>>> On 03/09/2025 5:07 pm, Ian Rogers wrote:
+>>>>> On Wed, Sep 3, 2025 at 8:15 AM James Clark <james.clark@linaro.org>
+>>>>> wrote:
+>>>>>>
+>>>>>> read_build_id() now has a blocking argument, but libbfd uses fopen()
+>>>>>> internally which doesn't support O_NONBLOCK. Fix the build by adding
+>>>>>> the
+>>>>>> argument and ignoring it:
+>>>>>>
+>>>>>>     util/symbol-elf.c:964:8: error: too many arguments to function
+>>>>>> ‘read_build_id’
+>>>>>>       964 |  err = read_build_id(filename, bid, block);
+>>>>>>
+>>>>>> Fixes: 2c369d91d093 ("perf symbol: Add blocking argument to
+>>>>>> filename__read_build_id")
+>>>>>> Signed-off-by: James Clark <james.clark@linaro.org>
+>>>>>
+>>>>> Libbfd should go away:
+>>>>> https://lore.kernel.org/lkml/20250823003216.733941-14-
+>>>>> irogers@google.com/
+>>>>> but I can imagine that currently this is hit in a build test - sorry
+>>>>> for missing that and thanks for the fix!
+>>>>>
+>>>>
+>>>> Yeah just one of the build tests, I'm not actually using it.
+>>>>
+>>>> Remi are you still using this? To be fair the addition for PE support
+>>>> is fairly recent and even includes a binary for testing it so I'm not
+>>>> sure if we should be so quick to remove it.
+>>>>
+>>> Yes, I'm still using it occasionally, and I think it's generally useful
+>>> for Wine profiling purposes and I would rather prefer that it's not
+>>> removed.
+>>>
+>>> I know it's not built by default because of license conflicts. I didn't
+>>> realize that was an issue when contributing the changes, and it is quite
+>>> unfortunate (and silly IMO).
+>>>
+>>> Then I'm not particularly attached to libbfd and any other option that
+>>> would let perf read PE files would be alright, as long as PE support is
+>>> kept.
+>>>
+>>> Cheers,
+>>
+>> It looks like libLLVM might work. Looking at the doxygen there are vague
+>> references to PE binaries around the getBuildID() function. But as
+>> mentioned in the linked thread, it's huge at 100+ MB.
+>>
+>> WRT that thread, I think maybe re-writing some of this in Perf wouldn't
+>> be so bad. Surely getting the buildID is trivial. For PE binaries it's
+>> hard to tell what's supported currently, what's being used and what's
+>> being done by what library or tool. addr2line, libbfd, symbols,
+>> disassembly etc.
+> 
+> I know some people who work on LLVM for Windows for the sake of having
+> a Chrome build from Linux. It should be possible to migrate the libbfd
+> use cases to LLVM.
 
--- 
-2.51.0
+Just wanted to let you know that I've been able to put together a PoC 
+that does just this. It allows the pe-file-parsing test to pass using 
+LLVM in place of libbfd.
+
+If there's interest, I would be happy to try to shape this in to 
+something that can be accepted upstream.
+
+> If I remember John Levine's Linkers and Loaders
+> book correctly (contents available by way of your favorite search
+> engine) everything is just a variant of COFF anyway.
+> 
+> It is a shame that the PE testing in buildid.sh (and the testing in
+> general) is requiring `cc` as it'd be much nicer to have the tests in
+> a form similar to the perf test workloads (e.g. perf test -w noploop).
+> I don't have a good idea on how to fix this but just wanted to note
+> it.
+> 
+> I'll write a non-blocking patch for read_build_id with libbfd that
+> matches what the others do and should avoid the hang in the meantime.
+> 
+> Thanks,
+> Ian
+> 
 
