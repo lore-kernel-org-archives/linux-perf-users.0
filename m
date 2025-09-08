@@ -1,108 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A551721FF39;
-	Mon,  8 Sep 2025 20:54:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CC3274B35;
+	Mon,  8 Sep 2025 21:00:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757364874; cv=none; b=FnSX2A5sh671cGFMNZ3ZZhT7MH9XRAwpqPRBbOcE4/UxmY/F7QfjMZLR9qZzGBMyWx96nrdXi6KfwPQSaPNQOCXH7kSa7B7DO7qHKZPOB5bbzglbh4On/5p5zgqXVppve0gdod6+oLf360PSGnCQC+Ik+7qPIKWLXHgvrAuEXRM=
+	t=1757365244; cv=none; b=OCFuT3eRYY4m5tiYIKxpQNGzWAKT4vLSE0vlPPkmq16wyM8C7kzP94JIuuYIxh6fWYL3Y9HKl7fi1OGG+98Ti3dmck06z8sYFAgLjnDWUTbkt/eGoxYFWgAlilF8jEjWR4DqlWfvhZm2j+P0dHbrkeGqUaJTj4JQPJtVW3y01TA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757364874; c=relaxed/simple;
-	bh=U3K50tXK+wACLTvtmTJZSIqUvpPt9aIhT02/EuzFOl8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=IM3BszaCAOVdg1OsLmvhreGvEnmnVu9ILCdUgUqc0BHHh19sylmxkCjTFLCLnJGjtf1uceDVduCrUFAcW9dcSN+KwULz5fqZqoA7MpIPoLzl5KxeCvXHZ3fWkzNTKj+ANlkt3iV8oBVdJIstsRlVboWygMoBvFicoaJZgPjqrtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sjdyFi7g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757365244; c=relaxed/simple;
+	bh=jjf+aHsPpbrLWSDIt9QKsf5MQvphLbS4gLwD5a1BFes=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JKCwRQU6Guabt//apOHUBRo0mLmLTzOD/MR5vDsFFDxt2joi3V8ZLnWHtkBlDcvuvktPoMnMzsVzD9SjR0JtcHnORp0PFZvx3UC3DoWAwfwNz7xsw8Z9ces5a4runwKe/7T9DZ7hfhfhBIFtVLbZ42RrULdugfhAixDWIJ2RIHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CRghxTVD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sjdyFi7g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAFE4C4CEF1;
-	Mon,  8 Sep 2025 20:54:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CRghxTVD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C32BC4CEF1;
+	Mon,  8 Sep 2025 21:00:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757364874;
-	bh=U3K50tXK+wACLTvtmTJZSIqUvpPt9aIhT02/EuzFOl8=;
-	h=Date:From:To:Cc:Subject:From;
-	b=sjdyFi7gLY9eb6hARVmhiBIqYckA4mFUbcqaf6abcWWpCTfUB1uc7RWVtVjaDJ6J9
-	 TuEN/9efh09Ko06dKsjf/J9gHsdKfj/IMsaEKNhJAhOnjW4WO09FFgO25LQhj/pkI7
-	 ZdgQEh9rqbpryAFH42skoAqpC0I5R6u3lUoiMsb9KJWj4RO6041D57+Aef3LJC8kr6
-	 cxrfhcIbn369v9iXvgRqvVkV2+7PuSGXN9VhJwp1drtLhbs4g+TdnbnIxPBRNzVaC4
-	 rGqv4UrRF3N8vsBhL/ocMeMJBM2ar0Y3EbR7oJqlbE9v76bljj6325/V9+sTNoZMRl
-	 Qc5LwEWUFKWOQ==
-Date: Mon, 8 Sep 2025 17:54:31 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Miguel Ojeda <ojeda@kernel.org>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH next 1/1] perf symbols: Handle 'N' symbols in /proc/kallsyms
-Message-ID: <aL9Ch_XaYTxMzFXK@x1>
+	s=k20201202; t=1757365243;
+	bh=jjf+aHsPpbrLWSDIt9QKsf5MQvphLbS4gLwD5a1BFes=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CRghxTVDtXnkHUprmyWWSLe/gyt5uG8/I8SN4ih8EZeMb7Bxgr9/Q+ognLI0EiW4t
+	 HcuT2KFU+1M+Oc8fJmxcKZl54p7nFWAs9Cxi/KLN5YJrxKyd7P9pP6XWdaY63gmU/n
+	 8kZt1JsIO+ZF3Zq+rrWbYkgRmURZq93dnh7f5hbqNx0mzoO7e1autXoW/QEQ+FE6V1
+	 KI7tr9tRAFWwbjkDtMZ7aCbkK6w7Od3iIe35gVepG/lyb//uEEiuJou1HWFcbUnxWP
+	 nmZaQFk/+wEFJWmKIhNFpxin+r9zszGmdTigV29UE7tcPzdpZDo+3Mxswq5AHMu5KK
+	 1nD3icjzd8qYA==
+Date: Mon, 8 Sep 2025 14:00:41 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+	Song Liu <song@kernel.org>, Howard Chu <howardchu95@gmail.com>,
+	Jakub Brnak <jbrnak@redhat.com>
+Subject: Re: [PATCH 1/5] perf trace: use standard syscall tracepoint structs
+ for augmentation
+Message-ID: <aL9D-ZzdNFxD8hkn@google.com>
+References: <20250814071754.193265-1-namhyung@kernel.org>
+ <20250814071754.193265-2-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <20250814071754.193265-2-namhyung@kernel.org>
 
-I started seeing this in recent Fedora 42 kernels:
+On Thu, Aug 14, 2025 at 12:17:50AM -0700, Namhyung Kim wrote:
+> From: Jakub Brnak <jbrnak@redhat.com>
+> 
+> Replace custom syscall structs with the standard trace_event_raw_sys_enter
+> and trace_event_raw_sys_exit from vmlinux.h.
+> This fixes a data structure misalignment issue discovered on RHEL-9, which
+> prevented BPF programs from correctly accessing syscall arguments.
+> This change also aims to improve compatibility between different version
+> of the perf tool and kernel by using CO-RE so BPF code can correclty
+> adjust field offsets.
+> 
+> Signed-off-by: Jakub Brnak <jbrnak@redhat.com>
+> [ coding style updates and fix a BPF verifier issue ]
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+[SNIP]
+> @@ -489,9 +477,11 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
+>  			index = -(size + 1);
+>  			barrier_var(index); // Prevent clang (noticed with v18) from removing the &= 7 trick.
+>  			index &= 7;	    // Satisfy the bounds checking with the verifier in some kernels.
+> -			aug_size = args->args[index] > TRACE_AUG_MAX_BUF ? TRACE_AUG_MAX_BUF : args->args[index];
+> +			aug_size = args->args[index];
+>  
+>  			if (aug_size > 0) {
+> +				if (aug_size > TRACE_AUG_MAX_BUF)
+> +					aug_size = TRACE_AUG_MAX_BUF;
+>  				if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, aug_size, arg))
+>  					augmented = true;
+>  			}
 
-  # uname -a
-  Linux number 6.16.3-200.fc42.x86_64 #1 SMP PREEMPT_DYNAMIC Sat Aug 23 17:02:17 UTC 2025 x86_64 GNU/Linux
-  #
-  # perf test vmlinux
-    1: vmlinux symtab matches kallsyms                  : FAILED!
-  #
+Does it help if you just revert this hunk?
+(But actually my kernel doesn't like this...)
 
-Rust is enabled and these were the symbols causing the above failure,
-i.e. found in vmlinux but not in /proc/kallsyms:
 
-  $ grep -w N /proc/kallsyms
-  0000000000000000 N __pfx__RNCINvNtNtNtCsbDUBuN8AbD4_4core4iter8adapters3map12map_try_foldjNtCs6vVzKs5jPr6_12drm_panic_qr7VersionuINtNtNtBa_3ops12control_flow11ControlFlowB10_ENcB10_0NCINvNvNtNtNtB8_6traits8iterator8Iterator4find5checkB10_NCNvMB12_B10_13from_segments0E0E0B12_
-  0000000000000000 N _RNCINvNtNtNtCsbDUBuN8AbD4_4core4iter8adapters3map12map_try_foldjNtCs6vVzKs5jPr6_12drm_panic_qr7VersionuINtNtNtBa_3ops12control_flow11ControlFlowB10_ENcB10_0NCINvNvNtNtNtB8_6traits8iterator8Iterator4find5checkB10_NCNvMB12_B10_13from_segments0E0E0B12_
-  $
-
-So accept those 'N' symbols as well.
-
-About them, from 'man nm':
-
-           "N" The symbol is a debugging symbol.
-
-           "n" The symbol is in a non-data, non-code, non-debug read-only section.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/symbol.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 3fed54de54016227..3d04382687d17d22 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -107,9 +107,14 @@ static enum dso_binary_type binary_type_symtab[] = {
- static bool symbol_type__filter(char __symbol_type)
- {
- 	// Since 'U' == undefined and 'u' == unique global symbol, we can't use toupper there
-+	// 'N' is for debugging symbols, 'n' is a non-data, non-code, non-debug read-only section.
-+	// According to 'man nm'.
-+	// 'N' first seen in:
-+	// ffffffff9b35d130 N __pfx__RNCINvNtNtNtCsbDUBuN8AbD4_4core4iter8adapters3map12map_try_foldjNtCs6vVzKs5jPr6_12drm_panic_qr7VersionuINtNtNtBa_3ops12control_flow11ControlFlowB10_ENcB10_0NCINvNvNtNtNtB8_6traits8iterator8Iterator4find5checkB10_NCNvMB12_B10_13from_segments0E0E0B12_
-+	// a seemingly Rust mangled name
- 	char symbol_type = toupper(__symbol_type);
- 	return symbol_type == 'T' || symbol_type == 'W' || symbol_type == 'D' || symbol_type == 'B' ||
--	       __symbol_type == 'u' || __symbol_type == 'l';
-+	       __symbol_type == 'u' || __symbol_type == 'l' || __symbol_type == 'N';
- }
+diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+index 979d60d7dce6565b..c4088bdd4916b0e6 100644
+--- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
++++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+@@ -493,11 +493,9 @@ static int augment_sys_enter(void *ctx, struct trace_event_raw_sys_enter *args)
+                        index = -(size + 1);
+                        barrier_var(index); // Prevent clang (noticed with v18) from removing the &= 7 trick.
+                        index &= 7;         // Satisfy the bounds checking with the verifier in some kernels.
+-                       aug_size = args->args[index];
++                       aug_size = args->args[index] > TRACE_AUG_MAX_BUF ? TRACE_AUG_MAX_BUF : args->args[index];
  
- static int prefix_underscores_count(const char *str)
--- 
-2.51.0
+                        if (aug_size > 0) {
+-                               if (aug_size > TRACE_AUG_MAX_BUF)
+-                                       aug_size = TRACE_AUG_MAX_BUF;
+                                if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, aug_size, arg))
+                                        augmented = true;
+                        }
 
