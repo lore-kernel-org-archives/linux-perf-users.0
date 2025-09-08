@@ -1,164 +1,137 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231671E130F
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Sep 2025 15:47:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA9A30F93B
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Sep 2025 16:42:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757346446; cv=none; b=XjQcJ9jKLwo/t0dAHu/Y/jj9H2dvUbjSW6gfeBhIZJMqQdgWVtH1mb6w9vPWDEoVij2WN+fPXf1QTfwVWY4x42O9GXbifVemUuPWbexEEtOSYoVYczzx9IQhOl0fKpHQl1zpBXroKV0aCgexZ95gCBxPLBZir8ugM3ZTbXWsUrI=
+	t=1757349773; cv=none; b=i+s2IVNu3NPsSZcpnwS/9K2GQYDbLb0T71XiCnVgHYUP1Lcm5fILJ+ZaiZOAC3ESlCG+Zs1z3dx+vH2xEKlYLJhgMFkQOEMw/H/XpsMb50xs7CWtpVR1Mal11OwfR3wcEwomZzRHHsVAicHCNqVBV+ZbjYgyWpq3LeMVkP43K0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757346446; c=relaxed/simple;
-	bh=aD3jXyKBXU31pvp9Myc8+fQsx0JMT3JspeZvV/Lksic=;
+	s=arc-20240116; t=1757349773; c=relaxed/simple;
+	bh=SK+V3i1b4JHmPbAgOyQ+O9nq+ydOhVWHaRR5izAFwGw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dCL05TGsMAkAGzQFzdSWE36So6Kv2y0m0mVUOS4WI9x+L759FgMS95FhxqknrftD0x1F70s2x+Tuylv5jxJ2+R5xCSI2vur/iQxSQqhANHNovZ4uL89pXTwkOBWERLbL0qrAJ/Jx0filGfNj/WRa4aozaiUNvRF4zF6LVE19YKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3VA+1h1u; arc=none smtp.client-ip=209.85.214.177
+	 To:Cc:Content-Type; b=swK1Z1iL4KrhuIBBwRJ6cdN6NuP7N7d/zgUWxOz+dTn5GBQDpRI4F5ZvGT22L0CZPOr04EoxtBfVXUREHPepb7VXUqkoMQZUcSDU09gw2nx8/lQAH7cGbY98o1PF1HjFHgkJC+zqYKRTIuEBaeYZGYRpTF2YjhJiKB87Pl6TkZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Vm/IzO8a; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3VA+1h1u"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-24cf5bcfb60so310795ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 Sep 2025 08:47:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vm/IzO8a"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-24cf5bcfb60so322875ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Sep 2025 09:42:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1757346444; x=1757951244; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1757349771; x=1757954571; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aD3jXyKBXU31pvp9Myc8+fQsx0JMT3JspeZvV/Lksic=;
-        b=3VA+1h1u48x4GSyq+AB8yklE9D/SS9FjjY0021pziiBvZVbAv5dvXLDtA/5unGV3/e
-         Y7bSbe9ByQfGxyIX1AXTa3wrZxEHYplggzswiTJjvoNXhOJIpBDDcTuqNNOkJ6fAK4N5
-         ReeRM7c2DcTtm57Ue0ydXdVhbyn4E8idpWeUsPr8cCwerLZrDZnY3ckmBSvpF1v2MaNE
-         1VBQ8fgZCuTM0WCVqmcBQe+3uLJJMU+frgLEtcy5Xb6AAzOqC2Grkq8qsoQ2YLlxDzgx
-         SnC0oOzF1WHVEbtK32Y3/RqiRuvtEX4rKXnNjFVa/Bx5kg9cyMt1C22u3zJOl0oTfvxO
-         pSPA==
+        bh=rxpZ3PbJm0tZWt4QSlez9tE8S36lpDl95U5aEIOWH8M=;
+        b=Vm/IzO8auHY+GsFS7FGc66jLLFHwTpn3ofRlSocqDrFQSwEir3iuhwqH6EZl3s5b3J
+         cnh7YWe3RzzlxDjHiE+SvCU2QHPUeBAckSJYumdAlgdFQjWVA+Efj1gEACUGPwUk+ABA
+         cL8IqGpKZqod7tXG+JORvFMtcu0R86HhLgTv4FuvUwA1+ynKjshzwzOsXTShPbPcC6ve
+         ZpTtjQjiIyJzavvF0uYAqPmTFf+RFCAkbdsQ5jiVy8qCYIK6sLgNU8q7AlBREtaaV5Jb
+         nRMwCkN4O9C9V+oMT7gB5Vsebx3YB/gATlroYZ3fiCFcrAIpnJsiuFqVtq3B4C6UW3lr
+         kWWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757346444; x=1757951244;
+        d=1e100.net; s=20230601; t=1757349771; x=1757954571;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aD3jXyKBXU31pvp9Myc8+fQsx0JMT3JspeZvV/Lksic=;
-        b=L0P/VSf15s16JaHka5VxU7V/2+/EIPO5SAQQMk8P5BBqTzalpGD/rd0Y+Li8OMceCG
-         /+562WGeSe2BmK9C46PHmnbTcFLu9whJsyR78ZZQ+n0nVH4WyZ+fn79pB55/rNTlRVFI
-         ydqbRIlvFI59Ol4LY1qB4Nq97N//YyTfMsMIAqxTtuRleNbhxg4eN7aGNv7MiSZj8quY
-         k77LLsVGEo84RN8mgGZV0ULSs3lyg24f09Z+wJlh59zDkR1KcT7rGM46hc8A0mOWyLVM
-         UvYQwe4ZJgUGo/AALkijoMMCU79b09vQjRKiA703avkFu8iMM1ybqEHS6plmJDbNm353
-         9g8A==
-X-Forwarded-Encrypted: i=1; AJvYcCXf5geaiwWR8Ov0Wbun66gg87J8ac/exe3FZBBQVvvGPqByWO7NSp76vQjLNzT94845xjG+0iEB0BUiDIv5UiFx@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAKv799DJw+0bXxL1FwL6rex1y9tI1TWXv1FoOPsZH4/+omwcX
-	FHfVH5kdPyA2DDACot6kcGqfpyCeQ7muF9G9iowPTB83zu7z2Ma1IXbMiQEGHMUTvHvaa4ZPu45
-	uQ1xsNXDym6UeE7kJXpz3mzbeaDqWY7O9x0RdX/cL
-X-Gm-Gg: ASbGncugITZnu0Ii1hsmdOMl4EXieY8J1XXFPTD8NOU2tpXmlvnnRRIEnBpEnHCP6mg
-	5y0izlumN55XQ3XGPIyQ4VhbrD0CC82ztZ4KuN0QZ7gWIHygOXQPo1czcu53eQ11OXMkCofD0lS
-	+MJmDoBCOkOVagPe3CQVbLIaqdsqxb3LqFA4CZ5GnUtN5LqZ7uakVb6+HFOcPIGkZ+vSUmjM5HH
-	gGNq/4KEPI5EQ4k+Rx1A2WZOsmwmFeJdaX7bH3dasNjLjvOk3TYb/w=
-X-Google-Smtp-Source: AGHT+IFRB2Zi7H8bLl4KDdTB4pTqHhLqyIcs4LqKCoPEIDGJ6guPwolnD8VdcorGTXxQsBy9SD4HG0t62zOwUJZKRhg=
-X-Received: by 2002:a17:902:c403:b0:231:d0ef:e8ff with SMTP id
- d9443c01a7336-2511937bce8mr7909045ad.8.1757346444046; Mon, 08 Sep 2025
- 08:47:24 -0700 (PDT)
+        bh=rxpZ3PbJm0tZWt4QSlez9tE8S36lpDl95U5aEIOWH8M=;
+        b=mFFA3YYzq1DWx2UfAeUx20V85XhJKktEobs2lN2s/z6hPXP4g25pbzsAsAxGPrdIzO
+         vQITk+NwKEKGxaQSTOtjfZi+avj5u3LIekE4UlFALjSwzT0r0XtRbyNizQgrzMqXWIcS
+         JDRd69QQB7PqwiPXdS8sXhAQDengCuUDs1iy+6ITsaHuiHPMFMjEyIZhCwBkJGWflzRx
+         Ng2AysnBLFXgoHaadD8SYLVtlyN/Rx65JmkdslWK30Xs7ORXE6VW96L95fpEDR39pWNw
+         ywy4p6FNRoOlk0CjLfKnUVyvhBl7aqlw8TASCFPevAoZ4IQd7L5qHdau+aTswxQqG8ut
+         eW0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWl7841C5kTYUssBF9RDw0mRxY89Hu9B0XWdHna2Nta+x3kSGFuxU1t1FhoPP13IaE3tCLho1WGcwudZU1mIC0z@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHC8ivvRhgbFErjwpIQT0HZ2rVET5CF8eyoXxE4oTpj/I5lwGC
+	4acDgROdNtHAAuokdxr7f4Pju90mqAaUKY1goilpkMHIrnfyqONZM7sKQnJKvIK8zIfUKeiLVWo
+	ZLItQKPb5gzX75q8eIfLew9CJTm+6p7ht4eSDfBgp
+X-Gm-Gg: ASbGnctunCBSLJC6jbsA3yq99+Wg+1daCc9FAsLlgfXebpCWEsgzqqIzZOXHtOZlfry
+	z708TULbYJK08mLFBptOiugPxpX6JZF+XdHZ8cPfcQ+gMkTb8d4QvkShwMYN4UoxJDmaL5FyEIz
+	W7M1XtExyGrpaFTu3SpYO9s8/emyWZgbRYHZH8cqvkATZP8OWM5obdcPRGE/EtncUjz+hwuXAus
+	L8Jh3UJ/XZlKfO5DLWEsuTiAZbk1HNM+dbjMvGpH4M9v6bOlkmwZmM=
+X-Google-Smtp-Source: AGHT+IEoSQybo+B9Ek7ofJWgjkMpsbm1SkCuXz2R9pZBuMRExcNhf8XxMuhra3hawRg85LZyRSbST+/NDna5xaK6pP4=
+X-Received: by 2002:a17:902:d2c4:b0:240:640a:c564 with SMTP id
+ d9443c01a7336-25171acbe36mr6682975ad.3.1757349771128; Mon, 08 Sep 2025
+ 09:42:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250903-james-perf-read-build-id-fix-v1-0-6a694d0a980f@linaro.org>
- <20250903-james-perf-read-build-id-fix-v1-2-6a694d0a980f@linaro.org>
- <CAP-5=fWHGFBaCgiRcj8zVy196OE07F8jnSUbjvsO_HerdqeyTg@mail.gmail.com>
- <70bd9eea-905a-4fa9-8265-f84ab9894b12@linaro.org> <2b958dec-7ba9-41a3-b11b-43b5e8418849@codeweavers.com>
- <549d3812-a606-4981-83f5-0a99b0ff9f6a@linaro.org> <CAP-5=fXKthsZe3J4_UHHGwDafBq7pHzM18Mh=_2QrnSfCT3nOg@mail.gmail.com>
- <3db2d6af-3b21-4ce2-be1f-668270adbbeb@codeweavers.com>
-In-Reply-To: <3db2d6af-3b21-4ce2-be1f-668270adbbeb@codeweavers.com>
+References: <20250603181634.1362626-1-ctshao@google.com> <CAP-5=fVjA9630Com3xNWvgDHbwmsswQ8GEbqvnZ5QCtARQJuvQ@mail.gmail.com>
+ <CAP-5=fXY68WRiz3PVD19GBPg4t+_-f3pyLCwhdCDZHmQ=Aag3Q@mail.gmail.com>
+In-Reply-To: <CAP-5=fXY68WRiz3PVD19GBPg4t+_-f3pyLCwhdCDZHmQ=Aag3Q@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 8 Sep 2025 08:47:12 -0700
-X-Gm-Features: Ac12FXx_k9AygYv7PTRqriXBaFYgUElhJVmWC1X25XbrTF3SCiUFkzquGcpd8G4
-Message-ID: <CAP-5=fX33kGxfHzqVGzusMBiHJM6G75TbLyZazjp37yohwscGg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf symbols: Fix HAVE_LIBBFD_BUILDID_SUPPORT build
-To: Brendan McGrath <bmcgrath@codeweavers.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: James Clark <james.clark@linaro.org>, =?UTF-8?B?UsOpbWkgQmVybm9u?= <rbernon@codeweavers.com>, 
-	Sam James <sam@gentoo.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 8 Sep 2025 09:42:38 -0700
+X-Gm-Features: Ac12FXz3ARBiOKDmnpPM27gy1mVzPRCmSPUEaTgHBWMDiYTBCCbQqzDPHiDjBcI
+Message-ID: <CAP-5=fU=5Be2mUL0Ptw1hLG9NuvS9dT1DN83nA2Q9kTskqmh-w@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] perf: Reveal PMU type in fdinfo
+To: peterz@infradead.org, mingo@redhat.com
+Cc: linux-kernel@vger.kernel.org, Chun-Tse Shao <ctshao@google.com>, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	james.clark@linaro.org, howardchu95@gmail.com, weilin.wang@intel.com, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 8, 2025 at 3:24=E2=80=AFAM Brendan McGrath <bmcgrath@codeweaver=
-s.com> wrote:
-> Just wanted to let you know that I've been able to put together a PoC
-> that does just this. It allows the pe-file-parsing test to pass using
-> LLVM in place of libbfd.
+On Wed, Jul 9, 2025 at 8:25=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
+e:
 >
-> If there's interest, I would be happy to try to shape this in to
-> something that can be accepted upstream.
+> On Tue, Jun 24, 2025 at 8:06=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > On Tue, Jun 3, 2025 at 11:16=E2=80=AFAM Chun-Tse Shao <ctshao@google.co=
+m> wrote:
+> > >
+> > > It gives useful info on knowing which PMUs are reserved by this proce=
+ss.
+> > > Also add config which would be useful.
+> > > Testing cycles:
+> > >
+> > >   $ ./perf stat -e cycles &
+> > >   $ cat /proc/`pidof perf`/fdinfo/3
+> > >   pos:    0
+> > >   flags:  02000002
+> > >   mnt_id: 16
+> > >   ino:    3081
+> > >   perf_event_attr.type:   0
+> > >   perf_event_attr.config: 0
+> > >
+> > > Testing L1-dcache-load-misses:
+> > >
+> > >   $ ./perf stat -e L1-dcache-load-misses &
+> > >   $ cat /proc/`pidof perf`/fdinfo/3
+> > >   pos:    0
+> > >   flags:  02000002
+> > >   mnt_id: 16
+> > >   ino:    1072
+> > >   perf_event_attr.type:   3
+> > >   perf_event_attr.config: 65536
+> > >
+> > > Reviewed-by: Ian Rogers <irogers@google.com>
+> > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> >
+> > Ping.
+> >
+> > Thanks,
+> > Ian
+>
+> Hi Peter and Ingo,
+>
+> This small kernel change enables being able to better diagnose which
+> processes are using perf events for what. In the series it is used in
+> perf to blame EBUSY for PMUs like intel-pt on which processes are
+> using that PMU.
+> Are there issues that need resolving before the patch can be
+> considered for inclusion?
+>
+> The original patch was sent in October 2024:
+> https://lore.kernel.org/lkml/20241031223948.4179222-2-ctshao@google.com/
 
-IMO that'd be great! In this series:
-https://lore.kernel.org/lkml/20250823003216.733941-1-irogers@google.com/
-I wanted to pull apart the disasm vs the srcline vs .. uses of
-libraries like llvm, capstone, let's delete libbfd, objdump, etc. The
-idea being to have the API defined somewhere like disasm.h and then
-based on compile time and runtime options select which implementation
-to use. Things have evolved in perf, with a lot of stuff just globbed
-into places like symbol without clear separation of APIs. Separating
-things by library used allows reuse of things like library handles.
-
-That series has 2 issues I'm aware of:
-1) the last 6 patches remove libbfd support (rather than refactor) and
-some people may care. I suspect with your fix it could be down to ~1
-person caring. I removed rather than refactored as there is a very
-real risk that when you do refactor you break, and as this stuff is
-next to always disabled then it's easy for regressions to creep in at
-which point that ~1 person would probably complain. I'd much rather we
-had a good solution that everyone was working toward having work well,
-your patches would pull in this direction :-)
-
-2) Namhyung didn't like that I'd reversed the struct definitions for
-the the capstone/LLVM APIs using pahole and would prefer that the
-definitions came from capstone.h/llvm.h. My reasons for not doing that
-are:
-2.1) if you have say capstone.h or llvm.h then why not just link
-against the library? But doing that avoids the decoupling the patch
-series is trying to set up. We'd need more build options, which option
-to make the default, etc. which is kind of messy.
-2.2) to support that you'd need to bring back a "what if no
-capstone.h/llvm.h" option in the code, I'd wanted that to be the
-dlopen/dlsym case which must already handle libcapstone.so or
-libLLVM.so being missing. Supporting the "no anything" option brings
-with it a lot of ifdef-ery I was hoping to avoid and it would again be
-one of those seldom used and often broken build options (like symbol
-minimal (no libelf) today).
-2.3) in my build environment (bazel) depending on headers means
-linking against the library and the global initializers mean that even
-though no code (in say libLLVM) is directly used you can't strip out
-the library again. I'd need to rework my build environment to try to
-get the headers without the library and that'd be a larger undertaking
-than the reverse engineering of the structs using pahole (as is
-already done in the series). So changing the patches would mean
-creating a patch series that I'd need to then do more work on to have
-work in my build environment, and I'm not sure things are any better
-by doing that. pahole was my compromise to just sidestep all of this
-without copy-pasting from header files and introducing licensing
-issues.
-
-Anyway, what does this mean to fixing PE executables in LLVM? Perhaps
-the first 12 patches of:
-https://lore.kernel.org/lkml/20250823003216.733941-1-irogers@google.com/
-can land and then you put your changes into llvm.c there? We can
-always clean up the issues of problem (2) above as later patches -
-don't let perfect be the enemy of good. If libbfd must live-on then we
-can move it to libbfd.c so that going through the generic source
-doesn't mean wading through the libbfd code.
-
-Anyway, I know I'm hijacking your fix to advance my own patch series.
-I'm happy with your work landing independent of it, it just seemed we
-could do the APIs more cleanly if both series landed together. I don't
-object to (I'd also be positive for) just getting PE working without
-my series. Isolating your code in the llvm.c in my series may make
-things a bit easier for you. Having both series together would allow
-the library decoupling, BPF JIT disassembly along with LLVM PE
-support.
-
-Namhyung/Arnaldo as the barriers to entry, could you comment?
+Ping. We're nearly up to a 1 year anniversary on this 10 line change.
 
 Thanks,
 Ian
