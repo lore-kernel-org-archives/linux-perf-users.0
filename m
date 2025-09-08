@@ -1,65 +1,66 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04525259C9A
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Sep 2025 14:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1E6225415
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Sep 2025 14:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757342157; cv=none; b=JhstRX32ZFf14i9sBroQb2hsCJRmQ0J/aN+gyXb13yODaeI/QHgLSz3fDQ9g8+GNfoX1IWYtAgQ4rj9ul3Ca4C2YzatXfOh2t5F00i0ZxJbm9JbRFEW3MjVMUh5prUEMjonCcEkYiPh1eQYXJAOTKXu9jqgY5Pxk4RgueCPrcB4=
+	t=1757342906; cv=none; b=D9uJaNKMQhKEu57lM/YQ4eLLBFu08zIs/csLhdvrvR2ewkQesDXALgTzTUwW34uqbQfbh8fX3U4zDCbYN1SHA8ZSLY9MuPXqlG+3F3NVezo6/JaJyxipxzrljtP0LWBNPOkmjHpowCVQaNoYq+t/hyJADfdPYE72EIjCZy8uGtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757342157; c=relaxed/simple;
-	bh=egs7205Snmd/mw+MEXwwC1Y+k8cNoU3nGHetOuR2saw=;
+	s=arc-20240116; t=1757342906; c=relaxed/simple;
+	bh=wYxZQsPJWMscRcV0tNuTLF9qxHI86VAlw37g1Uc0WiM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nY5Q7Qc2aaCgGpXoWSEPap5zVmogO/9sc266n1MCaR+MbeBImX/tlDkNj0eahYx4IhTXgVAFXhW8EHOnyMvJT8oyuxrcvmMj//7p9WMIiMuzEw9phKgspu3RXsc34CXassb1VZCRdCPwxoXSta8Bn1HQOyta++3EQR08A7M6CMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yVK7olK2; arc=none smtp.client-ip=209.85.221.52
+	 In-Reply-To:Content-Type; b=h/zFTQDvtVs5HFf9KT+beaJbRQz4JaCAw3FVFLEcrYhCuEXf4PZLwUWzc+3jUSjWYeu1a5y7s7EGvFTDo4A3z9ZLO485Nn6ECDEP6jgcTJrQ98CcjuArDvYXcFNiF597oifbzQmsOHOw8CuvBE3bDtyGrn1jLjmHs2uuZZw0KJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L4a9grjF; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yVK7olK2"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3df35a67434so2786067f8f.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 Sep 2025 07:35:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L4a9grjF"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-45b9a856dc2so28425525e9.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Sep 2025 07:48:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757342153; x=1757946953; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1757342901; x=1757947701; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=jGYytEnMw+6xuEh78CWcB0+W8fGeyKd2M/PYTH6aJS0=;
-        b=yVK7olK2IsFAx9QVo8Q5bM4x+Rrf1UMS6vqBWSn54WXOAw0Jl68ASNquSb7Hxjr4Gs
-         W1aRFVIDYFOlojloHP+FciNh5Qq5JVahgIaVnHipmcXjw/BpGTKvfkixQsnug2VnwIjk
-         foEWMasaMy7SG86cAULGWKnScwFnezmI65w6XX+k6z2XozqmR/JyjywwO25g9LPHViOD
-         VZ/YOxcRfIR4VYZrArjTdUs8gegP0OSRExghJA/TZIcMJLreWuanN4eX9r2qxwodd4e3
-         3Bh64hsxQed1iEtKDjQsXEVakfvCDMnLyxg7/ZnaQ2x6PBtH55DeDeL0i3bsNx0nZBc9
-         pi8A==
+        bh=MAvCbKbdsh9AD3IPo9PqUkN5Wi8Z7B3asWHTingNxr4=;
+        b=L4a9grjFU3jvX8EFIsHVngSMHyPVX+CGkwaN/PKoUS8YmQq7KUAFeU3xSQhs6gp3m4
+         4X93SMk8TwGG9IZukBonN6a+6lQcUbmky9kkEzUAzwvUU1pnSrtp7hIasL9vR+bKMxYZ
+         hnPb7Kg0Q4fIo6fzQbgKlIPtLzEgDDK1ajZTcKOTui8UrA0v8VHb6xLWyhXrq3+U36gn
+         Tv34bkCEOrIe4Ia0m7oLAv0dk+Z6/dzbQl+qrVXi9s/XV1eUf3JJkGVxZPhGavZ7yaBX
+         xS5aGagEbpu+jyMhUbyxfjMWMMKMzD7HdtEV33VBbW7Ptki3DevB6X5JWjZ/G60VeuiW
+         5UzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757342153; x=1757946953;
+        d=1e100.net; s=20230601; t=1757342901; x=1757947701;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jGYytEnMw+6xuEh78CWcB0+W8fGeyKd2M/PYTH6aJS0=;
-        b=UleAQ8kLJXdJ9J7kYewCXtACbTiNlNWL2rJZJEdsspCAAp4VqwE4beeweBJOzJjY3+
-         8r0Ece6CrNA3rfQib/a3mrSiaLFl0MB1zKpBR5UlsP/28JtEp2wRPMgcblU/G+rQnaeL
-         0Ikz63u1NWD1BXEo516/khIMq30fHkTkI88wK6bDYKZJzGdU7FtH3vq5VqxS+TVXSktW
-         c3IiFvdDe5iCxFI4SoX5ozAa6GimaYg5slUP+Y8KiHEAg6zx6ZEpClY4mw6woFdqsLfU
-         KxN376BLGahvgIvIUS4BK/W/2pEiANhpTLRCT/RRlU9hGoss9YKYDp0hmCLkXmTJOF1I
-         7H6A==
-X-Forwarded-Encrypted: i=1; AJvYcCV30PeB7JSUoWRhEeoMZdx+px4x8SxvJHGrBDTKgyT+Q6/i0TmzmIRCYnW3SpZzLDML96bYtCkJPoZ5UB+QNvQZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YytUUjTnq9CdOwlZ/V6zpri5BDZ96OZPz32PeYIlPZMi6ztp8hG
-	U/TILZtmMzSV2Sx5lIr2CX6UP7PuW/sM+cyStwsl3zVToUlMJ0Vbn51XMh1a86n6J7Q=
-X-Gm-Gg: ASbGnctR4NBqZIAC0mGlYoAzlEDcm5wIovRfU2KcjZnpB4GkTFOrDxkZ65OfxH5MiPq
-	8sRzyrTMivsXxdwzk4o2R4EYy6dhRtl5frGwWyS7XDUfJxTtqa00VwjRzR5ZA+TMIhP0iOWwiZ9
-	TcxNBjNs6Fy31gxuP4Mju8pqjQPv34Fc356uYOt2/sLsccKlTmsRdWMcfRo4PPUtbDFN7k01qyo
-	Xv6ZwRGSOsgDDRvIKO02eGx2tZM0hkKeY+xaD3CY+7JzUDlT9efYcDvh9XGquBjFI6jNBSReOEX
-	6VOpzqfze553eqT0DpA80WZuP+CrTnQMqvBm8buSzIKvnIe+Udsnw8NCAKz8f88SWusZgBLolGb
-	kKylplsyYzR+B5ikV3/KV+CWxKcHjDzIZHDyXzg==
-X-Google-Smtp-Source: AGHT+IHqTDAEvQOt+q1sz1oM/FMn4xs+DKIlODRGS8+cELpR8JABY1klHI4WNO8R4+DbWuABkVVF1g==
-X-Received: by 2002:a05:6000:2a85:b0:3e6:b06c:5b2e with SMTP id ffacd0b85a97d-3e6b06c622fmr3645332f8f.57.1757342153210;
-        Mon, 08 Sep 2025 07:35:53 -0700 (PDT)
+        bh=MAvCbKbdsh9AD3IPo9PqUkN5Wi8Z7B3asWHTingNxr4=;
+        b=wqRG4heaG8/VpTSl13Iz7nj8BVZ4T/i5zRCCck+7KXl6K/kCgtx6VwD0f7X22Pg/Uj
+         yct0iZUXHu0xSkOMDYkthgptMX0c312cwmA6qvKUx0YmMoLRZWloosRXcMUQpRzWwnqO
+         khr6XeaWBW1kh7Quf8hGBgzhFsybqsRIWKc63D0nmZYS8Wa4V6yXfIDt2iWBuuMehzya
+         Tultt5Sn9rJasf/9Naz71dP5I6ER/1cbrqA3uFmp34NdnlDQGGk0hSXHGSdqWRyseQSC
+         y6t3WFpUqrUMIhvzSfLik5PQzkzjjBcSFkWw9O/9lO8kIyCgJx7g+BZCd8x141delBAK
+         pb3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXu0E21ZLKDHpNh4ApJwbkjN/4R2KI/DXZVzuS5iHtgfTGeDZIhHawiN7AmSpxMBePGY9gsa3NqBSOmr7e7YoFU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxy6n+R199hZ43R/yyWD6PxW0ySo4BuLjdlySitr4Q1iVb/x/vs
+	sgrrgpv2Teo8h+jCNP0WZu8mSTZpxyFRB3udA3CECw7rBPosz9mS5JjXFmVpxXcGHW7Cs2wtI9a
+	B/VqIjyGWUg==
+X-Gm-Gg: ASbGncs+HK58RJB1sEsN2j4qPfrLeFYci/aAZI4l4skNF5/fMrJ2ciTDCTOj74h1GYE
+	yKSw53srrGydV5FecsI1Z/2bTWPYyLR7aUi7BA68cYr03KKc1iFiCxQcNw+lnxs9OLHfgbEj6kg
+	rvrClnVt1v6qpKu9370hTRY/oqb6K8voOXFt0NsTL9t9Lvv5MFjst89SSif7SVAf3Y/C3qpVojw
+	poLZ3yIDRCUNfxtN1FXZdh9ArQJlW+DoIU5nlBYmpgyGoP8wEajprlDNxS7wv69vWnBCxVCkizI
+	K0/qkhJCx2hRIX7zTYZchW8A/uwXrytM8XWzBgSTl6+P7ypJse1ZTau3YIXGtr0kZg+niDmC0Ft
+	E4dIa9V6uj1SgEP3TaCzrl7xFmgw4xjtfLri66w==
+X-Google-Smtp-Source: AGHT+IEJo0vSHfdIztLW0ycIdQO2nmVSvnB0WqI6b4WOE4jzB6Nqjlg+ZSbAlvlaOsL9wHYhXgC+lg==
+X-Received: by 2002:a05:600c:3149:b0:45d:e326:96d7 with SMTP id 5b1f17b1804b1-45de45f2bb7mr38192255e9.13.1757342901125;
+        Mon, 08 Sep 2025 07:48:21 -0700 (PDT)
 Received: from [192.168.1.3] ([185.48.76.109])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3d0a1f807f9sm40948664f8f.38.2025.09.08.07.35.52
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b9a6ecfafsm297159625e9.21.2025.09.08.07.48.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Sep 2025 07:35:52 -0700 (PDT)
-Message-ID: <ff94b709-2861-445d-81c4-9ed98125fe94@linaro.org>
-Date: Mon, 8 Sep 2025 15:35:51 +0100
+        Mon, 08 Sep 2025 07:48:20 -0700 (PDT)
+Message-ID: <5e0926df-053e-4217-9141-5b1107363a89@linaro.org>
+Date: Mon, 8 Sep 2025 15:48:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,8 +70,8 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 1/3] perf: arm_spe: Add barrier before enabling profiling
  buffer
-To: Will Deacon <will@kernel.org>, Alexandru Elisei <Alexandru.Elisei@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>,
+To: Alexandru Elisei <alexandru.elisei@arm.com>, Will Deacon <will@kernel.org>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
  Catalin Marinas <catalin.marinas@arm.com>,
  Anshuman Khandual <Anshuman.Khandual@arm.com>,
  Rob Herring <Rob.Herring@arm.com>, Suzuki Poulose <Suzuki.Poulose@arm.com>,
@@ -78,113 +79,81 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20250701-james-spe-vm-interface-v1-0-52a2cd223d00@linaro.org>
  <20250701-james-spe-vm-interface-v1-1-52a2cd223d00@linaro.org>
- <aL7dFIzEgiEETcIb@willie-the-truck>
- <b4bcb7cf-da03-4263-9101-feec6d0e0d8d@linaro.org>
- <aL7gsXbr_-k4q-i5@willie-the-truck>
+ <aG0tsz1EPbrDFTia@raptor>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <aL7gsXbr_-k4q-i5@willie-the-truck>
+In-Reply-To: <aG0tsz1EPbrDFTia@raptor>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 08/09/2025 2:57 pm, Will Deacon wrote:
-> On Mon, Sep 08, 2025 at 02:54:32PM +0100, James Clark wrote:
->>
->>
->> On 08/09/2025 2:41 pm, Will Deacon wrote:
->>> On Tue, Jul 01, 2025 at 04:31:57PM +0100, James Clark wrote:
->>>> DEN0154 states that PMBPTR_EL1 must not be modified while the profiling
->>>> buffer is enabled. Ensure that enabling the buffer comes after setting
->>>> PMBPTR_EL1 by inserting an isb().
->>>>
->>>> This only applies to guests for now, but in future versions of the
->>>> architecture the PE will be allowed to behave in the same way.
->>>>
->>>> Fixes: d5d9696b0380 ("drivers/perf: Add support for ARMv8.2 Statistical Profiling Extension")
->>>> Signed-off-by: James Clark <james.clark@linaro.org>
->>>> ---
->>>>    drivers/perf/arm_spe_pmu.c | 1 +
->>>>    1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
->>>> index 3efed8839a4e..6235ca7ecd48 100644
->>>> --- a/drivers/perf/arm_spe_pmu.c
->>>> +++ b/drivers/perf/arm_spe_pmu.c
->>>> @@ -537,6 +537,7 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
->>>>    	limit += (u64)buf->base;
->>>>    	base = (u64)buf->base + PERF_IDX2OFF(handle->head, buf);
->>>>    	write_sysreg_s(base, SYS_PMBPTR_EL1);
->>>> +	isb();
->>>
->>>
->>> Hmm.
->>>
->>> arm_spe_perf_aux_output_begin() is only called in two places:
->>>
->>> 1. From arm_spe_pmu_start()
->>> 2. From arm_spe_pmu_irq_handler()
->>>
->>> For (1), we know that profiling is disabled by PMSCR_EL1.ExSPE.
->>> For (2), we know that profiling is disabled by PMBSR_EL1.S.
->>>
->>> In both cases, we already have an isb() before enabling profiling again
->>> so I don't understand what this additional isb() is achieving.
->>>
->>
->> It's to prevent PMBPTR_EL1 from being written to after the PMBLIMITR_EL1
->> write than enables the buffer again. So you're right it's already disabled
->> up to this point, which is why we didn't need to add another isb(). This
->> change is only for the re-enabling bit.
->>
->> If the instructions were reordered you could get this ordering at the end of
->> arm_spe_perf_aux_output_begin():
->>
->>    write_sysreg_s(limit, SYS_PMBLIMITR_EL1); // Enables buffer
->>
->>    write_sysreg_s(base, SYS_PMBPTR_EL1);  // Invalid write to PMBPTR
->>
->> Instead of the new version with the barrier where PMBPTR must come before:
->>
->>    write_sysreg_s(base, SYS_PMBPTR_EL1);
->>    isb()
->>    write_sysreg_s(limit, SYS_PMBLIMITR_EL1);
+On 08/07/2025 3:40 pm, Alexandru Elisei wrote:
+> Hi James,
 > 
-> ... but my point is that profiling is still disabled after writing to
-> PMBLIMITR_EL1.
+> On Tue, Jul 01, 2025 at 04:31:57PM +0100, James Clark wrote:
+>> DEN0154 states that PMBPTR_EL1 must not be modified while the profiling
+>> buffer is enabled. Ensure that enabling the buffer comes after setting
+>> PMBPTR_EL1 by inserting an isb().
+>>
+>> This only applies to guests for now, but in future versions of the
+>> architecture the PE will be allowed to behave in the same way.
+>>
+>> Fixes: d5d9696b0380 ("drivers/perf: Add support for ARMv8.2 Statistical Profiling Extension")
 > 
-> Will
+> A note on why I think this is a fix.
+> 
+> The write to PMBLIMITR_EL1 serves two purposes: to enable the buffer and to set
+> the limit for the new buffer. The statistical profiling unit (I'm calling it
+> SPU) performs indirect reads of the registers. Without the ISB between the
+> buffer pointer write and the write that enables + sets limit for the buffer, I
+> think it's possible for the SPU to observe the PMBLIMITR_EL1 write before the
+> PMBPTR_EL1 write. During this time, from the point of view of the SPU, the
+> buffer is incorrectly programmed, and potentially the old PMBPTR_EL1.PTR > new
+> PMBLIMITR_EL1.Limit.
+> 
+> arm_spe_perf_aux_output_begin() can be called after sampling has been enabled
+> (PMSCR_EL1.E1SPE = 1).
+> 
+> Putting it all together, this means that we have all the conditions to break the
+> restrictions on the current write pointer and the behaviour is UNPREDICTABLE, as
+> per section D17.7.1, ARM DDI 0487L. I think it's worth pointing out that the SPU
+> can do any of the folling in this situation: writing to any writable virtual
+> address in the current owning translation regime (!), generate a profiling
+> management event, discard all data or don't enable profiling.
 
-Oh I see what you mean, I misunderstood that.
+D17.7.1, ARM DDI 0487L only states this is an issue at the point of 
+enabling, not writing:
 
-You might be right, but I'm looking at statement SFDXJJ and it only says 
-"...PMBLIMITR_EL1.E is 0b1, meaning the Profiling Buffer is enabled...", 
-so it's just the buffer rather than "profiling is enabled" which would 
-require both bits PMBLIMITR_EL1.E = 1 and PMBSR_EL1.S = 0:
+   "When profiling becomes enabled, all the following must be true..."
 
-   SFDXJJ
+I think Will has a point that it's not enabled at this point and it only 
+gets enabled after some existing isb()s. This is only an issue if we're 
+following DEN0154 which seems to be more strict.
 
-   When PMBLIMITR_EL1.E is 0b1, meaning the Profiling Buffer is enabled,
-   software must behave as if the PE can do all of the following:
-
-   * Ignore writes to the Profiling Buffer controls, other than a write
-     to PMBLIMITR_EL1.E that disables the Profiling Buffer. The
-     Statistical Profiling Unit registers affected are:
-
-    - PMBPTR_EL1.
-    - PMBLIMITR_EL1.
-    - PMBSR_EL1.
-    - If FEAT_SPE_nVM is implemented, PMBMAR_EL1.
-
-I'm trying to read Alex's other reply to this patch with it in mind that 
-profiling is still disabled, and it feels like your same point might 
-apply. Even if it's incorrectly programmed according to the existing Arm 
-ARM it doesn't matter if it's disabled.
-
-We did discuss internally about the difference between just the buffer 
-being enabled or profiling altogether being enabled. Looks like I need 
-to check again.
-
-James
+> 
+> Thanks,
+> Alex
+> 
+>> Signed-off-by: James Clark <james.clark@linaro.org>
+>> ---
+>>   drivers/perf/arm_spe_pmu.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+>> index 3efed8839a4e..6235ca7ecd48 100644
+>> --- a/drivers/perf/arm_spe_pmu.c
+>> +++ b/drivers/perf/arm_spe_pmu.c
+>> @@ -537,6 +537,7 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
+>>   	limit += (u64)buf->base;
+>>   	base = (u64)buf->base + PERF_IDX2OFF(handle->head, buf);
+>>   	write_sysreg_s(base, SYS_PMBPTR_EL1);
+>> +	isb();
+>>   
+>>   out_write_limit:
+>>   	write_sysreg_s(limit, SYS_PMBLIMITR_EL1);
+>>
+>> -- 
+>> 2.34.1
+>>
 
