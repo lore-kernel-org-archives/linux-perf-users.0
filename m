@@ -1,67 +1,67 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E74E2FD7A5
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Sep 2025 12:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962532FE05B
+	for <linux-perf-users@vger.kernel.org>; Mon,  8 Sep 2025 12:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757333447; cv=none; b=dY33YLYXFbuu06YCFNcPuRpfn8OEFBvRhsbJoOI5HT00F7D2EtWsmgtaKxTB0uu8m5GMjmshzIlXSkIvVeey31Uxwjcjut9dpHTUG0slp6FsiQIb60hOqPmV8WWjUsvs2g9DQuqMqzN9sh1hq82PK4+6npdIo1lngNSktQuhxOE=
+	t=1757333449; cv=none; b=cT5Vt02bfb0NBDXZmzh4TvS+JfEagWCU6LrO6SDRXzYVqMW4XY5ECWRD3vS4QM1FOnwIzZVM/lbqSdvV3yG2lKhNu5JcXTE8HtD2Fg0T4jKt77BoZSWcy9tibJ4sXjDr/pPkdet3SbWQd+GSwTUg9mYOYYfYkg5suo2Xu5kCnHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757333447; c=relaxed/simple;
-	bh=IJd6xGKn2wTKzeTG7OBOehcaLPe7DHLOeBtwLK/5d64=;
+	s=arc-20240116; t=1757333449; c=relaxed/simple;
+	bh=raNLMpkl+S5CZKwgmk04jznUUUHrI3AfobHlmwQcWqw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JbrkWmQA5ln4f48ZBX5JkAiCD3DAoyH1Q1eDPtsE4+dgdyIC+HIf0M2PNKV1kGDSlzrJKoHSjkSvJK0enMl5EiVtpCTppf/bgYvW6FFF5EoiO8NoEQOOeJyS5MAf0z2xqs7Y5BV7/9EPRcjpuHDuToELqnzH6PY+NXLVVwINDqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rJ92GMLF; arc=none smtp.client-ip=209.85.221.46
+	 In-Reply-To:To:Cc; b=oEqiRwtVWz5JmYwPd/XWlmzzNe4ET1owzKJ7E1XQyzMjkQGRI0MpqUBSBWDLepDCU52OkxUT3B6I5PZejCv1MxOlGkJ+o1D6grUpWSvbXp6yv8WQ6Oy0gNL+GggfI8Bn8Ur5x2XaknSURgSWH14D4sV9Kpod7k017zHfO575khw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VWUXWoc/; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rJ92GMLF"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3d19699240dso3188482f8f.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 Sep 2025 05:10:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VWUXWoc/"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3e537dc30f7so1128061f8f.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 Sep 2025 05:10:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1757333443; x=1757938243; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1757333445; x=1757938245; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=UkedwrzQI0rdKjNe52sGXdchQDXaBvZiPmkIP1sVIaA=;
-        b=rJ92GMLFE57Dp7KrQt6tsUDYQCdfGNqB18dEodOCQzFRdRJi+uiXMAtn6Qx9VF3lr3
-         y6r5T9alrQacArDlrmWRgJaQ+4IHqlpykeaW9YCVGNL91EdHiIl1iPQybMmwxOSxlBrx
-         zIdG2kEM5quN/J7ju5193JOXb5/8M58bSPXqUcqO0qJI1+UZyMODtDdND/vYgvBTzrmj
-         lBY+XbN5mmM8YWG26aL3/ItZmnXNwUpH7XL/IOBYPqg2WHdfj8LsVwKg/raHfpg5t9pN
-         cqJgq3XzWTYoZV2AXOjw4NWk1YR30NJk7MCe6r7lBt5nF0RKwLiNvWsdiexgInIb2dQj
-         SyBg==
+        bh=qqo1+7mglImJW3/ESP2sAU0K/vghCbEUc7ur867asyY=;
+        b=VWUXWoc/iOIswXuFQ/jUGWkzn9QTQDuJXTvwFpkb6CDeBeCVZj/0gnUp6nNtVUs8Hc
+         FDTUM6W72x7X3FUfbDa/q/kn6vjt4tSw0KdtDjKgJTyiimgOwNGrlLA8HEOt/JIWyvJ0
+         wo5jEx5DQd37QQCYqP3Z+Mok2nb5Y/QfUnp+/6wqMIVAaAInGGSu50iH4zGK0adw2Z5+
+         kdbzWM8MbnmBLIZrLbqOnMmEWSfEJxNGrOQ6EQBfVkS5U5wqqoscg+iuGQGh2gwlAYPc
+         6NQx6DCamPSw5h3OGn3+ccYPqLAr4dq2ciw6XvTpYhyWT3iZBuEGRwVcXzWpdHziCNHZ
+         AKqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757333443; x=1757938243;
+        d=1e100.net; s=20230601; t=1757333445; x=1757938245;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UkedwrzQI0rdKjNe52sGXdchQDXaBvZiPmkIP1sVIaA=;
-        b=GBL0to+SM/s1CRMCqQ1wjdKJqORAX8Go3dt+WV32Y8MZQoh0yNGFksYbCXaeXxzCQk
-         /K9Qt8l3FLJodKCEgD01iGdOSK4Wb8AA5UptUTwvRfQEcKBXm3MS/+Q/rYPNtDGH/XOM
-         CSowkMxsN/sF/WtWBjTBcFP2/QXO4nCtWm8pJ6s2cq6YIRnWSiVXbx/4Owk1gxXit8LV
-         QF0iCYD81CbG8f5iJSVdMweTfM7REimesPke18C7vI+NaPSorOqCXVsODTAaZEp6SH69
-         ojX1QDmFRtYCh6G/kp065yeLMOsJ8dW5cC/29w+58/QGjl/z23/T9Bf8O68Z7IALLn6f
-         pHKw==
-X-Forwarded-Encrypted: i=1; AJvYcCVcqM/Xk/pAZB9Yjx9k0gF9Ry3ku6KRwedO8Q9Dp+1zeUGW6Ihu8ofQJJpRUIRFlw6J7wkVKS0R570QSkW8zdt8@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzG3bs3zZ3fB/jlTrdbpMsnaVQW7Si2v1Ppi6/nqWGTyhHiNVK
-	qz9xjKG9AfliZo8erJZgCfnc3GiC0+eRI9M3JP5gjlEXuosfCBC5KvkcT/rS6xiUjdo=
-X-Gm-Gg: ASbGncueT2HhBr3Xm6fnFJ5WOheNB7lR6cuYUZqGO31iePo4S+i7zPI8/j16EF1AXBa
-	2whuHNznK1MCQSV2myhNEeCEzgXrCQrNT1n2kfiywgfZN7cEjRvTLeXRh5fWM1tuWOAsWhh60VC
-	83gkEGxHO00oKlb1O2TB619Q/4KDVv0/VxFfV9Gb9aG/5pea9absZa8vteZIa7xA5fcOuTGNSD0
-	XMmXZaxQYlFLzm/3shLn+0JQ0OPkZY4mC2ybbygJ9qAtErCua08z7/AOhv5F1E3S9bl9CZfOb/E
-	2fuL4BnHFbj1kCyr98GtAkrTrskcX//9v0YpBhDhJ/3vqWjujbUnVfvPuq0efdAnY6Y/LKuTWZw
-	MDahGBlKACgmiRfWkdlel1jzLPo/SKCSlU58IPvdwiw==
-X-Google-Smtp-Source: AGHT+IGak0uuuS5pIGUifYYsbhCa22YIqe9IhScFSAOd21dRmiIc9QfW//Nsn1rfDOPnEaB1ex4tYg==
-X-Received: by 2002:a05:6000:2385:b0:3e1:a74f:f847 with SMTP id ffacd0b85a97d-3e627a7c83cmr6685253f8f.6.1757333443258;
-        Mon, 08 Sep 2025 05:10:43 -0700 (PDT)
+        bh=qqo1+7mglImJW3/ESP2sAU0K/vghCbEUc7ur867asyY=;
+        b=V10ANiz6LjO6vtyzpuT5ar0H5RExPUfZvOonRHghv4vHhO4Jno0kivoGalNDkvcaL6
+         uDZwSuXQmJc6UGMJntQh+PKyFhqHPy4ekTqwVN9o1H04pV7nl40m1dbiZT5zFdVSFZqP
+         4RzkZFGMlDHxFqkjoNFZ/7Gvd01GYbs3pIUK0arRjozO9NKILR4/jj62XB+VAz89poLI
+         61pO4rRlz5OPCmx8uwptegqqDiEZb4SBeyLkVzAiBmw39BgWaQhzMloQ2zDsMn+/EDCM
+         tO8f1zIkmZ2RNYHgwoMMn9n3InM4UBqTHIIJNNfZsOUHY3ZwNzw0VYk3MojS2lceodwI
+         YAFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUibfVZTF/25hiFffZkZuTp0mSe4eTiON5YbNSQoCQTIIC5Uj+P+4LL/9VOvnqvOTYYFPtPwMqWnFbDJZfKtQ9T@vger.kernel.org
+X-Gm-Message-State: AOJu0YxX4GTDtSrG5Y09qhbI75ocq2BSP38YSvnwTHvgueLP6L2/EjfH
+	/Aysdhd26cAr9SmGoazdFh3jkYwjmXxO5qiAa50SDsjDhjFqiLOneLawlktBRgZcudE=
+X-Gm-Gg: ASbGncsEGimWxmnm1VSN/j8PT+hfMyRMj1ckWjABoObmCZ0k4OptqeyDU352VvpkNvV
+	onIJ2kHJeYUVigLO0e8XkWMXL6ugdDgpJW5AC9LshNwd5d2eGuBHpHgoK1uDYyQJYOhpNpuWZ+h
+	rE9JqV5H6wYBJrb9n2Sv5VPXQUKMuyeQiUfbSG71VHqodBnw27t8Vox+gnfqmZ1w5cegtCKA86W
+	PDDfEfZDh2u7beCNGiFvFUJUPyJz9ejGd2HO2Y0XYLgioIhy4ICP8fHYiepMH48bzaVlUyMQZxv
+	v2JNGPMwFUbd9dOrOKioceN46OrZtDaUTgmn9sjX9fZP65Uunp7rXtnGt8rHedvL0PC7BvAbhOK
+	ypHlL6W1qNk99qS7vcxSdYbnj3W/BzcM=
+X-Google-Smtp-Source: AGHT+IGBWxzyRFeeGevfk44/JfpKxel/pd+hKUi5ugftmEIb0KfQdxCQwGM4PG30BiUOferaK3FuAg==
+X-Received: by 2002:a5d:5848:0:b0:3e2:5d59:4868 with SMTP id ffacd0b85a97d-3e643e07d6amr5074970f8f.46.1757333444701;
+        Mon, 08 Sep 2025 05:10:44 -0700 (PDT)
 Received: from ho-tower-lan.lan ([185.48.76.109])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3cf33fba9fbsm41397825f8f.50.2025.09.08.05.10.42
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3cf33fba9fbsm41397825f8f.50.2025.09.08.05.10.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Sep 2025 05:10:42 -0700 (PDT)
+        Mon, 08 Sep 2025 05:10:43 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
-Date: Mon, 08 Sep 2025 13:10:20 +0100
-Subject: [PATCH 3/4] perf arm-spe: Display --itrace period warnings for all
- sample types
+Date: Mon, 08 Sep 2025 13:10:21 +0100
+Subject: [PATCH 4/4] perf docs: Update SPE doc to include default
+ instructions group
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250908-james-perf-spe-period-v1-3-7ccd805af461@linaro.org>
+Message-Id: <20250908-james-perf-spe-period-v1-4-7ccd805af461@linaro.org>
 References: <20250908-james-perf-spe-period-v1-0-7ccd805af461@linaro.org>
 In-Reply-To: <20250908-james-perf-spe-period-v1-0-7ccd805af461@linaro.org>
 To: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
@@ -87,61 +87,44 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
  linux-kernel@vger.kernel.org, James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.14.0
 
-Currently we only display the warning when the instructions group is
-requested. Instructions are on by default, and the period applies to all
-sample types anyway so always check the options and show the warning.
-
-Reword the messages to be more explicit about which flags the warnings
-apply to.
+The instructions group is now generated by default so update the doc to
+reflect this. Also explain the period/downsampling mechanism in more
+detail.
 
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/util/arm-spe.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ tools/perf/Documentation/perf-arm-spe.txt | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 4c81518a033a..228ed52e653d 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -1742,14 +1742,6 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
- 	}
+diff --git a/tools/perf/Documentation/perf-arm-spe.txt b/tools/perf/Documentation/perf-arm-spe.txt
+index 37afade4f1b2..cda8dd47fc4d 100644
+--- a/tools/perf/Documentation/perf-arm-spe.txt
++++ b/tools/perf/Documentation/perf-arm-spe.txt
+@@ -191,14 +191,20 @@ groups:
+   36 branch
+   0 remote-access
+   900 memory
++  1800 instructions
  
- 	if (spe->synth_opts.instructions) {
--		if (spe->synth_opts.period_type != PERF_ITRACE_PERIOD_INSTRUCTIONS) {
--			pr_warning("Only instruction-based sampling period is currently supported by Arm SPE.\n");
--			goto synth_instructions_out;
--		}
--		if (spe->synth_opts.period > 1)
--			pr_warning("Arm SPE has a hardware-based sample period.\n"
--				   "Additional instruction events will be discarded by --itrace\n");
--
- 		spe->sample_instructions = true;
- 		attr.config = PERF_COUNT_HW_INSTRUCTIONS;
+ The arm_spe// and dummy:u events are implementation details and are expected to be empty.
  
-@@ -1759,7 +1751,6 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
- 		spe->instructions_id = id;
- 		arm_spe_set_event_name(evlist, id, "instructions");
- 	}
--synth_instructions_out:
+-To get a full list of unique samples that are not sorted into groups, set the itrace option to
+-generate 'instruction' samples. The period option is also taken into account, so set it to 1
+-instruction unless you want to further downsample the already sampled SPE data:
++The instructions group contains the full list of unique samples that are not
++sorted into other groups. To generate only this group use --itrace=i1i.
  
- 	return 0;
- }
-@@ -1877,6 +1868,15 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
- 		spe->synth_opts.period = 1;
- 	}
- 
-+	if (spe->synth_opts.period_type != PERF_ITRACE_PERIOD_INSTRUCTIONS) {
-+		ui__error("You must only use i (instructions) --itrace period with Arm SPE. e.g --itrace=i1i\n");
-+		err = -EINVAL;
-+		goto err_free_queues;
-+	}
-+	if (spe->synth_opts.period > 1)
-+		ui__warning("Arm SPE has a hardware-based sampling period.\n\n"
-+			    "--itrace periods > 1i downsample by an interval of n SPE samples rather than n instructions.\n");
+-  perf report --itrace=i1i
++1i (1 instruction interval) signifies no further downsampling. Rather than an
++instruction interval, this generates a sample every n SPE samples. For example
++to generate the default set of events for every 100 SPE samples:
 +
- 	err = arm_spe_synth_events(spe, session);
- 	if (err)
- 		goto err_free_queues;
++  perf report --itrace==bxofmtMai100i
++
++Other period types, for example nanoseconds (ns) are not currently supported.
+ 
+ Memory access details are also stored on the samples and this can be viewed with:
+ 
 
 -- 
 2.34.1
