@@ -1,106 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CC3274B35;
-	Mon,  8 Sep 2025 21:00:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5B72DBF5B;
+	Mon,  8 Sep 2025 21:15:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757365244; cv=none; b=OCFuT3eRYY4m5tiYIKxpQNGzWAKT4vLSE0vlPPkmq16wyM8C7kzP94JIuuYIxh6fWYL3Y9HKl7fi1OGG+98Ti3dmck06z8sYFAgLjnDWUTbkt/eGoxYFWgAlilF8jEjWR4DqlWfvhZm2j+P0dHbrkeGqUaJTj4JQPJtVW3y01TA=
+	t=1757366105; cv=none; b=eucstYl5xdvIGjnyU+zxarTgQ+uGkRSS9mXFMtCcEeWKhDu4A5wC+ZvS+Q+aMp3uo4++zK5MzHCrdPhy9r1y6fJgP41f9B6ebbP175kFUuRh+aQM33GSlJngNz7D3xmP8373kTY7dWlGadRZfLlGmFnKlxMX3yk0Wl2B63BMJJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757365244; c=relaxed/simple;
-	bh=jjf+aHsPpbrLWSDIt9QKsf5MQvphLbS4gLwD5a1BFes=;
+	s=arc-20240116; t=1757366105; c=relaxed/simple;
+	bh=hsYCj2pTYv/83bCogC3ysaSqXDPXrnhxEz3v+vbZBPM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JKCwRQU6Guabt//apOHUBRo0mLmLTzOD/MR5vDsFFDxt2joi3V8ZLnWHtkBlDcvuvktPoMnMzsVzD9SjR0JtcHnORp0PFZvx3UC3DoWAwfwNz7xsw8Z9ces5a4runwKe/7T9DZ7hfhfhBIFtVLbZ42RrULdugfhAixDWIJ2RIHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CRghxTVD; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=WzmwYB9pfV1EAYTzYTzgFwvAgIbnqzMI3pGMJJTQWYGXHwRh41xE4mGvWXXbdGVRHvAWZWZQxY0kI5nsLWc7fjAeZ4naTvVvcZzVMGhJ+u88i1uSkcRwePxCTT2jgYsGdgG4OqYXqtNwX8JDQsIY9w2osneVdKp8uqrm8HsgUB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a6+uA+m/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CRghxTVD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C32BC4CEF1;
-	Mon,  8 Sep 2025 21:00:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a6+uA+m/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFC0FC4CEF7;
+	Mon,  8 Sep 2025 21:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757365243;
-	bh=jjf+aHsPpbrLWSDIt9QKsf5MQvphLbS4gLwD5a1BFes=;
+	s=k20201202; t=1757366105;
+	bh=hsYCj2pTYv/83bCogC3ysaSqXDPXrnhxEz3v+vbZBPM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CRghxTVDtXnkHUprmyWWSLe/gyt5uG8/I8SN4ih8EZeMb7Bxgr9/Q+ognLI0EiW4t
-	 HcuT2KFU+1M+Oc8fJmxcKZl54p7nFWAs9Cxi/KLN5YJrxKyd7P9pP6XWdaY63gmU/n
-	 8kZt1JsIO+ZF3Zq+rrWbYkgRmURZq93dnh7f5hbqNx0mzoO7e1autXoW/QEQ+FE6V1
-	 KI7tr9tRAFWwbjkDtMZ7aCbkK6w7Od3iIe35gVepG/lyb//uEEiuJou1HWFcbUnxWP
-	 nmZaQFk/+wEFJWmKIhNFpxin+r9zszGmdTigV29UE7tcPzdpZDo+3Mxswq5AHMu5KK
-	 1nD3icjzd8qYA==
-Date: Mon, 8 Sep 2025 14:00:41 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-	Song Liu <song@kernel.org>, Howard Chu <howardchu95@gmail.com>,
-	Jakub Brnak <jbrnak@redhat.com>
-Subject: Re: [PATCH 1/5] perf trace: use standard syscall tracepoint structs
- for augmentation
-Message-ID: <aL9D-ZzdNFxD8hkn@google.com>
-References: <20250814071754.193265-1-namhyung@kernel.org>
- <20250814071754.193265-2-namhyung@kernel.org>
+	b=a6+uA+m/GKKxJHzF5Tf8G7KjkKhStbaJOzWHJVvj0TJjvFAxkZjd85xnk+31a3JWd
+	 TVy3AJyvfjsT8i1HZy1XYX8ZR5JDvdVX+4Uxdiw+YlUCf29XEe3zy/E6dqsP6jS4yA
+	 IBS0OycKZq+iaY+5qoEb9B4yH1s2ASK5aVavTWtJR6JlvXuXglpg0J/r2slOawxkXe
+	 Zcg37cSH8v6lWUcDbHNbr2CA3GWEqGjz6LMGzo3O+x7kpkGmNkSKjZ62pqqFUSf7NP
+	 SlnAEjxDehDNn6j9XoCNUT6ZC2iWBymjAbG1ZL67VDPBPq7yCUMNfbqRV4grMhTXc1
+	 aClw0Vi9THT2g==
+Date: Mon, 8 Sep 2025 18:15:01 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Brendan McGrath <bmcgrath@codeweavers.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	=?iso-8859-1?Q?R=E9mi?= Bernon <rbernon@codeweavers.com>,
+	Sam James <sam@gentoo.org>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] perf symbols: Fix HAVE_LIBBFD_BUILDID_SUPPORT build
+Message-ID: <aL9HVT0F5m3c2sG6@x1>
+References: <20250903-james-perf-read-build-id-fix-v1-0-6a694d0a980f@linaro.org>
+ <20250903-james-perf-read-build-id-fix-v1-2-6a694d0a980f@linaro.org>
+ <CAP-5=fWHGFBaCgiRcj8zVy196OE07F8jnSUbjvsO_HerdqeyTg@mail.gmail.com>
+ <70bd9eea-905a-4fa9-8265-f84ab9894b12@linaro.org>
+ <2b958dec-7ba9-41a3-b11b-43b5e8418849@codeweavers.com>
+ <549d3812-a606-4981-83f5-0a99b0ff9f6a@linaro.org>
+ <CAP-5=fXKthsZe3J4_UHHGwDafBq7pHzM18Mh=_2QrnSfCT3nOg@mail.gmail.com>
+ <3db2d6af-3b21-4ce2-be1f-668270adbbeb@codeweavers.com>
+ <CAP-5=fX33kGxfHzqVGzusMBiHJM6G75TbLyZazjp37yohwscGg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250814071754.193265-2-namhyung@kernel.org>
+In-Reply-To: <CAP-5=fX33kGxfHzqVGzusMBiHJM6G75TbLyZazjp37yohwscGg@mail.gmail.com>
 
-On Thu, Aug 14, 2025 at 12:17:50AM -0700, Namhyung Kim wrote:
-> From: Jakub Brnak <jbrnak@redhat.com>
-> 
-> Replace custom syscall structs with the standard trace_event_raw_sys_enter
-> and trace_event_raw_sys_exit from vmlinux.h.
-> This fixes a data structure misalignment issue discovered on RHEL-9, which
-> prevented BPF programs from correctly accessing syscall arguments.
-> This change also aims to improve compatibility between different version
-> of the perf tool and kernel by using CO-RE so BPF code can correclty
-> adjust field offsets.
-> 
-> Signed-off-by: Jakub Brnak <jbrnak@redhat.com>
-> [ coding style updates and fix a BPF verifier issue ]
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
-[SNIP]
-> @@ -489,9 +477,11 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
->  			index = -(size + 1);
->  			barrier_var(index); // Prevent clang (noticed with v18) from removing the &= 7 trick.
->  			index &= 7;	    // Satisfy the bounds checking with the verifier in some kernels.
-> -			aug_size = args->args[index] > TRACE_AUG_MAX_BUF ? TRACE_AUG_MAX_BUF : args->args[index];
-> +			aug_size = args->args[index];
->  
->  			if (aug_size > 0) {
-> +				if (aug_size > TRACE_AUG_MAX_BUF)
-> +					aug_size = TRACE_AUG_MAX_BUF;
->  				if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, aug_size, arg))
->  					augmented = true;
->  			}
+On Mon, Sep 08, 2025 at 08:47:12AM -0700, Ian Rogers wrote:
+> Anyway, what does this mean to fixing PE executables in LLVM? Perhaps
+> the first 12 patches of:
 
-Does it help if you just revert this hunk?
-(But actually my kernel doesn't like this...)
+Lots to digest, but to make progress, if you think you can resubmit a
+trimmed down series after making sure it applies to perf-tools-next,
+please do so and mention that in the cover letter.
 
-
-diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-index 979d60d7dce6565b..c4088bdd4916b0e6 100644
---- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-+++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-@@ -493,11 +493,9 @@ static int augment_sys_enter(void *ctx, struct trace_event_raw_sys_enter *args)
-                        index = -(size + 1);
-                        barrier_var(index); // Prevent clang (noticed with v18) from removing the &= 7 trick.
-                        index &= 7;         // Satisfy the bounds checking with the verifier in some kernels.
--                       aug_size = args->args[index];
-+                       aug_size = args->args[index] > TRACE_AUG_MAX_BUF ? TRACE_AUG_MAX_BUF : args->args[index];
- 
-                        if (aug_size > 0) {
--                               if (aug_size > TRACE_AUG_MAX_BUF)
--                                       aug_size = TRACE_AUG_MAX_BUF;
-                                if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, aug_size, arg))
-                                        augmented = true;
-                        }
-
+- Arnaldo
