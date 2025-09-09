@@ -1,67 +1,68 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F25C320CCA;
-	Tue,  9 Sep 2025 10:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61BA31A564;
+	Tue,  9 Sep 2025 10:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757412772; cv=none; b=F9MCDUL2EY36Bo2NVQUp8WdSycSAswOQ8Co2Rw8RTtMAZa5/lEL1y1F2Jm56gUMvLjZFzbls+mYZPLkpKmCNjk/OU2inRtwlA1tUzEigegPkhjWhoEiyWmi3QcRW9NBAioYwH2Hvj0MGEISxVIayoIgi41DautQxlv1BULmfsZo=
+	t=1757412773; cv=none; b=A2BN7nwvhNNQz6+JTPrYyZ5e1eRNhyESOnaiMDhcwEpNqsmUhJ7/74ZAc13Fg9h99r5a0ZrM62ZW3iVLRD2wjS7PxFCgB2izd4Da7jeJTarcWPIFg0Qr2GFL2yvFP0KB1VEXgMKuXJshJ7paFwJC0tEAMAUM6aRMy0EtduuFB2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757412772; c=relaxed/simple;
-	bh=RtdhzO6P9ZvX6WJwSMLms7Y7sv3jFsFx2qpOpQIASFI=;
+	s=arc-20240116; t=1757412773; c=relaxed/simple;
+	bh=obnUKXEV34x38ZapSXN3pII61fMG/MHJIkw0EhSWfh0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Rnakf2KZ4SJ5CQO4YAzKWKdtTZsbAu0VJt+8UMkK/4ypviAjs4QSttUKA6+L9kxzJnznxggqxM+eMSOu0Ie8dORo0B4DbjiJltc1Xj+kDTfT0DisrnhAAccyTdtZjZFiuKew58ZwNv0S9z7z3CtsZBeWz7kSbcdW3elZKRHjSZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K/S4h44y; arc=none smtp.client-ip=209.85.128.49
+	 In-Reply-To:To:Cc; b=OrgsoFrQpw1cHFzgorylxzR+cPvIGfa3aX6FMhxphPIk16qqXqJxntK4e0hqFVMS/VVqUzGr4fYoU2XfRRiH/l3gCqnvjesO1TqHTDJXUx9Tz0qCMitljXHlUCUUKFssnCp5xzGotgRpdIz7YZipWRB4fmwIYFsfaLOuRmXCpG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eyBoVBzK; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K/S4h44y"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-45de2b517a3so21603225e9.3;
-        Tue, 09 Sep 2025 03:12:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eyBoVBzK"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3dea538b826so4642702f8f.2;
+        Tue, 09 Sep 2025 03:12:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757412768; x=1758017568; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1757412770; x=1758017570; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=cSHpkOd4uK0+LGgGfUUkh18hfW5funXXjdKKM0dPo6M=;
-        b=K/S4h44yFC4mIsQZ8Lbxlzy40ROSFAYTcNXAqiagsOowI0ORBnl22QlszcAleSP59q
-         WDM/yyFvLRPOQitu+cnOftGVHNyjIMsfYJ1djCbNj4GBy185IAmgzDqG5jShu5TPe59b
-         ZxYcXRVPRvo/y/gRalrFsgRfcr7dGC+3FnXddH9qBLIbciY4oEt9Dx3NMQT5F2hLzgt7
-         cIHjQP3bfjfgU6UN0C3Nh71DFPOaLchqjTlrMAhNSmFxWXTjDpTcgPQN1U1ulpgZuQrr
-         VtL/oZZMxfpWS0aepLkSq1s8YOGx5VGhVL3UPjjIVE4w1u6OCtThKC+26WDKKiJeZJqc
-         O7Gw==
+        bh=kqkLiWItq44+h/R1+EtYWkRm5AyzksHBQoJeAh9biR8=;
+        b=eyBoVBzKQJWFHz/Ssr1461fGg5lSNccd7AI0niFGz29MEgSnGkJXGmot6Zpm794LTr
+         l3nR1vts2rgOdIrASw2gRTL3KOKdQ//Zk3L8eESokZOu7Y2NaeoM/5Ralx0X3DaqYyb0
+         qT+l+pys7LsPBbUNUwvtEEY/rzT2RkC8wHZESBFNNJKTOIYA5niU8n/TpZpGe63+GpCP
+         EsMwNClUzuo3Zj59iGEqEpymKwhmv/dJcqmtaUjtMEIRS8OJwnVcSnsn4o3jwWO7+5gA
+         Rb8hIwyJLzmRvBnRdTqMfUyPwNEZX5EhMK4nK+DI54JV4Ng2ekl/11zQCQyuaEFtKb8R
+         4pJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757412768; x=1758017568;
+        d=1e100.net; s=20230601; t=1757412770; x=1758017570;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cSHpkOd4uK0+LGgGfUUkh18hfW5funXXjdKKM0dPo6M=;
-        b=Rr375TCD3aWFRtIzvUO3ToFPtj7HJrux8oByp1yxoZH4oYiSZF8CEhNTHit1sVzhm5
-         6TYHKVcsZOBPEm2iTSrXlCQra4ppIz6ucWMFdt5LoVUAuyUDVY7GuMp0Mx3aFR/sVb/d
-         gNkmvwhQ1o7lCPKp4hswhjk0y1InSRjoKCxjkgCBnCjNfSO1Og2xc8nCykgtMcZzLFEL
-         iqXU71pK1ADbDfEgFTLNM4xuFZKpjLQwYOnsc3sVy6b05MLH6hfZfInHma3+XenaQnz9
-         wpxg0jqlnEkUUEW2kBXH0kgYSqINMrR8UA4Nm6nPmeK96Sm2g7TONGBCluhZmeXf72H7
-         2O2w==
-X-Forwarded-Encrypted: i=1; AJvYcCUHcNAHjMOcmOu/OxMtYhlSHKSDC6gJbrKPnjAWSh1I4jFoGIB//nMh1eRC/FgWwtr/8RnqENWkvNgW@vger.kernel.org, AJvYcCUhmPZXWzN4mwl19Ep9MKLWvykjvV9ViNTEN+AqHPB/FirJhYg8IHehOT7HtCXK+/9pikG3/yy4ayqt891NCe7yUw==@vger.kernel.org, AJvYcCVR7EaabYg0n3JuRU+L7X0htzQH5n/ANk+EHoH2U4sBABhRRVuJZtqToTM61dpKhbYtEmPXJnGkE4gnCw39@vger.kernel.org, AJvYcCVTQZ8k6OtoyCS0Bru0W59suC1HrYU43Y/YPKQvCmgh0C3e8P7LnB98BprUPU/J5jqRZvKsrF+MrZXJ@vger.kernel.org, AJvYcCXl0y5G07mU/7RrW34ZeTwWPfC3eJ0/8kNf6stKka2l0b1G/BYxKFsPGT5cKzjFaUkBNALNwfvvDXB6@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzcy4sB0qnm2iBrbYUuk5JFJmbUMIPHnHYY6VXA/vkhc41cH2O4
-	zt+jZV9CTptX9Y96wle5ee3Y67zG/pMDo4tbch2tpD0zP3Z1e2xeMCBg
-X-Gm-Gg: ASbGncsooT1svZcrBszlWAoHVLO6QA9oVTA0NXj1QmpgiVCvOftnCDaMP7bm2v/VqbX
-	AMtRIAaTJ58yXwPUEOvgvVvF3PktCol23VtoZnImnR797uspbD8nA5zwqHdoZu/5OJ7Wjy5msCq
-	J+d6vfvRMwIhNeNtjzW8ikWRXxnyI6+v+4WNDMxqwFLDLBijIdom3xMZS4Sv24kyLxoTy+WqiqR
-	ajHi/uPNWLfXThlt53Dpa1f2s+16C31k+fOkawuH6Inw3duDadpPEWzr4KJtgBdUaK0WIJ+Uw6Q
-	tnfCvQ0wmAsfU+zdQNXStGCyfd063kEmamWvQ70gEcTBS3SJm3dXYyvk+OijVnYxPtY2kI24VHX
-	s7qZRJqw/SNJD6NM5kPrmDplBeaDO6OYhyGNbBhbdeKLWeCGdsdw6qt8DEF7wkiPcu4reSQcESS
-	HJpT00Da6gkTsSrA4=
-X-Google-Smtp-Source: AGHT+IEBMPQ+x6q1DQHn6tfQDdXdqZ5wpu49XiP27S3xqO3Tqwiv+/CrXaWQp/nERl98m+vIT28Mxg==
-X-Received: by 2002:a05:6000:2003:b0:3de:d33c:60da with SMTP id ffacd0b85a97d-3e642f9057amr7829659f8f.21.1757412768431;
-        Tue, 09 Sep 2025 03:12:48 -0700 (PDT)
+        bh=kqkLiWItq44+h/R1+EtYWkRm5AyzksHBQoJeAh9biR8=;
+        b=k/GXSlIAPVt7Mq86oA66lVt8BKR+lJZKnCM9hO1jLcFEe6LXfG8WdIpJZQCZsKIsKu
+         xKNX+khgP50r2BFaJ2AVdl+9//7JHkM+ac4bJnidneh2tsuVCi+fFLr/ROR8rjrAgqmP
+         t9tHowMcf2yXxAwuFa1TwLr6zmFbVzIUqjPWtba1Ccc4gjSUdrVfOhHKX5OWVxqSYxte
+         8/wVvn/zIBqfUgT7tWRiiwIt/r/54vpXORLshUJMPPbrn50/B9oB4Tu3l3FTwrNJ6E3C
+         /Tw0HhM5jhVImPix5CO5l8kOs6U5/M8R3BN8b6DjZwZ6jvxVaTRzoIHfKT7t4zVaBvQZ
+         Ctuw==
+X-Forwarded-Encrypted: i=1; AJvYcCU4UFW67wOcoKcxhnBbPXpmBoySfOx7kU67wGtZP+gbY1NR++NOcQx0tVck2tYnsBXd66L/boxHzpUB@vger.kernel.org, AJvYcCUAU0LeL3F4Py5ZiCAdiNR62msiaeZB2dUrrekpbJHtt0gBcvKrtG9upc4XpHy+cmHVgTBm9v02IG5b@vger.kernel.org, AJvYcCV+6zCmIYbAwhj8bQI+OD/Vya9KheYDZVSOjp3JBYHgs8fSjIiuleU2FON6NRFDOW+QcKnGp9Xm7wL5B2hrF2Yzvg==@vger.kernel.org, AJvYcCWEugXdJT20NZP9aXHBZ69gvvwTNayxs7R9FEbhJa9eod9Z8lO8EeCLYFuAiYL4QszWAU+EE9JgsYQ8@vger.kernel.org, AJvYcCWq7itShB3U76tqlisfn3CFBa/QUqOLb1r4tyVpvC/2rJp9AS6xHTrReMOaARaowZAQPygCqYq1FZ5UNRpe@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7bh4/qBelKIvnfjL+1n8FY9rJ4ZnVIsNqIeXvPaMGFNd3pV8n
+	bjlQKvbQH07IqabRTk+jV8dzFH49fuIJW/xJcDP+G6j099vVfgaG0GZ4989+Ml2y
+X-Gm-Gg: ASbGncsdkH57HaWKE+rX4VgV5bzeH39LhjyQRbFBLUK02FEz+OKJMDo025MSlNYywBv
+	1ZECX94CForV00AA4q+0M86gtU9iXXyArvt7qM0KTtFltcoMMzJcFPkC7LnGNB2x3Xx/Z4ylN4u
+	g9IIAvc7dlSc4KhFHNctwzPB8KgADYaDC+l3tgfVI5PW0ZPFvpzrXLx6uurEl1U+90aI6UBYKOm
+	x4OBSjWTNy/ntoDmnXDCkmMRQOg7CGT5lFSCBF9aSd5xdwGiUnOMFj/33E0Cnyko+bZaB6ZH5sG
+	mg9ar17Cxe/iaqPEwGEpp4a67neQ8+3/h2reJBjEfxkFIEDjOlyhXsE7XvVim0QzW0N37oihOB2
+	/gdL9xLsvZr2l5qHvXrFtWOHmaxBh3GhCgzTCxeDQWDJcUOPMmNNBWSkn8fWOwmWUMPcfrWVmFV
+	9/OOYwqLWsN6zRQ1g1S9OHs6r0ag==
+X-Google-Smtp-Source: AGHT+IEb/Uh0bOqYUD5CpTPjyWpptnA7lRTRp1bQevh63jpbLTzKsCg28IzONQcxTOeXGoqoY9SRmQ==
+X-Received: by 2002:a5d:5f92:0:b0:3e1:4d93:5580 with SMTP id ffacd0b85a97d-3e643ff64ecmr6456919f8f.37.1757412770106;
+        Tue, 09 Sep 2025 03:12:50 -0700 (PDT)
 Received: from localhost (2a02-8440-7136-74e7-5ebf-4282-0e1a-b885.rev.sfr.net. [2a02:8440:7136:74e7:5ebf:4282:e1a:b885])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e752238820sm2018879f8f.35.2025.09.09.03.12.47
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7521bfdbbsm2111014f8f.10.2025.09.09.03.12.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Sep 2025 03:12:48 -0700 (PDT)
+        Tue, 09 Sep 2025 03:12:49 -0700 (PDT)
 From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <legoffic.clement@gmail.com>
-Date: Tue, 09 Sep 2025 12:12:25 +0200
-Subject: [PATCH v6 18/20] arm64: dts: st: add ddrperfm on stm32mp251
+Date: Tue, 09 Sep 2025 12:12:26 +0200
+Subject: [PATCH v6 19/20] arm64: dts: st: support ddrperfm on
+ stm32mp257f-dk
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -70,7 +71,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250909-b4-ddrperfm-upstream-v6-18-ce082cc801b5@gmail.com>
+Message-Id: <20250909-b4-ddrperfm-upstream-v6-19-ce082cc801b5@gmail.com>
 References: <20250909-b4-ddrperfm-upstream-v6-0-ce082cc801b5@gmail.com>
 In-Reply-To: <20250909-b4-ddrperfm-upstream-v6-0-ce082cc801b5@gmail.com>
 To: Gatien Chevallier <gatien.chevallier@foss.st.com>, 
@@ -94,34 +95,32 @@ X-Mailer: b4 0.15-dev-dfb17
 
 From: Clément Le Goffic <clement.legoffic@foss.st.com>
 
-The DDRPERFM is the DDR Performance Monitor embedded in STM32MP251 SoC.
-
-Keep the node disabled at SoC level as it requires the property
-`st,dram-type` which is provided in board dtsi file.
+Configure DDRPERFM node on stm32mp257f-dk board.
+Disable the node as DDRPERFM will produce an error message if it's clock
+(shared with the DDRCTRL on STM32MP25x) is secured by common bootloaders.
 
 Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
 Signed-off-by: Clément Le Goffic <legoffic.clement@gmail.com>
 ---
- arch/arm64/boot/dts/st/stm32mp251.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/boot/dts/st/stm32mp257f-dk.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-index fbedf23def52..69f0276d3324 100644
---- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
-+++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-@@ -2100,5 +2100,12 @@ exti2: interrupt-controller@46230000 {
- 				<0>,
- 				<&intc GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH>;	/* EXTI_70 */
- 		};
-+
-+		ddrperfm: perf@48041000 {
-+			compatible = "st,stm32mp251-ddr-pmu";
-+			reg = <0x48041000 0x400>;
-+			access-controllers = <&rcc 104>;
-+			status = "disabled";
-+		};
- 	};
+diff --git a/arch/arm64/boot/dts/st/stm32mp257f-dk.dts b/arch/arm64/boot/dts/st/stm32mp257f-dk.dts
+index 45ffa358c800..81b115280bd4 100644
+--- a/arch/arm64/boot/dts/st/stm32mp257f-dk.dts
++++ b/arch/arm64/boot/dts/st/stm32mp257f-dk.dts
+@@ -84,6 +84,11 @@ &arm_wdt {
+ 	status = "okay";
  };
+ 
++&ddrperfm {
++	memory-channel = <&lpddr_channel>;
++	status = "disabled";
++};
++
+ &scmi_regu {
+ 	scmi_vddio1: regulator@0 {
+ 		regulator-min-microvolt = <1800000>;
 
 -- 
 2.43.0
