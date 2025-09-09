@@ -1,73 +1,73 @@
 Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D823375D9;
-	Tue,  9 Sep 2025 13:25:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1293451A3;
+	Tue,  9 Sep 2025 13:35:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757424313; cv=none; b=M1CsjOia4mlhYoGL8y5RDcFUcEUWs/hjB0Erf9l0RV2bnuCbeplq6kIR9F6pT6vaRaQFikx7976klO4RjdTTaf9pN+NWSLiyyr6n7LXnNzq83T69NtqQ0TZmDc0wvuIhJeSP0g1h7eQ9h+OHikGpAF38DYv5ZXMDTBPJbTwi4As=
+	t=1757424951; cv=none; b=Vvo7Ntkupk9RIiRF/cuBJ1O+ABnKvdk2kJP+DnrJ5vi5d1M+JT/NH1xJqkavquiS4Pt4bHYqGk3C3ZvcfkJIuC6JdvdwrbmkkLtpMS1ry3IrTuMH+7gVKbnqCdt2BLatIlHtI2sx7dpADAvCW6rQmjALrU5dc8qZd0hpCEuTMiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757424313; c=relaxed/simple;
-	bh=Dh7ZFf1vowKFpLIq1Hkf3W/nsAkPs2ZIJHND2Nezi5g=;
+	s=arc-20240116; t=1757424951; c=relaxed/simple;
+	bh=0uqewsNJRppxmhLbRxkhsb06qh232+OirkSTxVQyuak=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gbM9n6a3KNStv/+2tmO8lP/vNW4DnymPKCJBivUgCRo8q+/KqSOJszjUvbVRrcc0g5PygefUsHRGRabZRzM7hVI2gVk1Srq3F0KQg7+IZzu7xuDk/D2sPnecvXjeGg0gMuOe+tTS1o89eNsBRM12UcBLD8WZn/muDE3ZQdH30Bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NX0RG9bW; arc=none smtp.client-ip=209.85.208.53
+	 To:Cc:Content-Type; b=deKxD3i6yhzLNz8tD4nyAFaHh7e1TPwkD3if5PC8x6QbTeteYfZKYcUE0F1sx/dE0MLxbvryyqN6ogQ4+hqsDJu2cAXUOb1WMbaFGzlVvWZTfg33BZR7ctsPR6lHqz2CyJfqlY+ECCv0sOub8+Nj3HuOGuq7WYuJLbw+k89bhuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dN6L6Nl1; arc=none smtp.client-ip=209.85.208.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NX0RG9bW"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6237202020bso5286452a12.3;
-        Tue, 09 Sep 2025 06:25:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dN6L6Nl1"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6229f5ed47fso4809289a12.1;
+        Tue, 09 Sep 2025 06:35:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757424310; x=1758029110; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1757424947; x=1758029747; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PFVxVUspXmqQ2cCI0baz9Z+xjA4Wbx8Np4jPs/zc39I=;
-        b=NX0RG9bWMI4wtqLpvMhdMZC7WjlCimPACF8z7RaTmA/+nbY9Lb2WSNK4KKztmpxRiN
-         6c7eMeY723PUCeRKhL7DDf9SQveydjj987altYFj5WlDyhPcAk4ChTMso1lafW4jQCdC
-         w7ViagaJByBP7/OodSGIhSqSFLShkywi0KjD2kmbpMrhy9AzIcg7dFaaMtUg+0ef+Lw2
-         NZ6ZNyYs/+jYM/ip5fCKvLWhJhxl7dFCz56xleRKYSklBm5opp7UqRWWBiKTRIg9Givb
-         1IZIB2G4Wc81FGaMHU4sNjd3HuuqHgjPCBcGhTtGDfy2smE02noyZCovjPul0cLlU+OF
-         KQhA==
+        bh=Q/DFjvabh+Crv2HI1L5X9lsS0Izjk3JHWzvsY2mfML8=;
+        b=dN6L6Nl1pVM8uR0zQyW/sx98qoLNa5xjWbAKXDCJGeSoX9N8j70gnWrgaGulIUjSaw
+         OFHMZzY61OpWM3ZoXImDuvkMlzy+O0SOpWj69jIPj+KusSthAxdnD2Brk5Es6f//c2B2
+         93UAQGRsy+GdaxS2RLVgzKNJA+IDiFQ2TBbm9SJ67vaaYrUmoRY6uiTTdskKTDWUMQ5J
+         GQmPwMHWukYToMeSwfI3nvFfTUZXGMNG0ail1CEszKIrqoruTfNeF2TU/UkYrFgJRcvd
+         /2A5AfBnAiJ0Q5TDlASa+a2UkvadisdDsvdcjpgdmJPf8elf2v36hjKureWAPs5sRwKn
+         qMbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757424310; x=1758029110;
+        d=1e100.net; s=20230601; t=1757424947; x=1758029747;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PFVxVUspXmqQ2cCI0baz9Z+xjA4Wbx8Np4jPs/zc39I=;
-        b=hjG5TgXIQrO9AitMCiOPVcpufPHVVJp66vbkwEokyz14+0l9nW6O14f/q3pVk206Qb
-         hyCJW580TJNO2wRvXx6BUZMmcT+knqkoqPvm+X3W3sHtmfZSD0kWXJ1qFvhMcKKKJ0Ct
-         7kXQ9oAUu73oOEKPwLt6UhMJKeLC/cKx8GOwHvt+tK0J3qQNC1W1Mw5dmaV3hi+8pVVu
-         XdTZwCSv5pSh2f0knDNYIOindxfChcsgjUIiGZZZWk8zAz6QHcVgAX2iK+bi3tZ3dcCM
-         cn4eNJNtzcTWBq/hWPKkSJOcfnAdnPcCfzz1YkkG5B1FX1khTIxYLiXM+AfaaL3RGVeK
-         UXiA==
-X-Forwarded-Encrypted: i=1; AJvYcCV6fgGDasHVAUsv2D5Qr7xThopBIxlT9eSBahmAWspshpGFMFyPXtnIARNh33HfsV2AnGB3BdnSuyV65Ps=@vger.kernel.org, AJvYcCWas62NvMNq/j/R7U7g8gtv1bMAuSrloD02w1C/5p0+iaEmlk/0fGy0gIQeVKDaad/fpYHC1thepgMv94jBVIvRcw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7aNh6GO2/XMxROdBq2eKcm5MVMrwxIXAsubxw7jvrP/+lLk1P
-	yjYcFOuNMCIRIJPdUZ6i0xRJ3efYCVz8q6o28KjWLo5cE6YTnBaWL0QCguLTHdC6dVG8yobImHT
-	ccXjrEXWIERj+QSloj/KMX+PxR6WBO2E=
-X-Gm-Gg: ASbGnct3ucKhQ7l8L4mVGgPJ3pKZ3hGancEg8Dz2QjOPs60CxvsoxGjuEjPlQJ9POtv
-	xHxG4I+/alO4KZH6o7GDUTkbgl9jo3y9NwKtv0o/4FtSAjqS0zfjbyxwD32tk7Rd8NGFWp01V6N
-	lYjo5bvYN+cT1Wa74M3R8kdkJzMcUqwnpM+aj0KqicTUHfR6RH5hGSIJSwp/avH+SsI+uiQ3iAb
-	00wi8tGp2udO77Tlw==
-X-Google-Smtp-Source: AGHT+IEoZZyFb/r7RYDQCtGrnSMdZka2RIUJT2JORh2x2qFUEQIKxWVF71N8OZniC1Dxk1712nLw6c0PfeIDXtPiAUU=
-X-Received: by 2002:a05:6402:848:b0:62c:9c9c:fec7 with SMTP id
- 4fb4d7f45d1cf-62c9c9cffe7mr818195a12.14.1757424309735; Tue, 09 Sep 2025
- 06:25:09 -0700 (PDT)
+        bh=Q/DFjvabh+Crv2HI1L5X9lsS0Izjk3JHWzvsY2mfML8=;
+        b=JYUqkqy0iDapfRXkLyRySGYQC3gzl278jK+PiVpELZ8QZZRZICbrHDqYNOZN4Xr589
+         vM1W/tZsCWqNfXFFcg89DcaKybogrLRVnJmUL2M1qJzZQ463yKIkVoZd8IKvNlSJkICI
+         4e5HQaQUQjGLt1s7AjoDqQExHVMbDGN7jYZuzblpcmfufWp8k8WudbkaAl27qwKPGhq8
+         3GJg/+bS42av1xxE7QxsYwCDQkcSGJZjWV8ifWeVAxcToqBoSLrYpIHPfmTdnNyhYgpH
+         h5QV4PQqjatUdvvBLUk0q/u5F/021peWoU6C3cqVAiuMq2EXQ1vxmrI9scZlxLoNngJZ
+         m9HQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUK3gn88gploEkVeGZ9Pf8qAVGt9x5/m19qU98whUBf9BiaQw0HyvRNG7wrjQgUVEARW6iVb3n+QLeaKOlo@vger.kernel.org, AJvYcCUKseGbXvDpktAyPDsynjR8QOf1NaEmivSLmYz0tG4tKf2kjW9fPjDA3fBN6efEKYNRnjCj6gHfWvYHvfuWjY6u3w==@vger.kernel.org, AJvYcCUxlJsqC5fHiJZaAxUjxPcoeHKmAr/hDrSf8PZHz4U0V2svs8uXZFVxl5AqSOjO6jB5eqDha8NapqmI1h9e@vger.kernel.org
+X-Gm-Message-State: AOJu0YyreBdPG1yqFt8Uytp3mKJiLay8fvHNsplWNOpLqnGSTiC2070f
+	ZJW3tntP1X/HrqywKziLn+Hx/np1ghrx/1jLApoNY+u75K2CmdLa5KyZ3FeCB57Ufu5BdzRW59Z
+	lMBgImIzn43RhglsvVQiwDFvt1YAyVa4=
+X-Gm-Gg: ASbGncsySZYjo+70/8kvvmsEUezfk8nuDaYlXSxwrF7pU5yPnTNFuZmAnURb7z2ZWN/
+	ZieGnk9yF5Z/c7dvIpXfmlgPi2IauFu7gF6ZMXjWRyo9wLveSXtZFWTkPrVvoVjejkSf70ThfAC
+	p2cMNWFFx5FeEImnpvDfTbVqz5+1nnTrCFpCWfqqL7FelgcnHjGtxiQ2QV9c6MFRoEbYwnmYE9M
+	fTWQzo=
+X-Google-Smtp-Source: AGHT+IGL5tn8Jf0e3o9yUCm2+CbPk2HiFscLaxC8amo2qQeERvPZHlpWN7h3oq+c5wj50rCLKXrsJliEBfTo+xGAy0w=
+X-Received: by 2002:a05:6402:27d3:b0:62b:ae0f:11cf with SMTP id
+ 4fb4d7f45d1cf-62bae0f287amr2866455a12.19.1757424947274; Tue, 09 Sep 2025
+ 06:35:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250909124222.222945-1-adrian.hunter@intel.com> <20250909124222.222945-4-adrian.hunter@intel.com>
-In-Reply-To: <20250909124222.222945-4-adrian.hunter@intel.com>
+References: <20250909124222.222945-1-adrian.hunter@intel.com> <20250909124222.222945-3-adrian.hunter@intel.com>
+In-Reply-To: <20250909124222.222945-3-adrian.hunter@intel.com>
 From: Amir Goldstein <amir73il@gmail.com>
-Date: Tue, 9 Sep 2025 15:24:58 +0200
-X-Gm-Features: AS18NWCihbM-nbivfcm2bwdcSKx1Lky9w3ZoWFOoia0WNzQPH0bmAFnVYQzeaJs
-Message-ID: <CAOQ4uxin36Sk+rppHF+aRrg_J1Pg+ZSjdm9NzyA4mQ8qqoVLFw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] perf/core: Fix MMAP2 event device with backing files
-To: Adrian Hunter <adrian.hunter@intel.com>
+Date: Tue, 9 Sep 2025 15:35:36 +0200
+X-Gm-Features: AS18NWAymEKtcCowmWVyxkQJgVDpF4mASLmZGIlnJDFe4PeOlMb9bOj0SXJwX9o
+Message-ID: <CAOQ4uxgSb2cOj0-H5oCrkXPcD=_i81qvRnS0S+UdLLWEdYRjhA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] perf/core: Fix MMAP event path names with backing files
+To: Adrian Hunter <adrian.hunter@intel.com>, linux-fsdevel <linux-fsdevel@vger.kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -87,13 +87,13 @@ g
 > file in struct vm_area_struct vm_file, instead of the user file that the
 > user mmapped.
 >
-> That causes perf to misreport the device major/minor numbers of the file
-> system of the file, and the generation of the file, and potentially other
-> inode details.  There is an existing helper file_user_inode() for that
-> situation.
+> Since commit def3ae83da02f ("fs: store real path instead of fake path in
+> backing file f_path"), file_path() no longer returns the user file path
+> when applied to a backing file.  There is an existing helper
+> file_user_path() for that situation.
 >
-> Use file_user_inode() instead of file_inode() to get the inode for MMAP2
-> events.
+> Use file_user_path() instead of file_path() to get the path for MMAP
+> and MMAP2 events.
 >
 > Example:
 >
@@ -104,86 +104,73 @@ g
 >     # cp `which cat` lower
 >     # mount -t overlay overlay -olowerdir=3Dlower,upperdir=3Dupper,workdi=
 r=3Dwork merged
->     # perf record -e cycles:u -- /root/test/merged/cat /proc/self/maps
+>     # perf record -e intel_pt//u -- /root/test/merged/cat /proc/self/maps
 >     ...
->     55b2c91d0000-55b2c926b000 r-xp 00018000 00:1a 3419                   =
+>     55b0ba399000-55b0ba434000 r-xp 00018000 00:1a 3419                   =
     /root/test/merged/cat
 >     ...
 >     [ perf record: Woken up 1 times to write data ]
->     [ perf record: Captured and wrote 0.004 MB perf.data (5 samples) ]
+>     [ perf record: Captured and wrote 0.060 MB perf.data ]
 >     #
->     # stat /root/test/merged/cat
->       File: /root/test/merged/cat
->       Size: 1127792         Blocks: 2208       IO Block: 4096   regular f=
-ile
->     Device: 0,26    Inode: 3419        Links: 1
->     Access: (0755/-rwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    ro=
-ot)
->     Access: 2025-09-08 12:23:59.453309624 +0000
->     Modify: 2025-09-08 12:23:59.454309624 +0000
->     Change: 2025-09-08 12:23:59.454309624 +0000
->      Birth: 2025-09-08 12:23:59.453309624 +0000
 >
 >   Before:
 >
->     Device reported 00:02 differs from stat output and /proc/self/maps
+>     File name is wrong (/cat), so decoding fails:
 >
->     # perf script --show-mmap-events | grep /root/test/merged/cat
->              cat     377 [-01]   243.078558: PERF_RECORD_MMAP2 377/377: [=
-0x55b2c91d0000(0x9b000) @ 0x18000 00:02 3419 2068525940]: r-xp /root/test/m=
-erged/cat
+>     # perf script --no-itrace --show-mmap-events
+>              cat     367 [016]   100.491492: PERF_RECORD_MMAP2 367/367: [=
+0x55b0ba399000(0x9b000) @ 0x18000 00:02 3419 489959280]: r-xp /cat
+>     ...
+>     # perf script --itrace=3De | wc -l
+>     Warning:
+>     19 instruction trace errors
+>     19
+>     #
 >
 >   After:
 >
->     Device reported 00:1a is the same as stat output and /proc/self/maps
+>     File name is correct (/root/test/merged/cat), so decoding is ok:
 >
->     # perf script --show-mmap-events | grep /root/test/merged/cat
->              cat     362 [-01]   127.755167: PERF_RECORD_MMAP2 362/362: [=
-0x55ba6e781000(0x9b000) @ 0x18000 00:1a 3419 0]: r-xp /root/test/merged/cat
+>     # perf script --no-itrace --show-mmap-events
+>                  cat     364 [016]    72.153006: PERF_RECORD_MMAP2 364/36=
+4: [0x55ce4003d000(0x9b000) @ 0x18000 00:02 3419 3132534314]: r-xp /root/te=
+st/merged/cat
+>     # perf script --itrace=3De
+>     # perf script --itrace=3De | wc -l
+>     0
+>     #
 >
-> With respect to stable kernels, overlayfs mmap function ovl_mmap() was
-> added in v4.19 but file_user_inode() was not added until v6.8 and never
-> back-ported to stable kernels.  FMODE_BACKING that it depends on was adde=
-d
-> in v6.5.  This issue has gone largely unnoticed, so back-porting before
-> v6.8 is probably not worth it, so put 6.8 as the stable kernel prerequisi=
-te
-> version, although in practice the next long term kernel is 6.12.
->
-> Cc: stable@vger.kernel.org # 6.8
+> Fixes: def3ae83da02f ("fs: store real path instead of fake path in backin=
+g file f_path")
+> Cc: stable@vger.kernel.org
 > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 
 Feel free to add
 Acked-by: Amir Goldstein <amir73il@gmail.com>
 
+Thanks,
+Amir.
+
 > ---
->  kernel/events/core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  kernel/events/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
 > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index e203b8d90fd2..9d281785b99e 100644
+> index 184f3dc7b03b..e203b8d90fd2 100644
 > --- a/kernel/events/core.c
 > +++ b/kernel/events/core.c
-> @@ -9403,7 +9403,7 @@ static void perf_event_mmap_event(struct perf_mmap_=
+> @@ -9416,7 +9416,7 @@ static void perf_event_mmap_event(struct perf_mmap_=
 event *mmap_event)
->                 flags |=3D MAP_HUGETLB;
->
->         if (file) {
-> -               struct inode *inode;
-> +               const struct inode *inode;
->                 dev_t dev;
->
->                 buf =3D kmalloc(PATH_MAX, GFP_KERNEL);
-> @@ -9421,7 +9421,7 @@ static void perf_event_mmap_event(struct perf_mmap_=
-event *mmap_event)
+>                  * need to add enough zero bytes after the string to hand=
+le
+>                  * the 64bit alignment we do later.
+>                  */
+> -               name =3D file_path(file, buf, PATH_MAX - sizeof(u64));
+> +               name =3D d_path(file_user_path(file), buf, PATH_MAX - siz=
+eof(u64));
+>                 if (IS_ERR(name)) {
 >                         name =3D "//toolong";
 >                         goto cpy_name;
->                 }
-> -               inode =3D file_inode(vma->vm_file);
-> +               inode =3D file_user_inode(vma->vm_file);
->                 dev =3D inode->i_sb->s_dev;
->                 ino =3D inode->i_ino;
->                 gen =3D inode->i_generation;
 > --
 > 2.48.1
 >
