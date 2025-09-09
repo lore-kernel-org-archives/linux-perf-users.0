@@ -1,194 +1,217 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2127.outbound.protection.outlook.com [40.107.94.127])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C2325DAF0
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Sep 2025 18:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757442725; cv=none; b=LrdBQwrRLJoEMtdg64wng8CnqZIjH4s9M8PcaZUYCSaKTvlb/Yrb4dQ3a9YKX7jDTEDqIizq1V0IG0UUZLDEIZWs7CdJPBTAGCjXGu1T08JiZfxjcl7J65fJXg9PsoDi5/Sw9vcF3KY5X7EQnhDktZENbLKbESbZndRcm7Juhso=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757442725; c=relaxed/simple;
-	bh=6AAUlrnohGGrI+J0MWrA1OGh0ETm6EyZ1CIiP3AnRCU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KC3csG8ca987OzFpkuG9QhbmZgtE02Xbn5fo6wDhX0ydfbDJuDsPdy2Kg51iA9V+TQp7IYOZDprTDCeIv4zQdfhure96Fi3/WZZ0sRiqserXgPofmhUgY5RgtDxOzVLh3jAK84IXSGAs9ZCSysT2pAcol+iEkFSvme1huMVuH7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3x1fj1sq; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4B022173D;
+	Tue,  9 Sep 2025 21:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.127
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757451704; cv=fail; b=cThQyOb9IoxMuzqb4PWbX34xTyzUhPSzLnGexSujqgX3306h+TJwHTJ949TOQWsb/umW/27LE8LuRlm/5gsFUBI+u2dCNDB2Bnv188BKGW//IoubfuvTu0BDuiV8tFzVhi7RrwAS8Eiu/q38lmUrHyxrYwuaG6mHUO2jxYZxoPw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757451704; c=relaxed/simple;
+	bh=Po1t/7a7g2Ku1iPCD2sshKvSOdnab4DyrfbZ8M3QBd4=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=NQF5gc/nOzTM3bzPx9dgkzge5lGFeUoOmlFIGTya5rESFM7hGKVk7+8ELY5A98aHOcA11En3mw3OZk6NN6+ooKam4h/F7adwYU7DZHthcpiZsS2kfSofiuWLjhnIB5ATjuKGnsDKawz/c5VjeaD5MTp2KPteg5v7ljsSVnTtoj8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=v2lK9Mex; arc=fail smtp.client-ip=40.107.94.127
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3x1fj1sq"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-24cf5bcfb60so26305ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Sep 2025 11:32:03 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="v2lK9Mex"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bi11EtFE4lVqStc9QzcOOF3jMIAlCZYSCAO5kH8ddyCR+2MKswIv0Om6CL9naXOg/BWOhOSqcwV+NSeJ7VdGf0OaEF6UvPP8fvkhwqc/xYsRjkknZ8N8rSeBqhWhasGuklvJ+5I+E2lwxpKO+wOK0KYMij7qMbiyX7n6b2a1AfTcczOMCHvAL16cN36CU7PSNN7psft2bkpSK3SEn6MI6nn5MG6BA2o12T2RZDYmy8dgdLk9tPlumURLCSM/tpoM/9kCMMeHvIKD9aN0dx4mNnogQ3W13b+e4ykPYiZpM2w4y10r8AQj3xzNVuxpEuVPZIw6wv75E6om8IMyzvtrsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iJsmgd6XqU5+V3aO6IPPySNCZETtyS/JLPHM13pOQnQ=;
+ b=fEYK/hkSmUTnMnemNVnJWVMcEyho5+H3GCmEZLtKPrBMHuIUS2qPZmeW6kJ6PD1gW/yInI8Bjp5DfxRSfQdV3YFgiZDBKxzpLG3rrL8SdqxlIBnQbmUI8Mhy3+I7NFDqrk0PDM/ImPj6JEtMHSqfvNBsjIRyPAJMccxHYiGu4iePconv0RSq8uDmk71WEapNKUMyiy9D+/UlWcJpnwkYsr2Q/aRQY8T8SkmuUtwopA+DGf4sPbkOdsbKuB8p9WIJSA1bh5LX7SvjJdIiuUJ0nN5eB7Hnyd6lQ/5BOZ+MZUqgPeY5n/kaj9yGmOeRUzw23eAtJ/4+JYK4sDdHbuayHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1757442723; x=1758047523; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DIPDNeClQeqdnLL/QKbandyvntWZcY3ztNetbZo+c00=;
-        b=3x1fj1sqWkZwfX2dHcj5J7oEDfwg4nHxIxJVlMzH0ivxg+WBYRGqSZYkBKjMiTWPdV
-         FjWkdEnLXzlSwTl/0UhMc5lIsh8uBRfNe2wGmbc2KqP3ggg75vVQY4CI6A1itZ7uUdqV
-         /Hn/ATQWf2tMH1EMMhxMK4AtQi6xZT4tooqF2g1PUOJffo30y8lEiIpdqzidC7GFYwVY
-         OIOA2F0SpCD/0cxn+Hsa0qgBkqzt3vgMM1t6+uQVeunypEDMFZpdfJveJX4x5SZhLETr
-         tygC5F+mv9d9i1FcLevBiTWx/r5RQoUdU0Qgdpng1BI8LK4UcInKqRwI9Z4dc3l9CWfC
-         NGtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757442723; x=1758047523;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DIPDNeClQeqdnLL/QKbandyvntWZcY3ztNetbZo+c00=;
-        b=CxSNytcam2Y6LDOKjS9gnUZlGBziHxHDWLsK9tDs8lAWbY193qndTcA5ZP0LNkzjEJ
-         suC1l6oU5l2foZSMFMv/5vg9AHzvqaHMfVgBuSGvEmkXLDP7Qzxum8jDSdjs/vdNDpJj
-         csHeEiL6402m4/Lb+xnbSkhyeCPzOfZIqEZgjtSLgBoqnJCBkSHZGbOcgG4s3s6FRxNT
-         WcCLslvLS0Dlahwjo8YHVo3HkR1MqOpxpqLfTplPNNNGFx9AGZrIOzXoBZ+mlv+EBzk2
-         4J0SQbqGmuyndi7AFO5fOgmHKQzFGGj9XUVUzdoC3R2Y7BXdZPCd0jdUgjJ7s4fdOwnQ
-         wceg==
-X-Forwarded-Encrypted: i=1; AJvYcCWMkcMJ9p2pX4aRaQUjQpfwyYgFgAb4hqMBsAmCeL9S0pnIzTvsKRN9fqjDMSAbl9JosjQyAwHSetvTQBXFPXp6@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRVVvpgcYEYdYer0PFbiVghabB7shlVmU3ZkieJMj0/NF84V8v
-	6CfQyCVt0EkSYDVBIPCu2e40G94Do6PeaqwkPPebIs/kZVibFi2i+8sC3wMJJ9f7r0XpFOq/JFb
-	1o9hw0xcX3Hf8iqJUqA1v83v3PR/DpcT+NldKuc2L
-X-Gm-Gg: ASbGncv3vGaVFQCtpLd/j37Mb3MwJiyLQZ2EpRrlSw7keJhAVwmoaqjemED4dybEvOR
-	/oWiEjtefYcv/odshWAbLnzEK+CBC2+o3quEbwblkCAdGDIPocdMeMNJNH5pShvDr2pVKEptQTN
-	eN+xZ0V6npsY/ZbcN6kHL/Z41f0P/WAHBtUxCA/FMQSTgh/miN5R7fw5PsMl0Pah9kQ6CfqkoRZ
-	wxnp/dQnh7hDJyys5Vfila/yuDQU2v88WauxxhqXjhyb+7iLKsFjOB7wZCU6EMOmg==
-X-Google-Smtp-Source: AGHT+IGZLwzdjypUrYwsHkVBGt+rdl3qjVNxww8nM8h1q9KwE/jrMFjGashARVH68XP4Y+EA2LtLQmYuSwlViGOmG1c=
-X-Received: by 2002:a17:903:185:b0:248:f683:e980 with SMTP id
- d9443c01a7336-25a539a4fecmr487735ad.2.1757442722903; Tue, 09 Sep 2025
- 11:32:02 -0700 (PDT)
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iJsmgd6XqU5+V3aO6IPPySNCZETtyS/JLPHM13pOQnQ=;
+ b=v2lK9MexfYRSbzo4hxOVgi8asNxGzOACsSBmfQ5fM55P4XUAZnA1XXVquu4btAcDAs28jcJMZ55AIGMn/qGASos4NqFX7CPi04EaETESJbMBALDwIviGlKK8vF9POz8MP3k2UI2UTsULTGcJ0D3Mp/JH+uQIMSOr0pNTbXD+JeA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from MW4PR01MB6228.prod.exchangelabs.com (2603:10b6:303:76::7) by
+ CO1PR01MB8865.prod.exchangelabs.com (2603:10b6:303:275::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9094.22; Tue, 9 Sep 2025 21:01:37 +0000
+Received: from MW4PR01MB6228.prod.exchangelabs.com
+ ([fe80::86f5:4db2:7ad5:7fc4]) by MW4PR01MB6228.prod.exchangelabs.com
+ ([fe80::86f5:4db2:7ad5:7fc4%6]) with mapi id 15.20.9094.021; Tue, 9 Sep 2025
+ 21:01:36 +0000
+From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+To: John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>,
+	Leo Yan <leo.yan@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf vendor events arm64 AmpereOneX: Fix typo - should be l1d_cache_access_prefetches
+Date: Tue,  9 Sep 2025 14:01:20 -0700
+Message-ID: <20250909210120.9823-1-ilkka@os.amperecomputing.com>
+X-Mailer: git-send-email 2.51.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: CYZPR05CA0026.namprd05.prod.outlook.com
+ (2603:10b6:930:a3::7) To MW4PR01MB6228.prod.exchangelabs.com
+ (2603:10b6:303:76::7)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701201027.1171561-3-namhyung@kernel.org> <20250909094953.106706-1-amadio@gentoo.org>
-In-Reply-To: <20250909094953.106706-1-amadio@gentoo.org>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 9 Sep 2025 11:31:51 -0700
-X-Gm-Features: Ac12FXymMBpx6OEzUcR2rYto9x8srb0rgq2MgfkIOdb5qVU4JRQYY3mKRpIU3is
-Message-ID: <CAP-5=fVCeBz+hgCsctCe7BByaL7GqKVUbDcW4R=2th0C1O0m0w@mail.gmail.com>
-Subject: Re: perf --help triggers an assertion
-To: Guilherme Amadio <amadio@gentoo.org>
-Cc: namhyung@kernel.org, acme@kernel.org, adrian.hunter@intel.com, 
-	jolsa@kernel.org, kan.liang@linux.intel.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mingo@kernel.org, peterz@infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW4PR01MB6228:EE_|CO1PR01MB8865:EE_
+X-MS-Office365-Filtering-Correlation-Id: b92495e4-e9c8-4aea-21ee-08ddefe4109e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|52116014|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?8935EYn4Hp3UlFocwnSJ3b/hSOMBJl+iDZCm3QaawsPvaH4/k6QkCaKrfAcx?=
+ =?us-ascii?Q?p6Oqd7DxE8ox+tuXNeG1scYpao+lyuU9F6M+OoYIrUTU6i2T8OdPEpy4ilnx?=
+ =?us-ascii?Q?yt/UnP7LV+xjrI3BGqAkLgBYdcKhybNipsDiHDEL17oU2+vKgTMFeEBZl8cs?=
+ =?us-ascii?Q?Pwncbs2UYsQ6y6UEJ0caFOJlN0/NDqsDbtZRBC0dkZfZndXQzFkKc70WUJhc?=
+ =?us-ascii?Q?xAwrKfFuZkS0i5DYQR6S7Forj9Pro6VcYHKuNVQua5QfDyreem2gTNd6yfp2?=
+ =?us-ascii?Q?gKnzfmEx0f7slZeyNZL9gjlNXb/8BsdmHsjz3fpCirnFeqk0zJh9fhTbCD57?=
+ =?us-ascii?Q?yh6FL9hcSH5Ih42CfUXED5I+DjRe0/TREbQCMob0dAkXTHvPPnZ2v76VPdK2?=
+ =?us-ascii?Q?gIDuhGQmglRvh/YK+YumfzTPZnR6jEuJIF5ooNEV4bY5K0QjyG4Cb9G0PaxA?=
+ =?us-ascii?Q?lSthDOAj8qtlDMxE9eWUFZQei5PwDu0sB2R3bnOHdTWThypZtggVBp7JTF2Z?=
+ =?us-ascii?Q?G+7j2Z4umnZeNGVw52soIotU2ayOFWWL+gj3VHRLdicPUIwI7Xsd583psiXt?=
+ =?us-ascii?Q?bIlOoOmBdfrQmz/qm4fxByGc5CLqI5CSLJsSRsF7A/MPT6pFzcY/m21ziBnF?=
+ =?us-ascii?Q?q+1vUkeMCByvou2SG6nzmRdZN+RCmWDL9PQDtfLgRr0KLq8ij3/YT0evybv7?=
+ =?us-ascii?Q?rh8eEiZ+DO3DR4N6vZdpNuDitjXhwh/s/PJuflE0Y4PQRPvy8qY5f4iqR5eU?=
+ =?us-ascii?Q?YiYl3FlAQcPJgGYqp32Uua97ZGwf4z/JTDHolpGmsaUFCqNgTLYGhuFZMe/C?=
+ =?us-ascii?Q?GRPgvGI+ICTwAcUrksyiWgpRhqTOqTZMyb5Hc+Y99aojj/zMJCMf6f4EEJrf?=
+ =?us-ascii?Q?RK0fy9aCWLJYXmzc+w2jGFKFFtltGfwwBqUpB4iloNGXula36KOJJdbW6w5F?=
+ =?us-ascii?Q?Aa2MClLWm3EedWzJF7IsWlH4RlLeD57JoThhB29FbQNdXMPp4Xhu3sSeAh75?=
+ =?us-ascii?Q?cbhv7bc+sDxfdK+FMDi9nJGOTFreuXzbl63dkLVTLeyfMheWGYys2vjZ3kEH?=
+ =?us-ascii?Q?jIdsSyrI5k8XAJ7pXkGhHBKv6VUYpS9GS//30jhoU5G3eZI2bPO15z6nOc/O?=
+ =?us-ascii?Q?VJeSEHGt0yRQil05zgOGgegrQgnlnwxUehgZZm4vnT8bgqIq3LrikvN4CKvG?=
+ =?us-ascii?Q?JQaNHBZhatoEz1ltQzAaVxWWV/puJYY8LlNS+yN1dgiwHiD7UBnY2+VVlcxU?=
+ =?us-ascii?Q?m95NwWE3C2VsCWmQ/+RN2IAT9lw1Ikk6ooFwQEDSA3ezQRbs6+77qLcUuRrq?=
+ =?us-ascii?Q?/JmmLDsmrLib/CqTFSobhFb1JzyFpSXo1hzR/y0cotSpkR2je3EXFq0knNZJ?=
+ =?us-ascii?Q?efLe6CLTv5Pclsc1Hqp5gz5Wj/CV2t0RSf7WlqrW0vslD7sj0ScFy+d3IlRK?=
+ =?us-ascii?Q?OcgJi3MNK2KX1JfiRkI393b2MqwBEPMZbzhXFxN0gds8UQZOnyD/9nhq4ac+?=
+ =?us-ascii?Q?EeWgU96l+zJyRGk=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR01MB6228.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(52116014)(921020)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?yEArb32cWfyopqoWtnPw7YB6I0MuYW6jCCI81tKR51d76mWayVQYymBn8Gqw?=
+ =?us-ascii?Q?ihJlM7EzTLHHhILeRgbywRMYYByvlwB7mN4FEj30tqdtih7IzKWZxy1bKzm/?=
+ =?us-ascii?Q?9dRuqNze/JLyop4+kzC+SggE4n+Gt/RxO/fMJTvIdo9NacGGcC21Bsjf5FNT?=
+ =?us-ascii?Q?DkntypKrHAQ/CFtmAw0lWYsmfNtKdLlFVe5cdQZeeB4VzxSMItvc/SMJioRF?=
+ =?us-ascii?Q?P/jsG19zH58F8aszfZ+O9YC97rMmLAgMdksuVhAz8ZYQXLMPR6FKrdaPyQMk?=
+ =?us-ascii?Q?C1abzenTrlp4RtXdXhxfM7glRhW7Efo473FfF2wc3lPpkNYE6+VffzTSgTIX?=
+ =?us-ascii?Q?R7h3RKpA+WjEXE/e6EeScIV/JkOfdDyZgvrnrAQyeTNl4EJNm+FZ44a2mRKI?=
+ =?us-ascii?Q?jfkI0ww2pB4uQq2BGP5JwDHCUhToDaUyMZBumG7ikJk+EIoD4BRyUy74OgMo?=
+ =?us-ascii?Q?OSvI55XLQdeGUB6gFsN3l7zXpaatDd++I5uUW7LVZIb8HreGCcZgyChbRyro?=
+ =?us-ascii?Q?ChEyrk9Wn8OoJ3FDQg39L9nRKa3BIgAoh4wL8uBemEfKjJuIDpZWvXfjU5GZ?=
+ =?us-ascii?Q?snRqIvzQxa+4xClyVVRkbRTWYD4ZHvKkL1+GhL5Bk9reImPYdYaDe1VeO7QV?=
+ =?us-ascii?Q?joUQREFIBw2YpiSbLqz105DRyD2iCUmEby7nVWqGe97mdhX+NtV9xFeSorK6?=
+ =?us-ascii?Q?Z4sKq8pry0HYGgNfipGsX74fQPUMAZYEtxyP9hRQuyx5d/YAHhdLDRgI4xQi?=
+ =?us-ascii?Q?LQG6T4+0Bq+o5ZuYZDJytpBO21VJa2p2/QltHu5vAzFJ2RuONtw77i7RiN5l?=
+ =?us-ascii?Q?nR10ai0YRIlB+0+dB+lFyg/QVWo2GPmmgGRnWZQ3pXq071CNIE076pYDzPZM?=
+ =?us-ascii?Q?sYLs1QFTvAWZOhNzj++l2oCirMSZ9WYL3okwCm6aQkorpW/Rs2TcVgaW/Z1u?=
+ =?us-ascii?Q?6z07E0wxf1Q3AXJaTAlVv73eXw59H8LAO63K6OEcVlOB6CCxofHIx8Tk6khA?=
+ =?us-ascii?Q?LSJiqhjDK7pI5QfcRbxCyeVsd2yi8F5lk8iFJ7Mj5hQqe9zk6Ywm1Z+Z5+/0?=
+ =?us-ascii?Q?vQcVMlm4vaYmhzUeSmLf5UikQcWrqgZFMDEXEHXlQgm44f7yCG+ox3fUbZgW?=
+ =?us-ascii?Q?p5Bd3h9B7obdqBQjJzHZHDZ1Z5kTeKxv6gvKn92dtLaPxUgwPVAHH1H4y/NU?=
+ =?us-ascii?Q?6X9kIKFnmMQbNbMSdyVCP99rBttzen/ePhFUX4vBLdlRYBH1/mIOYjq5cFkR?=
+ =?us-ascii?Q?JMFZQoHVGYnRsEkOa7XiNhhlA6ZP2OaoN3rez8IjFG1NggzPVXB5D/i02ApR?=
+ =?us-ascii?Q?gEYjA+wzgQ/+NblZuLCbwlpG89NzOpr2DzFcBClCsMBPjzrP4wdfT3g7Je/X?=
+ =?us-ascii?Q?T16LtKS17lkOlq+K4acQo1bAUHWyqafWgVSVK1DWuxrXI0ur0ImVblpD2Z0/?=
+ =?us-ascii?Q?rI+vo0QdBSmMde/eZe+/5+K15kWwcPIODRhykZoXR+ZMOUZdAxQFV1poJY5J?=
+ =?us-ascii?Q?xdQw6wO3E1g2DtPCmPcNn/Cf/ctlkAD8/b0UGnhn5/OX+X58Si/zZ7Xbb1r1?=
+ =?us-ascii?Q?la+y1LNKLkhTdXZ6tRQJBJ1UkhnUYDqSGQJCJgx0JdBIvE1D9uJ+7uzJdZPW?=
+ =?us-ascii?Q?0lRMfvLS6PIg4JNq6tM/6sU=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b92495e4-e9c8-4aea-21ee-08ddefe4109e
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR01MB6228.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2025 21:01:36.8171
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TAhuY3KAGPwcVgAbDIjpHOaD+pvG+/KoaWgsbBBNwos2pVC7+sKhgJISdpIqZehQ8WHg6J91zBBu5yc6tnBHO7YsPgcd9eAp8yeudrIB+lhnBbxGozlRe6XSCVisNayD
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR01MB8865
 
-On Tue, Sep 9, 2025 at 2:49=E2=80=AFAM Guilherme Amadio <amadio@gentoo.org>=
- wrote:
->
-> Hi Namhyung,
->
-> I was updating perf's package in Gentoo Linux and noticed some problems
-> which were not there before. I tested with the version below and the prob=
-lem
-> still seems to be there. perf --help triggers an assertion (see below).
-> Looking in the list, it seems related to the patch below:
->
-> https://lore.kernel.org/linux-perf-users/20250701201027.1171561-3-namhyun=
-g@kernel.org/
->
-> Cheers,
-> -Guilherme
->
-> The problem:
->
-> gentoo perf $ ./perf --help
-> perf: help.c:104: exclude_cmds: Assertion `cmds->names[ci] =3D=3D NULL' f=
-ailed.
-> Aborted                    (core dumped) ./perf --help
->
-> Some extra information:
->
-> gentoo perf $ ./perf version
-> perf version 6.17.rc5.gf777d1112ee5
-> gentoo perf $ ./perf test subcmd
->  69: libsubcmd help tests                                            :
->  69.1: Load subcmd names                                             : Ok
->  69.2: Uniquify subcmd names                                         : Ok
->  69.3: Exclude duplicate subcmd names                                : Ok
-> gentoo perf $ ./perf bad-command
-> perf: 'bad-command' is not a perf-command. See 'perf --help'.
-> gentoo perf $ ./perf --help
-> perf: help.c:104: exclude_cmds: Assertion `cmds->names[ci] =3D=3D NULL' f=
-ailed.
-> Aborted                    (core dumped) ./perf --help
-> gentoo perf $ gdb run --args ./perf --help
-> GNU gdb (Gentoo 16.3 vanilla) 16.3
-> Copyright (C) 2024 Free Software Foundation, Inc.
-> License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.h=
-tml>
-> This is free software: you are free to change and redistribute it.
-> There is NO WARRANTY, to the extent permitted by law.
-> Type "show copying" and "show warranty" for details.
-> This GDB was configured as "x86_64-pc-linux-gnu".
-> Type "show configuration" for configuration details.
-> For bug reporting instructions, please see:
-> <https://bugs.gentoo.org/>.
-> Find the GDB manual and other documentation resources online at:
->     <http://www.gnu.org/software/gdb/documentation/>.
->
-> For help, type "help".
-> Type "apropos word" to search for commands related to "word"...
-> Reading symbols from ./perf...
-> (gdb) run
-> Starting program: /home/amadio/src/linux/tools/perf/perf --help
-> [Thread debugging using libthread_db enabled]
-> Using host libthread_db library "/usr/lib64/libthread_db.so.1".
-> perf: help.c:104: exclude_cmds: Assertion `cmds->names[ci] =3D=3D NULL' f=
-ailed.
->
-> Program received signal SIGABRT, Aborted.
-> __pthread_kill_implementation (threadid=3D<optimized out>, signo=3Dsigno@=
-entry=3D6, no_tid=3Dno_tid@entry=3D0) at pthread_kill.c:44
-> 44            return INTERNAL_SYSCALL_ERROR_P (ret) ? INTERNAL_SYSCALL_ER=
-RNO (ret) : 0;
-> (gdb) bt
-> #0  __pthread_kill_implementation (threadid=3D<optimized out>, signo=3Dsi=
-gno@entry=3D6, no_tid=3Dno_tid@entry=3D0) at pthread_kill.c:44
-> #1  0x00007ffff74c1656 in __pthread_kill_internal (threadid=3D<optimized =
-out>, signo=3Dsigno@entry=3D6) at pthread_kill.c:89
-> #2  0x00007ffff74c166d in __GI___pthread_kill (threadid=3D<optimized out>=
-, signo=3Dsigno@entry=3D6) at pthread_kill.c:100
-> #3  0x00007ffff747509c in __GI_raise (sig=3Dsig@entry=3D6) at ../sysdeps/=
-posix/raise.c:26
-> #4  0x00007ffff747637e in __GI_abort () at abort.c:77
-> #5  0x00007ffff746e023 in __assert_fail_base (fmt=3D<optimized out>, asse=
-rtion=3Dassertion@entry=3D0x555555974d03 "cmds->names[ci] =3D=3D NULL",
->     file=3Dfile@entry=3D0x555555974cfc "help.c", line=3Dline@entry=3D104,=
- function=3Dfunction@entry=3D0x555555974dc8 <__PRETTY_FUNCTION__.0> "exclud=
-e_cmds")
->     at assert.c:118
-> #6  0x00007ffff746e075 in __assert_fail (assertion=3D0x555555974d03 "cmds=
-->names[ci] =3D=3D NULL", file=3D0x555555974cfc "help.c", line=3D104,
->     function=3D0x555555974dc8 <__PRETTY_FUNCTION__.0> "exclude_cmds") at =
-assert.c:127
-> #7  0x0000555555693813 in exclude_cmds (cmds=3D0x55555614e5e0 <other_cmds=
->, excludes=3D0x55555614e5c0 <main_cmds>) at help.c:104
-> #8  0x0000555555693eb3 in load_command_list (prefix=3D0x555555954071 "per=
-f-", main_cmds=3D0x55555614e5c0 <main_cmds>,
->     other_cmds=3D0x55555614e5e0 <other_cmds>) at help.c:252
-> #9  0x00005555555e9987 in cmd_help (argc=3D1, argv=3D0x7fffffffd1a0) at b=
-uiltin-help.c:458
-> #10 0x0000555555685d45 in run_builtin (p=3D0x555556130de0 <commands+192>,=
- argc=3D1, argv=3D0x7fffffffd1a0) at perf.c:349
-> #11 0x0000555555685fe1 in handle_internal_command (argc=3D1, argv=3D0x7ff=
-fffffd1a0) at perf.c:401
-> #12 0x0000555555686142 in run_argv (argcp=3D0x7fffffffcfac, argv=3D0x7fff=
-ffffcfa0) at perf.c:445
-> #13 0x0000555555686493 in main (argc=3D1, argv=3D0x7fffffffd1a0) at perf.=
-c:553
-> (gdb) quit
+Add missing 'h' to l1d_cache_access_prefetces
 
-Thanks Guilherme,
+Also fix a couple of typos and use consistent term in brief descriptions
 
-I tried to reproduce the same version with various options: DEBUG=3D1
--UNDEBUG in EXTRA_CFLAGS, -fsanitize=3Daddress. Being in various
-directories with "perf-" prefixed files. I'm afraid I wasn't able to
-reproduce. The assert is trying to avoid a memory leak, so
-non-critical, and I couldn't in a quick inspection eye-ball an issue.
-Without getting a reproduction I don't think I can make progress with
-the issue.
+Fixes: 16438b652b46 ("perf vendor events arm64 AmpereOneX: Add core PMU events and metrics")
+Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+---
+ .../arch/arm64/ampere/ampereonex/metrics.json          | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Thanks,
-Ian
+diff --git a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/metrics.json b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/metrics.json
+index 5228f94a793f..6817cac149e0 100644
+--- a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/metrics.json
++++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/metrics.json
+@@ -113,7 +113,7 @@
+     {
+         "MetricName": "load_store_spec_rate",
+         "MetricExpr": "LDST_SPEC / INST_SPEC",
+-        "BriefDescription": "The rate of load or store instructions speculatively executed to overall instructions speclatively executed",
++        "BriefDescription": "The rate of load or store instructions speculatively executed to overall instructions speculatively executed",
+         "MetricGroup": "Operation_Mix",
+         "ScaleUnit": "100percent of operations"
+     },
+@@ -132,7 +132,7 @@
+     {
+         "MetricName": "pc_write_spec_rate",
+         "MetricExpr": "PC_WRITE_SPEC / INST_SPEC",
+-        "BriefDescription": "The rate of software change of the PC speculatively executed to overall instructions speclatively executed",
++        "BriefDescription": "The rate of software change of the PC speculatively executed to overall instructions speculatively executed",
+         "MetricGroup": "Operation_Mix",
+         "ScaleUnit": "100percent of operations"
+     },
+@@ -195,14 +195,14 @@
+     {
+         "MetricName": "stall_frontend_cache_rate",
+         "MetricExpr": "STALL_FRONTEND_CACHE / CPU_CYCLES",
+-        "BriefDescription": "Proportion of cycles stalled and no ops delivered from frontend and cache miss",
++        "BriefDescription": "Proportion of cycles stalled and no operations delivered from frontend and cache miss",
+         "MetricGroup": "Stall",
+         "ScaleUnit": "100percent of cycles"
+     },
+     {
+         "MetricName": "stall_frontend_tlb_rate",
+         "MetricExpr": "STALL_FRONTEND_TLB / CPU_CYCLES",
+-        "BriefDescription": "Proportion of cycles stalled and no ops delivered from frontend and TLB miss",
++        "BriefDescription": "Proportion of cycles stalled and no operations delivered from frontend and TLB miss",
+         "MetricGroup": "Stall",
+         "ScaleUnit": "100percent of cycles"
+     },
+@@ -391,7 +391,7 @@
+         "ScaleUnit": "100percent of cache acceses"
+     },
+     {
+-        "MetricName": "l1d_cache_access_prefetces",
++        "MetricName": "l1d_cache_access_prefetches",
+         "MetricExpr": "L1D_CACHE_PRFM / L1D_CACHE",
+         "BriefDescription": "L1D cache access - prefetch",
+         "MetricGroup": "Cache",
+-- 
+2.51.0
+
