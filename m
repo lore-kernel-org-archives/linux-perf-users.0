@@ -1,67 +1,67 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDE431AF1D;
-	Tue,  9 Sep 2025 10:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7FF31B128;
+	Tue,  9 Sep 2025 10:12:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757412748; cv=none; b=TLtemVA51u32tpZ/g+4hq12Ybwuvwyy7hP97pdPHN+TToSDLETgRc6HA1CorL3zgm4y8mYjH6kN/eByYwSoZMBldM6ADn36xxTf635V810GcZ8aHixCOt/sf2tx4QoOZ+ewzsVS9HurYdfqEcTq6zq9wrvG81PYS+Z8nlUq17hA=
+	t=1757412749; cv=none; b=V86bJX1e1lfvqEXZpq1wiA9J3FB+fbqgGpaCZ/jC85q8eWCc2yCzIPAglawzyKGpqXiVCkxseCFFk+P3FmLtKDazxkBkxz4z812gK87ER50eB2bT/ksrQa/F4RMmDQTFeL9Pz5p3Q85WQaez2r/acFRBVqOoIWal+rGSB2fye9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757412748; c=relaxed/simple;
-	bh=ciJyOR3eGK2gidrZT8YeI5fy6dg+FxklvW19mrX4w1c=;
+	s=arc-20240116; t=1757412749; c=relaxed/simple;
+	bh=jW34m1dVcRktmghJ+wO36JmqpXfoGmyvLM7Vm/SWXcY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=haZb0d0g9UIorE1mXpbbVNlXiw1GSc+e14zXN+eEw39QivNK2EbBy4kjUs7WYv5749jYlsvlFEUoYOI+XGLc0894JrcA6gq9Zfviy2z7W4kO7UwwXyRtjbWYTkSlp2sIKMXfj36J4b/rQrupwPD1bZ8/M6AJQXxTRl7TGs7OaqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mpas5YKI; arc=none smtp.client-ip=209.85.128.49
+	 In-Reply-To:To:Cc; b=K16hETFTeWlbzfmy0iUOVeWJa1UMh+KlIShlmWNriIbxT+cikXHH7eE30jHGzWy0A/lxze5nPYBgsh10+J+Fjxb9HiZ2r6gxkqko993v94tp61kpZKwW/X+zvHL13xz78DrR5xueaOTQGDpidfdvUnBxu6Mok1JL3ibB0vkFKF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c2taosm+; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mpas5YKI"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-45decc9e83dso4663315e9.0;
-        Tue, 09 Sep 2025 03:12:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c2taosm+"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-45b9c35bc0aso47908965e9.2;
+        Tue, 09 Sep 2025 03:12:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757412744; x=1758017544; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1757412746; x=1758017546; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=LPzMl9444DyFsyhIlxZU2alp+KEUomV9x8N6sGCMpt4=;
-        b=Mpas5YKI5ekTCXdsyJkl0AtfBk0M61NJJnbLvddhF4wYZCp7CWeLojC66Vgu1HkEk7
-         nGpmS8hWEJ+fnwUK++fpnevU4Z3lxMD/8odjUSZy6gEO65YWxUhQaRlAsrMh7+vFb7NA
-         IvGdUw2p9royABxiuPW1xvXCvSgGi+6PRh/D+/+uvzgNCqoOm2jYOnvIHuSgHk8zLZ71
-         h40YNmZ7OA4p2L7yvvvOnlcngrxPNr06HUQvf1tOP1ugwozX1QOwhUJCCAoubcgbDf0e
-         QyxN1DmKZR3XdUKGAkItse3mpYtiAhNwtXYkf6b6EKXTpFBGKkh7mer+QegBUEhm1vV+
-         bjqA==
+        bh=DybTmKrBLOMD6vf+9QLzWDpmjWc+lV91VxrSnOsEhLY=;
+        b=c2taosm+J3i047N4I+3PZzQ3+elYkM3TqAWzWzL157IVbhxCTQedNpCclJpX7uOlRS
+         V8jc2uWZk0VSNWLAx7JpBYYUR4vuq8QZYt5UX/44St9zQU8ConaF7dKXPGEg/OE6mXFv
+         qOs3wtijHqjDfIkupm9yPJrqS1yHwQhzqlVmlMicDFwbf6VbH4tyQnZ2IKSMh9miQjl1
+         rS/5iwfndirJLdmB28DeUOHEXtShW3RsxFDbddRdzRxm4LWBhy32hFr26AIItxxM7QCM
+         oPxhXk0FOlYgpO4eMuPQMq5Qk2MQZdj61vawuznh6Re+Qn7mcpIGBBNxV8bGcGrDClAr
+         RSVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757412744; x=1758017544;
+        d=1e100.net; s=20230601; t=1757412746; x=1758017546;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LPzMl9444DyFsyhIlxZU2alp+KEUomV9x8N6sGCMpt4=;
-        b=YvUtErNI1AZzt+HYy3KDO37ZG58scfG8Ez5wXFHI+CuCvvBrPHUrth1XeWU3uKBzlE
-         JUSfSWIeutE4upOFDqzLifKdx8gUyFsaIQJ6VKR4O5JEnIEXIrDB+UvDzI7h/btpSOMm
-         PyeyUW27CeCSgtPyIR4sSiApRUHmNVc60+TNiKAGici0RtJ//cKI9NLT3A+lWA3dB2pG
-         8DeXEjNHX0d2v16QYAyzU7rH+NUPq/KirTn8IHZscSgFFGLIbGzL2b17TWS32VJWRXNs
-         DDuWZJD8Dcpa1mHzeUfGlwSRAsStVj5N/WWlkqy7hNWkRkhFMHxqgMVzvOMcX/ZMvF+w
-         wplQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUc/9i0inBAkPjv/MtxHYr9DwFbsG6pKlSGACQZtGbgYCodPkINiJTTl0nzmiD8daUbvehCsPi+Aq6i@vger.kernel.org, AJvYcCVloEzdgy/KslrKA/cR8o3aVGPVZQavgqIgXSXTWbXx1YHPllD6VZotPj3X9oVNiNL1DcelEgpu19yK@vger.kernel.org, AJvYcCVr0LWi1gAYS9ASdI4fuEYRIgk3IFOIWXHRo7OswkDctUr+s1QyTUbqFtD0ygQYh39d0nBXb7Ula2c/u6mOEy7zsA==@vger.kernel.org, AJvYcCWn0joCqjzjhGcQQr6mWY/IgB4v8h8/U6B52dxYMu60WL950BKaPCYsGtCQGojh6ZAxBzAO47rJWDcP@vger.kernel.org, AJvYcCWy/0Qac0evaXonJkQuIqu+WRAvy3X9Ucu2IxByn1lZke1rezaZJtrszpExwqP21kwvR35LPHDPshFc0som@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjHzCJtTjFuVLAAFzXvdSDpPhmZ6YRETohu/J+VbP3jS8ADzzx
-	lryBNyhVBsW6kGqI8tBP8bGbRkfD+jzBAanzNTaY1u4njpyiiLXdaJ8k
-X-Gm-Gg: ASbGncv9geR2UUCsy61+jNSwr7Yl+Z18CHeapeunh3X7aOsZXrt9rK4ymLy9UD97TOU
-	JgiLJ6YQDdJhxPwSxrKpbXzlsa8SZuYDxb7p1BM7LqjSYk0bJ/JcbyTFntQ/iYeJoiwm10Avg1L
-	lhQPV+iwUY2LKhA7dcFF479zsSM2AeCgp+FRRHX1W9IonWCnkXjEMGM8+ExQ35ZCnEGIEePBI7R
-	2dAaD+OZMMi+7rTIfg7rNwrA1X2uhQIrnt8q/cdWTMhPkJOeR/fxdE8+0kvfSqGcmf0LQkpuGxb
-	pdh4LfLUJg8bBB3Ppf+EoBnyyE4gneI9hgc1RhIkU0zKEyvfK7SYr4nwZtldVH3vpUNmy2msTgn
-	hWpmMhMwcg2xcIHeDigpiPm34awhRdo9mok+E1Usjr94LyhzTyGQxtDh0c0SHU1mp9pP5yDkKVz
-	B7ZnRNLOA0FmFr/NGCjnQ0DMc6bg==
-X-Google-Smtp-Source: AGHT+IGPh09/AgyRGnk3hh/JVjy55HRoX4WeFY5HxCNx6I/w3RAwA6apcDwreywzBjxWgSeV51SF/Q==
-X-Received: by 2002:a05:600c:4587:b0:45d:d94b:a8fc with SMTP id 5b1f17b1804b1-45ddde8c757mr122875745e9.16.1757412744214;
-        Tue, 09 Sep 2025 03:12:24 -0700 (PDT)
+        bh=DybTmKrBLOMD6vf+9QLzWDpmjWc+lV91VxrSnOsEhLY=;
+        b=Z+AHcJXBFk5YNoBiTjGr++msMKTQxzKb+KKX2JcsAU1OUdHb4MBGmwXlurHyfwtZTl
+         CrlsbwvMAuSR54vSbxJtC8eu8aQ4QVcolPkwj5HOqLgVMgRLXBjeGQ93h9sOe05ly3q7
+         q58MkkVKsNxwSMKl/agA8PHJ8avU0nyiDvXn0P3W9u4gFqTW8CqqBVP00VGsjala8Tqc
+         2ny57n0g95gysq8W8IxVLd1btBkhQjkZ7JaESpRFjljXUqXIBoGUsUDu/Mq0cXCioSLr
+         Bpi66YwZOCIrSjtTqMFGdOKdObgVz6+ivqiJoqJut54hdFnDXupDPh0+yWetd1/ul43U
+         GwcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUEVF22Z1PISTQ4fj17l165Asw+/EEV1GcsCVnk4ZieBX/gvCYkdr1hOvs2ho7lX3/ic9Pex+B9IAJr0o2a1trkAw==@vger.kernel.org, AJvYcCVg3wGaygn0xIjjSauGEaprwsizXIjB6h28jtfQS/aMrC9K+KG5L3ML2OVx7m4y2zMxMm+75IIgg/jYNbrF@vger.kernel.org, AJvYcCW7CJHHs/mX2q96nqUafYe7dJN77vGpAmuW2OQlFraaJliMuj2CwqnmpqHbB2AoALi6T223+V97HSl0@vger.kernel.org, AJvYcCW970Fm4fHufQ4qc7imXuoTuNO3+2cS6+s6H0G9gTm4qY7DYm2F7BLrnsb86HQliOBS6lVPETCP/kdc@vger.kernel.org, AJvYcCWm46BiHTguzpi96+PzCzH0ZX0tDpsSOxBA53dNdWuVorJOciz69bnqtswOshCQ1w8D5ZlgOV6grJT1@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMtpLYwSCkvEmm4jFFZ9WyltRTgqxHtoo+5s7BHHJoz0kETxtk
+	enJeDZLUPlPo3UPWUzfQWeLf9E1ggN5sRhWsuoUaJmF0M/PmFDzYYZke
+X-Gm-Gg: ASbGnctQAo9LzEjg1iMfaK4gZ77u4q7X7rf0hgE/Wb9Bff0ZAsDSfpJnSxPU6WZNRew
+	tBJTDlzrJzu6+Fux8FWlXTANfBuGNq//K/UkfzIS8tPjUl8nrO7KiebaGa8O1IqF947Hvo43ASS
+	vanVzOwX8HtQQr/6CfpJ91THLG/POHBfr4VB5yY4Vd9gedtMxvqu7FvZzoRDwZiMMfGBpfF6u7H
+	x9aTaTBpAiHEZltK64X0nfd0duV7sDXqsp8kqenm9QSeAGN+rqw1FLOmc/DDn2KgHVZMFqKDVcb
+	giXTe1kgiZM5rX0jBo5rLm81lMZqHHAB1yWSkvsLUOXVkuXPr4OjFNu7aewg3cyQgL38Xx8xc+e
+	AZOxDOzbSweadAVvMIr2kdnFHWA2vXqjk3b110sh9teeiRIAp4bFGm3IhUalUNr1fDwTGi27c8v
+	9mBFxkqlC0PQ1sd74=
+X-Google-Smtp-Source: AGHT+IF3GDagRAyMPN5BSQODUHSp0iGmT0I36aBlmWYUaQ/w665uvtY5Iu4mjHI3U5ucVSesodrKQA==
+X-Received: by 2002:a05:600c:4683:b0:45b:8f5e:529a with SMTP id 5b1f17b1804b1-45ddde9764dmr80596335e9.14.1757412745694;
+        Tue, 09 Sep 2025 03:12:25 -0700 (PDT)
 Received: from localhost (2a02-8440-7136-74e7-5ebf-4282-0e1a-b885.rev.sfr.net. [2a02:8440:7136:74e7:5ebf:4282:e1a:b885])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45df2cb1d77sm9627225e9.3.2025.09.09.03.12.23
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b9a6ecfafsm334757015e9.21.2025.09.09.03.12.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Sep 2025 03:12:23 -0700 (PDT)
+        Tue, 09 Sep 2025 03:12:25 -0700 (PDT)
 From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <legoffic.clement@gmail.com>
-Date: Tue, 09 Sep 2025 12:12:10 +0200
-Subject: [PATCH v6 03/20] clk: stm32mp25: add firewall grant_access ops
+Date: Tue, 09 Sep 2025 12:12:11 +0200
+Subject: [PATCH v6 04/20] arm64: dts: st: set rcc as an access-controller
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250909-b4-ddrperfm-upstream-v6-3-ce082cc801b5@gmail.com>
+Message-Id: <20250909-b4-ddrperfm-upstream-v6-4-ce082cc801b5@gmail.com>
 References: <20250909-b4-ddrperfm-upstream-v6-0-ce082cc801b5@gmail.com>
 In-Reply-To: <20250909-b4-ddrperfm-upstream-v6-0-ce082cc801b5@gmail.com>
 To: Gatien Chevallier <gatien.chevallier@foss.st.com>, 
@@ -94,97 +94,27 @@ X-Mailer: b4 0.15-dev-dfb17
 
 From: Clément Le Goffic <clement.legoffic@foss.st.com>
 
-On STM32MP25, the RCC peripheral manages the secure level of resources
-that are used by other devices such as clocks.
-Declare this peripheral as a firewall controller.
+RCC now implements firewall access ops to check the access to
+resources. Allow client nodes to query the RCC with one firewall ID.
 
 Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
 Signed-off-by: Clément Le Goffic <legoffic.clement@gmail.com>
 ---
- drivers/clk/stm32/clk-stm32mp25.c | 40 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 39 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/st/stm32mp251.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/stm32/clk-stm32mp25.c b/drivers/clk/stm32/clk-stm32mp25.c
-index 52f0e8a12926..af4bc06d703a 100644
---- a/drivers/clk/stm32/clk-stm32mp25.c
-+++ b/drivers/clk/stm32/clk-stm32mp25.c
-@@ -4,8 +4,10 @@
-  * Author: Gabriel Fernandez <gabriel.fernandez@foss.st.com> for STMicroelectronics.
-  */
- 
-+#include <linux/bus/stm32_firewall.h>
- #include <linux/bus/stm32_firewall_device.h>
- #include <linux/clk-provider.h>
-+#include <linux/device.h>
- #include <linux/io.h>
- #include <linux/platform_device.h>
- 
-@@ -1602,6 +1604,11 @@ static int stm32_rcc_get_access(void __iomem *base, u32 index)
- 	return 0;
- }
- 
-+static int stm32mp25_rcc_grant_access(struct stm32_firewall_controller *ctrl, u32 firewall_id)
-+{
-+	return stm32_rcc_get_access(ctrl->mmio, firewall_id);
-+}
-+
- static int stm32mp25_check_security(struct device_node *np, void __iomem *base,
- 				    const struct clock_config *cfg)
- {
-@@ -1970,6 +1977,7 @@ MODULE_DEVICE_TABLE(of, stm32mp25_match_data);
- 
- static int stm32mp25_rcc_clocks_probe(struct platform_device *pdev)
- {
-+	struct stm32_firewall_controller *rcc_controller;
- 	struct device *dev = &pdev->dev;
- 	void __iomem *base;
- 	int ret;
-@@ -1982,7 +1990,36 @@ static int stm32mp25_rcc_clocks_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	return stm32_rcc_init(dev, stm32mp25_match_data, base);
-+	ret = stm32_rcc_init(dev, stm32mp25_match_data, base);
-+	if (ret)
-+		return ret;
-+
-+	rcc_controller = devm_kzalloc(&pdev->dev, sizeof(*rcc_controller), GFP_KERNEL);
-+	if (!rcc_controller)
-+		return -ENOMEM;
-+
-+	rcc_controller->dev = dev;
-+	rcc_controller->mmio = base;
-+	rcc_controller->name = dev_driver_string(dev);
-+	rcc_controller->type = STM32_PERIPHERAL_FIREWALL;
-+	rcc_controller->grant_access = stm32mp25_rcc_grant_access;
-+
-+	platform_set_drvdata(pdev, rcc_controller);
-+
-+	ret = stm32_firewall_controller_register(rcc_controller);
-+	if (ret) {
-+		dev_err(dev, "Couldn't register as a firewall controller: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void stm32mp25_rcc_clocks_remove(struct platform_device *pdev)
-+{
-+	struct stm32_firewall_controller *rcc_controller = platform_get_drvdata(pdev);
-+
-+	stm32_firewall_controller_unregister(rcc_controller);
- }
- 
- static struct platform_driver stm32mp25_rcc_clocks_driver = {
-@@ -1991,6 +2028,7 @@ static struct platform_driver stm32mp25_rcc_clocks_driver = {
- 		.of_match_table = stm32mp25_match_data,
- 	},
- 	.probe = stm32mp25_rcc_clocks_probe,
-+	.remove = stm32mp25_rcc_clocks_remove,
- };
- 
- static int __init stm32mp25_clocks_init(void)
+diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+index 303abf915b8e..fbedf23def52 100644
+--- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
++++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+@@ -1677,6 +1677,7 @@ rcc: clock-controller@44200000 {
+ 			reg = <0x44200000 0x10000>;
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
++			#access-controller-cells = <1>;
+ 			clocks = <&scmi_clk CK_SCMI_HSE>,
+ 				<&scmi_clk CK_SCMI_HSI>,
+ 				<&scmi_clk CK_SCMI_MSI>,
 
 -- 
 2.43.0
