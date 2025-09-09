@@ -1,68 +1,68 @@
 Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D6A24DD0E;
-	Tue,  9 Sep 2025 10:12:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815503191CE;
+	Tue,  9 Sep 2025 10:12:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757412745; cv=none; b=WL7YmTrGYQs6QcUgpwrTipXpawjH7UanCvasaI7qTnr6np54WX2QLRd86lObb2ryD6H5wjOXtjUYtLFVvgtN/lSvZCLzEZwUOAsQR4P1Ewpu6AchJD4UYS13eauyG704TelJhQFBZFuFas2lThGV+Fq8PKqBqJ8ikZV/kqt9JVc=
+	t=1757412746; cv=none; b=fgAGFqP43BstmtOv2vs0B/TixS+n+qDmeqTGwD/KnJlZ/9+B8Wzmnbvqdvv60SL+WG/BlklNAT92Ll98j9elUnU+ylRu+R9syaogDQAB0VLVfRYwH54IS19vRLisJJxwJUGdxIBXHpiEQ50GDONm2Yxiu8jPyUVM+YYLB72Gzt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757412745; c=relaxed/simple;
-	bh=MWx2AfrpKTR83//q16/EyVPq3FEVEkF04/Uc/WS+RSQ=;
+	s=arc-20240116; t=1757412746; c=relaxed/simple;
+	bh=2cljBbctUpov7EPp9dHLO/NTrzVDPxTc08Ag9XJ0xdk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bUaFG8ndfPi0hEBr66E/nqHEiXBnr5uTEymj2M6SWa7LCeGYJJ0bExveNjOqmsZlHIsIi6SgOvhYp+Cv5NH3bhaQ3V2aTGQdotljdADEGnvHjb9VSnoJ2T/iGcDvMUGalrok61RbbyMY7vB7bZnT9unF+sqZtNKHQv6n/e9WlZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jCYurqzd; arc=none smtp.client-ip=209.85.128.44
+	 In-Reply-To:To:Cc; b=pt0ybwiAH9E65mUtqGx/lAdz+kSWSk1yFVxhezzeAhZO5ed1u1QkG21H/fRhNUiq362S9rEng7kbi+YV/WgukQwcIfFlKe9O9m4xs2BrxvOnv5Uwv+xo3pcbGrlR6T5LoSGBTEKeYn+pwiqGXG4rW+RSeiuKM+l9CJupQSuPzsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A7Z6Wwix; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jCYurqzd"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-45decc9e83dso4662795e9.0;
-        Tue, 09 Sep 2025 03:12:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A7Z6Wwix"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-45de6ab6ce7so12357445e9.1;
+        Tue, 09 Sep 2025 03:12:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757412741; x=1758017541; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1757412743; x=1758017543; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=XI2ZZStM3cXWCSi8KK5fyFVb5U1Xw6ZX1EuBWF2OM9M=;
-        b=jCYurqzdvAAaMnKXdrtzw2zRZShXCLhfQBZHdwjQB8RqvejL1W3gezz9aj3wf+HwIb
-         nXBsClgjQigXc8uyoH533NgwCt0cpXyPHbIlLUf3T1dr94lMyLuHU8lNY+mVPp+emNPL
-         HxSLecI6NjPjs15SQG4m+DVF+H7xyR9pkhaniX4hxGIOOJvdff8cOkAQEYILTKMFvN9q
-         ztZ4bxVjSv+Ele7W+DTJnEUPk0mUbYbzQCC50P02Po1uj/OoFI9NqENK03stJuhRKQ/E
-         htmCjyDLlCQbWUt6riQkeMSbtSvs4Gcr1hRGCBMegovdk/IuZLo+NYTWU9A6Mv2IqtZP
-         TBZg==
+        bh=8htGACZZYE1dIEbtDAUA+3P97IrmED7ZD9WcIPqTfx4=;
+        b=A7Z6WwixZ+JAIgVmMKkYtTXPr7klNPCELDXF++dWtiJCSlf3B+ADisVELMZGmpZNlW
+         2JTOcQcUfbYxrTQ+XDu1kqx2Sc42jawh4CNkizlALJkMM10eq+cfMx4wLu1M5ir8Zsx0
+         iig9GrWlDrjg6ZHD6+KL4JBHubyAB6zfr6nVltPwlQqhwVmbWR9ml9/h0nJ+5QjTytaz
+         Y8RQiV65Yjv5eTkoz5u1bM61LlroWAvorUwaKeTSW+cwf6mghWkEvQTkBNXjT4QtjjGQ
+         /K+lG5jE7CdMXVgo70pNoxfINpMc8IdlAUz+Zy6U7M9d4zxMsD5gu/UAg7uiOfF0h+fc
+         Bi+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757412741; x=1758017541;
+        d=1e100.net; s=20230601; t=1757412743; x=1758017543;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XI2ZZStM3cXWCSi8KK5fyFVb5U1Xw6ZX1EuBWF2OM9M=;
-        b=SARwcbGK+Ci7JCOEk+e+eaaUDQmSpUjNU1mA5Ho8NSzlaaJcM37/fOffj1zJV5YWsm
-         15GRj2o2Gt8xS5DmXVNbJiDFLMhVe2RHKSmkvvKgQrUzpreyJjfnbgjwetGxmJCZpzpR
-         7gO+o2qrPHJLAB4oUTNLCpJjJYDfPwBmUa19t4peEyuWLJTHxemSGG95coXG6zx6502D
-         JzmS/ikp2OS+T4H5x97fNTISA8tTkbYg3Z71vr3DQs8JexCKECNaosQ6K90a3cjlCWbi
-         SjLWAUTAXFyHrrJNbRfrfBQMPwviFjSk3T9teev3gDOIj8WbQQMn7KGXeZOchAmsZzw4
-         FlZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUQT4REny1zO78r0Zn28I6Bm7tYhNiy7R41jfrSWaHqQuUJbwRf384US+YFAWo7WMrYeokZL4P3fWuY@vger.kernel.org, AJvYcCV+r0E9jiT1P2F9/Y6yq2m1q+WHnteuUAh0TxEulM+t5Pd83HnCaLizpm1vDfPTwpr7jZwydy3nLxBOkiCTennciA==@vger.kernel.org, AJvYcCVuq0kqv8fjK/2jAd2rG60e5U7OCrCSZXNQvnwSLxFQ+0xbisTjt6lgcH5TSch3m3EuIFB8Ep4mq3G0@vger.kernel.org, AJvYcCVvg4YCUPCJph7ur8PTC96Zyp/WcUSfotQkgUBXZMKvZhYB0e3ZtXgYszAtS8lD9Vm0av1g8aU63w5Dq2JD@vger.kernel.org, AJvYcCW1tvz7VAFQwAzA5m/7R5DTsMc0xlw7nSUYyCcVMrCC1/W8fBaRw9w8v86NUEiNWxXyqSoy3zuXgkJN@vger.kernel.org
-X-Gm-Message-State: AOJu0YzReOqofFSJ3CX6IFOjgb3neo93pZf4rZ8DbqmEfSbpk/KBQo9Y
-	fyXFs0CPvLBvzywF+uvbKyYG8pYbhNVunFScaBFrZ9W4V/KrTBRzFKmR
-X-Gm-Gg: ASbGncuUY9Plk0m3w7DDuXhGGr+ql3tWkJaZBQR/Pj6KFB2IahKjH+ZWT3mYbuKnVHh
-	8Be2t2LwuVJ43JS1rsh1Zu6l9xbsqmvAWSYQqnqdUBUeyQIh3DV257GvgVWorR8Uyvj7V7WqypW
-	3SRUsZYMXvGayQ/WX27m62xVopoDsfhTYiI4xhB1F+9P12LKUh3q7Hs6+xbm3qC4MgUQGYk8Fh5
-	8gncjhoGsT8k7Iuv05Xp7KqOmAIJj/PDxXAtq7S2zXtJbUfk1S4FxHJmhMmeTxgytWZr3nKdp4H
-	bWre4dAKDb5r0NOpaaOLdIZgQwGU92bpps3fzzXVBSCMWJY3kTRb9rnn2X6+TDSlswcaHRNpkgz
-	vZMznRAFEIEBL6WPbtklkXUdmfKipB1OTPejxE0iVqtYmEzxF4ZjzzIx2X08q3tqdZDexb3C+2c
-	PuXmYMNYp+KBfHaRSaoE3BK2R3gA==
-X-Google-Smtp-Source: AGHT+IGMq3YRNccUPXUDuQKWqwTrrYGimoWd2y4QrCx0yTnHMLewx8Uj16eSzaAZy993XHeIO/nPgA==
-X-Received: by 2002:a05:600c:45cc:b0:459:dde3:1a55 with SMTP id 5b1f17b1804b1-45dddec78d3mr98422505e9.24.1757412741076;
-        Tue, 09 Sep 2025 03:12:21 -0700 (PDT)
+        bh=8htGACZZYE1dIEbtDAUA+3P97IrmED7ZD9WcIPqTfx4=;
+        b=W8TGDIvMtuvwor6zHzhd31HppiruAX4fy9Wr866mjA/tmCIcYTpFpVSr5lnhtVBXmb
+         VHqPmFPYY09Q9vfs56nXRPwPnGH0kzap9gsi84Ey6iuCWPt7hxaN180a/mA8b/1HieiP
+         pJvRnDibJB8YawiFAgNtkoZcQlph8YvVTdlGNxY3OPtVQyZUDZG55IF/89iDuoMxWK/p
+         GdCvl3flALm1MI+c3wcz6vGI9HCDNMKR4nI0l0yPgiqFpTRs0QWccnmDdwR+/kPeiY/K
+         AW/yMtzTDXyuIiEOyBQ9HuummdaLPUyAeuGAwfT33Zy6/fzDTlYoLiJawTrBGYf7RBvw
+         +64w==
+X-Forwarded-Encrypted: i=1; AJvYcCUNF4he4ZSonYb1EQ+2iwbx3TJSjgBXuJmwD2Ul30ZVnQPtZbcEnqSr2+ObEOoTvqxLyl88MqID4qFkT1Cfi4c1yg==@vger.kernel.org, AJvYcCUXrNwGDpScbZ+zOe4c0mAroq0fuxD0LFW6ykkeyo2/i9HrosaHXMz0xrh0L7EAQZr3MhnHkMv0/qGi@vger.kernel.org, AJvYcCVKqnjbuHDNx9D60+x/8FeWLpocOC1bCqf/68lGw7WkH2ro9Dpu4E52+SqULP9kayfIILAa04z8nsrV@vger.kernel.org, AJvYcCWCB99r6PXbxA9dSmBeuEm/wEL6Bg01bSF1NPpU302GjBtsnAaid+N83jnF53wY/DqHDOXuNiXiO7qYlwH3@vger.kernel.org, AJvYcCWT2eJwvLNakMXV53HpdcmrcomPoZTcHYahM/Mg3pEvPjcBDyFiEDeUDQObZ1xej9Oj3T0cSAjHqtf6@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrSDHZMraB8CQCnAACOZNeboqaXpvnV5iCVoegxgkCn63XSe40
+	EbNog/eJz90cmWzfWiuVLrbE3Klv5JlGFhF6/KgnCli/ibkRPcv2ZqwW
+X-Gm-Gg: ASbGncuC+yNWG63DYSJ3OIKo1ybIbiywE+ib+4YLrEuv5FObPE536h1lPuilr0gb96F
+	EDB/mLdbzJ02+lMhwFYeiaw07l6LfUFfZcNGnqgMIq/deFDT/GcD1/sMlr8xn9DPU8EDzLMvYXm
+	Mx0G2VEzGlnOehb75WYqm/phNhUm9pqpB0K5R8OlvbhGgtmL8+lIDHdz3P2UvvhaCOgM5Qr41Gn
+	up1brzQAW/gsBmDQuGEmYP0ydCsZ6HUZ/VBQSu6w14kUOF68UkelvaejZ83n4VB5s2IUpbbOLfx
+	Pf0UtKToq5Ugsn01ZxXWcrWD0rleVxzpHjntIor6MEyz7AwpuRYA93PfM+FN8GiE3KolcFOikJs
+	l0XezI7jcR4Pnz528xltkhIO+hgbEhDvRXqPeYSwuQweKJM/ZqIvQiWPuvPFPNOd2XoLi6sUtbm
+	QlVVE5yUnPfF9qpyGrPqjBHMdGaA==
+X-Google-Smtp-Source: AGHT+IFNpcDqm5syw25D09i7ExBBWVEcooFgL+UUg7LLOjlL1pEopNlXuqGDOd1C5bTyB3d6ZXQWuA==
+X-Received: by 2002:a5d:5f46:0:b0:3d8:e1de:7e4f with SMTP id ffacd0b85a97d-3e642da5119mr7865674f8f.21.1757412742627;
+        Tue, 09 Sep 2025 03:12:22 -0700 (PDT)
 Received: from localhost (2a02-8440-7136-74e7-5ebf-4282-0e1a-b885.rev.sfr.net. [2a02:8440:7136:74e7:5ebf:4282:e1a:b885])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45c6faad9cfsm304908725e9.0.2025.09.09.03.12.20
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45dd2304e16sm229761215e9.7.2025.09.09.03.12.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Sep 2025 03:12:20 -0700 (PDT)
+        Tue, 09 Sep 2025 03:12:22 -0700 (PDT)
 From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <legoffic.clement@gmail.com>
-Date: Tue, 09 Sep 2025 12:12:08 +0200
-Subject: [PATCH v6 01/20] bus: firewall: move stm32_firewall header file in
- include folder
+Date: Tue, 09 Sep 2025 12:12:09 +0200
+Subject: [PATCH v6 02/20] dt-bindings: stm32: stm32mp25: add
+ `#access-controller-cells` property
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -71,7 +71,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250909-b4-ddrperfm-upstream-v6-1-ce082cc801b5@gmail.com>
+Message-Id: <20250909-b4-ddrperfm-upstream-v6-2-ce082cc801b5@gmail.com>
 References: <20250909-b4-ddrperfm-upstream-v6-0-ce082cc801b5@gmail.com>
 In-Reply-To: <20250909-b4-ddrperfm-upstream-v6-0-ce082cc801b5@gmail.com>
 To: Gatien Chevallier <gatien.chevallier@foss.st.com>, 
@@ -95,87 +95,48 @@ X-Mailer: b4 0.15-dev-dfb17
 
 From: Clément Le Goffic <clement.legoffic@foss.st.com>
 
-Other driver than rifsc and etzpc can implement firewall ops, such as
-rcc.
-In order for them to have access to the ops and type of this framework,
-we need to get the `stm32_firewall.h` file in the include/ folder.
+RCC is able to check the availability of a clock.
+Allow to query the RCC with a firewall ID.
 
 Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 Signed-off-by: Clément Le Goffic <legoffic.clement@gmail.com>
 ---
- drivers/bus/stm32_etzpc.c                       | 3 +--
- drivers/bus/stm32_firewall.c                    | 3 +--
- drivers/bus/stm32_rifsc.c                       | 3 +--
- {drivers => include/linux}/bus/stm32_firewall.h | 0
- 4 files changed, 3 insertions(+), 6 deletions(-)
+ Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/bus/stm32_etzpc.c b/drivers/bus/stm32_etzpc.c
-index 7fc0f16960be..4918a14e507e 100644
---- a/drivers/bus/stm32_etzpc.c
-+++ b/drivers/bus/stm32_etzpc.c
-@@ -5,6 +5,7 @@
+diff --git a/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml b/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml
+index 88e52f10d1ec..4d471e3d89bc 100644
+--- a/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml
++++ b/Documentation/devicetree/bindings/clock/st,stm32mp25-rcc.yaml
+@@ -31,6 +31,11 @@ properties:
+   '#reset-cells':
+     const: 1
  
- #include <linux/bitfield.h>
- #include <linux/bits.h>
-+#include <linux/bus/stm32_firewall.h>
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/init.h>
-@@ -16,8 +17,6 @@
- #include <linux/platform_device.h>
- #include <linux/types.h>
++  '#access-controller-cells':
++    const: 1
++    description:
++      Contains the firewall ID associated to the peripheral.
++
+   clocks:
+     items:
+       - description: CK_SCMI_HSE High Speed External oscillator (8 to 48 MHz)
+@@ -123,6 +128,7 @@ required:
+   - reg
+   - '#clock-cells'
+   - '#reset-cells'
++  - '#access-controller-cells'
+   - clocks
  
--#include "stm32_firewall.h"
--
- /*
-  * ETZPC registers
-  */
-diff --git a/drivers/bus/stm32_firewall.c b/drivers/bus/stm32_firewall.c
-index 2fc9761dadec..ef4988054b44 100644
---- a/drivers/bus/stm32_firewall.c
-+++ b/drivers/bus/stm32_firewall.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/bitfield.h>
- #include <linux/bits.h>
-+#include <linux/bus/stm32_firewall.h>
- #include <linux/bus/stm32_firewall_device.h>
- #include <linux/device.h>
- #include <linux/err.h>
-@@ -18,8 +19,6 @@
- #include <linux/types.h>
- #include <linux/slab.h>
- 
--#include "stm32_firewall.h"
--
- /* Corresponds to STM32_FIREWALL_MAX_EXTRA_ARGS + firewall ID */
- #define STM32_FIREWALL_MAX_ARGS		(STM32_FIREWALL_MAX_EXTRA_ARGS + 1)
- 
-diff --git a/drivers/bus/stm32_rifsc.c b/drivers/bus/stm32_rifsc.c
-index 4cf1b60014b7..643ddd0a5f54 100644
---- a/drivers/bus/stm32_rifsc.c
-+++ b/drivers/bus/stm32_rifsc.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/bitfield.h>
- #include <linux/bits.h>
-+#include <linux/bus/stm32_firewall.h>
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/init.h>
-@@ -16,8 +17,6 @@
- #include <linux/platform_device.h>
- #include <linux/types.h>
- 
--#include "stm32_firewall.h"
--
- /*
-  * RIFSC offset register
-  */
-diff --git a/drivers/bus/stm32_firewall.h b/include/linux/bus/stm32_firewall.h
-similarity index 100%
-rename from drivers/bus/stm32_firewall.h
-rename to include/linux/bus/stm32_firewall.h
+ additionalProperties: false
+@@ -136,6 +142,7 @@ examples:
+         reg = <0x44200000 0x10000>;
+         #clock-cells = <1>;
+         #reset-cells = <1>;
++        #access-controller-cells = <1>;
+         clocks =  <&scmi_clk CK_SCMI_HSE>,
+                   <&scmi_clk CK_SCMI_HSI>,
+                   <&scmi_clk CK_SCMI_MSI>,
 
 -- 
 2.43.0
