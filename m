@@ -1,166 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA62833EB12;
-	Tue,  9 Sep 2025 12:42:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5441632BF47
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Sep 2025 13:04:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757421769; cv=none; b=C+roZeinYzmcrPvWRGhv/pkgTiU4eJ29OTp4oItPh2/KtwRd88ICvJr7orw1TCPe0ojOEZcUHsZBLmk0sI2KLBvwdkDD/m24mqWCYLLe5zUzPnuyrzwImY2tBZfbHx3jdzLEkl0L6wEWp9+3wt3ODQ2NDcy8H3B+71LTxuaQdw0=
+	t=1757423097; cv=none; b=K5nWHjmNWLHE2dU1HPPOBxn/Tw3LceL3UXa+fO9WcEo5+UCe+ndql4HrLWh/MfXyUqst6S4B0AsnRhRJuSrDsOxYxveDjRK9Rh6XIZTIfiQMaLGHl29Xoycx7OiL8Y8w/8c9gPBZHkvoT1gfEWQrIb/i1Y/Iy42VyIZ5XXjYMrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757421769; c=relaxed/simple;
-	bh=Pt6R1lXQxECu96oquYdgEIA0VrhXv/RzniYpUbGqgSI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BfSvBPLZcjKrFofMzvHnsxnSQMbuoQEATGoYUnFMfnPuxSp8rez1gvXMPIlouhiIXhgR2LzfRjHH58QAe+a8ckkfJZVcq1sjaEnXycC3upwvOY2x3DktKmfoL2hWUVlepkWSK3dmpRQem0XTFwTewf3VF5xl6M11aZ5Uj0qYr78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=edZhkqCg; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1757423097; c=relaxed/simple;
+	bh=wuEDhAn7VE4XCDJgxxXZUeG3h59v9HM1l7I/5wkYj2g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ky/kymyoD784zFXE65dq2IFzfQhxVSuQRHIiEoQFcx8DDQysNf1p+0/wYTzi5u20PCNLTPFeQL0X0gjeNjD3m8kOXS17kJcmw8LJwi7UQT8KIr9k9DSm2dD1kFHnec+hix5zZNUkdH1McS46laMDVRs7r/V3DZtd2/oSVBJ9Ols=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=us3y1m1H; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="edZhkqCg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757421768; x=1788957768;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Pt6R1lXQxECu96oquYdgEIA0VrhXv/RzniYpUbGqgSI=;
-  b=edZhkqCgIGwrMRURj45eT/Vlax5qHr/z3Y5bu1BApbRSoeWt+N2kx3i0
-   yTlQ+WTc5coGb5kZDFw4CwzilgnVKC5Mllh+Ht0lNkIIXtSnYkVWg4WFk
-   u4YyCfGcl1wwG2EWPg1R9qDVxj2xa1LqZ5O3ISFPutfRHna99FllhkBw2
-   tl3qzkPM9JksxrFwJnzB8ZSaB2x3C9uDpABj3UC0ljkNkI8+kpOgCM+8B
-   b+QfI4358wLBIR1ERALyMvM7W1ys/133hxGX+Fn82G4y1KQb0DOoGiJdA
-   u3fQ93WkflEOHII4qm207/QvB7PBs9kxdKw/qE3vUvNoRF0JnO7lv1omC
-   w==;
-X-CSE-ConnectionGUID: rH2CTtoTSt2oQYL43tHPZA==
-X-CSE-MsgGUID: rEpL8Fb2S++G/TkNCk70ew==
-X-IronPort-AV: E=McAfee;i="6800,10657,11547"; a="70399573"
-X-IronPort-AV: E=Sophos;i="6.18,251,1751266800"; 
-   d="scan'208";a="70399573"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2025 05:42:48 -0700
-X-CSE-ConnectionGUID: uGyzRG44TECZQRgYsqdZqg==
-X-CSE-MsgGUID: K7rh66MDRg2kow9aXEBTTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,251,1751266800"; 
-   d="scan'208";a="172667483"
-Received: from abityuts-desk.ger.corp.intel.com (HELO localhost.localdomain) ([10.245.244.84])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2025 05:42:43 -0700
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 3/3] perf/core: Fix MMAP2 event device with backing files
-Date: Tue,  9 Sep 2025 15:42:22 +0300
-Message-ID: <20250909124222.222945-4-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250909124222.222945-1-adrian.hunter@intel.com>
-References: <20250909124222.222945-1-adrian.hunter@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="us3y1m1H"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-24b2d018f92so673715ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Sep 2025 06:04:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1757423096; x=1758027896; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FegmOUf8bYexzRzeJYKOCwFad+h+PFSGJuRgZi24g9o=;
+        b=us3y1m1H5gNeKGbjB3usftbiEidaWlIoFHSMULr97z2j0QcsQO0YAO/F1nddFXdsnY
+         2NACCT6TApoXWi6cJZ6V1cHOTscSKP/zsFOgS6dZyVjsQkjQe3tnLB0BJoKkEedwIWW8
+         5IX1UlK8tfE+1OHw8us2/LhTfB7bkooMkKDA9NTVnFka4hXrGQ9T7+Sw6dhU0KynNacJ
+         VkIThxUtKW6QaJGl15h22kL7TMFCsZUR/7g0v3kBHgv6RvjCDfwRPchqdnsbhFpp6yy1
+         ajtEFRPFDZVq0bpHYMnWg55FZs8+2iPrLWCm7nujpfesO+D2BeBxwTjtxEr38x/ybdD6
+         da2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757423096; x=1758027896;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FegmOUf8bYexzRzeJYKOCwFad+h+PFSGJuRgZi24g9o=;
+        b=ETdZJJgI4LKVV2e1xhdkzf5H9x331QQ7FKlrWBfpBitqQ9TIcKjqPpo9oUwv/Yws5A
+         toiG3F3FABi5uItLluZ7x2ihhoeU8FDCCoBjBeHgE7ZD54HTsIbQem5m/0t80bhp9mBJ
+         dDKMzu1FJR8DYCMblDzhlWFiUCnUDjWzocdvXXxNvNXHuxfoXOig7kdvqSbgdbZgO0wL
+         nqXDW3M9DR7JBpqxeqT6DFicSWCDZfnXE1/RJL1U2iFieV+oFZkEdJuqRtnMhiZl+F+J
+         KVGfYO/8D3qy5mjGvhEJXPCOubP8+YPHJtKeu9SsEYgPpQjhmnyPOXvB578HhWtZ2raG
+         xbEA==
+X-Forwarded-Encrypted: i=1; AJvYcCXS/Fffw6GA7iHOz0FgOjgtlKSKPBXqUHpIaS3nU7fnCiQoYjmh+LwuLyNKA6YWaaNRUJrjROSNcEtCRNDEVnea@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoAzCIbvM0VeuWnLErp6RfuSZHVHVW68la7yfoc8eu6qy0krSR
+	dRIrVpO7jm3Efn/E5WdIMf1MEZAkJp4k28YlQDkHCj0uONe+1i3/OMMVJsfrcXPHv/4g6bA/RhK
+	XQZ5EcFxSAJgSxuj5DTk9019J5/vlZPrLtfeEny6O
+X-Gm-Gg: ASbGncvj1EKAdXvA0Q3rh7SPWrx800kVHxNdkLtpeBdaUcccDPhZ++4h157JkbIa5H1
+	kKREQZGkhQ/+DPsncevhi82RjOpVabR4dkMK4L7FaAPxKXicwVkV1mTdJK65wLS3M4aF6SfDU8o
+	wm7nwmPrLCuByfgaK9rbzJ2vls1hWCDmB0NOLK/kTA3wFJQlDtaP0dNnGegZx6oJRlUrls1sZEm
+	8mZAnyYgRxKHtPmlq8q4XyKIA==
+X-Google-Smtp-Source: AGHT+IGxkBlp/AxP5ezcb05alMwdQQBJpkLO6kD0GQc8Jn7qJD8riHbmJuzzdb3s0/Uf/T4BuVR0E8LEVn45d8u0sWM=
+X-Received: by 2002:a17:902:ee55:b0:240:4464:d486 with SMTP id
+ d9443c01a7336-251753ddba7mr9427785ad.13.1757423095381; Tue, 09 Sep 2025
+ 06:04:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+References: <aMACaOmneDrG8_pQ@gentoo.org>
+In-Reply-To: <aMACaOmneDrG8_pQ@gentoo.org>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 9 Sep 2025 06:04:42 -0700
+X-Gm-Features: Ac12FXzybYii8a916p3tX2nAHNuT8iSupwAVo96d7tCCsAUhIZreC8qrC8yg8m4
+Message-ID: <CAP-5=fVA_Cduf9NvFAJezcNcg0JDNGa5q7m_mRBWNAYGEUo8bw@mail.gmail.com>
+Subject: Re: Problem with perf report --gtk
+To: Guilherme Amadio <amadio@gentoo.org>
+Cc: acme@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Some file systems like FUSE-based ones or overlayfs may record the backing
-file in struct vm_area_struct vm_file, instead of the user file that the
-user mmapped.
+On Tue, Sep 9, 2025 at 3:33=E2=80=AFAM Guilherme Amadio <amadio@gentoo.org>=
+ wrote:
+>
+> Hi Arnaldo, Namhyung,
+>
+> Since sometime we have a bug in Gentoo's bugzilla about perf report --gtk=
+ not
+> working=C2=B9: https://bugs.gentoo.org/937869
+>
+> I know this feature is not used very much, but I thought I'd report in
+> any case. The problem is easily reproducible as shown below:
+>
+>
+> $ perf record -a -g -- sleep 1
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 1.818 MB perf.data (6648 samples) ]
+> $ LD_DEBUG=3Dsymbols perf report --gtk 2>&1 | grep '(fatal)'
+>     288067:     /usr/libexec/perf-core/libperf-gtk.so: error: symbol look=
+up error: undefined symbol: hashmap_find (fatal)
+> $ perf report --gtk
+> GTK browser requested but could not find libperf-gtk.so
+>
+> I tried this with perf 6.16, but this bug seems to have been there since
+> at least 6.12.
+>
+> Please let me know if it's better to file problems at https://bugzilla.ke=
+rnel.org/.
 
-That causes perf to misreport the device major/minor numbers of the file
-system of the file, and the generation of the file, and potentially other
-inode details.  There is an existing helper file_user_inode() for that
-situation.
+Thanks for letting us know Guilherme! I suspect I broke things when
+trying to fix python things. The code linking libperf-gtk.so is:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/Makefile.perf?h=3Dperf-tools-next#n809
+The hashmap symbols are part of the perf-util library:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/Build?h=3Dperf-tools-next#n197
+So maybe there needs to be a libbpf -lbpf for your case? Alternatively
+we may need to reorder the libraries here:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/Makefile.perf?h=3Dperf-tools-next#n464
+like:
+PERFLIBS +=3D $(LIBPERF_BENCH) $(LIBPERF_TEST) $(LIBPERF_UI) $(LIBPERF_UTIL=
+)
+becomes:
+PERFLIBS +=3D $(LIBPERF_BENCH) $(LIBPERF_TEST) $(LIBPERF_UTIL) $(LIBPERF_UI=
+)
 
-Use file_user_inode() instead of file_inode() to get the inode for MMAP2
-events.
-
-Example:
-
-  Setup:
-
-    # cd /root
-    # mkdir test ; cd test ; mkdir lower upper work merged
-    # cp `which cat` lower
-    # mount -t overlay overlay -olowerdir=lower,upperdir=upper,workdir=work merged
-    # perf record -e cycles:u -- /root/test/merged/cat /proc/self/maps
-    ...
-    55b2c91d0000-55b2c926b000 r-xp 00018000 00:1a 3419                       /root/test/merged/cat
-    ...
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 0.004 MB perf.data (5 samples) ]
-    #
-    # stat /root/test/merged/cat
-      File: /root/test/merged/cat
-      Size: 1127792         Blocks: 2208       IO Block: 4096   regular file
-    Device: 0,26    Inode: 3419        Links: 1
-    Access: (0755/-rwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
-    Access: 2025-09-08 12:23:59.453309624 +0000
-    Modify: 2025-09-08 12:23:59.454309624 +0000
-    Change: 2025-09-08 12:23:59.454309624 +0000
-     Birth: 2025-09-08 12:23:59.453309624 +0000
-
-  Before:
-
-    Device reported 00:02 differs from stat output and /proc/self/maps
-
-    # perf script --show-mmap-events | grep /root/test/merged/cat
-             cat     377 [-01]   243.078558: PERF_RECORD_MMAP2 377/377: [0x55b2c91d0000(0x9b000) @ 0x18000 00:02 3419 2068525940]: r-xp /root/test/merged/cat
-
-  After:
-
-    Device reported 00:1a is the same as stat output and /proc/self/maps
-
-    # perf script --show-mmap-events | grep /root/test/merged/cat
-             cat     362 [-01]   127.755167: PERF_RECORD_MMAP2 362/362: [0x55ba6e781000(0x9b000) @ 0x18000 00:1a 3419 0]: r-xp /root/test/merged/cat
-
-With respect to stable kernels, overlayfs mmap function ovl_mmap() was
-added in v4.19 but file_user_inode() was not added until v6.8 and never
-back-ported to stable kernels.  FMODE_BACKING that it depends on was added
-in v6.5.  This issue has gone largely unnoticed, so back-porting before
-v6.8 is probably not worth it, so put 6.8 as the stable kernel prerequisite
-version, although in practice the next long term kernel is 6.12.
-
-Cc: stable@vger.kernel.org # 6.8
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- kernel/events/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index e203b8d90fd2..9d281785b99e 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -9403,7 +9403,7 @@ static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
- 		flags |= MAP_HUGETLB;
- 
- 	if (file) {
--		struct inode *inode;
-+		const struct inode *inode;
- 		dev_t dev;
- 
- 		buf = kmalloc(PATH_MAX, GFP_KERNEL);
-@@ -9421,7 +9421,7 @@ static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
- 			name = "//toolong";
- 			goto cpy_name;
- 		}
--		inode = file_inode(vma->vm_file);
-+		inode = file_user_inode(vma->vm_file);
- 		dev = inode->i_sb->s_dev;
- 		ino = inode->i_ino;
- 		gen = inode->i_generation;
--- 
-2.48.1
-
+Thanks,
+Ian
