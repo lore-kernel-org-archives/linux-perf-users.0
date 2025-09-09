@@ -1,123 +1,180 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5441632BF47
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Sep 2025 13:04:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4FA337687;
+	Tue,  9 Sep 2025 13:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757423097; cv=none; b=K5nWHjmNWLHE2dU1HPPOBxn/Tw3LceL3UXa+fO9WcEo5+UCe+ndql4HrLWh/MfXyUqst6S4B0AsnRhRJuSrDsOxYxveDjRK9Rh6XIZTIfiQMaLGHl29Xoycx7OiL8Y8w/8c9gPBZHkvoT1gfEWQrIb/i1Y/Iy42VyIZ5XXjYMrc=
+	t=1757424282; cv=none; b=d2exVYFzgdyZemr+UP64CP591qOB76k1TupoxVVPpePMSOySbVpDCL7CpzNkJ2IkHYP4yJzlmoaQHkpy+hjkOl2Hudmv4c2k5nXihcD/lAQHjFUx3wTC+k8xmafso+1IbwWdzxPDe9j2uG0MZWbL7WN6Gz2eNAboium3SeENqYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757423097; c=relaxed/simple;
-	bh=wuEDhAn7VE4XCDJgxxXZUeG3h59v9HM1l7I/5wkYj2g=;
+	s=arc-20240116; t=1757424282; c=relaxed/simple;
+	bh=fpsjqqNDSQjgsDI+nQ5ZcLwqq0EdVpOkXCEPydJUMJ4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ky/kymyoD784zFXE65dq2IFzfQhxVSuQRHIiEoQFcx8DDQysNf1p+0/wYTzi5u20PCNLTPFeQL0X0gjeNjD3m8kOXS17kJcmw8LJwi7UQT8KIr9k9DSm2dD1kFHnec+hix5zZNUkdH1McS46laMDVRs7r/V3DZtd2/oSVBJ9Ols=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=us3y1m1H; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=uZPuO1WJlQw1b3kfZG6cUIUx8eOiRYyIVogzp7XuWuEAz/0W1yxO1ox6yIbfoqEiyGWYSu62P1G7nDn2gEZwqETDiAXYh4M8DmzhaPHDz4bj7dPlEka5cAZKYHSHqRv+kLnWihxR+S9edw2zZ6diGCyoAoGp97TVwSf2AYLDESI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lrW7QQry; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="us3y1m1H"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-24b2d018f92so673715ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Sep 2025 06:04:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lrW7QQry"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-62733e779bbso2684878a12.1;
+        Tue, 09 Sep 2025 06:24:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1757423096; x=1758027896; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1757424279; x=1758029079; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FegmOUf8bYexzRzeJYKOCwFad+h+PFSGJuRgZi24g9o=;
-        b=us3y1m1H5gNeKGbjB3usftbiEidaWlIoFHSMULr97z2j0QcsQO0YAO/F1nddFXdsnY
-         2NACCT6TApoXWi6cJZ6V1cHOTscSKP/zsFOgS6dZyVjsQkjQe3tnLB0BJoKkEedwIWW8
-         5IX1UlK8tfE+1OHw8us2/LhTfB7bkooMkKDA9NTVnFka4hXrGQ9T7+Sw6dhU0KynNacJ
-         VkIThxUtKW6QaJGl15h22kL7TMFCsZUR/7g0v3kBHgv6RvjCDfwRPchqdnsbhFpp6yy1
-         ajtEFRPFDZVq0bpHYMnWg55FZs8+2iPrLWCm7nujpfesO+D2BeBxwTjtxEr38x/ybdD6
-         da2Q==
+        bh=9W4mhSrPI67T8KA1IekV94x2JuZ4WwTJiWrQXPvqhRU=;
+        b=lrW7QQryGLAteT86YVnv0+0mjsCEVJDMLgZTpsiBPHc8rUqxxo356s2gfoJn92xMS0
+         Kb4YHS8KmBLBS9psrMEKDhVMQ1CMLByVRgGMexdm5CuK4JFMiNuvfPf4JXDDpsrtoqF2
+         7twevgQZqD+qEX2Yhp+WMj2THQ49hOQ5OAJZN6mQigrkJLO5apuSvOzuEgwZg/nfQq7I
+         ID9kpQeM8frISknSYec1ZVBb+oLLB6Pj5npnoirtB4glAFSWr9HvSTpXFWgrWmmsMq4D
+         ZYaLNCyoo1HlXfcE2MwauMeKnXeGpjhn4K8mjZRytDLMUJfK6EKKSkBtzKPC6Kyf76uB
+         LORg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757423096; x=1758027896;
+        d=1e100.net; s=20230601; t=1757424279; x=1758029079;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FegmOUf8bYexzRzeJYKOCwFad+h+PFSGJuRgZi24g9o=;
-        b=ETdZJJgI4LKVV2e1xhdkzf5H9x331QQ7FKlrWBfpBitqQ9TIcKjqPpo9oUwv/Yws5A
-         toiG3F3FABi5uItLluZ7x2ihhoeU8FDCCoBjBeHgE7ZD54HTsIbQem5m/0t80bhp9mBJ
-         dDKMzu1FJR8DYCMblDzhlWFiUCnUDjWzocdvXXxNvNXHuxfoXOig7kdvqSbgdbZgO0wL
-         nqXDW3M9DR7JBpqxeqT6DFicSWCDZfnXE1/RJL1U2iFieV+oFZkEdJuqRtnMhiZl+F+J
-         KVGfYO/8D3qy5mjGvhEJXPCOubP8+YPHJtKeu9SsEYgPpQjhmnyPOXvB578HhWtZ2raG
-         xbEA==
-X-Forwarded-Encrypted: i=1; AJvYcCXS/Fffw6GA7iHOz0FgOjgtlKSKPBXqUHpIaS3nU7fnCiQoYjmh+LwuLyNKA6YWaaNRUJrjROSNcEtCRNDEVnea@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoAzCIbvM0VeuWnLErp6RfuSZHVHVW68la7yfoc8eu6qy0krSR
-	dRIrVpO7jm3Efn/E5WdIMf1MEZAkJp4k28YlQDkHCj0uONe+1i3/OMMVJsfrcXPHv/4g6bA/RhK
-	XQZ5EcFxSAJgSxuj5DTk9019J5/vlZPrLtfeEny6O
-X-Gm-Gg: ASbGncvj1EKAdXvA0Q3rh7SPWrx800kVHxNdkLtpeBdaUcccDPhZ++4h157JkbIa5H1
-	kKREQZGkhQ/+DPsncevhi82RjOpVabR4dkMK4L7FaAPxKXicwVkV1mTdJK65wLS3M4aF6SfDU8o
-	wm7nwmPrLCuByfgaK9rbzJ2vls1hWCDmB0NOLK/kTA3wFJQlDtaP0dNnGegZx6oJRlUrls1sZEm
-	8mZAnyYgRxKHtPmlq8q4XyKIA==
-X-Google-Smtp-Source: AGHT+IGxkBlp/AxP5ezcb05alMwdQQBJpkLO6kD0GQc8Jn7qJD8riHbmJuzzdb3s0/Uf/T4BuVR0E8LEVn45d8u0sWM=
-X-Received: by 2002:a17:902:ee55:b0:240:4464:d486 with SMTP id
- d9443c01a7336-251753ddba7mr9427785ad.13.1757423095381; Tue, 09 Sep 2025
- 06:04:55 -0700 (PDT)
+        bh=9W4mhSrPI67T8KA1IekV94x2JuZ4WwTJiWrQXPvqhRU=;
+        b=skF5DXQFE87k8qysbh4fH8jEOFNNOZTCDIdQ/LWAF71ro4ijSwV5F/x7MkExRNsvJj
+         llNwLlB6lUfB+RUTowhqQUu5GGlfNiWiWOaOwEt5o/Ozk4rx2BNW8bo32zj/vaXito1a
+         P0S2r/FXyOSEIrkWNW09zHs3ooSR+gh1QwsN8zRMMzfcVgm+W0LvIbzIVN/snNTjcuhh
+         utyd3lNW06j3rs3TNqTp0ZRIbtlX0p3xgO79NhGF1VimQl1bWuETe8myi2CPA6KNJif4
+         LGHalM+Xwi1Ee0JiPEsFWUVC3KIJkKy9xRcok7lYndGQSo1WKD3l5DjN/dxYJDt+ZezJ
+         1z4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUYZNl9S8cQ96To6phfxuQVSbUf816eRj8YnFBi0W///cOXlmGxtsSPpkEohfKTukefXbws0vO5lsUGb86L@vger.kernel.org, AJvYcCUihu/EAB0d1YByT9D/ka4mfQGOzwovHyDeoEfIxt3LKOhUsMUXpdvptFUSFXx3FszybgyIO5oB2LOxCJHE@vger.kernel.org, AJvYcCXqP40dE7jldv5sWFM4XvZt6oREKOxIwcj36ioyYaAnvcDYbXxhERTgVXfVBf1E+NuPVEqTcItoy2IBGW32L4adNA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzl8/JxYbwIWWieP9ejEGdXPQdoI9pdIp+gKrql8gI3WDllUcJE
+	MIWRSAA+3fHYYgtnGVb9rUcflIq1NTxa+o8iu1WHmyznO9BMHAOhC6BL+nGnYhnZIZE8IoRarLw
+	fM21g2MKxZxeNOZDnt7cFp9nyJXVuBtU=
+X-Gm-Gg: ASbGncsdpxdEhWgg8dxeOIEags+v4bDpaPzthbOquKSkl/9ln2QnrlTVXjG76Fdv0+Z
+	Ci3rh1XRX20dIZJTB4sDZcV6GEgw1qgFNOABOUsST3NyUqsFmKOyBhlMxIIE/pHc/Ke5ZY9dhD/
+	cBq+FQ+H2+f4O/SLg7Mor6PjxuxLX1OZEAw0d/uDHC+LT/Zm4J10lK5Cflt0n+34RjykRjs3MpP
+	6yWULI=
+X-Google-Smtp-Source: AGHT+IGl4XI+ZtmcJ1b64ZTNKqM1k+KAny9TAWMyaeqEg3Rym5eMWtwHDLAMkso27/WfxgPoUDSj8SfWefKhWoRlFZo=
+X-Received: by 2002:a05:6402:35c4:b0:625:6523:293a with SMTP id
+ 4fb4d7f45d1cf-62565232d22mr10065761a12.8.1757424278458; Tue, 09 Sep 2025
+ 06:24:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aMACaOmneDrG8_pQ@gentoo.org>
-In-Reply-To: <aMACaOmneDrG8_pQ@gentoo.org>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 9 Sep 2025 06:04:42 -0700
-X-Gm-Features: Ac12FXzybYii8a916p3tX2nAHNuT8iSupwAVo96d7tCCsAUhIZreC8qrC8yg8m4
-Message-ID: <CAP-5=fVA_Cduf9NvFAJezcNcg0JDNGa5q7m_mRBWNAYGEUo8bw@mail.gmail.com>
-Subject: Re: Problem with perf report --gtk
-To: Guilherme Amadio <amadio@gentoo.org>
-Cc: acme@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+References: <20250909124222.222945-1-adrian.hunter@intel.com> <20250909124222.222945-2-adrian.hunter@intel.com>
+In-Reply-To: <20250909124222.222945-2-adrian.hunter@intel.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Tue, 9 Sep 2025 15:24:27 +0200
+X-Gm-Features: AS18NWC2CR_cImOupCNdStAa9jMaQbZXVOFvOPgo46BzjSbVk9_s0ewaVBBZPRQ
+Message-ID: <CAOQ4uxiNdXXvX6gRtNk6bg17ixoUMkeJ70N6hEHVtt1vQz=HOA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] perf/core: Fix address filter match with backing files
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, 
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 9, 2025 at 3:33=E2=80=AFAM Guilherme Amadio <amadio@gentoo.org>=
- wrote:
+On Tue, Sep 9, 2025 at 2:42=E2=80=AFPM Adrian Hunter <adrian.hunter@intel.c=
+om> wrote:
 >
-> Hi Arnaldo, Namhyung,
+> It was reported that Intel PT address filters do not work in Docker
+> containers.  That relates to the use of overlayfs.
 >
-> Since sometime we have a bug in Gentoo's bugzilla about perf report --gtk=
- not
-> working=C2=B9: https://bugs.gentoo.org/937869
+> overlayfs records the backing file in struct vm_area_struct vm_file,
+> instead of the user file that the user mmapped.  In order for an address
+> filter to match, it must compare to the user file inode.  There is an
+> existing helper file_user_inode() for that situation.
 >
-> I know this feature is not used very much, but I thought I'd report in
-> any case. The problem is easily reproducible as shown below:
+> Use file_user_inode() instead of file_inode() to get the inode for addres=
+s
+> filter matching.
 >
+> Example:
 >
-> $ perf record -a -g -- sleep 1
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 1.818 MB perf.data (6648 samples) ]
-> $ LD_DEBUG=3Dsymbols perf report --gtk 2>&1 | grep '(fatal)'
->     288067:     /usr/libexec/perf-core/libperf-gtk.so: error: symbol look=
-up error: undefined symbol: hashmap_find (fatal)
-> $ perf report --gtk
-> GTK browser requested but could not find libperf-gtk.so
+>   Setup:
 >
-> I tried this with perf 6.16, but this bug seems to have been there since
-> at least 6.12.
+>     # cd /root
+>     # mkdir test ; cd test ; mkdir lower upper work merged
+>     # cp `which cat` lower
+>     # mount -t overlay overlay -olowerdir=3Dlower,upperdir=3Dupper,workdi=
+r=3Dwork merged
+>     # perf record --buildid-mmap -e intel_pt//u --filter 'filter * @ /roo=
+t/test/merged/cat' -- /root/test/merged/cat /proc/self/maps
+>     ...
+>     55d61d246000-55d61d2e1000 r-xp 00018000 00:1a 3418                   =
+    /root/test/merged/cat
+>     ...
+>     [ perf record: Woken up 1 times to write data ]
+>     [ perf record: Captured and wrote 0.015 MB perf.data ]
+>     # perf buildid-cache --add /root/test/merged/cat
 >
-> Please let me know if it's better to file problems at https://bugzilla.ke=
-rnel.org/.
+>   Before:
+>
+>     Address filter does not match so there are no control flow packets
+>
+>     # perf script --itrace=3De
+>     # perf script --itrace=3Db | wc -l
+>     0
+>     # perf script -D | grep 'TIP.PGE' | wc -l
+>     0
+>     #
+>
+>   After:
+>
+>     Address filter does match so there are control flow packets
+>
+>     # perf script --itrace=3De
+>     # perf script --itrace=3Db | wc -l
+>     235
+>     # perf script -D | grep 'TIP.PGE' | wc -l
+>     57
+>     #
+>
+> With respect to stable kernels, overlayfs mmap function ovl_mmap() was
+> added in v4.19 but file_user_inode() was not added until v6.8 and never
+> back-ported to stable kernels.  FMODE_BACKING that it depends on was adde=
+d
+> in v6.5.  This issue has gone largely unnoticed, so back-porting before
+> v6.8 is probably not worth it,
 
-Thanks for letting us know Guilherme! I suspect I broke things when
-trying to fix python things. The code linking libperf-gtk.so is:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/Makefile.perf?h=3Dperf-tools-next#n809
-The hashmap symbols are part of the perf-util library:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/Build?h=3Dperf-tools-next#n197
-So maybe there needs to be a libbpf -lbpf for your case? Alternatively
-we may need to reorder the libraries here:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/Makefile.perf?h=3Dperf-tools-next#n464
-like:
-PERFLIBS +=3D $(LIBPERF_BENCH) $(LIBPERF_TEST) $(LIBPERF_UI) $(LIBPERF_UTIL=
-)
-becomes:
-PERFLIBS +=3D $(LIBPERF_BENCH) $(LIBPERF_TEST) $(LIBPERF_UTIL) $(LIBPERF_UI=
-)
+Agreed.
 
-Thanks,
-Ian
+> so put 6.8 as the stable kernel prerequisite
+> version, although in practice the next long term kernel is 6.12.
+>
+> Reported-by: Edd Barrett <edd@theunixzoo.co.uk>
+> Closes: https://lore.kernel.org/linux-perf-users/aBCwoq7w8ohBRQCh@fremen.=
+lan
+> Cc: stable@vger.kernel.org # 6.8
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+
+Feel free to add
+Acked-by: Amir Goldstein <amir73il@gmail.com>
+
+> ---
+>  kernel/events/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index fb1eae762044..184f3dc7b03b 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -9492,7 +9492,7 @@ static bool perf_addr_filter_match(struct perf_addr=
+_filter *filter,
+>         if (!filter->path.dentry)
+>                 return false;
+>
+> -       if (d_inode(filter->path.dentry) !=3D file_inode(file))
+> +       if (d_inode(filter->path.dentry) !=3D file_user_inode(file))
+>                 return false;
+>
+>         if (filter->offset > offset + size)
+> --
+> 2.48.1
+>
