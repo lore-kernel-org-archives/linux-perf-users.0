@@ -1,274 +1,223 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816DE2D0636;
-	Wed, 10 Sep 2025 09:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9933148C2;
+	Wed, 10 Sep 2025 09:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757496396; cv=none; b=rzgXjdgFKJW4aMJKkWeIPp8LFYU52jhP3D/ZTJGQIsOgBfrggo1OGPUK6Rk5o6/gpA2nGUDA/ciP7zkb7K3Xfr6Wu+/eL+l8nDN11I7T/hdSodZlPDV2O2Q2GLAMBAohH0p4X+jIOUUYgOw9ZD56PrlCGJTTDHyZsb9ZCVzhIDs=
+	t=1757497400; cv=none; b=gSNcVwkZkrsuNRc9AT4INP4kn0gtMxO4T/FKsnIVRmLpL/19PQvt9jVRYcyr1HD/gjCojodbKxq9VF8tdLUl0ZdB/znzbJqgIS9JmTvPeLT6/rH1AUwZ846hhUTja6Ptxk7874fPAj0Q8UENN2lWSrV3GIMpGopX3Q2KAoQLCk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757496396; c=relaxed/simple;
-	bh=TBLaQu9oUkQF+zTBH/m7B/ZNup/xKW2pgwz5OFtQZR0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nx6Pu0x/V6ZebrWxCu/N0HvfpFpOOZihTe4fYBbSLTryiE4DUoEvBI/v1ivO/VWqJZ/I2MTO9NxtSEbxdbPO2BWmbjetVPp6vwiB5jc5yQ7L5chaYI0zENx0jBcmmnmLpanyljyecO1/DSZxmgX/IoSRjZeOcTuG23U7vaZ+Veo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4cMFf600s8z6L5R0;
-	Wed, 10 Sep 2025 17:25:18 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1377E1404C4;
-	Wed, 10 Sep 2025 17:26:30 +0800 (CST)
-Received: from localhost (10.203.177.15) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 10 Sep
- 2025 11:26:29 +0200
-Date: Wed, 10 Sep 2025 10:26:27 +0100
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: =?ISO-8859-1?Q?Cl=E9ment?= Le Goffic <legoffic.clement@gmail.com>
-CC: Gatien Chevallier <gatien.chevallier@foss.st.com>, Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Gabriel Fernandez
-	<gabriel.fernandez@foss.st.com>, Krzysztof Kozlowski <krzk@kernel.org>,
-	Julius Werner <jwerner@chromium.org>, Will Deacon <will@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-	"Jonathan Corbet" <corbet@lwn.net>,
-	<linux-stm32@st-md-mailman.stormreply.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	=?ISO-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>
-Subject: Re: [PATCH v6 13/20] perf: stm32: introduce DDRPERFM driver
-Message-ID: <20250910102627.00007a40@huawei.com>
-In-Reply-To: <20250909-b4-ddrperfm-upstream-v6-13-ce082cc801b5@gmail.com>
-References: <20250909-b4-ddrperfm-upstream-v6-0-ce082cc801b5@gmail.com>
-	<20250909-b4-ddrperfm-upstream-v6-13-ce082cc801b5@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1757497400; c=relaxed/simple;
+	bh=Qg4SnOajWTPp0F9yvDIVD6p+vbZ6EUUeIv6GZ9qy+bs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gc1+z4rvJS1cbpOsE8D4ASk2+PrWc6xIOYa5qSBz7qmYVB/5puTwegRNfLAdbjuZ0KCKk2dqhQY977ZRj05dmihuziQePdeu0e+k1fIHMiP2tYzohiHqZfEXQOaLNry77y8K4JxHme0XL00a70A2wwehlNTWZBhqow7GZ3CAh2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TCNZv6Py; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TCNZv6Py"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-45cb659e858so45699125e9.2;
+        Wed, 10 Sep 2025 02:43:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757497396; x=1758102196; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8+Yb/IxxLIspa6tHUrNInqlVlxK+I+nsywpKyzMZIM8=;
+        b=TCNZv6PyC56oz2eR1xLMpcRJMGdLr8JyYtqV8g4KW5icFcXxzQ9+u5MPPYCaPs0ImW
+         5j6GR28NHkmt2R4ihcv7E+fLHoIOVAYnv1FNck3qC2BBAiKiYgTQuRaDx9w7Ta9ncD9E
+         bLw9fN7kWqcnbULhNoD2sMs29wm+0IYXjilAFXQB8uMhSA/ku6xQjMWMyAbJUiqq/9yE
+         aK5XC0sJgRMWJ1Mdm1gsOFCCONtItF0wBV3CUxYua/DeKG2yB5irYT1Dcp1xJj3oJiMf
+         WHydKjaHhDxbla45146HygE80AcXgX2hBoGQqThIldEY+v+Ab5byMeBEY/J2kdvoG/jX
+         lHAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757497396; x=1758102196;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8+Yb/IxxLIspa6tHUrNInqlVlxK+I+nsywpKyzMZIM8=;
+        b=eMfh5fFy75Wdn/dlmkTMQp7bNa9+eoaV9KogCBTjwGW9JFtl1nuOrT+eDUI6Boroqu
+         9EVW8/2TVSBU8CN3b6xVugKsvy3HYg7Gd2krBPsn9MgfjG5gs6Rsfkb01/GIs5AxMBx8
+         j7DlimwdXe5uZu7KbxpW8/vGvldpJeCqmH2AoOmCQRM3POUvLoFgCEH1r4EMTP4eQpMT
+         VB/1Pd046PwmP6L2MxijqHB/ysnz7CcnJAsP+AeGfvJLKCfL934M47T7aTN/ElkbocNn
+         VTcCuhMUvefHIBth6rWpsge7NZ1NgcdHBP/RrQZgGtMoIHibe7k0Gw7rIV4fiaOBXWn2
+         Lsmg==
+X-Forwarded-Encrypted: i=1; AJvYcCV/hPq0g4wYTmWwgCihwAFkCgnEoQM6duq5752WKDmrN5aGFiDScsmwUGSBbsiQpmdtAHvh2utDZ+C8@vger.kernel.org, AJvYcCVOYYXV2iBrnSii5B0WxKZ90KzR54K4wGx5eNlZVsHMHgK54gvmsUm+lOu+K4NfQgNZD4W+rW/xj5rS@vger.kernel.org, AJvYcCVmrL+BEEdGoRGTlZYvt0Ccjpm3PZpA7lx6xCnQk5aEaXb85iM7bmQGCRse4s0DK/NV01GgRokAqfUxXKWY@vger.kernel.org, AJvYcCW6yDm5DXH6tNrwJJNEnWZ+qKj0EuPzT2NzDN5afDF0mU6OG7DZQwSlOHRpayFxq2GsliuB8APuRw0T2Zt67m6HYA==@vger.kernel.org, AJvYcCXu+1FJOkhJOYIp+1B/62AFR+ItMIzGMRpngK7S5QVLPW61VdKu/fEmbIE7EI2LMxEjslMxwHy4MXGE@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywj2lJW3V2Q5OYmWSN6k1C8gHwj5F0wx9aKhwYTRnTqFnOdt6Gv
+	WbwGQZyEoc14kBKIMRS20d2ItE0JQBwpnUeFytTJYZgIDEIyuFfn8VSG
+X-Gm-Gg: ASbGnct1CPmEIgpj2WQ60QiouIpujeNxAriFpJDL4TVRVhZBQvgf1nOHNIYUG1JzWzG
+	8Rx8DInLS8IxVRrFKh7vrNxEqYsbGPMvAfz+OcywdZ7d9k4ImmCsaSzX4kJ6gfB8CUbCsUqkK/Z
+	jVg/CrI1iYzI9GwM8rJcpwkjVPleeiUKRKQHuW/4oXAFvRlEGmaovgypPPNtKq2dOzrtL+03Cwv
+	el1brM/Y1jPjevHjII/i35qXAVrgwYns/x3Wfk5q3IED43tPwNqDrJtK+D8sRT93sJbykOjFGA6
+	7dn4XElb7r5/xsliX8byDIweaCZUTG/1GVxRtcdgqmiBp3+cszpVyg+f0wVbEZao9urfIK4KyC3
+	8yyVfZR0wM+HR3n3AqKd9yh1ynqv7fSje37at0cOTsWJe8gPu6bCDUy6S4yzlXYstzEq1W1t2Ls
+	u0yiytm58jSiLOepInxkBQuYFiQhy4kfSb/+yqlOP42CZj0tXER6ebIo7thVanLeQbGDOYpIvRw
+	7Oj
+X-Google-Smtp-Source: AGHT+IG++5gaOV3PJKYuJ0A9nAeEycj+nF32F/RTHqK48mjNiX/HpSzosqAvPkjm4CBA9YvRx7JU+A==
+X-Received: by 2002:a05:600c:c48e:b0:45b:6743:2242 with SMTP id 5b1f17b1804b1-45dddee9cc4mr128836755e9.22.1757497396149;
+        Wed, 10 Sep 2025 02:43:16 -0700 (PDT)
+Received: from ?IPV6:2a02:8440:7135:4f4c:c6d5:9a0c:a4c1:1e58? (2a02-8440-7135-4f4c-c6d5-9a0c-a4c1-1e58.rev.sfr.net. [2a02:8440:7135:4f4c:c6d5:9a0c:a4c1:1e58])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45df1ba282dsm25183485e9.5.2025.09.10.02.43.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Sep 2025 02:43:15 -0700 (PDT)
+Message-ID: <22a485b9-1b86-41d3-a42c-f813eea94697@gmail.com>
+Date: Wed, 10 Sep 2025 11:43:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
- frapeml500008.china.huawei.com (7.182.85.71)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 01/20] bus: firewall: move stm32_firewall header file
+ in include folder
+To: Gatien CHEVALLIER <gatien.chevallier@foss.st.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Gabriel Fernandez <gabriel.fernandez@foss.st.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>, Julius Werner <jwerner@chromium.org>,
+ Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>
+Cc: linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+ =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
+References: <20250909-b4-ddrperfm-upstream-v6-0-ce082cc801b5@gmail.com>
+ <20250909-b4-ddrperfm-upstream-v6-1-ce082cc801b5@gmail.com>
+ <9a46c8a8-1d25-410c-9fa2-267eb4040390@foss.st.com>
+ <19e664da-df4c-4bc0-84ce-41e4364f10bc@gmail.com>
+ <7cfb167a-26df-4abf-a6ec-73813a1a0986@foss.st.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <legoffic.clement@gmail.com>
+In-Reply-To: <7cfb167a-26df-4abf-a6ec-73813a1a0986@foss.st.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 09 Sep 2025 12:12:20 +0200
-Cl=E9ment Le Goffic <legoffic.clement@gmail.com> wrote:
+On 10/09/2025 10:42, Gatien CHEVALLIER wrote:
+> 
+> 
+> On 9/10/25 09:47, Clément Le Goffic wrote:
+>> On 09/09/2025 14:25, Gatien CHEVALLIER wrote:
+>>>
+>>>
+>>> On 9/9/25 12:12, Clément Le Goffic wrote:
+>>>> From: Clément Le Goffic <clement.legoffic@foss.st.com>
+>>>>
+>>>> Other driver than rifsc and etzpc can implement firewall ops, such as
+>>>> rcc.
+>>>> In order for them to have access to the ops and type of this framework,
+>>>> we need to get the `stm32_firewall.h` file in the include/ folder.
+>>>>
+>>>> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+>>>> Signed-off-by: Clément Le Goffic <legoffic.clement@gmail.com>
+>>>> ---
+>>>>   drivers/bus/stm32_etzpc.c                       | 3 +--
+>>>>   drivers/bus/stm32_firewall.c                    | 3 +--
+>>>>   drivers/bus/stm32_rifsc.c                       | 3 +--
+>>>>   {drivers => include/linux}/bus/stm32_firewall.h | 0
+>>>>   4 files changed, 3 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/drivers/bus/stm32_etzpc.c b/drivers/bus/stm32_etzpc.c
+>>>> index 7fc0f16960be..4918a14e507e 100644
+>>>> --- a/drivers/bus/stm32_etzpc.c
+>>>> +++ b/drivers/bus/stm32_etzpc.c
+>>>> @@ -5,6 +5,7 @@
+>>>>   #include <linux/bitfield.h>
+>>>>   #include <linux/bits.h>
+>>>> +#include <linux/bus/stm32_firewall.h>
+>>>>   #include <linux/device.h>
+>>>>   #include <linux/err.h>
+>>>>   #include <linux/init.h>
+>>>> @@ -16,8 +17,6 @@
+>>>>   #include <linux/platform_device.h>
+>>>>   #include <linux/types.h>
+>>>> -#include "stm32_firewall.h"
+>>>> -
+>>>>   /*
+>>>>    * ETZPC registers
+>>>>    */
+>>>> diff --git a/drivers/bus/stm32_firewall.c b/drivers/bus/ 
+>>>> stm32_firewall.c
+>>>> index 2fc9761dadec..ef4988054b44 100644
+>>>> --- a/drivers/bus/stm32_firewall.c
+>>>> +++ b/drivers/bus/stm32_firewall.c
+>>>> @@ -5,6 +5,7 @@
+>>>>   #include <linux/bitfield.h>
+>>>>   #include <linux/bits.h>
+>>>> +#include <linux/bus/stm32_firewall.h>
+>>>>   #include <linux/bus/stm32_firewall_device.h>
+>>>>   #include <linux/device.h>
+>>>>   #include <linux/err.h>
+>>>> @@ -18,8 +19,6 @@
+>>>>   #include <linux/types.h>
+>>>>   #include <linux/slab.h>
+>>>> -#include "stm32_firewall.h"
+>>>> -
+>>>>   /* Corresponds to STM32_FIREWALL_MAX_EXTRA_ARGS + firewall ID */
+>>>>   #define STM32_FIREWALL_MAX_ARGS (STM32_FIREWALL_MAX_EXTRA_ARGS + 1)
+>>>> diff --git a/drivers/bus/stm32_rifsc.c b/drivers/bus/stm32_rifsc.c
+>>>> index 4cf1b60014b7..643ddd0a5f54 100644
+>>>> --- a/drivers/bus/stm32_rifsc.c
+>>>> +++ b/drivers/bus/stm32_rifsc.c
+>>>> @@ -5,6 +5,7 @@
+>>>>   #include <linux/bitfield.h>
+>>>>   #include <linux/bits.h>
+>>>> +#include <linux/bus/stm32_firewall.h>
+>>>>   #include <linux/device.h>
+>>>>   #include <linux/err.h>
+>>>>   #include <linux/init.h>
+>>>> @@ -16,8 +17,6 @@
+>>>>   #include <linux/platform_device.h>
+>>>>   #include <linux/types.h>
+>>>> -#include "stm32_firewall.h"
+>>>> -
+>>>>   /*
+>>>>    * RIFSC offset register
+>>>>    */
+>>>> diff --git a/drivers/bus/stm32_firewall.h b/include/linux/bus/ 
+>>>> stm32_firewall.h
+>>>> similarity index 100%
+>>>> rename from drivers/bus/stm32_firewall.h
+>>>> rename to include/linux/bus/stm32_firewall.h
+>>>>
+>>
+>> Hi Gatien
+>>
+>>> As the firewall header is moved to a dedicated firewall directory,
+>>
+>> I don't move it to a dedicated firewall directory just to the "bus" 
+>> directory where the "stm32_firewall_device.h" header file is already 
+>> located.
+>>
+> 
+> Yes, my bad, I mixed my words there.
+> 
+>>> maybe it would be coherent to create the same kind of directory
+>>> for the sources as non-buses drivers use it. I can test it on my
+>>> side if you're willing to make the change.
+>>
+>> Do you mean create an include/linux/bus/firewall/ directory ?
+>>
+> 
+> Rather include/linux/firewall/(stm32/). and a drivers/firewall/(stm32/)
+> directory for the firewall files would be great. If that's not too much
+> of a burden.
 
-> From: Cl=E9ment Le Goffic <clement.legoffic@foss.st.com>
->=20
-> Introduce the driver for the DDR Performance Monitor available on
-> STM32MPU SoC.
->=20
-> On STM32MP2 platforms, the DDRPERFM allows to monitor up to 8 DDR events
-> that come from the DDR Controller such as read or write events.
->=20
-> On STM32MP1 platforms, the DDRPERFM cannot monitor any event on any
-> counter, there is a notion of set of events.
-> Events from different sets cannot be monitored at the same time.
-> The first chosen event selects the set.
-> The set is coded in the first two bytes of the config value which is on 4
-> bytes.
->=20
-> On STM32MP25x series, the DDRPERFM clock is shared with the DDR controller
-> and may be secured by bootloaders.
-> Access controllers allow to check access to a resource. Use the access
-> controller defined in the devicetree to know about the access to the
-> DDRPERFM clock.
->=20
-> Signed-off-by: Cl=E9ment Le Goffic <clement.legoffic@foss.st.com>
-> Signed-off-by: Cl=E9ment Le Goffic <legoffic.clement@gmail.com>
-Hi Cl=E9ment
+I thinks that's a bit too much for this one.
+As you're the firewall maintainer I would need to modify your entry in 
+the MAINTAINER file (and I just see that your entry is lacking the 
+header file path).
+For now I think it is not urgent neither mandatory.
+Maybe in a next patch series ?
+Even in the driver bus directory there is no vendor policy so adding a 
+path like drivers/bus/{stm32/|firewall/}stm32_firewall.c is a bit 
+overlapping as with the filename we already know it is ST and its firewall.
+Let me know what you think !
 
-A quick drive by review,
-
-J
-
-> diff --git a/drivers/perf/stm32_ddr_pmu.c b/drivers/perf/stm32_ddr_pmu.c
-> new file mode 100644
-> index 000000000000..38328663d2c5
-> --- /dev/null
-> +++ b/drivers/perf/stm32_ddr_pmu.c
-> @@ -0,0 +1,897 @@
-
-> +
-> +#define MP1_CLR_CNT		GENMASK(3, 0)
-> +#define MP1_CLR_TIME		BIT(31)
-> +#define MP2_CLR_CNT		GENMASK(7, 0)
-> +#define MP2_CLR_TIME		BIT(8)
-> +
-> +/* 4 event counters plus 1 dedicated to time */
-> +#define MP1_CNT_NB		(4 + 1)
-
-This is never used so I would drop it and rename the MP2_CNT_NB
-to indicate it is the max value for any devices supported.
-
-
-> +/* Index of the time dedicated counter */
-> +#define MP1_TIME_CNT_IDX	4
-> +
-> +/* 8 event counters plus 1 dedicated to time */
-> +#define MP2_CNT_NB		(8 + 1)
-...
-
-> +struct stm32_ddr_pmu {
-> +	struct pmu pmu;
-> +	void __iomem *membase;
-> +	struct device *dev;
-> +	struct clk *clk;
-> +	const struct stm32_ddr_pmu_cfg *cfg;
-> +	struct hrtimer hrtimer;
-> +	ktime_t poll_period;
-> +	int selected_set;
-> +	u32 dram_type;
-> +	struct list_head counters[];
-The absence of a __counted_by() marking made me wonder how
-we ensured that this wasn't overrun.  I see below that's because
-size is always the same.  So
-	struct list_head counters[MP2_CNT_NB];
-If you do want to make it dynamic then that is fine but added
-a local variable for the size and the __counted_by() marking so
-the various analysis tools can check for buffer overruns.
-
-> +};
-
-
-
-> +static void stm32_ddr_pmu_event_del(struct perf_event *event, int flags)
-> +{
-> +	struct stm32_ddr_pmu *pmu =3D to_stm32_ddr_pmu(event->pmu);
-> +	struct stm32_ddr_cnt *counter =3D event->pmu_private;
-> +	bool events =3D true;
-
-Always set before use, so don't set it here.  I'd move this into the
-scope of the for loop to make this more obvious.
-
-> +
-> +	stm32_ddr_pmu_event_stop(event, PERF_EF_UPDATE);
-> +
-> +	stm32_ddr_pmu_free_counter(pmu, counter);
-> +
-> +	for (int i =3D 0; i < pmu->cfg->counters_nb; i++) {
-> +		events =3D !list_empty(&pmu->counters[i]);
-> +		if (events) /* If there is activity nothing to do */
-> +			return;
-> +	}
-> +
-> +	hrtimer_cancel(&pmu->hrtimer);
-> +	stm32_ddr_stop_counters(pmu);
-> +
-> +	pmu->selected_set =3D -1;
-> +
-> +	clk_disable(pmu->clk);
-> +}
-
-> +
-> +#define STM32_DDR_PMU_EVENT_ATTR(_name, _id)			\
-> +	PMU_EVENT_ATTR_ID(_name, stm32_ddr_pmu_sysfs_show, _id)
-> +
-> +static struct attribute *stm32_ddr_pmu_events_attrs_mp[] =3D {
-> +	STM32_DDR_PMU_EVENT_ATTR(perf_op_is_rd, PERF_OP_IS_RD),
-
-Prefixing perf events with perf_ seems unnecessary.
-
-I guess perf_op_is_rd is counting all reads?  Is so why not call it simply =
-'reads'
-or something else short like that?  If it's cycles when a read is going on =
-then
-maybe a more complex is needed, but perf_op_is_rd doesn't convey that to me.
-
-> +	STM32_DDR_PMU_EVENT_ATTR(perf_op_is_wr, PERF_OP_IS_WR),
-> +	STM32_DDR_PMU_EVENT_ATTR(perf_op_is_activate, PERF_OP_IS_ACTIVATE),
-> +	STM32_DDR_PMU_EVENT_ATTR(ctl_idle, CTL_IDLE),
-> +	STM32_DDR_PMU_EVENT_ATTR(perf_hpr_req_with_no_credit, PERF_HPR_REQ_WITH=
-_NO_CREDIT),
-> +	STM32_DDR_PMU_EVENT_ATTR(perf_lpr_req_with_no_credit, PERF_LPR_REQ_WITH=
-_NO_CREDIT),
-> +	STM32_DDR_PMU_EVENT_ATTR(cactive_ddrc, CACTIVE_DDRC),
-> +	STM32_DDR_PMU_EVENT_ATTR(perf_op_is_enter_powerdown, PERF_OP_IS_ENTER_P=
-OWERDOWN),
-> +	STM32_DDR_PMU_EVENT_ATTR(perf_op_is_refresh, PERF_OP_IS_REFRESH),
-> +	STM32_DDR_PMU_EVENT_ATTR(perf_selfresh_mode, PERF_SELFRESH_MODE),
-> +	STM32_DDR_PMU_EVENT_ATTR(dfi_lp_req, DFI_LP_REQ),
-> +	STM32_DDR_PMU_EVENT_ATTR(perf_hpr_xact_when_critical, PERF_HPR_XACT_WHE=
-N_CRITICAL),
-> +	STM32_DDR_PMU_EVENT_ATTR(perf_lpr_xact_when_critical, PERF_LPR_XACT_WHE=
-N_CRITICAL),
-> +	STM32_DDR_PMU_EVENT_ATTR(perf_wr_xact_when_critical, PERF_WR_XACT_WHEN_=
-CRITICAL),
-> +	STM32_DDR_PMU_EVENT_ATTR(dfi_lp_req_cpy, DFI_LP_REQ),  /* Suffixed '_cp=
-y' to allow the
-> +								* choice between sets 2 and 3
-> +								*/
-> +	STM32_DDR_PMU_EVENT_ATTR(time_cnt, TIME_CNT),
-> +	NULL
-> +};
-
-
-> +static int stm32_ddr_pmu_device_probe(struct platform_device *pdev)
-> +{
-> +	struct stm32_firewall firewall;
-> +	struct stm32_ddr_pmu *pmu;
-> +	struct reset_control *rst;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	pmu =3D devm_kzalloc(&pdev->dev, struct_size(pmu, counters, MP2_CNT_NB)=
-, GFP_KERNEL);
-
-If using a fixed number of counters why not put it in the struct
-definition and simplify the code?  I agree it is probably not
-worth making this dynamic given small sizes but I don't mind
-if you do want to do this.  The only thing that isn't a good idea
-is this dynamic, but not really, current situation.
-
-
-> +	if (!pmu)
-> +		return -ENOMEM;
-
-
-
-> +static DEFINE_SIMPLE_DEV_PM_OPS(stm32_ddr_pmu_pm_ops, NULL, stm32_ddr_pm=
-u_device_resume);
-> +
-> +static const struct of_device_id stm32_ddr_pmu_of_match[] =3D {
-> +	{
-> +		.compatible =3D "st,stm32mp131-ddr-pmu",
-> +		.data =3D &stm32_ddr_pmu_cfg_mp1
-
-Trivial but if you are spinning again, normal convention is trailing commas
-in cases like this because maybe other fields will get set later.
-
-> +	},
-> +	{
-> +		.compatible =3D "st,stm32mp251-ddr-pmu",
-> +		.data =3D &stm32_ddr_pmu_cfg_mp2
-> +	},
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, stm32_ddr_pmu_of_match);
-> +
-> +static struct platform_driver stm32_ddr_pmu_driver =3D {
-> +	.driver =3D {
-> +		.name =3D DRIVER_NAME,
-> +		.pm =3D pm_sleep_ptr(&stm32_ddr_pmu_pm_ops),
-> +		.of_match_table =3D stm32_ddr_pmu_of_match,
-> +	},
-> +	.probe =3D stm32_ddr_pmu_device_probe,
-> +	.remove =3D stm32_ddr_pmu_device_remove,
-> +};
-> +
-> +module_platform_driver(stm32_ddr_pmu_driver);
-> +
-> +MODULE_AUTHOR("Cl=E9ment Le Goffic");
-> +MODULE_DESCRIPTION("STMicroelectronics STM32 DDR performance monitor dri=
-ver");
-> +MODULE_LICENSE("GPL");
->=20
+BR,
+Clément
 
