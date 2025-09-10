@@ -1,240 +1,165 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2042.outbound.protection.outlook.com [40.107.212.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 886BB31AF33;
-	Wed, 10 Sep 2025 12:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757508754; cv=none; b=m30AV6399QoHp6z0KjNlJhsddHTg3D8pX/OQCPH8QCKRsldNRTcijz4hnkwtkFQtgmGbmlY6gO6t1NMuM0qqonxvmYL6MerjxTn7HkeoJS40Rv2pwBkU8IyIuvn+fnFNbLpE0KMRWwTnVWtbCXaLkC82u2EEWnohAT4/3sKL9mc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757508754; c=relaxed/simple;
-	bh=ee7B3ZLWWj+PLQJDVUCLSsUTQ+aA/pB6s6Sn5kEfMUg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L3Hnibz29Z6VsFArEF86KY7q0gOI0swTmbE3P64yEBUrWwVZ3tANqts0Jg4C6BduiIHPKE2MBnqQfOE98YcEvwa6q8+BQQXLHb2WRjvTUgXJIszy8K+19yaiwpOHxjOBngRloHq8ddVE+NvkyPo8TkLHkulvIFYC9Bgqwf/B1QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from gentoo.org (gentoo.cern.ch [IPv6:2001:1458:202:227::100:45])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: amadio)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 43C4F335DB4;
-	Wed, 10 Sep 2025 12:52:30 +0000 (UTC)
-Date: Wed, 10 Sep 2025 14:52:25 +0200
-From: Guilherme Amadio <amadio@gentoo.org>
-To: Ian Rogers <irogers@google.com>
-Cc: namhyung@kernel.org, acme@kernel.org, adrian.hunter@intel.com,
-	jolsa@kernel.org, kan.liang@linux.intel.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mingo@kernel.org, peterz@infradead.org
-Subject: Re: perf --help triggers an assertion
-Message-ID: <aMF0iWh4yTK5KwcJ@gentoo.org>
-References: <20250701201027.1171561-3-namhyung@kernel.org>
- <20250909094953.106706-1-amadio@gentoo.org>
- <CAP-5=fVCeBz+hgCsctCe7BByaL7GqKVUbDcW4R=2th0C1O0m0w@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34FC1957FC;
+	Wed, 10 Sep 2025 13:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1757509340; cv=fail; b=HL9LUzLZ33AOYRQg2PVFGemz/DCx80yAXc0K62ExARm81T6HdZfLdCoiB0GW3njBx2Rj/n4RoqpHXTtbGjVsF0YOGKWLEjCZQrlrNQx6GuHyMkDFoGQcSrV3vJzxDWgtz9tR4ULW4G8okKjj+gdMLAsnqZUvnFis4J/+i9/+XHY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1757509340; c=relaxed/simple;
+	bh=xNtg2VA3opUiXvctaInLw3olPZeSwMtSFcgEg/iPYNU=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=hN/2pvwKqLyT2xY6Hb6ZEwDkCT9mj7PAm5rZn18W8Yg4TNwHBfWFEq9/HcPDHBxNOqS85kyT49e/jYD5HaEThszlviUSsjCwDHLQ+j9P9if3Ydy+j3uzdGiFMIHrbUULmH5XFdTYLlbl3cZwKR4P3TXY8j8Bk3Rj/Z67PGHm+J8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=RKBJSlnf; arc=fail smtp.client-ip=40.107.212.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="RKBJSlnf"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=V5FedJmBIdrXHD8F30OlAXbuf3sEfe37A78DeQnnS6hc/oHnev3dxb9/v60zzzxH/cYI7ufdM0xZw1k5knqS1Gaz2VlF10ghedmi0YjTvJHyH4v3BKmbrPOKfJrzUPXfNM9NLUd29hxWQeX+VAJGFvnqn03s6jmCitkOzu2WNXC/ib12lHy/ke30HG/fQReX8O+hTKHZ1EBSQQu9LAvjQnFAAa7hiwQw2K6a7eQ+x01Ky7P7EVjEE7jtrHAoPu+QW1aKSJJJJROr5cR1xGg6AlZiyX357OA1xAmhT6CCgO64QiLfeAa+5WbC+2lppqL2HJKdcvFWsoMh6iUE7TmZIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NyXE6e1zvswoEfzIcRHGBH79axWpMty3CfosNKwsfYQ=;
+ b=xC+OPtopxqb2WZX/edqVfEpHmtIvgIF9IU1xGE9bLQ/fVZ6Lwi83gSp5V/q04d/Kx/lsBrgWdSh7JUSVAPU79BYPYMBfqwlUuzmr+uHJ1CFm3f4/abQhDALeapLc8LE483XuANBJhFqxAjAWWwUoq7X6x+RBd30vq9QV6gI3XZo1g1eXLzR0Fq1IJx46YM9uonMnoCEiOoIcMvXwNlwZcNmWAaduy9cw7c2wjy4+XGQs96cC9SoVPhA7H2UK6qBBgqJm8MKGvZQ8rcinC/SQpCV386ibORCtsZlK5NVXXIIl/WH3hZHRTK/m8tQmWMcxLW9UX76oYsiD3XDHhNfwbw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NyXE6e1zvswoEfzIcRHGBH79axWpMty3CfosNKwsfYQ=;
+ b=RKBJSlnf0FOkEA58ILSV66sjnCGVTIypM50Yir1gisTunvjjaidYdEWpqndX4sMmjXX6Abb+xC7oZySZ/p9nUrRO1g4boMFRJPBCfxEU9JCzx/2EkHkdu2BeqSeXghCuvr8aH57QdA9OBjPzlVLiYhOWUC4GQVi8ajjWhvp1XLg=
+Received: from BYAPR05CA0086.namprd05.prod.outlook.com (2603:10b6:a03:e0::27)
+ by SA5PPF6CDAEAF48.namprd12.prod.outlook.com (2603:10b6:80f:fc04::8cf) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9094.22; Wed, 10 Sep
+ 2025 13:02:13 +0000
+Received: from SJ1PEPF00002326.namprd03.prod.outlook.com
+ (2603:10b6:a03:e0:cafe::56) by BYAPR05CA0086.outlook.office365.com
+ (2603:10b6:a03:e0::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9115.14 via Frontend Transport; Wed,
+ 10 Sep 2025 13:02:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SJ1PEPF00002326.mail.protection.outlook.com (10.167.242.89) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9115.13 via Frontend Transport; Wed, 10 Sep 2025 13:02:13 +0000
+Received: from BLR-L1-NDADHANI (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 10 Sep
+ 2025 06:02:08 -0700
+From: Nikunj A Dadhania <nikunj@amd.com>
+To: Manali Shukla <manali.shukla@amd.com>, <kvm@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-doc@vger.kernel.org>
+CC: <seanjc@google.com>, <pbonzini@redhat.com>, <manali.shukla@amd.com>,
+	<bp@alien8.de>, <peterz@infradead.org>, <mingo@redhat.com>,
+	<mizhang@google.com>, <thomas.lendacky@amd.com>, <ravi.bangoria@amd.com>,
+	<Sandipan.Das@amd.com>
+Subject: Re: [PATCH v2 06/12] x86/cpufeatures: Add CPUID feature bit for
+ VIBS in SVM/SEV guests
+In-Reply-To: <20250901052304.209199-1-manali.shukla@amd.com>
+References: <20250901051656.209083-1-manali.shukla@amd.com>
+ <20250901052304.209199-1-manali.shukla@amd.com>
+Date: Wed, 10 Sep 2025 13:01:50 +0000
+Message-ID: <85v7lq31hd.fsf@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVCeBz+hgCsctCe7BByaL7GqKVUbDcW4R=2th0C1O0m0w@mail.gmail.com>
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00002326:EE_|SA5PPF6CDAEAF48:EE_
+X-MS-Office365-Filtering-Correlation-Id: d680d1f6-8427-42c9-6aeb-08ddf06a42c5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?0ob8iHEoNNxMFVjV7+pJVMcESbStuYjzLfkYmjhHmNmYuHB1l5s7MOOSZh0H?=
+ =?us-ascii?Q?5gv+0YHgljYRQcnOSUZtKUeVxP5i9VYp1uefjUjJOOc7wkm5WiT0zLFPnzvr?=
+ =?us-ascii?Q?v8BkpBJe8S6CsH7Q6zcIwD0tKZE/xr5BRn3E9cBdjC0d9sfGMz4zP//foQME?=
+ =?us-ascii?Q?fhwgDvDSyP/OD3Hod46MgDZ2zXEPgq5J0NX3G1pjaIHkLIT+IqGKS+r4EhTR?=
+ =?us-ascii?Q?TShRacUq5DoZNck4joIkkK/F5cmnvSQ9DRxz8GSaPPvMfF+50ayNPhCvcYoO?=
+ =?us-ascii?Q?aursFEXSTnfvsNa2n5EMvYkeqPP6Qi2M2/CsKLOZE/mJAwQW+GMhDKVvDPZn?=
+ =?us-ascii?Q?aM/PiJbfIbySgNQeS1Fl0IyILJlkMiaorJ4UMM/nWhIc+eIrIh1TLh2zYGJF?=
+ =?us-ascii?Q?566QDKISUN9rScASu0BIym6GrHufVuyKuchfgSkasmdQWOnOs+7I3sCn5Wuo?=
+ =?us-ascii?Q?9ReFh1ISApgCbNamLlh6VTGLmg6jSBSK+WvQJdjbKmcyi6VaWVRcoxiF1Vxa?=
+ =?us-ascii?Q?i4z1k3RWSp3ninnLIfz318tIhVjNOGLlhc4V6H18V1HjzIFz6VCuKECcjYsm?=
+ =?us-ascii?Q?U6yF+tnfs4imtWEMyT08AViCyKTp+YCi5UaTzE+21qgVd2u4KKTXLNp1vxCF?=
+ =?us-ascii?Q?hApr2/6+s4Y5wvRsqH96/T2nz4S2BTKCT/xEF+r23QNM+ZF/A3ulmaVE1X1f?=
+ =?us-ascii?Q?Vvl54/wiidO9RRTsgzIq3saR8t7OqwuCp3DK5yYjd1Yr/dm73Cwqe92uKgFk?=
+ =?us-ascii?Q?ipJYfUzpvwQQsZjrksmCIzcSz74kGL6xXWX+EfkfKel7oPg8uk93esLTO9WP?=
+ =?us-ascii?Q?RzyKIidrRicjM6gTCgPbtnyqeARGFIgmZw8aZ/2lresUD2nfruT9YueBRkgy?=
+ =?us-ascii?Q?Xz47HmzarxYpXf8f4d89Jy/Be4wl5WTp6aDlq/On1XeSZsKFJ3+UELknSYJk?=
+ =?us-ascii?Q?FxmQQY8InqCln+oVaxGUoAZ9TgZIQ4XuHSSyGC72UF1pu/d856NfUyrVxWda?=
+ =?us-ascii?Q?nzxf+70wwMWV6kc4k8No2sQ/L+oomU/Nh9cHycmpaHUL2zXtO934UeSitf+r?=
+ =?us-ascii?Q?7y+izSiK77yqvebAQz8AX9VlDRrKNFHOYwt2O+RPTavMZstFadHZn6gqVRpT?=
+ =?us-ascii?Q?9arGmvMivfTQrJkSUwdPv25+Reo/6/Wu3CtgiSQRF5MNbyiRAOcQaAEjP1nO?=
+ =?us-ascii?Q?hfnWGybNJHliZYg0mQeLykswUIdp21WJNVXKN6JQAmNpnky1pmytPCONCkDh?=
+ =?us-ascii?Q?p0VsswNQPP2m2YwDlA9vt4QFV/msO9ZyEE/q6t1wfA9gOsMOokwnYeEy7DfV?=
+ =?us-ascii?Q?ZWdf4X7THLa3u1X57Mq2jWD0Yo1MLA4VpyE2ZsB7NILvU8jFw87GC9GxhkL6?=
+ =?us-ascii?Q?FwWBz1tHSMJANJ6X5DzxRal3tWp1uXAU2a8M3v3K/hwDueivNznhlNb4b2+C?=
+ =?us-ascii?Q?dxyrKpdPbx/oD8hM7LH//HIWMvQIJDR+wr4avm7QZKJ9VmK7w3zYf5/oJEy7?=
+ =?us-ascii?Q?j3epUD8UEO/FrIbH6wy5rrBCZCA9Rp+JlhEz?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Sep 2025 13:02:13.2573
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d680d1f6-8427-42c9-6aeb-08ddf06a42c5
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00002326.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPF6CDAEAF48
 
-On Tue, Sep 09, 2025 at 11:31:51AM -0700, Ian Rogers wrote:
-> On Tue, Sep 9, 2025 at 2:49 AM Guilherme Amadio <amadio@gentoo.org> wrote:
-> >
-> > Hi Namhyung,
-> >
-> > I was updating perf's package in Gentoo Linux and noticed some problems
-> > which were not there before. I tested with the version below and the problem
-> > still seems to be there. perf --help triggers an assertion (see below).
-> > Looking in the list, it seems related to the patch below:
-> >
-> > https://lore.kernel.org/linux-perf-users/20250701201027.1171561-3-namhyung@kernel.org/
-> >
-> > Cheers,
-> > -Guilherme
-> >
-> > The problem:
-> >
-> > gentoo perf $ ./perf --help
-> > perf: help.c:104: exclude_cmds: Assertion `cmds->names[ci] == NULL' failed.
-> > Aborted                    (core dumped) ./perf --help
-> >
-> > Some extra information:
-> >
-> > gentoo perf $ ./perf version
-> > perf version 6.17.rc5.gf777d1112ee5
-> > gentoo perf $ ./perf test subcmd
-> >  69: libsubcmd help tests                                            :
-> >  69.1: Load subcmd names                                             : Ok
-> >  69.2: Uniquify subcmd names                                         : Ok
-> >  69.3: Exclude duplicate subcmd names                                : Ok
-> > gentoo perf $ ./perf bad-command
-> > perf: 'bad-command' is not a perf-command. See 'perf --help'.
-> > gentoo perf $ ./perf --help
-> > perf: help.c:104: exclude_cmds: Assertion `cmds->names[ci] == NULL' failed.
-> > Aborted                    (core dumped) ./perf --help
-> > gentoo perf $ gdb run --args ./perf --help
-> > GNU gdb (Gentoo 16.3 vanilla) 16.3
-> > Copyright (C) 2024 Free Software Foundation, Inc.
-> > License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
-> > This is free software: you are free to change and redistribute it.
-> > There is NO WARRANTY, to the extent permitted by law.
-> > Type "show copying" and "show warranty" for details.
-> > This GDB was configured as "x86_64-pc-linux-gnu".
-> > Type "show configuration" for configuration details.
-> > For bug reporting instructions, please see:
-> > <https://bugs.gentoo.org/>.
-> > Find the GDB manual and other documentation resources online at:
-> >     <http://www.gnu.org/software/gdb/documentation/>.
-> >
-> > For help, type "help".
-> > Type "apropos word" to search for commands related to "word"...
-> > Reading symbols from ./perf...
-> > (gdb) run
-> > Starting program: /home/amadio/src/linux/tools/perf/perf --help
-> > [Thread debugging using libthread_db enabled]
-> > Using host libthread_db library "/usr/lib64/libthread_db.so.1".
-> > perf: help.c:104: exclude_cmds: Assertion `cmds->names[ci] == NULL' failed.
-> >
-> > Program received signal SIGABRT, Aborted.
-> > __pthread_kill_implementation (threadid=<optimized out>, signo=signo@entry=6, no_tid=no_tid@entry=0) at pthread_kill.c:44
-> > 44            return INTERNAL_SYSCALL_ERROR_P (ret) ? INTERNAL_SYSCALL_ERRNO (ret) : 0;
-> > (gdb) bt
-> > #0  __pthread_kill_implementation (threadid=<optimized out>, signo=signo@entry=6, no_tid=no_tid@entry=0) at pthread_kill.c:44
-> > #1  0x00007ffff74c1656 in __pthread_kill_internal (threadid=<optimized out>, signo=signo@entry=6) at pthread_kill.c:89
-> > #2  0x00007ffff74c166d in __GI___pthread_kill (threadid=<optimized out>, signo=signo@entry=6) at pthread_kill.c:100
-> > #3  0x00007ffff747509c in __GI_raise (sig=sig@entry=6) at ../sysdeps/posix/raise.c:26
-> > #4  0x00007ffff747637e in __GI_abort () at abort.c:77
-> > #5  0x00007ffff746e023 in __assert_fail_base (fmt=<optimized out>, assertion=assertion@entry=0x555555974d03 "cmds->names[ci] == NULL",
-> >     file=file@entry=0x555555974cfc "help.c", line=line@entry=104, function=function@entry=0x555555974dc8 <__PRETTY_FUNCTION__.0> "exclude_cmds")
-> >     at assert.c:118
-> > #6  0x00007ffff746e075 in __assert_fail (assertion=0x555555974d03 "cmds->names[ci] == NULL", file=0x555555974cfc "help.c", line=104,
-> >     function=0x555555974dc8 <__PRETTY_FUNCTION__.0> "exclude_cmds") at assert.c:127
-> > #7  0x0000555555693813 in exclude_cmds (cmds=0x55555614e5e0 <other_cmds>, excludes=0x55555614e5c0 <main_cmds>) at help.c:104
-> > #8  0x0000555555693eb3 in load_command_list (prefix=0x555555954071 "perf-", main_cmds=0x55555614e5c0 <main_cmds>,
-> >     other_cmds=0x55555614e5e0 <other_cmds>) at help.c:252
-> > #9  0x00005555555e9987 in cmd_help (argc=1, argv=0x7fffffffd1a0) at builtin-help.c:458
-> > #10 0x0000555555685d45 in run_builtin (p=0x555556130de0 <commands+192>, argc=1, argv=0x7fffffffd1a0) at perf.c:349
-> > #11 0x0000555555685fe1 in handle_internal_command (argc=1, argv=0x7fffffffd1a0) at perf.c:401
-> > #12 0x0000555555686142 in run_argv (argcp=0x7fffffffcfac, argv=0x7fffffffcfa0) at perf.c:445
-> > #13 0x0000555555686493 in main (argc=1, argv=0x7fffffffd1a0) at perf.c:553
-> > (gdb) quit
-> 
-> Thanks Guilherme,
-> 
-> I tried to reproduce the same version with various options: DEBUG=1
-> -UNDEBUG in EXTRA_CFLAGS, -fsanitize=address. Being in various
-> directories with "perf-" prefixed files. I'm afraid I wasn't able to
-> reproduce. The assert is trying to avoid a memory leak, so
-> non-critical, and I couldn't in a quick inspection eye-ball an issue.
-> Without getting a reproduction I don't think I can make progress with
-> the issue.
+Manali Shukla <manali.shukla@amd.com> writes:
 
-I do not have any special setup on my machine (if you consider Gentoo
-not special, of course). I just did a git bisect and arrived at commit
-9401d1771dad99bfc795dd2ae0c292343fd1f78d, which is the commit I linked
-above. I used
+> From: Santosh Shukla <santosh.shukla@amd.com>
+>
+> The virtualized IBS (VIBS) feature allows the guest to collect IBS
+> samples without exiting the guest.
+>
+> Presence of the VIBS feature is indicated via CPUID function
+> 0x8000000A_EDX[26].
+>
+> Signed-off-by: Santosh Shukla <santosh.shukla@amd.com>
+> Signed-off-by: Manali Shukla <manali.shukla@amd.com>
+> ---
+>  arch/x86/include/asm/cpufeatures.h | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index 0dd44cbf7196..3c31dea00671 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -379,6 +379,7 @@
+>  #define X86_FEATURE_V_SPEC_CTRL		(15*32+20) /* "v_spec_ctrl" Virtual SPEC_CTRL */
+>  #define X86_FEATURE_VNMI		(15*32+25) /* "vnmi" Virtual NMI */
+>  #define X86_FEATURE_EXTLVT		(15*32+27) /* Extended Local vector Table */
+> +#define X86_FEATURE_VIBS		(15*32+26) /* Virtual IBS */
 
-$ make -C tools/perf clean && make -B -j16 -C tools/perf DEBUG=1 WERROR=0 NO_SHELLCHECK=1
+Please move before EXTLVT to maintain bit position order
 
-then called perf --help each time (but perf help record or equivalent
-also triggers the assertion). I'm using GCC 14 on a 3950X. The features
-I have enabled and installed dependencies are below. This patch has been
-backported to at least 6.12 stable, and I can reproduce this with
-v6.12.45.
+Regards,
+Nikunj
 
-gentoo linux $ tools/perf/perf version --build-options
-perf version 6.16.g45effee4b85a
-                   aio: [ on  ]  # HAVE_AIO_SUPPORT
-                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-         bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
-            debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
-                 dwarf: [ on  ]  # HAVE_LIBDW_SUPPORT
-    dwarf_getlocations: [ on  ]  # HAVE_LIBDW_SUPPORT
-          dwarf-unwind: [ on  ]  # HAVE_DWARF_UNWIND_SUPPORT
-              auxtrace: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-                libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT ( tip: Deprecated, license incompatibility, use BUILD_NONDISTRO=1 and install binutils-dev[el] )
-           libcapstone: [ on  ]  # HAVE_LIBCAPSTONE_SUPPORT
-             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-    libdw-dwarf-unwind: [ on  ]  # HAVE_LIBDW_SUPPORT
-                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-            libopencsd: [ OFF ]  # HAVE_CSTRACE_SUPPORT
-               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-               libpfm4: [ on  ]  # HAVE_LIBPFM
-             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-         libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
-             libunwind: [ OFF ]  # HAVE_LIBUNWIND_SUPPORT ( tip: Deprecated, use LIBUNWIND=1 and install libunwind-dev[el] to build with it )
-                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-
-And here are the version of all dependencies I have installed:
-
- * dependency graph for dev-util/perf-6.16-r1
- `--  dev-util/perf-6.16-r1
-   `--  dev-util/babeltrace-1.5.11
-   `--  dev-libs/libbpf-1.6.2
-   `--  dev-util/bpftool-7.6.0
-   `--  dev-util/pahole-1.30
-   `--  llvm-core/clang-18.1.8-r6
-   `--  llvm-core/llvm-18.1.8-r6
-   `--  llvm-core/clang-19.1.7
-   `--  llvm-core/llvm-19.1.7
-   `--  llvm-core/clang-20.1.8
-   `--  llvm-core/llvm-20.1.8
-   `--  llvm-core/clang-21.1.0
-   `--  llvm-core/llvm-21.1.0
-   `--  sys-libs/libcap-2.76
-   `--  dev-libs/capstone-5.0.6
-   `--  dev-libs/openssl-3.5.2
-   `--  x11-libs/gtk+-2.24.33-r3
-   `--  virtual/jre-21
-   `--  dev-libs/libpfm-4.13.0
-   `--  dev-libs/libtraceevent-1.8.4
-   `--  dev-libs/libtracefs-1.8.2
-   `--  app-arch/xz-utils-5.8.1-r1
-   `--  sys-process/numactl-2.0.19
-   `--  dev-lang/perl-5.42.0
-   `--  dev-lang/python-0.3.13.7
-   `--  dev-lang/python-0.3.14.0_rc2
-   `--  dev-lang/python-3.11.13_p1
-   `--  dev-lang/python-3.12.11_p1
-   `--  dev-lang/python-3.13.9999
-   `--  dev-lang/python-3.14.0_rc2
-   `--  sys-libs/slang-2.3.3-r1
-   `--  dev-debug/systemtap-5.3
-   `--  dev-util/google-perftools-2.17.2
-   `--  sys-libs/libunwind-1.8.2-r1
-   `--  app-arch/zstd-1.5.7-r1
-   `--  dev-libs/elfutils-0.193
-   `--  sys-libs/binutils-libs-2.45-r1
-   `--  sys-libs/zlib-1.3.1-r1
-   `--  virtual/libcrypt-2-r1
-   `--  sys-kernel/linux-headers-6.16
-   `--  virtual/jdk-21
-   `--  app-arch/tar-1.35
-   `--  dev-python/setuptools-80.9.0-r1
-   `--  app-alternatives/yacc-1-r2
-   `--  app-alternatives/lex-0-r1
-   `--  sys-apps/which-2.23
-   `--  virtual/pkgconfig-3
-   `--  app-text/asciidoc-10.2.1
-   `--  app-text/sgml-common-0.6.3-r7
-   `--  app-text/xmlto-0.0.28-r11
-   `--  sys-process/time-1.9-r1
-
-I hope that this helps with reproducing the problem, but if not, let me
-know which additional information you'd like to have and I will send it.
-My running kernel is 6.16.4, and glibc is version 2.42.
-
-Best regards,
--Guilherme
+>  #define X86_FEATURE_SVME_ADDR_CHK	(15*32+28) /* SVME addr check */
+>  #define X86_FEATURE_BUS_LOCK_THRESHOLD	(15*32+29) /* Bus lock threshold */
+>  #define X86_FEATURE_IDLE_HLT		(15*32+30) /* IDLE HLT intercept */
+> -- 
+> 2.43.0
