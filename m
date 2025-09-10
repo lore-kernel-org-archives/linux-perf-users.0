@@ -1,166 +1,167 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270A01CAB3
-	for <linux-perf-users@vger.kernel.org>; Wed, 10 Sep 2025 16:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB69258CD8;
+	Wed, 10 Sep 2025 17:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757522749; cv=none; b=HkWMr2MZO32REJ1B2nOkwey+ICBFmBe0Mv6FsLJourwEcyCH7weGLIlmxsXWPmUm6KRez/PWuqRJxR0m8v6pR8LMveXt+U68oElQ4LV92+5pIlDKipD/K7dptEw0SAxPzahkwlPv+uOZ6thufpvfJKEJosJnPDOMCBbdDIHk4KY=
+	t=1757525985; cv=none; b=c/Sq/1YE6X6aupGQ84P5hCPToJJEZG3AGZvkCeUQzEIdwnOOy8LTjiQhfodTdOXTLH/5KECJeLZGqkCCAsNYGi0e4IEXtVlgtZKpLd/TgFEqM/VtY2K+DX+t/beHeYAzC89dA18vNXVRvniNXqCSN5wRdOY+6Q0nf5Unj9XuQp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757522749; c=relaxed/simple;
-	bh=3DoVvAkHKzlA55dWX7469yZ7NdqVmb2RDHnFOvW9QuY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zo1Ab7W30y2I47aDySSpeC83BMOViMA9Y4YH8VDKOvIwUT+6BjGwFKaRVUvDFemhTyYgBJ+6p2cwfuOjzKLU8slxKK3jQ2i69WNlND/27JfNqJfScn91o1+i0IoVaqLSjYA3vG6qZbqIS63eOBcdyjz4sftzYW4JTdSql1M8o6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=x8nCrXqR; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1757525985; c=relaxed/simple;
+	bh=9NYPXM8rN6ZU04YuT+J0cq4PyeCc2Pt6HtA8XSCm9us=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s70VY/aDDtbPh7cXaOOLhraPa5FC/S2bJHFZ7Z0qU9wbcyJUk/e4MqZ+ovEkOtME+JIuYiNsFw3FxUjj6r07cZM6RxzVkNfTGuCEwjNpYzloUDj5aQp29oNKkABOuNXgD1Ze25aesafqnOmJCKagGiI9fQ3LVGonhB+rfSuwde8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LU0wCdD1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x8nCrXqR"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-24cca557085so1505ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Sep 2025 09:45:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1757522747; x=1758127547; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=awcUZJhrSr7vk/FN6/yazFNso0WDtq5kIuzjKcXy7dM=;
-        b=x8nCrXqRuFl2oDmuSyJJC7KYbgbAl1Y4vxGzkStTfJtsCG8+0Dcyd6+E/Ve/dKzQAi
-         e78INYFUrTEDkEiUfIk94FLYYFqUJMmIcBEQfhGNI/tfIxmrW5pkLUDHF/VvTMBmWpuc
-         dkRMrimMdTe6k9XuS6rliBnawRqOWo9EFDqVSLA4hv41PwSRBg82/2vvGlJPNoG8F3rg
-         4po8rKj2l4iLFbD6/duExlDnKRfpW1q7TKKZ4KLI4jmAmikJelYHuRMJj5TUcZBY3YFh
-         XZRckaKGqN+ApjZ/vJ0KkYbSSif3r5HDHvZf7EPwSeLv5jwdMfw2NcYUYe8xDJPbsQ00
-         NfCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757522747; x=1758127547;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=awcUZJhrSr7vk/FN6/yazFNso0WDtq5kIuzjKcXy7dM=;
-        b=E5NnNRGKCVDIbaUoHDPaRLHfs5ncfMZH2k2WkV4kHlSHVi5SsMwR4XOtH2GIt/aNjT
-         jdGzBPsEP6JGEvRUg56kfTqqxy9GdOUuZd1wldPAk3upgSn5GUk+B622/+0js+rCWyha
-         0UEfn0FN8I+sa2qxJAQSBDbf5Z6p7+4On3bk0XOSRa231mqFU/b+Dz8eb85WM1f4Y+Ac
-         Q7S6PaCY1pz/fnhj9WRnVuP+3aOQCJWPrcwTlmBUdRseWINCuJsz3HVtWoFk7+pSSUBK
-         1yRe10tcuI6Q/u07rEl3jM6OjuEt35MjTnLbMkPDhM9yJM3LqCBBGwFiVwIuNsiwYnsG
-         SVvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXb5Y3WHLBnRM/+iR64SQk9NefINdJ1rfjBbGEk+ZFj5M5dlUt6RdDMUpD+PeQwuUJyttkJVCvZF8RqquH9A/Iq@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfIdAUuXI3nCeBId8QRxepqHqItYfkRrebKk4EHlQqFe6Fyutq
-	LchQaUacMa/4fMiiUkOXWSrNGywRiK84GHeO+kGLxpbOlyI5IQ3YDkRx4k6SYWtNNCnAqFxU3A4
-	dUPX0dmSYmfqGNepG01kZsEs01qUQ/mIqSuagGVEY
-X-Gm-Gg: ASbGncvHh/b9LZEsUoO1MfhpKNVlNVIjMquaBII9K8Lm60mu36OTt/T0IQhewC6Rv8y
-	+kx9fMLZkIqlrnsWVlPIms3D0DkJl1Ij1UOBB6qDzAdteNuiyVaJaiiHsoV++YNQzT9p+vamdun
-	29CU/lMBUvdAiONzwS23ln8qQ2k8SHrFipdGtXzgaIqWdJsKONaF60wH+5i6uvvPwaTFo23TYNQ
-	Y5sbbpXpfn0us6zoD41WLjvP0EaW8uKj9maaZVo4S0f
-X-Google-Smtp-Source: AGHT+IHYwRpB3J9CuictAomIol7aeL11ghkSN0Km+0mTWaChVAO1NMeXp/i3VR4zUg4scx2cFOoKZZYNX2kyXd2Cqxw=
-X-Received: by 2002:a17:902:d50e:b0:248:aa0d:f826 with SMTP id
- d9443c01a7336-25a55af0c4emr5769095ad.6.1757522747028; Wed, 10 Sep 2025
- 09:45:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LU0wCdD1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E41EC4CEEB;
+	Wed, 10 Sep 2025 17:39:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757525984;
+	bh=9NYPXM8rN6ZU04YuT+J0cq4PyeCc2Pt6HtA8XSCm9us=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LU0wCdD1/NtlPZTNZ75T4EWOv1EHk8/TsU+F1e5uL470ftUl6ESQt08Wez+cbJJ4B
+	 6rsADo8CZRieeFO85WPE5QWH+WB7Tb0BItNhWxFWGUBiJsTakOdx6F7rLXh+ekMfHq
+	 jO8Q1KNsROLsQFuHJrpsw9k4MAcC9RFfJTpgkEgdIowPED9nvR6jK0qo1vCzFTUSg7
+	 eeEOH5u7iNG6CnP/YcRhmCTiwqa86YXaPyR7z9jE6bTZvfVFUFKUj634XM/Df9W6E3
+	 AAtkfNEXpwSdy26dtJXnBsu38ssLD5lu/v0bfIYQDww8AUzJiIDTMoIzH+V8mkO3Nj
+	 richMcesv2stA==
+Date: Wed, 10 Sep 2025 10:39:42 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Ravi Bangoria <ravi.bangoria@amd.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Collin Funk <collin.funk1@gmail.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf test: AMD IBS swfilt skip kernel tests if
+ paranoia is >1
+Message-ID: <aMG33krB2PGJNZKu@google.com>
+References: <20250910155635.46187-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aMACaOmneDrG8_pQ@gentoo.org> <CAP-5=fVA_Cduf9NvFAJezcNcg0JDNGa5q7m_mRBWNAYGEUo8bw@mail.gmail.com>
- <aMAtqNq55TZEuaKn@gentoo.org>
-In-Reply-To: <aMAtqNq55TZEuaKn@gentoo.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 10 Sep 2025 09:45:35 -0700
-X-Gm-Features: Ac12FXy0jWTEx2X8QZ0NZCANfJE8Eof_psH73gdEiZeY_JHSOHjsmrlsDgL6vC0
-Message-ID: <CAP-5=fX-GG_pUH+1Eak8dsoTdNh=vRU+00scBxbRt7EhXZosiw@mail.gmail.com>
-Subject: Re: Problem with perf report --gtk
-To: Guilherme Amadio <amadio@gentoo.org>
-Cc: acme@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250910155635.46187-1-irogers@google.com>
 
-On Tue, Sep 9, 2025 at 6:37=E2=80=AFAM Guilherme Amadio <amadio@gentoo.org>=
- wrote:
->
-> On Tue, Sep 09, 2025 at 06:04:42AM -0700, Ian Rogers wrote:
-> > On Tue, Sep 9, 2025 at 3:33=E2=80=AFAM Guilherme Amadio <amadio@gentoo.=
-org> wrote:
-> > >
-> > > Hi Arnaldo, Namhyung,
-> > >
-> > > Since sometime we have a bug in Gentoo's bugzilla about perf report -=
--gtk not
-> > > working=C2=B9: https://bugs.gentoo.org/937869
-> > >
-> > > I know this feature is not used very much, but I thought I'd report i=
-n
-> > > any case. The problem is easily reproducible as shown below:
-> > >
-> > >
-> > > $ perf record -a -g -- sleep 1
-> > > [ perf record: Woken up 1 times to write data ]
-> > > [ perf record: Captured and wrote 1.818 MB perf.data (6648 samples) ]
-> > > $ LD_DEBUG=3Dsymbols perf report --gtk 2>&1 | grep '(fatal)'
-> > >     288067:     /usr/libexec/perf-core/libperf-gtk.so: error: symbol =
-lookup error: undefined symbol: hashmap_find (fatal)
-> > > $ perf report --gtk
-> > > GTK browser requested but could not find libperf-gtk.so
-> > >
-> > > I tried this with perf 6.16, but this bug seems to have been there si=
-nce
-> > > at least 6.12.
-> > >
-> > > Please let me know if it's better to file problems at https://bugzill=
-a.kernel.org/.
-> >
-> > Thanks for letting us know Guilherme! I suspect I broke things when
-> > trying to fix python things. The code linking libperf-gtk.so is:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/perf/Makefile.perf?h=3Dperf-tools-next#n809
-> > The hashmap symbols are part of the perf-util library:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/perf/util/Build?h=3Dperf-tools-next#n197
-> > So maybe there needs to be a libbpf -lbpf for your case? Alternatively
-> > we may need to reorder the libraries here:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/perf/Makefile.perf?h=3Dperf-tools-next#n464
-> > like:
-> > PERFLIBS +=3D $(LIBPERF_BENCH) $(LIBPERF_TEST) $(LIBPERF_UI) $(LIBPERF_=
-UTIL)
-> > becomes:
-> > PERFLIBS +=3D $(LIBPERF_BENCH) $(LIBPERF_TEST) $(LIBPERF_UTIL) $(LIBPER=
-F_UI)
->
-> Thank you for the suggestion, but just changing the order of linking or
-> linking libbpf doesn't seem to fix the issue. I still see:
->
-> $ nm -D libperf-gtk.so | grep hashmap
->                  U hashmap_find
->
-> at the end of the build. The function is in util/hashmap.c, so the
-> problem might be more involved than just the linking order.
+On Wed, Sep 10, 2025 at 08:56:35AM -0700, Ian Rogers wrote:
+> If not root and the perf_event_paranoid is set >1 swfilt will fail to
+> open the event failing the test. Add check to skip the test in that
+> case.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+> Remove incorrect sample count corrections
+> ---
+>  tools/perf/tests/shell/amd-ibs-swfilt.sh | 51 ++++++++++++++++++------
+>  1 file changed, 38 insertions(+), 13 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/amd-ibs-swfilt.sh b/tools/perf/tests/shell/amd-ibs-swfilt.sh
+> index 7045ec72ba4c..ebe1fedb897b 100755
+> --- a/tools/perf/tests/shell/amd-ibs-swfilt.sh
+> +++ b/tools/perf/tests/shell/amd-ibs-swfilt.sh
+> @@ -1,6 +1,10 @@
+>  #!/bin/bash
+>  # AMD IBS software filtering
+>  
+> +ParanoidAndNotRoot() {
+> +  [ "$(id -u)" != 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid)" -gt $1 ]
+> +}
+> +
+>  echo "check availability of IBS swfilt"
+>  
+>  # check if IBS PMU is available
+> @@ -16,6 +20,7 @@ if [ ! -f /sys/bus/event_source/devices/ibs_op/format/swfilt ]; then
+>  fi
+>  
+>  echo "run perf record with modifier and swfilt"
+> +err=0
+>  
+>  # setting any modifiers should fail
+>  perf record -B -e ibs_op//u -o /dev/null true 2> /dev/null
+> @@ -31,11 +36,17 @@ if [ $? -ne 0 ]; then
+>      exit 1
+>  fi
+>  
+> -# setting it with swfilt=1 should be fine
+> -perf record -B -e ibs_op/swfilt=1/k -o /dev/null true
+> -if [ $? -ne 0 ]; then
+> -    echo "[FAIL] IBS op PMU cannot handle swfilt for exclude_user"
+> -    exit 1
+> +if ! ParanoidAndNotRoot 1
+> +then
+> +    # setting it with swfilt=1 should be fine
+> +    perf record -B -e ibs_op/swfilt=1/k -o /dev/null true
+> +    if [ $? -ne 0 ]; then
+> +        echo "[FAIL] IBS op PMU cannot handle swfilt for exclude_user"
+> +        exit 1
+> +    fi
+> +else
+> +    echo "[SKIP] not root and perf_event_paranoid too high for exclude_user"
+> +    err=2
+>  fi
+>  
+>  # check ibs_fetch PMU as well
+> @@ -46,10 +57,16 @@ if [ $? -ne 0 ]; then
+>  fi
+>  
+>  # check system wide recording
+> -perf record -aB --synth=no -e ibs_op/swfilt/k -o /dev/null true
+> -if [ $? -ne 0 ]; then
+> -    echo "[FAIL] IBS op PMU cannot handle swfilt in system-wide mode"
+> -    exit 1
+> +if ! ParanoidAndNotRoot 1
 
-Thanks Guilherme! I was able to reproduce the "nm -D" output. Adding
-"-z defs" to the "$(OUTPUT)libperf-gtk.so" also fails for that symbol,
-it fails for many more. Even though the symbol is undefined "perf
-reprt --gtk" works for me. Attaching gdb I see that the symbol is in
-the perf executable itself. I tried the following change:
-```
- $(OUTPUT)libperf-gtk.so: $(GTK_IN) $(PERFLIBS)
--       $(QUIET_LINK)$(CC) -o $@ -shared $(LDFLAGS) $(filter %.o,$^) $(GTK_=
-LIBS)
-+       $(QUIET_LINK)$(CC) -o $@ -shared $(LDFLAGS) $(filter %.o,$^)
-$(filter %libperf-util.a,$^) $(GTK_LIBS)
-```
-or
-```
- $(OUTPUT)libperf-gtk.so: $(GTK_IN) $(PERFLIBS)
--       $(QUIET_LINK)$(CC) -o $@ -shared $(LDFLAGS) $(filter %.o,$^) $(GTK_=
-LIBS)
-+       $(QUIET_LINK)$(CC) -o $@ -shared $(LDFLAGS) $(filter
-%libperf-util.a,$^) $(filter %.o,$^) $(GTK_LIBS)
-```
-but the nm output shows either the same or more undefined symbols, not less=
-.
-
-I'm wondering if perhaps the hashmap_find symbol is being stripped
-from the perf executable. Maybe it is an LTO or stripping related
-thing?
+Using CPU events (-a) requires paranoid level 0.
 
 Thanks,
-Ian
+Namhyung
+
+
+> +then
+> +    perf record -aB --synth=no -e ibs_op/swfilt/k -o /dev/null true
+> +    if [ $? -ne 0 ]; then
+> +        echo "[FAIL] IBS op PMU cannot handle swfilt in system-wide mode"
+> +        exit 1
+> +    fi
+> +else
+> +    echo "[SKIP] not root and perf_event_paranoid too high for exclude_user"
+> +    err=2
+>  fi
+>  
+>  echo "check number of samples with swfilt"
+> @@ -60,8 +77,16 @@ if [ ${kernel_sample} -ne 0 ]; then
+>      exit 1
+>  fi
+>  
+> -user_sample=$(perf record -e ibs_fetch/swfilt/k -o- true | perf script -i- -F misc | grep -c ^U)
+> -if [ ${user_sample} -ne 0 ]; then
+> -    echo "[FAIL] unexpected user samples: " ${user_sample}
+> -    exit 1
+> +if ! ParanoidAndNotRoot 1
+> +then
+> +    user_sample=$(perf record -e ibs_fetch/swfilt/k -o- true | perf script -i- -F misc | grep -c ^U)
+> +    if [ ${user_sample} -ne 0 ]; then
+> +        echo "[FAIL] unexpected user samples: " ${user_sample}
+> +        exit 1
+> +    fi
+> +else
+> +    echo "[SKIP] not root and perf_event_paranoid too high for exclude_user"
+> +    err=2
+>  fi
+> +
+> +exit $err
+> -- 
+> 2.51.0.384.g4c02a37b29-goog
+> 
