@@ -1,167 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB69258CD8;
-	Wed, 10 Sep 2025 17:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13F73BBF0
+	for <linux-perf-users@vger.kernel.org>; Wed, 10 Sep 2025 17:46:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757525985; cv=none; b=c/Sq/1YE6X6aupGQ84P5hCPToJJEZG3AGZvkCeUQzEIdwnOOy8LTjiQhfodTdOXTLH/5KECJeLZGqkCCAsNYGi0e4IEXtVlgtZKpLd/TgFEqM/VtY2K+DX+t/beHeYAzC89dA18vNXVRvniNXqCSN5wRdOY+6Q0nf5Unj9XuQp0=
+	t=1757526378; cv=none; b=IRDSWUGrwYQwGJ1ppFM7/QwMhO5IMHIcy9IKkHDcqYymBURfqkLzSAzUVzge85+svkj0U9W4+gz+PrVVTwv7xIwYt+UJx46JWVKJLMHAhrXWfaU1YFyhx16PFTSa3KPQx6QRqdBWOCQeo5LwBnd3Xvu7B+dBd0ye8Pcc+7wuKkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757525985; c=relaxed/simple;
-	bh=9NYPXM8rN6ZU04YuT+J0cq4PyeCc2Pt6HtA8XSCm9us=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s70VY/aDDtbPh7cXaOOLhraPa5FC/S2bJHFZ7Z0qU9wbcyJUk/e4MqZ+ovEkOtME+JIuYiNsFw3FxUjj6r07cZM6RxzVkNfTGuCEwjNpYzloUDj5aQp29oNKkABOuNXgD1Ze25aesafqnOmJCKagGiI9fQ3LVGonhB+rfSuwde8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LU0wCdD1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757526378; c=relaxed/simple;
+	bh=wQDj2zgvbMFrsyQiuWDPhZMsiQB+mYgEXQMPF6cvHcA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZW36PhR6YUEXYE6WaTTPv1b8Xj07i/UGumIWlyq4dKdj0SCs5+hn+VFfD27ELfDyiu74EuKYL3WfUInDKIOPx07Q1H87i4z9/qtsQJjDKYMLOC//5s9VnmeiYwHRV41cQNg6KzO0Wne+MVBfA2uLQ9j/FgCdkcbzqLhPzvIO19Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cgwonXw8; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LU0wCdD1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E41EC4CEEB;
-	Wed, 10 Sep 2025 17:39:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757525984;
-	bh=9NYPXM8rN6ZU04YuT+J0cq4PyeCc2Pt6HtA8XSCm9us=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LU0wCdD1/NtlPZTNZ75T4EWOv1EHk8/TsU+F1e5uL470ftUl6ESQt08Wez+cbJJ4B
-	 6rsADo8CZRieeFO85WPE5QWH+WB7Tb0BItNhWxFWGUBiJsTakOdx6F7rLXh+ekMfHq
-	 jO8Q1KNsROLsQFuHJrpsw9k4MAcC9RFfJTpgkEgdIowPED9nvR6jK0qo1vCzFTUSg7
-	 eeEOH5u7iNG6CnP/YcRhmCTiwqa86YXaPyR7z9jE6bTZvfVFUFKUj634XM/Df9W6E3
-	 AAtkfNEXpwSdy26dtJXnBsu38ssLD5lu/v0bfIYQDww8AUzJiIDTMoIzH+V8mkO3Nj
-	 richMcesv2stA==
-Date: Wed, 10 Sep 2025 10:39:42 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Ravi Bangoria <ravi.bangoria@amd.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Collin Funk <collin.funk1@gmail.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf test: AMD IBS swfilt skip kernel tests if
- paranoia is >1
-Message-ID: <aMG33krB2PGJNZKu@google.com>
-References: <20250910155635.46187-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cgwonXw8"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-24b2337d1bfso21745ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Sep 2025 10:46:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1757526376; x=1758131176; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wQDj2zgvbMFrsyQiuWDPhZMsiQB+mYgEXQMPF6cvHcA=;
+        b=cgwonXw8dyDedgscQUvq50it1Bc++WUKDhaZ5HFKEdLmbaKRoJIfbiM33P+I2lXUJj
+         Dxs76BDrPkuc9UH01lhWoPMRzi5Cuf2IrIeqmNYZd5SBzf6A6AaUjyVLFabjPMwwlncD
+         SQF7YU9bqnaeIQHnNE8w3WtlbwKGqwa/2YYd2C/9rCh4gTW1IVj5u7Z6JPA4YqG02I27
+         Xi17QixactQH2uvsIKPKdhw6lmruGhb1+QJ3PzAV9D9TCCxKDXlQC0bZl9oFrwXJDZWi
+         4MJj6rAhvV2v34X75AtlZ85kX5Xn87OFx7QXpLvinp6K+kpT77aUbFlM7bQ+5kh1iNEr
+         NOiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757526376; x=1758131176;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wQDj2zgvbMFrsyQiuWDPhZMsiQB+mYgEXQMPF6cvHcA=;
+        b=WgUQrFN9Q6dkVGhLIc/Ql5UuL/WHnKWY1clVJ15Ue1jiGaA+xoRSCknfbhR/EW2bKx
+         530lDKHXEwQNdgnxZHxJs31pjLV9DQmMZt43CKY91hOxWvcxLJvnbmLRT5uyHrgY4Hqk
+         OX4PoAPJk6ff8Mju//UU58kzvgOOakihKhrV7XBc4Ou/Y+6jVbhQU0xgBN0ezrOaDo1V
+         zFzUF3F0iU5UVU4ktCm+A0Gn38/MaBAqWvlUWlxOlx75JM8GxYOFCjlXY5wOQqoi34z5
+         e/4Yz1v/wVRpZkCXX+N9XMz4IzS1+ZJhaf1iu1qCrZSQbXrsklFqVC2q71AK23NLpcTd
+         /sqA==
+X-Forwarded-Encrypted: i=1; AJvYcCWUI8WbmWt8yUXHAPA9C0IaUbbR3ZxwLiWEn0Oyzd8hQ1DhBopy5cmE7ZwmkI9lvNQdk+Airteu52Lg3p331+qw@vger.kernel.org
+X-Gm-Message-State: AOJu0YzH23c04NVWrsT6l0JgtWG51wNvvPREmbhU6eecU0d7hlqwhsp2
+	eaQYohbZI26YIWADZFh1s1FKdQuc15IeiTLhmvisUjgvWXilcfM/zZ9l3Um0LMMAmuKagHquijz
+	FLKqhapKhWih+RSUvsa+S51dHqoy3T30wHQm1iJfA0t2RLjpYw89Vej3e
+X-Gm-Gg: ASbGncs+4rZjiZwsyIzGnYcP2sfvXOc2ez95Qgko2bVN1iuk8Cm2Y7Fdzav1Rh0x331
+	s4syrBSnoyDMYk5iqX4JsUyUXR+rTUNvNDivQIlyrBsF8eUGLB48ETlvRTmfDi3UnCAzHrBYU6K
+	UHl0s0waTuxBuPvLmmv/aqRh66PAuMEDDEIZYCnxQPvR3EjDsG/F6gMD/UQ7hYpe/oeLWyZUIQU
+	FoiZddn+fmgznWWm6x14+zn6a5DhFURutQKIdf9mDTp3XnFLdZmj2k=
+X-Google-Smtp-Source: AGHT+IHueg9kXT0omqcYh1MygVGHuEc9hy8Rqr0QixuEBTlPZQJZorBCF+J+Y4ifx7VPu0iQKqplryA7OKjyoAcrw8Y=
+X-Received: by 2002:a17:903:1d0:b0:249:1f13:9d67 with SMTP id
+ d9443c01a7336-25a7ede71b1mr4755965ad.11.1757526375136; Wed, 10 Sep 2025
+ 10:46:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250910155635.46187-1-irogers@google.com>
+References: <20250814114908.45648-1-atrajeev@linux.ibm.com>
+ <aJ5FvBa4LPhMO0u-@google.com> <4772D6D1-D61B-4269-B20F-17A387CAAAD9@linux.ibm.com>
+ <D3D67CAC-C609-4C25-99E3-4E130E2C9AFE@linux.ibm.com>
+In-Reply-To: <D3D67CAC-C609-4C25-99E3-4E130E2C9AFE@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 10 Sep 2025 10:46:04 -0700
+X-Gm-Features: Ac12FXy9JX7KkckBNq3ZEM7F3jal1Fln24W-tCLhXu3xkjdfH2B3CUAxMYfp6AQ
+Message-ID: <CAP-5=fXMKoF1z4TPDJhBFqz8gRdXcrCBTJdBvRLhY9rzrCFxfQ@mail.gmail.com>
+Subject: Re: [PATCH] tools/perf/tests: Update perf record testcase to fix
+ usage of affinity for machines with #CPUs > 1K
+To: Athira Rajeev <atrajeev@linux.ibm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, hbathini@linux.vnet.ibm.com, 
+	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Tejas Manhas <tejas05@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 10, 2025 at 08:56:35AM -0700, Ian Rogers wrote:
-> If not root and the perf_event_paranoid is set >1 swfilt will fail to
-> open the event failing the test. Add check to skip the test in that
-> case.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
-> Remove incorrect sample count corrections
-> ---
->  tools/perf/tests/shell/amd-ibs-swfilt.sh | 51 ++++++++++++++++++------
->  1 file changed, 38 insertions(+), 13 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/amd-ibs-swfilt.sh b/tools/perf/tests/shell/amd-ibs-swfilt.sh
-> index 7045ec72ba4c..ebe1fedb897b 100755
-> --- a/tools/perf/tests/shell/amd-ibs-swfilt.sh
-> +++ b/tools/perf/tests/shell/amd-ibs-swfilt.sh
-> @@ -1,6 +1,10 @@
->  #!/bin/bash
->  # AMD IBS software filtering
->  
-> +ParanoidAndNotRoot() {
-> +  [ "$(id -u)" != 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid)" -gt $1 ]
-> +}
-> +
->  echo "check availability of IBS swfilt"
->  
->  # check if IBS PMU is available
-> @@ -16,6 +20,7 @@ if [ ! -f /sys/bus/event_source/devices/ibs_op/format/swfilt ]; then
->  fi
->  
->  echo "run perf record with modifier and swfilt"
-> +err=0
->  
->  # setting any modifiers should fail
->  perf record -B -e ibs_op//u -o /dev/null true 2> /dev/null
-> @@ -31,11 +36,17 @@ if [ $? -ne 0 ]; then
->      exit 1
->  fi
->  
-> -# setting it with swfilt=1 should be fine
-> -perf record -B -e ibs_op/swfilt=1/k -o /dev/null true
-> -if [ $? -ne 0 ]; then
-> -    echo "[FAIL] IBS op PMU cannot handle swfilt for exclude_user"
-> -    exit 1
-> +if ! ParanoidAndNotRoot 1
-> +then
-> +    # setting it with swfilt=1 should be fine
-> +    perf record -B -e ibs_op/swfilt=1/k -o /dev/null true
-> +    if [ $? -ne 0 ]; then
-> +        echo "[FAIL] IBS op PMU cannot handle swfilt for exclude_user"
-> +        exit 1
-> +    fi
-> +else
-> +    echo "[SKIP] not root and perf_event_paranoid too high for exclude_user"
-> +    err=2
->  fi
->  
->  # check ibs_fetch PMU as well
-> @@ -46,10 +57,16 @@ if [ $? -ne 0 ]; then
->  fi
->  
->  # check system wide recording
-> -perf record -aB --synth=no -e ibs_op/swfilt/k -o /dev/null true
-> -if [ $? -ne 0 ]; then
-> -    echo "[FAIL] IBS op PMU cannot handle swfilt in system-wide mode"
-> -    exit 1
-> +if ! ParanoidAndNotRoot 1
+On Tue, Sep 9, 2025 at 10:56=E2=80=AFPM Athira Rajeev <atrajeev@linux.ibm.c=
+om> wrote:
+> > On 20 Aug 2025, at 10:50=E2=80=AFPM, Athira Rajeev <atrajeev@linux.ibm.=
+com> wrote:
+> >> On 15 Aug 2025, at 1:53=E2=80=AFAM, Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+> >>
+> >> Hello,
+> >>
+> >> On Thu, Aug 14, 2025 at 05:19:08PM +0530, Athira Rajeev wrote:
+> >>> Reported-by: Tejas Manhas <tejas05@linux.ibm.com>
+> >>> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+> >>
+> >> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> >>
+> Hi,
+>
+> Can we please pull this patch in if this looks good ?
 
-Using CPU events (-a) requires paranoid level 0.
+Tested-by: Ian Rogers <irogers@google.com>
 
 Thanks,
-Namhyung
-
-
-> +then
-> +    perf record -aB --synth=no -e ibs_op/swfilt/k -o /dev/null true
-> +    if [ $? -ne 0 ]; then
-> +        echo "[FAIL] IBS op PMU cannot handle swfilt in system-wide mode"
-> +        exit 1
-> +    fi
-> +else
-> +    echo "[SKIP] not root and perf_event_paranoid too high for exclude_user"
-> +    err=2
->  fi
->  
->  echo "check number of samples with swfilt"
-> @@ -60,8 +77,16 @@ if [ ${kernel_sample} -ne 0 ]; then
->      exit 1
->  fi
->  
-> -user_sample=$(perf record -e ibs_fetch/swfilt/k -o- true | perf script -i- -F misc | grep -c ^U)
-> -if [ ${user_sample} -ne 0 ]; then
-> -    echo "[FAIL] unexpected user samples: " ${user_sample}
-> -    exit 1
-> +if ! ParanoidAndNotRoot 1
-> +then
-> +    user_sample=$(perf record -e ibs_fetch/swfilt/k -o- true | perf script -i- -F misc | grep -c ^U)
-> +    if [ ${user_sample} -ne 0 ]; then
-> +        echo "[FAIL] unexpected user samples: " ${user_sample}
-> +        exit 1
-> +    fi
-> +else
-> +    echo "[SKIP] not root and perf_event_paranoid too high for exclude_user"
-> +    err=2
->  fi
-> +
-> +exit $err
-> -- 
-> 2.51.0.384.g4c02a37b29-goog
-> 
+Ian
