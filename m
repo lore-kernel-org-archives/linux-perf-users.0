@@ -1,120 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6008321019C
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Sep 2025 22:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 007C5274B2B;
+	Thu, 11 Sep 2025 23:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.36.192.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757628060; cv=none; b=fBUJ2g4EKH/46Fb82ItaKv0FDXvVk0MHGqYLUQn3g+vPbHDpjaOuN4qwkRwZ7h4vKbYo4VSj0Tj8Fg0WuWh0MImfdQfIdOLYHZhusG0/ixR5opEBXm6rSUL8KLUd4Xek4polazCNbMi+3WqAq+VvQN3lIe8UMztATlZsRZLLQeg=
+	t=1757633037; cv=none; b=a5C/LR8DL5ET8NOLL7PmetmuwctJumxEwXksOS1ngGqWSAAxwa1C48BTSTdPCrLspq2YNie3INIJ8roYnJA/s2IOMwRzyBknyGn7sitIu2c7fPJ6zvWJFNJl9wz2DR6QmrDTDZ6duInRgHPFm2DHcmwsIwiD5MMrnMQYr1J3Sok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757628060; c=relaxed/simple;
-	bh=Zxw2xGLDIC+cPVn4MqSgFOEgaYgLQumhIed57+IGQ1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hl2b7qRTxeyeJ6tiizO/CdhMp0pZjmDYbk5ROEKKNuFpkSkOqEIkuzc4kN/THDegmJSFGPiAF59A/5q5VKO/ydbCI0kMk9d0AZ6afE+YmgImHypIeufuAmobKmWpNn2GyelMvFoGgeLblR0wjY0putLkOP8neqXwebfTz4RKEWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iUqTfhBv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757633037; c=relaxed/simple;
+	bh=5/KPH7XsCSGImCOjQwBlg6KfqnJwT1NE+60RMcKKZJg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jqXLYcRVWngoda5xCqhqQfdffjNi2uUJHId1IT+FuGSgCeHLBVaBLjpqkrd1+2ULWnpxoQm300ndrBut6z918VsAtK97b3CiwcASFaRsGCGRxxSuI3pbNE49ctTIRkmjvbGTdgHJIAgX6Xv6w27xLz0yyu3InBnOQGUHnJY6HqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=YoZe9h3p; arc=none smtp.client-ip=4.36.192.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=codeweavers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iUqTfhBv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62828C4CEF5;
-	Thu, 11 Sep 2025 22:00:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757628060;
-	bh=Zxw2xGLDIC+cPVn4MqSgFOEgaYgLQumhIed57+IGQ1c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iUqTfhBvp38BEBBrgquArHdvem7wbLMQDkN7Nlpzx5fy9xAyceWcOhcYT97uwQrYS
-	 ulHkw0iLPGSPZYM14Efvb5zk+2OlmRFROhtwnjvqDNTtUocpHpvRDWvzx9ItY9tit1
-	 2bv/UagDsmApXKJJaNzJU6SLbyS8IOGvdjHLKLQ0F/QB+SwnlR/x+Da8z3kEGx8lpu
-	 X9tJDEe2vaIxYXdvBXybaQ9vbi752K5ZKzDcAztYJhjG3Xf21rbQhOEJanv2rBx1k2
-	 0qKhpOvmU4h4ay87Ewc6XolV3+0K9gcRO0G/9hr9pHSJeuOBm9mFLIPC2Y71R+2iSY
-	 s5x7oSONBktIw==
-Date: Thu, 11 Sep 2025 15:00:57 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Anubhav Shelat <ashelat@redhat.com>
-Cc: mpetlan@redhat.com, acme@kernel.org, irogers@google.com,
-	linux-perf-users@vger.kernel.org, peterz@infradead.org,
-	mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com,
-	dapeng1.mi@linux.intel.com, james.clark@linaro.org
-Subject: Re: [PATCH] perf trace: don't show comm/tid for regular syscalls for
- single-pid traces
-Message-ID: <aMNGmR1pMsI6WFCa@google.com>
-References: <20250821165831.184569-2-ashelat@redhat.com>
+	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="YoZe9h3p"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codeweavers.com; s=s1; h=Content-Transfer-Encoding:Content-Type:In-Reply-To
+	:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=QhInm/d1x81hkriWldNAfr4t3DuDfh81HFnFGoEo6zo=; b=YoZe9h3pcekJVStV5Kw7lm65yJ
+	cijNWkl0CKxScbRqoUbXOF+60RUZJTvaQ7lYjUhnSmr7tDdtGMjdR6kIu7ArG+zDq7j3/pQVFDtvh
+	29PCEf8JXvyqx+NXZAPf29xQnBo+QEEMP+sG0h7B0tcqCzr+vv1m+bzpjDCxAVFyaBPdzznKxJYWB
+	p8fSV/7Lzd1QOmMJIQtlmvpZc805Eaf5fiRb5LQ6UXsreTS/WOrLUK572bc6pUg6CVQwL43esgLbQ
+	g5+SjS2xeQmNnMyDliz1qBLEWJ+EjvP6IxtF9SWAlMNLvtLvbBcvDO6VrnPnUuf7xTpebijqWHqh1
+	BXVpQV8Q==;
+Received: from cw141ip160.vpn.codeweavers.com ([10.69.141.160])
+	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <bmcgrath@codeweavers.com>)
+	id 1uwqdn-00HATe-0D;
+	Thu, 11 Sep 2025 18:23:47 -0500
+Message-ID: <3e6eb24f-5557-4045-8593-bfd12e2b9cec@codeweavers.com>
+Date: Fri, 12 Sep 2025 09:23:42 +1000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250821165831.184569-2-ashelat@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] perf symbols: Fix HAVE_LIBBFD_BUILDID_SUPPORT build
+To: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: James Clark <james.clark@linaro.org>,
+ =?UTF-8?Q?R=C3=A9mi_Bernon?= <rbernon@codeweavers.com>,
+ Sam James <sam@gentoo.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250903-james-perf-read-build-id-fix-v1-0-6a694d0a980f@linaro.org>
+ <20250903-james-perf-read-build-id-fix-v1-2-6a694d0a980f@linaro.org>
+ <CAP-5=fWHGFBaCgiRcj8zVy196OE07F8jnSUbjvsO_HerdqeyTg@mail.gmail.com>
+ <70bd9eea-905a-4fa9-8265-f84ab9894b12@linaro.org>
+ <2b958dec-7ba9-41a3-b11b-43b5e8418849@codeweavers.com>
+ <549d3812-a606-4981-83f5-0a99b0ff9f6a@linaro.org>
+ <CAP-5=fXKthsZe3J4_UHHGwDafBq7pHzM18Mh=_2QrnSfCT3nOg@mail.gmail.com>
+ <3db2d6af-3b21-4ce2-be1f-668270adbbeb@codeweavers.com>
+ <CAP-5=fX33kGxfHzqVGzusMBiHJM6G75TbLyZazjp37yohwscGg@mail.gmail.com>
+Content-Language: en-US
+From: Brendan McGrath <bmcgrath@codeweavers.com>
+In-Reply-To: <CAP-5=fX33kGxfHzqVGzusMBiHJM6G75TbLyZazjp37yohwscGg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Aug 21, 2025 at 12:58:32PM -0400, Anubhav Shelat wrote:
-> Previously when attaching perf trace to a specific pid the output would
-> look like this:
-> 
->          ? (         ): vest/616160  ... [continued]: clock_nanosleep())                                  = 0
->      0.041 ( 0.013 ms): vest/616160 fstat(statbuf: 0xfffff2c60038)                                        = 0
->      0.073 ( 0.008 ms): vest/616160 read(buf: 0x3bede330, count: 4096)                                    = 17
->      0.090 (1000.095 ms): vest/616160 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 0 }, rmtp: 0xfffff2c601d8) = 0
->   1000.210 ( 0.136 ms): vest/616160 openat(dfd: CWD, filename: "/tmp/something.txt", flags: CREAT|TRUNC|WRONLY, mode: IRUGO|IWUGO) = 3
->   1000.361 ( 0.004 ms): vest/616160 fstat(fd: 3, statbuf: 0xfffff2c60088)                                 = 0
->   1000.375 ( 0.018 ms): vest/616160 write(fd: 3, buf: SOME TEST STRING\10, count: 17)                     = 17
->   1000.395 ( 0.072 ms): vest/616160 close(fd: 3)                                                          = 0
->   1000.476 (         ): vest/616160 exit_group()
-> 
-> which would cause an error in the perftool-testsuite since the comm/tid
-> shouldn't be in trace lines for regular syscalls. With this change the
-> output looks like this:
 
-I'm not sure if it's the right test.  It's controlled by the
-trace->multiple_threads condition which I believe should use
-trace->opts.no_inherit condition instead of the attribute of the
-first event.
 
-Thanks,
-Namhyung
+On 9/9/25 01:47, Ian Rogers wrote:
+> On Mon, Sep 8, 2025 at 3:24 AM Brendan McGrath <bmcgrath@codeweavers.com> wrote:
+>> Just wanted to let you know that I've been able to put together a PoC
+>> that does just this. It allows the pe-file-parsing test to pass using
+>> LLVM in place of libbfd.
+>>
+>> If there's interest, I would be happy to try to shape this in to
+>> something that can be accepted upstream.
+> 
+> IMO that'd be great! In this series:
+> https://lore.kernel.org/lkml/20250823003216.733941-1-irogers@google.com/
+> I wanted to pull apart the disasm vs the srcline vs .. uses of
+> libraries like llvm, capstone, let's delete libbfd, objdump, etc. The
+> idea being to have the API defined somewhere like disasm.h and then
+> based on compile time and runtime options select which implementation
+> to use. Things have evolved in perf, with a lot of stuff just globbed
+> into places like symbol without clear separation of APIs. Separating
+> things by library used allows reuse of things like library handles.
+> 
+> That series has 2 issues I'm aware of:
+> 1) the last 6 patches remove libbfd support (rather than refactor) and
+> some people may care. I suspect with your fix it could be down to ~1
+> person caring. I removed rather than refactored as there is a very
+> real risk that when you do refactor you break, and as this stuff is
+> next to always disabled then it's easy for regressions to creep in at
+> which point that ~1 person would probably complain. I'd much rather we
+> had a good solution that everyone was working toward having work well,
+> your patches would pull in this direction :-)
+> 
+> 2) Namhyung didn't like that I'd reversed the struct definitions for
+> the the capstone/LLVM APIs using pahole and would prefer that the
+> definitions came from capstone.h/llvm.h. My reasons for not doing that
+> are:
+> 2.1) if you have say capstone.h or llvm.h then why not just link
+> against the library? But doing that avoids the decoupling the patch
+> series is trying to set up. We'd need more build options, which option
+> to make the default, etc. which is kind of messy.
+> 2.2) to support that you'd need to bring back a "what if no
+> capstone.h/llvm.h" option in the code, I'd wanted that to be the
+> dlopen/dlsym case which must already handle libcapstone.so or
+> libLLVM.so being missing. Supporting the "no anything" option brings
+> with it a lot of ifdef-ery I was hoping to avoid and it would again be
+> one of those seldom used and often broken build options (like symbol
+> minimal (no libelf) today).
+> 2.3) in my build environment (bazel) depending on headers means
+> linking against the library and the global initializers mean that even
+> though no code (in say libLLVM) is directly used you can't strip out
+> the library again. I'd need to rework my build environment to try to
+> get the headers without the library and that'd be a larger undertaking
+> than the reverse engineering of the structs using pahole (as is
+> already done in the series). So changing the patches would mean
+> creating a patch series that I'd need to then do more work on to have
+> work in my build environment, and I'm not sure things are any better
+> by doing that. pahole was my compromise to just sidestep all of this
+> without copy-pasting from header files and introducing licensing
+> issues.
+> 
+> Anyway, what does this mean to fixing PE executables in LLVM? Perhaps
+> the first 12 patches of:
+> https://lore.kernel.org/lkml/20250823003216.733941-1-irogers@google.com/
+> can land and then you put your changes into llvm.c there?
 
+I'm happy to do that. I'll be largely unavailable for the next 4 weeks 
+anyway, and I've still got clean-up/improvements to make to the PoC 
+before it would be ready for any kind of submission. So I'm happy to 
+wait and then modify my patches accordingly.
+
+> We can
+> always clean up the issues of problem (2) above as later patches -
+> don't let perfect be the enemy of good. If libbfd must live-on then we
+> can move it to libbfd.c so that going through the generic source
+> doesn't mean wading through the libbfd code.
 > 
->          ? (         ): vest/612038  ... [continued]: clock_nanosleep())                                  = 0
->      0.039 ( 0.012 ms): fstat(statbuf: 0xfffff8e94cb8)                                        = 0
->      0.069 ( 0.008 ms): read(buf: 0x3b997330, count: 4096)                                    = 17
->      0.086 (1000.436 ms): clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 0 }, rmtp: 0xfffff8e94e58) = 0
->   1000.545 ( 0.136 ms): openat(dfd: CWD, filename: "/tmp/something.txt", flags: CREAT|TRUNC|WRONLY, mode: IRUGO|IWUGO) = 3
->   1000.700 ( 0.006 ms): fstat(fd: 3, statbuf: 0xfffff8e94d08)                                 = 0
->   1000.720 ( 0.024 ms): write(fd: 3, buf: SOME TEST STRING\10, count: 17)                     = 17
->   1000.750 ( 0.073 ms): close(fd: 3)                                                          = 0
->   1000.833 (         ): vest/612038 exit_group()
+> Anyway, I know I'm hijacking your fix to advance my own patch series.
+> I'm happy with your work landing independent of it, it just seemed we
+> could do the APIs more cleanly if both series landed together. I don't
+> object to (I'd also be positive for) just getting PE working without
+> my series. Isolating your code in the llvm.c in my series may make
+> things a bit easier for you. Having both series together would allow
+> the library decoupling, BPF JIT disassembly along with LLVM PE
+> support.
 > 
-> Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
-> ---
->  tools/perf/builtin-trace.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+> Namhyung/Arnaldo as the barriers to entry, could you comment?
 > 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index fe737b3ac6e6..4cc38ee6aad9 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -2955,11 +2955,17 @@ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
->  	if (trace->summary_only || (ret >= 0 && trace->failure_only))
->  		goto out;
->  
-> -	trace__fprintf_entry_head(trace, thread, duration, duration_calculated, ttrace->entry_time, trace->output);
-> -
->  	if (ttrace->entry_pending) {
-> +		if (trace->opts.target.pid) {
-> +			if (trace->show_tstamp)
-> +				printed = trace__fprintf_tstamp(trace, ttrace->entry_time, trace->output);
-> +			if (trace->show_duration)
-> +				printed += fprintf_duration(duration, duration_calculated, trace->output);
-> +		} else
-> +			trace__fprintf_entry_head(trace, thread, duration, duration_calculated, ttrace->entry_time, trace->output);
->  		printed = fprintf(trace->output, "%s", ttrace->entry_str);
->  	} else {
-> +		trace__fprintf_entry_head(trace, thread, duration, duration_calculated, ttrace->entry_time, trace->output);
->  		printed += fprintf(trace->output, " ... [");
->  		color_fprintf(trace->output, PERF_COLOR_YELLOW, "continued");
->  		printed += 9;
-> -- 
-> 2.50.1
-> 
+> Thanks,
+> Ian
+
