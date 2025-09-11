@@ -1,66 +1,65 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A3F1A9FA8;
-	Thu, 11 Sep 2025 09:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017B813EFE3
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Sep 2025 13:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757584609; cv=none; b=J6+tjfUyIIoOWFh9+fPwgvxWMj0zNb5UgpO5QO9Sgif2EfIl+cEwRxLKKgvvXrnpo6n6415YYET58NiZs6beWCiRTewXbwkANN0EVq3r7xzI41CV9ES+poGmzkx82yC6WMlMBZfOYWb1o4D/l1NYX0ms/jyrFw+6kcrNAHqBtCc=
+	t=1757595636; cv=none; b=usU/EybvF7oDENpVpNHyJNOrXwXFQgpP5KJ9B11aNVIWjmOsPZd3ytHBkFLfLQUQoTc+VKz4gTQu+944ViE1hKFnzGCvT1FRwWWF8A1Li1+IE+8oLv3QnXJpcNvaDvPFza0+KBa1zbDlz4Aba44XIyLe2IuQdCQUgFaPB0DVVpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757584609; c=relaxed/simple;
-	bh=NNRDzEMyXb7z9BvX+5iCWZ1jzriJYgVNyQVrmXGPbQ8=;
+	s=arc-20240116; t=1757595636; c=relaxed/simple;
+	bh=Uev9tFJf6el4XASN98rZT8IvrdeNF7D26YWzATU6Rxc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rAbo1Ge5iww7HaAc6IwZZQVoPSIgb4IAvCEnqYH26D/HlNvPx71SzG7YGcNPCgOFiuU17YYDLwJQNlD9hHNhXM4hwbYfKuI1BkF59XsdI0JeeUE/n1fj/oA1QNl51YdUntQbbf0T1ftaslbXJHYi7+gLk+sPkNrq9k0En5qA6nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F/TKvTcF; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=gbtPeYvtAylci18I98PmcQEAAQCWa0v0t1C3QlYeTFZceM1IR6CZ0V3uG/WALzDG6P+iHLJ6xJqNikGe9nACvrDDsJHcoxTHgjTZUEPuFponCMG1A3w/1AMqDD6uTx5hiq6BGrhaj2ALckroKnlgTvoZXu68EKDvRjtgr3FkSWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XDPyXsm7; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F/TKvTcF"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3e7428c4cbdso393712f8f.0;
-        Thu, 11 Sep 2025 02:56:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XDPyXsm7"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3e7428c4cbdso543339f8f.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Sep 2025 06:00:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757584606; x=1758189406; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1757595632; x=1758200432; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=+gFz16OXxdVWNpZ+XAvrYshRDoVNNNdGGCZgE4lW13o=;
-        b=F/TKvTcFwyf2sK9KPMaysB23sEG6gik6YcJEQb8QADBuoBgi5xrlLKbzG7OdjxS+zP
-         0Ay4DGoEFrw36K+LRsc1r68JdKbTtKDdMekb9LgMvV//yNlJ88+pDmMdEU5/ou19Ez2f
-         eL0qWFnFD5mWkbV7wXSYFyAgI6hajcSaN4h5hb5boLIh8x5DdUgW5+x/SQMGRMo+49TM
-         Fjfm6Laa/5j/VUKA4VNKxGyp+xOxY8Rb0Zau8t47IML5PDGf8dJs/JFKZeUwB2hvHDJH
-         kI/zy9JWVhWRwIV6CAGWeQlLLAVIPxwyUpHa8DkzfHSk5DO2Q5c+9RUIqq4JfUCI+Exh
-         G9Zg==
+        bh=6K02gEkp4FY0AuUQUnIeSmVCDV/i1HbGkotmEzOpyz4=;
+        b=XDPyXsm7cAxXWfi+rkQcB1nAEIA4S2QxB6WIHZmb5WH1hal4b06kRL7OuDX1wMoidC
+         PulYqDv7wmJWm0VUjdMhXrR1/2Hj9LAnRtC8TAfGkX0+j5ipYThPLlRKVR3OUo5fLwNr
+         xEJVu/t1hQJuvNSiHCaBiWrt9oNH5WQurgzwHf3v1N+6E7y6w78THwfEnngRaIS46BQf
+         OlwO8KFZz57JD8/lVnoM2H1KJizmgwxpOfOoqa+IfHRDz4Sno3TQXBYTCtvQmXNuAR5b
+         WzyQFmMQGu2Quv2It2G31E6xETC3mrE7tzKWmOQffYxSl0rZ6WBqP8dL+81Tyy3U50v3
+         Efmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757584606; x=1758189406;
+        d=1e100.net; s=20230601; t=1757595632; x=1758200432;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+gFz16OXxdVWNpZ+XAvrYshRDoVNNNdGGCZgE4lW13o=;
-        b=IEI2lfqouZpFovxQ53nn9oEe2Hs8xaoyXHjvsKDES04zs/kMVTsN5FJAu82rEaGJog
-         w0QhZBjolQsoDjo9i/I2AuS7OehGCgj2Xh+UK5YVwf3ObfBz+SSdvjknMoh5zMPaE83s
-         xJqJqdUoMkDa9mmngtvZJ2SlDBi62ZIW3msGRDBZLuTfVBiMauOTlf4CAptG05bX2dYI
-         aAfiQc5EQpVnNEJVdMja4XqInhiTA2czjw5Kb0nGVfqRJYyRww11EgeZO1Jou19F50vh
-         iQBfGzyjV0l4Tk4kiHZt4840NkozGNB+EuOBrzmopDDVNhFHP7NShdCrvohwy1oDdmQW
-         /vZA==
-X-Forwarded-Encrypted: i=1; AJvYcCUbggr7IZQVcyh7W0mpJKsz2wC74H8YIXoFFOJmJqKpPs30VfRTIedXYwLoBc5UCgZzVSm7yzynpbZa@vger.kernel.org, AJvYcCVgQjrBSH+hjhvap9UeE4ZUH7oauOwx6Dd16XNozjdlecELm9agAFUx3/3c8bH/EsfK3ODPV301x/irTosMPsYy2A==@vger.kernel.org, AJvYcCWGS+nRK5Xe0ONY667hmnr3treGllh/lcOkWdSR3GSTOKG93EFEJy2OXaJoeh8fmdOvYpmT5xFU8CkD@vger.kernel.org, AJvYcCWwlgasxvWeFgBvmOe5OBnsPK5EgaQ071Z9dgJbEvHs0eOeuZHttR7ikE325QKeiOnOtcidME3WAWlvOOrO@vger.kernel.org, AJvYcCXWqRmAi/fKJx9ePFVGXpkFPs5NHNuNIwoKzrDAtzctWwSbyfL58vlgH056Lyuc8TuvFzzLQH4wTCrd@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgOCk4/a/BYuTKHLOasvKxHo46pzRoO+ReuZOrKKj4wUFrKAtO
-	1Lo8GbW9y2YR3U2jprWDSZx7TEBWUpyEi08vKUGXC3zScfImOAFLWY6x
-X-Gm-Gg: ASbGncvmUo38E+XBL1Db8MdOCUMKPMagkgQls3PJRqFmUIjeN510YzJ1GBFCjBwslr/
-	jh9zcSMrOhNe9GCt8fv3gskVugpOWE31cBrwKLv1OXJVZJ3MnP2vx5ZFCemSt2C3TSHHb1vNkCY
-	72rPXvFFBX6Zizb1BCjt/lGQ46+GmoJOXH2XIAL38sXSQy/jZ4B3sVW1EE0pk3sqjorcFot1FuL
-	ZrtSnfPBVt19wIW71j9cbIPrBx17j1nvzYVOZxbWe1IFNOQhMKkfgiWFNCJZT7NkTTW5tl06i5h
-	YWZGE4n8K7D8EnjsDg9wkKsVUTldiJXDE8BUI4cZj3H91NxfPbQOGFGXY3O0uAtCxJjcgyRy2M7
-	JzM5OAh/Wn+qDv4YDo5aYmkNVRaeK5dQLYgVpFkAmJZQWl9ElKvzrWeeXPTdFo1mK/AmIJq5Y8D
-	gstgXUHZjkKRK9YtF6JHnl7p+tWcPrTEsnt/28540/txByhK9NFvCNgkdNMe1IgCG9/A==
-X-Google-Smtp-Source: AGHT+IFsyOKmEcChP9t0DqmtXOvTU/RBxiKR0aH0FNUztPJysvQ4Mcixg7qVyb6OlqpSIPNKJ5m26Q==
-X-Received: by 2002:a05:6000:1a8b:b0:3c2:d7f0:9c4e with SMTP id ffacd0b85a97d-3e75e0fadc1mr2058003f8f.8.1757584605567;
-        Thu, 11 Sep 2025 02:56:45 -0700 (PDT)
-Received: from ?IPV6:2a02:8440:714e:6956:5ea7:44db:f723:be79? (2a02-8440-714e-6956-5ea7-44db-f723-be79.rev.sfr.net. [2a02:8440:714e:6956:5ea7:44db:f723:be79])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7607d7c02sm1803049f8f.52.2025.09.11.02.56.43
+        bh=6K02gEkp4FY0AuUQUnIeSmVCDV/i1HbGkotmEzOpyz4=;
+        b=sp6+NtAzM+ug0DF82n0agKFELakLDwdE/jEIptjrySXevh7crtn1YgFAyqao5n9lau
+         QzAibDmvs91jwXuAeYyL95KAzv2FXUefnh62bUo2e6kIk7Xo/nT23LhSJsxD9uEweIxc
+         G/SeF1mHra89k7e2aJd/DBI4Sg4orYkbIRFmmgWLP91n13S+oNis/IkK9BZZB5E+rZMX
+         vFIWdqnKkZdz2K7/SuaKOc7tJeWfSgtclv9xHhIHb5+Zy+nFGjDB2p3CAGROHYk/vSVz
+         5BM5tURWn5K1sO7dE4VVw5UPmHFgsoVhrYvZTnUzgTcaEUtzkhItFjtvbefaWALhfHEt
+         S75w==
+X-Forwarded-Encrypted: i=1; AJvYcCXKuNiPQcsYr+Lh4G5tLU9UbzTrJrKSchQTgstIr5oUmORr5DYzkv8AuQomKCygVwelXtd3wdzF/DftdVqtSGcd@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMqLcq7FqM1rVjWGl0M/0fJMXJeaJhXpto5/wQIoo6lAMpwX4D
+	5lZMjFpPdaSDA1dDtoZEJztyNMq/xGVm9H1IWAfJVcmWqkp6tcVn+nxp7OQLCjAn3hw=
+X-Gm-Gg: ASbGncvO3GmvqC7BQPbvhIGw5J08ftyGQHeDhUY6cNRkT0njkzhBdEhL5TFVlK9Yjlk
+	W99HSCBKqPO3tVeOi/cvqRh9Qs3gc56A1FCUdIAJjNWKU1KZcMivXYOsAOUaTSSB0ao5s3ehm0s
+	/KNypBZqn407DmJCbXcR6sCvTxOLsMb/nGdhj1GLzV7L+eHQCaGYMre8kM/rvMCB8stStPAbB/p
+	K4pPUyEuuD/t1ZNU4s8ZlVFXeUct0BFKKcA3yMP7h8VxXckj1aQumAEvXXXBjtrCm1hQd40kZUa
+	i3aMxW2L24mCGCz5oiRmDk6xpjnTmp38BrlN2LbkYCgAwfMMf2P4ptrlI/nOhS2j612lcrJK4Mi
+	XkudJOdIDwaGLoN81HIG98U11BDs=
+X-Google-Smtp-Source: AGHT+IGq8rqA+k3RKGl/sU6BFCggRB85QSN4RZ9bx5hBV1Bj59utOir0PZkfMb+C5GQLZ6LkmpaYlA==
+X-Received: by 2002:a05:6000:178d:b0:3dc:1a9c:2e7f with SMTP id ffacd0b85a97d-3e75e0e51damr2584373f8f.8.1757595631818;
+        Thu, 11 Sep 2025 06:00:31 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.76.109])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3e7607cd691sm2468335f8f.32.2025.09.11.06.00.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Sep 2025 02:56:45 -0700 (PDT)
-Message-ID: <1a9ddd04-7877-4b4b-b746-0f3cf6ce0d8b@gmail.com>
-Date: Thu, 11 Sep 2025 11:56:41 +0200
+        Thu, 11 Sep 2025 06:00:30 -0700 (PDT)
+Message-ID: <055e677e-2a2f-4c56-abe0-9a437dc14d69@linaro.org>
+Date: Thu, 11 Sep 2025 14:00:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,269 +67,94 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 13/20] perf: stm32: introduce DDRPERFM driver
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Gatien Chevallier <gatien.chevallier@foss.st.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Gabriel Fernandez <gabriel.fernandez@foss.st.com>,
- Krzysztof Kozlowski <krzk@kernel.org>, Julius Werner <jwerner@chromium.org>,
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
- =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-References: <20250909-b4-ddrperfm-upstream-v6-0-ce082cc801b5@gmail.com>
- <20250909-b4-ddrperfm-upstream-v6-13-ce082cc801b5@gmail.com>
- <20250910102627.00007a40@huawei.com>
+Subject: Re: [PATCH v3 00/15] Legacy hardware/cache events as json
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Xu Yang <xu.yang_2@nxp.com>,
+ Thomas Falcon <thomas.falcon@intel.com>, Andi Kleen <ak@linux.intel.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ bpf@vger.kernel.org, Atish Patra <atishp@rivosinc.com>,
+ Beeman Strong <beeman@rivosinc.com>, Leo Yan <leo.yan@arm.com>,
+ Vince Weaver <vincent.weaver@maine.edu>
+References: <20250828205930.4007284-1-irogers@google.com>
+ <21d108f2-db8e-457a-bbef-89d18e8d7601@linaro.org>
+ <CAP-5=fVbtL=eL5bCFzz06g86Sk3nBsxUmgwZ3c5UY7z5hwmoLA@mail.gmail.com>
 Content-Language: en-US
-From: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <legoffic.clement@gmail.com>
-In-Reply-To: <20250910102627.00007a40@huawei.com>
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CAP-5=fVbtL=eL5bCFzz06g86Sk3nBsxUmgwZ3c5UY7z5hwmoLA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 10/09/2025 11:26, Jonathan Cameron wrote:
-> On Tue, 09 Sep 2025 12:12:20 +0200
-> Clément Le Goffic <legoffic.clement@gmail.com> wrote:
-> 
->> From: Clément Le Goffic <clement.legoffic@foss.st.com>
+
+
+On 10/09/2025 4:00 pm, Ian Rogers wrote:
+> On Wed, Sep 10, 2025 at 4:14 AM James Clark <james.clark@linaro.org> wrote:
 >>
->> Introduce the driver for the DDR Performance Monitor available on
->> STM32MPU SoC.
+>> On 28/08/2025 9:59 pm, Ian Rogers wrote:
+>>> Mirroring similar work for software events in commit 6e9fa4131abb
+>>> ("perf parse-events: Remove non-json software events"). These changes
+>>> migrate the legacy hardware and cache events to json.  With no hard
+>>> coded legacy hardware or cache events the wild card, case
+>>> insensitivity, etc. is consistent for events. This does, however, mean
+>>> events like cycles will wild card against all PMUs. A change doing the
+>>> same was originally posted and merged from:
+>>> https://lore.kernel.org/r/20240416061533.921723-10-irogers@google.com
+>>> and reverted by Linus in commit 4f1b067359ac ("Revert "perf
+>>> parse-events: Prefer sysfs/JSON hardware events over legacy"") due to
+>>> his dislike for the cycles behavior on ARM with perf record. Earlier
+>>> patches in this series make perf record event opening failures
+>>> non-fatal and hide the cycles event's failure to open on ARM in perf
+>>> record, so it is expected the behavior will now be transparent in perf
+>>> record on ARM. perf stat with a cycles event will wildcard open the
+>>> event on all PMUs.
 >>
->> On STM32MP2 platforms, the DDRPERFM allows to monitor up to 8 DDR events
->> that come from the DDR Controller such as read or write events.
+>> Hi Ian,
 >>
->> On STM32MP1 platforms, the DDRPERFM cannot monitor any event on any
->> counter, there is a notion of set of events.
->> Events from different sets cannot be monitored at the same time.
->> The first chosen event selects the set.
->> The set is coded in the first two bytes of the config value which is on 4
->> bytes.
+>> Briefly testing perf record and perf stat seem to work now. i.e "perf
+>> record -e cycles" doesn't fail and just skips the uncore cycles event.
+>> And "perf stat" now includes the uncore cycles event which I think is
+>> harmless.
+> 
+> Thanks for confirming this.
+> 
+>> But there are a few perf test failures. For example "test event parsing":
 >>
->> On STM32MP25x series, the DDRPERFM clock is shared with the DDR controller
->> and may be secured by bootloaders.
->> Access controllers allow to check access to a resource. Use the access
->> controller defined in the devicetree to know about the access to the
->> DDRPERFM clock.
->>
->> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
->> Signed-off-by: Clément Le Goffic <legoffic.clement@gmail.com>
-> Hi Clément
+>>     evlist after sorting/fixing: 'arm_cmn_0/cycles/,{cycles,cache-
+>>       misses,branch-misses}'
+>>     FAILED tests/parse-events.c:1589 wrong number of entries
+>>     Event test failure: test 57 '{cycles,cache-misses,branch-
+>>       misses}:e'running test 58 'cycles/name=name/'
 > 
-> A quick drive by review,
+> I suspect the easiest fix for this is to change "cycles" to the
+> "cpu-cycles" legacy hardware event for this test. The test has always
+> had issues on ARM due to hardcoded expectations of the core PMU being
+> "cpu".
 > 
+>> The tests "Perf time to TSC" and "Use a dummy software event to keep
+>> tracking" are using libperf to open the cycles event as a sampling event
+>> which now fails. It seems like we've fixed Perf record to ignore this
+>> failure, but we didn't think about libperf until now.
+> 
+> I'm not clear on the connection here. libperf doesn't do event parsing
+> and so there are no changes in tools/lib/perf. If a test has an
+> expectation that "cycles" is a core event, again we can change it to
+> "cpu-cycles" as a workaround for ARM. As "cycles" will wildcard now,
+> we don't want that behavior in say API probing as we'll end up never
+> lazily processing the PMUs. That code has been altered in these
+> changes to specify the core PMU. For tests it is less of an issue and
+> so the changes are more limited.
+> 
+> Thanks,
+> Ian
 
-Hi Jonathan,
+Sure makes sense if there's an easy fix for the tests, we can do that. I 
+suppose the main reason I mentioned it was that the tests might be 
+highlighting that other genuine non-Perf and non-test users would see 
+the same breakage though.
 
-Thank you for the review, below are my answers
 
-> 
->> diff --git a/drivers/perf/stm32_ddr_pmu.c b/drivers/perf/stm32_ddr_pmu.c
->> new file mode 100644
->> index 000000000000..38328663d2c5
->> --- /dev/null
->> +++ b/drivers/perf/stm32_ddr_pmu.c
->> @@ -0,0 +1,897 @@
-> 
->> +
->> +#define MP1_CLR_CNT		GENMASK(3, 0)
->> +#define MP1_CLR_TIME		BIT(31)
->> +#define MP2_CLR_CNT		GENMASK(7, 0)
->> +#define MP2_CLR_TIME		BIT(8)
->> +
->> +/* 4 event counters plus 1 dedicated to time */
->> +#define MP1_CNT_NB		(4 + 1)
-> 
-> This is never used so I would drop it and rename the MP2_CNT_NB
-> to indicate it is the max value for any devices supported.
-
-It is used in the stm32_ddr_pmu_cfg_mp1 struct which is the device 
-platform data.
-> 
-> 
->> +/* Index of the time dedicated counter */
->> +#define MP1_TIME_CNT_IDX	4
->> +
->> +/* 8 event counters plus 1 dedicated to time */
->> +#define MP2_CNT_NB		(8 + 1)
-> ...
-> 
->> +struct stm32_ddr_pmu {
->> +	struct pmu pmu;
->> +	void __iomem *membase;
->> +	struct device *dev;
->> +	struct clk *clk;
->> +	const struct stm32_ddr_pmu_cfg *cfg;
->> +	struct hrtimer hrtimer;
->> +	ktime_t poll_period;
->> +	int selected_set;
->> +	u32 dram_type;
->> +	struct list_head counters[];
-> The absence of a __counted_by() marking made me wonder how
-> we ensured that this wasn't overrun.  I see below that's because
-> size is always the same.  So
-> 	struct list_head counters[MP2_CNT_NB];
-> If you do want to make it dynamic then that is fine but added
-> a local variable for the size and the __counted_by() marking so
-> the various analysis tools can check for buffer overruns.
-
-Oh I didn't know about this __counted_by compiler attribute.
-I'll have a look and try to use it.
-The array shouldn't have the same size basically it should depends on 
-the platform counters number.
-There is definitely something to rework regarding the allocation.
-Thank you for pointing it.
-
-> 
->> +};
-> 
-> 
-> 
->> +static void stm32_ddr_pmu_event_del(struct perf_event *event, int flags)
->> +{
->> +	struct stm32_ddr_pmu *pmu = to_stm32_ddr_pmu(event->pmu);
->> +	struct stm32_ddr_cnt *counter = event->pmu_private;
->> +	bool events = true;
-> 
-> Always set before use, so don't set it here.  I'd move this into the
-> scope of the for loop to make this more obvious.
-
-Right, i'll remove the assignation.
-
-> 
->> +
->> +	stm32_ddr_pmu_event_stop(event, PERF_EF_UPDATE);
->> +
->> +	stm32_ddr_pmu_free_counter(pmu, counter);
->> +
->> +	for (int i = 0; i < pmu->cfg->counters_nb; i++) {
->> +		events = !list_empty(&pmu->counters[i]);
->> +		if (events) /* If there is activity nothing to do */
->> +			return;
->> +	}
->> +
->> +	hrtimer_cancel(&pmu->hrtimer);
->> +	stm32_ddr_stop_counters(pmu);
->> +
->> +	pmu->selected_set = -1;
->> +
->> +	clk_disable(pmu->clk);
->> +}
-> 
->> +
->> +#define STM32_DDR_PMU_EVENT_ATTR(_name, _id)			\
->> +	PMU_EVENT_ATTR_ID(_name, stm32_ddr_pmu_sysfs_show, _id)
->> +
->> +static struct attribute *stm32_ddr_pmu_events_attrs_mp[] = {
->> +	STM32_DDR_PMU_EVENT_ATTR(perf_op_is_rd, PERF_OP_IS_RD),
-> 
-> Prefixing perf events with perf_ seems unnecessary.
-> 
-> I guess perf_op_is_rd is counting all reads?  Is so why not call it simply 'reads'
-> or something else short like that?  If it's cycles when a read is going on then
-> maybe a more complex is needed, but perf_op_is_rd doesn't convey that to me.
-
-Here I just extracted the name of each event from the datasheet and for 
-some of them there are prefixed by "perf_".
-I do not have enough knowledge of the HW to just rename it read and let 
-other event with their "scientific name".
-To me I should stick to a policy either rename all the events with 
-understandable names or keep all event names like this.
-And I'm unable to find an understandable name for each event.
-
-> 
->> +	STM32_DDR_PMU_EVENT_ATTR(perf_op_is_wr, PERF_OP_IS_WR),
->> +	STM32_DDR_PMU_EVENT_ATTR(perf_op_is_activate, PERF_OP_IS_ACTIVATE),
->> +	STM32_DDR_PMU_EVENT_ATTR(ctl_idle, CTL_IDLE),
->> +	STM32_DDR_PMU_EVENT_ATTR(perf_hpr_req_with_no_credit, PERF_HPR_REQ_WITH_NO_CREDIT),
->> +	STM32_DDR_PMU_EVENT_ATTR(perf_lpr_req_with_no_credit, PERF_LPR_REQ_WITH_NO_CREDIT),
->> +	STM32_DDR_PMU_EVENT_ATTR(cactive_ddrc, CACTIVE_DDRC),
->> +	STM32_DDR_PMU_EVENT_ATTR(perf_op_is_enter_powerdown, PERF_OP_IS_ENTER_POWERDOWN),
->> +	STM32_DDR_PMU_EVENT_ATTR(perf_op_is_refresh, PERF_OP_IS_REFRESH),
->> +	STM32_DDR_PMU_EVENT_ATTR(perf_selfresh_mode, PERF_SELFRESH_MODE),
->> +	STM32_DDR_PMU_EVENT_ATTR(dfi_lp_req, DFI_LP_REQ),
->> +	STM32_DDR_PMU_EVENT_ATTR(perf_hpr_xact_when_critical, PERF_HPR_XACT_WHEN_CRITICAL),
->> +	STM32_DDR_PMU_EVENT_ATTR(perf_lpr_xact_when_critical, PERF_LPR_XACT_WHEN_CRITICAL),
->> +	STM32_DDR_PMU_EVENT_ATTR(perf_wr_xact_when_critical, PERF_WR_XACT_WHEN_CRITICAL),
->> +	STM32_DDR_PMU_EVENT_ATTR(dfi_lp_req_cpy, DFI_LP_REQ),  /* Suffixed '_cpy' to allow the
->> +								* choice between sets 2 and 3
->> +								*/
->> +	STM32_DDR_PMU_EVENT_ATTR(time_cnt, TIME_CNT),
->> +	NULL
->> +};
-> 
-> 
->> +static int stm32_ddr_pmu_device_probe(struct platform_device *pdev)
->> +{
->> +	struct stm32_firewall firewall;
->> +	struct stm32_ddr_pmu *pmu;
->> +	struct reset_control *rst;
->> +	struct resource *res;
->> +	int ret;
->> +
->> +	pmu = devm_kzalloc(&pdev->dev, struct_size(pmu, counters, MP2_CNT_NB), GFP_KERNEL);
-> 
-> If using a fixed number of counters why not put it in the struct
-> definition and simplify the code?  I agree it is probably not
-> worth making this dynamic given small sizes but I don't mind
-> if you do want to do this.  The only thing that isn't a good idea
-> is this dynamic, but not really, current situation.
-
-Yes something need reworks here as said above in your first comment.
-I will try to find the best solution.
-
-> 
->> +	if (!pmu)
->> +		return -ENOMEM;
-> 
-> 
-> 
->> +static DEFINE_SIMPLE_DEV_PM_OPS(stm32_ddr_pmu_pm_ops, NULL, stm32_ddr_pmu_device_resume);
->> +
->> +static const struct of_device_id stm32_ddr_pmu_of_match[] = {
->> +	{
->> +		.compatible = "st,stm32mp131-ddr-pmu",
->> +		.data = &stm32_ddr_pmu_cfg_mp1
-> 
-> Trivial but if you are spinning again, normal convention is trailing commas
-> in cases like this because maybe other fields will get set later.
-Yes this is something I should keep in mind each time I init a struct.
-I'll fix it for the next version.
-
-> 
->> +	},
->> +	{
->> +		.compatible = "st,stm32mp251-ddr-pmu",
->> +		.data = &stm32_ddr_pmu_cfg_mp2
->> +	},
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(of, stm32_ddr_pmu_of_match);
->> +
->> +static struct platform_driver stm32_ddr_pmu_driver = {
->> +	.driver = {
->> +		.name = DRIVER_NAME,
->> +		.pm = pm_sleep_ptr(&stm32_ddr_pmu_pm_ops),
->> +		.of_match_table = stm32_ddr_pmu_of_match,
->> +	},
->> +	.probe = stm32_ddr_pmu_device_probe,
->> +	.remove = stm32_ddr_pmu_device_remove,
->> +};
->> +
->> +module_platform_driver(stm32_ddr_pmu_driver);
->> +
->> +MODULE_AUTHOR("Clément Le Goffic");
->> +MODULE_DESCRIPTION("STMicroelectronics STM32 DDR performance monitor driver");
->> +MODULE_LICENSE("GPL");
->>
-> 
-
-Best regards,
-Clément
 
