@@ -1,80 +1,58 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79AEA327A2E;
-	Fri, 12 Sep 2025 19:35:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0309D4C81;
+	Fri, 12 Sep 2025 19:45:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757705752; cv=none; b=OR+bq7ySjhxWKNzsim27RPZ+xYdvbVe5pj3FpIuD13idyoBmfGbZhX0SamBtE8NVNzwiRZDcf8FKVbSbpeUaet2VEQolXKRgDEFTva+6CcY4kzFHgDphsQn9Tp3eTpDdNJwppB+RVS1FVonNdRFf2jz1wQIYvEE3W9E8h+OVICY=
+	t=1757706324; cv=none; b=BpowPIzBy4PvHr200MSAnfhkzca5H20Zrk+DwYiOtVhRB2+ZF9FX4XD5bGyLQajYpmqWDTUZzAlRhN1QUe5s6Gxj0Jye8kN6LvCzdYQJpRxZWgSsU0+F9Ffa80a6Lb3nq1RAGIeDLSuafIqfZesWTumsNqRsU3Yuifph/SoEHFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757705752; c=relaxed/simple;
-	bh=EuFoan44y9MtixCT5U0TLvDIdjhgkppaMVmj//N0gIE=;
+	s=arc-20240116; t=1757706324; c=relaxed/simple;
+	bh=eRmlEgZBdwAVe3h7/GUPU9Q+gTO65mCT/B7HM+C5/r0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NBCSEKA0fVdXU1xE4naycKRef46kf1PfYCIcVPjMqTIMzgL5/JO70a1xB+AfzNNwAW68Devuf3wWd93mHI6mlYtVe8D8sqxLZH+EjYMkJiaIQLfIsScg3t6hK2JzzFTzN0ReDvZhvWJtwFjcwIX7mhrfGbmxvwf4kLclh7O/Zr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RlHMvKmW; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fryko6bKElKZZ0Xtil7Us2PzxI/Ytu6PuEP/l9YU4VBGsT2MMNODsvuip/5sEciIifeGosa2YYtK3Amynat6MbEJupabE3exBTxFtbSGLxJY301384arMifUJ3kOsjst5G5vrEe2udZhIopbN/uDf6sghcZdykDeTG/mnpxMZ7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HGxLGgRj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RlHMvKmW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDA3CC4CEF1;
-	Fri, 12 Sep 2025 19:35:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HGxLGgRj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25D1AC4CEF1;
+	Fri, 12 Sep 2025 19:45:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757705752;
-	bh=EuFoan44y9MtixCT5U0TLvDIdjhgkppaMVmj//N0gIE=;
+	s=k20201202; t=1757706323;
+	bh=eRmlEgZBdwAVe3h7/GUPU9Q+gTO65mCT/B7HM+C5/r0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RlHMvKmWxpBv6h+cFyw/9EEJlBNsJkahcd3bvPMc/P2PzeVOjiQrnk1W05TfKjNsb
-	 krBRBgl/6ppA1Ec/zw0quRTvAWXiBDov2FFWoA/ac2VYXE+QfSc2NDW1Dp6hTezPTg
-	 1TehB+LHSuHsBkYq5OTN2HJ/CtAW485PEBBdIuIPt0QKR4l8ig5McR09NHe5JAK2AA
-	 e6RCyOdBdJWPKjBH3gBiqtwaWM6mHU6nzXFIX9fjYunHZLHPEncrjdUPOr/MvNbuTA
-	 WZaXVx3XIGZv/DF+jhP5DqS+jBNnvAK79f/cT47vCBBvleG+eYHu+yUa+K6O6JA8wu
-	 CeBELC4tmmIoA==
-Date: Fri, 12 Sep 2025 16:35:49 -0300
+	b=HGxLGgRjMDweOQcz1o9SLsb4xdM047FEMoHGsd+9t1EJPz8DcZllP6Dh7GIEhwELe
+	 QUHRQ6RFNj72LgTkzPlBJWmmyO14IZNKvFmpCqgnOs5R25eBkYuqwE48olpdeOvHhp
+	 8Z14wHaxuxIQKh65NJNPSakqY6xeLxOlQIRrKlQ9uTpUOnLI2cQUQ/IWX0CYU1Lyh2
+	 vMhw65Etr9I402cbjwoiLi4y5OTmLvnH6WpKVIRmrruaygrm7gN6WZKSTFhXz7/jIf
+	 ESWkov3bh4QNU/MQsWxio8zGGCPzkQAC97XVNHBNjZL2U5Kj/wUAwzVpc66O/tUe8e
+	 gqTN/pJXedUVw==
+Date: Fri, 12 Sep 2025 16:45:20 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+To: Howard Chu <howardchu95@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>, Leo Yan <leo.yan@arm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH RESEND] perf: Completely remove possibility to override
- MAX_NR_CPUS
-Message-ID: <aMR2FZWyXekLEK0-@x1>
-References: <b205802edbb6fcc78822f558dff7104e64b29864.1755510867.git.christophe.leroy@csgroup.eu>
- <7ded6ce4-1fcb-4e2d-94ab-5c330de6aea0@csgroup.eu>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf trace: Add --max-summary option
+Message-ID: <aMR4UIY94UhoJUMl@x1>
+References: <20250821003220.1051711-1-namhyung@kernel.org>
+ <CAH0uvoj7s3V7qby7BxQ9Eby4G562MMsFtbonLJ2L3SF1N7CDng@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7ded6ce4-1fcb-4e2d-94ab-5c330de6aea0@csgroup.eu>
+In-Reply-To: <CAH0uvoj7s3V7qby7BxQ9Eby4G562MMsFtbonLJ2L3SF1N7CDng@mail.gmail.com>
 
-On Fri, Sep 12, 2025 at 10:32:56AM +0200, Christophe Leroy wrote:
-> Le 18/08/2025 à 11:57, Christophe Leroy a écrit :
-> > Commit 21b8732eb447 ("perf tools: Allow overriding MAX_NR_CPUS at
-> > compile time") added the capability to override MAX_NR_CPUS. At
-> > that time it was necessary to reduce the huge amount of RAM used
-> > by static stats variables.
-> > 
-> > But this has been unnecessary since commit 6a1e2c5c2673 ("perf stat:
-> > Remove a set of shadow stats static variables"), and
-> > commit e8399d34d568 ("libperf cpumap: Hide/reduce scope of
-> > MAX_NR_CPUS") broke the build in that case because it failed to
-> > add the guard around the new definition of MAX_NR_CPUS.
-> > 
-> > So cleanup things and remove guards completely to officialise it
-> > is not necessary anymore to override MAX_NR_CPUS.
-> > 
-> > Link: https://lore.kernel.org/all/8c8553387ebf904a9e5a93eaf643cb01164d9fb3.1736188471.git.christophe.leroy@csgroup.eu/
-> > Fixes: e8399d34d568 ("libperf cpumap: Hide/reduce scope of MAX_NR_CPUS")
-> > Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> 
-> Gentle ping
+On Fri, Aug 22, 2025 at 10:19:26PM -0700, Howard Chu wrote:
+> On Wed, Aug 20, 2025 at 5:32â€¯PM Namhyung Kim <namhyung@kernel.org> wrote:
+> Reviewed-by: Howard Chu <howardchu95@gmail.com>
 
 Thanks, applied to perf-tools-next,
 
