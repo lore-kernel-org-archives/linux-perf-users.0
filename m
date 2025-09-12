@@ -1,27 +1,26 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3691231352B
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Sep 2025 15:42:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68CF831355A
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Sep 2025 15:43:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757691781; cv=none; b=TK/Os5p1x+0eN/ufhkypPPteYwhQdkcrVghczqtAHB8h4wEQV1EX9qgf22GXhJ6g590saQ/E6Xk6glqaoQYNtpD096FYZTWknynB2GN+thNGWBNjD1+zNLt2HOrahLZZhD2KEqP/dliWPiO4orinpr3gp7b45hog2mtmNi7rDXE=
+	t=1757691783; cv=none; b=lBCqIhJ9rrA4NVr6/V9zOemaddtQPF+1NlSwIVdWzxGWLS2KwAX6LiRtRVmoEjnlr0cGzEcTxJV5aiW4uPt0p3oCKrqCI40NBj3XNTFaiyKvXFVpfgc1GAOPsNA8gpfTHUwLAhfqr04RDOVVEjvCRAojD9T8bYa2cbNwHJqaGgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757691781; c=relaxed/simple;
-	bh=B/9ePTi8sxuuKlUG38K+dU3DkACqi1L8KBK9hf+bQNs=;
+	s=arc-20240116; t=1757691783; c=relaxed/simple;
+	bh=nXQaRbE53bleBxqYngjZ5Ask7cOJ1qDiYfD4POjV/7k=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PqCKYFf96u/wo8HzbPE3WXLQkibE0eFrj4b4fP3TTE0DOCpvdMcEQYvMV45GbH8GQr2CbBJ0hxryEf7qTMQ2TYjn7MMmsdUxt1nYGJLi8KQP+XeOSIkCstitmx5RGmpe3Pk5PUYzCz7UD5dWAV+aI7ABh6+TztBJgyZQ4AOehzQ=
+	 In-Reply-To:To:Cc; b=pND9HCRtaPkZ7Uebj4TAiwtrDq8Xg2/kGk3rDxzqKke2o/TsdpnM0inpKrx3xV4pYJibNcCyN13PxbB17wdehRQZwDv0iLkk4JR1pGReIdg/Ed6ms7Sqq9ui9ALZRmOJy8LJZhhUyc6ZDLUrKz6QObKjez9YkkjKnwBYHwaOjlk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4246B1515;
-	Fri, 12 Sep 2025 08:42:51 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A8D31A25;
+	Fri, 12 Sep 2025 08:42:53 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82D963F694;
-	Fri, 12 Sep 2025 08:42:57 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C83693F694;
+	Fri, 12 Sep 2025 08:42:59 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Date: Fri, 12 Sep 2025 16:42:13 +0100
-Subject: [PATCH v5 08/14] perf arm_spe: Add "event_filter" entry in meta
- data
+Date: Fri, 12 Sep 2025 16:42:14 +0100
+Subject: [PATCH v5 09/14] perf arm_spe: Refine memory level filling
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -30,7 +29,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250912-arm_spe_support_hitm_overhead_v1_public-v5-8-0800880da0a7@arm.com>
+Message-Id: <20250912-arm_spe_support_hitm_overhead_v1_public-v5-9-0800880da0a7@arm.com>
 References: <20250912-arm_spe_support_hitm_overhead_v1_public-v5-0-0800880da0a7@arm.com>
 In-Reply-To: <20250912-arm_spe_support_hitm_overhead_v1_public-v5-0-0800880da0a7@arm.com>
 To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -45,92 +44,79 @@ Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
  linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1757691759; l=2736;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1757691759; l=2481;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=B/9ePTi8sxuuKlUG38K+dU3DkACqi1L8KBK9hf+bQNs=;
- b=/4VfGARmY0AHVKxdXytsqLExPvP7mCT7uGBiQxryLyjFeckOyPtjLSxpihGMp1LzGEJekPNn3
- f1vEAjm4dosDd6Sls9I2pcdOeWOrb1gqdBEAAViv1AVdQV2yQD6gUi8
+ bh=nXQaRbE53bleBxqYngjZ5Ask7cOJ1qDiYfD4POjV/7k=;
+ b=3ej2Muo/a5n07DhZ202HsjVW569+Tpe8DY4cJyTpu++FCOsgaKexBhr7wO8hKWnWPo/N29Yd6
+ nkBKoTCQzN6BU0WPCdpmDjWQ76cYZ2i99Z9efFW6cjN6F0zXN0ELTWx
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Add a new "event_filter" entry in the meta data and dump it in raw data
-mode.
+This commit introduces macros for detecting cache level and cache miss.
 
-After:
-
-  # perf script -D
-  ...
-
-  0 0 0x470 [0x1f0]: PERF_RECORD_AUXTRACE_INFO type: 4
-    Header version     :2
-    Header size        :4
-    PMU type v2        :11
-    CPU number         :8
-      Magic            :0x1010101010101010
-      CPU #            :0
-      Num of params    :4
-      MIDR             :0x410fd0f0
-      PMU Type         :11
-      Min Interval     :256
-      Event Filter     :0x3fe08fe
-
-  ...
+Populates the 'mem_lvl_num' field which is a later added attribute for
+representing memory level. Set NA ("not available") to memory levels if
+memory hierarchy info is absent.
 
 Reviewed-by: James Clark <james.clark@linaro.org>
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/arch/arm64/util/arm-spe.c | 5 +++++
- tools/perf/util/arm-spe.c            | 1 +
- tools/perf/util/arm-spe.h            | 2 ++
- 3 files changed, 8 insertions(+)
+ tools/perf/util/arm-spe.c | 32 +++++++++++++++++++++-----------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-index 4f2833b62ff55f3fd1dff3f032d6e06528460939..cac43cde7dbee94884938482d03989a2c69cb0b1 100644
---- a/tools/perf/arch/arm64/util/arm-spe.c
-+++ b/tools/perf/arch/arm64/util/arm-spe.c
-@@ -121,12 +121,17 @@ static int arm_spe_save_cpu_header(struct auxtrace_record *itr,
- 		/* No Arm SPE PMU is found */
- 		data[ARM_SPE_CPU_PMU_TYPE] = ULLONG_MAX;
- 		data[ARM_SPE_CAP_MIN_IVAL] = 0;
-+		data[ARM_SPE_CAP_EVENT_FILTER] = 0;
- 	} else {
- 		data[ARM_SPE_CPU_PMU_TYPE] = pmu->type;
- 
- 		if (perf_pmu__scan_file(pmu, "caps/min_interval", "%lu", &val) != 1)
- 			val = 0;
- 		data[ARM_SPE_CAP_MIN_IVAL] = val;
-+
-+		if (perf_pmu__scan_file(pmu, "caps/event_filter", "%lx", &val) != 1)
-+			val = 0;
-+		data[ARM_SPE_CAP_EVENT_FILTER] = val;
- 	}
- 
- 	free(cpuid);
 diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 38e6f8331f2790b9cd3bc94d5a18657d7e0f5e42..24968fc15693e4e6dcbe67dcdc85a261e0f701b7 100644
+index 24968fc15693e4e6dcbe67dcdc85a261e0f701b7..255a36ecd7bcd89a65ff1ef4a14191ebe76ae9a6 100644
 --- a/tools/perf/util/arm-spe.c
 +++ b/tools/perf/util/arm-spe.c
-@@ -1532,6 +1532,7 @@ static const char * const metadata_per_cpu_fmts[] = {
- 	[ARM_SPE_CPU_MIDR]		= "    MIDR             :0x%"PRIx64"\n",
- 	[ARM_SPE_CPU_PMU_TYPE]		= "    PMU Type         :%"PRId64"\n",
- 	[ARM_SPE_CAP_MIN_IVAL]		= "    Min Interval     :%"PRId64"\n",
-+	[ARM_SPE_CAP_EVENT_FILTER]	= "    Event Filter     :0x%"PRIx64"\n",
- };
+@@ -39,6 +39,15 @@
  
- static void arm_spe_print_info(struct arm_spe *spe, __u64 *arr)
-diff --git a/tools/perf/util/arm-spe.h b/tools/perf/util/arm-spe.h
-index 390679a4af2fb61419bc881b5dc43c01f1dd77d7..3966df1856d8234bb5fe580c3f128c4d238c6221 100644
---- a/tools/perf/util/arm-spe.h
-+++ b/tools/perf/util/arm-spe.h
-@@ -47,6 +47,8 @@ enum {
- 	ARM_SPE_CPU_PMU_TYPE,
- 	/* Minimal interval */
- 	ARM_SPE_CAP_MIN_IVAL,
-+	/* Event filter */
-+	ARM_SPE_CAP_EVENT_FILTER,
- 	ARM_SPE_CPU_PRIV_MAX,
- };
+ #define is_ldst_op(op)		(!!((op) & ARM_SPE_OP_LDST))
  
++#define ARM_SPE_CACHE_EVENT(lvl) \
++	(ARM_SPE_##lvl##_ACCESS | ARM_SPE_##lvl##_MISS)
++
++#define arm_spe_is_cache_level(type, lvl) \
++	((type) & ARM_SPE_CACHE_EVENT(lvl))
++
++#define arm_spe_is_cache_miss(type, lvl) \
++	((type) & ARM_SPE_##lvl##_MISS)
++
+ struct arm_spe {
+ 	struct auxtrace			auxtrace;
+ 	struct auxtrace_queues		queues;
+@@ -813,20 +822,21 @@ static const struct data_source_handle data_source_handles[] = {
+ static void arm_spe__synth_memory_level(const struct arm_spe_record *record,
+ 					union perf_mem_data_src *data_src)
+ {
+-	if (record->type & (ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS)) {
++	if (arm_spe_is_cache_level(record->type, LLC)) {
+ 		data_src->mem_lvl = PERF_MEM_LVL_L3;
+-
+-		if (record->type & ARM_SPE_LLC_MISS)
+-			data_src->mem_lvl |= PERF_MEM_LVL_MISS;
+-		else
+-			data_src->mem_lvl |= PERF_MEM_LVL_HIT;
+-	} else if (record->type & (ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS)) {
++		data_src->mem_lvl |= arm_spe_is_cache_miss(record->type, LLC) ?
++				     PERF_MEM_LVL_MISS : PERF_MEM_LVL_HIT;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L3;
++	} else if (arm_spe_is_cache_level(record->type, L1D)) {
+ 		data_src->mem_lvl = PERF_MEM_LVL_L1;
++		data_src->mem_lvl |= arm_spe_is_cache_miss(record->type, L1D) ?
++				     PERF_MEM_LVL_MISS : PERF_MEM_LVL_HIT;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_L1;
++	}
+ 
+-		if (record->type & ARM_SPE_L1D_MISS)
+-			data_src->mem_lvl |= PERF_MEM_LVL_MISS;
+-		else
+-			data_src->mem_lvl |= PERF_MEM_LVL_HIT;
++	if (!data_src->mem_lvl) {
++		data_src->mem_lvl = PERF_MEM_LVL_NA;
++		data_src->mem_lvl_num = PERF_MEM_LVLNUM_NA;
+ 	}
+ 
+ 	if (record->type & ARM_SPE_REMOTE_ACCESS)
 
 -- 
 2.34.1
