@@ -1,45 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD943009D5;
-	Fri, 12 Sep 2025 18:26:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3931532A817;
+	Fri, 12 Sep 2025 18:27:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757701595; cv=none; b=r+/m6S+LOl9VDzhqvTfDY/M9mATWkzWkhnb4oYflPELXubW1j5SSJT6ONANMd/ph5klgNEF/54s1qKq/MjuJbgrpjELBdPI+lTj/JiMiY37ReH2OGRMXtyPHAlCWa742OIqL0ui4BGwpOKGlI9z9fP5Gl1tMa+dLIisG3p918kQ=
+	t=1757701663; cv=none; b=ijArKtPEOeHHb7IQf0GCw8I0cl1SiygKWD5VR771DJcjMu63GADq7vN4d+Qf0RgrJQJXd+MnLk/e+QG5sPS+1FgQUtmNUhtaNEXgZvBVianNvShdDz4Bmm0/7Na80So1awT1YmW26c+Wn+tDIOGcaHt1E0+vde4xA/BsrHu0bJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757701595; c=relaxed/simple;
-	bh=mKTknIgSPUqsrwIiWh/K+IeP3nmG0ppoBFpLjSD6lCc=;
+	s=arc-20240116; t=1757701663; c=relaxed/simple;
+	bh=giny/t9N6iQo9VgTX/KMvXx1csABBtT4GXJJNz+cGzY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PqmoSqkCBhbeL85+iWNMlLoX3XPZMw8xcViws67Dk4Q6ieysb5IdOzoyn3Y4q9uE8waPxEarBTPqKQXCXOwCR6LZIrd3pHbB6LV6nL1kJii56bSlTRK+/wmMKg7v7dYwwWbv0gh2jNdA9Iyj3HavSPdWafJnRyHGZae9ol0ryOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ijjYQ2Rc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=lluvOYTv0bjT7Y44XJDuDblHm2Umy1if3y/f0ythxrc46HRagWf1iOAr36HpY4tqoASlVaaz+5HvWTR3hh4W07T6uzre98E8rZ9gb+prQs41/NUvFkH4ExqBH8J/XYks5qMydLyvxy1Dnj7h8qotZBggNJmjGrskHRXVH9SP+Yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZxOTH7q1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ijjYQ2Rc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BECFEC4CEF1;
-	Fri, 12 Sep 2025 18:26:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZxOTH7q1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9094EC4CEF1;
+	Fri, 12 Sep 2025 18:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757701595;
-	bh=mKTknIgSPUqsrwIiWh/K+IeP3nmG0ppoBFpLjSD6lCc=;
+	s=k20201202; t=1757701663;
+	bh=giny/t9N6iQo9VgTX/KMvXx1csABBtT4GXJJNz+cGzY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ijjYQ2RcMC4T9u5DQ43YRyCUEsiErCnGGA/kyBIfHiBAjOW4xyzxf3z8RtsbNh2WE
-	 dXpjbwqVRo/p9ecAkrnUDJzdshpN0xo3CxpsyNNwvx61tAnCXt8uYj7AUgd9MW1J/8
-	 Zl0Pi3TBdSq5N6GiO15NktuCbeiMHKhctXCWCAhQG+r/sNIb/p1lv+0t2+4zGleO2+
-	 SoGY8cgOCBin/HawFC/rt/XuMeQHKyAT4dInmw2zzJOQ5ipNp7tiazA5aRqegqiok+
-	 OJPEpHdjv/APTJ/ntGh8fqu4BigLK11RSQsJZVnUpCsCBPAGlKlCF7tqkm5IknV+7P
-	 o68+hvUjGR83A==
-Date: Fri, 12 Sep 2025 15:26:32 -0300
+	b=ZxOTH7q1UIMLIqN7+St3a6ke0DPxW51/2hEN6KE2K9Wugc6N3Z+FSUW5XJPuWCxOp
+	 0bukNnj+/D5FS5ezcLbAUBEIxXnW3Bm7r8fuHedpMr1n7C7QnyQBGRuRpfRhJEen4+
+	 Xnk+7ACAf3zc095OmEqes5RhJhOfW3DgAjHQ9Bb+0qD9DjSsaH0nfRkJLA96Up/eCs
+	 HBQI77oq/fYy4JFa6tHBryIAz4AicBcJM31ZcpzelcpQiYONSf5jrFohCzNuP36sLW
+	 dKWjvGlLHDe1CR8CgEo3NLWfFNk2zGUfiInh3MwgwKwxot5rKgqleKUsyPEChMO2BR
+	 tVNlRhkxykZFA==
+Date: Fri, 12 Sep 2025 15:27:40 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: zhaoguohan@kylinos.cn
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>,
-	Markus Elfring <Markus.Elfring@web.de>
-Subject: Re: [PATCH v3] perf drm_pmu: fix fd_dir leaks in
- for_each_drm_fdinfo_in_dir()
-Message-ID: <aMRl2AvE3LnAYesL@x1>
-References: <20250908065203.22187-1-zhaoguohan@kylinos.cn>
+To: James Clark <james.clark@linaro.org>
+Cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [PATCH v2 2/2] perf vendor events arm64 AmpereOne: Fix typos in
+ metrics' descriptions
+Message-ID: <aMRmHFNWjB74Bwy8@x1>
+References: <20250910195214.50814-1-ilkka@os.amperecomputing.com>
+ <20250910195214.50814-3-ilkka@os.amperecomputing.com>
+ <fc2ee38c-b163-4b7e-9ba2-c2b93d0fc691@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,46 +55,18 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250908065203.22187-1-zhaoguohan@kylinos.cn>
+In-Reply-To: <fc2ee38c-b163-4b7e-9ba2-c2b93d0fc691@linaro.org>
 
-On Mon, Sep 08, 2025 at 02:52:03PM +0800, zhaoguohan@kylinos.cn wrote:
-> From: GuoHan Zhao <zhaoguohan@kylinos.cn>
-> 
-> Fix file descriptor leak when callback function returns error. The
-> function was directly returning without closing fdinfo_dir_fd and
-> fd_dir when cb() returned non-zero value.
+On Thu, Sep 11, 2025 at 09:26:47AM +0100, James Clark wrote:
+> On 10/09/2025 8:52 pm, Ilkka Koskinen wrote:
+> > While fixing a typo in "l1d_cache_access_prefetches" in AmpereOneX,
+> > a few other typos were found in metrics' descriptions too. While AmpereOne
+> > doesn't have the metric, it did have the typos in the descriptions.
+> > 
+> > Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
 
-Thanks, applying to perf-tools-next.
+> Reviewed-by: James Clark <james.clark@linaro.org>
+
+Thanks, applied to perf-tools-next,
 
 - Arnaldo
- 
-> Fixes: 28917cb17f9d ("perf drm_pmu: Add a tool like PMU to expose DRM information")
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
-> Reviewed-by: Markus Elfring <Markus.Elfring@web.de>
-> Signed-off-by: GuoHan Zhao <zhaoguohan@kylinos.cn>
-> ---
-> v2 -> v3: replaced "cleanup" with "close_fdinfo"
-> v1 -> v2: Added the Fixes tag in commit message
-> ---
->  tools/perf/util/drm_pmu.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/drm_pmu.c b/tools/perf/util/drm_pmu.c
-> index 988890f37ba7..98d4d2b556d4 100644
-> --- a/tools/perf/util/drm_pmu.c
-> +++ b/tools/perf/util/drm_pmu.c
-> @@ -458,8 +458,10 @@ static int for_each_drm_fdinfo_in_dir(int (*cb)(void *args, int fdinfo_dir_fd, c
->  		}
->  		ret = cb(args, fdinfo_dir_fd, fd_entry->d_name);
->  		if (ret)
-> -			return ret;
-> +			goto close_fdinfo;
->  	}
-> +
-> +close_fdinfo:
->  	if (fdinfo_dir_fd != -1)
->  		close(fdinfo_dir_fd);
->  	closedir(fd_dir);
-> -- 
-> 2.43.0
