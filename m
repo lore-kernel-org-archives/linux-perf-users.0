@@ -1,195 +1,93 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B4EB313275
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Sep 2025 15:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD943009D5;
+	Fri, 12 Sep 2025 18:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757691795; cv=none; b=AQhfzW544nQQDFZM5v/oAShVE5x6ADqVRReg0otJ80nclBDQPbtsMJ3c6lbPBTusl/Bm6u1GJz9dvJd3H/ITj5z4cjErZ3Q7qbnSvmz+A4oIgxUYId+I/bkVaPDXhjlw9r6aHIaAFxmmNArMXgLPWknVufSoFG9I5qL9j8BMqYQ=
+	t=1757701595; cv=none; b=r+/m6S+LOl9VDzhqvTfDY/M9mATWkzWkhnb4oYflPELXubW1j5SSJT6ONANMd/ph5klgNEF/54s1qKq/MjuJbgrpjELBdPI+lTj/JiMiY37ReH2OGRMXtyPHAlCWa742OIqL0ui4BGwpOKGlI9z9fP5Gl1tMa+dLIisG3p918kQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757691795; c=relaxed/simple;
-	bh=jEfKff2cJ/QGkHt97S65VZfQl9a41dwyDsoTCnzdo74=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CbeJcLb7cbp7JVdKaxd30b7CrVvPSnSI3JTEbcIhQ+a6M1+gv2R+8ZmjaHNmZkSLJf0DNrNnxvI0KJkSNXNoUih0zfw3QP4RyToTAh8JLmIX+dPM8mGniaCG8RcDSgXAXz6JCyHVO5HsrCQs3Gh2UG0UlmrSOwSvv4wj/UFs/bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 011F41515;
-	Fri, 12 Sep 2025 08:43:05 -0700 (PDT)
-Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3D3F23F694;
-	Fri, 12 Sep 2025 08:43:11 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-Date: Fri, 12 Sep 2025 16:42:19 +0100
-Subject: [PATCH v5 14/14] perf arm_spe: Allow parsing both data source and
- events
+	s=arc-20240116; t=1757701595; c=relaxed/simple;
+	bh=mKTknIgSPUqsrwIiWh/K+IeP3nmG0ppoBFpLjSD6lCc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PqmoSqkCBhbeL85+iWNMlLoX3XPZMw8xcViws67Dk4Q6ieysb5IdOzoyn3Y4q9uE8waPxEarBTPqKQXCXOwCR6LZIrd3pHbB6LV6nL1kJii56bSlTRK+/wmMKg7v7dYwwWbv0gh2jNdA9Iyj3HavSPdWafJnRyHGZae9ol0ryOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ijjYQ2Rc; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ijjYQ2Rc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BECFEC4CEF1;
+	Fri, 12 Sep 2025 18:26:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757701595;
+	bh=mKTknIgSPUqsrwIiWh/K+IeP3nmG0ppoBFpLjSD6lCc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ijjYQ2RcMC4T9u5DQ43YRyCUEsiErCnGGA/kyBIfHiBAjOW4xyzxf3z8RtsbNh2WE
+	 dXpjbwqVRo/p9ecAkrnUDJzdshpN0xo3CxpsyNNwvx61tAnCXt8uYj7AUgd9MW1J/8
+	 Zl0Pi3TBdSq5N6GiO15NktuCbeiMHKhctXCWCAhQG+r/sNIb/p1lv+0t2+4zGleO2+
+	 SoGY8cgOCBin/HawFC/rt/XuMeQHKyAT4dInmw2zzJOQ5ipNp7tiazA5aRqegqiok+
+	 OJPEpHdjv/APTJ/ntGh8fqu4BigLK11RSQsJZVnUpCsCBPAGlKlCF7tqkm5IknV+7P
+	 o68+hvUjGR83A==
+Date: Fri, 12 Sep 2025 15:26:32 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: zhaoguohan@kylinos.cn
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>,
+	Markus Elfring <Markus.Elfring@web.de>
+Subject: Re: [PATCH v3] perf drm_pmu: fix fd_dir leaks in
+ for_each_drm_fdinfo_in_dir()
+Message-ID: <aMRl2AvE3LnAYesL@x1>
+References: <20250908065203.22187-1-zhaoguohan@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250912-arm_spe_support_hitm_overhead_v1_public-v5-14-0800880da0a7@arm.com>
-References: <20250912-arm_spe_support_hitm_overhead_v1_public-v5-0-0800880da0a7@arm.com>
-In-Reply-To: <20250912-arm_spe_support_hitm_overhead_v1_public-v5-0-0800880da0a7@arm.com>
-To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- James Clark <james.clark@linaro.org>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- German Gomez <german.gomez@arm.com>, Ali Saidi <alisaidi@amazon.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, 
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1757691759; l=4720;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=jEfKff2cJ/QGkHt97S65VZfQl9a41dwyDsoTCnzdo74=;
- b=Wf+Z6f0D+9xNIrxBSGt07ySbXwewgxxDXPBP/iiQxTYVImoyhlmiIKgxn5DB8FwJbaBjmuuvJ
- 92rA6MgVUjgDvQsG7cPkqLD6o0g6velrICUGQL2ucKEyQfEfwoBIzSK
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250908065203.22187-1-zhaoguohan@kylinos.cn>
 
-Current code skips to parse events after generating data source. The
-reason is the data source packets have cache and snooping related info,
-the afterwards event packets might contain duplicate info.
+On Mon, Sep 08, 2025 at 02:52:03PM +0800, zhaoguohan@kylinos.cn wrote:
+> From: GuoHan Zhao <zhaoguohan@kylinos.cn>
+> 
+> Fix file descriptor leak when callback function returns error. The
+> function was directly returning without closing fdinfo_dir_fd and
+> fd_dir when cb() returned non-zero value.
 
-This commit changes to continue parsing the events after data source
-analysis. If data source does not give out memory level and snooping
-types, then the event info is used to synthesize the related fields.
+Thanks, applying to perf-tools-next.
 
-As a result, both the peer snoop option ('-d peer') and hitm options
-('-d tot/lcl/rmt') are supported by Arm SPE in the perf c2c.
-
-Reviewed-by: James Clark <james.clark@linaro.org>
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/perf/util/arm-spe.c | 75 ++++++++++++++++++++++++++++-------------------
- 1 file changed, 45 insertions(+), 30 deletions(-)
-
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 08cb493c3265ade3093c84a90fa5e47dcd77c8f1..71be979f507718caadc091714c40bcee073c1d60 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -900,40 +900,56 @@ static void arm_spe__synth_memory_level(struct arm_spe_queue *speq,
- {
- 	struct arm_spe *spe = speq->spe;
+- Arnaldo
  
--	if (data_src->mem_op == PERF_MEM_OP_LOAD)
--		arm_spe__synth_ld_memory_level(record, data_src);
--	if (data_src->mem_op == PERF_MEM_OP_STORE)
--		arm_spe__synth_st_memory_level(record, data_src);
-+	/*
-+	 * The data source packet contains more info for cache levels for
-+	 * peer snooping. So respect the memory level if has been set by
-+	 * data source parsing.
-+	 */
-+	if (!data_src->mem_lvl) {
-+		if (data_src->mem_op == PERF_MEM_OP_LOAD)
-+			arm_spe__synth_ld_memory_level(record, data_src);
-+		if (data_src->mem_op == PERF_MEM_OP_STORE)
-+			arm_spe__synth_st_memory_level(record, data_src);
-+	}
- 
- 	if (!data_src->mem_lvl) {
- 		data_src->mem_lvl = PERF_MEM_LVL_NA;
- 		data_src->mem_lvl_num = PERF_MEM_LVLNUM_NA;
- 	}
- 
--	if (record->type & ARM_SPE_DATA_SNOOPED) {
--		if (record->type & ARM_SPE_HITM)
--			data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
--		else
--			data_src->mem_snoop = PERF_MEM_SNOOP_HIT;
--	} else {
--		u64 *metadata = arm_spe__get_metadata_by_cpu(spe, speq->cpu);
--
--		/*
--		 * Set NA ("Not available") mode if no meta data or the
--		 * SNOOPED event is not supported.
--		 */
--		if (!metadata ||
--		    !(metadata[ARM_SPE_CAP_EVENT_FILTER] & ARM_SPE_DATA_SNOOPED))
--			data_src->mem_snoop = PERF_MEM_SNOOP_NA;
--		else
--			data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
-+	/*
-+	 * If 'mem_snoop' has been set by data source packet, skip to set
-+	 * it at here.
-+	 */
-+	if (!data_src->mem_snoop) {
-+		if (record->type & ARM_SPE_DATA_SNOOPED) {
-+			if (record->type & ARM_SPE_HITM)
-+				data_src->mem_snoop = PERF_MEM_SNOOP_HITM;
-+			else
-+				data_src->mem_snoop = PERF_MEM_SNOOP_HIT;
-+		} else {
-+			u64 *metadata =
-+				arm_spe__get_metadata_by_cpu(spe, speq->cpu);
-+
-+			/*
-+			 * Set NA ("Not available") mode if no meta data or the
-+			 * SNOOPED event is not supported.
-+			 */
-+			if (!metadata ||
-+			    !(metadata[ARM_SPE_CAP_EVENT_FILTER] & ARM_SPE_DATA_SNOOPED))
-+				data_src->mem_snoop = PERF_MEM_SNOOP_NA;
-+			else
-+				data_src->mem_snoop = PERF_MEM_SNOOP_NONE;
-+		}
- 	}
- 
--	if (record->type & ARM_SPE_REMOTE_ACCESS)
--		data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
-+	if (!data_src->mem_remote) {
-+		if (record->type & ARM_SPE_REMOTE_ACCESS)
-+			data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
-+	}
- }
- 
--static bool arm_spe__synth_ds(struct arm_spe_queue *speq,
-+static void arm_spe__synth_ds(struct arm_spe_queue *speq,
- 			      const struct arm_spe_record *record,
- 			      union perf_mem_data_src *data_src)
- {
-@@ -952,19 +968,18 @@ static bool arm_spe__synth_ds(struct arm_spe_queue *speq,
- 	} else {
- 		metadata = arm_spe__get_metadata_by_cpu(spe, speq->cpu);
- 		if (!metadata)
--			return false;
-+			return;
- 
- 		midr = metadata[ARM_SPE_CPU_MIDR];
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(data_source_handles); i++) {
- 		if (is_midr_in_range_list(midr, data_source_handles[i].midr_ranges)) {
--			data_source_handles[i].ds_synth(record, data_src);
--			return true;
-+			return data_source_handles[i].ds_synth(record, data_src);
- 		}
- 	}
- 
--	return false;
-+	return;
- }
- 
- static union perf_mem_data_src
-@@ -984,8 +999,8 @@ arm_spe__synth_data_source(struct arm_spe_queue *speq,
- 	else
- 		return data_src;
- 
--	if (!arm_spe__synth_ds(speq, record, &data_src))
--		arm_spe__synth_memory_level(speq, record, &data_src);
-+	arm_spe__synth_ds(speq, record, &data_src);
-+	arm_spe__synth_memory_level(speq, record, &data_src);
- 
- 	if (record->type & (ARM_SPE_TLB_ACCESS | ARM_SPE_TLB_MISS)) {
- 		data_src.mem_dtlb = PERF_MEM_TLB_WK;
-
--- 
-2.34.1
-
+> Fixes: 28917cb17f9d ("perf drm_pmu: Add a tool like PMU to expose DRM information")
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+> Reviewed-by: Markus Elfring <Markus.Elfring@web.de>
+> Signed-off-by: GuoHan Zhao <zhaoguohan@kylinos.cn>
+> ---
+> v2 -> v3: replaced "cleanup" with "close_fdinfo"
+> v1 -> v2: Added the Fixes tag in commit message
+> ---
+>  tools/perf/util/drm_pmu.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/drm_pmu.c b/tools/perf/util/drm_pmu.c
+> index 988890f37ba7..98d4d2b556d4 100644
+> --- a/tools/perf/util/drm_pmu.c
+> +++ b/tools/perf/util/drm_pmu.c
+> @@ -458,8 +458,10 @@ static int for_each_drm_fdinfo_in_dir(int (*cb)(void *args, int fdinfo_dir_fd, c
+>  		}
+>  		ret = cb(args, fdinfo_dir_fd, fd_entry->d_name);
+>  		if (ret)
+> -			return ret;
+> +			goto close_fdinfo;
+>  	}
+> +
+> +close_fdinfo:
+>  	if (fdinfo_dir_fd != -1)
+>  		close(fdinfo_dir_fd);
+>  	closedir(fd_dir);
+> -- 
+> 2.43.0
