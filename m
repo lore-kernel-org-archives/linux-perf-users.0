@@ -1,134 +1,147 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.kdab.com (mail.kdab.com [176.9.126.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DCA6301017;
-	Fri, 12 Sep 2025 11:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8113043C3
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Sep 2025 12:31:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.126.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757677776; cv=none; b=f1rpg3L1YeJ6PzEqBc1f02sq3ib4WcQFpPEauJHH3W5+Qcwiwluc/WCRLYF+Fm57K1UMrnKXR53xYR4dC+1gvbYnvdtFMTFYDxhwUQmFMj4fyBvN2I4GFxt8mE7lniM1uZfEv93tY7rvbmK04ZKa/CcZH4V6vy3GIg7pudPNNnc=
+	t=1757680274; cv=none; b=M5+RFykOgpECxDdJrUHpMpQnYZ/+xwVEVVF5YqTU7hCJyXHP+hnENppNFg0Iwte5F5kz5mXibuASIApHyuelW1AE+MXRZQNxUaIhU176KArznkpLLHsfEy4tS+bPifIJetWlfVg9qQmyfmKYjmk0j3fXUrOZdzLm7CEFIruIa04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757677776; c=relaxed/simple;
-	bh=dgdcxtuGDgjv2LMECKB+QSRF/xELI57ELOO6Cb7PK2U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FF7cn5NPN+PsXn09vhhHuvId03alOPxp9ZhHCCeSf3cwtovUYDo2FzJuW87LhpHu5RJgXTmBazDoE9aU7ptevwrBm72GUImm9C0Id77V/xKGfarBftRJwQSA+aR3yJfS3AG9rf4nxnSkTo3DJHj0nYmHcIECwtPfZMKpzwBtaPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from gentoo.org (gentoo.cern.ch [IPv6:2001:1458:202:227::100:45])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: amadio)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id A73AA340FE4;
-	Fri, 12 Sep 2025 11:49:33 +0000 (UTC)
-Date: Fri, 12 Sep 2025 13:49:29 +0200
-From: Guilherme Amadio <amadio@gentoo.org>
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: Problem with perf report --gtk
-Message-ID: <aMQIydhceXVRORNp@gentoo.org>
-References: <aMACaOmneDrG8_pQ@gentoo.org>
- <CAP-5=fVA_Cduf9NvFAJezcNcg0JDNGa5q7m_mRBWNAYGEUo8bw@mail.gmail.com>
- <aMAtqNq55TZEuaKn@gentoo.org>
- <CAP-5=fX-GG_pUH+1Eak8dsoTdNh=vRU+00scBxbRt7EhXZosiw@mail.gmail.com>
+	s=arc-20240116; t=1757680274; c=relaxed/simple;
+	bh=+9mPX5umQxIr5Dhc5MnJCBn8tLPC55c5q9kfPczlQKE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ISEoRQWOei9Z7M3tqug2lnmFT690Vwi8dluriN0akOeLlSx8nSt5z8GJOdiB1MOOO0ajrQVX+mkzQEEyE2bNPQKK9D1nRi+R2CbQdDukZMHV28khRUGEY6aM5GCqMLJgoWTGgyOUxOfmmPIxvg1dE2dQvvli9q4CnxbdWyqDThs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kdab.com; spf=pass smtp.mailfrom=kdab.com; dkim=pass (1024-bit key) header.d=kdab.com header.i=@kdab.com header.b=xypa1Kjj; arc=none smtp.client-ip=176.9.126.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kdab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kdab.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=kdab.com header.i=@kdab.com header.b="xypa1Kjj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdab.com; h=
+ content-type:content-type:content-transfer-encoding:mime-version
+ :references:in-reply-to:organization:message-id:date:date
+ :subject:subject:from:from; s=dkim; t=1757680262; x=1758544263;
+ bh=layHvT3O+BR0qa5UzFOiCJC5CunCUQOmYwAUn4kUAU4=; b=xypa1Kjj4CjT
+ G5YFHxTGvFeMaxZ4zU3JIBWLhKU3w00JWoibXEWaaIkefJAOpFtmtIhnYs/54pru
+ v8Jb82PQOuIcft/fN7N3HwYpbkJNBmMz5SkZKHQm92lnl4SH4iKmjaIXiYV/qmOE
+ ZcDBOIO8xVplZNwldsvMRVb7UHXy0t8=
+X-Virus-Scanned: amavisd-new at kdab.com
+From: Milian Wolff <milian.wolff@kdab.com>
+To: linux-perf-users@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, acme@kernel.org
+Subject: Re: combined usage of `--aio -z` corrupts perf.data files - fallout
+ from COMPRESSED2?
+Date: Fri, 12 Sep 2025 14:31:01 +0200
+Message-ID: <4137699.i63VBsrd71@milian-workstation>
+Organization: KDAB
+In-Reply-To: <38208379.DOZC079dcN@milian-workstation>
+References: <38208379.DOZC079dcN@milian-workstation>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fX-GG_pUH+1Eak8dsoTdNh=vRU+00scBxbRt7EhXZosiw@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Sep 10, 2025 at 09:45:35AM -0700, Ian Rogers wrote:
-> On Tue, Sep 9, 2025 at 6:37 AM Guilherme Amadio <amadio@gentoo.org> wrote:
-> >
-> > On Tue, Sep 09, 2025 at 06:04:42AM -0700, Ian Rogers wrote:
-> > > On Tue, Sep 9, 2025 at 3:33 AM Guilherme Amadio <amadio@gentoo.org> wrote:
-> > > >
-> > > > Hi Arnaldo, Namhyung,
-> > > >
-> > > > Since sometime we have a bug in Gentoo's bugzilla about perf report --gtk not
-> > > > working¹: https://bugs.gentoo.org/937869
-> > > >
-> > > > I know this feature is not used very much, but I thought I'd report in
-> > > > any case. The problem is easily reproducible as shown below:
-> > > >
-> > > >
-> > > > $ perf record -a -g -- sleep 1
-> > > > [ perf record: Woken up 1 times to write data ]
-> > > > [ perf record: Captured and wrote 1.818 MB perf.data (6648 samples) ]
-> > > > $ LD_DEBUG=symbols perf report --gtk 2>&1 | grep '(fatal)'
-> > > >     288067:     /usr/libexec/perf-core/libperf-gtk.so: error: symbol lookup error: undefined symbol: hashmap_find (fatal)
-> > > > $ perf report --gtk
-> > > > GTK browser requested but could not find libperf-gtk.so
-> > > >
-> > > > I tried this with perf 6.16, but this bug seems to have been there since
-> > > > at least 6.12.
-> > > >
-> > > > Please let me know if it's better to file problems at https://bugzilla.kernel.org/.
-> > >
-> > > Thanks for letting us know Guilherme! I suspect I broke things when
-> > > trying to fix python things. The code linking libperf-gtk.so is:
-> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/Makefile.perf?h=perf-tools-next#n809
-> > > The hashmap symbols are part of the perf-util library:
-> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/Build?h=perf-tools-next#n197
-> > > So maybe there needs to be a libbpf -lbpf for your case? Alternatively
-> > > we may need to reorder the libraries here:
-> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/Makefile.perf?h=perf-tools-next#n464
-> > > like:
-> > > PERFLIBS += $(LIBPERF_BENCH) $(LIBPERF_TEST) $(LIBPERF_UI) $(LIBPERF_UTIL)
-> > > becomes:
-> > > PERFLIBS += $(LIBPERF_BENCH) $(LIBPERF_TEST) $(LIBPERF_UTIL) $(LIBPERF_UI)
-> >
-> > Thank you for the suggestion, but just changing the order of linking or
-> > linking libbpf doesn't seem to fix the issue. I still see:
-> >
-> > $ nm -D libperf-gtk.so | grep hashmap
-> >                  U hashmap_find
-> >
-> > at the end of the build. The function is in util/hashmap.c, so the
-> > problem might be more involved than just the linking order.
-> 
-> Thanks Guilherme! I was able to reproduce the "nm -D" output. Adding
-> "-z defs" to the "$(OUTPUT)libperf-gtk.so" also fails for that symbol,
-> it fails for many more. Even though the symbol is undefined "perf
-> reprt --gtk" works for me. Attaching gdb I see that the symbol is in
-> the perf executable itself. I tried the following change:
+On Mittwoch, 10. September 2025 10:51:31 Mitteleurop=C3=A4ische Sommerzeit =
+Milian=20
+Wolff wrote:
+> Hey all,
+>=20
+> for some context, see https://github.com/KDAB/hotspot/issues/
+> 736#issuecomment-3273734660
+>=20
+> The gist is the following:
+>=20
 > ```
->  $(OUTPUT)libperf-gtk.so: $(GTK_IN) $(PERFLIBS)
-> -       $(QUIET_LINK)$(CC) -o $@ -shared $(LDFLAGS) $(filter %.o,$^) $(GTK_LIBS)
-> +       $(QUIET_LINK)$(CC) -o $@ -shared $(LDFLAGS) $(filter %.o,$^)
-> $(filter %libperf-util.a,$^) $(GTK_LIBS)
+> $ perf record --call-graph dwarf -z --aio -- ls
+> ...
+> [ perf record: Captured and wrote 0.005 MB perf.data, compressed (original
+> 0.101 MB, ratio is 28.747) ]
+> $ perf script
+> Couldn't decompress data
+> 0x598 [0xe53]: failed to process type: 83 [Operation not permitted]
 > ```
-> or
-> ```
->  $(OUTPUT)libperf-gtk.so: $(GTK_IN) $(PERFLIBS)
-> -       $(QUIET_LINK)$(CC) -o $@ -shared $(LDFLAGS) $(filter %.o,$^) $(GTK_LIBS)
-> +       $(QUIET_LINK)$(CC) -o $@ -shared $(LDFLAGS) $(filter
-> %libperf-util.a,$^) $(filter %.o,$^) $(GTK_LIBS)
-> ```
-> but the nm output shows either the same or more undefined symbols, not less.
-> 
-> I'm wondering if perhaps the hashmap_find symbol is being stripped
-> from the perf executable. Maybe it is an LTO or stripping related
-> thing?
+>=20
+> If you remove the explicit `--aio` while keeping compression via `-z`
+> enabled, then the result file can be parsed. Enabling `--aio` but disabli=
+ng
+> `-z` also works as expected.
+>=20
+> My understanding so far was that `-z` implies `--aio`, and that there sho=
+uld
+> be zero semantic difference between `-z` and `-z --aio`. But apparently
+> this was a misunderstanding on my end.
+>=20
+> I suspect that the above issue is related to the recent addition of the
+> COMPRESSED2 record type, since commands combining both of these flags used
+> to work fine until very recently.
 
-Dear Ian,
+Hello all,
 
-I don't see any hashmap symbol as part of my own perf executable:
+there are apparently even issues with just `-z` and no `--aio`. Instead, I'=
+m=20
+now setting a larger buffer size:
 
-perf $ pwd && ./perf version
-/home/amadio/src/linux/tools/perf
-perf version 6.16.6.g1037d3a33ba6
-perf $ nm -D ./perf | grep hashmap
-perf $ 
-I compiled perf with:
+```
+$ perf record -m 16M -z --call-graph dwarf -e cycles  ./test
+failed to write perf data, error: Bad address
+[ perf record: Woken up 2 times to write data ]
+[ perf record: Captured and wrote 0.138 MB perf.data, compressed (original=
+=20
+10.517 MB, ratio is 83.180) ]
+$ perf script
+failed to decompress (B): 113080 -> 16781312, dst_size 16781312 : Data=20
+corruption detected
+Couldn't decompress data
+0x2df0 [0xb9c8]: failed to process type: 83 [Operation not permitted]
+```
 
-$ make -B -j16 V=1 WERROR=0 NO_SHELLCHECK=1 GTK2=1
+The code for the `test` binary used above is available here: https://
+invent.kde.org/-/snippets/3549
 
-Cheers,
--Guilherme
+If I use `-m 8M` instead of `-m 16M` the error above disappears. Is there=20
+possibly an overflow somewhere, considering that the compressed record size=
+=20
+used to be only 16bit, but now is uint64 for COMPRESSED2? See:
+
+> 	PERF_RECORD_COMPRESSED 			=3D 81, /* deprecated */
+>
+> The header is followed by compressed data frame that can be decompressed
+> into array of perf trace records. The size of the entire compressed event
+> record including the header is limited by the max value of header.size.
+
+=46rom `perf_event.h`:
+
+> u16				header_size;
+
+But then we now have:
+
+>	PERF_RECORD_COMPRESSED2			=3D 83,
+>
+> 8-byte aligned version of `PERF_RECORD_COMPRESSED`. `header.size` indicat=
+es=20
+> the
+> total record size, including padding for 8-byte alignment, and `data_size`
+> specifies the actual size of the compressed data.
+>=20
+> struct perf_record_compressed2 {
+> 	struct perf_event_header	header;
+> 	__u64				data_size;
+> 	char				data[];
+> };
+
+Just a hunch, I'm not really sure this is the reason - but it does look fun=
+ky=20
+to me.
+
+Note: this all happens on a linux kernel 6.16.5-arch1-1 with perf in the sa=
+me=20
+version 6.16-1.
+=2D-=20
+Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
+KDAB (Deutschland) GmbH, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - Trusted Software Excellence
+
