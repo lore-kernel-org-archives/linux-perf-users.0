@@ -1,118 +1,144 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E658A13AD05;
-	Sat, 13 Sep 2025 04:13:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C2F1DDA09
+	for <linux-perf-users@vger.kernel.org>; Sat, 13 Sep 2025 06:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757736801; cv=none; b=Kkjuge7HR53z1NDlubOh2GtCXMMRPYALblRq0iVfA1Cu3/sTbpq4EHLepEg9qXuLqKvHbaOZGpkl8OuX+4xVbeWwlxvvzs9RBmhwydJip0Bd2/XPe7z80s/RUqtlY/7GYctLTOF2vU9mS0zhE9AeH99LsAj0rJ2/zDEzyHRuU+k=
+	t=1757745323; cv=none; b=G5ot3uav/Kwlbt0D1IteT0KJbG6sozZHfaPOlXqVn3p8V5v0oCVqVMVih2rktXhEhDGXYwWiUixi5hLADcfyPu5usBU1CTV2sQ+G8+fNSqgPpGCqJj9lmGvjOYqYd4k8l+9gJr/CPCGz1SpwbAUIWtf3I6u/vH3hDoV5GdPto84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757736801; c=relaxed/simple;
-	bh=U9kKsshevJqGszGf9fsgE68j9TrfFI4hVI82DPtJMYE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=BNmrP0addK4CP3H/iEFOIlC4+bIVxOWgcTrQIiWe9xC6eC1smiXzuZluCmV0yY6AdHa2IbiZ3TDqCKa/5ulxXKf/Hc0uyWl2+wXMNKPZ5dBmyG2pYh4MghILqz/cnvfWaAqpoiDaCSPS4zlX9sv5LJ9ExYzUrFpoeZ64FYNtljw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=xPzy07H5; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1757745323; c=relaxed/simple;
+	bh=+MrZdmNVCG2OdQ4Nn0NGHXqto2cWIelVt/Phs7xDyRI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=UlTm8CNDsouWrA70PjgK8mkpd043IMkWp4Hrm+YLBqoJ08sXmHbtbxO4GCJil6HQfWVJSuN3/u4ow9qrUi0bAcdhJ30lGTLyNdAagrNPhtPKn6ie7Y8YVSqY/NV5Q4ossRukkiO5fN9X9e3oCSpmg2epD9UPDmpe/8aJz9c8ey4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l5nDp3+G; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xPzy07H5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
-	bh=u7ndZnQxyXKvcCzhFli8oZf0PjWLBirdplU5n0FJmLw=; b=xPzy07H5oLyRzMkKUDnRYxRbA8
-	FB9s/mgtYrIEncNja4JJjGye+zGOM5arCPaXRnqY0vBLCsFj8oDAeoSE0UqBh4+bDiLKE1WlvVIGg
-	KVrxlIQZrGV8DB3SCKRdz/WridjNvy5CXv+SD1Va6LVYxjNBA+mGHiEbQRiwSEI+cHvjloDDoXglj
-	0dK5WfUej0zVDXKQOXKsr5DuKq3kr+d9vFJrusNVKTTSLwcsCky4pU6kPywtug6qim/3Nk3gXwtyf
-	vbw1VCU9MqDSbqZvzBQzA1VgqzMvxCdl5wn99ll+PJEWgdoqb2XafQieoBP+l+brAtdIBvxrTKifR
-	pUY01Pvg==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uxHdN-0000000D6om-3RkA;
-	Sat, 13 Sep 2025 04:13:09 +0000
-Message-ID: <6b5e5d3e-5db8-44f2-8dca-42f317be8e0d@infradead.org>
-Date: Fri, 12 Sep 2025 21:13:07 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l5nDp3+G"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-32b96f83238so218904a91.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Sep 2025 23:35:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1757745321; x=1758350121; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oMj3cfgRXbo5TbTq5fxmrLscUg24nKM3Od2dH2JQ1YI=;
+        b=l5nDp3+Gx58LH6nYilj7/sSnHRarvFYfgpAkBu6QNVhta6Q2QX1zxICxnseZIOOj1L
+         fM1UBt9Iu56N6TqSL+ZBj6s/1mTpmb51TCZi0rmH143IzVSR+A5/CLgBPW20lKuuDyFl
+         gVd4O+b7mI/XsgbAIwsP84rMvfIgTfA4hVKuJWDhgWkYix2MqvxuGXkVgj+SPu0Qk+fe
+         40r7M1MKWOtyKzr52TYA49ZhnGF+kPK0TL7CjruaSzyICdeQYQKLCIEWNrFerHc5H3tM
+         v5KKkEDp3sI9ObSBty51kRiWJeAtI3Dvzq/vr8Zkb0G7scyTN5EsLRoVnHhjUoGTZ2dQ
+         PYUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757745321; x=1758350121;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oMj3cfgRXbo5TbTq5fxmrLscUg24nKM3Od2dH2JQ1YI=;
+        b=toqicdUgFZmhQexT8IlPPBh2ymWL3arzl7FhknEM9G8oc0WW9J158E3kbnbMiH2xDx
+         loXMXffnaYFGCdh/iqau3L6iSFJaMYzLwzdNIGGALbPY091iVrw4d5R8aOfArrETSXU8
+         URpw6hFaejR1VCRgIMvO/OX9eKG2mlJrqB7baEDUiqbZmjNc1frA5PDz9WYYzgdE0FFq
+         zy5+s4KaEpXSd6gmbdIw7XGZRMUpqwUYh9ES93Ob7tJ9c03a0IIFDfRSuQtK+ANj+9vW
+         zCNPhyFiX4j32M23p1q5a8FvXP0sCeeK/ZRpGxl0uAmt5vhCLPwNI+tA7UpoE8kscTf/
+         13Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCXBNlCjhodA7qyg0AG5TGawLNlhUhgc34T7q+aGze3kTEhZMrOB47UJdnlZP5BdbHJDNi8xEi+n5V6XUhebEfB9@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvWLqGBxASQbeY8o+rqg9sxXrjIWmPG9CMwEkKODplxQRjIfYe
+	M+YAVuCLHa7p3P6LYvI5HzetrN+zRslQi5QCVr3gwP1mxuOazc/a81Hc
+X-Gm-Gg: ASbGncsRwwdnEm4/wx4cu+XsDeqOg6gEuIEo5M7ZJ/1f+TQT++mHYUPlSKagFxPftoy
+	SkA6T46uLocd8XbtvvmqSMESadAwIblzpBw4jwDDPKW34dz5QsVUQbLI1n6mWCb2+iJ1KSFQQ6+
+	nG+jT6lUVs3lp8B5f7zuAVDlCWkZ+pIbkf280264dCvYs6whSMSqcKUJvESvd8OMnBUSbcM0Sij
+	3cYBgmtJGpPfKl9c4WXwtQ4DhjlgAwsYDsOFOtJ3uN3+ZQYt35ZHPEQNGRN2pP07HKGbCbYGZXN
+	HhkAxdH7RxOStaXOY3R1eApL0MKUMc3I6iBXgNgYrl/GxWp5zHlwsu4jfAcnp0h5uEz4tUM/LO9
+	OlTdKfU0gQtsfJwKHDqzvShn4u7Aa
+X-Google-Smtp-Source: AGHT+IHKkkC3QM8coQ6NO9qeJrC1prXGkBNL6WrXbhaljz4l9tRVx5lZNhS337M4qjUvBRHY2zyeNg==
+X-Received: by 2002:a17:90b:3890:b0:32b:92d7:5cb2 with SMTP id 98e67ed59e1d1-32de4e70fabmr3469839a91.1.1757745320701;
+        Fri, 12 Sep 2025 23:35:20 -0700 (PDT)
+Received: from hobbes ([2600:70ff:f833:0:85d:f376:d78:d2b3])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b54a35b7b53sm6453910a12.7.2025.09.12.23.35.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Sep 2025 23:35:19 -0700 (PDT)
+Date: Fri, 12 Sep 2025 20:35:12 -1000
+From: Joey Pabalinas <joeypabalinas@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, Joey Pabalinas <joeypabalinas@gmail.com>
+Subject: [PATCH] perf/x86/amd/uncore: use kcalloc() instead of multiplication
+Message-ID: <455fb1db8ab0811d2336e0ec198c728a0c703be9.1757744812.git.joeypabalinas@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 03/21] HWBP: Add modify_wide_hw_breakpoint_local() API
-To: Jinchao Wang <wangjinchao600@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Mike Rapoport <rppt@kernel.org>,
- Alexander Potapenko <glider@google.com>, Jonathan Corbet <corbet@lwn.net>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- David Hildenbrand <david@redhat.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Kees Cook <kees@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Sami Tolvanen <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>,
- Masahiro Yamada <masahiroy@kernel.org>, Rong Xu <xur@google.com>,
- Naveen N Rao <naveen@kernel.org>, David Kaplan <david.kaplan@amd.com>,
- Andrii Nakryiko <andrii@kernel.org>, Jinjie Ruan <ruanjinjie@huawei.com>,
- Nam Cao <namcao@linutronix.de>, workflows@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-mm@kvack.org, llvm@lists.linux.dev,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>, kasan-dev@googlegroups.com,
- "David S. Miller" <davem@davemloft.net>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org
-References: <20250912101145.465708-1-wangjinchao600@gmail.com>
- <20250912101145.465708-4-wangjinchao600@gmail.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250912101145.465708-4-wangjinchao600@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="qtx2otpa3et5sln5"
+Content-Disposition: inline
 
 
+--qtx2otpa3et5sln5
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: [PATCH] perf/x86/amd/uncore: use kcalloc() instead of multiplication
+MIME-Version: 1.0
 
-On 9/12/25 3:11 AM, Jinchao Wang wrote:
-> +/**
-> + * modify_wide_hw_breakpoint_local - update breakpoint config for local cpu
-> + * @bp: the hwbp perf event for this cpu
-> + * @attr: the new attribute for @bp
-> + *
-> + * This does not release and reserve the slot of HWBP, just reuse the current
+Dynamic size calculations should not be performed in allocator
+function arguments due to overflow risk.
 
-                                                 of a HWBP; it just reuses
+Use kcalloc() instead of multiplication in the first argument
+of kzalloc().
 
-and preferable s/cpu/CPU/ in comments.
+Signed-off-by: Joey Pabalinas <joeypabalinas@gmail.com>
+---
+ arch/x86/events/amd/uncore.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> + * slot on local CPU. So the users must update the other CPUs by themselves.
-> + * Also, since this does not release/reserve the slot, this can not change the
-> + * type to incompatible type of the HWBP.
-> + * Return err if attr is invalid or the cpu fails to update debug register
-> + * for new @attr.
-> + */
-> +#ifdef CONFIG_HAVE_REINSTALL_HW_BREAKPOINT
-> +int modify_wide_hw_breakpoint_local(struct perf_event *bp,
-> +				    struct perf_event_attr *attr)
-> +{
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index e8b6af199c738eb00b..d08e3054461f2ca07a 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -1036,11 +1036,11 @@ int amd_uncore_umc_ctx_init(struct amd_uncore *unco=
+re, unsigned int cpu)
+ 		group_num_pmus[gid] =3D hweight32(info.split.aux_data);
+ 		group_num_pmcs[gid] =3D info.split.num_pmcs;
+ 		uncore->num_pmus +=3D group_num_pmus[gid];
+ 	}
+=20
+-	uncore->pmus =3D kzalloc(sizeof(*uncore->pmus) * uncore->num_pmus,
++	uncore->pmus =3D kcalloc(uncore->num_pmus, sizeof(*uncore->pmus),
+ 			       GFP_KERNEL);
+ 	if (!uncore->pmus) {
+ 		uncore->num_pmus =3D 0;
+ 		goto done;
+ 	}
+--=20
+Cheers,
+Joey Pabalinas
 
--- 
-~Randy
 
+--qtx2otpa3et5sln5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEx6b1SGGPTKxTmPDYqoHu9CTxowIFAmjFEKAACgkQqoHu9CTx
+owIXpxAAjaO0yrfiWXht/rwuJg+nIcjL6lDzl5QbIruCyZ57rrETsm1VsVvrx+fm
+KFwjQhmJmPSF0m7Zh7yRtbgMvR5ADZ+C9no0CNvTtihrrIO5tJRPZqKJDcbWt/5P
+vFpYvE0HO3nFhB5jSKSM32Cavn3GvVjbkgJHTAIVts880qylg/tNgnpFFrWo5wYw
+KPPhksYPLkxsuBA5dQKF54qB6RyMGt3TCKQYwwU4oxoIBrtXux/Db2q5cCRYb23Q
+f469XWF0UxuEZlimxjs1h6XWEnmXuBLMFhdLRdutU5VKZxnYNOLzbcvIqg425yJh
+BxzIUm2Z8WYIQdxmtx5B6Z04qnLuXyJ9fuz+VO34X9MI7fRIFsPmRcu8OhVYLFvx
+JELIQLKzQ4Rpi6//2jEgKgozwUrDNrF9Od3za66qqpJCPpOZsyFcFAuzIhYyTZtE
+P1LrrG08RmEZwlZ/9+1sAaKVNFko3n+ttO12+xkQD/7fNw2T+UEeQ1URwocLvvuw
+V/0ZSckdIm8kbuUckBFmjTbY0UnJdp6sJbSg/pXpMrhFyB4XBqgJdAMDwd5bbxkv
+xySiGG7Os9R+v3GziyiFJ9RoyjJrl2wrQ4RzOhpoMBJ1wIcj5Lfhs1woq3Lm3K+d
+RdZOwTalO25NWvX3nbVzSnLfiyZmevYV6CCQXUoKCpJEyAeR8OE=
+=cHp3
+-----END PGP SIGNATURE-----
+
+--qtx2otpa3et5sln5--
