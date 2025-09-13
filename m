@@ -1,105 +1,116 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A16927CCF2
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Sep 2025 23:38:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F0015E5BB
+	for <linux-perf-users@vger.kernel.org>; Sat, 13 Sep 2025 00:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757720292; cv=none; b=DukGsyoZW/fvlKM22cYIhrUSffHZwa2bpFfesDbV9wyrP4khSGvgD2ybzvXTBWX5V4kJlHOGHntmEqtRBe7qHbwkktMw0O8+nt9+Fpzm8u3v/9NaIdFD1xXPW6VqnSj7OVs6YIlUSI4LQ0scGYZly128S0sDJHI3XRnyFyTJQwA=
+	t=1757721695; cv=none; b=KoQ/ZJM/U5LS7H33M0PjKqZTfS0b9soQg1k5hYZDLJj54R/BezTsZDAMdlQFFB3f+IRTBKk6sqtB8hq2U6lURiMTaCp4kRdeezPJ5F94UJVmMENmhZMC9IiBixrbaKxDHMzwGqtqsJRa5TRtTknigsd8VcagtrdqOZ1Kn3Wn5wM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757720292; c=relaxed/simple;
-	bh=I+IeUdWxiLjTU2csSrANPnlDmQ68oXdaxJe8wwbFp/U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tJlg+ua1AKLpBIR6eMd+P4LA8TYYIFpHSxTgqIZ3sDTDGdJxLCe9mbTUw9KQ+TNC6LJoGr932BWYd24zEhKxt05ybzIieG059my/qJ/uTTkWT/huCCcLZqnKTm8tGogypP75SGDEnwB5j048Br7KxjVM9TTHMz7CfxPnPrtEwWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Pw93jVhR; arc=none smtp.client-ip=209.85.214.174
+	s=arc-20240116; t=1757721695; c=relaxed/simple;
+	bh=hCsy/qb5fsV4U/ZfD33cto6EmCWWefY4GtL+u9D9szM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=AWEc6la6SrfN2hw7oSRb9gq1B7f11b6hHIc8iWulDN1QqaKdGHTtfjWOjzTQHb3rhsaMV0XDcf1fyFXr2aKf2iV+a8fNW6mQv4X1KI3fhDNI34S/f+L+dWCBBqaT14Bt1lJN6hyswwkeM5HPdDR60+GMdnyJAJjEEnvs06k17NU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gP7WqKpj; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pw93jVhR"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-24b2d018f92so37045ad.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 Sep 2025 16:38:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gP7WqKpj"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-32dd692614aso3476775a91.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Sep 2025 17:01:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1757720291; x=1758325091; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I+IeUdWxiLjTU2csSrANPnlDmQ68oXdaxJe8wwbFp/U=;
-        b=Pw93jVhRkAUIa57brajtHtLosLAh+uejWt//QEEhctWTr3rvan+Sz02ep9izvdvhLn
-         nPhRyDVO80lQ29nYoVJDjEHoZMa50UPAw1+1rWELIm3tZt8Hi0VSyYz7+aLr/DQj2BdB
-         I1H3j5+IX9HZVCh/uhtXN39ZAXMDnPhA/CGhprG81/GBadWV9WHe6iDGlnJW1Y2J5bPS
-         gwp//ncF6Mw71pCpCZl9wdE4kJTFHxE8NqJGR4sOvq2U27YWfPT2Zgo26MsWKMZByp67
-         1AGQcoRByDW5JX6FOaGtOAqVt8JbDR+o4O7BHXzPlchO+mIzJNNEEmU/Mztx3wOIt93s
-         WfTA==
+        d=google.com; s=20230601; t=1757721693; x=1758326493; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PMhMwVUWtkQhQozvbkaye4gfec+Uus5/E0Yhl+qmRTo=;
+        b=gP7WqKpjI1vLr8cB72GdxLrnHx1Spm04uAAuX0l1LLDghpUpY8k3VsG8NqIeF/9I4q
+         wgf+eoM3YD8v3dwmXmkGdluAGj14fqLlsUZKPj93zyv5qOFDSXXoxs8/9npaeJ6Y1fa+
+         yEvOPpWRwgTDGwbgaSmZ5H8Jik6dSl6Xl59z79lf0mB5Her9VaPaLtjw1lZrat2Bgp/1
+         q0YDbK9KbYz9VR5ol0CppbRuMUURFBpXJ40wGfM400cUp5DWTgSr9kmYKEVycsPQtlMJ
+         8au5WZ4NFMj3hX/N39HRMqQaC4kYPGUsOkABHra1LJB4bIbZGKINKvVCLitP8xIL7r8n
+         OtzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757720291; x=1758325091;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I+IeUdWxiLjTU2csSrANPnlDmQ68oXdaxJe8wwbFp/U=;
-        b=LMskN64TeDZsdHfgKNxTSJzgJfk25TYdr0smlzmbe6DrYAvaTVXJYC8mgR3KUC2Dul
-         QCqra8y9ltq5AOZmltixhxNPXfC6G3roId8jL5nyfzmLeT51Mab8clB6i68HK99I9+Rd
-         nT402Ciw1ZHU113OevDp7KPAfVwjDFw4Ur3XFWbs7Y69NWayK1xT8nCLLdiVsOlnRCxk
-         GHmhReqU9zICraJIrjc/KCdJYtoWX1712FJlzLQDOhGZWIWjDvSgfXpi99vRXBpNyQtc
-         PLc5hczDgk11sfLE2ojPnhiFIIE4SXiCAbxArfPqJkM9vcRfAOH976MdeSOHrl0OK4sX
-         7CQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVH4aTksOhG6VuP07sWrHvuPvdSS/mJzonsjZYF/axET9Fz6f/ItWzKjJ0blduYMWYW8ELHHhMMtKZ1df1AcsfA@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpjEWDlMI4egOrYzxXP9c0DhVMg8jV9PgHCfqI7jaYkUG/5X0P
-	9x9si9lulqOCDGKnOZqFCQYkcrOmXqwuhIlPKEX4dRLFMbW36vwwVY9uqGYE9fgeDU/Bh1qvcOr
-	psVVonLl+kpAO5dYenR9d+cSprQJ2GF3WsIshh32L
-X-Gm-Gg: ASbGncu1PPqMfQxydK4U0eIcpfCLYmkumSyJvlNrzjujqHGHyUPrG4b4OB96z2VxaXV
-	kV4twMjBUinyjR8DnmmRG8yo+MC/Nb6bap/dyx7qv51xcnX/CsZGvOG6VUf3mCexgkjJfL3EqiU
-	SZd7J03H97UwE25x4PhW8sX2DoBuMyfrLwwjU9jKjgy3mY44ZaH31B248Gen4FFnQNrbpSDaFjS
-	oJ9tuF4kv+Qz0J0FUdXNq54og==
-X-Google-Smtp-Source: AGHT+IFXZpKmsBxNh/q0fzirmyD/w1U2dM9umZvCp77k9wnf3KmFys6i1BPz4WTLGTUOjHzqhU7Z7y4G4ImJlUVDVQo=
-X-Received: by 2002:a17:902:e548:b0:24c:7be9:85b9 with SMTP id
- d9443c01a7336-260e5f75787mr1104205ad.14.1757720290078; Fri, 12 Sep 2025
- 16:38:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1757721693; x=1758326493;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PMhMwVUWtkQhQozvbkaye4gfec+Uus5/E0Yhl+qmRTo=;
+        b=vL5X/UZwuStddcg0y1eyDwgBvO0HVf7td3DFa4Fxtiz5BT6LT1Bsf/5L3vaz1aL2P0
+         gLlamDgkneasqYrSoqM/po93GBD2ZYdsOHSBQ7IdWAyxzlNLn7e2qvCYWL0qe2DbgFdJ
+         t2LNzmN5+kIH/SDY7DfRRxf2ApavHhGCE5dwoLhSAuHXkLzaGm59y4xKKWxpR5AnzTXN
+         133wM67kAMbAAH7K34l3/9BvngCr/rfBocfwWypTBdZ80VWY5cCOLE9APEMm4cEgPacm
+         YTnj8ApmC0oheACBkG4CsInQigbOe1jbVyqNuS9PWS+WQyJaQLUo1FgEprMqf8nzkM8c
+         0pLA==
+X-Forwarded-Encrypted: i=1; AJvYcCVcbDKy6NHls3Eshan5IJ5nex5NBM4utsAaZ7hNwP2y76uGGTdjtwwORlqlCcgMA4vLQcgNDYvHzZZCvPA0bEK7@vger.kernel.org
+X-Gm-Message-State: AOJu0YwH5v94ZYWnlqKjpGa2Y2bmM+CPUX056nqxn36S6Cpaok9/vqSY
+	VgkHIsL/cRToDepOGon7vszZQvRKl+nTienfcjxF89ETqwVonxOh3SWvB0NL0oWGDyWYjMSUKNk
+	6BC9gO+sq+g==
+X-Google-Smtp-Source: AGHT+IFYXWG5c4pWx8SGKm+MYzC4up5S0kC5qWHuqEAb7gKco/PQlJGOcBTDF6ZQWJ2Jg2rbCpSXqG1lYr9B
+X-Received: from pjbqb3.prod.google.com ([2002:a17:90b:2803:b0:32b:8eda:24e8])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d40c:b0:329:f535:6e4b
+ with SMTP id 98e67ed59e1d1-32de4fb9de0mr5671674a91.37.1757721693349; Fri, 12
+ Sep 2025 17:01:33 -0700 (PDT)
+Date: Fri, 12 Sep 2025 17:01:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250908221727.3635572-1-irogers@google.com> <aL9oL8aAMam676Ra@google.com>
- <aMSWbjo-qY7JYAoY@x1>
-In-Reply-To: <aMSWbjo-qY7JYAoY@x1>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.51.0.384.g4c02a37b29-goog
+Message-ID: <20250913000129.1306162-1-irogers@google.com>
+Subject: [PATCH v1] perf lock: Provide a host_env for session new
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 12 Sep 2025 16:37:59 -0700
-X-Gm-Features: Ac12FXyLvWrzlQdYTNqU0M2z-GvSe0s21WQqEMk6u9-FCWExAloYLbzvnl48ack
-Message-ID: <CAP-5=fWQUE4YxbAK4-qV44WFXYjo_EPy1XcVSrOYVP=rTspKnQ@mail.gmail.com>
-Subject: Re: [PATCH v1] perf test: AMD IBS swfilt skip kernel tests if
- paranoia is >1
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Collin Funk <collin.funk1@gmail.com>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 12, 2025 at 2:53=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Mon, Sep 08, 2025 at 04:35:11PM -0700, Namhyung Kim wrote:
-> > Hi Ian,
-> >
-> > On Mon, Sep 08, 2025 at 03:17:27PM -0700, Ian Rogers wrote:
-> > > If not root and the perf_event_paranoid is set >1 swfilt will fail to
-> > > open the event failing the test. Add check to skip the test in that
-> > > case.
-> >
-> > Thanks for the fix!
->
-> I'm taking this as an Acked-by, ok?
+When "perf lock con" is run in a live mode, with no data file, a host
+environment must be provided. Testing missed this as a failing assert
+was creating the 1 line of expected stderr output.
 
-I have a new version but I'm discovering quite a few other issues on
-the way. There are 7 patches on top of this here:
-https://github.com/googleprodkernel/linux-perf/commits/google_tools_master/
-I'll send the new version now, but I'd been tardy as it wasn't clear I
-was done with fixes yet.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+Please consider this patch for v6.17 fixes.
+---
+ tools/perf/builtin-lock.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Thanks,
-Ian
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index fd49703021fd..078634461df2 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -2009,6 +2009,7 @@ static int __cmd_contention(int argc, const char **argv)
+ 		.owner = show_lock_owner,
+ 		.cgroups = RB_ROOT,
+ 	};
++	struct perf_env host_env;
+ 
+ 	lockhash_table = calloc(LOCKHASH_SIZE, sizeof(*lockhash_table));
+ 	if (!lockhash_table)
+@@ -2024,7 +2025,10 @@ static int __cmd_contention(int argc, const char **argv)
+ 	eops.mmap		 = perf_event__process_mmap;
+ 	eops.tracing_data	 = perf_event__process_tracing_data;
+ 
+-	session = perf_session__new(use_bpf ? NULL : &data, &eops);
++	perf_env__init(&host_env);
++	session = __perf_session__new(use_bpf ? NULL : &data, &eops,
++				/*trace_event_repipe=*/false, &host_env);
++
+ 	if (IS_ERR(session)) {
+ 		pr_err("Initializing perf session failed\n");
+ 		err = PTR_ERR(session);
+@@ -2142,6 +2146,7 @@ static int __cmd_contention(int argc, const char **argv)
+ 	evlist__delete(con.evlist);
+ 	lock_contention_finish(&con);
+ 	perf_session__delete(session);
++	perf_env__exit(&host_env);
+ 	zfree(&lockhash_table);
+ 	return err;
+ }
+-- 
+2.51.0.384.g4c02a37b29-goog
+
