@@ -1,37 +1,37 @@
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E9935968;
-	Sat, 13 Sep 2025 04:07:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E658A13AD05;
+	Sat, 13 Sep 2025 04:13:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757736470; cv=none; b=a40kHDTc1CUdRoaw7jYIuKPN2mfPtR3Vq3wJ6UwBIdFttwlHSmf2j+O0sjxG3xx1BdAP3etWEevwYOPeuAQ0bC2AuTDNzORMwUCpJ/tdgFA/qjdtlTL6tqQE2XqlRCQU45IB64eWgIWRf9p/CZzkPURvmFe9srWpLLn/XupVVR8=
+	t=1757736801; cv=none; b=Kkjuge7HR53z1NDlubOh2GtCXMMRPYALblRq0iVfA1Cu3/sTbpq4EHLepEg9qXuLqKvHbaOZGpkl8OuX+4xVbeWwlxvvzs9RBmhwydJip0Bd2/XPe7z80s/RUqtlY/7GYctLTOF2vU9mS0zhE9AeH99LsAj0rJ2/zDEzyHRuU+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757736470; c=relaxed/simple;
-	bh=bzsI36RMc40NVQUbrU8x0jkLVmvncWaugvL4iQIAccU=;
+	s=arc-20240116; t=1757736801; c=relaxed/simple;
+	bh=U9kKsshevJqGszGf9fsgE68j9TrfFI4hVI82DPtJMYE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KQTb4wel1AMHpvEzk2ene8+rTsIjJxUYZfnQnsN9E2FuNxo63SmV+EazmyT11B0oI/2b96lxEg7MpbFcn7pUKGRittBESIPfnawMkD98Jk/A6bCht3Qb/MXrHsqNDmZUL/zuCUo2yxNkVop2GdTje1tw0bKNyZE75ynX+hkhzNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Zvj7+2VJ; arc=none smtp.client-ip=198.137.202.133
+	 In-Reply-To:Content-Type; b=BNmrP0addK4CP3H/iEFOIlC4+bIVxOWgcTrQIiWe9xC6eC1smiXzuZluCmV0yY6AdHa2IbiZ3TDqCKa/5ulxXKf/Hc0uyWl2+wXMNKPZ5dBmyG2pYh4MghILqz/cnvfWaAqpoiDaCSPS4zlX9sv5LJ9ExYzUrFpoeZ64FYNtljw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=xPzy07H5; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zvj7+2VJ"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xPzy07H5"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
 	Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
-	bh=ZkZpc5dBMnXI4POCZ2TCFFqEd7xijX/+QZHk6h+vWnA=; b=Zvj7+2VJQP1AUrM1oc0jI4D0df
-	kZLbrgoF6tWC1TSXrQCzaRwf64BcIFqWM9jqgctShxRWwA64Z3cH3ZJp9xtz/vExBAcClQcmfIZn7
-	yCcLB+AesJzDmEPSjA8I8PqMwPg+QtoHLtCCGQwR4t8mmkzazK/OjVldlPQMX7eK39OikaYuiFAkS
-	f3j34JKAUXKzXllob2T5kCBHPFSR85WlWQfJBGW6vvdYMXS8Z3QXIbkl5YsAeQ69QGvyvU6VGYXVL
-	zapYbucIouJWo+hLXEvQIBUIuwgelZEWHzU6JUYSd+NcP/fFDMoT6FMSctoEiTHXQLnPtkJJ7TQUx
-	RnGJ92cg==;
+	bh=u7ndZnQxyXKvcCzhFli8oZf0PjWLBirdplU5n0FJmLw=; b=xPzy07H5oLyRzMkKUDnRYxRbA8
+	FB9s/mgtYrIEncNja4JJjGye+zGOM5arCPaXRnqY0vBLCsFj8oDAeoSE0UqBh4+bDiLKE1WlvVIGg
+	KVrxlIQZrGV8DB3SCKRdz/WridjNvy5CXv+SD1Va6LVYxjNBA+mGHiEbQRiwSEI+cHvjloDDoXglj
+	0dK5WfUej0zVDXKQOXKsr5DuKq3kr+d9vFJrusNVKTTSLwcsCky4pU6kPywtug6qim/3Nk3gXwtyf
+	vbw1VCU9MqDSbqZvzBQzA1VgqzMvxCdl5wn99ll+PJEWgdoqb2XafQieoBP+l+brAtdIBvxrTKifR
+	pUY01Pvg==;
 Received: from [50.53.25.54] (helo=[192.168.254.17])
 	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uxHXd-0000000D5gz-1paw;
-	Sat, 13 Sep 2025 04:07:13 +0000
-Message-ID: <69198449-411b-4374-900a-16dc6cb91178@infradead.org>
-Date: Fri, 12 Sep 2025 21:07:11 -0700
+	id 1uxHdN-0000000D6om-3RkA;
+	Sat, 13 Sep 2025 04:13:09 +0000
+Message-ID: <6b5e5d3e-5db8-44f2-8dca-42f317be8e0d@infradead.org>
+Date: Fri, 12 Sep 2025 21:13:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -39,7 +39,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 15/21] mm/ksw: add test module
+Subject: Re: [PATCH v4 03/21] HWBP: Add modify_wide_hw_breakpoint_local() API
 To: Jinchao Wang <wangjinchao600@gmail.com>,
  Andrew Morton <akpm@linux-foundation.org>,
  Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
@@ -81,37 +81,37 @@ To: Jinchao Wang <wangjinchao600@gmail.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  linux-trace-kernel@vger.kernel.org
 References: <20250912101145.465708-1-wangjinchao600@gmail.com>
- <20250912101145.465708-16-wangjinchao600@gmail.com>
+ <20250912101145.465708-4-wangjinchao600@gmail.com>
 Content-Language: en-US
 From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250912101145.465708-16-wangjinchao600@gmail.com>
+In-Reply-To: <20250912101145.465708-4-wangjinchao600@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 9/12/25 3:11 AM, Jinchao Wang wrote:
-> diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
-> index fdfc6e6d0dec..46c280280980 100644
-> --- a/mm/Kconfig.debug
-> +++ b/mm/Kconfig.debug
-> @@ -320,3 +320,13 @@ config KSTACK_WATCH
->  	  the recursive depth of the monitored function.
->  
->  	  If unsure, say N.
-> +
-> +config KSTACK_WATCH_TEST
-> +	tristate "KStackWatch Test Module"
-> +	depends on KSTACK_WATCH
-> +	help
-> +	  This module provides controlled stack exhaustion and overflow scenarios
-> +	  to verify the functionality of KStackWatch. It is particularly useful
-> +	  for development and validation of the KStachWatch mechanism.
+> +/**
+> + * modify_wide_hw_breakpoint_local - update breakpoint config for local cpu
+> + * @bp: the hwbp perf event for this cpu
+> + * @attr: the new attribute for @bp
+> + *
+> + * This does not release and reserve the slot of HWBP, just reuse the current
 
-typo:	                                        ^^^^^^^^^^^
+                                                 of a HWBP; it just reuses
 
-> +
-> +	  If unsure, say N.
+and preferable s/cpu/CPU/ in comments.
+
+> + * slot on local CPU. So the users must update the other CPUs by themselves.
+> + * Also, since this does not release/reserve the slot, this can not change the
+> + * type to incompatible type of the HWBP.
+> + * Return err if attr is invalid or the cpu fails to update debug register
+> + * for new @attr.
+> + */
+> +#ifdef CONFIG_HAVE_REINSTALL_HW_BREAKPOINT
+> +int modify_wide_hw_breakpoint_local(struct perf_event *bp,
+> +				    struct perf_event_attr *attr)
+> +{
 
 -- 
 ~Randy
