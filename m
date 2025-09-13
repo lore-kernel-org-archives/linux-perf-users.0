@@ -1,105 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CFA2EB10;
-	Sat, 13 Sep 2025 00:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E9935968;
+	Sat, 13 Sep 2025 04:07:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757724503; cv=none; b=AJ7Xver+aw6Xn5tDUFsAL3H4u7emGY7tdNj7mvei7aYs91tCzlYoWjZqNM5hzeocV4gDX8fF3bWMdfX+2Ah3/Sh5JSGOvCqG4gUOaldMh+pc8cx/UxDHjkz45oGEquqZ+/Yg1pizFHCQFZ7eBqjK9Zdm0GX4aW/wU3rKNk7H8DU=
+	t=1757736470; cv=none; b=a40kHDTc1CUdRoaw7jYIuKPN2mfPtR3Vq3wJ6UwBIdFttwlHSmf2j+O0sjxG3xx1BdAP3etWEevwYOPeuAQ0bC2AuTDNzORMwUCpJ/tdgFA/qjdtlTL6tqQE2XqlRCQU45IB64eWgIWRf9p/CZzkPURvmFe9srWpLLn/XupVVR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757724503; c=relaxed/simple;
-	bh=1TwK5Sh9P3VBpxt1xTJbYYycQrwk9/QJHOpONGvrf0Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sYu0OfaA2rlCTN+jhC6ulorG2AIwPyvwT7FRF+tZUBeSz21hXimsmO55LKKBAJTr42cKKiZHtuZ5J7Ade/XEk7+4ARnGWuu7XYAHuY64ppTCAgoNyv0ULKKSu8+orsjoDJJ9DWuNvD9vd0SkysyVHH0qstgGxsVdZsYt5v9wjgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gGJQs2m/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1757736470; c=relaxed/simple;
+	bh=bzsI36RMc40NVQUbrU8x0jkLVmvncWaugvL4iQIAccU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=KQTb4wel1AMHpvEzk2ene8+rTsIjJxUYZfnQnsN9E2FuNxo63SmV+EazmyT11B0oI/2b96lxEg7MpbFcn7pUKGRittBESIPfnawMkD98Jk/A6bCht3Qb/MXrHsqNDmZUL/zuCUo2yxNkVop2GdTje1tw0bKNyZE75ynX+hkhzNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Zvj7+2VJ; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gGJQs2m/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 974D5C4CEF1;
-	Sat, 13 Sep 2025 00:48:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757724502;
-	bh=1TwK5Sh9P3VBpxt1xTJbYYycQrwk9/QJHOpONGvrf0Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gGJQs2m/zshV8BraUqNJf5g7rzsOTIZWDRIk3KPkfA72qDngGGUetkRRC7PuZ2//o
-	 dmiiRpqwWgdCcv9a/AgcfyZ7iHce99lgbXY/8D7eQ8+mCRCKcs0IScpsfTyAOBSFdD
-	 7jo9y2628/pRHsEb12gUsQXQp9DMv6rzfJ48d1vpHSuk6Gua4HRc1CPgEuKggJA0il
-	 CbQUxXaRz5bHWl6gg+GyC+4oQWtVQvYbzmb7iFPSLbfKZHh4RgGSpHgjET4LLAc3ES
-	 nMSTcQdtGBT6Xw9dq/v3rdaov5+iEoFG2ZtaWRwo7VSTRsnvf/bF9pfVTVty7+jJOS
-	 OJ1v4XtM4kh3Q==
-Date: Fri, 12 Sep 2025 17:48:20 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf lock: Provide a host_env for session new
-Message-ID: <aMS_VJpwvwBIW44t@google.com>
-References: <20250913000129.1306162-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zvj7+2VJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
+	bh=ZkZpc5dBMnXI4POCZ2TCFFqEd7xijX/+QZHk6h+vWnA=; b=Zvj7+2VJQP1AUrM1oc0jI4D0df
+	kZLbrgoF6tWC1TSXrQCzaRwf64BcIFqWM9jqgctShxRWwA64Z3cH3ZJp9xtz/vExBAcClQcmfIZn7
+	yCcLB+AesJzDmEPSjA8I8PqMwPg+QtoHLtCCGQwR4t8mmkzazK/OjVldlPQMX7eK39OikaYuiFAkS
+	f3j34JKAUXKzXllob2T5kCBHPFSR85WlWQfJBGW6vvdYMXS8Z3QXIbkl5YsAeQ69QGvyvU6VGYXVL
+	zapYbucIouJWo+hLXEvQIBUIuwgelZEWHzU6JUYSd+NcP/fFDMoT6FMSctoEiTHXQLnPtkJJ7TQUx
+	RnGJ92cg==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uxHXd-0000000D5gz-1paw;
+	Sat, 13 Sep 2025 04:07:13 +0000
+Message-ID: <69198449-411b-4374-900a-16dc6cb91178@infradead.org>
+Date: Fri, 12 Sep 2025 21:07:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250913000129.1306162-1-irogers@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 15/21] mm/ksw: add test module
+To: Jinchao Wang <wangjinchao600@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Mike Rapoport <rppt@kernel.org>,
+ Alexander Potapenko <glider@google.com>, Jonathan Corbet <corbet@lwn.net>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ David Hildenbrand <david@redhat.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Kees Cook <kees@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Sami Tolvanen <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+ Masahiro Yamada <masahiroy@kernel.org>, Rong Xu <xur@google.com>,
+ Naveen N Rao <naveen@kernel.org>, David Kaplan <david.kaplan@amd.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Jinjie Ruan <ruanjinjie@huawei.com>,
+ Nam Cao <namcao@linutronix.de>, workflows@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-mm@kvack.org, llvm@lists.linux.dev,
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, kasan-dev@googlegroups.com,
+ "David S. Miller" <davem@davemloft.net>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org
+References: <20250912101145.465708-1-wangjinchao600@gmail.com>
+ <20250912101145.465708-16-wangjinchao600@gmail.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250912101145.465708-16-wangjinchao600@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Sep 12, 2025 at 05:01:29PM -0700, Ian Rogers wrote:
-> When "perf lock con" is run in a live mode, with no data file, a host
-> environment must be provided. Testing missed this as a failing assert
-> was creating the 1 line of expected stderr output.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
-> Please consider this patch for v6.17 fixes.
 
-Yep, I'll queue it to perf-tools tree.
 
-Thanks,
-Namhyung
-
-> ---
->  tools/perf/builtin-lock.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> index fd49703021fd..078634461df2 100644
-> --- a/tools/perf/builtin-lock.c
-> +++ b/tools/perf/builtin-lock.c
-> @@ -2009,6 +2009,7 @@ static int __cmd_contention(int argc, const char **argv)
->  		.owner = show_lock_owner,
->  		.cgroups = RB_ROOT,
->  	};
-> +	struct perf_env host_env;
+On 9/12/25 3:11 AM, Jinchao Wang wrote:
+> diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
+> index fdfc6e6d0dec..46c280280980 100644
+> --- a/mm/Kconfig.debug
+> +++ b/mm/Kconfig.debug
+> @@ -320,3 +320,13 @@ config KSTACK_WATCH
+>  	  the recursive depth of the monitored function.
 >  
->  	lockhash_table = calloc(LOCKHASH_SIZE, sizeof(*lockhash_table));
->  	if (!lockhash_table)
-> @@ -2024,7 +2025,10 @@ static int __cmd_contention(int argc, const char **argv)
->  	eops.mmap		 = perf_event__process_mmap;
->  	eops.tracing_data	 = perf_event__process_tracing_data;
->  
-> -	session = perf_session__new(use_bpf ? NULL : &data, &eops);
-> +	perf_env__init(&host_env);
-> +	session = __perf_session__new(use_bpf ? NULL : &data, &eops,
-> +				/*trace_event_repipe=*/false, &host_env);
+>  	  If unsure, say N.
 > +
->  	if (IS_ERR(session)) {
->  		pr_err("Initializing perf session failed\n");
->  		err = PTR_ERR(session);
-> @@ -2142,6 +2146,7 @@ static int __cmd_contention(int argc, const char **argv)
->  	evlist__delete(con.evlist);
->  	lock_contention_finish(&con);
->  	perf_session__delete(session);
-> +	perf_env__exit(&host_env);
->  	zfree(&lockhash_table);
->  	return err;
->  }
-> -- 
-> 2.51.0.384.g4c02a37b29-goog
-> 
+> +config KSTACK_WATCH_TEST
+> +	tristate "KStackWatch Test Module"
+> +	depends on KSTACK_WATCH
+> +	help
+> +	  This module provides controlled stack exhaustion and overflow scenarios
+> +	  to verify the functionality of KStackWatch. It is particularly useful
+> +	  for development and validation of the KStachWatch mechanism.
+
+typo:	                                        ^^^^^^^^^^^
+
+> +
+> +	  If unsure, say N.
+
+-- 
+~Randy
+
