@@ -1,124 +1,96 @@
 Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2F52DF15D
-	for <linux-perf-users@vger.kernel.org>; Sun, 14 Sep 2025 18:29:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 223D623D288
+	for <linux-perf-users@vger.kernel.org>; Sun, 14 Sep 2025 18:31:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757874553; cv=none; b=DaJgdliyi0Lh5IlmHASSjTKNdeGNYbTtdQINWs/RgZ/2t0tZNaj89w8M92PBmQ0mBNvSwFj0FsOJmZWkIfnyGb1Q3CzlAj0K3SiXPO9CjpLaHFDcvTmUQ0gT7kknbvGlNy2kNdDPKgHMgRGu1Vty5fQLLPy7AMxg2auKyZmoMYM=
+	t=1757874699; cv=none; b=dORhL1Ak6QGBALBHoMuS45zROAf5TASlC3EeLLIb/jIEJTj+1rNqb/arOst/p5Img2+67vcdDx16iXvDTLt/8homEanAeqi3AUPzgmgwGmXLxeqDXQVuh9wq+JIxuMTlsq3Rk/LIi5qNQb8ovPjPL5Rfq9gYOcYBjtO8NuA3Els=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757874553; c=relaxed/simple;
-	bh=kHCFkoShNUOlHMlQ879xfha1TjDoflpSxnCnwqm/tOc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=YwKauuZm5vMIWTftGnsJi6kb0dlN029OGpUyXECqMUCwhdZEF0GZYIcg+LxXVlFL8Lkck3SF4URAzYXA3BB7dvkQ0wbgNPa2ftM8eGrc8Ani4qFAQvgTecCEcYhOIJYzn2orqNp2FYQplVITNR9hNJ0BvvCOW6cLcMtQKslsm9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DxWnHjna; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1757874699; c=relaxed/simple;
+	bh=6UFG4+fViSeESuEnKM2lAgu7VSmoW0Id/xL/ZujVnrs=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=Nqj6Zn7dCwxR38m8Ib2Poyl5cpDF0Dfjgl33exfCtp0Y6cKcVRcqnMkQamfwDkoeBIIVJjdYqdPlbtf/komRkC0JZ5Ug8f9m/fgsYThDyrmS+GAOJlONldkTkliki5+rfr82MvahMY/4kY2Zos/oAZwyqGhC4pdaJLZFMhbJq4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EdXbVEOj; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DxWnHjna"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-32deaafeb5bso4013392a91.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 14 Sep 2025 11:29:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EdXbVEOj"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-32e372d0ee6so435648a91.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 14 Sep 2025 11:31:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1757874551; x=1758479351; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ALDUZA03/UTXBYu9euaSzX+Yf6hYZQnIYDNKkWvFhVE=;
-        b=DxWnHjnaldwzNC2iTQVPj0qJMXHvzx0RXgxVdP3nWfdIA1ULVPDoE+wjzHbZ/C+ctK
-         PFX/h0xWAaWkq0IH5rx/VG4hmceHE8+ccjEdWn+brvjHmdcinZpiXWVp6aB2kTyhp2Yc
-         LK9cHlJUmwHwbP29vi8Id77FY6A9aWZfef6652a4Gx01jHkHhZss2pS5NXezR5V0NWMa
-         iVhboCF6Bd1SVwpY8uGPwSPEfGBy+kgJvJiPVllL+cxgmdETjp9xiMFnt3ucjnTeuMgv
-         F5K7FAZf4TTF8/5BH+3qQfoVLmhgRMv90VGKqMuwbLScDJRcaHJhGmxW290FR2JDR23u
-         81fg==
+        d=google.com; s=20230601; t=1757874697; x=1758479497; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+0HLF0l6sKrn/QwWnrA3S0LQAY0Lo5116W81vJMiWo4=;
+        b=EdXbVEOjtVwQKx4FdSIqlrMSVmAvdE2/KG/kguc6n9XrO32E69zus5H91dbReMFjBD
+         tb3DV0MTvueGFqLigqpMQkr+bJFpRUv3geKOdfO+3VypF0U3ZIxRcvMX4hjjCEdd5Onn
+         VMABLVGRk9ZcSt+r9cPHGTwqd2c82OoPSSgrri3sNJeIHA3xoRwHYzaC59xakS/67ZHI
+         m5HxGzgmmWhDx0lRxDHpQ0V64wpXajU+QMgbNFY3avvn2t23aejk3KSefLf8A8qlvTa7
+         jxUOUxm1iAbup4ucAzHRfvEqQrdh2Dd4PjrxTwOQIY8P4N7bIRIqDxkdGO0fwu0eTe/B
+         q0BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757874551; x=1758479351;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ALDUZA03/UTXBYu9euaSzX+Yf6hYZQnIYDNKkWvFhVE=;
-        b=NP7BiCY1AGRmqJ9KiFgcOaABz4q2fxzTwlDt5dFGmMgMc88eEaN8qAQXNkopSJrJPK
-         E+A6QdnYWT2OVTEFNtQ8zXb0wb5vl300xF4o++ria9JisX84LHBWcXV80/gaXvwEKanx
-         w3FifNQbxsP6aTBXFpytrGFW/Vc8oowu016Xbn1+lcP+b31/2XAVXz16CdEsnn9kdja0
-         vzExXy0jfvra2zGbgL8taMd0Bq9xKCjYAnCzqNOrv91ijCSyWPa7eKO0nEaA+sWzHOIT
-         L5ocCpcwuq82Xh5Y3uoENBUkpXoV+Fat/b08PxcW6mkk0O1IoPucGneDXFLG9obhQtUD
-         2LxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVz1XxdRnh4cpmM65AaXenb3p/jCB7L/qcNkw0F9ZQgIzTtlV4OmZiTMQiQSjsJl9CDBleee7Dbu5btn3m4HmQh@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpJRKgOOojWOTF0Ec8LkPBIu3gSPz5S7Edcxx2pD6SSnLYICR+
-	m2efJ+SGbc6sDvUivYb0yYFQiYXPbO1khRN+6tRE2zPcb8hoZiwBfjOEW0ulwi35WNNqpQoLuC2
-	+FZz2f/W35A==
-X-Google-Smtp-Source: AGHT+IFd71ZjRBakGhbafgnPTzrixccPSZLeSg9hHh43AJijBVxQ6iVQT+Cq9+9/FUnZC5J4hMdzOxh4UJP/
-X-Received: from pjtu3.prod.google.com ([2002:a17:90a:c883:b0:32e:6111:40ac])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1648:b0:32d:d714:b3d9
- with SMTP id 98e67ed59e1d1-32de4f9be8dmr11359334a91.31.1757874551179; Sun, 14
- Sep 2025 11:29:11 -0700 (PDT)
-Date: Sun, 14 Sep 2025 11:29:00 -0700
-In-Reply-To: <20250914182900.1960567-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1757874697; x=1758479497;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+0HLF0l6sKrn/QwWnrA3S0LQAY0Lo5116W81vJMiWo4=;
+        b=sZVDBkzXkhanDoLn7V4Qe5tNUeMAkXYmGYnORcMO+A4d6OEmCTXpHPg7Cctus3rhdW
+         pALR9Vbvjoxq7UzvD1VztBzN/wPPO/4FpgwXkA4vXV+sGovCQj4/Rc3e4ujkwfrddBfI
+         NC6+lZsRDLlm0gFiQ5QfFlLbfrfqwjeDrQXyD0OlgZiuowqJcdVDhUk5gNaPLH4tV+sz
+         Aw9tgQsAnlg/0g3pD/wsjV25H1L53IlyyAwA0YhyNLb3T37aHygREOM51a/1AjQ029Kt
+         ULvaRqKfJLBQ0exCNYItmUT6HgcYzfK4miV7k177I121G8BI/cVgkLn40a5/86M8JMpQ
+         ivGw==
+X-Forwarded-Encrypted: i=1; AJvYcCXgvtOctdsn5Li1iJ4aJXS0nNffRvD2kWaokGFVE2YgPyoy1InS+M6RsmYAfpxLicinNZMPCdus6dm9iHDJDVaK@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywh17CI4ovWosjHLAAZ0dhfN8hEP9O9Jo5OdIW/mFdh2i624a1a
+	3NfiW4Q6tnnK/ktDVCrdC/3w8w3O4mI0C7TVuEcjOSL+HR4McC32P5m7GyPN2MT2e8tRqVDzy4I
+	JVST1eqFhMw==
+X-Google-Smtp-Source: AGHT+IHknLGJwo1dZZlB1b6P3ynSOQKzTXmXy62zaLKX4wDxFaEBVQxKejLei4la9mohWs16XOWfwXwEAsj0
+X-Received: from pjbnw4.prod.google.com ([2002:a17:90b:2544:b0:32b:65c6:661a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:38c2:b0:32e:3592:5807
+ with SMTP id 98e67ed59e1d1-32e35925d53mr3068756a91.26.1757874697522; Sun, 14
+ Sep 2025 11:31:37 -0700 (PDT)
+Date: Sun, 14 Sep 2025 11:31:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250914182900.1960567-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.384.g4c02a37b29-goog
-Message-ID: <20250914182900.1960567-5-irogers@google.com>
-Subject: [PATCH v1 4/4] perf stat-shadow: Display metric-only for 0 counters
+Message-ID: <20250914183131.1962210-1-irogers@google.com>
+Subject: [PATCH v1] perf symbol-minimal: Be more defensive when reading build IDs
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Chun-Tse Shao <ctshao@google.com>, Thomas Falcon <thomas.falcon@intel.com>, 
-	Yang Li <yang.lee@linux.alibaba.com>, linux-perf-users@vger.kernel.org, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-0 counters may occur in hypervisor settings but metric-only output is
-always expected. This resolves an issue in the "perf stat STD output
-linter" test.
+The note_data at ptr is read as a nhdr but this may yield
+out-of-bounds reads if there isn't nhdrs worth of data. Be more
+defensive before doing the reads. This is motivated by address
+sanitizer capturing out of bounds reads running "perf top".
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/stat-display.c |  3 +++
- tools/perf/util/stat-shadow.c  | 11 ++++-------
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ tools/perf/util/symbol-minimal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index a67b991f4e81..8a72e019e6c7 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -944,6 +944,9 @@ static bool should_skip_zero_counter(struct perf_stat_config *config,
- 	if (verbose == 0 && counter->skippable && !counter->supported)
- 		return true;
+diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
+index 41e4ebe5eac5..aeb253248895 100644
+--- a/tools/perf/util/symbol-minimal.c
++++ b/tools/perf/util/symbol-minimal.c
+@@ -42,7 +42,7 @@ static int read_build_id(void *note_data, size_t note_len, struct build_id *bid,
+ 	void *ptr;
  
-+	/* Metric only counts won't be displayed but the metric wants to be computed. */
-+	if (config->metric_only)
-+		return false;
- 	/*
- 	 * Skip value 0 when enabling --per-thread globally,
- 	 * otherwise it will have too many 0 output.
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index abaf6b579bfc..dd3a15b17eb9 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -320,13 +320,10 @@ static void print_instructions(struct perf_stat_config *config,
- 	double max_stalled = max(find_stat(evsel, aggr_idx, STAT_STALLED_CYCLES_FRONT),
- 				find_stat(evsel, aggr_idx, STAT_STALLED_CYCLES_BACK));
+ 	ptr = note_data;
+-	while (ptr < (note_data + note_len)) {
++	while ((ptr + sizeof(*nhdr)) < (note_data + note_len)) {
+ 		const char *name;
+ 		size_t namesz, descsz;
  
--	if (cycles) {
--		print_metric(config, ctxp, METRIC_THRESHOLD_UNKNOWN, "%7.2f ",
--			     "insn per cycle", instructions / cycles);
--	} else {
--		print_metric(config, ctxp, METRIC_THRESHOLD_UNKNOWN, /*fmt=*/NULL,
--			     "insn per cycle", 0);
--	}
-+        print_metric(config, ctxp, METRIC_THRESHOLD_UNKNOWN, "%7.2f ",
-+                     "insn per cycle",
-+                     fpclassify(cycles) == FP_ZERO ? 0 : instructions / cycles);
-+
- 	if (max_stalled && instructions) {
- 		if (out->new_line)
- 			out->new_line(config, ctxp);
 -- 
 2.51.0.384.g4c02a37b29-goog
 
