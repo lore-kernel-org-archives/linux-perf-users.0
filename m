@@ -1,54 +1,54 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D771917F0
-	for <linux-perf-users@vger.kernel.org>; Sun, 14 Sep 2025 18:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F5A243968
+	for <linux-perf-users@vger.kernel.org>; Sun, 14 Sep 2025 18:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757874107; cv=none; b=PkLrvfghRjJNoE1nhKYsWb4j+l4f8E/ZqnrTGLFVQrLJFX/fKFmNFFgsVTHPFBA4Se0dBDYT27OWoojc0gX4KfcumHvMPn8N5OVeZC5l2wQ4uYo5+6njE0QmuBIt+TxBfYPN9gV+4ADLO88YFTXyu+sZWqNab3IQuEh18MHPWaI=
+	t=1757874282; cv=none; b=XlmZ/fKvwfcgU/SyAs01FFMc9BKwTr2ukskHEUqEsNzWdDCyUgmgWzaI2CcttZMGpbetTZjiJDcsaaqdT/3MVP+0F9k1fajvwPf3+icUJnDnkCtNk8Ucc72aFK10hQMio4xVhWQy1kvxM4bFglIwfZ90XNaFp+BesXFwq/zQyLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757874107; c=relaxed/simple;
-	bh=GsAIYc4aavaEsHeHft1wPWlWNFRL8pkAWYVQqnWXhD0=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=pZx2W1kPcwUJ+It7h/DfcuckaeJayAZ2v6EfuVQ/cAjx2phI3CZaebXwcTzTDpaMHLCvxVAg3M60sNZqpPOAtoeFN0PmpLsjwsU4ONZqfcceG8KpEIOKFwfoC6u7sMnm6n8g3yIFUuBICwlQpvbGA8iWMdg1jDXSsYaCl9za4Nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sSoBuB1c; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1757874282; c=relaxed/simple;
+	bh=c1zhOVVMQ8wU+7mhRUNPp+wxtAoMdBZyfu+0+9wUxd0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=Dct9Nx1URLys/1L5zkfTpHQKmIMNylCK//dOrxzaqrMR91yl+9j2iaJwNWiHyXRsYUAXGH6I/oJ6K//lLYYD7L5GrPTCCahyfKP/n6GrXZvzFPQBF1VwQwP7GAR4MZpZsRp+3PVq0QD+Evm7urDGv5n1AGYjFeeS7dj3gMRwPEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gCuPDNuy; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sSoBuB1c"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-32dd692614aso5272861a91.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 14 Sep 2025 11:21:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gCuPDNuy"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-25bdf8126ceso65120345ad.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 14 Sep 2025 11:24:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1757874105; x=1758478905; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1757874281; x=1758479081; darn=vger.kernel.org;
         h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=w1j/v+twDt0ZUaShb07DVO0ufp1ep8m6kkLq8qghy74=;
-        b=sSoBuB1cLXdC3qbJK+9oztD0vzRbSyvebxOrisHER3kV2Z+mKVQihXvE93XqMRtjvy
-         UVd0LTB0xwdNpziWfCaF6Evg6+KkTMQKUr9j9CeLHcThyTUCfSbntlsEl68BXF4Y0HDh
-         moiI269Og5reu1QQzDHwzxCQoMqEjjF7PU5EBPSZJkPPOSRpDOVDCcAEIyd2Ce+x8GGb
-         YIsv0LaJmttNUm+3jfjHYkuwXZsIZT8izPnLbtBvz9QPr96lDFJyKjCPPnahGsbjebQY
-         ldBqlOlUss+MEbvyRyjJ5yISsw7lSHTGVGJfVWXghPtB40KqSXv+JXn6fr0GIkm/vydX
-         k2zw==
+        bh=IE+Ce4sKejx+7TLffAwOq5GqAqr/hiqBaebc9tZypdw=;
+        b=gCuPDNuyiH4TcTrmuWSyE0jSnaTxfRVxOPFdEIeTfFPeYe0okwSc+yzS91nKQdc/uy
+         bl1n7M0zTauWiF7VITlmMVkGWM8ob9i024OI6hSockcoUCnq66DtUfnsa1bEmh9jnXg/
+         Om/LV44mfnwJwBBn1kZ5RUxCUWWEec7x9Ol4313L4FVnd4WAONtwAmQsJRQc/IeEV0XG
+         6bIKJwF0yIAZ1NwpwAvmuzdgjxg6UHvEm+LAxmw877TOGR0kXgDFkYKxkphvT6qKFvl7
+         Fs8PgbYx1HVVV4/LLJUVWIYmEocxjc2qo/wmbIPDhMvuqHGomX6CvMZF4tBofPvEFrjT
+         349Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757874105; x=1758478905;
+        d=1e100.net; s=20230601; t=1757874281; x=1758479081;
         h=to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=w1j/v+twDt0ZUaShb07DVO0ufp1ep8m6kkLq8qghy74=;
-        b=kSEtcqED8qzX4GuqverGPdD7mI/yYhLGs7zdea2ooc+binS6R+06ec+dpwf0JYWCPK
-         e2VNR3I4OFmjvj0uMEZlU0jPPA+dwLQ29Mjv4MvjE8jCWOUja56s4FzEwJd8CSErs3bg
-         tI11UAb2v9xhakTV35bVKsrPkYfOsayTg3vlp3t+5zw3FvkIr29BheyPyh/YeYmguyyU
-         2tWIHPKW5zzTylXyXcaQO2kOC7vs7/T5xqxB8N7vWBLKZFHbPUCMFNLLVWv7i35+QPDa
-         XuzG0wl5NuSBH2LBJsmJhdZGw2WiJ9+JN5D0tLbaTW2P8pvzTPZAUYjk08+2EDJBgXXD
-         ujEg==
-X-Forwarded-Encrypted: i=1; AJvYcCWekSGlEuY/WGB/b8+gbQ8wDUJqw2mwpl166wfj56ALn1l4acGPL9hE3ERg0YvWlXLisp4uOVkVEmzLMDZXLd6R@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEKQaQPmbDHjC0TPSkdqs2btAq8QLGj+Fna5+lzdaQ3rspRBqn
-	VKi6k6A75nCw1pK9AbRAc7oqAazQz8jzEKRClaxbrev7bIydMeX64cOVH11zCgPqyysAdzZ1Dwr
-	5aW2szl5X9Q==
-X-Google-Smtp-Source: AGHT+IFACbFgKBKlPscCXxu2FJpvWOu17SDKIWI7vglqGTGg8uhPIjaxhMCTv1EV7riOiN0nLCXS4urRqJZU
-X-Received: from pjwx7.prod.google.com ([2002:a17:90a:c2c7:b0:327:d54a:8c93])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:528d:b0:32e:358d:6678
- with SMTP id 98e67ed59e1d1-32e358d6fb4mr2881411a91.4.1757874105483; Sun, 14
- Sep 2025 11:21:45 -0700 (PDT)
-Date: Sun, 14 Sep 2025 11:21:40 -0700
+        bh=IE+Ce4sKejx+7TLffAwOq5GqAqr/hiqBaebc9tZypdw=;
+        b=Y9ETNqtHL2JlhwukBWWDnIZfHByyCWRlaNiRBTwxsT6cXP8SkdWC2QviO834/Lp/dF
+         hW5j74RoSBalLp6iKZGLs8MvFWowIAY3iZ3fBK7L/fuK2LtmoOrmXQZri/DkyS5JPKSg
+         hEn+ijAd/2XV2RF2WoTQLR5IPSGby7qaC8WZKOlCyHc8dHsuiER51/j8G2h3GrWJsh/F
+         uhxn0IYBWRc0J4FAD+q/ZzqVhc8ymo/X+AMcy7W/RS0jo+6tMFBONU6QvAut6IVSekHp
+         R6NCKK0IqtnGvCvPhRvVES8iaQr3n7oDthjntw9jYRbrftZjaBF0VNLps1WDu/4VNREg
+         ikbA==
+X-Forwarded-Encrypted: i=1; AJvYcCWAn5wvr3iDs+dmYrY8Il4ne/m/8n5/6BI/j2HEJG1BntjRde4h7KM5ob8CpkgUnHGBpG6RyP5G4EoH0PEW3gcN@vger.kernel.org
+X-Gm-Message-State: AOJu0YziATm3t05EF5RC3AevPVDsTnjdzkuVs7pjEHvneakWhB7AfYaG
+	ZsaheyDyg20bhYYe5UAXYyJRxgkOC9EQeRzCHtvWadugbYDUN5SjdhjXCZbPuQ3AZuq9A/pveMf
+	k5mvjs0bPtw==
+X-Google-Smtp-Source: AGHT+IEni+sfrUT3uNfCX7z902e/80bK4Z6raO5OgXAr7WxdCZ+MhDqLjdto7FL8yKctv7osY/7uM7ublLqw
+X-Received: from plsl15.prod.google.com ([2002:a17:903:244f:b0:25b:db75:cd39])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d512:b0:263:b8f:77dd
+ with SMTP id d9443c01a7336-2630b8f7bedmr59519585ad.57.1757874280773; Sun, 14
+ Sep 2025 11:24:40 -0700 (PDT)
+Date: Sun, 14 Sep 2025 11:24:37 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -56,44 +56,39 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.51.0.384.g4c02a37b29-goog
-Message-ID: <20250914182140.1958530-1-irogers@google.com>
-Subject: [PATCH v1] perf test: Stat std output don't fail metric only
+Message-ID: <20250914182437.1959331-1-irogers@google.com>
+Subject: [PATCH v1] libperf mmap: In user mmap rdpmc avoid undefined behavior
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Veronika Molnarova <vmolnaro@redhat.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-When running on a hypervisor the expected IPC metric may be missing as
-the events may fail to be read. Don't expect metric output for this
-test to avoid it failing.
+A shift left of a signed 64-bit s64 may overflow and result in
+undefined behavior caught by ubsan. Switch to a u64 instead.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/stat+std_output.sh | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ tools/lib/perf/mmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/stat+std_output.sh b/tools/perf/tests/shell/stat+std_output.sh
-index 6fee67693ba7..ec41f24299d9 100755
---- a/tools/perf/tests/shell/stat+std_output.sh
-+++ b/tools/perf/tests/shell/stat+std_output.sh
-@@ -90,7 +90,11 @@ function commachecker()
- 		}
- 	done < "${stat_output}"
+diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
+index c1a51d925e0e..ec124eb0ec0a 100644
+--- a/tools/lib/perf/mmap.c
++++ b/tools/lib/perf/mmap.c
+@@ -508,7 +508,7 @@ int perf_mmap__read_self(struct perf_mmap *map, struct perf_counts_values *count
+ 		idx = READ_ONCE(pc->index);
+ 		cnt = READ_ONCE(pc->offset);
+ 		if (pc->cap_user_rdpmc && idx) {
+-			s64 evcnt = read_perf_counter(idx - 1);
++			u64 evcnt = read_perf_counter(idx - 1);
+ 			u16 width = READ_ONCE(pc->pmc_width);
  
--	[ $metric_only -eq 1 ] && exit 1
-+	if [ $metric_only -ne 1 ]
-+	then
-+		echo "Missing metric only output in:"
-+		cat "${stat_output}"
-+	fi
- 	return 0
- }
- 
+ 			evcnt <<= 64 - width;
 -- 
 2.51.0.384.g4c02a37b29-goog
 
