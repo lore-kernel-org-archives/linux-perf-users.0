@@ -1,125 +1,237 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660098287E
-	for <linux-perf-users@vger.kernel.org>; Sun, 14 Sep 2025 18:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2754E1B7F4;
+	Mon, 15 Sep 2025 00:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757874840; cv=none; b=nIW48tgQKBLGz+mgxtraQTEytt/1oSvGnHihObNJwejC7xSgVZpByRhUKhOqJB0DkkhOiXMiGJb0tBcCPOHQFp5ayzuvFlIi+sA74X+Sy/9Lb2lCE9+E5v3rSFjDqjy7dNrpIsUtGgkg0SLUhcl3xe5n4irqfAnisWPwN2UwMHM=
+	t=1757895290; cv=none; b=Qypj8fyZbHbDLcA4A3YoNlqEwp0TvCeFoW9zcLJr3YR9s5fXqotGbW6dVOMkyod2sfNBCQ+dv/72aUWgm1ur0JZuYPKowkHh2BBqk5egvoUqbq9Cc1l0efSqVCl24JngaTs1JBXeGvgx7sRpK2dVwiziKS5mAa1rayJkpu0E16M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757874840; c=relaxed/simple;
-	bh=dmBpq3/7O/v41r+GDh+rnnlXPTGB3FAZAyg8cX0y2xw=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=QOa1jKeq6l0wW4SrqA+YHIQk8x5KWrEL4tVBAzLosqvB5Ic5+/5tm1Vbzq+NU23JwuZ1K8OPf75tPwe/Ysvgak5OzbCRqVfTFRbYCBUkXmU+QvoNsJAUlBMoc5uPBQeaq4TS0OAJKnHWQVyuupTT9fxoiVJ5X+xV9JXokbg5l0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tvnIkiOP; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1757895290; c=relaxed/simple;
+	bh=0F9Yp4zNl0AucLaX6oAKMyZWSX8vhjlpCLDzKaOBEd8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZLeND70oJODjc7SWnMayjr+qPqUuqpa1l4zL1DRh7GrXBargwAEPxDVVJLRzWWRp4daINI1HnQgCU6dtc14GfTvasf0h1eiN27GV+yiSGB98hp7WUczyJiSS/Mt5mFKUzAU4wahrE9EHLs5sZ9IfYuvB7kNx08oL0A54B+kduKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=O5n1QXv9; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tvnIkiOP"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2659a7488a2so7538815ad.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 14 Sep 2025 11:33:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1757874838; x=1758479638; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=wN2iccbVuVBwktRQK01qZKdZc7wUELk9NMoe4QbKLb8=;
-        b=tvnIkiOPQlZ0+J2taqiJ19RVylVtaBSwRtVHFbWDENDa3vVsycGkAhM9CQCPjbyQJH
-         d75/YTw+LZm/En8iBpXHRJqto2illYNmi6GfNX+UYJYkZtTORVrsxaGIORzr2UE4q7KC
-         DjQ+QztOie+S03YI2az2R0ODmClS+DDxj6XqPwm5Azobr2SCnM0p3owSP3PwKgjo+5Dr
-         AVUqYK8kGcT7pEKoK1cEslQl2KuB6F1DZr2WeyLx92Oqlz/YD5qLtr96cifJoWl8fOv6
-         RsUCmfLE2lccr7Y37DHIwiYCJyf/hmIFdOt69XtzETpEl3zhCETFoxB+vO74qAmWxLVv
-         S/Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757874838; x=1758479638;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wN2iccbVuVBwktRQK01qZKdZc7wUELk9NMoe4QbKLb8=;
-        b=OuKWVNcYukyd9Mdm1pZZiq1/bu6IaAvDgMzA9nJ1ETy75XZ7JTK8qWiy5G/woKlE86
-         B9aSCffw+86DOOZ/Lb+xhQx5KBRC4jIjqeZIi1u1woU4LRQYKNFc0jxV3qjIhkhKSwcz
-         pcDJ0G6HZoz8oe9xSqwEEVCklapeNFidgxTWdTk1+0EUGO02AiQUqi3QsVZfbQDMjHdl
-         SZ8EXjh4PQbkuavfcIFqH4SpQkuZQaYcMewesidBlnJ88/KHTTmJG5VJ93HlxdpryoC1
-         sMI1S+Csg49Tod+GH0FonyHasqCrfnNDIgF5WumQDtQwiWvSZtkaq+oJ2VQEu9NWwpUq
-         wQHw==
-X-Forwarded-Encrypted: i=1; AJvYcCXIzwCcXHfYjmjqIgcFNpk2rYaUFnGVfO7ah0NwEy/r3dTJdKIBNi4wgG/N0WbzTpaS6xRTqVwwpP1tQ8pKeNLX@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQTX7PXDFZkMG75/OrlDdaJGxbA1t3fkS1LE2Hjz0aNMNdglVf
-	EZGtPkZCyCA6hk1942/ZWz4IHtq5o3U5Ue5eN9CuKFG04zPz/WRALFv84NZYemJgR8Qs1GlfCWr
-	jhjVuCkYKRg==
-X-Google-Smtp-Source: AGHT+IF5F7RkNRcG5yv3XsFGcxWPT1s6w1jEj6xSWNSgWac2TDVnOvfsv/01vPbaqPE58WtPgrCmaFZ8kLx3
-X-Received: from plkh5.prod.google.com ([2002:a17:903:19e5:b0:24b:12ba:f799])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1aa4:b0:24b:15b3:223d
- with SMTP id d9443c01a7336-25d24da6cf9mr129138075ad.16.1757874838626; Sun, 14
- Sep 2025 11:33:58 -0700 (PDT)
-Date: Sun, 14 Sep 2025 11:33:53 -0700
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O5n1QXv9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=VUsMzAXAbgmvKmfkMAHLRN/OrGD90gmMBytN0Ftnky0=; b=O5n1QXv9rSXJ9CbDyQ9L4Ocs1q
+	1tGd//FycPbea4oGqRJ9UsAF9AF95bQw2ZQwROmquBrYaF4074k0BOZYxLhyrY24Q1RqmaUJ2u1rh
+	lQEm7iftW/mIUQM4Snr+jtq2GRL/e7+qpareMjy1zbvVIidEJ5pSaq6yH43vo6VM4wAtocMC4aNDg
+	vJuP1Yi+w/86DD516+MY6/tCbFbFD34kfFfbSg0rfV/Uc+bB3mPYpUeA2UKDdnICPDg13nwHSUaYA
+	E8bgxkf0y1G5atJVXN1gMf1OHJazPI7tg84AKF/1PZEdahKQJKUPe5u+pgtXxFeaEjTrI9UIBPxte
+	YJapVfKQ==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uxwrf-00000002Ooa-2CYC;
+	Mon, 15 Sep 2025 00:14:39 +0000
+Message-ID: <014136d2-8599-4a1f-ab8e-c5be4f522e5a@infradead.org>
+Date: Sun, 14 Sep 2025 17:14:37 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.51.0.384.g4c02a37b29-goog
-Message-ID: <20250914183353.1962899-1-irogers@google.com>
-Subject: [PATCH v1] perf sched: Avoid union type punning undefined behavior
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/8] tracing: wprobe: Add watchpoint probe event based
+ on hardware breakpoint
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, x86@kernel.org
+Cc: Jinchao Wang <wangjinchao600@gmail.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
+ <hpa@zytor.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <175785897434.234168.6798590787777427098.stgit@devnote2>
+ <175785898586.234168.14883193853242691280.stgit@devnote2>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <175785898586.234168.14883193853242691280.stgit@devnote2>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-A union is used to set the priv value in thread (a void*) to a boolean
-value through type punning. Undefined behavior sanitizer fails on this.
+Hi,
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-sched.c | 19 ++++---------------
- 1 file changed, 4 insertions(+), 15 deletions(-)
+On 9/14/25 7:09 AM, Masami Hiramatsu (Google) wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Add a new probe event for the hardware breakpoint called wprobe-event.
+> This wprobe allows user to trace (watch) the memory access at the
+> specified memory address.
+> The new syntax is;
+> 
+>  w[:[GROUP/]EVENT] [r|w|rw]@[ADDR|SYM][:SIZE] [FETCH_ARGs]
+> 
+> User also can use $addr to fetch the accessed address. But no other
+> variables are supported. To record updated value, use '+0($addr)'.
+> 
+> For example, tracing updates of the jiffies;
+> 
+>  /sys/kernel/tracing # echo 'w:my_jiffies w@jiffies' >> dynamic_events
+>  /sys/kernel/tracing # cat dynamic_events
+>  w:wprobes/my_jiffies w@jiffies:4
+>  /sys/kernel/tracing # echo 1 > events/wprobes/my_jiffies/enable
+>  /sys/kernel/tracing # head -n 20 trace | tail -n 5
+>  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+>  #              | |         |   |||||     |         |
+>           <idle>-0       [000] d.Z1.   206.547317: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
+>           <idle>-0       [000] d.Z1.   206.548341: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
+>           <idle>-0       [000] d.Z1.   206.549346: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
+> 
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  Changes in v3:
+>    - Enclose the register-API dependent code in trace_probe.c with
+>      CONFIG_HAVE_FUNCTION_ARG_ACCESS_API.
+> ---
+>  Documentation/trace/index.rst       |    1 
+>  Documentation/trace/wprobetrace.rst |   69 ++++
+>  include/linux/trace_events.h        |    2 
+>  kernel/trace/Kconfig                |   14 +
+>  kernel/trace/Makefile               |    1 
+>  kernel/trace/trace.c                |    9 
+>  kernel/trace/trace.h                |    5 
+>  kernel/trace/trace_probe.c          |   22 +
+>  kernel/trace/trace_probe.h          |    8 
+>  kernel/trace/trace_wprobe.c         |  685 +++++++++++++++++++++++++++++++++++
+>  10 files changed, 813 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/trace/wprobetrace.rst
+>  create mode 100644 kernel/trace/trace_wprobe.c
+> 
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index f166d6cbc083..eca3b1c58c4b 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -1532,35 +1532,24 @@ static int process_sched_wakeup_ignore(const struct perf_tool *tool __maybe_unus
- 	return 0;
- }
- 
--union map_priv {
--	void	*ptr;
--	bool	 color;
--};
--
- static bool thread__has_color(struct thread *thread)
- {
--	union map_priv priv = {
--		.ptr = thread__priv(thread),
--	};
--
--	return priv.color;
-+	return thread__priv(thread) != NULL;
- }
- 
- static struct thread*
- map__findnew_thread(struct perf_sched *sched, struct machine *machine, pid_t pid, pid_t tid)
- {
- 	struct thread *thread = machine__findnew_thread(machine, pid, tid);
--	union map_priv priv = {
--		.color = false,
--	};
-+	bool color = false;
- 
- 	if (!sched->map.color_pids || !thread || thread__priv(thread))
- 		return thread;
- 
- 	if (thread_map__has(sched->map.color_pids, tid))
--		priv.color = true;
-+		color = true;
- 
--	thread__set_priv(thread, priv.ptr);
-+	thread__set_priv(thread, color ? ((void*)1) : NULL);
- 	return thread;
- }
- 
+
+> diff --git a/Documentation/trace/wprobetrace.rst b/Documentation/trace/wprobetrace.rst
+> new file mode 100644
+> index 000000000000..9774f57e2947
+> --- /dev/null
+> +++ b/Documentation/trace/wprobetrace.rst
+> @@ -0,0 +1,69 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=======================================
+> +Watchpoint probe (wprobe) Event Tracing
+> +=======================================
+> +
+> +.. Author: Masami Hiramatsu <mhiramat@kernel.org>
+> +
+> +Overview
+> +--------
+> +
+> +Wprobe event is a dynamic event based on the hardware breakpoint, which is
+> +similar to other probe events, but it is for watching data access. It allows
+> +you to trace which code accesses a specified data.
+> +
+> +As same as other dynamic events, wprobe events are defined via
+> +`dynamic_events` interface file on tracefs.
+> +
+> +Synopsis of wprobe-events
+> +-------------------------
+> +::
+> +
+> +  w:[GRP/][EVENT] SPEC [FETCHARGS]                       : Probe on data access
+> +
+> + GRP            : Group name for wprobe. If omitted, use "wprobes" for it.
+> + EVENT          : Event name for wprobe. If omitted, an event name is
+> +                  generated based on the address or symbol.
+> + SPEC           : Breakpoint specification.
+> +                  [r|w|rw]@<ADDRESS|SYMBOL[+|-OFFS]>[:LENGTH]
+> +
+> +   r|w|rw       : Access type, r for read, w for write, and rw for both.
+> +                  Use rw if omitted.
+
+		     Default is rw if omitted.
+
+> +   ADDRESS      : Address to trace (hexadecimal).
+> +   SYMBOL       : Symbol name to trace.
+> +   LENGTH       : Length of the data to trace in bytes. (1, 2, 4, or 8)
+> +
+> + FETCHARGS      : Arguments. Each probe can have up to 128 args.
+> +  $addr         : Fetch the accessing address.
+> +  @ADDR         : Fetch memory at ADDR (ADDR should be in kernel)
+> +  @SYM[+|-offs] : Fetch memory at SYM +|- offs (SYM should be a data symbol)
+> +  +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*1)(\*2)
+> +  \IMM          : Store an immediate value to the argument.
+> +  NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
+> +  FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
+> +                  (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
+> +                  (x8/x16/x32/x64), "char", "string", "ustring", "symbol", "symstr"
+> +                  and bitfield are supported.
+> +
+> +  (\*1) this is useful for fetching a field of data structures.
+> +  (\*2) "u" means user-space dereference.
+> +
+> +For the details of TYPE, see :ref:`kprobetrace documentation <kprobetrace_types>`.
+> +
+> +Usage examples
+> +--------------
+> +Here is an example to add a wprobe event on a variable `jiffies`.
+> +::
+> +
+> +  # echo 'w:my_jiffies w@jiffies' >> dynamic_events
+> +  # cat dynamic_events
+> +  w:wprobes/my_jiffies w@jiffies
+> +  # echo 1 > events/wprobes/enable
+> +  # cat trace | head
+> +  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+> +  #              | |         |   |||||     |         |
+> +           <idle>-0       [000] d.Z1.  717.026259: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
+> +           <idle>-0       [000] d.Z1.  717.026373: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
+> +
+> +You can see the code which writes to `jiffies` is `do_timer()`.
+
+I'm having trouble getting from tick_do_update_jiffies64+0xbe/0x130,
+which I expect is
+	jiffies_64 += ticks;
+in that function, over to do_timer(), which also updates jiffies_64,
+but is not called by tick_do_update_jiffies64(). AFAICT, there are
+no calls to do_timer() in the file (kernel/time/tick-sched.c).
+
+Can you explain, please?
+
+
+
+> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> index d2c79da81e4f..dd8919386425 100644
+> --- a/kernel/trace/Kconfig
+> +++ b/kernel/trace/Kconfig
+> @@ -807,6 +807,20 @@ config EPROBE_EVENTS
+>  	  convert the type of an event field. For example, turn an
+>  	  address into a string.
+>  
+> +config WPROBE_EVENTS
+> +	bool "Enable wprobe-based dynamic events"
+> +	depends on TRACING
+> +	depends on HAVE_HW_BREAKPOINT
+> +	select PROBE_EVENTS
+> +	select DYNAMIC_EVENTS
+> +	default y
+
+Wny default y?
+
+> +	help
+> +	  This allows the user to add watchpoint tracing events based on
+> +	  hardware breakpoints on the fly via the ftrace interface.
+> +
+> +	  Those events can be inserted wherever hardware breakpoints can be
+> +	  set, and record various register and memory values.
+> +
+>  config BPF_EVENTS
+>  	depends on BPF_SYSCALL
+>  	depends on (KPROBE_EVENTS || UPROBE_EVENTS) && PERF_EVENTS
+
+
+thanks.
 -- 
-2.51.0.384.g4c02a37b29-goog
+~Randy
 
