@@ -1,227 +1,158 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6DA27BF7C
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Sep 2025 16:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83061B0F23;
+	Mon, 15 Sep 2025 17:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757952567; cv=none; b=WvnEHs4Re4sSfkW9oMeYiX++BSfTfM0SLGib7zyMALlMUhRfuBxC5SGPRfuXj0fAHa6VYuQAi4vG8qm3ut/xnr0RR1y56v4CTScMpqKfwFzgoDAbpk7jBseuHPl1lNy07WQl3hXaXbZrHtrRToyzvHeCAGFvFqfl2touznOTLTI=
+	t=1757955782; cv=none; b=NziSDHaMWPlTiELBAvXNoxDVZ8sjeGDOIZQDhyoZZKvlRq0D9iB9bVgYXvt38/zhg6Z4rzUSUHdoPmYl9WAKk26/wuVkbyVIrOIRt+sRQdaA+e3X2UbmIH+bWltXGnBd8UvV18lsRsLFpL/d/4YF0mSZnXApz8MEStaQzXOFOoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757952567; c=relaxed/simple;
-	bh=dXz34BX4UIV0DIYSk1bdN0XSvg48Um/drITJb0uyBmI=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=ZsPKkbAcQXmkf0p7ReFslpzb/sIL+0xypj6VkV+yR+/iyEnm6FKiL/CMBr9YSJ/qBP/j3voN6buZSk1vRsW6Iq01/qHfqA0POyuZNbsylPOE021cSaTwWb/M2YOYo22CmIBdWwahVYNsJ+kF2XqFMJmNSNg1KVmHAjFkmE4ks/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AMRm6BSY; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1757955782; c=relaxed/simple;
+	bh=tZFiStB2M4gGwMQOc1ppNjyCSdSM5uqdwEG3ZLUByrA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g+SK8IknwWXorQX1fOnYSlJUKUHX3Q57ZDAE1sUgHWkXbfltFZ1IygTjH0tBOuRLzoM2+2ntr02RpvhfwpXcCBsPhaq9QYuCA6zlcy6Uqle/GpWrC+aOVlZ/W1dyz2ceishUxL6HB1k0fPmgr+GdTXWq3N4TGwhz5DBA/7qTR50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OromX4Dz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AMRm6BSY"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58F9bAjh018958;
-	Mon, 15 Sep 2025 16:09:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=7q/379
-	l/XFqj7JrScjojX3o0l7vXy2VkyyKNtyMOR2w=; b=AMRm6BSYpv//ToIPwIQ2Xa
-	Q7e8iLvZSoijOlKMpIvoG2xIohLKudNZbNT9nOpAtU4mIvC83JgsceFO/W3OEOd/
-	kQyefSHJXEAigxg6kRO+B+O5QCMVr5NP7Eq9z6XJqworGYX5wCQevnpIa6PLFMOc
-	v92PqCCaNdbnYID7lQ2cX/JOhGGOqKRQa+Z6GsiGLZCmH4oZW1GsRnFeJvQ/Z0Wr
-	JlFJ+SKGGECxh67v5l1T/KSjr1m7Zbq+rdvIUkZo7QqV2LyTIJf1itJyOZsZHsmt
-	F4vBCyIw+XK72Nolut9zg9JtEzQ0SjZCjVTJA76Fu2WuX7QN8NN1vWIBoV9TeLkw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 496gat2383-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Sep 2025 16:09:12 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 58FFxOYM000563;
-	Mon, 15 Sep 2025 16:09:12 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 496gat2380-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Sep 2025 16:09:12 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58FFZJga022290;
-	Mon, 15 Sep 2025 16:09:10 GMT
-Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 495kxpf9x8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Sep 2025 16:09:10 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58FG98QH7668426
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 15 Sep 2025 16:09:09 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AAAAA5805D;
-	Mon, 15 Sep 2025 16:09:08 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 38A775805B;
-	Mon, 15 Sep 2025 16:09:04 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.61.248.92])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 15 Sep 2025 16:09:03 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OromX4Dz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B188EC4CEF1;
+	Mon, 15 Sep 2025 17:03:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1757955782;
+	bh=tZFiStB2M4gGwMQOc1ppNjyCSdSM5uqdwEG3ZLUByrA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OromX4DzaAswBcBGOC+ZKJiUuCBGsVPtLV5RAaTmfpp+afskvWWQkMaxczTnq1ioX
+	 pKzPscPYqBYhe0We3jYszK/rffZXYJSX7YT60ra+pk/imAs4sMud5Sxt3V47LjdxZ3
+	 q3N5sdC8T1SxlNfrD340hRU/+SkX9rP0TO+nqulsPo//I04Fko5q+0ruSOUjWBEn3n
+	 NKY59whOD/ZcUA6Ph10UhN+RpgH2++h0rYh2UQz9m5bomD4ssU03dKPmcu/EyryEDf
+	 jAFYIf/XgTYlh4b7+amR4zW70kxoy28eLqIioUSPUp8BmgA7mQkf0FRyA87zu/Wx1B
+	 7DGsFLgO2V5Fg==
+Date: Mon, 15 Sep 2025 10:03:00 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf maps: Ensure kmap is set up for all inserts
+Message-ID: <aMhGxKz3qYSNJC35@google.com>
+References: <20250914181808.1957729-1-irogers@google.com>
+ <CAP-5=fWz9Put0QznfXSf1ATXjcfQj1T2toZmXrXp502qU4fRSw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [PATCH V3 0/7] Add interface to expose vpa dtl counters via
-From: Venkat <venkat88@linux.ibm.com>
-In-Reply-To: <20250915102947.26681-1-atrajeev@linux.ibm.com>
-Date: Mon, 15 Sep 2025 21:38:51 +0530
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, aboorvad@linux.ibm.com,
-        sshegde@linux.ibm.com, hbathini@linux.vnet.ibm.com,
-        Aditya.Bodkhe1@ibm.com, Tejas.Manhas1@ibm.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <2D40E056-6194-40CD-BF72-B474A3ACDCAA@linux.ibm.com>
-References: <20250915102947.26681-1-atrajeev@linux.ibm.com>
-To: Athira Rajeev <atrajeev@linux.ibm.com>
-X-Mailer: Apple Mail (2.3774.600.62)
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=BKWzrEQG c=1 sm=1 tr=0 ts=68c83a29 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VnNF1IyMAAAA:8 a=KOgC1EyPhNRFhsr3tjMA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: REjqSJLVLzcTZw1hw55lgj6sqvlATeAn
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE1MDA4NiBTYWx0ZWRfX6Wf9mlB5b2Ib
- 7nwDTTrJmhFsn+2D7P2FfhLNdti+7VOBTdGeNoVzN34xtqNRBh91nXh/2jWX/y5dNlPcHBWqtMY
- IwJ0itWYsXSnZf1wRcsI9W/VW0HNsTcMDcqG+pUuG757WTJD7qTBh/q+b00cyYAjdS6ftor3PGi
- 7VlQeTpYD6DlKQ3F8OulAHXmYouE9tusW0DO9YP5IEGL3dN43f1SO0E6C83RGTUs1ojFh8bmqNg
- YKOqjDDtSxvXITFQdoAAAKhiqV7cPtmMFQuiun0qjVRJAjvlM6EFMvuIlskJ3iy0lRLDuPuEhtV
- pPGjW9UXJgzipUjO2x3MwLdZtZ/UEcZKf4SM3mwSOstI4ezmfWXK9twefm75HsSX0ON1iE4Z3vT
- DqjTCltk
-X-Proofpoint-ORIG-GUID: RWNxhKj6AUdhzKwk-R--aO4bdr-HL16r
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-15_06,2025-09-12_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 clxscore=1015 malwarescore=0 priorityscore=1501 adultscore=0
- suspectscore=0 impostorscore=0 bulkscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509150086
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWz9Put0QznfXSf1ATXjcfQj1T2toZmXrXp502qU4fRSw@mail.gmail.com>
 
+Hi Ian,
 
+On Mon, Sep 15, 2025 at 08:00:53AM -0700, Ian Rogers wrote:
+> On Sun, Sep 14, 2025 at 11:18 AM Ian Rogers <irogers@google.com> wrote:
+> >
+> > __maps__fixup_overlap_and_insert may split or directly insert a map,
+> > when doing this the map may need to have a kmap set up for the sake of
+> > the kmaps. The missing kmap set up fails the check_invariants test in
+> > maps, later "Internal error" reports from map__kmap and ultimately
+> > causes segfaults.
+> >
+> > Similar fixes were added in commit e0e4e0b8b7fa ("perf maps: Add
+> > missing map__set_kmap_maps() when replacing a kernel map") and commit
+> > 25d9c0301d36 ("perf maps: Set the kmaps for newly created/added kernel
+> > maps") but they missed cases. To try to reduce the risk of this,
+> > update the kmap directly following any manual insert. This identified
+> > another problem in maps__copy_from.
+> >
+> > Fixes: e0e4e0b8b7fa ("perf maps: Add missing map__set_kmap_maps() when replacing a kernel map")
+> > Fixes: 25d9c0301d36 ("perf maps: Set the kmaps for newly created/added kernel maps")
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> 
+> This may be worth picking up for v6.17. It was a fairly regular source
+> of crashes on basic commands like `perf record` for me on certain
+> kernels. `perf record` by default is processing the whole perf.data
+> file and if there were overlapping maps, from BPF symbol events
+> typically, the broken kmap would trigger assertion failures and seg
+> faults.
 
-> On 15 Sep 2025, at 3:59=E2=80=AFPM, Athira Rajeev =
-<atrajeev@linux.ibm.com> wrote:
->=20
-> The pseries Shared Processor Logical Partition(SPLPAR) machines can
-> retrieve a log of dispatch and preempt events from the hypervisor
-> using data from Disptach Trace Log(DTL) buffer. With this information,
-> user can retrieve when and why each dispatch & preempt has occurred.
-> The vpa-dtl PMU exposes the Virtual Processor Area(VPA) DTL counters
-> via perf.
->=20
-> - Patches 1 to 6 has powerpc PMU driver code changes to capture DTL
->  trace in perf.data. And patch 7 has documentation update.
->=20
-> Infrastructure used
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
-> The VPA DTL PMU counters do not interrupt on overflow or generate any
-> PMI interrupts. Therefore, hrtimer is used to poll the DTL data. The =
-timer
-> nterval can be provided by user via sample_period field in nano =
-seconds.
-> vpa dtl pmu has one hrtimer added per vpa-dtl pmu thread. DTL =
-(Dispatch
-> Trace Log) contains information about dispatch/preempt, enqueue time =
-etc.
-> We directly copy the DTL buffer data as part of auxiliary buffer and =
-it
-> will be processed later. This will avoid time taken to create samples
-> in the kernel space. The PMU driver collecting Dispatch Trace Log =
-(DTL)
-> entries makes use of AUX support in perf infrastructure. On the tools =
-side,
-> this data is made available as PERF_RECORD_AUXTRACE records.
->=20
-> To corelate each DTL entry with other events across CPU's, an =
-auxtrace_queue
-> is created for each CPU. Each auxtrace queue has a array/list of =
-auxtrace buffers.
-> All auxtrace queues is maintained in auxtrace heap. The queues are =
-sorted
-> based on timestamp. When the different PERF_RECORD_XX records are =
-processed,
-> compare the timestamp of perf record with timestamp of top element in =
-the
-> auxtrace heap so that DTL events can be co-related with other events
-> Process the auxtrace queue if the timestamp of element from heap is
-> lower than timestamp from entry in perf record. Sometimes it could =
-happen that
-> one buffer is only partially processed. if the timestamp of occurrence =
-of
-> another event is more than currently processed element in the queue, =
-it will
-> move on to next perf record. So keep track of position of buffer to =
-continue
-> processing next time. Update the timestamp of the auxtrace heap with =
-the timestamp
-> of last processed entry from the auxtrace buffer.
->=20
-> This infrastructure ensures dispatch trace log entries can be =
-corelated
-> and presented along with other events like sched.
->=20
-> With the kernel changes;
->=20
->  # ls /sys/devices/vpa_dtl/
->  events  format  perf_event_mux_interval_ms  power  subsystem  type  =
-uevent
->=20
-> Thanks
-> Athira
->=20
-> Aboorva Devarajan (1):
->  powerpc/time: Expose boot_tb via accessor
->=20
-> Athira Rajeev (4):
->  powerpc/perf/vpa-dtl: Add support to setup and free aux buffer for
->    capturing DTL data
->  powerpc/perf/vpa-dtl: Add support to capture DTL data in aux buffer
->  powerpc/perf/vpa-dtl: Handle the writing of perf record when aux wake
->    up is needed
->  powerpc/perf/vpa-dtl: Add documentation for VPA dispatch trace log =
-PMU
->=20
-> Kajol Jain (2):
->  powerpc/vpa_dtl: Add interface to expose vpa dtl counters via perf
->  docs: ABI: sysfs-bus-event_source-devices-vpa-dtl: Document sysfs
->    event format entries for vpa_dtl pmu
->=20
-> .../sysfs-bus-event_source-devices-vpa-dtl    |  25 +
-> Documentation/arch/powerpc/index.rst          |   1 +
-> Documentation/arch/powerpc/vpa-dtl.rst        | 156 +++++
-> arch/powerpc/include/asm/time.h               |   4 +
-> arch/powerpc/kernel/time.c                    |   8 +-
-> arch/powerpc/perf/Makefile                    |   2 +-
-> arch/powerpc/perf/vpa-dtl.c                   | 596 ++++++++++++++++++
-> 7 files changed, 790 insertions(+), 2 deletions(-)
-> create mode 100644 =
-Documentation/ABI/testing/sysfs-bus-event_source-devices-vpa-dtl
-> create mode 100644 Documentation/arch/powerpc/vpa-dtl.rst
-> create mode 100644 arch/powerpc/perf/vpa-dtl.c
->=20
-> --=20
-> 2.47.1
->=20
+Sounds good, will queue it to perf-tools.
 
-
-Tested this patch set by applying on top of today=E2=80=99s mainline =
-kernel and its working as expected.
-
-Please add below tag for the patch set.
-
-Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-
-Regards,
-Venkat.=
+Thanks,
+Namhyung
+ 
+> > ---
+> >  tools/perf/util/maps.c | 9 +++++----
+> >  1 file changed, 5 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+> > index 85b2a93a59ac..779f6230130a 100644
+> > --- a/tools/perf/util/maps.c
+> > +++ b/tools/perf/util/maps.c
+> > @@ -477,6 +477,7 @@ static int __maps__insert(struct maps *maps, struct map *new)
+> >         }
+> >         /* Insert the value at the end. */
+> >         maps_by_address[nr_maps] = map__get(new);
+> > +       map__set_kmap_maps(new, maps);
+> >         if (maps_by_name)
+> >                 maps_by_name[nr_maps] = map__get(new);
+> >
+> > @@ -502,8 +503,6 @@ static int __maps__insert(struct maps *maps, struct map *new)
+> >         if (map__end(new) < map__start(new))
+> >                 RC_CHK_ACCESS(maps)->ends_broken = true;
+> >
+> > -       map__set_kmap_maps(new, maps);
+> > -
+> >         return 0;
+> >  }
+> >
+> > @@ -891,6 +890,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
+> >                 if (before) {
+> >                         map__put(maps_by_address[i]);
+> >                         maps_by_address[i] = before;
+> > +                       map__set_kmap_maps(before, maps);
+> >
+> >                         if (maps_by_name) {
+> >                                 map__put(maps_by_name[ni]);
+> > @@ -918,6 +918,7 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
+> >                          */
+> >                         map__put(maps_by_address[i]);
+> >                         maps_by_address[i] = map__get(new);
+> > +                       map__set_kmap_maps(new, maps);
+> >
+> >                         if (maps_by_name) {
+> >                                 map__put(maps_by_name[ni]);
+> > @@ -942,14 +943,13 @@ static int __maps__fixup_overlap_and_insert(struct maps *maps, struct map *new)
+> >                                  */
+> >                                 map__put(maps_by_address[i]);
+> >                                 maps_by_address[i] = map__get(new);
+> > +                               map__set_kmap_maps(new, maps);
+> >
+> >                                 if (maps_by_name) {
+> >                                         map__put(maps_by_name[ni]);
+> >                                         maps_by_name[ni] = map__get(new);
+> >                                 }
+> >
+> > -                               map__set_kmap_maps(new, maps);
+> > -
+> >                                 check_invariants(maps);
+> >                                 return err;
+> >                         }
+> > @@ -1019,6 +1019,7 @@ int maps__copy_from(struct maps *dest, struct maps *parent)
+> >                                 err = unwind__prepare_access(dest, new, NULL);
+> >                                 if (!err) {
+> >                                         dest_maps_by_address[i] = new;
+> > +                                       map__set_kmap_maps(new, dest);
+> >                                         if (dest_maps_by_name)
+> >                                                 dest_maps_by_name[i] = map__get(new);
+> >                                         RC_CHK_ACCESS(dest)->nr_maps = i + 1;
+> > --
+> > 2.51.0.384.g4c02a37b29-goog
+> >
