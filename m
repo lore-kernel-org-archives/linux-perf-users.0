@@ -1,114 +1,206 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10E422FFDF6
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Sep 2025 10:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC98430ACF4
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Sep 2025 12:38:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757933437; cv=none; b=AortxQ/bBZm4U3nkkTgn3ay33sYqSqy47E48d4i+8/bg8N4IUky4ys5rCzGu3qqeubnweuHauxNLhTZWWtPZOoy5/ifhpsySrG0JWZjrQ5cm115ZpeoxKC5YoSQEECN4+aw3VgJnYMzd1M5E8j7j52/sNSuYMsLwwtCeyPwZxww=
+	t=1757939899; cv=none; b=Mt25oNt8XYfNkPnwQdD6l1dljhNzuLJDTOGRgHPHqs7+cEKIkTxbr4DxSCkmY4tEkJY4FvwcsEABGi1AdUGhwGGmb6aoOpebjI04IPbrALz2XZyJBlAEuwoG2AKuGD3o0tv0Am3DKwXjAKKTQz4Kd7oE92R/f7ajTzF6E+5DDbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757933437; c=relaxed/simple;
-	bh=TXHetOHlkmlYD6PbgeijJZo+RaZULfGI+WWQUPe9uUY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z4ItpbI9WIjHu37FSYQkEHVanrgVI47AcLWxh7IOdTqnf/1XyLunirt8tz8ZZQYQB2JXm46GLFdM+2HGeERcGwDf6L74l2A1M5BPUL2JsFtf5hBdcyR+IDbeYW2G/CQ805ZCNrdT/KgHGyLm7D5xkJDoHObx8yMCam5PSMm1tCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4cQM2p1Pc9z9sxY;
-	Mon, 15 Sep 2025 12:38:58 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id GczDd0MPrivs; Mon, 15 Sep 2025 12:38:58 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4cQM2p004Pz9sxX;
-	Mon, 15 Sep 2025 12:38:57 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id DC98C8B765;
-	Mon, 15 Sep 2025 12:38:57 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id L12I9pCXFpTn; Mon, 15 Sep 2025 12:38:57 +0200 (CEST)
-Received: from [10.25.207.160] (unknown [10.25.207.160])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id A34148B763;
-	Mon, 15 Sep 2025 12:38:57 +0200 (CEST)
-Message-ID: <bc6c17d2-298b-4629-9de1-dcecc3aac58f@csgroup.eu>
-Date: Mon, 15 Sep 2025 12:38:57 +0200
+	s=arc-20240116; t=1757939899; c=relaxed/simple;
+	bh=grCwWM8eI6p5NkuVyenGk7nXm9qBJ8rH8vNtdNvqG9E=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=E6Ovx/z8Pne5lx/Y6YDK7gNodnflFAC6aNiPITAow/u+Ksur7uRGUkS3UshIwvujXtPXeok0WXkBRpclnr6LU+LQhRgcIC2ArDn/eQ1wy3/Eg8dP5S5c6p+gaVHrLo1G3vrBrk42T5oBiJIhm+sZA8qSX31tb2LjKhRDOTRPQcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GWoDC8Yx; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GWoDC8Yx"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58F3PFLD023043;
+	Mon, 15 Sep 2025 12:38:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=K7dMnA
+	H4x4Yhlo74YTmg5SL9Xd+kCNTuCCyRN7MR+0Q=; b=GWoDC8YxdBT3tJu6iz5kuC
+	OUPWfKjJp0lI76X+HkKd/NVO70U7R6liuX/pOeeofoRYwzdL+kQ90RwjInv+PKoQ
+	0cHuevFCsEvSHPnQDy31zpLKsiCdDjqkrcGYYKVE/N3HKv/cxjjJs5eazc8s46qd
+	0ZFwWpHpPky8d7TOOnVHzcLLdmlQXs0hzSR9ODHV3eIzFl3dCs9e0d2hckcLL5bP
+	szGBE904MGz9EpoKo98r70Ba4IsY9pMbzAh+L0wioaCfZEETQBwJFXNy0I6Xcd+c
+	2mJGxbSQYeCKF42amgLKqu1MDJAK0kFmeGTjlFWuPkKV7OVHpf/2N3h2A0Sp2daQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 496avnjhh9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Sep 2025 12:38:09 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 58FCc8CL010593;
+	Mon, 15 Sep 2025 12:38:08 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 496avnjhh5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Sep 2025 12:38:08 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58FAkJgl029514;
+	Mon, 15 Sep 2025 12:38:07 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 495kb0pkpd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 15 Sep 2025 12:38:07 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58FCc3ZJ48824716
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 15 Sep 2025 12:38:03 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 536F62004D;
+	Mon, 15 Sep 2025 12:38:03 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5587C20043;
+	Mon, 15 Sep 2025 12:37:57 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.61.244.131])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 15 Sep 2025 12:37:56 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
 Subject: Re: [PATCH V3 0/7] Add interface to expose vpa dtl counters via
-To: Athira Rajeev <atrajeev@linux.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
- irogers@google.com, namhyung@kernel.org, linux-perf-users@vger.kernel.org,
- aboorvad@linux.ibm.com, sshegde@linux.ibm.com, hbathini@linux.vnet.ibm.com,
- Aditya.Bodkhe1@ibm.com, venkat88@linux.ibm.com, Tejas.Manhas1@ibm.com,
- linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+In-Reply-To: <bc6c17d2-298b-4629-9de1-dcecc3aac58f@csgroup.eu>
+Date: Mon, 15 Sep 2025 18:07:43 +0530
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+        Aboorva Devarajan <aboorvad@linux.ibm.com>,
+        Shrikanth Hegde <sshegde@linux.ibm.com>, hbathini@linux.vnet.ibm.com,
+        Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>,
+        Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+        Tejas Manhas <Tejas.Manhas1@ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <828878DA-D6F8-407F-9386-91A097E29364@linux.ibm.com>
 References: <20250915102947.26681-1-atrajeev@linux.ibm.com>
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-Content-Language: fr-FR
-In-Reply-To: <20250915102947.26681-1-atrajeev@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+ <bc6c17d2-298b-4629-9de1-dcecc3aac58f@csgroup.eu>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+X-Mailer: Apple Mail (2.3776.700.51)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: vp_wXhLiJM-r90d7yGRHn8yrRtMJ46Oc
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE1MDAyOCBTYWx0ZWRfX9w40CkoSd/Ry
+ jqR2mhc9XUhmWnRQmBU/UnkcgCXhS94QoPVhcIaxAVX6/NZdcoeMNqZYyU7DZrkSbjKcUX4aNWR
+ i6HtSdau0aZF8YEr3ZckaX2p0sqKIRpgWa0iG5ObtAOq6DRtuoNgj8gcbeGOIfW4jKbLOCJtLnc
+ HWJHr6UX9IRaOlwfAAHoY5A/aB/AtpKbadfZEiaOWa5g6/+nQD6lf2NO3V7SGRG+Cysl3KRqiKS
+ 3L997fiJ4WFRiroctrh9aYDQrMw91q/mFX/YsKvj7SrDWYWrhm2/bmIVYOZpR0/UHbKZ6ZcQZbz
+ 6urnTZ344d5oY/XClL8bCEJFhdPibb9FlxeIYQDvgEUElJcqgij7f/t1902kPKwIlTGncm7Zt2n
+ bM4HdpCN
+X-Authority-Analysis: v=2.4 cv=HecUTjE8 c=1 sm=1 tr=0 ts=68c808b1 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VwQbUJbxAAAA:8 a=1UX6Do5GAAAA:8
+ a=B8brMVGyltVLplSz2e4A:9 a=QEXdDO2ut3YA:10 a=Et2XPkok5AAZYJIKzHr1:22
+X-Proofpoint-GUID: hsxIIBvPwZBcF-bzUf4CSBfov4mnB3qF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-15_05,2025-09-12_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 adultscore=0 spamscore=0 priorityscore=1501 suspectscore=0
+ malwarescore=0 bulkscore=0 impostorscore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509150028
 
 
 
-Le 15/09/2025 à 12:29, Athira Rajeev a écrit :
-> The pseries Shared Processor Logical Partition(SPLPAR) machines can
-> retrieve a log of dispatch and preempt events from the hypervisor
-> using data from Disptach Trace Log(DTL) buffer. With this information,
-> user can retrieve when and why each dispatch & preempt has occurred.
-> The vpa-dtl PMU exposes the Virtual Processor Area(VPA) DTL counters
-> via perf.
-> 
-> - Patches 1 to 6 has powerpc PMU driver code changes to capture DTL
->    trace in perf.data. And patch 7 has documentation update.
-> 
-> Infrastructure used
-> ===================
-> 
-> The VPA DTL PMU counters do not interrupt on overflow or generate any
-> PMI interrupts. Therefore, hrtimer is used to poll the DTL data. The timer
-> nterval can be provided by user via sample_period field in nano seconds.
-> vpa dtl pmu has one hrtimer added per vpa-dtl pmu thread. DTL (Dispatch
-> Trace Log) contains information about dispatch/preempt, enqueue time etc.
-> We directly copy the DTL buffer data as part of auxiliary buffer and it
-> will be processed later. This will avoid time taken to create samples
-> in the kernel space. The PMU driver collecting Dispatch Trace Log (DTL)
-> entries makes use of AUX support in perf infrastructure. On the tools side,
-> this data is made available as PERF_RECORD_AUXTRACE records.
-> 
-> To corelate each DTL entry with other events across CPU's, an auxtrace_queue
-> is created for each CPU. Each auxtrace queue has a array/list of auxtrace buffers.
-> All auxtrace queues is maintained in auxtrace heap. The queues are sorted
-> based on timestamp. When the different PERF_RECORD_XX records are processed,
-> compare the timestamp of perf record with timestamp of top element in the
-> auxtrace heap so that DTL events can be co-related with other events
-> Process the auxtrace queue if the timestamp of element from heap is
-> lower than timestamp from entry in perf record. Sometimes it could happen that
-> one buffer is only partially processed. if the timestamp of occurrence of
-> another event is more than currently processed element in the queue, it will
-> move on to next perf record. So keep track of position of buffer to continue
-> processing next time. Update the timestamp of the auxtrace heap with the timestamp
-> of last processed entry from the auxtrace buffer.
-> 
-> This infrastructure ensures dispatch trace log entries can be corelated
-> and presented along with other events like sched.
-> 
-> With the kernel changes;
-> 
->    # ls /sys/devices/vpa_dtl/
->    events  format  perf_event_mux_interval_ms  power  subsystem  type  uevent
-> 
-> Thanks
-> Athira
-
-What is the difference between this version of the series and the V2 
+> On 15 Sep 2025, at 4:08=E2=80=AFPM, Christophe Leroy =
+<christophe.leroy@csgroup.eu> wrote:
+>=20
+>=20
+>=20
+> Le 15/09/2025 =C3=A0 12:29, Athira Rajeev a =C3=A9crit :
+>> The pseries Shared Processor Logical Partition(SPLPAR) machines can
+>> retrieve a log of dispatch and preempt events from the hypervisor
+>> using data from Disptach Trace Log(DTL) buffer. With this =
+information,
+>> user can retrieve when and why each dispatch & preempt has occurred.
+>> The vpa-dtl PMU exposes the Virtual Processor Area(VPA) DTL counters
+>> via perf.
+>> - Patches 1 to 6 has powerpc PMU driver code changes to capture DTL
+>>   trace in perf.data. And patch 7 has documentation update.
+>> Infrastructure used
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> The VPA DTL PMU counters do not interrupt on overflow or generate any
+>> PMI interrupts. Therefore, hrtimer is used to poll the DTL data. The =
+timer
+>> nterval can be provided by user via sample_period field in nano =
+seconds.
+>> vpa dtl pmu has one hrtimer added per vpa-dtl pmu thread. DTL =
+(Dispatch
+>> Trace Log) contains information about dispatch/preempt, enqueue time =
+etc.
+>> We directly copy the DTL buffer data as part of auxiliary buffer and =
+it
+>> will be processed later. This will avoid time taken to create samples
+>> in the kernel space. The PMU driver collecting Dispatch Trace Log =
+(DTL)
+>> entries makes use of AUX support in perf infrastructure. On the tools =
+side,
+>> this data is made available as PERF_RECORD_AUXTRACE records.
+>> To corelate each DTL entry with other events across CPU's, an =
+auxtrace_queue
+>> is created for each CPU. Each auxtrace queue has a array/list of =
+auxtrace buffers.
+>> All auxtrace queues is maintained in auxtrace heap. The queues are =
+sorted
+>> based on timestamp. When the different PERF_RECORD_XX records are =
+processed,
+>> compare the timestamp of perf record with timestamp of top element in =
+the
+>> auxtrace heap so that DTL events can be co-related with other events
+>> Process the auxtrace queue if the timestamp of element from heap is
+>> lower than timestamp from entry in perf record. Sometimes it could =
+happen that
+>> one buffer is only partially processed. if the timestamp of =
+occurrence of
+>> another event is more than currently processed element in the queue, =
+it will
+>> move on to next perf record. So keep track of position of buffer to =
+continue
+>> processing next time. Update the timestamp of the auxtrace heap with =
+the timestamp
+>> of last processed entry from the auxtrace buffer.
+>> This infrastructure ensures dispatch trace log entries can be =
+corelated
+>> and presented along with other events like sched.
+>> With the kernel changes;
+>>   # ls /sys/devices/vpa_dtl/
+>>   events  format  perf_event_mux_interval_ms  power  subsystem  type  =
+uevent
+>> Thanks
+>> Athira
+>=20
+> What is the difference between this version of the series and the V2 =
 sent 3 hours ago ?
+Hi Christophe,
 
-Christophe
+Change is in Patch 7 for Documentation, where build warning for =E2=80=9Cm=
+ake htmldocs=E2=80=9D is handled.
+
+I added in changelog here as part of patch 7:
+=
+https://lore.kernel.org/linux-perf-users/bc6c17d2-298b-4629-9de1-dcecc3aac=
+58f@csgroup.eu/T/#m7fb311c8b56c71e7077f3f7e790805dab11b548a
+
+There is no changes in other patches.
+Sorry, I should have added that here in cover letter too along with =
+having in patch 7.
+
+Thanks
+Athira
+
+>=20
+> Christophe
+
 
