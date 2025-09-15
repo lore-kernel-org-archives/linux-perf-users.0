@@ -1,152 +1,139 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B00218EB1
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Sep 2025 15:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 082DC220694
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Sep 2025 15:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757950827; cv=none; b=rTl4MF+CTM5B585ZX13z/IfAUaB6as5Hlq0UF/3b2MHwp+sydrIWhEWWSI4Zk4vHj+SPQZYS+6hqPZ7BtedldHVP3Cq+1K9n4+HxCh8lC10gV+G6CcXfuh6x5vL7WuwOKYK3YzrpzMo1t0ztCJ8jRCM4a8AR5hpzjh59LOy9nYE=
+	t=1757951306; cv=none; b=akMYVpSiAQqwIFuEWuOlyTumUTaqN86URUasIhPwStXwSmx31Y+HM5nRiDsS2o5Q+rc/0ZT1Wz3Wa++n1K4QyP+G+izhCNWt/ZJ052PIBTO6ZT5o2X5tkdi5u5TP+7tN1OGpZZ9GaDEpX0rt2qABk0derKHgs251TuuhjX76E5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757950827; c=relaxed/simple;
-	bh=EOAHCwCG2rnPR3Phoz/qA4caYX/V/qkk0XjVgU4cbVU=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=AUgYdDm6oCSVlZ+T5vaT6eUYH1Q2y0Z742ya022iyYSB/mIZ5jU6ubQ3Vqq83WCeOAjyfXHJMp0i8iz0BxlV5L44Pz3H/pUNdvwBPiArG5krA+x2/p9Y2QobeLpZm2BZ2MyPq30UhjR+jfrOszBxQtUCV6nQNcwOeOc1pcf02vM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cd6gamv/; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1757951306; c=relaxed/simple;
+	bh=2FgZf+GYVPbUDHE9BFwH1ejC8shiR73nOyJCnPx8AuA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rIeOb9uz5r69Gwc82eGlKfkTyEdsiZhxV6Bv0xAweeqTnNQM/nytCvwxOXnKgDJ4JaTEmpFJyirmBltJJQuoyLJWcAkC6CLXq5BFzye5qWOulQ1evkUxBBV+4NbouV72moQP4QyuUQALDTF00Uc9+0toxMWqKLzfTraWqbJS43s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZA/g6tWQ; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cd6gamv/"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58F9Onju017363;
-	Mon, 15 Sep 2025 15:40:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=EOAHCw
-	CG2rnPR3Phoz/qA4caYX/V/qkk0XjVgU4cbVU=; b=cd6gamv/ZS3kL2CpprG1X4
-	oRbaS56dP0CfM9Mt7DlVzRhLk/q8/LDfJ789UdX/ZMz4T+dCEcVPWAf9Endq6q2q
-	rnUTN0jqAQjAtfrDi04kJ3KkQeHiv09bJU9vk5iVdwF3F5jz6alqsT2oAz/kzXzK
-	4cEqB162+fJWKcxZVQlBL3vwNoxVpDWRFAjGcxth7uzuK80CEesKTFeHJK1x32tn
-	FbjDIYPhkdA8K/yictPQaFA88NV/cRHp0f1GUmETee3ByRPLpFIrPXU8LjL/+cj/
-	UUOYet7HqExqmX8naY1fCqTnNSpbQ140iOIh8n59wlLlp0mrpD2BEZSAGPSirFMQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 496g531yfj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Sep 2025 15:40:21 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 58FFdOtW012798;
-	Mon, 15 Sep 2025 15:40:21 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 496g531yf8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Sep 2025 15:40:21 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58FEHfpS029472;
-	Mon, 15 Sep 2025 15:40:20 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 495kb0qbdj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 15 Sep 2025 15:40:20 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58FFeHfs53805460
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 15 Sep 2025 15:40:17 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EDFDD2004B;
-	Mon, 15 Sep 2025 15:40:16 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 85D3420040;
-	Mon, 15 Sep 2025 15:40:12 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.61.250.129])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 15 Sep 2025 15:40:12 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZA/g6tWQ"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4b3d3f6360cso40513991cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Sep 2025 08:48:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1757951303; x=1758556103; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sF9n47OKYupJ+YpHurEgKB2LmOn4YAEsHDSQn4dI9Aw=;
+        b=ZA/g6tWQeWWxTPnzJhFjJZZdDH9iyufBrKQ561M4dshahas2XkheqO7dLpiRyDeuMt
+         bo2FuYoZSMBbl1FjcGYHjZE16+Mxbl0Pkc0UG1fXTyol5jaw4U4qUCecIQSFxbDq4g0b
+         Z1zMdQVWQj6nGV34aj43Qo3NJ7NLZzkttHlfY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757951303; x=1758556103;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sF9n47OKYupJ+YpHurEgKB2LmOn4YAEsHDSQn4dI9Aw=;
+        b=fA82cglCTBZD/rlMWJlTKP5mlmVHjGsiHAzmg/y5SV7S1XLQ9w22CZZfdVtJgGrcQs
+         PBj10d/6vChcvjCtOrX72xRXvvtDz+ZaZ/z5B8CNPyyOm5TSrDHq1ipRIotDaF78zVZ8
+         5MTug8Uu2ztaphT0RT0Ie/ET5FqGxXvLMUL/tzZgFDXsAc84WHQv124KkrLiXXqeaj+Q
+         6HpCq7zAR92HL7CVCoCIY34+ziRJNo2+YQ13Sq1Ds00oiKecPNT96VmrNRIp7wCbvI3r
+         L3foS/2AdRrL1A3XPBPJwgGOddF6yEnPfHwT9woqS7n+ili/DT/HujL/kglnA4bftJ4F
+         LEAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUiSfIbxMQTvIVZPmggrFasIw6R4BzB39yXcOJ/9VYg+SU0MoWWx1RliV8ksYnue7p7GKgEek3mqNGiSMZcUh+A@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6wof0gGRG6oEoXFpNiTAigBRQ8MEmkAgTJWQ0mkGGAGbgiCDw
+	lwTsQwuu2HyG2EF7Nm1AMd1yj/YJVPTXkbYcxkWN5R7WfrBYlbxb0u5966cI9aYWG03349cW275
+	Qirc=
+X-Gm-Gg: ASbGncvZ2kXAFMq5Vb2AVs60KVy9S+KcZ+HW+FDhUl/UL2Ps+ggma27DU02Y8JYoXrx
+	ddS34IabQ8T8MNofWEyWjEd6AME7MwuSeVet8t97wWV5ba70joRk0me7dsyzGo/EesQJ8NSR+Rw
+	zpaUwUj3gykXrYnwodGak0Ekcetc+fkst8rabFoWOMYuzf54auiczU17IB7JLLfza6Ux/+fu6Cj
+	vKXraJtpU2f8LxrY1kKpjbRXV4fgtbBTXmyagW7Tqxu+KJSkPeNnKVWGjSsdksRMT1qVvRZ0QzI
+	AbDVaMuyXDL43KRwHWsFn/tQU1VFVxWlQvrihfkpyfaLAexmDxjHfg65Yz+NkcTK0ukKJrp8UCn
+	Q6NiwdjCXRnk/fKWPYBxYQyP/AIADUBnqaAQoUvboRT1pxRMbAtdwSBfjf1Ju9A==
+X-Google-Smtp-Source: AGHT+IEx+1+0pVLa0p6KSmIEq54TU1WDDmytEM7D7T5yIOBQh1GmfiPvGJKxPrDp3HCjZmht/s7ucQ==
+X-Received: by 2002:a05:622a:248c:b0:4b7:a62c:3739 with SMTP id d75a77b69052e-4b7a62c395emr60812051cf.44.1757951302697;
+        Mon, 15 Sep 2025 08:48:22 -0700 (PDT)
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com. [209.85.219.51])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4b7a6a99c01sm17606811cf.47.2025.09.15.08.48.20
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 Sep 2025 08:48:22 -0700 (PDT)
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-777fb17fd84so14577666d6.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Sep 2025 08:48:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUSrREXEuMqu/dDHomDtK95bCFC1rEXArITkGG0zH5shaDpvXZtBk4c20jxiMQNHJUUSAvDseP8KSoftAK7kRUv@vger.kernel.org
+X-Received: by 2002:a17:902:e80c:b0:264:ee2:c3f5 with SMTP id
+ d9443c01a7336-2640ee2d03bmr82023175ad.19.1757950933588; Mon, 15 Sep 2025
+ 08:42:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: Re: [PATCH] tools/perf/tests: Update perf record testcase to fix
- usage of affinity for machines with #CPUs > 1K
-From: Athira Rajeev <atrajeev@linux.ibm.com>
-In-Reply-To: <aMWE1A-ruPozj9f-@x1>
-Date: Mon, 15 Sep 2025 21:10:07 +0530
-Cc: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>, hbathini@linux.vnet.ibm.com,
-        Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>,
-        Tejas Manhas <tejas05@linux.ibm.com>
+MIME-Version: 1.0
+References: <20250915035355.10846-1-cuiyunhui@bytedance.com>
+ <aMfpwYPX6_i6ROOY@willie-the-truck> <20250915103506.GA3245006@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250915103506.GA3245006@noisy.programming.kicks-ass.net>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 15 Sep 2025 08:42:00 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Vr67+uRK2bYu34MDXRJN4w_VH_EO7OW4eVLJ3wqUUBog@mail.gmail.com>
+X-Gm-Features: Ac12FXzAoIBOvB7DdouVYRPtMAe3U5Dl3CUX53Fx6WzMzB918sSg5cv2FslrCvs
+Message-ID: <CAD=FV=Vr67+uRK2bYu34MDXRJN4w_VH_EO7OW4eVLJ3wqUUBog@mail.gmail.com>
+Subject: Re: [PATCH] watchdog: remove HARDLOCKUP_DETECTOR_PERF
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will@kernel.org>, Yunhui Cui <cuiyunhui@bytedance.com>, akpm@linux-foundation.org, 
+	catalin.marinas@arm.com, maddy@linux.ibm.com, mpe@ellerman.id.au, 
+	npiggin@gmail.com, christophe.leroy@csgroup.eu, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, kees@kernel.org, 
+	masahiroy@kernel.org, aliceryhl@google.com, ojeda@kernel.org, 
+	thomas.weissschuh@linutronix.de, xur@google.com, ruanjinjie@huawei.com, 
+	gshan@redhat.com, maz@kernel.org, suzuki.poulose@arm.com, 
+	zhanjie9@hisilicon.com, yangyicong@hisilicon.com, gautam@linux.ibm.com, 
+	arnd@arndb.de, zhao.xichao@vivo.com, rppt@kernel.org, lihuafei1@huawei.com, 
+	coxu@redhat.com, jpoimboe@kernel.org, yaozhenguo1@gmail.com, 
+	luogengkun@huaweicloud.com, max.kellermann@ionos.com, tj@kernel.org, 
+	wangjinchao600@gmail.com, yury.norov@gmail.com, thorsten.blum@linux.dev, 
+	x86@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <C298E78E-04BE-4CB6-8959-65E4E26BEC45@linux.ibm.com>
-References: <20250814114908.45648-1-atrajeev@linux.ibm.com>
- <aJ5FvBa4LPhMO0u-@google.com>
- <4772D6D1-D61B-4269-B20F-17A387CAAAD9@linux.ibm.com>
- <D3D67CAC-C609-4C25-99E3-4E130E2C9AFE@linux.ibm.com>
- <CAP-5=fXMKoF1z4TPDJhBFqz8gRdXcrCBTJdBvRLhY9rzrCFxfQ@mail.gmail.com>
- <aMWE1A-ruPozj9f-@x1>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-X-Mailer: Apple Mail (2.3776.700.51)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 4RZGDWbMc_7wXzcWhb0bvv0-B2BxKzGb
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE1MDA4NiBTYWx0ZWRfX6/1lyZnGh04k
- NevoTUXQ4/meP6WemnoGKIIL5Ij5tuhzDEquqpsZ1bq7r7NieSKmnus3A9CvdHMB3R9vIsmPEDD
- +QzX1Iqrzi2luhgnKyVh3fhbC6B+jQBpLihrX2aNHcNprz5kNTQ0FO7UgE6Al1Agd0wdRMRNyhd
- vSaJjnEPhRjatK2e3zcGs1xIQEScYOJgg6jZtu3ntntwghreIjI1GWaL/7Thg7ne/X2ml7FsXe+
- u5xT53C7ikqX6nnvp8y47Ko/POD9+lNusDpD8vwYwwBFGURUGVcgxPOar7MDRZ/Axj8ukQz2g0c
- pcJcS1Qwh0Q8YgmtWfe07ddcc7i6b+2ut7N0fG5dSOOp0UMaHpOl7oXQOUnQwzIqtcqTV3QBuwF
- WwB5kCVa
-X-Proofpoint-ORIG-GUID: gw0o5SJm2du9j41zjavkmGoKI_Bp8WyU
-X-Authority-Analysis: v=2.4 cv=UJ7dHDfy c=1 sm=1 tr=0 ts=68c83365 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
- a=1XWaLZrsAAAA:8 a=WhmIiR-BnfdzuEMxMSIA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-15_06,2025-09-12_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 bulkscore=0 impostorscore=0 spamscore=0 priorityscore=1501
- clxscore=1015 suspectscore=0 phishscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509150086
 
+Hi,
 
+On Mon, Sep 15, 2025 at 3:35=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Mon, Sep 15, 2025 at 11:26:09AM +0100, Will Deacon wrote:
+>
+> >   | If all CPUs are hard locked up at the same time the buddy system
+> >   | can't detect it.
+> >
+> > Ok, so why is that limitation acceptable? It looks to me like you're
+> > removing useful functionality.
+>
+> Yeah, this. I've run into this case waaay too many times to think it
+> reasonable to remove the perf/NMI based lockup detector.
 
-> On 13 Sep 2025, at 8:21=E2=80=AFPM, Arnaldo Carvalho de Melo =
-<acme@kernel.org> wrote:
->=20
-> On Wed, Sep 10, 2025 at 10:46:04AM -0700, Ian Rogers wrote:
->> On Tue, Sep 9, 2025 at 10:56=E2=80=AFPM Athira Rajeev =
-<atrajeev@linux.ibm.com> wrote:
->>>> On 20 Aug 2025, at 10:50=E2=80=AFPM, Athira Rajeev =
-<atrajeev@linux.ibm.com> wrote:
->>>>> On 15 Aug 2025, at 1:53=E2=80=AFAM, Namhyung Kim =
-<namhyung@kernel.org> wrote:
->>>>>=20
->>>>> Hello,
->>>>>=20
->>>>> On Thu, Aug 14, 2025 at 05:19:08PM +0530, Athira Rajeev wrote:
->>>>>> Reported-by: Tejas Manhas <tejas05@linux.ibm.com>
->>>>>> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
->>>>>=20
->>>>> Acked-by: Namhyung Kim <namhyung@kernel.org>
->>>>>=20
->>> Hi,
->>>=20
->>> Can we please pull this patch in if this looks good ?
->>=20
->> Tested-by: Ian Rogers <irogers@google.com>
->>=20
->=20
-> Thanks, applied to perf-tools-next,
->=20
-> - Arnaldo
+I am a bit curious how this comes to be in cases where you've seen it.
+What causes all CPUs to be stuck looping all with interrupts disabled
+(but still able to execute NMIs)? Certainly one can come up with a
+synthetic way to make that happen, but I would imagine it to be
+exceedingly rare in real life. Maybe all CPUs are deadlocked waiting
+on spinlocks or something? There shouldn't be a lot of other reasons
+that all CPUs should be stuck indefinitely with interrupts disabled...
+If that's what's happening, (just spitballing) I wonder if hooking
+into the slowpath of spinlocks to look for lockups would help? Maybe
+every 10000 failures to acquire the spinlock we check for a lockup?
+Obviously you could still come up with synthetic ways to make a
+non-caught watchdog, but hopefully in those types of cases we can at
+least reset the device with a hardware watchdog?
 
-Thanks Arnaldo for picking the patch
+Overall the issue is that it's really awkward to have both types of
+lockup detectors, especially since you've got to pick at compile time.
+The perf lockup detector has a pile of things that make it pretty
+awkward and it seems like people have been toward the buddy detector
+because of this...
 
-Thanks
-Athira
-
+-Doug
