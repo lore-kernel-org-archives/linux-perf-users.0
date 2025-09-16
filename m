@@ -1,59 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D80A2DE707;
-	Tue, 16 Sep 2025 19:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D5B24887E
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Sep 2025 19:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758050750; cv=none; b=jhX5zh+8VRpKSOJZoxsU28v7iUWW8elRTA/9/vEV7McfiPjnMza6j06vpM0ynRe1lrwq6qF20otS/tB3V6IYaArY1syksAeV3RhY2N+dWprDmV63Odkc+ytcTbRcdhBTDHDRtmB4UButJm8BsWJgKkCyBwPLhF6aO/WMAa7ntzw=
+	t=1758051093; cv=none; b=J+YKBuXIFwjmH+YEtTYhA0Gn/tHxjw/QC66pxvsA5xKX3XhL3fFzTcsVBEWDxIqUxzsjSS1LJfqAvgESwiXcovkI3OlYWCyMzX1qVLOZ8h7K8Q8RAlMeUWJo+85ECs4+bspx8GjU3Mk7Ajv6D3Xc20u642TIdX8sHgDU7isnOaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758050750; c=relaxed/simple;
-	bh=NTM9phhJY7tFV6Vjfe56zXmMyjIemIO8RQM+Y4MM7XQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KWAL+TVvtqt02KjNrsE3OYj1TEiB1ZuUD/HrmUX3ysDJuhCq/eElrCoHIvbhTQ+6SUJPP7waMGK7Rd/uhjfpm5RkOPCqrrQ79/UEjtGZ6kNSMoSXBpO4kfolqtDS2Tgvd/kC9IAY9LjUnP4Y9JjORTt4H7hKiJMAFUDl3XPr5RE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FSVn5u9r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758051093; c=relaxed/simple;
+	bh=tWA9pE2c9SjTNmn7e5Z4EHT1RUVjuKEoDBEGgej/pow=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IBwdRkCkSIEA76d3kTXNz/nmBPqhFC+Gn+VMtVGECTHSNy0ItWhXtK2w2+EnvICJjPYtqEKAiJ1qTLGyTkhNDURWZRdzykdLiejEGCdNIyLGbo5uvFE9j3XbOtSVarX42VuX+nc6CzZOsV0sQAQ4CKBe/CvclvVFT34WtVR8sNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TwxCC4Pz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FSVn5u9r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 796A5C4CEEB;
-	Tue, 16 Sep 2025 19:25:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758050750;
-	bh=NTM9phhJY7tFV6Vjfe56zXmMyjIemIO8RQM+Y4MM7XQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FSVn5u9rn0rJ4dXhcoSQe9+sq0JVi35m3M0LkdJaDU3LR4JULS0HL9afq5XMrAz+F
-	 TyWMv6/RGw0CyRKIM1pjCRAb4n+Gw0eR/h3DrZxvJsxS5kBBOzGxWdJRWSl1bsDXSD
-	 wtJZm+r7CCzsYK3lFfidr475oHr0ElgDH6C9cBsqH8HK0+ek0/qaW1Z12bJWuuHScL
-	 RwPSx0mPhP02Q8NdCCyeJ2XpdEzcfGcFPlLSZo5gEsYGVzo4aIYfcEP/1OMgvd9EK/
-	 n9H8jfsDFR9ww5+xjeieWp/ckouoGze75ukSXeWVrQDx1FoYAq3pIJoMTF1wkkevsM
-	 teJXtyI/Pskdw==
-Date: Tue, 16 Sep 2025 16:25:46 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Gautam Menghani <gautam@linux.ibm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, maddy@linux.ibm.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] perf python: Add an example for sampling
-Message-ID: <aMm5uvPsMfXEv8Oo@x1>
-References: <20250728055937.58531-1-gautam@linux.ibm.com>
- <aMlmiHATn5WHUcSM@mac.in.ibm.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TwxCC4Pz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1758051090;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=s3Qo7UaYadSsZzeIV0ke9/VrgOysfQt5KuaaZQjIeWs=;
+	b=TwxCC4PzLnKsZNmiHqlAYIBG1TW5Soba2qLOeVDCRd9Dh7PEQ5rFidmuYZ5OKBHCA7e+Wu
+	1ffBMRMDTnouL503mzYPs8NVYcf8l7UdaWd9wBy+WaekA4mHI63C8I/0Gnmxquja4/vpp1
+	0ljK89DVS9SqWYuPKaYgsjLF62c9b8U=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-381-gEnYh085Op2IyK1tRhaKvw-1; Tue,
+ 16 Sep 2025 15:31:26 -0400
+X-MC-Unique: gEnYh085Op2IyK1tRhaKvw-1
+X-Mimecast-MFC-AGG-ID: gEnYh085Op2IyK1tRhaKvw_1758051084
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5F281195605A;
+	Tue, 16 Sep 2025 19:31:23 +0000 (UTC)
+Received: from tallison-mac.rdu.redhat.com (unknown [10.13.33.48])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4113518003FC;
+	Tue, 16 Sep 2025 19:31:21 +0000 (UTC)
+From: Trevor Allison <tallison@redhat.com>
+To: linux-perf-users@vger.kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	Trevor Allison <tallison@redhat.com>
+Subject: [PATCH] perf test attr: Add missing int_mist.uop_dropping event to test-stat files
+Date: Tue, 16 Sep 2025 15:30:46 -0400
+Message-Id: <20250916193046.10054-1-tallison@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aMlmiHATn5WHUcSM@mac.in.ibm.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Tue, Sep 16, 2025 at 07:00:48PM +0530, Gautam Menghani wrote:
-> Hi Ian/Arnaldo,
-> 
-> Can you please review this series and let me know if any changes are
-> needed?
+Setup struct perf-event-attr test was failing on EMR cpu because perf stat
+was providing an event that was not included in the test. Type 4 Config 4269
+or 10ad, int_misc.uop_dropping.
 
-Looking at it now, sry for the delay,
+Add event type=4 config=4269 to test-stat-default and test-stat-detailed-*
+files with optional=1 so EMR machines can pass test
 
-- Arnaldo
+Signed-off-by: Trevor Allison <tallison@redhat.com>
+---
+ tools/perf/tests/shell/attr/test-stat-default    | 7 +++++++
+ tools/perf/tests/shell/attr/test-stat-detailed-1 | 7 +++++++
+ tools/perf/tests/shell/attr/test-stat-detailed-2 | 7 +++++++
+ tools/perf/tests/shell/attr/test-stat-detailed-3 | 7 +++++++
+ 4 files changed, 28 insertions(+)
+
+diff --git a/tools/perf/tests/shell/attr/test-stat-default b/tools/perf/tests/shell/attr/test-stat-default
+index e47fb4944679..8dd27c1fb661 100644
+--- a/tools/perf/tests/shell/attr/test-stat-default
++++ b/tools/perf/tests/shell/attr/test-stat-default
+@@ -227,3 +227,10 @@ fd=28
+ type=4
+ config=270
+ optional=1
++
++# PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
++[event29:base-stat]
++fd=29
++type=4
++config=4269
++optional=1
+\ No newline at end of file
+diff --git a/tools/perf/tests/shell/attr/test-stat-detailed-1 b/tools/perf/tests/shell/attr/test-stat-detailed-1
+index 3d500d3e0c5c..12a2ebf4e64a 100644
+--- a/tools/perf/tests/shell/attr/test-stat-detailed-1
++++ b/tools/perf/tests/shell/attr/test-stat-detailed-1
+@@ -269,3 +269,10 @@ fd=32
+ type=3
+ config=65538
+ optional=1
++
++# PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
++[event33:base-stat]
++fd=33
++type=4
++config=4269
++optional=1
+\ No newline at end of file
+diff --git a/tools/perf/tests/shell/attr/test-stat-detailed-2 b/tools/perf/tests/shell/attr/test-stat-detailed-2
+index 01777a63752f..66ea25b7d38f 100644
+--- a/tools/perf/tests/shell/attr/test-stat-detailed-2
++++ b/tools/perf/tests/shell/attr/test-stat-detailed-2
+@@ -329,3 +329,10 @@ fd=38
+ type=3
+ config=65540
+ optional=1
++
++# PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
++[event39:base-stat]
++fd=39
++type=4
++config=4269
++optional=1
+\ No newline at end of file
+diff --git a/tools/perf/tests/shell/attr/test-stat-detailed-3 b/tools/perf/tests/shell/attr/test-stat-detailed-3
+index 8400abd7e1e4..4a27bbfb9f87 100644
+--- a/tools/perf/tests/shell/attr/test-stat-detailed-3
++++ b/tools/perf/tests/shell/attr/test-stat-detailed-3
+@@ -349,3 +349,10 @@ fd=40
+ type=3
+ config=66048
+ optional=1
++
++# PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
++[event41:base-stat]
++fd=41
++type=4
++config=4269
++optional=1
+\ No newline at end of file
+-- 
+2.39.5 (Apple Git-154)
+
