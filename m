@@ -1,153 +1,177 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4281283FE1
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Sep 2025 20:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E3C2D6E4C
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Sep 2025 20:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758053277; cv=none; b=cdqsp7eGlbBbEqvSw6So6Uq2042kXmULT10i0iOKX98DbfEwj/GVgsT1FiguWieCgaf7nrhQ6b6FLFr8IVCGW1NViNEKrZgrYUsoUk/I0YDfeQOZo/L3J2TqItQmCR6qFGm8Qlt++sqKcnZOxdOtZAQWYGI9NPpHsRMF2OP+UNk=
+	t=1758054248; cv=none; b=kS3yC93Kcqr70/hr7DyargdJBWUjaOaA/u7Lm2jHTU7gwBXfoLbBtQjAs9b9QIUKqMZI2fV3NSP2LKo5b9grEUgUN41mi7axSvMw0kONaGxAOmUTEFHL8xLDGAMCPqfs5W7yEP0VM45mqIiTfDP//f+aO4bx9WFJQfFFkLCbIm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758053277; c=relaxed/simple;
-	bh=zAgc80zVWEamKL0fX3pawReQ9UvOTax2idkMr1tnxJY=;
+	s=arc-20240116; t=1758054248; c=relaxed/simple;
+	bh=Q4zFebQ9rnwof96T42+3VrrD5adTEApSj8dU5zmJ32w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sLmhsZBJv3llvsIzOGejf8MjtPJOCW8wbOfGhPe+INrAjpdefnP9I2Ewysjj9GIY3EXNTVK0K8Z40Triy/wH0t09zZj6erRs8x99tU1AnJcLpsai12R3No8LyhPZ2eY+szIMd2nnd99LKKvjD6r/cq84cHOanu5I4VTv9MObJjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i5bQ4U2z; arc=none smtp.client-ip=209.85.214.170
+	 To:Cc:Content-Type; b=hCj+Y4ceMEoZQqgaqBmtm3ZuUDenM0mNyZfRw/DpE/aIDNWyPHAcH9uCn6NwM4z6tvQq62B6tQ7Fq+qFd8+dS5/qqm38lWOKIKSmwNa9tb/kbXcDz+bz00XYnNj9HzhY1MG6gCS0R50C0Yt0XZeIi6pgQi9D/Xo8d7t6sfYqDo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rk0AyCV7; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i5bQ4U2z"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-265abad93bfso42215ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 16 Sep 2025 13:07:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rk0AyCV7"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2637b6e9149so18605ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Sep 2025 13:24:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1758053275; x=1758658075; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1758054246; x=1758659046; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TmX2dG89z9s4QzftVPzn9RGiKlTrvwKXZrja38EG3uw=;
-        b=i5bQ4U2zw99JwjG5Pq7JDh0e16Mv5U6N35vZ6MYdvbFtqrISXCxabPPK3+feRJ9M9S
-         Wj8aXlfIRK6DSMyipZ10SRZJ55ubAY5dOWXCEsK6BfDuJUPKfDQyKGJNXaKv9j2MJJYH
-         KNuhe/yCavmbHoLS8td/FJXuZtaovq00eK12QqEbPbQCG9Soq/6GmXvjycx+vhnh2o+P
-         sza195N4yVu/LVJZcGArMTiBuWROdrpBx+EzNozzwLe/SGfWIZYVYo22rBnr4rlaDw6Y
-         clJYw8pFT/nYhGJ/2nR59VUbQznMFaNFCRhLJnsYIfoQF3F1AvXCVVcu5kf8k8XlUC2O
-         cCGw==
+        bh=2XwuNMaNf7pkd+lgKxPWtZffQGnjuhEb+6J3mJn1H5o=;
+        b=rk0AyCV7JOnYoqEMwCk2wtLio4zPKm29omhSwW3eTOj1KnRaf04RpWvIr9v0VGLv3g
+         h7W915SHblGvSAdIREeiq70M4xhqqakkSmLe20p9MCrVOQQOvFQ2ZrAalLtkILi++k2I
+         KUy97jBPmAASQ/a4X/1eZj5XkcxCkO5jc1+lWWPUyGDp7zAi8a8oDNr0y8jF+KxFSMDd
+         CqkbAvtedgOaJaVxUre9ovPcSTWIDBLJR8CmnJLJfaR7yuBKj2+m3k8Ga9sbqmUidu0P
+         AM8P6qWzxH0Uv2wSuoIZ6ECe3IfsLQwh4xB/mt160ulAdzUlJkKYgaTIIiw/2EjRNqJ8
+         glDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758053275; x=1758658075;
+        d=1e100.net; s=20230601; t=1758054246; x=1758659046;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TmX2dG89z9s4QzftVPzn9RGiKlTrvwKXZrja38EG3uw=;
-        b=mT7n6zG8EqyVsrlPVrfAj4guKv9p5nSY2qdBhwUWMOMQQE/QOAXCZ3ZoOj9Z2hWAFR
-         E0xOQZwRlyS2dhtchG4m1tjkvpjS/N+Cl0rpezozN1q2fEbysTXhhf0S+Ili9qIQOl1Q
-         hApQc2dxXDVJMet0QKKytmNYiaYGeGKKINlPdsDTsmXF/NdcwuMzMRC9BvXe9B/BI1Lb
-         +uG+MizxFZ1Xt20Ea6xxOQJmIfsMMYvigxhhUOK11AOGNpOhhwvMPHjRHMGKz0Z1tEEl
-         +MYYyK/qvTHX3O1wUAAJcLg7+F9U4Br7vKE5qgM4gL92CTco8R3ynhnTbXsx9LPQfjWw
-         BnKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWohK0aIl2afQJmcEw3B4jPbWx1IJP0CENsq/odNPPoapjdd3Lrez3U/VekAOxVMkItsCXskz/G6oopgl4WE4pf@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBrnRXZH8oRJ7VdWNZMvYWh6MxwP+rpdDN08UI37isfamCxhyW
-	M/cO5DTrRSMEwss+Qi3RpA+G/EJyz4w2RvFcI9dxoft8dCxroH3D2SrnqlMy2brfMFqvqBBsyLA
-	dt65cha77kN4jxP4Ufz4Ng5AmSG1QKj1IXJ1Lhbz9
-X-Gm-Gg: ASbGnctQOuE00h8VuWPCDrbcyByEUn4tXJJ1GDZk1/UYuWfH+oFqvZDZ+tl8KKozE8o
-	PNLwVZKHnjPxnOQGt/4yKCGtfB3kZoi/3C0vah/OiHbQvxi5e7naJLSThqBPAECQU1Z6uUs0IhI
-	DFs7UkwS9yFFS6LqSOpKz9++7pW6ewsDjosB59S8/cHtnNUTfhG746p1a7gGktty7H/DDsa7kIh
-	2VTAYX6hj47K5NMnA5fF9ew9G7F58LD+uUTm1eJDI/S7zh1V0wUbYU=
-X-Google-Smtp-Source: AGHT+IGEuWVr23Zz1x5JlKHMYy4pYv6g5d4MtP765YpFDF3VkFTqqK2qZwJG2KZRGdDkNbo90uHaTUkmxi8HBKVltB8=
-X-Received: by 2002:a17:902:e88c:b0:246:1f3e:4973 with SMTP id
- d9443c01a7336-26800f4ba2cmr1245035ad.6.1758053274798; Tue, 16 Sep 2025
- 13:07:54 -0700 (PDT)
+        bh=2XwuNMaNf7pkd+lgKxPWtZffQGnjuhEb+6J3mJn1H5o=;
+        b=qRwsIzsvJS5FEmYSGftwDh7jhm4knvwsx7i7UGS+jgnFKuLOb6aqxkU8apwOnpdhF1
+         6dRPrrozCQtBtb0YJxWUxJJYI87TG816lR0LA5DvHKmeqLCdODw5k2lU6jnN+B9jpisH
+         QnCFPoLg8jgjyUohMmiBJgjeEMaJL/UxTDrixgYhxMhyECJ3xpXA2d7Z31MV8CLLJFE/
+         yB20unOKXy73mBB9My0fZMlIe8sH7OPwYblm+S+zl25zY5tce/c41sYj+qVQkDG08Ikr
+         yrPrICAF1AujBaSORix7g6Rcqjh6b5gn0k8Ge0/tXxsPKpUMBqx0uZQK799hZvuLNWLN
+         2vGw==
+X-Gm-Message-State: AOJu0Yw/N+ULsFNBX5iDwGifH7HZPOTFsNefE6BZ7NJ9tMdvLtfIjGU7
+	dvAVgcRikFNSG1y3IcEu142TycD9xmWp965qHj+D+C1tmlgU8LfhfYZE6jGm5MRr2dxKOT9dHcj
+	8BTPpCdRwp6jxCUdd6pHi4BNj1TERhbPcSet6NppC
+X-Gm-Gg: ASbGnctaSteWhP2EaE85VEJmeVXYXhIHDNeqN8z/02UNxpTdSsq5bsOCNRq29LuXGcH
+	+6a2EGVrRZjMAtpeTb9pRtKO4Lg2r7s8MrFrjcHMi4MPm4sfiZCfSrmmgoC3U3hpkTdod6l0v5G
+	2qllIkiF27V1KqTPjdtJZlxu9GeZ2g8ori1G7CC6aORgUq93Kn/CYaJe8kXGVGOZ2h6Dd4y89ss
+	5fDAPpoLg0fNDRxVFre4WDbUN6nQQpwzd8FsO7Bf8CyPIu4WTNAtxsHi/Ly5g8NWw==
+X-Google-Smtp-Source: AGHT+IENGPU+1xv66Y8XBNW9DYrz4RbTDGa4tjo9ronOzLZHXIaQApHEQV3W6rSYteXQZ+hhHERWsgL+kse6q6Wbezw=
+X-Received: by 2002:a17:903:41c3:b0:25d:c405:132e with SMTP id
+ d9443c01a7336-26800f4d873mr1222895ad.12.1758054245556; Tue, 16 Sep 2025
+ 13:24:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250728055937.58531-1-gautam@linux.ibm.com> <aMlmiHATn5WHUcSM@mac.in.ibm.com>
- <aMm5uvPsMfXEv8Oo@x1>
-In-Reply-To: <aMm5uvPsMfXEv8Oo@x1>
+References: <20250916193046.10054-1-tallison@redhat.com>
+In-Reply-To: <20250916193046.10054-1-tallison@redhat.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 16 Sep 2025 13:07:43 -0700
-X-Gm-Features: AS18NWBWsbgYiyExLr3xwCIKJ6z7cZXGocyZLej862MS88dpO_SC3EbWWLuO17s
-Message-ID: <CAP-5=fW4JQYJ2NCRsRVePidCcZ9+JcQbfY=xQ00xZG-bSn96ew@mail.gmail.com>
-Subject: Re: [PATCH 0/2] perf python: Add an example for sampling
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Gautam Menghani <gautam@linux.ibm.com>, peterz@infradead.org, mingo@redhat.com, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	maddy@linux.ibm.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Tue, 16 Sep 2025 13:23:54 -0700
+X-Gm-Features: AS18NWDadalivTAKRNmrEJbyqD_QidejZEaIW02iHo4R5RZEGFqbweL4U7VX2zA
+Message-ID: <CAP-5=fXdxNLA4Ey51HdMCrY0SZuzp1WUc5A+n9EFLtaajtYEiA@mail.gmail.com>
+Subject: Re: [PATCH] perf test attr: Add missing int_mist.uop_dropping event
+ to test-stat files
+To: Trevor Allison <tallison@redhat.com>, Thomas Falcon <thomas.falcon@intel.com>
+Cc: linux-perf-users@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 16, 2025 at 12:25=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Tue, Sep 16, 2025 at 12:31=E2=80=AFPM Trevor Allison <tallison@redhat.co=
+m> wrote:
 >
-> On Tue, Sep 16, 2025 at 07:00:48PM +0530, Gautam Menghani wrote:
-> > Hi Ian/Arnaldo,
-> >
-> > Can you please review this series and let me know if any changes are
-> > needed?
+> Setup struct perf-event-attr test was failing on EMR cpu because perf sta=
+t
+> was providing an event that was not included in the test. Type 4 Config 4=
+269
+> or 10ad, int_misc.uop_dropping.
 >
-> Looking at it now, sry for the delay,
+> Add event type=3D4 config=3D4269 to test-stat-default and test-stat-detai=
+led-*
+> files with optional=3D1 so EMR machines can pass test
+>
+> Signed-off-by: Trevor Allison <tallison@redhat.com>
 
-I think the patches look good. I'm a little concerned that the python
-APIs are a chance to do something better than the C APIs that have
-evolved. For example, we removed UID out of target recently [1] as the
-BPF alternative was better. Had this patch come earlier then it seems
-likely we'd have had target with UIDs. I wonder rather than having a
-kwlist of:
+Thanks! I wonder why this wasn't seen on SapphireRapids.
 
-+ static char *kwlist[] =3D { "target", "inherit_stat", "no_buffering",
-"no_inherit",
-+ "no_inherit_set", "no_samples", "raw_samples",
-+ "sample_address", "sample_phys_addr", "sample_data_page_size",
-+ "sample_code_page_size", "sample_weight", "sample_time",
-+ "sample_time_set", "sample_cpu", "sample_identifier",
-+ "sample_data_src", "period", "period_set", "running_time",
-+ "full_auxtrace", "auxtrace_snapshot_mode",
-+ "auxtrace_snapshot_on_exit", "auxtrace_sample_mode",
-+ "record_namespaces", "record_cgroup", "record_switch_events",
-+ "record_switch_events_set", "all_kernel", "all_user",
-+ "kernel_callchains", "user_callchains", "tail_synthesize",
-+ "overwrite", "ignore_missing_thread", "strict_freq", "sample_id",
-+ "no_bpf_event", "kcore", "text_poke", "build_id", "freq",
-+ "mmap_pages", "auxtrace_mmap_pages", "user_freq", "branch_stack",
-+ "sample_intr_regs", "sample_user_regs", "default_interval",
-+ "user_interval", "auxtrace_snapshot_size", "auxtrace_snapshot_opts",
-+ "auxtrace_sample_opts", "sample_transaction", "use_clockid",
-+ "clockid", "clockid_res_ns", "nr_cblocks", "affinity", "mmap_flush",
-+ "comp_level", "nr_threads_synthesize", "ctl_fd", "ctl_fd_ack",
-+ "ctl_fd_close", "synth", "threads_spec", "threads_user_spec",
-+ "off_cpu_thresh_ns",  NULL };
+Reviewed-by: Ian Rogers <irogers@google.com>
+Fixes: 50e2eb259650 perf vendor events: Update emeraldrapids events/metrics
 
-but then just using this subset:
-
-+    opts =3D perf.record_opts(freq=3D1000, target=3Dtgt, sample_time=3DTru=
-e,
-+                            sample_cpu=3DTrue, no_buffering=3DTrue,
-no_inherit=3DTrue)
-
-The kwlist should be kept to just those necessary values for the
-example to work? I kind of see this as Arnaldo's baby, so he may just
-want everything, so this needn't be a blocker.
-
-Bigger picture I wonder about migrating the `perf script` code to just
-being regular python programs like the example here. I sent out
-deprecating the libperl code to this ends (looking for reviews):
-https://lore.kernel.org/linux-perf-users/20250908181918.3533480-1-irogers@g=
-oogle.com/
-The issue is that `perf script` being the main thread inhibits things
-like textual running until trace_end. This means we can't do things
-like incremental loading support. We may want to make the perf events
-support something like an asyncio interface for that.
-
-Refactoring that support will likely raise backward compatibility
-concerns. It'd be a really nice thing to do as the API has some fairly
-major overheads like turning everything in a sample into a Dict
-whether needed or not:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/tools/perf/util/scripting-engines/trace-event-python.c#n838
-I mention this just to say why I'd like to minimize the API when possible.
-
-Thanks,
 Ian
 
-[1] https://lore.kernel.org/r/20250604174545.2853620-10-irogers@google.com
+> ---
+>  tools/perf/tests/shell/attr/test-stat-default    | 7 +++++++
+>  tools/perf/tests/shell/attr/test-stat-detailed-1 | 7 +++++++
+>  tools/perf/tests/shell/attr/test-stat-detailed-2 | 7 +++++++
+>  tools/perf/tests/shell/attr/test-stat-detailed-3 | 7 +++++++
+>  4 files changed, 28 insertions(+)
+>
+> diff --git a/tools/perf/tests/shell/attr/test-stat-default b/tools/perf/t=
+ests/shell/attr/test-stat-default
+> index e47fb4944679..8dd27c1fb661 100644
+> --- a/tools/perf/tests/shell/attr/test-stat-default
+> +++ b/tools/perf/tests/shell/attr/test-stat-default
+> @@ -227,3 +227,10 @@ fd=3D28
+>  type=3D4
+>  config=3D270
+>  optional=3D1
+> +
+> +# PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
+> +[event29:base-stat]
+> +fd=3D29
+> +type=3D4
+> +config=3D4269
+> +optional=3D1
+> \ No newline at end of file
+> diff --git a/tools/perf/tests/shell/attr/test-stat-detailed-1 b/tools/per=
+f/tests/shell/attr/test-stat-detailed-1
+> index 3d500d3e0c5c..12a2ebf4e64a 100644
+> --- a/tools/perf/tests/shell/attr/test-stat-detailed-1
+> +++ b/tools/perf/tests/shell/attr/test-stat-detailed-1
+> @@ -269,3 +269,10 @@ fd=3D32
+>  type=3D3
+>  config=3D65538
+>  optional=3D1
+> +
+> +# PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
+> +[event33:base-stat]
+> +fd=3D33
+> +type=3D4
+> +config=3D4269
+> +optional=3D1
+> \ No newline at end of file
+> diff --git a/tools/perf/tests/shell/attr/test-stat-detailed-2 b/tools/per=
+f/tests/shell/attr/test-stat-detailed-2
+> index 01777a63752f..66ea25b7d38f 100644
+> --- a/tools/perf/tests/shell/attr/test-stat-detailed-2
+> +++ b/tools/perf/tests/shell/attr/test-stat-detailed-2
+> @@ -329,3 +329,10 @@ fd=3D38
+>  type=3D3
+>  config=3D65540
+>  optional=3D1
+> +
+> +# PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
+> +[event39:base-stat]
+> +fd=3D39
+> +type=3D4
+> +config=3D4269
+> +optional=3D1
+> \ No newline at end of file
+> diff --git a/tools/perf/tests/shell/attr/test-stat-detailed-3 b/tools/per=
+f/tests/shell/attr/test-stat-detailed-3
+> index 8400abd7e1e4..4a27bbfb9f87 100644
+> --- a/tools/perf/tests/shell/attr/test-stat-detailed-3
+> +++ b/tools/perf/tests/shell/attr/test-stat-detailed-3
+> @@ -349,3 +349,10 @@ fd=3D40
+>  type=3D3
+>  config=3D66048
+>  optional=3D1
+> +
+> +# PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
+> +[event41:base-stat]
+> +fd=3D41
+> +type=3D4
+> +config=3D4269
+> +optional=3D1
+> \ No newline at end of file
+> --
+> 2.39.5 (Apple Git-154)
+>
