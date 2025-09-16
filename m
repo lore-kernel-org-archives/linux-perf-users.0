@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39BB22DAFD2;
-	Tue, 16 Sep 2025 19:00:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED92B276022;
+	Tue, 16 Sep 2025 19:04:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758049207; cv=none; b=Qr7fV1KXE4SqVMxo9l3twBsKiFFMtLr+aJT0gEkvb9BtYi/WWCBj5XqAPpKD8z+nuCMg6G/MgiyxkF5C0q8FEFjh0Q/jVN0QCVj3U99z8wiRDbgqJTGHBVxERafgbq0oFtBQwchhUohUZOXAPz/SikCHsmkYddPpGFLFkwvwoTw=
+	t=1758049454; cv=none; b=nsMVAwBAmq2HyhBbTmGP5fQWC7KB/6/j8YgOrEt870iOdLN8E8nXH+TsgqcIJxIDYBqWF/B8CJaMYHujblxIaOoFlqZ0slqOQ2ueS5VQfcltQ6gbSQDMyRw9sIgTfC8iWQdaeOBErV9RucUCgJe5VobQUcAlEgKHDsr/ZYUKVVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758049207; c=relaxed/simple;
-	bh=95l9pr64ynrwi244Oy9sUnhLG2jGgpcru4un1rfIZTE=;
+	s=arc-20240116; t=1758049454; c=relaxed/simple;
+	bh=oOCz4ZC/B3OEba2UZc9WhRkO6LSkANYZ35eQnGNQPRg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oJhXlVDLAEpaWCvyMG2dYVQkN7RcQnq01K7XYCCE9TEwQjVYaqBUE2uyDF6I0Q/T0Ge6f1m14+BHNofBFynApcfEIK8rsNYziOu4Y1eBWm5H3rthybr1OBGt44WcgeKjdXL6sv8lDIUtwmBFbVHK3O1gAllbAzX98NhDPaFRK8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vD/KuB1c; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kJ9C6upwsni/ZfE6FT6Wm+foJLAxAK9+93dBZJ6zhXJx9Vn5auS97q8DWOfe6258NR9UkS4N1OTttxOD5EPGkO1iu9UaDoqh3/X/I++4wBm5gCC3Ryza2f9LKOZOO0ONPeBPncxDEB7/eVlgTWQQX5W52lAMipjIkvAJHJrmMT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vEsjOtGg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vD/KuB1c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFCE9C4CEEB;
-	Tue, 16 Sep 2025 19:00:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vEsjOtGg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F02CFC4CEEB;
+	Tue, 16 Sep 2025 19:04:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758049207;
-	bh=95l9pr64ynrwi244Oy9sUnhLG2jGgpcru4un1rfIZTE=;
+	s=k20201202; t=1758049453;
+	bh=oOCz4ZC/B3OEba2UZc9WhRkO6LSkANYZ35eQnGNQPRg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vD/KuB1cLG7frNkpzca7V6XivhD+WriLeTqzeKRCcKjD+169sahMAf9+SPhfgXhWz
-	 mN+tyeQIFI/za346w/oGwv9o7YUWqHrVsR6ZeAxVAaaNp73SwwDv3+kSWp5LBmjhgp
-	 hQ/nmklBAQdsFikN/JFcZpGpZbYrhNOpyXJOEfxYudpS7yfknBtrQabMVqtbSah9dp
-	 pdw/QbZNJpfWNTvw2F/487xp9DWp0+x2BpRI4N+6aVjwbzbktcfVyZq7frMhVeZ/VG
-	 yPVAyWhUR709AEENjzoX4YbFbp/KpI2keCE33hJ/jjo+3AZrMDObSJkj9oGr8FOZqY
-	 yfva2OSLMTIrQ==
-Date: Tue, 16 Sep 2025 16:00:04 -0300
+	b=vEsjOtGg7HrAlew/LSmyJwGxMAOUtPHnwkwT4+Ahfr+XhqRGg3VXcrC/u0wfcCRnx
+	 9Dq1JGWmBX5+doX0GLaRisNWXCss/hpmYQ9wYBa1qifiP9T7PVIOCDVCUT8Y0vwHAv
+	 V7pc+btB81P5BsfVAHRNsamAkINUm5vPTUpLMi/f3YmpquqlO1KFrXF0fyWXA9Td+V
+	 O1chmanXcIK274Izz7tBDZbeBsG5qGWe8tJQarCHxu5CvzviHwWVtgdqjNhHduQF3m
+	 vn1bZcteVYkGwyNCDKm0YkYy+bWghYAMrKoG7XPu3YWD01eZ++cjCfuroV7pWg2+xN
+	 8tk1RewYDrOuA==
+Date: Tue, 16 Sep 2025 16:04:09 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -40,111 +40,221 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	James Clark <james.clark@linaro.org>,
 	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 1/4] perf test shell lbr: Avoid failures with perf
- event paranoia
-Message-ID: <aMmztG_F1KuAKKq9@x1>
+Subject: Re: [PATCH v1 2/4] perf test: Don't leak workload gopipe in
+ PERF_RECORD_*
+Message-ID: <aMm0qUcdeDJmwuyI@x1>
 References: <20250821221834.1312002-1-irogers@google.com>
- <20250821221834.1312002-2-irogers@google.com>
+ <20250821221834.1312002-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250821221834.1312002-2-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250821221834.1312002-3-irogers@google.com>
 
-On Thu, Aug 21, 2025 at 03:18:31PM -0700, Ian Rogers wrote:
-> When not running as root and with higher perf event paranoia values
-> the perf record LBR tests could fail rather than skipping the
-> problematic tests. Add the sensitivity to the test and confirm it
-> passes with paranoia values from -1 to 2.
+On Thu, Aug 21, 2025 at 03:18:32PM -0700, Ian Rogers wrote:
+> The test starts a workload and then opens events. If the events fail
+> to open, for example because of perf_event_paranoid, the gopipe of the
+> workload is leaked and the file descriptor leak check fails when the
+> test exits. To avoid this cancel the workload when opening the events
+> fails.
+> 
+> Before:
+> ```
+> $ perf test -vv 7
+>   7: PERF_RECORD_* events & perf_sample fields:
+> --- start ---
 
-Thanks, applied to perf-tools-next,
+⬢ [acme@toolbx perf-tools-next]$ patch -p1 < b
+patching file tools/perf/tests/perf-record.c
+Hunk #1 succeeded at 130 (offset 15 lines).
+Hunk #2 succeeded at 142 with fuzz 1 (offset 15 lines).
+Hunk #3 succeeded at 154 (offset 15 lines).
+Hunk #4 succeeded at 167 (offset 15 lines).
+⬢ [acme@toolbx perf-tools-next]$ 
+⬢ [acme@toolbx perf-tools-next]$ git log --oneline -5 tools/perf/tests/perf-record.c
+576bd7a8c90c48e9 (x1/perf-tools-next, x1/HEAD, five/perf-tools-next, five/HEAD) perf tests record: Update testcase to fix usage of affinity for machines with #CPUs > 1K
+b4c658d4d63d6149 perf target: Remove uid from target
+dc6d2bc2d893a878 perf sample: Make user_regs and intr_regs optional
+fd8d5a3b076c033f perf tests: Add missing event.h include
+9823147da6c893d9 perf tools: Move 'struct perf_sample' to a separate header file to disentangle headers
+⬢ [acme@toolbx perf-tools-next]$
 
-Committer testing:
+Can you please check that it is still ok?
 
-Testing with '$ perf test -vv lbr', i.e. as non root, and then comparing
-the output shows the mentioned errors before this patch:
-
-  acme@x1:~$ grep -m1 "model name" /proc/cpuinfo
-  model name    : 13th Gen Intel(R) Core(TM) i7-1365U
-  acme@x1:~$ 
-
-Before:
-
- 132: perf record LBR tests            : Skip
-
-After:
-
- 132: perf record LBR tests            : Ok
+I processed the first in the series and now I'm going thru the other
+two.
 
 - Arnaldo
- 
-> Fixes: 32559b99e0f5 ("perf test: Add set of perf record LBR tests")
+
+> test child forked, pid 1189568
+> Using CPUID GenuineIntel-6-B7-1
+> ------------------------------------------------------------
+> perf_event_attr:
+>   type                             0 (PERF_TYPE_HARDWARE)
+>   config                           0xa00000000 (cpu_atom/PERF_COUNT_HW_CPU_CYCLES/)
+>   disabled                         1
+> ------------------------------------------------------------
+> sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8
+> sys_perf_event_open failed, error -13
+> ------------------------------------------------------------
+> perf_event_attr:
+>   type                             0 (PERF_TYPE_HARDWARE)
+>   config                           0xa00000000 (cpu_atom/PERF_COUNT_HW_CPU_CYCLES/)
+>   disabled                         1
+>   exclude_kernel                   1
+> ------------------------------------------------------------
+> sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 3
+> ------------------------------------------------------------
+> perf_event_attr:
+>   type                             0 (PERF_TYPE_HARDWARE)
+>   config                           0x400000000 (cpu_core/PERF_COUNT_HW_CPU_CYCLES/)
+>   disabled                         1
+> ------------------------------------------------------------
+> sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8
+> sys_perf_event_open failed, error -13
+> ------------------------------------------------------------
+> perf_event_attr:
+>   type                             0 (PERF_TYPE_HARDWARE)
+>   config                           0x400000000 (cpu_core/PERF_COUNT_HW_CPU_CYCLES/)
+>   disabled                         1
+>   exclude_kernel                   1
+> ------------------------------------------------------------
+> sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 = 3
+> Attempt to add: software/cpu-clock/
+> ..after resolving event: software/config=0/
+> cpu-clock -> software/cpu-clock/
+> ------------------------------------------------------------
+> perf_event_attr:
+>   type                             1 (PERF_TYPE_SOFTWARE)
+>   size                             136
+>   config                           0x9 (PERF_COUNT_SW_DUMMY)
+>   sample_type                      IP|TID|TIME|CPU
+>   read_format                      ID|LOST
+>   disabled                         1
+>   inherit                          1
+>   mmap                             1
+>   comm                             1
+>   enable_on_exec                   1
+>   task                             1
+>   sample_id_all                    1
+>   mmap2                            1
+>   comm_exec                        1
+>   ksymbol                          1
+>   bpf_event                        1
+>   { wakeup_events, wakeup_watermark } 1
+> ------------------------------------------------------------
+> sys_perf_event_open: pid 1189569  cpu 0  group_fd -1  flags 0x8
+> sys_perf_event_open failed, error -13
+> perf_evlist__open: Permission denied
+> ---- end(-2) ----
+> Leak of file descriptor 6 that opened: 'pipe:[14200347]'
+> 
+> ---- unexpected signal (6) ----
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+> Failed to read build ID for //anon
+>     #0 0x565358f6666e in child_test_sig_handler builtin-test.c:311
+>     #1 0x7f29ce849df0 in __restore_rt libc_sigaction.c:0
+>     #2 0x7f29ce89e95c in __pthread_kill_implementation pthread_kill.c:44
+>     #3 0x7f29ce849cc2 in raise raise.c:27
+>     #4 0x7f29ce8324ac in abort abort.c:81
+>     #5 0x565358f662d4 in check_leaks builtin-test.c:226
+>     #6 0x565358f6682e in run_test_child builtin-test.c:344
+>     #7 0x565358ef7121 in start_command run-command.c:128
+>     #8 0x565358f67273 in start_test builtin-test.c:545
+>     #9 0x565358f6771d in __cmd_test builtin-test.c:647
+>     #10 0x565358f682bd in cmd_test builtin-test.c:849
+>     #11 0x565358ee5ded in run_builtin perf.c:349
+>     #12 0x565358ee6085 in handle_internal_command perf.c:401
+>     #13 0x565358ee61de in run_argv perf.c:448
+>     #14 0x565358ee6527 in main perf.c:555
+>     #15 0x7f29ce833ca8 in __libc_start_call_main libc_start_call_main.h:74
+>     #16 0x7f29ce833d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
+>     #17 0x565358e391c1 in _start perf[851c1]
+>   7: PERF_RECORD_* events & perf_sample fields                       : FAILED!
+> ```
+> 
+> After:
+> ```
+> $ perf test 7
+>   7: PERF_RECORD_* events & perf_sample fields                       : Skip (permissions)
+> ```
+> 
+> Fixes: 16d00fee7038 ("perf tests: Move test__PERF_RECORD into separate object")
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/tests/shell/record_lbr.sh | 26 ++++++++++++++++++++------
->  1 file changed, 20 insertions(+), 6 deletions(-)
+>  tools/perf/tests/perf-record.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/tools/perf/tests/shell/record_lbr.sh b/tools/perf/tests/shell/record_lbr.sh
-> index 6fcb5e52b9b4..78a02e90ece1 100755
-> --- a/tools/perf/tests/shell/record_lbr.sh
-> +++ b/tools/perf/tests/shell/record_lbr.sh
-> @@ -4,6 +4,10 @@
+> diff --git a/tools/perf/tests/perf-record.c b/tools/perf/tests/perf-record.c
+> index 0b3c37e66871..8c79b5166a05 100644
+> --- a/tools/perf/tests/perf-record.c
+> +++ b/tools/perf/tests/perf-record.c
+> @@ -115,6 +115,7 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
+>  	if (err < 0) {
+>  		pr_debug("sched__get_first_possible_cpu: %s\n",
+>  			 str_error_r(errno, sbuf, sizeof(sbuf)));
+> +		evlist__cancel_workload(evlist);
+>  		goto out_delete_evlist;
+>  	}
 >  
->  set -e
+> @@ -126,6 +127,7 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
+>  	if (sched_setaffinity(evlist->workload.pid, cpu_mask_size, &cpu_mask) < 0) {
+>  		pr_debug("sched_setaffinity: %s\n",
+>  			 str_error_r(errno, sbuf, sizeof(sbuf)));
+> +		evlist__cancel_workload(evlist);
+>  		goto out_delete_evlist;
+>  	}
 >  
-> +ParanoidAndNotRoot() {
-> +  [ "$(id -u)" != 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid)" -gt $1 ]
-> +}
-> +
->  if [ ! -f /sys/bus/event_source/devices/cpu/caps/branches ] &&
->     [ ! -f /sys/bus/event_source/devices/cpu_core/caps/branches ]
->  then
-> @@ -23,6 +27,7 @@ cleanup() {
->  }
+> @@ -137,6 +139,7 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
+>  	if (err < 0) {
+>  		pr_debug("perf_evlist__open: %s\n",
+>  			 str_error_r(errno, sbuf, sizeof(sbuf)));
+> +		evlist__cancel_workload(evlist);
+>  		goto out_delete_evlist;
+>  	}
 >  
->  trap_cleanup() {
-> +  echo "Unexpected signal in ${FUNCNAME[1]}"
->    cleanup
->    exit 1
->  }
-> @@ -123,8 +128,11 @@ lbr_test "-j ind_call" "any indirect call" 2
->  lbr_test "-j ind_jmp" "any indirect jump" 100
->  lbr_test "-j call" "direct calls" 2
->  lbr_test "-j ind_call,u" "any indirect user call" 100
-> -lbr_test "-a -b" "system wide any branch" 2
-> -lbr_test "-a -j any_call" "system wide any call" 2
-> +if ! ParanoidAndNotRoot 1
-> +then
-> +  lbr_test "-a -b" "system wide any branch" 2
-> +  lbr_test "-a -j any_call" "system wide any call" 2
-> +fi
+> @@ -149,6 +152,7 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
+>  	if (err < 0) {
+>  		pr_debug("evlist__mmap: %s\n",
+>  			 str_error_r(errno, sbuf, sizeof(sbuf)));
+> +		evlist__cancel_workload(evlist);
+>  		goto out_delete_evlist;
+>  	}
 >  
->  # Parallel
->  parallel_lbr_test "-b" "parallel any branch" 100 &
-> @@ -141,10 +149,16 @@ parallel_lbr_test "-j call" "parallel direct calls" 100 &
->  pid6=$!
->  parallel_lbr_test "-j ind_call,u" "parallel any indirect user call" 100 &
->  pid7=$!
-> -parallel_lbr_test "-a -b" "parallel system wide any branch" 100 &
-> -pid8=$!
-> -parallel_lbr_test "-a -j any_call" "parallel system wide any call" 100 &
-> -pid9=$!
-> +if ParanoidAndNotRoot 1
-> +then
-> +  pid8=
-> +  pid9=
-> +else
-> +  parallel_lbr_test "-a -b" "parallel system wide any branch" 100 &
-> +  pid8=$!
-> +  parallel_lbr_test "-a -j any_call" "parallel system wide any call" 100 &
-> +  pid9=$!
-> +fi
->  
->  for pid in $pid1 $pid2 $pid3 $pid4 $pid5 $pid6 $pid7 $pid8 $pid9
->  do
 > -- 
 > 2.51.0.rc2.233.g662b1ed5c5-goog
