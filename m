@@ -1,313 +1,252 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7969D32D5D4
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Sep 2025 19:09:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E8B3016E7;
+	Tue, 16 Sep 2025 19:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758049752; cv=none; b=KYLZii+elkoUArQT5b451lef8QKe+Vaw1Iy5ClVgE+qTaYHmM9GprZ/ir2IEcUGySArNBFkUfqNv4W/x/t/3oFQYTH0q6OL2K1QWpnTJofvJ/qAproS3kOq9cijeFUOmToR6jArSH2ayD+1+zpKzb1v0aGEsYR2fva7tsf8HPoQ=
+	t=1758050108; cv=none; b=Bxl2wdFTLqn5aJZD0TgyZdTnARVhAC5wvlR60vfPyT+YJGNhVvjbIPq9hs/FSSQmNP99YQgD2j4Egw2/r6blCJSM2XsfEpD6rbM0OoSG3NN7aEG6gyRwRoToZr4FNxVfzKyihC9QCqxW80sHmBhTl8Ic3saI5SiRUhnmBgKhh0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758049752; c=relaxed/simple;
-	bh=gDgBd7oIJjnAGnml4JKrj9hUBgWH01BbWUxIqxPOfWI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iRXstp7k8fqx0sYZEbvdBPI/lsioKseOptMWl9+uSB81jJ6SpqAEZz27ENcxSEHrCmjAX+8nKbjYtzcA3OaHWFRcvRbJVLFbNGc+ImveXFklvZTpRjjP14Wwkh04abdCR+8hFYHoQuWuOUWgbQnIbX4tJfyvLChJb3W/Ea/1N+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OM7Q+LBG; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1758050108; c=relaxed/simple;
+	bh=M/yZWrPfZpewGGEimNsWyMgo4jxRNbJ0o5evV2UPJXQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sOgPT37OJ0j2prMSucjgo71tVhKezwx4xD7o9B3tWXbdz2AnNd8v++LqkUFNbv06hEqYy1ymT9XcRxlVnp7aueupPFlk+OFLx/yOSPdqC0Ja1ITGF7jt5TN/t1m9rQcqyOKZ/pHlt57mFZQHntCnGxSRN1IJxEEtVjiyGmvIF+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d4pN7l5F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OM7Q+LBG"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2637b6e9149so39725ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 16 Sep 2025 12:09:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1758049750; x=1758654550; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v5GWnHtcFt1BNkCReHFNnU/aXlqNcIwBUpU5vbc/YpE=;
-        b=OM7Q+LBGGrN+Nu6xUeghKurkLNFtn2K6uEqy1Xx6jeQ/T8TFIEqX2/yks6TybPtjoY
-         yc1Lhjg/lFvn3NuFD4tHNG8Np/wqXQzz+iQQD5wW+MA8izjo621TmrvPyHL7kb1ycX7E
-         zRAh1KRSqoEWxsP/7+Li81z+ZNQKQP8v3q8jTgtOknWp3QTCQpQ34L0ymfO0u0UIU+WQ
-         s+Nh+IUHvAfukFUNMI6XpxQTPYU4OkUlmrB8GMjvnNNF1pmOnfWFkqAV6ktHrDs+6fcB
-         m0jnsT8ZrXnGeh5ua3TsVeqK/ChfaK6D2qEC+YRbltkNLMi2M4KhuQFx5BORXLL+7Y6J
-         4Zaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758049750; x=1758654550;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=v5GWnHtcFt1BNkCReHFNnU/aXlqNcIwBUpU5vbc/YpE=;
-        b=Iu3yUB5yz5d5HRfSfQDhNMUKt2Hoq9uWamOzS72bzNeeF24TaTasMkhWM4yUhop0f+
-         m9AKko7qBjm4Wsm/2X+kp4bO3g6NEXvTnM+zRMg07Si4PFQVcHSh8phYs+NFt+k0CWq5
-         OkfMENnaMh9BVv3mNniVNqDOgAuLBEAfRjDJgak5Xb0tBmhfzH/M55taRdnp22KqO75R
-         Gl+hazFvUF224PTKA7mfcADoLgKTpfPUpbtKh2VmmlBK/MsLw5/f2Ermq8NCifHhTY1W
-         RX4/ZO5dYOFyxlsFJGb9vVKREvUNrhJ+xNUkmc50dMtuDmRtGieugeLK5s9fSKKBTpIB
-         wmbg==
-X-Forwarded-Encrypted: i=1; AJvYcCVKdIQn62ctLVer3DZov67Xi0x88myt8yz/QRuDukWCS7XA4yplvQDPKywDqr8ccl3gPrdminN4GbSQD0RbW7k6@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfDR5NrXyqzfaPaW/TWekdBXjghLYIcbCPHrwTiVEZVg6LgPXD
-	0+Pz9zvQSXckEJwcEViZ+/BPl8fJSJYsPWW8sMPGZr2JYNSEdWQauUSwE9+8eqgZUuE829HZJAg
-	V4ylAtHA5/E91Ynqna6/Gt72QUzLCv9GqJir+mIC3xMBAgHwyN62flmKgqC2azA==
-X-Gm-Gg: ASbGncs2tSTud+FiV1w7i4AYwc6DJug/rRqj+5G7g1fk2DVx6gJLjOqKImcoG5nRPdr
-	B4oCAxfEUVgjU6MLT8Mz7lNunmLRfXpqP4gy6XMZPM3JQj1oHmmYbU6KTxzCuBWOjBemXeWPtj3
-	Qc5UT40wfqcLASPbG+huM7cr9dEp2quDvAA2OHgLdIZ/PreaOflrsB0z/L8MlFBvLgpXtcjeOXh
-	BOXf6pwlVfKUNulVAK3am3cBzCxeFeipadE2ywudWmf
-X-Google-Smtp-Source: AGHT+IGq1HTtZu40xUa2NY7c7FiFRDtN7uU0OkSXjbMJZserLy3vpQE/fGL+wYuLNr3A7nBntoCA3Il4CzM721+30s8=
-X-Received: by 2002:a17:902:da89:b0:240:6076:20cd with SMTP id
- d9443c01a7336-26801295907mr771895ad.15.1758049749441; Tue, 16 Sep 2025
- 12:09:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d4pN7l5F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A073C4CEF0;
+	Tue, 16 Sep 2025 19:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758050106;
+	bh=M/yZWrPfZpewGGEimNsWyMgo4jxRNbJ0o5evV2UPJXQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d4pN7l5F3ObPMsSiH+6ToDPrkWwsn9/0478vLF60M9F3mLc9zYheSdv0tMQUE5UgN
+	 rHGCglUsJRG/jgfEin80p4la0b7iFYe/lcJ2iTrl8JwdH+3Fc9peMSW2JxAiTme5Wc
+	 r7gEHewXWJnpQRfvwWqQga8lAk9IZDwC5RCcpD202qotMqR8lnR9QVO971Zi5GL7LC
+	 VN7l7MyGnJE7MBHsYAcZSp4UmEnAIKmal1R4Yd7OzEPbqGbZMFnK/1fy/Odq9I6aTf
+	 RycCWO/yNDXGnbTmxf33aP1UHruSbedien291IDmPdfFMbES650ODAaR2aGy//8b13
+	 Me9jjCaZJncQg==
+Date: Tue, 16 Sep 2025 16:15:03 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Chun-Tse Shao <ctshao@google.com>,
+	James Clark <james.clark@linaro.org>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1 4/4] perf test: Avoid uncore_imc/clockticks in
+ uniquification test
+Message-ID: <aMm3N0dfD_r46K6A@x1>
+References: <20250821221834.1312002-1-irogers@google.com>
+ <20250821221834.1312002-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250821221834.1312002-1-irogers@google.com> <20250821221834.1312002-3-irogers@google.com>
- <aMm0qUcdeDJmwuyI@x1>
-In-Reply-To: <aMm0qUcdeDJmwuyI@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 16 Sep 2025 12:08:58 -0700
-X-Gm-Features: AS18NWAkSTFha9L4A5hQRM2mmJRNQINB2wG_5T6T7jo8wX-J1HZctrKwLmV-8WQ
-Message-ID: <CAP-5=fU8NXY+mbnkmhq15yncXx0TxE7Zc1zu23o+d+3ZyXjSjA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] perf test: Don't leak workload gopipe in PERF_RECORD_*
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Chun-Tse Shao <ctshao@google.com>, James Clark <james.clark@linaro.org>, 
-	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250821221834.1312002-5-irogers@google.com>
 
-On Tue, Sep 16, 2025 at 12:04=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Thu, Aug 21, 2025 at 03:18:32PM -0700, Ian Rogers wrote:
-> > The test starts a workload and then opens events. If the events fail
-> > to open, for example because of perf_event_paranoid, the gopipe of the
-> > workload is leaked and the file descriptor leak check fails when the
-> > test exits. To avoid this cancel the workload when opening the events
-> > fails.
-> >
-> > Before:
-> > ```
-> > $ perf test -vv 7
-> >   7: PERF_RECORD_* events & perf_sample fields:
-> > --- start ---
->
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ patch -p1 < b
-> patching file tools/perf/tests/perf-record.c
-> Hunk #1 succeeded at 130 (offset 15 lines).
-> Hunk #2 succeeded at 142 with fuzz 1 (offset 15 lines).
-> Hunk #3 succeeded at 154 (offset 15 lines).
-> Hunk #4 succeeded at 167 (offset 15 lines).
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ git log --oneline -5 tools/perf/=
-tests/perf-record.c
-> 576bd7a8c90c48e9 (x1/perf-tools-next, x1/HEAD, five/perf-tools-next, five=
-/HEAD) perf tests record: Update testcase to fix usage of affinity for mach=
-ines with #CPUs > 1K
-> b4c658d4d63d6149 perf target: Remove uid from target
-> dc6d2bc2d893a878 perf sample: Make user_regs and intr_regs optional
-> fd8d5a3b076c033f perf tests: Add missing event.h include
-> 9823147da6c893d9 perf tools: Move 'struct perf_sample' to a separate head=
-er file to disentangle headers
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$
->
-> Can you please check that it is still ok?
->
-> I processed the first in the series and now I'm going thru the other
-> two.
+On Thu, Aug 21, 2025 at 03:18:34PM -0700, Ian Rogers wrote:
+> The detection of uncore_imc may happen for free running PMUs and the
+> clockticks event may be present on uncore_clock. Rewrite the test to
+> detect duplicated/deduplicated events from perf list, not hardcoded to
+> uncore_imc.
 
-Thanks Arnaldo! I'm not seeing the patch on:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/log/?h=3Dtmp.perf-tools-next
-I'm happy to check.
+acme@x1:~/git/perf-tools-next$ perf test 96
+ 96: perf stat events uniquifying                                    : FAILED!
+acme@x1:~/git/perf-tools-next$ perf test -vv 96
+Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
+ 96: perf stat events uniquifying:
+--- start ---
+test child forked, pid 86847
+Uniquification of PMU sysfs events test
+Testing event uncore_imc_free_running/data_read/ is uniquified to uncore_imc_free_running_0/data_read/
+Error:
+The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (uncore_imc_free_running/data_read/u).
+"dmesg | grep -i perf" may provide additional information.
 
-Ian
+Unexpected signal in test_event_uniquifying
+---- end(-1) ----
+ 96: perf stat events uniquifying                                    : FAILED!
 
-> - Arnaldo
->
-> > test child forked, pid 1189568
-> > Using CPUID GenuineIntel-6-B7-1
-> > ------------------------------------------------------------
-> > perf_event_attr:
-> >   type                             0 (PERF_TYPE_HARDWARE)
-> >   config                           0xa00000000 (cpu_atom/PERF_COUNT_HW_=
-CPU_CYCLES/)
-> >   disabled                         1
-> > ------------------------------------------------------------
-> > sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8
-> > sys_perf_event_open failed, error -13
-> > ------------------------------------------------------------
-> > perf_event_attr:
-> >   type                             0 (PERF_TYPE_HARDWARE)
-> >   config                           0xa00000000 (cpu_atom/PERF_COUNT_HW_=
-CPU_CYCLES/)
-> >   disabled                         1
-> >   exclude_kernel                   1
-> > ------------------------------------------------------------
-> > sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 =3D 3
-> > ------------------------------------------------------------
-> > perf_event_attr:
-> >   type                             0 (PERF_TYPE_HARDWARE)
-> >   config                           0x400000000 (cpu_core/PERF_COUNT_HW_=
-CPU_CYCLES/)
-> >   disabled                         1
-> > ------------------------------------------------------------
-> > sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8
-> > sys_perf_event_open failed, error -13
-> > ------------------------------------------------------------
-> > perf_event_attr:
-> >   type                             0 (PERF_TYPE_HARDWARE)
-> >   config                           0x400000000 (cpu_core/PERF_COUNT_HW_=
-CPU_CYCLES/)
-> >   disabled                         1
-> >   exclude_kernel                   1
-> > ------------------------------------------------------------
-> > sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 =3D 3
-> > Attempt to add: software/cpu-clock/
-> > ..after resolving event: software/config=3D0/
-> > cpu-clock -> software/cpu-clock/
-> > ------------------------------------------------------------
-> > perf_event_attr:
-> >   type                             1 (PERF_TYPE_SOFTWARE)
-> >   size                             136
-> >   config                           0x9 (PERF_COUNT_SW_DUMMY)
-> >   sample_type                      IP|TID|TIME|CPU
-> >   read_format                      ID|LOST
-> >   disabled                         1
-> >   inherit                          1
-> >   mmap                             1
-> >   comm                             1
-> >   enable_on_exec                   1
-> >   task                             1
-> >   sample_id_all                    1
-> >   mmap2                            1
-> >   comm_exec                        1
-> >   ksymbol                          1
-> >   bpf_event                        1
-> >   { wakeup_events, wakeup_watermark } 1
-> > ------------------------------------------------------------
-> > sys_perf_event_open: pid 1189569  cpu 0  group_fd -1  flags 0x8
-> > sys_perf_event_open failed, error -13
-> > perf_evlist__open: Permission denied
-> > ---- end(-2) ----
-> > Leak of file descriptor 6 that opened: 'pipe:[14200347]'
-> >
-> > ---- unexpected signal (6) ----
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> > Failed to read build ID for //anon
-> >     #0 0x565358f6666e in child_test_sig_handler builtin-test.c:311
-> >     #1 0x7f29ce849df0 in __restore_rt libc_sigaction.c:0
-> >     #2 0x7f29ce89e95c in __pthread_kill_implementation pthread_kill.c:4=
-4
-> >     #3 0x7f29ce849cc2 in raise raise.c:27
-> >     #4 0x7f29ce8324ac in abort abort.c:81
-> >     #5 0x565358f662d4 in check_leaks builtin-test.c:226
-> >     #6 0x565358f6682e in run_test_child builtin-test.c:344
-> >     #7 0x565358ef7121 in start_command run-command.c:128
-> >     #8 0x565358f67273 in start_test builtin-test.c:545
-> >     #9 0x565358f6771d in __cmd_test builtin-test.c:647
-> >     #10 0x565358f682bd in cmd_test builtin-test.c:849
-> >     #11 0x565358ee5ded in run_builtin perf.c:349
-> >     #12 0x565358ee6085 in handle_internal_command perf.c:401
-> >     #13 0x565358ee61de in run_argv perf.c:448
-> >     #14 0x565358ee6527 in main perf.c:555
-> >     #15 0x7f29ce833ca8 in __libc_start_call_main libc_start_call_main.h=
-:74
-> >     #16 0x7f29ce833d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:12=
-8
-> >     #17 0x565358e391c1 in _start perf[851c1]
-> >   7: PERF_RECORD_* events & perf_sample fields                       : =
-FAILED!
-> > ```
-> >
-> > After:
-> > ```
-> > $ perf test 7
-> >   7: PERF_RECORD_* events & perf_sample fields                       : =
-Skip (permissions)
-> > ```
-> >
-> > Fixes: 16d00fee7038 ("perf tests: Move test__PERF_RECORD into separate =
-object")
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/tests/perf-record.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/tools/perf/tests/perf-record.c b/tools/perf/tests/perf-rec=
-ord.c
-> > index 0b3c37e66871..8c79b5166a05 100644
-> > --- a/tools/perf/tests/perf-record.c
-> > +++ b/tools/perf/tests/perf-record.c
-> > @@ -115,6 +115,7 @@ static int test__PERF_RECORD(struct test_suite *tes=
-t __maybe_unused, int subtest
-> >       if (err < 0) {
-> >               pr_debug("sched__get_first_possible_cpu: %s\n",
-> >                        str_error_r(errno, sbuf, sizeof(sbuf)));
-> > +             evlist__cancel_workload(evlist);
-> >               goto out_delete_evlist;
-> >       }
-> >
-> > @@ -126,6 +127,7 @@ static int test__PERF_RECORD(struct test_suite *tes=
-t __maybe_unused, int subtest
-> >       if (sched_setaffinity(evlist->workload.pid, cpu_mask_size, &cpu_m=
-ask) < 0) {
-> >               pr_debug("sched_setaffinity: %s\n",
-> >                        str_error_r(errno, sbuf, sizeof(sbuf)));
-> > +             evlist__cancel_workload(evlist);
-> >               goto out_delete_evlist;
-> >       }
-> >
-> > @@ -137,6 +139,7 @@ static int test__PERF_RECORD(struct test_suite *tes=
-t __maybe_unused, int subtest
-> >       if (err < 0) {
-> >               pr_debug("perf_evlist__open: %s\n",
-> >                        str_error_r(errno, sbuf, sizeof(sbuf)));
-> > +             evlist__cancel_workload(evlist);
-> >               goto out_delete_evlist;
-> >       }
-> >
-> > @@ -149,6 +152,7 @@ static int test__PERF_RECORD(struct test_suite *tes=
-t __maybe_unused, int subtest
-> >       if (err < 0) {
-> >               pr_debug("evlist__mmap: %s\n",
-> >                        str_error_r(errno, sbuf, sizeof(sbuf)));
-> > +             evlist__cancel_workload(evlist);
-> >               goto out_delete_evlist;
-> >       }
-> >
-> > --
-> > 2.51.0.rc2.233.g662b1ed5c5-goog
+
+Works for root:
+
+acme@x1:~/git/perf-tools-next$ sudo su -
+[sudo] password for acme: 
+root@x1:~# perf test 96
+ 96: perf stat events uniquifying                                    : Ok
+root@x1:~#
+
+acme@x1:~/git/perf-tools-next$ ls -la /sys/bus/event_source/devices/uncore_imc_free_running_*/events/
+/sys/bus/event_source/devices/uncore_imc_free_running_0/events/:
+total 0
+drwxr-xr-x. 2 root root    0 Sep 16 16:09 .
+drwxr-xr-x. 5 root root    0 Sep 16 16:09 ..
+-r--r--r--. 1 root root 4096 Sep 16 16:09 data_read
+-r--r--r--. 1 root root 4096 Sep 16 16:09 data_read.scale
+-r--r--r--. 1 root root 4096 Sep 16 16:09 data_read.unit
+-r--r--r--. 1 root root 4096 Sep 16 16:09 data_total
+-r--r--r--. 1 root root 4096 Sep 16 16:09 data_total.scale
+-r--r--r--. 1 root root 4096 Sep 16 16:09 data_total.unit
+-r--r--r--. 1 root root 4096 Sep 16 16:09 data_write
+-r--r--r--. 1 root root 4096 Sep 16 16:09 data_write.scale
+-r--r--r--. 1 root root 4096 Sep 16 16:09 data_write.unit
+
+/sys/bus/event_source/devices/uncore_imc_free_running_1/events/:
+total 0
+drwxr-xr-x. 2 root root    0 Sep 16 16:09 .
+drwxr-xr-x. 5 root root    0 Sep 16 16:09 ..
+-r--r--r--. 1 root root 4096 Sep 16 16:09 data_read
+-r--r--r--. 1 root root 4096 Sep 16 16:09 data_read.scale
+-r--r--r--. 1 root root 4096 Sep 16 16:09 data_read.unit
+-r--r--r--. 1 root root 4096 Sep 16 16:09 data_total
+-r--r--r--. 1 root root 4096 Sep 16 16:09 data_total.scale
+-r--r--r--. 1 root root 4096 Sep 16 16:09 data_total.unit
+-r--r--r--. 1 root root 4096 Sep 16 16:09 data_write
+-r--r--r--. 1 root root 4096 Sep 16 16:09 data_write.scale
+-r--r--r--. 1 root root 4096 Sep 16 16:09 data_write.unit
+acme@x1:~/git/perf-tools-next$
+
+
+ 
+> Fixes: 070b315333ee ("perf test: Restrict uniquifying test to machines with 'uncore_imc'")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  .../tests/shell/stat+event_uniquifying.sh     | 105 ++++++++----------
+>  1 file changed, 44 insertions(+), 61 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/stat+event_uniquifying.sh b/tools/perf/tests/shell/stat+event_uniquifying.sh
+> index bf54bd6c3e2e..9bc7a1f520f9 100755
+> --- a/tools/perf/tests/shell/stat+event_uniquifying.sh
+> +++ b/tools/perf/tests/shell/stat+event_uniquifying.sh
+> @@ -4,74 +4,57 @@
+>  
+>  set -e
+>  
+> -stat_output=$(mktemp /tmp/__perf_test.stat_output.XXXXX)
+> -perf_tool=perf
+>  err=0
+> +stat_output=$(mktemp /tmp/__perf_test.stat_output.XXXXX)
+>  
+> -test_event_uniquifying() {
+> -  # We use `clockticks` in `uncore_imc` to verify the uniquify behavior.
+> -  pmu="uncore_imc"
+> -  event="clockticks"
+> -
+> -  # If the `-A` option is added, the event should be uniquified.
+> -  #
+> -  # $perf list -v clockticks
+> -  #
+> -  # List of pre-defined events (to be used in -e or -M):
+> -  #
+> -  #   uncore_imc_0/clockticks/                           [Kernel PMU event]
+> -  #   uncore_imc_1/clockticks/                           [Kernel PMU event]
+> -  #   uncore_imc_2/clockticks/                           [Kernel PMU event]
+> -  #   uncore_imc_3/clockticks/                           [Kernel PMU event]
+> -  #   uncore_imc_4/clockticks/                           [Kernel PMU event]
+> -  #   uncore_imc_5/clockticks/                           [Kernel PMU event]
+> -  #
+> -  #   ...
+> -  #
+> -  # $perf stat -e clockticks -A -- true
+> -  #
+> -  #  Performance counter stats for 'system wide':
+> -  #
+> -  # CPU0            3,773,018      uncore_imc_0/clockticks/
+> -  # CPU0            3,609,025      uncore_imc_1/clockticks/
+> -  # CPU0                    0      uncore_imc_2/clockticks/
+> -  # CPU0            3,230,009      uncore_imc_3/clockticks/
+> -  # CPU0            3,049,897      uncore_imc_4/clockticks/
+> -  # CPU0                    0      uncore_imc_5/clockticks/
+> -  #
+> -  #        0.002029828 seconds time elapsed
+> -
+> -  echo "stat event uniquifying test"
+> -  uniquified_event_array=()
+> -
+> -  # Skip if the machine does not have `uncore_imc` device.
+> -  if ! ${perf_tool} list pmu | grep -q ${pmu}; then
+> -    echo "Target does not support PMU ${pmu} [Skipped]"
+> -    err=2
+> -    return
+> -  fi
+> +cleanup() {
+> +  rm -f "${stat_output}"
+>  
+> -  # Check how many uniquified events.
+> -  while IFS= read -r line; do
+> -    uniquified_event=$(echo "$line" | awk '{print $1}')
+> -    uniquified_event_array+=("${uniquified_event}")
+> -  done < <(${perf_tool} list -v ${event} | grep ${pmu})
+> +  trap - EXIT TERM INT
+> +}
+>  
+> -  perf_command="${perf_tool} stat -e $event -A -o ${stat_output} -- true"
+> -  $perf_command
+> +trap_cleanup() {
+> +  echo "Unexpected signal in ${FUNCNAME[1]}"
+> +  cleanup
+> +  exit 1
+> +}
+> +trap trap_cleanup EXIT TERM INT
+>  
+> -  # Check the output contains all uniquified events.
+> -  for uniquified_event in "${uniquified_event_array[@]}"; do
+> -    if ! cat "${stat_output}" | grep -q "${uniquified_event}"; then
+> -      echo "Event is not uniquified [Failed]"
+> -      echo "${perf_command}"
+> -      cat "${stat_output}"
+> -      err=1
+> -      break
+> -    fi
+> +test_event_uniquifying() {
+> +  echo "Uniquification of PMU sysfs events test"
+> +
+> +  # Read events from perf list with and without -v. With -v the duplicate PMUs
+> +  # aren't deduplicated. Note, json events are listed by perf list without a
+> +  # PMU.
+> +  read -ra pmu_events <<< "$(perf list --raw pmu)"
+> +  read -ra pmu_v_events <<< "$(perf list -v --raw pmu)"
+> +  # For all non-deduplicated events.
+> +  for pmu_v_event in "${pmu_v_events[@]}"; do
+> +    # If the event matches an event in the deduplicated events then it musn't
+> +    # be an event with duplicate PMUs, continue the outer loop.
+> +    for pmu_event in "${pmu_events[@]}"; do
+> +      if [[ "$pmu_v_event" == "$pmu_event" ]]; then
+> +        continue 2
+> +      fi
+> +    done
+> +    # Strip the suffix from the non-deduplicated event's PMU.
+> +    event=$(echo "$pmu_v_event" | sed -E 's/_[0-9]+//')
+> +    for pmu_event in "${pmu_events[@]}"; do
+> +      if [[ "$event" == "$pmu_event" ]]; then
+> +        echo "Testing event ${event} is uniquified to ${pmu_v_event}"
+> +        perf stat -e "$event" -A -o ${stat_output} -- true
+> +        # Ensure the non-deduplicated event appears in the output.
+> +        if ! grep -q "${pmu_v_event}" "${stat_output}"; then
+> +          echo "Uniquification of PMU sysfs events test [Failed]"
+> +          cat "${stat_output}"
+> +          err=1
+> +        fi
+> +        break
+> +      fi
+> +    done
+>    done
+>  }
+>  
+>  test_event_uniquifying
+> -rm -f "${stat_output}"
+> +cleanup
+>  exit $err
+> -- 
+> 2.51.0.rc2.233.g662b1ed5c5-goog
