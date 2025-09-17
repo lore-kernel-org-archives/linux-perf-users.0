@@ -1,55 +1,55 @@
-Received: from mail-yx1-f73.google.com (mail-yx1-f73.google.com [74.125.224.73])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096DF2FFF8A
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 19:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C98E301485
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 19:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758139102; cv=none; b=PqDlTltVzwmNRxN5G6Wr4XPhRFQ0xkVKWms6cD2cyY2b1K2XFAgsIle7mYRbni0fGQQcMFalQbW4De4Zn8Ua8yk2FEiD/wfXCripO1wq7FJa4ivzPLmsC1A6X6opFj5uhAHB6vB8BcjLn9Lg6YR4y8hQdUJjx5U0UKdwRiFjSoE=
+	t=1758139103; cv=none; b=pG73W8ApYp5pz2Qkir7vurQx347m6EVn8Yc4X4SFkKjEBGkLzVI0aOzGl2iDZETPIoFkhlHnBez5xrLfZy89SdV+pDA60DAIgLTtOl6YRKwhBOiOb8SSkF2Z2DyWH1lur0KKvZxTg9+a7nEKVDtpADbafGeS+LXh235ttatcshU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758139102; c=relaxed/simple;
-	bh=YaCTe7tvAvbh0b1M/IwTP5q+eEGK9U/Dhs+HYoFfQOc=;
+	s=arc-20240116; t=1758139103; c=relaxed/simple;
+	bh=0lWzt9RO+8jsRK3poX0e6qyYY2f7EOwhvwqUc9lYhdU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ILkNrSHY0JgK2UGQf952gLiT1jaVFQ4dPptd6Iyr1Cqa+c9hJD0Nj7Sel3b6ctur0sAzAUQPgk7js9MJByAZemLbRq6WKFXmJYsTgEtekfqDc1USc+W3NquCUmJXmlNCYuwLq+3YuPZLeeVomY+temqMDT0JMeB6sY5zZDixjC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=w6kZ2psm; arc=none smtp.client-ip=74.125.224.73
+	 To:Cc:Content-Type; b=avDgspfT9sg767QOpph+1KC6VzwjLXhHC9p4LmgT5deSazS10z3O3cpEbney3Kme+bt4dyk4+iQFVLjvn9YMNfJMJu+tPhwCAgYTZb4ysbQfdK8SOgtct10epclRWh565F0pRECwheJ2Op4ee8SLywMXrP85fWAytaFTAUceLFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EgUMSkOW; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="w6kZ2psm"
-Received: by mail-yx1-f73.google.com with SMTP id 956f58d0204a3-6119ec806f9so171493d50.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 12:58:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EgUMSkOW"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-71e7181cddeso2770737b3.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 12:58:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1758139100; x=1758743900; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1758139101; x=1758743901; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ff8iQk0FPzgWQVhFkOxEf6wop7fJ/8iqGcNpfT69dcA=;
-        b=w6kZ2psmpYUAw9m6s+W3xXe4v95RQ0+PvdoB2XN+h+1B1uKgeDTuB8jVWZJBIiTP6l
-         qStORZImJ+UAuBQDOCBN3n9Jb0BjjPAC1GfRtQ5dvQSig8nA0Ywp89QZp7izX/YzqGLH
-         IPV2zKfe3UKgiVQ4buySR4sXBHUF5I8+OGj51NwhXN4gDloX5dDxQ/Vm5LHUlo6KFajV
-         45pJQnWFB0KCIeIVjLZq+wMU4AtVYkU74uPeHn6TutkSpv8Z9nh316ZGlUkSo+kCnZYo
-         0QB97TUCJwr3Wb6Sz2/giQiG1/5LQZ7WoqF2QWeJjeT2K1tZceWSebmkalSpHVggo68G
-         RP9g==
+        bh=h9DHlI9Ihi3mnPuz7nsW2r0i9Vkc+j3chUUZTsmP0Lc=;
+        b=EgUMSkOW4m0qQ4FP9uhV7svX09AA2YpwpyxdptZ3cGPie6aQAyryGp/8VXZzLQ7SNO
+         yEVABSmKLl0Lm4306zpUAcNB/PM4qE77BG0LBK4DawJuYfLDu77qWB2iXCdtskN02+c6
+         26nk7G3jzjSWRNBmvnstBE19rnnrNViB7s9xmCXPtESKpVLqVTkr3ncv+hzEjxWn88Ny
+         b5Tq8jdCRHAi3TQpfbiB3AzMYsKLA/hkAAlyaBTu2lT6ExOuDdLHR0rJxJAAMXSWjY7X
+         C1lD9Hi2cnHWUYT3kt0ZtCR0jM3AJO4rmt4OJYZJjKVuFryf8KJLOKsCMTQmzeM1Phxi
+         hCEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758139100; x=1758743900;
+        d=1e100.net; s=20230601; t=1758139101; x=1758743901;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ff8iQk0FPzgWQVhFkOxEf6wop7fJ/8iqGcNpfT69dcA=;
-        b=iykYpcUJOE2MOBBofNbosgRxzRJyqvwNbTqPmoHi+S4scisMpMDGpaS9TMpziDXcz8
-         mItD3BYFTSSDdd/5PRMcPWBAKzggLpSe4Ogey52IUH7rE5ZbOWueEFzXVBYnP2yrMTgZ
-         rqr1ozJxE6m7VEr39AhL/ndj87wSes93ySranaSI+KCLgHP4W92XIPmysRmmShuYz/OR
-         VgMeJJHDLK+rZy4oAFvy9D93etEdk3k1QJOE1P7+VYtjx/2LyOJvJ9a3o2FjIG4D4309
-         qRMcUgWtaHpd/QEkATmJGSJOsj9yFnYfxAPDyfSJeRwdteOC1GW8GPu5uq3x0jz/fpMI
-         SYMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCHvBO7VbDDNOEQ3fwqT+6GZF+N46fN86ZFjvw4f6Yo+AESjqj84ZvlPFgg3FP5ipa0nM/ZJ1kODP64kS89VoQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpIWiX8rFR9DZz/rhBRNmuahswFe1HgfAZGIA3rXQx4Gfcha0Q
-	ImGdSE74HOT4AE8H9KbyZX3+dsyFVzSQssKZwPP5hfBmBG00izYzqijkQ8nCGZap1UX683Mub70
-	7BOsmeIhXZw==
-X-Google-Smtp-Source: AGHT+IFCBl5FOhbjQY+swMvC9WLhg4anbTbvjABfmmdmioCSc+TNQepIhR3e/bBE3JHsnu8q/HRpmofN+Z6u
-X-Received: from ybbby7.prod.google.com ([2002:a05:6902:1707:b0:ea4:791:2410])
- (user=zecheng job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6902:5408:b0:e97:b52:a814
- with SMTP id 3f1490d57ef6-ea5c044dd64mr3348542276.34.1758139100119; Wed, 17
- Sep 2025 12:58:20 -0700 (PDT)
-Date: Wed, 17 Sep 2025 19:58:06 +0000
+        bh=h9DHlI9Ihi3mnPuz7nsW2r0i9Vkc+j3chUUZTsmP0Lc=;
+        b=NEL1LFVnvNygx4aiExpSRNz0deVowf3e7ZxEFVC1UKKH2mGdcjjhNcEY7DQ7hBOBCg
+         ygpxahmGA8doeGtC+4a5LendjBlAixg7+cuQKGvUJpakOc55Hx+RalJvSxxgq0LUiJ1L
+         yoDxV2am8ZN8woubXHNoA1WC1xFLRhtuNN+enhrxGEAr8sheqszsV5xKG0jf1+YTuFbo
+         zVGojlgPUdHStbV5moTvg84j8LHwTn/hpzZUAemv1STOyv0OjX+vE4zLcLH5Klfw8BHV
+         cyA6YW+SfDKqphfeMTSzhSrHmE2hvguF/LYdzQaNVq98trbcdvQGm59VOZCKeSDbQ5Iy
+         cwGg==
+X-Forwarded-Encrypted: i=1; AJvYcCWAhpauh2MWEEY+vE/8vs7kGHhX4KyJx+DqTEh0nmBbsECbIGeiwk5pAlOhkiLoylPtlxCRPvi/kgXgO/ATWtwP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yym7HJuGF9V4IEj8m1MpNZHj+JF3l/3kz0PNzJx1YFiKhVOh664
+	wyAL/CcZOtV+/RxHL+aCd7zf6JA3i6jfxpRCkmxvGl0ZpMtydkyDXmMS6mVKoqlOAn7JqbVEp9Y
+	niCml8j5ZRw==
+X-Google-Smtp-Source: AGHT+IEwbYCWP2bNi/CnkWrXxccCC22yUDESZA7PFDkENPsFEF4nWCL7Y9MLRk9ACZV2PmfW8TTOgQwRgw6k
+X-Received: from ywbbg13.prod.google.com ([2002:a05:690c:30d:b0:722:83d1:81db])
+ (user=zecheng job=prod-delivery.src-stubby-dispatcher) by 2002:a05:690c:d0b:b0:734:81fb:8ba0
+ with SMTP id 00721157ae682-7389129df2fmr29782737b3.19.1758139101185; Wed, 17
+ Sep 2025 12:58:21 -0700 (PDT)
+Date: Wed, 17 Sep 2025 19:58:07 +0000
 In-Reply-To: <20250917195808.2514277-1-zecheng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250917195808.2514277-1-zecheng@google.com>
 X-Mailer: git-send-email 2.51.0.384.g4c02a37b29-goog
-Message-ID: <20250917195808.2514277-9-zecheng@google.com>
-Subject: [PATCH v3 08/10] perf dwarf-aux: Preserve typedefs in match_var_offset
+Message-ID: <20250917195808.2514277-10-zecheng@google.com>
+Subject: [PATCH v3 09/10] perf annotate: Improve type comparison from
+ different scopes
 From: Zecheng Li <zecheng@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,54 +73,36 @@ Cc: Xu Liu <xliuprof@google.com>, linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org, Zecheng Li <zecheng@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Since we are skipping the check_variable, we need to preserve typedefs
-in match_var_offset to match the results by __die_get_real_type. Also
-move the (offset == 0) branch after the is_pointer check to ensure the
-correct type is used, fixing cases where an incorrect pointer type was
-chosen when the access offset was 0.
+When comparing types from different scopes, first compare their type
+offsets. A larger offset means the field belongs to an outer
+(enclosing) struct. This helps resolve cases where a pointer is found
+in an inner scope, but a struct containing that pointer exists in an
+outer scope. Previously, is_better_type would prefer the pointer type,
+but the struct type is actually more complete and should be chosen.
+
+Prefer types from outer scopes when is_better_type cannot determine
+a better type. This sometimes helps pick a more complete type.
 
 Signed-off-by: Zecheng Li <zecheng@google.com>
 ---
- tools/perf/util/dwarf-aux.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ tools/perf/util/annotate-data.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index b57cdc8860f0..b2189de07daf 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -1395,24 +1395,24 @@ static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
- 	Dwarf_Word size;
- 	s64 offset = addr_offset - addr_type;
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index 7e4c045d0f4d..51765bd36c47 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -1622,7 +1622,9 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
+ 				pr_debug_dtp("type_offset=%#x\n", type_offset);
+ 			}
  
--	if (offset == 0) {
--		/* Update offset relative to the start of the variable */
--		data->offset = 0;
--		return true;
--	}
--
- 	if (offset < 0)
- 		return false;
- 
--	if (die_get_real_type(die_mem, &data->type) == NULL)
-+	if (__die_get_real_type(die_mem, &data->type) == NULL)
- 		return false;
- 
- 	if (is_pointer && dwarf_tag(&data->type) == DW_TAG_pointer_type) {
- 		/* Get the target type of the pointer */
--		if (die_get_real_type(&data->type, &data->type) == NULL)
-+		if (__die_get_real_type(&data->type, &data->type) == NULL)
- 			return false;
- 	}
- 
-+	if (offset == 0) {
-+		/* Update offset relative to the start of the variable */
-+		data->offset = 0;
-+		return true;
-+	}
-+
- 	if (dwarf_aggregate_size(&data->type, &size) < 0)
- 		return false;
- 
+-			if (!found || is_better_type(type_die, &mem_die)) {
++			if (!found || dloc->type_offset < type_offset ||
++				(dloc->type_offset == type_offset &&
++				 !is_better_type(&mem_die, type_die))) {
+ 				*type_die = mem_die;
+ 				dloc->type_offset = type_offset;
+ 				found = true;
 -- 
 2.51.0.384.g4c02a37b29-goog
 
