@@ -1,243 +1,490 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E75F2367AC;
-	Wed, 17 Sep 2025 04:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758085133; cv=fail; b=MYfPeipn1kZlhufpLhNQL5qhAGVP+6dfrjmuVNqcx+i70K5n3Ujd260zSAycQ8jsh0B6IMC6JKyXFQKKm+3ATzr4cJlaIlF9VHjRf1c19//LfnAXAyUNxhvbA5DjSRB9ryXxh3vLAWWF+PAQ6DLm8INn0oJ0GJU1F2iE76jRbVs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758085133; c=relaxed/simple;
-	bh=W2RPfioLwUv4GzV6Qhqh+U7QIWt/Snwo4ovelmROK3E=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=OnbMlB0d/QTKbOcyvqC6tkdod9JnzNLkZjRXBNWL4QqUAP0062V94omlD2sdqGflBYsuN+VB61/45fpM/PnLRhyUDqr3cOlwTBfC5tYJWeOcmq1zUcxfSpz5jVChBD2McaEXHvQgjQeEa/o87UTOB5R6G8pRsYsu10KDCDm47EE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WSlCToi5; arc=fail smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676B9266B40
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 05:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758086007; cv=none; b=qhY5Tye7yE8ZRGDo2qOOSC4rZ3gYAXA+KmCHPfAZDcOcgWXrvWgvqLEqtaM+MBtaNTRkLb3YrmPIrEy7gt1xIbQvxXRCQas37xvwkxYFffBu45Hv1y3xLYAc0VAmFzIa9qVCRA69QhT/16cZKzb8R8BH/5dfUJCGP3aIFYqgubg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758086007; c=relaxed/simple;
+	bh=Nq52xXLWJebwfPO31IY9hLI0UF4CBOmpsKAXoMrMt6Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VY5Z1eN+CINggpRNxP/Wh5aKxt/48KGXCm1vxEtnE9ReR4kA5LGZefjlUc3Er1Sz0eEl+h4DKI/xF5jNoT8SGg56sjtTHxoeu32VxC+GH5t/Ze36gLvoRhLyQhHQB4EaOqB7c2HgCqbdBP8GwEgpYkREG0z6s9TU2yZJVstZh0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=thNlFwSW; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WSlCToi5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758085133; x=1789621133;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=W2RPfioLwUv4GzV6Qhqh+U7QIWt/Snwo4ovelmROK3E=;
-  b=WSlCToi5ug8I9HM6+XHSE6fDAdSoivywcg5SrP9Oae7rxHOqRg2Fpisb
-   WJeUIfr2SEoeCZAUAqUuQtytHYQyNMtUT8zyG2MsCFKxvR+bgXi1r1Fg+
-   W6ELuQl19Za+/HpTGtnseNh+hGo6C3X0o1ltEk30bQRcvOPEmYHI1rVZG
-   2AhAR48BIuYID5q6er1LlxxDVS/6z3JnlTbvibEj/JOhwLNGfyfsvVq1m
-   IDFNGXUCJkD65qbSkO7SYoFdd/d+ui/D3Qx8kiApg5bFYuoU4BrmH1Gr6
-   3IqOn156eZNpxUlO8Cl9aB/0CN8kRYjCh/kvG6rItmosR45sZIcZZ4izm
-   A==;
-X-CSE-ConnectionGUID: ccyuau+zROCXxfwbwFssQg==
-X-CSE-MsgGUID: Z8cDGnIxQXSmUB8uWc/rug==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="60296666"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="60296666"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2025 21:58:50 -0700
-X-CSE-ConnectionGUID: W0Ef4099Qc+h1v3/tm1TIA==
-X-CSE-MsgGUID: GeGnNsqkTe2UXDRzncOrmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,271,1751266800"; 
-   d="scan'208";a="175540052"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2025 21:58:45 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Tue, 16 Sep 2025 21:58:44 -0700
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17 via Frontend Transport; Tue, 16 Sep 2025 21:58:44 -0700
-Received: from PH7PR06CU001.outbound.protection.outlook.com (52.101.201.52) by
- edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Tue, 16 Sep 2025 21:58:44 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vWYAj24oVOPewhVPWe157x7EwDiILhaF4Cmbdr0cWUtdc+2PU2vyoFQQGs3fSPgl2YzyIq1y/h/TMISew6YxG/MOCYpMa7+XAPwLAZTiMYpeFP3qtj0HYxUGapcmJ0tAcJUs8rSU5PCQvScv0G1AGQ7G5CD0WfeyL4sCc9LLoNeq0anKFkB6M5XgAq2AmYQlD2ziwpu4Cwov02mpQ9kzCr7xhYjABmXRXgMgkVW8SRSd15haQfpbrjn08tYpgWl6n9ei2AkQ+jiYgh14bhKQq9V0xYUjjk94IMaLX8oQ2ntONuUOLd0VSf8ZqZBwYtRbvMg4oWde3fKRF2Qc82NnOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4vL6Ta3VkEhMa/XEaapJ+l+VblJ3u/wCTCJ8C+X82Vo=;
- b=AU3tMOvIZF4rKmY2BwBZErCVdSrtb+G19Em7JsMIIiP4ZQxU4yYiPdqyR8NzFLw0BpN6tzqym5RIRL9LbA/q33B39Gk2srXN3ShbxcflM7NQI2kF0lmuXmf/yKWWh+bREjTYn9Twqftg/oj4NuVFizmgD8cM8zRIUxzO5OAktVtIwBL8X5xMIQEFJ3XwAQgbRpUhnPh39lFsFXnEaU3y4f0TFSxm9SU+EZ29K9GWSNth1JnLeU2GgNypmqk+fWMEPEnpv8MclJ0b18HhyjKcWasZIFqQRcDPL+K499a5zbbM+GH1aSMd/kI+vr9/4LTAey+xLGtGcUA+rCo/ZiyBkQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB8587.namprd11.prod.outlook.com (2603:10b6:a03:568::21)
- by BL3PR11MB6363.namprd11.prod.outlook.com (2603:10b6:208:3b6::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.22; Wed, 17 Sep
- 2025 04:58:42 +0000
-Received: from SJ2PR11MB8587.namprd11.prod.outlook.com
- ([fe80::4050:8bc7:b7c9:c125]) by SJ2PR11MB8587.namprd11.prod.outlook.com
- ([fe80::4050:8bc7:b7c9:c125%5]) with mapi id 15.20.9115.020; Wed, 17 Sep 2025
- 04:58:42 +0000
-Date: Wed, 17 Sep 2025 12:58:34 +0800
-From: kernel test robot <oliver.sang@intel.com>
-To: Namhyung Kim <namhyung@kernel.org>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>, Ian Rogers <irogers@google.com>,
-	<linux-perf-users@vger.kernel.org>, <oliver.sang@intel.com>
-Subject: [linus:master] [perf machine]  41453107bf:
- perf-sanity-tests.build_id_cache_operations.fail
-Message-ID: <202509171233.7f389399-lkp@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-X-ClientProxiedBy: SI2PR01CA0049.apcprd01.prod.exchangelabs.com
- (2603:1096:4:193::13) To SJ2PR11MB8587.namprd11.prod.outlook.com
- (2603:10b6:a03:568::21)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="thNlFwSW"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-265abad93bfso103405ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Sep 2025 22:13:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1758086005; x=1758690805; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uoIg9TTqRnBquZ+3ui3pLlAxls22Sw5DtDDmxlNkJ5U=;
+        b=thNlFwSWx5w8fmnynyzaS/xyafXliueEfsSehhzNLYSBPFdBgnvKuxfWw3r7spzMfR
+         GCJ0RZrxcoWBlaY7nz3eVuH17PKYp4WEejA92CmFVAGmXXG0lr32qXLwHTfDbdP4/Opt
+         CxVCEhy4BbFoj98fHiBwl31nFM378P+TXlu0yUbQAAFpNK9NUAh82oMvPNtw3k4ng7Zk
+         ckM9tsthsvzgCKMHBSN8Go3dtntFe7ple7ggrBazNzxyxUWBd3sGL9hqKLl8XYhWhrmA
+         iXTZ+rOl+GOD9xyKwzNud2YR+9SLbddJEiBwTAG1ciDfbJTJezzqYc7hQ49pk6a9Xnup
+         uObQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758086005; x=1758690805;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uoIg9TTqRnBquZ+3ui3pLlAxls22Sw5DtDDmxlNkJ5U=;
+        b=v4VuiJThmzLWhz26tu+f1SuX7dWdYNj8mXWVDe4UPbmotD0gCZWYIGI753gC87tXBJ
+         EXCcBF74NvKA99b8BRp99/i6owrHoA+REVYqrm3RJ6HEv6IgL0efmt4gjF8YRvlkLdyu
+         XWhtzj7s4sbnHEDZ8nPpwndS7G95zKBpa4BMZTWJlfzCvwynKXRJhPPx23IjpmJ7Pfg5
+         q79us90sHw6gK2wva63k1FRvWyicr3QxSbj0Iyb2rDJipa65K2fyUUysrKH1f+YXNGjV
+         rZh1FtGP2LjoLl8X9RbsXmU5j7rkR0zgNCfF8CB9lF/NybbgTWP4a+Pm6vEyzwCRfsv6
+         XbNA==
+X-Forwarded-Encrypted: i=1; AJvYcCUzRm8+4+8/qIw75hYzoJrCyyWmJ/hKEM4OrpMvpT4VtijDnH6rBgDDYBelW0lAcwmLvMKg3pBCaV3Yno5a2gtf@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBgs7YCu0t+ULqqfa2+ffBpCt2Ti4qBMTfmQLFcHlxx7XtfmqC
+	7tO5KkzhG+yjsqXAZn8d9/AzKRpj0n5laghK7oEnMNeQFfxCz2k13zaQ1LsVrhEbmPcdEFyp4ve
+	7xGV2uF5EoR4dHx20lqIO6tCELTDfolg5kSRjht77
+X-Gm-Gg: ASbGnctMU3rBbWAWGZ3iagvIERYjRDZ7kzO922EyRPmDF09yccqIaXNo+urgDSG2o7m
+	E7MbSDoLEtffOFFKvSo72TdnGm7/hvnEJ4LcpopY/+/J+rCF2q7FE8sWStuQVp6pJ64SQOE7RUf
+	K/Z7jtIdljuWmebFmdrhAe68/mBg4Hn1YpaA7rDM4RZw0QKLDQIVR6//PycqHKRb6JjL9CCZ5aI
+	weVwtzDyZIUFdM=
+X-Google-Smtp-Source: AGHT+IGNxZVbaI4mR3cLIJdamcafeaGfX8NnENJDy+H60BTHxRLhLioecnuLCbefKmqsXonQs42B13opmzSN0E5ptwc=
+X-Received: by 2002:a17:903:183:b0:267:d7f8:4054 with SMTP id
+ d9443c01a7336-26800f68420mr3354455ad.16.1758086004299; Tue, 16 Sep 2025
+ 22:13:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB8587:EE_|BL3PR11MB6363:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2a673bf7-ac4a-46ff-3a53-08ddf5a6df6e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?wlHHo/RrF5J0+Xw3r1GGYk8V12WWJCeJoRfXLjjKMg8NNY34j32RVQlk+G0o?=
- =?us-ascii?Q?U+wMFqft2Ou92flGyGMNzFoQrJ+vaLZUdf7zSHRzk9E2b7iiO1PEtsauUNWH?=
- =?us-ascii?Q?ngJsUgxWGJw2mdE9Fg/vBN9H2EBO5T6olmvZBsR7iCW+bizqZnavS51tIBug?=
- =?us-ascii?Q?ioTu5mO9M+pAUXAfgH4OakZTW6e9AenjAoKN2HEWr3+v8x4kPY7f0QOcPAb0?=
- =?us-ascii?Q?qm2oqWK/OD5oY8XCDxUGVnaTZdNxCKuu3flfQW1Kb8k3y73LGA7qdL9kbgi7?=
- =?us-ascii?Q?zQ1QxMpSyGNNLUUekmE9uNXuughionN2bdF03TGSr/M13j9wRnxwyD9eH9l7?=
- =?us-ascii?Q?3HXF+yl2Yn9L2LRpKBc37gSm3Maa7/htIE/aIkETL8fJx8UxJBYkxqhIwpKU?=
- =?us-ascii?Q?zdm13fSHM6CxBs9+BSGXp8ktk0D2tUK8lj3xAyK1E6C+Qe94xqJp935U+lxp?=
- =?us-ascii?Q?yb76Q4IukXFPA37lj5JDUzaJ7jFQNJV+oRnFfK/pRbzAxuj0LpfJ19K6WjXk?=
- =?us-ascii?Q?tlzZUvyy8TIGLOLW/bJsxSXacBicx8cHKmAczYbXOJQDJ5YAewFdyhUFuHzO?=
- =?us-ascii?Q?8OGbhdS1iFzX7m2ZGIr9N6861kh9/PzwMtWX1PanPdsL9Sk2bEHvJK8yyj/9?=
- =?us-ascii?Q?QtWrE7DbqFQbJ41UOXOmQ34w2HFLpayZeKkploU7muoYSnH4fagHk9YklR+u?=
- =?us-ascii?Q?T1D/EQdMdHXX6wT/LqyTsL/c5n0e1PgJnCpPf2KbssvGpbAx7UQprl+qPqWZ?=
- =?us-ascii?Q?GjcNSl9CTOZV2j5kvSrVCpDFUAydpkr0ySH9RJiepS5RSrlaSODQrc1FSJG2?=
- =?us-ascii?Q?BRl9BoNxZdpCpYyIbwuLFgRK68GO1xEh+nLWL7RKPjGeOeJbCtF4Lq6keW+M?=
- =?us-ascii?Q?56hcYng5wmxLqM6iKlh3Y4V8BnqsH/CPiNoM7njZXECMtbNK77fln+FO/oBi?=
- =?us-ascii?Q?NjMxPWFOqswkel1dFsJLhBsECp6bBF7e1XeJJqkHDV+75kZQoRXvbJbat3b8?=
- =?us-ascii?Q?OnqURR5hX2chXQx6P9i18kVhG+03mDCig4c8G4MkhDm3SAQd4D8llRfzlo18?=
- =?us-ascii?Q?uKcFPC2YWUAZT8V0AqBJvDmfd+5zmOKqhzypVsl+p18Q74fDBfpfNTVowjY3?=
- =?us-ascii?Q?v+oPrU3o2gVruuYH+PdyrMQRecULi294GaRpPypE4sqKTms/TDWtj1KVTqze?=
- =?us-ascii?Q?ZUDr2KvSB9lkIqSqqPRbzdpg6OyToML/HeqYigM6dldcI/9BPCdu1GyZ6TAj?=
- =?us-ascii?Q?YbYtyV9HNryyYQJvEWsWoKTP06PK0dQwravUx/+15zI9tVp3CQmsCjM3m6gq?=
- =?us-ascii?Q?SpLYYpLc1AK1h0ohbjm7p0TwxZWL+jXz/bVQfKSr217hRE396UNEIwdqQDYC?=
- =?us-ascii?Q?SJhsMqkoFu5IC1TkHpdfJ2CnVoHs?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB8587.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?uYwsX4cGWHatYet5XThgoTK5u/h8X27/sO5x9bZUlg9fumQCpEv7dI2ZyfbM?=
- =?us-ascii?Q?ins6tojdiLacQEQkg1jRT4R3yQj8F2s3Y1iZzEnlw0wiDvpp7DAkJiHxQh3o?=
- =?us-ascii?Q?pLKP83fol3Bkj92oMY6xFT5lY50ygakBor3uOXwXzq/jD8JW9Dew45JhcvpJ?=
- =?us-ascii?Q?xmMVX90XaM1BfhhJkfBQx7i1WA+56yncEzKABMKKJqvMOOmLUkkxsvqY8rcF?=
- =?us-ascii?Q?pZdu+AeoAR5WRlPSenwMFz/9eWh/n+77DwJpUYMwQFPjv5dosVl4999jb7pD?=
- =?us-ascii?Q?zfKfY2EeJDoSL/W51tQRi8FEnYC1tSa2ALn26aV+S6Rdqf4a2wafPGJXtLdj?=
- =?us-ascii?Q?/7xFTSOxbcc87fdBC1k5tLFcfAND0kREHyTC1POe8r1NkNTpIuxrFzHsgZW3?=
- =?us-ascii?Q?hLnpL/kxqGft9mmN9Qt5LmG14GscQ2SaH/CL0aDfkUt3xwX+89zpurl1n/7L?=
- =?us-ascii?Q?H0CzVHznPprHDMWSHMxrjVwNRHKONQhHxoNpL670VyJeAhXcR1SvXHkU3wZH?=
- =?us-ascii?Q?XCeP5FY/T+WzmxSpqTgCvYKG9YRXXWdmsxB46NV8J2+rWGo68ulq5A2gmhvi?=
- =?us-ascii?Q?ACZdXCLlecyxIDC341TRcq8a4nRmeyHCy/gUsXKiubKz7jPSUUCLf8mjXS7E?=
- =?us-ascii?Q?T+HcmVtL7Ma0x0wMtsXslxod+pIDMXiAHSLhZcGhzy/47JArbIfGLwnTArah?=
- =?us-ascii?Q?YXkKdzfcVL+9dpP90QmBH6N7sXJcW0cJ+Y4M9oWtPMgrgmtNfzvVRjDdwCYw?=
- =?us-ascii?Q?67tESZqwP4jtsuc2bfh03TXl/+qwoROjgItRX2AtMNBVPqF7w6WlxKIeenMT?=
- =?us-ascii?Q?GN/ByfX02OxlC8qFTq7WU2m3i61PcBt4abG/3B++4U+FyFPNkhqpr9VfmW9F?=
- =?us-ascii?Q?88AmUsssDCO4YhtMJxznPa44lwcwdQ5EHQ6f7tZpw7bZIUx42Tgwmx5ilChq?=
- =?us-ascii?Q?JHfAik/rYHSM1elc8yv9ImmLDeDX/JWg8f9SfQDpIYsC9ZjI9Mr6EnGrndPF?=
- =?us-ascii?Q?4moZ+L5irt0BR1W8EIXX2+w7FJhJLn8nFKkQoddAVDgi919E//140q5YsTTf?=
- =?us-ascii?Q?6dUk5/wFUbGAyaDVQIHMDMztZJDUYCQlZRPc7TxDwb6AYlCGNomJwz6AYnjV?=
- =?us-ascii?Q?1EnDJYAiNLfPRr1zwwDNG2xKs9pOwLWDSJZJg8WBewnIQT3dret6rBgaVwFc?=
- =?us-ascii?Q?PI/+U/fFTMkXt7xhQncmUFLzNpil2wk+9aM/tbHbcax/a/xL1FTjwxj3PQaO?=
- =?us-ascii?Q?zmuolbcHUtZqlMTi3Gs0/ALwGGE1mEvdToNMoZtVc8k57uTNqOxMKK0zgVb6?=
- =?us-ascii?Q?/TlDjUxuDhobEVEbb99KCHjsga9eVG4/cTXW3kvqpIVL0OqmRdufbKnyVe7c?=
- =?us-ascii?Q?fH3WveVQyzH2a0R1OxWUTVNPkzV9C40G97ciPdqM+Cw6vG3tbQwU442YW/at?=
- =?us-ascii?Q?4N7NBf6Yl5WLkyvDSEVWWVJqjwXlq9r47R4ikPJ266mB621uD3FcFYkcnchH?=
- =?us-ascii?Q?9+GA/OqKi9UOl23pU7djRRzpYfS0fb80cKbEYFz4q5U9Ma/g8HBUHsp3ED6Z?=
- =?us-ascii?Q?jbxhrXB8zYrQ8QKXWtzEZLu8KpfbxeSzHViMnuuJE9QJU5mphlaLhMAEFhcP?=
- =?us-ascii?Q?7w=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2a673bf7-ac4a-46ff-3a53-08ddf5a6df6e
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB8587.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Sep 2025 04:58:41.9682
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Z6iOE2GVhAmMW0YSU+rPAwZ85r04g0//8274H2wxGmgupcF0Ya6YZt+BNOlSemqyoU8OGpxex8C36Fm01Zb3sw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR11MB6363
-X-OriginatorOrg: intel.com
+References: <20250916145122.416128-1-wangjinchao600@gmail.com>
+ <CAP-5=fWWOQ-6SWiNVBvb5mCofe0kZUURG_bm0PDsVFWqwDwrXg@mail.gmail.com> <aMoTOXIKBYVTj7PV@mdev>
+In-Reply-To: <aMoTOXIKBYVTj7PV@mdev>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 16 Sep 2025 22:13:12 -0700
+X-Gm-Features: AS18NWBhgzzO33PJO6FoH_VToOGMfUugu12w9jLvAC2FrKmZUHqi3u0zros6a6g
+Message-ID: <CAP-5=fX7NJmBjd1v5y4xCa0Ce5rNZ8Dqg0LXd12gPrdEQCERVA@mail.gmail.com>
+Subject: Re: [RFC PATCH V1] watchdog: Add boot-time selection for hard lockup detector
+To: Jinchao Wang <wangjinchao600@gmail.com>
+Cc: Doug Anderson <dianders@chromium.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Will Deacon <will@kernel.org>, Yunhui Cui <cuiyunhui@bytedance.com>, akpm@linux-foundation.org, 
+	catalin.marinas@arm.com, maddy@linux.ibm.com, mpe@ellerman.id.au, 
+	npiggin@gmail.com, christophe.leroy@csgroup.eu, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, kees@kernel.org, masahiroy@kernel.org, 
+	aliceryhl@google.com, ojeda@kernel.org, thomas.weissschuh@linutronix.de, 
+	xur@google.com, ruanjinjie@huawei.com, gshan@redhat.com, maz@kernel.org, 
+	suzuki.poulose@arm.com, zhanjie9@hisilicon.com, yangyicong@hisilicon.com, 
+	gautam@linux.ibm.com, arnd@arndb.de, zhao.xichao@vivo.com, rppt@kernel.org, 
+	lihuafei1@huawei.com, coxu@redhat.com, jpoimboe@kernel.org, 
+	yaozhenguo1@gmail.com, luogengkun@huaweicloud.com, max.kellermann@ionos.com, 
+	tj@kernel.org, yury.norov@gmail.com, thorsten.blum@linux.dev, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Sep 16, 2025 at 6:47=E2=80=AFPM Jinchao Wang <wangjinchao600@gmail.=
+com> wrote:
+>
+> On Tue, Sep 16, 2025 at 05:03:48PM -0700, Ian Rogers wrote:
+> > On Tue, Sep 16, 2025 at 7:51=E2=80=AFAM Jinchao Wang <wangjinchao600@gm=
+ail.com> wrote:
+> > >
+> > > Currently, the hard lockup detector is selected at compile time via
+> > > Kconfig, which requires a kernel rebuild to switch implementations.
+> > > This is inflexible, especially on systems where a perf event may not
+> > > be available or may be needed for other tasks.
+> > >
+> > > This commit refactors the hard lockup detector to replace a rigid
+> > > compile-time choice with a flexible build-time and boot-time solution=
+.
+> > > The patch supports building the kernel with either detector
+> > > independently, or with both. When both are built, a new boot paramete=
+r
+> > > `hardlockup_detector=3D"perf|buddy"` allows the selection at boot tim=
+e.
+> > > This is a more robust and user-friendly design.
+> > >
+> > > This patch is a follow-up to the discussion on the kernel mailing lis=
+t
+> > > regarding the preference and future of the hard lockup detectors. It
+> > > implements a flexible solution that addresses the community's need to
+> > > select an appropriate detector at boot time.
+> > >
+> > > The core changes are:
+> > > - The `perf` and `buddy` watchdog implementations are separated into
+> > >   distinct functions (e.g., `watchdog_perf_hardlockup_enable`).
+> > > - Global function pointers are introduced (`watchdog_hardlockup_enabl=
+e_ptr`)
+> > >   to serve as a single API for the entire feature.
+> > > - A new `hardlockup_detector=3D` boot parameter is added to allow the
+> > >   user to select the desired detector at boot time.
+> > > - The Kconfig options are simplified by removing the complex
+> > >   `HARDLOCKUP_DETECTOR_PREFER_BUDDY` and allowing both detectors to b=
+e
+> > >   built without mutual exclusion.
+> > > - The weak stubs are updated to call the new function pointers,
+> > >   centralizing the watchdog logic.
+> >
+> > What is the impact on  /proc/sys/kernel/nmi_watchdog ? Is that
+> > enabling and disabling whatever the boot time choice was? I'm not sure
+> > why this has to be a boot time option given the ability to configure
+> > via /proc/sys/kernel/nmi_watchdog.
+> The new hardlockup_detector boot parameter and the existing
+> /proc/sys/kernel/nmi_watchdog file serve different purposes.
+>
+> The boot parameter selects the type of hard lockup detector (perf or budd=
+y).
+> This choice is made once at boot.
+>
+>  /proc/sys/kernel/nmi_watchdog, on the other hand, is only a simple on/of=
+f
+> switch for the currently selected detector. It does not change the detect=
+or's
+> type.
 
+So the name "nmi_watchdog" for the buddy watchdog is wrong for fairly
+obvious naming reasons but also because we can't differentiate when a
+perf event has been taken or not - this impacts perf that is choosing
+not to group events in metrics because of it, reducing the metric's
+accuracy. We need an equivalent "buddy_watchdog" file to the
+"nmi_watchdog" file. If we have such a file then if I did "echo 1 >
+/proc/sys/kernel/nmi_watchdog" I'd expect the buddy watchdog to be
+disabled and the perf event one to be enabled. Similarly, if I did
+"echo 1 > /proc/sys/kernel/buddy_watchdog" then I would expect the
+perf event watchdog to be disabled and the buddy one enabled. If I did
+ "echo 0 > /proc/sys/kernel/nmi_watchdog; echo 0 >
+/proc/sys/kernel/buddy_watchdog" then I'd expect neither to be
+enabled. I don't see why choosing the type of watchdog implementation
+at boot time is particularly desirable. It seems sensible to default
+normal people to using the buddy watchdog (more perf events, power...)
+and  CONFIG_DEBUG_KERNEL type people to using the perf event one. As
+the "nmi_watchdog" file may be assumed to control the buddy watchdog,
+perhaps a compatibility option (where the "nmi_watchdog" file controls
+the buddy watchdog) is needed so that user code has time to migrate.
 
-Hello,
+Thanks,
+Ian
 
-kernel test robot noticed "perf-sanity-tests.build_id_cache_operations.fail" on:
-
-commit: 41453107bfc3008302c2b98cc01da55890235b77 ("perf machine: Fix insertion of PERF_RECORD_KSYMBOL related kernel maps")
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-
-[test failed on      linus/master 5cd64d4f92683afa691a6b83dcad5adfb2165ed0]
-[test failed on linux-next/master 590b221ed4256fd6c34d3dea77aa5bd6e741bbc1]
-
-in testcase: perf-sanity-tests
-version: 
-with following parameters:
-
-	perf_compiler: clang
-	group: group-02
-
-
-
-config: x86_64-rhel-9.4-bpf
-compiler: gcc-14
-test machine: 16 threads 1 sockets Intel(R) Xeon(R) E-2278G CPU @ 3.40GHz (Coffee Lake-E) with 32G memory
-
-(please refer to attached dmesg/kmsg for entire log/backtrace)
-
-
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <oliver.sang@intel.com>
-| Closes: https://lore.kernel.org/oe-lkp/202509171233.7f389399-lkp@intel.com
-
-
-
-2025-09-12 15:50:40 sudo /usr/src/linux-perf-x86_64-rhel-9.4-bpf-41453107bfc3008302c2b98cc01da55890235b77/tools/perf/perf test 77 -v
- 77: build id cache operations                                       : Running (1 active)
---- start ---
-test child forked, pid 10337
-WARNING: perf not built with libbfd. PE binaries will not be tested.
-WARNING: wine not found. PE binaries will not be run.
-test binaries: /tmp/perf.ex.SHA1.lkF /tmp/perf.ex.MD5.CJf /usr/src/perf_selftests-x86_64-rhel-9.4-bpf-41453107bfc3008302c2b98cc01da55890235b77/tools/perf/tests/shell/../pe-file.exe
-DEBUGINFOD_URLS=
-Adding 916d0ebaf0e95fd65f7a56c358fd8127a599f412 /tmp/perf.ex.SHA1.lkF: Ok
-build id: 916d0ebaf0e95fd65f7a56c358fd8127a599f412
-link: /tmp/perf.debug.OLh/.build-id/91/6d0ebaf0e95fd65f7a56c358fd8127a599f412
-file: /tmp/perf.debug.OLh/.build-id/91/../../tmp/perf.ex.SHA1.lkF/916d0ebaf0e95fd65f7a56c358fd8127a599f412/elf
-916d0ebaf0e95fd65f7a56c358fd8127a599f412 /tmp/perf.ex.SHA1.lkF
-OK for /tmp/perf.ex.SHA1.lkF
-DEBUGINFOD_URLS=
-Adding 82116c4fd43ec51d956099717eef476c /tmp/perf.ex.MD5.CJf: Ok
-build id: 82116c4fd43ec51d956099717eef476c
-link: /tmp/perf.debug.HOq/.build-id/82/116c4fd43ec51d956099717eef476c
-file: /tmp/perf.debug.HOq/.build-id/82/../../tmp/perf.ex.MD5.CJf/82116c4fd43ec51d956099717eef476c/elf
-82116c4fd43ec51d956099717eef476c /tmp/perf.ex.MD5.CJf
-OK for /tmp/perf.ex.MD5.CJf
-running: perf record /tmp/perf.ex.SHA1.lkF
-failed: record /tmp/perf.ex.SHA1.lkF
-see log: /tmp/perf.log.err.KD1
----- end(-1) ----
- 77: build id cache operations                                       : FAILED!
-
-
-
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20250917/202509171233.7f389399-lkp@intel.com
-
-
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+> >
+> > > Link: https://lore.kernel.org/all/20250915035355.10846-1-cuiyunhui@by=
+tedance.com/
+> > > Link: https://lore.kernel.org/all/CAD=3DFV=3DWWUiCi6bZCs_gseFpDDWNkuJ=
+MoL6XCftEo6W7q6jRCkg@mail.gmail.com/
+> > >
+> > > Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
+> > > ---
+> > >  .../admin-guide/kernel-parameters.txt         |  7 +++
+> > >  include/linux/nmi.h                           |  6 +++
+> > >  kernel/watchdog.c                             | 46 +++++++++++++++++=
++-
+> > >  kernel/watchdog_buddy.c                       |  7 +--
+> > >  kernel/watchdog_perf.c                        | 10 ++--
+> > >  lib/Kconfig.debug                             | 37 +++++++--------
+> > >  6 files changed, 85 insertions(+), 28 deletions(-)
+> > >
+> > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Docume=
+ntation/admin-guide/kernel-parameters.txt
+> > > index 5a7a83c411e9..0af214ee566c 100644
+> > > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > > @@ -1828,6 +1828,13 @@
+> > >                         backtraces on all cpus.
+> > >                         Format: 0 | 1
+> > >
+> > > +       hardlockup_detector=3D
+> > > +                       [perf, buddy] Selects the hard lockup detecto=
+r to use at
+> > > +                       boot time.
+> > > +                       Format: <string>
+> > > +                       - "perf": Use the perf-based detector.
+> > > +                       - "buddy": Use the buddy-based detector.
+> > > +
+> > >         hash_pointers=3D
+> > >                         [KNL,EARLY]
+> > >                         By default, when pointers are printed to the =
+console
+> > > diff --git a/include/linux/nmi.h b/include/linux/nmi.h
+> > > index cf3c6ab408aa..9298980ce572 100644
+> > > --- a/include/linux/nmi.h
+> > > +++ b/include/linux/nmi.h
+> > > @@ -100,6 +100,9 @@ void watchdog_hardlockup_check(unsigned int cpu, =
+struct pt_regs *regs);
+> > >  #endif
+> > >
+> > >  #if defined(CONFIG_HARDLOCKUP_DETECTOR_PERF)
+> > > +void watchdog_perf_hardlockup_enable(unsigned int cpu);
+> > > +void watchdog_perf_hardlockup_disable(unsigned int cpu);
+> > > +extern int watchdog_perf_hardlockup_probe(void);
+> > >  extern void hardlockup_detector_perf_stop(void);
+> > >  extern void hardlockup_detector_perf_restart(void);
+> > >  extern void hardlockup_config_perf_event(const char *str);
+> > > @@ -120,6 +123,9 @@ void watchdog_hardlockup_disable(unsigned int cpu=
+);
+> > >  void lockup_detector_reconfigure(void);
+> > >
+> > >  #ifdef CONFIG_HARDLOCKUP_DETECTOR_BUDDY
+> > > +void watchdog_buddy_hardlockup_enable(unsigned int cpu);
+> > > +void watchdog_buddy_hardlockup_disable(unsigned int cpu);
+> > > +int watchdog_buddy_hardlockup_probe(void);
+> > >  void watchdog_buddy_check_hardlockup(int hrtimer_interrupts);
+> > >  #else
+> > >  static inline void watchdog_buddy_check_hardlockup(int hrtimer_inter=
+rupts) {}
+> > > diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+> > > index 80b56c002c7f..85451d24a77d 100644
+> > > --- a/kernel/watchdog.c
+> > > +++ b/kernel/watchdog.c
+> > > @@ -55,6 +55,37 @@ unsigned long *watchdog_cpumask_bits =3D cpumask_b=
+its(&watchdog_cpumask);
+> > >
+> > >  #ifdef CONFIG_HARDLOCKUP_DETECTOR
+> > >
+> > > +#ifdef CONFIG_HARDLOCKUP_DETECTOR_PERF
+> > > +/* The global function pointers */
+> > > +void (*watchdog_hardlockup_enable_ptr)(unsigned int cpu) =3D watchdo=
+g_perf_hardlockup_enable;
+> > > +void (*watchdog_hardlockup_disable_ptr)(unsigned int cpu) =3D watchd=
+og_perf_hardlockup_disable;
+> > > +int (*watchdog_hardlockup_probe_ptr)(void) =3D watchdog_perf_hardloc=
+kup_probe;
+> > > +#elif defined(CONFIG_HARDLOCKUP_DETECTOR_BUDDY)
+> > > +void (*watchdog_hardlockup_enable_ptr)(unsigned int cpu) =3D watchdo=
+g_buddy_hardlockup_enable;
+> > > +void (*watchdog_hardlockup_disable_ptr)(unsigned int cpu) =3D watchd=
+og_buddy_hardlockup_disable;
+> > > +int (*watchdog_hardlockup_probe_ptr)(void) =3D watchdog_buddy_hardlo=
+ckup_probe;
+> > > +#endif
+> > > +
+> > > +#ifdef CONFIG_HARDLOCKUP_DETECTOR_MULTIPLE
+> > > +static char *hardlockup_detector_type =3D "perf"; /* Default to perf=
+ */
+> > > +static int __init set_hardlockup_detector_type(char *str)
+> > > +{
+> > > +       if (!strncmp(str, "perf", 4)) {
+> > > +               watchdog_hardlockup_enable_ptr =3D watchdog_perf_hard=
+lockup_enable;
+> > > +               watchdog_hardlockup_disable_ptr =3D watchdog_perf_har=
+dlockup_disable;
+> > > +               watchdog_hardlockup_probe_ptr =3D watchdog_perf_hardl=
+ockup_probe;
+> > > +       } else if (!strncmp(str, "buddy", 5)) {
+> > > +               watchdog_hardlockup_enable_ptr =3D watchdog_buddy_har=
+dlockup_enable;
+> > > +               watchdog_hardlockup_disable_ptr =3D watchdog_buddy_ha=
+rdlockup_disable;
+> > > +               watchdog_hardlockup_probe_ptr =3D watchdog_buddy_hard=
+lockup_probe;
+> > > +       }
+> > > +       return 1;
+> > > +}
+> > > +
+> > > +__setup("hardlockup_detector=3D", set_hardlockup_detector_type);
+> > > +
+> > > +#endif
+> > > +
+> > >  # ifdef CONFIG_SMP
+> > >  int __read_mostly sysctl_hardlockup_all_cpu_backtrace;
+> > >  # endif /* CONFIG_SMP */
+> > > @@ -262,9 +293,17 @@ static inline void watchdog_hardlockup_kick(void=
+) { }
+> > >   * softlockup watchdog start and stop. The detector must select the
+> > >   * SOFTLOCKUP_DETECTOR Kconfig.
+> > >   */
+> > > -void __weak watchdog_hardlockup_enable(unsigned int cpu) { }
+> > > +void __weak watchdog_hardlockup_enable(unsigned int cpu)
+> > > +{
+> > > +       if (watchdog_hardlockup_enable_ptr)
+> > > +               watchdog_hardlockup_enable_ptr(cpu);
+> > > +}
+> > >
+> > > -void __weak watchdog_hardlockup_disable(unsigned int cpu) { }
+> > > +void __weak watchdog_hardlockup_disable(unsigned int cpu)
+> > > +{
+> > > +       if (watchdog_hardlockup_disable_ptr)
+> > > +               watchdog_hardlockup_disable_ptr(cpu);
+> > > +}
+> > >
+> > >  /*
+> > >   * Watchdog-detector specific API.
+> > > @@ -275,6 +314,9 @@ void __weak watchdog_hardlockup_disable(unsigned =
+int cpu) { }
+> > >   */
+> > >  int __weak __init watchdog_hardlockup_probe(void)
+> > >  {
+> > > +       if (watchdog_hardlockup_probe_ptr)
+> > > +               return watchdog_hardlockup_probe_ptr();
+> > > +
+> > >         return -ENODEV;
+> > >  }
+> > >
+> > > diff --git a/kernel/watchdog_buddy.c b/kernel/watchdog_buddy.c
+> > > index ee754d767c21..390d89bfcafa 100644
+> > > --- a/kernel/watchdog_buddy.c
+> > > +++ b/kernel/watchdog_buddy.c
+> > > @@ -19,15 +19,16 @@ static unsigned int watchdog_next_cpu(unsigned in=
+t cpu)
+> > >         return next_cpu;
+> > >  }
+> > >
+> > > -int __init watchdog_hardlockup_probe(void)
+> > > +int __init watchdog_buddy_hardlockup_probe(void)
+> > >  {
+> > >         return 0;
+> > >  }
+> > >
+> > > -void watchdog_hardlockup_enable(unsigned int cpu)
+> > > +void watchdog_buddy_hardlockup_enable(unsigned int cpu)
+> > >  {
+> > >         unsigned int next_cpu;
+> > >
+> > > +       pr_info("ddddd %s\n", __func__);
+> > >         /*
+> > >          * The new CPU will be marked online before the hrtimer inter=
+rupt
+> > >          * gets a chance to run on it. If another CPU tests for a
+> > > @@ -58,7 +59,7 @@ void watchdog_hardlockup_enable(unsigned int cpu)
+> > >         cpumask_set_cpu(cpu, &watchdog_cpus);
+> > >  }
+> > >
+> > > -void watchdog_hardlockup_disable(unsigned int cpu)
+> > > +void watchdog_buddy_hardlockup_disable(unsigned int cpu)
+> > >  {
+> > >         unsigned int next_cpu =3D watchdog_next_cpu(cpu);
+> > >
+> > > diff --git a/kernel/watchdog_perf.c b/kernel/watchdog_perf.c
+> > > index 9c58f5b4381d..270110e58f20 100644
+> > > --- a/kernel/watchdog_perf.c
+> > > +++ b/kernel/watchdog_perf.c
+> > > @@ -153,10 +153,12 @@ static int hardlockup_detector_event_create(voi=
+d)
+> > >   * watchdog_hardlockup_enable - Enable the local event
+> > >   * @cpu: The CPU to enable hard lockup on.
+> > >   */
+> > > -void watchdog_hardlockup_enable(unsigned int cpu)
+> > > +void watchdog_perf_hardlockup_enable(unsigned int cpu)
+> > >  {
+> > >         WARN_ON_ONCE(cpu !=3D smp_processor_id());
+> > >
+> > > +       pr_info("ddddd %s\n", __func__);
+> > > +
+> > >         if (hardlockup_detector_event_create())
+> > >                 return;
+> > >
+> > > @@ -172,7 +174,7 @@ void watchdog_hardlockup_enable(unsigned int cpu)
+> > >   * watchdog_hardlockup_disable - Disable the local event
+> > >   * @cpu: The CPU to enable hard lockup on.
+> > >   */
+> > > -void watchdog_hardlockup_disable(unsigned int cpu)
+> > > +void watchdog_perf_hardlockup_disable(unsigned int cpu)
+> > >  {
+> > >         struct perf_event *event =3D this_cpu_read(watchdog_ev);
+> > >
+> > > @@ -257,10 +259,12 @@ bool __weak __init arch_perf_nmi_is_available(v=
+oid)
+> > >  /**
+> > >   * watchdog_hardlockup_probe - Probe whether NMI event is available =
+at all
+> > >   */
+> > > -int __init watchdog_hardlockup_probe(void)
+> > > +int __init watchdog_perf_hardlockup_probe(void)
+> > >  {
+> > >         int ret;
+> > >
+> > > +       pr_info("ddddd %s\n", __func__);
+> > > +
+> > >         if (!arch_perf_nmi_is_available())
+> > >                 return -ENODEV;
+> > >
+> > > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > > index dc0e0c6ed075..443353fad1c1 100644
+> > > --- a/lib/Kconfig.debug
+> > > +++ b/lib/Kconfig.debug
+> > > @@ -1167,36 +1167,33 @@ config HARDLOCKUP_DETECTOR
+> > >  #
+> > >  # Note that arch-specific variants are always preferred.
+> > >  #
+> > > -config HARDLOCKUP_DETECTOR_PREFER_BUDDY
+> > > -       bool "Prefer the buddy CPU hardlockup detector"
+> > > -       depends on HARDLOCKUP_DETECTOR
+> > > -       depends on HAVE_HARDLOCKUP_DETECTOR_PERF && HAVE_HARDLOCKUP_D=
+ETECTOR_BUDDY
+> > > -       depends on !HAVE_HARDLOCKUP_DETECTOR_ARCH
+> > > -       help
+> > > -         Say Y here to prefer the buddy hardlockup detector over the=
+ perf one.
+> > > -
+> > > -         With the buddy detector, each CPU uses its softlockup hrtim=
+er
+> > > -         to check that the next CPU is processing hrtimer interrupts=
+ by
+> > > -         verifying that a counter is increasing.
+> > > -
+> > > -         This hardlockup detector is useful on systems that don't ha=
+ve
+> > > -         an arch-specific hardlockup detector or if resources needed
+> > > -         for the hardlockup detector are better used for other thing=
+s.
+> > > -
+> > >  config HARDLOCKUP_DETECTOR_PERF
+> > > -       bool
+> > > +       bool "Enable perf-based hard lockup detector (preferred)"
+> > >         depends on HARDLOCKUP_DETECTOR
+> > > -       depends on HAVE_HARDLOCKUP_DETECTOR_PERF && !HARDLOCKUP_DETEC=
+TOR_PREFER_BUDDY
+> > > +       depends on HAVE_HARDLOCKUP_DETECTOR_PERF
+> > >         depends on !HAVE_HARDLOCKUP_DETECTOR_ARCH
+> > >         select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
+> > > +       help
+> > > +         This detector uses a perf event on the CPU to detect when a=
+ CPU
+> > > +         has become non-maskable interrupt (NMI) stuck. This is the
+> > > +         preferred method on modern systems as it can detect lockups=
+ on
+> > > +         all CPUs at the same time.
+> >
+> > I'd say this option should be the default for kernel developers but
+> > shouldn't be used by default to free the perf event and due to the
+> > extra power overhead.
+> >
+> > Thanks,
+> > Ian
+> >
+> > >  config HARDLOCKUP_DETECTOR_BUDDY
+> > > -       bool
+> > > +       bool "Enable buddy-based hard lockup detector"
+> > >         depends on HARDLOCKUP_DETECTOR
+> > >         depends on HAVE_HARDLOCKUP_DETECTOR_BUDDY
+> > > -       depends on !HAVE_HARDLOCKUP_DETECTOR_PERF || HARDLOCKUP_DETEC=
+TOR_PREFER_BUDDY
+> > >         depends on !HAVE_HARDLOCKUP_DETECTOR_ARCH
+> > >         select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
+> > > +       help
+> > > +         This is an alternative lockup detector that uses a heartbea=
+t
+> > > +         mechanism between CPUs to detect when one has stopped respo=
+nding.
+> > > +         It is less precise than the perf-based detector and cannot =
+detect
+> > > +         all-CPU lockups, but it does not require a perf counter.
+> > > +
+> > > +config CONFIG_HARDLOCKUP_DETECTOR_MULTIPLE
+> > > +       bool
+> > > +       depends on HARDLOCKUP_DETECTOR_PERF && HARDLOCKUP_DETECTOR_BU=
+DDY
+> > >
+> > >  config HARDLOCKUP_DETECTOR_ARCH
+> > >         bool
+> > > --
+> > > 2.43.0
+> > >
+>
+> --
+> Jinchao
