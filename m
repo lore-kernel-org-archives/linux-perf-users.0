@@ -1,108 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87CAC1A9FBE;
-	Wed, 17 Sep 2025 16:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA222905;
+	Wed, 17 Sep 2025 17:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758127318; cv=none; b=BcVYxJamP7u0k8gnPtGfpzNjSYWa+mMFlMCd73Jt8g16HvkvgeeYAZo2VS8CDN5DH2EtVhTRlksq8vyKu1f2tQkXlWQZl20DnZne+ZS6iBbRvXFPl8WGoRFNb3blAmTr5wJC7gp70zNJiFFSECDnB8sMgC8xCiFq6PviojXy/iE=
+	t=1758129228; cv=none; b=s0XUyNpPmmQBVgsmHVbsJgyXuX7qjmkvCnNf1mjJ71xrSe1GMBZCw/twD626I2tZS6hBfcQqpknqViwFPNDJNxB8Tm7Kqxvu7wKq7vEcsSBRF3ajejSaLdav+IOBsBBy4qThX6o1F3n+sJGASD558Od89cPp1sOzbhzmszEJLD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758127318; c=relaxed/simple;
-	bh=H5+WBnWe3MWBYM4eBRe3qCY0iIElJYW8j9sDBLad/TM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hONZLhwJe7sbNNYz8M0gEuSy7CS2HGYKobyaEm2ERNju3B/8tl+Xw13J/pWLsM4DDEBso/a/3N7DwbSW+Ulp48ht5I1YkEmKYlWPjGZGCnXiiBwpAyD0ZVjQrVxnzd/00gG5TC/9KzBPH2AYqkpVU/9bBBgNuLphhvT5/26JSlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lBBB0OG7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758129228; c=relaxed/simple;
+	bh=7utd2mNCGqv0fGRGHJlqKBPLh/85qlOzgzSj3DRpfGA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lpB3UVBIRSfPBkNVI7SGuWywn3QjNrhN1oWvxuwMrCO4VBXl2Rm79lv1bNivzEZnpYnGJQ7z/qctJRCLw6mFK92I0wbbu06CZfyp9/nDREbPti5mhCS1+Jwi2TvBQEnpoZ8zSnHEw5KydvIdGMFm9iymZo7mS1wUAXk5fwQfMSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=s/8W4GJW; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lBBB0OG7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3D58C4CEF9;
-	Wed, 17 Sep 2025 16:41:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758127318;
-	bh=H5+WBnWe3MWBYM4eBRe3qCY0iIElJYW8j9sDBLad/TM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lBBB0OG7azD8+aZC4yztyVTFFJsbnR8c9A0zNn09pkMImVCBqnFCPu+DylHUzUsLQ
-	 QgkdQzzkA8vOcLieykYHo+CzAVvLg+PS5W4LQBQ6syR7DPTnHBvDEtL9m53oOWyQLA
-	 2MsUCxb724GoankvFPSBHyl5NXsAagxrEyMlKOMkBslFr03n4PsP/yQ+SAfFB6DBMl
-	 D78GFTmrd58ToaHL9Hy6Kq5D44V0sOnEtgPn6ppyWG1YV4uc5+dYc/GZx4n682ks//
-	 QZoFUP7ygKrsR6F9c8+sktLqz5QcCHfZJtHuennehowcZoxU/IGGMfn7eNR5suUySF
-	 ECduk+XwEQ0fA==
-Date: Wed, 17 Sep 2025 13:41:55 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Gautam Menghani <gautam@linux.ibm.com>, peterz@infradead.org,
-	mingo@redhat.com, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com,
-	maddy@linux.ibm.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] perf python: Add an example for sampling
-Message-ID: <aMrk03gigBlGcYLK@x1>
-References: <20250728055937.58531-1-gautam@linux.ibm.com>
- <aMlmiHATn5WHUcSM@mac.in.ibm.com>
- <aMm5uvPsMfXEv8Oo@x1>
- <CAP-5=fW4JQYJ2NCRsRVePidCcZ9+JcQbfY=xQ00xZG-bSn96ew@mail.gmail.com>
- <aMqrmmDG65BGeZp0@x1>
- <CAP-5=fXnM15Zj5mCYcsd9usUMtHoPOd3Wz8-L1N5UaB-YvKuHQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s/8W4GJW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=PWqxr35AzD9frV25voEqKDmiFYHwMk5p7VNBLNHixIU=; b=s/8W4GJWaIDo+n9p8W+SHHXkVl
+	Fn6tiZ9I3k0bTLcNzUfK2eARfPMmb3YnFiGUjHNwBeDyPvfwpIH4T7eFh12E9epNABNHaniRiVGNZ
+	faoJUG5fbaybuKgNChi4GfZRf9FNSfEwwI4OInG6x0/zDh56WpgrvMSYgAiecckuX56B6c299uQcI
+	/N+oz9owL+iL4I7Bx/RnEvgduW/hyBfNrmY/I1eH40ahXsDyC/rL3HOSCXwXwA8Ty9QbAv6Qd2qlM
+	IRp6eEtvkgeV+zfJ6mcNzn6eErXrAs4dyiDy/EfTp2b0nRC5TL2ASK1uXTsiqWCSlGcMSA06FGCTi
+	NBmAeUvw==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uyvis-0000000DSn0-3zIx;
+	Wed, 17 Sep 2025 17:13:38 +0000
+Message-ID: <f8d432e0-e220-4857-8d4e-427332ce837a@infradead.org>
+Date: Wed, 17 Sep 2025 10:13:36 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXnM15Zj5mCYcsd9usUMtHoPOd3Wz8-L1N5UaB-YvKuHQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/8] tracing: wprobe: Add watchpoint probe event based
+ on hardware breakpoint
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, Jinchao Wang <wangjinchao600@gmail.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
+ <hpa@zytor.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <175785897434.234168.6798590787777427098.stgit@devnote2>
+ <175785898586.234168.14883193853242691280.stgit@devnote2>
+ <014136d2-8599-4a1f-ab8e-c5be4f522e5a@infradead.org>
+ <20250917233818.71678d0164a6fc2d11fa6e38@kernel.org>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250917233818.71678d0164a6fc2d11fa6e38@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Sep 17, 2025 at 08:29:24AM -0700, Ian Rogers wrote:
-> On Wed, Sep 17, 2025 at 5:37 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > And make:
 
-> > perf script rwtop
 
-> > Just call 'python PATH_TO_PYTHON_SCRIPTS/rwtop.py' transparently?
- 
-> Yeah, that's it. The perf script libpython stuff is just providing
-> trace_begin, process_event and trace_end. Using the sampling
-> mechanism, as shown in Gautum's patches, it is pretty easy to migrate
-> them to being stand alone bits of python.
- 
-> > That looks interesting indeed, that way we would stop linking with
-> > libpython, etc.
+On 9/17/25 7:38 AM, Masami Hiramatsu (Google) wrote:
+>> +  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+>> +  #              | |         |   |||||     |         |
+>> +           <idle>-0       [000] d.Z1.  717.026259: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
+>> +           <idle>-0       [000] d.Z1.  717.026373: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
+>> +
+>> +You can see the code which writes to `jiffies` is `do_timer()`.
+> I'm having trouble getting from tick_do_update_jiffies64+0xbe/0x130,
+> which I expect is
+> 	jiffies_64 += ticks;
+> in that function, over to do_timer(), which also updates jiffies_64,
+> but is not called by tick_do_update_jiffies64(). AFAICT, there are
+> no calls to do_timer() in the file (kernel/time/tick-sched.c).
+> 
+> Can you explain, please?
 
-> > I wonder if there are out of tree scripts using the current tools/perf/util/scripting-engines/trace-event-python.c
-> > mechanism...
+Let me try this again.
 
-> > But even that can fallback to a python based mechanism, right?
+I understand the stack (call) trace/dump and your explanation, but
+then your next comment says:
 
-> I think so. Like I said about the use of a Dict for process_event, we
-> may want to streamline things so there is a tension with what the API
-> should be and compatibility. We can always have 2 APIs and try to
-> deprecate one of them.
++You can see the code which writes to `jiffies` is `do_timer()`.
 
-> > Import the script, if it has a given structure, use the new way, if not,
-> > call a glue that reads the events and feed to the old style code.
+Does that need to be corrected?
 
-> > Seems doable and would save code on the main perf binary and headaches
-> > with the libpython and libperl build processes.
+thanks.
+-- 
+~Randy
 
-> So I see this for libpython, and I think it'd be pretty cool if we
-> could have things work like this for say "perf script ilist" and
-
-I think we could even try to, not having a builtin-ilist.c convert
-'perf ilist' to 'perf script ilist' automagically.
-
-> Alice's textual flamegraph work. I worry what the work for libperl
-> would be like and whether it is worth it (hence sending the patch to
-> at least start to make it opt-in rather than opt-out).
-
-Maybe we should be a tad more cautious and start with emitting a warning
-that "libperl is deprecated (holler if you disagree if you use it!)" and
-then make it opt-in, and then remove it.
-
-> Do you need my tags for these changes or wdyt about making the
-> kwlist/API surface smaller?
-
-Lemme look at the original post...
-
-- Arnaldo
