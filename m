@@ -1,180 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011068.outbound.protection.outlook.com [40.107.208.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C271B3925
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 12:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758113348; cv=none; b=hCSFN5EJw+3GVtOkEX9FnibGGiJkPfQLLwfPHUjhS0Sxt/J+79Lfa8BexjeRqSSWddI9XD/6VSKGYYcn0bYrF3+XWaRK9NMfHldMpSBxBBf7fiupjiMRhDCXBCZpYU1P8g6KMknWuR6AgNP/7ney7IDFmW0TqC0X1ysGfWLHcGM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758113348; c=relaxed/simple;
-	bh=101/yr1lluSDprutMk9XWjbg5amAkrbMYeVDWyYiqLk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ofI/R64r0vBF1Mob2cVMzJPOjT3ArqY3uaPbMQg3VpgBMhAaP08xZ3K+oSDb2MN321w1319IIzk5Z1GXIhDKx7KWBUahKz9OpWWs1lMawVU/N6JDCf8aftk+Qb6drmYChdp9mGg0RMEUWXFTJpqNGiOL3Ud3pF12LflrkAb5r04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d2nKYAiy; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C5D1B3925;
+	Wed, 17 Sep 2025 12:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758113838; cv=fail; b=OUQFN4KoqdWssRqTsYCFP5CJc15fqew3GXCtHPUnua5X22ZQMiO7ljnyYX/CQDJazJ0VuN9b/xWm9woZUXn5nUriOetEa6Ydgsk7mnjWjn8bwzmpFXyk2jvxcRMCm9jvDeO2zE2ReApJefnhngADP/1RMnzagdWIGs8HKc1nDqs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758113838; c=relaxed/simple;
+	bh=6R7iKD43tfpVJpFf2hPCS2BDdT1JY4er0cWl7tbRjKU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=VhOXs0xLAlpY5m95OvaWO4dvwg9bCgUQ7g7XAT6iMQiDc0o+7BVeiJ89vIHivzug61crrcEwgwIiddXBVojqhzaIhHH5a1y5BjKweAtL5Nrv1XV7nelt5KJ3HQlYcT7ejti3LSM8ID+/GOBMJAKGTku2TpFfGoIIM5+m0vi1OMg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0pkP81LZ; arc=fail smtp.client-ip=40.107.208.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d2nKYAiy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9D16C4CEF5;
-	Wed, 17 Sep 2025 12:49:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758113348;
-	bh=101/yr1lluSDprutMk9XWjbg5amAkrbMYeVDWyYiqLk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d2nKYAiy6u583jJ4O5CbiS91M1uX6h41GfnXroO3Cx23BdpbDeZNTNhSc3jaTihiX
-	 Eoe/0FHltrQk3CQvwQuXsuoPfPfqHRyG6+B0aGOyeZuoLgqucWWilRILsZhlXmIAck
-	 zNGEcU3oud+sSoJKw1K3F79GpLWV6XxLbItJTsfnn8CC2leabSS84fd8Y4IvxZl7Gw
-	 CeB/HltT1MQA2yRVDlT57Ve1S8CiS6tzCBXohGCE1x3o7C9wkJCd7X3xWkUkqmiDwH
-	 aFrPKejDE54xWlsLHFrx7v4t5L/rDIkvEGZDhsExT+ZzPrt3VCx9mxlofwfOd+jiFB
-	 Irh0kxrSVqd0g==
-Date: Wed, 17 Sep 2025 09:49:05 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Trevor Allison <tallison@redhat.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	linux-perf-users@vger.kernel.org, peterz@infradead.org,
-	mingo@redhat.com, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com
-Subject: Re: [PATCH] perf test attr: Add missing int_mist.uop_dropping event
- to test-stat files
-Message-ID: <aMquQS_5PuC2el1f@x1>
-References: <20250916193046.10054-1-tallison@redhat.com>
- <CAP-5=fXdxNLA4Ey51HdMCrY0SZuzp1WUc5A+n9EFLtaajtYEiA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0pkP81LZ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cu0UaB19WKqmH/A0Oa0jj5qKl4FckKN24yjLcW+zRCqvvWIo4E/r2QAnjsottQCfzq5DOur4uXHHkE9nkJj68b7PzKOYtv1G4IUlrNGbTKyyhU2uv3VN8SxiO1QCNiPaYwdFMag55F0sBYZQ26GLeTa1Bzin6s0klO3qNzSMxuTbHGQDntY0vhpo9kcHsY3oELKzUwueKnyDXc+YALLa9IDBPSAVBnMbumpCxvPplTSuDg8h3GznAk6m2DI3Zd/OLx9vFePv1QKRmjqSemq/QYQW1ifhZHeg1clPo2Y6brtQnWVgTS76px3iwazmMA/uV6pIgZNoo4C5T32un8hOoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Bh+9/yjpA36Z0gYELBd1VLnddNycO0Y4Cu5XB0uUMEM=;
+ b=XY1TkbHdlvWxjy3UvvCiNY6vAsaQjHEjnf+Ss/X6VTw7ERgA4eAeLew9kyZiy0eKs4/oJAO8tODGqDDiyFqMnpVO9VWbL/lBdQ/t71NHwOO/ZVUzsvAk2W4k05NIExjDjTTAF90zV9oTQrGEmB35yM8+swYG29ahA+Rk+pqjwmBAx6jvWMCk0qQpsnIzfG7KB7cyHXUzbQoHIQ5bVgkrJqdTzRJJuNs2lhrSZ9n5Uyws0LXqES8Ynl/QvEXuQmE4ijlv8bnionooxPQaJ6ZF5CPrPUpgFX+P1tDyT6ngTRcNyxHXLnOYBPKt0O5RJuwoog1ibv/4olO3pQ5F13+Leg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Bh+9/yjpA36Z0gYELBd1VLnddNycO0Y4Cu5XB0uUMEM=;
+ b=0pkP81LZP7E1Y9v+EO/9yLc8ITzDhEAPNMmU0WcDNXxDP+1Dh9Fh0LVsOg0WsLemJXB2dZhEh9Zk7RniuLn4rp0kGkYnBy3yTBgqoXEpnUPNBtHqrjUfot1QYcHhpa/S/O/KswayM4gMDzWCd2+4RZf+Ewm/K81n7bM60h56azk=
+Received: from SJ0PR13CA0103.namprd13.prod.outlook.com (2603:10b6:a03:2c5::18)
+ by CH2PR12MB4245.namprd12.prod.outlook.com (2603:10b6:610:af::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.23; Wed, 17 Sep
+ 2025 12:57:09 +0000
+Received: from MWH0EPF000989EC.namprd02.prod.outlook.com
+ (2603:10b6:a03:2c5:cafe::86) by SJ0PR13CA0103.outlook.office365.com
+ (2603:10b6:a03:2c5::18) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9137.13 via Frontend Transport; Wed,
+ 17 Sep 2025 12:57:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ MWH0EPF000989EC.mail.protection.outlook.com (10.167.241.139) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9137.12 via Frontend Transport; Wed, 17 Sep 2025 12:57:09 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.17; Wed, 17 Sep
+ 2025 05:57:08 -0700
+Received: from satlexmb08.amd.com (10.181.42.217) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 17 Sep
+ 2025 07:57:08 -0500
+Received: from [10.252.198.192] (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Wed, 17 Sep 2025 05:57:03 -0700
+Message-ID: <9f2b02e2-f3b2-40aa-8e31-e940f4c2b90b@amd.com>
+Date: Wed, 17 Sep 2025 18:27:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXdxNLA4Ey51HdMCrY0SZuzp1WUc5A+n9EFLtaajtYEiA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 05/12] KVM: x86: Add emulation support for Extented LVT
+ registers
+To: Naveen N Rao <naveen@kernel.org>
+CC: <kvm@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <seanjc@google.com>, <pbonzini@redhat.com>,
+	<nikunj@amd.com>, <bp@alien8.de>, <peterz@infradead.org>, <mingo@redhat.com>,
+	<mizhang@google.com>, <thomas.lendacky@amd.com>, <ravi.bangoria@amd.com>,
+	<Sandipan.Das@amd.com>
+References: <20250901051656.209083-1-manali.shukla@amd.com>
+ <20250901052238.209184-1-manali.shukla@amd.com>
+ <xnwr5tch7yeme3feo6m4irp46ju5lu6gr4kurn6oxlgoutvabt@3k3xh2pbdbje>
+Content-Language: en-US
+From: Manali Shukla <manali.shukla@amd.com>
+In-Reply-To: <xnwr5tch7yeme3feo6m4irp46ju5lu6gr4kurn6oxlgoutvabt@3k3xh2pbdbje>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Received-SPF: None (SATLEXMB05.amd.com: manali.shukla@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000989EC:EE_|CH2PR12MB4245:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6a8555f2-ea20-4de5-2346-08ddf5e9b67d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|36860700013|7416014|376014|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?eElrWFJWdkdVZ0k0S2kyV2MyY21neEpLZFNzOGpUWkduZHM0dzRJUTRTTlAr?=
+ =?utf-8?B?cmduYTVQaWJDa1RxK2g4OXhDN21PM3FPS2d5c2paZnRhRnpWK2JDcGlXeDhJ?=
+ =?utf-8?B?TUhMRk13ck5OUThWT0xJR0NqeXMvY25laWNkVWhWNjExMkJXVXBuRXdERU1v?=
+ =?utf-8?B?ZE80RFdHT0tpMVlvaEhaYnVIaGJ5MzJyb0hQWE01ajg4cW5UQncvaUFBT3hB?=
+ =?utf-8?B?a243eitMSFF2Y3k1VitSU3gyQ281M1JBTHc5aURWODA0OWNDeCtkandzV3RI?=
+ =?utf-8?B?djJTYWEzTDZTMHo5RUtteUEwbXlFZjdLcGwyZzAzSFdSMElzU0hoTng2T3Q4?=
+ =?utf-8?B?OFhaTzlLYkhzWWRReXpxVkRwblVMRFNra2ptRlZ2bGppb0hSVzRJbUpWelQ0?=
+ =?utf-8?B?RlZwOG83L2l6dkd6WHg0WnhWU1ZNT0VrektJUkJMd2JtaVo5QkJEZVFqc3FK?=
+ =?utf-8?B?WkVYSVFvQXZva2NGRy9QVlMxN2kzcHBlb2l5NXdneiszREJwamh1VkpKQ0FO?=
+ =?utf-8?B?YUt3bEhWWi9paTNYSDJpamNoaE9IRUc0WWJQT1pvNk0raG1uSHdZTzRGTmIz?=
+ =?utf-8?B?eEx3K2J0YXFnSWdZZzNhWjM0WjFIR2JvYTFvQnppazVUb21FaXBpaUhFNVVr?=
+ =?utf-8?B?Y0Nmc0MyakhzTER2bTV6VFBCbkM3R0hmZzl1REdYWGJNV3lheEdsSGVNMzVk?=
+ =?utf-8?B?Q2VaZ2VndkRVS0pVbnpSc1dsMGV0WDFsUzZGSHdGV2dNQXR1YVBHMEtwRGxr?=
+ =?utf-8?B?dk5XQzI4NTUwRDdnZkVuUlcxd1A2UlBLRzllQ05tc1JXb1I1SDhvMUcrWWF2?=
+ =?utf-8?B?VDAwZ1RMRzNDRm1UOGsyTjZYNW9UVEpBcU1VUEJKRk4xYUlsRGNvUUVRdW5Q?=
+ =?utf-8?B?c2NMZWxPeWk1YkNqNTNvN09Sb3NvQk9WRDl5T3ZSNFFmTTc4SDMzVVl5d2VZ?=
+ =?utf-8?B?RmtqYkZrQ2pWc1RmTW1vOVVKR2RUS0VkVkQzcXhUSkZ2S0NGR09SV2JaNTJw?=
+ =?utf-8?B?L0diaDEvSUlNNFdla2tEcXNqallndEJjODI2Q0JLVWlJNkl5d2RpdmNEbm4w?=
+ =?utf-8?B?VlhXVHd2L0oxYzlPTWpVYWhkZWU2MGxrYklBQ3NNZi95MS92MUl1d2RGS3Y0?=
+ =?utf-8?B?UEE4cXpyS0RGOHRqcHd2YVdQSlEyVGE1WWNITmZBempaVVBWYjdRaWVSNHRJ?=
+ =?utf-8?B?bHczbEhWZEQwZVRBeVhUeG93RmQ5SkErdkJxeEt2TUMwU1RSQnlZZGtGcE1l?=
+ =?utf-8?B?REdZaXNZSFRaVzJIREhvdVJuS0EwdC8zRXBDOS8wN3RSVUF6Q0VYN0tCcFV2?=
+ =?utf-8?B?V1Vpc1FVMnJwZ0I3V2xHbm5VVURiZEJlU1NCYnBLNmVPZnVpL0dlVnRuZFF1?=
+ =?utf-8?B?NjYyNlRaL29GVkVtdEM2V2RXUXBPdmNYR21kc1pPTVVKejlaRlJkS0t1UWQ0?=
+ =?utf-8?B?bTVsMEhpUjdTQ0tzUXVYOXFOd0hzTk5NVXBBSVZYR3RxMjd1Mm5hMklDMVg1?=
+ =?utf-8?B?SXEyUVp0SzM0UXNVWEU3UTNoS0RnNk5tbDkyOGFjckc2VS9OWGcxOUNWczFB?=
+ =?utf-8?B?c0ZwYjRsR0JkKzQwclJOZ0k0Mm9SWHFBQUlOUnExTHVwYit4VjdtT1Bycklv?=
+ =?utf-8?B?cEd2ZU1KTzNiaGZiYTJ1WUVXNVd5UW15Q0Y1S1pKcVY5M09qTVZNUE5MdjVT?=
+ =?utf-8?B?UWJQZlh1eGVwK2NnaERtMVlMODNvdnVzZDJsZHl1WUNxeVlucXBXS0RiMUIw?=
+ =?utf-8?B?OU45c09YNmtPZytOcndTS1hnVGtJN3dEU1RhSHJ5M1ZRYmJucU5DOFROY2FR?=
+ =?utf-8?B?aThmWUVmZzhsdEFBR0ZJSHFScmErZUt6SkVDWXA4Q2NtdEVncnIydVVOc2tn?=
+ =?utf-8?B?bm5TNURGQjZpZ1VlanNaQzgvaWQzanpIZzhBa3VUaHpMWUt4SjRubXV5Q1RC?=
+ =?utf-8?B?Wk1tRnQrdHpZZCs1Y1dmamZYVXFJUFduTnJDSWdvcEp4Z1ExSnp6TFhVNE9R?=
+ =?utf-8?B?ZVB2TzlpaFNBPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700013)(7416014)(376014)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Sep 2025 12:57:09.2978
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a8555f2-ea20-4de5-2346-08ddf5e9b67d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000989EC.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4245
 
-On Tue, Sep 16, 2025 at 01:23:54PM -0700, Ian Rogers wrote:
-> On Tue, Sep 16, 2025 at 12:31 PM Trevor Allison <tallison@redhat.com> wrote:
-> >
-> > Setup struct perf-event-attr test was failing on EMR cpu because perf stat
-> > was providing an event that was not included in the test. Type 4 Config 4269
-> > or 10ad, int_misc.uop_dropping.
-> >
-> > Add event type=4 config=4269 to test-stat-default and test-stat-detailed-*
-> > files with optional=1 so EMR machines can pass test
-> >
-> > Signed-off-by: Trevor Allison <tallison@redhat.com>
+On 9/8/2025 7:11 PM, Naveen N Rao wrote:
+> On Mon, Sep 01, 2025 at 10:52:38AM +0530, Manali Shukla wrote:
+>> From: Santosh Shukla <santosh.shukla@amd.com>
+>>
+>> The local interrupts are extended to include more LVT registers in
+>> order to allow additional interrupt sources, like Instruction Based
+>> Sampling (IBS) and many more.
+>>
+>> Currently there are four additional LVT registers defined and they are
+>> located at APIC offsets 400h-530h.
+>>
+>> AMD IBS driver is designed to use EXTLVT (Extended interrupt local
+>> vector table) by default for driver initialization.
+>>
+>> Extended LVT registers are required to be emulated to initialize the
+>> guest IBS driver successfully.
+>>
+>> Please refer to Section 16.4.5 in AMD Programmer's Manual Volume 2 at
+>> https://bugzilla.kernel.org/attachment.cgi?id=306250 for more details
+>> on Extended LVT.
+>>
+>> Signed-off-by: Santosh Shukla <santosh.shukla@amd.com>
+>> Co-developed-by: Manali Shukla <manali.shukla@amd.com>
+>> Signed-off-by: Manali Shukla <manali.shukla@amd.com>
+>> ---
+>>  arch/x86/include/asm/apicdef.h | 17 ++++++++++++++
+>>  arch/x86/kvm/cpuid.c           |  6 +++++
+>>  arch/x86/kvm/lapic.c           | 42 ++++++++++++++++++++++++++++++++++
+>>  arch/x86/kvm/lapic.h           |  1 +
+>>  arch/x86/kvm/svm/avic.c        |  4 ++++
+>>  arch/x86/kvm/svm/svm.c         |  6 +++++
+>>  6 files changed, 76 insertions(+)
+>>
 > 
-> Thanks! I wonder why this wasn't seen on SapphireRapids.
+> <snip>
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Fixes: 50e2eb259650 perf vendor events: Update emeraldrapids events/metrics
-
-You mean:
-
-commit d9a6bb9e359e6f816c746fc8d6aa0999f4594a0c
-Author: Ian Rogers <irogers@google.com>
-Date:   Mon Aug 18 12:04:02 2025 -0700
-
-    perf vendor events: Update emeraldrapids events/metrics
-    
-    Update events from v1.14 to v1.16. Update metrics from TMA 5.0 to 5.1.
-    
-    The event updates come from:
-    
-    https://github.com/intel/perfmon/commit/9020e49e790349f86141a1f6ef6f009f189a0f48
-    https://github.com/intel/perfmon/commit/a0567b56185fea4b968391aae344e9d8ed9782d8
-
-?
-
-As I didn't find 50e2eb259650 in upstream or perf-tools-next.
-
-⬢ [acme@toolbx perf-tools-next]$ git log --oneline tools/perf/pmu-events/arch/x86/emeraldrapids/
-d9a6bb9e359e6f81 perf vendor events: Update emeraldrapids events/metrics
-31c8714cf5b91da6 perf vendor events: Update EmeraldRapids events
-4ecf9eab4a04c75d perf vendor events: Update emeraldrapids events/metrics
-5ee60fbf7375abeb perf vendor events: Update EmeraldRapids events/metrics
-40ccd6aa3e2e05be perf vendor events: Add/update emeraldrapids events/metrics
-36f353a1ebf88280 perf vendor events intel: Update emeraldrapids to 1.06
-ea518afc992032f7 perf vendor events intel: Update emeraldrapids events to v1.03
-576d7fed09c7edba perf vendor events intel: Update emeraldrapids events to v1.02
-8a94d3bfaf45e799 perf vendor events intel: Update emeraldrapids to v1.01
-8c994eff8fcfe8ec perf vendor events intel: Add emeraldrapids, update sapphirerapids to v1.16
-⬢ [acme@toolbx perf-tools-next]$
-
-- Arnaldo
- 
-> Ian
+>> diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
+>> index a34c5c3b164e..1b46de10e328 100644
+>> --- a/arch/x86/kvm/svm/avic.c
+>> +++ b/arch/x86/kvm/svm/avic.c
+>> @@ -669,6 +669,10 @@ static bool is_avic_unaccelerated_access_trap(u32 offset)
+>>  	case APIC_LVTERR:
+>>  	case APIC_TMICT:
+>>  	case APIC_TDCR:
+>> +	case APIC_EILVTn(0):
+>> +	case APIC_EILVTn(1):
+>> +	case APIC_EILVTn(2):
+>> +	case APIC_EILVTn(3):
 > 
-> > ---
-> >  tools/perf/tests/shell/attr/test-stat-default    | 7 +++++++
-> >  tools/perf/tests/shell/attr/test-stat-detailed-1 | 7 +++++++
-> >  tools/perf/tests/shell/attr/test-stat-detailed-2 | 7 +++++++
-> >  tools/perf/tests/shell/attr/test-stat-detailed-3 | 7 +++++++
-> >  4 files changed, 28 insertions(+)
-> >
-> > diff --git a/tools/perf/tests/shell/attr/test-stat-default b/tools/perf/tests/shell/attr/test-stat-default
-> > index e47fb4944679..8dd27c1fb661 100644
-> > --- a/tools/perf/tests/shell/attr/test-stat-default
-> > +++ b/tools/perf/tests/shell/attr/test-stat-default
-> > @@ -227,3 +227,10 @@ fd=28
-> >  type=4
-> >  config=270
-> >  optional=1
-> > +
-> > +# PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
-> > +[event29:base-stat]
-> > +fd=29
-> > +type=4
-> > +config=4269
-> > +optional=1
-> > \ No newline at end of file
-> > diff --git a/tools/perf/tests/shell/attr/test-stat-detailed-1 b/tools/perf/tests/shell/attr/test-stat-detailed-1
-> > index 3d500d3e0c5c..12a2ebf4e64a 100644
-> > --- a/tools/perf/tests/shell/attr/test-stat-detailed-1
-> > +++ b/tools/perf/tests/shell/attr/test-stat-detailed-1
-> > @@ -269,3 +269,10 @@ fd=32
-> >  type=3
-> >  config=65538
-> >  optional=1
-> > +
-> > +# PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
-> > +[event33:base-stat]
-> > +fd=33
-> > +type=4
-> > +config=4269
-> > +optional=1
-> > \ No newline at end of file
-> > diff --git a/tools/perf/tests/shell/attr/test-stat-detailed-2 b/tools/perf/tests/shell/attr/test-stat-detailed-2
-> > index 01777a63752f..66ea25b7d38f 100644
-> > --- a/tools/perf/tests/shell/attr/test-stat-detailed-2
-> > +++ b/tools/perf/tests/shell/attr/test-stat-detailed-2
-> > @@ -329,3 +329,10 @@ fd=38
-> >  type=3
-> >  config=65540
-> >  optional=1
-> > +
-> > +# PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
-> > +[event39:base-stat]
-> > +fd=39
-> > +type=4
-> > +config=4269
-> > +optional=1
-> > \ No newline at end of file
-> > diff --git a/tools/perf/tests/shell/attr/test-stat-detailed-3 b/tools/perf/tests/shell/attr/test-stat-detailed-3
-> > index 8400abd7e1e4..4a27bbfb9f87 100644
-> > --- a/tools/perf/tests/shell/attr/test-stat-detailed-3
-> > +++ b/tools/perf/tests/shell/attr/test-stat-detailed-3
-> > @@ -349,3 +349,10 @@ fd=40
-> >  type=3
-> >  config=66048
-> >  optional=1
-> > +
-> > +# PERF_TYPE_RAW / INT_MISC.UOP_DROPPING
-> > +[event41:base-stat]
-> > +fd=41
-> > +type=4
-> > +config=4269
-> > +optional=1
-> > \ No newline at end of file
-> > --
-> > 2.39.5 (Apple Git-154)
-> >
+> This should actually be conditional on X86_FEATURE_EXTLVT.
+
+Sure. I will incorporate it in V2.>
+> I also forgot to add for the previous patch: the feature name needs to 
+> be changed to reflect the true nature of the feature bit.
+
+Ack, I agree the feature bit name should reflect its true nature.
+Happy to rename it. Any specific suggestion for the name?
+
+> 
+> 
+> - Naveen
+> 
+
