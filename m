@@ -1,72 +1,70 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30FD91AA1F4
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 15:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88CA227EB9
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 15:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758121617; cv=none; b=SZ/3TuZPphxa6ghf+8DDISYCelGSSw3pKhGL7lc+NQquA7w77xvT7PyXxrWzSwcGL1/jO1zaYYHXUboCHwlV7OSKOAIv8T3mvigRr+IW+yZB5Ay5FbtOf5zNeJ/UKc+Q0JcYXHXtp4UsXbUkQw7+YOoh8Y6j2sFq9pt1YU5QTB8=
+	t=1758122051; cv=none; b=t4FUrIzgiGGK+pCIzmlxkhuO6O7fvLfEaGu5qTz+SnySSsxVjnWIo/yoLKRG4VTW1Jq8aHgj4f3O7BsaCBYDIeiK8CYfpFbPXIIYFoFFrQeAmlXDVDDGm4LJFORkPPT6fXpvbk5txB1GAbwpop3B6vrcHaGqHBBharqetWxXnkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758121617; c=relaxed/simple;
-	bh=aWHBMOW8hyEe365SagMQZPNiGW5aSEvEFBlvvt4KhAw=;
+	s=arc-20240116; t=1758122051; c=relaxed/simple;
+	bh=KSe+VQBHvW0n2Vmc15r/RkklfJ0UGB66cliG33ieqhs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BH1FD7hsjNVDvc4Fu6uXY5LpcIzqxJ1m4U2X5dgBzAH9v3jASeNAKhLacNI/fDGyJsp31CoS0MJJWdN/v/Lnt1G7QyecRgLDhzvDVjMSY1NJ27Px34jld/JP77iwtUvkiztjrPD2xIURrhbsJxyNXl/Floe57CaJW5JcQcrPiJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.49
+	 To:Cc:Content-Type; b=c6aAorFuI5GrQZnsz+gFjKWjmZf5VkbPH6C2inviSVMAqTELNrILqI9VWka1B13Uoml5+ftMgxpg5IltfBEQ/3aX5AFe6z7CHxbI/I9pRzg7I3/5q6Wn+izpHVaFUgvT/7rS+Np1asRRW+uhdE4cDNRD/icmdB35zmphUNgyGMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-327f87275d4so6596567a91.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 08:06:56 -0700 (PDT)
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-8a967f3a873so2038451241.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 08:14:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758121615; x=1758726415;
+        d=1e100.net; s=20230601; t=1758122048; x=1758726848;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=05Xx0KU64Po07Lz8pcNMpuzAdK+HLbLydsRr28mrazU=;
-        b=vaPBrroO6tMq5Ri+8Fw4k9dsfei1w6/RtEEwYKztZWqwJkkQTbVX/67unIcsotDYWF
-         c8of42GVUQvfX/yfJ29oHCdtfxLTB8PZZJZYOkFOKrzKRUxPImDP/hLdRalQDnUpCTu/
-         VaU2yXkOPV55so2AZWg9TIaFAit3kBUv+rGtGlft+yPF7GTqf5NVPmoADJ/WFIXNaru0
-         vVMVDXrhIgv6pbTzZJoCcWfN7eYXAzItc2JW+qL1ek7IfGoQTg1lBEyIUtkVx53Lddo2
-         J+uF9CG5CjKe0UC3dRPYg4n7OKUHRiLvrbrYlHvcHH8KCXcpJTyTwc4kMcis1on2NGSZ
-         EODg==
-X-Forwarded-Encrypted: i=1; AJvYcCVrQUlej7PUXJ6fb9PxYU1vtBX8u4FZxmxzP48yp2Ya/hunaWOgyajshgEJ+LMziZiPVutbNGuA5yMzD9b6ZIT8@vger.kernel.org
-X-Gm-Message-State: AOJu0YyW9l1G/WYY7fOyoXdeh9Eq7RbvMTXja7+fAv5D11O9pwnqU1Ex
-	86RB5DQA5++06gd0uB8vYxJqSmBW81lrYs25H+II79EJYP48dRb85sBq95U2QOkGNfg=
-X-Gm-Gg: ASbGncuhp+QYszzRsGx0w1M+V5V8hP01zseL2Z7Do0z3q6lepCdlsgqA4u9FlOMbeXD
-	m3VwNaxte8lZgOd5j/u+YNU+VwN1OWhgp4qCqVZhexDPgD9GB5aVpJi/zD+pAow6pd8jeLJo4SJ
-	ritUuJxW5acSvrfQMi3D+46uac8Cc72tXKvnBOQ1hm+h5BArWKx96hdOrzuzibk14S7H7zexzvJ
-	H16BhAv7OaRCJv99uL9uX1OKQu8rVVa8aArzeqM8pl0JY3udqUzs5PgDAaMn/rIqpjyswX5euex
-	GT+eaLWCRnghHNUl/ox4gg7M0qODc9Q4eau4Jm/BksZ+d5dhuWd27XcAVCn+e8RlY26i3eIbh2a
-	SeCjbJWkyFw1nMGx1sHzxS/cULzMfuJyqDMP4fxPwgncCI+7k8nd8LJmDT9rW/WhtT+N52zEU8N
-	0=
-X-Google-Smtp-Source: AGHT+IGWgNOHEQr25IMa2Ciz87cP12O93fVoTScnfOI3wj9WvexYg22IyxgdX+v0U7lgSd/iVaaRXQ==
-X-Received: by 2002:a17:90a:d2ce:b0:32b:dfdb:b276 with SMTP id 98e67ed59e1d1-32ee3fa2c58mr2935383a91.34.1758121614975;
-        Wed, 17 Sep 2025 08:06:54 -0700 (PDT)
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com. [209.85.215.180])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3303ffa1531sm841269a91.4.2025.09.17.08.06.54
+        bh=tZ6rxnhh7QouGGcSBJApcqvcuY+RYoCVy1LFm/ChHAI=;
+        b=QCyUz+U+LRWdKIUbxtnastxnUZCfVKQtroZA7cK+dROq3jQEN3GfChT4qVNlzaEt32
+         I1pgEpU4M+ozJgGntO/eUN9nhMzd3uXdU4wtLxOMFmpcz7mJUMfyTOVnTnDw27unoRoq
+         hgH8J55cIBpVpxAwkvc8yr07n2GxepqixIF4wFqzU4hJCiXmF2agzPhH2EF2s9T4gg8d
+         WYvw4lp4vcMRhnRZ3Ufs625dp4sNP7BublR04Ch73D6vI4N37D5w17kWkZVxqhCWCLeb
+         qkLJYAH0nZRcNHuA08lrUhuzqnBLfkNKIoOEe1DkEqeml4LMcyuqwV9X83nx/t1Wy3H6
+         ZPiw==
+X-Forwarded-Encrypted: i=1; AJvYcCUvBqI57vn9pJf/j9+jxFDKrTmUv42qKsbb8GE0//7DovxxUUzTIjAivVceqaoyf/czgn0KEOVrMwuH4g8W5jux@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIzK/EijApTrx4fg1mpctpGKvLArtbf5c11LY1XhQEIVBdjOQ0
+	w3J5LkfHxvc6/cwbY3Vve/g+j9Q2NBvQLmuqdyxxkQhog4C/Qobu4UmRvKRgNI5o+0Y=
+X-Gm-Gg: ASbGncvg5L6JTIrgajSOukEFSSayLT4kkFxOS78P8Ww22aBIqTrbZq9IdcseKIBcOQP
+	EHns2bnYGGQ9yPwuDvhK776gIOrcyIPP9FE105psOLsNHm3PqTFeV34PaRXd978L5khGPN5JPXg
+	oC9WXR4A06clHIRe2C/l8eviTrlCSoN5VpBlbcswvyu/wlG9yare/rdMKVt+xz3m01AksoDyWKA
+	91hQUgNEDMgk9Jf9mav8pM7GS2NbVTSBDNsApsw4QdXvDAe9AeOBj2ZWvAeQAzEwl++3nF4cwKj
+	snDlW7kM+Wc2/j3CKzUlSSok5EFuZ/fhSIbfhHBkrpdTxrU+biG2L8PI5TgOx0govb/IQMahqpC
+	HdR/pd+wH9lU/3SO0nL8QbitNryIJnPqjozFXfLiPy4jpZ+ey2TLcZJKX5GVJ
+X-Google-Smtp-Source: AGHT+IGC/2u2Q4ebULMYhKHTKj5XG2gqVQBM0Ns/mjbFBNLedAAwlCFWc4amNUAcc9V9IBvqpLxxWg==
+X-Received: by 2002:a05:6122:546:b0:543:53df:f3c with SMTP id 71dfb90a1353d-54a60a06021mr838511e0c.2.1758122048172;
+        Wed, 17 Sep 2025 08:14:08 -0700 (PDT)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-54a0d1e7324sm3319463e0c.12.2025.09.17.08.14.07
         for <linux-perf-users@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Sep 2025 08:06:54 -0700 (PDT)
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b54dd647edcso2128206a12.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 08:06:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWtPkt/zJMzJNtaRcy6tu4gmDN0a4wdnm7UfkgFNZ3YKJyNHUqq8sbiw4Q1WDG3Pcke6loOOP00tDH5CCCcnNNV@vger.kernel.org
-X-Received: by 2002:a05:6122:829c:b0:539:3bb5:e4c8 with SMTP id
- 71dfb90a1353d-54a60a7a014mr768825e0c.12.1758121126748; Wed, 17 Sep 2025
- 07:58:46 -0700 (PDT)
+        Wed, 17 Sep 2025 08:14:07 -0700 (PDT)
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-8e11df47db5so493114241.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 08:14:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV7TjQwImfPQNu7GFdx+ay5XT8TyckU7x2UZmPNqjLludVe/AlOYe9ra6hU8HZKht/eU1CSzeGrVumBcbvb05G8@vger.kernel.org
+X-Received: by 2002:a05:6102:4414:b0:4e6:ddd0:96ff with SMTP id
+ ada2fe7eead31-56d63efa012mr900359137.16.1758122046543; Wed, 17 Sep 2025
+ 08:14:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <87ecs5abp9.wl-kuninori.morimoto.gx@renesas.com> <875xdhabml.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <875xdhabml.wl-kuninori.morimoto.gx@renesas.com>
+References: <87ecs5abp9.wl-kuninori.morimoto.gx@renesas.com> <877bxxabmr.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <877bxxabmr.wl-kuninori.morimoto.gx@renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 17 Sep 2025 16:58:35 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX=oJqJhXOm6w_65dJHRD3VZyJZUWfHzot5EuZtRB2tZw@mail.gmail.com>
-X-Gm-Features: AS18NWDSUjkX-aOCFteBo5qpdwwTSUCRiYts8nug9t_TpQbYuJMfunN09RrdfOE
-Message-ID: <CAMuHMdX=oJqJhXOm6w_65dJHRD3VZyJZUWfHzot5EuZtRB2tZw@mail.gmail.com>
-Subject: Re: [PATCH v4 5/5] arm64: dts: renesas: R8A78000: Add initial
- Ironhide support
+Date: Wed, 17 Sep 2025 17:13:55 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUaoBP1ZtJqc7rfqLXGETXpVYNcFfJf5xFBFSHG9mSB8Q@mail.gmail.com>
+X-Gm-Features: AS18NWDAtmJ2xaoQuGRsAt7Kwia2BPFHIJLsHQkXMzPf_Sxvg99Y761td_EKCiw
+Message-ID: <CAMuHMdUaoBP1ZtJqc7rfqLXGETXpVYNcFfJf5xFBFSHG9mSB8Q@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] arm64: dts: renesas: Add R8A78000 X5H DTs
 To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Cc: "Liang, Kan" <kan.liang@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
@@ -91,73 +89,155 @@ On Wed, 17 Sept 2025 at 07:31, Kuninori Morimoto
 <kuninori.morimoto.gx@renesas.com> wrote:
 > From: Hai Pham <hai.pham.ud@renesas.com>
 >
-> Add the initial support for Renesas X5H Ironhide board.
->
-> Note: It is using "maxcpus" in bootargs to limit number of CPU, because
-> SMP support is now under development. This limitation will be removed
-> in the future.
+> Add initial DT support for R8A78000 (R-Car X5H) SoC.
 >
 > [Kuninori: tidyup for upstreaming]
 >
 > Signed-off-by: Hai Pham <hai.pham.ud@renesas.com>
 > Signed-off-by: Vinh Nguyen <vinh.nguyen.xz@renesas.com>
-> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> Signed-off-by: Khanh Le <khanh.le.xr@renesas.com>
+> Signed-off-by: Minh Le <minh.le.aj@renesas.com>
 > Signed-off-by: Huy Bui <huy.bui.wm@renesas.com>
+> Signed-off-by: Khanh Le <khanh.le.xr@renesas.com>
 > Signed-off-by: Phong Hoang <phong.hoang.wz@renesas.com>
 > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
 Thanks for the update!
 
+> index 0000000000000..6445f05de0563
 > --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/r8a78000-ironhide.dts
-> @@ -0,0 +1,92 @@
+> +++ b/arch/arm64/boot/dts/renesas/r8a78000.dtsi
+> @@ -0,0 +1,755 @@
 > +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > +/*
-> + * Device Tree Source for the Ironhide board
+> + * Device Tree Source for the R-Car X5H (R8A78000) SoC
 > + *
 > + * Copyright (C) 2025 Renesas Electronics Corp.
 > + */
 > +
-> +/dts-v1/;
-> +#include "r8a78000.dtsi"
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
 > +
 > +/ {
-> +       model = "Renesas Ironhide board based on r8a78000";
-> +       compatible = "renesas,ironhide", "renesas,r8a78000";
+> +       compatible = "renesas,r8a78000";
+> +       #address-cells = <2>;
+> +       #size-cells = <2>;
 > +
-> +       aliases {
-> +               serial0 = &hscif0;
-> +       };
+> +       cpus {
+
+> +               a720_0: cpu@0 {
+> +                       compatible = "arm,cortex-a720ae";
+> +                       reg = <0x0 0x0>;
+> +                       device_type = "cpu";
+> +                       next-level-cache = <&L2_CA720_0>;
 > +
-> +       chosen {
-> +               /*
-> +                * REMOVE-ME
-> +                *
-> +                * It works 1 CPU core only for now. This limitation will be
-> +                * removed in future.
-> +                */
-> +               bootargs = "maxcpus=1";
+> +                       L2_CA720_0: cache-controller {
 
-I still don't fully understand why this is needed: without that line,
-Ironhide boots fine, and only a single CPU is enabled.
-None of the cpu node have an enable-method, so Linux does not try to
-enable secondary CPUs anyway.  Even with the enable-method re-added
-(like in your v2), Linux cannot enable secondary CPUs, as there is no
-PSCI node.
+As reported before, the cache nodes should be outside the CPU nodes.
 
-What am I missing?
+"make dtbs_check" would have reminded you:
 
-> +               stdout-path = "serial0:1843200n8";
-> +       };
+    arch/arm64/boot/dts/renesas/r8a78000-ironhide.dtb: cpu@0
+(arm,cortex-a720ae): Unevaluated properties are not allowed
+('cache-controller' was unexpected)
+            from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
 
-The rest LGTM.
+> +                               compatible = "cache";
+> +                               cache-level = <2>;
+
+Missing "cache-unified".
+
+"make dtbs_check":
+
+    arm64/boot/dts/renesas/r8a78000-ironhide.dtb: cache-controller
+(cache): 'cache-unified' is a required property
+            from schema $id: http://devicetree.org/schemas/cache.yaml#
+
+> +                               next-level-cache = <&L3_CA720_0>;
+> +                       };
+
+> +               };
+
+> +       soc: soc {
+> +               compatible = "simple-bus";
+> +               interrupt-parent = <&gic>;
+
+Marc asked to move interrupt-parent to the top, i.e. one level up...
+
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               ranges;
+> +
+> +               timer {
+
+... and please keep the timer node outside the soc node.
+
+"make dtbs_check":
+
+    arch/arm64/boot/dts/renesas/r8a78000-ironhide.dtb: soc
+(simple-bus): timer: 'ranges' is a required property
+            from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+
+> +                       compatible = "arm,armv8-timer";
+> +                       interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
+> +                                    <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
+> +                                    <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+> +                                    <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>,
+> +                                    <GIC_PPI 12 IRQ_TYPE_LEVEL_LOW>;
+> +                       interrupt-names = "sec-phys", "phys", "virt", "hyp-phys", "hyp-virt";
+> +               };
+
+> +               scif0: serial@c0700000 {
+> +                       compatible = "renesas,scif-r8a78000", "renesas,scif";
+
+Missing "renesas,rcar-gen5-scif".
+
+"make dtbs_check":
+
+    arch/arm64/boot/dts/renesas/r8a78000-ironhide.dtb: serial@c0700000
+(renesas,scif-r8a78000): compatible: 'oneOf' conditional failed, one
+must be fixed:
+            ...
+            ['renesas,scif-r8a78000', 'renesas,scif'] is too short
+            ...
+            'renesas,rcar-gen5-scif' was expected
+            ...
+            from schema $id:
+http://devicetree.org/schemas/serial/renesas,scif.yaml#
+
+> +                       reg = <0 0xc0700000 0 0x40>;
+> +                       interrupts = <GIC_SPI 4074 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&dummy_clk_sgasyncd16>, <&dummy_clk_sgasyncd16>, <&scif_clk>;
+> +                       clock-names = "fck", "brg_int", "scif_clk";
+> +                       status = "disabled";
+> +               };
+
+> +               hscif0: serial@c0710000 {
+> +                       compatible = "renesas,hscif-r8a78000", "renesas,hscif";
+
+Missing "renesas,rcar-gen5-hscif".
+
+"make dtbs_check":
+
+arch/arm64/boot/dts/renesas/r8a78000-ironhide.dtb: serial@c0710000
+(renesas,hscif-r8a78000): compatible: 'oneOf' conditional failed, one
+must be fixed:
+        ['renesas,hscif-r8a78000', 'renesas,hscif'] is too short
+        ...
+        'renesas,rcar-gen5-hscif' was expected
+        from schema $id:
+http://devicetree.org/schemas/serial/renesas,hscif.yaml#
+
+> +                       reg = <0 0xc0710000 0 0x60>;
+> +                       interrupts = <GIC_SPI 4078 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&dummy_clk_sgasyncd4>, <&dummy_clk_sgasyncd4>, <&scif_clk>;
+> +                       clock-names = "fck", "brg_int", "scif_clk";
+> +                       status = "disabled";
+> +               };
 
 Gr{oetje,eeting}s,
 
                         Geert
 
---
+-- 
 Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
 In personal conversations with technical people, I call myself a hacker. But
