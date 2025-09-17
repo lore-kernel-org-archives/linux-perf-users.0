@@ -1,150 +1,197 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA783054F3;
-	Wed, 17 Sep 2025 07:53:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37372836AF
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 09:00:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758095612; cv=none; b=Fcke0JsyqFkM+D7URr4bmRCh5bV06Ze6yBQwKuWhAp64cwoIO0JU/LptAPU1+v1X3xTDdPcNKAUjqcT4lhL6E9Se8Mzq5nhJGbd/59wXU+OytW5uFYDbjqmrWCtFpg+QS07r8160eZMnxA2yJwbirzU9Q0KTNanP+fkMPCQlMdQ=
+	t=1758099603; cv=none; b=f9p4RognhMoyJQZf5Hdg0DNYTYpGS64z0Mo0do9EzM8mgRkaqVwBWeNHTFO4M27GLwOX3XbvNkPIlcL2KC4meJT5pOIjAglmMC0xPQY5m8rrdAKGv9WwymrsuJCwR4w6zKac2oT+wjwfCRQ5/0zkqmQMHGpLtk5Fwvo2AAZL9gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758095612; c=relaxed/simple;
-	bh=rZD530C33pH+GWMHh31/6zyeGeoXK3zwG57zlNxdd7s=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jY6G0BkckS5FJUxfjpm36lS1MYooZAatjpD8pgIS+1h86hOn3KbgM/XamXTV8JZtkVRi7yH09nCqXfWgue8ys2dk7QrHnmewHdpp2utVQ3J8iGWNzRkFdeixs62Zv1XjAj70jCV0Dl+hoMokSv4BLl5llBjGp7YTt2Mv9dx6pqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cNM1z9hn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758099603; c=relaxed/simple;
+	bh=xeHhow+SdXLOm6/jUDZ40phvuZPxraWrGLpbapXZp9I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bWVoOW952J/+hfocjJ4XnHmUTFrnKvhk9RChTE1kcDi13gfGfxP8YIfXaAlCAQrJFt554cBcrfeoe+wcJ3rtPonQNGua2WdD17NZSrMI+2qyQVV58YpKzPBuTunRXmNRDKf3uVFD1JKzHxKkhxKew3tLMdmW/h2N5R2yTDqE5D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JpJZZ+3V; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cNM1z9hn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76070C4CEF7;
-	Wed, 17 Sep 2025 07:53:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758095611;
-	bh=rZD530C33pH+GWMHh31/6zyeGeoXK3zwG57zlNxdd7s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cNM1z9hnO/tp4z5Bk9aOjAreEb+GhL7j4b7o/2L+q1cBzAYhyqVy8unTi9B31u9Pa
-	 VfCHGiFnsKiemO/jBp3XL0moGs6WrA5uPyybRlhOUG1PQ4JDRb6IVOirtLWwqFMmPz
-	 pOP9nz41hTctahm4XL4uCVXj255VaePscfnzr0VPu73TRJqYhvrHl75SV0pGzSBUrA
-	 fGgp85cNDmuzXvk+rb2FJb3INRCxDhx4ppcYDPU73yywF7sR4YJQPLwoR6g2BbKd5X
-	 icQ2kOHM4dgtbVRaMEhsd/y3osWPKfq7/+hn4GWpKhAxZrCfqZ0yroxbE8ulajy7Dk
-	 eR4cYfzxKGzng==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1uymym-00000006yJA-31N5;
-	Wed, 17 Sep 2025 07:53:28 +0000
-Date: Wed, 17 Sep 2025 08:53:27 +0100
-Message-ID: <86qzw51pmw.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: "Liang,  Kan" <kan.liang@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Ian Rogers <irogers@google.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	John Garry <john.g.garry@oracle.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Leo Yan <leo.yan@linux.dev>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rob Herring <robh@kernel.org>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Will Deacon <will@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.
- infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] arm64: dts: renesas: Add R8A78000 X5H DTs
-In-Reply-To: <87h5x1afgr.wl-kuninori.morimoto.gx@renesas.com>
-References: <87tt13i0lh.wl-kuninori.morimoto.gx@renesas.com>
-	<87ms6vi0js.wl-kuninori.morimoto.gx@renesas.com>
-	<86v7li1xs4.wl-maz@kernel.org>
-	<87h5x1afgr.wl-kuninori.morimoto.gx@renesas.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JpJZZ+3V"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58GLlspB011459;
+	Wed, 17 Sep 2025 08:59:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=y9JuRO
+	Ov1Z8bodf9acv20lw8Oh9qlIy+EEy+myOvzeU=; b=JpJZZ+3VG4bannOqaiaG1m
+	4giCkik1qNm+qk8TnCDuBtYuIvhEA/Aw2aUb7xdnM5LnD50L+FbFqpI41uaZikyx
+	AB0PAX3kyGZgdZQROlAKCq5yCcEOPZDbiovjzafRtbaB2lH4A5Fu9udOYmY7gj88
+	8bFa7uBmMlKA63Ri9IJHeASOxw5Dt3NnfClbBWLhKPUSNzUcq9nm5RTWk+HXn8n6
+	0NWOAk0Iz0Wl6wvZGkzSNkTQGQKE8sxdizP/I0h+OqZYKYKpk1Uz9Wl3mOXxXo2A
+	frTp0ftM4D2aiBzDHK8PN/eTcQynDNYcCBJDksBpf/TBdHPANGxqQdnR0wzPctlg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 497g4j2hmn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Sep 2025 08:59:45 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 58H8xi34022318;
+	Wed, 17 Sep 2025 08:59:44 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 497g4j2hmj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Sep 2025 08:59:44 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58H5ht1k005923;
+	Wed, 17 Sep 2025 08:59:43 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 495jxu8jcg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Sep 2025 08:59:43 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58H8xeYV32309836
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 17 Sep 2025 08:59:40 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 02E5920040;
+	Wed, 17 Sep 2025 08:59:40 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A29AF20043;
+	Wed, 17 Sep 2025 08:59:35 +0000 (GMT)
+Received: from [9.124.214.27] (unknown [9.124.214.27])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 17 Sep 2025 08:59:35 +0000 (GMT)
+Message-ID: <320a93c0-befb-49df-98b4-b10906c3148d@linux.ibm.com>
+Date: Wed, 17 Sep 2025 14:29:34 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: kuninori.morimoto.gx@renesas.com, kan.liang@linux.intel.com, adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, acme@kernel.org, catalin.marinas@arm.com, conor+dt@kernel.org, dianders@chromium.org, geert+renesas@glider.be, irogers@google.com, mingo@redhat.com, james.clark@linaro.org, jolsa@kernel.org, john.g.garry@oracle.com, krzk+dt@kernel.org, leo.yan@linux.dev, lpieralisi@kernel.org, mark.rutland@arm.com, mike.leach@linaro.org, namhyung@kernel.org, oliver.upton@linux.dev, peterz@infradead.org, robh@kernel.org, shameerali.kolothum.thodi@huawei.com, will@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 0/7] Add interface to expose vpa dtl counters via
+To: Athira Rajeev <atrajeev@linux.ibm.com>, maddy@linux.ibm.com,
+        linuxppc-dev@lists.ozlabs.org
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, aboorvad@linux.ibm.com,
+        sshegde@linux.ibm.com, hbathini@linux.vnet.ibm.com,
+        Aditya.Bodkhe1@ibm.com, venkat88@linux.ibm.com, Tejas.Manhas1@ibm.com
+References: <20250915102947.26681-1-atrajeev@linux.ibm.com>
+Content-Language: en-US
+From: tejas05 <tejas05@linux.ibm.com>
+In-Reply-To: <20250915102947.26681-1-atrajeev@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=Qf5mvtbv c=1 sm=1 tr=0 ts=68ca7881 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=VnNF1IyMAAAA:8 a=okJC4TyXnK7yox6SSLIA:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: RRzJMI1AgSPOucvLeTHXHgHcCmpN2-iZ
+X-Proofpoint-GUID: OJxL40TGkGpp0gv7_PaOZ-te41SpRnmq
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE2MDIwNCBTYWx0ZWRfX+pOzl6bObUB8
+ le1eBR3NQWAIid/Kr9xyGAR9WwH4qY1TDAZ2qUhV5k5HScnsvC0ZxioNB117r2m2EAPiaelEwMF
+ 3HnHHmsFSA/Kb6pz20mr65kzWOHBcFUP1e/ipy4BJAb6/W/On4F0hJTPIr+K4N22TOgHHJUKlfc
+ lpF/TE3/cADPeGeGKtEJRBos/JBhJkFlq7lkYZ2BICDwqDBFaLv2nVcdAaHQvCurKbvaaw/abSP
+ 7cmDWwcN61CJIJ6bltGkIcWeNJVUiXz3CxKbzl0BvMBdKGJD4N0YdLWPM59pBkB5eyqQZvUryiI
+ QxflzG9pTrn8Ozc4O7Q5xoipOV+GTGcd/aoJHL9olw7DfqTNWO2cKkmyphL9QsV6xGMQha2LOEp
+ xixCz8am
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-09-16_02,2025-09-17_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 clxscore=1015 phishscore=0 suspectscore=0 adultscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509160204
 
-On Wed, 17 Sep 2025 05:08:21 +0100,
-Kuninori Morimoto <kuninori.morimoto.gx@renesas.com> wrote:
-> 
-> 
-> Hi Marc
-> 
-> > > +		/*
-> > > +		 * The ARM GIC-720AE - View 1
-> > > +		 *
-> > > +		 * see
-> > > +		 *	r19uh0244ej0052-r-carx5h.pdf
-> > > +		 *	- attachments: 002_R-CarX5H_Address_Map_r0p51.xlsx
-> > > +		 *	 - sheet [RT]
-> > > +		 *	  - line 619
-> > 
-> > Are these documents publicly available? If not, I don't think this
-> > helps much.
-> 
-> You can get it if you are Renesas R-Car Consortium member.
+> The pseries Shared Processor Logical Partition(SPLPAR) machines can
+> retrieve a log of dispatch and preempt events from the hypervisor
+> using data from Disptach Trace Log(DTL) buffer. With this information,
+> user can retrieve when and why each dispatch & preempt has occurred.
+> The vpa-dtl PMU exposes the Virtual Processor Area(VPA) DTL counters
+> via perf.
+>
+> - Patches 1 to 6 has powerpc PMU driver code changes to capture DTL
+>    trace in perf.data. And patch 7 has documentation update.
+>
+> Infrastructure used
+> ===================
+>
+> The VPA DTL PMU counters do not interrupt on overflow or generate any
+> PMI interrupts. Therefore, hrtimer is used to poll the DTL data. The timer
+> nterval can be provided by user via sample_period field in nano seconds.
+> vpa dtl pmu has one hrtimer added per vpa-dtl pmu thread. DTL (Dispatch
+> Trace Log) contains information about dispatch/preempt, enqueue time etc.
+> We directly copy the DTL buffer data as part of auxiliary buffer and it
+> will be processed later. This will avoid time taken to create samples
+> in the kernel space. The PMU driver collecting Dispatch Trace Log (DTL)
+> entries makes use of AUX support in perf infrastructure. On the tools side,
+> this data is made available as PERF_RECORD_AUXTRACE records.
+>
+> To corelate each DTL entry with other events across CPU's, an auxtrace_queue
+> is created for each CPU. Each auxtrace queue has a array/list of auxtrace buffers.
+> All auxtrace queues is maintained in auxtrace heap. The queues are sorted
+> based on timestamp. When the different PERF_RECORD_XX records are processed,
+> compare the timestamp of perf record with timestamp of top element in the
+> auxtrace heap so that DTL events can be co-related with other events
+> Process the auxtrace queue if the timestamp of element from heap is
+> lower than timestamp from entry in perf record. Sometimes it could happen that
+> one buffer is only partially processed. if the timestamp of occurrence of
+> another event is more than currently processed element in the queue, it will
+> move on to next perf record. So keep track of position of buffer to continue
+> processing next time. Update the timestamp of the auxtrace heap with the timestamp
+> of last processed entry from the auxtrace buffer.
+>
+> This infrastructure ensures dispatch trace log entries can be corelated
+> and presented along with other events like sched.
+>
+> With the kernel changes;
+>
+>    # ls /sys/devices/vpa_dtl/
+>    events  format  perf_event_mux_interval_ms  power  subsystem  type  uevent
+>
+> Thanks
+> Athira
+>
+> Aboorva Devarajan (1):
+>    powerpc/time: Expose boot_tb via accessor
+>
+> Athira Rajeev (4):
+>    powerpc/perf/vpa-dtl: Add support to setup and free aux buffer for
+>      capturing DTL data
+>    powerpc/perf/vpa-dtl: Add support to capture DTL data in aux buffer
+>    powerpc/perf/vpa-dtl: Handle the writing of perf record when aux wake
+>      up is needed
+>    powerpc/perf/vpa-dtl: Add documentation for VPA dispatch trace log PMU
+>
+> Kajol Jain (2):
+>    powerpc/vpa_dtl: Add interface to expose vpa dtl counters via perf
+>    docs: ABI: sysfs-bus-event_source-devices-vpa-dtl: Document sysfs
+>      event format entries for vpa_dtl pmu
+>
+>   .../sysfs-bus-event_source-devices-vpa-dtl    |  25 +
+>   Documentation/arch/powerpc/index.rst          |   1 +
+>   Documentation/arch/powerpc/vpa-dtl.rst        | 156 +++++
+>   arch/powerpc/include/asm/time.h               |   4 +
+>   arch/powerpc/kernel/time.c                    |   8 +-
+>   arch/powerpc/perf/Makefile                    |   2 +-
+>   arch/powerpc/perf/vpa-dtl.c                   | 596 ++++++++++++++++++
+>   7 files changed, 790 insertions(+), 2 deletions(-)
+>   create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices-vpa-dtl
+>   create mode 100644 Documentation/arch/powerpc/vpa-dtl.rst
+>   create mode 100644 arch/powerpc/perf/vpa-dtl.c
+>
+Hi Athira,
 
-Given that statistically nobody outside of Renesas it a "member", the
-relevance of this document is pretty much nil.
+I have tested the above patchset on the mainline kernel [ 6.17.0-rc6], 
+it is working fine. The vpa-dtl pmu is recognizable and the perf record 
+report works as expected. Please add the tag below, for the entire series.
 
-> And, the datasheet is very complex, I don't think people can find it by
-> himself without any hint.
+Tested-by: Tejas Manhas <tejas05@linux.ibm.com>
 
-I guess we're just a bunch of inexperienced idiots unable to read a
-TRM.
+Thanks & Regards,
 
-(eye roll...)
+Tejas
 
-> 
-> > > +		 */
-> > > +		gic: interrupt-controller@39000000 {
-> > > +			compatible = "arm,gic-v3";
-> > > +			#interrupt-cells = <3>;
-> > > +			#address-cells = <0>;
-> > > +			interrupt-controller;
-> > > +			reg = <0 0x39000000 0 0x20000>, // GICD
-> > > +			      <0 0x39080000 0 0x40000>; // GICR
-> > 
-> > In v2, you indicated that your GIC was configured for GICv4.1, which
-> > implied 256kB frames for each redistributor. Here, you have either
-> > just enough space for 32 RDs for a GICv3, or 16 RDs for GICv4.
-> > 
-> > So either this is wrong, and you're missing half of the RD space, or
-> > v2 was wrong. Which one is it?
-> 
-> will fix in v4
-> 
-> > > +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> > 
-> > No ITS? That seems... surprising.
-> 
-> Will be added later
-
-Why later? You're adding the GIC, add it all, not just a part of it.
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
