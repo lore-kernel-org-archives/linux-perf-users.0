@@ -1,192 +1,389 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0502475D0
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 06:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05169285056
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 06:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758089653; cv=none; b=AFc6PLNDXDlCIQyjr2y+XGhvXN+cjgSAme7wkgIKIG+svQRWSK9H29Ly2lKs4ESAJCRPEgpSi8zhAR3D5Zd89XKp4J4ZsGnJg9jhVfXlW4nQvh881NsfJmb8hxQ2ZwZbxbz8SujG37C7o4GTj3773I8sR3gZ/QQExRxq0H4wGC0=
+	t=1758090043; cv=none; b=RGS/vkmc8Rnl79aSn5o7XhIFjBtuLs81vr864qHIMpwm4eb0UnCcAOZFhxmRZn7RxFhVW726B21zyaBeRFb+L6yuQ9MMxL1Gk6GbmgFI0aoLp/YKrQhEOYPt7h2L7vHamBe6BZUmeKtRjLYQmKi2wfJRg41y95Vv5AaEhqQb0nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758089653; c=relaxed/simple;
-	bh=jwNyZdCzkpVeu8M/UncF/JIEZsPkukGJTMUOSNPYnO8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kCqg1jqs67t84BptcIj9LgBbWMjigldlGNvQD+Ue+jZVm2mPb2g8oA284xSc+MzbuwGiGZPVDcjQxFI00pjxNXnoSUvh+am4BvGTdA9FLMILJRZSftdleK4H4bE7u4E0IfN2kUAYBKYS8tStOjEHWjJegReyo8Wfag6DgOmf3zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fNIbWBmh; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fNIbWBmh"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-776b0100de0so466105b3a.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 16 Sep 2025 23:14:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758089651; x=1758694451; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=FmzfgTfio2uU1BYpRua3Nqm7f01ztuczzsg9vKgt8Hk=;
-        b=fNIbWBmhnTpKRlRZlHhECeXxrxRTkuUGze9MPrTN3O0pBWYjyWKp80N/jMoEHtKNlw
-         7it1yZ/Jc4+Xy4LGlPw8Af0KBpIjvxtUYCQ0C4TxuJeOLOG935Q5ouWtu6ZoicaI7m0I
-         TRBO1S4hQUSvUoxhg5kp+xbhmAn6s/JgakGKfridtuDyQaXlpe2Rehq6bEpZQQeYqqIb
-         eoiUGU9Ot0IzawZh2UfPYJkIy2CB2L7Jo3NchVSkF4mRATr5DUcIxeZa6nWTA6TaQq7f
-         eLs4wx+fZ/RDc+IFZ5dYKRItMp1W+H0KBdkbmsgW2eKd7pRlfr4OkuuKJnEmclNosI/i
-         mi9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758089651; x=1758694451;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FmzfgTfio2uU1BYpRua3Nqm7f01ztuczzsg9vKgt8Hk=;
-        b=CEO1cGkJYVjVXvLga6r+psF2KzRZTEopc0uoL9s1G4pEglA6QkM7+wDHzuNdcmmRse
-         DkxHVZvNkWSR6UQPmtUtICkfFnlPbUyI1KC7MLYKokdtp189qv94uNHPu5r4V4mM4NTT
-         R1tMFEExMmmIK0bucE933H609UaUhGo//ttMkU5rsTMcpCHlsRkm1I8OLY0OnWA6LZok
-         3wELsvLdvOXyPmhf3qyoxut6RRWsRkhIDOJtiJ9EtxU0hzhu2+YVV53vqtQ7V6DEF3Pl
-         MbPxqD8rLxQWXW/h+vFBWKmHDsZ/g+Q0chkZGSSE/4VuBx/JoDpEB6S8EbnfCUSkerTu
-         k27A==
-X-Forwarded-Encrypted: i=1; AJvYcCWUkztzDfQHhmnJkDq6SL2G2P7iiOSHTXd4un2vSM73uJuJUGhUBzvELa/lsCyaT+EuIJ6zBzxY8a0keYFMh/hl@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIBhWH9nzDybJ++mUOs8vzptbSe6XOBjpxrdIPKk9QwQ+vB0ha
-	l2ZEN+LjSxIPuTOCkmqt2EgVUm6GmpuaCdic+SbpItHHbTf/daVcBnqI
-X-Gm-Gg: ASbGncuPDB/rWgU/mfaQ+L9q4Eh1EewgaVijkfoIo/wgEL/VOVe4egL5QujdC00aCvJ
-	Uy3U4slNTdP+yzteb+xoz9c3Mt+R+GzjnxA0QCwuaiFJQQ9JezCDtfr5TpL5tn3bj87m74b55iI
-	AgkKFKEO3LnF6kyrTSDV3PLxUZ6mwo/cPHAK2erEeCDt3GkvrUuvPfonINhMo/vbz+ALr4ELd1D
-	AwVGWV2hGPQAF0TPcyGARK8ePhjbKdOPcnozRd8Sf4XF7mXy9Mgtdacl4JRV6iZ8ZvJoSbV+GKi
-	7USJ++782w7oovHCRxOKuIWrX5iGq+yPINVp0SuAgqc9DRRNROeSC8QYywgbXEmCi6N+F7N+XQW
-	4SBmAHy1ErOSTD+lsuNPzDtlWvwitD+WdZWIJXWK8
-X-Google-Smtp-Source: AGHT+IFbOOUPuUp71MZLUCXJnIvNlVqkzTniqbE7azWA2KDlmn7NJjUtb/+FLQYp6JRxCAhLg6/vEQ==
-X-Received: by 2002:a05:6a20:3d10:b0:243:b089:9fbe with SMTP id adf61e73a8af0-26701102125mr7170178637.31.1758089650568;
-        Tue, 16 Sep 2025 23:14:10 -0700 (PDT)
-Received: from localhost ([146.19.163.62])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b54b169f2edsm12638506a12.19.2025.09.16.23.14.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Sep 2025 23:14:10 -0700 (PDT)
-Date: Wed, 17 Sep 2025 14:14:02 +0800
-From: Jinchao Wang <wangjinchao600@gmail.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Doug Anderson <dianders@chromium.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Will Deacon <will@kernel.org>, Yunhui Cui <cuiyunhui@bytedance.com>,
-	akpm@linux-foundation.org, catalin.marinas@arm.com,
-	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-	christophe.leroy@csgroup.eu, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-	acme@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, kees@kernel.org,
-	masahiroy@kernel.org, aliceryhl@google.com, ojeda@kernel.org,
-	thomas.weissschuh@linutronix.de, xur@google.com,
-	ruanjinjie@huawei.com, gshan@redhat.com, maz@kernel.org,
-	suzuki.poulose@arm.com, zhanjie9@hisilicon.com,
-	yangyicong@hisilicon.com, gautam@linux.ibm.com, arnd@arndb.de,
-	zhao.xichao@vivo.com, rppt@kernel.org, lihuafei1@huawei.com,
-	coxu@redhat.com, jpoimboe@kernel.org, yaozhenguo1@gmail.com,
-	luogengkun@huaweicloud.com, max.kellermann@ionos.com, tj@kernel.org,
-	yury.norov@gmail.com, thorsten.blum@linux.dev, x86@kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH V1] watchdog: Add boot-time selection for hard lockup
- detector
-Message-ID: <aMpRqlDXXOR5qYFd@mdev>
-References: <20250916145122.416128-1-wangjinchao600@gmail.com>
- <CAP-5=fWWOQ-6SWiNVBvb5mCofe0kZUURG_bm0PDsVFWqwDwrXg@mail.gmail.com>
- <aMoTOXIKBYVTj7PV@mdev>
- <CAP-5=fX7NJmBjd1v5y4xCa0Ce5rNZ8Dqg0LXd12gPrdEQCERVA@mail.gmail.com>
- <aMpIsqcgpOH1AObN@z2>
+	s=arc-20240116; t=1758090043; c=relaxed/simple;
+	bh=Fmmv55BBRuclIhB+qi4UV0FFzJ8QJF+fDBrCQDFb6Po=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=slEtNzN/KK+j+lZPSPk//Kg/oPB0OoxUni6bFbAq88h2R3yGNV04Is0/61IMPv2FfatX0DCLHPrLXQ3wzuVVn1KL6Yul6TQW2yj9sNfvFCgmDatss3f0NwUzLnvCDWmquaSgfKd62RY+siKN3qA9Fbg/JGU+EgvIOwfnGEVFsDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub4.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4cRSyQ0tc6z9sxn;
+	Wed, 17 Sep 2025 08:09:02 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id pu-mVhBGV2B5; Wed, 17 Sep 2025 08:09:02 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4cRSyP5kYTz9sxZ;
+	Wed, 17 Sep 2025 08:09:01 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 902DA8B766;
+	Wed, 17 Sep 2025 08:09:01 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id 36VSlukLfpiK; Wed, 17 Sep 2025 08:09:01 +0200 (CEST)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id EFBB98B763;
+	Wed, 17 Sep 2025 08:08:58 +0200 (CEST)
+Message-ID: <f932d6da-cd9c-4307-8877-eeb947a5c1a6@csgroup.eu>
+Date: Wed, 17 Sep 2025 08:08:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH V1] watchdog: Add boot-time selection for hard lockup
+ detector
+To: Jinchao Wang <wangjinchao600@gmail.com>,
+ Doug Anderson <dianders@chromium.org>, Peter Zijlstra
+ <peterz@infradead.org>, Will Deacon <will@kernel.org>,
+ Yunhui Cui <cuiyunhui@bytedance.com>, akpm@linux-foundation.org,
+ catalin.marinas@arm.com, maddy@linux.ibm.com, mpe@ellerman.id.au,
+ npiggin@gmail.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, kees@kernel.org,
+ masahiroy@kernel.org, aliceryhl@google.com, ojeda@kernel.org,
+ thomas.weissschuh@linutronix.de, xur@google.com, ruanjinjie@huawei.com,
+ gshan@redhat.com, maz@kernel.org, suzuki.poulose@arm.com,
+ zhanjie9@hisilicon.com, yangyicong@hisilicon.com, gautam@linux.ibm.com,
+ arnd@arndb.de, zhao.xichao@vivo.com, rppt@kernel.org, lihuafei1@huawei.com,
+ coxu@redhat.com, jpoimboe@kernel.org, yaozhenguo1@gmail.com,
+ luogengkun@huaweicloud.com, max.kellermann@ionos.com, tj@kernel.org,
+ yury.norov@gmail.com, thorsten.blum@linux.dev, x86@kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org,
+ Ian Rogers <irogers@google.com>
+References: <https://lore.kernel.org/all/20250915035355.10846-1-cuiyunhui@bytedance.com/>
+ <20250916145122.416128-1-wangjinchao600@gmail.com>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+Content-Language: fr-FR
+In-Reply-To: <20250916145122.416128-1-wangjinchao600@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aMpIsqcgpOH1AObN@z2>
 
-On Tue, Sep 16, 2025 at 10:35:46PM -0700, Namhyung Kim wrote:
-> Hello,
-> 
-> On Tue, Sep 16, 2025 at 10:13:12PM -0700, Ian Rogers wrote:
-> > On Tue, Sep 16, 2025 at 6:47 PM Jinchao Wang <wangjinchao600@gmail.com> wrote:
-> > >
-> > > On Tue, Sep 16, 2025 at 05:03:48PM -0700, Ian Rogers wrote:
-> > > > On Tue, Sep 16, 2025 at 7:51 AM Jinchao Wang <wangjinchao600@gmail.com> wrote:
-> > > > >
-> > > > > Currently, the hard lockup detector is selected at compile time via
-> > > > > Kconfig, which requires a kernel rebuild to switch implementations.
-> > > > > This is inflexible, especially on systems where a perf event may not
-> > > > > be available or may be needed for other tasks.
-> > > > >
-> > > > > This commit refactors the hard lockup detector to replace a rigid
-> > > > > compile-time choice with a flexible build-time and boot-time solution.
-> > > > > The patch supports building the kernel with either detector
-> > > > > independently, or with both. When both are built, a new boot parameter
-> > > > > `hardlockup_detector="perf|buddy"` allows the selection at boot time.
-> > > > > This is a more robust and user-friendly design.
-> > > > >
-> > > > > This patch is a follow-up to the discussion on the kernel mailing list
-> > > > > regarding the preference and future of the hard lockup detectors. It
-> > > > > implements a flexible solution that addresses the community's need to
-> > > > > select an appropriate detector at boot time.
-> > > > >
-> > > > > The core changes are:
-> > > > > - The `perf` and `buddy` watchdog implementations are separated into
-> > > > >   distinct functions (e.g., `watchdog_perf_hardlockup_enable`).
-> > > > > - Global function pointers are introduced (`watchdog_hardlockup_enable_ptr`)
-> > > > >   to serve as a single API for the entire feature.
-> > > > > - A new `hardlockup_detector=` boot parameter is added to allow the
-> > > > >   user to select the desired detector at boot time.
-> > > > > - The Kconfig options are simplified by removing the complex
-> > > > >   `HARDLOCKUP_DETECTOR_PREFER_BUDDY` and allowing both detectors to be
-> > > > >   built without mutual exclusion.
-> > > > > - The weak stubs are updated to call the new function pointers,
-> > > > >   centralizing the watchdog logic.
-> > > >
-> > > > What is the impact on  /proc/sys/kernel/nmi_watchdog ? Is that
-> > > > enabling and disabling whatever the boot time choice was? I'm not sure
-> > > > why this has to be a boot time option given the ability to configure
-> > > > via /proc/sys/kernel/nmi_watchdog.
-> > > The new hardlockup_detector boot parameter and the existing
-> > > /proc/sys/kernel/nmi_watchdog file serve different purposes.
-> > >
-> > > The boot parameter selects the type of hard lockup detector (perf or buddy).
-> > > This choice is made once at boot.
-> > >
-> > >  /proc/sys/kernel/nmi_watchdog, on the other hand, is only a simple on/off
-> > > switch for the currently selected detector. It does not change the detector's
-> > > type.
-> > 
-> > So the name "nmi_watchdog" for the buddy watchdog is wrong for fairly
-> > obvious naming reasons but also because we can't differentiate when a
-> > perf event has been taken or not - this impacts perf that is choosing
-> > not to group events in metrics because of it, reducing the metric's
-> > accuracy. We need an equivalent "buddy_watchdog" file to the
-> > "nmi_watchdog" file. If we have such a file then if I did "echo 1 >
-> > /proc/sys/kernel/nmi_watchdog" I'd expect the buddy watchdog to be
-> > disabled and the perf event one to be enabled. Similarly, if I did
-> > "echo 1 > /proc/sys/kernel/buddy_watchdog" then I would expect the
-> > perf event watchdog to be disabled and the buddy one enabled. If I did
-> >  "echo 0 > /proc/sys/kernel/nmi_watchdog; echo 0 >
-> > /proc/sys/kernel/buddy_watchdog" then I'd expect neither to be
-> > enabled. I don't see why choosing the type of watchdog implementation
-> > at boot time is particularly desirable. It seems sensible to default
-> > normal people to using the buddy watchdog (more perf events, power...)
-> > and  CONFIG_DEBUG_KERNEL type people to using the perf event one. As
-> > the "nmi_watchdog" file may be assumed to control the buddy watchdog,
-> > perhaps a compatibility option (where the "nmi_watchdog" file controls
-> > the buddy watchdog) is needed so that user code has time to migrate.
-> 
-> Sounds good to me.  For perf tools, it'd be great if we can have a run-
-> time check which watchdog is selected.
-Considering backward compatibility, I prefer to keep
-/proc/sys/kernel/nmi_watchdog and introduce a new file called
-/proc/sys/kernel/hardlockup_detector_type, which only shows the default string
-or the boot parameter.
 
-The global str pointer hardlockup_detector_type was already introduced in the
-patch, so exposing it in a file is straightforward.
-> 
-> Thanks,
-> Namhyung
-> 
 
--- 
-Jinchao
+Le 16/09/2025 à 16:50, Jinchao Wang a écrit :
+> Currently, the hard lockup detector is selected at compile time via
+> Kconfig, which requires a kernel rebuild to switch implementations.
+> This is inflexible, especially on systems where a perf event may not
+> be available or may be needed for other tasks.
+> 
+> This commit refactors the hard lockup detector to replace a rigid
+> compile-time choice with a flexible build-time and boot-time solution.
+> The patch supports building the kernel with either detector
+> independently, or with both. When both are built, a new boot parameter
+> `hardlockup_detector="perf|buddy"` allows the selection at boot time.
+> This is a more robust and user-friendly design.
+> 
+> This patch is a follow-up to the discussion on the kernel mailing list
+> regarding the preference and future of the hard lockup detectors. It
+> implements a flexible solution that addresses the community's need to
+> select an appropriate detector at boot time.
+> 
+> The core changes are:
+> - The `perf` and `buddy` watchdog implementations are separated into
+>    distinct functions (e.g., `watchdog_perf_hardlockup_enable`).
+> - Global function pointers are introduced (`watchdog_hardlockup_enable_ptr`)
+>    to serve as a single API for the entire feature.
+> - A new `hardlockup_detector=` boot parameter is added to allow the
+>    user to select the desired detector at boot time.
+> - The Kconfig options are simplified by removing the complex
+>    `HARDLOCKUP_DETECTOR_PREFER_BUDDY` and allowing both detectors to be
+>    built without mutual exclusion.
+> - The weak stubs are updated to call the new function pointers,
+>    centralizing the watchdog logic.
+> 
+> Link: https://lore.kernel.org/all/20250915035355.10846-1-cuiyunhui@bytedance.com/
+> Link: https://lore.kernel.org/all/CAD=FV=WWUiCi6bZCs_gseFpDDWNkuJMoL6XCftEo6W7q6jRCkg@mail.gmail.com/
+> 
+> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
+> ---
+>   .../admin-guide/kernel-parameters.txt         |  7 +++
+>   include/linux/nmi.h                           |  6 +++
+>   kernel/watchdog.c                             | 46 ++++++++++++++++++-
+>   kernel/watchdog_buddy.c                       |  7 +--
+>   kernel/watchdog_perf.c                        | 10 ++--
+>   lib/Kconfig.debug                             | 37 +++++++--------
+>   6 files changed, 85 insertions(+), 28 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 5a7a83c411e9..0af214ee566c 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1828,6 +1828,13 @@
+>   			backtraces on all cpus.
+>   			Format: 0 | 1
+>   
+> +	hardlockup_detector=
+> +			[perf, buddy] Selects the hard lockup detector to use at
+> +			boot time.
+> +			Format: <string>
+> +			- "perf": Use the perf-based detector.
+> +			- "buddy": Use the buddy-based detector.
+> +
+>   	hash_pointers=
+>   			[KNL,EARLY]
+>   			By default, when pointers are printed to the console
+> diff --git a/include/linux/nmi.h b/include/linux/nmi.h
+> index cf3c6ab408aa..9298980ce572 100644
+> --- a/include/linux/nmi.h
+> +++ b/include/linux/nmi.h
+> @@ -100,6 +100,9 @@ void watchdog_hardlockup_check(unsigned int cpu, struct pt_regs *regs);
+>   #endif
+>   
+>   #if defined(CONFIG_HARDLOCKUP_DETECTOR_PERF)
+> +void watchdog_perf_hardlockup_enable(unsigned int cpu);
+> +void watchdog_perf_hardlockup_disable(unsigned int cpu);
+> +extern int watchdog_perf_hardlockup_probe(void);
+
+No 'extern' on function prototypes, this is pointless.
+
+>   extern void hardlockup_detector_perf_stop(void);
+>   extern void hardlockup_detector_perf_restart(void);
+>   extern void hardlockup_config_perf_event(const char *str);
+> @@ -120,6 +123,9 @@ void watchdog_hardlockup_disable(unsigned int cpu);
+>   void lockup_detector_reconfigure(void);
+>   
+>   #ifdef CONFIG_HARDLOCKUP_DETECTOR_BUDDY
+> +void watchdog_buddy_hardlockup_enable(unsigned int cpu);
+> +void watchdog_buddy_hardlockup_disable(unsigned int cpu);
+> +int watchdog_buddy_hardlockup_probe(void);
+>   void watchdog_buddy_check_hardlockup(int hrtimer_interrupts);
+>   #else
+>   static inline void watchdog_buddy_check_hardlockup(int hrtimer_interrupts) {}
+> diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+> index 80b56c002c7f..85451d24a77d 100644
+> --- a/kernel/watchdog.c
+> +++ b/kernel/watchdog.c
+> @@ -55,6 +55,37 @@ unsigned long *watchdog_cpumask_bits = cpumask_bits(&watchdog_cpumask);
+>   
+>   #ifdef CONFIG_HARDLOCKUP_DETECTOR
+>   
+> +#ifdef CONFIG_HARDLOCKUP_DETECTOR_PERF
+> +/* The global function pointers */
+> +void (*watchdog_hardlockup_enable_ptr)(unsigned int cpu) = watchdog_perf_hardlockup_enable;
+> +void (*watchdog_hardlockup_disable_ptr)(unsigned int cpu) = watchdog_perf_hardlockup_disable;
+> +int (*watchdog_hardlockup_probe_ptr)(void) = watchdog_perf_hardlockup_probe;
+
+As this is set only once at startup, can we use static_call instead of 
+function pointers ?
+
+Also, can it me made __ro_after_init ?
+
+> +#elif defined(CONFIG_HARDLOCKUP_DETECTOR_BUDDY)
+> +void (*watchdog_hardlockup_enable_ptr)(unsigned int cpu) = watchdog_buddy_hardlockup_enable;
+> +void (*watchdog_hardlockup_disable_ptr)(unsigned int cpu) = watchdog_buddy_hardlockup_disable;
+> +int (*watchdog_hardlockup_probe_ptr)(void) = watchdog_buddy_hardlockup_probe;
+> +#endif
+> +
+> +#ifdef CONFIG_HARDLOCKUP_DETECTOR_MULTIPLE
+> +static char *hardlockup_detector_type = "perf"; /* Default to perf */
+> +static int __init set_hardlockup_detector_type(char *str)
+> +{
+> +	if (!strncmp(str, "perf", 4)) {
+
+Why strncmp ?
+
+What if I set 'hardlockup_detector=performance" ?
+
+
+> +		watchdog_hardlockup_enable_ptr = watchdog_perf_hardlockup_enable;
+> +		watchdog_hardlockup_disable_ptr = watchdog_perf_hardlockup_disable;
+> +		watchdog_hardlockup_probe_ptr = watchdog_perf_hardlockup_probe;
+> +	} else if (!strncmp(str, "buddy", 5)) {
+> +		watchdog_hardlockup_enable_ptr = watchdog_buddy_hardlockup_enable;
+> +		watchdog_hardlockup_disable_ptr = watchdog_buddy_hardlockup_disable;
+> +		watchdog_hardlockup_probe_ptr = watchdog_buddy_hardlockup_probe;
+> +	}
+> +	return 1;
+> +}
+> +
+> +__setup("hardlockup_detector=", set_hardlockup_detector_type);
+> +
+> +#endif
+> +
+>   # ifdef CONFIG_SMP
+>   int __read_mostly sysctl_hardlockup_all_cpu_backtrace;
+>   # endif /* CONFIG_SMP */
+> @@ -262,9 +293,17 @@ static inline void watchdog_hardlockup_kick(void) { }
+>    * softlockup watchdog start and stop. The detector must select the
+>    * SOFTLOCKUP_DETECTOR Kconfig.
+>    */
+> -void __weak watchdog_hardlockup_enable(unsigned int cpu) { }
+> +void __weak watchdog_hardlockup_enable(unsigned int cpu)
+> +{
+> +	if (watchdog_hardlockup_enable_ptr)
+> +		watchdog_hardlockup_enable_ptr(cpu);
+> +}
+
+This is a weak function so it can be overloaded. What happens then, for 
+instance if the sparc architecture version of 
+watchdog_hardlockup_enable() is called instead ?
+
+>   
+> -void __weak watchdog_hardlockup_disable(unsigned int cpu) { }
+> +void __weak watchdog_hardlockup_disable(unsigned int cpu)
+> +{
+> +	if (watchdog_hardlockup_disable_ptr)
+> +		watchdog_hardlockup_disable_ptr(cpu);
+> +}
+>   
+>   /*
+>    * Watchdog-detector specific API.
+> @@ -275,6 +314,9 @@ void __weak watchdog_hardlockup_disable(unsigned int cpu) { }
+>    */
+>   int __weak __init watchdog_hardlockup_probe(void)
+>   {
+> +	if (watchdog_hardlockup_probe_ptr)
+> +		return watchdog_hardlockup_probe_ptr();
+> +
+>   	return -ENODEV;
+>   }
+>   
+> diff --git a/kernel/watchdog_buddy.c b/kernel/watchdog_buddy.c
+> index ee754d767c21..390d89bfcafa 100644
+> --- a/kernel/watchdog_buddy.c
+> +++ b/kernel/watchdog_buddy.c
+> @@ -19,15 +19,16 @@ static unsigned int watchdog_next_cpu(unsigned int cpu)
+>   	return next_cpu;
+>   }
+>   
+> -int __init watchdog_hardlockup_probe(void)
+> +int __init watchdog_buddy_hardlockup_probe(void)
+>   {
+>   	return 0;
+>   }
+>   
+> -void watchdog_hardlockup_enable(unsigned int cpu)
+> +void watchdog_buddy_hardlockup_enable(unsigned int cpu)
+>   {
+>   	unsigned int next_cpu;
+>   
+> +	pr_info("ddddd %s\n", __func__);
+
+Leftover from debuging ?
+
+>   	/*
+>   	 * The new CPU will be marked online before the hrtimer interrupt
+>   	 * gets a chance to run on it. If another CPU tests for a
+> @@ -58,7 +59,7 @@ void watchdog_hardlockup_enable(unsigned int cpu)
+>   	cpumask_set_cpu(cpu, &watchdog_cpus);
+>   }
+>   
+> -void watchdog_hardlockup_disable(unsigned int cpu)
+> +void watchdog_buddy_hardlockup_disable(unsigned int cpu)
+>   {
+>   	unsigned int next_cpu = watchdog_next_cpu(cpu);
+>   
+> diff --git a/kernel/watchdog_perf.c b/kernel/watchdog_perf.c
+> index 9c58f5b4381d..270110e58f20 100644
+> --- a/kernel/watchdog_perf.c
+> +++ b/kernel/watchdog_perf.c
+> @@ -153,10 +153,12 @@ static int hardlockup_detector_event_create(void)
+>    * watchdog_hardlockup_enable - Enable the local event
+>    * @cpu: The CPU to enable hard lockup on.
+>    */
+> -void watchdog_hardlockup_enable(unsigned int cpu)
+> +void watchdog_perf_hardlockup_enable(unsigned int cpu)
+>   {
+>   	WARN_ON_ONCE(cpu != smp_processor_id());
+>   
+> +	pr_info("ddddd %s\n", __func__);
+> +
+>   	if (hardlockup_detector_event_create())
+>   		return;
+>   
+> @@ -172,7 +174,7 @@ void watchdog_hardlockup_enable(unsigned int cpu)
+>    * watchdog_hardlockup_disable - Disable the local event
+>    * @cpu: The CPU to enable hard lockup on.
+>    */
+> -void watchdog_hardlockup_disable(unsigned int cpu)
+> +void watchdog_perf_hardlockup_disable(unsigned int cpu)
+>   {
+>   	struct perf_event *event = this_cpu_read(watchdog_ev);
+>   
+> @@ -257,10 +259,12 @@ bool __weak __init arch_perf_nmi_is_available(void)
+>   /**
+>    * watchdog_hardlockup_probe - Probe whether NMI event is available at all
+>    */
+> -int __init watchdog_hardlockup_probe(void)
+> +int __init watchdog_perf_hardlockup_probe(void)
+>   {
+>   	int ret;
+>   
+> +	pr_info("ddddd %s\n", __func__);
+> +
+>   	if (!arch_perf_nmi_is_available())
+>   		return -ENODEV;
+>   
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index dc0e0c6ed075..443353fad1c1 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -1167,36 +1167,33 @@ config HARDLOCKUP_DETECTOR
+>   #
+>   # Note that arch-specific variants are always preferred.
+>   #
+> -config HARDLOCKUP_DETECTOR_PREFER_BUDDY
+> -	bool "Prefer the buddy CPU hardlockup detector"
+> -	depends on HARDLOCKUP_DETECTOR
+> -	depends on HAVE_HARDLOCKUP_DETECTOR_PERF && HAVE_HARDLOCKUP_DETECTOR_BUDDY
+> -	depends on !HAVE_HARDLOCKUP_DETECTOR_ARCH
+> -	help
+> -	  Say Y here to prefer the buddy hardlockup detector over the perf one.
+> -
+> -	  With the buddy detector, each CPU uses its softlockup hrtimer
+> -	  to check that the next CPU is processing hrtimer interrupts by
+> -	  verifying that a counter is increasing.
+> -
+> -	  This hardlockup detector is useful on systems that don't have
+> -	  an arch-specific hardlockup detector or if resources needed
+> -	  for the hardlockup detector are better used for other things.
+> -
+>   config HARDLOCKUP_DETECTOR_PERF
+> -	bool
+> +	bool "Enable perf-based hard lockup detector (preferred)"
+>   	depends on HARDLOCKUP_DETECTOR
+> -	depends on HAVE_HARDLOCKUP_DETECTOR_PERF && !HARDLOCKUP_DETECTOR_PREFER_BUDDY
+> +	depends on HAVE_HARDLOCKUP_DETECTOR_PERF
+>   	depends on !HAVE_HARDLOCKUP_DETECTOR_ARCH
+>   	select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
+> +	help
+> +	  This detector uses a perf event on the CPU to detect when a CPU
+> +	  has become non-maskable interrupt (NMI) stuck. This is the
+> +	  preferred method on modern systems as it can detect lockups on
+> +	  all CPUs at the same time.
+>   
+>   config HARDLOCKUP_DETECTOR_BUDDY
+> -	bool
+> +	bool "Enable buddy-based hard lockup detector"
+>   	depends on HARDLOCKUP_DETECTOR
+>   	depends on HAVE_HARDLOCKUP_DETECTOR_BUDDY
+> -	depends on !HAVE_HARDLOCKUP_DETECTOR_PERF || HARDLOCKUP_DETECTOR_PREFER_BUDDY
+>   	depends on !HAVE_HARDLOCKUP_DETECTOR_ARCH
+>   	select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
+> +	help
+> +	  This is an alternative lockup detector that uses a heartbeat
+> +	  mechanism between CPUs to detect when one has stopped responding.
+> +	  It is less precise than the perf-based detector and cannot detect
+> +	  all-CPU lockups, but it does not require a perf counter.
+> +
+> +config CONFIG_HARDLOCKUP_DETECTOR_MULTIPLE
+> +	bool
+> +	depends on HARDLOCKUP_DETECTOR_PERF && HARDLOCKUP_DETECTOR_BUDDY
+>   
+>   config HARDLOCKUP_DETECTOR_ARCH
+>   	bool
+
