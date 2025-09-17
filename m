@@ -1,95 +1,85 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA222905;
-	Wed, 17 Sep 2025 17:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A7A2F99BD;
+	Wed, 17 Sep 2025 17:24:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758129228; cv=none; b=s0XUyNpPmmQBVgsmHVbsJgyXuX7qjmkvCnNf1mjJ71xrSe1GMBZCw/twD626I2tZS6hBfcQqpknqViwFPNDJNxB8Tm7Kqxvu7wKq7vEcsSBRF3ajejSaLdav+IOBsBBy4qThX6o1F3n+sJGASD558Od89cPp1sOzbhzmszEJLD0=
+	t=1758129873; cv=none; b=E1FbuWwZw1QvCoPtFjipaH4Go9N0yaSouX7mRIKIKEU5Sq/bDkZEg/C8qeZGp5i8odjPjNMMcPPjV6ea2TcjpD96u5wvHWA2iJvtL9YMNQodELlJ607HLCeOUh5+ra4UjwWcQaqmgof/uuLpjLdslLschvyyvIAyAMJFTF/0RV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758129228; c=relaxed/simple;
-	bh=7utd2mNCGqv0fGRGHJlqKBPLh/85qlOzgzSj3DRpfGA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lpB3UVBIRSfPBkNVI7SGuWywn3QjNrhN1oWvxuwMrCO4VBXl2Rm79lv1bNivzEZnpYnGJQ7z/qctJRCLw6mFK92I0wbbu06CZfyp9/nDREbPti5mhCS1+Jwi2TvBQEnpoZ8zSnHEw5KydvIdGMFm9iymZo7mS1wUAXk5fwQfMSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=s/8W4GJW; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1758129873; c=relaxed/simple;
+	bh=4UoXPczKg9TI8gT2C8XoVlv2Ynl1q/uZ3VhRzWWWyL4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TRfhYuzkSjF5ap36pkCTKP9loCR6wgfhe9tHLcSEBI5JYxreRiANBbnVNjz2KfMk+yf+zw7ij+7ExBwmQKfMxGmkVI5czn5r7A4fkUy9q1u5AzAQCXsdn0++MJOiv4QTAZMvypIaFu1b54oV3fL/SCg2xNsX4fYQhTL+I3D/wb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mhENdb70; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s/8W4GJW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=PWqxr35AzD9frV25voEqKDmiFYHwMk5p7VNBLNHixIU=; b=s/8W4GJWaIDo+n9p8W+SHHXkVl
-	Fn6tiZ9I3k0bTLcNzUfK2eARfPMmb3YnFiGUjHNwBeDyPvfwpIH4T7eFh12E9epNABNHaniRiVGNZ
-	faoJUG5fbaybuKgNChi4GfZRf9FNSfEwwI4OInG6x0/zDh56WpgrvMSYgAiecckuX56B6c299uQcI
-	/N+oz9owL+iL4I7Bx/RnEvgduW/hyBfNrmY/I1eH40ahXsDyC/rL3HOSCXwXwA8Ty9QbAv6Qd2qlM
-	IRp6eEtvkgeV+zfJ6mcNzn6eErXrAs4dyiDy/EfTp2b0nRC5TL2ASK1uXTsiqWCSlGcMSA06FGCTi
-	NBmAeUvw==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uyvis-0000000DSn0-3zIx;
-	Wed, 17 Sep 2025 17:13:38 +0000
-Message-ID: <f8d432e0-e220-4857-8d4e-427332ce837a@infradead.org>
-Date: Wed, 17 Sep 2025 10:13:36 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mhENdb70"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F226AC4CEE7;
+	Wed, 17 Sep 2025 17:24:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758129872;
+	bh=4UoXPczKg9TI8gT2C8XoVlv2Ynl1q/uZ3VhRzWWWyL4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mhENdb70ih5gEPAaGFnU9gvOL5vnLYRihU/D1e97SBANv3lOG9ooDfnxdId2zkmRL
+	 /P6thmnX0eCCuNi/lvxGQkj9nr3VSv4mUr9aliqnlnnD7sNDR+GOZy3fQQDfEc/yce
+	 cBNxIkPUd/2YHXWpJD1ZJp9cx4yWAixjHilt9qTLg5E/XQiJogwZyiTuP3l7VyXz1z
+	 3ulFWme/QBIAOptneJigS3xJIGophNq4birSAF3ZI+OS0cAOleG+s7zxMxoMFGu5G6
+	 hvncvb8HMzSZg1XqmChn0bAgVbr60lrNuvupZSS6lLxHqoRUcruFa8rXLNqv9htg+G
+	 2ByyKb4ozUbdQ==
+Date: Wed, 17 Sep 2025 14:24:29 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: James Clark <james.clark@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH v6 00/12] perf: arm_spe: Armv8.8 SPE features
+Message-ID: <aMruzdTu74rZ0RZ9@x1>
+References: <20250808-james-perf-feat_spe_eft-v6-0-6daf498578c8@linaro.org>
+ <20250808123913.GD3420125@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/8] tracing: wprobe: Add watchpoint probe event based
- on hardware breakpoint
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- x86@kernel.org, Jinchao Wang <wangjinchao600@gmail.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
- <hpa@zytor.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <175785897434.234168.6798590787777427098.stgit@devnote2>
- <175785898586.234168.14883193853242691280.stgit@devnote2>
- <014136d2-8599-4a1f-ab8e-c5be4f522e5a@infradead.org>
- <20250917233818.71678d0164a6fc2d11fa6e38@kernel.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250917233818.71678d0164a6fc2d11fa6e38@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250808123913.GD3420125@e132581.arm.com>
 
-
-
-On 9/17/25 7:38 AM, Masami Hiramatsu (Google) wrote:
->> +  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
->> +  #              | |         |   |||||     |         |
->> +           <idle>-0       [000] d.Z1.  717.026259: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
->> +           <idle>-0       [000] d.Z1.  717.026373: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
->> +
->> +You can see the code which writes to `jiffies` is `do_timer()`.
-> I'm having trouble getting from tick_do_update_jiffies64+0xbe/0x130,
-> which I expect is
-> 	jiffies_64 += ticks;
-> in that function, over to do_timer(), which also updates jiffies_64,
-> but is not called by tick_do_update_jiffies64(). AFAICT, there are
-> no calls to do_timer() in the file (kernel/time/tick-sched.c).
+On Fri, Aug 08, 2025 at 01:39:13PM +0100, Leo Yan wrote:
+> On Fri, Aug 08, 2025 at 12:22:57PM +0100, James Clark wrote:
+> > Support 3 new SPE features: FEAT_SPEv1p4 filters, FEAT_SPE_EFT extended
+> > filtering, and SPE_FEAT_FDS data source filtering. The features are
+> > independent can be applied separately:
+> > 
+> >   * Prerequisite sysreg changes - patch 1
+> >   * FEAT_SPEv1p4 - patches 2 - 3
+> >   * FEAT_SPE_EFT - patch 4
+> >   * FEAT_SPE_FDS - patches 5 - 9
+> >   * FEAT_SPE_FDS Perf tool changes - patches 10 - 12
+> > 
+> > The first two features will work with old Perfs but a Perf change to
+> > parse the new config4 is required for the last feature.
 > 
-> Can you explain, please?
+> I tested FEAT_SPE_EFT (xxx_filter_mask), inv_data_src_filter
+> and inv_event_filter, all of them work as expected.
+> 
+> Tested-by: Leo Yan <leo.yan@arm.com>
 
-Let me try this again.
+Please let me know when I can merge the tools/perf bits.
 
-I understand the stack (call) trace/dump and your explanation, but
-then your next comment says:
-
-+You can see the code which writes to `jiffies` is `do_timer()`.
-
-Does that need to be corrected?
-
-thanks.
--- 
-~Randy
-
+- Arnaldo
