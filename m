@@ -1,427 +1,198 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F25007404E
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 00:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2037E1401B
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 00:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758067443; cv=none; b=VRAbG70XE2Szg1UMUrpjO0s89hLkCHbJ9TIILdbLFFFzpBWR9WCiVLTv9xPsxjWApcuFPTqjuXQXuAmF+DtbWrUJJ1z5l/L/qOgQIm4v8FqhFzqa+ZhAlJphBbyZ8DfxSGUwNS6AtD6fCyEqNqPCsqHT9DPtpgFjXwGkJkJfljs=
+	t=1758068231; cv=none; b=S1q6zvjSNaX2Jqcbl6VfQg6ZTmq/hV58ASWWRPUUZFnmTSZoOeuty73DMH10CfxInYc3jW++IycZ/Z+VA5pE2JacQOM5jTzgKR31f7Wkr3ysBZKcdu6XOtWduNARoullz5pkWfzfjJP+6SAX6QUQ3FsB9T31xYD/FUKiFmrJYWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758067443; c=relaxed/simple;
-	bh=wOCmffexuyl/NcnGYhBdbif/7iJ3aRzsJXv9Mrm2Yyc=;
+	s=arc-20240116; t=1758068231; c=relaxed/simple;
+	bh=8bMaW+s8iABakKwgqc6w26p8Hw7d/FhUe28p51azdRg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AMOuZYQNVyRTDx1h1aVAxjW4VlQfehMedyhsTIiz1EX5i+QPeZscbXWONqeJE6EaQgKNXIUgkjoJylZBOjsH8R+qOOGDBVHVSH8b1UOK0DL6F4v9gyxrM2w3chgJNSa6orI4QPSBQ97563BjRfe5JnomXld24VX0hHU0ndmHebo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dDv17upp; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=F8I6Ijvc6QArZIF7hCH3UNx2M1EvicAbqPFIjKg4pRPk7CXtUHDC+oRrTu7xiyrCFP9d2rqOhvfxOQmu0Q+jyT56ET3NjFv3eyAnAqqQi64/osEsofSq04HZJJ3EKib7O2VWGxHgD5wkOPbSYkTopYF6M7RUR1cWbsRizr0e674=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R3lswAoh; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dDv17upp"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-265abad93bfso75595ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 16 Sep 2025 17:04:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R3lswAoh"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-62f2b27a751so4085644a12.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Sep 2025 17:17:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1758067441; x=1758672241; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1758068227; x=1758673027; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=b1ozF3Ihz3SbIh1//+stJwcJhcq5G5PVLjQUIa2BLC4=;
-        b=dDv17uppXW1iFMGuQH5jf7nBr8QSF5M3d671/9O67v03OykAgc+5V6IQdpAW/1k6Ww
-         HDci1g+yDqkFUHJnJ+zj5Z8p9yAZ6uB8afMNbqhVNaeFDYTiWFEyGorA0qH0HiGTnVve
-         N6P1QIE1bMrU2Z2FSy32FA3oz+qAbfZ3zAshj35YsYdHOxdaaey/zsUabnyASwuLJBsX
-         2K5SjM3XqJRC5cOuYjq8e8TBauvPLYJkyJmPP+p2507Cc7Flf+ggfy/NgeVolR7ugwkG
-         yPEbudT3ireDyeE66YBFUFDCE4CxJ2wcefmn0mdIi15M483XYXthOfc9vK0jpG0L7LqD
-         35IA==
+        bh=xXSGAh8chrKBAWdQa4v/8pOW/Kzc0QCjuDzlGtOmWtE=;
+        b=R3lswAohNyOMwWKwXZqGgP77g3sVJvV3/mg9TzComvE2dQRdy7tW7chcmxkZgXm5Pt
+         y8ShAYeveHS9l1YTNw5O33im160bqMNxYklewVHTmq3rbd0RGrrrEKQnTEBMbeGaXYw5
+         /9t/BxIp5x6YFECxH3FclY7u5KY4PbtZH6zaLOai03vO0gev+pPSHEaElrdTFmXcaWyc
+         QTS8iwW92mgHxfbuc18vaFp/5XWSypNuiQ0ebTp7bC+sVmNC7ZUfCgnRAIoiqtmsAEnR
+         1eJNoGEYG0GVdU7ROWlTd39kVc0mCpHRMJo29uGRqv8NNLmdOuXjSY3rWz0QCMxuy7U4
+         9MKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758067441; x=1758672241;
+        d=1e100.net; s=20230601; t=1758068227; x=1758673027;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=b1ozF3Ihz3SbIh1//+stJwcJhcq5G5PVLjQUIa2BLC4=;
-        b=bIziq0yLH+8b04RCN4nIqJozwGkoJXDLXwLOW29WEGByRDEKIzRRKGwvpV2GikceFR
-         cENQ7UICfO6x5LsDDJfPNkdyuaOtyiJCDiD+k6/5O8zZAjGCNPWhVi7W97w3n5OD3XzH
-         N+7xTjZJQATiijTxfSBJqpwic9iiMCTU64WRBkOczzud+eFdHtPRy/uKtckaVLpvZp5R
-         Qj1l7Ntgb1KCRBh4hBXlyW1VesQCg/NgwIT43DhlGFD4YzqS4VoI4Ncp806vn9mG/XVn
-         WPofAxKeG9lUuSw9IuVJCe3SQnOfp9SZtb4NFmwizU0xLSR4CR19/v26XTUTwMxOiV/I
-         4D6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVIC7OEQtrZsI/gBbkZT0sPHmz2HrdwmY/NdxRMPMWJ7LvZ/J2dfxILmazeauyYjad44X6nlOC4fMmREjXpQ/sJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpVGOiuJCxiUXUptf5JubcTv/bYez2k9sET8PCcLtDE/Wj1Sfu
-	qu0l08wwjlNRF+Z9NeW6VJOErY/Hm8L8oYniuqDL5Vx9uUotLYJ0kLeHaAuq7Sn/tgwUHLloyG/
-	Lw1tg4RxduvRxJcNpXEKQ4K9g4+Vlyb4KkdvIHaOr
-X-Gm-Gg: ASbGnctO7BLbMnEXlIX/598Bx4ImxotQBM12C7G8aEHsaJmBE6/EpAu5O3+fiTRAeQQ
-	YPRm0ABaLh/diYgXL98HwyYHnPKAI5OxFHc0qrIwZS8DX3DGKpNUdgWHhgCFpLI2qH3H+eWO2ft
-	ywpOIkDsnbP4o9eLimU42GExKGeZvj3XXRc66r1Q6WUkMGV16cTTB/VuRVxoWUvPmrnmuIqApQ+
-	XHk09UXpIT0I7I=
-X-Google-Smtp-Source: AGHT+IF44M/njGETFfGx7puarW8zSab4Yqo7efyATMKMqVa8CxtmvwDhuCwTG6EiL4xJDWFLbqy6XjX3gMcWgISoAJY=
-X-Received: by 2002:a17:902:eccf:b0:25b:d970:fe45 with SMTP id
- d9443c01a7336-26808a2bb47mr1492825ad.1.1758067440819; Tue, 16 Sep 2025
- 17:04:00 -0700 (PDT)
+        bh=xXSGAh8chrKBAWdQa4v/8pOW/Kzc0QCjuDzlGtOmWtE=;
+        b=fxffkkSjE8CsKcgGcMV2DOHHmWbM+KWal5WcwQOjIAPr7cqX7aM9jpbUv9z+Ikjr54
+         A4lmlfYiNcYuOPGKv3Sx1EYvPFW0DdCHW4NfWy5VoRo5A8y6RgFDJTOrKF9OhWfQfU4+
+         GzDYtQ8TT76l2X2/2Z/aMDvSPwqLPgmoZC6mt7N1alNCCtSW8/0Oc+eGJIoGXJUcCyoX
+         wVttjR7mogng4Ov11LTQ4BMZ+D+ikBb+3Vt373CM5I2K6bXlCxPSagpxRDEhPgYoK0N4
+         Nw0OWP0mt7Snxd0tpddhOX+Qys0tex/nawIenqn6zNJ65DvsvqXMiCIWbc4GecaxUxhX
+         WVMA==
+X-Forwarded-Encrypted: i=1; AJvYcCV16W2vnngpHnFvZlIlv1SGP45Fl6zxMSayA9iECZzLxtdWeBqOwIVIjBHqpPKy6831eeE/u736sArDl/fX+wKO@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6O4ewcW/ptGR67/CrZ/qMvqqzJkLQ1kqQNe8MzZrGbLShDerQ
+	eWX3BBkTiL7lzSfI/dmeu23xVy7MssMLVP4X20Z4dpC0/TNUqh2OLXvD5vjZMIuPwSNX26NnL1u
+	NJhXWGDhq6V7nDh40gOHW+3ATZevfoVE=
+X-Gm-Gg: ASbGncvQK+3+AFI8M5ILS/oTs9vveFd36fWXbGYp/CjBC+nfoLqAY5yO0ZQtcP+ZARZ
+	5TA4MQ8V6wk3OwbAd9cRCKrHL1ULaWHByyjmPwVNqMtyYfiitw+sB6IWSCxsu22hiOa9CLvA3RF
+	O8hJpmGBW7zFeLsSjVu4ju1qbbxgBp6qB7nsUWMspKaBHm40TmsSygCdxIC2mHD2HspRqq5XxiR
+	o5ENW6mPh9PubQtg6y+XiYpmX8MLlgpAItWeKE=
+X-Google-Smtp-Source: AGHT+IHkWc8z+1xTqfr6RJDMY4BcUWdUqKw6o2ECW5HvusjoalWjKeML6JPCAbs/M1LUcK6l6vjMuNB824YFNjkP4LM=
+X-Received: by 2002:a05:6402:26c3:b0:62f:2afa:60e6 with SMTP id
+ 4fb4d7f45d1cf-62f83c3f396mr486555a12.7.1758068227086; Tue, 16 Sep 2025
+ 17:17:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250916145122.416128-1-wangjinchao600@gmail.com>
-In-Reply-To: <20250916145122.416128-1-wangjinchao600@gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 16 Sep 2025 17:03:48 -0700
-X-Gm-Features: AS18NWDR12QpAvWDnz7Kij5exh3KDDcZnCHjW3U3Ew-QC-j5MDeFbQz2osglKGQ
-Message-ID: <CAP-5=fWWOQ-6SWiNVBvb5mCofe0kZUURG_bm0PDsVFWqwDwrXg@mail.gmail.com>
-Subject: Re: [RFC PATCH V1] watchdog: Add boot-time selection for hard lockup detector
-To: Jinchao Wang <wangjinchao600@gmail.com>
-Cc: Doug Anderson <dianders@chromium.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Will Deacon <will@kernel.org>, Yunhui Cui <cuiyunhui@bytedance.com>, akpm@linux-foundation.org, 
-	catalin.marinas@arm.com, maddy@linux.ibm.com, mpe@ellerman.id.au, 
-	npiggin@gmail.com, christophe.leroy@csgroup.eu, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, kees@kernel.org, masahiroy@kernel.org, 
-	aliceryhl@google.com, ojeda@kernel.org, thomas.weissschuh@linutronix.de, 
-	xur@google.com, ruanjinjie@huawei.com, gshan@redhat.com, maz@kernel.org, 
-	suzuki.poulose@arm.com, zhanjie9@hisilicon.com, yangyicong@hisilicon.com, 
-	gautam@linux.ibm.com, arnd@arndb.de, zhao.xichao@vivo.com, rppt@kernel.org, 
-	lihuafei1@huawei.com, coxu@redhat.com, jpoimboe@kernel.org, 
-	yaozhenguo1@gmail.com, luogengkun@huaweicloud.com, max.kellermann@ionos.com, 
-	tj@kernel.org, yury.norov@gmail.com, thorsten.blum@linux.dev, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org
+References: <1eb2266f4408798a55bda00cb04545a3203aa572.1755012943.git.lorenzo.stoakes@oracle.com>
+ <20250916194915.1395712-1-clm@meta.com>
+In-Reply-To: <20250916194915.1395712-1-clm@meta.com>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Wed, 17 Sep 2025 02:16:54 +0200
+X-Gm-Features: AS18NWCoF9toVvfO2cO2nt5EYzoV_mx2NXf7z13bcCNBsYM4N3TAXw98oK0bZL0
+Message-ID: <CAGudoHE1GfgM-fX9pE-McqXH3dowPRoSPU9yHiGi+a3mk1hwnw@mail.gmail.com>
+Subject: Re: [PATCH 02/10] mm: convert core mm to mm_flags_*() accessors
+To: Chris Mason <clm@meta.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, "David S . Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Kees Cook <kees@kernel.org>, 
+	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+	Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, David Rientjes <rientjes@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Oleg Nesterov <oleg@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, 
+	Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	Matthew Wilcox <willy@infradead.org>, linux-s390@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 16, 2025 at 7:51=E2=80=AFAM Jinchao Wang <wangjinchao600@gmail.=
-com> wrote:
+On Wed, Sep 17, 2025 at 1:57=E2=80=AFAM Chris Mason <clm@meta.com> wrote:
 >
-> Currently, the hard lockup detector is selected at compile time via
-> Kconfig, which requires a kernel rebuild to switch implementations.
-> This is inflexible, especially on systems where a perf event may not
-> be available or may be needed for other tasks.
+> On Tue, 12 Aug 2025 16:44:11 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracl=
+e.com> wrote:
 >
-> This commit refactors the hard lockup detector to replace a rigid
-> compile-time choice with a flexible build-time and boot-time solution.
-> The patch supports building the kernel with either detector
-> independently, or with both. When both are built, a new boot parameter
-> `hardlockup_detector=3D"perf|buddy"` allows the selection at boot time.
-> This is a more robust and user-friendly design.
+> > As part of the effort to move to mm->flags becoming a bitmap field, con=
+vert
+> > existing users to making use of the mm_flags_*() accessors which will, =
+when
+> > the conversion is complete, be the only means of accessing mm_struct fl=
+ags.
+> >
+> > This will result in the debug output being that of a bitmap output, whi=
+ch
+> > will result in a minor change here, but since this is for debug only, t=
+his
+> > should have no bearing.
+> >
+> > Otherwise, no functional changes intended.
+> >
+> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 >
-> This patch is a follow-up to the discussion on the kernel mailing list
-> regarding the preference and future of the hard lockup detectors. It
-> implements a flexible solution that addresses the community's need to
-> select an appropriate detector at boot time.
+> [ ... ]
 >
-> The core changes are:
-> - The `perf` and `buddy` watchdog implementations are separated into
->   distinct functions (e.g., `watchdog_perf_hardlockup_enable`).
-> - Global function pointers are introduced (`watchdog_hardlockup_enable_pt=
-r`)
->   to serve as a single API for the entire feature.
-> - A new `hardlockup_detector=3D` boot parameter is added to allow the
->   user to select the desired detector at boot time.
-> - The Kconfig options are simplified by removing the complex
->   `HARDLOCKUP_DETECTOR_PREFER_BUDDY` and allowing both detectors to be
->   built without mutual exclusion.
-> - The weak stubs are updated to call the new function pointers,
->   centralizing the watchdog logic.
+> > diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+> > index 25923cfec9c6..17650f0b516e 100644
+> > --- a/mm/oom_kill.c
+> > +++ b/mm/oom_kill.c
+>
+> [ ... ]
+>
+> > @@ -1251,7 +1251,7 @@ SYSCALL_DEFINE2(process_mrelease, int, pidfd, uns=
+igned int, flags)
+> >        * Check MMF_OOM_SKIP again under mmap_read_lock protection to en=
+sure
+> >        * possible change in exit_mmap is seen
+> >        */
+> > -     if (!test_bit(MMF_OOM_SKIP, &mm->flags) && !__oom_reap_task_mm(mm=
+))
+> > +     if (mm_flags_test(MMF_OOM_SKIP, mm) && !__oom_reap_task_mm(mm))
+> >               ret =3D -EAGAIN;
+> >       mmap_read_unlock(mm);
+> >
+>
+> Hi Lorzeno, I think we lost a ! here.
+>
+> claude found enough inverted logic in moved code that I did a new run wit=
+h
+> a more explicit prompt for it, but this was the only new hit.
+>
 
-What is the impact on  /proc/sys/kernel/nmi_watchdog ? Is that
-enabling and disabling whatever the boot time choice was? I'm not sure
-why this has to be a boot time option given the ability to configure
-via /proc/sys/kernel/nmi_watchdog.
+I presume conversion was done mostly manually?
 
-> Link: https://lore.kernel.org/all/20250915035355.10846-1-cuiyunhui@byteda=
-nce.com/
-> Link: https://lore.kernel.org/all/CAD=3DFV=3DWWUiCi6bZCs_gseFpDDWNkuJMoL6=
-XCftEo6W7q6jRCkg@mail.gmail.com/
->
-> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
-> ---
->  .../admin-guide/kernel-parameters.txt         |  7 +++
->  include/linux/nmi.h                           |  6 +++
->  kernel/watchdog.c                             | 46 ++++++++++++++++++-
->  kernel/watchdog_buddy.c                       |  7 +--
->  kernel/watchdog_perf.c                        | 10 ++--
->  lib/Kconfig.debug                             | 37 +++++++--------
->  6 files changed, 85 insertions(+), 28 deletions(-)
->
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentat=
-ion/admin-guide/kernel-parameters.txt
-> index 5a7a83c411e9..0af214ee566c 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -1828,6 +1828,13 @@
->                         backtraces on all cpus.
->                         Format: 0 | 1
->
-> +       hardlockup_detector=3D
-> +                       [perf, buddy] Selects the hard lockup detector to=
- use at
-> +                       boot time.
-> +                       Format: <string>
-> +                       - "perf": Use the perf-based detector.
-> +                       - "buddy": Use the buddy-based detector.
-> +
->         hash_pointers=3D
->                         [KNL,EARLY]
->                         By default, when pointers are printed to the cons=
-ole
-> diff --git a/include/linux/nmi.h b/include/linux/nmi.h
-> index cf3c6ab408aa..9298980ce572 100644
-> --- a/include/linux/nmi.h
-> +++ b/include/linux/nmi.h
-> @@ -100,6 +100,9 @@ void watchdog_hardlockup_check(unsigned int cpu, stru=
-ct pt_regs *regs);
->  #endif
->
->  #if defined(CONFIG_HARDLOCKUP_DETECTOR_PERF)
-> +void watchdog_perf_hardlockup_enable(unsigned int cpu);
-> +void watchdog_perf_hardlockup_disable(unsigned int cpu);
-> +extern int watchdog_perf_hardlockup_probe(void);
->  extern void hardlockup_detector_perf_stop(void);
->  extern void hardlockup_detector_perf_restart(void);
->  extern void hardlockup_config_perf_event(const char *str);
-> @@ -120,6 +123,9 @@ void watchdog_hardlockup_disable(unsigned int cpu);
->  void lockup_detector_reconfigure(void);
->
->  #ifdef CONFIG_HARDLOCKUP_DETECTOR_BUDDY
-> +void watchdog_buddy_hardlockup_enable(unsigned int cpu);
-> +void watchdog_buddy_hardlockup_disable(unsigned int cpu);
-> +int watchdog_buddy_hardlockup_probe(void);
->  void watchdog_buddy_check_hardlockup(int hrtimer_interrupts);
->  #else
->  static inline void watchdog_buddy_check_hardlockup(int hrtimer_interrupt=
-s) {}
-> diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-> index 80b56c002c7f..85451d24a77d 100644
-> --- a/kernel/watchdog.c
-> +++ b/kernel/watchdog.c
-> @@ -55,6 +55,37 @@ unsigned long *watchdog_cpumask_bits =3D cpumask_bits(=
-&watchdog_cpumask);
->
->  #ifdef CONFIG_HARDLOCKUP_DETECTOR
->
-> +#ifdef CONFIG_HARDLOCKUP_DETECTOR_PERF
-> +/* The global function pointers */
-> +void (*watchdog_hardlockup_enable_ptr)(unsigned int cpu) =3D watchdog_pe=
-rf_hardlockup_enable;
-> +void (*watchdog_hardlockup_disable_ptr)(unsigned int cpu) =3D watchdog_p=
-erf_hardlockup_disable;
-> +int (*watchdog_hardlockup_probe_ptr)(void) =3D watchdog_perf_hardlockup_=
-probe;
-> +#elif defined(CONFIG_HARDLOCKUP_DETECTOR_BUDDY)
-> +void (*watchdog_hardlockup_enable_ptr)(unsigned int cpu) =3D watchdog_bu=
-ddy_hardlockup_enable;
-> +void (*watchdog_hardlockup_disable_ptr)(unsigned int cpu) =3D watchdog_b=
-uddy_hardlockup_disable;
-> +int (*watchdog_hardlockup_probe_ptr)(void) =3D watchdog_buddy_hardlockup=
-_probe;
-> +#endif
-> +
-> +#ifdef CONFIG_HARDLOCKUP_DETECTOR_MULTIPLE
-> +static char *hardlockup_detector_type =3D "perf"; /* Default to perf */
-> +static int __init set_hardlockup_detector_type(char *str)
-> +{
-> +       if (!strncmp(str, "perf", 4)) {
-> +               watchdog_hardlockup_enable_ptr =3D watchdog_perf_hardlock=
-up_enable;
-> +               watchdog_hardlockup_disable_ptr =3D watchdog_perf_hardloc=
-kup_disable;
-> +               watchdog_hardlockup_probe_ptr =3D watchdog_perf_hardlocku=
-p_probe;
-> +       } else if (!strncmp(str, "buddy", 5)) {
-> +               watchdog_hardlockup_enable_ptr =3D watchdog_buddy_hardloc=
-kup_enable;
-> +               watchdog_hardlockup_disable_ptr =3D watchdog_buddy_hardlo=
-ckup_disable;
-> +               watchdog_hardlockup_probe_ptr =3D watchdog_buddy_hardlock=
-up_probe;
-> +       }
-> +       return 1;
-> +}
-> +
-> +__setup("hardlockup_detector=3D", set_hardlockup_detector_type);
-> +
-> +#endif
-> +
->  # ifdef CONFIG_SMP
->  int __read_mostly sysctl_hardlockup_all_cpu_backtrace;
->  # endif /* CONFIG_SMP */
-> @@ -262,9 +293,17 @@ static inline void watchdog_hardlockup_kick(void) { =
-}
->   * softlockup watchdog start and stop. The detector must select the
->   * SOFTLOCKUP_DETECTOR Kconfig.
->   */
-> -void __weak watchdog_hardlockup_enable(unsigned int cpu) { }
-> +void __weak watchdog_hardlockup_enable(unsigned int cpu)
-> +{
-> +       if (watchdog_hardlockup_enable_ptr)
-> +               watchdog_hardlockup_enable_ptr(cpu);
-> +}
->
-> -void __weak watchdog_hardlockup_disable(unsigned int cpu) { }
-> +void __weak watchdog_hardlockup_disable(unsigned int cpu)
-> +{
-> +       if (watchdog_hardlockup_disable_ptr)
-> +               watchdog_hardlockup_disable_ptr(cpu);
-> +}
->
->  /*
->   * Watchdog-detector specific API.
-> @@ -275,6 +314,9 @@ void __weak watchdog_hardlockup_disable(unsigned int =
-cpu) { }
->   */
->  int __weak __init watchdog_hardlockup_probe(void)
->  {
-> +       if (watchdog_hardlockup_probe_ptr)
-> +               return watchdog_hardlockup_probe_ptr();
-> +
->         return -ENODEV;
->  }
->
-> diff --git a/kernel/watchdog_buddy.c b/kernel/watchdog_buddy.c
-> index ee754d767c21..390d89bfcafa 100644
-> --- a/kernel/watchdog_buddy.c
-> +++ b/kernel/watchdog_buddy.c
-> @@ -19,15 +19,16 @@ static unsigned int watchdog_next_cpu(unsigned int cp=
-u)
->         return next_cpu;
->  }
->
-> -int __init watchdog_hardlockup_probe(void)
-> +int __init watchdog_buddy_hardlockup_probe(void)
->  {
->         return 0;
->  }
->
-> -void watchdog_hardlockup_enable(unsigned int cpu)
-> +void watchdog_buddy_hardlockup_enable(unsigned int cpu)
->  {
->         unsigned int next_cpu;
->
-> +       pr_info("ddddd %s\n", __func__);
->         /*
->          * The new CPU will be marked online before the hrtimer interrupt
->          * gets a chance to run on it. If another CPU tests for a
-> @@ -58,7 +59,7 @@ void watchdog_hardlockup_enable(unsigned int cpu)
->         cpumask_set_cpu(cpu, &watchdog_cpus);
->  }
->
-> -void watchdog_hardlockup_disable(unsigned int cpu)
-> +void watchdog_buddy_hardlockup_disable(unsigned int cpu)
->  {
->         unsigned int next_cpu =3D watchdog_next_cpu(cpu);
->
-> diff --git a/kernel/watchdog_perf.c b/kernel/watchdog_perf.c
-> index 9c58f5b4381d..270110e58f20 100644
-> --- a/kernel/watchdog_perf.c
-> +++ b/kernel/watchdog_perf.c
-> @@ -153,10 +153,12 @@ static int hardlockup_detector_event_create(void)
->   * watchdog_hardlockup_enable - Enable the local event
->   * @cpu: The CPU to enable hard lockup on.
->   */
-> -void watchdog_hardlockup_enable(unsigned int cpu)
-> +void watchdog_perf_hardlockup_enable(unsigned int cpu)
->  {
->         WARN_ON_ONCE(cpu !=3D smp_processor_id());
->
-> +       pr_info("ddddd %s\n", __func__);
-> +
->         if (hardlockup_detector_event_create())
->                 return;
->
-> @@ -172,7 +174,7 @@ void watchdog_hardlockup_enable(unsigned int cpu)
->   * watchdog_hardlockup_disable - Disable the local event
->   * @cpu: The CPU to enable hard lockup on.
->   */
-> -void watchdog_hardlockup_disable(unsigned int cpu)
-> +void watchdog_perf_hardlockup_disable(unsigned int cpu)
->  {
->         struct perf_event *event =3D this_cpu_read(watchdog_ev);
->
-> @@ -257,10 +259,12 @@ bool __weak __init arch_perf_nmi_is_available(void)
->  /**
->   * watchdog_hardlockup_probe - Probe whether NMI event is available at a=
-ll
->   */
-> -int __init watchdog_hardlockup_probe(void)
-> +int __init watchdog_perf_hardlockup_probe(void)
->  {
->         int ret;
->
-> +       pr_info("ddddd %s\n", __func__);
-> +
->         if (!arch_perf_nmi_is_available())
->                 return -ENODEV;
->
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index dc0e0c6ed075..443353fad1c1 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -1167,36 +1167,33 @@ config HARDLOCKUP_DETECTOR
->  #
->  # Note that arch-specific variants are always preferred.
->  #
-> -config HARDLOCKUP_DETECTOR_PREFER_BUDDY
-> -       bool "Prefer the buddy CPU hardlockup detector"
-> -       depends on HARDLOCKUP_DETECTOR
-> -       depends on HAVE_HARDLOCKUP_DETECTOR_PERF && HAVE_HARDLOCKUP_DETEC=
-TOR_BUDDY
-> -       depends on !HAVE_HARDLOCKUP_DETECTOR_ARCH
-> -       help
-> -         Say Y here to prefer the buddy hardlockup detector over the per=
-f one.
-> -
-> -         With the buddy detector, each CPU uses its softlockup hrtimer
-> -         to check that the next CPU is processing hrtimer interrupts by
-> -         verifying that a counter is increasing.
-> -
-> -         This hardlockup detector is useful on systems that don't have
-> -         an arch-specific hardlockup detector or if resources needed
-> -         for the hardlockup detector are better used for other things.
-> -
->  config HARDLOCKUP_DETECTOR_PERF
-> -       bool
-> +       bool "Enable perf-based hard lockup detector (preferred)"
->         depends on HARDLOCKUP_DETECTOR
-> -       depends on HAVE_HARDLOCKUP_DETECTOR_PERF && !HARDLOCKUP_DETECTOR_=
-PREFER_BUDDY
-> +       depends on HAVE_HARDLOCKUP_DETECTOR_PERF
->         depends on !HAVE_HARDLOCKUP_DETECTOR_ARCH
->         select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
-> +       help
-> +         This detector uses a perf event on the CPU to detect when a CPU
-> +         has become non-maskable interrupt (NMI) stuck. This is the
-> +         preferred method on modern systems as it can detect lockups on
-> +         all CPUs at the same time.
+The way(tm) is to use coccinelle.
 
-I'd say this option should be the default for kernel developers but
-shouldn't be used by default to free the perf event and due to the
-extra power overhead.
+I whipped out the following real quick and results look good:
 
-Thanks,
-Ian
+@@
+expression mm, bit;
+@@
 
->  config HARDLOCKUP_DETECTOR_BUDDY
-> -       bool
-> +       bool "Enable buddy-based hard lockup detector"
->         depends on HARDLOCKUP_DETECTOR
->         depends on HAVE_HARDLOCKUP_DETECTOR_BUDDY
-> -       depends on !HAVE_HARDLOCKUP_DETECTOR_PERF || HARDLOCKUP_DETECTOR_=
-PREFER_BUDDY
->         depends on !HAVE_HARDLOCKUP_DETECTOR_ARCH
->         select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
-> +       help
-> +         This is an alternative lockup detector that uses a heartbeat
-> +         mechanism between CPUs to detect when one has stopped respondin=
-g.
-> +         It is less precise than the perf-based detector and cannot dete=
-ct
-> +         all-CPU lockups, but it does not require a perf counter.
-> +
-> +config CONFIG_HARDLOCKUP_DETECTOR_MULTIPLE
-> +       bool
-> +       depends on HARDLOCKUP_DETECTOR_PERF && HARDLOCKUP_DETECTOR_BUDDY
->
->  config HARDLOCKUP_DETECTOR_ARCH
->         bool
-> --
-> 2.43.0
->
+- test_bit(bit, &mm->flags)
++ mm_flags_test(bit, mm)
+
+$ spatch --sp-file mmbit.cocci mm/oom_kill.c
+[snip]
+@@ -892,7 +892,7 @@ static bool task_will_free_mem(struct ta
+         * This task has already been drained by the oom reaper so there ar=
+e
+         * only small chances it will free some more
+         */
+-       if (test_bit(MMF_OOM_SKIP, &mm->flags))
++       if (mm_flags_test(MMF_OOM_SKIP, mm))
+                return false;
+
+        if (atomic_read(&mm->mm_users) <=3D 1)
+@@ -1235,7 +1235,7 @@ SYSCALL_DEFINE2(process_mrelease, int, p
+                reap =3D true;
+        else {
+                /* Error only if the work has not been done already */
+-               if (!test_bit(MMF_OOM_SKIP, &mm->flags))
++               if (!mm_flags_test(MMF_OOM_SKIP, mm))
+                        ret =3D -EINVAL;
+        }
+        task_unlock(p);
+@@ -1251,7 +1251,7 @@ SYSCALL_DEFINE2(process_mrelease, int, p
+         * Check MMF_OOM_SKIP again under mmap_read_lock protection to ensu=
+re
+         * possible change in exit_mmap is seen
+         */
+-       if (!test_bit(MMF_OOM_SKIP, &mm->flags) && !__oom_reap_task_mm(mm))
++       if (!mm_flags_test(MMF_OOM_SKIP, mm) && !__oom_reap_task_mm(mm))
+                ret =3D -EAGAIN;
+        mmap_read_unlock(mm);
