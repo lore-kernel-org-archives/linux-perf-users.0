@@ -1,69 +1,46 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A11225A3D
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 17:52:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0732773CE;
+	Wed, 17 Sep 2025 17:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758131539; cv=none; b=gq/lh8bdY0QxM594REJKy/IvOSbQ/7MR/FsfmF9s9OkPMKYZb8hcmiX+R12/oCE7FMdedIdJ3kfcDsbRE23BLBbaSRVkiKfMaRsJvret09hDUjXB7bU7PIlHbuscStEErIV4Gmm9EfFwRr91bWC0nZF45Fkwvyt9Llv6bVLJ140=
+	t=1758131822; cv=none; b=PBf5sL3sOwZ44OEYVnCAI4IHgKaoub3W3IXt3y+Gb64EYPl5fbG1N5qFbElG3/S01UWyjhCiBqEl4okKmTh6FPPk2DRSDV5kCEanSMI2o38VW81gXE3xi1p7aK62sV2K/y2mTn5GQ8Zwl3R2jMGKJZolTpY9rNMS/ZoFQEkNOjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758131539; c=relaxed/simple;
-	bh=g2/Cse7salc1tIUE/OJp9FayjCskQFXXIpcOQv0wqcA=;
+	s=arc-20240116; t=1758131822; c=relaxed/simple;
+	bh=67ffSzd5FeWwRmf2I/9jF06+U1mwUT8kfxZrOsoiHu4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lZv6JTVh8TzD61d6XY4WBW18UHDOoKzMmlRfEO01k/5+6Eo9m6ayRpQVwrdHauVqsWDCOv8UFhLGRKlnAx2vkARQuktreDwKfPGf7nUZ/3ZPWG4G5kVfGEd0GB5dK2QVkzjzurmjO7gDk4jKmaQ2osaKTJ1nc5vhBn/AUhtxMKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=FWgOARlf; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=PJeKGK63/MB+71ro3sftMHHi8CDYGwYtS9y9P1l5Fj1ciddj/m1who2Z4dFioSOLQaxzkuNeuto/vO19/k+G1iBb5G0l/FS2c+khHP8B2cpocQzfeHO6Iy3EHwSlsQQxVp/Akx+nYhfJC20o+Vp+kVeAD0ccz2z8oWz25aco2vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=leFSV0pj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="FWgOARlf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=Rx5V
-	0/lZD/IdbtCuUfwjiSEO0Grpo0JaThAgFi8Wh8s=; b=FWgOARlfcC5bBkEhH7jG
-	ITFPFlwr1VAfDuV0hIVqbDeNRxa2v7Ycn5BBKxibO0KMk2WxPeWb494SJo3SZ4QE
-	RFClSWn1PObw0nS9NEb3t1IMYTqChz5GwKXqsFSu9j0TT3VWAwE6MN3au5m6mGpS
-	JD/p/ucC6a7lTlJguzmIG+T8RyBoUsUmd+Cy2Cg3AZdC4PTagMr5mrvyPECtqOUh
-	rSgilWdz3j4OR/4LUArMds+Rffk4gY60pYA2iLgddKm6DKEjeKNKUM0HjLkxrPzc
-	/OPXKoqjG0tih5tcmDLmR3lqI7P4yCJGfxt6ZBz/cgerHqnfaKm8oige/Ejgtbyi
-	sQ==
-Received: (qmail 3221545 invoked from network); 17 Sep 2025 19:52:03 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 17 Sep 2025 19:52:03 +0200
-X-UD-Smtp-Session: l3s3148p1@Zdbn5AI/itEujnvK
-Date: Wed, 17 Sep 2025 19:52:02 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	"Liang,  Kan" <kan.liang@linux.intel.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="leFSV0pj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3518FC4CEF7;
+	Wed, 17 Sep 2025 17:57:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758131821;
+	bh=67ffSzd5FeWwRmf2I/9jF06+U1mwUT8kfxZrOsoiHu4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=leFSV0pjTJStHKC1yptmZHoKANoD8KsuqwcsG3/oWcTRusRkBmC2B2msU7Lrm+vdm
+	 NjM/0gVBZjoKEQxDdDF8upGJa4n9Jpm6Meb3aSf3t/fRBM5dEd9gHdFQKwoOM9mKKY
+	 1052H41Jv4G+j162LX+4vnz3LxYZuA2MRHEeYy4u4gj1I3NjRYn2x/y3OKJ6u7aVnt
+	 c1/Mso9Ru2wzyLBmCrjGMioEAtiYTE0KuGqNJg+wGZ3cBJ1NSHhplw3C4EjWdYmrY+
+	 2gU5L5jIM1sWXxMkw9Uw02Up9Ixp271zhLpRdVtbczLaj2ji65HQqCGuEfOHCeLCJb
+	 R52tCaDV6G6ZQ==
+Date: Wed, 17 Sep 2025 14:56:58 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	John Garry <john.g.garry@oracle.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Leo Yan <leo.yan@linux.dev>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rob Herring <robh@kernel.org>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] arm64: dts: renesas: Add R8A78000 X5H DTs
-Message-ID: <aMr1QjI8vfrP_fwD@shikoro>
-References: <87tt13i0lh.wl-kuninori.morimoto.gx@renesas.com>
- <87ms6vi0js.wl-kuninori.morimoto.gx@renesas.com>
- <86v7li1xs4.wl-maz@kernel.org>
- <87h5x1afgr.wl-kuninori.morimoto.gx@renesas.com>
- <86qzw51pmw.wl-maz@kernel.org>
+	Kan Liang <kan.liang@linux.intel.com>,
+	Kevin Tian <kevin.tian@intel.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
+Subject: Re: [Patch v2 0/6] Perf kvm commands bug fix
+Message-ID: <aMr2aokEOET8sdu-@x1>
+References: <20250811055546.296678-1-dapeng1.mi@linux.intel.com>
+ <aJ-VWevppm9Srjmr@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -72,21 +49,20 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <86qzw51pmw.wl-maz@kernel.org>
+In-Reply-To: <aJ-VWevppm9Srjmr@google.com>
 
+On Fri, Aug 15, 2025 at 01:15:21PM -0700, Namhyung Kim wrote:
+> On Mon, Aug 11, 2025 at 01:55:40PM +0800, Dapeng Mi wrote:
+> > Dapeng Mi (6):
+> >   perf tools kvm: Add missed memory allocation check and free
+> >   perf tools kwork: Add missed memory allocation check and free
+> >   perf tools kvm: Fix the potential out of range memory access issue
+> >   perf tools: Add helper x86__is_intel_cpu()
+> >   perf tools kvm: Use "cycles" to sample guest for "kvm record" on Intel
+> >   perf tools kvm: Use "cycles" to sample guest for "kvm top" on Intel
+ 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-> > And, the datasheet is very complex, I don't think people can find it by
-> > himself without any hint.
-> 
-> I guess we're just a bunch of inexperienced idiots unable to read a
-> TRM.
+Thanks, applied to perf-tools-next,
 
-Please don't feel offended. Morimoto-san really has a point here. The
-datasheet available for us is currently in a very rough format with
-*lots* of attached documents with hard to grasp naming. I am dealing
-with R-Car datasheets for 10+ years now, and I do have a hard time
-finding the information I want with this one.
-
-That being said, I agree to the point that it is not very helpful to
-reference such documentation upstream.
-
+- Arnaldo
