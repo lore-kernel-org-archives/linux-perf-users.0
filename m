@@ -1,245 +1,283 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88CA227EB9
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 15:14:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE50530C0EB
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 15:29:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758122051; cv=none; b=t4FUrIzgiGGK+pCIzmlxkhuO6O7fvLfEaGu5qTz+SnySSsxVjnWIo/yoLKRG4VTW1Jq8aHgj4f3O7BsaCBYDIeiK8CYfpFbPXIIYFoFFrQeAmlXDVDDGm4LJFORkPPT6fXpvbk5txB1GAbwpop3B6vrcHaGqHBBharqetWxXnkU=
+	t=1758122980; cv=none; b=uj5i3RxqtJZo+eQkGgybg3+nh0FBL8cTdsHBJds6a/MtTq4mibkT0bdYFl7jpapPyN/F6vBQ9qWGoe0mOTBM6S1j9XZ4yoxV0xge/J2VQCkMf5iF6pfFz/fJn3xfFEaRVWgEKCk0erCAYbgU1/A1OMAQajWODU4TSHCtjxjTRFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758122051; c=relaxed/simple;
-	bh=KSe+VQBHvW0n2Vmc15r/RkklfJ0UGB66cliG33ieqhs=;
+	s=arc-20240116; t=1758122980; c=relaxed/simple;
+	bh=GDwHPJq0q38T0Jr6OSSSYfjFVzwUOx5bOImepeuOTyk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c6aAorFuI5GrQZnsz+gFjKWjmZf5VkbPH6C2inviSVMAqTELNrILqI9VWka1B13Uoml5+ftMgxpg5IltfBEQ/3aX5AFe6z7CHxbI/I9pRzg7I3/5q6Wn+izpHVaFUgvT/7rS+Np1asRRW+uhdE4cDNRD/icmdB35zmphUNgyGMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-8a967f3a873so2038451241.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 08:14:09 -0700 (PDT)
+	 To:Cc:Content-Type; b=JifkvhgycL7re9wOF3yDAXO3pBVmSW4FEwK1VSeSaix3afDMJDnD8gmnjc10UtmJ1xpYOqwsO0GHGQt4E0ITf7B1jAhXCtAJvmyOjcLfcb1oHngRzPNDTxEyGgG1OUjgm4BL4psSWfkFRGeexj1QXpGaGVZwMfh+zel02pqkjvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SK2Q3UgN; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SK2Q3UgN"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-267c90c426dso217105ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 08:29:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1758122977; x=1758727777; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TMxAjLuuDkMnizvwWJVXJDUetp9qiaCCJ0xivBfeA3Q=;
+        b=SK2Q3UgNMa4G79wnV7k/vLZw6GG5lEljA4FgL7uiuqKGxiKgVX5UaXOrnFR3ykgd82
+         FomqFsNaDOyYWLhDYlD1RcvcSn1srh57p3uB/c16z5HQcRd9LdKZsipRBDGtInFqbuFy
+         lb65dZaQeQShBim/UZ+H4Q5F0t+owrM68ZlCdGM/9e/mYHOIlZSoLZSKF1nGjoyqKp4x
+         T9TlIsEqU4hGIkcqAyloAKhSnhw2gflPvzWBYMrmyuCWZopqf4CguNd3P/cULAObk2tG
+         UbAn3znQm/RQWaXJxdcP3JWniHkqqUY/VhkCXQByp6/VnQvyEwFLCPy3jIAw7N0IBgeK
+         GAVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758122048; x=1758726848;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tZ6rxnhh7QouGGcSBJApcqvcuY+RYoCVy1LFm/ChHAI=;
-        b=QCyUz+U+LRWdKIUbxtnastxnUZCfVKQtroZA7cK+dROq3jQEN3GfChT4qVNlzaEt32
-         I1pgEpU4M+ozJgGntO/eUN9nhMzd3uXdU4wtLxOMFmpcz7mJUMfyTOVnTnDw27unoRoq
-         hgH8J55cIBpVpxAwkvc8yr07n2GxepqixIF4wFqzU4hJCiXmF2agzPhH2EF2s9T4gg8d
-         WYvw4lp4vcMRhnRZ3Ufs625dp4sNP7BublR04Ch73D6vI4N37D5w17kWkZVxqhCWCLeb
-         qkLJYAH0nZRcNHuA08lrUhuzqnBLfkNKIoOEe1DkEqeml4LMcyuqwV9X83nx/t1Wy3H6
-         ZPiw==
-X-Forwarded-Encrypted: i=1; AJvYcCUvBqI57vn9pJf/j9+jxFDKrTmUv42qKsbb8GE0//7DovxxUUzTIjAivVceqaoyf/czgn0KEOVrMwuH4g8W5jux@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIzK/EijApTrx4fg1mpctpGKvLArtbf5c11LY1XhQEIVBdjOQ0
-	w3J5LkfHxvc6/cwbY3Vve/g+j9Q2NBvQLmuqdyxxkQhog4C/Qobu4UmRvKRgNI5o+0Y=
-X-Gm-Gg: ASbGncvg5L6JTIrgajSOukEFSSayLT4kkFxOS78P8Ww22aBIqTrbZq9IdcseKIBcOQP
-	EHns2bnYGGQ9yPwuDvhK776gIOrcyIPP9FE105psOLsNHm3PqTFeV34PaRXd978L5khGPN5JPXg
-	oC9WXR4A06clHIRe2C/l8eviTrlCSoN5VpBlbcswvyu/wlG9yare/rdMKVt+xz3m01AksoDyWKA
-	91hQUgNEDMgk9Jf9mav8pM7GS2NbVTSBDNsApsw4QdXvDAe9AeOBj2ZWvAeQAzEwl++3nF4cwKj
-	snDlW7kM+Wc2/j3CKzUlSSok5EFuZ/fhSIbfhHBkrpdTxrU+biG2L8PI5TgOx0govb/IQMahqpC
-	HdR/pd+wH9lU/3SO0nL8QbitNryIJnPqjozFXfLiPy4jpZ+ey2TLcZJKX5GVJ
-X-Google-Smtp-Source: AGHT+IGC/2u2Q4ebULMYhKHTKj5XG2gqVQBM0Ns/mjbFBNLedAAwlCFWc4amNUAcc9V9IBvqpLxxWg==
-X-Received: by 2002:a05:6122:546:b0:543:53df:f3c with SMTP id 71dfb90a1353d-54a60a06021mr838511e0c.2.1758122048172;
-        Wed, 17 Sep 2025 08:14:08 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-54a0d1e7324sm3319463e0c.12.2025.09.17.08.14.07
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Sep 2025 08:14:07 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-8e11df47db5so493114241.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 08:14:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV7TjQwImfPQNu7GFdx+ay5XT8TyckU7x2UZmPNqjLludVe/AlOYe9ra6hU8HZKht/eU1CSzeGrVumBcbvb05G8@vger.kernel.org
-X-Received: by 2002:a05:6102:4414:b0:4e6:ddd0:96ff with SMTP id
- ada2fe7eead31-56d63efa012mr900359137.16.1758122046543; Wed, 17 Sep 2025
- 08:14:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1758122977; x=1758727777;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TMxAjLuuDkMnizvwWJVXJDUetp9qiaCCJ0xivBfeA3Q=;
+        b=BfagWcFOeXk7srWi8k0bwEcluasaMYmPfXJEF/2KxtghLO6iXfofXggenHMNkIP1XQ
+         OOpz3MvkVCkPGFQBGOucsxMAa4Kd5Q2kUp7wTcnYV2AF9TRWkBEeHtJEXxwD5JjZ/eYF
+         2zS42fb7/kck7ZpxC5MqUI6PrzWUpY2j1br6FY8nlxuUYFQc5flEee1tMZbFyPugXTI3
+         pbqw4X37DsbDJ161M/T4veB3oi0PSHxKFobkMZ447In1uaxZOEo5OZpbrcY907PXCkQI
+         WAwaKG7lQjIlvvWpP4aDq696QnKZmtdIuVVlsyHyST2uAiCdtE5jFjVfViQq/S+8/YmW
+         NpCA==
+X-Forwarded-Encrypted: i=1; AJvYcCU8oub6U+HzQrS2zl9/qNzMNFRfoqBACt6LxMPexPbI61mTzvd65MoSlT0y7/2XN8jn+nAPkOWMyGOj1MOFwR7C@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPJRpydU5hdoKKfhiBIMvO5URMYth4Axs7lnpH1IGFJN27Imkg
+	JXdvLEuMcy8YsqVWRZxMq7JnX+IhP2Ph9jFEHGiWa8l7t4rTxEauhA54Cblap+Qcwca0cT+ZeUR
+	VDUabozErk/+3saCbgdYhGNFLY4j8W79g13NB7HO3
+X-Gm-Gg: ASbGnctuvbccIIs/zqTACAuG5dNJzEbFGGDWXy7mldlDL3/SbKFxBTx9SmkqGHl9vKQ
+	2SUog8bSoVkBIMZotWYb+zIX08V1ljrSlZf0dz6D3BaRqoSZ3xJXaRsX00WikMZ69tC0iCc05h1
+	XtisQKH0cHzfSnkWkV0nJzQ/a7sWSVihZdM6mlGdWm/ozf7nAlU14z+4HnvxT+V2h/LqN7t5lHC
+	hZ7HblwkaYJktzdECaiwD3yKB+y463Ixl0izGOG7AjIuONoKIfs3A==
+X-Google-Smtp-Source: AGHT+IEu5bTFqGbWEEWlRTNRW4OpqN3cCmobToF3V3eLzmTEu5d1MFMRS/pi2zER693ymPpprifjc2cb6F8Jwsr9GvA=
+X-Received: by 2002:a17:903:22c6:b0:261:83d2:9d91 with SMTP id
+ d9443c01a7336-26808af1b83mr3581005ad.15.1758122976798; Wed, 17 Sep 2025
+ 08:29:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <87ecs5abp9.wl-kuninori.morimoto.gx@renesas.com> <877bxxabmr.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <877bxxabmr.wl-kuninori.morimoto.gx@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 17 Sep 2025 17:13:55 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUaoBP1ZtJqc7rfqLXGETXpVYNcFfJf5xFBFSHG9mSB8Q@mail.gmail.com>
-X-Gm-Features: AS18NWDAtmJ2xaoQuGRsAt7Kwia2BPFHIJLsHQkXMzPf_Sxvg99Y761td_EKCiw
-Message-ID: <CAMuHMdUaoBP1ZtJqc7rfqLXGETXpVYNcFfJf5xFBFSHG9mSB8Q@mail.gmail.com>
-Subject: Re: [PATCH v4 4/5] arm64: dts: renesas: Add R8A78000 X5H DTs
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Conor Dooley <conor+dt@kernel.org>, Douglas Anderson <dianders@chromium.org>, 
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>, 
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
-	John Garry <john.g.garry@oracle.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Leo Yan <leo.yan@linux.dev>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mike Leach <mike.leach@linaro.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, 
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>, Will Deacon <will@kernel.org>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Marc Zyngier <maz@kernel.org>
+References: <20250728055937.58531-1-gautam@linux.ibm.com> <aMlmiHATn5WHUcSM@mac.in.ibm.com>
+ <aMm5uvPsMfXEv8Oo@x1> <CAP-5=fW4JQYJ2NCRsRVePidCcZ9+JcQbfY=xQ00xZG-bSn96ew@mail.gmail.com>
+ <aMqrmmDG65BGeZp0@x1>
+In-Reply-To: <aMqrmmDG65BGeZp0@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 17 Sep 2025 08:29:24 -0700
+X-Gm-Features: AS18NWDkvSHJLNz9aprvKv7LSv3mgibe4uveJXarzHUkDmpgDV7sV8WBeCIO1hg
+Message-ID: <CAP-5=fXnM15Zj5mCYcsd9usUMtHoPOd3Wz8-L1N5UaB-YvKuHQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] perf python: Add an example for sampling
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Gautam Menghani <gautam@linux.ibm.com>, peterz@infradead.org, mingo@redhat.com, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	maddy@linux.ibm.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Morimoto-san,
-
-On Wed, 17 Sept 2025 at 07:31, Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
-> From: Hai Pham <hai.pham.ud@renesas.com>
+On Wed, Sep 17, 2025 at 5:37=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> Add initial DT support for R8A78000 (R-Car X5H) SoC.
+> On Tue, Sep 16, 2025 at 01:07:43PM -0700, Ian Rogers wrote:
+> > On Tue, Sep 16, 2025 at 12:25=E2=80=AFPM Arnaldo Carvalho de Melo
+> > <acme@kernel.org> wrote:
+> > >
+> > > On Tue, Sep 16, 2025 at 07:00:48PM +0530, Gautam Menghani wrote:
+> > > > Hi Ian/Arnaldo,
+> > > >
+> > > > Can you please review this series and let me know if any changes ar=
+e
+> > > > needed?
+> > >
+> > > Looking at it now, sry for the delay,
+> >
+> > I think the patches look good. I'm a little concerned that the python
+> > APIs are a chance to do something better than the C APIs that have
+> > evolved. For example, we removed UID out of target recently [1] as the
+> > BPF alternative was better. Had this patch come earlier then it seems
+> > likely we'd have had target with UIDs. I wonder rather than having a
+> > kwlist of:
+> >
+> > + static char *kwlist[] =3D { "target", "inherit_stat", "no_buffering",
+> > "no_inherit",
+> > + "no_inherit_set", "no_samples", "raw_samples",
+> > + "sample_address", "sample_phys_addr", "sample_data_page_size",
+> > + "sample_code_page_size", "sample_weight", "sample_time",
+> > + "sample_time_set", "sample_cpu", "sample_identifier",
+> > + "sample_data_src", "period", "period_set", "running_time",
+> > + "full_auxtrace", "auxtrace_snapshot_mode",
+> > + "auxtrace_snapshot_on_exit", "auxtrace_sample_mode",
+> > + "record_namespaces", "record_cgroup", "record_switch_events",
+> > + "record_switch_events_set", "all_kernel", "all_user",
+> > + "kernel_callchains", "user_callchains", "tail_synthesize",
+> > + "overwrite", "ignore_missing_thread", "strict_freq", "sample_id",
+> > + "no_bpf_event", "kcore", "text_poke", "build_id", "freq",
+> > + "mmap_pages", "auxtrace_mmap_pages", "user_freq", "branch_stack",
+> > + "sample_intr_regs", "sample_user_regs", "default_interval",
+> > + "user_interval", "auxtrace_snapshot_size", "auxtrace_snapshot_opts",
+> > + "auxtrace_sample_opts", "sample_transaction", "use_clockid",
+> > + "clockid", "clockid_res_ns", "nr_cblocks", "affinity", "mmap_flush",
+> > + "comp_level", "nr_threads_synthesize", "ctl_fd", "ctl_fd_ack",
+> > + "ctl_fd_close", "synth", "threads_spec", "threads_user_spec",
+> > + "off_cpu_thresh_ns",  NULL };
+> >
+> > but then just using this subset:
+> >
+> > +    opts =3D perf.record_opts(freq=3D1000, target=3Dtgt, sample_time=
+=3DTrue,
+> > +                            sample_cpu=3DTrue, no_buffering=3DTrue,
+> > no_inherit=3DTrue)
+> >
+> > The kwlist should be kept to just those necessary values for the
+> > example to work? I kind of see this as Arnaldo's baby, so he may just
+> > want everything, so this needn't be a blocker.
+> >
+> > Bigger picture I wonder about migrating the `perf script` code to just
+> > being regular python programs like the example here.
 >
-> [Kuninori: tidyup for upstreaming]
+> You mean:
 >
-> Signed-off-by: Hai Pham <hai.pham.ud@renesas.com>
-> Signed-off-by: Vinh Nguyen <vinh.nguyen.xz@renesas.com>
-> Signed-off-by: Minh Le <minh.le.aj@renesas.com>
-> Signed-off-by: Huy Bui <huy.bui.wm@renesas.com>
-> Signed-off-by: Khanh Le <khanh.le.xr@renesas.com>
-> Signed-off-by: Phong Hoang <phong.hoang.wz@renesas.com>
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> acme@number:~/git/perf-tools-next$ ls -la tools/perf/scripts/python/
+> total 452
+> drwxr-xr-x. 1 acme acme    902 Aug 20 14:18 .
+> drwxr-xr-x. 1 acme acme     30 Sep 17 09:27 ..
+> -rwxr-xr-x. 1 acme acme  11865 Aug 20 14:06 arm-cs-trace-disasm.py
+> drwxr-xr-x. 1 acme acme   1640 Aug 20 14:18 bin
+> -rw-r--r--. 1 acme acme   2461 Apr 16 10:06 check-perf-trace.py
+> -rw-r--r--. 1 acme acme   7923 Apr 16 10:06 compaction-times.py
+> -rw-r--r--. 1 acme acme   7497 Apr 16 10:06 event_analyzing_sample.py
+> -rwxr-xr-x. 1 acme acme 157369 Aug 20 14:18 exported-sql-viewer.py
+> -rw-r--r--. 1 acme acme  39845 Apr 16 10:06 export-to-postgresql.py
+> -rw-r--r--. 1 acme acme  24671 Apr 16 10:06 export-to-sqlite.py
+> -rw-r--r--. 1 acme acme   2173 Apr 16 10:06 failed-syscalls-by-pid.py
+> -rwxr-xr-x. 1 acme acme  10377 Aug 20 14:18 flamegraph.py
+> -rw-r--r--. 1 acme acme   1717 Apr 16 10:06 futex-contention.py
+> -rw-r--r--. 1 acme acme  13302 Apr 16 10:06 gecko.py
+> -rw-r--r--. 1 acme acme  14636 Apr 16 10:06 intel-pt-events.py
+> -rw-r--r--. 1 acme acme   3395 Apr 16 10:06 libxed.py
+> -rw-r--r--. 1 acme acme   4230 Aug 20 14:13 mem-phys-addr.py
+> -rw-r--r--. 1 acme acme  15420 Aug 20 14:05 netdev-times.py
+> -rwxr-xr-x. 1 acme acme   1833 Apr 16 10:06 net_dropmonitor.py
+> -rwxr-xr-x. 1 acme acme  30683 Aug 20 14:05 parallel-perf.py
+> drwxr-xr-x. 1 acme acme     34 Sep 17 09:27 Perf-Trace-Util
+> -rw-r--r--. 1 acme acme   4509 Apr 16 10:06 powerpc-hcalls.py
+> -rw-r--r--. 1 acme acme  12095 Apr 16 10:06 sched-migration.py
+> -rw-r--r--. 1 acme acme   2183 Apr 16 10:06 sctop.py
+> -rwxr-xr-x. 1 acme acme   4408 Apr 16 10:06 stackcollapse.py
+> -rw-r--r--. 1 acme acme   2444 Apr 16 10:06 stat-cpi.py
+> -rw-r--r--. 1 acme acme   2055 Apr 16 10:06 syscall-counts-by-pid.py
+> -rw-r--r--. 1 acme acme   1673 Apr 16 10:06 syscall-counts.py
+> -rwxr-xr-x. 1 acme acme  34014 Apr 16 10:06 task-analyzer.py
+> acme@number:~/git/perf-tools-next$
+>
+> And then make:
+>
+> acme@number:~/git/perf-tools-next$ perf script -l
+> List of available trace scripts:
+>   compaction-times [-h] [-u] [-p|-pv] [-t | [-m] [-fs] [-ms]] [pid|pid-ra=
+nge|comm-regex] display time taken by mm compaction
+>   event_analyzing_sample               analyze all perf samples
+>   export-to-postgresql [database name] [columns] [calls] export perf data=
+ to a postgresql database
+>   export-to-sqlite [database name] [columns] [calls] export perf data to =
+a sqlite3 database
+>   failed-syscalls-by-pid [comm]        system-wide failed syscalls, by pi=
+d
+>   flamegraph                           create flame graphs
+>   futex-contention                     futext contention measurement
+>   gecko                                create firefox gecko profile json =
+format from perf.data
+>   intel-pt-events                      print Intel PT Events including Po=
+wer Events and PTWRITE
+>   mem-phys-addr                        resolve physical address samples
+>   net_dropmonitor                      display a table of dropped frames
+>   netdev-times [tx] [rx] [dev=3D] [debug] display a process of packet and=
+ processing time
+>   powerpc-hcalls
+>   sched-migration                      sched migration overview
+>   sctop [comm] [interval]              syscall top
+>   stackcollapse                        produce callgraphs in short form f=
+or scripting use
+>   syscall-counts-by-pid [comm]         system-wide syscall counts, by pid
+>   syscall-counts [comm]                system-wide syscall counts
+>   task-analyzer                        analyze timings of tasks
+>   failed-syscalls [comm]               system-wide failed syscalls
+>   rw-by-file <comm>                    r/w activity for a program, by fil=
+e
+>   rw-by-pid                            system-wide r/w activity
+>   rwtop [interval]                     system-wide r/w top
+>   wakeup-latency                       system-wide min/max/avg wakeup lat=
+ency
+> acme@number:~/git/perf-tools-next$
+>
+> And make:
+>
+> perf script rwtop
+>
+> Just call 'python PATH_TO_PYTHON_SCRIPTS/rwtop.py' transparently?
 
-Thanks for the update!
+Yeah, that's it. The perf script libpython stuff is just providing
+trace_begin, process_event and trace_end. Using the sampling
+mechanism, as shown in Gautum's patches, it is pretty easy to migrate
+them to being stand alone bits of python.
 
-> index 0000000000000..6445f05de0563
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/r8a78000.dtsi
-> @@ -0,0 +1,755 @@
-> +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +/*
-> + * Device Tree Source for the R-Car X5H (R8A78000) SoC
-> + *
-> + * Copyright (C) 2025 Renesas Electronics Corp.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +       compatible = "renesas,r8a78000";
-> +       #address-cells = <2>;
-> +       #size-cells = <2>;
-> +
-> +       cpus {
+> That looks interesting indeed, that way we would stop linking with
+> libpython, etc.
+>
+> I wonder if there are out of tree scripts using the current tools/perf/ut=
+il/scripting-engines/trace-event-python.c
+> mechanism...
+>
+> But even that can fallback to a python based mechanism, right?
 
-> +               a720_0: cpu@0 {
-> +                       compatible = "arm,cortex-a720ae";
-> +                       reg = <0x0 0x0>;
-> +                       device_type = "cpu";
-> +                       next-level-cache = <&L2_CA720_0>;
-> +
-> +                       L2_CA720_0: cache-controller {
+I think so. Like I said about the use of a Dict for process_event, we
+may want to streamline things so there is a tension with what the API
+should be and compatibility. We can always have 2 APIs and try to
+deprecate one of them.
 
-As reported before, the cache nodes should be outside the CPU nodes.
+> Import the script, if it has a given structure, use the new way, if not,
+> call a glue that reads the events and feed to the old style code.
+>
+> Seems doable and would save code on the main perf binary and headaches
+> with the libpython and libperl build processes.
 
-"make dtbs_check" would have reminded you:
+So I see this for libpython, and I think it'd be pretty cool if we
+could have things work like this for say "perf script ilist" and
+Alice's textual flamegraph work. I worry what the work for libperl
+would be like and whether it is worth it (hence sending the patch to
+at least start to make it opt-in rather than opt-out).
 
-    arch/arm64/boot/dts/renesas/r8a78000-ironhide.dtb: cpu@0
-(arm,cortex-a720ae): Unevaluated properties are not allowed
-('cache-controller' was unexpected)
-            from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+Do you need my tags for these changes or wdyt about making the
+kwlist/API surface smaller?
 
-> +                               compatible = "cache";
-> +                               cache-level = <2>;
+Thanks!
+Ian
 
-Missing "cache-unified".
-
-"make dtbs_check":
-
-    arm64/boot/dts/renesas/r8a78000-ironhide.dtb: cache-controller
-(cache): 'cache-unified' is a required property
-            from schema $id: http://devicetree.org/schemas/cache.yaml#
-
-> +                               next-level-cache = <&L3_CA720_0>;
-> +                       };
-
-> +               };
-
-> +       soc: soc {
-> +               compatible = "simple-bus";
-> +               interrupt-parent = <&gic>;
-
-Marc asked to move interrupt-parent to the top, i.e. one level up...
-
-> +               #address-cells = <2>;
-> +               #size-cells = <2>;
-> +               ranges;
-> +
-> +               timer {
-
-... and please keep the timer node outside the soc node.
-
-"make dtbs_check":
-
-    arch/arm64/boot/dts/renesas/r8a78000-ironhide.dtb: soc
-(simple-bus): timer: 'ranges' is a required property
-            from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
-
-> +                       compatible = "arm,armv8-timer";
-> +                       interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
-> +                                    <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
-> +                                    <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
-> +                                    <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>,
-> +                                    <GIC_PPI 12 IRQ_TYPE_LEVEL_LOW>;
-> +                       interrupt-names = "sec-phys", "phys", "virt", "hyp-phys", "hyp-virt";
-> +               };
-
-> +               scif0: serial@c0700000 {
-> +                       compatible = "renesas,scif-r8a78000", "renesas,scif";
-
-Missing "renesas,rcar-gen5-scif".
-
-"make dtbs_check":
-
-    arch/arm64/boot/dts/renesas/r8a78000-ironhide.dtb: serial@c0700000
-(renesas,scif-r8a78000): compatible: 'oneOf' conditional failed, one
-must be fixed:
-            ...
-            ['renesas,scif-r8a78000', 'renesas,scif'] is too short
-            ...
-            'renesas,rcar-gen5-scif' was expected
-            ...
-            from schema $id:
-http://devicetree.org/schemas/serial/renesas,scif.yaml#
-
-> +                       reg = <0 0xc0700000 0 0x40>;
-> +                       interrupts = <GIC_SPI 4074 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&dummy_clk_sgasyncd16>, <&dummy_clk_sgasyncd16>, <&scif_clk>;
-> +                       clock-names = "fck", "brg_int", "scif_clk";
-> +                       status = "disabled";
-> +               };
-
-> +               hscif0: serial@c0710000 {
-> +                       compatible = "renesas,hscif-r8a78000", "renesas,hscif";
-
-Missing "renesas,rcar-gen5-hscif".
-
-"make dtbs_check":
-
-arch/arm64/boot/dts/renesas/r8a78000-ironhide.dtb: serial@c0710000
-(renesas,hscif-r8a78000): compatible: 'oneOf' conditional failed, one
-must be fixed:
-        ['renesas,hscif-r8a78000', 'renesas,hscif'] is too short
-        ...
-        'renesas,rcar-gen5-hscif' was expected
-        from schema $id:
-http://devicetree.org/schemas/serial/renesas,hscif.yaml#
-
-> +                       reg = <0 0xc0710000 0 0x60>;
-> +                       interrupts = <GIC_SPI 4078 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&dummy_clk_sgasyncd4>, <&dummy_clk_sgasyncd4>, <&scif_clk>;
-> +                       clock-names = "fck", "brg_int", "scif_clk";
-> +                       status = "disabled";
-> +               };
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> - Arnaldo
+>
+> > I sent out
+> > deprecating the libperl code to this ends (looking for reviews):
+> > https://lore.kernel.org/linux-perf-users/20250908181918.3533480-1-iroge=
+rs@google.com/
+> > The issue is that `perf script` being the main thread inhibits things
+> > like textual running until trace_end. This means we can't do things
+> > like incremental loading support. We may want to make the perf events
+> > support something like an asyncio interface for that.
+> >
+> > Refactoring that support will likely raise backward compatibility
+> > concerns. It'd be a really nice thing to do as the API has some fairly
+> > major overheads like turning everything in a sample into a Dict
+> > whether needed or not:
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
+tree/tools/perf/util/scripting-engines/trace-event-python.c#n838
+> > I mention this just to say why I'd like to minimize the API when possib=
+le.
+> >
+> > Thanks,
+> > Ian
+> >
+> > [1] https://lore.kernel.org/r/20250604174545.2853620-10-irogers@google.=
+com
