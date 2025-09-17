@@ -1,79 +1,92 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6D273002A0;
-	Wed, 17 Sep 2025 17:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A11225A3D
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 17:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758130929; cv=none; b=LTZaODywcb3zVqbBQd02fEGMUiclft9lO1hbtDii1x3EFAzY+iOsVHPuz9Xhcf+bix0AKOW2OAaorw3p09lW4jqqRG7Ef0da6anFzazATRP+U1TZc8cCDnC2MjbpvHXHB/tOgM+7bKE2Di0mtIbLAjgF5873Vq7hF36sMkwloHc=
+	t=1758131539; cv=none; b=gq/lh8bdY0QxM594REJKy/IvOSbQ/7MR/FsfmF9s9OkPMKYZb8hcmiX+R12/oCE7FMdedIdJ3kfcDsbRE23BLBbaSRVkiKfMaRsJvret09hDUjXB7bU7PIlHbuscStEErIV4Gmm9EfFwRr91bWC0nZF45Fkwvyt9Llv6bVLJ140=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758130929; c=relaxed/simple;
-	bh=/9UdUZ9OJII8IHbRr4Maef/QuxaY9QyUmTQxAX7pvqg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=l1WxwENPVh9Vhvvlj9eAtJhyjuDEDqDV6rpv9u+M1e6vIRXRF+MgkRjGwmB2E+2BVFIfbeGtVkZrv1QNHKN0IXx4RhoBAmbheX9EbdsEQLoE9AkKcEVtnxQ+rvrSQULDFpw1wvaW0tNOOVOO5FNNuesCF7OjCXkiQmPhnRD2dLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D86E726BC;
-	Wed, 17 Sep 2025 10:41:58 -0700 (PDT)
-Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D3803F694;
-	Wed, 17 Sep 2025 10:42:05 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-Date: Wed, 17 Sep 2025 18:41:39 +0100
-Subject: [PATCH 2/2] perf: arm_spe: Prevent overflow in PERF_IDX2OFF()
+	s=arc-20240116; t=1758131539; c=relaxed/simple;
+	bh=g2/Cse7salc1tIUE/OJp9FayjCskQFXXIpcOQv0wqcA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lZv6JTVh8TzD61d6XY4WBW18UHDOoKzMmlRfEO01k/5+6Eo9m6ayRpQVwrdHauVqsWDCOv8UFhLGRKlnAx2vkARQuktreDwKfPGf7nUZ/3ZPWG4G5kVfGEd0GB5dK2QVkzjzurmjO7gDk4jKmaQ2osaKTJ1nc5vhBn/AUhtxMKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=FWgOARlf; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="FWgOARlf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=Rx5V
+	0/lZD/IdbtCuUfwjiSEO0Grpo0JaThAgFi8Wh8s=; b=FWgOARlfcC5bBkEhH7jG
+	ITFPFlwr1VAfDuV0hIVqbDeNRxa2v7Ycn5BBKxibO0KMk2WxPeWb494SJo3SZ4QE
+	RFClSWn1PObw0nS9NEb3t1IMYTqChz5GwKXqsFSu9j0TT3VWAwE6MN3au5m6mGpS
+	JD/p/ucC6a7lTlJguzmIG+T8RyBoUsUmd+Cy2Cg3AZdC4PTagMr5mrvyPECtqOUh
+	rSgilWdz3j4OR/4LUArMds+Rffk4gY60pYA2iLgddKm6DKEjeKNKUM0HjLkxrPzc
+	/OPXKoqjG0tih5tcmDLmR3lqI7P4yCJGfxt6ZBz/cgerHqnfaKm8oige/Ejgtbyi
+	sQ==
+Received: (qmail 3221545 invoked from network); 17 Sep 2025 19:52:03 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 17 Sep 2025 19:52:03 +0200
+X-UD-Smtp-Session: l3s3148p1@Zdbn5AI/itEujnvK
+Date: Wed, 17 Sep 2025 19:52:02 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	"Liang,  Kan" <kan.liang@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	John Garry <john.g.garry@oracle.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Leo Yan <leo.yan@linux.dev>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Rob Herring <robh@kernel.org>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v3 5/6] arm64: dts: renesas: Add R8A78000 X5H DTs
+Message-ID: <aMr1QjI8vfrP_fwD@shikoro>
+References: <87tt13i0lh.wl-kuninori.morimoto.gx@renesas.com>
+ <87ms6vi0js.wl-kuninori.morimoto.gx@renesas.com>
+ <86v7li1xs4.wl-maz@kernel.org>
+ <87h5x1afgr.wl-kuninori.morimoto.gx@renesas.com>
+ <86qzw51pmw.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250917-fix_aux_trace_index-v1-2-e36a76ac6292@arm.com>
-References: <20250917-fix_aux_trace_index-v1-0-e36a76ac6292@arm.com>
-In-Reply-To: <20250917-fix_aux_trace_index-v1-0-e36a76ac6292@arm.com>
-To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Anshuman Khandual <anshuman.khandual@arm.com>, 
- Tamas Zsoldos <tamas.zsoldos@arm.com>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
- Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1758130921; l=1032;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=/9UdUZ9OJII8IHbRr4Maef/QuxaY9QyUmTQxAX7pvqg=;
- b=x0p7c5gNdLZczsCfpgoOfdRVsyQTPiTO8a7q3eclGz88s9gvUi3g63j/BIGmu+UrjcROmjZ+6
- UCpvygM7/WrALEAZljLPsga55AGq0wDkfpn8JHk/HzPcrAAruaPZDGS
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86qzw51pmw.wl-maz@kernel.org>
 
-Cast nr_pages to unsigned long to avoid overflow when handling large
-AUX buffer sizes (>= 2 GiB).
 
-Fixes: d5d9696b0380 ("drivers/perf: Add support for ARMv8.2 Statistical Profiling Extension")
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- drivers/perf/arm_spe_pmu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> > And, the datasheet is very complex, I don't think people can find it by
+> > himself without any hint.
+> 
+> I guess we're just a bunch of inexperienced idiots unable to read a
+> TRM.
 
-diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index 369e77ad5f13ffb490bf8f128fee5180d1254bc6..8f14cb324e018349fbe19c5c20d92a9cdcfd2e73 100644
---- a/drivers/perf/arm_spe_pmu.c
-+++ b/drivers/perf/arm_spe_pmu.c
-@@ -97,7 +97,8 @@ struct arm_spe_pmu {
- #define to_spe_pmu(p) (container_of(p, struct arm_spe_pmu, pmu))
- 
- /* Convert a free-running index from perf into an SPE buffer offset */
--#define PERF_IDX2OFF(idx, buf)	((idx) % ((buf)->nr_pages << PAGE_SHIFT))
-+#define PERF_IDX2OFF(idx, buf) \
-+	((idx) % ((unsigned long)(buf)->nr_pages << PAGE_SHIFT))
- 
- /* Keep track of our dynamic hotplug state */
- static enum cpuhp_state arm_spe_pmu_online;
+Please don't feel offended. Morimoto-san really has a point here. The
+datasheet available for us is currently in a very rough format with
+*lots* of attached documents with hard to grasp naming. I am dealing
+with R-Car datasheets for 10+ years now, and I do have a hard time
+finding the information I want with this one.
 
--- 
-2.34.1
+That being said, I agree to the point that it is not very helpful to
+reference such documentation upstream.
 
