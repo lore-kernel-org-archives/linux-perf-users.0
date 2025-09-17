@@ -1,261 +1,179 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179179478
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 20:49:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31BF302CB9
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 21:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758142179; cv=none; b=OkiTey/SNceXuJS4ZWftL9bSKm7/mAUPPYknVc3wU97KG7IfUpspRw6j+8bDVhjweAOq0CobzPnxaSgvjc7zNIeGT9FPWjk2FNZIQxqHxy2MXY96nS7rJtI6acxGFelz2aWaP8WoeK0YldRLxNOQD/4aLTbFNRa71Gumwk78oPo=
+	t=1758143582; cv=none; b=Nw7x9LYeIBaZjkhtMDCsp2pZgIKrybhSi/iVdGoRPdfPdpbdvkB+laiKzCZXa55n582qlC5pUyryXiMYZQCJmnZwaNfgIluwfm1mkgI2a0cqhrxlF1sbXkymrzyqfRdSpZsq5tDZiyDSkhyxBurLcIuS/1iHdtSFYl7N6uyrog4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758142179; c=relaxed/simple;
-	bh=w/9KXPZXjuM4uADuz/NcnSPq+DKuG5EI3D2PEkGP0tw=;
+	s=arc-20240116; t=1758143582; c=relaxed/simple;
+	bh=0NV118m/ucNL4hGNaRGYd0PW446G/5kdWpVvTpty/8w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dYxJAr1odt7NSb+GPIQkYVXdNcyTn+q/UhNWaOah3ew/Eba+nN6I/r1s0PFNuQ9I5xyWxHb38V5qcJ4I4ynFZqXfVI1UhE4JYFlhIxMqIa47a+8FgRWZ66ZO9CUqDt6e1e6q1zhqJ994KhaRyODsqp/Mc/2toNxtTPoNhjgpakw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wscfrxqs; arc=none smtp.client-ip=209.85.214.181
+	 To:Cc:Content-Type; b=SBdmzvm1hrWjsph2g1NDembA4Bedw41pJzSv2Kbj+v4fkgDB5rB+VDzOqGPiGLj5SajFRiWEBJc/uzGDJzOk91+Z3ITGGZWoM1HuJVyNM17HOO3hPoLFZL4JlOMI9PAGqVqaQ536SEgfQP3GgiU8cLn+t+WeBJOVEAlECZvYU7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SHyNOYHM; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wscfrxqs"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-265abad93bfso50225ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 13:49:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SHyNOYHM"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-265abad93bfso54355ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 14:13:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1758142177; x=1758746977; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1758143580; x=1758748380; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YD0YaSX/nQIVvYRv3lyV8EiANlhEsiZAgU5SLemRN9I=;
-        b=wscfrxqsljXl7Asqm6uZf5HMdW2CuIte5P0pcClOQ1vrUmjNq6gawnsSkyBh7ujN7w
-         CjpLhPx1P0Fnvic5HNEVDgi6CfxsHY3i9u+dlHSW6cTQ0UzN/s8mJwxMfnnbzfAxjNgP
-         EUStmmkEaGO0eMc5E9HiWxG32F6zNjPyaVS5Y6b5284wUMeS5611aUwf910tasMmtc+9
-         WZ8NZn6lCWSgDwx9Ewnwu7pHwST22okrxDlxMvMas+uyuOJ93RCWmHtviatBEpoFZU+L
-         F7WgK2hwGsJQJUDBgQuPGMmPWrTV1OKpYXTmkHuVr/JuDFSpFlUDk8c84EK4YLCWAj3N
-         /OLw==
+        bh=mfu99aaPsl7lO5kkVqQHKSVhMr/04dLqdSGEmEMpZPY=;
+        b=SHyNOYHMHz2VNQt2xYBqBSWdZDqJVJ4apMi/ElR1tZtCab+9nPnsUrD2IKJ/6SE5QS
+         1PTG3bW803vhg/nhNUI/9dc2quWVTuZKAVveBxchMS2YIK/FHs5o5BK9OwWeqnpxLoaM
+         xORiAdPlkJRCvbJ9TPjy4MyUaIECh0jj66ZzA8OzWNF7t6PI9rY95rY2fuSut7YShVVC
+         H3BDW7CdGZkbWaPJxyAbYLAT9z22+kA7sekcZC9sSWe07Y3LcYrqLWZYUcJzAYt4lsrd
+         pVg2RfBNCqmz8xWl4lb39GUfcA+vZS9E0GMxvH1FbMPA5xcry2iB37Nt/v9sVVNiloXk
+         sxog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758142177; x=1758746977;
+        d=1e100.net; s=20230601; t=1758143580; x=1758748380;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YD0YaSX/nQIVvYRv3lyV8EiANlhEsiZAgU5SLemRN9I=;
-        b=wNqad6TMudIP9EMxDP1NSyBGo/NZoREVtJFpXamfu1qO3ZRvRPOZgT+h2zRV1s/Ato
-         XfGuK+8G4omr79YYtGf9E9XsjyYst2/iD6lqNBv07MD0QzT4Guro7Dnrb5DGsh7B5SS8
-         8VaSBSORc0C25s2yIt/3MH00+Xayq1MBXlxy9G+hCqosZ828KSrlf6AADYB3yF5rgdx2
-         Fz3gKtysuddajQBSgI0M+BLC7YCbIWkwgcv3443/Fv3MQBk8fzFGk7VRglOiqOBjnXaT
-         OFPqN32/TUVOhhSMn9IYsMq4hH9+0/fkU/zV2iaZHRNbny8JR5vX7hAcTYP+hCLvAJoB
-         gxSg==
-X-Forwarded-Encrypted: i=1; AJvYcCWEI9r1dC0yeRgKQVRvNpMPKs4HCQqXSbXZZ0HnbNCLKA5LskC+yTxv8/aUvlWR0ISM1wLECN4gNCy1Za5DlyxD@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUgedP0KHgJ3qJrKZ9yIsHnH0jsyd625nb9JS13a2weGT4JeEu
-	4dbhtLAig7TcBkNtSLea9hGCys6vnjtuUtIA52eiX6Rd5qZk4yMAiIr14cxMF5dmAMStGYpEQbD
-	6w9Tdbr5A90f1BmWVQeBgeZn11XPeaMlF/UFyPmm2E3LJyd8kYTjgfaxJxqQ=
-X-Gm-Gg: ASbGncsm5a7BZ9k6NAbXUH5nHrBmWEF3Exoc8nQHo+eYxxWQGApEYihg6AfPG6WfHnL
-	6wLuwn8ZpsTJgZYBkboX224gXaWLIqa/ePvClmVG95v316/B9gBObKjF59R+Efq+t4yjtnYrOKs
-	zgK4Lqeh1hWFBlqG0f2dX5RxcFBkm8BcJG+No2HDtg+y/33edC2dVH05nYFHGWz0aGHpQmT9G6j
-	sMXlqkbyKzv5sKZa3/4e7wuDxFcoSCBLP1ZIEZrY8OLdib5/RfHmobniY1WsA==
-X-Google-Smtp-Source: AGHT+IHqjlTORFQiuvLEqXF6/BhbNXVQJ7b03TKqe4M3ZkpkBdZNS4xem2H3lWDaAfxjJen7clHHtu2Plyvx7Bh3oM4=
-X-Received: by 2002:a17:903:41c2:b0:269:2215:e672 with SMTP id
- d9443c01a7336-2692215eb63mr3809565ad.12.1758142176979; Wed, 17 Sep 2025
- 13:49:36 -0700 (PDT)
+        bh=mfu99aaPsl7lO5kkVqQHKSVhMr/04dLqdSGEmEMpZPY=;
+        b=SFEZ9VTyU20yQoxK+fk9J5YGlsgRJBjVIF858s17P0SPkcFBLwsqC5hd2lM1YMbfx5
+         0SWyjaHnIncBLZDZLi09rlx012XYYQeytKiv9Ibo4t9uJIXxZSq5XZ5S/nqCKDdTshFn
+         HS0Dw0vEe13+5GwPS+cJQ+70jJNhGOf0oTWw1wIOf6Q6PidGO2q70Uf4e2kTsCaHojtq
+         32mZuvPaSMXDA/Jj/3XpEVgsHcs5NkAtGOptX/xRe01Ptuy1bkMvYqOfZThLHFCggYD/
+         DI2OAFFl7Zxn2zYOYroxrwclXMpph1DT1MeneVPHqMAB/ozXkwqLBu/oI2giWkuriOfk
+         6cqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXQ0ZpwP41LbCQTC0hc39TN5emWu+mKU5E6RA7GlI8okRUUrlUVb/B/P8zlyF1wLakkp/DR2aWTB+SaEg34hcOt@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQTSJi58jpSnsNxWjjr/hQIOAdwro4R4lzDVrkgVI3adtvG8dB
+	5RbLImQFsvfwAm98Sfu7o5tDxJyk8Ndl03nTvj1AJW9EA/L+bF+f+dU24o3WjktnHdGfvsEzAIm
+	xHsxX769eYqha0Ur+E+YIccS3R/nzhZZL8LFgbNWu
+X-Gm-Gg: ASbGncv6b9dI0IQqtfo/nDKimzjeD13H7bLbgxUdXGUb9jYoWCbwiVzY6/e4ybQwJKN
+	xTtJaUSEkwofJwoTltHjud/oUALtPXlWULiaOs9bdJPicVPZkre1pq31XAzA6kCXZxSrb9REBql
+	gWQx6TxSdveShNvjOgWnkIv0f0Ng5N6nzNLkkOv2sNfXmEejOA0jsjhF29XLnwMIoDTpixikxlY
+	snqqzrhSJCOY0kBoKvM0FM6+LPliOnfZ9wLsFrBCLy3w9jnIi+kgv8r/Edzlg==
+X-Google-Smtp-Source: AGHT+IGq0upiJh6JIgG1mEsxqUx8fQkSIiit6VnVAuHy0r/3lp3ren6BfVxVF/psZ+KwlIgBfaGdVXzFKRWJd3gGiLw=
+X-Received: by 2002:a17:902:ea06:b0:265:cb5f:3a66 with SMTP id
+ d9443c01a7336-26808aeb835mr6924825ad.13.1758143579562; Wed, 17 Sep 2025
+ 14:12:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250904044653.1002362-1-irogers@google.com> <20250904044653.1002362-6-irogers@google.com>
- <ef20fc6501c57d932024ad31323f90165caeae28.camel@intel.com>
-In-Reply-To: <ef20fc6501c57d932024ad31323f90165caeae28.camel@intel.com>
+References: <20250811055546.296678-1-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250811055546.296678-1-dapeng1.mi@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 17 Sep 2025 13:49:25 -0700
-X-Gm-Features: AS18NWBzJyyrp8EQ8fF_epUjuvEmhQudR4HdGpFHYhy3lQJdye1qVwyqfxIRTGs
-Message-ID: <CAP-5=fW05xhQ2TkQ2VgXwS9gUCtyZf=69L-7KksJDEWr8r+vuw@mail.gmail.com>
-Subject: Re: [PATCH v6 05/22] perf jevents: Mark metrics with experimental
- events as experimental
-To: "Falcon, Thomas" <thomas.falcon@intel.com>
-Cc: "Baker, Edward" <edward.baker@intel.com>, "Wang, Weilin" <weilin.wang@intel.com>, 
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
-	"xu.yang_2@nxp.com" <xu.yang_2@nxp.com>, "Biggers, Caleb" <caleb.biggers@intel.com>, 
-	"Hunter, Adrian" <adrian.hunter@intel.com>, "Taylor, Perry" <perry.taylor@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
-	"sandipan.das@amd.com" <sandipan.das@amd.com>, "james.clark@linaro.org" <james.clark@linaro.org>, 
-	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, 
-	"peterz@infradead.org" <peterz@infradead.org>, "john.g.garry@oracle.com" <john.g.garry@oracle.com>, 
-	"bgray@linux.ibm.com" <bgray@linux.ibm.com>, "Alt, Samantha" <samantha.alt@intel.com>, 
-	"renyu.zj@linux.alibaba.com" <renyu.zj@linux.alibaba.com>, "acme@kernel.org" <acme@kernel.org>, 
-	"jolsa@kernel.org" <jolsa@kernel.org>, "namhyung@kernel.org" <namhyung@kernel.org>
+Date: Wed, 17 Sep 2025 14:12:48 -0700
+X-Gm-Features: AS18NWByQXui-cbq7Hni-JA9LsBVy0lAL2uPym6h4MIqguq_9wEQJ0SNhl04WP8
+Message-ID: <CAP-5=fWcf7F1QvWXzAD_KMpOnnKGw9PFM7mNtgzp_jh4Vi6V-w@mail.gmail.com>
+Subject: Re: [Patch v2 0/6] Perf kvm commands bug fix
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Kevin Tian <kevin.tian@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 17, 2025 at 11:02=E2=80=AFAM Falcon, Thomas <thomas.falcon@inte=
-l.com> wrote:
+On Sun, Aug 10, 2025 at 10:56=E2=80=AFPM Dapeng Mi <dapeng1.mi@linux.intel.=
+com> wrote:
 >
-> On Wed, 2025-09-03 at 21:46 -0700, Ian Rogers wrote:
-> > When metrics are made with experimental events it is desirable the
-> > metric description also carries this information in case of metric
-> > inaccuracies.
-> >
-> > Suggested-by: Perry Taylor <perry.taylor@intel.com>
+> his patch-set fixes perf kvm commands issues, like missed memory
+> allocation check/free, out of range memory access and especially the
+> issue that fails to sample guest with "perf kvm record/top" commands on
+> Intel platforms.
 >
-> Does this need a Signed-off-by?
+> The commit 634d36f82517 ("perf record: Just use "cycles:P" as the
+>  default event") changes to use PEBS event to do sampling by default
+> including guest sampling. This breaks host to sample guest with commands
+> "perf kvm record/top" on Intel platforms.
 
-It does, I'll fix in v7.
+Huh? That change is:
+```
+$ git show 634d36f82517
+commit 634d36f82517eb5c6a9b9ec7fe3ba19dbbcb7809
+Author: Namhyung Kim <namhyung@kernel.org>
+Date:   Tue Oct 15 23:23:58 2024 -0700
+
+    perf record: Just use "cycles:P" as the default event
+
+    The fallback logic can add ":u" modifier if needed.
+...
+-               bool can_profile_kernel =3D perf_event_paranoid_check(1);
+-
+-               err =3D parse_event(rec->evlist, can_profile_kernel ?
+"cycles:P" : "cycles:Pu");
++               err =3D parse_event(rec->evlist, "cycles:P");
+...
+```
+isn't the precision the same before and after? I think you've blamed
+the wrong patch.
+
+The change to use cycles:P looks to come from commit 7b100989b4f6
+("perf evlist: Remove __evlist__add_default") but the old code was
+doing things like "evsel->precise_max =3D true;" so I think I was just
+carrying forward behavior. The use of precise_max comes from commit
+4e8a5c155137 ("perf evsel: Fix max perf_event_attr.precise_ip
+detection") from over 6 years ago, and the behavior before that also
+appears to have been to use the maximum supported precision.
+
+Apart from the blame and commit message being off I think the change
+is okay, delta my usual complaint that weak symbols are the devil's
+work.
 
 Thanks,
 Ian
 
-> Thanks,
-> Tom
+> Since the change "KVM: x86/pmu: Add basic support to enable guest PEBS
+>  via DS"[1] starts, host loses the capability to sample guest with PEBS
+> since all PEBS related MSRs are switched to guest value after vm-entry,
+> like IA32_DS_AREA MSR is switched to guest GVA at vm-entry. This leads
+> to PEBS events can't be used to sample guest by host, otherwise no guest
+> PEBS records can be really sampled. The patches 5-6/6 fix this issue by
+> using "cycles" event instead of PEBS event "cycles:P" to sample guest on
+> Intel platforms.
 >
-> > ---
-> >  tools/perf/pmu-events/metric.py | 44 +++++++++++++++++++++++++++++++++
-> >  1 file changed, 44 insertions(+)
-> >
-> > diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/me=
-tric.py
-> > index 62d1a1e1d458..2029b6e28365 100644
-> > --- a/tools/perf/pmu-events/metric.py
-> > +++ b/tools/perf/pmu-events/metric.py
-> > @@ -10,11 +10,13 @@ from typing import Dict, List, Optional, Set, Tuple=
-, Union
-> >
-> >  all_pmus =3D set()
-> >  all_events =3D set()
-> > +experimental_events =3D set()
-> >
-> >  def LoadEvents(directory: str) -> None:
-> >    """Populate a global set of all known events for the purpose of vali=
-dating Event names"""
-> >    global all_pmus
-> >    global all_events
-> > +  global experimental_events
-> >    all_events =3D {
-> >        "context\\-switches",
-> >        "cpu\\-cycles",
-> > @@ -32,6 +34,8 @@ def LoadEvents(directory: str) -> None:
-> >              all_pmus.add(x["Unit"])
-> >            if "EventName" in x:
-> >              all_events.add(x["EventName"])
-> > +            if "Experimental" in x and x["Experimental"] =3D=3D "1":
-> > +              experimental_events.add(x["EventName"])
-> >            elif "ArchStdEvent" in x:
-> >              all_events.add(x["ArchStdEvent"])
-> >        except json.decoder.JSONDecodeError:
-> > @@ -61,6 +65,18 @@ def CheckEvent(name: str) -> bool:
-> >    return name in all_events
-> >
-> >
-> > +def IsExperimentalEvent(name: str) -> bool:
-> > +  global experimental_events
-> > +  if ':' in name:
-> > +    # Remove trailing modifier.
-> > +    name =3D name[:name.find(':')]
-> > +  elif '/' in name:
-> > +    # Name could begin with a PMU or an event, for now assume it is no=
-t experimental.
-> > +    return False
-> > +
-> > +  return name in experimental_events
-> > +
-> > +
-> >  class MetricConstraint(Enum):
-> >    GROUPED_EVENTS =3D 0
-> >    NO_GROUP_EVENTS =3D 1
-> > @@ -82,6 +98,10 @@ class Expression:
-> >      """Returns a simplified version of self."""
-> >      raise NotImplementedError()
-> >
-> > +  def HasExperimentalEvents(self) -> bool:
-> > +    """Are experimental events used in the expression?"""
-> > +    raise NotImplementedError()
-> > +
-> >    def Equals(self, other) -> bool:
-> >      """Returns true when two expressions are the same."""
-> >      raise NotImplementedError()
-> > @@ -249,6 +269,9 @@ class Operator(Expression):
-> >
-> >      return Operator(self.operator, lhs, rhs)
-> >
-> > +  def HasExperimentalEvents(self) -> bool:
-> > +    return self.lhs.HasExperimentalEvents() or self.rhs.HasExperimenta=
-lEvents()
-> > +
-> >    def Equals(self, other: Expression) -> bool:
-> >      if isinstance(other, Operator):
-> >        return self.operator =3D=3D other.operator and self.lhs.Equals(
-> > @@ -297,6 +320,10 @@ class Select(Expression):
-> >
-> >      return Select(true_val, cond, false_val)
-> >
-> > +  def HasExperimentalEvents(self) -> bool:
-> > +    return (self.cond.HasExperimentalEvents() or self.true_val.HasExpe=
-rimentalEvents() or
-> > +            self.false_val.HasExperimentalEvents())
-> > +
-> >    def Equals(self, other: Expression) -> bool:
-> >      if isinstance(other, Select):
-> >        return self.cond.Equals(other.cond) and self.false_val.Equals(
-> > @@ -345,6 +372,9 @@ class Function(Expression):
-> >
-> >      return Function(self.fn, lhs, rhs)
-> >
-> > +  def HasExperimentalEvents(self) -> bool:
-> > +    return self.lhs.HasExperimentalEvents() or (self.rhs and self.rhs.=
-HasExperimentalEvents())
-> > +
-> >    def Equals(self, other: Expression) -> bool:
-> >      if isinstance(other, Function):
-> >        result =3D self.fn =3D=3D other.fn and self.lhs.Equals(other.lhs=
-)
-> > @@ -384,6 +414,9 @@ class Event(Expression):
-> >      global all_events
-> >      raise Exception(f"No event {error} in:\n{all_events}")
-> >
-> > +  def HasExperimentalEvents(self) -> bool:
-> > +    return IsExperimentalEvent(self.name)
-> > +
-> >    def ToPerfJson(self):
-> >      result =3D re.sub('/', '@', self.name)
-> >      return result
-> > @@ -416,6 +449,9 @@ class MetricRef(Expression):
-> >    def Simplify(self) -> Expression:
-> >      return self
-> >
-> > +  def HasExperimentalEvents(self) -> bool:
-> > +    return False
-> > +
-> >    def Equals(self, other: Expression) -> bool:
-> >      return isinstance(other, MetricRef) and self.name =3D=3D other.nam=
-e
-> >
-> > @@ -443,6 +479,9 @@ class Constant(Expression):
-> >    def Simplify(self) -> Expression:
-> >      return self
-> >
-> > +  def HasExperimentalEvents(self) -> bool:
-> > +    return False
-> > +
-> >    def Equals(self, other: Expression) -> bool:
-> >      return isinstance(other, Constant) and self.value =3D=3D other.val=
-ue
-> >
-> > @@ -465,6 +504,9 @@ class Literal(Expression):
-> >    def Simplify(self) -> Expression:
-> >      return self
-> >
-> > +  def HasExperimentalEvents(self) -> bool:
-> > +    return False
-> > +
-> >    def Equals(self, other: Expression) -> bool:
-> >      return isinstance(other, Literal) and self.value =3D=3D other.valu=
-e
-> >
-> > @@ -527,6 +569,8 @@ class Metric:
-> >      self.name =3D name
-> >      self.description =3D description
-> >      self.expr =3D expr.Simplify()
-> > +    if self.expr.HasExperimentalEvents():
-> > +      self.description +=3D " (metric should be considered experimenta=
-l as it contains experimental events)."
-> >      # Workraound valid_only_metric hiding certain metrics based on uni=
-t.
-> >      scale_unit =3D scale_unit.replace('/sec', ' per sec')
-> >      if scale_unit[0].isdigit():
+> Changes:
+>   v1 -> v2:
+>   * Free memory allocated by strdup().
+>   * Check "--pfm-events" in kvm_add_default_arch_event() as well.
+>   * Opportunistically fix the missed memory allocation and free issue in
+>     builtin-kwork.
+>   * Comments refine.
+>
+>
+> Tests:
+>   * Run command "perf kvm record -a && perf kvm report" and "perf kvm
+>     top" on Intel Sapphire Rapids platform, guest records can be
+>     captured successfully.
+>   * Since no powerpc platforms on hand, doesn't check the patches on
+>     powerpc. Any test on powerpc is appreciated.
+>
+> Ref:
+>   [1] https://lore.kernel.org/all/20220411101946.20262-1-likexu@tencent.c=
+om/
+>
+>
+> Dapeng Mi (6):
+>   perf tools kvm: Add missed memory allocation check and free
+>   perf tools kwork: Add missed memory allocation check and free
+>   perf tools kvm: Fix the potential out of range memory access issue
+>   perf tools: Add helper x86__is_intel_cpu()
+>   perf tools kvm: Use "cycles" to sample guest for "kvm record" on Intel
+>   perf tools kvm: Use "cycles" to sample guest for "kvm top" on Intel
+>
+>  tools/perf/arch/x86/util/kvm-stat.c |  51 +++++++++++
+>  tools/perf/builtin-kvm.c            | 130 ++++++++++++++++++++--------
+>  tools/perf/builtin-kwork.c          |  27 ++++--
+>  tools/perf/util/env.c               |  22 +++++
+>  tools/perf/util/env.h               |   2 +
+>  tools/perf/util/kvm-stat.h          |  10 +++
+>  6 files changed, 203 insertions(+), 39 deletions(-)
+>
+>
+> base-commit: 6235ce77749f45cac27f630337e2fdf04e8a6c73
+> --
+> 2.34.1
+>
