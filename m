@@ -1,509 +1,418 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7880213B280;
-	Wed, 17 Sep 2025 06:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0541726A1CF
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 06:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758090869; cv=none; b=RHEytWNq6mu6HvK4GIuv2ncurLBusmAnDIlfhewEqnO7tsXlg/oh6cIuVhERRQclg4Yz6vYVD8GZaG17V2Zs+vE7vQKR33WMGr7v7ZjJXitzLVf5vwJOuqer2lcPaWYndQ6fOWh68ZhdF2tw8RwtVORvzEwwZrOv9+dPH/7obYo=
+	t=1758092107; cv=none; b=JCgRJbXT8xG9P7TQoJq4ngKM+UaeQlerWPM6CMLDEzctsEubPiyJpIzTl5wkHrYWNUeQqD2aYApx2fmC70MAqfV4hHuZG9DB7WmHZNDRX8s6TpJRWqoWa7ooiwWi832jNHiy+16Lw0oODcgAaVCHePbeiJlp82Hv06EwO3GN69U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758090869; c=relaxed/simple;
-	bh=2orAa0ZoIsOq0hBdXJK/QEJJZtYkEPEuGoap5+dOQx8=;
+	s=arc-20240116; t=1758092107; c=relaxed/simple;
+	bh=n2xOh/vHIWFAVtPY207+qfTRmAJyrUlRJgvSTUIK6U4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b/M2uGDiMHndFPBoMLMKdpUUZ3gZUCSReVYhtD/2a8DAGF4mhPuhe7MC6XPR5Md/0fGEzB4lS+2jERq59z4gM/BM1w4YYJZVSe8Fq1jblvhJ7GMy/yv7s6FPsdlfwdL1B7wKpfXSp/YMfU+938bSv3t8UE2PUgPEuWESXdmiMTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HHslzygd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=EuRjwZP2VYYUJD39aDu5qmz/lTutojvLwRxVyUvT7EKD1pPibIn0+FHSYZfGQ1zvhJf8EmP+lmkQDe0/S4ABkigKAeVITLdveQz7VgihYoYVx9AkOvXunaKa8F3oE0dZSyFc1ycxZGvVYacpzNa9vJ0w++xWuRSZmVwpr0M5IgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jpv8KzyJ; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HHslzygd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE5AC4CEF0;
-	Wed, 17 Sep 2025 06:34:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758090868;
-	bh=2orAa0ZoIsOq0hBdXJK/QEJJZtYkEPEuGoap5+dOQx8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HHslzygdag/a0PcWTJVfThcU8jLDBxriW30smgnZWc3iu3uIMAl3t0LLiRDtopMpi
-	 iSQNmXporMOPmccNCCck/PFAiUaEumpWpuceUvDGRTdNFowWI0oOil+7aClxvk/7ag
-	 uqU5OrSpyZtMMbPzafe6z7XqqZ/3wI6H0XNUmn1PzvV+Y9z4L7KHKR+BJ9e9Ah1ijP
-	 OYHSXIxf5SUxK5KISyg3Lg7fJ9anwOirqGYC+YOdT5XNXCP/G6/fhxAPfB/MySShqe
-	 IiSqR5/EFzYfFfeNz8epsYcp1wn/NOBg4v13N+oSm0Z60TEYbLc/Gu148TXGwEwSax
-	 TuQDGk5FCGRxA==
-Date: Tue, 16 Sep 2025 23:34:25 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: "Li, Tianyou" <tianyou.li@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>, wangyang.guo@intel.com,
-	pan.deng@intel.com, zhiguo.zhou@intel.com, jiebin.sun@intel.com,
-	thomas.falcon@intel.com, dapeng1.mi@intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] perf tools c2c: Add annotation support to perf c2c
- report
-Message-ID: <aMpWcdjoCBsRVo72@z2>
-References: <aLhHvWTnxGA-_6Ew@x1>
- <20250907152510.957952-1-tianyou.li@intel.com>
- <aMNBn0rWjfj7TkUQ@google.com>
- <b470609e-6392-4c15-8123-ac5126df8b5e@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jpv8KzyJ"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-24458272c00so67253675ad.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Sep 2025 23:55:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758092104; x=1758696904; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ciYojmKTHtrfRmerHgichDH+MlCs0p4AN6MtET9b34c=;
+        b=Jpv8KzyJ61F0C7x6n4bOIWTfqJPh3vrj4po8HLoiUMtC1t0T3Srb3UKcsaOmQhP1IH
+         FYyu7Z7QbiWIZeP3J07QJ7haUoMjk/rle64jG/H6HNcZDC4CXZ0J8LHldsG/ULB4JhHk
+         vgRNiiMODMAtQYcB/jKJp947TrFt0h5NMz5PT+xN3rG20qdVPfrkxWao8K0DT2NA/od+
+         0caR7Wrk6B7khb0zPq5RXfCh7rZrR/U3Ymi9g3LfbMdIDbqsP1oayN+8vKEkAXv+3+I/
+         DltPdisUyWi7hJ/vkV14p+RczCosJP+2mYGfEZaXDShSTvYMiJhHbQLpFOZpoQvReuSV
+         nHkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758092104; x=1758696904;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ciYojmKTHtrfRmerHgichDH+MlCs0p4AN6MtET9b34c=;
+        b=d4zvaeIiW4spnwkQXaR2MZ2TfP7V/e+uuVK3ydQjRnd3YE+tHRqNZu0GpFhZrfABuQ
+         qaHzFa7EJuIxrLdoG2sOoMmW/I0o3+o6OT123wRQ6ffSit6dph4R0HGm2KIOTWBnl82o
+         Tzgi4329yxaqVJYWYh6SNUuJBiEnuCcK6nc0rdtJ0g4snWkRQAlGldgaoAhbBQwKC4iG
+         bDCiPzYbR2bRT/8H9JO1qoFXN28GGdHRzBfKfp3mkg2GV51zi8tC+SCAUnYJnCBbJM8H
+         U0o3swJ3GsiEI6kiS8G4U1U4O3yJlmRlsyrq8HXgXMZMIiaamd/x3aAY3CtUS/oHz7ar
+         sxRA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyA2R66BhN5zX7wpwCN5cIkP/0OToeavt5YDlKvz5w1tRB7kqyaPAgdRBM7JbabwhKtrg/++igZ9XN3nuUx8U6@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpqRLKagOd+cx03lUohub6k2bZZY2/n95G9VlrTOlI9ijRCspl
+	Izd3yEDgPn9JIFfu3yCmrXf2fiY+t8NdYRLysDn7sQblNKsbEwZt8HLC
+X-Gm-Gg: ASbGncvSHSCYUxCxXctgHGwgSXfqCf/hW6T4FtI9SCi3iB5d3MwsnSFCiFj7+mNht+v
+	fsqf6WWEkVZr1UTkO7cIxIfOql55DQ4In1ssiZqONbhUOt5tlkYYx5Tu6gVmqWDhdY6z120XHNk
+	uEbbs30lrLyJzlGjG5Br14py1K8/zCLsV5MjULy72NJ2Mtc5+9uThYcJJj08pdZb9PrpdZxQzDI
+	vsTmmHE0LLVgxL22whTOZMyE0wFZZkKKISfIe6J0j+oit+8P8VOIImL9/bPBw2xhJyY8bPOAwqL
+	lSPcLs9nSe5Z7lQ54/Mu/0uBdXLki3YvOq+jkxe2nu98SjSnYqDfC/7FAu93ifV6LKs6jOg9q1E
+	VQ8SYtF/kKnvqCd5ka8ErUVP2BGdTn5oyOpocsJWi+RpXsjypibC1uWP85YJO9Q==
+X-Google-Smtp-Source: AGHT+IEMOPmQpgO9licMzodMNvLCJmPGd6KpjFeGD/TAjLXfmnoUh4OGIUW174YcM5R0QJKsMXjAoQ==
+X-Received: by 2002:a17:903:124e:b0:267:cd93:cba9 with SMTP id d9443c01a7336-268137f318bmr14162225ad.35.1758092103917;
+        Tue, 16 Sep 2025 23:55:03 -0700 (PDT)
+Received: from localhost (61-221-120-111.hinet-ip.hinet.net. [61.221.120.111])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-267de22b719sm33440055ad.85.2025.09.16.23.55.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Sep 2025 23:55:03 -0700 (PDT)
+Date: Wed, 17 Sep 2025 14:54:49 +0800
+From: Jinchao Wang <wangjinchao600@gmail.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Doug Anderson <dianders@chromium.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Will Deacon <will@kernel.org>, Yunhui Cui <cuiyunhui@bytedance.com>,
+	akpm@linux-foundation.org, catalin.marinas@arm.com,
+	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com, acme@kernel.org,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, kees@kernel.org,
+	masahiroy@kernel.org, aliceryhl@google.com, ojeda@kernel.org,
+	thomas.weissschuh@linutronix.de, xur@google.com,
+	ruanjinjie@huawei.com, gshan@redhat.com, maz@kernel.org,
+	suzuki.poulose@arm.com, zhanjie9@hisilicon.com,
+	yangyicong@hisilicon.com, gautam@linux.ibm.com, arnd@arndb.de,
+	zhao.xichao@vivo.com, rppt@kernel.org, lihuafei1@huawei.com,
+	coxu@redhat.com, jpoimboe@kernel.org, yaozhenguo1@gmail.com,
+	luogengkun@huaweicloud.com, max.kellermann@ionos.com, tj@kernel.org,
+	yury.norov@gmail.com, thorsten.blum@linux.dev, x86@kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org,
+	Ian Rogers <irogers@google.com>
+Subject: Re: [RFC PATCH V1] watchdog: Add boot-time selection for hard lockup
+ detector
+Message-ID: <aMpbOSN4DH09IPgD@mdev>
+References: <https://lore.kernel.org/all/20250915035355.10846-1-cuiyunhui@bytedance.com/>
+ <20250916145122.416128-1-wangjinchao600@gmail.com>
+ <f932d6da-cd9c-4307-8877-eeb947a5c1a6@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b470609e-6392-4c15-8123-ac5126df8b5e@intel.com>
+In-Reply-To: <f932d6da-cd9c-4307-8877-eeb947a5c1a6@csgroup.eu>
 
-On Fri, Sep 12, 2025 at 11:20:29PM +0800, Li, Tianyou wrote:
+On Wed, Sep 17, 2025 at 08:08:57AM +0200, Christophe Leroy wrote:
 > 
-> On 9/12/2025 5:39 AM, Namhyung Kim wrote:
-> > Hello,
+> 
+> Le 16/09/2025 à 16:50, Jinchao Wang a écrit :
+> > Currently, the hard lockup detector is selected at compile time via
+> > Kconfig, which requires a kernel rebuild to switch implementations.
+> > This is inflexible, especially on systems where a perf event may not
+> > be available or may be needed for other tasks.
 > > 
-> > On Sun, Sep 07, 2025 at 11:25:10PM +0800, Tianyou Li wrote:
-> > > Perf c2c report currently specified the code address and source:line
-> > > information in the cacheline browser, while it is lack of annotation
-> > > support like perf report to directly show the disassembly code for
-> > > the particular symbol shared that same cacheline. This patches add
-> > > a key 'a' binding to the cacheline browser which reuse the annotation
-> > > browser to show the disassembly view for easier analysis of cacheline
-> > > contentions. By default, the 'TAB' key navigate to the code address
-> > > where the contentions detected.
-> > > 
-> > > Signed-off-by: Tianyou Li <tianyou.li@intel.com>
-> > > Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> > > Reviewed-by: Thomas Falcon <thomas.falcon@intel.com>
-> > > Reviewed-by: Jiebin Sun <jiebin.sun@intel.com>
-> > > Reviewed-by: Pan Deng <pan.deng@intel.com>
-> > > Reviewed-by: Zhiguo Zhou <zhiguo.zhou@intel.com>
-> > > Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
-> > > ---
-> > >   tools/perf/builtin-annotate.c     |   2 +-
-> > >   tools/perf/builtin-c2c.c          | 124 ++++++++++++++++++++++++++++--
-> > >   tools/perf/ui/browsers/annotate.c |  40 +++++++++-
-> > >   tools/perf/ui/browsers/hists.c    |   2 +-
-> > >   tools/perf/util/annotate.c        |   2 +-
-> > >   tools/perf/util/annotate.h        |   2 +
-> > >   tools/perf/util/hist.h            |   6 +-
-> > >   7 files changed, 164 insertions(+), 14 deletions(-)
-> > > 
-> > > diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-> > > index 646f43b0f7c4..f977e97a9c96 100644
-> > > --- a/tools/perf/builtin-annotate.c
-> > > +++ b/tools/perf/builtin-annotate.c
-> > > @@ -519,7 +519,7 @@ static void hists__find_annotations(struct hists *hists,
-> > >   			/* skip missing symbols */
-> > >   			nd = rb_next(nd);
-> > >   		} else if (use_browser == 1) {
-> > > -			key = hist_entry__tui_annotate(he, evsel, NULL);
-> > > +			key = hist_entry__tui_annotate(he, evsel, NULL, NO_INITIAL_IP);
-> > >   			switch (key) {
-> > >   			case -1:
-> > > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> > > index 9e9ff471ddd1..f5702d218490 100644
-> > > --- a/tools/perf/builtin-c2c.c
-> > > +++ b/tools/perf/builtin-c2c.c
-> > > @@ -45,6 +45,8 @@
-> > >   #include "pmus.h"
-> > >   #include "string2.h"
-> > >   #include "util/util.h"
-> > > +#include "util/symbol.h"
-> > > +#include "util/annotate.h"
-> > >   struct c2c_hists {
-> > >   	struct hists		hists;
-> > > @@ -62,6 +64,7 @@ struct compute_stats {
-> > >   struct c2c_hist_entry {
-> > >   	struct c2c_hists	*hists;
-> > > +	struct evsel		*evsel;
-> > >   	struct c2c_stats	 stats;
-> > >   	unsigned long		*cpuset;
-> > >   	unsigned long		*nodeset;
-> > > @@ -225,6 +228,12 @@ he__get_c2c_hists(struct hist_entry *he,
-> > >   	return hists;
-> > >   }
-> > > +static void c2c_he__set_evsel(struct c2c_hist_entry *c2c_he,
-> > > +				struct evsel *evsel)
-> > > +{
-> > > +	c2c_he->evsel = evsel;
-> > > +}
-> > > +
-> > >   static void c2c_he__set_cpu(struct c2c_hist_entry *c2c_he,
-> > >   			    struct perf_sample *sample)
-> > >   {
-> > > @@ -334,6 +343,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
-> > >   	c2c_he__set_cpu(c2c_he, sample);
-> > >   	c2c_he__set_node(c2c_he, sample);
-> > > +	c2c_he__set_evsel(c2c_he, evsel);
-> > >   	hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
-> > >   	ret = hist_entry__append_callchain(he, sample);
-> > > @@ -371,6 +381,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
-> > >   		c2c_he__set_cpu(c2c_he, sample);
-> > >   		c2c_he__set_node(c2c_he, sample);
-> > > +		c2c_he__set_evsel(c2c_he, evsel);
-> > >   		hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
-> > >   		ret = hist_entry__append_callchain(he, sample);
-> > > @@ -2550,6 +2561,29 @@ static void perf_c2c__hists_fprintf(FILE *out, struct perf_session *session)
-> > >   }
-> > >   #ifdef HAVE_SLANG_SUPPORT
-> > > +
-> > > +static int perf_c2c__toggle_annotation(struct hist_browser *browser)
-> > > +{
-> > > +	struct hist_entry *he = browser->he_selection;
-> > > +	struct symbol *sym = NULL;
-> > > +	struct c2c_hist_entry *c2c_he = NULL;
-> > > +
-> > > +	if (!he) {
-> > > +		ui_browser__help_window(&browser->b, "No entry selected for annotation");
-> > > +		return 0;
-> > > +	}
-> > > +	sym = (&he->ms)->sym;
-> > > +
-> > > +	if (sym == NULL) {
-> > > +		ui_browser__help_window(&browser->b, "Can not annotate, no symbol found");
-> > > +		return 0;
-> > > +	}
-> > > +
-> > > +	symbol__hists(sym, 0);
-> > > +	c2c_he = container_of(he, struct c2c_hist_entry, he);
-> > > +	return hist_entry__tui_annotate(he, c2c_he->evsel, NULL, he->ip);
-> > > +}
-> > > +
-> > >   static void c2c_browser__update_nr_entries(struct hist_browser *hb)
-> > >   {
-> > >   	u64 nr_entries = 0;
-> > > @@ -2617,6 +2651,7 @@ static int perf_c2c__browse_cacheline(struct hist_entry *he)
-> > >   	" ENTER         Toggle callchains (if present) \n"
-> > >   	" n             Toggle Node details info \n"
-> > >   	" s             Toggle full length of symbol and source line columns \n"
-> > > +	" a             Toggle annotation view \n"
-> > >   	" q             Return back to cacheline list \n";
-> > >   	if (!he)
-> > > @@ -2651,6 +2686,9 @@ static int perf_c2c__browse_cacheline(struct hist_entry *he)
-> > >   			c2c.node_info = (c2c.node_info + 1) % 3;
-> > >   			setup_nodes_header();
-> > >   			break;
-> > > +		case 'a':
-> > > +			perf_c2c__toggle_annotation(browser);
-> > > +			break;
-> > >   		case 'q':
-> > >   			goto out;
-> > >   		case '?':
-> > > @@ -2989,6 +3027,11 @@ static int setup_coalesce(const char *coalesce, bool no_source)
-> > >   	return 0;
-> > >   }
-> > > +static bool perf_c2c__has_annotation(void)
-> > > +{
-> > > +	return use_browser == 1;
-> > > +}
-> > Can you just use ui__has_annotation()?  It should make sure if
-> > he->ms.sym is valid which means you have 'sym' sort key.
+> > This commit refactors the hard lockup detector to replace a rigid
+> > compile-time choice with a flexible build-time and boot-time solution.
+> > The patch supports building the kernel with either detector
+> > independently, or with both. When both are built, a new boot parameter
+> > `hardlockup_detector="perf|buddy"` allows the selection at boot time.
+> > This is a more robust and user-friendly design.
 > > 
-> > Thanks,
-> > Namhyung
+> > This patch is a follow-up to the discussion on the kernel mailing list
+> > regarding the preference and future of the hard lockup detectors. It
+> > implements a flexible solution that addresses the community's need to
+> > select an appropriate detector at boot time.
+> > 
+> > The core changes are:
+> > - The `perf` and `buddy` watchdog implementations are separated into
+> >    distinct functions (e.g., `watchdog_perf_hardlockup_enable`).
+> > - Global function pointers are introduced (`watchdog_hardlockup_enable_ptr`)
+> >    to serve as a single API for the entire feature.
+> > - A new `hardlockup_detector=` boot parameter is added to allow the
+> >    user to select the desired detector at boot time.
+> > - The Kconfig options are simplified by removing the complex
+> >    `HARDLOCKUP_DETECTOR_PREFER_BUDDY` and allowing both detectors to be
+> >    built without mutual exclusion.
+> > - The weak stubs are updated to call the new function pointers,
+> >    centralizing the watchdog logic.
+> > 
+> > Link: https://lore.kernel.org/all/20250915035355.10846-1-cuiyunhui@bytedance.com/
+> > Link: https://lore.kernel.org/all/CAD=FV=WWUiCi6bZCs_gseFpDDWNkuJMoL6XCftEo6W7q6jRCkg@mail.gmail.com/
+> > 
+> > Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
+> > ---
+> >   .../admin-guide/kernel-parameters.txt         |  7 +++
+> >   include/linux/nmi.h                           |  6 +++
+> >   kernel/watchdog.c                             | 46 ++++++++++++++++++-
+> >   kernel/watchdog_buddy.c                       |  7 +--
+> >   kernel/watchdog_perf.c                        | 10 ++--
+> >   lib/Kconfig.debug                             | 37 +++++++--------
+> >   6 files changed, 85 insertions(+), 28 deletions(-)
+> > 
+> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > index 5a7a83c411e9..0af214ee566c 100644
+> > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -1828,6 +1828,13 @@
+> >   			backtraces on all cpus.
+> >   			Format: 0 | 1
+> > +	hardlockup_detector=
+> > +			[perf, buddy] Selects the hard lockup detector to use at
+> > +			boot time.
+> > +			Format: <string>
+> > +			- "perf": Use the perf-based detector.
+> > +			- "buddy": Use the buddy-based detector.
+> > +
+> >   	hash_pointers=
+> >   			[KNL,EARLY]
+> >   			By default, when pointers are printed to the console
+> > diff --git a/include/linux/nmi.h b/include/linux/nmi.h
+> > index cf3c6ab408aa..9298980ce572 100644
+> > --- a/include/linux/nmi.h
+> > +++ b/include/linux/nmi.h
+> > @@ -100,6 +100,9 @@ void watchdog_hardlockup_check(unsigned int cpu, struct pt_regs *regs);
+> >   #endif
+> >   #if defined(CONFIG_HARDLOCKUP_DETECTOR_PERF)
+> > +void watchdog_perf_hardlockup_enable(unsigned int cpu);
+> > +void watchdog_perf_hardlockup_disable(unsigned int cpu);
+> > +extern int watchdog_perf_hardlockup_probe(void);
 > 
-> Thanks Namhyung for your time to review the patch. ui__has_annotation() use
-> global perf_hpp_list while we use c2c.hists.list in builtin-c2c.c.
+> No 'extern' on function prototypes, this is pointless.
+Got it.
+> 
+> >   extern void hardlockup_detector_perf_stop(void);
+> >   extern void hardlockup_detector_perf_restart(void);
+> >   extern void hardlockup_config_perf_event(const char *str);
+> > @@ -120,6 +123,9 @@ void watchdog_hardlockup_disable(unsigned int cpu);
+> >   void lockup_detector_reconfigure(void);
+> >   #ifdef CONFIG_HARDLOCKUP_DETECTOR_BUDDY
+> > +void watchdog_buddy_hardlockup_enable(unsigned int cpu);
+> > +void watchdog_buddy_hardlockup_disable(unsigned int cpu);
+> > +int watchdog_buddy_hardlockup_probe(void);
+> >   void watchdog_buddy_check_hardlockup(int hrtimer_interrupts);
+> >   #else
+> >   static inline void watchdog_buddy_check_hardlockup(int hrtimer_interrupts) {}
+> > diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+> > index 80b56c002c7f..85451d24a77d 100644
+> > --- a/kernel/watchdog.c
+> > +++ b/kernel/watchdog.c
+> > @@ -55,6 +55,37 @@ unsigned long *watchdog_cpumask_bits = cpumask_bits(&watchdog_cpumask);
+> >   #ifdef CONFIG_HARDLOCKUP_DETECTOR
+> > +#ifdef CONFIG_HARDLOCKUP_DETECTOR_PERF
+> > +/* The global function pointers */
+> > +void (*watchdog_hardlockup_enable_ptr)(unsigned int cpu) = watchdog_perf_hardlockup_enable;
+> > +void (*watchdog_hardlockup_disable_ptr)(unsigned int cpu) = watchdog_perf_hardlockup_disable;
+> > +int (*watchdog_hardlockup_probe_ptr)(void) = watchdog_perf_hardlockup_probe;
+> 
+> As this is set only once at startup, can we use static_call instead of
+> function pointers ?
+> 
+> Also, can it me made __ro_after_init ?
+Not really, this is just an RFC patch, and there is no consensus yet.
+If it is included in the final consensus, I will handle it in the next version.
+> 
+> > +#elif defined(CONFIG_HARDLOCKUP_DETECTOR_BUDDY)
+> > +void (*watchdog_hardlockup_enable_ptr)(unsigned int cpu) = watchdog_buddy_hardlockup_enable;
+> > +void (*watchdog_hardlockup_disable_ptr)(unsigned int cpu) = watchdog_buddy_hardlockup_disable;
+> > +int (*watchdog_hardlockup_probe_ptr)(void) = watchdog_buddy_hardlockup_probe;
+> > +#endif
+> > +
+> > +#ifdef CONFIG_HARDLOCKUP_DETECTOR_MULTIPLE
+> > +static char *hardlockup_detector_type = "perf"; /* Default to perf */
+> > +static int __init set_hardlockup_detector_type(char *str)
+> > +{
+> > +	if (!strncmp(str, "perf", 4)) {
+> 
+> Why strncmp ?
+Copy from hardlockup_panic_setup().
+> 
+> What if I set 'hardlockup_detector=performance" ?
+I think that is acceptable in this case.
+> 
+> 
+> > +		watchdog_hardlockup_enable_ptr = watchdog_perf_hardlockup_enable;
+> > +		watchdog_hardlockup_disable_ptr = watchdog_perf_hardlockup_disable;
+> > +		watchdog_hardlockup_probe_ptr = watchdog_perf_hardlockup_probe;
+> > +	} else if (!strncmp(str, "buddy", 5)) {
+> > +		watchdog_hardlockup_enable_ptr = watchdog_buddy_hardlockup_enable;
+> > +		watchdog_hardlockup_disable_ptr = watchdog_buddy_hardlockup_disable;
+> > +		watchdog_hardlockup_probe_ptr = watchdog_buddy_hardlockup_probe;
+> > +	}
+> > +	return 1;
+> > +}
+> > +
+> > +__setup("hardlockup_detector=", set_hardlockup_detector_type);
+> > +
+> > +#endif
+> > +
+> >   # ifdef CONFIG_SMP
+> >   int __read_mostly sysctl_hardlockup_all_cpu_backtrace;
+> >   # endif /* CONFIG_SMP */
+> > @@ -262,9 +293,17 @@ static inline void watchdog_hardlockup_kick(void) { }
+> >    * softlockup watchdog start and stop. The detector must select the
+> >    * SOFTLOCKUP_DETECTOR Kconfig.
+> >    */
+> > -void __weak watchdog_hardlockup_enable(unsigned int cpu) { }
+> > +void __weak watchdog_hardlockup_enable(unsigned int cpu)
+> > +{
+> > +	if (watchdog_hardlockup_enable_ptr)
+> > +		watchdog_hardlockup_enable_ptr(cpu);
+> > +}
+> 
+> This is a weak function so it can be overloaded. What happens then, for
+> instance if the sparc architecture version of watchdog_hardlockup_enable()
+> is called instead ?
+It is a historical problem; I prefer using an #if condition instead. 
+I had considered sparc arch, if sparc version is called, it is expected.
+Because the __weak functions only handle perf & buddy watchdog not the sparc
+watchdog.
 
-I see.  Thanks for the explanation.  Ideally it'd check if
-c2c.hists.list.sym is set but I'm not sure the sort key setup code
-correctly updates it or not.
+I think we should first resolve the consensus issue:
+- Should we keep both perf and buddy watchdogs? (probably yes already)
+- Should the watchdog type be changeable at boot time?
+- Should the watchdog type be changeable at runtime?
+
+How we handle these different watchdog types(maybe including sparc type)
+depends on the answers to these questions.
+What do you think?
 
 > 
-> Per my understanding, the he->ms.sym was initialized through the call chain
-> of hists__add_entry_ops ->Â  __hists__add_entry -> hists__findnew_entry ->
-> hist_entry__init.
+> > -void __weak watchdog_hardlockup_disable(unsigned int cpu) { }
+> > +void __weak watchdog_hardlockup_disable(unsigned int cpu)
+> > +{
+> > +	if (watchdog_hardlockup_disable_ptr)
+> > +		watchdog_hardlockup_disable_ptr(cpu);
+> > +}
+> >   /*
+> >    * Watchdog-detector specific API.
+> > @@ -275,6 +314,9 @@ void __weak watchdog_hardlockup_disable(unsigned int cpu) { }
+> >    */
+> >   int __weak __init watchdog_hardlockup_probe(void)
+> >   {
+> > +	if (watchdog_hardlockup_probe_ptr)
+> > +		return watchdog_hardlockup_probe_ptr();
+> > +
+> >   	return -ENODEV;
+> >   }
+> > diff --git a/kernel/watchdog_buddy.c b/kernel/watchdog_buddy.c
+> > index ee754d767c21..390d89bfcafa 100644
+> > --- a/kernel/watchdog_buddy.c
+> > +++ b/kernel/watchdog_buddy.c
+> > @@ -19,15 +19,16 @@ static unsigned int watchdog_next_cpu(unsigned int cpu)
+> >   	return next_cpu;
+> >   }
+> > -int __init watchdog_hardlockup_probe(void)
+> > +int __init watchdog_buddy_hardlockup_probe(void)
+> >   {
+> >   	return 0;
+> >   }
+> > -void watchdog_hardlockup_enable(unsigned int cpu)
+> > +void watchdog_buddy_hardlockup_enable(unsigned int cpu)
+> >   {
+> >   	unsigned int next_cpu;
+> > +	pr_info("ddddd %s\n", __func__);
 > 
-> Could you please kindly let me know in which case we have an invalid
-> he->ms.sym where I should code a fix? Thanks.
-
-It may have some value, but it'd be consistent only if all hist entries
-merged to it (according to the sort keys) has the same symbol info.  And
-it's guaranteed only if you have 'symbol' in the sort key.
-
-Otherwise an entry can have a random symbol (at the time of the first
-sample) which won't represent the whole overhead for the entry.  And I'm
-afraid that the result can be misleading.
-
-I haven't looked at the c2c code deeply if it's always guaranteed to
-have the 'symbol' sort key though.
-
-Thanks,
-Namhyung
-
-> > > +
-> > >   static int perf_c2c__report(int argc, const char **argv)
-> > >   {
-> > >   	struct itrace_synth_opts itrace_synth_opts = {
-> > > @@ -3006,6 +3049,7 @@ static int perf_c2c__report(int argc, const char **argv)
-> > >   	const char *display = NULL;
-> > >   	const char *coalesce = NULL;
-> > >   	bool no_source = false;
-> > > +	const char *disassembler_style = NULL, *objdump_path = NULL, *addr2line_path = NULL;
-> > >   	const struct option options[] = {
-> > >   	OPT_STRING('k', "vmlinux", &symbol_conf.vmlinux_name,
-> > >   		   "file", "vmlinux pathname"),
-> > > @@ -3033,6 +3077,12 @@ static int perf_c2c__report(int argc, const char **argv)
-> > >   	OPT_BOOLEAN(0, "stitch-lbr", &c2c.stitch_lbr,
-> > >   		    "Enable LBR callgraph stitching approach"),
-> > >   	OPT_BOOLEAN(0, "double-cl", &chk_double_cl, "Detect adjacent cacheline false sharing"),
-> > > +	OPT_STRING('M', "disassembler-style", &disassembler_style, "disassembler style",
-> > > +		   "Specify disassembler style (e.g. -M intel for intel syntax)"),
-> > > +	OPT_STRING(0, "objdump", &objdump_path, "path",
-> > > +		   "objdump binary to use for disassembly and annotations"),
-> > > +	OPT_STRING(0, "addr2line", &addr2line_path, "path",
-> > > +		   "addr2line binary to use for line numbers"),
-> > >   	OPT_PARENT(c2c_options),
-> > >   	OPT_END()
-> > >   	};
-> > > @@ -3040,6 +3090,12 @@ static int perf_c2c__report(int argc, const char **argv)
-> > >   	const char *output_str, *sort_str = NULL;
-> > >   	struct perf_env *env;
-> > > +	annotation_options__init();
-> > > +
-> > > +	err = hists__init();
-> > > +	if (err < 0)
-> > > +		goto out;
-> > > +
-> > >   	argc = parse_options(argc, argv, options, report_c2c_usage,
-> > >   			     PARSE_OPT_STOP_AT_NON_OPTION);
-> > >   	if (argc)
-> > > @@ -3052,6 +3108,36 @@ static int perf_c2c__report(int argc, const char **argv)
-> > >   	if (c2c.stats_only)
-> > >   		c2c.use_stdio = true;
-> > > +	/**
-> > > +	 * Annotation related options
-> > > +	 * disassembler_style, objdump_path, addr2line_path
-> > > +	 * are set in the c2c_options, so we can use them here.
-> > > +	 */
-> > > +	if (disassembler_style) {
-> > > +		annotate_opts.disassembler_style = strdup(disassembler_style);
-> > > +		if (!annotate_opts.disassembler_style) {
-> > > +			err = -ENOMEM;
-> > > +			pr_err("Failed to allocate memory for annotation options\n");
-> > > +			goto out;
-> > > +		}
-> > > +	}
-> > > +	if (objdump_path) {
-> > > +		annotate_opts.objdump_path = strdup(objdump_path);
-> > > +		if (!annotate_opts.objdump_path) {
-> > > +			err = -ENOMEM;
-> > > +			pr_err("Failed to allocate memory for annotation options\n");
-> > > +			goto out;
-> > > +		}
-> > > +	}
-> > > +	if (addr2line_path) {
-> > > +		symbol_conf.addr2line_path = strdup(addr2line_path);
-> > > +		if (!symbol_conf.addr2line_path) {
-> > > +			err = -ENOMEM;
-> > > +			pr_err("Failed to allocate memory for annotation options\n");
-> > > +			goto out;
-> > > +		}
-> > > +	}
-> > > +
-> > >   	err = symbol__validate_sym_arguments();
-> > >   	if (err)
-> > >   		goto out;
-> > > @@ -3126,6 +3212,38 @@ static int perf_c2c__report(int argc, const char **argv)
-> > >   	if (err)
-> > >   		goto out_mem2node;
-> > > +	if (c2c.use_stdio)
-> > > +		use_browser = 0;
-> > > +	else
-> > > +		use_browser = 1;
-> > > +
-> > > +	/*
-> > > +	 * Only in the TUI browser we are doing integrated annotation,
-> > > +	 * so don't allocate extra space that won't be used in the stdio
-> > > +	 * implementation.
-> > > +	 */
-> > > +	if (perf_c2c__has_annotation()) {
-> > > +		int ret = symbol__annotation_init();
-> > > +
-> > > +		if (ret < 0)
-> > > +			goto out_mem2node;
-> > > +		/*
-> > > +		 * For searching by name on the "Browse map details".
-> > > +		 * providing it only in verbose mode not to bloat too
-> > > +		 * much struct symbol.
-> > > +		 */
-> > > +		if (verbose > 0) {
-> > > +			/*
-> > > +			 * XXX: Need to provide a less kludgy way to ask for
-> > > +			 * more space per symbol, the u32 is for the index on
-> > > +			 * the ui browser.
-> > > +			 * See symbol__browser_index.
-> > > +			 */
-> > > +			symbol_conf.priv_size += sizeof(u32);
-> > > +		}
-> > > +		annotation_config__init();
-> > > +	}
-> > > +
-> > >   	if (symbol__init(env) < 0)
-> > >   		goto out_mem2node;
-> > > @@ -3135,11 +3253,6 @@ static int perf_c2c__report(int argc, const char **argv)
-> > >   		goto out_mem2node;
-> > >   	}
-> > > -	if (c2c.use_stdio)
-> > > -		use_browser = 0;
-> > > -	else
-> > > -		use_browser = 1;
-> > > -
-> > >   	setup_browser(false);
-> > >   	err = perf_session__process_events(session);
-> > > @@ -3210,6 +3323,7 @@ static int perf_c2c__report(int argc, const char **argv)
-> > >   out_session:
-> > >   	perf_session__delete(session);
-> > >   out:
-> > > +	annotation_options__exit();
-> > >   	return err;
-> > >   }
-> > > diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-> > > index b770a8d4623e..c2afa3624917 100644
-> > > --- a/tools/perf/ui/browsers/annotate.c
-> > > +++ b/tools/perf/ui/browsers/annotate.c
-> > > @@ -592,7 +592,7 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
-> > >   	target_ms.map = ms->map;
-> > >   	target_ms.sym = dl->ops.target.sym;
-> > >   	annotation__unlock(notes);
-> > > -	__hist_entry__tui_annotate(browser->he, &target_ms, evsel, hbt);
-> > > +	__hist_entry__tui_annotate(browser->he, &target_ms, evsel, hbt, NO_INITIAL_IP);
-> > >   	sym_title(ms->sym, ms->map, title, sizeof(title), annotate_opts.percent_type);
-> > >   	ui_browser__show_title(&browser->b, title);
-> > >   	return true;
-> > > @@ -854,6 +854,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
-> > >   	const char *help = "Press 'h' for help on key bindings";
-> > >   	int delay_secs = hbt ? hbt->refresh : 0;
-> > >   	char *br_cntr_text = NULL;
-> > > +	u64 init_ip = 0;
-> > >   	char title[256];
-> > >   	int key;
-> > > @@ -863,6 +864,13 @@ static int annotate_browser__run(struct annotate_browser *browser,
-> > >   	annotate_browser__calc_percent(browser, evsel);
-> > > +	/* the selection are intentionally even not from the sample percentage */
-> > > +	if (browser->entries.rb_node == NULL && browser->selection) {
-> > > +		init_ip = sym->start + browser->selection->offset;
-> > > +		disasm_rb_tree__insert(browser, browser->selection);
-> > > +		browser->curr_hot = rb_last(&browser->entries);
-> > > +	}
-> > > +
-> > >   	if (browser->curr_hot) {
-> > >   		annotate_browser__set_rb_top(browser, browser->curr_hot);
-> > >   		browser->b.navkeypressed = false;
-> > > @@ -963,6 +971,17 @@ static int annotate_browser__run(struct annotate_browser *browser,
-> > >   				ui_helpline__puts(help);
-> > >   			annotate__scnprintf_title(hists, title, sizeof(title));
-> > >   			annotate_browser__show(&browser->b, title, help);
-> > > +			/* Previous RB tree may not valid, need refresh according to new entries*/
-> > > +			if (init_ip != 0) {
-> > > +				struct disasm_line *dl = find_disasm_line(sym, init_ip, true);
-> > > +				browser->curr_hot = NULL;
-> > > +				if (dl != NULL) {
-> > > +					browser->entries.rb_node = NULL;
-> > > +					disasm_rb_tree__insert(browser, &dl->al);
-> > > +					browser->curr_hot = rb_last(&browser->entries);
-> > > +				}
-> > > +				nd = browser->curr_hot;
-> > > +			}
-> > >   			continue;
-> > >   		case 'o':
-> > >   			annotate_opts.use_offset = !annotate_opts.use_offset;
-> > > @@ -1096,22 +1115,23 @@ static int annotate_browser__run(struct annotate_browser *browser,
-> > >   }
-> > >   int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
-> > > -			     struct hist_browser_timer *hbt)
-> > > +			     struct hist_browser_timer *hbt, u64 init_ip)
-> > >   {
-> > >   	/* reset abort key so that it can get Ctrl-C as a key */
-> > >   	SLang_reset_tty();
-> > >   	SLang_init_tty(0, 0, 0);
-> > >   	SLtty_set_suspend_state(true);
-> > > -	return __hist_entry__tui_annotate(he, &he->ms, evsel, hbt);
-> > > +	return __hist_entry__tui_annotate(he, &he->ms, evsel, hbt, init_ip);
-> > >   }
-> > >   int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
-> > >   			       struct evsel *evsel,
-> > > -			       struct hist_browser_timer *hbt)
-> > > +			       struct hist_browser_timer *hbt, u64 init_ip)
-> > >   {
-> > >   	struct symbol *sym = ms->sym;
-> > >   	struct annotation *notes = symbol__annotation(sym);
-> > > +	struct disasm_line *dl = NULL;
-> > >   	struct annotate_browser browser = {
-> > >   		.b = {
-> > >   			.refresh = annotate_browser__refresh,
-> > > @@ -1163,6 +1183,18 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
-> > >   		browser.he = &annotate_he;
-> > >   	}
-> > > +	/*
-> > > +	 * If init_ip is set, it means that there should be a line
-> > > +	 * intentionally selected, not based on the percentages
-> > > +	 * which caculated by the event sampling. In this case, we
-> > > +	 * convey this information into the browser selection, where
-> > > +	 * the selection in other cases should be empty.
-> > > +	 */
-> > > +	if (init_ip != NO_INITIAL_IP) {
-> > > +		dl = find_disasm_line(sym, init_ip, false);
-> > > +		browser.selection = &dl->al;
-> > > +	}
-> > > +
-> > >   	ui_helpline__push("Press ESC to exit");
-> > >   	if (annotate_opts.code_with_type) {
-> > > diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-> > > index 487c0b08c003..3675a703de11 100644
-> > > --- a/tools/perf/ui/browsers/hists.c
-> > > +++ b/tools/perf/ui/browsers/hists.c
-> > > @@ -2485,7 +2485,7 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
-> > >   		evsel = hists_to_evsel(browser->hists);
-> > >   	he = hist_browser__selected_entry(browser);
-> > > -	err = __hist_entry__tui_annotate(he, &act->ms, evsel, browser->hbt);
-> > > +	err = __hist_entry__tui_annotate(he, &act->ms, evsel, browser->hbt, NO_INITIAL_IP);
-> > >   	/*
-> > >   	 * offer option to annotate the other branch source or target
-> > >   	 * (if they exists) when returning from annotate
-> > > diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> > > index c9b220d9f924..937effbeda69 100644
-> > > --- a/tools/perf/util/annotate.c
-> > > +++ b/tools/perf/util/annotate.c
-> > > @@ -2622,7 +2622,7 @@ int annotate_get_insn_location(struct arch *arch, struct disasm_line *dl,
-> > >   	return 0;
-> > >   }
-> > > -static struct disasm_line *find_disasm_line(struct symbol *sym, u64 ip,
-> > > +struct disasm_line *find_disasm_line(struct symbol *sym, u64 ip,
-> > >   					    bool allow_update)
-> > >   {
-> > >   	struct disasm_line *dl;
-> > > diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-> > > index eaf6c8aa7f47..bbe67588bbdd 100644
-> > > --- a/tools/perf/util/annotate.h
-> > > +++ b/tools/perf/util/annotate.h
-> > > @@ -170,6 +170,8 @@ static inline struct disasm_line *disasm_line(struct annotation_line *al)
-> > >   	return al ? container_of(al, struct disasm_line, al) : NULL;
-> > >   }
-> > > +struct disasm_line *find_disasm_line(struct symbol *sym, u64 ip, bool allow_update);
-> > > +
-> > >   /*
-> > >    * Is this offset in the same function as the line it is used?
-> > >    * asm functions jump to other functions, for instance.
-> > > diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-> > > index c64005278687..e544e1795f19 100644
-> > > --- a/tools/perf/util/hist.h
-> > > +++ b/tools/perf/util/hist.h
-> > > @@ -713,12 +713,14 @@ struct block_hist {
-> > >   #include "../ui/keysyms.h"
-> > >   void attr_to_script(char *buf, struct perf_event_attr *attr);
-> > > +#define NO_INITIAL_IP 0
-> > > +
-> > >   int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
-> > >   			       struct evsel *evsel,
-> > > -			       struct hist_browser_timer *hbt);
-> > > +			       struct hist_browser_timer *hbt, u64 init_ip);
-> > >   int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
-> > > -			     struct hist_browser_timer *hbt);
-> > > +			     struct hist_browser_timer *hbt, u64 init_ip);
-> > >   int evlist__tui_browse_hists(struct evlist *evlist, const char *help, struct hist_browser_timer *hbt,
-> > >   			     float min_pcnt, struct perf_env *env, bool warn_lost_event);
-> > > -- 
-> > > 2.47.1
-> > > 
+> Leftover from debuging ?
+Forgot to delete the log, will fix if a v2 is needed.
+> 
+> >   	/*
+> >   	 * The new CPU will be marked online before the hrtimer interrupt
+> >   	 * gets a chance to run on it. If another CPU tests for a
+> > @@ -58,7 +59,7 @@ void watchdog_hardlockup_enable(unsigned int cpu)
+> >   	cpumask_set_cpu(cpu, &watchdog_cpus);
+> >   }
+> > -void watchdog_hardlockup_disable(unsigned int cpu)
+> > +void watchdog_buddy_hardlockup_disable(unsigned int cpu)
+> >   {
+> >   	unsigned int next_cpu = watchdog_next_cpu(cpu);
+> > diff --git a/kernel/watchdog_perf.c b/kernel/watchdog_perf.c
+> > index 9c58f5b4381d..270110e58f20 100644
+> > --- a/kernel/watchdog_perf.c
+> > +++ b/kernel/watchdog_perf.c
+> > @@ -153,10 +153,12 @@ static int hardlockup_detector_event_create(void)
+> >    * watchdog_hardlockup_enable - Enable the local event
+> >    * @cpu: The CPU to enable hard lockup on.
+> >    */
+> > -void watchdog_hardlockup_enable(unsigned int cpu)
+> > +void watchdog_perf_hardlockup_enable(unsigned int cpu)
+> >   {
+> >   	WARN_ON_ONCE(cpu != smp_processor_id());
+> > +	pr_info("ddddd %s\n", __func__);
+> > +
+> >   	if (hardlockup_detector_event_create())
+> >   		return;
+> > @@ -172,7 +174,7 @@ void watchdog_hardlockup_enable(unsigned int cpu)
+> >    * watchdog_hardlockup_disable - Disable the local event
+> >    * @cpu: The CPU to enable hard lockup on.
+> >    */
+> > -void watchdog_hardlockup_disable(unsigned int cpu)
+> > +void watchdog_perf_hardlockup_disable(unsigned int cpu)
+> >   {
+> >   	struct perf_event *event = this_cpu_read(watchdog_ev);
+> > @@ -257,10 +259,12 @@ bool __weak __init arch_perf_nmi_is_available(void)
+> >   /**
+> >    * watchdog_hardlockup_probe - Probe whether NMI event is available at all
+> >    */
+> > -int __init watchdog_hardlockup_probe(void)
+> > +int __init watchdog_perf_hardlockup_probe(void)
+> >   {
+> >   	int ret;
+> > +	pr_info("ddddd %s\n", __func__);
+> > +
+> >   	if (!arch_perf_nmi_is_available())
+> >   		return -ENODEV;
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index dc0e0c6ed075..443353fad1c1 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -1167,36 +1167,33 @@ config HARDLOCKUP_DETECTOR
+> >   #
+> >   # Note that arch-specific variants are always preferred.
+> >   #
+> > -config HARDLOCKUP_DETECTOR_PREFER_BUDDY
+> > -	bool "Prefer the buddy CPU hardlockup detector"
+> > -	depends on HARDLOCKUP_DETECTOR
+> > -	depends on HAVE_HARDLOCKUP_DETECTOR_PERF && HAVE_HARDLOCKUP_DETECTOR_BUDDY
+> > -	depends on !HAVE_HARDLOCKUP_DETECTOR_ARCH
+> > -	help
+> > -	  Say Y here to prefer the buddy hardlockup detector over the perf one.
+> > -
+> > -	  With the buddy detector, each CPU uses its softlockup hrtimer
+> > -	  to check that the next CPU is processing hrtimer interrupts by
+> > -	  verifying that a counter is increasing.
+> > -
+> > -	  This hardlockup detector is useful on systems that don't have
+> > -	  an arch-specific hardlockup detector or if resources needed
+> > -	  for the hardlockup detector are better used for other things.
+> > -
+> >   config HARDLOCKUP_DETECTOR_PERF
+> > -	bool
+> > +	bool "Enable perf-based hard lockup detector (preferred)"
+> >   	depends on HARDLOCKUP_DETECTOR
+> > -	depends on HAVE_HARDLOCKUP_DETECTOR_PERF && !HARDLOCKUP_DETECTOR_PREFER_BUDDY
+> > +	depends on HAVE_HARDLOCKUP_DETECTOR_PERF
+> >   	depends on !HAVE_HARDLOCKUP_DETECTOR_ARCH
+> >   	select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
+> > +	help
+> > +	  This detector uses a perf event on the CPU to detect when a CPU
+> > +	  has become non-maskable interrupt (NMI) stuck. This is the
+> > +	  preferred method on modern systems as it can detect lockups on
+> > +	  all CPUs at the same time.
+> >   config HARDLOCKUP_DETECTOR_BUDDY
+> > -	bool
+> > +	bool "Enable buddy-based hard lockup detector"
+> >   	depends on HARDLOCKUP_DETECTOR
+> >   	depends on HAVE_HARDLOCKUP_DETECTOR_BUDDY
+> > -	depends on !HAVE_HARDLOCKUP_DETECTOR_PERF || HARDLOCKUP_DETECTOR_PREFER_BUDDY
+> >   	depends on !HAVE_HARDLOCKUP_DETECTOR_ARCH
+> >   	select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
+> > +	help
+> > +	  This is an alternative lockup detector that uses a heartbeat
+> > +	  mechanism between CPUs to detect when one has stopped responding.
+> > +	  It is less precise than the perf-based detector and cannot detect
+> > +	  all-CPU lockups, but it does not require a perf counter.
+> > +
+> > +config CONFIG_HARDLOCKUP_DETECTOR_MULTIPLE
+> > +	bool
+> > +	depends on HARDLOCKUP_DETECTOR_PERF && HARDLOCKUP_DETECTOR_BUDDY
+> >   config HARDLOCKUP_DETECTOR_ARCH
+> >   	bool
+> 
