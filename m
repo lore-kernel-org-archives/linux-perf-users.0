@@ -1,164 +1,171 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B78B2F9DA1
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 18:05:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BF0242D8B
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 19:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758132335; cv=none; b=I1EfKALg6PaSJdYvoOfWFgB/0B1w+faHLhUBZKbkEEZ+yw4BlzhqP22+pXeGPobWIEzwdMsoXvSOGO5geNv44dpxIoP4y8PCCrJS5+DdR52rVoTIr21EY+OqrTV1BfP5qFngE6fj5DTv3ZjRKFfjS3yClhdpr7V623N/iGqAeXs=
+	t=1758139093; cv=none; b=nheaeXuRPUno3wR7we/qoHUnwL1HOvm7D5pEzEs2dQz5kqFE5rhZJWFAVzJiJkWuOFaTAWRROG2goI6EB6Z+fj3oeIi2zc8i+XX9F/aeOC2UlAWV35rrvdZUoniw4MCFOLYr20WmhrDp1JK7P9nOwFFF7h/W7g2FVfdb8fPchVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758132335; c=relaxed/simple;
-	bh=MSqEKzh41VCyG9sUnCQ9EAyOn6P8hvgQK1BtnTXPxDk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=Dssj5V8Y2g2WJgJx9HAV3a23nniodLhJJqCVsKosuMeupme9vGmRd7IxO/jpOPECrjD3/1woqNxSD0de4m2FxPYl6BvzhBewxgLsVTUdTFCydgu53m3T7AlXkbCz3EUUzHODGvttJgGM+GAwi2L5p7EsGqlomvQIdYlyzvuLhT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=So6OoEDm; arc=none smtp.client-ip=209.85.214.182
+	s=arc-20240116; t=1758139093; c=relaxed/simple;
+	bh=VYhOCC8w8b0du4gtXNNKjrAafCOFYDdyrDStA8xhIEQ=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=QhNMN3VCXM5+jwpOsbpWrZmBiVSR8Vd3DYKLogHsKJV1bcCNd4KtSCV0dDolIDcRkKDhUqxKh9My6qLqSxtWaQuZJu+501C7LVAkFZkC7eE+N5C0BgyHDa2443H1zbqq8P+siK6RhXi/1iVESyYUrAD7ykOcbzSn372N8d3E2wE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qVi1v1VH; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--zecheng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="So6OoEDm"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-265abad93bfso21945ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 11:05:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qVi1v1VH"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e94dfb23622so311169276.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Sep 2025 12:58:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1758132333; x=1758737133; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vB9k8zghfEZp5b5KEYFYgK1mtyQZW6vQAuJhWb7VkRE=;
-        b=So6OoEDm/xiINVKyijLLswjRprRpzLZ8Jpb2K2ujlTcf0kRmRAo1kGCrTAiH8+6Xxm
-         FOyNsTw3B94b34KelU7DaAVfFvqPTolbK4LtOIVfFbgfNyF4oCMOSO4oIyL8RVFRvp6r
-         Xtngmnd0EXmfy6SCJHfoe/4D0W7PgLVe+RC6vuNExVhH7pl93yZ9bq5FC3VlNcvMbIUj
-         JhozX1Ig6a81P2O0yrnFZIcOQxCpV1CXBK7V5GOiXwScOrnekRQxm4fgNmxin1uAaWSI
-         zg1B5dcCdLNqLRQAjtK9SuqXa/2L+Y0PijyZHkj/vVhIhHSRvvxY8RW6yM546qhq9q9P
-         uOIQ==
+        d=google.com; s=20230601; t=1758139091; x=1758743891; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=jKpyAd31LStv7r9U6TzGp8PoM20m6pKTZ/PYA4rOye4=;
+        b=qVi1v1VHfErUu1lA/8E/3HnyRqsBug2NEIbCVf0TCjgCVNRME3cXuVWZU7I+di7utw
+         K/b3bku48fRS2ELschFl7PX0num00xNRwQab3YEzjpHBsOa/tfphO34V/WaiYXLMgXdu
+         I+PcIfMbeLcr1Cq/y6gyE6FMLMuo/xf8QGzs3aPTH8MsCc8vHr7lC+1HedG9ABxgVHqy
+         tsnu1dCUViBQuD5eDZ+i1HbZoe7gxT7AVKnpGZgx/bydferA71AhzDl2uNkacqYmFTHd
+         EPQcFLRlh0dCHfYizLS83P66XtMbgQdHM35M1wf1lxkG2sodm1gUfk8fJ+JrKoOVlYdc
+         dVJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758132333; x=1758737133;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vB9k8zghfEZp5b5KEYFYgK1mtyQZW6vQAuJhWb7VkRE=;
-        b=mlPYRNqt37NKM/EZi7CVDTVfDEvU6FrBpccTPn+7B6iG5OrQm/+oS6rZGAVW9vSSum
-         XZLyLGRoGakyRIaxhd1RsetLHqyq7QmBEKXz/EuQt2BoU5dWj2/jjbP9CLe1PDI4QbVk
-         hjGQvhX2yBLyp/kisuBktbPorpA3zjlfw4/KtSaSlU1X6chzFXY4O6WHQwRsvlGomHMx
-         snCX12mo+ee2coadqXnjMX+V/zChuSPUMFHhZEX0SHPbaQY9oHffDX+Pr3K1AHamu0qz
-         SOc98czpBuKx3uTSh93wKiOIUYuH5sa+lcqDrXs6no3lfGA8a1yLwSry+8hC7pPrxiDR
-         4VqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWlReZWYwFMCYvcP0hSMT3yKUdQsUXFv7VAaq+csS1GudIB5+EUVs7HK0QoAhM+2bThxxoAlICMV2PaX5c5zLVb@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXdwmt+1i23RuukpE/3mlMMjAUM2TpNWcrYEewg4cOooOTP4ll
-	W555TR57chOzBnSoP+1P7iML/XHVlXS2nTTRIb5NvvGvIsByEx3S8HExTDP+CEUxqhT3qjM+aHG
-	1Eo/p2etD9yeyqCqgr2R8ZDt/FtX4TQrYH7CRMnKB
-X-Gm-Gg: ASbGnctQepap/Osf3Wg4COQKeqn5c8dsoqygo8irs1d4WRASvJtydM/VMV9pxsw+wpv
-	xgk7GAlgDeyHOaoAJm7ncvrHD039k8j9CnxATNS9Ct233DpJEYbLm04q+3FW/C6CzOC/aGBb2i5
-	YZmpZo3Pb/SaYp1CeK/n4+9LhicZHlfmUy6ZLJFEg6Uo4f313yBQSKQVKnCtnwoOEW2KJO2YdtG
-	RlNfnF9TH8+ze60ckouGssraK/ZouEFWXRnBXuX1lUUgGeh/7blzA==
-X-Google-Smtp-Source: AGHT+IGfF3D8R21uKy2Xpl4cZvXu67GMNs6WZ+vo0s0Vdh/pY7u4pma0OnOZXdrCP074WN81gn5DVAQbIBHyYLUb6po=
-X-Received: by 2002:a17:902:dac2:b0:265:f30b:ab00 with SMTP id
- d9443c01a7336-26808aebb83mr5849095ad.17.1758132333171; Wed, 17 Sep 2025
- 11:05:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1758139091; x=1758743891;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jKpyAd31LStv7r9U6TzGp8PoM20m6pKTZ/PYA4rOye4=;
+        b=BmmnxFNVBBfwQ1OqSarEqqETgaXpmPd82x+NuCe/Drfxsx93MVCUbg2RYMSNw5rbVW
+         wJqwYIg3IjnaYhavUWapKU69mWSNkuSPycYZBdkOQCDzjL7B5ZSwE8mP0W44tGzyWKLO
+         DGs5SfW2zdbVqrlW8ZRM8zviccEgAffe0av/3D92IZacwKxpH5sXxXhjsFwwBWE2Pjyl
+         4FkTg69CK0KhET2Vb9puD5TA812xcRDCV7J29O12D3O3+2zp94/9Hzqlm0YbIscPLyMK
+         i7Mr1rq08ttrlQkJorUaasYxAknagZ9bf7EF5HFRruZ/fOP4kLRy/2JpxPFZHoIg033+
+         jLjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVn6UQkb0GX8W19xzbffX1p/DAgN8UkfkZIX8tGKdiSDehrttr8V4AEOZmpx3u0zpHTJoT9MJaTgBmy1c1ZiLYg@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCprNpimpXx27DboL+eb9e8KnfJlaLkpi7Fg4l36/2/dJXbaiT
+	lpyVCojLOjXhBpnK1eKkLLphMnoMK99j2zCh6ZS1UUMclFsuVQwO5ZxtoQvpv/yLb+V8IasS5fQ
+	PlvJcldPJUw==
+X-Google-Smtp-Source: AGHT+IGOGjX3+rWe9h1zahrKmHzEVszha+4XSttUZLk4M8GG2BxNj1YYXRyNn1PdDObKnf+2TxvmgACchUO6
+X-Received: from ybbha6.prod.google.com ([2002:a05:6902:4506:b0:ea3:ef8e:1987])
+ (user=zecheng job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6902:1b8d:b0:e9b:afa3:518e
+ with SMTP id 3f1490d57ef6-ea5c04463b1mr3090328276.32.1758139090906; Wed, 17
+ Sep 2025 12:58:10 -0700 (PDT)
+Date: Wed, 17 Sep 2025 19:57:58 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250905042643.1937122-1-irogers@google.com>
-In-Reply-To: <20250905042643.1937122-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 17 Sep 2025 11:05:22 -0700
-X-Gm-Features: AS18NWBkI9kYiZyqngvLWLVxXTvIhBHU7i27lLNk55KDGwSKomZzmJMUJhpRkJE
-Message-ID: <CAP-5=fUSuh+hKVg_1owmzPAZka3DGmhr6FzN__n_Cb2XUET3=A@mail.gmail.com>
-Subject: Re: [PATCH v1] perf parse-events: Fix parsing of >30kb event strings
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.51.0.384.g4c02a37b29-goog
+Message-ID: <20250917195808.2514277-1-zecheng@google.com>
+Subject: [PATCH v3 00/10] perf tools: Some improvements on data type profiler
+From: Zecheng Li <zecheng@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	"Liang, Kan" <kan.liang@linux.intel.com>, Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Xu Liu <xliuprof@google.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Zecheng Li <zecheng@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 4, 2025 at 9:26=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> Metrics may generate many particularly uncore event references. The
-> resulting event string may then be >32kb. The parse events lex is
-> using "%option reject" which stores backtracking state in a buffer
-> sized at roughtly 30kb. If the event string is larger than this then a
-> buffer overflow and typically a crash happens.
->
-> The need for "%option reject" was for BPF events which were removed in
-> commit 3d6dfae88917 ("perf parse-events: Remove BPF event
-> support"). As "%option reject" is both a memory and performance cost
-> let's remove it and fix the parsing case for event strings being over
-> ~30kb.
->
-> Whilst cleaning up "%option reject" make the header files accurately
-> reflect functions used in the code and tidy up not requiring yywrap.
->
-> Measuring on the "PMU JSON event tests" a modest reduction of 0.41%
-> user time and 0.27% max resident size was observed. More importantly
-> this change fixes parsing large metrics and event strings.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Hi all,
 
-Ping. I think this may have gotten lost in noise about things like
-hardware json and the python metrics. It is a small change, bug fix
-and performance win. It can land independently of anything else. PTAL.
+I've identified several missing data type annotations within the perf
+tools when annotating the Linux kernel. This patch series improves the
+coverage and correctness of data type annotations.
 
-Thanks,
-Ian
+Some patches from the previous version of this series were
+cherry-picked. This revision adds new improvements based on feedback and
+further development.
 
-> ---
->  tools/perf/util/parse-events.l | 17 +++--------------
->  1 file changed, 3 insertions(+), 14 deletions(-)
->
-> diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-event=
-s.l
-> index 2034590eb789..1eaa8dbc26d8 100644
-> --- a/tools/perf/util/parse-events.l
-> +++ b/tools/perf/util/parse-events.l
-> @@ -5,16 +5,14 @@
->  %option stack
->  %option bison-locations
->  %option yylineno
-> -%option reject
-> +%option noyywrap
->
->  %{
->  #include <errno.h>
-> -#include <sys/types.h>
-> -#include <sys/stat.h>
-> -#include <unistd.h>
-> +#include <stdlib.h>
-> +#include <stdio.h>
->  #include "parse-events.h"
->  #include "parse-events-bison.h"
-> -#include "evsel.h"
->
->  char *parse_events_get_text(yyscan_t yyscanner);
->  YYSTYPE *parse_events_get_lval(yyscan_t yyscanner);
-> @@ -222,10 +220,6 @@ do {                                                =
-       \
->         yycolumn +=3D yyleng;                             \
->  } while (0);
->
-> -#define USER_REJECT            \
-> -       yycolumn -=3D yyleng;     \
-> -       REJECT
-> -
->  %}
->
->  %x mem
-> @@ -423,8 +417,3 @@ r{num_raw_hex}              { return str(yyscanner, P=
-E_RAW); }
->  .                      { }
->
->  %%
-> -
-> -int parse_events_wrap(void *scanner __maybe_unused)
-> -{
-> -       return 1;
-> -}
-> --
-> 2.51.0.355.g5224444f11-goog
->
+Here's a breakdown of the changes in this revision:
+
+Patch 1 skips annotations for LEA instructions in x86, as these do not
+involve memory access. It now returns NO_TYPE.
+
+Patches 2-3 implement the TSR_KIND_POINTER to represent registers
+holding memory addresses of the type. Two points here may need more
+discussion:
+
+- When moving a TSR_KIND_POINTER to the stack in set_stack_state, how
+should we obtain the pointer size for the target arch?
+
+- If the target instruction is a stack memory access and the stack state
+is TSR_KIND_POINTER, we should find or compose a pointer type to
+state->type. How should this be implemented?
+
+Patches 4-6 implement a basic approach for register offset tracking that
+supports add, sub, and lea operations. The register state is invalidated
+when an unsupported arithmetic instruction is encountered. This revision
+uses TSR_KIND_POINTER to avoid finding the pointer type in DWARF and
+preserves the pointer offset information in the stack state.
+
+One question is what type should we use for the pointer + offset case.
+For example, if an offset of 128 is added to a struct rq * pointer, it
+then points to &rq->cfs_rq. Should we try to find the pointer type for
+cfs_rq or just use the original pointer type (rq *)? It is currently
+implemented to use the original pointer type.
+
+Patches 7-9 split patch 8 from v2 with some minor improvements. It skips
+check_variable when the type is found directly by register, since
+sufficient checking is already performed in match_var_offset.
+check_variable lacks some DWARF information to correctly determine if a
+variable is valid. I also found it is able to find members for
+typedef'd types so I preserve them in match_var_offset.
+
+Patch 10 implements support for DW_OP_piece. Currently, this is allowed
+in check_allowed_ops but is handled like other single location
+expressions. This patch splits any expression containing DW_OP_piece
+into multiple parts and handle them separately.
+
+I have tested each patch on a vmlinux and manually checked the results.
+After applying all patches, there are less missing or incorrect
+annotations. No obvious regressions were observed.
+
+v3:
+Already cherry-picked patches in v2:
+
+perf dwarf-aux: Use signed variable types in match_var_offset
+perf dwarf-aux: More accurate variable type match for breg
+perf dwarf-aux: Better variable collection for insn tracking
+perf dwarf-aux: Skip check_variable for die_find_variable_by_reg
+
+v2:
+https://lore.kernel.org/all/20250825195412.223077-1-zecheng@google.com/
+1. update the match_var_offset function signature to s64
+2. correct the comment for is_breg_access_indirect. Use simpler logic to
+match the expressions we support.
+3. add is_reg_var_addr to indicate whether a register holds an address
+of the variable. This defers the type dereference logic to
+update_var_state.
+4. invalidate register state for unsupported instructions.
+5. include two new patches related to improving data type profiler.
+
+v1:
+https://lore.kernel.org/linux-perf-users/20250725202809.1230085-1-zecheng@google.com/
+
+
+Zecheng Li (10):
+  perf annotate: Skip annotating data types to lea instructions
+  perf annotate: Rename TSR_KIND_POINTER to TSR_KIND_PERCPU_POINTER
+  perf annotate: Track address registers via TSR_KIND_POINTER
+  perf annotate: Track arithmetic instructions on pointers
+  perf annotate: Save pointer offset in stack state
+  perf annotate: Invalidate register states for untracked instructions
+  perf dwarf-aux: Skip check_variable for die_find_variable_by_reg
+  perf dwarf-aux: Preserve typedefs in match_var_offset
+  perf annotate: Improve type comparison from different scopes
+  perf dwarf-aux: Support DW_OP_piece expressions
+
+ tools/perf/arch/x86/annotate/instructions.c | 175 ++++++++++++-
+ tools/perf/util/annotate-data.c             |  93 +++++--
+ tools/perf/util/annotate-data.h             |  14 +-
+ tools/perf/util/annotate.c                  |  19 ++
+ tools/perf/util/dwarf-aux.c                 | 266 +++++++++++++++-----
+ tools/perf/util/dwarf-aux.h                 |   2 +-
+ 6 files changed, 474 insertions(+), 95 deletions(-)
+
+-- 
+2.51.0.384.g4c02a37b29-goog
+
