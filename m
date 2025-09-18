@@ -1,150 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841B3314D13;
-	Thu, 18 Sep 2025 15:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86B1A14B06C;
+	Thu, 18 Sep 2025 16:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758210677; cv=none; b=NWhNupRl+9BBIZ+pdOOUQOTqUjiMUoq+mQ+HbPJgntjPA069sf9lMnIOiOUpgJohdB6CvolhyJusNnqMu9A5ryQmEXPLX/vQTx9QZg8KK2gx0BOtm+TAVSVq9cMgdXNaFpZ61CeLDhwjCzY/sTXftmj52d85q7sk+9GRI4v7XHk=
+	t=1758212743; cv=none; b=k0atL0BJkjperEk0+b0Wk0ea3sn9BfZ++6vg9IGA1Wvb6k5ClntvG13jxkpYtWPoYjOHxedVngCShwZv7NZW52GCvQ075R+UVkumXR+Ri57y9bVptMoCLonB57StvGRmSjrZ3k9wnuQDcKSJ/PeZEonYg6ZAVJDAfl/1uQR92II=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758210677; c=relaxed/simple;
-	bh=e6XJbeklgFNXwruDywAZe7vowNbZUbwBKpZS63m54og=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=YSXPJ3tti4lzkiCYhxc0Ef9l4a45T2AaiS3YIu3rV2l6gSZjk2hbT3NWkxesZyTWif7TcAG9xmzoUmtbJY53E1lshvud4Q0H5VZlWgUqqa5VJuzutYgXiLZoWAhu6axDN3LmWCi8F76DOdapIAdSeYxB/bLyd+PxM6opRJaE4GQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lAxccBgH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lAxccBgH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D77DBC4CEE7;
-	Thu, 18 Sep 2025 15:51:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758210677;
-	bh=e6XJbeklgFNXwruDywAZe7vowNbZUbwBKpZS63m54og=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=lAxccBgHQJMGKL6W5XO/kIBHMi2AladIz8qPWx4MBG7gpBrzHZckIimBwgkALGSoK
-	 RTpLe7661eFC5B/7BhfypSLu8ciNLbjbhnW0/Uiw7F9qtuf/K/hOn+NGzmTK4Elius
-	 Puw/h1XtP570vHRTCm/o6CmMUjRekyChiJ42E7YZlGDJw6uFwLqKV4izLQfNVxc+1W
-	 3GgwOdBMEpO6bPhXxyYgbuGAlwFII7VeYUA20OL3bsW1JzfLATB4CEE7Um16odYOB9
-	 O8FOQqOy+9iE5VgV50GipK6qrDd5viCwdSnAqnhpyMVlV7VT8suWp23kcrZWa2l0BA
-	 qFbk69uCk7f8g==
-Date: Thu, 18 Sep 2025 09:51:07 -0600 (MDT)
-From: Paul Walmsley <pjw@kernel.org>
-To: Simon Schuster <schuster.simon@siemens-energy.com>
-cc: Dinh Nguyen <dinguyen@kernel.org>, Christian Brauner <brauner@kernel.org>, 
-    Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, 
-    David Hildenbrand <david@redhat.com>, 
-    Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-    "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-    Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
-    Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-    Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-    Juri Lelli <juri.lelli@redhat.com>, 
-    Vincent Guittot <vincent.guittot@linaro.org>, 
-    Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-    Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
-    Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, 
-    Kees Cook <kees@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-    Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-    Alexandre Ghiti <alex@ghiti.fr>, Guo Ren <guoren@kernel.org>, 
-    Oleg Nesterov <oleg@redhat.com>, Jens Axboe <axboe@kernel.dk>, 
-    Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-    Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-    =?ISO-8859-15?Q?Michal_Koutn=FD?= <mkoutny@suse.com>, 
-    Paul Moore <paul@paul-moore.com>, Serge Hallyn <sergeh@kernel.org>, 
-    James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-    Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-    Frederic Weisbecker <frederic@kernel.org>, 
-    Thomas Gleixner <tglx@linutronix.de>, 
-    Masami Hiramatsu <mhiramat@kernel.org>, 
-    "David S. Miller" <davem@davemloft.net>, 
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-    Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-    Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-    Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-    Adrian Hunter <adrian.hunter@intel.com>, 
-    John Johansen <john.johansen@canonical.com>, 
-    Stephen Smalley <stephen.smalley.work@gmail.com>, 
-    Ondrej Mosnacek <omosnace@redhat.com>, 
-    Kentaro Takeda <takedakn@nttdata.co.jp>, 
-    Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>, 
-    Richard Henderson <richard.henderson@linaro.org>, 
-    Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>, 
-    Russell King <linux@armlinux.org.uk>, 
-    Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-    Brian Cain <bcain@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, 
-    WANG Xuerui <kernel@xen0n.name>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-    Michal Simek <monstr@monstr.eu>, 
-    Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-    Jonas Bonn <jonas@southpole.se>, 
-    Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, 
-    Stafford Horne <shorne@gmail.com>, 
-    "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
-    Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-    Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-    Christophe Leroy <christophe.leroy@csgroup.eu>, 
-    Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-    Alexander Gordeev <agordeev@linux.ibm.com>, 
-    Christian Borntraeger <borntraeger@linux.ibm.com>, 
-    Sven Schnelle <svens@linux.ibm.com>, 
-    Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
-    John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-    Andreas Larsson <andreas@gaisler.com>, Richard Weinberger <richard@nod.at>, 
-    Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-    Johannes Berg <johannes@sipsolutions.net>, Borislav Petkov <bp@alien8.de>, 
-    Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-    "H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>, 
-    Max Filippov <jcmvbkbc@gmail.com>, linux-mm@kvack.org, 
-    linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-    linux-csky@vger.kernel.org, linux-block@vger.kernel.org, 
-    linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org, 
-    linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-    netdev@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-    apparmor@lists.ubuntu.com, selinux@vger.kernel.org, 
-    linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
-    linux-arm-kernel@lists.infradead.org, linux-hexagon@vger.kernel.org, 
-    loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
-    linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
-    linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-    linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-    sparclinux@vger.kernel.org, linux-um@lists.infradead.org
-Subject: Re: [PATCH v2 3/4] arch: copy_thread: pass clone_flags as u64
-In-Reply-To: <20250901-nios2-implement-clone3-v2-3-53fcf5577d57@siemens-energy.com>
-Message-ID: <ffb22e54-6b7d-5b88-4217-e67870051c6e@kernel.org>
-References: <20250901-nios2-implement-clone3-v2-0-53fcf5577d57@siemens-energy.com> <20250901-nios2-implement-clone3-v2-3-53fcf5577d57@siemens-energy.com>
+	s=arc-20240116; t=1758212743; c=relaxed/simple;
+	bh=yoJm0h0nEd1ymiNbwpGC0swfY0I68k78+ZMpOcMi0mI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ieWIstLSZyM6jUlAMAPuSfC0JwGBefqV3YusInBpNmYb6k25gyGiGLoFseybssCCa2TZw6qjmfPpFxPGIamFdLHlkF+JaaRXelsQnjupJYYxsw5XXgKVyML3mBH5zIgXW1KWJII0dNvv7vgCKvZSdh753DacVnvyG1Jd3/XGsYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79777176C;
+	Thu, 18 Sep 2025 09:25:32 -0700 (PDT)
+Received: from 010265703453.cambridge.arm.com (010265703453.cambridge.arm.com [10.1.33.68])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A7FB73F673;
+	Thu, 18 Sep 2025 09:25:39 -0700 (PDT)
+From: Robin Murphy <robin.murphy@arm.com>
+To: will@kernel.org
+Cc: mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH] perf/arm-cmn: Fix CMN S3 DTM offset
+Date: Thu, 18 Sep 2025 17:25:31 +0100
+Message-Id: <f1248eedc2d082c80f5299747acedc8decb94c70.1758212731.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Mon, 1 Sep 2025, Simon Schuster via B4 Relay wrote:
+CMN S3's DTM offset is different between r0px and r1p0, and it
+turns out this was not a error in the earlier documentation, but
+does actually exist in the design. Lovely.
 
-> From: Simon Schuster <schuster.simon@siemens-energy.com>
-> 
-> With the introduction of clone3 in commit 7f192e3cd316 ("fork: add
-> clone3") the effective bit width of clone_flags on all architectures was
-> increased from 32-bit to 64-bit, with a new type of u64 for the flags.
-> However, for most consumers of clone_flags the interface was not
-> changed from the previous type of unsigned long.
-> 
-> While this works fine as long as none of the new 64-bit flag bits
-> (CLONE_CLEAR_SIGHAND and CLONE_INTO_CGROUP) are evaluated, this is still
-> undesirable in terms of the principle of least surprise.
-> 
-> Thus, this commit fixes all relevant interfaces of the copy_thread
-> function that is called from copy_process to consistently pass
-> clone_flags as u64, so that no truncation to 32-bit integers occurs on
-> 32-bit architectures.
-> 
-> Signed-off-by: Simon Schuster <schuster.simon@siemens-energy.com>
+Cc: stable@vger.kernel.org
+Fixes: 0dc2f4963f7e ("perf/arm-cmn: Support CMN S3")
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/perf/arm-cmn.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-Acked-by: Paul Walmsley <pjw@kernel.org> # for RISC-V
+diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+index 50695b95fbfd..6698f0ec94e9 100644
+--- a/drivers/perf/arm-cmn.c
++++ b/drivers/perf/arm-cmn.c
+@@ -65,7 +65,7 @@
+ /* PMU registers occupy the 3rd 4KB page of each node's region */
+ #define CMN_PMU_OFFSET			0x2000
+ /* ...except when they don't :( */
+-#define CMN_S3_DTM_OFFSET		0xa000
++#define CMN_S3_R1_DTM_OFFSET		0xa000
+ #define CMN_S3_PMU_OFFSET		0xd900
+ 
+ /* For most nodes, this is all there is */
+@@ -233,6 +233,9 @@ enum cmn_revision {
+ 	REV_CMN700_R1P0,
+ 	REV_CMN700_R2P0,
+ 	REV_CMN700_R3P0,
++	REV_CMNS3_R0P0 = 0,
++	REV_CMNS3_R0P1,
++	REV_CMNS3_R1P0,
+ 	REV_CI700_R0P0 = 0,
+ 	REV_CI700_R1P0,
+ 	REV_CI700_R2P0,
+@@ -425,8 +428,8 @@ static enum cmn_model arm_cmn_model(const struct arm_cmn *cmn)
+ static int arm_cmn_pmu_offset(const struct arm_cmn *cmn, const struct arm_cmn_node *dn)
+ {
+ 	if (cmn->part == PART_CMN_S3) {
+-		if (dn->type == CMN_TYPE_XP)
+-			return CMN_S3_DTM_OFFSET;
++		if (cmn->rev >= REV_CMNS3_R1P0 && dn->type == CMN_TYPE_XP)
++			return CMN_S3_R1_DTM_OFFSET;
+ 		return CMN_S3_PMU_OFFSET;
+ 	}
+ 	return CMN_PMU_OFFSET;
+-- 
+2.34.1
 
-Thanks!
-
-
-- Paul
