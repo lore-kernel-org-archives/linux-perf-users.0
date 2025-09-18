@@ -1,102 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706BD23ABA0;
-	Thu, 18 Sep 2025 11:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9F2A283FD0;
+	Thu, 18 Sep 2025 12:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758193610; cv=none; b=bunjdKHySb/V6rYT0Ngg1oGyijT6sZg5GqVf0y47pO1u5goYeI/LoPVrgPJevodYj/qUaSgccCG8CksP5eVTlWF4SROgk4iMGxYVUban9VuKD3TaGNT06Wq8Wi/yzL81v8P0D77M3q0UY3QGb/xq/1+CymnsPCiVSJc3Y78P85U=
+	t=1758200058; cv=none; b=at6o+eOjxIb80N/xhEPeYOcRu5S0TxhmS+p/d6bKphmU8MwjzTSi+ZhB9u8uchGvayFOrE8HcFlE3nYA7JFVboHxpbrfRuZgf6q+PWkhghxZtB8FhtKh4MLcurFfDH+jll+/xfKgDzqW21+CRmshTSuHD1lo/sKJUFanuObg4cE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758193610; c=relaxed/simple;
-	bh=tLCrfcwuvmqPecuw/USrpVPpjk1XTTQBWxdekuHCy/E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eO9+2dHBqJbT0ToSzm3YIaGi6xdPQ+PPfRPHETlWNuCM5d/Yd/Ce1AnnL9ksA9VjfIQjtTUMWYiwVBzj1smzfq8V9nePrJtBF8PR5wRtyqSxl8rm+CbtB6HB3/68u2Ihu6C46H6OFRm0vM8wcXFM8Zh94F4s/NpBW0jEzvF1LpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oBef1k3P; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oBef1k3P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B4C7C4CEEB;
-	Thu, 18 Sep 2025 11:06:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758193610;
-	bh=tLCrfcwuvmqPecuw/USrpVPpjk1XTTQBWxdekuHCy/E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oBef1k3P2JyWc9LBWFAz6ImTtdvOwDQn6zp/dKDsPHP4Jc1ELZP0a1OBbDHZYRq25
-	 FEENxEfLwSAaOA0OVE1zmGTvB8Dcqb7s/BC/Za5PEFIFXxhFXFT0E0aBjtA0BGf+LU
-	 9EXN+s65WmQ5ItxX5LeuWXtJAOeBSCPNfTZEKW/iF8MqI+fTSyKhoDYaqzXChqyrzA
-	 DbjOMRKjHimtUflLNy+xZtbs81X8DmfrXSgogRsVdiTGReljuX7BekvciP166Koa82
-	 xfe2EfwqnTFFfk287DUlREOMPKxP9mGfmARdwYYjL59cezZODjnsLVGWH2rXipvnGI
-	 HvbbTs9WVUlng==
-From: Will Deacon <will@kernel.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Ian Rogers <irogers@google.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	John Garry <john.g.garry@oracle.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Leo Yan <leo.yan@linux.dev>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rob Herring <robh@kernel.org>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Marc Zyngier <maz@kernel.org>,
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: kernel-team@android.com,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v5 0/7] arm64: add R8A78000 support
-Date: Thu, 18 Sep 2025 12:06:35 +0100
-Message-Id: <175819208575.1966292.14850843650367600650.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <87ms6snut0.wl-kuninori.morimoto.gx@renesas.com>
-References: <87ms6snut0.wl-kuninori.morimoto.gx@renesas.com>
+	s=arc-20240116; t=1758200058; c=relaxed/simple;
+	bh=V2chHHku1fOFH/uCGvedeRp2kHAM7noiy4UoMokE1Lg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jYASloupP3GOrzPziyp5wmF3iRA8Rrg4tAFKQDJzHcRS7o9AjWwkPw9Xd/JWEM2zNreHZNeGEW0Ies6OYjGskY3r5+0SulIrT2udA7Ka3ChGlaePHRDSvpEhutF+vFOf0wPQg0ANwH372SJOEVv9FpejRf8atk8HJ+HFxrlUeaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E24D61A25;
+	Thu, 18 Sep 2025 05:54:05 -0700 (PDT)
+Received: from [192.168.20.16] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 828843F66E;
+	Thu, 18 Sep 2025 05:54:13 -0700 (PDT)
+Message-ID: <90c78c6d-2e73-44a6-b933-779477d15745@arm.com>
+Date: Thu, 18 Sep 2025 07:54:12 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 4/7] arm64: probes: Add GCS support to bl/blr/ret
+To: linux-trace-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org, mhiramat@kernel.org, oleg@redhat.com,
+ peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ thiago.bauermann@linaro.org, broonie@kernel.org, yury.khrustalev@arm.com,
+ kristina.martsenko@arm.com, liaochang1@huawei.com, catalin.marinas@arm.com,
+ will@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250825033421.463669-1-jeremy.linton@arm.com>
+ <20250825033421.463669-5-jeremy.linton@arm.com>
+Content-Language: en-US
+From: Jeremy Linton <jeremy.linton@arm.com>
+In-Reply-To: <20250825033421.463669-5-jeremy.linton@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 18 Sep 2025 06:23:07 +0000, Kuninori Morimoto wrote:
-> This is v5 of R8A78000 support for Renesas.
+Hi,
+
+On 8/24/25 10:34 PM, Jeremy Linton wrote:
+> The arm64 probe simulation doesn't currently have logic in place
+> to deal with GCS and this results in core dumps if probes are inserted
+> at control flow locations. Fix-up bl, blr and ret to manipulate the
+> shadow stack as needed.
 > 
-> This patch-set adds R8A78000 and Ironhide board support.
-> It is based on SDK v4.28.0 or later. It will be released at end of Oct.
+> While we manipulate and validate the shadow stack correctly, the
+> hardware provides additional security by only allowing GCS operations
+> against pages which are marked to support GCS. For writing there is
+> gcssttr() which enforces this, but there isn't an equivalent for
+> reading. This means that uprobe users should be aware that probing on
+> control flow instructions which require reading the shadow stack (ex:
+> ret) offers lower security guarantees than what is achieved without
+> the uprobe active.
 > 
-> Link: https://lore.kernel.org/r/87ecs5abp9.wl-kuninori.morimoto.gx@renesas.com
-> Link: https://lore.kernel.org/r/87tt13i0lh.wl-kuninori.morimoto.gx@renesas.com
-> Link: https://lore.kernel.org/r/87o6rjvzf4.wl-kuninori.morimoto.gx@renesas.com
-> Link: https://lore.kernel.org/r/87tt1c9z7h.wl-kuninori.morimoto.gx@renesas.com
+> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> ---
+>   arch/arm64/kernel/probes/simulate-insn.c | 44 +++++++++++++++++++-----
+>   1 file changed, 35 insertions(+), 9 deletions(-)
 > 
-> [...]
+> diff --git a/arch/arm64/kernel/probes/simulate-insn.c b/arch/arm64/kernel/probes/simulate-insn.c
+> index 09a0b36122d0..97ed4db75417 100644
+> --- a/arch/arm64/kernel/probes/simulate-insn.c
+> +++ b/arch/arm64/kernel/probes/simulate-insn.c
+> @@ -13,6 +13,7 @@
+>   #include <asm/traps.h>
+>   
+>   #include "simulate-insn.h"
+> +#include "asm/gcs.h"
+>   
+>   #define bbl_displacement(insn)		\
+>   	sign_extend32(((insn) & 0x3ffffff) << 2, 27)
+> @@ -49,6 +50,21 @@ static inline u32 get_w_reg(struct pt_regs *regs, int reg)
+>   	return lower_32_bits(pt_regs_read_reg(regs, reg));
+>   }
+>   
+> +static inline int update_lr(struct pt_regs *regs, long addr)
+> +{
+> +	int err = 0;
+> +
+> +	if (user_mode(regs) && task_gcs_el0_enabled(current)) {
+> +		push_user_gcs(addr, &err);
+> +		if (err) {
+> +			force_sig(SIGSEGV);
+> +			return err;
+> +		}
+> +	}
+> +	procedure_link_pointer_set(regs, addr);
+> +	return err;
+> +}
+> +
+>   static bool __kprobes check_cbz(u32 opcode, struct pt_regs *regs)
+>   {
+>   	int xn = opcode & 0x1f;
+> @@ -107,9 +123,9 @@ simulate_b_bl(u32 opcode, long addr, struct pt_regs *regs)
+>   {
+>   	int disp = bbl_displacement(opcode);
+>   
+> -	/* Link register is x30 */
+>   	if (opcode & (1 << 31))
+> -		set_x_reg(regs, 30, addr + 4);
+> +		if (update_lr(regs, addr + 4))
+> +			return;
+>   
+>   	instruction_pointer_set(regs, addr + disp);
+>   }
+> @@ -129,21 +145,31 @@ void __kprobes
+>   simulate_br_blr(u32 opcode, long addr, struct pt_regs *regs)
+>   {
+>   	int xn = (opcode >> 5) & 0x1f;
+> +	int b_target = get_x_reg(regs, xn);
 
-Applied MIDR bits to arm64 (for-next/cpufeature), thanks!
+Ugh, I was staring at this set and realized that this type is wrong, it 
+should be 'long'. I will send a patch once I sanity check it on 
+something that isn't a model.
 
-[4/7] arm64: cputype: Add Cortex-A720AE definitions
-      https://git.kernel.org/arm64/c/f38c2c3e572c
-[5/7] arm64: errata: Expand speculative SSBS workaround for Cortex-A720AE
-      https://git.kernel.org/arm64/c/3ba8d4aa42bd
 
-Cheers,
--- 
-Will
+>   
+> -	/* update pc first in case we're doing a "blr lr" */
+> -	instruction_pointer_set(regs, get_x_reg(regs, xn));
+> -
+> -	/* Link register is x30 */
+>   	if (((opcode >> 21) & 0x3) == 1)
+> -		set_x_reg(regs, 30, addr + 4);
+> +		if (update_lr(regs, addr + 4))
+> +			return;
+> +
+> +	instruction_pointer_set(regs, b_target);
+>   }
+>   
+>   void __kprobes
+>   simulate_ret(u32 opcode, long addr, struct pt_regs *regs)
+>   {
+> +	u64 ret_addr;
+> +	int err = 0;
+>   	int xn = (opcode >> 5) & 0x1f;
+> -
+> -	instruction_pointer_set(regs, get_x_reg(regs, xn));
+> +	unsigned long r_target = get_x_reg(regs, xn);
+> +
+> +	if (user_mode(regs) && task_gcs_el0_enabled(current)) {
+> +		ret_addr = pop_user_gcs(&err);
+> +		if (err || ret_addr != r_target) {
+> +			force_sig(SIGSEGV);
+> +			return;
+> +		}
+> +	}
+> +	instruction_pointer_set(regs, r_target);
+>   }
+>   
+>   void __kprobes
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
