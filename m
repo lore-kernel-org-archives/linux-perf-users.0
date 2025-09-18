@@ -1,79 +1,78 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401B42DF124
-	for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 09:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA699227B83
+	for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 09:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758187551; cv=none; b=EUiSdJ4eUPgCeftzfFdGIQhPkUatVXp+67EEh/UbhOrSpv1VZPka2Bfr+ddu5yg7gA4ySzCAGrPsHPOJdiC3fUAzQsaTywnFUXrXQ76s9Jcr05qhPB6vxAStMC//4qFBxwIXXX2VH0EHCl+97ATfgL2qr5Zw1bcBxkZM5gz9Hzc=
+	t=1758188046; cv=none; b=dVorO1nRYJhde897Ai4ozcspRlKKglbwIuqNYwqfLj/laEuCeSLHuMgtqKFHDcEdY5vbgxqBGGheKC4nQy8TiLwo/B6LZHo7RUeHtdSQt5G6W/GLoHzuXvvuHZZ5WvWOGoEK3W+FAWln518Lyqn4N6yHkpE/R20ReUm5kr6W8x0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758187551; c=relaxed/simple;
-	bh=onHsAQTWsUyBs5IX1LlfYCWKBjpstcoF4upDP17pgA4=;
+	s=arc-20240116; t=1758188046; c=relaxed/simple;
+	bh=F+7UwolL+d5M3u3SJQMdS/JoH4KAhipm+vZbdTiVTtU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BhaMVAiOJhIIP4PYHVi4khda16JJ8xCThYf4OFj6eMLqvOFKLouByV1n6ec8X7KQAX/6AVV4Ed1qaCWFRkkO0nk3vGTdebkpnNYgX1V/zcyd1r5IZD7VdIUSu5dTxfuRHF9zhKRoVTsMnBDprNuiBroLYtIqQsgRoLyZLn28psM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.176
+	 To:Cc:Content-Type; b=lYlMuJduWgJM5xdXdjwBfdzv2DQBUh5w40LmCSUT7KbIUwcBb06uyvhbpmw7p322EsBKJGcKpnUn2wtiArNhyIkAfOYZNFjk1at0rNwHrFrM0tA+BIBl4lfmb01vn38gS0Melt9LQ+XjmfPB9mfwKb01vA3/ufUUChCnPIZpbVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-4240111d446so7733115ab.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 02:25:49 -0700 (PDT)
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-7639af4c4acso9306606d6.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 02:34:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758187549; x=1758792349;
+        d=1e100.net; s=20230601; t=1758188044; x=1758792844;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=DIPAGga4FOA5RTuOCxh82ZFvj8TL8c2aRMORyqNz1+U=;
-        b=HGdyZ59szpbmUkEhVVsVqeGcdqvTXdhf/Rj19oniUDHIHUOtmstTwfY1PErsB0j4os
-         CiJiIi064lAKcbi+PU+wUy3P/ucvggvA4LsF/CBEKgmj8b2zB/HP1cJ7PS5DT/D8NpGz
-         pvhV3QciynZ/85VocvDjqa9JaBv4JeDWqURo93KQHEllCM7rqNcbfDhQUnCjqkZy/zjw
-         hM0qMYb8mNbrdDTUA1fpQTq+LG7fBzsB6iOr7ceOuGoyAOF60hfRZA+QqiJTn8HWPUrM
-         l0MAi1m/hr4kRjVQkQWPvtMhEt30MZ1hK2JP2KBui+4BglpgkwxQSAe99HsRqsqLJizB
-         DO+g==
-X-Forwarded-Encrypted: i=1; AJvYcCWT3V/QytOXBx5u4kIQkoCJbeHzdcDys30Ss52RUcZb109I1rmtI8Pl410OsAn8k3TZvZqmpVNyQ0zwBp8gPTiI@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFMnNwRvfZlkfEjSwAx4seR/VY0aC0Y0HE0UZG9TjIu2LSldCD
-	mh9IXQBD5VT2EQALuU2J4ZioUI+iVSL35ggJiSlNgYB9p81d7yzJVAEuXrUvdDm4
-X-Gm-Gg: ASbGncuS4Fda968awGAtctIJ1U7DQR0IPqcpOB6SMM69rjTiACkQerNXRfTSn4r6SW1
-	kMSyt8wcY4DruihitqA9Bl882sCnVtduOWAHCjcr+jOJwg7l+9Zk+3yz29TSWNZLcS9Mf2WJNpr
-	hlx/E/YIfDgPvhnH+MiHh2HjjwQqOfN4TWokteN/3UsPMZ0BrhSun2npJVH+cPFG3zrGdUXc9ne
-	+Wl9Yz2/8MkEpCumYHOKz5f6WvwScxdttY4A0B7E9JKPOfsIZwCYtXi3FEaZIXg/hmDlEZvdbSz
-	0HgPbj/ILRErLuYWHRGz8aZRfxFGDO24Io0cNEcuSvz5ikCJMjitA7/AJV5QF53Rw/Ee8JaLhEz
-	pv+UvX8m5GFjHiGK1/fiTk8nmXbILjftOV4DalXp9GOR5WijH3r57JJjmm0p3YkR5ZF3R9h4+I2
-	vQyZSk7Rw=
-X-Google-Smtp-Source: AGHT+IFJf0eu4Btrp1e1p59x36W1HzdwyzA8HX6huLLxL69Q3H5bbfiA4MGVDfQbtt0bQg1tomaOOA==
-X-Received: by 2002:a05:6e02:2508:b0:411:7b83:c9f2 with SMTP id e9e14a558f8ab-4241a5297a3mr67916255ab.17.1758187549046;
-        Thu, 18 Sep 2025 02:25:49 -0700 (PDT)
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com. [209.85.166.171])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-53d53e58134sm735774173.62.2025.09.18.02.25.48
+        bh=thwzdmTgqO/aYIbO/EaYexBbO6rJAeT6rezea+eeFXA=;
+        b=IH+P7WC4bqC7tNzsvSezOC00h/6BJ3zJ6CX4baPJ8qgU84SDGsySnee35bFXQMXHry
+         R+bXu4P2s8twfaH/4KjWMVmWTw2bItjJsYdkMuyv3NyTMUf6KRMtLdF5GK4yTiUTOTkN
+         UkCHpuz9fFom3so9KOH061uJmAFuDUdnv91GkYh7324dNvzwJ0x//bR+knhfDyqCLsoA
+         p47mM56gBsgwWSOsmH+05IA+S/9BHTTSNOTkQQzsQTfrlA4jU1yRr5NcT0eKsrju9mdi
+         y2NJYp6fm3B5LmIL/VDFpvmzr+S6PKJtvfLxXGb7pYBAknpCxjrR2S/3FdNLAAYuypne
+         74dQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWIhdqEoiPlotKUCRVzumLnFsZsWq/Nt3er9xVVhT32+yhlUk7nYzzOnSrtDqueG6Ia0AH9e4nZvmkHIL2eAACa@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiVGVWxJ0uqIMumyOJ6k4qs4IGEt1gK+SYKJTQ1zYld2yiZkJK
+	zSlHfYORfS6evzDiWGXH/pDvl2Nuwg8AdqzLjXlZu3ZqGdEYwoM1NjC3lOjUU1ll
+X-Gm-Gg: ASbGncvZ9X7dY4b2gTZN71a7IVipYcA8zXUmcyFp1a1D1wwaLMIKo1s5c8WR9VTYIvv
+	FuvLeGD+qpx7PgkNPBzBePIpfFZ/n2E945rnTsROUZ63sRdBGr6je0X9HvqV8qE5XoslLnv9brM
+	DF+yobDVryMpY9U1kJOdGuJxdrAkRmkHE3MqeZNFX+mPAVFiVkLJweYRcT3cJLpYBFfx/WbMvsj
+	5PSKw3zbvjral7dFxKmcnOqt82S4CpJQR1ENd11pI0OtYLbjFj01JA4alGZN5IGZjB8Oo2OKBn1
+	UjBIFs3unVA39q7V789njdnNlL2+xImpAtKmp6trhKJcvQ8AJ+2IEuXq4H4zuz2j07VwkisCf9J
+	07iz5TjtUI4TQdxA+S5i+/s9AxUjI3tvGCbmbg7jHX4BaAsVKe3/qAApCcZAFxqUWRYB0zCNhWF
+	BUxec69Xs=
+X-Google-Smtp-Source: AGHT+IGt8oifhph8cJNcBhgj/o/NsH9wZVF7N8ADDLmwp/pCV7CO91sHrYvbG0HXzTfR9iRL1lEM+A==
+X-Received: by 2002:a05:6214:4885:b0:791:34a5:868f with SMTP id 6a1803df08f44-79134a587fcmr35174756d6.20.1758188043440;
+        Thu, 18 Sep 2025 02:34:03 -0700 (PDT)
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com. [209.85.222.173])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-79355ce7048sm10524916d6.69.2025.09.18.02.34.03
         for <linux-perf-users@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Sep 2025 02:25:48 -0700 (PDT)
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-424117c229aso7710735ab.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 02:25:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWT08CjNESngPU1K8cySPeuV02Lh49ikbY+uBL9+TKvq8Iw78q999HrCx8oLDX0jJIy7qjHT77JXbmCx+UdejqW@vger.kernel.org
-X-Received: by 2002:a05:6102:26cf:b0:4fb:de9e:6d87 with SMTP id
- ada2fe7eead31-56d5376a64emr1999299137.11.1758187210414; Thu, 18 Sep 2025
- 02:20:10 -0700 (PDT)
+        Thu, 18 Sep 2025 02:34:03 -0700 (PDT)
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-80e3612e1a7so126832985a.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 02:34:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU7KYqdRenXwv85QW3HsQJhuong6nIPOPVc7sx6tuBz6FlRqon1eDa/9KdfECUIIXmiR8KdW7IUCD5J/VwVenV9@vger.kernel.org
+X-Received: by 2002:a05:6102:80a6:b0:51e:92cc:6e6a with SMTP id
+ ada2fe7eead31-56d6d57bf75mr1452834137.33.1758187611708; Thu, 18 Sep 2025
+ 02:26:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <87ms6snut0.wl-kuninori.morimoto.gx@renesas.com> <87ldmcnup1.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87ldmcnup1.wl-kuninori.morimoto.gx@renesas.com>
+References: <87ms6snut0.wl-kuninori.morimoto.gx@renesas.com> <87jz1wnunm.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87jz1wnunm.wl-kuninori.morimoto.gx@renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 18 Sep 2025 11:19:58 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdV+59oaCo5oOqTLhQMDV=SJhvBu-gGr4vUzyyPxEEBJpw@mail.gmail.com>
-X-Gm-Features: AS18NWB4Q9Ufki8ANAbzyQzmxL_5lVd8LQK2sw8BXyMmuM4p3Xg-lO7FkssDvz4
-Message-ID: <CAMuHMdV+59oaCo5oOqTLhQMDV=SJhvBu-gGr4vUzyyPxEEBJpw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/7] dt-bindings: serial: sh-sci: don't required
- "reset" for r8a78000
+Date: Thu, 18 Sep 2025 11:26:40 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVfhMKrdnQCjf_Z90EnH_gb-RpdxPiVUjEe3C5ZyuTfUw@mail.gmail.com>
+X-Gm-Features: AS18NWDTdMprA4ImYjVf-zjtYmKdsmDO9RIvez5aKcVZCW3WJ100X4TbNjepaRg
+Message-ID: <CAMuHMdVfhMKrdnQCjf_Z90EnH_gb-RpdxPiVUjEe3C5ZyuTfUw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/7] dt-bindings: serial: sh-sci: don't required "power-domain"
 To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Cc: "Liang, Kan" <kan.liang@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
 	Conor Dooley <conor+dt@kernel.org>, Douglas Anderson <dianders@chromium.org>, 
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>, 
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Ian Rogers <irogers@google.com>, 
+	Ingo Molnar <mingo@redhat.com>, James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
 	John Garry <john.g.garry@oracle.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
 	Leo Yan <leo.yan@linux.dev>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, Mike Leach <mike.leach@linaro.org>, 
@@ -87,49 +86,47 @@ Content-Type: text/plain; charset="UTF-8"
 
 Hi Morimoto-san,
 
-On Thu, 18 Sept 2025 at 08:25, Kuninori Morimoto
+On Thu, 18 Sept 2025 at 08:26, Kuninori Morimoto
 <kuninori.morimoto.gx@renesas.com> wrote:
-> commit 6ac1d6047372 ("dt-bindings: serial: sh-sci: Document r8a78000
-> bindings") added r8a78000 DT bindings for Renesas serial, and it sets
-> "resets" as "required", but it is not mandatory, because driver doesn't
-> use it. Remove it.
+> {H}SCIF is in the always-on power area. "power-domain" property is not
+> mandatory. Remove it.
 >
 > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
 Thanks for your patch!
 
-> I'm not sure this is acceptable. This is optional patch.
-> If it was acceptable, I think we can remove "resets" from required not only for X5H...
+> I'm not sure this is acceptable patch. This is optional patch.
 
-The question is not "Does the driver use the reset signal?", but
-"Does the hardware have a reset signal?".
+(H)SCIF is indeed part of the always-on power area.  However, like
+for many other modules, its power management is handled similarly
+through a clock/module controller.  Hence it falls under the PM Domain
+abstraction, and the power-domains property is justified.
 
-According to Table 12.1 "Reset Categories and Reset Source" and Note 2,
-the Module Controller takes care of Software Module Reset.  However,
-I couldn't find information about the individual module resets in the
-documentation for the Module Controller.
+What this power-domains property will point to on R-ar X5H is a
+different question, as there are no DT bindings and no driver for the
+clock/module controller yet...
 
 > --- a/Documentation/devicetree/bindings/serial/renesas,hscif.yaml
 > +++ b/Documentation/devicetree/bindings/serial/renesas,hscif.yaml
-> @@ -126,7 +126,6 @@ if:
->            - renesas,rcar-gen2-hscif
->            - renesas,rcar-gen3-hscif
->            - renesas,rcar-gen4-hscif
-> -          - renesas,rcar-gen5-hscif
->  then:
->    required:
->      - resets
+> @@ -116,7 +116,6 @@ required:
+>    - interrupts
+>    - clocks
+>    - clock-names
+> -  - power-domains
+>
+>  if:
+>    properties:
 
 > --- a/Documentation/devicetree/bindings/serial/renesas,scif.yaml
 > +++ b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-> @@ -181,7 +181,6 @@ allOf:
->                - renesas,rcar-gen2-scif
->                - renesas,rcar-gen3-scif
->                - renesas,rcar-gen4-scif
-> -              - renesas,rcar-gen5-scif
->                - renesas,scif-r9a07g044
->                - renesas,scif-r9a09g057
->      then:
+> @@ -168,7 +168,6 @@ required:
+>    - interrupts
+>    - clocks
+>    - clock-names
+> -  - power-domains
+>
+>  allOf:
+>    - $ref: serial.yaml#
 
 Gr{oetje,eeting}s,
 
