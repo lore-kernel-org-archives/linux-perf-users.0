@@ -1,78 +1,78 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA699227B83
-	for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 09:34:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD322320F
+	for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 09:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758188046; cv=none; b=dVorO1nRYJhde897Ai4ozcspRlKKglbwIuqNYwqfLj/laEuCeSLHuMgtqKFHDcEdY5vbgxqBGGheKC4nQy8TiLwo/B6LZHo7RUeHtdSQt5G6W/GLoHzuXvvuHZZ5WvWOGoEK3W+FAWln518Lyqn4N6yHkpE/R20ReUm5kr6W8x0=
+	t=1758189237; cv=none; b=pylvGmwYuVx5lde3XYn46J3eGAVDhjDAUTtkyPHV8ty1POZrRNpFkN9Hn1L8JmDgTniaIXxNmBHNPZG5dSEUPPhCq+hHmRQdXSK9RZbO28CC9rX/RpOlrbbZuavDYN8YN5GQ4HMO/ZD6jCh/ajkSU2/jJLe3tYEkPjONziedZEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758188046; c=relaxed/simple;
-	bh=F+7UwolL+d5M3u3SJQMdS/JoH4KAhipm+vZbdTiVTtU=;
+	s=arc-20240116; t=1758189237; c=relaxed/simple;
+	bh=tJj9rQD66s1ZsqtyiQYDVNQ/XIehZY5bWaCYzk/MGHw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lYlMuJduWgJM5xdXdjwBfdzv2DQBUh5w40LmCSUT7KbIUwcBb06uyvhbpmw7p322EsBKJGcKpnUn2wtiArNhyIkAfOYZNFjk1at0rNwHrFrM0tA+BIBl4lfmb01vn38gS0Melt9LQ+XjmfPB9mfwKb01vA3/ufUUChCnPIZpbVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.49
+	 To:Cc:Content-Type; b=L/FTV0X076Z1oWvg6tM8JKR6Mmg9hjepsb7NU6YV33wuHR3/Y2efVF8ZD7j1XTuwzhQSgFfP//NJr8r/S3dBDSXdN5UbHHZhyTh8JdqaNB+nAvLeCoBOkyGC6Z4b4g11K2OLPYcYAFyaVBmpRg22IJ4jSRIvkMTQb/VSUg+Qpjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-7639af4c4acso9306606d6.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 02:34:04 -0700 (PDT)
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-8b32453d838so519476241.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 02:53:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758188044; x=1758792844;
+        d=1e100.net; s=20230601; t=1758189232; x=1758794032;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=thwzdmTgqO/aYIbO/EaYexBbO6rJAeT6rezea+eeFXA=;
-        b=IH+P7WC4bqC7tNzsvSezOC00h/6BJ3zJ6CX4baPJ8qgU84SDGsySnee35bFXQMXHry
-         R+bXu4P2s8twfaH/4KjWMVmWTw2bItjJsYdkMuyv3NyTMUf6KRMtLdF5GK4yTiUTOTkN
-         UkCHpuz9fFom3so9KOH061uJmAFuDUdnv91GkYh7324dNvzwJ0x//bR+knhfDyqCLsoA
-         p47mM56gBsgwWSOsmH+05IA+S/9BHTTSNOTkQQzsQTfrlA4jU1yRr5NcT0eKsrju9mdi
-         y2NJYp6fm3B5LmIL/VDFpvmzr+S6PKJtvfLxXGb7pYBAknpCxjrR2S/3FdNLAAYuypne
-         74dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWIhdqEoiPlotKUCRVzumLnFsZsWq/Nt3er9xVVhT32+yhlUk7nYzzOnSrtDqueG6Ia0AH9e4nZvmkHIL2eAACa@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiVGVWxJ0uqIMumyOJ6k4qs4IGEt1gK+SYKJTQ1zYld2yiZkJK
-	zSlHfYORfS6evzDiWGXH/pDvl2Nuwg8AdqzLjXlZu3ZqGdEYwoM1NjC3lOjUU1ll
-X-Gm-Gg: ASbGncvZ9X7dY4b2gTZN71a7IVipYcA8zXUmcyFp1a1D1wwaLMIKo1s5c8WR9VTYIvv
-	FuvLeGD+qpx7PgkNPBzBePIpfFZ/n2E945rnTsROUZ63sRdBGr6je0X9HvqV8qE5XoslLnv9brM
-	DF+yobDVryMpY9U1kJOdGuJxdrAkRmkHE3MqeZNFX+mPAVFiVkLJweYRcT3cJLpYBFfx/WbMvsj
-	5PSKw3zbvjral7dFxKmcnOqt82S4CpJQR1ENd11pI0OtYLbjFj01JA4alGZN5IGZjB8Oo2OKBn1
-	UjBIFs3unVA39q7V789njdnNlL2+xImpAtKmp6trhKJcvQ8AJ+2IEuXq4H4zuz2j07VwkisCf9J
-	07iz5TjtUI4TQdxA+S5i+/s9AxUjI3tvGCbmbg7jHX4BaAsVKe3/qAApCcZAFxqUWRYB0zCNhWF
-	BUxec69Xs=
-X-Google-Smtp-Source: AGHT+IGt8oifhph8cJNcBhgj/o/NsH9wZVF7N8ADDLmwp/pCV7CO91sHrYvbG0HXzTfR9iRL1lEM+A==
-X-Received: by 2002:a05:6214:4885:b0:791:34a5:868f with SMTP id 6a1803df08f44-79134a587fcmr35174756d6.20.1758188043440;
-        Thu, 18 Sep 2025 02:34:03 -0700 (PDT)
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com. [209.85.222.173])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-79355ce7048sm10524916d6.69.2025.09.18.02.34.03
+        bh=gAV6+U9ykOwvp8+2HatYYts2BEiZRGxqVQPDnpRww3U=;
+        b=s1xIcPx+333I8PlqtwpHuDCvzNVZnBKiff0SWvw0RaFzbF0aaHtNJiE+rdiBJPRxzZ
+         kSqlRUL/AWKvv2VV6nLAd64e925wAndsToz2H7BacIa/v7P6aANhZFtJVk6MUCRThvLl
+         msQlTLLjegC2B4ioEW225V3z5h15iZyYZPW9AYPg3i5Q8U9eCOUooXGwTpv1Xi7mANsd
+         6rCnO9HTBKV7+xGqgUxlsRlBQn1mYLKO0svURQyRMvBeSJhXFta6r8jpXqidt5o8JlOh
+         b5nhzfzDWGmQqNuBt++Za62D8jjH4iDbGsUws84ige3SpwhogH0kYe7L4w4dhGqu5UqU
+         +BYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVg8yw1U2TMYW45/Oi0qnK0lG+LOm/celqoekPwdw4iFc6evagcnwTw1IAP/+o4GtuqnH45FkMqR9t9pB2YPX5+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/vfkdm2JGlK+5FXJOj6zHaQC3wAMVGq7detMPUKYmS94HdFsm
+	Y7jLxcQN4R+fzwJB/5BukJULEWIXqvFkRWnvXvAQ8GYDssmQA1Pcq6zU03FnU98s
+X-Gm-Gg: ASbGncvOcgQjztESxGHMoSHY/oYRP+ayFy/3v5FsrcGCBLPFriTjXWeRNZmpNG7bmjV
+	wL0eHEG6lp7toXzCeSbdF7pNynnBHAHY9RF1p4O/5Xj5qmZ+NcVv8SLTljUkBulwdtNbYRLFriJ
+	1D3xKNdAd74w9L2crUQFEwv/41vcyvtZVPZNtLpVmhp6HVunCS38kr84K6yLIckveZJxcxXFFiu
+	fUHR2kWffkmVkyUSKpaSXQIOn1xHlaWwv5taYH4MBpFNwGdoncvfMA3F7m1T31T5k/xwOaDtgAY
+	7XV+m1JqvrrREcLqV/XQl5QrK1JLh5GZ8pXBan/X2GZMJUcUnYnHrLQ96332+Cvf+RsBFRf0ZDO
+	x1185ZTTmHVECdFm1fmItWo326Kv3LgYLvmw1C7yoz8XiduDPheo8E9S+vDBzd3uZdjpyRTlEFW
+	Sf5agLcyHJCKVmzQ==
+X-Google-Smtp-Source: AGHT+IH9eZeHgrtK4zIfmHN92s9EGl6K6bcn0arW/nLawd4YKa57oZdjOu1ErRsqdKA2H2lrtf4f/Q==
+X-Received: by 2002:a05:6102:6c1:b0:527:8b63:78fb with SMTP id ada2fe7eead31-56d6ec7297dmr2114749137.34.1758189232489;
+        Thu, 18 Sep 2025 02:53:52 -0700 (PDT)
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-57a02676a73sm485853137.11.2025.09.18.02.53.51
         for <linux-perf-users@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Sep 2025 02:34:03 -0700 (PDT)
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-80e3612e1a7so126832985a.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 02:34:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU7KYqdRenXwv85QW3HsQJhuong6nIPOPVc7sx6tuBz6FlRqon1eDa/9KdfECUIIXmiR8KdW7IUCD5J/VwVenV9@vger.kernel.org
-X-Received: by 2002:a05:6102:80a6:b0:51e:92cc:6e6a with SMTP id
- ada2fe7eead31-56d6d57bf75mr1452834137.33.1758187611708; Thu, 18 Sep 2025
- 02:26:51 -0700 (PDT)
+        Thu, 18 Sep 2025 02:53:51 -0700 (PDT)
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-5570a77eabcso565678137.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 02:53:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXxoQkSbWeGuf1/0hTDimVGymA6rkIvmkaO9CbDnWcGufUCJRvnaUjvW7vfM5MY34489NRGXWgzqpmkIbdHTzLw@vger.kernel.org
+X-Received: by 2002:a05:6102:f96:b0:524:5653:81aa with SMTP id
+ ada2fe7eead31-56d6a96ba24mr1974782137.27.1758189231483; Thu, 18 Sep 2025
+ 02:53:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <87ms6snut0.wl-kuninori.morimoto.gx@renesas.com> <87jz1wnunm.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87jz1wnunm.wl-kuninori.morimoto.gx@renesas.com>
+References: <87ms6snut0.wl-kuninori.morimoto.gx@renesas.com> <87ecs4nult.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87ecs4nult.wl-kuninori.morimoto.gx@renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 18 Sep 2025 11:26:40 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVfhMKrdnQCjf_Z90EnH_gb-RpdxPiVUjEe3C5ZyuTfUw@mail.gmail.com>
-X-Gm-Features: AS18NWDTdMprA4ImYjVf-zjtYmKdsmDO9RIvez5aKcVZCW3WJ100X4TbNjepaRg
-Message-ID: <CAMuHMdVfhMKrdnQCjf_Z90EnH_gb-RpdxPiVUjEe3C5ZyuTfUw@mail.gmail.com>
-Subject: Re: [PATCH v5 2/7] dt-bindings: serial: sh-sci: don't required "power-domain"
+Date: Thu, 18 Sep 2025 11:53:39 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU6KkM4+0tDzxNLQhWzBMs02vx=DTQ95D_-u+YYAcNgRg@mail.gmail.com>
+X-Gm-Features: AS18NWC_4v91tXzLLOBSlDGTfgVal7mv5u3w5QpZG0TVZ1CRDcwzHECf6Dh9qXk
+Message-ID: <CAMuHMdU6KkM4+0tDzxNLQhWzBMs02vx=DTQ95D_-u+YYAcNgRg@mail.gmail.com>
+Subject: Re: [PATCH v5 6/7] arm64: dts: renesas: Add R8A78000 X5H DTs
 To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Cc: "Liang, Kan" <kan.liang@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
 	Conor Dooley <conor+dt@kernel.org>, Douglas Anderson <dianders@chromium.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Ian Rogers <irogers@google.com>, 
-	Ingo Molnar <mingo@redhat.com>, James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>, 
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
 	John Garry <john.g.garry@oracle.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
 	Leo Yan <leo.yan@linux.dev>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, Mike Leach <mike.leach@linaro.org>, 
@@ -86,47 +86,102 @@ Content-Type: text/plain; charset="UTF-8"
 
 Hi Morimoto-san,
 
-On Thu, 18 Sept 2025 at 08:26, Kuninori Morimoto
+On Thu, 18 Sept 2025 at 08:27, Kuninori Morimoto
 <kuninori.morimoto.gx@renesas.com> wrote:
-> {H}SCIF is in the always-on power area. "power-domain" property is not
-> mandatory. Remove it.
+> From: Hai Pham <hai.pham.ud@renesas.com>
 >
+> Add initial DT support for R8A78000 (R-Car X5H) SoC.
+>
+> [Kuninori: tidyup for upstreaming]
+>
+> Signed-off-by: Hai Pham <hai.pham.ud@renesas.com>
+> Signed-off-by: Vinh Nguyen <vinh.nguyen.xz@renesas.com>
+> Signed-off-by: Minh Le <minh.le.aj@renesas.com>
+> Signed-off-by: Huy Bui <huy.bui.wm@renesas.com>
+> Signed-off-by: Khanh Le <khanh.le.xr@renesas.com>
+> Signed-off-by: Phong Hoang <phong.hoang.wz@renesas.com>
 > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
 Thanks for your patch!
 
-> I'm not sure this is acceptable patch. This is optional patch.
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/renesas/r8a78000.dtsi
 
-(H)SCIF is indeed part of the always-on power area.  However, like
-for many other modules, its power management is handled similarly
-through a clock/module controller.  Hence it falls under the PM Domain
-abstraction, and the power-domains property is justified.
+> +       extalr_clk: extalr-clk {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               /* clock-frequency must be set on board */
+> +       };
+> +
+> +       /*
+> +        * In the early phase, there is no clock control support,
+> +        * so assume that the clocks are enabled by default.
+> +        * Therefore, dummy clocks are used.
+> +        */
+> +       dummy_clk_sgasyncd4: dummy-clk-sgasyncd4 {
 
-What this power-domains property will point to on R-ar X5H is a
-different question, as there are no DT bindings and no driver for the
-clock/module controller yet...
+Please keep nodes sorted (alphabetically, by node name).
 
-> --- a/Documentation/devicetree/bindings/serial/renesas,hscif.yaml
-> +++ b/Documentation/devicetree/bindings/serial/renesas,hscif.yaml
-> @@ -116,7 +116,6 @@ required:
->    - interrupts
->    - clocks
->    - clock-names
-> -  - power-domains
->
->  if:
->    properties:
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <266660000>;
+> +       };
+> +
+> +       dummy_clk_sgasyncd16: dummy-clk-sgasyncd16 {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <66666000>;
+> +       };
 
-> --- a/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-> +++ b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-> @@ -168,7 +168,6 @@ required:
->    - interrupts
->    - clocks
->    - clock-names
-> -  - power-domains
->
->  allOf:
->    - $ref: serial.yaml#
+> +       soc: soc {
+> +               compatible = "simple-bus";
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               ranges;
+> +
+> +               prr: chipid@189e0044 {
+> +                       compatible = "renesas,prr";
+> +                       reg = <0 0x189e0044 0 4>;
+> +               };
+> +
+> +               /*
+> +                * The ARM GIC-720AE - View 1
+> +                *
+> +                * see
+> +                *      r19uh0244ej0052-r-carx5h.pdf
+> +                *      - attachments: 002_R-CarX5H_Address_Map_r0p51.xlsx
+> +                *       - sheet [RT]
+> +                *        - line 619
+> +                */
+> +               gic: interrupt-controller@39000000 {
+> +                       compatible = "arm,gic-v3";
+> +                       #interrupt-cells = <3>;
+> +                       #address-cells = <0>;
+> +                       interrupt-controller;
+> +                       reg = <0 0x39000000 0 0x20000>,
+
+The DT bindings say the first region should be GICD (no mention of
+GICM), so shouldn't the size be 0x10000?
+See Table 21.9 "GIC-720AE Base address".
+
+> +                             <0 0x39080000 0 0x800000>;
+> +                       interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +               };
+> +
+> +               scif0: serial@c0700000 {
+> +                       compatible = "renesas,scif-r8a78000", "renesas,rcar-gen5-scif", "renesas,scif";
+
+Some lines are getting a bit long, but that is not something I cannot
+fix while applying...
+
+> +                       reg = <0 0xc0700000 0 0x40>;
+> +                       interrupts = <GIC_SPI 4074 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&dummy_clk_sgasyncd16>, <&dummy_clk_sgasyncd16>, <&scif_clk>;
+> +                       clock-names = "fck", "brg_int", "scif_clk";
+> +                       status = "disabled";
+> +               };
+
+The rest LGTM.
 
 Gr{oetje,eeting}s,
 
