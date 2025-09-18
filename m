@@ -1,88 +1,143 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24B8D29E11E;
-	Thu, 18 Sep 2025 08:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401B42DF124
+	for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 09:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758183352; cv=none; b=ic9fUgUoOYKouB5wU2BtLtJ91/G4IZvZhkSDNPCQfKdR6TeK4cfJ1QRIv2/OMSte6SRizX6qnodeRJ9zqnDdcZTgGCFrwmEcigapToe2mHmCjpGAZ568QVWWtZAxiSI8QBq9p3X8VcGQw9D7ciovEvBGG6JSoA2dTO0HNCqm4WI=
+	t=1758187551; cv=none; b=EUiSdJ4eUPgCeftzfFdGIQhPkUatVXp+67EEh/UbhOrSpv1VZPka2Bfr+ddu5yg7gA4ySzCAGrPsHPOJdiC3fUAzQsaTywnFUXrXQ76s9Jcr05qhPB6vxAStMC//4qFBxwIXXX2VH0EHCl+97ATfgL2qr5Zw1bcBxkZM5gz9Hzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758183352; c=relaxed/simple;
-	bh=lSAJttjP0UeL7hTVbrBaA1PbIrkGMzcauuCWdfzEWGw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wlz0oDAqN4j6WT+jAf9g1t5VynNGWaUTU1OX23Hn+mhzDcx1bvHuTKsV+cRMH+o4ka8lq7Xh6a/C5Qdj2QFcsoww13+apb73weLXsMgvIVxJ0oJ56hwi2vonDnnPtMnKQRpuYAqGH7tfLRmexfFvnah3r64+7OXKjWIyi0XMAUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3ABA11A32;
-	Thu, 18 Sep 2025 01:15:42 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 161433F673;
-	Thu, 18 Sep 2025 01:15:50 -0700 (PDT)
-Date: Thu, 18 Sep 2025 09:15:48 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: James Clark <james.clark@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH v6 00/12] perf: arm_spe: Armv8.8 SPE features
-Message-ID: <20250918081548.GQ12516@e132581.arm.com>
-References: <20250808-james-perf-feat_spe_eft-v6-0-6daf498578c8@linaro.org>
- <20250808123913.GD3420125@e132581.arm.com>
- <aMruzdTu74rZ0RZ9@x1>
+	s=arc-20240116; t=1758187551; c=relaxed/simple;
+	bh=onHsAQTWsUyBs5IX1LlfYCWKBjpstcoF4upDP17pgA4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BhaMVAiOJhIIP4PYHVi4khda16JJ8xCThYf4OFj6eMLqvOFKLouByV1n6ec8X7KQAX/6AVV4Ed1qaCWFRkkO0nk3vGTdebkpnNYgX1V/zcyd1r5IZD7VdIUSu5dTxfuRHF9zhKRoVTsMnBDprNuiBroLYtIqQsgRoLyZLn28psM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-4240111d446so7733115ab.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 02:25:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758187549; x=1758792349;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DIPAGga4FOA5RTuOCxh82ZFvj8TL8c2aRMORyqNz1+U=;
+        b=HGdyZ59szpbmUkEhVVsVqeGcdqvTXdhf/Rj19oniUDHIHUOtmstTwfY1PErsB0j4os
+         CiJiIi064lAKcbi+PU+wUy3P/ucvggvA4LsF/CBEKgmj8b2zB/HP1cJ7PS5DT/D8NpGz
+         pvhV3QciynZ/85VocvDjqa9JaBv4JeDWqURo93KQHEllCM7rqNcbfDhQUnCjqkZy/zjw
+         hM0qMYb8mNbrdDTUA1fpQTq+LG7fBzsB6iOr7ceOuGoyAOF60hfRZA+QqiJTn8HWPUrM
+         l0MAi1m/hr4kRjVQkQWPvtMhEt30MZ1hK2JP2KBui+4BglpgkwxQSAe99HsRqsqLJizB
+         DO+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWT3V/QytOXBx5u4kIQkoCJbeHzdcDys30Ss52RUcZb109I1rmtI8Pl410OsAn8k3TZvZqmpVNyQ0zwBp8gPTiI@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFMnNwRvfZlkfEjSwAx4seR/VY0aC0Y0HE0UZG9TjIu2LSldCD
+	mh9IXQBD5VT2EQALuU2J4ZioUI+iVSL35ggJiSlNgYB9p81d7yzJVAEuXrUvdDm4
+X-Gm-Gg: ASbGncuS4Fda968awGAtctIJ1U7DQR0IPqcpOB6SMM69rjTiACkQerNXRfTSn4r6SW1
+	kMSyt8wcY4DruihitqA9Bl882sCnVtduOWAHCjcr+jOJwg7l+9Zk+3yz29TSWNZLcS9Mf2WJNpr
+	hlx/E/YIfDgPvhnH+MiHh2HjjwQqOfN4TWokteN/3UsPMZ0BrhSun2npJVH+cPFG3zrGdUXc9ne
+	+Wl9Yz2/8MkEpCumYHOKz5f6WvwScxdttY4A0B7E9JKPOfsIZwCYtXi3FEaZIXg/hmDlEZvdbSz
+	0HgPbj/ILRErLuYWHRGz8aZRfxFGDO24Io0cNEcuSvz5ikCJMjitA7/AJV5QF53Rw/Ee8JaLhEz
+	pv+UvX8m5GFjHiGK1/fiTk8nmXbILjftOV4DalXp9GOR5WijH3r57JJjmm0p3YkR5ZF3R9h4+I2
+	vQyZSk7Rw=
+X-Google-Smtp-Source: AGHT+IFJf0eu4Btrp1e1p59x36W1HzdwyzA8HX6huLLxL69Q3H5bbfiA4MGVDfQbtt0bQg1tomaOOA==
+X-Received: by 2002:a05:6e02:2508:b0:411:7b83:c9f2 with SMTP id e9e14a558f8ab-4241a5297a3mr67916255ab.17.1758187549046;
+        Thu, 18 Sep 2025 02:25:49 -0700 (PDT)
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com. [209.85.166.171])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-53d53e58134sm735774173.62.2025.09.18.02.25.48
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Sep 2025 02:25:48 -0700 (PDT)
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-424117c229aso7710735ab.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 02:25:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWT08CjNESngPU1K8cySPeuV02Lh49ikbY+uBL9+TKvq8Iw78q999HrCx8oLDX0jJIy7qjHT77JXbmCx+UdejqW@vger.kernel.org
+X-Received: by 2002:a05:6102:26cf:b0:4fb:de9e:6d87 with SMTP id
+ ada2fe7eead31-56d5376a64emr1999299137.11.1758187210414; Thu, 18 Sep 2025
+ 02:20:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aMruzdTu74rZ0RZ9@x1>
+References: <87ms6snut0.wl-kuninori.morimoto.gx@renesas.com> <87ldmcnup1.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87ldmcnup1.wl-kuninori.morimoto.gx@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 18 Sep 2025 11:19:58 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdV+59oaCo5oOqTLhQMDV=SJhvBu-gGr4vUzyyPxEEBJpw@mail.gmail.com>
+X-Gm-Features: AS18NWB4Q9Ufki8ANAbzyQzmxL_5lVd8LQK2sw8BXyMmuM4p3Xg-lO7FkssDvz4
+Message-ID: <CAMuHMdV+59oaCo5oOqTLhQMDV=SJhvBu-gGr4vUzyyPxEEBJpw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/7] dt-bindings: serial: sh-sci: don't required
+ "reset" for r8a78000
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Conor Dooley <conor+dt@kernel.org>, Douglas Anderson <dianders@chromium.org>, 
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>, 
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
+	John Garry <john.g.garry@oracle.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Leo Yan <leo.yan@linux.dev>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mike Leach <mike.leach@linaro.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, 
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>, Will Deacon <will@kernel.org>, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Marc Zyngier <maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Sep 17, 2025 at 02:24:29PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Fri, Aug 08, 2025 at 01:39:13PM +0100, Leo Yan wrote:
-> > On Fri, Aug 08, 2025 at 12:22:57PM +0100, James Clark wrote:
-> > > Support 3 new SPE features: FEAT_SPEv1p4 filters, FEAT_SPE_EFT extended
-> > > filtering, and SPE_FEAT_FDS data source filtering. The features are
-> > > independent can be applied separately:
-> > > 
-> > >   * Prerequisite sysreg changes - patch 1
-> > >   * FEAT_SPEv1p4 - patches 2 - 3
-> > >   * FEAT_SPE_EFT - patch 4
-> > >   * FEAT_SPE_FDS - patches 5 - 9
-> > >   * FEAT_SPE_FDS Perf tool changes - patches 10 - 12
-> > > 
-> > > The first two features will work with old Perfs but a Perf change to
-> > > parse the new config4 is required for the last feature.
-> > 
-> > I tested FEAT_SPE_EFT (xxx_filter_mask), inv_data_src_filter
-> > and inv_event_filter, all of them work as expected.
-> > 
-> > Tested-by: Leo Yan <leo.yan@arm.com>
-> 
-> Please let me know when I can merge the tools/perf bits.
+Hi Morimoto-san,
 
-Thanks for bringing up this, Arnaldo!
+On Thu, 18 Sept 2025 at 08:25, Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+> commit 6ac1d6047372 ("dt-bindings: serial: sh-sci: Document r8a78000
+> bindings") added r8a78000 DT bindings for Renesas serial, and it sets
+> "resets" as "required", but it is not mandatory, because driver doesn't
+> use it. Remove it.
+>
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-Just remind, James sent the latest series is v8 [1] couple weeks ago,
-and I confirmed v8 can apply clearly on the latest mainline kernel.
-We need kernel maintainers' review so can move forward.
+Thanks for your patch!
 
-Thanks,
-Leo
+> I'm not sure this is acceptable. This is optional patch.
+> If it was acceptable, I think we can remove "resets" from required not only for X5H...
 
-[1] https://lore.kernel.org/linux-arm-kernel/20250901-james-perf-feat_spe_eft-v8-0-2e2738f24559@linaro.org/
+The question is not "Does the driver use the reset signal?", but
+"Does the hardware have a reset signal?".
+
+According to Table 12.1 "Reset Categories and Reset Source" and Note 2,
+the Module Controller takes care of Software Module Reset.  However,
+I couldn't find information about the individual module resets in the
+documentation for the Module Controller.
+
+> --- a/Documentation/devicetree/bindings/serial/renesas,hscif.yaml
+> +++ b/Documentation/devicetree/bindings/serial/renesas,hscif.yaml
+> @@ -126,7 +126,6 @@ if:
+>            - renesas,rcar-gen2-hscif
+>            - renesas,rcar-gen3-hscif
+>            - renesas,rcar-gen4-hscif
+> -          - renesas,rcar-gen5-hscif
+>  then:
+>    required:
+>      - resets
+
+> --- a/Documentation/devicetree/bindings/serial/renesas,scif.yaml
+> +++ b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
+> @@ -181,7 +181,6 @@ allOf:
+>                - renesas,rcar-gen2-scif
+>                - renesas,rcar-gen3-scif
+>                - renesas,rcar-gen4-scif
+> -              - renesas,rcar-gen5-scif
+>                - renesas,scif-r9a07g044
+>                - renesas,scif-r9a09g057
+>      then:
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
