@@ -1,33 +1,25 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713DB227EA8;
-	Thu, 18 Sep 2025 10:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C57F2FE575;
+	Thu, 18 Sep 2025 10:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758191880; cv=none; b=bTk0Cpw5dWff/nhLCMUeD7EvXm50FMgMfCRfIWYnktCL+DmIk4elZI4MA5lhgfH5UOhBjsf0dB1kYx7AHSDhpp3pqrSO94QkFuPym5eaGTkGr124wF6YSsBqE17x9XIxGNEc7oTGCy+VKKJas2DPUyGvz1Br41EWRwcPDPnsDUM=
+	t=1758192405; cv=none; b=o+Nlc1WN+Of8G+B2mAP0iFhZsT6YBUlsy/gJn3r+ZFoN7NLvVwdANX6Ppvj48JODf9OsSNaNgKXE2xLgOK56nLtvmRtV+5O9XatuzKGHrSCyNMaKtgMNcdOBvsqE+eCTp4tD/EYPpax6V3HqrlyRgLASZgu5m67FvEdM9hIsyU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758191880; c=relaxed/simple;
-	bh=3wLU6rYHf7utHzIANk8nK0heYOD/FcW8/1SsNTd/TNk=;
+	s=arc-20240116; t=1758192405; c=relaxed/simple;
+	bh=h5OKx0riOVIawi/We1x4Y4mCHv5rkSm0OBcsJm/3Ans=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RCfRuO1tOPTPLcmRlsCz/ebpRLQrZCrsNKWp/pCqr0mMEBkT8HNHS83X8U9Zm2/7AWS4FoS1mT3UNHnrDG2otqtIvvN0edbl1sYmKnHFQHekOa6HewiFIad5ovB9Vu+rzfLRojQGvEE6xVJx62QayuLR67ALLxcmHKvsiB3ez2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A5E6Pp7W; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A5E6Pp7W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23865C4CEF7;
-	Thu, 18 Sep 2025 10:37:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758191880;
-	bh=3wLU6rYHf7utHzIANk8nK0heYOD/FcW8/1SsNTd/TNk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A5E6Pp7WkZ6ZhzfTDXPr0l2+wqXgliX2Mp8KjhOeOsDgvGO2D75+jOAkhLYlyaQZ7
-	 N3O1DZMqrmt6Y5gLH4Y2TY1Gt5wiYzbJcI+o7VrWRC8SJVZAO+n4tfabmw3tQlFOMr
-	 SO2BMMzV75ta8jdULM9mL4kxIwvZOlPS0tBXY0z6iNkjk1Y7lttAzjyRSRKePXFqmp
-	 0ZBRQgfm62kGaevn1Z0irlM0Dj4tGtU3DkeYSmSjpfRdl5C9g61qyszcAcM03zkFqK
-	 e77E8mC1whTqazcK0cgZ5ZsNUNzgNAzmRpDX8S2oH5jY4kP3pg6yuasNTn9OpP+R/D
-	 E1Ocy/BjljNlA==
-Date: Thu, 18 Sep 2025 11:37:52 +0100
-From: Will Deacon <will@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=lX0jbCBxzprJRtv/QXPdhQ2rXX3ZmP59wCumF8NidzLFfObMBzqsJ/ncWW/CaZMgEJvFLGLJC343BGfFQTfUL4hl/9BDZeYZ1j2wBNQ/F/m0MB5F6c3JI6z0LndthH6fsL4HNkkHvvsS+8v0BU2PKUbjo9M7f0uPxcYr4fYVtO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A13F51A2D;
+	Thu, 18 Sep 2025 03:46:34 -0700 (PDT)
+Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 930233F673;
+	Thu, 18 Sep 2025 03:46:38 -0700 (PDT)
+Date: Thu, 18 Sep 2025 11:46:12 +0100
+From: Mark Rutland <mark.rutland@arm.com>
 To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 Cc: "Liang,  Kan" <kan.liang@linux.intel.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
@@ -43,20 +35,20 @@ Cc: "Liang,  Kan" <kan.liang@linux.intel.com>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Leo Yan <leo.yan@linux.dev>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
 	Mike Leach <mike.leach@linaro.org>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Oliver Upton <oliver.upton@linux.dev>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Rob Herring <robh@kernel.org>,
 	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
 	Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v5 3/7] tools: arm64: Add Cortex-A720AE definitions
-Message-ID: <aMvhAJ_NIgjGxuvA@willie-the-truck>
+Subject: Re: [PATCH v5 4/7] arm64: cputype: Add Cortex-A720AE definitions
+Message-ID: <aMvi9PdW5Nd9UMvE@J2N7QTR9R3.cambridge.arm.com>
 References: <87ms6snut0.wl-kuninori.morimoto.gx@renesas.com>
- <87ikhgnun4.wl-kuninori.morimoto.gx@renesas.com>
+ <87h5x0numo.wl-kuninori.morimoto.gx@renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -65,9 +57,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87ikhgnun4.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <87h5x0numo.wl-kuninori.morimoto.gx@renesas.com>
 
-On Thu, Sep 18, 2025 at 06:26:39AM +0000, Kuninori Morimoto wrote:
+On Thu, Sep 18, 2025 at 06:26:55AM +0000, Kuninori Morimoto wrote:
 > Add cputype definitions for Cortex-A720AE. These will be used for errata
 > detection in subsequent patches.
 > 
@@ -78,11 +70,35 @@ On Thu, Sep 18, 2025 at 06:26:39AM +0000, Kuninori Morimoto wrote:
 > ... in Table A-187
 > 
 > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark.
+
 > ---
->  tools/arch/arm64/include/asm/cputype.h | 2 ++
->  tools/perf/util/arm-spe.c              | 1 +
->  2 files changed, 3 insertions(+)
-
-Acked-by: Will Deacon <will@kernel.org>
-
-Will
+>  arch/arm64/include/asm/cputype.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/cputype.h b/arch/arm64/include/asm/cputype.h
+> index 661735616787e..b10eba7f52476 100644
+> --- a/arch/arm64/include/asm/cputype.h
+> +++ b/arch/arm64/include/asm/cputype.h
+> @@ -96,6 +96,7 @@
+>  #define ARM_CPU_PART_NEOVERSE_V3	0xD84
+>  #define ARM_CPU_PART_CORTEX_X925	0xD85
+>  #define ARM_CPU_PART_CORTEX_A725	0xD87
+> +#define ARM_CPU_PART_CORTEX_A720AE	0xD89
+>  #define ARM_CPU_PART_NEOVERSE_N3	0xD8E
+>  
+>  #define APM_CPU_PART_XGENE		0x000
+> @@ -185,6 +186,7 @@
+>  #define MIDR_NEOVERSE_V3 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_NEOVERSE_V3)
+>  #define MIDR_CORTEX_X925 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_X925)
+>  #define MIDR_CORTEX_A725 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A725)
+> +#define MIDR_CORTEX_A720AE MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A720AE)
+>  #define MIDR_NEOVERSE_N3 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_NEOVERSE_N3)
+>  #define MIDR_THUNDERX	MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX)
+>  #define MIDR_THUNDERX_81XX MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX_81XX)
+> -- 
+> 2.43.0
+> 
