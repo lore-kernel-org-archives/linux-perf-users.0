@@ -1,70 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C600B3161B3;
-	Thu, 18 Sep 2025 16:43:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AEA31815D;
+	Thu, 18 Sep 2025 16:43:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758213819; cv=none; b=GxhrQLvEebbv+KWBaYbCoNKtYAXjBE588juZzHMm46HjuD97sy678gH+HfISWNy6LGYHIHi1qKfFrOoABcuOIKTzD5cE72W7Ol6wOg0TO+z89DruMqeMiXoV74eV6iSu+1NoW2JIei45TNC5GqloFBAuM1K53glkqyISPBQEYzw=
+	t=1758213828; cv=none; b=KUfpOu77S57CAkHKUgUlQ8H1bA7GfyNcPK9tNeKKEZ2fYrV/EfEuJwa05sAoCgvjnszKo6lGx0sog/AoyHtrN1BNG1Z/twG5OeEGpray/MCBmW2O1HcVDIVPS8ZSiFv09h2Xil2z+NZTflyqH75Ht3God65ZLGIh1SWSO+NeIDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758213819; c=relaxed/simple;
-	bh=qFtgFQc45qH6NI8BCfmuOT4L0z37VVKN0klbtf67YnU=;
+	s=arc-20240116; t=1758213828; c=relaxed/simple;
+	bh=ouOmp5NqelaHAn4D3Kb4rcJp4Tm74ZDtqSiYkLb7RUs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hK0xoOKXcvzaSVURYq8M8TsA+vQBJRuEp/EnkZdcRsRCJ/XwrMyp6Iw6gmC6awiQbhlG/Ei9JXkU3+5eNoV4uOAJ/F4saiRQwdPy2Kljtq7+0YXbDpKKLfyiQumCgGfoXKr3IXMYLvXBJSBRWdgcC2pwbdkIbhn75nrD6C9ky2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q8hFiwiW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=e129gAid2wxIUBYAhJ+bVaa6H+M0e7/DnXi68hLQLBP30T45GO2Z4jM9aGOW1zEe5RubdOTW4jxKVHRRZULtS5akLUTPiWkxODuoqgWSVgEq1DJaweV/KgrmtdnzuUIn7cqwvOn+ajjtY5ewnKrdqC/VUIdYTsS4JtAUOaKwPUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bDHkYUJx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q8hFiwiW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21495C4CEE7;
-	Thu, 18 Sep 2025 16:43:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bDHkYUJx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BCB9C4CEF0;
+	Thu, 18 Sep 2025 16:43:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758213819;
-	bh=qFtgFQc45qH6NI8BCfmuOT4L0z37VVKN0klbtf67YnU=;
+	s=k20201202; t=1758213827;
+	bh=ouOmp5NqelaHAn4D3Kb4rcJp4Tm74ZDtqSiYkLb7RUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=q8hFiwiWtw0hUG7YjuNfM7nuZGywpt1+gyDojeilUUUPtmmmWVyvgdfauJW+/hvnP
-	 PpWXdWzALUFGC9hAGJh2MxtLazBVKNJxqMm9LvTOIrQ/wbcz1Rj1YqLC+oNaLzWke0
-	 JuaSL3ovkaOhx9XlQO7U2QXEhQPU2g5V4NDQX8jgoEYfFk4W1Ke8/CVFkpH4vHNQrU
-	 sJaWTSauMGgvU+5FbiBbBQEiMKTYsAYwj7kFHvBj3ef79ljQJYX/ZZlUhyoLGHtaEI
-	 O42oZtalg3qihlhLN4/wVoXbgCEcA2yUQxm6tV3azdFnYNgeFcrbLyZ786BPj1RjqY
-	 5Rs6f6knzNy6w==
+	b=bDHkYUJx7O36GXburAillFuHJOoJTGroVvB0Ut/tO1pyEztuNWqnxQvSR6g2yIpEv
+	 T10SlEAdLTVjN2OqRwew0nCy7NltOIZVJ2geStABmMlgfJwIGmETXXYwpi7IEiP4Ci
+	 BhoXm3RfB/XApvAFo7vqOs0ZHxWYLFW1iHF43ErAvdxr3GzAra/XN6r7VEhHHw4WR9
+	 l7yofzuUZUU/liBFjMcDroWmsh6qZSnp4mfAY+o8XAxN3l3Xh1t1L7MumeBnwtW6Td
+	 Pic1gxmBgqZtqNij/HYnpXN0+urejlLL5WowOIMQ1ZVM5LzTWjUl73SxBM9niczMI5
+	 JKEsSNkNAlACw==
 From: Will Deacon <will@kernel.org>
-To: Frank Li <Frank.li@nxp.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	John Garry <john.g.garry@oracle.com>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>,
-	Leo Yan <leo.yan@linux.dev>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Xu Yang <xu.yang_2@nxp.com>
+To: mark.rutland@arm.com,
+	Xichao Zhao <zhao.xichao@vivo.com>
 Cc: catalin.marinas@arm.com,
 	kernel-team@android.com,
 	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	Peng Fan <peng.fan@nxp.com>,
-	Frank Li <Frank.Li@nxp.com>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v2 0/5] add imx94 DDR Performance Monitor support
-Date: Thu, 18 Sep 2025 17:43:10 +0100
-Message-Id: <175819950650.3462177.6226529699819628940.b4-ty@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers: perf: use us_to_ktime() where appropriate
+Date: Thu, 18 Sep 2025 17:43:13 +0100
+Message-Id: <175819970127.3463522.16008162224664814549.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250821-imx94-ddr-pmu-v2-0-052c6420605d@nxp.com>
-References: <20250821-imx94-ddr-pmu-v2-0-052c6420605d@nxp.com>
+In-Reply-To: <20250813083257.504573-1-zhao.xichao@vivo.com>
+References: <20250813083257.504573-1-zhao.xichao@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -74,23 +49,17 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Thu, 21 Aug 2025 19:01:48 +0800, Xu Yang wrote:
-> The i.MX94 Soc has a DDR Performance Monitor Unit (PMU), this will
-> add support for it.
+On Wed, 13 Aug 2025 16:32:57 +0800, Xichao Zhao wrote:
+> The arm_ccn_pmu_poll_period_us are more suitable for using
+> the us_to_ktime(). This can make the code more concise and
+> enhance readability.
+> 
 > 
 
-Applied drivers and bindings updates to will (for-next/perf), thanks!
+Applied to will (for-next/perf), thanks!
 
-You'll need to route the .dts and tools changes via their respective
-trees.
-
-[1/5] dt-bindings: perf: fsl-imx-ddr: Add a compatible string fsl,imx94-ddr-pmu for i.MX94
-      https://git.kernel.org/will/c/f8cc02321bfc
-[2/5] perf: imx_perf: add support for i.MX94 platform
-      https://git.kernel.org/will/c/e4d9e8fb406b
-
-[4/5] MAINTAINERS: include fsl_imx9_ddr_perf.c and some perf metric files
-      https://git.kernel.org/will/c/2c599c68c43e
+[1/1] drivers: perf: use us_to_ktime() where appropriate
+      https://git.kernel.org/will/c/1e558fb31bec
 
 Cheers,
 -- 
