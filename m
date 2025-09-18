@@ -1,64 +1,67 @@
-Received: from mail-oi1-f201.google.com (mail-oi1-f201.google.com [209.85.167.201])
+Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0A4248F75
-	for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 17:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD67D313280
+	for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 17:24:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758216261; cv=none; b=NGEE9q0VzLS74j/NhX/zqB4lBg+46M7FnQKmeDd2SoKoSdItmSSgLtHYqD7Xud6n6N5RslH8pZLkc0IvZ6eP2TwwPJ9YDySzqP+tcat6UJY1GcdeSt34PdXm2MeGZVfD9HtCPl0Pxx+BBKYkRtp1PAcU7b03mWkO+0FauViYl+k=
+	t=1758216263; cv=none; b=fKERUMn11Vj3smmfhiYQ8oip3fZaXbHZAvqK1Q6+bGSjOJNRkR5XFa4vOA72h8twd6kGIVoCuJx1aU4wl90G6Y75Rz1wtlAcb5VEOyl6/ZsooRmsRQMGZppD+2VFTKjKZ8WrB0Br4kehGvnSpxkB5ByZqJDnRUf/cTrU/WWTUHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758216261; c=relaxed/simple;
-	bh=vaDWT20s/LC9UNltIDvKjeDjNkntHPYzNahjuA8L3NM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=eEErgOyhqiu81gkr15lpiooXQYMW8cLluH0k1rmBBzX+uv43fRzF6h6UlsBHLLxoU8TWBeOxcF369DbqhXGE+mtciXOSHmJYgt508nqbzxqeZgwyGoYuQ9+AEJ7hLobXariJiq6VuAIt4GmD0ccltzZU5G13lleANNdbudnPHL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hoNs9W3X; arc=none smtp.client-ip=209.85.167.201
+	s=arc-20240116; t=1758216263; c=relaxed/simple;
+	bh=h+y2Um0sWiG++m2eQ4n+7CATo8zmvy0N5uykStccMxU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=D3dYZSVqMrRiEQ7eekVtX3PhwMwYjzWpi/zMoeI3X8/bPtmIwDwjGZR14yXp1AoTNI2Lhu1g7cOnL8fUDWfzrlTzdMCeFIPpelisgU7fdSioAiWe7WvHEcTiX1WufALh5tYQie2JALy9Br0viJR8RuZ3b1NVZzZ6aJTIjawguOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SmBM6LLj; arc=none smtp.client-ip=209.85.160.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hoNs9W3X"
-Received: by mail-oi1-f201.google.com with SMTP id 5614622812f47-435de5b55e7so923948b6e.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 10:24:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SmBM6LLj"
+Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-33103aaaea3so1161841fac.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 10:24:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1758216259; x=1758821059; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=rGc1GlAUI6MGVyw1McNVC1ua5PKAdc6aMJbTizQeuf4=;
-        b=hoNs9W3X/PXR33hzWAy2zWYyF9Z5SxhuEysNp37TeLCILlzlI1rg1lmgjhrS6HFv1d
-         6rmHVnvrzFkDj7bNqLYTzOMdZXJlV3uzpBWaq5U/1UNIJlDSzrtusCUGROZmrDC9RAmv
-         lcdfUDbwO0S4u6H6k2KWLVR7kAisiUFF/D3h180KgOwEGhygdn42T/ygY/MK0HFopKJP
-         FQ+6RQovzNKzsBau/LL38bIo66ECN5L6eNa3TTk0MT1Skgj29V96XDEWoen6P06Msp8a
-         5MT6HbpYEUfOJc9249Glcu4EZanQAJpCOfkX52lTOjWxQRVWHdu4sx8u+qLmBTX5i7Mt
-         j+Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758216259; x=1758821059;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1758216261; x=1758821061; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=rGc1GlAUI6MGVyw1McNVC1ua5PKAdc6aMJbTizQeuf4=;
-        b=DCNlWoG7UDheCgR4X14ZoeRgU8w6XOVniDOcgsu1XtdP4LPmVF+M+J7Shg28unh0eS
-         Z2fW75ir748f3plBZScK4hXJOGcCIXwYuMd2s8B44UfF/do0/+TpH+rDpHWUhqQTKiCe
-         6OUg26RQvAZ+tKpeKZdwNRvHBMKNMD6ZsFlKlzKGP4+yeCUgr0BCedRyinWGcng+c9CO
-         20mRh7lm+N1nuZQd7WSPvONDAc7Lc2RuXEVUxgLQRjpvxYtBuGTWBMPykDe0lzcZKVr9
-         NgkfnqY8ZP+bYsR3OzwmrsArbnknJA6tCnQd3uZsR26c+OxXwUV46FisHL20JWbpPK6g
-         u0lQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVmrsEQnYv4EeNvwut8Nh2MSlCnA10l8VisSWWnIxP7X3byoi3JhBQcTEsfItC1M9olgjKGzglYU89U9qDgWb6D@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGEs5SZxuHohY5EnBDQ1BTTOyUAdm0lc6S+Z+BZPC+6sAAaWeY
-	h3F5RwTP1b2ZfJoEjpaUWi7bVlVbGQbx7aRklBLmOzq+DmEuPNdTWqnDuBZfW/l8k6vgwiGlz9t
-	8xrqmS/0oWg==
-X-Google-Smtp-Source: AGHT+IGacugtWxHcctIggiAC3tjIbV92hwu7pngoJJJFA6GiBta/P4RS3r1fXotqF9c2rBzq6XOtMZchSPZC
-X-Received: from oabpp22.prod.google.com ([2002:a05:6870:9d16:b0:331:9a49:4dbe])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6808:4484:b0:438:9303:acee
- with SMTP id 5614622812f47-43d6c245512mr95512b6e.30.1758216259014; Thu, 18
- Sep 2025 10:24:19 -0700 (PDT)
-Date: Thu, 18 Sep 2025 10:24:15 -0700
+        bh=XsfmL0ulg/CT1LMIENsj8BUyC9tsKVtVKqCgN4jh7dI=;
+        b=SmBM6LLjBSsTIGMHdNg3CmFo7TRLz0eY6MzvQeOjBhEWXwoLdLN3Qxg3NvhxT266w+
+         akTZs2AkLVnHOSLwgPEslqXioU9ndl/M4jzKzN2lIc4Y9OGKVzw/e9tkxs7ps4Wpdf54
+         yYEYe5i/vyPnXXYj1yuQCRPo9PlI6+t+nqUYdwdYYkMqlO39TnSL+K8mYmehrMb0n41U
+         oLiJI6reecauan35sHXAXdJexCLZdCZLEJv13yG2sz2FjvggF6WKbL/uRf36zE7wNuSk
+         OyI7xcJY3aYYx3ed8fd1FZH9aY98QzQFWyNCvv+YHaXVbvz8i/Msh9DS21xVDcS0Ywz/
+         P/eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758216261; x=1758821061;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XsfmL0ulg/CT1LMIENsj8BUyC9tsKVtVKqCgN4jh7dI=;
+        b=JHGriNmiUDU6VDamXn1x7/kKAJO53b6m+mhJWY8n9lEZFUilchk6FzZpuwl05thQZf
+         /8GR3VyT/MipkJOVlJ8KPCY/fijSmam8Jdr0cehXMDrgJTRmebuTq48JisHOspwxFqXN
+         fo0Qkg9bkwCiaJ5ORBGL2/mCD1STPit59wGM/Vnfb3djy7//EkTVWK/jSYzWkLFsq/7E
+         8m75zoM3m1AFb3T+ePxDqSoTFbeWTjtxupKwVjpHp7eqTTUypO1fH+udolvxadYag1fW
+         MM/Qpo+vurMwKjrqG+XsGzBNOEs8q1VBqolloJji8rt6yaqWl9d3vDFRMC5W0KJFnKqq
+         z2Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBPh0QMspkbKjzeQoBay5/mJyxhYLWdLLLPHGNFN0fbyOvW+lt0/IgPiAbXfM6TIZa/GbuAwmUNZyA73H3OLDM@vger.kernel.org
+X-Gm-Message-State: AOJu0YwstXPND3tf6ADLcdsY796YOCyVco3xqsIlpCrfAXDa+/OHDqhy
+	/gsFtOc5nHWUhqRFoC0NaYzulU2ZcoYIWyLOYqdPFOjVUTZR45qPl7Zje7RCjv/aITmZkNVc/OG
+	xH/AF0iyHdQ==
+X-Google-Smtp-Source: AGHT+IGWB/VXAS3RnF6arcEmZeiuRWFqDcSNYAyDvKYDCL+F0KRVx4cJ1GKjg8GNB3EYMyo2OmRye3CO7CG7
+X-Received: from oablc18.prod.google.com ([2002:a05:6871:4192:b0:332:c618:867f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:d88d:b0:31d:8edc:3d1a
+ with SMTP id 586e51a60fabf-33bb38a30ebmr282005fac.7.1758216260804; Thu, 18
+ Sep 2025 10:24:20 -0700 (PDT)
+Date: Thu, 18 Sep 2025 10:24:16 -0700
+In-Reply-To: <20250918172416.1247940-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250918172416.1247940-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.470.ga7dc726c21-goog
-Message-ID: <20250918172416.1247940-1-irogers@google.com>
-Subject: [PATCH v1 1/2] perf evsel: Ensure the fallback message is always
- written to
+Message-ID: <20250918172416.1247940-2-irogers@google.com>
+Subject: [PATCH v1 2/2] perf build-id: Ensure snprintf string is empty when
+ size is 0
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -70,60 +73,38 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The fallback message is unconditionally printed in places like
-record__open. If no fallback is attempted this can lead to printing
-uninitialized data, crashes, etc.
+The string result of build_id__snprintf is unconditionally used in
+places like dsos__fprintf_buildid_cb. If the build id has size 0 then
+this creates a use of uninitialized memory. Add null termination for
+the size 0 case.
 
-Fixes: c0a54341c0e8 ("perf evsel: Introduce event fallback method")
+A similar fix was written by Jiri Olsa in commit 6311951d4f8f ("perf
+tools: Initialize output buffer in build_id__sprintf") but lost in the
+transition to snprintf.
+
+Fixes: fccaaf6fbbc5 ("perf build-id: Change sprintf functions to snprintf")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/evsel.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ tools/perf/util/build-id.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 477cddf08c5c..814ef6f6b32a 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -3565,7 +3565,7 @@ bool evsel__fallback(struct evsel *evsel, struct target *target, int err,
+diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+index bf7f3268b9a2..35505a1ffd11 100644
+--- a/tools/perf/util/build-id.c
++++ b/tools/perf/util/build-id.c
+@@ -86,6 +86,13 @@ int build_id__snprintf(const struct build_id *build_id, char *bf, size_t bf_size
+ {
+ 	size_t offs = 0;
  
- 		/* If event has exclude user then don't exclude kernel. */
- 		if (evsel->core.attr.exclude_user)
--			return false;
-+			goto no_fallback;
- 
- 		/* Is there already the separator in the name. */
- 		if (strchr(name, '/') ||
-@@ -3573,7 +3573,7 @@ bool evsel__fallback(struct evsel *evsel, struct target *target, int err,
- 			sep = "";
- 
- 		if (asprintf(&new_name, "%s%su", name, sep) < 0)
--			return false;
-+			goto no_fallback;
- 
- 		free(evsel->name);
- 		evsel->name = new_name;
-@@ -3596,17 +3596,19 @@ bool evsel__fallback(struct evsel *evsel, struct target *target, int err,
- 			sep = "";
- 
- 		if (asprintf(&new_name, "%s%sH", name, sep) < 0)
--			return false;
-+			goto no_fallback;
- 
- 		free(evsel->name);
- 		evsel->name = new_name;
- 		/* Apple M1 requires exclude_guest */
--		scnprintf(msg, msgsize, "trying to fall back to excluding guest samples");
-+		scnprintf(msg, msgsize, "Trying to fall back to excluding guest samples");
- 		evsel->core.attr.exclude_guest = 1;
- 
- 		return true;
- 	}
--
-+no_fallback:
-+	scnprintf(msg, msgsize, "No fallback found for '%s' for error %d",
-+		  evsel__name(evsel), err);
- 	return false;
- }
++	if (build_id->size == 0) {
++		/* Ensure bf is always \0 terminated. */
++		if (bf_size > 0)
++			bf[0] = '\0';
++		return 0;
++	}
++
+ 	for (size_t i = 0; i < build_id->size && offs < bf_size; ++i)
+ 		offs += snprintf(bf + offs, bf_size - offs, "%02x", build_id->data[i]);
  
 -- 
 2.51.0.470.ga7dc726c21-goog
