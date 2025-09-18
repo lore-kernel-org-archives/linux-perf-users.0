@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D1252FF650
-	for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 22:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F013090EF
+	for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 22:22:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758234131; cv=none; b=VyA2fk+MYAtMKgdUt/hw970CUZHjI9SZ99JQ/gbG7gBJw/dVTURAH1fNMwty8NqPnoDBPX5wKjk6/nMNt3jaFG6Zly0NBDWVUdfwKXRL8z+Casgpwy4n0BPZBnLAJjjZWlHFBAbk0ICmKVCrLnUd0jD/sWC5V2r2v9y6zfEVvgc=
+	t=1758234134; cv=none; b=USpe4bbnd39IfgEtSONq64EwwxynZa/dr5h/r68uEkdzz4JMiWs4V/dd9tSTvKTNaCl1hmFtVllp1nLuGM8yCKPUXOBcXZeOYib6ZOetF5AYlrZN1ESMkIUiHfbMg670f/9TQ4OX87TIzRKcB+MjNv37gDRx5at5WK6Wuk+wTz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758234131; c=relaxed/simple;
-	bh=bVc3kDgnMxi3LeNcvdebA35fa49RA/BlURQA67guNaM=;
+	s=arc-20240116; t=1758234134; c=relaxed/simple;
+	bh=TwqoMqLQHjUxI2rkeJmleYPOhZn3UgjHTrrdcI1tvtg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=uy5sEIl/7lmmzdRYIij7nZQYYXNkoFjy+E5rmliA+1t4eomU1PmolBB5xDOuemUkWsQjuf0dWf14FbMv0HkqI6hIyK51ky8iexOjFb2Jvt7+Cwld/7jKhHbCPnHIyF6V8sX6XCxAr9OLHSnF+Fl2oHj/2TaCrF/arwC1eHqL7kM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iunOri8I; arc=none smtp.client-ip=209.85.214.201
+	 To:Content-Type; b=bVH8CKS2PbFw6lB88X7s/brk3KrA0RSd35G3XG4xJV49sChEnyvlrEuVXbuodXhl9FDxUMIQtu1AjHaNwpfVPLKHVcotpicApdWDPezkUpQDe1xL+E5j9FuWKkCCl0Z8SPcxXOCDV8+zjVtKtTbK8HN+ID9xDkb2q+2TPrekZiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mlpREUlv; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iunOri8I"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2681642efd9so12937925ad.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 15:22:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mlpREUlv"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-269939bfccbso12274745ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 15:22:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1758234130; x=1758838930; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1758234132; x=1758838932; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=2qfPNJqadhLlZpiek/PBm8YyMz6t+BW/rS3q4ughwwA=;
-        b=iunOri8IPXlkTcrNA/mR9aOpUEBov7zcFb5MuhHfZQ8Bkutf59HG8nnGqwc3C+qQx+
-         fJNRSBmnw9iI8d2FMi5AS8vVZupfWAAw1b3IhrY6OlU1iagKaZpAOxVjNLmKu8u430US
-         O7NG4IXrb+oftzQ7REGzT89t1B9FzXyCTX/p72yjLl7MiFXoimgzaGQ5bnuDaLQ0mhgo
-         zSOvMlUhZdReCIO7KioP9bPZkQUx+b7EIO3TZRYUnMWoSJodLs/A5WL8LImFonSIuUKJ
-         Mpc4vOuy8oJ/1nNdcW8+CU1fP8vOxWylUxJbvKiGpCQRDudyj4AB9Xfg+ISGSogDPBeq
-         TGjQ==
+        bh=rxusbh2pXscDQhVlXFTi2xaqfqmPjhhvMWLhfAOar+Y=;
+        b=mlpREUlvP6e6n7GOUsRf0ozKfZih0ZW3SnZMpMfcDw8FVQ3Q7ixTXjjKvhzQFvS760
+         9/gQXa5ca44XjHNNLjx/QqjSWDVo/PRTvotjnbAyjodzCyLHmPwBpatm9B+ZxbcjGq2y
+         9yY/v4pfwY2sLFkCjIcyHgH27YHw3vi2QYTT/NBMOjVC1y5qHMhKxaTXN13qLqxv3LDn
+         gYwXYuZ1wOq0JnE9IDJDXvDBeNbu7UKJLhZaOpEYwPoYxuHmFzmhbsig8xP7x8Pu7oJ6
+         LnTfzTR7qgRBsUA2SIOSkZdo22FYMqHWuDTHc4boV+LzAAxNmo22OidCT0E6X0DFLZBb
+         vJQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758234130; x=1758838930;
+        d=1e100.net; s=20230601; t=1758234132; x=1758838932;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2qfPNJqadhLlZpiek/PBm8YyMz6t+BW/rS3q4ughwwA=;
-        b=B3cmLzTMpLYp9pFSWu1EDe8jgom9jOTIAUaBnkM5i6gilwep8Kr0vlDTrG7BnAIfou
-         I3uiBTaiS+vLt5LJVVB+Gaq1u3/nscBx5vC3zveOm0ZnHHWXQDQICRbC1HINRMEKIioS
-         aWdHo4AxjXLUzVbejtl0fGFqpTclDyV7+6XoHPbDfTS0wX9lmX41E6VEdC4hJVFB3qnK
-         yFVMgMeHKqOOuwQxfN1TW47gFX0Dn/+2wNCzo0xAcC2M9AYOTdVR7PdQmjnu2bJpMfmy
-         TiIl9YucZf9PuGeLZB4DvLRj1RQdqYs27IXVWqgvbOcOKj/jbx1Y3rBq6HGX5UcysbAU
-         BOmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXMbaCUWctzwDyNeUyXs7Y/2YkNdXA6W8b0oGGX/WZmdy3GUxSmsAtMLgv2cSJiDDlnqnYdtWCYvoD9RRuNuvNM@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0LeN0j1i+9LML8jadDhHPJRazhP028ygaSIGXYYJMLDUO9wec
-	ZxmU9PYBxBiW16BaeIal60VophXd71SDF9AWFj33usyu2IKXj79gQFH+6HWEctSOLRvnkWYsMwd
-	Ir2eCdzttEg==
-X-Google-Smtp-Source: AGHT+IHAb2iMgpayxv+HM2x01Rh9wJpNBeSAoQCuaNCvhxmKHijGOa+73Gu/v/DdBjyrrIF9u0m/JcRWON1Y
-X-Received: from plho12.prod.google.com ([2002:a17:903:23cc:b0:263:a081:54b2])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:32c4:b0:269:aecc:a454
- with SMTP id d9443c01a7336-269ba3c5027mr16373625ad.11.1758234129653; Thu, 18
- Sep 2025 15:22:09 -0700 (PDT)
-Date: Thu, 18 Sep 2025 15:22:01 -0700
+        bh=rxusbh2pXscDQhVlXFTi2xaqfqmPjhhvMWLhfAOar+Y=;
+        b=iPWJUXXeR4LZX+cs4YTAeB5c6uvOBQiz6wbV77xyuGMLt2cKWgBtKtqfAFoNavUaDq
+         ZGcJmczNX4sWhtYDCk3JT94288jucdqEDnNtFqHa84sNjDSl5kMMGKAL0qtnT7qJFuFP
+         uzEkYuAimw9GomNKBMPUo1AWgWj29zmaLjjH8jVLM9pSiS5XfiCLfKUg0cZKxvibyedJ
+         150GbVyTpCdtwRZzcPi/YIUX7GEpbK2K0k4ukrLoNQJn3DC5n7YmuZNp5U2titSzCd+L
+         8b536jJgTSDoC03G/kmyepxXc1xczJSXahjJvn5/vL3l68k4njUDAmdOJn+OEeLOcfcI
+         6a+g==
+X-Forwarded-Encrypted: i=1; AJvYcCVeSFWyT31uCGW6ix6oQ0zu94T9o0mm4WUGs2U/o3Q3P+jTk782u/zYHzZ2fnKuc+9hsl27dAbb5uvMvv/pMYT/@vger.kernel.org
+X-Gm-Message-State: AOJu0YycRlttVLNqToIQ4lZA95Qq+P4tEWGHfriEHIH/fmqNUuAdW7+2
+	8KespSQzrCjD0BKFkM8Ed9KOPss/zdgkHcba7o01VhX1rlO8jODwKuGYZoGDz76HGvh7h7buFin
+	LzaDCgg3nnA==
+X-Google-Smtp-Source: AGHT+IF1i3RQ5YoxqBTNWNiUwo8wn69WpweQEoJjE2pE6tp3kNd89jJ6Dl20BgOSosjGWmWOoivuP5joC6Lb
+X-Received: from pjbsv6.prod.google.com ([2002:a17:90b:5386:b0:330:8c66:4984])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:246:b0:269:a8a8:4029
+ with SMTP id d9443c01a7336-269ba3ea13bmr18290485ad.5.1758234131690; Thu, 18
+ Sep 2025 15:22:11 -0700 (PDT)
+Date: Thu, 18 Sep 2025 15:22:02 -0700
 In-Reply-To: <20250918222202.1353854-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250918222202.1353854-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.470.ga7dc726c21-goog
-Message-ID: <20250918222202.1353854-3-irogers@google.com>
-Subject: [PATCH v2 2/3] perf evsel: Fix uniquification when PMU given without suffix
+Message-ID: <20250918222202.1353854-4-irogers@google.com>
+Subject: [PATCH v2 3/3] perf test: Avoid uncore_imc/clockticks in
+ uniquification test
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,81 +74,147 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The PMU name is appearing twice in:
-```
-$ perf stat -e uncore_imc_free_running/data_total/ -A true
+The detection of uncore_imc may happen for free running PMUs and the
+clockticks event may be present on uncore_clock. Rewrite the test to
+detect duplicated/deduplicated events from perf list, not hardcoded to
+uncore_imc.
 
- Performance counter stats for 'system wide':
+If perf stat fails then assume it is permissions and skip the test.
 
-CPU0                 1.57 MiB  uncore_imc_free_running_0/uncore_imc_free_running,data_total/
-CPU0                 1.58 MiB  uncore_imc_free_running_1/uncore_imc_free_running,data_total/
-       0.000892376 seconds time elapsed
-```
-
-Use the pmu_name_len_no_suffix to avoid this problem.
-
-Fixes: 7d45f402d311 ("perf evlist: Make uniquifying counter names consistent")
+Fixes: 070b315333ee ("perf test: Restrict uniquifying test to machines with 'uncore_imc'")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/evsel.c | 28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+ .../tests/shell/stat+event_uniquifying.sh     | 109 ++++++++----------
+ 1 file changed, 49 insertions(+), 60 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 6a31f9699b49..6947072598b1 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -4053,9 +4053,9 @@ bool evsel__set_needs_uniquify(struct evsel *counter, const struct perf_stat_con
+diff --git a/tools/perf/tests/shell/stat+event_uniquifying.sh b/tools/perf/tests/shell/stat+event_uniquifying.sh
+index bf54bd6c3e2e..b5dec6b6da36 100755
+--- a/tools/perf/tests/shell/stat+event_uniquifying.sh
++++ b/tools/perf/tests/shell/stat+event_uniquifying.sh
+@@ -4,74 +4,63 @@
  
- void evsel__uniquify_counter(struct evsel *counter)
- {
--	const char *name, *pmu_name;
--	char *new_name, *config;
--	int ret;
-+	const char *name, *pmu_name, *config;
-+	char *new_name;
-+	int len, ret;
+ set -e
  
- 	/* No uniquification necessary. */
- 	if (!counter->needs_uniquify)
-@@ -4069,15 +4069,23 @@ void evsel__uniquify_counter(struct evsel *counter)
- 	counter->uniquified_name = true;
+-stat_output=$(mktemp /tmp/__perf_test.stat_output.XXXXX)
+-perf_tool=perf
+ err=0
++stat_output=$(mktemp /tmp/__perf_test.stat_output.XXXXX)
  
- 	name = evsel__name(counter);
-+	config = strchr(name, '/');
- 	pmu_name = counter->pmu->name;
--	/* Already prefixed by the PMU name. */
--	if (!strncmp(name, pmu_name, strlen(pmu_name)))
--		return;
+-test_event_uniquifying() {
+-  # We use `clockticks` in `uncore_imc` to verify the uniquify behavior.
+-  pmu="uncore_imc"
+-  event="clockticks"
+-
+-  # If the `-A` option is added, the event should be uniquified.
+-  #
+-  # $perf list -v clockticks
+-  #
+-  # List of pre-defined events (to be used in -e or -M):
+-  #
+-  #   uncore_imc_0/clockticks/                           [Kernel PMU event]
+-  #   uncore_imc_1/clockticks/                           [Kernel PMU event]
+-  #   uncore_imc_2/clockticks/                           [Kernel PMU event]
+-  #   uncore_imc_3/clockticks/                           [Kernel PMU event]
+-  #   uncore_imc_4/clockticks/                           [Kernel PMU event]
+-  #   uncore_imc_5/clockticks/                           [Kernel PMU event]
+-  #
+-  #   ...
+-  #
+-  # $perf stat -e clockticks -A -- true
+-  #
+-  #  Performance counter stats for 'system wide':
+-  #
+-  # CPU0            3,773,018      uncore_imc_0/clockticks/
+-  # CPU0            3,609,025      uncore_imc_1/clockticks/
+-  # CPU0                    0      uncore_imc_2/clockticks/
+-  # CPU0            3,230,009      uncore_imc_3/clockticks/
+-  # CPU0            3,049,897      uncore_imc_4/clockticks/
+-  # CPU0                    0      uncore_imc_5/clockticks/
+-  #
+-  #        0.002029828 seconds time elapsed
+-
+-  echo "stat event uniquifying test"
+-  uniquified_event_array=()
++cleanup() {
++  rm -f "${stat_output}"
  
--	config = strchr(name, '/');
--	if (config) {
--		int len = config - name;
-+	/* Already prefixed by the PMU name? */
-+	len = pmu_name_len_no_suffix(pmu_name);
-+
-+	if (!strncmp(name, pmu_name, len)) {
-+		/*
-+		 * If the PMU name is there, then there is no sense in not
-+		 * having a slash. Do this for robustness.
-+		 */
-+		if (config == NULL)
-+			config = name - 1;
+-  # Skip if the machine does not have `uncore_imc` device.
+-  if ! ${perf_tool} list pmu | grep -q ${pmu}; then
+-    echo "Target does not support PMU ${pmu} [Skipped]"
+-    err=2
+-    return
+-  fi
++  trap - EXIT TERM INT
++}
  
-+		ret = asprintf(&new_name, "%s/%s", pmu_name, config + 1);
-+	} else if (config) {
-+		len = config - name;
- 		if (config[1] == '/') {
- 			/* case: event// */
- 			ret = asprintf(&new_name, "%s/%.*s/%s", pmu_name, len, name, config + 2);
-@@ -4089,7 +4097,7 @@ void evsel__uniquify_counter(struct evsel *counter)
- 		config = strchr(name, ':');
- 		if (config) {
- 			/* case: event:.. */
--			int len = config - name;
-+			len = config - name;
+-  # Check how many uniquified events.
+-  while IFS= read -r line; do
+-    uniquified_event=$(echo "$line" | awk '{print $1}')
+-    uniquified_event_array+=("${uniquified_event}")
+-  done < <(${perf_tool} list -v ${event} | grep ${pmu})
++trap_cleanup() {
++  echo "Unexpected signal in ${FUNCNAME[1]}"
++  cleanup
++  exit 1
++}
++trap trap_cleanup EXIT TERM INT
  
- 			ret = asprintf(&new_name, "%s/%.*s/%s", pmu_name, len, name, config + 1);
- 		} else {
+-  perf_command="${perf_tool} stat -e $event -A -o ${stat_output} -- true"
+-  $perf_command
++test_event_uniquifying() {
++  echo "Uniquification of PMU sysfs events test"
+ 
+-  # Check the output contains all uniquified events.
+-  for uniquified_event in "${uniquified_event_array[@]}"; do
+-    if ! cat "${stat_output}" | grep -q "${uniquified_event}"; then
+-      echo "Event is not uniquified [Failed]"
+-      echo "${perf_command}"
+-      cat "${stat_output}"
+-      err=1
+-      break
+-    fi
++  # Read events from perf list with and without -v. With -v the duplicate PMUs
++  # aren't deduplicated. Note, json events are listed by perf list without a
++  # PMU.
++  read -ra pmu_events <<< "$(perf list --raw pmu)"
++  read -ra pmu_v_events <<< "$(perf list -v --raw pmu)"
++  # For all non-deduplicated events.
++  for pmu_v_event in "${pmu_v_events[@]}"; do
++    # If the event matches an event in the deduplicated events then it musn't
++    # be an event with duplicate PMUs, continue the outer loop.
++    for pmu_event in "${pmu_events[@]}"; do
++      if [[ "$pmu_v_event" == "$pmu_event" ]]; then
++        continue 2
++      fi
++    done
++    # Strip the suffix from the non-deduplicated event's PMU.
++    event=$(echo "$pmu_v_event" | sed -E 's/_[0-9]+//')
++    for pmu_event in "${pmu_events[@]}"; do
++      if [[ "$event" == "$pmu_event" ]]; then
++        echo "Testing event ${event} is uniquified to ${pmu_v_event}"
++        if ! perf stat -e "$event" -A -o ${stat_output} -- true; then
++          echo "Error running perf stat for event '$event'  [Skip]"
++          if [ $err = 0 ]; then
++            err=2
++          fi
++          continue
++        fi
++        # Ensure the non-deduplicated event appears in the output.
++        if ! grep -q "${pmu_v_event}" "${stat_output}"; then
++          echo "Uniquification of PMU sysfs events test [Failed]"
++          cat "${stat_output}"
++          err=1
++        fi
++        break
++      fi
++    done
+   done
+ }
+ 
+ test_event_uniquifying
+-rm -f "${stat_output}"
++cleanup
+ exit $err
 -- 
 2.51.0.470.ga7dc726c21-goog
 
