@@ -1,187 +1,146 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55E029E113
-	for <linux-perf-users@vger.kernel.org>; Fri, 19 Sep 2025 07:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121732C17B6;
+	Fri, 19 Sep 2025 08:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758266442; cv=none; b=VOyJnaDM2eD6PlFvxAUNHoEiEs49Q6K3xWjYqvGKvQIiRZp2pVBhb8YW7Wk5dzLwo2HGPwnyuzhEYwjp5Z3MHFCeqWNOUhqPbT/6VtwhQoLPRMfmptluZ9sZhY2gB8szllmgQBMWSbhoOvcgzer5XzGC7M7MN3RizhVyn6XSHOA=
+	t=1758270818; cv=none; b=Fsx+8sc1fEB7jzlgu+FUsdQ/H/1UAwPtK6TXfS1JwZMZr5D4MwpmEEsQlDNJ1W5UiAAbrBiT1+3yqnbSuaKCDmJZNJxTzXYaRcPqmNEltK5SMxtIq+CrsWPxTdo2KdSO5m14HRuNc2yVSSHAGoEa9xTzU8p4OAmn7D7tqGNZedU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758266442; c=relaxed/simple;
-	bh=yiFwlzdG/4ekcGAQ3xVV8Vqc/nCrMqm4/4XTS051e3g=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=Tyr882mIYU0W+nDoBLI7s91SGMpoNGIAlfY8v33GW32eU8VAfo3ZLEP2R+AW0eKqOIQS3YuQSp5PpTnncMkOoLzSSIBdIMKxNZRgsUuXdI6VKu7Jzk+4pxUK/sf5I7k0Hj3tolsb9196b0cpPIQnhA5e6O9fXxXwBm//+IvKZZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DmR5wxI3; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1758270818; c=relaxed/simple;
+	bh=A0OWMtvps1Wg81cMmbvIwQ/jjMHTw/+5L7NX69xhXOA=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=a0tL2hmJJry2FcIW5Dr9tnL/XcuXC/mDhf/QeVn83NhOIikwkhkBcEFJxIh/sVtwTDnscubkH6NrdlPXcoSlbo4bzxmyZeJUrsOLelIX59l5t2CaF8r9pzbCTWoFvmkwL15/hYJDlgWKhutv/+W2TuKZzJ0szvTZzApZ2KvOe9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fgvr5Tsw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DmR5wxI3"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58INt6oB031254
-	for <linux-perf-users@vger.kernel.org>; Fri, 19 Sep 2025 07:20:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=KG7H1/mvFCqgQzZ96gSg1BpxF7nG
-	eeoBU8pIjG0E8YI=; b=DmR5wxI3CR3XC4zekE+Muq4WTBrMymTfAdh/LFXyZdwJ
-	23sbr8hnIYQW+F2rgp5V72ppcM2XOlE0Y7hpY/ivt3CVVABgsGm8B/7YqdPi45Oc
-	XB3M7az3uuIhvMkfsKzGfddduPs2T+I2dU+A/weDvgR8c4VSNEdlXWSEIDiue9U0
-	myldPeCU3GBGTdkMekuvtu0E7NUxHpSf0g9QgTuxLyLB/rdbdw/uPkzZ+wu+hO5p
-	EFdcNHGMKckmr9H2Aofl0OCg47AaOC2T5qzEJZ/ErWkAepz2SGgauzuEXxbhmCQR
-	ta8T9uImYEqIF2l/PWUVhS6ArYn9j/07GJbRmkz/7A==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 497g4hy1q7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-perf-users@vger.kernel.org>; Fri, 19 Sep 2025 07:20:39 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 58J6rUAR014645
-	for <linux-perf-users@vger.kernel.org>; Fri, 19 Sep 2025 07:20:39 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 497g4hy1q5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 19 Sep 2025 07:20:39 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58J6XdII027341;
-	Fri, 19 Sep 2025 07:20:38 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 495menjmk3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 19 Sep 2025 07:20:38 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58J7KaR944696062
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 19 Sep 2025 07:20:36 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5B08420040;
-	Fri, 19 Sep 2025 07:20:36 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 330D020043;
-	Fri, 19 Sep 2025 07:20:36 +0000 (GMT)
-Received: from [9.111.59.58] (unknown [9.111.59.58])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 19 Sep 2025 07:20:36 +0000 (GMT)
-Message-ID: <1327f4b0-dbe8-4807-a024-f6f0037ebb4f@linux.ibm.com>
-Date: Fri, 19 Sep 2025 09:20:35 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fgvr5Tsw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FBF8C4CEF0;
+	Fri, 19 Sep 2025 08:33:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758270817;
+	bh=A0OWMtvps1Wg81cMmbvIwQ/jjMHTw/+5L7NX69xhXOA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fgvr5Tsw8zrd1WdlGfdJXPxPaxz6hGIy23jAI0/LiOBdfXV+y332cCVDaA517TNDF
+	 ckFfXGne6LMAX+HeJENEo7QBgKiNxh9XOhzjbPjchnFB372o2qS7Hpr4WRViR2v5ib
+	 nbLzFLfuI3dJ+eMyGuTDpOq80f2btKmjpY09JzQQDaSXDWQIGVuypRf2OunlAZ0POX
+	 11zEwhyN/V9xYINHU84nN2gNPFHxC7OdwwSP5XKcF7ceMYVgskhbw0JXuYAWaj6r57
+	 zL5JNaczkthArdSdBwXjDJJBIthgPv1h3uwSsfImBtceXO0WZGzLbJlUrYRAiShvS/
+	 a2qe3xLxstq5g==
+Received: from 82-132-235-207.dab.02.net ([82.132.235.207] helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1uzWYf-00000007i2F-3pDh;
+	Fri, 19 Sep 2025 08:33:34 +0000
+Date: Fri, 19 Sep 2025 09:33:29 +0100
+Message-ID: <877bxuzvs6.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Ian Rogers <irogers@google.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	John Garry <john.g.garry@oracle.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Leo Yan <leo.yan@linux.dev>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Rob Herring <robh@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v5 6/7] arm64: dts: renesas: Add R8A78000 X5H DTs
+In-Reply-To: <CAMuHMdVezqWxbFp9dd0WPJnNM+MvmQ9F0UA2Ru_BSV6-6VgOyA@mail.gmail.com>
+References: <87ms6snut0.wl-kuninori.morimoto.gx@renesas.com>
+	<87ecs4nult.wl-kuninori.morimoto.gx@renesas.com>
+	<86ikhg13m1.wl-maz@kernel.org>
+	<CAMuHMdVezqWxbFp9dd0WPJnNM+MvmQ9F0UA2Ru_BSV6-6VgOyA@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>
-From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: Changed Behavior of perf stat in linux-next
-Organization: IBM
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 4R8ccVWaMaGWMcEevVlpxk1APJWsGhNz
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTE2MDIwNCBTYWx0ZWRfX1NLpgmZebUxl
- MQiUDa7N+0iHSVuD3n/8KK6V9dXAL+uNfvTOQwks+7PFDqdVlULkFwoj6u5v6e42IDq7EbvHH6B
- MlNHXy+BrRmvJFboXoJgPY22jiHXmPkMzG2BQJL3/CvDvrUzj/BUxGAehSU0Wgb4JI9UAey/iH9
- nd0FmoexR1XxBD3vlKKQ7k+HUskWKNpQOuEPJSRkR/rjEzxO/Kq4zTAB9vAx1T1wf/5w0dIUQ3O
- 2PR26e2G3MDoXPuyCS8ek7lo/zkJpkqgXe0HfQ3bq/5tg7aEqVKAKySvIroXIIMDZ4uBG3VcbT4
- E0xJEPO0CXLtQnS4ZgL5kOwOSdwiFaaT6CzZnrkN/7EByFUgJVcCySl6LYjYaflaZFD9WwI+pl5
- FqmjHhZM
-X-Proofpoint-GUID: s0kgXmYPI84AtfFzdIh-OP8oSGrf5xD7
-X-Authority-Analysis: v=2.4 cv=co2bk04i c=1 sm=1 tr=0 ts=68cd0448 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=jMbeAP_MWtstleuaIbsA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-18_03,2025-09-19_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 impostorscore=0 priorityscore=1501 suspectscore=0 adultscore=0
- phishscore=0 malwarescore=0 spamscore=0 bulkscore=0 classifier=typeunknown
- authscore=0 authtc= authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2507300000 definitions=main-2509160204
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 82.132.235.207
+X-SA-Exim-Rcpt-To: geert@linux-m68k.org, kuninori.morimoto.gx@renesas.com, kan.liang@linux.intel.com, adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, acme@kernel.org, catalin.marinas@arm.com, conor+dt@kernel.org, dianders@chromium.org, geert+renesas@glider.be, irogers@google.com, mingo@redhat.com, james.clark@linaro.org, jolsa@kernel.org, john.g.garry@oracle.com, krzk+dt@kernel.org, leo.yan@linux.dev, lpieralisi@kernel.org, mark.rutland@arm.com, mike.leach@linaro.org, namhyung@kernel.org, oliver.upton@linux.dev, peterz@infradead.org, robh@kernel.org, will@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-With latest linux-next (tag next-20250917) I noticed an change in behavior:
+Hi Geert,
 
-1. An undefined event now triggers a different exit code for perf stat
-   when the event does not exist:
+On Fri, 19 Sep 2025 07:52:38 +0100,
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> 
+> Hi Marc,
+> 
+> On Thu, 18 Sept 2025 at 12:01, Marc Zyngier <maz@kernel.org> wrote:
+> > On Thu, 18 Sep 2025 07:27:26 +0100,
+> > Kuninori Morimoto <kuninori.morimoto.gx@renesas.com> wrote:
+> > > +             /*
+> > > +              * The ARM GIC-720AE - View 1
+> > > +              *
+> > > +              * see
+> > > +              *      r19uh0244ej0052-r-carx5h.pdf
+> > > +              *      - attachments: 002_R-CarX5H_Address_Map_r0p51.xlsx
+> > > +              *       - sheet [RT]
+> > > +              *        - line 619
+> > > +              */
+> > > +             gic: interrupt-controller@39000000 {
+> > > +                     compatible = "arm,gic-v3";
+> > > +                     #interrupt-cells = <3>;
+> > > +                     #address-cells = <0>;
+> > > +                     interrupt-controller;
+> > > +                     reg = <0 0x39000000 0 0x20000>,
+> > > +                           <0 0x39080000 0 0x800000>;
+> > > +                     interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> > > +             };
+> >
+> > I already asked for:
+> >
+> > - this comment to be dropped, as it serves zero purpose to the common
+> >   mortal
+> 
+> What about using a different comment instead?
+> 
+>     /* Linux must use I/F Region 1 */
+> 
+> I.e. replace "View 1" by the above.
 
-   Before:
-   # perf -v
-   perf version 6.14.0-63.fc42.s390x
-   # perf stat -e pai_ext/NNPA_ADD/k -- true; echo exit code perf stat: $?
+I definitely wouldn't mention Linux, as the DT is not specific to any
+particular OS. This is more about what block the main CPUs are allowed
+to use. Also, "View" is the term used in the TRM to describe the
+multiplexing of multiple GIC "instances" on a single GIC
+implementation in a mixed-criticality system, so keeping it makes more
+sense.
 
-   Performance counter stats for 'true':
+Something like:
 
-   <not supported>      pai_ext/NNPA_ADD/k
+	/* Application Processors manage View-1 of a GIC-720AE */
 
-       0.001074996 seconds time elapsed
+and the mention of the TRM and other spreadsheets dropped.
 
-       0.000051000 seconds user
-       0.001124000 seconds sys
+Thanks,
 
-    exit code perf stat: 0
-
-    After:
-    # perf -v
-    perf version 6.17.0-20250918.rc6.git0.ae2d20002576.63.fc42.s390x+next
-    # perf stat -e pai_ext/NNPA_ADD/k -- sleep; echo exit code perf stat: $?
-    event syntax error: 'pai_ext/NNPA_ADD/k'
-                         \___ Bad event or PMU
-
-    Unable to find PMU or event on a PMU of 'pai_ext'
-    Run 'perf list' for a list of valid events
-
-     Usage: perf stat [<options>] [<command>]
-
-       -e, --event <event>   event selector. use 'perf list' to list available events
-    #
-
-    exit code perf stat: 129
-
-A invalid event now triggers a non-zero exit code indicating failure.
-    
-    
-2. An event defined on a system but with unsupported modifier also shows
-   different behavior:
-   
-   Before:
-   # perf stat -e pai_ext/NNPA_ADD/k -- sleep 2; echo exit code perf stat: $?
-
-   Performance counter stats for 'sleep 2':
-
-   <not supported>      pai_ext/NNPA_ADD/k
-
-       2.001368389 seconds time elapsed
-
-       0.000140000 seconds user
-       0.001187000 seconds sys
-
-
-    exit code perf stat: 0
-
-    After:
-    # perf stat -e pai_ext/NNPA_ADD/k -- sleep 2; echo exit code perf stat: $?
-    Error:
-    Invalid event (pai_ext/NNPA_ADD/k) in per-thread mode, enable system wide with '-a'.
-    exit code perf stat: 255
-
-The good thing is that the process is not started and executed wheh the event
-does not exist.
-
-I reckon these changes are intended and will be integrated into mainline kernel?
-
-I am asking because of our Continuious Intergration setup runs on the linux-next
-and mainline linux kernel daily and has to handle both behaviors.
-
-Thanks
-
+	M.
 
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
-
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-
+Jazz isn't dead. It just smells funny.
