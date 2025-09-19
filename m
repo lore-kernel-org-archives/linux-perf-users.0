@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB5E25A626;
-	Fri, 19 Sep 2025 02:18:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ACBB2609FD;
+	Fri, 19 Sep 2025 02:18:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758248323; cv=none; b=rdrMbxfJCESvYPQstPZwMb5++3woDprh2cGposLN3J+i1DLNvetMPiBR25TlaMXDzhxN5M6Ipb4QZqzJUsBNY7EfBOL7h1PHFj8YApe4DJaV34zPRAHHH9c+5s8oIu6h0NKzQqqzOtQpwA1y/KkMUwA+CKDB8EU1XOr7EiY62p4=
+	t=1758248327; cv=none; b=gxjfnXpSXpKEpMrumnK9rjmiiNY2/LWgCX/Vby/qUwSkEcO8upGOwg0A1PAA1PNs8yd/AlXVS5PBVeAj4AkEe1La2hgzGre9qpwk3SKbnXfOh+62jdVGLVZER/lZI4NtuuLDFTyEOXe2KZFUgV6oRb3gJxLPxBK/PBzPdJiD4X0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758248323; c=relaxed/simple;
-	bh=5otLIvgribi/H89sXWTHdrjVv3hyG9Xes4ulCNTnrO0=;
+	s=arc-20240116; t=1758248327; c=relaxed/simple;
+	bh=7sV5XXyfT80UuU5FmYPw9Nla94sjvOftHHNsNDMlRp4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VUC5lAYGC603jmLIVY2BREqHKkaTnxQQXp0FqY8aa7h5ngrkMr0eOKhPnwBxWeG3WuNazE2hVrNDqHl7+UXfLxoXB3KV3Sz+/A9AhicODYEle+lhXogyeRNfxRKgSjYTDoQ2m7vuSF6exH5LtGfcMcxfSerfQH9NqtYUqXmCsBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k6DlzQGh; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=VmOaBmW4liLuCWv2bZ1sZbB6U/xB507+W9oSbx1BaAz0FehRw0x2gis/w1LWbrOih4iaCvCb3QzENHqWST1SGx9NpPbwU/RGxa1PRyzE4qbPeTVTYefJRPbz/fnLENdrGas0RzPVEcH2FX2V0QAqq1XLiYtI9ZkZMBjDZclbqMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aGcrvTxr; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k6DlzQGh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aGcrvTxr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758248323; x=1789784323;
+  t=1758248326; x=1789784326;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=5otLIvgribi/H89sXWTHdrjVv3hyG9Xes4ulCNTnrO0=;
-  b=k6DlzQGhrYyxyXmXQqHKCNPTPgnZlAZNpDwBAaP/ONmISlRDW9Y8acIy
-   /by/pytffVCb0H+rjj32ItBef4AYVDYJQb82Mj3txF/jusk+nEE1gImkm
-   iOeI/nbYDYVT6whlB9Eu5L2Se+EN3/CozFuqZL1cOwOx2DPv8t0fJdwXW
-   tCc3lF+1qPvnuYuGvBeMKp50zPUcFCZhLLTJYI8UJy2bh+zWLe0GutI8v
-   RJjLIhtam348G2emEOBCjHdGix7+ruLfObjRW8HvoUlW2fPHkvH5kHZSr
-   SXR+bWOqlvJm2sznQUG7ivr7a8EhROyL+HT6PInxWmzoMRuPTrckqIJiz
-   A==;
-X-CSE-ConnectionGUID: XvSXJDGbTFS3vzQXzUsN8Q==
-X-CSE-MsgGUID: WyG/0SlUTIeYt+9pF/TRRg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11557"; a="64229125"
+  bh=7sV5XXyfT80UuU5FmYPw9Nla94sjvOftHHNsNDMlRp4=;
+  b=aGcrvTxrZt7ZmX5S3+F7ZWc5SNKkpCE7m4Z/NixACWHTDapR9ItW4al9
+   WT9VKmZ5NrmugAeMMyKjATIkLRTuhVgPpUS3XBtrqxfDhYd0KlrtRYaZB
+   DjAR9cwZSxyo9yHib8Ia/jw4+THao2l/5d3vIfapSVayxN+pcu0XXD8sH
+   ufs2hx94QtOfQmRPrvszQIURYXVZT/WGHouIwWwrOjR4P/1+6VFRMUWMt
+   bqkeb5vejAwH23sc7zCQjKr7lCTDf3DQMT872+ngP1L5xR13PenAz8KBm
+   wWtj/6iR0wSm5ACiEdXreeQ7WYjSE6+SCb25TVLUfGo0ky+MMo93/j0Pq
+   g==;
+X-CSE-ConnectionGUID: kVDZyx5AR/q1LTtBYZuppQ==
+X-CSE-MsgGUID: mnB1qvmTQ3689V9OSh5JVQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11557"; a="64229135"
 X-IronPort-AV: E=Sophos;i="6.18,276,1751266800"; 
-   d="scan'208";a="64229125"
+   d="scan'208";a="64229135"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2025 19:18:42 -0700
-X-CSE-ConnectionGUID: uLM+hOqASY+4McPPOpqRqg==
-X-CSE-MsgGUID: q5Bt265+Rq64lIId70jYrA==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2025 19:18:46 -0700
+X-CSE-ConnectionGUID: rpwfj2WJT2KRq4hiS2k6xA==
+X-CSE-MsgGUID: goVEWOQaQVSZArptzNHeUw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,276,1751266800"; 
-   d="scan'208";a="175535604"
+   d="scan'208";a="175535610"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa007.jf.intel.com with ESMTP; 18 Sep 2025 19:18:39 -0700
+  by orviesa007.jf.intel.com with ESMTP; 18 Sep 2025 19:18:43 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -56,9 +56,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v3 2/6] perf tools kwork: Add missed memory allocation check and free
-Date: Fri, 19 Sep 2025 10:16:55 +0800
-Message-Id: <20250919021659.1263351-3-dapeng1.mi@linux.intel.com>
+Subject: [Patch v3 3/6] perf tools kvm: Fix the potential out of range memory access issue
+Date: Fri, 19 Sep 2025 10:16:56 +0800
+Message-Id: <20250919021659.1263351-4-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250919021659.1263351-1-dapeng1.mi@linux.intel.com>
 References: <20250919021659.1263351-1-dapeng1.mi@linux.intel.com>
@@ -70,81 +70,49 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Same with previous builtin-kvm code, perf_kwork__record() doesn't check
-the memory allocation and explicitly free the allocated memory. Just fix
-it.
+kvm_add_default_arch_event() helper may add 2 extra options but it
+directly modifies the original argv[] array. This may cause out of range
+memory access. Fix this issue.
 
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-kwork.c | 27 ++++++++++++++++++++++-----
- 1 file changed, 22 insertions(+), 5 deletions(-)
+ tools/perf/builtin-kvm.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index d2e08de5976d..7f3068264568 100644
---- a/tools/perf/builtin-kwork.c
-+++ b/tools/perf/builtin-kwork.c
-@@ -2273,12 +2273,23 @@ static void setup_event_list(struct perf_kwork *kwork,
- 	pr_debug("\n");
- }
- 
-+#define STRDUP_FAIL_EXIT(s)		\
-+	({	char *_p;		\
-+		_p = strdup(s);		\
-+		if (!_p) {		\
-+			ret = -ENOMEM;	\
-+			goto EXIT;	\
-+		}			\
-+		_p;			\
-+	})
-+
- static int perf_kwork__record(struct perf_kwork *kwork,
- 			      int argc, const char **argv)
- {
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index 9813f1eb56f9..d297a7b2c088 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -2008,11 +2008,12 @@ static int __cmd_record(const char *file_name, int argc, const char **argv)
+ 	int rec_argc, i = 0, j, ret;
  	const char **rec_argv;
- 	unsigned int rec_argc, i, j;
- 	struct kwork_class *class;
-+	int ret;
  
- 	const char *const record_args[] = {
- 		"record",
-@@ -2298,17 +2309,17 @@ static int perf_kwork__record(struct perf_kwork *kwork,
+-	ret = kvm_add_default_arch_event(&argc, argv);
+-	if (ret)
+-		return -EINVAL;
+-
+-	rec_argc = argc + 2;
++	/*
++	 * Besides the 2 more options "-o" and "filename",
++	 * kvm_add_default_arch_event() may add 2 extra options,
++	 * so allocate 4 more items.
++	 */
++	rec_argc = argc + 2 + 2;
+ 	rec_argv = calloc(rec_argc + 1, sizeof(char *));
+ 	if (!rec_argv)
  		return -ENOMEM;
- 
- 	for (i = 0; i < ARRAY_SIZE(record_args); i++)
--		rec_argv[i] = strdup(record_args[i]);
-+		rec_argv[i] = STRDUP_FAIL_EXIT(record_args[i]);
- 
- 	list_for_each_entry(class, &kwork->class_list, list) {
- 		for (j = 0; j < class->nr_tracepoints; j++) {
--			rec_argv[i++] = strdup("-e");
--			rec_argv[i++] = strdup(class->tp_handlers[j].name);
-+			rec_argv[i++] = STRDUP_FAIL_EXIT("-e");
-+			rec_argv[i++] = STRDUP_FAIL_EXIT(class->tp_handlers[j].name);
- 		}
- 	}
- 
- 	for (j = 1; j < (unsigned int)argc; j++, i++)
--		rec_argv[i] = argv[j];
-+		rec_argv[i] = STRDUP_FAIL_EXIT(argv[j]);
+@@ -2025,6 +2026,10 @@ static int __cmd_record(const char *file_name, int argc, const char **argv)
  
  	BUG_ON(i != rec_argc);
  
-@@ -2317,7 +2328,13 @@ static int perf_kwork__record(struct perf_kwork *kwork,
- 		pr_debug("%s ", rec_argv[j]);
- 	pr_debug("\n");
- 
--	return cmd_record(i, rec_argv);
-+	ret = cmd_record(i, rec_argv);
++	ret = kvm_add_default_arch_event(&i, rec_argv);
++	if (ret)
++		goto EXIT;
 +
-+EXIT:
-+	for (i = 0; i < rec_argc; i++)
-+		free((void *)rec_argv[i]);
-+	free(rec_argv);
-+	return ret;
- }
+ 	ret = cmd_record(i, rec_argv);
  
- int cmd_kwork(int argc, const char **argv)
+ EXIT:
 -- 
 2.34.1
 
