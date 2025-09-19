@@ -1,183 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C395F1F7580;
-	Fri, 19 Sep 2025 05:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B496025A33A
+	for <linux-perf-users@vger.kernel.org>; Fri, 19 Sep 2025 06:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758261319; cv=none; b=WBn9T4VDCzS2jNZG+95a9BaMUtqe1grCPwnHaHERDQVeBGCZIoKvPR4qLMb4ZslioRnnyv4hv9UhBydeWBJNrbtpYt3NyNlGqmu11shZKPKqSaUgG4uRDVo/x056i6vMrXZZdfYWoDapfT4AHjHPCePaG9JKOun9AjzkoadALdU=
+	t=1758265200; cv=none; b=VmwdUQT4QrFSoYsa99dkZQzScmf/C8iZrEX3ax3yNnmT44LmZqwV6pBSo9f92ANCEkJVtjp4BVrmsHgdg+5D3fvREdqeMM6JSHD628dsfP8MN/5JIOfUrptHyolAS6Puf8/OuLH73/MDDGIYu1SVLjQ8+8LWxcEIcux3xKbVmNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758261319; c=relaxed/simple;
-	bh=GGV1fNHCrNN+yx/CG9dIwyTi9ytFA8RptYOTLFaHYbU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fk+47jKg+8XKB4A7VhaSscp7qyRXXsNtl403GsAVGG32g3Af2Ye+Clh/muc+VvIZn35vHKn3QrIzcqHPQs57HOsr7Yphsrf6oyxsOOEvjR0uZhqP93Ih8ZPvkzFJEcJ/bn8wUcUHDTeIVMxcQJSd82/Lk2VzzrR35a3vjPGv/Aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OvHglfvY; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OvHglfvY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758261318; x=1789797318;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GGV1fNHCrNN+yx/CG9dIwyTi9ytFA8RptYOTLFaHYbU=;
-  b=OvHglfvYXM22dBRUh21BcevutImjBOcuE2tCEzo2pj6uA0EU4lHlQYr4
-   92bDj2LNM21Dmn3JYKFEkgjjymTIInG1nwsyOFqn37NpX3Ns5FE8isreX
-   HtvhgzgD6c63kPpN5sPGhcJG53UCrob9OGlJJQVr/ix5++A+9j1F3yJEF
-   UKhntjYpKHMvpo8geEoYm2RkHA/a6H1+J46OEf3sUcWwBrHk6r2QEzn0W
-   q4hQZHzLfFKResqiGnWy5nju9twL2jKmLh9RZbT99neKUe9Cnuw6zDmF5
-   xqhnSfFaoXyR3MEe+S7SGQ4Fn5xlQf/2Z0FLGYB7Q15MlCAlQsot9HkFQ
-   g==;
-X-CSE-ConnectionGUID: LA5YyC6wSAiMA/7ziYPVag==
-X-CSE-MsgGUID: xNXBtkZqRdGNEFsmIMgb6g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11557"; a="71977263"
-X-IronPort-AV: E=Sophos;i="6.18,277,1751266800"; 
-   d="scan'208";a="71977263"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2025 22:55:15 -0700
-X-CSE-ConnectionGUID: 5YaQtYNqSa2bFgTANIxpCA==
-X-CSE-MsgGUID: SYy7ZPebQIS+pCFRJIk5TA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,277,1751266800"; 
-   d="scan'208";a="180010102"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.233.177]) ([10.124.233.177])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2025 22:55:12 -0700
-Message-ID: <67b81e67-80ba-4cac-b019-1c54f191c3d0@linux.intel.com>
-Date: Fri, 19 Sep 2025 13:55:08 +0800
+	s=arc-20240116; t=1758265200; c=relaxed/simple;
+	bh=92VyL1l/CCW1RzuyUm3CyqNURYeJmbDXunIJF9vmd2A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NiQg0lz5LJ016fynjaYGbfflj6GKc5CvIxh1DOWajEhRFpSBoJYbpMRhF1wSKpj9kSFQgA+apR5hxPYQyZqt34uhYxg77+aEphk2Kbu5qZCWbitRdoEW3Vr5dGyadlNjTE15ICGG09X4BcDpLqcDDcR0RRnFIztHnf04i6avCNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-80e2c52703bso178038285a.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 23:59:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758265197; x=1758869997;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pkV81nju0TPvNncudyLCXK6ByPHFzfyoX04Ft1zWdlI=;
+        b=mbH/TOoVP8Qok9InFa73Y2yYzNI/ytfyFRATsjl+upnWubZNvI9vBzzpamQQ7IFF4z
+         hfWUCRtKoeCWyHkN2gQ0ntl7jLozBjAqpmZjI1C26rfSBkXUAECkG5gx1/WdOvSPtLH6
+         MqRzXQ7W2kzX1lXu7iKsHiqetUgpl8QSrUlSVswWTbRkwKic03nyi2bkw+YLG37tfCpH
+         8e80Mu9knPDUpTLQ17cBhO+OcTqmDXfhr3XXSFcByuViTIklYoeCyCyWFvBdQUwo3P0u
+         iC2MRFgvXMckDQwqvBVgiDocJdPn/YSXZKiQz+aL+VWvsmVTogfU26XQf7QA2tvZgJWf
+         WBYg==
+X-Forwarded-Encrypted: i=1; AJvYcCWK7DN1RP6Dt8BJu7WHvbfccNvbvr03zH0Sy4GeWe9JkAjWG8piHvlLcsymHiCuOW8kwVdT2lwQMs+zb51HbncS@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMjFmN8hRCBYmJ4zrvgUh+RlY8R9EGxxkxrQom03N1ng7lhe1q
+	oweZKN8TIKPgjXR1w2Z0eqoJyWGsxiPJNaHqf5NRU0pa+Os4guBEHV5EMcEPlDv6
+X-Gm-Gg: ASbGncsOq6Qyne2+oyEvM7K/32vdTdiBh21s6x0Y1o5ansPAoZkCnWFSLUD2RNpB/px
+	XBb8VAihRMas5HIQrliu1LS+384Kje4iZg6mcj6jD9kPRYi5QEdGxI1fJZaYgeD4A2xjP/kPOjV
+	NROhNCqlU9ult055qI2/ViIufKfzlj/d+6VPr6yV7QC/vAd27I//hu+w2iRgsAl7Hvai4Wrktjd
+	XbWLXKV/Wmwtj797LAWQ/8hjsR1LNQ29wIKYW2h2NpcPzKZZ96uE0RzENdYs+DRJBl/eb5c6h7w
+	pMMgo1NtkRmziFP/BN74gtTdFob7TfM7JaPQvgkxoI//b/2+WkQhNieT26znDXLL6inb0I7oVg+
+	FT4V0nwnCCA5qXmJ8rwyDzB6UpiByhMy5Z+TyebspLIuBNHmT+302mSue3qJY
+X-Google-Smtp-Source: AGHT+IG6eifJD+SNNql+3FbQXPXmwQg8R1VFpo8paHp2nC0L3gaAES0Xh9v7yQjWJl61j/mnliRdmQ==
+X-Received: by 2002:a05:620a:60e3:b0:828:769f:b155 with SMTP id af79cd13be357-83babfe7eb3mr197824685a.57.1758265197425;
+        Thu, 18 Sep 2025 23:59:57 -0700 (PDT)
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com. [209.85.219.42])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-836262b5612sm297824585a.3.2025.09.18.23.59.57
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Sep 2025 23:59:57 -0700 (PDT)
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-78ea15d3489so17539816d6.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 23:59:57 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWQVrS9mvHHupjjAtfN95A/vAqjCi7GuXQVJlcY2wZwK2nags70fffpiQfQzBy3ka8Aw68iq8l02eibA/ekzjba@vger.kernel.org
+X-Received: by 2002:a05:6102:cd4:b0:519:534a:6c24 with SMTP id
+ ada2fe7eead31-588f87db47cmr602651137.34.1758264769029; Thu, 18 Sep 2025
+ 23:52:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v7 00/12] arch-PEBS enabling for Intel platforms
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
- Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250828013435.1528459-1-dapeng1.mi@linux.intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250828013435.1528459-1-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <87ms6snut0.wl-kuninori.morimoto.gx@renesas.com>
+ <87ecs4nult.wl-kuninori.morimoto.gx@renesas.com> <86ikhg13m1.wl-maz@kernel.org>
+In-Reply-To: <86ikhg13m1.wl-maz@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 19 Sep 2025 08:52:38 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVezqWxbFp9dd0WPJnNM+MvmQ9F0UA2Ru_BSV6-6VgOyA@mail.gmail.com>
+X-Gm-Features: AS18NWD_Pkgqx7xjtQzxa7XmXgry72f3hJO1WXd7ew0O-6Nznr1kYzKT4iwfWdQ
+Message-ID: <CAMuHMdVezqWxbFp9dd0WPJnNM+MvmQ9F0UA2Ru_BSV6-6VgOyA@mail.gmail.com>
+Subject: Re: [PATCH v5 6/7] arm64: dts: renesas: Add R8A78000 X5H DTs
+To: Marc Zyngier <maz@kernel.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+	"Liang, Kan" <kan.liang@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Conor Dooley <conor+dt@kernel.org>, Douglas Anderson <dianders@chromium.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Ian Rogers <irogers@google.com>, 
+	Ingo Molnar <mingo@redhat.com>, James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
+	John Garry <john.g.garry@oracle.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Leo Yan <leo.yan@linux.dev>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mike Leach <mike.leach@linaro.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Marc,
 
-On 8/28/2025 9:34 AM, Dapeng Mi wrote:
-> Changes:
-> v6 -> v7:
->   * Rebase code to last tip perf/core tree.
->   * Opportunistically remove the redundant is_x86_event() prototype.
->     (Patch 01/12)
->   * Fix PEBS handler NULL event access and record loss issue.
->     (Patch 02/12)
->   * Reset MSR_IA32_PEBS_INDEX at the head of_drain_arch_pebs() instead
->     of end. It avoids the processed PEBS records are processed again in
->     some corner cases like event throttling. (Patch 08/12)
+On Thu, 18 Sept 2025 at 12:01, Marc Zyngier <maz@kernel.org> wrote:
+> On Thu, 18 Sep 2025 07:27:26 +0100,
+> Kuninori Morimoto <kuninori.morimoto.gx@renesas.com> wrote:
+> > +             /*
+> > +              * The ARM GIC-720AE - View 1
+> > +              *
+> > +              * see
+> > +              *      r19uh0244ej0052-r-carx5h.pdf
+> > +              *      - attachments: 002_R-CarX5H_Address_Map_r0p51.xlsx
+> > +              *       - sheet [RT]
+> > +              *        - line 619
+> > +              */
+> > +             gic: interrupt-controller@39000000 {
+> > +                     compatible = "arm,gic-v3";
+> > +                     #interrupt-cells = <3>;
+> > +                     #address-cells = <0>;
+> > +                     interrupt-controller;
+> > +                     reg = <0 0x39000000 0 0x20000>,
+> > +                           <0 0x39080000 0 0x800000>;
+> > +                     interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> > +             };
 >
-> v5 -> v6:
->   * Rebase code to last tip perf/core tree + "x86 perf bug fixes and
->     optimization" patchset
->  
-> v4 -> v5:
->   * Rebase code to 6.16-rc3
->   * Allocate/free arch-PEBS buffer in callbacks *prepare_cpu/*dead_cpu
->     (patch 07/10, Peter)
->   * Code and comments refine (patch 09/10, Peter)
+> I already asked for:
 >
->
-> This patchset introduces architectural PEBS support for Intel platforms
-> like Clearwater Forest (CWF) and Panther Lake (PTL). The detailed
-> information about arch-PEBS can be found in chapter 11
-> "architectural PEBS" of "Intel Architecture Instruction Set Extensions
-> and Future Features".
->
-> This patch set doesn't include the SSP and SIMD regs (OPMASK/YMM/ZMM)
-> sampling support for arch-PEBS to avoid the dependency for the basic
-> SIMD regs sampling support patch series[1]. Once the basic SIMD regs
-> sampling is supported, the arch-PEBS based SSP and SIMD regs
-> (OPMASK/YMM/ZMM) sampling would be supported in a later patch set.
+> - this comment to be dropped, as it serves zero purpose to the common
+>   mortal
 
-Kindly ping.
+What about using a different comment instead?
 
-Hi Peter,
+    /* Linux must use I/F Region 1 */
 
-May I know your comments on this patch series? Is it ok to merge this basic
-arch-PEBS enabling patch series first (without SIMD regs sampling support)?
-Is there other new comments about this patch set? Thanks.
+I.e. replace "View 1" by the above.
+Thanks!
 
+Gr{oetje,eeting}s,
 
+                        Geert
 
->
-> Tests:
->   Run below tests on Clearwater Forest and Pantherlake, no issue is
->   found.
->
->   1. Basic perf counting case.
->     perf stat -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles}' sleep 1
->
->   2. Basic PMI based perf sampling case.
->     perf record -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles}' sleep 1
->
->   3. Basic PEBS based perf sampling case.
->     perf record -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles}:p' sleep 1
->
->   4. PEBS sampling case with basic, GPRs, vector-registers and LBR groups
->     perf record -e branches:p -Iax,bx,ip,xmm0 -b -c 10000 sleep 1
->
->   5. User space PEBS sampling case with basic, GPRs and LBR groups
->     perf record -e branches:p --user-regs=ax,bx,ip -b -c 10000 sleep 1
->
->   6. PEBS sampling case with auxiliary (memory info) group
->     perf mem record sleep 1
->
->   7. PEBS sampling case with counter group
->     perf record -e '{branches:p,branches,cycles}:S' -c 10000 sleep 1
->
->   8. Perf stat and record test
->     perf test 100; perf test 131
->
->
-> History:
->   v6: https://lore.kernel.org/all/20250821035805.159494-1-dapeng1.mi@linux.intel.com/ 
->   v5: https://lore.kernel.org/all/20250623223546.112465-1-dapeng1.mi@linux.intel.com/
->   v4: https://lore.kernel.org/all/20250620103909.1586595-1-dapeng1.mi@linux.intel.com/
->   v3: https://lore.kernel.org/all/20250415114428.341182-1-dapeng1.mi@linux.intel.com/
->   v2: https://lore.kernel.org/all/20250218152818.158614-1-dapeng1.mi@linux.intel.com/
->   v1: https://lore.kernel.org/all/20250123140721.2496639-1-dapeng1.mi@linux.intel.com/
->
-> Ref:
->   [1]: https://lore.kernel.org/all/20250815213435.1702022-1-kan.liang@linux.intel.com/
->
-> Dapeng Mi (12):
->   perf/x86: Remove redundant is_x86_event() prototype
->   perf/x86/intel: Fix NULL event access and potential PEBS record loss
->   perf/x86/intel: Replace x86_pmu.drain_pebs calling with static call
->   perf/x86/intel: Correct large PEBS flag check
->   perf/x86/intel: Initialize architectural PEBS
->   perf/x86/intel/ds: Factor out PEBS record processing code to functions
->   perf/x86/intel/ds: Factor out PEBS group processing code to functions
->   perf/x86/intel: Process arch-PEBS records or record fragments
->   perf/x86/intel: Allocate arch-PEBS buffer and initialize PEBS_BASE MSR
->   perf/x86/intel: Update dyn_constranit base on PEBS event precise level
->   perf/x86/intel: Setup PEBS data configuration and enable legacy groups
->   perf/x86/intel: Add counter group support for arch-PEBS
->
->  arch/x86/events/core.c            |  21 +-
->  arch/x86/events/intel/core.c      | 268 ++++++++++++-
->  arch/x86/events/intel/ds.c        | 621 +++++++++++++++++++++++++-----
->  arch/x86/events/perf_event.h      |  41 +-
->  arch/x86/include/asm/intel_ds.h   |  10 +-
->  arch/x86/include/asm/msr-index.h  |  20 +
->  arch/x86/include/asm/perf_event.h | 116 +++++-
->  7 files changed, 955 insertions(+), 142 deletions(-)
->
->
-> base-commit: f49e1be19542487921e82b29004908966cb99d7c
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
