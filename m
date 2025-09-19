@@ -1,129 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C56D191;
-	Fri, 19 Sep 2025 00:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8679447F77
+	for <linux-perf-users@vger.kernel.org>; Fri, 19 Sep 2025 00:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758240559; cv=none; b=ca/w8v4J9sWb46XL7zw+9xwkncHieflBy6OFE/SJRpRT1cUu8EVeiNbGST0bK3Q4kqpUqd8q5svOr04xnZsfJwcVeJ3B91DiSXFxZiOgGd9EENiCeKsfvxzZHp078qiH3S18ZE7p7/VeDWd0v/Hma/8OEhxytQKF+AOvBIKUqOc=
+	t=1758240699; cv=none; b=Op7LM2ugQBn7oDRLr1uhRHd8o1GQ+D7ED7W+QV0YBialX5e4o/lMuZaifCMoEsJD3LcGJt7n+1kA/sjsZbZ6tvVxa6dlfQ4kCJRnnNyGCDK03dYuNj/h9GaM6S//IaMavzW7Qz+Tvgms9tWC8X7CkGXUz4PQi6CZMm+d1CIuTzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758240559; c=relaxed/simple;
-	bh=mbjZB92TxDhArcKXUR2GBPTMN3cns8vIOAZmwdr2MNQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cbFn/Zjs6vusmQipIXtc/kwS2R0eGiau0DnihqVN3tc+7y6GXaH13bYwXgd4bjDYVmDIACcq2RO4KLa6rS82z0lz6KrC8zyguSx0pp8JtLbAHECp8JS5jKapXmOz4bpudMZ1o8zU9ZmOLwsrEC/ZV4u8CQxIFXGquyL5VYdNS8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KYnzTn/R; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1758240699; c=relaxed/simple;
+	bh=9ggq31TuElkvdeTP2ZjS79K/WX3d9QrheK9IIUaFVzY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=FxaehBHNPxXAplWnED6Iz3S+mKE5gXC+8tx89UcVksvcK/3Giy//1dDRnmcBQAqHFopigAuS+U+RmO/YcdqeSSxSqpmBSn0YewP7PeeY6uz2XnmWeFeXz5LZg4awOEGWH5mGJWJfUarECN/pIIPBgMeTyL8GVuYOtVAAVIScSaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SAhtkkWg; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KYnzTn/R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758240557; x=1789776557;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=mbjZB92TxDhArcKXUR2GBPTMN3cns8vIOAZmwdr2MNQ=;
-  b=KYnzTn/RJwGdI6Ge5RUCmhQVf53tMIjodHuhpe6n8S70ftoAFtgt8UAX
-   78gTULawFVdCKQ+3dd0G2ytr3dENNH8uHbm+kBoC1zFuF19b2XrwPUa13
-   FvjFCftwRu58OJchJU7qNs8dfW6paocRiVVpJ/yHFQVO490zFqStLzh3R
-   QLkNH8Q64zhpLyWT99o3UCjmwdYSpBVkLS67zCqdgzvfZUeChZgTmHRm3
-   D1aJlR/gKaMEkev8EtcmGT3ANCwKspLVW4qDLLsty4kfzfuDVmtufKvyB
-   KswX4CNse2W2pmqh05Fkpi9zW8KF2i3a1pKxoOCP7UGYQVvjqorJ7ZlYv
-   Q==;
-X-CSE-ConnectionGUID: wAkNc017TdaUD4B9WcaiOQ==
-X-CSE-MsgGUID: fsjCW0ZjR06nqNnmfsxwjw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11557"; a="64405196"
-X-IronPort-AV: E=Sophos;i="6.18,276,1751266800"; 
-   d="scan'208";a="64405196"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2025 17:09:16 -0700
-X-CSE-ConnectionGUID: HyOZ2EEeQti+glqJKoTEoA==
-X-CSE-MsgGUID: Gk1Q12HRQQK7CJv18XI3VA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,276,1751266800"; 
-   d="scan'208";a="175749657"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.233.177]) ([10.124.233.177])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2025 17:09:13 -0700
-Message-ID: <aea7c0f4-e951-484a-962d-f3a9b5b26b57@linux.intel.com>
-Date: Fri, 19 Sep 2025 08:09:08 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SAhtkkWg"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-77283b2b5f7so2271101b3a.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Sep 2025 17:11:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1758240697; x=1758845497; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5pHZG9bcElhtMtIe02tLqtkF2uGVTgQcC3bk12Urlxs=;
+        b=SAhtkkWgcse++AEPWR74HEShFUe9VH+05txFueYp2JCv7mm8qhH8mlemOGyNOqoJbl
+         5DyQiUh6xFYWc7dMdwKodlIK3slknjHhdYEAaqQmVuvxlVRis+U+Jf6CwmyyKAaNWkKL
+         9UcszJocNIZ+nsbMeRJrgwAO2NLfqugw9bPvZToo/1NRp9vAsgH+lQk7OyOIXeGtOT4o
+         QJue9QUqD3xQ6M9fRVvqq7DFBtIUHx1hM8Bt9w6c0UfxHu6URnYP7BU9bkYrj/CZeo1G
+         93G0uoep/qFL7/qUefNwrvyOpwrase91gvSbTAn5A5Lmhip+wmrbHIG3M788A9H2thf/
+         6P0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758240697; x=1758845497;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5pHZG9bcElhtMtIe02tLqtkF2uGVTgQcC3bk12Urlxs=;
+        b=e3KrBzVx8Q7dZjEjnYS59GwL+QU4Db+7msU4a3beOb0qYdNw+FiyWEywIkGY0++PUG
+         rePTRhkNFZyrlyH4utTm4xGS1l/AXNSIXonRZeCANk/DYAi1kfIbb1Q9zAS8ZDM0RtYH
+         C0kxej5ucVqZ04pp5Xa6EZmpdHM4GWxwdxifvdKwVKEWJSYYjP8mZ/gPgNRMBSdw0Lij
+         lOZvgVjr/41hFVTttd9vZQp64PKAkTn6jJAsnmwnG7a0wNp0e2AioU6UF8NBIn91h9x4
+         JuKvhLZv/ckfEogPKcMoXGPJR3J6G3u8guurGx1pcIPiu7UqkWcsdI6odxqGNi9fabnJ
+         pgrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX5TtwpdZNAONNuMyPVf6TMc7Z5MFSAnMsGGC3AK6oWbl7Ukf9YonF3itnLMIUp7r/LEZrpdUD3fU+r6L6GFH7D@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmwPq7Z6F4RfsHxo4P+Njl4bv20gKgb4c2CJCB9RjTlW1JIOu2
+	u2YXkVub6vd1gW/FoaGaZdKNyfBV7kzPN/93uksPEdiQbviBYx4uDVBSeJ+jPl7VnRGjwfCLBOi
+	yuGItow==
+X-Google-Smtp-Source: AGHT+IHL6wVIYMVXo/qF+C7m2xAthhi9wrZHJ6iKg3qq/wSUNMfIVTHCzCbvYXSzkHH/AND/3vPqEr/ALak=
+X-Received: from pjyf16.prod.google.com ([2002:a17:90a:ec90:b0:330:75c7:341c])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:99a8:b0:252:3c5e:45cc
+ with SMTP id adf61e73a8af0-2925d5abc4cmr2117916637.19.1758240696687; Thu, 18
+ Sep 2025 17:11:36 -0700 (PDT)
+Date: Thu, 18 Sep 2025 17:10:50 -0700
+In-Reply-To: <20250806195706.1650976-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 0/6] Perf kvm commands bug fix
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Kevin Tian <kevin.tian@intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250811055546.296678-1-dapeng1.mi@linux.intel.com>
- <CAP-5=fWcf7F1QvWXzAD_KMpOnnKGw9PFM7mNtgzp_jh4Vi6V-w@mail.gmail.com>
- <189e060b-207b-469f-9b6e-314380d12a42@linux.intel.com> <aMxkqnXdrvv9BN8s@x1>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aMxkqnXdrvv9BN8s@x1>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250806195706.1650976-1-seanjc@google.com>
+X-Mailer: git-send-email 2.51.0.470.ga7dc726c21-goog
+Message-ID: <175824021167.1343722.9290387002572827825.b4-ty@google.com>
+Subject: Re: [PATCH v5 00/44] KVM: x86: Add support for mediated vPMUs
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	kvm@vger.kernel.org, loongarch@lists.linux.dev, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>, 
+	Yongwei Ma <yongwei.ma@intel.com>, Mingwei Zhang <mizhang@google.com>, 
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
 
+On Wed, 06 Aug 2025 12:56:22 -0700, Sean Christopherson wrote:
+> This series is based on the fastpath+PMU cleanups series[*] (which is based on
+> kvm/queue), but the non-KVM changes apply cleanly on v6.16 or Linus' tree.
+> I.e. if you only care about the perf changes, I would just apply on whatever
+> branch is convenient and stop when you hit the KVM changes.
+> 
+> My hope/plan is that the perf changes will go through the tip tree with a
+> stable tag/branch, and the KVM changes will go the kvm-x86 tree.
+> 
+> [...]
 
-On 9/19/2025 3:59 AM, Arnaldo Carvalho de Melo wrote:
-> On Thu, Sep 18, 2025 at 07:52:43AM +0800, Mi, Dapeng wrote:
->> On 9/18/2025 5:12 AM, Ian Rogers wrote:
->>> On Sun, Aug 10, 2025 at 10:56 PM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
->>>> his patch-set fixes perf kvm commands issues, like missed memory
->>>> allocation check/free, out of range memory access and especially the
->>>> issue that fails to sample guest with "perf kvm record/top" commands on
->>>> Intel platforms.
->>>>
->>>> The commit 634d36f82517 ("perf record: Just use "cycles:P" as the
->>>>  default event") changes to use PEBS event to do sampling by default
->>>> including guest sampling. This breaks host to sample guest with commands
->>>> "perf kvm record/top" on Intel platforms.
->>> Huh? That change is:
->>> ```
->>> $ git show 634d36f82517
->>> commit 634d36f82517eb5c6a9b9ec7fe3ba19dbbcb7809
->>> Author: Namhyung Kim <namhyung@kernel.org>
->>> Date:   Tue Oct 15 23:23:58 2024 -0700
->>>
->>>     perf record: Just use "cycles:P" as the default event
->>>
->>>     The fallback logic can add ":u" modifier if needed.
->>> ...
->>> -               bool can_profile_kernel = perf_event_paranoid_check(1);
->>> -
->>> -               err = parse_event(rec->evlist, can_profile_kernel ?
->>> "cycles:P" : "cycles:Pu");
->>> +               err = parse_event(rec->evlist, "cycles:P");
->>> ...
->>> ```
->>> isn't the precision the same before and after? I think you've blamed
->>> the wrong patch.
->>>
->>> The change to use cycles:P looks to come from commit 7b100989b4f6
->>> ("perf evlist: Remove __evlist__add_default") but the old code was
->>> doing things like "evsel->precise_max = true;" so I think I was just
->>> carrying forward behavior. The use of precise_max comes from commit
->>> 4e8a5c155137 ("perf evsel: Fix max perf_event_attr.precise_ip
->>> detection") from over 6 years ago, and the behavior before that also
->>> appears to have been to use the maximum supported precision.
->>>
->>> Apart from the blame and commit message being off I think the change
->>> is okay, delta my usual complaint that weak symbols are the devil's
->>> work.
->> Hmm, yeah, you're right. Thanks for correcting this. 
-> Hi Dapeng,
->
-> 	Can you please fix the patch descriptions and Fixes references
-> and resubmit?
+Applied a subset (roughtly 1/4) of the KVM patches to kvm-x86 misc, as the full
+thing is far too late for 6.18.  In a nutshell, all of the random prep work and
+cleanups that aren't directly related to mediated PMU support.
 
-Sure. would do. Thanks.
+I want to get "setup VMCS prior to kvm_x86_vendor_init()" in particular landed
+to establish the order of setup operations.  The in-progress CET series moves
+the _nested_ VMCS setup later, and I had a moment of panic that I was creating
+incompatible patches.
 
+[14/44] KVM: VMX: Setup canonical VMCS config prior to kvm_x86_vendor_init()
+        https://github.com/kvm-x86/linux/commit/4687a2c4e6a6
+[15/44] KVM: SVM: Check pmu->version, not enable_pmu, when getting PMC MSRs
+        https://github.com/kvm-x86/linux/commit/e3d1f2826da6
 
->
-> - Arnaldo
+[17/44] KVM: x86/pmu: Snapshot host (i.e. perf's) reported PMU capabilities
+        https://github.com/kvm-x86/linux/commit/51f34b1e650f
+
+[22/44] KVM: x86: Rename vmx_vmentry/vmexit_ctrl() helpers
+        https://github.com/kvm-x86/linux/commit/1e24bece2681
+[23/44] KVM: x86/pmu: Move PMU_CAP_{FW_WRITES,LBR_FMT} into msr-index.h header
+        https://github.com/kvm-x86/linux/commit/cdfed9370b96
+[24/44] KVM: x86: Rework KVM_REQ_MSR_FILTER_CHANGED into a generic RECALC_INTERCEPTS
+        https://github.com/kvm-x86/linux/commit/6057497336bb
+[25/44] KVM: x86: Use KVM_REQ_RECALC_INTERCEPTS to react to CPUID updates
+        https://github.com/kvm-x86/linux/commit/5a1a726e68ff
+[26/44] KVM: VMX: Add helpers to toggle/change a bit in VMCS execution controls
+        https://github.com/kvm-x86/linux/commit/2bff2edf69ed
+
+[29/44] KVM: x86/pmu: Use BIT_ULL() instead of open coded equivalents
+        https://github.com/kvm-x86/linux/commit/30c0267f1581
+[30/44] KVM: x86/pmu: Move initialization of valid PMCs bitmask to common x86
+        https://github.com/kvm-x86/linux/commit/9bae7a086394
+[31/44] KVM: x86/pmu: Restrict GLOBAL_{CTRL,STATUS}, fixed PMCs, and PEBS to PMU v2+
+        https://github.com/kvm-x86/linux/commit/c49aa9837686
+
+--
+https://github.com/kvm-x86/linux/tree/next
