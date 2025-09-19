@@ -1,69 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3FC810957;
-	Fri, 19 Sep 2025 20:46:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A891D54D8;
+	Fri, 19 Sep 2025 21:07:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758314766; cv=none; b=jEn7czkRtVQVu8I1M6nts6k83grQWojCj2xMdpevcDJHQGP1ih3GqWkdLwiV+euLxiPtnozxSrKoO6vr+6jAa6BXSY/XerZyBQ5JTFNKcPaTut+nQ29YBZ/8joUWCZ8t5fUZykEah0FPC0/G2kCa3knLbUoZ6Vs0rsmCXBE+L64=
+	t=1758316025; cv=none; b=WeBrtMEY/MrqPQTHEX6Jh/O1iad2E5LyWTAlrC2BmnL+gIbsMQFSRbHu6DEavXbiuu786dS22rvQ55gr/E7QrGZbi139a9j56h36TaJS3noX6UmCKUlHLltp8pi+DOSUuIHqSXVTPvMifz4B29O13GuwiKwumKcZ9TgTGOpV3dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758314766; c=relaxed/simple;
-	bh=+FZQDT4NwUe2IKpIfg9qxr0/yPqq9LxeRcWI1yCL45U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VijAjVOcR+HkUIfUJ7y0X4myjT6CP0SRDjOiaHEACrLwh/tHIjDS/GjZcgj4ndiKcz+VsiMpPiB2gYJ0UkJ2wlBH053Nbn82QLMM0Gju4pC2IMEQW47e92yuRzmPdOtmtCCcuGxRD1iftUXp8tUh+dAZMdRhaNQioAWairvJQbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uNgP8kRE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758316025; c=relaxed/simple;
+	bh=ZiYDg642Gq4D1UAbZXmgc6ZhqVXL/p9B8S+mHkUwovQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aocETgeYvKw1BgGPITFvyydCxGCBW4g2FHyjc1En9nGDhfOoxHVRmZ+T9rBEt6aDtikbrYC+Y1nMYwqNbrWbnQ9eALghQgqaDZJwwxuN9j3FCqMbGuVnvemcuo5zhYYYM6lGekAO2elmLq+ufJ20VTfbijri9ySQ1RhPpyPhMOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bt/A7m+W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uNgP8kRE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E290C4CEF0;
-	Fri, 19 Sep 2025 20:46:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bt/A7m+W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1186AC4CEF0;
+	Fri, 19 Sep 2025 21:07:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758314766;
-	bh=+FZQDT4NwUe2IKpIfg9qxr0/yPqq9LxeRcWI1yCL45U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uNgP8kREA9ZdQuo26uyN8X6iBJhBrzFgH1qP1JmtI/dvZb8QW8lHtVdqS1sZ0zvKy
-	 oagR0OhhD4zMNNnGlzWoHrfJSkTRnhXCOouDrnT3MEhUH0tvq46QLh4L2Hauv4zsrr
-	 hGNdC0EbXmcIfgxGNSAkQUd4bjtfAuOy8K1oDNmXb0BwvfBMjg4hpv/927mUEJVRpY
-	 OyGywlBy9vKL6QAPPI9sK9Dgdl5cS1tUTHBkaX83v9iCjfECuMW5Jkp8diCeNcWg7f
-	 k8l9iBbcJJW1yCbmFuE4MdVUhnJCJ9ALLSH+LuyvfPizM0sFndno+Cg4SQhhmUWUoO
-	 LlcvCfwvDGkAA==
-Date: Fri, 19 Sep 2025 17:46:02 -0300
+	s=k20201202; t=1758316025;
+	bh=ZiYDg642Gq4D1UAbZXmgc6ZhqVXL/p9B8S+mHkUwovQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Bt/A7m+WP2iBo7W1s12LKEpw5gDOKbVdy96eUSV1FlhkWEbHR1HAyHe/VQNTr5Ul7
+	 G+tPxxAMjACI9Qyz/PKiyr9lgUNyd1GUhs2k7Gucf5eMSco0HRXJPq4OgN2R1M4gra
+	 8d9jM9c5tLkyGxsOTIDeR3NfbyVKl+GhYlV9ZgNQjMji0j9A+JmyEz76Y/tLSI0d5Q
+	 US9m7haZ2PSYerNvFzv9D1UYoNL6QfdAWgoR3QHWAEni7B462Ph2ire5MixPZ+lwtN
+	 SJbfiRGMUKwMxVeWE6ANqoWFaTj4mtViz7v4bITl7appqXnEK0fGCNCJi/btrbZ3QE
+	 9SgeZ1jQ3wUaw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
 	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Yang Li <yang.lee@linux.alibaba.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/4] Test fixes and debug logging
-Message-ID: <aM3BCr9DbBxnL5rV@x1>
-References: <20250914182900.1960567-1-irogers@google.com>
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCH 0/2] LIBBPF_DYNAMIC=1 fixes
+Date: Fri, 19 Sep 2025 18:06:52 -0300
+Message-ID: <20250919210654.317656-1-acme@kernel.org>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250914182900.1960567-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, Sep 14, 2025 at 11:28:56AM -0700, Ian Rogers wrote:
-> Testing in a hypervisor guest showed some issues that these patches
-> try to address, or improve the debug situation upon.
-> 
-> Ian Rogers (4):
->   perf test: Be tolerant of missing json metric none value
->   perf parse-events: Add debug logging to perf_event
->   perf test: Don't fail if user rdpmc returns 0 when disabled
->   perf stat-shadow: Display metric-only for 0 counters
+Hi,
 
-Thanks, applied to perf-tools-next,
+	Please take a look, noticed after processing a patch from Ian
+for another such issue, on a hurry now, haven't checked when that
+emit_string was introduced.
 
 - Arnaldo
+
+Arnaldo Carvalho de Melo (2):
+  perf bpf: Move the LIBBPF_CURRENT_VERSION_GEQ macro to bpf-utils.h
+  perf bpf: Check libbpf version to use
+    btf_dump_type_data_opts.emit_strings
+
+ tools/perf/util/bpf-event.c  | 2 ++
+ tools/perf/util/bpf-filter.c | 5 +----
+ tools/perf/util/bpf-utils.h  | 5 +++++
+ 3 files changed, 8 insertions(+), 4 deletions(-)
+
+-- 
+2.51.0
+
