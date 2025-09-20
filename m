@@ -1,367 +1,911 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51341487F4
-	for <linux-perf-users@vger.kernel.org>; Sat, 20 Sep 2025 14:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74F11F428C
+	for <linux-perf-users@vger.kernel.org>; Sat, 20 Sep 2025 15:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758377112; cv=none; b=QNPk+3FUmvNGELKZGp1qhnEA2v668XYK4VE+UrjOpd/IrT0+ByNcSIcpdChJbd2MeMieO9mU8wDHL4vKK/8PEmWc1LuPElN954v5w2b/LEdke9DUDJzesbT//9SEZYJ2VcdHlSMhkbLlyN00YYbryKUtuXGDrqX3S6/sOHW53LA=
+	t=1758381433; cv=none; b=N6BogrIg/bxjS96yx2OMLSEokZPOUboaRZnbaOXZ4xpnI9ze1h6TZB7Q5e1rYWNY9J55K/NXobVUtoZZgBZqKXKtWKXFZT3I/yVzQMxqJKfB5xmEh2qudUjHbBbfcnmBurznUJ2Vmwzevmfz9/6L0I4TFMlS6Zt8l9IUjBHvu1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758377112; c=relaxed/simple;
-	bh=cl6KNVTs1CCjuYRYXgitS90TDF/yPZHGY2fVDgSrlWk=;
+	s=arc-20240116; t=1758381433; c=relaxed/simple;
+	bh=4Z4NdLjn/pdyw5qoG1HMuM1Hki+qRnDtPw/6DRc1zUI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WfGA2Y2nM/4qdQ+rLHVvL0eJy0GHG5avTtwlw9VxE2STadc+waMeOJki/3XBkhgtSZsSbxnsRc34fHc/u8V4uU0qvgO1fKyyY0ylsvASiVThxEd6YIx0RryXLyg/K8pVKOWGADuGlrKTJ1cUSqx54J6NTMuN8TfXBvqFzVgC24w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JKSUaLtb; arc=none smtp.client-ip=209.85.214.171
+	 To:Cc:Content-Type; b=ovz9AqfPlusH/Gc6krrpYccR3FoMsq78jxdeWWqMsgeqU7H5mVEZYjJaPi0MEQSN6COndZNuje62UJc5NivcoZu7BUV4Vp+BUKp5LFw0kVhhPyfjtpK0+vcDRnma1RBakvI6BQDJ9fma/SBHDxuDm24plKvTTGxl3O1qtsyQMkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=po8Gucd/; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JKSUaLtb"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-26d9cd643eeso116695ad.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 20 Sep 2025 07:05:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="po8Gucd/"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2681645b7b6so93265ad.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 20 Sep 2025 08:17:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1758377108; x=1758981908; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1758381430; x=1758986230; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=a4wdSdMbYIdqGOMiZoRxz4STBvd3LUCQKkqL6fqxU6s=;
-        b=JKSUaLtbEktL0wIa1rjx4vv8dGZe4u6Xm9K+rSUt4MnBveF+06LF08sH45VWD9p7xt
-         fWdjMju2P7pB+A2cHfI9oE1zgSHbcsnUBrnjz92oOscTE2tIZLimKtqlMiCAV/ssgFZh
-         f8P+M2eXcc5scER6uRktyw5fR/F+rGSzY3fC9FopZdIpzohHWNVIMl3/nWJzn5tRArZI
-         mWKOJP0SOo0utNx3UCWcurepz+hKB616MYMJ9dXMvxyyQ4ifkZehZZ3A5agBeL0vyChh
-         RkjQwXpMFZ2Xra4f50FT9Sn4eLWSvQIzE26kc81iHfcRN0tslSmc8Je1iC0pcTkZq2RD
-         +XRQ==
+        bh=cllstR6iKYEW2JdabuHGy1LVqdxd/0bYTF+3H4ZLNj4=;
+        b=po8Gucd/ihT+bHaIc37GTERkO92oqOCIuJj5dSmS4O7wxrUdZMzCXwKIU+W822h5I1
+         OOoatjsRyRuVKEoyTLwh8B5RwIJdNChc08DT8yw9MFJnqE0aMkBYHo2tyTmP/s4rlQls
+         eVYF2vTGyFiCQUC6Y3leszJjk40UZ6A8bdrfNootEepNMBaDqRjL9zR1ZpCKpXgfDkwC
+         d5uiuFBsXggv0FyIS8MQMRhbeVrfaEMunRakvmMorlMJ/xq6lzvyKHUr03JxIB8OHZci
+         m9iJPqCfz2OXoWoZ/7udHfZjHMj6MbY0JNmjzzIpbAr+skpFx0EfWbOHUeLv0xsIt7D8
+         lwnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758377108; x=1758981908;
+        d=1e100.net; s=20230601; t=1758381430; x=1758986230;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=a4wdSdMbYIdqGOMiZoRxz4STBvd3LUCQKkqL6fqxU6s=;
-        b=RO0pAidtTtoHS1XRDsGyEAsgY+SqUelQMkzyFrlg/ykSPfMv2HdRhJs9CUfVwmcHhv
-         xD6NMInSbb6E0a5+1843N36ZaAJXFpr65E1WBaYPRHAXqVq9a8iA/zbnnMAgIJCVKU9b
-         M1kY3rGQWT5jk/wDbofOJ/7bhKBTaNfBNVdT71ZgkunRgZVFhynPJvvBBTXXtR+h3Jyf
-         bcHVI4YDpRXNLhGjZr+FWJSA+ENtlaKYkwSaGUNUNSLyuniqQNcb8JKjAkN+4G7WUHPU
-         iB9dj3oSzgMQYgJQhfHVlmb/KoXwePIdIIU65r6X7DLAhpmIH9+qPjaj8494cQoNUzud
-         N1AA==
-X-Forwarded-Encrypted: i=1; AJvYcCXfF/UM69Nf8qJ3SPgdb5Y8Iya7Yh9H2PgGkxNRABo91LceJZ+O2JdzbxpimxfYJ5Rgn3OH1HINZ1AAyAAIFpVY@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9vjtx9rz29EqccT9JADjEQgqTnwTEDZRQ1imLQzgT83L2yUdz
-	s1/1OE/wZDfXn0JTAoJP1ffeRkGqwLuOGB5CFYftV/GvMPckccvM88PBpBSyOfCAxE/V1z6Mlld
-	doWfw2VpCadkjGeMHQ/m03EHNjj00Zh6qhV6osLpc
-X-Gm-Gg: ASbGncupHLMW0Vy6LjmHSnmwFHsUxsiTrYqVl+B1X0upqozAnpA4pQQE3XmSHc9OZuw
-	brc6vNInys6oxjG/PPCLTB1hwTKWt/CWAJ0B0ZWyzOGUB3JSzqFplc3vdpo+v49aiRcKKA0CJgJ
-	YPLphDUwkp3oqHlxxaIMikDbke6FEdHphGjt5kXofocZCwXMnJtmFf1wLMtdmP4ASQ9t0TS0Atl
-	/qgb5Cw1ubOxd333BM=
-X-Google-Smtp-Source: AGHT+IGt9WMH4oAa1v0mXV08RgG0i+ea2+8U9Qw7tS4WkEj6oUnPzxJnsrGHvnMb1QljWFMfPeh3w24J+W7Jaru9C3w=
-X-Received: by 2002:a17:902:e80d:b0:248:dce7:40e1 with SMTP id
- d9443c01a7336-26808ad114cmr16004965ad.9.1758377107506; Sat, 20 Sep 2025
- 07:05:07 -0700 (PDT)
+        bh=cllstR6iKYEW2JdabuHGy1LVqdxd/0bYTF+3H4ZLNj4=;
+        b=gFoZcryWGebMExpWUa1HvYOot4O2/EggoHA1V+gmmxCby655USjSTY/EMPn0ANm/0r
+         RI7xCLLals3EVrRYUfG1R8gc+SbfSjZPdJjIQ9vbv9jtRWSZyynoAjBRt5qo7sI0f4C7
+         TbVjWdRxkwBoAcjWYUbJ/X8gAh/6Uk95UfQUG7d2vudHc+z0Zn3zpPBzM6vhq88OEP9o
+         QY+PwvqmkntBHpvAkhsZTRQVddp5V/NlHsT7MLf9rs3Yl7tVhXGL24vMx4S7vW99XsJV
+         k4WYod7i+f8q3QZiPQ6o8MnD8MgtKLupqqIjrVOyAHBwSDMIvKlLmOoLRm3CxVb4VAms
+         FZ7A==
+X-Forwarded-Encrypted: i=1; AJvYcCUNuSZ7Gqx4nymosYRsOfvB+ckQ9OKPqh4qNcfL9kfL8GE8otv1EBp9ryNRn60xMzg1lx/NqktFVwPCZDREGDbm@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+j0pjaPYdYlG43/bmJJ/XjKvAhZ9VZa/cuYIjJre7F4hGA8r9
+	/ZjB61tUHgUcbBfWwU8WT7WBNxULgGT0mHm6DAEGTqUesC47/VOJoC/CZeTcLzWnrfrdrI+gXTa
+	a5Na11QG+n70GRbhFNUhbjyx3F4d58/gtuA+hmO9S
+X-Gm-Gg: ASbGnct5XkbkFEjS8ovr6V4bIXHMT7u6n+QckEBqGg8DrjtYESitFBRfl7tlrSORRld
+	srNJh477uYfok6S7gZAe44680H7jdbB8coT9BiM2CBUrwlF9YKicnluzLZXvAc+V61vr5v53VwC
+	zOxyVeu4rIhQfYXWQYlEdQxgroz1HIJVVoTCgb8cJ3oc7KMyRhzA32yNs7MCb6w75mAZ8c77beM
+	ZYD/8Nl
+X-Google-Smtp-Source: AGHT+IG0QqdiPeLEKVF00WNtKga6M6q5aTPg1Okn+TMI8gJYnPA0oKXqa2QSmQyOgB/3kCb3HPweNIGJifm6RoxmImU=
+X-Received: by 2002:a17:902:e846:b0:274:506d:7fea with SMTP id
+ d9443c01a7336-274506d8309mr40705ad.5.1758381429253; Sat, 20 Sep 2025 08:17:09
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250918063944.16331-1-namhyung@kernel.org> <20250918063944.16331-2-namhyung@kernel.org>
- <CAP-5=fVeYM7RJ0wW7S+9F+UnWW9pRphJMQhmBxT=V7zfmQF3cA@mail.gmail.com> <aM28tDp-BoNTVQwf@google.com>
-In-Reply-To: <aM28tDp-BoNTVQwf@google.com>
+References: <20250914181121.1952748-1-irogers@google.com> <20250914181121.1952748-21-irogers@google.com>
+ <aMljsNZxTw5ZPfeb@J2N7QTR9R3.cambridge.arm.com> <CAP-5=fUx5oyCBtp2NO-h1mTC+ANt=uTOp9tS3rVN=CQFuXo00g@mail.gmail.com>
+ <aMpTzWhifwzVlOoD@z2>
+In-Reply-To: <aMpTzWhifwzVlOoD@z2>
 From: Ian Rogers <irogers@google.com>
-Date: Sat, 20 Sep 2025 07:04:56 -0700
-X-Gm-Features: AS18NWBqWj2ai6pxgyMeCMiU2b57iMILP_EIgzHhwtkcPODYIWwjJQVpIG0U15w
-Message-ID: <CAP-5=fUrB3gJYaCUFpizC5dtOCUdbCqiTFvWvf6be-2YGFM7QQ@mail.gmail.com>
-Subject: Re: [RFC/PATCH 2/2] perf check: Add 'pmu' subcommand
+Date: Sat, 20 Sep 2025 08:16:57 -0700
+X-Gm-Features: AS18NWC_cleqJ00Ws_xksGaGaEisTguO_ZlpAi9iJ4p7NyDjhlAjNeIDcAizH6I
+Message-ID: <CAP-5=fXPt8gThgRtc1jpoNS4v2Hk_U-xS1JYJir-AUg=d0sW3A@mail.gmail.com>
+Subject: Re: [PATCH v4 20/21] perf parse-events: Add HW_CYCLES_STR as default
+ cycles event string
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Andi Kleen <ak@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	bpf@vger.kernel.org, Atish Patra <atishp@rivosinc.com>, 
+	Beeman Strong <beeman@rivosinc.com>, Leo Yan <leo.yan@arm.com>, 
+	Vince Weaver <vincent.weaver@maine.edu>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 19, 2025 at 1:27=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Tue, Sep 16, 2025 at 11:23=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
 >
-> On Thu, Sep 18, 2025 at 08:33:30AM -0700, Ian Rogers wrote:
-> > On Wed, Sep 17, 2025 at 11:39=E2=80=AFPM Namhyung Kim <namhyung@kernel.=
-org> wrote:
+> Hello,
+>
+> On Tue, Sep 16, 2025 at 08:49:48AM -0700, Ian Rogers wrote:
+> > On Tue, Sep 16, 2025 at 6:18=E2=80=AFAM Mark Rutland <mark.rutland@arm.=
+com> wrote:
 > > >
-> > > The 'perf check pmu' command will show information about PMUs in the
-> > > system like below:
+> > > On Sun, Sep 14, 2025 at 11:11:20AM -0700, Ian Rogers wrote:
+> > > > ARM managed to significantly overload the meaning of the "cycles"
+> > > > event in their PMU kernel drivers through sysfs.
 > > >
-> > >   $ perf check pmu | head
-> > >   cpu_atom: type =3D 10
-> > >     core PMU: cpus =3D 16-27
-> > >     caps: branches =3D 32
-> > >     caps: max_precise =3D 3
-> > >     caps: pmu_name =3D alderlake_hybrid
-> > >   cpu_core: type =3D 4
-> > >     core PMU: cpus =3D 0-15
-> > >     caps: branches =3D 32
-> > >     caps: max_precise =3D 3
-> > >     caps: pmu_name =3D alderlake_hybrid
+> > > Ian, please stop phrasing this as if Arm have done something wrong he=
+re.
 > > >
-> > > The -q option will make it print the name and type of PMUs only.  It
-> > > also takes arguments to show matching PMUs only.
+> > > It's true that some system PMU drivers have events named 'cycles'.
 > > >
-> > >   $ perf check pmu -q uncore
-> > >   uncore_arb_0: type =3D 27
-> > >   uncore_arb_1: type =3D 28
-> > >   uncore_cbox_0: type =3D 15
-> > >   uncore_cbox_1: type =3D 16
-> > >   uncore_cbox_2: type =3D 17
-> > >   uncore_cbox_3: type =3D 18
-> > >   uncore_cbox_4: type =3D 19
-> > >   uncore_cbox_5: type =3D 20
-> > >   uncore_cbox_6: type =3D 21
-> > >   uncore_cbox_7: type =3D 22
-> > >   uncore_cbox_8: type =3D 23
-> > >   uncore_cbox_9: type =3D 24
-> > >   uncore_cbox_10: type =3D 25
-> > >   uncore_cbox_11: type =3D 26
-> > >   uncore_clock: type =3D 29
-> > >   uncore_imc_free_running_0: type =3D 32
-> > >   uncore_imc_free_running_1: type =3D 33
-> > >   uncore_imc_0: type =3D 30
-> > >   uncore_imc_1: type =3D 31
+> > > It's not true that this is "overloading" the meaning of 'cycles'; tho=
+se
+> > > PMU-specific events were never intended to be conflated with the
+> > > PERF_TYPE_HARDWARE events which have the same name.
 > > >
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > ---
-> > >  tools/perf/Documentation/perf-check.txt | 12 +++++
-> > >  tools/perf/builtin-check.c              | 60 +++++++++++++++++++++++=
-+-
-> > >  2 files changed, 71 insertions(+), 1 deletion(-)
+> > > This was never a problem until the perf tool was changed to handle
+> > > events such that it blindly assumed all events were in the same
+> > > namespace. I have repeatedly explained that this was a bad idea.
 > > >
-> > > diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Doc=
-umentation/perf-check.txt
-> > > index 34dccc29d90d2fdf..2fa007698c0f0814 100644
-> > > --- a/tools/perf/Documentation/perf-check.txt
-> > > +++ b/tools/perf/Documentation/perf-check.txt
-> > > @@ -11,6 +11,7 @@ SYNOPSIS
-> > >  'perf check' [<options>]
-> > >  'perf check' {feature <feature_list>} [<options>]
-> > >  'perf check' {system <setting_list>} [<options>]
-> > > +'perf check' {pmu <name_list>} [<options>]
-> > >
-> > >  DESCRIPTION
-> > >  -----------
-> > > @@ -26,6 +27,9 @@ is built-in, otherwise returns with exit status 1.
-> > >  If the subcommand 'system' is used, then system settins are printed =
-on
-> > >  the standard output with explanation.
-> > >
-> > > +If the subcommand 'pmu' is used, then available PMU information is p=
-rinted
-> > > +on the standard output with explanation.
-> > > +
-> > >  SUBCOMMANDS
-> > >  -----------
-> > >
-> > > @@ -88,6 +92,14 @@ SUBCOMMANDS
-> > >                 nmi_watchdog
-> > >                 kptr_restrict
-> > >
-> > > +pmu::
-> > > +
-> > > +       Print PMU information available in the system.
-> > > +
-> > > +       Example Usage:
-> > > +               perf check pmu
-> > > +               perf check pmu <name>
-> > > +
-> > >
-> > >  OPTIONS
-> > >  -------
-> > > diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
-> > > index 1c7c6bb5da5ccbf2..f3d034a94b1227c7 100644
-> > > --- a/tools/perf/builtin-check.c
-> > > +++ b/tools/perf/builtin-check.c
-> > > @@ -3,6 +3,8 @@
-> > >  #include "color.h"
-> > >  #include "util/debug.h"
-> > >  #include "util/header.h"
-> > > +#include "util/pmu.h"
-> > > +#include "util/pmus.h"
-> > >  #include <api/fs/fs.h>
-> > >  #include <tools/config.h>
-> > >  #include <stdbool.h>
-> > > @@ -10,13 +12,14 @@
-> > >  #include <string.h>
-> > >  #include <subcmd/parse-options.h>
-> > >
-> > > -static const char * const check_subcommands[] =3D { "feature", "syst=
-em", NULL };
-> > > +static const char * const check_subcommands[] =3D { "feature", "syst=
-em", "pmu", NULL };
-> > >  static struct option check_options[] =3D {
-> > >         OPT_BOOLEAN('q', "quiet", &quiet, "do not show any warnings o=
-r messages"),
-> > >         OPT_END()
-> > >  };
-> > >  static struct option check_feature_options[] =3D { OPT_PARENT(check_=
-options) };
-> > >  static struct option check_system_options[] =3D { OPT_PARENT(check_o=
-ptions) };
-> > > +static struct option check_pmu_options[] =3D { OPT_PARENT(check_opti=
-ons) };
-> > >
-> > >  static const char *check_usage[] =3D { NULL, NULL };
-> > >  static const char *check_feature_usage[] =3D {
-> > > @@ -27,6 +30,10 @@ static const char *check_system_usage[] =3D {
-> > >         "perf check system",
-> > >         NULL
-> > >  };
-> > > +static const char *check_pmu_usage[] =3D {
-> > > +       "perf check pmu",
-> > > +       NULL
-> > > +};
-> > >
-> > >  #define FEATURE_STATUS(name_, macro_) {    \
-> > >         .name =3D name_,                     \
-> > > @@ -278,6 +285,55 @@ static int subcommand_system(int argc, const cha=
-r **argv)
-> > >         return 0;
-> > >  }
-> > >
-> > > +/**
-> > > + * Usage: 'perf check pmu <names>'
-> > > + *
-> > > + * Show PMU information.
-> > > + */
-> > > +static int subcommand_pmu(int argc, const char **argv)
-> > > +{
-> > > +       struct perf_pmu *pmu =3D NULL;
-> > > +       struct perf_pmu_caps *caps;
-> > > +
-> > > +       argc =3D parse_options(argc, argv, check_pmu_options, check_p=
-mu_usage, 0);
-> > > +
-> > > +       while ((pmu =3D perf_pmus__scan(pmu)) !=3D NULL) {
-> > > +               if (argc) {
-> > > +                       bool found =3D false;
-> > > +
-> > > +                       /* only show entries match to command line ar=
-guments */
-> > > +                       for (int k =3D 0; k < argc; k++) {
-> > > +                               if (strstr(pmu->name, argv[k])) {
+> > > There is no reason that this should be handled in an ARM-specific way=
+;
+> > > if you want the bare 'cycles' event (withj no explcit PMU) to mean
+> > > PERF_TYPE_HARDWARE:PERF_COUNT_HW_CPU_CYCLES, then *don't* match that
+> > > with other PMU types. We cna specifically identify CPU PMUs which
+> > > support that with the extended type ID if necessary.
 > >
-> > To avoid divergence from parse-events it may be better to use
-> > perf_pmu__wildcard_match? There is also
-> > perf_pmus__scan_matching_wildcard.
+> > Is the "cycles" event meaning uncore events a problem on anything
+> > other than ARM, no.
+> > Is having more than one event of the same name overloading the name,
+> > by my definition yes.
+> > Am I implying ARM has done something wrong? Well other than in fixing
+> > a problem created by ARM's drivers..
 >
-> Sounds good, will change.
+> Well.. at least we agreed that there's a problem. :)  Let's move on to
+> talking about solutions.  Please see below.
 >
 > >
-> > > +                                       found =3D true;
-> > > +                                       break;
-> > > +                               }
-> > > +                       }
-> > > +                       if (!found)
-> > > +                               continue;
-> > > +               }
-> > > +
-> > > +               printf("%s: type =3D %u\n", pmu->name, pmu->type);
-> > > +               if (quiet)
-> > > +                       continue;
-> > > +
-> > > +               if (pmu->is_core || pmu->is_uncore) {
-> > > +                       printf("  %score PMU", pmu->is_uncore ? "un" =
-: "");
-> > > +                       if (!perf_cpu_map__is_empty(pmu->cpus)) {
-> > > +                               printf(": %s =3D ", pmu->is_core ? "c=
-pus" : "cpumask");
+> > Firstly, let's not pretend ARM has always elegantly supported the
+> > legacy cycles event. When BIG.little came out, as you explained to me,
+> > the legacy events would be opened on the first PMU registered with the
+> > kernel. You would get legacy events on some fraction of the CPU cores.
+> > ARM was reliant on a lot of seemingly correct behavior by having its
+> > core PMU drivers appear as uncore ones. I am very much still in the
+> > process of trying to clean up the tech debt and mess that falls out
+> > from BIG.little and Intel's hybrid.
 > >
-> > The cpus file is only generally present on hybrid systems. I don't
-> > think this needs to be core/uncore dependent - the only thing I've
-> > ever seen fail that test are some ARM uncore PMUs. I'd always dump
-> > this as cpumask, when !core and !uncore then the default all online
-> > CPUs cpumask is important information as that probably isn't the
-> > cpumask you want with an uncore PMU.
+> > The behavior of legacy events with extended types and wildcarding.
+> > This was introduced by Intel. The right moment to complain would have
+> > been when Intel added the extended type and wildcarding support in the
+> > kernel and perf tool. I wasn't even a reviewer on those patches.
 >
-> Ok, I can remove the core/uncore check.  But I think it's better to
-> print them only if they actually have maps to inform users that those
-> PMUs need some more care. :)
+> In the perf tools, we want to support extended type and wildcarding
+> for usability and maintenance reasons.  Right now, IIUC the problem
+> happens when it expands the default 'cycles' event for perf record
+> where some events from a PMU that doesn't support sampling.  I think
+> Ian changed perf record not to fail by the supported events.
 
-So we have to deal with a bit of history in the code:
-1. if there is a cpumask file then this is an uncore PMU and the
-cpumask is the one given.
-2. if there is a cpus file then this is a core PMU typically a hybrid one.
-3. if there is no cpus file then all online CPUs are used in the
-cpumask as this is probably a core PMU. Being a core PMU is only set
-in the case of the PMU name being "cpu" or "cpum_cf" or for case 2.
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/pmu.c?h=3Dperf-tools-next#n1966
+It also disables warning for such events on ARM builds.
 
-So there is the broken PMU case where no cpumask is provided for an
-uncore PMU. Historically we treat that as having a cpumask of all
-online CPUs.
+> (To me, it'd be great if we can get the info whether the PMU supports
+> sampling or not from the kernel.  But that's a different story.)
+>
+> And perf stat can handle unsupported events already.  Then the problem
+> sovled?  Almost?
+>
+> While 'cycles' happens to be found only in some ARM machines, other
+> hardware events can have the same problem in other platforms
+> theoretically.  So I don't like to add a specicial rule for cycles and
+> ARMs.
 
-There are other workaround case the perf code deals with:
- - the cpumasks are rewritten for the benefit of NUMA support when
-there is sub-NUMA clustering:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/arch/x86/util/pmu.c?h=3Dperf-tools-next#n309
- - on ARM there has been a history of broken cpumasks (note on ARM
-both arm and arm64 arch directories get into the perf build):
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/arch/arm/util/pmu.c?h=3Dperf-tools-next#n43
+Agreed. This is the v4 version of this patch with all the prior
+versions not having this patch. The prior versions of this series,
+updating the parsing and not using json, also didn't carry a patch
+like this. So why this patch?
 
-There was an unresolved bug on ARM PMUs where CPU hot plugging
-wouldn't update the cpumask and so perf would request typically uncore
-events be opened on a CPU that was offline. A driver fix for that was
-sent. IIRC Will Deacon had concerns that the kernel's perf API was
-racy, a CPU hot plug could happen immediately after the read, and so
-that never landed. I believe this means that if you offline a CPU that
-is in an ARM uncore cpumask the intersection computation above will
-make the cpumask empty and so we therefore open the event on all the
-online CPUs. Doing that will likely cause multiplexing, aggregation of
-the same count many times and a massive miscalculation of the uncore
-event's count.
+We have primarily test code that assumes: cycles =3D=3D legacy cycles =3D=
+=3D
+an event that opens only on core PMUs. As James Clark pointed out that
+is failing on ARM as cycles is an event on many other ARM PMUs (imo
+this is wrong but nobody is fixing it). We can fix the test code so
+that it doesn't count cycles events that appear on uncore PMUs, this
+is relatively easy in the C code by scanning every PMU and calling
+have_event("cycles"), but harder in shell scripts. Rather than do
+this, the patch substitutes cycles for cpu-cycles where the only core
+PMUs property holds up. The main test impacted by this is
+parse-events, and that has a core PMU is "cpu" assumption I've long
+asked people not calling their core PMU "cpu" to fix. For the sake of
+sanity I guess I'll fix this up.
 
-I therefore believe, with the caveats above, that the cpumask on
-perf's internal pmu can never be empty. As it is a complicated thing
-that has real implications for how events get opened, I think it is
-best to just always print it.
+> Maybe we should use 'cpu-cycles' instead (as it's the same event), if
+> you really don't want to expand it with wildcard.  I'm not sure how
+> many people care about name of the default event.  Probably we can try
+> cpu-cycles for all platforms and see if someone screams..
+
+So on x86 cpu-cycles is a sysfs event which has a slightly higher
+overhead in processing. As you mention, people are likely to scream
+when they see default perf stat output has changed. Other than that I
+have no problem with this as a fix and will update the patch
+accordingly.
+
+> Or, we can keep the original name and update the test code to handle
+> multiple events (if that's the only concern).  Maybe you just pick a
+> correct one after parsing and before running the tests rather than
+> dealing with multilple events.
+
+So let's switch to cpu-cycles in the tests for all architectures. For
+things like evlist__new_default and perf_probe_api let's specify core
+PMUs with cycles. It means the code and the tests are drifting but
+whatever.. I do yet more fixing to work around ARM refusing to do
+s/cycles/cpu_cycles/ in their event names. *sigh* even with this all
+in place I still don't see getting tags as it seems everyone has a
+different opinion in solving this problem and we've drifted into the
+weeds of not merging a good patch series and working out the kinks
+later. I do appreciate at least getting feedback.
 
 Thanks,
 Ian
 
-
-
-> >
-> > > +                               cpu_map__fprintf(pmu->cpus, stdout);
-> > > +                       } else {
-> > > +                               printf("\n");
-> > > +                       }
-> > > +               }
-> > > +
-> > > +               perf_pmu__caps_parse(pmu);
-> > > +               list_for_each_entry(caps, &pmu->caps, list) {
-> > > +                       printf("  caps: %s =3D %s\n", caps->name, cap=
-s->value);
-> > > +               }
-> > > +       }
-> > > +       return 0;
-> >
-> > If not found return an error?
->
-> Yep, good idea.
->
-> Thanks for the review!
+> Thanks,
 > Namhyung
 >
 > >
-> > > +}
-> > > +
-> > >  int cmd_check(int argc, const char **argv)
-> > >  {
-> > >         argc =3D parse_options_subcommand(argc, argv, check_options,
-> > > @@ -290,6 +346,8 @@ int cmd_check(int argc, const char **argv)
-> > >                 return subcommand_feature(argc, argv);
-> > >         if (strcmp(argv[0], "system") =3D=3D 0)
-> > >                 return subcommand_system(argc, argv);
-> > > +       if (strcmp(argv[0], "pmu") =3D=3D 0)
-> > > +               return subcommand_pmu(argc, argv);
+> > Do ARM do things in their drivers that seem unthought through? Yes,
+> > when hex suffixes of physical addresses were added to uncore PMU
+> > drivers it was missed that a53 and a57 would also match this wildcard
+> > suffix as ARM has unconventional core PMU names and the suffix on
+> > those match as hex. We've worked around the issue by saying a hex
+> > suffix must be longer than 3 characters but when ARM bumps up its CPU
+> > names that will be broken. It seems there is some ambition to reinvent
+> > rules when ARM drivers do things and the fallout has all too often had
+> > to be fixed and addressed by me, with emails like this for thanks.
+> >
+> > I'm sorry that you think I'm targeting ARM by fixing the issues your
+> > drivers have introduced. It would have been better if ARM's drivers
+> > didn't keep introducing issues. I'd repeat my call here that ARM add
+> > support for the parse-events test for their PMUs. I don't understand
+> > your last paragraph, in the context of the patch series it makes
+> > little to no sense as the patch series is very much doing this.
+> >
+> > Finally, doing things this way was prompted by James Clark's concerns
+> > and I posted about this exact patch here:
+> > https://lore.kernel.org/lkml/CAP-5=3DfUsZCz8Li1noKMODKXTLYFH9FsDCpXqCUx=
+fu1h+s4c6Vw@mail.gmail.com/
+> > ie I only added this patch at someone from Linaro's request and
+> > received 0 feedback that doing so would be wrong. I don't think it is
+> > and recommend this patch series for review.
+> >
+> > Thanks,
+> > Ian
+> >
+> > > Mark.
 > > >
-> > >         /* If no subcommand matched above, print usage help */
-> > >         pr_err("Unknown subcommand: %s\n", argv[0]);
-> > > --
-> > > 2.51.0
-> > >
+> > > > In the tool use
+> > > > "cpu-cycles" on ARM to avoid wildcard matching on different PMUS. T=
+his
+> > > > is most commonly done in test code.
+> > > >
+> > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > ---
+> > > >  tools/perf/builtin-stat.c           |   4 +-
+> > > >  tools/perf/tests/code-reading.c     |   4 +-
+> > > >  tools/perf/tests/keep-tracking.c    |   2 +-
+> > > >  tools/perf/tests/parse-events.c     | 100 ++++++++++++++----------=
+----
+> > > >  tools/perf/tests/perf-time-to-tsc.c |   2 +-
+> > > >  tools/perf/tests/switch-tracking.c  |   2 +-
+> > > >  tools/perf/util/evlist.c            |   2 +-
+> > > >  tools/perf/util/parse-events.h      |  10 +++
+> > > >  tools/perf/util/perf_api_probe.c    |   4 +-
+> > > >  9 files changed, 71 insertions(+), 59 deletions(-)
+> > > >
+> > > > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> > > > index 2c38dd98f6ca..9f522b787ad5 100644
+> > > > --- a/tools/perf/builtin-stat.c
+> > > > +++ b/tools/perf/builtin-stat.c
+> > > > @@ -1957,7 +1957,7 @@ static int add_default_events(void)
+> > > >                               "cpu-migrations,"
+> > > >                               "page-faults,"
+> > > >                               "instructions,"
+> > > > -                             "cycles,"
+> > > > +                             HW_CYCLES_STR ","
+> > > >                               "stalled-cycles-frontend,"
+> > > >                               "stalled-cycles-backend,"
+> > > >                               "branches,"
+> > > > @@ -2043,7 +2043,7 @@ static int add_default_events(void)
+> > > >                        * Make at least one event non-skippable so f=
+atal errors are visible.
+> > > >                        * 'cycles' always used to be default and non=
+-skippable, so use that.
+> > > >                        */
+> > > > -                     if (strcmp("cycles", evsel__name(evsel)))
+> > > > +                     if (strcmp(HW_CYCLES_STR, evsel__name(evsel))=
+)
+> > > >                               evsel->skippable =3D true;
+> > > >               }
+> > > >       }
+> > > > diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/cod=
+e-reading.c
+> > > > index 9c2091310191..baa44918f555 100644
+> > > > --- a/tools/perf/tests/code-reading.c
+> > > > +++ b/tools/perf/tests/code-reading.c
+> > > > @@ -649,7 +649,9 @@ static int do_test_code_reading(bool try_kcore)
+> > > >       struct map *map;
+> > > >       bool have_vmlinux, have_kcore;
+> > > >       struct dso *dso;
+> > > > -     const char *events[] =3D { "cycles", "cycles:u", "cpu-clock",=
+ "cpu-clock:u", NULL };
+> > > > +     const char *events[] =3D {
+> > > > +             HW_CYCLES_STR, HW_CYCLES_STR ":u", "cpu-clock", "cpu-=
+clock:u", NULL
+> > > > +     };
+> > > >       int evidx =3D 0;
+> > > >       struct perf_env host_env;
+> > > >
+> > > > diff --git a/tools/perf/tests/keep-tracking.c b/tools/perf/tests/ke=
+ep-tracking.c
+> > > > index eafb49eb0b56..d54ddb4db47b 100644
+> > > > --- a/tools/perf/tests/keep-tracking.c
+> > > > +++ b/tools/perf/tests/keep-tracking.c
+> > > > @@ -90,7 +90,7 @@ static int test__keep_tracking(struct test_suite =
+*test __maybe_unused, int subte
+> > > >       perf_evlist__set_maps(&evlist->core, cpus, threads);
+> > > >
+> > > >       CHECK__(parse_event(evlist, "dummy:u"));
+> > > > -     CHECK__(parse_event(evlist, "cycles:u"));
+> > > > +     CHECK__(parse_event(evlist, HW_CYCLES_STR ":u"));
+> > > >
+> > > >       evlist__config(evlist, &opts, NULL);
+> > > >
+> > > > diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/par=
+se-events.c
+> > > > index 4e55b0d295bd..7d59648a0591 100644
+> > > > --- a/tools/perf/tests/parse-events.c
+> > > > +++ b/tools/perf/tests/parse-events.c
+> > > > @@ -198,7 +198,7 @@ static int test__checkevent_symbolic_name_confi=
+g(struct evlist *evlist)
+> > > >       TEST_ASSERT_VAL("wrong number of entries", 0 !=3D evlist->cor=
+e.nr_entries);
+> > > >
+> > > >       perf_evlist__for_each_evsel(&evlist->core, evsel) {
+> > > > -             int ret =3D assert_hw(evsel, PERF_COUNT_HW_CPU_CYCLES=
+, "cycles");
+> > > > +             int ret =3D assert_hw(evsel, PERF_COUNT_HW_CPU_CYCLES=
+, HW_CYCLES_STR);
+> > > >
+> > > >               if (ret)
+> > > >                       return ret;
+> > > > @@ -884,7 +884,7 @@ static int test__group1(struct evlist *evlist)
+> > > >
+> > > >               /* cycles:upp */
+> > > >               evsel =3D evsel__next(evsel);
+> > > > -             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, "cycles");
+> > > > +             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, HW_CYCLES_STR);
+> > > >               if (ret)
+> > > >                       return ret;
+> > > >
+> > > > @@ -948,7 +948,7 @@ static int test__group2(struct evlist *evlist)
+> > > >                       continue;
+> > > >               }
+> > > >               /* cycles:k */
+> > > > -             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, "cycles");
+> > > > +             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, HW_CYCLES_STR);
+> > > >               if (ret)
+> > > >                       return ret;
+> > > >
+> > > > @@ -1085,7 +1085,7 @@ static int test__group4(struct evlist *evlist=
+ __maybe_unused)
+> > > >
+> > > >               /* cycles:u + p */
+> > > >               evsel =3D leader =3D (i =3D=3D 0 ? evlist__first(evli=
+st) : evsel__next(evsel));
+> > > > -             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, "cycles");
+> > > > +             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, HW_CYCLES_STR);
+> > > >               if (ret)
+> > > >                       return ret;
+> > > >
+> > > > @@ -1133,7 +1133,7 @@ static int test__group5(struct evlist *evlist=
+ __maybe_unused)
+> > > >       for (int i =3D 0; i < num_core_entries(); i++) {
+> > > >               /* cycles + G */
+> > > >               evsel =3D leader =3D (i =3D=3D 0 ? evlist__first(evli=
+st) : evsel__next(evsel));
+> > > > -             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, "cycles");
+> > > > +             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, HW_CYCLES_STR);
+> > > >               if (ret)
+> > > >                       return ret;
+> > > >
+> > > > @@ -1168,7 +1168,7 @@ static int test__group5(struct evlist *evlist=
+ __maybe_unused)
+> > > >       for (int i =3D 0; i < num_core_entries(); i++) {
+> > > >               /* cycles:G */
+> > > >               evsel =3D leader =3D evsel__next(evsel);
+> > > > -             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, "cycles");
+> > > > +             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, HW_CYCLES_STR);
+> > > >               if (ret)
+> > > >                       return ret;
+> > > >
+> > > > @@ -1202,7 +1202,7 @@ static int test__group5(struct evlist *evlist=
+ __maybe_unused)
+> > > >       for (int i =3D 0; i < num_core_entries(); i++) {
+> > > >               /* cycles */
+> > > >               evsel =3D evsel__next(evsel);
+> > > > -             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, "cycles");
+> > > > +             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, HW_CYCLES_STR);
+> > > >               if (ret)
+> > > >                       return ret;
+> > > >
+> > > > @@ -1231,7 +1231,7 @@ static int test__group_gh1(struct evlist *evl=
+ist)
+> > > >
+> > > >               /* cycles + :H group modifier */
+> > > >               evsel =3D leader =3D (i =3D=3D 0 ? evlist__first(evli=
+st) : evsel__next(evsel));
+> > > > -             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, "cycles");
+> > > > +             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, HW_CYCLES_STR);
+> > > >               if (ret)
+> > > >                       return ret;
+> > > >
+> > > > @@ -1278,7 +1278,7 @@ static int test__group_gh2(struct evlist *evl=
+ist)
+> > > >
+> > > >               /* cycles + :G group modifier */
+> > > >               evsel =3D leader =3D (i =3D=3D 0 ? evlist__first(evli=
+st) : evsel__next(evsel));
+> > > > -             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, "cycles");
+> > > > +             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, HW_CYCLES_STR);
+> > > >               if (ret)
+> > > >                       return ret;
+> > > >
+> > > > @@ -1325,7 +1325,7 @@ static int test__group_gh3(struct evlist *evl=
+ist)
+> > > >
+> > > >               /* cycles:G + :u group modifier */
+> > > >               evsel =3D leader =3D (i =3D=3D 0 ? evlist__first(evli=
+st) : evsel__next(evsel));
+> > > > -             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, "cycles");
+> > > > +             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, HW_CYCLES_STR);
+> > > >               if (ret)
+> > > >                       return ret;
+> > > >
+> > > > @@ -1372,7 +1372,7 @@ static int test__group_gh4(struct evlist *evl=
+ist)
+> > > >
+> > > >               /* cycles:G + :uG group modifier */
+> > > >               evsel =3D leader =3D (i =3D=3D 0 ? evlist__first(evli=
+st) : evsel__next(evsel));
+> > > > -             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, "cycles");
+> > > > +             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, HW_CYCLES_STR);
+> > > >               if (ret)
+> > > >                       return ret;
+> > > >
+> > > > @@ -1417,7 +1417,7 @@ static int test__leader_sample1(struct evlist=
+ *evlist)
+> > > >
+> > > >               /* cycles - sampling group leader */
+> > > >               evsel =3D leader =3D (i =3D=3D 0 ? evlist__first(evli=
+st) : evsel__next(evsel));
+> > > > -             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, "cycles");
+> > > > +             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, HW_CYCLES_STR);
+> > > >               if (ret)
+> > > >                       return ret;
+> > > >
+> > > > @@ -1540,7 +1540,7 @@ static int test__pinned_group(struct evlist *=
+evlist)
+> > > >
+> > > >               /* cycles - group leader */
+> > > >               evsel =3D leader =3D (i =3D=3D 0 ? evlist__first(evli=
+st) : evsel__next(evsel));
+> > > > -             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, "cycles");
+> > > > +             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, HW_CYCLES_STR);
+> > > >               if (ret)
+> > > >                       return ret;
+> > > >
+> > > > @@ -1594,7 +1594,7 @@ static int test__exclusive_group(struct evlis=
+t *evlist)
+> > > >
+> > > >               /* cycles - group leader */
+> > > >               evsel =3D leader =3D (i =3D=3D 0 ? evlist__first(evli=
+st) : evsel__next(evsel));
+> > > > -             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, "cycles");
+> > > > +             ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYC=
+LES, HW_CYCLES_STR);
+> > > >               if (ret)
+> > > >                       return ret;
+> > > >
+> > > > @@ -1759,7 +1759,7 @@ static int test__checkevent_raw_pmu(struct ev=
+list *evlist)
+> > > >  static int test__sym_event_slash(struct evlist *evlist)
+> > > >  {
+> > > >       struct evsel *evsel =3D evlist__first(evlist);
+> > > > -     int ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES,=
+ "cycles");
+> > > > +     int ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES,=
+ HW_CYCLES_STR);
+> > > >
+> > > >       if (ret)
+> > > >               return ret;
+> > > > @@ -1771,7 +1771,7 @@ static int test__sym_event_slash(struct evlis=
+t *evlist)
+> > > >  static int test__sym_event_dc(struct evlist *evlist)
+> > > >  {
+> > > >       struct evsel *evsel =3D evlist__first(evlist);
+> > > > -     int ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES,=
+ "cycles");
+> > > > +     int ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES,=
+ HW_CYCLES_STR);
+> > > >
+> > > >       if (ret)
+> > > >               return ret;
+> > > > @@ -1783,7 +1783,7 @@ static int test__sym_event_dc(struct evlist *=
+evlist)
+> > > >  static int test__term_equal_term(struct evlist *evlist)
+> > > >  {
+> > > >       struct evsel *evsel =3D evlist__first(evlist);
+> > > > -     int ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES,=
+ "cycles");
+> > > > +     int ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES,=
+ HW_CYCLES_STR);
+> > > >
+> > > >       if (ret)
+> > > >               return ret;
+> > > > @@ -1795,7 +1795,7 @@ static int test__term_equal_term(struct evlis=
+t *evlist)
+> > > >  static int test__term_equal_legacy(struct evlist *evlist)
+> > > >  {
+> > > >       struct evsel *evsel =3D evlist__first(evlist);
+> > > > -     int ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES,=
+ "cycles");
+> > > > +     int ret =3D assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES,=
+ HW_CYCLES_STR);
+> > > >
+> > > >       if (ret)
+> > > >               return ret;
+> > > > @@ -2006,27 +2006,27 @@ static const struct evlist_test test__event=
+s[] =3D {
+> > > >               /* 7 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "{instructions:k,cycles:upp}",
+> > > > +             .name  =3D "{instructions:k," HW_CYCLES_STR ":upp}",
+> > > >               .check =3D test__group1,
+> > > >               /* 8 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "{faults:k,branches}:u,cycles:k",
+> > > > +             .name  =3D "{faults:k,branches}:u," HW_CYCLES_STR ":k=
+",
+> > > >               .check =3D test__group2,
+> > > >               /* 9 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "group1{syscalls:sys_enter_openat:H,cycles=
+:kppp},group2{cycles,1:3}:G,instructions:u",
+> > > > +             .name  =3D "group1{syscalls:sys_enter_openat:H," HW_C=
+YCLES_STR ":kppp},group2{" HW_CYCLES_STR ",1:3}:G,instructions:u",
+> > > >               .check =3D test__group3,
+> > > >               /* 0 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "{cycles:u,instructions:kp}:p",
+> > > > +             .name  =3D "{" HW_CYCLES_STR ":u,instructions:kp}:p",
+> > > >               .check =3D test__group4,
+> > > >               /* 1 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "{cycles,instructions}:G,{cycles:G,instruc=
+tions:G},cycles",
+> > > > +             .name  =3D "{" HW_CYCLES_STR ",instructions}:G,{" HW_=
+CYCLES_STR ":G,instructions:G}," HW_CYCLES_STR,
+> > > >               .check =3D test__group5,
+> > > >               /* 2 */
+> > > >       },
+> > > > @@ -2036,27 +2036,27 @@ static const struct evlist_test test__event=
+s[] =3D {
+> > > >               /* 3 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "{cycles,cache-misses:G}:H",
+> > > > +             .name  =3D "{" HW_CYCLES_STR ",cache-misses:G}:H",
+> > > >               .check =3D test__group_gh1,
+> > > >               /* 4 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "{cycles,cache-misses:H}:G",
+> > > > +             .name  =3D "{" HW_CYCLES_STR ",cache-misses:H}:G",
+> > > >               .check =3D test__group_gh2,
+> > > >               /* 5 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "{cycles:G,cache-misses:H}:u",
+> > > > +             .name  =3D "{" HW_CYCLES_STR ":G,cache-misses:H}:u",
+> > > >               .check =3D test__group_gh3,
+> > > >               /* 6 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "{cycles:G,cache-misses:H}:uG",
+> > > > +             .name  =3D "{" HW_CYCLES_STR ":G,cache-misses:H}:uG",
+> > > >               .check =3D test__group_gh4,
+> > > >               /* 7 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "{cycles,cache-misses,branch-misses}:S",
+> > > > +             .name  =3D "{" HW_CYCLES_STR ",cache-misses,branch-mi=
+sses}:S",
+> > > >               .check =3D test__leader_sample1,
+> > > >               /* 8 */
+> > > >       },
+> > > > @@ -2071,7 +2071,7 @@ static const struct evlist_test test__events[=
+] =3D {
+> > > >               /* 0 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "{cycles,cache-misses,branch-misses}:D",
+> > > > +             .name  =3D "{" HW_CYCLES_STR ",cache-misses,branch-mi=
+sses}:D",
+> > > >               .check =3D test__pinned_group,
+> > > >               /* 1 */
+> > > >       },
+> > > > @@ -2109,7 +2109,7 @@ static const struct evlist_test test__events[=
+] =3D {
+> > > >               /* 6 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "task-clock:P,cycles",
+> > > > +             .name  =3D "task-clock:P," HW_CYCLES_STR,
+> > > >               .check =3D test__checkevent_precise_max_modifier,
+> > > >               /* 7 */
+> > > >       },
+> > > > @@ -2140,17 +2140,17 @@ static const struct evlist_test test__event=
+s[] =3D {
+> > > >               /* 2 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "cycles/name=3D'COMPLEX_CYCLES_NAME:orig=
+=3Dcycles,desc=3Dchip-clock-ticks'/Duk",
+> > > > +             .name  =3D HW_CYCLES_STR "/name=3D'COMPLEX_CYCLES_NAM=
+E:orig=3Dcycles,desc=3Dchip-clock-ticks'/Duk",
+> > > >               .check =3D test__checkevent_complex_name,
+> > > >               /* 3 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "cycles//u",
+> > > > +             .name  =3D HW_CYCLES_STR "//u",
+> > > >               .check =3D test__sym_event_slash,
+> > > >               /* 4 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "cycles:k",
+> > > > +             .name  =3D HW_CYCLES_STR ":k",
+> > > >               .check =3D test__sym_event_dc,
+> > > >               /* 5 */
+> > > >       },
+> > > > @@ -2160,17 +2160,17 @@ static const struct evlist_test test__event=
+s[] =3D {
+> > > >               /* 6 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "{cycles,cache-misses,branch-misses}:e",
+> > > > +             .name  =3D "{" HW_CYCLES_STR ",cache-misses,branch-mi=
+sses}:e",
+> > > >               .check =3D test__exclusive_group,
+> > > >               /* 7 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "cycles/name=3Dname/",
+> > > > +             .name  =3D HW_CYCLES_STR "/name=3Dname/",
+> > > >               .check =3D test__term_equal_term,
+> > > >               /* 8 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "cycles/name=3Dl1d/",
+> > > > +             .name  =3D HW_CYCLES_STR "/name=3Dl1d/",
+> > > >               .check =3D test__term_equal_legacy,
+> > > >               /* 9 */
+> > > >       },
+> > > > @@ -2311,7 +2311,7 @@ static const struct evlist_test test__events_=
+pmu[] =3D {
+> > > >               /* 9 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "cpu/cycles,period=3D100000,config2/",
+> > > > +             .name  =3D "cpu/" HW_CYCLES_STR ",period=3D100000,con=
+fig2/",
+> > > >               .valid =3D test__pmu_cpu_valid,
+> > > >               .check =3D test__checkevent_symbolic_name_config,
+> > > >               /* 0 */
+> > > > @@ -2335,43 +2335,43 @@ static const struct evlist_test test__event=
+s_pmu[] =3D {
+> > > >               /* 3 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "{cpu/instructions/k,cpu/cycles/upp}",
+> > > > +             .name  =3D "{cpu/instructions/k,cpu/" HW_CYCLES_STR "=
+/upp}",
+> > > >               .valid =3D test__pmu_cpu_valid,
+> > > >               .check =3D test__group1,
+> > > >               /* 4 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "{cpu/cycles/u,cpu/instructions/kp}:p",
+> > > > +             .name  =3D "{cpu/" HW_CYCLES_STR "/u,cpu/instructions=
+/kp}:p",
+> > > >               .valid =3D test__pmu_cpu_valid,
+> > > >               .check =3D test__group4,
+> > > >               /* 5 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "{cpu/cycles/,cpu/cache-misses/G}:H",
+> > > > +             .name  =3D "{cpu/" HW_CYCLES_STR "/,cpu/cache-misses/=
+G}:H",
+> > > >               .valid =3D test__pmu_cpu_valid,
+> > > >               .check =3D test__group_gh1,
+> > > >               /* 6 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "{cpu/cycles/,cpu/cache-misses/H}:G",
+> > > > +             .name  =3D "{cpu/" HW_CYCLES_STR "/,cpu/cache-misses/=
+H}:G",
+> > > >               .valid =3D test__pmu_cpu_valid,
+> > > >               .check =3D test__group_gh2,
+> > > >               /* 7 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "{cpu/cycles/G,cpu/cache-misses/H}:u",
+> > > > +             .name  =3D "{cpu/" HW_CYCLES_STR "/G,cpu/cache-misses=
+/H}:u",
+> > > >               .valid =3D test__pmu_cpu_valid,
+> > > >               .check =3D test__group_gh3,
+> > > >               /* 8 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "{cpu/cycles/G,cpu/cache-misses/H}:uG",
+> > > > +             .name  =3D "{cpu/" HW_CYCLES_STR "/G,cpu/cache-misses=
+/H}:uG",
+> > > >               .valid =3D test__pmu_cpu_valid,
+> > > >               .check =3D test__group_gh4,
+> > > >               /* 9 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "{cpu/cycles/,cpu/cache-misses/,cpu/branch=
+-misses/}:S",
+> > > > +             .name  =3D "{cpu/" HW_CYCLES_STR "/,cpu/cache-misses/=
+,cpu/branch-misses/}:S",
+> > > >               .valid =3D test__pmu_cpu_valid,
+> > > >               .check =3D test__leader_sample1,
+> > > >               /* 0 */
+> > > > @@ -2389,7 +2389,7 @@ static const struct evlist_test test__events_=
+pmu[] =3D {
+> > > >               /* 2 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "{cpu/cycles/,cpu/cache-misses/,cpu/branch=
+-misses/}:D",
+> > > > +             .name  =3D "{cpu/" HW_CYCLES_STR "/,cpu/cache-misses/=
+,cpu/branch-misses/}:D",
+> > > >               .valid =3D test__pmu_cpu_valid,
+> > > >               .check =3D test__pinned_group,
+> > > >               /* 3 */
+> > > > @@ -2407,13 +2407,13 @@ static const struct evlist_test test__event=
+s_pmu[] =3D {
+> > > >               /* 5 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "cpu/cycles/u",
+> > > > +             .name  =3D "cpu/" HW_CYCLES_STR "/u",
+> > > >               .valid =3D test__pmu_cpu_valid,
+> > > >               .check =3D test__sym_event_slash,
+> > > >               /* 6 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "cpu/cycles/k",
+> > > > +             .name  =3D "cpu/" HW_CYCLES_STR "/k",
+> > > >               .valid =3D test__pmu_cpu_valid,
+> > > >               .check =3D test__sym_event_dc,
+> > > >               /* 7 */
+> > > > @@ -2425,19 +2425,19 @@ static const struct evlist_test test__event=
+s_pmu[] =3D {
+> > > >               /* 8 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "{cpu/cycles/,cpu/cache-misses/,cpu/branch=
+-misses/}:e",
+> > > > +             .name  =3D "{cpu/" HW_CYCLES_STR "/,cpu/cache-misses/=
+,cpu/branch-misses/}:e",
+> > > >               .valid =3D test__pmu_cpu_valid,
+> > > >               .check =3D test__exclusive_group,
+> > > >               /* 9 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "cpu/cycles,name=3Dname/",
+> > > > +             .name  =3D "cpu/" HW_CYCLES_STR ",name=3Dname/",
+> > > >               .valid =3D test__pmu_cpu_valid,
+> > > >               .check =3D test__term_equal_term,
+> > > >               /* 0 */
+> > > >       },
+> > > >       {
+> > > > -             .name  =3D "cpu/cycles,name=3Dl1d/",
+> > > > +             .name  =3D "cpu/" HW_CYCLES_STR ",name=3Dl1d/",
+> > > >               .valid =3D test__pmu_cpu_valid,
+> > > >               .check =3D test__term_equal_legacy,
+> > > >               /* 1 */
+> > > > diff --git a/tools/perf/tests/perf-time-to-tsc.c b/tools/perf/tests=
+/perf-time-to-tsc.c
+> > > > index d4437410c99f..7ebcb1f004b2 100644
+> > > > --- a/tools/perf/tests/perf-time-to-tsc.c
+> > > > +++ b/tools/perf/tests/perf-time-to-tsc.c
+> > > > @@ -101,7 +101,7 @@ static int test__perf_time_to_tsc(struct test_s=
+uite *test __maybe_unused, int su
+> > > >
+> > > >       perf_evlist__set_maps(&evlist->core, cpus, threads);
+> > > >
+> > > > -     CHECK__(parse_event(evlist, "cycles:u"));
+> > > > +     CHECK__(parse_event(evlist, HW_CYCLES_STR ":u"));
+> > > >
+> > > >       evlist__config(evlist, &opts, NULL);
+> > > >
+> > > > diff --git a/tools/perf/tests/switch-tracking.c b/tools/perf/tests/=
+switch-tracking.c
+> > > > index 5be294014d3b..ad3a87978c0d 100644
+> > > > --- a/tools/perf/tests/switch-tracking.c
+> > > > +++ b/tools/perf/tests/switch-tracking.c
+> > > > @@ -332,7 +332,7 @@ static int process_events(struct evlist *evlist=
+,
+> > > >  static int test__switch_tracking(struct test_suite *test __maybe_u=
+nused, int subtest __maybe_unused)
+> > > >  {
+> > > >       const char *sched_switch =3D "sched:sched_switch";
+> > > > -     const char *cycles =3D "cycles:u";
+> > > > +     const char *cycles =3D HW_CYCLES_STR ":u";
+> > > >       struct switch_tracking switch_tracking =3D { .tids =3D NULL, =
+};
+> > > >       struct record_opts opts =3D {
+> > > >               .mmap_pages          =3D UINT_MAX,
+> > > > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> > > > index e8217efdda53..d7e935faeda0 100644
+> > > > --- a/tools/perf/util/evlist.c
+> > > > +++ b/tools/perf/util/evlist.c
+> > > > @@ -112,7 +112,7 @@ struct evlist *evlist__new_default(void)
+> > > >               char buf[256];
+> > > >               int err;
+> > > >
+> > > > -             snprintf(buf, sizeof(buf), "%s/cycles/%s", pmu->name,
+> > > > +             snprintf(buf, sizeof(buf), "%s/%s/%s", pmu->name, HW_=
+CYCLES_STR,
+> > > >                        can_profile_kernel ? "P" : "Pu");
+> > > >               err =3D parse_event(evlist, buf);
+> > > >               if (err) {
+> > > > diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse=
+-events.h
+> > > > index db92cd67bc0f..304676bf32dd 100644
+> > > > --- a/tools/perf/util/parse-events.h
+> > > > +++ b/tools/perf/util/parse-events.h
+> > > > @@ -20,6 +20,16 @@ struct option;
+> > > >  struct perf_pmu;
+> > > >  struct strbuf;
+> > > >
+> > > > +/*
+> > > > + * The name used for the "cycles" event. A different event name is=
+ used on ARM
+> > > > + * as many ARM PMUs define a "cycles" event.
+> > > > + */
+> > > > +#if defined(__aarch64__) || defined(__arm__)
+> > > > +#define HW_CYCLES_STR "cpu-cycles"
+> > > > +#else
+> > > > +#define HW_CYCLES_STR "cycles"
+> > > > +#endif
+> > > > +
+> > > >  const char *event_type(size_t type);
+> > > >
+> > > >  /* Arguments encoded in opt->value. */
+> > > > diff --git a/tools/perf/util/perf_api_probe.c b/tools/perf/util/per=
+f_api_probe.c
+> > > > index 6ecf38314f01..693bb5891bc4 100644
+> > > > --- a/tools/perf/util/perf_api_probe.c
+> > > > +++ b/tools/perf/util/perf_api_probe.c
+> > > > @@ -74,9 +74,9 @@ static bool perf_probe_api(setup_probe_fn_t fn)
+> > > >       if (!ret)
+> > > >               return true;
+> > > >
+> > > > -     pmu =3D perf_pmus__scan_core(/*pmu=3D*/NULL);
+> > > > +     pmu =3D perf_pmus__find_core_pmu();
+> > > >       if (pmu) {
+> > > > -             const char *try[] =3D {"cycles", "instructions", NULL=
+};
+> > > > +             const char *try[] =3D {HW_CYCLES_STR, "instructions",=
+ NULL};
+> > > >               char buf[256];
+> > > >               int i =3D 0;
+> > > >
+> > > > --
+> > > > 2.51.0.384.g4c02a37b29-goog
+> > > >
