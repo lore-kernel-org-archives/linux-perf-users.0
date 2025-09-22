@@ -1,87 +1,212 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D26830E82D;
-	Mon, 22 Sep 2025 13:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A155B2E1C69
+	for <linux-perf-users@vger.kernel.org>; Mon, 22 Sep 2025 15:25:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758546907; cv=none; b=fHtySz6YFCbLsAMGAoexb0ePNpTW16v8w7pAX9DIF8GDINnPQ/pC/TY5MgCVKY30SXGwsGwBNfagxj+2RXE2UHvaZb11CnZy17RJh57mu6xp6uxik480agXgvUGMyqlCBeLmca7s4YgI+uizAJa+Bbj7hEBrI88vIdVbSlq7GFw=
+	t=1758554716; cv=none; b=beZzPsBfPDwx26Y8aFjANub5Zix6WVgVDsS0tXWIPFat+kZEX3NAUq8eDPmHAD7nWXJHHLhEE5C0DJqqD7DUeqY6wZmxnWv/+ZamGgbl4vA51eJO4xoDq3rPOhE7EpE+tY2PMHUGRXr0AXRf42/mdbi1HNOdwmvwX/Yry6/LEM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758546907; c=relaxed/simple;
-	bh=82ttxSMSEH3ZtEUKmy8PdeINF6t2+aMiPJPzyVHU8aQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ml+dl3bVGGLoXmV11hzoNko1Y1777NdbsognF0bvQWmxXVyvMs1J6rlA7PB3zBySrPHEDow5RsaxzWYaC90OGEFJya27W3b5MSaD2SNOVq7jqI2rGsfoYKqcvXpJtsLce9zcp4OaVeyhgESYDerNXFewVCjIJ3KWUz62cpGFn4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a0DttOC3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758554716; c=relaxed/simple;
+	bh=Flvci69kLy4oqGvHOPqNh+K684ly9/dXY4U3t7DwwMU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cB3E5SmX206e57m2vh9V/0iiWUNLmrPdWgubFrUUmaBGU+U+MtSGtQ8YRoKk2PbhVbn888lI8+gZpp9AvjB2LffbkdoIH/IVi5H4anb+LRzcURcNACySYQaX6KF1ptOOietjyF0JYY4dZSpwAsfQKWoqguBLVJAm3MwfvFgcvHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=muUTNVb3; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a0DttOC3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2302C113D0;
-	Mon, 22 Sep 2025 13:15:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758546906;
-	bh=82ttxSMSEH3ZtEUKmy8PdeINF6t2+aMiPJPzyVHU8aQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=a0DttOC3XZWhMwZfaIUvd6QJ4ILg4SOyEa+9PhjK0EvNN7OI/ZFmYgam50ND54UDO
-	 +04S34jnJshMLJZkoG8zCFsaDT7xI+nWIWbMia0RBaSvw8e2FW5RiXiJCSNPNIqktw
-	 XwW/LxFIV6MpDnVL6s1rqcKzWfU+SRs/Z0jU1OaCeUYW6kINoduYk+AgOF2AdX5pBz
-	 NTZL+w32HCEtzoEbO6UuiCOXil716Juz06qas/Fsa8+CiQO+BgYU1A8pLtmPPWuOsC
-	 zJGC9Cy1O0gOHJfR/eN2k6xUQgzVT/9C1jG66pelFi5leQcutSXc1xKQ2YX8bT40Nm
-	 F/PPQu0avTQrQ==
-From: Will Deacon <will@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Gowthami Thiagarajan <gthiagarajan@marvell.com>,
-	Linu Cherian <lcherian@marvell.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Besar Wicaksono <bwicaksono@nvidia.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Koichi Okuno <fj2767dz@fujitsu.com>
-Cc: catalin.marinas@arm.com,
-	kernel-team@android.com,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v9] perf: Fujitsu: Add the Uncore PMU driver
-Date: Mon, 22 Sep 2025 14:14:47 +0100
-Message-Id: <175854271310.3138824.7032222735567665921.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250909030259.2313226-1-fj2767dz@fujitsu.com>
-References: <20250909030259.2313226-1-fj2767dz@fujitsu.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="muUTNVb3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758554715; x=1790090715;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Flvci69kLy4oqGvHOPqNh+K684ly9/dXY4U3t7DwwMU=;
+  b=muUTNVb30g6aW4BpVAVs8HK+09JVlruGwIGGn3hJg0ofwAx19gOZBNnh
+   a9ZI9ShBQzGWgbRNrqPR4c8/mh/4aLM7+TJX2wefIMfDQCg0Owu69OpH9
+   YCvtLejZ5Y4A52s1e/kdIsjXYX9LCGa87Zz0PB2a+ZjzSH2hMyhd7a1jS
+   mkndqvbyKxL/T4D4UY64KnGue8T+aJMLHEKDzPh0WUPhFwsPEuu1TaYlz
+   g+d1HzYJPXDbNuHedE9o+xp8nhZMzJV4YAPb8tw3VT76xV7Zj01rvgs4h
+   erh2K1iEa6HVwcaBaTpbgX5ivFXC5Cx7RQ2WC5QpLxqqfwP1okxW+i6rB
+   w==;
+X-CSE-ConnectionGUID: HJ+naVwXQECX+9yh2zuCXA==
+X-CSE-MsgGUID: 8bCDjTPfQca4YnLYmBP64A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11561"; a="63449105"
+X-IronPort-AV: E=Sophos;i="6.18,285,1751266800"; 
+   d="scan'208";a="63449105"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2025 08:25:14 -0700
+X-CSE-ConnectionGUID: jyBQzMPORuS+GaJcFoNtFQ==
+X-CSE-MsgGUID: UqzxoVg3QaWAGMTWMGPggg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,285,1751266800"; 
+   d="scan'208";a="207241918"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2025 08:25:14 -0700
+Date: Mon, 22 Sep 2025 08:25:08 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: Andi Kleen <andi@firstfloor.org>
+Cc: acme@kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] tools perf build: Support BUILD_NONDISTRO on OpenSUSE
+ Tumbleweed
+Message-ID: <aNFqVAO6Wy2IDEAt@tassilo>
+References: <20250905183832.3011694-1-andi@firstfloor.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250905183832.3011694-1-andi@firstfloor.org>
 
-On Tue, 09 Sep 2025 12:02:50 +0900, Koichi Okuno wrote:
-> This adds a new dynamic PMU to the Perf Events framework to program and
-> control the Uncore PMUs in Fujitsu chips.
+On Fri, Sep 05, 2025 at 11:38:32AM -0700, Andi Kleen wrote:
+> My Tumbleweed system needs -lzstd -lsframe to build -lbfd
+> for BUILD_NONDISTRO to get a sane BFD based setup.
+> Add probing for that case.
 > 
-> This driver exports formatting and event information to sysfs so it can
-> be used by the perf user space tools with the syntaxes:
+> The previously posted build fixes are also needed.
 > 
-> perf stat -e pci_iod0_pci0/ea-pci/ ls
-> perf stat -e pci_iod0_pci0/event=0x80/ ls
-> perf stat -e mac_iod0_mac0_ch0/ea-mac/ ls
-> perf stat -e mac_iod0_mac0_ch0/event=0x80/ ls
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+
+Patch still needs to be merged.
+
+Thanks,
+
+-Andi
+
+> ---
+>  tools/build/Makefile.feature |  4 +++-
+>  tools/build/feature/Makefile | 24 ++++++++++++++++++------
+>  tools/perf/Makefile.config   | 22 +++++++++++++++-------
+>  3 files changed, 36 insertions(+), 14 deletions(-)
 > 
-> [...]
-
-Applied to will (for-next/perf), thanks!
-
-[1/1] perf: Fujitsu: Add the Uncore PMU driver
-      https://git.kernel.org/will/c/bad11557eed2
-
-Cheers,
--- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+> index 649c5ab8e8f2..46bdb9f8ba7f 100644
+> --- a/tools/build/Makefile.feature
+> +++ b/tools/build/Makefile.feature
+> @@ -120,6 +120,7 @@ FEATURE_TESTS_EXTRA :=                  \
+>           libcapstone                    \
+>           libbfd-liberty                 \
+>           libbfd-liberty-z               \
+> +         libbfd-liberty-z-zstd-sframe   \
+>           libopencsd                     \
+>           cxx                            \
+>           llvm                           \
+> @@ -159,7 +160,8 @@ FEATURE_DISPLAY ?=              \
+>  # Declare group members of a feature to display the logical OR of the detection
+>  # result instead of each member result.
+>  #
+> -FEATURE_GROUP_MEMBERS-libbfd = libbfd-liberty libbfd-liberty-z
+> +FEATURE_GROUP_MEMBERS-libbfd = libbfd-liberty libbfd-liberty-z \
+> +			       libbfd-liberty-z-zstd-sframe
+>  
+>  #
+>  # Declare list of feature dependency packages that provide pkg-config files.
+> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> index b41a42818d8a..7fd30cbeefb0 100644
+> --- a/tools/build/feature/Makefile
+> +++ b/tools/build/feature/Makefile
+> @@ -20,6 +20,7 @@ FILES=                                          \
+>           test-reallocarray.bin			\
+>           test-libbfd-liberty.bin                \
+>           test-libbfd-liberty-z.bin              \
+> +         test-libbfd-liberty-z-zstd-sframe.bin  \
+>           test-cplus-demangle.bin                \
+>           test-cxa-demangle.bin                  \
+>           test-libcap.bin			\
+> @@ -118,7 +119,7 @@ __BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.cpp,$(
+>  ###############################
+>  
+>  $(OUTPUT)test-all.bin:
+> -	$(BUILD_ALL) || $(BUILD_ALL) -lopcodes -liberty
+> +	$(BUILD_ALL) || $(BUILD_ALL) -lopcodes -liberty || $(BUILD_ALL) -lopcodes -liberty -lz -lzstd -lsframe
+>  
+>  $(OUTPUT)test-hello.bin:
+>  	$(BUILD)
+> @@ -278,15 +279,22 @@ $(OUTPUT)test-libbfd.bin:
+>  	$(BUILD_BFD)
+>  
+>  $(OUTPUT)test-libbfd-buildid.bin:
+> -	$(BUILD_BFD) || $(BUILD_BFD) -liberty || $(BUILD_BFD) -liberty -lz
+> +	$(BUILD_BFD) || \
+> +	$(BUILD_BFD) -liberty || \
+> +	$(BUILD_BFD) -liberty -lz || \
+> +	$(BUILD_BFD) -liberty -lz -lzstd -sframe
+>  
+>  $(OUTPUT)test-disassembler-four-args.bin:
+> -	$(BUILD_BFD) -lopcodes || $(BUILD_BFD) -lopcodes -liberty || \
+> -	$(BUILD_BFD) -lopcodes -liberty -lz
+> +	$(BUILD_BFD) -lopcodes || \
+> +	$(BUILD_BFD) -lopcodes -liberty || \
+> +	$(BUILD_BFD) -lopcodes -liberty -lz || \
+> +	$(BUILD_BFD) -lopcodes -liberty -lz -lzstd -lsframe
+>  
+>  $(OUTPUT)test-disassembler-init-styled.bin:
+> -	$(BUILD_BFD) -lopcodes || $(BUILD_BFD) -lopcodes -liberty || \
+> -	$(BUILD_BFD) -lopcodes -liberty -lz
+> +	$(BUILD_BFD) -lopcodes || \
+> +	$(BUILD_BFD) -lopcodes -liberty || \
+> +	$(BUILD_BFD) -lopcodes -liberty -lz || \
+> +	$(BUILD_BFD) -lopcodes -liberty -lz -lzstd -lsframe
+>  
+>  $(OUTPUT)test-reallocarray.bin:
+>  	$(BUILD)
+> @@ -297,6 +305,10 @@ $(OUTPUT)test-libbfd-liberty.bin:
+>  $(OUTPUT)test-libbfd-liberty-z.bin:
+>  	$(CC) $(CFLAGS) -Wall -Werror -o $@ test-libbfd.c -DPACKAGE='"perf"' $(LDFLAGS) -lbfd -ldl -liberty -lz
+>  
+> +$(OUTPUT)test-libbfd-liberty-z-zstd-sframe.bin:
+> +	$(CC) $(CFLAGS) -Wall -Werror -o $@ test-libbfd.c -DPACKAGE='"perf"' $(LDFLAGS) -lbfd -ldl -liberty -lz \
+> +		-lzstd -lsframe
+> +
+>  $(OUTPUT)test-cplus-demangle.bin:
+>  	$(BUILD) -liberty
+>  
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 5a5832ee7b53..53864a505cfa 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -923,23 +923,31 @@ ifdef BUILD_NONDISTRO
+>      EXTLIBS += -lbfd -lopcodes
+>    else
+>      # we are on a system that requires -liberty and (maybe) -lz
+> +    # and possibly sframe and zstd
+>      # to link against -lbfd; test each case individually here
+>  
+>      # call all detections now so we get correct
+>      # status in VF output
+>      $(call feature_check,libbfd-liberty)
+>      $(call feature_check,libbfd-liberty-z)
+> +    $(call feature_check,libbfd-liberty-z-zstd-sframe)
+>  
+> -    ifeq ($(feature-libbfd-liberty), 1)
+> +    ifeq ($(feature-libbfd-liberty),$(feature-libbfd-liberty-z),1)
+>        EXTLIBS += -lbfd -lopcodes -liberty
+>        FEATURE_CHECK_LDFLAGS-disassembler-four-args += -liberty -ldl
+>        FEATURE_CHECK_LDFLAGS-disassembler-init-styled += -liberty -ldl
+> -    else
+> -      ifeq ($(feature-libbfd-liberty-z), 1)
+> -        EXTLIBS += -lbfd -lopcodes -liberty -lz
+> -        FEATURE_CHECK_LDFLAGS-disassembler-four-args += -liberty -lz -ldl
+> -        FEATURE_CHECK_LDFLAGS-disassembler-init-styled += -liberty -lz -ldl
+> -      endif
+> +    endif
+> +    ifeq ($(feature-libbfd-liberty-z),1)
+> +      EXTLIBS += -lbfd -lopcodes -liberty -lz
+> +      FEATURE_CHECK_LDFLAGS-disassembler-four-args += -liberty -lz -ldl
+> +      FEATURE_CHECK_LDFLAGS-disassembler-init-styled += -liberty -lz -ldl
+> +    endif
+> +    ifeq ($(feature-libbfd-liberty-z-zstd-sframe),1)
+> +      EXTLIBS += -lbfd -lopcodes -liberty -lz -lzstd -lsframe
+> +      FEATURE_CHECK_LDFLAGS-disassembler-four-args += \
+> +	      -liberty -lz -lzstd -lsframe -ldl
+> +      FEATURE_CHECK_LDFLAGS-disassembler-init-styled += \
+> +	      -liberty -lz -lzstd -lsframe -ldl
+>      endif
+>      $(call feature_check,disassembler-four-args)
+>      $(call feature_check,disassembler-init-styled)
+> -- 
+> 2.51.0
+> 
