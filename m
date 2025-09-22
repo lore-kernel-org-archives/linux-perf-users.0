@@ -1,212 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A155B2E1C69
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Sep 2025 15:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D061318120
+	for <linux-perf-users@vger.kernel.org>; Mon, 22 Sep 2025 18:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758554716; cv=none; b=beZzPsBfPDwx26Y8aFjANub5Zix6WVgVDsS0tXWIPFat+kZEX3NAUq8eDPmHAD7nWXJHHLhEE5C0DJqqD7DUeqY6wZmxnWv/+ZamGgbl4vA51eJO4xoDq3rPOhE7EpE+tY2PMHUGRXr0AXRf42/mdbi1HNOdwmvwX/Yry6/LEM0=
+	t=1758564542; cv=none; b=k+JKk9z0K1ub2fnpQbo0amKno3wbgfijrgTfGWPBPHzAoIzRHJ4ubzkDX5TrWDdC6GS46qcr7EHUcNn0kiAtdLEBAdeCTiFbw9qz5N7rCC8yFH3rTsXi4JYakAYuMGhhDprB2p7GYHf2npkYqwOhaRRnLdVptIfF7gctSoLhG74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758554716; c=relaxed/simple;
-	bh=Flvci69kLy4oqGvHOPqNh+K684ly9/dXY4U3t7DwwMU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cB3E5SmX206e57m2vh9V/0iiWUNLmrPdWgubFrUUmaBGU+U+MtSGtQ8YRoKk2PbhVbn888lI8+gZpp9AvjB2LffbkdoIH/IVi5H4anb+LRzcURcNACySYQaX6KF1ptOOietjyF0JYY4dZSpwAsfQKWoqguBLVJAm3MwfvFgcvHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=muUTNVb3; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1758564542; c=relaxed/simple;
+	bh=ClvKFZ/b7716ndh5rkOR1V+bcY01pXI7j9WIQX5fb6I=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=K4J2POJ9xbIub47/2SJPHGHaLe1LcpEjavrOgZV3h8ZG65J7tLLa+nrzE/mu+VMqchN/EULfA8geD9rXhE3N/wdMf0BL/XRcevZnARVJApsW6uTTay6EyGNVDKizZ8d2ZnbM7Wqm3ZgjL/+y55UJ+MmhrDzyzPfEQQQhySXU5dY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IxJql1Ig; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="muUTNVb3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758554715; x=1790090715;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Flvci69kLy4oqGvHOPqNh+K684ly9/dXY4U3t7DwwMU=;
-  b=muUTNVb30g6aW4BpVAVs8HK+09JVlruGwIGGn3hJg0ofwAx19gOZBNnh
-   a9ZI9ShBQzGWgbRNrqPR4c8/mh/4aLM7+TJX2wefIMfDQCg0Owu69OpH9
-   YCvtLejZ5Y4A52s1e/kdIsjXYX9LCGa87Zz0PB2a+ZjzSH2hMyhd7a1jS
-   mkndqvbyKxL/T4D4UY64KnGue8T+aJMLHEKDzPh0WUPhFwsPEuu1TaYlz
-   g+d1HzYJPXDbNuHedE9o+xp8nhZMzJV4YAPb8tw3VT76xV7Zj01rvgs4h
-   erh2K1iEa6HVwcaBaTpbgX5ivFXC5Cx7RQ2WC5QpLxqqfwP1okxW+i6rB
-   w==;
-X-CSE-ConnectionGUID: HJ+naVwXQECX+9yh2zuCXA==
-X-CSE-MsgGUID: 8bCDjTPfQca4YnLYmBP64A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11561"; a="63449105"
-X-IronPort-AV: E=Sophos;i="6.18,285,1751266800"; 
-   d="scan'208";a="63449105"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2025 08:25:14 -0700
-X-CSE-ConnectionGUID: jyBQzMPORuS+GaJcFoNtFQ==
-X-CSE-MsgGUID: UqzxoVg3QaWAGMTWMGPggg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,285,1751266800"; 
-   d="scan'208";a="207241918"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2025 08:25:14 -0700
-Date: Mon, 22 Sep 2025 08:25:08 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: Andi Kleen <andi@firstfloor.org>
-Cc: acme@kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] tools perf build: Support BUILD_NONDISTRO on OpenSUSE
- Tumbleweed
-Message-ID: <aNFqVAO6Wy2IDEAt@tassilo>
-References: <20250905183832.3011694-1-andi@firstfloor.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IxJql1Ig"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-278bfae33beso13013815ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 Sep 2025 11:09:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758564541; x=1759169341; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ToEoYspZoDukL5w/NejXRw07/Byo+3irLVr2SZ9SWds=;
+        b=IxJql1Ig5JyaUkC4cripVkz9kEZCY4szO/xE4hRd0ltfyIKUXbdyfXwGZFwFbdws6R
+         1LGdZiTvOXpFKg47Mfk81js4OCc9O+XaMWsfsh33bsymUqy7EmZGNbwF9WMK/cpyUjUX
+         9fDhsH2YNVHrIgCO7ib8wvPq+EH3qzJxWVYwkcfabtNXLiMXgZNMeAZRfhLIiAVTar7P
+         TrbO+R89tcOKHvKjfEH5U2uDA7HU1cU9tJzM0tEvBO9CKvxXOtKRYopl8Al9V7YdmyXQ
+         tbleZ/FrvBxnpErYMMxMDOSUeLH7eOaIDEXUH9GScijb9MWWO3Gd60lbhgDP5gVQXXes
+         +xew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758564541; x=1759169341;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ToEoYspZoDukL5w/NejXRw07/Byo+3irLVr2SZ9SWds=;
+        b=w9+rU9GV4LbjyKeclLAp12N+iUPhZ0mAxDRBl6NHNdMjgdGe1Yn9FjNYd2olLrIlAq
+         z+rzMoxTRRFi6uIxoqDdU0NyB1F3HhBLHZpjn3fAPWHgxFzxJ5GtznTsk3f52cZ0BxAP
+         JL8uE0OnqIpm2imSYW2xiAkVLxxE19+F95Lw8k6hJAun/Se6KoWIRff7RCKItUMTiuDF
+         vTvakShbSBtWeenszxn34Gdlo3m55gTpPak+wtO+7ZcqgKGDq8V5tdIuyZOaTxgkgJco
+         XiMokjjDKCyF6ALE6F2sSKmSvCoXD3GYbXgNPHdqcdszg/BOZCm/3VMwP6SR/DIxvD6P
+         E3gA==
+X-Forwarded-Encrypted: i=1; AJvYcCVsqB8J+nReWC4X26uk5o8ZGyChOPnLAhH/Di5S6Y/WXTmRh7Z9e6GjlkQndsBjDzeRApsFc2Z6lHiOb+DdsXK7@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmJdDUezoc9ujMKByUWfK3/sq6J4dgKIniUsMPl7VbOrWt+lPQ
+	qJYuNk+t2JF1Mv5u+b4c2wIsLTM6wrtB/Ot3RMF6+BYPaRT7dgDWQ/la
+X-Gm-Gg: ASbGncvQsV0zqPqNNB0pfqpCR+i1suzQZP+H7x9bY1u51VDctLFcZW5uzHKatin22mi
+	e8Xm107oIVeIZQhBOd5KYEWFpXfohb1Z0AN3NFq2mF/GeIRilnu9AlQA2PUbymw/drmWsQgEdBm
+	vAhJmquUx7x754QfoZoxCurHv1r7y5nu3Nlwl3UTll4HJvkKmiuoQFSTdWnDWBf93ubBBAQHCTq
+	pHOug9NBh3EG51YDc5abnezpTb/VJF3Gidk4aciENWMbVJC2TC/UMrXcSS7EvwcXO6YLjL/Yumu
+	3mwcyDSiXp491ToIpGNoWSrTNBV6YGVdplwPAd4sRJC2aIT+/+fk40hLQdVPwzjWLjETd1cMG4R
+	iIhnrZVJOt4XyHh7kuOfjVh4TbrOnROGEBrM=
+X-Google-Smtp-Source: AGHT+IFZXZ1PyVy0iEuxUGNtkFvpvoD2o14jNC4/NMrkx90+TPiBtYnuHYVnqH1dcJoEet2Vv52Bww==
+X-Received: by 2002:a17:903:90c:b0:24b:164d:4e61 with SMTP id d9443c01a7336-269ba40a0d7mr185701835ad.13.1758564540683;
+        Mon, 22 Sep 2025 11:09:00 -0700 (PDT)
+Received: from ThinkPad-T490.. ([49.207.194.84])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-269802e14f1sm136155565ad.71.2025.09.22.11.08.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Sep 2025 11:09:00 -0700 (PDT)
+From: Faisal Bukhari <faisalbukhari523@gmail.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	thomas.falcon@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf parse-events: Fix evsel allocation failure
+Date: Mon, 22 Sep 2025 23:38:34 +0530
+Message-ID: <20250922180834.1744399-1-faisalbukhari523@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250905183832.3011694-1-andi@firstfloor.org>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Sep 05, 2025 at 11:38:32AM -0700, Andi Kleen wrote:
-> My Tumbleweed system needs -lzstd -lsframe to build -lbfd
-> for BUILD_NONDISTRO to get a sane BFD based setup.
-> Add probing for that case.
-> 
-> The previously posted build fixes are also needed.
-> 
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+If evsel__new_idx() returns NULL, the function currently jumps 
+to label 'out_err'.
+Here, references to `cpus` and `pmu_cpus` are dropped.
+Also, resources held by evsel->name and evsel->metric_id are freed.
+But if evsel__new_idx() returns NULL, 
+it can lead to NULL pointer dereference.
 
-Patch still needs to be merged.
+Signed-off-by: Faisal Bukhari <faisalbukhari523@gmail.com>
+---
+ tools/perf/util/parse-events.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Thanks,
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 452f12191f6e..02e7ff94a2d2 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -286,8 +286,11 @@ __add_event(struct list_head *list, int *idx,
+ 		event_attr_init(attr);
+ 
+ 	evsel = evsel__new_idx(attr, *idx);
+-	if (!evsel)
+-		goto out_err;
++	if (!evsel) {
++		perf_cpu_map__put(cpus);
++		perf_cpu_map__put(pmu_cpus);
++		return NULL;
++	}
+ 
+ 	if (name) {
+ 		evsel->name = strdup(name);
+-- 
+2.43.0
 
--Andi
-
-> ---
->  tools/build/Makefile.feature |  4 +++-
->  tools/build/feature/Makefile | 24 ++++++++++++++++++------
->  tools/perf/Makefile.config   | 22 +++++++++++++++-------
->  3 files changed, 36 insertions(+), 14 deletions(-)
-> 
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index 649c5ab8e8f2..46bdb9f8ba7f 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -120,6 +120,7 @@ FEATURE_TESTS_EXTRA :=                  \
->           libcapstone                    \
->           libbfd-liberty                 \
->           libbfd-liberty-z               \
-> +         libbfd-liberty-z-zstd-sframe   \
->           libopencsd                     \
->           cxx                            \
->           llvm                           \
-> @@ -159,7 +160,8 @@ FEATURE_DISPLAY ?=              \
->  # Declare group members of a feature to display the logical OR of the detection
->  # result instead of each member result.
->  #
-> -FEATURE_GROUP_MEMBERS-libbfd = libbfd-liberty libbfd-liberty-z
-> +FEATURE_GROUP_MEMBERS-libbfd = libbfd-liberty libbfd-liberty-z \
-> +			       libbfd-liberty-z-zstd-sframe
->  
->  #
->  # Declare list of feature dependency packages that provide pkg-config files.
-> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index b41a42818d8a..7fd30cbeefb0 100644
-> --- a/tools/build/feature/Makefile
-> +++ b/tools/build/feature/Makefile
-> @@ -20,6 +20,7 @@ FILES=                                          \
->           test-reallocarray.bin			\
->           test-libbfd-liberty.bin                \
->           test-libbfd-liberty-z.bin              \
-> +         test-libbfd-liberty-z-zstd-sframe.bin  \
->           test-cplus-demangle.bin                \
->           test-cxa-demangle.bin                  \
->           test-libcap.bin			\
-> @@ -118,7 +119,7 @@ __BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.cpp,$(
->  ###############################
->  
->  $(OUTPUT)test-all.bin:
-> -	$(BUILD_ALL) || $(BUILD_ALL) -lopcodes -liberty
-> +	$(BUILD_ALL) || $(BUILD_ALL) -lopcodes -liberty || $(BUILD_ALL) -lopcodes -liberty -lz -lzstd -lsframe
->  
->  $(OUTPUT)test-hello.bin:
->  	$(BUILD)
-> @@ -278,15 +279,22 @@ $(OUTPUT)test-libbfd.bin:
->  	$(BUILD_BFD)
->  
->  $(OUTPUT)test-libbfd-buildid.bin:
-> -	$(BUILD_BFD) || $(BUILD_BFD) -liberty || $(BUILD_BFD) -liberty -lz
-> +	$(BUILD_BFD) || \
-> +	$(BUILD_BFD) -liberty || \
-> +	$(BUILD_BFD) -liberty -lz || \
-> +	$(BUILD_BFD) -liberty -lz -lzstd -sframe
->  
->  $(OUTPUT)test-disassembler-four-args.bin:
-> -	$(BUILD_BFD) -lopcodes || $(BUILD_BFD) -lopcodes -liberty || \
-> -	$(BUILD_BFD) -lopcodes -liberty -lz
-> +	$(BUILD_BFD) -lopcodes || \
-> +	$(BUILD_BFD) -lopcodes -liberty || \
-> +	$(BUILD_BFD) -lopcodes -liberty -lz || \
-> +	$(BUILD_BFD) -lopcodes -liberty -lz -lzstd -lsframe
->  
->  $(OUTPUT)test-disassembler-init-styled.bin:
-> -	$(BUILD_BFD) -lopcodes || $(BUILD_BFD) -lopcodes -liberty || \
-> -	$(BUILD_BFD) -lopcodes -liberty -lz
-> +	$(BUILD_BFD) -lopcodes || \
-> +	$(BUILD_BFD) -lopcodes -liberty || \
-> +	$(BUILD_BFD) -lopcodes -liberty -lz || \
-> +	$(BUILD_BFD) -lopcodes -liberty -lz -lzstd -lsframe
->  
->  $(OUTPUT)test-reallocarray.bin:
->  	$(BUILD)
-> @@ -297,6 +305,10 @@ $(OUTPUT)test-libbfd-liberty.bin:
->  $(OUTPUT)test-libbfd-liberty-z.bin:
->  	$(CC) $(CFLAGS) -Wall -Werror -o $@ test-libbfd.c -DPACKAGE='"perf"' $(LDFLAGS) -lbfd -ldl -liberty -lz
->  
-> +$(OUTPUT)test-libbfd-liberty-z-zstd-sframe.bin:
-> +	$(CC) $(CFLAGS) -Wall -Werror -o $@ test-libbfd.c -DPACKAGE='"perf"' $(LDFLAGS) -lbfd -ldl -liberty -lz \
-> +		-lzstd -lsframe
-> +
->  $(OUTPUT)test-cplus-demangle.bin:
->  	$(BUILD) -liberty
->  
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 5a5832ee7b53..53864a505cfa 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -923,23 +923,31 @@ ifdef BUILD_NONDISTRO
->      EXTLIBS += -lbfd -lopcodes
->    else
->      # we are on a system that requires -liberty and (maybe) -lz
-> +    # and possibly sframe and zstd
->      # to link against -lbfd; test each case individually here
->  
->      # call all detections now so we get correct
->      # status in VF output
->      $(call feature_check,libbfd-liberty)
->      $(call feature_check,libbfd-liberty-z)
-> +    $(call feature_check,libbfd-liberty-z-zstd-sframe)
->  
-> -    ifeq ($(feature-libbfd-liberty), 1)
-> +    ifeq ($(feature-libbfd-liberty),$(feature-libbfd-liberty-z),1)
->        EXTLIBS += -lbfd -lopcodes -liberty
->        FEATURE_CHECK_LDFLAGS-disassembler-four-args += -liberty -ldl
->        FEATURE_CHECK_LDFLAGS-disassembler-init-styled += -liberty -ldl
-> -    else
-> -      ifeq ($(feature-libbfd-liberty-z), 1)
-> -        EXTLIBS += -lbfd -lopcodes -liberty -lz
-> -        FEATURE_CHECK_LDFLAGS-disassembler-four-args += -liberty -lz -ldl
-> -        FEATURE_CHECK_LDFLAGS-disassembler-init-styled += -liberty -lz -ldl
-> -      endif
-> +    endif
-> +    ifeq ($(feature-libbfd-liberty-z),1)
-> +      EXTLIBS += -lbfd -lopcodes -liberty -lz
-> +      FEATURE_CHECK_LDFLAGS-disassembler-four-args += -liberty -lz -ldl
-> +      FEATURE_CHECK_LDFLAGS-disassembler-init-styled += -liberty -lz -ldl
-> +    endif
-> +    ifeq ($(feature-libbfd-liberty-z-zstd-sframe),1)
-> +      EXTLIBS += -lbfd -lopcodes -liberty -lz -lzstd -lsframe
-> +      FEATURE_CHECK_LDFLAGS-disassembler-four-args += \
-> +	      -liberty -lz -lzstd -lsframe -ldl
-> +      FEATURE_CHECK_LDFLAGS-disassembler-init-styled += \
-> +	      -liberty -lz -lzstd -lsframe -ldl
->      endif
->      $(call feature_check,disassembler-four-args)
->      $(call feature_check,disassembler-init-styled)
-> -- 
-> 2.51.0
-> 
