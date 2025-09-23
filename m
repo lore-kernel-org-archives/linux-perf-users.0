@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807D71386B4;
-	Tue, 23 Sep 2025 01:18:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D591D798E;
+	Tue, 23 Sep 2025 01:18:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758590284; cv=none; b=aRoaD9vGrXzgYrn8u8N/Ud8BBrXRHMT0T24ga4g/Cf5DWMQPQbx+EFgaVOTRD+WLDTGSeurBOOKAHmdst4HS+ijgoQVW2B64m51jZPwy6bjixQt6xYxIpmwv+pkf34XqNd44l44WP/9ufvzwxP5NFP6nyBq9zc+mpAvI29jNCkA=
+	t=1758590297; cv=none; b=GNi5ZQ79DYNr6q6kmrOLIQHuoC1bfhRABPtjWL1b6aoLhawVAJOin3omCAEM7wx2yzy+oVVB/q7GxevNJQ+Jxu7l24bG/30AP/RdWwcsxrPzI5XV2kVuRCptK1k9nfmyEHT9hCcs4ZHTj4XWH4D9GGWswwf6F0DAtTWb+RQz86s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758590284; c=relaxed/simple;
-	bh=V1sZe++I+DX8D0azwJCk2OhQOYC8K8WNEARBLQqqCJg=;
+	s=arc-20240116; t=1758590297; c=relaxed/simple;
+	bh=yWrgfH6o6tBojpygb/3hwUZPMazgwgCEKyJzb90YtAg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JhcvcQe49mf4FIWAflyM/bT6fCKlVZMaVMQ20/ptF/3I9VX6a97szCFgiMmL8n8whMVNrhVq5whRUwFQ5jlOF1J6/lx98oSry4RvGac8jdoHab0aRDWgd+1TsmfYxuJWa9EzjyzQxQsZUMlfAjNxt9J0XYFgWCXZYjHqYfvj7qE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BrNhvTiq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=lpoyQcRAMFo/Qu/zvHQVOshE5m7Cye9rFscJJlgBR6MAfAgF9k6sRtLembTkedTuyhALugWuxkZH7UJhphf2I78V80q66SLc5k+UkfGHlJuIGadYO/YdZAIUb0AovrFcT8x9V8g7sbkcHQ3ylCnrGsifWn0zwRbLtoWoJh6QCS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UKZGvtEC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BrNhvTiq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B92D2C4CEF0;
-	Tue, 23 Sep 2025 01:18:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UKZGvtEC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 510D4C4CEF0;
+	Tue, 23 Sep 2025 01:18:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758590284;
-	bh=V1sZe++I+DX8D0azwJCk2OhQOYC8K8WNEARBLQqqCJg=;
+	s=k20201202; t=1758590296;
+	bh=yWrgfH6o6tBojpygb/3hwUZPMazgwgCEKyJzb90YtAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BrNhvTiq7nszs8awxzt7Kc4KDsbekneTJWNu/b/HUZQk8jY7O00KP0GvLxGFLRt9i
-	 ++V/aDSgJIf1+VM1/2m0OjQjc7RCFgYWxe92gaGSwahouMwoYJEaX3zJH3kFPJhfkG
-	 nC9ZbcnSZpuS9MOhTWFpONyF1gCwsCVAik6GMnnwREeKbWRe+Hcx++Eq0NIfjuZRGx
-	 71aeuD0AwzfGqGmqazvvz4GRIJ79vGQdTuEeSuxSHC7SatogUfWeYdFg6yKsIqegJD
-	 3J/kU7m84EPxWskNd1jp1Vuw9lwnqdylyIqgV6L76+XAHCuyYhW8NBCyVoxq7//nEp
-	 +TS8FsGIEYXWQ==
+	b=UKZGvtECgMz333UnPKEQKvTJc3iuycFS/3PpSOaVp/zNr60F7bywnA4nIdc2YmrCa
+	 5LULhTFJsVfuuvGwyKZfN8hulyl3gwr4/NSTdoWf/W2aJTiSEivCs+ViQCkXspF2w1
+	 8bjmqx7i/QLOjJQO31bA1HTzfi768lMz8CafthFsiWW7ytzUSXTOypfocXnsJFF1OC
+	 ErXxERsnYge+aWE+K5Pox+Tu90aFIsyKQMYygK3pj3WTZb14z7XbcdJ65zqf2dvshh
+	 eqIM6UP+aogJTLxY6P7whl1DCmAgJeoPtgRHvvgmhJTSMRpw6KkjsUEroF8dTDWj4A
+	 l/z+ns0CCVCag==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -44,9 +44,9 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v5 7/8] selftests: tracing: Add syntax testcase for wprobe
-Date: Tue, 23 Sep 2025 10:17:58 +0900
-Message-ID: <175859027842.374439.6402700780945714048.stgit@devnote2>
+Subject: [PATCH v5 8/8] selftests: ftrace: Add wprobe trigger testcase
+Date: Tue, 23 Sep 2025 10:18:09 +0900
+Message-ID: <175859028948.374439.13079482023691271097.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <175859019940.374439.7398451124225791618.stgit@devnote2>
 References: <175859019940.374439.7398451124225791618.stgit@devnote2>
@@ -62,43 +62,84 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Add "wprobe_syntax_errors.tc" testcase for testing syntax errors
-of the watch probe events.
+Add a testcase for checking wprobe trigger. This sets set_wprobe and
+clear_wprobe triggers on fprobe events to watch dentry access.
+So this depends on both wprobe and fprobe.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
+ Changes in v5:
+  - Enable CONFIG_WPROBE_TRIGGERS in the config for ftrace test.
  Changes in v3:
-  - Fix to use "wprobe" prefix for detecting error log.
-  - Fix an error place with wrong offset.
+  - Newly added.
 ---
- .../test.d/dynevent/wprobes_syntax_errors.tc       |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
+ tools/testing/selftests/ftrace/config              |    1 
+ .../ftrace/test.d/trigger/trigger-wprobe.tc        |   48 ++++++++++++++++++++
+ 2 files changed, 49 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
 
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
+diff --git a/tools/testing/selftests/ftrace/config b/tools/testing/selftests/ftrace/config
+index d2f503722020..ecdee77f360f 100644
+--- a/tools/testing/selftests/ftrace/config
++++ b/tools/testing/selftests/ftrace/config
+@@ -28,3 +28,4 @@ CONFIG_TRACER_SNAPSHOT=y
+ CONFIG_UPROBES=y
+ CONFIG_UPROBE_EVENTS=y
+ CONFIG_WPROBE_EVENTS=y
++CONFIG_WPROBE_TRIGGERS=y
+diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
 new file mode 100644
-index 000000000000..56ac579d60ae
+index 000000000000..a012f7b92405
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
-@@ -0,0 +1,20 @@
++++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+@@ -0,0 +1,48 @@
 +#!/bin/sh
 +# SPDX-License-Identifier: GPL-2.0
-+# description: Watch probe event parser error log check
-+# requires: dynamic_events "w[:[<group>/][<event>]] [r|w|rw]@<addr>[:<len>]":README
++# description: event trigger - test wprobe trigger
++# requires: dynamic_events "w[:[<group>/][<event>]] [r|w|rw]@<addr>[:<len>]":README events/sched/sched_process_fork/trigger
 +
-+check_error() { # command-with-error-pos-by-^
-+    ftrace_errlog_check 'wprobe' "$1" 'dynamic_events'
-+}
++echo 0 > tracing_on
 +
-+check_error 'w ^symbol'			# BAD_ACCESS_FMT
-+check_error 'w ^a@symbol'		# BAD_ACCESS_TYPE
-+check_error 'w w@^symbol'		# BAD_ACCESS_ADDR
-+check_error 'w w@jiffies^+offset'	# BAD_ACCESS_ADDR
-+check_error 'w w@jiffies:^100'		# BAD_ACCESS_LEN
-+check_error 'w w@jiffies ^$arg1'	# BAD_VAR
-+check_error 'w w@jiffies ^$retval'	# BAD_VAR
-+check_error 'w w@jiffies ^$stack'	# BAD_VAR
-+check_error 'w w@jiffies ^%ax'		# BAD_VAR
++:;: "Add a wprobe event used by trigger" ;:
++echo 'w:watch rw@0:8 address=$addr value=+0($addr)' > dynamic_events
++
++:;: "Add events for triggering wprobe" ;:
++echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
++echo 'f:dentry_kill __dentry_kill dentry=$arg1' >> dynamic_events
++
++:;: "Add wprobe triggers" ;:
++echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
++echo 'clear_wprobe:watch:dentry' >> events/fprobes/dentry_kill/trigger
++cat events/fprobes/truncate/trigger | grep ^set_wprobe
++cat events/fprobes/dentry_kill/trigger | grep ^clear_wprobe
++
++:;: "Ensure wprobe is still disabled" ;:
++cat events/wprobes/watch/enable | grep 0
++
++:;: "Enable events for triggers" ;:
++echo 1 >> events/fprobes/truncate/enable
++echo 1 >> events/fprobes/dentry_kill/enable
++
++:;: "Start test workload" ;:
++echo 1 >> tracing_on
++
++echo aaa > /tmp/hoge
++echo bbb > /tmp/hoge
++echo ccc > /tmp/hoge
++rm /tmp/hoge
++
++:;: "Check trace results" ;:
++cat trace | grep watch
++
++:;: "Ensure wprobe becomes disabled again" ;:
++cat events/wprobes/watch/enable | grep 0
++
++:;: "Remove wprobe triggers" ;:
++echo '!set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
++echo '!clear_wprobe:watch' >> events/fprobes/dentry_kill/trigger
++! grep ^set_wprobe events/fprobes/truncate/trigger
++! grep ^clear_wprobe events/fprobes/dentry_kill/trigger
 +
 +exit 0
+\ No newline at end of file
 
