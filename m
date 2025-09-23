@@ -1,505 +1,127 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4140F264A92
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Sep 2025 15:53:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE17728032D
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Sep 2025 17:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758642788; cv=none; b=VZSs6ug2h+9NWZz3sdWprZK8HoE52AKiRTnS2sDGPaRNedzciiEoVHs6Nn7DrgTFXCDGlDpSF1vgt2ctwbFG7jhhZUeaS9xGJacFTXenP8QZ/sce66X+eEZactWuhmnpyvvNtbzmHc5q35YFDG2g1yK6KN5gM0+hJq6sw/8Nt1Q=
+	t=1758649409; cv=none; b=XmprY2UwBAYSdQHYM0H64cenB1gywTdb8u5Ngys/vK2sp0/kPM6luYMF61TU0YfGNwX9++sGCmt+ceVV7+V9k4c2V3VybSxf0OXFXuEjy/QpFCnxhwpnsEbV4PAYpk/C4Gu/cQrYat/b+bUfuUAdOnjJ7bWB6CvAk40qhCD+f2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758642788; c=relaxed/simple;
-	bh=z+uFfbT2+V0VN1QUBUBVU7Yf0yCZy6rUsLod9G1TZRo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=SXotARffkYtp3PbnYvVCUU/XJY9y9XOq2gbAFJd8CWA/QyfsdlzHzSGBmXRbBd5bNXjB1oD02nJg44c6GYJQa1aNiSNEIzNNZjgyQhPJpmPUdBtkZP17EjNv58tqWV98o9wVXrZSkXUDbSNWPnf2BaxEyUL+o8V6yTfmi5vCSKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OJJcSOU9; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1758649409; c=relaxed/simple;
+	bh=TBydUlaZwvjaoiWXQNjwVx4nHU3n7XPX1BEYGfUeY7U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SRqp8nwKamBMR3z6N13nPu63e3civ4UL8aZbbGN8LA3Xnw8kRcJWDWI0Ikx+t1sRURwAsBGpA0wswAKUaaYdn1TWcok6NzYhA1pKnDx3JK1NjIJY1cBhTgIoB9ShsvuCFcdNA3zeXer7z3hPtSdXohZaOwCQRKzpAHie2eh4iqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dgnwIqd5; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OJJcSOU9"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2681645b7b6so218375ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Sep 2025 08:53:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dgnwIqd5"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-3324523dfb2so2611541a91.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Sep 2025 10:43:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1758642785; x=1759247585; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s2P4DLa291UN5dMIrJwLdZEHxEo+piJsQetYJAPBjZk=;
-        b=OJJcSOU98RU4rsrPHI3eyZgynatz+5P6KZ8ax1EVUp5/iSCyyf5X/eci9Vl2YObDhp
-         27Z1IqJkUxRs2vuNsD+QXazaMot7qlk9IJntc8lLsRpqflequS7yvJYEe/d9sJyYEEmq
-         In5v13gaBf7xP9u57stnAsFwV6J0gsLCqSY0EbeZFFvhOiRnAWtr0lQL+xIDjM9UliFs
-         S2u5JmS5Sz1/HcA8b76tRu454ZsR87mwhdEaK7QjbV0DE1HknRrXmSkNcgZYxtqQkyZf
-         eb4ku7UIQmB18YxneGxnjogX/Gj6D19rwVVpzwIwCvLWR7lcPogh0fgG/okabS50Y88Z
-         wPLA==
+        d=gmail.com; s=20230601; t=1758649407; x=1759254207; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=12Psv0L7KGLemGCvbz5saQeHawW9GRBxiy9osVzP4Fc=;
+        b=dgnwIqd5tQQFOwAxJIjv5aJUCnX3QDolOWplSTEitXAZF4l5ZQaAFezo80E9sslJms
+         FGmZBDmxuGFAGJWUbTS1L4d0+eSushVx+6v2/puY1f1cRdmwFz9uruinD0vzv3uS5ind
+         eRzzufSc0blTnnqGOyOeG8eclAKOvU4WSGm+QdAe2VHohX2Af9RpNI2I0NJ4sOm1x1nr
+         ks9fDMG3U8YPZRn4gRYZbMfFJY8JMYpMIsT1khA6eEg+mE7PE6I8cVn8JL8jKBRYOdC+
+         GmUnNvuuS0CnbUD1Yc/VDLOqBtBqsP1YO2z214BABOxWmO2JWLSHxDKpUiSFDZoqWqEO
+         yYmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758642785; x=1759247585;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=s2P4DLa291UN5dMIrJwLdZEHxEo+piJsQetYJAPBjZk=;
-        b=gU4RXeoxBfCDPUFWDlGqfCaIHhC5n5uzNl7y4p9H1hBS1dAGhWzUqKVH1egCRRnNUR
-         ne1QP0FGyAnB8rw1hJ4d9b7x8zI+/Z5oFsidobNnBWyUqN/Z/tKGvgTgfaR3AWyZRKIt
-         MrVYW9LaZU77f9AD0fE1VlkL07lMhdkl6zV2vupBLunWYeyaj3tCz1m+eVAeIUESptbe
-         BFIVK9S14Kgr+i43eBdaSko+XR1DjLdh4gBMfUtcpjH4eZdBXOHj0d5vGvke5nw50QvZ
-         bEGrswhmaTAhRPpImv1fCKAnTDFGruIdD3fqOQ3KhN+74mmaIix5IQLiebGt/O5p86DH
-         FDbw==
-X-Forwarded-Encrypted: i=1; AJvYcCXniyIa5If3MchHV9ojR1hinWaKtkue7gAymjlmRdaeSq4K4bsyyCPAGNv1Md1yfQLHGUtKJpyX+DTYkwHMhHtT@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDN/wBqbDmbAGn/QN0hmw74iqYwt+wSfDnOGtype5JY2cGvvPY
-	1e68U/LtY9oWlEn60wdgIqG//+z6wIjPXIZwOInNp80fXRrNvmWiGWKdkFtNZbrOwnLoqTs0p5C
-	7Yip4OJBSrAx5CD22JUArPsXO3OAbSc2QRezIPLri
-X-Gm-Gg: ASbGncudVOGjZuFVxHv7JQLBJBhLh6AAUlU8ApArajC0e+iJY3gvytGpjTE2vSCMhhP
-	o55gA+l6ZDMjH/TnYS1uXHmiuBcfm00GFgEaimayvnHRXY8SnDtEiwnt40wQnWX6e3ie5M55alE
-	hPYVGJ55fG+MsGAdhbjPUxC7qvTd0oVjqgAWu9lcJX49KIlZvcE0sXyMaK0zufLBVZW0Q3oGojx
-	tPzL1RnE16214VN3tveauyHnuqkTuQ5SwzvBA==
-X-Google-Smtp-Source: AGHT+IG70m5QoiJJvuwAcevMWtg86TUItbecWmuxDqdihU/rHXvTVdXNsMfLpfuUdu+Ffaj4A8H5JLTcJWzV4vzsyGo=
-X-Received: by 2002:a17:902:e5c5:b0:274:506d:7fea with SMTP id
- d9443c01a7336-27ebcbcc1b2mr357055ad.5.1758642784825; Tue, 23 Sep 2025
- 08:53:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1758649407; x=1759254207;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=12Psv0L7KGLemGCvbz5saQeHawW9GRBxiy9osVzP4Fc=;
+        b=HudoBgO/3byfKs1H70DKePPV7jtQ6F7eO+pm/O4pjZUWBNhY+ERkLTF0EozcS+UolH
+         YX1mvSTY4LoJ0BBsJk+qORvDn67EKlWv6JRH3TKDeuSHPUutvxtXcsWJnXerLJlspLCw
+         oF/wAVeCOxUceWvhjweZSyzuJgpvJVf8Cu5kzYH2pknhymvp3ez8O4/FLfrvYgOII2dX
+         Gu3R5zO1p2oYkdWu3rE8fmHDI1g8cha4Mxw1o5tBOTiCnGZrg+bpDhJ+Cu+OJ7/S74+t
+         aqetkWe3E6xDTKWLvWVLLj4EJgIfuYPYo4BHyH3YXlbnBeaDw9qC4KekL4py4n9jQjHU
+         OxKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXnRG4+ip+tdGkR9ztDqNo7Uh3jZK4U6D6vTAaHrO0UsXr/rJaI8NPFK74OWt3hKFcYW4RuJyYZpSCTKDzmiI1X@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaE9ozHIZc9Impmqg5YPl1QVg4ENstSrnfYj3tFUWgJ0f2a/gS
+	Dl1jLCPJKmk3dItaAti0IvxF83yu+MStoSoBgrzW0SD2nY4lYuAc2npm
+X-Gm-Gg: ASbGncuQUxA54oAYGzRI8TCzU6SG8vEDz574s3PL9wpYeTM7x18YYIqyx2I03jxNTVp
+	hLAnjz3DU5frrGvPAJ+kQ7l/5N+l3r7VO5wSX7M0wMiIKCo/hfaf8lyGKNUVtEXTOKJlwsMydLf
+	MXdDOOsX71fESwmAJOiiHJyYMnD7Pne06xOx8Us+vkAPdkpV65Ri6ORoYeRJduO3Z7vh8Sgrv64
+	IrgKrTuRk11e6rsdFGh3QOp9TeSFvTPEgylq0Hgr3yHYHmti0AyHw+Yzos99jHsTyFvrTz3sMag
+	M5FPRS9H6NdnsSUKQC/djn3PbFdwoJsLacF2wBlKdzqSzTFjWTXe9iPuuUb+dPhGY9lkZgJgAfx
+	qQkpm4mWBdKcX7ilFwnkodgEzlNoqkc8=
+X-Google-Smtp-Source: AGHT+IGHCtQSXDsLg+/XpjGWOyQYA66vNcWGwDZNAlzZTqpJwx4fxepOvpgiWPPekyfcQ3iavGr2cA==
+X-Received: by 2002:a17:90b:4c02:b0:32e:59e7:c37f with SMTP id 98e67ed59e1d1-332a92da740mr4865746a91.12.1758649406858;
+        Tue, 23 Sep 2025 10:43:26 -0700 (PDT)
+Received: from archlinux ([205.254.163.16])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3303ffe611csm18562321a91.9.2025.09.23.10.43.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Sep 2025 10:43:26 -0700 (PDT)
+From: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	Suchit Karunakaran <suchitkarunakaran@gmail.com>
+Subject: [PATCH] perf/annotate: Use architecture-agnostic register limit
+Date: Tue, 23 Sep 2025 23:12:36 +0530
+Message-ID: <20250923174236.12372-1-suchitkarunakaran@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250923041844.400164-1-irogers@google.com> <20250923041844.400164-23-irogers@google.com>
-In-Reply-To: <20250923041844.400164-23-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 23 Sep 2025 08:52:53 -0700
-X-Gm-Features: AS18NWABI_j0UfirBS1qDjfAYkIAHiJq_Fz6ZmvM95S5kAUNEw1x-M1-JJ3_Amg
-Message-ID: <CAP-5=fUvDoyMW2pu-f4-Qoxr6RX_k2+NZ4STmeSDQRFyhvN89g@mail.gmail.com>
-Subject: Re: [PATCH v5 22/25] perf test parse-events: Remove cpu PMU requirement
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Xu Yang <xu.yang_2@nxp.com>, Thomas Falcon <thomas.falcon@intel.com>, 
-	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
-	Atish Patra <atishp@rivosinc.com>, Beeman Strong <beeman@rivosinc.com>, Leo Yan <leo.yan@arm.com>, 
-	Vince Weaver <vincent.weaver@maine.edu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 22, 2025 at 9:19=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> In the event parse string, switch "cpu" to "default_core" and then
-> rewrite this to the first core PMU name prior to parsing. This enables
-> testing with a PMU on hybrid x86 and other systems that don't use
-> "cpu" for the core PMU name. The name "default_core" is already used
-> by jevents. Update test expectations to match.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Remove the arch-specific guard around TYPE_STATE_MAX_REGS and define it
+as 32 for all architectures. The architecture that perf is built on may
+not match the architecture that produced the perf.data file, so relying
+on __powerpc__ or similar is fragile. Using 32 as a fixed upper bound is
+safe since it is greater than the previous maximum of 16.
+Add a comment to clarify that TYPE_STATE_MAX_REGS is an arch-independent
+maximum rather than a build-time choice.
 
-This introduces a test failure on Intel hybrid that I'll fix in v6.
-Previously the failing tests weren't run and the test expectation was
-that, with a PMU or without a PMU, an event would be opened on all
-PMUs - which isn't true if the PMU is specified.
+Suggested-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+---
+ tools/perf/util/annotate-data.h | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-Thanks,
-Ian
+diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+index 541fee1a5f0a..1f76885facb0 100644
+--- a/tools/perf/util/annotate-data.h
++++ b/tools/perf/util/annotate-data.h
+@@ -189,12 +189,15 @@ struct type_state_stack {
+ 	u8 kind;
+ };
+ 
+-/* FIXME: This should be arch-dependent */
+-#ifdef __powerpc__
++/*
++ * Maximum number of registers tracked in type_state.
++ *
++ * This limit must cover all supported architectures, since perf
++ * may analyze perf.data files generated on systems with a different
++ * register set. Use 32 as a safe upper bound instead of relying on
++ * build-arch specific values.
++ */
+ #define TYPE_STATE_MAX_REGS  32
+-#else
+-#define TYPE_STATE_MAX_REGS  16
+-#endif
+ 
+ /*
+  * State table to maintain type info in each register and stack location.
+-- 
+2.51.0
 
-> ---
->  tools/perf/tests/parse-events.c | 141 ++++++++++++++------------------
->  1 file changed, 63 insertions(+), 78 deletions(-)
->
-> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-eve=
-nts.c
-> index d0f1e05139ac..4f197f34621b 100644
-> --- a/tools/perf/tests/parse-events.c
-> +++ b/tools/perf/tests/parse-events.c
-> @@ -646,19 +646,22 @@ static int test__checkevent_list(struct evlist *evl=
-ist)
->  static int test__checkevent_pmu_name(struct evlist *evlist)
->  {
->         struct evsel *evsel =3D evlist__first(evlist);
-> +       struct perf_pmu *core_pmu =3D perf_pmus__find_core_pmu();
-> +       char buf[256];
->
-> -       /* cpu/config=3D1,name=3Dkrava/u */
-> +       /* default_core/config=3D1,name=3Dkrava/u */
->         TEST_ASSERT_VAL("wrong number of entries", 2 =3D=3D evlist->core.=
-nr_entries);
->         TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW =3D=3D evsel->core.at=
-tr.type);
->         TEST_ASSERT_VAL("wrong config", 1 =3D=3D evsel->core.attr.config)=
-;
->         TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "krava"));
->
-> -       /* cpu/config=3D2/u" */
-> +       /* default_core/config=3D2/u" */
->         evsel =3D evsel__next(evsel);
->         TEST_ASSERT_VAL("wrong number of entries", 2 =3D=3D evlist->core.=
-nr_entries);
->         TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW =3D=3D evsel->core.at=
-tr.type);
->         TEST_ASSERT_VAL("wrong config", 2 =3D=3D evsel->core.attr.config)=
-;
-> -       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "cpu/config=
-=3D2/u"));
-> +       snprintf(buf, sizeof(buf), "%s/config=3D2/u", core_pmu->name);
-> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, buf));
->
->         return TEST_OK;
->  }
-> @@ -667,7 +670,7 @@ static int test__checkevent_pmu_partial_time_callgrap=
-h(struct evlist *evlist)
->  {
->         struct evsel *evsel =3D evlist__first(evlist);
->
-> -       /* cpu/config=3D1,call-graph=3Dfp,time,period=3D100000/ */
-> +       /* default_core/config=3D1,call-graph=3Dfp,time,period=3D100000/ =
-*/
->         TEST_ASSERT_VAL("wrong number of entries", 2 =3D=3D evlist->core.=
-nr_entries);
->         TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW =3D=3D evsel->core.at=
-tr.type);
->         TEST_ASSERT_VAL("wrong config", 1 =3D=3D evsel->core.attr.config)=
-;
-> @@ -679,7 +682,7 @@ static int test__checkevent_pmu_partial_time_callgrap=
-h(struct evlist *evlist)
->         TEST_ASSERT_VAL("wrong callgraph",  !evsel__has_callchain(evsel))=
-;
->         TEST_ASSERT_VAL("wrong time",  !(PERF_SAMPLE_TIME & evsel->core.a=
-ttr.sample_type));
->
-> -       /* cpu/config=3D2,call-graph=3Dno,time=3D0,period=3D2000/ */
-> +       /* default_core/config=3D2,call-graph=3Dno,time=3D0,period=3D2000=
-/ */
->         evsel =3D evsel__next(evsel);
->         TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW =3D=3D evsel->core.at=
-tr.type);
->         TEST_ASSERT_VAL("wrong config", 2 =3D=3D evsel->core.attr.config)=
-;
-> @@ -702,7 +705,8 @@ static int test__checkevent_pmu_events(struct evlist =
-*evlist)
->
->         evlist__for_each_entry(evlist, evsel) {
->                 TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW =3D=3D evsel-=
->core.attr.type ||
-> -                                             strcmp(evsel->pmu->name, "c=
-pu"));
-> +                               !strncmp(evsel__name(evsel), evsel->pmu->=
-name,
-> +                                        strlen(evsel->pmu->name)));
->                 TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.e=
-xclude_user);
->                 TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.=
-exclude_kernel);
->                 TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.excl=
-ude_hv);
-> @@ -735,7 +739,7 @@ static int test__checkevent_pmu_events_mix(struct evl=
-ist *evlist)
->                 TEST_ASSERT_VAL("wrong pinned", !evsel->core.attr.pinned)=
-;
->                 TEST_ASSERT_VAL("wrong exclusive", !evsel->core.attr.excl=
-usive);
->         }
-> -       /* cpu/pmu-event/u*/
-> +       /* default_core/pmu-event/u*/
->         evsel =3D evsel__next(evsel);
->         TEST_ASSERT_VAL("wrong type", evsel__find_pmu(evsel)->is_core);
->         TEST_ASSERT_VAL("wrong exclude_user",
-> @@ -1570,14 +1574,9 @@ static int test__checkevent_config_cache(struct ev=
-list *evlist)
->         return test__checkevent_genhw(evlist);
->  }
->
-> -static bool test__pmu_cpu_valid(void)
-> +static bool test__pmu_default_core_event_valid(void)
->  {
-> -       return !!perf_pmus__find("cpu");
-> -}
-> -
-> -static bool test__pmu_cpu_event_valid(void)
-> -{
-> -       struct perf_pmu *pmu =3D perf_pmus__find("cpu");
-> +       struct perf_pmu *pmu =3D perf_pmus__find_core_pmu();
->
->         if (!pmu)
->                 return false;
-> @@ -2103,26 +2102,23 @@ static const struct evlist_test test__events[] =
-=3D {
->
->  static const struct evlist_test test__events_pmu[] =3D {
->         {
-> -               .name  =3D "cpu/config=3D10,config1=3D1,config2=3D3,perio=
-d=3D1000/u",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "default_core/config=3D10,config1=3D1,config2=
-=3D3,period=3D1000/u",
->                 .check =3D test__checkevent_pmu,
->                 /* 0 */
->         },
->         {
-> -               .name  =3D "cpu/config=3D1,name=3Dkrava/u,cpu/config=3D2/=
-u",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "default_core/config=3D1,name=3Dkrava/u,defaul=
-t_core/config=3D2/u",
->                 .check =3D test__checkevent_pmu_name,
->                 /* 1 */
->         },
->         {
-> -               .name  =3D "cpu/config=3D1,call-graph=3Dfp,time,period=3D=
-100000/,cpu/config=3D2,call-graph=3Dno,time=3D0,period=3D2000/",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "default_core/config=3D1,call-graph=3Dfp,time,=
-period=3D100000/,default_core/config=3D2,call-graph=3Dno,time=3D0,period=3D=
-2000/",
->                 .check =3D test__checkevent_pmu_partial_time_callgraph,
->                 /* 2 */
->         },
->         {
-> -               .name  =3D "cpu/name=3D'COMPLEX_CYCLES_NAME:orig=3Dcycles=
-,desc=3Dchip-clock-ticks',period=3D0x1,event=3D0x2/ukp",
-> -               .valid =3D test__pmu_cpu_event_valid,
-> +               .name  =3D "default_core/name=3D'COMPLEX_CYCLES_NAME:orig=
-=3Dcycles,desc=3Dchip-clock-ticks',period=3D0x1,event=3D0x2/ukp",
-> +               .valid =3D test__pmu_default_core_event_valid,
->                 .check =3D test__checkevent_complex_name,
->                 /* 3 */
->         },
-> @@ -2137,158 +2133,132 @@ static const struct evlist_test test__events_pm=
-u[] =3D {
->                 /* 5 */
->         },
->         {
-> -               .name  =3D "cpu/L1-dcache-load-miss/",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "default_core/L1-dcache-load-miss/",
->                 .check =3D test__checkevent_genhw,
->                 /* 6 */
->         },
->         {
-> -               .name  =3D "cpu/L1-dcache-load-miss/kp",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "default_core/L1-dcache-load-miss/kp",
->                 .check =3D test__checkevent_genhw_modifier,
->                 /* 7 */
->         },
->         {
-> -               .name  =3D "cpu/L1-dcache-misses,name=3Dcachepmu/",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "default_core/L1-dcache-misses,name=3Dcachepmu=
-/",
->                 .check =3D test__checkevent_config_cache,
->                 /* 8 */
->         },
->         {
-> -               .name  =3D "cpu/instructions/",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "default_core/instructions/",
->                 .check =3D test__checkevent_symbolic_name,
->                 /* 9 */
->         },
->         {
-> -               .name  =3D "cpu/cycles,period=3D100000,config2/",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "default_core/cycles,period=3D100000,config2/"=
-,
->                 .check =3D test__checkevent_symbolic_name_config,
->                 /* 0 */
->         },
->         {
-> -               .name  =3D "cpu/instructions/h",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "default_core/instructions/h",
->                 .check =3D test__checkevent_symbolic_name_modifier,
->                 /* 1 */
->         },
->         {
-> -               .name  =3D "cpu/instructions/G",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "default_core/instructions/G",
->                 .check =3D test__checkevent_exclude_host_modifier,
->                 /* 2 */
->         },
->         {
-> -               .name  =3D "cpu/instructions/H",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "default_core/instructions/H",
->                 .check =3D test__checkevent_exclude_guest_modifier,
->                 /* 3 */
->         },
->         {
-> -               .name  =3D "{cpu/instructions/k,cpu/cycles/upp}",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "{default_core/instructions/k,default_core/cyc=
-les/upp}",
->                 .check =3D test__group1,
->                 /* 4 */
->         },
->         {
-> -               .name  =3D "{cpu/cycles/u,cpu/instructions/kp}:p",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "{default_core/cycles/u,default_core/instructi=
-ons/kp}:p",
->                 .check =3D test__group4,
->                 /* 5 */
->         },
->         {
-> -               .name  =3D "{cpu/cycles/,cpu/cache-misses/G}:H",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "{default_core/cycles/,default_core/cache-miss=
-es/G}:H",
->                 .check =3D test__group_gh1,
->                 /* 6 */
->         },
->         {
-> -               .name  =3D "{cpu/cycles/,cpu/cache-misses/H}:G",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "{default_core/cycles/,default_core/cache-miss=
-es/H}:G",
->                 .check =3D test__group_gh2,
->                 /* 7 */
->         },
->         {
-> -               .name  =3D "{cpu/cycles/G,cpu/cache-misses/H}:u",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "{default_core/cycles/G,default_core/cache-mis=
-ses/H}:u",
->                 .check =3D test__group_gh3,
->                 /* 8 */
->         },
->         {
-> -               .name  =3D "{cpu/cycles/G,cpu/cache-misses/H}:uG",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "{default_core/cycles/G,default_core/cache-mis=
-ses/H}:uG",
->                 .check =3D test__group_gh4,
->                 /* 9 */
->         },
->         {
-> -               .name  =3D "{cpu/cycles/,cpu/cache-misses/,cpu/branch-mis=
-ses/}:S",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "{default_core/cycles/,default_core/cache-miss=
-es/,default_core/branch-misses/}:S",
->                 .check =3D test__leader_sample1,
->                 /* 0 */
->         },
->         {
-> -               .name  =3D "{cpu/instructions/,cpu/branch-misses/}:Su",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "{default_core/instructions/,default_core/bran=
-ch-misses/}:Su",
->                 .check =3D test__leader_sample2,
->                 /* 1 */
->         },
->         {
-> -               .name  =3D "cpu/instructions/uDp",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "default_core/instructions/uDp",
->                 .check =3D test__checkevent_pinned_modifier,
->                 /* 2 */
->         },
->         {
-> -               .name  =3D "{cpu/cycles/,cpu/cache-misses/,cpu/branch-mis=
-ses/}:D",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "{default_core/cycles/,default_core/cache-miss=
-es/,default_core/branch-misses/}:D",
->                 .check =3D test__pinned_group,
->                 /* 3 */
->         },
->         {
-> -               .name  =3D "cpu/instructions/I",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "default_core/instructions/I",
->                 .check =3D test__checkevent_exclude_idle_modifier,
->                 /* 4 */
->         },
->         {
-> -               .name  =3D "cpu/instructions/kIG",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "default_core/instructions/kIG",
->                 .check =3D test__checkevent_exclude_idle_modifier_1,
->                 /* 5 */
->         },
->         {
-> -               .name  =3D "cpu/cycles/u",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "default_core/cycles/u",
->                 .check =3D test__sym_event_slash,
->                 /* 6 */
->         },
->         {
-> -               .name  =3D "cpu/cycles/k",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "default_core/cycles/k",
->                 .check =3D test__sym_event_dc,
->                 /* 7 */
->         },
->         {
-> -               .name  =3D "cpu/instructions/uep",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "default_core/instructions/uep",
->                 .check =3D test__checkevent_exclusive_modifier,
->                 /* 8 */
->         },
->         {
-> -               .name  =3D "{cpu/cycles/,cpu/cache-misses/,cpu/branch-mis=
-ses/}:e",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "{default_core/cycles/,default_core/cache-miss=
-es/,default_core/branch-misses/}:e",
->                 .check =3D test__exclusive_group,
->                 /* 9 */
->         },
->         {
-> -               .name  =3D "cpu/cycles,name=3Dname/",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "default_core/cycles,name=3Dname/",
->                 .check =3D test__term_equal_term,
->                 /* 0 */
->         },
->         {
-> -               .name  =3D "cpu/cycles,name=3Dl1d/",
-> -               .valid =3D test__pmu_cpu_valid,
-> +               .name  =3D "default_core/cycles,name=3Dl1d/",
->                 .check =3D test__term_equal_legacy,
->                 /* 1 */
->         },
-> @@ -2378,15 +2348,30 @@ static int combine_test_results(int existing, int=
- latest)
->  static int test_events(const struct evlist_test *events, int cnt)
->  {
->         int ret =3D TEST_OK;
-> +       struct perf_pmu *core_pmu =3D perf_pmus__find_core_pmu();
->
->         for (int i =3D 0; i < cnt; i++) {
-> -               const struct evlist_test *e =3D &events[i];
-> +               struct evlist_test e =3D events[i];
->                 int test_ret;
-> +               const char *pos =3D e.name;
-> +               char buf[1024], *buf_pos =3D buf, *end;
-> +
-> +               while ((end =3D strstr(pos, "default_core"))) {
-> +                       size_t len =3D end - pos;
-> +
-> +                       strncpy(buf_pos, pos, len);
-> +                       pos =3D end + 12;
-> +                       buf_pos +=3D len;
-> +                       strcpy(buf_pos, core_pmu->name);
-> +                       buf_pos +=3D strlen(core_pmu->name);
-> +               }
-> +               strcpy(buf_pos, pos);
->
-> -               pr_debug("running test %d '%s'\n", i, e->name);
-> -               test_ret =3D test_event(e);
-> +               e.name =3D buf;
-> +               pr_debug("running test %d '%s'\n", i, e.name);
-> +               test_ret =3D test_event(&e);
->                 if (test_ret !=3D TEST_OK) {
-> -                       pr_debug("Event test failure: test %d '%s'", i, e=
-->name);
-> +                       pr_debug("Event test failure: test %d '%s'", i, e=
-.name);
->                         ret =3D combine_test_results(ret, test_ret);
->                 }
->         }
-> --
-> 2.51.0.534.gc79095c0ca-goog
->
