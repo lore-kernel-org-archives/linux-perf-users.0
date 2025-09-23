@@ -1,55 +1,55 @@
-Received: from mail-oi1-f202.google.com (mail-oi1-f202.google.com [209.85.167.202])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3500A311C32
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Sep 2025 22:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83B23126C7
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Sep 2025 22:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758666811; cv=none; b=crfpI4Em2nDn6gMn1xzwYtOadO0Un/pOMCit+BKBzTJS5v8KShMATRLvOxq1eQ+0hGT5QXAqKzYhiBpTfTW1BU7H2DWFQdE28sCCscPTQ1D6OUF6KhIiMw9+160qjhoRjmmJtEKXf3E4iEFRZ7E3C+ctFcNH7rtyP4ar1u3IT/w=
+	t=1758666812; cv=none; b=ZwYOIqBD/JMrV51lon0szK9tVOTIiTXxA0MU5rNiVqPwVZkwQG3wwdAjkCuPY4mM2CLe1HeTnn58zyck9vW/V1e/5Jin9oipZgY5OxQdTKVGiApb+ETujCJfO5vVH0a0T77OCuRv80QKzDB01FMe3ap1pClkowHna0t+/ZRi0wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758666811; c=relaxed/simple;
-	bh=6w32qiODxVbWhu7gKe69wsxnRqgpm9MqdSFipBqSCVY=;
+	s=arc-20240116; t=1758666812; c=relaxed/simple;
+	bh=UCkII/yUTJU5Ivn/8kuSrZ54xDQZvy/PNGwyAbAEYn8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=YXC16CkUyEvzIHNUf5TrucMM3G+hGpaD7vS69v+NTTc22vkiURcCDaiBHw7CqkfAs/tBkD6AcIjSvRyfoF3y6dTUQxsbyn4sSAbg4/arbgirjOLmi4M6fwzi8x8Mquv4nTiQ/pBRqzrE9TsASIwv2zFaC+iiAtwx34x870+s4xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tBK1MTam; arc=none smtp.client-ip=209.85.167.202
+	 To:Cc:Content-Type; b=IpntSmKDsCge+TvAHivsvcdCzB9oXN+mvhcADx3tq4rDzFgHjkG4B+Rsnb1w9L8qcmPxBbIFqNqlSoa/aVNNclmSUXJ84xrCq6lQgs1hfNKJjL5QPRF/drmfjM9QbGByJVGymnXVTHEfkT64IZ3NFXsKmeutHC12hTrLDRRGMHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YSuR9EtX; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tBK1MTam"
-Received: by mail-oi1-f202.google.com with SMTP id 5614622812f47-435de7c0722so6444170b6e.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Sep 2025 15:33:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YSuR9EtX"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-32eb45e9d03so268567a91.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Sep 2025 15:33:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1758666808; x=1759271608; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1758666810; x=1759271610; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7JPySr0sbcR3UAmkPCoUXEtd2Wkfd/YW7TDvRR50H+Y=;
-        b=tBK1MTamfV0pROwepT1Ox1FQgCV/yXICEuozgD296em9D2A0eftOhEQ5+l1oIwv7ho
-         v5ALWFmawkiiDuH+Ul/UY/TOktQFFWu9mhu17qgDXrBboA1h8Zhb5ptv0pzUhQ3jS3Ps
-         hnnTmotz3oN/IryEg5Y1aIU7gh2srMYpCylX8a12vdFybQKXYTgcOxH9zbc51//kbHOD
-         a0qCtt6JpZ8VWI0cLSmRyE2LE6Rtro8s1gKALSLvFkfDUYsnQ9hAoFh+bafL7Fy0js66
-         Tl13o/aMCtYLna+rWZHd2EkbYljwKj++P2lg74bDEHL30NzruBHciQZxpnwD9aAAPQi0
-         kXUA==
+        bh=vFYBQLQUysyk1nrExOGMvOXafgreMYpCr9gCjccrHN4=;
+        b=YSuR9EtXnEUtKf1zp3HpHGUjfSQPvRGiYspoQSPA2rYbR7TSlsQbufTF3rHAEfLKWB
+         Cdzo9+Oh1n1q18blsG3Abf7aLynEKCzMcpLWZAouyZAaJ9hxMxUnk/m2q6wzRwXJJCDF
+         XV4dsG1Ds4Ee3hVk6/OkfkaYFOTIxD/Vos4B4JZIuDw7F5vxZRZpb8s21lGBiyo7tz+5
+         wrhCExxnugJ5UJBZx9EUQrk8jRyyWvBVFkgjO1G5pWqMOEExVA+emnYR0LqjMmhIHO3M
+         DvVEysJQpBYzadG7yv5vNSfPqzSWg7zk6TXtlRO6+Ord0yEYWGcq9VWU8al+K8rmeRj2
+         EGRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758666808; x=1759271608;
+        d=1e100.net; s=20230601; t=1758666810; x=1759271610;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7JPySr0sbcR3UAmkPCoUXEtd2Wkfd/YW7TDvRR50H+Y=;
-        b=px9tdrjViNIOgLhP4PAFQuz2RfjP/0uQqtvp8DebENlIyaytZthdTDBfaZOzqd/OjI
-         Vpw4tVx575ftA3Vg9oAb7TplfEhNxyrmLkytIyahtsIDv9IfvwshOgKTc/B+Ft5Vn/IY
-         2VNyEQihGEG8n/DHBYsjguE++UB3AjdQJTSZRvvtjRgcIhuxkHACtdzz2KnMccXbNa3q
-         zPZasTnJDT5bCaZaePwKLFY/9w8XuUzqtQudsDYU11rZfl73vF5CzpHWcyCNJpkn1V/0
-         VobfN1cU3ACutQXpGRGpVljza/qN3qxxy87+wFVsdSvs4W15Y59AEjG/3wDbEw4FDoUv
-         8PXg==
-X-Forwarded-Encrypted: i=1; AJvYcCW0/knhXHCk1+OMmjgLj3Xn0/sOEVxfSC4i5mSMDjd4YvXVMPPae3cO0nQ1RjnxBWFA68X1flwZT+yIws1GQ81c@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxjx+hNYXVnEF6jgyO/A4oBPoeAB/YYUdzD8t2XbE6IzSp2lmuH
-	TPsKRNITWzQSlaSrYjNCfMumvGztwaXvWbikx4VtG5hp7w9RWiuiWyT3PmqgYLWIKcUQWPL1fNk
-	A8zJioMGAng==
-X-Google-Smtp-Source: AGHT+IH2sTB/4h6yVZu7HWXEN2iwwI7tkqEgPMQpECn/qEGXJa2PJA3HxSe9wqfB/uiloWN9gQX09AfJ3c+u
-X-Received: from oabry4.prod.google.com ([2002:a05:6871:2084:b0:349:df6f:4e81])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6808:f92:b0:438:3ed4:9059
- with SMTP id 5614622812f47-43f2d4c2e51mr2660852b6e.44.1758666808363; Tue, 23
- Sep 2025 15:33:28 -0700 (PDT)
-Date: Tue, 23 Sep 2025 15:32:49 -0700
+        bh=vFYBQLQUysyk1nrExOGMvOXafgreMYpCr9gCjccrHN4=;
+        b=otkN10UQVp4f81uXYrvRG8lhz1eNGYpKZmI63idb7UUrJpaE13dhdnSqTxorVrDkLi
+         q3IzJglc59qeleuBLNj/1KSBHYLoRk6OnWsg/jMgcW22XPUFEAxPx3y/5EzQ1Oh0pPui
+         ESBXEslcIVj2ox3mEnOD7mSzjsE9Jos8CwjNsoiHwFrOfzhA/wZSIb2fNnO1iaRnUXSD
+         TyD8quV0FAy+uwGUAbbnKYCLV+FvXfmpebNBFWVHlXsFeLWsVxwYL1GhpDIKSwcbZ2Tw
+         Q8FBQcT2hYfhq4d4jcYnaS1qIZnAgZ19hJkghgYegg1LWoTkBu4XECor9uznuWcQ+VWq
+         M97g==
+X-Forwarded-Encrypted: i=1; AJvYcCUDwETOPajy+wKYj8TK8pieOs+8i9KqrYf4Guxyw9mDiPCnOZwUtr7oAXdHxJhFu2HkS94LhcJxZbsNwk4oPwdW@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfEpfAntxNYptNj1sLOVjR5MAPXsPuDR+AgGfWBH5xK7Cm1llv
+	I/VwIJb5T+H8Y2EG2gXJcCoVjOFt3FK3SyK4wZnTdLiTKKPzd4xxvTjUnN8jaMlkZ7CljuBrQO1
+	v9loQLmvUdw==
+X-Google-Smtp-Source: AGHT+IGm8yCV1Sh1gd4VXc3W37WXDH0Eo9KAi6gx4/OY4v6+A65B2EjopkEhnbtpfvfyMbEFVYqdMz7wARnQ
+X-Received: from pjbpb2.prod.google.com ([2002:a17:90b:3c02:b0:330:6d2f:1b62])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:54c8:b0:32e:7340:a7fe
+ with SMTP id 98e67ed59e1d1-3341bfdc580mr234008a91.12.1758666810178; Tue, 23
+ Sep 2025 15:33:30 -0700 (PDT)
+Date: Tue, 23 Sep 2025 15:32:50 -0700
 In-Reply-To: <20250923223312.238185-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250923223312.238185-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.534.gc79095c0ca-goog
-Message-ID: <20250923223312.238185-6-irogers@google.com>
-Subject: [PATCH v6 05/28] perf record: Skip don't fail for events that don't open
+Message-ID: <20250923223312.238185-7-irogers@google.com>
+Subject: [PATCH v6 06/28] perf jevents: Support copying the source json files
+ to OUTPUT
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,253 +77,117 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Thomas Richter <tmricht@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Whilst for many tools it is an expected behavior that failure to open
-a perf event is a failure, ARM decided to name PMU events the same as
-legacy events and then failed to rename such events on a server uncore
-SLC PMU. As perf's default behavior when no PMU is specified is to
-open the event on all PMUs that advertise/"have" the event, this
-yielded failures when trying to make the priority of legacy and
-sysfs/json events uniform - something requested by RISC-V and ARM. A
-legacy event user on ARM hardware may find their event opened on an
-uncore PMU which for perf record will fail. Arnaldo suggested skipping
-such events which this patch implements. Rather than have the skipping
-conditional on running on ARM, the skipping is done on all
-architectures as such a fundamental behavioral difference could lead
-to problems with tools built/depending on perf.
+The jevents command expects all json files to be organized under a
+single directory. When generating json files from scripts (to reduce
+laborious copy and paste in the json) we don't want to generate the
+json into the source directory if there is an OUTPUT directory
+specified. This change adds a GEN_JSON for this case where the
+GEN_JSON copies the JSON files to OUTPUT, only when OUTPUT is
+specified. The Makefile.perf clean code is updated to clean up this
+directory when present.
 
-An example of perf record failing to open events on x86 is:
-```
-$ perf record -e data_read,cycles,LLC-prefetch-read -a sleep 0.1
-Error:
-Failure to open event 'data_read' on PMU 'uncore_imc_free_running_0' which will be removed.
-The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (data_read).
-"dmesg | grep -i perf" may provide additional information.
+This patch is part of:
+https://lore.kernel.org/lkml/20240926173554.404411-12-irogers@google.com/
+which was similarly adding support for generating json in scripts for
+the consumption of jevents.py.
 
-Error:
-Failure to open event 'data_read' on PMU 'uncore_imc_free_running_1' which will be removed.
-The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (data_read).
-"dmesg | grep -i perf" may provide additional information.
-
-Error:
-Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be removed.
-The LLC-prefetch-read event is not supported.
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 2.188 MB perf.data (87 samples) ]
-
-$ perf report --stats
-Aggregated stats:
-               TOTAL events:      17255
-                MMAP events:        284  ( 1.6%)
-                COMM events:       1961  (11.4%)
-                EXIT events:          1  ( 0.0%)
-                FORK events:       1960  (11.4%)
-              SAMPLE events:         87  ( 0.5%)
-               MMAP2 events:      12836  (74.4%)
-             KSYMBOL events:         83  ( 0.5%)
-           BPF_EVENT events:         36  ( 0.2%)
-      FINISHED_ROUND events:          2  ( 0.0%)
-            ID_INDEX events:          1  ( 0.0%)
-          THREAD_MAP events:          1  ( 0.0%)
-             CPU_MAP events:          1  ( 0.0%)
-           TIME_CONV events:          1  ( 0.0%)
-       FINISHED_INIT events:          1  ( 0.0%)
-cycles stats:
-              SAMPLE events:         87
-```
-
-If all events fail to open then the perf record will fail:
-```
-$ perf record -e LLC-prefetch-read true
-Error:
-Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be removed.
-The LLC-prefetch-read event is not supported.
-Error:
-Failure to open any events for recording
-```
-
-As an evlist may have dummy events that open when all command line
-events fail we ignore dummy events when detecting if at least some
-events open. This still permits the dummy event on its own to be used
-as a permission check:
-```
-$ perf record -e dummy true
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.046 MB perf.data ]
-```
-but allows failure when a dummy event is implicilty inserted or when
-there are insufficient permissions to open it:
-```
-$ perf record -e LLC-prefetch-read -a true
-Error:
-Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be removed.
-The LLC-prefetch-read event is not supported.
-Error:
-Failure to open any events for recording
-```
-
-As the first parsed event in an evlist is marked as tracking, removing
-this event can remove tracking from the evlist, removing mmap events
-and breaking symbolization. To avoid this, if a tracking event is
-removed then the next event has tracking added.
-
-The issue with legacy events is that on RISC-V they want the driver to
-not have mappings from legacy to non-legacy config encodings for each
-vendor/model due to size, complexity and difficulty to update. It was
-reported that on ARM Apple-M? CPUs the legacy mapping in the driver
-was broken and the sysfs/json events should always take precedent,
-however, it isn't clear this is still the case. It is the case that
-without working around this issue a legacy event like cycles without a
-PMU can encode differently than when specified with a PMU - the
-non-PMU version favoring legacy encodings, the PMU one avoiding legacy
-encodings. Legacy events are also case sensitive while sysfs/json
-events are not.
-
-The patch removes events and then adjusts the idx value for each
-evsel. This is done so that the dense xyarrays used for file
-descriptors, etc. don't contain broken entries.
-
-On ARM it could be common following this change to see a lot of
-warnings for the cycles event due to many ARM PMUs advertising the
-cycles event (ARM inconsistently have events bus_cycles and then
-cycles implying CPU cycles, they also sometimes have a cpu_cycles
-event). As cycles is a popular event, avoid potentially spamming users
-with error messages on ARM when there are multiple cycles events in
-the evlist, the error is still shown when verbose is enabled.
-
-Prior versions without adding the tracking data and not warning for
-cycles on ARM was:
-
-Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-Tested-by: James Clark <james.clark@linaro.org>
-Tested-by: Leo Yan <leo.yan@arm.com>
-Tested-by: Atish Patra <atishp@rivosinc.com>
 Tested-by: Thomas Richter <tmricht@linux.ibm.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-record.c | 89 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 82 insertions(+), 7 deletions(-)
+ tools/perf/Makefile.perf    | 21 ++++++++++++++++-----
+ tools/perf/pmu-events/Build | 18 ++++++++++++------
+ 2 files changed, 28 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 7ea3a11aca70..effe6802c1a3 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -983,7 +983,6 @@ static int record__config_tracking_events(struct record *rec)
- 	 */
- 	if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
- 	    perf_pmus__num_core_pmus() > 1) {
--
- 		/*
- 		 * User space tasks can migrate between CPUs, so when tracing
- 		 * selected CPUs, sideband for all CPUs is still needed.
-@@ -1388,10 +1387,27 @@ static int record__open(struct record *rec)
- 	struct perf_session *session = rec->session;
- 	struct record_opts *opts = &rec->opts;
- 	int rc = 0;
-+	bool skipped = false;
-+	bool removed_tracking = false;
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index e2150acc2c13..cc1635335586 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -1272,9 +1272,24 @@ endif # CONFIG_PERF_BPF_SKEL
+ bpf-skel-clean:
+ 	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS) $(SKEL_OUT)/vmlinux.h
  
- 	evlist__for_each_entry(evlist, pos) {
-+		if (removed_tracking) {
-+			/*
-+			 * Normally the head of the list has tracking enabled
-+			 * for sideband data like mmaps. If this event is
-+			 * removed, make sure to add tracking to the next
-+			 * processed event.
-+			 */
-+			if (!pos->tracking) {
-+				pos->tracking = true;
-+				evsel__config(pos, opts, &callchain_param);
-+			}
-+			removed_tracking = false;
-+		}
- try_again:
- 		if (evsel__open(pos, pos->core.cpus, pos->core.threads) < 0) {
-+			bool report_error = true;
++pmu-events-clean:
++ifeq ($(OUTPUT),)
++	$(call QUIET_CLEAN, pmu-events) $(RM) \
++		pmu-events/pmu-events.c \
++		pmu-events/metric_test.log \
++		pmu-events/test-empty-pmu-events.c \
++		pmu-events/empty-pmu-events.log
++else # When an OUTPUT directory is present, clean up the copied pmu-events/arch directory.
++	$(call QUIET_CLEAN, pmu-events) $(RM) -r $(OUTPUT)pmu-events/arch \
++		$(OUTPUT)pmu-events/pmu-events.c \
++		$(OUTPUT)pmu-events/metric_test.log \
++		$(OUTPUT)pmu-events/test-empty-pmu-events.c \
++		$(OUTPUT)pmu-events/empty-pmu-events.log
++endif
 +
- 			if (evsel__fallback(pos, &opts->target, errno, msg, sizeof(msg))) {
- 				if (verbose > 0)
- 					ui__warning("%s\n", msg);
-@@ -1403,15 +1419,74 @@ static int record__open(struct record *rec)
- 			        pos = evlist__reset_weak_group(evlist, pos, true);
- 				goto try_again;
- 			}
--			rc = -errno;
--			evsel__open_strerror(pos, &opts->target, errno, msg, sizeof(msg));
--			ui__error("%s\n", msg);
--			goto out;
-+#if defined(__aarch64__) || defined(__arm__)
-+			if (strstr(evsel__name(pos), "cycles")) {
-+				struct evsel *pos2;
-+				/*
-+				 * Unfortunately ARM has many events named
-+				 * "cycles" on PMUs like the system-level (L3)
-+				 * cache which don't support sampling. Only
-+				 * display such failures to open when there is
-+				 * only 1 cycles event or verbose is enabled.
-+				 */
-+				evlist__for_each_entry(evlist, pos2) {
-+					if (pos2 == pos)
-+						continue;
-+					if (strstr(evsel__name(pos2), "cycles")) {
-+						report_error = false;
-+						break;
-+					}
-+				}
-+			}
-+#endif
-+			if (report_error || verbose > 0) {
-+				ui__error("Failure to open event '%s' on PMU '%s' which will be "
-+					  "removed.\n%s\n",
-+					  evsel__name(pos), evsel__pmu_name(pos), msg);
-+			}
-+			if (pos->tracking)
-+				removed_tracking = true;
-+			pos->skippable = true;
-+			skipped = true;
-+		} else {
-+			pos->supported = true;
- 		}
--
--		pos->supported = true;
- 	}
+ clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean \
+ 		arm64-sysreg-defs-clean fixdep-clean python-clean bpf-skel-clean \
+-		tests-coresight-targets-clean
++		tests-coresight-targets-clean pmu-events-clean
+ 	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive \
+ 		$(OUTPUT)perf-iostat $(LANG_BINDINGS)
+ 	$(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '*.a' -delete -o \
+@@ -1287,10 +1302,6 @@ clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(
+ 		$(OUTPUT)FEATURE-DUMP $(OUTPUT)util/*-bison* $(OUTPUT)util/*-flex* \
+ 		$(OUTPUT)util/intel-pt-decoder/inat-tables.c \
+ 		$(OUTPUT)tests/llvm-src-{base,kbuild,prologue,relocation}.c \
+-		$(OUTPUT)pmu-events/pmu-events.c \
+-		$(OUTPUT)pmu-events/test-empty-pmu-events.c \
+-		$(OUTPUT)pmu-events/empty-pmu-events.log \
+-		$(OUTPUT)pmu-events/metric_test.log \
+ 		$(OUTPUT)$(fadvise_advice_array) \
+ 		$(OUTPUT)$(fsconfig_arrays) \
+ 		$(OUTPUT)$(fsmount_arrays) \
+diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+index 32f387d48908..1503a16e662a 100644
+--- a/tools/perf/pmu-events/Build
++++ b/tools/perf/pmu-events/Build
+@@ -1,7 +1,6 @@
+ pmu-events-y	+= pmu-events.o
+ JDIR		=  pmu-events/arch/$(SRCARCH)
+-JSON		=  $(shell [ -d $(JDIR) ] &&				\
+-			find $(JDIR) -name '*.json' -o -name 'mapfile.csv')
++JSON		=  $(shell find pmu-events/arch -name *.json -o -name *.csv)
+ JDIR_TEST	=  pmu-events/arch/test
+ JSON_TEST	=  $(shell [ -d $(JDIR_TEST) ] &&			\
+ 			find $(JDIR_TEST) -name '*.json')
+@@ -29,13 +28,20 @@ $(PMU_EVENTS_C): $(EMPTY_PMU_EVENTS_C)
+ 	$(call rule_mkdir)
+ 	$(Q)$(call echo-cmd,gen)cp $< $@
+ else
++# Copy checked-in json for generation.
++$(OUTPUT)pmu-events/arch/%: pmu-events/arch/%
++	$(call rule_mkdir)
++	$(Q)$(call echo-cmd,gen)cp $< $@
++
++GEN_JSON = $(patsubst %,$(OUTPUT)%,$(JSON))
++
+ $(METRIC_TEST_LOG): $(METRIC_TEST_PY) $(METRIC_PY)
+ 	$(call rule_mkdir)
+ 	$(Q)$(call echo-cmd,test)$(PYTHON) $< 2> $@ || (cat $@ && false)
  
-+	if (skipped) {
-+		struct evsel *tmp;
-+		int idx = 0;
-+		bool evlist_empty = true;
-+
-+		/* Remove evsels that failed to open and update indices. */
-+		evlist__for_each_entry_safe(evlist, tmp, pos) {
-+			if (pos->skippable) {
-+				evlist__remove(evlist, pos);
-+				continue;
-+			}
-+
-+			/*
-+			 * Note, dummy events may be command line parsed or
-+			 * added by the tool. We care about supporting `perf
-+			 * record -e dummy` which may be used as a permission
-+			 * check. Dummy events that are added to the command
-+			 * line and opened along with other events that fail,
-+			 * will still fail as if the dummy events were tool
-+			 * added events for the sake of code simplicity.
-+			 */
-+			if (!evsel__is_dummy_event(pos))
-+				evlist_empty = false;
-+		}
-+		evlist__for_each_entry(evlist, pos) {
-+			pos->core.idx = idx++;
-+		}
-+		/* If list is empty then fail. */
-+		if (evlist_empty) {
-+			ui__error("Failure to open any events for recording.\n");
-+			rc = -1;
-+			goto out;
-+		}
-+	}
- 	if (symbol_conf.kptr_restrict && !evlist__exclude_kernel(evlist)) {
- 		pr_warning(
- "WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,\n"
+-$(TEST_EMPTY_PMU_EVENTS_C): $(JSON) $(JSON_TEST) $(JEVENTS_PY) $(METRIC_PY) $(METRIC_TEST_LOG)
++$(TEST_EMPTY_PMU_EVENTS_C): $(GEN_JSON) $(JSON_TEST) $(JEVENTS_PY) $(METRIC_PY) $(METRIC_TEST_LOG)
+ 	$(call rule_mkdir)
+-	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) none none pmu-events/arch $@
++	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) none none $(OUTPUT)pmu-events/arch $@
+ 
+ $(EMPTY_PMU_EVENTS_TEST_LOG): $(EMPTY_PMU_EVENTS_C) $(TEST_EMPTY_PMU_EVENTS_C)
+ 	$(call rule_mkdir)
+@@ -63,10 +69,10 @@ $(OUTPUT)%.pylint_log: %
+ 	$(call rule_mkdir)
+ 	$(Q)$(call echo-cmd,test)pylint "$<" > $@ || (cat $@ && rm $@ && false)
+ 
+-$(PMU_EVENTS_C): $(JSON) $(JSON_TEST) $(JEVENTS_PY) $(METRIC_PY) $(METRIC_TEST_LOG) \
++$(PMU_EVENTS_C): $(GEN_JSON) $(JSON_TEST) $(JEVENTS_PY) $(METRIC_PY) $(METRIC_TEST_LOG) \
+     $(EMPTY_PMU_EVENTS_TEST_LOG) $(PMU_EVENTS_MYPY_TEST_LOGS) $(PMU_EVENTS_PYLINT_TEST_LOGS)
+ 	$(call rule_mkdir)
+-	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) $(JEVENTS_MODEL) pmu-events/arch $@
++	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) $(JEVENTS_MODEL) $(OUTPUT)pmu-events/arch $@
+ endif
+ 
+ # pmu-events.c file is generated in the OUTPUT directory so it needs a
 -- 
 2.51.0.534.gc79095c0ca-goog
 
