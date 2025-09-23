@@ -1,116 +1,210 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D061318120
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Sep 2025 18:09:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA0A34BA2E;
+	Tue, 23 Sep 2025 01:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758564542; cv=none; b=k+JKk9z0K1ub2fnpQbo0amKno3wbgfijrgTfGWPBPHzAoIzRHJ4ubzkDX5TrWDdC6GS46qcr7EHUcNn0kiAtdLEBAdeCTiFbw9qz5N7rCC8yFH3rTsXi4JYakAYuMGhhDprB2p7GYHf2npkYqwOhaRRnLdVptIfF7gctSoLhG74=
+	t=1758590206; cv=none; b=f6P+md6lmSmkZSq8GgKt1Y9qrFKI7q3jLi4VTHsrCQBdJZ/Qr/cE2ze0ewH532MKrLegpS5rKQWH1BAZt3rQ5fSyNaO8LKdRZvt3ITwnm8BAEuNOEecQqRfasl1Y4y6gfstIws353/4UUvVjYtvRwnNc4WhHg4ubbxFYEgxvr6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758564542; c=relaxed/simple;
-	bh=ClvKFZ/b7716ndh5rkOR1V+bcY01pXI7j9WIQX5fb6I=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=K4J2POJ9xbIub47/2SJPHGHaLe1LcpEjavrOgZV3h8ZG65J7tLLa+nrzE/mu+VMqchN/EULfA8geD9rXhE3N/wdMf0BL/XRcevZnARVJApsW6uTTay6EyGNVDKizZ8d2ZnbM7Wqm3ZgjL/+y55UJ+MmhrDzyzPfEQQQhySXU5dY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IxJql1Ig; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1758590206; c=relaxed/simple;
+	bh=8tXejbFW19KFrTWNnFD7AdnZF5VZAJlv5KEXs5SvnzM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CSHmnHNkmNcFAoTlDzxHqbU+YUuZGkG2ivqRuCUlZ29D9zR2kwdnkGVwjCPAVtJ/Ei23VhWp0xIeZI5iHaYXeq+d3r5/PeOwbzE8wldJXtCT4YmOwIDH7qOmRmpuM8A16Z3SDN52Nw2IAIY66UquYyS+H6gc/SwCs5p901yZb3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qZZAwqwG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IxJql1Ig"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-278bfae33beso13013815ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Sep 2025 11:09:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758564541; x=1759169341; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ToEoYspZoDukL5w/NejXRw07/Byo+3irLVr2SZ9SWds=;
-        b=IxJql1Ig5JyaUkC4cripVkz9kEZCY4szO/xE4hRd0ltfyIKUXbdyfXwGZFwFbdws6R
-         1LGdZiTvOXpFKg47Mfk81js4OCc9O+XaMWsfsh33bsymUqy7EmZGNbwF9WMK/cpyUjUX
-         9fDhsH2YNVHrIgCO7ib8wvPq+EH3qzJxWVYwkcfabtNXLiMXgZNMeAZRfhLIiAVTar7P
-         TrbO+R89tcOKHvKjfEH5U2uDA7HU1cU9tJzM0tEvBO9CKvxXOtKRYopl8Al9V7YdmyXQ
-         tbleZ/FrvBxnpErYMMxMDOSUeLH7eOaIDEXUH9GScijb9MWWO3Gd60lbhgDP5gVQXXes
-         +xew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758564541; x=1759169341;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ToEoYspZoDukL5w/NejXRw07/Byo+3irLVr2SZ9SWds=;
-        b=w9+rU9GV4LbjyKeclLAp12N+iUPhZ0mAxDRBl6NHNdMjgdGe1Yn9FjNYd2olLrIlAq
-         z+rzMoxTRRFi6uIxoqDdU0NyB1F3HhBLHZpjn3fAPWHgxFzxJ5GtznTsk3f52cZ0BxAP
-         JL8uE0OnqIpm2imSYW2xiAkVLxxE19+F95Lw8k6hJAun/Se6KoWIRff7RCKItUMTiuDF
-         vTvakShbSBtWeenszxn34Gdlo3m55gTpPak+wtO+7ZcqgKGDq8V5tdIuyZOaTxgkgJco
-         XiMokjjDKCyF6ALE6F2sSKmSvCoXD3GYbXgNPHdqcdszg/BOZCm/3VMwP6SR/DIxvD6P
-         E3gA==
-X-Forwarded-Encrypted: i=1; AJvYcCVsqB8J+nReWC4X26uk5o8ZGyChOPnLAhH/Di5S6Y/WXTmRh7Z9e6GjlkQndsBjDzeRApsFc2Z6lHiOb+DdsXK7@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmJdDUezoc9ujMKByUWfK3/sq6J4dgKIniUsMPl7VbOrWt+lPQ
-	qJYuNk+t2JF1Mv5u+b4c2wIsLTM6wrtB/Ot3RMF6+BYPaRT7dgDWQ/la
-X-Gm-Gg: ASbGncvQsV0zqPqNNB0pfqpCR+i1suzQZP+H7x9bY1u51VDctLFcZW5uzHKatin22mi
-	e8Xm107oIVeIZQhBOd5KYEWFpXfohb1Z0AN3NFq2mF/GeIRilnu9AlQA2PUbymw/drmWsQgEdBm
-	vAhJmquUx7x754QfoZoxCurHv1r7y5nu3Nlwl3UTll4HJvkKmiuoQFSTdWnDWBf93ubBBAQHCTq
-	pHOug9NBh3EG51YDc5abnezpTb/VJF3Gidk4aciENWMbVJC2TC/UMrXcSS7EvwcXO6YLjL/Yumu
-	3mwcyDSiXp491ToIpGNoWSrTNBV6YGVdplwPAd4sRJC2aIT+/+fk40hLQdVPwzjWLjETd1cMG4R
-	iIhnrZVJOt4XyHh7kuOfjVh4TbrOnROGEBrM=
-X-Google-Smtp-Source: AGHT+IFZXZ1PyVy0iEuxUGNtkFvpvoD2o14jNC4/NMrkx90+TPiBtYnuHYVnqH1dcJoEet2Vv52Bww==
-X-Received: by 2002:a17:903:90c:b0:24b:164d:4e61 with SMTP id d9443c01a7336-269ba40a0d7mr185701835ad.13.1758564540683;
-        Mon, 22 Sep 2025 11:09:00 -0700 (PDT)
-Received: from ThinkPad-T490.. ([49.207.194.84])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-269802e14f1sm136155565ad.71.2025.09.22.11.08.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Sep 2025 11:09:00 -0700 (PDT)
-From: Faisal Bukhari <faisalbukhari523@gmail.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	thomas.falcon@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf parse-events: Fix evsel allocation failure
-Date: Mon, 22 Sep 2025 23:38:34 +0530
-Message-ID: <20250922180834.1744399-1-faisalbukhari523@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qZZAwqwG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6A28C4CEF0;
+	Tue, 23 Sep 2025 01:16:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758590205;
+	bh=8tXejbFW19KFrTWNnFD7AdnZF5VZAJlv5KEXs5SvnzM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qZZAwqwGzRb3tAsxVTQ9BlVvu5fo1RFvvN6+J2T9E1BsmpYY/b+DdXSHNGBUPI5Bx
+	 +obMMXLe1wnYddPZHqFCdWTG9mfdUl7ZxHAvNCP1T8iOs5TGuut9Fj/cymTKDl7JMa
+	 B6loUasVzjwc/6v1viSgoaKsDdfhMsatRbB8tco73tjsCXPDK61F0PamCbLLQwTJTh
+	 xRcTd/dKHLpxbQtaL+ZoOy8MEVEGKz09R8Gg59mdvSjkzpnvuaCaLFy7iAcI19OeBJ
+	 46njZcZN0W/cKRqFfC2SpU5PaTV2V3+qU3j3mkkI8EiMlmICNM4a3xTlvmSy6QTz/K
+	 Cug+GkojmeTgA==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	x86@kernel.org
+Cc: Jinchao Wang <wangjinchao600@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v5 0/8] tracing: wprobe: Add wprobe for watchpoint
+Date: Tue, 23 Sep 2025 10:16:39 +0900
+Message-ID: <175859019940.374439.7398451124225791618.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-If evsel__new_idx() returns NULL, the function currently jumps 
-to label 'out_err'.
-Here, references to `cpus` and `pmu_cpus` are dropped.
-Also, resources held by evsel->name and evsel->metric_id are freed.
-But if evsel__new_idx() returns NULL, 
-it can lead to NULL pointer dereference.
+Hi,
 
-Signed-off-by: Faisal Bukhari <faisalbukhari523@gmail.com>
+Here is the 5th version of the series for adding new wprobe (watch probe)
+which provides memory access tracing event. Moreover, this can be used
+via event trigger. Thus it can trace memory access on a dynamically
+allocated objects too.
+The previous version is here:
+
+https://lore.kernel.org/all/175785897434.234168.6798590787777427098.stgit@devnote2/
+
+This version updates the document about wprobe according to Randy's comment
+and modify config for test cases.
+This still include Jinchao's x86 HWBP patches[1][2] as [2/8][3/8].
+
+[1] https://lore.kernel.org/all/20250912101145.465708-2-wangjinchao600@gmail.com/
+[2] https://lore.kernel.org/all/20250912101145.465708-3-wangjinchao600@gmail.com/
+
+Usage
+-----
+
+The basic usage of this wprobe is similar to other probes;
+
+  w:[GRP/][EVENT] [r|w|rw]@<ADDRESS|SYMBOL[+OFFS]> [FETCHARGS]
+
+This defines a new wprobe event. For example, to trace jiffies update,
+you can do;
+
+ echo 'w:my_jiffies w@jiffies:8 value=+0($addr)' >> dynamic_events
+ echo 1 > events/wprobes/my_jiffies/enable
+
+Moreover, this can be combined with event trigger to trace the memory
+accecss on slab objects. The trigger syntax is;
+
+  set_wprobe:WPROBE_EVENT:FIELD[+OFFSET] [if FILTER]
+  clear_wprobe:WPROBE_EVENT[:FIELD[+OFFSET]] [if FILTER]
+
+set_wprobe sets WPROBE_EVENT's watch address on FIELD[+OFFSET].
+clear_wprobe clears WPROBE_EVENT's watch address if it is set to
+FIELD[+OFFSET]. If FIELD is omitted, forcibly clear the watch address
+when trigger event is hit.
+
+For example, trace the first 8 byte of the dentry data structure passed
+to do_truncate() until it is deleted by __dentry_kill().
+(Note: all tracefs setup uses '>>' so that it does not kick do_truncate())
+
+  # echo 'w:watch rw@0:8 address=$addr value=+0($addr)' > dynamic_events
+
+  # echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
+  # echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
+
+  # echo 'f:dentry_kill __dentry_kill dentry=$arg1' >> dynamic_events
+  # echo 'clear_wprobe:watch:dentry' >> events/fprobes/dentry_kill/trigger
+
+  # echo 1 >> events/fprobes/truncate/enable
+  # echo 1 >> events/fprobes/dentry_kill/enable
+
+  # echo aaa > /tmp/hoge
+  # echo bbb > /tmp/hoge
+  # echo ccc > /tmp/hoge
+  # rm /tmp/hoge
+
+Then, the trace data will show;
+
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 16/16   #P:8
+#
+#                                _-----=> irqs-off/BH-disabled
+#                               / _----=> need-resched
+#                              | / _---=> hardirq/softirq
+#                              || / _--=> preempt-depth
+#                              ||| / _-=> migrate-disable
+#                              |||| /     delay
+#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+#              | |         |   |||||     |         |
+              sh-113     [004] .....     6.467444: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880044f0fd8
+              sh-113     [004] ..Zff     6.468534: watch: (lookup_fast+0xaa/0x150) address=0xffff8880044f0fd8 value=0x200080
+              sh-113     [004] ..Zff     6.468542: watch: (step_into+0x82/0x360) address=0xffff8880044f0fd8 value=0x200080
+              sh-113     [004] ..Zff     6.468547: watch: (step_into+0x9f/0x360) address=0xffff8880044f0fd8 value=0x200080
+              sh-113     [004] ..Zff     6.468553: watch: (path_openat+0xb3a/0xe70) address=0xffff8880044f0fd8 value=0x200080
+              sh-113     [004] ..Zff     6.468557: watch: (path_openat+0xb9a/0xe70) address=0xffff8880044f0fd8 value=0x200080
+              sh-113     [004] .....     6.468563: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880044f0fd8
+              sh-113     [004] ...1.     6.469826: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880044f0ea0
+              sh-113     [004] ...1.     6.469859: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880044f0d68
+              rm-118     [001] ..Zff     6.472360: watch: (lookup_fast+0xaa/0x150) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] ..Zff     6.472366: watch: (step_into+0x82/0x360) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] ..Zff     6.472370: watch: (step_into+0x9f/0x360) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] ..Zff     6.472386: watch: (lookup_fast+0xaa/0x150) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] ..Zff     6.472390: watch: (step_into+0x82/0x360) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] ..Zff     6.472394: watch: (step_into+0x9f/0x360) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] ..Zff     6.472415: watch: (lookup_one_qstr_excl+0x2c/0x150) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] ..Zff     6.472419: watch: (lookup_one_qstr_excl+0xd5/0x150) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] ..Zff     6.472424: watch: (may_delete+0x18/0x200) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] ..Zff     6.472428: watch: (may_delete+0x194/0x200) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] ..Zff     6.472446: watch: (vfs_unlink+0x63/0x1c0) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] d.Z..     6.472528: watch: (dont_mount+0x19/0x30) address=0xffff8880044f0fd8 value=0x200180
+              rm-118     [001] ..Zff     6.472533: watch: (vfs_unlink+0x11a/0x1c0) address=0xffff8880044f0fd8 value=0x200180
+              rm-118     [001] ..Zff     6.472538: watch: (vfs_unlink+0x12e/0x1c0) address=0xffff8880044f0fd8 value=0x200180
+              rm-118     [001] d.Z1.     6.472543: watch: (d_delete+0x61/0xa0) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] d.Z1.     6.472547: watch: (dentry_unlink_inode+0x14/0x110) address=0xffff8880044f0fd8 value=0x200080
+              rm-118     [001] d.Z1.     6.472551: watch: (dentry_unlink_inode+0x1e/0x110) address=0xffff8880044f0fd8 value=0x80
+              rm-118     [001] d.Z..     6.472563: watch: (fast_dput+0x8d/0x120) address=0xffff8880044f0fd8 value=0x80
+              rm-118     [001] ...1.     6.472567: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff8880044f0fd8
+              sh-113     [004] ...2.     6.473049: dentry_kill: (__dentry_kill+0x0/0x220) dentry=0xffff888006e383a8
+
+Thank you,
+
 ---
- tools/perf/util/parse-events.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 452f12191f6e..02e7ff94a2d2 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -286,8 +286,11 @@ __add_event(struct list_head *list, int *idx,
- 		event_attr_init(attr);
- 
- 	evsel = evsel__new_idx(attr, *idx);
--	if (!evsel)
--		goto out_err;
-+	if (!evsel) {
-+		perf_cpu_map__put(cpus);
-+		perf_cpu_map__put(pmu_cpus);
-+		return NULL;
-+	}
- 
- 	if (name) {
- 		evsel->name = strdup(name);
--- 
-2.43.0
+Jinchao Wang (2):
+      x86/hw_breakpoint: Unify breakpoint install/uninstall
+      x86/hw_breakpoint: Add arch_reinstall_hw_breakpoint
 
+Masami Hiramatsu (Google) (6):
+      tracing: wprobe: Add watchpoint probe event based on hardware breakpoint
+      HWBP: Add modify_wide_hw_breakpoint_local() API
+      tracing: wprobe: Add wprobe event trigger
+      selftests: tracing: Add a basic testcase for wprobe
+      selftests: tracing: Add syntax testcase for wprobe
+      selftests: ftrace: Add wprobe trigger testcase
+
+
+ Documentation/trace/index.rst                      |    1 
+ Documentation/trace/wprobetrace.rst                |  155 +++
+ arch/Kconfig                                       |   10 
+ arch/x86/Kconfig                                   |    1 
+ arch/x86/include/asm/hw_breakpoint.h               |    8 
+ arch/x86/kernel/hw_breakpoint.c                    |  148 ++-
+ include/linux/hw_breakpoint.h                      |    6 
+ include/linux/trace_events.h                       |    3 
+ kernel/events/hw_breakpoint.c                      |   37 +
+ kernel/trace/Kconfig                               |   23 
+ kernel/trace/Makefile                              |    1 
+ kernel/trace/trace.c                               |    9 
+ kernel/trace/trace.h                               |    5 
+ kernel/trace/trace_probe.c                         |   22 
+ kernel/trace/trace_probe.h                         |    8 
+ kernel/trace/trace_wprobe.c                        | 1115 ++++++++++++++++++++
+ tools/testing/selftests/ftrace/config              |    2 
+ .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   68 +
+ .../test.d/dynevent/wprobes_syntax_errors.tc       |   20 
+ .../ftrace/test.d/trigger/trigger-wprobe.tc        |   48 +
+ 20 files changed, 1625 insertions(+), 65 deletions(-)
+ create mode 100644 Documentation/trace/wprobetrace.rst
+ create mode 100644 kernel/trace/trace_wprobe.c
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
