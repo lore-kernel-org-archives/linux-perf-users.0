@@ -1,166 +1,505 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98230267F59
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Sep 2025 14:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4140F264A92
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Sep 2025 15:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758637866; cv=none; b=MZjJuZpDaxmOm9sFpbadgKE9IHn98wQADq23/37gi77HgwUUbQ1SEx6WVB9MymHh4aKvyAt/s5cUTFIR050ZECuMTaKISkRrkW2Dqi++PRc2SlKQTOOn8LN6osPZC0imLXtzyXZ78doTImomK5Iu3NwqnAUPuhqvCOb6EDaPpdY=
+	t=1758642788; cv=none; b=VZSs6ug2h+9NWZz3sdWprZK8HoE52AKiRTnS2sDGPaRNedzciiEoVHs6Nn7DrgTFXCDGlDpSF1vgt2ctwbFG7jhhZUeaS9xGJacFTXenP8QZ/sce66X+eEZactWuhmnpyvvNtbzmHc5q35YFDG2g1yK6KN5gM0+hJq6sw/8Nt1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758637866; c=relaxed/simple;
-	bh=nUazmvD6mqNMpiKJglu3sHLs2k1PHBMidIFT68RkjcE=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=BhjH1YDCqGWuYQRfoAgiVJwPvxpSxxb/aVt6QRkPBV27a2OArITk55+3Ztnr8RI5F2HbkhuHbUGl56A6GCWPOegIuF2GtmgTJPmHanU4CkH1wSr2C8gYdqhNYS20DJE9TSOUqrybjE01G6IhVV6ZTvTwh6QtHHnMgE5fvSclKcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BHPUu4iz; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1758642788; c=relaxed/simple;
+	bh=z+uFfbT2+V0VN1QUBUBVU7Yf0yCZy6rUsLod9G1TZRo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=SXotARffkYtp3PbnYvVCUU/XJY9y9XOq2gbAFJd8CWA/QyfsdlzHzSGBmXRbBd5bNXjB1oD02nJg44c6GYJQa1aNiSNEIzNNZjgyQhPJpmPUdBtkZP17EjNv58tqWV98o9wVXrZSkXUDbSNWPnf2BaxEyUL+o8V6yTfmi5vCSKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OJJcSOU9; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BHPUu4iz"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58NBr9gD006772
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Sep 2025 14:31:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=9jNyllVgn69Ms3EiBsAehiaDjsLB
-	cCCoHF4Y1oHLVUw=; b=BHPUu4iz4i+SPwuFFITgBhW5mwuhkbot/fFiZhNtU2cj
-	hzTBS0IATNekRVzoQBec4Gqm1s21vwGNvmr+cAXc4/z7dzPNk5Fazw/LdJA+b9rI
-	JrqTCjkHnW7eT/S70K81StI4QPpdcqJRNR1lEpA9O/gpD63mWJigbWsCGyk2DIjO
-	Um7nJiRDt4rn+D6rMILOBKsPuf/Pb8mtbeEKQkndFr7O/lpjoWv0GQ/7Fu35IEVo
-	IG9jxfS2dMAES4WDgpOQTZEsonYBlY994A6CYlzfCtB4o4gHzc75f4Biy4xz6/Tc
-	c3Yo0bhSUXcs8seMDolp0Wcq0q55a7FVUsG5sAyNaA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 499jpk99jv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Sep 2025 14:31:01 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 58NEKoH8023821
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Sep 2025 14:31:01 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 499jpk99js-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Sep 2025 14:31:01 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58NDgFoT013592;
-	Tue, 23 Sep 2025 14:31:00 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 49a8tjbmd2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Sep 2025 14:31:00 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58NEUu1L44695966
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 23 Sep 2025 14:30:57 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E11932004F;
-	Tue, 23 Sep 2025 14:30:56 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B8C0B2004D;
-	Tue, 23 Sep 2025 14:30:56 +0000 (GMT)
-Received: from [9.152.212.92] (unknown [9.152.212.92])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 23 Sep 2025 14:30:56 +0000 (GMT)
-Message-ID: <9744e7fc-6884-4849-adf0-6c1044bd19b5@linux.ibm.com>
-Date: Tue, 23 Sep 2025 16:30:56 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OJJcSOU9"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2681645b7b6so218375ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Sep 2025 08:53:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1758642785; x=1759247585; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s2P4DLa291UN5dMIrJwLdZEHxEo+piJsQetYJAPBjZk=;
+        b=OJJcSOU98RU4rsrPHI3eyZgynatz+5P6KZ8ax1EVUp5/iSCyyf5X/eci9Vl2YObDhp
+         27Z1IqJkUxRs2vuNsD+QXazaMot7qlk9IJntc8lLsRpqflequS7yvJYEe/d9sJyYEEmq
+         In5v13gaBf7xP9u57stnAsFwV6J0gsLCqSY0EbeZFFvhOiRnAWtr0lQL+xIDjM9UliFs
+         S2u5JmS5Sz1/HcA8b76tRu454ZsR87mwhdEaK7QjbV0DE1HknRrXmSkNcgZYxtqQkyZf
+         eb4ku7UIQmB18YxneGxnjogX/Gj6D19rwVVpzwIwCvLWR7lcPogh0fgG/okabS50Y88Z
+         wPLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758642785; x=1759247585;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s2P4DLa291UN5dMIrJwLdZEHxEo+piJsQetYJAPBjZk=;
+        b=gU4RXeoxBfCDPUFWDlGqfCaIHhC5n5uzNl7y4p9H1hBS1dAGhWzUqKVH1egCRRnNUR
+         ne1QP0FGyAnB8rw1hJ4d9b7x8zI+/Z5oFsidobNnBWyUqN/Z/tKGvgTgfaR3AWyZRKIt
+         MrVYW9LaZU77f9AD0fE1VlkL07lMhdkl6zV2vupBLunWYeyaj3tCz1m+eVAeIUESptbe
+         BFIVK9S14Kgr+i43eBdaSko+XR1DjLdh4gBMfUtcpjH4eZdBXOHj0d5vGvke5nw50QvZ
+         bEGrswhmaTAhRPpImv1fCKAnTDFGruIdD3fqOQ3KhN+74mmaIix5IQLiebGt/O5p86DH
+         FDbw==
+X-Forwarded-Encrypted: i=1; AJvYcCXniyIa5If3MchHV9ojR1hinWaKtkue7gAymjlmRdaeSq4K4bsyyCPAGNv1Md1yfQLHGUtKJpyX+DTYkwHMhHtT@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDN/wBqbDmbAGn/QN0hmw74iqYwt+wSfDnOGtype5JY2cGvvPY
+	1e68U/LtY9oWlEn60wdgIqG//+z6wIjPXIZwOInNp80fXRrNvmWiGWKdkFtNZbrOwnLoqTs0p5C
+	7Yip4OJBSrAx5CD22JUArPsXO3OAbSc2QRezIPLri
+X-Gm-Gg: ASbGncudVOGjZuFVxHv7JQLBJBhLh6AAUlU8ApArajC0e+iJY3gvytGpjTE2vSCMhhP
+	o55gA+l6ZDMjH/TnYS1uXHmiuBcfm00GFgEaimayvnHRXY8SnDtEiwnt40wQnWX6e3ie5M55alE
+	hPYVGJ55fG+MsGAdhbjPUxC7qvTd0oVjqgAWu9lcJX49KIlZvcE0sXyMaK0zufLBVZW0Q3oGojx
+	tPzL1RnE16214VN3tveauyHnuqkTuQ5SwzvBA==
+X-Google-Smtp-Source: AGHT+IG70m5QoiJJvuwAcevMWtg86TUItbecWmuxDqdihU/rHXvTVdXNsMfLpfuUdu+Ffaj4A8H5JLTcJWzV4vzsyGo=
+X-Received: by 2002:a17:902:e5c5:b0:274:506d:7fea with SMTP id
+ d9443c01a7336-27ebcbcc1b2mr357055ad.5.1758642784825; Tue, 23 Sep 2025
+ 08:53:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Ian Rogers <irogers@google.com>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>
-Cc: Jan Polensky <japo@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Vasily Gorbik
- <gor@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>
-From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: Regression on perf stat command on s390 z/VM systems
-Organization: IBM
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=L50dQ/T8 c=1 sm=1 tr=0 ts=68d2af25 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=Ca0GTFGugmhc6tUoCQ4A:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTIwMDAxMCBTYWx0ZWRfX0L3mMtKb89cx
- b4ytMTiK05o0Zljp8p9Z/+Ln+bsHWzRqrTefUcxulkD81iKZ8A6hNbImquBSWSVkxmsoWXKUdNv
- tYgOu5q7/tWa35djbJFVeK55FPrCH2K9BCyn6vYwGjuOdUrf31oW5scKKycnFlK6IFLsMcqvDbQ
- 8GOMKKmceD950e00DwsXsaeOBUR1cjqqrCxwUNwOJcp6U5JnofgmeLuOAwQKpG1Fuh7Bn2LuAX5
- IHOvXzZaaoPOrFOHNZtSXcwzD/z8h08Qsc45f4CoWNJK6BaEpMRxQf0cwruA2cvkvLk3p4tqo+s
- ayRQc2tcDkpJREpTxf7WAhJOxJ+jH+4+uxgbQQYgaL5iaHHs1e3HcbxBQHP6VVfOyotxibICNzM
- v4tXyQBc
-X-Proofpoint-ORIG-GUID: 3YF_hwR7Foyo7ANAM89PDxjvozdTGHFU
-X-Proofpoint-GUID: xnznJytUP_xcdyjV0xKfQoQM0lAUwo4B
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-23_03,2025-09-22_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 adultscore=0 phishscore=0 impostorscore=0 spamscore=0
- priorityscore=1501 suspectscore=0 clxscore=1015 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509200010
+References: <20250923041844.400164-1-irogers@google.com> <20250923041844.400164-23-irogers@google.com>
+In-Reply-To: <20250923041844.400164-23-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 23 Sep 2025 08:52:53 -0700
+X-Gm-Features: AS18NWABI_j0UfirBS1qDjfAYkIAHiJq_Fz6ZmvM95S5kAUNEw1x-M1-JJ3_Amg
+Message-ID: <CAP-5=fUvDoyMW2pu-f4-Qoxr6RX_k2+NZ4STmeSDQRFyhvN89g@mail.gmail.com>
+Subject: Re: [PATCH v5 22/25] perf test parse-events: Remove cpu PMU requirement
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Xu Yang <xu.yang_2@nxp.com>, Thomas Falcon <thomas.falcon@intel.com>, 
+	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, 
+	Atish Patra <atishp@rivosinc.com>, Beeman Strong <beeman@rivosinc.com>, Leo Yan <leo.yan@arm.com>, 
+	Vince Weaver <vincent.weaver@maine.edu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On linux-next since tag next-20250917 several test cases fail
-on s390 z/VM machines:
+On Mon, Sep 22, 2025 at 9:19=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> In the event parse string, switch "cpu" to "default_core" and then
+> rewrite this to the first core PMU name prior to parsing. This enables
+> testing with a PMU on hybrid x86 and other systems that don't use
+> "cpu" for the core PMU name. The name "default_core" is already used
+> by jevents. Update test expectations to match.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
- 88 perf stat CSV output linter
- 91 perf stat JSON output linter
- 93 perf stat STD output linter
+This introduces a test failure on Intel hybrid that I'll fix in v6.
+Previously the failing tests weren't run and the test expectation was
+that, with a PMU or without a PMU, an event would be opened on all
+PMUs - which isn't true if the PMU is specified.
 
-There are more, all caused by the same issue.
-I bisected this down to
-commit 9eac5612da1c91 ("perf stat: Don't skip failing group events")
+Thanks,
+Ian
 
-Before this commit the command
-
- # perf stat -- true
- Performance counter stats for 'true':
-
-           143,936      task-clock                       #    0.333 CPUs utilized
-                 0      context-switches                 #    0.000 /sec
-                 0      cpu-migrations                   #    0.000 /sec
-                43      page-faults                      #  298.744 K/sec
-   <not supported>      cycles
-
-       0.000431791 seconds time elapsed
-
-       0.000061000 seconds user
-       0.000439000 seconds sys
-
-This is correct. On z/VM a linux guest has no PMU and the event 'cycles'
-does not exist. This is shown as 'not supported' and the fall back was
-task-clock, a software event. Also the perf stat exit code was 0.
-
-With commit 9eac5612da1c91
-that behavior changed:
-
- # perf stat -- true
- Error:
- The cycles event is not supported.
- # echo exit code $?
- exit code 255
- #
-
-There is no fall back to event task-clock and no further output to
-post-process. Also the perf tool now exits with non-zero exit code.
-
-This breaks a lot of test cases.
-Was this done on intension? Can we add a fallback to use a software event
-cpu-clock or task-clock when the hardware event 'cycles' is not available.
-
-How to proceed with the issue? Any suggestions?
-
-Thanks a lot for your help.
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
-
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-
+> ---
+>  tools/perf/tests/parse-events.c | 141 ++++++++++++++------------------
+>  1 file changed, 63 insertions(+), 78 deletions(-)
+>
+> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-eve=
+nts.c
+> index d0f1e05139ac..4f197f34621b 100644
+> --- a/tools/perf/tests/parse-events.c
+> +++ b/tools/perf/tests/parse-events.c
+> @@ -646,19 +646,22 @@ static int test__checkevent_list(struct evlist *evl=
+ist)
+>  static int test__checkevent_pmu_name(struct evlist *evlist)
+>  {
+>         struct evsel *evsel =3D evlist__first(evlist);
+> +       struct perf_pmu *core_pmu =3D perf_pmus__find_core_pmu();
+> +       char buf[256];
+>
+> -       /* cpu/config=3D1,name=3Dkrava/u */
+> +       /* default_core/config=3D1,name=3Dkrava/u */
+>         TEST_ASSERT_VAL("wrong number of entries", 2 =3D=3D evlist->core.=
+nr_entries);
+>         TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW =3D=3D evsel->core.at=
+tr.type);
+>         TEST_ASSERT_VAL("wrong config", 1 =3D=3D evsel->core.attr.config)=
+;
+>         TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "krava"));
+>
+> -       /* cpu/config=3D2/u" */
+> +       /* default_core/config=3D2/u" */
+>         evsel =3D evsel__next(evsel);
+>         TEST_ASSERT_VAL("wrong number of entries", 2 =3D=3D evlist->core.=
+nr_entries);
+>         TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW =3D=3D evsel->core.at=
+tr.type);
+>         TEST_ASSERT_VAL("wrong config", 2 =3D=3D evsel->core.attr.config)=
+;
+> -       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, "cpu/config=
+=3D2/u"));
+> +       snprintf(buf, sizeof(buf), "%s/config=3D2/u", core_pmu->name);
+> +       TEST_ASSERT_VAL("wrong name", evsel__name_is(evsel, buf));
+>
+>         return TEST_OK;
+>  }
+> @@ -667,7 +670,7 @@ static int test__checkevent_pmu_partial_time_callgrap=
+h(struct evlist *evlist)
+>  {
+>         struct evsel *evsel =3D evlist__first(evlist);
+>
+> -       /* cpu/config=3D1,call-graph=3Dfp,time,period=3D100000/ */
+> +       /* default_core/config=3D1,call-graph=3Dfp,time,period=3D100000/ =
+*/
+>         TEST_ASSERT_VAL("wrong number of entries", 2 =3D=3D evlist->core.=
+nr_entries);
+>         TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW =3D=3D evsel->core.at=
+tr.type);
+>         TEST_ASSERT_VAL("wrong config", 1 =3D=3D evsel->core.attr.config)=
+;
+> @@ -679,7 +682,7 @@ static int test__checkevent_pmu_partial_time_callgrap=
+h(struct evlist *evlist)
+>         TEST_ASSERT_VAL("wrong callgraph",  !evsel__has_callchain(evsel))=
+;
+>         TEST_ASSERT_VAL("wrong time",  !(PERF_SAMPLE_TIME & evsel->core.a=
+ttr.sample_type));
+>
+> -       /* cpu/config=3D2,call-graph=3Dno,time=3D0,period=3D2000/ */
+> +       /* default_core/config=3D2,call-graph=3Dno,time=3D0,period=3D2000=
+/ */
+>         evsel =3D evsel__next(evsel);
+>         TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW =3D=3D evsel->core.at=
+tr.type);
+>         TEST_ASSERT_VAL("wrong config", 2 =3D=3D evsel->core.attr.config)=
+;
+> @@ -702,7 +705,8 @@ static int test__checkevent_pmu_events(struct evlist =
+*evlist)
+>
+>         evlist__for_each_entry(evlist, evsel) {
+>                 TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW =3D=3D evsel-=
+>core.attr.type ||
+> -                                             strcmp(evsel->pmu->name, "c=
+pu"));
+> +                               !strncmp(evsel__name(evsel), evsel->pmu->=
+name,
+> +                                        strlen(evsel->pmu->name)));
+>                 TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.e=
+xclude_user);
+>                 TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.=
+exclude_kernel);
+>                 TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.excl=
+ude_hv);
+> @@ -735,7 +739,7 @@ static int test__checkevent_pmu_events_mix(struct evl=
+ist *evlist)
+>                 TEST_ASSERT_VAL("wrong pinned", !evsel->core.attr.pinned)=
+;
+>                 TEST_ASSERT_VAL("wrong exclusive", !evsel->core.attr.excl=
+usive);
+>         }
+> -       /* cpu/pmu-event/u*/
+> +       /* default_core/pmu-event/u*/
+>         evsel =3D evsel__next(evsel);
+>         TEST_ASSERT_VAL("wrong type", evsel__find_pmu(evsel)->is_core);
+>         TEST_ASSERT_VAL("wrong exclude_user",
+> @@ -1570,14 +1574,9 @@ static int test__checkevent_config_cache(struct ev=
+list *evlist)
+>         return test__checkevent_genhw(evlist);
+>  }
+>
+> -static bool test__pmu_cpu_valid(void)
+> +static bool test__pmu_default_core_event_valid(void)
+>  {
+> -       return !!perf_pmus__find("cpu");
+> -}
+> -
+> -static bool test__pmu_cpu_event_valid(void)
+> -{
+> -       struct perf_pmu *pmu =3D perf_pmus__find("cpu");
+> +       struct perf_pmu *pmu =3D perf_pmus__find_core_pmu();
+>
+>         if (!pmu)
+>                 return false;
+> @@ -2103,26 +2102,23 @@ static const struct evlist_test test__events[] =
+=3D {
+>
+>  static const struct evlist_test test__events_pmu[] =3D {
+>         {
+> -               .name  =3D "cpu/config=3D10,config1=3D1,config2=3D3,perio=
+d=3D1000/u",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "default_core/config=3D10,config1=3D1,config2=
+=3D3,period=3D1000/u",
+>                 .check =3D test__checkevent_pmu,
+>                 /* 0 */
+>         },
+>         {
+> -               .name  =3D "cpu/config=3D1,name=3Dkrava/u,cpu/config=3D2/=
+u",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "default_core/config=3D1,name=3Dkrava/u,defaul=
+t_core/config=3D2/u",
+>                 .check =3D test__checkevent_pmu_name,
+>                 /* 1 */
+>         },
+>         {
+> -               .name  =3D "cpu/config=3D1,call-graph=3Dfp,time,period=3D=
+100000/,cpu/config=3D2,call-graph=3Dno,time=3D0,period=3D2000/",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "default_core/config=3D1,call-graph=3Dfp,time,=
+period=3D100000/,default_core/config=3D2,call-graph=3Dno,time=3D0,period=3D=
+2000/",
+>                 .check =3D test__checkevent_pmu_partial_time_callgraph,
+>                 /* 2 */
+>         },
+>         {
+> -               .name  =3D "cpu/name=3D'COMPLEX_CYCLES_NAME:orig=3Dcycles=
+,desc=3Dchip-clock-ticks',period=3D0x1,event=3D0x2/ukp",
+> -               .valid =3D test__pmu_cpu_event_valid,
+> +               .name  =3D "default_core/name=3D'COMPLEX_CYCLES_NAME:orig=
+=3Dcycles,desc=3Dchip-clock-ticks',period=3D0x1,event=3D0x2/ukp",
+> +               .valid =3D test__pmu_default_core_event_valid,
+>                 .check =3D test__checkevent_complex_name,
+>                 /* 3 */
+>         },
+> @@ -2137,158 +2133,132 @@ static const struct evlist_test test__events_pm=
+u[] =3D {
+>                 /* 5 */
+>         },
+>         {
+> -               .name  =3D "cpu/L1-dcache-load-miss/",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "default_core/L1-dcache-load-miss/",
+>                 .check =3D test__checkevent_genhw,
+>                 /* 6 */
+>         },
+>         {
+> -               .name  =3D "cpu/L1-dcache-load-miss/kp",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "default_core/L1-dcache-load-miss/kp",
+>                 .check =3D test__checkevent_genhw_modifier,
+>                 /* 7 */
+>         },
+>         {
+> -               .name  =3D "cpu/L1-dcache-misses,name=3Dcachepmu/",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "default_core/L1-dcache-misses,name=3Dcachepmu=
+/",
+>                 .check =3D test__checkevent_config_cache,
+>                 /* 8 */
+>         },
+>         {
+> -               .name  =3D "cpu/instructions/",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "default_core/instructions/",
+>                 .check =3D test__checkevent_symbolic_name,
+>                 /* 9 */
+>         },
+>         {
+> -               .name  =3D "cpu/cycles,period=3D100000,config2/",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "default_core/cycles,period=3D100000,config2/"=
+,
+>                 .check =3D test__checkevent_symbolic_name_config,
+>                 /* 0 */
+>         },
+>         {
+> -               .name  =3D "cpu/instructions/h",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "default_core/instructions/h",
+>                 .check =3D test__checkevent_symbolic_name_modifier,
+>                 /* 1 */
+>         },
+>         {
+> -               .name  =3D "cpu/instructions/G",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "default_core/instructions/G",
+>                 .check =3D test__checkevent_exclude_host_modifier,
+>                 /* 2 */
+>         },
+>         {
+> -               .name  =3D "cpu/instructions/H",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "default_core/instructions/H",
+>                 .check =3D test__checkevent_exclude_guest_modifier,
+>                 /* 3 */
+>         },
+>         {
+> -               .name  =3D "{cpu/instructions/k,cpu/cycles/upp}",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "{default_core/instructions/k,default_core/cyc=
+les/upp}",
+>                 .check =3D test__group1,
+>                 /* 4 */
+>         },
+>         {
+> -               .name  =3D "{cpu/cycles/u,cpu/instructions/kp}:p",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "{default_core/cycles/u,default_core/instructi=
+ons/kp}:p",
+>                 .check =3D test__group4,
+>                 /* 5 */
+>         },
+>         {
+> -               .name  =3D "{cpu/cycles/,cpu/cache-misses/G}:H",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "{default_core/cycles/,default_core/cache-miss=
+es/G}:H",
+>                 .check =3D test__group_gh1,
+>                 /* 6 */
+>         },
+>         {
+> -               .name  =3D "{cpu/cycles/,cpu/cache-misses/H}:G",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "{default_core/cycles/,default_core/cache-miss=
+es/H}:G",
+>                 .check =3D test__group_gh2,
+>                 /* 7 */
+>         },
+>         {
+> -               .name  =3D "{cpu/cycles/G,cpu/cache-misses/H}:u",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "{default_core/cycles/G,default_core/cache-mis=
+ses/H}:u",
+>                 .check =3D test__group_gh3,
+>                 /* 8 */
+>         },
+>         {
+> -               .name  =3D "{cpu/cycles/G,cpu/cache-misses/H}:uG",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "{default_core/cycles/G,default_core/cache-mis=
+ses/H}:uG",
+>                 .check =3D test__group_gh4,
+>                 /* 9 */
+>         },
+>         {
+> -               .name  =3D "{cpu/cycles/,cpu/cache-misses/,cpu/branch-mis=
+ses/}:S",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "{default_core/cycles/,default_core/cache-miss=
+es/,default_core/branch-misses/}:S",
+>                 .check =3D test__leader_sample1,
+>                 /* 0 */
+>         },
+>         {
+> -               .name  =3D "{cpu/instructions/,cpu/branch-misses/}:Su",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "{default_core/instructions/,default_core/bran=
+ch-misses/}:Su",
+>                 .check =3D test__leader_sample2,
+>                 /* 1 */
+>         },
+>         {
+> -               .name  =3D "cpu/instructions/uDp",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "default_core/instructions/uDp",
+>                 .check =3D test__checkevent_pinned_modifier,
+>                 /* 2 */
+>         },
+>         {
+> -               .name  =3D "{cpu/cycles/,cpu/cache-misses/,cpu/branch-mis=
+ses/}:D",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "{default_core/cycles/,default_core/cache-miss=
+es/,default_core/branch-misses/}:D",
+>                 .check =3D test__pinned_group,
+>                 /* 3 */
+>         },
+>         {
+> -               .name  =3D "cpu/instructions/I",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "default_core/instructions/I",
+>                 .check =3D test__checkevent_exclude_idle_modifier,
+>                 /* 4 */
+>         },
+>         {
+> -               .name  =3D "cpu/instructions/kIG",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "default_core/instructions/kIG",
+>                 .check =3D test__checkevent_exclude_idle_modifier_1,
+>                 /* 5 */
+>         },
+>         {
+> -               .name  =3D "cpu/cycles/u",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "default_core/cycles/u",
+>                 .check =3D test__sym_event_slash,
+>                 /* 6 */
+>         },
+>         {
+> -               .name  =3D "cpu/cycles/k",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "default_core/cycles/k",
+>                 .check =3D test__sym_event_dc,
+>                 /* 7 */
+>         },
+>         {
+> -               .name  =3D "cpu/instructions/uep",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "default_core/instructions/uep",
+>                 .check =3D test__checkevent_exclusive_modifier,
+>                 /* 8 */
+>         },
+>         {
+> -               .name  =3D "{cpu/cycles/,cpu/cache-misses/,cpu/branch-mis=
+ses/}:e",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "{default_core/cycles/,default_core/cache-miss=
+es/,default_core/branch-misses/}:e",
+>                 .check =3D test__exclusive_group,
+>                 /* 9 */
+>         },
+>         {
+> -               .name  =3D "cpu/cycles,name=3Dname/",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "default_core/cycles,name=3Dname/",
+>                 .check =3D test__term_equal_term,
+>                 /* 0 */
+>         },
+>         {
+> -               .name  =3D "cpu/cycles,name=3Dl1d/",
+> -               .valid =3D test__pmu_cpu_valid,
+> +               .name  =3D "default_core/cycles,name=3Dl1d/",
+>                 .check =3D test__term_equal_legacy,
+>                 /* 1 */
+>         },
+> @@ -2378,15 +2348,30 @@ static int combine_test_results(int existing, int=
+ latest)
+>  static int test_events(const struct evlist_test *events, int cnt)
+>  {
+>         int ret =3D TEST_OK;
+> +       struct perf_pmu *core_pmu =3D perf_pmus__find_core_pmu();
+>
+>         for (int i =3D 0; i < cnt; i++) {
+> -               const struct evlist_test *e =3D &events[i];
+> +               struct evlist_test e =3D events[i];
+>                 int test_ret;
+> +               const char *pos =3D e.name;
+> +               char buf[1024], *buf_pos =3D buf, *end;
+> +
+> +               while ((end =3D strstr(pos, "default_core"))) {
+> +                       size_t len =3D end - pos;
+> +
+> +                       strncpy(buf_pos, pos, len);
+> +                       pos =3D end + 12;
+> +                       buf_pos +=3D len;
+> +                       strcpy(buf_pos, core_pmu->name);
+> +                       buf_pos +=3D strlen(core_pmu->name);
+> +               }
+> +               strcpy(buf_pos, pos);
+>
+> -               pr_debug("running test %d '%s'\n", i, e->name);
+> -               test_ret =3D test_event(e);
+> +               e.name =3D buf;
+> +               pr_debug("running test %d '%s'\n", i, e.name);
+> +               test_ret =3D test_event(&e);
+>                 if (test_ret !=3D TEST_OK) {
+> -                       pr_debug("Event test failure: test %d '%s'", i, e=
+->name);
+> +                       pr_debug("Event test failure: test %d '%s'", i, e=
+.name);
+>                         ret =3D combine_test_results(ret, test_ret);
+>                 }
+>         }
+> --
+> 2.51.0.534.gc79095c0ca-goog
+>
