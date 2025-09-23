@@ -1,55 +1,55 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-oi1-f202.google.com (mail-oi1-f202.google.com [209.85.167.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46AC0311943
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Sep 2025 22:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3500A311C32
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Sep 2025 22:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758666809; cv=none; b=qFMNFHyEO/my07vsgZUw5/ND8fQBsP5497YHNJ3px3uMGSxCeO74jOBlde2X7PxK/HotkztVkaBD9DhUJgTOjj4y6hC7/RTCI/ytdzfOSszOhSMspVZaTlRsQR4fGq8k7tcBPXXIcFfVPG/EH6HLMVOqfd0GIctmQiwBgOgBAgk=
+	t=1758666811; cv=none; b=crfpI4Em2nDn6gMn1xzwYtOadO0Un/pOMCit+BKBzTJS5v8KShMATRLvOxq1eQ+0hGT5QXAqKzYhiBpTfTW1BU7H2DWFQdE28sCCscPTQ1D6OUF6KhIiMw9+160qjhoRjmmJtEKXf3E4iEFRZ7E3C+ctFcNH7rtyP4ar1u3IT/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758666809; c=relaxed/simple;
-	bh=luwZRNv0cwausX9DyzkSxwPPCb+bpc4Fbcw7XNow1CY=;
+	s=arc-20240116; t=1758666811; c=relaxed/simple;
+	bh=6w32qiODxVbWhu7gKe69wsxnRqgpm9MqdSFipBqSCVY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=TH9fyGTNK+HZHfGM429WtDfnbDK9zLzd0Jm4/tTLYL1mraatMEEG9+cO5VvIU4R8FkV92S3cpOzoAzPibSYQlXZ2ERic3rIYAoHOk/ayBcLToei+Vc9NMMuuDrrlJFBv2DTxSBxlmtH/XMGYDlOmSkaTQmKztDsRoWxnUjw5h8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QhuBckXZ; arc=none smtp.client-ip=209.85.128.202
+	 To:Cc:Content-Type; b=YXC16CkUyEvzIHNUf5TrucMM3G+hGpaD7vS69v+NTTc22vkiURcCDaiBHw7CqkfAs/tBkD6AcIjSvRyfoF3y6dTUQxsbyn4sSAbg4/arbgirjOLmi4M6fwzi8x8Mquv4nTiQ/pBRqzrE9TsASIwv2zFaC+iiAtwx34x870+s4xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tBK1MTam; arc=none smtp.client-ip=209.85.167.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QhuBckXZ"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-745c3f7e569so25344467b3.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Sep 2025 15:33:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tBK1MTam"
+Received: by mail-oi1-f202.google.com with SMTP id 5614622812f47-435de7c0722so6444170b6e.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Sep 2025 15:33:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1758666806; x=1759271606; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UaTTG9m1t55nqlYCplpxcuoDY1QX8geYe7NsmZ1Ka2k=;
-        b=QhuBckXZ6jsLAnzyRhPVr4jBaudlemP+i3XA4shJd6ijAUHc8kmxRCKe9aBlKKDngs
-         fwy/CYYCAZaitrUvO0T5Qs6oMMkCJfRZ3zdj1CbQBqTuNnRuppUHjGU2FCO2Afum3gG+
-         9rfdYQPa/XMGMCOIXZhMsiOTBcFNfUhgaFYt37eW3K2r19kRv7P4FdCwyaMCroIkYVZG
-         Ct50xfTN+CJle/ZBFshgGPFyzXnbgbs2byE4WvtLkzuMmMr9t8TfZFCol+LXO5ny4HcG
-         tv+I5i+Px3GsWlZizT1n3UX2H74IuJhYS1Wg+V4+Fpu734LYFAzWLGnACXBrQ3vgtkmx
-         pwHQ==
+        d=google.com; s=20230601; t=1758666808; x=1759271608; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7JPySr0sbcR3UAmkPCoUXEtd2Wkfd/YW7TDvRR50H+Y=;
+        b=tBK1MTamfV0pROwepT1Ox1FQgCV/yXICEuozgD296em9D2A0eftOhEQ5+l1oIwv7ho
+         v5ALWFmawkiiDuH+Ul/UY/TOktQFFWu9mhu17qgDXrBboA1h8Zhb5ptv0pzUhQ3jS3Ps
+         hnnTmotz3oN/IryEg5Y1aIU7gh2srMYpCylX8a12vdFybQKXYTgcOxH9zbc51//kbHOD
+         a0qCtt6JpZ8VWI0cLSmRyE2LE6Rtro8s1gKALSLvFkfDUYsnQ9hAoFh+bafL7Fy0js66
+         Tl13o/aMCtYLna+rWZHd2EkbYljwKj++P2lg74bDEHL30NzruBHciQZxpnwD9aAAPQi0
+         kXUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758666806; x=1759271606;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UaTTG9m1t55nqlYCplpxcuoDY1QX8geYe7NsmZ1Ka2k=;
-        b=YktPm6/uWO8Dgx5wfy7Cnl1brFsTnx9MnWRLWWnTbDS0Ix979hrgsYGLJXMdcXkaAZ
-         0bo0/taWeXktgxjyTtalIVr3qTYQ1BNYirraSp4P8gXZ20wBSfEIHUBqX/S3nP61VmB6
-         cMrENZ4HPCEj2qKVmi0SJa/2Hq0B77J2lmxcXw8yjalxCfaRmQVZWQAZQdc+xEv1sitw
-         ZrBtgz9V9XKnLQH954+/58hL34bfYuHTSGdG5t1xpzAih0C1/Rxeakz6qbdYU9J0FmiA
-         PCo3rtXf23sESJaNFm6sG41llhuE1tq9PZiYKN+951kxgFHauJSZIi8pO+UKVDIuplbn
-         QTtg==
-X-Forwarded-Encrypted: i=1; AJvYcCVFiiA8Jo5gNcBKsX6lsWGihVdew1loFYFpveOu+lkUl0eYAdmkSr9OdiROcRwFiPUc5rkvSTF5BW5C4WW/KzAN@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxj+r7x/f6nynyi7z65ACAQSY2g/bBXV7r37DaIIb00TIZl7cvA
-	FurwkT/hfDt0qM10uzUYjkSQfX3DuY9M2JAsvslPp8oObgRJLqW2boaQ7oxrOvSKQ6Pg0wTHW47
-	sldEWDMsiyg==
-X-Google-Smtp-Source: AGHT+IGT/OjsNEc+PfAToaXyOncv+i3ZDoGYd6AiDK9uBHLi3ylvmi2/SIs+cgAeL3Op1AtEdKXniSfKcxfw
-X-Received: from ywbfq7.prod.google.com ([2002:a05:690c:3507:b0:732:fd98:aeb8])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:690c:6d02:b0:737:523a:f7fe
- with SMTP id 00721157ae682-758a5f1f525mr38007387b3.39.1758666806158; Tue, 23
- Sep 2025 15:33:26 -0700 (PDT)
-Date: Tue, 23 Sep 2025 15:32:48 -0700
+        d=1e100.net; s=20230601; t=1758666808; x=1759271608;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7JPySr0sbcR3UAmkPCoUXEtd2Wkfd/YW7TDvRR50H+Y=;
+        b=px9tdrjViNIOgLhP4PAFQuz2RfjP/0uQqtvp8DebENlIyaytZthdTDBfaZOzqd/OjI
+         Vpw4tVx575ftA3Vg9oAb7TplfEhNxyrmLkytIyahtsIDv9IfvwshOgKTc/B+Ft5Vn/IY
+         2VNyEQihGEG8n/DHBYsjguE++UB3AjdQJTSZRvvtjRgcIhuxkHACtdzz2KnMccXbNa3q
+         zPZasTnJDT5bCaZaePwKLFY/9w8XuUzqtQudsDYU11rZfl73vF5CzpHWcyCNJpkn1V/0
+         VobfN1cU3ACutQXpGRGpVljza/qN3qxxy87+wFVsdSvs4W15Y59AEjG/3wDbEw4FDoUv
+         8PXg==
+X-Forwarded-Encrypted: i=1; AJvYcCW0/knhXHCk1+OMmjgLj3Xn0/sOEVxfSC4i5mSMDjd4YvXVMPPae3cO0nQ1RjnxBWFA68X1flwZT+yIws1GQ81c@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxjx+hNYXVnEF6jgyO/A4oBPoeAB/YYUdzD8t2XbE6IzSp2lmuH
+	TPsKRNITWzQSlaSrYjNCfMumvGztwaXvWbikx4VtG5hp7w9RWiuiWyT3PmqgYLWIKcUQWPL1fNk
+	A8zJioMGAng==
+X-Google-Smtp-Source: AGHT+IH2sTB/4h6yVZu7HWXEN2iwwI7tkqEgPMQpECn/qEGXJa2PJA3HxSe9wqfB/uiloWN9gQX09AfJ3c+u
+X-Received: from oabry4.prod.google.com ([2002:a05:6871:2084:b0:349:df6f:4e81])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6808:f92:b0:438:3ed4:9059
+ with SMTP id 5614622812f47-43f2d4c2e51mr2660852b6e.44.1758666808363; Tue, 23
+ Sep 2025 15:33:28 -0700 (PDT)
+Date: Tue, 23 Sep 2025 15:32:49 -0700
 In-Reply-To: <20250923223312.238185-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250923223312.238185-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.534.gc79095c0ca-goog
-Message-ID: <20250923223312.238185-5-irogers@google.com>
-Subject: [PATCH v6 04/28] perf stat: Avoid wildcarding PMUs for default events
+Message-ID: <20250923223312.238185-6-irogers@google.com>
+Subject: [PATCH v6 05/28] perf record: Skip don't fail for events that don't open
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,194 +73,256 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, Atish Patra <atishp@rivosinc.com>, 
 	Beeman Strong <beeman@rivosinc.com>, Leo Yan <leo.yan@arm.com>, 
 	Vince Weaver <vincent.weaver@maine.edu>
+Cc: Thomas Richter <tmricht@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Without a PMU perf matches an event against any PMU with the
-event. Unfortunately some PMU drivers advertise a "cycles" event which
-is typically just a core event. To make perf's behavior consistent,
-just look up default events with their designated PMU types.
+Whilst for many tools it is an expected behavior that failure to open
+a perf event is a failure, ARM decided to name PMU events the same as
+legacy events and then failed to rename such events on a server uncore
+SLC PMU. As perf's default behavior when no PMU is specified is to
+open the event on all PMUs that advertise/"have" the event, this
+yielded failures when trying to make the priority of legacy and
+sysfs/json events uniform - something requested by RISC-V and ARM. A
+legacy event user on ARM hardware may find their event opened on an
+uncore PMU which for perf record will fail. Arnaldo suggested skipping
+such events which this patch implements. Rather than have the skipping
+conditional on running on ARM, the skipping is done on all
+architectures as such a fundamental behavioral difference could lead
+to problems with tools built/depending on perf.
 
+An example of perf record failing to open events on x86 is:
+```
+$ perf record -e data_read,cycles,LLC-prefetch-read -a sleep 0.1
+Error:
+Failure to open event 'data_read' on PMU 'uncore_imc_free_running_0' which will be removed.
+The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (data_read).
+"dmesg | grep -i perf" may provide additional information.
+
+Error:
+Failure to open event 'data_read' on PMU 'uncore_imc_free_running_1' which will be removed.
+The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (data_read).
+"dmesg | grep -i perf" may provide additional information.
+
+Error:
+Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be removed.
+The LLC-prefetch-read event is not supported.
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 2.188 MB perf.data (87 samples) ]
+
+$ perf report --stats
+Aggregated stats:
+               TOTAL events:      17255
+                MMAP events:        284  ( 1.6%)
+                COMM events:       1961  (11.4%)
+                EXIT events:          1  ( 0.0%)
+                FORK events:       1960  (11.4%)
+              SAMPLE events:         87  ( 0.5%)
+               MMAP2 events:      12836  (74.4%)
+             KSYMBOL events:         83  ( 0.5%)
+           BPF_EVENT events:         36  ( 0.2%)
+      FINISHED_ROUND events:          2  ( 0.0%)
+            ID_INDEX events:          1  ( 0.0%)
+          THREAD_MAP events:          1  ( 0.0%)
+             CPU_MAP events:          1  ( 0.0%)
+           TIME_CONV events:          1  ( 0.0%)
+       FINISHED_INIT events:          1  ( 0.0%)
+cycles stats:
+              SAMPLE events:         87
+```
+
+If all events fail to open then the perf record will fail:
+```
+$ perf record -e LLC-prefetch-read true
+Error:
+Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be removed.
+The LLC-prefetch-read event is not supported.
+Error:
+Failure to open any events for recording
+```
+
+As an evlist may have dummy events that open when all command line
+events fail we ignore dummy events when detecting if at least some
+events open. This still permits the dummy event on its own to be used
+as a permission check:
+```
+$ perf record -e dummy true
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.046 MB perf.data ]
+```
+but allows failure when a dummy event is implicilty inserted or when
+there are insufficient permissions to open it:
+```
+$ perf record -e LLC-prefetch-read -a true
+Error:
+Failure to open event 'LLC-prefetch-read' on PMU 'cpu' which will be removed.
+The LLC-prefetch-read event is not supported.
+Error:
+Failure to open any events for recording
+```
+
+As the first parsed event in an evlist is marked as tracking, removing
+this event can remove tracking from the evlist, removing mmap events
+and breaking symbolization. To avoid this, if a tracking event is
+removed then the next event has tracking added.
+
+The issue with legacy events is that on RISC-V they want the driver to
+not have mappings from legacy to non-legacy config encodings for each
+vendor/model due to size, complexity and difficulty to update. It was
+reported that on ARM Apple-M? CPUs the legacy mapping in the driver
+was broken and the sysfs/json events should always take precedent,
+however, it isn't clear this is still the case. It is the case that
+without working around this issue a legacy event like cycles without a
+PMU can encode differently than when specified with a PMU - the
+non-PMU version favoring legacy encodings, the PMU one avoiding legacy
+encodings. Legacy events are also case sensitive while sysfs/json
+events are not.
+
+The patch removes events and then adjusts the idx value for each
+evsel. This is done so that the dense xyarrays used for file
+descriptors, etc. don't contain broken entries.
+
+On ARM it could be common following this change to see a lot of
+warnings for the cycles event due to many ARM PMUs advertising the
+cycles event (ARM inconsistently have events bus_cycles and then
+cycles implying CPU cycles, they also sometimes have a cpu_cycles
+event). As cycles is a popular event, avoid potentially spamming users
+with error messages on ARM when there are multiple cycles events in
+the evlist, the error is still shown when verbose is enabled.
+
+Prior versions without adding the tracking data and not warning for
+cycles on ARM was:
+
+Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Tested-by: James Clark <james.clark@linaro.org>
+Tested-by: Leo Yan <leo.yan@arm.com>
+Tested-by: Atish Patra <atishp@rivosinc.com>
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c | 133 +++++++++++++++++++++++++++-----------
- 1 file changed, 94 insertions(+), 39 deletions(-)
+ tools/perf/builtin-record.c | 89 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 82 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 303628189004..4615aa3f2b7f 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1824,6 +1824,38 @@ static int perf_stat_init_aggr_mode_file(struct perf_stat *st)
- 	return 0;
- }
- 
-+/* Add given software event to evlist without wildcarding. */
-+static int parse_software_event(struct evlist *evlist, const char *event,
-+				struct parse_events_error *err)
-+{
-+	char buf[256];
-+
-+	snprintf(buf, sizeof(buf), "software/%s,name=%s/", event, event);
-+	return parse_events(evlist, buf, err);
-+}
-+
-+/* Add legacy hardware/hardware-cache event to evlist for all core PMUs without wildcarding. */
-+static int parse_hardware_event(struct evlist *evlist, const char *event,
-+				struct parse_events_error *err)
-+{
-+	char buf[256];
-+	struct perf_pmu *pmu = NULL;
-+
-+	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
-+		int ret;
-+
-+		if (perf_pmus__num_core_pmus() == 1)
-+			snprintf(buf, sizeof(buf), "%s/%s,name=%s/", pmu->name, event, event);
-+		else
-+			snprintf(buf, sizeof(buf), "%s/%s/", pmu->name, event);
-+
-+		ret = parse_events(evlist, buf, err);
-+		if (ret)
-+			return ret;
-+	}
-+	return 0;
-+}
-+
- /*
-  * Add default events, if there were no attributes specified or
-  * if -d/--detailed, -d -d or -d -d -d is used:
-@@ -1947,26 +1979,31 @@ static int add_default_events(void)
- 
- 	if (!evlist->core.nr_entries && !evsel_list->core.nr_entries) {
- 		/* No events so add defaults. */
--		if (target__has_cpu(&target))
--			ret = parse_events(evlist, "cpu-clock", &err);
--		else
--			ret = parse_events(evlist, "task-clock", &err);
--		if (ret)
--			goto out;
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 7ea3a11aca70..effe6802c1a3 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -983,7 +983,6 @@ static int record__config_tracking_events(struct record *rec)
+ 	 */
+ 	if (opts->target.initial_delay || target__has_cpu(&opts->target) ||
+ 	    perf_pmus__num_core_pmus() > 1) {
 -
--		ret = parse_events(evlist,
--				"context-switches,"
--				"cpu-migrations,"
--				"page-faults,"
--				"instructions,"
--				"cycles,"
--				"stalled-cycles-frontend,"
--				"stalled-cycles-backend,"
--				"branches,"
--				"branch-misses",
--				&err);
--		if (ret)
--			goto out;
-+		const char *sw_events[] = {
-+			target__has_cpu(&target) ? "cpu-clock" : "task-clock",
-+			"context-switches",
-+			"cpu-migrations",
-+			"page-faults",
-+		};
-+		const char *hw_events[] = {
-+			"instructions",
-+			"cycles",
-+			"stalled-cycles-frontend",
-+			"stalled-cycles-backend",
-+			"branches",
-+			"branch-misses",
-+		};
-+
-+		for (size_t i = 0; i < ARRAY_SIZE(sw_events); i++) {
-+			ret = parse_software_event(evlist, sw_events[i], &err);
-+			if (ret)
-+				goto out;
-+		}
-+		for (size_t i = 0; i < ARRAY_SIZE(hw_events); i++) {
-+			ret = parse_hardware_event(evlist, hw_events[i], &err);
-+			if (ret)
-+				goto out;
-+		}
+ 		/*
+ 		 * User space tasks can migrate between CPUs, so when tracing
+ 		 * selected CPUs, sideband for all CPUs is still needed.
+@@ -1388,10 +1387,27 @@ static int record__open(struct record *rec)
+ 	struct perf_session *session = rec->session;
+ 	struct record_opts *opts = &rec->opts;
+ 	int rc = 0;
++	bool skipped = false;
++	bool removed_tracking = false;
  
- 		/*
- 		 * Add TopdownL1 metrics if they exist. To minimize
-@@ -2008,35 +2045,53 @@ static int add_default_events(void)
- 		 * Detailed stats (-d), covering the L1 and last level data
- 		 * caches:
- 		 */
--		ret = parse_events(evlist,
--				"L1-dcache-loads,"
--				"L1-dcache-load-misses,"
--				"LLC-loads,"
--				"LLC-load-misses",
--				&err);
-+		const char *hw_events[] = {
-+			"L1-dcache-loads",
-+			"L1-dcache-load-misses",
-+			"LLC-loads",
-+			"LLC-load-misses",
-+		};
-+
-+		for (size_t i = 0; i < ARRAY_SIZE(hw_events); i++) {
-+			ret = parse_hardware_event(evlist, hw_events[i], &err);
-+			if (ret)
-+				goto out;
+ 	evlist__for_each_entry(evlist, pos) {
++		if (removed_tracking) {
++			/*
++			 * Normally the head of the list has tracking enabled
++			 * for sideband data like mmaps. If this event is
++			 * removed, make sure to add tracking to the next
++			 * processed event.
++			 */
++			if (!pos->tracking) {
++				pos->tracking = true;
++				evsel__config(pos, opts, &callchain_param);
++			}
++			removed_tracking = false;
 +		}
- 	}
- 	if (!ret && detailed_run >=  2) {
- 		/*
- 		 * Very detailed stats (-d -d), covering the instruction cache
- 		 * and the TLB caches:
- 		 */
--		ret = parse_events(evlist,
--				"L1-icache-loads,"
--				"L1-icache-load-misses,"
--				"dTLB-loads,"
--				"dTLB-load-misses,"
--				"iTLB-loads,"
--				"iTLB-load-misses",
--				&err);
-+		const char *hw_events[] = {
-+			"L1-icache-loads",
-+			"L1-icache-load-misses",
-+			"dTLB-loads",
-+			"dTLB-load-misses",
-+			"iTLB-loads",
-+			"iTLB-load-misses",
-+		};
+ try_again:
+ 		if (evsel__open(pos, pos->core.cpus, pos->core.threads) < 0) {
++			bool report_error = true;
 +
-+		for (size_t i = 0; i < ARRAY_SIZE(hw_events); i++) {
-+			ret = parse_hardware_event(evlist, hw_events[i], &err);
-+			if (ret)
-+				goto out;
-+		}
- 	}
- 	if (!ret && detailed_run >=  3) {
- 		/*
- 		 * Very, very detailed stats (-d -d -d), adding prefetch events:
- 		 */
--		ret = parse_events(evlist,
--				"L1-dcache-prefetches,"
--				"L1-dcache-prefetch-misses",
--				&err);
-+		const char *hw_events[] = {
-+			"L1-dcache-prefetches",
-+			"L1-dcache-prefetch-misses",
-+		};
-+
-+		for (size_t i = 0; i < ARRAY_SIZE(hw_events); i++) {
-+			ret = parse_hardware_event(evlist, hw_events[i], &err);
-+			if (ret)
-+				goto out;
-+		}
- 	}
- out:
- 	if (!ret) {
-@@ -2045,7 +2100,7 @@ static int add_default_events(void)
- 			 * Make at least one event non-skippable so fatal errors are visible.
- 			 * 'cycles' always used to be default and non-skippable, so use that.
- 			 */
--			if (strcmp("cycles", evsel__name(evsel)))
-+			if (!evsel__match(evsel, HARDWARE, HW_CPU_CYCLES))
- 				evsel->skippable = true;
+ 			if (evsel__fallback(pos, &opts->target, errno, msg, sizeof(msg))) {
+ 				if (verbose > 0)
+ 					ui__warning("%s\n", msg);
+@@ -1403,15 +1419,74 @@ static int record__open(struct record *rec)
+ 			        pos = evlist__reset_weak_group(evlist, pos, true);
+ 				goto try_again;
+ 			}
+-			rc = -errno;
+-			evsel__open_strerror(pos, &opts->target, errno, msg, sizeof(msg));
+-			ui__error("%s\n", msg);
+-			goto out;
++#if defined(__aarch64__) || defined(__arm__)
++			if (strstr(evsel__name(pos), "cycles")) {
++				struct evsel *pos2;
++				/*
++				 * Unfortunately ARM has many events named
++				 * "cycles" on PMUs like the system-level (L3)
++				 * cache which don't support sampling. Only
++				 * display such failures to open when there is
++				 * only 1 cycles event or verbose is enabled.
++				 */
++				evlist__for_each_entry(evlist, pos2) {
++					if (pos2 == pos)
++						continue;
++					if (strstr(evsel__name(pos2), "cycles")) {
++						report_error = false;
++						break;
++					}
++				}
++			}
++#endif
++			if (report_error || verbose > 0) {
++				ui__error("Failure to open event '%s' on PMU '%s' which will be "
++					  "removed.\n%s\n",
++					  evsel__name(pos), evsel__pmu_name(pos), msg);
++			}
++			if (pos->tracking)
++				removed_tracking = true;
++			pos->skippable = true;
++			skipped = true;
++		} else {
++			pos->supported = true;
  		}
+-
+-		pos->supported = true;
  	}
+ 
++	if (skipped) {
++		struct evsel *tmp;
++		int idx = 0;
++		bool evlist_empty = true;
++
++		/* Remove evsels that failed to open and update indices. */
++		evlist__for_each_entry_safe(evlist, tmp, pos) {
++			if (pos->skippable) {
++				evlist__remove(evlist, pos);
++				continue;
++			}
++
++			/*
++			 * Note, dummy events may be command line parsed or
++			 * added by the tool. We care about supporting `perf
++			 * record -e dummy` which may be used as a permission
++			 * check. Dummy events that are added to the command
++			 * line and opened along with other events that fail,
++			 * will still fail as if the dummy events were tool
++			 * added events for the sake of code simplicity.
++			 */
++			if (!evsel__is_dummy_event(pos))
++				evlist_empty = false;
++		}
++		evlist__for_each_entry(evlist, pos) {
++			pos->core.idx = idx++;
++		}
++		/* If list is empty then fail. */
++		if (evlist_empty) {
++			ui__error("Failure to open any events for recording.\n");
++			rc = -1;
++			goto out;
++		}
++	}
+ 	if (symbol_conf.kptr_restrict && !evlist__exclude_kernel(evlist)) {
+ 		pr_warning(
+ "WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,\n"
 -- 
 2.51.0.534.gc79095c0ca-goog
 
