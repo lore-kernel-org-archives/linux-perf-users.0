@@ -1,137 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CDCB2D877D;
-	Wed, 24 Sep 2025 09:37:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3084F15624D;
+	Wed, 24 Sep 2025 09:57:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758706654; cv=none; b=kMPBzBc3oVzUEO2gABgCA+bhNeHWR6FJTJ0i9lw91s9+ZwRBb8UW+TeiwDuvZIf3471VKOc2a4OlXr6iO91udQltA4QmFO8L/Sbi7eE/mmR1ICIpDpq8o/zdF2VYwy1QPiy+TmSFsV9jhhXi+bWjYsfjnTJfTLrnf4lyrnFR1cM=
+	t=1758707840; cv=none; b=EMwttufRj3oeoyB9c/PKia37xG093DrnNl83ys4Jl5lvDgyGLiSHNkwLbMJ6TpFfDBo4K0yGAtcRVXejDHxcSJSTgVLWcD55NByq4VQ6gC+XbJ95AzlhzF5vTvrvhSWH+sBBYPwTjjmKx5MtsHE53R06UsOSO8S8wCy0EG9QeNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758706654; c=relaxed/simple;
-	bh=1aZ/9VunpzhlHKKkboI7zyiqhZ/F0yATGuOtZAeMB/0=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BfFdQn2A0RD2Dk07pIQeHwxDYRN8mwYr/CJyqvgPp8dg9D0jG+OwY2sNyBBfRW58wm/WlV+SkVwWYTiORJvpUNnkYe3kzfSLB2fmih2vrr6XS/u3bISQ4WW6IrxAJd6nza8EEeanJ6C25nWeDVG2Mj4dlLoS2JO0B5Xa60szNYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oaAnH1TI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1758707840; c=relaxed/simple;
+	bh=SS41FRb6aDAQjk9Oc/EVenUGngwNPleBuE2EELyQavs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s7nI1syZVhgMtPF6A9wBOyRShwVQbD5hdl5c4NEYFy3lQyuLglPRQtRsj2rTcNjoLhG7vUwA6712Auuwka0acS89+TQn/397Pp2fl4z3GNM+g8nBOu9RAIE7MWM+36SnNvczG7kfwuQ3Hh1dyyQPvWW2tIeNw7lMjNOKgWB2m5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X1AHgoyx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oaAnH1TI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E08DC4CEE7;
-	Wed, 24 Sep 2025 09:37:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X1AHgoyx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D276BC16AAE;
+	Wed, 24 Sep 2025 09:57:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758706654;
-	bh=1aZ/9VunpzhlHKKkboI7zyiqhZ/F0yATGuOtZAeMB/0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=oaAnH1TIvwFUX0sa/zWWzjeMquc3iEFX1R2IOXauBGZXM5aKOb40WbSQYdQcTCP3j
-	 bag2hPIXNbxbFWTGfBiSsX/aw810/XYF6qWm484X9MIcBa/ioSSVX37Jf9HAFtrlCP
-	 T2Fo2o0IYDNPo6EFagZvC7XGxJtYzP0ZBoZQ8PO350iDtORV68Pa101ZoGcC7S9eYa
-	 S5A+Sv3/DeqxGv0B/Ao/t1p3In66+e6d/qnyRDEONv38p2VMWzodESi97yX4ejMQJz
-	 He0VxSvvEDXXsvoQ7PRkXIKhYfg2LiELBKGjUPNpiyanmGbvhqswPydEWwWL+SmmRd
-	 I8+TjH64VMCAw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1v1LwJ-00000008yeU-2X2S;
-	Wed, 24 Sep 2025 09:37:31 +0000
-Date: Wed, 24 Sep 2025 10:37:30 +0100
-Message-ID: <86a52k199h.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Ian Rogers <irogers@google.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	John Garry <john.g.garry@oracle.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Leo Yan <leo.yan@linux.dev>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
+	s=k20201202; t=1758707839;
+	bh=SS41FRb6aDAQjk9Oc/EVenUGngwNPleBuE2EELyQavs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X1AHgoyxv+oqClooEAztfJG1krtTp1D1mXGJH+axrUHxDz3WH3DCul7MQ2xEisAgu
+	 YAQ2wIb2VLdlkJkD1lsrKOVM0NuCy2zBG6chXd2ws4vPP5BBn+mwJlUmrnfJWUX7sQ
+	 56NEeUIJ3c6OgU411bAws45IvoBENW8YbI5/YkNQOXlqu1aSKxbtP9H3fD74C1/XDt
+	 zXB+IjpWE5FAPnw/maUFJvSe+faMCmSYu2oTFTwhVX5V1EAYBCs0TuEn412Aya9snU
+	 XA26TVEbMFu3xttrKzc+E+1p9MiJ3A5ci/FqxaJeW77Zsu9oiX10Xb2PWaOBi/q8Yu
+	 xC53FNAwxjDTg==
+Date: Wed, 24 Sep 2025 06:57:07 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rob Herring <robh@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v5 6/7] arm64: dts: renesas: Add R8A78000 X5H DTs
-In-Reply-To: <87plbgafkj.wl-kuninori.morimoto.gx@renesas.com>
-References: <87ms6snut0.wl-kuninori.morimoto.gx@renesas.com>
-	<87ecs4nult.wl-kuninori.morimoto.gx@renesas.com>
-	<86ikhg13m1.wl-maz@kernel.org>
-	<CAMuHMdVezqWxbFp9dd0WPJnNM+MvmQ9F0UA2Ru_BSV6-6VgOyA@mail.gmail.com>
-	<877bxuzvs6.wl-maz@kernel.org>
-	<87plbgafkj.wl-kuninori.morimoto.gx@renesas.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/4] Test fixes and debug logging
+Message-ID: <aNPAc7wW5Rgpskap@x1>
+References: <20250914182900.1960567-1-irogers@google.com>
+ <aM3BCr9DbBxnL5rV@x1>
+ <CAP-5=fXOMLLFmn_06nBGjzbeD4=TLGPExP+K8x_pNRqKO-z-KQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: kuninori.morimoto.gx@renesas.com, geert@linux-m68k.org, kan.liang@linux.intel.com, adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, acme@kernel.org, catalin.marinas@arm.com, conor+dt@kernel.org, dianders@chromium.org, geert+renesas@glider.be, irogers@google.com, mingo@redhat.com, james.clark@linaro.org, jolsa@kernel.org, john.g.garry@oracle.com, krzk+dt@kernel.org, leo.yan@linux.dev, lpieralisi@kernel.org, mark.rutland@arm.com, mike.leach@linaro.org, namhyung@kernel.org, oliver.upton@linux.dev, peterz@infradead.org, robh@kernel.org, will@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXOMLLFmn_06nBGjzbeD4=TLGPExP+K8x_pNRqKO-z-KQ@mail.gmail.com>
 
-On Wed, 24 Sep 2025 00:56:28 +0100,
-Kuninori Morimoto <kuninori.morimoto.gx@renesas.com> wrote:
-> 
-> 
-> Hi Marc
-> 
-> # sorry for late response. I had took day-off
-> 
-> > > > > +             /*
-> > > > > +              * The ARM GIC-720AE - View 1
-> > > > > +              *
-> > > > > +              * see
-> > > > > +              *      r19uh0244ej0052-r-carx5h.pdf
-> > > > > +              *      - attachments: 002_R-CarX5H_Address_Map_r0p51.xlsx
-> > > > > +              *       - sheet [RT]
-> > > > > +              *        - line 619
-> > > > > +              */
-> (snip)
-> > Something like:
-> > 
-> > 	/* Application Processors manage View-1 of a GIC-720AE */
-> > 
-> > and the mention of the TRM and other spreadsheets dropped.
-> 
-> OK, will do
-> 
-> > the ITS to be described. The HW has it, it has no dependency on
-> > anything else, so there is no reason to omit it.
-> 
-> I had asked HW team and PCI team, and there is a valid reason
-> why we would like to skip it. Because we had issues with using ITS on
-> previous SoCs. Hence we are reluctant to describe it until we can
-> actually test it.
+On Sat, Sep 20, 2025 at 08:21:43AM -0700, Ian Rogers wrote:
+> On Fri, Sep 19, 2025 at 1:46 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > On Sun, Sep 14, 2025 at 11:28:56AM -0700, Ian Rogers wrote:
+> > > Ian Rogers (4):
+> > >   perf test: Be tolerant of missing json metric none value
+> > >   perf parse-events: Add debug logging to perf_event
+> > >   perf test: Don't fail if user rdpmc returns 0 when disabled
+> > >   perf stat-shadow: Display metric-only for 0 counters
 
-Posting patches for partially HW doesn't feel like a great approach.
+> > Thanks, applied to perf-tools-next,
+ 
+> there was some follow up in:
+> https://lore.kernel.org/lkml/20250914182140.1958530-1-irogers@google.com/
+> I think I've also noticed that logging introducing newlines that
+> impacts the tests column counts. I'll take a further look as we tried
+> to harden against that with an output file option.
 
-> So far, we never submitted a complete .dtsi in one go, but always enabled
-> more functionality in incremental steps, after verifying that it actually
-> works.
+I'll make sure I get the most uptodate version, if/when available.
 
-Well, the GIC (and specially ARM's implementation) is a whole entity,
-not something you can cut and dice. Just like you wouldn't describe
-the CPUs without their timers.
+I'm attending Kernel Recipes, so there is an additional delay on
+processing patches, but I should be back processing patches RSN.
 
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+- Arnaldo
