@@ -1,141 +1,72 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC9330AABE
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Sep 2025 15:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095901311AC;
+	Wed, 24 Sep 2025 16:10:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758727356; cv=none; b=WUvw+zPWGwmQEr06iJBiUCoePrkmaw9LWCXDjtmhg+j4HiToCjCz6REbDuYxw8vyocJMmdXXcnSVEktI2xCwqxEvPf4dbXTwFjRx/YgylgRvT6ZDxPK/bjC2P/ua7w9BTp1Ir5jAWUs6u8+S22M3f5Jix1/XUWQfBJqnTrUHPu0=
+	t=1758730206; cv=none; b=PWcv3T4lsC7gsIGie5L7KA4cPLiQUIfVAIndRB8fHg9432h1gUB3KLgUjyjp4XaWJGxWjZbQeuFKq3vdZJtUSfsmntUdismX7BdoIbFTuAtI8XiEgKAQMz2qBWrWZRMsNSarN+HPgrDQzSG1tL076A91bZQIkwr8GlxGyV6QQsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758727356; c=relaxed/simple;
-	bh=JsPnfKtr3MiLoJ8hsPpReBdY4CePyEpwU2RLe/kafMM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YhUj2dte10LRmUKzd6wls4UmnOsjtt6WbkvYdCAdldtGt3z5p3fZFTvMTmWGAMQ3dfn9uErKRhu7dgcaPy/WLRbazNhLDD6Hu6+zaduXgG30wVeGt6kiipWHcjKdVaUMwnznkzKp4ugcdJkuaZxgeQhLlfxQn4BFGX584cIR17M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PUFNavYn; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1758730206; c=relaxed/simple;
+	bh=oZMitb7M22Ej6GRU2hUfNuXfDkljVEWaa1LZL7XbmAs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q4Qoi7GxIgru9szPXZQEjwXORZcE2ch5ibr9oFSnNzXvYUDI9KJufKUhrNo97nD6qjlIQT6LuGFhKunC9+CBhRbgy4tPOAQLU0eXLuJMCWj8qjXivxXtbEhtgtI8JeTcmBON8Yrf+YRQVzCnUQFdK7J1QOEvIohHF1yVIUrQ6H4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ig6xByBE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PUFNavYn"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-76e4fc419a9so7100947b3a.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 Sep 2025 08:22:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1758727355; x=1759332155; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AGkkH3On4e9g/uKbOlSYkJKHveGl2HpttCc7mFGVIhA=;
-        b=PUFNavYnN8MQnTSb1pmGvwUR2NDqHh+nIF/Pt6Ql+75GzYq8iT4hs5YWnxuaDQjJQb
-         BM+Y6BwRnnQGZIrvEHJoQt2qJ55tThqLHPjp6+6Pyzjep4bg1t8senLZwRU9jgl3idCs
-         U8m7LuEkascIY7yHgtJbpOO1UW4HVSqugByGc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758727355; x=1759332155;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AGkkH3On4e9g/uKbOlSYkJKHveGl2HpttCc7mFGVIhA=;
-        b=ttXuCrN04YI01uvcEjlAqNkzFTXypaK/Ht6IFz35BEm/c4+69ObsqHcH63FLvuaIQw
-         pmglzjNxQoyqyy4w3NPFLO1ot56cxu1z+65B1eiOjiWlUoJqq69nPnojIg2oqtQKAgDN
-         Bu0itVQ33UuO7z1UsqEC57qveuhcciCplaw64seE7p9mdiTq5sCslGtELDPmA4thY8Pc
-         BIWhoG6MALmFyQ8R5VX5tiuePd/3DcFfRijch2XMvURN09e8LIwK8uUlEe5/RyOPj0O2
-         1eWorgDHw7a9Jg/37gNFrd48tx8wG47hSu78iMEAUFt/JnbOnBFHfLdXAo1702qkjFyB
-         +qqA==
-X-Forwarded-Encrypted: i=1; AJvYcCXbJ5NJ/aa1Th8jxEcWCoQvB9g3v7OlyjMwz8WJ26NNnF1ux5yHGvFVjAkFJwU5zYxIR1r02rhbx9gm+Dbv+Frp@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFvJ1q2kyGiQhV6SKM0oq1yVB8bnQZD0FfhzikrJDmw3fo0it1
-	496q31n2g9rtwzzTZaAV8bpqZzOsZEWESd9Cz3gQKTcmDgUYTRyQPn+wj0dI5pWPEDOwefbTUJt
-	6cs4=
-X-Gm-Gg: ASbGnctpVozTC6emaiBy3wD8e9QZ6qxkAmsuC8ilDuBHXmVYVrVx4Q3AcnA5e6ZZC7p
-	RiuotcLPnXuZK/zzSRuhVRI6c4DRkprqEfN1FSwWseJs4WWNQja3SXSwCo4SUqHF9TCvb4FHwCI
-	0C78iYIf3wtZMh61IzIkCj4ydK3zLXl4MzBKE2VYep0xbnE/gCO0kcqW7fbb/ZfHlBwOiikpSdF
-	8mlYpEIEq9ERirxk/a4qjlQIbCUXVhsvKHvWcm6r3dT6uHTQ6eDWViC9SqAUwsJ1lxvzhTx1rAD
-	UY5BBeO0rTc8t844RG/H8tx3z0FeTvRFM8Hox1GUZrVy9C24vI2FG0n+Xwa3b310NlA5vUSH3+S
-	1hxKs/b3MTXlcmlGuQyPaBnwvO2ZJT87ysKV9UHdfTXrQEr2cr7n4JFwpJArlcoWARA==
-X-Google-Smtp-Source: AGHT+IHBztUVsdKIZG7ZZAIph7myIMoCIceVljn3Wsve7lbeBMRitq9MVjqcXPVIrd9FOpVxZ3VRQg==
-X-Received: by 2002:a05:6a00:124e:b0:77f:14f5:7483 with SMTP id d2e1a72fcca58-780fced6c5cmr402486b3a.25.1758727354699;
-        Wed, 24 Sep 2025 08:22:34 -0700 (PDT)
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com. [209.85.214.173])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-780fd8e95f9sm101221b3a.34.2025.09.24.08.22.34
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Sep 2025 08:22:34 -0700 (PDT)
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-279e2554b6fso28288335ad.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 Sep 2025 08:22:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUnk+QE7XXrg2TQCJmpIjL2Zf50SCufiF064kA92Kq41wg2FXyjOG9dU+AWPrFjLm6A80Gf70ytPsPFeuZyt6xg@vger.kernel.org
-X-Received: by 2002:a17:902:c94d:b0:278:daab:7940 with SMTP id
- d9443c01a7336-27ed4a3dfa8mr1337745ad.17.1758727353184; Wed, 24 Sep 2025
- 08:22:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ig6xByBE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62172C4CEE7;
+	Wed, 24 Sep 2025 16:10:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758730205;
+	bh=oZMitb7M22Ej6GRU2hUfNuXfDkljVEWaa1LZL7XbmAs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Ig6xByBEBw/6LKeaCNF8IllhULFNjthYcNuED5Mu9YT+mpc6F/iF8noUoy+TfAEXa
+	 k/oJX9OqDwIDjzx6l7gVvtq9g4iK7vuWLtgOsgh5eM6Uv8gl5sgC1cXH93D6OR23F3
+	 iQLp+z/JOLRiZOt51PUz+pM9Tb0jHajco2oY3hOOp+p3/ISoGPeJKcGgAkn80ZLPG4
+	 EXSjh64SQlRwwmpNYTQU880gymK4JSHEtgeGz63bMzbFJH4Vb3iDca7WjniBYL5dpX
+	 if9a609uJvcOR+q976D34VLr9M9zdiLE+bC2qBcaXDBhJIGRAvn/Tcw6jTwpI7qMxh
+	 epNhwte9caNOA==
+From: Will Deacon <will@kernel.org>
+To: Shuai Xue <xueshuai@linux.alibaba.com>,
+	Jing Zhang <renyu.zj@linux.alibaba.com>,
+	dan.carpenter@linaro.org,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Cc: catalin.marinas@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf/dwc_pcie: Fix use of uninitialized variable
+Date: Wed, 24 Sep 2025 17:09:56 +0100
+Message-Id: <175871240090.2379729.10967323290224502441.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250923213136.8107-1-ilkka@os.amperecomputing.com>
+References: <20250923213136.8107-1-ilkka@os.amperecomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250827100959.83023-1-cuiyunhui@bytedance.com>
- <20250827100959.83023-2-cuiyunhui@bytedance.com> <CAD=FV=WiZ5=4Ck3G2gme=ey6uYQhi-3Wo32DpLj9P53wxGCojw@mail.gmail.com>
- <CAEEQ3wnHzL6KVaW=RAkoMNSoM+HW11n=5miFwkw7=LQw+375Gw@mail.gmail.com>
-In-Reply-To: <CAEEQ3wnHzL6KVaW=RAkoMNSoM+HW11n=5miFwkw7=LQw+375Gw@mail.gmail.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Wed, 24 Sep 2025 08:22:21 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XYGmayve1ujv9oqRrJaq-D6g7pRygvQf31WfEMsT3g8Q@mail.gmail.com>
-X-Gm-Features: AS18NWDf2q3VkrTezxWiqMq5MaW03lcJwh8tH3BwlSFCZCG9Jd79C5JfcXHF2sY
-Message-ID: <CAD=FV=XYGmayve1ujv9oqRrJaq-D6g7pRygvQf31WfEMsT3g8Q@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH 1/2] watchdog: refactor watchdog_hld functionality
-To: yunhui cui <cuiyunhui@bytedance.com>
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	alex@ghiti.fr, atish.patra@linux.dev, anup@brainfault.org, will@kernel.org, 
-	mark.rutland@arm.com, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, catalin.marinas@arm.com, 
-	masahiroy@kernel.org, suzuki.poulose@arm.com, maz@kernel.org, 
-	zhanjie9@hisilicon.com, yangyicong@hisilicon.com, mingo@kernel.org, 
-	lihuafei1@huawei.com, akpm@linux-foundation.org, jpoimboe@kernel.org, 
-	rppt@kernel.org, kees@kernel.org, thomas.weissschuh@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi,
+On Tue, 23 Sep 2025 14:31:36 -0700, Ilkka Koskinen wrote:
+> Fix use of uninitialized variable in group validation code.
+> 
+> 
 
-On Tue, Sep 23, 2025 at 7:41=E2=80=AFPM yunhui cui <cuiyunhui@bytedance.com=
-> wrote:
->
-> Hi Doug,
->
-> On Sat, Aug 30, 2025 at 5:34=E2=80=AFAM Doug Anderson <dianders@chromium.=
-org> wrote:
-> >
-> > Hi,
-> >
-> > On Wed, Aug 27, 2025 at 3:10=E2=80=AFAM Yunhui Cui <cuiyunhui@bytedance=
-.com> wrote:
-> > >
-> > > Move watchdog_hld.c to kernel/, and rename arm_pmu_irq_is_nmi()
-> > > to arch_pmu_irq_is_nmi() for cross-arch reusability.
-> > >
-> > > Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> > > ---
-> > >  arch/arm64/kernel/Makefile                   | 1 -
-> > >  drivers/perf/arm_pmu.c                       | 2 +-
-> > >  include/linux/nmi.h                          | 1 +
-> > >  include/linux/perf/arm_pmu.h                 | 2 --
-> > >  kernel/Makefile                              | 2 +-
-> > >  {arch/arm64/kernel =3D> kernel}/watchdog_hld.c | 8 ++++++--
-> > >  6 files changed, 9 insertions(+), 7 deletions(-)
-> > >  rename {arch/arm64/kernel =3D> kernel}/watchdog_hld.c (97%)
-> >
-> > I'm not a huge fan of the perf hardlockup detector and IMO we should
-> > maybe just delete it. Thus spreading it to support a new architecture
-> > isn't my favorite thing to do. Can't you use the buddy hardlockup
-> > detector?
-> >
-> > That being said, I did a quick look at your patch. I'm pretty sure you
-> > can't just move the arm64 "watchdog_hld.c" to be generic. Won't
-> > hw_nmi_get_sample_period() conflict with everyone else's (x86 and
-> > powerpc)?
->
-> After discussing whether to remove watchdog perf, it still seems
-> necessary to keep advancing with it. For the code, we just need to
-> decorate hw_nmi_get_sample_period() with __weak, right?
+Applied to will (for-next/perf), thanks!
 
-That would probably work, but IMO you should make sure you can figure
-out how to at least compile the x86/powerpc kernels to confirm.
+[1/1] perf/dwc_pcie: Fix use of uninitialized variable
+      https://git.kernel.org/will/c/2084660ad288
 
--Doug
+Cheers,
+-- 
+Will
+
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
