@@ -1,269 +1,589 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2561D2030A;
-	Wed, 24 Sep 2025 21:13:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758748388; cv=fail; b=jJeGhf5bN4tUHT7R8lMYrbUjjNwvb0HzeqhyRtjlcLplkxtdPD0XRsMmysBSNXj3v+hC8xay5LjjUZzyh00GJKUhdfvtzoxwg6N/UarCMfs/rVCJn2HYM9uA4Y6YiW9tov2BJO1YSXVGOKgE9t4wcAPQOE1IuxzmKYngEe5OLgI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758748388; c=relaxed/simple;
-	bh=8XX5aOAElG/2JYlkENDWV5HC3Eng4EdjZqJ/xhnJWCY=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=FCiyAcbLdAhtyqdzDqHBa8OvtzsVyUSkb55/FHk2BrEyPajVtKEPLINFG80UXY+1ytuHbg539b1okaM4lJdP56XD+5RaMkb5VL7ieCKL1TM9Lb1eb80f0+zpVSkt3Y2rccn3UOVq4gNZ5ww8BBN59ReyIiFEVo4iMksdpc2qRqY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NGlE3psj; arc=fail smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7076F26B971
+	for <linux-perf-users@vger.kernel.org>; Wed, 24 Sep 2025 21:34:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758749680; cv=none; b=cwqPlk4LSvTWBppGyAM8RHUXBUZyTIz3Ku2A//TdRVevvkVccGoQ1YXTYHvmFDRj/Us8PEH1NTW9d6dO1R7/b1cV9OCLjbTByitloy1neIihTs7hyl3qeJ6bL+2qMZK1K2FA4Xg6dGl6B/IENwQmyf4fUxXkZkEZIJ1RQsSTE98=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758749680; c=relaxed/simple;
+	bh=qL/qqboFruerUqMQH8wZQwrqfOQPFdYzkJDkOd52qMI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gVSe9INdL+gv3Z2L/iyXH+vvY0/M1KOFNBxnYzEdValh7Cpl1PXjq8UMscIuO7WQI89pd8vS0Yfj5RqlGkFdXrkx39afKacDe9+4Chz+7E4SVmQYvZaxngkxlDqRR/XnVWmAXxbIb6DJk8k4n8uf4M9KebRqxrl+2O/7sB8w3uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3AAfp3Zp; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NGlE3psj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758748386; x=1790284386;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version;
-  bh=8XX5aOAElG/2JYlkENDWV5HC3Eng4EdjZqJ/xhnJWCY=;
-  b=NGlE3psjWPqSaidI0bLfE7hZ+hUfjy4XdPTSjfuKDaWQM/89RN5Ap6yr
-   lvWZAQTlv0UVyDaoA+fwlBzYPOSeaPS/qDesgGaFKtMzFIhX7dUl2fOeZ
-   KKQOJsJmY5iHJYWNQP5AotIxiUmPbUVbnDbPWj7Ba6w8sttw6snn/oVOf
-   07ESO9j1aKS9W+Dr9ayZvnHWo/LvArPtD8UJgnyXeEkuVjQri+gcrxxx2
-   WLLqkIgDOquGc/onFUKfY86i87/LNgQAqfhC4WxEWgj/y6j1wcgKfmAqW
-   VrmU03rgy0JqGUW9bZYE/ANRkDAp00e/qHRnfeZ5vyWxYPYX80U5jznXJ
-   g==;
-X-CSE-ConnectionGUID: cE2obbNlSy2VF4GCT8ttMA==
-X-CSE-MsgGUID: VpyXFZcFTw+XpOYSfr/kZQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11563"; a="86503163"
-X-IronPort-AV: E=Sophos;i="6.18,291,1751266800"; 
-   d="scan'208";a="86503163"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 14:13:04 -0700
-X-CSE-ConnectionGUID: VdFNJsGaRrOqXy0kMLZaVQ==
-X-CSE-MsgGUID: 9CPL2F6iSDKB1vpPKwHKfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,291,1751266800"; 
-   d="scan'208";a="208061710"
-Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 14:13:04 -0700
-Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
- fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Wed, 24 Sep 2025 14:13:03 -0700
-Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
- FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27 via Frontend Transport; Wed, 24 Sep 2025 14:13:03 -0700
-Received: from CY7PR03CU001.outbound.protection.outlook.com (40.93.198.17) by
- edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Wed, 24 Sep 2025 14:13:01 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=x6a9XSGQfPdMsmlGP1aflxbtpkjt+H2Hihk0shaSzNdX2ZpogWimnVAkmy6BKheH3gEb2bmDx/WErJAIgGm8r7D6VH5K/wn7NBOuOj995WJ/L4uzxdiZCs1QRYI9UcIvy6vGxEvdat5uGGcQVWrwim16Z9ozbipB0bXZKF6iFFg2oR/pqUqQ2PhZdUE0PVKO6CACXYHchilMTkwMQEo1Qx3cg8LC0jgssYYfUmeGKC+pe1grziowUoOvpKYPVsCksyv2ezp5hB8DvHN9iXqG4PeSFFz7tyS12xYs8gCsDfbGdFhg365U548+AykzFrScNiUd4VjDwGLcp56WFl2PLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8XX5aOAElG/2JYlkENDWV5HC3Eng4EdjZqJ/xhnJWCY=;
- b=ip9/ncby2wVTRML8/8IdvegR8Mof5RP74WdPy5C4MONAYof91LOYwXYappg7E9u6g2KFN4irkrKLBvN0GyrNrmcbUB1VX3yquDXe58FnK6ErriC5bqRjKXToTxYkQiHQFHeq3l1Bjk84Y5wxfn+OrRxFl744oFoNMbC68vtHxpvJ6mZTyuYXKqBqWtgCdfZdv919ZAeBX98NVkQL/5Xcxi3t20FTh61jZzX0tyi83v4NPWy1tLty4YwHJuMhZ9yd3Ds1cOeNdXFcbQX8nGMuMgBVen4sAyDvOf747KjrjXAXAh5Sbu2HCkktVp0rk+z2j9G2DC7caVKZgP4WVhj6rA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from CH3PR11MB8383.namprd11.prod.outlook.com (2603:10b6:610:171::6)
- by DS0PR11MB8688.namprd11.prod.outlook.com (2603:10b6:8:1a0::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.19; Wed, 24 Sep
- 2025 21:12:54 +0000
-Received: from CH3PR11MB8383.namprd11.prod.outlook.com
- ([fe80::56d4:6f50:dd04:d11b]) by CH3PR11MB8383.namprd11.prod.outlook.com
- ([fe80::56d4:6f50:dd04:d11b%3]) with mapi id 15.20.9137.017; Wed, 24 Sep 2025
- 21:12:54 +0000
-From: "Falcon, Thomas" <thomas.falcon@intel.com>
-To: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"afaerber@suse.de" <afaerber@suse.de>, "Biggers, Caleb"
-	<caleb.biggers@intel.com>, "peterz@infradead.org" <peterz@infradead.org>,
-	"acme@kernel.org" <acme@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
-	"Hunter, Adrian" <adrian.hunter@intel.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"namhyung@kernel.org" <namhyung@kernel.org>, "jolsa@kernel.org"
-	<jolsa@kernel.org>, "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
-	"irogers@google.com" <irogers@google.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "mani@kernel.org" <mani@kernel.org>
-Subject: Re: [PATCH v1 00/10] perf vendor events intel update
-Thread-Topic: [PATCH v1 00/10] perf vendor events intel update
-Thread-Index: AQHcLRjeTPATN5hPYEeTaFfyepsKJbSi1cmA
-Date: Wed, 24 Sep 2025 21:12:54 +0000
-Message-ID: <5275b98eff5e686521c407f4d38eed8448be5a3b.camel@intel.com>
-References: <20250924060229.375718-1-irogers@google.com>
-In-Reply-To: <20250924060229.375718-1-irogers@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH3PR11MB8383:EE_|DS0PR11MB8688:EE_
-x-ms-office365-filtering-correlation-id: 5fac407b-6162-43b5-98f8-08ddfbaf2093
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|10070799003|7416014|376014|366016|38070700021|921020;
-x-microsoft-antispam-message-info: =?utf-8?B?Q2RxVUlaU25hNnJKUVpUeE9aeUtObkNyT0lBejhIa1NEVTZIQXhEMWVneWhL?=
- =?utf-8?B?ditWWnRoUVpVR3NBclV3Q2hGRUNiOWpHUTZPZ21ZQkZIZS9SSzJ3bHQzMDRO?=
- =?utf-8?B?c0JIRzhtaWc2MnVsYjdQbGJSSTdHb1VBUlQyZG4rWTBRN3V2TEZPSTdPMnZE?=
- =?utf-8?B?OGtwcDNlaVA1RTl1SjFZSmZDNWNZSSt0OGlzeW12RkxqM3JoQzlMOWlTN080?=
- =?utf-8?B?a3ZEV0Jqd202by9XQ21LZlVteXJoaDdyVDBXdUtxSUZ2U0oxdU4xMVZmSXVz?=
- =?utf-8?B?ZVRHWG9QRUhlbWJlM1hsSUZyUXV0Rzd6eFhtZElFVm5hb0RDK3ZFYWJzeUN5?=
- =?utf-8?B?T3lnY0tYL0pmWVd0ZzZMM0pwV2VBWjg2cjh3elhMOEFvU2puSzlleUJQbUxi?=
- =?utf-8?B?R2lMRjgweTAxYmJSWWJWZ3g3QnA1U1F5ak9MZHNtaVIvQk5vdDZyTUJteHVw?=
- =?utf-8?B?eFg1OXB1WTBhWk9JK2d4dmg5MDVMQ1VESW81SFVSMGV5dWJXNWh0a2xveDht?=
- =?utf-8?B?bnQ4Q3FySHg4WDlhZFZCTEhZRjVPZmliaHRqcXZieHB4aGNvdEw1d2lnQ1ZE?=
- =?utf-8?B?aEk2WURSVDQwaW8vTGRKQTJsbXFTRFBJV0RCRmgxeTZaZUpvUXdNcXYvbkZI?=
- =?utf-8?B?cWJ3Z2ZVTHArZEEvMnhTc21CUGRhbkhMN2RBR29kTjI2aDlXQXdOZVVxZmN2?=
- =?utf-8?B?UndPWkwxYmVpZTJSbUU2eDR3YVBpTUZNblRaa29KZlNlTFR4cVZ3cXlBK3dQ?=
- =?utf-8?B?dnJqWEFWUEtUTVdWejVvU09xT0xubHUwaGRLUG0wNitGS1BIeTgvK09kVUxP?=
- =?utf-8?B?VUJZV0pXZDRhQUNrNXhIS1NyMVZRUWlJRnNFdkVyNEpySnl4djVFSlJ6UGxM?=
- =?utf-8?B?MTBMU1dHd294S3FEWEEvNi9SVXRCTmJhOGwreGNmRjFGcnF0SEw1OEg3NktM?=
- =?utf-8?B?WFhPL2FMRkxOTVM2SCsrc2tVbi82bzMzL0VxZERDaXRXeDVtYjNWMUczYVc5?=
- =?utf-8?B?b3ZvTEVieU1WbXFQZEx5bCs3bXJkOG9qMkdReFBkaldOV1dkYUNaNmM0Q0w5?=
- =?utf-8?B?Qlo5aHpCZFZ4dzBuK2lING5LZ1RuVGc1TnVJZG5rakFGeTFNU2p3ekZFdXps?=
- =?utf-8?B?dmVma2p6cFU2YzNIcnZYdzZ4RDBHMzl6NTM3Rk5IS2wyZW4yVVV1QjNSeTlK?=
- =?utf-8?B?VUludlVpZzUwS25tc3lidzlsSStWRFBCVkdTaE8vVVYvb1E0aFVJS0FzSno5?=
- =?utf-8?B?ZTdveVBjTlBNazFya0ZCamVXU0RsQk4xZk11ZDUrTXJHakEwY0JFcW5RTDFl?=
- =?utf-8?B?RGJkYTRRS3R4Z3lXa255TlFzRFlSZWo2d21xSjVGc1lBMDFua0gvbEw3VmRU?=
- =?utf-8?B?TDF6cy9oeWhDbVRRQ1ROalBuUDkyeHdBa2JJdWV3Vk50R1ZzNFJLMENZc0xv?=
- =?utf-8?B?eUFsQ3ZCY09qd2hOUmxxYW5vVGdJZ3ZDVGgwZkRJWFY0bGtNRit6NGlyelEw?=
- =?utf-8?B?OVFVNmRkZWpON0V2b2hqVk9lSEE2MUJKUkF6ZFByUlhuaER5SWpEVFhEV3Bl?=
- =?utf-8?B?aThySktUeG5rRnA1T1hjK1ZjTER5STVDQnlzMlNGczNEckFNblk3c0N0Vm9w?=
- =?utf-8?B?Qi8rRHdwY3U5d2lwdy9jM3VCeWhWWU1kQzVrS3AwTFRFdmdlbXV3aVFtMXda?=
- =?utf-8?B?V2ZCUGFDQncxZEdIMjN6OUUxS0pzY3J0YXdSdSszSWc1bjNsakJvd0Zwa1Y0?=
- =?utf-8?B?OGY3dDJiYUJGU2ZUOC9lczE0SmV3eVpOQVYyblRNTjgydW1PdEQyRTgzMmFj?=
- =?utf-8?B?TmVtbWd2aEFZYVcwUjl6ZSt0RFExdU55NzJGdFRNaEE3cVBFLzJLN1UvN1dF?=
- =?utf-8?B?RWFDM2M2TUFya0dGZWtWQkdicm9GdHhXOVVtanhRWlNZRjV5VzhLU2s3QldO?=
- =?utf-8?B?TEp3MXM5VlpRcXo0RS9wUC8zOWRyVWdrWTFUbjI1VTJIQkJFbHlTdGczYURT?=
- =?utf-8?Q?rDjIoilgB+pD7pk7TY/DKrlT01vNpc=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8383.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(10070799003)(7416014)(376014)(366016)(38070700021)(921020);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?SHQvOXN0b0JOUDJxQTRwL3dhK2dkbHZiR1VCd0xMSnIySDM0Zy9BY2FQSlJO?=
- =?utf-8?B?NHpUTTZ1aGI5bUpnNFhzUkVpVjhWQVdMbkFJbjljNWg4aXJJc2lSejlyMTdk?=
- =?utf-8?B?TnZuVHkzdzBPSHZIY21LcmppT1hnNlhKUDg5YlhVZk5BVTlKbVhCeGJ4RXI3?=
- =?utf-8?B?VFhpVXEyNnI5dkxFVkZ1MndtdGdHc09nTkVHWm5FSDVzZDNuR0VRbVduSTdw?=
- =?utf-8?B?c2thU3NzZlFCSHE5bEluMXI2VkswUmorMEkxdFoyektRcDFHWWZVVytPbVNN?=
- =?utf-8?B?V3Fvc0VhTlAzWElnb0VTclBvYS8veUpLdjBrZkxpM3VyMWxBUDJ4UUJuZGxq?=
- =?utf-8?B?MGkwemFnOUVvUy9WN2VJYjFJQlhNby9STWRXc1hHRUJUSXZoQzQzMm40aUox?=
- =?utf-8?B?U1gzQW8rT1J0MkZCYzMyamdTTDUreUJiZWtCSEc5NWNMd0t3R2lYSG85MFNM?=
- =?utf-8?B?WkNaYjlmM25RL2l6MS95VE5TMzdmcjdLTUF4K1R2cndPeXo0eFVVSHVJUFJW?=
- =?utf-8?B?NFhNNFVGck0zTzRlTmNFV1pOTFpldDBieC9LQk50MjhoRmRacEFTT0FpQlE1?=
- =?utf-8?B?REFzdVFGZ3JYUFdwUUFFanB2OXM0Z3NUV2Fib0R5VHhuVWdXcklVWXZML0dh?=
- =?utf-8?B?RXdvY05HZUVHVU9Ka1dBdUJRMUF4NGk0anJWQ0pkWjJFSTgxK3VIdUl1YjVs?=
- =?utf-8?B?N3Y3ckZzMWhHVVFobHM3U1E3aXpYaFo0cEhHeEZRMUw2cU5rWjhER0xKTFI4?=
- =?utf-8?B?NFNmbXNTY2EzS3pRTU1aUGl5cDNBTUtLWGVkb0JUZlUrM0xFWGJ1R0g5NUdx?=
- =?utf-8?B?RnNlODA5ZGYyQ2cvbmQzVWk4YmJSd21Hem5DSkNBeXdsQll3cXp4aVVGYTd4?=
- =?utf-8?B?WUh1a0U2U3RnSCt2Q2RqWEI0NVc5cVozeHpzbkdRZHkzKytDZ2pFakprUDhl?=
- =?utf-8?B?eFFLYWZEQ3BZSE0xaUdPY1BqeVpwUlpRbTZEamgxZEJiemFuVW9TUnVyeEJa?=
- =?utf-8?B?QTFxZXk3OEQwNVJyWkFxTlQ5eXJTNE1leXVKZ1NRNlpFMFFHWXZHVzNzQS9i?=
- =?utf-8?B?K2I3NTFqaXBDc0F0NEFQSUVtS2ZZNFp4eDI1V0h1UmtDdnRHdE5zUHFYNnd1?=
- =?utf-8?B?Um9ENHlhcjc2T1ozOEdPQVZBMmlmZ29zZVhXNkg4SkpsMVhEczJGbS9MMFhn?=
- =?utf-8?B?ZW8wRjZ3SC8zSGZKa1FOUXV3dHNqV1kxWENUcFZVNnVieVRJKzFBanNZRDlD?=
- =?utf-8?B?OVN1NFEzTDJBOEE3RFQ1cTk2WEV0ZURxOHUxZ1FLRTRDbnQrZUpLcmxSK0ZM?=
- =?utf-8?B?Vm1NcXNlczJ3L1NRRHNSRWRwWnR2ZHdHT1dmMlp5bHFwYmxxbnlrb1pTdWxI?=
- =?utf-8?B?aXBkWmRNaVRtc3drclRzUzBqQ21TM0RrdG10Q1ZCaHJXUHhqKzRvNGxNbFNH?=
- =?utf-8?B?aDdZVGtwTTFidnBCdkdGQVorek9lQnY0NlZaeTUrekFKU1RELzF5dTY0Wks4?=
- =?utf-8?B?bDZvTDhpVkc1L0RQSXNpV3FIYkxTMHRkcGFhMXZmb3JCNG5uTHQwYXdtZzRn?=
- =?utf-8?B?KzJaV3I5R05PTG1hNzlTNmVlNHpXTnFZREtaTGFrSS85cXNPVzlXdTI0Z1JU?=
- =?utf-8?B?T3cwWjFuaVdkcFJ0L0ZHT1VjSldQMlJyTWR1bFZBc1o0TVoyTFBHSUt1VUJ3?=
- =?utf-8?B?Q3BCay83WmlrTFB3YzV5Yk11SXZHdmxmRmtKN0dyRzVack4zZU1XcW4rWHF0?=
- =?utf-8?B?a0RLeUY1elh1bm5SOG9FNDh2OVpLZkM5dXAyVXhGZ0M0WE1KdmR2WDcwbElw?=
- =?utf-8?B?TTY3UVNkbGloVGhnSXBPN3JZU3FVM21URnlTQnpsYTZSU1AzK0QxMnBEdERr?=
- =?utf-8?B?TW5iZ0dob0dKRm8wdDRlMnB1Vmx3SGVockdwNTE2YjhFdzl6TGY3TEVIc1ls?=
- =?utf-8?B?NXNxYkUyUmVnMFdmeEdxMXYxaTl4STA1bjRJRFRGWm5XM0NMM29VZDNUUFQv?=
- =?utf-8?B?NnVWSHU3OUp0amg5WUxvVVp5alcrYndjUWk2OWpNQXBWd3ltWG14amhtY0Nz?=
- =?utf-8?B?aWhtRzdmUjBnaXpnbG50ZjJSVXJFR0NuRXdTS3E0Lys3dmdzbjlZeHNjaVRZ?=
- =?utf-8?B?NVFBcDdlSXVuWXNiT1BkeFhuUWZlcmpLMnVqbG5QakdMcHpDUEc5UnovTlVW?=
- =?utf-8?B?Nzd2SS90S0t6ZXBqcUlZeFR0dTNaaDNtY1lwV1FZOHB1dUM2UCtKVFc1YUVx?=
- =?utf-8?B?ZGszSWZsM0hDMkhwRDFaRGVZeGN3PT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D6AE75E1BEBDE143BF68F26E94F6853C@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3AAfp3Zp"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2731ff54949so250155ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 Sep 2025 14:34:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1758749678; x=1759354478; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vPKSgJ+JnuWhZmWvU4SdwVrx8NK/S6tQIDBDLdOb+DU=;
+        b=3AAfp3ZpdeKrjXXw4cfLDbJXTSuN7rr0OOhvfL/eRsO6S5gN/oqZ8dZHKXL2z2lbLS
+         a6AROIuO9l8KQXGj4sXfMk08ogt1aR/bf+mTdn5meTi6U07I/JAWxtIvP2l2RtGNaeak
+         sjBuuCcLdfUqf5LMp+BoEMBA3sIQcOPpmKlGcafphReAJlF2kMLp8slOU8S0kUFfI7pu
+         bdug3fJL10Befw0pqYvFELKNbC+fMbTZoK5MJUOBZbQPFAeUi/+rfo63MFxjKC8K7ujv
+         0cfd804XrfD81FBPLHfBdIk9J0k6XhEsz03S4uXqRowMulOipdyufxPN4gfpcr0qzFXJ
+         v7vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758749678; x=1759354478;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vPKSgJ+JnuWhZmWvU4SdwVrx8NK/S6tQIDBDLdOb+DU=;
+        b=DOUMmkDXPlHG4p26C4WjjeOEBJyXjOSSIPb6VdFXveuuSN8xN7TXiDHHb3zblWjqyz
+         1PiSCzRJT0rVCQOLi6QGFZAOgH3k6UyckcvkKzh+VjNMX+uViSgiTG6o7iH+8yuLYwhM
+         XeLOf9AdKZE/79Pat8hPkYCbx+2JkmZCDAg7lspQyH4BR71pb2tQqWEGig7lbWQiH2Fu
+         cU+ArIE1DlmAaxM6JZ+ZBcc9d29laR/UQ9XTa/PTh2d7BRo9ngiyDldfrZBKGz1Oi03J
+         Wri3a2BWg419RqflaIunsQfxJdW9Xrb766TlXbcaQYzzr0TCVc6rjo4BR82ilaWKKXbX
+         fUIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPepHnrMMZgMMBdeW+sbv24SmO/HYSbBrUo270CUcdkssnS5SwmLzjnh95X9TYVTCtRbKpVjuHKiY57ssNmMVU@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSE2NMHrL0niaiJ95oeboa3PrHebJmzLW7hhVLCD98GGeuZR1U
+	o3EFxnawkRfhf5KOLWuSze/TNe+mFV7BuQ4vgOqku8bktvnl27/kdTZQzViV3TFZEBupKnA5GVs
+	XI0+FzeVeJZJSztIyA6Lf5U74kZYkE3oDQAnHdRVN
+X-Gm-Gg: ASbGnctYcpPHdmVSs/ZUNoTJbUjzmLRIuQDsRbzR61V9bLPmVyBRu8unIDq1sSvfbJ5
+	HlLMx615rdiokBIH4Kc8cZgrQjEgSXRMxRIuGxrV3D2xk8fXfH3QpW3GdXDcHmEQaecU78evWny
+	CBm/y+hoApVuphO2G9eciE/PX22kE3nlIbx/adBOG2WixS2Go2clCJL7dK1d+vihqmKCxNMSVsx
+	evjcVauAZYlYOVXn/5YtO++m1CIZOFvpFwNf2WBiJYl
+X-Google-Smtp-Source: AGHT+IEu70Mu1ZDyXwU1Dtw8/ffbqsWWrL/Hqq+SEMEDOyD5B5ZvFYX2fM3ni56scJNwlP7Gxl35AGidO4X8GRL8A5s=
+X-Received: by 2002:a17:902:e745:b0:267:912b:2b4d with SMTP id
+ d9443c01a7336-27ed3fdcf89mr2396165ad.7.1758749677120; Wed, 24 Sep 2025
+ 14:34:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8383.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5fac407b-6162-43b5-98f8-08ddfbaf2093
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Sep 2025 21:12:54.0470
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tu08hshIealtLihs058jOjUm9oXLteDBI27a6oq1i+rlGwVi/oFuTQZTuunoR+IIcSj8ddUoFKOo9XlSyzegfg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8688
-X-OriginatorOrg: intel.com
+References: <20250902164047.64261-1-thomas.falcon@intel.com> <20250902164047.64261-2-thomas.falcon@intel.com>
+In-Reply-To: <20250902164047.64261-2-thomas.falcon@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 24 Sep 2025 14:34:26 -0700
+X-Gm-Features: AS18NWA3mro55yisLg4M9ifNw8wPOnS-NRj-YIx5vNmqipRTez2CzPwz95LoALI
+Message-ID: <CAP-5=fXe43BE3hWoQ1gjxXuQ9OYBTNvMjexrxiyC+SHgP9rTYQ@mail.gmail.com>
+Subject: Re: [RESEND][PATCH v2 1/2] perf record: Add ratio-to-prev term
+To: Thomas Falcon <thomas.falcon@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Andi Kleen <ak@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-T24gVHVlLCAyMDI1LTA5LTIzIGF0IDIzOjAyIC0wNzAwLCBJYW4gUm9nZXJzIHdyb3RlOg0KPiBV
-cGRhdGUgZXZlbnRzIGFuZCBzb21lIG1ldHJpY3MgdG8gdGhlIGxhdGVzdCBwZXJmbW9uIHZlcnNp
-b25zOg0KPiDCoC0gYWxkZXJsYWtlIDEuMzQNCj4gwqAtIGFycm93bGFrZSAxLjEzDQo+IMKgLSBl
-bWVyYWxkcmFwaWRzIDEuMjANCj4gwqAtIGdyYW5kcmlkZ2UgMS4xMA0KPiDCoC0gZ3Jhbml0ZXJh
-cGlkcyAxLjE1DQo+IMKgLSBsdW5hcmxha2UgMS4xOA0KPiDCoC0gbWV0ZW9ybGFrZSAxLjE3DQo+
-IMKgLSBzYXBwaGlyZXJhcGlkcyAxLjM1DQo+IMKgLSBzaWVycmFmb3Jlc3QgMS4xMg0KPiANCg0K
-TWV0cmljcyB0ZXN0cyBwYXNzZWQgb24gQWxkZXIgTGFrZSwgU2FwcGhpcmUgUmFwaWRzLCBhbmQg
-QXJyb3cgTGFrZS4NCg0KVGVzdGVkLWJ5OiBUaG9tYXMgRmFsY29uIDx0aG9tYXMuZmFsY29uQGlu
-dGVsLmNvbT4NCg0KVGhhbmtzLA0KVG9tDQoNCj4gSWFuIFJvZ2VycyAoMTApOg0KPiDCoCBwZXJm
-IHZlbmRvciBldmVudHMgaW50ZWw6IFVwZGF0ZSBhbGRlcmxha2UgZXZlbnRzIHRvIHYxLjM0DQo+
-IMKgIHBlcmYgdmVuZG9yIGV2ZW50cyBpbnRlbDogVXBkYXRlIGFycm93bGFrZSBldmVudHMgdG8g
-djEuMTMNCj4gwqAgcGVyZiB2ZW5kb3IgZXZlbnRzIGludGVsOiBVcGRhdGUgZW1lcmFsZHJhcGlk
-cyBldmVudHMgdG8gdjEuMjANCj4gwqAgcGVyZiB2ZW5kb3IgZXZlbnRzIGludGVsOiBVcGRhdGUg
-Z3JhbmRyaWRnZSBldmVudHMgdG8gdjEuMTANCj4gwqAgcGVyZiB2ZW5kb3IgZXZlbnRzIGludGVs
-OiBVcGRhdGUgZ3Jhbml0ZXJhcGlkcyBldmVudHMgdG8gdjEuMTUNCj4gwqAgcGVyZiB2ZW5kb3Ig
-ZXZlbnRzIGludGVsOiBVcGRhdGUgbHVuYXJsYWtlIGV2ZW50cyB0byB2MS4xOA0KPiDCoCBwZXJm
-IHZlbmRvciBldmVudHMgaW50ZWw6IFVwZGF0ZSBtZXRlb3JsYWtlIGV2ZW50cyB0byB2MS4xNw0K
-PiDCoCBwZXJmIHZlbmRvciBldmVudHMgaW50ZWw6IFVwZGF0ZSBwYW50aGVybGFrZSBldmVudHMg
-dG8gdjEuMDANCj4gwqAgcGVyZiB2ZW5kb3IgZXZlbnRzIGludGVsOiBVcGRhdGUgc2FwcGhpcmVy
-YXBpZHMgZXZlbnRzIHRvIHYxLjM1DQo+IMKgIHBlcmYgdmVuZG9yIGV2ZW50cyBpbnRlbDogVXBk
-YXRlIHNpZXJyYWZvcmVzdCBldmVudHMgdG8gdjEuMTINCj4gDQo+IMKgLi4uL3BtdS1ldmVudHMv
-YXJjaC94ODYvYWxkZXJsYWtlL2NhY2hlLmpzb27CoCB8wqDCoCAzNiArDQo+IMKgLi4uL3BtdS1l
-dmVudHMvYXJjaC94ODYvYXJyb3dsYWtlL2NhY2hlLmpzb27CoCB8wqDCoCA0NiArLQ0KPiDCoC4u
-Li9wbXUtZXZlbnRzL2FyY2gveDg2L2Fycm93bGFrZS9tZW1vcnkuanNvbiB8wqDCoMKgIDYgKy0N
-Cj4gwqAuLi4vcG11LWV2ZW50cy9hcmNoL3g4Ni9hcnJvd2xha2Uvb3RoZXIuanNvbsKgIHzCoMKg
-wqAgMiArLQ0KPiDCoC4uLi9hcmNoL3g4Ni9lbWVyYWxkcmFwaWRzL2NhY2hlLmpzb27CoMKgwqDC
-oMKgwqDCoMKgIHzCoMKgIDYzICsNCj4gwqAuLi4vYXJjaC94ODYvZW1lcmFsZHJhcGlkcy9lbXIt
-bWV0cmljcy5qc29uwqDCoCB8wqDCoCAxMiArDQo+IMKgLi4uL2FyY2gveDg2L2VtZXJhbGRyYXBp
-ZHMvdW5jb3JlLWNhY2hlLmpzb27CoCB8wqDCoCAxMSArDQo+IMKgLi4uL2FyY2gveDg2L2VtZXJh
-bGRyYXBpZHMvdW5jb3JlLW1lbW9yeS5qc29uIHzCoMKgIDIyICsNCj4gwqAuLi4vYXJjaC94ODYv
-ZW1lcmFsZHJhcGlkcy91bmNvcmUtcG93ZXIuanNvbsKgIHzCoMKgwqAgMiAtDQo+IMKgLi4uL3Bt
-dS1ldmVudHMvYXJjaC94ODYvZ3JhbmRyaWRnZS9jYWNoZS5qc29uIHzCoMKgIDIwICstDQo+IMKg
-Li4uL2dyYW5pdGVyYXBpZHMvdW5jb3JlLWludGVyY29ubmVjdC5qc29uwqDCoMKgIHzCoMKgIDEw
-ICstDQo+IMKgLi4uL2FyY2gveDg2L2dyYW5pdGVyYXBpZHMvdW5jb3JlLW1lbW9yeS5qc29uIHzC
-oCAxMTIgKysNCj4gwqAuLi4vcG11LWV2ZW50cy9hcmNoL3g4Ni9sdW5hcmxha2UvY2FjaGUuanNv
-bsKgIHzCoMKgIDQ2ICstDQo+IMKgLi4uL3BtdS1ldmVudHMvYXJjaC94ODYvbHVuYXJsYWtlL21l
-bW9yeS5qc29uIHzCoMKgwqAgNiArLQ0KPiDCoC4uLi9wbXUtZXZlbnRzL2FyY2gveDg2L2x1bmFy
-bGFrZS9vdGhlci5qc29uwqAgfMKgwqDCoCAyICstDQo+IMKgdG9vbHMvcGVyZi9wbXUtZXZlbnRz
-L2FyY2gveDg2L21hcGZpbGUuY3N2wqDCoMKgIHzCoMKgIDIwICstDQo+IMKgLi4uL3BtdS1ldmVu
-dHMvYXJjaC94ODYvbWV0ZW9ybGFrZS9jYWNoZS5qc29uIHzCoMKgIDM2ICsNCj4gwqAuLi4vYXJj
-aC94ODYvcGFudGhlcmxha2UvY2FjaGUuanNvbsKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgMTIwNyAr
-KysrKysrKysrLQ0KPiDCoC4uLi9hcmNoL3g4Ni9wYW50aGVybGFrZS9jb3VudGVyLmpzb27CoMKg
-wqDCoMKgwqDCoMKgIHzCoMKgwqAgOSArLQ0KPiDCoC4uLi9hcmNoL3g4Ni9wYW50aGVybGFrZS9m
-bG9hdGluZy1wb2ludC5qc29uwqAgfMKgIDI4NiArKysNCj4gwqAuLi4vYXJjaC94ODYvcGFudGhl
-cmxha2UvZnJvbnRlbmQuanNvbsKgwqDCoMKgwqDCoMKgIHzCoCA1MzUgKysrKysNCj4gwqAuLi4v
-YXJjaC94ODYvcGFudGhlcmxha2UvbWVtb3J5Lmpzb27CoMKgwqDCoMKgwqDCoMKgwqAgfMKgIDEw
-NiArLQ0KPiDCoC4uLi9hcmNoL3g4Ni9wYW50aGVybGFrZS9vdGhlci5qc29uwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgfMKgwqAgNDQgKw0KPiDCoC4uLi9hcmNoL3g4Ni9wYW50aGVybGFrZS9waXBlbGlu
-ZS5qc29uwqDCoMKgwqDCoMKgwqAgfCAxNzc2DQo+ICsrKysrKysrKysrKysrKystDQo+IMKgLi4u
-L2FyY2gveDg2L3BhbnRoZXJsYWtlL3VuY29yZS1tZW1vcnkuanNvbsKgwqAgfMKgwqAgMjYgKw0K
-PiDCoC4uLi9hcmNoL3g4Ni9wYW50aGVybGFrZS92aXJ0dWFsLW1lbW9yeS5qc29uwqAgfMKgIDI0
-OCArKysNCj4gwqAuLi4vYXJjaC94ODYvc2FwcGhpcmVyYXBpZHMvY2FjaGUuanNvbsKgwqDCoMKg
-wqDCoMKgIHzCoMKgIDYzICsNCj4gwqAuLi4vYXJjaC94ODYvc2FwcGhpcmVyYXBpZHMvc3ByLW1l
-dHJpY3MuanNvbsKgIHzCoMKgIDEyICsNCj4gwqAuLi4vYXJjaC94ODYvc2FwcGhpcmVyYXBpZHMv
-dW5jb3JlLWNhY2hlLmpzb24gfMKgwqAgMTEgKw0KPiDCoC4uLi94ODYvc2FwcGhpcmVyYXBpZHMv
-dW5jb3JlLW1lbW9yeS5qc29uwqDCoMKgwqAgfMKgwqAgMjIgKw0KPiDCoC4uLi9hcmNoL3g4Ni9z
-YXBwaGlyZXJhcGlkcy91bmNvcmUtcG93ZXIuanNvbiB8wqDCoMKgIDIgLQ0KPiDCoC4uLi9hcmNo
-L3g4Ni9zaWVycmFmb3Jlc3QvY2FjaGUuanNvbsKgwqDCoMKgwqDCoMKgwqDCoCB8wqDCoCA2MSAr
-LQ0KPiDCoC4uLi94ODYvc2llcnJhZm9yZXN0L3VuY29yZS1pbnRlcmNvbm5lY3QuanNvbiB8wqDC
-oCAxMCArLQ0KPiDCoC4uLi9hcmNoL3g4Ni9zaWVycmFmb3Jlc3QvdW5jb3JlLWlvLmpzb27CoMKg
-wqDCoMKgIHzCoMKgwqAgMSAtDQo+IMKgLi4uL2FyY2gveDg2L3NpZXJyYWZvcmVzdC91bmNvcmUt
-bWVtb3J5Lmpzb27CoCB8wqAgMTAzICstDQo+IMKgMzUgZmlsZXMgY2hhbmdlZCwgNDcxMiBpbnNl
-cnRpb25zKCspLCAyNjIgZGVsZXRpb25zKC0pDQo+IMKgY3JlYXRlIG1vZGUgMTAwNjQ0IHRvb2xz
-L3BlcmYvcG11LQ0KPiBldmVudHMvYXJjaC94ODYvcGFudGhlcmxha2UvZmxvYXRpbmctcG9pbnQu
-anNvbg0KPiDCoGNyZWF0ZSBtb2RlIDEwMDY0NCB0b29scy9wZXJmL3BtdS0NCj4gZXZlbnRzL2Fy
-Y2gveDg2L3BhbnRoZXJsYWtlL290aGVyLmpzb24NCj4gwqBjcmVhdGUgbW9kZSAxMDA2NDQgdG9v
-bHMvcGVyZi9wbXUtDQo+IGV2ZW50cy9hcmNoL3g4Ni9wYW50aGVybGFrZS91bmNvcmUtbWVtb3J5
-Lmpzb24NCj4gDQoNCg==
+On Tue, Sep 2, 2025 at 9:41=E2=80=AFAM Thomas Falcon <thomas.falcon@intel.c=
+om> wrote:
+>
+> Provide ratio-to-prev term which allows the user to
+> set the event sample period of two events corresponding
+> to a desired ratio. If using on an Intel x86 platform with
+> Auto Counter Reload support, also set corresponding event's
+> config2 attribute with a bitmask which counters to reset and
+> which counters to sample if the desired ratio is met or exceeded.
+> On other platforms, only the sample period is affected by the
+> ratio-to-prev term.
+>
+> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
+> ---
+>  tools/perf/Documentation/intel-acr.txt | 53 ++++++++++++++++++
+>  tools/perf/Documentation/perf-list.txt |  2 +
+>  tools/perf/arch/x86/util/evsel.c       | 53 ++++++++++++++++++
+>  tools/perf/util/evsel.c                | 76 ++++++++++++++++++++++++++
+>  tools/perf/util/evsel.h                |  1 +
+>  tools/perf/util/evsel_config.h         |  1 +
+>  tools/perf/util/parse-events.c         | 22 ++++++++
+>  tools/perf/util/parse-events.h         |  3 +-
+>  tools/perf/util/parse-events.l         |  1 +
+>  tools/perf/util/pmu.c                  |  3 +-
+>  10 files changed, 213 insertions(+), 2 deletions(-)
+>  create mode 100644 tools/perf/Documentation/intel-acr.txt
+>
+> diff --git a/tools/perf/Documentation/intel-acr.txt b/tools/perf/Document=
+ation/intel-acr.txt
+> new file mode 100644
+> index 000000000000..72654fdd9a52
+> --- /dev/null
+> +++ b/tools/perf/Documentation/intel-acr.txt
+> @@ -0,0 +1,53 @@
+> +Intel Auto Counter Reload Support
+> +---------------------------------
+> +Support for Intel Auto Counter Reload in perf tools
+> +
+> +Auto counter reload provides a means for software to specify to hardware
+> +that certain counters, if supported, should be automatically reloaded
+> +upon overflow of chosen counters. By taking a sample only if the rate of
+> +one event exceeds some threshold relative to the rate of another event,
+> +this feature enables software to sample based on the relative rate of
+> +two or more events. To enable this, the user must provide a sample perio=
+d
+> +term and a bitmask ("acr_mask") for each relevant event specifying the
+> +counters in an event group to reload if the event's specified sample
+> +period is exceeded.
+> +
+> +For example, if the user desires to measure a scenario when IPC > 2,
+> +the event group might look like the one below:
+> +
+> +       perf record -e {cpu_atom/instructions,period=3D200000,acr_mask=3D=
+0x2/, \
+> +       cpu_atom/cycles,period=3D100000,acr_mask=3D0x3/} -- true
+> +
+> +In this case, if the "instructions" counter exceeds the sample period of
+> +200000, the second counter, "cycles", will be reset and a sample will be
+> +taken. If "cycles" is exceeded first, both counters in the group will be
+> +reset. In this way, samples will only be taken for cases where IPC > 2.
+> +
+> +The acr_mask term is a hexadecimal value representing a bitmask of the
+> +events in the group to be reset when the period is exceeded. In the
+> +example above, "instructions" is assigned an acr_mask of 0x2, meaning
+> +only the second event in the group is reloaded and a sample is taken
+> +for the first event. "cycles" is assigned an acr_mask of 0x3, meaning
+> +that both event counters will be reset if the sample period is exceeded
+> +first.
+
+This is great! Thank you for adding it.
+
+> +
+> +ratio-to-prev Event Term
+> +------------------------
+> +To simplify this, an event term "ratio-to-prev" is provided which is use=
+d
+> +alongside the sample period term n or the -c/--count option. This would
+> +allow users to specify the desired relative rate between events as a
+> +ratio. Note: Both events compared must belong to the same PMU.
+> +
+> +The command above would then become
+> +
+> +       perf record -e {cpu_atom/instructions/, \
+> +       cpu_atom/cycles,period=3D100000,ratio-to-prev=3D0.5/} -- true
+> +
+> +ratio-to-prev is the ratio of the event using the term relative
+> +to the previous event in the group, which will always be 1,
+> +for a 1:0.5 or 2:1 ratio.
+> +
+> +To sample for IPC < 2 for example, the events need to be reordered:
+> +
+> +       perf record -e {cpu_atom/cycles/, \
+> +       cpu_atom/instructions,period=3D200000,ratio-to-prev=3D2.0/} -- tr=
+ue
+> diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Document=
+ation/perf-list.txt
+> index 28215306a78a..10bc66d39202 100644
+> --- a/tools/perf/Documentation/perf-list.txt
+> +++ b/tools/perf/Documentation/perf-list.txt
+> @@ -392,6 +392,8 @@ Support raw format:
+>  . '--raw-dump [hw|sw|cache|tracepoint|pmu|event_glob]', shows the raw-du=
+mp of
+>    a certain kind of events.
+>
+> +include::intel-acr.txt[]
+> +
+>  SEE ALSO
+>  --------
+>  linkperf:perf-stat[1], linkperf:perf-top[1],
+> diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/=
+evsel.c
+> index 9bc80fff3aa0..84858e4c397d 100644
+> --- a/tools/perf/arch/x86/util/evsel.c
+> +++ b/tools/perf/arch/x86/util/evsel.c
+> @@ -1,7 +1,9 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> +#include "util/evlist.h"
+>  #include "util/evsel.h"
+> +#include "util/evsel_config.h"
+>  #include "util/env.h"
+>  #include "util/pmu.h"
+>  #include "util/pmus.h"
+> @@ -67,6 +69,57 @@ int arch_evsel__hw_name(struct evsel *evsel, char *bf,=
+ size_t size)
+>                          event_name);
+>  }
+>
+> +void arch_evsel__apply_ratio_to_prev(struct evsel *evsel,
+> +                               struct perf_event_attr *attr)
+> +{
+> +       struct perf_event_attr *prev_attr =3D NULL;
+> +       struct evsel *evsel_prev =3D NULL;
+> +       const char *name =3D "acr_mask";
+> +       int evsel_idx =3D 0;
+> +       __u64 ev_mask, pr_ev_mask;
+> +
+> +       if (!perf_pmu__has_format(evsel->pmu, name)) {
+> +               pr_err("'%s' does not have acr_mask format support\n", ev=
+sel->pmu->name);
+> +               return;
+> +       }
+> +       if (perf_pmu__format_type(evsel->pmu, name) !=3D
+> +                       PERF_PMU_FORMAT_VALUE_CONFIG2) {
+> +               pr_err("'%s' does not have config2 format support\n", evs=
+el->pmu->name);
+> +               return;
+> +       }
+> +
+> +       evsel_prev =3D evsel__prev(evsel);
+> +       if (!evsel_prev) {
+> +               pr_err("Previous event does not exist.\n");
+> +               return;
+> +       }
+
+Nit: you should probably check that the leader of both events is the
+same, this means the events are in the same group.
+
+> +
+> +       prev_attr =3D &evsel_prev->core.attr;
+> +
+> +       if (prev_attr->config2) {
+> +               pr_err("'%s' has set config2 (acr_mask?) already, configu=
+ration not supported\n", evsel_prev->name);
+> +               return;
+> +       }
+> +
+> +       /*
+> +        * acr_mask (config2) is calculated using the event's index in
+> +        * the event group. The first event will use the index of the
+> +        * second event as its mask (e.g., 0x2), indicating that the
+> +        * second event counter will be reset and a sample taken for
+> +        * the first event if its counter overflows. The second event
+> +        * will use the mask consisting of the first and second bits
+> +        * (e.g., 0x3), meaning both counters will be reset if the
+> +        * second event counter overflows.
+> +        */
+> +
+> +       evsel_idx =3D evsel__group_idx(evsel);
+> +       ev_mask =3D 1ull << evsel_idx;
+> +       pr_ev_mask =3D 1ull << (evsel_idx - 1);
+> +
+> +       prev_attr->config2 =3D ev_mask;
+> +       attr->config2 =3D ev_mask | pr_ev_mask;
+> +}
+> +
+>  static void ibs_l3miss_warn(void)
+>  {
+>         pr_warning(
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index d264c143b592..f6f93920c0aa 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1091,6 +1091,71 @@ static void evsel__reset_callgraph(struct evsel *e=
+vsel, struct callchain_param *
+>         }
+>  }
+>
+> +static void evsel__apply_ratio_to_prev(struct evsel *evsel,
+> +                                      struct perf_event_attr *attr,
+> +                                      struct record_opts *opts,
+> +                                      const char *buf)
+> +{
+> +       struct perf_event_attr *prev_attr =3D NULL;
+> +       struct evsel *evsel_prev =3D NULL;
+> +       u64 type =3D evsel->core.attr.sample_type;
+> +       u64 prev_type =3D 0;
+> +       double rtp;
+> +
+> +       rtp =3D strtod(buf, NULL);
+> +       if (rtp <=3D 0) {
+> +               pr_err("Invalid ratio-to-prev value %lf\n", rtp);
+> +               return;
+> +       }
+> +       if (evsel =3D=3D evsel__leader(evsel)) {
+> +               pr_err("Invalid use of ratio-to-prev term without precedi=
+ng element in group\n");
+> +               return;
+> +       }
+
+Ah, it is done here.
+
+> +       if (!evsel->pmu->is_core) {
+> +               pr_err("Event using ratio-to-prev term must have a core P=
+MU\n");
+> +               return;
+> +       }
+> +
+> +       evsel_prev =3D evsel__prev(evsel);
+> +       if (!evsel_prev) {
+> +               pr_err("Previous event does not exist.\n");
+> +               return;
+> +       }
+> +
+> +       if (evsel_prev->pmu->type !=3D evsel->pmu->type) {
+> +               pr_err("Compared events (\"%s\", \"%s\") must have same P=
+MU\n",
+> +                       evsel->name, evsel_prev->name);
+> +               return;
+> +       }
+> +
+> +       prev_attr =3D &evsel_prev->core.attr;
+> +       prev_type =3D evsel_prev->core.attr.sample_type;
+> +
+> +       if (!(prev_type & PERF_SAMPLE_PERIOD)) {
+> +               attr->sample_period =3D prev_attr->sample_period * rtp;
+> +               attr->freq =3D 0;
+> +               evsel__reset_sample_bit(evsel, PERIOD);
+> +       } else if (!(type & PERF_SAMPLE_PERIOD)) {
+> +               prev_attr->sample_period =3D attr->sample_period / rtp;
+> +               prev_attr->freq =3D 0;
+> +               evsel__reset_sample_bit(evsel_prev, PERIOD);
+> +       } else {
+> +               if (opts->user_interval !=3D ULLONG_MAX) {
+> +                       prev_attr->sample_period =3D opts->user_interval;
+> +                       attr->sample_period =3D prev_attr->sample_period =
+* rtp;
+> +                       prev_attr->freq =3D 0;
+> +                       attr->freq =3D 0;
+> +                       evsel__reset_sample_bit(evsel_prev, PERIOD);
+> +                       evsel__reset_sample_bit(evsel, PERIOD);
+> +               } else {
+> +                       pr_err("Event period term or count (-c) must be s=
+et when using ratio-to-prev term.\n");
+> +                       return;
+> +               }
+> +       }
+> +
+> +       arch_evsel__apply_ratio_to_prev(evsel, attr);
+> +}
+> +
+>  static void evsel__apply_config_terms(struct evsel *evsel,
+>                                       struct record_opts *opts, bool trac=
+k)
+>  {
+> @@ -1104,6 +1169,7 @@ static void evsel__apply_config_terms(struct evsel =
+*evsel,
+>         u32 dump_size =3D 0;
+>         int max_stack =3D 0;
+>         const char *callgraph_buf =3D NULL;
+> +       const char *rtp_buf =3D NULL;
+>
+>         list_for_each_entry(term, config_terms, list) {
+>                 switch (term->type) {
+> @@ -1174,6 +1240,9 @@ static void evsel__apply_config_terms(struct evsel =
+*evsel,
+>                         break;
+>                 case EVSEL__CONFIG_TERM_CFG_CHG:
+>                         break;
+> +               case EVSEL__CONFIG_TERM_RATIO_TO_PREV:
+> +                       rtp_buf =3D term->val.str;
+> +                       break;
+>                 default:
+>                         break;
+>                 }
+> @@ -1225,6 +1294,8 @@ static void evsel__apply_config_terms(struct evsel =
+*evsel,
+>                         evsel__config_callchain(evsel, opts, &param);
+>                 }
+>         }
+> +       if (rtp_buf)
+> +               evsel__apply_ratio_to_prev(evsel, attr, opts, rtp_buf);
+>  }
+>
+>  struct evsel_config_term *__evsel__get_config_term(struct evsel *evsel, =
+enum evsel_term_type type)
+> @@ -1249,6 +1320,11 @@ void __weak arch__post_evsel_config(struct evsel *=
+evsel __maybe_unused,
+>  {
+>  }
+>
+> +void __weak arch_evsel__apply_ratio_to_prev(struct evsel *evsel __maybe_=
+unused,
+> +                                           struct perf_event_attr *attr =
+__maybe_unused)
+> +{
+> +}
+> +
+
+I'm not a fan of weak functions as they introduce subtle bugs, but I
+can see why you have this organization.
+
+Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks,
+Ian
+
+
+>  static void evsel__set_default_freq_period(struct record_opts *opts,
+>                                            struct perf_event_attr *attr)
+>  {
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index 5797a02e5d6a..5002c795e818 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -342,6 +342,7 @@ void evsel__set_sample_id(struct evsel *evsel, bool u=
+se_sample_identifier);
+>  void arch_evsel__set_sample_weight(struct evsel *evsel);
+>  void arch__post_evsel_config(struct evsel *evsel, struct perf_event_attr=
+ *attr);
+>  int arch_evsel__open_strerror(struct evsel *evsel, char *msg, size_t siz=
+e);
+> +void arch_evsel__apply_ratio_to_prev(struct evsel *evsel, struct perf_ev=
+ent_attr *attr);
+>
+>  int evsel__set_filter(struct evsel *evsel, const char *filter);
+>  int evsel__append_tp_filter(struct evsel *evsel, const char *filter);
+> diff --git a/tools/perf/util/evsel_config.h b/tools/perf/util/evsel_confi=
+g.h
+> index 94a1e9cf73d6..bcd3a978f0c4 100644
+> --- a/tools/perf/util/evsel_config.h
+> +++ b/tools/perf/util/evsel_config.h
+> @@ -28,6 +28,7 @@ enum evsel_term_type {
+>         EVSEL__CONFIG_TERM_AUX_ACTION,
+>         EVSEL__CONFIG_TERM_AUX_SAMPLE_SIZE,
+>         EVSEL__CONFIG_TERM_CFG_CHG,
+> +       EVSEL__CONFIG_TERM_RATIO_TO_PREV,
+>  };
+>
+>  struct evsel_config_term {
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
+s.c
+> index 8282ddf68b98..850de3a51f47 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -834,6 +834,7 @@ const char *parse_events__term_type_str(enum parse_ev=
+ents__term_type term_type)
+>                 [PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE]          =3D "lega=
+cy-cache",
+>                 [PARSE_EVENTS__TERM_TYPE_HARDWARE]              =3D "hard=
+ware",
+>                 [PARSE_EVENTS__TERM_TYPE_CPU]                   =3D "cpu"=
+,
+> +               [PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV]         =3D "rati=
+o-to-prev",
+>         };
+>         if ((unsigned int)term_type >=3D __PARSE_EVENTS__TERM_TYPE_NR)
+>                 return "unknown term";
+> @@ -884,6 +885,7 @@ config_term_avail(enum parse_events__term_type term_t=
+ype, struct parse_events_er
+>         case PARSE_EVENTS__TERM_TYPE_RAW:
+>         case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
+>         case PARSE_EVENTS__TERM_TYPE_HARDWARE:
+> +       case PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV:
+>         default:
+>                 if (!err)
+>                         return false;
+> @@ -1037,6 +1039,21 @@ do {                                              =
+                          \
+>                 perf_cpu_map__put(map);
+>                 break;
+>         }
+> +       case PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV:
+> +               CHECK_TYPE_VAL(STR);
+> +               if (strtod(term->val.str, NULL) <=3D 0) {
+> +                       parse_events_error__handle(err, term->err_val,
+> +                                                  strdup("zero or negati=
+ve"),
+> +                                                  NULL);
+> +                       return -EINVAL;
+> +               }
+> +               if (errno =3D=3D ERANGE) {
+> +                       parse_events_error__handle(err, term->err_val,
+> +                                                  strdup("too big"),
+> +                                                  NULL);
+> +                       return -EINVAL;
+> +               }
+> +               break;
+>         case PARSE_EVENTS__TERM_TYPE_DRV_CFG:
+>         case PARSE_EVENTS__TERM_TYPE_USER:
+>         case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
+> @@ -1165,6 +1182,7 @@ static int config_term_tracepoint(struct perf_event=
+_attr *attr,
+>         case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
+>         case PARSE_EVENTS__TERM_TYPE_HARDWARE:
+>         case PARSE_EVENTS__TERM_TYPE_CPU:
+> +       case PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV:
+>         default:
+>                 if (err) {
+>                         parse_events_error__handle(err, term->err_term,
+> @@ -1289,6 +1307,9 @@ do {                                               =
+               \
+>                         ADD_CONFIG_TERM_VAL(AUX_SAMPLE_SIZE, aux_sample_s=
+ize,
+>                                             term->val.num, term->weak);
+>                         break;
+> +               case PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV:
+> +                       ADD_CONFIG_TERM_STR(RATIO_TO_PREV, term->val.str,=
+ term->weak);
+> +                       break;
+>                 case PARSE_EVENTS__TERM_TYPE_USER:
+>                 case PARSE_EVENTS__TERM_TYPE_CONFIG:
+>                 case PARSE_EVENTS__TERM_TYPE_CONFIG1:
+> @@ -1355,6 +1376,7 @@ static int get_config_chgs(struct perf_pmu *pmu, st=
+ruct parse_events_terms *head
+>                 case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
+>                 case PARSE_EVENTS__TERM_TYPE_HARDWARE:
+>                 case PARSE_EVENTS__TERM_TYPE_CPU:
+> +               case PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV:
+>                 default:
+>                         break;
+>                 }
+> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-event=
+s.h
+> index 62dc7202e3ba..b2dcc52e3814 100644
+> --- a/tools/perf/util/parse-events.h
+> +++ b/tools/perf/util/parse-events.h
+> @@ -83,7 +83,8 @@ enum parse_events__term_type {
+>         PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE,
+>         PARSE_EVENTS__TERM_TYPE_HARDWARE,
+>         PARSE_EVENTS__TERM_TYPE_CPU,
+> -#define        __PARSE_EVENTS__TERM_TYPE_NR (PARSE_EVENTS__TERM_TYPE_CPU=
+ + 1)
+> +       PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV,
+> +#define        __PARSE_EVENTS__TERM_TYPE_NR (PARSE_EVENTS__TERM_TYPE_RAT=
+IO_TO_PREV + 1)
+>  };
+>
+>  struct parse_events_term {
+> diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-event=
+s.l
+> index 2034590eb789..25206de68007 100644
+> --- a/tools/perf/util/parse-events.l
+> +++ b/tools/perf/util/parse-events.l
+> @@ -336,6 +336,7 @@ aux-action          { return term(yyscanner, PARSE_EV=
+ENTS__TERM_TYPE_AUX_ACTION); }
+>  aux-sample-size                { return term(yyscanner, PARSE_EVENTS__TE=
+RM_TYPE_AUX_SAMPLE_SIZE); }
+>  metric-id              { return term(yyscanner, PARSE_EVENTS__TERM_TYPE_=
+METRIC_ID); }
+>  cpu                    { return term(yyscanner, PARSE_EVENTS__TERM_TYPE_=
+CPU); }
+> +ratio-to-prev          { return term(yyscanner, PARSE_EVENTS__TERM_TYPE_=
+RATIO_TO_PREV); }
+>  cpu-cycles|cycles                              { return hw_term(yyscanne=
+r, PERF_COUNT_HW_CPU_CYCLES); }
+>  stalled-cycles-frontend|idle-cycles-frontend   { return hw_term(yyscanne=
+r, PERF_COUNT_HW_STALLED_CYCLES_FRONTEND); }
+>  stalled-cycles-backend|idle-cycles-backend     { return hw_term(yyscanne=
+r, PERF_COUNT_HW_STALLED_CYCLES_BACKEND); }
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 5a291f1380ed..3d1f975e8db9 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -1541,7 +1541,7 @@ static int pmu_config_term(const struct perf_pmu *p=
+mu,
+>                         break;
+>                 case PARSE_EVENTS__TERM_TYPE_USER: /* Not hardcoded. */
+>                         return -EINVAL;
+> -               case PARSE_EVENTS__TERM_TYPE_NAME ... PARSE_EVENTS__TERM_=
+TYPE_CPU:
+> +               case PARSE_EVENTS__TERM_TYPE_NAME ... PARSE_EVENTS__TERM_=
+TYPE_RATIO_TO_PREV:
+>                         /* Skip non-config terms. */
+>                         break;
+>                 default:
+> @@ -1930,6 +1930,7 @@ int perf_pmu__for_each_format(struct perf_pmu *pmu,=
+ void *state, pmu_format_call
+>                 "aux-action=3D(pause|resume|start-paused)",
+>                 "aux-sample-size=3Dnumber",
+>                 "cpu=3Dnumber",
+> +               "ratio-to-prev=3Dstring",
+>         };
+>         struct perf_pmu_format *format;
+>         int ret;
+> --
+> 2.50.1
+>
