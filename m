@@ -1,179 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609982E1737;
-	Thu, 25 Sep 2025 15:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBCF2E5400
+	for <linux-perf-users@vger.kernel.org>; Thu, 25 Sep 2025 15:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758812859; cv=none; b=Qt2KNSak5FCswzkNW1LATT/ahsI+GCHULKkIujvG/aGzWIbZowGb6wGlEkjmLYKGd8AqSMhRq8DKaoRrU2xr1r3CjzbjtTi1hhIiCTZFR5qI6jqZRmeq5eXOnD6ncxBVbDMbB6LehW8aTSHLZ2iyDm5vBgXog9qTmY62BHybQoA=
+	t=1758813551; cv=none; b=j6zlIUQzongicRyAVca1rt87t6Xx2Fv/R6FIaBx9W72IPS9WP0UpO90gPGLnx7RsMfmcE9OihOl59vZ0MlUUK9o2PaiNIG6UXD/gyYpfFPIoqhDSNqke5w460bpNMK/4bsrduFTeiCerd9rYYentyQYqw1aTS2/eUFOob6ZB2Hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758812859; c=relaxed/simple;
-	bh=Hn8Nz2QsEgEwXTThIZCX3K9EVu+2yqcnfyaoABTO+Eo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bea+Prc6a2hCPGSDSLDAxefv5F0jKQHmxFyjX8nwjByukJdFUS8V8zE/MMMviFzbQUuALASqmmiT9/alIz18XRw29L16S5Bf9BXkw7fFyoEPhQhDf7Nz/KmKLduZ0eIFax78Le8dTrdLej/CN0Wacr0s7fFWxYWYuaeK6Qg6KKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eickpeGh; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1758813551; c=relaxed/simple;
+	bh=EB/Og+b+iGBdj3yiP+ao1ybCVJ+QxFP61rwkgwxjfZY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hfCQf4S5t4Y3mymb0uZXauuXzQYspz/IFVGMZoT78WsCFCh7h5KLtuy8Tw/fvZLSGhuZEWeKRMCPALgcRmp/cOJsXbgPP30i4xKF9CBq8lNs8YTXOL6cmk2ikfQyFci7QAGBJooH4ZBkPBehpb/aEsu+hkTziOQhF+S7j06omuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WyQKFE7s; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eickpeGh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758812858; x=1790348858;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Hn8Nz2QsEgEwXTThIZCX3K9EVu+2yqcnfyaoABTO+Eo=;
-  b=eickpeGhdwq5Ge34R2uvouCMcvsoaXVAUvzXSVbumQQ3erWufhfmXNKu
-   wiwLZfYWrnRhDTgWy4Ycuaxd5kj2MqDx8cP0WfSkqipFeDq70wh64cCTd
-   32lC1dbwm1bQYE+a/1GXAZdOG+h6ELgMsTUv71X/nkq8+cosLquTW/6U7
-   3INaEv8MTp/yE4aPiJARZ9aF/v6aqYvef8plD/FKt1oYKBRZVjfg03EO0
-   12IQHfZwDl3G8mKZqFpSX+nLeaxqQ3RaNmsqsR+cBaKCrWB3xj7MZhfH5
-   xJ/9E8z7H9NR8oXey6V3c6sAuMSLYlf+5/lHLmRCxFa67r08x+PtyI1Up
-   Q==;
-X-CSE-ConnectionGUID: 8gRMB2xjTNKTIOiJFlyzkA==
-X-CSE-MsgGUID: wQ/0zR/IShamkyczBHqG8Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11564"; a="61242848"
-X-IronPort-AV: E=Sophos;i="6.18,292,1751266800"; 
-   d="scan'208";a="61242848"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2025 08:07:09 -0700
-X-CSE-ConnectionGUID: ZYIn94jwSwWQTrWlb/vDEg==
-X-CSE-MsgGUID: ZYMQNOc/SP2Zuv573B424Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,292,1751266800"; 
-   d="scan'208";a="176644501"
-Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.108.252]) ([10.125.108.252])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2025 08:07:08 -0700
-Message-ID: <bc8a902f-549a-482f-bf24-04cf5f38a379@intel.com>
-Date: Thu, 25 Sep 2025 08:07:08 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WyQKFE7s"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2681645b7b6so424445ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Sep 2025 08:19:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1758813550; x=1759418350; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SU3JGvSGpyxpYzs0mUzQDCmIqY2mfW9vcvUuf9tvqIc=;
+        b=WyQKFE7sn1IvC+r1MGMMQYmiJR52EFsMA2ZplcpDT8B+Z8ygBpEjVXsybIKfNXs6CA
+         Deu+USxcRK113IN7izPYoE9k1wD05o9WgZEuaeByqx/C/jfheXWhmFRetN7Z8Ulhl+6V
+         kf8rADpVgpxZi83nLa6rGrlsiCwNQhQPdaFmk8WjXrjp4VN3V0LOict2m21v8O3SFqUt
+         pIIvRuZMfay0TdZegZBmboUWnmoQtupdY40hHzSVXL9/O29fm5W/GUpSDG92YHxR6pFm
+         1uuSdYFf+Ay7Xcl8/Qy314pbbC9OA3QDP8OdoUl0ch3jd7w7f1ObW/By1E7NcVvLwUu0
+         ZhDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758813550; x=1759418350;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SU3JGvSGpyxpYzs0mUzQDCmIqY2mfW9vcvUuf9tvqIc=;
+        b=lE938h1KPRS8cWPbPst+h8BamjKlHAHowrhHYRwho6A1xFxuhincAQsPiL1zS1xy4o
+         DM8DEWoPc0fe+r/77mWy0BuYxldBzbz5tWOGLe9iUtaNF1II+PhtzuZ061YPty6/mEwy
+         AI103W+bFoTLTWHoQP2JFyN29nOGqh5yybpPzgSj2PYGKmBvlz7qA3sJJlqvs/6hynXm
+         ZXAwOiZlNBg6Hrc7/8Yi4iSL4jW2DZAItC+MZz2ZlKV55S0mkncorM7ImvIlulkKxiYc
+         BDL8d+1isV+xLeERiZcdP425tjZXOgtWeVmM9Z7iYMWWwdvHq3yHeq/6hmYYcVTCVfmy
+         +/0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVgYU6rk7ly4ZqmqESymcld050+mgUdgu38ETEKlkpB638qoAtqUEDT3yPl7ccjCKLX7o4D+N1AXaQ0B4hndaF2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3mqKIpYzGpgEvYzfPJLQpFQERlsZMMKu6T2UpyDh2rDykXHdl
+	dYx0v8cr3dan45s0RqHEC1VHd0XCHXXhy0A04QcZKyRPbVgVDuG6STG75Tf99AyF+x7hB/zJDQT
+	EXyxfcn0/E03gbxiE0RIRypSnr9vc9Ul28X79Ua8N
+X-Gm-Gg: ASbGncuHRv+A9vhsI88yQdsuVbpkLdwIpGyqbKwUcMDGCQNhGff3oyeqwSWexUBujpb
+	FoYeD58hAv8oDI0rJwR1FBpYvlBOPYTF3wAnLHpG4wH+alA+eizjgVIE5tdmVJ09Frd34W9j87U
+	9BpWAPig33SVMNS7/ljlayaeyVsD+0OYaS1QLOkXm3L4ZGjV+UShe2mki9jFSU+8ymYoKB8ksrC
+	/pN49CgS/VTQw4nANXHuIqKyOgIwqdHLNT34a6FdPUzu0iZ5bqh
+X-Google-Smtp-Source: AGHT+IGGL5fE/W5NbXgeUTpmEaMrB5ESy2RBa3qikd1fthwkw7Q1SE7y+sOgT/6eBODaZrn1GFR0hZtrZyq2JqZvysA=
+X-Received: by 2002:a17:903:90c:b0:267:d7f8:4054 with SMTP id
+ d9443c01a7336-27ed3fe68a4mr5269935ad.16.1758813549164; Thu, 25 Sep 2025
+ 08:19:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v4 03/17] x86/fpu/xstate: Add xsaves_nmi
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
- Eranian Stephane <eranian@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org,
- Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250925061213.178796-1-dapeng1.mi@linux.intel.com>
- <20250925061213.178796-4-dapeng1.mi@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
- oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
- 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
- ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
- VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
- iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
- c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
- pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
- ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
- QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzUVEYXZpZCBDaHJp
- c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
- LmNvbT7CwXgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
- lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
- MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
- IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
- aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
- I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
- E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
- F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
- CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
- P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
- 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lczsFNBFRjzmoBEACyAxbvUEhd
- GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
- MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
- Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
- lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
- 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
- qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
- BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
- 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
- vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
- FCRl0Bvyj1YZUql+ZkptgGjikQARAQABwsFfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
- l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
- yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
- +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
- asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
- WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
- sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
- KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
- MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
- hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
- vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <20250925061213.178796-4-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250925112614.78061-1-m.heidelberg@cab.de>
+In-Reply-To: <20250925112614.78061-1-m.heidelberg@cab.de>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 25 Sep 2025 08:18:58 -0700
+X-Gm-Features: AS18NWB00MrDrgFULezqEiwJlL7_KKyqX1CRRHQHckecyYPzcM1Cc0pyvFtw7eA
+Message-ID: <CAP-5=fX3rdL6zrZozPNS8LiTpD8S2vfMs_3QPDQYdxk49t2VWw@mail.gmail.com>
+Subject: Re: [PATCH] perf: fix duplicated words in documentation and comments
+To: Markus Heidelberg <m.heidelberg@cab.de>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 9/24/25 23:11, Dapeng Mi wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> There is a hardware feature (Intel PEBS XMMs group), which can handle
-> XSAVE "snapshots" from random code running. This just provides another
-> XSAVE data source at a random time.
-> 
-> Add an interface to retrieve the actual register contents when the NMI
-> hit. The interface is different from the other interfaces of FPU. The
-> other mechanisms that deal with xstate try to get something coherent.
-> But this interface is *in*coherent. There's no telling what was in the
-> registers when a NMI hits. It writes whatever was in the registers when
-> the NMI hit. It's the invoker's responsibility to make sure the contents
-> are properly filtered before exposing them to the end user.
-> 
-> The support of the supervisor state components is required. The
-> compacted storage format is preferred. So the XSAVES is used.
+On Thu, Sep 25, 2025 at 4:26=E2=80=AFAM Markus Heidelberg <m.heidelberg@cab=
+.de> wrote:
+>
+> - "the the"
+> - "in in"
+> - "a a"
+>
+> Signed-off-by: Markus Heidelberg <m.heidelberg@cab.de>
 
-The changelog here is looking a bit munged from the last time I looked
-at it. It's getting a bit hard to read. I'd probably run it through your
-favorite LLM (and proofread it after of course) to make it more readable.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-Ditto for the comments.
+Thanks,
+Ian
 
-Also, what supervisor components are involved here? Aren't we just
-talking about [XYZ]MM's?
-
-> +/**
-> + * xsaves_nmi - Save selected components to a kernel xstate buffer in NMI
-> + * @xstate:	Pointer to the buffer
-> + * @mask:	Feature mask to select the components to save
-> + *
-> + * The @xstate buffer must be 64 byte aligned.
-> + *
-> + * Caution: The interface is different from the other interfaces of FPU.
-> + * The other mechanisms that deal with xstate try to get something coherent.
-> + * But this interface is *in*coherent. There's no telling what was in the
-> + * registers when a NMI hits. It writes whatever was in the registers when
-> + * the NMI hit.
-> + * The only user for the interface is perf_event. There is already a
-> + * hardware feature (See Intel PEBS XMMs group), which can handle XSAVE
-> + * "snapshots" from random code running. This just provides another XSAVE
-> + * data source at a random time.
-> + * This function can only be invoked in an NMI. It returns the *ACTUAL*
-> + * register contents when the NMI hit.
-> + */
-
-First, please use actual paragraphs. This isn't a manpage.
-
-But this whole comment kinda rubs me the wrong way.
-
-For instance, I don't think we need to relitigate the XSAVE architecture
-with the "The @xstate buffer must be 64 byte aligned." comment. Even if
-we did, that's just silly when you could put a one-liner WARN_ON() in
-the function which would be a billion times better than a comment.
-
-I'm not sure what "interfaces of FPU" means. I know it came mostly out
-of some earlier mails I wrote. But could we trim this down, please?
-
-We basically want to scare anyone else away that might be tempted to use
-this.
+> ---
+>  tools/perf/Documentation/perf-diff.txt | 2 +-
+>  tools/perf/builtin-script.c            | 2 +-
+>  tools/perf/util/hwmon_pmu.h            | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/Documentation/perf-diff.txt b/tools/perf/Document=
+ation/perf-diff.txt
+> index f3067a4af294..58efab72d2e5 100644
+> --- a/tools/perf/Documentation/perf-diff.txt
+> +++ b/tools/perf/Documentation/perf-diff.txt
+> @@ -285,7 +285,7 @@ If specified the 'Weighted diff' column is displayed =
+with value 'd' computed as:
+>
+>    - period being the hist entry period value
+>
+> -  - WEIGHT-A/WEIGHT-B being user supplied weights in the the '-c' option
+> +  - WEIGHT-A/WEIGHT-B being user supplied weights in the '-c' option
+>      behind ':' separator like '-c wdiff:1,2'.
+>      - WEIGHT-A being the weight of the data file
+>      - WEIGHT-B being the weight of the baseline data file
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index d9fbdcf72f25..f731b6de7f23 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -223,7 +223,7 @@ enum {
+>         OUTPUT_TYPE_MAX
+>  };
+>
+> -// We need to refactor the evsel->priv use in in 'perf script' to allow =
+for
+> +// We need to refactor the evsel->priv use in 'perf script' to allow for
+>  // using that area, that is being used only in some cases.
+>  #define OUTPUT_TYPE_UNSET -1
+>
+> diff --git a/tools/perf/util/hwmon_pmu.h b/tools/perf/util/hwmon_pmu.h
+> index dc711b289ff5..d1e403c8b70b 100644
+> --- a/tools/perf/util/hwmon_pmu.h
+> +++ b/tools/perf/util/hwmon_pmu.h
+> @@ -37,7 +37,7 @@ enum hwmon_type {
+>  /**
+>   * enum hwmon_item:
+>   *
+> - * Similar to enum hwmon_type but describes the item part of a a sysfs f=
+ilename.
+> + * Similar to enum hwmon_type but describes the item part of a sysfs fil=
+ename.
+>   *
+>   * This enum is exposed for testing.
+>   */
+> --
+> 2.43.0
+>
