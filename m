@@ -1,192 +1,81 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CAA22F0695;
-	Thu, 25 Sep 2025 10:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411E52EA75D;
+	Thu, 25 Sep 2025 10:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758796027; cv=none; b=pHYmwlNB9iYOvJfgOWoSEkyimQw7CZZ9QjaSiZvx0tTV5y8Uykmubci0I9+oVaCQesvyv+KQYoQks7NG4F3ZVwTHagN7q0pIjmBTkSEGCGGevefm2QqqyiOs8r6i8zIs6PyP3plUdp0uWLtrDvfgA9hmdWI1AtYH2cD1/d1XmC0=
+	t=1758796965; cv=none; b=DyaaTQxCHGr+CYcDECr9O4wBmWtGYCtZcVd8U0bEgwM9rHeIbNOw/NKlUR9azBqwVF51hYdoABropa3l5iR1+hFJL789r9voOQoHCB9ZdGLjf8rfeBAsnReG3tXB/A+BJO9cs/Kc4ZcLoR6QyhNXwyx6E6+BA+4b41d89JO9YoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758796027; c=relaxed/simple;
-	bh=5UZyU3hxeDBbAHG0CubbPqBnd7XvqG1P7r9nmzVZ0gM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rq745ty12LVe1sVA8s3/4gcDBg6FCp8Qtc5dPhpoHKlirqFjZKvHo84krBvK1s8mjklwbsmfVXbkDOgrmGiWwF2pcdXEEl29MhZVwURoY/U62A5YUhqMwZrZ1LhZQqCykM6rJxLJRvn9OG3XVVn+oqjBBxRhnszzFAkjVwlE1zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF44B1E5E;
-	Thu, 25 Sep 2025 03:26:57 -0700 (PDT)
-Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B3E63F694;
-	Thu, 25 Sep 2025 03:27:02 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-Date: Thu, 25 Sep 2025 11:26:32 +0100
-Subject: [PATCH 8/8] perf docs: Document building with Clang
+	s=arc-20240116; t=1758796965; c=relaxed/simple;
+	bh=u7U036YsC/tIgi4yAuDO4E7PAwS1xrqPfbasQ3Ujv/c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AOgQgnj9kN59y67Xzlw5dC4Sm9wHtz7Dxs/D3eUYzZz3nId+gZEfNYRPAjf/5AxVfGuxI4CVe9/xDLY1iAQoP0JTYveKmSdWFT7WnEYk2cF79W35rAy6/m7GzMNMeYEEEag7v2z3c9h6p0P/EtIAmjnjF4TIIpApAfmiTA2ccZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mvgxOavW; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mvgxOavW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18F94C4CEF0;
+	Thu, 25 Sep 2025 10:42:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758796964;
+	bh=u7U036YsC/tIgi4yAuDO4E7PAwS1xrqPfbasQ3Ujv/c=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mvgxOavWfD6J4ad9MTct4h8LxkO2Guaq6oV6qdIL8WtJJ4A2XtpXe2LDojmrgZvWL
+	 bffdvw0+5uQ9ni6ma+SAzYm/e78N9pKeYo8OpXx1nJXdSivdVOAtmF91Ujw1Sf4C6x
+	 w+VLvkS8Cae3q5EDULHiOy/dHEhDX1kVj+DM72LAf3eBnOgiDyW2A8a9CYn7eDEWw4
+	 Q3slXhA8GCrgRKj5smw4f8zEqkVnOage9LNOZx6aeFmOqbnh0Po2pNMNZgGmSpXFKG
+	 rDYAe5pnd9mgaWeCTqC3hKrU2J4HOx6JzQ8PQhcI97WTqoPEHHpg5f0PNawvzuMTyR
+	 UaywVVAN+uMgA==
+Message-ID: <52fe87ef-0797-4cf1-9e70-dc218f904e77@kernel.org>
+Date: Thu, 25 Sep 2025 11:42:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250925-perf_build_android_ndk-v1-8-8b35aadde3dc@arm.com>
-References: <20250925-perf_build_android_ndk-v1-0-8b35aadde3dc@arm.com>
-In-Reply-To: <20250925-perf_build_android_ndk-v1-0-8b35aadde3dc@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
- Quentin Monnet <qmo@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/8] bpftool: Conditionally add -Wformat-signedness flag
+To: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
  James Clark <james.clark@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
- llvm@lists.linux.dev, bpf@vger.kernel.org, Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1758795991; l=5681;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=5UZyU3hxeDBbAHG0CubbPqBnd7XvqG1P7r9nmzVZ0gM=;
- b=tb2pRMEyB50eTQUvsjIlbJYI8uoKFNV+gIcIdopK8J4jF2gGE8v3xAL8Z805ADNRREKqhULWe
- CpAunfuKYA1DNx9vwkFzpLn2NNS1JjLPorZinSCrPgpBthZ45B2/Hul
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ llvm@lists.linux.dev, bpf@vger.kernel.org
+References: <20250925-perf_build_android_ndk-v1-0-8b35aadde3dc@arm.com>
+ <20250925-perf_build_android_ndk-v1-3-8b35aadde3dc@arm.com>
+From: Quentin Monnet <qmo@kernel.org>
+Content-Language: en-GB
+In-Reply-To: <20250925-perf_build_android_ndk-v1-3-8b35aadde3dc@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add example commands for building perf with Clang.
+2025-09-25 11:26 UTC+0100 ~ Leo Yan <leo.yan@arm.com>
+> clang-18.1.3 on Ubuntu 24.04.2 reports warning:
+> 
+>   warning: unknown warning option '-Wformat-signedness' [-Wunknown-warning-option]
+> 
+> Conditionally add the option only when it is supported by compiler.
+> 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 
-Since recent Android NDK releases use Clang as the default compiler, a
-separate Android specific document is no longer needed; point to the
-general build documentation instead.
 
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/perf/Documentation/Build.txt   | 18 ++++++++
- tools/perf/Documentation/android.txt | 82 ++++--------------------------------
- 2 files changed, 26 insertions(+), 74 deletions(-)
+Hi, how annoying is this warning? I'm asking because as far as I
+understand, the option has been introduced in LLVM 19.1.0 [0] - the
+latest being 21.1.0 already - so we won't need this check once distros
+have transitioned, and I'm a bit reluctant to add it.
 
-diff --git a/tools/perf/Documentation/Build.txt b/tools/perf/Documentation/Build.txt
-index 83dc87c662b63ecc17553a15cc15a6b8d6f01d83..3e4104e605ac0d7d30b4408ef413cf1f90b034c1 100644
---- a/tools/perf/Documentation/Build.txt
-+++ b/tools/perf/Documentation/Build.txt
-@@ -99,3 +99,21 @@ configuration paths for cross building:
- In this case, the variable PKG_CONFIG_SYSROOT_DIR can be used alongside the
- variable PKG_CONFIG_LIBDIR or PKG_CONFIG_PATH to prepend the sysroot path to
- the library paths for cross compilation.
-+
-+5) Build with clang
-+===================
-+By default, the makefile uses GCC as compiler. With specifying environment
-+variables HOSTCC, CC and CXX, it allows to build perf with clang.
-+
-+Using clang for native build:
-+
-+  $ HOSTCC=clang CC=clang CXX=clang++ make -C tools/perf
-+
-+Using clang for cross compilation:
-+
-+  $ HOSTCC=clang CC=clang CXX=clang++ \
-+    make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -C tools/perf \
-+    NO_LIBELF=1 NO_LIBTRACEEVENT=1 NO_JEVENTS=1
-+
-+In the example above, due to lack libelf, python and libtraceevent for
-+cross comiplation, disable the features accordingly.
-diff --git a/tools/perf/Documentation/android.txt b/tools/perf/Documentation/android.txt
-index 24a59998fc91e814ad96f658d3481d88d798b60c..e65204cf2921f6bd8a79875784c5b3d5487ce05d 100644
---- a/tools/perf/Documentation/android.txt
-+++ b/tools/perf/Documentation/android.txt
-@@ -1,78 +1,12 @@
- How to compile perf for Android
--=========================================
-+===============================
- 
--I. Set the Android NDK environment
--------------------------------------------------
-+There have two ways to build perf and run it on Android.
- 
--(a). Use the Android NDK
--------------------------------------------------
--1. You need to download and install the Android Native Development Kit (NDK).
--Set the NDK variable to point to the path where you installed the NDK:
--  export NDK=/path/to/android-ndk
-+- The first method is to build perf with static linking, please refer to
-+  Build.txt, section "4) Cross compilation" for how to build a static
-+  perf binary.
- 
--2. Set cross-compiling environment variables for NDK toolchain and sysroot.
--For arm:
--  export NDK_TOOLCHAIN=${NDK}/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-
--  export NDK_SYSROOT=${NDK}/platforms/android-24/arch-arm
--For x86:
--  export NDK_TOOLCHAIN=${NDK}/toolchains/x86-4.9/prebuilt/linux-x86_64/bin/i686-linux-android-
--  export NDK_SYSROOT=${NDK}/platforms/android-24/arch-x86
--
--This method is only tested for Android NDK versions Revision 11b and later.
--perf uses some bionic enhancements that are not included in prior NDK versions.
--You can use method (b) described below instead.
--
--(b). Use the Android source tree
-------------------------------------------------
--1. Download the master branch of the Android source tree.
--Set the environment for the target you want using:
--  source build/envsetup.sh
--  lunch
--
--2. Build your own NDK sysroot to contain latest bionic changes and set the
--NDK sysroot environment variable.
--  cd ${ANDROID_BUILD_TOP}/ndk
--For arm:
--  ./build/tools/build-ndk-sysroot.sh --abi=arm
--  export NDK_SYSROOT=${ANDROID_BUILD_TOP}/ndk/build/platforms/android-3/arch-arm
--For x86:
--  ./build/tools/build-ndk-sysroot.sh --abi=x86
--  export NDK_SYSROOT=${ANDROID_BUILD_TOP}/ndk/build/platforms/android-3/arch-x86
--
--3. Set the NDK toolchain environment variable.
--For arm:
--  export NDK_TOOLCHAIN=${ANDROID_TOOLCHAIN}/arm-linux-androideabi-
--For x86:
--  export NDK_TOOLCHAIN=${ANDROID_TOOLCHAIN}/i686-linux-android-
--
--II. Compile perf for Android
--------------------------------------------------
--You need to run make with the NDK toolchain and sysroot defined above:
--For arm:
--  make WERROR=0 ARCH=arm CROSS_COMPILE=${NDK_TOOLCHAIN} EXTRA_CFLAGS="-pie --sysroot=${NDK_SYSROOT}"
--For x86:
--  make WERROR=0 ARCH=x86 CROSS_COMPILE=${NDK_TOOLCHAIN} EXTRA_CFLAGS="-pie --sysroot=${NDK_SYSROOT}"
--
--III. Install perf
-------------------------------------------------
--You need to connect to your Android device/emulator using adb.
--Install perf using:
--  adb push perf /data/perf
--
--If you also want to use perf-archive you need busybox tools for Android.
--For installing perf-archive, you first need to replace #!/bin/bash with #!/system/bin/sh:
--  sed 's/#!\/bin\/bash/#!\/system\/bin\/sh/g' perf-archive >> /tmp/perf-archive
--  chmod +x /tmp/perf-archive
--  adb push /tmp/perf-archive /data/perf-archive
--
--IV. Environment settings for running perf
--------------------------------------------------
--Some perf features need environment variables to run properly.
--You need to set these before running perf on the target:
--  adb shell
--  # PERF_PAGER=cat
--
--IV. Run perf
--------------------------------------------------
--Run perf on your device/emulator to which you previously connected using adb:
--  # ./data/perf
-+- The second method is to download Android NDK, then use the contained
-+  clang compiler for building perf. Please refer to Build.txt, section
-+  "5) Build with clang" for details.
+Quentin
 
--- 
-2.34.1
 
+[0]
+https://github.com/llvm/llvm-project/commit/ea92b1f9d0fc31f1fd97ad04eb0412003a37cb0d
