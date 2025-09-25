@@ -1,289 +1,289 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F572E0921
-	for <linux-perf-users@vger.kernel.org>; Thu, 25 Sep 2025 02:07:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E13849C;
+	Thu, 25 Sep 2025 06:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758766052; cv=none; b=PoYPUKquYYULOiQJALEFh7WFR1a+rWHXpa41SQTV5VECEXRL5pnTknz7ffu0GJclQYFbhIcM/daYZpRZAicRTBvA3qph+4NlG7IlADLG4OMqV0a5As3cLMdxmBROXG+Klsz/j2nq/q4xQNfjBrTOpfq4Bt6rsMes6OFfFwrX0d4=
+	t=1758780854; cv=none; b=BMwICeh/pBlrT8kc0oB1Yse4w0B1a+mNQr11cQ545/U1H0eIRt9co40Anpl0YBuS3SYgL7w/fUPVD8Mizk90+2uHB6OcDXFAQs95wxMVhZ7g0Io8xLc2/CdedjDRzZasCdxWA/HPhHV7dzMVeXpvEnRDHTF0zw7UN3C75xjTWuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758766052; c=relaxed/simple;
-	bh=COJ0vkNmeocbk8Pusq+tkqxDVCs9BpOKYM5zjdAFf64=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TqkY9/0onfUnw4Y8cGS7DiH+mI/fpjCkz+OMPHvZqGVkVzZk06feR+6hT+ipGPOJJTQQmekI9stM6qqcptSy04yFBK1U3/SwTGUJpDEWBIVTLEdyhDlgUpvw3SwXuDTRZNIXULRCC6Wddy5zg8LtlxBrBf4mIoW727YVzUm8JVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ABYxGmlB; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1758780854; c=relaxed/simple;
+	bh=TvXZQtjJFfQtGTb6aE5U5LBFLnI1T8Rj/jKxdlhf41Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ae1fc3WICPuIqttOR4kdBpF7kWdt0ymJOtncUJR5o2li8UNINILglzluopjsyGTYHu0Wv6kCXSd19JRXPMAZuwu0OKWGyEjSKy0T/Kdr2vNys9fF1eleGXZqTdIs2vSDaLyPk8OhNm7p1KICS8EVVgP1XsOL/cqOR9utXlZ+K6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KKmk5tv7; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ABYxGmlB"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b4c1fc383eeso333210a12.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 Sep 2025 19:07:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758766050; x=1759370850; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=z3v0KAw/a5VLZK8q/426U2Svx1Ly/zqTFJD1qMEvdMs=;
-        b=ABYxGmlB/DxpvZ+pISqHsz1jz0STOZR7FJR6Ttg+95ZVmHJYgW7VCwJs3OWgD6AmR9
-         SZuv0iuvPO3HIDkjjVY/oxqd2+xcb5Y1EnBMwIZfiBVDiBSpclEOH3o17051pmVqHMG/
-         VD/DYp2C6uXixgOOl9nBtZ9AszvFQo76Ys3duGUce1PsY6xGEImC2ZKPvyUjAQmAlUso
-         RSlS+WI7E38gMDsUqsRtU4OD+Ys4ZjJglddmej7u+/TgIlRdwYVbpeP9MipeXIk5qaL8
-         5/qSPpf56WsVm3A67bWCEMA7mT5Tn06jIepyF3j2aE13uxMiSCdtdpMjMw2xmQi8ro1I
-         GlZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758766050; x=1759370850;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z3v0KAw/a5VLZK8q/426U2Svx1Ly/zqTFJD1qMEvdMs=;
-        b=a4qu15V8Ff96yfp1rKubAh9wB9qhEsUi568QwWVcPv/5NAQv8Vm2LpuMugW++8iHaF
-         CTtXy1Tl2jvTWm1kOn9YCyUAM0g7qPBr4p0gcmVxkPRr4qETrR3AxR34Hj5B47SlmMER
-         X86UmGQKpxBhK9bICFUdG9Wuj2ui+TotOj2W46BizWQZBQ/xEfqJhtZJkR4LpL3SsVZw
-         LkUNoOC33zV65vcJ7F39VildJsfkunfC+QpTKMNvgS5hHSpdGpOrpX6OJEWb5myxfwKj
-         6LExcAX7n524O46T6nAKkM1PPbowNRAaQHcfPQz6uSKqYrSQOf4Znj7vXrKDQKPMXpgT
-         611Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVni/z9Jqfr/QW5zqsXjJ4q+tx9ApqajlRveLHP7yxbVRgjrSyfpInDd7CVAZxw3appchwxivjqm9SLhcICII+7@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9db7Z1StHp7uTXDtk4D0PQUiSe2onOM0Pon3L4pz8Dd2lAqtI
-	Oogu/0eCVskqGU4Z9+B9yV2sNuVykpmBuHDLbDyX3T26TPtHvvM6OWsX
-X-Gm-Gg: ASbGnctGWEgilzsYzP+5b6PyhRqR2Uuuun7dP5f8F8MbwmU4mt7yWkdQ185EZoUJJ4V
-	GjddMAERSACrlC4yL4oSddmY8wTiLbPDhw8kGFVodenBnv/Hm4PhdVnjTzO4ptK+B1zdGiQl9jk
-	zNn/YkYP9Ea+we0QkvJLyOSuUVHCYWaEjk4xwQVumFW6FttXuCcMIyB4GLayYQCspvNNMTblgxC
-	a4aZWWSbdaJupiFEbuMUq3b5yiN4bh0hqALTxkt63xTsx+TSMyu7FD4KOYgFdqrHPnxdMU4KLi4
-	UWmAyPVRt3bFlLhD/4D4C5B++xXtUMuGg53//oUHoPrG9Gub0s9iT6wVmZaO4Smu2Nn3KSq3twF
-	KissfShII8tJFFTVFYR1JVsenRurn0S5Siw==
-X-Google-Smtp-Source: AGHT+IHZwY+E9Zl/mOnS/wW2XcXo5Et3bKXZYRlw/VXukF+oo1CmX+XrzU+9/LJydGwruFBdmu625g==
-X-Received: by 2002:a17:902:fccf:b0:273:31fb:a872 with SMTP id d9443c01a7336-27ed4a06cefmr13125795ad.6.1758766049602;
-        Wed, 24 Sep 2025 19:07:29 -0700 (PDT)
-Received: from localhost ([103.88.46.62])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-27ed6abff9fsm6469775ad.133.2025.09.24.19.07.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Sep 2025 19:07:28 -0700 (PDT)
-Date: Thu, 25 Sep 2025 10:07:26 +0800
-From: Jinchao Wang <wangjinchao600@gmail.com>
-To: Marco Elver <elver@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Alexander Potapenko <glider@google.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KKmk5tv7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758780853; x=1790316853;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TvXZQtjJFfQtGTb6aE5U5LBFLnI1T8Rj/jKxdlhf41Q=;
+  b=KKmk5tv7SfXDcX+uc12cWYOMMOZs6Fqc5AgMb/tm/zmTslD/aYMemgnf
+   irgWJMSIjVv5lY5EFl0RtNrobuK7A8qXqGTzVJ4ygRW/O0QaaPSQPWnH3
+   Fo7KvEa+t+bV6woasF2T9++M+9KgXnQYosOWM72iFRm+hmBiPG5C82ILu
+   2u3lya8dGL0OyEya7ubiQbWCxixfMcjI2KQIwTKxs2EvosCpt85CIKdZn
+   okfyhxZ45PvSDe2MEwY86GU6q8uUXIzYRZJHao1zpqMjBBTtVHo+dA8it
+   MvPP9tzhNWL64UwJhPm0U86Y9cwLW9DNoq8EmR8D97xCBux0tVV21l1jo
+   g==;
+X-CSE-ConnectionGUID: 9N96+Ed0SV+xFrDlJNHQsg==
+X-CSE-MsgGUID: evOnrlfGTdaDtDoJ+qPCwg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11563"; a="61139472"
+X-IronPort-AV: E=Sophos;i="6.18,292,1751266800"; 
+   d="scan'208";a="61139472"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2025 23:14:12 -0700
+X-CSE-ConnectionGUID: saVxe+P4RrWToLAwuwnn0g==
+X-CSE-MsgGUID: 1Q9xLIUVSTqHbX2J/TLKUg==
+X-Ironport-Invalid-End-Of-Message: True
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,292,1751266800"; 
+   d="scan'208";a="181528261"
+Received: from spr.sh.intel.com ([10.112.230.239])
+  by orviesa004.jf.intel.com with ESMTP; 24 Sep 2025 23:14:07 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>, Rong Xu <xur@google.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	David Kaplan <david.kaplan@amd.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Jinjie Ruan <ruanjinjie@huawei.com>, Nam Cao <namcao@linutronix.de>,
-	workflows@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-mm@kvack.org, llvm@lists.linux.dev,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	kasan-dev@googlegroups.com, "David S. Miller" <davem@davemloft.net>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 06/23] mm/ksw: add singleton /proc/kstackwatch
- interface
-Message-ID: <aNSj3j1P9O-XWbRE@mdev>
-References: <20250924115124.194940-1-wangjinchao600@gmail.com>
- <20250924115124.194940-7-wangjinchao600@gmail.com>
- <CANpmjNOuA3q3BweB9kTUpAX4CX1U25Pqa0Hiyt__=7zio81=Uw@mail.gmail.com>
+	Jiri Olsa <jolsa@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	broonie@kernel.org,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [Patch v4 00/17] Support vector and more extended registers in perf 
+Date: Thu, 25 Sep 2025 14:11:56 +0800
+Message-Id: <20250925061213.178796-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNOuA3q3BweB9kTUpAX4CX1U25Pqa0Hiyt__=7zio81=Uw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Sep 24, 2025 at 10:49:35PM +0200, Marco Elver wrote:
-> On Wed, 24 Sept 2025 at 13:51, Jinchao Wang <wangjinchao600@gmail.com> wrote:
-> >
-> > Provide the /proc/kstackwatch file to read or update the configuration.
-> > Only a single process can open this file at a time, enforced using atomic
-> > config_file_busy, to prevent concurrent access.
-> 
-> Why is this in /proc and not debugfs?
-Thanks, will fix in next version.
-> 
-> > ksw_get_config() exposes the configuration pointer as const.
-> >
-> > Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
-> > ---
-> >  mm/kstackwatch/kernel.c      | 77 +++++++++++++++++++++++++++++++++++-
-> >  mm/kstackwatch/kstackwatch.h |  3 ++
-> >  2 files changed, 79 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/mm/kstackwatch/kernel.c b/mm/kstackwatch/kernel.c
-> > index 3b7009033dd4..4a06ddadd9c7 100644
-> > --- a/mm/kstackwatch/kernel.c
-> > +++ b/mm/kstackwatch/kernel.c
-> > @@ -3,11 +3,15 @@
-> >
-> >  #include <linux/kstrtox.h>
-> >  #include <linux/module.h>
-> > +#include <linux/proc_fs.h>
-> > +#include <linux/seq_file.h>
-> >  #include <linux/string.h>
-> > +#include <linux/uaccess.h>
-> >
-> >  #include "kstackwatch.h"
-> >
-> >  static struct ksw_config *ksw_config;
-> > +static atomic_t config_file_busy = ATOMIC_INIT(0);
-> >
-> >  struct param_map {
-> >         const char *name;       /* long name */
-> > @@ -74,7 +78,7 @@ static int ksw_parse_param(struct ksw_config *config, const char *key,
-> >   * - sp_offset  |so (u16) : offset from stack pointer at func_offset
-> >   * - watch_len  |wl (u16) : watch length (1,2,4,8)
-> >   */
-> > -static int __maybe_unused ksw_parse_config(char *buf, struct ksw_config *config)
-> > +static int ksw_parse_config(char *buf, struct ksw_config *config)
-> >  {
-> >         char *part, *key, *val;
-> >         int ret;
-> > @@ -109,18 +113,89 @@ static int __maybe_unused ksw_parse_config(char *buf, struct ksw_config *config)
-> >         return 0;
-> >  }
-> >
-> > +static ssize_t kstackwatch_proc_write(struct file *file,
-> > +                                     const char __user *buffer, size_t count,
-> > +                                     loff_t *pos)
-> > +{
-> > +       char input[MAX_CONFIG_STR_LEN];
-> > +       int ret;
-> > +
-> > +       if (count == 0 || count >= sizeof(input))
-> > +               return -EINVAL;
-> > +
-> > +       if (copy_from_user(input, buffer, count))
-> > +               return -EFAULT;
-> > +
-> > +       input[count] = '\0';
-> > +       strim(input);
-> > +
-> > +       if (!strlen(input)) {
-> > +               pr_info("config cleared\n");
-> > +               return count;
-> > +       }
-> > +
-> > +       ret = ksw_parse_config(input, ksw_config);
-> > +       if (ret) {
-> > +               pr_err("Failed to parse config %d\n", ret);
-> > +               return ret;
-> > +       }
-> > +
-> > +       return count;
-> > +}
-> > +
-> > +static int kstackwatch_proc_show(struct seq_file *m, void *v)
-> > +{
-> > +       seq_printf(m, "%s\n", ksw_config->user_input);
-> > +       return 0;
-> > +}
-> > +
-> > +static int kstackwatch_proc_open(struct inode *inode, struct file *file)
-> > +{
-> > +       if (atomic_cmpxchg(&config_file_busy, 0, 1))
-> > +               return -EBUSY;
-> > +
-> > +       return single_open(file, kstackwatch_proc_show, NULL);
-> > +}
-> > +
-> > +static int kstackwatch_proc_release(struct inode *inode, struct file *file)
-> > +{
-> > +       atomic_set(&config_file_busy, 0);
-> > +       return single_release(inode, file);
-> > +}
-> > +
-> > +static const struct proc_ops kstackwatch_proc_ops = {
-> > +       .proc_open = kstackwatch_proc_open,
-> > +       .proc_read = seq_read,
-> > +       .proc_write = kstackwatch_proc_write,
-> > +       .proc_lseek = seq_lseek,
-> > +       .proc_release = kstackwatch_proc_release,
-> > +};
-> > +
-> > +const struct ksw_config *ksw_get_config(void)
-> > +{
-> > +       return ksw_config;
-> > +}
-> >  static int __init kstackwatch_init(void)
-> >  {
-> >         ksw_config = kzalloc(sizeof(*ksw_config), GFP_KERNEL);
-> >         if (!ksw_config)
-> >                 return -ENOMEM;
-> >
-> > +       if (!proc_create("kstackwatch", 0600, NULL, &kstackwatch_proc_ops)) {
-> > +               pr_err("create proc kstackwatch fail");
-> > +               kfree(ksw_config);
-> > +               return -ENOMEM;
-> > +       }
-> > +
-> >         pr_info("module loaded\n");
-> >         return 0;
-> >  }
-> >
-> >  static void __exit kstackwatch_exit(void)
-> >  {
-> > +       remove_proc_entry("kstackwatch", NULL);
-> > +       kfree(ksw_config->func_name);
-> > +       kfree(ksw_config->user_input);
-> >         kfree(ksw_config);
-> >
-> >         pr_info("module unloaded\n");
-> > diff --git a/mm/kstackwatch/kstackwatch.h b/mm/kstackwatch/kstackwatch.h
-> > index a7bad207f863..983125d5cf18 100644
-> > --- a/mm/kstackwatch/kstackwatch.h
-> > +++ b/mm/kstackwatch/kstackwatch.h
-> > @@ -29,4 +29,7 @@ struct ksw_config {
-> >         char *user_input;
-> >  };
-> >
-> > +// singleton, only modified in kernel.c
-> > +const struct ksw_config *ksw_get_config(void);
-> > +
-> >  #endif /* _KSTACKWATCH_H */
-> > --
-> > 2.43.0
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> > To view this discussion visit https://groups.google.com/d/msgid/kasan-dev/20250924115124.194940-7-wangjinchao600%40gmail.com.
+Changes since V3:
+- Drop the SIMD registers if an NMI hits kernel mode for REGS_USER.
+- Only dump the available regs, rather than zero and dump the
+  unavailable regs. It's possible that the dumped registers are a subset
+  of the requested registers.
+- Some minor updates to address Dapeng's comments in V3.
 
+Changes since V2:
+- Use the FPU format for the x86_pmu.ext_regs_mask as well
+- Add a check before invoking xsaves_nmi()
+- Add perf_simd_reg_check() to retrieve the number of available
+  registers. If the kernel fails to get the requested registers, e.g.,
+  XSAVES fails, nothing dumps to the userspace (the V2 dumps all 0s).
+- Add POC perf tool patches
+
+Changes since V1:
+- Apply the new interfaces to configure and dump the SIMD registers
+- Utilize the existing FPU functions, e.g., xstate_calculate_size,
+  get_xsave_addr().
+
+Starting from the Intel Ice Lake, the XMM registers can be collected in
+a PEBS record. More registers, e.g., YMM, ZMM, OPMASK, SPP and APX, will
+be added in the upcoming Architecture PEBS as well. But it requires the
+hardware support.
+
+The patch set provides a software solution to mitigate the hardware
+requirement. It utilizes the XSAVES command to retrieve the requested
+registers in the overflow handler. The feature isn't limited to the PEBS
+event or specific platforms anymore.
+The hardware solution (if available) is still preferred, since it has
+low overhead (especially with the large PEBS) and is more accurate.
+
+In theory, the solution should work for all X86 platforms. But I only
+have newer Inter platforms to test. The patch set only enable the
+feature for Intel Ice Lake and later platforms.
+
+The new registers include YMM, ZMM, OPMASK, SSP, and APX.
+The sample_regs_user/intr has run out. A new field in the
+struct perf_event_attr is required for the registers.
+
+After a long discussion in V1,
+https://lore.kernel.org/lkml/3f1c9a9e-cb63-47ff-a5e9-06555fa6cc9a@linux.intel.com/
+
+The new field looks like as below.
+@@ -543,6 +545,25 @@ struct perf_event_attr {
+        __u64   sig_data;
+
+        __u64   config3; /* extension of config2 */
++
++
++       /*
++        * Defines set of SIMD registers to dump on samples.
++        * The sample_simd_regs_enabled !=0 implies the
++        * set of SIMD registers is used to config all SIMD registers.
++        * If !sample_simd_regs_enabled, sample_regs_XXX may be used to
++        * config some SIMD registers on X86.
++        */
++       union {
++               __u16 sample_simd_regs_enabled;
++               __u16 sample_simd_pred_reg_qwords;
++       };
++       __u32 sample_simd_pred_reg_intr;
++       __u32 sample_simd_pred_reg_user;
++       __u16 sample_simd_vec_reg_qwords;
++       __u64 sample_simd_vec_reg_intr;
++       __u64 sample_simd_vec_reg_user;
++       __u32 __reserved_4;
+ };
+@@ -1016,7 +1037,15 @@ enum perf_event_type {
+         *      } && PERF_SAMPLE_BRANCH_STACK
+         *
+         *      { u64                   abi; # enum perf_sample_regs_abi
+-        *        u64                   regs[weight(mask)]; } && PERF_SAMPLE_REGS_USER
++        *        u64                   regs[weight(mask)];
++        *        struct {
++        *              u16 nr_vectors;
++        *              u16 vector_qwords;
++        *              u16 nr_pred;
++        *              u16 pred_qwords;
++        *              u64 data[nr_vectors * vector_qwords + nr_pred * pred_qwords];
++        *        } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
++        *      } && PERF_SAMPLE_REGS_USER
+         *
+         *      { u64                   size;
+         *        char                  data[size];
+@@ -1043,7 +1072,15 @@ enum perf_event_type {
+         *      { u64                   data_src; } && PERF_SAMPLE_DATA_SRC
+         *      { u64                   transaction; } && PERF_SAMPLE_TRANSACTION
+         *      { u64                   abi; # enum perf_sample_regs_abi
+-        *        u64                   regs[weight(mask)]; } && PERF_SAMPLE_REGS_INTR
++        *        u64                   regs[weight(mask)];
++        *        struct {
++        *              u16 nr_vectors;
++        *              u16 vector_qwords;
++        *              u16 nr_pred;
++        *              u16 pred_qwords;
++        *              u64 data[nr_vectors * vector_qwords + nr_pred * pred_qwords];
++        *        } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
++        *      } && PERF_SAMPLE_REGS_INTR
+         *      { u64                   phys_addr;} && PERF_SAMPLE_PHYS_ADDR
+         *      { u64                   cgroup;} && PERF_SAMPLE_CGROUP
+         *      { u64                   data_page_size;} && PERF_SAMPLE_DATA_PAGE_SIZE
+
+
+Since there is only one vector qwords field, the qwords for the newest
+vector should be set by the tools. For example, if the end user wants
+XMM0 and YMM1, the vector qwords should be 4. The vector mask should be
+0x3. The YMM0 and YMM1 will be dumped to the userspace. It's the tool's
+responsibility to output the XMM0 and YMM1 to the end user.
+
+The POC perf tool patches for testing purposes is also attached.
+
+Examples:
+ $perf record -I?
+ available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10
+ R11 R12 R13 R14 R15 SSP XMM0-31 YMM0-31 ZMM0-31 OPMASK0-7
+
+ $perf record --user-regs=?
+ available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10
+ R11 R12 R13 R14 R15 SSP XMM0-31 YMM0-31 ZMM0-31 OPMASK0-7
+
+ $perf record -e cycles:p -IXMM,YMM,OPMASK,SSP ./test
+ $perf report -D
+ ... ...
+ 237538985992962 0x454d0 [0x480]: PERF_RECORD_SAMPLE(IP, 0x1):
+ 179370/179370: 0xffffffff969627fc period: 124999 addr: 0
+ ... intr regs: mask 0x20000000000 ABI 64-bit
+ .... SSP   0x0000000000000000
+ ... SIMD ABI nr_vectors 32 vector_qwords 4 nr_pred 8 pred_qwords 1
+ .... YMM  [0] 0x0000000000004000
+ .... YMM  [0] 0x000055e828695270
+ .... YMM  [0] 0x0000000000000000
+ .... YMM  [0] 0x0000000000000000
+ .... YMM  [1] 0x000055e8286990e0
+ .... YMM  [1] 0x000055e828698dd0
+ .... YMM  [1] 0x0000000000000000
+ .... YMM  [1] 0x0000000000000000
+ ... ...
+ .... YMM  [31] 0x0000000000000000
+ .... YMM  [31] 0x0000000000000000
+ .... YMM  [31] 0x0000000000000000
+ .... YMM  [31] 0x0000000000000000
+ .... OPMASK[0] 0x0000000000100221
+ .... OPMASK[1] 0x0000000000000020
+ .... OPMASK[2] 0x000000007fffffff
+ .... OPMASK[3] 0x0000000000000000
+ .... OPMASK[4] 0x0000000000000000
+ .... OPMASK[5] 0x0000000000000000
+ .... OPMASK[6] 0x0000000000000000
+ .... OPMASK[7] 0x0000000000000000
+ ... ...
+
+
+History:
+  v3: https://lore.kernel.org/lkml/20250815213435.1702022-1-kan.liang@linux.intel.com/
+  v2: https://lore.kernel.org/lkml/20250626195610.405379-1-kan.liang@linux.intel.com/
+  v1: https://lore.kernel.org/lkml/20250613134943.3186517-1-kan.liang@linux.intel.com/
+
+Kan Liang (17):
+  perf/x86: Use x86_perf_regs in the x86 nmi handler
+  perf/x86: Setup the regs data
+  x86/fpu/xstate: Add xsaves_nmi
+  perf: Move has_extended_regs() to header file
+  perf/x86: Support XMM register for non-PEBS and REGS_USER
+  perf: Support SIMD registers
+  perf/x86: Move XMM to sample_simd_vec_regs
+  perf/x86: Add YMM into sample_simd_vec_regs
+  perf/x86: Add ZMM into sample_simd_vec_regs
+  perf/x86: Add OPMASK into sample_simd_pred_reg
+  perf/x86: Add eGPRs into sample_regs
+  perf/x86: Add SSP into sample_regs
+  perf/x86/intel: Enable PERF_PMU_CAP_SIMD_REGS
+  perf tools: Only support legacy regs for the PT and PERF_REGS_MASK
+  perf tools: headers: Sync with the kernel sources
+  perf tools: parse-regs: Support the new SIMD format
+  perf tools: regs: Support to dump regs for PERF_SAMPLE_REGS_ABI_SIMD
+
+ arch/x86/events/core.c                        | 315 ++++++++++++-
+ arch/x86/events/intel/core.c                  |  75 ++-
+ arch/x86/events/intel/ds.c                    |  12 +-
+ arch/x86/events/perf_event.h                  |  80 ++++
+ arch/x86/include/asm/fpu/xstate.h             |   3 +
+ arch/x86/include/asm/perf_event.h             |  30 +-
+ arch/x86/include/uapi/asm/perf_regs.h         |  65 ++-
+ arch/x86/kernel/fpu/xstate.c                  |  32 +-
+ arch/x86/kernel/perf_regs.c                   | 139 +++++-
+ include/linux/perf_event.h                    |  16 +
+ include/linux/perf_regs.h                     |  26 +
+ include/uapi/linux/perf_event.h               |  45 +-
+ kernel/events/core.c                          | 111 ++++-
+ tools/arch/x86/include/uapi/asm/perf_regs.h   |  65 ++-
+ tools/include/uapi/linux/perf_event.h         |  45 +-
+ tools/perf/arch/x86/include/perf_regs.h       |   2 +-
+ tools/perf/arch/x86/util/perf_regs.c          | 443 +++++++++++++++++-
+ tools/perf/util/evsel.c                       |  45 ++
+ tools/perf/util/intel-pt.c                    |   2 +-
+ tools/perf/util/parse-regs-options.c          | 133 +++++-
+ .../perf/util/perf-regs-arch/perf_regs_x86.c  |  43 ++
+ tools/perf/util/perf_event_attr_fprintf.c     |   6 +
+ tools/perf/util/perf_regs.c                   |  54 +++
+ tools/perf/util/perf_regs.h                   |  10 +
+ tools/perf/util/record.h                      |   6 +
+ tools/perf/util/sample.h                      |  10 +
+ tools/perf/util/session.c                     |  78 ++-
+ 27 files changed, 1814 insertions(+), 77 deletions(-)
+
+
+base-commit: 6d48436560e91be858158e227f21aab71698814e
 -- 
-Jinchao
+2.34.1
+
