@@ -1,98 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32093054CE;
-	Thu, 25 Sep 2025 16:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B332521E091
+	for <linux-perf-users@vger.kernel.org>; Thu, 25 Sep 2025 16:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758817567; cv=none; b=OKo3p0rTCows095pwCq/l2gH0OU2XVflJxfUpi0XMzW9dtmidpvSf7uTWQn8xGtg5nHw5xXoXJeXL48wd4SkBFIMiWJKDxRZUUdQM7BLEUbgnXBXExe9ZFNH86FtajC5GU7rc8aC6y0KH/evpk4dFq1pYaJTdzz7snmaDmHEZ6k=
+	t=1758817660; cv=none; b=YMkhG3oT1Rtp4f9LktZ/BjORgSjMSdNMVCCEcQi910hr10RPsEavU51SzXBCaYophtUzGVJPawq9O3HnAiZ+JqIUN7y7Sa4+yipvkJnDwVTZQafx3SRytuOv1DwcG8h4Ll3CZmYLkepLAnZfQXBqLargdDKNAWMpf+O3RwdCycI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758817567; c=relaxed/simple;
-	bh=pNjBTQXJ2yYV7pbLmX8VeGDdjyTrjnL7dgj3WPZocn0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hFDM+54ucPSOAPXOiKo7SXFb9mlyG26SLNXwWrpyCwVUBrq2MQiAnmQ89esGIH/gDMP6igylAG+OQPslI8Y5joMcZj2geAoqz5RLjpFLFDGiEqBHqBbqLpLPKgk7+KvF9iqqVHPN5HD1abHs0PNAkWnLS8EqhWTBy+Wie6XHpEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KUSE+UEY; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1758817660; c=relaxed/simple;
+	bh=tKo0aXmpGJcdBrGhcXY2lCyeZIUJ1PkodFtfhRjU2cM=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=ktRp7yd8Q7WtZ8X/66EwxSVC4UGIFRLRx7onwE68EuvIiiUuOUV9gSBFitUaDGgYfsiJtc7zSfb/moQc5HI1wp3rhiB7N47xUCWOkULKJMQdDvMk9uKithA7Dro79LUPFO61/4kK4qeU3JQgQmWkPRkvtQ4B0y/LcD8PPBMETkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KFQfPLXQ; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KUSE+UEY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758817566; x=1790353566;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=pNjBTQXJ2yYV7pbLmX8VeGDdjyTrjnL7dgj3WPZocn0=;
-  b=KUSE+UEYxsEiNwrQL58Jhf/9I9YhI/TzsL+Fj3UFfS9AQaCOdNL/++OX
-   Wopyn7VZPev5jpAg5ZO6FYqJVbuB09SlKK2RPlAHtyqkZ1TylUFHHFbrN
-   EZXoI/z+clgQ2iDoHon24fdu8/BPGG6hrEx6LZVbhg7r/DDzcqS2+98kD
-   4UjzntQ0pMPulWWQFjmwLOEW+5tnqRiFn6dJ5aUYuc55kn5PNhYBC+SLx
-   fyB0aRg+JUe+UTlSlBgGPg+HrwkS2VQvoi8xtAtXNsWAbbKNLCEHtykVq
-   TtIG6z2ac7vtdV25LG35xNxmcDtvz4T1fun9PgI2Cg7I6dHD6cG9pwSBo
-   Q==;
-X-CSE-ConnectionGUID: j46PBqtkTUqv1nA1ZUl9wA==
-X-CSE-MsgGUID: X5EM0NfjS7qNAMSb5rTpzg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11564"; a="60355442"
-X-IronPort-AV: E=Sophos;i="6.18,292,1751266800"; 
-   d="scan'208";a="60355442"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2025 09:26:05 -0700
-X-CSE-ConnectionGUID: VkmZmm0WSQWRYBeC+EdUkw==
-X-CSE-MsgGUID: oxijncKESWGrWM3Nmh3rSg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,292,1751266800"; 
-   d="scan'208";a="176956913"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by orviesa009.jf.intel.com with ESMTP; 25 Sep 2025 09:25:53 -0700
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	jolsa@kernel.org,
-	alexander.shishkin@linux.intel.com,
-	mark.rutland@arm.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	dave.hansen@linux.intel.com
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH] MAINTAINERS: Remove myself from perf_events subsystem
-Date: Thu, 25 Sep 2025 09:24:28 -0700
-Message-Id: <20250925162428.3516894-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFQfPLXQ"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-46b7580f09eso8060785e9.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Sep 2025 09:27:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1758817657; x=1759422457; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=DOt8SCNPqNoEq/gynRl5Nvsh98Fum4P4iOo41lrBivY=;
+        b=KFQfPLXQOkHcSHCqty60p6TJXD/pF9+w30Bcfzphwk8lnbEW4r37bXnr3Hh1KtyHCO
+         SYYSF7iNMI4bjUTZW/c+94TkG5Mdy4ZW/dk/k2VzE8E3LFdhWjO7w4/QQadIvta5A3ld
+         /fbRRS/HgocS6RWs4OQcdEv4XkjpafysV3FI9uzELkAx9KBV4P0LL6okpqF73MmfFLp/
+         LHtKcm+sp1fmCXJVRTBzr24M2KLuwBHQyprbiqzVlhkC4WhvnbLrVxKjMA3SS+PavQH/
+         Dz+ngpuJ+jpwSVzxuo1/om7qjbQZ3wX7smvKR0no7hssjiTSUrxMaFKR80Nw9OlsHS37
+         kRHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758817657; x=1759422457;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DOt8SCNPqNoEq/gynRl5Nvsh98Fum4P4iOo41lrBivY=;
+        b=GQwSlKPCWW6xfRGLNqDEsH3C7LNxJ9I7piJYoQ+P8+OHb9hQxsH08JILcEgrGrL2EN
+         JXBqgUxdUeTuI5ArdK7hriDXwTVIv77N0m7kl25s/Mnb+FyFli6OCbBvodTfAhgtKYGk
+         dG8qbtG7TdzfoukxMwHS7VZTYa3YcBaVcLs5OAGxmFqUARaJ5zroF1kgXH0I8S4oTDAW
+         dkxYFWM4QfBCZP27VBCGCeSWFsoNRfGkWzaZBqHdlMdDyrP2pYO5LtL2I6CtAykyJPSz
+         PvaUh0qUIXlckXHTciKcdM/82Gmsdp6EKC/nPdqtvhUNCMCokTL6Hg3oNFCm5l8nC3nr
+         hrYw==
+X-Forwarded-Encrypted: i=1; AJvYcCVNCx8oRjcemnyh5PoE2IaJLYJut2XcnioYoIaP5sYFZ7gmC/GErMXdm3YiGsWoOhgWfv3gIClN0f4ecJmYtRDm@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/RLm/izu02DwGuOqbpnwb33gFfw48jH6vykFNW0DDs9tuQtIK
+	ptxdGhum5RXQ80CY8zMW7KJAHxE68SMG+CuFfkoF1Q1G8MSoOxUT1r2o
+X-Gm-Gg: ASbGncvyFz8KPEJC9FIJahtskLpprDpM0wcp/Lb0PmJsjh4FXXN4rgt91YHgzfXpjjG
+	7G7uCzKKgNpfnzaF0KfzOjZgrl65aIpm6htRzFRiaSYBZPdF48otti8tui2w1Oa1SQMb0G5lmGM
+	4nxsA2IMxvnFJwbWeOWmmL6jnSzYnwKB47Kj5Fp8/nXrOGVHYUnW+C4lH47nd+RQkKR5KNEAC9O
+	Q0z3mLOXQI5u9q6HremkDpnhHMjarUVscCxGi6xZFh++bU6ugtqClVf0udeifwbE80UlIfkVg5y
+	rxl00JLzkqQs4sJQuh28D/XJaqqeJ2iNLQL93H71Au0znq4nmro9iJUw/ViTHLudxKoac45RwVw
+	q0KJ+8ZFI703Ws+mfaJC1qs8X6sLiFPwi6ABnxqmToveNt+M=
+X-Google-Smtp-Source: AGHT+IEFKHBHubn1cTGjy+ZH0sSlW55oT61o1prZ3rjWvLnj0iZRejAZ/4vk8KwWhanKzHuomILbiw==
+X-Received: by 2002:a05:600c:8b58:b0:45d:e326:96fb with SMTP id 5b1f17b1804b1-46e32a17d2bmr48722145e9.30.1758817656742;
+        Thu, 25 Sep 2025 09:27:36 -0700 (PDT)
+Received: from ehlo.thunderbird.net ([185.255.128.31])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-40fb89fb2fcsm3932799f8f.22.2025.09.25.09.27.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Sep 2025 09:27:35 -0700 (PDT)
+Date: Thu, 25 Sep 2025 18:27:27 +0200
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+To: Athira Rajeev <atrajeev@linux.ibm.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>
+CC: Jiri Olsa <jolsa@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+ Aboorva Devarajan <aboorvad@linux.ibm.com>,
+ Shrikanth Hegde <sshegde@linux.ibm.com>, hbathini@linux.vnet.ibm.com,
+ Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>,
+ Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+ Tejas Manhas <Tejas.Manhas1@ibm.com>
+Subject: Re: [PATCH V3 0/6] perf/tools: Add interface to expose vpa dtl
+User-Agent: Thunderbird for Android
+In-Reply-To: <6BB167B7-6479-44E7-9175-E67E500DB9E2@linux.ibm.com>
+References: <20250916052536.93911-1-atrajeev@linux.ibm.com> <ac85151f-21e0-4a98-96e6-8153d0159915@intel.com> <6BB167B7-6479-44E7-9175-E67E500DB9E2@linux.ibm.com>
+Message-ID: <7EE7DD5B-6550-436B-A799-2B1DF293121E@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Kan Liang <kan.liang@linux.intel.com>
 
-I'm stepping down as the Reviewer of perf_events subsystem.
-It has been an honor and a pleasure to work with everyone to improve the
-perf_events subsystem. However, due to personal reasons, I have to leave
-Intel. I believe it would be difficult for me to continue in this role
-any further.
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
+On September 25, 2025 6:21:19 PM GMT+02:00, Athira Rajeev <atrajeev@linux=
+=2Eibm=2Ecom> wrote:
+>
+>
+>> On 17 Sep 2025, at 11:28=E2=80=AFAM, Adrian Hunter <adrian=2Ehunter@int=
+el=2Ecom> wrote:
+>>=20
+>> On 16/09/2025 08:25, Athira Rajeev wrote:
+>>> The pseries Shared Processor Logical Partition(SPLPAR) machines can
+>>> retrieve a log of dispatch and preempt events from the hypervisor
+>>> using data from Disptach Trace Log(DTL) buffer=2E With this informatio=
+n,
+>>> user can retrieve when and why each dispatch & preempt has occurred=2E
+>>> The vpa-dtl PMU exposes the Virtual Processor Area(VPA) DTL counters
+>>> via perf=2E
+>>>=20
+>>> - Patch 1 to 6 is perf tools side code changes to enable perf
+>>>  report/script on perf=2Edata file
+>>=20
+>> For all patches 1 to 6:
+>>=20
+>> Reviewed-by: Adrian Hunter <adrian=2Ehunter@intel=2Ecom>
+>
+>Hi All,
+>
+>Looking for further comments if any on this patchset=2E
+>The kernel side patches for this feature which was sent as separate serie=
+s is pulled to powerpc tree by Maddy
+>
+>If the tools side changes looks good, can we have this merged to perf too=
+ls tree ?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fe168477caa4..2c788294cf84 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19759,7 +19759,6 @@ R:	Alexander Shishkin <alexander.shishkin@linux.intel.com>
- R:	Jiri Olsa <jolsa@kernel.org>
- R:	Ian Rogers <irogers@google.com>
- R:	Adrian Hunter <adrian.hunter@intel.com>
--R:	"Liang, Kan" <kan.liang@linux.intel.com>
- L:	linux-perf-users@vger.kernel.org
- L:	linux-kernel@vger.kernel.org
- S:	Supported
--- 
-2.38.1
 
+Sure, I'll look at it soon now that the kernel part is merged=2E
+
+- Arnaldo
+>
+>Thanks
+>Athira
+>
+>>=20
+>
+
+- Arnaldo 
