@@ -1,260 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8142ED84A;
-	Thu, 25 Sep 2025 11:51:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E7A014B953;
+	Thu, 25 Sep 2025 12:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758801119; cv=none; b=JAtR2tmOmo4I1dlhedyNS5lQrDnY9VGJ0wQQciIz2vpl16hI9Qkm5J+fvT3m7fwawIuH8SLaB1gMY7RNDu9yTP7CYArY3MXsp9d07wKVcSdIfhvdfjM/3MZBcgnSFvcBej4QtIcSGbej0wOnLaezPXsswhFk5OWHTby7KqYDIgM=
+	t=1758804201; cv=none; b=CvLsAV8VtFLZeAXLIzMGT4tEZpANwi/CYBs1BM/D2EkaFb/7VnMS7AUw4cc6UA4NJICMcVL0i8bfn99ClRNyw+3R3b3kLMW6S7owKofeHz9dr95Ce7NZG5thLF1VvPSbrlRj1pOIUX3hJsOIyheZ9tWDA7c9qE0x0OzWH7Jzw5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758801119; c=relaxed/simple;
-	bh=wfgqwt+NXtirlCpuguERid2O5/nt96XopcicVnATzLI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iH5HKQOmzjT8+pCP7XnanXVBA0LQYxiV/KhZGNh5lW8860ZblN10hGod79WLfED4ingDZb3W9mu0WN1c8MjphmTKG6by5b9YKHAuOC8T/Gg3SB30wSKJdqBmdY4JIU46noDGigIo6gtUiO30QUJoPRFRPickrHaGeXkoyFECptc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o8mabVUb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o8mabVUb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5978C4CEF0;
-	Thu, 25 Sep 2025 11:51:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1758801119;
-	bh=wfgqwt+NXtirlCpuguERid2O5/nt96XopcicVnATzLI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=o8mabVUbJgXlvnQxRfysKj9zaPpL4bgmOIrAjLAsKaLEkC7sNSfmoynpJc3xVw01l
-	 eBOavrRQcyeYsasd0RN7lwMAfFneLx3wcJPK6K8VuCUqev7hfk8De52MJnP1CNngIP
-	 zAO8I1D+0EQoLUP0QHpDBJmsDDCmuP8RZXetSj+hTU/p7KcWs7rNY+7pzm9C+/FMuj
-	 6EALZHFWhe4SjNd8thf2UwEKlEaN9xHi3jVc4qEmmllRH/5nvHNi+6ClkX5a0pTY7f
-	 fxIEn7YLVCCx4j8lyjk7TLFLUwvWblh5DNCzjso7Sh83+DiIk0O/IPWwRuRP4Y9gJK
-	 EjsRlA90zDAcQ==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>,
+	s=arc-20240116; t=1758804201; c=relaxed/simple;
+	bh=gcHZwcDMSIGu3KYmFLAtCFzPUJCXH64+5aDEv1Ci6FY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UET+8kSKiPVrIr4Ut1l+pQEmo82gP29dv9fW5kR6XOsIN5w1JUIYT+RG3p5AGQzQYza+bSGPNg55ndIxUS6TjrOdQcqnc4hgx6q2y477W9PCY8kFRHKbR1Y4339ymbNN6szDfyneb0sQtOof2hvvW3ncYV2JzLfecFcGbm3rGZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4DAD91692;
+	Thu, 25 Sep 2025 05:43:10 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0841B3F694;
+	Thu, 25 Sep 2025 05:43:18 -0700 (PDT)
+Date: Thu, 25 Sep 2025 13:43:16 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Quentin Monnet <qmo@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Alexei Starovoitov <ast@kernel.org>,
 	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: Feng Yang <yangfeng59949@163.com>,
-	bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
 	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>
-Subject: [PATCH bpf-next] selftests/bpf: Add stacktrace test for kprobe multi
-Date: Thu, 25 Sep 2025 13:51:45 +0200
-Message-ID: <20250925115145.1916664-1-jolsa@kernel.org>
-X-Mailer: git-send-email 2.51.0
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, James Clark <james.clark@linaro.org>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	llvm@lists.linux.dev, bpf@vger.kernel.org
+Subject: Re: [PATCH 3/8] bpftool: Conditionally add -Wformat-signedness flag
+Message-ID: <20250925124316.GA7985@e132581.arm.com>
+References: <20250925-perf_build_android_ndk-v1-0-8b35aadde3dc@arm.com>
+ <20250925-perf_build_android_ndk-v1-3-8b35aadde3dc@arm.com>
+ <52fe87ef-0797-4cf1-9e70-dc218f904e77@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <52fe87ef-0797-4cf1-9e70-dc218f904e77@kernel.org>
 
-Adding stacktrace test for kprobe multi probe.
+On Thu, Sep 25, 2025 at 11:42:39AM +0100, Quentin Monnet wrote:
+> 2025-09-25 11:26 UTC+0100 ~ Leo Yan <leo.yan@arm.com>
+> > clang-18.1.3 on Ubuntu 24.04.2 reports warning:
+> > 
+> >   warning: unknown warning option '-Wformat-signedness' [-Wunknown-warning-option]
+> > 
+> > Conditionally add the option only when it is supported by compiler.
+> > 
+> > Signed-off-by: Leo Yan <leo.yan@arm.com>
+> 
+> 
+> Hi, how annoying is this warning?
 
-Cc: Feng Yang <yangfeng59949@163.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
-test for arm64 fix posted separately in here:
-  https://lore.kernel.org/bpf/20250925020822.119302-1-yangfeng59949@163.com/
+Not too bad, it prints out 5~6 times warnings (see the build log below).
+Though the warnings are a bit noisy, they does not break the build.
 
- .../selftests/bpf/prog_tests/stacktrace_map.c | 107 +++++++++++++-----
- .../selftests/bpf/progs/test_stacktrace_map.c |  28 ++++-
- 2 files changed, 106 insertions(+), 29 deletions(-)
+> I'm asking because as far as I
+> understand, the option has been introduced in LLVM 19.1.0 [0] - the
+> latest being 21.1.0 already - so we won't need this check once distros
+> have transitioned, and I'm a bit reluctant to add it.
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/stacktrace_map.c b/tools/testing/selftests/bpf/prog_tests/stacktrace_map.c
-index 84a7e405e912..922224adc86b 100644
---- a/tools/testing/selftests/bpf/prog_tests/stacktrace_map.c
-+++ b/tools/testing/selftests/bpf/prog_tests/stacktrace_map.c
-@@ -1,13 +1,44 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <test_progs.h>
-+#include "test_stacktrace_map.skel.h"
- 
--void test_stacktrace_map(void)
-+static void check_stackmap(int control_map_fd, int stackid_hmap_fd,
-+			   int stackmap_fd, int stack_amap_fd)
-+{
-+	__u32 key, val, duration = 0;
-+	int err, stack_trace_len;
-+
-+	/* disable stack trace collection */
-+	key = 0;
-+	val = 1;
-+	bpf_map_update_elem(control_map_fd, &key, &val, 0);
-+
-+	/* for every element in stackid_hmap, we can find a corresponding one
-+	 * in stackmap, and vice versa.
-+	 */
-+	err = compare_map_keys(stackid_hmap_fd, stackmap_fd);
-+	if (CHECK(err, "compare_map_keys stackid_hmap vs. stackmap",
-+		  "err %d errno %d\n", err, errno))
-+		return;
-+
-+	err = compare_map_keys(stackmap_fd, stackid_hmap_fd);
-+	if (CHECK(err, "compare_map_keys stackmap vs. stackid_hmap",
-+		  "err %d errno %d\n", err, errno))
-+		return;
-+
-+	stack_trace_len = PERF_MAX_STACK_DEPTH * sizeof(__u64);
-+	err = compare_stack_ips(stackmap_fd, stack_amap_fd, stack_trace_len);
-+	CHECK(err, "compare_stack_ips stackmap vs. stack_amap",
-+		"err %d errno %d\n", err, errno);
-+}
-+
-+static void test_stacktrace_map_tp(void)
- {
- 	int control_map_fd, stackid_hmap_fd, stackmap_fd, stack_amap_fd;
- 	const char *prog_name = "oncpu";
--	int err, prog_fd, stack_trace_len;
-+	int err, prog_fd;
- 	const char *file = "./test_stacktrace_map.bpf.o";
--	__u32 key, val, duration = 0;
-+	__u32 duration = 0;
- 	struct bpf_program *prog;
- 	struct bpf_object *obj;
- 	struct bpf_link *link;
-@@ -44,32 +75,56 @@ void test_stacktrace_map(void)
- 	/* give some time for bpf program run */
- 	sleep(1);
- 
--	/* disable stack trace collection */
--	key = 0;
--	val = 1;
--	bpf_map_update_elem(control_map_fd, &key, &val, 0);
--
--	/* for every element in stackid_hmap, we can find a corresponding one
--	 * in stackmap, and vice versa.
--	 */
--	err = compare_map_keys(stackid_hmap_fd, stackmap_fd);
--	if (CHECK(err, "compare_map_keys stackid_hmap vs. stackmap",
--		  "err %d errno %d\n", err, errno))
--		goto disable_pmu;
--
--	err = compare_map_keys(stackmap_fd, stackid_hmap_fd);
--	if (CHECK(err, "compare_map_keys stackmap vs. stackid_hmap",
--		  "err %d errno %d\n", err, errno))
--		goto disable_pmu;
--
--	stack_trace_len = PERF_MAX_STACK_DEPTH * sizeof(__u64);
--	err = compare_stack_ips(stackmap_fd, stack_amap_fd, stack_trace_len);
--	if (CHECK(err, "compare_stack_ips stackmap vs. stack_amap",
--		  "err %d errno %d\n", err, errno))
--		goto disable_pmu;
-+	check_stackmap(control_map_fd, stackid_hmap_fd, stackmap_fd, stack_amap_fd);
- 
- disable_pmu:
- 	bpf_link__destroy(link);
- close_prog:
- 	bpf_object__close(obj);
- }
-+
-+static void test_stacktrace_map_kprobe_multi(bool retprobe)
-+{
-+	int control_map_fd, stackid_hmap_fd, stackmap_fd, stack_amap_fd;
-+	LIBBPF_OPTS(bpf_kprobe_multi_opts, opts,
-+		.retprobe = retprobe
-+	);
-+	LIBBPF_OPTS(bpf_test_run_opts, topts);
-+	struct test_stacktrace_map *skel;
-+	struct bpf_link *link;
-+	int prog_fd, err;
-+
-+	skel = test_stacktrace_map__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "test_stacktrace_map__open_and_load"))
-+		return;
-+
-+	link = bpf_program__attach_kprobe_multi_opts(skel->progs.kprobe,
-+						     "bpf_fentry_test1", &opts);
-+	if (!ASSERT_OK_PTR(link, "bpf_program__attach_kprobe_multi_opts"))
-+		goto cleanup;
-+
-+	prog_fd = bpf_program__fd(skel->progs.trigger);
-+	err = bpf_prog_test_run_opts(prog_fd, &topts);
-+	ASSERT_OK(err, "test_run");
-+	ASSERT_EQ(topts.retval, 0, "test_run");
-+
-+	control_map_fd  = bpf_map__fd(skel->maps.control_map);
-+	stackid_hmap_fd = bpf_map__fd(skel->maps.stackid_hmap);
-+	stackmap_fd     = bpf_map__fd(skel->maps.stackmap);
-+	stack_amap_fd   = bpf_map__fd(skel->maps.stack_amap);
-+
-+	check_stackmap(control_map_fd, stackid_hmap_fd, stackmap_fd, stack_amap_fd);
-+
-+cleanup:
-+	test_stacktrace_map__destroy(skel);
-+}
-+
-+void test_stacktrace_map(void)
-+{
-+	if (test__start_subtest("tp"))
-+		test_stacktrace_map_tp();
-+	if (test__start_subtest("kprobe_multi"))
-+		test_stacktrace_map_kprobe_multi(false);
-+	if (test__start_subtest("kretprobe_multi"))
-+		test_stacktrace_map_kprobe_multi(true);
-+}
-diff --git a/tools/testing/selftests/bpf/progs/test_stacktrace_map.c b/tools/testing/selftests/bpf/progs/test_stacktrace_map.c
-index 47568007b668..7a27e162a407 100644
---- a/tools/testing/selftests/bpf/progs/test_stacktrace_map.c
-+++ b/tools/testing/selftests/bpf/progs/test_stacktrace_map.c
-@@ -3,6 +3,7 @@
- 
- #include <vmlinux.h>
- #include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
- 
- #ifndef PERF_MAX_STACK_DEPTH
- #define PERF_MAX_STACK_DEPTH         127
-@@ -50,8 +51,7 @@ struct sched_switch_args {
- 	int next_prio;
- };
- 
--SEC("tracepoint/sched/sched_switch")
--int oncpu(struct sched_switch_args *ctx)
-+static inline void test_stackmap(void *ctx)
- {
- 	__u32 max_len = PERF_MAX_STACK_DEPTH * sizeof(__u64);
- 	__u32 key = 0, val = 0, *value_p;
-@@ -59,7 +59,7 @@ int oncpu(struct sched_switch_args *ctx)
- 
- 	value_p = bpf_map_lookup_elem(&control_map, &key);
- 	if (value_p && *value_p)
--		return 0; /* skip if non-zero *value_p */
-+		return; /* skip if non-zero *value_p */
- 
- 	/* The size of stackmap and stackid_hmap should be the same */
- 	key = bpf_get_stackid(ctx, &stackmap, 0);
-@@ -69,7 +69,29 @@ int oncpu(struct sched_switch_args *ctx)
- 		if (stack_p)
- 			bpf_get_stack(ctx, stack_p, max_len, 0);
- 	}
-+}
-+
-+SEC("tracepoint/sched/sched_switch")
-+int oncpu(struct sched_switch_args *ctx)
-+{
-+	test_stackmap(ctx);
-+	return 0;
-+}
- 
-+/*
-+ * No tests in here, just to trigger 'bpf_fentry_test*'
-+ * through tracing test_run.
-+ */
-+SEC("fentry/bpf_modify_return_test")
-+int BPF_PROG(trigger)
-+{
-+	return 0;
-+}
-+
-+SEC("kprobe.multi")
-+int kprobe(struct pt_regs *ctx)
-+{
-+	test_stackmap(ctx);
- 	return 0;
- }
- 
--- 
-2.51.0
+I agree the warning likely won't affect distros, as package maintainers
+will hide it. But it can annoy _paranoid_ developers in day-to-day
+builds ;)
 
+As the warning doesn't block anything, so I am fine with not merging
+this patch.
+
+Thanks,
+Leo
+
+> [0]
+> https://github.com/llvm/llvm-project/commit/ea92b1f9d0fc31f1fd97ad04eb0412003a37cb0d
+
+
+---8<---
+
+Auto-detecting system features:
+...                         clang-bpf-co-re: [ on  ]
+...                                    llvm: [ OFF ]
+...                                  libcap: [ on  ]
+...                                  libbfd: [ OFF ]
+...                          libbfd-liberty: [ OFF ]
+...                        libbfd-liberty-z: [ OFF ]
+...                  disassembler-four-args: [ OFF ]
+...                disassembler-init-styled: [ OFF ]
+...                             libelf-zstd: [ o
+  MKDIR   /build/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf
+  MKDIR   /build/util/bpf_skel/.tmp/bootstrap/libbpf/
+  MKDIR   /build/util/bpf_skel/.tmp/bootstrap/
+  INSTALL /build/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/hashmap.h
+  INSTALL /build/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/relo_core.h
+  INSTALL /build/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/libbpf_internal.h
+warning: unknown warning option '-Wformat-signedness' [-Wunknown-warning-option]
+1 warning generated.
+  GEN     /build/util/bpf_skel/.tmp/bootstrap/libbpf/bpf_helper_defs.h
+  INSTALL /build/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/bpf.h
+  INSTALL /build/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/libbpf.h
+  INSTALL /build/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/libbpf_legacy.h
+  INSTALL /build/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/btf.h
+  INSTALL /build/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/bpf_helpers.h
+  INSTALL /build/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/libbpf_common.h
+  INSTALL /build/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/bpf_tracing.h
+  INSTALL /build/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/bpf_core_read.h
+  INSTALL /build/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/bpf_endian.h
+  INSTALL /build/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/libbpf_version.h
+  INSTALL /build/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/skel_internal.h
+  INSTALL /build/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/usdt.bpf.h
+  INSTALL /build/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf/bpf_helper_defs.h
+  INSTALL libbpf_headers
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/libbpf.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/bpf.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/nlattr.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/btf.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/libbpf_errno.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/str_error.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/netlink.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/bpf_prog_linfo.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/libbpf_probes.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/hashmap.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/btf_dump.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/ringbuf.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/strset.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/gen_loader.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/relo_core.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/linker.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/usdt.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/zip.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/elf.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/features.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/btf_iter.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/btf_relocate.o
+  LD      /build/util/bpf_skel/.tmp/bootstrap/libbpf/staticobjs/libbpf-in.o
+  LINK    /build/util/bpf_skel/.tmp/bootstrap/libbpf/libbpf.a
+  CC      /build/util/bpf_skel/.tmp/bootstrap/main.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/common.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/json_writer.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/gen.o
+  CC      /build/util/bpf_skel/.tmp/bootstrap/btf.o
+warning: unknown warning option '-Wformat-signedness' [-Wunknown-warning-option]
+warning: unknown warning option '-Wformat-signedness' [-Wunknown-warning-option]
+warning: unknown warning option '-Wformat-signedness' [-Wunknown-warning-option]warning:
+unknown warning option '-Wformat-signedness' [-Wunknown-warning-option]
+warning: unknown warning option '-Wformat-signedness' [-Wunknown-warning-option]
+1 warning generated.
+1 warning generated.
+1 warning generated.
+1 warning generated.
+1 warning generated.
+  LINK    /build/util/bpf_skel/.tmp/bootstrap/bpftool
