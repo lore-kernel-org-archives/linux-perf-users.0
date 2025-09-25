@@ -1,135 +1,140 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-yx1-f74.google.com (mail-yx1-f74.google.com [74.125.224.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B332521E091
-	for <linux-perf-users@vger.kernel.org>; Thu, 25 Sep 2025 16:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D7C2F617B
+	for <linux-perf-users@vger.kernel.org>; Thu, 25 Sep 2025 17:27:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758817660; cv=none; b=YMkhG3oT1Rtp4f9LktZ/BjORgSjMSdNMVCCEcQi910hr10RPsEavU51SzXBCaYophtUzGVJPawq9O3HnAiZ+JqIUN7y7Sa4+yipvkJnDwVTZQafx3SRytuOv1DwcG8h4Ll3CZmYLkepLAnZfQXBqLargdDKNAWMpf+O3RwdCycI=
+	t=1758821264; cv=none; b=t3k4MvT/xy6f0Bx/d7XkVmm4+fYECZinRKvz7QZt+KT9IGSF19ag2BlVDRbsb9R8bhEmOCP0cL2yfKHOoxYljOdsmVQgtBpJJTKdeJjzbgO3Qlk592KxmIVegmXmu8k9NbE9m9+cqM/1YHGOcgvaLiMTGr06wlhDOafq10nZrdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758817660; c=relaxed/simple;
-	bh=tKo0aXmpGJcdBrGhcXY2lCyeZIUJ1PkodFtfhRjU2cM=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=ktRp7yd8Q7WtZ8X/66EwxSVC4UGIFRLRx7onwE68EuvIiiUuOUV9gSBFitUaDGgYfsiJtc7zSfb/moQc5HI1wp3rhiB7N47xUCWOkULKJMQdDvMk9uKithA7Dro79LUPFO61/4kK4qeU3JQgQmWkPRkvtQ4B0y/LcD8PPBMETkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KFQfPLXQ; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1758821264; c=relaxed/simple;
+	bh=1aMzbPXXTV6s8shnpFeoB2BqIpLtvMoCfxhUmtdjiSg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=Q351G/tFcFnx6N7RptkrWn7nZK6qdRdMZDHgjgbfbtq9pPcSP5rfQ5dqfsyQ1hMkOQZ0d/Kh1rrdo2VGdIn1JeH0ZONlQAL86FsZS54eQpE2KdnIdmutUU1GB6tUgp13n6HfLL0q943z1GmtHy2CJ5mTUViPe2nqzn6zn5qCkZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hldYki0x; arc=none smtp.client-ip=74.125.224.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFQfPLXQ"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-46b7580f09eso8060785e9.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Sep 2025 09:27:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hldYki0x"
+Received: by mail-yx1-f74.google.com with SMTP id 956f58d0204a3-633bad5006aso806849d50.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 Sep 2025 10:27:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1758817657; x=1759422457; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+        d=google.com; s=20230601; t=1758821262; x=1759426062; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=DOt8SCNPqNoEq/gynRl5Nvsh98Fum4P4iOo41lrBivY=;
-        b=KFQfPLXQOkHcSHCqty60p6TJXD/pF9+w30Bcfzphwk8lnbEW4r37bXnr3Hh1KtyHCO
-         SYYSF7iNMI4bjUTZW/c+94TkG5Mdy4ZW/dk/k2VzE8E3LFdhWjO7w4/QQadIvta5A3ld
-         /fbRRS/HgocS6RWs4OQcdEv4XkjpafysV3FI9uzELkAx9KBV4P0LL6okpqF73MmfFLp/
-         LHtKcm+sp1fmCXJVRTBzr24M2KLuwBHQyprbiqzVlhkC4WhvnbLrVxKjMA3SS+PavQH/
-         Dz+ngpuJ+jpwSVzxuo1/om7qjbQZ3wX7smvKR0no7hssjiTSUrxMaFKR80Nw9OlsHS37
-         kRHw==
+        bh=twFyA4eORy0F+hKQH+6fcNvXcelQ6Qor5Ir75U2uMhA=;
+        b=hldYki0xAh0kLV2buZRLd4DEzu/phrTs5+rJVtPFjk0nmFPWPjb8clAWQ7LCrj4E8R
+         F2tn92KC/4rcmavTzvLjNeMN7pjyE3ZFnArjUFN2kxhZ+YuqTWRpcWzbssghYhO6U3Wb
+         5Eq5mxFX7XN1Xe5X9Wdm0CpMIruVbWnsOLidhHs2Y+WgW8Jip8FatKFjCapFiYRx/key
+         txVHpCbxAcpbuOijQ+URMbQZLrkxzKOq86O/P9lgMQ8hpjYVACqvjil6YDXP9Uiau4i0
+         Sbh5PjWfxtI7AJ7VBRWczEgzJt3HTp3+/vpfGnKzPfRBDo85OXtf1VlLr62uqPqSY4i9
+         rdFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758817657; x=1759422457;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+        d=1e100.net; s=20230601; t=1758821262; x=1759426062;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=DOt8SCNPqNoEq/gynRl5Nvsh98Fum4P4iOo41lrBivY=;
-        b=GQwSlKPCWW6xfRGLNqDEsH3C7LNxJ9I7piJYoQ+P8+OHb9hQxsH08JILcEgrGrL2EN
-         JXBqgUxdUeTuI5ArdK7hriDXwTVIv77N0m7kl25s/Mnb+FyFli6OCbBvodTfAhgtKYGk
-         dG8qbtG7TdzfoukxMwHS7VZTYa3YcBaVcLs5OAGxmFqUARaJ5zroF1kgXH0I8S4oTDAW
-         dkxYFWM4QfBCZP27VBCGCeSWFsoNRfGkWzaZBqHdlMdDyrP2pYO5LtL2I6CtAykyJPSz
-         PvaUh0qUIXlckXHTciKcdM/82Gmsdp6EKC/nPdqtvhUNCMCokTL6Hg3oNFCm5l8nC3nr
-         hrYw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNCx8oRjcemnyh5PoE2IaJLYJut2XcnioYoIaP5sYFZ7gmC/GErMXdm3YiGsWoOhgWfv3gIClN0f4ecJmYtRDm@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/RLm/izu02DwGuOqbpnwb33gFfw48jH6vykFNW0DDs9tuQtIK
-	ptxdGhum5RXQ80CY8zMW7KJAHxE68SMG+CuFfkoF1Q1G8MSoOxUT1r2o
-X-Gm-Gg: ASbGncvyFz8KPEJC9FIJahtskLpprDpM0wcp/Lb0PmJsjh4FXXN4rgt91YHgzfXpjjG
-	7G7uCzKKgNpfnzaF0KfzOjZgrl65aIpm6htRzFRiaSYBZPdF48otti8tui2w1Oa1SQMb0G5lmGM
-	4nxsA2IMxvnFJwbWeOWmmL6jnSzYnwKB47Kj5Fp8/nXrOGVHYUnW+C4lH47nd+RQkKR5KNEAC9O
-	Q0z3mLOXQI5u9q6HremkDpnhHMjarUVscCxGi6xZFh++bU6ugtqClVf0udeifwbE80UlIfkVg5y
-	rxl00JLzkqQs4sJQuh28D/XJaqqeJ2iNLQL93H71Au0znq4nmro9iJUw/ViTHLudxKoac45RwVw
-	q0KJ+8ZFI703Ws+mfaJC1qs8X6sLiFPwi6ABnxqmToveNt+M=
-X-Google-Smtp-Source: AGHT+IEFKHBHubn1cTGjy+ZH0sSlW55oT61o1prZ3rjWvLnj0iZRejAZ/4vk8KwWhanKzHuomILbiw==
-X-Received: by 2002:a05:600c:8b58:b0:45d:e326:96fb with SMTP id 5b1f17b1804b1-46e32a17d2bmr48722145e9.30.1758817656742;
-        Thu, 25 Sep 2025 09:27:36 -0700 (PDT)
-Received: from ehlo.thunderbird.net ([185.255.128.31])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-40fb89fb2fcsm3932799f8f.22.2025.09.25.09.27.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Sep 2025 09:27:35 -0700 (PDT)
-Date: Thu, 25 Sep 2025 18:27:27 +0200
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-To: Athira Rajeev <atrajeev@linux.ibm.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>,
- Namhyung Kim <namhyung@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: Jiri Olsa <jolsa@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>,
- "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
- linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
- Aboorva Devarajan <aboorvad@linux.ibm.com>,
- Shrikanth Hegde <sshegde@linux.ibm.com>, hbathini@linux.vnet.ibm.com,
- Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>,
- Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
- Tejas Manhas <Tejas.Manhas1@ibm.com>
-Subject: Re: [PATCH V3 0/6] perf/tools: Add interface to expose vpa dtl
-User-Agent: Thunderbird for Android
-In-Reply-To: <6BB167B7-6479-44E7-9175-E67E500DB9E2@linux.ibm.com>
-References: <20250916052536.93911-1-atrajeev@linux.ibm.com> <ac85151f-21e0-4a98-96e6-8153d0159915@intel.com> <6BB167B7-6479-44E7-9175-E67E500DB9E2@linux.ibm.com>
-Message-ID: <7EE7DD5B-6550-436B-A799-2B1DF293121E@gmail.com>
+        bh=twFyA4eORy0F+hKQH+6fcNvXcelQ6Qor5Ir75U2uMhA=;
+        b=wnfcZh/S9Of+UmA37Qcu+/JCE1vz9Zkzv+l0b9TO2btc3Otun1RZ+KjwtNjVQy1u6l
+         Ue7v2BmxDE30OBW4HGLA3RApRaXbNGSevXPz8KI3RnrAHxN35NFjQZFuSuwdB7EeMS7k
+         Jmb9rmmVkW4fevYLf4TPtbhYNKSv3DbbM90ngvejnUVtFcct1iJFKhZMgp6x3vVC1w14
+         oHRHDgfxApP8b7V7JDX5GPmvv2sk1j73P6XOWAxQKvyPFWeYqz3IFYggwK7vZ0P16Hv7
+         AfdzN2tAgkH10Z92m88PICHs+sXJ0FZnV51drbLKCuALkUXBdBgqWXJ8qu8eOfq2Jh/f
+         ZswA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6haSq2z82hpmz9Z9bvpm3vKZIo0W4twx0Y945bfATm141WHBTIVZzC6mqMnT53ayvH6TTBrZ2I9UcRo8WrlC8@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYe6G322v7V505vhnayJm70gnyL8OSGUVpBxgoO4rlXPE7fL1s
+	QI2iVafqqsGR9Nlo4AjlsodF/KjMs1AU1qk3idaSamPy3g2a+aYgiFK4jR+mVYprZViuv7vW6wb
+	Vifeq6iSbOQ==
+X-Google-Smtp-Source: AGHT+IEcnlGjcYu4VtKAKyC7RJYe5WejLIMJSsrrgsndDXTrAUuZ4rOx79HSoDfyUmL7gjjARwRaPPXheIUc
+X-Received: from ybcs3.prod.google.com ([2002:a05:6902:5083:b0:eb3:8782:dcea])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:690e:1a0c:b0:633:bf80:8b2a
+ with SMTP id 956f58d0204a3-6361a7b96eamr2604704d50.29.1758821261600; Thu, 25
+ Sep 2025 10:27:41 -0700 (PDT)
+Date: Thu, 25 Sep 2025 10:27:26 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.51.0.536.g15c5d4f767-goog
+Message-ID: <20250925172736.960368-1-irogers@google.com>
+Subject: [PATCH v2 00/10] perf vendor events intel update
+From: Ian Rogers <irogers@google.com>
+To: Thomas Falcon <thomas.falcon@intel.com>, Perry Taylor <perry.taylor@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, 
+	"=?UTF-8?q?Andreas=20F=C3=A4rber?=" <afaerber@suse.de>, Manivannan Sadhasivam <mani@kernel.org>, 
+	Caleb Biggers <caleb.biggers@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Update events and some metrics to the latest perfmon versions:
+ - alderlake 1.34
+ - arrowlake 1.13
+ - emeraldrapids 1.20
+ - grandridge 1.10
+ - graniterapids 1.15
+ - lunarlake 1.18
+ - meteorlake 1.17
+ - sapphirerapids 1.35
+ - sierraforest 1.12
 
+v2: EMR/SPR cpu_cstate metric fixes.
 
-On September 25, 2025 6:21:19 PM GMT+02:00, Athira Rajeev <atrajeev@linux=
-=2Eibm=2Ecom> wrote:
->
->
->> On 17 Sep 2025, at 11:28=E2=80=AFAM, Adrian Hunter <adrian=2Ehunter@int=
-el=2Ecom> wrote:
->>=20
->> On 16/09/2025 08:25, Athira Rajeev wrote:
->>> The pseries Shared Processor Logical Partition(SPLPAR) machines can
->>> retrieve a log of dispatch and preempt events from the hypervisor
->>> using data from Disptach Trace Log(DTL) buffer=2E With this informatio=
-n,
->>> user can retrieve when and why each dispatch & preempt has occurred=2E
->>> The vpa-dtl PMU exposes the Virtual Processor Area(VPA) DTL counters
->>> via perf=2E
->>>=20
->>> - Patch 1 to 6 is perf tools side code changes to enable perf
->>>  report/script on perf=2Edata file
->>=20
->> For all patches 1 to 6:
->>=20
->> Reviewed-by: Adrian Hunter <adrian=2Ehunter@intel=2Ecom>
->
->Hi All,
->
->Looking for further comments if any on this patchset=2E
->The kernel side patches for this feature which was sent as separate serie=
-s is pulled to powerpc tree by Maddy
->
->If the tools side changes looks good, can we have this merged to perf too=
-ls tree ?
+Ian Rogers (10):
+  perf vendor events intel: Update alderlake events to v1.34
+  perf vendor events intel: Update arrowlake events to v1.13
+  perf vendor events intel: Update emeraldrapids events to v1.20
+  perf vendor events intel: Update grandridge events to v1.10
+  perf vendor events intel: Update graniterapids events to v1.15
+  perf vendor events intel: Update lunarlake events to v1.18
+  perf vendor events intel: Update meteorlake events to v1.17
+  perf vendor events intel: Update pantherlake events to v1.00
+  perf vendor events intel: Update sapphirerapids events to v1.35
+  perf vendor events intel: Update sierraforest events to v1.12
 
+ .../pmu-events/arch/x86/alderlake/cache.json  |   36 +
+ .../pmu-events/arch/x86/arrowlake/cache.json  |   46 +-
+ .../pmu-events/arch/x86/arrowlake/memory.json |    6 +-
+ .../pmu-events/arch/x86/arrowlake/other.json  |    2 +-
+ .../arch/x86/emeraldrapids/cache.json         |   63 +
+ .../arch/x86/emeraldrapids/emr-metrics.json   |   12 +
+ .../arch/x86/emeraldrapids/uncore-cache.json  |   11 +
+ .../arch/x86/emeraldrapids/uncore-memory.json |   22 +
+ .../arch/x86/emeraldrapids/uncore-power.json  |    2 -
+ .../pmu-events/arch/x86/grandridge/cache.json |   20 +-
+ .../graniterapids/uncore-interconnect.json    |   10 +-
+ .../arch/x86/graniterapids/uncore-memory.json |  112 ++
+ .../pmu-events/arch/x86/lunarlake/cache.json  |   46 +-
+ .../pmu-events/arch/x86/lunarlake/memory.json |    6 +-
+ .../pmu-events/arch/x86/lunarlake/other.json  |    2 +-
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |   20 +-
+ .../pmu-events/arch/x86/meteorlake/cache.json |   36 +
+ .../arch/x86/pantherlake/cache.json           | 1207 ++++++++++-
+ .../arch/x86/pantherlake/counter.json         |    9 +-
+ .../arch/x86/pantherlake/floating-point.json  |  286 +++
+ .../arch/x86/pantherlake/frontend.json        |  535 +++++
+ .../arch/x86/pantherlake/memory.json          |  106 +-
+ .../arch/x86/pantherlake/other.json           |   44 +
+ .../arch/x86/pantherlake/pipeline.json        | 1776 ++++++++++++++++-
+ .../arch/x86/pantherlake/uncore-memory.json   |   26 +
+ .../arch/x86/pantherlake/virtual-memory.json  |  248 +++
+ .../arch/x86/sapphirerapids/cache.json        |   63 +
+ .../arch/x86/sapphirerapids/spr-metrics.json  |   12 +
+ .../arch/x86/sapphirerapids/uncore-cache.json |   11 +
+ .../x86/sapphirerapids/uncore-memory.json     |   22 +
+ .../arch/x86/sapphirerapids/uncore-power.json |    2 -
+ .../arch/x86/sierraforest/cache.json          |   61 +-
+ .../x86/sierraforest/uncore-interconnect.json |   10 +-
+ .../arch/x86/sierraforest/uncore-io.json      |    1 -
+ .../arch/x86/sierraforest/uncore-memory.json  |  103 +-
+ 35 files changed, 4712 insertions(+), 262 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/floating-point.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/uncore-memory.json
 
-Sure, I'll look at it soon now that the kernel part is merged=2E
+-- 
+2.51.0.536.g15c5d4f767-goog
 
-- Arnaldo
->
->Thanks
->Athira
->
->>=20
->
-
-- Arnaldo 
