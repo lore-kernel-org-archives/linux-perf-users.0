@@ -1,148 +1,98 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B7B21E091
-	for <linux-perf-users@vger.kernel.org>; Thu, 25 Sep 2025 16:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32093054CE;
+	Thu, 25 Sep 2025 16:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758817315; cv=none; b=UIbQsxsrCZilMKVc45pmod+y+1+cN8zhw9ca3pqjRHL8TQiN6YzrMxVqthPUS955YsbPntgaqzHqYpPLhklGWVaagg+OP6xKMtLDi3eZe3CsTMCTE6JP2IbFn9wkeRBfPgRS5I2lnYeGQ+YcQQfQEmTLF2luTA4YnQ5VdKGX5p4=
+	t=1758817567; cv=none; b=OKo3p0rTCows095pwCq/l2gH0OU2XVflJxfUpi0XMzW9dtmidpvSf7uTWQn8xGtg5nHw5xXoXJeXL48wd4SkBFIMiWJKDxRZUUdQM7BLEUbgnXBXExe9ZFNH86FtajC5GU7rc8aC6y0KH/evpk4dFq1pYaJTdzz7snmaDmHEZ6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758817315; c=relaxed/simple;
-	bh=ip8jzfYOvUnXlHxwUkymk2V2kIo/pA+pSrm0toQvQeI=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=l+y6xj1CmDfI2KWFLgomEwm5y7ZB+EpDumG5y2kFbiYVPtbrF7tVLiBjANgOjANPzo2NkJSdubGchmLi+3VzrQsIUsLwvgRYwnz4H2lQYCz8aPgMUn1znj3n7A9VwOL2MxT4kstwEky5MeLAQKgmf8F0rHMGe378ycAogAeLvds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=M0dl3LGI; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1758817567; c=relaxed/simple;
+	bh=pNjBTQXJ2yYV7pbLmX8VeGDdjyTrjnL7dgj3WPZocn0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hFDM+54ucPSOAPXOiKo7SXFb9mlyG26SLNXwWrpyCwVUBrq2MQiAnmQ89esGIH/gDMP6igylAG+OQPslI8Y5joMcZj2geAoqz5RLjpFLFDGiEqBHqBbqLpLPKgk7+KvF9iqqVHPN5HD1abHs0PNAkWnLS8EqhWTBy+Wie6XHpEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KUSE+UEY; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="M0dl3LGI"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 58PG9t0p027646;
-	Thu, 25 Sep 2025 16:21:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=uD/8nL
-	KVWM+Lp2qYVbaC6377nn0bz6Ew4o5O6RI0L8g=; b=M0dl3LGIuM8UqpgSELTF2k
-	toetGXmAAq5JtDPA+3cTUyGJ2UOwXhWUiALAJqslb8Vx/jNbrRPXp4RjVmp29oAV
-	HPw0T11QpA3MS+6oBcPRzC8OHhpO7mHaeMaM/Tt/OrgwVplKR+RzqFABko/Eb1Jk
-	Tg51xGHYcDY0vQnkDAmStmCrF/GJA2PmoJdalBtqfSNdTySgdGSggdelT5pgL9rh
-	8v8+XAA4sZEw3oTvdbV+tS0mF1Qo5MT1Ml2bnwBl9o8dS7xw712ay+eJBhxuIPO4
-	e1XDQH8Jef3WKU8qeV3MVMP05j0LCvuTO5lzzb/GZExDDYWSA2o4NfdGWDZfFSpg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 499ky6f0nh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Sep 2025 16:21:45 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 58PGLiOE015140;
-	Thu, 25 Sep 2025 16:21:44 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 499ky6f0nb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Sep 2025 16:21:44 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 58PDCFAk019743;
-	Thu, 25 Sep 2025 16:21:43 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 49a83kes9m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Sep 2025 16:21:43 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 58PGLdLF26542388
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 25 Sep 2025 16:21:39 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 789332004B;
-	Thu, 25 Sep 2025 16:21:39 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9F7A920040;
-	Thu, 25 Sep 2025 16:21:33 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.61.241.244])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 25 Sep 2025 16:21:33 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KUSE+UEY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758817566; x=1790353566;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=pNjBTQXJ2yYV7pbLmX8VeGDdjyTrjnL7dgj3WPZocn0=;
+  b=KUSE+UEYxsEiNwrQL58Jhf/9I9YhI/TzsL+Fj3UFfS9AQaCOdNL/++OX
+   Wopyn7VZPev5jpAg5ZO6FYqJVbuB09SlKK2RPlAHtyqkZ1TylUFHHFbrN
+   EZXoI/z+clgQ2iDoHon24fdu8/BPGG6hrEx6LZVbhg7r/DDzcqS2+98kD
+   4UjzntQ0pMPulWWQFjmwLOEW+5tnqRiFn6dJ5aUYuc55kn5PNhYBC+SLx
+   fyB0aRg+JUe+UTlSlBgGPg+HrwkS2VQvoi8xtAtXNsWAbbKNLCEHtykVq
+   TtIG6z2ac7vtdV25LG35xNxmcDtvz4T1fun9PgI2Cg7I6dHD6cG9pwSBo
+   Q==;
+X-CSE-ConnectionGUID: j46PBqtkTUqv1nA1ZUl9wA==
+X-CSE-MsgGUID: X5EM0NfjS7qNAMSb5rTpzg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11564"; a="60355442"
+X-IronPort-AV: E=Sophos;i="6.18,292,1751266800"; 
+   d="scan'208";a="60355442"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2025 09:26:05 -0700
+X-CSE-ConnectionGUID: VkmZmm0WSQWRYBeC+EdUkw==
+X-CSE-MsgGUID: oxijncKESWGrWM3Nmh3rSg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,292,1751266800"; 
+   d="scan'208";a="176956913"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by orviesa009.jf.intel.com with ESMTP; 25 Sep 2025 09:25:53 -0700
+From: kan.liang@linux.intel.com
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	jolsa@kernel.org,
+	alexander.shishkin@linux.intel.com,
+	mark.rutland@arm.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	dave.hansen@linux.intel.com
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH] MAINTAINERS: Remove myself from perf_events subsystem
+Date: Thu, 25 Sep 2025 09:24:28 -0700
+Message-Id: <20250925162428.3516894-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: Re: [PATCH V3 0/6] perf/tools: Add interface to expose vpa dtl
-From: Athira Rajeev <atrajeev@linux.ibm.com>
-In-Reply-To: <ac85151f-21e0-4a98-96e6-8153d0159915@intel.com>
-Date: Thu, 25 Sep 2025 21:51:19 +0530
-Cc: Jiri Olsa <jolsa@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Aboorva Devarajan <aboorvad@linux.ibm.com>,
-        Shrikanth Hegde <sshegde@linux.ibm.com>, hbathini@linux.vnet.ibm.com,
-        Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>,
-        Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
-        Tejas Manhas <Tejas.Manhas1@ibm.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6BB167B7-6479-44E7-9175-E67E500DB9E2@linux.ibm.com>
-References: <20250916052536.93911-1-atrajeev@linux.ibm.com>
- <ac85151f-21e0-4a98-96e6-8153d0159915@intel.com>
-To: Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-X-Mailer: Apple Mail (2.3776.700.51)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: biCr0rqG765JJcxil91zs-AIYvTzUvDY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwOTIwMDAyMCBTYWx0ZWRfX9eJepzwrR6vn
- nCSAd0dschZgUjv5BZtO4Yg6MR5Gl/7cPNH53ivLxOnHXGy2Bh9CBNPhPkGpQ1jYxa+vLBKyU0M
- P4uHNzX0k5vZ4fowaS7lJinXwkRUb8ilVdeCabmKMb4Em+J6FgFpJUBfo6HahXrZW/YiYV/PSz0
- 8+DLhZF02ArxoPlA1pvFP22+9UCvEeeMTTitEwlQzCWqnFZ2ktNFguQX3E2qT2SGwkD+pqs8c7W
- SBpXR0MSEzEN3k/R6qoWVx1LEkuphOvrAHxTXI9ONfK01bk0HyPPXmGzHSDbnG/BlY4l0Mhxybe
- 5X4bILZZ3fJc9InUzPKq7QR7VKUNcnoN7K/1/3r4DWDckmCg62OWO9J7N49BMnlU1w74sTQnh1M
- zU1ljrQk
-X-Authority-Analysis: v=2.4 cv=XYGJzJ55 c=1 sm=1 tr=0 ts=68d56c19 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=yJojWOMRYYMA:10 a=QyXUC8HyAAAA:8 a=9a-m9Z7WuIiSYxGGx3EA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: ZEZYSBFwn1R1TnxEf7Us3v0PioL1MvtV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-09-25_01,2025-09-25_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 phishscore=0 clxscore=1015 adultscore=0 malwarescore=0
- suspectscore=0 impostorscore=0 priorityscore=1501 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2507300000 definitions=main-2509200020
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
+From: Kan Liang <kan.liang@linux.intel.com>
 
+I'm stepping down as the Reviewer of perf_events subsystem.
+It has been an honor and a pleasure to work with everyone to improve the
+perf_events subsystem. However, due to personal reasons, I have to leave
+Intel. I believe it would be difficult for me to continue in this role
+any further.
 
-> On 17 Sep 2025, at 11:28=E2=80=AFAM, Adrian Hunter =
-<adrian.hunter@intel.com> wrote:
->=20
-> On 16/09/2025 08:25, Athira Rajeev wrote:
->> The pseries Shared Processor Logical Partition(SPLPAR) machines can
->> retrieve a log of dispatch and preempt events from the hypervisor
->> using data from Disptach Trace Log(DTL) buffer. With this =
-information,
->> user can retrieve when and why each dispatch & preempt has occurred.
->> The vpa-dtl PMU exposes the Virtual Processor Area(VPA) DTL counters
->> via perf.
->>=20
->> - Patch 1 to 6 is perf tools side code changes to enable perf
->>  report/script on perf.data file
->=20
-> For all patches 1 to 6:
->=20
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ MAINTAINERS | 1 -
+ 1 file changed, 1 deletion(-)
 
-Hi All,
-
-Looking for further comments if any on this patchset.
-The kernel side patches for this feature which was sent as separate =
-series is pulled to powerpc tree by Maddy
-
-If the tools side changes looks good, can we have this merged to perf =
-tools tree ?
-
-Thanks
-Athira
-
->=20
+diff --git a/MAINTAINERS b/MAINTAINERS
+index fe168477caa4..2c788294cf84 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -19759,7 +19759,6 @@ R:	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+ R:	Jiri Olsa <jolsa@kernel.org>
+ R:	Ian Rogers <irogers@google.com>
+ R:	Adrian Hunter <adrian.hunter@intel.com>
+-R:	"Liang, Kan" <kan.liang@linux.intel.com>
+ L:	linux-perf-users@vger.kernel.org
+ L:	linux-kernel@vger.kernel.org
+ S:	Supported
+-- 
+2.38.1
 
