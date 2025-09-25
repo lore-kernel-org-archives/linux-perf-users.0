@@ -1,162 +1,110 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFC1278761
-	for <linux-perf-users@vger.kernel.org>; Thu, 25 Sep 2025 08:48:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C12E26F28B;
+	Thu, 25 Sep 2025 10:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758790124; cv=none; b=K9KubKZsHZJOjAS+/G7D943BvvhnCiUSRMbZ4CbjUes1UfDJrZcLBHpNR/UWGoBKML9CJVhiNqDYJe39xpqNrXPh+kIKdnllOZf1Bw9+CGBS6cWUEvj70s4uLvscWpjjpEO/WpLKUP8ci8I5Mv7xTI4X0W1+/oomorTTenLeWHQ=
+	t=1758795998; cv=none; b=gjMNGq4F2KcXh81HR1HlslXwRxZJNB2aojlknrJOUAAfF6fiRGmnXaj6XcugRrAVJuPArvCyVow6ooNkTEzfodAgo7NafmcMA6vGwfGi7tdmrgSRmLOJslssknL39SvunwGtJhIMyaUTKG2rDNYVtEbBp5cQhUWs5nAnijouaLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758790124; c=relaxed/simple;
-	bh=rfT/UnolT2+BKHZylLOfQE/YMmzeQ4dYHqdSX/rrlS4=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=vEd0Z03xqnVpPFWDz5v8Kisqu6w54H4yoos3SwFnExYiSoWKFcrVroYmGVUKkFkL0/CgfF9sIQqSmFbN0f10frgfb7gW44IBMkkkrEo0AtKpgZNuHPvIwbKpu8B33g2ewKubavwF4A7wpNqMK1qSzrUdXIv7RYH5uOLRUt6W4Ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=RpkcPUG6; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="RpkcPUG6"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7704f3c46ceso755733b3a.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Sep 2025 01:48:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1758790122; x=1759394922; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0Ub+joKWJDAfsvLrnMb0mGFn8U6flakDwqgSsOBFKpo=;
-        b=RpkcPUG6t0yNyFnUytqgxLmzHVC03pRmJ/vSNCJYoQET1G6g+d53uTN3kKT8WmFYIf
-         ZBJC4E2SIfaTdNms3twzjbtBx5BTjxtZUlVlJkyScT0pPGri61rDlvzXSg6HqDZj+hB1
-         HiIClQZXiZzYEW2hu+P91Ncqsbn1q3SpJMAYAWEc67bml/UXW1MBxWeKF/ReZ3JMywtD
-         sP9oWVNFEahEEqA+/12mzuPUldym8AKYqvtWj7dgLJF1CufwzrtAJ13bu9KDqOv9M21h
-         w683IAfMSGN/T99F2SIjjytqGSdAKJSBZ0mMG4WtQxIbsFoOSmDpiLRCZwuD3F4foFVe
-         FMaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758790122; x=1759394922;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0Ub+joKWJDAfsvLrnMb0mGFn8U6flakDwqgSsOBFKpo=;
-        b=Uhj0qY5WMAcJWJYJQfPMXZvutnQO0Ua/EEoVLCj2xMOKEWsQIOd/RwYk927PzE6dcP
-         4R11hBEkRc94BYowFgU17cBtIaVLDdRyurSfCNSp9NkN9XXdyqjMp6x6ySMoUklMLQDz
-         RPp72g6b0qV8k5KBVosye6JSqZ7bd4JfBeNFZTSncmlYVlECVFO9MxjQ5lxKz964aI1Q
-         Ago1vUXH7vNDNjudM9WXweoDRd1YOD8+nILRmXTBRB6INK2HKYCvCFQQVKompmdmB1uK
-         eJrfHChtliYKL11IAN2OiHBbzutQ8KBpMMW4laLZeGP37b/xCFMPVwJ0jw+KLTJHHIhk
-         jCnA==
-X-Forwarded-Encrypted: i=1; AJvYcCUpKq9wlwYnH15xvNyrf+krVv0EhZc3kMZsmMstYsvdo0leTGTeUhb8lY9qj5gddPcQaD8pS0BWnOjZvX55765i@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuBnhXlRE5k0iHySVoOP3393McpmtCAnuaDNQuVT2UA4z9Z5K9
-	6eO0jGl2Jz8AoVOyenwHNvhfl/CAZtkJK5fv/KzHoJ2Ec/bIa3BG1jhQKLsG9jbGoYA=
-X-Gm-Gg: ASbGnctJM0YaFomE5BSkGYKTXdhtLfcTo9pb+1PWs+FlU+sm1eaFkQ6fhHodeYNNrQg
-	cTrl0LToDpD4XnCsfoyGC0JbQixKMTkYfcPaTBUVTDlnAZoafC120NTeojhX+rJt2JEhO8PX0Iz
-	IJLF8oHE9C1A7lF7MMA+BDxYmQhE5vjUSmJZItk+d4ti8qFshq7/HEQE20ME/fTQ/es7sX4c/kb
-	Jjw6/uHDYub/XdbjpK+fFQrlH8+ParpDfV6jb0Ni6A3NHK6uHY5WURNZHrVa90u5B7quoLbIOSd
-	muuKc4Xui8noKO3+ncJ1nKfDTKQNGw4pzY5t0PU68Ej0ts6/YkLhL96kLTlU5lA1jm3bRQxZhf8
-	VrXhBdcch0v4AqSt3QJ75k86t7kn/90fMlwqRm/0ZKfedxNq6gjLUU12/nCJH
-X-Google-Smtp-Source: AGHT+IEGSkHjuRa7OGjamv0g/2mmAckOVuB2U/CUDAe2j089bjTc0cZKoTa5Cf1LNp+M5twG0RcAdQ==
-X-Received: by 2002:a05:6a20:a127:b0:220:10e5:825d with SMTP id adf61e73a8af0-2e7bfc1d570mr3624129637.8.1758790121907;
-        Thu, 25 Sep 2025 01:48:41 -0700 (PDT)
-Received: from L6YN4KR4K9.bytedance.net ([61.213.176.10])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-781023ec6aasm1321867b3a.46.2025.09.25.01.48.32
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 25 Sep 2025 01:48:41 -0700 (PDT)
-From: Yunhui Cui <cuiyunhui@bytedance.com>
-To: akpm@linux-foundation.org,
-	alex@ghiti.fr,
-	anup@brainfault.org,
-	aou@eecs.berkeley.edu,
-	atish.patra@linux.dev,
-	catalin.marinas@arm.com,
-	cuiyunhui@bytedance.com,
-	dianders@chromium.org,
-	johannes@sipsolutions.net,
-	lihuafei1@huawei.com,
-	mark.rutland@arm.com,
-	masahiroy@kernel.org,
-	maz@kernel.org,
-	mingo@kernel.org,
-	nicolas.schier@linux.dev,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	suzuki.poulose@arm.com,
-	thorsten.blum@linux.dev,
-	wangjinchao600@gmail.com,
-	will@kernel.org,
-	yangyicong@hisilicon.com,
-	zhanjie9@hisilicon.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: [PATCH v2 2/2] riscv: add HARDLOCKUP_DETECTOR_PERF support
-Date: Thu, 25 Sep 2025 16:48:06 +0800
-Message-Id: <20250925084806.89715-3-cuiyunhui@bytedance.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
-In-Reply-To: <20250925084806.89715-1-cuiyunhui@bytedance.com>
-References: <20250925084806.89715-1-cuiyunhui@bytedance.com>
+	s=arc-20240116; t=1758795998; c=relaxed/simple;
+	bh=XU+JsDm+NACkjK6KgkBIoEW0aBxNnr3czBMcHn+kAFw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bdZ69WUZwZiwmsuaxKIu+5YUYCbE4BZPeKRrCnz7weosMu9iSX71l0YqBd/7/ctn7x3DITA20BTA9LrOPWW9UbMFm6IMsQQUvuGDLE+klHbAVnUGBpIqE/niVrjZ3Z24PwhRIFeHjLDH54Rn9AfbXamdGYhBnZvObJ1mYOAmbl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38F8F1692;
+	Thu, 25 Sep 2025 03:26:27 -0700 (PDT)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C61A93F694;
+	Thu, 25 Sep 2025 03:26:31 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH 0/8] perf build: Support building with Clang
+Date: Thu, 25 Sep 2025 11:26:24 +0100
+Message-Id: <20250925-perf_build_android_ndk-v1-0-8b35aadde3dc@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIANAY1WgC/x3MQQqEMAxA0atI1lOoSkC9yjCU1kQNDlVSFKF4d
+ 4vLt/g/Q2IVTjBUGZRPSbLFgvpTwbj4OLMRKobGNmj7Gs3OOrlwyJ+cj6SbkIu0GrQ2YBvYdz1
+ CiXflSa53/P3d9wOY32O2aAAAAA==
+X-Change-ID: 20250915-perf_build_android_ndk-500b53bea895
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Quentin Monnet <qmo@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ James Clark <james.clark@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ llvm@lists.linux.dev, bpf@vger.kernel.org, Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1758795991; l=2161;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=XU+JsDm+NACkjK6KgkBIoEW0aBxNnr3czBMcHn+kAFw=;
+ b=VaDG4JssfwIwKfVis2IGMb3HXC/byRBlxX87NQBY9L6PLPT9dhDxgMh51YLs9KIYrXvqTwL3n
+ FKBnLR7EDZ2BFkIHJi1P+0LLnQTCwKIVweN//eHuFHJ/ocslDjdWEVh
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Enable the HARDLOCKUP_DETECTOR_PERF function based on RISC-V SSE.
+This series adds support for building perf with Clang, following the
+discussion in [1]. Because the Android NDK uses Clang by default,
+enabling Clang builds naturally covers Android as well.
 
-Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+The series is organized as follows:
+
+  - Patches 1–2: Fix two bugs found with Clang.
+  - Patches 3–6: Address Clang build warnings. Because these warnings
+    do not break the build, no Fixes tag is added to avoid backporting.
+  - Patches 7–8: Enable Clang in the Makefile and update the
+    documentation.
+
+Testing:
+
+  - Clang 15.0.7 on Ubuntu 22.04.5: native and cross-compiling (aarch64)
+  - Clang 18.1.3 on Ubuntu 24.04.2: native and cross-compiling (aarch64)
+  - Android NDK r27d (latest LTS): cross-compiling (aarch64)
+
+[1] https://lore.kernel.org/linux-perf-users/20240715143342.52236-1-leo.yan@arm.com/
+
+Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- arch/riscv/Kconfig           |  3 +++
- drivers/perf/riscv_pmu_sbi.c | 10 ++++++++++
- 2 files changed, 13 insertions(+)
+Leo Yan (8):
+      tools build: Align warning options with perf
+      perf python: split Clang options when invoking Popen
+      bpftool: Conditionally add -Wformat-signedness flag
+      perf test coresight: Dismiss clang warning for memcpy thread
+      perf test coresight: Dismiss clang warning for thread loop
+      perf test coresight: Dismiss clang warning for unroll loop thread
+      perf build: Support build with clang
+      perf docs: Document building with Clang
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index badbb2b366946..bb4e8c5a18717 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -186,6 +186,9 @@ config RISCV
- 	select HAVE_PAGE_SIZE_4KB
- 	select HAVE_PCI
- 	select HAVE_PERF_EVENTS
-+	select PERF_EVENTS
-+	select HAVE_PERF_EVENTS_NMI if RISCV_PMU_SBI_SSE
-+	select HAVE_HARDLOCKUP_DETECTOR_PERF if PERF_EVENTS && HAVE_PERF_EVENTS_NMI
- 	select HAVE_PERF_REGS
- 	select HAVE_PERF_USER_STACK_DUMP
- 	select HAVE_POSIX_CPU_TIMERS_TASK_WORK
-diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-index c852f64a50221..0c7c5924687c9 100644
---- a/drivers/perf/riscv_pmu_sbi.c
-+++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -22,6 +22,7 @@
- #include <linux/sched/clock.h>
- #include <linux/soc/andes/irq.h>
- #include <linux/workqueue.h>
-+#include <linux/nmi.h>
- 
- #include <asm/errata_list.h>
- #include <asm/sbi.h>
-@@ -1192,6 +1193,13 @@ static int pmu_sbi_setup_sse(struct riscv_pmu *pmu)
- }
- #endif
- 
-+#ifdef CONFIG_HARDLOCKUP_DETECTOR_PERF
-+bool arch_perf_nmi_is_available(void)
-+{
-+	return IS_ENABLED(CONFIG_RISCV_PMU_SBI_SSE);
-+}
-+#endif
-+
- static int pmu_sbi_starting_cpu(unsigned int cpu, struct hlist_node *node)
- {
- 	struct riscv_pmu *pmu = hlist_entry_safe(node, struct riscv_pmu, node);
-@@ -1618,6 +1626,8 @@ static int __init pmu_sbi_devinit(void)
- 	/* Notify legacy implementation that SBI pmu is available*/
- 	riscv_pmu_legacy_skip_init();
- 
-+	lockup_detector_retry_init();
-+
- 	return ret;
- }
- device_initcall(pmu_sbi_devinit)
+ tools/bpf/bpftool/Makefile                         | 12 +++-
+ tools/build/feature/Makefile                       |  4 +-
+ tools/perf/Documentation/Build.txt                 | 18 +++++
+ tools/perf/Documentation/android.txt               | 82 +++-------------------
+ tools/perf/Makefile.config                         | 32 ++++++++-
+ .../shell/coresight/memcpy_thread/memcpy_thread.c  |  2 +
+ .../shell/coresight/thread_loop/thread_loop.c      |  4 +-
+ .../unroll_loop_thread/unroll_loop_thread.c        |  4 +-
+ tools/perf/util/setup.py                           |  5 +-
+ 9 files changed, 81 insertions(+), 82 deletions(-)
+---
+base-commit: c17dda8013495d8132c976cbf349be9949d0fbd1
+change-id: 20250915-perf_build_android_ndk-500b53bea895
+
+Best regards,
 -- 
-2.39.5
+Leo Yan <leo.yan@arm.com>
 
