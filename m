@@ -1,488 +1,388 @@
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012022.outbound.protection.outlook.com [52.101.43.22])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA6227F4CE;
-	Fri, 26 Sep 2025 07:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.22
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758870793; cv=fail; b=L/YlxWMHeZgY0fqupYO/CfXUjsXy3Q3gt3PKaNuG2kTbBB1JgnA7n9hJDFED7bVD8Ll07ZHOjGd5xRM2eBmNlo2SGyztRudYTeHv86j5KBAaEvZYC6E9i+Pq8DKaQ/YaxYtsxjh5ZmLiwj9yhdt1BBso4C+trD4OQ/sJkdyhsAU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758870793; c=relaxed/simple;
-	bh=KoLXqJMKnPNS0wWvOb1w1E4jMz19Cy+J1BHiemsjprQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=L0nXJxrzOe6Yr5qX001CbZvtFrTDQzIbT/GocWYXj6SxNwI9lrNz4AlWjXt2FoMtrUKow1ITaHVRuEriio5ys+iNN/zOUskTt2aW7NhjaQ80YQPTGfuMVrXUr65i2ZHoamc/uCH+FXZy1b6kHHL/FoYuSjejYy03uIM5mvEi4vk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AIS8tK5E; arc=fail smtp.client-ip=52.101.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7B9279DDD
+	for <linux-perf-users@vger.kernel.org>; Fri, 26 Sep 2025 09:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1758877261; cv=none; b=uhGkWNmXcr+ASi6Ota3BMpaYS5OhYkR8rrVAAQrCLG7P79gT6Swhbb+AxHnmQyFVOBA2ObRPpydJQ+Dpe5WY+wtR+zi6q+EkFhLszhD2GpRU9pkPKyvKt1FJOZisRzUQMs82WJDS6M5+6cRV5UG6EymlIYLJRxqIV6al71lC4Kk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1758877261; c=relaxed/simple;
+	bh=2wA0d16u/6KCj+Abm5zr10wxjk/Nv6UemcjdDLNfRf4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Mf3JOS+Qv/Y4lbDzhkqeMYN85cKgWjUt6BUq50AHzKuxe7TxzX3nyPFP3tpZ7CRVz5uW9eiNMvx1mR3Jwvp5pCu7ZLOOm1+blPF8ONe2owKdz8Mqtwy5wzVnvwKXv5RBbjqGVbURQjAU3z1mWdrR8NLEvu55iLaefQKxuNGVr7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ULJO/MAL; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AIS8tK5E"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nzua3Sox0lAXBVSaPMqEk8USCdF32UzaJhFu78/PtVrItVuIh+0/zLUZ+YTrOSMlnGcjBrkpd+FjdJCz8PZ/XRAk6ldKOKx3L8Pydahzj3RZcc9kMUyLGx/avXtCrWo6ZHstjJQ79RWLmJeiNWUjQfENJKFjC/dOUqxkWSGiXOesFM5YySs7RUJNKo93W6ySkmzgTRNjxgeDSIL2qdl+VluH9qlWSrplvx/lTMzuQdGeAPQuHg93VwW4AZ1PHvT0DhKKHTmg6R3Tq4/1YN3oK75ct10mqDyu69LPJOwF6/S9ZJPVOSwdbrS3y8fIPuo1wmhTyObJdaUwBHdC/AR50Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2vpVfG7RLRw8H16WuZjgOBjnzonFtRr6h55U0N8epS8=;
- b=eeoYeRW248aF1M5KTe1owC9KaEIg2lVfvdIsYrcy80VDgl/JGJU/t53Kbb1VkJjZYyyu2mIz2mwbkNrGKnUHjiuU8Jmx5oH70KbXpvHVAHy9+eoQ7j5FQaU77YhcRaauOx611uOpL3jMUHpgWyksvh/OXUMhIrGhu3ThsOLmfxTS52xfb1ADNBmDnVeuemQvHMnrkpSTX9Nf2WA3vCofyZEIGnm/6c/8vshMVapVOZll9GcW00YxS90cfyxlWxKdAviboBy2THCUHZkinnMc2z6laydgb2lkYCByc/YNwFq5nXU1hBs7e3/OzcVC5dstF0qYD1lpeZEmgkewcahjYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2vpVfG7RLRw8H16WuZjgOBjnzonFtRr6h55U0N8epS8=;
- b=AIS8tK5EUfT6YP9QFpeCeFtNCNYN9zcHWPhDgbDJzlPtTMg5FBP6f6O47OxgYteNgHcGwT8R/aVI9RSlJWpkt4xs/WCkdaauPf8H8sOmKbLlgsgGQXuNd3lF/m4dreb7wNC/oGf/NwPQwnGkc/iK1+jPs0YojrV9QcsgiHIlBVk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
- by PH7PR12MB8121.namprd12.prod.outlook.com (2603:10b6:510:2b5::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.13; Fri, 26 Sep
- 2025 07:13:08 +0000
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::2efc:dc9f:3ba8:3291]) by PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::2efc:dc9f:3ba8:3291%6]) with mapi id 15.20.9160.008; Fri, 26 Sep 2025
- 07:13:08 +0000
-Message-ID: <f896966e-8925-4b4f-8f0d-f1ae8aa197f7@amd.com>
-Date: Fri, 26 Sep 2025 12:42:50 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 32/44] KVM: x86/pmu: Disable interception of select PMU
- MSRs for mediated vPMUs
-To: Sean Christopherson <seanjc@google.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao
- <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- kvm@vger.kernel.org, loongarch@lists.linux.dev,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Kan Liang <kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>,
- Mingwei Zhang <mizhang@google.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Sandipan Das <sandipan.das@amd.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
-References: <20250806195706.1650976-1-seanjc@google.com>
- <20250806195706.1650976-33-seanjc@google.com>
-Content-Language: en-US
-From: Sandipan Das <sandidas@amd.com>
-In-Reply-To: <20250806195706.1650976-33-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0184.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:e8::8) To PH7PR12MB5712.namprd12.prod.outlook.com
- (2603:10b6:510:1e3::13)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ULJO/MAL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1758877258;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1ShGXGHPdvYlBe5RKUUi4Bd0ovd8HxH8J4+xlI4KkhA=;
+	b=ULJO/MALAs1ZcXAxuOLpTY39cV3NlAw/evOxTJKxu8B7nrqUzvVHXLaZabgxDAeSfcIQVm
+	ZaqqJCdPSF48fFykJIgkjOoprSE+jaBZUIlIvWYQRtn1XIqJ8H8GI6S0UJjSHZ1OsgGBVT
+	awdksZY31Codo1zusfILMPwIWl8NVCI=
+Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com
+ [209.85.210.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-261-j10fn44CM8iOq0stbZ7_Bg-1; Fri, 26 Sep 2025 05:00:56 -0400
+X-MC-Unique: j10fn44CM8iOq0stbZ7_Bg-1
+X-Mimecast-MFC-AGG-ID: j10fn44CM8iOq0stbZ7_Bg_1758877256
+Received: by mail-ot1-f69.google.com with SMTP id 46e09a7af769-74a30209044so3579264a34.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Sep 2025 02:00:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758877256; x=1759482056;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1ShGXGHPdvYlBe5RKUUi4Bd0ovd8HxH8J4+xlI4KkhA=;
+        b=PxA5Y+PZBCViPXzbJjiwMyL0IW6nfFJ+J2zaliP8IXztOqPbtmO8wKOnN/mIgc9efB
+         VCf4Hcgo/GRvz2+LetRAwtnZGc5tzdHIBYvrWRNbfe5Idj5SRlSdfpGq0buB/GmyDy5D
+         00NYQYbElj81ea8R4CesmYjoAZCCWT4gvBmUmAjFScu+b+RVFTZ2qRtYZMbGwtbfdKjA
+         SYBVKF9dIsPznjNXykaqOYtaRpOx0IQ20r8eQNYQ0ISY/NotsGK/XuEQjbZpQdNmbQ58
+         e0GWrw8wLadGqXgXHypxcm88Y6xJ/33H1qnS6CKWYVJ8jaLaR+4T/wV+EHUPPj4g5N1a
+         lZiw==
+X-Forwarded-Encrypted: i=1; AJvYcCVjCPFBSTl9X/KG0yYrIW6l/D6Y9NrbXFddtRRCOMhUkPe9UTVLen7y+AQhZpDjHkZ8SYXWtb61DH6rRPdeC0s8@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5Pp+FfMo6k5SsTT+IsdKVX7F/5s7D96gSe3QvS4ZeYsb+jvms
+	LPg0mbqBU0ykJrB+siq9esmmktDaDR/HwlBi7X+4PgwtOzbqYYNSO3ihGGnsgk1mO8koWpq3IWL
+	CmbEliVHeRHK0NF+TK/a47xFO5PrvDaCNvcqoI5bAvGyZK2MznuFHYGwDDmZf/fY5y9dFIUgjUG
+	FN/fuaeE5kpkqkRs7VvHWjdd0oYYUIJRmOm6yF1i8qz4AKyQ==
+X-Gm-Gg: ASbGnctCvBolL5p6DV2TolSoOJi0iW+CEkJQmkPcImhIx+KKIemdBH1N758Dg54m6e0
+	P/g8UxwUYd9zYgja7Mv57U4kdVb2FmmpT0CStavtvwhH3GXnyyoufuAJMXi2OowM4Q/h3Hkb+VD
+	9r+0DgNfP1+vGpCX0OfjIFHw==
+X-Received: by 2002:a05:6830:25d6:b0:790:78e6:8450 with SMTP id 46e09a7af769-7a03d122795mr3216497a34.6.1758877255709;
+        Fri, 26 Sep 2025 02:00:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEZxy8k2uUNsp1XRNbnNWcIuiqAPl8O62jVNCJNNdDph9uiBGilSEFZNffrSh/bpMVUsWAWwFTFyXQs20a4HOw=
+X-Received: by 2002:a05:6830:25d6:b0:790:78e6:8450 with SMTP id
+ 46e09a7af769-7a03d122795mr3216478a34.6.1758877255212; Fri, 26 Sep 2025
+ 02:00:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|PH7PR12MB8121:EE_
-X-MS-Office365-Filtering-Correlation-Id: cc94f5c9-f0ee-468d-94f6-08ddfccc24b8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|921020|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dFhROFNlSkYxbWs3SFJnQXVmMVpDZkJ0eStKTFBxQXBPczFoNlhrcEVnclM3?=
- =?utf-8?B?UFR2NmR0bjdEM0xKNUJZMVZHNDBKWUczcXM5MTB0QzNOZzdDVXdOK1dhTGRN?=
- =?utf-8?B?Y0tQM1RBVGl2M3ZaMU9IMXpyVFBsS3hVQkpGaVpPOW83SURvdjVGa3lySjZJ?=
- =?utf-8?B?QmxtRlRiUHhxRHlETjR5UjEyNnkwVjl1d01xRE9ZRXMvNEpSQVgxS0NEeGZE?=
- =?utf-8?B?cThNa1BUbXZUSGJYazVzZXBDMlMvUUR4TWhEVjRuWXo2eStMWU9yV3ErYTR5?=
- =?utf-8?B?eVBOYzMyd2dmMjd1OXZua1h0N0dId2Y5WGlibVZ4Rlg1ZUttanowZzNFeU5j?=
- =?utf-8?B?M0czaUQzUUdraDNDMjJ4NTRmc1FJdEVLbHdIckFGZmJ2YUkyMXlrQzNSSTAw?=
- =?utf-8?B?U0hJYWF5TUxxRFFjWTMwT2pqK0JjUmRMYnY0NmhiVlR4VVhURm5QdHYvT1BR?=
- =?utf-8?B?NTBTZDRFeEk5SDl3R1dKekFFNlpueHhqK3NMSEt0NXRPVkVuZ2JWVHpRVy9R?=
- =?utf-8?B?SlA3M3VRbCtjWTJMdVJkSU1lU0l1VzdJNDFvRUdvTWkrRFJWemFTZVhvMTA1?=
- =?utf-8?B?dml0dlM2QXVXa3BqdDZQU1pxNUh2U2dvRUpxS3FFQUFlamRuR1VWRFU3bXhN?=
- =?utf-8?B?U3VSL3FOUnhtU212bG1zMlhMUjcvQmhzWjArQWh3VEp6NVFqRHRzSERUSTd6?=
- =?utf-8?B?bVRkei9vYkxId0ZuWE5nOVZtMjNTaUxBRlJKcVdOUlQ3b0lraVZwMlRWWEdH?=
- =?utf-8?B?WEJTT2F6NEJuSkhOWWxsMThiNVd1VFVVNzlBbG5zMkpieVNtdGNGcGd6dG5T?=
- =?utf-8?B?cUlUSytWOS8zbk84cFRXNmJQVzlidkZnM2Rwak1xaDk3QnljWjVENUx1NmRN?=
- =?utf-8?B?SEt5UkRxZ3pYSkNybXRkLzZJVkpqS3duZ3h2WllUU1AyZE5KcDVUKzd0Kytn?=
- =?utf-8?B?ZWhMaWdBSmsrZzVJcjMyKzd3QURra1Y2bS9rMThCMlI3MXJGUUhWNGJFWnox?=
- =?utf-8?B?SXpaNXhkYnc5QnBHVmordnFkWis1ZG4yU0lvdXNUZEZ5UUtKYTBlOW5xS2VK?=
- =?utf-8?B?ek1OeTVXUHlkRFg5MGhGTlBzdVpTWm4yZS9DQzZKcDRVbjlwZEpseTUzUWx1?=
- =?utf-8?B?RXhabXJuQ2JHTHNianpBUnQyQ0tSQzFiVXp3UkN4ajEyanVlbnBac1BDSnlJ?=
- =?utf-8?B?OWQrRGFYSFN0aUQ2a2F5L0tZaGdOVEFaengrbnhBU2d1M3hpUGhGTXZUS0pQ?=
- =?utf-8?B?U2NYcEwxRmZ2Y0pjNER0Z1RiN2k4azlDbHowMDhlbm9xTGZoblhCL1J5QjV3?=
- =?utf-8?B?U3EwaTVnZWVib21JUGFwUGxPUjVESU56SzNCaHc4QjNCT082RWJTV29CYjNZ?=
- =?utf-8?B?OHF0SFIrbFdEb1Z6TDVyYi84SElGTjRNTzI5ZzJiclpPRlI0ZExKeWVOZDhv?=
- =?utf-8?B?SzN3YUVQejlKT2ZxQVY3bjJmemp5c0RJaXk1RVJSOHFCdHpVNjlKR3ZHb3Yy?=
- =?utf-8?B?aWZBL0ZMelRhZnpuOHBNbmMxWTRjSGtRQ0xZQlVybE01WGdiNmJub2trOUhI?=
- =?utf-8?B?NjJLTzlXcm9hdEpYNXlXdyttMEFUN0dTMW93S3BLWVM3WGJxd2plRXk0QWJI?=
- =?utf-8?B?Y3dGYUdMcGE0bGNLWGFXTEtCMUU0UG4xQml0d3VqZ1BVS0xkbEp0ZDcyN0hL?=
- =?utf-8?B?UGdnblA4Z3FoaWZyRnhlME9KVS9BMTkvU3ZvTTNhNDYveUNyeDNlOEJHT1VU?=
- =?utf-8?B?WUVFOFdYNXZ2Q1ZjQVg5MlI0TlJFL2dzdVR1cC9XdWhjc0R5TGxRQ2tFNTFO?=
- =?utf-8?B?TkxYaWlYNlhhZHhOdjd5bDNJYUxLdXp2MnlyRDArYTZRZ1FXSXVVak0rRk5l?=
- =?utf-8?B?cGl1OEFoaW5NcnFhY0NXMUZqcWRxa1Y4MUQ5YVdTREVRcnIvNjA4RU41UmRD?=
- =?utf-8?B?OVd5ZmxlSEpMMEF0TEpyL1hqWThVUE1mVUVNK0xXR25JS1duZURJWG1ySFJN?=
- =?utf-8?B?NDcxSFhVOXZRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(921020)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?REZJSXdZTStoMG5pdDZTejQ5ODZ5Qlh3ZnM0ZytUSnlMZG9zQzBCTW9SVEo2?=
- =?utf-8?B?WUZVckpEOWV5TmVpWkZZYjBHbzM5ZDNSNjd2ZzFnQ2I4a1dndUNIK1BIVEN5?=
- =?utf-8?B?MlF3R2NlVTVMM3htR1d4VTNkTVpBUkc3RVR3SmxnV0lsL0N0ems4bWdPVlhl?=
- =?utf-8?B?UlRiZ2M2emF0WXVtak5mSWxaRittRnZndkgyWWw0Vk1PcXZmNkVJWWJNcEJz?=
- =?utf-8?B?S20zbGRLNnI5Wi9xZGh2U1ZIMHQxRTV0VUpQbVQ0YUVCc0k3WDR5Z2x0bE5P?=
- =?utf-8?B?Um9pQmUwZk1BdFFOSXFHeEZvYjl0L0hrajZEdGVHV1dicTBzUnhCdkJTWWdz?=
- =?utf-8?B?aUwrUllzSktSeVY5dFRZYng1bEFlNGMwMW52U3R2NmFud0NVeEVKbUhkRmJk?=
- =?utf-8?B?Q2kvZHFoNW11UWlLTWVJRGdpMnpIM3FEUlBQOWhQOEM0VGNhakJqeHhxOTVF?=
- =?utf-8?B?VFNiUUFycnBXR0NILzJiU1JqSjdIMjc0RmpuSDZkSjNYenVwemtpOFRuVjJn?=
- =?utf-8?B?MHZWZFo0TUV0ek8xYlZDa2dwTzZnZEVpQkYrNm4vZmY2UG1YdjMvd0VST0NV?=
- =?utf-8?B?cmtXalJxbTJoR1MvSm9nUGVodzFoUkViMWZrRFk4SnhGQXJXeTNzWGV2c2lK?=
- =?utf-8?B?bzN1eExqd29IRHFPZk91bTRTUjJ6NFkrQjhkd0ZzZEZGOFFTd0M4RmNpSjhU?=
- =?utf-8?B?UnFweXZoWGxDa1AwNEJKcXZpREhGSnZKS2dWZVVIRHNDNDRpWWY2Nk9Qa0Y4?=
- =?utf-8?B?NFdzbDhXZUpZTWVIcGFrNyswblBhWDJPK0NHNm1pNXlrS1Z1WUlqZ0Zhayt1?=
- =?utf-8?B?d2xhYkhoQ1NWODJrUHhLV3BNdVBiMzM4RWZwMGo2Y3BYVElwMllJNkhiWlp6?=
- =?utf-8?B?a2J5WHk5M3lhbFZib2I2SzV3TDEyc21QKzFNdnlBcEQzbkdiNGN0U2ZlaGNR?=
- =?utf-8?B?b09kU1puQkwvM1VQbDVhcXg5NWZkaWZDcy9JUithK0RNNGRqWVZ0bUhjcCtX?=
- =?utf-8?B?VmNlS25mV1ZJTm1Wb2ZFR2orTWRkZklKcVJoVzhlSGlpOER6Y0psZEtOTjhH?=
- =?utf-8?B?MzhPK0VHdWJZRTEvcHBsNWpKNGRZWWErdGIrWm90NU9MY3UxQ1JjZFdpRXBY?=
- =?utf-8?B?VXJ1QXNUY3hqeC9wcUxPRDBEYzdMVmZOZHd3RXNRUmttUTlIRk4rUHpYNlNK?=
- =?utf-8?B?TkEwMmtzSlQ3SWdqU2Qyd0lPRlpVWUxHQW9nUmdyeU5YcGpsWWI3bGZKL3JD?=
- =?utf-8?B?QVBtRjFzVmF0WkRsVkVhM3R0VGxjMG1vcGVVTEl6ajFZSHZXbzhKTzVGWm0z?=
- =?utf-8?B?b2ZmQkE5Q2ZDOEdVMTRvR0FNaWFSV1ZjejNpOGoveWdNT1FFWTA4eUVmL3hl?=
- =?utf-8?B?THQwdkM3UTl6S1RnTnQ3YTNnR0E4QlFWS1U5dnBUUjFKako3WjhXeXRJdnlS?=
- =?utf-8?B?ajdrcnZTVmJYY3k4RnpIOVNNc21pTHdZdjVTbDEvNFN3dGJHQldPeGE5MlJ3?=
- =?utf-8?B?NUNWL1ZtR3lTMzhMYXpLTmtMYm1lbW1aektVOGxqd285OUtzQ1g5U0Roa3Vo?=
- =?utf-8?B?VUJDVy9kK0h3cUY1TDR1c2kwbjNLMTlxV1RUMlBNa2RrSCtoKzQ5cThIWTJ2?=
- =?utf-8?B?V003VUlKVXJmY2lXYWxJcnpvaFlCakxnSVNpUFo1ZUM1N1JSSUlCODYxSHFV?=
- =?utf-8?B?eEFnZEpiOHQ4dm5rYVpxN24zUEdRZ1oxdGVhdTlMckJIZ2tvaU8zSnlFVGE1?=
- =?utf-8?B?NVJGL2VMVHpUcXNzODJTcFpMb2wyOG9KQWo3SDJqUnZhTk1xdytiZVZScXpX?=
- =?utf-8?B?U0UrTnJxckQ3bGpOUGxrRm5rNTd6OUt0bmVSU3E0QzN0NnYyR0J2ZTVHcno2?=
- =?utf-8?B?RFBIQ2x1cUFzUm8rdGQzWkd0UTgvYWlSRWlvelVMSzZRdVduWDlVZTdlb1l0?=
- =?utf-8?B?S1dhSkJGUXhGQnNGRWhNaDByUE9lVlhCdnJ3VElMUThZL2RLUnovaEc4YS8y?=
- =?utf-8?B?c2pVc0QrRmdaTXdFUUlVMzNva2ROYTllanhSMlZNRWV1aVZ0Y21HSVNqc1FR?=
- =?utf-8?B?OUZ0VFhadmN2U3ZocmkrNzhQOW5qc0ZtbDRrdnFMTk5IekN0L3V5SWJTVmhi?=
- =?utf-8?Q?dGMU2WIj7J3DZKmgi6VrmV7y2?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc94f5c9-f0ee-468d-94f6-08ddfccc24b8
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2025 07:13:08.0442
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3DOCVJ15s68FUHCLwewWv+n/BYJGdzjXwaWofriXgT00d0pCfmxE4y0lT7CTE/Q9MOuy/vImG91TiQBXnuCI+w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8121
+References: <20250918222202.1353854-1-irogers@google.com> <20250918222202.1353854-4-irogers@google.com>
+In-Reply-To: <20250918222202.1353854-4-irogers@google.com>
+From: Qiao Zhao <qzhao@redhat.com>
+Date: Fri, 26 Sep 2025 17:00:43 +0800
+X-Gm-Features: AS18NWAV1pmn_mwfn6L3-Ucum_4jK7MR8aU109NNkeDKqD7xSbvxIWq9Qew7oX4
+Message-ID: <CAATMXfnqCjxSV2wOqDJ9copKMWyR5hNe9p78kwtrn+W7UCV2DQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] perf test: Avoid uncore_imc/clockticks in
+ uniquification test
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Athira Rajeev <atrajeev@linux.ibm.com>, Chun-Tse Shao <ctshao@google.com>, 
+	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 8/7/2025 1:26 AM, Sean Christopherson wrote:
-> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> 
-> For vCPUs with a mediated vPMU, disable interception of counter MSRs for
-> PMCs that are exposed to the guest, and for GLOBAL_CTRL and related MSRs
-> if they are fully supported according to the vCPU model, i.e. if the MSRs
-> and all bits supported by hardware exist from the guest's point of view.
-> 
-> Do NOT passthrough event selector or fixed counter control MSRs, so that
-> KVM can enforce userspace-defined event filters, e.g. to prevent use of
-> AnyThread events (which is unfortunately a setting in the fixed counter
-> control MSR).
-> 
-> Defer support for nested passthrough of mediated PMU MSRs to the future,
-> as the logic for nested MSR interception is unfortunately vendor specific.
-> 
-> Suggested-by: Sean Christopherson <seanjc@google.com>
-> Co-developed-by: Mingwei Zhang <mizhang@google.com>
-> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> Co-developed-by: Sandipan Das <sandipan.das@amd.com>
-> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> [sean: squash patches, massage changelog, refresh VMX MSRs on filter change]
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+Hi Ian,
+
+I tested your patch (latest linux-next code + your patch) on hybrid
+CPU machine {CPU Model name: 12th Gen Intel(R) Core(TM) i7-12800HE}
+and failed,
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# perf test -vv "perf stat events uniquifying"
+ 95: perf stat events uniquifying:
+--- start ---
+test child forked, pid 21799
+Uniquification of PMU sysfs events test
+Testing event uncore_imc_free_running/data_read/ is uniquified to
+uncore_imc_free_running_0/data_read/
+Uniquification of PMU sysfs events test [Failed]
+# started on Fri Sep 26 04:49:54 2025
+
+
+ Performance counter stats for 'system wide':
+
+CPU0                 1.47 MiB
+uncore_imc_free_running_0/uncore_imc_free_running,data_read/
+CPU0                 1.47 MiB
+uncore_imc_free_running_1/uncore_imc_free_running,data_read/
+
+       0.000925108 seconds time elapsed
+
+Testing event uncore_imc_free_running/data_total/ is uniquified to
+uncore_imc_free_running_0/data_total/
+Uniquification of PMU sysfs events test [Failed]
+# started on Fri Sep 26 04:49:54 2025
+
+
+ Performance counter stats for 'system wide':
+
+CPU0                 0.59 MiB
+uncore_imc_free_running_0/uncore_imc_free_running,data_total/
+CPU0                 0.58 MiB
+uncore_imc_free_running_1/uncore_imc_free_running,data_total/
+
+       0.000969877 seconds time elapsed
+
+Testing event uncore_imc_free_running/data_write/ is uniquified to
+uncore_imc_free_running_0/data_write/
+Uniquification of PMU sysfs events test [Failed]
+# started on Fri Sep 26 04:49:54 2025
+
+
+ Performance counter stats for 'system wide':
+
+CPU0                 0.00 MiB
+uncore_imc_free_running_0/uncore_imc_free_running,data_write/
+CPU0                 0.00 MiB
+uncore_imc_free_running_1/uncore_imc_free_running,data_write/
+
+       0.001183888 seconds time elapsed
+
+Testing event uncore_imc_free_running/data_read/ is uniquified to
+uncore_imc_free_running_1/data_read/
+Uniquification of PMU sysfs events test [Failed]
+# started on Fri Sep 26 04:49:54 2025
+
+
+ Performance counter stats for 'system wide':
+
+CPU0                 0.29 MiB
+uncore_imc_free_running_0/uncore_imc_free_running,data_read/
+CPU0                 0.29 MiB
+uncore_imc_free_running_1/uncore_imc_free_running,data_read/
+
+       0.000710088 seconds time elapsed
+
+Testing event uncore_imc_free_running/data_total/ is uniquified to
+uncore_imc_free_running_1/data_total/
+Uniquification of PMU sysfs events test [Failed]
+# started on Fri Sep 26 04:49:54 2025
+
+
+ Performance counter stats for 'system wide':
+
+CPU0                 0.62 MiB
+uncore_imc_free_running_0/uncore_imc_free_running,data_total/
+CPU0                 0.67 MiB
+uncore_imc_free_running_1/uncore_imc_free_running,data_total/
+
+       0.000959074 seconds time elapsed
+
+Testing event uncore_imc_free_running/data_write/ is uniquified to
+uncore_imc_free_running_1/data_write/
+Uniquification of PMU sysfs events test [Failed]
+# started on Fri Sep 26 04:49:54 2025
+
+
+ Performance counter stats for 'system wide':
+
+CPU0                 0.23 MiB
+uncore_imc_free_running_0/uncore_imc_free_running,data_write/
+CPU0                 0.23 MiB
+uncore_imc_free_running_1/uncore_imc_free_running,data_write/
+
+       0.000775028 seconds time elapsed
+
+---- end(-1) ----
+ 95: perf stat events uniquifying                                    : FAIL=
+ED!
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# ls -la /sys/bus/event_source/devices/uncore_imc_free_running_*/events/
+/sys/bus/event_source/devices/uncore_imc_free_running_0/events/:
+total 0
+drwxr-xr-x. 2 root root    0 Sep 26 04:57 .
+drwxr-xr-x. 5 root root    0 Sep 26 01:49 ..
+-r--r--r--. 1 root root 4096 Sep 26 01:49 data_read
+-r--r--r--. 1 root root 4096 Sep 26 01:49 data_read.scale
+-r--r--r--. 1 root root 4096 Sep 26 01:49 data_read.unit
+-r--r--r--. 1 root root 4096 Sep 26 01:49 data_total
+-r--r--r--. 1 root root 4096 Sep 26 01:49 data_total.scale
+-r--r--r--. 1 root root 4096 Sep 26 01:49 data_total.unit
+-r--r--r--. 1 root root 4096 Sep 26 01:49 data_write
+-r--r--r--. 1 root root 4096 Sep 26 01:49 data_write.scale
+-r--r--r--. 1 root root 4096 Sep 26 01:49 data_write.unit
+
+/sys/bus/event_source/devices/uncore_imc_free_running_1/events/:
+total 0
+drwxr-xr-x. 2 root root    0 Sep 26 04:57 .
+drwxr-xr-x. 5 root root    0 Sep 26 01:49 ..
+-r--r--r--. 1 root root 4096 Sep 26 01:49 data_read
+-r--r--r--. 1 root root 4096 Sep 26 01:49 data_read.scale
+-r--r--r--. 1 root root 4096 Sep 26 01:49 data_read.unit
+-r--r--r--. 1 root root 4096 Sep 26 01:49 data_total
+-r--r--r--. 1 root root 4096 Sep 26 01:49 data_total.scale
+-r--r--r--. 1 root root 4096 Sep 26 01:49 data_total.unit
+-r--r--r--. 1 root root 4096 Sep 26 01:49 data_write
+-r--r--r--. 1 root root 4096 Sep 26 01:49 data_write.scale
+-r--r--r--. 1 root root 4096 Sep 26 01:49 data_write.unit
+
+- Qiao
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+On Fri, Sep 19, 2025 at 6:22=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> The detection of uncore_imc may happen for free running PMUs and the
+> clockticks event may be present on uncore_clock. Rewrite the test to
+> detect duplicated/deduplicated events from perf list, not hardcoded to
+> uncore_imc.
+>
+> If perf stat fails then assume it is permissions and skip the test.
+>
+> Fixes: 070b315333ee ("perf test: Restrict uniquifying test to machines wi=
+th 'uncore_imc'")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  arch/x86/include/asm/msr-index.h |  1 +
->  arch/x86/kvm/pmu.c               | 34 ++++++++++++------
->  arch/x86/kvm/pmu.h               |  1 +
->  arch/x86/kvm/svm/svm.c           | 36 +++++++++++++++++++
->  arch/x86/kvm/vmx/pmu_intel.c     | 13 -------
->  arch/x86/kvm/vmx/pmu_intel.h     | 15 ++++++++
->  arch/x86/kvm/vmx/vmx.c           | 59 ++++++++++++++++++++++++++------
->  7 files changed, 124 insertions(+), 35 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-> index f19d1ee9a396..06bd7aaae931 100644
-> --- a/arch/x86/include/asm/msr-index.h
-> +++ b/arch/x86/include/asm/msr-index.h
-> @@ -736,6 +736,7 @@
->  #define MSR_AMD64_PERF_CNTR_GLOBAL_STATUS	0xc0000300
->  #define MSR_AMD64_PERF_CNTR_GLOBAL_CTL		0xc0000301
->  #define MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR	0xc0000302
-> +#define MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_SET	0xc0000303
->  
->  /* AMD Last Branch Record MSRs */
->  #define MSR_AMD64_LBR_SELECT			0xc000010e
-> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> index 4246e1d2cfcc..817ef852bdf9 100644
-> --- a/arch/x86/kvm/pmu.c
-> +++ b/arch/x86/kvm/pmu.c
-> @@ -715,18 +715,14 @@ int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned idx, u64 *data)
->  	return 0;
->  }
->  
-> -bool kvm_need_rdpmc_intercept(struct kvm_vcpu *vcpu)
-> +bool kvm_need_perf_global_ctrl_intercept(struct kvm_vcpu *vcpu)
->  {
->  	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
->  
->  	if (!kvm_vcpu_has_mediated_pmu(vcpu))
->  		return true;
->  
-> -	/*
-> -	 * VMware allows access to these Pseduo-PMCs even when read via RDPMC
-> -	 * in Ring3 when CR4.PCE=0.
-> -	 */
-> -	if (enable_vmware_backdoor)
-> +	if (!kvm_pmu_has_perf_global_ctrl(pmu))
->  		return true;
->  
->  	/*
-> @@ -735,7 +731,22 @@ bool kvm_need_rdpmc_intercept(struct kvm_vcpu *vcpu)
->  	 * capabilities themselves may be a subset of hardware capabilities.
->  	 */
->  	return pmu->nr_arch_gp_counters != kvm_host_pmu.num_counters_gp ||
-> -	       pmu->nr_arch_fixed_counters != kvm_host_pmu.num_counters_fixed ||
-> +	       pmu->nr_arch_fixed_counters != kvm_host_pmu.num_counters_fixed;
-> +}
-> +EXPORT_SYMBOL_GPL(kvm_need_perf_global_ctrl_intercept);
-> +
-> +bool kvm_need_rdpmc_intercept(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +
-> +	/*
-> +	 * VMware allows access to these Pseduo-PMCs even when read via RDPMC
-> +	 * in Ring3 when CR4.PCE=0.
-> +	 */
-> +	if (enable_vmware_backdoor)
-> +		return true;
-> +
-> +	return kvm_need_perf_global_ctrl_intercept(vcpu) ||
->  	       pmu->counter_bitmask[KVM_PMC_GP] != (BIT_ULL(kvm_host_pmu.bit_width_gp) - 1) ||
->  	       pmu->counter_bitmask[KVM_PMC_FIXED] != (BIT_ULL(kvm_host_pmu.bit_width_fixed) - 1);
->  }
-
-There is a case for AMD processors where the global MSRs are absent in the guest
-but the guest still uses the same number of counters as what is advertised by the
-host capabilities. So RDPMC interception is not necessary for all cases where
-global control is unavailable.
-
-> @@ -927,11 +938,12 @@ void kvm_pmu_refresh(struct kvm_vcpu *vcpu)
->  	 * in the global controls).  Emulate that behavior when refreshing the
->  	 * PMU so that userspace doesn't need to manually set PERF_GLOBAL_CTRL.
->  	 */
-> -	if (kvm_pmu_has_perf_global_ctrl(pmu) && pmu->nr_arch_gp_counters) {
-> +	if (pmu->nr_arch_gp_counters &&
-> +	    (kvm_pmu_has_perf_global_ctrl(pmu) || kvm_vcpu_has_mediated_pmu(vcpu)))
->  		pmu->global_ctrl = GENMASK_ULL(pmu->nr_arch_gp_counters - 1, 0);
-> -		if (kvm_vcpu_has_mediated_pmu(vcpu))
-> -			kvm_pmu_call(write_global_ctrl)(pmu->global_ctrl);
-> -	}
-> +
-> +	if (kvm_vcpu_has_mediated_pmu(vcpu))
-> +		kvm_pmu_call(write_global_ctrl)(pmu->global_ctrl);
->  
->  	bitmap_set(pmu->all_valid_pmc_idx, 0, pmu->nr_arch_gp_counters);
->  	bitmap_set(pmu->all_valid_pmc_idx, KVM_FIXED_PMC_BASE_IDX,
-> diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-> index dcf4e2253875..51963a3a167a 100644
-> --- a/arch/x86/kvm/pmu.h
-> +++ b/arch/x86/kvm/pmu.h
-> @@ -239,6 +239,7 @@ void kvm_pmu_instruction_retired(struct kvm_vcpu *vcpu);
->  void kvm_pmu_branch_retired(struct kvm_vcpu *vcpu);
->  
->  bool is_vmware_backdoor_pmc(u32 pmc_idx);
-> +bool kvm_need_perf_global_ctrl_intercept(struct kvm_vcpu *vcpu);
->  bool kvm_need_rdpmc_intercept(struct kvm_vcpu *vcpu);
->  
->  extern struct kvm_pmu_ops intel_pmu_ops;
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 2d42962b47aa..add50b64256c 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -790,6 +790,40 @@ void svm_vcpu_free_msrpm(void *msrpm)
->  	__free_pages(virt_to_page(msrpm), get_order(MSRPM_SIZE));
->  }
->  
-> +static void svm_recalc_pmu_msr_intercepts(struct kvm_vcpu *vcpu)
-> +{
-> +	bool intercept = !kvm_vcpu_has_mediated_pmu(vcpu);
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +	int i;
-> +
-> +	if (!enable_mediated_pmu)
-> +		return;
-> +
-> +	/* Legacy counters are always available for AMD CPUs with a PMU. */
-> +	for (i = 0; i < min(pmu->nr_arch_gp_counters, AMD64_NUM_COUNTERS); i++)
-> +		svm_set_intercept_for_msr(vcpu, MSR_K7_PERFCTR0 + i,
-> +					  MSR_TYPE_RW, intercept);
-> +
-> +	intercept |= !guest_cpu_cap_has(vcpu, X86_FEATURE_PERFCTR_CORE);
-> +	for (i = 0; i < pmu->nr_arch_gp_counters; i++)
-> +		svm_set_intercept_for_msr(vcpu, MSR_F15H_PERF_CTR + 2 * i,
-> +					  MSR_TYPE_RW, intercept);
-> +
-> +	for ( ; i < kvm_pmu_cap.num_counters_gp; i++)
-> +		svm_enable_intercept_for_msr(vcpu, MSR_F15H_PERF_CTR + 2 * i,
-> +					     MSR_TYPE_RW);
-> +
-> +	intercept = kvm_need_perf_global_ctrl_intercept(vcpu);
-> +	svm_set_intercept_for_msr(vcpu, MSR_AMD64_PERF_CNTR_GLOBAL_CTL,
-> +				  MSR_TYPE_RW, intercept);
-> +	svm_set_intercept_for_msr(vcpu, MSR_AMD64_PERF_CNTR_GLOBAL_STATUS,
-> +				  MSR_TYPE_RW, intercept);
-> +	svm_set_intercept_for_msr(vcpu, MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR,
-> +				  MSR_TYPE_RW, intercept);
-> +	svm_set_intercept_for_msr(vcpu, MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_SET,
-> +				  MSR_TYPE_RW, intercept);
-> +}
-> +
->  static void svm_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
->  {
->  	struct vcpu_svm *svm = to_svm(vcpu);
-> @@ -847,6 +881,8 @@ static void svm_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
->  	if (sev_es_guest(vcpu->kvm))
->  		sev_es_recalc_msr_intercepts(vcpu);
->  
-> +	svm_recalc_pmu_msr_intercepts(vcpu);
-> +
->  	/*
->  	 * x2APIC intercepts are modified on-demand and cannot be filtered by
->  	 * userspace.
-> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-> index 779b4e64acac..2bdddb95816e 100644
-> --- a/arch/x86/kvm/vmx/pmu_intel.c
-> +++ b/arch/x86/kvm/vmx/pmu_intel.c
-> @@ -128,19 +128,6 @@ static struct kvm_pmc *intel_rdpmc_ecx_to_pmc(struct kvm_vcpu *vcpu,
->  	return &counters[array_index_nospec(idx, num_counters)];
->  }
->  
-> -static inline u64 vcpu_get_perf_capabilities(struct kvm_vcpu *vcpu)
-> -{
-> -	if (!guest_cpu_cap_has(vcpu, X86_FEATURE_PDCM))
-> -		return 0;
+>  .../tests/shell/stat+event_uniquifying.sh     | 109 ++++++++----------
+>  1 file changed, 49 insertions(+), 60 deletions(-)
+>
+> diff --git a/tools/perf/tests/shell/stat+event_uniquifying.sh b/tools/per=
+f/tests/shell/stat+event_uniquifying.sh
+> index bf54bd6c3e2e..b5dec6b6da36 100755
+> --- a/tools/perf/tests/shell/stat+event_uniquifying.sh
+> +++ b/tools/perf/tests/shell/stat+event_uniquifying.sh
+> @@ -4,74 +4,63 @@
+>
+>  set -e
+>
+> -stat_output=3D$(mktemp /tmp/__perf_test.stat_output.XXXXX)
+> -perf_tool=3Dperf
+>  err=3D0
+> +stat_output=3D$(mktemp /tmp/__perf_test.stat_output.XXXXX)
+>
+> -test_event_uniquifying() {
+> -  # We use `clockticks` in `uncore_imc` to verify the uniquify behavior.
+> -  pmu=3D"uncore_imc"
+> -  event=3D"clockticks"
 > -
-> -	return vcpu->arch.perf_capabilities;
-> -}
+> -  # If the `-A` option is added, the event should be uniquified.
+> -  #
+> -  # $perf list -v clockticks
+> -  #
+> -  # List of pre-defined events (to be used in -e or -M):
+> -  #
+> -  #   uncore_imc_0/clockticks/                           [Kernel PMU eve=
+nt]
+> -  #   uncore_imc_1/clockticks/                           [Kernel PMU eve=
+nt]
+> -  #   uncore_imc_2/clockticks/                           [Kernel PMU eve=
+nt]
+> -  #   uncore_imc_3/clockticks/                           [Kernel PMU eve=
+nt]
+> -  #   uncore_imc_4/clockticks/                           [Kernel PMU eve=
+nt]
+> -  #   uncore_imc_5/clockticks/                           [Kernel PMU eve=
+nt]
+> -  #
+> -  #   ...
+> -  #
+> -  # $perf stat -e clockticks -A -- true
+> -  #
+> -  #  Performance counter stats for 'system wide':
+> -  #
+> -  # CPU0            3,773,018      uncore_imc_0/clockticks/
+> -  # CPU0            3,609,025      uncore_imc_1/clockticks/
+> -  # CPU0                    0      uncore_imc_2/clockticks/
+> -  # CPU0            3,230,009      uncore_imc_3/clockticks/
+> -  # CPU0            3,049,897      uncore_imc_4/clockticks/
+> -  # CPU0                    0      uncore_imc_5/clockticks/
+> -  #
+> -  #        0.002029828 seconds time elapsed
 > -
-> -static inline bool fw_writes_is_enabled(struct kvm_vcpu *vcpu)
-> -{
-> -	return (vcpu_get_perf_capabilities(vcpu) & PERF_CAP_FW_WRITES) != 0;
-> -}
-> -
->  static inline struct kvm_pmc *get_fw_gp_pmc(struct kvm_pmu *pmu, u32 msr)
->  {
->  	if (!fw_writes_is_enabled(pmu_to_vcpu(pmu)))
-> diff --git a/arch/x86/kvm/vmx/pmu_intel.h b/arch/x86/kvm/vmx/pmu_intel.h
-> index 5620d0882cdc..5d9357640aa1 100644
-> --- a/arch/x86/kvm/vmx/pmu_intel.h
-> +++ b/arch/x86/kvm/vmx/pmu_intel.h
-> @@ -4,6 +4,21 @@
->  
->  #include <linux/kvm_host.h>
->  
-> +#include "cpuid.h"
-> +
-> +static inline u64 vcpu_get_perf_capabilities(struct kvm_vcpu *vcpu)
-> +{
-> +	if (!guest_cpu_cap_has(vcpu, X86_FEATURE_PDCM))
-> +		return 0;
-> +
-> +	return vcpu->arch.perf_capabilities;
+> -  echo "stat event uniquifying test"
+> -  uniquified_event_array=3D()
+> +cleanup() {
+> +  rm -f "${stat_output}"
+>
+> -  # Skip if the machine does not have `uncore_imc` device.
+> -  if ! ${perf_tool} list pmu | grep -q ${pmu}; then
+> -    echo "Target does not support PMU ${pmu} [Skipped]"
+> -    err=3D2
+> -    return
+> -  fi
+> +  trap - EXIT TERM INT
 > +}
-> +
-> +static inline bool fw_writes_is_enabled(struct kvm_vcpu *vcpu)
-> +{
-> +	return (vcpu_get_perf_capabilities(vcpu) & PERF_CAP_FW_WRITES) != 0;
+>
+> -  # Check how many uniquified events.
+> -  while IFS=3D read -r line; do
+> -    uniquified_event=3D$(echo "$line" | awk '{print $1}')
+> -    uniquified_event_array+=3D("${uniquified_event}")
+> -  done < <(${perf_tool} list -v ${event} | grep ${pmu})
+> +trap_cleanup() {
+> +  echo "Unexpected signal in ${FUNCNAME[1]}"
+> +  cleanup
+> +  exit 1
 > +}
-> +
->  bool intel_pmu_lbr_is_enabled(struct kvm_vcpu *vcpu);
->  int intel_pmu_create_guest_lbr_event(struct kvm_vcpu *vcpu);
->  
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 1233a0afb31e..85bd82d41f94 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -4068,6 +4068,53 @@ void pt_update_intercept_for_msr(struct kvm_vcpu *vcpu)
->  	}
+> +trap trap_cleanup EXIT TERM INT
+>
+> -  perf_command=3D"${perf_tool} stat -e $event -A -o ${stat_output} -- tr=
+ue"
+> -  $perf_command
+> +test_event_uniquifying() {
+> +  echo "Uniquification of PMU sysfs events test"
+>
+> -  # Check the output contains all uniquified events.
+> -  for uniquified_event in "${uniquified_event_array[@]}"; do
+> -    if ! cat "${stat_output}" | grep -q "${uniquified_event}"; then
+> -      echo "Event is not uniquified [Failed]"
+> -      echo "${perf_command}"
+> -      cat "${stat_output}"
+> -      err=3D1
+> -      break
+> -    fi
+> +  # Read events from perf list with and without -v. With -v the duplicat=
+e PMUs
+> +  # aren't deduplicated. Note, json events are listed by perf list witho=
+ut a
+> +  # PMU.
+> +  read -ra pmu_events <<< "$(perf list --raw pmu)"
+> +  read -ra pmu_v_events <<< "$(perf list -v --raw pmu)"
+> +  # For all non-deduplicated events.
+> +  for pmu_v_event in "${pmu_v_events[@]}"; do
+> +    # If the event matches an event in the deduplicated events then it m=
+usn't
+> +    # be an event with duplicate PMUs, continue the outer loop.
+> +    for pmu_event in "${pmu_events[@]}"; do
+> +      if [[ "$pmu_v_event" =3D=3D "$pmu_event" ]]; then
+> +        continue 2
+> +      fi
+> +    done
+> +    # Strip the suffix from the non-deduplicated event's PMU.
+> +    event=3D$(echo "$pmu_v_event" | sed -E 's/_[0-9]+//')
+> +    for pmu_event in "${pmu_events[@]}"; do
+> +      if [[ "$event" =3D=3D "$pmu_event" ]]; then
+> +        echo "Testing event ${event} is uniquified to ${pmu_v_event}"
+> +        if ! perf stat -e "$event" -A -o ${stat_output} -- true; then
+> +          echo "Error running perf stat for event '$event'  [Skip]"
+> +          if [ $err =3D 0 ]; then
+> +            err=3D2
+> +          fi
+> +          continue
+> +        fi
+> +        # Ensure the non-deduplicated event appears in the output.
+> +        if ! grep -q "${pmu_v_event}" "${stat_output}"; then
+> +          echo "Uniquification of PMU sysfs events test [Failed]"
+> +          cat "${stat_output}"
+> +          err=3D1
+> +        fi
+> +        break
+> +      fi
+> +    done
+>    done
 >  }
->  
-> +static void vmx_recalc_pmu_msr_intercepts(struct kvm_vcpu *vcpu)
-> +{
-> +	bool has_mediated_pmu = kvm_vcpu_has_mediated_pmu(vcpu);
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> +	bool intercept = !has_mediated_pmu;
-> +	int i;
-> +
-> +	if (!enable_mediated_pmu)
-> +		return;
-> +
-> +	vm_entry_controls_changebit(vmx, VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL,
-> +				    has_mediated_pmu);
-> +
-> +	vm_exit_controls_changebit(vmx, VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
-> +					VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL,
-> +				   has_mediated_pmu);
-> +
-> +	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
-> +		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PERFCTR0 + i,
-> +					  MSR_TYPE_RW, intercept);
-> +		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PMC0 + i, MSR_TYPE_RW,
-> +					  intercept || !fw_writes_is_enabled(vcpu));
-> +	}
-> +	for ( ; i < kvm_pmu_cap.num_counters_gp; i++) {
-> +		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PERFCTR0 + i,
-> +					  MSR_TYPE_RW, true);
-> +		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PMC0 + i,
-> +					  MSR_TYPE_RW, true);
-> +	}
-> +
-> +	for (i = 0; i < pmu->nr_arch_fixed_counters; i++)
-> +		vmx_set_intercept_for_msr(vcpu, MSR_CORE_PERF_FIXED_CTR0 + i,
-> +					  MSR_TYPE_RW, intercept);
-> +	for ( ; i < kvm_pmu_cap.num_counters_fixed; i++)
-> +		vmx_set_intercept_for_msr(vcpu, MSR_CORE_PERF_FIXED_CTR0 + i,
-> +					  MSR_TYPE_RW, true);
-> +
-> +	intercept = kvm_need_perf_global_ctrl_intercept(vcpu);
-> +	vmx_set_intercept_for_msr(vcpu, MSR_CORE_PERF_GLOBAL_STATUS,
-> +				  MSR_TYPE_RW, intercept);
-> +	vmx_set_intercept_for_msr(vcpu, MSR_CORE_PERF_GLOBAL_CTRL,
-> +				  MSR_TYPE_RW, intercept);
-> +	vmx_set_intercept_for_msr(vcpu, MSR_CORE_PERF_GLOBAL_OVF_CTRL,
-> +				  MSR_TYPE_RW, intercept);
-> +}
-> +
->  static void vmx_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
->  {
->  	if (!cpu_has_vmx_msr_bitmap())
-> @@ -4115,17 +4162,7 @@ static void vmx_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
->  		vmx_set_intercept_for_msr(vcpu, MSR_IA32_FLUSH_CMD, MSR_TYPE_W,
->  					  !guest_cpu_cap_has(vcpu, X86_FEATURE_FLUSH_L1D));
->  
-> -	if (enable_mediated_pmu) {
-> -		bool is_mediated_pmu = kvm_vcpu_has_mediated_pmu(vcpu);
-> -		struct vcpu_vmx *vmx = to_vmx(vcpu);
-> -
-> -		vm_entry_controls_changebit(vmx,
-> -					    VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL, is_mediated_pmu);
-> -
-> -		vm_exit_controls_changebit(vmx,
-> -					   VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
-> -					   VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL, is_mediated_pmu);
-> -	}
-> +	vmx_recalc_pmu_msr_intercepts(vcpu);
->  
->  	/*
->  	 * x2APIC and LBR MSR intercepts are modified on-demand and cannot be
+>
+>  test_event_uniquifying
+> -rm -f "${stat_output}"
+> +cleanup
+>  exit $err
+> --
+> 2.51.0.470.ga7dc726c21-goog
+>
+>
 
