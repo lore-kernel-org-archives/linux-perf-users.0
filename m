@@ -1,388 +1,152 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7B9279DDD
-	for <linux-perf-users@vger.kernel.org>; Fri, 26 Sep 2025 09:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A09529DB88
+	for <linux-perf-users@vger.kernel.org>; Fri, 26 Sep 2025 09:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758877261; cv=none; b=uhGkWNmXcr+ASi6Ota3BMpaYS5OhYkR8rrVAAQrCLG7P79gT6Swhbb+AxHnmQyFVOBA2ObRPpydJQ+Dpe5WY+wtR+zi6q+EkFhLszhD2GpRU9pkPKyvKt1FJOZisRzUQMs82WJDS6M5+6cRV5UG6EymlIYLJRxqIV6al71lC4Kk=
+	t=1758879478; cv=none; b=gea5ajglpnUlC3fZgHO2iWne8/PURKInM4VOLiUDswAzNs9pw4qSlHtwqnwDFFJPjZr+BqRhAGYgAuayHqBo4efIp8H1Szilo1mVKdeNNBU2uUiz4WHgDLqhi+DS91Nrx1KgpY5nZFKOoUF57o94AYPlGiX0sQ5170FH62E+ERo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758877261; c=relaxed/simple;
-	bh=2wA0d16u/6KCj+Abm5zr10wxjk/Nv6UemcjdDLNfRf4=;
+	s=arc-20240116; t=1758879478; c=relaxed/simple;
+	bh=B/7QQgyqHSm4AZXbTcSg97A8gq1X1CH39AjApJhmXr0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mf3JOS+Qv/Y4lbDzhkqeMYN85cKgWjUt6BUq50AHzKuxe7TxzX3nyPFP3tpZ7CRVz5uW9eiNMvx1mR3Jwvp5pCu7ZLOOm1+blPF8ONe2owKdz8Mqtwy5wzVnvwKXv5RBbjqGVbURQjAU3z1mWdrR8NLEvu55iLaefQKxuNGVr7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ULJO/MAL; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=lcKbvpJkQS+Bf0jixpL00pn49CL3tdJUCwr2sDbOP+Us0Yf4aeXGS7+wKicNZDORsVkQfwce8tKpzn3RnLjIgScTe61Xpp1iV8FYPG8eLUHgcumR4Hz4d17puP4TQpFMtiqUNUPZrycVT7UqkT/pF1V9GkcS/6cezZGwAWYUUW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=G0n7Nqss; arc=none smtp.client-ip=209.85.210.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ULJO/MAL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1758877258;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1ShGXGHPdvYlBe5RKUUi4Bd0ovd8HxH8J4+xlI4KkhA=;
-	b=ULJO/MALAs1ZcXAxuOLpTY39cV3NlAw/evOxTJKxu8B7nrqUzvVHXLaZabgxDAeSfcIQVm
-	ZaqqJCdPSF48fFykJIgkjOoprSE+jaBZUIlIvWYQRtn1XIqJ8H8GI6S0UJjSHZ1OsgGBVT
-	awdksZY31Codo1zusfILMPwIWl8NVCI=
-Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com
- [209.85.210.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-261-j10fn44CM8iOq0stbZ7_Bg-1; Fri, 26 Sep 2025 05:00:56 -0400
-X-MC-Unique: j10fn44CM8iOq0stbZ7_Bg-1
-X-Mimecast-MFC-AGG-ID: j10fn44CM8iOq0stbZ7_Bg_1758877256
-Received: by mail-ot1-f69.google.com with SMTP id 46e09a7af769-74a30209044so3579264a34.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Sep 2025 02:00:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="G0n7Nqss"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-74526ca79c2so872483a34.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Sep 2025 02:37:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1758879475; x=1759484275; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V5FmCZ7m0CyShB1Ycdtz4U9JEqoB4MdA/m7HVOlr6mo=;
+        b=G0n7NqssAzj0IG6CY+5Qi/lsv6pyp4tX8yLowhiSP4mEo1a5zTTGdKPh+Vcz32SSv7
+         VrGACAxwyfhxcCAXEx5Il62yjT9yLvO1IQc1E2hIxPNbI9d09gWxht9RfS+rAy8osM5L
+         qsbnHj1eoBUDsSMV8Y4b8weoNajm03mzhYNXqDT4heEzUw+V4JMH1h0d6AnWssO/u+Ow
+         g4fwuVCzauhfsyJhp7KH/mGdi46kP0/X0te2b61fmg6V7xfz5qIlvtnCldaqEpvhpVI2
+         Bb1sLFRQOUkCIfaSh8B1VRJ2+jHQWHug6VSUqtVoJ1uwEtRTjb9E5nlO8js9t+DFrZgO
+         vtxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758877256; x=1759482056;
+        d=1e100.net; s=20230601; t=1758879475; x=1759484275;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1ShGXGHPdvYlBe5RKUUi4Bd0ovd8HxH8J4+xlI4KkhA=;
-        b=PxA5Y+PZBCViPXzbJjiwMyL0IW6nfFJ+J2zaliP8IXztOqPbtmO8wKOnN/mIgc9efB
-         VCf4Hcgo/GRvz2+LetRAwtnZGc5tzdHIBYvrWRNbfe5Idj5SRlSdfpGq0buB/GmyDy5D
-         00NYQYbElj81ea8R4CesmYjoAZCCWT4gvBmUmAjFScu+b+RVFTZ2qRtYZMbGwtbfdKjA
-         SYBVKF9dIsPznjNXykaqOYtaRpOx0IQ20r8eQNYQ0ISY/NotsGK/XuEQjbZpQdNmbQ58
-         e0GWrw8wLadGqXgXHypxcm88Y6xJ/33H1qnS6CKWYVJ8jaLaR+4T/wV+EHUPPj4g5N1a
-         lZiw==
-X-Forwarded-Encrypted: i=1; AJvYcCVjCPFBSTl9X/KG0yYrIW6l/D6Y9NrbXFddtRRCOMhUkPe9UTVLen7y+AQhZpDjHkZ8SYXWtb61DH6rRPdeC0s8@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5Pp+FfMo6k5SsTT+IsdKVX7F/5s7D96gSe3QvS4ZeYsb+jvms
-	LPg0mbqBU0ykJrB+siq9esmmktDaDR/HwlBi7X+4PgwtOzbqYYNSO3ihGGnsgk1mO8koWpq3IWL
-	CmbEliVHeRHK0NF+TK/a47xFO5PrvDaCNvcqoI5bAvGyZK2MznuFHYGwDDmZf/fY5y9dFIUgjUG
-	FN/fuaeE5kpkqkRs7VvHWjdd0oYYUIJRmOm6yF1i8qz4AKyQ==
-X-Gm-Gg: ASbGnctCvBolL5p6DV2TolSoOJi0iW+CEkJQmkPcImhIx+KKIemdBH1N758Dg54m6e0
-	P/g8UxwUYd9zYgja7Mv57U4kdVb2FmmpT0CStavtvwhH3GXnyyoufuAJMXi2OowM4Q/h3Hkb+VD
-	9r+0DgNfP1+vGpCX0OfjIFHw==
-X-Received: by 2002:a05:6830:25d6:b0:790:78e6:8450 with SMTP id 46e09a7af769-7a03d122795mr3216497a34.6.1758877255709;
-        Fri, 26 Sep 2025 02:00:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEZxy8k2uUNsp1XRNbnNWcIuiqAPl8O62jVNCJNNdDph9uiBGilSEFZNffrSh/bpMVUsWAWwFTFyXQs20a4HOw=
-X-Received: by 2002:a05:6830:25d6:b0:790:78e6:8450 with SMTP id
- 46e09a7af769-7a03d122795mr3216478a34.6.1758877255212; Fri, 26 Sep 2025
- 02:00:55 -0700 (PDT)
+        bh=V5FmCZ7m0CyShB1Ycdtz4U9JEqoB4MdA/m7HVOlr6mo=;
+        b=p/PUx34Pdm7SQGv5ixZWOIPVgoC5e5SwARKWdW5NdKMlVCxASZZxR54c6DnYaqaKb0
+         3GPZWGM1tEHuElE17XpJD8WTcAYGdTnZbNdh+rT3zM9Y9q+7EfVQkT5aXHUCURDe0wMd
+         Rka5FDvcnfQKZbFvExJQeVT5jWaUZco80vZTDR6A0ts5ASDvehbxEslfj6g06nsWugRy
+         F9eRTwBgGqcTx2UVLA8/qlT7Ti9rWGI3Js+Rf46LLANw9Umra1kHJFO0AUMJTwBazpIP
+         aoIuFOHndNf8UOuwvlx2jtZxqewSmfliMvwxqKLaiHcJ2yuMI2iiupGadj0BVXQozlJ7
+         0Y7g==
+X-Forwarded-Encrypted: i=1; AJvYcCWma8bAhmq6zkhQcHQdGWlOtqp940PnITPMPekDMLZiROzfBtjZEVQiR/sHdo6yDWbPgeEYWywXEciMqv03+uZw@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnFqhgHKg/fCxru1j7rLKegBkBFkC0lIJxdVLBN/b4PzQd0dls
+	MGTfoIwqnVVXX4/V7cOEoBID2KYDvqi2QV2DfEafaZaTh+ny0mm8vIHEMpTYP+xHEnzLvdddOlz
+	CmKogvYRfL7CzBnPXrKv6GEmbIY7n6Swu/zKrWMDv2Q==
+X-Gm-Gg: ASbGncuVRZtgO0HM/p5Cc1OiTICYuXUeXtM0SDkt1jIMOeOt5+BLcbe+qWQpeCwrpQJ
+	c3wI/e5MsEyD4MP8nvXPkQGDXeolT3/bXMHQRNMmyZn0kOGRxU67dYs06C1UxPFvqXfhWE3ppFE
+	OuZUlg5IHewAfqqogB683KW8goeWVM0J1k5q2PRlvN2g/bv/VIrtFsMKzxVn6EnbvNAYrVHCnHn
+	RgIgHZ/7qFWFglaYqqXpWz6mXfaMFXCWi3u8g==
+X-Google-Smtp-Source: AGHT+IEc3BE14yCdZtCENJr4UXyf6Y8XkhqfpWh+WHahYzWW5GLDg7SSMeNNAS+2Kw/XzX0+d+blEeRda/r+amoNwkc=
+X-Received: by 2002:a05:6808:8843:10b0:43f:5218:878a with SMTP id
+ 5614622812f47-43f52188986mr2126658b6e.22.1758879475127; Fri, 26 Sep 2025
+ 02:37:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250918222202.1353854-1-irogers@google.com> <20250918222202.1353854-4-irogers@google.com>
-In-Reply-To: <20250918222202.1353854-4-irogers@google.com>
-From: Qiao Zhao <qzhao@redhat.com>
-Date: Fri, 26 Sep 2025 17:00:43 +0800
-X-Gm-Features: AS18NWAV1pmn_mwfn6L3-Ucum_4jK7MR8aU109NNkeDKqD7xSbvxIWq9Qew7oX4
-Message-ID: <CAATMXfnqCjxSV2wOqDJ9copKMWyR5hNe9p78kwtrn+W7UCV2DQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] perf test: Avoid uncore_imc/clockticks in
- uniquification test
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Athira Rajeev <atrajeev@linux.ibm.com>, Chun-Tse Shao <ctshao@google.com>, 
-	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20250925084806.89715-1-cuiyunhui@bytedance.com>
+ <20250925084806.89715-2-cuiyunhui@bytedance.com> <CAD=FV=VZLYqPQCOEhbH4QtndeG5e1-0wey24fgYNTeFiqd8qJg@mail.gmail.com>
+In-Reply-To: <CAD=FV=VZLYqPQCOEhbH4QtndeG5e1-0wey24fgYNTeFiqd8qJg@mail.gmail.com>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Fri, 26 Sep 2025 17:37:44 +0800
+X-Gm-Features: AS18NWBUD0z6jg0TusFj1nphukSzt5aTNsZRJ0rH-JxFSgQYIIkepAcYdgJLzRk
+Message-ID: <CAEEQ3wnwNdTgt6ByHCzM43fhZMLSxwXvYx-AGBpsktraXqif2Q@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v2 1/2] watchdog: move arm64 watchdog_hld
+ into common code
+To: Doug Anderson <dianders@chromium.org>
+Cc: akpm@linux-foundation.org, alex@ghiti.fr, anup@brainfault.org, 
+	aou@eecs.berkeley.edu, atish.patra@linux.dev, catalin.marinas@arm.com, 
+	johannes@sipsolutions.net, lihuafei1@huawei.com, mark.rutland@arm.com, 
+	masahiroy@kernel.org, maz@kernel.org, mingo@kernel.org, 
+	nicolas.schier@linux.dev, palmer@dabbelt.com, paul.walmsley@sifive.com, 
+	suzuki.poulose@arm.com, thorsten.blum@linux.dev, wangjinchao600@gmail.com, 
+	will@kernel.org, yangyicong@hisilicon.com, zhanjie9@hisilicon.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Ian,
+Hi Doug,
 
-I tested your patch (latest linux-next code + your patch) on hybrid
-CPU machine {CPU Model name: 12th Gen Intel(R) Core(TM) i7-12800HE}
-and failed,
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-# perf test -vv "perf stat events uniquifying"
- 95: perf stat events uniquifying:
---- start ---
-test child forked, pid 21799
-Uniquification of PMU sysfs events test
-Testing event uncore_imc_free_running/data_read/ is uniquified to
-uncore_imc_free_running_0/data_read/
-Uniquification of PMU sysfs events test [Failed]
-# started on Fri Sep 26 04:49:54 2025
-
-
- Performance counter stats for 'system wide':
-
-CPU0                 1.47 MiB
-uncore_imc_free_running_0/uncore_imc_free_running,data_read/
-CPU0                 1.47 MiB
-uncore_imc_free_running_1/uncore_imc_free_running,data_read/
-
-       0.000925108 seconds time elapsed
-
-Testing event uncore_imc_free_running/data_total/ is uniquified to
-uncore_imc_free_running_0/data_total/
-Uniquification of PMU sysfs events test [Failed]
-# started on Fri Sep 26 04:49:54 2025
-
-
- Performance counter stats for 'system wide':
-
-CPU0                 0.59 MiB
-uncore_imc_free_running_0/uncore_imc_free_running,data_total/
-CPU0                 0.58 MiB
-uncore_imc_free_running_1/uncore_imc_free_running,data_total/
-
-       0.000969877 seconds time elapsed
-
-Testing event uncore_imc_free_running/data_write/ is uniquified to
-uncore_imc_free_running_0/data_write/
-Uniquification of PMU sysfs events test [Failed]
-# started on Fri Sep 26 04:49:54 2025
-
-
- Performance counter stats for 'system wide':
-
-CPU0                 0.00 MiB
-uncore_imc_free_running_0/uncore_imc_free_running,data_write/
-CPU0                 0.00 MiB
-uncore_imc_free_running_1/uncore_imc_free_running,data_write/
-
-       0.001183888 seconds time elapsed
-
-Testing event uncore_imc_free_running/data_read/ is uniquified to
-uncore_imc_free_running_1/data_read/
-Uniquification of PMU sysfs events test [Failed]
-# started on Fri Sep 26 04:49:54 2025
-
-
- Performance counter stats for 'system wide':
-
-CPU0                 0.29 MiB
-uncore_imc_free_running_0/uncore_imc_free_running,data_read/
-CPU0                 0.29 MiB
-uncore_imc_free_running_1/uncore_imc_free_running,data_read/
-
-       0.000710088 seconds time elapsed
-
-Testing event uncore_imc_free_running/data_total/ is uniquified to
-uncore_imc_free_running_1/data_total/
-Uniquification of PMU sysfs events test [Failed]
-# started on Fri Sep 26 04:49:54 2025
-
-
- Performance counter stats for 'system wide':
-
-CPU0                 0.62 MiB
-uncore_imc_free_running_0/uncore_imc_free_running,data_total/
-CPU0                 0.67 MiB
-uncore_imc_free_running_1/uncore_imc_free_running,data_total/
-
-       0.000959074 seconds time elapsed
-
-Testing event uncore_imc_free_running/data_write/ is uniquified to
-uncore_imc_free_running_1/data_write/
-Uniquification of PMU sysfs events test [Failed]
-# started on Fri Sep 26 04:49:54 2025
-
-
- Performance counter stats for 'system wide':
-
-CPU0                 0.23 MiB
-uncore_imc_free_running_0/uncore_imc_free_running,data_write/
-CPU0                 0.23 MiB
-uncore_imc_free_running_1/uncore_imc_free_running,data_write/
-
-       0.000775028 seconds time elapsed
-
----- end(-1) ----
- 95: perf stat events uniquifying                                    : FAIL=
-ED!
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-# ls -la /sys/bus/event_source/devices/uncore_imc_free_running_*/events/
-/sys/bus/event_source/devices/uncore_imc_free_running_0/events/:
-total 0
-drwxr-xr-x. 2 root root    0 Sep 26 04:57 .
-drwxr-xr-x. 5 root root    0 Sep 26 01:49 ..
--r--r--r--. 1 root root 4096 Sep 26 01:49 data_read
--r--r--r--. 1 root root 4096 Sep 26 01:49 data_read.scale
--r--r--r--. 1 root root 4096 Sep 26 01:49 data_read.unit
--r--r--r--. 1 root root 4096 Sep 26 01:49 data_total
--r--r--r--. 1 root root 4096 Sep 26 01:49 data_total.scale
--r--r--r--. 1 root root 4096 Sep 26 01:49 data_total.unit
--r--r--r--. 1 root root 4096 Sep 26 01:49 data_write
--r--r--r--. 1 root root 4096 Sep 26 01:49 data_write.scale
--r--r--r--. 1 root root 4096 Sep 26 01:49 data_write.unit
-
-/sys/bus/event_source/devices/uncore_imc_free_running_1/events/:
-total 0
-drwxr-xr-x. 2 root root    0 Sep 26 04:57 .
-drwxr-xr-x. 5 root root    0 Sep 26 01:49 ..
--r--r--r--. 1 root root 4096 Sep 26 01:49 data_read
--r--r--r--. 1 root root 4096 Sep 26 01:49 data_read.scale
--r--r--r--. 1 root root 4096 Sep 26 01:49 data_read.unit
--r--r--r--. 1 root root 4096 Sep 26 01:49 data_total
--r--r--r--. 1 root root 4096 Sep 26 01:49 data_total.scale
--r--r--r--. 1 root root 4096 Sep 26 01:49 data_total.unit
--r--r--r--. 1 root root 4096 Sep 26 01:49 data_write
--r--r--r--. 1 root root 4096 Sep 26 01:49 data_write.scale
--r--r--r--. 1 root root 4096 Sep 26 01:49 data_write.unit
-
-- Qiao
-
->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-
-On Fri, Sep 19, 2025 at 6:22=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
+On Fri, Sep 26, 2025 at 4:00=E2=80=AFAM Doug Anderson <dianders@chromium.or=
+g> wrote:
 >
-> The detection of uncore_imc may happen for free running PMUs and the
-> clockticks event may be present on uncore_clock. Rewrite the test to
-> detect duplicated/deduplicated events from perf list, not hardcoded to
-> uncore_imc.
+> Hi,
 >
-> If perf stat fails then assume it is permissions and skip the test.
+> On Thu, Sep 25, 2025 at 1:48=E2=80=AFAM Yunhui Cui <cuiyunhui@bytedance.c=
+om> wrote:
+> >
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/cpu_pm.h>
+> >  #include <linux/export.h>
+> >  #include <linux/kernel.h>
+> > +#include <linux/nmi.h>
+> >  #include <linux/perf/arm_pmu.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/sched/clock.h>
+> > @@ -696,10 +697,12 @@ static int armpmu_get_cpu_irq(struct arm_pmu *pmu=
+, int cpu)
+> >         return per_cpu(hw_events->irq, cpu);
+> >  }
+> >
+> > -bool arm_pmu_irq_is_nmi(void)
+> > +#ifdef CONFIG_HARDLOCKUP_DETECTOR_PERF
+> > +bool arch_perf_nmi_is_available(void)
+> >  {
+> >         return has_nmi;
+> >  }
+> > +#endif
 >
-> Fixes: 070b315333ee ("perf test: Restrict uniquifying test to machines wi=
-th 'uncore_imc'")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  .../tests/shell/stat+event_uniquifying.sh     | 109 ++++++++----------
->  1 file changed, 49 insertions(+), 60 deletions(-)
+> Should the previous comment move here, AKA:
 >
-> diff --git a/tools/perf/tests/shell/stat+event_uniquifying.sh b/tools/per=
-f/tests/shell/stat+event_uniquifying.sh
-> index bf54bd6c3e2e..b5dec6b6da36 100755
-> --- a/tools/perf/tests/shell/stat+event_uniquifying.sh
-> +++ b/tools/perf/tests/shell/stat+event_uniquifying.sh
-> @@ -4,74 +4,63 @@
->
->  set -e
->
-> -stat_output=3D$(mktemp /tmp/__perf_test.stat_output.XXXXX)
-> -perf_tool=3Dperf
->  err=3D0
-> +stat_output=3D$(mktemp /tmp/__perf_test.stat_output.XXXXX)
->
-> -test_event_uniquifying() {
-> -  # We use `clockticks` in `uncore_imc` to verify the uniquify behavior.
-> -  pmu=3D"uncore_imc"
-> -  event=3D"clockticks"
-> -
-> -  # If the `-A` option is added, the event should be uniquified.
-> -  #
-> -  # $perf list -v clockticks
-> -  #
-> -  # List of pre-defined events (to be used in -e or -M):
-> -  #
-> -  #   uncore_imc_0/clockticks/                           [Kernel PMU eve=
-nt]
-> -  #   uncore_imc_1/clockticks/                           [Kernel PMU eve=
-nt]
-> -  #   uncore_imc_2/clockticks/                           [Kernel PMU eve=
-nt]
-> -  #   uncore_imc_3/clockticks/                           [Kernel PMU eve=
-nt]
-> -  #   uncore_imc_4/clockticks/                           [Kernel PMU eve=
-nt]
-> -  #   uncore_imc_5/clockticks/                           [Kernel PMU eve=
-nt]
-> -  #
-> -  #   ...
-> -  #
-> -  # $perf stat -e clockticks -A -- true
-> -  #
-> -  #  Performance counter stats for 'system wide':
-> -  #
-> -  # CPU0            3,773,018      uncore_imc_0/clockticks/
-> -  # CPU0            3,609,025      uncore_imc_1/clockticks/
-> -  # CPU0                    0      uncore_imc_2/clockticks/
-> -  # CPU0            3,230,009      uncore_imc_3/clockticks/
-> -  # CPU0            3,049,897      uncore_imc_4/clockticks/
-> -  # CPU0                    0      uncore_imc_5/clockticks/
-> -  #
-> -  #        0.002029828 seconds time elapsed
-> -
-> -  echo "stat event uniquifying test"
-> -  uniquified_event_array=3D()
-> +cleanup() {
-> +  rm -f "${stat_output}"
->
-> -  # Skip if the machine does not have `uncore_imc` device.
-> -  if ! ${perf_tool} list pmu | grep -q ${pmu}; then
-> -    echo "Target does not support PMU ${pmu} [Skipped]"
-> -    err=3D2
-> -    return
-> -  fi
-> +  trap - EXIT TERM INT
-> +}
->
-> -  # Check how many uniquified events.
-> -  while IFS=3D read -r line; do
-> -    uniquified_event=3D$(echo "$line" | awk '{print $1}')
-> -    uniquified_event_array+=3D("${uniquified_event}")
-> -  done < <(${perf_tool} list -v ${event} | grep ${pmu})
-> +trap_cleanup() {
-> +  echo "Unexpected signal in ${FUNCNAME[1]}"
-> +  cleanup
-> +  exit 1
-> +}
-> +trap trap_cleanup EXIT TERM INT
->
-> -  perf_command=3D"${perf_tool} stat -e $event -A -o ${stat_output} -- tr=
-ue"
-> -  $perf_command
-> +test_event_uniquifying() {
-> +  echo "Uniquification of PMU sysfs events test"
->
-> -  # Check the output contains all uniquified events.
-> -  for uniquified_event in "${uniquified_event_array[@]}"; do
-> -    if ! cat "${stat_output}" | grep -q "${uniquified_event}"; then
-> -      echo "Event is not uniquified [Failed]"
-> -      echo "${perf_command}"
-> -      cat "${stat_output}"
-> -      err=3D1
-> -      break
-> -    fi
-> +  # Read events from perf list with and without -v. With -v the duplicat=
-e PMUs
-> +  # aren't deduplicated. Note, json events are listed by perf list witho=
-ut a
-> +  # PMU.
-> +  read -ra pmu_events <<< "$(perf list --raw pmu)"
-> +  read -ra pmu_v_events <<< "$(perf list -v --raw pmu)"
-> +  # For all non-deduplicated events.
-> +  for pmu_v_event in "${pmu_v_events[@]}"; do
-> +    # If the event matches an event in the deduplicated events then it m=
-usn't
-> +    # be an event with duplicate PMUs, continue the outer loop.
-> +    for pmu_event in "${pmu_events[@]}"; do
-> +      if [[ "$pmu_v_event" =3D=3D "$pmu_event" ]]; then
-> +        continue 2
-> +      fi
-> +    done
-> +    # Strip the suffix from the non-deduplicated event's PMU.
-> +    event=3D$(echo "$pmu_v_event" | sed -E 's/_[0-9]+//')
-> +    for pmu_event in "${pmu_events[@]}"; do
-> +      if [[ "$event" =3D=3D "$pmu_event" ]]; then
-> +        echo "Testing event ${event} is uniquified to ${pmu_v_event}"
-> +        if ! perf stat -e "$event" -A -o ${stat_output} -- true; then
-> +          echo "Error running perf stat for event '$event'  [Skip]"
-> +          if [ $err =3D 0 ]; then
-> +            err=3D2
-> +          fi
-> +          continue
-> +        fi
-> +        # Ensure the non-deduplicated event appears in the output.
-> +        if ! grep -q "${pmu_v_event}" "${stat_output}"; then
-> +          echo "Uniquification of PMU sysfs events test [Failed]"
-> +          cat "${stat_output}"
-> +          err=3D1
-> +        fi
-> +        break
-> +      fi
-> +    done
->    done
->  }
->
->  test_event_uniquifying
-> -rm -f "${stat_output}"
-> +cleanup
->  exit $err
-> --
-> 2.51.0.470.ga7dc726c21-goog
+> /*
+>  * hardlockup_detector_perf_init() will success even if Pseudo-NMI turns =
+off,
+
+Okay, we also need to change it to =E2=80=9Cwatchdog_hardlockup_probe()=E2=
+=80=9D
+
+>  * however, the pmu interrupts will act like a normal interrupt instead o=
+f
+>  * NMI and the hardlockup detector would be broken.
+> */
 >
 >
+> > +static int __init init_watchdog_freq_notifier(void)
+> > +{
+> > +       return cpufreq_register_notifier(&watchdog_freq_notifier,
+> > +                                        CPUFREQ_POLICY_NOTIFIER);
+>
+> I think you need to do something to prevent this from happening on any
+> platforms that override hw_nmi_get_sample_period(), right? These
+> cpufreq notifiers will be useless in that case...
 
+I understand this is not a problem. watchdog_perf uses
+PERF_COUNT_HW_CPU_CYCLES, which means it is inherently limited by the
+CPU's main frequency. After we make such a change, a larger value may
+be used as the period, so the NMI period will become longer, but this
+value will not change after the system starts.
+
+>
+>
+> -Doug
+>
+
+Thanks,
+Yunhui
