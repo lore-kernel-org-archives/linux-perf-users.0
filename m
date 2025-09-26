@@ -1,181 +1,151 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A64288510
-	for <linux-perf-users@vger.kernel.org>; Fri, 26 Sep 2025 20:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CCF1B3925
+	for <linux-perf-users@vger.kernel.org>; Fri, 26 Sep 2025 22:46:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758920271; cv=none; b=p25fGv/mvavvZYUvDq4cFVJ9AxXmP0FoRd3WrRND55nGmY4dHSd+++MWlS5G1kNkP6LUp9nwWeB9DIPZCzLzrQWlDhJJ912T3Ox+2eR1Bn1KBOzKEBMX9dEWE+iz4H6h5CXu7bzhbqz+9UioO0kwVToPJ/LGrt06cI+KpSN1eDo=
+	t=1758926770; cv=none; b=b867oAdXWZQ4/qXSGhJwpj0JroW9fnckqF3EekZOsjTtiGl3IdsdsQ0YRH+6AS13k+Jwa4oDmW6BdXz+nbGsCiAHZiE7RNAfgGAGv0lDLb9Ri5hHgMbl1DlY2g+7U4Yd3y995CwkCufnvf3JSmt1HdPcbsFp6IwIh2bag78S4qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758920271; c=relaxed/simple;
-	bh=CE1reL0wncd9PierxwrDmW4jfOrkqzteseelrqjomUs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nBkfmjHY2sRhy2M7LL+yUFRvHsIedyHQFKJLj39u7GGHPWujBrSmMraLLK10d+zuutbqzdF6jZ9HRfrVapAcDKPbR8fbz0mNaCldJ0qUtDqJvB7WvLOz4g3CrWyZPRe+hsSVhiWBmVNaBYpXSonza7lcskC5pj/TjM/FNsx1ZM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LnFvvg12; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1758926770; c=relaxed/simple;
+	bh=aVLAvDuzjvZUq4o1w0WdiuksjsM3bmOCj0ux9RfpkFc=;
+	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:Cc:To; b=D+ssjnQYPPWEW6igA8TvWp87Z3pdcJwPeJFxO7v1//QcLQa8CenW2HBzUV3V/LyRf6MJ+ZSMmeRnJWk2whonvjGCjSufn+AzTx3my4L054EnWASqylIR6a43F1TZ/xAK6rqpKCcU9hk66RgFsj5cjl/bBDpjz+gk5QEO00Damy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZWKny/ht; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LnFvvg12"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-32df5cae0b1so3042315a91.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Sep 2025 13:57:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZWKny/ht"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-634a4829c81so4103018a12.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Sep 2025 15:46:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1758920266; x=1759525066; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lH2Sfk58/GaFMno98E5ZZZ0Jezt1oWfRMccsDmLi3+U=;
-        b=LnFvvg1251fT84Uc8EvVtzSfwMHLGfZG01EU733AX0T7JbM3bf9WO+AlcCM8uwIuQi
-         NFLA2Ky9BXuNNtxTMaLusiOxRjGQKjQAkkW8U0KqPtGSTg40Bo/UtDEA49TBa7QAvW/e
-         rdHNtfb2ubWfk/7STYKrdNd1LlTJkOLjhEy/s=
+        d=gmail.com; s=20230601; t=1758926767; x=1759531567; darn=vger.kernel.org;
+        h=to:cc:date:message-id:subject:mime-version
+         :content-transfer-encoding:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p0XcUmbDIm9A8aHJ2IMOdtvaZQ6t8E9f+KkDqK772Fo=;
+        b=ZWKny/htVsoqKThzah9+H/u+WP8YCFrb2pjPVyf7/dUPkFajLRlMqoK/c5zwIDyNPa
+         b1MlIPsARVIitkGP80665CUXy6iN0XMBnsbFy0ALRlTwGj5UfbeVxqBxQe/tdp/8TpVv
+         OaUVt4fRl2OKgcF9hMzOvVB+fgborAELlqFqDjCTXgbNLwFlCt/TbXDWC+4qW085obDz
+         GqObzWJzpBucKLGDZketQ3GhTXBHHAnxKG9b6m361ZM/xDYLpg2p6Vxqxp0kd1goeZRO
+         k6fE+QIkiGr3n/eK7Q8BVZIFEIWBZTvLO27D2mzixTtmuKO1k2MkppS3AwvI3PkwVoYU
+         snjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758920266; x=1759525066;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1758926767; x=1759531567;
+        h=to:cc:date:message-id:subject:mime-version
+         :content-transfer-encoding:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lH2Sfk58/GaFMno98E5ZZZ0Jezt1oWfRMccsDmLi3+U=;
-        b=KJAoZw08KvrJEURmUVR07QGlCxr38URFiSzTsk22lK50tL8kMl0Z/dLqe8donQC1QS
-         B1LmTm3/2Ep6s93fxmi05iDnMefj3NWeenE+48n+ksbRTgownGtOTIbGqaLkOCy7fWBI
-         Jg8inB9YtJbB/Zs60nS7MQejsOPp2CjIa59S3eHfcIbulhjDLBNBlsmr/7Rx/bGil8Hr
-         AKQ0baQAbwJLQucbSEL1h0QPgOrOx1GpDRV7T6/Vq8mq5gqKic1sL30kwDUr9oAK18Br
-         8hcPYxjSaZ3lB681xXRaja46S1mjh8hFOPALHy2CfqT6O2GnurpXqSvh965vj0UHae9v
-         UqOw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2q73DJNw/3X3s7E/gjYUdUqDxqtJaRpR+gy73Xpp/R8rmsW/livpFztDhS8DyHjnNaZy2iurvBBQ0RA9ZKPaB@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuAH4LEIXsWBenO+LLiqm/apkMXsN1By52z4fKBJguP2j2KuAy
-	/yQkXk/NSPk3an82dNYeCH7YfbgDh1Sg4piLu6cyxNnnL2MKxn1B22+L8fxP6Xlc2dGNITP/arM
-	SrBc=
-X-Gm-Gg: ASbGncvp/D5+KTgVhOPgJQoiOiEKkH3Jq37Cro7rSagiDhixUhirlUrsLKN07moRkLK
-	8ptmHTnLJT4JDWWXu0gCH27Bjyud+oyOvkZnBkvGZj7A0IYRRgTWf/D0lGV2MC4euK9eUUhbkcS
-	mQWK5+nGl0TKy+ELS3efTNDfiLOpz3rrvUOcFrrsi3dSSZWGXAV5ANSNDY+gYaoqZfz0TeqOl9N
-	+C/mgE5+YoyaXXhFfJSFe+SITNySFSD3vH48i3/jbEpoG1hekRwMkFhGqjnr6bOUT9GEQZEb8N5
-	/IgY2Gr/3pmPzBDP3XipHldt8DAUwb5B2xBuFCeQKcSiwaCpeid5KAZFHsdeyaVLh+qmVxgiO3d
-	VIz6x4W6hYuuHq6IW9rfj+KS8Pjt/jpX0dmx0lziKyNUYp5IwZ2Emm4lJhqMCg9ldWcV57SaHtX
-	oE
-X-Google-Smtp-Source: AGHT+IGUn9RQHUA+UsWh/l47ULycJOukQrvT/u9NAGySWClknwUmotwz2vC3mogtk+AB7Ib6MAruTw==
-X-Received: by 2002:a17:90b:3a8b:b0:330:4604:3ab6 with SMTP id 98e67ed59e1d1-3342a2b119emr9410998a91.18.1758920265986;
-        Fri, 26 Sep 2025 13:57:45 -0700 (PDT)
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com. [209.85.214.181])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3352c6e11d8sm3111990a91.17.2025.09.26.13.57.44
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Sep 2025 13:57:44 -0700 (PDT)
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-269639879c3so25339595ad.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Sep 2025 13:57:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX1mN1Ms9XSU8HGKh5O900cDdjhs1EPu2Mh89CkZ9qatGwlrk+7R+CY/e/o0bEgMfFgBT4R3kY4c/GRpNzTSMrz@vger.kernel.org
-X-Received: by 2002:a17:902:c402:b0:25c:d4b6:f119 with SMTP id
- d9443c01a7336-27ed49df307mr105837165ad.12.1758920263386; Fri, 26 Sep 2025
- 13:57:43 -0700 (PDT)
+        bh=p0XcUmbDIm9A8aHJ2IMOdtvaZQ6t8E9f+KkDqK772Fo=;
+        b=vk4xHJ8iXOffLr9BSV+OdxdPJEH2omA9fMziOAbFWIhtQjKR1GuImWVhMC8LYl861m
+         eWnSBj3EaEDNmIn/PbZy+DfzxM1uHlhayhQVsQL3909bft3rin2O+s1Gy9xZVjM50u3g
+         puaZ7JNIM7TZ7b+K2crzSXYsQz1YyeYCpk861snCft06QP2Q/3Rqpf0kSUrEU071mwbv
+         x0RCzlAB4i8z7uZoegJabg54hU48sbhMLjCtyk//DqY201GAChJuOuSJIbPdJlz1ajla
+         G+r5epH+fBlHFKOun0gE0zO2o1o6ZUF/vsIqWMiMfv80gM7LJoYJ3um//jFWqwhsLQov
+         +4MA==
+X-Gm-Message-State: AOJu0YypwoMJ0oHXZ1pJhapnM9q3rembqimDAI+9CwR44rWMMh52JzUx
+	ScsXnOeNXeAFoEEDFueQLs6Ps31FMpnwt1ujeFc089LV/ewnSEIb+14=
+X-Gm-Gg: ASbGncsDwTCCqVAcmduMXLNsdyhB+ttk5ra7hftKIcs9cUubpLE3yOp+Vu9cKUyTRSK
+	zdbV3apttPRDr7ISCRgZvD5Mr7iH22PPtJwb4xYRAJVL+m6cC7nZKpUQzJhhXwFNafyZ21RC7A/
+	NxjiQ/o+ji3A6irBM1eNIPXh59fFAf34ZW08G9RNN+FSEGLC2DYJkcn3kXNwjSEHJ8THTPtGH+8
+	XczMJvm1sK8xK/VF6kbhstJ8rJA3wK/pD8utydTxnMJqm0nyT2wCTZYi9ruxAkOG5W77dskky39
+	+gpzcO40QquiS9ZIOyzZAWhb+drnbG00s0sCVHa8oGCV6SyTsO72wNhc+jjdsuJpXYHkCuZxZGz
+	3qMR4QJp1+YYNrTsWC7PTKgQ5w+C5JX10E3LSzGO9NAm3En4/hB4Qu8A2/0Fjk7E/z98Qf3stcV
+	BBrZFk/bd29Mszve1N9BBRFKalPMyGSqJyticvI/o/PGtaGX9Hj2fVcQA3euJIpCU=
+X-Google-Smtp-Source: AGHT+IEgUt5ke5XNe6uNWf2k/utNyZVhDSWziVn5R9T8tXuQhiIvIALdk0ct3EdeGF/jA1gp8kFcMg==
+X-Received: by 2002:a17:907:7f0f:b0:aff:16eb:8b09 with SMTP id a640c23a62f3a-b34b6449b22mr908248066b.5.1758926767146;
+        Fri, 26 Sep 2025 15:46:07 -0700 (PDT)
+Received: from smtpclient.apple (2001-1c00-3b81-9100-e596-dd7e-500a-9b8c.cable.dynamic.v6.ziggo.nl. [2001:1c00:3b81:9100:e596:dd7e:500a:9b8c])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b35446f7506sm443091466b.52.2025.09.26.15.46.06
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Sep 2025 15:46:06 -0700 (PDT)
+From: Aniruddha Deb <aniruddha.deb.2002@gmail.com>
+Content-Type: text/plain;
+	charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250925084806.89715-1-cuiyunhui@bytedance.com>
- <20250925084806.89715-2-cuiyunhui@bytedance.com> <CAD=FV=VZLYqPQCOEhbH4QtndeG5e1-0wey24fgYNTeFiqd8qJg@mail.gmail.com>
- <CAEEQ3wnwNdTgt6ByHCzM43fhZMLSxwXvYx-AGBpsktraXqif2Q@mail.gmail.com>
-In-Reply-To: <CAEEQ3wnwNdTgt6ByHCzM43fhZMLSxwXvYx-AGBpsktraXqif2Q@mail.gmail.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 26 Sep 2025 13:57:31 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=X6Xv_WYPMXKtOWLJX7skCoQmia3JbQej_u38qxqAbqDg@mail.gmail.com>
-X-Gm-Features: AS18NWDVMqIM3NdX-t4tF69rrS3UxfWVNc7ZvIbAVZlF3PJHNdBYWzKZ9mUJzVc
-Message-ID: <CAD=FV=X6Xv_WYPMXKtOWLJX7skCoQmia3JbQej_u38qxqAbqDg@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH v2 1/2] watchdog: move arm64 watchdog_hld
- into common code
-To: yunhui cui <cuiyunhui@bytedance.com>
-Cc: akpm@linux-foundation.org, alex@ghiti.fr, anup@brainfault.org, 
-	aou@eecs.berkeley.edu, atish.patra@linux.dev, catalin.marinas@arm.com, 
-	johannes@sipsolutions.net, lihuafei1@huawei.com, mark.rutland@arm.com, 
-	masahiroy@kernel.org, maz@kernel.org, mingo@kernel.org, 
-	nicolas.schier@linux.dev, palmer@dabbelt.com, paul.walmsley@sifive.com, 
-	suzuki.poulose@arm.com, thorsten.blum@linux.dev, wangjinchao600@gmail.com, 
-	will@kernel.org, yangyicong@hisilicon.com, zhanjie9@hisilicon.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
+Subject: [BUG] linux/arch/x86/events/intel/uncore_snbep.c: MCx Channel PCI
+ devices are swapped around
+Message-Id: <AB0DE99B-34C1-4BDC-B9C4-15E85BDBF5FA@gmail.com>
+Date: Sat, 27 Sep 2025 00:46:03 +0200
+Cc: linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+To: acme@kernel.org,
+ peterz@infradead.org,
+ mingo@redhat.com,
+ namhyung@kernel.org
+X-Mailer: Apple Mail (2.3776.700.51)
 
-Hi,
+Hi perf subsystem maintainers,
 
-On Fri, Sep 26, 2025 at 2:37=E2=80=AFAM yunhui cui <cuiyunhui@bytedance.com=
-> wrote:
->
-> Hi Doug,
->
-> On Fri, Sep 26, 2025 at 4:00=E2=80=AFAM Doug Anderson <dianders@chromium.=
-org> wrote:
-> >
-> > Hi,
-> >
-> > On Thu, Sep 25, 2025 at 1:48=E2=80=AFAM Yunhui Cui <cuiyunhui@bytedance=
-.com> wrote:
-> > >
-> > > @@ -17,6 +17,7 @@
-> > >  #include <linux/cpu_pm.h>
-> > >  #include <linux/export.h>
-> > >  #include <linux/kernel.h>
-> > > +#include <linux/nmi.h>
-> > >  #include <linux/perf/arm_pmu.h>
-> > >  #include <linux/slab.h>
-> > >  #include <linux/sched/clock.h>
-> > > @@ -696,10 +697,12 @@ static int armpmu_get_cpu_irq(struct arm_pmu *p=
-mu, int cpu)
-> > >         return per_cpu(hw_events->irq, cpu);
-> > >  }
-> > >
-> > > -bool arm_pmu_irq_is_nmi(void)
-> > > +#ifdef CONFIG_HARDLOCKUP_DETECTOR_PERF
-> > > +bool arch_perf_nmi_is_available(void)
-> > >  {
-> > >         return has_nmi;
-> > >  }
-> > > +#endif
-> >
-> > Should the previous comment move here, AKA:
-> >
-> > /*
-> >  * hardlockup_detector_perf_init() will success even if Pseudo-NMI turn=
-s off,
->
-> Okay, we also need to change it to =E2=80=9Cwatchdog_hardlockup_probe()=
-=E2=80=9D
->
-> >  * however, the pmu interrupts will act like a normal interrupt instead=
- of
-> >  * NMI and the hardlockup detector would be broken.
-> > */
-> >
-> >
-> > > +static int __init init_watchdog_freq_notifier(void)
-> > > +{
-> > > +       return cpufreq_register_notifier(&watchdog_freq_notifier,
-> > > +                                        CPUFREQ_POLICY_NOTIFIER);
-> >
-> > I think you need to do something to prevent this from happening on any
-> > platforms that override hw_nmi_get_sample_period(), right? These
-> > cpufreq notifiers will be useless in that case...
->
-> I understand this is not a problem. watchdog_perf uses
-> PERF_COUNT_HW_CPU_CYCLES, which means it is inherently limited by the
-> CPU's main frequency. After we make such a change, a larger value may
-> be used as the period, so the NMI period will become longer, but this
-> value will not change after the system starts.
+The iMC PMC=E2=80=99s in the haswell-EP subsystem have their PCI device =
+ID=E2=80=99s swapped around. According to page 109 of =
+https://www.intel.com/content/www/us/en/content-details/671052/intel-xeon-=
+processor-e5-and-e7-v3-family-uncore-performance-monitoring-reference-manu=
+al.html, MC0 channel 0 and 1 map to 0x2fb4/5 and channel 2/3 map to =
+0x2fb0/1 respectively. Have attached a small patch illustrating the =
+same.
 
-I'm not sure I follow. On x86, hw_nmi_get_sample_period() is:
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -3118,32 +3118,32 @@
+ 	{ /* MC0 Channel 0 */
+-		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x2fb0),
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x2fb4),
+ 		.driver_data =3D =
+UNCORE_PCI_DEV_DATA(HSWEP_PCI_UNCORE_IMC, 0),
+ 	},
+ 	{ /* MC0 Channel 1 */
+-		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x2fb1),
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x2fb5),
+ 		.driver_data =3D =
+UNCORE_PCI_DEV_DATA(HSWEP_PCI_UNCORE_IMC, 1),
+ 	},
+ 	{ /* MC0 Channel 2 */
+-		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x2fb4),
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x2fb0),
+ 		.driver_data =3D =
+UNCORE_PCI_DEV_DATA(HSWEP_PCI_UNCORE_IMC, 2),
+ 	},
+ 	{ /* MC0 Channel 3 */
+-		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x2fb5),
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x2fb1),
+ 		.driver_data =3D =
+UNCORE_PCI_DEV_DATA(HSWEP_PCI_UNCORE_IMC, 3),
+ 	},
+ 	{ /* MC1 Channel 0 */
+-		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x2fd0),
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x2fd4),
+ 		.driver_data =3D =
+UNCORE_PCI_DEV_DATA(HSWEP_PCI_UNCORE_IMC, 4),
+ 	},
+ 	{ /* MC1 Channel 1 */
+-		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x2fd1),
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x2fd5),
+ 		.driver_data =3D =
+UNCORE_PCI_DEV_DATA(HSWEP_PCI_UNCORE_IMC, 5),
+ 	},
+ 	{ /* MC1 Channel 2 */
+-		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x2fd4),
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x2fd0),
+ 		.driver_data =3D =
+UNCORE_PCI_DEV_DATA(HSWEP_PCI_UNCORE_IMC, 6),
+ 	},
+ 	{ /* MC1 Channel 3 */
+-		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x2fd5),
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x2fd1),
+ 		.driver_data =3D =
+UNCORE_PCI_DEV_DATA(HSWEP_PCI_UNCORE_IMC, 7),
+ 	},
 
-u64 hw_nmi_get_sample_period(int watchdog_thresh)
-{
-  return (u64)(cpu_khz) * 1000 * watchdog_thresh;
-}
+I came across this when reading the perf subsystem code to see how =
+offcore memory controllers are accessed, and where the addresses are =
+defined. Haven=E2=80=99t had the chance to test it out on hardware yet, =
+so please let me know if the intel document is wrong and the values =
+entered are correct in practice.
 
-On PowerPC it's:
-
-u64 hw_nmi_get_sample_period(int watchdog_thresh)
-{
-  return ppc_proc_freq * watchdog_thresh;
-}
-
-Neither of those are necessarily based on the results the cpufreq
-reports. ...so therefore I don't think you should be taking the
-cpufreq reported numbers and assuming they're OK on x86 and powerpc.
-
--Doug
+Thanks,
+Aniruddha.=
