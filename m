@@ -1,152 +1,325 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A09529DB88
-	for <linux-perf-users@vger.kernel.org>; Fri, 26 Sep 2025 09:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039532DF6F6
+	for <linux-perf-users@vger.kernel.org>; Fri, 26 Sep 2025 10:54:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758879478; cv=none; b=gea5ajglpnUlC3fZgHO2iWne8/PURKInM4VOLiUDswAzNs9pw4qSlHtwqnwDFFJPjZr+BqRhAGYgAuayHqBo4efIp8H1Szilo1mVKdeNNBU2uUiz4WHgDLqhi+DS91Nrx1KgpY5nZFKOoUF57o94AYPlGiX0sQ5170FH62E+ERo=
+	t=1758884061; cv=none; b=rF86rCR5xGMPZq2W4u7dOXgjPsgCjlXon8ebePv+8KamdQqVaJAdmc/ibmcUPgSNoPzkHQT5rr0ZKGq9wNkamM2KpsmyKAUk3xyNb6NRPW7OcIrjAND9VL3GPdXXzKCXCt+3q0zlgka1ARePOeMZsNX/2EQs81uSBAp6nLI+51g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758879478; c=relaxed/simple;
-	bh=B/7QQgyqHSm4AZXbTcSg97A8gq1X1CH39AjApJhmXr0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lcKbvpJkQS+Bf0jixpL00pn49CL3tdJUCwr2sDbOP+Us0Yf4aeXGS7+wKicNZDORsVkQfwce8tKpzn3RnLjIgScTe61Xpp1iV8FYPG8eLUHgcumR4Hz4d17puP4TQpFMtiqUNUPZrycVT7UqkT/pF1V9GkcS/6cezZGwAWYUUW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=G0n7Nqss; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1758884061; c=relaxed/simple;
+	bh=ZqJ9gWc509cwsHWwJkNg4NON23HFhjy8X0SEdcYZJdQ=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P2mOdr85PDPqnY1p91n4uBNJoT938DKE/Tg4ZQNegS85q9sab2+CgJy0hECwyrK7lKHdBS83VSfGnFdLZ6K8b4YwtzqNv/VIwWMqWh3oWSrnWjD+i76UZzEPbL/gT3p/hBwg8NXPNKuztEalroPmbsM+TqsgVP+b2qM2A0YbByo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IW8rqNH/; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="G0n7Nqss"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-74526ca79c2so872483a34.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Sep 2025 02:37:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IW8rqNH/"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3ef166e625aso1600391f8f.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Sep 2025 03:54:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1758879475; x=1759484275; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V5FmCZ7m0CyShB1Ycdtz4U9JEqoB4MdA/m7HVOlr6mo=;
-        b=G0n7NqssAzj0IG6CY+5Qi/lsv6pyp4tX8yLowhiSP4mEo1a5zTTGdKPh+Vcz32SSv7
-         VrGACAxwyfhxcCAXEx5Il62yjT9yLvO1IQc1E2hIxPNbI9d09gWxht9RfS+rAy8osM5L
-         qsbnHj1eoBUDsSMV8Y4b8weoNajm03mzhYNXqDT4heEzUw+V4JMH1h0d6AnWssO/u+Ow
-         g4fwuVCzauhfsyJhp7KH/mGdi46kP0/X0te2b61fmg6V7xfz5qIlvtnCldaqEpvhpVI2
-         Bb1sLFRQOUkCIfaSh8B1VRJ2+jHQWHug6VSUqtVoJ1uwEtRTjb9E5nlO8js9t+DFrZgO
-         vtxA==
+        d=gmail.com; s=20230601; t=1758884057; x=1759488857; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=UJQS+YYB0NzVkBYe1TuZ4CgN8KO3C/Ns6qyjEQZVUms=;
+        b=IW8rqNH/1yhFb0gGVJYACjrM3qwnw0O+mRjnnsVnKBetIp5s6F2n6ZCB1kKwEKC+pw
+         B950MYusjWienDRj8noQHTW+KaEsATmsD8kwRMbpMkri9FO6+z65yzWqMXqYNPC2wOTO
+         woX3TAsMdqQrvI+ttoPzdL4XEXm9mJ42NWRL4hN71FinoDbcyoSSq/ztclaLLCprBzGn
+         zij4vvNdldsYoX3IiJBDpEeH3zSaZSN3sVPYaejYXIvYGRwrYy1DvQmLro/L8Zlft1IG
+         aYJsnd9KwjyJ6PSPitlEvJHxCqaIcQd2Gn4gF5WJpyADihnNRqpRrfI3yvfnrMo/Abv+
+         yo4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1758879475; x=1759484275;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V5FmCZ7m0CyShB1Ycdtz4U9JEqoB4MdA/m7HVOlr6mo=;
-        b=p/PUx34Pdm7SQGv5ixZWOIPVgoC5e5SwARKWdW5NdKMlVCxASZZxR54c6DnYaqaKb0
-         3GPZWGM1tEHuElE17XpJD8WTcAYGdTnZbNdh+rT3zM9Y9q+7EfVQkT5aXHUCURDe0wMd
-         Rka5FDvcnfQKZbFvExJQeVT5jWaUZco80vZTDR6A0ts5ASDvehbxEslfj6g06nsWugRy
-         F9eRTwBgGqcTx2UVLA8/qlT7Ti9rWGI3Js+Rf46LLANw9Umra1kHJFO0AUMJTwBazpIP
-         aoIuFOHndNf8UOuwvlx2jtZxqewSmfliMvwxqKLaiHcJ2yuMI2iiupGadj0BVXQozlJ7
-         0Y7g==
-X-Forwarded-Encrypted: i=1; AJvYcCWma8bAhmq6zkhQcHQdGWlOtqp940PnITPMPekDMLZiROzfBtjZEVQiR/sHdo6yDWbPgeEYWywXEciMqv03+uZw@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnFqhgHKg/fCxru1j7rLKegBkBFkC0lIJxdVLBN/b4PzQd0dls
-	MGTfoIwqnVVXX4/V7cOEoBID2KYDvqi2QV2DfEafaZaTh+ny0mm8vIHEMpTYP+xHEnzLvdddOlz
-	CmKogvYRfL7CzBnPXrKv6GEmbIY7n6Swu/zKrWMDv2Q==
-X-Gm-Gg: ASbGncuVRZtgO0HM/p5Cc1OiTICYuXUeXtM0SDkt1jIMOeOt5+BLcbe+qWQpeCwrpQJ
-	c3wI/e5MsEyD4MP8nvXPkQGDXeolT3/bXMHQRNMmyZn0kOGRxU67dYs06C1UxPFvqXfhWE3ppFE
-	OuZUlg5IHewAfqqogB683KW8goeWVM0J1k5q2PRlvN2g/bv/VIrtFsMKzxVn6EnbvNAYrVHCnHn
-	RgIgHZ/7qFWFglaYqqXpWz6mXfaMFXCWi3u8g==
-X-Google-Smtp-Source: AGHT+IEc3BE14yCdZtCENJr4UXyf6Y8XkhqfpWh+WHahYzWW5GLDg7SSMeNNAS+2Kw/XzX0+d+blEeRda/r+amoNwkc=
-X-Received: by 2002:a05:6808:8843:10b0:43f:5218:878a with SMTP id
- 5614622812f47-43f52188986mr2126658b6e.22.1758879475127; Fri, 26 Sep 2025
- 02:37:55 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1758884057; x=1759488857;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UJQS+YYB0NzVkBYe1TuZ4CgN8KO3C/Ns6qyjEQZVUms=;
+        b=Yxe0dQra1UbyXpixSXdolzPVtROxJ0sV+/R3S/YhwySDCfCnklAwhQMQh1pYMEmQ7j
+         /JEpw5HuZ5EeAkj3wnJBNKvkxaJQGex3pppIam3SLXBIF7Mt5fkC8I68+KkLjdPycMxu
+         y7/cXlMDWXGK5Up+wAwxpLtgWpL6QZI99Szo3t8b+Ehvaqfv0Wnjm6EFdTmK5rc+6Cmz
+         k2uEHWvNs3Io+vAyNCLc9W0r4pbgt+bKx7pZiMLWz3PcEN4Kq+2atVsPgavojfskCkks
+         avfZkU1PJU3iUgF91Y5MgH5Vta1ODUpPikVl4S41me4MjofFVRAkd3JbZOEzEiY4fNG3
+         DC8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVKjjNT/tEbuTlYCNlOvcTFS8ScEaQArrWwrCZXabtMK4doP0p/iS0ALaEwW+1PtT0yPtePNS137+yK4y6xJ4Ed@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxkj3XqtxcCIZXZUwusYHNTNtGtwS1twdkYllsBzTxHt2xgVZxe
+	l8dZIxz4MDz+JT+ddxhviHfV77IXzRR/y81VpZTdOsEoG4gkc65BAr/9
+X-Gm-Gg: ASbGnctQeNBniIMq5LzRHbNjD49ZI8bizR6oXtlJaLpK7oX97W9mSQsDziWM6HZuxTs
+	rlodKlB4s2j6A6p+C0JP2MHMdKWkCSCqvaAtLl10d3kap/WUR+1WY9jTFY9Duop0Kg8DP9P/h4z
+	czCmYtvjfJ7bOch2yPcfsiqR5mXwDa3PtIpjDleHOAUF5t14cE4BysvHaNJlHDfwiGLX7Iaw8vy
+	VOrqm8tccgEx6L/UVOCgIjBmTiYAfCZhz156E31qA+N1jYD6ckq8UXL44VodnapGhHLvhuMkbYh
+	9ipVimT1Gtauj+k7rH3so6SrMrI3SfNZcmkYySsqAa/ilD0KQDcy0vbcsTDZr1ey8u+BCIVxqjV
+	9hLlIjRk=
+X-Google-Smtp-Source: AGHT+IGNiZG0zTs7QJIGVAfP9xqyiBKqMoVnPCEQ/mevzBFGRcZCQruWumPhglYyA6JRq8GUffO6ow==
+X-Received: by 2002:a05:6000:178b:b0:3b7:9c79:32bb with SMTP id ffacd0b85a97d-40e4ff1991bmr6941603f8f.44.1758884057002;
+        Fri, 26 Sep 2025 03:54:17 -0700 (PDT)
+Received: from krava ([2a02:8308:a00c:e200::31e0])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-40fb72face8sm6615912f8f.5.2025.09.26.03.54.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Sep 2025 03:54:16 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Fri, 26 Sep 2025 12:54:15 +0200
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Feng Yang <yangfeng59949@163.com>, bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>
+Subject: Re: [PATCH bpf-next] selftests/bpf: Add stacktrace test for kprobe
+ multi
+Message-ID: <aNZw13CJARm5EZGB@krava>
+References: <20250925115145.1916664-1-jolsa@kernel.org>
+ <CAEf4BzYPkuD0SnfhjwWU3X_HaRGk-gSVqe_-AxYe7P5kfAZ9Vw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250925084806.89715-1-cuiyunhui@bytedance.com>
- <20250925084806.89715-2-cuiyunhui@bytedance.com> <CAD=FV=VZLYqPQCOEhbH4QtndeG5e1-0wey24fgYNTeFiqd8qJg@mail.gmail.com>
-In-Reply-To: <CAD=FV=VZLYqPQCOEhbH4QtndeG5e1-0wey24fgYNTeFiqd8qJg@mail.gmail.com>
-From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Fri, 26 Sep 2025 17:37:44 +0800
-X-Gm-Features: AS18NWBUD0z6jg0TusFj1nphukSzt5aTNsZRJ0rH-JxFSgQYIIkepAcYdgJLzRk
-Message-ID: <CAEEQ3wnwNdTgt6ByHCzM43fhZMLSxwXvYx-AGBpsktraXqif2Q@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH v2 1/2] watchdog: move arm64 watchdog_hld
- into common code
-To: Doug Anderson <dianders@chromium.org>
-Cc: akpm@linux-foundation.org, alex@ghiti.fr, anup@brainfault.org, 
-	aou@eecs.berkeley.edu, atish.patra@linux.dev, catalin.marinas@arm.com, 
-	johannes@sipsolutions.net, lihuafei1@huawei.com, mark.rutland@arm.com, 
-	masahiroy@kernel.org, maz@kernel.org, mingo@kernel.org, 
-	nicolas.schier@linux.dev, palmer@dabbelt.com, paul.walmsley@sifive.com, 
-	suzuki.poulose@arm.com, thorsten.blum@linux.dev, wangjinchao600@gmail.com, 
-	will@kernel.org, yangyicong@hisilicon.com, zhanjie9@hisilicon.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzYPkuD0SnfhjwWU3X_HaRGk-gSVqe_-AxYe7P5kfAZ9Vw@mail.gmail.com>
 
-Hi Doug,
-
-On Fri, Sep 26, 2025 at 4:00=E2=80=AFAM Doug Anderson <dianders@chromium.or=
-g> wrote:
->
-> Hi,
->
-> On Thu, Sep 25, 2025 at 1:48=E2=80=AFAM Yunhui Cui <cuiyunhui@bytedance.c=
-om> wrote:
+On Thu, Sep 25, 2025 at 04:26:08PM -0700, Andrii Nakryiko wrote:
+> On Thu, Sep 25, 2025 at 4:51 AM Jiri Olsa <jolsa@kernel.org> wrote:
 > >
-> > @@ -17,6 +17,7 @@
-> >  #include <linux/cpu_pm.h>
-> >  #include <linux/export.h>
-> >  #include <linux/kernel.h>
-> > +#include <linux/nmi.h>
-> >  #include <linux/perf/arm_pmu.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/sched/clock.h>
-> > @@ -696,10 +697,12 @@ static int armpmu_get_cpu_irq(struct arm_pmu *pmu=
-, int cpu)
-> >         return per_cpu(hw_events->irq, cpu);
-> >  }
+> > Adding stacktrace test for kprobe multi probe.
 > >
-> > -bool arm_pmu_irq_is_nmi(void)
-> > +#ifdef CONFIG_HARDLOCKUP_DETECTOR_PERF
-> > +bool arch_perf_nmi_is_available(void)
-> >  {
-> >         return has_nmi;
-> >  }
-> > +#endif
->
-> Should the previous comment move here, AKA:
->
-> /*
->  * hardlockup_detector_perf_init() will success even if Pseudo-NMI turns =
-off,
+> > Cc: Feng Yang <yangfeng59949@163.com>
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> > test for arm64 fix posted separately in here:
+> >   https://lore.kernel.org/bpf/20250925020822.119302-1-yangfeng59949@163.com/
+> >
+> >  .../selftests/bpf/prog_tests/stacktrace_map.c | 107 +++++++++++++-----
+> >  .../selftests/bpf/progs/test_stacktrace_map.c |  28 ++++-
+> >  2 files changed, 106 insertions(+), 29 deletions(-)
+> >
+> > diff --git a/tools/testing/selftests/bpf/prog_tests/stacktrace_map.c b/tools/testing/selftests/bpf/prog_tests/stacktrace_map.c
+> > index 84a7e405e912..922224adc86b 100644
+> > --- a/tools/testing/selftests/bpf/prog_tests/stacktrace_map.c
+> > +++ b/tools/testing/selftests/bpf/prog_tests/stacktrace_map.c
+> > @@ -1,13 +1,44 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  #include <test_progs.h>
+> > +#include "test_stacktrace_map.skel.h"
+> >
+> 
+> Tao just refactored this to skeleton, so please rebase and adjust accordingly
 
-Okay, we also need to change it to =E2=80=9Cwatchdog_hardlockup_probe()=E2=
-=80=9D
+ok
 
->  * however, the pmu interrupts will act like a normal interrupt instead o=
-f
->  * NMI and the hardlockup detector would be broken.
-> */
->
->
-> > +static int __init init_watchdog_freq_notifier(void)
+> 
+> pw-bot: cr
+> 
+> 
+> > -void test_stacktrace_map(void)
+> > +static void check_stackmap(int control_map_fd, int stackid_hmap_fd,
+> > +                          int stackmap_fd, int stack_amap_fd)
 > > +{
-> > +       return cpufreq_register_notifier(&watchdog_freq_notifier,
-> > +                                        CPUFREQ_POLICY_NOTIFIER);
->
-> I think you need to do something to prevent this from happening on any
-> platforms that override hw_nmi_get_sample_period(), right? These
-> cpufreq notifiers will be useless in that case...
+> > +       __u32 key, val, duration = 0;
+> > +       int err, stack_trace_len;
+> > +
+> > +       /* disable stack trace collection */
+> > +       key = 0;
+> > +       val = 1;
+> > +       bpf_map_update_elem(control_map_fd, &key, &val, 0);
+> > +
+> > +       /* for every element in stackid_hmap, we can find a corresponding one
+> > +        * in stackmap, and vice versa.
+> > +        */
+> > +       err = compare_map_keys(stackid_hmap_fd, stackmap_fd);
+> > +       if (CHECK(err, "compare_map_keys stackid_hmap vs. stackmap",
+> > +                 "err %d errno %d\n", err, errno))
+> > +               return;
+> > +
+> > +       err = compare_map_keys(stackmap_fd, stackid_hmap_fd);
+> > +       if (CHECK(err, "compare_map_keys stackmap vs. stackid_hmap",
+> > +                 "err %d errno %d\n", err, errno))
+> > +               return;
+> > +
+> > +       stack_trace_len = PERF_MAX_STACK_DEPTH * sizeof(__u64);
+> > +       err = compare_stack_ips(stackmap_fd, stack_amap_fd, stack_trace_len);
+> > +       CHECK(err, "compare_stack_ips stackmap vs. stack_amap",
+> > +               "err %d errno %d\n", err, errno);
+> > +}
+> > +
+> > +static void test_stacktrace_map_tp(void)
+> >  {
+> >         int control_map_fd, stackid_hmap_fd, stackmap_fd, stack_amap_fd;
+> >         const char *prog_name = "oncpu";
+> > -       int err, prog_fd, stack_trace_len;
+> > +       int err, prog_fd;
+> >         const char *file = "./test_stacktrace_map.bpf.o";
+> > -       __u32 key, val, duration = 0;
+> > +       __u32 duration = 0;
+> >         struct bpf_program *prog;
+> >         struct bpf_object *obj;
+> >         struct bpf_link *link;
+> > @@ -44,32 +75,56 @@ void test_stacktrace_map(void)
+> >         /* give some time for bpf program run */
+> >         sleep(1);
+> >
+> > -       /* disable stack trace collection */
+> > -       key = 0;
+> > -       val = 1;
+> > -       bpf_map_update_elem(control_map_fd, &key, &val, 0);
+> > -
+> > -       /* for every element in stackid_hmap, we can find a corresponding one
+> > -        * in stackmap, and vice versa.
+> > -        */
+> > -       err = compare_map_keys(stackid_hmap_fd, stackmap_fd);
+> > -       if (CHECK(err, "compare_map_keys stackid_hmap vs. stackmap",
+> > -                 "err %d errno %d\n", err, errno))
+> > -               goto disable_pmu;
+> > -
+> > -       err = compare_map_keys(stackmap_fd, stackid_hmap_fd);
+> > -       if (CHECK(err, "compare_map_keys stackmap vs. stackid_hmap",
+> > -                 "err %d errno %d\n", err, errno))
+> > -               goto disable_pmu;
+> > -
+> > -       stack_trace_len = PERF_MAX_STACK_DEPTH * sizeof(__u64);
+> > -       err = compare_stack_ips(stackmap_fd, stack_amap_fd, stack_trace_len);
+> > -       if (CHECK(err, "compare_stack_ips stackmap vs. stack_amap",
+> > -                 "err %d errno %d\n", err, errno))
+> > -               goto disable_pmu;
+> > +       check_stackmap(control_map_fd, stackid_hmap_fd, stackmap_fd, stack_amap_fd);
+> >
+> >  disable_pmu:
+> >         bpf_link__destroy(link);
+> >  close_prog:
+> >         bpf_object__close(obj);
+> >  }
+> > +
+> > +static void test_stacktrace_map_kprobe_multi(bool retprobe)
+> > +{
+> > +       int control_map_fd, stackid_hmap_fd, stackmap_fd, stack_amap_fd;
+> > +       LIBBPF_OPTS(bpf_kprobe_multi_opts, opts,
+> > +               .retprobe = retprobe
+> > +       );
+> > +       LIBBPF_OPTS(bpf_test_run_opts, topts);
+> > +       struct test_stacktrace_map *skel;
+> > +       struct bpf_link *link;
+> > +       int prog_fd, err;
+> > +
+> > +       skel = test_stacktrace_map__open_and_load();
+> > +       if (!ASSERT_OK_PTR(skel, "test_stacktrace_map__open_and_load"))
+> > +               return;
+> > +
+> > +       link = bpf_program__attach_kprobe_multi_opts(skel->progs.kprobe,
+> > +                                                    "bpf_fentry_test1", &opts);
+> > +       if (!ASSERT_OK_PTR(link, "bpf_program__attach_kprobe_multi_opts"))
+> > +               goto cleanup;
+> > +
+> > +       prog_fd = bpf_program__fd(skel->progs.trigger);
+> > +       err = bpf_prog_test_run_opts(prog_fd, &topts);
+> > +       ASSERT_OK(err, "test_run");
+> > +       ASSERT_EQ(topts.retval, 0, "test_run");
+> > +
+> > +       control_map_fd  = bpf_map__fd(skel->maps.control_map);
+> > +       stackid_hmap_fd = bpf_map__fd(skel->maps.stackid_hmap);
+> > +       stackmap_fd     = bpf_map__fd(skel->maps.stackmap);
+> > +       stack_amap_fd   = bpf_map__fd(skel->maps.stack_amap);
+> > +
+> > +       check_stackmap(control_map_fd, stackid_hmap_fd, stackmap_fd, stack_amap_fd);
+> > +
+> > +cleanup:
+> > +       test_stacktrace_map__destroy(skel);
+> > +}
+> > +
+> > +void test_stacktrace_map(void)
+> > +{
+> > +       if (test__start_subtest("tp"))
+> > +               test_stacktrace_map_tp();
+> > +       if (test__start_subtest("kprobe_multi"))
+> > +               test_stacktrace_map_kprobe_multi(false);
+> > +       if (test__start_subtest("kretprobe_multi"))
+> > +               test_stacktrace_map_kprobe_multi(true);
+> > +}
+> > diff --git a/tools/testing/selftests/bpf/progs/test_stacktrace_map.c b/tools/testing/selftests/bpf/progs/test_stacktrace_map.c
+> > index 47568007b668..7a27e162a407 100644
+> > --- a/tools/testing/selftests/bpf/progs/test_stacktrace_map.c
+> > +++ b/tools/testing/selftests/bpf/progs/test_stacktrace_map.c
+> > @@ -3,6 +3,7 @@
+> >
+> >  #include <vmlinux.h>
+> >  #include <bpf/bpf_helpers.h>
+> > +#include <bpf/bpf_tracing.h>
+> >
+> >  #ifndef PERF_MAX_STACK_DEPTH
+> >  #define PERF_MAX_STACK_DEPTH         127
+> > @@ -50,8 +51,7 @@ struct sched_switch_args {
+> >         int next_prio;
+> >  };
+> >
+> > -SEC("tracepoint/sched/sched_switch")
+> > -int oncpu(struct sched_switch_args *ctx)
+> > +static inline void test_stackmap(void *ctx)
+> >  {
+> >         __u32 max_len = PERF_MAX_STACK_DEPTH * sizeof(__u64);
+> >         __u32 key = 0, val = 0, *value_p;
+> > @@ -59,7 +59,7 @@ int oncpu(struct sched_switch_args *ctx)
+> >
+> >         value_p = bpf_map_lookup_elem(&control_map, &key);
+> >         if (value_p && *value_p)
+> > -               return 0; /* skip if non-zero *value_p */
+> > +               return; /* skip if non-zero *value_p */
+> >
+> >         /* The size of stackmap and stackid_hmap should be the same */
+> >         key = bpf_get_stackid(ctx, &stackmap, 0);
+> > @@ -69,7 +69,29 @@ int oncpu(struct sched_switch_args *ctx)
+> >                 if (stack_p)
+> >                         bpf_get_stack(ctx, stack_p, max_len, 0);
+> >         }
+> > +}
+> > +
+> > +SEC("tracepoint/sched/sched_switch")
+> > +int oncpu(struct sched_switch_args *ctx)
+> > +{
+> > +       test_stackmap(ctx);
+> > +       return 0;
+> > +}
+> >
+> > +/*
+> > + * No tests in here, just to trigger 'bpf_fentry_test*'
+> > + * through tracing test_run.
+> > + */
+> > +SEC("fentry/bpf_modify_return_test")
+> > +int BPF_PROG(trigger)
+> > +{
+> > +       return 0;
+> > +}
+> > +
+> > +SEC("kprobe.multi")
+> > +int kprobe(struct pt_regs *ctx)
+> > +{
+> > +       test_stackmap(ctx);
+> >         return 0;
+> >  }
+> >
+> 
+> Can you please expland the set of program types you are testing:
+> kprobe/kretprobe, kprobe.multi/kretprobe.multi, fentry/fexit/fmod_ret,
+> maybe even uprobe/uretprobe?
 
-I understand this is not a problem. watchdog_perf uses
-PERF_COUNT_HW_CPU_CYCLES, which means it is inherently limited by the
-CPU's main frequency. After we make such a change, a larger value may
-be used as the period, so the NMI period will become longer, but this
-value will not change after the system starts.
+right, will add those
 
->
->
-> -Doug
->
+> 
+> Also, for check_stack_ips(), can we make sure that we look for
+> expected >1 IPs there? We had (still have?) issues where we'd get
+> (successfully) stack trace with just single (but valid!) entry
+> corresponding to traced function, but nothing beyond that. Which
+> clearly is broken. So it would be good to be able to detect this going
+> forward.
 
-Thanks,
-Yunhui
+ok
+
+thanks,
+jirka
