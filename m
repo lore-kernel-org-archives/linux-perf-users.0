@@ -1,151 +1,213 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D64C2222AC;
-	Sat, 27 Sep 2025 08:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B9B2EAE3
+	for <linux-perf-users@vger.kernel.org>; Sun, 28 Sep 2025 02:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758961737; cv=none; b=R5sNT0jIjeo8BbfgC3WHp5EiNTqYABjnddTHzvoDKVyMgVFFYl+I+coAStOL+WfOn3ZwbQeHXGlufHdBKPzEfGE7EUHV3+1as+FsbxMS+Y4A/k9sFPglfx0KcodrFYXc5QpqT9N8HL/KjfLgIZKU1vrycp2mkhtDtRo8woSuls8=
+	t=1759027104; cv=none; b=TUbiMn65belQ8w9atCnBqDIYkQKfb/6Ozsw3S9mUSUDQxFBHWz7d2AjbeMnTGX2L3mLbbN0tyqxysrQ7aQcRuPzppOX1ohkZf1wEPGNN6yuKZgtXYMxSCC9QCAhjYoJHdhhtutc/ZgqlBqX7bj69qTztcnMLdZHgK3MZupxHbyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758961737; c=relaxed/simple;
-	bh=HaBJA/9QY7OaFtysKj9cM6C9pNz3VwiYcn3b170byGM=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=hJJd8S4VNmn7tVxMP951tTOaWlMSpoRXbCxIP6w2fwaL1eEk2lHTIfB06qu5zFweESYSpNR6N8ckVNsdNI22W7yXmvI1ZqS/STPE5Ov7keoaJoo5dw/N48+ky6ZO+ulTpJRI6uKC5mjerJUk58rYzNjVKgCe4k89b8JBE7ebyQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=kSAaaHjN; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1759027104; c=relaxed/simple;
+	bh=y1o0NktTiBEjBpOsSj/+9mjkA32Qt5ndvIyNBx4gntc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mo68rR6G35DT4Yqm0K7KC6wEcbprtzJAVQvEPq2/ADFOr6RlXtP27oBOcc+KRawzKnX8DFJ/2ytfGtnbF0gWItwKZCbYaxKGl4J5n7fnEoEIGs4TVIb3STB2hveTn2PaHBVRBQfTxSqA8BB0zjjEZ7x5kLHK9anamMB5288hvzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=asix7SXw; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="kSAaaHjN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1758961715; x=1759566515; i=markus.elfring@web.de;
-	bh=HaBJA/9QY7OaFtysKj9cM6C9pNz3VwiYcn3b170byGM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=kSAaaHjNmbVnX9nexMY5eKob6BK7gEHyYaoRedKVCLf0sjpc7qFL6w/5ZgMcMS+W
-	 WjQ6ANH2SN9Y7OqbPjA5BCKOr7P1Q5a+Ili7DPckO8+oylKDerBjk1WSPtzHTfvdz
-	 eGiI9DLy4EzUvRaNdGK6ZwRj6UAkiMZO4N/Q+2g+u/yVU92LAt3ow6zlWPV5LMImX
-	 9H4NqEoQDBp15KJOAT35KZmTl85YOZA3Res+9grog8deV9GmwIfrtqNFMLptZlETf
-	 2ROeHH/Su6ateAiPSNmDlz1eLQJy8oxBdLpUsPRj2WMSN70dMmcxzvDIcXGt0grc4
-	 x1GVX3O3YmmNL/yEhg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.92.221]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MadzU-1uUkVF19cw-00odiM; Sat, 27
- Sep 2025 10:28:35 +0200
-Message-ID: <541009d1-b0ab-4dc8-81bb-2dd903cd3cf9@web.de>
-Date: Sat, 27 Sep 2025 10:28:33 +0200
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="asix7SXw"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-6401f1733d7so1257662eaf.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 27 Sep 2025 19:38:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1759027102; x=1759631902; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YDDVDZIdgHY10IxWeSmThIWnM3Kfl8SB2Uc8qwV0eGM=;
+        b=asix7SXwsSIdHyHeR0zGuCLJBz+BNzd6M+VkUCC/c5AjPAWzRHxWmvFWChtHPKlPwc
+         4yb0Fy6t9jxb5ndZ/56x64mTcWlos83ImV4zoEnf983IG4D7RuN/0R8OQMu7Ztg5s12Z
+         s39O8eqf4//VNdp0Jjhv3jhv7LSMMNfm7NZ3T+VdR69d6TMqRbmUfZDzDXXKJ9qG8Nj3
+         AF+uEGegnQF9mi3gkXIB0wjr/VIz3QtAA+xQUVInv5kbcku+o6G/aaDHOCwxKZ7M6AWg
+         4TqQjMPW9JPPnW/sj9MJ1WxyziLy+mxJHOfQkNVu9Vd5glLyaZMmtevrIvjMZ+J/SGJu
+         ZEdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759027102; x=1759631902;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YDDVDZIdgHY10IxWeSmThIWnM3Kfl8SB2Uc8qwV0eGM=;
+        b=VAStwzNt5hvZqrflWz6VFyuWc0Sjq6pLQpCYIMdM6bmZ6Ak+5tglJ7bX4oeIdGmSR3
+         csExyUlsm4fEvEZlE0IM8JjCWJHw89teY0IbgkyRrVVTcEJtsWZSLanfYmkN8ImKt/PK
+         /5QKBDG2HnDyTsJVZkJJBHKxGNxpXvSxi1QwVwUm0XqZL8vkvB9oNAigH0sLsWldo4KX
+         iJgljLpKk0b0NZpQCY4l/557eKTa3+M7JLHT8iHcvG3OiBSD1+wDcDij6bhyCW/WOajq
+         UY8BGygWENRyuuEG+GzrV/s6cM5nHzNxPyyUwHlknSyr/eD12vAXzNdeFrFzDMM5Sn/x
+         8sTw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/aKtwO4S/5rP+V+Dq1dM4x9LnFd9aBozo/9vmlZ4bFtuq7kdYkiw15JiZ16BD4Lqhmv2PbnXT1MfVTPYc5xy9@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6nvOc1W74VEO5edz9VI+gdjXiFZ2O1eAGc6OO+RGL6fIJe8i4
+	h0LKKKPYrqorantAU+UevyxOuS/idCSXghO+0ytzONPwEVqSFvueZLztzZjjaGhwYlNL4vQLf0C
+	2h2toD2JwPEC58Fc+FcN8XuTzg9vaq6GBHy7fKy3mXg==
+X-Gm-Gg: ASbGncvFYygOHQj8mW3mhV6ne4rB+SE/Iy8BfqV4vR57js9Xb7PogKR2LhBfnUu0C2N
+	lNzkUxmkRutQJj0kC0iY5RQUY+fC2VV92Sihe4uyzLtXCoEJX5kEbHVPcicL5uONaJaZ5vcrJN1
+	/bBGhVDln3bDtyORHHvx/Rmh0o81Ydp7TUkqValhU3Mkf0BdIHjPeRH64YHnMwB4Lsl9CvKTRk+
+	1AjGX6TUQy6E9Os3flxaElNES60RwA=
+X-Google-Smtp-Source: AGHT+IHN9SZKPMfskn9LtN56hlvjdE/PVxPJY1sD2/2M2FEMKbIx55CZ1Hog94gS2psvQYARXktJ5bJrXOdSq0er7i4=
+X-Received: by 2002:a05:6808:3022:b0:43f:7287:a5d0 with SMTP id
+ 5614622812f47-43f7287b062mr1202461b6e.34.1759027101799; Sat, 27 Sep 2025
+ 19:38:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: make24@iscas.ac.cn, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org
-Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Besar Wicaksono <bwicaksono@nvidia.com>,
- Ilkka Koskinen <ilkka@os.amperecomputing.com>,
- James Clark <james.clark@linaro.org>, Mark Rutland <mark.rutland@arm.com>,
- Robin Murphy <robin.murphy@arm.com>, Suzuki Poulouse
- <suzuki.poulose@arm.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <u.kleine-koenig@baylibre.com>, Will Deacon <will@kernel.org>
-References: <20250927073013.29898-1-make24@iscas.ac.cn>
-Subject: Re: [PATCH] perf: arm_cspmu: fix error handling in
- arm_cspmu_impl_unregister()
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250927073013.29898-1-make24@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8
+References: <20250925084806.89715-1-cuiyunhui@bytedance.com>
+ <20250925084806.89715-2-cuiyunhui@bytedance.com> <CAD=FV=VZLYqPQCOEhbH4QtndeG5e1-0wey24fgYNTeFiqd8qJg@mail.gmail.com>
+ <CAEEQ3wnwNdTgt6ByHCzM43fhZMLSxwXvYx-AGBpsktraXqif2Q@mail.gmail.com> <CAD=FV=X6Xv_WYPMXKtOWLJX7skCoQmia3JbQej_u38qxqAbqDg@mail.gmail.com>
+In-Reply-To: <CAD=FV=X6Xv_WYPMXKtOWLJX7skCoQmia3JbQej_u38qxqAbqDg@mail.gmail.com>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Sun, 28 Sep 2025 10:38:10 +0800
+X-Gm-Features: AS18NWAN-ZpVjYdN0iAwRHsiQoYm1lDRDU85PF8Qq2B5t-2l3rsp0TxumU2MhVA
+Message-ID: <CAEEQ3wn0UckgNTJCPCNDtHW8DwWAJR1PXURvH57yfHATYqs7Gw@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v2 1/2] watchdog: move arm64 watchdog_hld
+ into common code
+To: Doug Anderson <dianders@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, bp@alien8.de, dave.hansen@linux.intel.com, 
+	x86@kernel.org, hpa@zytor.com, ziqianlu@bytedance.com
+Cc: akpm@linux-foundation.org, alex@ghiti.fr, anup@brainfault.org, 
+	aou@eecs.berkeley.edu, atish.patra@linux.dev, catalin.marinas@arm.com, 
+	johannes@sipsolutions.net, lihuafei1@huawei.com, mark.rutland@arm.com, 
+	masahiroy@kernel.org, maz@kernel.org, mingo@kernel.org, 
+	nicolas.schier@linux.dev, palmer@dabbelt.com, paul.walmsley@sifive.com, 
+	suzuki.poulose@arm.com, thorsten.blum@linux.dev, wangjinchao600@gmail.com, 
+	will@kernel.org, yangyicong@hisilicon.com, zhanjie9@hisilicon.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:4Gs/DylM+FZ1/v30UM1kG2H8UNFCU5ynxAN+OpDeWId5zlaV17E
- JAgC2hKIYGjCLE9UmfaqejiDetTTfQiCeI/ErCZhuF91PjrtZ5ranZYPtbC4n6EAmINY/++
- GtK8Osv/wBR+fDYcYGU8j/xw8qEDeq3jb3UprkPRNsGmEf5qXjRBwwL24/8PfFomm01LZuy
- WZe5PsFApHPbEiPl3KBvA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:pzAYSlBlhVU=;ZXuEhtDQ8pnivTK4X58KMl87a1t
- 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
 
-> driver_find_device() calls get_device() to increment the reference
-> count once a matching device is found. device_release_driver()
-> releases the driver, but it does not decrease the reference count that
-> was incremented by driver_find_device(). At the end of the loop, there
-> is no put_device() to balance the reference count. To avoid reference
-> count leakage, add put_device() to decrease the reference count.
+Hi Doug,
 
-Can a summary phrase like =E2=80=9CPrevent reference count leaks in arm_cs=
-pmu_impl_unregister()=E2=80=9D
-be more appropriate?
+On Sat, Sep 27, 2025 at 4:58=E2=80=AFAM Doug Anderson <dianders@chromium.or=
+g> wrote:
+>
+> Hi,
+>
+> On Fri, Sep 26, 2025 at 2:37=E2=80=AFAM yunhui cui <cuiyunhui@bytedance.c=
+om> wrote:
+> >
+> > Hi Doug,
+> >
+> > On Fri, Sep 26, 2025 at 4:00=E2=80=AFAM Doug Anderson <dianders@chromiu=
+m.org> wrote:
+> > >
+> > > Hi,
+> > >
+> > > On Thu, Sep 25, 2025 at 1:48=E2=80=AFAM Yunhui Cui <cuiyunhui@bytedan=
+ce.com> wrote:
+> > > >
+> > > > @@ -17,6 +17,7 @@
+> > > >  #include <linux/cpu_pm.h>
+> > > >  #include <linux/export.h>
+> > > >  #include <linux/kernel.h>
+> > > > +#include <linux/nmi.h>
+> > > >  #include <linux/perf/arm_pmu.h>
+> > > >  #include <linux/slab.h>
+> > > >  #include <linux/sched/clock.h>
+> > > > @@ -696,10 +697,12 @@ static int armpmu_get_cpu_irq(struct arm_pmu =
+*pmu, int cpu)
+> > > >         return per_cpu(hw_events->irq, cpu);
+> > > >  }
+> > > >
+> > > > -bool arm_pmu_irq_is_nmi(void)
+> > > > +#ifdef CONFIG_HARDLOCKUP_DETECTOR_PERF
+> > > > +bool arch_perf_nmi_is_available(void)
+> > > >  {
+> > > >         return has_nmi;
+> > > >  }
+> > > > +#endif
+> > >
+> > > Should the previous comment move here, AKA:
+> > >
+> > > /*
+> > >  * hardlockup_detector_perf_init() will success even if Pseudo-NMI tu=
+rns off,
+> >
+> > Okay, we also need to change it to =E2=80=9Cwatchdog_hardlockup_probe()=
+=E2=80=9D
+> >
+> > >  * however, the pmu interrupts will act like a normal interrupt inste=
+ad of
+> > >  * NMI and the hardlockup detector would be broken.
+> > > */
+> > >
+> > >
+> > > > +static int __init init_watchdog_freq_notifier(void)
+> > > > +{
+> > > > +       return cpufreq_register_notifier(&watchdog_freq_notifier,
+> > > > +                                        CPUFREQ_POLICY_NOTIFIER);
+> > >
+> > > I think you need to do something to prevent this from happening on an=
+y
+> > > platforms that override hw_nmi_get_sample_period(), right? These
+> > > cpufreq notifiers will be useless in that case...
+> >
+> > I understand this is not a problem. watchdog_perf uses
+> > PERF_COUNT_HW_CPU_CYCLES, which means it is inherently limited by the
+> > CPU's main frequency. After we make such a change, a larger value may
+> > be used as the period, so the NMI period will become longer, but this
+> > value will not change after the system starts.
+>
+> I'm not sure I follow. On x86, hw_nmi_get_sample_period() is:
+>
+> u64 hw_nmi_get_sample_period(int watchdog_thresh)
+> {
+>   return (u64)(cpu_khz) * 1000 * watchdog_thresh;
+> }
 
-Regards,
-Markus
+I have added the maintainers for arch/x86.
+
+1. cpu_khz can be understood as returning the base operating frequency
+of a CPU, such as 2.3GHz. In practice, the CPU's core frequency may
+downclock to 800MHz under low load and overclock to 4.4GHz under high
+load.
+
+2. Because the event provided to the PMU has the
+PERF_COUNT_HW_CPU_CYCLES attribute, and the counter's value is based
+on 2.3GHz, the execution cycle of watchdog_overflow_callback() is not
+fixed; it varies with the CPU's core frequency. When the CPU runs at a
+frequency higher than 2.3GHz, the NMI cycle will shorten; otherwise,
+it will lengthen.
+
+3. After our modification, if the architecture is not integrated with
+cpufreq, it returns 0 and will not update the cycle. If integrated
+with cpufreq, it returns the maximum frequency supported by the CPU,
+so the NMI cycle is only slightly lengthened, with no impact on the
+actual hardlockup detection function.
+
+4. I have also conducted tests:
+stress-ng --cpu 1 --taskset 1 --cpu-load 80
+echo 800000 > scaling_max_freq
+turbostat shows that Bzy_MHz and TSC_MHz are 800 and 2300 respectively.
+And the NMI cycle became approximately 30 seconds:
+[ 2309.442743] NMI watchdog: ------ watchdog overflow callback, cpu =3D 1
+[ 2341.526032] NMI watchdog: ------ watchdog overflow callback, cpu =3D 1
+
+
+
+>
+> On PowerPC it's:
+>
+> u64 hw_nmi_get_sample_period(int watchdog_thresh)
+> {
+>   return ppc_proc_freq * watchdog_thresh;
+> }
+>
+> Neither of those are necessarily based on the results the cpufreq
+> reports. ...so therefore I don't think you should be taking the
+> cpufreq reported numbers and assuming they're OK on x86 and powerpc.
+>
+> -Doug
+>
+
+Thanks,
+Yunhui
