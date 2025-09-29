@@ -1,128 +1,185 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA73DF6C;
-	Mon, 29 Sep 2025 19:01:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940EF2405EB
+	for <linux-perf-users@vger.kernel.org>; Mon, 29 Sep 2025 19:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759172511; cv=none; b=ZgTx7wwoZ08sor/m0fztqDOu51KJdw+kyv1Q7ZwnPPo9pzjGiBQ1ErOMQha8fbL74m3NleRzx1tzwbrWZsOgNb8zFkFBi1sVVAI2LKKQlBuOqfHBCCmgGTEIYvbHYyhjmwQHQvY+owQb91yDDK4iD+/zJSYimVgM73em1b7cDug=
+	t=1759172905; cv=none; b=sUS74xnFWaJzKn0DI+AH/nqzJF0yWoNmi+kBRSzs538zdKKd65ltoy5CFJF/uSzxYaPbNH75m7wyP1g7vm5B/hjQu2hhFxKzj5MpgHbgzKvi61oFesjWWIM9qqt+5/3i6LvQZqT5Htmv8CVzrCXJDwETpxYviLZWeHdT3Paui+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759172511; c=relaxed/simple;
-	bh=g6AAYELuVcdIJrr+eCGc7pYoNDIfAIO4C9UEPcARuxE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W2ObpmZV2WnPff8VAdnUBTtYzvPRpurmV7LyOTrkLJfLVY1gRbUPD1LeS4+oHJbIn5v7W2nYj197mgnLkaSIakebQXXugbSltzKgfCcIuP8GIQOW2leww2j8/Gyx+nE8Zly4Zm+mBHBIEaxJHrLiLMaQSWn35ml1OR9sT7Ucz3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dxt5uAh/; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1759172905; c=relaxed/simple;
+	bh=7qrHmbfGn2aKzzxiGGx0dQNxryrNWvLvsBasM7skIBk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=jmW21YkQ1GB6a/3qgSlc5A3UhpTXqu28iMYQvRKylIPdV3lM29S7b2ZJkHsZmnICw0kx/zCX8lWjDM1XCEl+sj7E3v8QI/ZkKaoaqxfcFnInRHWitlKYK8xzH4k7CId+BY0rAKABcbSgeVvUE0fCreH1dmbVkCg2/sE3+FWp7UU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J1L/VARC; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dxt5uAh/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759172510; x=1790708510;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=g6AAYELuVcdIJrr+eCGc7pYoNDIfAIO4C9UEPcARuxE=;
-  b=dxt5uAh/eP/EJJnSpjWep5md1DUKCBhpnp5KWHQofKx8+6hEQyK82inc
-   4OETzWI1eoFu8gdlKvoBdZbq4zp5Z81RNJi87/gKxkVhQE5o62/vIj9G6
-   l6+sbyMQfK6x5yTkkqgw2Pr3Y5NbltKqwRk3uXhYOMnCj27OjG35IZRxt
-   OCWA1Yy+2QGGyiZoPCVQ/ndFGpNtqPdEiInbcMXY81SfxW2OHqGuK9M1l
-   tjnB5Noul5PXJnM2xNDg7sBF9RXXj5pP9Ss7LMCOuFrO4prgev0wSQQki
-   v3PGi+GGdYhm2/4h0ze/Ou4873fYdGmX/4+SLTxq2zvoYCjjR/bIiSZIQ
-   Q==;
-X-CSE-ConnectionGUID: WkcLE3NbTNqdc5ogmLqvFQ==
-X-CSE-MsgGUID: m4TCWvpeSouGUu6Bldy5HA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11568"; a="61310258"
-X-IronPort-AV: E=Sophos;i="6.18,302,1751266800"; 
-   d="scan'208";a="61310258"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2025 12:01:49 -0700
-X-CSE-ConnectionGUID: 2LvRxJ86TiincwGX7t1JNw==
-X-CSE-MsgGUID: ooiG/0MBSLK8dPY5Y/0BPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,302,1751266800"; 
-   d="scan'208";a="209265232"
-Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.109.105]) ([10.125.109.105])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2025 12:01:47 -0700
-Message-ID: <3921d500-36ce-409c-8730-6be86a40e334@intel.com>
-Date: Mon, 29 Sep 2025 12:01:47 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J1L/VARC"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-26985173d8eso95195715ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Sep 2025 12:08:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1759172903; x=1759777703; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Njxey7G3aTuTqShbTBIMUulJ1i1nTX1TYxL9UTCOTos=;
+        b=J1L/VARCwC47irL1hwNV8Mjn4O54A8kpyzBXVvf0NYIzdZmEJtmLcNPbMCK/efsCYi
+         Jx4vI3T0CcvuwOwvC8hEpPbWjqH0lJ697byR/Dj+sbfiwkoXYWfG6LNbvk3oVJ+EMkyQ
+         uO7LPBaB47HB5uCSnYfPI1RaVywtsggXm71R4GtlPKWbZVyoEDFbYoB2WvaklSDmYV0h
+         aYFOdpfNrQ7U3WA+m90L2Hoo7tvZIPiGPqlIDpopLYmtzVd0Z1/ceRv2xXguS3oqfieH
+         J5iu9W2YWDdwecMLKDc9jTEJO43qx2z16gqhxAyITar1J9/+CTUD4DV67ImiqSKpLUQx
+         FZQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759172903; x=1759777703;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Njxey7G3aTuTqShbTBIMUulJ1i1nTX1TYxL9UTCOTos=;
+        b=BLgOcOV1rXhJQlVdKgM2gCW0N9L/OoBCfEwnB1a8ukdzcX8OGY87eCVJZ8AnVBa0e3
+         lsHSczld223eQsEtU1k9Kd01RxuXId/KlWh+qRmH+oSvx8IflM55ALylr2/yBqHA2/m4
+         cef1aiqTHUZdS4B2ymBhUfxuL/0JJ0g7wn0GDGHcwgH8JZ725d0TUSKoEEJ90hQ6QgpI
+         /5LUD1i+nfdWRJnGRkUIeojDlXAKupHSvPAwApVLiGRD2oWAHmjAovum8XwFku4x4bH/
+         GYU3nUNbWNnWEqNEdToBRg6xis7Ky5JCDusnT4Sfpt7Cx6UZX+QGqQTbZ5eYfglZvY7O
+         iGOw==
+X-Forwarded-Encrypted: i=1; AJvYcCXuKBvj9wqKVzg2LU1xAw71CjMGE1lqRCL2DDbN46Dr3vCwGm1UnbKv4v/c1vHUOa54sUnotYmFhGnBZMugxpEj@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4PngKInV75Thecm7NrKcJ6ujRgUSR6EoPBTDcgPuZOhAOTTHD
+	5SwVYYLtqLunaCd3/oRJ2nqwB1NhbwrhnPruN4R7tjeNs/i4WnGPC4IXi6lMzrEGLUK8o4pey95
+	9bTLo4eIoIQ==
+X-Google-Smtp-Source: AGHT+IFmUFAVW2JIwu+mAzAudh/QlJTnKWL5DHbA3zxjJEAoKO8ELdvqM7NM2IO10H5OHVK9s9MPkQxl47Lj
+X-Received: from plhs13.prod.google.com ([2002:a17:903:320d:b0:268:4e0:9c09])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:db04:b0:265:9878:4852
+ with SMTP id d9443c01a7336-27ed49ddab3mr226842215ad.15.1759172902750; Mon, 29
+ Sep 2025 12:08:22 -0700 (PDT)
+Date: Mon, 29 Sep 2025 12:07:50 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v4 03/17] x86/fpu/xstate: Add xsaves_nmi
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
- Eranian Stephane <eranian@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org,
- Ravi Bangoria <ravi.bangoria@amd.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250925061213.178796-1-dapeng1.mi@linux.intel.com>
- <20250925061213.178796-4-dapeng1.mi@linux.intel.com>
- <bc8a902f-549a-482f-bf24-04cf5f38a379@intel.com>
- <8476ee65-546a-47ff-951c-5b2a24995ccf@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <8476ee65-546a-47ff-951c-5b2a24995ccf@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.51.0.570.gb178f27e6d-goog
+Message-ID: <20250929190805.201446-1-irogers@google.com>
+Subject: [PATCH v6 00/15] Support dynamic opening of capstone/llvm
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Charlie Jenkins <charlie@rivosinc.com>, Eric Biggers <ebiggers@kernel.org>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
+	Collin Funk <collin.funk1@gmail.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	Li Huafei <lihuafei1@huawei.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
+	Stephen Brennan <stephen.s.brennan@oracle.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Alexandre Ghiti <alexghiti@rivosinc.com>, Haibo Xu <haibo1.xu@intel.com>, 
+	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev, 
+	Song Liu <song@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 9/27/25 22:31, Mi, Dapeng wrote:
->> Also, what supervisor components are involved here? Aren't we just
->> talking about [XYZ]MM's?
-> Besides the SIMD registers [XYZ]MM, the CET_USR (only SSP) and APX eGPRs
-> would be supported as well.
+Linking against libcapstone and libLLVM can be a significant increase
+in dependencies and file size if building statically. For something
+like `perf record` the disassembler and addr2line functionality won't
+be used. Support dynamically loading these libraries using dlopen and
+then calling the appropriate functions found using dlsym.
 
-We should think long and hard about whether to use XSAVE for the CET
-SSP. I'm not convinced it's worth it.
+The patch series:
+1) moves the capstone, LLVM and libbfd code to their own C files,
+2) simplifies a little the capstone code;
+3) adds perf_ variants of the functions that will either directly call
+   the function or use dlsym to discover it;
+4) adds BPF JIT disassembly support to in memory disassemblers (LLVM
+   and capstone) by just directing them at the BPF info linear JIT
+   instructions (note this doesn't support source lines);
+5) adds fallback to srcline's addr2line so that llvm_addr2line is
+   tried first, then the deprecated libbfd and then the forked command
+   tried next, moving the code for forking out of the main srcline.c
+   file in the process.
+
+The addr2line LLVM functionality is written in C++. To avoid linking
+against libLLVM for this, a new LIBLLVM_DYNAMIC option is added where
+the C++ code with the libLLVM dependency will be built into a
+libperf-llvm.so and that dlsym-ed and called against. Ideally LLVM
+would extend their C API to avoid this.
+
+v6: Refactor the libbfd along with capstone and LLVM, previous patch
+    series had tried to avoid this by just removing the deprecated
+    BUILD_NONDISTRO code. Remove the libtracefs removal into its own
+    patch.
+v5: Rebase and comment typo fix.
+v4: Rebase and addition of a patch removing an unused struct variable.
+v3: Add srcline addr2line fallback trying LLVM first then forking a
+    process. This came up in conversation with Steinar Gunderson
+    <sesse@google.com>.
+    Tweak the cover letter message to try to address Andi Kleen's
+    <ak@linux.intel.com> feedback that the series doesn't really
+    achieve anything.
+v2: Add mangling of the function names in libperf-llvm.so to avoid
+    potential infinite recursion. Add BPF JIT disassembly support to
+    LLVM and capstone. Add/rebase the BUILD_NONDISTRO cleanup onto the
+    series from:
+    https://lore.kernel.org/lkml/20250111202851.1075338-1-irogers@google.com/
+    Some other minor additional clean up.
+
+Ian Rogers (15):
+  perf map: Constify objdump offset/address conversion APIs
+  perf capstone: Move capstone functionality into its own file
+  perf llvm: Move llvm functionality into its own file
+  perf libbfd: Move libbfd functionality to its own file
+  perf capstone: Remove open_capstone_handle
+  perf capstone: Support for dlopen-ing libcapstone.so
+  perf llvm: Support for dlopen-ing libLLVM.so
+  perf llvm: Mangle libperf-llvm.so function names
+  perf dso: Move read_symbol from llvm/capstone to dso
+  perf dso: Support BPF programs in dso__read_symbol
+  perf llvm: Disassemble cleanup
+  perf dso: Clean up read_symbol error handling
+  perf disasm: Make ins__scnprintf and ins__is_nop static
+  perf srcline: Fallback between addr2line implementations
+  perf disasm: Remove unused evsel from annotate_args
+
+ tools/perf/Makefile.config         |  14 +
+ tools/perf/Makefile.perf           |  24 +-
+ tools/perf/builtin-script.c        |   2 -
+ tools/perf/tests/make              |   2 +
+ tools/perf/util/Build              |   7 +-
+ tools/perf/util/addr2line.c        | 439 ++++++++++++++++
+ tools/perf/util/addr2line.h        |  20 +
+ tools/perf/util/annotate.c         |   1 -
+ tools/perf/util/capstone.c         | 682 +++++++++++++++++++++++++
+ tools/perf/util/capstone.h         |  24 +
+ tools/perf/util/config.c           |   2 +-
+ tools/perf/util/disasm.c           | 645 ++----------------------
+ tools/perf/util/disasm.h           |   6 +-
+ tools/perf/util/disasm_bpf.c       | 195 --------
+ tools/perf/util/disasm_bpf.h       |  12 -
+ tools/perf/util/dso.c              | 112 +++++
+ tools/perf/util/dso.h              |   4 +
+ tools/perf/util/libbfd.c           | 600 ++++++++++++++++++++++
+ tools/perf/util/libbfd.h           |  83 ++++
+ tools/perf/util/llvm-c-helpers.cpp | 120 ++++-
+ tools/perf/util/llvm-c-helpers.h   |  24 +-
+ tools/perf/util/llvm.c             | 484 ++++++++++++++++++
+ tools/perf/util/llvm.h             |  21 +
+ tools/perf/util/map.c              |  19 +-
+ tools/perf/util/map.h              |   6 +-
+ tools/perf/util/print_insn.c       | 117 +----
+ tools/perf/util/srcline.c          | 772 ++---------------------------
+ tools/perf/util/srcline.h          |   9 +-
+ tools/perf/util/symbol-elf.c       | 100 +---
+ tools/perf/util/symbol.c           | 131 -----
+ 30 files changed, 2745 insertions(+), 1932 deletions(-)
+ create mode 100644 tools/perf/util/addr2line.c
+ create mode 100644 tools/perf/util/addr2line.h
+ create mode 100644 tools/perf/util/capstone.c
+ create mode 100644 tools/perf/util/capstone.h
+ delete mode 100644 tools/perf/util/disasm_bpf.c
+ delete mode 100644 tools/perf/util/disasm_bpf.h
+ create mode 100644 tools/perf/util/libbfd.c
+ create mode 100644 tools/perf/util/libbfd.h
+ create mode 100644 tools/perf/util/llvm.c
+ create mode 100644 tools/perf/util/llvm.h
+
+-- 
+2.51.0.570.gb178f27e6d-goog
+
