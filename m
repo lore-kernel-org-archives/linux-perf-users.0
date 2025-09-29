@@ -1,102 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED124414;
-	Mon, 29 Sep 2025 12:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2E2D4A07
+	for <linux-perf-users@vger.kernel.org>; Mon, 29 Sep 2025 16:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759150331; cv=none; b=mm7t1ldmkqAs5Pe/y0F0buv5ulK4dglVAI0foyDSqhwH592xWG5vEJR/JoTOvfhinfZaOd3WW6zBbJ771cl2m2yz6QuTof1HFRhVGwWtCOXlpYElyiuqsadIAYIwPH2S0JaxHQzdDX8pHM+KLv6BSCwz1dm5qRuX8ghZ3VVwh8U=
+	t=1759163876; cv=none; b=uKewlc90xyGfyJks1QAhP0QD7MMyeZQVi48fCXEpzIoCPim7nXw4Dx4So85yuboNOQ4YCWQlZJZo83RSvdIDJbz1BBt2cOdh0Z6xUGwWgvDq+wjSd7DvMH31Ik3qGAsqnDKlCkeJvXLBasCLo8Srk/IcXyQ214gdCOwSSVNp1v8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759150331; c=relaxed/simple;
-	bh=0Y61i2/JPEtUs4NHRT+GM+hnsD0LgG6qA2wjrd3lTdw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oV67qlxnRvtUY7Oom2E2wOIzKKtUwT2UUp5V4Vhi+YCzM2GnM3+/0LSymsXSegrp/t8w2Ytzjd51Vw2xOFnaO7wAuwsl8xQbjszXjjz4xIi84Y414CzFg6/F31Vz7HQJJcH1iXPYCWcRtx0ZyT/2XRvh/v1T1q0eSPlZKRSxhno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TTOoWGtf; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TTOoWGtf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26A9DC4CEF4;
-	Mon, 29 Sep 2025 12:52:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759150330;
-	bh=0Y61i2/JPEtUs4NHRT+GM+hnsD0LgG6qA2wjrd3lTdw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=TTOoWGtfLzIViMofMiKTOBaMYo4vdcZ5Le555tRYfUJIvy3nO0AVatNIdB6y1Iann
-	 g5MtWX3R3zKGVxDoC2nwwIoP3pIAwS+pHjFYSPuvNUU8nDQLcoHo3Kjpf3+I0gZ81+
-	 Qp73BRJ0aZU7++a0xKDGRleaTIW+g+Kb2ZoaBA6ucxqYmayiHiwsq+n+dbWY0lbFUA
-	 h8Wx0GQR5hwhs1v481AgY2dhAm2J/03ybrjt6QnwjL700H0Mg7rdbKDcnVDjeoTvSA
-	 uU4b770Xoxi6I4LBRAjYdnSu2G/lkRTwrBgZi+JRR9p26wc9ay+uh+bjeZXrJ3DefR
-	 GWoJ7chLnMBCw==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Song Liu <songliubraving@fb.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Yonghong Song <yhs@fb.com>,
-	Andrii Nakryiko <andrii@kernel.org>
-Subject: [RFC] Revert "perf/x86: Always store regs->ip in perf_callchain_kernel()"
-Date: Mon, 29 Sep 2025 14:51:58 +0200
-Message-ID: <20250929125158.2488188-1-jolsa@kernel.org>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1759163876; c=relaxed/simple;
+	bh=0UK3UBAhu6yCCdqynZEv/rSNKmeciofmmL/dNxUWQWw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=WyN7LDPu8omeXcCK3SgJe0ZHPeF6H0K5o4QOxkfncyrmUgxSdzYl2df+2f/X5p58MDjCV/2hIMSJEfXqR/yrOtaCxuxXqVbvs8ft6Sp/dG2StjE8ahq5tciIAaZgoNl990jnGA8zXQYXjNw4lzvLe8nKHehZNF5/LupPNhHgYno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3A3F150C;
+	Mon, 29 Sep 2025 09:37:45 -0700 (PDT)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78C2A3F66E;
+	Mon, 29 Sep 2025 09:37:52 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH 00/25] perf arm_spe: Extend operations
+Date: Mon, 29 Sep 2025 17:37:36 +0100
+Message-Id: <20250929-perf_support_arm_spev1-3-v1-0-1150b3c83857@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANC12mgC/3WNQQ6CMBBFr0JmbU1bkQIr72FIU+hUuoA2UyQaw
+ t2tuHYzyfs//80GCcljgrbYgHD1yYc5gzgVMIxmfiDzNjNILq+8lpxFJKfTM8ZAizY06RRxFez
+ C+gqdrdygVC8hzyOh869Dfe8yjz4tgd7Hp1V805+04fV/aT6cKSucKctGCGlvuT0PYYJu3/cPu
+ qKGy74AAAA=
+X-Change-ID: 20250820-perf_support_arm_spev1-3-b6efd6fc77b2
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, 
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1759163872; l=3423;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=0UK3UBAhu6yCCdqynZEv/rSNKmeciofmmL/dNxUWQWw=;
+ b=3ej9XOeB0onJXrW8RiIvgXIHir+PmuJjJ1isNnwPuDFK2edcpQAn0ay+D9HlmLh5Y0aE9Pme3
+ coftzUCrP9hAySe5goy4K/vA3RJhY9D1Yehm6C59SU8gmpUMwFo57Zs
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-This reverts commit 83f44ae0f8afcc9da659799db8693f74847e66b3.
+This series enhances tooling to support new operations:
 
-hi,
-non hw events store first stack trace entry twice:
+  - Support for MTE tag since Arm SPE v1.3;
+  - Support for Advanced SIMD extension and SVE operations;
+  - Support memcpy, memset and GCS operations;
+  - Support extended operations for atomic, Acquire/Release and
+    Exclusive instructions.
+  - Enhance the data source for associated info, like floating-point,
+    conditional, data processing, etc.
 
-        bpf_prog_2beb79c650d605dd_rawtracepoint_sched_process_exec_1+324
-        bpf_prog_2beb79c650d605dd_rawtracepoint_sched_process_exec_1+324
-        bpf_trace_run3+138
-        bprm_execve+1191
-        do_execveat_common.isra.0+404
-        __x64_sys_execve+56
-        do_syscall_64+130
-        entry_SYSCALL_64_after_hwframe+118
+This series is divided into three parts:
 
-I traced it to [1] from 2019, which stores regs->ip implicitly to fix
-raw tracepoints stacktrace. Revert does not seem to break raw tp
-stacktrace for me. Song, any idea? I know it's long time ;-)
+  Patches 01 ~ 06: Support raw dump for new operations;
+  Patches 07 ~ 18: Export the operation info into records, so that the
+                   information can be later consumed by samples.
+  Patches 19 ~ 25: Set the operation info into sample's data source and
+                   SIMD flag, and updated the document.
 
-thanks,
-jirka
+This patch series is tested on FVP. I verified Arm SPE trace data with
+kselftest's MTE tag test and SVE test. For GCS test, I verified the SPE
+decoding with I manually modifying perf binary file.
 
-
-[1] 83f44ae0f8af ("perf/x86: Always store regs->ip in perf_callchain_kernel()")
+Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- arch/x86/events/core.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Leo Yan (25):
+      perf arm_spe: Fix memset subclass in operation
+      perf arm_spe: Unify operation naming
+      perf arm_spe: Decode GCS operation
+      perf arm_spe: Rename SPE_OP_PKT_IS_OTHER_SVE_OP macro
+      perf arm_spe: Decode ASE and FP fields in other operation
+      perf arm_spe: Decode SME data processing packet
+      perf arm_spe: Remove unused operation types
+      perf arm_spe: Consolidate operation types
+      perf arm_spe: Introduce data processing macro for SVE operations
+      perf arm_spe: Report register access in record
+      perf arm_spe: Report MTE allocation tag in record
+      perf arm_spe: Report extended memory operations in records
+      perf arm_spe: Report associated info for SVE / SME operations
+      perf arm_spe: Report memset and memcpy in records
+      perf arm_spe: Report GCS in record
+      perf arm_spe: Expose SIMD information in other operations
+      perf arm_spe: Expose length for SVE and SME operations
+      perf arm_spe: Synthesize memory samples for SIMD operations
+      perf/uapi: Extend data source fields
+      perf mem: Print extended fields
+      perf arm_spe: Set extended fields in data source
+      perf sort: Support sort ASE and SME
+      perf sort: Sort disabled and full predicated flags
+      perf report: Update document for SIMD flags
+      perf arm_spe: Improve SIMD flags setting
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 7610f26dfbd9..38f7102e2dac 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2787,13 +2787,13 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
- 		return;
- 	}
- 
--	if (perf_callchain_store(entry, regs->ip))
--		return;
--
--	if (perf_hw_regs(regs))
-+	if (perf_hw_regs(regs)) {
-+		if (perf_callchain_store(entry, regs->ip))
-+			return;
- 		unwind_start(&state, current, regs, NULL);
--	else
-+	} else {
- 		unwind_start(&state, current, NULL, (void *)regs->sp);
-+	}
- 
- 	for (; !unwind_done(&state); unwind_next_frame(&state)) {
- 		addr = unwind_get_return_address(&state);
+ include/uapi/linux/perf_event.h                    | 28 +++++++-
+ tools/include/uapi/linux/perf_event.h              | 28 +++++++-
+ tools/perf/Documentation/perf-report.txt           |  5 +-
+ tools/perf/util/arm-spe-decoder/arm-spe-decoder.c  | 59 +++++++++++++++--
+ tools/perf/util/arm-spe-decoder/arm-spe-decoder.h  | 56 +++++++++-------
+ .../util/arm-spe-decoder/arm-spe-pkt-decoder.c     | 53 ++++++++-------
+ .../util/arm-spe-decoder/arm-spe-pkt-decoder.h     | 40 +++++++----
+ tools/perf/util/arm-spe.c                          | 77 +++++++++++++++++-----
+ tools/perf/util/mem-events.c                       | 58 +++++++++++++++-
+ tools/perf/util/sample.h                           | 11 +++-
+ tools/perf/util/sort.c                             | 15 ++++-
+ 11 files changed, 336 insertions(+), 94 deletions(-)
+---
+base-commit: c17dda8013495d8132c976cbf349be9949d0fbd1
+change-id: 20250820-perf_support_arm_spev1-3-b6efd6fc77b2
+
+Best regards,
 -- 
-2.51.0
+Leo Yan <leo.yan@arm.com>
 
