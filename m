@@ -1,501 +1,496 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28CD7BA3D
-	for <linux-perf-users@vger.kernel.org>; Mon, 29 Sep 2025 02:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C13239E79;
+	Mon, 29 Sep 2025 08:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759113580; cv=none; b=pbfSwfED3pIbNdNk9iIlU5yEenYxRTLJE6b5q7p24m25vhoYFc8zj4ZuiYTXj0Gnk4duEmp/wbr0PMsXiLR79xSC4lV1YSEvoXPZ3J+bvJXhoNvLr6L0r16ola5GjLIxM0bimCLAgfxSWJZfedlikryDKrkttHBwFOG5hgn1s7I=
+	t=1759133274; cv=none; b=R/4nV/UE75RhsPp6g2654roQBQRkHhbWfeJ39P9uowe1EtcNJz+JTQW6rBw8KaQOHALevQ488dZi/UA/N4TZbOsXdSfCXFD0utRhsOyI+zA0zQDgQHL1KpEP53VioyFYDOiwd6Iie3V093UMNweYDmTCes2KiXPWkQhfaIRXASQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759113580; c=relaxed/simple;
-	bh=i2eXrDCETyRcAN962lpPJu8MuLsHnqrcB1fuua4NVnc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L1q3QfcUhJwEBdYsjNvXDTj3hGcM6/pYHgehp4eWoB8DiyeXrvfu9DQAR3ftfsUvJuNlJiTMIUBBoJC5x8+KZcM5NQVvVrZe05MAAtN2AAJtR//R9LhDpIS595PoSeyYB9pNaTNuzdyMxDnuSSAOctbEvHFhYPr5VUOMveTWIEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jM9dHjto; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1759133274; c=relaxed/simple;
+	bh=bNjGwLKmpVwBXxYsFJkRS7rwCepqLb8el/123Qk7JbY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MD51a2UXltXNOcCYR4yjDm3gcM6BNtPvcPfDomAr094B6mcbkaoi0WSxcMf9iypLOVWiYv6d19QMjcA8TN4jEwMom6Xpdc9qzaKrKE6PMl0R2kDjp1IPE3ikxIRpfPrqdTELL9Pa0rfT3NRZOwy3puQD+bl07jFqAu4Q/aLxpds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oto9ZJvV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jM9dHjto"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1759113576;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U+Mo7zuy5xta4oo3UX7idl0F1HdsOv2bgqbQMKiGktQ=;
-	b=jM9dHjtofVbEUsJf2ILCMtpZ/PHQqkZsGP7nJMgGchfzmBmeuX38p9Wz//rKII9TtjZ7jb
-	bc3X+WjGFzVo1enL+k8d9JgA/zeUW0Csb7tE6mZJUXiT6QXPIpUtwnq9mVu2VEDTGh9iOw
-	3Kh53jBsxxDtVVkQ34w490RFkACzaco=
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
- [209.85.166.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-538-DpsPckkOOyyUraOEb4S-gA-1; Sun, 28 Sep 2025 22:39:35 -0400
-X-MC-Unique: DpsPckkOOyyUraOEb4S-gA-1
-X-Mimecast-MFC-AGG-ID: DpsPckkOOyyUraOEb4S-gA_1759113575
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-90dfda98b4bso837208739f.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 28 Sep 2025 19:39:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759113575; x=1759718375;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U+Mo7zuy5xta4oo3UX7idl0F1HdsOv2bgqbQMKiGktQ=;
-        b=wq6sFoE2tFOFIRJMU5Dzd0SpkpuucwB6eNRrelZs2UrpkLuoTDoDpOU0IDFt3jimne
-         CWSw3G12ZPjOqktI6R7Y4N108s2yIboFyBDwaoco+hUzdQgLhhwoxFr/MFQyen3AizoD
-         grBkS04GOQBKMks643SI5qDjG1IJasr5Z6yy3FkuBj7H0Ygq+T6Z29BJ7OskmImEipG3
-         BfdJnJlG0oCyYfOto4cXz2Red9smE0NkSk0HkE6MyBD0pF8tRwkesGXZcFvNcyGnxdJY
-         G01nQd6/FdUferHgVkTXe3ITN//fAWNyoWqENfCioREGTbkzUWGDuaAm1dnPLrVqYB8X
-         MrIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW4liuNFbRK7p5ywrtlUaSivUDkUZe6pQq19iEa1KtdPFWuhT0BWk8EBh1bpxE18HcKR/fJUoZH75HTrjD4dIuw@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMLZLORTn63M6P96Ji5oueagSUIH6AmWTvSWLHPXWU46o4QasO
-	gPooMHvKqn/X8HkeO9TK4eR7Sxm9ai7qXVdK3/ImRyxv26D6gH/HTtjLm4b7qizRVv/qhT4oLIG
-	CKuqTC7FkqEG9LSvtDaIZD3TLmWTs0Y3b+/k+800iGvBu5MkJEqLSq8ZWRVg15nlZybINUABO5S
-	73bP48xw6EFsapsJs9PKawIvAsDeoxFFSSTwOhJmAndXsLXw==
-X-Gm-Gg: ASbGnctQ9BTFIqw83yLSM7ZQ8vyBxgC6BBuB8XqGNeban3/ZGppEO42cG3yIdQnl1Rk
-	uW/oC79gkj4pNU/IyADTyVMbOei2V5TNLTvjil4IOmQEuvPRVxtQOidmWHEHqbc0g1i/fNVM4o6
-	psxfjt1KCwSLJ1axzB3Jw3KQ==
-X-Received: by 2002:a05:6602:a014:b0:924:2696:a53 with SMTP id ca18e2360f4ac-929ae1631b5mr237888839f.3.1759113574702;
-        Sun, 28 Sep 2025 19:39:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFFRUAwIuTq/bO5lXqA3tb8EB1CqkX0muxvELaMUmUkWZ78sj3uQCl/xFwhwtOtaX2fjwiHU6qxckCVKvHKw/0=
-X-Received: by 2002:a05:6602:a014:b0:924:2696:a53 with SMTP id
- ca18e2360f4ac-929ae1631b5mr237886539f.3.1759113574299; Sun, 28 Sep 2025
- 19:39:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oto9ZJvV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4019C4CEF4;
+	Mon, 29 Sep 2025 08:07:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759133274;
+	bh=bNjGwLKmpVwBXxYsFJkRS7rwCepqLb8el/123Qk7JbY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oto9ZJvVULaqlxzt88AWq+/BL0/rWZX+2Zqot+r1sEYIfPY7pEFaf5FIpRGECmcrd
+	 aovbE3bN3yyWDnoJjdwFoyFiyUxGqEG+UetSDf5Q5xZBbbK1kgRQqq0pkuvWXA0/rR
+	 gMX3jQ+AeMZTNw2zWvl5jPKeoEpUa7qdpYotsKU3EMxBE3AYvqYSvBMmSq+M1Kn1dM
+	 WGgHI6OQ6N1X7Ws8pex/b94mZ6Uq3hRINg00551eXtrn+0AuarVUMIMGuECi2KGdke
+	 TcroHQxzl/Fax3ZH9v83fwPc03ZShvrVAWxE5X7aP4dDgfttEHW69bhXDhbcyCajEI
+	 /Rl2hhQykhf0g==
+Date: Mon, 29 Sep 2025 17:07:47 +0900
+From: Namhyung Kim <namhyung@kernel.org>
+To: "Li, Tianyou" <tianyou.li@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, wangyang.guo@intel.com,
+	pan.deng@intel.com, zhiguo.zhou@intel.com, jiebin.sun@intel.com,
+	thomas.falcon@intel.com, dapeng1.mi@intel.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] perf tools c2c: Add annotation support to perf c2c
+ report
+Message-ID: <aNo-U0KquRbcJam9@google.com>
+References: <aMpWcdjoCBsRVo72@z2>
+ <20250928090212.1324797-1-tianyou.li@intel.com>
+ <be2b23a3-9951-4357-a3f2-3eebe7ef20a5@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250918222202.1353854-1-irogers@google.com> <20250918222202.1353854-4-irogers@google.com>
- <CAATMXfnqCjxSV2wOqDJ9copKMWyR5hNe9p78kwtrn+W7UCV2DQ@mail.gmail.com> <CAP-5=fWb5R3Gu+01Qr0+fu7n=RL8hs2b-timZKzqnATa+DRMyw@mail.gmail.com>
-In-Reply-To: <CAP-5=fWb5R3Gu+01Qr0+fu7n=RL8hs2b-timZKzqnATa+DRMyw@mail.gmail.com>
-From: Qiao Zhao <qzhao@redhat.com>
-Date: Sun, 28 Sep 2025 19:39:23 -0700
-X-Gm-Features: AS18NWAxqHToub-OqiceaCOIXFL3bCybGNuw6oO7wesyqNlnWgJp-g5NmI-Nk7I
-Message-ID: <CAATMXfkcWT+SP0eu9By2VdnLoHY8PdCFWa9MwTNzHMZ7t2UB_Q@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] perf test: Avoid uncore_imc/clockticks in
- uniquification test
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Athira Rajeev <atrajeev@linux.ibm.com>, Chun-Tse Shao <ctshao@google.com>, 
-	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <be2b23a3-9951-4357-a3f2-3eebe7ef20a5@intel.com>
 
-Hi Ian,
+Hello,
 
-Cool! After applied your patch "[PATCH v2 2/3] perf evsel: Fix
-uniquification when PMU given without suffix" and  "[PATCH v2 3/3]
-perf test: Avoid uncore_imc/clockticks in uniquification test",
-the uniquifying testing passed on both Intel hybrid and non-hybrid machine:
+On Sun, Sep 28, 2025 at 04:16:16PM +0800, Li, Tianyou wrote:
+> Rebased with latest perf-tools-next. Looking forward to your review
+> comments. Thanks.
 
-hybrid CPU machine:
->>>>>>>>>>>>>>>>>>
-# ./perf test -vv 96
- 96: perf stat events uniquifying:
---- start ---
-test child forked, pid 40541
-Uniquification of PMU sysfs events test
-Testing event uncore_imc_free_running/data_read/ is uniquified to
-uncore_imc_free_running_0/data_read/
-Testing event uncore_imc_free_running/data_total/ is uniquified to
-uncore_imc_free_running_0/data_total/
-Testing event uncore_imc_free_running/data_write/ is uniquified to
-uncore_imc_free_running_0/data_write/
-Testing event uncore_imc_free_running/data_read/ is uniquified to
-uncore_imc_free_running_1/data_read/
-Testing event uncore_imc_free_running/data_total/ is uniquified to
-uncore_imc_free_running_1/data_total/
-Testing event uncore_imc_free_running/data_write/ is uniquified to
-uncore_imc_free_running_1/data_write/
----- end(0) ----
- 96: perf stat events uniquifying                                    : Ok
->>>>>>>>>>>>>>>>>>
+Sorry for the delay, I was on vacation.
+ 
+> On 9/28/2025 5:02 PM, Tianyou Li wrote:
+> > Perf c2c report currently specified the code address and source:line
+> > information in the cacheline browser, while it is lack of annotation
+> > support like perf report to directly show the disassembly code for
+> > the particular symbol shared that same cacheline. This patches add
+> > a key 'a' binding to the cacheline browser which reuse the annotation
+> > browser to show the disassembly view for easier analysis of cacheline
+> > contentions. By default, the 'TAB' key navigate to the code address
+> > where the contentions detected.
+> > 
+> > Signed-off-by: Tianyou Li <tianyou.li@intel.com>
+> > Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> > Reviewed-by: Thomas Falcon <thomas.falcon@intel.com>
+> > Reviewed-by: Jiebin Sun <jiebin.sun@intel.com>
+> > Reviewed-by: Pan Deng <pan.deng@intel.com>
+> > Reviewed-by: Zhiguo Zhou <zhiguo.zhou@intel.com>
+> > Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
+> > ---
+> >   tools/perf/builtin-annotate.c     |   2 +-
+> >   tools/perf/builtin-c2c.c          | 130 ++++++++++++++++++++++++++++--
+> >   tools/perf/ui/browsers/annotate.c |  41 +++++++++-
+> >   tools/perf/ui/browsers/hists.c    |   2 +-
+> >   tools/perf/util/annotate.c        |   2 +-
+> >   tools/perf/util/annotate.h        |   2 +
+> >   tools/perf/util/hist.h            |   6 +-
+> >   7 files changed, 171 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+> > index 646f43b0f7c4..f977e97a9c96 100644
+> > --- a/tools/perf/builtin-annotate.c
+> > +++ b/tools/perf/builtin-annotate.c
+> > @@ -519,7 +519,7 @@ static void hists__find_annotations(struct hists *hists,
+> >   			/* skip missing symbols */
+> >   			nd = rb_next(nd);
+> >   		} else if (use_browser == 1) {
+> > -			key = hist_entry__tui_annotate(he, evsel, NULL);
+> > +			key = hist_entry__tui_annotate(he, evsel, NULL, NO_INITIAL_IP);
+> >   			switch (key) {
+> >   			case -1:
+> > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> > index 9e9ff471ddd1..bf2136d062ef 100644
+> > --- a/tools/perf/builtin-c2c.c
+> > +++ b/tools/perf/builtin-c2c.c
+> > @@ -45,6 +45,8 @@
+> >   #include "pmus.h"
+> >   #include "string2.h"
+> >   #include "util/util.h"
+> > +#include "util/symbol.h"
+> > +#include "util/annotate.h"
+> >   struct c2c_hists {
+> >   	struct hists		hists;
+> > @@ -62,6 +64,7 @@ struct compute_stats {
+> >   struct c2c_hist_entry {
+> >   	struct c2c_hists	*hists;
+> > +	struct evsel		*evsel;
+> >   	struct c2c_stats	 stats;
+> >   	unsigned long		*cpuset;
+> >   	unsigned long		*nodeset;
+> > @@ -225,6 +228,12 @@ he__get_c2c_hists(struct hist_entry *he,
+> >   	return hists;
+> >   }
+> > +static void c2c_he__set_evsel(struct c2c_hist_entry *c2c_he,
+> > +				struct evsel *evsel)
+> > +{
+> > +	c2c_he->evsel = evsel;
+> > +}
+> > +
+> >   static void c2c_he__set_cpu(struct c2c_hist_entry *c2c_he,
+> >   			    struct perf_sample *sample)
+> >   {
+> > @@ -334,6 +343,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+> >   	c2c_he__set_cpu(c2c_he, sample);
+> >   	c2c_he__set_node(c2c_he, sample);
+> > +	c2c_he__set_evsel(c2c_he, evsel);
+> >   	hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
+> >   	ret = hist_entry__append_callchain(he, sample);
+> > @@ -371,6 +381,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+> >   		c2c_he__set_cpu(c2c_he, sample);
+> >   		c2c_he__set_node(c2c_he, sample);
+> > +		c2c_he__set_evsel(c2c_he, evsel);
+> >   		hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
+> >   		ret = hist_entry__append_callchain(he, sample);
+> > @@ -2550,6 +2561,35 @@ static void perf_c2c__hists_fprintf(FILE *out, struct perf_session *session)
+> >   }
+> >   #ifdef HAVE_SLANG_SUPPORT
+> > +
+> > +static int perf_c2c__toggle_annotation(struct hist_browser *browser)
+> > +{
+> > +	struct hist_entry *he = browser->he_selection;
+> > +	struct symbol *sym = NULL;
+> > +	struct c2c_hist_entry *c2c_he = NULL;
+> > +	struct annotated_source *src = NULL;
+> > +
+> > +	if (he == NULL) {
+> > +		ui_browser__help_window(&browser->b, "No entry selected for annotation");
+> > +		return 0;
+> > +	}
+> > +	sym = (&he->ms)->sym;
+> > +
+> > +	if (sym == NULL) {
+> > +		ui_browser__help_window(&browser->b, "Can not annotate, no symbol found");
+> > +		return 0;
+> > +	}
+> > +
+> > +	src = symbol__hists(sym, 0);
+> > +	if (src == NULL) {
+> > +		ui_browser__help_window(&browser->b, "Failed to initialize annotation source");
+> > +		return 0;
+> > +	}
+> > +
+> > +	c2c_he = container_of(he, struct c2c_hist_entry, he);
+> > +	return hist_entry__tui_annotate(he, c2c_he->evsel, NULL, he->ip);
 
-non-hybrid CPU machine:
->>>>>>>>>>>>>>>>>>
-# ./perf test -vv 96
- 96: perf stat events uniquifying:
---- start ---
-test child forked, pid 114458
-Uniquification of PMU sysfs events test
-Testing event uncore_iio_free_running/bw_in_port0/ is uniquified to
-uncore_iio_free_running_0/bw_in_port0/
-Testing event uncore_iio_free_running/bw_in_port1/ is uniquified to
-uncore_iio_free_running_0/bw_in_port1/
-Testing event uncore_iio_free_running/bw_in_port2/ is uniquified to
-uncore_iio_free_running_0/bw_in_port2/
-Testing event uncore_iio_free_running/bw_in_port3/ is uniquified to
-uncore_iio_free_running_0/bw_in_port3/
-Testing event uncore_iio_free_running/bw_in_port4/ is uniquified to
-uncore_iio_free_running_0/bw_in_port4/
-Testing event uncore_iio_free_running/bw_in_port5/ is uniquified to
-uncore_iio_free_running_0/bw_in_port5/
-Testing event uncore_iio_free_running/bw_in_port6/ is uniquified to
-uncore_iio_free_running_0/bw_in_port6/
-Testing event uncore_iio_free_running/bw_in_port7/ is uniquified to
-uncore_iio_free_running_0/bw_in_port7/
-Testing event uncore_iio_free_running/ioclk/ is uniquified to
-uncore_iio_free_running_0/ioclk/
-... ...
-Testing event uncore_imc_free_running/dclk/ is uniquified to
-uncore_imc_free_running_0/dclk/
-Testing event uncore_imc_free_running/rpq_cycles/ is uniquified to
-uncore_imc_free_running_0/rpq_cycles/
-Testing event uncore_imc_free_running/wpq_cycles/ is uniquified to
-uncore_imc_free_running_0/wpq_cycles/
-Testing event uncore_imc_free_running/dclk/ is uniquified to
-uncore_imc_free_running_1/dclk/
-Testing event uncore_imc_free_running/rpq_cycles/ is uniquified to
-uncore_imc_free_running_1/rpq_cycles/
-Testing event uncore_imc_free_running/wpq_cycles/ is uniquified to
-uncore_imc_free_running_1/wpq_cycles/
-Testing event uncore_imc_free_running/dclk/ is uniquified to
-uncore_imc_free_running_2/dclk/
-Testing event uncore_imc_free_running/rpq_cycles/ is uniquified to
-uncore_imc_free_running_2/rpq_cycles/
-Testing event uncore_imc_free_running/wpq_cycles/ is uniquified to
-uncore_imc_free_running_2/wpq_cycles/
-Testing event uncore_imc_free_running/dclk/ is uniquified to
-uncore_imc_free_running_3/dclk/
-Testing event uncore_imc_free_running/rpq_cycles/ is uniquified to
-uncore_imc_free_running_3/rpq_cycles/
-Testing event uncore_imc_free_running/wpq_cycles/ is uniquified to
-uncore_imc_free_running_3/wpq_cycles/
----- end(0) ----
- 96: perf stat events uniquifying                                    : Ok
->>>>>>>>>>>>>>>>>>
+I'm skeptical about using he->ip.  An hist_entry can collapse multiple
+samples with different IP in a symbol (even if hpp_list has symbol sort
+key).  That means he->ip cannot represent the entry is from the specific
+point in the function.  This might lead users to an inaccurate place in
+the annotation browser.  I'd recommend not passing IP.
 
-Tested-by: Qiao Zhao <qzhao@redhat.com>
+> > +}
+> > +
+> >   static void c2c_browser__update_nr_entries(struct hist_browser *hb)
+> >   {
+> >   	u64 nr_entries = 0;
+> > @@ -2617,6 +2657,7 @@ static int perf_c2c__browse_cacheline(struct hist_entry *he)
+> >   	" ENTER         Toggle callchains (if present) \n"
+> >   	" n             Toggle Node details info \n"
+> >   	" s             Toggle full length of symbol and source line columns \n"
+> > +	" a             Toggle annotation view \n"
+> >   	" q             Return back to cacheline list \n";
+> >   	if (!he)
+> > @@ -2651,6 +2692,9 @@ static int perf_c2c__browse_cacheline(struct hist_entry *he)
+> >   			c2c.node_info = (c2c.node_info + 1) % 3;
+> >   			setup_nodes_header();
+> >   			break;
+> > +		case 'a':
+> > +			perf_c2c__toggle_annotation(browser);
+> > +			break;
+> >   		case 'q':
+> >   			goto out;
+> >   		case '?':
+> > @@ -2989,6 +3033,11 @@ static int setup_coalesce(const char *coalesce, bool no_source)
+> >   	return 0;
+> >   }
+> > +static bool perf_c2c__has_annotation(void)
+> > +{
+> > +	return use_browser == 1;
 
-On Fri, Sep 26, 2025 at 9:22=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Fri, Sep 26, 2025 at 2:00=E2=80=AFAM Qiao Zhao <qzhao@redhat.com> wrot=
-e:
-> >
-> > Hi Ian,
-> >
-> > I tested your patch (latest linux-next code + your patch) on hybrid
-> > CPU machine {CPU Model name: 12th Gen Intel(R) Core(TM) i7-12800HE}
-> > and failed,
->
-> Hi Qiao,
->
-> in your output is:
-> uncore_imc_free_running_0/uncore_imc_free_running,data_total/
-> ie the uncore PMU is reported twice. This is fixed in the immediately
-> prior patch in this series:
-> https://lore.kernel.org/lkml/20250918222202.1353854-3-irogers@google.com/
->
-> Thanks,
-> Ian
->
-> > >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-> > # perf test -vv "perf stat events uniquifying"
-> >  95: perf stat events uniquifying:
-> > --- start ---
-> > test child forked, pid 21799
-> > Uniquification of PMU sysfs events test
-> > Testing event uncore_imc_free_running/data_read/ is uniquified to
-> > uncore_imc_free_running_0/data_read/
-> > Uniquification of PMU sysfs events test [Failed]
-> > # started on Fri Sep 26 04:49:54 2025
-> >
-> >
-> >  Performance counter stats for 'system wide':
-> >
-> > CPU0                 1.47 MiB
-> > uncore_imc_free_running_0/uncore_imc_free_running,data_read/
-> > CPU0                 1.47 MiB
-> > uncore_imc_free_running_1/uncore_imc_free_running,data_read/
-> >
-> >        0.000925108 seconds time elapsed
-> >
-> > Testing event uncore_imc_free_running/data_total/ is uniquified to
-> > uncore_imc_free_running_0/data_total/
-> > Uniquification of PMU sysfs events test [Failed]
-> > # started on Fri Sep 26 04:49:54 2025
-> >
-> >
-> >  Performance counter stats for 'system wide':
-> >
-> > CPU0                 0.59 MiB
-> > uncore_imc_free_running_0/uncore_imc_free_running,data_total/
-> > CPU0                 0.58 MiB
-> > uncore_imc_free_running_1/uncore_imc_free_running,data_total/
-> >
-> >        0.000969877 seconds time elapsed
-> >
-> > Testing event uncore_imc_free_running/data_write/ is uniquified to
-> > uncore_imc_free_running_0/data_write/
-> > Uniquification of PMU sysfs events test [Failed]
-> > # started on Fri Sep 26 04:49:54 2025
-> >
-> >
-> >  Performance counter stats for 'system wide':
-> >
-> > CPU0                 0.00 MiB
-> > uncore_imc_free_running_0/uncore_imc_free_running,data_write/
-> > CPU0                 0.00 MiB
-> > uncore_imc_free_running_1/uncore_imc_free_running,data_write/
-> >
-> >        0.001183888 seconds time elapsed
-> >
-> > Testing event uncore_imc_free_running/data_read/ is uniquified to
-> > uncore_imc_free_running_1/data_read/
-> > Uniquification of PMU sysfs events test [Failed]
-> > # started on Fri Sep 26 04:49:54 2025
-> >
-> >
-> >  Performance counter stats for 'system wide':
-> >
-> > CPU0                 0.29 MiB
-> > uncore_imc_free_running_0/uncore_imc_free_running,data_read/
-> > CPU0                 0.29 MiB
-> > uncore_imc_free_running_1/uncore_imc_free_running,data_read/
-> >
-> >        0.000710088 seconds time elapsed
-> >
-> > Testing event uncore_imc_free_running/data_total/ is uniquified to
-> > uncore_imc_free_running_1/data_total/
-> > Uniquification of PMU sysfs events test [Failed]
-> > # started on Fri Sep 26 04:49:54 2025
-> >
-> >
-> >  Performance counter stats for 'system wide':
-> >
-> > CPU0                 0.62 MiB
-> > uncore_imc_free_running_0/uncore_imc_free_running,data_total/
-> > CPU0                 0.67 MiB
-> > uncore_imc_free_running_1/uncore_imc_free_running,data_total/
-> >
-> >        0.000959074 seconds time elapsed
-> >
-> > Testing event uncore_imc_free_running/data_write/ is uniquified to
-> > uncore_imc_free_running_1/data_write/
-> > Uniquification of PMU sysfs events test [Failed]
-> > # started on Fri Sep 26 04:49:54 2025
-> >
-> >
-> >  Performance counter stats for 'system wide':
-> >
-> > CPU0                 0.23 MiB
-> > uncore_imc_free_running_0/uncore_imc_free_running,data_write/
-> > CPU0                 0.23 MiB
-> > uncore_imc_free_running_1/uncore_imc_free_running,data_write/
-> >
-> >        0.000775028 seconds time elapsed
-> >
-> > ---- end(-1) ----
-> >  95: perf stat events uniquifying                                    : =
-FAILED!
-> > >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-> > # ls -la /sys/bus/event_source/devices/uncore_imc_free_running_*/events=
-/
-> > /sys/bus/event_source/devices/uncore_imc_free_running_0/events/:
-> > total 0
-> > drwxr-xr-x. 2 root root    0 Sep 26 04:57 .
-> > drwxr-xr-x. 5 root root    0 Sep 26 01:49 ..
-> > -r--r--r--. 1 root root 4096 Sep 26 01:49 data_read
-> > -r--r--r--. 1 root root 4096 Sep 26 01:49 data_read.scale
-> > -r--r--r--. 1 root root 4096 Sep 26 01:49 data_read.unit
-> > -r--r--r--. 1 root root 4096 Sep 26 01:49 data_total
-> > -r--r--r--. 1 root root 4096 Sep 26 01:49 data_total.scale
-> > -r--r--r--. 1 root root 4096 Sep 26 01:49 data_total.unit
-> > -r--r--r--. 1 root root 4096 Sep 26 01:49 data_write
-> > -r--r--r--. 1 root root 4096 Sep 26 01:49 data_write.scale
-> > -r--r--r--. 1 root root 4096 Sep 26 01:49 data_write.unit
-> >
-> > /sys/bus/event_source/devices/uncore_imc_free_running_1/events/:
-> > total 0
-> > drwxr-xr-x. 2 root root    0 Sep 26 04:57 .
-> > drwxr-xr-x. 5 root root    0 Sep 26 01:49 ..
-> > -r--r--r--. 1 root root 4096 Sep 26 01:49 data_read
-> > -r--r--r--. 1 root root 4096 Sep 26 01:49 data_read.scale
-> > -r--r--r--. 1 root root 4096 Sep 26 01:49 data_read.unit
-> > -r--r--r--. 1 root root 4096 Sep 26 01:49 data_total
-> > -r--r--r--. 1 root root 4096 Sep 26 01:49 data_total.scale
-> > -r--r--r--. 1 root root 4096 Sep 26 01:49 data_total.unit
-> > -r--r--r--. 1 root root 4096 Sep 26 01:49 data_write
-> > -r--r--r--. 1 root root 4096 Sep 26 01:49 data_write.scale
-> > -r--r--r--. 1 root root 4096 Sep 26 01:49 data_write.unit
-> >
-> > - Qiao
-> >
-> > >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-> >
-> >
-> > On Fri, Sep 19, 2025 at 6:22=E2=80=AFAM Ian Rogers <irogers@google.com>=
- wrote:
-> > >
-> > > The detection of uncore_imc may happen for free running PMUs and the
-> > > clockticks event may be present on uncore_clock. Rewrite the test to
-> > > detect duplicated/deduplicated events from perf list, not hardcoded t=
-o
-> > > uncore_imc.
-> > >
-> > > If perf stat fails then assume it is permissions and skip the test.
-> > >
-> > > Fixes: 070b315333ee ("perf test: Restrict uniquifying test to machine=
-s with 'uncore_imc'")
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  .../tests/shell/stat+event_uniquifying.sh     | 109 ++++++++--------=
---
-> > >  1 file changed, 49 insertions(+), 60 deletions(-)
-> > >
-> > > diff --git a/tools/perf/tests/shell/stat+event_uniquifying.sh b/tools=
-/perf/tests/shell/stat+event_uniquifying.sh
-> > > index bf54bd6c3e2e..b5dec6b6da36 100755
-> > > --- a/tools/perf/tests/shell/stat+event_uniquifying.sh
-> > > +++ b/tools/perf/tests/shell/stat+event_uniquifying.sh
-> > > @@ -4,74 +4,63 @@
-> > >
-> > >  set -e
-> > >
-> > > -stat_output=3D$(mktemp /tmp/__perf_test.stat_output.XXXXX)
-> > > -perf_tool=3Dperf
-> > >  err=3D0
-> > > +stat_output=3D$(mktemp /tmp/__perf_test.stat_output.XXXXX)
-> > >
-> > > -test_event_uniquifying() {
-> > > -  # We use `clockticks` in `uncore_imc` to verify the uniquify behav=
-ior.
-> > > -  pmu=3D"uncore_imc"
-> > > -  event=3D"clockticks"
-> > > -
-> > > -  # If the `-A` option is added, the event should be uniquified.
-> > > -  #
-> > > -  # $perf list -v clockticks
-> > > -  #
-> > > -  # List of pre-defined events (to be used in -e or -M):
-> > > -  #
-> > > -  #   uncore_imc_0/clockticks/                           [Kernel PMU=
- event]
-> > > -  #   uncore_imc_1/clockticks/                           [Kernel PMU=
- event]
-> > > -  #   uncore_imc_2/clockticks/                           [Kernel PMU=
- event]
-> > > -  #   uncore_imc_3/clockticks/                           [Kernel PMU=
- event]
-> > > -  #   uncore_imc_4/clockticks/                           [Kernel PMU=
- event]
-> > > -  #   uncore_imc_5/clockticks/                           [Kernel PMU=
- event]
-> > > -  #
-> > > -  #   ...
-> > > -  #
-> > > -  # $perf stat -e clockticks -A -- true
-> > > -  #
-> > > -  #  Performance counter stats for 'system wide':
-> > > -  #
-> > > -  # CPU0            3,773,018      uncore_imc_0/clockticks/
-> > > -  # CPU0            3,609,025      uncore_imc_1/clockticks/
-> > > -  # CPU0                    0      uncore_imc_2/clockticks/
-> > > -  # CPU0            3,230,009      uncore_imc_3/clockticks/
-> > > -  # CPU0            3,049,897      uncore_imc_4/clockticks/
-> > > -  # CPU0                    0      uncore_imc_5/clockticks/
-> > > -  #
-> > > -  #        0.002029828 seconds time elapsed
-> > > -
-> > > -  echo "stat event uniquifying test"
-> > > -  uniquified_event_array=3D()
-> > > +cleanup() {
-> > > +  rm -f "${stat_output}"
-> > >
-> > > -  # Skip if the machine does not have `uncore_imc` device.
-> > > -  if ! ${perf_tool} list pmu | grep -q ${pmu}; then
-> > > -    echo "Target does not support PMU ${pmu} [Skipped]"
-> > > -    err=3D2
-> > > -    return
-> > > -  fi
-> > > +  trap - EXIT TERM INT
-> > > +}
-> > >
-> > > -  # Check how many uniquified events.
-> > > -  while IFS=3D read -r line; do
-> > > -    uniquified_event=3D$(echo "$line" | awk '{print $1}')
-> > > -    uniquified_event_array+=3D("${uniquified_event}")
-> > > -  done < <(${perf_tool} list -v ${event} | grep ${pmu})
-> > > +trap_cleanup() {
-> > > +  echo "Unexpected signal in ${FUNCNAME[1]}"
-> > > +  cleanup
-> > > +  exit 1
-> > > +}
-> > > +trap trap_cleanup EXIT TERM INT
-> > >
-> > > -  perf_command=3D"${perf_tool} stat -e $event -A -o ${stat_output} -=
-- true"
-> > > -  $perf_command
-> > > +test_event_uniquifying() {
-> > > +  echo "Uniquification of PMU sysfs events test"
-> > >
-> > > -  # Check the output contains all uniquified events.
-> > > -  for uniquified_event in "${uniquified_event_array[@]}"; do
-> > > -    if ! cat "${stat_output}" | grep -q "${uniquified_event}"; then
-> > > -      echo "Event is not uniquified [Failed]"
-> > > -      echo "${perf_command}"
-> > > -      cat "${stat_output}"
-> > > -      err=3D1
-> > > -      break
-> > > -    fi
-> > > +  # Read events from perf list with and without -v. With -v the dupl=
-icate PMUs
-> > > +  # aren't deduplicated. Note, json events are listed by perf list w=
-ithout a
-> > > +  # PMU.
-> > > +  read -ra pmu_events <<< "$(perf list --raw pmu)"
-> > > +  read -ra pmu_v_events <<< "$(perf list -v --raw pmu)"
-> > > +  # For all non-deduplicated events.
-> > > +  for pmu_v_event in "${pmu_v_events[@]}"; do
-> > > +    # If the event matches an event in the deduplicated events then =
-it musn't
-> > > +    # be an event with duplicate PMUs, continue the outer loop.
-> > > +    for pmu_event in "${pmu_events[@]}"; do
-> > > +      if [[ "$pmu_v_event" =3D=3D "$pmu_event" ]]; then
-> > > +        continue 2
-> > > +      fi
-> > > +    done
-> > > +    # Strip the suffix from the non-deduplicated event's PMU.
-> > > +    event=3D$(echo "$pmu_v_event" | sed -E 's/_[0-9]+//')
-> > > +    for pmu_event in "${pmu_events[@]}"; do
-> > > +      if [[ "$event" =3D=3D "$pmu_event" ]]; then
-> > > +        echo "Testing event ${event} is uniquified to ${pmu_v_event}=
-"
-> > > +        if ! perf stat -e "$event" -A -o ${stat_output} -- true; the=
-n
-> > > +          echo "Error running perf stat for event '$event'  [Skip]"
-> > > +          if [ $err =3D 0 ]; then
-> > > +            err=3D2
-> > > +          fi
-> > > +          continue
-> > > +        fi
-> > > +        # Ensure the non-deduplicated event appears in the output.
-> > > +        if ! grep -q "${pmu_v_event}" "${stat_output}"; then
-> > > +          echo "Uniquification of PMU sysfs events test [Failed]"
-> > > +          cat "${stat_output}"
-> > > +          err=3D1
-> > > +        fi
-> > > +        break
-> > > +      fi
-> > > +    done
-> > >    done
-> > >  }
-> > >
-> > >  test_event_uniquifying
-> > > -rm -f "${stat_output}"
-> > > +cleanup
-> > >  exit $err
-> > > --
-> > > 2.51.0.470.ga7dc726c21-goog
-> > >
-> > >
-> >
->
+Please check if it has symbol dimension in the c2c_hists->list like in
+the ui__has_annotation().  Maybe you need to add this in the
+c2c_hists__init_sort().
 
+	if (dim == &dim_symbol)
+		hpp_list->sym = 1;
+
+Thanks,
+Namhyung
+
+> > +}
+> > +
+> >   static int perf_c2c__report(int argc, const char **argv)
+> >   {
+> >   	struct itrace_synth_opts itrace_synth_opts = {
+> > @@ -3006,6 +3055,7 @@ static int perf_c2c__report(int argc, const char **argv)
+> >   	const char *display = NULL;
+> >   	const char *coalesce = NULL;
+> >   	bool no_source = false;
+> > +	const char *disassembler_style = NULL, *objdump_path = NULL, *addr2line_path = NULL;
+> >   	const struct option options[] = {
+> >   	OPT_STRING('k', "vmlinux", &symbol_conf.vmlinux_name,
+> >   		   "file", "vmlinux pathname"),
+> > @@ -3033,6 +3083,12 @@ static int perf_c2c__report(int argc, const char **argv)
+> >   	OPT_BOOLEAN(0, "stitch-lbr", &c2c.stitch_lbr,
+> >   		    "Enable LBR callgraph stitching approach"),
+> >   	OPT_BOOLEAN(0, "double-cl", &chk_double_cl, "Detect adjacent cacheline false sharing"),
+> > +	OPT_STRING('M', "disassembler-style", &disassembler_style, "disassembler style",
+> > +		   "Specify disassembler style (e.g. -M intel for intel syntax)"),
+> > +	OPT_STRING(0, "objdump", &objdump_path, "path",
+> > +		   "objdump binary to use for disassembly and annotations"),
+> > +	OPT_STRING(0, "addr2line", &addr2line_path, "path",
+> > +		   "addr2line binary to use for line numbers"),
+> >   	OPT_PARENT(c2c_options),
+> >   	OPT_END()
+> >   	};
+> > @@ -3040,6 +3096,12 @@ static int perf_c2c__report(int argc, const char **argv)
+> >   	const char *output_str, *sort_str = NULL;
+> >   	struct perf_env *env;
+> > +	annotation_options__init();
+> > +
+> > +	err = hists__init();
+> > +	if (err < 0)
+> > +		goto out;
+> > +
+> >   	argc = parse_options(argc, argv, options, report_c2c_usage,
+> >   			     PARSE_OPT_STOP_AT_NON_OPTION);
+> >   	if (argc)
+> > @@ -3052,6 +3114,36 @@ static int perf_c2c__report(int argc, const char **argv)
+> >   	if (c2c.stats_only)
+> >   		c2c.use_stdio = true;
+> > +	/**
+> > +	 * Annotation related options
+> > +	 * disassembler_style, objdump_path, addr2line_path
+> > +	 * are set in the c2c_options, so we can use them here.
+> > +	 */
+> > +	if (disassembler_style) {
+> > +		annotate_opts.disassembler_style = strdup(disassembler_style);
+> > +		if (!annotate_opts.disassembler_style) {
+> > +			err = -ENOMEM;
+> > +			pr_err("Failed to allocate memory for annotation options\n");
+> > +			goto out;
+> > +		}
+> > +	}
+> > +	if (objdump_path) {
+> > +		annotate_opts.objdump_path = strdup(objdump_path);
+> > +		if (!annotate_opts.objdump_path) {
+> > +			err = -ENOMEM;
+> > +			pr_err("Failed to allocate memory for annotation options\n");
+> > +			goto out;
+> > +		}
+> > +	}
+> > +	if (addr2line_path) {
+> > +		symbol_conf.addr2line_path = strdup(addr2line_path);
+> > +		if (!symbol_conf.addr2line_path) {
+> > +			err = -ENOMEM;
+> > +			pr_err("Failed to allocate memory for annotation options\n");
+> > +			goto out;
+> > +		}
+> > +	}
+> > +
+> >   	err = symbol__validate_sym_arguments();
+> >   	if (err)
+> >   		goto out;
+> > @@ -3126,6 +3218,38 @@ static int perf_c2c__report(int argc, const char **argv)
+> >   	if (err)
+> >   		goto out_mem2node;
+> > +	if (c2c.use_stdio)
+> > +		use_browser = 0;
+> > +	else
+> > +		use_browser = 1;
+> > +
+> > +	/*
+> > +	 * Only in the TUI browser we are doing integrated annotation,
+> > +	 * so don't allocate extra space that won't be used in the stdio
+> > +	 * implementation.
+> > +	 */
+> > +	if (perf_c2c__has_annotation()) {
+> > +		int ret = symbol__annotation_init();
+> > +
+> > +		if (ret < 0)
+> > +			goto out_mem2node;
+> > +		/*
+> > +		 * For searching by name on the "Browse map details".
+> > +		 * providing it only in verbose mode not to bloat too
+> > +		 * much struct symbol.
+> > +		 */
+> > +		if (verbose > 0) {
+> > +			/*
+> > +			 * XXX: Need to provide a less kludgy way to ask for
+> > +			 * more space per symbol, the u32 is for the index on
+> > +			 * the ui browser.
+> > +			 * See symbol__browser_index.
+> > +			 */
+> > +			symbol_conf.priv_size += sizeof(u32);
+> > +		}
+> > +		annotation_config__init();
+> > +	}
+> > +
+> >   	if (symbol__init(env) < 0)
+> >   		goto out_mem2node;
+> > @@ -3135,11 +3259,6 @@ static int perf_c2c__report(int argc, const char **argv)
+> >   		goto out_mem2node;
+> >   	}
+> > -	if (c2c.use_stdio)
+> > -		use_browser = 0;
+> > -	else
+> > -		use_browser = 1;
+> > -
+> >   	setup_browser(false);
+> >   	err = perf_session__process_events(session);
+> > @@ -3210,6 +3329,7 @@ static int perf_c2c__report(int argc, const char **argv)
+> >   out_session:
+> >   	perf_session__delete(session);
+> >   out:
+> > +	annotation_options__exit();
+> >   	return err;
+> >   }
+> > diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+> > index 8fe699f98542..63d0e28fb991 100644
+> > --- a/tools/perf/ui/browsers/annotate.c
+> > +++ b/tools/perf/ui/browsers/annotate.c
+> > @@ -605,7 +605,7 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
+> >   	target_ms.map = ms->map;
+> >   	target_ms.sym = dl->ops.target.sym;
+> >   	annotation__unlock(notes);
+> > -	__hist_entry__tui_annotate(browser->he, &target_ms, evsel, hbt);
+> > +	__hist_entry__tui_annotate(browser->he, &target_ms, evsel, hbt, NO_INITIAL_IP);
+> >   	/*
+> >   	 * The annotate_browser above changed the title with the target function
+> > @@ -864,6 +864,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
+> >   	const char *help = "Press 'h' for help on key bindings";
+> >   	int delay_secs = hbt ? hbt->refresh : 0;
+> >   	char *br_cntr_text = NULL;
+> > +	u64 init_ip = NO_INITIAL_IP;
+> >   	char title[256];
+> >   	int key;
+> > @@ -873,6 +874,13 @@ static int annotate_browser__run(struct annotate_browser *browser,
+> >   	annotate_browser__calc_percent(browser, evsel);
+> > +	/* the selection are intentionally even not from the sample percentage */
+> > +	if (browser->entries.rb_node == NULL && browser->selection) {
+> > +		init_ip = sym->start + browser->selection->offset;
+> > +		disasm_rb_tree__insert(browser, browser->selection);
+> > +		browser->curr_hot = rb_last(&browser->entries);
+> > +	}
+> > +
+> >   	if (browser->curr_hot) {
+> >   		annotate_browser__set_rb_top(browser, browser->curr_hot);
+> >   		browser->b.navkeypressed = false;
+> > @@ -973,6 +981,18 @@ static int annotate_browser__run(struct annotate_browser *browser,
+> >   				ui_helpline__puts(help);
+> >   			annotate__scnprintf_title(hists, title, sizeof(title));
+> >   			annotate_browser__show(browser, title, help);
+> > +			/* Previous RB tree may not valid, need refresh according to new entries*/
+> > +			if (init_ip != NO_INITIAL_IP) {
+> > +				struct disasm_line *dl = find_disasm_line(sym, init_ip, true);
+> > +
+> > +				browser->curr_hot = NULL;
+> > +				browser->entries.rb_node = NULL;
+> > +				if (dl != NULL) {
+> > +					disasm_rb_tree__insert(browser, &dl->al);
+> > +					browser->curr_hot = rb_last(&browser->entries);
+> > +				}
+> > +				nd = browser->curr_hot;
+> > +			}
+> >   			continue;
+> >   		case 'o':
+> >   			annotate_opts.use_offset = !annotate_opts.use_offset;
+> > @@ -1106,22 +1126,23 @@ static int annotate_browser__run(struct annotate_browser *browser,
+> >   }
+> >   int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
+> > -			     struct hist_browser_timer *hbt)
+> > +			     struct hist_browser_timer *hbt, u64 init_ip)
+> >   {
+> >   	/* reset abort key so that it can get Ctrl-C as a key */
+> >   	SLang_reset_tty();
+> >   	SLang_init_tty(0, 0, 0);
+> >   	SLtty_set_suspend_state(true);
+> > -	return __hist_entry__tui_annotate(he, &he->ms, evsel, hbt);
+> > +	return __hist_entry__tui_annotate(he, &he->ms, evsel, hbt, init_ip);
+> >   }
+> >   int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+> >   			       struct evsel *evsel,
+> > -			       struct hist_browser_timer *hbt)
+> > +			       struct hist_browser_timer *hbt, u64 init_ip)
+> >   {
+> >   	struct symbol *sym = ms->sym;
+> >   	struct annotation *notes = symbol__annotation(sym);
+> > +	struct disasm_line *dl = NULL;
+> >   	struct annotate_browser browser = {
+> >   		.b = {
+> >   			.refresh = annotate_browser__refresh,
+> > @@ -1173,6 +1194,18 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+> >   		browser.he = &annotate_he;
+> >   	}
+> > +	/*
+> > +	 * If init_ip is set, it means that there should be a line
+> > +	 * intentionally selected, not based on the percentages
+> > +	 * which caculated by the event sampling. In this case, we
+> > +	 * convey this information into the browser selection, where
+> > +	 * the selection in other cases should be empty.
+> > +	 */
+> > +	if (init_ip != NO_INITIAL_IP) {
+> > +		dl = find_disasm_line(sym, init_ip, false);
+> > +		browser.selection = &dl->al;
+> > +	}
+> > +
+> >   	ui_helpline__push("Press ESC to exit");
+> >   	if (annotate_opts.code_with_type) {
+> > diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+> > index 487c0b08c003..3675a703de11 100644
+> > --- a/tools/perf/ui/browsers/hists.c
+> > +++ b/tools/perf/ui/browsers/hists.c
+> > @@ -2485,7 +2485,7 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
+> >   		evsel = hists_to_evsel(browser->hists);
+> >   	he = hist_browser__selected_entry(browser);
+> > -	err = __hist_entry__tui_annotate(he, &act->ms, evsel, browser->hbt);
+> > +	err = __hist_entry__tui_annotate(he, &act->ms, evsel, browser->hbt, NO_INITIAL_IP);
+> >   	/*
+> >   	 * offer option to annotate the other branch source or target
+> >   	 * (if they exists) when returning from annotate
+> > diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> > index c9b220d9f924..937effbeda69 100644
+> > --- a/tools/perf/util/annotate.c
+> > +++ b/tools/perf/util/annotate.c
+> > @@ -2622,7 +2622,7 @@ int annotate_get_insn_location(struct arch *arch, struct disasm_line *dl,
+> >   	return 0;
+> >   }
+> > -static struct disasm_line *find_disasm_line(struct symbol *sym, u64 ip,
+> > +struct disasm_line *find_disasm_line(struct symbol *sym, u64 ip,
+> >   					    bool allow_update)
+> >   {
+> >   	struct disasm_line *dl;
+> > diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+> > index eaf6c8aa7f47..bbe67588bbdd 100644
+> > --- a/tools/perf/util/annotate.h
+> > +++ b/tools/perf/util/annotate.h
+> > @@ -170,6 +170,8 @@ static inline struct disasm_line *disasm_line(struct annotation_line *al)
+> >   	return al ? container_of(al, struct disasm_line, al) : NULL;
+> >   }
+> > +struct disasm_line *find_disasm_line(struct symbol *sym, u64 ip, bool allow_update);
+> > +
+> >   /*
+> >    * Is this offset in the same function as the line it is used?
+> >    * asm functions jump to other functions, for instance.
+> > diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+> > index c64005278687..e544e1795f19 100644
+> > --- a/tools/perf/util/hist.h
+> > +++ b/tools/perf/util/hist.h
+> > @@ -713,12 +713,14 @@ struct block_hist {
+> >   #include "../ui/keysyms.h"
+> >   void attr_to_script(char *buf, struct perf_event_attr *attr);
+> > +#define NO_INITIAL_IP 0
+> > +
+> >   int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+> >   			       struct evsel *evsel,
+> > -			       struct hist_browser_timer *hbt);
+> > +			       struct hist_browser_timer *hbt, u64 init_ip);
+> >   int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
+> > -			     struct hist_browser_timer *hbt);
+> > +			     struct hist_browser_timer *hbt, u64 init_ip);
+> >   int evlist__tui_browse_hists(struct evlist *evlist, const char *help, struct hist_browser_timer *hbt,
+> >   			     float min_pcnt, struct perf_env *env, bool warn_lost_event);
