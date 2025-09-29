@@ -1,117 +1,229 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF1D29E11D
-	for <linux-perf-users@vger.kernel.org>; Mon, 29 Sep 2025 19:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734C046BF
+	for <linux-perf-users@vger.kernel.org>; Mon, 29 Sep 2025 22:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759172966; cv=none; b=kDpvwJjTmaJ/FTAUoozY6n5bbhTAJne348BzL+dyHlNT/uDmjaMkbbpZmeUePLWWWOWOJy0pqhPF62ZcP3kd6jfadxh+1KBzD8/4+ODXJNTRbAh8xVY1VkTFnD9IL2ElXL32a5iQTwO4n3SAGcfHIgvlOMadcsBSEMO52YZwq0Y=
+	t=1759186549; cv=none; b=qLP8rlBS3sIAnVYuhs/hdyTLP3hJPXa/B7kgMDT1WcE0KiwOUQX5ic5xyvWUL4pqkMHtObN1SuskwcZcFEPyo+1Z0UQkLy0pKnyJuy1MqnbBoHOENhDgTW7CwT2+jRUjUqvZMfpS35ESdTc1Ds67ug8r1OdvVp3QJpqcXFSJ3LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759172966; c=relaxed/simple;
-	bh=AdUfJ3+HbRhbK7PtlXvfEfALYxdhT7u77r7aSN4uwZk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=J13YBJZriCfO96nhCUCDB084qud11lmmNyl+JU6ymlFfEgnYATHjZNsiSE0JLd3QUfKTDJKR+qy8OCy6Onag3TZc+6Bixv1y42LUbukKW45euoglXSqi2ZOwne6MFvMEYCoeJt+APdECfN+WPW1wGR+4NAyNj2a8Oaoc5fBFx/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L9yQeoMo; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1759186549; c=relaxed/simple;
+	bh=yWltR5UMzQ7WPVaW6BAgCDmNnZZsCVW/Imk+hdrGYds=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=meROsnp4z0udlFn9GieoeXwyTECfv6UgqfZT3rQW1XgLtBdWxcoyBH1EAlgS8BBAz68GBVEL8ykQ6/Bn+cft9TLYSJ8Dh85HjLNXg+qauc3bF79uDWG5NgPNyqybSBIg14IS4TOoLbl5hz6nZ053ixzpoLE+6ShT6OK0u7j0N44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=blm/TWE4; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L9yQeoMo"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-27eeb9730d9so40566675ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Sep 2025 12:09:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="blm/TWE4"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-267f0fe72a1so40979495ad.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Sep 2025 15:55:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759172964; x=1759777764; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4971M/0zABDO+i83fcQEQWVemuah1MT0Et0WsfrEZzk=;
-        b=L9yQeoMoPkXg5d5lT2D7Ra4n++RDy2SE9MSuD1eTVbKyNZt8WSLkEloIFCzXNqO3cf
-         wgo7N6WOlI3EbhXo5y3QghXVKhaL+Zvz8smMzTX6PYl9BbIVf1GEj4T9C4wjsBNEy4Q1
-         KlOwLH5/fBorFi9cSI8qqlETXPIa4jpkZ8BNK0uEtWK6NZAVH6EQ+bKbkY9YGqEsyc6E
-         BLs/sdBbGMY+DbRGhMRogroFvjoCF9NtRqAFJi8SLM2GPrX1fIc/hJ4vsLdpOiDW5Wft
-         CCZEQXne39KFIdsPDNuxX8Nvhvcr9ivaFvj2gSVR3Mwpc54sE3l3Kzq5pqKdVIvy3Gzj
-         r7NA==
+        d=chromium.org; s=google; t=1759186547; x=1759791347; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aWwi2YKfcBmpXzN2h2HKSfYkQo0+gXnuV1TKOkK9JPg=;
+        b=blm/TWE4F9Oirn2qLsmmuxCns8S1JAOZHFkub2KrhpTIfat6bD8yMre+zbYODU4hJl
+         Y8qS6lcwlYhsZmOyy8G5COxZgLHpaP5O+9WSMTUxPRUDwTWw0AF42Om/ItgPIEiAkMhs
+         zZ75tTXkxF/8r9gkbfGuAadj5xsgLGUokYEDc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759172964; x=1759777764;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4971M/0zABDO+i83fcQEQWVemuah1MT0Et0WsfrEZzk=;
-        b=bgqLco4vIcIdU/Z/8aSXOuSnPaYrKTb6wO4WJERZOyrkPFU6dPCiVUAUpHzhsrmiS1
-         uJvw3H0PV6I1LVuHzaNPcI/J+3JE10j6gG0sEDtQtie1j2xFZXQNmRTsiXvxnAv7mklQ
-         l818L9kTByR4HyQ6TZuhuJECOnlbEqtn57psfh6deUilt2qvqG7ngNmcunJvTMTAjGsW
-         KzXnZL1xHMA/XD/tyCDvPnCQiNtJ3NbsCGPTZS6+u6z4CSp6CQ8Oedj5RvCjS3BQ2q8i
-         WNILJAAgDUYstQXItcMmOyDKCiRoCU0ubd7LgYe/697UY2UpPiQ07BkmnelPKAiJosp6
-         +u0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXMBaudqkY5VB34kaGvy2xy08MWyVzywHtIsaBHgBqAyZU+g02TobhMaUW/DQPF78BxFtU6HSMrCO51r21iDx4M@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiFC3qxC5mjjdslBahqgXJMsGc9o+PZ8WhPRyCBrXVu0ck8xEf
-	NRbURdjRTIIOSZnxcW+c7miKkZVsh3yXXDjtNgJg5CA/e5bfSt6I+TuGdz6ZQ6Z/o2z97nDdRXL
-	Z/NfUU5oUwg==
-X-Google-Smtp-Source: AGHT+IGSCDVx0cLNNfPAO34F5NCMZLpRD91/a9vLPfmnYqOXMggPFusn25YIXzpM5IEFpb7ikaAU0IUITXOR
-X-Received: from pgar25.prod.google.com ([2002:a05:6a02:2e99:b0:b58:4e62:6f3d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:acf:b0:274:5030:2906
- with SMTP id d9443c01a7336-27ed4ab8df8mr196816435ad.46.1759172963586; Mon, 29
- Sep 2025 12:09:23 -0700 (PDT)
-Date: Mon, 29 Sep 2025 12:08:05 -0700
-In-Reply-To: <20250929190805.201446-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1759186547; x=1759791347;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aWwi2YKfcBmpXzN2h2HKSfYkQo0+gXnuV1TKOkK9JPg=;
+        b=P/y0mMJUE9SpFZMCqx4v6xwlefCsr0+UAGrZV3ZfZd2xf3Heo78rrf2rGWEoCat1oP
+         F8w4XliLjQwuZt48UkwtQqojaMMnDAAZWLF5vlim5hx3aIA5bCnMVP5NfYvznLzmhF8d
+         UWZ3lxdrS5wkuGGSjO/FidT/wvF+zeLuatpfJSsbuMIxiWf5B/c0MNCjSuOsBXBwZPoj
+         FPT8xlhccRcqWTC435OmOM+2nSan2eNFtY+PQ3LcQkoE8UvO8YZJgbv9S2PYroNmwdo2
+         Ty13//5yxEbA+Ju/6up0QAP2D5ZPM/IT+xbOLfIwBiqtZAk6fzvs5Z1EWyK2vLZI+Mbq
+         AleQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUMkZgppmBRl8jfFXiEJlDktSncJSiU8+3TuoY+jPhkwmtwhnHjWsT6vl5Q86nm9G8aPQw31ljI8NbQHdBoQbzZ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxzhyy5zTQHpsw/FsEYrkQgZVBwbuknMtidKWi2cxxP7ZeakyNQ
+	0uX2kRicIjxfbuN88RaNGWt11fKxkOonpqB3ytZVb0tjNMaTW5NmR7K4zksmXL2pvBVULDkLs9k
+	FU1w=
+X-Gm-Gg: ASbGnctqly/gWoXOwSFle0qiD4mNeoAXU5P5SmWkxT1hHsrLzmr58ep5Qtep0IDviLa
+	W8954rKz2WQmVs8VdgLyUYa7vBKSjx40dPJ7SCbIoIwsSRJ9p/ZNAKRLPsOQZeRQvS+LJlnmk1G
+	pt29Nkc8fb9aXZy3qLJmXJUdSY5Bp+4ICIHpUejUdZYeNA+X//hUxnCPwEzr9zgci0mJg6Xi09K
+	hSjoOdvEGR8O+Hq6gB1AxiESzHQntQfax/gYyZEEd6KdQ5dQEhGzDAe96fXlusmuB1PfzQ6sQaK
+	vRMwnHcvyrBI4sq1mgO1aQ0xrxs8wOzV6YOmswQq23g9SjrLephLUrBRaENwcYwSzLD3ryf8HgW
+	TtxAsPIp50q9k0Uhzmeniqa+AhDGkjmQEDuHWwSqD5nxXA+wGwJeAV4rA9ovrGdBw3g==
+X-Google-Smtp-Source: AGHT+IGeQ0sYeoGyM7LpFkq/TFU2U+mgarTUc+40E4E8k4VwA85HOxvhmwQflZTiPuBHiBcBQ0jtrA==
+X-Received: by 2002:a17:902:f688:b0:269:9adf:839 with SMTP id d9443c01a7336-27ed49d0be2mr208365285ad.19.1759186546745;
+        Mon, 29 Sep 2025 15:55:46 -0700 (PDT)
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com. [209.85.214.175])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-27ed66d6523sm141806495ad.11.2025.09.29.15.55.46
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Sep 2025 15:55:46 -0700 (PDT)
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2698d47e776so45701525ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Sep 2025 15:55:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW8Qki47U6Kj9Z1ODRm5m6ADOLrutQtWla794TINMLwABt2ds4cRduLpfHVP1mRLgRBBc5GssRIft6BrGBL7jc0@vger.kernel.org
+X-Received: by 2002:a17:903:2291:b0:27e:dc53:d222 with SMTP id
+ d9443c01a7336-27edc53d5ddmr177688785ad.44.1759186545584; Mon, 29 Sep 2025
+ 15:55:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250929190805.201446-1-irogers@google.com>
-X-Mailer: git-send-email 2.51.0.570.gb178f27e6d-goog
-Message-ID: <20250929190805.201446-16-irogers@google.com>
-Subject: [PATCH v6 15/15] perf disasm: Remove unused evsel from annotate_args
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, Eric Biggers <ebiggers@kernel.org>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
-	Collin Funk <collin.funk1@gmail.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Li Huafei <lihuafei1@huawei.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
-	Stephen Brennan <stephen.s.brennan@oracle.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Alexandre Ghiti <alexghiti@rivosinc.com>, Haibo Xu <haibo1.xu@intel.com>, 
-	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev, 
-	Song Liu <song@kernel.org>
+MIME-Version: 1.0
+References: <20250925084806.89715-1-cuiyunhui@bytedance.com>
+ <20250925084806.89715-2-cuiyunhui@bytedance.com> <CAD=FV=VZLYqPQCOEhbH4QtndeG5e1-0wey24fgYNTeFiqd8qJg@mail.gmail.com>
+ <CAEEQ3wnwNdTgt6ByHCzM43fhZMLSxwXvYx-AGBpsktraXqif2Q@mail.gmail.com>
+ <CAD=FV=X6Xv_WYPMXKtOWLJX7skCoQmia3JbQej_u38qxqAbqDg@mail.gmail.com> <CAEEQ3wn0UckgNTJCPCNDtHW8DwWAJR1PXURvH57yfHATYqs7Gw@mail.gmail.com>
+In-Reply-To: <CAEEQ3wn0UckgNTJCPCNDtHW8DwWAJR1PXURvH57yfHATYqs7Gw@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 29 Sep 2025 15:55:33 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XoUw6HWoFLMcgyHhYm7oeTOXCAyvBdpOghggmdvYzp6Q@mail.gmail.com>
+X-Gm-Features: AS18NWAnKZZMEtwxIM0YbV4Mazpr4rnQGlLmvr3-cqjcbEOsSH_1wE2lEHBVzYs
+Message-ID: <CAD=FV=XoUw6HWoFLMcgyHhYm7oeTOXCAyvBdpOghggmdvYzp6Q@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v2 1/2] watchdog: move arm64 watchdog_hld
+ into common code
+To: yunhui cui <cuiyunhui@bytedance.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	ziqianlu@bytedance.com, akpm@linux-foundation.org, alex@ghiti.fr, 
+	anup@brainfault.org, aou@eecs.berkeley.edu, atish.patra@linux.dev, 
+	catalin.marinas@arm.com, johannes@sipsolutions.net, lihuafei1@huawei.com, 
+	mark.rutland@arm.com, masahiroy@kernel.org, maz@kernel.org, mingo@kernel.org, 
+	nicolas.schier@linux.dev, palmer@dabbelt.com, paul.walmsley@sifive.com, 
+	suzuki.poulose@arm.com, thorsten.blum@linux.dev, wangjinchao600@gmail.com, 
+	will@kernel.org, yangyicong@hisilicon.com, zhanjie9@hisilicon.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Set in symbol__annotate but never used.
+Hi,
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/annotate.c | 1 -
- tools/perf/util/disasm.h   | 1 -
- 2 files changed, 2 deletions(-)
+On Sat, Sep 27, 2025 at 7:38=E2=80=AFPM yunhui cui <cuiyunhui@bytedance.com=
+> wrote:
+>
+> Hi Doug,
+>
+> On Sat, Sep 27, 2025 at 4:58=E2=80=AFAM Doug Anderson <dianders@chromium.=
+org> wrote:
+> >
+> > Hi,
+> >
+> > On Fri, Sep 26, 2025 at 2:37=E2=80=AFAM yunhui cui <cuiyunhui@bytedance=
+.com> wrote:
+> > >
+> > > Hi Doug,
+> > >
+> > > On Fri, Sep 26, 2025 at 4:00=E2=80=AFAM Doug Anderson <dianders@chrom=
+ium.org> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Thu, Sep 25, 2025 at 1:48=E2=80=AFAM Yunhui Cui <cuiyunhui@byted=
+ance.com> wrote:
+> > > > >
+> > > > > @@ -17,6 +17,7 @@
+> > > > >  #include <linux/cpu_pm.h>
+> > > > >  #include <linux/export.h>
+> > > > >  #include <linux/kernel.h>
+> > > > > +#include <linux/nmi.h>
+> > > > >  #include <linux/perf/arm_pmu.h>
+> > > > >  #include <linux/slab.h>
+> > > > >  #include <linux/sched/clock.h>
+> > > > > @@ -696,10 +697,12 @@ static int armpmu_get_cpu_irq(struct arm_pm=
+u *pmu, int cpu)
+> > > > >         return per_cpu(hw_events->irq, cpu);
+> > > > >  }
+> > > > >
+> > > > > -bool arm_pmu_irq_is_nmi(void)
+> > > > > +#ifdef CONFIG_HARDLOCKUP_DETECTOR_PERF
+> > > > > +bool arch_perf_nmi_is_available(void)
+> > > > >  {
+> > > > >         return has_nmi;
+> > > > >  }
+> > > > > +#endif
+> > > >
+> > > > Should the previous comment move here, AKA:
+> > > >
+> > > > /*
+> > > >  * hardlockup_detector_perf_init() will success even if Pseudo-NMI =
+turns off,
+> > >
+> > > Okay, we also need to change it to =E2=80=9Cwatchdog_hardlockup_probe=
+()=E2=80=9D
+> > >
+> > > >  * however, the pmu interrupts will act like a normal interrupt ins=
+tead of
+> > > >  * NMI and the hardlockup detector would be broken.
+> > > > */
+> > > >
+> > > >
+> > > > > +static int __init init_watchdog_freq_notifier(void)
+> > > > > +{
+> > > > > +       return cpufreq_register_notifier(&watchdog_freq_notifier,
+> > > > > +                                        CPUFREQ_POLICY_NOTIFIER)=
+;
+> > > >
+> > > > I think you need to do something to prevent this from happening on =
+any
+> > > > platforms that override hw_nmi_get_sample_period(), right? These
+> > > > cpufreq notifiers will be useless in that case...
+> > >
+> > > I understand this is not a problem. watchdog_perf uses
+> > > PERF_COUNT_HW_CPU_CYCLES, which means it is inherently limited by the
+> > > CPU's main frequency. After we make such a change, a larger value may
+> > > be used as the period, so the NMI period will become longer, but this
+> > > value will not change after the system starts.
+> >
+> > I'm not sure I follow. On x86, hw_nmi_get_sample_period() is:
+> >
+> > u64 hw_nmi_get_sample_period(int watchdog_thresh)
+> > {
+> >   return (u64)(cpu_khz) * 1000 * watchdog_thresh;
+> > }
+>
+> I have added the maintainers for arch/x86.
+>
+> 1. cpu_khz can be understood as returning the base operating frequency
+> of a CPU, such as 2.3GHz. In practice, the CPU's core frequency may
+> downclock to 800MHz under low load and overclock to 4.4GHz under high
+> load.
+>
+> 2. Because the event provided to the PMU has the
+> PERF_COUNT_HW_CPU_CYCLES attribute, and the counter's value is based
+> on 2.3GHz, the execution cycle of watchdog_overflow_callback() is not
+> fixed; it varies with the CPU's core frequency. When the CPU runs at a
+> frequency higher than 2.3GHz, the NMI cycle will shorten; otherwise,
+> it will lengthen.
+>
+> 3. After our modification, if the architecture is not integrated with
+> cpufreq, it returns 0 and will not update the cycle. If integrated
+> with cpufreq, it returns the maximum frequency supported by the CPU,
+> so the NMI cycle is only slightly lengthened, with no impact on the
+> actual hardlockup detection function.
+>
+> 4. I have also conducted tests:
+> stress-ng --cpu 1 --taskset 1 --cpu-load 80
+> echo 800000 > scaling_max_freq
+> turbostat shows that Bzy_MHz and TSC_MHz are 800 and 2300 respectively.
+> And the NMI cycle became approximately 30 seconds:
+> [ 2309.442743] NMI watchdog: ------ watchdog overflow callback, cpu =3D 1
+> [ 2341.526032] NMI watchdog: ------ watchdog overflow callback, cpu =3D 1
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index c9b220d9f924..a2e34f149a07 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1015,7 +1015,6 @@ int symbol__annotate(struct map_symbol *ms, struct evsel *evsel,
- 	struct symbol *sym = ms->sym;
- 	struct annotation *notes = symbol__annotation(sym);
- 	struct annotate_args args = {
--		.evsel		= evsel,
- 		.options	= &annotate_opts,
- 	};
- 	struct arch *arch = NULL;
-diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
-index 09c86f540f7f..d2cb555e4a3b 100644
---- a/tools/perf/util/disasm.h
-+++ b/tools/perf/util/disasm.h
-@@ -98,7 +98,6 @@ struct ins_ops {
- struct annotate_args {
- 	struct arch		  *arch;
- 	struct map_symbol	  ms;
--	struct evsel		  *evsel;
- 	struct annotation_options *options;
- 	s64			  offset;
- 	char			  *line;
--- 
-2.51.0.570.gb178f27e6d-goog
+Whether or not having x86 and powerpc start looking at cpufreq is an
+improvement, certainly it is a change in behavior, right? If we're
+really changing the behavior here then the commit subject and commit
+message need to mention this. Right now this is billed as a simple
+rename...
 
+I don't personally have lots of experience with x86 cpufreq but I do
+know it doesn't work quite the same as how it does on arm. It would
+definitely be good to get someone on x86 / powerpc to make sure that
+they are happy with this. ...or you just keep making it work the way
+it did before and then you don't have to worry about getting any
+buy-in from x86 / powerpc folks. Up to you, I guess.
+
+Note that folks on x86 have definitely had to deal with turbo mode
+before.  See commit 7edaeb6841df ("kernel/watchdog: Prevent false
+positives with turbo modes").
+
+-Doug
