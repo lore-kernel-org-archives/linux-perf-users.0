@@ -1,146 +1,131 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1466138F9C
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Sep 2025 20:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFDA1A83ED
+	for <linux-perf-users@vger.kernel.org>; Tue, 30 Sep 2025 20:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759262747; cv=none; b=H3YKgQJVvgmTmmdNIyCoS9vwyELDnt2ivE3nEHCe8mLGrNvj/m1izQjLAVohNNKscBec3nC82PckoAKzLjcB+29uV764pXWjnoEivMfXrrqPYGHr8zuOKSoqHdJgLTsMyypS4bu/9slrhY2GTj4DXrxw3jhFFv9Er/xci06LxZE=
+	t=1759263074; cv=none; b=KmM5PsTRvSGtHM/e7EZece9jWmMJZQuBWR1jv7qCrzrpW7k0P3ZnCfe74gpLbLE61cjz5IrU8eHWK4YKR8u2G9Vkd06RvNIp8s6bFanjrHbRDuashuL1gzQwfQxCsXnk7snXGseekzmxr4dU9EMZ7vmAnDeZrsB/WQqvCWjUU8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759262747; c=relaxed/simple;
-	bh=+O7E0xYbdBDkKmgcReNtSO/+rzQoEah3WlLA/TdGzRA=;
+	s=arc-20240116; t=1759263074; c=relaxed/simple;
+	bh=28CiOOtE1+utCGkn71XoVKwktkzm+lmXvMrk0Texmhk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=s/HzZq8ogyXKTsSF/trazQJ3T+PP+q1MFTSaUNMMU8OpsV68+72SKK9X+Wr/vdra7kFSGseUEDh8iv5FlYibyXtjJ8xLKA+gtyZVvp4aguYCVF3NhOOKnVZ0MeObz7CL+ySAsd82150NqvslqGzs4O2feEtH5v4sLfh0fm0A8pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2/1KNLDf; arc=none smtp.client-ip=209.85.214.169
+	 To:Cc:Content-Type; b=V8QYDgrjdoLXYGSbH2kL4w4WF/UtKtU03Hz22txo67WLaCPUfQ6cbGKBTH9aDoB1uyBCG7+KV7sy3lTVZejzzBETJRAMMLKSPUJYsymMDafDZ4jibJP6H4Y+d8zFtD5OalY71PcbAUOwZGjewR0pjgB1nQM0jk80UQ7ApepQ7fE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZkK9+ffG; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2/1KNLDf"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2731ff54949so2405ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 30 Sep 2025 13:05:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZkK9+ffG"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2681645b7b6so2725ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 Sep 2025 13:11:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759262745; x=1759867545; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=google.com; s=20230601; t=1759263071; x=1759867871; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LFCc179Dp3pOElR5ms1mLbchLu5y9iNqzrQelohBmx4=;
-        b=2/1KNLDf4jcNrymcFQvVarhWy7MKX/V4VmNEFQcH/ct3RONjr/Q7h3zeFKxuPUtGTS
-         1ge7On1vOhxVbCyEywcj175JlNBnWQgT5eWl/Clr1BjFXghWnvn7x1XU2mjD+6yUZqT5
-         OcepLL59dvMR1Zp5D3iKvqlhgCmtzR6F4vbz/3H53RjmZ6IF4liDLlvMRM0IBCo3k2CS
-         xPN4K3OcpqF1WwQSHbUdzVzhgZxfL3BVZyBK/ozwqwa6wCY+RRXaYOnbQSGYtL9xlOWQ
-         Fgzt3EulyLAAGGY9O2dYGcsnc9R51x09OB2w6rHLB0vGxtPUCdFu3sf+WwmVV9ptB26t
-         7Irw==
+        bh=4Z35lL/3kx403pYQW8IvvheoMziA8YGpWpHWvXvsIQU=;
+        b=ZkK9+ffGx+h4khUErsG9ROuKLdKQwG3HIpjLxVvFR+mDzLku5pe9yvP0yFta1Xv/aU
+         OIfe49eiPpQHqCkoqtdho6TzKPgkQpS5noh2EXWIIOocblrWs4QTz1/aJ8oKX8jIOgrV
+         BgtjwxLJCNZ+TQ8ybBUgFbMl6aIBzW1gPyZWlMK9ud9f9ekcX5FDMFBXuTXPBlopHE7K
+         p5EOQ35cgPJkTR1mAT9acW3TchW+gqit4Pe8ETo2ODTc9koF99S2eUXvLl33Ww4Iqs0r
+         GFuEwycBCLnBQJNmBahLC7D7plpf2B9Y5mY5QTWZ/Qr1XkgaxPXIGjqVxsKHmqZ7uF0O
+         JIvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759262745; x=1759867545;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1759263071; x=1759867871;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LFCc179Dp3pOElR5ms1mLbchLu5y9iNqzrQelohBmx4=;
-        b=DjhMhwJen6HekESv+afhnIKz6lMAGgr9E1eo8N1sq+mfXubizPYJymNX5SvPg9M9ga
-         KuxYAiYQEq4KrU3kRNfEoDrVztxYjOIeMScwueLs7s/CWgq15ygYfMq3MTAp3tQVCgMp
-         XF9eM6nu3ICwKMQmi+vfY+YEEFGrKEYWZYljlDHSt4Fl1Ukbj5szQEVi6zSbgq35Vmwm
-         O2bWz9qTF5kUSjV7266JIZ7ZHSP+bPRixixEPmWn2zgs6D+asiJ7ulyuSkL+B73oq5k4
-         NEMzpNWlyaF5bmB8As8yyBmcSgIcWSvE6tTXWN1SK9sUfgf30AytdKrR8V9DBsL98rdY
-         k+DQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV3CDjw4TRfnMznFdKI1nZyzv51EvGvh7jt+QtJB9JQorGi2a5+Un6yIlCezRaqKSg1jcE/0NQB0pbNofsRgHs5@vger.kernel.org
-X-Gm-Message-State: AOJu0YxseMy0n0xY+f4G5jU3hxkvsHLA3AsMmkt7bPXgNDb2MV/d9KOb
-	EZpzIuAyptVAKV8S4TZZdxJ3TagCqyc5j3QwfbW16uRKb0VxvwI/Uze61Fyrfy9GKXfOvq2TqQl
-	RSMhS1gUZ4Rx0mqADmDRjYZCTiJJgvE4h7EVFpQfi
-X-Gm-Gg: ASbGncv+DytfwHlYi1bPK1iY8edYbXr0C0YuxAzLALJhQVuGwhcZpkpMgjfljTEFrYH
-	QKWLZbnGgdNCe54+VxZY3BqqY7XMjG7H4enHLZAgtVjbtDYWRs3qCO+I04b8LGXPXhn6PNannvy
-	emIKm3AG5u7rN+cGMIGXDrhme8c/EBdG6QdQ6ldownHFMlUme35W/WS0J2EZ2SAvGNW8Wj9nZvL
-	HeD0PxHs73eaa8816bF5KlMrVpHZXQhyXeqPuRHV5nHGdj2VPvToz3h/Dd7O8WKbfz1
-X-Google-Smtp-Source: AGHT+IHHh9JevAZ7PaehVwgw6+jzVxzZ+2niK6DzklvkWwaIz9NijM5RmLov0xxykDGhNUTPGnG8FkD21SWdtww5YhY=
-X-Received: by 2002:a17:903:2c9:b0:26a:befc:e7e1 with SMTP id
- d9443c01a7336-28e8003e1a8mr986365ad.12.1759262745053; Tue, 30 Sep 2025
- 13:05:45 -0700 (PDT)
+        bh=4Z35lL/3kx403pYQW8IvvheoMziA8YGpWpHWvXvsIQU=;
+        b=R8pMyi9lQCOhYr18CDnPxOEJrBGAKz6TfXzN6Q2tF8Q7Rmj0OongesV31uiehRb55R
+         5EVA2GcPlA9krR+F4Cksu8hwWqPXWEaZPSigoFLvG8QOPYVyMytmPDhdHDITzCUg8hal
+         z9dRFW+VjGbyq8zIRhIWTAmftqSSiFzI75e5og5INZmTQczi3YgwUPTgAt74YO5JnV65
+         AE+nbBCr0+lvemChYKJJ5LJz5LRscb2U9gmpdlySy06uB6JtS78Q1bRSDy4TL40g/YT7
+         eYagDZXpbrAF6mYZrPtuWcyFGb3ZaHTTAQzSH2HJW+NbUasF5f/YSHZK5HgLG9/CvDIh
+         f88Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUAVlsDEvJIQw9EPkjQlHINSmWcw0zwkgfmoU1gDKn+6PlXiVf/DV/z3X30BV1yt7jDp29+8fZkMf3J5yy7hhZ+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4gFvTMXNVvE3bWefZlo4o57Z+5US1guTk4nET3nuTvPesFVTZ
+	uIpGyFPqniRjN0bFfZYomJz3e6nEMC61PDOyOdB9h7QlQSkflbX0I7A7O6XqNHCEwKt42DKEPpa
+	GpIxcmSYlOFmVq1BhhPsJjq2lPPflARsRJICqYVqS
+X-Gm-Gg: ASbGncuPkaySHwtA3vBrNiJ1l0R6Q9VwWrHtiLCHoNlGwKh1UO4dHwFz2xmamcn8/Ln
+	Css1WPIhKe2GPQ9ZDomZAmzdihiG7pVgqk5ix0OnCsn0JIu7nbnlYKxjCH91sWBpDscuzQbvdwM
+	n7VCQAWlnK8uN15/iovjeiVwuRAM03z7c4kHyb4Cb1qNlIy4PMPFn0hMcqCb9Um2gNfKcKnk86N
+	BGYIIM096l9hKKtlwv79adoL+7jo8mct8cJ1V2tUf2otKUZDdgN+6y6xQJctQrbVhpK
+X-Google-Smtp-Source: AGHT+IERdYR1/mUI7zXBnM19rHV5/7EdktMJLu+4W1r6xYhstvFfzAM7cCBplh6Yc4QT+b1yPwrOREhwdiT63r7xiis=
+X-Received: by 2002:a17:903:3203:b0:26d:72f8:8cfa with SMTP id
+ d9443c01a7336-28e8129b9d0mr150215ad.13.1759263070428; Tue, 30 Sep 2025
+ 13:11:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250914183353.1962899-1-irogers@google.com>
-In-Reply-To: <20250914183353.1962899-1-irogers@google.com>
+References: <20250919210654.317656-1-acme@kernel.org> <aM3SCGOXZsP3GZal@google.com>
+ <CAP-5=fX6=7Ycp=Su2ahZS1R0wS9s4eozPPcBgMBG25UCaC6uBA@mail.gmail.com>
+In-Reply-To: <CAP-5=fX6=7Ycp=Su2ahZS1R0wS9s4eozPPcBgMBG25UCaC6uBA@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 30 Sep 2025 13:05:33 -0700
-X-Gm-Features: AS18NWAWr0cMyC7kAVVOvYHKqJ8zIPeQHKH65rFC18TxONt4GIIpxrAGDbGzuOo
-Message-ID: <CAP-5=fV59uES4ZkNHDUypeO0XSnjkUTDWLydvaymEsegyeSb-w@mail.gmail.com>
-Subject: Re: [PATCH v1] perf sched: Avoid union type punning undefined behavior
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Tue, 30 Sep 2025 13:10:59 -0700
+X-Gm-Features: AS18NWAMU8EozYGGxgb_yx-b4bLuOaxCH94CW8izj29kx3qqp2nmTeyfVuIUP5g
+Message-ID: <CAP-5=fW6tPRW2qdFE4AbXg+47CzTjDX5HEjenjTxgOZ35fFa8A@mail.gmail.com>
+Subject: Re: [PATCH 0/2] LIBBPF_DYNAMIC=1 fixes
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Andrii Nakryiko <andrii@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Sep 14, 2025 at 11:33=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
+On Fri, Sep 19, 2025 at 3:10=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> A union is used to set the priv value in thread (a void*) to a boolean
-> value through type punning. Undefined behavior sanitizer fails on this.
+> On Fri, Sep 19, 2025 at 2:58=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
+> wrote:
+> >
+> > On Fri, Sep 19, 2025 at 06:06:52PM -0300, Arnaldo Carvalho de Melo wrot=
+e:
+> > > Hi,
+> > >
+> > >       Please take a look, noticed after processing a patch from Ian
+> > > for another such issue, on a hurry now, haven't checked when that
+> > > emit_string was introduced.
 >
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> emit_strings was added in Linux v6.17 and libbpf was tagged as version
+> 1.7 prior to that.
+>
+> Thanks,
+> Ian
 
 Ping.
+
+When this lands I can rebase:
+https://lore.kernel.org/lkml/20250830053549.1966520-1-irogers@google.com/
+on it.
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/builtin-sched.c | 19 ++++---------------
->  1 file changed, 4 insertions(+), 15 deletions(-)
->
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index f166d6cbc083..eca3b1c58c4b 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -1532,35 +1532,24 @@ static int process_sched_wakeup_ignore(const stru=
-ct perf_tool *tool __maybe_unus
->         return 0;
->  }
->
-> -union map_priv {
-> -       void    *ptr;
-> -       bool     color;
-> -};
-> -
->  static bool thread__has_color(struct thread *thread)
->  {
-> -       union map_priv priv =3D {
-> -               .ptr =3D thread__priv(thread),
-> -       };
-> -
-> -       return priv.color;
-> +       return thread__priv(thread) !=3D NULL;
->  }
->
->  static struct thread*
->  map__findnew_thread(struct perf_sched *sched, struct machine *machine, p=
-id_t pid, pid_t tid)
->  {
->         struct thread *thread =3D machine__findnew_thread(machine, pid, t=
-id);
-> -       union map_priv priv =3D {
-> -               .color =3D false,
-> -       };
-> +       bool color =3D false;
->
->         if (!sched->map.color_pids || !thread || thread__priv(thread))
->                 return thread;
->
->         if (thread_map__has(sched->map.color_pids, tid))
-> -               priv.color =3D true;
-> +               color =3D true;
->
-> -       thread__set_priv(thread, priv.ptr);
-> +       thread__set_priv(thread, color ? ((void*)1) : NULL);
->         return thread;
->  }
->
-> --
-> 2.51.0.384.g4c02a37b29-goog
->
+> > >
+> > > - Arnaldo
+> > >
+> > > Arnaldo Carvalho de Melo (2):
+> > >   perf bpf: Move the LIBBPF_CURRENT_VERSION_GEQ macro to bpf-utils.h
+> > >   perf bpf: Check libbpf version to use
+> > >     btf_dump_type_data_opts.emit_strings
+> >
+> > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> >
+> > Thanks,
+> > Namhyung
+> >
+> > >
+> > >  tools/perf/util/bpf-event.c  | 2 ++
+> > >  tools/perf/util/bpf-filter.c | 5 +----
+> > >  tools/perf/util/bpf-utils.h  | 5 +++++
+> > >  3 files changed, 8 insertions(+), 4 deletions(-)
+> > >
+> > > --
+> > > 2.51.0
+> > >
