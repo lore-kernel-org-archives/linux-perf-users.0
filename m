@@ -1,162 +1,363 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58AB2309DDC
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Sep 2025 16:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF2ACA4E;
+	Tue, 30 Sep 2025 16:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759248597; cv=none; b=mRt8gP991i28DBIJ6JPrC7/tJC7TwPVhFjk4w/ZMCQcl8Sqd7QdSlpgb3WmhZpqR8c8Djo3r/wUYzuPPb86dN3lS2+Hndpy115UyzQcctZfo5jfCeQ6DfaQEE2quVbC37cOm+y0gTvfEq90VsLjVKiWR6RTRoK3sHTa3wh1MKHg=
+	t=1759249623; cv=none; b=RMfK0nUUW8gkP45aFqc+cttqtT7oh0FFTp0PG/toZ3afXM6HjKYoUHNbL6kYou8ANvHTVDhyXdiNdHmm00pMsLLMHuz8YsWcXYah0ceveg1RxeJYq3tPE2revFJepX3879d9N1D2UgZLLwWjjCMQMD0rKmuCsbsDc06ib0bCuyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759248597; c=relaxed/simple;
-	bh=GOymHrNWJ/DcqzFRzNLLiF1DogkUUYreDSzbM08GGt4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BizmolCUuCSIeOQaDJvmA/befrDyugJJuUo4W2tlCEPzHfeO16mUxaKkHn4ddrd2cmm4ae+bDGiJNYfYyw84UrOJMHIfqoV4ea28kNJEslMSTGc6yCTD5sZ6Gu0uqSq4EIfkfu5a0jpIaQ4SkQxFvFd5ivbpPECsQNTFhLKhbfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UCpG8RS/; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1759249623; c=relaxed/simple;
+	bh=QpX7H1glCEew6/fXBPAjjPputLtXSY15ADgSTrv3Ggk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PjRb/22i1bEPtGfdFS4kiL6+xWrsjHj6AsawQXL6Mu/rQrHEcsqSUYwisMYwIDnIRwi8WVLtFFcluboOw7ocgqh2zV8ad0v7kxZSfApnNTI/KO3Td/ufxYeYYaAxguHzFK0+3XSVld0FP3eTN2hUjiExU151QVTaXbrYGFN0cno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AbE+arLF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UCpG8RS/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1759248594;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nHb7eAG3iz8vQBG390eouAsX/g11mGeOxSw1qV8aQ3I=;
-	b=UCpG8RS/ZwVh2BUkiBE0IL8V89swuNwq9sp3HKQWcD/sA7rMbGBgGSLCzZgUohYu08fudB
-	/uO3YVn588tHnAW9WttebtRNurvvtyR/pDAbTEGt3XsckpMOmvTC26GZhqkCYnXaUZlWHn
-	G6ytuMkYx7c+GFJ9KOBNXd2VkQjJybg=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-586--BFkofxyMwWBzFwcH0tROA-1; Tue,
- 30 Sep 2025 12:09:51 -0400
-X-MC-Unique: -BFkofxyMwWBzFwcH0tROA-1
-X-Mimecast-MFC-AGG-ID: -BFkofxyMwWBzFwcH0tROA_1759248589
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 653111800371;
-	Tue, 30 Sep 2025 16:09:49 +0000 (UTC)
-Received: from jbrnak-thinkpadx1carbongen9.tpbc.com (unknown [10.43.17.77])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D8EE230003BA;
-	Tue, 30 Sep 2025 16:09:46 +0000 (UTC)
-From: Jakub Brnak <jbrnak@redhat.com>
-To: namhyung@kernel.org
-Cc: acme@kernel.org,
-	acme@redhat.com,
-	irogers@google.com,
-	linux-perf-users@vger.kernel.org,
-	mpetlan@redhat.com,
-	vmolnaro@redhat.com
-Subject: [PATCH v4 7/7] perf test: Remove perftool drivers
-Date: Tue, 30 Sep 2025 18:09:23 +0200
-Message-ID: <20250930160923.13728-8-jbrnak@redhat.com>
-In-Reply-To: <20250930160923.13728-1-jbrnak@redhat.com>
-References: <20250930160923.13728-1-jbrnak@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AbE+arLF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 651EEC4CEF0;
+	Tue, 30 Sep 2025 16:27:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759249622;
+	bh=QpX7H1glCEew6/fXBPAjjPputLtXSY15ADgSTrv3Ggk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AbE+arLFxdFRQPdarLxZG1EKUgWsC6Hvo3w1QcFacRZXRS3wMp4rM84HlmDKi+ZkT
+	 o2JRd2QqpUt1VBrYbZkWc15WmYNLBilcH3bzyS13WIMWvqa30ohUjjW371Chg9Moob
+	 8iVwcLU4mWVtFPNVTpymAK/vIfev3KZ3LGUTbrO+kjC8h9tLk63Ty+qWBA1sL5LnVo
+	 7rO1rq7zNy5IoFG9B1MJc4/SFYmnWBM8vtYkSWpw2mZ7ty0wOFkBUKINDyR4clT273
+	 wHn2AMjKFecP74IF3NGNVsd+7JEuuYtHy7E9ovb4+LNlC0/lG8by+j+wSJ0kl/pUDa
+	 9s13TV/yicMtA==
+Date: Tue, 30 Sep 2025 13:26:58 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: "Falcon, Thomas" <thomas.falcon@intel.com>
+Cc: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
+	"afaerber@suse.de" <afaerber@suse.de>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"Hunter, Adrian" <adrian.hunter@intel.com>,
+	"Biggers, Caleb" <caleb.biggers@intel.com>,
+	"namhyung@kernel.org" <namhyung@kernel.org>,
+	"Taylor, Perry" <perry.taylor@intel.com>,
+	"jolsa@kernel.org" <jolsa@kernel.org>,
+	"irogers@google.com" <irogers@google.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"mani@kernel.org" <mani@kernel.org>
+Subject: Re: [PATCH v2 03/10] perf vendor events intel: Update emeraldrapids
+ events to v1.20
+Message-ID: <aNwE0sAsRKoBNADw@x1>
+References: <20250925172736.960368-1-irogers@google.com>
+ <20250925172736.960368-4-irogers@google.com>
+ <5545b403a33b32c65ff1dc6e61d78861dbfdde90.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+In-Reply-To: <5545b403a33b32c65ff1dc6e61d78861dbfdde90.camel@intel.com>
 
-From: Veronika Molnarova <vmolnaro@redhat.com>
+On Mon, Sep 29, 2025 at 11:45:20PM +0000, Falcon, Thomas wrote:
+> On Thu, 2025-09-25 at 10:27 -0700, Ian Rogers wrote:
+> > Update emeraldrapids events to v1.20 released in:
+> > https://github.com/intel/perfmon/commit/868b433955f3e94126420ee9374b9e0a6ce2d83e
+> > https://github.com/intel/perfmon/commit/43681e2817a960d06c5b8870cc6d3e5b7b6feeb9
+> > 
+> > Also adds cpu_cstate_c0 and cpu_cstate_c6 metrics.
+> > 
+> > Event json automatically generated by:
+> > https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+> > 
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> 
+> I found an Emerald Rapids to test this on. All metrics tests passed.
 
-The perf now provides all of the features required for running the
-perftool test cases, such as creating log directories, running
-setup scripts and the tests are structured by the base_ directories.
+I'll take this as a Tested-by for this specific patch, ok?
 
-Remove the drivers as they are no longer necessary together with
-the condition of skipping the base_ directories and run the
-test cases by the default perf test structure.
-
-Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
-Signed-off-by: Jakub Brnak <jbrnak@redhat.com>
----
- .../tests/shell/perftool-testsuite_probe.sh   | 24 -------------------
- .../tests/shell/perftool-testsuite_report.sh  | 23 ------------------
- tools/perf/tests/tests-scripts.c              |  2 --
- 3 files changed, 49 deletions(-)
- delete mode 100755 tools/perf/tests/shell/perftool-testsuite_probe.sh
- delete mode 100755 tools/perf/tests/shell/perftool-testsuite_report.sh
-
-diff --git a/tools/perf/tests/shell/perftool-testsuite_probe.sh b/tools/perf/tests/shell/perftool-testsuite_probe.sh
-deleted file mode 100755
-index 3863df16c19b..000000000000
---- a/tools/perf/tests/shell/perftool-testsuite_probe.sh
-+++ /dev/null
-@@ -1,24 +0,0 @@
--#!/bin/bash
--# perftool-testsuite_probe (exclusive)
--# SPDX-License-Identifier: GPL-2.0
--
--[ "$(id -u)" = 0 ] || exit 2
--test -d "$(dirname "$0")/base_probe" || exit 2
--cd "$(dirname "$0")/base_probe" || exit 2
--status=0
--
--PERFSUITE_RUN_DIR=$(mktemp -d /tmp/"$(basename "$0" .sh)".XXX)
--export PERFSUITE_RUN_DIR
--
--for testcase in setup.sh test_*; do                  # skip setup.sh if not present or not executable
--     test -x "$testcase" || continue
--     ./"$testcase"
--     (( status += $? ))
--done
--
--if ! [ "$PERFTEST_KEEP_LOGS" = "y" ]; then
--	rm -rf "$PERFSUITE_RUN_DIR"
--fi
--
--test $status -ne 0 && exit 1
--exit 0
-diff --git a/tools/perf/tests/shell/perftool-testsuite_report.sh b/tools/perf/tests/shell/perftool-testsuite_report.sh
-deleted file mode 100755
-index a8cf75b4e77e..000000000000
---- a/tools/perf/tests/shell/perftool-testsuite_report.sh
-+++ /dev/null
-@@ -1,23 +0,0 @@
--#!/bin/bash
--# perftool-testsuite_report (exclusive)
--# SPDX-License-Identifier: GPL-2.0
--
--test -d "$(dirname "$0")/base_report" || exit 2
--cd "$(dirname "$0")/base_report" || exit 2
--status=0
--
--PERFSUITE_RUN_DIR=$(mktemp -d /tmp/"$(basename "$0" .sh)".XXX)
--export PERFSUITE_RUN_DIR
--
--for testcase in setup.sh test_*; do                  # skip setup.sh if not present or not executable
--     test -x "$testcase" || continue
--     ./"$testcase"
--     (( status += $? ))
--done
--
--if ! [ "$PERFTEST_KEEP_LOGS" = "y" ]; then
--	rm -rf "$PERFSUITE_RUN_DIR"
--fi
--
--test $status -ne 0 && exit 1
--exit 0
-diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-scripts.c
-index 9b4782bc1767..e5137a89471b 100644
---- a/tools/perf/tests/tests-scripts.c
-+++ b/tools/perf/tests/tests-scripts.c
-@@ -420,8 +420,6 @@ static void append_suites_in_dir(int dir_fd,
- 			if (!S_ISDIR(st.st_mode))
- 				continue;
- 		}
--		if (strncmp(ent->d_name, "base_", 5) == 0)
--			continue; /* Skip scripts that have a separate driver. */
+- Arnaldo
  
- 		/* Scan subdir for test cases*/
- 		fd = openat(dir_fd, ent->d_name, O_PATH);
--- 
-2.50.1
-
+> Thanks,
+> Tom
+> 
+> > ---
+> >  .../arch/x86/emeraldrapids/cache.json         | 63
+> > +++++++++++++++++++
+> >  .../arch/x86/emeraldrapids/emr-metrics.json   | 12 ++++
+> >  .../arch/x86/emeraldrapids/uncore-cache.json  | 11 ++++
+> >  .../arch/x86/emeraldrapids/uncore-memory.json | 22 +++++++
+> >  .../arch/x86/emeraldrapids/uncore-power.json  |  2 -
+> >  tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
+> >  6 files changed, 109 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/tools/perf/pmu-events/arch/x86/emeraldrapids/cache.json
+> > b/tools/perf/pmu-events/arch/x86/emeraldrapids/cache.json
+> > index e96f938587bb..26568e4b77f7 100644
+> > --- a/tools/perf/pmu-events/arch/x86/emeraldrapids/cache.json
+> > +++ b/tools/perf/pmu-events/arch/x86/emeraldrapids/cache.json
+> > @@ -1,4 +1,67 @@
+> >  [
+> > +    {
+> > +        "BriefDescription": "Hit snoop reply with data, line
+> > invalidated.",
+> > +        "Counter": "0,1,2,3",
+> > +        "EventCode": "0x27",
+> > +        "EventName": "CORE_SNOOP_RESPONSE.I_FWD_FE",
+> > +        "PublicDescription": "Counts responses to snoops indicating
+> > the line will now be (I)nvalidated: removed from this core's cache,
+> > after the data is forwarded back to the requestor and indicating the
+> > data was found unmodified in the (FE) Forward or Exclusive State in
+> > this cores caches cache.  A single snoop response from the core
+> > counts on all hyperthreads of the core.",
+> > +        "SampleAfterValue": "1000003",
+> > +        "UMask": "0x20"
+> > +    },
+> > +    {
+> > +        "BriefDescription": "HitM snoop reply with data, line
+> > invalidated.",
+> > +        "Counter": "0,1,2,3",
+> > +        "EventCode": "0x27",
+> > +        "EventName": "CORE_SNOOP_RESPONSE.I_FWD_M",
+> > +        "PublicDescription": "Counts responses to snoops indicating
+> > the line will now be (I)nvalidated: removed from this core's caches,
+> > after the data is forwarded back to the requestor, and indicating the
+> > data was found modified(M) in this cores caches cache (aka HitM
+> > response).  A single snoop response from the core counts on all
+> > hyperthreads of the core.",
+> > +        "SampleAfterValue": "1000003",
+> > +        "UMask": "0x10"
+> > +    },
+> > +    {
+> > +        "BriefDescription": "Hit snoop reply without sending the
+> > data, line invalidated.",
+> > +        "Counter": "0,1,2,3",
+> > +        "EventCode": "0x27",
+> > +        "EventName": "CORE_SNOOP_RESPONSE.I_HIT_FSE",
+> > +        "PublicDescription": "Counts responses to snoops indicating
+> > the line will now be (I)nvalidated in this core's caches without
+> > forwarded back to the requestor. The line was in Forward, Shared or
+> > Exclusive (FSE) state in this cores caches.  A single snoop response
+> > from the core counts on all hyperthreads of the core.",
+> > +        "SampleAfterValue": "1000003",
+> > +        "UMask": "0x2"
+> > +    },
+> > +    {
+> > +        "BriefDescription": "Line not found snoop reply",
+> > +        "Counter": "0,1,2,3",
+> > +        "EventCode": "0x27",
+> > +        "EventName": "CORE_SNOOP_RESPONSE.MISS",
+> > +        "PublicDescription": "Counts responses to snoops indicating
+> > that the data was not found (IHitI) in this core's caches. A single
+> > snoop response from the core counts on all hyperthreads of the
+> > Core.",
+> > +        "SampleAfterValue": "1000003",
+> > +        "UMask": "0x1"
+> > +    },
+> > +    {
+> > +        "BriefDescription": "Hit snoop reply with data, line kept in
+> > Shared state.",
+> > +        "Counter": "0,1,2,3",
+> > +        "EventCode": "0x27",
+> > +        "EventName": "CORE_SNOOP_RESPONSE.S_FWD_FE",
+> > +        "PublicDescription": "Counts responses to snoops indicating
+> > the line may be kept on this core in the (S)hared state, after the
+> > data is forwarded back to the requestor, initially the data was found
+> > in the cache in the (FS) Forward or Shared state.  A single snoop
+> > response from the core counts on all hyperthreads of the core.",
+> > +        "SampleAfterValue": "1000003",
+> > +        "UMask": "0x40"
+> > +    },
+> > +    {
+> > +        "BriefDescription": "HitM snoop reply with data, line kept
+> > in Shared state",
+> > +        "Counter": "0,1,2,3",
+> > +        "EventCode": "0x27",
+> > +        "EventName": "CORE_SNOOP_RESPONSE.S_FWD_M",
+> > +        "PublicDescription": "Counts responses to snoops indicating
+> > the line may be kept on this core in the (S)hared state, after the
+> > data is forwarded back to the requestor, initially the data was found
+> > in the cache in the (M)odified state.  A single snoop response from
+> > the core counts on all hyperthreads of the core.",
+> > +        "SampleAfterValue": "1000003",
+> > +        "UMask": "0x8"
+> > +    },
+> > +    {
+> > +        "BriefDescription": "Hit snoop reply without sending the
+> > data, line kept in Shared state.",
+> > +        "Counter": "0,1,2,3",
+> > +        "EventCode": "0x27",
+> > +        "EventName": "CORE_SNOOP_RESPONSE.S_HIT_FSE",
+> > +        "PublicDescription": "Counts responses to snoops indicating
+> > the line was kept on this core in the (S)hared state, and that the
+> > data was found unmodified but not forwarded back to the requestor,
+> > initially the data was found in the cache in the (FSE) Forward,
+> > Shared state or Exclusive state.  A single snoop response from the
+> > core counts on all hyperthreads of the core.",
+> > +        "SampleAfterValue": "1000003",
+> > +        "UMask": "0x4"
+> > +    },
+> >      {
+> >          "BriefDescription": "L1D.HWPF_MISS",
+> >          "Counter": "0,1,2,3",
+> > diff --git a/tools/perf/pmu-events/arch/x86/emeraldrapids/emr-
+> > metrics.json b/tools/perf/pmu-events/arch/x86/emeraldrapids/emr-
+> > metrics.json
+> > index af0a7dd81e93..433ae5f50704 100644
+> > --- a/tools/perf/pmu-events/arch/x86/emeraldrapids/emr-metrics.json
+> > +++ b/tools/perf/pmu-events/arch/x86/emeraldrapids/emr-metrics.json
+> > @@ -39,6 +39,18 @@
+> >          "MetricName": "cpi",
+> >          "ScaleUnit": "1per_instr"
+> >      },
+> > +    {
+> > +        "BriefDescription": "The average number of cores that are in
+> > cstate C0 as observed by the power control unit (PCU)",
+> > +        "MetricExpr": "UNC_P_POWER_STATE_OCCUPANCY_CORES_C0 /
+> > UNC_P_CLOCKTICKS * #num_packages",
+> > +        "MetricGroup": "cpu_cstate",
+> > +        "MetricName": "cpu_cstate_c0"
+> > +    },
+> > +    {
+> > +        "BriefDescription": "The average number of cores are in
+> > cstate C6 as observed by the power control unit (PCU)",
+> > +        "MetricExpr": "UNC_P_POWER_STATE_OCCUPANCY_CORES_C6 /
+> > UNC_P_CLOCKTICKS * #num_packages",
+> > +        "MetricGroup": "cpu_cstate",
+> > +        "MetricName": "cpu_cstate_c6"
+> > +    },
+> >      {
+> >          "BriefDescription": "CPU operating frequency (in GHz)",
+> >          "MetricExpr": "CPU_CLK_UNHALTED.THREAD /
+> > CPU_CLK_UNHALTED.REF_TSC * #SYSTEM_TSC_FREQ / 1e9",
+> > diff --git a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-
+> > cache.json b/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-
+> > cache.json
+> > index f453202d80c2..92cf47967f0b 100644
+> > --- a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-cache.json
+> > +++ b/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-cache.json
+> > @@ -311,6 +311,17 @@
+> >          "UMask": "0x2",
+> >          "Unit": "CHA"
+> >      },
+> > +    {
+> > +        "BriefDescription": "Distress signal asserted : DPT Remote",
+> > +        "Counter": "0,1,2,3",
+> > +        "EventCode": "0xaf",
+> > +        "EventName": "UNC_CHA_DISTRESS_ASSERTED.DPT_NONLOCAL",
+> > +        "Experimental": "1",
+> > +        "PerPkg": "1",
+> > +        "PublicDescription": "Distress signal asserted : DPT Remote
+> > : Counts the number of cycles either the local or incoming distress
+> > signals are asserted. : Dynamic Prefetch Throttle received by this
+> > tile",
+> > +        "UMask": "0x8",
+> > +        "Unit": "CHA"
+> > +    },
+> >      {
+> >          "BriefDescription": "Egress Blocking due to Ordering
+> > requirements : Down",
+> >          "Counter": "0,1,2,3",
+> > diff --git a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-
+> > memory.json b/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-
+> > memory.json
+> > index 90f61c9511fc..30044177ccf8 100644
+> > --- a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-memory.json
+> > +++ b/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-memory.json
+> > @@ -3129,6 +3129,28 @@
+> >          "PublicDescription": "Clock-Enabled Self-Refresh : Counts
+> > the number of cycles when the iMC is in self-refresh and the iMC
+> > still has a clock.  This happens in some package C-states.  For
+> > example, the PCU may ask the iMC to enter self-refresh even though
+> > some of the cores are still processing.  One use of this is for
+> > Monroe technology.  Self-refresh is required during package C3 and
+> > C6, but there is no clock in the iMC at this time, so it is not
+> > possible to count these cases.",
+> >          "Unit": "iMC"
+> >      },
+> > +    {
+> > +        "BriefDescription": "Throttle Cycles for Rank 0",
+> > +        "Counter": "0,1,2,3",
+> > +        "EventCode": "0x46",
+> > +        "EventName": "UNC_M_POWER_THROTTLE_CYCLES.SLOT0",
+> > +        "Experimental": "1",
+> > +        "PerPkg": "1",
+> > +        "PublicDescription": "Throttle Cycles for Rank 0 : Counts
+> > the number of cycles while the iMC is being throttled by either
+> > thermal constraints or by the PCU throttling.  It is not possible to
+> > distinguish between the two.  This can be filtered by rank.  If
+> > multiple ranks are selected and are being throttled at the same time,
+> > the counter will only increment by 1. : Thermal throttling is
+> > performed per DIMM.  We support 3 DIMMs per channel.  This ID allows
+> > us to filter by ID.",
+> > +        "UMask": "0x1",
+> > +        "Unit": "iMC"
+> > +    },
+> > +    {
+> > +        "BriefDescription": "Throttle Cycles for Rank 0",
+> > +        "Counter": "0,1,2,3",
+> > +        "EventCode": "0x46",
+> > +        "EventName": "UNC_M_POWER_THROTTLE_CYCLES.SLOT1",
+> > +        "Experimental": "1",
+> > +        "PerPkg": "1",
+> > +        "PublicDescription": "Throttle Cycles for Rank 0 : Counts
+> > the number of cycles while the iMC is being throttled by either
+> > thermal constraints or by the PCU throttling.  It is not possible to
+> > distinguish between the two.  This can be filtered by rank.  If
+> > multiple ranks are selected and are being throttled at the same time,
+> > the counter will only increment by 1.",
+> > +        "UMask": "0x2",
+> > +        "Unit": "iMC"
+> > +    },
+> >      {
+> >          "BriefDescription": "Precharge due to read, write,
+> > underfill, or PGT.",
+> >          "Counter": "0,1,2,3",
+> > diff --git a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-
+> > power.json b/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-
+> > power.json
+> > index 9482ddaea4d1..71c35b165a3e 100644
+> > --- a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-power.json
+> > +++ b/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-power.json
+> > @@ -178,7 +178,6 @@
+> >          "Counter": "0,1,2,3",
+> >          "EventCode": "0x35",
+> >          "EventName": "UNC_P_POWER_STATE_OCCUPANCY_CORES_C0",
+> > -        "Experimental": "1",
+> >          "PerPkg": "1",
+> >          "PublicDescription": "Number of cores in C0 : This is an
+> > occupancy event that tracks the number of cores that are in the
+> > chosen C-State.  It can be used by itself to get the average number
+> > of cores in that C-state with thresholding to generate histograms, or
+> > with other PCU events and occupancy triggering to capture other
+> > details.",
+> >          "Unit": "PCU"
+> > @@ -198,7 +197,6 @@
+> >          "Counter": "0,1,2,3",
+> >          "EventCode": "0x37",
+> >          "EventName": "UNC_P_POWER_STATE_OCCUPANCY_CORES_C6",
+> > -        "Experimental": "1",
+> >          "PerPkg": "1",
+> >          "PublicDescription": "Number of cores in C6 : This is an
+> > occupancy event that tracks the number of cores that are in the
+> > chosen C-State.  It can be used by itself to get the average number
+> > of cores in that C-state with thresholding to generate histograms, or
+> > with other PCU events and occupancy triggering to capture other
+> > details.",
+> >          "Unit": "PCU"
+> > diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv
+> > b/tools/perf/pmu-events/arch/x86/mapfile.csv
+> > index 8daaa8f40b66..dec7bdd770cf 100644
+> > --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
+> > +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+> > @@ -9,7 +9,7 @@ GenuineIntel-6-4F,v23,broadwellx,core
+> >  GenuineIntel-6-55-[56789ABCDEF],v1.25,cascadelakex,core
+> >  GenuineIntel-6-DD,v1.00,clearwaterforest,core
+> >  GenuineIntel-6-9[6C],v1.05,elkhartlake,core
+> > -GenuineIntel-6-CF,v1.16,emeraldrapids,core
+> > +GenuineIntel-6-CF,v1.20,emeraldrapids,core
+> >  GenuineIntel-6-5[CF],v13,goldmont,core
+> >  GenuineIntel-6-7A,v1.01,goldmontplus,core
+> >  GenuineIntel-6-B6,v1.09,grandridge,core
+> 
