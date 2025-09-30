@@ -1,73 +1,73 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B13185B67
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Sep 2025 18:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0758D1FF7B3
+	for <linux-perf-users@vger.kernel.org>; Tue, 30 Sep 2025 18:51:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759258188; cv=none; b=kp+J0nzNqCkuluHiC6XA1wZabz0gblZ5MNTvNL0V8nNty/daHomgwVgdPPwUlou5yNPp2On6o86hfssmE9fLA0MO1ySFmoE/WFyoaxO1qfEmcgVCcmBPBA6kHnHknJ9tiu5WtkRYXRB35mLrbwoeoqojKrm5u6SjSBBLNN57h2U=
+	t=1759258311; cv=none; b=o/QzBMs7+3KuPN7uXM8T8G0kjazPLn+bRctv0TxRRUB8wWi/c/o8Iy3LFDdeB/HYKPCJ3NUg6kv9pinwdayjeWjlj71+XCZL2x1sY8j2NU3rwJHkeqKu0oWJ6DqBjW7eLYCKdy1VofoE2SgEO7CwJHhhLBuWWOPzSNqZEbDwPzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759258188; c=relaxed/simple;
-	bh=rrvTmiQHoLbY6GA247cXqaP5ruHIrd218zwwJ6z88rA=;
+	s=arc-20240116; t=1759258311; c=relaxed/simple;
+	bh=c6aARP6HySPNXZHWxDWZYoOp62KGXVGBclbtnOkB+SI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=upzEES+1asC976zo+/baNuwEC8mEiVS+1+pKbxvwTJScxrpdlIAPznHIqCY2ULLrJ6mhSCC1C20Ytf+iTu/vwTRVI2yzxf+ZcndJS6wUe7RYB1oPzwTuRNkgEXwsnJ4vwr2eiF4cibHhApfvFWVq3sgV5DOabt8UzI5TExK5XiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yb/QlUam; arc=none smtp.client-ip=209.85.214.169
+	 To:Cc:Content-Type; b=jLRrhHNbgvRAW9vSt37thZ5ICq/qmOLKLDPbI0S6fm9b/lC9I3AMn9Y47rNWqPocUVYsu8cxQqVwVug+/vqeoI1Oxb8uFUAwOWNGkdR5VEc94CAaMSvEpz1LEMb4qoVAB8TEPd38jI62bMev61UGUA8zmLZ9Gp/pHJqV0YMFC1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zq8VQV5K; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yb/QlUam"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2731ff54949so30475ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 30 Sep 2025 11:49:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zq8VQV5K"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-27d67abd215so36915ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 Sep 2025 11:51:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759258186; x=1759862986; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1759258309; x=1759863109; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CafYW9JCVHk3LRqVoUK8T+mfYpIQDIKvvil2TcyFbUc=;
-        b=yb/QlUamEzloGdMwJY2WOjMKgzOSHAKlBSZeYiGgbzHgEatsvHVeNC4DtSJqEI2iuy
-         RnBTirEIX1C4JqaX6cXJUSz6MvVMiQuunT1UR4azPnJlCBxbDrVa17c2ah6DYDHSZZlJ
-         Sh01rS7lj0ooDf/wai8Iky3NJxf/KdhnFMJyEVQPxvB6AF/bQNdn0AT2HbIv9eYslsHE
-         NAO9fo3l/Bz/sun9AaNzk6Gnob4juUEK2JtIZqNPWVLyk8zdYdF+xway+0DquU64rIuJ
-         tvZbleQAqeO2ErgZJTjEqald1c4WCx9/uXQC5rOvogsAsAooEKfJYrje31SR8uqcpH5n
-         eT8A==
+        bh=BLdWbyUPTqYGHrb/St2KHAyIDNInCGbWMUFwK1oXl8o=;
+        b=zq8VQV5KwxbmBP4C4VTd5WzrXwAlPvlb3cbE3tEz4HxJ6YYfPeQycbJodq9vyZ1PyS
+         wYQguGLEgE06Msk+fMPF+GFvSxnz9oatC5u6sFrk3fkV2SnhOMC2JyPi/FHWmQ76OOUh
+         hwB0qJcSVSvlMDmsM6lYsaK605X9Cut2Q+zek4DQ5IOlV2uKnnKgD82B/3P/S4RBfTCO
+         2g7xDg0TGTeQtvc8wZrBImwZatcLmI7Ss/oamtrfNsRcSluqDO58ZEw6bvQZDiPZhcCI
+         DIIHPrKJ8D33c/nPwSkg3vWlm9foKG4yK7zEENHXwABET8j/nFmHlq8EOFDfauJMYIPn
+         VSFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759258186; x=1759862986;
+        d=1e100.net; s=20230601; t=1759258309; x=1759863109;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CafYW9JCVHk3LRqVoUK8T+mfYpIQDIKvvil2TcyFbUc=;
-        b=GV0emn/t11MH6RibFEYEyUUelQQ9drcjOzRpWJCGo+WiCDU+0M3H0RaWbe+dlGGGLw
-         oepbGuMK5flVy+ONhVxgWYCFAmiIWVkY0ytk2NLNgLGDuk+uAK3vyLrrbyw8pH6rBmxo
-         Wm5WZzMgBOrzLY//dIWJgMEFgUAxz2FqHsjc5zitnImaFB8Gi5uD/ankmZQnU+Unk3Xa
-         VR/OCM6C0/FLxklS/N42QlxmjxpF/Rm1UKcMd91UE2yCtWvC7T252X6zbzKTsN3Zm9PY
-         q3HIx5XGL0UXcxSukTzOSBDrjHRXDelPEIIkyoCHbZ6FLs1Mj/aEek6rWDFAJcx6I2ds
-         7mPg==
-X-Forwarded-Encrypted: i=1; AJvYcCVkCpJ5lpE6Wqw+p7cyMtPl28lqT+0Mxl/olanPkffSRhUiVJvflpmfrNne792lVtnu+s5KRhVzXk/tJVQfkxsr@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy88hHGarN6njRL3bFaCd/ncGEfzxj1ctdYMUOO+Kpbi7WXmbt6
-	Go4rEQU0aDpVxSGGhzXOKrxzDDtkFjxWPa9Un+asSr91RhPPpgR5K9U0q+3CHrIEVrLhqREjiad
-	TblxYFyV0q8uX879OusjyT5jNeKbUFzXgZjrSBToe
-X-Gm-Gg: ASbGnctBQ3GzvBqUiYZoZUjBzBn43KCLae8J8oBwZ2F9eT+MlyxhDdIn6BIVO20ixNd
-	rrjETTUkrGjFbNPoXvLgXBtLOVT+bDUr6r0EgU4WeB22AJZ8QTPdpiyXUePw8Tqj3lRUSbvFjNE
-	+nDNvMU3grIEiZbFNJ5AjSSS9CXF99O5Qk7C4S+3TSttOm4fob5j49gEmFgyJHYocYweL20vDLD
-	YlqhP2dYyQazSRTUOi8yCBYknrduhWBSXLBMb+a1R9QglWaLGwZiSq8q99VWEbwDNmSstkFD/r/
-	UBs=
-X-Google-Smtp-Source: AGHT+IEXBJF+xqUmFBZ/VkdEejKOIhuu6z2ZpMuSeK93GDYBnUxia/ginTZLE1vRR5tQniZZW/A/OIhr76qlTCdUu1w=
-X-Received: by 2002:a17:903:4b0c:b0:248:7b22:dfb4 with SMTP id
- d9443c01a7336-28e80054ba7mr664965ad.16.1759258185251; Tue, 30 Sep 2025
- 11:49:45 -0700 (PDT)
+        bh=BLdWbyUPTqYGHrb/St2KHAyIDNInCGbWMUFwK1oXl8o=;
+        b=qsZAy4y0qc8N6yr52OeD8ZmcBbv08dgjVK22ciHd6UJVU1C1lY/+t9cliqF5Uhe2eo
+         P/EVNDkduWLsJZkSaX8Vai98bmQucn/38kvTFgMsy8O9q2PhJR0NYuNKrBneUCMF9o9l
+         SjiWtdi517iu29RCIOT9Vtmq68ESl9Pyo2+ZWUBgi0o/7flVu5DWtqmmKuqv8Hwk+ZTD
+         p4558r7pXv+if8mI+fSKwTGuDjlhXr3mSxfAZOhjCh/xOxbwERp9JooAlGaSUE3WGJgZ
+         rE6Lhcr53yOF9DFA9XZaijoRyb9mITIRiEwt79KELjiebi+3dFePdc31KlwqBfWM6ujH
+         bw9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVLHEWTkG6xymBsktcDgo/B+K4xgk77LjVZVLvQ6eDtcSw+ZrMOU9SmvsKy39rYKQnLt8nr0V2WOUKQD8DCMYk+@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqyS5A0hDZKHoRy7hPtQWrnY/kIA55khdK2+lVKfgL2LLMulbU
+	gRR/TU4tQT6GeHgRzB70TgXhj7K+qy2xvRZ6lrh9VEEMDkEwk2b3AgM8eXuSQJjrKOY5QtfV7jB
+	gdfCs7UDZdtuG5eTaGJVPIMyB6XfXA/+wYSLBEkQA
+X-Gm-Gg: ASbGnct/2TWGo1fNmF/jM7C3/COkqOO79BspExGeM5fisUjaMT+Z1tjzfdlbLaiYHgR
+	cRA6YL4cwvQeJEu2rtg+5g3UiKUcPOXcTaRtwAnxDjb9Q3Df9mcsNSh8jOQTPN+OD8asFBbXwVJ
+	7fBNJtEUX2zkq2WHIoUHhKXYbYXHQ8dAhC3t06fpCApyeLVCsFz4CR4eaUYM/QF7XteqjlnrZno
+	b1t8TtefQ2AKiuBtHlw2Qk4o62z+MnwIcvfLv+f22F1zU+2Q3X2AZMqIu3FAAJokffTUxE+XgeE
+	8/Y=
+X-Google-Smtp-Source: AGHT+IH7WBu2TUGx6L1UvhEZ/Mf/fmyBmuHhmcq8hsw5GO5D9bshjy3cON7R/5sjqA2IcO3qfD5J3K9LZKs6PSJ4XUE=
+X-Received: by 2002:a17:903:2c08:b0:26e:ac44:3b44 with SMTP id
+ d9443c01a7336-28e8003dd19mr706455ad.10.1759258308768; Tue, 30 Sep 2025
+ 11:51:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250930160923.13728-1-jbrnak@redhat.com> <20250930160923.13728-3-jbrnak@redhat.com>
-In-Reply-To: <20250930160923.13728-3-jbrnak@redhat.com>
+References: <20250930160923.13728-1-jbrnak@redhat.com> <20250930160923.13728-4-jbrnak@redhat.com>
+In-Reply-To: <20250930160923.13728-4-jbrnak@redhat.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 30 Sep 2025 11:49:34 -0700
-X-Gm-Features: AS18NWAJbF4pTEfMFJyW-IDqe73ageLGnp9T9EFs2Z3aQFn6v_HwbcT4ACbqbdY
-Message-ID: <CAP-5=fWvNOhPA7JnzdraF-VWDsBUKJYREx4WbOdFC4piq75KfQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/7] perf tests: Create a structure for shell tests
+Date: Tue, 30 Sep 2025 11:51:36 -0700
+X-Gm-Features: AS18NWA7MniDWOIWbuZ-mHI7kz8knvh-AeH5S7raZp-WfIrQPmLDLPhbd97xgD4
+Message-ID: <CAP-5=fWrdQy750vhuZ204Q6PJjhuy2Gg_OEPs+2h21bkfceMgQ@mail.gmail.com>
+Subject: Re: [PATCH v4 3/7] perf test: Provide setup for the shell test suite
 To: Jakub Brnak <jbrnak@redhat.com>
 Cc: namhyung@kernel.org, acme@kernel.org, acme@redhat.com, 
 	linux-perf-users@vger.kernel.org, mpetlan@redhat.com, vmolnaro@redhat.com
@@ -79,417 +79,249 @@ te:
 >
 > From: Veronika Molnarova <vmolnaro@redhat.com>
 >
-> The general structure of test suites with test cases has been implemented
-> for C tests for some time, while shell tests were just all put into a lis=
-t
-> without any possible structuring.
+> Some of the perftool-testsuite test cases require a setup to be done
+> beforehand as may be recording data, setting up cache or restoring sample
+> rate. The setup file also provides the possibility to set the name of
+> the test suite, if the name of the directory is not good enough.
 >
-> Provide the same possibility of test suite structure for shell tests. The
-> suite is created for each subdirectory located in the 'perf/tests/shell'
-> directory that contains at least one test script. All of the deeper level=
-s
-> of subdirectories will be merged with the first level of test cases.
-> The name of the test suite is the name of the subdirectory, where the tes=
-t
-> cases are located. For all of the test scripts that are not in any
-> subdirectory, a test suite with a single test case is created as it has
-> been till now.
->
-> The new structure of the shell tests for 'perf test list':
->     77: build id cache operations
->     78: coresight
->     78:1: CoreSight / ASM Pure Loop
->     78:2: CoreSight / Memcpy 16k 10 Threads
->     78:3: CoreSight / Thread Loop 10 Threads - Check TID
->     78:4: CoreSight / Thread Loop 2 Threads - Check TID
->     78:5: CoreSight / Unroll Loop Thread 10
->     79: daemon operations
->     80: perf diff tests
+> Check for the existence of the "setup.sh" script for the shell test
+> suites and run it before the any of the test cases. If the setup fails,
+> skip all of the test cases of the test suite as the setup may be
+> required for the result to be valid.
 >
 > Signed-off-by: Michael Petlan <mpetlan@redhat.com>
 > Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
 > Signed-off-by: Jakub Brnak <jbrnak@redhat.com>
-> ---
->  tools/perf/tests/tests-scripts.c | 229 ++++++++++++++++++++++++++-----
->  tools/perf/tests/tests-scripts.h |   4 +
->  2 files changed, 195 insertions(+), 38 deletions(-)
->
-> diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-sc=
-ripts.c
-> index f18c4cd337c8..e47f7eb50a73 100644
-> --- a/tools/perf/tests/tests-scripts.c
-> +++ b/tools/perf/tests/tests-scripts.c
-> @@ -151,14 +151,47 @@ static char *strdup_check(const char *str)
->         return newstr;
->  }
->
-> -static int shell_test__run(struct test_suite *test, int subtest __maybe_=
-unused)
-> +/* Free the whole structure of test_suite with its test_cases */
-> +static void free_suite(struct test_suite *suite)
->  {
-> -       const char *file =3D test->priv;
-> +       if (suite->test_cases) {
-> +               int num =3D 0;
-> +
-> +               while (suite->test_cases[num].name) { /* Last case has na=
-me set to NULL */
-> +                       free((void *) suite->test_cases[num].name);
-> +                       free((void *) suite->test_cases[num].desc);
-> +                       num++;
-> +               }
-> +               free(suite->test_cases);
-> +       }
-> +       if (suite->desc)
-> +               free((void *) suite->desc);
-> +       if (suite->priv) {
-> +               struct shell_info *test_info =3D suite->priv;
-> +
-> +               free((void *) test_info->base_path);
-> +               free(test_info);
-> +       }
-> +
-> +       free(suite);
-> +}
-> +
-> +static int shell_test__run(struct test_suite *test, int subtest)
-> +{
-> +       const char *file;
->         int err;
->         char *cmd =3D NULL;
->
-> +       /* Get absolute file path */
-> +       if (subtest >=3D 0) {
-> +               file =3D test->test_cases[subtest].name;
-> +       } else {                /* Single test case */
-> +               file =3D test->test_cases[0].name;
-> +       }
 
-nit: I think style wise the curlies shouldn't be here:
-https://www.kernel.org/doc/html/v4.10/process/coding-style.html#placing-bra=
-ces-and-spaces
-
-> +
->         if (asprintf(&cmd, "%s%s", file, verbose ? " -v" : "") < 0)
->                 return TEST_FAIL;
-> +
->         err =3D system(cmd);
->         free(cmd);
->         if (!err)
-> @@ -167,63 +200,155 @@ static int shell_test__run(struct test_suite *test=
-, int subtest __maybe_unused)
->         return WEXITSTATUS(err) =3D=3D 2 ? TEST_SKIP : TEST_FAIL;
->  }
->
-> -static void append_script(int dir_fd, const char *name, char *desc,
-> -                         struct test_suite ***result,
-> -                         size_t *result_sz)
-> +static struct test_suite *prepare_test_suite(int dir_fd)
->  {
-> -       char filename[PATH_MAX], link[128];
-> -       struct test_suite *test_suite, **result_tmp;
-> -       struct test_case *tests;
-> +       char dirpath[PATH_MAX], link[128];
->         ssize_t len;
-> -       char *exclusive;
-> +       struct test_suite *test_suite =3D NULL;
-> +       struct shell_info *test_info;
->
-> +       /* Get dir absolute path */
->         snprintf(link, sizeof(link), "/proc/%d/fd/%d", getpid(), dir_fd);
-> -       len =3D readlink(link, filename, sizeof(filename));
-> +       len =3D readlink(link, dirpath, sizeof(dirpath));
->         if (len < 0) {
->                 pr_err("Failed to readlink %s", link);
-> -               return;
-> +               return NULL;
->         }
-> -       filename[len++] =3D '/';
-> -       strcpy(&filename[len], name);
-> +       dirpath[len++] =3D '/';
-> +       dirpath[len] =3D '\0';
->
-> -       tests =3D calloc(2, sizeof(*tests));
-> -       if (!tests) {
-> -               pr_err("Out of memory while building script test suite li=
-st\n");
-> -               return;
-> -       }
-> -       tests[0].name =3D strdup_check(name);
-> -       exclusive =3D strstr(desc, " (exclusive)");
-> -       if (exclusive !=3D NULL) {
-> -               tests[0].exclusive =3D true;
-> -               exclusive[0] =3D '\0';
-> -       }
-> -       tests[0].desc =3D strdup_check(desc);
-> -       tests[0].run_case =3D shell_test__run;
->         test_suite =3D zalloc(sizeof(*test_suite));
->         if (!test_suite) {
->                 pr_err("Out of memory while building script test suite li=
-st\n");
-> -               free(tests);
-> -               return;
-> +               return NULL;
->         }
-> -       test_suite->desc =3D desc;
-> -       test_suite->test_cases =3D tests;
-> -       test_suite->priv =3D strdup_check(filename);
-> +
-> +       test_info =3D zalloc(sizeof(*test_info));
-> +       if (!test_info) {
-> +               pr_err("Out of memory while building script test suite li=
-st\n");
-> +               return NULL;
-> +       }
-> +
-> +       test_info->base_path =3D strdup_check(dirpath);           /* Abso=
-lute path to dir */
-> +
-> +       test_suite->priv =3D test_info;
-> +       test_suite->desc =3D NULL;
-> +       test_suite->test_cases =3D NULL;
-> +
-> +       return test_suite;
-> +}
-> +
-> +static void append_suite(struct test_suite ***result,
-> +                         size_t *result_sz, struct test_suite *test_suit=
-e)
-> +{
-> +       struct test_suite **result_tmp;
-> +
->         /* Realloc is good enough, though we could realloc by chunks, not=
- that
->          * anyone will ever measure performance here */
->         result_tmp =3D realloc(*result, (*result_sz + 1) * sizeof(*result=
-_tmp));
->         if (result_tmp =3D=3D NULL) {
->                 pr_err("Out of memory while building script test suite li=
-st\n");
-> -               free(tests);
-> -               free(test_suite);
-> +               free_suite(test_suite);
->                 return;
->         }
-> +
->         /* Add file to end and NULL terminate the struct array */
->         *result =3D result_tmp;
->         (*result)[*result_sz] =3D test_suite;
->         (*result_sz)++;
->  }
->
-> -static void append_scripts_in_dir(int dir_fd,
-> +static void append_script_to_suite(int dir_fd, const char *name, char *d=
-esc,
-> +                                       struct test_suite *test_suite, si=
-ze_t *tc_count)
-> +{
-> +       char file_name[PATH_MAX], link[128];
-> +       struct test_case *tests;
-> +       size_t len;
-> +       char *exclusive;
-> +
-> +       if (!test_suite)
-> +               return;
-> +
-> +       /* Requires an empty test case at the end */
-> +       tests =3D realloc(test_suite->test_cases, (*tc_count + 2) * sizeo=
-f(*tests));
-> +       if (!tests) {
-> +               pr_err("Out of memory while building script test suite li=
-st\n");
-> +               return;
-> +       }
-> +
-> +       /* Get path to the test script */
-> +       snprintf(link, sizeof(link), "/proc/%d/fd/%d", getpid(), dir_fd);
-> +       len =3D readlink(link, file_name, sizeof(file_name));
-> +       if (len < 0) {
-> +               pr_err("Failed to readlink %s", link);
-> +               return;
-> +       }
-> +       file_name[len++] =3D '/';
-> +       strcpy(&file_name[len], name);
-> +
-> +       /* Get path to the script from base dir */
-> +       tests[(*tc_count)].name =3D strdup_check(file_name);
-> +       tests[(*tc_count)].exclusive =3D false;
-> +       exclusive =3D strstr(desc, " (exclusive)");
-> +       if (exclusive !=3D NULL) {
-> +               tests[(*tc_count)].exclusive =3D true;
-> +               exclusive[0] =3D '\0';
-> +       }
-> +       tests[(*tc_count)].desc =3D desc;
-> +       tests[(*tc_count)].skip_reason =3D NULL;  /* Unused */
-> +       tests[(*tc_count)++].run_case =3D shell_test__run;
-> +
-> +       tests[(*tc_count)].name =3D NULL;         /* End the test cases *=
-/
-> +
-> +       test_suite->test_cases =3D tests;
-> +}
-> +
-> +static void append_scripts_in_subdir(int dir_fd,
-> +                                 struct test_suite *suite,
-> +                                 size_t *tc_count)
-> +{
-> +       struct dirent **entlist;
-> +       struct dirent *ent;
-> +       int n_dirs, i;
-> +
-> +       /* List files, sorted by alpha */
-> +       n_dirs =3D scandirat(dir_fd, ".", &entlist, NULL, alphasort);
-> +       if (n_dirs =3D=3D -1)
-> +               return;
-> +       for (i =3D 0; i < n_dirs && (ent =3D entlist[i]); i++) {
-> +               int fd;
-> +
-> +               if (ent->d_name[0] =3D=3D '.')
-> +                       continue; /* Skip hidden files */
-> +               if (is_test_script(dir_fd, ent->d_name)) { /* It's a test=
- */
-> +                       char *desc =3D shell_test__description(dir_fd, en=
-t->d_name);
-> +
-> +                       if (desc) /* It has a desc line - valid script */
-> +                               append_script_to_suite(dir_fd, ent->d_nam=
-e, desc, suite, tc_count);
-> +                       continue;
-> +               }
-> +
-> +               if (ent->d_type !=3D DT_DIR) {
-> +                       struct stat st;
-> +
-> +                       if (ent->d_type !=3D DT_UNKNOWN)
-> +                               continue;
-> +                       fstatat(dir_fd, ent->d_name, &st, 0);
-> +                       if (!S_ISDIR(st.st_mode))
-> +                               continue;
-
-Fwiw, there is already logic doing something like this here:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/lib/api/io_dir.h?h=3Dperf-tools-next#n89
-but iodir and not scandir so not suitably sorted. I wonder if we
-should add a helper as this test seems to be common in this code?
-
-> +               }
-> +
-> +               fd =3D openat(dir_fd, ent->d_name, O_PATH);
-> +
-> +               /* Recurse into the dir */
-> +               append_scripts_in_subdir(fd, suite, tc_count);
-> +       }
-> +       for (i =3D 0; i < n_dirs; i++) /* Clean up */
-> +               zfree(&entlist[i]);
-> +       free(entlist);
-> +}
-> +
-> +static void append_suites_in_dir(int dir_fd,
->                                   struct test_suite ***result,
->                                   size_t *result_sz)
->  {
-> @@ -237,16 +362,29 @@ static void append_scripts_in_dir(int dir_fd,
->                 return;
->         for (i =3D 0; i < n_dirs && (ent =3D entlist[i]); i++) {
->                 int fd;
-> +               struct test_suite *test_suite;
-> +               size_t cases_count =3D 0;
->
->                 if (ent->d_name[0] =3D=3D '.')
->                         continue; /* Skip hidden files */
->                 if (is_test_script(dir_fd, ent->d_name)) { /* It's a test=
- */
->                         char *desc =3D shell_test__description(dir_fd, en=
-t->d_name);
->
-> -                       if (desc) /* It has a desc line - valid script */
-> -                               append_script(dir_fd, ent->d_name, desc, =
-result, result_sz);
-> +                       if (desc) { /* It has a desc line - valid script =
-*/
-> +                               /* Create a test suite with a single test=
- case */
-> +                               test_suite =3D prepare_test_suite(dir_fd)=
-;
-> +                               append_script_to_suite(dir_fd, ent->d_nam=
-e, desc,
-> +                                                              test_suite=
-, &cases_count);
-> +                               test_suite->desc =3D strdup_check(desc);
-> +
-> +                               if (cases_count)
-> +                                       append_suite(result, result_sz, t=
-est_suite);
-> +                               else /* Wasn't able to create the test ca=
-se */
-> +                                       free_suite(test_suite);
-> +                       }
->                         continue;
->                 }
-> +
->                 if (ent->d_type !=3D DT_DIR) {
->                         struct stat st;
->
-> @@ -258,8 +396,23 @@ static void append_scripts_in_dir(int dir_fd,
->                 }
->                 if (strncmp(ent->d_name, "base_", 5) =3D=3D 0)
->                         continue; /* Skip scripts that have a separate dr=
-iver. */
-> +
-> +               /* Scan subdir for test cases*/
->                 fd =3D openat(dir_fd, ent->d_name, O_PATH);
-> -               append_scripts_in_dir(fd, result, result_sz);
-> +               test_suite =3D prepare_test_suite(fd);    /* Prepare a te=
-stsuite with its path */
-> +               if (!test_suite)
-> +                       continue;
-> +
-> +               append_scripts_in_subdir(fd, test_suite, &cases_count);
-> +               if (cases_count =3D=3D 0) {
-> +                       free_suite(test_suite);
-> +                       continue;
-> +               }
-> +
-> +               /* If no setup, set name to the directory */
-> +               test_suite->desc =3D strdup_check(ent->d_name);
-> +
-> +               append_suite(result, result_sz, test_suite);
->                 close(fd);
->         }
->         for (i =3D 0; i < n_dirs; i++) /* Clean up */
-> @@ -278,7 +431,7 @@ struct test_suite **create_script_test_suites(void)
->          * length array.
->          */
->         if (dir_fd >=3D 0)
-> -               append_scripts_in_dir(dir_fd, &result, &result_sz);
-> +               append_suites_in_dir(dir_fd, &result, &result_sz);
->
->         result_tmp =3D realloc(result, (result_sz + 1) * sizeof(*result_t=
-mp));
->         if (result_tmp =3D=3D NULL) {
-> diff --git a/tools/perf/tests/tests-scripts.h b/tools/perf/tests/tests-sc=
-ripts.h
-> index b553ad26ea17..60a1a19a45c9 100644
-> --- a/tools/perf/tests/tests-scripts.h
-> +++ b/tools/perf/tests/tests-scripts.h
-> @@ -4,6 +4,10 @@
->
->  #include "tests.h"
->
-> +struct shell_info {
-
-Maybe shell_test_info with a comment saying that this is the
-additional information attached to shell tests?
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> +       const char *base_path;
+> ---
+>  tools/perf/tests/builtin-test.c  | 30 +++++++++++++++++++-----
+>  tools/perf/tests/tests-scripts.c | 39 +++++++++++++++++++++++++++++---
+>  tools/perf/tests/tests-scripts.h | 10 ++++++++
+>  tools/perf/tests/tests.h         |  8 ++++---
+>  4 files changed, 75 insertions(+), 12 deletions(-)
+>
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
+est.c
+> index 85142dfb3e01..6fc031ef50ea 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -258,6 +258,22 @@ static test_fnptr test_function(const struct test_su=
+ite *t, int test_case)
+>         return t->test_cases[test_case].run_case;
+>  }
+>
+> +/* If setup fails, skip all test cases */
+> +static void check_shell_setup(const struct test_suite *t, int ret)
+> +{
+> +       struct shell_info *test_info;
+> +
+> +       if (!t->priv)
+> +               return;
+> +
+> +       test_info =3D t->priv;
+> +
+> +       if (ret =3D=3D TEST_SETUP_FAIL)
+> +               test_info->has_setup =3D FAILED_SETUP;
+> +       else if (test_info->has_setup =3D=3D RUN_SETUP)
+> +               test_info->has_setup =3D PASSED_SETUP;
+> +}
+> +
+>  static bool test_exclusive(const struct test_suite *t, int test_case)
+>  {
+>         if (test_case <=3D 0)
+> @@ -347,10 +363,9 @@ static int run_test_child(struct child_process *proc=
+ess)
+>         return -err;
+>  }
+>
+> -#define TEST_RUNNING -3
+> -
+> -static int print_test_result(struct test_suite *t, int curr_suite, int c=
+urr_test_case,
+> -                            int result, int width, int running)
+> +static int print_test_result(struct test_suite *t, int curr_suite,
+> +                            int curr_test_case, int result, int width,
+> +                            int running)
+>  {
+>         if (test_suite__num_test_cases(t) > 1) {
+>                 int subw =3D width > 2 ? width - 2 : width;
+> @@ -367,7 +382,8 @@ static int print_test_result(struct test_suite *t, in=
+t curr_suite, int curr_test
+>         case TEST_OK:
+>                 pr_info(" Ok\n");
+>                 break;
+> -       case TEST_SKIP: {
+> +       case TEST_SKIP:
+> +       case TEST_SETUP_FAIL:{
+>                 const char *reason =3D skip_reason(t, curr_test_case);
+>
+>                 if (reason)
+> @@ -482,6 +498,7 @@ static void finish_test(struct child_test **child_tes=
+ts, int running_test, int c
+>         }
+>         /* Clean up child process. */
+>         ret =3D finish_command(&child_test->process);
+> +       check_shell_setup(t, ret);
+>         if (verbose > 1 || (verbose =3D=3D 1 && ret =3D=3D TEST_FAIL))
+>                 fprintf(stderr, "%s", err_output.buf);
+>
+> @@ -504,7 +521,8 @@ static int start_test(struct test_suite *test, int cu=
+rr_suite, int curr_test_cas
+>                         err =3D test_function(test, curr_test_case)(test,=
+ curr_test_case);
+>                         pr_debug("---- end ----\n");
+>                         print_test_result(test, curr_suite, curr_test_cas=
+e, err, width,
+> -                                         /*running=3D*/0);
+> +                                 /*running=3D*/0);
+> +                       check_shell_setup(test, err);
+>                 }
+>                 return 0;
+>         }
+> diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-sc=
+ripts.c
+> index e47f7eb50a73..10aab7c19ffe 100644
+> --- a/tools/perf/tests/tests-scripts.c
+> +++ b/tools/perf/tests/tests-scripts.c
+> @@ -138,6 +138,12 @@ static bool is_test_script(int dir_fd, const char *n=
+ame)
+>         return is_shell_script(dir_fd, name);
+>  }
+>
+> +/* Filter for scandir */
+> +static int setup_filter(const struct dirent *entry)
+> +{
+> +       return strcmp(entry->d_name, SHELL_SETUP);
+> +}
+> +
+>  /* Duplicate a string and fall over and die if we run out of memory */
+>  static char *strdup_check(const char *str)
+>  {
+> @@ -178,6 +184,7 @@ static void free_suite(struct test_suite *suite)
+>
+>  static int shell_test__run(struct test_suite *test, int subtest)
+>  {
+> +       struct shell_info *test_info =3D test->priv;
+>         const char *file;
+>         int err;
+>         char *cmd =3D NULL;
+> @@ -189,6 +196,23 @@ static int shell_test__run(struct test_suite *test, =
+int subtest)
+>                 file =3D test->test_cases[0].name;
+>         }
+>
+> +       /* Run setup if needed */
+> +       if (test_info->has_setup =3D=3D RUN_SETUP) {
+> +               char *setup_script;
+> +
+> +               if (asprintf(&setup_script, "%s%s%s", test_info->base_pat=
+h,
+> +                            SHELL_SETUP, verbose ? " -v" : "") < 0)
+> +                       return TEST_SETUP_FAIL;
+> +
+> +               err =3D system(setup_script);
+> +               free(setup_script);
+> +
+> +                       if (err)
+> +                               return TEST_SETUP_FAIL;
+> +       } else if (test_info->has_setup =3D=3D FAILED_SETUP) {
+> +               return TEST_SKIP; /* Skip test suite if setup failed */
+> +       }
+> +
+>         if (asprintf(&cmd, "%s%s", file, verbose ? " -v" : "") < 0)
+>                 return TEST_FAIL;
+>
+> @@ -230,6 +254,7 @@ static struct test_suite *prepare_test_suite(int dir_=
+fd)
+>         }
+>
+>         test_info->base_path =3D strdup_check(dirpath);           /* Abso=
+lute path to dir */
+> +       test_info->has_setup =3D NO_SETUP;
+>
+>         test_suite->priv =3D test_info;
+>         test_suite->desc =3D NULL;
+> @@ -312,7 +337,7 @@ static void append_scripts_in_subdir(int dir_fd,
+>         int n_dirs, i;
+>
+>         /* List files, sorted by alpha */
+> -       n_dirs =3D scandirat(dir_fd, ".", &entlist, NULL, alphasort);
+> +       n_dirs =3D scandirat(dir_fd, ".", &entlist, setup_filter, alphaso=
+rt);
+>         if (n_dirs =3D=3D -1)
+>                 return;
+>         for (i =3D 0; i < n_dirs && (ent =3D entlist[i]); i++) {
+> @@ -409,8 +434,16 @@ static void append_suites_in_dir(int dir_fd,
+>                         continue;
+>                 }
+>
+> -               /* If no setup, set name to the directory */
+> -               test_suite->desc =3D strdup_check(ent->d_name);
+> +               if (is_test_script(fd, SHELL_SETUP)) {  /* Check for setu=
+p existence */
+> +                       char *desc =3D shell_test__description(fd, SHELL_=
+SETUP);
+> +
+> +                       /* Set the suite name by the setup description */
+> +                       test_suite->desc =3D desc;
+> +                       ((struct shell_info *)(test_suite->priv))->has_se=
+tup =3D RUN_SETUP;
+> +               } else {
+> +                       /* If no setup, set name to the directory */
+> +                       test_suite->desc =3D strdup_check(ent->d_name);
+> +               }
+>
+>                 append_suite(result, result_sz, test_suite);
+>                 close(fd);
+> diff --git a/tools/perf/tests/tests-scripts.h b/tools/perf/tests/tests-sc=
+ripts.h
+> index 60a1a19a45c9..da4dcd26140c 100644
+> --- a/tools/perf/tests/tests-scripts.h
+> +++ b/tools/perf/tests/tests-scripts.h
+> @@ -4,8 +4,18 @@
+>
+>  #include "tests.h"
+>
+> +#define SHELL_SETUP "setup.sh"
+> +
+> +enum shell_setup {
+> +       NO_SETUP     =3D 0,
+> +       RUN_SETUP    =3D 1,
+> +       FAILED_SETUP =3D 2,
+> +       PASSED_SETUP =3D 3,
 > +};
 > +
->  struct test_suite **create_script_test_suites(void);
+>  struct shell_info {
+>         const char *base_path;
+> +       enum shell_setup has_setup;
+>  };
 >
->  #endif /* TESTS_SCRIPTS_H */
+>  struct test_suite **create_script_test_suites(void);
+> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+> index 97e62db8764a..9f3e3b90f1ac 100644
+> --- a/tools/perf/tests/tests.h
+> +++ b/tools/perf/tests/tests.h
+> @@ -6,9 +6,11 @@
+>  #include "util/debug.h"
+>
+>  enum {
+> -       TEST_OK   =3D  0,
+> -       TEST_FAIL =3D -1,
+> -       TEST_SKIP =3D -2,
+> +       TEST_OK         =3D  0,
+> +       TEST_FAIL               =3D -1,
+> +       TEST_SKIP       =3D -2,
+> +       TEST_RUNNING    =3D -3,
+> +       TEST_SETUP_FAIL =3D -4,
+>  };
+>
+>  #define TEST_ASSERT_VAL(text, cond)                                     =
+\
 > --
 > 2.50.1
 >
