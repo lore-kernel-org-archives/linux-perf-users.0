@@ -1,183 +1,261 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294C62BCF41
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Sep 2025 06:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236AD2BE024
+	for <linux-perf-users@vger.kernel.org>; Tue, 30 Sep 2025 07:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759214976; cv=none; b=VgFUn+/htyxU0L6CHnE64ccmcUnH0VQxrFv9iMA+qC9D47MDt3GUDyma7+EtJLBXGKkyQJ3OjaieymCidKmh/BYU83qRfvdVNdwlGMOBtJyVymFRZ/uPpTIr8f+BgDw0uYzGB+lThWs/zVPzCs8qRflhIG13swuDJFvDsFGzOu8=
+	t=1759216295; cv=none; b=fnjH7ZEAIpqlV3q8wuAcCrvtdtbanz0HDhEkTtu1/Qp660s+0zTT5LLjcqrxj5BgXE82p4x/TsI/jsvF8Df0hys06BHn1bLJD8+zNLvVsQ/QHN1aNVqqC8W+UNA5jN4geb4Ffr63MUGM8ZeXprCko/KF9Q5XO62me6tmVYuqviw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759214976; c=relaxed/simple;
-	bh=qtCxdLAk5RxSyoau0wBFHmkETSWtB4mi0PWwaVQ2zUA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=MyCbx07X85nZROHU5hoQ7EyDb5c3VDJXw/YZxdxRUcpCZsxVxLC/c00cdyGYoI7c7uNbB0r+PTMjKcRgRlw3t73zWsrqfH7oLRwaWobgzuPPdQCg50PNBoW2fTjJp30+6ZFGTCzNFClgwhNxnGPuZOCU0iFO/mFP2/KQw2o0IX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cWPn/YHw; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1759216295; c=relaxed/simple;
+	bh=wU7LKPEWgp8v64IOBUq45JwQFdXugbm6cOiATPmV9CI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lplN/9pB9NCd8r51ynBSWbjHzHEwgOc00E5pQ+/UUHRD8c0oIqQMdOto31U4ok3m3DAICK+8uTIzbtIWBlEQBEf8e9uJy/fhjvxppl4qx7w02oIGt4T4E8yEgDrHFUH4qzgJGzkuK5jhcERs/VYEKZxzuThNEV0npjDP9xI9wow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=BDMZTUH9; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cWPn/YHw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1759214973;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=mqRlzhy6X/OCGXbjhJnXJHWuco4CEjpdGpSoiDLw9OM=;
-	b=cWPn/YHwPd2B4yFiIEeGg9p+l507dxYRKoRh8m9Z2afCMhlT5iLmjLKkI9zU0i6jBK3xO1
-	jTsiwSFIT6MxARK9fGgAhMyOTK7UOlB4SIRVEsG+3jeF3mcYLOPXppHovCvOZu7Wr02J8j
-	BvHYWel8OO4c7H3TaGe5RTRhY+hzZpk=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-515-63-G8LO4P5GSQ_lU58MdVA-1; Tue, 30 Sep 2025 02:49:31 -0400
-X-MC-Unique: 63-G8LO4P5GSQ_lU58MdVA-1
-X-Mimecast-MFC-AGG-ID: 63-G8LO4P5GSQ_lU58MdVA_1759214971
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-401dbafbcfaso3765624f8f.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Sep 2025 23:49:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="BDMZTUH9"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-7a32c0163bfso3322744a34.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 Sep 2025 00:11:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1759216293; x=1759821093; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CR+v3DYyPIQfSuBgQSD/F1YEBoxZbmD+6/3elV5THH0=;
+        b=BDMZTUH9pvj1q3ZmJ7w+1z1WJ7tdEfOzM154R+mlWma6AWkQNy2o2uVZUZHgdamTCH
+         LLnMNYfZUw+ZUkscYF8SHyXu1SUqRXFDoQgS/Gn2GsZhC+j0GpkcRN1XkEDXvkolecZj
+         fHE+wMc3TKMkqj9tIjbw444Lna3I2nIJIAujHGAtDsZXhlozxAp4AVqpFOf2arHPnZfh
+         OtIHSdjLyMpX16DZU1xcjoRfxLMCIiVJtbMhmM94bLd6xyWRE+vls9sr6au3ml1+Lm6r
+         ZcZwP90A5dQg4nz2eWpwDHcM0ZyrQJY4ECblU+EKzNqyy6pLivZJvUIWt++aZOluuJ4a
+         Qp3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759214970; x=1759819770;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mqRlzhy6X/OCGXbjhJnXJHWuco4CEjpdGpSoiDLw9OM=;
-        b=Nxb7H7UHXjGcJs5/8MxxSEwVeTd0S/2JMyZVALP4YTjzOTtCLJ95TOb9oELZVP4W2b
-         rgzNBVY2eJ29rOvUZE/n1nOkbXYZ/7RPL9IZGRWKWYWcwtKxc7m+6RtHAwF/Y3cao7Zr
-         9QQxwPV2ebuqPkJABwtYiOszOCm+wsVJFTstW1DVimo0IVNB1K80T1xsxptf3tPTKN49
-         iiby34hQcF0Xl40A+2AhAczTjg8VXU33v1KswqQgIpnfLTUIWJV9ePZ1tU5fJDJv0eGM
-         RVphlCQKJpgh4qsSx8A1GnUJK2GS3GfLx3bVTmHd2hXenYjCSInlLwwT8SGzNcWX+AnH
-         WfYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXy4FE98eRtAJe3dyK5iGo2ELluJ3waifASJUPQFoVboCtp7Cf8MSFvW54+HaKKIjege29OE2aZgHBxc85TRyLg@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRmxTD/6xV6eA8MJOQvMtQKFbuqUkuvYAM2mmcY6v+PGq916t8
-	SYPwY3GzUyQ2eRSmePhv7zDoFV5B1VCy58tO3BAEzkBdqVIJgpI9braU0jR+mMnsmbAxG0Blo7L
-	XZOYstVRNJlG30E0Eg3rPin3Uw9o40jxgIEYdMhATrQ1H5xp8eCNUE/I+IXk6UohdWZMFEok=
-X-Gm-Gg: ASbGncvXcQZqBTnT/cOqtfNgK/KolobGd7wV9QAV783OGXUDvJ3DM9V/QavYa7EdjRF
-	CXbRomePVwpBxc2N1nYjZqyc3nXQgDbf67uldFvit5dnieicyvq9/2mPRtLeI296DwkIy+dMZ/v
-	s1cD6rUdo/lQM8U/1SN5e/qs7hN8GS1JDg5webTJhpEjE9oIEs3DzKSOzbMF7HYzL4EeZAKclQA
-	ew4gFmhtiOe19mgadSvC0bJVUeQLnVjwRdI9lMkLQixcH5dKGs5Jc3JcLJE3IUynuzqJFe7SCaO
-	tXt9Ti+Rmc/yG2kSxINgPizCxuaTfJAWD8pECvUYpRn7TxI7zEXiuLRWajCxa64SPZGJzA3NnrE
-	69592JxRH
-X-Received: by 2002:a5d:5c84:0:b0:3ea:15cd:ac3b with SMTP id ffacd0b85a97d-40e480ca367mr13436859f8f.30.1759214970641;
-        Mon, 29 Sep 2025 23:49:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFjJ1kh+gHGKjhm8s7ngHlJgKibrCLfy9i3c10QH8wYWazuNRp/0yTM4Ql0YUWytAaTC1Wp7w==
-X-Received: by 2002:a5d:5c84:0:b0:3ea:15cd:ac3b with SMTP id ffacd0b85a97d-40e480ca367mr13436821f8f.30.1759214970148;
-        Mon, 29 Sep 2025 23:49:30 -0700 (PDT)
-Received: from ?IPV6:2a01:599:901:4a65:f2e2:845:f3d2:404d? ([2a01:599:901:4a65:f2e2:845:f3d2:404d])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e5b5e4922sm7544255e9.1.2025.09.29.23.49.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Sep 2025 23:49:29 -0700 (PDT)
-Message-ID: <3ed8a6a5-9983-4b9e-bae1-4c433568de16@redhat.com>
-Date: Tue, 30 Sep 2025 08:49:23 +0200
+        d=1e100.net; s=20230601; t=1759216293; x=1759821093;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CR+v3DYyPIQfSuBgQSD/F1YEBoxZbmD+6/3elV5THH0=;
+        b=V5GUEE6URmbBX11gfY/i1EqTCzA5s8/T+nXhlEHNs6fYsATk7Lq2JIdIUEPSKxH3hm
+         fTTXz3MEmUOWTl99XHvyTG25HyONKeOGky4unlQwe9L8IoanJCEZf9ijDd1xmbc9oD7V
+         IFpygZwgcL8p47FQjQlWJ+AImsbWizXO6+YVPHxuNikZtJpZ+NbVxFTIzdlLWz82rKul
+         FhzLYaDrDqq+8F/yuUeueXhJIldlrg0HFhKaRTZfoT1jH07SzGGzGVkSSJaJsZ5RM66X
+         lJRPxV9WApsnKGa8rueKUD+B9t+sCjzuOHGOM+DXkoytXK7/uVSd7oWvKULX1J+7snmY
+         yrRA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVIpYIlYK020nrp9aJXiuNmQs9hmvBUMh02lQjNs/+cluoe7ZDXIXpEGxymNhEmgphdjRMH8FDyk+gX7KopRKP@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIm+VXb2YRVunWAKUD3/C1F2j4BulCjkybRKpOPGWcR1ITwroP
+	Mjzx5yai3keKXsolpQACma8vzr/Re4RTSIfh7mUMOE/sFC57QYhuKh1K7QMqKkqk2rexpI56W85
+	sgv3DRZOqpzc3oHWSNLoKLEfjGil89XaJQEMuMJX7CQ==
+X-Gm-Gg: ASbGnctHaijeyWZxF0OPnPCDugKn16AWGEuPtAai89ukdd2ZZHoeM6Mcd5Xn2zgUs2u
+	zLjLlhGbcDaQbcKTz9FU7oLgIdT1Wv7rDKCL1+mijfz6sRk3QQkHrqeI6DMnfs7byiKqzyzqEFi
+	obmPykZ8qDbbXXtvmG1xu9uoCx84gy03xPvbSpICa3xPCYL/i5MVR9rd74bTBIRoWzBGckIvLDh
+	gVIo/MKfU8HOB4czGaCLHGaEitV6H7KJB90BRS0w4hZ9jSkGgg=
+X-Google-Smtp-Source: AGHT+IG13enBpViuqbJkl3egtFONm0MWRV/sewI1GNsujGwdIAgHii202fyE/GTui5/tKuBeRANEDhPr69i6SXBk7hQ=
+X-Received: by 2002:a05:6808:158d:b0:437:d0a7:e7aa with SMTP id
+ 5614622812f47-43f9401fe52mr1763089b6e.19.1759216292941; Tue, 30 Sep 2025
+ 00:11:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 21/23] tools/ksw: add test script
-To: Jinchao Wang <wangjinchao600@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Mike Rapoport <rppt@kernel.org>,
- Alexander Potapenko <glider@google.com>, Randy Dunlap
- <rdunlap@infradead.org>, Marco Elver <elver@google.com>,
- Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Kees Cook <kees@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Sami Tolvanen <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>,
- Masahiro Yamada <masahiroy@kernel.org>, Rong Xu <xur@google.com>,
- Naveen N Rao <naveen@kernel.org>, David Kaplan <david.kaplan@amd.com>,
- Andrii Nakryiko <andrii@kernel.org>, Jinjie Ruan <ruanjinjie@huawei.com>,
- Nam Cao <namcao@linutronix.de>, workflows@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-mm@kvack.org, llvm@lists.linux.dev,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>, kasan-dev@googlegroups.com,
- "David S. Miller" <davem@davemloft.net>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org
-References: <20250930024402.1043776-1-wangjinchao600@gmail.com>
- <20250930024402.1043776-22-wangjinchao600@gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20250930024402.1043776-22-wangjinchao600@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250925084806.89715-1-cuiyunhui@bytedance.com>
+ <20250925084806.89715-2-cuiyunhui@bytedance.com> <CAD=FV=VZLYqPQCOEhbH4QtndeG5e1-0wey24fgYNTeFiqd8qJg@mail.gmail.com>
+ <CAEEQ3wnwNdTgt6ByHCzM43fhZMLSxwXvYx-AGBpsktraXqif2Q@mail.gmail.com>
+ <CAD=FV=X6Xv_WYPMXKtOWLJX7skCoQmia3JbQej_u38qxqAbqDg@mail.gmail.com>
+ <CAEEQ3wn0UckgNTJCPCNDtHW8DwWAJR1PXURvH57yfHATYqs7Gw@mail.gmail.com>
+ <CAD=FV=XoUw6HWoFLMcgyHhYm7oeTOXCAyvBdpOghggmdvYzp6Q@mail.gmail.com> <CAEEQ3w==Ekffs4+Z55AXMV52f+8ht1pWm3JexXCSiB7T6rzppA@mail.gmail.com>
+In-Reply-To: <CAEEQ3w==Ekffs4+Z55AXMV52f+8ht1pWm3JexXCSiB7T6rzppA@mail.gmail.com>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Tue, 30 Sep 2025 15:11:21 +0800
+X-Gm-Features: AS18NWBdZh_HxwD18sk9IRGlss7IupBdkXT8d-g2velRw5frfqvDCFq41tp_kn0
+Message-ID: <CAEEQ3wkUai4-noA6CQDsOs=Hn3bSB5cdV9tZJZR8_g+o9e-Mpg@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v2 1/2] watchdog: move arm64 watchdog_hld
+ into common code
+To: Doug Anderson <dianders@chromium.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	ziqianlu@bytedance.com, akpm@linux-foundation.org, alex@ghiti.fr, 
+	anup@brainfault.org, aou@eecs.berkeley.edu, atish.patra@linux.dev, 
+	catalin.marinas@arm.com, johannes@sipsolutions.net, lihuafei1@huawei.com, 
+	mark.rutland@arm.com, masahiroy@kernel.org, maz@kernel.org, mingo@kernel.org, 
+	nicolas.schier@linux.dev, palmer@dabbelt.com, paul.walmsley@sifive.com, 
+	suzuki.poulose@arm.com, thorsten.blum@linux.dev, wangjinchao600@gmail.com, 
+	will@kernel.org, yangyicong@hisilicon.com, zhanjie9@hisilicon.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 30.09.25 04:43, Jinchao Wang wrote:
-> Provide a shell script to trigger test cases.
-> 
-> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
-> ---
+Hi Doug,
 
-Do you think there could be a way to convert this into an automated 
-selftests, living in tool/testing/selftests/TBD ?
+On Tue, Sep 30, 2025 at 9:53=E2=80=AFAM yunhui cui <cuiyunhui@bytedance.com=
+> wrote:
+>
+> Hi Doug,
+>
+> On Tue, Sep 30, 2025 at 6:56=E2=80=AFAM Doug Anderson <dianders@chromium.=
+org> wrote:
+> >
+> > Hi,
+> >
+> > On Sat, Sep 27, 2025 at 7:38=E2=80=AFPM yunhui cui <cuiyunhui@bytedance=
+.com> wrote:
+> > >
+> > > Hi Doug,
+> > >
+> > > On Sat, Sep 27, 2025 at 4:58=E2=80=AFAM Doug Anderson <dianders@chrom=
+ium.org> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Fri, Sep 26, 2025 at 2:37=E2=80=AFAM yunhui cui <cuiyunhui@byted=
+ance.com> wrote:
+> > > > >
+> > > > > Hi Doug,
+> > > > >
+> > > > > On Fri, Sep 26, 2025 at 4:00=E2=80=AFAM Doug Anderson <dianders@c=
+hromium.org> wrote:
+> > > > > >
+> > > > > > Hi,
+> > > > > >
+> > > > > > On Thu, Sep 25, 2025 at 1:48=E2=80=AFAM Yunhui Cui <cuiyunhui@b=
+ytedance.com> wrote:
+> > > > > > >
+> > > > > > > @@ -17,6 +17,7 @@
+> > > > > > >  #include <linux/cpu_pm.h>
+> > > > > > >  #include <linux/export.h>
+> > > > > > >  #include <linux/kernel.h>
+> > > > > > > +#include <linux/nmi.h>
+> > > > > > >  #include <linux/perf/arm_pmu.h>
+> > > > > > >  #include <linux/slab.h>
+> > > > > > >  #include <linux/sched/clock.h>
+> > > > > > > @@ -696,10 +697,12 @@ static int armpmu_get_cpu_irq(struct ar=
+m_pmu *pmu, int cpu)
+> > > > > > >         return per_cpu(hw_events->irq, cpu);
+> > > > > > >  }
+> > > > > > >
+> > > > > > > -bool arm_pmu_irq_is_nmi(void)
+> > > > > > > +#ifdef CONFIG_HARDLOCKUP_DETECTOR_PERF
+> > > > > > > +bool arch_perf_nmi_is_available(void)
+> > > > > > >  {
+> > > > > > >         return has_nmi;
+> > > > > > >  }
+> > > > > > > +#endif
+> > > > > >
+> > > > > > Should the previous comment move here, AKA:
+> > > > > >
+> > > > > > /*
+> > > > > >  * hardlockup_detector_perf_init() will success even if Pseudo-=
+NMI turns off,
+> > > > >
+> > > > > Okay, we also need to change it to =E2=80=9Cwatchdog_hardlockup_p=
+robe()=E2=80=9D
+> > > > >
+> > > > > >  * however, the pmu interrupts will act like a normal interrupt=
+ instead of
+> > > > > >  * NMI and the hardlockup detector would be broken.
+> > > > > > */
+> > > > > >
+> > > > > >
+> > > > > > > +static int __init init_watchdog_freq_notifier(void)
+> > > > > > > +{
+> > > > > > > +       return cpufreq_register_notifier(&watchdog_freq_notif=
+ier,
+> > > > > > > +                                        CPUFREQ_POLICY_NOTIF=
+IER);
+> > > > > >
+> > > > > > I think you need to do something to prevent this from happening=
+ on any
+> > > > > > platforms that override hw_nmi_get_sample_period(), right? Thes=
+e
+> > > > > > cpufreq notifiers will be useless in that case...
+> > > > >
+> > > > > I understand this is not a problem. watchdog_perf uses
+> > > > > PERF_COUNT_HW_CPU_CYCLES, which means it is inherently limited by=
+ the
+> > > > > CPU's main frequency. After we make such a change, a larger value=
+ may
+> > > > > be used as the period, so the NMI period will become longer, but =
+this
+> > > > > value will not change after the system starts.
+> > > >
+> > > > I'm not sure I follow. On x86, hw_nmi_get_sample_period() is:
+> > > >
+> > > > u64 hw_nmi_get_sample_period(int watchdog_thresh)
+> > > > {
+> > > >   return (u64)(cpu_khz) * 1000 * watchdog_thresh;
+> > > > }
+> > >
+> > > I have added the maintainers for arch/x86.
+> > >
+> > > 1. cpu_khz can be understood as returning the base operating frequenc=
+y
+> > > of a CPU, such as 2.3GHz. In practice, the CPU's core frequency may
+> > > downclock to 800MHz under low load and overclock to 4.4GHz under high
+> > > load.
+> > >
+> > > 2. Because the event provided to the PMU has the
+> > > PERF_COUNT_HW_CPU_CYCLES attribute, and the counter's value is based
+> > > on 2.3GHz, the execution cycle of watchdog_overflow_callback() is not
+> > > fixed; it varies with the CPU's core frequency. When the CPU runs at =
+a
+> > > frequency higher than 2.3GHz, the NMI cycle will shorten; otherwise,
+> > > it will lengthen.
+> > >
+> > > 3. After our modification, if the architecture is not integrated with
+> > > cpufreq, it returns 0 and will not update the cycle. If integrated
+> > > with cpufreq, it returns the maximum frequency supported by the CPU,
+> > > so the NMI cycle is only slightly lengthened, with no impact on the
+> > > actual hardlockup detection function.
+> > >
+> > > 4. I have also conducted tests:
+> > > stress-ng --cpu 1 --taskset 1 --cpu-load 80
+> > > echo 800000 > scaling_max_freq
+> > > turbostat shows that Bzy_MHz and TSC_MHz are 800 and 2300 respectivel=
+y.
+> > > And the NMI cycle became approximately 30 seconds:
+> > > [ 2309.442743] NMI watchdog: ------ watchdog overflow callback, cpu =
+=3D 1
+> > > [ 2341.526032] NMI watchdog: ------ watchdog overflow callback, cpu =
+=3D 1
+> >
+> > Whether or not having x86 and powerpc start looking at cpufreq is an
+> > improvement, certainly it is a change in behavior, right? If we're
+> > really changing the behavior here then the commit subject and commit
+> > message need to mention this. Right now this is billed as a simple
+> > rename...
+> >
+> > I don't personally have lots of experience with x86 cpufreq but I do
+> > know it doesn't work quite the same as how it does on arm. It would
+> > definitely be good to get someone on x86 / powerpc to make sure that
+> > they are happy with this. ...or you just keep making it work the way
+> > it did before and then you don't have to worry about getting any
+> > buy-in from x86 / powerpc folks. Up to you, I guess.
+>
+> Well, I fully agree with your suggestion. What I can think of for now
+> is wrapping the newly added content with #if defined(CONFIG_ARM64) ||
+> defined(CONFIG_RISCV).
 
--- 
-Cheers
+I=E2=80=99ve also thought of an alternative approach: add a generic
+WATCHDOG_PERF_ADJUST_PERIOD to /lib/Kconfig.debug, then have the
+Kconfig files for arch/arm64 and riscv select
+WATCHDOG_PERF_ADJUST_PERIOD. What=E2=80=99s your take on this?
 
-David / dhildenb
+Do you have a more elegant approach to
+> recommend?
+>
+> >
+> > Note that folks on x86 have definitely had to deal with turbo mode
+> > before.  See commit 7edaeb6841df ("kernel/watchdog: Prevent false
+> > positives with turbo modes").
+> >
+> > -Doug
+> >
+>
+> Thanks,
+> Yunhui
 
+Thanks,
+Yunhui
