@@ -1,26 +1,27 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 353F223816D;
-	Tue, 30 Sep 2025 16:55:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE44326B76D;
+	Tue, 30 Sep 2025 16:55:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759251324; cv=none; b=dN28iOhBn25StQ58+YK7F9UADKo8y9LSeiE2lhwBTxUAoFX+f8csVYNvFHkWgqDHWMJClUuLAF/xDqeWE2lW7JivQSpx0l3Cd65rUaKwmaBmkEmRc/OGeXbVnt98tXOj6PYVzp07STLUJsHU5+e7MhsMmzK5LVlOL46HWdvAF/s=
+	t=1759251327; cv=none; b=F8QShiUBjQgo+EStMKd5kKC3USaGJ0F7mht/Emik1Rigixd+OIfDK63lyAHrzc1XmkxfBnaa79XYX3KgWnHI/V2ZDmfEKXtAJH4NtSL+zAx8GpVwZYzKnGsA3IO0/abj12HdXcZ8Mlp3HeKV/w8e0KIb1hWllUnWuz9ZH+vFDtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759251324; c=relaxed/simple;
-	bh=m3SmlzRsMKVpO74OXfiVE3r/DuuiN/mWjDes/0cwih0=;
+	s=arc-20240116; t=1759251327; c=relaxed/simple;
+	bh=cmg2aP/OdJEbju4k0iOcFl8K9ZROTOnbUW84a1thBFk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uB/AKJZYb6jkfFjLNJwuYx86KhMVDALgTtqxkgPE7ofYnIucsGJ0VKiSsl742M05b/Le48jqK/Yv/fRd+ritZ9ubLpALizDuFp3XUSwH5FUwSj8cENp2XPBq+qC2AOLiEpO7CbNqYxhFs+NJ+cviuetuhrJbq4dIqKtLh/iNv/U=
+	 In-Reply-To:To:Cc; b=kJRfIuGsMKpHe9XIyHsEc+Y7eNtRzszVwNxzNAJOtHAOk0SqzAavZYm6ETlM80wIQ4KR7NLNmFXF/s1YyFSppO/jqmLIW+MGOdqzsyvon9vmJ7Ud4wK9tW7GhpcLdiSWKf9V5515MevOfbVAn5Xt81ZSUJF5gk1QPlg0L5sKdN8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DA6A2008;
-	Tue, 30 Sep 2025 09:55:14 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68925106F;
+	Tue, 30 Sep 2025 09:55:17 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B9DB3F59E;
-	Tue, 30 Sep 2025 09:55:20 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EBC5D3F59E;
+	Tue, 30 Sep 2025 09:55:22 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Date: Tue, 30 Sep 2025 17:54:51 +0100
-Subject: [PATCH v2 3/8] perf: build: Correct CROSS_ARCH for clang
+Date: Tue, 30 Sep 2025 17:54:52 +0100
+Subject: [PATCH v2 4/8] perf test coresight: Dismiss clang warning for
+ memcpy thread
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,7 +30,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250930-perf_build_android_ndk-v2-3-2ea440b7ef01@arm.com>
+Message-Id: <20250930-perf_build_android_ndk-v2-4-2ea440b7ef01@arm.com>
 References: <20250930-perf_build_android_ndk-v2-0-2ea440b7ef01@arm.com>
 In-Reply-To: <20250930-perf_build_android_ndk-v2-0-2ea440b7ef01@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -45,53 +46,40 @@ Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
  llvm@lists.linux.dev, linux-riscv@lists.infradead.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1759251311; l=1923;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1759251311; l=1020;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=m3SmlzRsMKVpO74OXfiVE3r/DuuiN/mWjDes/0cwih0=;
- b=qUc6vL977vzutRPctHwk1sckCH+1J1T6H7bOBO7DYTmLBmUjwij5vDGLB3/y7XbyFMRL7bm1h
- LqO51kVR3eMAVhrO7d+2ZKDZqEN6w1OzCZrAWr9lUOxhTmkvAWy1Mc3
+ bh=cmg2aP/OdJEbju4k0iOcFl8K9ZROTOnbUW84a1thBFk=;
+ b=NzpFUhV66bUX0M0Pm4Pz/PqkXq7i194l89hn5IBh5wwZxXbjFJrR5wji5ol2lgY1iOPzIKbUJ
+ 7G7Jfxa7djGB4lRZv8rn38KcngiSvFQ6kkU5I/55nYuXDh5YsYtJVjU
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Clang's -dumpmachine outputs "aarch64-unknown-linux-gnu", which does not
-match the MultiArch convention. This prevents the build system from
-detecting installed packages.
+clang-18.1.3 on Ubuntu 24.04.2 reports warning:
 
-Fix by stripping the trailing '-' from CROSS_COMPILE when setting
-CROSS_ARCH.
+  memcpy_thread.c:30:1: warning: non-void function does not return a value in all control paths [-Wreturn-type]
+     30 | }
+        | ^
+
+Dismiss the warning with returning NULL from the thread function.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/build/feature/Makefile | 2 +-
- tools/perf/Makefile.perf     | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index bd615a708a0aa89ddbe87401f04bd736e384a9c4..214ccaee69181cce1f8e736b85c8dc940efa6c19 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -94,7 +94,7 @@ else
-   # paths are used instead.
-   ifdef CROSS_COMPILE
-     ifeq ($(PKG_CONFIG_LIBDIR)$(PKG_CONFIG_PATH)$(PKG_CONFIG_SYSROOT_DIR),)
--      CROSS_ARCH = $(shell $(CC) -dumpmachine)
-+      CROSS_ARCH = $(notdir $(CROSS_COMPILE:%-=%))
-       PKG_CONFIG_LIBDIR := /usr/local/$(CROSS_ARCH)/lib/pkgconfig/
-       PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/local/lib/$(CROSS_ARCH)/pkgconfig/
-       PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/lib/$(CROSS_ARCH)/pkgconfig/
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index e2150acc2c13325f93a2d5cd4a60b4a6bfeedc94..47bc9d8a91df90535408c427909bcb3f7cd50970 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -194,7 +194,7 @@ else
-   # paths are used instead.
-   ifdef CROSS_COMPILE
-     ifeq ($(PKG_CONFIG_LIBDIR)$(PKG_CONFIG_PATH)$(PKG_CONFIG_SYSROOT_DIR),)
--      CROSS_ARCH = $(shell $(CC) -dumpmachine)
-+      CROSS_ARCH = $(notdir $(CROSS_COMPILE:%-=%))
-       PKG_CONFIG_LIBDIR := /usr/local/$(CROSS_ARCH)/lib/pkgconfig/
-       PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/local/lib/$(CROSS_ARCH)/pkgconfig/
-       PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/lib/$(CROSS_ARCH)/pkgconfig/
+diff --git a/tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c b/tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c
+index 5f886cd09e6b3a62b5690dade94f1f8cae3279d2..7e879217be30a86431989dbf1f36d2134ef259cc 100644
+--- a/tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c
++++ b/tools/perf/tests/shell/coresight/memcpy_thread/memcpy_thread.c
+@@ -27,6 +27,8 @@ static void *thrfn(void *arg)
+ 	}
+ 	for (i = 0; i < len; i++)
+ 		memcpy(dst, src, a->size * 1024);
++
++	return NULL;
+ }
+ 
+ static pthread_t new_thr(void *(*fn) (void *arg), void *arg)
 
 -- 
 2.34.1
