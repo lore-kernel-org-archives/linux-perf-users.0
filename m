@@ -1,136 +1,164 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazolkn19012045.outbound.protection.outlook.com [52.103.32.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9EE223DDF
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Sep 2025 08:33:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759221225; cv=none; b=hdJDgCkOLq1OGde9nEVcfGAs/CmCujarQRj/xPyg/jWwA32HVkikEQlh9zk3OszvvY5V+RX1tCtOQzCwhN9Rk8mlpoddzxDTWFYzsB+X8m+sdfUBoF7S0NluLwJdxtL7Z13RdKhMHfKR5Af8R3t/H2LaNypPGOA8UfafyXK/zQc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759221225; c=relaxed/simple;
-	bh=b84z4sLj6OipiU/LDADQxD4tH4RaTd5fv3amUZ6N038=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=makm+9y1VmfIUg5U9ypPx1t5Md5F65/473SJveCHN5JnexCJ0inYLCXiLgS0UKadgxPCHuIxLzXkLpnF3+wzBiewZlz/GVro4spv93xER34TgdiuMZNlRLuK58QY0907TrVfJi3IZMudDYp2XjD1WyWZ2I6oEV3uCAwvUJHfAFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jH0BfA7p; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835642F6581;
+	Tue, 30 Sep 2025 10:19:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.32.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759227564; cv=fail; b=hMYyfDGn70GypozX/sQdy3RLA5wPsj1xpcNYMz5v8IjoDpfgrAsTq9lhVc/G5KXujFQxojiUcS4napTmEWyjVi1u935xcpqAyp0HwztqZ57JsAz3WmtIsNlyS6tspGh2KbLknQ4CQ7cJiuWAo2xuEg/Zxt0D7Ye+obYpG7t7reY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759227564; c=relaxed/simple;
+	bh=vgIwFi9BQz3maQr6r6b3HRp4vRGya3wMeCXXgQiYexM=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=fZ+dBBONBfAKMaa0rZKlX62iMAiekKxZ3GQF7coBFJo0JfssyQICLRKD/1qk7CMEEagM+ncNJGuX+LiILjYKt1Up1f326zwPJmPLUqc9BGihCGVIqSHcAQ7dLRKNGIHdJgbEzrYRk1RGyHAVZC6rcMVo08bRXNMUVBdSablJqt0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=i9g47bAX; arc=fail smtp.client-ip=52.103.32.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jH0BfA7p"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-72ce9790acdso63893037b3.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 30 Sep 2025 01:33:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759221223; x=1759826023; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=bBOPU6N+QlAarzu9LlqnD6xE/6f1CWCmb96507SlQ5Q=;
-        b=jH0BfA7pDo+pX7Z+tkcD8+wAy9cVudilMudXZukkQ2bgWYdPTHjDwiE0aFeVDWeXuy
-         OsIfUnhzVXpL+wZUYsn6bTKdYAOJOrH5b/TP4fGJWmcL/URvY1RxlixYIKxAd0dz+JmJ
-         V/svmB8CJAtAnFGFxcdoo9SEJLdW5eyTaPqP+yCEuweVPs+ZvXGrMJLDfYvj1WsqiT8P
-         X6Vf1esS5qkzi7kgvV5OFGboqEyVQImNjLMIk1EojLiJl2DOjpvXo44WbXdgPL9d9I67
-         REA9W9K2suAWQqA4wwMxhUM/JY+/h1M5SKMKB94tZ4FypM5+Xg895Jw0VqQicGHGNwDB
-         fmsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759221223; x=1759826023;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bBOPU6N+QlAarzu9LlqnD6xE/6f1CWCmb96507SlQ5Q=;
-        b=TtMcf6dxs2pflgM8eov+PYZc4+w9oRtqo6GIfWuJIUFZQ8uAgBzQ2W+l8yn1BKWHIX
-         eowAzG+3nHRM6+gbaDB6GLUms1m9UmVlBC4vV7l3BFovWm+niKCTBvtR0lHO0ZJ2eRUr
-         EpL2GaeNCIOmLsStbwp40o97DWE+V1YCjxQJ8yAjb3BLCN9kBoQMIWxuLCEemtmJBdGJ
-         KU48hwbxHcnQwndqe0dIftIeJjEj8qI9TLpB+LXRlj9KQK1O4BCJ04HbizwBaEigCbBb
-         R3Hd/7n1V2iw1PxyCv4xrrCa6jz8iluLb1acz4nTLKco0wWL7/XVkSzp4vhjp9fq2uWP
-         4QJw==
-X-Forwarded-Encrypted: i=1; AJvYcCV8zSvTQ/s9gD/Ydl0IYLM1UxQfyTx4Cn8Fa/9lxCmuyT0irBGsG05pntU3TgkzESEJdtv4Gp84MUgP9hyw5zy7@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywp8XfRujfKdPkp3ZrKbMeetbP6QheZ92edH/0g2RytKoCkGcpq
-	o01GhTCSarXbKMK+9JlT2aXEe3qO63udOAqmGFZU+UEP7RGUJShuY3IT
-X-Gm-Gg: ASbGncthxKCfT5bDHW48nD//+bo7P1DFbMRcpOktYG4JObbAs7E0EHz0KmUnZPMecRa
-	38o0bTpW6GPHc9xTDx/EMvWgRF6HiAQqx3hgjAJZByjNse4q8ZEihe2rlfVc+rOCzHRhgptcHgf
-	WetQuF7y06gLxINR4ksognrXS1hPqDFuK9VSye0KVuLTCgls0y6Zkee/BI3w8EWrHrW1JGc+xI4
-	y94Fzlbzosq28jVdEcrbozTSrNU8XpgwK5LrIj8FSqvCIaE/4kDcmkAEdWgZyan/OyKdAHNXWBp
-	YwV0b/7/bFCbY00Iqcc9x+KY9xm/gmujb7ixDS46L66BxFjJL8onmPbagU5N5SpcgGZd35827f7
-	06qQ5N36XRQfJBIc8wa/5PVhZbibdLgVAxNHw0z8C9HFw4zsyau2FD50DNJhuBISHOqJN
-X-Google-Smtp-Source: AGHT+IGdR0AHEeCd0GI8ArsMTXFyr2HmyKLRFM1XYpy12MOYMkBlzY/X5jDZtYeuuUkt/8DMB9hqmQ==
-X-Received: by 2002:a53:d015:0:b0:635:4ecf:bdd1 with SMTP id 956f58d0204a3-6361a8d4824mr21581008d50.51.1759221222864;
-        Tue, 30 Sep 2025 01:33:42 -0700 (PDT)
-Received: from [127.0.0.1] ([45.142.167.196])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-636d5b1d875sm3280311d50.10.2025.09.30.01.33.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Sep 2025 01:33:42 -0700 (PDT)
-Message-ID: <7530d25c-f4ef-40bc-9ac8-40de4abe3960@gmail.com>
-Date: Tue, 30 Sep 2025 16:33:14 +0800
+	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="i9g47bAX"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=m6RyGzkWnXjNeMlhEFgCbhLwM0CV5UKFVg8bwnxlyCSOUHvzxEjNi7yLRCin7aMZZGG0OfgiXQFvrLcbjGCYpBxAbHAhgLvXVwG1WLKGWxXWHndbeKEyQLJ4XrqzdFnK1L32r9uJR5p6mes9g8kFTHFmvCcF606VlzP6Oxdyn8QX0Qaql17+l5Iu+S5PMA9xND3fD5I5Ze82VlvcTkgpOgoPIiH82i8Y+fBYt3nMcMF5Bre8leRc1jC+sH9GyJ/YS1Vdd8OOA5mvHSrtKFxWjVRiOTC3Pv/HIBniwxZTBuPnbP12LWbvUhZg/m8DL7pM3VCJHTafvEbrQ3XVbhSaGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=63dAqOXPjcPXdFAlOBjkgWFr8CG0Qgc8e7EvI9XQ0NU=;
+ b=uJT6T5E3kCASGgKirBDqN3JTsAxUr1Xi3B8ym7mPSl2agxNs58Kt8UbQccJySdKbCFxsat9dvqAUrgaoKSVd8PZWreX+H1saN0eRWAejgeLv7XAf4G02u9h7GrqMWViQSMV6UtDewEoaRvmGoYPGLX+xcFMeWt43MVHULiw47bvfg5/HTIJtOQgU1w8lSIBRofDntumWqtbvHABAOtbSzJ/jpEfoQzaMzBZC3SVIBfEZepboT69UlH+6EoKpZlhpywMuDulANPj8PxcJDVn5ZCdJCyOmOy295kxOBqOdaWpPzyLk55A7HpAz3evbCbtJkcdpdvAK/wA9hE6m5H0MHg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=63dAqOXPjcPXdFAlOBjkgWFr8CG0Qgc8e7EvI9XQ0NU=;
+ b=i9g47bAXPF4MJgiaamnjGc4SoOiDa+/iRoTO9mHVc9OQUigsqCN8lguWa4hjRf+GYcv9eU7m0A/77s549avuEzB91ksHKV8P0J2146/9lGcSAlHmYNtG7ovgKE6zWu8tLhzgH2wyUe9MQnuXgku7JV7C0nn/2L4md5hZqZ09B3aF764pfOBGZT4ZONCggufCKT6993bBtRW4Ia7oHQeS/MW69FLnpmQTWonl75BawSy1uGaYChCjIKQzBMuvTPCyzzr2DKkEcHNVofPKzoP7QleotH5/Wzo3+9t360/3uFS4QvLjw50/LsdeJlL6TaYc0B5yFEBNwdXuVQEbXX7m1g==
+Received: from VI1PR02MB3952.eurprd02.prod.outlook.com (2603:10a6:803:85::14)
+ by AM7PR02MB6033.eurprd02.prod.outlook.com (2603:10a6:20b:1ac::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.16; Tue, 30 Sep
+ 2025 10:19:19 +0000
+Received: from VI1PR02MB3952.eurprd02.prod.outlook.com
+ ([fe80::60e5:4de0:ff18:2fb1]) by VI1PR02MB3952.eurprd02.prod.outlook.com
+ ([fe80::60e5:4de0:ff18:2fb1%3]) with mapi id 15.20.9160.013; Tue, 30 Sep 2025
+ 10:19:19 +0000
+From: David Binderman <dcb314@hotmail.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>,
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+	<adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, LKML
+	<linux-kernel@vger.kernel.org>
+Subject: inux-6.17/tools/perf/util/lzma.c:123: Strange return value ?
+Thread-Topic: inux-6.17/tools/perf/util/lzma.c:123: Strange return value ?
+Thread-Index: AQHcMfMTSwoEFFLcyEuvrfpR1GmUAg==
+Date: Tue, 30 Sep 2025 10:19:19 +0000
+Message-ID:
+ <VI1PR02MB39525F61113D96E3671BFA1F9C1AA@VI1PR02MB3952.eurprd02.prod.outlook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: VI1PR02MB3952:EE_|AM7PR02MB6033:EE_
+x-ms-office365-filtering-correlation-id: c0bd06d7-c869-4438-b3a4-08de000ad13c
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|15030799006|15080799012|461199028|31061999003|8060799015|8062599012|19110799012|41001999006|13041999003|51005399003|440099028|40105399003|3412199025|102099032;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?lD/wALv1C2jQvUBFNZOVlM79mAwgkv7k+FadilEj+RDV0jvhjMZ9B+DMWn?=
+ =?iso-8859-1?Q?GFrH2MEBX40T537Ap1+ASijlt0pADq2pTIRQYZLwV+kn73puVospqNwT2S?=
+ =?iso-8859-1?Q?fQ0zbMs7l8OVVW+hSQOdL/fv982PijtCptJLcnr7L9iuItjElXxgjAAtD8?=
+ =?iso-8859-1?Q?AVGw6y+U/pMA/hjOHaiI5yTWspyesNfCJ+6gmHqdoQDQd8oavyH4vPRYT5?=
+ =?iso-8859-1?Q?cc/A1RJWcdbvj2Z6c3iUK+ViPqJT3vjkj5k8Vw+ydLk3091zR8XsIM2DEg?=
+ =?iso-8859-1?Q?YsXTRNLhdQf3CCMIqBcASSOzbmVsRrPQt+lOpU+QQaLRfBcWzgvD5nhqhu?=
+ =?iso-8859-1?Q?/Y/JUcxy8Zdeaq+q0oOURaKFi1T76jO5fJ6u4hGHsKCJ2O8MESdimNGNrB?=
+ =?iso-8859-1?Q?oWCA4QQ3zx0ndsqZrSB6v1DoBvpms4rDf11inKLM4D2ompBxFCoDSAZ5/k?=
+ =?iso-8859-1?Q?PQQdq4JMDoKUsFewsexDJl7aQDjXxS//sckH49SHeXK+50xgsaq5QJTMMR?=
+ =?iso-8859-1?Q?cwaiYesDB1uQlt0M5dGVR+S2SWGw6yWRg+9sSTKnSqPeCGSDJxSj7glcLc?=
+ =?iso-8859-1?Q?ue1tzrXl6B4DoregbGLcCTWGk24oxURFl7OJvHnNFTIyengahtnykYG0Ny?=
+ =?iso-8859-1?Q?V155FCmY9/nzFu9lwjQlSE41ONYfN3IU1mOwu2/Z1tcovPPpyIpVzVqrKy?=
+ =?iso-8859-1?Q?fjY8N7APNN7TChIEWbmmToeEwU3DdFRRqZNmFjklT4bsw/EF+NuX246X8h?=
+ =?iso-8859-1?Q?0b0YqCO2flTsxzuSSJ7qIZMxGC6c0sUzSubuHIl5SZHdZYQXYbLWLbOTjq?=
+ =?iso-8859-1?Q?kB2L9Kmxvk6iDasVdlRuBhEV6m6SRTLrhqxVVq/T9nxJa106TS3nGH3tyy?=
+ =?iso-8859-1?Q?qgSgufD7l4ORxYXj+v/IDx8slJDMSLB5603hD8V5RyckOtpBpAm4rllGcQ?=
+ =?iso-8859-1?Q?T0mBRbPuBBhEZApxC6nnrOM/gYQKK8U9xLPxGWr6fCvWXGL36Ijuo+E5XY?=
+ =?iso-8859-1?Q?81Tt1np4BZzWkl5zF4BH/LlYICsh/LZ5uQhshHj4fp/TLblAjtGwGKhqmy?=
+ =?iso-8859-1?Q?gIJh6BV7y8nSe2VMctTqUrbl3l7dSkL5c697ntrTaCk06xx46Dbs10wPUU?=
+ =?iso-8859-1?Q?IOkERgQWirMQd259JKdnp6gSTFoesf3yGHQSHWFgal2VJ0ookjKMHo/kz9?=
+ =?iso-8859-1?Q?XTqth/SOcTO61IHKXtsRJvXju5vfFzAr1Nh66s2bg0QgODqxknV5CMbGdD?=
+ =?iso-8859-1?Q?Swc/7rb5Gwlfh9TYooq7D91HizHm57V1bWqUImzCr6a0TClELMuMk/ZFow?=
+ =?iso-8859-1?Q?J6MNXn1nFbxwiskXf/N5p+ICGw=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?XZF9z4/nqb+wIbrDAHYoNCswKkMVwNGMkdQP8PSbZb1zulL1B1AZArYiCC?=
+ =?iso-8859-1?Q?WUvA7ByOY02WgTEkRiEX3s7qdPfEcL+lEvnFjTMr2Th4BLUsaIfx35YYWy?=
+ =?iso-8859-1?Q?A5J0kaLc5HvP8AQIIDdG5DgLXGD7tr6SQC71AtO1Cn9AOBFtGutMM5TMxk?=
+ =?iso-8859-1?Q?8g5K1JFGwCpzbuH9zjbojUjSSOWZa+UaWGnP8wGXqIH0XQLB3g5ZfYnmsI?=
+ =?iso-8859-1?Q?sT6+P2CjvrxNsH5pHfLI0M7MxSUsIcwl6htM6qJrERS2KyNKTiMQY9bdWD?=
+ =?iso-8859-1?Q?fFtAqQsMnARC8cwFpkJLsr1Pn6Bk8t/jvHMB0Mhmn86FXZ+zYqm8ZJzWIN?=
+ =?iso-8859-1?Q?0Rvh5fzaKBkF4RVjGj42XewKKMH/cb+FKf00vPtV/MbehkIDhAKfdE2Vs8?=
+ =?iso-8859-1?Q?GIIWbROuC03umdiL99NXyul/AuHlDWOkK0sdVSDq4CnEuZ5Hj6lz5Kpbia?=
+ =?iso-8859-1?Q?kiFjoXuui0+d21/Hkha+Qy5LwduflyzIoe5yMfM3FjG4YefhmJckyVEEZW?=
+ =?iso-8859-1?Q?GSL0uJrENbx6+kYaUQyYGQFA3fB9jmO3uvnbH9t398CSbxaWlh5j/WpsOs?=
+ =?iso-8859-1?Q?PRVQHmEAKVV6eDqANJHiy4+KL2bM+cbZ3npsAT3ksSAHCN6Hkw2/Ek54Po?=
+ =?iso-8859-1?Q?xxpFdSMbCdcDhAfL6qkNOXHvWrANzsnkKEEq1IFrrraONvV48PiDp12ZYi?=
+ =?iso-8859-1?Q?4RGJE6/F+vhZIhUJ0XZ6As3Rh8Md1XvdEn1oLr3mirRHxveCvkQbUNcLKU?=
+ =?iso-8859-1?Q?a1Heegs66qhAv2zEkw+uJB9NS3/l7XPSa+xPAqT3hPqsqLIpAgq76shVb7?=
+ =?iso-8859-1?Q?5sNY1QdPgJ/7eQ07HZGgywNo3f4ECXSrLoVpyQw6pDCvhTyEp5YM3I/lhD?=
+ =?iso-8859-1?Q?rR2k29CUlxo4mqCqLlxxyr6oUebwO6YggbQFgH773ACMIfCup6QgA9cx06?=
+ =?iso-8859-1?Q?t4fE/pzBj6le8Wi+EP4/K6+OSA5M46q7Gtp5fmJlVybOcdjNao4hDxhh6O?=
+ =?iso-8859-1?Q?sDydVqqAn1J50EcPyxnUz3wXCyvPpfpEIIKxKTZB/N6kP7hlQlUZMCoDbc?=
+ =?iso-8859-1?Q?valVysBj8izmCLInd08S3XsQ4h0AfhkKWnIrT5jsCcHwR34YGSgAnw09/V?=
+ =?iso-8859-1?Q?VCwvNa4RUDIxDlxA0WJe1naXJSE+r1ti5gRa3rUfOzC6faoJ+Cvx0QhEmF?=
+ =?iso-8859-1?Q?xHqMi4DouLSQ4ZBbpDxkxiGkPhIpvaP28bWyaHvhdjF1JUa8gb++tGZzkR?=
+ =?iso-8859-1?Q?nwT8l6Dt5fKpqnjU2Hug=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 21/23] tools/ksw: add test script
-To: David Hildenbrand <david@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Mike Rapoport <rppt@kernel.org>,
- Alexander Potapenko <glider@google.com>, Randy Dunlap
- <rdunlap@infradead.org>, Marco Elver <elver@google.com>,
- Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Kees Cook <kees@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Sami Tolvanen <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>,
- Masahiro Yamada <masahiroy@kernel.org>, Rong Xu <xur@google.com>,
- Naveen N Rao <naveen@kernel.org>, David Kaplan <david.kaplan@amd.com>,
- Andrii Nakryiko <andrii@kernel.org>, Jinjie Ruan <ruanjinjie@huawei.com>,
- Nam Cao <namcao@linutronix.de>, workflows@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-mm@kvack.org, llvm@lists.linux.dev,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>, kasan-dev@googlegroups.com,
- "David S. Miller" <davem@davemloft.net>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org
-References: <20250930024402.1043776-1-wangjinchao600@gmail.com>
- <20250930024402.1043776-22-wangjinchao600@gmail.com>
- <3ed8a6a5-9983-4b9e-bae1-4c433568de16@redhat.com>
-Content-Language: en-CA
-From: Jinchao Wang <wangjinchao600@gmail.com>
-In-Reply-To: <3ed8a6a5-9983-4b9e-bae1-4c433568de16@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: sct-15-20-8534-20-msonline-outlook-5faa0.templateTenant
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR02MB3952.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0bd06d7-c869-4438-b3a4-08de000ad13c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2025 10:19:19.3052
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR02MB6033
 
-On 9/30/25 14:49, David Hildenbrand wrote:
-> On 30.09.25 04:43, Jinchao Wang wrote:
->> Provide a shell script to trigger test cases.
->>
->> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
->> ---
-> 
-> Do you think there could be a way to convert this into an automated 
-> selftests, living in tool/testing/selftests/TBD ?
-> 
-kstackwatch_test includes 6 cases. Because KStackWatch is aimed at
-debugging stack corruption, several of the cases intentionally trigger
-kernel panic. kselftest is designed for tests that exit cleanly with a
-status code, so these panic cases do not map well to it.
-
--- 
-Jinchao
+Hello there,=0A=
+=0A=
+Static analyser cppcheck says:=0A=
+=0A=
+linux-6.17/tools/perf/util/lzma.c:123:3: style: Non-boolean value returned =
+from function returning bool [returnNonBoolInBooleanFunction]=0A=
+=0A=
+Source code is=0A=
+=0A=
+bool lzma_is_compressed(const char *input)=0A=
+{=0A=
+    int fd =3D open(input, O_RDONLY);=0A=
+    const uint8_t magic[6] =3D { 0xFD, '7', 'z', 'X', 'Z', 0x00 };=0A=
+    char buf[6] =3D { 0 };=0A=
+    ssize_t rc;=0A=
+=0A=
+    if (fd < 0)=0A=
+        return -1;=0A=
+=0A=
+Suggest return either true or false.=0A=
+=0A=
+Also, there is a duplicate of this problem at file linux-6.17/tools/perf/ut=
+il/zlib.c=0A=
+line 91.=0A=
+=0A=
+Regards=0A=
+=0A=
+David Binderman=0A=
+=0A=
+=0A=
