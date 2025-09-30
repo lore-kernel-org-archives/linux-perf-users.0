@@ -1,363 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF2ACA4E;
-	Tue, 30 Sep 2025 16:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16F632032D;
+	Tue, 30 Sep 2025 16:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759249623; cv=none; b=RMfK0nUUW8gkP45aFqc+cttqtT7oh0FFTp0PG/toZ3afXM6HjKYoUHNbL6kYou8ANvHTVDhyXdiNdHmm00pMsLLMHuz8YsWcXYah0ceveg1RxeJYq3tPE2revFJepX3879d9N1D2UgZLLwWjjCMQMD0rKmuCsbsDc06ib0bCuyU=
+	t=1759251317; cv=none; b=cQNDtAOCyf8kjA7BWInunObI0kjTnmbRhwCVKeN46u+aUdf1nnIaGfgssEoZ73wx37zkhViQ1DQHLwZeHMEoY1l5X4DdkV6oBsAmBoYwaLBQMQMwfkfhcROeP0ajv7+QC/K6yVo51GMQLc7UIZ/N0RNxK5haXmhjHY3518g8WJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759249623; c=relaxed/simple;
-	bh=QpX7H1glCEew6/fXBPAjjPputLtXSY15ADgSTrv3Ggk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PjRb/22i1bEPtGfdFS4kiL6+xWrsjHj6AsawQXL6Mu/rQrHEcsqSUYwisMYwIDnIRwi8WVLtFFcluboOw7ocgqh2zV8ad0v7kxZSfApnNTI/KO3Td/ufxYeYYaAxguHzFK0+3XSVld0FP3eTN2hUjiExU151QVTaXbrYGFN0cno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AbE+arLF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AbE+arLF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 651EEC4CEF0;
-	Tue, 30 Sep 2025 16:27:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759249622;
-	bh=QpX7H1glCEew6/fXBPAjjPputLtXSY15ADgSTrv3Ggk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AbE+arLFxdFRQPdarLxZG1EKUgWsC6Hvo3w1QcFacRZXRS3wMp4rM84HlmDKi+ZkT
-	 o2JRd2QqpUt1VBrYbZkWc15WmYNLBilcH3bzyS13WIMWvqa30ohUjjW371Chg9Moob
-	 8iVwcLU4mWVtFPNVTpymAK/vIfev3KZ3LGUTbrO+kjC8h9tLk63Ty+qWBA1sL5LnVo
-	 7rO1rq7zNy5IoFG9B1MJc4/SFYmnWBM8vtYkSWpw2mZ7ty0wOFkBUKINDyR4clT273
-	 wHn2AMjKFecP74IF3NGNVsd+7JEuuYtHy7E9ovb4+LNlC0/lG8by+j+wSJ0kl/pUDa
-	 9s13TV/yicMtA==
-Date: Tue, 30 Sep 2025 13:26:58 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: "Falcon, Thomas" <thomas.falcon@intel.com>
-Cc: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
-	"afaerber@suse.de" <afaerber@suse.de>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"Hunter, Adrian" <adrian.hunter@intel.com>,
-	"Biggers, Caleb" <caleb.biggers@intel.com>,
-	"namhyung@kernel.org" <namhyung@kernel.org>,
-	"Taylor, Perry" <perry.taylor@intel.com>,
-	"jolsa@kernel.org" <jolsa@kernel.org>,
-	"irogers@google.com" <irogers@google.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"mani@kernel.org" <mani@kernel.org>
-Subject: Re: [PATCH v2 03/10] perf vendor events intel: Update emeraldrapids
- events to v1.20
-Message-ID: <aNwE0sAsRKoBNADw@x1>
-References: <20250925172736.960368-1-irogers@google.com>
- <20250925172736.960368-4-irogers@google.com>
- <5545b403a33b32c65ff1dc6e61d78861dbfdde90.camel@intel.com>
+	s=arc-20240116; t=1759251317; c=relaxed/simple;
+	bh=DG99HF4Lne9RqdlvTT1l9WWDXFii+MEmJGhK5urOu34=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FPrw98z0K9QPrNzsmQG5iKd2ROQky0wmlm5Q60ibWC6IYL47TmDdUw+CBJ9/5fDItTUntxO59mtI/hpglOidyvQIxp2FLKERCRRc1Qg/+vHeqGin75enteowtyvQT4xRpHjVsII1wzyUtCrLyoo0BCfogyV30gyCjcFhYeC82bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 48AC9106F;
+	Tue, 30 Sep 2025 09:55:06 -0700 (PDT)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C83283F59E;
+	Tue, 30 Sep 2025 09:55:11 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v2 0/8] perf build: Support building with Clang
+Date: Tue, 30 Sep 2025 17:54:48 +0100
+Message-Id: <20250930-perf_build_android_ndk-v2-0-2ea440b7ef01@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5545b403a33b32c65ff1dc6e61d78861dbfdde90.camel@intel.com>
+X-B4-Tracking: v=1; b=H4sIAFgL3GgC/3WNQQ6CMBBFr0JmbU0paQKuvIchpGUGmSgtmSrRE
+ O5uJW5dvpf891dIJEwJTsUKQgsnjiGDORTQjy5cSTFmBqON1U1p1UwydP7Jd+xcQImMXcCbslp
+ 7W3lydWMhj2ehgV97+NJmHjk9orz3n6X82l/S/E0updKq9pV1DpEq7M9OpmMfJ2i3bfsAMmNGW
+ boAAAA=
+X-Change-ID: 20250915-perf_build_android_ndk-500b53bea895
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>, James Clark <james.clark@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ llvm@lists.linux.dev, linux-riscv@lists.infradead.org, 
+ Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1759251311; l=2242;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=DG99HF4Lne9RqdlvTT1l9WWDXFii+MEmJGhK5urOu34=;
+ b=SzjrvsCzykN6+u62532Hnbo0JlFkPjxkoqgejd67nbrkmjwphzWlZC5C/EYLaAIZAUUMn/YrQ
+ +jKctUmlXEsCi+gBra8alvZCQjLe4NPgx/o3F58YKpFdhXlWZjPqcqJ
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-On Mon, Sep 29, 2025 at 11:45:20PM +0000, Falcon, Thomas wrote:
-> On Thu, 2025-09-25 at 10:27 -0700, Ian Rogers wrote:
-> > Update emeraldrapids events to v1.20 released in:
-> > https://github.com/intel/perfmon/commit/868b433955f3e94126420ee9374b9e0a6ce2d83e
-> > https://github.com/intel/perfmon/commit/43681e2817a960d06c5b8870cc6d3e5b7b6feeb9
-> > 
-> > Also adds cpu_cstate_c0 and cpu_cstate_c6 metrics.
-> > 
-> > Event json automatically generated by:
-> > https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
-> > 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> 
-> I found an Emerald Rapids to test this on. All metrics tests passed.
+This series adds support for building perf with Clang, following the
+discussion in [1]. Because the Android NDK uses Clang by default,
+enabling Clang builds naturally covers Android as well.
 
-I'll take this as a Tested-by for this specific patch, ok?
+The series is organized as follows:
 
-- Arnaldo
- 
-> Thanks,
-> Tom
-> 
-> > ---
-> >  .../arch/x86/emeraldrapids/cache.json         | 63
-> > +++++++++++++++++++
-> >  .../arch/x86/emeraldrapids/emr-metrics.json   | 12 ++++
-> >  .../arch/x86/emeraldrapids/uncore-cache.json  | 11 ++++
-> >  .../arch/x86/emeraldrapids/uncore-memory.json | 22 +++++++
-> >  .../arch/x86/emeraldrapids/uncore-power.json  |  2 -
-> >  tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
-> >  6 files changed, 109 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/tools/perf/pmu-events/arch/x86/emeraldrapids/cache.json
-> > b/tools/perf/pmu-events/arch/x86/emeraldrapids/cache.json
-> > index e96f938587bb..26568e4b77f7 100644
-> > --- a/tools/perf/pmu-events/arch/x86/emeraldrapids/cache.json
-> > +++ b/tools/perf/pmu-events/arch/x86/emeraldrapids/cache.json
-> > @@ -1,4 +1,67 @@
-> >  [
-> > +    {
-> > +        "BriefDescription": "Hit snoop reply with data, line
-> > invalidated.",
-> > +        "Counter": "0,1,2,3",
-> > +        "EventCode": "0x27",
-> > +        "EventName": "CORE_SNOOP_RESPONSE.I_FWD_FE",
-> > +        "PublicDescription": "Counts responses to snoops indicating
-> > the line will now be (I)nvalidated: removed from this core's cache,
-> > after the data is forwarded back to the requestor and indicating the
-> > data was found unmodified in the (FE) Forward or Exclusive State in
-> > this cores caches cache.  A single snoop response from the core
-> > counts on all hyperthreads of the core.",
-> > +        "SampleAfterValue": "1000003",
-> > +        "UMask": "0x20"
-> > +    },
-> > +    {
-> > +        "BriefDescription": "HitM snoop reply with data, line
-> > invalidated.",
-> > +        "Counter": "0,1,2,3",
-> > +        "EventCode": "0x27",
-> > +        "EventName": "CORE_SNOOP_RESPONSE.I_FWD_M",
-> > +        "PublicDescription": "Counts responses to snoops indicating
-> > the line will now be (I)nvalidated: removed from this core's caches,
-> > after the data is forwarded back to the requestor, and indicating the
-> > data was found modified(M) in this cores caches cache (aka HitM
-> > response).  A single snoop response from the core counts on all
-> > hyperthreads of the core.",
-> > +        "SampleAfterValue": "1000003",
-> > +        "UMask": "0x10"
-> > +    },
-> > +    {
-> > +        "BriefDescription": "Hit snoop reply without sending the
-> > data, line invalidated.",
-> > +        "Counter": "0,1,2,3",
-> > +        "EventCode": "0x27",
-> > +        "EventName": "CORE_SNOOP_RESPONSE.I_HIT_FSE",
-> > +        "PublicDescription": "Counts responses to snoops indicating
-> > the line will now be (I)nvalidated in this core's caches without
-> > forwarded back to the requestor. The line was in Forward, Shared or
-> > Exclusive (FSE) state in this cores caches.  A single snoop response
-> > from the core counts on all hyperthreads of the core.",
-> > +        "SampleAfterValue": "1000003",
-> > +        "UMask": "0x2"
-> > +    },
-> > +    {
-> > +        "BriefDescription": "Line not found snoop reply",
-> > +        "Counter": "0,1,2,3",
-> > +        "EventCode": "0x27",
-> > +        "EventName": "CORE_SNOOP_RESPONSE.MISS",
-> > +        "PublicDescription": "Counts responses to snoops indicating
-> > that the data was not found (IHitI) in this core's caches. A single
-> > snoop response from the core counts on all hyperthreads of the
-> > Core.",
-> > +        "SampleAfterValue": "1000003",
-> > +        "UMask": "0x1"
-> > +    },
-> > +    {
-> > +        "BriefDescription": "Hit snoop reply with data, line kept in
-> > Shared state.",
-> > +        "Counter": "0,1,2,3",
-> > +        "EventCode": "0x27",
-> > +        "EventName": "CORE_SNOOP_RESPONSE.S_FWD_FE",
-> > +        "PublicDescription": "Counts responses to snoops indicating
-> > the line may be kept on this core in the (S)hared state, after the
-> > data is forwarded back to the requestor, initially the data was found
-> > in the cache in the (FS) Forward or Shared state.  A single snoop
-> > response from the core counts on all hyperthreads of the core.",
-> > +        "SampleAfterValue": "1000003",
-> > +        "UMask": "0x40"
-> > +    },
-> > +    {
-> > +        "BriefDescription": "HitM snoop reply with data, line kept
-> > in Shared state",
-> > +        "Counter": "0,1,2,3",
-> > +        "EventCode": "0x27",
-> > +        "EventName": "CORE_SNOOP_RESPONSE.S_FWD_M",
-> > +        "PublicDescription": "Counts responses to snoops indicating
-> > the line may be kept on this core in the (S)hared state, after the
-> > data is forwarded back to the requestor, initially the data was found
-> > in the cache in the (M)odified state.  A single snoop response from
-> > the core counts on all hyperthreads of the core.",
-> > +        "SampleAfterValue": "1000003",
-> > +        "UMask": "0x8"
-> > +    },
-> > +    {
-> > +        "BriefDescription": "Hit snoop reply without sending the
-> > data, line kept in Shared state.",
-> > +        "Counter": "0,1,2,3",
-> > +        "EventCode": "0x27",
-> > +        "EventName": "CORE_SNOOP_RESPONSE.S_HIT_FSE",
-> > +        "PublicDescription": "Counts responses to snoops indicating
-> > the line was kept on this core in the (S)hared state, and that the
-> > data was found unmodified but not forwarded back to the requestor,
-> > initially the data was found in the cache in the (FSE) Forward,
-> > Shared state or Exclusive state.  A single snoop response from the
-> > core counts on all hyperthreads of the core.",
-> > +        "SampleAfterValue": "1000003",
-> > +        "UMask": "0x4"
-> > +    },
-> >      {
-> >          "BriefDescription": "L1D.HWPF_MISS",
-> >          "Counter": "0,1,2,3",
-> > diff --git a/tools/perf/pmu-events/arch/x86/emeraldrapids/emr-
-> > metrics.json b/tools/perf/pmu-events/arch/x86/emeraldrapids/emr-
-> > metrics.json
-> > index af0a7dd81e93..433ae5f50704 100644
-> > --- a/tools/perf/pmu-events/arch/x86/emeraldrapids/emr-metrics.json
-> > +++ b/tools/perf/pmu-events/arch/x86/emeraldrapids/emr-metrics.json
-> > @@ -39,6 +39,18 @@
-> >          "MetricName": "cpi",
-> >          "ScaleUnit": "1per_instr"
-> >      },
-> > +    {
-> > +        "BriefDescription": "The average number of cores that are in
-> > cstate C0 as observed by the power control unit (PCU)",
-> > +        "MetricExpr": "UNC_P_POWER_STATE_OCCUPANCY_CORES_C0 /
-> > UNC_P_CLOCKTICKS * #num_packages",
-> > +        "MetricGroup": "cpu_cstate",
-> > +        "MetricName": "cpu_cstate_c0"
-> > +    },
-> > +    {
-> > +        "BriefDescription": "The average number of cores are in
-> > cstate C6 as observed by the power control unit (PCU)",
-> > +        "MetricExpr": "UNC_P_POWER_STATE_OCCUPANCY_CORES_C6 /
-> > UNC_P_CLOCKTICKS * #num_packages",
-> > +        "MetricGroup": "cpu_cstate",
-> > +        "MetricName": "cpu_cstate_c6"
-> > +    },
-> >      {
-> >          "BriefDescription": "CPU operating frequency (in GHz)",
-> >          "MetricExpr": "CPU_CLK_UNHALTED.THREAD /
-> > CPU_CLK_UNHALTED.REF_TSC * #SYSTEM_TSC_FREQ / 1e9",
-> > diff --git a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-
-> > cache.json b/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-
-> > cache.json
-> > index f453202d80c2..92cf47967f0b 100644
-> > --- a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-cache.json
-> > +++ b/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-cache.json
-> > @@ -311,6 +311,17 @@
-> >          "UMask": "0x2",
-> >          "Unit": "CHA"
-> >      },
-> > +    {
-> > +        "BriefDescription": "Distress signal asserted : DPT Remote",
-> > +        "Counter": "0,1,2,3",
-> > +        "EventCode": "0xaf",
-> > +        "EventName": "UNC_CHA_DISTRESS_ASSERTED.DPT_NONLOCAL",
-> > +        "Experimental": "1",
-> > +        "PerPkg": "1",
-> > +        "PublicDescription": "Distress signal asserted : DPT Remote
-> > : Counts the number of cycles either the local or incoming distress
-> > signals are asserted. : Dynamic Prefetch Throttle received by this
-> > tile",
-> > +        "UMask": "0x8",
-> > +        "Unit": "CHA"
-> > +    },
-> >      {
-> >          "BriefDescription": "Egress Blocking due to Ordering
-> > requirements : Down",
-> >          "Counter": "0,1,2,3",
-> > diff --git a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-
-> > memory.json b/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-
-> > memory.json
-> > index 90f61c9511fc..30044177ccf8 100644
-> > --- a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-memory.json
-> > +++ b/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-memory.json
-> > @@ -3129,6 +3129,28 @@
-> >          "PublicDescription": "Clock-Enabled Self-Refresh : Counts
-> > the number of cycles when the iMC is in self-refresh and the iMC
-> > still has a clock.  This happens in some package C-states.  For
-> > example, the PCU may ask the iMC to enter self-refresh even though
-> > some of the cores are still processing.  One use of this is for
-> > Monroe technology.  Self-refresh is required during package C3 and
-> > C6, but there is no clock in the iMC at this time, so it is not
-> > possible to count these cases.",
-> >          "Unit": "iMC"
-> >      },
-> > +    {
-> > +        "BriefDescription": "Throttle Cycles for Rank 0",
-> > +        "Counter": "0,1,2,3",
-> > +        "EventCode": "0x46",
-> > +        "EventName": "UNC_M_POWER_THROTTLE_CYCLES.SLOT0",
-> > +        "Experimental": "1",
-> > +        "PerPkg": "1",
-> > +        "PublicDescription": "Throttle Cycles for Rank 0 : Counts
-> > the number of cycles while the iMC is being throttled by either
-> > thermal constraints or by the PCU throttling.  It is not possible to
-> > distinguish between the two.  This can be filtered by rank.  If
-> > multiple ranks are selected and are being throttled at the same time,
-> > the counter will only increment by 1. : Thermal throttling is
-> > performed per DIMM.  We support 3 DIMMs per channel.  This ID allows
-> > us to filter by ID.",
-> > +        "UMask": "0x1",
-> > +        "Unit": "iMC"
-> > +    },
-> > +    {
-> > +        "BriefDescription": "Throttle Cycles for Rank 0",
-> > +        "Counter": "0,1,2,3",
-> > +        "EventCode": "0x46",
-> > +        "EventName": "UNC_M_POWER_THROTTLE_CYCLES.SLOT1",
-> > +        "Experimental": "1",
-> > +        "PerPkg": "1",
-> > +        "PublicDescription": "Throttle Cycles for Rank 0 : Counts
-> > the number of cycles while the iMC is being throttled by either
-> > thermal constraints or by the PCU throttling.  It is not possible to
-> > distinguish between the two.  This can be filtered by rank.  If
-> > multiple ranks are selected and are being throttled at the same time,
-> > the counter will only increment by 1.",
-> > +        "UMask": "0x2",
-> > +        "Unit": "iMC"
-> > +    },
-> >      {
-> >          "BriefDescription": "Precharge due to read, write,
-> > underfill, or PGT.",
-> >          "Counter": "0,1,2,3",
-> > diff --git a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-
-> > power.json b/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-
-> > power.json
-> > index 9482ddaea4d1..71c35b165a3e 100644
-> > --- a/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-power.json
-> > +++ b/tools/perf/pmu-events/arch/x86/emeraldrapids/uncore-power.json
-> > @@ -178,7 +178,6 @@
-> >          "Counter": "0,1,2,3",
-> >          "EventCode": "0x35",
-> >          "EventName": "UNC_P_POWER_STATE_OCCUPANCY_CORES_C0",
-> > -        "Experimental": "1",
-> >          "PerPkg": "1",
-> >          "PublicDescription": "Number of cores in C0 : This is an
-> > occupancy event that tracks the number of cores that are in the
-> > chosen C-State.  It can be used by itself to get the average number
-> > of cores in that C-state with thresholding to generate histograms, or
-> > with other PCU events and occupancy triggering to capture other
-> > details.",
-> >          "Unit": "PCU"
-> > @@ -198,7 +197,6 @@
-> >          "Counter": "0,1,2,3",
-> >          "EventCode": "0x37",
-> >          "EventName": "UNC_P_POWER_STATE_OCCUPANCY_CORES_C6",
-> > -        "Experimental": "1",
-> >          "PerPkg": "1",
-> >          "PublicDescription": "Number of cores in C6 : This is an
-> > occupancy event that tracks the number of cores that are in the
-> > chosen C-State.  It can be used by itself to get the average number
-> > of cores in that C-state with thresholding to generate histograms, or
-> > with other PCU events and occupancy triggering to capture other
-> > details.",
-> >          "Unit": "PCU"
-> > diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv
-> > b/tools/perf/pmu-events/arch/x86/mapfile.csv
-> > index 8daaa8f40b66..dec7bdd770cf 100644
-> > --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-> > +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-> > @@ -9,7 +9,7 @@ GenuineIntel-6-4F,v23,broadwellx,core
-> >  GenuineIntel-6-55-[56789ABCDEF],v1.25,cascadelakex,core
-> >  GenuineIntel-6-DD,v1.00,clearwaterforest,core
-> >  GenuineIntel-6-9[6C],v1.05,elkhartlake,core
-> > -GenuineIntel-6-CF,v1.16,emeraldrapids,core
-> > +GenuineIntel-6-CF,v1.20,emeraldrapids,core
-> >  GenuineIntel-6-5[CF],v13,goldmont,core
-> >  GenuineIntel-6-7A,v1.01,goldmontplus,core
-> >  GenuineIntel-6-B6,v1.09,grandridge,core
-> 
+  - Patches 1â€“2: Fix two bugs found with Clang.
+  - Patches 3â€“6: Correct CROSS_ARCH and dismiss Clang build warnings.
+  - Patches 7â€“8: Enable Clang in the Makefile and update the
+    documentation.
+
+Testing:
+
+  - Clang 15.0.7 on Ubuntu 22.04.5: native and cross-compiling (aarch64)
+  - Clang 18.1.3 on Ubuntu 24.04.2: native and cross-compiling (aarch64)
+  - Android NDK r27d (latest LTS): cross-compiling (aarch64)
+
+[1] https://lore.kernel.org/linux-perf-users/20240715143342.52236-1-leo.yan@arm.com/
+
+---
+Changes in v2:
+- Dropped the patch for dismissing warning in bpftool.
+- Refined the document. (Ian)
+- Link to v1: https://lore.kernel.org/r/20250925-perf_build_android_ndk-v1-0-8b35aadde3dc@arm.com
+
+---
+Leo Yan (8):
+      tools build: Align warning options with perf
+      perf python: split Clang options when invoking Popen
+      perf: build: Correct CROSS_ARCH for clang
+      perf test coresight: Dismiss clang warning for memcpy thread
+      perf test coresight: Dismiss clang warning for thread loop
+      perf test coresight: Dismiss clang warning for unroll loop thread
+      perf build: Support build with clang
+      perf docs: Document building with Clang
+
+ tools/build/feature/Makefile                       |  6 +-
+ tools/perf/Documentation/Build.txt                 | 15 ++++
+ tools/perf/Documentation/android.txt               | 80 ++--------------------
+ tools/perf/Makefile.config                         | 32 ++++++++-
+ tools/perf/Makefile.perf                           |  2 +-
+ .../shell/coresight/memcpy_thread/memcpy_thread.c  |  2 +
+ .../shell/coresight/thread_loop/thread_loop.c      |  4 +-
+ .../unroll_loop_thread/unroll_loop_thread.c        |  4 +-
+ tools/perf/util/setup.py                           |  5 +-
+ 9 files changed, 67 insertions(+), 83 deletions(-)
+---
+base-commit: c17dda8013495d8132c976cbf349be9949d0fbd1
+change-id: 20250915-perf_build_android_ndk-500b53bea895
+
+Best regards,
+-- 
+Leo Yan <leo.yan@arm.com>
+
