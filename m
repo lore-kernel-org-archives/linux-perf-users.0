@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CB380604;
-	Tue, 30 Sep 2025 02:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6C1194A44;
+	Tue, 30 Sep 2025 03:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759200603; cv=none; b=rYq6eECoofttLMJSgaZNxpzcSfFCHfLGqlYSDhIu6TFTeiaoNKRpBH3Hv6Td2o3dLvS7B2uoJOeF+UcgdIoF2AHhcr1CDw3rufCrPSCZXye3ePJ4TKyR+gy61eRVWp/oIuPeYFKNCQ0hkDtTE/wPNPUmaFVYYc0Hd4W8ghGAnVg=
+	t=1759201936; cv=none; b=d3z5RHN3PSpZU185sf2pISXm+Ax5IyIIHmLr3Wb9dBe40SIIGn4IZNw/Or42Oz2CpANREbDUFY4Bor05wFe0xgHQJwM9JbKkNlxVuqc+2aUcu1ubEKk8CGJ7Z4kjuCSfT9pqidtrAWwVNI+lfG7Lp3HGZBTRf9gVhjuXzZ1tXdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759200603; c=relaxed/simple;
-	bh=FFgPD/gTRbTBPPHwmYLsUAHGHdmtr5rkckDNuuD/9b0=;
+	s=arc-20240116; t=1759201936; c=relaxed/simple;
+	bh=NGG9DeZK47EVyEsf6Apy1O10y8NknK2/yC/JKs3evuM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NZUeuWN8NCCY6PzR0avsss5sSkQQgLp9/wWaes8xXl0ttCwW7oNJDelN+6XziMSt5ozKhN3U3ACHSRrMZacr/qn/JdeCzy7u87d/vR76O/BFsFAbD57993KHoTNTa0b8GBkIehci7jcs1k5nHWwCyiVQU3FuE3De9nKDuOAHkJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BOLpCrVc; arc=none smtp.client-ip=198.175.65.11
+	 In-Reply-To:Content-Type; b=kIAQSBEevNoK4aGAzf/IFVSOXnYrGMU0njJUDdFm+8Jh+TV+Kf7peMaQz9GH9niS+9GllU8jmBpFOdKfzUYVxnR5fXLnqKJxpuHAU/AOPajITZEi9aVJvHjSbRX1yBUZEes8lqTQrT+XAtufT5OYIU2cuoboRrk3C+A+S0mxNk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N/w4ZiF5; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BOLpCrVc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N/w4ZiF5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759200602; x=1790736602;
+  t=1759201934; x=1790737934;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=FFgPD/gTRbTBPPHwmYLsUAHGHdmtr5rkckDNuuD/9b0=;
-  b=BOLpCrVcjQ6DXj/qU/b60DSeURZDyaMYHBdWueKg4qOG2B34GqU+pVBq
-   j6nat8MQwr3BeCRUohcOJBSvYc3gjXBMwimKQGtbgOOYSk+3Q6yw8BzNA
-   BQDqB5LjqO7UEJ/Qo+n8AoAvPdbKM23MPgNuGPKPhZij7x7mAiU0k6yyU
-   0Kx3vvmvBhLvesgjNEs6+RgH+i6yGtAojZSXCCTrgsDPE/88xRPn0BFAV
-   ThjPJnGdyZLYWJrJ5mRc1uca45qvSjcP8KmVVkZ6krMbQCn3rDMfJEpkl
-   Q2YjYRScqJHUPLBW8VtnFGPge6nnPc1wn7Yc2p9jhWaazUbV6Xy24JSBN
-   A==;
-X-CSE-ConnectionGUID: dixxvyQ0QRyp8L2HCDB5Dw==
-X-CSE-MsgGUID: K+jYGBCGRs+pYmyBQTffFg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11568"; a="71696587"
-X-IronPort-AV: E=Sophos;i="6.18,303,1751266800"; 
-   d="scan'208";a="71696587"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2025 19:50:02 -0700
-X-CSE-ConnectionGUID: jLE9vQpZSEeyJgSh9wbK/g==
-X-CSE-MsgGUID: 0mKt3EiCSYKGGlbjB0obHQ==
+  bh=NGG9DeZK47EVyEsf6Apy1O10y8NknK2/yC/JKs3evuM=;
+  b=N/w4ZiF54Ta9OXhLxakdKskA1BFUQZl6f/gw9JPPekXrIFHzSeRx6IYn
+   WtZduByRkTy/ojUoWIVNsbgIjhZcoPgyT+L2Zq1T8Le1Gd3OedF+eWDFd
+   +se9LatChqgiNTDCQoPnTeFgQF/aI/I6pngP16FDUMfSdxw/zdBAy9U1b
+   iB/OTTg/fRfr/dWbZV60oS8mRO1lgp+vw/osGgFumdUMMtjullnqibVGt
+   MeC0qi6pXpaiuNP+LHv8+2/NI3Pdk7sbikivevx+msp7UvBg0ec+P76nP
+   r9hOt3mGeHG5TX4NCV6flLl0EQ5Uz1Gj1CVQGy1cxTgTze4uScZRmUvFs
+   Q==;
+X-CSE-ConnectionGUID: 8wbyUrYmR6WPnjUvUnJn8Q==
+X-CSE-MsgGUID: AkPbs2HTRUSDbPA9gXCunw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="65270236"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="65270236"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2025 20:12:13 -0700
+X-CSE-ConnectionGUID: z1w8pF8rQY66BjOhXdgEuA==
+X-CSE-MsgGUID: OJCA+ymBQmipRXP1dfzm3Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.18,303,1751266800"; 
-   d="scan'208";a="177519730"
+   d="scan'208";a="179169815"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.209]) ([10.124.232.209])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2025 19:49:59 -0700
-Message-ID: <c962d1a5-b941-4361-839c-c34e621de5ee@linux.intel.com>
-Date: Tue, 30 Sep 2025 10:49:56 +0800
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2025 20:12:09 -0700
+Message-ID: <9413e707-35d2-4c9a-9058-d14112ebb2cc@linux.intel.com>
+Date: Tue, 30 Sep 2025 11:12:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,63 +52,100 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] perf/x86/zhaoxin: Fix instructions error by missing
- fixedctr member
-To: tanze <tanze@kylinos.cn>, peterz@infradead.org, kan.liang@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- x86@kernel.org
-References: <a6cd3756-5aa7-435f-9ee7-3fde67c29f17@linux.intel.com>
- <20250620023757.1429898-1-tanze@kylinos.cn>
+Subject: Re: [PATCH v4 1/2] perf: Reveal PMU type in fdinfo
+To: Chun-Tse Shao <ctshao@google.com>, linux-kernel@vger.kernel.org
+Cc: Ian Rogers <irogers@google.com>, peterz@infradead.org, mingo@redhat.com,
+ acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, james.clark@linaro.org,
+ howardchu95@gmail.com, weilin.wang@intel.com,
+ linux-perf-users@vger.kernel.org
+References: <20250603181634.1362626-1-ctshao@google.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250620023757.1429898-1-tanze@kylinos.cn>
+In-Reply-To: <20250603181634.1362626-1-ctshao@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-On 6/20/2025 10:37 AM, tanze wrote:
-> Perf's instructions event tests on Zhaoxin CPUs may exhibit:
+On 6/4/2025 2:15 AM, Chun-Tse Shao wrote:
+> It gives useful info on knowing which PMUs are reserved by this process.
+> Also add config which would be useful.
+> Testing cycles:
 >
->   $perf stat -e instructions,cycles ls -l
+>   $ ./perf stat -e cycles &
+>   $ cat /proc/`pidof perf`/fdinfo/3
+>   pos:    0
+>   flags:  02000002
+>   mnt_id: 16
+>   ino:    3081
+>   perf_event_attr.type:   0
+>   perf_event_attr.config: 0
 >
->   ......
->   Performance counter stats for 'ls -l':
+> Testing L1-dcache-load-misses:
 >
->                  0      instructions                     #    0.00  insn per cycle
->          9,488,278      cycles
+>   $ ./perf stat -e L1-dcache-load-misses &
+>   $ cat /proc/`pidof perf`/fdinfo/3
+>   pos:    0
+>   flags:  02000002
+>   mnt_id: 16
+>   ino:    1072
+>   perf_event_attr.type:   3
+>   perf_event_attr.config: 65536
 >
->        0.004365407 seconds time elapsed
->
->        0.003303000 seconds user
->        0.001099000 seconds sys
->
-> The absence of the fixedctr member leads to an incorrect hwc->event_base
-> value on Zhaoxin CPUs, causing a discrepancy in the instruction count
-> reported by perf stat. This commit resolves the instruction count issue
-> by properly initializing the fixedctr member.
->
-> Fixes: 149fd4712bcd ("perf/x86/intel: Support Perfmon MSRs aliasing")
-> Signed-off-by: tanze <tanze@kylinos.cn>
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
 > ---
->  arch/x86/events/zhaoxin/core.c | 1 +
->  1 file changed, 1 insertion(+)
+> v4:
+>   Removed the first patch in v3 since it is merged.
+>   Retested to make sure the patch still work.
 >
-> diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/core.c
-> index 4bdfcf091200..3fc3f9abece9 100644
-> --- a/arch/x86/events/zhaoxin/core.c
-> +++ b/arch/x86/events/zhaoxin/core.c
-> @@ -467,6 +467,7 @@ static const struct x86_pmu zhaoxin_pmu __initconst = {
->  	.schedule_events	= x86_schedule_events,
->  	.eventsel		= MSR_ARCH_PERFMON_EVENTSEL0,
->  	.perfctr		= MSR_ARCH_PERFMON_PERFCTR0,
-> +	.fixedctr		= MSR_ARCH_PERFMON_FIXED_CTR0,
->  	.event_map		= zhaoxin_pmu_event_map,
->  	.max_events		= ARRAY_SIZE(zx_pmon_event_map),
->  	.apic			= 1,
+> v3: lore.kernel.org/20241106003007.2112584-2-ctshao@google.com
+>
+>  kernel/events/core.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 95e703891b24..bad563692d63 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -56,6 +56,7 @@
+>  #include <linux/buildid.h>
+>  #include <linux/task_work.h>
+>  #include <linux/percpu-rwsem.h>
+> +#include <linux/seq_file.h>
+>
+>  #include "internal.h"
+>
+> @@ -7077,6 +7078,14 @@ static int perf_fasync(int fd, struct file *filp, int on)
+>  	return 0;
+>  }
+>
+> +static void perf_show_fdinfo(struct seq_file *m, struct file *f)
+> +{
+> +	struct perf_event *event = f->private_data;
+> +
+> +	seq_printf(m, "perf_event_attr.type:\t%u\n", event->orig_type);
+> +	seq_printf(m, "perf_event_attr.config:\t%llu\n", (unsigned long long)event->attr.config);
 
-LGTM.
+Could we print the config field with hexadecimal format? It makes the event
+is more easily recognized. Thanks.
 
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-
+> +}
+> +
+>  static const struct file_operations perf_fops = {
+>  	.release		= perf_release,
+>  	.read			= perf_read,
+> @@ -7085,6 +7094,7 @@ static const struct file_operations perf_fops = {
+>  	.compat_ioctl		= perf_compat_ioctl,
+>  	.mmap			= perf_mmap,
+>  	.fasync			= perf_fasync,
+> +	.show_fdinfo		= perf_show_fdinfo,
+>  };
+>
+>  /*
+> --
+> 2.49.0.1204.g71687c7c1d-goog
+>
+>
