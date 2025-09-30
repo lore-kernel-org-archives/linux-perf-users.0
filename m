@@ -1,27 +1,26 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A01703064AA;
-	Tue, 30 Sep 2025 16:55:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36EBD3081A5;
+	Tue, 30 Sep 2025 16:55:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759251333; cv=none; b=LEWpYBCt9BYpa6Tt2GLQkcnqK8+D/DuWiynV0ub9vjWIXiz8DtNZ5jndDAslPABSUICPNXUIuTnWcCJlsfuoK1B4utoIyceIopwILwRu26RujCukvH9KWe4SNn5gTp/H/GakDEf9jCGIMlDN/576fVbXHlS+K9+4waH3yFzt48g=
+	t=1759251335; cv=none; b=eeE9qA/+oGuSR88trI4g7SGU0WtngFSY4LjsJRM7NMN7TL2mjbsybPGKeaj62dYPqPAd1cuA+EPx2xfLrN5dVYKDutd4GiJTSiSCAtEf0awa90/+aIkqaQ5HRiR7tR0CkZDWvnqGhW8evxAfgN7SKwtbREJaNT/Qf8pT4WwCmVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759251333; c=relaxed/simple;
-	bh=6JaO7UUmiEVn7pKrHNGJDEz9BYZJxL1KrwbjcRDT7O4=;
+	s=arc-20240116; t=1759251335; c=relaxed/simple;
+	bh=miZL6Yzqk6/EUWPBBeudxyQE12NEiBHtXzL1MUUXC30=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tDsbon7YKdFsDxuU+ZeVHbBH4GhdBjU/3G6oGMVpVKBqCzc8qBqTbZF5qHoUa38Me8i/udujTVOk1XYqZt12zOTKFP3YyfqFru060RyYpgUIjXnzCjHr4+yEXlYw0J8UN6uTcJbeVQUMMlUutJsthioLg18yyFeTzf49KONTTS8=
+	 In-Reply-To:To:Cc; b=RK6WPfto/qPfh9PHaPTiWLpIvwv5RZVDlECR0DSuQHqeitEg1kPRlx/yTaPR6RbuQB/ooadC2xVpYhGHWBTo0URFrfC1V1iixw+YjdO9BvojVnSDBeN7ZLEkuR1kIxS8eoj8vYoljPZ0LqrYqKAcA15662Gk25BsUEXJ0AmCf9A=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F359E106F;
-	Tue, 30 Sep 2025 09:55:22 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0EA6106F;
+	Tue, 30 Sep 2025 09:55:25 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82A923F59E;
-	Tue, 30 Sep 2025 09:55:28 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F1943F59E;
+	Tue, 30 Sep 2025 09:55:31 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Date: Tue, 30 Sep 2025 17:54:54 +0100
-Subject: [PATCH v2 6/8] perf test coresight: Dismiss clang warning for
- unroll loop thread
+Date: Tue, 30 Sep 2025 17:54:55 +0100
+Subject: [PATCH v2 7/8] perf build: Support build with clang
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -30,7 +29,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250930-perf_build_android_ndk-v2-6-2ea440b7ef01@arm.com>
+Message-Id: <20250930-perf_build_android_ndk-v2-7-2ea440b7ef01@arm.com>
 References: <20250930-perf_build_android_ndk-v2-0-2ea440b7ef01@arm.com>
 In-Reply-To: <20250930-perf_build_android_ndk-v2-0-2ea440b7ef01@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -46,53 +45,85 @@ Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
  llvm@lists.linux.dev, linux-riscv@lists.infradead.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1759251311; l=1677;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1759251311; l=2752;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=6JaO7UUmiEVn7pKrHNGJDEz9BYZJxL1KrwbjcRDT7O4=;
- b=IL/PtsxjrtyZRg6KRWstnSYp5wNt6/32M/wHANXmPmbiMF5O1tf7AOPJLXWhrVbYU1Tb3s5/B
- MMKbuhplGktCHa4HUqCP/OH0wowWkyrD+ugaDL6GNmXy9AZeLgP3bN/
+ bh=miZL6Yzqk6/EUWPBBeudxyQE12NEiBHtXzL1MUUXC30=;
+ b=MWei7t108/0dA/kXy0ivVqULgek1bY/nXrQfnZA/ANTPxo7folMUdgQgOSBpxfxzC5Cgo+9Fu
+ BBwu05SO9FQB5jfviSiUmBw2xM//AI4LOcPrkUAdjauckTx51vIaZbC
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-clang-18.1.3 on Ubuntu 24.04.2 reports warning:
+Add support for building perf with clang. For cross compilation, the
+Makefile dynamically selects target flag for corresponding arch.
 
-  unroll_loop_thread.c:35:25: warning: value size does not match register size specified by the constraint and modifier [-Wasm-operand-widths]
-     35 |                         : /* in */ [in] "r" (in)
-        |                                              ^
-  unroll_loop_thread.c:39:1: warning: non-void function does not return a value [-Wreturn-type]
-     39 | }
-        | ^
+This patch has been verified on x86_64 machine with Ubuntu distro, it
+can build successfully for native target, and for cross building Arm64
+and s390.
 
-Use the modifier "w" for 32-bit register access and return NULL at the
-end of thread function.
+Example: native build on x86_64 / Ubuntu machine:
+
+  $ HOSTCC=clang CC=clang CXX=clang++ make -C tools/perf
+
+Example: cross building s390 target on x86_64 / Ubuntu machine:
+
+  # Install x390x cross toolchain and headers
+  $ sudo apt-get install gcc-s390x-linux-gnu g++-s390x-linux-gnu \
+         libc6-dev-s390x-cross linux-libc-dev-s390x-cross
+
+  # Build with clang
+  $ HOSTCC=clang CC=clang CXX=clang++ \
+    ARCH=s390 CROSS_COMPILE=s390x-linux-gnu- \
+    make -C tools/perf NO_LIBELF=1 NO_LIBTRACEEVENT=1 NO_LIBPYTHON=1
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- .../tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c     | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/Makefile.config | 32 +++++++++++++++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c b/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
-index 0fc7bf1a25af3607b40f091f62176134ddb7f9f6..8f4e1c985ca38ab545a05189432a14a6d888d34c 100644
---- a/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
-+++ b/tools/perf/tests/shell/coresight/unroll_loop_thread/unroll_loop_thread.c
-@@ -20,7 +20,7 @@ static void *thrfn(void *arg)
- 	for (i = 0; i < 10000; i++) {
- 		asm volatile (
- // force an unroll of thia add instruction so we can test long runs of code
--#define SNIP1 "add %[in], %[in], #1\n"
-+#define SNIP1 "add %w[in], %w[in], #1\n"
- // 10
- #define SNIP2 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1 SNIP1
- // 100
-@@ -36,6 +36,8 @@ static void *thrfn(void *arg)
- 			: /* clobber */
- 		);
- 	}
-+
-+	return NULL;
- }
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 5a5832ee7b53c604ec0d90c5ca7e2bee5bfa6a17..a2b5c291a364cbf331c16384764520dfe330a04c 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -23,8 +23,38 @@ HOSTCFLAGS := $(filter-out -Wnested-externs,$(EXTRA_WARNINGS))
+ # borrowed from kernel headers depends on it, e.g. put_unaligned_*().
+ CFLAGS += -fno-strict-aliasing
  
- static pthread_t new_thr(void *(*fn) (void *arg), void *arg)
+-# Enabled Wthread-safety analysis for clang builds.
++# Set target flag and options when using clang as compiler.
+ ifeq ($(CC_NO_CLANG), 0)
++  CLANG_TARGET_FLAGS_arm	:= arm-linux-gnueabi
++  CLANG_TARGET_FLAGS_arm64	:= aarch64-linux-gnu
++  CLANG_TARGET_FLAGS_m68k	:= m68k-linux-gnu
++  CLANG_TARGET_FLAGS_mips	:= mipsel-linux-gnu
++  CLANG_TARGET_FLAGS_powerpc	:= powerpc64le-linux-gnu
++  CLANG_TARGET_FLAGS_riscv	:= riscv64-linux-gnu
++  CLANG_TARGET_FLAGS_s390	:= s390x-linux-gnu
++  CLANG_TARGET_FLAGS_x86	:= x86_64-linux-gnu
++
++  # Default to host architecture if ARCH is not explicitly given.
++  ifeq ($(ARCH),)
++    CLANG_TARGET_FLAGS := $(shell $(CLANG) -print-target-triple)
++  else
++    CLANG_TARGET_FLAGS := $(CLANG_TARGET_FLAGS_$(ARCH))
++  endif
++
++  ifeq ($(CROSS_COMPILE),)
++    ifeq ($(CLANG_TARGET_FLAGS),)
++      $(error Specify CROSS_COMPILE or add CLANG_TARGET_FLAGS for $(ARCH))
++    else
++      CLANG_FLAGS += --target=$(CLANG_TARGET_FLAGS)
++    endif # CLANG_TARGET_FLAGS
++  else
++    CLANG_FLAGS += --target=$(notdir $(CROSS_COMPILE:%-=%))
++  endif # CROSS_COMPILE
++
++  CC := $(CLANG) $(CLANG_FLAGS) -fintegrated-as
++  CXX := $(CXX) $(CLANG_FLAGS) -fintegrated-as
++
++  # Enabled Wthread-safety analysis for clang builds.
+   CFLAGS += -Wthread-safety
+ endif
+ 
 
 -- 
 2.34.1
