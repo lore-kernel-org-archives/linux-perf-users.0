@@ -1,44 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD822E888C;
-	Wed,  1 Oct 2025 14:15:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3940238C15;
+	Wed,  1 Oct 2025 14:21:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759328100; cv=none; b=W43t2wZ8t39BaHYncqg1D6xJcqYDrDBOLp5Sq1z8qMgIITygXzWRirdDhzNe3+PBhaJ17lAAYkOIbXVuy4qV9hwAA5yZD3DXCJU+HRYTBMzuM52AJDAOuS6C8hwBGILxb4IUppmFb83wcOscdffskjfgUyHkgO79NW19T0WJgso=
+	t=1759328483; cv=none; b=t3xVfyjKrbvxVXCUOXBaeruZ8f/e2m/PcdeZbE3Ksvs5xTb5XfNgfV9HusjY1z/MNjZ+E3T4NfJz+Perkls8kX/HrUZETQDJjG6E4xsLDbiz3pzTi5T90xX0JTkUQD9wOxIHajc64+rfhnJuDt9fOPxhCkXpD5rUrzhPaxrl3n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759328100; c=relaxed/simple;
-	bh=nQic+VLci5XqxwF9N2qBEMgmpbs4SRbRbJmzysZjCjI=;
+	s=arc-20240116; t=1759328483; c=relaxed/simple;
+	bh=J2fqNDAd1wRU864eSpkfrd999qUHOFK/4c5fDl4Dl/c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bYBTwTvT4mHYcRQF/Rcm6AJ+znHxXke9VHpeUZE/GA3HPiehDlmNgswFAhdtsHLcoqXf5mAIKa/hSSQylaSoG4GP1zMjtw77yTrW6nvY4igLjslp9pz9OBrNse4a+JuIsMNmJQrYupb6c36UEz0qLMCLiF5q1enQ3jAQDyUXgsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dodkX1ad; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=dx//Nbd6H9KlLf1WNbhf9ttCez+L0dBzMU8siDfLHWw8w6YwNsKBDvmYG9TzUBNDK/c8atOGXp5WG/ziqiuwcxNyI0wyjSAZJ/QV3o9k6xqYLjdZEmPAk2H/8LHH2KbeDNMMx7LSjgPDwRnj/RH6OYpOm4DKcrJr6i3QozCCqqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ppq0wNVC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dodkX1ad"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA5ECC4CEF1;
-	Wed,  1 Oct 2025 14:14:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ppq0wNVC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00075C4CEF1;
+	Wed,  1 Oct 2025 14:21:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759328100;
-	bh=nQic+VLci5XqxwF9N2qBEMgmpbs4SRbRbJmzysZjCjI=;
+	s=k20201202; t=1759328483;
+	bh=J2fqNDAd1wRU864eSpkfrd999qUHOFK/4c5fDl4Dl/c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dodkX1adpvOAzilMHv7Jyp1+GtxiLIUqLV2Lvrb9jr2SI6W7AEEb6Yve+lQUGkWDo
-	 EEGjeO9efkiDUbm8GtyYpydM1GRlaHqkuPe17xI61b6xL9jsxejH7PdmAsdnjWX9Nw
-	 CaTMkD/0ud/bIsOcD+WLcFAr6C9r/1lbWjan3tRMYwXtfJ87wA17XubagoxqC8hmaD
-	 ZApmxNV5Q1A0TMrsSxX5e7TFaeblcDBpGNP7BG6BpzGY9QB5IfTz+Ao4lWx2jame5m
-	 IpiT+eyz5qU/qY+hK5OXKeegjF0gvDlrO0HYmfck9X1GDapBwOUo9O08murCtWtWab
-	 oBfzTGzzORpsg==
-Date: Wed, 1 Oct 2025 11:14:57 -0300
+	b=Ppq0wNVCZl49QUnuNWMqJMVyXU2DqLrdlPDr8cnmvrzwqvtM5wRv7ff6hocv7/oFC
+	 Pfun6y0oKel+L98l7ayCFYyz7gHiItSbbxHUUtaCdQhFIxs2vPPbcXsq+EIFIbRhFa
+	 iLE5/2QhcQuTkHZH8tODay3K7NUSDmYXr+PyGqJV14OxlA0p1TnzejJp2Wgnev6pwc
+	 CFEYxRtp71kJYY01z0L9yJlmffr//QTNB4lWqO61W6pigaWm5l1ZI1dMiqnysVT6Se
+	 3jC2aExEmObG4DxPaJ/ZTTtf2ZJUpazGiym+nDMHQT9cI4HcNxbhTp2jxAU1c4jgVj
+	 Yn4tNZoh85oHA==
+Date: Wed, 1 Oct 2025 11:21:20 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Suchit Karunakaran <suchitkarunakaran@gmail.com>, peterz@infradead.org,
-	mingo@redhat.com, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org
-Subject: Re: [PATCH] perf/annotate: Use architecture-agnostic register limit
-Message-ID: <aN03YZ-GkfTyOD8Z@x1>
-References: <20250923174236.12372-1-suchitkarunakaran@gmail.com>
- <CAP-5=fXVFBewYhSmjVCGTbzEN82apECRLRnSeit8rqydCBJ1bg@mail.gmail.com>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 0/8] perf build: Support building with Clang
+Message-ID: <aN044EY-Ds9-E6iz@x1>
+References: <20250930-perf_build_android_ndk-v2-0-2ea440b7ef01@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,25 +54,42 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXVFBewYhSmjVCGTbzEN82apECRLRnSeit8rqydCBJ1bg@mail.gmail.com>
+In-Reply-To: <20250930-perf_build_android_ndk-v2-0-2ea440b7ef01@arm.com>
 
-On Tue, Sep 23, 2025 at 12:11:27PM -0700, Ian Rogers wrote:
-> On Tue, Sep 23, 2025 at 10:43 AM Suchit Karunakaran
-> <suchitkarunakaran@gmail.com> wrote:
-> >
-> > Remove the arch-specific guard around TYPE_STATE_MAX_REGS and define it
-> > as 32 for all architectures. The architecture that perf is built on may
-> > not match the architecture that produced the perf.data file, so relying
-> > on __powerpc__ or similar is fragile. Using 32 as a fixed upper bound is
-> > safe since it is greater than the previous maximum of 16.
-> > Add a comment to clarify that TYPE_STATE_MAX_REGS is an arch-independent
-> > maximum rather than a build-time choice.
-> >
-> > Suggested-by: Ian Rogers <irogers@google.com>
-> > Signed-off-by: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+On Tue, Sep 30, 2025 at 05:54:48PM +0100, Leo Yan wrote:
+> This series adds support for building perf with Clang, following the
+> discussion in [1]. Because the Android NDK uses Clang by default,
+> enabling Clang builds naturally covers Android as well.
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> The series is organized as follows:
+> 
+>   - Patches 1–2: Fix two bugs found with Clang.
+>   - Patches 3–6: Correct CROSS_ARCH and dismiss Clang build warnings.
+>   - Patches 7–8: Enable Clang in the Makefile and update the
+>     documentation.
+> 
+> Testing:
+> 
+>   - Clang 15.0.7 on Ubuntu 22.04.5: native and cross-compiling (aarch64)
+>   - Clang 18.1.3 on Ubuntu 24.04.2: native and cross-compiling (aarch64)
+>   - Android NDK r27d (latest LTS): cross-compiling (aarch64)
 
-Thanks, applied to perf-tools-next,
-
-- Arnaldo
+  LD      /tmp/build/perf/util/perf-util-in.o
+  LD      /tmp/build/perf/perf-util-in.o
+  AR      /tmp/build/perf/libperf-util.a
+  CC      /tmp/build/perf/pmu-events/pmu-events.o
+  LD      /tmp/build/perf/pmu-events/pmu-events-in.o
+  AR      /tmp/build/perf/libpmu-events.a
+  LINK    /tmp/build/perf/perf
+make: Leaving directory '/git/perf-6.17.0-rc6/tools/perf'
++ rm -rf /tmp/build/perf
++ mkdir /tmp/build/perf
++ make 'ARCH=' 'CROSS_COMPILE=' 'EXTRA_CFLAGS=' -C tools/perf 'O=/tmp/build/perf' 'CC=clang'
+make: Entering directory '/git/perf-6.17.0-rc6/tools/perf'
+  BUILD:   Doing 'make -j28' parallel build
+Makefile.config:494: *** No gnu/libc-version.h found, please install glibc-dev[el].  Stop.
+make[1]: *** [Makefile.perf:289: sub-make] Error 2
+make: *** [Makefile:76: all] Error 2
+make: Leaving directory '/git/perf-6.17.0-rc6/tools/perf'
++ exit 1
+toolsbuilder@five:~$ cat dm.log/alpine\:3.22
