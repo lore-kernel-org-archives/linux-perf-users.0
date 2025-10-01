@@ -1,95 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3940238C15;
-	Wed,  1 Oct 2025 14:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E15A2765CA
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Oct 2025 14:55:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759328483; cv=none; b=t3xVfyjKrbvxVXCUOXBaeruZ8f/e2m/PcdeZbE3Ksvs5xTb5XfNgfV9HusjY1z/MNjZ+E3T4NfJz+Perkls8kX/HrUZETQDJjG6E4xsLDbiz3pzTi5T90xX0JTkUQD9wOxIHajc64+rfhnJuDt9fOPxhCkXpD5rUrzhPaxrl3n4=
+	t=1759330526; cv=none; b=B6hQlpOh5mLE+Xk1Sl3tGQRI7nwE23WddWiPkZyXoVbkPkTFAgGJPGUN+sprKSfVS1wpxgqtn7SgWk5sPuWOg0L93gTXk99s9xpBT/EZSs2Uyf4MaNbtv+n9G6lcKi0iaFVK02nqD5kGcYDtdhgwYaU6jAJJkxUFCavuvEhy+/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759328483; c=relaxed/simple;
-	bh=J2fqNDAd1wRU864eSpkfrd999qUHOFK/4c5fDl4Dl/c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dx//Nbd6H9KlLf1WNbhf9ttCez+L0dBzMU8siDfLHWw8w6YwNsKBDvmYG9TzUBNDK/c8atOGXp5WG/ziqiuwcxNyI0wyjSAZJ/QV3o9k6xqYLjdZEmPAk2H/8LHH2KbeDNMMx7LSjgPDwRnj/RH6OYpOm4DKcrJr6i3QozCCqqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ppq0wNVC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759330526; c=relaxed/simple;
+	bh=xRD2yXCXkLLbqYulxTrjbbgrREUpLwVSGR2doQPspRU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aFWlxDVGBHltYqpB2+SKwLd/RDgzHNqKQT/5fFkKnwEAQTfiC7aQKzYLTTkxORFyBJXqFtL0J71hiATNFCazknLAXVLRN/tDQE3iYwvnCuprGIa+qmiav14CSk7vj8m6Mjb/Nu15PiTmoQoCKNKRoGWLJENe9ng34S67k+OBiYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xbMcAANL; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ppq0wNVC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00075C4CEF1;
-	Wed,  1 Oct 2025 14:21:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759328483;
-	bh=J2fqNDAd1wRU864eSpkfrd999qUHOFK/4c5fDl4Dl/c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ppq0wNVCZl49QUnuNWMqJMVyXU2DqLrdlPDr8cnmvrzwqvtM5wRv7ff6hocv7/oFC
-	 Pfun6y0oKel+L98l7ayCFYyz7gHiItSbbxHUUtaCdQhFIxs2vPPbcXsq+EIFIbRhFa
-	 iLE5/2QhcQuTkHZH8tODay3K7NUSDmYXr+PyGqJV14OxlA0p1TnzejJp2Wgnev6pwc
-	 CFEYxRtp71kJYY01z0L9yJlmffr//QTNB4lWqO61W6pigaWm5l1ZI1dMiqnysVT6Se
-	 3jC2aExEmObG4DxPaJ/ZTTtf2ZJUpazGiym+nDMHQT9cI4HcNxbhTp2jxAU1c4jgVj
-	 Yn4tNZoh85oHA==
-Date: Wed, 1 Oct 2025 11:21:20 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 0/8] perf build: Support building with Clang
-Message-ID: <aN044EY-Ds9-E6iz@x1>
-References: <20250930-perf_build_android_ndk-v2-0-2ea440b7ef01@arm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xbMcAANL"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2681645b7b6so158395ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 Oct 2025 07:55:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1759330524; x=1759935324; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FhsPaQ7p5WJkNBSgyD9D5tQQAYbvt5dtrgNCJ2qJKok=;
+        b=xbMcAANLZI359WFs51DcVTeWPiaZg0Lrgvt7PT+IesUgR8ovUQ4jItapG8pPHR0zXV
+         U5S6JYych/IdYh6jZtCZUprJlc6gAUZuZYBuSA6D7UzzQJ7MOcaMgFhEJrpVNUifK0Vs
+         F01XKk719G7pML26cuoM1y4wBmwSNiEfbMv2BkXx/pKSTYndrP5jN0VuaHemXhGpRRg0
+         4Fjk9i1h5OQqtk8YkJ+vNuoOYGtaVyB2Vw32Nf33dhJsd4/aNeeA6mgHmiVOFJZt4MHh
+         gO3SWckzv0AuKwaGoaOFydXI4roDz9LLUSku5/7v8WLFoq9KYBrHLc/6zdJJVM4IbRiX
+         e/Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759330524; x=1759935324;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FhsPaQ7p5WJkNBSgyD9D5tQQAYbvt5dtrgNCJ2qJKok=;
+        b=pw3GP2WAEkw8E790+lb9lsVl3gbhsGg5MncLBiXg022kXk6msRK6CcWI5mBB6PvGx/
+         eX4E9cKvXy8JWHHvknLkDhV3NFr2hMk8oF5KDq7yb5wlkiMnu7FQgL59VtWIzf/UJd9T
+         4gq1bwLbESwU2olnZz7ZsuP8WAUpveez8g6/eQpVpFPDhkefZpvUnVyIPcFb0cErIrpQ
+         kkFnt/Bu4eNVPCqd2yl9YWQpIFJI/iCLUTBKzaPdjCllfZjzzuQt4/Z4hjVK5quI3WsH
+         rLpZKaA9zPHODK6HvnSpcQhrhlcs7+XBf8ENJMvCySAtRWT4/Pk+w+uplnf7lTl03Ypi
+         mwrw==
+X-Forwarded-Encrypted: i=1; AJvYcCW4gNPxPOtVwZqi+IKv/gbgM7cC67ffk4ENUKT8VI0a+KJbgfulkuSDDDXPsq958oMsRVZKf3DINDEqq2Y4BxUw@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZI5XXySLS/YIYO/dr1oeBM5MyxZtiUP4tk0Y8qXDl/jHyn6SE
+	ZcOZ9lRQ4rBTJnsY01ieCKsKjCGqbvdS+78nQWHfMw2rKwW2Edi1Si19C0VDnKOSYVwgFbyjqgw
+	og9nbLdxyFA3edJhr1HQ/TV4Zxn14XWHhTJRQqPvH
+X-Gm-Gg: ASbGncs/hUBFWN9iRYU4scf3hNs7NCinD+D+i6q7i8I5CNaFL1XmZpthqukp3TrknE2
+	OdxwX5up6PDI+wpyrAgK9tlCcdXtPiYxvUbKderdLny/CaRG1bGJ2o41cCWyW1pUd/wLhIHfgJ6
+	IIL6cId6vOgPMnXWJ4//L0tT0LUBjp0Gh7NbeTwCkVMe+8ANzUZPtirHwneSdSzCRqCHxL/hhjM
+	8kAHdncdznCIbYUMW0MYXEpSTPc+QB6bhiKmaCbNBd1kxK7k0IMHFQwsBQ6br8ixI2A8nnvNfGw
+	ZIM=
+X-Google-Smtp-Source: AGHT+IHZApbTn2f8Bc144Vyi9JnUaoYvu+ZyiBe9lrNyNM4HMnH2M4tmU1Rh4Q39Zpi9EiQr52wtOZChi17BNfYcfio=
+X-Received: by 2002:a17:902:ce0e:b0:24b:1741:1a4c with SMTP id
+ d9443c01a7336-28e7fcf1f70mr5037765ad.0.1759330524045; Wed, 01 Oct 2025
+ 07:55:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250930-perf_build_android_ndk-v2-0-2ea440b7ef01@arm.com>
+References: <20250903184248.695267-1-irogers@google.com> <CAP-5=fV-3d1EzYfZq6s9M2NrLFFVOrWOTx_k5tByScA4Sfqq-g@mail.gmail.com>
+ <aN0vu4yoVWjmTbtJ@x1>
+In-Reply-To: <aN0vu4yoVWjmTbtJ@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 1 Oct 2025 07:55:12 -0700
+X-Gm-Features: AS18NWCNLhCWzmWSoLRCUJqGjooqnlqXjwFfo3FV6h1-TZfeczc5cdnkqfDu6Kk
+Message-ID: <CAP-5=fX46C2A22B1TBSgNb0BR1BumvqQeZvaFbU=9OqHmYPqrQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] perf test: Add an 'import perf' test shell script
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Collin Funk <collin.funk1@gmail.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 30, 2025 at 05:54:48PM +0100, Leo Yan wrote:
-> This series adds support for building perf with Clang, following the
-> discussion in [1]. Because the Android NDK uses Clang by default,
-> enabling Clang builds naturally covers Android as well.
-> 
-> The series is organized as follows:
-> 
->   - Patches 1–2: Fix two bugs found with Clang.
->   - Patches 3–6: Correct CROSS_ARCH and dismiss Clang build warnings.
->   - Patches 7–8: Enable Clang in the Makefile and update the
->     documentation.
-> 
-> Testing:
-> 
->   - Clang 15.0.7 on Ubuntu 22.04.5: native and cross-compiling (aarch64)
->   - Clang 18.1.3 on Ubuntu 24.04.2: native and cross-compiling (aarch64)
->   - Android NDK r27d (latest LTS): cross-compiling (aarch64)
+On Wed, Oct 1, 2025 at 6:42=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+>
+> On Tue, Sep 30, 2025 at 01:02:55PM -0700, Ian Rogers wrote:
+> > On Wed, Sep 3, 2025 at 11:42=E2=80=AFAM Ian Rogers <irogers@google.com>=
+ wrote:
+> > >
+> > > The 'import perf' test needs to set up a path to the python module as
+> > > well as to know the python command to invoke. These are hard coded at
+> > > build time to be build a directory and the python used in the build,
+> > > which is less than desirable. Avoid the hard coded values by reusing
+> > > the existing shell script python setup and determine a potential buil=
+t
+> > > python module via the path of the perf executable.
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> >
+> > Ping.
+>
+> There is another patch in this area to make it work, right?
+>
+> After applying this one I get a failure, only when I set PYTHONPATH it
+> works:
+>
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$ export PYTHONPATH=3D/tmp/build/p=
+erf-tools-next/python_ext_build/lib/
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$ perf test -v pytho
+> Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF =
+maps, etc
+>  88: 'import perf' in python                                         : Ok
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$
 
-  LD      /tmp/build/perf/util/perf-util-in.o
-  LD      /tmp/build/perf/perf-util-in.o
-  AR      /tmp/build/perf/libperf-util.a
-  CC      /tmp/build/perf/pmu-events/pmu-events.o
-  LD      /tmp/build/perf/pmu-events/pmu-events-in.o
-  AR      /tmp/build/perf/libpmu-events.a
-  LINK    /tmp/build/perf/perf
-make: Leaving directory '/git/perf-6.17.0-rc6/tools/perf'
-+ rm -rf /tmp/build/perf
-+ mkdir /tmp/build/perf
-+ make 'ARCH=' 'CROSS_COMPILE=' 'EXTRA_CFLAGS=' -C tools/perf 'O=/tmp/build/perf' 'CC=clang'
-make: Entering directory '/git/perf-6.17.0-rc6/tools/perf'
-  BUILD:   Doing 'make -j28' parallel build
-Makefile.config:494: *** No gnu/libc-version.h found, please install glibc-dev[el].  Stop.
-make[1]: *** [Makefile.perf:289: sub-make] Error 2
-make: *** [Makefile:76: all] Error 2
-make: Leaving directory '/git/perf-6.17.0-rc6/tools/perf'
-+ exit 1
-toolsbuilder@five:~$ cat dm.log/alpine\:3.22
+Hmm.. if you are running from the install directory then I guess the
+assumption should be that the install bin directory is in the PATH,
+lib in LD_LIBRARY_PATH and PYTHONPATH set up for the directory too? We
+could have the script look for a python module going from ..../bin to
+..../lib and fix the PYTHONPATH for you. Wdyyt?
+
+Thanks,
+Ian
+
+> - Arnaldo
+>
+>
+>
+> > Thanks,
+> > Ian
+> >
+> > > ---
+> > >  tools/perf/tests/shell/python-use.sh | 36 ++++++++++++++++++++++++++=
+++
+> > >  1 file changed, 36 insertions(+)
+> > >  create mode 100755 tools/perf/tests/shell/python-use.sh
+> > >
+> > > diff --git a/tools/perf/tests/shell/python-use.sh b/tools/perf/tests/=
+shell/python-use.sh
+> > > new file mode 100755
+> > > index 000000000000..fd2ee5390060
+> > > --- /dev/null
+> > > +++ b/tools/perf/tests/shell/python-use.sh
+> > > @@ -0,0 +1,36 @@
+> > > +#!/bin/bash
+> > > +# 'import perf' in python
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +# Just test if we can load the python binding.
+> > > +set -e
+> > > +
+> > > +shelldir=3D$(dirname "$0")
+> > > +# shellcheck source=3Dlib/setup_python.sh
+> > > +. "${shelldir}"/lib/setup_python.sh
+> > > +
+> > > +MODULE_DIR=3D$(dirname "$(which perf)")/python
+> > > +
+> > > +if [ -d "$MODULE_DIR" ]
+> > > +then
+> > > +    CMD=3D$(cat <<EOF
+> > > +import sys
+> > > +sys.path.insert(0, '$MODULE_DIR')
+> > > +import perf
+> > > +print('success!')
+> > > +EOF
+> > > +    )
+> > > +else
+> > > +    CMD=3D$(cat <<EOF
+> > > +import perf
+> > > +print('success!')
+> > > +EOF
+> > > +    )
+> > > +fi
+> > > +
+> > > +echo -e "Testing 'import perf' with:\n$CMD"
+> > > +
+> > > +if ! echo "$CMD" | $PYTHON | grep -q "success!"
+> > > +then
+> > > +  exit 1
+> > > +fi
+> > > +exit 0
+> > > --
+> > > 2.51.0.338.gd7d06c2dae-goog
+> > >
