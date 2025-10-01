@@ -1,103 +1,70 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856F31DED63
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Oct 2025 19:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E8D417A305;
+	Wed,  1 Oct 2025 20:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759348341; cv=none; b=jgJSdeuRhdg52vgJbr/m4uECphU+NNeU2+fEvtiqSrlALWIJkt4FTKicO5IaFiK/RS9Bgs6LFFlpJPelo666RmslDPNsdTUdmvf96SUcIBgFFcNcE/dgc0R/noATnnWiNV0v51L+qX+JbNX6+s1uSmh36cq08NBRNu4Fieg8Q2c=
+	t=1759350055; cv=none; b=IzDtsiZXfIyx1vd2MyvLWJq1fmYy0TinN4j617fRH+o83wneA3BG8myiRvhcr2oycra51aNDWOhHwv8Azd/tANqp+EhqnjiLOF9RKoucHD3QI5MbKWDFkSvGtD/C6JED7Z5KHKvRyGRNeDwjBLp+i5g2nFP2sGRu6NOVj09htWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759348341; c=relaxed/simple;
-	bh=2GwntnuGEgVcJp5uzDbaxQTWGpDZdjmJnerRcjsvzJg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iARDOJyzpJtE8hlftfn+o/G2U0f/SWCkdBh5KnEGtALpef6WTSIntxBjZiYQkF5+v5tnr1irex3g3VxbsZgBt1s5tbHPlZeejM7YyYS55ZxOHdBz5vwh6kUSF0uBJhT3aF4EJocBPSgVOU5b02mCR/SKrYdVAHm7SXJAxH8A9Xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WITDMlD9; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WITDMlD9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1759348337;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=E1IGHmX8DGMtzjlmDVzuCFCfPglAkbYr95cqX8KMDng=;
-	b=WITDMlD92Q6VODzLriAx1ibGRwlF4b2SnJdqHK/a8gGaFt/AUQRWEbzjwbfrexYFpti+hI
-	Al5nx1YZmgx4+2ZdeUYilCc3FFtGSQ7OteETd9EfpU/NRrgN+FsCn3fvgyGPUOoUQvmDXZ
-	7cVUeMgSS7kmTA3GdIWB/DSTUiSRw1Y=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-346-5GORiUkiMriGhjVqvR_XEQ-1; Wed,
- 01 Oct 2025 15:52:10 -0400
-X-MC-Unique: 5GORiUkiMriGhjVqvR_XEQ-1
-X-Mimecast-MFC-AGG-ID: 5GORiUkiMriGhjVqvR_XEQ_1759348326
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1BE8A180047F;
-	Wed,  1 Oct 2025 19:52:06 +0000 (UTC)
-Received: from ashelat-thinkpadp1gen5.boston.csb (unknown [10.22.80.159])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 66A2419560B4;
-	Wed,  1 Oct 2025 19:52:02 +0000 (UTC)
-From: Anubhav Shelat <ashelat@redhat.com>
-To: mpetlan@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	linux-perf-users@vger.kernel.org
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	dapeng1.mi@linux.intel.com,
-	james.clark@linaro.org,
-	Anubhav Shelat <ashelat@redhat.com>
-Subject: [PATCH] perf tests record: allow for some difference in cycle count in leader sampling test on aarch64
-Date: Wed,  1 Oct 2025 15:50:48 -0400
-Message-ID: <20251001195047.541745-2-ashelat@redhat.com>
+	s=arc-20240116; t=1759350055; c=relaxed/simple;
+	bh=gH8Bk/26mj0XCvAzQheDtiveLzBJprZeUJW3oTWn67g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fP/Wl1ItnXFlY3kB4baT7AwjaoJa/FvgN2X3G9KuGZE+RuAAnK2N8nB3yU2adnKq+lVR/NVxmxdSDg//3kIGBUmuFerEkY8KBJcGw3pOHkeqrq8jdk07lYIDNGTijsuzuSd1t11m9x+Rn5TCF70v+hpkNZ03pM4z2rLDvN6d+n0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 902B516F8;
+	Wed,  1 Oct 2025 13:20:44 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 37A5D3F5A1;
+	Wed,  1 Oct 2025 13:20:52 -0700 (PDT)
+Date: Wed, 1 Oct 2025 21:20:50 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 0/8] perf build: Support building with Clang
+Message-ID: <20251001202050.GT7985@e132581.arm.com>
+References: <20250930-perf_build_android_ndk-v2-0-2ea440b7ef01@arm.com>
+ <aN044EY-Ds9-E6iz@x1>
+ <20251001152217.GQ7985@e132581.arm.com>
+ <aN1yNKxXLnMtQczW@x1>
+ <20251001183256.GS7985@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251001183256.GS7985@e132581.arm.com>
 
-On aarch64 systems, when running the leader sampling test, the cycle
-count on the leader is consistently ~30 cycles less than the cycle count
-on the slave event causing the test to fail. This looks like the result
-of some hardware property of aarch64 processors, so allow for a small
-difference in cycles between the leader and slave events on aarch64
-systems.
+On Wed, Oct 01, 2025 at 07:32:56PM +0100, Leo Yan wrote:
 
-Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
----
- tools/perf/tests/shell/record.sh | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+[...]
 
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index b1ad24fb3b33..dff83d64e970 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -280,7 +280,12 @@ test_leader_sampling() {
-   while IFS= read -r line
-   do
-     cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
--    if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
-+    # On aarch64 systems the leader event gets stopped ~30 cycles before the slave, so allow some
-+    # difference
-+    if [ "$(uname -m)" = "aarch64" ] && (( cycles - prev_cycles < 50 ))
-+    then
-+	    valid_counts=$(($valid_counts+1))
-+    elif [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
-     then
-       invalid_counts=$(($invalid_counts+1))
-     else
--- 
-2.47.3
+> > + make 'ARCH=' 'CROSS_COMPILE=' 'EXTRA_CFLAGS=' -C tools/perf 'O=/tmp/build/perf' 'CC=clang'
+> > make: Entering directory '/git/perf-6.17.0-rc6/tools/perf'
+> >   BUILD:   Doing 'make -j28' parallel build
+> > Makefile.config:494: *** No gnu/libc-version.h found, please install glibc-dev[el].  Stop.
 
+It does not set correctly --target as x86_64-alpine-linux-musl if
+distros are using musl libc.
+
+Now running the container build for updated code.  Once pass test,
+I will send new series.
+
+Thanks,
+Leo
