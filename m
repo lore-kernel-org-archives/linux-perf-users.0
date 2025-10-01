@@ -1,42 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A77512EA74D
-	for <linux-perf-users@vger.kernel.org>; Wed,  1 Oct 2025 12:37:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9056712C544;
+	Wed,  1 Oct 2025 13:34:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759322276; cv=none; b=LLtTIQ5sCfpMuf7Mqmy+REgGrQTGvnQyTx/EFD3FhPrpGn4Juvhosby6i3nvurItYd2eo+7aLHzsYA0DbLP657QfwB/cv4ya3FD2LQRAk0P0MEC5VSGCGKu/t/pJJTxMai8S7B8K3gdIJRhYQPYveBIdmjjjcbMKAOApobGZF/k=
+	t=1759325676; cv=none; b=e7b9Bbfe/mr+92uRAKvAJul6n5XpNG4sL50zOFcHhYdjnjZ4swtY84me3N7W1cLbQX7iyapSXljpdNvUcALu+G8KxR/3dwPBh/XC5ZiLmhaEePPfA4PBT9QP1b210mZf3DXTZWTEJSr0r1nNGD4E/ZpKCi52rvHic+U5BCArn8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759322276; c=relaxed/simple;
-	bh=YXVxYxEpFZYzQu2ifriepj59fECi2EuclyFZ0M5RB/M=;
+	s=arc-20240116; t=1759325676; c=relaxed/simple;
+	bh=ZE4N66J3ktY8IRfvtbMhGxcc6MKDZ6AJh2VWt6887no=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rxblk7Hn9wXcLyjL6L/V0tKdia8s9nqtXvAiSP9YYXiSQ2+TH499G6esW0RnvyOpTtUYKVglbRVM8G+NWN7UvTktHOoSoWf902jVnyHFyXsKCio5z5NX846B+SjnzFDmwxqtfZKhdgEfh+6Hck7w+oI1PxjcIzuvPknkh3/phvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uGUFE0LC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hs2MY5GoTU5W9nCd0aG3HZy+Yy0aXX3W5zBvKB47xnGtR5+eaNc6ZrkhrO6jsUn7C25LMzdRLG2Su0PpzcIcTE44203LShEM0mnq1UY9oodW41RpBjwFj5kyBdSg/0VEJy9wzj0tfkUJ1YXm5yW2DQDEyZ3podMVTc2j35uJKss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=htDhPPR8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uGUFE0LC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5805FC4CEF4;
-	Wed,  1 Oct 2025 12:37:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="htDhPPR8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80094C4CEF4;
+	Wed,  1 Oct 2025 13:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759322276;
-	bh=YXVxYxEpFZYzQu2ifriepj59fECi2EuclyFZ0M5RB/M=;
+	s=k20201202; t=1759325676;
+	bh=ZE4N66J3ktY8IRfvtbMhGxcc6MKDZ6AJh2VWt6887no=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uGUFE0LCd2pxh8cRuLl6yWN8vHsGqcICUePQoTL5aDEQwZNBLxySujebRcE3ERTaT
-	 Y2v6dXsYGdMX03qClVmreUfeK+WyRd9/ixh3EdlRSTRG2VJJU0MSq1fa7cTd+kGZo1
-	 dYDlcthaeeLOufTjTCcqrwgkxMxMQPHPWAXBnkzeqXFB7lUm1igrqg1teaqUhUQnmE
-	 Y/BzZdVYYXe7ZuOpNhhar9KxPfX8OP4LHuVNS8i7f/b7CoRZ1jAiYNYxkI8oBef9I6
-	 ZZvSn4rWm+nnoJBcJggV+elf5ZtNz5NLRBAPiN35a/e6LFzBYW3d5+5u7kQv+JXeIZ
-	 LfcrU2S7JSOlg==
-Date: Wed, 1 Oct 2025 09:37:52 -0300
+	b=htDhPPR82n+Azi7xVfwV9rx1ZLKXr1DAbbOstPZbz5WID7FmNghgZI18zRXPN1QhS
+	 ZpzqVLoOUQ/gGfCQZ2Sf/taK7lVlMJyY6fzgdNKdtLRpWScoo9UFu0ONM8h/bhJU2A
+	 s8iNwkY+g9cbtXZ83gEaeCYSDAtTqT8DaD6B2IeOSOeq1OdYYq3n3uwNioWt4tLBY7
+	 mLx7GxeqbiFKj/DT6GrVq5xgbIZbX2PSHP4zE9DcOJoaLO3EZxnRuHhs3vFdfaUs75
+	 gsEoAYOWwL+1xRq7+nNiXwiWqnXM4U4uSTSGjuvJMGjn7ezehq/jHuMSPTay9J8+iT
+	 0J+AOl99jAE8A==
+Date: Wed, 1 Oct 2025 10:34:32 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Jakub Brnak <jbrnak@redhat.com>, namhyung@kernel.org, acme@redhat.com,
-	linux-perf-users@vger.kernel.org, mpetlan@redhat.com,
-	vmolnaro@redhat.com
-Subject: Re: [PATCH v4 1/7] perf test perftool_testsuite: Use absolute paths
-Message-ID: <aN0goDY77JHo3l_D@x1>
-References: <20250930160923.13728-1-jbrnak@redhat.com>
- <20250930160923.13728-2-jbrnak@redhat.com>
- <CAP-5=fWyq9_Dvgz+X1+=e28yBG7wX4LKOf34AXrEBt=5o7tMdA@mail.gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: Re: [PATCH 0/2] LIBBPF_DYNAMIC=1 fixes
+Message-ID: <aN0t6Bcd8MKmeBn7@x1>
+References: <20250919210654.317656-1-acme@kernel.org>
+ <aM3SCGOXZsP3GZal@google.com>
+ <CAP-5=fX6=7Ycp=Su2ahZS1R0wS9s4eozPPcBgMBG25UCaC6uBA@mail.gmail.com>
+ <CAP-5=fW6tPRW2qdFE4AbXg+47CzTjDX5HEjenjTxgOZ35fFa8A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,727 +52,58 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWyq9_Dvgz+X1+=e28yBG7wX4LKOf34AXrEBt=5o7tMdA@mail.gmail.com>
+In-Reply-To: <CAP-5=fW6tPRW2qdFE4AbXg+47CzTjDX5HEjenjTxgOZ35fFa8A@mail.gmail.com>
 
-On Tue, Sep 30, 2025 at 11:28:33AM -0700, Ian Rogers wrote:
-> On Tue, Sep 30, 2025 at 9:09 AM Jakub Brnak <jbrnak@redhat.com> wrote:
+On Tue, Sep 30, 2025 at 01:10:59PM -0700, Ian Rogers wrote:
+> On Fri, Sep 19, 2025 at 3:10 PM Ian Rogers <irogers@google.com> wrote:
 > >
-> > From: Veronika Molnarova <vmolnaro@redhat.com>
+> > On Fri, Sep 19, 2025 at 2:58 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > On Fri, Sep 19, 2025 at 06:06:52PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > Hi,
+> > > >
+> > > >       Please take a look, noticed after processing a patch from Ian
+> > > > for another such issue, on a hurry now, haven't checked when that
+> > > > emit_string was introduced.
 > >
-> > Test cases from perftool_testsuite are affected by the current
-> > directory where the test are run. For this reason, the test
-> > driver has to change the directory to the base_dir for references to
-> > work correctly.
+> > emit_strings was added in Linux v6.17 and libbpf was tagged as version
+> > 1.7 prior to that.
 > >
-> > Utilize absolute paths when sourcing and referencing other scripts so
-> > that the current working directory doesn't impact the test cases.
-> >
-> > Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-> > Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
-> > Signed-off-by: Jakub Brnak <jbrnak@redhat.com>
+> > Thanks,
+> > Ian
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> Ping.
+> 
+> When this lands I can rebase:
+> https://lore.kernel.org/lkml/20250830053549.1966520-1-irogers@google.com/
+> on it.
 
-Thanks, applied to perf-tools-next,
+I'm testing this now.
 
 - Arnaldo
  
-> Although not changed here, any chance of making the naming of the file
-> and variables better fitting to inclusive language guidelines?
-> https://www.aswf.io/inclusive-language-guide/
-> 
 > Thanks,
 > Ian
 > 
-> > ---
-> >  .../base_probe/test_adding_blacklisted.sh     |  20 +++-
-> >  .../shell/base_probe/test_adding_kernel.sh    |  97 ++++++++++++-----
-> >  .../perf/tests/shell/base_probe/test_basic.sh |  31 ++++--
-> >  .../shell/base_probe/test_invalid_options.sh  |  14 ++-
-> >  .../shell/base_probe/test_line_semantics.sh   |   7 +-
-> >  tools/perf/tests/shell/base_report/setup.sh   |  10 +-
-> >  .../tests/shell/base_report/test_basic.sh     | 103 +++++++++++++-----
-> >  tools/perf/tests/shell/common/init.sh         |   4 +-
-> >  8 files changed, 202 insertions(+), 84 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh b/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
-> > index 8226449ac5c3..f74aab5c5d7f 100755
-> > --- a/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
-> > +++ b/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
-> > @@ -13,11 +13,12 @@
-> >  #      they must be skipped.
-> >  #
-> >
-> > -# include working environment
-> > -. ../common/init.sh
-> > -
-> > +DIR_PATH="$(dirname $0)"
-> >  TEST_RESULT=0
-> >
-> > +# include working environment
-> > +. "$DIR_PATH/../common/init.sh"
-> > +
-> >  # skip if not supported
-> >  BLACKFUNC_LIST=`head -n 5 /sys/kernel/debug/kprobes/blacklist 2> /dev/null | cut -f2`
-> >  if [ -z "$BLACKFUNC_LIST" ]; then
-> > @@ -53,7 +54,8 @@ for BLACKFUNC in $BLACKFUNC_LIST; do
-> >         PERF_EXIT_CODE=$?
-> >
-> >         # check for bad DWARF polluting the result
-> > -       ../common/check_all_patterns_found.pl "$REGEX_MISSING_DECL_LINE" >/dev/null < $LOGS_DIR/adding_blacklisted.err
-> > +       "$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +               "$REGEX_MISSING_DECL_LINE" >/dev/null < $LOGS_DIR/adding_blacklisted.err
-> >
-> >         if [ $? -eq 0 ]; then
-> >                 SKIP_DWARF=1
-> > @@ -73,7 +75,11 @@ for BLACKFUNC in $BLACKFUNC_LIST; do
-> >                         fi
-> >                 fi
-> >         else
-> > -               ../common/check_all_lines_matched.pl "$REGEX_SKIP_MESSAGE" "$REGEX_NOT_FOUND_MESSAGE" "$REGEX_ERROR_MESSAGE" "$REGEX_SCOPE_FAIL" "$REGEX_INVALID_ARGUMENT" "$REGEX_SYMBOL_FAIL" "$REGEX_OUT_SECTION" < $LOGS_DIR/adding_blacklisted.err
-> > +               "$DIR_PATH/../common/check_all_lines_matched.pl" \
-> > +                       "$REGEX_SKIP_MESSAGE" "$REGEX_NOT_FOUND_MESSAGE" \
-> > +                       "$REGEX_ERROR_MESSAGE" "$REGEX_SCOPE_FAIL" \
-> > +                       "$REGEX_INVALID_ARGUMENT" "$REGEX_SYMBOL_FAIL" \
-> > +                       "$REGEX_OUT_SECTION" < $LOGS_DIR/adding_blacklisted.err
-> >                 CHECK_EXIT_CODE=$?
-> >
-> >                 SKIP_DWARF=0
-> > @@ -94,7 +100,9 @@ fi
-> >  $CMD_PERF list probe:\* > $LOGS_DIR/adding_blacklisted_list.log
-> >  PERF_EXIT_CODE=$?
-> >
-> > -../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "List of pre-defined events" "Metric Groups:" < $LOGS_DIR/adding_blacklisted_list.log
-> > +"$DIR_PATH/../common/check_all_lines_matched.pl" \
-> > +       "$RE_LINE_EMPTY" "List of pre-defined events" "Metric Groups:" \
-> > +       < $LOGS_DIR/adding_blacklisted_list.log
-> >  CHECK_EXIT_CODE=$?
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing blacklisted probe (should NOT be listed)"
-> > diff --git a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
-> > index df288cf90cd6..555a825d55f2 100755
-> > --- a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
-> > +++ b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
-> > @@ -13,13 +13,14 @@
-> >  #              and removing.
-> >  #
-> >
-> > -# include working environment
-> > -. ../common/init.sh
-> > -
-> > +DIR_PATH="$(dirname $0)"
-> >  TEST_RESULT=0
-> >
-> > +# include working environment
-> > +. "$DIR_PATH/../common/init.sh"
-> > +
-> >  # shellcheck source=lib/probe_vfs_getname.sh
-> > -. "$(dirname "$0")/../lib/probe_vfs_getname.sh"
-> > +. "$DIR_PATH/../lib/probe_vfs_getname.sh"
-> >
-> >  TEST_PROBE=${TEST_PROBE:-"inode_permission"}
-> >
-> > @@ -44,7 +45,9 @@ for opt in "" "-a" "--add"; do
-> >         $CMD_PERF probe $opt $TEST_PROBE 2> $LOGS_DIR/adding_kernel_add$opt.err
-> >         PERF_EXIT_CODE=$?
-> >
-> > -       ../common/check_all_patterns_found.pl "Added new events?:" "probe:$TEST_PROBE" "on $TEST_PROBE" < $LOGS_DIR/adding_kernel_add$opt.err
-> > +       "$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +               "Added new events?:" "probe:$TEST_PROBE" "on $TEST_PROBE" \
-> > +               < $LOGS_DIR/adding_kernel_add$opt.err
-> >         CHECK_EXIT_CODE=$?
-> >
-> >         print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "adding probe $TEST_PROBE :: $opt"
-> > @@ -58,7 +61,10 @@ done
-> >  $CMD_PERF list probe:\* > $LOGS_DIR/adding_kernel_list.log
-> >  PERF_EXIT_CODE=$?
-> >
-> > -../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "List of pre-defined events" "probe:${TEST_PROBE}(?:_\d+)?\s+\[Tracepoint event\]" "Metric Groups:" < $LOGS_DIR/adding_kernel_list.log
-> > +"$DIR_PATH/../common/check_all_lines_matched.pl" \
-> > +       "$RE_LINE_EMPTY" "List of pre-defined events" \
-> > +       "probe:${TEST_PROBE}(?:_\d+)?\s+\[Tracepoint event\]" \
-> > +       "Metric Groups:" < $LOGS_DIR/adding_kernel_list.log
-> >  CHECK_EXIT_CODE=$?
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe :: perf list"
-> > @@ -71,7 +77,9 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe :: perf list
-> >  $CMD_PERF probe -l > $LOGS_DIR/adding_kernel_list-l.log
-> >  PERF_EXIT_CODE=$?
-> >
-> > -../common/check_all_patterns_found.pl "\s*probe:${TEST_PROBE}(?:_\d+)?\s+\(on ${TEST_PROBE}(?:[:\+]$RE_NUMBER_HEX)?@.+\)" < $LOGS_DIR/adding_kernel_list-l.log
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "\s*probe:${TEST_PROBE}(?:_\d+)?\s+\(on ${TEST_PROBE}(?:[:\+]$RE_NUMBER_HEX)?@.+\)" \
-> > +       < $LOGS_DIR/adding_kernel_list-l.log
-> >  CHECK_EXIT_CODE=$?
-> >
-> >  if [ $NO_DEBUGINFO ] ; then
-> > @@ -93,9 +101,13 @@ REGEX_STAT_VALUES="\s*\d+\s+probe:$TEST_PROBE"
-> >  # the value should be greater than 1
-> >  REGEX_STAT_VALUE_NONZERO="\s*[1-9][0-9]*\s+probe:$TEST_PROBE"
-> >  REGEX_STAT_TIME="\s*$RE_NUMBER\s+seconds (?:time elapsed|user|sys)"
-> > -../common/check_all_lines_matched.pl "$REGEX_STAT_HEADER" "$REGEX_STAT_VALUES" "$REGEX_STAT_TIME" "$RE_LINE_COMMENT" "$RE_LINE_EMPTY" < $LOGS_DIR/adding_kernel_using_probe.log
-> > +"$DIR_PATH/../common/check_all_lines_matched.pl" \
-> > +       "$REGEX_STAT_HEADER" "$REGEX_STAT_VALUES" "$REGEX_STAT_TIME" \
-> > +       "$RE_LINE_COMMENT" "$RE_LINE_EMPTY" < $LOGS_DIR/adding_kernel_using_probe.log
-> >  CHECK_EXIT_CODE=$?
-> > -../common/check_all_patterns_found.pl "$REGEX_STAT_HEADER" "$REGEX_STAT_VALUE_NONZERO" "$REGEX_STAT_TIME" < $LOGS_DIR/adding_kernel_using_probe.log
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "$REGEX_STAT_HEADER" "$REGEX_STAT_VALUE_NONZERO" "$REGEX_STAT_TIME" \
-> > +       < $LOGS_DIR/adding_kernel_using_probe.log
-> >  (( CHECK_EXIT_CODE += $? ))
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "using added probe"
-> > @@ -108,7 +120,8 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "using added probe"
-> >  $CMD_PERF probe -d $TEST_PROBE\* 2> $LOGS_DIR/adding_kernel_removing.err
-> >  PERF_EXIT_CODE=$?
-> >
-> > -../common/check_all_lines_matched.pl "Removed event: probe:$TEST_PROBE" < $LOGS_DIR/adding_kernel_removing.err
-> > +"$DIR_PATH/../common/check_all_lines_matched.pl" \
-> > +       "Removed event: probe:$TEST_PROBE" < $LOGS_DIR/adding_kernel_removing.err
-> >  CHECK_EXIT_CODE=$?
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "deleting added probe"
-> > @@ -121,7 +134,9 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "deleting added probe"
-> >  $CMD_PERF list probe:\* > $LOGS_DIR/adding_kernel_list_removed.log
-> >  PERF_EXIT_CODE=$?
-> >
-> > -../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "List of pre-defined events" "Metric Groups:" < $LOGS_DIR/adding_kernel_list_removed.log
-> > +"$DIR_PATH/../common/check_all_lines_matched.pl" \
-> > +       "$RE_LINE_EMPTY" "List of pre-defined events" "Metric Groups:" \
-> > +       < $LOGS_DIR/adding_kernel_list_removed.log
-> >  CHECK_EXIT_CODE=$?
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing removed probe (should NOT be listed)"
-> > @@ -135,7 +150,9 @@ $CMD_PERF probe -n --add $TEST_PROBE 2> $LOGS_DIR/adding_kernel_dryrun.err
-> >  PERF_EXIT_CODE=$?
-> >
-> >  # check for the output (should be the same as usual)
-> > -../common/check_all_patterns_found.pl "Added new events?:" "probe:$TEST_PROBE" "on $TEST_PROBE" < $LOGS_DIR/adding_kernel_dryrun.err
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "Added new events?:" "probe:$TEST_PROBE" "on $TEST_PROBE" \
-> > +       < $LOGS_DIR/adding_kernel_dryrun.err
-> >  CHECK_EXIT_CODE=$?
-> >
-> >  # check that no probe was added in real
-> > @@ -152,7 +169,9 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "dry run :: adding probe"
-> >  $CMD_PERF probe --add $TEST_PROBE 2> $LOGS_DIR/adding_kernel_forceadd_01.err
-> >  PERF_EXIT_CODE=$?
-> >
-> > -../common/check_all_patterns_found.pl "Added new events?:" "probe:$TEST_PROBE" "on $TEST_PROBE" < $LOGS_DIR/adding_kernel_forceadd_01.err
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "Added new events?:" "probe:$TEST_PROBE" "on $TEST_PROBE" \
-> > +       < $LOGS_DIR/adding_kernel_forceadd_01.err
-> >  CHECK_EXIT_CODE=$?
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "force-adding probes :: first probe adding"
-> > @@ -162,7 +181,9 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "force-adding probes :: first pro
-> >  ! $CMD_PERF probe --add $TEST_PROBE 2> $LOGS_DIR/adding_kernel_forceadd_02.err
-> >  PERF_EXIT_CODE=$?
-> >
-> > -../common/check_all_patterns_found.pl "Error: event \"$TEST_PROBE\" already exists." "Error: Failed to add events." < $LOGS_DIR/adding_kernel_forceadd_02.err
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "Error: event \"$TEST_PROBE\" already exists." \
-> > +       "Error: Failed to add events." < $LOGS_DIR/adding_kernel_forceadd_02.err
-> >  CHECK_EXIT_CODE=$?
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "force-adding probes :: second probe adding (without force)"
-> > @@ -173,7 +194,9 @@ NO_OF_PROBES=`$CMD_PERF probe -l $TEST_PROBE| wc -l`
-> >  $CMD_PERF probe --force --add $TEST_PROBE 2> $LOGS_DIR/adding_kernel_forceadd_03.err
-> >  PERF_EXIT_CODE=$?
-> >
-> > -../common/check_all_patterns_found.pl "Added new events?:" "probe:${TEST_PROBE}_${NO_OF_PROBES}" "on $TEST_PROBE" < $LOGS_DIR/adding_kernel_forceadd_03.err
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "Added new events?:" "probe:${TEST_PROBE}_${NO_OF_PROBES}" \
-> > +       "on $TEST_PROBE" < $LOGS_DIR/adding_kernel_forceadd_03.err
-> >  CHECK_EXIT_CODE=$?
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "force-adding probes :: second probe adding (with force)"
-> > @@ -187,7 +210,9 @@ $CMD_PERF stat -e probe:$TEST_PROBE -e probe:${TEST_PROBE}_${NO_OF_PROBES} -x';'
-> >  PERF_EXIT_CODE=$?
-> >
-> >  REGEX_LINE="$RE_NUMBER;+probe:${TEST_PROBE}_?(?:$NO_OF_PROBES)?;$RE_NUMBER;$RE_NUMBER"
-> > -../common/check_all_lines_matched.pl "$REGEX_LINE" "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" < $LOGS_DIR/adding_kernel_using_two.log
-> > +"$DIR_PATH/../common/check_all_lines_matched.pl" \
-> > +       "$REGEX_LINE" "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" \
-> > +       < $LOGS_DIR/adding_kernel_using_two.log
-> >  CHECK_EXIT_CODE=$?
-> >
-> >  VALUE_1=`grep "$TEST_PROBE;" $LOGS_DIR/adding_kernel_using_two.log | awk -F';' '{print $1}'`
-> > @@ -205,7 +230,9 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "using doubled probe"
-> >  $CMD_PERF probe --del \* 2> $LOGS_DIR/adding_kernel_removing_wildcard.err
-> >  PERF_EXIT_CODE=$?
-> >
-> > -../common/check_all_patterns_found.pl "Removed event: probe:$TEST_PROBE" "Removed event: probe:${TEST_PROBE}_1" < $LOGS_DIR/adding_kernel_removing_wildcard.err
-> > +"$DIR_PATH/../common/check_all_lines_matched.pl" \
-> > +       "Removed event: probe:$TEST_PROBE" \
-> > +       "Removed event: probe:${TEST_PROBE}_1" < $LOGS_DIR/adding_kernel_removing_wildcard.err
-> >  CHECK_EXIT_CODE=$?
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "removing multiple probes"
-> > @@ -217,7 +244,9 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "removing multiple probes"
-> >  $CMD_PERF probe -nf --max-probes=512 -a 'vfs_* $params' 2> $LOGS_DIR/adding_kernel_adding_wildcard.err
-> >  PERF_EXIT_CODE=$?
-> >
-> > -../common/check_all_patterns_found.pl "probe:vfs_mknod" "probe:vfs_create" "probe:vfs_rmdir" "probe:vfs_link" "probe:vfs_write" < $LOGS_DIR/adding_kernel_adding_wildcard.err
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "probe:vfs_mknod" "probe:vfs_create" "probe:vfs_rmdir" \
-> > +       "probe:vfs_link" "probe:vfs_write" < $LOGS_DIR/adding_kernel_adding_wildcard.err
-> >  CHECK_EXIT_CODE=$?
-> >
-> >  if [ $NO_DEBUGINFO ] ; then
-> > @@ -240,13 +269,22 @@ test $PERF_EXIT_CODE -ne 139 -a $PERF_EXIT_CODE -ne 0
-> >  PERF_EXIT_CODE=$?
-> >
-> >  # check that the error message is reasonable
-> > -../common/check_all_patterns_found.pl "Failed to find" "somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64" < $LOGS_DIR/adding_kernel_nonexisting.err
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "Failed to find" \
-> > +       "somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64" \
-> > +       < $LOGS_DIR/adding_kernel_nonexisting.err
-> >  CHECK_EXIT_CODE=$?
-> > -../common/check_all_patterns_found.pl "in this function|at this address" "Error" "Failed to add events" < $LOGS_DIR/adding_kernel_nonexisting.err
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "in this function|at this address" "Error" "Failed to add events" \
-> > +       < $LOGS_DIR/adding_kernel_nonexisting.err
-> >  (( CHECK_EXIT_CODE += $? ))
-> > -../common/check_all_lines_matched.pl "Failed to find" "Error" "Probe point .+ not found" "optimized out" "Use.+\-\-range option to show.+location range" < $LOGS_DIR/adding_kernel_nonexisting.err
-> > +"$DIR_PATH/../common/check_all_lines_matched.pl" \
-> > +       "Failed to find" "Error" "Probe point .+ not found" "optimized out" \
-> > +       "Use.+\-\-range option to show.+location range" \
-> > +       < $LOGS_DIR/adding_kernel_nonexisting.err
-> >  (( CHECK_EXIT_CODE += $? ))
-> > -../common/check_no_patterns_found.pl "$RE_SEGFAULT" < $LOGS_DIR/adding_kernel_nonexisting.err
-> > +"$DIR_PATH/../common/check_no_patterns_found.pl" \
-> > +       "$RE_SEGFAULT" < $LOGS_DIR/adding_kernel_nonexisting.err
-> >  (( CHECK_EXIT_CODE += $? ))
-> >
-> >  if [ $NO_DEBUGINFO ]; then
-> > @@ -264,7 +302,10 @@ fi
-> >  $CMD_PERF probe --add "$TEST_PROBE%return \$retval" 2> $LOGS_DIR/adding_kernel_func_retval_add.err
-> >  PERF_EXIT_CODE=$?
-> >
-> > -../common/check_all_patterns_found.pl "Added new events?:" "probe:$TEST_PROBE" "on $TEST_PROBE%return with \\\$retval" < $LOGS_DIR/adding_kernel_func_retval_add.err
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "Added new events?:" "probe:$TEST_PROBE" \
-> > +       "on $TEST_PROBE%return with \\\$retval" \
-> > +       < $LOGS_DIR/adding_kernel_func_retval_add.err
-> >  CHECK_EXIT_CODE=$?
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "function with retval :: add"
-> > @@ -274,7 +315,9 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "function with retval :: add"
-> >  $CMD_PERF record -e probe:$TEST_PROBE\* -o $CURRENT_TEST_DIR/perf.data -- cat /proc/cpuinfo > /dev/null 2> $LOGS_DIR/adding_kernel_func_retval_record.err
-> >  PERF_EXIT_CODE=$?
-> >
-> > -../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/adding_kernel_func_retval_record.err
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" \
-> > +       < $LOGS_DIR/adding_kernel_func_retval_record.err
-> >  CHECK_EXIT_CODE=$?
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "function with retval :: record"
-> > @@ -285,9 +328,11 @@ $CMD_PERF script -i $CURRENT_TEST_DIR/perf.data > $LOGS_DIR/adding_kernel_func_r
-> >  PERF_EXIT_CODE=$?
-> >
-> >  REGEX_SCRIPT_LINE="\s*cat\s+$RE_NUMBER\s+\[$RE_NUMBER\]\s+$RE_NUMBER:\s+probe:$TEST_PROBE\w*:\s+\($RE_NUMBER_HEX\s+<\-\s+$RE_NUMBER_HEX\)\s+arg1=$RE_NUMBER_HEX"
-> > -../common/check_all_lines_matched.pl "$REGEX_SCRIPT_LINE" < $LOGS_DIR/adding_kernel_func_retval_script.log
-> > +"$DIR_PATH/../common/check_all_lines_matched.pl" \
-> > +       "$REGEX_SCRIPT_LINE" < $LOGS_DIR/adding_kernel_func_retval_script.log
-> >  CHECK_EXIT_CODE=$?
-> > -../common/check_all_patterns_found.pl "$REGEX_SCRIPT_LINE" < $LOGS_DIR/adding_kernel_func_retval_script.log
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "$REGEX_SCRIPT_LINE" < $LOGS_DIR/adding_kernel_func_retval_script.log
-> >  (( CHECK_EXIT_CODE += $? ))
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "function argument probing :: script"
-> > diff --git a/tools/perf/tests/shell/base_probe/test_basic.sh b/tools/perf/tests/shell/base_probe/test_basic.sh
-> > index 9d8b5afbeddd..162838ddc974 100755
-> > --- a/tools/perf/tests/shell/base_probe/test_basic.sh
-> > +++ b/tools/perf/tests/shell/base_probe/test_basic.sh
-> > @@ -12,11 +12,12 @@
-> >  #              This test tests basic functionality of perf probe command.
-> >  #
-> >
-> > -# include working environment
-> > -. ../common/init.sh
-> > -
-> > +DIR_PATH="$(dirname $0)"
-> >  TEST_RESULT=0
-> >
-> > +# include working environment
-> > +. "$DIR_PATH/../common/init.sh"
-> > +
-> >  if ! check_kprobes_available; then
-> >         print_overall_skipped
-> >         exit 2
-> > @@ -30,15 +31,25 @@ if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
-> >         $CMD_PERF probe --help > $LOGS_DIR/basic_helpmsg.log 2> $LOGS_DIR/basic_helpmsg.err
-> >         PERF_EXIT_CODE=$?
-> >
-> > -       ../common/check_all_patterns_found.pl "PERF-PROBE" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "PROBE\s+SYNTAX" "PROBE\s+ARGUMENT" "LINE\s+SYNTAX" < $LOGS_DIR/basic_helpmsg.log
-> > +       "$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +               "PERF-PROBE" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" \
-> > +               "PROBE\s+SYNTAX" "PROBE\s+ARGUMENT" "LINE\s+SYNTAX" \
-> > +               < $LOGS_DIR/basic_helpmsg.log
-> >         CHECK_EXIT_CODE=$?
-> > -       ../common/check_all_patterns_found.pl "LAZY\s+MATCHING" "FILTER\s+PATTERN" "EXAMPLES" "SEE\s+ALSO" < $LOGS_DIR/basic_helpmsg.log
-> > +       "$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +               "LAZY\s+MATCHING" "FILTER\s+PATTERN" "EXAMPLES" "SEE\s+ALSO" \
-> > +               < $LOGS_DIR/basic_helpmsg.log
-> >         (( CHECK_EXIT_CODE += $? ))
-> > -       ../common/check_all_patterns_found.pl "vmlinux" "module=" "source=" "verbose" "quiet" "add=" "del=" "list.*EVENT" "line=" "vars=" "externs" < $LOGS_DIR/basic_helpmsg.log
-> > +       "$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +               "vmlinux" "module=" "source=" "verbose" "quiet" "add=" "del=" \
-> > +               "list.*EVENT" "line=" "vars=" "externs" < $LOGS_DIR/basic_helpmsg.log
-> >         (( CHECK_EXIT_CODE += $? ))
-> > -       ../common/check_all_patterns_found.pl "no-inlines" "funcs.*FILTER" "filter=FILTER" "force" "dry-run" "max-probes" "exec=" "demangle-kernel" < $LOGS_DIR/basic_helpmsg.log
-> > +       "$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +               "no-inlines" "funcs.*FILTER" "filter=FILTER" "force" "dry-run" \
-> > +               "max-probes" "exec=" "demangle-kernel" < $LOGS_DIR/basic_helpmsg.log
-> >         (( CHECK_EXIT_CODE += $? ))
-> > -       ../common/check_no_patterns_found.pl "No manual entry for" < $LOGS_DIR/basic_helpmsg.err
-> > +       "$DIR_PATH/../common/check_no_patterns_found.pl" \
-> > +               "No manual entry for" < $LOGS_DIR/basic_helpmsg.err
-> >         (( CHECK_EXIT_CODE += $? ))
-> >
-> >         print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "help message"
-> > @@ -53,7 +64,9 @@ fi
-> >  # without any args perf-probe should print usage
-> >  $CMD_PERF probe 2> $LOGS_DIR/basic_usage.log > /dev/null
-> >
-> > -../common/check_all_patterns_found.pl "[Uu]sage" "perf probe" "verbose" "quiet" "add" "del" "force" "line" "vars" "externs" "range" < $LOGS_DIR/basic_usage.log
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "[Uu]sage" "perf probe" "verbose" "quiet" "add" "del" "force" \
-> > +       "line" "vars" "externs" "range" < $LOGS_DIR/basic_usage.log
-> >  CHECK_EXIT_CODE=$?
-> >
-> >  print_results 0 $CHECK_EXIT_CODE "usage message"
-> > diff --git a/tools/perf/tests/shell/base_probe/test_invalid_options.sh b/tools/perf/tests/shell/base_probe/test_invalid_options.sh
-> > index 92f7254eb32a..44a3ae014bfa 100755
-> > --- a/tools/perf/tests/shell/base_probe/test_invalid_options.sh
-> > +++ b/tools/perf/tests/shell/base_probe/test_invalid_options.sh
-> > @@ -12,11 +12,12 @@
-> >  #              This test checks whether the invalid and incompatible options are reported
-> >  #
-> >
-> > -# include working environment
-> > -. ../common/init.sh
-> > -
-> > +DIR_PATH="$(dirname $0)"
-> >  TEST_RESULT=0
-> >
-> > +# include working environment
-> > +. "$DIR_PATH/../common/init.sh"
-> > +
-> >  if ! check_kprobes_available; then
-> >         print_overall_skipped
-> >         exit 2
-> > @@ -33,7 +34,9 @@ for opt in '-a' '-d' '-L' '-V'; do
-> >         ! $CMD_PERF probe $opt 2> $LOGS_DIR/invalid_options_missing_argument$opt.err
-> >         PERF_EXIT_CODE=$?
-> >
-> > -       ../common/check_all_patterns_found.pl "Error: switch .* requires a value" < $LOGS_DIR/invalid_options_missing_argument$opt.err
-> > +       "$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +               "Error: switch .* requires a value" \
-> > +               < $LOGS_DIR/invalid_options_missing_argument$opt.err
-> >         CHECK_EXIT_CODE=$?
-> >
-> >         print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "missing argument for $opt"
-> > @@ -66,7 +69,8 @@ for opt in '-a xxx -d xxx' '-a xxx -L foo' '-a xxx -V foo' '-a xxx -l' '-a xxx -
-> >         ! $CMD_PERF probe $opt > /dev/null 2> $LOGS_DIR/aux.log
-> >         PERF_EXIT_CODE=$?
-> >
-> > -       ../common/check_all_patterns_found.pl "Error: switch .+ cannot be used with switch .+" < $LOGS_DIR/aux.log
-> > +       "$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +               "Error: switch .+ cannot be used with switch .+" < $LOGS_DIR/aux.log
-> >         CHECK_EXIT_CODE=$?
-> >
-> >         print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "mutually exclusive options :: $opt"
-> > diff --git a/tools/perf/tests/shell/base_probe/test_line_semantics.sh b/tools/perf/tests/shell/base_probe/test_line_semantics.sh
-> > index 20435b6bf6bc..576442d87a44 100755
-> > --- a/tools/perf/tests/shell/base_probe/test_line_semantics.sh
-> > +++ b/tools/perf/tests/shell/base_probe/test_line_semantics.sh
-> > @@ -13,11 +13,12 @@
-> >  #              arguments are properly reported.
-> >  #
-> >
-> > -# include working environment
-> > -. ../common/init.sh
-> > -
-> > +DIR_PATH="$(dirname $0)"
-> >  TEST_RESULT=0
-> >
-> > +# include working environment
-> > +. "$DIR_PATH/../common/init.sh"
-> > +
-> >  if ! check_kprobes_available; then
-> >         print_overall_skipped
-> >         exit 2
-> > diff --git a/tools/perf/tests/shell/base_report/setup.sh b/tools/perf/tests/shell/base_report/setup.sh
-> > index 8634e7e0dda6..bb49b0fabb11 100755
-> > --- a/tools/perf/tests/shell/base_report/setup.sh
-> > +++ b/tools/perf/tests/shell/base_report/setup.sh
-> > @@ -12,8 +12,10 @@
-> >  #
-> >  #
-> >
-> > +DIR_PATH="$(dirname $0)"
-> > +
-> >  # include working environment
-> > -. ../common/init.sh
-> > +. "$DIR_PATH/../common/init.sh"
-> >
-> >  TEST_RESULT=0
-> >
-> > @@ -24,7 +26,8 @@ SW_EVENT="cpu-clock"
-> >  $CMD_PERF record -asdg -e $SW_EVENT -o $CURRENT_TEST_DIR/perf.data -- $CMD_LONGER_SLEEP 2> $LOGS_DIR/setup.log
-> >  PERF_EXIT_CODE=$?
-> >
-> > -../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/setup.log
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/setup.log
-> >  CHECK_EXIT_CODE=$?
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "prepare the perf.data file"
-> > @@ -38,7 +41,8 @@ echo ==================
-> >  cat $LOGS_DIR/setup-latency.log
-> >  echo ==================
-> >
-> > -../common/check_all_patterns_found.pl "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/setup-latency.log
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "$RE_LINE_RECORD1" "$RE_LINE_RECORD2" < $LOGS_DIR/setup-latency.log
-> >  CHECK_EXIT_CODE=$?
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "prepare the perf.data.1 file"
-> > diff --git a/tools/perf/tests/shell/base_report/test_basic.sh b/tools/perf/tests/shell/base_report/test_basic.sh
-> > index adfd8713b8f8..0dfe7e5fd1ca 100755
-> > --- a/tools/perf/tests/shell/base_report/test_basic.sh
-> > +++ b/tools/perf/tests/shell/base_report/test_basic.sh
-> > @@ -12,11 +12,12 @@
-> >  #
-> >  #
-> >
-> > -# include working environment
-> > -. ../common/init.sh
-> > -
-> > +DIR_PATH="$(dirname $0)"
-> >  TEST_RESULT=0
-> >
-> > +# include working environment
-> > +. "$DIR_PATH/../common/init.sh"
-> > +
-> >
-> >  ### help message
-> >
-> > @@ -25,19 +26,37 @@ if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
-> >         $CMD_PERF report --help > $LOGS_DIR/basic_helpmsg.log 2> $LOGS_DIR/basic_helpmsg.err
-> >         PERF_EXIT_CODE=$?
-> >
-> > -       ../common/check_all_patterns_found.pl "PERF-REPORT" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "OVERHEAD\s+CALCULATION" "SEE ALSO" < $LOGS_DIR/basic_helpmsg.log
-> > +       "$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +               "PERF-REPORT" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" \
-> > +               "OVERHEAD\s+CALCULATION" "SEE ALSO" < $LOGS_DIR/basic_helpmsg.log
-> >         CHECK_EXIT_CODE=$?
-> > -       ../common/check_all_patterns_found.pl "input" "verbose" "show-nr-samples" "show-cpu-utilization" "threads" "comms" "pid" "tid" "dsos" "symbols" "symbol-filter" < $LOGS_DIR/basic_helpmsg.log
-> > +       "$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +               "input" "verbose" "show-nr-samples" "show-cpu-utilization" \
-> > +               "threads" "comms" "pid" "tid" "dsos" "symbols" "symbol-filter" \
-> > +               < $LOGS_DIR/basic_helpmsg.log
-> >         (( CHECK_EXIT_CODE += $? ))
-> > -       ../common/check_all_patterns_found.pl "hide-unresolved" "sort" "fields" "parent" "exclude-other" "column-widths" "field-separator" "dump-raw-trace" "children" < $LOGS_DIR/basic_helpmsg.log
-> > +       "$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +               "hide-unresolved" "sort" "fields" "parent" "exclude-other" \
-> > +               "column-widths" "field-separator" "dump-raw-trace" "children" \
-> > +               < $LOGS_DIR/basic_helpmsg.log
-> >         (( CHECK_EXIT_CODE += $? ))
-> > -       ../common/check_all_patterns_found.pl "call-graph" "max-stack" "inverted" "ignore-callees" "pretty" "stdio" "tui" "gtk" "vmlinux" "kallsyms" "modules" < $LOGS_DIR/basic_helpmsg.log
-> > +       "$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +               "call-graph" "max-stack" "inverted" "ignore-callees" "pretty" \
-> > +               "stdio" "tui" "gtk" "vmlinux" "kallsyms" "modules" \
-> > +               < $LOGS_DIR/basic_helpmsg.log
-> >         (( CHECK_EXIT_CODE += $? ))
-> > -       ../common/check_all_patterns_found.pl "force" "symfs" "cpu" "disassembler-style" "source" "asm-raw" "show-total-period" "show-info" "branch-stack" "group" < $LOGS_DIR/basic_helpmsg.log
-> > +       "$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +               "force" "symfs" "cpu" "disassembler-style" "source" "asm-raw" \
-> > +               "show-total-period" "show-info" "branch-stack" "group" \
-> > +               < $LOGS_DIR/basic_helpmsg.log
-> >         (( CHECK_EXIT_CODE += $? ))
-> > -       ../common/check_all_patterns_found.pl "branch-history" "objdump" "demangle" "percent-limit" "percentage" "header" "itrace" "full-source-path" "show-ref-call-graph" < $LOGS_DIR/basic_helpmsg.log
-> > +       "$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +               "branch-history" "objdump" "demangle" "percent-limit" "percentage" \
-> > +               "header" "itrace" "full-source-path" "show-ref-call-graph" \
-> > +               < $LOGS_DIR/basic_helpmsg.log
-> >         (( CHECK_EXIT_CODE += $? ))
-> > -       ../common/check_no_patterns_found.pl "No manual entry for" < $LOGS_DIR/basic_helpmsg.err
-> > +       "$DIR_PATH/../common/check_no_patterns_found.pl" \
-> > +               "No manual entry for" < $LOGS_DIR/basic_helpmsg.err
-> >         (( CHECK_EXIT_CODE += $? ))
-> >
-> >         print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "help message"
-> > @@ -57,9 +76,12 @@ REGEX_LOST_SAMPLES_INFO="#\s*Total Lost Samples:\s+$RE_NUMBER"
-> >  REGEX_SAMPLES_INFO="#\s*Samples:\s+(?:$RE_NUMBER)\w?\s+of\s+event\s+'$RE_EVENT_ANY'"
-> >  REGEX_LINES_HEADER="#\s*Children\s+Self\s+Command\s+Shared Object\s+Symbol"
-> >  REGEX_LINES="\s*$RE_NUMBER%\s+$RE_NUMBER%\s+\S+\s+\[kernel\.(?:vmlinux)|(?:kallsyms)\]\s+\[[k\.]\]\s+\w+"
-> > -../common/check_all_patterns_found.pl "$REGEX_LOST_SAMPLES_INFO" "$REGEX_SAMPLES_INFO" "$REGEX_LINES_HEADER" "$REGEX_LINES" < $LOGS_DIR/basic_basic.log
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "$REGEX_LOST_SAMPLES_INFO" "$REGEX_SAMPLES_INFO" \
-> > +       "$REGEX_LINES_HEADER" "$REGEX_LINES" < $LOGS_DIR/basic_basic.log
-> >  CHECK_EXIT_CODE=$?
-> > -../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/basic_basic.err
-> > +"$DIR_PATH/../common/check_errors_whitelisted.pl" \
-> > +       "$DIR_PATH/stderr-whitelist.txt" < $LOGS_DIR/basic_basic.err
-> >  (( CHECK_EXIT_CODE += $? ))
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "basic execution"
-> > @@ -74,9 +96,11 @@ PERF_EXIT_CODE=$?
-> >
-> >  REGEX_LINES_HEADER="#\s*Children\s+Self\s+Samples\s+Command\s+Shared Object\s+Symbol"
-> >  REGEX_LINES="\s*$RE_NUMBER%\s+$RE_NUMBER%\s+$RE_NUMBER\s+\S+\s+\[kernel\.(?:vmlinux)|(?:kallsyms)\]\s+\[[k\.]\]\s+\w+"
-> > -../common/check_all_patterns_found.pl "$REGEX_LINES_HEADER" "$REGEX_LINES" < $LOGS_DIR/basic_nrsamples.log
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "$REGEX_LINES_HEADER" "$REGEX_LINES" < $LOGS_DIR/basic_nrsamples.log
-> >  CHECK_EXIT_CODE=$?
-> > -../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/basic_nrsamples.err
-> > +"$DIR_PATH/../common/check_errors_whitelisted.pl" \
-> > +       "$DIR_PATH/stderr-whitelist.txt" < $LOGS_DIR/basic_nrsamples.err
-> >  (( CHECK_EXIT_CODE += $? ))
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "number of samples"
-> > @@ -98,7 +122,10 @@ REGEX_LINE_CPUS_ONLINE="#\s+nrcpus online\s*:\s*$MY_CPUS_ONLINE"
-> >  REGEX_LINE_CPUS_AVAIL="#\s+nrcpus avail\s*:\s*$MY_CPUS_AVAILABLE"
-> >  # disable precise check for "nrcpus avail" in BASIC runmode
-> >  test $PERFTOOL_TESTSUITE_RUNMODE -lt $RUNMODE_STANDARD && REGEX_LINE_CPUS_AVAIL="#\s+nrcpus avail\s*:\s*$RE_NUMBER"
-> > -../common/check_all_patterns_found.pl "$REGEX_LINE_TIMESTAMP" "$REGEX_LINE_HOSTNAME" "$REGEX_LINE_KERNEL" "$REGEX_LINE_PERF" "$REGEX_LINE_ARCH" "$REGEX_LINE_CPUS_ONLINE" "$REGEX_LINE_CPUS_AVAIL" < $LOGS_DIR/basic_header.log
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "$REGEX_LINE_TIMESTAMP" "$REGEX_LINE_HOSTNAME" "$REGEX_LINE_KERNEL" \
-> > +       "$REGEX_LINE_PERF" "$REGEX_LINE_ARCH" "$REGEX_LINE_CPUS_ONLINE" \
-> > +       "$REGEX_LINE_CPUS_AVAIL" < $LOGS_DIR/basic_header.log
-> >  CHECK_EXIT_CODE=$?
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "header"
-> > @@ -129,9 +156,11 @@ PERF_EXIT_CODE=$?
-> >
-> >  REGEX_LINES_HEADER="#\s*Children\s+Self\s+sys\s+usr\s+Command\s+Shared Object\s+Symbol"
-> >  REGEX_LINES="\s*$RE_NUMBER%\s+$RE_NUMBER%\s+$RE_NUMBER%\s+$RE_NUMBER%\s+\S+\s+\[kernel\.(?:vmlinux)|(?:kallsyms)\]\s+\[[k\.]\]\s+\w+"
-> > -../common/check_all_patterns_found.pl "$REGEX_LINES_HEADER" "$REGEX_LINES" < $LOGS_DIR/basic_cpuut.log
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "$REGEX_LINES_HEADER" "$REGEX_LINES" < $LOGS_DIR/basic_cpuut.log
-> >  CHECK_EXIT_CODE=$?
-> > -../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/basic_cpuut.err
-> > +"$DIR_PATH/../common/check_errors_whitelisted.pl" \
-> > +       "$DIR_PATH/stderr-whitelist.txt" < $LOGS_DIR/basic_cpuut.err
-> >  (( CHECK_EXIT_CODE += $? ))
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "show CPU utilization"
-> > @@ -144,9 +173,11 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "show CPU utilization"
-> >  $CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data --pid=1 > $LOGS_DIR/basic_pid.log 2> $LOGS_DIR/basic_pid.err
-> >  PERF_EXIT_CODE=$?
-> >
-> > -grep -P -v '^#' $LOGS_DIR/basic_pid.log | grep -P '\s+[\d\.]+%' | ../common/check_all_lines_matched.pl "systemd|init"
-> > +grep -P -v '^#' $LOGS_DIR/basic_pid.log | grep -P '\s+[\d\.]+%' | \
-> > +       "$DIR_PATH/../common/check_all_lines_matched.pl" "systemd|init"
-> >  CHECK_EXIT_CODE=$?
-> > -../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/basic_pid.err
-> > +"$DIR_PATH/../common/check_errors_whitelisted.pl" \
-> > +       "$DIR_PATH/stderr-whitelist.txt" < $LOGS_DIR/basic_pid.err
-> >  (( CHECK_EXIT_CODE += $? ))
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "pid"
-> > @@ -159,9 +190,11 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "pid"
-> >  $CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data --symbols=dummynonexistingsymbol > $LOGS_DIR/basic_symbols.log 2> $LOGS_DIR/basic_symbols.err
-> >  PERF_EXIT_CODE=$?
-> >
-> > -../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" < $LOGS_DIR/basic_symbols.log
-> > +"$DIR_PATH/../common/check_all_lines_matched.pl" \
-> > +       "$RE_LINE_EMPTY" "$RE_LINE_COMMENT" < $LOGS_DIR/basic_symbols.log
-> >  CHECK_EXIT_CODE=$?
-> > -../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/basic_symbols.err
-> > +"$DIR_PATH/../common/check_errors_whitelisted.pl" \
-> > +       "$DIR_PATH/stderr-whitelist.txt" < $LOGS_DIR/basic_symbols.err
-> >  (( CHECK_EXIT_CODE += $? ))
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing symbol"
-> > @@ -174,9 +207,11 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing symbol"
-> >  $CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data --symbol-filter=map > $LOGS_DIR/basic_symbolfilter.log 2> $LOGS_DIR/basic_symbolfilter.err
-> >  PERF_EXIT_CODE=$?
-> >
-> > -grep -P -v '^#' $LOGS_DIR/basic_symbolfilter.log | grep -P '\s+[\d\.]+%' | ../common/check_all_lines_matched.pl "\[[k\.]\]\s+.*map"
-> > +grep -P -v '^#' $LOGS_DIR/basic_symbolfilter.log | grep -P '\s+[\d\.]+%' | \
-> > +       "$DIR_PATH/../common/check_all_lines_matched.pl" "\[[k\.]\]\s+.*map"
-> >  CHECK_EXIT_CODE=$?
-> > -../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/basic_symbolfilter.err
-> > +"$DIR_PATH/../common/check_errors_whitelisted.pl" \
-> > +       "$DIR_PATH/stderr-whitelist.txt" < $LOGS_DIR/basic_symbolfilter.err
-> >  (( CHECK_EXIT_CODE += $? ))
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "symbol filter"
-> > @@ -189,7 +224,8 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "symbol filter"
-> >  $CMD_PERF report -i $CURRENT_TEST_DIR/perf.data.1 --stdio --header-only > $LOGS_DIR/latency_header.log
-> >  PERF_EXIT_CODE=$?
-> >
-> > -../common/check_all_patterns_found.pl ", context_switch = 1, " < $LOGS_DIR/latency_header.log
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       ", context_switch = 1, " < $LOGS_DIR/latency_header.log
-> >  CHECK_EXIT_CODE=$?
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "latency header"
-> > @@ -200,9 +236,11 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "latency header"
-> >  $CMD_PERF report --stdio -i $CURRENT_TEST_DIR/perf.data.1 > $LOGS_DIR/latency_default.log 2> $LOGS_DIR/latency_default.err
-> >  PERF_EXIT_CODE=$?
-> >
-> > -../common/check_all_patterns_found.pl "# Overhead   Latency  Command" < $LOGS_DIR/latency_default.log
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "# Overhead   Latency  Command" < $LOGS_DIR/latency_default.log
-> >  CHECK_EXIT_CODE=$?
-> > -../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/latency_default.err
-> > +"$DIR_PATH/../common/check_errors_whitelisted.pl" \
-> > +       "stderr-whitelist.txt" < $LOGS_DIR/latency_default.err
-> >  (( CHECK_EXIT_CODE += $? ))
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "default report for latency profile"
-> > @@ -213,9 +251,11 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "default report for latency profi
-> >  $CMD_PERF report --latency --stdio -i $CURRENT_TEST_DIR/perf.data.1 > $LOGS_DIR/latency_latency.log 2> $LOGS_DIR/latency_latency.err
-> >  PERF_EXIT_CODE=$?
-> >
-> > -../common/check_all_patterns_found.pl "#  Latency  Overhead  Command" < $LOGS_DIR/latency_latency.log
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "#  Latency  Overhead  Command" < $LOGS_DIR/latency_latency.log
-> >  CHECK_EXIT_CODE=$?
-> > -../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/latency_latency.err
-> > +"$DIR_PATH/../common/check_errors_whitelisted.pl" \
-> > +       "stderr-whitelist.txt" < $LOGS_DIR/latency_latency.err
-> >  (( CHECK_EXIT_CODE += $? ))
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "latency report for latency profile"
-> > @@ -226,9 +266,12 @@ print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "latency report for latency profi
-> >  $CMD_PERF report --hierarchy --sort latency,parallelism,comm,symbol --parallelism=1,2 --stdio -i $CURRENT_TEST_DIR/perf.data.1 > $LOGS_DIR/parallelism_hierarchy.log 2> $LOGS_DIR/parallelism_hierarchy.err
-> >  PERF_EXIT_CODE=$?
-> >
-> > -../common/check_all_patterns_found.pl "#           Latency  Parallelism / Command / Symbol" < $LOGS_DIR/parallelism_hierarchy.log
-> > +"$DIR_PATH/../common/check_all_patterns_found.pl" \
-> > +       "#           Latency  Parallelism / Command / Symbol" \
-> > +       < $LOGS_DIR/parallelism_hierarchy.log
-> >  CHECK_EXIT_CODE=$?
-> > -../common/check_errors_whitelisted.pl "stderr-whitelist.txt" < $LOGS_DIR/parallelism_hierarchy.err
-> > +"$DIR_PATH/../common/check_errors_whitelisted.pl" \
-> > +       "stderr-whitelist.txt" < $LOGS_DIR/parallelism_hierarchy.err
-> >  (( CHECK_EXIT_CODE += $? ))
-> >
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "parallelism histogram"
-> > diff --git a/tools/perf/tests/shell/common/init.sh b/tools/perf/tests/shell/common/init.sh
-> > index 26c7525651e0..cbfc78bec974 100644
-> > --- a/tools/perf/tests/shell/common/init.sh
-> > +++ b/tools/perf/tests/shell/common/init.sh
-> > @@ -11,8 +11,8 @@
-> >  #
-> >
-> >
-> > -. ../common/settings.sh
-> > -. ../common/patterns.sh
-> > +. "$(dirname $0)/../common/settings.sh"
-> > +. "$(dirname $0)/../common/patterns.sh"
-> >
-> >  THIS_TEST_NAME=`basename $0 .sh`
-> >
-> > --
-> > 2.50.1
-> >
+> > > >
+> > > > - Arnaldo
+> > > >
+> > > > Arnaldo Carvalho de Melo (2):
+> > > >   perf bpf: Move the LIBBPF_CURRENT_VERSION_GEQ macro to bpf-utils.h
+> > > >   perf bpf: Check libbpf version to use
+> > > >     btf_dump_type_data_opts.emit_strings
+> > >
+> > > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> > >
+> > > Thanks,
+> > > Namhyung
+> > >
+> > > >
+> > > >  tools/perf/util/bpf-event.c  | 2 ++
+> > > >  tools/perf/util/bpf-filter.c | 5 +----
+> > > >  tools/perf/util/bpf-utils.h  | 5 +++++
+> > > >  3 files changed, 8 insertions(+), 4 deletions(-)
+> > > >
+> > > > --
+> > > > 2.51.0
+> > > >
