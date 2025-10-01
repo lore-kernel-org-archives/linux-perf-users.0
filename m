@@ -1,92 +1,103 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6994027F00F;
-	Wed,  1 Oct 2025 18:32:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856F31DED63
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Oct 2025 19:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759343581; cv=none; b=W5iGOwjsj8ZDI8W6/iv8IRzLZ0SYqruMEQIFV2FJH6sMv57ABcml8lcPRD0Bt2NgqDgtWHqVxeiAB9zK78pEIxAI21vZ7fmbLhudrInQsIaV5DVp98ze/fSuYhhvTx0i/P1WxvXLBUuQAKcGsrZhzPwYbKq2RLuqkxhdDdZOq2g=
+	t=1759348341; cv=none; b=jgJSdeuRhdg52vgJbr/m4uECphU+NNeU2+fEvtiqSrlALWIJkt4FTKicO5IaFiK/RS9Bgs6LFFlpJPelo666RmslDPNsdTUdmvf96SUcIBgFFcNcE/dgc0R/noATnnWiNV0v51L+qX+JbNX6+s1uSmh36cq08NBRNu4Fieg8Q2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759343581; c=relaxed/simple;
-	bh=gR2gKrymd+GBEb2ZZasTzLPiQr1yNDrh2ELftZdrnFQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EgH9FgnHXlT2E6dFzqZUgjUxUR5tKFDCOAq4v2BtImassn5qWOlJy8knpr0EDkgWQGKv3NQ/A5I6FIrPxRJVSDxVVBFkkyb2qOwvxtVp2ppToqx54GcCag44HUtMxYeskSbiv+2ou0QCgx/f6zjNvAa1u/OBfirNtx+yIXoFeM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7DD4B16F8;
-	Wed,  1 Oct 2025 11:32:50 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23ADB3F66E;
-	Wed,  1 Oct 2025 11:32:58 -0700 (PDT)
-Date: Wed, 1 Oct 2025 19:32:56 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 0/8] perf build: Support building with Clang
-Message-ID: <20251001183256.GS7985@e132581.arm.com>
-References: <20250930-perf_build_android_ndk-v2-0-2ea440b7ef01@arm.com>
- <aN044EY-Ds9-E6iz@x1>
- <20251001152217.GQ7985@e132581.arm.com>
- <aN1yNKxXLnMtQczW@x1>
+	s=arc-20240116; t=1759348341; c=relaxed/simple;
+	bh=2GwntnuGEgVcJp5uzDbaxQTWGpDZdjmJnerRcjsvzJg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iARDOJyzpJtE8hlftfn+o/G2U0f/SWCkdBh5KnEGtALpef6WTSIntxBjZiYQkF5+v5tnr1irex3g3VxbsZgBt1s5tbHPlZeejM7YyYS55ZxOHdBz5vwh6kUSF0uBJhT3aF4EJocBPSgVOU5b02mCR/SKrYdVAHm7SXJAxH8A9Xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WITDMlD9; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WITDMlD9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1759348337;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=E1IGHmX8DGMtzjlmDVzuCFCfPglAkbYr95cqX8KMDng=;
+	b=WITDMlD92Q6VODzLriAx1ibGRwlF4b2SnJdqHK/a8gGaFt/AUQRWEbzjwbfrexYFpti+hI
+	Al5nx1YZmgx4+2ZdeUYilCc3FFtGSQ7OteETd9EfpU/NRrgN+FsCn3fvgyGPUOoUQvmDXZ
+	7cVUeMgSS7kmTA3GdIWB/DSTUiSRw1Y=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-346-5GORiUkiMriGhjVqvR_XEQ-1; Wed,
+ 01 Oct 2025 15:52:10 -0400
+X-MC-Unique: 5GORiUkiMriGhjVqvR_XEQ-1
+X-Mimecast-MFC-AGG-ID: 5GORiUkiMriGhjVqvR_XEQ_1759348326
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1BE8A180047F;
+	Wed,  1 Oct 2025 19:52:06 +0000 (UTC)
+Received: from ashelat-thinkpadp1gen5.boston.csb (unknown [10.22.80.159])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 66A2419560B4;
+	Wed,  1 Oct 2025 19:52:02 +0000 (UTC)
+From: Anubhav Shelat <ashelat@redhat.com>
+To: mpetlan@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	linux-perf-users@vger.kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	dapeng1.mi@linux.intel.com,
+	james.clark@linaro.org,
+	Anubhav Shelat <ashelat@redhat.com>
+Subject: [PATCH] perf tests record: allow for some difference in cycle count in leader sampling test on aarch64
+Date: Wed,  1 Oct 2025 15:50:48 -0400
+Message-ID: <20251001195047.541745-2-ashelat@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aN1yNKxXLnMtQczW@x1>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Wed, Oct 01, 2025 at 03:25:56PM -0300, Arnaldo Carvalho de Melo wrote:
+On aarch64 systems, when running the leader sampling test, the cycle
+count on the leader is consistently ~30 cycles less than the cycle count
+on the slave event causing the test to fail. This looks like the result
+of some hardware property of aarch64 processors, so allow for a small
+difference in cycles between the leader and slave events on aarch64
+systems.
 
-[...]
+Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+---
+ tools/perf/tests/shell/record.sh | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-> It was in all alpine versions I have containers to test on:
-> 
-> toolsbuilder@five:~$ grep FAIL dm.log.old/summary 
->    3    71.85 almalinux:9-i386              : FAIL clang version 17.0.6 (AlmaLinux OS Foundation 17.0.6-5.el9)
->    5    78.60 alpine:3.16                   : FAIL gcc version 11.2.1 20220219 (Alpine 11.2.1_git20220219) 
->    6    59.77 alpine:3.17                   : FAIL gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r4) 
->    7    56.89 alpine:3.18                   : FAIL gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r10) 
->    8    60.86 alpine:3.19                   : FAIL gcc version 13.2.1 20231014 (Alpine 13.2.1_git20231014) 
->    9    60.18 alpine:3.20                   : FAIL gcc version 13.2.1 20240309 (Alpine 13.2.1_git20240309) 
->   10    64.58 alpine:3.22                   : FAIL gcc version 14.2.0 (Alpine 14.2.0) 
->   11    63.36 alpine:edge                   : FAIL gcc version 14.2.0 (Alpine 14.2.0) 
-> toolsbuilder@five:~$
-> 
->   GEN     /tmp/build/perf/python/perf.cpython-312-x86_64-linux-musl.so
-> make: Leaving directory '/git/perf-6.17.0-rc6/tools/perf'
-> + rm -rf /tmp/build/perf
-> + mkdir /tmp/build/perf
-> + make 'ARCH=' 'CROSS_COMPILE=' 'EXTRA_CFLAGS=' -C tools/perf 'O=/tmp/build/perf' 'CC=clang'
-> make: Entering directory '/git/perf-6.17.0-rc6/tools/perf'
->   BUILD:   Doing 'make -j28' parallel build
-> Makefile.config:494: *** No gnu/libc-version.h found, please install glibc-dev[el].  Stop.
-> make[1]: *** [Makefile.perf:289: sub-make] Error 2
-> make: *** [Makefile:76: all] Error 2
-> make: Leaving directory '/git/perf-6.17.0-rc6/tools/perf'
-> + exit 1
-> toolsbuilder@five:~
-> $
-> 
-> lemme try to reapply those patches and get the
-> tools/perf/feature/test-libelf.make.output and
-> tools/perf/feature/test-glibc.make.output files.
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index b1ad24fb3b33..dff83d64e970 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -280,7 +280,12 @@ test_leader_sampling() {
+   while IFS= read -r line
+   do
+     cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
+-    if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
++    # On aarch64 systems the leader event gets stopped ~30 cycles before the slave, so allow some
++    # difference
++    if [ "$(uname -m)" = "aarch64" ] && (( cycles - prev_cycles < 50 ))
++    then
++	    valid_counts=$(($valid_counts+1))
++    elif [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
+     then
+       invalid_counts=$(($invalid_counts+1))
+     else
+-- 
+2.47.3
 
-That is fine.  I have reproduced at my side, will look into.
-
-Thanks,
-Leo
