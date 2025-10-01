@@ -1,109 +1,338 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E75F318DB01;
-	Wed,  1 Oct 2025 15:22:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7447C25D546
+	for <linux-perf-users@vger.kernel.org>; Wed,  1 Oct 2025 18:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759332141; cv=none; b=NkhAtrmZNgOMaSI+QubeBzJ2Z2D2IH+FdxHEgYFbG45ObH4kzF9l8VlbE84BxnLhdLezpJtPlVtYyOBL/hx4ptSFAwSGXFsfOdjaYC3LzPdXIWWDFz5sS0SjRZq0akUcNLSgp10bg9HR1pceNFvkwygPpgM/DUX296x4EXmuTtU=
+	t=1759342368; cv=none; b=QXTbsN+OpFNqqPgUWrJPoyqEnYkEoR6+OSnk8mefaqisU5PaSDsg1tMtt5arocDBST/7V2rSNZ+MxEjdfClqiTlqJcwQAeQtIMfSicEuZlWDfV3id/7R1oEeWoCucZAxjEDxMPTzW74F4C7cMBZh/YJ+2f//022/XjNuX8qflhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759332141; c=relaxed/simple;
-	bh=Q7Wjglx0bW6cmBXT78OZQGD3WEnnqIDV8cnmhObQUhE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nPyQoLAz/MQmKSXX8bCe6f7pHPXgBKZa0KafmpN/HKq9h2lrzY6RQVyMg0Zo22E13yCmxRzL4yw7Y1ioOC2ipHqWMLxZT8R0HYQBdiA75KS3JTh8Ps3l2bg0YB8evVwPq2HGfBLcVn2tsNzTc5Zy1RrvzPokjUzNvRm5WEhu3T8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 34E5A1424;
-	Wed,  1 Oct 2025 08:22:11 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D688B3F59E;
-	Wed,  1 Oct 2025 08:22:18 -0700 (PDT)
-Date: Wed, 1 Oct 2025 16:22:17 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, llvm@lists.linux.dev,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 0/8] perf build: Support building with Clang
-Message-ID: <20251001152217.GQ7985@e132581.arm.com>
-References: <20250930-perf_build_android_ndk-v2-0-2ea440b7ef01@arm.com>
- <aN044EY-Ds9-E6iz@x1>
+	s=arc-20240116; t=1759342368; c=relaxed/simple;
+	bh=011jUGOOoKkXk/ReueeZUoSAU8MIuuPR7QdsFRWbkfM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=pVvh2IUf5jG8lSBoi023GsadoLg3601lglbw6nrlqTO4H3hRmO+fd8GaPHPuBm39EIdYL8MvejRWtQnD5XDdSrP7Ztpnjl1YzKxYxaUOfCWbRJHMdrkyRzyIrxqfOpiTn7X0I0TXCMN9PJm/WtA2WH0zQ7vUL0Az6UzPbLGjorw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=har80iey; arc=none smtp.client-ip=209.85.160.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="har80iey"
+Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-30cce517292so236604fac.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 Oct 2025 11:12:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1759342365; x=1759947165; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=730yQpFWggvxNIJikZhHthn00aM7vY2Tj4B2azCDoco=;
+        b=har80ieyXQxUBrDqjcszI1MPf5z1Eb1+UNrAuosZg4tGQ5Wuww7Lim5/6yUPaPUeNi
+         h3XMYhnXS3D8JkyAzql2O18/Bf+VViELG4OyNRoavCUcwOxoXVxZpR+9PbC0/YJ7tyuE
+         vL/uVW59cUxYzQ4DchtoaBoBlpQ5Uw+ftQ/R1GpOUhMAPg1E/+7wZnAEsSTCrU82+v1Q
+         UgdMMj0fb6eR2WKHqeyjppPcn+bWOAffn5+SvRje37xx4/bQDcCrxOU9sOoUML4qBn3+
+         7FWL9hFJNpIVptjWVyvPxOKS0Vq9fkliQzIt0rXq05kaL4yFPhZML9edLRt4ZhOw//FI
+         DDFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759342365; x=1759947165;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=730yQpFWggvxNIJikZhHthn00aM7vY2Tj4B2azCDoco=;
+        b=u7gaNTgkj0dzAg49yk0ESf070PKL4zIpFUtP7BOuFSjZIgSYZRgZ4IQnBCQKdEJfkV
+         +srshcsGCMPOgfa4N2m8qL4TOOKwHWHQTOGDra8olJYiYz75matH3QrcXvlIiuX+22Mf
+         phju12tllMMT9NfegnsNPC7w4hfZ8NnJvxmC1nWOf0sNiJtrwQ95YlBaxY738nu2euLE
+         EtDB9I33PUJtDsj9AsacjfzSB/pMKJae6cL+FzW/0WhsfDMN+aMQzoUWct/KhBU4W7ft
+         1XugrbEQSSI919qn4NdlCM8s4PjZ7MAXGy+cBuECv0wRVGaqeTWk4R0azzUSsw7a6xPR
+         NmLw==
+X-Forwarded-Encrypted: i=1; AJvYcCWrys+jJHIIYd4ZVWjESvJ+NbzVyiKrOEBkfui/RB8IbYkBkPgTvyWVdCRod8sVRqQMf7d0t74rQFplZ8zRT0Ba@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFX6lMSQ3mKwmh5ZKxojTi9Iq8cA1zYvrMCVc5g7plb9Ap23uQ
+	RdvCPWWBxYRne4wpz1UwBt6u5O5afKIw0FWzpGrsfnNr5p5EicjVwJ7vP6sGVN3SWN1c0sweddc
+	jHvQzTPOWzA==
+X-Google-Smtp-Source: AGHT+IH0pXCIae2yyp2tAq7SYpCMePBRfDR6ltaDmHYJA+cgg0pmRh7cjevkoYEbhEukmRpsI/w3BNS8UR5Q
+X-Received: from oabcv42.prod.google.com ([2002:a05:6870:c6aa:b0:394:3e41:3f05])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:2490:b0:332:8989:4ef8
+ with SMTP id 586e51a60fabf-39bae855404mr2531917fac.31.1759342365499; Wed, 01
+ Oct 2025 11:12:45 -0700 (PDT)
+Date: Wed,  1 Oct 2025 11:12:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aN044EY-Ds9-E6iz@x1>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.51.0.618.g983fd99d29-goog
+Message-ID: <20251001181229.1010340-1-irogers@google.com>
+Subject: [PATCH v1 1/2] perf bpf_counter: Move header declarations into C code
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Tengda Wu <wutengda@huaweicloud.com>, Gabriele Monaco <gmonaco@redhat.com>, 
+	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Song Liu <songliubraving@fb.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Oct 01, 2025 at 11:21:20AM -0300, Arnaldo Carvalho de Melo wrote:
-> On Tue, Sep 30, 2025 at 05:54:48PM +0100, Leo Yan wrote:
-> > This series adds support for building perf with Clang, following the
-> > discussion in [1]. Because the Android NDK uses Clang by default,
-> > enabling Clang builds naturally covers Android as well.
-> > 
-> > The series is organized as follows:
-> > 
-> >   - Patches 1–2: Fix two bugs found with Clang.
-> >   - Patches 3–6: Correct CROSS_ARCH and dismiss Clang build warnings.
-> >   - Patches 7–8: Enable Clang in the Makefile and update the
-> >     documentation.
-> > 
-> > Testing:
-> > 
-> >   - Clang 15.0.7 on Ubuntu 22.04.5: native and cross-compiling (aarch64)
-> >   - Clang 18.1.3 on Ubuntu 24.04.2: native and cross-compiling (aarch64)
-> >   - Android NDK r27d (latest LTS): cross-compiling (aarch64)
-> 
->   LD      /tmp/build/perf/util/perf-util-in.o
->   LD      /tmp/build/perf/perf-util-in.o
->   AR      /tmp/build/perf/libperf-util.a
->   CC      /tmp/build/perf/pmu-events/pmu-events.o
->   LD      /tmp/build/perf/pmu-events/pmu-events-in.o
->   AR      /tmp/build/perf/libpmu-events.a
->   LINK    /tmp/build/perf/perf
-> make: Leaving directory '/git/perf-6.17.0-rc6/tools/perf'
-> + rm -rf /tmp/build/perf
-> + mkdir /tmp/build/perf
-> + make 'ARCH=' 'CROSS_COMPILE=' 'EXTRA_CFLAGS=' -C tools/perf 'O=/tmp/build/perf' 'CC=clang'
-> make: Entering directory '/git/perf-6.17.0-rc6/tools/perf'
->   BUILD:   Doing 'make -j28' parallel build
-> Makefile.config:494: *** No gnu/libc-version.h found, please install glibc-dev[el].  Stop.
-> make[1]: *** [Makefile.perf:289: sub-make] Error 2
-> make: *** [Makefile:76: all] Error 2
-> make: Leaving directory '/git/perf-6.17.0-rc6/tools/perf'
-> + exit 1
-> toolsbuilder@five:~$ cat dm.log/alpine\:3.22
+Reduce the API surface that is in bpf_counter.h, this helps compiler
+analysis like unused static function, makes it easier to set a
+breakpoint and just makes it easier to see the code is self
+contained. When code is shared between BPF C code, put it inside
+HAVE_BPF_SKEL. Move transitively found #includes into appropriate C
+files.
+No functional change.
 
-A quick look: the build cannot find both libelf (feature-libelf=0) and
-glibc (feature-glibc=0), thus lead to build failure. It is good to
-know what the reason for the feature building failures:
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/bpf_counter.c        | 62 ++++++++++++++++++++++-
+ tools/perf/util/bpf_counter.h        | 74 +++-------------------------
+ tools/perf/util/bpf_counter_cgroup.c |  1 +
+ tools/perf/util/bpf_ftrace.c         |  1 +
+ tools/perf/util/bpf_off_cpu.c        |  1 +
+ 5 files changed, 69 insertions(+), 70 deletions(-)
 
-  tools/perf/feature/test-libelf.make.output
-  tools/perf/feature/test-glibc.make.output
+diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
+index 73fcafbffc6a..1c6cb5ea077e 100644
+--- a/tools/perf/util/bpf_counter.c
++++ b/tools/perf/util/bpf_counter.c
+@@ -6,10 +6,14 @@
+ #include <limits.h>
+ #include <unistd.h>
+ #include <sys/file.h>
++#include <sys/resource.h>
+ #include <sys/time.h>
+ #include <linux/err.h>
++#include <linux/list.h>
+ #include <linux/zalloc.h>
+ #include <api/fs/fs.h>
++#include <bpf/bpf.h>
++#include <bpf/btf.h>
+ #include <perf/bpf_perf.h>
+ 
+ #include "bpf_counter.h"
+@@ -28,13 +32,67 @@
+ #include "bpf_skel/bperf_leader.skel.h"
+ #include "bpf_skel/bperf_follower.skel.h"
+ 
++struct bpf_counter {
++	void *skel;
++	struct list_head list;
++};
++
+ #define ATTR_MAP_SIZE 16
+ 
+-static inline void *u64_to_ptr(__u64 ptr)
++static void *u64_to_ptr(__u64 ptr)
+ {
+ 	return (void *)(unsigned long)ptr;
+ }
+ 
++
++void set_max_rlimit(void)
++{
++	struct rlimit rinf = { RLIM_INFINITY, RLIM_INFINITY };
++
++	setrlimit(RLIMIT_MEMLOCK, &rinf);
++}
++
++static __u32 bpf_link_get_id(int fd)
++{
++	struct bpf_link_info link_info = { .id = 0, };
++	__u32 link_info_len = sizeof(link_info);
++
++	bpf_obj_get_info_by_fd(fd, &link_info, &link_info_len);
++	return link_info.id;
++}
++
++static __u32 bpf_link_get_prog_id(int fd)
++{
++	struct bpf_link_info link_info = { .id = 0, };
++	__u32 link_info_len = sizeof(link_info);
++
++	bpf_obj_get_info_by_fd(fd, &link_info, &link_info_len);
++	return link_info.prog_id;
++}
++
++static __u32 bpf_map_get_id(int fd)
++{
++	struct bpf_map_info map_info = { .id = 0, };
++	__u32 map_info_len = sizeof(map_info);
++
++	bpf_obj_get_info_by_fd(fd, &map_info, &map_info_len);
++	return map_info.id;
++}
++
++/* trigger the leader program on a cpu */
++int bperf_trigger_reading(int prog_fd, int cpu)
++{
++	DECLARE_LIBBPF_OPTS(bpf_test_run_opts, opts,
++			    .ctx_in = NULL,
++			    .ctx_size_in = 0,
++			    .flags = BPF_F_TEST_RUN_ON_CPU,
++			    .cpu = cpu,
++			    .retval = 0,
++		);
++
++	return bpf_prog_test_run_opts(prog_fd, &opts);
++}
++
+ static struct bpf_counter *bpf_counter_alloc(void)
+ {
+ 	struct bpf_counter *counter;
+@@ -785,7 +843,7 @@ struct bpf_counter_ops bperf_ops = {
+ 
+ extern struct bpf_counter_ops bperf_cgrp_ops;
+ 
+-static inline bool bpf_counter_skip(struct evsel *evsel)
++static bool bpf_counter_skip(struct evsel *evsel)
+ {
+ 	return evsel->bpf_counter_ops == NULL;
+ }
+diff --git a/tools/perf/util/bpf_counter.h b/tools/perf/util/bpf_counter.h
+index c6d21c07b14c..658d8e7d507e 100644
+--- a/tools/perf/util/bpf_counter.h
++++ b/tools/perf/util/bpf_counter.h
+@@ -2,18 +2,10 @@
+ #ifndef __PERF_BPF_COUNTER_H
+ #define __PERF_BPF_COUNTER_H 1
+ 
+-#include <linux/list.h>
+-#include <sys/resource.h>
+-
+-#ifdef HAVE_LIBBPF_SUPPORT
+-#include <bpf/bpf.h>
+-#include <bpf/btf.h>
+-#include <bpf/libbpf.h>
+-#endif
+-
+ struct evsel;
+ struct target;
+-struct bpf_counter;
++
++#ifdef HAVE_BPF_SKEL
+ 
+ typedef int (*bpf_counter_evsel_op)(struct evsel *evsel);
+ typedef int (*bpf_counter_evsel_target_op)(struct evsel *evsel,
+@@ -22,6 +14,7 @@ typedef int (*bpf_counter_evsel_install_pe_op)(struct evsel *evsel,
+ 					       int cpu_map_idx,
+ 					       int fd);
+ 
++/* Shared ops between bpf_counter, bpf_counter_cgroup, etc. */
+ struct bpf_counter_ops {
+ 	bpf_counter_evsel_target_op load;
+ 	bpf_counter_evsel_op enable;
+@@ -31,13 +24,6 @@ struct bpf_counter_ops {
+ 	bpf_counter_evsel_install_pe_op install_pe;
+ };
+ 
+-struct bpf_counter {
+-	void *skel;
+-	struct list_head list;
+-};
+-
+-#ifdef HAVE_BPF_SKEL
+-
+ int bpf_counter__load(struct evsel *evsel, struct target *target);
+ int bpf_counter__enable(struct evsel *evsel);
+ int bpf_counter__disable(struct evsel *evsel);
+@@ -45,6 +31,9 @@ int bpf_counter__read(struct evsel *evsel);
+ void bpf_counter__destroy(struct evsel *evsel);
+ int bpf_counter__install_pe(struct evsel *evsel, int cpu_map_idx, int fd);
+ 
++int bperf_trigger_reading(int prog_fd, int cpu);
++void set_max_rlimit(void);
++
+ #else /* HAVE_BPF_SKEL */
+ 
+ #include <linux/err.h>
+@@ -83,55 +72,4 @@ static inline int bpf_counter__install_pe(struct evsel *evsel __maybe_unused,
+ 
+ #endif /* HAVE_BPF_SKEL */
+ 
+-static inline void set_max_rlimit(void)
+-{
+-	struct rlimit rinf = { RLIM_INFINITY, RLIM_INFINITY };
+-
+-	setrlimit(RLIMIT_MEMLOCK, &rinf);
+-}
+-
+-#ifdef HAVE_BPF_SKEL
+-
+-static inline __u32 bpf_link_get_id(int fd)
+-{
+-	struct bpf_link_info link_info = { .id = 0, };
+-	__u32 link_info_len = sizeof(link_info);
+-
+-	bpf_obj_get_info_by_fd(fd, &link_info, &link_info_len);
+-	return link_info.id;
+-}
+-
+-static inline __u32 bpf_link_get_prog_id(int fd)
+-{
+-	struct bpf_link_info link_info = { .id = 0, };
+-	__u32 link_info_len = sizeof(link_info);
+-
+-	bpf_obj_get_info_by_fd(fd, &link_info, &link_info_len);
+-	return link_info.prog_id;
+-}
+-
+-static inline __u32 bpf_map_get_id(int fd)
+-{
+-	struct bpf_map_info map_info = { .id = 0, };
+-	__u32 map_info_len = sizeof(map_info);
+-
+-	bpf_obj_get_info_by_fd(fd, &map_info, &map_info_len);
+-	return map_info.id;
+-}
+-
+-/* trigger the leader program on a cpu */
+-static inline int bperf_trigger_reading(int prog_fd, int cpu)
+-{
+-	DECLARE_LIBBPF_OPTS(bpf_test_run_opts, opts,
+-			    .ctx_in = NULL,
+-			    .ctx_size_in = 0,
+-			    .flags = BPF_F_TEST_RUN_ON_CPU,
+-			    .cpu = cpu,
+-			    .retval = 0,
+-		);
+-
+-	return bpf_prog_test_run_opts(prog_fd, &opts);
+-}
+-#endif /* HAVE_BPF_SKEL */
+-
+ #endif /* __PERF_BPF_COUNTER_H */
+diff --git a/tools/perf/util/bpf_counter_cgroup.c b/tools/perf/util/bpf_counter_cgroup.c
+index 6ff42619de12..ed6a29b106b4 100644
+--- a/tools/perf/util/bpf_counter_cgroup.c
++++ b/tools/perf/util/bpf_counter_cgroup.c
+@@ -13,6 +13,7 @@
+ #include <linux/zalloc.h>
+ #include <linux/perf_event.h>
+ #include <api/fs/fs.h>
++#include <bpf/bpf.h>
+ #include <perf/bpf_perf.h>
+ 
+ #include "affinity.h"
+diff --git a/tools/perf/util/bpf_ftrace.c b/tools/perf/util/bpf_ftrace.c
+index 0cb02412043c..e61a3b20be0a 100644
+--- a/tools/perf/util/bpf_ftrace.c
++++ b/tools/perf/util/bpf_ftrace.c
+@@ -3,6 +3,7 @@
+ #include <stdint.h>
+ #include <stdlib.h>
+ 
++#include <bpf/bpf.h>
+ #include <linux/err.h>
+ 
+ #include "util/ftrace.h"
+diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
+index c367fefe6ecb..88e0660c4bff 100644
+--- a/tools/perf/util/bpf_off_cpu.c
++++ b/tools/perf/util/bpf_off_cpu.c
+@@ -13,6 +13,7 @@
+ #include "util/cgroup.h"
+ #include "util/strlist.h"
+ #include <bpf/bpf.h>
++#include <bpf/btf.h>
+ #include <internal/xyarray.h>
+ #include <linux/time64.h>
+ 
+-- 
+2.51.0.618.g983fd99d29-goog
 
-I am not surprised for the failure of libelf (this is common case
-that the package is not installed by default in a distro), but it is a
-bit confused for the glibc feature failure.
-
-It seems the issue occurs on Alpine 3.22, but the highest version
-supported in container-build is 3.21 [1]. Could you confirm whether
-the issue reproduces on other distros or versions?
-
-Thanks,
-Leo
-
-[1] https://github.com/acmel/linux-tools-container-builds/tree/main/alpine
