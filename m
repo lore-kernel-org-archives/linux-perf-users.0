@@ -1,155 +1,163 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59BE2C8E6
-	for <linux-perf-users@vger.kernel.org>; Thu,  2 Oct 2025 15:57:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4692417FB
+	for <linux-perf-users@vger.kernel.org>; Thu,  2 Oct 2025 16:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759420630; cv=none; b=qtBk17GMo9fjm6AoLnTR3MLEYM5+rIs/VmBpgToFisi8tPRBqwNAdUXNfwFI0pq74+JIOWeKIDsCDusNmCDNHJgwWYYtvbfzieRsHwMEcD7o+LkLOHz7e28m2woXN2NHIsrfrRfRJREhFhvi4vL/bmHPCnhjGmrYcbnCyvOirZc=
+	t=1759421679; cv=none; b=pQc7A2AsS2wFI9Lr+Hsg3nwTHjx/1iNFbTG8CgRatPCjqGHNl2OJckk4x85yFMUEC3FFhDWoiy09NvumxO4PPGm2Zv/PcPkVTwYgX77kVgvIK94Z3aIfBwMz3vCUxER7o+HVum+nO5wfOMrkFztMwRApslXJK4Tr3e3yAeKt9OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759420630; c=relaxed/simple;
-	bh=XfUV5XegIWPsrtsXcJ939TwFlfhwct8RclP4jki8I7M=;
+	s=arc-20240116; t=1759421679; c=relaxed/simple;
+	bh=rhLVxpfQGbtVJNyFj+iCQzU2hwWz2cS2k+5lVPxuSX4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fOZqx8Rcdo+pbSrrzD2hj5fQDelziYMdu/JaH0PyPsYIfimda19oe3uoAQYGYHyZ/uCekJ8pkCT7LlEyD7qRjIhQhF9gt558e8uXStWFRRh5FxCxpQauw/wz7HOXe4/16AB7UKK5oh2RIMluq74s5rtdyh/Dsrj3LRByFskRPbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Lkw8uNej; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=pzgPRRnW8MC82UBGjFBJNtO2JsiTfFfYoyrxoe5K+hutgIeVCNY0oWVUY3YBcrgP70HQ25AZOwEjeGmZqYbEAIyBQ6pexjTkSy/HCRRLXLNHkiZ5hkT1L4SHNebT2ZJgpHfLVTTjAiE252j6b67/vsem8Wfdltm1YWnXWK48sV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iN9Ycp3M; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Lkw8uNej"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2681645b7b6so169195ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Oct 2025 08:57:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iN9Ycp3M"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2698e4795ebso11264305ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Oct 2025 09:14:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759420628; x=1760025428; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1759421677; x=1760026477; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dY0WE2c/yXBySLtJpxfHDCV+p1YIydI9WOBXVmdAH3E=;
-        b=Lkw8uNej5nBpEbADQJAfE6o3XmCPVJKxsWkloRqHBjvofXOyVstWQXf9zj+0lrMwzP
-         gPqrZy2Hwgs29OYJDn6w8YzJ8nZtlRXYRQ52u/MBDAFJNc7zEudtpMIlOUgBtySVTBmR
-         5UX4yoKpfQnEovzadYwCnStsELir1c2hTqhW9iGrIeYAHrFixUKFu8mhtXMn6oHjg19I
-         bTN6vZxaq+AM9Jy9wciA5zmaix+8q4IvchuNPLM34TEZwtzeJTjxyZ1zf3udStc6/iyN
-         oB3sDr6vSLzcRKw28NiImTH5O5oYxdOTDx5YTOOZ+T3IvV4/BwQp5ekGGOo+hckvBs6i
-         ovfQ==
+        bh=j76UJzpxIM0UDjCUI2ssii8dRu7vQdKTtMg3Bbeobi4=;
+        b=iN9Ycp3MxnUOOVPuL3qFLkmCE29PL1/MA5V141qZKkKcDL/oy7Okg/xsihAswbvvOE
+         7xYe6i6fMpK/kXl/6eg6I8fY/qZJJi5ohqeJs1cO1dHeEOEIwtzU3pHZ6WJMjRAc91DM
+         lud+zNg9rdg6Ps/Rd+ja4zb7uRfmaHmCLk/l9gm6u5/xI1dnene92z4MigPWYweGygYt
+         K2NJEmNX/EGqfY6gEj/Syk8bWdzeATohl4OcgQcjn5zXQjPYW2q1WeHgYVdSTyH16Ogw
+         RWuPQ6jlO/hxT61dQmiLKZWuB0qIh3WpiIyl6xpSRa6sn9FQ99dyjQ3J3ILuacjGPkfJ
+         /SKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759420628; x=1760025428;
+        d=1e100.net; s=20230601; t=1759421677; x=1760026477;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dY0WE2c/yXBySLtJpxfHDCV+p1YIydI9WOBXVmdAH3E=;
-        b=OhRNL3lbPD5IBgaESzrj3b0WC3VRXX8KQnARtVqfPQ8dGhbp2S+kCSKoEoTBH+8lWR
-         9QJNx6gEqQZ+kHNmhzqN2P05B8VU/bC2du3fOwjbRCwb67PXeRVBHbOIrA9nlQVITbFY
-         8qFEMSHaI0tWSmd+Frjg3qbmfxtfbLGnejL7angpu0MB83/atuN5kw2kMGRX+ZjWTNC+
-         14H91KAmQDPkqcrFcueQgfbJU/95UHVznL4MgK2GO5JfPTcFDWnAY7LFmOoh2iorgYh7
-         0u+w3HxviVtyP1L94r9YApU90C+OJBtwIo+VQMTZ+IoNNacT+KF4DgAWKUGsqqFSn88V
-         /FjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW2Gbn93+MIXg6Mfc4/vUUnoQjNznJmPgMQYrdtMv9P1deA5BPAc+F9uE0qLEWOhNg3JX6w4+GNueMIY19I6UIn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx372pKr2IsP8FTpLpDzbFP3Gn76eDhS5AjULzbciCO6+7YdrpW
-	PiwsRzuELbtmmZEFrGFms1MFCE/F5jNSrcKnbXyz0aRXQUH2BQzdWj8jFdOm0jiyJHTt5qi3oXU
-	1ILbAHNhdHQbY8yUFjoFhWJ1fh5ZNrKd+UQ0MnWGl
-X-Gm-Gg: ASbGncut8GjiJyzTCIL0aCuHmmPyxBZEHr6kNKoUQwhic1NTk4Bg31JGRr+ArDqsiKi
-	w2G3jcCAk3ERCG3ERH39dEFllXAPHP/Vy1hjE4LdcmqbJsaxjt88p35UbAosCEJekMU6Aij3ozE
-	KxY17Q6pOsUWXO9V/44DnfJwCAwrx+y5PnIZbgw9Qo5EzfwauIyaflPE/l8ChlcxfNGp8YUOigV
-	kPS3FWCslteQ3Mw2FOcVrNJatkPxBa/NnKtnycIMxnIc2QKFqcr/6aQoycwYF7P1/zEb93S66TL
-	Q40=
-X-Google-Smtp-Source: AGHT+IFbZu1sX8rBFZojBP9UQNCMTAzswKj1VcmmvPpI30Vfx/Wg4Icxratlw1QrTSPIXIcpDbqGAINXJPK4JsnalZw=
-X-Received: by 2002:a17:903:2b0d:b0:271:9873:80d9 with SMTP id
- d9443c01a7336-28e8ea7de2amr3923265ad.7.1759420628173; Thu, 02 Oct 2025
- 08:57:08 -0700 (PDT)
+        bh=j76UJzpxIM0UDjCUI2ssii8dRu7vQdKTtMg3Bbeobi4=;
+        b=TlAVxpqXX5eucv8d1/+O4w24aiw61CFmMAcOH9U4jE9drWGfOZ5OLJ7oZB4TveLvhR
+         NqeD2vXgbUcyyZjcFWF7tvRqSGYjXvDP4ivF+7JpcH6OmhCLG2UI3pQ+v8TJiK1I4vJ/
+         sdOMbkx2oYAQwWsFbq6EbDXgZGz2TngolPIfUCy9H1g0me78KSk4G8euDxv2PmjqYReH
+         ooh8VVPA/LU9abQ9hnksvn59b45AuAFPd/Iqm+dOyDzci+I82VUrepyLx+Gp5+yVNgaa
+         8DzmlC0xKd0GL4ndrg0EU3aUGxAvbdWjGnPkWRv/FmtFw0t3Mx5ouQ4fzSHAHHTXXnTV
+         aFYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWEI/2Fva0lPhsq/5PHqy33lNuqeyWiqNIvLeCxXmPrk4dTcUlmfJafF/bieHnobRVo0hshzn4IxJYSIeiU103Y@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRbTnEm1xpH76qPtobn+RQTBCo7Nn1TKUUonRGmOKyuKGnmU7N
+	/fIi/ZThhgmojmNIZ55vLgDt2R+yWK0U9/Yov7ijKNcMCy3rxOJLuML+I+MMlGzHSXyNy0vBaCB
+	me58dj2wKW3rgr0sskXXJBW4zp2MhhB8=
+X-Gm-Gg: ASbGncsQ0m5U/PIjmMAR3EfI5rdn8LMy7na36nz9rYKy3YvEXmFYKxAEzDvwRdJUcko
+	mK8a4Paj7aX1mWWJBHGf87wnATnIF07Dh3w6MNTwT5JoK2DEyPCUMRFXCH39ufjjQS4AdOVaoXq
+	HP008a6WImuQp+cEV2EMyrqIPOrHdSby0E83iO0lC0Oh9SnAZuYat+v8c7WuFRW4XtsYf+uFD/s
+	0aeNIS8oQDC3KyLuDnEhJo/6JcbrpY=
+X-Google-Smtp-Source: AGHT+IHbtMDLzeR1sbGWDms0G96PvbvaODbPkv/i4BOWqccXBOtFVGuPCPTquIYVn+yewz88FEz/5ymwxelAnAlxT2E=
+X-Received: by 2002:a17:902:e94e:b0:24c:e6fa:2a38 with SMTP id
+ d9443c01a7336-28e7f298119mr103135045ad.25.1759421677200; Thu, 02 Oct 2025
+ 09:14:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aN6eqf1nPwrfa4YU@x1>
-In-Reply-To: <aN6eqf1nPwrfa4YU@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 2 Oct 2025 08:56:56 -0700
-X-Gm-Features: AS18NWAy6ttVGBpCCgBQZyRBauFGyVfxgmuuXkbFv4KEUdNgaAHzZZ7yH-EwHbQ
-Message-ID: <CAP-5=fWBCcwF9jcOh+vWwKU0P04oiTSu2n+bO+X3SaqeDLtx=A@mail.gmail.com>
-Subject: Re: [PATCH 1/1 v2] tools build: Don't assume libtracefs-devel is
- always available
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Tomas Glozar <tglozar@redhat.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Gabriele Monaco <gmonaco@redhat.com>, 
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+References: <20250820023032.17128-1-dapeng1.mi@linux.intel.com> <20250820023032.17128-6-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250820023032.17128-6-dapeng1.mi@linux.intel.com>
+From: ChaosEsque Team <chaosesqueteam@gmail.com>
+Date: Thu, 2 Oct 2025 12:19:33 -0400
+X-Gm-Features: AS18NWBM0aYGmFkp1e6VQemGuXxJDoK5xJUF16ODwth6yiolqTW8NtM51H7eonk
+Message-ID: <CALC8CXdkpNtk7gd+jPhixU2irxfLae+rQRzORWXmKtNMzdyohg@mail.gmail.com>
+Subject: Re: [Patch v3 5/7] perf/x86/intel: Change macro GLOBAL_CTRL_EN_PERF_METRICS
+ to BIT_ULL(48)
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>, 
+	Yi Lai <yi1.lai@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 2, 2025 at 8:47=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> perf doesn't use libtracefs and so it doesn't make sense to assume it is
-> always available when building test-all.bin, defeating the feature check
-> speedup it provides.
->
-> The other tools/build/ users such as rtla, rv, etc call $(feature_check
-> libtracefs) to check its availability instead of using the test-all.bin
-> mechanism, stopping the build and asking for libtracefs-devel to be
-> installed.
->
-> Remove it from FEATURE_TESTS_BASIC to not have it as available, as noted
-> by Ian Rogers during review.
->
-> Acked-by: Tomas Glozar <tglozar@redhat.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Gabriele Monaco <gmonaco@redhat.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+"Tip bot"
+Just the tip.
+Wonder if this was sent to "menglongdong" (a kernel programmer)
 
-Reviewed-by: Ian Rogers <irogers@google.com>
-
-Thanks!
-Ian
-
+On Tue, Aug 19, 2025 at 10:33=E2=80=AFPM Dapeng Mi <dapeng1.mi@linux.intel.=
+com> wrote:
+>
+> Macro GLOBAL_CTRL_EN_PERF_METRICS is defined to 48 instead of
+> BIT_ULL(48), it's inconsistent with other similar macros. This leads to
+> this macro is quite easily used wrongly since users thinks it's a
+> bit-mask just like other similar macros.
+>
+> Thus change GLOBAL_CTRL_EN_PERF_METRICS to BIT_ULL(48) and eliminate
+> this potential misuse.
+>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Tested-by: Yi Lai <yi1.lai@intel.com>
 > ---
->  tools/build/Makefile.feature   | 1 -
->  tools/build/feature/test-all.c | 5 -----
->  2 files changed, 6 deletions(-)
+>  arch/x86/events/intel/core.c      | 8 ++++----
+>  arch/x86/include/asm/perf_event.h | 2 +-
+>  2 files changed, 5 insertions(+), 5 deletions(-)
 >
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index 9c1a69d26f5121fd..531f8fc4f7df9943 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -83,7 +83,6 @@ FEATURE_TESTS_BASIC :=3D                  \
->          libpython                       \
->          libslang                        \
->          libtraceevent                   \
-> -        libtracefs                      \
->          libcpupower                     \
->          pthread-attr-setaffinity-np     \
->          pthread-barrier                \
-> diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-al=
-l.c
-> index e1847db6f8e63750..2df593593b6ec15e 100644
-> --- a/tools/build/feature/test-all.c
-> +++ b/tools/build/feature/test-all.c
-> @@ -150,10 +150,6 @@
->  # include "test-libtraceevent.c"
->  #undef main
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 15da60cf69f2..f88a99d8d125 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -5319,9 +5319,9 @@ static void intel_pmu_check_hybrid_pmus(struct x86_=
+hybrid_pmu *pmu)
+>                                                 0, x86_pmu_num_counters(&=
+pmu->pmu), 0, 0);
 >
-> -#define main main_test_libtracefs
-> -# include "test-libtracefs.c"
-> -#undef main
-> -
->  int main(int argc, char *argv[])
->  {
->         main_test_libpython();
-> @@ -187,7 +183,6 @@ int main(int argc, char *argv[])
->         main_test_reallocarray();
->         main_test_libzstd();
->         main_test_libtraceevent();
-> -       main_test_libtracefs();
+>         if (pmu->intel_cap.perf_metrics)
+> -               pmu->intel_ctrl |=3D 1ULL << GLOBAL_CTRL_EN_PERF_METRICS;
+> +               pmu->intel_ctrl |=3D GLOBAL_CTRL_EN_PERF_METRICS;
+>         else
+> -               pmu->intel_ctrl &=3D ~(1ULL << GLOBAL_CTRL_EN_PERF_METRIC=
+S);
+> +               pmu->intel_ctrl &=3D ~GLOBAL_CTRL_EN_PERF_METRICS;
 >
->         return 0;
->  }
+>         intel_pmu_check_event_constraints(pmu->event_constraints,
+>                                           pmu->cntr_mask64,
+> @@ -5456,7 +5456,7 @@ static void intel_pmu_cpu_starting(int cpu)
+>                 rdmsrq(MSR_IA32_PERF_CAPABILITIES, perf_cap.capabilities)=
+;
+>                 if (!perf_cap.perf_metrics) {
+>                         x86_pmu.intel_cap.perf_metrics =3D 0;
+> -                       x86_pmu.intel_ctrl &=3D ~(1ULL << GLOBAL_CTRL_EN_=
+PERF_METRICS);
+> +                       x86_pmu.intel_ctrl &=3D ~GLOBAL_CTRL_EN_PERF_METR=
+ICS;
+>                 }
+>         }
+>
+> @@ -7790,7 +7790,7 @@ __init int intel_pmu_init(void)
+>         }
+>
+>         if (!is_hybrid() && x86_pmu.intel_cap.perf_metrics)
+> -               x86_pmu.intel_ctrl |=3D 1ULL << GLOBAL_CTRL_EN_PERF_METRI=
+CS;
+> +               x86_pmu.intel_ctrl |=3D GLOBAL_CTRL_EN_PERF_METRICS;
+>
+>         if (x86_pmu.intel_cap.pebs_timing_info)
+>                 x86_pmu.flags |=3D PMU_FL_RETIRE_LATENCY;
+> diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/per=
+f_event.h
+> index 70d1d94aca7e..f8247ac276c4 100644
+> --- a/arch/x86/include/asm/perf_event.h
+> +++ b/arch/x86/include/asm/perf_event.h
+> @@ -430,7 +430,7 @@ static inline bool is_topdown_idx(int idx)
+>  #define GLOBAL_STATUS_TRACE_TOPAPMI            BIT_ULL(GLOBAL_STATUS_TRA=
+CE_TOPAPMI_BIT)
+>  #define GLOBAL_STATUS_PERF_METRICS_OVF_BIT     48
+>
+> -#define GLOBAL_CTRL_EN_PERF_METRICS            48
+> +#define GLOBAL_CTRL_EN_PERF_METRICS            BIT_ULL(48)
+>  /*
+>   * We model guest LBR event tracing as another fixed-mode PMC like BTS.
+>   *
 > --
-> 2.49.0
+> 2.34.1
+>
 >
