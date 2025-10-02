@@ -1,87 +1,83 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85082798EC;
-	Thu,  2 Oct 2025 18:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A68E2741B3;
+	Thu,  2 Oct 2025 18:02:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759428080; cv=none; b=T7DLCJNSNePtOdcCI3DKr44GYrF+Hrq7GpoBCSDDEPc0+cXkVAfroaSvSXPC/NK/fGDBuvg4Lemu1HNSHHefwIhItS0AdxkQZ0+CMFC64u0mFGq6hkYmcHXH5bd+khnx5Yn6Rtve1LehfSn53OPyHaYd2VwSynFpoIRD9GcCZxA=
+	t=1759428132; cv=none; b=DXVVmYv6fxyevvTM44quRCLqDBva24sGHHHlHVAZdEml5rNxAiQ5tzlJvk5UeeVMsFaNiQjZhUHuI6gWXyqlGBParNn3AfHd7bS2/C3xdmYAg+uKuD0N8yWpouYUfO1LCUxeW39xFtc2fyxMJyPbVBOK/v9dTSJkGHEHpXMWonU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759428080; c=relaxed/simple;
-	bh=3Okw5ifb9rLUlWRI5FmlFu9g7uRHkmz5MKZJThzoFO8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=MMLGFqNl2WfpDD75ZfqD8cqq7vvixsLetZRvZ01yC38f1V/r7z/gs1SANOe1RjuSk3SMOhiGKW3mSAUlkj4V/DLzPQYa27AcF8ZWVqBwFQg9ZhiNoeVwyuShadweLBFh6tF2VIxaO/QweroqecV2dvuU+IiXP5L9JcVV6hzul70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from mop.sam.mop (2.8.3.0.0.0.0.0.0.0.0.0.0.0.0.0.a.5.c.d.c.d.9.1.0.b.8.0.1.0.0.2.ip6.arpa [IPv6:2001:8b0:19dc:dc5a::382])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sam)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id AE3A2340DE1;
-	Thu, 02 Oct 2025 18:01:15 +0000 (UTC)
-From: Sam James <sam@gentoo.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Andrew Pinski <apinski@quicinc.com>,  Yonghong Song
- <yonghong.song@linux.dev>,  "Andrew Pinski (QUIC)"
- <quic_apinski@quicinc.com>,  Namhyung Kim <namhyung@kernel.org>,  Peter
- Zijlstra <peterz@infradead.org>,  Ingo Molnar <mingo@redhat.com>,  Mark
- Rutland <mark.rutland@arm.com>,  Alexander Shishkin
- <alexander.shishkin@linux.intel.com>,  Jiri Olsa <jolsa@kernel.org>,  Ian
- Rogers <irogers@google.com>,  Adrian Hunter <adrian.hunter@intel.com>,
-  "Liang, Kan" <kan.liang@linux.intel.com>,
-  "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-  "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-  "Andrew.pinski@oss.qualcomm.com" <Andrew.pinski@oss.qualcomm.com>
-Subject: Re: [PATCH] perf: use __builtin_preserve_field_info for GCC
- compatibility
-In-Reply-To: <aN69RSQQ8agXOBDH@x1>
-Organization: Gentoo
-References: <fea380fb0934d039d19821bba88130e632bbfe8d.1754438581.git.sam@gentoo.org>
-	<aJPmX8xc5x0W_r0y@google.com>
-	<CO1PR02MB8460C81562C4608B036F36A5B82DA@CO1PR02MB8460.namprd02.prod.outlook.com>
-	<043721e8-a38e-419d-b9b9-2dad33e267a0@linux.dev> <aN629m1MlMXYh1te@x1>
-	<CO1PR02MB84601693B2ECBB323297B4ECB8E7A@CO1PR02MB8460.namprd02.prod.outlook.com>
-	<aN69RSQQ8agXOBDH@x1>
-User-Agent: mu4e 1.12.12; emacs 31.0.50
-Date: Thu, 02 Oct 2025 19:01:13 +0100
-Message-ID: <87wm5dtc7q.fsf@gentoo.org>
+	s=arc-20240116; t=1759428132; c=relaxed/simple;
+	bh=CbY2NvA+Ap2HRr7OZFA29vi4VW/oJ93cwWfxn1XfYus=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J59bLep/yOwlzUV17opmSbBdJZY3X75ylK4YEgtzod6fZxznDSh6bJPQhK6R7QYu7D7eY6OiK5qm9yn37yeQSoRWCDKLQ3NMRzArM/nqdIV16SJ5TP+6nYlKGJENHq08XlKE3n0Rl15N/Mi6OlPdJA7eNkZvcX4ay0OxdUgmPrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t6eKFwVq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t6eKFwVq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3A71C4CEF4;
+	Thu,  2 Oct 2025 18:02:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759428130;
+	bh=CbY2NvA+Ap2HRr7OZFA29vi4VW/oJ93cwWfxn1XfYus=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=t6eKFwVqrvVsGVhlwURDp5ZWiLODlKhamzFwLf9WK+4+lP+UKxQVnog+UbHyYx66p
+	 q+3O0dvfjfTE9ra95S2A/9ze9xRqYWBajc856Mde8G1IOGGSlaIFAwMpGr5epcUkaM
+	 2ZT4oLuxqx2GZpRcqYAJ9auDy49TQAMiO54egmoz8GMBgbhjUdRD3HVPKBYRhz42TD
+	 lOpS/H9rUs3f7SS9YGlFotgydG/wUrm15SbKufIkPgw0jLfO5gaM0dHPedX6+qHlSE
+	 odA+ZiP6dJ8XRJ1cUbo29slKDMHFNn6PFapjaEWAzmgSjEI2EN071gLa1qy4kRdHSd
+	 q51PFoXDReneQ==
+Date: Thu, 2 Oct 2025 15:02:05 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf symbol-minimal: Be more defensive when reading
+ build IDs
+Message-ID: <aN6-HeKLpsBuseXS@x1>
+References: <20250914183131.1962210-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250914183131.1962210-1-irogers@google.com>
 
-Arnaldo Carvalho de Melo <acme@kernel.org> writes:
+On Sun, Sep 14, 2025 at 11:31:31AM -0700, Ian Rogers wrote:
+> The note_data at ptr is read as a nhdr but this may yield
+> out-of-bounds reads if there isn't nhdrs worth of data. Be more
+> defensive before doing the reads. This is motivated by address
+> sanitizer capturing out of bounds reads running "perf top".
 
-> On Thu, Oct 02, 2025 at 05:35:09PM +0000, Andrew Pinski wrote:
->> > From: Arnaldo Carvalho de Melo <acme@kernel.org>
->> > So I'm taking the patch as-is, ok?
->
->> > But first we need the Signed-off-by tag from Andrew Pinski as
->> > he is listed in a Co-authored-by, that I replaced with Co-
->> > developed-by as its the term used for this purpose in:
->
->> > Yonghong, can I add an Acked-by: you since you participated in
->> > this discussion agreeing with the original patch (If I'm not
->> > mistaken)?
->
->> Signed-off-by: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
+Thanks, applied to perf-tools-next,
+
+- Arnaldo
+ 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/symbol-minimal.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
+> index 41e4ebe5eac5..aeb253248895 100644
+> --- a/tools/perf/util/symbol-minimal.c
+> +++ b/tools/perf/util/symbol-minimal.c
+> @@ -42,7 +42,7 @@ static int read_build_id(void *note_data, size_t note_len, struct build_id *bid,
+>  	void *ptr;
 >  
->> Note my email address for doing Linux and GCC development is
->> Andrew.pinski@oss.qualcomm.com . It was apinski_quic@quicinc.com but
->> that changed last month.
->
-> This is what I have in the patch now:
->
-> Co-developed-by: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
-> Signed-off-by: Andrew Pinski <andrew.pinski@oss.qualcomm.com>
-
-Looks good if Andrew is happy. Thanks!
-
->
-> - Arnaldo
+>  	ptr = note_data;
+> -	while (ptr < (note_data + note_len)) {
+> +	while ((ptr + sizeof(*nhdr)) < (note_data + note_len)) {
+>  		const char *name;
+>  		size_t namesz, descsz;
+>  
+> -- 
+> 2.51.0.384.g4c02a37b29-goog
