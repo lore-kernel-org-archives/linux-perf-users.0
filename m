@@ -1,220 +1,208 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854342C08D5;
-	Thu,  2 Oct 2025 23:43:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528F25464D
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Oct 2025 00:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759448615; cv=none; b=Iz9ekUKbUTK1FY0Uj/FQik+ED1pk86GvA6EEy/jQF0t93Nqm4dNrlcN8apyOVRkCQXwTsmE416IVYTRjs773RdB583CbJatGCQAU8Ywc4Z+8vVrhgLdQxhL4Sye/JxFMdyE9vccBqTyzT0+5P7KDBLsO/tqFUBSlfpQleYrnDS8=
+	t=1759452083; cv=none; b=odOESE97c8VfbSS/ZBD5Ij3JP25gsZscQs9rhchp0k7eqvhS272HShXdPWmv5g6jj53+/B/8jtkp89xpUcpVZ4ZHQbaG4fsfKKA4Vx0lykEhy+nuTjCh8EQctjtzMFDZ4YuQOSZF+ReR2vHaAZtS5d54Y6MWI9Ww5eRjPhWaU/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759448615; c=relaxed/simple;
-	bh=53y8mTKwYGU9EQpfzk/NGpruUlqMD9aiccI+mmERdBg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dDltKTB3Vphl5kkzSZbCY5dQ0eg025kAooXyuCrC7BBT5elDTJgeCY14RCy3SvHompV6qwrX8NQLxO9+OREJpaEJ/etnkLjyrJ2YfrnI/qlGG0+d1a/N3oQ7FoiUXS+SSzvO77HlGxPutzf4UpMwUUrR6f5uREkgHq2kv5JSfNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X6cxv/B0; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1759452083; c=relaxed/simple;
+	bh=3mDe7fpgcruxbDrX0bc5+oJ9/rO2+0AXTXV6A3h/n+k=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=Kgz5AogWtyYGqjhUQmfeHQU/JhYoFf7naamagTeeLe4I7bIazpyB5PiSdktYipupl2HXy6K7DUmT8++rK8JPuSUzpWqxD+e5yA8jKJoyfTx1yJMyasqyaR/11dWFZHOhyHBjLLk3NRwgJ/PG8ZtqStobQv0rm37WwmExf4AJYyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g8xHhWC8; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X6cxv/B0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759448614; x=1790984614;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=53y8mTKwYGU9EQpfzk/NGpruUlqMD9aiccI+mmERdBg=;
-  b=X6cxv/B0eed+7jj82xh4eNcAav310t96jVLvio6XARHMSWVetz/HI9am
-   JWm4WLmI1pfv6evWswgrYUemavVWfpdPYm6grZLufud0TSimCNhSYppx+
-   Pges+PXWx/D+iivM1chhwIWDyJzgvDZPVoOmFo2XVzXPQbNC98mk2Bre/
-   Y2MdJwIkBpVcsnUrABp0z+s5lH8g7bjqwEtO0PvSI1LjmmX891jVQi3UV
-   FD1Ugfbb1merMdPAC1IRz4soqI97HG0V3++BV/HGBjgqQJs7FQaGdUdSf
-   HGUsi43cMqilTUz6sKQ9LDrPHwBL2J4VTD3boIChOvLRlsr74k4PqkBKW
-   g==;
-X-CSE-ConnectionGUID: mltELkH8TwqieYu98yrnlA==
-X-CSE-MsgGUID: GFcz0VFLQTG/YwWSWTNRvA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11570"; a="60948401"
-X-IronPort-AV: E=Sophos;i="6.18,310,1751266800"; 
-   d="scan'208";a="60948401"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2025 16:43:33 -0700
-X-CSE-ConnectionGUID: TWYbA5FgRiaf6JbFs5CK/A==
-X-CSE-MsgGUID: kyvZrzOsTO2S42W5shpXwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,310,1751266800"; 
-   d="scan'208";a="178444545"
-Received: from mgoodin-mobl3.amr.corp.intel.com (HELO tfalcon-desk.attlocal.net) ([10.124.223.53])
-  by orviesa010.jf.intel.com with ESMTP; 02 Oct 2025 16:43:32 -0700
-From: thomas.falcon@intel.com
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Andi Kleen <ak@linux.intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>
-Subject: [Patch v3 2/2] perf record: Add auto counter reload parse and regression tests
-Date: Thu,  2 Oct 2025 18:43:06 -0500
-Message-ID: <20251002234308.64218-3-thomas.falcon@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251002234308.64218-1-thomas.falcon@intel.com>
-References: <20251002234308.64218-1-thomas.falcon@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g8xHhWC8"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-76e2ea9366aso1581236b3a.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Oct 2025 17:41:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1759452077; x=1760056877; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=XlVgG+qUcqt1ti4IWrjfI9WXkl1dtzgX2VnAjDGGGKQ=;
+        b=g8xHhWC8cEKyL4LnDYPCCu+BiMTD120cbHvrH3KqLnx40F67t01wY7YMbaHBtixl4o
+         WcQj4jCD2JzBzoHzJtO+Y6xoUry3k61ywbyF5kj6Hv+Qv2z23YZvsq6C4s4Ziwn76qXj
+         CpXUrY7WfLnejabVpOu/+174tTQGw+F1mcrs3vmS/7EGDZid+CSqJ+ry5nRPbcD/Jf0q
+         FXh7ewHk23Y435/ya11+9TpK2KmhG0A4tdhLdDD/IDGrA5iB29KJduEkUCJ8X7LvCugH
+         SlOhxQTcZDkncUChqo5adRhmtmx2pwcUFdhgulvcMU0KKMYF/WeXU9slt3m0UOAsJSi7
+         b1Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759452077; x=1760056877;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XlVgG+qUcqt1ti4IWrjfI9WXkl1dtzgX2VnAjDGGGKQ=;
+        b=fxrgkf6wATCMpRcluRyJGkU65ozHTs8fVVWcgN6heCLgx+3i1Am9qZfnk+qqYbyDWJ
+         4Wb7gCnMNflloqwTsKTFNZe2RhbVNfwN3swV+TBn6mVg70smoxhKTHoxTsMWZ+sEEtvP
+         aknp0YlimXbhOyQqY1k1e4gakVeyCAST7GZD3FI+noO4XPId1aNj086cJIfTJKhJIDwN
+         gyNpA8JZSczgK6ZfyNm729/YEAuewVlOM4fglV8WWwySqfe5k/3lWANLTD8mXigMB7XY
+         4Nsqp6nOkSWQ+7ad3KZHvADvqGkSmL3mzuMb2Fb/ilBNl/T5zm+DqTsEm6nYMsx/YPYB
+         P5cA==
+X-Forwarded-Encrypted: i=1; AJvYcCVymTi/+iihlYimgssUxhTZEBVqXKq1cwf1l4vKZTUi/ouCTSuDqg7uGUf9mXwxoXevVOwdMAa6a5SuJBKUJfXp@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCu2l+U2oifmkLxs5PS18NgBH9lOZMfrF5GA+EIvazEgiz1I2w
+	GFtY4ptqs9Dvmuzj96QlWVz9j11MSxI2Tzgu+xGiamafudhw3CEIGKfzMxwUpkzZjziPoOH4nEA
+	aneto/9Gmcg==
+X-Google-Smtp-Source: AGHT+IGP0IJMW4X14mDo3SaF2DPNVjoOEPADwz8Mfq/a+u3M5w2WZyZ+g37te5WSjbUe5DeFJ/v/n2gwtua5
+X-Received: from pgct8.prod.google.com ([2002:a05:6a02:5288:b0:b55:117c:84a3])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:2450:b0:2e2:3e68:6e45
+ with SMTP id adf61e73a8af0-32b6211891dmr1662801637.51.1759452077454; Thu, 02
+ Oct 2025 17:41:17 -0700 (PDT)
+Date: Thu,  2 Oct 2025 17:41:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.51.0.618.g983fd99d29-goog
+Message-ID: <20251003004102.2369463-1-irogers@google.com>
+Subject: [PATCH v1 1/2] perf namespaces: Avoid get_current_dir_name dependency
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Thomas Falcon <thomas.falcon@intel.com>
+get_current_dir_name is a GNU extension not supported on, for example,
+Android. There is only one use of it so let's just switch to getcwd to
+avoid build and other complexity.
 
-Include event parsing and regression tests for auto counter reload
-and ratio-to-prev event term.
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/parse-events.c  | 54 ++++++++++++++++++++++++++++++++
- tools/perf/tests/shell/record.sh | 40 +++++++++++++++++++++++
- 2 files changed, 94 insertions(+)
+ tools/perf/Makefile.config             |  4 ----
+ tools/perf/util/Build                  |  1 -
+ tools/perf/util/get_current_dir_name.c | 18 ------------------
+ tools/perf/util/get_current_dir_name.h |  8 --------
+ tools/perf/util/namespaces.c           | 14 +++++---------
+ 5 files changed, 5 insertions(+), 40 deletions(-)
+ delete mode 100644 tools/perf/util/get_current_dir_name.c
+ delete mode 100644 tools/perf/util/get_current_dir_name.h
 
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index bb8004397650..67550cc60555 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -1736,6 +1736,53 @@ static int test__intel_pt(struct evlist *evlist)
- 	return TEST_OK;
- }
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 0f4b297fbacc..6cdb96576cb8 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -417,10 +417,6 @@ ifeq ($(feature-eventfd), 1)
+   CFLAGS += -DHAVE_EVENTFD_SUPPORT
+ endif
  
-+static bool test__acr_valid(void)
-+{
-+	struct perf_pmu *pmu = NULL;
-+
-+	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
-+		if (perf_pmu__has_format(pmu, "acr_mask"))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+static int test__ratio_to_prev(struct evlist *evlist)
-+{
-+	struct evsel *evsel;
-+	int ret;
-+
-+	TEST_ASSERT_VAL("wrong number of entries", 2 * perf_pmus__num_core_pmus() == evlist->core.nr_entries);
-+
-+	 evlist__for_each_entry(evlist, evsel) {
-+		if (!perf_pmu__has_format(evsel->pmu, "acr_mask"))
-+			return TEST_OK;
-+
-+		if (evsel == evlist__first(evlist)) {
-+			TEST_ASSERT_VAL("wrong config2", 0 == evsel->core.attr.config2);
-+			TEST_ASSERT_VAL("wrong leader", evsel__is_group_leader(evsel));
-+			TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 2);
-+			TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 0);
-+			ret = assert_hw(&evsel->core, PERF_COUNT_HW_CPU_CYCLES, "cycles");
-+		} else {
-+			TEST_ASSERT_VAL("wrong config2", 0 == evsel->core.attr.config2);
-+			TEST_ASSERT_VAL("wrong leader", !evsel__is_group_leader(evsel));
-+			TEST_ASSERT_VAL("wrong core.nr_members", evsel->core.nr_members == 0);
-+			TEST_ASSERT_VAL("wrong group_idx", evsel__group_idx(evsel) == 1);
-+			ret = assert_hw(&evsel->core, PERF_COUNT_HW_INSTRUCTIONS, "instructions");
-+		}
-+		if (ret)
-+			return ret;
-+		/*
-+		 * The period value gets configured within evlist__config,
-+		 * while this test executes only parse events method.
-+		 */
-+		TEST_ASSERT_VAL("wrong period", 0 == evsel->core.attr.sample_period);
-+	}
-+	return TEST_OK;
-+}
-+
- static int test__checkevent_complex_name(struct evlist *evlist)
+-ifeq ($(feature-get_current_dir_name), 1)
+-  CFLAGS += -DHAVE_GET_CURRENT_DIR_NAME
+-endif
+-
+ ifeq ($(feature-gettid), 1)
+   CFLAGS += -DHAVE_GETTID
+ endif
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 5ead46dc98e7..9464eceb764b 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -23,7 +23,6 @@ perf-util-y += evsel_fprintf.o
+ perf-util-y += perf_event_attr_fprintf.o
+ perf-util-y += evswitch.o
+ perf-util-y += find_bit.o
+-perf-util-y += get_current_dir_name.o
+ perf-util-y += levenshtein.o
+ perf-util-y += mmap.o
+ perf-util-y += memswap.o
+diff --git a/tools/perf/util/get_current_dir_name.c b/tools/perf/util/get_current_dir_name.c
+deleted file mode 100644
+index e68935e9ac8c..000000000000
+--- a/tools/perf/util/get_current_dir_name.c
++++ /dev/null
+@@ -1,18 +0,0 @@
+-// SPDX-License-Identifier: LGPL-2.1
+-// Copyright (C) 2018, 2019 Red Hat Inc, Arnaldo Carvalho de Melo <acme@redhat.com>
+-//
+-#ifndef HAVE_GET_CURRENT_DIR_NAME
+-#include "get_current_dir_name.h"
+-#include <limits.h>
+-#include <string.h>
+-#include <unistd.h>
+-
+-/* Android's 'bionic' library, for one, doesn't have this */
+-
+-char *get_current_dir_name(void)
+-{
+-	char pwd[PATH_MAX];
+-
+-	return getcwd(pwd, sizeof(pwd)) == NULL ? NULL : strdup(pwd);
+-}
+-#endif // HAVE_GET_CURRENT_DIR_NAME
+diff --git a/tools/perf/util/get_current_dir_name.h b/tools/perf/util/get_current_dir_name.h
+deleted file mode 100644
+index 69f7d5537d32..000000000000
+--- a/tools/perf/util/get_current_dir_name.h
++++ /dev/null
+@@ -1,8 +0,0 @@
+-// SPDX-License-Identifier: LGPL-2.1
+-// Copyright (C) 2018, 2019 Red Hat Inc, Arnaldo Carvalho de Melo <acme@redhat.com>
+-//
+-#ifndef __PERF_GET_CURRENT_DIR_NAME_H
+-#ifndef HAVE_GET_CURRENT_DIR_NAME
+-char *get_current_dir_name(void);
+-#endif // HAVE_GET_CURRENT_DIR_NAME
+-#endif // __PERF_GET_CURRENT_DIR_NAME_H
+diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
+index 68f5de2d79c7..d1475b79a4a7 100644
+--- a/tools/perf/util/namespaces.c
++++ b/tools/perf/util/namespaces.c
+@@ -6,7 +6,6 @@
+ 
+ #include "namespaces.h"
+ #include "event.h"
+-#include "get_current_dir_name.h"
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+@@ -279,10 +278,9 @@ void nsinfo__set_in_pidns(struct nsinfo *nsi)
+ void nsinfo__mountns_enter(struct nsinfo *nsi,
+ 				  struct nscookie *nc)
  {
- 	struct evsel *evsel = evlist__first(evlist);
-@@ -2249,6 +2296,13 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_tracepoint,
- 		/* 4 */
- 	},
-+	{
-+		.name  = "{cycles,instructions/period=200000,ratio-to-prev=2.0/}",
-+		.valid = test__acr_valid,
-+		.check = test__ratio_to_prev,
-+		/* 5 */
-+	},
-+
- };
+-	char curpath[PATH_MAX];
++	char oldcwd[PATH_MAX];
+ 	int oldns = -1;
+ 	int newns = -1;
+-	char *oldcwd = NULL;
  
- static const struct evlist_test test__events_pmu[] = {
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index b1ad24fb3b33..0f5841c479e7 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -388,6 +388,45 @@ test_callgraph() {
-   echo "Callgraph test [Success]"
- }
+ 	if (nc == NULL)
+ 		return;
+@@ -293,14 +291,14 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
+ 	if (!nsi || !nsinfo__need_setns(nsi))
+ 		return;
  
-+test_ratio_to_prev() {
-+  echo "ratio-to-prev test"
-+  if ! perf record -o /dev/null -e "{instructions, cycles/period=100000,ratio-to-prev=0.5/}" \
-+     true 2> /dev/null
-+  then
-+    echo "ratio-to-prev [Skipped not supported]"
-+    return
-+  fi
-+  if ! perf record -o /dev/null -e "instructions, cycles/period=100000,ratio-to-prev=0.5/" \
-+     true |& grep -q 'Invalid use of ratio-to-prev term without preceding element in group'
-+  then
-+    echo "ratio-to-prev test [Failed elements must be in same group]"
-+    err=1
-+    return
-+  fi
-+  if ! perf record -o /dev/null -e "{instructions,dummy,cycles/period=100000,ratio-to-prev=0.5/}" \
-+     true |& grep -q 'must have same PMU'
-+  then
-+    echo "ratio-to-prev test [Failed elements must have same PMU]"
-+    err=1
-+    return
-+  fi
-+  if ! perf record -o /dev/null -e "{instructions,cycles/ratio-to-prev=0.5/}" \
-+     true |& grep -q 'Event period term or count (-c) must be set when using ratio-to-prev term.'
-+  then
-+    echo "ratio-to-prev test [Failed period must be set]"
-+    err=1
-+    return
-+  fi
-+  if ! perf record -o /dev/null -e "{cycles/ratio-to-prev=0.5/}" \
-+     true |& grep -q 'Invalid use of ratio-to-prev term without preceding element in group'
-+  then
-+    echo "ratio-to-prev test [Failed need 2+ events]"
-+    err=1
-+    return
-+  fi
-+  echo "Basic ratio-to-prev record test [Success]"
-+}
-+
- # raise the limit of file descriptors to minimum
- if [[ $default_fd_limit -lt $min_fd_limit ]]; then
-        ulimit -Sn $min_fd_limit
-@@ -404,6 +443,7 @@ test_leader_sampling
- test_topdown_leader_sampling
- test_precise_max
- test_callgraph
-+test_ratio_to_prev
+-	if (snprintf(curpath, PATH_MAX, "/proc/self/ns/mnt") >= PATH_MAX)
++	if (!getcwd(oldcwd, sizeof(oldcwd)))
+ 		return;
  
- # restore the default value
- ulimit -Sn $default_fd_limit
+-	oldcwd = get_current_dir_name();
+-	if (!oldcwd)
++	nc->oldcwd = strdup(oldcwd);
++	if (!nc->oldcwd)
+ 		return;
+ 
+-	oldns = open(curpath, O_RDONLY);
++	oldns = open("/proc/self/ns/mnt", O_RDONLY);
+ 	if (oldns < 0)
+ 		goto errout;
+ 
+@@ -311,13 +309,11 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
+ 	if (setns(newns, CLONE_NEWNS) < 0)
+ 		goto errout;
+ 
+-	nc->oldcwd = oldcwd;
+ 	nc->oldns = oldns;
+ 	nc->newns = newns;
+ 	return;
+ 
+ errout:
+-	free(oldcwd);
+ 	if (oldns > -1)
+ 		close(oldns);
+ 	if (newns > -1)
 -- 
-2.50.1
+2.51.0.618.g983fd99d29-goog
 
