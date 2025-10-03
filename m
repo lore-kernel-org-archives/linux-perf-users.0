@@ -1,152 +1,138 @@
-Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9340E7261D
-	for <linux-perf-users@vger.kernel.org>; Fri,  3 Oct 2025 00:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F427274B56
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Oct 2025 01:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759452085; cv=none; b=GoqscCAppF7gOJBgTxYGRNJ/OKm+oJBaGWg5MPcGNrCQOr44KQmo6F6nUySxq7U2B68g/Y14Q5X+BOh12ybpvoQVWwhyOQOuw5wMfqs30pB4/H3fFZsTkbwEMb9JnpVdBrYMKMtFxguXve7YJd0huQbPT1pHDOhzpT5Sb2BJTIU=
+	t=1759454645; cv=none; b=oDyoxdtsgGVQd60siB0A6BX99+JRl8Yy+3RtuWcIw4/tWP4IXCalOJtu8AAeDUgt4TcR20ty/dg6D3lp9BuW+fMCW4BTqOmYp+vVZc+imZrPS/7DtEa2YmpKkQSqECWm3w/0we2WEipclBeR/QyDIYn2wuXxRAkkqv4kYIJqmig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759452085; c=relaxed/simple;
-	bh=OpUdHXUA0W+Q6HfIdjC5/Eo2qQS6nQyXRDaLDwwWGXE=;
+	s=arc-20240116; t=1759454645; c=relaxed/simple;
+	bh=5YQj5whNsy944Tq1nsPgEs2SC3r0ANA3hsB9j366qHU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=mrEM7YbCdG9jJcRqGBaWaz5kzVegMfyuP0tZ6i9yvT8PCj6C6AKTv6pZs/o5m/xH4QBt6asxFma5IhP5HViQhBzks9GWlHEjrznH8Rh6U3Y1EOPRMwBzihq6+XAyIazx4bVs4gizaLjk9bWWOyPEgBczUus2kQId5/HNTdsm/BU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YB8tnYmG; arc=none smtp.client-ip=209.85.160.73
+	 To:Content-Type; b=bzx5AlTz2mTGDWDWX4TusDdYU2L0oV2bgSgNu+cl62GSiPaolENHU9++DxH5B3MDU4lKiHaPVP7AnFA8vteJ2aSDpL0HxAvL9IcBYv2/bU90kN1gAxOV3E8hDWdMHwQBbvveFDOBcamomEdrtDlKBwfB7D7CjegYTZcNcqz5XvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RdygujaT; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YB8tnYmG"
-Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-36d429b919cso2163621fac.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Oct 2025 17:41:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RdygujaT"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-32eb18b5659so1592943a91.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Oct 2025 18:24:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759452079; x=1760056879; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1759454643; x=1760059443; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=CCzKIcxSwtwSrniu1/P7nPNHr6oMGAp8BGuB6qmiLI4=;
-        b=YB8tnYmG6SsChHmhZRyXLRygcNNa5qwkZ/2foxQC2WeaEYBFCYjEUmtZ/azd/GWkUh
-         U5J8kCU7+O0XS0hBRcImloJYZnGrMe9zwVHAySnijZARETnVEJCbzYH4dfuOtpP8afna
-         o+Vdk0BRl+Bm58G1mey1tE2SWbVCHSnzZYnSdCuxvhHjcGmxMJIifH1IFJyv+kwQE1kx
-         JOs1D+YBm8Nq2ydXOjmcWmkoYPFXJ+7x+0GgDznKKzbkQrdlHND/WRU3VvLfSSrinx9v
-         Wbl4rhS6KpVAgeRs4DFlUMXDbbzz1pf2rktjYkgeVebir+DQg/aridgHKiJvKGsEDspT
-         N1HQ==
+        bh=4a36ssrUk2NOwqoWNNokgafRmPGrKtrh3ueHGKtWlXo=;
+        b=RdygujaTfvghY5aIrVszsg0i07xaYCGZ4tm89wKO89C4R9j9a54A7fJumfv++d/y6G
+         2ghPPmp922lzXOcVBmxbOeu6LzoviFthD/Whysjv/CKa9oGHHesWpbtNvZkhqZLsTifA
+         pGvT5QnynywUsl63+MM7n8oqeugrwzS8Wma5HtKGd/2Fw/LmwW9h2uLxvj7kQZwDx88k
+         K2G26JCbuPbVu6sHQOH7gPf02ZwPU2mUUH/CPkvSN24lhwN9ttjlz/m7ENjwaWEE8i8K
+         g8c0A2bSaaK20ugkeLfDJ4SXoxy5YHKaDCuBdsLnKcnHve/fDwpnRk3UamqP8fvCuzuf
+         lr4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759452079; x=1760056879;
+        d=1e100.net; s=20230601; t=1759454643; x=1760059443;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CCzKIcxSwtwSrniu1/P7nPNHr6oMGAp8BGuB6qmiLI4=;
-        b=mpfoY4KnaR74tx4PI32O23YteCCcLWKoX/5FcZy/U+hP8QzZLZX7J2BrFy6d7bsnZr
-         mXpCY49BXjlDk2soNcLaNzVgZNMUPDGPRwCT2/Agx2E7UBP1OMj1/6R77GyR7j8dQXUj
-         mPJKP9S/J7/kKksXSb4KCrMC6RzCiMtxe7qcBU12NKoFyidwICphItRuorBuHWsCyAqv
-         iwhapCT4ixY4A0ScS0DUwbLU0GOcDiNgMHkeglaQL7mVHCQrIWXcNRC2iBXzF4ycTWx0
-         GZ8xRG0GfvdmZKzSc9fAdq8hO+9CCMm4CKL33hq+KyPUVDDysNKuwyOxdO0b1g98K7Me
-         1rcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW/x499J+z4MG5L26HbA18yTffqGBLuINT7+oO5UoDZN8AMzfoD8sfQ0vUnKU4xkfWA2WVCnX31SWSGQnJ7NH7V@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwKksg/Kn9ECMSiGmji6XFCaugsYTQUDOMxrQYj4yYJZsMnPVw
-	15kaNMmpgUlUGxM5Uy0W0Hwy2hk8y5YvqyRu/nbaoBYarqwzJkdXZD4RZZlLCVjshmuSa+pVf+J
-	+Yxj5JSLAHw==
-X-Google-Smtp-Source: AGHT+IHSKO6pynCvlxVgyPpdGQ5vMYpKoedA5Lj/IAAoV6RAFlFnYhVoeUzAmxNCKVa7k5b0HLTSZ71wpDdu
-X-Received: from oabmk9.prod.google.com ([2002:a05:6870:d09:b0:368:ae2f:aa00])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:f116:b0:322:5678:8245
- with SMTP id 586e51a60fabf-3b10283e0edmr803446fac.31.1759452079552; Thu, 02
- Oct 2025 17:41:19 -0700 (PDT)
-Date: Thu,  2 Oct 2025 17:41:02 -0700
-In-Reply-To: <20251003004102.2369463-1-irogers@google.com>
+        bh=4a36ssrUk2NOwqoWNNokgafRmPGrKtrh3ueHGKtWlXo=;
+        b=HbTDSLhmon/6c4NJ0K+5vYHQeIo9P+HTVNxSNhv6P6uRWeeJmFnIbGQtMiridhrN8u
+         N6ScouqmvCBx8TMg9bsz1rNlUd851XnmisRHD10jTI2/UoGaTjezRQFUcHAvMHYdMsyM
+         BWYmyQQsRERXHnSJv2Gm4AeIEv2zMGz0/tpr3NctBECbl3iT+e/vaPr1CaY8sPTOGKkC
+         OUkvtllo68ELlCW6dl0x8aH2ccHp6onHMBA43S1xMOA9C3wPoL0GIyQGDhroKLQO+Vd3
+         gbMw2DCnaD/duciGbBjR6iXeN8MFMB60MXGgXRYwSEaTJQKwk96KwnH8QKPig9V7bK6M
+         Sz8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUdZ5z8Z11Ta1uWbNCMPPdBBQGAPtNgJanE3Xl3eEdtNHAXobh8HvV9YXkeJsYojmmIy7GovP4TUZeCgKTsLXKv@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxx3G0+E+ARE4mjaDuJ6eXi/ynO96O/ETfl0PaGd2lKjxTAlbGO
+	wdfImOuY2zxTizamulJps2leInbKPA9vnue9TJhtlWohtqJHxqkl8NQXLyyeqyjBq5vbzGWUAmI
+	rp+TvUtkFlQ==
+X-Google-Smtp-Source: AGHT+IHfyZpoMDCQT8hkrc//s6nFD45TPZ427CL0dAfY14RayEbEgz2tiGZWsZyPld8miWOzUhmcMlj6XJBu
+X-Received: from pjsk12.prod.google.com ([2002:a17:90a:62cc:b0:330:49f5:c0a7])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1845:b0:32e:32f8:bf9f
+ with SMTP id 98e67ed59e1d1-339c27d2ec8mr1417437a91.30.1759454642812; Thu, 02
+ Oct 2025 18:24:02 -0700 (PDT)
+Date: Thu,  2 Oct 2025 18:23:49 -0700
+In-Reply-To: <20251003012349.2396685-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20251003004102.2369463-1-irogers@google.com>
+References: <20251003012349.2396685-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.618.g983fd99d29-goog
-Message-ID: <20251003004102.2369463-2-irogers@google.com>
-Subject: [PATCH v1 2/2] tools build: Remove get_current_dir_name
+Message-ID: <20251003012349.2396685-2-irogers@google.com>
+Subject: [PATCH v1 2/2] tools build: Remove libbpf-strings feature test
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+	Blake Jones <blakejones@google.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-As perf no longer tests for this feature, and it was the only user,
-remove the feature test.
+The feature test is unnecessary as the LIBBPF_CURRENT_VERSION_GEQ(1,7)
+macro can be used instead. The only use was in perf and this is now
+removed.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/build/Makefile.feature                    |  1 -
- tools/build/feature/Makefile                    |  4 ----
- tools/build/feature/test-all.c                  |  4 ----
- tools/build/feature/test-get_current_dir_name.c | 11 -----------
- 4 files changed, 20 deletions(-)
- delete mode 100644 tools/build/feature/test-get_current_dir_name.c
+ tools/build/Makefile.feature              |  1 -
+ tools/build/feature/Makefile              |  4 ----
+ tools/build/feature/test-libbpf-strings.c | 10 ----------
+ 3 files changed, 15 deletions(-)
+ delete mode 100644 tools/build/feature/test-libbpf-strings.c
 
 diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 9c1a69d26f51..9399f591bd69 100644
+index 9399f591bd69..f9477df18841 100644
 --- a/tools/build/Makefile.feature
 +++ b/tools/build/Makefile.feature
-@@ -68,7 +68,6 @@ FEATURE_TESTS_BASIC :=                  \
-         libdw                           \
-         eventfd                         \
-         fortify-source                  \
--        get_current_dir_name            \
-         gettid				\
-         glibc                           \
-         libbfd                          \
+@@ -124,7 +124,6 @@ FEATURE_TESTS_EXTRA :=                  \
+          llvm                           \
+          clang                          \
+          libbpf                         \
+-         libbpf-strings                 \
+          libpfm4                        \
+          libdebuginfod			\
+          clang-bpf-co-re		\
 diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index b41a42818d8a..d13d2a1f44fe 100644
+index d13d2a1f44fe..fd304dc2aafd 100644
 --- a/tools/build/feature/Makefile
 +++ b/tools/build/feature/Makefile
-@@ -8,7 +8,6 @@ FILES=                                          \
-          test-libdw.bin                         \
-          test-eventfd.bin                       \
-          test-fortify-source.bin                \
--         test-get_current_dir_name.bin          \
-          test-glibc.bin                         \
-          test-gtk2.bin                          \
-          test-gtk2-infobar.bin                  \
-@@ -147,9 +146,6 @@ $(OUTPUT)test-libelf.bin:
- $(OUTPUT)test-eventfd.bin:
- 	$(BUILD)
+@@ -57,7 +57,6 @@ FILES=                                          \
+          test-lzma.bin                          \
+          test-bpf.bin                           \
+          test-libbpf.bin                        \
+-         test-libbpf-strings.bin                \
+          test-get_cpuid.bin                     \
+          test-sdt.bin                           \
+          test-cxx.bin                           \
+@@ -332,9 +331,6 @@ $(OUTPUT)test-bpf.bin:
+ $(OUTPUT)test-libbpf.bin:
+ 	$(BUILD) -lbpf
  
--$(OUTPUT)test-get_current_dir_name.bin:
+-$(OUTPUT)test-libbpf-strings.bin:
 -	$(BUILD)
 -
- $(OUTPUT)test-glibc.bin:
+ $(OUTPUT)test-sdt.bin:
  	$(BUILD)
  
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-index e1847db6f8e6..778883a32afb 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -22,10 +22,6 @@
- # include "test-libelf.c"
- #undef main
- 
--#define main main_test_get_current_dir_name
--# include "test-get_current_dir_name.c"
--#undef main
--
- #define main main_test_gettid
- # include "test-gettid.c"
- #undef main
-diff --git a/tools/build/feature/test-get_current_dir_name.c b/tools/build/feature/test-get_current_dir_name.c
+diff --git a/tools/build/feature/test-libbpf-strings.c b/tools/build/feature/test-libbpf-strings.c
 deleted file mode 100644
-index c3c201691b4f..000000000000
---- a/tools/build/feature/test-get_current_dir_name.c
+index 83e6c45f5c85..000000000000
+--- a/tools/build/feature/test-libbpf-strings.c
 +++ /dev/null
-@@ -1,11 +0,0 @@
+@@ -1,10 +0,0 @@
 -// SPDX-License-Identifier: GPL-2.0
--#define _GNU_SOURCE
--#include <unistd.h>
--#include <stdlib.h>
+-#include <bpf/btf.h>
 -
 -int main(void)
 -{
--	free(get_current_dir_name());
--	return 0;
+-	struct btf_dump_type_data_opts opts;
+-
+-	opts.emit_strings = 0;
+-	return opts.emit_strings;
 -}
--#undef _GNU_SOURCE
 -- 
 2.51.0.618.g983fd99d29-goog
 
