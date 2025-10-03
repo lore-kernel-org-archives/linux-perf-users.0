@@ -1,302 +1,580 @@
-Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013016.outbound.protection.outlook.com [40.93.196.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12461CBEAA;
-	Fri,  3 Oct 2025 05:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759467854; cv=fail; b=bOe+SQGOwrN1Bcy9nFvVrjClaK3dZZuUUhfqHg84EZosZn36yhnyVhdCoI09aqqchKeBq5Iev3gO9uHtjOX3YNECqZCT/bs2QE4VL4fLEmio+LbSxWQJJO9dWfoLcmgUy0LmbphFh1uTuT+QVySp1d4C57684YTmBm5ocpcsmPQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759467854; c=relaxed/simple;
-	bh=hMN1xOLEngw5N1qCoblctLSmBnpV/HL1uGQcOhkljyU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=u++3/tjL1tvRzFZ3D53UqtTYf8fjnPJceU3n5pbAfNMBaVDitgghNswZaLdCUTAN6o8hALDtE/4e+JRFvOV90NkQ1vw+ra7RZTAhV76kp3H+xXNSoOLKziPrtbPypgSrmjNHxqIu0KHLl7m7Ot15VlVyy7PU35Kh5QciRkO2UfM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dNwffRs5; arc=fail smtp.client-ip=40.93.196.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C98D19C54F;
+	Fri,  3 Oct 2025 05:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759467931; cv=none; b=FxgoVU47NWX5jR1L/dIFZz9JlyCAgtKVG8MmmP7H3c6xqd6ozXHhUBlz+6Wt6eieNCA0W2EJlWbx2R0je0KT2pXzVWD3HZAJB4R9vznKXRv+u1921TO271CMEFnTUq1d3oX9an73s9Wmf70uSE2JZm9/DZb3fCfJ92UQDuyp72A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759467931; c=relaxed/simple;
+	bh=wCqljXs5f14yz3HH4gXWDN2RMbXSMYXuG1x7ClCXlI0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JFf5eutXBLkMl6mvC/lmQLcvTLI7cwXNyDBKVKiUOeep8URZp2+vU0HtutbfRKkQqqm03vP++osbRbjPafIjIO4hrdNVXaOJJMPj9qGPpGjW1+izlPG0cnaFCiuPRku5Vz+PjdagGSTeK3JhfxMuUYETmHJsj6Y6B5wuRQyUClk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T4i4N/A2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dNwffRs5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZmnvLqQJoPH6PjcpyXkHZzqsEBFfrHe0BVPWwEdgYEmlJK9XGZYTSmbWQbBPGCCQoF1HS5HYqm9soumGUOWXMAvXTkVVzlXWDcdY4BC3XX/bPFUtWo9Sgr4Mh8XAHkKZRIGmD+fYLdc32PkCowglJtoHO4cR+3bPrD88V5Qm8wIBcL0l25XRR10vTm9XWYKNHNfBfVZfFPD90aQXmJZoB9MnINMGMWAo/GjmknUYDqu0s/2qxhIKjKhkGSPc27lHxjIBUoc2GzcNEyb5KxNGvk5KxM1qIfyM3Tv2oq0vHiHdFcgRCdVdiuaTpbeIHmeXPHFV09BCzdKPA0fEn+cclw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iplH5jn4C0klpNNVCzIs9dMDCkQEOLLe2i1eeO4XarY=;
- b=vdgbh3Gp9yFbWD4rJGqZpviupTcgFHFRHQo4y7XG4awCqVb9kfzHOtnBeyCHaJJA0to4xsuTCbnJ5LewkSOf1Y9twNdo//1y35GMhUNhlfAzoyRAXLZr2g4OBZa/3O6NT0EL4GSFrb+oIX/aH3tk3bT8Fr2HyF7IefJqW1IV6p7SlqPR653Q+VixvtNoUfkNPCljQPay+PR5b03Jv1J06WwY74D2qaICVIqblj0pjoslvJ1KpU5thdsKoM6N3Z641/gunYqspyJtagDAtMgddPdmq5z5KAc/CnIzV/9/+Krug9XrED2YKnLBRlLWmz8hLasDjZGzZ/+cTUrNWjNJEg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iplH5jn4C0klpNNVCzIs9dMDCkQEOLLe2i1eeO4XarY=;
- b=dNwffRs5+LA+dIMsnCJDDcCNynYbNF5HU90An3uQvFIAeVfRPPlm67Ff9SERr26VTJBXtlKzDGSxjS1PT6wbnaWuza7FuvqC3mh+cET+TOzcbYdioq0yyNBSdlpc7Bg8TFuqm9rp03wbMQucHiINJN1289+fff5Tr52Swcv8v3Q=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
- by LV2PR12MB5989.namprd12.prod.outlook.com (2603:10b6:408:171::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9160.18; Fri, 3 Oct
- 2025 05:04:05 +0000
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::2efc:dc9f:3ba8:3291]) by PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::2efc:dc9f:3ba8:3291%6]) with mapi id 15.20.9160.017; Fri, 3 Oct 2025
- 05:04:04 +0000
-Message-ID: <bd144177-94e6-49b2-8c9e-b5edbaa42aeb@amd.com>
-Date: Fri, 3 Oct 2025 10:33:43 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 32/44] KVM: x86/pmu: Disable interception of select PMU
- MSRs for mediated vPMUs
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- kvm@vger.kernel.org, loongarch@lists.linux.dev,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Kan Liang <kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>,
- Mingwei Zhang <mizhang@google.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Sandipan Das <sandipan.das@amd.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
-References: <20250806195706.1650976-1-seanjc@google.com>
- <20250806195706.1650976-33-seanjc@google.com>
- <f896966e-8925-4b4f-8f0d-f1ae8aa197f7@amd.com> <aN1vfykNs8Dmv_g0@google.com>
-Content-Language: en-US
-From: Sandipan Das <sandidas@amd.com>
-In-Reply-To: <aN1vfykNs8Dmv_g0@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA0PR01CA0091.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:ae::14) To PH7PR12MB5712.namprd12.prod.outlook.com
- (2603:10b6:510:1e3::13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T4i4N/A2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A1BEC4CEF5;
+	Fri,  3 Oct 2025 05:05:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759467930;
+	bh=wCqljXs5f14yz3HH4gXWDN2RMbXSMYXuG1x7ClCXlI0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T4i4N/A2JIW2ZUfVm0eF24P07mcixZ+74j0Vu4bPML2yEQq0yMF834ZlgAwRTCvDL
+	 fpC7yfxq7VCikIhtITZsnBB/iUH8vgm9kGX+3uLHd1UodntPv1kUF1uSkUoSLvPx9p
+	 zSMPMCrMo/YWR8hkCOFLMVGHkJr8Z981bfOhh5D5svMlyNXJREpl6hLZbl6bYTVq7W
+	 4iALgOmDXIRLWS3xqeeSMZK6NMXHYylOxM7+WSPHoWvemNUdCTIu/Xm75g8EO4dcl5
+	 aIk4cxnB8O79y/v7uQk43fTPHXLHJyzPClYhQmnWtn42dskdWZ2mi3tWW7YKBYN8bM
+	 AtncxqyK4wR4g==
+Date: Fri, 3 Oct 2025 14:05:12 +0900
+From: Namhyung Kim <namhyung@kernel.org>
+To: Tianyou Li <tianyou.li@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, wangyang.guo@intel.com,
+	pan.deng@intel.com, zhiguo.zhou@intel.com, jiebin.sun@intel.com,
+	thomas.falcon@intel.com, dapeng1.mi@intel.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] perf tools c2c: Add annotation support to perf c2c
+ report
+Message-ID: <aN9ZiPYyYtr332h_@google.com>
+References: <aNo-U0KquRbcJam9@google.com>
+ <20250930123900.1445017-1-tianyou.li@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|LV2PR12MB5989:EE_
-X-MS-Office365-Filtering-Correlation-Id: 65c033f2-89d6-4143-610e-08de023a4632
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bVp2UEQ3UkRVNk5VKzZWZUtrK1l5OXFVVUMraCtOSUZOdisxQ0pQZXo0bUlt?=
- =?utf-8?B?YXE0aytESTloZkhkTm5HRHByTk5JYUZEaEpWQWNuRzBlNThqWWYraUNpOU45?=
- =?utf-8?B?K0Q1alNJR2FLSGlCeklHV25TZld0bmI0Yk1mMnVRWCtCclJiWGNCK0dqUjRM?=
- =?utf-8?B?NGFtenNKZS9WZjUwdVNMeDcrWHVhbm5yd3JkdHFveGRmVWZFTzl4UkVtUy9v?=
- =?utf-8?B?dWxtQXd2QVFpWklXQWNFM0xYWXRIM0RsLzlhT2U4cVBGNHBYb1dDYXVLN1ZS?=
- =?utf-8?B?SDJlU2t6NTBWZy9VYU1HTWZZdlorQUxiWjdMakthZnNXUmVVQUx3R1pXYUJv?=
- =?utf-8?B?Wk9maW02VGgyNzZoSGtTa0h3aU5YSDdZdStRQk42c0VOUkRjR3NyVGdTQ0JD?=
- =?utf-8?B?Y3JZNGI5a2hIYytqSjVpYnhJa1RiSGx1WG0yTm9mRFhzbytmaFdNZ1BaWU4w?=
- =?utf-8?B?YTZGRWxBbW05S0prWGVCL2lzdjBURkw3K0JpVG5WRjkzdWlSLzkzVmFGK0hI?=
- =?utf-8?B?U256VEI4eSthOXRuQmFucFpoZU9BWWdzMUM1RVBpQUFDdjBoOFdMcG1ybEp4?=
- =?utf-8?B?WC9IQ3BZMzI2WlFSTUtPQjBuUUhSaDR5TVM5TEVrNGtVZGR5R3FDNGZvNWZl?=
- =?utf-8?B?ZDZoaStXQ0xSWExwMXZWeFhGaGxvSXVzUnZNRmRGL21XWG0zcXNjS2U5THFv?=
- =?utf-8?B?UmdsS2szcEhNRVJoWjU3SU5UWFVyUGdEcmYxdkUwUE5hVDZ2SWNzVFhIY0xk?=
- =?utf-8?B?QjRRMVE3cE43aU5QcXduZ3BIbVBtbzl2SWhkQVh6VU9JSUxsSWlDd1RrOGIv?=
- =?utf-8?B?Vm9uMGE2T2h2eXQvNUVjQWF2SmhlZEhaUEZpNlMvUDlQWXRVeVkvWkhqUHhh?=
- =?utf-8?B?QXNvSjJvTCthSVc1THUvZUtlbVJQdGxxdWxiUzVVVjBHKzhaNk41dGhrNGpN?=
- =?utf-8?B?MHRtemhKV2hwTUE3R0gyaDhhU20wcldFTmNDZWZDTzg3Q28yZ2Y0bUhMaDVx?=
- =?utf-8?B?RTN6Q3gvaGsxMXBMMnhvQ1UxdDN3SFI1VlQyWUFYbGZWeWwzTWZYOTZldnBP?=
- =?utf-8?B?cFZzWU1pQlJRbWhlcUVTZ1liZDNTTHVzWE5iZUo4MkJKc1p2d0FsMlNWR21v?=
- =?utf-8?B?QTJVcHp4WkZzaU10MTI5cTFVd3d6cmk0WTdRVGcyQTNSRkhpUmNxdW5Qb2Ux?=
- =?utf-8?B?THdsdTYwa0UzYkpHWHpSbzl2c0p1UGtXN1dTVjdSQ3lnWE1CNHVJVnE5aU1a?=
- =?utf-8?B?NkU4SVRhRHZMTFlybkgwcWRyRlVGbW1LaEU1S2VITHhyajZoUUhsS0R6UU5s?=
- =?utf-8?B?VHhaRElybWJhQWdTL0tGSUEwQkNyaEpqNk1Hb3RKUGxtVFNhWi9UUUg5L2gy?=
- =?utf-8?B?TW52OHBkREs0eVN5bVMzQlhOUFcrdnQ3R0tOSDZwN2FrU1pJTi9vWUZHK2Jo?=
- =?utf-8?B?NmNyeWg4blYvTkdRRTBrRGNpVFlWdldTZTlodWxnU3ExVEZJOHUzVWVocEt4?=
- =?utf-8?B?MnRiZXdFbnRSQ0FPckZ5Uzhna0lseDE4UmVMUnp4c1hvT210ajZGa0k4Z2o3?=
- =?utf-8?B?Y0t0RzdaUnFYd0lhWGhzcU96Z3RVWjdvWHVtNTNrTUZicUpzR1hYdUhlbUpF?=
- =?utf-8?B?TG5PVEJzcFIrMC9hYVJud1p5MFRWS01QbmhuYndkMG1RZlNOTW1hSlVOL0Fp?=
- =?utf-8?B?MGhnZnBRR3VqMERjTU9xbDNucFNlN3oyUC9UMG0wQmRVT2VQWjc5eGhrMnZ6?=
- =?utf-8?B?UklQemI0T2ZaMm1BeitWWGEvemhIZnhueVBTVXdtQitBUHRZQkwxRkF0NkFv?=
- =?utf-8?B?dC90d0hpQVVUTFV4WkhoUC9WTkZQb3JLanAzQmpYRmdKbnpGNC9sRzlybUNV?=
- =?utf-8?B?enZ2V2VSSEs5QU8xQ1ZINUk5RzNORWgyeW9LRGthWWF3SVFpQTdqaU4yZm56?=
- =?utf-8?Q?IOKUBlLsm9RZmsfMOxp8tXAeRHuEOGN9?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eXpwbzc0L1c0ZGlTYW41UFMrQlp5eEk0dDJVZ0xYUEtadmdIZE5PVTFrNXNw?=
- =?utf-8?B?VzExK0pVd0E1RnFOWjk5OVFwUml6Q0tqRGIwODZTU0dQVkt4VE9rWWV6eEF4?=
- =?utf-8?B?U2pDeXI3VFRydFd1MjF1VFUydE10MmZCY2Y1Z3VwY1phdzBwbkVzektEdUJW?=
- =?utf-8?B?Mnp4WWEyd3hKajB0anVtNlpCdldQUjFwSktPWktkVkRtR1h3cElTSWVBVlJ3?=
- =?utf-8?B?UzNLSXk5YkNUTUh5SHlPeTdabHBQNy9HZGc2WGR3R09Ob1RIUGI5dSt1R3FF?=
- =?utf-8?B?ZGg4VXprNzd2QTVkckNvaGZIWVIrTjJRaTRwcytueDRtMG5LSmdxSktlM0gy?=
- =?utf-8?B?WDlRbC9wdkxieExTYytIN1cxU3VldFJzcHhtaldFa1NGdi9Mb3BXZC83THI1?=
- =?utf-8?B?NGRxMjFpSzZPYnQ2WEpoRVBGQ2REZ0lab0cyWWQ0Z0lkVEVrMUEvVnhaaCt3?=
- =?utf-8?B?WXZ0aWZ5NVFhNVFscTNmY3hwdW1TNStPMjRjZjF5bklFR0N2NWhOU0ZRMEll?=
- =?utf-8?B?U2hSbEJBS1JsVW1UUWp4QWl6eFU5TzRWbjk3bGFqM21vTUNpRHlxZUZUN0pw?=
- =?utf-8?B?NUt5VkJsYnMyN1dsUFdnWk9LajhtZHUyMXU1emtRalMyblROZm9Qa1hnM1pN?=
- =?utf-8?B?YWt1WFZzMGlHSFFvNFA4Sjd1UFc5R3B3YlUxWko1Q2VOdVR0SzlkK3BlV3JM?=
- =?utf-8?B?UmlZUHpmNGRETC8vdFRjMVc0aDVKMC82T3NWaEtHSUxRcDVQR3VYMjZDT3kr?=
- =?utf-8?B?UW5RbnlEQmZ0LzNtelhRclZjZzdtYVpwTmI5anEyWnBjWGl5R0xWekt3ZDVz?=
- =?utf-8?B?STR2TzREQmkxVEhnZzkyMkwrTDZpcjIrb1BxTVpuOXprWlRKZzJFZVlWS1M5?=
- =?utf-8?B?TWFxRDJ4bldGaU5veVdMNXJOS3dESEJxVVE2bnlSOVJsWTdWYTFqc1FZRG1I?=
- =?utf-8?B?VWVTenlRZGJqRy9xUmljSTZmVTFNc2diYzlMM2JUUER4QXI3SW5mWmU2RnJV?=
- =?utf-8?B?QmcyaFlGamR3YWZONTl2T1lXMkVwNWVzRzNPQUtqbGx1QzlqWHE2TWRxbXNW?=
- =?utf-8?B?bkM2TWljbld4a2kxVlNwbnY0VllzUnI2aHBhREtEMWpSNG9qdENodEQyQTdu?=
- =?utf-8?B?T1JEYzJOMnBMb1ZiODhRSmR1V3JucVRHOGdjdFZ6SWQzUytUNm5QRGlGT3dV?=
- =?utf-8?B?ZHdCSmhXZk11ZEZvZ3E5VnhnOVQwKzdndkFaMVU5eW8xdnladzREV3dId0tG?=
- =?utf-8?B?Uk12cW1zeHFOV2VGRjdEVHdLSkRYa25YbDVnZk13bXFWYkxpOWdhU1N4cDdp?=
- =?utf-8?B?ZGFpNnUwcSt0UHZuN3pBOTRUcm9tdmZzU3lnRnY1OFdDbTFnaHlOQlV2d0Jh?=
- =?utf-8?B?NGRWMzR6bWc2ZFprTWQraGx6WVVTaGVCWjVwcmF4ME8rb3NoOFd0N01hVmRj?=
- =?utf-8?B?TG5IQ3hGbzNIUnd5SGsyaytqWnhQRFVkL0NEWERITUdza3dzUTdxd1k3eENu?=
- =?utf-8?B?OTRsSVhCeTk0Umg4ZE5Kd3VjR0NvRW1iTFBKL3E1TjYzaWdtc0loSkp0SUsv?=
- =?utf-8?B?Tit6cFdic09ZSUJIU1lGZldYQlFHK2dhUGtBbHdkNk9RRDhqbTM2YmJXcTJI?=
- =?utf-8?B?d3JSQnN6NHVOUGFrc0dUQWtsV0w2d3BmU2lOcDRSRm1PT29GUzU4anBqSVFp?=
- =?utf-8?B?YkdEOUpKRkVGV3RHRUhsVEJrRERVRyt0eFBPVzF5SkUrTnhlZFpPUFpjNDVP?=
- =?utf-8?B?R3E0ditlMTNkWjFzcFZpRVRWeWVlOGMzZlFOS1lHSm0rYXVxYVM5U1VwSU5R?=
- =?utf-8?B?VGh4TE53VG9oNTFnOXJ2OCtrV25sZkZwb2xkckFhbU5GVm40bHEwbVF0NnhK?=
- =?utf-8?B?ODViUUlXaFRoaVF4bDF2VlRsc3JDUXdEaHN5dXd0NjNyZ0k3Ly9JK2RuUXVl?=
- =?utf-8?B?akNmN2tMdm9WTHgwU0Q1SUtGeVo4ckNXWFdtQXBBYzArYjVaWUMxZDY5RVRs?=
- =?utf-8?B?QWZYQUJyM0ljcHE1MXpha2JUY2FnQUxRamg0VTJUQUJ0YWJzZ0ExZWk4N3k1?=
- =?utf-8?B?dE1palRRL2Y1cDJYVEJRaU9sODJvN1J4TC9TTGoxck0wZTZhSjhhZFdBbGtL?=
- =?utf-8?Q?pvW0351KuCOmuyN4OUOboxpDi?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65c033f2-89d6-4143-610e-08de023a4632
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Oct 2025 05:04:04.6435
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WSYiXZXU/+Js+nYnbGsNH396/VpLDn+SsYlivjFMDLKwA68AxYMyyLRWBUnrq5wubBY8CVyZUeiFUDXjKOXjFA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5989
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250930123900.1445017-1-tianyou.li@intel.com>
 
-On 10/1/2025 11:44 PM, Sean Christopherson wrote:
-> On Fri, Sep 26, 2025, Sandipan Das wrote:
->> On 8/7/2025 1:26 AM, Sean Christopherson wrote:
->>> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>>
->>> For vCPUs with a mediated vPMU, disable interception of counter MSRs for
->>> PMCs that are exposed to the guest, and for GLOBAL_CTRL and related MSRs
->>> if they are fully supported according to the vCPU model, i.e. if the MSRs
->>> and all bits supported by hardware exist from the guest's point of view.
->>>
->>> Do NOT passthrough event selector or fixed counter control MSRs, so that
->>> KVM can enforce userspace-defined event filters, e.g. to prevent use of
->>> AnyThread events (which is unfortunately a setting in the fixed counter
->>> control MSR).
->>>
->>> Defer support for nested passthrough of mediated PMU MSRs to the future,
->>> as the logic for nested MSR interception is unfortunately vendor specific.
+Hello,
+
+On Tue, Sep 30, 2025 at 08:39:00PM +0800, Tianyou Li wrote:
+> Perf c2c report currently specified the code address and source:line
+> information in the cacheline browser, while it is lack of annotation
+> support like perf report to directly show the disassembly code for
+> the particular symbol shared that same cacheline. This patches add
+> a key 'a' binding to the cacheline browser which reuse the annotation
+> browser to show the disassembly view for easier analysis of cacheline
+> contentions. By default, the 'TAB' key navigate to the code address
+> where the contentions detected.
 > 
-> ...
+> Signed-off-by: Tianyou Li <tianyou.li@intel.com>
+> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Reviewed-by: Thomas Falcon <thomas.falcon@intel.com>
+> Reviewed-by: Jiebin Sun <jiebin.sun@intel.com>
+> Reviewed-by: Pan Deng <pan.deng@intel.com>
+> Reviewed-by: Zhiguo Zhou <zhiguo.zhou@intel.com>
+> Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
+> ---
+>  tools/perf/builtin-annotate.c     |   2 +-
+>  tools/perf/builtin-c2c.c          | 160 ++++++++++++++++++++++++++++--
+>  tools/perf/ui/browsers/annotate.c |  41 +++++++-
+>  tools/perf/ui/browsers/hists.c    |   2 +-
+>  tools/perf/util/annotate.c        |   2 +-
+>  tools/perf/util/annotate.h        |   2 +
+>  tools/perf/util/hist.h            |   6 +-
+>  7 files changed, 200 insertions(+), 15 deletions(-)
 > 
->>>  #define MSR_AMD64_LBR_SELECT			0xc000010e
->>> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
->>> index 4246e1d2cfcc..817ef852bdf9 100644
->>> --- a/arch/x86/kvm/pmu.c
->>> +++ b/arch/x86/kvm/pmu.c
->>> @@ -715,18 +715,14 @@ int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned idx, u64 *data)
->>>  	return 0;
->>>  }
->>>  
->>> -bool kvm_need_rdpmc_intercept(struct kvm_vcpu *vcpu)
->>> +bool kvm_need_perf_global_ctrl_intercept(struct kvm_vcpu *vcpu)
->>>  {
->>>  	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
->>>  
->>>  	if (!kvm_vcpu_has_mediated_pmu(vcpu))
->>>  		return true;
->>>  
->>> -	/*
->>> -	 * VMware allows access to these Pseduo-PMCs even when read via RDPMC
->>> -	 * in Ring3 when CR4.PCE=0.
->>> -	 */
->>> -	if (enable_vmware_backdoor)
->>> +	if (!kvm_pmu_has_perf_global_ctrl(pmu))
->>>  		return true;
->>>  
->>>  	/*
->>> @@ -735,7 +731,22 @@ bool kvm_need_rdpmc_intercept(struct kvm_vcpu *vcpu)
->>>  	 * capabilities themselves may be a subset of hardware capabilities.
->>>  	 */
->>>  	return pmu->nr_arch_gp_counters != kvm_host_pmu.num_counters_gp ||
->>> -	       pmu->nr_arch_fixed_counters != kvm_host_pmu.num_counters_fixed ||
->>> +	       pmu->nr_arch_fixed_counters != kvm_host_pmu.num_counters_fixed;
->>> +}
->>> +EXPORT_SYMBOL_GPL(kvm_need_perf_global_ctrl_intercept);
->>> +
->>> +bool kvm_need_rdpmc_intercept(struct kvm_vcpu *vcpu)
->>> +{
->>> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
->>> +
->>> +	/*
->>> +	 * VMware allows access to these Pseduo-PMCs even when read via RDPMC
->>> +	 * in Ring3 when CR4.PCE=0.
->>> +	 */
->>> +	if (enable_vmware_backdoor)
->>> +		return true;
->>> +
->>> +	return kvm_need_perf_global_ctrl_intercept(vcpu) ||
->>>  	       pmu->counter_bitmask[KVM_PMC_GP] != (BIT_ULL(kvm_host_pmu.bit_width_gp) - 1) ||
->>>  	       pmu->counter_bitmask[KVM_PMC_FIXED] != (BIT_ULL(kvm_host_pmu.bit_width_fixed) - 1);
->>>  }
->>
->> There is a case for AMD processors where the global MSRs are absent in the guest
->> but the guest still uses the same number of counters as what is advertised by the
->> host capabilities. So RDPMC interception is not necessary for all cases where
->> global control is unavailable.o
-> 
-> Hmm, I think Intel would be the same?  Ah, no, because the host will have fixed
-> counters, but the guest will not.  However, that's not directly related to
-> kvm_pmu_has_perf_global_ctrl(), so I think this would be correct?
-> 
-> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> index 4414d070c4f9..4c5b2712ee4c 100644
-> --- a/arch/x86/kvm/pmu.c
-> +++ b/arch/x86/kvm/pmu.c
-> @@ -744,16 +744,13 @@ int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned idx, u64 *data)
->         return 0;
+> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+> index 646f43b0f7c4..d89796648bec 100644
+> --- a/tools/perf/builtin-annotate.c
+> +++ b/tools/perf/builtin-annotate.c
+> @@ -519,7 +519,7 @@ static void hists__find_annotations(struct hists *hists,
+>  			/* skip missing symbols */
+>  			nd = rb_next(nd);
+>  		} else if (use_browser == 1) {
+> -			key = hist_entry__tui_annotate(he, evsel, NULL);
+> +			key = hist_entry__tui_annotate(he, evsel, NULL, NO_INITIAL_AL_ADDR);
+>  
+>  			switch (key) {
+>  			case -1:
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index 9e9ff471ddd1..7989fc46516e 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+> @@ -45,6 +45,8 @@
+>  #include "pmus.h"
+>  #include "string2.h"
+>  #include "util/util.h"
+> +#include "util/symbol.h"
+> +#include "util/annotate.h"
+>  
+>  struct c2c_hists {
+>  	struct hists		hists;
+> @@ -62,6 +64,7 @@ struct compute_stats {
+>  
+>  struct c2c_hist_entry {
+>  	struct c2c_hists	*hists;
+> +	struct evsel		*evsel;
+>  	struct c2c_stats	 stats;
+>  	unsigned long		*cpuset;
+>  	unsigned long		*nodeset;
+> @@ -225,6 +228,12 @@ he__get_c2c_hists(struct hist_entry *he,
+>  	return hists;
 >  }
 >  
-> -bool kvm_need_perf_global_ctrl_intercept(struct kvm_vcpu *vcpu)
-> +static bool kvm_need_pmc_intercept(struct kvm_vcpu *vcpu)
->  {
->         struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
->  
->         if (!kvm_vcpu_has_mediated_pmu(vcpu))
->                 return true;
->  
-> -       if (!kvm_pmu_has_perf_global_ctrl(pmu))
-> -               return true;
-> -
->         /*
->          * Note!  Check *host* PMU capabilities, not KVM's PMU capabilities, as
->          * KVM's capabilities are constrained based on KVM support, i.e. KVM's
-> @@ -762,6 +759,13 @@ bool kvm_need_perf_global_ctrl_intercept(struct kvm_vcpu *vcpu)
->         return pmu->nr_arch_gp_counters != kvm_host_pmu.num_counters_gp ||
->                pmu->nr_arch_fixed_counters != kvm_host_pmu.num_counters_fixed;
->  }
-> +
-> +bool kvm_need_perf_global_ctrl_intercept(struct kvm_vcpu *vcpu)
+> +static void c2c_he__set_evsel(struct c2c_hist_entry *c2c_he,
+> +				struct evsel *evsel)
 > +{
-> +
-> +       return kvm_need_pmc_intercept(vcpu) ||
-> +              !kvm_pmu_has_perf_global_ctrl(vcpu_to_pmu(vcpu));
+> +	c2c_he->evsel = evsel;
 > +}
->  EXPORT_SYMBOL_GPL(kvm_need_perf_global_ctrl_intercept);
+> +
+>  static void c2c_he__set_cpu(struct c2c_hist_entry *c2c_he,
+>  			    struct perf_sample *sample)
+>  {
+> @@ -334,6 +343,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
 >  
->  bool kvm_need_rdpmc_intercept(struct kvm_vcpu *vcpu)
-> @@ -775,7 +779,7 @@ bool kvm_need_rdpmc_intercept(struct kvm_vcpu *vcpu)
->         if (enable_vmware_backdoor)
->                 return true;
+>  	c2c_he__set_cpu(c2c_he, sample);
+>  	c2c_he__set_node(c2c_he, sample);
+> +	c2c_he__set_evsel(c2c_he, evsel);
 >  
-> -       return kvm_need_perf_global_ctrl_intercept(vcpu) ||
-> +       return kvm_need_pmc_intercept(vcpu) ||
->                pmu->counter_bitmask[KVM_PMC_GP] != (BIT_ULL(kvm_host_pmu.bit_width_gp) - 1) ||
->                pmu->counter_bitmask[KVM_PMC_FIXED] != (BIT_ULL(kvm_host_pmu.bit_width_fixed) - 1);
+>  	hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
+>  	ret = hist_entry__append_callchain(he, sample);
+> @@ -371,6 +381,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+>  
+>  		c2c_he__set_cpu(c2c_he, sample);
+>  		c2c_he__set_node(c2c_he, sample);
+> +		c2c_he__set_evsel(c2c_he, evsel);
+>  
+>  		hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
+>  		ret = hist_entry__append_callchain(he, sample);
+> @@ -1997,6 +2008,9 @@ static int c2c_hists__init_sort(struct perf_hpp_list *hpp_list, char *name, stru
+>  	if (dim == &dim_dso)
+>  		hpp_list->dso = 1;
+>  
+> +	if (dim == &dim_symbol)
+> +		hpp_list->sym = 1;
+> +
+>  	perf_hpp_list__register_sort_field(hpp_list, &c2c_fmt->fmt);
+>  	return 0;
 >  }
+> @@ -2549,7 +2563,65 @@ static void perf_c2c__hists_fprintf(FILE *out, struct perf_session *session)
+>  	print_pareto(out, perf_session__env(session));
+>  }
+>  
+> +/*
+> + * Return true if annotation is possible. When list is NULL,
+> + * it means that we are called at the c2c_browser level,
+> + * in that case we allow annotation to be initialized.When list
+> + * is non-NULL, it means that we are called at the cacheline_browser
+> + * level, in that case we allow annotation only if use_browser
+> + * is set and symbol information is available.
+> + */
+> +static bool perf_c2c__has_annotation(struct perf_hpp_list *list)
+> +{
+> +	bool has_annotation = false;
+> +
+> +	if (list == NULL)
+> +		has_annotation = use_browser == 1;
+> +	else
+> +		has_annotation = use_browser == 1 && list->sym;
+> +
+> +	return has_annotation;
 
-This looks good. Thanks.
+Nit: it would be simpler this way.
+
+	if (use_browser != 1)
+		return false;
+	return !list || list->sym;
+
+> +}
+> +
+>  #ifdef HAVE_SLANG_SUPPORT
+> +
+> +static int perf_c2c__toggle_annotation(struct hist_browser *browser)
+> +{
+> +	struct hist_entry *he = browser->he_selection;
+> +	struct symbol *sym = NULL;
+> +	struct c2c_hist_entry *c2c_he = NULL;
+> +	struct annotated_source *src = NULL;
+> +	u64 addr = 0;
+
+	u64 addr = NO_INITIAL_AL_ADDR;
+
+> +
+> +	if (!perf_c2c__has_annotation(he->hists->hpp_list)) {
+> +		ui_browser__help_window(&browser->b, "No annotation support");
+> +		return 0;
+> +	}
+> +
+> +	if (he == NULL) {
+> +		ui_browser__help_window(&browser->b, "No entry selected for annotation");
+> +		return 0;
+> +	}
+> +	sym = (&he->ms)->sym;
+
+	sym = he->ms.sym;
+
+> +
+> +	if (sym == NULL) {
+> +		ui_browser__help_window(&browser->b, "Can not annotate, no symbol found");
+> +		return 0;
+> +	}
+> +
+> +	src = symbol__hists(sym, 0);
+> +	if (src == NULL) {
+> +		ui_browser__help_window(&browser->b, "Failed to initialize annotation source");
+> +		return 0;
+> +	}
+> +
+> +	if (he->mem_info)
+> +		addr = mem_info__iaddr(he->mem_info)->al_addr;
+> +
+> +	c2c_he = container_of(he, struct c2c_hist_entry, he);
+> +	return hist_entry__tui_annotate(he, c2c_he->evsel, NULL, addr);
+> +}
+> +
+>  static void c2c_browser__update_nr_entries(struct hist_browser *hb)
+>  {
+>  	u64 nr_entries = 0;
+> @@ -2617,6 +2689,7 @@ static int perf_c2c__browse_cacheline(struct hist_entry *he)
+>  	" ENTER         Toggle callchains (if present) \n"
+>  	" n             Toggle Node details info \n"
+>  	" s             Toggle full length of symbol and source line columns \n"
+> +	" a             Toggle annotation view \n"
+>  	" q             Return back to cacheline list \n";
+>  
+>  	if (!he)
+> @@ -2651,6 +2724,9 @@ static int perf_c2c__browse_cacheline(struct hist_entry *he)
+>  			c2c.node_info = (c2c.node_info + 1) % 3;
+>  			setup_nodes_header();
+>  			break;
+> +		case 'a':
+> +			perf_c2c__toggle_annotation(browser);
+> +			break;
+>  		case 'q':
+>  			goto out;
+>  		case '?':
+> @@ -2980,7 +3056,8 @@ static int setup_coalesce(const char *coalesce, bool no_source)
+>  	else if (c2c.display == DISPLAY_SNP_PEER)
+>  		sort_str = "tot_peer";
+>  
+> -	if (asprintf(&c2c.cl_resort, "offset,%s", sort_str) < 0)
+> +	/* add 'symbol' sort key to make sure hpp_list->sym get updated */
+> +	if (asprintf(&c2c.cl_resort, "offset,%s,symbol", sort_str) < 0)
+
+I think it's better to just process the input rather than enforcing it.
+It seems the default value will have 'iaddr' and so 'symbol as well.
+
+
+>  		return -ENOMEM;
+>  
+>  	pr_debug("coalesce sort   fields: %s\n", c2c.cl_sort);
+> @@ -3006,6 +3083,7 @@ static int perf_c2c__report(int argc, const char **argv)
+>  	const char *display = NULL;
+>  	const char *coalesce = NULL;
+>  	bool no_source = false;
+> +	const char *disassembler_style = NULL, *objdump_path = NULL, *addr2line_path = NULL;
+>  	const struct option options[] = {
+>  	OPT_STRING('k', "vmlinux", &symbol_conf.vmlinux_name,
+>  		   "file", "vmlinux pathname"),
+> @@ -3033,6 +3111,12 @@ static int perf_c2c__report(int argc, const char **argv)
+>  	OPT_BOOLEAN(0, "stitch-lbr", &c2c.stitch_lbr,
+>  		    "Enable LBR callgraph stitching approach"),
+>  	OPT_BOOLEAN(0, "double-cl", &chk_double_cl, "Detect adjacent cacheline false sharing"),
+> +	OPT_STRING('M', "disassembler-style", &disassembler_style, "disassembler style",
+> +		   "Specify disassembler style (e.g. -M intel for intel syntax)"),
+> +	OPT_STRING(0, "objdump", &objdump_path, "path",
+> +		   "objdump binary to use for disassembly and annotations"),
+
+Please update documentation with the new options.
+
+> +	OPT_STRING(0, "addr2line", &addr2line_path, "path",
+> +		   "addr2line binary to use for line numbers"),
+
+Do you really need this?
+
+
+>  	OPT_PARENT(c2c_options),
+>  	OPT_END()
+>  	};
+> @@ -3040,6 +3124,12 @@ static int perf_c2c__report(int argc, const char **argv)
+>  	const char *output_str, *sort_str = NULL;
+>  	struct perf_env *env;
+>  
+> +	annotation_options__init();
+> +
+> +	err = hists__init();
+> +	if (err < 0)
+> +		goto out;
+> +
+>  	argc = parse_options(argc, argv, options, report_c2c_usage,
+>  			     PARSE_OPT_STOP_AT_NON_OPTION);
+>  	if (argc)
+> @@ -3052,6 +3142,36 @@ static int perf_c2c__report(int argc, const char **argv)
+>  	if (c2c.stats_only)
+>  		c2c.use_stdio = true;
+>  
+> +	/**
+> +	 * Annotation related options
+> +	 * disassembler_style, objdump_path, addr2line_path
+> +	 * are set in the c2c_options, so we can use them here.
+> +	 */
+> +	if (disassembler_style) {
+> +		annotate_opts.disassembler_style = strdup(disassembler_style);
+> +		if (!annotate_opts.disassembler_style) {
+> +			err = -ENOMEM;
+> +			pr_err("Failed to allocate memory for annotation options\n");
+> +			goto out;
+> +		}
+> +	}
+> +	if (objdump_path) {
+> +		annotate_opts.objdump_path = strdup(objdump_path);
+> +		if (!annotate_opts.objdump_path) {
+> +			err = -ENOMEM;
+> +			pr_err("Failed to allocate memory for annotation options\n");
+> +			goto out;
+> +		}
+> +	}
+> +	if (addr2line_path) {
+> +		symbol_conf.addr2line_path = strdup(addr2line_path);
+> +		if (!symbol_conf.addr2line_path) {
+> +			err = -ENOMEM;
+> +			pr_err("Failed to allocate memory for annotation options\n");
+> +			goto out;
+> +		}
+> +	}
+> +
+>  	err = symbol__validate_sym_arguments();
+>  	if (err)
+>  		goto out;
+> @@ -3126,6 +3246,38 @@ static int perf_c2c__report(int argc, const char **argv)
+>  	if (err)
+>  		goto out_mem2node;
+>  
+> +	if (c2c.use_stdio)
+> +		use_browser = 0;
+> +	else
+> +		use_browser = 1;
+> +
+> +	/*
+> +	 * Only in the TUI browser we are doing integrated annotation,
+> +	 * so don't allocate extra space that won't be used in the stdio
+> +	 * implementation.
+> +	 */
+> +	if (perf_c2c__has_annotation(NULL)) {
+> +		int ret = symbol__annotation_init();
+> +
+> +		if (ret < 0)
+> +			goto out_mem2node;
+> +		/*
+> +		 * For searching by name on the "Browse map details".
+> +		 * providing it only in verbose mode not to bloat too
+> +		 * much struct symbol.
+> +		 */
+> +		if (verbose > 0) {
+> +			/*
+> +			 * XXX: Need to provide a less kludgy way to ask for
+> +			 * more space per symbol, the u32 is for the index on
+> +			 * the ui browser.
+> +			 * See symbol__browser_index.
+> +			 */
+> +			symbol_conf.priv_size += sizeof(u32);
+> +		}
+> +		annotation_config__init();
+> +	}
+> +
+>  	if (symbol__init(env) < 0)
+>  		goto out_mem2node;
+>  
+> @@ -3135,11 +3287,6 @@ static int perf_c2c__report(int argc, const char **argv)
+>  		goto out_mem2node;
+>  	}
+>  
+> -	if (c2c.use_stdio)
+> -		use_browser = 0;
+> -	else
+> -		use_browser = 1;
+> -
+>  	setup_browser(false);
+>  
+>  	err = perf_session__process_events(session);
+> @@ -3210,6 +3357,7 @@ static int perf_c2c__report(int argc, const char **argv)
+>  out_session:
+>  	perf_session__delete(session);
+>  out:
+> +	annotation_options__exit();
+>  	return err;
+>  }
+>  
+> diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+> index 8fe699f98542..a9d56e67454d 100644
+> --- a/tools/perf/ui/browsers/annotate.c
+> +++ b/tools/perf/ui/browsers/annotate.c
+> @@ -605,7 +605,7 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
+>  	target_ms.map = ms->map;
+>  	target_ms.sym = dl->ops.target.sym;
+>  	annotation__unlock(notes);
+> -	__hist_entry__tui_annotate(browser->he, &target_ms, evsel, hbt);
+> +	__hist_entry__tui_annotate(browser->he, &target_ms, evsel, hbt, NO_INITIAL_AL_ADDR);
+>  
+>  	/*
+>  	 * The annotate_browser above changed the title with the target function
+> @@ -864,6 +864,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
+>  	const char *help = "Press 'h' for help on key bindings";
+>  	int delay_secs = hbt ? hbt->refresh : 0;
+>  	char *br_cntr_text = NULL;
+> +	u64 init_al_addr = NO_INITIAL_AL_ADDR;
+>  	char title[256];
+>  	int key;
+>  
+> @@ -873,6 +874,13 @@ static int annotate_browser__run(struct annotate_browser *browser,
+>  
+>  	annotate_browser__calc_percent(browser, evsel);
+>  
+> +	/* the selection are intentionally even not from the sample percentage */
+> +	if (browser->entries.rb_node == NULL && browser->selection) {
+> +		init_al_addr = sym->start + browser->selection->offset;
+> +		disasm_rb_tree__insert(browser, browser->selection);
+> +		browser->curr_hot = rb_last(&browser->entries);
+> +	}
+> +
+>  	if (browser->curr_hot) {
+>  		annotate_browser__set_rb_top(browser, browser->curr_hot);
+>  		browser->b.navkeypressed = false;
+> @@ -973,6 +981,18 @@ static int annotate_browser__run(struct annotate_browser *browser,
+>  				ui_helpline__puts(help);
+>  			annotate__scnprintf_title(hists, title, sizeof(title));
+>  			annotate_browser__show(browser, title, help);
+> +			/* Previous RB tree may not valid, need refresh according to new entries*/
+> +			if (init_al_addr != NO_INITIAL_AL_ADDR) {
+> +				struct disasm_line *dl = find_disasm_line(sym, init_al_addr, true);
+> +
+> +				browser->curr_hot = NULL;
+> +				browser->entries.rb_node = NULL;
+> +				if (dl != NULL) {
+> +					disasm_rb_tree__insert(browser, &dl->al);
+> +					browser->curr_hot = rb_last(&browser->entries);
+> +				}
+> +				nd = browser->curr_hot;
+> +			}
+
+Can you please split annotate changes from c2c change?  I think you can
+start with annotation support in c2c.  And add INITIAL_ADDR later so
+that we can discuss the issue separately.  Maybe we don't need the ADDR
+change.  Do you have any concrete usecase where default annotate is not
+enough for c2c?
+
+Thanks,
+Namhyung
+
+>  			continue;
+>  		case 'o':
+>  			annotate_opts.use_offset = !annotate_opts.use_offset;
+> @@ -1106,22 +1126,23 @@ static int annotate_browser__run(struct annotate_browser *browser,
+>  }
+>  
+>  int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
+> -			     struct hist_browser_timer *hbt)
+> +			     struct hist_browser_timer *hbt, u64 init_al_addr)
+>  {
+>  	/* reset abort key so that it can get Ctrl-C as a key */
+>  	SLang_reset_tty();
+>  	SLang_init_tty(0, 0, 0);
+>  	SLtty_set_suspend_state(true);
+>  
+> -	return __hist_entry__tui_annotate(he, &he->ms, evsel, hbt);
+> +	return __hist_entry__tui_annotate(he, &he->ms, evsel, hbt, init_al_addr);
+>  }
+>  
+>  int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+>  			       struct evsel *evsel,
+> -			       struct hist_browser_timer *hbt)
+> +			       struct hist_browser_timer *hbt, u64 init_al_addr)
+>  {
+>  	struct symbol *sym = ms->sym;
+>  	struct annotation *notes = symbol__annotation(sym);
+> +	struct disasm_line *dl = NULL;
+>  	struct annotate_browser browser = {
+>  		.b = {
+>  			.refresh = annotate_browser__refresh,
+> @@ -1173,6 +1194,18 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+>  		browser.he = &annotate_he;
+>  	}
+>  
+> +	/*
+> +	 * If init_al_addr is set, it means that there should be a line
+> +	 * intentionally selected, not based on the percentages
+> +	 * which caculated by the event sampling. In this case, we
+> +	 * convey this information into the browser selection, where
+> +	 * the selection in other cases should be empty.
+> +	 */
+> +	if (init_al_addr != NO_INITIAL_AL_ADDR) {
+> +		dl = find_disasm_line(sym, init_al_addr, false);
+> +		browser.selection = &dl->al;
+> +	}
+> +
+>  	ui_helpline__push("Press ESC to exit");
+>  
+>  	if (annotate_opts.code_with_type) {
+> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+> index 487c0b08c003..c34ddc4ca13f 100644
+> --- a/tools/perf/ui/browsers/hists.c
+> +++ b/tools/perf/ui/browsers/hists.c
+> @@ -2485,7 +2485,7 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
+>  		evsel = hists_to_evsel(browser->hists);
+>  
+>  	he = hist_browser__selected_entry(browser);
+> -	err = __hist_entry__tui_annotate(he, &act->ms, evsel, browser->hbt);
+> +	err = __hist_entry__tui_annotate(he, &act->ms, evsel, browser->hbt, NO_INITIAL_AL_ADDR);
+>  	/*
+>  	 * offer option to annotate the other branch source or target
+>  	 * (if they exists) when returning from annotate
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index c9b220d9f924..937effbeda69 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -2622,7 +2622,7 @@ int annotate_get_insn_location(struct arch *arch, struct disasm_line *dl,
+>  	return 0;
+>  }
+>  
+> -static struct disasm_line *find_disasm_line(struct symbol *sym, u64 ip,
+> +struct disasm_line *find_disasm_line(struct symbol *sym, u64 ip,
+>  					    bool allow_update)
+>  {
+>  	struct disasm_line *dl;
+> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+> index eaf6c8aa7f47..bbe67588bbdd 100644
+> --- a/tools/perf/util/annotate.h
+> +++ b/tools/perf/util/annotate.h
+> @@ -170,6 +170,8 @@ static inline struct disasm_line *disasm_line(struct annotation_line *al)
+>  	return al ? container_of(al, struct disasm_line, al) : NULL;
+>  }
+>  
+> +struct disasm_line *find_disasm_line(struct symbol *sym, u64 ip, bool allow_update);
+> +
+>  /*
+>   * Is this offset in the same function as the line it is used?
+>   * asm functions jump to other functions, for instance.
+> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+> index c64005278687..7afa50aa5cbb 100644
+> --- a/tools/perf/util/hist.h
+> +++ b/tools/perf/util/hist.h
+> @@ -713,12 +713,14 @@ struct block_hist {
+>  #include "../ui/keysyms.h"
+>  void attr_to_script(char *buf, struct perf_event_attr *attr);
+>  
+> +#define NO_INITIAL_AL_ADDR 0
+> +
+>  int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+>  			       struct evsel *evsel,
+> -			       struct hist_browser_timer *hbt);
+> +			       struct hist_browser_timer *hbt, u64 init_al_addr);
+>  
+>  int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
+> -			     struct hist_browser_timer *hbt);
+> +			     struct hist_browser_timer *hbt, u64 init_al_addr);
+>  
+>  int evlist__tui_browse_hists(struct evlist *evlist, const char *help, struct hist_browser_timer *hbt,
+>  			     float min_pcnt, struct perf_env *env, bool warn_lost_event);
+> -- 
+> 2.47.1
+> 
