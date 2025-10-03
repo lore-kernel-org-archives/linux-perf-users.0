@@ -1,236 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8A134BA50;
-	Fri,  3 Oct 2025 05:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2919928150F
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Oct 2025 09:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759470742; cv=none; b=BT+djmYcaXBHqwokd59TSaACt3gIxVLy5pQqhnjFNyAXUysHCRfEYVatv8po7pDyGXBkuclelkAJgWtbtL2R/E/coLK7gU4i6qa1tbcf0QXfwpt3HIJhaZagVkF7SCNjbcKSuapp1gZPCwZayCpGeJi+wpe1TCXRNv+YWFnkSx0=
+	t=1759483217; cv=none; b=maSTF1gNu0CzHj2+sQ/uc9rwsfysghTkmipiJnZKE8wiHZjCZyyqJsOpAkziNwnvoUTD10+NQ5MfLJ9g0KZ5qcrPHg3PfTFlSwg35VFzhKQWqDGywpM1RIiWzIIkoqr8i1aeBU/3Q2A1vwi9qLPYoj+fKnbWGkOSGRvGjm3DXkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759470742; c=relaxed/simple;
-	bh=m8QTSeBYc+9dw9PyAe4KBzJKyia/JpiSrRnm+m8PQs4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T9oTUUhas4LKUUQI8dKaHmgq8PRiDT4iXaxOtNPIS5IHTfiebV0GNjUv+2yLU9eNKs1q0KINU8ab2YsqdCf5qWz4II7k6cAY8LKdhdpUbLc80waJNuwpErCjbKx2mk8fWUPI9FYQT0EZnByCYcvkMaquiIGsJQBmpDMDfLYElBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mVs72cRd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759483217; c=relaxed/simple;
+	bh=+SLJ7EfScV6sMH/JMesT8stk7T24TwrdUWoRJeAo79s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tgP0xJqVUhYI0f/xkbbTKn78lKnldURkkBDcRXlVF4X3UphtH9TDxCrVrVtQJnZk2WtQmxqIs/hEShiNDY3gZ7efK6a2pYMw9SajausV5X/ZtNTXprk1qx0Ru8cwe3vZg1Wgmw1enNOF/oLTDmAUDgznZmFKpBvHe1mevfC3BrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aLWmjelF; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mVs72cRd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1D10C4CEF5;
-	Fri,  3 Oct 2025 05:52:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759470742;
-	bh=m8QTSeBYc+9dw9PyAe4KBzJKyia/JpiSrRnm+m8PQs4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mVs72cRdC6opnIh/wtYkpdHvXaP0/DuIz25R/eClezmdN0G6+mvtgiV9NICKMqsEx
-	 DalwV+5MIu/RaxEVlHiAOKmEpUV5c1+tV2gzqBYFhiWMNxIP+FroSa7kvT4ZJd+Ygi
-	 X6vok8zceSdxzcL6owHtFummbN4JwtW28Apy1wkn6IWzwx7jWKs+rxTvbiI+vqWQY2
-	 5wS+OCkSmdBgnzu2hQBCLqq0HvVnlUmWj6xX5/KITBPTPJ0k09dyWdof71rZKHKWqv
-	 2zgUbL0JKBEbQETP7djYuImdbarxlHkZh/3d+nP7FB5JGxuNBzN0ZmwgwlopqS2yng
-	 oddBJrhJyYnnQ==
-Date: Fri, 3 Oct 2025 14:52:14 +0900
-From: Namhyung Kim <namhyung@kernel.org>
-To: Zecheng Li <zecheng@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Xu Liu <xliuprof@google.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 03/10] perf annotate: Track address registers via
- TSR_KIND_POINTER
-Message-ID: <aN9kjm4cLV6mp8Ep@google.com>
-References: <20250917195808.2514277-1-zecheng@google.com>
- <20250917195808.2514277-4-zecheng@google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aLWmjelF"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3c68ac7e18aso1106812f8f.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Oct 2025 02:20:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1759483214; x=1760088014; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bqv2200rRXJ/QamD+MMfnrrG8n7+Od5t42rq8XoC83I=;
+        b=aLWmjelFexeVaLyPTHyWH5XnWye+P0kfsOc5scTMolCYNzWfl4EvtpOhVUxCkWnAvb
+         hlkidbMZ7uZQ7mdjhj+Hni5E7J2gl39Cn8+Jfx9USCSszg5PA5i2PTzxq4iLnyZzGdKu
+         yvD+XcJFUewR2koCTJcjT0Cw1OCilwVbaySKuFGyIPreionlOl33qrTwEbA0YKZFTNPc
+         gIAaHTuhb/wYodv6yzw6yNwF11gNWkfoeSBytAZU4481huwuljSkNLH4HUwfNpiH/C1G
+         lKC1qjz5dWoEG8mXQ+7/JcLDOqT3PoxpNZIPL5MYeeP57D45kGgFYPtJTxdZgrEKgYD8
+         QsIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759483214; x=1760088014;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bqv2200rRXJ/QamD+MMfnrrG8n7+Od5t42rq8XoC83I=;
+        b=p/oCYD1DVa02secYvTQWnmceLTerRKAursqfnCVO+KsBvrEHPOdWs5ApFlOp7AZ1of
+         rSLy7WGA8EUJdABwxMIzSM8HZsfjgf/dAc3rnAxmWydJeXe7tMwijBGflkrvrfvvJby7
+         eZlSvfkdEJ2ldiQWRH1FIjf2efGol0oQGsa44TXBL4lf9Y1Zkn7dljJobnhRzJz1x2nY
+         Sy6rtNG3j+zhGwsKA25y2ZlZQZVD1/v+IBnT882l/bu+TKzEA5h+1WcSU8LX4henM9k4
+         pLVhG8iuqk350vUSrZecyHPXJwCAuDsOFCGi86vZRWgDYP/DrLNv66DuUSqhMZQRbSnw
+         /dXA==
+X-Forwarded-Encrypted: i=1; AJvYcCWHoKOd6jxfot6gpXrETsftlyisTmoFESRH1lSqwpMa0JX8HcUe7LOeMT2HBTz6TQuDVtVW4s66F0J+RwdCC4sU@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLa3mYDkTxwXb2CzX+V6Pxr30USIC3/K/9v/UuLm/7LqB+74p7
+	TN7Ni25VO0E2b3LQJq1dlHjfzbELKIn4rpiNwBFNTGQRSNqa3dY8358A1ozPUtwWWMc=
+X-Gm-Gg: ASbGncsvNKKq1z0zhd9UaWAT55B2YPDHuflE8OvOmY9J7nrfLnYQmYaqNAmoXMTHsPn
+	WCF8Wvo/UZgVaXVYYgb9Oze/CckgSPp2AkH8kCk8V51x0M5M/D8pScbS+JI+4hzqmrj0RrBCEZ1
+	7iJRVwNHG0ZTTadvaCmX+IZbDinjjnthEZK8nGvQSkok7HB6aykm+Yx155ZP3pKiZZgGvVWi+WM
+	B39Dw3ThU3pvKt2z/60HKhfWYccizYdWoDllBy9qjVPzyYdrjtlhV0/72mdiTwN2V2wplrT23o7
+	vUqjIRSS5JRuoCnvr/BCDUUVka0apEn4DLGSX/jsG164wyoCpgPmdfXZLt4NrEa22LlPQaTZxFK
+	lOP6qzhEd7WF97WDOEVX8LIEMmy+ehuFUlNCMvH4A89jeQ0kvWmu1penp
+X-Google-Smtp-Source: AGHT+IHpYgt/4Fafg/5Gnz394SePFpGL16C42FqwGPTOfqs6EHI3VgunwlusPKdKsHi77r25Xg4O/w==
+X-Received: by 2002:a5d:64e3:0:b0:3d1:61f0:d26c with SMTP id ffacd0b85a97d-425671bea34mr1495147f8f.54.1759483214391;
+        Fri, 03 Oct 2025 02:20:14 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.76.109])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e72362344sm22502505e9.15.2025.10.03.02.20.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Oct 2025 02:20:13 -0700 (PDT)
+Message-ID: <86331395-140b-44ca-8351-8bc5c511e211@linaro.org>
+Date: Fri, 3 Oct 2025 10:20:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250917195808.2514277-4-zecheng@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 00/28] Legacy hardware/cache events as json
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Xu Yang <xu.yang_2@nxp.com>,
+ Thomas Falcon <thomas.falcon@intel.com>, Andi Kleen <ak@linux.intel.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Atish Patra <atishp@rivosinc.com>, Beeman Strong <beeman@rivosinc.com>,
+ Leo Yan <leo.yan@arm.com>, Vince Weaver <vincent.weaver@maine.edu>
+References: <20250923223312.238185-1-irogers@google.com>
+ <ca47d298-331d-420c-8c4f-83cd29bae902@linaro.org>
+ <CAP-5=fWUYH2eji2SNp37_2uHu55qEfRxuhhROYsMZeCixjda+g@mail.gmail.com>
+ <CAP-5=fWUVycpDss_+MNQ_DM93AYKWED8aYOUBKLziYTOn68QJA@mail.gmail.com>
+ <cf050a7f-b341-4e14-bc46-8bd30e366b19@linaro.org>
+ <CAP-5=fW_WfAzb=qm+AnA-xSn8MOHjmTMcpEvXB6uVi+0Cr0=fg@mail.gmail.com>
+ <CAP-5=fV0Qqi1m72-7us9rw7K3hbh05fAzutVtcazY7iTu3g3+w@mail.gmail.com>
+ <CAP-5=fX0bOj2kEJYmRs33RpL0ODaOy2wCvDzwLDmNxurVRpGew@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CAP-5=fX0bOj2kEJYmRs33RpL0ODaOy2wCvDzwLDmNxurVRpGew@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Sep 17, 2025 at 07:58:01PM +0000, Zecheng Li wrote:
-> Introduce TSR_KIND_POINTER to improve the data type profiler's ability
-> to track pointer-based memory accesses and address register variables.
+
+
+On 02/10/2025 9:10 pm, Ian Rogers wrote:
+> On Thu, Oct 2, 2025 at 10:58 AM Ian Rogers <irogers@google.com> wrote:
+>>  From bisecting, this change came from commit 9eac5612da1c ("perf stat:
+>> Don't skip failing group events"):
+>> https://lore.kernel.org/lkml/20250825211204.2784695-3-irogers@google.com/
+>> Taking a look.
 > 
-> TSR_KIND_POINTER represents a register that holds the address of the
-> type in the `type_state_reg`. The semantics match the `breg` registers
-> that describe a memory location.
+> I sent a fix:
+> https://lore.kernel.org/linux-perf-users/20251002200604.1792141-2-irogers@google.com/
+> that makes it so that only if all events are unsupported that perf
+> stat exits - this is addressing a bunch of latent issues and fixes the
+> perf-tools-next regression. I don't think there is a difference
+> between v3 and v6 wrt this behavior, I think you were probably just
+> cherry-picking the v6 patches onto a newer tree. When those 2 patches
+> land I can rebase this series on them and drop the first patch of this
+> series.
 > 
-> This change implements handling for this new kind in mov instructions
-> and in the check_matching_type() function. When a TSR_KIND_POINTER is
-> moved to the stack, the stack state size is set to the architecture's
-> pointer size.
-> 
-> Signed-off-by: Zecheng Li <zecheng@google.com>
-> ---
->  tools/perf/arch/x86/annotate/instructions.c | 19 +++++++-
->  tools/perf/util/annotate-data.c             | 52 +++++++++++++++++++--
->  tools/perf/util/annotate-data.h             |  1 +
->  3 files changed, 66 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arch/x86/annotate/instructions.c
-> index da98a4e3c52c..698cbb299c6d 100644
-> --- a/tools/perf/arch/x86/annotate/instructions.c
-> +++ b/tools/perf/arch/x86/annotate/instructions.c
-> @@ -391,7 +391,7 @@ static void update_insn_state_x86(struct type_state *state,
->  		tsr->ok = true;
->  
->  		/* To copy back the variable type later (hopefully) */
-> -		if (tsr->kind == TSR_KIND_TYPE)
-> +		if (tsr->kind == TSR_KIND_TYPE || tsr->kind == TSR_KIND_POINTER)
->  			tsr->copied_from = src->reg1;
->  
->  		pr_debug_dtp("mov [%x] reg%d -> reg%d",
-> @@ -418,6 +418,10 @@ static void update_insn_state_x86(struct type_state *state,
->  			if (stack == NULL) {
->  				tsr->ok = false;
->  				return;
-> +			} else if (stack->kind == TSR_KIND_POINTER) {
-> +				tsr->type = stack->type;
-> +				tsr->kind = stack->kind;
-> +				tsr->ok = true;
->  			} else if (!stack->compound) {
+> Thanks,
+> Ian
 
-Looks like you can reues the !stack->compound block below.  But you need
-to update set_stack_state() not to set it for POINTER types.
+That is true about the cherry picking. I could only apply V3 to 
+perf-tools and V6 to perf-tools-next, that was just a guess without the 
+hash in the cover letter.
 
+I did test both unpatched perf-tools and perf-tools-next to confirm that 
+the original behavior was the same in those. Once I saw it was the same 
+I assumed the difference was only in the V3 vs V6. But you're right it 
+could be because of the base.
 
->  				tsr->type = stack->type;
->  				tsr->kind = stack->kind;
-> @@ -455,6 +459,19 @@ static void update_insn_state_x86(struct type_state *state,
->  				     insn_offset, src->offset, sreg, dst->reg1);
->  			pr_debug_type_name(&tsr->type, tsr->kind);
->  		}
-> +		/* Handle dereference of TSR_KIND_POINTER registers */
-> +		else if (has_reg_type(state, sreg) && state->regs[sreg].ok &&
-> +			 state->regs[sreg].kind == TSR_KIND_POINTER &&
-> +			 die_get_member_type(&state->regs[sreg].type,
-> +					     src->offset, &type_die)) {
-> +			tsr->type = state->regs[sreg].type;
-> +			tsr->kind = TSR_KIND_TYPE;
-> +			tsr->ok = true;
-> +
-> +			pr_debug_dtp("mov [%x] addr %#x(reg%d) -> reg%d",
-> +				     insn_offset, src->offset, sreg, dst->reg1);
-> +			pr_debug_type_name(&tsr->type, tsr->kind);
-> +		}
->  		/* Or check if it's a global variable */
->  		else if (sreg == DWARF_REG_PC) {
->  			struct map_symbol *ms = dloc->ms;
-> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-> index 903027a6fb7d..31b5896276f1 100644
-> --- a/tools/perf/util/annotate-data.c
-> +++ b/tools/perf/util/annotate-data.c
-> @@ -59,6 +59,10 @@ void pr_debug_type_name(Dwarf_Die *die, enum type_state_kind kind)
->  		pr_info(" constant\n");
->  		return;
->  	case TSR_KIND_PERCPU_POINTER:
-> +		pr_info(" percpu pointer");
-> +		/* it also prints the type info */
-> +		break;
-> +	case TSR_KIND_POINTER:
->  		pr_info(" pointer");
->  		/* it also prints the type info */
->  		break;
-> @@ -578,7 +582,9 @@ void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
->  	int tag;
->  	Dwarf_Word size;
->  
-> -	if (dwarf_aggregate_size(type_die, &size) < 0)
-> +	if (kind == TSR_KIND_POINTER)
-> +		size = 8;
-
-Maybe better to use 'sizeof(void *)'.  Later, we may support different
-architectures with different pointer size, but that would need many more
-work, I guess. :)
-
-Thanks,
-Namhyung
-
-
-> +	else if (dwarf_aggregate_size(type_die, &size) < 0)
->  		size = 0;
->  
->  	tag = dwarf_tag(type_die);
-> @@ -898,13 +904,25 @@ static void update_var_state(struct type_state *state, struct data_loc_info *dlo
->  
->  			reg = &state->regs[var->reg];
->  
-> -			/* For gp registers, skip the address registers for now */
-> -			if (var->is_reg_var_addr)
-> +			if (reg->ok && reg->kind == TSR_KIND_TYPE &&
-> +			   (!is_better_type(&reg->type, &mem_die) || var->is_reg_var_addr))
->  				continue;
->  
-> -			if (reg->ok && reg->kind == TSR_KIND_TYPE &&
-> -			    !is_better_type(&reg->type, &mem_die))
-> +			/* Handle address registers with TSR_KIND_POINTER */
-> +			if (var->is_reg_var_addr) {
-> +				if (reg->ok && reg->kind == TSR_KIND_POINTER &&
-> +				    !is_better_type(&reg->type, &mem_die))
-> +					continue;
-> +
-> +				reg->type = mem_die;
-> +				reg->kind = TSR_KIND_POINTER;
-> +				reg->ok = true;
-> +
-> +				pr_debug_dtp("var [%"PRIx64"] reg%d addr offset %x",
-> +					     insn_offset, var->reg, var->offset);
-> +				pr_debug_type_name(&mem_die, TSR_KIND_POINTER);
->  				continue;
-> +			}
->  
->  			orig_type = reg->type;
->  
-> @@ -1116,6 +1134,30 @@ static enum type_match_result check_matching_type(struct type_state *state,
->  		return PERF_TMR_OK;
->  	}
->  
-> +	if (state->regs[reg].kind == TSR_KIND_POINTER) {
-> +		struct strbuf sb;
-> +
-> +		strbuf_init(&sb, 32);
-> +		die_get_typename_from_type(&state->regs[reg].type, &sb);
-> +		pr_debug_dtp("(ptr->%s)", sb.buf);
-> +		strbuf_release(&sb);
-> +
-> +		/*
-> +		 * Register holds a pointer (address) to the target variable.
-> +		 * The type is the type of the variable it points to.
-> +		 */
-> +		*type_die = state->regs[reg].type;
-> +
-> +		dloc->type_offset = dloc->op->offset;
-> +
-> +		/* Get the size of the actual type */
-> +		if (dwarf_aggregate_size(type_die, &size) < 0 ||
-> +		    (unsigned)dloc->type_offset >= size)
-> +			return PERF_TMR_BAD_OFFSET;
-> +
-> +		return PERF_TMR_OK;
-> +	}
-> +
->  	if (state->regs[reg].kind == TSR_KIND_PERCPU_POINTER) {
->  		pr_debug_dtp("percpu ptr");
->  
-> diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-> index dd3807b55208..fd0d1084bc4e 100644
-> --- a/tools/perf/util/annotate-data.h
-> +++ b/tools/perf/util/annotate-data.h
-> @@ -35,6 +35,7 @@ enum type_state_kind {
->  	TSR_KIND_PERCPU_BASE,
->  	TSR_KIND_CONST,
->  	TSR_KIND_PERCPU_POINTER,
-> +	TSR_KIND_POINTER,
->  	TSR_KIND_CANARY,
->  };
->  
-> -- 
-> 2.51.0.384.g4c02a37b29-goog
-> 
+I'll retest with the fix applied
