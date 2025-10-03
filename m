@@ -1,126 +1,174 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFCB253B40;
-	Fri,  3 Oct 2025 20:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706931F63FF
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Oct 2025 21:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759524666; cv=none; b=ihjNQWrNKjhHS2PEqT+nJXA+18HL67c64WfueG1/r7SxXCWW/cwPpHc3uleIlse8/vVAfXgK+CvvG5C8f+fsaOzqvcKCH4if/1OktBpzW89+/rq5MOtC9RfkqBQKupbwWhiZJYXEGDg8he1tZhnrzxQE4RuoNXvBjayVEdZGt7c=
+	t=1759526754; cv=none; b=KW/znT326Hb3bu53tWUPfbkJErvXc2gItZwU6tcvFw11SMU0HWKLaA8Z1NWApLhLMHeUiplTq3bWVUSNErnVxlXX0yz/+RN/1TMsUEWRQoUMrGujL+rep54mf1H/QoaFii+iJO7zd3dToGl++5qNjKARp8X8GnZhsE3jViwjW7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759524666; c=relaxed/simple;
-	bh=bZr+Lvkb5M6Ufx0akrIYv+VR8dkYeZRAOvoeF3RPvsg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ArnWUhXLUdvRaJOD1J2q2n6uL+3EDuWDBk3lcB4ZdorhZv5xvImhhD+vK1Cr7o60sGAv9gqlIHwuHWKOchkNqVDUHY+ZhddyGtxZZgraHq0kMrEUYFb9JDr5SP2o5JIEN+B1cRLV4FCNiysNQYEoZKz6XrwC5NAr3TzsuKoO0q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Lrx+Opa8; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1759526754; c=relaxed/simple;
+	bh=57pLtc5rAmyyS/wQyFbPOMpl7eLN+4lrTPENsmASPAo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=Po936N350iIRij6/pTs3flgBfEvpUv8SIKuaJ1MbKLj8SR6IuB9QOtkmtG7B85I70670p5yikujX4Zj9CoO7GAku6K6YOvrJi6YkG9oso5WgPnozEdJBYJ7d1YzZ+TVdXg0LC/EUMss0iOucIOmJ4cvyfBgdVMuEQeU21f5CP8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rScLPhSR; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Lrx+Opa8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
-	bh=oIs3ppVLk6gw/qZXypZLZcOfa+yCn//X21VZFkDaLYU=; b=Lrx+Opa8kAlfEXuyu8nZrskDYS
-	RMEVW1K3EtHWtp/TNPMDl4+TZidS8rII6LOpnPv0qEvXnZn1PtaWNoVRLLHkzUnhbCR3Tfh1MpEHf
-	ZkZd/NEu3t0eSIf0IaCZTwNSp4G961ZaVD/mJjLljb3ViiQ31g8H8jJABJOEx687ZtuOQgxZ+AsqI
-	LmC9fUttLZOzjyJF2FAdnCTKBCeWjOa6Rmq3x9FU9+hZojGWXCUyKadvy1un7W8qu/DrpcU76pUyT
-	OX6o9m0+7SucZJP87UviQ0UOsMWHeilEIIYasmiArPjulk9Jci/3QFC7WnJj9QL3uPYwy+SzCuC2Q
-	D0kAwH9A==;
-Received: from [50.53.25.54] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v4mjl-0000000D7bQ-0Z25;
-	Fri, 03 Oct 2025 20:50:45 +0000
-Message-ID: <3913273d-12e2-426f-aec7-263b7f49008a@infradead.org>
-Date: Fri, 3 Oct 2025 13:50:43 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rScLPhSR"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-27eeafd4882so63625ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Oct 2025 14:25:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1759526753; x=1760131553; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P4VT0ieB0jgGlNp2juozLPJwl8qLI4qMKjBM+yWFQxQ=;
+        b=rScLPhSRt8Je1BfTMWncRATd1mIxxhPm3BnUpMz+E7JJuSVDYj3Mgd7ilFDhdmUEvv
+         +ZdXNsJ0oSuy26SlCFouBgshxfHZLU1h1usbjs+TAQvX+kFuJCGpkMqzWZFLAzIoku5J
+         usml5UmJ7FMtBSe2KSB/pNm1stLQvHvYhr3OJLwC2jBTVD0iUJ+cTIuueTdbURaWDQNK
+         csAuRN/5TJS4uzJiPD78tmCTY83TcDwTBHf/i4i/Y5U8BaPzNcTUET36lIbJmMFbC8g9
+         cLGYI+P+kdYLbYxjcU/aDePvHYXkwRIvyTewTeqbxMeJPOGRnIuTdkLQ+LLOwupRNjhg
+         KL7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759526753; x=1760131553;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=P4VT0ieB0jgGlNp2juozLPJwl8qLI4qMKjBM+yWFQxQ=;
+        b=KTkcXIzdRh10eFsbFss/9Sr4R8e7BqgwU01+06lfUOhAFSbuZYKstj05O35OWEQBVf
+         fXJnmzW0XAnAKOoy9LsAfj1truHG7Hl7stNfAtLUQj0s/pKDJlrU4+ckddsegS7Kzdeu
+         kcpCQU4ihUfjYaBWzQ95/DQxkfDiVwtBHX8I4AgxO9Fh6b3Z5XxwJxH3T63bmaRPRKVg
+         YX70W1cyNBoQLEsQYe3XJunE3BnpccBxyMd21Hh5mbV6Xr+Qwao52mRg6Mdk9i42duTA
+         f8ER4PJdc5/WO58AB7w0+O3+N6sNGQ9Ms7j0DwZv2LQtjY6dUhhsi61DJnrt1ANr9c5N
+         twCg==
+X-Forwarded-Encrypted: i=1; AJvYcCVm7BiURcpsUEpbp4g7kw8+bjDZEsnvWoCFwhsoPsUDqLRmb1I7Z8bWfQglwvMLZ6IE5B4PjSe9nbNXYt9GgDsj@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7eh0JPQjyA47GM3oLxv5W++4w2gIfBARTAHMhjpAI1IAWHJl2
+	TPJ++jCs6CMdjulMo/7whjQqe0yRBjEmgcmj9QWgNjldmVDCTT8O8M9HMh6Va5pYfnNEQuzakzm
+	QZxK/ZyGV7EKYFbMUMO17az4r2BzwphsW6rsXOCbe
+X-Gm-Gg: ASbGncuGlrh2ybq3rAZSwNJJ6tM4c1ZbODm9MOB9j4YJnSgkzEM8rDylq/ReSH8O1VK
+	z6HiNcPhzpXoaynnDqY5wHjGZ4/s4J4qSqaGMMyUbNypkL9T7d3NURYPEIa6n+9kuEDgQ+HvLqZ
+	+Mu4k0gmh8GLmaMSmaac2Ln66WLx+LVf2IXR3MMoJGs9Enyw/mlTT22SqhxubAevFMOFxtEBPtU
+	XNkVJeIYbQJ0JQfZ2HVDwjLYr96WJZ3lpjnWMY=
+X-Google-Smtp-Source: AGHT+IEvKCaC7A5Ml4aKvLTF08Kw++5135k1T1k0ilEsn2gPqKa3Flguj4PYlUgxI0sPVl1oU0SnhaiVDHYI6+mcv8I=
+X-Received: by 2002:a17:903:37c3:b0:266:b8a2:f605 with SMTP id
+ d9443c01a7336-28ea80b6848mr1092635ad.3.1759526752412; Fri, 03 Oct 2025
+ 14:25:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 23/23] MAINTAINERS: add entry for KStackWatch
-To: Jinchao Wang <wangjinchao600@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Mike Rapoport <rppt@kernel.org>,
- Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>,
- Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- David Hildenbrand <david@redhat.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Kees Cook <kees@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Sami Tolvanen <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>,
- Masahiro Yamada <masahiroy@kernel.org>, Rong Xu <xur@google.com>,
- Naveen N Rao <naveen@kernel.org>, David Kaplan <david.kaplan@amd.com>,
- Andrii Nakryiko <andrii@kernel.org>, Jinjie Ruan <ruanjinjie@huawei.com>,
- Nam Cao <namcao@linutronix.de>, workflows@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-mm@kvack.org, llvm@lists.linux.dev,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>, kasan-dev@googlegroups.com,
- "David S. Miller" <davem@davemloft.net>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org
-References: <20250930024402.1043776-1-wangjinchao600@gmail.com>
- <20250930024402.1043776-24-wangjinchao600@gmail.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250930024402.1043776-24-wangjinchao600@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250905042643.1937122-1-irogers@google.com> <CAP-5=fUSuh+hKVg_1owmzPAZka3DGmhr6FzN__n_Cb2XUET3=A@mail.gmail.com>
+In-Reply-To: <CAP-5=fUSuh+hKVg_1owmzPAZka3DGmhr6FzN__n_Cb2XUET3=A@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 3 Oct 2025 14:25:39 -0700
+X-Gm-Features: AS18NWDQKFSXIfHLXPhA-wfzscMqdhhpbLO_pw2mKIg7osIY2y1fwdMgsm4-1E4
+Message-ID: <CAP-5=fUOpiJypozewCSi6Avg2pQnjmvNcFMM5iUsbTR1P_47zQ@mail.gmail.com>
+Subject: Re: [PATCH v1] perf parse-events: Fix parsing of >30kb event strings
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Wed, Sep 17, 2025 at 11:05=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> On Thu, Sep 4, 2025 at 9:26=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+> >
+> > Metrics may generate many particularly uncore event references. The
+> > resulting event string may then be >32kb. The parse events lex is
+> > using "%option reject" which stores backtracking state in a buffer
+> > sized at roughtly 30kb. If the event string is larger than this then a
+> > buffer overflow and typically a crash happens.
+> >
+> > The need for "%option reject" was for BPF events which were removed in
+> > commit 3d6dfae88917 ("perf parse-events: Remove BPF event
+> > support"). As "%option reject" is both a memory and performance cost
+> > let's remove it and fix the parsing case for event strings being over
+> > ~30kb.
+> >
+> > Whilst cleaning up "%option reject" make the header files accurately
+> > reflect functions used in the code and tidy up not requiring yywrap.
+> >
+> > Measuring on the "PMU JSON event tests" a modest reduction of 0.41%
+> > user time and 0.27% max resident size was observed. More importantly
+> > this change fixes parsing large metrics and event strings.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+>
+> Ping. I think this may have gotten lost in noise about things like
+> hardware json and the python metrics. It is a small change, bug fix
+> and performance win. It can land independently of anything else. PTAL.
 
-On 9/29/25 7:43 PM, Jinchao Wang wrote:
-> Add a maintainer entry for Kernel Stack Watch.
-> 
-> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
-> ---
->  MAINTAINERS | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 520fb4e379a3..3d4811ff3631 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13362,6 +13362,14 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git
->  F:	Documentation/dev-tools/kselftest*
->  F:	tools/testing/selftests/
->  
-> +KERNEL STACK WATCH
-> +M:	Jinchao Wang <wangjinchao600@gmail.com>
-> +S:	Maintained
-> +F:	Documentation/dev-tools/kstackwatch.rst
-> +F:	include/linux/kstackwatch_types.h
-> +F:	mm/kstackwatch/
-> +F:	tools/kstackwatch/
-> +
+It'd be nice to land this for the v6.18 pull. I don't think it has any
+visible implications and just makes stuff better.
 
-Add entries in alphabetical order, please.
+Thanks,
+Ian
 
->  KERNEL SMB3 SERVER (KSMBD)
->  M:	Namjae Jeon <linkinjeon@kernel.org>
->  M:	Namjae Jeon <linkinjeon@samba.org>
 
--- 
-~Randy
-
+> Thanks,
+> Ian
+>
+> > ---
+> >  tools/perf/util/parse-events.l | 17 +++--------------
+> >  1 file changed, 3 insertions(+), 14 deletions(-)
+> >
+> > diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-eve=
+nts.l
+> > index 2034590eb789..1eaa8dbc26d8 100644
+> > --- a/tools/perf/util/parse-events.l
+> > +++ b/tools/perf/util/parse-events.l
+> > @@ -5,16 +5,14 @@
+> >  %option stack
+> >  %option bison-locations
+> >  %option yylineno
+> > -%option reject
+> > +%option noyywrap
+> >
+> >  %{
+> >  #include <errno.h>
+> > -#include <sys/types.h>
+> > -#include <sys/stat.h>
+> > -#include <unistd.h>
+> > +#include <stdlib.h>
+> > +#include <stdio.h>
+> >  #include "parse-events.h"
+> >  #include "parse-events-bison.h"
+> > -#include "evsel.h"
+> >
+> >  char *parse_events_get_text(yyscan_t yyscanner);
+> >  YYSTYPE *parse_events_get_lval(yyscan_t yyscanner);
+> > @@ -222,10 +220,6 @@ do {                                              =
+         \
+> >         yycolumn +=3D yyleng;                             \
+> >  } while (0);
+> >
+> > -#define USER_REJECT            \
+> > -       yycolumn -=3D yyleng;     \
+> > -       REJECT
+> > -
+> >  %}
+> >
+> >  %x mem
+> > @@ -423,8 +417,3 @@ r{num_raw_hex}              { return str(yyscanner,=
+ PE_RAW); }
+> >  .                      { }
+> >
+> >  %%
+> > -
+> > -int parse_events_wrap(void *scanner __maybe_unused)
+> > -{
+> > -       return 1;
+> > -}
+> > --
+> > 2.51.0.355.g5224444f11-goog
+> >
