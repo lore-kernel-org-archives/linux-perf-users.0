@@ -1,174 +1,215 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706931F63FF
-	for <linux-perf-users@vger.kernel.org>; Fri,  3 Oct 2025 21:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD412264C8
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Oct 2025 21:29:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759526754; cv=none; b=KW/znT326Hb3bu53tWUPfbkJErvXc2gItZwU6tcvFw11SMU0HWKLaA8Z1NWApLhLMHeUiplTq3bWVUSNErnVxlXX0yz/+RN/1TMsUEWRQoUMrGujL+rep54mf1H/QoaFii+iJO7zd3dToGl++5qNjKARp8X8GnZhsE3jViwjW7M=
+	t=1759526963; cv=none; b=lD5qsrUUU/BxfObU4Rtz3zWUkuWoJHq5NXK763cmjPOHr1JMZlwDOK/FNHd9z7vqiqYaBf17eheM+SZOL69YMrGRn5jpR09cfGzOE3cJce4BTzCsA3v2uCUJTLGZbyMCH9pG4+fFABcqXQi0Chjd7s7YREICSTUnLb5TanJGzGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759526754; c=relaxed/simple;
-	bh=57pLtc5rAmyyS/wQyFbPOMpl7eLN+4lrTPENsmASPAo=;
+	s=arc-20240116; t=1759526963; c=relaxed/simple;
+	bh=sgCLR2ngapQNLouWMOBzkBY/LCsMsAk0k5g8Ou9XOII=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=Po936N350iIRij6/pTs3flgBfEvpUv8SIKuaJ1MbKLj8SR6IuB9QOtkmtG7B85I70670p5yikujX4Zj9CoO7GAku6K6YOvrJi6YkG9oso5WgPnozEdJBYJ7d1YzZ+TVdXg0LC/EUMss0iOucIOmJ4cvyfBgdVMuEQeU21f5CP8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rScLPhSR; arc=none smtp.client-ip=209.85.214.180
+	 To:Cc:Content-Type; b=jXOhGueGNFw282gWJ8h1MdKsd+UML18d0h2yrvlrOTXTJUC83PjWqftboSpYk2Sw3rpo49s7XRSpVN9/iV1Cm2DMFx4NZvRoHqolwajFF7I1cFcUvnwtEjx8ygOdphmc+gnzvSXL/NVIqgAWD2kl7OoDWINvOAbB22Bdc0lvCTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2aorZwbA; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rScLPhSR"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-27eeafd4882so63625ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Oct 2025 14:25:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2aorZwbA"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-27eeafd4882so64345ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Oct 2025 14:29:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759526753; x=1760131553; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=google.com; s=20230601; t=1759526961; x=1760131761; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=P4VT0ieB0jgGlNp2juozLPJwl8qLI4qMKjBM+yWFQxQ=;
-        b=rScLPhSRt8Je1BfTMWncRATd1mIxxhPm3BnUpMz+E7JJuSVDYj3Mgd7ilFDhdmUEvv
-         +ZdXNsJ0oSuy26SlCFouBgshxfHZLU1h1usbjs+TAQvX+kFuJCGpkMqzWZFLAzIoku5J
-         usml5UmJ7FMtBSe2KSB/pNm1stLQvHvYhr3OJLwC2jBTVD0iUJ+cTIuueTdbURaWDQNK
-         csAuRN/5TJS4uzJiPD78tmCTY83TcDwTBHf/i4i/Y5U8BaPzNcTUET36lIbJmMFbC8g9
-         cLGYI+P+kdYLbYxjcU/aDePvHYXkwRIvyTewTeqbxMeJPOGRnIuTdkLQ+LLOwupRNjhg
-         KL7g==
+        bh=C9VRi3EH24xBcxIT9mshnPJiIjgju22iBD0ykQ5/sxM=;
+        b=2aorZwbAXX68+MXVgPmvCfhv4jEkNdI8P2SEUuAFRkKtw32p+yGosSsrAXRrQUk4XP
+         jQxW2slUmMzmOAxwFTUou5iqmN/moFDfe0DhB5vHkbUZc7HZxI4OdVsfrzR4VF2dQrn/
+         em1xYW6dMWvZfpzGhXnTaL2o5NI1lGTGFd3zHechaiDYiMNsUmP21oAVqBUpfcR0/6Zo
+         0yyJ4u8+XwrkROX9C7gvje+LVKe5NrmOboM8ftRBA/EG2y7212bJx/lEOp8vHb18hMTb
+         JZjAFn28RwzbxMpNOAQ4ibXAL99MXKuv2nMc1gtmBiUVxhRuyhgh8s/2UOblddLLLmsj
+         tQDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759526753; x=1760131553;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1759526961; x=1760131761;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=P4VT0ieB0jgGlNp2juozLPJwl8qLI4qMKjBM+yWFQxQ=;
-        b=KTkcXIzdRh10eFsbFss/9Sr4R8e7BqgwU01+06lfUOhAFSbuZYKstj05O35OWEQBVf
-         fXJnmzW0XAnAKOoy9LsAfj1truHG7Hl7stNfAtLUQj0s/pKDJlrU4+ckddsegS7Kzdeu
-         kcpCQU4ihUfjYaBWzQ95/DQxkfDiVwtBHX8I4AgxO9Fh6b3Z5XxwJxH3T63bmaRPRKVg
-         YX70W1cyNBoQLEsQYe3XJunE3BnpccBxyMd21Hh5mbV6Xr+Qwao52mRg6Mdk9i42duTA
-         f8ER4PJdc5/WO58AB7w0+O3+N6sNGQ9Ms7j0DwZv2LQtjY6dUhhsi61DJnrt1ANr9c5N
-         twCg==
-X-Forwarded-Encrypted: i=1; AJvYcCVm7BiURcpsUEpbp4g7kw8+bjDZEsnvWoCFwhsoPsUDqLRmb1I7Z8bWfQglwvMLZ6IE5B4PjSe9nbNXYt9GgDsj@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7eh0JPQjyA47GM3oLxv5W++4w2gIfBARTAHMhjpAI1IAWHJl2
-	TPJ++jCs6CMdjulMo/7whjQqe0yRBjEmgcmj9QWgNjldmVDCTT8O8M9HMh6Va5pYfnNEQuzakzm
-	QZxK/ZyGV7EKYFbMUMO17az4r2BzwphsW6rsXOCbe
-X-Gm-Gg: ASbGncuGlrh2ybq3rAZSwNJJ6tM4c1ZbODm9MOB9j4YJnSgkzEM8rDylq/ReSH8O1VK
-	z6HiNcPhzpXoaynnDqY5wHjGZ4/s4J4qSqaGMMyUbNypkL9T7d3NURYPEIa6n+9kuEDgQ+HvLqZ
-	+Mu4k0gmh8GLmaMSmaac2Ln66WLx+LVf2IXR3MMoJGs9Enyw/mlTT22SqhxubAevFMOFxtEBPtU
-	XNkVJeIYbQJ0JQfZ2HVDwjLYr96WJZ3lpjnWMY=
-X-Google-Smtp-Source: AGHT+IEvKCaC7A5Ml4aKvLTF08Kw++5135k1T1k0ilEsn2gPqKa3Flguj4PYlUgxI0sPVl1oU0SnhaiVDHYI6+mcv8I=
-X-Received: by 2002:a17:903:37c3:b0:266:b8a2:f605 with SMTP id
- d9443c01a7336-28ea80b6848mr1092635ad.3.1759526752412; Fri, 03 Oct 2025
- 14:25:52 -0700 (PDT)
+        bh=C9VRi3EH24xBcxIT9mshnPJiIjgju22iBD0ykQ5/sxM=;
+        b=eeQd3qiCzOvV4c7DxWnBfR4Q9Lxjq90NGcq2/bcD8pCa82mZhfJpQ+DdCr5vu68i3J
+         pqGcfk6PkVFQAK4oDRo4e2eC+TTZr9+2kE5ch1c6Lp/bsI+QAd+uWgrtwkHo9pELq3FZ
+         zmNRtsIqZPIcIDyfYFFHKL1It4uQx0alGx4GBqy2Xsc80NL3QISf2DuVKoBaoSOtRPyY
+         5mff5/K39h6e+FU5SPY8GY6WMQcttq4QMwnqKFbvcHC5HqEKOoPgx7VymVzSLpdtdvIi
+         Sy8ExOVPpIU4mQ3oAm9pAcnsNlE0KVtHDypmEF0+O4qZ46pzDpryTQVfYwCPpaO5xEdy
+         EQOg==
+X-Forwarded-Encrypted: i=1; AJvYcCUeCgn1ViORCxhEwbMcpfvFWQpGefXhVt6TTtORU/K399CRnpV01frddzD9gueHk5XbdRkoSAyQ8RWqg+otwIR9@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAShn/oBsbSoTDsK5ZFhO46GrR6hRPs3ozu98xAYPuRQlMIwWS
+	vHSMt5gS8/Ijv09f4mjqBpH52lDu4E2WSoTYRlePMcZDHG/KU1buTNPr+bU8BPvH8yHdkaFECzi
+	78ILnILnHykBvN13gGmOojayKZdmXyYdyyRRHXeUd
+X-Gm-Gg: ASbGnctCWLguNNQiqlDk/JMTXv1j54FQuU8/9p2oXxP/oy3FEpB8kQkUU3uJAHeNXeb
+	E2j1WqsAn8uHQTR1RXBeM7G8+iX37Ikwiuz9miGIL6Q0nNdMBv9PXUR0zaUc3ZVq+83NIIIyLB5
+	vu+g0rCuOk5rt+Y0VjG4z9hzNLiiNqDtfFOA5G2r7mAQdVgALc+t1wD56Kih4UZouqmBeDgPC+2
+	/e8HnEiiOT8rp42ChUdemTKAaNvQ7G04djXfdY=
+X-Google-Smtp-Source: AGHT+IHUleMTSV8OFBZDxUEi0C1/AcmU8XAZJZPNf2qZ0+XgxlY77yPW07NAORzho2z6VXpzlcFrk1fhQ/DDZCDalIA=
+X-Received: by 2002:a17:903:3c70:b0:268:cc5:5e3c with SMTP id
+ d9443c01a7336-28ea7f48339mr1229385ad.10.1759526960554; Fri, 03 Oct 2025
+ 14:29:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250905042643.1937122-1-irogers@google.com> <CAP-5=fUSuh+hKVg_1owmzPAZka3DGmhr6FzN__n_Cb2XUET3=A@mail.gmail.com>
-In-Reply-To: <CAP-5=fUSuh+hKVg_1owmzPAZka3DGmhr6FzN__n_Cb2XUET3=A@mail.gmail.com>
+References: <20251003175613.2512296-1-irogers@google.com> <20251003175613.2512296-2-irogers@google.com>
+ <aOAoc0-Oy99l3iQG@x1>
+In-Reply-To: <aOAoc0-Oy99l3iQG@x1>
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 3 Oct 2025 14:25:39 -0700
-X-Gm-Features: AS18NWDQKFSXIfHLXPhA-wfzscMqdhhpbLO_pw2mKIg7osIY2y1fwdMgsm4-1E4
-Message-ID: <CAP-5=fUOpiJypozewCSi6Avg2pQnjmvNcFMM5iUsbTR1P_47zQ@mail.gmail.com>
-Subject: Re: [PATCH v1] perf parse-events: Fix parsing of >30kb event strings
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
+Date: Fri, 3 Oct 2025 14:29:09 -0700
+X-Gm-Features: AS18NWCd15Gjm1sQjDY-vazJTUi06ucepjQjCnk20HrbpaC4TLu776xKUu3Fsmw
+Message-ID: <CAP-5=fXVVg5BC-q85i4s8Phdp86UYEKTaKHcb75W76LdSa+_7g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] tools build: Remove get_current_dir_name
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 17, 2025 at 11:05=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
+On Fri, Oct 3, 2025 at 12:48=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> On Thu, Sep 4, 2025 at 9:26=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
-> >
-> > Metrics may generate many particularly uncore event references. The
-> > resulting event string may then be >32kb. The parse events lex is
-> > using "%option reject" which stores backtracking state in a buffer
-> > sized at roughtly 30kb. If the event string is larger than this then a
-> > buffer overflow and typically a crash happens.
-> >
-> > The need for "%option reject" was for BPF events which were removed in
-> > commit 3d6dfae88917 ("perf parse-events: Remove BPF event
-> > support"). As "%option reject" is both a memory and performance cost
-> > let's remove it and fix the parsing case for event strings being over
-> > ~30kb.
-> >
-> > Whilst cleaning up "%option reject" make the header files accurately
-> > reflect functions used in the code and tidy up not requiring yywrap.
-> >
-> > Measuring on the "PMU JSON event tests" a modest reduction of 0.41%
-> > user time and 0.27% max resident size was observed. More importantly
-> > this change fixes parsing large metrics and event strings.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+> On Fri, Oct 03, 2025 at 10:56:13AM -0700, Ian Rogers wrote:
+> > As perf no longer tests for this feature, and it was the only user,
+> > remove the feature test.
 >
-> Ping. I think this may have gotten lost in noise about things like
-> hardware json and the python metrics. It is a small change, bug fix
-> and performance win. It can land independently of anything else. PTAL.
+> You forgot to remove this:
+>
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$ git diff
+> diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-al=
+l.c
+> index 71ba7001dc25c6bb..8a354b81417c6fcc 100644
+> --- a/tools/build/feature/test-all.c
+> +++ b/tools/build/feature/test-all.c
+> @@ -151,7 +151,6 @@ int main(int argc, char *argv[])
+>         main_test_libpython();
+>         main_test_hello();
+>         main_test_libelf();
+> -       main_test_get_current_dir_name();
+>         main_test_gettid();
+>         main_test_glibc();
+>         main_test_libdw();
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$
+>
+> That results, when building with this alias:
+>
+> alias m=3D'rm -rf ~/libexec/perf-core/ ; make CORESIGHT=3D1 -k O=3D/tmp/b=
+uild/$(basename $PWD)/ -C tools/perf install-bin && perf test python && cat=
+ /tmp/build/$(basename $PWD)/feature/test-all.make.output'
+>
+> that needs to be on the makefiles somewhere, shows that test-all.bin is
+> failing to build:
+>
+> make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
+>  88: 'import perf' in python                                         : FA=
+ILED!
+> test-all.c: In function =E2=80=98main=E2=80=99:
+> test-all.c:154:9: error: implicit declaration of function =E2=80=98main_t=
+est_get_current_dir_name=E2=80=99; did you mean =E2=80=98get_current_dir_na=
+me=E2=80=99? [-Wimplicit-function-declaration]
+>   154 |         main_test_get_current_dir_name();
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>       |         get_current_dir_name
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$
+>
+> I fixed this up already,
 
-It'd be nice to land this for the v6.18 pull. I don't think it has any
-visible implications and just makes stuff better.
-
-Thanks,
+Sorry for that. Thanks for fixing it up!
 Ian
 
-
 > Thanks,
-> Ian
 >
+> - Arnaldo
+>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
 > > ---
-> >  tools/perf/util/parse-events.l | 17 +++--------------
-> >  1 file changed, 3 insertions(+), 14 deletions(-)
+> >  tools/build/Makefile.feature                    |  1 -
+> >  tools/build/feature/Makefile                    |  4 ----
+> >  tools/build/feature/test-all.c                  |  4 ----
+> >  tools/build/feature/test-get_current_dir_name.c | 11 -----------
+> >  4 files changed, 20 deletions(-)
+> >  delete mode 100644 tools/build/feature/test-get_current_dir_name.c
 > >
-> > diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-eve=
-nts.l
-> > index 2034590eb789..1eaa8dbc26d8 100644
-> > --- a/tools/perf/util/parse-events.l
-> > +++ b/tools/perf/util/parse-events.l
-> > @@ -5,16 +5,14 @@
-> >  %option stack
-> >  %option bison-locations
-> >  %option yylineno
-> > -%option reject
-> > +%option noyywrap
+> > diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.featur=
+e
+> > index 9c1a69d26f51..9399f591bd69 100644
+> > --- a/tools/build/Makefile.feature
+> > +++ b/tools/build/Makefile.feature
+> > @@ -68,7 +68,6 @@ FEATURE_TESTS_BASIC :=3D                  \
+> >          libdw                           \
+> >          eventfd                         \
+> >          fortify-source                  \
+> > -        get_current_dir_name            \
+> >          gettid                               \
+> >          glibc                           \
+> >          libbfd                          \
+> > diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefil=
+e
+> > index b41a42818d8a..d13d2a1f44fe 100644
+> > --- a/tools/build/feature/Makefile
+> > +++ b/tools/build/feature/Makefile
+> > @@ -8,7 +8,6 @@ FILES=3D                                          \
+> >           test-libdw.bin                         \
+> >           test-eventfd.bin                       \
+> >           test-fortify-source.bin                \
+> > -         test-get_current_dir_name.bin          \
+> >           test-glibc.bin                         \
+> >           test-gtk2.bin                          \
+> >           test-gtk2-infobar.bin                  \
+> > @@ -147,9 +146,6 @@ $(OUTPUT)test-libelf.bin:
+> >  $(OUTPUT)test-eventfd.bin:
+> >       $(BUILD)
 > >
-> >  %{
-> >  #include <errno.h>
-> > -#include <sys/types.h>
-> > -#include <sys/stat.h>
+> > -$(OUTPUT)test-get_current_dir_name.bin:
+> > -     $(BUILD)
+> > -
+> >  $(OUTPUT)test-glibc.bin:
+> >       $(BUILD)
+> >
+> > diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-=
+all.c
+> > index e1847db6f8e6..778883a32afb 100644
+> > --- a/tools/build/feature/test-all.c
+> > +++ b/tools/build/feature/test-all.c
+> > @@ -22,10 +22,6 @@
+> >  # include "test-libelf.c"
+> >  #undef main
+> >
+> > -#define main main_test_get_current_dir_name
+> > -# include "test-get_current_dir_name.c"
+> > -#undef main
+> > -
+> >  #define main main_test_gettid
+> >  # include "test-gettid.c"
+> >  #undef main
+> > diff --git a/tools/build/feature/test-get_current_dir_name.c b/tools/bu=
+ild/feature/test-get_current_dir_name.c
+> > deleted file mode 100644
+> > index c3c201691b4f..000000000000
+> > --- a/tools/build/feature/test-get_current_dir_name.c
+> > +++ /dev/null
+> > @@ -1,11 +0,0 @@
+> > -// SPDX-License-Identifier: GPL-2.0
+> > -#define _GNU_SOURCE
 > > -#include <unistd.h>
-> > +#include <stdlib.h>
-> > +#include <stdio.h>
-> >  #include "parse-events.h"
-> >  #include "parse-events-bison.h"
-> > -#include "evsel.h"
-> >
-> >  char *parse_events_get_text(yyscan_t yyscanner);
-> >  YYSTYPE *parse_events_get_lval(yyscan_t yyscanner);
-> > @@ -222,10 +220,6 @@ do {                                              =
-         \
-> >         yycolumn +=3D yyleng;                             \
-> >  } while (0);
-> >
-> > -#define USER_REJECT            \
-> > -       yycolumn -=3D yyleng;     \
-> > -       REJECT
+> > -#include <stdlib.h>
 > > -
-> >  %}
-> >
-> >  %x mem
-> > @@ -423,8 +417,3 @@ r{num_raw_hex}              { return str(yyscanner,=
- PE_RAW); }
-> >  .                      { }
-> >
-> >  %%
-> > -
-> > -int parse_events_wrap(void *scanner __maybe_unused)
+> > -int main(void)
 > > -{
-> > -       return 1;
+> > -     free(get_current_dir_name());
+> > -     return 0;
 > > -}
+> > -#undef _GNU_SOURCE
 > > --
-> > 2.51.0.355.g5224444f11-goog
-> >
+> > 2.51.0.618.g983fd99d29-goog
