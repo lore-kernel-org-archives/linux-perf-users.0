@@ -1,209 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09D8156F20
-	for <linux-perf-users@vger.kernel.org>; Fri,  3 Oct 2025 20:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFCB253B40;
+	Fri,  3 Oct 2025 20:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759523532; cv=none; b=i9WiXYRfKTc/c9sL+cyayim6qTWPevMYwvpCROpxNaf8+De60aQf22xqaHdQz998RAdaoxo2GWEfUvPVA0J/6/Hl+T2uu1zsHgyEGuGRfDhnR1eCQ30PLQ3A2yCL+cpvQIpEfYv9KNyaaUByWts5K5qHQrsys0YJ6bUFOAR0S8w=
+	t=1759524666; cv=none; b=ihjNQWrNKjhHS2PEqT+nJXA+18HL67c64WfueG1/r7SxXCWW/cwPpHc3uleIlse8/vVAfXgK+CvvG5C8f+fsaOzqvcKCH4if/1OktBpzW89+/rq5MOtC9RfkqBQKupbwWhiZJYXEGDg8he1tZhnrzxQE4RuoNXvBjayVEdZGt7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759523532; c=relaxed/simple;
-	bh=VI/m8hlGeHz2lFJLgNWKTsXKt1joCkN3IjGqIi51ug8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mhQq99tVfBI1IQzj7+OM9+B1MS1xvMCnBO3A5Dd8460ttDUW2GoPwMYq2z9A/ytMkE4uG7Az4eshKi0UXEF70nMSj1fUXNP+/+Mzt/FaTc2rLFQ5rJXdfAdeuMmHvXpxA0+7wbGtjjev+tqWRJ3ngd3vfv1ruUPf/awxVOYeNig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k87acxJF; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1759524666; c=relaxed/simple;
+	bh=bZr+Lvkb5M6Ufx0akrIYv+VR8dkYeZRAOvoeF3RPvsg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ArnWUhXLUdvRaJOD1J2q2n6uL+3EDuWDBk3lcB4ZdorhZv5xvImhhD+vK1Cr7o60sGAv9gqlIHwuHWKOchkNqVDUHY+ZhddyGtxZZgraHq0kMrEUYFb9JDr5SP2o5JIEN+B1cRLV4FCNiysNQYEoZKz6XrwC5NAr3TzsuKoO0q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Lrx+Opa8; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k87acxJF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759523531; x=1791059531;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VI/m8hlGeHz2lFJLgNWKTsXKt1joCkN3IjGqIi51ug8=;
-  b=k87acxJF/VARgmdz0VJk6JDOXA6+ATmCXW6HVRa3/J/HKHS/26XO2/8d
-   hqvrvQ3rMj6n3Tvh5nO70WPz5Bq4V4stiThGYI7f2KXCpuOWWsfHlrU4m
-   7xGV3QzslB7NkmcGVW/jIplNAu4Xxj0Qdwj4IDpVTNXf35PyoMpoSUbWB
-   5swElsOxy9kBUbKiKd6z4OSlpKE34sAvABre9MGqR+p8wXdhpdGRg/2df
-   n2GYs+NqOXjabCs0s5j+0Fx3Ejc0Xumz86+UoqDCujIhDbwE8mKoXUulU
-   m4RLhbl8MB73wj92SZPgJXmCCIteEoBIzhWfcqzhJ9uGENo9qkyfruLsD
-   g==;
-X-CSE-ConnectionGUID: VwsTwzkWQJmdQkn61d1nMQ==
-X-CSE-MsgGUID: ke+3N8rPR5KipyObKhBcKQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="61771295"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="61771295"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2025 13:32:10 -0700
-X-CSE-ConnectionGUID: kL5A6/3jQGqYg9jZYGQ8kA==
-X-CSE-MsgGUID: jLNAPX4+Q5e11nrf+v9wEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,313,1751266800"; 
-   d="scan'208";a="183762867"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2025 13:32:09 -0700
-Date: Fri, 3 Oct 2025 13:32:04 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: Andi Kleen <andi@firstfloor.org>
-Cc: acme@kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] tools perf build: Support BUILD_NONDISTRO on OpenSUSE
- Tumbleweed
-Message-ID: <aOAyqW65MaW4ccje@tassilo>
-References: <20250905183832.3011694-1-andi@firstfloor.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Lrx+Opa8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
+	bh=oIs3ppVLk6gw/qZXypZLZcOfa+yCn//X21VZFkDaLYU=; b=Lrx+Opa8kAlfEXuyu8nZrskDYS
+	RMEVW1K3EtHWtp/TNPMDl4+TZidS8rII6LOpnPv0qEvXnZn1PtaWNoVRLLHkzUnhbCR3Tfh1MpEHf
+	ZkZd/NEu3t0eSIf0IaCZTwNSp4G961ZaVD/mJjLljb3ViiQ31g8H8jJABJOEx687ZtuOQgxZ+AsqI
+	LmC9fUttLZOzjyJF2FAdnCTKBCeWjOa6Rmq3x9FU9+hZojGWXCUyKadvy1un7W8qu/DrpcU76pUyT
+	OX6o9m0+7SucZJP87UviQ0UOsMWHeilEIIYasmiArPjulk9Jci/3QFC7WnJj9QL3uPYwy+SzCuC2Q
+	D0kAwH9A==;
+Received: from [50.53.25.54] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1v4mjl-0000000D7bQ-0Z25;
+	Fri, 03 Oct 2025 20:50:45 +0000
+Message-ID: <3913273d-12e2-426f-aec7-263b7f49008a@infradead.org>
+Date: Fri, 3 Oct 2025 13:50:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250905183832.3011694-1-andi@firstfloor.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 23/23] MAINTAINERS: add entry for KStackWatch
+To: Jinchao Wang <wangjinchao600@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Mike Rapoport <rppt@kernel.org>,
+ Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>,
+ Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ David Hildenbrand <david@redhat.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Kees Cook <kees@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Sami Tolvanen <samitolvanen@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+ Masahiro Yamada <masahiroy@kernel.org>, Rong Xu <xur@google.com>,
+ Naveen N Rao <naveen@kernel.org>, David Kaplan <david.kaplan@amd.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Jinjie Ruan <ruanjinjie@huawei.com>,
+ Nam Cao <namcao@linutronix.de>, workflows@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-mm@kvack.org, llvm@lists.linux.dev,
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, kasan-dev@googlegroups.com,
+ "David S. Miller" <davem@davemloft.net>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org
+References: <20250930024402.1043776-1-wangjinchao600@gmail.com>
+ <20250930024402.1043776-24-wangjinchao600@gmail.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250930024402.1043776-24-wangjinchao600@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Ping^2
+Hi,
 
--Andi
-
-On Fri, Sep 05, 2025 at 11:38:32AM -0700, Andi Kleen wrote:
-> My Tumbleweed system needs -lzstd -lsframe to build -lbfd
-> for BUILD_NONDISTRO to get a sane BFD based setup.
-> Add probing for that case.
+On 9/29/25 7:43 PM, Jinchao Wang wrote:
+> Add a maintainer entry for Kernel Stack Watch.
 > 
-> The previously posted build fixes are also needed.
-> 
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 > ---
->  tools/build/Makefile.feature |  4 +++-
->  tools/build/feature/Makefile | 24 ++++++++++++++++++------
->  tools/perf/Makefile.config   | 22 +++++++++++++++-------
->  3 files changed, 36 insertions(+), 14 deletions(-)
+>  MAINTAINERS | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index 649c5ab8e8f2..46bdb9f8ba7f 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -120,6 +120,7 @@ FEATURE_TESTS_EXTRA :=                  \
->           libcapstone                    \
->           libbfd-liberty                 \
->           libbfd-liberty-z               \
-> +         libbfd-liberty-z-zstd-sframe   \
->           libopencsd                     \
->           cxx                            \
->           llvm                           \
-> @@ -159,7 +160,8 @@ FEATURE_DISPLAY ?=              \
->  # Declare group members of a feature to display the logical OR of the detection
->  # result instead of each member result.
->  #
-> -FEATURE_GROUP_MEMBERS-libbfd = libbfd-liberty libbfd-liberty-z
-> +FEATURE_GROUP_MEMBERS-libbfd = libbfd-liberty libbfd-liberty-z \
-> +			       libbfd-liberty-z-zstd-sframe
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 520fb4e379a3..3d4811ff3631 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13362,6 +13362,14 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git
+>  F:	Documentation/dev-tools/kselftest*
+>  F:	tools/testing/selftests/
 >  
->  #
->  # Declare list of feature dependency packages that provide pkg-config files.
-> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index b41a42818d8a..7fd30cbeefb0 100644
-> --- a/tools/build/feature/Makefile
-> +++ b/tools/build/feature/Makefile
-> @@ -20,6 +20,7 @@ FILES=                                          \
->           test-reallocarray.bin			\
->           test-libbfd-liberty.bin                \
->           test-libbfd-liberty-z.bin              \
-> +         test-libbfd-liberty-z-zstd-sframe.bin  \
->           test-cplus-demangle.bin                \
->           test-cxa-demangle.bin                  \
->           test-libcap.bin			\
-> @@ -118,7 +119,7 @@ __BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.cpp,$(
->  ###############################
->  
->  $(OUTPUT)test-all.bin:
-> -	$(BUILD_ALL) || $(BUILD_ALL) -lopcodes -liberty
-> +	$(BUILD_ALL) || $(BUILD_ALL) -lopcodes -liberty || $(BUILD_ALL) -lopcodes -liberty -lz -lzstd -lsframe
->  
->  $(OUTPUT)test-hello.bin:
->  	$(BUILD)
-> @@ -278,15 +279,22 @@ $(OUTPUT)test-libbfd.bin:
->  	$(BUILD_BFD)
->  
->  $(OUTPUT)test-libbfd-buildid.bin:
-> -	$(BUILD_BFD) || $(BUILD_BFD) -liberty || $(BUILD_BFD) -liberty -lz
-> +	$(BUILD_BFD) || \
-> +	$(BUILD_BFD) -liberty || \
-> +	$(BUILD_BFD) -liberty -lz || \
-> +	$(BUILD_BFD) -liberty -lz -lzstd -sframe
->  
->  $(OUTPUT)test-disassembler-four-args.bin:
-> -	$(BUILD_BFD) -lopcodes || $(BUILD_BFD) -lopcodes -liberty || \
-> -	$(BUILD_BFD) -lopcodes -liberty -lz
-> +	$(BUILD_BFD) -lopcodes || \
-> +	$(BUILD_BFD) -lopcodes -liberty || \
-> +	$(BUILD_BFD) -lopcodes -liberty -lz || \
-> +	$(BUILD_BFD) -lopcodes -liberty -lz -lzstd -lsframe
->  
->  $(OUTPUT)test-disassembler-init-styled.bin:
-> -	$(BUILD_BFD) -lopcodes || $(BUILD_BFD) -lopcodes -liberty || \
-> -	$(BUILD_BFD) -lopcodes -liberty -lz
-> +	$(BUILD_BFD) -lopcodes || \
-> +	$(BUILD_BFD) -lopcodes -liberty || \
-> +	$(BUILD_BFD) -lopcodes -liberty -lz || \
-> +	$(BUILD_BFD) -lopcodes -liberty -lz -lzstd -lsframe
->  
->  $(OUTPUT)test-reallocarray.bin:
->  	$(BUILD)
-> @@ -297,6 +305,10 @@ $(OUTPUT)test-libbfd-liberty.bin:
->  $(OUTPUT)test-libbfd-liberty-z.bin:
->  	$(CC) $(CFLAGS) -Wall -Werror -o $@ test-libbfd.c -DPACKAGE='"perf"' $(LDFLAGS) -lbfd -ldl -liberty -lz
->  
-> +$(OUTPUT)test-libbfd-liberty-z-zstd-sframe.bin:
-> +	$(CC) $(CFLAGS) -Wall -Werror -o $@ test-libbfd.c -DPACKAGE='"perf"' $(LDFLAGS) -lbfd -ldl -liberty -lz \
-> +		-lzstd -lsframe
+> +KERNEL STACK WATCH
+> +M:	Jinchao Wang <wangjinchao600@gmail.com>
+> +S:	Maintained
+> +F:	Documentation/dev-tools/kstackwatch.rst
+> +F:	include/linux/kstackwatch_types.h
+> +F:	mm/kstackwatch/
+> +F:	tools/kstackwatch/
 > +
->  $(OUTPUT)test-cplus-demangle.bin:
->  	$(BUILD) -liberty
->  
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 5a5832ee7b53..53864a505cfa 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -923,23 +923,31 @@ ifdef BUILD_NONDISTRO
->      EXTLIBS += -lbfd -lopcodes
->    else
->      # we are on a system that requires -liberty and (maybe) -lz
-> +    # and possibly sframe and zstd
->      # to link against -lbfd; test each case individually here
->  
->      # call all detections now so we get correct
->      # status in VF output
->      $(call feature_check,libbfd-liberty)
->      $(call feature_check,libbfd-liberty-z)
-> +    $(call feature_check,libbfd-liberty-z-zstd-sframe)
->  
-> -    ifeq ($(feature-libbfd-liberty), 1)
-> +    ifeq ($(feature-libbfd-liberty),$(feature-libbfd-liberty-z),1)
->        EXTLIBS += -lbfd -lopcodes -liberty
->        FEATURE_CHECK_LDFLAGS-disassembler-four-args += -liberty -ldl
->        FEATURE_CHECK_LDFLAGS-disassembler-init-styled += -liberty -ldl
-> -    else
-> -      ifeq ($(feature-libbfd-liberty-z), 1)
-> -        EXTLIBS += -lbfd -lopcodes -liberty -lz
-> -        FEATURE_CHECK_LDFLAGS-disassembler-four-args += -liberty -lz -ldl
-> -        FEATURE_CHECK_LDFLAGS-disassembler-init-styled += -liberty -lz -ldl
-> -      endif
-> +    endif
-> +    ifeq ($(feature-libbfd-liberty-z),1)
-> +      EXTLIBS += -lbfd -lopcodes -liberty -lz
-> +      FEATURE_CHECK_LDFLAGS-disassembler-four-args += -liberty -lz -ldl
-> +      FEATURE_CHECK_LDFLAGS-disassembler-init-styled += -liberty -lz -ldl
-> +    endif
-> +    ifeq ($(feature-libbfd-liberty-z-zstd-sframe),1)
-> +      EXTLIBS += -lbfd -lopcodes -liberty -lz -lzstd -lsframe
-> +      FEATURE_CHECK_LDFLAGS-disassembler-four-args += \
-> +	      -liberty -lz -lzstd -lsframe -ldl
-> +      FEATURE_CHECK_LDFLAGS-disassembler-init-styled += \
-> +	      -liberty -lz -lzstd -lsframe -ldl
->      endif
->      $(call feature_check,disassembler-four-args)
->      $(call feature_check,disassembler-init-styled)
-> -- 
-> 2.51.0
-> 
+
+Add entries in alphabetical order, please.
+
+>  KERNEL SMB3 SERVER (KSMBD)
+>  M:	Namjae Jeon <linkinjeon@kernel.org>
+>  M:	Namjae Jeon <linkinjeon@samba.org>
+
+-- 
+~Randy
+
