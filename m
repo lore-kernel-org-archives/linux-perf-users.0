@@ -1,172 +1,209 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C80C29405;
-	Fri,  3 Oct 2025 19:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09D8156F20
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Oct 2025 20:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759520887; cv=none; b=RrusUVl5DTW6SpyhIS2J9Sol8h1FdWuDpRWweEcB3mWKutLB+5l2cmsmw6UnBF7GJkiWx/3zgypSCk3FbgC3E+AqxUq53a4fz8+GdnHIpQq7Stvr9Zr2q8miuLA7G5r+4CKEGm4p7nakZlwQ1wzEFuLi6LYWawuMQNs3Fb90Hq8=
+	t=1759523532; cv=none; b=i9WiXYRfKTc/c9sL+cyayim6qTWPevMYwvpCROpxNaf8+De60aQf22xqaHdQz998RAdaoxo2GWEfUvPVA0J/6/Hl+T2uu1zsHgyEGuGRfDhnR1eCQ30PLQ3A2yCL+cpvQIpEfYv9KNyaaUByWts5K5qHQrsys0YJ6bUFOAR0S8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759520887; c=relaxed/simple;
-	bh=XespbJmbr9h/tE+EY6P0TWlgNfeNfgvN51LKlVZ+UHM=;
+	s=arc-20240116; t=1759523532; c=relaxed/simple;
+	bh=VI/m8hlGeHz2lFJLgNWKTsXKt1joCkN3IjGqIi51ug8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VavTEnK4k2DDh7U2RpqrnAchxJAzDtIpzdAhVtmzi6HyUXzDdu0q+ubsweZH1RnwgCc1/+ioKDZPjZjFeOeoX+dL2/v0U24JP0BUxmq3LGb5iouetwJAif7XNif/qby15bmoi4gaL3Lne1293YrD/yohQoH1WLZ+O356XNIElgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M1qSKVeW; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mhQq99tVfBI1IQzj7+OM9+B1MS1xvMCnBO3A5Dd8460ttDUW2GoPwMYq2z9A/ytMkE4uG7Az4eshKi0UXEF70nMSj1fUXNP+/+Mzt/FaTc2rLFQ5rJXdfAdeuMmHvXpxA0+7wbGtjjev+tqWRJ3ngd3vfv1ruUPf/awxVOYeNig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k87acxJF; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M1qSKVeW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73E97C4CEF5;
-	Fri,  3 Oct 2025 19:48:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759520887;
-	bh=XespbJmbr9h/tE+EY6P0TWlgNfeNfgvN51LKlVZ+UHM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M1qSKVeWOCu5oqjFB5lakDhnVjXNQV8JyTdSrY/E25Qc139EpD8Szp8V00L2mUl7M
-	 q6CEW7XeD0y/JNLqLs087dy5XzHsDMnYUmXKtm37I9hS7vw/TMPdgRXaclJvB3SGhm
-	 iXQzj/jDF9F6vJRsFXdJHUfGzoEXZkj453VHLHgrryQjitRQB5vN/FUdySmoKtM1Zv
-	 Xqpqz2YkI2PyKEe26gZe5yRb4V7r1aE4PTcff3uH3IArVy4DKC87Uzmaf1ElAD/PBY
-	 /SxpjJc/EfwOhSbQBOvn/+ORfRCiyh6BKUyTJ1E+nYBGJ3x6gCB2RS5XNfAr0Ts6Uv
-	 lWvnx9+1rwenw==
-Date: Fri, 3 Oct 2025 16:48:03 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] tools build: Remove get_current_dir_name
-Message-ID: <aOAoc0-Oy99l3iQG@x1>
-References: <20251003175613.2512296-1-irogers@google.com>
- <20251003175613.2512296-2-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k87acxJF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1759523531; x=1791059531;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VI/m8hlGeHz2lFJLgNWKTsXKt1joCkN3IjGqIi51ug8=;
+  b=k87acxJF/VARgmdz0VJk6JDOXA6+ATmCXW6HVRa3/J/HKHS/26XO2/8d
+   hqvrvQ3rMj6n3Tvh5nO70WPz5Bq4V4stiThGYI7f2KXCpuOWWsfHlrU4m
+   7xGV3QzslB7NkmcGVW/jIplNAu4Xxj0Qdwj4IDpVTNXf35PyoMpoSUbWB
+   5swElsOxy9kBUbKiKd6z4OSlpKE34sAvABre9MGqR+p8wXdhpdGRg/2df
+   n2GYs+NqOXjabCs0s5j+0Fx3Ejc0Xumz86+UoqDCujIhDbwE8mKoXUulU
+   m4RLhbl8MB73wj92SZPgJXmCCIteEoBIzhWfcqzhJ9uGENo9qkyfruLsD
+   g==;
+X-CSE-ConnectionGUID: VwsTwzkWQJmdQkn61d1nMQ==
+X-CSE-MsgGUID: ke+3N8rPR5KipyObKhBcKQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="61771295"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="61771295"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2025 13:32:10 -0700
+X-CSE-ConnectionGUID: kL5A6/3jQGqYg9jZYGQ8kA==
+X-CSE-MsgGUID: jLNAPX4+Q5e11nrf+v9wEA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,313,1751266800"; 
+   d="scan'208";a="183762867"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2025 13:32:09 -0700
+Date: Fri, 3 Oct 2025 13:32:04 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: Andi Kleen <andi@firstfloor.org>
+Cc: acme@kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] tools perf build: Support BUILD_NONDISTRO on OpenSUSE
+ Tumbleweed
+Message-ID: <aOAyqW65MaW4ccje@tassilo>
+References: <20250905183832.3011694-1-andi@firstfloor.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251003175613.2512296-2-irogers@google.com>
+In-Reply-To: <20250905183832.3011694-1-andi@firstfloor.org>
 
-On Fri, Oct 03, 2025 at 10:56:13AM -0700, Ian Rogers wrote:
-> As perf no longer tests for this feature, and it was the only user,
-> remove the feature test.
+Ping^2
 
-You forgot to remove this:
+-Andi
 
-⬢ [acme@toolbx perf-tools-next]$ git diff
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-index 71ba7001dc25c6bb..8a354b81417c6fcc 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -151,7 +151,6 @@ int main(int argc, char *argv[])
-        main_test_libpython();
-        main_test_hello();
-        main_test_libelf();
--       main_test_get_current_dir_name();
-        main_test_gettid();
-        main_test_glibc();
-        main_test_libdw();
-⬢ [acme@toolbx perf-tools-next]$ 
-
-That results, when building with this alias:
-
-alias m='rm -rf ~/libexec/perf-core/ ; make CORESIGHT=1 -k O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin && perf test python && cat /tmp/build/$(basename $PWD)/feature/test-all.make.output'
-
-that needs to be on the makefiles somewhere, shows that test-all.bin is
-failing to build:
-
-make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
- 88: 'import perf' in python                                         : FAILED!
-test-all.c: In function ‘main’:
-test-all.c:154:9: error: implicit declaration of function ‘main_test_get_current_dir_name’; did you mean ‘get_current_dir_name’? [-Wimplicit-function-declaration]
-  154 |         main_test_get_current_dir_name();
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      |         get_current_dir_name
-⬢ [acme@toolbx perf-tools-next]$ 
-
-I fixed this up already,
-
-Thanks,
-
-- Arnaldo
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+On Fri, Sep 05, 2025 at 11:38:32AM -0700, Andi Kleen wrote:
+> My Tumbleweed system needs -lzstd -lsframe to build -lbfd
+> for BUILD_NONDISTRO to get a sane BFD based setup.
+> Add probing for that case.
+> 
+> The previously posted build fixes are also needed.
+> 
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
 > ---
->  tools/build/Makefile.feature                    |  1 -
->  tools/build/feature/Makefile                    |  4 ----
->  tools/build/feature/test-all.c                  |  4 ----
->  tools/build/feature/test-get_current_dir_name.c | 11 -----------
->  4 files changed, 20 deletions(-)
->  delete mode 100644 tools/build/feature/test-get_current_dir_name.c
+>  tools/build/Makefile.feature |  4 +++-
+>  tools/build/feature/Makefile | 24 ++++++++++++++++++------
+>  tools/perf/Makefile.config   | 22 +++++++++++++++-------
+>  3 files changed, 36 insertions(+), 14 deletions(-)
 > 
 > diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index 9c1a69d26f51..9399f591bd69 100644
+> index 649c5ab8e8f2..46bdb9f8ba7f 100644
 > --- a/tools/build/Makefile.feature
 > +++ b/tools/build/Makefile.feature
-> @@ -68,7 +68,6 @@ FEATURE_TESTS_BASIC :=                  \
->          libdw                           \
->          eventfd                         \
->          fortify-source                  \
-> -        get_current_dir_name            \
->          gettid				\
->          glibc                           \
->          libbfd                          \
+> @@ -120,6 +120,7 @@ FEATURE_TESTS_EXTRA :=                  \
+>           libcapstone                    \
+>           libbfd-liberty                 \
+>           libbfd-liberty-z               \
+> +         libbfd-liberty-z-zstd-sframe   \
+>           libopencsd                     \
+>           cxx                            \
+>           llvm                           \
+> @@ -159,7 +160,8 @@ FEATURE_DISPLAY ?=              \
+>  # Declare group members of a feature to display the logical OR of the detection
+>  # result instead of each member result.
+>  #
+> -FEATURE_GROUP_MEMBERS-libbfd = libbfd-liberty libbfd-liberty-z
+> +FEATURE_GROUP_MEMBERS-libbfd = libbfd-liberty libbfd-liberty-z \
+> +			       libbfd-liberty-z-zstd-sframe
+>  
+>  #
+>  # Declare list of feature dependency packages that provide pkg-config files.
 > diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index b41a42818d8a..d13d2a1f44fe 100644
+> index b41a42818d8a..7fd30cbeefb0 100644
 > --- a/tools/build/feature/Makefile
 > +++ b/tools/build/feature/Makefile
-> @@ -8,7 +8,6 @@ FILES=                                          \
->           test-libdw.bin                         \
->           test-eventfd.bin                       \
->           test-fortify-source.bin                \
-> -         test-get_current_dir_name.bin          \
->           test-glibc.bin                         \
->           test-gtk2.bin                          \
->           test-gtk2-infobar.bin                  \
-> @@ -147,9 +146,6 @@ $(OUTPUT)test-libelf.bin:
->  $(OUTPUT)test-eventfd.bin:
+> @@ -20,6 +20,7 @@ FILES=                                          \
+>           test-reallocarray.bin			\
+>           test-libbfd-liberty.bin                \
+>           test-libbfd-liberty-z.bin              \
+> +         test-libbfd-liberty-z-zstd-sframe.bin  \
+>           test-cplus-demangle.bin                \
+>           test-cxa-demangle.bin                  \
+>           test-libcap.bin			\
+> @@ -118,7 +119,7 @@ __BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.cpp,$(
+>  ###############################
+>  
+>  $(OUTPUT)test-all.bin:
+> -	$(BUILD_ALL) || $(BUILD_ALL) -lopcodes -liberty
+> +	$(BUILD_ALL) || $(BUILD_ALL) -lopcodes -liberty || $(BUILD_ALL) -lopcodes -liberty -lz -lzstd -lsframe
+>  
+>  $(OUTPUT)test-hello.bin:
 >  	$(BUILD)
+> @@ -278,15 +279,22 @@ $(OUTPUT)test-libbfd.bin:
+>  	$(BUILD_BFD)
 >  
-> -$(OUTPUT)test-get_current_dir_name.bin:
-> -	$(BUILD)
-> -
->  $(OUTPUT)test-glibc.bin:
+>  $(OUTPUT)test-libbfd-buildid.bin:
+> -	$(BUILD_BFD) || $(BUILD_BFD) -liberty || $(BUILD_BFD) -liberty -lz
+> +	$(BUILD_BFD) || \
+> +	$(BUILD_BFD) -liberty || \
+> +	$(BUILD_BFD) -liberty -lz || \
+> +	$(BUILD_BFD) -liberty -lz -lzstd -sframe
+>  
+>  $(OUTPUT)test-disassembler-four-args.bin:
+> -	$(BUILD_BFD) -lopcodes || $(BUILD_BFD) -lopcodes -liberty || \
+> -	$(BUILD_BFD) -lopcodes -liberty -lz
+> +	$(BUILD_BFD) -lopcodes || \
+> +	$(BUILD_BFD) -lopcodes -liberty || \
+> +	$(BUILD_BFD) -lopcodes -liberty -lz || \
+> +	$(BUILD_BFD) -lopcodes -liberty -lz -lzstd -lsframe
+>  
+>  $(OUTPUT)test-disassembler-init-styled.bin:
+> -	$(BUILD_BFD) -lopcodes || $(BUILD_BFD) -lopcodes -liberty || \
+> -	$(BUILD_BFD) -lopcodes -liberty -lz
+> +	$(BUILD_BFD) -lopcodes || \
+> +	$(BUILD_BFD) -lopcodes -liberty || \
+> +	$(BUILD_BFD) -lopcodes -liberty -lz || \
+> +	$(BUILD_BFD) -lopcodes -liberty -lz -lzstd -lsframe
+>  
+>  $(OUTPUT)test-reallocarray.bin:
 >  	$(BUILD)
+> @@ -297,6 +305,10 @@ $(OUTPUT)test-libbfd-liberty.bin:
+>  $(OUTPUT)test-libbfd-liberty-z.bin:
+>  	$(CC) $(CFLAGS) -Wall -Werror -o $@ test-libbfd.c -DPACKAGE='"perf"' $(LDFLAGS) -lbfd -ldl -liberty -lz
 >  
-> diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-> index e1847db6f8e6..778883a32afb 100644
-> --- a/tools/build/feature/test-all.c
-> +++ b/tools/build/feature/test-all.c
-> @@ -22,10 +22,6 @@
->  # include "test-libelf.c"
->  #undef main
+> +$(OUTPUT)test-libbfd-liberty-z-zstd-sframe.bin:
+> +	$(CC) $(CFLAGS) -Wall -Werror -o $@ test-libbfd.c -DPACKAGE='"perf"' $(LDFLAGS) -lbfd -ldl -liberty -lz \
+> +		-lzstd -lsframe
+> +
+>  $(OUTPUT)test-cplus-demangle.bin:
+>  	$(BUILD) -liberty
 >  
-> -#define main main_test_get_current_dir_name
-> -# include "test-get_current_dir_name.c"
-> -#undef main
-> -
->  #define main main_test_gettid
->  # include "test-gettid.c"
->  #undef main
-> diff --git a/tools/build/feature/test-get_current_dir_name.c b/tools/build/feature/test-get_current_dir_name.c
-> deleted file mode 100644
-> index c3c201691b4f..000000000000
-> --- a/tools/build/feature/test-get_current_dir_name.c
-> +++ /dev/null
-> @@ -1,11 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -#define _GNU_SOURCE
-> -#include <unistd.h>
-> -#include <stdlib.h>
-> -
-> -int main(void)
-> -{
-> -	free(get_current_dir_name());
-> -	return 0;
-> -}
-> -#undef _GNU_SOURCE
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 5a5832ee7b53..53864a505cfa 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -923,23 +923,31 @@ ifdef BUILD_NONDISTRO
+>      EXTLIBS += -lbfd -lopcodes
+>    else
+>      # we are on a system that requires -liberty and (maybe) -lz
+> +    # and possibly sframe and zstd
+>      # to link against -lbfd; test each case individually here
+>  
+>      # call all detections now so we get correct
+>      # status in VF output
+>      $(call feature_check,libbfd-liberty)
+>      $(call feature_check,libbfd-liberty-z)
+> +    $(call feature_check,libbfd-liberty-z-zstd-sframe)
+>  
+> -    ifeq ($(feature-libbfd-liberty), 1)
+> +    ifeq ($(feature-libbfd-liberty),$(feature-libbfd-liberty-z),1)
+>        EXTLIBS += -lbfd -lopcodes -liberty
+>        FEATURE_CHECK_LDFLAGS-disassembler-four-args += -liberty -ldl
+>        FEATURE_CHECK_LDFLAGS-disassembler-init-styled += -liberty -ldl
+> -    else
+> -      ifeq ($(feature-libbfd-liberty-z), 1)
+> -        EXTLIBS += -lbfd -lopcodes -liberty -lz
+> -        FEATURE_CHECK_LDFLAGS-disassembler-four-args += -liberty -lz -ldl
+> -        FEATURE_CHECK_LDFLAGS-disassembler-init-styled += -liberty -lz -ldl
+> -      endif
+> +    endif
+> +    ifeq ($(feature-libbfd-liberty-z),1)
+> +      EXTLIBS += -lbfd -lopcodes -liberty -lz
+> +      FEATURE_CHECK_LDFLAGS-disassembler-four-args += -liberty -lz -ldl
+> +      FEATURE_CHECK_LDFLAGS-disassembler-init-styled += -liberty -lz -ldl
+> +    endif
+> +    ifeq ($(feature-libbfd-liberty-z-zstd-sframe),1)
+> +      EXTLIBS += -lbfd -lopcodes -liberty -lz -lzstd -lsframe
+> +      FEATURE_CHECK_LDFLAGS-disassembler-four-args += \
+> +	      -liberty -lz -lzstd -lsframe -ldl
+> +      FEATURE_CHECK_LDFLAGS-disassembler-init-styled += \
+> +	      -liberty -lz -lzstd -lsframe -ldl
+>      endif
+>      $(call feature_check,disassembler-four-args)
+>      $(call feature_check,disassembler-init-styled)
 > -- 
-> 2.51.0.618.g983fd99d29-goog
+> 2.51.0
+> 
