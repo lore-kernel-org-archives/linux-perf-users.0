@@ -1,65 +1,65 @@
 Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A5CEAC7
-	for <linux-perf-users@vger.kernel.org>; Fri,  3 Oct 2025 11:26:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E6C2EA494
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Oct 2025 11:31:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759490820; cv=none; b=ZPTVLWwM5yxkgMEsExx3tBX2RNNFH0W/jgcQU7zvvdiQgXeIE24VeHzSkncSI9gzABpMvAO3+/vpzQrJ09giHxLTQB8v9Setd89rqqnicDrkcSMiRddqDiHl/d08G1kONdVpGjaGEOi6as89MSnDuRt7cenSvf74gd3wHiWeAzI=
+	t=1759491077; cv=none; b=IaANvSJZNsBV0YA5vYIQYURPp0G9q4WbUz21hT63lRHAmfkBQgVplHPFp5VphfqXkpDeIJ9D7qoHVJau4a04NcG8KebykarXEoUna4RTPurcJOpyDh2flJAsD/Axtuyvl+R7C0inIclNJ4M51ZtYD0vfEjaoegJb9A2EYN+mEaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759490820; c=relaxed/simple;
-	bh=YtdNjVaGBtjpugUu5JZhhW80yJtKKEGYmhthPhLz4Pk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=kwKtca/eds4byIzaVP/tXWFuzpwtZ+KlBnJhH3q43sUnBRezHAhDFBXZKfwGsb1Aypkz/UUGbtnjwcd8TM13xTgPatBv4z9f82KtfVTGBvf2DaeXVGjT3bQ1mG3C8RMoBk2ujjdj6ovP6IGKWcIX3TkYlFYnre54+9BbE5V1/U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XLX8BlP+; arc=none smtp.client-ip=209.85.128.46
+	s=arc-20240116; t=1759491077; c=relaxed/simple;
+	bh=PIkT1+0gw+lXsm9sS5Wzvn/5CTdfZq6wWYlHqXPd8eo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=oCl0cKBiQfJuMttbbPr5hdDzFKz+aHmzyycpnvvRvIJUcuoHfmgmg/5EkBDvpoTSMJiPfOl0+TgvECRoxDw8qWb6wur4+ERss+1e5WtsOUOejtzMN7aiVs1eQBcQfO8pN3vGvgJc2i+alJszlvvw1U2DhBXK3wFlc+fh244Mq4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KKFd9BLK; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XLX8BlP+"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-46e37d10ed2so19362615e9.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Oct 2025 04:26:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KKFd9BLK"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-46e491a5b96so13360475e9.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Oct 2025 04:31:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1759490817; x=1760095617; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=FjjyfVbmRhvSAkr2TJodpaTn31PsZR4ycOzkb5aM6Qs=;
-        b=XLX8BlP+W1rEeABWioKiqqUCL0a2PPVzUCqXClwBFhN7rXPi1SJBgApRc1LbcH1wb/
-         M26QRsc22zTD0uitH4GUWu9Z7jNgVs5ufOTe2R+RHPSn0EyWbatAsPrY9lBrIphsrXv1
-         OtShsRnEPH3ARP5dAk12ZrbLDZ2DmI2XA03gSSqo/ntkznLXFJmfv1jyQGDXaOByiUkW
-         xldjE1EF1y/wLo4VwWVtZCO4bSt4CiaVbmr0clWsuwWTZlBrlbTIVBQxIMIyxPa/GnyF
-         Xcetn8Oo9OFyfbN3ufgsfyxtGUH7WbkR+QxxU4GT1+lhbGUU6SmRNCEqpGwULaL4BB0h
-         wrvA==
+        d=linaro.org; s=google; t=1759491073; x=1760095873; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ibN5rbc8ghQl0pJHE5O9fPExmoZbJHmxkhtyV7wHyf0=;
+        b=KKFd9BLKI830t1400/+UlbeoejmruXkswx2DR9repOqitlMXHJDsAtzqD7xcaQ8tcJ
+         Iqu+Fg5w8LjybhA04Ub8PBcfXxlKdiWyqsFqpxWLWBgjw0UiXYDF8MLOR57Eur5kGShV
+         qPdgmkA4U89wAlhYXFv+INCksdQO65b9qp4kOOtXDT9EAo+eLKWehe3kc0GoOUxJZ1ll
+         vhJkzpdDo8yBBkHHrpjgRFnPg3+qheL+q52AB4pMOyKMZNoU5rsV1QcX1HGk0lHOpfBs
+         V5q2VvbOpC1BvgtCQkziewE0bAcVW97uvkXeWNnbeD9fUyctOp7jJHjgV7FF/Rsso7Ll
+         s00g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759490817; x=1760095617;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1759491073; x=1760095873;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FjjyfVbmRhvSAkr2TJodpaTn31PsZR4ycOzkb5aM6Qs=;
-        b=sg4Y5548ewQSyw4H7VqCQhFQOIMKgaVsHfHcNb6LFETQDbbSXRpbvyTDwtKP5NU/rC
-         AnhXzN5Qtn1XHVjCfVa0D5zMIfZoxtCqg9UDUcErMOWquIP1WtjEULICLVzwFfc8KXEt
-         3C1CkEzjiAi5KJVtLJOQnYCHz8nAZ87ecc1YVS7V0B3wbegwAsp4UjdYgNvEj/pLo7jf
-         A13fkwk9Aw6cKMqaVRgIYqmIKHn7dgw3NDxBN1MzHV1Wm9NeYcnjBzWx6/mVaztCCt0B
-         ZrB3iJzuLQWJlqn13/YitbKsNBZZ3tmfojFdYnohmybMA+bnVZb9dHb/KZvzSJ5e/oEf
-         tD+g==
-X-Forwarded-Encrypted: i=1; AJvYcCWNg150OUD17Z/VDIIHm+77O7VOT45HBN8x172HTBzO2UVj/gP3RFW1vZZLSHoTU/2TEc6fD7S1pDKsZnY5rsoU@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkI8SqAT1J8FtEQ5nK+e1VJ4krteoWyFutE1JaIwGVGTIsLhSs
-	L73VbqYF6kCuf7tHIRkPVWxX5jw8il2mR5Qgr9kn5ezVDo47aKLyr+6ZVhTg5cxPrnA=
-X-Gm-Gg: ASbGnctNALO69hmGKuCwMZaTwp2zBqSAZOd+Ab+LRTxyDwPdA/1Kq3m9ZB+gJJiYZvP
-	S0TjAG4j/5ly+pHPM8d+88WfcHqmGlbCRwRAzu4oHp7X8wC1kMHfbSTbsjOiQUWf3LYMZ7nC50t
-	y5F850KzbKN220efrHCvq+ev2pd/X8YxDu/V3RJ4dZSP1hw8tZv6qbz0z6Fj7PyP3oAm9RvdLv9
-	xqCigeMdoRih3rgmXFuFJupy80oI/OI5eMvCH2v68scu+Y/LzNmZcsvzHBgB7yn6B9NRdFYc682
-	FnytPqa1DUnNCJr4f+Lpm8Uz0kduqOb2e+MbsV3yNhctGnBO0V0/6Gi6XfbIp2isg5Ue7bpxbEz
-	ys30IDojlCZoGL/x4SJLnN8h4CAykCSln3PmugEQ0k1X/rEiytqxQijSt
-X-Google-Smtp-Source: AGHT+IEa6CUW5LAl08YINRqtUMfMTIv6xNaCHjkSZbWtuYs8CeOLeyg9VUpU299wnFEU8PVFTODVOw==
-X-Received: by 2002:a05:600c:8b53:b0:46e:4b8b:75f2 with SMTP id 5b1f17b1804b1-46e7110c4d7mr21569915e9.16.1759490816875;
-        Fri, 03 Oct 2025 04:26:56 -0700 (PDT)
+        bh=ibN5rbc8ghQl0pJHE5O9fPExmoZbJHmxkhtyV7wHyf0=;
+        b=aHa5dkUOIyMryNZdonwCIL+1Htaz0JUnzo/vOKxIgdzQ4uZu6yk9ZLP0N7gNOAZdhT
+         oG+JwAoiVN4wuFi4asRkIsRJFW0yu87lELEFA/m/FmkcYV3/7J8NaFWocT9OeptUgLJg
+         qhzDyAP903MzBlsUI9J+/nvbWR05fyR6gVVCvbN7SMvz+rBakC56CqhO7Ih2puXi8GhZ
+         zJV4ksCq1tRi4YGDiwf28V927KQw4f0lwaoErnT/dSR+UHfpPpO2mnjofx9zFQ+AzGPg
+         oHFUsed/7BSgTwBnozGVZUP85h+ToX+rxAttHNXkttIqEsNBDz8FLe/r6KebFaZYcAod
+         Sa3w==
+X-Forwarded-Encrypted: i=1; AJvYcCVuspwK8qaP9wv/NVsQvuuHPLLziyfvR01cF2IThSm/LdmdEdfvI+XxRCQsxXZjfriXFx4vWsEbjvuHFxv2FcPc@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzDn0dD+LNvioxGi/YGe0v8jgDMALH5VlpfDEK8lfGXRkF+1PU
+	RaIRL7j3PejU9aSNPBe2ffQEZ8bITMGDZfPIbXsP5V3TOAp0//U427oaaS5ZFRgkbqQ=
+X-Gm-Gg: ASbGncsSTMxcvE6xbKAVHgr8KVce0ih8K2sW6pvhW+j87sJdgegAGkq2ltWrRTKzuad
+	3X4bQkZsnFt/3m7DzOa1ToKGBI9onnBJ4CwTXKf6BomDZpsWo0tjtNwP/toekSvF/migEDUxK/3
+	9samPJAzWLrTCFdaL7g2DtSLTBOtx0+6iXwudBrEse9dxhBYEcCjDEHmrxuTthZfwdXAg9A97X1
+	LfJMMTFO+twptlvmRIUGm/nHoQP5kEucwSC+sjMZspLCcBgo7hD8mTkf9oe/TNxBmkfjfkiQNqL
+	TRQKHecVd9nabNP2ylGqvl1oUBGMWaVwfGTEhcYySqrFtD9e4ER4E8l2IJVdqUzWHn833RospEF
+	APJZvXXfXUZzHpATAOIisAkurF1GTPpj1D7HGQTqM1P6K6gAaDdfKb3u/
+X-Google-Smtp-Source: AGHT+IHO5l0fSYL4lKyVqheYc51Yp0SHNdYSpIW0cATJRdXWA33ZbEKx2wK2487Gs5sKnFqQcspjKw==
+X-Received: by 2002:a05:6000:2c0c:b0:400:ac58:b35f with SMTP id ffacd0b85a97d-4256714cc0dmr1579028f8f.21.1759491072634;
+        Fri, 03 Oct 2025 04:31:12 -0700 (PDT)
 Received: from [192.168.1.3] ([185.48.76.109])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4255d8e97fbsm7466058f8f.34.2025.10.03.04.26.55
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4255d8f4cc3sm7599429f8f.55.2025.10.03.04.31.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Oct 2025 04:26:56 -0700 (PDT)
-Message-ID: <b11cdd84-47c6-4cc4-b950-514ff6a3a777@linaro.org>
-Date: Fri, 3 Oct 2025 12:26:55 +0100
+        Fri, 03 Oct 2025 04:31:12 -0700 (PDT)
+Message-ID: <640baace-99c7-435e-a754-a46a49c32deb@linaro.org>
+Date: Fri, 3 Oct 2025 12:31:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,74 +67,204 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 00/28] Legacy hardware/cache events as json
-From: James Clark <james.clark@linaro.org>
+Subject: Re: [PATCH v2 1/2] perf stat: Move create_perf_stat_counter to
+ builtin-stat
 To: Ian Rogers <irogers@google.com>
+References: <20251002220727.1889799-1-irogers@google.com>
+Content-Language: en-US
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Namhyung Kim <namhyung@kernel.org>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
  Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Xu Yang <xu.yang_2@nxp.com>,
- Thomas Falcon <thomas.falcon@intel.com>, Andi Kleen <ak@linux.intel.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Atish Patra <atishp@rivosinc.com>, Beeman Strong <beeman@rivosinc.com>,
- Leo Yan <leo.yan@arm.com>, Vince Weaver <vincent.weaver@maine.edu>
-References: <20250923223312.238185-1-irogers@google.com>
- <ca47d298-331d-420c-8c4f-83cd29bae902@linaro.org>
- <CAP-5=fWUYH2eji2SNp37_2uHu55qEfRxuhhROYsMZeCixjda+g@mail.gmail.com>
- <CAP-5=fWUVycpDss_+MNQ_DM93AYKWED8aYOUBKLziYTOn68QJA@mail.gmail.com>
- <cf050a7f-b341-4e14-bc46-8bd30e366b19@linaro.org>
- <CAP-5=fW_WfAzb=qm+AnA-xSn8MOHjmTMcpEvXB6uVi+0Cr0=fg@mail.gmail.com>
- <CAP-5=fV0Qqi1m72-7us9rw7K3hbh05fAzutVtcazY7iTu3g3+w@mail.gmail.com>
- <CAP-5=fX0bOj2kEJYmRs33RpL0ODaOy2wCvDzwLDmNxurVRpGew@mail.gmail.com>
- <86331395-140b-44ca-8351-8bc5c511e211@linaro.org>
-Content-Language: en-US
-In-Reply-To: <86331395-140b-44ca-8351-8bc5c511e211@linaro.org>
+ Kan Liang <kan.liang@linux.intel.com>, Howard Chu <howardchu95@gmail.com>,
+ Thomas Falcon <thomas.falcon@intel.com>, Chun-Tse Shao <ctshao@google.com>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20251002220727.1889799-1-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 03/10/2025 10:20 am, James Clark wrote:
+On 02/10/2025 11:07 pm, Ian Rogers wrote:
+> The function create_perf_stat_counter is only used in builtin-stat.c
+> and contains logic about retrying events specific to
+> builtin-stat.c. Move the code to builtin-stat to tidy this up.
 > 
-> 
-> On 02/10/2025 9:10 pm, Ian Rogers wrote:
->> On Thu, Oct 2, 2025 at 10:58 AM Ian Rogers <irogers@google.com> wrote:
->>>  From bisecting, this change came from commit 9eac5612da1c ("perf stat:
->>> Don't skip failing group events"):
->>> https://lore.kernel.org/lkml/20250825211204.2784695-3- 
->>> irogers@google.com/
->>> Taking a look.
->>
->> I sent a fix:
->> https://lore.kernel.org/linux-perf-users/20251002200604.1792141-2- 
->> irogers@google.com/
->> that makes it so that only if all events are unsupported that perf
->> stat exits - this is addressing a bunch of latent issues and fixes the
->> perf-tools-next regression. I don't think there is a difference
->> between v3 and v6 wrt this behavior, I think you were probably just
->> cherry-picking the v6 patches onto a newer tree. When those 2 patches
->> land I can rebase this series on them and drop the first patch of this
->> series.
->>
->> Thanks,
->> Ian
-> 
-> That is true about the cherry picking. I could only apply V3 to perf- 
-> tools and V6 to perf-tools-next, that was just a guess without the hash 
-> in the cover letter.
-> 
-> I did test both unpatched perf-tools and perf-tools-next to confirm that 
-> the original behavior was the same in those. Once I saw it was the same 
-> I assumed the difference was only in the V3 vs V6. But you're right it 
-> could be because of the base.
-> 
-> I'll retest with the fix applied
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Yeah the behavior seems good now after testing with that fix applied and 
-the first patch of this set dropped.
+Reviewed-by: James Clark <james.clark@linaro.org>
 
-Will wait for the rebase and then do more testing.
-
+> ---
+>   tools/perf/builtin-stat.c | 60 +++++++++++++++++++++++++++++++++++++--
+>   tools/perf/util/stat.c    | 56 ------------------------------------
+>   tools/perf/util/stat.h    |  4 ---
+>   3 files changed, 58 insertions(+), 62 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index ab567919b89a..75b9979c6c05 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -676,6 +676,62 @@ static enum counter_recovery stat_handle_error(struct evsel *counter, int err)
+>   	return COUNTER_FATAL;
+>   }
+>   
+> +static int create_perf_stat_counter(struct evsel *evsel,
+> +				    struct perf_stat_config *config,
+> +				    int cpu_map_idx)
+> +{
+> +	struct perf_event_attr *attr = &evsel->core.attr;
+> +	struct evsel *leader = evsel__leader(evsel);
+> +
+> +	/* Reset supported flag as creating a stat counter is retried. */
+> +	attr->read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
+> +			    PERF_FORMAT_TOTAL_TIME_RUNNING;
+> +
+> +	/*
+> +	 * The event is part of non trivial group, let's enable
+> +	 * the group read (for leader) and ID retrieval for all
+> +	 * members.
+> +	 */
+> +	if (leader->core.nr_members > 1)
+> +		attr->read_format |= PERF_FORMAT_ID|PERF_FORMAT_GROUP;
+> +
+> +	attr->inherit = !config->no_inherit && list_empty(&evsel->bpf_counter_list);
+> +
+> +	/*
+> +	 * Some events get initialized with sample_(period/type) set,
+> +	 * like tracepoints. Clear it up for counting.
+> +	 */
+> +	attr->sample_period = 0;
+> +
+> +	if (config->identifier)
+> +		attr->sample_type = PERF_SAMPLE_IDENTIFIER;
+> +
+> +	if (config->all_user) {
+> +		attr->exclude_kernel = 1;
+> +		attr->exclude_user   = 0;
+> +	}
+> +
+> +	if (config->all_kernel) {
+> +		attr->exclude_kernel = 0;
+> +		attr->exclude_user   = 1;
+> +	}
+> +
+> +	/*
+> +	 * Disabling all counters initially, they will be enabled
+> +	 * either manually by us or by kernel via enable_on_exec
+> +	 * set later.
+> +	 */
+> +	if (evsel__is_group_leader(evsel)) {
+> +		attr->disabled = 1;
+> +
+> +		if (target__enable_on_exec(&target))
+> +			attr->enable_on_exec = 1;
+> +	}
+> +
+> +	return evsel__open_per_cpu_and_thread(evsel, evsel__cpus(evsel), cpu_map_idx,
+> +					      evsel->core.threads);
+> +}
+> +
+>   static int __run_perf_stat(int argc, const char **argv, int run_idx)
+>   {
+>   	int interval = stat_config.interval;
+> @@ -736,7 +792,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+>   		if (evsel__is_bperf(counter))
+>   			continue;
+>   try_again:
+> -		if (create_perf_stat_counter(counter, &stat_config, &target,
+> +		if (create_perf_stat_counter(counter, &stat_config,
+>   					     evlist_cpu_itr.cpu_map_idx) < 0) {
+>   
+>   			/*
+> @@ -794,7 +850,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+>   				continue;
+>   try_again_reset:
+>   			pr_debug2("reopening weak %s\n", evsel__name(counter));
+> -			if (create_perf_stat_counter(counter, &stat_config, &target,
+> +			if (create_perf_stat_counter(counter, &stat_config,
+>   						     evlist_cpu_itr.cpu_map_idx) < 0) {
+>   
+>   				switch (stat_handle_error(counter, errno)) {
+> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> index 50b1a92d16df..101ed6c497bc 100644
+> --- a/tools/perf/util/stat.c
+> +++ b/tools/perf/util/stat.c
+> @@ -716,59 +716,3 @@ size_t perf_event__fprintf_stat_config(union perf_event *event, FILE *fp)
+>   
+>   	return ret;
+>   }
+> -
+> -int create_perf_stat_counter(struct evsel *evsel,
+> -			     struct perf_stat_config *config,
+> -			     struct target *target,
+> -			     int cpu_map_idx)
+> -{
+> -	struct perf_event_attr *attr = &evsel->core.attr;
+> -	struct evsel *leader = evsel__leader(evsel);
+> -
+> -	attr->read_format = PERF_FORMAT_TOTAL_TIME_ENABLED |
+> -			    PERF_FORMAT_TOTAL_TIME_RUNNING;
+> -
+> -	/*
+> -	 * The event is part of non trivial group, let's enable
+> -	 * the group read (for leader) and ID retrieval for all
+> -	 * members.
+> -	 */
+> -	if (leader->core.nr_members > 1)
+> -		attr->read_format |= PERF_FORMAT_ID|PERF_FORMAT_GROUP;
+> -
+> -	attr->inherit = !config->no_inherit && list_empty(&evsel->bpf_counter_list);
+> -
+> -	/*
+> -	 * Some events get initialized with sample_(period/type) set,
+> -	 * like tracepoints. Clear it up for counting.
+> -	 */
+> -	attr->sample_period = 0;
+> -
+> -	if (config->identifier)
+> -		attr->sample_type = PERF_SAMPLE_IDENTIFIER;
+> -
+> -	if (config->all_user) {
+> -		attr->exclude_kernel = 1;
+> -		attr->exclude_user   = 0;
+> -	}
+> -
+> -	if (config->all_kernel) {
+> -		attr->exclude_kernel = 0;
+> -		attr->exclude_user   = 1;
+> -	}
+> -
+> -	/*
+> -	 * Disabling all counters initially, they will be enabled
+> -	 * either manually by us or by kernel via enable_on_exec
+> -	 * set later.
+> -	 */
+> -	if (evsel__is_group_leader(evsel)) {
+> -		attr->disabled = 1;
+> -
+> -		if (target__enable_on_exec(target))
+> -			attr->enable_on_exec = 1;
+> -	}
+> -
+> -	return evsel__open_per_cpu_and_thread(evsel, evsel__cpus(evsel), cpu_map_idx,
+> -					      evsel->core.threads);
+> -}
+> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+> index 4b0f14ae4e5f..34f30a295f89 100644
+> --- a/tools/perf/util/stat.h
+> +++ b/tools/perf/util/stat.h
+> @@ -223,10 +223,6 @@ size_t perf_event__fprintf_stat(union perf_event *event, FILE *fp);
+>   size_t perf_event__fprintf_stat_round(union perf_event *event, FILE *fp);
+>   size_t perf_event__fprintf_stat_config(union perf_event *event, FILE *fp);
+>   
+> -int create_perf_stat_counter(struct evsel *evsel,
+> -			     struct perf_stat_config *config,
+> -			     struct target *target,
+> -			     int cpu_map_idx);
+>   void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *config,
+>   			    struct target *_target, struct timespec *ts, int argc, const char **argv);
+>   
 
