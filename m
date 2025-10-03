@@ -1,63 +1,66 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528F25464D
-	for <linux-perf-users@vger.kernel.org>; Fri,  3 Oct 2025 00:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9340E7261D
+	for <linux-perf-users@vger.kernel.org>; Fri,  3 Oct 2025 00:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759452083; cv=none; b=odOESE97c8VfbSS/ZBD5Ij3JP25gsZscQs9rhchp0k7eqvhS272HShXdPWmv5g6jj53+/B/8jtkp89xpUcpVZ4ZHQbaG4fsfKKA4Vx0lykEhy+nuTjCh8EQctjtzMFDZ4YuQOSZF+ReR2vHaAZtS5d54Y6MWI9Ww5eRjPhWaU/Y=
+	t=1759452085; cv=none; b=GoqscCAppF7gOJBgTxYGRNJ/OKm+oJBaGWg5MPcGNrCQOr44KQmo6F6nUySxq7U2B68g/Y14Q5X+BOh12ybpvoQVWwhyOQOuw5wMfqs30pB4/H3fFZsTkbwEMb9JnpVdBrYMKMtFxguXve7YJd0huQbPT1pHDOhzpT5Sb2BJTIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759452083; c=relaxed/simple;
-	bh=3mDe7fpgcruxbDrX0bc5+oJ9/rO2+0AXTXV6A3h/n+k=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=Kgz5AogWtyYGqjhUQmfeHQU/JhYoFf7naamagTeeLe4I7bIazpyB5PiSdktYipupl2HXy6K7DUmT8++rK8JPuSUzpWqxD+e5yA8jKJoyfTx1yJMyasqyaR/11dWFZHOhyHBjLLk3NRwgJ/PG8ZtqStobQv0rm37WwmExf4AJYyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g8xHhWC8; arc=none smtp.client-ip=209.85.210.202
+	s=arc-20240116; t=1759452085; c=relaxed/simple;
+	bh=OpUdHXUA0W+Q6HfIdjC5/Eo2qQS6nQyXRDaLDwwWGXE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=mrEM7YbCdG9jJcRqGBaWaz5kzVegMfyuP0tZ6i9yvT8PCj6C6AKTv6pZs/o5m/xH4QBt6asxFma5IhP5HViQhBzks9GWlHEjrznH8Rh6U3Y1EOPRMwBzihq6+XAyIazx4bVs4gizaLjk9bWWOyPEgBczUus2kQId5/HNTdsm/BU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YB8tnYmG; arc=none smtp.client-ip=209.85.160.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g8xHhWC8"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-76e2ea9366aso1581236b3a.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Oct 2025 17:41:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YB8tnYmG"
+Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-36d429b919cso2163621fac.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Oct 2025 17:41:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759452077; x=1760056877; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=XlVgG+qUcqt1ti4IWrjfI9WXkl1dtzgX2VnAjDGGGKQ=;
-        b=g8xHhWC8cEKyL4LnDYPCCu+BiMTD120cbHvrH3KqLnx40F67t01wY7YMbaHBtixl4o
-         WcQj4jCD2JzBzoHzJtO+Y6xoUry3k61ywbyF5kj6Hv+Qv2z23YZvsq6C4s4Ziwn76qXj
-         CpXUrY7WfLnejabVpOu/+174tTQGw+F1mcrs3vmS/7EGDZid+CSqJ+ry5nRPbcD/Jf0q
-         FXh7ewHk23Y435/ya11+9TpK2KmhG0A4tdhLdDD/IDGrA5iB29KJduEkUCJ8X7LvCugH
-         SlOhxQTcZDkncUChqo5adRhmtmx2pwcUFdhgulvcMU0KKMYF/WeXU9slt3m0UOAsJSi7
-         b1Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759452077; x=1760056877;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1759452079; x=1760056879; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=XlVgG+qUcqt1ti4IWrjfI9WXkl1dtzgX2VnAjDGGGKQ=;
-        b=fxrgkf6wATCMpRcluRyJGkU65ozHTs8fVVWcgN6heCLgx+3i1Am9qZfnk+qqYbyDWJ
-         4Wb7gCnMNflloqwTsKTFNZe2RhbVNfwN3swV+TBn6mVg70smoxhKTHoxTsMWZ+sEEtvP
-         aknp0YlimXbhOyQqY1k1e4gakVeyCAST7GZD3FI+noO4XPId1aNj086cJIfTJKhJIDwN
-         gyNpA8JZSczgK6ZfyNm729/YEAuewVlOM4fglV8WWwySqfe5k/3lWANLTD8mXigMB7XY
-         4Nsqp6nOkSWQ+7ad3KZHvADvqGkSmL3mzuMb2Fb/ilBNl/T5zm+DqTsEm6nYMsx/YPYB
-         P5cA==
-X-Forwarded-Encrypted: i=1; AJvYcCVymTi/+iihlYimgssUxhTZEBVqXKq1cwf1l4vKZTUi/ouCTSuDqg7uGUf9mXwxoXevVOwdMAa6a5SuJBKUJfXp@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCu2l+U2oifmkLxs5PS18NgBH9lOZMfrF5GA+EIvazEgiz1I2w
-	GFtY4ptqs9Dvmuzj96QlWVz9j11MSxI2Tzgu+xGiamafudhw3CEIGKfzMxwUpkzZjziPoOH4nEA
-	aneto/9Gmcg==
-X-Google-Smtp-Source: AGHT+IGP0IJMW4X14mDo3SaF2DPNVjoOEPADwz8Mfq/a+u3M5w2WZyZ+g37te5WSjbUe5DeFJ/v/n2gwtua5
-X-Received: from pgct8.prod.google.com ([2002:a05:6a02:5288:b0:b55:117c:84a3])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:2450:b0:2e2:3e68:6e45
- with SMTP id adf61e73a8af0-32b6211891dmr1662801637.51.1759452077454; Thu, 02
- Oct 2025 17:41:17 -0700 (PDT)
-Date: Thu,  2 Oct 2025 17:41:01 -0700
+        bh=CCzKIcxSwtwSrniu1/P7nPNHr6oMGAp8BGuB6qmiLI4=;
+        b=YB8tnYmG6SsChHmhZRyXLRygcNNa5qwkZ/2foxQC2WeaEYBFCYjEUmtZ/azd/GWkUh
+         U5J8kCU7+O0XS0hBRcImloJYZnGrMe9zwVHAySnijZARETnVEJCbzYH4dfuOtpP8afna
+         o+Vdk0BRl+Bm58G1mey1tE2SWbVCHSnzZYnSdCuxvhHjcGmxMJIifH1IFJyv+kwQE1kx
+         JOs1D+YBm8Nq2ydXOjmcWmkoYPFXJ+7x+0GgDznKKzbkQrdlHND/WRU3VvLfSSrinx9v
+         Wbl4rhS6KpVAgeRs4DFlUMXDbbzz1pf2rktjYkgeVebir+DQg/aridgHKiJvKGsEDspT
+         N1HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759452079; x=1760056879;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CCzKIcxSwtwSrniu1/P7nPNHr6oMGAp8BGuB6qmiLI4=;
+        b=mpfoY4KnaR74tx4PI32O23YteCCcLWKoX/5FcZy/U+hP8QzZLZX7J2BrFy6d7bsnZr
+         mXpCY49BXjlDk2soNcLaNzVgZNMUPDGPRwCT2/Agx2E7UBP1OMj1/6R77GyR7j8dQXUj
+         mPJKP9S/J7/kKksXSb4KCrMC6RzCiMtxe7qcBU12NKoFyidwICphItRuorBuHWsCyAqv
+         iwhapCT4ixY4A0ScS0DUwbLU0GOcDiNgMHkeglaQL7mVHCQrIWXcNRC2iBXzF4ycTWx0
+         GZ8xRG0GfvdmZKzSc9fAdq8hO+9CCMm4CKL33hq+KyPUVDDysNKuwyOxdO0b1g98K7Me
+         1rcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW/x499J+z4MG5L26HbA18yTffqGBLuINT7+oO5UoDZN8AMzfoD8sfQ0vUnKU4xkfWA2WVCnX31SWSGQnJ7NH7V@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwKksg/Kn9ECMSiGmji6XFCaugsYTQUDOMxrQYj4yYJZsMnPVw
+	15kaNMmpgUlUGxM5Uy0W0Hwy2hk8y5YvqyRu/nbaoBYarqwzJkdXZD4RZZlLCVjshmuSa+pVf+J
+	+Yxj5JSLAHw==
+X-Google-Smtp-Source: AGHT+IHSKO6pynCvlxVgyPpdGQ5vMYpKoedA5Lj/IAAoV6RAFlFnYhVoeUzAmxNCKVa7k5b0HLTSZ71wpDdu
+X-Received: from oabmk9.prod.google.com ([2002:a05:6870:d09:b0:368:ae2f:aa00])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:f116:b0:322:5678:8245
+ with SMTP id 586e51a60fabf-3b10283e0edmr803446fac.31.1759452079552; Thu, 02
+ Oct 2025 17:41:19 -0700 (PDT)
+Date: Thu,  2 Oct 2025 17:41:02 -0700
+In-Reply-To: <20251003004102.2369463-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20251003004102.2369463-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.618.g983fd99d29-goog
-Message-ID: <20251003004102.2369463-1-irogers@google.com>
-Subject: [PATCH v1 1/2] perf namespaces: Avoid get_current_dir_name dependency
+Message-ID: <20251003004102.2369463-2-irogers@google.com>
+Subject: [PATCH v1 2/2] tools build: Remove get_current_dir_name
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -66,143 +69,84 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-get_current_dir_name is a GNU extension not supported on, for example,
-Android. There is only one use of it so let's just switch to getcwd to
-avoid build and other complexity.
+As perf no longer tests for this feature, and it was the only user,
+remove the feature test.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Makefile.config             |  4 ----
- tools/perf/util/Build                  |  1 -
- tools/perf/util/get_current_dir_name.c | 18 ------------------
- tools/perf/util/get_current_dir_name.h |  8 --------
- tools/perf/util/namespaces.c           | 14 +++++---------
- 5 files changed, 5 insertions(+), 40 deletions(-)
- delete mode 100644 tools/perf/util/get_current_dir_name.c
- delete mode 100644 tools/perf/util/get_current_dir_name.h
+ tools/build/Makefile.feature                    |  1 -
+ tools/build/feature/Makefile                    |  4 ----
+ tools/build/feature/test-all.c                  |  4 ----
+ tools/build/feature/test-get_current_dir_name.c | 11 -----------
+ 4 files changed, 20 deletions(-)
+ delete mode 100644 tools/build/feature/test-get_current_dir_name.c
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 0f4b297fbacc..6cdb96576cb8 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -417,10 +417,6 @@ ifeq ($(feature-eventfd), 1)
-   CFLAGS += -DHAVE_EVENTFD_SUPPORT
- endif
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 9c1a69d26f51..9399f591bd69 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -68,7 +68,6 @@ FEATURE_TESTS_BASIC :=                  \
+         libdw                           \
+         eventfd                         \
+         fortify-source                  \
+-        get_current_dir_name            \
+         gettid				\
+         glibc                           \
+         libbfd                          \
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index b41a42818d8a..d13d2a1f44fe 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -8,7 +8,6 @@ FILES=                                          \
+          test-libdw.bin                         \
+          test-eventfd.bin                       \
+          test-fortify-source.bin                \
+-         test-get_current_dir_name.bin          \
+          test-glibc.bin                         \
+          test-gtk2.bin                          \
+          test-gtk2-infobar.bin                  \
+@@ -147,9 +146,6 @@ $(OUTPUT)test-libelf.bin:
+ $(OUTPUT)test-eventfd.bin:
+ 	$(BUILD)
  
--ifeq ($(feature-get_current_dir_name), 1)
--  CFLAGS += -DHAVE_GET_CURRENT_DIR_NAME
--endif
+-$(OUTPUT)test-get_current_dir_name.bin:
+-	$(BUILD)
 -
- ifeq ($(feature-gettid), 1)
-   CFLAGS += -DHAVE_GETTID
- endif
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 5ead46dc98e7..9464eceb764b 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -23,7 +23,6 @@ perf-util-y += evsel_fprintf.o
- perf-util-y += perf_event_attr_fprintf.o
- perf-util-y += evswitch.o
- perf-util-y += find_bit.o
--perf-util-y += get_current_dir_name.o
- perf-util-y += levenshtein.o
- perf-util-y += mmap.o
- perf-util-y += memswap.o
-diff --git a/tools/perf/util/get_current_dir_name.c b/tools/perf/util/get_current_dir_name.c
+ $(OUTPUT)test-glibc.bin:
+ 	$(BUILD)
+ 
+diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+index e1847db6f8e6..778883a32afb 100644
+--- a/tools/build/feature/test-all.c
++++ b/tools/build/feature/test-all.c
+@@ -22,10 +22,6 @@
+ # include "test-libelf.c"
+ #undef main
+ 
+-#define main main_test_get_current_dir_name
+-# include "test-get_current_dir_name.c"
+-#undef main
+-
+ #define main main_test_gettid
+ # include "test-gettid.c"
+ #undef main
+diff --git a/tools/build/feature/test-get_current_dir_name.c b/tools/build/feature/test-get_current_dir_name.c
 deleted file mode 100644
-index e68935e9ac8c..000000000000
---- a/tools/perf/util/get_current_dir_name.c
+index c3c201691b4f..000000000000
+--- a/tools/build/feature/test-get_current_dir_name.c
 +++ /dev/null
-@@ -1,18 +0,0 @@
--// SPDX-License-Identifier: LGPL-2.1
--// Copyright (C) 2018, 2019 Red Hat Inc, Arnaldo Carvalho de Melo <acme@redhat.com>
--//
--#ifndef HAVE_GET_CURRENT_DIR_NAME
--#include "get_current_dir_name.h"
--#include <limits.h>
--#include <string.h>
+@@ -1,11 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-#define _GNU_SOURCE
 -#include <unistd.h>
+-#include <stdlib.h>
 -
--/* Android's 'bionic' library, for one, doesn't have this */
--
--char *get_current_dir_name(void)
+-int main(void)
 -{
--	char pwd[PATH_MAX];
--
--	return getcwd(pwd, sizeof(pwd)) == NULL ? NULL : strdup(pwd);
+-	free(get_current_dir_name());
+-	return 0;
 -}
--#endif // HAVE_GET_CURRENT_DIR_NAME
-diff --git a/tools/perf/util/get_current_dir_name.h b/tools/perf/util/get_current_dir_name.h
-deleted file mode 100644
-index 69f7d5537d32..000000000000
---- a/tools/perf/util/get_current_dir_name.h
-+++ /dev/null
-@@ -1,8 +0,0 @@
--// SPDX-License-Identifier: LGPL-2.1
--// Copyright (C) 2018, 2019 Red Hat Inc, Arnaldo Carvalho de Melo <acme@redhat.com>
--//
--#ifndef __PERF_GET_CURRENT_DIR_NAME_H
--#ifndef HAVE_GET_CURRENT_DIR_NAME
--char *get_current_dir_name(void);
--#endif // HAVE_GET_CURRENT_DIR_NAME
--#endif // __PERF_GET_CURRENT_DIR_NAME_H
-diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
-index 68f5de2d79c7..d1475b79a4a7 100644
---- a/tools/perf/util/namespaces.c
-+++ b/tools/perf/util/namespaces.c
-@@ -6,7 +6,6 @@
- 
- #include "namespaces.h"
- #include "event.h"
--#include "get_current_dir_name.h"
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <fcntl.h>
-@@ -279,10 +278,9 @@ void nsinfo__set_in_pidns(struct nsinfo *nsi)
- void nsinfo__mountns_enter(struct nsinfo *nsi,
- 				  struct nscookie *nc)
- {
--	char curpath[PATH_MAX];
-+	char oldcwd[PATH_MAX];
- 	int oldns = -1;
- 	int newns = -1;
--	char *oldcwd = NULL;
- 
- 	if (nc == NULL)
- 		return;
-@@ -293,14 +291,14 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
- 	if (!nsi || !nsinfo__need_setns(nsi))
- 		return;
- 
--	if (snprintf(curpath, PATH_MAX, "/proc/self/ns/mnt") >= PATH_MAX)
-+	if (!getcwd(oldcwd, sizeof(oldcwd)))
- 		return;
- 
--	oldcwd = get_current_dir_name();
--	if (!oldcwd)
-+	nc->oldcwd = strdup(oldcwd);
-+	if (!nc->oldcwd)
- 		return;
- 
--	oldns = open(curpath, O_RDONLY);
-+	oldns = open("/proc/self/ns/mnt", O_RDONLY);
- 	if (oldns < 0)
- 		goto errout;
- 
-@@ -311,13 +309,11 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
- 	if (setns(newns, CLONE_NEWNS) < 0)
- 		goto errout;
- 
--	nc->oldcwd = oldcwd;
- 	nc->oldns = oldns;
- 	nc->newns = newns;
- 	return;
- 
- errout:
--	free(oldcwd);
- 	if (oldns > -1)
- 		close(oldns);
- 	if (newns > -1)
+-#undef _GNU_SOURCE
 -- 
 2.51.0.618.g983fd99d29-goog
 
