@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6064C298CA3
-	for <linux-perf-users@vger.kernel.org>; Sun,  5 Oct 2025 18:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12B7296BC9
+	for <linux-perf-users@vger.kernel.org>; Sun,  5 Oct 2025 18:25:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759688703; cv=none; b=fxCQ1cFgQQqYR5mBomXqYUg5OCL04ahjEb7+NKTrTgHmKUzeGxGARduaGfzGwG+leQwXKndSEhXMnrmRe4lEzxdUH/XqSo6NfzwZc9U0HGOHOE5iRw6wSH84wlnStNxz2DggdvccEeWmwt+8KLOVn5EdUf7ASLu6t2b0dvglGZ4=
+	t=1759688708; cv=none; b=MULCixfJKU6c25d6nWYZeHfTkdbeH098Pssh6nYAK6ieTthdVBZkKFg0VschjYL2/lPxoPNDP8nMsHqeDHYgrrSuMHeCnXJGVHOCK5F5e24zhDkkG5Dn8J3FBUALFkVxPWn/lNViO0rOd9X/zpiUPKrjslIXoKqURj9zCUcny0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759688703; c=relaxed/simple;
-	bh=HdVGMdUZJ7sQw0wCpKNfX0a9lPS97C04R9RXylKiaXA=;
+	s=arc-20240116; t=1759688708; c=relaxed/simple;
+	bh=mTa9Y6WeAtvn9d7+2/fGkIrChVhZ8EITp0NfUwLgqMo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=FJII5X4Be/YpRLk2nKf5WN3gO8XlPobcfqoIr66KeOiCG2YmUOHtisYVROfuxpke9W1+mq5iMijfwYGYPiKlsqdqHbX/U9G2FGrP+ZiyaiKYv2Npvfy6i+v4hC6y+TiDwlHkwejsdi1J0QhQsrDDDURNH468REWaSRYVgUa2Ge8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mwkqoLju; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=iKgE6EieVHFXNGgr4C6e3iws8e/E1HkrfelDkb9LuupKDiLlIIAxwYU199PeCDxlT7AlZvymvcUNyIdKhkcd5+yTeZfm5h/2gMwI4LxOJcHwMy/27SjKBxngEwgFTdmpG/czjBcgriBN6Q/q5wPVP8gCUJTd8zMhbtw17aD35R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=grb4oJK7; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mwkqoLju"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-28bd8b3fa67so33771675ad.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 05 Oct 2025 11:25:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="grb4oJK7"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b55283ff3fcso2861049a12.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 05 Oct 2025 11:25:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759688701; x=1760293501; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1759688705; x=1760293505; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0o00XL7qipP4mPs0tHYqXDOdnOe1rP6Nx9a3z+JzO6E=;
-        b=mwkqoLjuz9qCmxpJdiBE3yOYG989r0cRELzbSb5PCApVMnZ35SrF3ybTcYKNMw2QY7
-         LzLUecT0s5pQZ/axO8LRTSfuGByUvOZzWJBjLKAjZHVeu/DTuJYcIodmfooZjdMX0Mef
-         UquoLxwd8lrsgrKuTFVC2z56zS9hljVf88+L95XG8sM4E875SEI2prSyxsZs3WqFCX1G
-         b2fCRxGWOBF454AvIIqHplb881VugTqGh24Y72GLlOMPzD8CpoH6rB5asPNkKl+s6QSR
-         7xe7YKOcXEC0/iZysCoFTbsD++GgsvTCBb/1tS9Zp3BXhI/op4HHAkRCQc0sth42IgIN
-         9f/Q==
+        bh=chaVjHV6gVx+9hgVDtyapkRgzRP2tTAbbR4GER7wzJI=;
+        b=grb4oJK7N37ILKHfMaY19tE+B8seYGaAGfm9VmG23Gn06fVqUC0JBqoxDwxTChBiwq
+         X7Y3RO83+B2ToCNCAkPgdK0ZkyoKb/WSWe/HmzJxJW3jcRBmA96Bfz6cjRRsC/62A6Cj
+         Ym4j/j5E4fu/po4im06c8oCfz8XrC/iLslI0vz6hPGHyU6N65HWBOan7NTt2Z4eCPJDi
+         95/HDOj6xP2C1mTpU2deoD0TWqbfUOr3k03bV70ha6fwSFRQFKJ6N2AhGTZi0wO2oZlH
+         YKiP6bsMVUFHb2C7dRpvj8vYTTRx1tcWhSAKZUtgAk25RtroMtP0qCAhUT3dkKWPMMVY
+         EsQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759688701; x=1760293501;
+        d=1e100.net; s=20230601; t=1759688705; x=1760293505;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0o00XL7qipP4mPs0tHYqXDOdnOe1rP6Nx9a3z+JzO6E=;
-        b=GZe8k5hu+thaxxRuJatvamaPRPZnjVJFoP1Xd4MoaeF8diOPOXPDgVpS9uVWeldHyL
-         7+WCr5xdStjtKQxw5IJ4Ae3l9SbxYR3fEOV1gMM/b1zbB0D0L8nyv1lDxGbzWN6Z0Q7d
-         vOP90qzDq28lHGbwlBi4Q/e+V2SwWwIkNwxtmBZ7I9HvIK3r28HZT9b2cjMurnywTEEE
-         +CMbg/eLgBb+jmmfUiDJy2sFSaYbQl1FXZYXC2+y16hcI2T1MViJf+j++OxcuTUEF9zf
-         7Qpi94Oj31yx6L++P9Xk0vpOzDDJJIppQqWAXcQNqJ38rA37ZuvFv2pJvTN4S9W6zmy3
-         qpvA==
-X-Forwarded-Encrypted: i=1; AJvYcCWdR3UsexmuLpH+hp5N9NvPDoM8/iu+GiGdqSdf8ep7AiR1K6c58PxTRxJXf8HnyvKENzw0aI6+njP6u7dZnzpr@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIdIPlgsXBTXdmCvdomkm7AIe9BYxg5MUBAoMALSAkY+qqrl8M
-	sngC4vruZIz2xZ/1dIiLWvHaVknyyObdimn9m1QLfCemlTvSLCMOajM03OHM85M8RhFn9tBCd8G
-	Gh71q8JO6Hg==
-X-Google-Smtp-Source: AGHT+IFhkdnRh1DHOibgodoGZwdmDBnO5I6y1BIqxNg7zc7aDTESFAa2l8oR/gJ4qmqIXhc3k4GcXet6QLC1
-X-Received: from plcc20.prod.google.com ([2002:a17:902:c1d4:b0:234:c104:43f1])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:198c:b0:26a:ac66:ef3f
- with SMTP id d9443c01a7336-28e9a54630fmr107474415ad.8.1759688700665; Sun, 05
- Oct 2025 11:25:00 -0700 (PDT)
-Date: Sun,  5 Oct 2025 11:24:15 -0700
+        bh=chaVjHV6gVx+9hgVDtyapkRgzRP2tTAbbR4GER7wzJI=;
+        b=dkFQ4sIAn4cr18uuMQOrJUYTSUdBx4BNRohu9twuCzrAp2Yf4O1+CzPZ1+ozwP6Kq2
+         qPrapP29pO/YC0E4drCW144uYStnxshIo6qn3roVL/TC+8IIHmfKvzkr1dY8t+KQCTwe
+         FV2ADWFjWTDEhXsG1szalkd53AWijgnNw7LHowaMw0YtB7fdl4Xnqz+TEZi2Ngb9EgX6
+         d4/7h15IaU/3XMueX0d4LDrea4QW4K+kNXuxrV47z85pDTDZHpwqgswPUxAzx7/awZWL
+         0J76mhZ4PR/U8Lw8my7+Y1/xGZ3UiMIwnYHw6Pts3Q7gqKNd1YM2ubKh0f7m/0ZJxwZX
+         DDmA==
+X-Forwarded-Encrypted: i=1; AJvYcCXR7RFrzSJwqAxTWnuEwmf3XSMcg06j5R4GeK9Nvh6D2iOmL5i73FqSKr33/oepMKJmbCMxUT/DVOivrxcwABfA@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqP4BRRnEnL+b7Q5JG2at9Ws7ZDh6Pic5Qjgm/RA+veH51aY0m
+	2OCWkFs3FZVmtDzLMti2/QRz5XEPpWb0tcWkxPIeNBX+2iA9dg2Amobs6mgT/gReYd+p8V4DVuF
+	Vb7yJpGxv8Q==
+X-Google-Smtp-Source: AGHT+IFsXoq2ezUEImVo+oEMTghrVDKCqLlfb4CwpegA+7f1Z+jJxzblg3WCU59+Hl9dvIRpIkmv7jzFN1sL
+X-Received: from pjbhk16.prod.google.com ([2002:a17:90b:2250:b0:32d:dbd4:5cf3])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:33d2:b0:32d:fcd8:1a9
+ with SMTP id 98e67ed59e1d1-339c279f4cemr9375874a91.32.1759688705025; Sun, 05
+ Oct 2025 11:25:05 -0700 (PDT)
+Date: Sun,  5 Oct 2025 11:24:17 -0700
 In-Reply-To: <20251005182430.2791371-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251005182430.2791371-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.618.g983fd99d29-goog
-Message-ID: <20251005182430.2791371-13-irogers@google.com>
-Subject: [PATCH v7 12/27] perf pmu: Add and use legacy_terms in alias information
+Message-ID: <20251005182430.2791371-15-irogers@google.com>
+Subject: [PATCH v7 14/27] perf print-events: Remove print_hwcache_events
 From: Ian Rogers <irogers@google.com>
 To: James Clark <james.clark@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,273 +73,138 @@ To: James Clark <james.clark@linaro.org>, Peter Zijlstra <peterz@infradead.org>,
 Cc: Ian Rogers <irogers@google.com>, Thomas Richter <tmricht@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Add support to finding/adding events from the default_core event
-table. If an event already exists from sysfs/json then the
-default_core configuration is saved in the legacy_terms string. Lazily
-use the legacy_terms string to set a legacy hardware or cache event as
-deprecated if the core PMU doesn't support it. Use the legacy terms
-string to set the alternate_hw_config, avoiding the value needing to
-be passed from the parse_events parser.
+Now legacy cache events are in json there's no need for a specific
+printing routine. To support the previous filtered version use an
+event glob of "legacy cache" which matches the topic of the json
+events.
 
 Tested-by: Thomas Richter <tmricht@linux.ibm.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/pmu.c | 137 ++++++++++++++++++++++++++++++++++++------
- 1 file changed, 117 insertions(+), 20 deletions(-)
+ tools/perf/builtin-list.c      | 16 +++++++---
+ tools/perf/util/print-events.c | 55 ----------------------------------
+ tools/perf/util/print-events.h |  1 -
+ 3 files changed, 12 insertions(+), 60 deletions(-)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index e25a4201f9ad..667be41abcd7 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -69,6 +69,11 @@ struct perf_pmu_alias {
- 	char *topic;
- 	/** @terms: Owned copy of the event terms. */
- 	char *terms;
-+	/**
-+	 * @legacy_terms: If the event aliases a legacy event, holds a copy
-+	 * ofthe legacy event string.
-+	 */
-+	char *legacy_terms;
- 	/**
- 	 * @pmu_name: The name copied from the json struct pmu_event. This can
- 	 * differ from the PMU name as it won't have suffixes.
-@@ -101,6 +106,12 @@ struct perf_pmu_alias {
- 	 * default.
- 	 */
- 	bool deprecated;
-+	/**
-+	 * @legacy_deprecated_checked: Legacy events may not be supported by the
-+	 * PMU need to be checked. If they aren't supported they are marked
-+	 * deprecated.
-+	 */
-+	bool legacy_deprecated_checked;
- 	/** @from_sysfs: Was the alias from sysfs or a json event? */
- 	bool from_sysfs;
- 	/** @info_loaded: Have the scale, unit and other values been read from disk? */
-@@ -430,6 +441,7 @@ static void perf_pmu_free_alias(struct perf_pmu_alias *alias)
- 	zfree(&alias->topic);
- 	zfree(&alias->pmu_name);
- 	zfree(&alias->terms);
-+	zfree(&alias->legacy_terms);
- 	free(alias);
+diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+index caf42276bd0f..b6720ef3adf6 100644
+--- a/tools/perf/builtin-list.c
++++ b/tools/perf/builtin-list.c
+@@ -652,9 +652,18 @@ int cmd_list(int argc, const char **argv)
+ 			}
+ 			default_ps.pmu_glob = old_pmu_glob;
+ 		} else if (strcmp(argv[i], "cache") == 0 ||
+-			 strcmp(argv[i], "hwcache") == 0)
+-			print_hwcache_events(&print_cb, ps);
+-		else if (strcmp(argv[i], "pmu") == 0) {
++			   strcmp(argv[i], "hwcache") == 0) {
++			char *old_event_glob = default_ps.event_glob;
++
++			default_ps.event_glob = strdup("legacy cache");
++			if (!default_ps.event_glob) {
++				ret = -1;
++				goto out;
++			}
++			perf_pmus__print_pmu_events(&print_cb, ps);
++			zfree(&default_ps.event_glob);
++			default_ps.event_glob = old_event_glob;
++		} else if (strcmp(argv[i], "pmu") == 0) {
+ 			default_ps.exclude_abi = true;
+ 			perf_pmus__print_pmu_events(&print_cb, ps);
+ 			default_ps.exclude_abi = false;
+@@ -707,7 +716,6 @@ int cmd_list(int argc, const char **argv)
+ 			default_ps.event_glob = s;
+ 			print_symbol_events(&print_cb, ps, PERF_TYPE_HARDWARE,
+ 					event_symbols_hw, PERF_COUNT_HW_MAX);
+-			print_hwcache_events(&print_cb, ps);
+ 			perf_pmus__print_pmu_events(&print_cb, ps);
+ 			print_sdt_events(&print_cb, ps);
+ 			default_ps.metrics = true;
+diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
+index 4153124a9948..91a5d9c7882b 100644
+--- a/tools/perf/util/print-events.c
++++ b/tools/perf/util/print-events.c
+@@ -186,59 +186,6 @@ bool is_event_supported(u8 type, u64 config)
+ 	return ret;
  }
  
-@@ -522,6 +534,7 @@ static void read_alias_info(struct perf_pmu *pmu, struct perf_pmu_alias *alias)
- struct update_alias_data {
- 	struct perf_pmu *pmu;
- 	struct perf_pmu_alias *alias;
-+	bool legacy;
- };
- 
- static int update_alias(const struct pmu_event *pe,
-@@ -537,8 +550,13 @@ static int update_alias(const struct pmu_event *pe,
- 	assign_str(pe->name, "topic", &data->alias->topic, pe->topic);
- 	data->alias->per_pkg = pe->perpkg;
- 	if (pe->event) {
--		zfree(&data->alias->terms);
--		data->alias->terms = strdup(pe->event);
-+		if (data->legacy) {
-+			zfree(&data->alias->legacy_terms);
-+			data->alias->legacy_terms = strdup(pe->event);
-+		} else {
-+			zfree(&data->alias->terms);
-+			data->alias->terms = strdup(pe->event);
-+		}
- 	}
- 	if (!ret && pe->unit) {
- 		char *unit;
-@@ -628,7 +646,6 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
- 			return ret;
- 		}
- 	}
+-int print_hwcache_events(const struct print_callbacks *print_cb, void *print_state)
+-{
+-	struct perf_pmu *pmu = NULL;
+-	const char *event_type_descriptor = event_type_descriptors[PERF_TYPE_HW_CACHE];
 -
- 	alias->name = strdup(name);
- 	alias->desc = desc ? strdup(desc) : NULL;
- 	alias->long_desc = long_desc ? strdup(long_desc) : NULL;
-@@ -645,15 +662,29 @@ static int perf_pmu__new_alias(struct perf_pmu *pmu, const char *name,
- 	default:
- 	case EVENT_SRC_SYSFS:
- 		alias->from_sysfs = true;
--		if (pmu->events_table) {
-+		if (pmu->events_table || pmu->is_core) {
- 			/* Update an event from sysfs with json data. */
- 			struct update_alias_data data = {
- 				.pmu = pmu,
- 				.alias = alias,
-+				.legacy = false,
- 			};
--			if (pmu_events_table__find_event(pmu->events_table, pmu, name,
--							 update_alias, &data) == 0)
-+			if ((pmu_events_table__find_event(pmu->events_table, pmu, name,
-+							  update_alias, &data) == 0)) {
-+				/*
-+				 * Override sysfs encodings with json encodings
-+				 * specific to the cpuid.
-+				 */
- 				pmu->cpu_common_json_aliases++;
-+			}
-+			if (pmu->is_core) {
-+				/* Add in legacy encodings. */
-+				data.legacy = true;
-+				if (pmu_events_table__find_event(
-+						perf_pmu__default_core_events_table(),
-+						pmu, name, update_alias, &data) == 0)
-+					pmu->cpu_common_json_aliases++;
-+			}
- 		}
- 		pmu->sysfs_aliases++;
- 		break;
-@@ -1054,13 +1085,16 @@ void pmu_add_cpu_aliases_table(struct perf_pmu *pmu, const struct pmu_events_tab
+-	/*
+-	 * Only print core PMUs, skipping uncore for performance and
+-	 * PERF_TYPE_SOFTWARE that can succeed in opening legacy cache evenst.
+-	 */
+-	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
+-		if (pmu->is_uncore || pmu->type == PERF_TYPE_SOFTWARE)
+-			continue;
+-
+-		for (int type = 0; type < PERF_COUNT_HW_CACHE_MAX; type++) {
+-			for (int op = 0; op < PERF_COUNT_HW_CACHE_OP_MAX; op++) {
+-				/* skip invalid cache type */
+-				if (!evsel__is_cache_op_valid(type, op))
+-					continue;
+-
+-				for (int res = 0; res < PERF_COUNT_HW_CACHE_RESULT_MAX; res++) {
+-					char name[64];
+-					char alias_name[128];
+-					__u64 config;
+-					int ret;
+-
+-					__evsel__hw_cache_type_op_res_name(type, op, res,
+-									name, sizeof(name));
+-
+-					ret = parse_events__decode_legacy_cache(name, pmu->type,
+-										&config);
+-					if (ret || !is_event_supported(PERF_TYPE_HW_CACHE, config))
+-						continue;
+-					snprintf(alias_name, sizeof(alias_name), "%s/%s/",
+-						 pmu->name, name);
+-					print_cb->print_event(print_state,
+-							"cache",
+-							pmu->name,
+-							pmu->type,
+-							name,
+-							alias_name,
+-							/*scale_unit=*/NULL,
+-							/*deprecated=*/false,
+-							event_type_descriptor,
+-							/*desc=*/NULL,
+-							/*long_desc=*/NULL,
+-							/*encoding_desc=*/NULL);
+-				}
+-			}
+-		}
+-	}
+-	return 0;
+-}
+-
+ void print_symbol_events(const struct print_callbacks *print_cb, void *print_state,
+ 			 unsigned int type, const struct event_symbol *syms,
+ 			 unsigned int max)
+@@ -434,8 +381,6 @@ void print_events(const struct print_callbacks *print_cb, void *print_state)
+ 	print_symbol_events(print_cb, print_state, PERF_TYPE_HARDWARE,
+ 			event_symbols_hw, PERF_COUNT_HW_MAX);
  
- static void pmu_add_cpu_aliases(struct perf_pmu *pmu)
- {
--	if (!pmu->events_table)
-+	if (!pmu->events_table && !pmu->is_core)
- 		return;
+-	print_hwcache_events(print_cb, print_state);
+-
+ 	perf_pmus__print_pmu_events(print_cb, print_state);
  
- 	if (pmu->cpu_aliases_added)
- 		return;
+ 	print_cb->print_event(print_state,
+diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-events.h
+index d6ba384f0c66..44e5dbd91400 100644
+--- a/tools/perf/util/print-events.h
++++ b/tools/perf/util/print-events.h
+@@ -32,7 +32,6 @@ struct print_callbacks {
  
- 	pmu_add_cpu_aliases_table(pmu, pmu->events_table);
-+	if (pmu->is_core)
-+		pmu_add_cpu_aliases_table(pmu, perf_pmu__default_core_events_table());
-+
- 	pmu->cpu_aliases_added = true;
- }
- 
-@@ -1738,10 +1772,14 @@ static struct perf_pmu_alias *pmu_find_alias(struct perf_pmu *pmu,
- 		return alias;
- 
- 	/* Alias doesn't exist, try to get it from the json events. */
--	if (pmu->events_table &&
--	    pmu_events_table__find_event(pmu->events_table, pmu, name,
--				         pmu_add_cpu_aliases_map_callback,
--				         pmu) == 0) {
-+	if ((pmu_events_table__find_event(pmu->events_table, pmu, name,
-+					  pmu_add_cpu_aliases_map_callback,
-+					  pmu) == 0) ||
-+	    (pmu->is_core &&
-+	     pmu_events_table__find_event(perf_pmu__default_core_events_table(),
-+					  pmu, name,
-+					  pmu_add_cpu_aliases_map_callback,
-+					  pmu) == 0)) {
- 		alias = perf_pmu__find_alias(pmu, name, /*load=*/ false);
- 	}
- 	return alias;
-@@ -1865,6 +1903,20 @@ int perf_pmu__check_alias(struct perf_pmu *pmu, struct parse_events_terms *head_
- 		if (ret)
- 			return ret;
- 
-+		if (alias->legacy_terms) {
-+			struct perf_event_attr attr = {.config = 0,};
-+
-+			ret = perf_pmu__parse_terms_to_attr(pmu, alias->legacy_terms, &attr);
-+			if (ret) {
-+				parse_events_error__handle(err, term->err_term,
-+							strdup("Error evaluating legacy terms"),
-+							NULL);
-+				return ret;
-+			}
-+			if (attr.type == PERF_TYPE_HARDWARE)
-+				*alternate_hw_config = attr.config & PERF_HW_EVENT_MASK;
-+		}
-+
- 		if (alias->per_pkg)
- 			info->per_pkg = true;
- 
-@@ -2034,9 +2086,13 @@ bool perf_pmu__have_event(struct perf_pmu *pmu, const char *name)
- 		return drm_pmu__have_event(pmu, name);
- 	if (perf_pmu__find_alias(pmu, name, /*load=*/ true) != NULL)
- 		return true;
--	if (pmu->cpu_aliases_added || !pmu->events_table)
-+	if (pmu->cpu_aliases_added || (!pmu->events_table && !pmu->is_core))
- 		return false;
--	return pmu_events_table__find_event(pmu->events_table, pmu, name, NULL, NULL) == 0;
-+	if (pmu_events_table__find_event(pmu->events_table, pmu, name, NULL, NULL) == 0)
-+		return true;
-+	return pmu->is_core &&
-+		pmu_events_table__find_event(perf_pmu__default_core_events_table(),
-+					     pmu, name, NULL, NULL) == 0;
- }
- 
- size_t perf_pmu__num_events(struct perf_pmu *pmu)
-@@ -2053,13 +2109,18 @@ size_t perf_pmu__num_events(struct perf_pmu *pmu)
- 	pmu_aliases_parse(pmu);
- 	nr = pmu->sysfs_aliases + pmu->sys_json_aliases;
- 
--	if (pmu->cpu_aliases_added)
--		 nr += pmu->cpu_json_aliases;
--	else if (pmu->events_table)
--		nr += pmu_events_table__num_events(pmu->events_table, pmu) -
--			pmu->cpu_common_json_aliases;
--	else
-+	if (pmu->cpu_aliases_added) {
-+		nr += pmu->cpu_json_aliases;
-+	} else if (pmu->events_table || pmu->is_core) {
-+		nr += pmu_events_table__num_events(pmu->events_table, pmu);
-+		if (pmu->is_core) {
-+			nr += pmu_events_table__num_events(
-+				perf_pmu__default_core_events_table(), pmu);
-+		}
-+		nr -= pmu->cpu_common_json_aliases;
-+	} else {
- 		assert(pmu->cpu_json_aliases == 0 && pmu->cpu_common_json_aliases == 0);
-+	}
- 
- 	if (perf_pmu__is_tool(pmu))
- 		nr -= tool_pmu__num_skip_events();
-@@ -2121,6 +2182,42 @@ static char *format_alias(char *buf, int len, const struct perf_pmu *pmu,
- 	return buf;
- }
- 
-+static bool perf_pmu_alias__check_deprecated(struct perf_pmu *pmu, struct perf_pmu_alias *alias)
-+{
-+	struct perf_event_attr attr = {.config = 0,};
-+	const char *check_terms;
-+	bool has_legacy_config;
-+
-+	if (alias->legacy_deprecated_checked)
-+		return alias->deprecated;
-+
-+	alias->legacy_deprecated_checked = true;
-+	if (alias->deprecated)
-+		return true;
-+
-+	check_terms = alias->terms;
-+	has_legacy_config =
-+		strstr(check_terms, "legacy-hardware-config=") != NULL ||
-+		strstr(check_terms, "legacy-cache-config=") != NULL;
-+	if (!has_legacy_config && alias->legacy_terms) {
-+		check_terms = alias->legacy_terms;
-+		has_legacy_config =
-+			strstr(check_terms, "legacy-hardware-config=") != NULL ||
-+			strstr(check_terms, "legacy-cache-config=") != NULL;
-+	}
-+	if (!has_legacy_config)
-+		return false;
-+
-+	if (perf_pmu__parse_terms_to_attr(pmu, check_terms, &attr) != 0) {
-+		/* Parsing failed, set as deprecated. */
-+		alias->deprecated = true;
-+	} else if (attr.type < PERF_TYPE_MAX) {
-+		/* Flag unsupported legacy events as deprecated. */
-+		alias->deprecated = !is_event_supported(attr.type, attr.config);
-+	}
-+	return alias->deprecated;
-+}
-+
- int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
- 			     void *state, pmu_event_callback cb)
- {
-@@ -2178,7 +2275,7 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
- 				"%.*s/%s/", (int)pmu_name_len, info.pmu_name, event->terms) + 1;
- 		info.str = event->terms;
- 		info.topic = event->topic;
--		info.deprecated = event->deprecated;
-+		info.deprecated = perf_pmu_alias__check_deprecated(pmu, event);
- 		ret = cb(state, &info);
- 		if (ret)
- 			goto out;
+ /** Print all events, the default when no options are specified. */
+ void print_events(const struct print_callbacks *print_cb, void *print_state);
+-int print_hwcache_events(const struct print_callbacks *print_cb, void *print_state);
+ void print_sdt_events(const struct print_callbacks *print_cb, void *print_state);
+ void print_symbol_events(const struct print_callbacks *print_cb, void *print_state,
+ 			 unsigned int type, const struct event_symbol *syms,
 -- 
 2.51.0.618.g983fd99d29-goog
 
