@@ -1,55 +1,55 @@
 Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394271E0E08
-	for <linux-perf-users@vger.kernel.org>; Sun,  5 Oct 2025 18:25:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5058B29DB99
+	for <linux-perf-users@vger.kernel.org>; Sun,  5 Oct 2025 18:25:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759688718; cv=none; b=Wf62Cz2DUiraFI1em3a+ZGVkhoTNAN9v8LLBXStPmMucLvgfdzA0kPCf4BVLk4qDLJFlA/H4HzK4du/ux6Nc8lV9UP+cNQYwCxEdXKRn2o/NGZC2lLLM8uFAj6pZq8fV/rd/rmfvk4LHrtaKiaoVXqtzeoOCzVHDFj1S2YlI+eQ=
+	t=1759688720; cv=none; b=DgD+fHhpIRGGv7xF0O8lwn4a90ZHtpSkogx2JJHyH/t6metugGbLCIrv/eBsjp2R39CtDeAtFF2x4PXxlL5ALkEs3kz7rpkIjai9H+C1Kd6aXqcmbKhvH2f3FFoU9pgNAbn+E/aPu3lOeyPFFQa5sZdiyYw1pOD/4kaCFmSvsZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759688718; c=relaxed/simple;
-	bh=HLWlGuKKGsxbZ/VlexXCASHgD2Zqo2tv4jU6pHirNCU=;
+	s=arc-20240116; t=1759688720; c=relaxed/simple;
+	bh=SEzAsSMoNsTTgZvnVHYt1VizCcHn2xa9s9a+H5Ek3tE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qroYuq6F6Qno3NdJ6Vl+q1e3LWBcpEEp+Ook0qZQHq/+gdeNT+XnPaHsvJSejL3MPnLqNMTFvTG6FLF9WBYw/mEb2Pjp2MYJ2IfXtyjM4r0JmgGSiZKNG4cXUyYxX9UXD2naBtiTQii9TCu0WPWGd+ETjuiYp+COAc8Otn7zFJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Cb1k0Uo0; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=NSKwHdjEnIxxxsphiJnJ4T5q5SqwE3XC/ngsU65Y727VSLV0kI/WHgCF1x5SB3c3qf2ilk5xT4hFHXQGoX4OePjXFteXzsWjQ/XJhSajPzgUmoCWzAXP8D+hpf6pcDIx+8hFfFHoJd5+RjkoD90ascLx/BnIwQtcuIOTQqo6ZIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pQf5RxTW; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cb1k0Uo0"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-27ee214108cso92232445ad.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 05 Oct 2025 11:25:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pQf5RxTW"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-277f0ea6ee6so52410495ad.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 05 Oct 2025 11:25:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759688715; x=1760293515; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1759688718; x=1760293518; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pGrB9wpoGRw4wb/VV8boqf4ZZbV8ujvZqQy8douNpFU=;
-        b=Cb1k0Uo0It61gCSPdDMfP+80+oc9l/oFL8Z/yuHo3YwGYXQocWh0z3oXdmYh3LtHig
-         uJTIBAZMoLwLRPcHcs1hoAaSApB4zQSfx0/UOcHAL7zjvRp/dJV+Hx56ARLLfrUG1xjc
-         247QLjg3B9JybhSxyDvF38p2F9VJEiaYXbe05tI8jdnNBbuwZAarEEvR4O+2obyk9KP6
-         /VaY05tH+4pvo4/9hlxUxNqlSNkCWWqWSoJ1ly3f7xMp5BLjXFn3Rn25blHRA+fTCjQ+
-         mDj2wgAB2+2UdzULR9QFuWguwBifei30ZnyynG1JumQZOYf2LUkn2NvmzB+CG5yKoGCi
-         2sFg==
+        bh=A1sEyHn6hnyRLAXWdXc6uX+CUu0Ko58Z/kC+AsHj6Ww=;
+        b=pQf5RxTWSojrJdT2kGzpQtOTkTOm2NUQBRNY76xIJYNtt1Lu+5MI9fGsHdsv2apLfS
+         qwgPMLAzC8CbJSaW1KMw5hQkIUWcRxQ07dxBb6kPMPQZ2lEL9VtvWjlXTMJdqVbK9D4U
+         rlpho86FlY2JlzL0t7Y0pEOjC96uyMBwNG+4UIsdWEtsQKiNYk20z3KZhRRTQy4i0Bxj
+         85JtblP9vU8DB3yPSDOmzoHM6uI8cFJQpy1y8Bh80i25lteIbC5n3DRoSC/RsF9JJVBc
+         0X/K51aT/hKZSaO1m57m4+eRkX2gmLpPZtscDlHRSd0sWsmWw3ukylnx1emmA8GiyZJj
+         UxlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759688715; x=1760293515;
+        d=1e100.net; s=20230601; t=1759688718; x=1760293518;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pGrB9wpoGRw4wb/VV8boqf4ZZbV8ujvZqQy8douNpFU=;
-        b=Vs8YGj4azh512wxZidvcG3as581h15YVXmutGq7iPwkVPnN4bU8UB4951WWfHK5QYo
-         3WQR1VjHQoELo94ShsCKmLNm1UD3qtAP97jpfGqfKT7QGZVeZo27I9DVjZuPgdFtHXGw
-         5m/AhDvZBz8GKLWg1mRBc1CvCb9HugxdqxE9hPm5K0GC8vhiZIyaSAyvIVJhFV2p8ujk
-         T76MIgcSSGLE6T89y7OgXS7RGc/ynwqLmJsPKBI6LkH4oAbkOfVeyQ6RdM9MTr1kyv8Y
-         fzYqlHZoRAgBjcJJRJG/MVukoXho2TqzGM1z6lwFPpX+U5lRukQOxI4kmyi4Dr0ORzU2
-         Hl/w==
-X-Forwarded-Encrypted: i=1; AJvYcCXXFAoVwgfPvGzDETDZE/3izNiD1PuFgVlQr/0U9BRpIMhAi3O5L+LclnK0wyQaDudTBD/T1YPdsk0ppSWeGcWB@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeQHSjDQEX96TO/22v60REcmblOodiHdmN+Gyw8J3v31Vw6A1z
-	BSMHSnEYp+Y5JYCkLB/ZFXk1ixWK45Mdof+WGPgtmtntYDGkzRQ6H84YHyWj+ZNqgsaTofzUpuL
-	tpfHIqlXkpw==
-X-Google-Smtp-Source: AGHT+IHuTTRLk6nyHFo3u33c5lPkL63Gcmyz1jzNBU2q5+TfJ2opM10Z3AmlL82Ky7TkElo3bLnq5800X+qZ
-X-Received: from plbkn4.prod.google.com ([2002:a17:903:784:b0:267:e964:bc69])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:3d07:b0:268:500:5ec7
- with SMTP id d9443c01a7336-28e9a5b9441mr127956365ad.2.1759688715580; Sun, 05
- Oct 2025 11:25:15 -0700 (PDT)
-Date: Sun,  5 Oct 2025 11:24:22 -0700
+        bh=A1sEyHn6hnyRLAXWdXc6uX+CUu0Ko58Z/kC+AsHj6Ww=;
+        b=iWP9fh6/k7+ocxUMzyJlBREflV8nw7Y5oPvmSQFF9xRvLA9+JfdHuKW6XKhy0gJ42t
+         Oo7hPZMpOWLy9ljH/ly7kP38Kl1Tp26k/jZoY/J/yjN2LnqW5OE41Zb9s9niSF1Prc6a
+         oBcLaoMu435kxw49CZJiXmDw0obAKPL7Zn1QjhbiO1VJC9Wgn+Fz0GcFGteN7lEOsYY8
+         eCyZ14Oxby//ZylqXX7guDZNabXt7y0HCFRQmW4e1FPHq60l/s8T7sbeJ5eNgv6gJeOD
+         l0qGw2IW9yW6+dMsM63UK3blZpUYr1KVuEgCitbVtkH96akreIQcSeJ94gehrHzO/vi6
+         33mg==
+X-Forwarded-Encrypted: i=1; AJvYcCUzWE5xc+5m6TH/UUvEvJJF1vCFEm3ziGENhs1KBterYXCXcsvhMt3YnMVPy3z7qMEXgv5fFdrrrXska4RiZU44@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGOaKcXGrK5+ywPyCI+vCRnMAUvgeo0TAZuTwQumWmFosSrQEq
+	kxcv2m67HH5k9Wg3gyXjkX7Walf3YVGd++o6AtSLR80c/npu2HqupTv8W6bjtAsqTHYEoi+vy2W
+	JS1j3/a7E4A==
+X-Google-Smtp-Source: AGHT+IEJqSApSHd1BhmFoZKe2640Ivz+C2UbgeEfegtwFFBeBPC1PG9Tw96g0Q/q521daG/+L6gEoibM/mJ3
+X-Received: from pjbnl7.prod.google.com ([2002:a17:90b:3847:b0:332:8246:26ae])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4ac4:b0:32b:dfdb:b27f
+ with SMTP id 98e67ed59e1d1-339c2797420mr12552222a91.17.1759688717803; Sun, 05
+ Oct 2025 11:25:17 -0700 (PDT)
+Date: Sun,  5 Oct 2025 11:24:23 -0700
 In-Reply-To: <20251005182430.2791371-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251005182430.2791371-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.0.618.g983fd99d29-goog
-Message-ID: <20251005182430.2791371-20-irogers@google.com>
-Subject: [PATCH v7 19/27] perf evlist: Avoid scanning all PMUs for evlist__new_default
+Message-ID: <20251005182430.2791371-21-irogers@google.com>
+Subject: [PATCH v7 20/27] perf evsel: Improvements to __evsel__match
 From: Ian Rogers <irogers@google.com>
 To: James Clark <james.clark@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,48 +73,48 @@ To: James Clark <james.clark@linaro.org>, Peter Zijlstra <peterz@infradead.org>,
 Cc: Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Rather than wildcard matching the cycles event specify only the core
-PMUs. This avoids potentially loading unnecessary uncore PMUs.
+Ensure both the perf_event_attr and alternate_hw_config are checked in
+the match. Don't mask the config if the perf_event_attr isn't a
+HARDWARE or HW_CACHE event. Add common early exit cases.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/evlist.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ tools/perf/util/evsel.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 80d8387e6b97..e8217efdda53 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -101,16 +101,24 @@ struct evlist *evlist__new_default(void)
- {
- 	struct evlist *evlist = evlist__new();
- 	bool can_profile_kernel;
--	int err;
-+	struct perf_pmu *pmu = NULL;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 56ebefd075f2..ad11cbfcbff1 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1940,16 +1940,19 @@ bool __evsel__match(const struct evsel *evsel, u32 type, u64 config)
+ 	u32 e_type = evsel->core.attr.type;
+ 	u64 e_config = evsel->core.attr.config;
  
- 	if (!evlist)
- 		return NULL;
+-	if (e_type != type) {
+-		return type == PERF_TYPE_HARDWARE && evsel->pmu && evsel->pmu->is_core &&
+-			evsel->alternate_hw_config == config;
+-	}
+-
+-	if ((type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE) &&
+-	    perf_pmus__supports_extended_type())
++	if (e_type == type && e_config == config)
++		return true;
++	if (type != PERF_TYPE_HARDWARE && type != PERF_TYPE_HW_CACHE)
++		return false;
++	if ((e_type == PERF_TYPE_HARDWARE || e_type == PERF_TYPE_HW_CACHE) &&
++		perf_pmus__supports_extended_type())
+ 		e_config &= PERF_HW_EVENT_MASK;
+-
+-	return e_config == config;
++	if (e_type == type && e_config == config)
++		return true;
++	if (type == PERF_TYPE_HARDWARE && evsel->pmu && evsel->pmu->is_core &&
++	    evsel->alternate_hw_config == config)
++		return true;
++	return false;
+ }
  
- 	can_profile_kernel = perf_event_paranoid_check(1);
--	err = parse_event(evlist, can_profile_kernel ? "cycles:P" : "cycles:Pu");
--	if (err) {
--		evlist__delete(evlist);
--		return NULL;
-+
-+	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
-+		char buf[256];
-+		int err;
-+
-+		snprintf(buf, sizeof(buf), "%s/cycles/%s", pmu->name,
-+			 can_profile_kernel ? "P" : "Pu");
-+		err = parse_event(evlist, buf);
-+		if (err) {
-+			evlist__delete(evlist);
-+			return NULL;
-+		}
- 	}
- 
- 	if (evlist->core.nr_entries > 1) {
+ int evsel__read_counter(struct evsel *evsel, int cpu_map_idx, int thread)
 -- 
 2.51.0.618.g983fd99d29-goog
 
