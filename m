@@ -1,176 +1,270 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10C3846F
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Oct 2025 18:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C962376EB;
+	Mon,  6 Oct 2025 18:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759773680; cv=none; b=b0XiHPqBAwvVrfKUnGYstWV4RuvdlqbvxEthAKjBIuytmWVG4V1TOm1BgumyBMIKZDNfVr6EBD4rYtwdJMpBfCP5dvR1H0yArUVOO+Dxbn2tVKUBrXM5/xu7r+BAPph6dqz+w4I/Ipuq6g0nqLCiQesseoVXk1f4lJLvnqSHTmc=
+	t=1759774750; cv=none; b=RQfbPDtjbn/UDIRLUGsEzwYJ1g9Wms8Bds78b9HNZWD/RQSRQ0tUs92siFxWjIMw9u2qckfrFYV4eDOfCpPhVSXX1Xeb6CNPDvuIHd/gS9h/ssNRD758TUX3vV/nAiQQEr3JNzYae+kXAjIIyY36KHCTzllVBoEsV1hRMQ8XKpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759773680; c=relaxed/simple;
-	bh=A6/BJX/rSJ+oEW3Z5FawwJ1mbJY4uAhwOGF2VHEQU3s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S9EoHGZ4Kc8+4zs0oB4KMwthN8i/24Bf6b0OJJKEoYuv4MewQC4bkMVO09xoE66fmOkMZHTh9usAKTKfSjeOvKQSItCZpB27jbehjOOa/yX5IkKYi/0KKzLsSnv91s28s+A4MmgfhPct+dQ4i2W8+EpW9Xc98vL/ovMybUFutwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H9yp2Qq9; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1759774750; c=relaxed/simple;
+	bh=o0BM9Rulk2fLONymVwALWm16NrAkLNqYnt/EXRkq9nM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JdAFu8TJAwO57apLfrMtfJ5j24lXyrKewY2CcfQsyPHq8v1RVC80gBSaYR8LbQAWN2J9fXwtd97/+IEZ8/GpCMW6phhH+Q6eLjOdwCCWpDFwD2BtmC+MPuzvyLhzXuOuRidCJ2m5fUSlVFv9lSsDQJkaltv7SUFhWh4vV9OZvNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J5LGxLsV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H9yp2Qq9"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-27eeafd4882so32005ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 06 Oct 2025 11:01:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759773678; x=1760378478; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z3XSntDDcAtonl22HdbxJ3JujsfuLjYh2Gi8mbDcwjU=;
-        b=H9yp2Qq9+mrU3jl+0bdvEb6ngbpu7a/255YP9Rs+YhcUr4yyBFbqVREVG8zOwXrQU/
-         zMOppazajfTXJ6LgPn779RLu/agu8opoMvI/xvSweT6NAdIxS7Xcd7oqd0gkohrds9vu
-         +3mCjmV/0Q46Z6RznV1gRcFq1gZc77xBvG7sYFiq63XgBhZNDMKuyG2spnf93GkWGjo/
-         ugr2UVUT48EodC9j/NlqC4XJiR2tUEKVFFHo+C+DcKOPI9mbypxYWcBm9DcxD3enIJqb
-         rQREJcAOEGbk80E0u92aJiS9tX9MQoBx3eITgjuYdKNIWoyLdXCJTKSzoj4Jdow2/nmO
-         OTpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759773678; x=1760378478;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z3XSntDDcAtonl22HdbxJ3JujsfuLjYh2Gi8mbDcwjU=;
-        b=tArEKwaNy4BukPwdB/kTbDUish39d+isAeachbYV42F6NdRwKLn0QH5xfMg9TU8f4F
-         +NFdlUGmRr0i/YYVnCjX7cN3zXChnM2DcdLKrOvpaRVbAHvkUzOBrgEw7hzA2eYZBCPQ
-         RlTCJi/b0jzoapB4vWZGyIxDappA5iXdnq+SOQlg63Ui5A4JqC/DHnwWS+SXXQKdS8MH
-         N+7JJHJ0eNlnqLTGaIgsHxIdeHRDhGeIwAlRG75KufXJbBM4LP3c7MFWlvkSOWWwwBmb
-         mBEHBHZqBubLo7+fpXp+5LJr7JioBHeCWBH+ZFWyJ3+8nKbt5pO9u/2lmJkceNBrLt+E
-         Z/SQ==
-X-Gm-Message-State: AOJu0YyI+nKiaEflbg13aB5dAoiayGskY2Xotia2jeGGmUdKYiKbOBTu
-	Rg265AvgvHxb1W7wN9cTANj+AKFs631QGunaxHfBjb1lc3V8+lh1m6xx8jqF0KyhmBGYayI/S+N
-	6ddK54hJyr1SDhQ/9LkYdG9M2WyhTQI9iFTSe0IKK
-X-Gm-Gg: ASbGncvxiLk8j47z9WvoW+PQqRP6D4KERAxlWKfqUNhm1lvlLT8AAfKEu5LQRfO7Y/X
-	g8Nr2SLTAyTyDGC6J/03RZ/XzrJAqK4vrNcuGwh7GOLo55CgyxIn44VXbTTjOIvBBagRkFeMfno
-	GaRVER2LA21+NU9HoEnR0rqBz/A0FMKytti2cXfz4P/Jz7jzzgtINnwHFGWWPbmY27xfF6KDkvt
-	+eTQnvN9YnoT7KOtWOIOq2RQvhvBvqu5ZBReglOWnZkZw3Agl1Ksq0XNYTGQA2DZPT5
-X-Google-Smtp-Source: AGHT+IGYZOz6tdwi/2SqWSVYOeBfbz3o0UKrixnlYK72dl/zu2CNuW3/yxwKF6qJZhnzGqs1I0DYAqAQ09NO0gbbdK8=
-X-Received: by 2002:a17:902:cecf:b0:248:f683:e980 with SMTP id
- d9443c01a7336-28eca39eb6fmr330075ad.2.1759773677003; Mon, 06 Oct 2025
- 11:01:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J5LGxLsV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EA33C4CEFE;
+	Mon,  6 Oct 2025 18:19:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759774749;
+	bh=o0BM9Rulk2fLONymVwALWm16NrAkLNqYnt/EXRkq9nM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=J5LGxLsVscglG0g+KjaUbodNN4mFIj+Zx0Du1U+vT28nno1qK1KCcwIeHDHC6/OnR
+	 YFJlwm4wts27HsTQqFPIA0iqIUoOyLZesaQ/Z9X3QR1Pzo/SGjfw2Y6GpLvmWP5Mzg
+	 9h2uK6F6Wj4mwU3jZA+QWnEkZ1lUu2+6h8at9YbOjUksv1E9nBJ7zU6IugaU6Q2VEg
+	 ghv73kG6b4ljZbCPSeDzcYByyuq67mNlO2UbW1m8s+ieUI6eWUe95jRfZ3cTJNFS/+
+	 2c8tPtQqpTj28TuweG9CLVnvxWZAwk+cRDsNtG0NMGTWfoR1UxPdTyaoMXoB9pkxeK
+	 sjHJyn6lAbUhQ==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Yi Lai <yi1.lai@intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	seanjc@google.com,
+	pbonzini@redhat.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.17-6.12] perf/x86/intel: Add ICL_FIXED_0_ADAPTIVE bit into INTEL_FIXED_BITS_MASK
+Date: Mon,  6 Oct 2025 14:17:40 -0400
+Message-ID: <20251006181835.1919496-8-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251006181835.1919496-1-sashal@kernel.org>
+References: <20251006181835.1919496-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251006175710.1179040-1-mpetlan@redhat.com> <20251006175710.1179040-2-mpetlan@redhat.com>
-In-Reply-To: <20251006175710.1179040-2-mpetlan@redhat.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 6 Oct 2025 11:01:05 -0700
-X-Gm-Features: AS18NWC7X_scpoUlxvdivacuoeaD3LFBX_-PU2TTDhaytOdFOXJpFbemSVq2c4k
-Message-ID: <CAP-5=fXo2+tKbTtNKN8oxiva+rKYB2AMpOCjA4+5xxNagC01UQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] perf tools: Remove /SYSV from no_dso maps
-To: Michael Petlan <mpetlan@redhat.com>
-Cc: linux-perf-users@vger.kernel.org, acme@redhat.com, namhyung@kernel.org, 
-	jmario@redhat.com, jolsa@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.17.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Oct 6, 2025 at 10:57=E2=80=AFAM Michael Petlan <mpetlan@redhat.com>=
- wrote:
->
-> We will need it for upcoming commits. Also adjust the function
-> calls in perf-inject, in order not to break the logic.
->
-> Suggested-by: Jiri Olsa <jolsa@kernel.org>
->
-> Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-> ---
->  tools/perf/builtin-inject.c | 4 ++--
->  tools/perf/util/map.c       | 5 +++--
->  tools/perf/util/map.h       | 6 +++++-
->  3 files changed, 10 insertions(+), 5 deletions(-)
->
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index a114b3fa1bea..cc090da5c445 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -773,7 +773,7 @@ static int tool__inject_build_id(const struct perf_to=
-ol *tool,
->
->         if (is_anon_memory(filename) || flags & MAP_HUGETLB)
->                 return 0;
-> -       if (is_no_dso_memory(filename))
-> +       if (is_no_dso_memory(filename) || is_shared_memory(filename))
->                 return 0;
->
->         if (inject->known_build_ids !=3D NULL &&
-> @@ -813,7 +813,7 @@ static int tool__inject_mmap2_build_id(const struct p=
-erf_tool *tool,
->         /* Return to repipe anonymous maps. */
->         if (is_anon_memory(filename) || flags & MAP_HUGETLB)
->                 return 1;
-> -       if (is_no_dso_memory(filename))
-> +       if (is_no_dso_memory(filename) || is_shared_memory(filename))
->                 return 1;
->
->         if (dso__read_build_id(dso)) {
-> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-> index b46c68c24d1c..6d13b4602970 100644
-> --- a/tools/perf/util/map.c
-> +++ b/tools/perf/util/map.c
-> @@ -133,12 +133,13 @@ struct map *map__new(struct machine *machine, u64 s=
-tart, u64 len,
->         if (ADD_RC_CHK(result, map)) {
->                 char newfilename[PATH_MAX];
->                 struct dso *dso;
-> -               int anon, no_dso, vdso, android;
-> +               int anon, no_dso, vdso, android, shared;
->
->                 android =3D is_android_lib(filename);
->                 anon =3D is_anon_memory(filename) || flags & MAP_HUGETLB;
->                 vdso =3D is_vdso_map(filename);
->                 no_dso =3D is_no_dso_memory(filename);
-> +               shared =3D is_shared_memory(filename);
->                 nsi =3D nsinfo__get(thread__nsinfo(thread));
->
->                 if ((anon || no_dso) && nsi && (prot & PROT_EXEC)) {
-> @@ -174,7 +175,7 @@ struct map *map__new(struct machine *machine, u64 sta=
-rt, u64 len,
->                 assert(!dso__kernel(dso));
->                 map__init(result, start, start + len, pgoff, dso, prot, f=
-lags);
->
-> -               if (anon || no_dso) {
-> +               if (anon || no_dso || shared) {
->                         map->mapping_type =3D MAPPING_TYPE__IDENTITY;
->
->                         /*
-> diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-> index 9cadf533a561..616f32504e46 100644
-> --- a/tools/perf/util/map.h
-> +++ b/tools/perf/util/map.h
-> @@ -258,10 +258,14 @@ static inline int is_anon_memory(const char *filena=
-me)
->  static inline int is_no_dso_memory(const char *filename)
->  {
->         return !strncmp(filename, "[stack", 6) ||
-> -              !strncmp(filename, "/SYSV", 5)  ||
->                !strcmp(filename, "[heap]");
->  }
->
-> +static inline int is_shared_memory(const char *filename)
-> +{
-> +       return !strncmp(filename, "/SYSV", 5);
-> +}
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Shared memory could happen because of two mmaps having the same file
-and offset. Is the mapping shared within or across processes? Perhaps
-there is a clearer and more capable API hiding here.
+[ Upstream commit 2676dbf9f4fb7f6739d1207c0f1deaf63124642a ]
 
-Thanks,
-Ian
+ICL_FIXED_0_ADAPTIVE is missed to be added into INTEL_FIXED_BITS_MASK,
+add it.
 
-> +
->  static inline void map__set_start(struct map *map, u64 start)
->  {
->         RC_CHK_ACCESS(map)->start =3D start;
-> --
-> 2.47.3
->
+With help of this new INTEL_FIXED_BITS_MASK, intel_pmu_enable_fixed() can
+be optimized. The old fixed counter control bits can be unconditionally
+cleared with INTEL_FIXED_BITS_MASK and then set new control bits base on
+new configuration.
+
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Tested-by: Yi Lai <yi1.lai@intel.com>
+Link: https://lore.kernel.org/r/20250820023032.17128-7-dapeng1.mi@linux.intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+
+LLM Generated explanations, may be completely bogus:
+
+**YES**
+
+This commit should definitely be backported to stable kernel trees.
+
+## Extensive Analysis
+
+### Nature of the Bug
+
+This commit fixes a **real and significant bug** in the Intel PMU
+(Performance Monitoring Unit) fixed counter handling. The bug has
+existed since kernel v6.5 when `INTEL_FIXED_BITS_MASK` was introduced in
+commit 10d95a317ec12 (May 2023).
+
+### Technical Details of the Bug
+
+**In arch/x86/include/asm/perf_event.h:18-35:**
+
+The original `INTEL_FIXED_BITS_MASK` was defined as `0xFULL` (binary
+1111), covering only bits 0-3:
+```c
+-#define INTEL_FIXED_BITS_MASK                          0xFULL
+```
+
+However, the mask was missing `ICL_FIXED_0_ADAPTIVE` (bit 32), which has
+existed since 2019 for Ice Lake adaptive PEBS v4 support (commit
+c22497f5838c2). The fix correctly includes all relevant bits:
+```c
++#define INTEL_FIXED_BITS_MASK                                  \
++       (INTEL_FIXED_0_KERNEL | INTEL_FIXED_0_USER |            \
++        INTEL_FIXED_0_ANYTHREAD | INTEL_FIXED_0_ENABLE_PMI |   \
++        ICL_FIXED_0_ADAPTIVE)
+```
+
+**In arch/x86/events/intel/core.c:2844-2896:**
+
+The bug manifests in `intel_pmu_enable_fixed()` at lines 2888-2895. When
+reconfiguring a fixed counter:
+
+**Before the fix:**
+- Line 2888 creates `mask` with only bits 0-3
+- Lines 2890-2893 conditionally add `ICL_FIXED_0_ADAPTIVE` to both
+  `bits` and `mask` only if PEBS is enabled
+- Line 2895 clears bits using the incomplete mask
+- **Problem:** If a counter previously had `ICL_FIXED_0_ADAPTIVE` set
+  but the new configuration doesn't need it, the bit won't be cleared
+  because it's not in the mask
+
+**After the fix:**
+- The mask always includes `ICL_FIXED_0_ADAPTIVE`
+- Line 2890 unconditionally clears all relevant bits (including
+  `ICL_FIXED_0_ADAPTIVE`)
+- Lines 2890-2891 set `ICL_FIXED_0_ADAPTIVE` only when needed
+- The code is cleaner and bug-free
+
+### Impact Analysis
+
+1. **Affected Hardware:** Intel Ice Lake (ICL) and newer processors with
+   adaptive PEBS support
+
+2. **Symptom:** The `ICL_FIXED_0_ADAPTIVE` bit can remain incorrectly
+   set after reconfiguring performance counters, causing:
+   - Incorrect PMU behavior
+   - Adaptive PEBS being enabled when it should be disabled
+   - Performance monitoring data corruption
+
+3. **Severity:** This bug was explicitly identified as **"Bug #3"** in
+   KVM commit 9e985cbf2942a (March 2024), which stated:
+  > "Bug #3 is in perf. intel_pmu_disable_fixed() doesn't clear the
+  upper bits either, i.e. leaves ICL_FIXED_0_ADAPTIVE set, and
+  intel_pmu_enable_fixed() effectively doesn't clear
+  ICL_FIXED_0_ADAPTIVE either. I.e. perf _always_ enables ADAPTIVE
+  counters, regardless of what KVM requests."
+
+4. **Security Context:** KVM had to **completely disable adaptive PEBS
+   support** (with a Cc: stable tag) as a workaround for multiple bugs,
+   including this one. The KVM commit mentioned potential security
+   implications including LBR leaks.
+
+### Why This Should Be Backported
+
+1. ✅ **Fixes an important bug** affecting Intel processors since 2019
+   (Ice Lake)
+2. ✅ **Small, contained change** - only modifies a constant definition
+   and simplifies existing code
+3. ✅ **Low regression risk** - the change makes the mask complete and
+   correct
+4. ✅ **Well-reviewed and tested** - Reviewed-by: Kan Liang, Tested-by:
+   Yi Lai (both from Intel)
+5. ✅ **Addresses known issue** - this was explicitly identified in a
+   previous security-related commit
+6. ✅ **Affects both enable and disable paths** - also fixes
+   `intel_pmu_disable_fixed()` at line 2562 which uses the same mask
+7. ✅ **No architectural changes** - pure bug fix
+8. ✅ **Stable since v6.5** - applies cleanly to all kernels since the
+   mask was introduced
+
+### Dependencies
+
+This fix requires that `INTEL_FIXED_BITS_MASK` exists, which was
+introduced in kernel v6.5. The fix should be backported to all stable
+trees from **v6.5 onwards**.
+
+### Conclusion
+
+This is a textbook example of a commit suitable for stable backporting:
+it fixes a real bug with clear symptoms, is small and low-risk, and has
+been properly reviewed and tested. The fact that it addresses an issue
+severe enough to warrant disabling an entire feature in KVM further
+underscores its importance.
+
+ arch/x86/events/intel/core.c      | 10 +++-------
+ arch/x86/include/asm/perf_event.h |  6 +++++-
+ arch/x86/kvm/pmu.h                |  2 +-
+ 3 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index c2fb729c270ec..af47d266f8064 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2845,8 +2845,8 @@ static void intel_pmu_enable_fixed(struct perf_event *event)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	struct hw_perf_event *hwc = &event->hw;
+-	u64 mask, bits = 0;
+ 	int idx = hwc->idx;
++	u64 bits = 0;
+ 
+ 	if (is_topdown_idx(idx)) {
+ 		struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+@@ -2885,14 +2885,10 @@ static void intel_pmu_enable_fixed(struct perf_event *event)
+ 
+ 	idx -= INTEL_PMC_IDX_FIXED;
+ 	bits = intel_fixed_bits_by_idx(idx, bits);
+-	mask = intel_fixed_bits_by_idx(idx, INTEL_FIXED_BITS_MASK);
+-
+-	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip) {
++	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip)
+ 		bits |= intel_fixed_bits_by_idx(idx, ICL_FIXED_0_ADAPTIVE);
+-		mask |= intel_fixed_bits_by_idx(idx, ICL_FIXED_0_ADAPTIVE);
+-	}
+ 
+-	cpuc->fixed_ctrl_val &= ~mask;
++	cpuc->fixed_ctrl_val &= ~intel_fixed_bits_by_idx(idx, INTEL_FIXED_BITS_MASK);
+ 	cpuc->fixed_ctrl_val |= bits;
+ }
+ 
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 70d1d94aca7e6..ee943bd1595af 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -35,7 +35,6 @@
+ #define ARCH_PERFMON_EVENTSEL_EQ			(1ULL << 36)
+ #define ARCH_PERFMON_EVENTSEL_UMASK2			(0xFFULL << 40)
+ 
+-#define INTEL_FIXED_BITS_MASK				0xFULL
+ #define INTEL_FIXED_BITS_STRIDE			4
+ #define INTEL_FIXED_0_KERNEL				(1ULL << 0)
+ #define INTEL_FIXED_0_USER				(1ULL << 1)
+@@ -48,6 +47,11 @@
+ #define ICL_EVENTSEL_ADAPTIVE				(1ULL << 34)
+ #define ICL_FIXED_0_ADAPTIVE				(1ULL << 32)
+ 
++#define INTEL_FIXED_BITS_MASK					\
++	(INTEL_FIXED_0_KERNEL | INTEL_FIXED_0_USER |		\
++	 INTEL_FIXED_0_ANYTHREAD | INTEL_FIXED_0_ENABLE_PMI |	\
++	 ICL_FIXED_0_ADAPTIVE)
++
+ #define intel_fixed_bits_by_idx(_idx, _bits)			\
+ 	((_bits) << ((_idx) * INTEL_FIXED_BITS_STRIDE))
+ 
+diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+index ad89d0bd60058..103604c4b33b5 100644
+--- a/arch/x86/kvm/pmu.h
++++ b/arch/x86/kvm/pmu.h
+@@ -13,7 +13,7 @@
+ #define MSR_IA32_MISC_ENABLE_PMU_RO_MASK (MSR_IA32_MISC_ENABLE_PEBS_UNAVAIL |	\
+ 					  MSR_IA32_MISC_ENABLE_BTS_UNAVAIL)
+ 
+-/* retrieve the 4 bits for EN and PMI out of IA32_FIXED_CTR_CTRL */
++/* retrieve a fixed counter bits out of IA32_FIXED_CTR_CTRL */
+ #define fixed_ctrl_field(ctrl_reg, idx) \
+ 	(((ctrl_reg) >> ((idx) * INTEL_FIXED_BITS_STRIDE)) & INTEL_FIXED_BITS_MASK)
+ 
+-- 
+2.51.0
+
