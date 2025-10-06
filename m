@@ -1,257 +1,169 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D44D1C84C0
-	for <linux-perf-users@vger.kernel.org>; Mon,  6 Oct 2025 16:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E74F2D8399;
+	Mon,  6 Oct 2025 16:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759767515; cv=none; b=D22+B5WqYOh9iVYdwmAhuPAWX5rJhFab2E4c7FBQq4ja3m8SlG/HtsXUfBtK+RmjabzPUMgs2i87qGAgCriip5Z11mqfs/ako8eg6CL5YdrFvxhd/wFjg/qZ5tVDTF9QKXCLsE8IO0QEAstDlPz5Xx9u015g9fTXuTILR42x8Y8=
+	t=1759767702; cv=none; b=UtO3JdrhRZt4O7K3l68V4WxFED1K4yIx3/w/7kXp0hvwfWBKvn53/Yl0ykwTooMlSaKk3wYyNXRm6xqWIGLkc9Kj3DMvGHHw73JA4KA4FlRVLcEuQ22GDoPoT8NXckkn1O25ht08h2hXBMRzU2IWNhfQwgmofu26w1GX7x9ZEj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759767515; c=relaxed/simple;
-	bh=UCustgtecwlBM6ztXEcDA3DNfiRgPGhRlNblePFRA8k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jomGiBpDpVjvp9pHMOR0uI5QuDBLylYMuZ93zLId48m7IVbuS6Tyf9UOZ6qb9ENK8LQINKtcsKHPDjEQeMJ66/nyqJLe1H8jqGuyqkayjYKR+eYdMJxpZMy3n6d9PuUs4nle1ShC764WgDMFOXkipsjghbYmfoIXcdjD3vimzB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RIqqsOPr; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RIqqsOPr"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-27eeafd4882so474315ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 06 Oct 2025 09:18:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759767513; x=1760372313; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kU0TtrguK7qk4A0QfKZeTDhq/oEex6e4b8DUTkSJDr4=;
-        b=RIqqsOPrB6yY3YdruKckPTXXIEeQVrETNi+0eVEvLJiAxGJJN25Z1H5VbhsWhtQ4EW
-         1fAZ6JberLYWphXdqrvDmDb4iGiv9PB+vCfWSsGLO3EBdIx+9d1bM/5mmYvBzbnyCRYs
-         TtZGTgvO/w6e0tRxn/DNC0EotcO9bPJnlMPo2mxDpiSDJc4EW9MgbswsMq41WTtbNNJO
-         Mpj6T407rIF9YasdiONAqlszwkK6U8akK7ThybvckoyPK8y8SZV65dqLRzr+/p0/V6KT
-         JZN3cMwj3Ab5bUtI4CKhiiccIB7mmEAXQHuwD298xBU0g843s5jdMd4wOroHvfCHEtwd
-         S9xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759767513; x=1760372313;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kU0TtrguK7qk4A0QfKZeTDhq/oEex6e4b8DUTkSJDr4=;
-        b=jFgxCOXVje/eMr3xDYS05ZEUyiCj/gYBYpXMHHEzk0qdSrIOt7NrwLI2fmrdvWF/gm
-         vK8eY0o68n84gc4ods6iY4HIADLnZ6AYemkqYgMjOo2iSTUhwRgzMh1nGqx5uxjMf9pm
-         rSwxODM5dzh9KNwDH0121gyhxutADGngy1Zu9U8L4OwzzENukRnipBkGR26Bqq+x6fQ6
-         cxymfm+8gSvlLFtWNdz00BSBv65bUzGV8clCV7GDwWxFhD5Ag84Le4TKRfnCQ6ws5iyo
-         A8CAD26gg+Na+QtEcuBNRRs71H5xUmXq8jKTMetHLOeDYX2Bpa4cOrCCDtviikeRXdeg
-         i1EA==
-X-Forwarded-Encrypted: i=1; AJvYcCUqyYn7Vd8BiNpQU44MsB/8X1H52iSvtxgWl2llycX7m3H0MWa4ef2ouBDQ3r9A9urSkBYBgT4qn53wUXoPEC9k@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhTqaSjAiuv1BigFNSuRNy14G6unUGSnFOaeUEuVsBStr+zoEG
-	My2cbpcro50+HdVtU2veZfmz9KeafWDkPK4CSOr/9fzxgIgcYNciCOdVHqO6OsAQS9UfxicRprw
-	vSxo19ZiCH8aAYGvqDt2NEkTvPpvynDfRKUWQLQol
-X-Gm-Gg: ASbGncvYZCVJGA3rX0vGup7xDoxVHYNT7B8tqs+9TOz8nexrNxLUuyeP8s9Pro8xQ3h
-	CbyNzmKy2t6ywmwffzncrwb3XJzSsQhdqPxjjyabMhpduEzoJCUbQKLRVX6kgS3YlKByclrlJcB
-	N9r8lTN15XCpGAtJrvwx8Xyq76DnJ9q6qSjCYzjyjS4//cpTml8sKoM0TT48mIMkvTsVwqwmKx9
-	tNubltndWY+ifwLRQTp4LACYzK3uzD9yNLZ81X/npL6+EtAjWg2phJXi5vde6AZqEQ7S4EdDpQJ
-	du4=
-X-Google-Smtp-Source: AGHT+IFh7FR1cqOA0BL2c4ebW6PsrAWsAq/qT+J6YRO2XmDX0dV6b1csiJGP+whB+SIlqKH5Jf+OIZEhYM8Cw2+s8WQ=
-X-Received: by 2002:a17:902:ebd2:b0:274:506d:7fea with SMTP id
- d9443c01a7336-28eabe75c15mr5405225ad.5.1759767513116; Mon, 06 Oct 2025
- 09:18:33 -0700 (PDT)
+	s=arc-20240116; t=1759767702; c=relaxed/simple;
+	bh=8Q7cwgPG2l22cdHPml+9mko6bkVk2uyGrrnIsI+emBo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ebWKinityCtLdw/4QPvMI/dNrAURE28ar/ioLyZ9xNYvm0popxmzgtO29uNqKWbA8JxVZ7n/0wQoHkmYPk2ULlbrUKEdm8q+fUxCt4jirJz98gOBv8xM56Q3uFc33Hxp6dilYXQoEnxWhwu7fiJ082uqGDXSDjSn+JBEg9SjWe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 976051516;
+	Mon,  6 Oct 2025 09:21:31 -0700 (PDT)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0AE133F738;
+	Mon,  6 Oct 2025 09:21:36 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v3 0/9] perf build: Support building with Clang
+Date: Mon, 06 Oct 2025 17:21:22 +0100
+Message-Id: <20251006-perf_build_android_ndk-v3-0-4305590795b2@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251001181229.1010340-1-irogers@google.com> <20251001181229.1010340-2-irogers@google.com>
-In-Reply-To: <20251001181229.1010340-2-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 6 Oct 2025 09:18:22 -0700
-X-Gm-Features: AS18NWB6SllOYuhP7SJZEuNqp_-G3MWb6oWLLffENpykCOYe6rvFtj_-k9a6qMI
-Message-ID: <CAP-5=fVHetc8DqdqxURJm_VtaH6apJKoyVOSpfQrE2ntkEa+4g@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] perf bpf_counter: Fix handling of cpumap fixing hybrid
-To: Thomas Falcon <thomas.falcon@intel.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Song Liu <songliubraving@fb.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Howard Chu <howardchu95@gmail.com>, 
-	Gabriele Monaco <gmonaco@redhat.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	James Clark <james.clark@linaro.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Tengda Wu <wutengda@huaweicloud.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAILs42gC/3XNTQrCMBCG4auUrI3kp8HWlfcQKUlnaoM2KYkGp
+ fTupkXQTZfvB/PMRCIGi5Eci4kETDZa73LIXUHaXrsrUgu5iWBCsZorOmLoGvO0d2i0g+AtNA5
+ uVDFmlDSoq1qRfDwG7Oxrhc+X3L2NDx/e65/El/VLik0yccpoZaTSGgAltCcdhn3rB7KASfwhk
+ m0iIiMCdVkyc8CO8R8yz/MHpk3A6/8AAAA=
+X-Change-ID: 20250915-perf_build_android_ndk-500b53bea895
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>, James Clark <james.clark@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ llvm@lists.linux.dev, linux-riscv@lists.infradead.org, 
+ Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1759767696; l=8424;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=8Q7cwgPG2l22cdHPml+9mko6bkVk2uyGrrnIsI+emBo=;
+ b=era/Wn5yodUf8G/6eSt5+q27j9CLCLY4QnZQ3zTpwI0lPrBGffLBG0rYLftRJb9wkB2/uvw+k
+ NOmc48B2MXRDzsxyQxJ+4tepzbZRBFj9EPNrwY43ajZABV4QdLvNASB
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-On Wed, Oct 1, 2025 at 11:12=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> Don't open evsels on all CPUs, open them just on the CPUs they
-> support. This avoids opening say an e-core event on a p-core and
-> getting a failure - achieve this by getting rid of the "all_cpu_map".
->
-> In install_pe functions don't use the cpu_map_idx as a CPU number,
-> translate the cpu_map_idx, which is a dense index into the cpu_map
-> skipping holes at the beginning, to a proper CPU number.
->
-> Before:
-> ```
-> $ perf stat --bpf-counters -a -e cycles,instructions -- sleep 1
->
->  Performance counter stats for 'system wide':
->
->    <not supported>      cpu_atom/cycles/
->        566,270,672      cpu_core/cycles/
->    <not supported>      cpu_atom/instructions/
->        572,792,836      cpu_core/instructions/           #    1.01  insn =
-per cycle
->
->        1.001595384 seconds time elapsed
-> ```
->
-> After:
-> ```
-> $ perf stat --bpf-counters -a -e cycles,instructions -- sleep 1
->
->  Performance counter stats for 'system wide':
->
->        443,299,201      cpu_atom/cycles/
->      1,233,919,737      cpu_core/cycles/
->        213,634,112      cpu_atom/instructions/           #    0.48  insn =
-per cycle
->      2,758,965,527      cpu_core/instructions/           #    2.24  insn =
-per cycle
->
->        1.001699485 seconds time elapsed
-> ```
->
-> Fixes: 7fac83aaf2ee ("perf stat: Introduce 'bperf' to share hardware PMCs=
- with BPF")
-> Signed-off-by: Ian Rogers <irogers@google.com>
+This series adds support for building perf with Clang, following the
+discussion in [1]. Because the Android NDK uses Clang by default,
+enabling Clang builds naturally covers Android as well.
 
-+Thomas Falcon
+The series is organized as follows:
 
-I think it'd be nice to get this quite major fix for
---bpf-counters/bperf for hybrid architectures into v6.18 and stable
-builds. Thomas would it be possible for you to give a Tested-by tag
-using the reproduction in the commit message?
+  - Patches 1~2: Fix two bugs found with Clang.
+  - Patches 3~7: Correct CROSS_ARCH, Disable thread safety analysis for
+                 perl header, and dismiss Clang build warnings.
+  - Patches 8~9: Enable Clang in the Makefile and update the
+                 documentation.
 
-Thanks,
-Ian
+Testing:
 
-> ---
->  tools/perf/util/bpf_counter.c        | 26 ++++++++++----------------
->  tools/perf/util/bpf_counter_cgroup.c |  3 ++-
->  2 files changed, 12 insertions(+), 17 deletions(-)
->
-> diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.=
-c
-> index 1c6cb5ea077e..ca5d01b9017d 100644
-> --- a/tools/perf/util/bpf_counter.c
-> +++ b/tools/perf/util/bpf_counter.c
-> @@ -336,6 +336,7 @@ static int bpf_program_profiler__install_pe(struct ev=
-sel *evsel, int cpu_map_idx
->  {
->         struct bpf_prog_profiler_bpf *skel;
->         struct bpf_counter *counter;
-> +       int cpu =3D perf_cpu_map__cpu(evsel->core.cpus, cpu_map_idx).cpu;
->         int ret;
->
->         list_for_each_entry(counter, &evsel->bpf_counter_list, list) {
-> @@ -343,7 +344,7 @@ static int bpf_program_profiler__install_pe(struct ev=
-sel *evsel, int cpu_map_idx
->                 assert(skel !=3D NULL);
->
->                 ret =3D bpf_map_update_elem(bpf_map__fd(skel->maps.events=
-),
-> -                                         &cpu_map_idx, &fd, BPF_ANY);
-> +                                         &cpu, &fd, BPF_ANY);
->                 if (ret)
->                         return ret;
->         }
-> @@ -451,7 +452,6 @@ static int bperf_check_target(struct evsel *evsel,
->         return 0;
->  }
->
-> -static struct perf_cpu_map *all_cpu_map;
->  static __u32 filter_entry_cnt;
->
->  static int bperf_reload_leader_program(struct evsel *evsel, int attr_map=
-_fd,
-> @@ -495,7 +495,7 @@ static int bperf_reload_leader_program(struct evsel *=
-evsel, int attr_map_fd,
->          * following evsel__open_per_cpu call
->          */
->         evsel->leader_skel =3D skel;
-> -       evsel__open_per_cpu(evsel, all_cpu_map, -1);
-> +       evsel__open(evsel, evsel->core.cpus, evsel->core.threads);
->
->  out:
->         bperf_leader_bpf__destroy(skel);
-> @@ -533,12 +533,6 @@ static int bperf__load(struct evsel *evsel, struct t=
-arget *target)
->         if (bperf_check_target(evsel, target, &filter_type, &filter_entry=
-_cnt))
->                 return -1;
->
-> -       if (!all_cpu_map) {
-> -               all_cpu_map =3D perf_cpu_map__new_online_cpus();
-> -               if (!all_cpu_map)
-> -                       return -1;
-> -       }
-> -
->         evsel->bperf_leader_prog_fd =3D -1;
->         evsel->bperf_leader_link_fd =3D -1;
->
-> @@ -656,9 +650,10 @@ static int bperf__load(struct evsel *evsel, struct t=
-arget *target)
->  static int bperf__install_pe(struct evsel *evsel, int cpu_map_idx, int f=
-d)
->  {
->         struct bperf_leader_bpf *skel =3D evsel->leader_skel;
-> +       int cpu =3D perf_cpu_map__cpu(evsel->core.cpus, cpu_map_idx).cpu;
->
->         return bpf_map_update_elem(bpf_map__fd(skel->maps.events),
-> -                                  &cpu_map_idx, &fd, BPF_ANY);
-> +                                  &cpu, &fd, BPF_ANY);
->  }
->
->  /*
-> @@ -667,13 +662,12 @@ static int bperf__install_pe(struct evsel *evsel, i=
-nt cpu_map_idx, int fd)
->   */
->  static int bperf_sync_counters(struct evsel *evsel)
->  {
-> -       int num_cpu, i, cpu;
-> +       struct perf_cpu cpu;
-> +       int idx;
-> +
-> +       perf_cpu_map__for_each_cpu(cpu, idx, evsel->core.cpus)
-> +               bperf_trigger_reading(evsel->bperf_leader_prog_fd, cpu.cp=
-u);
->
-> -       num_cpu =3D perf_cpu_map__nr(all_cpu_map);
-> -       for (i =3D 0; i < num_cpu; i++) {
-> -               cpu =3D perf_cpu_map__cpu(all_cpu_map, i).cpu;
-> -               bperf_trigger_reading(evsel->bperf_leader_prog_fd, cpu);
-> -       }
->         return 0;
->  }
->
-> diff --git a/tools/perf/util/bpf_counter_cgroup.c b/tools/perf/util/bpf_c=
-ounter_cgroup.c
-> index ed6a29b106b4..690be3ce3e11 100644
-> --- a/tools/perf/util/bpf_counter_cgroup.c
-> +++ b/tools/perf/util/bpf_counter_cgroup.c
-> @@ -186,7 +186,8 @@ static int bperf_cgrp__load(struct evsel *evsel,
->  }
->
->  static int bperf_cgrp__install_pe(struct evsel *evsel __maybe_unused,
-> -                                 int cpu __maybe_unused, int fd __maybe_=
-unused)
-> +                                 int cpu_map_idx __maybe_unused,
-> +                                 int fd __maybe_unused)
->  {
->         /* nothing to do */
->         return 0;
-> --
-> 2.51.0.618.g983fd99d29-goog
->
+Tested with linux-tools-container-builds [2], which based on Arnaldo's
+build test container but with several fixes for cross building with
+Clang:
+
+  - All clang native builds on x86_64 have passed.
+  - The cross builds for arm64/mips/mips64/mipsel/riscv64 have passed.
+
+Only a pity thing is I cannot build successfully with clang for
+ubuntu:20.04-x-powerpc64el (in below log, it only builds with GCC).
+The cross config does not work well on Ubuntu 20.04 due to failure
+"No gnu/libc-version.h found, please install glibc-dev[el]". I confirmed
+that powerpc64el cross build can make success on Ubuntu 24.04, the
+failure on Ubuntu 20.04 should not be caused by perf build.
+
+  Subject: tools build test for http://localhost/perf/perf-6.17.0-rc6.tar.xz 
+
+     1   201.44 alpine:3.16                   : Ok   gcc (Alpine 11.2.1_git20220219) 11.2.1 20220219 , Alpine clang version 13.0.1 flex 2.6.4
+     2   154.82 alpine:3.17                   : Ok   gcc (Alpine 12.2.1_git20220924-r4) 12.2.1 20220924 , Alpine clang version 15.0.7 flex 2.6.4
+     3   136.07 alpine:3.18                   : Ok   gcc (Alpine 12.2.1_git20220924-r10) 12.2.1 20220924 , Alpine clang version 16.0.6 flex 2.6.4
+     4   150.21 alpine:3.19                   : Ok   gcc (Alpine 13.2.1_git20231014) 13.2.1 20231014 , Alpine clang version 17.0.5 flex 2.6.4
+     5   143.50 alpine:3.20                   : Ok   gcc (Alpine 13.2.1_git20240309) 13.2.1 20240309 , Alpine clang version 17.0.6 flex 2.6.4
+     6   146.08 amazonlinux:2023              : Ok   gcc (GCC) 11.5.0 20240719 (Red Hat 11.5.0-5) , clang version 15.0.7 (AWS 15.0.7-3.amzn2023.0.4) flex 2.6.4
+     7   147.19 amazonlinux:devel             : Ok   gcc (GCC) 11.3.1 20221121 (Red Hat 11.3.1-4) , clang version 15.0.6 (Amazon Linux 15.0.6-3.amzn2023.0.2) flex 2.6.4
+     8   117.92 debian:11                     : Ok   gcc (Debian 10.2.1-6) 10.2.1 20210110 , Debian clang version 13.0.1-6~deb11u1 flex 2.6.4
+     9   121.54 debian:12                     : Ok   gcc (Debian 12.2.0-14+deb12u1) 12.2.0 , Debian clang version 14.0.6 flex 2.6.4
+    10   128.64 debian:experimental           : Ok   gcc (Debian 15.2.0-4) 15.2.0 , Debian clang version 19.1.7 (7) flex 2.6.4
+    11    96.47 debian:experimental-x-arm64   : Ok   aarch64-linux-gnu-gcc (Debian 15.2.0-4) 15.2.0 , Debian clang version 19.1.7 (7) flex 2.6.4
+    12    72.89 debian:experimental-x-mips    : Ok   mips-linux-gnu-gcc (Debian 14.2.0-13) 14.2.0 , Debian clang version 19.1.7 (7) flex 2.6.4
+    13    73.31 debian:experimental-x-mips64  : Ok   mips64-linux-gnuabi64-gcc (Debian 14.2.0-13) 14.2.0 , Debian clang version 19.1.7 (7) flex 2.6.4
+    14    71.69 debian:experimental-x-mipsel  : Ok   mipsel-linux-gnu-gcc (Debian 14.2.0-13) 14.2.0 , Debian clang version 19.1.7 (7) flex 2.6.4
+    15   151.92 fedora:35                     : Ok   gcc (GCC) 11.3.1 20220421 (Red Hat 11.3.1-3) , clang version 13.0.1 (Fedora 13.0.1-1.fc35) flex 2.6.4
+    16   146.99 fedora:36                     : Ok   gcc (GCC) 12.2.1 20221121 (Red Hat 12.2.1-4) , clang version 14.0.5 (Fedora 14.0.5-2.fc36) flex 2.6.4
+    17   139.58 fedora:37                     : Ok   gcc (GCC) 12.3.1 20230508 (Red Hat 12.3.1-1) , clang version 15.0.7 (Fedora 15.0.7-2.fc37) flex 2.6.4
+    18   142.00 fedora:38                     : Ok   gcc (GCC) 13.2.1 20240316 (Red Hat 13.2.1-7) , clang version 16.0.6 (Fedora 16.0.6-4.fc38) flex 2.6.4
+    19   140.18 fedora:39                     : Ok   gcc (GCC) 13.3.1 20240913 (Red Hat 13.3.1-3) , clang version 17.0.6 (Fedora 17.0.6-2.fc39) flex 2.6.4
+    20   139.38 fedora:40                     : Ok   gcc (GCC) 14.2.1 20240912 (Red Hat 14.2.1-3) , clang version 18.1.8 (Fedora 18.1.8-2.fc40) flex 2.6.4
+    21   136.26 fedora:41                     : Ok   gcc (GCC) 14.3.1 20250808 (Red Hat 14.3.1-3) , clang version 19.1.7 (Fedora 19.1.7-5.fc41) flex 2.6.4
+    22   135.38 fedora:42                     : Ok   gcc (GCC) 15.2.1 20250808 (Red Hat 15.2.1-1) , clang version 20.1.8 (Fedora 20.1.8-4.fc42) flex 2.6.4
+    23   127.55 fedora:rawhide                : Ok   gcc (GCC) 15.2.1 20250924 (Red Hat 15.2.1-2) , clang version 21.1.2 (Fedora 21.1.2-1.fc44) flex 2.6.4
+    24   180.17 opensuse:15.4                 : Ok   gcc (SUSE Linux) 7.5.0 , clang version 15.0.7 flex 2.6.4
+    25   169.40 opensuse:15.5                 : Ok   gcc (SUSE Linux) 7.5.0 , clang version 15.0.7 flex 2.6.4
+    26   167.36 opensuse:15.6                 : Ok   gcc (SUSE Linux) 7.5.0 , clang version 17.0.6 flex 2.6.4
+    27   154.82 opensuse:tumbleweed           : Ok   gcc (SUSE Linux) 15.2.0 , clang version 21.1.2 flex 2.6.4
+    28   145.89 oraclelinux:8                 : Ok   gcc (GCC) 8.5.0 20210514 (Red Hat 8.5.0-28.0.1) , clang version 19.1.7 ( 19.1.7-2.module+el8.10.0+90583+7e562d96) flex 2.6.1
+    29   139.68 oraclelinux:9                 : Ok   gcc (GCC) 11.5.0 20240719 (Red Hat 11.5.0-5.0.1) , clang version 19.1.7 ( 19.1.7-2.el9) flex 2.6.4
+    30    40.17 ubuntu:20.04                  : Ok   gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0  flex 2.6.4
+    31    20.83 ubuntu:20.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu 10.5.0-1ubuntu1~20.04) 10.5.0  flex 2.6.4
+    32   127.75 ubuntu:22.04                  : Ok   gcc (Ubuntu 11.4.0-1ubuntu1~22.04.2) 11.4.0 , Ubuntu clang version 14.0.0-1ubuntu1.1 flex 2.6.4
+    33    92.25 ubuntu:22.04-x-riscv64        : Ok   riscv64-linux-gnu-gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0 , Ubuntu clang version 14.0.0-1ubuntu1.1 flex 2.6.4
+    34   126.64 ubuntu:24.04                  : Ok   gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0 , Ubuntu clang version 18.1.3 (1ubuntu1) flex 2.6.4
+    35   130.95 ubuntu:25.04                  : Ok   gcc (Ubuntu 14.2.0-19ubuntu2) 14.2.0 , Ubuntu clang version 20.1.2 (0ubuntu1) flex 2.6.4
+
+[1] https://lore.kernel.org/linux-perf-users/20240715143342.52236-1-leo.yan@arm.com/
+[2] https://github.com/Leo-Yan/linux-tools-container-builds/tree/fix-riscv64-cross-build
+
+---
+Changes in v3:
+- Fixed build failure with musl lib.
+- Disabled thread safety analysis for perl head.
+- Link to v2: https://lore.kernel.org/r/20250930-perf_build_android_ndk-v2-0-2ea440b7ef01@arm.com
+
+Changes in v2:
+- Dropped the patch for dismissing warning in bpftool.
+- Refined the document. (Ian)
+- Link to v1: https://lore.kernel.org/r/20250925-perf_build_android_ndk-v1-0-8b35aadde3dc@arm.com
+
+---
+Leo Yan (9):
+      tools build: Align warning options with perf
+      perf python: split Clang options when invoking Popen
+      perf build: Correct CROSS_ARCH for clang
+      perf build: Disable thread safety analysis for perl header
+      perf test coresight: Dismiss clang warning for memcpy thread
+      perf test coresight: Dismiss clang warning for thread loop
+      perf test coresight: Dismiss clang warning for unroll loop thread
+      perf build: Support build with clang
+      perf docs: Document building with Clang
+
+ tools/build/feature/Makefile                       |  6 +-
+ tools/perf/Documentation/Build.txt                 | 15 ++++
+ tools/perf/Documentation/android.txt               | 80 ++--------------------
+ tools/perf/Makefile.config                         | 33 ++++++++-
+ tools/perf/Makefile.perf                           |  2 +-
+ tools/perf/scripts/perl/Perf-Trace-Util/Build      |  2 +-
+ .../shell/coresight/memcpy_thread/memcpy_thread.c  |  2 +
+ .../shell/coresight/thread_loop/thread_loop.c      |  4 +-
+ .../unroll_loop_thread/unroll_loop_thread.c        |  4 +-
+ tools/perf/util/scripting-engines/Build            |  2 +-
+ tools/perf/util/setup.py                           |  5 +-
+ 11 files changed, 70 insertions(+), 85 deletions(-)
+---
+base-commit: c17dda8013495d8132c976cbf349be9949d0fbd1
+change-id: 20250915-perf_build_android_ndk-500b53bea895
+
+Best regards,
+-- 
+Leo Yan <leo.yan@arm.com>
+
