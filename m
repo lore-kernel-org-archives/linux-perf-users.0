@@ -1,47 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576E82DECC2;
-	Mon,  6 Oct 2025 18:19:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8B02DF15D;
+	Mon,  6 Oct 2025 18:19:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759774759; cv=none; b=WmgUn5wGy0poIu5md9eDOCf8JEPv/vPESpVyjCzJ0WTF6MeKrCfdt27oH6GO82vFN6coyjOxjppvrpuxThEC80ukMtFa4/GQgDjS6/C0A/oLHO3ylg/3J6EV42rtlxprbtbMAoa+7EJzUb4aQmAVOHmUEvFomUKntapSTFzPUao=
+	t=1759774762; cv=none; b=pmxbk9cQ7bMarxFBJASCXxu5rYg6gbkPrfy2O7BHUvkyW59PqN+hrL0GabRMzvZyDNqyR56CU/S5n3N6j70hF/TrnzlYG6f463zQZuJQH1+R8MoTKnKsPc7Yv2kpG6iBCJfbaONOb43RRWVkjosdGGn67VkxN985c2atzlHq2yI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759774759; c=relaxed/simple;
-	bh=weF2i9MqU4JBi11QhA9h5h8x9r7QO+eRhNlq3ZkVONQ=;
+	s=arc-20240116; t=1759774762; c=relaxed/simple;
+	bh=4QHmMm0HnvC1UzoVVe0fnLdsw+rEJP3mgwGZEQk65qM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DIhdbi2yIBKDH3EslPLO6vkyUB9wAL7ykiqRhX5ZOniWSf4b+mUhfxDc78e8CO/N8PR0SKxvfVXzF0dPTSAk+q18afheOyvXenb8/2ytTc1mhyhxQFUtN9VsYOrw6iMi+odOHLd+tvndR53eIqWaa2+mzFy/74MCB7qCwrOMxwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i1TkAiwB; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=aUdO4f5d1k8QAgxo2sIZfY5kG+SqgqHyl1QI2Fd0dTgycb8zPndoh4lIpWXgzze/+nSOZwiluB8gAFct0zxBatG/q0HEvP8obmHotNmQWJr2228lp15DU79ig1/hBApbOLxknQvUXpXfY8ApEyJGBqLGj4u7HUSObeWOqvDoz74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ux6Zgv8y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1TkAiwB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D705C4CEF5;
-	Mon,  6 Oct 2025 18:19:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ux6Zgv8y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B52C4C113D0;
+	Mon,  6 Oct 2025 18:19:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759774758;
-	bh=weF2i9MqU4JBi11QhA9h5h8x9r7QO+eRhNlq3ZkVONQ=;
+	s=k20201202; t=1759774761;
+	bh=4QHmMm0HnvC1UzoVVe0fnLdsw+rEJP3mgwGZEQk65qM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=i1TkAiwBNECcS4RVoOE8BIMFtLJpYlCxKhs+o48uFutYGn9kNAmLZy2AobE9qZTpH
-	 jMvHmrucM19bszjkFYtuldvHjISbdR1Wy/z8wQjSKP6ZLbeHRrFP9diV1ailHlzDNN
-	 V9DMXWdMvdZSkW+wfNRpDeq435SU00cJAMGx0ZzUK9Q8qCJwHyPgHZbVU0Sxf/qXcc
-	 JLI9QR4MtXzboJlhT4Es0gc374izI2Sau7X+dPi9XZHQa3rr+mT+0JrV2rTFdP0IiN
-	 p2b0Dgzpjg/RQfYqQCHgTCkGHmTh4HTviv45/1kD29RIouaUrzKPt1bK5c9BauR3wk
-	 WkubnGcl9BLow==
+	b=Ux6Zgv8ydcoo9QTJ/xd0HBf6AklVTsjk0mteTN3kFC8WqurQS8iSqKD6R90sVLJhq
+	 qHZDofc4lU99HRehhx5/MGvCZYNBTQ2BUfpCDwqlmKqvCHRTQBFuTkT/0G8MlFHtco
+	 qFkxpx/kuoENYj3XlFe6AHdsu+UNTLK91KCukxAcJIWFHqo5Fq0+bG0Nglf+IGtUrp
+	 blOBC6RahIjMD9jtFsjmQdFvrEJJvbjlXmZfU8p2n4POzrIfoNbMjOd2gPPqOvEaWr
+	 39+Q52gircHn08HgbQbWvw8mKP2p/a5tBmGYh/DNEvwAVHXBj2HMQe+xct1PfwOqQj
+	 k2QK//ZdPqo3w==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+Cc: Steven Rostedt <rostedt@goodmis.org>,
 	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
 	Sasha Levin <sashal@kernel.org>,
 	mingo@redhat.com,
 	acme@kernel.org,
 	namhyung@kernel.org,
 	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.17-6.1] perf: Have get_perf_callchain() return NULL if crosstask and user are set
-Date: Mon,  6 Oct 2025 14:17:46 -0400
-Message-ID: <20251006181835.1919496-14-sashal@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.17-6.6] perf: Use current->flags & PF_KTHREAD|PF_USER_WORKER instead of current->mm == NULL
+Date: Mon,  6 Oct 2025 14:17:48 -0400
+Message-ID: <20251006181835.1919496-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20251006181835.1919496-1-sashal@kernel.org>
 References: <20251006181835.1919496-1-sashal@kernel.org>
@@ -54,277 +52,171 @@ MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.17.1
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Josh Poimboeuf <jpoimboe@kernel.org>
+From: Steven Rostedt <rostedt@goodmis.org>
 
-[ Upstream commit 153f9e74dec230f2e070e16fa061bc7adfd2c450 ]
+[ Upstream commit 90942f9fac05702065ff82ed0bade0d08168d4ea ]
 
-get_perf_callchain() doesn't support cross-task unwinding for user space
-stacks, have it return NULL if both the crosstask and user arguments are
-set.
+To determine if a task is a kernel thread or not, it is more reliable to
+use (current->flags & (PF_KTHREAD|PF_USER_WORKERi)) than to rely on
+current->mm being NULL.  That is because some kernel tasks (io_uring
+helpers) may have a mm field.
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250820180428.426423415@kernel.org
+Link: https://lore.kernel.org/r/20250820180428.592367294@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
 LLM Generated explanations, may be completely bogus:
 
-## BACKPORT RECOMMENDATION: YES
+Based on my comprehensive analysis, here is my determination:
 
-## COMPREHENSIVE ANALYSIS
+## **Backport Status: YES**
 
-### Executive Summary
-This commit fixes a long-standing correctness and efficiency issue in
-`get_perf_callchain()` by making it return NULL early when attempting
-unsupported cross-task user stack unwinding, rather than wastefully
-allocating and deallocating resources. This is a low-risk bug fix that
-improves both correctness and efficiency.
+### Extensive Analysis:
 
----
+#### **Context and Problem Being Fixed:**
 
-### Code Change Analysis
+This commit addresses a **correctness bug** in how the perf subsystem
+identifies kernel threads. The issue is that the code was using
+`current->mm == NULL` to determine if a task is a kernel thread, but
+this assumption is incorrect for **io_uring helper threads and other
+PF_USER_WORKER threads**, which have a non-NULL mm field despite being
+kernel-side workers.
 
-**What Changed:**
-The commit modifies `kernel/events/callchain.c:get_perf_callchain()` in
-two key ways:
+#### **Evidence from Code Investigation:**
 
-1. **Added early NULL return check** (lines 227-229):
-```c
-+       /* crosstask is not supported for user stacks */
-+       if (crosstask && user && !kernel)
-+               return NULL;
-```
+1. **This is part of a fix series**: I found three related commits in
+   upstream:
+   - `16ed389227651`: "perf: Skip user unwind if the task is a kernel
+     thread" (already being backported to stable as `823d7b9ec8616`)
+   - `d77e3319e3109`: "perf: Simplify get_perf_callchain() user logic"
+     (already in stable as `96681d3b99282`)
+   - `90942f9fac057`: **This commit** - completes the fix by updating
+     remaining locations
 
-2. **Modified user section entry condition** (line 247):
-```c
-- if (user) {
-+       if (user && !crosstask) {
-```
+2. **Historical context**: PF_USER_WORKER was introduced in commit
+   `54e6842d0775b` (March 2023) to handle io_uring and vhost workers
+   that behave differently from regular kernel threads. These threads
+   have mm contexts but shouldn't be treated as user threads for
+   operations like register sampling.
 
-3. **Removed redundant checks** (lines 252-254, 264):
-   - Removed `if (crosstask) goto exit_put;` inside the user section
-   - Removed the now-unnecessary `exit_put:` label
+3. **Real-world impact**: PowerPC already experienced crashes (commit
+   `01849382373b8`) when trying to access pt_regs for PF_IO_WORKER tasks
+   during coredump generation, demonstrating this class of bugs is real.
 
-**Functional Impact:**
-- **Before**: When `crosstask && user && !kernel`, the function would
-  call `get_callchain_entry(&rctx)` to allocate a per-CPU buffer, enter
-  the user path, immediately hit `if (crosstask) goto exit_put;`,
-  deallocate the buffer, and return an "empty" callchain entry.
-- **After**: When `crosstask && user && !kernel`, the function returns
-  NULL immediately without any resource allocation.
+#### **Specific Code Changes Analysis:**
 
----
+1. **kernel/events/callchain.c:247-250** (currently at line 245 in
+   autosel-6.17):
+   - **OLD**: `if (current->mm)` then use `task_pt_regs(current)`
+   - **NEW**: `if (current->flags & (PF_KTHREAD | PF_USER_WORKER))` then
+     skip user unwinding
+   - **Impact**: Prevents perf from attempting to unwind user stack for
+     io_uring helpers
 
-### Historical Context
+2. **kernel/events/core.c:7455** (currently at line 7443 in
+   autosel-6.17):
+   - **OLD**: `!(current->flags & PF_KTHREAD)`
+   - **NEW**: `!(current->flags & (PF_KTHREAD | PF_USER_WORKER))`
+   - **Impact**: Correctly excludes user worker threads from user
+     register sampling
 
-**Origin of crosstask support (2016):**
-Commit `568b329a02f75` by Alexei Starovoitov (Feb 2016) generalized
-`get_perf_callchain()` for BPF usage and added the `crosstask` parameter
-with this explicit comment:
-```c
-/* Disallow cross-task user callchains. */
-```
+3. **kernel/events/core.c:8095** (currently at line 8083 in
+   autosel-6.17):
+   - **OLD**: `if (current->mm != NULL)`
+   - **NEW**: `if (!(current->flags & (PF_KTHREAD | PF_USER_WORKER)))`
+   - **Impact**: Prevents incorrect page table walks for user worker
+     threads in `perf_virt_to_phys()`
 
-The original implementation included `if (crosstask) goto exit_put;` in
-the user path, showing the intent was **always to disallow cross-task
-user stack unwinding**. The reason is clear: cross-task user stack
-unwinding is unsafe because:
-- The target task's user stack memory may not be accessible from the
-  current context
-- It would require complex synchronization and memory access validation
-- Security implications of reading another process's user space stack
+#### **Why This Qualifies for Backporting:**
 
-**Why the old code was problematic:**
-For 9+ years (2016-2025), the function has been allocating resources
-only to immediately deallocate them for the unsupported case. This
-wastes CPU cycles and makes the code harder to understand.
+1. **Fixes a real bug**: Perf incorrectly handles io_uring helper
+   threads, leading to:
+   - Incorrect callchain collection
+   - Wrong register samples
+   - Potential crashes or data corruption when walking page tables
 
----
+2. **Affects widely-used functionality**: io_uring is heavily used in
+   modern applications (databases, proxies, async I/O workloads), and
+   perf profiling of these workloads would hit this bug
 
-### Caller Analysis
+3. **Small and contained**: Only 3 conditional checks changed across 2
+   files - minimal risk
 
-**All callers properly handle NULL returns:**
+4. **Part of an upstream series already being backported**: The first
+   commit in the series (`16ed389227651`) is already marked for stable
+   backport, making this a natural follow-up
 
-1. **kernel/events/core.c:perf_callchain()** (lines 8220):
-```c
-callchain = get_perf_callchain(regs, kernel, user, max_stack, crosstask,
-true);
-return callchain ?: &__empty_callchain;
-```
-Uses the ternary operator to return `&__empty_callchain` when NULL.
+5. **No architectural changes**: Pure bug fix with no API changes or
+   feature additions
 
-2. **kernel/bpf/stackmap.c** (lines 317, 454):
-```c
-/* get_perf_callchain does not support crosstask user stack walking
- - but returns an empty stack instead of NULL.
- */
-if (crosstask && user) {
-    err = -EOPNOTSUPP;
-    goto clear;
-}
-...
-trace = get_perf_callchain(regs, kernel, user, max_depth, crosstask,
-false);
-if (unlikely(!trace))
-    /* couldn't fetch the stack trace */
-    return -EFAULT;
-```
+6. **Low regression risk**: The new flag-based check is more correct
+   than the mm-based check; any behavioral changes would be fixing
+   incorrect behavior
 
-**Key observation:** The BPF code comment explicitly states it expects
-NULL for crosstask+user, but notes the function "returns an empty stack
-instead." This commit **fixes this discrepancy**.
+#### **Verification in Current Tree:**
 
----
+I confirmed that linux-autosel-6.17 still has the old buggy code:
+- Line 7443: Missing PF_USER_WORKER in the check
+- Line 8083: Still uses `current->mm != NULL`
+- callchain.c:245: Still uses `if (current->mm)`
 
-### Risk Assessment
+This confirms the fix is needed and not yet applied.
 
-**Risk Level: VERY LOW**
+#### **Conclusion:**
 
-**Why low risk:**
-1. **Behavioral compatibility**: The functional outcome is identical -
-   both old and new code result in no user stack data being collected
-   for crosstask scenarios
-2. **Caller readiness**: All callers already have NULL-handling code in
-   place
-3. **Resource efficiency**: Only improves performance by avoiding
-   wasteful allocation/deallocation
-4. **No semantic changes**: The "unsupported operation" is still
-   unsupported, just handled more efficiently
-5. **Code simplification**: Removes goto statement and makes control
-   flow clearer
+This is a **clear YES for backporting**. It's a well-understood
+correctness fix for a real bug affecting perf profiling of io_uring
+workloads, with minimal risk and part of an ongoing stable backport
+series.
 
-**Potential concerns addressed:**
-- **Performance impact**: Positive - reduces overhead
-- **Compatibility**: Complete - callers expect this behavior
-- **Edge cases**: The scenario (crosstask user-only callchains) is
-  uncommon in practice, evidenced by the fact this inefficiency went
-  unnoticed for 9 years
-
----
-
-### Bug Fix Classification
-
-**This IS a bug fix, specifically:**
-1. **Correctness bug**: Behavior didn't match documented intent (BPF
-   comment)
-2. **Efficiency bug**: Wasteful resource allocation for unsupported
-   operations
-3. **Code clarity bug**: Goto-based control flow obscured the actual
-   behavior
-
-**Not a security bug**: No security implications, no CVE
-
----
-
-### Series Context
-
-This commit is part of a cleanup series by Josh Poimboeuf:
-1. `e649bcda25b5a` - Remove unused `init_nr` argument (cleanup)
-2. **`153f9e74dec23` - Fix crosstask+user handling (THIS COMMIT - bug
-   fix)**
-3. `d77e3319e3109` - Simplify user logic further (cleanup)
-4. `16ed389227651` - Skip user unwind for kernel threads (bug fix)
-
-**No follow-up fixes required**: No subsequent commits fix issues
-introduced by this change, indicating it's stable.
-
----
-
-### Backporting Considerations
-
-**Arguments FOR backporting:**
-1. ✅ **Fixes long-standing bug**: Corrects 9-year-old inefficiency
-2. ✅ **Low risk**: Minimal code change, all callers prepared
-3. ✅ **Improves correctness**: Aligns behavior with documented intent
-4. ✅ **Performance benefit**: Reduces unnecessary overhead
-5. ✅ **Clean commit**: Well-tested, no follow-up fixes needed
-6. ✅ **Follows stable rules**: Important bugfix, minimal regression
-   risk, confined to perf subsystem
-
-**Arguments AGAINST backporting:**
-1. ⚠️ **No Cc: stable tag**: Maintainers didn't mark it for stable
-2. ⚠️ **Rare scenario**: crosstask user-only callchains are uncommon
-3. ⚠️ **Non-critical**: No user-visible bugs reported
-
-**Verdict:**
-The absence of a `Cc: stable` tag suggests maintainers viewed this as a
-minor fix rather than critical. However, the change meets all technical
-criteria for stable backporting: it's a genuine bug fix, low-risk, and
-improves correctness. The decision likely depends on stable tree
-maintainer philosophy - this is a quality improvement rather than a
-critical user-facing fix.
-
----
-
-### Recommendation: **YES - Backport to stable trees**
-
-**Rationale:**
-While not critical, this commit improves kernel quality with minimal
-risk. It fixes a real (if uncommon) inefficiency, improves code clarity,
-and has no downsides. Stable trees benefit from such quality
-improvements, especially when they're this low-risk.
-
-**Suggested stable versions:** 6.6+, 6.12+, 6.17+ (any stable tree where
-perf events are actively used)
-
-**Dependencies:** Should ideally be backported with the prerequisite
-commit:
-- `e649bcda25b5a` ("perf: Remove get_perf_callchain() init_nr argument")
-  - simplifies the function signature
-
-The follow-up commits (`d77e3319e3109`, `16ed389227651`) are optional
-but recommended for consistency.
-
- kernel/events/callchain.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ kernel/events/callchain.c | 6 +++---
+ kernel/events/core.c      | 4 ++--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-index decff7266cfbd..2609998ca07f1 100644
+index 6c83ad674d010..decff7266cfbd 100644
 --- a/kernel/events/callchain.c
 +++ b/kernel/events/callchain.c
-@@ -224,6 +224,10 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
- 	struct perf_callchain_entry_ctx ctx;
- 	int rctx, start_entry_idx;
+@@ -242,10 +242,10 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
  
-+	/* crosstask is not supported for user stacks */
-+	if (crosstask && user && !kernel)
-+		return NULL;
-+
- 	entry = get_callchain_entry(&rctx);
- 	if (!entry)
- 		return NULL;
-@@ -240,7 +244,7 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
- 		perf_callchain_kernel(&ctx, regs);
- 	}
- 
--	if (user) {
-+	if (user && !crosstask) {
+ 	if (user) {
  		if (!user_mode(regs)) {
- 			if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
+-			if  (current->mm)
+-				regs = task_pt_regs(current);
+-			else
++			if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
  				regs = NULL;
-@@ -249,9 +253,6 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
++			else
++				regs = task_pt_regs(current);
  		}
  
  		if (regs) {
--			if (crosstask)
--				goto exit_put;
--
- 			if (add_mark)
- 				perf_callchain_store_context(&ctx, PERF_CONTEXT_USER);
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 820127536e62b..ea9ff856770be 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7440,7 +7440,7 @@ static void perf_sample_regs_user(struct perf_regs *regs_user,
+ 	if (user_mode(regs)) {
+ 		regs_user->abi = perf_reg_abi(current);
+ 		regs_user->regs = regs;
+-	} else if (!(current->flags & PF_KTHREAD)) {
++	} else if (!(current->flags & (PF_KTHREAD | PF_USER_WORKER))) {
+ 		perf_get_regs_user(regs_user, regs);
+ 	} else {
+ 		regs_user->abi = PERF_SAMPLE_REGS_ABI_NONE;
+@@ -8080,7 +8080,7 @@ static u64 perf_virt_to_phys(u64 virt)
+ 		 * Try IRQ-safe get_user_page_fast_only first.
+ 		 * If failed, leave phys_addr as 0.
+ 		 */
+-		if (current->mm != NULL) {
++		if (!(current->flags & (PF_KTHREAD | PF_USER_WORKER))) {
+ 			struct page *p;
  
-@@ -261,7 +262,6 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
- 		}
- 	}
- 
--exit_put:
- 	put_callchain_entry(rctx);
- 
- 	return entry;
+ 			pagefault_disable();
 -- 
 2.51.0
 
