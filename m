@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542032248AE
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2734D27A135
 	for <linux-perf-users@vger.kernel.org>; Mon,  6 Oct 2025 17:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759773463; cv=none; b=ENaGZxbb9LcNwbrjxMwvByorNBkUAf1LqSj826w5lGxyLW9450CAAxufAu1nIDRDjFHYEMHZIIwwDNwbPHl/1Kl6Cyt8GQGfi/2m+r8y1r5Q4cMMD1ezA8/nDh/3awEWgwzSN/mxidCRcVj1iAeQBzHewdgTyWxYMWBIG6z48A0=
+	t=1759773463; cv=none; b=Cmnj2k4ZcmtXHZmqKL/XHVAeMKcaryXnUAwo9a7e6BQApwSODpnNbapGBy7UbyvLNhaGus5cKdi/qFmKfcakGcP28viQ2UsJK0DAhmsPCVrL6dz7c68CXIEZ0tc/xfvZNJy6og/bR+O701k94ZkgZv612Z3mhR0t25i8dQidSO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1759773463; c=relaxed/simple;
-	bh=t8zZ5OspnjJ69t+/iJjAhC1FhP+39NniT01uLiLSSAg=;
+	bh=yM9WMVlEWmkCR9xre9UdunssF/fmkKugJiD2i4rSqss=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FoIMHpbM3ykNSwKTpJuWxpD1BZE9FUgYVb15AMtkEUy1XW3TlKEHbHxDdw4QipnJyZK7GBQHCabRTA0RzcsPOlxh+ga1HmU35Z5ranteyjr2vODzdrcf9bw+FChJ0ItzEfFl3ary9TziJaZv5aodnkYhc2NtB0mjGRN+I7D1Tp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=We8+QZaW; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=JlBUd7cayz7VcXKraCzs4Tt0j4JPSBjtyAV7gqppwW7bNNwj5iKrE5AKG8zT7gzOacGcn4BmEHhFGv0ItmeO5r3Lzq6bpSMphPod4Vqs1EuIwx4Jcl8SZ6xjb8jnpitfOtY98pw0hu86m8U8GAuWzdwGJw5BSzG0X5HoLeU3ix4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KNH36T/o; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="We8+QZaW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KNH36T/o"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1759773460;
+	s=mimecast20190719; t=1759773461;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5deb51mMV7rTWcAaFItZJsNp2cPy3FQMgCASF2mu0zQ=;
-	b=We8+QZaWf3zDIhdgwb6QUBzG8XZhWHQ3Jk5QzboXMRrj639uXijcVJWzDx1TFQ1g7Aq3DQ
-	NHKIxwidm7FUwezQG4DBhgIWA/R1+FAH5IuhQooHE1eEByZd7lGVflNorIumkAXyHuauCx
-	ZCsezhlZ6zy0rWxLMxgPcNqx+g4WJog=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+	bh=oy0BNnlTgInjvYgYZPqU7dgZ/NLoIjWHwZ8cWFP7qbc=;
+	b=KNH36T/ofmmxbLVSd8gkl3Vr6bF5c5JCqXOJrF+ZEQeTYEAXaziTTt7pfKxxTpwjTtzs7R
+	IkNCrAiIWNKMP2w0qjSZEm2GcY4l80B+BHTK7+4n1Na2lAv/ilosIRqlQpx5pXIXzfqrlK
+	+ntCzvkDAZUAEf59PnDxkhAU2DYlzBI=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-183-NOI7p-r-M1ixfR4p_h38_A-1; Mon,
- 06 Oct 2025 13:57:37 -0400
-X-MC-Unique: NOI7p-r-M1ixfR4p_h38_A-1
-X-Mimecast-MFC-AGG-ID: NOI7p-r-M1ixfR4p_h38_A_1759773455
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-468-a_-xQRZcOEiHfOqdiXjw3w-1; Mon,
+ 06 Oct 2025 13:57:38 -0400
+X-MC-Unique: a_-xQRZcOEiHfOqdiXjw3w-1
+X-Mimecast-MFC-AGG-ID: a_-xQRZcOEiHfOqdiXjw3w_1759773457
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CEFBF18005A2;
-	Mon,  6 Oct 2025 17:57:19 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E444518005A0;
+	Mon,  6 Oct 2025 17:57:24 +0000 (UTC)
 Received: from Carbon.redhat.com (unknown [10.44.22.12])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4544419560A2;
-	Mon,  6 Oct 2025 17:57:15 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A40B719560A2;
+	Mon,  6 Oct 2025 17:57:21 +0000 (UTC)
 From: Michael Petlan <mpetlan@redhat.com>
 To: linux-perf-users@vger.kernel.org,
 	acme@redhat.com,
@@ -49,9 +49,9 @@ To: linux-perf-users@vger.kernel.org,
 	namhyung@kernel.org
 Cc: jmario@redhat.com,
 	jolsa@kernel.org
-Subject: [PATCH 1/4] perf tools: Remove /SYSV from no_dso maps
-Date: Mon,  6 Oct 2025 19:57:07 +0200
-Message-ID: <20251006175710.1179040-2-mpetlan@redhat.com>
+Subject: [PATCH 2/4] perf c2c: Add shared mem flag
+Date: Mon,  6 Oct 2025 19:57:08 +0200
+Message-ID: <20251006175710.1179040-3-mpetlan@redhat.com>
 In-Reply-To: <20251006175710.1179040-1-mpetlan@redhat.com>
 References: <20251006175710.1179040-1-mpetlan@redhat.com>
 Precedence: bulk
@@ -63,88 +63,136 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-We will need it for upcoming commits. Also adjust the function
-calls in perf-inject, in order not to break the logic.
+In perf-c2c report, it was impossible to detect shared memory. That
+may hide important facts about the cache-line usage.
 
+Add an "S" flag to the Shared Data Cache Line Table marking entries
+using shared memory.
+
+Suggested-by: Joe Mario <jmario@redhat.com>
 Suggested-by: Jiri Olsa <jolsa@kernel.org>
 
 Signed-off-by: Michael Petlan <mpetlan@redhat.com>
 ---
- tools/perf/builtin-inject.c | 4 ++--
- tools/perf/util/map.c       | 5 +++--
- tools/perf/util/map.h       | 6 +++++-
- 3 files changed, 10 insertions(+), 5 deletions(-)
+ tools/perf/builtin-c2c.c | 49 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index a114b3fa1bea..cc090da5c445 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -773,7 +773,7 @@ static int tool__inject_build_id(const struct perf_tool *tool,
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 9e9ff471ddd1..ab77ea7b188c 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -19,6 +19,7 @@
+ #include <linux/zalloc.h>
+ #include <asm/bug.h>
+ #include <sys/param.h>
++#include <sys/mman.h>
+ #include "debug.h"
+ #include "builtin.h"
+ #include <perf/cpumap.h>
+@@ -45,6 +46,14 @@
+ #include "pmus.h"
+ #include "string2.h"
+ #include "util/util.h"
++#include "dso.h"
++#include "map.h"
++
++enum shared_mem {
++	SHARED_MEM__UNKNOWN	= -1,
++	SHARED_MEM__NO		=  0,
++	SHARED_MEM__YES		=  1,
++};
  
- 	if (is_anon_memory(filename) || flags & MAP_HUGETLB)
- 		return 0;
--	if (is_no_dso_memory(filename))
-+	if (is_no_dso_memory(filename) || is_shared_memory(filename))
- 		return 0;
+ struct c2c_hists {
+ 	struct hists		hists;
+@@ -74,6 +83,7 @@ struct c2c_hist_entry {
+ 	unsigned long		 paddr_cnt;
+ 	bool			 paddr_zero;
+ 	char			*nodestr;
++	enum shared_mem		 shared_mem;
  
- 	if (inject->known_build_ids != NULL &&
-@@ -813,7 +813,7 @@ static int tool__inject_mmap2_build_id(const struct perf_tool *tool,
- 	/* Return to repipe anonymous maps. */
- 	if (is_anon_memory(filename) || flags & MAP_HUGETLB)
- 		return 1;
--	if (is_no_dso_memory(filename))
-+	if (is_no_dso_memory(filename) || is_shared_memory(filename))
- 		return 1;
- 
- 	if (dso__read_build_id(dso)) {
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index b46c68c24d1c..6d13b4602970 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -133,12 +133,13 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
- 	if (ADD_RC_CHK(result, map)) {
- 		char newfilename[PATH_MAX];
- 		struct dso *dso;
--		int anon, no_dso, vdso, android;
-+		int anon, no_dso, vdso, android, shared;
- 
- 		android = is_android_lib(filename);
- 		anon = is_anon_memory(filename) || flags & MAP_HUGETLB;
- 		vdso = is_vdso_map(filename);
- 		no_dso = is_no_dso_memory(filename);
-+		shared = is_shared_memory(filename);
- 		nsi = nsinfo__get(thread__nsinfo(thread));
- 
- 		if ((anon || no_dso) && nsi && (prot & PROT_EXEC)) {
-@@ -174,7 +175,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
- 		assert(!dso__kernel(dso));
- 		map__init(result, start, start + len, pgoff, dso, prot, flags);
- 
--		if (anon || no_dso) {
-+		if (anon || no_dso || shared) {
- 			map->mapping_type = MAPPING_TYPE__IDENTITY;
- 
- 			/*
-diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-index 9cadf533a561..616f32504e46 100644
---- a/tools/perf/util/map.h
-+++ b/tools/perf/util/map.h
-@@ -258,10 +258,14 @@ static inline int is_anon_memory(const char *filename)
- static inline int is_no_dso_memory(const char *filename)
- {
- 	return !strncmp(filename, "[stack", 6) ||
--	       !strncmp(filename, "/SYSV", 5)  ||
- 	       !strcmp(filename, "[heap]");
+ 	/*
+ 	 * must be at the end,
+@@ -275,6 +285,12 @@ static void compute_stats(struct c2c_hist_entry *c2c_he,
+ 		update_stats(&cstats->load, weight);
  }
  
-+static inline int is_shared_memory(const char *filename)
++static bool map_is_shared_memory(struct map *map)
 +{
-+	return !strncmp(filename, "/SYSV", 5);
++	return map && map->flags & MAP_SHARED && map->dso &&
++		!strncmp(map->dso->name, "/SYSV", sizeof("/SYSV") - 1);
 +}
 +
- static inline void map__set_start(struct map *map, u64 start)
- {
- 	RC_CHK_ACCESS(map)->start = start;
+ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 				union perf_event *event,
+ 				struct perf_sample *sample,
+@@ -1330,6 +1346,28 @@ cl_idx_empty_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 	return scnprintf(hpp->buf, hpp->size, "%*s", width, "");
+ }
+ 
++static void
++c2c_he__resolve_shared_mem(struct c2c_hist_entry *c2c_he)
++{
++	if (c2c_he->shared_mem != SHARED_MEM__UNKNOWN)
++		c2c_he->shared_mem = map_is_shared_memory(c2c_he->he.mem_info->daddr.ms.map);
++}
++
++static int
++cl_shared_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
++				struct hist_entry *he)
++{
++	struct c2c_hist_entry *c2c_he;
++	int width = c2c_width(fmt, hpp, he->hists);
++	char buf[10];
++
++	c2c_he = container_of(he, struct c2c_hist_entry, he);
++	c2c_he__resolve_shared_mem(c2c_he);
++
++	scnprintf(buf, 10, c2c_he->shared_mem == SHARED_MEM__YES ? "S" : " ");
++	return scnprintf(hpp->buf, hpp->size, "%*s", width, buf);
++}
++
+ #define HEADER_LOW(__h)			\
+ 	{				\
+ 		.line[1] = {		\
+@@ -1810,6 +1848,14 @@ static struct c2c_dimension dim_dcacheline_num_empty = {
+ 	.width		= 5,
+ };
+ 
++static struct c2c_dimension dim_dcacheline_shared = {
++	.header		= HEADER_LOW(""),
++	.name		= "cl_shared",
++	.cmp		= empty_cmp,
++	.entry		= cl_shared_entry,
++	.width		= 1,
++};
++
+ static struct c2c_dimension *dimensions[] = {
+ 	&dim_dcacheline,
+ 	&dim_dcacheline_node,
+@@ -1866,6 +1912,7 @@ static struct c2c_dimension *dimensions[] = {
+ 	&dim_dcacheline_idx,
+ 	&dim_dcacheline_num,
+ 	&dim_dcacheline_num_empty,
++	&dim_dcacheline_shared,
+ 	NULL,
+ };
+ 
+@@ -3150,6 +3197,7 @@ static int perf_c2c__report(int argc, const char **argv)
+ 
+ 	if (c2c.display != DISPLAY_SNP_PEER)
+ 		output_str = "cl_idx,"
++			     "cl_shared,"
+ 			     "dcacheline,"
+ 			     "dcacheline_node,"
+ 			     "dcacheline_count,"
+@@ -3165,6 +3213,7 @@ static int perf_c2c__report(int argc, const char **argv)
+ 			     "dram_lcl,dram_rmt";
+ 	else
+ 		output_str = "cl_idx,"
++			     "cl_shared,"
+ 			     "dcacheline,"
+ 			     "dcacheline_node,"
+ 			     "dcacheline_count,"
 -- 
 2.47.3
 
