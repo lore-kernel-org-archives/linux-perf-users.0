@@ -1,202 +1,340 @@
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010033.outbound.protection.outlook.com [52.101.46.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7941265281;
-	Mon,  6 Oct 2025 10:54:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.33
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759748099; cv=fail; b=Tiw/xcREANsIAjwDvvJb8cVHmfUYkoTPHNUch2crt2lW5TQbOIsHTM9JOtSrCQwdEVvVAmcNNskOgcuSP9zySM0SP7n2acnRClo1KE7uBL08hSJYoXsZQ0PKSiakeQgnhO7Vzn+IQiQVHrVvHMosd5gZ/8gLe7WsA22rUTjXJic=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759748099; c=relaxed/simple;
-	bh=JapsIq6usewSiAzwDSEdPq4iuiLsT1RLRsai4BPbCGk=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=c+VUPcW6RD0KXklmHEW3CXrv+8XXoKlKA3VenA48Qr3DTWPqm+K0ZecWBvvrVg6w74aLxXS7OsBRzPv6yNXWpG0JlS3PgtcFWGkqTbfF7UYA8i1vfkrRwhLFNQgSCGi2tzXk9KtBxCgTIB2HmGTr3iIEYSgcFwMHHIZs+C05e/0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Kh8CV2y9; arc=fail smtp.client-ip=52.101.46.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789EA299A85
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 Oct 2025 13:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759756292; cv=none; b=g6hkURjScYf45CVaI8pQLvFQqDb1DH7Z7nRka1koF9IVI0Hm2R5OIflj1G1ST+HzEIkCltjG89I7LDURYH1hqsGg8LBj8RB7wtMoBnwKuWKKtWvS+SQDin+m/Vk/RDwZGyJaSi0qUOwHjGcmyk/+ZuAszHpftWiy2BCqcgo5UvA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759756292; c=relaxed/simple;
+	bh=//5X3czCc4GFayvi8y/0XC+L5+/dta7u7+Xr20bo8p8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=uFOI4kYQSey2iPLgWxU9IfKc0nU4P+wBjgif7GxO7snHMEi36DudBCKaVc4csSWIfxURoFd3smZ7t2rn44rHpJyO2nzIwIGB0OseczL+jCKyWL3USvIIoD38aNMl+GdXsEGdUG0m8XH3d7u2QbhyiEE05RYSw2GexYlYFD0xi20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vDER8XXL; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Kh8CV2y9"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=M++g1K4BwZ4s4ruWyfJ60ippfQ6J2m6wB4hCxu/R05JkW8oW2I34+CtCL7E/oNBktaE34ziXBNSAAcpIphfO6UqPm3ZPx9NvoKglJdauA0Vr4pF05Dd6yK6Ac9Zsru3HqA5jJiGqlyx3sRPP+2HhNtMUMgiSNAfUJqeSHJpPMa4R1YQByVZ+5R9i6Dqff/lDWbrlfBNXvSijEPveMW34PZ4wMJjvK3ANHAnyUiuryYAR9WztoXB09pd5EG2Lg4MhF0Ep/u4bn2PVgHurse1vYKJk3MxKtwGBswb9RmtRlCehCoe9BfQHJWV3PSBT1o6/1nt4QNIZMiCmxIphmUMAjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=s1nqjpc0kpf/wLPccBEP1Drj2WlkwJQmI2HUYoMN6q4=;
- b=pAeHjLfDnuT81drRK47sxCv2NDZ/TgwdAeGpn8/qaWreGTDBsAHFpJ2ADBStShusOBg6Q0MT9Vsh+HoGAbTZMgG1E9x1kbEXTaDnOttqmKGoV5uHawQIqZ2dOuVGuuev8HN0oA7VgXSeYlVd2pcGT6GkYBwp2icC0iID2OADjwRm8fCB23olRlvYUDcq/fSAoL/NFs/IitN803TN8AEn70hc75AkEzRDClfUXAbPyD84B8IMNbeDTg1tQ7smC+wq+iu0joAHpAWR/VwLn65yT08ENCSoEtc+pRZ3wA7agq2McMcE6r8Bk3t2faiFx1GH1uYR8D0Q7+9K7VVBTTsy5A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s1nqjpc0kpf/wLPccBEP1Drj2WlkwJQmI2HUYoMN6q4=;
- b=Kh8CV2y9eIHt3sRer+/E4Mrtntz7ZrodWs6JR9cQtQvv5vfkW0S3n1DC55CCiIX1tzzevOOfp4bc2FlKYXG3ZhjNShcEnVfkKH7y8V4mE1aoIg4iC/+1pJsVnDEb9BEgNuIQlNRaXKDk2xJ66YMIy1M7pBP/1Py7+jUFIFatSfA=
-Received: from BL1PR13CA0258.namprd13.prod.outlook.com (2603:10b6:208:2ba::23)
- by SA5PPFCB4F033D6.namprd12.prod.outlook.com (2603:10b6:80f:fc04::8e2) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9115.19; Mon, 6 Oct
- 2025 10:54:54 +0000
-Received: from BL02EPF0001A102.namprd05.prod.outlook.com
- (2603:10b6:208:2ba:cafe::30) by BL1PR13CA0258.outlook.office365.com
- (2603:10b6:208:2ba::23) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9203.9 via Frontend Transport; Mon, 6
- Oct 2025 10:54:54 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
-Received: from satlexmb08.amd.com (165.204.84.17) by
- BL02EPF0001A102.mail.protection.outlook.com (10.167.241.134) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9203.9 via Frontend Transport; Mon, 6 Oct 2025 10:54:54 +0000
-Received: from SATLEXMB06.amd.com (10.181.40.147) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.17; Mon, 6 Oct
- 2025 03:54:53 -0700
-Received: from satlexmb07.amd.com (10.181.42.216) by SATLEXMB06.amd.com
- (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 6 Oct
- 2025 05:54:53 -0500
-Received: from [10.252.82.201] (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
- Transport; Mon, 6 Oct 2025 03:54:46 -0700
-Message-ID: <2f981591-4159-411c-b530-e884262d1a80@amd.com>
-Date: Mon, 6 Oct 2025 16:24:45 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vDER8XXL"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-42557c5cedcso2541730f8f.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 06 Oct 2025 06:11:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1759756288; x=1760361088; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QWdZlOTz0hyU0moGCRMUBDgT03J3fo3JCAg6LcKFa4w=;
+        b=vDER8XXL6OKvpb0X7/YFMhK5CIr0h6PPiN9qdkfmCsn9UrkXQvwHxkeEsmJKDtzAwt
+         do1+YTW0fErIFSiIKPQsXnyxm5F7Dh4z0P/a2Zzjj/T88rjT4Rz2VZjGaGCY4JjoPqDT
+         Z+a8Yj8rbI4nWMhbjxzWVHP15Tqo97TjxHkdPmrZpCGCyatGUwa7Af/BmmQxjmmyCN7K
+         g3hfmRU9HKaIGtFUXsiIxWxGsOaH/aq8NYZZPCH0T/4Um3806WUuY8vOyLuvbd8R2gFh
+         sdTmMSuqDRV+xH4vWZXwDUvM9yFcnPwWQXnh5OJo6uPXOHb30aaXi+nZQWZUHEGDzTm8
+         gSRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759756288; x=1760361088;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QWdZlOTz0hyU0moGCRMUBDgT03J3fo3JCAg6LcKFa4w=;
+        b=hrlZS5wBz9PkXJEN23f1zhG9CPOm/WM3s0EGDv88n5AVPh+LOArcpsul1WvMRg5DWi
+         SA74xhyfJKclboWnGufvujkaaemrSmprLpHUvafBcXQXGJPUQCt59cPWaq0UzEHsoplu
+         BLepsnzjNb2stM5Ozv1UYkGOYaScMapOuCiBVYQHMlw3aB650D8clxDpMnJ1t89Ku25I
+         46/G69Fm5h6QsJ+pAqH3bzn2sjS+v4XO+92xK3W+bjXdZKlZ3PFxGGDUcS1B5GdMQ/8P
+         dC4b9IwSCFpqSSMyeCeFSowXY+yiMaUKgdIsi7XeNnKb0MUxwRAvqs3AbbycWwGdclYu
+         XDMA==
+X-Gm-Message-State: AOJu0Yy+JgYY1WP+lGHuaIujDnKrzzA9Xg1WTEtSu+4eO3SRqlnHLiB+
+	JjqvYr99kQYKE2DB41zpEgSoj/lPZ4T5AT/sgO7PN2Zy/c4yUY+vwWcjjPqq5elDeOk=
+X-Gm-Gg: ASbGncvgTv7j86lRRBeCqx51TCDAG3W+Aa8ohP/eAoKuCxULACBuegCeOwu07XADlGU
+	xloI5FuObCd0ajmuVSn02jWKtlT1kTEJDmzJJ+N8Eglw6s8iV7QxRCTpBD9Jn44wEHLcGK5tnC2
+	f+jzKDQ1esfsb36slGztXJykZCvUq7jroJSllRIXj4FH6GU8Ms4KUkBMFSrKltyw2LHy8oJgYnR
+	QMdq6+gNIYetimAnP+PGdbQlCLVXbUC5qcKUPTXqRY24LyTwjBCdQVMNuSusZEOLc9ERl1zzjIN
+	nS6QbNTvQgmz0me1FqdOFyBc5Uk49VSpEDj04658r+zbvZJvTS6CDhwytvvSOtcDKodfXU66Rj1
+	W0l6ovOfurrB9JPfZd0PKeU8Dicwo8uQR1p4gXW8Byiu+Lu/9O5QckBl/nUkGVW/QLqs7SkzNeq
+	EtKM2RvQ==
+X-Google-Smtp-Source: AGHT+IEb0/354XDjZL/3xqQvGmMufKoIFM6WNEwTK16lg8oM/ZM+OBF4dUnRkHGBbzVCAaFNAOCCZA==
+X-Received: by 2002:a5d:5f47:0:b0:415:7a6c:6a38 with SMTP id ffacd0b85a97d-425671c3bcdmr7790794f8f.59.1759756287634;
+        Mon, 06 Oct 2025 06:11:27 -0700 (PDT)
+Received: from ho-tower-lan.lan ([185.48.76.109])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e723614c9sm156577245e9.14.2025.10.06.06.11.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Oct 2025 06:11:27 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+Date: Mon, 06 Oct 2025 14:11:07 +0100
+Subject: [PATCH] perf tests: Don't retest sections in "Object code reading"
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: Re: [PATCH v5] perf tools c2c: Add annotation support to perf c2c
- report
-To: Tianyou Li <tianyou.li@intel.com>
-CC: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Ian
- Rogers" <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Kan
- Liang" <kan.liang@linux.intel.com>, <wangyang.guo@intel.com>,
-	<pan.deng@intel.com>, <zhiguo.zhou@intel.com>, <jiebin.sun@intel.com>,
-	<thomas.falcon@intel.com>, <dapeng1.mi@intel.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Ravi
- Bangoria" <ravi.bangoria@amd.com>
-References: <aNo-U0KquRbcJam9@google.com>
- <20250930123900.1445017-1-tianyou.li@intel.com> <aN9ZiPYyYtr332h_@google.com>
-Content-Language: en-US
-In-Reply-To: <aN9ZiPYyYtr332h_@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0001A102:EE_|SA5PPFCB4F033D6:EE_
-X-MS-Office365-Filtering-Correlation-Id: daf8288e-a1f3-4d20-d757-08de04c6c826
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|36860700013|1800799024|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RVJrMVNqa3J5ai9ucVF6TkhaOVF1Y01peGU2a01NRXBncVRMSUxQNnBGWG03?=
- =?utf-8?B?RWUvK0FKU2E3MHdsQ0dQZ3R4VEdGNDhiQVV5M3hCd0dDZkZaMGY2YVVPbEM5?=
- =?utf-8?B?ZnlxVzZveDU4bkh1Q3lzRmpOc3ZhcHo1cXFBbUxXRmRsOEN5YjN5S1ozRGla?=
- =?utf-8?B?TkJ3ZkwvYlFmQXdtSGpISjJnaTFSNWtwenRmODd5ZlBlM0JVNjJneGdKWUp5?=
- =?utf-8?B?Z2k3bWhnQzVaV0JZRDdRVy96VFlxQ0t4NWJydHZLSnVVMGVHOWwrZ1Z3MlVz?=
- =?utf-8?B?d2RMZmVxeEJrQis2UHhSUHFONzFlZVVjckQrSjhVbzBTWkJEZGJVd1Awa0h6?=
- =?utf-8?B?UTFLTDhmWFlZL1JQNzEyeTh4Y1lTdHBXZEhBa3hwZERoK1I0SG0zWERMM2FV?=
- =?utf-8?B?eUtoWmxUcm9HeWpxN3I0M21aQ2JrS0t6MXA2bDA0VFJnQzhqR3VST3NwaEUy?=
- =?utf-8?B?U2ZITEdJVW4rR3RYaFlEQnRVM0hUSUU1UFpVdFRoVDJMSHY5NFNkdG4vRWph?=
- =?utf-8?B?MWJkYmV1SUludGRWM2NxSlVxb2ZRRVJseENYenlyc0ErdnphRjhhRmRsejgr?=
- =?utf-8?B?S2JvbUdtVWVlaUgxMzF2TDNMOEpwK0RtblNFVGYyNEVKbDdUSzNqRGp0SFZw?=
- =?utf-8?B?OGdKZklrSkZGVHVaQkNBdEIwaUYxQmJhNGJ5VVFUYjVsb0Q0Q3ZkNnNjMVFT?=
- =?utf-8?B?b2l1WnJWVTl5WmlhTEcreDNlTFU1dzY1WUl6MUFIaS9GWkVVTjVJWFVCTzcw?=
- =?utf-8?B?UzJNY0kwK214QktzVGh1NXRQUXV4UEd2MERzcFl0SEJPbGhQSjVVTUV0YjNh?=
- =?utf-8?B?WHJUNXRuam9Lb2M5cWkrRGpQQnNmZ3FGeElZZTg1NEYrOHcwL29xMTBUTTlE?=
- =?utf-8?B?LzhoTndWdUJCTEZlQ2JIU05WclprT3FNa2VtU0taaDZCUzZEeWU4Mm1OZDV1?=
- =?utf-8?B?ZnlYeGtmS21CbHdyaFVyb0QweXdEZm4ybjVpeHRLVjR3WldEQ3VBdGRTa0tG?=
- =?utf-8?B?S2F2RzBwL2YwbVo4ZVhNR2ZyWnhrSFVUWjlWQmg3U00yb3lFckdSTWN5cDRh?=
- =?utf-8?B?bTlsVUNFalBMd3J0dUpoN1A1V2RPTjArNEN6dVMyZ1NDKytyNnpHU1JJSUtp?=
- =?utf-8?B?d1pCTWhRWGo3MFZVU3F6d0FOajY1Zm83Q2VlWTc1ckpTUmhZNk1hcGpoalJh?=
- =?utf-8?B?UnRnd1lxN29wY2NXcnNSR0pYbkM5ZmQ2aWFOUnlDYWNZL0MvNTJLa1QxOEF2?=
- =?utf-8?B?bEZvbVpuZHA5M3pBbHh5SlU5SDBkSG1rMVhocDMvODg4Q3ZRaEhqS1BqSGs3?=
- =?utf-8?B?RERVYjhheFlmdlJFRlJGcHh6eTlTOXZyWjJBYjJ1dmJwd3pBbSt5OVZKZ3dj?=
- =?utf-8?B?b0lUaUVtK05LVWJ2eG5tTGl0VGpCZjdoN1ppZkk2UGJ1ZWxTQ3BpMW5lTDJn?=
- =?utf-8?B?U3UvVzdOaS92a0RxWWR4YzRDcDNCbGs3NWdUUi83U0F5MVc1b3dDNzl3Ykpn?=
- =?utf-8?B?bjNTaHExaWpyUHJVeWwyWHlBaTR4TThjbkY5ZFoxTk40UVkyeS9JYkFwSm5p?=
- =?utf-8?B?NWdaYVU5Vk5wSit5cE9JYnhzTkVVWXlwWUJIcE5HUjUvWjNTa0FwdzVIVGQ2?=
- =?utf-8?B?Q3RMTzBSRXUzRzRta1doSHZZRHh6YXQ0RVZRaE5sUG1LeDdxZStWdEJZdVB3?=
- =?utf-8?B?VEw1UDJhdFgyTmVLZHZGTFdobWtZaHFhNFA0QllSVEtZeGJ0R1FNWmhRZ0Vr?=
- =?utf-8?B?eFc0ZFRxU1F0TFhHK2RVdnl5SW5qVVpQUzVkOVV4bWF0SXVXVy9FdnlrVkRI?=
- =?utf-8?B?ODk1ZTJUek5rMSt6dDN2Z0lUci9nQ3JlV0c2cWNFNHNNMWd1d2w0M1RZYmVv?=
- =?utf-8?B?ZDRpVmI4WTFtRStCMDIvQVlqR25aWllNZks0b2YyOXpLa0hYSXBRZlA4QzlO?=
- =?utf-8?B?Skh3MG84UjB3cTJsY3QwQTRQYlZsTTdQaC9KbXFiT3NEcE1hcnUxK1pEVnl3?=
- =?utf-8?B?YTdOTnc4bFIvQlZMTFNObERPZXlXbTErSFhrUFhEQVRnYXZ4SzFaamp3R090?=
- =?utf-8?B?U3JIeGxNZkxVNHFEZGkvMFRiL0Q0Y1dVQTg3aGxGMXUrd3FMdlBlVWtZOVkz?=
- =?utf-8?Q?viPk=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Oct 2025 10:54:54.0773
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: daf8288e-a1f3-4d20-d757-08de04c6c826
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF0001A102.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPFCB4F033D6
+Message-Id: <20251006-james-perf-object-code-reading-v1-1-acab2129747d@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAOq/42gC/x3NQQqDMBBG4avIrDsQxYTaq5QuYvJrR2giExFBv
+ Luhy2/z3kkFKij0ak5S7FIkp4r20VD4+jSDJVZTZzrbGuN48T8UXqET53FB2DjkCFb4KGnmwfU
+ O/dNFO1iqkVUxyfEfvD/XdQNdGnhTcAAAAA==
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.14.0
 
-Hi Tianyou,
+We already only test each kcore map once, but on slow systems
+(particularly with network filesystems) even the non-kcore maps are
+slow. The test can test the same objump output over and over which only
+wastes time. Generalize the skipping mechanism to track all DSOs and
+addresses so that each section is only tested once.
 
-I tested this on an AMD machine and it's working fine. Few minor issues
-I would suggest to address.
+On a fully loaded Arm Juno (simulating a parallel Perf test run) with a
+network filesystem, the original runtime is:
 
->> Perf c2c report currently specified the code address and source:line
->> information in the cacheline browser, while it is lack of annotation
->> support like perf report to directly show the disassembly code for
->> the particular symbol shared that same cacheline. This patches add
->> a key 'a' binding to the cacheline browser which reuse the annotation
->> browser to show the disassembly view for easier analysis of cacheline
->> contentions. By default, the 'TAB' key navigate to the code address
->> where the contentions detected.
+  real  1m51.126s
+  user  0m19.445s
+  sys   1m15.431s
 
-1. Annotate browser title always shows "Samples: 0", which is misleading:
+And the new runtime is:
 
-   Samples: 0  of event 'ibs_op//', 100000 Hz, Event count (approx.): 0
-            ^                                                         ^
-             `--- this                                                 `--- and this
+  real  0m48.873s
+  user  0m8.031s
+  sys   0m32.353s
 
-2. Comment from v3:
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+ tools/perf/tests/code-reading.c | 119 ++++++++++++++++++++++++++++------------
+ 1 file changed, 85 insertions(+), 34 deletions(-)
 
-   > In the annotation browser, we did not need to show the overhead of
-   > particular event type, or switch among events. The only selection
-   > was set to the ip addr where the hist entry indicated in the
-   > cacheline browser. The hist_entry was correctly initialized with
-   > .ms field by addr_location when the mem_info can be successfully
-   > resolved through addr_location.
+diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
+index 9c2091310191..4c9fbf6965c4 100644
+--- a/tools/perf/tests/code-reading.c
++++ b/tools/perf/tests/code-reading.c
+@@ -2,6 +2,7 @@
+ #include <errno.h>
+ #include <linux/kconfig.h>
+ #include <linux/kernel.h>
++#include <linux/rbtree.h>
+ #include <linux/types.h>
+ #include <inttypes.h>
+ #include <stdlib.h>
+@@ -39,11 +40,64 @@
+ #define BUFSZ	1024
+ #define READLEN	128
+ 
+-struct state {
+-	u64 done[1024];
+-	size_t done_cnt;
++struct tested_section {
++	struct rb_node rb_node;
++	u64 addr;
++	char path[PATH_MAX];
+ };
+ 
++static bool tested_code_insert_or_exists(const char *path, u64 addr,
++					 struct rb_root *tested_sections)
++{
++	struct rb_node **node = &tested_sections->rb_node;
++	struct rb_node *parent = NULL;
++	struct tested_section *data;
++
++	while (*node) {
++		int cmp;
++
++		parent = *node;
++		data = rb_entry(*node, struct tested_section, rb_node);
++		cmp = strcmp(path, data->path);
++		if (!cmp) {
++			if (addr < data->addr)
++				cmp = -1;
++			else if (addr > data->addr)
++				cmp = 1;
++			else
++				return true; /* already tested */
++		}
++
++		if (cmp < 0)
++			node = &(*node)->rb_left;
++		else
++			node = &(*node)->rb_right;
++	}
++
++	data = zalloc(sizeof(*data));
++	if (!data)
++		return true;
++
++	data->addr = addr;
++	strlcpy(data->path, path, sizeof(data->path));
++	rb_link_node(&data->rb_node, parent, node);
++	rb_insert_color(&data->rb_node, tested_sections);
++	return false;
++}
++
++static void tested_sections__free(struct rb_root *root)
++{
++	while (!RB_EMPTY_ROOT(root)) {
++		struct rb_node *node = rb_first(root);
++		struct tested_section *ts = rb_entry(node,
++						     struct tested_section,
++						     rb_node);
++
++		rb_erase(node, root);
++		free(ts);
++	}
++}
++
+ static size_t read_objdump_chunk(const char **line, unsigned char **buf,
+ 				 size_t *buf_len)
+ {
+@@ -316,13 +370,15 @@ static void dump_buf(unsigned char *buf, size_t len)
+ }
+ 
+ static int read_object_code(u64 addr, size_t len, u8 cpumode,
+-			    struct thread *thread, struct state *state)
++			    struct thread *thread,
++			    struct rb_root *tested_sections)
+ {
+ 	struct addr_location al;
+ 	unsigned char buf1[BUFSZ] = {0};
+ 	unsigned char buf2[BUFSZ] = {0};
+ 	size_t ret_len;
+ 	u64 objdump_addr;
++	u64 skip_addr;
+ 	const char *objdump_name;
+ 	char decomp_name[KMOD_DECOMP_LEN];
+ 	bool decomp = false;
+@@ -350,6 +406,18 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
+ 		goto out;
+ 	}
+ 
++	/*
++	 * Don't retest the same addresses. objdump struggles with kcore - try
++	 * each map only once even if the address is different.
++	 */
++	skip_addr = dso__is_kcore(dso) ? map__start(al.map) : al.addr;
++	if (tested_code_insert_or_exists(dso__long_name(dso), skip_addr,
++					 tested_sections)) {
++		pr_debug("Already tested %s @ %#"PRIx64" - skipping\n",
++			 dso__long_name(dso), skip_addr);
++		goto out;
++	}
++
+ 	pr_debug("On file address is: %#"PRIx64"\n", al.addr);
+ 
+ 	if (len > BUFSZ)
+@@ -387,24 +455,6 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
+ 		goto out;
+ 	}
+ 
+-	/* objdump struggles with kcore - try each map only once */
+-	if (dso__is_kcore(dso)) {
+-		size_t d;
+-
+-		for (d = 0; d < state->done_cnt; d++) {
+-			if (state->done[d] == map__start(al.map)) {
+-				pr_debug("kcore map tested already");
+-				pr_debug(" - skipping\n");
+-				goto out;
+-			}
+-		}
+-		if (state->done_cnt >= ARRAY_SIZE(state->done)) {
+-			pr_debug("Too many kcore maps - skipping\n");
+-			goto out;
+-		}
+-		state->done[state->done_cnt++] = map__start(al.map);
+-	}
+-
+ 	objdump_name = dso__long_name(dso);
+ 	if (dso__needs_decompress(dso)) {
+ 		if (dso__decompress_kmodule_path(dso, objdump_name,
+@@ -471,9 +521,9 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
+ 	return err;
+ }
+ 
+-static int process_sample_event(struct machine *machine,
+-				struct evlist *evlist,
+-				union perf_event *event, struct state *state)
++static int process_sample_event(struct machine *machine, struct evlist *evlist,
++				union perf_event *event,
++				struct rb_root *tested_sections)
+ {
+ 	struct perf_sample sample;
+ 	struct thread *thread;
+@@ -494,7 +544,8 @@ static int process_sample_event(struct machine *machine,
+ 		goto out;
+ 	}
+ 
+-	ret = read_object_code(sample.ip, READLEN, sample.cpumode, thread, state);
++	ret = read_object_code(sample.ip, READLEN, sample.cpumode, thread,
++			       tested_sections);
+ 	thread__put(thread);
+ out:
+ 	perf_sample__exit(&sample);
+@@ -502,10 +553,11 @@ static int process_sample_event(struct machine *machine,
+ }
+ 
+ static int process_event(struct machine *machine, struct evlist *evlist,
+-			 union perf_event *event, struct state *state)
++			 union perf_event *event, struct rb_root *tested_sections)
+ {
+ 	if (event->header.type == PERF_RECORD_SAMPLE)
+-		return process_sample_event(machine, evlist, event, state);
++		return process_sample_event(machine, evlist, event,
++					    tested_sections);
+ 
+ 	if (event->header.type == PERF_RECORD_THROTTLE ||
+ 	    event->header.type == PERF_RECORD_UNTHROTTLE)
+@@ -525,7 +577,7 @@ static int process_event(struct machine *machine, struct evlist *evlist,
+ }
+ 
+ static int process_events(struct machine *machine, struct evlist *evlist,
+-			  struct state *state)
++			  struct rb_root *tested_sections)
+ {
+ 	union perf_event *event;
+ 	struct mmap *md;
+@@ -537,7 +589,7 @@ static int process_events(struct machine *machine, struct evlist *evlist,
+ 			continue;
+ 
+ 		while ((event = perf_mmap__read_event(&md->core)) != NULL) {
+-			ret = process_event(machine, evlist, event, state);
++			ret = process_event(machine, evlist, event, tested_sections);
+ 			perf_mmap__consume(&md->core);
+ 			if (ret < 0)
+ 				return ret;
+@@ -637,9 +689,7 @@ static int do_test_code_reading(bool try_kcore)
+ 			.uses_mmap   = true,
+ 		},
+ 	};
+-	struct state state = {
+-		.done_cnt = 0,
+-	};
++	struct rb_root tested_sections = RB_ROOT;
+ 	struct perf_thread_map *threads = NULL;
+ 	struct perf_cpu_map *cpus = NULL;
+ 	struct evlist *evlist = NULL;
+@@ -773,7 +823,7 @@ static int do_test_code_reading(bool try_kcore)
+ 
+ 	evlist__disable(evlist);
+ 
+-	ret = process_events(machine, evlist, &state);
++	ret = process_events(machine, evlist, &tested_sections);
+ 	if (ret < 0)
+ 		goto out_put;
+ 
+@@ -793,6 +843,7 @@ static int do_test_code_reading(bool try_kcore)
+ 	perf_thread_map__put(threads);
+ 	machine__delete(machine);
+ 	perf_env__exit(&host_env);
++	tested_sections__free(&tested_sections);
+ 
+ 	return err;
+ }
 
-   It's ideal if we can show sample count/overhead along with the
-   instruction (because that's what users are used to seeing with
-   perf-report->annotate output). I haven't checked the code but is
-   it possible to highlight the instruction by default (Annotate+TAB
-   OR Set the font color to red etc.)? Waiting for user to press the
-   TAB seems counterintuitive esp when instructions are not tagged
-   with overhead.
+---
+base-commit: a22d167ed82505f770340c3a7c257c04ba24dac9
+change-id: 20251006-james-perf-object-code-reading-9646e486d595
 
-        |1340: > callq   0x10f0 <_init+0xf0>
-        |1345: v jmp     0x1376 <thread+0x12d>
-        |1347:   cmpl    $0x1, -0xb0(%rbp)
-        |134e: v jne     0x1364 <thread+0x11b>
-        |1350:   movq    0x2d29(%rip), %rax  # 0x4080 <data>   <=====  Highlight it by default
-        |1357:   addq    $0x1, %rax
-        |135b:   movq    %rax, 0x2d1e(%rip)  # 0x4080 <data>
-        |1362: v jmp     0x1376 <thread+0x12d>
+Best regards,
+-- 
+James Clark <james.clark@linaro.org>
 
-These are not blockers if Namhyung / Arnaldo are okay with current design.
-
-Thanks,
-Ravi
