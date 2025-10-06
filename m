@@ -1,26 +1,27 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51F772DC77A;
-	Mon,  6 Oct 2025 16:21:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C4042DAFBA;
+	Mon,  6 Oct 2025 16:21:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759767710; cv=none; b=o8Cy9jSwq8xvgVxCgMnJaJo+xJAOEgOqDiGR7SxyYPo6uVEO96PTP2JgE2QUaOsCXBKM9Pu8umrHsvB/5prFGIbPS2vPCPXvENdBT/YIcKYFrRZQWGfXrdnSc7I0K9EQAnWIC6n0SX2tuu6AeIW9g//xaE9PQX2cbpd4XluYfCs=
+	t=1759767714; cv=none; b=UEWF1jszal5qahXYkkOVfPjUxHyQd87TfWFieBwFWkvEv4gBcbtKBYGBqYWqfmYrsmzRYpi3PUmaAra29zD8/Bbj/ssPgqHyr2YydeKIoFxKhLNEXZKwkIBJwdhdeMojSkkrlEKOdgqTSGN2x2Lm5CCy6g0vO5o0qoPgh5H0nmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759767710; c=relaxed/simple;
-	bh=m3SmlzRsMKVpO74OXfiVE3r/DuuiN/mWjDes/0cwih0=;
+	s=arc-20240116; t=1759767714; c=relaxed/simple;
+	bh=GGldtNXc0oaGS+19NwZcOJHDnYTkrkTDgLmVwE6QIUo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WsADCAGrxHjta/6pVT7AGVMYQ/cZ8M1Vfspd9j2sq6wSkkvThdCxdOeG6mSyXA3zNQrEP+NuEyVsqNtA3KNC+ts0SYnjcDYbtVf3RqshpBwSvrBbjsyIyM9C6NpzO08LJDsvq4OL6BNxhG9Th39Pp/8Pd1MJWG52kNKqUBJujg0=
+	 In-Reply-To:To:Cc; b=cZWB8sd/WO80mDvvrci09Pu98pGJyCXnheBEvUsKCXGqTAAZYudEqLRNmAGXpplANwOpMbK0lGJmP7NTFuHwoYGL32pPap7AAg4M4fNpE9w6WwCQpGvGAPmVwZHFWEUfmdUbzYHUSFWAEbqGFLlUmzJ5Og3rjCOVEQZ3FFp8eaY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F160C1515;
-	Mon,  6 Oct 2025 09:21:39 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBEB51516;
+	Mon,  6 Oct 2025 09:21:42 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 684C33F738;
-	Mon,  6 Oct 2025 09:21:45 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 353C43F738;
+	Mon,  6 Oct 2025 09:21:48 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Date: Mon, 06 Oct 2025 17:21:25 +0100
-Subject: [PATCH v3 3/9] perf build: Correct CROSS_ARCH for clang
+Date: Mon, 06 Oct 2025 17:21:26 +0100
+Subject: [PATCH v3 4/9] perf build: Disable thread safety analysis for perl
+ header
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,7 +30,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251006-perf_build_android_ndk-v3-3-4305590795b2@arm.com>
+Message-Id: <20251006-perf_build_android_ndk-v3-4-4305590795b2@arm.com>
 References: <20251006-perf_build_android_ndk-v3-0-4305590795b2@arm.com>
 In-Reply-To: <20251006-perf_build_android_ndk-v3-0-4305590795b2@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -45,53 +46,73 @@ Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
  llvm@lists.linux.dev, linux-riscv@lists.infradead.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1759767696; l=1923;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1759767696; l=3588;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=m3SmlzRsMKVpO74OXfiVE3r/DuuiN/mWjDes/0cwih0=;
- b=P/jhnB+7EFmN27NsILJyvdp237PuNM9MUTeMFHprYYaxLA9gJqDTnVDbR8lhu5730vVdvjaG0
- /AvvxHOtS/eBQ59/Cb4kIikDOUVFG9H+euApMwSOZP2VL59wm5Fu2M4
+ bh=GGldtNXc0oaGS+19NwZcOJHDnYTkrkTDgLmVwE6QIUo=;
+ b=BLRY4IQuw/VxHRszeUvciM005PXecD/Bpj2Ky9vCsY5uv8Ib9vT/VmGHqkK1GNR9GAJBP4QN8
+ xANHFi217g6DS5VGu8aRy97l0WLYgW3InDhYVvxol2e1vlfLRqysy/y
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Clang's -dumpmachine outputs "aarch64-unknown-linux-gnu", which does not
-match the MultiArch convention. This prevents the build system from
-detecting installed packages.
+When build with perl5, it reports error:
 
-Fix by stripping the trailing '-' from CROSS_COMPILE when setting
-CROSS_ARCH.
+    In file included from /usr/lib/perl5/5.42.0/x86_64-linux-thread-multi/CORE/perl.h:7933:
+    /usr/lib/perl5/5.42.0/x86_64-linux-thread-multi/CORE/inline.h:298:5: error:
+          mutex 'PL_env_mutex.lock' is not held on every path through
+          here [-Werror,-Wthread-safety-analysis]
+      298 |     ENV_UNLOCK;
+          |     ^
+    /usr/lib/perl5/5.42.0/x86_64-linux-thread-multi/CORE/perl.h:7091:31: note:
+          expanded from macro 'ENV_UNLOCK'
+     7091 | #  define ENV_UNLOCK          PERL_REENTRANT_UNLOCK("env"...
+          |                               ^
+    /usr/lib/perl5/5.42.0/x86_64-linux-thread-multi/CORE/perl.h:6465:7: note:
+          expanded from macro 'PERL_REENTRANT_UNLOCK'
+     6465 |     } STMT_END
+          |       ^
+    /usr/lib/perl5/5.42.0/x86_64-linux-thread-multi/CORE/perl.h:865:28: note:
+          expanded from macro 'STMT_END'
+      865 | #   define STMT_END     while (0)
+          |                                ^
+
+The error is caused by perl header but not perf code, disable thread
+safety analysis if including the header.
+
+Though GCC does not support the thread safety analysis option, this
+negative warning flag is silently ignored by it.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/build/feature/Makefile | 2 +-
- tools/perf/Makefile.perf     | 2 +-
+ tools/perf/scripts/perl/Perf-Trace-Util/Build | 2 +-
+ tools/perf/util/scripting-engines/Build       | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index bd615a708a0aa89ddbe87401f04bd736e384a9c4..214ccaee69181cce1f8e736b85c8dc940efa6c19 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -94,7 +94,7 @@ else
-   # paths are used instead.
-   ifdef CROSS_COMPILE
-     ifeq ($(PKG_CONFIG_LIBDIR)$(PKG_CONFIG_PATH)$(PKG_CONFIG_SYSROOT_DIR),)
--      CROSS_ARCH = $(shell $(CC) -dumpmachine)
-+      CROSS_ARCH = $(notdir $(CROSS_COMPILE:%-=%))
-       PKG_CONFIG_LIBDIR := /usr/local/$(CROSS_ARCH)/lib/pkgconfig/
-       PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/local/lib/$(CROSS_ARCH)/pkgconfig/
-       PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/lib/$(CROSS_ARCH)/pkgconfig/
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index e2150acc2c13325f93a2d5cd4a60b4a6bfeedc94..47bc9d8a91df90535408c427909bcb3f7cd50970 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -194,7 +194,7 @@ else
-   # paths are used instead.
-   ifdef CROSS_COMPILE
-     ifeq ($(PKG_CONFIG_LIBDIR)$(PKG_CONFIG_PATH)$(PKG_CONFIG_SYSROOT_DIR),)
--      CROSS_ARCH = $(shell $(CC) -dumpmachine)
-+      CROSS_ARCH = $(notdir $(CROSS_COMPILE:%-=%))
-       PKG_CONFIG_LIBDIR := /usr/local/$(CROSS_ARCH)/lib/pkgconfig/
-       PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/local/lib/$(CROSS_ARCH)/pkgconfig/
-       PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/lib/$(CROSS_ARCH)/pkgconfig/
+diff --git a/tools/perf/scripts/perl/Perf-Trace-Util/Build b/tools/perf/scripts/perl/Perf-Trace-Util/Build
+index 9b0e5a8b5070f1a1640518fae75557f824ef21ee..01a1a0ed51aefd721b4bc7eba728c29a8ffcd551 100644
+--- a/tools/perf/scripts/perl/Perf-Trace-Util/Build
++++ b/tools/perf/scripts/perl/Perf-Trace-Util/Build
+@@ -2,7 +2,7 @@ perf-util-y += Context.o
+ 
+ CFLAGS_Context.o += $(PERL_EMBED_CCOPTS) -Wno-redundant-decls -Wno-strict-prototypes -Wno-bad-function-cast -Wno-declaration-after-statement -Wno-switch-enum
+ CFLAGS_Context.o += -Wno-unused-parameter -Wno-nested-externs -Wno-undef
+-CFLAGS_Context.o += -Wno-switch-default -Wno-shadow
++CFLAGS_Context.o += -Wno-switch-default -Wno-shadow -Wno-thread-safety-analysis
+ 
+ ifeq ($(CC_NO_CLANG), 1)
+   CFLAGS_Context.o += -Wno-unused-command-line-argument
+diff --git a/tools/perf/util/scripting-engines/Build b/tools/perf/util/scripting-engines/Build
+index 2282fe3772f3bdc35056cb5e66efb3462dc1c2e3..24f087b0cd11b3e06a338c394dc2c650bc2c60b1 100644
+--- a/tools/perf/util/scripting-engines/Build
++++ b/tools/perf/util/scripting-engines/Build
+@@ -3,7 +3,7 @@ ifeq ($(CONFIG_LIBTRACEEVENT),y)
+ endif
+ perf-util-$(CONFIG_LIBPYTHON) += trace-event-python.o
+ 
+-CFLAGS_trace-event-perl.o += $(PERL_EMBED_CCOPTS) -Wno-redundant-decls -Wno-strict-prototypes -Wno-unused-parameter -Wno-shadow -Wno-nested-externs -Wno-undef -Wno-switch-default -Wno-bad-function-cast -Wno-declaration-after-statement -Wno-switch-enum
++CFLAGS_trace-event-perl.o += $(PERL_EMBED_CCOPTS) -Wno-redundant-decls -Wno-strict-prototypes -Wno-unused-parameter -Wno-shadow -Wno-nested-externs -Wno-undef -Wno-switch-default -Wno-bad-function-cast -Wno-declaration-after-statement -Wno-switch-enum -Wno-thread-safety-analysis
+ 
+ # -Wno-declaration-after-statement: The python headers have mixed code with declarations (decls after asserts, for instance)
+ CFLAGS_trace-event-python.o += $(PYTHON_EMBED_CCOPTS) -Wno-redundant-decls -Wno-strict-prototypes -Wno-unused-parameter -Wno-shadow -Wno-deprecated-declarations -Wno-switch-enum -Wno-declaration-after-statement
 
 -- 
 2.34.1
