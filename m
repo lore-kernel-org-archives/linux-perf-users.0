@@ -1,178 +1,148 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9D121767A
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Oct 2025 11:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C9A21767A;
+	Wed,  8 Oct 2025 11:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759922656; cv=none; b=Teb9gV9yIh9z0GvsBpN2s13jNppM5fCJaGn2JBOFLkE6UHdj3ebfuL623//OLe7aMkWa/qlvf/2RDuvjzIQ94y4b8j8EL3IpxKMrj0k6G530fN7rtimJCcyRzLsrAIP3Zg8yl8RZWtIrVjg838wJ/T0U7qmwOMPWBdAJLwf3CLw=
+	t=1759922717; cv=none; b=muAIkla89C++IK+nJ+cvg5l4roDwEvUXLdCdCTQjtFFJEjbdUMPahLejzIBD+7zTDhgQip8yWRv+JTbuf0+QKUzBYL5y2m6So2YDqXqP8/21C0zE6Q5/lVgHnQ6fyq/QXghyNYU8VNesLVgDq535cwWNjGi8+PEAQ2b+P4ex97E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759922656; c=relaxed/simple;
-	bh=EayhN+7SAxWZPlkJfFnjV3AW17hD4MGHUCwlSSCrdcI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kmTUafHV7rHOet1CJWd/Yc1Pls9A4/xkXS9A//VDHWIuJ3O0j7Po7bVjVeZEAtAMdPiECDTsIcv3/800eAlpdTpN9WRkVohIPEBSg7sG51PxK1M3Mgk5msHSyRmnxCwkypWcNGTbSoItnR7lGyKGIJeVsAcJh7+dXehMsI2aECo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Yg29ShjN; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1759922717; c=relaxed/simple;
+	bh=Pi1c1mcg1bKSqManVotiqTLKJTKhwZizggas+Uqb/MI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hrkl2CRsI3IYxSvBnPaWzaDF3tjpqit/RhHW/hl2sC5b279xbrUQiZJiDHa4UNkgv0QB+oSj/p7EqGBq/nq7gHyiBZLT3SjtkCa81V1BO4dr85J0B6vvfDt0pXOCW3AuWGscwykUQJYuxTpZ+Zhynl6l3d98BLQVv2ktZOCiuf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FyLs7KE2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yg29ShjN"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-46b303f7469so47508695e9.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Oct 2025 04:24:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1759922653; x=1760527453; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lxCpWxnbuxzafJAcwUoMWnGeMixIxITv5AqxWDo+5E4=;
-        b=Yg29ShjNrWhE5/Ed190DjwWHiyXsD3Z+NZjN3+KERzJbVAiJfQnIst83tfVFLj6ll3
-         /90thPJN8LfD4c7V7tQoAlLeE4u9ozpt/IAfzN+gwh/sCqPJNM738xyoBAs0x99VZ0cl
-         cn/ceHhPZGuWNHikCFXWwyH2bGt349lMAiLOT/3lsAybk1cg9Ofef6OLTqM6E+/Yit7L
-         ENqMuHDFMotIp5P4qsmCGdR3iDiIsiyygStw9fdtozFgXRZJsKHvTwZggJSYECrxS5yE
-         rzAYcH1Jf6T5PMJtuF+3FQIZHtZwhlcijCZGFWrSs3KDzeH3GkBW6kkU3E4ufopEAFtE
-         3BTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759922653; x=1760527453;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lxCpWxnbuxzafJAcwUoMWnGeMixIxITv5AqxWDo+5E4=;
-        b=nUyg4k24BMMtn2+osvlV15zKJ5YLOXOxDKguzQoJtKRYPAfzDyh/6+2eDsK4JXvQ7V
-         jH6G+oUXDXZ9OTzBJaBYZhTWLNpaekFc1eLgUqd3JhXRTWXDnhWTfW3n3UBVgfZZ8XIb
-         14cw85j8aZPPLZ3WguN2iHyWncZ6XFoYXdgUCxdRJEQ7iI1U1d8ZpyVENep50NZNkzCG
-         wOuEOZr7hOBDfGoe271fgDS3FY6G5XSTZhJvrQW+VNeXgd5tJp/5aMN38L+DCn5szouY
-         gSK0kcpJ9R+fvA1jzFrgGcuvWJYtwBg6RA/Ddu3Sdr69AeniWAc9Uy62PfQEeOMn6IW1
-         5Ldg==
-X-Forwarded-Encrypted: i=1; AJvYcCXqi1zOPZlvJc4n+Za/RowWYL+KsGm6Y8AyWklvL+TFzZwuY7GbR25G/0bbs5s50petANt7zhfmM6SHl7GUennI@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHwExNp5uKj6ecS+c5DbSCT9asAfQ4mDkRuLgnxLzN398wcjd5
-	EUuFlCdivVCQifdEjqarvuaw0poEwxgOhH9Yx/evGFoW5Rtoz+0A98lE7dJUcj4dFhY=
-X-Gm-Gg: ASbGnctExNp5XmvWJVcCyTlptQu3ZdZDyhXEBjOztwsPetSR0ymO+xjv2qfbN/0lEp7
-	8pYP3M6YTd8/wAIwZ4M+4oHXyrBkwWAiDC/g3FTW1cWp5eOSL1mBX4LVt14jMUfwUPm0vtGBDK7
-	AAlsd93e820qgAeyrfnXzBR4ZSSZt7t/lDwSAaPgwIhNix5ajH2piN9MEDNxRTSD6jVP0IF2Uwq
-	0YBeS0N3+s+N132eRTvX9cXODbL9Mk7uDJhRGMekcgl/z8usN8ny2M0D/HGKNaQ8RIa5rUS6Xqm
-	IYuKpZtpx98CtJIc9LyqRFrd1WOt7oK0H6djp5tUfvNm2VE9qwGrrAEJzK1yhk1ZS9bXZjZpIxQ
-	8o7JxtEv1tH/CCWAOoblEAaiQ9bct5tTiLtbhB4KdUtFFxeW9FThWmvTl
-X-Google-Smtp-Source: AGHT+IET88e5SHIR+qMVlh+T1ffTflwo62em8LHiC6PcUpcorGMk44nhcvPUkzM/0cFTMxn3TIg2Cw==
-X-Received: by 2002:a05:600c:350b:b0:46e:6603:2ab0 with SMTP id 5b1f17b1804b1-46fa9aeff11mr23495685e9.24.1759922652901;
-        Wed, 08 Oct 2025 04:24:12 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.76.109])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46fa9c07a83sm37054045e9.6.2025.10.08.04.24.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Oct 2025 04:24:12 -0700 (PDT)
-Message-ID: <296700d2-878b-4eeb-b8cd-0252b2f92479@linaro.org>
-Date: Wed, 8 Oct 2025 12:24:11 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FyLs7KE2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FF0AC4CEF4;
+	Wed,  8 Oct 2025 11:25:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759922717;
+	bh=Pi1c1mcg1bKSqManVotiqTLKJTKhwZizggas+Uqb/MI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FyLs7KE2q9gyTAnfY/iyKn/jhqWkzzorFI63rO8Ssp/K+AzUveSBS4gpgTLRj4ISF
+	 j66k1fLVxrDb3Hnlmt+PhEbCjUJl5qcEiasJvzOuzpWknHPL4wd4kCYN4ck+o0St2I
+	 xDl/pb0X7DdaZaX+afRZZCqfA0Ut3rVoiS6HTguwHz9DkGrvELlzQotf64Fv8JATaS
+	 GiwDW1DGU3I+bAVPBQfQX91/cWXumKrEPxfML0cDMF4o8J9gl7atqSA0ZwVm0i3fG8
+	 anp+bEJotItPxY75jGGmUHz8HG9nGH21WqhTxQ2NfmtlPwtpCoFkszl7KM1d7O8D6E
+	 iGVVd4jveKa1Q==
+Date: Mon, 6 Oct 2025 21:42:10 +0530
+From: Naveen N Rao <naveen@kernel.org>
+To: Manali Shukla <manali.shukla@amd.com>
+Cc: kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-doc@vger.kernel.org, seanjc@google.com, pbonzini@redhat.com, nikunj@amd.com, 
+	bp@alien8.de, peterz@infradead.org, mingo@redhat.com, mizhang@google.com, 
+	thomas.lendacky@amd.com, ravi.bangoria@amd.com, Sandipan.Das@amd.com
+Subject: Re: [PATCH v2 02/12] KVM: x86: Refactor APIC register mask handling
+ to support extended APIC registers
+Message-ID: <koech6fbxpzzao3232pf4ozloanas4irecti2n3win2ow7aikj@3r72i5qyaxd4>
+References: <20250901051656.209083-1-manali.shukla@amd.com>
+ <20250901052118.209133-1-manali.shukla@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf tests record: allow for some difference in cycle
- count in leader sampling test on aarch64
-To: Thomas Richter <tmricht@linux.ibm.com>,
- Anubhav Shelat <ashelat@redhat.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: mpetlan@redhat.com, acme@kernel.org, irogers@google.com,
- linux-perf-users@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- adrian.hunter@intel.com, kan.liang@linux.intel.com,
- dapeng1.mi@linux.intel.com
-References: <20251001195047.541745-2-ashelat@redhat.com>
- <906a9e47-ec19-4897-bbc0-06101d7afd24@linux.ibm.com>
- <CA+G8DhL49FWD47bkbcXYeb9T=AbxNhC-ypqjkNxRnW0JqmYnPw@mail.gmail.com>
- <901d2d1d-647a-4a76-a0ee-d8a687ed3f85@linux.ibm.com>
- <ff157071-e241-4b81-8241-cfd15e5705ef@linaro.org>
- <7a03fb30-87f9-4737-b59a-9f977acc7549@linux.ibm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <7a03fb30-87f9-4737-b59a-9f977acc7549@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250901052118.209133-1-manali.shukla@amd.com>
 
-
-
-On 08/10/2025 11:48 am, Thomas Richter wrote:
-> On 10/7/25 14:34, James Clark wrote:
->>
->>
->> On 07/10/2025 6:47 am, Thomas Richter wrote:
->>> On 10/2/25 15:39, Anubhav Shelat wrote:
->>>> On Oct 1, 2025 at 9:44 PM, Ian Rogers wrote:
->>>>> If cycles is 0 then this will always pass, should this be checking a
->>>> range?
->>>>
->>>> Yes you're right this will be better.
->>>>
->>>> On Oct 2, 2025 at 7:56 AM, Thomas Richter wrote:
->>>>> Can we use a larger range to allow the test to pass?
->>>>
->>>> What range do you get on s390? When I do group measurements using "perf
->>>> record -e "{cycles,cycles}:Su" perf test -w brstack" like in the test I
->>>> always get somewhere between 20 and 50 cycles difference. I haven't tested
->>>> on s390x, but I see no cycle count difference when testing the same command
->>>> on x86. I have observed much larger, more varied differences when using
->>>> software events.
->>>>
->>>> Anubhav
->>>>
->>>
->>> Here is the output of the
->>>
->>>    # perf record  -e "{cycles,cycles}:Su" -- ./perf test -w brstack
->>>    # perf script | grep brstack
->>>
->>> commands:
->>>
->>> perf 1110782 426394.696874:    6885000 cycles:           116fc9e brstack_bench+0xae (/r>
->>> perf 1110782 426394.696875:    1377000 cycles:           116fb98 brstack_foo+0x0 (/root>
->>> perf 1110782 426394.696877:    1377000 cycles:           116fb48 brstack_bar+0x0 (/root>
->>> perf 1110782 426394.696878:    1377000 cycles:           116fc94 brstack_bench+0xa4 (/r>
->>> perf 1110782 426394.696880:    1377000 cycles:           116fc84 brstack_bench+0x94 (/r>
->>> perf 1110782 426394.696881:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
->>> perf 1110782 426394.696883:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
->>> perf 1110782 426394.696884:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
->>> perf 1110782 426394.696885:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
->>> perf 1110782 426394.696887:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
->>> perf 1110782 426394.696888:    1377000 cycles:           116fc98 brstack_bench+0xa8 (/r>
->>> perf 1110782 426394.696890:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
->>> perf 1110782 426394.696891:    1377000 cycles:           116fc9e brstack_bench+0xae (/r>
->>> perf 1110782 426394.703542:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
->>> perf 1110782 426394.703542:   30971975 cycles:           116fb7c brstack_bar+0x34 (/roo>
->>> perf 1110782 426394.703543:    1377000 cycles:           116fc76 brstack_bench+0x86 (/r>
->>> perf 1110782 426394.703545:    1377000 cycles:           116fc06 brstack_bench+0x16 (/r>
->>> perf 1110782 426394.703546:    1377000 cycles:           116fc9e brstack_bench+0xae (/r>
->>> perf 1110782 426394.703547:    1377000 cycles:           116fc20 brstack_bench+0x30 (/r>
->>> perf 1110782 426394.703549:    1377000 cycles:           116fc9e brstack_bench+0xae (/r>
->>> perf 1110782 426394.703550:    1377000 cycles:           116fcbc brstack_bench+0xcc
->>>
->>> They are usual identical values beside one or two which are way off. Ignoring those would
->>> be good.
->>>
->>
->> FWIW I ran 100+ iterations my Arm Juno and N1SDP boards and the test passed every time.
->>
->> Are we sure there isn't some kind of race condition or bug that the test has found? Rather than a bug in the test?
-> There is always a possibility of a bug, that can not be ruled out for certain.
-> However as LPARs on s390 run on top of a hypervisor, there is a chance for the
-> linux guest being stopped while hardware keeps running.
+On Mon, Sep 01, 2025 at 10:51:18AM +0530, Manali Shukla wrote:
+> Modify the APIC register mask infrastructure to support both standard
+> APIC registers (0x0-0x3f0) and extended APIC registers (0x400-0x530).
 > 
-
-I have no idea what's going on or how that works, so maybe this question 
-is useless, but doesn't that mean that guests can determine/guess the 
-counter values from other guests? If the hardware keeps the counter 
-running when the guest isn't, that sounds like something is leaking from 
-one guest to another? Should the hypervisor not be saving and restoring 
-context?
-
-> I see these runoff values time and again, roughly every second run fails with
-> one runoff value
+> This refactoring:
+> - Replaces the single u64 bitmask with a u64[2] array to accommodate
+>   the extended register range(128 bitmask)
+> - Updates the APIC_REG_MASK macro to handle both standard and extended
+>   register spaces
+> - Adapts kvm_lapic_readable_reg_mask() to use the new approach
+> - Adds APIC_REG_TEST macro to check register validity for standard
+>   APIC registers and Exended APIC registers
+> - Updates all callers to use the new interface
 > 
-> Hope this helps
+> This is purely an infrastructure change to support the upcoming
+> extended APIC register emulation.
 > 
+> Suggested-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Signed-off-by: Manali Shukla <manali.shukla@amd.com>
+> ---
+>  arch/x86/kvm/lapic.c   | 99 ++++++++++++++++++++++++++----------------
+>  arch/x86/kvm/lapic.h   |  2 +-
+>  arch/x86/kvm/vmx/vmx.c | 10 +++--
+>  3 files changed, 70 insertions(+), 41 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index e19545b8cc98..f92e3f53ee75 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -1587,53 +1587,77 @@ static inline struct kvm_lapic *to_lapic(struct kvm_io_device *dev)
+>  	return container_of(dev, struct kvm_lapic, dev);
+>  }
+>  
+> -#define APIC_REG_MASK(reg)	(1ull << ((reg) >> 4))
+> -#define APIC_REGS_MASK(first, count) \
+> -	(APIC_REG_MASK(first) * ((1ull << (count)) - 1))
+> -
+> -u64 kvm_lapic_readable_reg_mask(struct kvm_lapic *apic)
+> -{
+> -	/* Leave bits '0' for reserved and write-only registers. */
+> -	u64 valid_reg_mask =
+> -		APIC_REG_MASK(APIC_ID) |
+> -		APIC_REG_MASK(APIC_LVR) |
+> -		APIC_REG_MASK(APIC_TASKPRI) |
+> -		APIC_REG_MASK(APIC_PROCPRI) |
+> -		APIC_REG_MASK(APIC_LDR) |
+> -		APIC_REG_MASK(APIC_SPIV) |
+> -		APIC_REGS_MASK(APIC_ISR, APIC_ISR_NR) |
+> -		APIC_REGS_MASK(APIC_TMR, APIC_ISR_NR) |
+> -		APIC_REGS_MASK(APIC_IRR, APIC_ISR_NR) |
+> -		APIC_REG_MASK(APIC_ESR) |
+> -		APIC_REG_MASK(APIC_ICR) |
+> -		APIC_REG_MASK(APIC_LVTT) |
+> -		APIC_REG_MASK(APIC_LVTTHMR) |
+> -		APIC_REG_MASK(APIC_LVTPC) |
+> -		APIC_REG_MASK(APIC_LVT0) |
+> -		APIC_REG_MASK(APIC_LVT1) |
+> -		APIC_REG_MASK(APIC_LVTERR) |
+> -		APIC_REG_MASK(APIC_TMICT) |
+> -		APIC_REG_MASK(APIC_TMCCT) |
+> -		APIC_REG_MASK(APIC_TDCR);
+> +/*
+> + * Helper macros for APIC register bitmask handling
+> + * 2 element array is being used to represent 128-bit mask, where:
+> + * - mask[0] tracks standard APIC registers (0x0-0x3f0)
+> + * - mask[1] tracks extended APIC registers (0x400-0x530)
+> + */
+> +
+> +#define APIC_REG_INDEX(reg)	(((reg) < 0x400) ? 0 : 1)
+> +#define APIC_REG_BIT(reg)	(((reg) < 0x400) ? ((reg) >> 4) : (((reg) - 0x400) >> 4))
+> +
+> +/* Set a bit in the mask for a single APIC register. */
+> +#define APIC_REG_MASK(reg, mask) do { \
+> +	(mask)[APIC_REG_INDEX(reg)] |= (1ULL << APIC_REG_BIT(reg)); \
+> +} while (0)
+> +
+> +/* Set bits in the mask for a range of consecutive APIC registers. */
+> +#define APIC_REGS_MASK(first, count, mask) do { \
+> +	(mask)[APIC_REG_INDEX(first)] |= ((1ULL << (count)) - 1) << APIC_REG_BIT(first); \
+> +} while (0)
+> +
+> +/* Macro to check whether the an APIC register bit is set in the mask. */
+> +#define APIC_REG_TEST(reg, mask) \
+> +	((mask)[APIC_REG_INDEX(reg)] & (1ULL << APIC_REG_BIT(reg)))
+> +
+> +#define APIC_LAST_REG_OFFSET		0x3f0
+> +#define APIC_EXT_LAST_REG_OFFSET	0x530
+> +
+> +void kvm_lapic_readable_reg_mask(struct kvm_lapic *apic, u64 mask[2])
+> +{
+> +	mask[0] = 0;
+> +	mask[1] = 0;
 
-That may explain the issue for s390 then, but I'm assuming it doesn't 
-explain the issues on Arm if the failures there aren't in a VM. But even 
-if they were in a VM, the PMU is fully virtualised and the events would 
-be stopped and resumed when the guest is switched out.
+Would it be simpler to use a bitmap for the mask?
 
-James
+
+- Naveen
 
