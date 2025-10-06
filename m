@@ -1,83 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3CB2DCC01;
-	Mon,  6 Oct 2025 20:03:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF89846F
+	for <linux-perf-users@vger.kernel.org>; Mon,  6 Oct 2025 20:17:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759781003; cv=none; b=WAup/JauAujm8lGJAl/qOC+FYUfdX+VZoL0rzq0nBxG43xE6x0Qg4DntlbopcOzIM+dKvNT2UytLOcLmt2Gm4My6UwrLn/2oZQ8Vm7iEwimniyW1kuNajJ9uKfPWpkat5jHP7rqD1zgy53nQJKDsX03EJ0ZZ+BIWhkffLTUznZE=
+	t=1759781867; cv=none; b=hlT91j6Ppp0pBocJZxA1C2SZXPVAVcCaVzaGzyQlszbffCah2qEkfnLFeFxXXG+Jak5752cmdC0NPMeA73PL4lfyW8ov+pX09bhh7Do4JfcVOUmGIDPJ/EW3ez+RatPwiIMCsZE8bJMQqALtf+LMvJCyaIhKtpcgGiO+wDQxPe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759781003; c=relaxed/simple;
-	bh=Jb2U3zm3DqlxlAs18U3OQ+1rjupm7LjmojbDEOd1xYk=;
+	s=arc-20240116; t=1759781867; c=relaxed/simple;
+	bh=Kgz1As6lGKibGrUEZkNzxRecNvrhot7vv44aboVMfFE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PdUqDKKcjYjcFQ8xAAjqPBC0h/2+3xc72IbqSwOh79FW7KAmUG/8esli5z9H1O6YJNqT9qsJtZYp7FlK3BQnSQnglPlYaUPhjoo1geMoSd5tKqvcjhtpHQa204/q+kNvu1NT1Xnie++YnGLtPJ33GlmYs5hYyLXCs7MyqNGy+58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZrrIoPKS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TK0xC+2LvS/C/EZDWXjKebHYLjGw9DCNr/IxR2jt/io4z60HWz4W7QkZ9v0mautcevKJ3qNnyNQo4HbhYfFEh77BvYb2/XrmptmUWfrWocJ2btWwjP/hQny5PeDlVbScHb766iggU+51lsJRcjcpOIrbRWK9FpWFC9fhrLOUxhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pvbzQpcc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZrrIoPKS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B6D5C116B1;
-	Mon,  6 Oct 2025 20:03:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pvbzQpcc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9BA4C4CEF7;
+	Mon,  6 Oct 2025 20:17:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759781003;
-	bh=Jb2U3zm3DqlxlAs18U3OQ+1rjupm7LjmojbDEOd1xYk=;
+	s=k20201202; t=1759781867;
+	bh=Kgz1As6lGKibGrUEZkNzxRecNvrhot7vv44aboVMfFE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZrrIoPKSZ2xC/VASVdxf7qDyVjjETOYocZmRXAP9axn6G8biokawmkAlqUKmAhxyA
-	 3QNNoHu1wRLbZi/KybojeTDItmR/gG4RxT3P1AHBjscdglPgBJDx/S98qik58phwa/
-	 9HMV3TKp2CglpsjOHmWAX8Q/3ipLjHouml4lxGtA8iaI4Q5tWTlh/v3QS+TRnRkJvK
-	 CyYE9niUzYrxhxXQecW0xrgdGWaS0L3109yT8gx355GoCsi6wpTKvcYr98MRrJQt5Q
-	 KXre1M4vtMInIeYW+1pFgsQJGvfv56GcknttEfX5OkxGIkV77P1o32bnmu1FGgEWHY
-	 NTLnzPa7RKCdg==
-Date: Mon, 6 Oct 2025 17:03:20 -0300
+	b=pvbzQpcc0TB+C+5JPF2dQ9ynzphDdziHGFVLo5lH2RzTqTJIdGvVkRFcNBRRzhrPn
+	 sIpidZfrDXr2YLgXtOZJg2f/W1P8v/xh/5nNhy1UxGjDelZVgtwlV8DVeRyXg5CLZZ
+	 M9Cjsiw0Nifmi4pZoZDvP/NAtqf+Pi1bRdnnOiSbCtbNPL3vwBWlzhevArj7MvSGCk
+	 Hf9i2O9HGbcR7/6Hv1BrK8qSxx8kfVlbdc6UhMd8GDaPXFVzuzLQ45o7Uwl31ojfoz
+	 qiQV45TGCZwrNcHLJ3ttnN1/zbXOTtXScgFwnRJJelWNPDSBFIgSd5xqMPwf4hu/+a
+	 lMoU847L2pF2A==
+Date: Mon, 6 Oct 2025 17:17:44 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tests: Don't retest sections in "Object code
- reading"
-Message-ID: <aOQgiN0IlSso_L6d@x1>
-References: <20251006-james-perf-object-code-reading-v1-1-acab2129747d@linaro.org>
- <CAP-5=fXmAbz7Gp5eCRFYsYu_pZoFNSR+mcJgE6Eu6YewHyLNtg@mail.gmail.com>
+To: Vincent Minet <v.minet@criteo.com>
+Cc: linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf tools: Fix arm64 libjvmti build by generating
+ unistd_64.h
+Message-ID: <aOQj6AiUd6NaZK-_@x1>
+References: <20250922053702.2688374-1-v.minet@criteo.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXmAbz7Gp5eCRFYsYu_pZoFNSR+mcJgE6Eu6YewHyLNtg@mail.gmail.com>
+In-Reply-To: <20250922053702.2688374-1-v.minet@criteo.com>
 
-On Mon, Oct 06, 2025 at 08:21:12AM -0700, Ian Rogers wrote:
-> On Mon, Oct 6, 2025 at 6:11 AM James Clark <james.clark@linaro.org> wrote:
-> > We already only test each kcore map once, but on slow systems
-> > (particularly with network filesystems) even the non-kcore maps are
-> > slow. The test can test the same objump output over and over which only
-> > wastes time. Generalize the skipping mechanism to track all DSOs and
-> > addresses so that each section is only tested once.
-> >
-> > On a fully loaded Arm Juno (simulating a parallel Perf test run) with a
-> > network filesystem, the original runtime is:
-> >
-> >   real  1m51.126s
-> >   user  0m19.445s
-> >   sys   1m15.431s
-> >
-> > And the new runtime is:
-> >
-> >   real  0m48.873s
-> >   user  0m8.031s
-> >   sys   0m32.353s
-> >
-> > Signed-off-by: James Clark <james.clark@linaro.org>
+On Mon, Sep 22, 2025 at 07:37:02AM +0200, Vincent Minet wrote:
+> Since commit 22f72088ffe6 ("tools headers: Update the syscall table with
+> the kernel sources") the arm64 syscall header is generated at build
+> time. Later, commit bfb713ea53c7 ("perf tools: Fix arm64 build by
+> generating unistd_64.h") added a dependency to libperf to guarantee that
+> this header was created before building libperf or perf itself.
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> However, libjvmti also requires this header but does not depend on
+> libperf, leading to build failures such as:
+> 
+>   In file included from /usr/include/sys/syscall.h:24,
+>                    from /usr/include/syscall.h:1,
+>                    from jvmti/jvmti_agent.c:36:
+>   tools/arch/arm64/include/uapi/asm/unistd.h:2:10: fatal error: asm/unistd_64.h: No such file or directory
+>       2 | #include <asm/unistd_64.h>
+> 
+> Fix this by ensuring that libperf is built before libjvmti, so that
+> unistd_64.h is always available.
+> 
+> Fixes: 22f72088ffe6 ("tools headers: Update the syscall table with the kernel sources")
+
 
 Thanks, applied to perf-tools-next,
 
 - Arnaldo
+
+> ---
+>  tools/perf/Makefile.perf | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index e2150acc2c13..f561025d4085 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -941,7 +941,7 @@ $(OUTPUT)dlfilters/%.so: $(OUTPUT)dlfilters/%.o
+>  ifndef NO_JVMTI
+>  LIBJVMTI_IN := $(OUTPUT)jvmti/jvmti-in.o
+>  
+> -$(LIBJVMTI_IN): FORCE
+> +$(LIBJVMTI_IN): prepare FORCE
+>  	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=jvmti obj=jvmti
+>  
+>  $(OUTPUT)$(LIBJVMTI): $(LIBJVMTI_IN)
+> -- 
+> 2.51.0
+> 
