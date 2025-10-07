@@ -1,503 +1,368 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65BC7EACD;
-	Tue,  7 Oct 2025 08:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C8B2C3258
+	for <linux-perf-users@vger.kernel.org>; Tue,  7 Oct 2025 09:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759827353; cv=none; b=Gixl9jZZVxnke0iZNq+Leqnt6S4ry4WwQdQDpB68SmOhmCe9M0eEeT8J7Fo2E+Tzon4HV8KcEq4Ty7tT//m2IhIO1vVvUgoo6pIA6DYIQbU+Q9MSs1o89lglAVsZa9kyYRgWir0aKx7xBNShNvqssfNKfx6FJBC9nH+NpJxjRPM=
+	t=1759828218; cv=none; b=DeyWqyGwBhi5MQF7XfY4QxxYmbMmf6hZvDKsIa+9bAu23KLNX1bEBQZmFhQCoto4dsFze8LcHluBzjAolhaFcBlPFbPGYnw6iAfy2xbgpJvqswIGFCvkh7PfLFsSFusUa5XbJm5hslXJyyPvb4BJnerW6BuiXKuV4vH4XVIMmgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759827353; c=relaxed/simple;
-	bh=hB0ZyKqjU060+ZaIS56cSgUBFWB+DLMFnHVWx1XZC80=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s1cUXpVdOmTid6nQExnDaWpGG8x7wlsUyGeHtyOiEhI3e2JBl91I+OxuG2L6GilvZ7yBm1OkjU4G+VFiEriEAJCi8fhiRsTITxz4bPF2R3RuLajIU6vy7XFHybN0/FwwFux+9KrVe4h8pkKBz+taKSAgdN+Vi0SRWEn4Tvfq4ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tkTW5x8/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1759828218; c=relaxed/simple;
+	bh=xkurHUrHiDvxiaLEkzB8GFBV/iCz22WvC9ERFE1fsyw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HzqZtUglA5FZKE18bLIXUPKWxNH7/4WWbZCEUoqdYCI3FFNukajQxhWzj3Dw/OYz01/yYoeh1kiV67zVq5TjNiYpOV2NebPu9jSiH8cL+WQp0bsTrEhPTuw/KWUiv+m6kBGskuWRzkuN94UCrUqwAdiDQXXu40DR8LuE5rnFYuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VEkE620G; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tkTW5x8/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1390EC4CEF1;
-	Tue,  7 Oct 2025 08:55:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759827352;
-	bh=hB0ZyKqjU060+ZaIS56cSgUBFWB+DLMFnHVWx1XZC80=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tkTW5x8/h170WGrQ4PGT3HQQdS7lUYdSFaKg22VxLxwktYndU19z5oJuhATcNp01W
-	 /zWG+Q49pfyxl7eB1puBn94tAZ+YbW4+2e66g2xOSRgYYYZWvufXtB01G8t1MVWw1s
-	 PWBF3T+TtFxdqe/TMqQQG8AaP7UzR+gCM+ERm43kG2MjyJ6QimU9nUv8r9o6hmZ9gx
-	 GkoYlzi70AeuIleUMm6F2Dyqmm4iuzpgrL7BLD3znHvGuzmhAPTfHW2twxf3jQDTEs
-	 PSljeiNNvvR8VY1BL1lZZdkQuX2OeRMB4nJI4z+iapWVPPPkbNK+j145cTpxkGg2R2
-	 chvQJS3K88h9Q==
-Date: Tue, 7 Oct 2025 17:55:47 +0900
-From: Namhyung Kim <namhyung@kernel.org>
-To: thomas.falcon@intel.com
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [Patch v3 1/2] perf record: Add ratio-to-prev term
-Message-ID: <aOTVkxY09-Uillf6@google.com>
-References: <20251002234308.64218-1-thomas.falcon@intel.com>
- <20251002234308.64218-2-thomas.falcon@intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VEkE620G"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-46b303f755aso46053155e9.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 Oct 2025 02:10:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1759828214; x=1760433014; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1A5grJalUNQTGqrKuVDzibQGrnaKKNODDxPG9phNRc4=;
+        b=VEkE620GO+P0p3Kl0IhNLbTLGXNiylhm8Uzo2xfxp8/jOR0WuAqG3sUNL8PjADOo20
+         oTHtrtITiaAt19/OqyVmJ6KL88ECRkSOP+WeDv45m32kT5hFYQzz+w/7q75P1GLpr+fW
+         bGB898LsHqpTqCVNcuPixVkdPeHqcpANCed3u9dOjEY3Fuj/Yl/WV2PsLoNajvO9lp/5
+         cucyxZmvPN5yNmTz/o2K26DMspSXS1xs0xnlDnA7VWMX8C0NSwdjiAgGwy+EAvu4i+hZ
+         Z1FORkaW6COnrX75lZiC8o3Tg0iJqddDh0s4CQcp/s8Jc+No+lUWATBmpgQNZQdTAPp3
+         CFOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759828214; x=1760433014;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1A5grJalUNQTGqrKuVDzibQGrnaKKNODDxPG9phNRc4=;
+        b=uzm9xCfi6MbwuzwpkzeFV5gu49Yv3uvdQU4fGl11bgSCR61c1xj5l4T/mZbWoTQlRk
+         fDxTC/zk7Bym/RSMURPjXG7Vuf+qNboDheu3n06aUl2cV34K35c/kcOhQtWJAz0ZrIkG
+         veXAkJ20loBWlrAveBf1YFVQaq0MWf6nExcfDE1K2+F0XJXt3rCYV1RLLhQl4DUEtnVx
+         LlOx679m6FV3veSvHzt9ku+BNv6KDehgr8ysJ/6OgzP9Ln/B8Yt9ueuRVoNhW9MT+8UP
+         V5Bnqs3e5rk0ZTp80jv92pPgSNu2VosfNV4K6OG5Eo6jLLDTOTFFGOCYWAw+mvQLuzyd
+         UJyg==
+X-Forwarded-Encrypted: i=1; AJvYcCVZKTEjDUpl4iPXC+DN0rID25XtmHq6aBrEUcFH9HpuOrToOzNs8T450ze1MB+lcj7Lf7bq0OgFNDeN7KZcXEvc@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEFUDMCg3G9pmEnSWmp8ZEtwIjJ6XWtpZUGWaqAMOFQO/NoaJC
+	hfAkLlAQ7Gmok39xDHAPuleAW8bUeNxZcx/diG1wPRJPx/gAWY+Cr7SdxO7j3Fn8Yq4=
+X-Gm-Gg: ASbGnctU9hQKRGtgiG71AZ6utxkrjC7wOWzTq5bcAtF2sNvb98FhKG3/2SFI6J21H4g
+	QQbfVRmoZJl54Y/3hFBhPt/bvMv48Cqm17Ow+7PRS8i6fbJNF30Mzc9fsiAEwxXx7FRCyDP4CWd
+	5DMvBXkZgEOOzpvZZGx8jfJx8UCog93oSpdwf6RFfdiuQGj0p+UVJBd8zqh8J8edW5DqgbJ0bBS
+	1kC5kWUD3zQsokeH60JJy92nvbbtBuCJAJRt5si6KKFIXoE58eioS3q1dw4RfXMoTIQr7r34Ng4
+	j7vpEweTfxRPOG7x9l8wTeGisWim2NoBe7Jc0+F31tay69MdSLGEC0AI9MvWMOmBNOh1LIfW/2p
+	OO6qntSyi2BRR9T0PWRQtygxNdjx7eIzizET/nU2w7nRMPxEkSBTpcnQP
+X-Google-Smtp-Source: AGHT+IGMFiVKJp39q+pMns0W0NskfICt/r26mga3cpyM8uAPmyuedwXmOqFinHFTEHYx9lKQOrElfw==
+X-Received: by 2002:a05:600d:41f3:b0:46e:4a78:dea9 with SMTP id 5b1f17b1804b1-46e71145dc7mr133486085e9.17.1759828213740;
+        Tue, 07 Oct 2025 02:10:13 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.76.109])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e619c396esm292761625e9.8.2025.10.07.02.10.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Oct 2025 02:10:13 -0700 (PDT)
+Message-ID: <b39ffdd5-1692-46ed-86d9-726011c92036@linaro.org>
+Date: Tue, 7 Oct 2025 10:10:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20251002234308.64218-2-thomas.falcon@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf tests: Don't retest sections in "Object code
+ reading"
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20251006-james-perf-object-code-reading-v1-1-acab2129747d@linaro.org>
+ <CAP-5=fXmAbz7Gp5eCRFYsYu_pZoFNSR+mcJgE6Eu6YewHyLNtg@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CAP-5=fXmAbz7Gp5eCRFYsYu_pZoFNSR+mcJgE6Eu6YewHyLNtg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 02, 2025 at 06:43:05PM -0500, thomas.falcon@intel.com wrote:
-> From: Thomas Falcon <thomas.falcon@intel.com>
-> 
-> Provide ratio-to-prev term which allows the user to
-> set the event sample period of two events corresponding
-> to a desired ratio. If using on an Intel x86 platform with
-> Auto Counter Reload support, also set corresponding event's
-> config2 attribute with a bitmask which counters to reset and
-> which counters to sample if the desired ratio is met or exceeded.
-> On other platforms, only the sample period is affected by the
-> ratio-to-prev term.
+
+
+On 06/10/2025 4:21 pm, Ian Rogers wrote:
+> On Mon, Oct 6, 2025 at 6:11 AM James Clark <james.clark@linaro.org> wrote:
+>>
+>> We already only test each kcore map once, but on slow systems
+>> (particularly with network filesystems) even the non-kcore maps are
+>> slow. The test can test the same objump output over and over which only
+>> wastes time. Generalize the skipping mechanism to track all DSOs and
+>> addresses so that each section is only tested once.
+>>
+>> On a fully loaded Arm Juno (simulating a parallel Perf test run) with a
+>> network filesystem, the original runtime is:
+>>
+>>    real  1m51.126s
+>>    user  0m19.445s
+>>    sys   1m15.431s
+>>
+>> And the new runtime is:
+>>
+>>    real  0m48.873s
+>>    user  0m8.031s
+>>    sys   0m32.353s
+>>
+>> Signed-off-by: James Clark <james.clark@linaro.org>
 > 
 > Reviewed-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
-> ---
->  tools/perf/Documentation/intel-acr.txt | 53 ++++++++++++++++++
->  tools/perf/Documentation/perf-list.txt |  2 +
->  tools/perf/arch/x86/util/evsel.c       | 52 ++++++++++++++++++
->  tools/perf/util/evsel.c                | 76 ++++++++++++++++++++++++++
->  tools/perf/util/evsel.h                |  1 +
->  tools/perf/util/evsel_config.h         |  1 +
->  tools/perf/util/parse-events.c         | 22 ++++++++
->  tools/perf/util/parse-events.h         |  3 +-
->  tools/perf/util/parse-events.l         |  1 +
->  tools/perf/util/pmu.c                  |  3 +-
->  10 files changed, 212 insertions(+), 2 deletions(-)
->  create mode 100644 tools/perf/Documentation/intel-acr.txt
 > 
-> diff --git a/tools/perf/Documentation/intel-acr.txt b/tools/perf/Documentation/intel-acr.txt
-> new file mode 100644
-> index 000000000000..72654fdd9a52
-> --- /dev/null
-> +++ b/tools/perf/Documentation/intel-acr.txt
-> @@ -0,0 +1,53 @@
-> +Intel Auto Counter Reload Support
-> +---------------------------------
-> +Support for Intel Auto Counter Reload in perf tools
-> +
-> +Auto counter reload provides a means for software to specify to hardware
-> +that certain counters, if supported, should be automatically reloaded
-> +upon overflow of chosen counters. By taking a sample only if the rate of
-> +one event exceeds some threshold relative to the rate of another event,
-> +this feature enables software to sample based on the relative rate of
-> +two or more events. To enable this, the user must provide a sample period
-> +term and a bitmask ("acr_mask") for each relevant event specifying the
-> +counters in an event group to reload if the event's specified sample
-> +period is exceeded.
-
-Thanks for the documentation, now I got the idea what it tries to do.
-So acr_mask and ratio-to-prev are only allowed in a group..
-
-> +
-> +For example, if the user desires to measure a scenario when IPC > 2,
-> +the event group might look like the one below:
-> +
-> +	perf record -e {cpu_atom/instructions,period=200000,acr_mask=0x2/, \
-> +	cpu_atom/cycles,period=100000,acr_mask=0x3/} -- true
-> +
-> +In this case, if the "instructions" counter exceeds the sample period of
-> +200000, the second counter, "cycles", will be reset and a sample will be
-> +taken. If "cycles" is exceeded first, both counters in the group will be
-> +reset. In this way, samples will only be taken for cases where IPC > 2.
-> +
-> +The acr_mask term is a hexadecimal value representing a bitmask of the
-> +events in the group to be reset when the period is exceeded. In the
-> +example above, "instructions" is assigned an acr_mask of 0x2, meaning
-> +only the second event in the group is reloaded and a sample is taken
-> +for the first event. "cycles" is assigned an acr_mask of 0x3, meaning
-> +that both event counters will be reset if the sample period is exceeded
-> +first.
-
-IIUC bit of 1 means auto-reload without samples and 0 means to take a
-sample (as normal), right?  And index is meaningful in a group and not
-related to hardware, correct?
-
-
-> +
-> +ratio-to-prev Event Term
-> +------------------------
-> +To simplify this, an event term "ratio-to-prev" is provided which is used
-> +alongside the sample period term n or the -c/--count option. This would
-> +allow users to specify the desired relative rate between events as a
-> +ratio. Note: Both events compared must belong to the same PMU.
-> +
-> +The command above would then become
-> +
-> +	perf record -e {cpu_atom/instructions/, \
-> +	cpu_atom/cycles,period=100000,ratio-to-prev=0.5/} -- true
-> +
-> +ratio-to-prev is the ratio of the event using the term relative
-> +to the previous event in the group, which will always be 1,
-> +for a 1:0.5 or 2:1 ratio.
-
-What about acr_mask?
-
-> +
-> +To sample for IPC < 2 for example, the events need to be reordered:
-> +
-> +	perf record -e {cpu_atom/cycles/, \
-> +	cpu_atom/instructions,period=200000,ratio-to-prev=2.0/} -- true
-> diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-> index a5039d1614f9..a4378a0cd914 100644
-> --- a/tools/perf/Documentation/perf-list.txt
-> +++ b/tools/perf/Documentation/perf-list.txt
-> @@ -393,6 +393,8 @@ Support raw format:
->  . '--raw-dump [hw|sw|cache|tracepoint|pmu|event_glob]', shows the raw-dump of
->    a certain kind of events.
->  
-> +include::intel-acr.txt[]
-> +
->  SEE ALSO
->  --------
->  linkperf:perf-stat[1], linkperf:perf-top[1],
-> diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
-> index e67701d26f24..23a8e662a912 100644
-> --- a/tools/perf/arch/x86/util/evsel.c
-> +++ b/tools/perf/arch/x86/util/evsel.c
-> @@ -4,6 +4,7 @@
->  #include <stdlib.h>
->  #include "util/evlist.h"
->  #include "util/evsel.h"
-> +#include "util/evsel_config.h"
->  #include "util/env.h"
->  #include "util/pmu.h"
->  #include "util/pmus.h"
-> @@ -71,6 +72,57 @@ int arch_evsel__hw_name(struct evsel *evsel, char *bf, size_t size)
->  			 event_name);
->  }
->  
-> +void arch_evsel__apply_ratio_to_prev(struct evsel *evsel,
-> +				struct perf_event_attr *attr)
-> +{
-> +	struct perf_event_attr *prev_attr = NULL;
-> +	struct evsel *evsel_prev = NULL;
-> +	const char *name = "acr_mask";
-> +	int evsel_idx = 0;
-> +	__u64 ev_mask, pr_ev_mask;
-> +
-> +	if (!perf_pmu__has_format(evsel->pmu, name)) {
-> +		pr_err("'%s' does not have acr_mask format support\n", evsel->pmu->name);
-> +		return;
-> +	}
-> +	if (perf_pmu__format_type(evsel->pmu, name) !=
-> +			PERF_PMU_FORMAT_VALUE_CONFIG2) {
-> +		pr_err("'%s' does not have config2 format support\n", evsel->pmu->name);
-> +		return;
-> +	}
-> +
-> +	evsel_prev = evsel__prev(evsel);
-> +	if (!evsel_prev) {
-> +		pr_err("Previous event does not exist.\n");
-> +		return;
-> +	}
-> +
-> +	prev_attr = &evsel_prev->core.attr;
-> +
-> +	if (prev_attr->config2) {
-> +		pr_err("'%s' has set config2 (acr_mask?) already, configuration not supported\n", evsel_prev->name);
-
-This line is too long.
-
-Also I'm afraid this only works for two events in a group.
-
-Thanks,
-Namhyung
-
-
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * acr_mask (config2) is calculated using the event's index in
-> +	 * the event group. The first event will use the index of the
-> +	 * second event as its mask (e.g., 0x2), indicating that the
-> +	 * second event counter will be reset and a sample taken for
-> +	 * the first event if its counter overflows. The second event
-> +	 * will use the mask consisting of the first and second bits
-> +	 * (e.g., 0x3), meaning both counters will be reset if the
-> +	 * second event counter overflows.
-> +	 */
-> +
-> +	evsel_idx = evsel__group_idx(evsel);
-> +	ev_mask = 1ull << evsel_idx;
-> +	pr_ev_mask = 1ull << (evsel_idx - 1);
-> +
-> +	prev_attr->config2 = ev_mask;
-> +	attr->config2 = ev_mask | pr_ev_mask;
-> +}
-> +
->  static void ibs_l3miss_warn(void)
->  {
->  	pr_warning(
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 1a29d4f47bbf..56cef1310574 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -1091,6 +1091,71 @@ static void evsel__reset_callgraph(struct evsel *evsel, struct callchain_param *
->  	}
->  }
->  
-> +static void evsel__apply_ratio_to_prev(struct evsel *evsel,
-> +				       struct perf_event_attr *attr,
-> +				       struct record_opts *opts,
-> +				       const char *buf)
-> +{
-> +	struct perf_event_attr *prev_attr = NULL;
-> +	struct evsel *evsel_prev = NULL;
-> +	u64 type = evsel->core.attr.sample_type;
-> +	u64 prev_type = 0;
-> +	double rtp;
-> +
-> +	rtp = strtod(buf, NULL);
-> +	if (rtp <= 0) {
-> +		pr_err("Invalid ratio-to-prev value %lf\n", rtp);
-> +		return;
-> +	}
-> +	if (evsel == evsel__leader(evsel)) {
-> +		pr_err("Invalid use of ratio-to-prev term without preceding element in group\n");
-> +		return;
-> +	}
-> +	if (!evsel->pmu->is_core) {
-> +		pr_err("Event using ratio-to-prev term must have a core PMU\n");
-> +		return;
-> +	}
-> +
-> +	evsel_prev = evsel__prev(evsel);
-> +	if (!evsel_prev) {
-> +		pr_err("Previous event does not exist.\n");
-> +		return;
-> +	}
-> +
-> +	if (evsel_prev->pmu->type != evsel->pmu->type) {
-> +		pr_err("Compared events (\"%s\", \"%s\") must have same PMU\n",
-> +			evsel->name, evsel_prev->name);
-> +		return;
-> +	}
-> +
-> +	prev_attr = &evsel_prev->core.attr;
-> +	prev_type = evsel_prev->core.attr.sample_type;
-> +
-> +	if (!(prev_type & PERF_SAMPLE_PERIOD)) {
-> +		attr->sample_period = prev_attr->sample_period * rtp;
-> +		attr->freq = 0;
-> +		evsel__reset_sample_bit(evsel, PERIOD);
-> +	} else if (!(type & PERF_SAMPLE_PERIOD)) {
-> +		prev_attr->sample_period = attr->sample_period / rtp;
-> +		prev_attr->freq = 0;
-> +		evsel__reset_sample_bit(evsel_prev, PERIOD);
-> +	} else {
-> +		if (opts->user_interval != ULLONG_MAX) {
-> +			prev_attr->sample_period = opts->user_interval;
-> +			attr->sample_period = prev_attr->sample_period * rtp;
-> +			prev_attr->freq = 0;
-> +			attr->freq = 0;
-> +			evsel__reset_sample_bit(evsel_prev, PERIOD);
-> +			evsel__reset_sample_bit(evsel, PERIOD);
-> +		} else {
-> +			pr_err("Event period term or count (-c) must be set when using ratio-to-prev term.\n");
-> +			return;
-> +		}
-> +	}
-> +
-> +	arch_evsel__apply_ratio_to_prev(evsel, attr);
-> +}
-> +
->  static void evsel__apply_config_terms(struct evsel *evsel,
->  				      struct record_opts *opts, bool track)
->  {
-> @@ -1104,6 +1169,7 @@ static void evsel__apply_config_terms(struct evsel *evsel,
->  	u32 dump_size = 0;
->  	int max_stack = 0;
->  	const char *callgraph_buf = NULL;
-> +	const char *rtp_buf = NULL;
->  
->  	list_for_each_entry(term, config_terms, list) {
->  		switch (term->type) {
-> @@ -1174,6 +1240,9 @@ static void evsel__apply_config_terms(struct evsel *evsel,
->  			break;
->  		case EVSEL__CONFIG_TERM_CFG_CHG:
->  			break;
-> +		case EVSEL__CONFIG_TERM_RATIO_TO_PREV:
-> +			rtp_buf = term->val.str;
-> +			break;
->  		default:
->  			break;
->  		}
-> @@ -1225,6 +1294,8 @@ static void evsel__apply_config_terms(struct evsel *evsel,
->  			evsel__config_callchain(evsel, opts, &param);
->  		}
->  	}
-> +	if (rtp_buf)
-> +		evsel__apply_ratio_to_prev(evsel, attr, opts, rtp_buf);
->  }
->  
->  struct evsel_config_term *__evsel__get_config_term(struct evsel *evsel, enum evsel_term_type type)
-> @@ -1249,6 +1320,11 @@ void __weak arch__post_evsel_config(struct evsel *evsel __maybe_unused,
->  {
->  }
->  
-> +void __weak arch_evsel__apply_ratio_to_prev(struct evsel *evsel __maybe_unused,
-> +					    struct perf_event_attr *attr __maybe_unused)
-> +{
-> +}
-> +
->  static void evsel__set_default_freq_period(struct record_opts *opts,
->  					   struct perf_event_attr *attr)
->  {
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index 03f9f22e3a0c..521d280c4abe 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -343,6 +343,7 @@ void evsel__set_sample_id(struct evsel *evsel, bool use_sample_identifier);
->  void arch_evsel__set_sample_weight(struct evsel *evsel);
->  void arch__post_evsel_config(struct evsel *evsel, struct perf_event_attr *attr);
->  int arch_evsel__open_strerror(struct evsel *evsel, int err, char *msg, size_t size);
-> +void arch_evsel__apply_ratio_to_prev(struct evsel *evsel, struct perf_event_attr *attr);
->  
->  int evsel__set_filter(struct evsel *evsel, const char *filter);
->  int evsel__append_tp_filter(struct evsel *evsel, const char *filter);
-> diff --git a/tools/perf/util/evsel_config.h b/tools/perf/util/evsel_config.h
-> index 94a1e9cf73d6..bcd3a978f0c4 100644
-> --- a/tools/perf/util/evsel_config.h
-> +++ b/tools/perf/util/evsel_config.h
-> @@ -28,6 +28,7 @@ enum evsel_term_type {
->  	EVSEL__CONFIG_TERM_AUX_ACTION,
->  	EVSEL__CONFIG_TERM_AUX_SAMPLE_SIZE,
->  	EVSEL__CONFIG_TERM_CFG_CHG,
-> +	EVSEL__CONFIG_TERM_RATIO_TO_PREV,
->  };
->  
->  struct evsel_config_term {
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 452f12191f6e..da73d686f6b9 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -842,6 +842,7 @@ const char *parse_events__term_type_str(enum parse_events__term_type term_type)
->  		[PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE]          = "legacy-cache",
->  		[PARSE_EVENTS__TERM_TYPE_HARDWARE]              = "hardware",
->  		[PARSE_EVENTS__TERM_TYPE_CPU]			= "cpu",
-> +		[PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV]         = "ratio-to-prev",
->  	};
->  	if ((unsigned int)term_type >= __PARSE_EVENTS__TERM_TYPE_NR)
->  		return "unknown term";
-> @@ -892,6 +893,7 @@ config_term_avail(enum parse_events__term_type term_type, struct parse_events_er
->  	case PARSE_EVENTS__TERM_TYPE_RAW:
->  	case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
->  	case PARSE_EVENTS__TERM_TYPE_HARDWARE:
-> +	case PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV:
->  	default:
->  		if (!err)
->  			return false;
-> @@ -1045,6 +1047,21 @@ do {											\
->  		perf_cpu_map__put(map);
->  		break;
->  	}
-> +	case PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV:
-> +		CHECK_TYPE_VAL(STR);
-> +		if (strtod(term->val.str, NULL) <= 0) {
-> +			parse_events_error__handle(parse_state->error, term->err_val,
-> +						   strdup("zero or negative"),
-> +						   NULL);
-> +			return -EINVAL;
-> +		}
-> +		if (errno == ERANGE) {
-> +			parse_events_error__handle(parse_state->error, term->err_val,
-> +						   strdup("too big"),
-> +						   NULL);
-> +			return -EINVAL;
-> +		}
-> +		break;
->  	case PARSE_EVENTS__TERM_TYPE_DRV_CFG:
->  	case PARSE_EVENTS__TERM_TYPE_USER:
->  	case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
-> @@ -1173,6 +1190,7 @@ static int config_term_tracepoint(struct perf_event_attr *attr,
->  	case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
->  	case PARSE_EVENTS__TERM_TYPE_HARDWARE:
->  	case PARSE_EVENTS__TERM_TYPE_CPU:
-> +	case PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV:
->  	default:
->  		parse_events_error__handle(parse_state->error, term->err_term,
->  					strdup(parse_events__term_type_str(term->type_term)),
-> @@ -1295,6 +1313,9 @@ do {								\
->  			ADD_CONFIG_TERM_VAL(AUX_SAMPLE_SIZE, aux_sample_size,
->  					    term->val.num, term->weak);
->  			break;
-> +		case PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV:
-> +			ADD_CONFIG_TERM_STR(RATIO_TO_PREV, term->val.str, term->weak);
-> +			break;
->  		case PARSE_EVENTS__TERM_TYPE_USER:
->  		case PARSE_EVENTS__TERM_TYPE_CONFIG:
->  		case PARSE_EVENTS__TERM_TYPE_CONFIG1:
-> @@ -1361,6 +1382,7 @@ static int get_config_chgs(struct perf_pmu *pmu, struct parse_events_terms *head
->  		case PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE:
->  		case PARSE_EVENTS__TERM_TYPE_HARDWARE:
->  		case PARSE_EVENTS__TERM_TYPE_CPU:
-> +		case PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV:
->  		default:
->  			break;
->  		}
-> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-> index a5c5fc39fd6f..8f8c8e7fbcf1 100644
-> --- a/tools/perf/util/parse-events.h
-> +++ b/tools/perf/util/parse-events.h
-> @@ -83,7 +83,8 @@ enum parse_events__term_type {
->  	PARSE_EVENTS__TERM_TYPE_LEGACY_CACHE,
->  	PARSE_EVENTS__TERM_TYPE_HARDWARE,
->  	PARSE_EVENTS__TERM_TYPE_CPU,
-> -#define	__PARSE_EVENTS__TERM_TYPE_NR (PARSE_EVENTS__TERM_TYPE_CPU + 1)
-> +	PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV,
-> +#define	__PARSE_EVENTS__TERM_TYPE_NR (PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV + 1)
->  };
->  
->  struct parse_events_term {
-> diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-> index 294e943bcdb4..c985aa8a7d56 100644
-> --- a/tools/perf/util/parse-events.l
-> +++ b/tools/perf/util/parse-events.l
-> @@ -337,6 +337,7 @@ aux-action		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_ACTION); }
->  aux-sample-size		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE); }
->  metric-id		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_METRIC_ID); }
->  cpu			{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_CPU); }
-> +ratio-to-prev		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV); }
->  cpu-cycles|cycles				{ return hw_term(yyscanner, PERF_COUNT_HW_CPU_CYCLES); }
->  stalled-cycles-frontend|idle-cycles-frontend	{ return hw_term(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_FRONTEND); }
->  stalled-cycles-backend|idle-cycles-backend	{ return hw_term(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_BACKEND); }
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 5a291f1380ed..3d1f975e8db9 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -1541,7 +1541,7 @@ static int pmu_config_term(const struct perf_pmu *pmu,
->  			break;
->  		case PARSE_EVENTS__TERM_TYPE_USER: /* Not hardcoded. */
->  			return -EINVAL;
-> -		case PARSE_EVENTS__TERM_TYPE_NAME ... PARSE_EVENTS__TERM_TYPE_CPU:
-> +		case PARSE_EVENTS__TERM_TYPE_NAME ... PARSE_EVENTS__TERM_TYPE_RATIO_TO_PREV:
->  			/* Skip non-config terms. */
->  			break;
->  		default:
-> @@ -1930,6 +1930,7 @@ int perf_pmu__for_each_format(struct perf_pmu *pmu, void *state, pmu_format_call
->  		"aux-action=(pause|resume|start-paused)",
->  		"aux-sample-size=number",
->  		"cpu=number",
-> +		"ratio-to-prev=string",
->  	};
->  	struct perf_pmu_format *format;
->  	int ret;
-> -- 
-> 2.50.1
+>> ---
+>>   tools/perf/tests/code-reading.c | 119 ++++++++++++++++++++++++++++------------
+>>   1 file changed, 85 insertions(+), 34 deletions(-)
+>>
+>> diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
+>> index 9c2091310191..4c9fbf6965c4 100644
+>> --- a/tools/perf/tests/code-reading.c
+>> +++ b/tools/perf/tests/code-reading.c
+>> @@ -2,6 +2,7 @@
+>>   #include <errno.h>
+>>   #include <linux/kconfig.h>
+>>   #include <linux/kernel.h>
+>> +#include <linux/rbtree.h>
+>>   #include <linux/types.h>
+>>   #include <inttypes.h>
+>>   #include <stdlib.h>
+>> @@ -39,11 +40,64 @@
+>>   #define BUFSZ  1024
+>>   #define READLEN        128
+>>
+>> -struct state {
+>> -       u64 done[1024];
+>> -       size_t done_cnt;
+>> +struct tested_section {
+>> +       struct rb_node rb_node;
+>> +       u64 addr;
+>> +       char path[PATH_MAX];
+>>   };
+>>
+>> +static bool tested_code_insert_or_exists(const char *path, u64 addr,
+>> +                                        struct rb_root *tested_sections)
+>> +{
+>> +       struct rb_node **node = &tested_sections->rb_node;
+>> +       struct rb_node *parent = NULL;
+>> +       struct tested_section *data;
+>> +
+>> +       while (*node) {
+>> +               int cmp;
+>> +
+>> +               parent = *node;
+>> +               data = rb_entry(*node, struct tested_section, rb_node);
+>> +               cmp = strcmp(path, data->path);
+>> +               if (!cmp) {
+>> +                       if (addr < data->addr)
+>> +                               cmp = -1;
+>> +                       else if (addr > data->addr)
+>> +                               cmp = 1;
+>> +                       else
+>> +                               return true; /* already tested */
+>> +               }
+>> +
+>> +               if (cmp < 0)
+>> +                       node = &(*node)->rb_left;
+>> +               else
+>> +                       node = &(*node)->rb_right;
+>> +       }
+>> +
+>> +       data = zalloc(sizeof(*data));
+>> +       if (!data)
+>> +               return true;
+>> +
+>> +       data->addr = addr;
+>> +       strlcpy(data->path, path, sizeof(data->path));
 > 
+> nit: perhaps strdup rather than having 4kb per tested_section.
+> 
+> Thanks,
+> Ian
+> 
+
+Oh yeah that would have been better, not sure why I didn't do it that 
+way. Although the max sections I saw was around 50, and it's usually a 
+lot less so it's probably not worth the churn to change it now that 
+Arnaldo's applied it?
+
+Thanks
+James
+
+>> +       rb_link_node(&data->rb_node, parent, node);
+>> +       rb_insert_color(&data->rb_node, tested_sections);
+>> +       return false;
+>> +}
+>> +
+>> +static void tested_sections__free(struct rb_root *root)
+>> +{
+>> +       while (!RB_EMPTY_ROOT(root)) {
+>> +               struct rb_node *node = rb_first(root);
+>> +               struct tested_section *ts = rb_entry(node,
+>> +                                                    struct tested_section,
+>> +                                                    rb_node);
+>> +
+>> +               rb_erase(node, root);
+>> +               free(ts);
+>> +       }
+>> +}
+>> +
+>>   static size_t read_objdump_chunk(const char **line, unsigned char **buf,
+>>                                   size_t *buf_len)
+>>   {
+>> @@ -316,13 +370,15 @@ static void dump_buf(unsigned char *buf, size_t len)
+>>   }
+>>
+>>   static int read_object_code(u64 addr, size_t len, u8 cpumode,
+>> -                           struct thread *thread, struct state *state)
+>> +                           struct thread *thread,
+>> +                           struct rb_root *tested_sections)
+>>   {
+>>          struct addr_location al;
+>>          unsigned char buf1[BUFSZ] = {0};
+>>          unsigned char buf2[BUFSZ] = {0};
+>>          size_t ret_len;
+>>          u64 objdump_addr;
+>> +       u64 skip_addr;
+>>          const char *objdump_name;
+>>          char decomp_name[KMOD_DECOMP_LEN];
+>>          bool decomp = false;
+>> @@ -350,6 +406,18 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
+>>                  goto out;
+>>          }
+>>
+>> +       /*
+>> +        * Don't retest the same addresses. objdump struggles with kcore - try
+>> +        * each map only once even if the address is different.
+>> +        */
+>> +       skip_addr = dso__is_kcore(dso) ? map__start(al.map) : al.addr;
+>> +       if (tested_code_insert_or_exists(dso__long_name(dso), skip_addr,
+>> +                                        tested_sections)) {
+>> +               pr_debug("Already tested %s @ %#"PRIx64" - skipping\n",
+>> +                        dso__long_name(dso), skip_addr);
+>> +               goto out;
+>> +       }
+>> +
+>>          pr_debug("On file address is: %#"PRIx64"\n", al.addr);
+>>
+>>          if (len > BUFSZ)
+>> @@ -387,24 +455,6 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
+>>                  goto out;
+>>          }
+>>
+>> -       /* objdump struggles with kcore - try each map only once */
+>> -       if (dso__is_kcore(dso)) {
+>> -               size_t d;
+>> -
+>> -               for (d = 0; d < state->done_cnt; d++) {
+>> -                       if (state->done[d] == map__start(al.map)) {
+>> -                               pr_debug("kcore map tested already");
+>> -                               pr_debug(" - skipping\n");
+>> -                               goto out;
+>> -                       }
+>> -               }
+>> -               if (state->done_cnt >= ARRAY_SIZE(state->done)) {
+>> -                       pr_debug("Too many kcore maps - skipping\n");
+>> -                       goto out;
+>> -               }
+>> -               state->done[state->done_cnt++] = map__start(al.map);
+>> -       }
+>> -
+>>          objdump_name = dso__long_name(dso);
+>>          if (dso__needs_decompress(dso)) {
+>>                  if (dso__decompress_kmodule_path(dso, objdump_name,
+>> @@ -471,9 +521,9 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
+>>          return err;
+>>   }
+>>
+>> -static int process_sample_event(struct machine *machine,
+>> -                               struct evlist *evlist,
+>> -                               union perf_event *event, struct state *state)
+>> +static int process_sample_event(struct machine *machine, struct evlist *evlist,
+>> +                               union perf_event *event,
+>> +                               struct rb_root *tested_sections)
+>>   {
+>>          struct perf_sample sample;
+>>          struct thread *thread;
+>> @@ -494,7 +544,8 @@ static int process_sample_event(struct machine *machine,
+>>                  goto out;
+>>          }
+>>
+>> -       ret = read_object_code(sample.ip, READLEN, sample.cpumode, thread, state);
+>> +       ret = read_object_code(sample.ip, READLEN, sample.cpumode, thread,
+>> +                              tested_sections);
+>>          thread__put(thread);
+>>   out:
+>>          perf_sample__exit(&sample);
+>> @@ -502,10 +553,11 @@ static int process_sample_event(struct machine *machine,
+>>   }
+>>
+>>   static int process_event(struct machine *machine, struct evlist *evlist,
+>> -                        union perf_event *event, struct state *state)
+>> +                        union perf_event *event, struct rb_root *tested_sections)
+>>   {
+>>          if (event->header.type == PERF_RECORD_SAMPLE)
+>> -               return process_sample_event(machine, evlist, event, state);
+>> +               return process_sample_event(machine, evlist, event,
+>> +                                           tested_sections);
+>>
+>>          if (event->header.type == PERF_RECORD_THROTTLE ||
+>>              event->header.type == PERF_RECORD_UNTHROTTLE)
+>> @@ -525,7 +577,7 @@ static int process_event(struct machine *machine, struct evlist *evlist,
+>>   }
+>>
+>>   static int process_events(struct machine *machine, struct evlist *evlist,
+>> -                         struct state *state)
+>> +                         struct rb_root *tested_sections)
+>>   {
+>>          union perf_event *event;
+>>          struct mmap *md;
+>> @@ -537,7 +589,7 @@ static int process_events(struct machine *machine, struct evlist *evlist,
+>>                          continue;
+>>
+>>                  while ((event = perf_mmap__read_event(&md->core)) != NULL) {
+>> -                       ret = process_event(machine, evlist, event, state);
+>> +                       ret = process_event(machine, evlist, event, tested_sections);
+>>                          perf_mmap__consume(&md->core);
+>>                          if (ret < 0)
+>>                                  return ret;
+>> @@ -637,9 +689,7 @@ static int do_test_code_reading(bool try_kcore)
+>>                          .uses_mmap   = true,
+>>                  },
+>>          };
+>> -       struct state state = {
+>> -               .done_cnt = 0,
+>> -       };
+>> +       struct rb_root tested_sections = RB_ROOT;
+>>          struct perf_thread_map *threads = NULL;
+>>          struct perf_cpu_map *cpus = NULL;
+>>          struct evlist *evlist = NULL;
+>> @@ -773,7 +823,7 @@ static int do_test_code_reading(bool try_kcore)
+>>
+>>          evlist__disable(evlist);
+>>
+>> -       ret = process_events(machine, evlist, &state);
+>> +       ret = process_events(machine, evlist, &tested_sections);
+>>          if (ret < 0)
+>>                  goto out_put;
+>>
+>> @@ -793,6 +843,7 @@ static int do_test_code_reading(bool try_kcore)
+>>          perf_thread_map__put(threads);
+>>          machine__delete(machine);
+>>          perf_env__exit(&host_env);
+>> +       tested_sections__free(&tested_sections);
+>>
+>>          return err;
+>>   }
+>>
+>> ---
+>> base-commit: a22d167ed82505f770340c3a7c257c04ba24dac9
+>> change-id: 20251006-james-perf-object-code-reading-9646e486d595
+>>
+>> Best regards,
+>> --
+>> James Clark <james.clark@linaro.org>
+>>
+
