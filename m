@@ -1,65 +1,65 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C8B2C3258
-	for <linux-perf-users@vger.kernel.org>; Tue,  7 Oct 2025 09:10:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB6D2DBF7C
+	for <linux-perf-users@vger.kernel.org>; Tue,  7 Oct 2025 12:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759828218; cv=none; b=DeyWqyGwBhi5MQF7XfY4QxxYmbMmf6hZvDKsIa+9bAu23KLNX1bEBQZmFhQCoto4dsFze8LcHluBzjAolhaFcBlPFbPGYnw6iAfy2xbgpJvqswIGFCvkh7PfLFsSFusUa5XbJm5hslXJyyPvb4BJnerW6BuiXKuV4vH4XVIMmgo=
+	t=1759840491; cv=none; b=c07eK1VDTJmKl5GSE1kzw5e6+ZrmbzFZge4NutxemoLEVr1eXgmAynqbXAtsmwCVflnSAAhuKfx3eWcmMOfIYgfGSph1z6syffUzDHkRUft1zEb6JKrvuo1bEc2CPm7uWIacV5dTQtTZxOf6oRtunNHgr/y5gWDDx7asHXKAZ/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759828218; c=relaxed/simple;
-	bh=xkurHUrHiDvxiaLEkzB8GFBV/iCz22WvC9ERFE1fsyw=;
+	s=arc-20240116; t=1759840491; c=relaxed/simple;
+	bh=K7HootoGsJoDCytEZbhrEIRHi1K8dNLAb4/ufI/qnWk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HzqZtUglA5FZKE18bLIXUPKWxNH7/4WWbZCEUoqdYCI3FFNukajQxhWzj3Dw/OYz01/yYoeh1kiV67zVq5TjNiYpOV2NebPu9jSiH8cL+WQp0bsTrEhPTuw/KWUiv+m6kBGskuWRzkuN94UCrUqwAdiDQXXu40DR8LuE5rnFYuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VEkE620G; arc=none smtp.client-ip=209.85.128.43
+	 In-Reply-To:Content-Type; b=DqAWhK2RvkcAtLJeXYPPD8UssP7/TL8IXDVHxQwIQaBqQgWHLZnFLZKMmwpJaFD3ztz2RUBzkmV7GJBsYAQlOYqaqZmuNlbPv6cuZ66b+rEz+unRqA4WvjwcurKRIQ9jcobIduikAiQuXB5gcA3ogqrcXpPYbQfzk3PPPnaS7A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IQ+6DY3O; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VEkE620G"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-46b303f755aso46053155e9.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 Oct 2025 02:10:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IQ+6DY3O"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-46e2826d5c6so48169555e9.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 Oct 2025 05:34:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1759828214; x=1760433014; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1759840488; x=1760445288; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=1A5grJalUNQTGqrKuVDzibQGrnaKKNODDxPG9phNRc4=;
-        b=VEkE620GO+P0p3Kl0IhNLbTLGXNiylhm8Uzo2xfxp8/jOR0WuAqG3sUNL8PjADOo20
-         oTHtrtITiaAt19/OqyVmJ6KL88ECRkSOP+WeDv45m32kT5hFYQzz+w/7q75P1GLpr+fW
-         bGB898LsHqpTqCVNcuPixVkdPeHqcpANCed3u9dOjEY3Fuj/Yl/WV2PsLoNajvO9lp/5
-         cucyxZmvPN5yNmTz/o2K26DMspSXS1xs0xnlDnA7VWMX8C0NSwdjiAgGwy+EAvu4i+hZ
-         Z1FORkaW6COnrX75lZiC8o3Tg0iJqddDh0s4CQcp/s8Jc+No+lUWATBmpgQNZQdTAPp3
-         CFOQ==
+        bh=mlMpRFESv4rtaqIC7khHxfBNOCJGnluYaphvkdManIs=;
+        b=IQ+6DY3OHUJuUzejcC8KblO5Qd3EaZIxBEBt4BLd2ZOhKMbmP7GL5jL6+35QL1EN4V
+         MSyLy+9/O3hxbL0/tKl15bsqL1X8n8a+0kEqjOWIw447RhMJksgA0sOGdcw6svW6A22x
+         2IW7MQsBJlRI+/adrD9EfCZiQ90uWw117IKklT0N1NU43zPmAzpiCvdMaWyaLhdVkQTV
+         YtoKjWqagyVhnc4OxtdWlgSgofIqdo7WT/FX2DQvrn6YOEFopl75DMmeyxZD4LP0oyxp
+         qSveIEwVljiw9RpkEMe7hgdJnh2021lBAYehvgQotHTFlAFDL/NO1k9IT896EOCMnPBO
+         jsHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759828214; x=1760433014;
+        d=1e100.net; s=20230601; t=1759840488; x=1760445288;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1A5grJalUNQTGqrKuVDzibQGrnaKKNODDxPG9phNRc4=;
-        b=uzm9xCfi6MbwuzwpkzeFV5gu49Yv3uvdQU4fGl11bgSCR61c1xj5l4T/mZbWoTQlRk
-         fDxTC/zk7Bym/RSMURPjXG7Vuf+qNboDheu3n06aUl2cV34K35c/kcOhQtWJAz0ZrIkG
-         veXAkJ20loBWlrAveBf1YFVQaq0MWf6nExcfDE1K2+F0XJXt3rCYV1RLLhQl4DUEtnVx
-         LlOx679m6FV3veSvHzt9ku+BNv6KDehgr8ysJ/6OgzP9Ln/B8Yt9ueuRVoNhW9MT+8UP
-         V5Bnqs3e5rk0ZTp80jv92pPgSNu2VosfNV4K6OG5Eo6jLLDTOTFFGOCYWAw+mvQLuzyd
-         UJyg==
-X-Forwarded-Encrypted: i=1; AJvYcCVZKTEjDUpl4iPXC+DN0rID25XtmHq6aBrEUcFH9HpuOrToOzNs8T450ze1MB+lcj7Lf7bq0OgFNDeN7KZcXEvc@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEFUDMCg3G9pmEnSWmp8ZEtwIjJ6XWtpZUGWaqAMOFQO/NoaJC
-	hfAkLlAQ7Gmok39xDHAPuleAW8bUeNxZcx/diG1wPRJPx/gAWY+Cr7SdxO7j3Fn8Yq4=
-X-Gm-Gg: ASbGnctU9hQKRGtgiG71AZ6utxkrjC7wOWzTq5bcAtF2sNvb98FhKG3/2SFI6J21H4g
-	QQbfVRmoZJl54Y/3hFBhPt/bvMv48Cqm17Ow+7PRS8i6fbJNF30Mzc9fsiAEwxXx7FRCyDP4CWd
-	5DMvBXkZgEOOzpvZZGx8jfJx8UCog93oSpdwf6RFfdiuQGj0p+UVJBd8zqh8J8edW5DqgbJ0bBS
-	1kC5kWUD3zQsokeH60JJy92nvbbtBuCJAJRt5si6KKFIXoE58eioS3q1dw4RfXMoTIQr7r34Ng4
-	j7vpEweTfxRPOG7x9l8wTeGisWim2NoBe7Jc0+F31tay69MdSLGEC0AI9MvWMOmBNOh1LIfW/2p
-	OO6qntSyi2BRR9T0PWRQtygxNdjx7eIzizET/nU2w7nRMPxEkSBTpcnQP
-X-Google-Smtp-Source: AGHT+IGMFiVKJp39q+pMns0W0NskfICt/r26mga3cpyM8uAPmyuedwXmOqFinHFTEHYx9lKQOrElfw==
-X-Received: by 2002:a05:600d:41f3:b0:46e:4a78:dea9 with SMTP id 5b1f17b1804b1-46e71145dc7mr133486085e9.17.1759828213740;
-        Tue, 07 Oct 2025 02:10:13 -0700 (PDT)
+        bh=mlMpRFESv4rtaqIC7khHxfBNOCJGnluYaphvkdManIs=;
+        b=nz292SCDgTpbRbs0wry8/apcD1NgvGE8JphfaxCNc97CzRpnGXgdWMN4Wzi0L0MAuE
+         nuT0oyHPuDj66mljDO657UgRzWU0jVjmKUg59ogCGn7P6RvVpmaas5HsOTkikQjrOKM8
+         naOTDka2P8Oh3FvA+TUCk6S0Tn1qeqE7vRtQUABm5QCedshazzWuSMmhRHfC8fIrt4nv
+         flKg1RDi2EXH0CqQHoSPup5QSd2l/Y2G/UtrR3wdBRlZzxtxcy/RfZU4DVHt2yrtR7ca
+         tiVCQPvdZgz+J5YtZCJVDJ89gHbefWBV+mhuk2IgSuc+wckYqh8M39sS3RMXKfKg+BIo
+         fiXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVWpS6gdbmXm7azctJ3/39ChxRXOaIVZQy+lbBfxzoE4jpW3hWn22rCXNAB8MzajqEyzz5K1kotZB90eAh0TK5E@vger.kernel.org
+X-Gm-Message-State: AOJu0YxffsMnpjrMC/CrsSWyv7B8JVglR62RJ9ikfZppqx4dBkqEaTLB
+	RXY87tgMubDL7KeeqRz3JKa0xFlgA9cYCyEMgdj0h9DrmgLYCtb0Hhxumec9XGzGzR4=
+X-Gm-Gg: ASbGncuzqpe10SEPudXBNVKYlWmNAdTGd03tZFLrXFC71pFqcx5aDsOIRhhSevPmjhW
+	pmlghAzvK+iTweT0/e28DgT28K/+VzTrBGVAEBVJCiflGgrPFA9mH2DwyCX8H7s1i0e1LCc2LzI
+	T96sZyd6ktzawHmJuhCI3G/Mfr9NxhCYxgIVwi3rR1I3JfNh7n5yn5z7HfZYzxkxd10vT9lvb3Q
+	9pKo/HugWCVdps6l2BM77r/g+WagIpWvkhVQg4ya3uhotJ4R/p1cMwl9jWg+pA9UMWg1o8ixsNz
+	yoxU5RKbS0XwAg7HraThMPE8gXg+u16CxegrN/4604Bcz8o9waMMVCgTxRrm//yDyGcgNks8TTw
+	1BWSML/NXXpjuR+gSLCePNxJ15P3W8EV7H1e1aM9ITXyjqqvj4CabvAWW
+X-Google-Smtp-Source: AGHT+IEdq9klpaIcMnOinitXn3AkphWfbtMmEJdjRN6LHJgnvDptPdzK2zC2u4AyApf7Ti+eTPVVjg==
+X-Received: by 2002:a05:600c:6094:b0:46e:39e1:fc3c with SMTP id 5b1f17b1804b1-46e710fff73mr120842315e9.5.1759840488096;
+        Tue, 07 Oct 2025 05:34:48 -0700 (PDT)
 Received: from [192.168.1.3] ([185.48.76.109])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e619c396esm292761625e9.8.2025.10.07.02.10.12
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46e72374ac5sm231512715e9.18.2025.10.07.05.34.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Oct 2025 02:10:13 -0700 (PDT)
-Message-ID: <b39ffdd5-1692-46ed-86d9-726011c92036@linaro.org>
-Date: Tue, 7 Oct 2025 10:10:12 +0100
+        Tue, 07 Oct 2025 05:34:47 -0700 (PDT)
+Message-ID: <ff157071-e241-4b81-8241-cfd15e5705ef@linaro.org>
+Date: Tue, 7 Oct 2025 13:34:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,302 +67,90 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf tests: Don't retest sections in "Object code
- reading"
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20251006-james-perf-object-code-reading-v1-1-acab2129747d@linaro.org>
- <CAP-5=fXmAbz7Gp5eCRFYsYu_pZoFNSR+mcJgE6Eu6YewHyLNtg@mail.gmail.com>
+Subject: Re: [PATCH] perf tests record: allow for some difference in cycle
+ count in leader sampling test on aarch64
+To: Thomas Richter <tmricht@linux.ibm.com>,
+ Anubhav Shelat <ashelat@redhat.com>
+Cc: mpetlan@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ irogers@google.com, linux-perf-users@vger.kernel.org, peterz@infradead.org,
+ mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+ jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ dapeng1.mi@linux.intel.com
+References: <20251001195047.541745-2-ashelat@redhat.com>
+ <906a9e47-ec19-4897-bbc0-06101d7afd24@linux.ibm.com>
+ <CA+G8DhL49FWD47bkbcXYeb9T=AbxNhC-ypqjkNxRnW0JqmYnPw@mail.gmail.com>
+ <901d2d1d-647a-4a76-a0ee-d8a687ed3f85@linux.ibm.com>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <CAP-5=fXmAbz7Gp5eCRFYsYu_pZoFNSR+mcJgE6Eu6YewHyLNtg@mail.gmail.com>
+In-Reply-To: <901d2d1d-647a-4a76-a0ee-d8a687ed3f85@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
 
-On 06/10/2025 4:21 pm, Ian Rogers wrote:
-> On Mon, Oct 6, 2025 at 6:11 AM James Clark <james.clark@linaro.org> wrote:
+On 07/10/2025 6:47 am, Thomas Richter wrote:
+> On 10/2/25 15:39, Anubhav Shelat wrote:
+>> On Oct 1, 2025 at 9:44 PM, Ian Rogers wrote:
+>>> If cycles is 0 then this will always pass, should this be checking a
+>> range?
 >>
->> We already only test each kcore map once, but on slow systems
->> (particularly with network filesystems) even the non-kcore maps are
->> slow. The test can test the same objump output over and over which only
->> wastes time. Generalize the skipping mechanism to track all DSOs and
->> addresses so that each section is only tested once.
+>> Yes you're right this will be better.
 >>
->> On a fully loaded Arm Juno (simulating a parallel Perf test run) with a
->> network filesystem, the original runtime is:
+>> On Oct 2, 2025 at 7:56 AM, Thomas Richter wrote:
+>>> Can we use a larger range to allow the test to pass?
 >>
->>    real  1m51.126s
->>    user  0m19.445s
->>    sys   1m15.431s
+>> What range do you get on s390? When I do group measurements using "perf
+>> record -e "{cycles,cycles}:Su" perf test -w brstack" like in the test I
+>> always get somewhere between 20 and 50 cycles difference. I haven't tested
+>> on s390x, but I see no cycle count difference when testing the same command
+>> on x86. I have observed much larger, more varied differences when using
+>> software events.
 >>
->> And the new runtime is:
+>> Anubhav
 >>
->>    real  0m48.873s
->>    user  0m8.031s
->>    sys   0m32.353s
->>
->> Signed-off-by: James Clark <james.clark@linaro.org>
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> Here is the output of the
 > 
->> ---
->>   tools/perf/tests/code-reading.c | 119 ++++++++++++++++++++++++++++------------
->>   1 file changed, 85 insertions(+), 34 deletions(-)
->>
->> diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
->> index 9c2091310191..4c9fbf6965c4 100644
->> --- a/tools/perf/tests/code-reading.c
->> +++ b/tools/perf/tests/code-reading.c
->> @@ -2,6 +2,7 @@
->>   #include <errno.h>
->>   #include <linux/kconfig.h>
->>   #include <linux/kernel.h>
->> +#include <linux/rbtree.h>
->>   #include <linux/types.h>
->>   #include <inttypes.h>
->>   #include <stdlib.h>
->> @@ -39,11 +40,64 @@
->>   #define BUFSZ  1024
->>   #define READLEN        128
->>
->> -struct state {
->> -       u64 done[1024];
->> -       size_t done_cnt;
->> +struct tested_section {
->> +       struct rb_node rb_node;
->> +       u64 addr;
->> +       char path[PATH_MAX];
->>   };
->>
->> +static bool tested_code_insert_or_exists(const char *path, u64 addr,
->> +                                        struct rb_root *tested_sections)
->> +{
->> +       struct rb_node **node = &tested_sections->rb_node;
->> +       struct rb_node *parent = NULL;
->> +       struct tested_section *data;
->> +
->> +       while (*node) {
->> +               int cmp;
->> +
->> +               parent = *node;
->> +               data = rb_entry(*node, struct tested_section, rb_node);
->> +               cmp = strcmp(path, data->path);
->> +               if (!cmp) {
->> +                       if (addr < data->addr)
->> +                               cmp = -1;
->> +                       else if (addr > data->addr)
->> +                               cmp = 1;
->> +                       else
->> +                               return true; /* already tested */
->> +               }
->> +
->> +               if (cmp < 0)
->> +                       node = &(*node)->rb_left;
->> +               else
->> +                       node = &(*node)->rb_right;
->> +       }
->> +
->> +       data = zalloc(sizeof(*data));
->> +       if (!data)
->> +               return true;
->> +
->> +       data->addr = addr;
->> +       strlcpy(data->path, path, sizeof(data->path));
+>   # perf record  -e "{cycles,cycles}:Su" -- ./perf test -w brstack
+>   # perf script | grep brstack
 > 
-> nit: perhaps strdup rather than having 4kb per tested_section.
+> commands:
 > 
-> Thanks,
-> Ian
+> perf 1110782 426394.696874:    6885000 cycles:           116fc9e brstack_bench+0xae (/r>
+> perf 1110782 426394.696875:    1377000 cycles:           116fb98 brstack_foo+0x0 (/root>
+> perf 1110782 426394.696877:    1377000 cycles:           116fb48 brstack_bar+0x0 (/root>
+> perf 1110782 426394.696878:    1377000 cycles:           116fc94 brstack_bench+0xa4 (/r>
+> perf 1110782 426394.696880:    1377000 cycles:           116fc84 brstack_bench+0x94 (/r>
+> perf 1110782 426394.696881:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
+> perf 1110782 426394.696883:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
+> perf 1110782 426394.696884:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
+> perf 1110782 426394.696885:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
+> perf 1110782 426394.696887:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
+> perf 1110782 426394.696888:    1377000 cycles:           116fc98 brstack_bench+0xa8 (/r>
+> perf 1110782 426394.696890:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
+> perf 1110782 426394.696891:    1377000 cycles:           116fc9e brstack_bench+0xae (/r>
+> perf 1110782 426394.703542:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
+> perf 1110782 426394.703542:   30971975 cycles:           116fb7c brstack_bar+0x34 (/roo>
+> perf 1110782 426394.703543:    1377000 cycles:           116fc76 brstack_bench+0x86 (/r>
+> perf 1110782 426394.703545:    1377000 cycles:           116fc06 brstack_bench+0x16 (/r>
+> perf 1110782 426394.703546:    1377000 cycles:           116fc9e brstack_bench+0xae (/r>
+> perf 1110782 426394.703547:    1377000 cycles:           116fc20 brstack_bench+0x30 (/r>
+> perf 1110782 426394.703549:    1377000 cycles:           116fc9e brstack_bench+0xae (/r>
+> perf 1110782 426394.703550:    1377000 cycles:           116fcbc brstack_bench+0xcc
+> 
+> They are usual identical values beside one or two which are way off. Ignoring those would
+> be good.
 > 
 
-Oh yeah that would have been better, not sure why I didn't do it that 
-way. Although the max sections I saw was around 50, and it's usually a 
-lot less so it's probably not worth the churn to change it now that 
-Arnaldo's applied it?
+FWIW I ran 100+ iterations my Arm Juno and N1SDP boards and the test 
+passed every time.
 
-Thanks
+Are we sure there isn't some kind of race condition or bug that the test 
+has found? Rather than a bug in the test?
+
+At least "This looks like the result of some hardware property of 
+aarch64 processors" in the commit message can't be accurate as this 
+isn't the case everywhere.
+
 James
-
->> +       rb_link_node(&data->rb_node, parent, node);
->> +       rb_insert_color(&data->rb_node, tested_sections);
->> +       return false;
->> +}
->> +
->> +static void tested_sections__free(struct rb_root *root)
->> +{
->> +       while (!RB_EMPTY_ROOT(root)) {
->> +               struct rb_node *node = rb_first(root);
->> +               struct tested_section *ts = rb_entry(node,
->> +                                                    struct tested_section,
->> +                                                    rb_node);
->> +
->> +               rb_erase(node, root);
->> +               free(ts);
->> +       }
->> +}
->> +
->>   static size_t read_objdump_chunk(const char **line, unsigned char **buf,
->>                                   size_t *buf_len)
->>   {
->> @@ -316,13 +370,15 @@ static void dump_buf(unsigned char *buf, size_t len)
->>   }
->>
->>   static int read_object_code(u64 addr, size_t len, u8 cpumode,
->> -                           struct thread *thread, struct state *state)
->> +                           struct thread *thread,
->> +                           struct rb_root *tested_sections)
->>   {
->>          struct addr_location al;
->>          unsigned char buf1[BUFSZ] = {0};
->>          unsigned char buf2[BUFSZ] = {0};
->>          size_t ret_len;
->>          u64 objdump_addr;
->> +       u64 skip_addr;
->>          const char *objdump_name;
->>          char decomp_name[KMOD_DECOMP_LEN];
->>          bool decomp = false;
->> @@ -350,6 +406,18 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
->>                  goto out;
->>          }
->>
->> +       /*
->> +        * Don't retest the same addresses. objdump struggles with kcore - try
->> +        * each map only once even if the address is different.
->> +        */
->> +       skip_addr = dso__is_kcore(dso) ? map__start(al.map) : al.addr;
->> +       if (tested_code_insert_or_exists(dso__long_name(dso), skip_addr,
->> +                                        tested_sections)) {
->> +               pr_debug("Already tested %s @ %#"PRIx64" - skipping\n",
->> +                        dso__long_name(dso), skip_addr);
->> +               goto out;
->> +       }
->> +
->>          pr_debug("On file address is: %#"PRIx64"\n", al.addr);
->>
->>          if (len > BUFSZ)
->> @@ -387,24 +455,6 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
->>                  goto out;
->>          }
->>
->> -       /* objdump struggles with kcore - try each map only once */
->> -       if (dso__is_kcore(dso)) {
->> -               size_t d;
->> -
->> -               for (d = 0; d < state->done_cnt; d++) {
->> -                       if (state->done[d] == map__start(al.map)) {
->> -                               pr_debug("kcore map tested already");
->> -                               pr_debug(" - skipping\n");
->> -                               goto out;
->> -                       }
->> -               }
->> -               if (state->done_cnt >= ARRAY_SIZE(state->done)) {
->> -                       pr_debug("Too many kcore maps - skipping\n");
->> -                       goto out;
->> -               }
->> -               state->done[state->done_cnt++] = map__start(al.map);
->> -       }
->> -
->>          objdump_name = dso__long_name(dso);
->>          if (dso__needs_decompress(dso)) {
->>                  if (dso__decompress_kmodule_path(dso, objdump_name,
->> @@ -471,9 +521,9 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
->>          return err;
->>   }
->>
->> -static int process_sample_event(struct machine *machine,
->> -                               struct evlist *evlist,
->> -                               union perf_event *event, struct state *state)
->> +static int process_sample_event(struct machine *machine, struct evlist *evlist,
->> +                               union perf_event *event,
->> +                               struct rb_root *tested_sections)
->>   {
->>          struct perf_sample sample;
->>          struct thread *thread;
->> @@ -494,7 +544,8 @@ static int process_sample_event(struct machine *machine,
->>                  goto out;
->>          }
->>
->> -       ret = read_object_code(sample.ip, READLEN, sample.cpumode, thread, state);
->> +       ret = read_object_code(sample.ip, READLEN, sample.cpumode, thread,
->> +                              tested_sections);
->>          thread__put(thread);
->>   out:
->>          perf_sample__exit(&sample);
->> @@ -502,10 +553,11 @@ static int process_sample_event(struct machine *machine,
->>   }
->>
->>   static int process_event(struct machine *machine, struct evlist *evlist,
->> -                        union perf_event *event, struct state *state)
->> +                        union perf_event *event, struct rb_root *tested_sections)
->>   {
->>          if (event->header.type == PERF_RECORD_SAMPLE)
->> -               return process_sample_event(machine, evlist, event, state);
->> +               return process_sample_event(machine, evlist, event,
->> +                                           tested_sections);
->>
->>          if (event->header.type == PERF_RECORD_THROTTLE ||
->>              event->header.type == PERF_RECORD_UNTHROTTLE)
->> @@ -525,7 +577,7 @@ static int process_event(struct machine *machine, struct evlist *evlist,
->>   }
->>
->>   static int process_events(struct machine *machine, struct evlist *evlist,
->> -                         struct state *state)
->> +                         struct rb_root *tested_sections)
->>   {
->>          union perf_event *event;
->>          struct mmap *md;
->> @@ -537,7 +589,7 @@ static int process_events(struct machine *machine, struct evlist *evlist,
->>                          continue;
->>
->>                  while ((event = perf_mmap__read_event(&md->core)) != NULL) {
->> -                       ret = process_event(machine, evlist, event, state);
->> +                       ret = process_event(machine, evlist, event, tested_sections);
->>                          perf_mmap__consume(&md->core);
->>                          if (ret < 0)
->>                                  return ret;
->> @@ -637,9 +689,7 @@ static int do_test_code_reading(bool try_kcore)
->>                          .uses_mmap   = true,
->>                  },
->>          };
->> -       struct state state = {
->> -               .done_cnt = 0,
->> -       };
->> +       struct rb_root tested_sections = RB_ROOT;
->>          struct perf_thread_map *threads = NULL;
->>          struct perf_cpu_map *cpus = NULL;
->>          struct evlist *evlist = NULL;
->> @@ -773,7 +823,7 @@ static int do_test_code_reading(bool try_kcore)
->>
->>          evlist__disable(evlist);
->>
->> -       ret = process_events(machine, evlist, &state);
->> +       ret = process_events(machine, evlist, &tested_sections);
->>          if (ret < 0)
->>                  goto out_put;
->>
->> @@ -793,6 +843,7 @@ static int do_test_code_reading(bool try_kcore)
->>          perf_thread_map__put(threads);
->>          machine__delete(machine);
->>          perf_env__exit(&host_env);
->> +       tested_sections__free(&tested_sections);
->>
->>          return err;
->>   }
->>
->> ---
->> base-commit: a22d167ed82505f770340c3a7c257c04ba24dac9
->> change-id: 20251006-james-perf-object-code-reading-9646e486d595
->>
->> Best regards,
->> --
->> James Clark <james.clark@linaro.org>
->>
 
