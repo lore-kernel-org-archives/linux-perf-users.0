@@ -1,44 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07DD2F1FE1;
-	Wed,  8 Oct 2025 07:35:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C132F069E
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Oct 2025 07:52:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759908930; cv=none; b=ug0p2UNoHVSAlG/Gxsg9VLuVbTSF2nPNu8j+Ae7daoTMQRTl5RGWGy8ukRP75hELtzxNJZTSUiVpt54uEik5iscA/bI5USNocGMZENPFDo22gJwmHyhiMXnrse3umgyFdEwEdS7NWQMOH8qLQzvqsFfL5l5SOml08syoODigL40=
+	t=1759909947; cv=none; b=sIA1ocUvKRqRN2JkjbpgGuoyvqrqgeN9GQNvMxQTmENCfwSXccFZX4Qf0d6URu/sTRPxHBSBwmbdak0QZjDOjSfh1iIaG9UXaxuJJqRoaH4vbF59vtHCrib0aqxxIAHIrUQQR5iNiKUY1fp0t2BohepnYZO2XW6058bxEWrmo+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759908930; c=relaxed/simple;
-	bh=TK/uviFFMNE2V5+nUNwLfxLce1AfY4qZki5torwTTps=;
+	s=arc-20240116; t=1759909947; c=relaxed/simple;
+	bh=G0cbNSyBpXYxRhOXDRje58RJjj/D6lOV3JI1waB5eCU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lE5Ao6WbcL4sSjP6BIvQftTu3HvXFLXZaVF/4jipP7bhfrcVVNOExudvBOqDGz4fwXFs6nox7nqA5YchIba9w7bzhyjQ5+nEq71w56i33ELYIsq6T/VYXT7CSo4Yxxg/7NcbRW2DOQ9BYQdJovgTncSRH8pHVA7Pe9N951RvrVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qFGpnXtO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=AzyRibGSnkrAOznWIOT62RIyr9HD7uz3y+cKb8dhtTn9wGqeF5CQHuhPDUaPRMi8RFVdnQN4oSfmrSILta7faIvDvJhfFF/p+jldsmkGX8fULkZ5m672k9IKAR3FHOlLZEfte2H8dY2SkD8m19GDYmg5EPdoE1o4jNXi6oiJ1vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h1tiRUv6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qFGpnXtO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE2E9C4CEF4;
-	Wed,  8 Oct 2025 07:35:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h1tiRUv6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36050C4CEF9;
+	Wed,  8 Oct 2025 07:52:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759908930;
-	bh=TK/uviFFMNE2V5+nUNwLfxLce1AfY4qZki5torwTTps=;
+	s=k20201202; t=1759909947;
+	bh=G0cbNSyBpXYxRhOXDRje58RJjj/D6lOV3JI1waB5eCU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qFGpnXtOc8YuoR+y6MRQe46Fys5QvoydJirLuBJgyGloesWHI6IX9HBK55k/JvVmb
-	 PRq4BN8UuNfq/JmEHcviCpKN49AMJwBA2z+v/JYDaWVj2YpjAl4Ew9ylHZ1Suq95N3
-	 gMZK9Ezt5ySbtGv7n5mpfiuvZVfGplY07C6FqW31382NUUbekcNALxROz4+fd+LBUe
-	 RwBVIpxluBYk3anMepAc7iPcnVSWtLpMftJcOHQ0gmUtQ0w/SRrQzCA8ITPWzRRFXP
-	 8druukSrY+uoB2utMWjnKFJT/Pr+8neIKaK/7ukWicVosm6dh6F9ywfC0X379owwQH
-	 wPa/9A2h3/AeA==
-Date: Wed, 8 Oct 2025 16:35:25 +0900
+	b=h1tiRUv65mLXZbrlqGSetGJnHy+dB7mbQ59ivM/xlLnxM3/1pprgqwU2gRqtF3f2K
+	 tw8Z7G26w3J96VWGWQB4RPfnA9Phydn1ixkBElqUzFcU86Ihl+qnbS4S/MtSXb/Vwp
+	 zaW8ofY81AtnT5Fa1epTvL1Ci0DAQ3TTj6VtZlUIb/paeTy+/yL5j4EnAG8F6bK7l6
+	 PCGlMniQNMhLfwHboxLvaIfSHbO11Ua5qMkHrlCbGnBFrpvROGRpiQWr5zpcSy3GHv
+	 RLIrtwCLfYAr8M2jLLAFuxxtiSMwaCsI6Drj6loJR+bIM01ey6jowo/Bu+blR8hC74
+	 w2lpcM1nME/gQ==
+Date: Wed, 8 Oct 2025 16:52:21 +0900
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Tengda Wu <wutengda@huaweicloud.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf bpf_counter: Fix opening of "any"(-1) CPU events
-Message-ID: <aOYUPWbyQv53hrjE@google.com>
-References: <20251007185826.3674908-1-irogers@google.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Thomas Richter <tmricht@linux.ibm.com>,
+	Anubhav Shelat <ashelat@redhat.com>, mpetlan@redhat.com,
+	acme@kernel.org, irogers@google.com,
+	linux-perf-users@vger.kernel.org, peterz@infradead.org,
+	mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com,
+	dapeng1.mi@linux.intel.com
+Subject: Re: [PATCH] perf tests record: allow for some difference in cycle
+ count in leader sampling test on aarch64
+Message-ID: <aOYYNb98V2eL0QK6@google.com>
+References: <20251001195047.541745-2-ashelat@redhat.com>
+ <906a9e47-ec19-4897-bbc0-06101d7afd24@linux.ibm.com>
+ <CA+G8DhL49FWD47bkbcXYeb9T=AbxNhC-ypqjkNxRnW0JqmYnPw@mail.gmail.com>
+ <901d2d1d-647a-4a76-a0ee-d8a687ed3f85@linux.ibm.com>
+ <ff157071-e241-4b81-8241-cfd15e5705ef@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,71 +53,89 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251007185826.3674908-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ff157071-e241-4b81-8241-cfd15e5705ef@linaro.org>
 
-Hi Ian,
+Hello,
 
-On Tue, Oct 07, 2025 at 11:58:26AM -0700, Ian Rogers wrote:
-> The bperf BPF counter code doesn't handle "any"(-1) CPU events, always
-> wanting to aggregate a count against a CPU, which avoids the need for
-> atomics. Force evsels used for BPF counters to require a CPU when not
-> in system-wide mode so that the "any"(-1) value isn't used during map
-> propagation and evsel's CPU map matches that of the PMU.
+On Tue, Oct 07, 2025 at 01:34:46PM +0100, James Clark wrote:
 > 
-> Fixes: b91917c0c6fa ("perf bpf_counter: Fix handling of cpumap fixing hybrid")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-stat.c     | 12 ++++++++++++
->  tools/perf/util/bpf_counter.c |  1 +
->  2 files changed, 13 insertions(+)
 > 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 7006f848f87a..7fdc7f273a48 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -2797,6 +2797,18 @@ int cmd_stat(int argc, const char **argv)
->  
->  	evlist__warn_user_requested_cpus(evsel_list, target.cpu_list);
->  
-> +	if (target.use_bpf && !target.system_wide) {
+> On 07/10/2025 6:47 am, Thomas Richter wrote:
+> > On 10/2/25 15:39, Anubhav Shelat wrote:
+> > > On Oct 1, 2025 at 9:44 PM, Ian Rogers wrote:
+> > > > If cycles is 0 then this will always pass, should this be checking a
+> > > range?
+> > > 
+> > > Yes you're right this will be better.
+> > > 
+> > > On Oct 2, 2025 at 7:56 AM, Thomas Richter wrote:
+> > > > Can we use a larger range to allow the test to pass?
+> > > 
+> > > What range do you get on s390? When I do group measurements using "perf
+> > > record -e "{cycles,cycles}:Su" perf test -w brstack" like in the test I
+> > > always get somewhere between 20 and 50 cycles difference. I haven't tested
+> > > on s390x, but I see no cycle count difference when testing the same command
+> > > on x86. I have observed much larger, more varied differences when using
+> > > software events.
+> > > 
+> > > Anubhav
+> > > 
+> > 
+> > Here is the output of the
+> > 
+> >   # perf record  -e "{cycles,cycles}:Su" -- ./perf test -w brstack
+> >   # perf script | grep brstack
+> > 
+> > commands:
+> > 
+> > perf 1110782 426394.696874:    6885000 cycles:           116fc9e brstack_bench+0xae (/r>
+> > perf 1110782 426394.696875:    1377000 cycles:           116fb98 brstack_foo+0x0 (/root>
+> > perf 1110782 426394.696877:    1377000 cycles:           116fb48 brstack_bar+0x0 (/root>
+> > perf 1110782 426394.696878:    1377000 cycles:           116fc94 brstack_bench+0xa4 (/r>
+> > perf 1110782 426394.696880:    1377000 cycles:           116fc84 brstack_bench+0x94 (/r>
+> > perf 1110782 426394.696881:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
+> > perf 1110782 426394.696883:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
+> > perf 1110782 426394.696884:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
+> > perf 1110782 426394.696885:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
+> > perf 1110782 426394.696887:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
+> > perf 1110782 426394.696888:    1377000 cycles:           116fc98 brstack_bench+0xa8 (/r>
+> > perf 1110782 426394.696890:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
+> > perf 1110782 426394.696891:    1377000 cycles:           116fc9e brstack_bench+0xae (/r>
+> > perf 1110782 426394.703542:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
+> > perf 1110782 426394.703542:   30971975 cycles:           116fb7c brstack_bar+0x34 (/roo>
+> > perf 1110782 426394.703543:    1377000 cycles:           116fc76 brstack_bench+0x86 (/r>
+> > perf 1110782 426394.703545:    1377000 cycles:           116fc06 brstack_bench+0x16 (/r>
+> > perf 1110782 426394.703546:    1377000 cycles:           116fc9e brstack_bench+0xae (/r>
+> > perf 1110782 426394.703547:    1377000 cycles:           116fc20 brstack_bench+0x30 (/r>
+> > perf 1110782 426394.703549:    1377000 cycles:           116fc9e brstack_bench+0xae (/r>
+> > perf 1110782 426394.703550:    1377000 cycles:           116fcbc brstack_bench+0xcc
+> > 
+> > They are usual identical values beside one or two which are way off. Ignoring those would
+> > be good.
+> > 
+> 
+> FWIW I ran 100+ iterations my Arm Juno and N1SDP boards and the test passed
+> every time.
+> 
+> Are we sure there isn't some kind of race condition or bug that the test has
+> found? Rather than a bug in the test?
 
-The target.use_bpf only checks the --bpf-counters option.  But IIUC it's
-possible to use BPF only for selected events with ':b' modifier.  I
-think you need to check each evsel with evsel__is_bperf().
+I suspect this too.
 
-Also system_wide might not be set for -C/--cpu option.  Probably you
-want target__has_cpu() instead of target.system_wide.
+> 
+> At least "This looks like the result of some hardware property of aarch64
+> processors" in the commit message can't be accurate as this isn't the case
+> everywhere.
+
+I guess this depends on hardware capability to start/stop the PMU globally
+rather than doing it for each counter.
+
+Maybe we can have two set of checks depends on the hardware.  For
+example, we keep the existing test on x86 (and selected ARM machines?)
+and add a range test for others.  It'd be great if the kernel could
+expose that information to userspace.
 
 Thanks,
 Namhyung
 
-
-> +		/*
-> +		 * Setup BPF counters to require CPUs as any(-1) isn't
-> +		 * supported. evlist__create_maps below will propagate this
-> +		 * information to the evsels.
-> +		 */
-> +		struct evsel *counter;
-> +
-> +		evlist__for_each_entry(evsel_list, counter)
-> +			counter->core.requires_cpu = true;
-> +	}
-> +
->  	if (evlist__create_maps(evsel_list, &target) < 0) {
->  		if (target__has_task(&target)) {
->  			pr_err("Problems finding threads of monitor\n");
-> diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
-> index ca5d01b9017d..d3e5933b171b 100644
-> --- a/tools/perf/util/bpf_counter.c
-> +++ b/tools/perf/util/bpf_counter.c
-> @@ -495,6 +495,7 @@ static int bperf_reload_leader_program(struct evsel *evsel, int attr_map_fd,
->  	 * following evsel__open_per_cpu call
->  	 */
->  	evsel->leader_skel = skel;
-> +	assert(!perf_cpu_map__has_any_cpu_or_is_empty(evsel->core.cpus));
->  	evsel__open(evsel, evsel->core.cpus, evsel->core.threads);
->  
->  out:
-> -- 
-> 2.51.0.710.ga91ca5db03-goog
-> 
