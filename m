@@ -1,67 +1,65 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E0A2EB86A
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Oct 2025 10:48:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771F12F6164
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Oct 2025 11:06:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759920541; cv=none; b=f924OuJof2oGlcQTlUti7HqklV3lz6MRsmkbiFpjhwEJ+YcmbwjFySIjH25zF29r4s6z8DJJFD8JMDnGsR9kiHpEL1Y5UvhpoGUaQt5A8T3EffOxHIo7OVQIuHDX7EqG8mNinQwHEcOr1E1oTpxDIbDMmD5l3qzj7y8fMi3lanU=
+	t=1759921581; cv=none; b=e9XKRa30/9NrJjZgZKYz7XrjksNeQbW4ypMG234460x1ZYnSIoDEBbbshA0ldH+DsrlTgjpm4Re43ngXIxP+v6kRktbSstqIJsRgGjIc+orW7ZZstmIkBRLW5KBRZsFB1rLbEUmMLR0NJ9zQlh6sbBz+BIy9yn0hwyfd9wqs0W8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759920541; c=relaxed/simple;
-	bh=ImCQ6d2lDlUWoNtKuxUNsT6PKMAZ4bZVEydtzfEcfF4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uo5Q9k4pjvbBHLRamIunHDPH2O4G6nBFV8DxjdHPW7Qys+tTZPSeFkovfNN5Yx9fcxh2X7YcxghkwrtH49h7cC+Dj47WofdIiAT1byjDFb1zBJEE2uNoD53sG77TcqufB1GKHDi8Yii168UFA/OR5sr65n1gOUoH70DH/Ege2uQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mA1qz7yj; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1759921581; c=relaxed/simple;
+	bh=rcwtB4rVyCBzKNTcc0KmvFQOQiz2Q3Ry7cOYyj+n2BQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=Q5siI1R2VVRMT/qtrhJmdsDr4kCpYQmj0qcafZE4Mp+QTFT0ZEdeiaOel0auHjS7CVT/18Eu0FUh51UBFeHCJv/4A8LL3Zk7+NDpfct8cK9QcshMBpLACAnxt7zaRaqjhlzmQk5b6J58VFxrUR19Ft2t74ZOiTRK9D6xRxe8xDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Fk1SIjNC; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mA1qz7yj"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5983RTSo013268;
-	Wed, 8 Oct 2025 10:48:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=ToRaCL
-	6EYUxB23El/lZOss43SWjhCUyjwz5ysCsoy78=; b=mA1qz7yjWXv9Q+ewo6z2yq
-	gKgdCfuJKzJcZYDBULL1zHoX7NBtzf0Fwq+HuyBidkxlDI0VaxquXxh+aylTRVYH
-	W8qALdbcE2j8I6w7XdXrN0e9Eu2nkyKGX4nMI828u/36aPY0ZZrEmifo85z8Ru+e
-	JEyoRLEVJR98PPRaIc4m02AdcMAxG0jCCbl0hdg5Aw7Eh+vy5lYsOxaKaq73TbQQ
-	7rh/F5kxM8/eFJWxkZ9YE0izKQyxVBXw7PpSmaSVIr1dc0xb7LxVauhB13nBJlpp
-	jDyAd6U6M+lSstmRhXApwd1E7TWLTWAAufsgHDks3p5o1MDjUOkiOUUZwHMJN/6g
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49jt0pkxc5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 08 Oct 2025 10:48:44 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 598AfnKt003388;
-	Wed, 8 Oct 2025 10:48:44 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 49jt0pkxby-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 08 Oct 2025 10:48:44 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5987RLGq021218;
-	Wed, 8 Oct 2025 10:48:43 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 49kgm1frgc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 08 Oct 2025 10:48:43 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 598AmfPW40435996
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 8 Oct 2025 10:48:41 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6CD4120043;
-	Wed,  8 Oct 2025 10:48:41 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1C68A2005A;
-	Wed,  8 Oct 2025 10:48:41 +0000 (GMT)
-Received: from [9.152.212.92] (unknown [9.152.212.92])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  8 Oct 2025 10:48:41 +0000 (GMT)
-Message-ID: <7a03fb30-87f9-4737-b59a-9f977acc7549@linux.ibm.com>
-Date: Wed, 8 Oct 2025 12:48:40 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fk1SIjNC"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-42420c7de22so3921514f8f.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Oct 2025 04:06:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1759921577; x=1760526377; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=w9skgAXCV5SdOI7tzHYlaMNV43kkRs+2XgsWaNKtkOk=;
+        b=Fk1SIjNCrHv0AxtqYk2mp3gjmEcQ6zcKnSkltZ5aawyp3tkWuoysQohc1wQUHkkxAW
+         3u2vs8e91wf6Wa3Sz81XMBR0uLWnE22r9PMzfDBcHGeFG+wOAKiD/F52LihigHvOgbkN
+         eAKR9gZGv6shkuluRUWJX0FbCa2W/AckgWDRCJxy8Mlo1HJC+tvjWgDOmKgKiezWbAUW
+         vwbhn6elwbrnD5DKau19HrU/lWnS4AiJ2TbTtigM6d8YnPAt9KjxrjN5NaQeIif7SDnD
+         mcOMP8hAgd+CdS5qcwpBg4wwIyHR24XLXZTOcOvNn8424A5paI1M3D+VrpJqF9i7FIfk
+         GMgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759921577; x=1760526377;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=w9skgAXCV5SdOI7tzHYlaMNV43kkRs+2XgsWaNKtkOk=;
+        b=IcdAEmynf+Hbb6TvuuIItIEqWB2+M2AOZ5jRXSaq/DSOxuH5YT0VFq4r+iusifexsD
+         wto2BeTbez26zeCiCx7VBZeuRDU9Ti4Kt9IQjsNyk/zy7aMmr5p8KR9eojeffaayqUZd
+         9lrvYaAEtSsyOP2LSMHmTmjknrhPkZCYOqh5kEHIoIxTP3hdxrhEg9UoW/Lo6Ri3sufE
+         bAdLj86eTFFWZCOh6/LnNPIL18gRCyJzYg1WDTG/+SkeRU00ZhCoUMK7grtwwDc3sMjP
+         AP/OLxoVJa3zF3kVujizJFEM2/kWVJLSPld29/nSCacTcgoJdFvxUDhjroxf7h1RiFLp
+         rGWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVG9YEfMUHRRDPD17IAB4Br2vbY0EN/qXQJhPoOwNx2AVKkGfDR1XTC+ukZVgFRgvoY1MQ4raiQOOAFm9Ir7+x7@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJCMWbEK1tFPehX+De3+BzW+envPFiJW0Br/9pHg5lgn99Zl9Y
+	1Qd9Jsd3OSq0ktgk1Y976T6fqu6cI7M2XRR/UtK2kgdiXa0Lf1MnAj4glQLyBdr+qYg=
+X-Gm-Gg: ASbGncv0L/FQhDSPTUN+unpKgTmMHenw77UsNNumgzon8L1mmARtyVy3daTmU1Omvgi
+	PbL+Isuaxr/aPD3wQgLVyZRNBsYCI0Ui4J+6ougAYZRpAvVa1ScBoEcIJARheIlBrz9wDyinEOk
+	kTob4WHHr5dPqnbo9+bK/pZErI3zexBbFPtv1SqEUa9mUMcOoYbcIY3LkOREfKJLO/dNgU0xntM
+	XfRxrUJX9wWgwN/xsERE1ZD2sUd7S5/wwFkgvkKGNye/PHc1ifYTmd8/51DecUfHJc4q9Fqyz7i
+	QnWxRUUNz0ZrPCrGoGPV/c9qqgJXzSuXo7R8V6/J2V8oG/Woe5Y7KfocKzUpIBaBWE++4scnQ9y
+	rk3oQ+tVkcvfk6CXA16X8pn7Tk7xE55z8riOr++3V6Z6lAXLetwimWPnoblgiEVkkfcQ=
+X-Google-Smtp-Source: AGHT+IFCaW9bqzii0o/1hvZKcttM6MZo9qaAIXOGfzuzrPpIJh30cCzasApmxEzd6HrEw7WMhn6Zsg==
+X-Received: by 2002:a05:6000:2c0d:b0:3e2:da00:44af with SMTP id ffacd0b85a97d-4266e8d8d0dmr1918170f8f.36.1759921576763;
+        Wed, 08 Oct 2025 04:06:16 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.76.109])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42585989607sm6721887f8f.53.2025.10.08.04.06.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Oct 2025 04:06:16 -0700 (PDT)
+Message-ID: <8ddd5f97-79a9-4608-8a40-871fb70f2725@linaro.org>
+Date: Wed, 8 Oct 2025 12:06:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,126 +67,52 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf tests record: allow for some difference in cycle
- count in leader sampling test on aarch64
-To: James Clark <james.clark@linaro.org>, Anubhav Shelat <ashelat@redhat.com>
-Cc: mpetlan@redhat.com, acme@kernel.org, namhyung@kernel.org,
-        irogers@google.com, linux-perf-users@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        dapeng1.mi@linux.intel.com
-References: <20251001195047.541745-2-ashelat@redhat.com>
- <906a9e47-ec19-4897-bbc0-06101d7afd24@linux.ibm.com>
- <CA+G8DhL49FWD47bkbcXYeb9T=AbxNhC-ypqjkNxRnW0JqmYnPw@mail.gmail.com>
- <901d2d1d-647a-4a76-a0ee-d8a687ed3f85@linux.ibm.com>
- <ff157071-e241-4b81-8241-cfd15e5705ef@linaro.org>
+Subject: Re: [PATCH v7 00/27] Legacy hardware/cache events as json
+To: Ian Rogers <irogers@google.com>
+References: <20251005182430.2791371-1-irogers@google.com>
 Content-Language: en-US
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <ff157071-e241-4b81-8241-cfd15e5705ef@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=XvT3+FF9 c=1 sm=1 tr=0 ts=68e6418c cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=jG6JC8piQt_4cliN:21 a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10
- a=_YuDahbZGq4wDAqHexcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-ORIG-GUID: CPMU_1_m3AqChhlXDX7DZrdI_8X_N9yg
-X-Proofpoint-GUID: 6OSi62SFxxgBwKUewt__XTEVK45t9hXY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDA0MDAwOSBTYWx0ZWRfX3/rNaCfUCsw5
- 0uChvzYROY/w4llIAnv0kCgUjrvrfOOG0e1wL5p+7GY9yxN+RSiimgGLc45BcCUK7DmvigSwr3I
- /K7k9XWEC1zawyop2ln9a325QEmq+bq3m693jC7rEheTkeoYoi0oG9vc/J8Odnv/JYjHEZh/zzr
- UCOPJJPKvD/Lisd0yKpcqMjsJ3qDkRSi1whXtwUEz/GkJLtwxcUZdT8VKZtU80v6Idpob0IPagp
- vBjpNFWO1+Zb/r855/NpVNiwD14UsziLM02ai9nZLU3/Q0m3RUVL2fmuszzo593Iqx03sL6oNag
- zh4E2o8dUtmtG2YMPcw6cEOLzNjDn/DX8iErYuIM3PllUiik2OebxTt9Z8ttux3ZKBxpnGl+i7L
- 8YJP8MgJzgPIvCF/et7CHyfz0jY/5g==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-08_03,2025-10-06_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 malwarescore=0 spamscore=0 lowpriorityscore=0 suspectscore=0
- phishscore=0 priorityscore=1501 clxscore=1015 adultscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2509150000 definitions=main-2510040009
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Xu Yang <xu.yang_2@nxp.com>, Thomas Falcon <thomas.falcon@intel.com>,
+ Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Atish Patra <atishp@rivosinc.com>,
+ Beeman Strong <beeman@rivosinc.com>, Leo Yan <leo.yan@arm.com>,
+ Vince Weaver <vincent.weaver@maine.edu>
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20251005182430.2791371-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 10/7/25 14:34, James Clark wrote:
+
+
+On 05/10/2025 7:24 pm, Ian Rogers wrote:
+> Mirroring similar work for software events in commit 6e9fa4131abb
+> ("perf parse-events: Remove non-json software events"). These changes
+> migrate the legacy hardware and cache events to json.  With no hard
+> coded legacy hardware or cache events the wild card, case
+> insensitivity, etc. is consistent for events. This does, however, mean
+> events like cycles will wild card against all PMUs. A change doing the
+> same was originally posted and merged from:
+> https://lore.kernel.org/r/20240416061533.921723-10-irogers@google.com
+> and reverted by Linus in commit 4f1b067359ac ("Revert "perf
+> parse-events: Prefer sysfs/JSON hardware events over legacy"") due to
+> his dislike for the cycles behavior on ARM with perf record. Earlier
+> patches in this series make perf record event opening failures
+> non-fatal and hide the cycles event's failure to open on ARM in perf
+> record, so it is expected the behavior will now be transparent in perf
+> record on ARM. perf stat with a cycles event will wildcard open the
+> event on all PMUs, however, with default events the cycles event will
+> only be opened on core PMUs.
 > 
-> 
-> On 07/10/2025 6:47 am, Thomas Richter wrote:
->> On 10/2/25 15:39, Anubhav Shelat wrote:
->>> On Oct 1, 2025 at 9:44 PM, Ian Rogers wrote:
->>>> If cycles is 0 then this will always pass, should this be checking a
->>> range?
->>>
->>> Yes you're right this will be better.
->>>
->>> On Oct 2, 2025 at 7:56 AM, Thomas Richter wrote:
->>>> Can we use a larger range to allow the test to pass?
->>>
->>> What range do you get on s390? When I do group measurements using "perf
->>> record -e "{cycles,cycles}:Su" perf test -w brstack" like in the test I
->>> always get somewhere between 20 and 50 cycles difference. I haven't tested
->>> on s390x, but I see no cycle count difference when testing the same command
->>> on x86. I have observed much larger, more varied differences when using
->>> software events.
->>>
->>> Anubhav
->>>
->>
->> Here is the output of the
->>
->>   # perf record  -e "{cycles,cycles}:Su" -- ./perf test -w brstack
->>   # perf script | grep brstack
->>
->> commands:
->>
->> perf 1110782 426394.696874:    6885000 cycles:           116fc9e brstack_bench+0xae (/r>
->> perf 1110782 426394.696875:    1377000 cycles:           116fb98 brstack_foo+0x0 (/root>
->> perf 1110782 426394.696877:    1377000 cycles:           116fb48 brstack_bar+0x0 (/root>
->> perf 1110782 426394.696878:    1377000 cycles:           116fc94 brstack_bench+0xa4 (/r>
->> perf 1110782 426394.696880:    1377000 cycles:           116fc84 brstack_bench+0x94 (/r>
->> perf 1110782 426394.696881:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
->> perf 1110782 426394.696883:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
->> perf 1110782 426394.696884:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
->> perf 1110782 426394.696885:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
->> perf 1110782 426394.696887:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
->> perf 1110782 426394.696888:    1377000 cycles:           116fc98 brstack_bench+0xa8 (/r>
->> perf 1110782 426394.696890:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
->> perf 1110782 426394.696891:    1377000 cycles:           116fc9e brstack_bench+0xae (/r>
->> perf 1110782 426394.703542:    1377000 cycles:           116fb7c brstack_bar+0x34 (/roo>
->> perf 1110782 426394.703542:   30971975 cycles:           116fb7c brstack_bar+0x34 (/roo>
->> perf 1110782 426394.703543:    1377000 cycles:           116fc76 brstack_bench+0x86 (/r>
->> perf 1110782 426394.703545:    1377000 cycles:           116fc06 brstack_bench+0x16 (/r>
->> perf 1110782 426394.703546:    1377000 cycles:           116fc9e brstack_bench+0xae (/r>
->> perf 1110782 426394.703547:    1377000 cycles:           116fc20 brstack_bench+0x30 (/r>
->> perf 1110782 426394.703549:    1377000 cycles:           116fc9e brstack_bench+0xae (/r>
->> perf 1110782 426394.703550:    1377000 cycles:           116fcbc brstack_bench+0xcc
->>
->> They are usual identical values beside one or two which are way off. Ignoring those would
->> be good.
->>
-> 
-> FWIW I ran 100+ iterations my Arm Juno and N1SDP boards and the test passed every time.
-> 
-> Are we sure there isn't some kind of race condition or bug that the test has found? Rather than a bug in the test?
-There is always a possibility of a bug, that can not be ruled out for certain.
-However as LPARs on s390 run on top of a hypervisor, there is a chance for the 
-linux guest being stopped while hardware keeps running.
 
-I see these runoff values time and again, roughly every second run fails with
-one runoff value
+Hi Ian,
 
-Hope this helps
+The previous issues seem to be fixed, I don't see any Perf test 
+regressions or issues when there is an uncore PMU with a cycles event.
 
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
+Tested-by: James Clark <james.clark@linaro.org>
 
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
 
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
