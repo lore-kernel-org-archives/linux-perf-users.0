@@ -1,695 +1,563 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E434C6C;
-	Wed,  8 Oct 2025 20:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759955318; cv=none; b=mXvdZUM0O9HZAKcBBCJvYzttLI/PXZMdUjjl/aLviZ/dffwwhOW0G4iylrSTNA3KWFSfWbo+FXy0ySSTSjTP/bXEizswONJclzQMxhtiQxkPFLEvfY2ZvXqtLqQFuLrqG7A8OYsFbthOXADfh+wOZMPSi+H5HenYnlOECvJlF3U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759955318; c=relaxed/simple;
-	bh=F729APzXr8ACy05uR1C2C6JPx94rKeLMfiT7NQxPmQQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OjozppuVrHypfM9EK3zVdRkFkx8jJPy3rmANzrU0yJ8FyaW55VLQdYK6+tJClMPJpPKgGD9Mut2MFFpwmGW7YRNGmnt6U3YAFWBfznBCJsHwhHX/a/1RjU3lOLKfo7ksgZOrxgPYRqr62/lIdpsskhyFgf2/J9oKtpmG/nIZgjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XJjiDOEZ; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43DF26A1A4;
+	Wed,  8 Oct 2025 20:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1759955447; cv=fail; b=seiW16n2dR9Y1ZenQLs+5rM4MeH03PCFGhj2TkP7+gqX6dDnzmhXL33ktTUaEhdOb6mPxN746kw+bJn8Ezov0ii6L9CpscsJn2LqJSJd5kNiMsdVCDDQ2lXD9FvkmK9dH9xePVron1a+cYkINS58BR+edKF2GSs6fhJrX8/c4cY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1759955447; c=relaxed/simple;
+	bh=RZOX1cj7VBU6nsP9FZONKemBDS8n7m5OtlDwYUTGnIU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=J7GJeWHCoY2UzQ0nm7PFcnM9bBxk9IXO3te2u+eoZ/LBNpvgrY9nz9gpl98muycVTaO0POqPfDqaF4oI0rPhVIk+nAZCDwlVHKLNBvGSa3cc3vT3vbjQ5zmpHiFVKO3gYLqSAMoHnntaJAxNG7FZ46+MLXHn0Giy6Mf/QZ+LesM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RZMKYZK4; arc=fail smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XJjiDOEZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02AB3C4CEE7;
-	Wed,  8 Oct 2025 20:28:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759955317;
-	bh=F729APzXr8ACy05uR1C2C6JPx94rKeLMfiT7NQxPmQQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=XJjiDOEZJJ3c8dHsjYshi1VbUgnibt+C/Ykbi4P3j9BghvjaRMlTm5TZq/+kzuIjx
-	 eoRLNZKdi22bh/7X72gmUFJQpaFFo0qxDi8zu5A/schmh8ZA/Aq/ad/2t2NCh03Zp3
-	 bzb+jfrcESDvUtlSLnNI983pybp72/VrS2mSgnKgv3WvlZ8qlQiSNBbOC6Sd7m5Ip0
-	 FAb8iPS+9UM8RX+A+pwAxtd365yO3GyHWPPxZX+vF7dn3KSb1E3ChAECH6JCYlzXU9
-	 oo7xlC7L2dXJ1KzpKKPLISe/yxA5KU9GqGAgGn5RxO8lyJExVbYZRibZblZac3zdSz
-	 nq3b+p7a71xOw==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ankur Arora <ankur.a.arora@oracle.com>,
-	Athira Rajeev <atrajeev@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	David Binderman <dcb314@hotmail.com>,
-	Fushuai Wang <wangfushuai@baidu.com>,
-	Gautam Menghani <gautam@linux.ibm.com>,
-	GuoHan Zhao <zhaoguohan@kylinos.cn>,
-	Howard Chu <howardchu95@gmail.com>,
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-	James Clark <james.clark@linaro.org>,
-	Leo Yan <leo.yan@arm.com>,
-	Tejas Manhas <tejas05@linux.ibm.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Trevor Allison <tallison@redhat.com>,
-	Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Yunseong Kim <ysk@kzalloc.com>,
-	Zecheng Li <zecheng@google.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [GIT PULL] perf tools changes for v6.18
-Date: Wed,  8 Oct 2025 17:28:04 -0300
-Message-ID: <20251008202804.852200-1-acme@kernel.org>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RZMKYZK4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1759955445; x=1791491445;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=RZOX1cj7VBU6nsP9FZONKemBDS8n7m5OtlDwYUTGnIU=;
+  b=RZMKYZK47PWr0ikmuCcecXl0L67Hwl2WjSh8CV8l7rNZT0P59JMWEXHX
+   t+311IoS4DXMILikPUtCmcKNBUu8vKl3m3G4xzNRRkkqx+3//XyCG/9Qq
+   Qq1mNdA8tdeVSyx49ELO7rcKYGEqPpIxtM1IxqS/HUDRDJo3RLWVvziOy
+   au/ysDqwAMQvaf1B07/2zzsCkhv2S13032p8remQyKK9dYpBKbzbO59RK
+   EQbEMWThjslILa48bgFICBQD5Ob5cjUiQs5g1u9iW2vR2uJ9cPsmZnV7w
+   VCADtVquxDit7R9pOZG01JHzpPUig1nChy5vR9DL9KtEmzPCk1Wd7uplp
+   g==;
+X-CSE-ConnectionGUID: wxRWFTkbT4q4FnZHCO6SsA==
+X-CSE-MsgGUID: O/ZtzZYHQB6mJdPM1OWbpw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="62103751"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="62103751"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2025 13:30:44 -0700
+X-CSE-ConnectionGUID: 642Jh43sTveIp6F32XYlpQ==
+X-CSE-MsgGUID: PJX1pQrYR4qsiiVMCBZYgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,214,1754982000"; 
+   d="scan'208";a="217624401"
+Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2025 13:30:44 -0700
+Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Wed, 8 Oct 2025 13:30:42 -0700
+Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
+ FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27 via Frontend Transport; Wed, 8 Oct 2025 13:30:42 -0700
+Received: from CH5PR02CU005.outbound.protection.outlook.com (40.107.200.41) by
+ edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Wed, 8 Oct 2025 13:30:42 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PR9zcuqMD9eprqXSHZNn8OniOptEvjwGrARbunzhsNlmNB7avg4jCUEUd/VqteeauZg3iUF9bxq0O8LoVk4M9TMIlQrBO5n+bKKt17VchqBclIq0MCc/Q5q6bwMzHDjOXb78pQKyPMRvk4OTy//zg1leNPCOha7pMGdr1Jy4vrJhwJtkKxcwfIbzFJ9JHEqTMvAJ9qPHWLeYjgd0dXVvzq0oE/YteejZiZzO0hc6WZYiD1Kz/3JY5h4jW9bPqP3L3m2+mZjCX4AVaKWf80bHNRSyedwXPrjg765pm3wGQc+0TgKcBLoRu860cDhZknnoTShYpwuMUg3lEj1W9JJv1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RZOX1cj7VBU6nsP9FZONKemBDS8n7m5OtlDwYUTGnIU=;
+ b=jz6MPFJlXYmpB8CFV64HM8Qgta91FbTyT2fdEiILaECbaBJ4wNOQ7Lvosfd+slnjmS5oRVnKyDgm10rmAsPTYFZhZOLzlUru9+E9H+nO6lXmiQl/n/CUnxioVM8ovJEsfPdFfknZH/F+emvCGFvEYKWlP4co+bHpkCuDA6Q4Jfv4LlC8rEDJdZIa5TgkZliU6lBS2u0qvlE4k2KLgswpWevpJErr7vEgBGKuVfqwFe22mC5oGQAngTPlcBfCoAs7hJ/7f3Gd4Yjk7rxbiEe1VI/ZA8SE6AXq6kNnKh9/xYay6GgenPRNtdLWZACxiUY+7TadBkE+UDN3OsME1ObYSw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CH3PR11MB8383.namprd11.prod.outlook.com (2603:10b6:610:171::6)
+ by PH3PPF1618AF7BB.namprd11.prod.outlook.com (2603:10b6:518:1::d0a) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9182.20; Wed, 8 Oct
+ 2025 20:30:35 +0000
+Received: from CH3PR11MB8383.namprd11.prod.outlook.com
+ ([fe80::56d4:6f50:dd04:d11b]) by CH3PR11MB8383.namprd11.prod.outlook.com
+ ([fe80::56d4:6f50:dd04:d11b%3]) with mapi id 15.20.9203.007; Wed, 8 Oct 2025
+ 20:30:35 +0000
+From: "Falcon, Thomas" <thomas.falcon@intel.com>
+To: "namhyung@kernel.org" <namhyung@kernel.org>
+CC: "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+	"ak@linux.intel.com" <ak@linux.intel.com>, "linux-perf-users@vger.kernel.org"
+	<linux-perf-users@vger.kernel.org>, "dapeng1.mi@linux.intel.com"
+	<dapeng1.mi@linux.intel.com>, "peterz@infradead.org" <peterz@infradead.org>,
+	"acme@kernel.org" <acme@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
+	"Hunter, Adrian" <adrian.hunter@intel.com>, "irogers@google.com"
+	<irogers@google.com>, "jolsa@kernel.org" <jolsa@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
+	"mark.rutland@arm.com" <mark.rutland@arm.com>
+Subject: Re: [Patch v3 1/2] perf record: Add ratio-to-prev term
+Thread-Topic: [Patch v3 1/2] perf record: Add ratio-to-prev term
+Thread-Index: AQHcM/Zhs55MsMQb/ECLhfwlAE0VkbS2aGuAgAJUdAA=
+Date: Wed, 8 Oct 2025 20:30:35 +0000
+Message-ID: <fcd9cd3eb3fd7479012e5feba71ae8e2c4b775d4.camel@intel.com>
+References: <20251002234308.64218-1-thomas.falcon@intel.com>
+	 <20251002234308.64218-2-thomas.falcon@intel.com>
+	 <aOTVkxY09-Uillf6@google.com>
+In-Reply-To: <aOTVkxY09-Uillf6@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH3PR11MB8383:EE_|PH3PPF1618AF7BB:EE_
+x-ms-office365-filtering-correlation-id: c1f9dbab-b5b1-42fa-5b38-08de06a98959
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014|10070799003|38070700021;
+x-microsoft-antispam-message-info: =?utf-8?B?d3dFcDBydm95UGY1Z25qVWFNSTFZcWcybG9GbnhpVy9lS0FlclNldGlxY05o?=
+ =?utf-8?B?cTBjc1lIalcra0E4VGhFcHN1bmNEMmF3aCttVldPNlBQNXZQeEU2aHZ0c0NP?=
+ =?utf-8?B?ek1aTjhrR1JSbDJBZnN2VXJYWXdiTE1xVk53cjhGaEtJc2RmRVRFcmtwaGRH?=
+ =?utf-8?B?MXQvOElPZkxXbk1zMWxLdU9Vc3ZvZDNmeUl6ZkYvWWs5NDEwL0hyVmhjaGVR?=
+ =?utf-8?B?UXl6Ykkyci9jeVhhWU96QnoyNTJDUTZkU0dKdHMwMWVtdktsdTgzM0ttMUUr?=
+ =?utf-8?B?Mm9OY1J1REJZY1lTcFZrOGZreE1FaENJUUZrSHBtV0YyZXNhRmk1SU5ZU0pK?=
+ =?utf-8?B?Z1hEczZLZ1FhblYwcUg4ZHU4TXY2MThFZFJ6Q3N4QjlmU1NEdzlENnFhU0dY?=
+ =?utf-8?B?c1pEbFQ0OExYMkRNcUVrMjJXTkNNaWZoYnVmZVJORDNrSU9zLzlrajVIR042?=
+ =?utf-8?B?eUpqNHEvSUFPbkhIZkVFSWEyVmZMUlFkdW1pQWo0K240cWJrRjJ0RDZHUXor?=
+ =?utf-8?B?SUE0UjQxeFhlazlwZnQrang4MjFza0RIQmZzd0RmUUdab2I3VTllUk5tV2Zw?=
+ =?utf-8?B?cHNHTktHTDB3OTFlOExwQmFRVk5rQVhQSEFkcUVjZGpMbVpkZWM1S1U2UGM3?=
+ =?utf-8?B?Q1RiNlRrY1E2TGl2dHA1RThwV3R5SU44Ky9JRW4rQjFyYjg2NjdNaDY3Nkt0?=
+ =?utf-8?B?MHlQMnI2YVl4dkZRYVVKa2tNTVpyYW1YQWYzRERFYVE0U2h5V0FicGFKamlH?=
+ =?utf-8?B?d2lwWHllemJnWjVjR0duRGx4NTVwQk5nZHhldUtNa1M3N0Y0M1JiU3BkbXJk?=
+ =?utf-8?B?UFZ4bHpIR1hRVGd1eDkvWGdYMk85L1RRd2xXSk5jczhGL0VNM1JndDU5bTF1?=
+ =?utf-8?B?VjFzVGpOdklzM2s1VWhEbGRaalhNakJZNVlqVVdFK3hJYmNBVkgxeDNycTlD?=
+ =?utf-8?B?RG5ySTZCN1J4WFc0dUoySStTeUUvdFdJdyszeHB0aHNFdXN2c21NczUvNm4w?=
+ =?utf-8?B?UDJjUldlYytvYkNNTlVOZmNBS3BJcGh1dzM5c2F0OHVhKzYxLzVJcTN5K0RJ?=
+ =?utf-8?B?N0E1NVhIRHN3S2xHZ3dBS1hkditBRUhSZjZ6NnF4N0FnUEEyYmRyR3h0cVo2?=
+ =?utf-8?B?a24xTlpuZWdyUGhFa0dGejZMYytYQkdScjJnaUpZakUxRlZobS9mb1drVkdS?=
+ =?utf-8?B?TTNtaEFpODNsdkxJQ25UMFJKNHpzNmtiN2hGMitYamJ2d1ZCU1hxVVRwdXhB?=
+ =?utf-8?B?YnRWekZFRUh0M1RsTkV6VW1FMG1ZSDVVTEV0TzRTL3ZOeEdpRkN2dmF4TjN4?=
+ =?utf-8?B?Sjd0NVBueS91Z01YdHJzaWt1K0wyVENrVVhianJwOTIzYldod3p4R2xoTFJH?=
+ =?utf-8?B?aTVVVEwwZDV2cEJBL2tKLy91L054UFdzZ3FTVTRobkJKTXRYalluK1p1Wm9Q?=
+ =?utf-8?B?RlpuazNMam1PRVZOSjBuMTFLcTk1WXB0VXFaN3ZuOWh3YXFHRWlkV1pScUdy?=
+ =?utf-8?B?RUV4ODJKQVgzc1lLa3BRRnh3UWI4UGZuSGx1UGlibVFQTGMzbjM1cW15aHJG?=
+ =?utf-8?B?QjY3bDZBclRJa2I5Mk1IYXBCTzE4OVVOYWM2S29vUFF5Ukg3TTJlbXhnRXVF?=
+ =?utf-8?B?bUdqdldkek5XWnEwazlYWWZUTDhzMFNQNlBnYVkxdjRZMmFEYld5Y0NvOHgz?=
+ =?utf-8?B?ZzZlb2pZckg3NmxtOFNvS3pUTHBJeG5oMUtERjg3eHhmMmkxOUZJRjlsYmF6?=
+ =?utf-8?B?N2kzSWRqaVAzaURMV2ptQzhITlJ1Yzc0SDhJOHJtNGNLMDNUelllSXg5REJY?=
+ =?utf-8?B?WWJCcTZLM0MyNWk0ODVCaUJtR0czS2daRlFEUWMvTldXdGo3LzQ4TUVyQXFH?=
+ =?utf-8?B?M1ZTbnpUSzFjY29rbUY3WW1lRndQaHJEa1l1YWIyK01oNXBGK3NENUtQdEVh?=
+ =?utf-8?B?dkFKMC9OeisvTzJnaUlMRHNhRU9tYVBOb0V1TERyNWo0TTJaRmlpMmxobjZP?=
+ =?utf-8?B?M0p4VHlxMlJlVnhpYmVpcHpHWXdmcy9ZaXI0akR5SHFTYlc1cExuS0NGMjdD?=
+ =?utf-8?Q?CxFR0D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8383.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(10070799003)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?R2pDdnVNMnVrTnkzRTRYWDdZaWdoZ0pZVkQ4NzFBa25Ed3hXNFgvRWI2Y3Nx?=
+ =?utf-8?B?VEgxUlUrd0Z1NVExNWdQTDJSeGRWUUUwcjBTQkM5RXZ1aEhvbWJEVzgzaEgv?=
+ =?utf-8?B?NGR5SWVIRjBDa0FNc3I5eFR2NDFsbzFzQW1tNmZtK2ZOS1dFSnplL0pLdU01?=
+ =?utf-8?B?ZlB6Zi9aYWpiN1dOS0s3dE5jbzNRR1BlR2k4SFQxaWxNUmdoeEdacXAwNUFM?=
+ =?utf-8?B?MVZMSTZWNThnVERqYWQwWFl1QnE2dTFheE95N00wWUN3QnNwbnlPOU41dXVQ?=
+ =?utf-8?B?amFTRE04RlkzaXNwUjZCT2lROVhQcmJyRWVzYmprdEg2d2ZYb0pEbVBPQUQx?=
+ =?utf-8?B?TW51SHpGL3BlK1hiRk5TNE5yT25rWjIzWmZORTVtMG9Hc1FOOWJxek5KL0ha?=
+ =?utf-8?B?NDdhTElGQmNSUERuVjgyZERmNHF6b3dUeXV2TVVpcGU0SXFMbHZMdzFxdklY?=
+ =?utf-8?B?WTJTM2dBa0hWVUNKb1VZUkV4Tjk5RnZBRHJscTJ1RS9WVXAwUlh5VkJpZlFV?=
+ =?utf-8?B?MUg2bkVXNTFPcCtHOHBGNllibGg1ZS8yZktpeUFnR2hKYWhpdzlTakFia09C?=
+ =?utf-8?B?QXBwSjdDNGNUTGJkK0J1TUNUUCs4TGxtai9lYjhMbW53OHcvTUtKSWhDQUpU?=
+ =?utf-8?B?RU9QNU1rRDhFeXE3amhYTUpPczE3MXhnMDZBQ3RNTDBrQTdqLzh6ZlQwOUJh?=
+ =?utf-8?B?Z2hPSnVqbTNmRjFCQW1XbDM0cGdkVFZXV05BZ0FqN09qWUMvWVhpUjB3dWtP?=
+ =?utf-8?B?RzNEci9YZlFPQ3lHSkNyTG13N0s0blhBZmhINlVUaEFhMkVYL1pzVFBuUG8y?=
+ =?utf-8?B?VGpLN3RXeTl4dWJKN296VTJmM3JmaERTQjFUaGZJM0RjY1luazZKYWFEYmJq?=
+ =?utf-8?B?QmQrV1FJK3JpMFl6czdHSklHK2J1b2cyOTd5NGJWam5mQ1NwTE84VXRYUk9u?=
+ =?utf-8?B?dUNlZlo1ZTQ4YndwWFcweWhQZ2pRbG5XZm80ZFA2dXFUTmI5d3VSaXY5eCtV?=
+ =?utf-8?B?VndZcEFNR09HY0JPeEdwRXJ4MVVmYTZuSHBxbWE3anJhM2l3djIwdzB2eEZ3?=
+ =?utf-8?B?MmdmR1pUTzBodEVVMkIvYmRSNTVzQlZmRHRGRVYza1M3RldycVhOUmZPS21G?=
+ =?utf-8?B?NzlLYXJQNVdUNTVqZS9ydGg1L1AxUFh2ZnlZRDdKM3NZM08yNGVIQ094OTJN?=
+ =?utf-8?B?bkx0MjlTM0syVkhGMmp4VHpaSmFxc2tBc2lsWUtweVdINDlFakYwU3d2bTYx?=
+ =?utf-8?B?NW5hUGN3eGNhWmJsOVpzRnVnM1A0ckxaLzNqMmxiUmRwTFRvY2F3RDIzN3BE?=
+ =?utf-8?B?M1pFYTg1QUhSMUJOWXZvZFNhL2dJcjNCdWdBQ2dxc012NEZMUTl5VnNOcFo0?=
+ =?utf-8?B?ZDlJWGdzakY4ZUVYd2FlZ0FSblBkSHBuMUJOa0hJNVpnWXFSeVI1TkYyUERo?=
+ =?utf-8?B?TythVmw3bm5IVzlGbzExeWtSZHJpZ3U1ZUhkZGx2OHk5dU1JblEraWExcHh1?=
+ =?utf-8?B?bllxZ2tIcEl4UUc2eFZDN3N1UXlyTjhZV3o1enN0ZjdOdklDMzRsMXlpeWJl?=
+ =?utf-8?B?dE1Qbi9XRGM3NFlwWGpKU1Qrc3N3YkVZM1pYTDJ4WnpDTUFUNEgzQm50dWJ6?=
+ =?utf-8?B?eGZWS0pyeXptYzIwWG1tckNhWloxNFRKN3E2cHBSbjFXc2t0SExsZXNjazhq?=
+ =?utf-8?B?MGZDa3pWMmNpR21lNmgyazFWL3pKUzVxRzUyWGJodktKNFlVaUxGUlJNcHln?=
+ =?utf-8?B?cDhqK09pcVZwakZDUER4Z3MraStzRkFsT1ZZUnhDQVh0NitiQ3luaU01RWlY?=
+ =?utf-8?B?Nm5IYUtuUlI2cDFHMm1wT2FzNExQUGNMcHpLUU1IYkd0M0hJQU9tVVpnSkxB?=
+ =?utf-8?B?cFAvQ3R6ZmI2clFlMVF0V3J1RFllR0YzbnVjTERNTmFPNCtPRldvWWRXOU4x?=
+ =?utf-8?B?K2plbkhzb3RVT0pvSTFtcFB6TUxLK3lHbTQ2YnFkcDRpU2lkNEZvTGlyaDV1?=
+ =?utf-8?B?eXVNbFJ3dDJ1ZFZURHVUb05SeWM5eU1lSUlsZ0crdWtVM1RSRVNkZHNmUlI2?=
+ =?utf-8?B?RENTcHpGVWFTSUN4T0R5UUVKcW1Ycjh3ZkhQdTF1cnZnUnhJK3lkUlRmcXln?=
+ =?utf-8?B?RkFrTm5DSXhKUkJOS1BVMXBFVHpmNTRndFF2WkxkRE15NGVValJvOEFlVHcy?=
+ =?utf-8?B?R1NKN3VGQjA0NHpsSkhNM1RpSlU0T2NSc2c3SmlzS3FiNGlvdjJ3aFVxQkRQ?=
+ =?utf-8?B?S04zQ0lqd3o0TEdVdUNLNEp6ZUJBPT0=?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7ADAD9DE83039443BA726FB1D1468B79@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8383.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1f9dbab-b5b1-42fa-5b38-08de06a98959
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2025 20:30:35.6227
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XkTUEND6d+IMT7k4fwmzLSwsxJBz8o5WiHYCYXkqvdFtBM52bz/T9pbz4doQDlPsYNZ3e967l7AUCuV0KfoQ5w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH3PPF1618AF7BB
+X-OriginatorOrg: intel.com
 
-Hi Linus,
-
-	Please consider pulling,
-
-Best regards,
-
-- Arnaldo
-
-The following changes since commit e8442d5b7bc6338d553040f5b1f7bd43f5ab30e0:
-
-  Merge tag 'sound-6.17-rc7' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound (2025-09-19 08:22:07 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-for-v6.18-1-2025-10-08
-
-for you to fetch changes up to f3b601f900902ab80902c44f820a8985384ac021:
-
-  perf tools: Fix arm64 libjvmti build by generating unistd_64.h (2025-10-06 17:16:52 -0300)
-
-----------------------------------------------------------------
-perf tools improvements and fixes for Linux v6.18:
-
-- Extended 'perf annotate' with DWARF type information (--code-with-type)
-  integration in the TUI, including a 'T' hotkey to toggle it.
-
-- Enhanced 'perf bench mem' with new mmap() workloads and control over
-  page/chunk sizes.
-
-- Fix 'perf stat' error handling to correctly display unsupported events.
-
-- Improved support for Clang cross-compilation.
-
-- Refactored LLVM and Capstone disasm for modularity.
-
-- Introduced the :X modifier to exclude an event from automatic regrouping.
-
-- Adjusted KVM sampling defaults to use the "cycles" event to prevent failures.
-
-- Added comprehensive support for decoding PowerPC Dispatch Trace Log (DTL).
-
-- Updated Arm SPE tracing logic for better analysis of memory and snoop
-  details.
-
-- Synchronized Intel PMU events and metrics with TMA 5.1 across multiple
-  processor generations.
-
-- Converted dependencies like libperl and libtracefs to be opt-in.
-
-- Handle more Rust symbols in kallsyms ('N', debugging).
-
-- Improve the python binding to allow for python based tools to use more
-  of the libraries, add a 'ilist' utility to test those new bindings.
-
-- Various 'perf test' fixes.
-
-- Kan Liang no longer a perf tools reviewer.
-
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-----------------------------------------------------------------
-Ankur Arora (9):
-      perf bench mem: Remove repetition around time measurement
-      perf bench mem: Defer type munging of size to float
-      perf bench mem: Move mem op parameters into a structure
-      perf bench mem: Pull out init/fini logic
-      perf bench mem: Switch from zalloc() to mmap()
-      perf bench mem: Allow mapping of hugepages
-      perf bench mem: Allow chunking on a memory region
-      perf bench mem: Refactor mem_options
-      perf bench mem: Add mmap() workloads
-
-Arnaldo Carvalho de Melo (6):
-      Merge remote-tracking branch 'torvalds/master' into perf-tools-next
-      perf symbols: Handle 'N' symbols in /proc/kallsyms
-      Merge remote-tracking branch 'torvalds/master' into perf-tools-next
-      perf bpf: Move the LIBBPF_CURRENT_VERSION_GEQ macro to bpf-utils.h
-      perf bpf: Check libbpf version to use btf_dump_type_data_opts.emit_strings
-      tools build: Don't assume libtracefs-devel is always available
-
-Athira Rajeev (7):
-      perf tests record: Update testcase to fix usage of affinity for machines with #CPUs > 1K
-      perf powerpc: Add basic CONFIG_AUXTRACE support for VPA pmu on powerpc
-      perf powerpc: Process auxtrace events and display in 'perf report -D'
-      perf powerpc: Add event name as vpa-dtl of PERF_TYPE_SYNTH type to present DTL samples
-      perf powerpc: Allocate and setup aux buffer queue to help co-relate with other events across CPU's
-      perf powerpc: Process the DTL entries in queue and deliver samples
-      perf script: Enable to present DTL entries
-
-Christophe Leroy (1):
-      perf: Completely remove possibility to override MAX_NR_CPUS
-
-Colin Ian King (1):
-      perf python: Fix spelling mistake "metics" -> "metrics"
-
-Dapeng Mi (6):
-      perf tools kvm: Add missed memory allocation check and free
-      perf tools kwork: Add missed memory allocation check and free
-      perf tools kvm: Fix the potential out of range memory access issue
-      perf tools: Add helper x86__is_intel_cpu()
-      perf tools kvm: Use "cycles" to sample guest for "kvm record" on Intel
-      perf tools kvm: Use "cycles" to sample guest for "kvm top" on Intel
-
-Fushuai Wang (1):
-      perf trace: Fix IS_ERR() vs NULL check bug
-
-Gautam Menghani (1):
-      perf auxtrace: Avoid redundant NULL check in auxtrace_mmap_params__set_idx()
-
-GuoHan Zhao (1):
-      perf drm_pmu: Fix fd_dir leaks in for_each_drm_fdinfo_in_dir()
-
-Ian Rogers (93):
-      perf disasm: Avoid undefined behavior in incrementing NULL
-      perf test trace_btf_enum: Skip if permissions are insufficient
-      perf evsel: Avoid container_of on a NULL leader
-      perf test shell lock_contention: Extra debug diagnostics
-      libperf event: Ensure tracing data is multiple of 8 sized
-      perf python: Add more exceptions on error paths
-      perf python: Improve the tracepoint function if no libtraceevent
-      perf python: Add basic PMU abstraction and pmus sequence
-      perf python: Add function returning dictionary of all events on a PMU
-      perf ilist: Add new python ilist command
-      perf python: Add parse_metrics function
-      perf python: Add evlist metrics function
-      perf python: Add evlist compute_metric
-      perf python: Add metrics function
-      perf ilist: Add support for metrics
-      perf tp_pmu: Remove unnecessary check
-      perf parse-events: Handle fake PMUs in CPU terms
-      perf vendor events: Update alderlake events/metrics
-      perf vendor events: Update arrowlake events/metrics
-      perf vendor events: Update broadwell metrics
-      perf vendor events: Update cascadelakex metrics
-      perf vendor events: Update emeraldrapids events/metrics
-      perf vendor events: Update grandridge metrics
-      perf vendor events: Update graniterapids events/metrics
-      perf vendor events: Update haswell metrics
-      perf vendor events: Update icelake metrics
-      perf vendor events: Update ivybridge/ivytown metrics
-      perf vendor events: Update jaketown metrics
-      perf vendor events: Update lunarlake events/metrics
-      perf vendor events: Update meteorlake events/metrics
-      perf vendor events: Update rocketlake metrics
-      perf vendor events: Update sandybridge metrics
-      perf vendor events: Update sapphirerapids events/metrics
-      perf vendor events: Update sierraforest metrics
-      perf vendor events: Update skylake metrics
-      perf vendor events: Update tigerlake metrics
-      perf evsel: Give warning for broken Intel topdown event grouping
-      perf stat: Don't skip failing group events
-      perf parse-events: Add 'X' modifier to exclude an event from being regrouped
-      perf test: AMD IBS swfilt skip kernel tests if paranoia is >1
-      perf test shell lbr: Avoid failures with perf event paranoia
-      tools build: Make libperl opt-in rather than opt-out, deprecate
-      perf test: Don't leak workload gopipe in PERF_RECORD_*
-      perf evsel: Fix uniquification when PMU given without suffix
-      perf test: Avoid uncore_imc/clockticks in uniquification test
-      perf evsel: Ensure the fallback message is always written to
-      perf build-id: Ensure snprintf string is empty when size is 0
-      perf bpf-filter: Fix opts declaration on older libbpfs
-      perf vendor events intel: Update alderlake events to v1.34
-      perf vendor events intel: Update arrowlake events to v1.13
-      perf vendor events intel: Update emeraldrapids events to v1.20
-      perf vendor events intel: Update grandridge events to v1.10
-      perf vendor events intel: Update graniterapids events to v1.15
-      perf vendor events intel: Update lunarlake events to v1.18
-      perf vendor events intel: Update meteorlake events to v1.17
-      perf vendor events intel: Update pantherlake events to v1.00
-      perf vendor events intel: Update sapphirerapids events to v1.35
-      perf vendor events intel: Update sierraforest events to v1.12
-      perf sched: Avoid union type punning undefined behavior
-      perf bpf_counter: Move header declarations into C code
-      perf bpf_counter: Fix handling of cpumap fixing hybrid
-      perf test: Add an 'import perf' test shell script
-      perf test: Remove C python_use test
-      perf build: Remove libtracefs configuration
-      perf symbol-minimal: Be more defensive when reading build IDs
-      libperf mmap: In user mmap rdpmc avoid undefined behavior
-      perf test: Stat std output don't fail metric only
-      perf bench futex: Add missing stdbool.h
-      tools bitmap: Add missing asm-generic/bitsperlong.h include
-      tools include: Replace tools linux/gfp_types.h with kernel version
-      tools include: Add headers to make tools builds more hermetic
-      perf map: Constify objdump offset/address conversion APIs
-      perf capstone: Move capstone functionality into its own file
-      perf llvm: Move llvm functionality into its own file
-      perf libbfd: Move libbfd functionality to its own file
-      perf capstone: Remove open_capstone_handle
-      perf namespaces: Avoid get_current_dir_name dependency
-      tools build: Remove get_current_dir_name feature check
-      perf stat: Move create_perf_stat_counter() to builtin-stat.c
-      perf stat: Refactor retry/skip/fatal error handling
-      tools build: Remove feature-libslang-include-subdir
-      perf build: Move libopcode disasm tests to BUILD_NONDISTRO
-      perf bpf-event: Use libbpf version rather than feature check
-      tools build: Remove libbpf-strings feature test
-      perf parse-events: Fix parsing of >30kb event strings
-      perf check: Add libLLVM feature
-      perf llvm: Reduce LLVM initialization
-      perf dso: Move read_symbol() from llvm/capstone to dso
-      perf dso: Support BPF programs in dso__read_symbol()
-      perf dso: Clean up read_symbol() error handling
-      perf disasm: Make ins__scnprintf() and ins__is_nop() static
-      perf srcline: Fallback between addr2line implementations
-      perf disasm: Remove unused evsel from 'struct annotate_args'
-
-Ilkka Koskinen (2):
-      perf vendor events arm64 AmpereOneX: Fix typo - should be l1d_cache_access_prefetches
-      perf vendor events arm64 AmpereOne: Fix typos in metrics' descriptions
-
-James Clark (11):
-      perf arm-spe: Show instruction sample types by default
-      perf arm-spe: Downsample all sample types equally
-      perf arm-spe: Display --itrace period warnings for all sample types
-      perf docs: Update SPE doc to include default instructions group
-      tools headers: Remove unused kvm_perf.h copies
-      tools headers: Remove unused arm32 asm/kvm.h copy
-      perf arm_spe: Use full type for data_src
-      perf test: Refactor brstack test
-      perf test: Add syscall and address tests to brstack test
-      perf test: Extend branch stack sampling test for Arm64 BRBE
-      perf tests: Don't retest sections in "Object code reading"
-
-Kan Liang (1):
-      MAINTAINERS: Remove myself from perf_events subsystem
-
-Leo Yan (21):
-      perf arm_spe: Correct setting remote access
-      perf arm_spe: Correct memory level for remote access
-      perf arm_spe: Directly propagate raw event
-      perf arm_spe: Decode event types for new features
-      perf arm_spe: Add "event_filter" entry in meta data
-      perf arm_spe: Refine memory level filling
-      perf arm_spe: Separate setting of memory levels for loads and stores
-      perf arm_spe: Fill memory levels for FEAT_SPEv1p4
-      perf arm_spe: Refactor arm_spe__get_metadata_by_cpu()
-      perf arm_spe: Set HITM flag
-      perf arm_spe: Allow parsing both data source and events
-      perf session: Fix handling when buffer exceeds 2 GiB
-      tools build: Align warning options with perf
-      perf python: split Clang options when invoking Popen
-      perf build: Correct CROSS_ARCH for clang
-      perf build: Disable thread safety analysis for perl header
-      perf test coresight: Dismiss clang warning for memcpy thread
-      perf test coresight: Dismiss clang warning for thread loop
-      perf test coresight: Dismiss clang warning for unroll loop thread
-      perf build: Support build with clang
-      perf docs: Document building with Clang
-
-Markus Heidelberg (1):
-      perf tools: Fix duplicated words in documentation and comments
-
-Namhyung Kim (17):
-      perf annotate: Rename to __hist_entry__tui_annotate()
-      perf annotate: Remove annotation_print_data.start
-      perf annotate: Remove __annotation_line__write()
-      perf annotate: Pass annotation_print_data to annotation_line__write()
-      perf annotate: Simplify width calculation in annotation_line__write()
-      perf annotate: Return printed number from disasm_line__write()
-      perf annotate: Add --code-with-type support for TUI
-      perf annotate: Add 'T' hot key to toggle data type display
-      perf annotate: Show warning when debuginfo is not available
-      perf annotate: Hide data-type for stack operation and canary
-      perf annotate: Add dso__debuginfo() helper
-      perf annotate: Use a hashmap to save type data
-      perf annotate: Fix signature of annotate_browser__show()
-      perf annotate: Factor out annotate_browser__show_function_title()
-      perf annotate: Fix title line after return from call
-      perf trace: Add --max-summary option
-      perf tools: Remove a pointless check
-
-Sam James (1):
-      perf bpf: Use __builtin_preserve_field_info for GCC compatibility
-
-Suchit Karunakaran (1):
-      perf annotate: Use architecture-agnostic register limit
-
-Thomas Falcon (2):
-      perf record: Add ratio-to-prev term
-      perf record: Add auto counter reload parse and regression tests
-
-Thomas Richter (1):
-      perf tools: Update header documentation on BPF_PROG_INFO
-
-Trevor Allison (1):
-      perf test attr: Add missing int_mist.uop_dropping event to test-stat files
-
-Veronika Molnarova (1):
-      perf test perftool_testsuite: Use absolute paths
-
-Vincent Minet (1):
-      perf tools: Fix arm64 libjvmti build by generating unistd_64.h
-
-Yunseong Kim (2):
-      perf arm64: Sync ESR_ELx_EC_* macros in arm64_exception_types.h with esr.h
-      perf util: Fix compression checks returning -1 as bool
-
-Zecheng Li (5):
-      perf dwarf-aux: Use signed variable types in match_var_offset
-      perf dwarf-aux: More accurate variable type match for breg
-      perf dwarf-aux: Better variable collection for insn tracking
-      perf dwarf-aux: Fix __die_find_scope_cb() for namespaces
-      perf annotate: Rename TSR_KIND_POINTER to TSR_KIND_PERCPU_POINTER
-
- MAINTAINERS                                        |    1 -
- tools/arch/arm/include/uapi/asm/kvm.h              |  315 ----
- tools/arch/s390/include/uapi/asm/kvm_perf.h        |   22 -
- tools/arch/x86/include/uapi/asm/kvm_perf.h         |   17 -
- tools/build/Makefile.feature                       |    6 +-
- tools/build/feature/Makefile                       |   18 +-
- tools/build/feature/test-all.c                     |   19 +-
- tools/build/feature/test-get_current_dir_name.c    |   11 -
- tools/build/feature/test-libbpf-strings.c          |   10 -
- tools/build/feature/test-libslang-include-subdir.c |    7 -
- tools/include/linux/bitmap.h                       |    1 +
- tools/include/linux/gfp_types.h                    |  393 ++++-
- tools/include/uapi/linux/genetlink.h               |  103 ++
- tools/include/uapi/linux/if_addr.h                 |   79 +
- tools/include/uapi/linux/neighbour.h               |  229 +++
- tools/include/uapi/linux/netfilter.h               |   80 +
- tools/include/uapi/linux/netfilter_arp.h           |   23 +
- tools/include/uapi/linux/rtnetlink.h               |  848 ++++++++++
- tools/lib/perf/include/perf/event.h                |    1 +
- tools/lib/perf/mmap.c                              |    2 +-
- tools/perf/Documentation/Build.txt                 |   15 +
- tools/perf/Documentation/android.txt               |   80 +-
- tools/perf/Documentation/intel-acr.txt             |   53 +
- tools/perf/Documentation/perf-annotate.txt         |    1 -
- tools/perf/Documentation/perf-arm-spe.txt          |   14 +-
- tools/perf/Documentation/perf-bench.txt            |   58 +-
- tools/perf/Documentation/perf-check.txt            |    1 +
- tools/perf/Documentation/perf-diff.txt             |    2 +-
- tools/perf/Documentation/perf-list.txt             |    3 +
- tools/perf/Documentation/perf-trace.txt            |    4 +
- tools/perf/Documentation/perf.data-file-format.txt |   10 +
- tools/perf/Makefile.config                         |   96 +-
- tools/perf/Makefile.perf                           |    8 +-
- tools/perf/arch/arm64/util/arm-spe.c               |    5 +
- tools/perf/arch/arm64/util/arm64_exception_types.h |   15 +-
- tools/perf/arch/powerpc/util/Build                 |    1 +
- tools/perf/arch/powerpc/util/auxtrace.c            |  103 ++
- tools/perf/arch/x86/annotate/instructions.c        |    4 +-
- tools/perf/arch/x86/util/evsel.c                   |  114 +-
- tools/perf/arch/x86/util/kvm-stat.c                |   51 +
- tools/perf/bench/bench.h                           |    1 +
- tools/perf/bench/futex.h                           |    1 +
- tools/perf/bench/mem-functions.c                   |  390 +++--
- tools/perf/bench/mem-memcpy-arch.h                 |    2 +-
- tools/perf/bench/mem-memcpy-x86-64-asm-def.h       |    4 +
- tools/perf/bench/mem-memset-arch.h                 |    2 +-
- tools/perf/bench/mem-memset-x86-64-asm-def.h       |    4 +
- tools/perf/builtin-annotate.c                      |    5 -
- tools/perf/builtin-bench.c                         |    1 +
- tools/perf/builtin-check.c                         |    4 +-
- tools/perf/builtin-kvm.c                           |  130 +-
- tools/perf/builtin-kwork.c                         |   27 +-
- tools/perf/builtin-record.c                        |    2 -
- tools/perf/builtin-sched.c                         |   19 +-
- tools/perf/builtin-script.c                        |   34 +-
- tools/perf/builtin-stat.c                          |  185 +-
- tools/perf/builtin-trace.c                         |   14 +-
- tools/perf/check-headers.sh                        |   12 +-
- tools/perf/perf.h                                  |    2 -
- .../arch/arm64/ampere/ampereone/metrics.json       |    8 +-
- .../arch/arm64/ampere/ampereonex/metrics.json      |   10 +-
- .../pmu-events/arch/x86/alderlake/adl-metrics.json |  104 +-
- .../perf/pmu-events/arch/x86/alderlake/cache.json  |  135 +-
- .../arch/x86/alderlake/floating-point.json         |   28 +-
- .../pmu-events/arch/x86/alderlake/frontend.json    |   42 +-
- .../perf/pmu-events/arch/x86/alderlake/memory.json |   12 +-
- .../perf/pmu-events/arch/x86/alderlake/other.json  |    8 +-
- .../pmu-events/arch/x86/alderlake/pipeline.json    |  163 +-
- .../arch/x86/alderlake/uncore-interconnect.json    |    2 -
- .../arch/x86/alderlake/virtual-memory.json         |   40 +-
- .../arch/x86/alderlaken/adln-metrics.json          |   20 +-
- .../arch/x86/alderlaken/uncore-interconnect.json   |    2 -
- .../pmu-events/arch/x86/arrowlake/arl-metrics.json |  180 +-
- .../perf/pmu-events/arch/x86/arrowlake/cache.json  |  168 +-
- .../pmu-events/arch/x86/arrowlake/frontend.json    |   40 +-
- .../perf/pmu-events/arch/x86/arrowlake/memory.json |   28 +-
- .../perf/pmu-events/arch/x86/arrowlake/other.json  |    2 +-
- .../pmu-events/arch/x86/arrowlake/pipeline.json    |   94 +-
- .../pmu-events/arch/x86/broadwell/bdw-metrics.json |   30 +-
- .../arch/x86/broadwellde/bdwde-metrics.json        |   30 +-
- .../arch/x86/broadwellx/bdx-metrics.json           |   33 +-
- .../arch/x86/cascadelakex/clx-metrics.json         |  139 +-
- .../pmu-events/arch/x86/emeraldrapids/cache.json   |  163 +-
- .../arch/x86/emeraldrapids/emr-metrics.json        |  143 +-
- .../arch/x86/emeraldrapids/floating-point.json     |   43 +-
- .../arch/x86/emeraldrapids/frontend.json           |   42 +-
- .../pmu-events/arch/x86/emeraldrapids/memory.json  |   30 +-
- .../pmu-events/arch/x86/emeraldrapids/other.json   |   28 +-
- .../arch/x86/emeraldrapids/pipeline.json           |  167 +-
- .../arch/x86/emeraldrapids/uncore-cache.json       |   11 +
- .../arch/x86/emeraldrapids/uncore-memory.json      |  104 ++
- .../arch/x86/emeraldrapids/uncore-power.json       |    2 -
- .../arch/x86/emeraldrapids/virtual-memory.json     |   40 +-
- .../perf/pmu-events/arch/x86/grandridge/cache.json |   20 +-
- .../arch/x86/grandridge/grr-metrics.json           |   20 +-
- .../pmu-events/arch/x86/graniterapids/cache.json   |  227 ++-
- .../arch/x86/graniterapids/floating-point.json     |   43 +-
- .../arch/x86/graniterapids/frontend.json           |   42 +-
- .../arch/x86/graniterapids/gnr-metrics.json        |  131 +-
- .../pmu-events/arch/x86/graniterapids/memory.json  |   33 +-
- .../pmu-events/arch/x86/graniterapids/other.json   |   30 +-
- .../arch/x86/graniterapids/pipeline.json           |  167 +-
- .../x86/graniterapids/uncore-interconnect.json     |   10 +-
- .../arch/x86/graniterapids/uncore-io.json          |    1 -
- .../arch/x86/graniterapids/uncore-memory.json      |  143 +-
- .../arch/x86/graniterapids/virtual-memory.json     |   40 +-
- .../pmu-events/arch/x86/haswell/hsw-metrics.json   |   32 +-
- .../pmu-events/arch/x86/haswellx/hsx-metrics.json  |   35 +-
- .../pmu-events/arch/x86/icelake/icl-metrics.json   |   96 +-
- .../pmu-events/arch/x86/icelakex/icx-metrics.json  |  155 +-
- .../pmu-events/arch/x86/ivybridge/ivb-metrics.json |   30 +-
- .../pmu-events/arch/x86/ivytown/ivt-metrics.json   |   33 +-
- .../pmu-events/arch/x86/jaketown/jkt-metrics.json  |   20 +-
- .../perf/pmu-events/arch/x86/lunarlake/cache.json  |  150 +-
- .../pmu-events/arch/x86/lunarlake/frontend.json    |   40 +-
- .../pmu-events/arch/x86/lunarlake/lnl-metrics.json |  216 +--
- .../perf/pmu-events/arch/x86/lunarlake/memory.json |   28 +-
- .../perf/pmu-events/arch/x86/lunarlake/other.json  |    2 +-
- .../pmu-events/arch/x86/lunarlake/pipeline.json    |   85 +-
- .../arch/x86/lunarlake/uncore-interconnect.json    |   10 +
- .../arch/x86/lunarlake/uncore-memory.json          |    8 +
- tools/perf/pmu-events/arch/x86/mapfile.csv         |   20 +-
- .../perf/pmu-events/arch/x86/meteorlake/cache.json |  165 +-
- .../arch/x86/meteorlake/floating-point.json        |   28 +-
- .../pmu-events/arch/x86/meteorlake/frontend.json   |   42 +-
- .../pmu-events/arch/x86/meteorlake/memory.json     |   15 +-
- .../arch/x86/meteorlake/mtl-metrics.json           |  103 +-
- .../perf/pmu-events/arch/x86/meteorlake/other.json |    5 +-
- .../pmu-events/arch/x86/meteorlake/pipeline.json   |  173 +-
- .../arch/x86/meteorlake/virtual-memory.json        |   40 +-
- .../pmu-events/arch/x86/pantherlake/cache.json     | 1207 ++++++++++++-
- .../pmu-events/arch/x86/pantherlake/counter.json   |    9 +-
- .../arch/x86/pantherlake/floating-point.json       |  286 ++++
- .../pmu-events/arch/x86/pantherlake/frontend.json  |  535 ++++++
- .../pmu-events/arch/x86/pantherlake/memory.json    |  106 +-
- .../pmu-events/arch/x86/pantherlake/other.json     |   44 +
- .../pmu-events/arch/x86/pantherlake/pipeline.json  | 1776 ++++++++++++++++++--
- .../arch/x86/pantherlake/uncore-memory.json        |   26 +
- .../arch/x86/pantherlake/virtual-memory.json       |  248 +++
- .../arch/x86/rocketlake/rkl-metrics.json           |   97 +-
- .../arch/x86/sandybridge/snb-metrics.json          |   19 +-
- .../pmu-events/arch/x86/sapphirerapids/cache.json  |  163 +-
- .../arch/x86/sapphirerapids/floating-point.json    |   43 +-
- .../arch/x86/sapphirerapids/frontend.json          |   42 +-
- .../pmu-events/arch/x86/sapphirerapids/memory.json |   30 +-
- .../pmu-events/arch/x86/sapphirerapids/other.json  |   28 +-
- .../arch/x86/sapphirerapids/pipeline.json          |  167 +-
- .../arch/x86/sapphirerapids/spr-metrics.json       |  165 +-
- .../arch/x86/sapphirerapids/uncore-cache.json      |   11 +
- .../arch/x86/sapphirerapids/uncore-memory.json     |  104 ++
- .../arch/x86/sapphirerapids/uncore-power.json      |    2 -
- .../arch/x86/sapphirerapids/virtual-memory.json    |   40 +-
- .../pmu-events/arch/x86/sierraforest/cache.json    |   61 +-
- .../arch/x86/sierraforest/srf-metrics.json         |   20 +-
- .../arch/x86/sierraforest/uncore-interconnect.json |   10 +-
- .../arch/x86/sierraforest/uncore-io.json           |    1 -
- .../arch/x86/sierraforest/uncore-memory.json       |  103 +-
- .../pmu-events/arch/x86/skylake/skl-metrics.json   |  101 +-
- .../pmu-events/arch/x86/skylakex/skx-metrics.json  |  101 +-
- .../pmu-events/arch/x86/tigerlake/tgl-metrics.json |   97 +-
- tools/perf/python/ilist.py                         |  495 ++++++
- tools/perf/scripts/perl/Perf-Trace-Util/Build      |    2 +-
- tools/perf/tests/Build                             |    2 -
- tools/perf/tests/builtin-test.c                    |    2 +-
- tools/perf/tests/code-reading.c                    |  119 +-
- tools/perf/tests/make                              |    8 +-
- tools/perf/tests/parse-events.c                    |   54 +
- tools/perf/tests/perf-record.c                     |   40 +-
- tools/perf/tests/python-use.c                      |   27 -
- tools/perf/tests/shell/amd-ibs-swfilt.sh           |   51 +-
- tools/perf/tests/shell/attr/test-stat-default      |    7 +
- tools/perf/tests/shell/attr/test-stat-detailed-1   |    7 +
- tools/perf/tests/shell/attr/test-stat-detailed-2   |    7 +
- tools/perf/tests/shell/attr/test-stat-detailed-3   |    7 +
- .../shell/base_probe/test_adding_blacklisted.sh    |   20 +-
- .../tests/shell/base_probe/test_adding_kernel.sh   |   97 +-
- tools/perf/tests/shell/base_probe/test_basic.sh    |   31 +-
- .../tests/shell/base_probe/test_invalid_options.sh |   14 +-
- .../tests/shell/base_probe/test_line_semantics.sh  |    7 +-
- tools/perf/tests/shell/base_report/setup.sh        |   10 +-
- tools/perf/tests/shell/base_report/test_basic.sh   |  103 +-
- tools/perf/tests/shell/common/init.sh              |    4 +-
- .../shell/coresight/memcpy_thread/memcpy_thread.c  |    2 +
- .../shell/coresight/thread_loop/thread_loop.c      |    4 +-
- .../unroll_loop_thread/unroll_loop_thread.c        |    4 +-
- tools/perf/tests/shell/lock_contention.sh          |    7 +-
- tools/perf/tests/shell/python-use.sh               |   36 +
- tools/perf/tests/shell/record.sh                   |   40 +
- tools/perf/tests/shell/record_lbr.sh               |   26 +-
- tools/perf/tests/shell/stat+event_uniquifying.sh   |  109 +-
- tools/perf/tests/shell/stat+std_output.sh          |    6 +-
- tools/perf/tests/shell/test_brstack.sh             |  106 +-
- tools/perf/tests/shell/trace_btf_enum.sh           |   11 +
- tools/perf/tests/tests.h                           |    2 +-
- tools/perf/tests/workloads/Build                   |    2 +
- tools/perf/tests/workloads/traploop.c              |   31 +
- tools/perf/ui/browsers/annotate.c                  |  169 +-
- tools/perf/ui/browsers/hists.c                     |    2 +-
- tools/perf/ui/libslang.h                           |    4 -
- tools/perf/util/Build                              |    7 +-
- tools/perf/util/addr2line.c                        |  439 +++++
- tools/perf/util/addr2line.h                        |   20 +
- tools/perf/util/annotate-data.c                    |   15 +-
- tools/perf/util/annotate-data.h                    |   15 +-
- tools/perf/util/annotate.c                         |  181 +-
- tools/perf/util/annotate.h                         |   29 +-
- tools/perf/util/arm-spe-decoder/arm-spe-decoder.c  |   37 +-
- tools/perf/util/arm-spe-decoder/arm-spe-decoder.h  |   33 +-
- .../util/arm-spe-decoder/arm-spe-pkt-decoder.c     |   14 +
- .../util/arm-spe-decoder/arm-spe-pkt-decoder.h     |    7 +
- tools/perf/util/arm-spe.c                          |  263 ++-
- tools/perf/util/arm-spe.h                          |    2 +
- tools/perf/util/auxtrace.c                         |    9 +-
- tools/perf/util/auxtrace.h                         |    1 +
- tools/perf/util/bpf-filter.c                       |    5 +
- tools/perf/util/bpf-trace-summary.c                |   40 +-
- tools/perf/util/bpf-utils.h                        |   10 +
- tools/perf/util/bpf_counter.c                      |   88 +-
- tools/perf/util/bpf_counter.h                      |   74 +-
- tools/perf/util/bpf_counter_cgroup.c               |    4 +-
- tools/perf/util/bpf_ftrace.c                       |    1 +
- tools/perf/util/bpf_off_cpu.c                      |    1 +
- tools/perf/util/bpf_skel/kwork_top.bpf.c           |    2 -
- tools/perf/util/bpf_skel/sample_filter.bpf.c       |    2 +-
- tools/perf/util/build-id.c                         |    7 +
- tools/perf/util/capstone.c                         |  471 ++++++
- tools/perf/util/capstone.h                         |   24 +
- tools/perf/util/config.c                           |    2 +-
- tools/perf/util/disasm.c                           |  652 +------
- tools/perf/util/disasm.h                           |    6 +-
- tools/perf/util/disasm_bpf.c                       |  195 ---
- tools/perf/util/disasm_bpf.h                       |   12 -
- tools/perf/util/drm_pmu.c                          |    4 +-
- tools/perf/util/dso.c                              |  112 ++
- tools/perf/util/dso.h                              |   25 +
- tools/perf/util/dwarf-aux.c                        |   69 +-
- tools/perf/util/dwarf-aux.h                        |    2 +
- tools/perf/util/env.c                              |   22 +
- tools/perf/util/env.h                              |    2 +
- tools/perf/util/event.h                            |   20 +
- tools/perf/util/evsel.c                            |  165 +-
- tools/perf/util/evsel.h                            |    5 +-
- tools/perf/util/evsel_config.h                     |    1 +
- tools/perf/util/get_current_dir_name.c             |   18 -
- tools/perf/util/get_current_dir_name.h             |    8 -
- tools/perf/util/hist.h                             |   12 +-
- tools/perf/util/hwmon_pmu.h                        |    2 +-
- tools/perf/util/kvm-stat.h                         |   10 +
- tools/perf/util/libbfd.c                           |  600 +++++++
- tools/perf/util/libbfd.h                           |   83 +
- tools/perf/util/llvm.c                             |  273 +++
- tools/perf/util/llvm.h                             |   21 +
- tools/perf/util/lzma.c                             |    2 +-
- tools/perf/util/map.c                              |   19 +-
- tools/perf/util/map.h                              |    6 +-
- tools/perf/util/namespaces.c                       |    7 +-
- tools/perf/util/parse-events.c                     |  143 +-
- tools/perf/util/parse-events.h                     |    4 +-
- tools/perf/util/parse-events.l                     |   23 +-
- tools/perf/util/pmu.c                              |    3 +-
- tools/perf/util/powerpc-vpadtl.c                   |  734 ++++++++
- tools/perf/util/powerpc-vpadtl.h                   |   23 +
- tools/perf/util/print_insn.c                       |  117 +-
- tools/perf/util/python.c                           |  522 +++++-
- tools/perf/util/scripting-engines/Build            |    2 +-
- tools/perf/util/session.c                          |    2 +-
- tools/perf/util/setup.py                           |    5 +-
- tools/perf/util/srcline.c                          |  772 +--------
- tools/perf/util/srcline.h                          |    9 +-
- tools/perf/util/stat.c                             |   56 -
- tools/perf/util/stat.h                             |    4 -
- tools/perf/util/symbol-elf.c                       |  100 +-
- tools/perf/util/symbol-minimal.c                   |    2 +-
- tools/perf/util/symbol.c                           |  138 +-
- tools/perf/util/tool_pmu.c                         |    3 -
- tools/perf/util/tp_pmu.c                           |    2 -
- tools/perf/util/trace.h                            |    4 +-
- tools/perf/util/zlib.c                             |    2 +-
- 278 files changed, 16149 insertions(+), 6185 deletions(-)
- delete mode 100644 tools/arch/arm/include/uapi/asm/kvm.h
- delete mode 100644 tools/arch/s390/include/uapi/asm/kvm_perf.h
- delete mode 100644 tools/arch/x86/include/uapi/asm/kvm_perf.h
- delete mode 100644 tools/build/feature/test-get_current_dir_name.c
- delete mode 100644 tools/build/feature/test-libbpf-strings.c
- delete mode 100644 tools/build/feature/test-libslang-include-subdir.c
- create mode 100644 tools/include/uapi/linux/genetlink.h
- create mode 100644 tools/include/uapi/linux/if_addr.h
- create mode 100644 tools/include/uapi/linux/neighbour.h
- create mode 100644 tools/include/uapi/linux/netfilter.h
- create mode 100644 tools/include/uapi/linux/netfilter_arp.h
- create mode 100644 tools/include/uapi/linux/rtnetlink.h
- create mode 100644 tools/perf/Documentation/intel-acr.txt
- create mode 100644 tools/perf/arch/powerpc/util/auxtrace.c
- create mode 100644 tools/perf/pmu-events/arch/x86/lunarlake/uncore-interconnect.json
- create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/floating-point.json
- create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/other.json
- create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/uncore-memory.json
- create mode 100755 tools/perf/python/ilist.py
- delete mode 100644 tools/perf/tests/python-use.c
- create mode 100755 tools/perf/tests/shell/python-use.sh
- create mode 100644 tools/perf/tests/workloads/traploop.c
- create mode 100644 tools/perf/util/addr2line.c
- create mode 100644 tools/perf/util/addr2line.h
- create mode 100644 tools/perf/util/capstone.c
- create mode 100644 tools/perf/util/capstone.h
- delete mode 100644 tools/perf/util/disasm_bpf.c
- delete mode 100644 tools/perf/util/disasm_bpf.h
- delete mode 100644 tools/perf/util/get_current_dir_name.c
- delete mode 100644 tools/perf/util/get_current_dir_name.h
- create mode 100644 tools/perf/util/libbfd.c
- create mode 100644 tools/perf/util/libbfd.h
- create mode 100644 tools/perf/util/llvm.c
- create mode 100644 tools/perf/util/llvm.h
- create mode 100644 tools/perf/util/powerpc-vpadtl.c
- create mode 100644 tools/perf/util/powerpc-vpadtl.h
+T24gVHVlLCAyMDI1LTEwLTA3IGF0IDE3OjU1ICswOTAwLCBOYW1oeXVuZyBLaW0gd3JvdGU6DQo+
+IE9uIFRodSwgT2N0IDAyLCAyMDI1IGF0IDA2OjQzOjA1UE0gLTA1MDAsDQo+IHRob21hcy5mYWxj
+b25AaW50ZWwuY29twqB3cm90ZToNCj4gPiBGcm9tOiBUaG9tYXMgRmFsY29uIDx0aG9tYXMuZmFs
+Y29uQGludGVsLmNvbT4NCj4gPiANCj4gPiBQcm92aWRlIHJhdGlvLXRvLXByZXYgdGVybSB3aGlj
+aCBhbGxvd3MgdGhlIHVzZXIgdG8NCj4gPiBzZXQgdGhlIGV2ZW50IHNhbXBsZSBwZXJpb2Qgb2Yg
+dHdvIGV2ZW50cyBjb3JyZXNwb25kaW5nDQo+ID4gdG8gYSBkZXNpcmVkIHJhdGlvLiBJZiB1c2lu
+ZyBvbiBhbiBJbnRlbCB4ODYgcGxhdGZvcm0gd2l0aA0KPiA+IEF1dG8gQ291bnRlciBSZWxvYWQg
+c3VwcG9ydCwgYWxzbyBzZXQgY29ycmVzcG9uZGluZyBldmVudCdzDQo+ID4gY29uZmlnMiBhdHRy
+aWJ1dGUgd2l0aCBhIGJpdG1hc2sgd2hpY2ggY291bnRlcnMgdG8gcmVzZXQgYW5kDQo+ID4gd2hp
+Y2ggY291bnRlcnMgdG8gc2FtcGxlIGlmIHRoZSBkZXNpcmVkIHJhdGlvIGlzIG1ldCBvciBleGNl
+ZWRlZC4NCj4gPiBPbiBvdGhlciBwbGF0Zm9ybXMsIG9ubHkgdGhlIHNhbXBsZSBwZXJpb2QgaXMg
+YWZmZWN0ZWQgYnkgdGhlDQo+ID4gcmF0aW8tdG8tcHJldiB0ZXJtLg0KPiA+IA0KPiA+IFJldmll
+d2VkLWJ5OiBJYW4gUm9nZXJzIDxpcm9nZXJzQGdvb2dsZS5jb20+DQo+ID4gU2lnbmVkLW9mZi1i
+eTogVGhvbWFzIEZhbGNvbiA8dGhvbWFzLmZhbGNvbkBpbnRlbC5jb20+DQo+ID4gLS0tDQo+ID4g
+wqB0b29scy9wZXJmL0RvY3VtZW50YXRpb24vaW50ZWwtYWNyLnR4dCB8IDUzICsrKysrKysrKysr
+KysrKysrKw0KPiA+IMKgdG9vbHMvcGVyZi9Eb2N1bWVudGF0aW9uL3BlcmYtbGlzdC50eHQgfMKg
+IDIgKw0KPiA+IMKgdG9vbHMvcGVyZi9hcmNoL3g4Ni91dGlsL2V2c2VsLmPCoMKgwqDCoMKgwqAg
+fCA1MiArKysrKysrKysrKysrKysrKysNCj4gPiDCoHRvb2xzL3BlcmYvdXRpbC9ldnNlbC5jwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgNzYNCj4gPiArKysrKysrKysrKysrKysrKysr
+KysrKysrKw0KPiA+IMKgdG9vbHMvcGVyZi91dGlsL2V2c2VsLmjCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgfMKgIDEgKw0KPiA+IMKgdG9vbHMvcGVyZi91dGlsL2V2c2VsX2NvbmZpZy5o
+wqDCoMKgwqDCoMKgwqDCoCB8wqAgMSArDQo+ID4gwqB0b29scy9wZXJmL3V0aWwvcGFyc2UtZXZl
+bnRzLmPCoMKgwqDCoMKgwqDCoMKgIHwgMjIgKysrKysrKysNCj4gPiDCoHRvb2xzL3BlcmYvdXRp
+bC9wYXJzZS1ldmVudHMuaMKgwqDCoMKgwqDCoMKgwqAgfMKgIDMgKy0NCj4gPiDCoHRvb2xzL3Bl
+cmYvdXRpbC9wYXJzZS1ldmVudHMubMKgwqDCoMKgwqDCoMKgwqAgfMKgIDEgKw0KPiA+IMKgdG9v
+bHMvcGVyZi91dGlsL3BtdS5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAg
+MyArLQ0KPiA+IMKgMTAgZmlsZXMgY2hhbmdlZCwgMjEyIGluc2VydGlvbnMoKyksIDIgZGVsZXRp
+b25zKC0pDQo+ID4gwqBjcmVhdGUgbW9kZSAxMDA2NDQgdG9vbHMvcGVyZi9Eb2N1bWVudGF0aW9u
+L2ludGVsLWFjci50eHQNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi9Eb2N1bWVu
+dGF0aW9uL2ludGVsLWFjci50eHQNCj4gPiBiL3Rvb2xzL3BlcmYvRG9jdW1lbnRhdGlvbi9pbnRl
+bC1hY3IudHh0DQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAw
+MDAuLjcyNjU0ZmRkOWE1Mg0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi90b29scy9wZXJm
+L0RvY3VtZW50YXRpb24vaW50ZWwtYWNyLnR4dA0KPiA+IEBAIC0wLDAgKzEsNTMgQEANCj4gPiAr
+SW50ZWwgQXV0byBDb3VudGVyIFJlbG9hZCBTdXBwb3J0DQo+ID4gKy0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLQ0KPiA+ICtTdXBwb3J0IGZvciBJbnRlbCBBdXRvIENvdW50ZXIgUmVs
+b2FkIGluIHBlcmYgdG9vbHMNCj4gPiArDQo+ID4gK0F1dG8gY291bnRlciByZWxvYWQgcHJvdmlk
+ZXMgYSBtZWFucyBmb3Igc29mdHdhcmUgdG8gc3BlY2lmeSB0bw0KPiA+IGhhcmR3YXJlDQo+ID4g
+K3RoYXQgY2VydGFpbiBjb3VudGVycywgaWYgc3VwcG9ydGVkLCBzaG91bGQgYmUgYXV0b21hdGlj
+YWxseQ0KPiA+IHJlbG9hZGVkDQo+ID4gK3Vwb24gb3ZlcmZsb3cgb2YgY2hvc2VuIGNvdW50ZXJz
+LiBCeSB0YWtpbmcgYSBzYW1wbGUgb25seSBpZiB0aGUNCj4gPiByYXRlIG9mDQo+ID4gK29uZSBl
+dmVudCBleGNlZWRzIHNvbWUgdGhyZXNob2xkIHJlbGF0aXZlIHRvIHRoZSByYXRlIG9mIGFub3Ro
+ZXINCj4gPiBldmVudCwNCj4gPiArdGhpcyBmZWF0dXJlIGVuYWJsZXMgc29mdHdhcmUgdG8gc2Ft
+cGxlIGJhc2VkIG9uIHRoZSByZWxhdGl2ZSByYXRlDQo+ID4gb2YNCj4gPiArdHdvIG9yIG1vcmUg
+ZXZlbnRzLiBUbyBlbmFibGUgdGhpcywgdGhlIHVzZXIgbXVzdCBwcm92aWRlIGEgc2FtcGxlDQo+
+ID4gcGVyaW9kDQo+ID4gK3Rlcm0gYW5kIGEgYml0bWFzayAoImFjcl9tYXNrIikgZm9yIGVhY2gg
+cmVsZXZhbnQgZXZlbnQgc3BlY2lmeWluZw0KPiA+IHRoZQ0KPiA+ICtjb3VudGVycyBpbiBhbiBl
+dmVudCBncm91cCB0byByZWxvYWQgaWYgdGhlIGV2ZW50J3Mgc3BlY2lmaWVkDQo+ID4gc2FtcGxl
+DQo+ID4gK3BlcmlvZCBpcyBleGNlZWRlZC4NCj4gDQo+IFRoYW5rcyBmb3IgdGhlIGRvY3VtZW50
+YXRpb24sIG5vdyBJIGdvdCB0aGUgaWRlYSB3aGF0IGl0IHRyaWVzIHRvIGRvLg0KPiBTbyBhY3Jf
+bWFzayBhbmQgcmF0aW8tdG8tcHJldiBhcmUgb25seSBhbGxvd2VkIGluIGEgZ3JvdXAuLg0KDQpI
+aSwgeWVzLCB0aGF0J3MgcmlnaHQuDQoNCj4gDQo+ID4gKw0KPiA+ICtGb3IgZXhhbXBsZSwgaWYg
+dGhlIHVzZXIgZGVzaXJlcyB0byBtZWFzdXJlIGEgc2NlbmFyaW8gd2hlbiBJUEMgPg0KPiA+IDIs
+DQo+ID4gK3RoZSBldmVudCBncm91cCBtaWdodCBsb29rIGxpa2UgdGhlIG9uZSBiZWxvdzoNCj4g
+PiArDQo+ID4gKwlwZXJmIHJlY29yZCAtZQ0KPiA+IHtjcHVfYXRvbS9pbnN0cnVjdGlvbnMscGVy
+aW9kPTIwMDAwMCxhY3JfbWFzaz0weDIvLCBcDQo+ID4gKwljcHVfYXRvbS9jeWNsZXMscGVyaW9k
+PTEwMDAwMCxhY3JfbWFzaz0weDMvfSAtLSB0cnVlDQo+ID4gKw0KPiA+ICtJbiB0aGlzIGNhc2Us
+IGlmIHRoZSAiaW5zdHJ1Y3Rpb25zIiBjb3VudGVyIGV4Y2VlZHMgdGhlIHNhbXBsZQ0KPiA+IHBl
+cmlvZCBvZg0KPiA+ICsyMDAwMDAsIHRoZSBzZWNvbmQgY291bnRlciwgImN5Y2xlcyIsIHdpbGwg
+YmUgcmVzZXQgYW5kIGEgc2FtcGxlDQo+ID4gd2lsbCBiZQ0KPiA+ICt0YWtlbi4gSWYgImN5Y2xl
+cyIgaXMgZXhjZWVkZWQgZmlyc3QsIGJvdGggY291bnRlcnMgaW4gdGhlIGdyb3VwDQo+ID4gd2ls
+bCBiZQ0KPiA+ICtyZXNldC4gSW4gdGhpcyB3YXksIHNhbXBsZXMgd2lsbCBvbmx5IGJlIHRha2Vu
+IGZvciBjYXNlcyB3aGVyZSBJUEMNCj4gPiA+IDIuDQo+ID4gKw0KPiA+ICtUaGUgYWNyX21hc2sg
+dGVybSBpcyBhIGhleGFkZWNpbWFsIHZhbHVlIHJlcHJlc2VudGluZyBhIGJpdG1hc2sgb2YNCj4g
+PiB0aGUNCj4gPiArZXZlbnRzIGluIHRoZSBncm91cCB0byBiZSByZXNldCB3aGVuIHRoZSBwZXJp
+b2QgaXMgZXhjZWVkZWQuIEluDQo+ID4gdGhlDQo+ID4gK2V4YW1wbGUgYWJvdmUsICJpbnN0cnVj
+dGlvbnMiIGlzIGFzc2lnbmVkIGFuIGFjcl9tYXNrIG9mIDB4MiwNCj4gPiBtZWFuaW5nDQo+ID4g
+K29ubHkgdGhlIHNlY29uZCBldmVudCBpbiB0aGUgZ3JvdXAgaXMgcmVsb2FkZWQgYW5kIGEgc2Ft
+cGxlIGlzDQo+ID4gdGFrZW4NCj4gPiArZm9yIHRoZSBmaXJzdCBldmVudC4gImN5Y2xlcyIgaXMg
+YXNzaWduZWQgYW4gYWNyX21hc2sgb2YgMHgzLA0KPiA+IG1lYW5pbmcNCj4gPiArdGhhdCBib3Ro
+IGV2ZW50IGNvdW50ZXJzIHdpbGwgYmUgcmVzZXQgaWYgdGhlIHNhbXBsZSBwZXJpb2QgaXMNCj4g
+PiBleGNlZWRlZA0KPiA+ICtmaXJzdC4NCj4gDQo+IElJVUMgYml0IG9mIDEgbWVhbnMgYXV0by1y
+ZWxvYWQgd2l0aG91dCBzYW1wbGVzIGFuZCAwIG1lYW5zIHRvIHRha2UgYQ0KPiBzYW1wbGUgKGFz
+IG5vcm1hbCksIHJpZ2h0P8KgIEFuZCBpbmRleCBpcyBtZWFuaW5nZnVsIGluIGEgZ3JvdXAgYW5k
+DQo+IG5vdA0KPiByZWxhdGVkIHRvIGhhcmR3YXJlLCBjb3JyZWN0Pw0KPiANCg0KWWVzLiBNYXli
+ZSBJIGNhbiB1cGRhdGUgdG8gbWFrZSB0aGF0IGNsZWFyZXIgaW4gdGhlIGZ1dHVyZS4NCg0KPiAN
+Cj4gPiArDQo+ID4gK3JhdGlvLXRvLXByZXYgRXZlbnQgVGVybQ0KPiA+ICstLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0NCj4gPiArVG8gc2ltcGxpZnkgdGhpcywgYW4gZXZlbnQgdGVybSAicmF0aW8t
+dG8tcHJldiIgaXMgcHJvdmlkZWQgd2hpY2gNCj4gPiBpcyB1c2VkDQo+ID4gK2Fsb25nc2lkZSB0
+aGUgc2FtcGxlIHBlcmlvZCB0ZXJtIG4gb3IgdGhlIC1jLy0tY291bnQgb3B0aW9uLiBUaGlzDQo+
+ID4gd291bGQNCj4gPiArYWxsb3cgdXNlcnMgdG8gc3BlY2lmeSB0aGUgZGVzaXJlZCByZWxhdGl2
+ZSByYXRlIGJldHdlZW4gZXZlbnRzIGFzDQo+ID4gYQ0KPiA+ICtyYXRpby4gTm90ZTogQm90aCBl
+dmVudHMgY29tcGFyZWQgbXVzdCBiZWxvbmcgdG8gdGhlIHNhbWUgUE1VLg0KPiA+ICsNCj4gPiAr
+VGhlIGNvbW1hbmQgYWJvdmUgd291bGQgdGhlbiBiZWNvbWUNCj4gPiArDQo+ID4gKwlwZXJmIHJl
+Y29yZCAtZSB7Y3B1X2F0b20vaW5zdHJ1Y3Rpb25zLywgXA0KPiA+ICsJY3B1X2F0b20vY3ljbGVz
+LHBlcmlvZD0xMDAwMDAscmF0aW8tdG8tcHJldj0wLjUvfSAtLSB0cnVlDQo+ID4gKw0KPiA+ICty
+YXRpby10by1wcmV2IGlzIHRoZSByYXRpbyBvZiB0aGUgZXZlbnQgdXNpbmcgdGhlIHRlcm0gcmVs
+YXRpdmUNCj4gPiArdG8gdGhlIHByZXZpb3VzIGV2ZW50IGluIHRoZSBncm91cCwgd2hpY2ggd2ls
+bCBhbHdheXMgYmUgMSwNCj4gPiArZm9yIGEgMTowLjUgb3IgMjoxIHJhdGlvLg0KPiANCj4gV2hh
+dCBhYm91dCBhY3JfbWFzaz8NCg0KSW4gdGhpcyBjYXNlLCB0aGUgZXZlbnQgdXNpbmcgcmF0aW8t
+dG8tcHJldiB0ZXJtLCAnY3ljbGVzJywgd2lsbCByZWxvYWQNCmJvdGggZXZlbnQgY291bnRlcnMg
+aWYgdGhlIHNhbXBsZSBwZXJpb2QgaXMgZXhjZWVkZWQgZmlyc3QsIHNvIHRoZQ0KYWNyX21hc2sg
+d291bGQgYmUgMGIxMSBvciAweDMuIFRoZSBvdGhlciBldmVudCwgJ2luc3RydWN0aW9ucycsIHdp
+bGwNCmhhdmUgYW4gYWNyX21hc2sgb2YgMGIxMCBvciAweDIsIG1lYW5pbmcgaXQgd2lsbCBiZSBy
+ZWxvYWRlZCBhbmQgYW4NCnNhbXBsZSBpcyB0YWtlbiBmb3IgJ2N5Y2xlcy4nDQoNCj4gDQo+ID4g
+Kw0KPiA+ICtUbyBzYW1wbGUgZm9yIElQQyA8IDIgZm9yIGV4YW1wbGUsIHRoZSBldmVudHMgbmVl
+ZCB0byBiZQ0KPiA+IHJlb3JkZXJlZDoNCj4gPiArDQo+ID4gKwlwZXJmIHJlY29yZCAtZSB7Y3B1
+X2F0b20vY3ljbGVzLywgXA0KPiA+ICsJY3B1X2F0b20vaW5zdHJ1Y3Rpb25zLHBlcmlvZD0yMDAw
+MDAscmF0aW8tdG8tcHJldj0yLjAvfSAtLQ0KPiA+IHRydWUNCj4gPiBkaWZmIC0tZ2l0IGEvdG9v
+bHMvcGVyZi9Eb2N1bWVudGF0aW9uL3BlcmYtbGlzdC50eHQNCj4gPiBiL3Rvb2xzL3BlcmYvRG9j
+dW1lbnRhdGlvbi9wZXJmLWxpc3QudHh0DQo+ID4gaW5kZXggYTUwMzlkMTYxNGY5Li5hNDM3OGEw
+Y2Q5MTQgMTAwNjQ0DQo+ID4gLS0tIGEvdG9vbHMvcGVyZi9Eb2N1bWVudGF0aW9uL3BlcmYtbGlz
+dC50eHQNCj4gPiArKysgYi90b29scy9wZXJmL0RvY3VtZW50YXRpb24vcGVyZi1saXN0LnR4dA0K
+PiA+IEBAIC0zOTMsNiArMzkzLDggQEAgU3VwcG9ydCByYXcgZm9ybWF0Og0KPiA+IMKgLiAnLS1y
+YXctZHVtcCBbaHd8c3d8Y2FjaGV8dHJhY2Vwb2ludHxwbXV8ZXZlbnRfZ2xvYl0nLCBzaG93cyB0
+aGUNCj4gPiByYXctZHVtcCBvZg0KPiA+IMKgwqAgYSBjZXJ0YWluIGtpbmQgb2YgZXZlbnRzLg0K
+PiA+IMKgDQo+ID4gK2luY2x1ZGU6OmludGVsLWFjci50eHRbXQ0KPiA+ICsNCj4gPiDCoFNFRSBB
+TFNPDQo+ID4gwqAtLS0tLS0tLQ0KPiA+IMKgbGlua3BlcmY6cGVyZi1zdGF0WzFdLCBsaW5rcGVy
+ZjpwZXJmLXRvcFsxXSwNCj4gPiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi9hcmNoL3g4Ni91dGls
+L2V2c2VsLmMNCj4gPiBiL3Rvb2xzL3BlcmYvYXJjaC94ODYvdXRpbC9ldnNlbC5jDQo+ID4gaW5k
+ZXggZTY3NzAxZDI2ZjI0Li4yM2E4ZTY2MmE5MTIgMTAwNjQ0DQo+ID4gLS0tIGEvdG9vbHMvcGVy
+Zi9hcmNoL3g4Ni91dGlsL2V2c2VsLmMNCj4gPiArKysgYi90b29scy9wZXJmL2FyY2gveDg2L3V0
+aWwvZXZzZWwuYw0KPiA+IEBAIC00LDYgKzQsNyBAQA0KPiA+IMKgI2luY2x1ZGUgPHN0ZGxpYi5o
+Pg0KPiA+IMKgI2luY2x1ZGUgInV0aWwvZXZsaXN0LmgiDQo+ID4gwqAjaW5jbHVkZSAidXRpbC9l
+dnNlbC5oIg0KPiA+ICsjaW5jbHVkZSAidXRpbC9ldnNlbF9jb25maWcuaCINCj4gPiDCoCNpbmNs
+dWRlICJ1dGlsL2Vudi5oIg0KPiA+IMKgI2luY2x1ZGUgInV0aWwvcG11LmgiDQo+ID4gwqAjaW5j
+bHVkZSAidXRpbC9wbXVzLmgiDQo+ID4gQEAgLTcxLDYgKzcyLDU3IEBAIGludCBhcmNoX2V2c2Vs
+X19od19uYW1lKHN0cnVjdCBldnNlbCAqZXZzZWwsDQo+ID4gY2hhciAqYmYsIHNpemVfdCBzaXpl
+KQ0KPiA+IMKgCQkJIGV2ZW50X25hbWUpOw0KPiA+IMKgfQ0KPiA+IMKgDQo+ID4gK3ZvaWQgYXJj
+aF9ldnNlbF9fYXBwbHlfcmF0aW9fdG9fcHJldihzdHJ1Y3QgZXZzZWwgKmV2c2VsLA0KPiA+ICsJ
+CQkJc3RydWN0IHBlcmZfZXZlbnRfYXR0ciAqYXR0cikNCj4gPiArew0KPiA+ICsJc3RydWN0IHBl
+cmZfZXZlbnRfYXR0ciAqcHJldl9hdHRyID0gTlVMTDsNCj4gPiArCXN0cnVjdCBldnNlbCAqZXZz
+ZWxfcHJldiA9IE5VTEw7DQo+ID4gKwljb25zdCBjaGFyICpuYW1lID0gImFjcl9tYXNrIjsNCj4g
+PiArCWludCBldnNlbF9pZHggPSAwOw0KPiA+ICsJX191NjQgZXZfbWFzaywgcHJfZXZfbWFzazsN
+Cj4gPiArDQo+ID4gKwlpZiAoIXBlcmZfcG11X19oYXNfZm9ybWF0KGV2c2VsLT5wbXUsIG5hbWUp
+KSB7DQo+ID4gKwkJcHJfZXJyKCInJXMnIGRvZXMgbm90IGhhdmUgYWNyX21hc2sgZm9ybWF0DQo+
+ID4gc3VwcG9ydFxuIiwgZXZzZWwtPnBtdS0+bmFtZSk7DQo+ID4gKwkJcmV0dXJuOw0KPiA+ICsJ
+fQ0KPiA+ICsJaWYgKHBlcmZfcG11X19mb3JtYXRfdHlwZShldnNlbC0+cG11LCBuYW1lKSAhPQ0K
+PiA+ICsJCQlQRVJGX1BNVV9GT1JNQVRfVkFMVUVfQ09ORklHMikgew0KPiA+ICsJCXByX2Vycigi
+JyVzJyBkb2VzIG5vdCBoYXZlIGNvbmZpZzIgZm9ybWF0DQo+ID4gc3VwcG9ydFxuIiwgZXZzZWwt
+PnBtdS0+bmFtZSk7DQo+ID4gKwkJcmV0dXJuOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCWV2c2Vs
+X3ByZXYgPSBldnNlbF9fcHJldihldnNlbCk7DQo+ID4gKwlpZiAoIWV2c2VsX3ByZXYpIHsNCj4g
+PiArCQlwcl9lcnIoIlByZXZpb3VzIGV2ZW50IGRvZXMgbm90IGV4aXN0LlxuIik7DQo+ID4gKwkJ
+cmV0dXJuOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCXByZXZfYXR0ciA9ICZldnNlbF9wcmV2LT5j
+b3JlLmF0dHI7DQo+ID4gKw0KPiA+ICsJaWYgKHByZXZfYXR0ci0+Y29uZmlnMikgew0KPiA+ICsJ
+CXByX2VycigiJyVzJyBoYXMgc2V0IGNvbmZpZzIgKGFjcl9tYXNrPykgYWxyZWFkeSwNCj4gPiBj
+b25maWd1cmF0aW9uIG5vdCBzdXBwb3J0ZWRcbiIsIGV2c2VsX3ByZXYtPm5hbWUpOw0KPiANCj4g
+VGhpcyBsaW5lIGlzIHRvbyBsb25nLg0KDQpUaGFua3MsIEkgd2lsbCBzdWJtaXQgYSBjbGVhbnVw
+IHNvb24uDQoNCj4gDQo+IEFsc28gSSdtIGFmcmFpZCB0aGlzIG9ubHkgd29ya3MgZm9yIHR3byBl
+dmVudHMgaW4gYSBncm91cC4NCg0KRm9yIG5vdyBzdXBwb3J0IGlzIGxpbWl0ZWQgdG8gdHdvIGV2
+ZW50cyBpbiBhIGdyb3VwLiBGb3IgbGFyZ2VyIGdyb3VwcywNCnRoZSBhY3JfbWFzayBhbmQgcGVy
+aW9kIHRlcm1zIGNhbiBiZSB1c2VkLg0KDQpUaGFua3MsDQpUb20NCg0KPiANCj4gVGhhbmtzLA0K
+PiBOYW1oeXVuZw0KPiANCj4gDQo+ID4gKwkJcmV0dXJuOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiAr
+CS8qDQo+ID4gKwkgKiBhY3JfbWFzayAoY29uZmlnMikgaXMgY2FsY3VsYXRlZCB1c2luZyB0aGUg
+ZXZlbnQncw0KPiA+IGluZGV4IGluDQo+ID4gKwkgKiB0aGUgZXZlbnQgZ3JvdXAuIFRoZSBmaXJz
+dCBldmVudCB3aWxsIHVzZSB0aGUgaW5kZXggb2YNCj4gPiB0aGUNCj4gPiArCSAqIHNlY29uZCBl
+dmVudCBhcyBpdHMgbWFzayAoZS5nLiwgMHgyKSwgaW5kaWNhdGluZyB0aGF0DQo+ID4gdGhlDQo+
+ID4gKwkgKiBzZWNvbmQgZXZlbnQgY291bnRlciB3aWxsIGJlIHJlc2V0IGFuZCBhIHNhbXBsZSB0
+YWtlbg0KPiA+IGZvcg0KPiA+ICsJICogdGhlIGZpcnN0IGV2ZW50IGlmIGl0cyBjb3VudGVyIG92
+ZXJmbG93cy4gVGhlIHNlY29uZA0KPiA+IGV2ZW50DQo+ID4gKwkgKiB3aWxsIHVzZSB0aGUgbWFz
+ayBjb25zaXN0aW5nIG9mIHRoZSBmaXJzdCBhbmQgc2Vjb25kDQo+ID4gYml0cw0KPiA+ICsJICog
+KGUuZy4sIDB4MyksIG1lYW5pbmcgYm90aCBjb3VudGVycyB3aWxsIGJlIHJlc2V0IGlmIHRoZQ0K
+PiA+ICsJICogc2Vjb25kIGV2ZW50IGNvdW50ZXIgb3ZlcmZsb3dzLg0KPiA+ICsJICovDQo+ID4g
+Kw0KPiA+ICsJZXZzZWxfaWR4ID0gZXZzZWxfX2dyb3VwX2lkeChldnNlbCk7DQo+ID4gKwlldl9t
+YXNrID0gMXVsbCA8PCBldnNlbF9pZHg7DQo+ID4gKwlwcl9ldl9tYXNrID0gMXVsbCA8PCAoZXZz
+ZWxfaWR4IC0gMSk7DQo+ID4gKw0KPiA+ICsJcHJldl9hdHRyLT5jb25maWcyID0gZXZfbWFzazsN
+Cj4gPiArCWF0dHItPmNvbmZpZzIgPSBldl9tYXNrIHwgcHJfZXZfbWFzazsNCj4gPiArfQ0KPiA+
+ICsNCj4gPiDCoHN0YXRpYyB2b2lkIGlic19sM21pc3Nfd2Fybih2b2lkKQ0KPiA+IMKgew0KPiA+
+IMKgCXByX3dhcm5pbmcoDQo+ID4gZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvdXRpbC9ldnNlbC5j
+IGIvdG9vbHMvcGVyZi91dGlsL2V2c2VsLmMNCj4gPiBpbmRleCAxYTI5ZDRmNDdiYmYuLjU2Y2Vm
+MTMxMDU3NCAxMDA2NDQNCj4gPiAtLS0gYS90b29scy9wZXJmL3V0aWwvZXZzZWwuYw0KPiA+ICsr
+KyBiL3Rvb2xzL3BlcmYvdXRpbC9ldnNlbC5jDQo+ID4gQEAgLTEwOTEsNiArMTA5MSw3MSBAQCBz
+dGF0aWMgdm9pZCBldnNlbF9fcmVzZXRfY2FsbGdyYXBoKHN0cnVjdA0KPiA+IGV2c2VsICpldnNl
+bCwgc3RydWN0IGNhbGxjaGFpbl9wYXJhbSAqDQo+ID4gwqAJfQ0KPiA+IMKgfQ0KPiA+IMKgDQo+
+ID4gK3N0YXRpYyB2b2lkIGV2c2VsX19hcHBseV9yYXRpb190b19wcmV2KHN0cnVjdCBldnNlbCAq
+ZXZzZWwsDQo+ID4gKwkJCQnCoMKgwqDCoMKgwqAgc3RydWN0IHBlcmZfZXZlbnRfYXR0cg0KPiA+
+ICphdHRyLA0KPiA+ICsJCQkJwqDCoMKgwqDCoMKgIHN0cnVjdCByZWNvcmRfb3B0cyAqb3B0cywN
+Cj4gPiArCQkJCcKgwqDCoMKgwqDCoCBjb25zdCBjaGFyICpidWYpDQo+ID4gK3sNCj4gPiArCXN0
+cnVjdCBwZXJmX2V2ZW50X2F0dHIgKnByZXZfYXR0ciA9IE5VTEw7DQo+ID4gKwlzdHJ1Y3QgZXZz
+ZWwgKmV2c2VsX3ByZXYgPSBOVUxMOw0KPiA+ICsJdTY0IHR5cGUgPSBldnNlbC0+Y29yZS5hdHRy
+LnNhbXBsZV90eXBlOw0KPiA+ICsJdTY0IHByZXZfdHlwZSA9IDA7DQo+ID4gKwlkb3VibGUgcnRw
+Ow0KPiA+ICsNCj4gPiArCXJ0cCA9IHN0cnRvZChidWYsIE5VTEwpOw0KPiA+ICsJaWYgKHJ0cCA8
+PSAwKSB7DQo+ID4gKwkJcHJfZXJyKCJJbnZhbGlkIHJhdGlvLXRvLXByZXYgdmFsdWUgJWxmXG4i
+LCBydHApOw0KPiA+ICsJCXJldHVybjsNCj4gPiArCX0NCj4gPiArCWlmIChldnNlbCA9PSBldnNl
+bF9fbGVhZGVyKGV2c2VsKSkgew0KPiA+ICsJCXByX2VycigiSW52YWxpZCB1c2Ugb2YgcmF0aW8t
+dG8tcHJldiB0ZXJtIHdpdGhvdXQNCj4gPiBwcmVjZWRpbmcgZWxlbWVudCBpbiBncm91cFxuIik7
+DQo+ID4gKwkJcmV0dXJuOw0KPiA+ICsJfQ0KPiA+ICsJaWYgKCFldnNlbC0+cG11LT5pc19jb3Jl
+KSB7DQo+ID4gKwkJcHJfZXJyKCJFdmVudCB1c2luZyByYXRpby10by1wcmV2IHRlcm0gbXVzdCBo
+YXZlIGENCj4gPiBjb3JlIFBNVVxuIik7DQo+ID4gKwkJcmV0dXJuOw0KPiA+ICsJfQ0KPiA+ICsN
+Cj4gPiArCWV2c2VsX3ByZXYgPSBldnNlbF9fcHJldihldnNlbCk7DQo+ID4gKwlpZiAoIWV2c2Vs
+X3ByZXYpIHsNCj4gPiArCQlwcl9lcnIoIlByZXZpb3VzIGV2ZW50IGRvZXMgbm90IGV4aXN0Llxu
+Iik7DQo+ID4gKwkJcmV0dXJuOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCWlmIChldnNlbF9wcmV2
+LT5wbXUtPnR5cGUgIT0gZXZzZWwtPnBtdS0+dHlwZSkgew0KPiA+ICsJCXByX2VycigiQ29tcGFy
+ZWQgZXZlbnRzIChcIiVzXCIsIFwiJXNcIikgbXVzdCBoYXZlDQo+ID4gc2FtZSBQTVVcbiIsDQo+
+ID4gKwkJCWV2c2VsLT5uYW1lLCBldnNlbF9wcmV2LT5uYW1lKTsNCj4gPiArCQlyZXR1cm47DQo+
+ID4gKwl9DQo+ID4gKw0KPiA+ICsJcHJldl9hdHRyID0gJmV2c2VsX3ByZXYtPmNvcmUuYXR0cjsN
+Cj4gPiArCXByZXZfdHlwZSA9IGV2c2VsX3ByZXYtPmNvcmUuYXR0ci5zYW1wbGVfdHlwZTsNCj4g
+PiArDQo+ID4gKwlpZiAoIShwcmV2X3R5cGUgJiBQRVJGX1NBTVBMRV9QRVJJT0QpKSB7DQo+ID4g
+KwkJYXR0ci0+c2FtcGxlX3BlcmlvZCA9IHByZXZfYXR0ci0+c2FtcGxlX3BlcmlvZCAqDQo+ID4g
+cnRwOw0KPiA+ICsJCWF0dHItPmZyZXEgPSAwOw0KPiA+ICsJCWV2c2VsX19yZXNldF9zYW1wbGVf
+Yml0KGV2c2VsLCBQRVJJT0QpOw0KPiA+ICsJfSBlbHNlIGlmICghKHR5cGUgJiBQRVJGX1NBTVBM
+RV9QRVJJT0QpKSB7DQo+ID4gKwkJcHJldl9hdHRyLT5zYW1wbGVfcGVyaW9kID0gYXR0ci0+c2Ft
+cGxlX3BlcmlvZCAvDQo+ID4gcnRwOw0KPiA+ICsJCXByZXZfYXR0ci0+ZnJlcSA9IDA7DQo+ID4g
+KwkJZXZzZWxfX3Jlc2V0X3NhbXBsZV9iaXQoZXZzZWxfcHJldiwgUEVSSU9EKTsNCj4gPiArCX0g
+ZWxzZSB7DQo+ID4gKwkJaWYgKG9wdHMtPnVzZXJfaW50ZXJ2YWwgIT0gVUxMT05HX01BWCkgew0K
+PiA+ICsJCQlwcmV2X2F0dHItPnNhbXBsZV9wZXJpb2QgPSBvcHRzLQ0KPiA+ID51c2VyX2ludGVy
+dmFsOw0KPiA+ICsJCQlhdHRyLT5zYW1wbGVfcGVyaW9kID0gcHJldl9hdHRyLQ0KPiA+ID5zYW1w
+bGVfcGVyaW9kICogcnRwOw0KPiA+ICsJCQlwcmV2X2F0dHItPmZyZXEgPSAwOw0KPiA+ICsJCQlh
+dHRyLT5mcmVxID0gMDsNCj4gPiArCQkJZXZzZWxfX3Jlc2V0X3NhbXBsZV9iaXQoZXZzZWxfcHJl
+diwNCj4gPiBQRVJJT0QpOw0KPiA+ICsJCQlldnNlbF9fcmVzZXRfc2FtcGxlX2JpdChldnNlbCwg
+UEVSSU9EKTsNCj4gPiArCQl9IGVsc2Ugew0KPiA+ICsJCQlwcl9lcnIoIkV2ZW50IHBlcmlvZCB0
+ZXJtIG9yIGNvdW50ICgtYykNCj4gPiBtdXN0IGJlIHNldCB3aGVuIHVzaW5nIHJhdGlvLXRvLXBy
+ZXYgdGVybS5cbiIpOw0KPiA+ICsJCQlyZXR1cm47DQo+ID4gKwkJfQ0KPiA+ICsJfQ0KPiA+ICsN
+Cj4gPiArCWFyY2hfZXZzZWxfX2FwcGx5X3JhdGlvX3RvX3ByZXYoZXZzZWwsIGF0dHIpOw0KPiA+
+ICt9DQo+ID4gKw0KPiA+IMKgc3RhdGljIHZvaWQgZXZzZWxfX2FwcGx5X2NvbmZpZ190ZXJtcyhz
+dHJ1Y3QgZXZzZWwgKmV2c2VsLA0KPiA+IMKgCQkJCcKgwqDCoMKgwqAgc3RydWN0IHJlY29yZF9v
+cHRzICpvcHRzLA0KPiA+IGJvb2wgdHJhY2spDQo+ID4gwqB7DQo+ID4gQEAgLTExMDQsNiArMTE2
+OSw3IEBAIHN0YXRpYyB2b2lkIGV2c2VsX19hcHBseV9jb25maWdfdGVybXMoc3RydWN0DQo+ID4g
+ZXZzZWwgKmV2c2VsLA0KPiA+IMKgCXUzMiBkdW1wX3NpemUgPSAwOw0KPiA+IMKgCWludCBtYXhf
+c3RhY2sgPSAwOw0KPiA+IMKgCWNvbnN0IGNoYXIgKmNhbGxncmFwaF9idWYgPSBOVUxMOw0KPiA+
+ICsJY29uc3QgY2hhciAqcnRwX2J1ZiA9IE5VTEw7DQo+ID4gwqANCj4gPiDCoAlsaXN0X2Zvcl9l
+YWNoX2VudHJ5KHRlcm0sIGNvbmZpZ190ZXJtcywgbGlzdCkgew0KPiA+IMKgCQlzd2l0Y2ggKHRl
+cm0tPnR5cGUpIHsNCj4gPiBAQCAtMTE3NCw2ICsxMjQwLDkgQEAgc3RhdGljIHZvaWQgZXZzZWxf
+X2FwcGx5X2NvbmZpZ190ZXJtcyhzdHJ1Y3QNCj4gPiBldnNlbCAqZXZzZWwsDQo+ID4gwqAJCQli
+cmVhazsNCj4gPiDCoAkJY2FzZSBFVlNFTF9fQ09ORklHX1RFUk1fQ0ZHX0NIRzoNCj4gPiDCoAkJ
+CWJyZWFrOw0KPiA+ICsJCWNhc2UgRVZTRUxfX0NPTkZJR19URVJNX1JBVElPX1RPX1BSRVY6DQo+
+ID4gKwkJCXJ0cF9idWYgPSB0ZXJtLT52YWwuc3RyOw0KPiA+ICsJCQlicmVhazsNCj4gPiDCoAkJ
+ZGVmYXVsdDoNCj4gPiDCoAkJCWJyZWFrOw0KPiA+IMKgCQl9DQo+ID4gQEAgLTEyMjUsNiArMTI5
+NCw4IEBAIHN0YXRpYyB2b2lkIGV2c2VsX19hcHBseV9jb25maWdfdGVybXMoc3RydWN0DQo+ID4g
+ZXZzZWwgKmV2c2VsLA0KPiA+IMKgCQkJZXZzZWxfX2NvbmZpZ19jYWxsY2hhaW4oZXZzZWwsIG9w
+dHMsDQo+ID4gJnBhcmFtKTsNCj4gPiDCoAkJfQ0KPiA+IMKgCX0NCj4gPiArCWlmIChydHBfYnVm
+KQ0KPiA+ICsJCWV2c2VsX19hcHBseV9yYXRpb190b19wcmV2KGV2c2VsLCBhdHRyLCBvcHRzLA0K
+PiA+IHJ0cF9idWYpOw0KPiA+IMKgfQ0KPiA+IMKgDQo+ID4gwqBzdHJ1Y3QgZXZzZWxfY29uZmln
+X3Rlcm0gKl9fZXZzZWxfX2dldF9jb25maWdfdGVybShzdHJ1Y3QgZXZzZWwNCj4gPiAqZXZzZWws
+IGVudW0gZXZzZWxfdGVybV90eXBlIHR5cGUpDQo+ID4gQEAgLTEyNDksNiArMTMyMCwxMSBAQCB2
+b2lkIF9fd2VhayBhcmNoX19wb3N0X2V2c2VsX2NvbmZpZyhzdHJ1Y3QNCj4gPiBldnNlbCAqZXZz
+ZWwgX19tYXliZV91bnVzZWQsDQo+ID4gwqB7DQo+ID4gwqB9DQo+ID4gwqANCj4gPiArdm9pZCBf
+X3dlYWsgYXJjaF9ldnNlbF9fYXBwbHlfcmF0aW9fdG9fcHJldihzdHJ1Y3QgZXZzZWwgKmV2c2Vs
+DQo+ID4gX19tYXliZV91bnVzZWQsDQo+ID4gKwkJCQkJwqDCoMKgIHN0cnVjdCBwZXJmX2V2ZW50
+X2F0dHINCj4gPiAqYXR0ciBfX21heWJlX3VudXNlZCkNCj4gPiArew0KPiA+ICt9DQo+ID4gKw0K
+PiA+IMKgc3RhdGljIHZvaWQgZXZzZWxfX3NldF9kZWZhdWx0X2ZyZXFfcGVyaW9kKHN0cnVjdCBy
+ZWNvcmRfb3B0cw0KPiA+ICpvcHRzLA0KPiA+IMKgCQkJCQnCoMKgIHN0cnVjdCBwZXJmX2V2ZW50
+X2F0dHINCj4gPiAqYXR0cikNCj4gPiDCoHsNCj4gPiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi91
+dGlsL2V2c2VsLmggYi90b29scy9wZXJmL3V0aWwvZXZzZWwuaA0KPiA+IGluZGV4IDAzZjlmMjJl
+M2EwYy4uNTIxZDI4MGM0YWJlIDEwMDY0NA0KPiA+IC0tLSBhL3Rvb2xzL3BlcmYvdXRpbC9ldnNl
+bC5oDQo+ID4gKysrIGIvdG9vbHMvcGVyZi91dGlsL2V2c2VsLmgNCj4gPiBAQCAtMzQzLDYgKzM0
+Myw3IEBAIHZvaWQgZXZzZWxfX3NldF9zYW1wbGVfaWQoc3RydWN0IGV2c2VsICpldnNlbCwNCj4g
+PiBib29sIHVzZV9zYW1wbGVfaWRlbnRpZmllcik7DQo+ID4gwqB2b2lkIGFyY2hfZXZzZWxfX3Nl
+dF9zYW1wbGVfd2VpZ2h0KHN0cnVjdCBldnNlbCAqZXZzZWwpOw0KPiA+IMKgdm9pZCBhcmNoX19w
+b3N0X2V2c2VsX2NvbmZpZyhzdHJ1Y3QgZXZzZWwgKmV2c2VsLCBzdHJ1Y3QNCj4gPiBwZXJmX2V2
+ZW50X2F0dHIgKmF0dHIpOw0KPiA+IMKgaW50IGFyY2hfZXZzZWxfX29wZW5fc3RyZXJyb3Ioc3Ry
+dWN0IGV2c2VsICpldnNlbCwgaW50IGVyciwgY2hhcg0KPiA+ICptc2csIHNpemVfdCBzaXplKTsN
+Cj4gPiArdm9pZCBhcmNoX2V2c2VsX19hcHBseV9yYXRpb190b19wcmV2KHN0cnVjdCBldnNlbCAq
+ZXZzZWwsIHN0cnVjdA0KPiA+IHBlcmZfZXZlbnRfYXR0ciAqYXR0cik7DQo+ID4gwqANCj4gPiDC
+oGludCBldnNlbF9fc2V0X2ZpbHRlcihzdHJ1Y3QgZXZzZWwgKmV2c2VsLCBjb25zdCBjaGFyICpm
+aWx0ZXIpOw0KPiA+IMKgaW50IGV2c2VsX19hcHBlbmRfdHBfZmlsdGVyKHN0cnVjdCBldnNlbCAq
+ZXZzZWwsIGNvbnN0IGNoYXINCj4gPiAqZmlsdGVyKTsNCj4gPiBkaWZmIC0tZ2l0IGEvdG9vbHMv
+cGVyZi91dGlsL2V2c2VsX2NvbmZpZy5oDQo+ID4gYi90b29scy9wZXJmL3V0aWwvZXZzZWxfY29u
+ZmlnLmgNCj4gPiBpbmRleCA5NGExZTljZjczZDYuLmJjZDNhOTc4ZjBjNCAxMDA2NDQNCj4gPiAt
+LS0gYS90b29scy9wZXJmL3V0aWwvZXZzZWxfY29uZmlnLmgNCj4gPiArKysgYi90b29scy9wZXJm
+L3V0aWwvZXZzZWxfY29uZmlnLmgNCj4gPiBAQCAtMjgsNiArMjgsNyBAQCBlbnVtIGV2c2VsX3Rl
+cm1fdHlwZSB7DQo+ID4gwqAJRVZTRUxfX0NPTkZJR19URVJNX0FVWF9BQ1RJT04sDQo+ID4gwqAJ
+RVZTRUxfX0NPTkZJR19URVJNX0FVWF9TQU1QTEVfU0laRSwNCj4gPiDCoAlFVlNFTF9fQ09ORklH
+X1RFUk1fQ0ZHX0NIRywNCj4gPiArCUVWU0VMX19DT05GSUdfVEVSTV9SQVRJT19UT19QUkVWLA0K
+PiA+IMKgfTsNCj4gPiDCoA0KPiA+IMKgc3RydWN0IGV2c2VsX2NvbmZpZ190ZXJtIHsNCj4gPiBk
+aWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi91dGlsL3BhcnNlLWV2ZW50cy5jDQo+ID4gYi90b29scy9w
+ZXJmL3V0aWwvcGFyc2UtZXZlbnRzLmMNCj4gPiBpbmRleCA0NTJmMTIxOTFmNmUuLmRhNzNkNjg2
+ZjZiOSAxMDA2NDQNCj4gPiAtLS0gYS90b29scy9wZXJmL3V0aWwvcGFyc2UtZXZlbnRzLmMNCj4g
+PiArKysgYi90b29scy9wZXJmL3V0aWwvcGFyc2UtZXZlbnRzLmMNCj4gPiBAQCAtODQyLDYgKzg0
+Miw3IEBAIGNvbnN0IGNoYXIgKnBhcnNlX2V2ZW50c19fdGVybV90eXBlX3N0cihlbnVtDQo+ID4g
+cGFyc2VfZXZlbnRzX190ZXJtX3R5cGUgdGVybV90eXBlKQ0KPiA+IMKgCQlbUEFSU0VfRVZFTlRT
+X19URVJNX1RZUEVfTEVHQUNZX0NBQ0hFXcKgwqDCoMKgwqDCoMKgwqDCoCA9DQo+ID4gImxlZ2Fj
+eS1jYWNoZSIsDQo+ID4gwqAJCVtQQVJTRV9FVkVOVFNfX1RFUk1fVFlQRV9IQVJEV0FSRV3CoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA9DQo+ID4gImhhcmR3YXJlIiwNCj4gPiDCoAkJW1BBUlNF
+X0VWRU5UU19fVEVSTV9UWVBFX0NQVV0JCQk9DQo+ID4gImNwdSIsDQo+ID4gKwkJW1BBUlNFX0VW
+RU5UU19fVEVSTV9UWVBFX1JBVElPX1RPX1BSRVZdwqDCoMKgwqDCoMKgwqDCoCA9DQo+ID4gInJh
+dGlvLXRvLXByZXYiLA0KPiA+IMKgCX07DQo+ID4gwqAJaWYgKCh1bnNpZ25lZCBpbnQpdGVybV90
+eXBlID49DQo+ID4gX19QQVJTRV9FVkVOVFNfX1RFUk1fVFlQRV9OUikNCj4gPiDCoAkJcmV0dXJu
+ICJ1bmtub3duIHRlcm0iOw0KPiA+IEBAIC04OTIsNiArODkzLDcgQEAgY29uZmlnX3Rlcm1fYXZh
+aWwoZW51bSBwYXJzZV9ldmVudHNfX3Rlcm1fdHlwZQ0KPiA+IHRlcm1fdHlwZSwgc3RydWN0IHBh
+cnNlX2V2ZW50c19lcg0KPiA+IMKgCWNhc2UgUEFSU0VfRVZFTlRTX19URVJNX1RZUEVfUkFXOg0K
+PiA+IMKgCWNhc2UgUEFSU0VfRVZFTlRTX19URVJNX1RZUEVfTEVHQUNZX0NBQ0hFOg0KPiA+IMKg
+CWNhc2UgUEFSU0VfRVZFTlRTX19URVJNX1RZUEVfSEFSRFdBUkU6DQo+ID4gKwljYXNlIFBBUlNF
+X0VWRU5UU19fVEVSTV9UWVBFX1JBVElPX1RPX1BSRVY6DQo+ID4gwqAJZGVmYXVsdDoNCj4gPiDC
+oAkJaWYgKCFlcnIpDQo+ID4gwqAJCQlyZXR1cm4gZmFsc2U7DQo+ID4gQEAgLTEwNDUsNiArMTA0
+NywyMSBAQCBkbw0KPiA+IHsJCQkJCQkJCQkJCVwNCj4gPiDCoAkJcGVyZl9jcHVfbWFwX19wdXQo
+bWFwKTsNCj4gPiDCoAkJYnJlYWs7DQo+ID4gwqAJfQ0KPiA+ICsJY2FzZSBQQVJTRV9FVkVOVFNf
+X1RFUk1fVFlQRV9SQVRJT19UT19QUkVWOg0KPiA+ICsJCUNIRUNLX1RZUEVfVkFMKFNUUik7DQo+
+ID4gKwkJaWYgKHN0cnRvZCh0ZXJtLT52YWwuc3RyLCBOVUxMKSA8PSAwKSB7DQo+ID4gKwkJCXBh
+cnNlX2V2ZW50c19lcnJvcl9faGFuZGxlKHBhcnNlX3N0YXRlLQ0KPiA+ID5lcnJvciwgdGVybS0+
+ZXJyX3ZhbCwNCj4gPiArCQkJCQkJwqDCoCBzdHJkdXAoInplcm8gb3INCj4gPiBuZWdhdGl2ZSIp
+LA0KPiA+ICsJCQkJCQnCoMKgIE5VTEwpOw0KPiA+ICsJCQlyZXR1cm4gLUVJTlZBTDsNCj4gPiAr
+CQl9DQo+ID4gKwkJaWYgKGVycm5vID09IEVSQU5HRSkgew0KPiA+ICsJCQlwYXJzZV9ldmVudHNf
+ZXJyb3JfX2hhbmRsZShwYXJzZV9zdGF0ZS0NCj4gPiA+ZXJyb3IsIHRlcm0tPmVycl92YWwsDQo+
+ID4gKwkJCQkJCcKgwqAgc3RyZHVwKCJ0b28NCj4gPiBiaWciKSwNCj4gPiArCQkJCQkJwqDCoCBO
+VUxMKTsNCj4gPiArCQkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gKwkJfQ0KPiA+ICsJCWJyZWFrOw0K
+PiA+IMKgCWNhc2UgUEFSU0VfRVZFTlRTX19URVJNX1RZUEVfRFJWX0NGRzoNCj4gPiDCoAljYXNl
+IFBBUlNFX0VWRU5UU19fVEVSTV9UWVBFX1VTRVI6DQo+ID4gwqAJY2FzZSBQQVJTRV9FVkVOVFNf
+X1RFUk1fVFlQRV9MRUdBQ1lfQ0FDSEU6DQo+ID4gQEAgLTExNzMsNiArMTE5MCw3IEBAIHN0YXRp
+YyBpbnQgY29uZmlnX3Rlcm1fdHJhY2Vwb2ludChzdHJ1Y3QNCj4gPiBwZXJmX2V2ZW50X2F0dHIg
+KmF0dHIsDQo+ID4gwqAJY2FzZSBQQVJTRV9FVkVOVFNfX1RFUk1fVFlQRV9MRUdBQ1lfQ0FDSEU6
+DQo+ID4gwqAJY2FzZSBQQVJTRV9FVkVOVFNfX1RFUk1fVFlQRV9IQVJEV0FSRToNCj4gPiDCoAlj
+YXNlIFBBUlNFX0VWRU5UU19fVEVSTV9UWVBFX0NQVToNCj4gPiArCWNhc2UgUEFSU0VfRVZFTlRT
+X19URVJNX1RZUEVfUkFUSU9fVE9fUFJFVjoNCj4gPiDCoAlkZWZhdWx0Og0KPiA+IMKgCQlwYXJz
+ZV9ldmVudHNfZXJyb3JfX2hhbmRsZShwYXJzZV9zdGF0ZS0+ZXJyb3IsDQo+ID4gdGVybS0+ZXJy
+X3Rlcm0sDQo+ID4gwqAJCQkJCXN0cmR1cChwYXJzZV9ldmVudHNfX3Rlcm1fDQo+ID4gdHlwZV9z
+dHIodGVybS0+dHlwZV90ZXJtKSksDQo+ID4gQEAgLTEyOTUsNiArMTMxMyw5IEBAIGRvDQo+ID4g
+ewkJCQkJCQkJXA0KPiA+IMKgCQkJQUREX0NPTkZJR19URVJNX1ZBTChBVVhfU0FNUExFX1NJWkUs
+DQo+ID4gYXV4X3NhbXBsZV9zaXplLA0KPiA+IMKgCQkJCQnCoMKgwqAgdGVybS0+dmFsLm51bSwg
+dGVybS0NCj4gPiA+d2Vhayk7DQo+ID4gwqAJCQlicmVhazsNCj4gPiArCQljYXNlIFBBUlNFX0VW
+RU5UU19fVEVSTV9UWVBFX1JBVElPX1RPX1BSRVY6DQo+ID4gKwkJCUFERF9DT05GSUdfVEVSTV9T
+VFIoUkFUSU9fVE9fUFJFViwgdGVybS0NCj4gPiA+dmFsLnN0ciwgdGVybS0+d2Vhayk7DQo+ID4g
+KwkJCWJyZWFrOw0KPiA+IMKgCQljYXNlIFBBUlNFX0VWRU5UU19fVEVSTV9UWVBFX1VTRVI6DQo+
+ID4gwqAJCWNhc2UgUEFSU0VfRVZFTlRTX19URVJNX1RZUEVfQ09ORklHOg0KPiA+IMKgCQljYXNl
+IFBBUlNFX0VWRU5UU19fVEVSTV9UWVBFX0NPTkZJRzE6DQo+ID4gQEAgLTEzNjEsNiArMTM4Miw3
+IEBAIHN0YXRpYyBpbnQgZ2V0X2NvbmZpZ19jaGdzKHN0cnVjdCBwZXJmX3BtdQ0KPiA+ICpwbXUs
+IHN0cnVjdCBwYXJzZV9ldmVudHNfdGVybXMgKmhlYWQNCj4gPiDCoAkJY2FzZSBQQVJTRV9FVkVO
+VFNfX1RFUk1fVFlQRV9MRUdBQ1lfQ0FDSEU6DQo+ID4gwqAJCWNhc2UgUEFSU0VfRVZFTlRTX19U
+RVJNX1RZUEVfSEFSRFdBUkU6DQo+ID4gwqAJCWNhc2UgUEFSU0VfRVZFTlRTX19URVJNX1RZUEVf
+Q1BVOg0KPiA+ICsJCWNhc2UgUEFSU0VfRVZFTlRTX19URVJNX1RZUEVfUkFUSU9fVE9fUFJFVjoN
+Cj4gPiDCoAkJZGVmYXVsdDoNCj4gPiDCoAkJCWJyZWFrOw0KPiA+IMKgCQl9DQo+ID4gZGlmZiAt
+LWdpdCBhL3Rvb2xzL3BlcmYvdXRpbC9wYXJzZS1ldmVudHMuaA0KPiA+IGIvdG9vbHMvcGVyZi91
+dGlsL3BhcnNlLWV2ZW50cy5oDQo+ID4gaW5kZXggYTVjNWZjMzlmZDZmLi44ZjhjOGU3ZmJjZjEg
+MTAwNjQ0DQo+ID4gLS0tIGEvdG9vbHMvcGVyZi91dGlsL3BhcnNlLWV2ZW50cy5oDQo+ID4gKysr
+IGIvdG9vbHMvcGVyZi91dGlsL3BhcnNlLWV2ZW50cy5oDQo+ID4gQEAgLTgzLDcgKzgzLDggQEAg
+ZW51bSBwYXJzZV9ldmVudHNfX3Rlcm1fdHlwZSB7DQo+ID4gwqAJUEFSU0VfRVZFTlRTX19URVJN
+X1RZUEVfTEVHQUNZX0NBQ0hFLA0KPiA+IMKgCVBBUlNFX0VWRU5UU19fVEVSTV9UWVBFX0hBUkRX
+QVJFLA0KPiA+IMKgCVBBUlNFX0VWRU5UU19fVEVSTV9UWVBFX0NQVSwNCj4gPiAtI2RlZmluZQlf
+X1BBUlNFX0VWRU5UU19fVEVSTV9UWVBFX05SDQo+ID4gKFBBUlNFX0VWRU5UU19fVEVSTV9UWVBF
+X0NQVSArIDEpDQo+ID4gKwlQQVJTRV9FVkVOVFNfX1RFUk1fVFlQRV9SQVRJT19UT19QUkVWLA0K
+PiA+ICsjZGVmaW5lCV9fUEFSU0VfRVZFTlRTX19URVJNX1RZUEVfTlINCj4gPiAoUEFSU0VfRVZF
+TlRTX19URVJNX1RZUEVfUkFUSU9fVE9fUFJFViArIDEpDQo+ID4gwqB9Ow0KPiA+IMKgDQo+ID4g
+wqBzdHJ1Y3QgcGFyc2VfZXZlbnRzX3Rlcm0gew0KPiA+IGRpZmYgLS1naXQgYS90b29scy9wZXJm
+L3V0aWwvcGFyc2UtZXZlbnRzLmwNCj4gPiBiL3Rvb2xzL3BlcmYvdXRpbC9wYXJzZS1ldmVudHMu
+bA0KPiA+IGluZGV4IDI5NGU5NDNiY2RiNC4uYzk4NWFhOGE3ZDU2IDEwMDY0NA0KPiA+IC0tLSBh
+L3Rvb2xzL3BlcmYvdXRpbC9wYXJzZS1ldmVudHMubA0KPiA+ICsrKyBiL3Rvb2xzL3BlcmYvdXRp
+bC9wYXJzZS1ldmVudHMubA0KPiA+IEBAIC0zMzcsNiArMzM3LDcgQEAgYXV4LWFjdGlvbgkJeyBy
+ZXR1cm4gdGVybSh5eXNjYW5uZXIsDQo+ID4gUEFSU0VfRVZFTlRTX19URVJNX1RZUEVfQVVYX0FD
+VElPTik7IH0NCj4gPiDCoGF1eC1zYW1wbGUtc2l6ZQkJeyByZXR1cm4gdGVybSh5eXNjYW5uZXIs
+DQo+ID4gUEFSU0VfRVZFTlRTX19URVJNX1RZUEVfQVVYX1NBTVBMRV9TSVpFKTsgfQ0KPiA+IMKg
+bWV0cmljLWlkCQl7IHJldHVybiB0ZXJtKHl5c2Nhbm5lciwNCj4gPiBQQVJTRV9FVkVOVFNfX1RF
+Uk1fVFlQRV9NRVRSSUNfSUQpOyB9DQo+ID4gwqBjcHUJCQl7IHJldHVybiB0ZXJtKHl5c2Nhbm5l
+ciwNCj4gPiBQQVJTRV9FVkVOVFNfX1RFUk1fVFlQRV9DUFUpOyB9DQo+ID4gK3JhdGlvLXRvLXBy
+ZXYJCXsgcmV0dXJuIHRlcm0oeXlzY2FubmVyLA0KPiA+IFBBUlNFX0VWRU5UU19fVEVSTV9UWVBF
+X1JBVElPX1RPX1BSRVYpOyB9DQo+ID4gwqBjcHUtY3ljbGVzfGN5Y2xlcwkJCQl7IHJldHVybg0K
+PiA+IGh3X3Rlcm0oeXlzY2FubmVyLCBQRVJGX0NPVU5UX0hXX0NQVV9DWUNMRVMpOyB9DQo+ID4g
+wqBzdGFsbGVkLWN5Y2xlcy1mcm9udGVuZHxpZGxlLWN5Y2xlcy1mcm9udGVuZAl7IHJldHVybg0K
+PiA+IGh3X3Rlcm0oeXlzY2FubmVyLCBQRVJGX0NPVU5UX0hXX1NUQUxMRURfQ1lDTEVTX0ZST05U
+RU5EKTsgfQ0KPiA+IMKgc3RhbGxlZC1jeWNsZXMtYmFja2VuZHxpZGxlLWN5Y2xlcy1iYWNrZW5k
+CXsgcmV0dXJuDQo+ID4gaHdfdGVybSh5eXNjYW5uZXIsIFBFUkZfQ09VTlRfSFdfU1RBTExFRF9D
+WUNMRVNfQkFDS0VORCk7IH0NCj4gPiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi91dGlsL3BtdS5j
+IGIvdG9vbHMvcGVyZi91dGlsL3BtdS5jDQo+ID4gaW5kZXggNWEyOTFmMTM4MGVkLi4zZDFmOTc1
+ZThkYjkgMTAwNjQ0DQo+ID4gLS0tIGEvdG9vbHMvcGVyZi91dGlsL3BtdS5jDQo+ID4gKysrIGIv
+dG9vbHMvcGVyZi91dGlsL3BtdS5jDQo+ID4gQEAgLTE1NDEsNyArMTU0MSw3IEBAIHN0YXRpYyBp
+bnQgcG11X2NvbmZpZ190ZXJtKGNvbnN0IHN0cnVjdA0KPiA+IHBlcmZfcG11ICpwbXUsDQo+ID4g
+wqAJCQlicmVhazsNCj4gPiDCoAkJY2FzZSBQQVJTRV9FVkVOVFNfX1RFUk1fVFlQRV9VU0VSOiAv
+KiBOb3QNCj4gPiBoYXJkY29kZWQuICovDQo+ID4gwqAJCQlyZXR1cm4gLUVJTlZBTDsNCj4gPiAt
+CQljYXNlIFBBUlNFX0VWRU5UU19fVEVSTV9UWVBFX05BTUUgLi4uDQo+ID4gUEFSU0VfRVZFTlRT
+X19URVJNX1RZUEVfQ1BVOg0KPiA+ICsJCWNhc2UgUEFSU0VfRVZFTlRTX19URVJNX1RZUEVfTkFN
+RSAuLi4NCj4gPiBQQVJTRV9FVkVOVFNfX1RFUk1fVFlQRV9SQVRJT19UT19QUkVWOg0KPiA+IMKg
+CQkJLyogU2tpcCBub24tY29uZmlnIHRlcm1zLiAqLw0KPiA+IMKgCQkJYnJlYWs7DQo+ID4gwqAJ
+CWRlZmF1bHQ6DQo+ID4gQEAgLTE5MzAsNiArMTkzMCw3IEBAIGludCBwZXJmX3BtdV9fZm9yX2Vh
+Y2hfZm9ybWF0KHN0cnVjdCBwZXJmX3BtdQ0KPiA+ICpwbXUsIHZvaWQgKnN0YXRlLCBwbXVfZm9y
+bWF0X2NhbGwNCj4gPiDCoAkJImF1eC1hY3Rpb249KHBhdXNlfHJlc3VtZXxzdGFydC1wYXVzZWQp
+IiwNCj4gPiDCoAkJImF1eC1zYW1wbGUtc2l6ZT1udW1iZXIiLA0KPiA+IMKgCQkiY3B1PW51bWJl
+ciIsDQo+ID4gKwkJInJhdGlvLXRvLXByZXY9c3RyaW5nIiwNCj4gPiDCoAl9Ow0KPiA+IMKgCXN0
+cnVjdCBwZXJmX3BtdV9mb3JtYXQgKmZvcm1hdDsNCj4gPiDCoAlpbnQgcmV0Ow0KPiA+IC0tIA0K
+PiA+IDIuNTAuMQ0KPiA+IA0KPiANCg0K
