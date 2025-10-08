@@ -1,129 +1,233 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA7D286D49
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Oct 2025 16:23:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56F47260A
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Oct 2025 16:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759940634; cv=none; b=NVz6qWwjwGxPtcwA35q9kgCqmLb+GZ6ukXg5F89tsNXsLC+K4x8SmtatOBOueeHgbOq+eg0oWcbpa3t9l1YpVTFIssyy9Eslrc7Qx9bsqu2e2d4/uFOrkb2vfKLnplTGqnv3/gldHp8+7rUHbqevg1xt546wUNaWdVKLxekqUk8=
+	t=1759941128; cv=none; b=cln3an+C1Y9Oo+PwviFB6oinA+2v6PqmjTfVijxmXZfUh99TKTVTeha0Prp+2f2RRzrqjjjQ9oVUsTTCYKi6haKYbeja8HOI/NoXlU1F7s9mdXYSdyu5BNuIjj7r5sQFQM2KKd+guPEjUfK8BYwbE4JnFPzgdOGskFrHaYYveLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759940634; c=relaxed/simple;
-	bh=R96bbATMZSPb9OIoAzn4ym9WVGJOuOpN7eTc3TttFUU=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=hD8PNxf5I0YKoPVH2xkZwADtP5GixQ+693mGV4GLyfEY7cgoPX5B4rHlrYBjSnBqWfd/s/KbgXZPlEvLTwB54UHCUc2qTvFkXFQfwaqHTs6JoGQQcXL4TZOvNcLrL9h1Ie2udsl5s8brDeh8kFHPOjqaRPCrmItiKYY25LEhz0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Of9EIVXk; arc=none smtp.client-ip=209.85.215.201
+	s=arc-20240116; t=1759941128; c=relaxed/simple;
+	bh=j+KG90QHUq8UmErnUnf4KEjhOcBO2c0iFGFWaJiiMyc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W6Ab6Ns+gbpzPLDUhLpd4nwjJX2XTRhdEV35gzs5cFGQcGK6bdP6dlrJgL5GIZjurtnyeuZnPEVahKL4eDexnrHk0nQ7wBY+N2LChq2CAIUyIQDLnOwgzYCfyaaXJe9HM8TFqAVj+NK0p12V9b7dnup2BABYXil17zHzKrYnV1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qEandcT/; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Of9EIVXk"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b551338c2c9so4954259a12.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Oct 2025 09:23:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qEandcT/"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-27d67abd215so304585ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Oct 2025 09:32:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759940632; x=1760545432; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=wRJXz112Re1ju3vdnrYT2DZaPKwj05gRwzq+1yeUNKs=;
-        b=Of9EIVXkOmVcdac0kItnBsdmLVoWxpnDoYt51psGG8lF8bpyBhGGCrFdXZ6ImCgH8r
-         rmcHKGhvI7EI/9LanL+WsQmcXnUiE1omEc9MmyF/iHwSmBIQ03YALtEp6yzK26LLC1L+
-         OMmCZVIJdqplg90GBk7c0BmZTxUp9OIPmJeqUIRC7Q6in0uCmHGKtAgfiOInjlafEDTS
-         DZXyR78mGwZZd5/hhiluf4N86oxpUdey+A/SLPkKk6JuzGR5Kml+G7qQhKcimxjIs3wE
-         x+ncCgPX12OtEZg++b3pLbRaYP4wRao2yi/YCwyATLuHZXZaCeiwQTZN5Qs6VJWfDS67
-         mNJg==
+        d=google.com; s=20230601; t=1759941126; x=1760545926; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SSuPYLhNBhQbv9PnRs/ehQEpBWk9AgU9ZFIL2VExLKk=;
+        b=qEandcT/8s1RsLWIfaFwIeKHjD3g4B7J6zPDTfoxwlScUBdsYENZXjt+/F7gmW2b8f
+         /+HdE2/ur+1m9W6EZggpFZOrPhHZ9/+72eH9pNIrAkua9H8O0VoPo0skqWukrO/XIMsN
+         ddw+UZtIsO6x4/wibUZShwN8abXhioZNmDdh8aww0nnEPoQfOuyOTR5ddqKlKe2QPiuW
+         GJItyWE1kKmeQsRrhUpcU2DN1MwmtC8vXr3pAJ7PW4NmKWYYIJGh56jdxSQDArRoUiok
+         3iADFEQtWQahJdPX4BqBGV+tpjwW4EUWW+Qgrlb4caFrWIyc/pxwKu/cXdA+2nJWyXkF
+         hBNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759940632; x=1760545432;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wRJXz112Re1ju3vdnrYT2DZaPKwj05gRwzq+1yeUNKs=;
-        b=CuP7gFp+vZ9Xe7oWP3nHADHYmvLUctaBJlJfMm8ODXQjQ52dH67tMrH62vB9vZzI5F
-         +1DfeKUVMx9b/32rvlq2Jznc2E1XZXdlwylP50zSPQrx9Uj4GeNcSzZ5bTGb/PGtbVXh
-         Y72jM4eR0gQYXnVzkq1Ig5/T4qDN5SJD7x3zCV3EFAOVIJCsu/z1au1vH7UBuwSEzYwW
-         26hyLpiASyNGJHHTr7n/sAd+tCC7ti9334sVgoSWv7cvGxZ38Qra/cLko555sz1dFNSl
-         f338uHG4jHoWA8xlg9OVdSa++hrDI8QMGOC6wL5leE+7bnZXkTMgG/1R8LWs2UQyGV9p
-         YaWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbFfET+rz1DF03hKSiy3fyrju9IMqC88Q8y1I0eJ0aoeAgBrz0/5pb1PQRjOwlmCyIz1MK4xgn8Gzcfozd+afs@vger.kernel.org
-X-Gm-Message-State: AOJu0YxI7gIJpzkhhL5MblihJuAKmn5qIdH5ux3HOdOQnDFTK6GROkUA
-	3ZLHjUsSyjL1sTuwb3dkxrTTV0VgqVl9/HjAXX0q2d0PxElbFe2DUWkc99SWCWp6jFlPA+xkh8n
-	VUqvWaeEg6A==
-X-Google-Smtp-Source: AGHT+IGKggukMuWythYr3qzc7hKbOfyUWxXaNl2ZkzSjXOY2nzoCMvWkDw+/XtALg86o1p0QKnOwEdiv1B2m
-X-Received: from plez12.prod.google.com ([2002:a17:902:cccc:b0:26a:23c7:68d3])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ef10:b0:27e:eabd:4b41
- with SMTP id d9443c01a7336-29027216505mr56267885ad.7.1759940632569; Wed, 08
- Oct 2025 09:23:52 -0700 (PDT)
-Date: Wed,  8 Oct 2025 09:23:47 -0700
+        d=1e100.net; s=20230601; t=1759941126; x=1760545926;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SSuPYLhNBhQbv9PnRs/ehQEpBWk9AgU9ZFIL2VExLKk=;
+        b=YTCdj08bNH5LgGhnYhO/YgGcD65nggt/q8ztoqvKEpXpgt6PgIgB81uQ7+zCwOMmD+
+         2NgRckBEv7hmcgGyzfqZWeYSHOo+Fnr6d76lK25jB3nL23o+2H6FpZDiJED2suCjj2fd
+         /1G720N6bm6Yh5GK9wJRv4a9U8Yg4wuIKEujPyyTgeuiZLrprepWa0SlD3Z1w/kbdBZd
+         tJA9gLe5BkPbwhKWeR5EXGDF8E87j1mdC6NCihQ6fQsix+k9kItnVZBYBu9LCY/16ptH
+         MTM/STP+guKZr4Ppep8AwW//Tq/1GTXoO7mq/QFPT0Sczol6GilIXdv/MIKiES+VAMsd
+         CItA==
+X-Forwarded-Encrypted: i=1; AJvYcCWIX7XxHLs+coMLH2hdQEyiopajD4rHqx5yrpq7DWZOEqGRu7uHWPx8OO34MnxxdWUmYe6v9u6zh31ZGHvqUm8q@vger.kernel.org
+X-Gm-Message-State: AOJu0YwM/44BHw9mmSKog8sVrhJg6R/mEYWVxf5No6Xwo4Yv8k7mPv65
+	eMPP+ZheyZZBQzc/ckIDt+JShvHa4Q0kIxT0cFg/G4SWVxBBkm6I/aF7tiVInw9mNrvpUK3W8vR
+	RwBz7tcm6x90OZr5Y2mcR9FGMZPCCj3sCOj2UuXGPityA9jS0NG4KcSjr
+X-Gm-Gg: ASbGnctO34a/F1MyfE9EsLVuAoJt2KK00DyuWhRrMYLZMuBvnKFSZlDEnId6TEkgFAD
+	83WfiDCHWfhHCzs2yTXMrS6IR8tlXBUiDKIKUyUmGPYxEnvdUXy9tmhtGSoIOC1OVXmx4bdQg9K
+	7vQoWcTn8rSdjWA0jCPRLNIxmFoA2ayK0ujQVUgP7YpVmmOPvLNnoJsoUvCwLN6p7ZyD9xKJetB
+	gu0F0qyp9W5yfkuFa92mKaEQt3+tMWu+awyCT24ES1RdFdW2fYKbq+GvvNeHII0sssicGo4y5Hv
+	aMs=
+X-Google-Smtp-Source: AGHT+IHSYUCWVVfawwj76MCuZAt7I2oBJNyK1d6keP/z8TRxeN1VnE76Y6GyeiD+58cgYNsHWxjSRkxeknXwYtcnDuQ=
+X-Received: by 2002:a17:902:f545:b0:27e:e96a:4c6 with SMTP id
+ d9443c01a7336-290275dda35mr6978595ad.2.1759941125342; Wed, 08 Oct 2025
+ 09:32:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.51.0.710.ga91ca5db03-goog
-Message-ID: <20251008162347.4005288-1-irogers@google.com>
-Subject: [PATCH v2] perf bpf_counter: Fix opening of "any"(-1) CPU events
+MIME-Version: 1.0
+References: <20251005181421.2787960-1-irogers@google.com> <aOYkRdU5pn_jTOq3@google.com>
+In-Reply-To: <aOYkRdU5pn_jTOq3@google.com>
 From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Tengda Wu <wutengda@huaweicloud.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Wed, 8 Oct 2025 09:31:53 -0700
+X-Gm-Features: AS18NWCGtV-hp43VXeqvQ4UJu4ENt9gz6g5gTLbFb7BmReBQIdsR0EpEar-QFOQ
+Message-ID: <CAP-5=fUqYeaE_P3ApXvq7j9SRuNXpLf+mK-4XBsvv2R=OTccbQ@mail.gmail.com>
+Subject: Re: [PATCH v1] perf stat: Additional verbose details for <not
+ supported> events
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The bperf BPF counter code doesn't handle "any"(-1) CPU events, always
-wanting to aggregate a count against a CPU, which avoids the need for
-atomics so let's not change that. Force evsels used for BPF counters
-to require a CPU when not in system-wide mode so that the "any"(-1)
-value isn't used during map propagation and evsel's CPU map matches
-that of the PMU.
+On Wed, Oct 8, 2025 at 1:43=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> On Sun, Oct 05, 2025 at 11:14:21AM -0700, Ian Rogers wrote:
+> > If an event shows as "<not supported>" in perf stat output, in verbose
+> > mode add the strerror output to help diagnose the issue.
+> >
+> > Consider:
+> > ```
+> > $ perf stat -e cycles,data_read,instructions true
+> >
+> >  Performance counter stats for 'true':
+> >
+> >            357,457      cycles:u
+> >    <not supported> MiB  data_read:u
+> >            156,182      instructions:u                   #    0.44  ins=
+n per cycle
+> >
+> >        0.001250315 seconds time elapsed
+> >
+> >        0.001283000 seconds user
+> >        0.000000000 seconds sys
+> > ```
+> >
+> > To understand why the data_read uncore event failed, with this change:
+> > ```
+> > $ perf stat -v -e cycles,data_read,instructions true
+> > Using CPUID GenuineIntel-6-8D-1
+> > cycles -> cpu/cycles/
+> > data_read -> uncore_imc_free_running_0/data_read/
+> > data_read -> uncore_imc_free_running_1/data_read/
+> > instructions -> cpu/instructions/
+> > Control descriptor is not initialized
+> > Warning:
+> > kernel.perf_event_paranoid=3D2, trying to fall back to excluding kernel=
+ and hypervisor  samples
+> > Warning:
+> > kernel.perf_event_paranoid=3D2, trying to fall back to excluding kernel=
+ and hypervisor  samples
+> > Warning:
+> > kernel.perf_event_paranoid=3D2, trying to fall back to excluding kernel=
+ and hypervisor  samples
+> > Warning:
+> > data_read:u event is not supported by the kernel.
+> > Invalid event (data_read:u) in per-thread mode, enable system wide with=
+ '-a'.
+> > Warning:
+> > kernel.perf_event_paranoid=3D2, trying to fall back to excluding kernel=
+ and hypervisor  samples
+> > Warning:
+> > data_read:u event is not supported by the kernel.
+> > Invalid event (data_read:u) in per-thread mode, enable system wide with=
+ '-a'.
+> > cycles:u: 351621 362833 362833
+> > failed to read counter data_read:u
+> > failed to read counter data_read:u
+> > instructions:u: 156184 362833 362833
+> >
+> >  Performance counter stats for 'true':
+> >
+> >            351,621      cycles:u
+> >    <not supported> MiB  data_read:u
+> >            156,184      instructions:u                   #    0.44  ins=
+n per cycle
+> >
+> >        0.001584472 seconds time elapsed
+> >
+> >        0.001811000 seconds user
+> >        0.000000000 seconds sys
+> > ```
+> > where without this change only "data_read:u event is not supported by
+> > the kernel." is shown.
+>
+> I think what you say is:
+>
+> Before:
+>   data_read:u event is not supported by the kernel.
+>
+> After:
+>   data_read:u event is not supported by the kernel.
+>   Invalid event (data_read:u) in per-thread mode, enable system wide with=
+ '-a'.
 
-Fixes: b91917c0c6fa ("perf bpf_counter: Fix handling of cpumap fixing hybrid")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-stat.c     | 13 +++++++++++++
- tools/perf/util/bpf_counter.c |  1 +
- 2 files changed, 14 insertions(+)
+I kept things verbose as unfortunately the
+"kernel.perf_event_paranoid=3D2" is important as is the use of
+per-thread mode. Different paranoia levels lead to different errors
+and unfortunately a lot of the time the error gets reported as "
+data_read:u event is not supported by the kernel." and I'm not sure
+all users will get that the key part there is the :u modifier.
+However, fixing  evsel__open_strerror wasn't in scope for this change.
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 7006f848f87a..0fc6884c1bf1 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -2540,6 +2540,7 @@ int cmd_stat(int argc, const char **argv)
- 	unsigned int interval, timeout;
- 	const char * const stat_subcommands[] = { "record", "report" };
- 	char errbuf[BUFSIZ];
-+	struct evsel *counter;
- 
- 	setlocale(LC_ALL, "");
- 
-@@ -2797,6 +2798,18 @@ int cmd_stat(int argc, const char **argv)
- 
- 	evlist__warn_user_requested_cpus(evsel_list, target.cpu_list);
- 
-+	evlist__for_each_entry(evsel_list, counter) {
-+		/*
-+		 * Setup BPF counters to require CPUs as any(-1) isn't
-+		 * supported. evlist__create_maps below will propagate this
-+		 * information to the evsels. Note, evsel__is_bperf isn't yet
-+		 * set up, and this change must happen early, so directly use
-+		 * the bpf_counter variable.
-+		 */
-+		if (counter->bpf_counter)
-+			counter->core.requires_cpu = true;
-+	}
-+
- 	if (evlist__create_maps(evsel_list, &target) < 0) {
- 		if (target__has_task(&target)) {
- 			pr_err("Problems finding threads of monitor\n");
-diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
-index ca5d01b9017d..d3e5933b171b 100644
---- a/tools/perf/util/bpf_counter.c
-+++ b/tools/perf/util/bpf_counter.c
-@@ -495,6 +495,7 @@ static int bperf_reload_leader_program(struct evsel *evsel, int attr_map_fd,
- 	 * following evsel__open_per_cpu call
- 	 */
- 	evsel->leader_skel = skel;
-+	assert(!perf_cpu_map__has_any_cpu_or_is_empty(evsel->core.cpus));
- 	evsel__open(evsel, evsel->core.cpus, evsel->core.threads);
- 
- out:
--- 
-2.51.0.710.ga91ca5db03-goog
+Thanks,
+Ian
 
+
+> Off-topic, it'd be great if we reduce the number of the same warning
+> messages.  I think the data_read is from two uncore PMUs so the message
+> was repeated.  If we can connect the related evsels and show the
+> messages once, then the output is more readable.  Maybe we also want to
+> show the fallback message just once (globally).
+>
+> Thanks,
+> Namhyung
+>
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/builtin-stat.c | 12 +++++++-----
+> >  1 file changed, 7 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> > index 7006f848f87a..84e06ec09cc2 100644
+> > --- a/tools/perf/builtin-stat.c
+> > +++ b/tools/perf/builtin-stat.c
+> > @@ -624,8 +624,9 @@ static enum counter_recovery stat_handle_error(stru=
+ct evsel *counter, int err)
+> >        */
+> >       if (err =3D=3D EINVAL || err =3D=3D ENOSYS || err =3D=3D ENOENT |=
+| err =3D=3D ENXIO) {
+> >               if (verbose > 0) {
+> > -                     ui__warning("%s event is not supported by the ker=
+nel.\n",
+> > -                                 evsel__name(counter));
+> > +                     evsel__open_strerror(counter, &target, err, msg, =
+sizeof(msg));
+> > +                     ui__warning("%s event is not supported by the ker=
+nel.\n%s\n",
+> > +                                 evsel__name(counter), msg);
+> >               }
+> >               return COUNTER_SKIP;
+> >       }
+> > @@ -649,10 +650,11 @@ static enum counter_recovery stat_handle_error(st=
+ruct evsel *counter, int err)
+> >               }
+> >       }
+> >       if (verbose > 0) {
+> > +             evsel__open_strerror(counter, &target, err, msg, sizeof(m=
+sg));
+> >               ui__warning(err =3D=3D EOPNOTSUPP
+> > -                     ? "%s event is not supported by the kernel.\n"
+> > -                     : "skipping event %s that kernel failed to open.\=
+n",
+> > -                     evsel__name(counter));
+> > +                     ? "%s event is not supported by the kernel.\n%s\n=
+"
+> > +                     : "skipping event %s that kernel failed to open.\=
+n%s\n",
+> > +                     evsel__name(counter), msg);
+> >       }
+> >       return COUNTER_SKIP;
+> >  }
+> > --
+> > 2.51.0.618.g983fd99d29-goog
+> >
