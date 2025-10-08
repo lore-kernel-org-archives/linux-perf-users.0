@@ -1,262 +1,129 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C2E2ED154
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Oct 2025 15:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA7D286D49
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Oct 2025 16:23:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759936463; cv=none; b=nN6L1Y4vrQVhmwWVBEH32GVWzY41UKABmCZSm0lVYLBV7Db/8O5zwQeb4rcbn68EYDtADTCImnveayTEMYRtz9FvNCxPwr8w6u17/lO8e8DELVZN30g4EAEkNmBr8qvS8ps73Tazfv3ZVuZgzl2TA1cXcA5quC/fWx66gk4PVXo=
+	t=1759940634; cv=none; b=NVz6qWwjwGxPtcwA35q9kgCqmLb+GZ6ukXg5F89tsNXsLC+K4x8SmtatOBOueeHgbOq+eg0oWcbpa3t9l1YpVTFIssyy9Eslrc7Qx9bsqu2e2d4/uFOrkb2vfKLnplTGqnv3/gldHp8+7rUHbqevg1xt546wUNaWdVKLxekqUk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759936463; c=relaxed/simple;
-	bh=fKhXwZOH8jdMKSySGkMaw0CnyUlHZspDs+YiaztuI1s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M7IDWo8lRER4LuCAAGHUZ/3aQE/w/gpWg5XRNdBr4ceMtyIfve1u6cjLPi9aPyG8ZE7RZhNcNEImm6N7ogrk4rfPemwoA3QymW2G1ApVfIUyepn+uuhvTVfwOdwdmGUL4/40/P60lvfrc/A917EQG6bV3tg8TJW8CIRruzCGU5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ww8YcHGY; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1759940634; c=relaxed/simple;
+	bh=R96bbATMZSPb9OIoAzn4ym9WVGJOuOpN7eTc3TttFUU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=hD8PNxf5I0YKoPVH2xkZwADtP5GixQ+693mGV4GLyfEY7cgoPX5B4rHlrYBjSnBqWfd/s/KbgXZPlEvLTwB54UHCUc2qTvFkXFQfwaqHTs6JoGQQcXL4TZOvNcLrL9h1Ie2udsl5s8brDeh8kFHPOjqaRPCrmItiKYY25LEhz0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Of9EIVXk; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ww8YcHGY"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-421851bca51so23190f8f.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Oct 2025 08:14:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Of9EIVXk"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b551338c2c9so4954259a12.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Oct 2025 09:23:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1759936460; x=1760541260; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=71pgwAeF8ZnAvmZsmtw6crExw14x3YUmdHLkGbBmsIM=;
-        b=ww8YcHGYQmcphPZxAWt4uCsSpOxwHAcNgpTrXjghMN1FPsJAogGfyRa5qz31niHsDy
-         DGyj8Bk3T9/4axEciNeFv53zG3VWnbNpq0YrRqAYXPClIYuMdVsSw2bXbVcQwQMb7Ln5
-         32Jw1yCI5n/XzDdYEfQYT3pLMMs/Uq7JuU0SLI2tR7+7OJ2uBad9pVh7kNUu3zt14ZUH
-         MBqqUwBv1SIU2rBPQVcS0I4rdIm84a1u3AmospCsERXbPdTKTvb70vMRzOLruZoLFTqC
-         qIN2bQcl6InA1LFmjyypLBgdYDgo9UJQVVMVbvUvVl8mQG8qSWuxsGYfzfJC4GxW5h9K
-         L5Iw==
+        d=google.com; s=20230601; t=1759940632; x=1760545432; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wRJXz112Re1ju3vdnrYT2DZaPKwj05gRwzq+1yeUNKs=;
+        b=Of9EIVXkOmVcdac0kItnBsdmLVoWxpnDoYt51psGG8lF8bpyBhGGCrFdXZ6ImCgH8r
+         rmcHKGhvI7EI/9LanL+WsQmcXnUiE1omEc9MmyF/iHwSmBIQ03YALtEp6yzK26LLC1L+
+         OMmCZVIJdqplg90GBk7c0BmZTxUp9OIPmJeqUIRC7Q6in0uCmHGKtAgfiOInjlafEDTS
+         DZXyR78mGwZZd5/hhiluf4N86oxpUdey+A/SLPkKk6JuzGR5Kml+G7qQhKcimxjIs3wE
+         x+ncCgPX12OtEZg++b3pLbRaYP4wRao2yi/YCwyATLuHZXZaCeiwQTZN5Qs6VJWfDS67
+         mNJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759936460; x=1760541260;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=71pgwAeF8ZnAvmZsmtw6crExw14x3YUmdHLkGbBmsIM=;
-        b=I589VEMPef9od+DXQkKvxJ3k7/tNGT4MwP7g7AZUdhXMZ89G29e80F2So+9U/sN0hu
-         oX9HroE9k+DXHaN7g8EpAmV9rsp/IsmRvOJ3MXUweXi2a8K5PtOAG6ib6Oy2xwwXnXjd
-         ZLlLg1G2wTFw7I8uVQ4QNOs4FY79s0kJV69pn2+FAOdaM+EKeubGlWdZ6hpOKCxHNhwV
-         cUrmReQhoo4kJioCMw0w1HNLSQ5hgJ7ONUR4LR7/Jxof5fHN5dq/Y2SZr1F+sdKxuSfV
-         X3FPAX4tkfwmmBE+ECO9kY4BHuSjo+6ij+R45/CWBDHR9wDpJicXdBTAdS1SXMolHGoG
-         Waxg==
-X-Forwarded-Encrypted: i=1; AJvYcCXFIXBSRtwGd5jh8Lqx325S7gGFnNtP32cdKtuhLB/1AQyuhNjIJ7ZqiK7nKkoUNyJEszAvdkO9Fezn2EFW5NSU@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzt2CYzUJwrRYUGHp7DIxkBWzZJM9aa5HPm4P1ymhS4TSnXTwpM
-	iEZ3NtRph3te4brQyBBO2yQLkv5+lS/YRQ8IekUWHT+FBdRdXY/VWdfTXEq86lJHh4E=
-X-Gm-Gg: ASbGncvVc40iz36Isw8nu8o5MASOom0aFxXeqZdzVMJRwiZAEJlWwSFfliBHWz4T1n1
-	d/olODqzJsg7edhZf4Y5jOsUle9DbJ/7wZCXrzDzSqKkc47R9BkjlWl3sub9aF0Vetd+B35iRTu
-	OQ72mb341BS71ZKJiS7oDJx8p5pTt2O3APuPmC15uffUW/rUTcduCx/QVDgrYY7cemc4BRcjMyt
-	ZQyRgRDs7/BEe1A8YFVo/uhV2O3YAlKMRfOXW/uGO9H1/ksOcmAH6e0wdkk+kJ34ozLuwNQozmJ
-	gM8QOxQkiOcR78wF7EgPCPpYuS79XdrEU9S8GNtGKY8dtYWKIwhFKdsknfrXu3G+a+g0QcHWUl4
-	NCBA7NSikVdYNSf2Pv+33dMG7nNxiN7lv+++VfiFToXAn7sL/A+5jiOOE
-X-Google-Smtp-Source: AGHT+IG6KcNZ0O/tlcjzWgsQA75pdcQp1NlzxQsZEPzaxSGf+G+35PCibY3W6WMwDR276jZjPez+dA==
-X-Received: by 2002:a05:6000:186f:b0:3f4:84d0:401a with SMTP id ffacd0b85a97d-42666ab87b8mr2469128f8f.4.1759936459939;
-        Wed, 08 Oct 2025 08:14:19 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.76.109])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4255d8f02a8sm30819224f8f.39.2025.10.08.08.14.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Oct 2025 08:14:19 -0700 (PDT)
-Message-ID: <947c4e39-ee4e-4798-b783-8dec9a58f75d@linaro.org>
-Date: Wed, 8 Oct 2025 16:14:18 +0100
+        d=1e100.net; s=20230601; t=1759940632; x=1760545432;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wRJXz112Re1ju3vdnrYT2DZaPKwj05gRwzq+1yeUNKs=;
+        b=CuP7gFp+vZ9Xe7oWP3nHADHYmvLUctaBJlJfMm8ODXQjQ52dH67tMrH62vB9vZzI5F
+         +1DfeKUVMx9b/32rvlq2Jznc2E1XZXdlwylP50zSPQrx9Uj4GeNcSzZ5bTGb/PGtbVXh
+         Y72jM4eR0gQYXnVzkq1Ig5/T4qDN5SJD7x3zCV3EFAOVIJCsu/z1au1vH7UBuwSEzYwW
+         26hyLpiASyNGJHHTr7n/sAd+tCC7ti9334sVgoSWv7cvGxZ38Qra/cLko555sz1dFNSl
+         f338uHG4jHoWA8xlg9OVdSa++hrDI8QMGOC6wL5leE+7bnZXkTMgG/1R8LWs2UQyGV9p
+         YaWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVbFfET+rz1DF03hKSiy3fyrju9IMqC88Q8y1I0eJ0aoeAgBrz0/5pb1PQRjOwlmCyIz1MK4xgn8Gzcfozd+afs@vger.kernel.org
+X-Gm-Message-State: AOJu0YxI7gIJpzkhhL5MblihJuAKmn5qIdH5ux3HOdOQnDFTK6GROkUA
+	3ZLHjUsSyjL1sTuwb3dkxrTTV0VgqVl9/HjAXX0q2d0PxElbFe2DUWkc99SWCWp6jFlPA+xkh8n
+	VUqvWaeEg6A==
+X-Google-Smtp-Source: AGHT+IGKggukMuWythYr3qzc7hKbOfyUWxXaNl2ZkzSjXOY2nzoCMvWkDw+/XtALg86o1p0QKnOwEdiv1B2m
+X-Received: from plez12.prod.google.com ([2002:a17:902:cccc:b0:26a:23c7:68d3])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ef10:b0:27e:eabd:4b41
+ with SMTP id d9443c01a7336-29027216505mr56267885ad.7.1759940632569; Wed, 08
+ Oct 2025 09:23:52 -0700 (PDT)
+Date: Wed,  8 Oct 2025 09:23:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 05/27] perf jevents: Support copying the source json
- files to OUTPUT
-To: Ian Rogers <irogers@google.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Xu Yang <xu.yang_2@nxp.com>, Thomas Falcon <thomas.falcon@intel.com>,
- Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Atish Patra <atishp@rivosinc.com>,
- Beeman Strong <beeman@rivosinc.com>, Leo Yan <leo.yan@arm.com>,
- Vince Weaver <vincent.weaver@maine.edu>
-References: <20251005182430.2791371-1-irogers@google.com>
- <20251005182430.2791371-6-irogers@google.com>
- <fcba9459-9a5a-44c9-976a-323a6f4e0429@linaro.org>
- <CAP-5=fVervG=fmG7naTut3ERzwTTp7yQvuwqNkoKxSBSLsbgGA@mail.gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <CAP-5=fVervG=fmG7naTut3ERzwTTp7yQvuwqNkoKxSBSLsbgGA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.51.0.710.ga91ca5db03-goog
+Message-ID: <20251008162347.4005288-1-irogers@google.com>
+Subject: [PATCH v2] perf bpf_counter: Fix opening of "any"(-1) CPU events
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Tengda Wu <wutengda@huaweicloud.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+The bperf BPF counter code doesn't handle "any"(-1) CPU events, always
+wanting to aggregate a count against a CPU, which avoids the need for
+atomics so let's not change that. Force evsels used for BPF counters
+to require a CPU when not in system-wide mode so that the "any"(-1)
+value isn't used during map propagation and evsel's CPU map matches
+that of the PMU.
 
+Fixes: b91917c0c6fa ("perf bpf_counter: Fix handling of cpumap fixing hybrid")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-stat.c     | 13 +++++++++++++
+ tools/perf/util/bpf_counter.c |  1 +
+ 2 files changed, 14 insertions(+)
 
-On 08/10/2025 3:58 pm, Ian Rogers wrote:
-> On Wed, Oct 8, 2025 at 4:10 AM James Clark <james.clark@linaro.org> wrote:
->> On 05/10/2025 7:24 pm, Ian Rogers wrote:
->>> The jevents command expects all json files to be organized under a
->>> single directory. When generating json files from scripts (to reduce
->>> laborious copy and paste in the json) we don't want to generate the
->>> json into the source directory if there is an OUTPUT directory
->>> specified. This change adds a GEN_JSON for this case where the
->>> GEN_JSON copies the JSON files to OUTPUT, only when OUTPUT is
->>> specified. The Makefile.perf clean code is updated to clean up this
->>> directory when present.
->>>
->>> This patch is part of:
->>> https://lore.kernel.org/lkml/20240926173554.404411-12-irogers@google.com/
->>> which was similarly adding support for generating json in scripts for
->>> the consumption of jevents.py.
->>>
->>> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
->>> Signed-off-by: Ian Rogers <irogers@google.com>
->>
->> Hi Ian,
->>
->> This commit breaks the build on x86 for me, but not Arm. I also had to
->> do a clean build when bisecting as it seemed to be sticky in some way.
->>
->> It fails on the empty pmu events file diff check:
->>
->> diff -u pmu-events/empty-pmu-events.c
->> /home/james/workspace/linux/build/local/pmu-events/test-empty-pmu-events.c
->> 2>
->> /home/james/workspace/linux/build/local/pmu-events/empty-pmu-events.log
->> || (cat
->> /home/james/workspace/linux/build/local/pmu-events/empty-pmu-events.log
->> && false)
->> --- pmu-events/empty-pmu-events.c       2025-10-08 11:49:46.341849139 +0100
->> +++
->> /home/james/workspace/linux/build/local/pmu-events/test-empty-pmu-events.c
->>    2025-10-08 11:54:40.619999115 +0100
->> @@ -19,239 +19,8 @@
->>    };
->>
->>    static const char *const big_c_string =
->> -/* offset=0 */ "software\000"
->> ...
->>
->> The output continues with the rest of the diff, but I assume it's not
->> important to reproduce the issue.
-> 
-> I've similarly had issues with empty-pmu-events.c and the test that as
-> you say are resolved by a clean build. When I've investigated in the
-> past it is the dependencies on the files are accurate but some are
-> added or removed, I think adding the Makefile as a dependency for
-> building empty-pmu-events.c was a resolution but in general we've not
-> done that so I didn't send out a fix.
-> 
-> Thanks,
-> Ian
-> 
-
-Yeah this is the second time I've hit this, but this time it didn't get 
-me stuck for too long because I recognized it.
-
-I double checked building the last commit of the series after a clean 
-and it still fails, so I think that's an issue in addition to the 
-dependency issue. Considering this change touches the Makefile maybe we 
-can ignore the dependency issue for now and assume that a clean is required.
-
->> Thanks
->> James
->>
->>> ---
->>>    tools/perf/Makefile.perf    | 21 ++++++++++++++++-----
->>>    tools/perf/pmu-events/Build | 18 ++++++++++++------
->>>    2 files changed, 28 insertions(+), 11 deletions(-)
->>>
->>> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
->>> index 7d6ac03a7109..278e51e4b5c6 100644
->>> --- a/tools/perf/Makefile.perf
->>> +++ b/tools/perf/Makefile.perf
->>> @@ -1272,9 +1272,24 @@ endif # CONFIG_PERF_BPF_SKEL
->>>    bpf-skel-clean:
->>>        $(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS) $(SKEL_OUT)/vmlinux.h
->>>
->>> +pmu-events-clean:
->>> +ifeq ($(OUTPUT),)
->>> +     $(call QUIET_CLEAN, pmu-events) $(RM) \
->>> +             pmu-events/pmu-events.c \
->>> +             pmu-events/metric_test.log \
->>> +             pmu-events/test-empty-pmu-events.c \
->>> +             pmu-events/empty-pmu-events.log
->>> +else # When an OUTPUT directory is present, clean up the copied pmu-events/arch directory.
->>> +     $(call QUIET_CLEAN, pmu-events) $(RM) -r $(OUTPUT)pmu-events/arch \
->>> +             $(OUTPUT)pmu-events/pmu-events.c \
->>> +             $(OUTPUT)pmu-events/metric_test.log \
->>> +             $(OUTPUT)pmu-events/test-empty-pmu-events.c \
->>> +             $(OUTPUT)pmu-events/empty-pmu-events.log
->>> +endif
->>> +
->>>    clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean \
->>>                arm64-sysreg-defs-clean fixdep-clean python-clean bpf-skel-clean \
->>> -             tests-coresight-targets-clean
->>> +             tests-coresight-targets-clean pmu-events-clean
->>>        $(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive \
->>>                $(OUTPUT)perf-iostat $(LANG_BINDINGS)
->>>        $(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '*.a' -delete -o \
->>> @@ -1287,10 +1302,6 @@ clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(
->>>                $(OUTPUT)FEATURE-DUMP $(OUTPUT)util/*-bison* $(OUTPUT)util/*-flex* \
->>>                $(OUTPUT)util/intel-pt-decoder/inat-tables.c \
->>>                $(OUTPUT)tests/llvm-src-{base,kbuild,prologue,relocation}.c \
->>> -             $(OUTPUT)pmu-events/pmu-events.c \
->>> -             $(OUTPUT)pmu-events/test-empty-pmu-events.c \
->>> -             $(OUTPUT)pmu-events/empty-pmu-events.log \
->>> -             $(OUTPUT)pmu-events/metric_test.log \
->>>                $(OUTPUT)$(fadvise_advice_array) \
->>>                $(OUTPUT)$(fsconfig_arrays) \
->>>                $(OUTPUT)$(fsmount_arrays) \
->>> diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
->>> index 32f387d48908..1503a16e662a 100644
->>> --- a/tools/perf/pmu-events/Build
->>> +++ b/tools/perf/pmu-events/Build
->>> @@ -1,7 +1,6 @@
->>>    pmu-events-y        += pmu-events.o
->>>    JDIR                =  pmu-events/arch/$(SRCARCH)
->>> -JSON         =  $(shell [ -d $(JDIR) ] &&                            \
->>> -                     find $(JDIR) -name '*.json' -o -name 'mapfile.csv')
->>> +JSON         =  $(shell find pmu-events/arch -name *.json -o -name *.csv)
->>>    JDIR_TEST   =  pmu-events/arch/test
->>>    JSON_TEST   =  $(shell [ -d $(JDIR_TEST) ] &&                       \
->>>                        find $(JDIR_TEST) -name '*.json')
->>> @@ -29,13 +28,20 @@ $(PMU_EVENTS_C): $(EMPTY_PMU_EVENTS_C)
->>>        $(call rule_mkdir)
->>>        $(Q)$(call echo-cmd,gen)cp $< $@
->>>    else
->>> +# Copy checked-in json for generation.
->>> +$(OUTPUT)pmu-events/arch/%: pmu-events/arch/%
->>> +     $(call rule_mkdir)
->>> +     $(Q)$(call echo-cmd,gen)cp $< $@
->>> +
->>> +GEN_JSON = $(patsubst %,$(OUTPUT)%,$(JSON))
->>> +
->>>    $(METRIC_TEST_LOG): $(METRIC_TEST_PY) $(METRIC_PY)
->>>        $(call rule_mkdir)
->>>        $(Q)$(call echo-cmd,test)$(PYTHON) $< 2> $@ || (cat $@ && false)
->>>
->>> -$(TEST_EMPTY_PMU_EVENTS_C): $(JSON) $(JSON_TEST) $(JEVENTS_PY) $(METRIC_PY) $(METRIC_TEST_LOG)
->>> +$(TEST_EMPTY_PMU_EVENTS_C): $(GEN_JSON) $(JSON_TEST) $(JEVENTS_PY) $(METRIC_PY) $(METRIC_TEST_LOG)
->>>        $(call rule_mkdir)
->>> -     $(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) none none pmu-events/arch $@
->>> +     $(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) none none $(OUTPUT)pmu-events/arch $@
->>>
->>>    $(EMPTY_PMU_EVENTS_TEST_LOG): $(EMPTY_PMU_EVENTS_C) $(TEST_EMPTY_PMU_EVENTS_C)
->>>        $(call rule_mkdir)
->>> @@ -63,10 +69,10 @@ $(OUTPUT)%.pylint_log: %
->>>        $(call rule_mkdir)
->>>        $(Q)$(call echo-cmd,test)pylint "$<" > $@ || (cat $@ && rm $@ && false)
->>>
->>> -$(PMU_EVENTS_C): $(JSON) $(JSON_TEST) $(JEVENTS_PY) $(METRIC_PY) $(METRIC_TEST_LOG) \
->>> +$(PMU_EVENTS_C): $(GEN_JSON) $(JSON_TEST) $(JEVENTS_PY) $(METRIC_PY) $(METRIC_TEST_LOG) \
->>>        $(EMPTY_PMU_EVENTS_TEST_LOG) $(PMU_EVENTS_MYPY_TEST_LOGS) $(PMU_EVENTS_PYLINT_TEST_LOGS)
->>>        $(call rule_mkdir)
->>> -     $(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) $(JEVENTS_MODEL) pmu-events/arch $@
->>> +     $(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) $(JEVENTS_MODEL) $(OUTPUT)pmu-events/arch $@
->>>    endif
->>>
->>>    # pmu-events.c file is generated in the OUTPUT directory so it needs a
->>
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 7006f848f87a..0fc6884c1bf1 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -2540,6 +2540,7 @@ int cmd_stat(int argc, const char **argv)
+ 	unsigned int interval, timeout;
+ 	const char * const stat_subcommands[] = { "record", "report" };
+ 	char errbuf[BUFSIZ];
++	struct evsel *counter;
+ 
+ 	setlocale(LC_ALL, "");
+ 
+@@ -2797,6 +2798,18 @@ int cmd_stat(int argc, const char **argv)
+ 
+ 	evlist__warn_user_requested_cpus(evsel_list, target.cpu_list);
+ 
++	evlist__for_each_entry(evsel_list, counter) {
++		/*
++		 * Setup BPF counters to require CPUs as any(-1) isn't
++		 * supported. evlist__create_maps below will propagate this
++		 * information to the evsels. Note, evsel__is_bperf isn't yet
++		 * set up, and this change must happen early, so directly use
++		 * the bpf_counter variable.
++		 */
++		if (counter->bpf_counter)
++			counter->core.requires_cpu = true;
++	}
++
+ 	if (evlist__create_maps(evsel_list, &target) < 0) {
+ 		if (target__has_task(&target)) {
+ 			pr_err("Problems finding threads of monitor\n");
+diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
+index ca5d01b9017d..d3e5933b171b 100644
+--- a/tools/perf/util/bpf_counter.c
++++ b/tools/perf/util/bpf_counter.c
+@@ -495,6 +495,7 @@ static int bperf_reload_leader_program(struct evsel *evsel, int attr_map_fd,
+ 	 * following evsel__open_per_cpu call
+ 	 */
+ 	evsel->leader_skel = skel;
++	assert(!perf_cpu_map__has_any_cpu_or_is_empty(evsel->core.cpus));
+ 	evsel__open(evsel, evsel->core.cpus, evsel->core.threads);
+ 
+ out:
+-- 
+2.51.0.710.ga91ca5db03-goog
 
