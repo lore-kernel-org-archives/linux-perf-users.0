@@ -1,233 +1,285 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56F47260A
-	for <linux-perf-users@vger.kernel.org>; Wed,  8 Oct 2025 16:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A93742BE65B
+	for <linux-perf-users@vger.kernel.org>; Wed,  8 Oct 2025 16:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759941128; cv=none; b=cln3an+C1Y9Oo+PwviFB6oinA+2v6PqmjTfVijxmXZfUh99TKTVTeha0Prp+2f2RRzrqjjjQ9oVUsTTCYKi6haKYbeja8HOI/NoXlU1F7s9mdXYSdyu5BNuIjj7r5sQFQM2KKd+guPEjUfK8BYwbE4JnFPzgdOGskFrHaYYveLQ=
+	t=1759941345; cv=none; b=C8SknUNziSWF4mcvANy7RAWgr3w2bjwKJx5GUR266SUBMuYLaXqhP9pCPc2NcTJb1FZUpBVoXsmB8jMwN7/YYMhcfurxz+BYrvTdyip6mKc4UJTvOMbCZ9XwH4czTAjLcqTCmT06Z5rmWQ3MsiREgEn6tBnwDYL5rZmMuWZjjzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759941128; c=relaxed/simple;
-	bh=j+KG90QHUq8UmErnUnf4KEjhOcBO2c0iFGFWaJiiMyc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W6Ab6Ns+gbpzPLDUhLpd4nwjJX2XTRhdEV35gzs5cFGQcGK6bdP6dlrJgL5GIZjurtnyeuZnPEVahKL4eDexnrHk0nQ7wBY+N2LChq2CAIUyIQDLnOwgzYCfyaaXJe9HM8TFqAVj+NK0p12V9b7dnup2BABYXil17zHzKrYnV1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qEandcT/; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1759941345; c=relaxed/simple;
+	bh=CKRJGACJWHK8Hlud48RR8jl/VtJ79lLFYLx1AJc/+NA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UzWr0kNGLIs/jzTOCesD8OuHJoVPLsSDwu2sm3lhDFISw3Hvvcxm8eIAZg2zQMRWk+g6SmJXLniUTJ5XtBDUfHzJo6B/dfZnYLh/+Y2koATBt5LR/Z0CvLolNi4ocXg0wZDYo8tNvjMGRGgNtHqd2cvhVs5+aNYC67GM9qTRtFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HgniaLZb; arc=none smtp.client-ip=209.85.210.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qEandcT/"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-27d67abd215so304585ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Oct 2025 09:32:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HgniaLZb"
+Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-793021f348fso6061b3a.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Oct 2025 09:35:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1759941126; x=1760545926; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SSuPYLhNBhQbv9PnRs/ehQEpBWk9AgU9ZFIL2VExLKk=;
-        b=qEandcT/8s1RsLWIfaFwIeKHjD3g4B7J6zPDTfoxwlScUBdsYENZXjt+/F7gmW2b8f
-         /+HdE2/ur+1m9W6EZggpFZOrPhHZ9/+72eH9pNIrAkua9H8O0VoPo0skqWukrO/XIMsN
-         ddw+UZtIsO6x4/wibUZShwN8abXhioZNmDdh8aww0nnEPoQfOuyOTR5ddqKlKe2QPiuW
-         GJItyWE1kKmeQsRrhUpcU2DN1MwmtC8vXr3pAJ7PW4NmKWYYIJGh56jdxSQDArRoUiok
-         3iADFEQtWQahJdPX4BqBGV+tpjwW4EUWW+Qgrlb4caFrWIyc/pxwKu/cXdA+2nJWyXkF
-         hBNA==
+        d=gmail.com; s=20230601; t=1759941343; x=1760546143; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ISvkKKWDIq4+oW79gR956cg3AZDUxj8RaDon4KWZSA4=;
+        b=HgniaLZbybMc7rK0hnoAY/a1aHoL+/qGncGdtzWVXpIJlUDMwkwv7ijv1EzYDAa+sy
+         sjoE8KzRm5Mj7tSYbJ3/z5TYphIEIJjFGn8sM17n+r5JIwJXjrhXJ5mrOWo/j2v5VmKP
+         2+noSX89FZ/ztYYapjLBa8c7zcvOjOHNzxCoKLoZ5Jbr0kaffm12FnG/myssJnMe3Cvz
+         xfNjWZ8l0CUmyetcrxSSRRcp1J18+dhCUnHe72ybuVpBqum+A+tMhjQYuO0GqnFZs0iD
+         RetA7SkMXROgo+IFJflXQWKCnPZe5hClwGYVLhfyK0s6MO/BIUcO0eA812y136o38Y0N
+         Plcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759941126; x=1760545926;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SSuPYLhNBhQbv9PnRs/ehQEpBWk9AgU9ZFIL2VExLKk=;
-        b=YTCdj08bNH5LgGhnYhO/YgGcD65nggt/q8ztoqvKEpXpgt6PgIgB81uQ7+zCwOMmD+
-         2NgRckBEv7hmcgGyzfqZWeYSHOo+Fnr6d76lK25jB3nL23o+2H6FpZDiJED2suCjj2fd
-         /1G720N6bm6Yh5GK9wJRv4a9U8Yg4wuIKEujPyyTgeuiZLrprepWa0SlD3Z1w/kbdBZd
-         tJA9gLe5BkPbwhKWeR5EXGDF8E87j1mdC6NCihQ6fQsix+k9kItnVZBYBu9LCY/16ptH
-         MTM/STP+guKZr4Ppep8AwW//Tq/1GTXoO7mq/QFPT0Sczol6GilIXdv/MIKiES+VAMsd
-         CItA==
-X-Forwarded-Encrypted: i=1; AJvYcCWIX7XxHLs+coMLH2hdQEyiopajD4rHqx5yrpq7DWZOEqGRu7uHWPx8OO34MnxxdWUmYe6v9u6zh31ZGHvqUm8q@vger.kernel.org
-X-Gm-Message-State: AOJu0YwM/44BHw9mmSKog8sVrhJg6R/mEYWVxf5No6Xwo4Yv8k7mPv65
-	eMPP+ZheyZZBQzc/ckIDt+JShvHa4Q0kIxT0cFg/G4SWVxBBkm6I/aF7tiVInw9mNrvpUK3W8vR
-	RwBz7tcm6x90OZr5Y2mcR9FGMZPCCj3sCOj2UuXGPityA9jS0NG4KcSjr
-X-Gm-Gg: ASbGnctO34a/F1MyfE9EsLVuAoJt2KK00DyuWhRrMYLZMuBvnKFSZlDEnId6TEkgFAD
-	83WfiDCHWfhHCzs2yTXMrS6IR8tlXBUiDKIKUyUmGPYxEnvdUXy9tmhtGSoIOC1OVXmx4bdQg9K
-	7vQoWcTn8rSdjWA0jCPRLNIxmFoA2ayK0ujQVUgP7YpVmmOPvLNnoJsoUvCwLN6p7ZyD9xKJetB
-	gu0F0qyp9W5yfkuFa92mKaEQt3+tMWu+awyCT24ES1RdFdW2fYKbq+GvvNeHII0sssicGo4y5Hv
-	aMs=
-X-Google-Smtp-Source: AGHT+IHSYUCWVVfawwj76MCuZAt7I2oBJNyK1d6keP/z8TRxeN1VnE76Y6GyeiD+58cgYNsHWxjSRkxeknXwYtcnDuQ=
-X-Received: by 2002:a17:902:f545:b0:27e:e96a:4c6 with SMTP id
- d9443c01a7336-290275dda35mr6978595ad.2.1759941125342; Wed, 08 Oct 2025
- 09:32:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1759941343; x=1760546143;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ISvkKKWDIq4+oW79gR956cg3AZDUxj8RaDon4KWZSA4=;
+        b=NDkVybtf1W1PBMW7bYgNjgrCl/d6nkoumNuWWZR7vXmkDrithJUNgzRyZ86O7kSpVW
+         9XfTDgfuRnRNZbQn2pMwNVLhncXaGPGWpJNXA9RDjv6nfUf/sU3a/4GRB08f6h3BD6QT
+         qxM5+vXFHodkc6gEkOVwXTRhYj0PUW4loSGUBm/HBd1xuhE7qh3H5AVHMcqUed5Y49BC
+         VKEb7sf6Zmduz7MiZiPRKFGG6isZCRidFCZxkcmtYKd/2m8sgKHpr4ANECmi5vtTBQpc
+         3ljpV5H+DPtRJEnvhcEO+3f19SHzSgqIFa4+D2Y2NyNDblb7OD7gemT5glAHMWCmop0h
+         riWQ==
+X-Gm-Message-State: AOJu0Yw39uD7zJpahGbNuL4M87pTSINOzTdIa8bOfqcB1w5QZQPFJaic
+	FDSoPxAzU3FNzKTJFnIB0wSEL7vyHLMC3o9fDoXZabM1hy5Yk9CVy7ug
+X-Gm-Gg: ASbGnctIOHhiA3PBc/yBG5qOu9U2NadPAw2IfwKDaw9Nk3bH9igj/6BsQA0NwrX2oRw
+	zu3HDHIz338Fwq1l1FqZlZGesXcrM6HfKDQyp/weAT24qaG0FXPHeCQTz/mjiEjLxBc1CrpgSbH
+	TPkpSV+U6IpCHQw76iDgQBCYQHVyVHbkJW+hd9K5HW03pWnW5VqfvwzZrrddnIcO9MP63RWrfS2
+	pRzc5vICd6yybpdnU+LVZzd6rtsrvIh7Wi/46KAIzgYZgOCS/6cRIWqx7BzjjoZT79+9Z0lc+hR
+	l+smYjKBfrgiX8oNk1Mw7JKlzuLkqWq7nT4VKNMYiVoZh3TLurjgQEFPrWL3fVLTrO0IuoC89mL
+	/HT1C60+D3o+Qm+d6YyxmWBI6L8hqWncCuNdriv1WYIMrlyG/67fH
+X-Google-Smtp-Source: AGHT+IFyKxDK1EEywFovdigzvcCH96/bCa684gE/Uzd317/7l8f5ukh49kZ2qABtvV1h3v3zrAOoBw==
+X-Received: by 2002:a05:6a00:c8c:b0:781:15b0:bea9 with SMTP id d2e1a72fcca58-79387c16f18mr4659168b3a.22.1759941342575;
+        Wed, 08 Oct 2025 09:35:42 -0700 (PDT)
+Received: from nixos ([115.192.189.58])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-794d4b3d6a6sm204653b3a.7.2025.10.08.09.35.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Oct 2025 09:35:42 -0700 (PDT)
+From: Thaumy Cheng <thaumy.love@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thaumy Cheng <thaumy.love@gmail.com>
+Subject: [PATCH v2 RESEND] perf/core: Fix missing read event generation on task exit
+Date: Thu,  9 Oct 2025 00:35:30 +0800
+Message-ID: <20251008163530.810407-1-thaumy.love@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251005181421.2787960-1-irogers@google.com> <aOYkRdU5pn_jTOq3@google.com>
-In-Reply-To: <aOYkRdU5pn_jTOq3@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 8 Oct 2025 09:31:53 -0700
-X-Gm-Features: AS18NWCGtV-hp43VXeqvQ4UJu4ENt9gz6g5gTLbFb7BmReBQIdsR0EpEar-QFOQ
-Message-ID: <CAP-5=fUqYeaE_P3ApXvq7j9SRuNXpLf+mK-4XBsvv2R=OTccbQ@mail.gmail.com>
-Subject: Re: [PATCH v1] perf stat: Additional verbose details for <not
- supported> events
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 8, 2025 at 1:43=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> w=
-rote:
->
-> On Sun, Oct 05, 2025 at 11:14:21AM -0700, Ian Rogers wrote:
-> > If an event shows as "<not supported>" in perf stat output, in verbose
-> > mode add the strerror output to help diagnose the issue.
-> >
-> > Consider:
-> > ```
-> > $ perf stat -e cycles,data_read,instructions true
-> >
-> >  Performance counter stats for 'true':
-> >
-> >            357,457      cycles:u
-> >    <not supported> MiB  data_read:u
-> >            156,182      instructions:u                   #    0.44  ins=
-n per cycle
-> >
-> >        0.001250315 seconds time elapsed
-> >
-> >        0.001283000 seconds user
-> >        0.000000000 seconds sys
-> > ```
-> >
-> > To understand why the data_read uncore event failed, with this change:
-> > ```
-> > $ perf stat -v -e cycles,data_read,instructions true
-> > Using CPUID GenuineIntel-6-8D-1
-> > cycles -> cpu/cycles/
-> > data_read -> uncore_imc_free_running_0/data_read/
-> > data_read -> uncore_imc_free_running_1/data_read/
-> > instructions -> cpu/instructions/
-> > Control descriptor is not initialized
-> > Warning:
-> > kernel.perf_event_paranoid=3D2, trying to fall back to excluding kernel=
- and hypervisor  samples
-> > Warning:
-> > kernel.perf_event_paranoid=3D2, trying to fall back to excluding kernel=
- and hypervisor  samples
-> > Warning:
-> > kernel.perf_event_paranoid=3D2, trying to fall back to excluding kernel=
- and hypervisor  samples
-> > Warning:
-> > data_read:u event is not supported by the kernel.
-> > Invalid event (data_read:u) in per-thread mode, enable system wide with=
- '-a'.
-> > Warning:
-> > kernel.perf_event_paranoid=3D2, trying to fall back to excluding kernel=
- and hypervisor  samples
-> > Warning:
-> > data_read:u event is not supported by the kernel.
-> > Invalid event (data_read:u) in per-thread mode, enable system wide with=
- '-a'.
-> > cycles:u: 351621 362833 362833
-> > failed to read counter data_read:u
-> > failed to read counter data_read:u
-> > instructions:u: 156184 362833 362833
-> >
-> >  Performance counter stats for 'true':
-> >
-> >            351,621      cycles:u
-> >    <not supported> MiB  data_read:u
-> >            156,184      instructions:u                   #    0.44  ins=
-n per cycle
-> >
-> >        0.001584472 seconds time elapsed
-> >
-> >        0.001811000 seconds user
-> >        0.000000000 seconds sys
-> > ```
-> > where without this change only "data_read:u event is not supported by
-> > the kernel." is shown.
->
-> I think what you say is:
->
-> Before:
->   data_read:u event is not supported by the kernel.
->
-> After:
->   data_read:u event is not supported by the kernel.
->   Invalid event (data_read:u) in per-thread mode, enable system wide with=
- '-a'.
+For events with inherit_stat enabled, a "read" event will be generated
+to collect per task event counts on task exit.
 
-I kept things verbose as unfortunately the
-"kernel.perf_event_paranoid=3D2" is important as is the use of
-per-thread mode. Different paranoia levels lead to different errors
-and unfortunately a lot of the time the error gets reported as "
-data_read:u event is not supported by the kernel." and I'm not sure
-all users will get that the key part there is the :u modifier.
-However, fixing  evsel__open_strerror wasn't in scope for this change.
+The call chain is as follows:
 
-Thanks,
-Ian
+do_exit
+  -> perf_event_exit_task
+    -> perf_event_exit_task_context
+      -> perf_event_exit_event
+        -> perf_remove_from_context
+          -> perf_child_detach
+            -> sync_child_event
+              -> perf_event_read_event
 
+However, the child event context detaches the task too early in
+perf_event_exit_task_context, which causes sync_child_event to never
+generate the read event in this case, since child_event->ctx->task is
+always set to TASK_TOMBSTONE. Fix that by moving context lock section
+backward to ensure ctx->task is not set to TASK_TOMBSTONE before
+generating the read event.
 
-> Off-topic, it'd be great if we reduce the number of the same warning
-> messages.  I think the data_read is from two uncore PMUs so the message
-> was repeated.  If we can connect the related evsels and show the
-> messages once, then the output is more readable.  Maybe we also want to
-> show the fallback message just once (globally).
->
-> Thanks,
-> Namhyung
->
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/builtin-stat.c | 12 +++++++-----
-> >  1 file changed, 7 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > index 7006f848f87a..84e06ec09cc2 100644
-> > --- a/tools/perf/builtin-stat.c
-> > +++ b/tools/perf/builtin-stat.c
-> > @@ -624,8 +624,9 @@ static enum counter_recovery stat_handle_error(stru=
-ct evsel *counter, int err)
-> >        */
-> >       if (err =3D=3D EINVAL || err =3D=3D ENOSYS || err =3D=3D ENOENT |=
-| err =3D=3D ENXIO) {
-> >               if (verbose > 0) {
-> > -                     ui__warning("%s event is not supported by the ker=
-nel.\n",
-> > -                                 evsel__name(counter));
-> > +                     evsel__open_strerror(counter, &target, err, msg, =
-sizeof(msg));
-> > +                     ui__warning("%s event is not supported by the ker=
-nel.\n%s\n",
-> > +                                 evsel__name(counter), msg);
-> >               }
-> >               return COUNTER_SKIP;
-> >       }
-> > @@ -649,10 +650,11 @@ static enum counter_recovery stat_handle_error(st=
-ruct evsel *counter, int err)
-> >               }
-> >       }
-> >       if (verbose > 0) {
-> > +             evsel__open_strerror(counter, &target, err, msg, sizeof(m=
-sg));
-> >               ui__warning(err =3D=3D EOPNOTSUPP
-> > -                     ? "%s event is not supported by the kernel.\n"
-> > -                     : "skipping event %s that kernel failed to open.\=
-n",
-> > -                     evsel__name(counter));
-> > +                     ? "%s event is not supported by the kernel.\n%s\n=
-"
-> > +                     : "skipping event %s that kernel failed to open.\=
-n%s\n",
-> > +                     evsel__name(counter), msg);
-> >       }
-> >       return COUNTER_SKIP;
-> >  }
-> > --
-> > 2.51.0.618.g983fd99d29-goog
-> >
+Because perf_event_free_task calls perf_event_exit_task_context with
+exit = false to tear down all child events from the context, and the
+task never lived, accessing the task PID can lead to a use-after-free.
+
+To address that, need an extra exit parameter for perf_event_exit_event
+to teach it to distinguish callers. Only the caller that needs to exit
+the task will trigger the read event, which will set the newly added
+sync_child parameter of perf_child_detach.
+
+Since now perf_event_exit_event may not carry DETACH_EXIT, rename it to
+a more appropriate name "perf_event_detach_event".
+
+This bug can be reproduced by running "perf record -s" and attaching to
+any program that generates perf events in its child tasks. If we check
+the result with "perf report -T", the last line of the report will leave
+an empty table like "# PID  TID", which is expected to contain the
+per-task event counts by design.
+
+Fixes: ef54c1a476ae ("perf: Rework perf_event_exit_event()")
+Signed-off-by: Thaumy Cheng <thaumy.love@gmail.com>
+---
+Changes in v2:
+- Only trigger read event on task exit.
+- Rename perf_event_exit_event to perf_event_detach_event.
+
+Changes in v1:
+- Set TASK_TOMBSTONE after the read event is tirggered.
+- Link to v1: https://lore.kernel.org/all/20250720000424.12572-1-thaumy.love@gmail.com/
+
+ kernel/events/core.c | 53 ++++++++++++++++++++++++--------------------
+ 1 file changed, 29 insertions(+), 24 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 8060c2857bb2..2e17883f2439 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1306,7 +1306,7 @@ static void put_ctx(struct perf_event_context *ctx)
+  * perf_event_context::mutex nests and those are:
+  *
+  *  - perf_event_exit_task_context()	[ child , 0 ]
+- *      perf_event_exit_event()
++ *      perf_event_detach_event()
+  *        put_event()			[ parent, 1 ]
+  *
+  *  - perf_event_init_context()		[ parent, 0 ]
+@@ -2318,7 +2318,7 @@ static void perf_group_detach(struct perf_event *event)
+
+ static void sync_child_event(struct perf_event *child_event);
+
+-static void perf_child_detach(struct perf_event *event)
++static void perf_child_detach(struct perf_event *event, bool sync_child)
+ {
+ 	struct perf_event *parent_event = event->parent;
+
+@@ -2336,7 +2336,9 @@ static void perf_child_detach(struct perf_event *event)
+ 	lockdep_assert_held(&parent_event->child_mutex);
+ 	 */
+
+-	sync_child_event(event);
++	if (sync_child)
++		sync_child_event(event);
++
+ 	list_del_init(&event->child_list);
+ }
+
+@@ -2507,7 +2509,7 @@ __perf_remove_from_context(struct perf_event *event,
+ 	if (flags & DETACH_GROUP)
+ 		perf_group_detach(event);
+ 	if (flags & DETACH_CHILD)
+-		perf_child_detach(event);
++		perf_child_detach(event, (flags & DETACH_EXIT) != 0);
+ 	list_del_event(event, ctx);
+
+ 	if (!pmu_ctx->nr_events) {
+@@ -2613,7 +2615,7 @@ static void __perf_event_disable(struct perf_event *event,
+  * remains valid.  This condition is satisfied when called through
+  * perf_event_for_each_child or perf_event_for_each because they
+  * hold the top-level event's child_mutex, so any descendant that
+- * goes to exit will block in perf_event_exit_event().
++ * goes to exit will block in perf_event_detach_event().
+  *
+  * When called from perf_pending_disable it's OK because event->ctx
+  * is the current context on this CPU and preemption is disabled,
+@@ -4579,9 +4581,9 @@ static void perf_event_enable_on_exec(struct perf_event_context *ctx)
+ }
+
+ static void perf_remove_from_owner(struct perf_event *event);
+-static void perf_event_exit_event(struct perf_event *event,
++static void perf_event_detach_event(struct perf_event *event,
+ 				  struct perf_event_context *ctx,
+-				  bool revoke);
++				  bool revoke, bool exit);
+
+ /*
+  * Removes all events from the current task that have been marked
+@@ -4608,7 +4610,7 @@ static void perf_event_remove_on_exec(struct perf_event_context *ctx)
+
+ 		modified = true;
+
+-		perf_event_exit_event(event, ctx, false);
++		perf_event_detach_event(event, ctx, false, true);
+ 	}
+
+ 	raw_spin_lock_irqsave(&ctx->lock, flags);
+@@ -6178,7 +6180,7 @@ EXPORT_SYMBOL_GPL(perf_event_pause);
+ /*
+  * Holding the top-level event's child_mutex means that any
+  * descendant process that has inherited this event will block
+- * in perf_event_exit_event() if it goes to exit, thus satisfying the
++ * in perf_event_detach_event() if it goes to exit, thus satisfying the
+  * task existence requirements of perf_event_enable/disable.
+  */
+ static void perf_event_for_each_child(struct perf_event *event,
+@@ -12413,7 +12415,7 @@ static void __pmu_detach_event(struct pmu *pmu, struct perf_event *event,
+ 	/*
+ 	 * De-schedule the event and mark it REVOKED.
+ 	 */
+-	perf_event_exit_event(event, ctx, true);
++	perf_event_detach_event(event, ctx, true, true);
+
+ 	/*
+ 	 * All _free_event() bits that rely on event->pmu:
+@@ -13995,13 +13997,16 @@ static void sync_child_event(struct perf_event *child_event)
+ }
+
+ static void
+-perf_event_exit_event(struct perf_event *event,
+-		      struct perf_event_context *ctx, bool revoke)
++perf_event_detach_event(struct perf_event *event,
++		      struct perf_event_context *ctx, bool revoke, bool exit)
+ {
+ 	struct perf_event *parent_event = event->parent;
+-	unsigned long detach_flags = DETACH_EXIT;
++	unsigned long detach_flags = 0;
+ 	unsigned int attach_state;
+
++	if (exit)
++		detach_flags |= DETACH_EXIT;
++
+ 	if (parent_event) {
+ 		/*
+ 		 * Do not destroy the 'original' grouping; because of the
+@@ -14077,6 +14082,17 @@ static void perf_event_exit_task_context(struct task_struct *task, bool exit)
+ 	 */
+ 	mutex_lock(&ctx->mutex);
+
++	/*
++	 * Report the task dead after unscheduling the events so that we
++	 * won't get any samples after PERF_RECORD_EXIT. We can however still
++	 * get a few PERF_RECORD_READ events.
++	 */
++	if (exit)
++		perf_event_task(task, ctx, 0);
++
++	list_for_each_entry_safe(child_event, next, &ctx->event_list, event_entry)
++		perf_event_detach_event(child_event, ctx, false, exit);
++
+ 	/*
+ 	 * In a single ctx::lock section, de-schedule the events and detach the
+ 	 * context from the task such that we cannot ever get it scheduled back
+@@ -14101,17 +14117,6 @@ static void perf_event_exit_task_context(struct task_struct *task, bool exit)
+ 	if (clone_ctx)
+ 		put_ctx(clone_ctx);
+
+-	/*
+-	 * Report the task dead after unscheduling the events so that we
+-	 * won't get any samples after PERF_RECORD_EXIT. We can however still
+-	 * get a few PERF_RECORD_READ events.
+-	 */
+-	if (exit)
+-		perf_event_task(task, ctx, 0);
+-
+-	list_for_each_entry_safe(child_event, next, &ctx->event_list, event_entry)
+-		perf_event_exit_event(child_event, ctx, false);
+-
+ 	mutex_unlock(&ctx->mutex);
+
+ 	if (!exit) {
+--
+2.50.1
+
