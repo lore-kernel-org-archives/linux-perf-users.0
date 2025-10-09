@@ -1,50 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62F94A01;
-	Thu,  9 Oct 2025 08:35:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1592B10F1
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Oct 2025 09:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759998922; cv=none; b=TUFBZ70xihrJjig6hE2JYolGbyM4qWndMwQZdNSW2csfkaAgyN/gosmk7hi9h8K+bdK1mxUGz4y7nEex2LvddP/yUpF+25QFWWQPQwyuK6/+AmfMFzWGPW7TI/2u0OhZH5Zh2PHZ5gANy6vKNA9P7cRs0NsFNj/vZGJgppAkieE=
+	t=1760000683; cv=none; b=Iy052ZpuEsLQ04h1qCibWSxLBMpTC9wTG1suJeMHcFFcNZ7CDSJEWjh5lvQmE9mQUFEFVlvWMU37peIQ5wOSqb8WSQcj72ArhiSwU+D5OH84SYQnFkpxI+31wNLutcsmYgEi9KkbJutFNE/vcIHKtckFIGXZH2G5KNgUXdoBeAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759998922; c=relaxed/simple;
-	bh=cxIbOqNUR76AnDJ8XYf468KSYN5jwnxzGtZjYBXTQM4=;
+	s=arc-20240116; t=1760000683; c=relaxed/simple;
+	bh=I5/ohoBhVKtvUkRFTNBGYLIoie1JXvtwSa5RLNjZISY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZhwwtU6t/q7a8Tqp6hlWC8Df8FzyZJbXMTl10jOhbSPSu0EkW14BoqjNOTWMdJFEo5nCjbf/qpsDoGQqsLNt/qg3SWFIWxUuD+SLLgFORYd835jVM7p8qwgx8egVcXhLzMQDqMq7Fn6PyDb7ECLfBC8zPYXBG1G4D4uLvkETeX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vk0NKy7f; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=lwZVXGDTtKEXIMV0WRIUPcNvCId0tVACSmIlMnBKB8jES9qjQe7zYKqIFGea0+2o5tF7rOE4t6YM6Xrj3VUEFo+bg2Jmm/78G58TWD26+mJe+od27oIfUA+FIwAWI1hi2nYHx2SC6xxkxLlRqFIO1Dn5Z8lw9A+nBlBSg9qEkRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b2+GAk0y; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vk0NKy7f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759998921; x=1791534921;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=cxIbOqNUR76AnDJ8XYf468KSYN5jwnxzGtZjYBXTQM4=;
-  b=Vk0NKy7fKxlQKFGRk4Ykugl9w/pxtiyz3qABXiS46sENW4MI4x7r/r+8
-   5kWUC+4KxOaH93a1vkwyuEYIYHOv7859SCxagE/pgdj7JpgzIrcP4hpaW
-   dwmD8JQe4ruoUTzocOMV14whAqoQLD6WQC/1dy8Kz9sIvdlLC7QV10IgK
-   yU81+A327IXWXMEqOoGo7SYKSa0nXGDEjcMN0DPpaekfkE5NCVo9z2TI7
-   mddulp9L6iSzsCZeoSFeeJ/f630QMt++jxasKs6zBGV8Tn9HYLaFvvOLw
-   jwTS0CV0JGm9ROM0o3yd+UF9nMk9PHlt/+mzS8F4lKSxBUquTAC0UObMR
-   A==;
-X-CSE-ConnectionGUID: GJ1aI5XjQhSLWYWMj9dR6w==
-X-CSE-MsgGUID: vzPerdInTnCCGtqwxnHK5g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11576"; a="72462630"
-X-IronPort-AV: E=Sophos;i="6.19,215,1754982000"; 
-   d="scan'208";a="72462630"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2025 01:35:21 -0700
-X-CSE-ConnectionGUID: cXIzzForQoaKN8tGXHcSPg==
-X-CSE-MsgGUID: vQA6LQBqS1qo3f2NMRZ3hA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,215,1754982000"; 
-   d="scan'208";a="181065729"
-Received: from unknown (HELO [10.238.2.75]) ([10.238.2.75])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2025 01:35:17 -0700
-Message-ID: <cef60d5a-a975-4b4e-b553-9aaaaf6da558@linux.intel.com>
-Date: Thu, 9 Oct 2025 16:35:15 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b2+GAk0y"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-46e34bd8eb2so7058595e9.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Oct 2025 02:04:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1760000680; x=1760605480; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OclG1+kzl/iGxxR7lC3nMmz/XW+nbQzJ3yd10e73GM8=;
+        b=b2+GAk0yKKgRjgmVLAp1Fp8YAMtLMWB1V8JJDVyDzg5pO1bsQHfoA2bI5P5lt+TVd1
+         ZPXKVVGDCQt33zWrGSedDBtJEmWRRS7zjdt0IA3+6iJxOpVx++PkjmztvsyC5E5+9vt8
+         Gfd9iwgy9MmedZgkny3XUq/M0iJls3/rmVgq/M3QP/+mFtZ1arLxs4RskCmzS2DVXTQL
+         FUEU6AqA8vAjz4s7wFZkmKoEMuolh+OHHuodTbMvTOpamWA3bYO8MKuqS1LTZpwUBzrZ
+         RNig1e/+yzlaiuIkPCzVEgBuGrGxC/SDAScfbSLrSWXI2rHvL874KixSKm5kKre+chfu
+         BOuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760000680; x=1760605480;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OclG1+kzl/iGxxR7lC3nMmz/XW+nbQzJ3yd10e73GM8=;
+        b=KY8VM3GC/LLXhMgybgxqNcSTK5IO/G0jRlRN5X52bknin4HBwiuxm2IoCAWC/QPZq0
+         qkaXkLOTuAp/lfAQtC65ThOegugB08V8LTJj5QHoRhVQmc3OgIrqNb59/JHLS0yUwcTM
+         lmsyCBxNhmba/BpPJGc1OEwnzWrHglQpjVkYqo67qjNl/k5J8uKWqe/KMYWxdcopmZNq
+         Wqa/1qf1KRmCP8cWn9QgxMsTt9CC0Qo8C3qmz4vOFA+wCUcuGpqfpLlKqAkxqneg01VY
+         erN8BU8Euspgg7s1WVD8QgMv3TXReBkBvmjaeI4MEgAvkohInZwnJTBaCO6MoNemxzDB
+         0p4g==
+X-Forwarded-Encrypted: i=1; AJvYcCV6TqT5zr3eeJnc95Yo1cbFTBKtaqwas0kB2NDXSPOG4MJ30f8uj7YWoMoQ+QorCub+mNLpqDty6aafVhBCak4+@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkWoc+Ly3bQWY8j4zweQcC9SxrvDZQiI8vmf7uNKTpQWSyyj96
+	sgr7zRBU6dZ0U8ZpUFLnWzMM6zHj0TvzDZ++SwADCdQz2H2uYg8W91GH0hAlSfz9dV4=
+X-Gm-Gg: ASbGncux+WacpSylL0s86GwPq30iPpAmZ4zTQ9z+XcZ+3yUkzEmJmasSH4k9V0fWmnu
+	kmcmzt8qTFmyyojyC2xpgt2+2jf6L16zSQX8qMLRigfPDO6OpQre0RncOz6DBnrUKnOdB4XTTE6
+	oMCPFHiKsfCQwlxLJ+DXntEyYVheAx4Lkj2oci0jm6wfFkhJ+TokMafgbW3omXXcuJ6VR8ev4Zu
+	3oa4xuU8YYZAUq1JbH+wImF9ScNHTY/8axS7DmiewHvHrqv/ntel/RF7smfFZo6xO+d1maAa6lo
+	NNulVuWlEAIOCOBkvpPvOCt8V1QL2ziO02ib/bCA0dGPl+3zsJLzCRnYXAMuCRFez7xEGCSWfqr
+	8S74XO4lwHqV7HWnEx681ZA2d+QQwyXiVRR7CFvpxs798cy7i1JkkH/OHwkBgmCZBeNU=
+X-Google-Smtp-Source: AGHT+IHuZPJvj5chfdbrdzBcDVd4tdia78dqN9AumnIHt0HsTrI5NBoiI28owPGskp0+wYu7G+MfVA==
+X-Received: by 2002:a05:600c:4fd1:b0:46e:4abd:6515 with SMTP id 5b1f17b1804b1-46fa9af8ebcmr49616235e9.21.1760000680262;
+        Thu, 09 Oct 2025 02:04:40 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.76.109])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46fa9d4c8c5sm73350045e9.11.2025.10.09.02.04.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Oct 2025 02:04:39 -0700 (PDT)
+Message-ID: <897c28a8-599f-44b3-8939-8279d2639f2c@linaro.org>
+Date: Thu, 9 Oct 2025 10:04:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,130 +67,79 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v7 00/12] arch-PEBS enabling for Intel platforms
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+Subject: Re: [PATCH 05/25] perf arm_spe: Decode ASE and FP fields in other
+ operation
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
- Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250828013435.1528459-1-dapeng1.mi@linux.intel.com>
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
+References: <20250929-perf_support_arm_spev1-3-v1-0-1150b3c83857@arm.com>
+ <20250929-perf_support_arm_spev1-3-v1-5-1150b3c83857@arm.com>
 Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250828013435.1528459-1-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250929-perf_support_arm_spev1-3-v1-5-1150b3c83857@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
-On 8/28/2025 9:34 AM, Dapeng Mi wrote:
-> Changes:
-> v6 -> v7:
->   * Rebase code to last tip perf/core tree.
->   * Opportunistically remove the redundant is_x86_event() prototype.
->     (Patch 01/12)
->   * Fix PEBS handler NULL event access and record loss issue.
->     (Patch 02/12)
->   * Reset MSR_IA32_PEBS_INDEX at the head of_drain_arch_pebs() instead
->     of end. It avoids the processed PEBS records are processed again in
->     some corner cases like event throttling. (Patch 08/12)
 
-Hi Peter,
+On 29/09/2025 5:37 pm, Leo Yan wrote:
+> Add a check for other operation, which prevents any incorrectly
+> classifying. Parse the ASE and FP fields.
+> 
+> After:
+> 
+>    .  0000002f:  48 06                                           OTHER ASE FP INSN-OTHER
+>    .  00000031:  b2 08 80 48 01 08 00 ff ff                      VA 0xffff000801488008
+>    .  0000003a:  9a 00 00                                        LAT 0 XLAT
+>    .  0000003d:  42 16                                           EV RETIRED L1D-ACCESS TLB-ACCESS
+> 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>   tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c | 6 +++++-
+>   tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h | 4 ++++
+>   2 files changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
+> index 533920b738cbcb39136d1ba3d88e99f9d8009e74..21b65a9b40f481b6cb25aaf01ab627ade046ff72 100644
+> --- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
+> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
+> @@ -351,8 +351,12 @@ static int arm_spe_pkt_desc_op_type(const struct arm_spe_pkt *packet,
+>   				arm_spe_pkt_out_string(&err, &buf, &buf_len, " FP");
+>   			if (payload & SPE_OP_PKT_SVE_PRED)
+>   				arm_spe_pkt_out_string(&err, &buf, &buf_len, " PRED");
+> -		} else {
+> +		} else if (SPE_OP_PKT_OTHER_SUBCLASS_OTHER(payload)) {
+>   			arm_spe_pkt_out_string(&err, &buf, &buf_len, "OTHER");
+> +			if (payload & SPE_OP_PKT_OTHER_ASE)
+> +				arm_spe_pkt_out_string(&err, &buf, &buf_len, " ASE");
+> +			if (payload & SPE_OP_PKT_OTHER_FP)
+> +				arm_spe_pkt_out_string(&err, &buf, &buf_len, " FP");
+>   			arm_spe_pkt_out_string(&err, &buf, &buf_len, " %s",
+>   					       payload & SPE_OP_PKT_COND ?
+>   					       "COND-SELECT" : "INSN-OTHER");
 
-Do you have more comments on this arch-PEBS enabling patch-set? Thanks.
+A warning for unknown packet type would be useful here now that there is 
+no final else catch-all.
 
-(The warning raised by kernel test robot about patch 02/12 would be fixed
-in next version.)
+> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
+> index 48bd9e9ef132b11b79ffe2e2fbc7cfe4c340ff92..704601c6dbe30e93f83a82670d0d60344a22222a 100644
+> --- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
+> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
+> @@ -123,8 +123,12 @@ enum arm_spe_events {
+>   #define SPE_OP_PKT_HDR_CLASS_LD_ST_ATOMIC	0x1
+>   #define SPE_OP_PKT_HDR_CLASS_BR_ERET		0x2
+>   
+> +#define SPE_OP_PKT_OTHER_SUBCLASS_OTHER(v)	(((v) & GENMASK_ULL(7, 3)) == 0x0)
+>   #define SPE_OP_PKT_OTHER_SUBCLASS_SVE(v)	(((v) & (BIT(7) | BIT(3) | BIT(0))) == 0x8)
+>   
+> +#define SPE_OP_PKT_OTHER_ASE			BIT(2)
+> +#define SPE_OP_PKT_OTHER_FP			BIT(1)
+> +
+>   #define SPE_OP_PKT_LDST_SUBCLASS_GP_REG(v)	(((v) & GENMASK_ULL(7, 1)) == 0x0)
+>   #define SPE_OP_PKT_LDST_SUBCLASS_SIMD_FP(v)	(((v) & GENMASK_ULL(7, 1)) == 0x4)
+>   #define SPE_OP_PKT_LDST_SUBCLASS_UNSPEC_REG(v)	(((v) & GENMASK_ULL(7, 1)) == 0x10)
+> 
 
-
->
-> v5 -> v6:
->   * Rebase code to last tip perf/core tree + "x86 perf bug fixes and
->     optimization" patchset
->  
-> v4 -> v5:
->   * Rebase code to 6.16-rc3
->   * Allocate/free arch-PEBS buffer in callbacks *prepare_cpu/*dead_cpu
->     (patch 07/10, Peter)
->   * Code and comments refine (patch 09/10, Peter)
->
->
-> This patchset introduces architectural PEBS support for Intel platforms
-> like Clearwater Forest (CWF) and Panther Lake (PTL). The detailed
-> information about arch-PEBS can be found in chapter 11
-> "architectural PEBS" of "Intel Architecture Instruction Set Extensions
-> and Future Features".
->
-> This patch set doesn't include the SSP and SIMD regs (OPMASK/YMM/ZMM)
-> sampling support for arch-PEBS to avoid the dependency for the basic
-> SIMD regs sampling support patch series[1]. Once the basic SIMD regs
-> sampling is supported, the arch-PEBS based SSP and SIMD regs
-> (OPMASK/YMM/ZMM) sampling would be supported in a later patch set.
->
-> Tests:
->   Run below tests on Clearwater Forest and Pantherlake, no issue is
->   found.
->
->   1. Basic perf counting case.
->     perf stat -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles}' sleep 1
->
->   2. Basic PMI based perf sampling case.
->     perf record -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles}' sleep 1
->
->   3. Basic PEBS based perf sampling case.
->     perf record -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles}:p' sleep 1
->
->   4. PEBS sampling case with basic, GPRs, vector-registers and LBR groups
->     perf record -e branches:p -Iax,bx,ip,xmm0 -b -c 10000 sleep 1
->
->   5. User space PEBS sampling case with basic, GPRs and LBR groups
->     perf record -e branches:p --user-regs=ax,bx,ip -b -c 10000 sleep 1
->
->   6. PEBS sampling case with auxiliary (memory info) group
->     perf mem record sleep 1
->
->   7. PEBS sampling case with counter group
->     perf record -e '{branches:p,branches,cycles}:S' -c 10000 sleep 1
->
->   8. Perf stat and record test
->     perf test 100; perf test 131
->
->
-> History:
->   v6: https://lore.kernel.org/all/20250821035805.159494-1-dapeng1.mi@linux.intel.com/ 
->   v5: https://lore.kernel.org/all/20250623223546.112465-1-dapeng1.mi@linux.intel.com/
->   v4: https://lore.kernel.org/all/20250620103909.1586595-1-dapeng1.mi@linux.intel.com/
->   v3: https://lore.kernel.org/all/20250415114428.341182-1-dapeng1.mi@linux.intel.com/
->   v2: https://lore.kernel.org/all/20250218152818.158614-1-dapeng1.mi@linux.intel.com/
->   v1: https://lore.kernel.org/all/20250123140721.2496639-1-dapeng1.mi@linux.intel.com/
->
-> Ref:
->   [1]: https://lore.kernel.org/all/20250815213435.1702022-1-kan.liang@linux.intel.com/
->
-> Dapeng Mi (12):
->   perf/x86: Remove redundant is_x86_event() prototype
->   perf/x86/intel: Fix NULL event access and potential PEBS record loss
->   perf/x86/intel: Replace x86_pmu.drain_pebs calling with static call
->   perf/x86/intel: Correct large PEBS flag check
->   perf/x86/intel: Initialize architectural PEBS
->   perf/x86/intel/ds: Factor out PEBS record processing code to functions
->   perf/x86/intel/ds: Factor out PEBS group processing code to functions
->   perf/x86/intel: Process arch-PEBS records or record fragments
->   perf/x86/intel: Allocate arch-PEBS buffer and initialize PEBS_BASE MSR
->   perf/x86/intel: Update dyn_constranit base on PEBS event precise level
->   perf/x86/intel: Setup PEBS data configuration and enable legacy groups
->   perf/x86/intel: Add counter group support for arch-PEBS
->
->  arch/x86/events/core.c            |  21 +-
->  arch/x86/events/intel/core.c      | 268 ++++++++++++-
->  arch/x86/events/intel/ds.c        | 621 +++++++++++++++++++++++++-----
->  arch/x86/events/perf_event.h      |  41 +-
->  arch/x86/include/asm/intel_ds.h   |  10 +-
->  arch/x86/include/asm/msr-index.h  |  20 +
->  arch/x86/include/asm/perf_event.h | 116 +++++-
->  7 files changed, 955 insertions(+), 142 deletions(-)
->
->
-> base-commit: f49e1be19542487921e82b29004908966cb99d7c
