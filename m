@@ -1,221 +1,210 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841461339A4
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Oct 2025 13:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2341E3775
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Oct 2025 13:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760015051; cv=none; b=Hltr9UeGDh5MWwS5YY7UWAovdBDarIVDBgTscu36U2QF3V1dj68vkIvONILRj36NjNnna3XBY50UNWp65zL1mjLmjscduRxhb3pqHwe60rK7RF9vqPYqO8eLaRamEDo0Tuw8XPezUDcj41nBOkYUyqp9GU11uuToPM5/uhc7XTE=
+	t=1760016188; cv=none; b=aDb9eHbQNwzk6beHOLwVuYOzCwElSzhYU9NT0+7mZcgEOTsZPhP8SeFY26DfnOofq4cqcr1pAS/62kN4Y0ZSz3tA+ew2G3JllNyoLygwe1mxf7NATT/5sG05Zo9Hum97SOjKsqd9vI7C6aE43ovRqxcUe3gz2mSkd/g0Sx0n+pU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760015051; c=relaxed/simple;
-	bh=LG4Z5WVNlgp3hIwMCXh9D2qWKpYs23znPnTeOZfOuSo=;
+	s=arc-20240116; t=1760016188; c=relaxed/simple;
+	bh=iUsN6+xOKFFmhbmQ9CG96hFFXoboyzRrO/ukkjIyYHA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U6LMlDJSMbuP1UsQDQDo/KsejVPClVCGtvU6K/ClxaEuRmH6LP9DKlgonm2Ub/PAeEhUq64wNkk9XeGCGwXvgKJNGNBn0kfafZQztTpiusWD2c31AoGMGazw4hP2aZuxg7mg6oMIJkeAxWNv+bmD2zQKzUST/3nvLNKbAHrlGow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WQvEs3QK; arc=none smtp.client-ip=209.85.214.181
+	 To:Cc:Content-Type; b=lLVvypCCmc5zPE1lWahW0AZMni38JAO/gIHpFlB+gwztrfr7eAnMhjaYQB9zYLJr+pKqZK3z1muvc4VKKgnp4fZYkt6ld2QHvnSJqXpy8MyMQ9gdaOKMRHcXav2VHNIvsPsVCXPZRU+t8IffcUNGo21IlwRntReG0o0zTmvbAL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QcE6OzCe; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WQvEs3QK"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-27d67abd215so246865ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Oct 2025 06:04:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QcE6OzCe"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-27d67abd215so250805ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Oct 2025 06:23:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1760015048; x=1760619848; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1760016186; x=1760620986; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Fl/RSfrwlYvyA1qHmEIVwvLYIxXODeI2qbIcJFQoTrQ=;
-        b=WQvEs3QKIgmkUOJfYfB0L9gklyzoR5L9qSAN/dLLlGFYQuyFS6Mga4sWS/o5J3ebPd
-         xSrdrg/xJINIHkH/PmSH7UjGZJtIjIg0fDwsTfirUdjYt0ar1cyqnHhhp5Pfo/S4pIYJ
-         ZXc2CITc1AHgufSecwX1AI+5I2v0mwV1bbQiO9XZUXt31XNCR5RqDv8iypz8zKLG+Lfm
-         forcJKj1m89JgVP3Bi3cdqZRFtbIpZ187VK9kfvY/t9t6eqjriwISEthUQDgwnPdeXzd
-         uK3OLhBBPexHngIbprFFj5olG8h2G+nRzKP3xsvMZTzessAnJ20t9w7WixaLV7k7rWFa
-         AYbQ==
+        bh=/MmBd+7zzowhrSWoBWSLCsui3fgz/9aHsIIOvCWsuYU=;
+        b=QcE6OzCe4FrsAGoYCDlZ2DjYXhN9L0NfGDNWvsNVa9lZbAEzeyDJcH3oavLzpCrbyS
+         VB97Z/jbfPTUgt9yFv6fXPCYlENIptyKf+oPKhfitTLyNta3+/lnvI9Ap9RgMzy8SDYI
+         PU0Vsg1Hd+ylFNoTH32X6/Y64+yp7zQC4gm1n3M+ysbYlZXATh9g8+iTtwaRs1NbCyCb
+         7m30nR1JCuu0XGbqBTZbzhvfAnEbz7GQsfU4Fd+gaEN7LF8RTH6/aeKhmc7UPqwQG13e
+         Kvzqnk5tmYuFRY/HC4uhPO+XU4m5fk4vq4eVdfacMuWPrXjPBdfREadLhM6T5VTW3Cpl
+         EAYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760015048; x=1760619848;
+        d=1e100.net; s=20230601; t=1760016186; x=1760620986;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Fl/RSfrwlYvyA1qHmEIVwvLYIxXODeI2qbIcJFQoTrQ=;
-        b=a8oD+SNZCKByHPXHNd7BJXOonXA1nnGApcuy26P0nJS4kXPYRg+h8Tlb6zbFBkE4Tp
-         7u7ewoQ0+r8Bx4jHiQi3tF6/m3IXz0uNxSKm2WxiQN/r6ADGoT8iXh9LJ7Sxps/QJNbR
-         tIW5yfm2/pAbb0+XKCnWMtvR4gRMo6O6lUeYNn40B3a7junvoEVAYek0PsPc8CqJh40X
-         SFijXypqkjDSjXWHS0Nuj25bmySUBhBLqMPUQkfGGYdm5+1Tp1fQBXj0tDGgFr8aCwnB
-         OKubrAbJBw55M6DYIk8ubuCPFGfGCpytCusu/bQ0yF2IajQ01eTvZhOFtcuLT8RSCjuT
-         bWqA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/TMMVdYWubzCpHvu2C+pM7zpvqjpLk6Fv6LCudzjUdn+7njGjPVsVPsOwGxRzQ2L5WjJkmQgrUDQUTY2d750r@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9lan1dZMl0G+5IYioBD6kH8G0Wks5HDh/dbTEtRXFeyHxw/IT
-	kHyvZQ09+JIOE4qeBuG0XNt0fb5vGkaxyk77G+XSCB0alelcWIiTmW3J/RSfSRooYK8S2501o67
-	7gDvqeUvsLTPPUgWNpmSQmSr0mv42WPxzIpfh0BIy
-X-Gm-Gg: ASbGncv60/fy5RXHxX37v5xUW16ndL4n/MMDhRZptAuKk35sKR2nGKXfY/mACAmHlOQ
-	reAm9ZiHUb7dOvnZo4BpG2J8lP3olp8Hi8tmW8MfyoaAzfkb9hrWb2sV6U/hLyrXPzMAwX7omL8
-	j+rdnHxjesumDv8PFCvPHY84jozU82+Z4f37ES+rG5aOwgDxKL49lE+DjUXQ5i/RIojbvtoThVp
-	3IklX0UoYFA1Rr+pY6e0XM0C8g21Ke38AaZiDU=
-X-Google-Smtp-Source: AGHT+IHmGo/yOZgI4rXtBpU3aqsyiUBab973QHCIWTjzRzsVK57ncfjWXOU8KLSK0RcpNfhT0Re007HssfcMf8SFlvI=
-X-Received: by 2002:a17:902:f545:b0:27e:e96a:4c6 with SMTP id
- d9443c01a7336-290275dda35mr12806125ad.2.1760015044872; Thu, 09 Oct 2025
- 06:04:04 -0700 (PDT)
+        bh=/MmBd+7zzowhrSWoBWSLCsui3fgz/9aHsIIOvCWsuYU=;
+        b=lKTvY/Gvnfe9Aks3cONGdrgrsUoBdl8QdOE+U50tFvOGgIvUcLPXE8f5nyBApZOC5c
+         OK+BDBNP9Pw5tbcMoGt0J/grhJaS45mGD2oMheg/rfTZygq9BW7+p2DhCKUH8RIV/mNQ
+         5oUDDx57tWN+Q3wxRyNqiS4l2j+MCN1decHkbQ/CN7BSM0gNRxvghGEHvqSeSc5h/VcK
+         3j7g36Un/3kKHDFKdFc0HRPjBDhdC8AyEw/vL3rS0+GX5BkVuzYuczU7Juaxg/ABIjrq
+         OODIJjctuvAmb3WZYFbPTykkwJ9kyFKV+06X/zuGRJPV284Y4GiyZqvAiL9rbcCO2Idu
+         Kudg==
+X-Forwarded-Encrypted: i=1; AJvYcCUnh+2qJT2yUBgi/5SPs3EghrUkkxjqwBPVCHa3sU4VH9etAYeJ96XB3gj6lGTNA7ekexFxHNY5zLjMT/oRu1VS@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeuovYkPxYRBw7e65mQslpYCeIv+WDDvjW4icEyrPzX4z+e4En
+	3MDaqrko4MfAdxuWbT2+QzN3znrHnxngzY3Xq5JMhlpaRjG3ascAULroOrqPJOXL8mJTVftzocg
+	6g8QCN3GLfddXCzs9T31IPhRAvvRkl/1S63k+Ywfi
+X-Gm-Gg: ASbGnctpAnJeXnPhP3lrb9U6vJ3Rndyypw1DsmfYluvY8VNXJ1MYjPJrIXOGNGr43+F
+	7Aa8KPNZ5EU8tDaAJYTJw/E5f1i7XOg3XPvH3ulQR7x063Nc3gx1iVZRc5T19Rrag8CtNNPrqVd
+	MVYB6rZko/5O5vBqJ893uOrYxFTKaQiUM1ypAC+ohrgvCBSOQqekoSJvVomDe9bLz1WujP418D5
+	hvhPI1d4Mzz8LUTWvCBFLvf0cVYZGEB7PYX6MZB0UHUzaVRrg==
+X-Google-Smtp-Source: AGHT+IEdrbQJWbBux9pavyDpSQy9ZinCAuiOJMYN+NXoFglR2vnRt6D5+OiKnG1DQ8GqgnIDFnpngIY4dqYtYVE57TE=
+X-Received: by 2002:a17:902:f605:b0:25b:fba3:afb5 with SMTP id
+ d9443c01a7336-2902768ec14mr10451505ad.11.1760016185180; Thu, 09 Oct 2025
+ 06:23:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251008162347.4005288-1-irogers@google.com> <02ac6916-7bfa-4b6b-8bae-64fe02580731@huaweicloud.com>
-In-Reply-To: <02ac6916-7bfa-4b6b-8bae-64fe02580731@huaweicloud.com>
+References: <aMpRqlDXXOR5qYFd@mdev> <CAP-5=fV05++2Qvcxs=+tqhTdpGK8L9e5HzVu=y+xHxy9AqLMmg@mail.gmail.com>
+ <CAD=FV=VNmjTVxcxgTQqjE7CTkK2NVGbRxFJSwv=yOHU8gj-urQ@mail.gmail.com>
+ <CAP-5=fW64xHEW+4dKU_voNv7E67nUOFm27FFBuhtFii52NiQUQ@mail.gmail.com>
+ <CAD=FV=U3ic707dLuUc+NfxtWF6-ZyRdE0OY2VA6TgvgWKCHUzg@mail.gmail.com>
+ <CAP-5=fVkw6TLjVuR3UCNs+X1cwVmYk7UFABio4oDOwfshqoP_g@mail.gmail.com>
+ <CAD=FV=UWkZx8xQD=jBkOO6h2f5tw_KCoqhHciw5hkEOYU=GM8A@mail.gmail.com>
+ <CAP-5=fXTFHcCE8pf5qgEf1AVODs2+r+_nDUOiWgdQeEgUBHzfA@mail.gmail.com>
+ <CAD=FV=VuDYiu5nL5ZeZcY2b+YXOzZtSu2E4qBBHz9fWTW8gPhg@mail.gmail.com>
+ <CAP-5=fX4=fV70N3GCdXgV6o-YoJynnSppxJp0MwdRrtsyDrs0w@mail.gmail.com> <aOdbRI3BaMCbyvtv@mdev>
+In-Reply-To: <aOdbRI3BaMCbyvtv@mdev>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 9 Oct 2025 06:03:53 -0700
-X-Gm-Features: AS18NWBzhV5frQ3wC17J_JhLbuYI1J4mS1vSXlezOvijWUH7DT-G2L4MGan8hz0
-Message-ID: <CAP-5=fV7hhHYAgDp1kR=gjJb2jdrR7GfgKi1mvob4OavhcyHmg@mail.gmail.com>
-Subject: Re: [PATCH v2] perf bpf_counter: Fix opening of "any"(-1) CPU events
-To: Tengda Wu <wutengda@huaweicloud.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Thu, 9 Oct 2025 06:22:53 -0700
+X-Gm-Features: AS18NWASwkyvua1-o-5GApfZryqQldGLDGiPEERJurLRPNNxfov3J3ycLz5Cqx0
+Message-ID: <CAP-5=fUAato=+jyNNESCX3SjWMEEJQ697VvWiBFCi5wKs_JQCA@mail.gmail.com>
+Subject: Re: [RFC PATCH V1] watchdog: Add boot-time selection for hard lockup detector
+To: Jinchao Wang <wangjinchao600@gmail.com>
+Cc: Doug Anderson <dianders@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Will Deacon <will@kernel.org>, Yunhui Cui <cuiyunhui@bytedance.com>, akpm@linux-foundation.org, 
+	catalin.marinas@arm.com, maddy@linux.ibm.com, mpe@ellerman.id.au, 
+	npiggin@gmail.com, christophe.leroy@csgroup.eu, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	kees@kernel.org, masahiroy@kernel.org, aliceryhl@google.com, ojeda@kernel.org, 
+	thomas.weissschuh@linutronix.de, xur@google.com, ruanjinjie@huawei.com, 
+	gshan@redhat.com, maz@kernel.org, suzuki.poulose@arm.com, 
+	zhanjie9@hisilicon.com, yangyicong@hisilicon.com, gautam@linux.ibm.com, 
+	arnd@arndb.de, zhao.xichao@vivo.com, rppt@kernel.org, lihuafei1@huawei.com, 
+	coxu@redhat.com, jpoimboe@kernel.org, yaozhenguo1@gmail.com, 
+	luogengkun@huaweicloud.com, max.kellermann@ionos.com, tj@kernel.org, 
+	yury.norov@gmail.com, thorsten.blum@linux.dev, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 9, 2025 at 12:52=E2=80=AFAM Tengda Wu <wutengda@huaweicloud.com=
+On Wed, Oct 8, 2025 at 11:50=E2=80=AFPM Jinchao Wang <wangjinchao600@gmail.=
+com> wrote:
+>
+> On Tue, Oct 07, 2025 at 05:11:52PM -0700, Ian Rogers wrote:
+> > On Tue, Oct 7, 2025 at 3:58=E2=80=AFPM Doug Anderson <dianders@chromium=
+.org> wrote:
+> > >
+> > > Hi,
+> > >
+> > > On Tue, Oct 7, 2025 at 3:45=E2=80=AFPM Ian Rogers <irogers@google.com=
 > wrote:
-> On 2025/10/9 0:23, Ian Rogers wrote:
-> > The bperf BPF counter code doesn't handle "any"(-1) CPU events, always
-> > wanting to aggregate a count against a CPU, which avoids the need for
-> > atomics so let's not change that. Force evsels used for BPF counters
-> > to require a CPU when not in system-wide mode so that the "any"(-1)
-> > value isn't used during map propagation and evsel's CPU map matches
-> > that of the PMU.
+> > > >
+> > > > On Tue, Oct 7, 2025 at 2:43=E2=80=AFPM Doug Anderson <dianders@chro=
+mium.org> wrote:
+> > > > ...
+> > > > > The buddy watchdog was pretty much following the conventions that=
+ were
+> > > > > already in the code: that the hardlockup detector (whether backed=
+ by
+> > > > > perf or not) was essentially called the "nmi watchdog". There wer=
+e a
+> > > > > number of people that were involved in reviews and I don't believ=
+e
+> > > > > suggesting creating a whole different mechanism for enabling /
+> > > > > disabling the buddy watchdog was never suggested.
+> > > >
+> > > > I suspect they lacked the context that 1 in the nmi_watchdog is tak=
+en
+> > > > to mean there's a perf event in use by the kernel with implications=
+ on
+> > > > how group events behave. This behavior has been user
+> > > > visible/advertised for 9 years. I don't doubt that there were good
+> > > > intentions by PowerPC's watchdog and in the buddy watchdog patches =
+in
+> > > > using the file, that use will lead to spurious warnings and behavio=
+rs
+> > > > by perf.
+> > > >
+> > > > My points remain:
+> > > > 1) using multiple files regresses perf's performance;
+> > > > 2) the file name by its meaning is wrong;
+> > > > 3) old perf tools on new kernels won't behave as expected wrt warni=
+ngs
+> > > > and metrics because the meaning of the file has changed.
+> > > > Using a separate file for each watchdog resolves this. It seems tha=
+t
+> > > > there wasn't enough critical mass for getting this right to have
+> > > > mattered before, but that doesn't mean we shouldn't get it right no=
+w.
+> > >
+> > > Presumably your next steps then are to find someone to submit a patch
+> > > and try to convince others on the list that this is a good idea. The
+> > > issue with perf has been known for a while now and I haven't seen any
+> > > patches. As I've said, I won't stand in the way if everyone else
+> > > agrees, but given that I'm still not convinced I'm not going to autho=
+r
+> > > any patches for this myself.
 > >
-> > Fixes: b91917c0c6fa ("perf bpf_counter: Fix handling of cpumap fixing h=
-ybrid")
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/builtin-stat.c     | 13 +++++++++++++
-> >  tools/perf/util/bpf_counter.c |  1 +
-> >  2 files changed, 14 insertions(+)
-> >
-> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > index 7006f848f87a..0fc6884c1bf1 100644
-> > --- a/tools/perf/builtin-stat.c
-> > +++ b/tools/perf/builtin-stat.c
-> > @@ -2540,6 +2540,7 @@ int cmd_stat(int argc, const char **argv)
-> >       unsigned int interval, timeout;
-> >       const char * const stat_subcommands[] =3D { "record", "report" };
-> >       char errbuf[BUFSIZ];
-> > +     struct evsel *counter;
-> >
-> >       setlocale(LC_ALL, "");
-> >
-> > @@ -2797,6 +2798,18 @@ int cmd_stat(int argc, const char **argv)
-> >
-> >       evlist__warn_user_requested_cpus(evsel_list, target.cpu_list);
-> >
-> > +     evlist__for_each_entry(evsel_list, counter) {
-> > +             /*
-> > +              * Setup BPF counters to require CPUs as any(-1) isn't
-> > +              * supported. evlist__create_maps below will propagate th=
-is
-> > +              * information to the evsels. Note, evsel__is_bperf isn't=
- yet
-> > +              * set up, and this change must happen early, so directly=
- use
-> > +              * the bpf_counter variable.
-> > +              */
-> > +             if (counter->bpf_counter)
-> > +                     counter->core.requires_cpu =3D true;
-> > +     }
-> > +
-> >       if (evlist__create_maps(evsel_list, &target) < 0) {
-> >               if (target__has_task(&target)) {
-> >                       pr_err("Problems finding threads of monitor\n");
-> > diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counte=
-r.c
-> > index ca5d01b9017d..d3e5933b171b 100644
-> > --- a/tools/perf/util/bpf_counter.c
-> > +++ b/tools/perf/util/bpf_counter.c
-> > @@ -495,6 +495,7 @@ static int bperf_reload_leader_program(struct evsel=
- *evsel, int attr_map_fd,
-> >        * following evsel__open_per_cpu call
-> >        */
-> >       evsel->leader_skel =3D skel;
-> > +     assert(!perf_cpu_map__has_any_cpu_or_is_empty(evsel->core.cpus));
-> >       evsel__open(evsel, evsel->core.cpus, evsel->core.threads);
-> >
-> >  out:
->
->
-> I must point out that `requires_cpu + evsel__open(evsel, evsel->core.cpus=
-, evsel->core.threads)`
-> is not equivalent to the original `evsel__open_per_cpu(evsel, all_cpu_map=
-, -1)`. The former
-> specifies a pid, while the latter does not. This will lead to inaccurate =
-final event counting.
->
->
-> For `evsel__open_per_cpu(evsel, all_cpu_map, -1)`:
->
-> $ ./perf stat -vv --bpf-counters -e task-clock ./perf test -w sqrtloop
-> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 =3D 13
-> sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 =3D 14
-> sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 =3D 15
-> [...]
->  Performance counter stats for './perf test -w sqrtloop':
->
->      1,016,156,671      task-clock                       #    1.000 CPUs =
-utilized
->
->        1.016294745 seconds time elapsed
->
->        1.005710000 seconds user
->        0.010637000 seconds sys
->
->
-> For `requires_cpu + evsel__open(evsel, evsel->core.cpus, evsel->core.thre=
-ads)`:
->
-> $ ./perf stat -vv --bpf-counters -e task-clock ./perf test -w sqrtloop
-> sys_perf_event_open: pid 75099  cpu 0  group_fd -1  flags 0x8 =3D 13
-> sys_perf_event_open: pid 75099  cpu 1  group_fd -1  flags 0x8 =3D 14
-> sys_perf_event_open: pid 75099  cpu 2  group_fd -1  flags 0x8 =3D 15
-> [...]
->  Performance counter stats for './perf test -w sqrtloop':
->
->         16,184,507      task-clock                       #    0.016 CPUs =
-utilized
->
->        1.018540734 seconds time elapsed
->
->        1.009143000 seconds user
->        0.009497000 seconds sys
->
->
-> As you can see, after specifying a pid, the task-clock count has signific=
-antly decreased.
-> So to correct the counting, we may also need to keep the pid as -1 withou=
-t specifying it.
+> > Writing >1 of:
+> > ```
+> > static struct ctl_table watchdog_hardlockup_sysctl[] =3D {
+> > {
+> > .procname       =3D "nmi_watchdog",
+> > .data =3D &watchdog_hardlockup_user_enabled,
+> > .maxlen =3D sizeof(int),
+> > .mode =3D 0444,
+> > .proc_handler   =3D proc_nmi_watchdog,
+> > .extra1 =3D SYSCTL_ZERO,
+> > .extra2 =3D SYSCTL_ONE,
+> > },
+> > };
+> > ```
+> > is an exercise of copy-and-paste, if you need me to do the copy and
+> > pasting then it is okay.
+> Can we get whether a perf event is already in use directly from the
+> perf subsystem? There may be (or will be) other kernel users of
+> perf_event besides the NMI watchdog. Exposing that state from the perf
+> side would avoid coupling unrelated users through nmi_watchdog and
+> similar features.
 
-Yeah, it look like the running time is off and so the count is being scaled=
-:
-```
-$ perf stat -e task-clock:b,task-clock /tmp/perf/perf test -w noploop
+For regular processes there is this unmerged proposal:
+https://lore.kernel.org/lkml/20250603181634.1362626-1-ctshao@google.com/
+it doesn't say whether the counter is pinned - the NMI watchdog's
+counter is pinned to be a higher priority that flexible regular
+counters that may be multiplexed. I don't believe there is anything to
+say whether the kernel has taken a performance counter. In general
+something else taking a performance counter is okay as  the kernel
+will multiplex the counter or groups of counters.
 
- Performance counter stats for '/tmp/perf/perf test -w noploop':
-
-     3,776,663,297      task-clock:b                     #    3.701
-CPUs utilized               (26.96%)
-     1,017,400,438      task-clock                       #    0.997
-CPUs utilized
-
-       1.020467405 seconds time elapsed
-
-       1.008409000 seconds user
-       0.012004000 seconds sys
-```
-will fix in v3.
+The particular issue for the NMI watchdog counter is that groups of
+events are tested to see if they fit on a PMU, the perf event open
+will fail when a group isn't possible and then the events will be
+reprogrammed by the perf tool without a group. When the group is
+tested the PMU has always assumed that all counters are available,
+which of course with the NMI watchdog they are not. This results with
+the NMI watchdog causing a group of events to be created that can
+never be scheduled.
 
 Thanks,
 Ian
 
-> Thanks,
-> Tengda
+> >
+> > Thanks,
+> > Ian
+> >
+> >
+> > > -Doug
+> > >
 >
+> --
+> Jinchao
