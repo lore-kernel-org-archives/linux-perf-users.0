@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD288182D0;
-	Thu,  9 Oct 2025 02:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99AC34BA3C;
+	Thu,  9 Oct 2025 02:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759976393; cv=none; b=HUgdT5lfUD2CAimjE2b9teHj8l++mJqN+PTfqkUiQ+9Uchp6TL9PY1kntITlMih9kFCQdbHfxIEGIKI9SQ/AXJfhMGj4qGZJuhDU5wPgCKI/Cc2c9VST5mZAiGlHaFc8WQ/2aW3ksqGqQBZMR659DjoAsJwGWh0NcNFNwY9owOw=
+	t=1759977078; cv=none; b=pqpWiki8+9UtnGJG+88/+qqdghUiF6kF3NyY0LCZT1r0ZuESD2QldVpwaBqdkXFadr4+ejUgJ7XK7t00wLhGrJMAtG0EGczeG5lzlwSpub2qrfe61r6FVWw3WFIGzeoEtkdeNhRf6q5EA4DQIhAU3fowNRRJXY6dK8POktQ2TlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759976393; c=relaxed/simple;
-	bh=MKwwAjIvNTVYzVSKLCj93oAfQ4vIbNdKNB8W0YNJ6Qg=;
+	s=arc-20240116; t=1759977078; c=relaxed/simple;
+	bh=+7s9Br6cECwXBhfFA8GmgPo2i86Xbi2C0hgsN/FI2gk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FC/ETsMn5r5OPk8arapq3I8BSVwtdJrNrWepuMzs9PL/8v8oBL/HVYHyW3r/sjCQtS4vtgVEbA5pRbFdPV5acPMlzYvuQrmrTKhs5A3+xSGMC+cIypCt7zA/mjNSYoB+R55eP8B1bF+Syl2Sfbb0S9YuLlEzamAX5Ksw9uNOulA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jBBW05E1; arc=none smtp.client-ip=198.175.65.21
+	 In-Reply-To:Content-Type; b=kWBnQGXn6vH/waichiq+MwYI+eDrsPL0gf4/SQeKbqitQb+IyRPOCPGhKCSEQh6kYOTuum4SVgR7YW8v0xE4CgPs0i8sIcyflrqW52YAR7lkBFVWq46uiba9o6fEYg7Mlx/A882ZifwFXTeGlicI9oHOIcj0tqfuC24Dkt6amPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I1rvve7h; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jBBW05E1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I1rvve7h"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759976391; x=1791512391;
+  t=1759977077; x=1791513077;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=MKwwAjIvNTVYzVSKLCj93oAfQ4vIbNdKNB8W0YNJ6Qg=;
-  b=jBBW05E1MUnYFZWaxdB/CrGNH0YhcZIm6QcYaCyKHBRYGwEypd7EPUQb
-   /+MQkOd1iQfrAVSs8CBM1Uj39Oq7VX+kh0DsfP/AUZAifJOMfUxKl5h0x
-   HvHW6em/ugZFcBsDESnaqQQ+juCXybb18nGjBRX2bDD67mqFulYS5F5c0
-   6pV0+TZNkxkrfdy6OplVUGptqP6tkM45HSHR0MEraGGWkCTDgKLpD8pPL
-   hIl2bMhCWf73SW/PISpd2ShsPlrI5wIu/mu5Yn7sGFNqOPWpGiitroA53
-   CPgcjDWK39+lCJ3JLwhBD5nV+U9nTrfAGmB5ne2KGVlHw0sX5ndmRhNmK
+  bh=+7s9Br6cECwXBhfFA8GmgPo2i86Xbi2C0hgsN/FI2gk=;
+  b=I1rvve7hh+Oyqbtn0oYTrmYcg895zt+J8U94a3dGo8fdzEZKuPKhZaSg
+   3t67UlOpVaGPkSZCPZ0D1vFFii36IsDnpi+YXKeshHpsiywGHPAcnorhG
+   L23qeENaPk73Z8vLmTw/ESRlbXhg7dd08DMxRx6oxBd18bubsqS8PZ2yA
+   Ekce8X9G9fR3ogQDEzTyd0uGY8ZLpaddsP4Ob7Yu/vryqayQuuY2j4ABC
+   yGzveZZFFRgvxAzuRrH0+6yD6A4p7HpmoBTOTALdttRch67zazwl9Gmto
+   A/WUeMGVpOgaIwe0/K+UQMP/rSRHlT6Mx8jAdfQCZpVerqWS6RFdN8i/O
    A==;
-X-CSE-ConnectionGUID: mdL1U0ecRGGUSFbzfG6UGQ==
-X-CSE-MsgGUID: PA2QuWEaR/eC9WBYagUvpA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="62097737"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="62097737"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2025 19:19:51 -0700
-X-CSE-ConnectionGUID: SjjAIAIGQgGwYyFr6uTBmQ==
-X-CSE-MsgGUID: dnnE1byERkONzbCEalT4rw==
+X-CSE-ConnectionGUID: UH3dqJhGSrikMbnN8WyMew==
+X-CSE-MsgGUID: JiM3ZekKQF2GcUjfTA0eOA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11576"; a="72792615"
+X-IronPort-AV: E=Sophos;i="6.19,215,1754982000"; 
+   d="scan'208";a="72792615"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2025 19:31:15 -0700
+X-CSE-ConnectionGUID: 3dsMEZceTeOzWYOdq2p59g==
+X-CSE-MsgGUID: x52x1ZdHTACOTyW4G9aN4w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,215,1754982000"; 
-   d="scan'208";a="211538774"
+   d="scan'208";a="179847110"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.209]) ([10.124.232.209])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2025 19:19:44 -0700
-Message-ID: <0276af52-c697-46c3-9db8-9284adb6beee@linux.intel.com>
-Date: Thu, 9 Oct 2025 10:19:41 +0800
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2025 19:31:11 -0700
+Message-ID: <fd91b8b2-7e6e-42b6-812d-3cf3ead882d3@linux.intel.com>
+Date: Thu, 9 Oct 2025 10:31:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,164 +52,161 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 32/44] KVM: x86/pmu: Disable interception of select PMU
- MSRs for mediated vPMUs
-To: Sean Christopherson <seanjc@google.com>, Sandipan Das <sandidas@amd.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Huacai Chen <chenhuacai@kernel.org>, Anup Patel <anup@brainfault.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Xin Li <xin@zytor.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- kvm@vger.kernel.org, loongarch@lists.linux.dev,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Kan Liang <kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>,
- Mingwei Zhang <mizhang@google.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Sandipan Das <sandipan.das@amd.com>
-References: <20250806195706.1650976-1-seanjc@google.com>
- <20250806195706.1650976-33-seanjc@google.com>
- <f896966e-8925-4b4f-8f0d-f1ae8aa197f7@amd.com> <aN1vfykNs8Dmv_g0@google.com>
+Subject: Re: [RESEND][PATCH v2 0/2] perf record: ratio-to-prev event term for
+ auto counter reload
+To: "Falcon, Thomas" <thomas.falcon@intel.com>,
+ "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "acme@kernel.org" <acme@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
+ "Hunter, Adrian" <adrian.hunter@intel.com>,
+ "namhyung@kernel.org" <namhyung@kernel.org>,
+ "jolsa@kernel.org" <jolsa@kernel.org>,
+ "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
+ "irogers@google.com" <irogers@google.com>,
+ "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+ "ak@linux.intel.com" <ak@linux.intel.com>
+References: <20250902164047.64261-1-thomas.falcon@intel.com>
+ <ed463cd8-495e-4769-b392-372413ca7db6@linux.intel.com>
+ <cf7ae59b735f004b5c6dd53b82e3d3e2acfad973.camel@intel.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aN1vfykNs8Dmv_g0@google.com>
+In-Reply-To: <cf7ae59b735f004b5c6dd53b82e3d3e2acfad973.camel@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
-On 10/2/2025 2:14 AM, Sean Christopherson wrote:
-> On Fri, Sep 26, 2025, Sandipan Das wrote:
->> On 8/7/2025 1:26 AM, Sean Christopherson wrote:
->>> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+On 10/2/2025 11:38 PM, Falcon, Thomas wrote:
+> On Tue, 2025-09-30 at 15:28 +0800, Mi, Dapeng wrote:
+>> On 9/3/2025 12:40 AM, Thomas Falcon wrote:
+>>> The Auto Counter Reload (ACR)[1] feature is used to track the
+>>> relative rates of two or more perf events, only sampling
+>>> when a given threshold is exceeded. This helps reduce overhead
+>>> and unnecessary samples. However, enabling this feature
+>>> currently requires setting two parameters:
 >>>
->>> For vCPUs with a mediated vPMU, disable interception of counter MSRs for
->>> PMCs that are exposed to the guest, and for GLOBAL_CTRL and related MSRs
->>> if they are fully supported according to the vCPU model, i.e. if the MSRs
->>> and all bits supported by hardware exist from the guest's point of view.
+>>>  -- Event sampling period ("period")
+>>>  -- acr_mask, which determines which events get reloaded
+>>>     when the sample period is reached.
 >>>
->>> Do NOT passthrough event selector or fixed counter control MSRs, so that
->>> KVM can enforce userspace-defined event filters, e.g. to prevent use of
->>> AnyThread events (which is unfortunately a setting in the fixed counter
->>> control MSR).
+>>> For example, in the following command:
 >>>
->>> Defer support for nested passthrough of mediated PMU MSRs to the future,
->>> as the logic for nested MSR interception is unfortunately vendor specific.
-> ...
+>>> perf record -e "{cpu_atom/branch-misses,period=200000,\
+>>> acr_mask=0x2/ppu,cpu_atom/branch-instructions,period=1000000,\
+>>> acr_mask=0x3/u}" -- ./mispredict
+>>>
+>>> The goal is to limit event sampling to cases when the
+>>> branch miss rate exceeds 20%. If the branch instructions
+>>> sample period is exceeded first, both events are reloaded.
+>>> If branch misses exceed their threshold first, only the
+>>> second counter is reloaded, and a sample is taken.
+>>>
+>>> To simplify this, provide a new “ratio-to-prev” event term
+>>> that works alongside the period event option or -c option.
+>>> This would allow users to specify the desired relative rate
+>>> between events as a ratio, making configuration more intuitive.
+>>>
+>>> With this enhancement, the equivalent command would be:
+>>>
+>>> perf record -e "{cpu_atom/branch-misses/ppu,\
+>>> cpu_atom/branch-instructions,period=1000000,ratio_to_prev=5/u}" \
+>>> -- ./mispredict
+>> Hi Tom,
+>>
+>> Does this "ratio-to-prev" option support 3 and more events in ACR
+>> group?
+>>
+> Hi Dapeng,
 >
->>>  #define MSR_AMD64_LBR_SELECT			0xc000010e
->>> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
->>> index 4246e1d2cfcc..817ef852bdf9 100644
->>> --- a/arch/x86/kvm/pmu.c
->>> +++ b/arch/x86/kvm/pmu.c
->>> @@ -715,18 +715,14 @@ int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned idx, u64 *data)
->>>  	return 0;
->>>  }
->>>  
->>> -bool kvm_need_rdpmc_intercept(struct kvm_vcpu *vcpu)
->>> +bool kvm_need_perf_global_ctrl_intercept(struct kvm_vcpu *vcpu)
->>>  {
->>>  	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
->>>  
->>>  	if (!kvm_vcpu_has_mediated_pmu(vcpu))
->>>  		return true;
->>>  
->>> -	/*
->>> -	 * VMware allows access to these Pseduo-PMCs even when read via RDPMC
->>> -	 * in Ring3 when CR4.PCE=0.
->>> -	 */
->>> -	if (enable_vmware_backdoor)
->>> +	if (!kvm_pmu_has_perf_global_ctrl(pmu))
->>>  		return true;
->>>  
->>>  	/*
->>> @@ -735,7 +731,22 @@ bool kvm_need_rdpmc_intercept(struct kvm_vcpu *vcpu)
->>>  	 * capabilities themselves may be a subset of hardware capabilities.
->>>  	 */
->>>  	return pmu->nr_arch_gp_counters != kvm_host_pmu.num_counters_gp ||
->>> -	       pmu->nr_arch_fixed_counters != kvm_host_pmu.num_counters_fixed ||
->>> +	       pmu->nr_arch_fixed_counters != kvm_host_pmu.num_counters_fixed;
->>> +}
->>> +EXPORT_SYMBOL_GPL(kvm_need_perf_global_ctrl_intercept);
->>> +
->>> +bool kvm_need_rdpmc_intercept(struct kvm_vcpu *vcpu)
->>> +{
->>> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
->>> +
->>> +	/*
->>> +	 * VMware allows access to these Pseduo-PMCs even when read via RDPMC
->>> +	 * in Ring3 when CR4.PCE=0.
->>> +	 */
->>> +	if (enable_vmware_backdoor)
->>> +		return true;
->>> +
->>> +	return kvm_need_perf_global_ctrl_intercept(vcpu) ||
->>>  	       pmu->counter_bitmask[KVM_PMC_GP] != (BIT_ULL(kvm_host_pmu.bit_width_gp) - 1) ||
->>>  	       pmu->counter_bitmask[KVM_PMC_FIXED] != (BIT_ULL(kvm_host_pmu.bit_width_fixed) - 1);
->>>  }
->> There is a case for AMD processors where the global MSRs are absent in the guest
->> but the guest still uses the same number of counters as what is advertised by the
->> host capabilities. So RDPMC interception is not necessary for all cases where
->> global control is unavailable.o
-> Hmm, I think Intel would be the same?  Ah, no, because the host will have fixed
-> counters, but the guest will not.  However, that's not directly related to
-> kvm_pmu_has_perf_global_ctrl(), so I think this would be correct?
+> The 'ratio-to-prev' option only supports groups with two events at this
+> time. For larger event groups, the "acr_mask" term is available.
 >
-> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> index 4414d070c4f9..4c5b2712ee4c 100644
-> --- a/arch/x86/kvm/pmu.c
-> +++ b/arch/x86/kvm/pmu.c
-> @@ -744,16 +744,13 @@ int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned idx, u64 *data)
->         return 0;
->  }
->  
-> -bool kvm_need_perf_global_ctrl_intercept(struct kvm_vcpu *vcpu)
-> +static bool kvm_need_pmc_intercept(struct kvm_vcpu *vcpu)
-
-The function name kvm_need_pmc_intercept() seems a little bit misleading
-and make users think this function is used to check if a certain PMC is
-intercepted. Maybe we can rename the function to kvm_need_global_intercept().
-
-Others look good to me. Thanks.
-
-
->  {
->         struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
->  
->         if (!kvm_vcpu_has_mediated_pmu(vcpu))
->                 return true;
->  
-> -       if (!kvm_pmu_has_perf_global_ctrl(pmu))
-> -               return true;
-> -
->         /*
->          * Note!  Check *host* PMU capabilities, not KVM's PMU capabilities, as
->          * KVM's capabilities are constrained based on KVM support, i.e. KVM's
-> @@ -762,6 +759,13 @@ bool kvm_need_perf_global_ctrl_intercept(struct kvm_vcpu *vcpu)
->         return pmu->nr_arch_gp_counters != kvm_host_pmu.num_counters_gp ||
->                pmu->nr_arch_fixed_counters != kvm_host_pmu.num_counters_fixed;
->  }
-> +
-> +bool kvm_need_perf_global_ctrl_intercept(struct kvm_vcpu *vcpu)
-> +{
-> +
-> +       return kvm_need_pmc_intercept(vcpu) ||
-> +              !kvm_pmu_has_perf_global_ctrl(vcpu_to_pmu(vcpu));
-> +}
->  EXPORT_SYMBOL_GPL(kvm_need_perf_global_ctrl_intercept);
->  
->  bool kvm_need_rdpmc_intercept(struct kvm_vcpu *vcpu)
-> @@ -775,7 +779,7 @@ bool kvm_need_rdpmc_intercept(struct kvm_vcpu *vcpu)
->         if (enable_vmware_backdoor)
->                 return true;
->  
-> -       return kvm_need_perf_global_ctrl_intercept(vcpu) ||
-> +       return kvm_need_pmc_intercept(vcpu) ||
->                pmu->counter_bitmask[KVM_PMC_GP] != (BIT_ULL(kvm_host_pmu.bit_width_gp) - 1) ||
->                pmu->counter_bitmask[KVM_PMC_FIXED] != (BIT_ULL(kvm_host_pmu.bit_width_fixed) - 1);
->  }
+>> If not, should we consider to support the cases there are 3 and more
+>> events
+>> in the ACR group? (If I remember correct, the PMU driver should
+>> support it).
+>>
+> Correct.
 >
+>> e.g.,
+>>
+>> perf record -e
+>> "{cpu_atom/branch-
+>> misses,period=200000,acr_mask=0x6/p,cpu_atom/branches,period=1000000,
+>> acr_mask=0x7/,cpu_atom/branches,period=1000000,acr_mask=0x7/}"
+>> -- sleep 1
+>>
+>> Of course, this is just an example that indicates the cases are
+>> supported,
+>> it doesn't mean the command is meaningful. But we can't exclude that
+>> users
+>> have such real requirements.
+>>
+>> If we want to support 3 and more events in ACR group (if not
+>> already), we'd
+>> better rename the "ratio-to-prev" option to "ratio-to-head" and only
+>> allow
+>> the group leader can be set the sampling period explicitly with
+>> "period"
+>> option and the sampling period of all other group members can only be
+>> calculated base on the sampling period of group leader and
+>> the "ratio-to-head", maybe like this.
+>>
+>> perf record -e
+>> "{cpu_atom/branch-misses,period=200000/p,cpu_atom/branches,ratio-to-
+>> head=5/,cpu_atom/branches,ratio-to-head=5/}"
+>> -- sleep 1
+>>
+>> Thanks.
+>>
+>>
+> Thanks, those are good suggestions, but the goal of the feature was to
+> provide users a way to utilize ACR to make simple comparisons without
+> needing to use the "acr_mask" field. For tests comparing larger event
+> groups, the acr_mask field may be used instead.
+
+Yeah, I understand the intent is to get a new simple option for using the
+ACR feature. But we already support 2 events for the ACR group, why not we
+make it more generic and can support more events? 
+
+
+>
+> Thanks,
+> Tom
+>
+>>> or
+>>>
+>>> perf record -e "{cpu_atom/branch-misses/ppu,\
+>>> cpu_atom/branch-instructions,ratio-to-prev=5/u}" -c 1000000 \
+>>> -- ./mispredict
+>>>
+>>> [1]
+>>> https://lore.kernel.org/lkml/20250327195217.2683619-1-kan.liang@linux.intel.com/
+>>>
+>>> Changes in v2 (mostly suggested by Ian Rogers):
+>>>
+>>> -- Add documentation explaining acr_mask bitmask used by ACR
+>>> -- Move ACR specific implementation to arch/x86/
+>>> -- Provide test cases for event parsing and perf record tests
+>>>
+>>> Thomas Falcon (2):
+>>>   perf record: Add ratio-to-prev term
+>>>   perf record: add auto counter reload parse and regression tests
+>>>
+>>>  tools/perf/Documentation/intel-acr.txt | 53 ++++++++++++++++++
+>>>  tools/perf/Documentation/perf-list.txt |  2 +
+>>>  tools/perf/arch/x86/util/evsel.c       | 53 ++++++++++++++++++
+>>>  tools/perf/tests/parse-events.c        | 54 ++++++++++++++++++
+>>>  tools/perf/tests/shell/record.sh       | 40 ++++++++++++++
+>>>  tools/perf/util/evsel.c                | 76
+>>> ++++++++++++++++++++++++++
+>>>  tools/perf/util/evsel.h                |  1 +
+>>>  tools/perf/util/evsel_config.h         |  1 +
+>>>  tools/perf/util/parse-events.c         | 22 ++++++++
+>>>  tools/perf/util/parse-events.h         |  3 +-
+>>>  tools/perf/util/parse-events.l         |  1 +
+>>>  tools/perf/util/pmu.c                  |  3 +-
+>>>  12 files changed, 307 insertions(+), 2 deletions(-)
+>>>  create mode 100644 tools/perf/Documentation/intel-acr.txt
+>>>
