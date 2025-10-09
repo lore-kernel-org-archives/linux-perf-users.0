@@ -1,68 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB9C2494D8
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Oct 2025 12:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB2E2E62BF
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Oct 2025 12:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760014171; cv=none; b=TZsrJF1LDHxfQ+xNREr3GSkB7+q/0lEz8DqdKH06/8lTAJ+wHpJhQVXZbPjpxtpOMTTfiF5PYkI5dLMTuZ4Vq0ybZI/VMgaNRJ2bUNiErS2Uh7RiX1+2zLekz117BITb3H25VNQylB+/LzsLu4lyNpxEr89gHZ8wBAMQm3RnKWU=
+	t=1760014719; cv=none; b=ptlxF2obxLyWdAhBwe+T/dWkAmFXiMrTZ05sUlX/h91u3RpI/QfWC73X4mlHVL4J0EjxtQj0kLllWnngO6npRuav2avJOlpaeIZNZImQTnAeh8Sw+pe30UnjZZvVOpz8SINAspYk71GLrPSNc4rJ9+zvcGyaXkVb2Z/nD8cUCSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760014171; c=relaxed/simple;
-	bh=4o67N+5muSrhDMynCVeCRqgka2MTM/1TesakMxevxuc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iinzmPlZarK3i16WhKnMnp1Qos73VhITLZSpSLn2ZQwROkxkzVSMpe9Y4qowmb14j3zxqXd0bEUDVs9MVRF6xsLOVzcwpnMyZzKeK/oPgi9QasZdbb7W3ic3Kp37SNq4ojmrcLR2rAwxMG/HXAD20a0Btagm84TWiOV7rAIJLg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N9nFG0mJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760014719; c=relaxed/simple;
+	bh=fG8614poqmYHLHwPJZtoBYycrE1J9gSjrapsjsi+MJY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=FZmKuc5d1FXx35YtHez8rxm3Dn8RJRbzprIn+oKEU95fOAmg8ZesnSCOPGqFaEDfQTu57l9CvMaBo+8+NR8YQmoxY6/t6D5tUZliJia6R0xL3dwFqP3QHtC/8ommAXM9kwZ6mX/2eIToGsFhptWxidCjjAXLTCgNHzAe5SHwhhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ns3HjRNm; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N9nFG0mJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 305BCC4CEF8;
-	Thu,  9 Oct 2025 12:49:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760014171;
-	bh=4o67N+5muSrhDMynCVeCRqgka2MTM/1TesakMxevxuc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N9nFG0mJdWVIIiQRfBT/gO332Y+WpK6xSEMOl/MsxyXIM7Bcyi6788wM0vxpFjBc1
-	 xqN7/R9QVMhssrXXF3Lg7sA7pi8qEC7w7SAWa6jWaogukSYop0S9JgnTpKxyHX8bPm
-	 xg582shf5IbSTsBjDrP9wVENxe+61UNmpMz2gsrGnW1mWLVgEFRibdC+UiD14a0saJ
-	 Fuwv9vEknXYlpA9TakfXLma/pzcamRwbZeAKgUbNk2aDBIkk5iWJrWfHIL+Vn04Hra
-	 wH91vvBVloENHSgJrYfbKIcjVzFQ3NdS+oETx5BrmFkxJIEi7uHSjtlzm4OmWNDCLz
-	 n+qgs9UOms+Aw==
-Date: Thu, 9 Oct 2025 09:49:27 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 20/25] perf mem: Print extended fields
-Message-ID: <aOevVyDVBj_oKvlR@x1>
-References: <20250929-perf_support_arm_spev1-3-v1-0-1150b3c83857@arm.com>
- <20250929-perf_support_arm_spev1-3-v1-20-1150b3c83857@arm.com>
- <10332b1f-f73c-4bfb-a4d4-74e1953b75ff@linaro.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ns3HjRNm"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-268149e1c28so17722905ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Oct 2025 05:58:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1760014718; x=1760619518; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rW1G3rL+KumF5u3WwLC+tOU95q8htP+/xpt0iPYfuBA=;
+        b=ns3HjRNmQTCsc+ZTgkRcnpCRiahI8aj/Zk5jA03ejUJxtOro4zT5lTeoDDsofxw+FG
+         GoWix1BvQf0sY5K+K9cL2ouBLeA185hEed+TUxl9UqNc8cQXF1Vb8zOwRcNFxxjs9tFk
+         OAAD4F2mWnuZZLEDh8T4+WGRUaYRtTL5fGlRfBqGsomABkqlBHKnK9A+Y/67Uc55ZLL3
+         Gh/jfnxMRm9MqBchwvL/jr9HxdtovVVuifpCmZ3jR4xMshdhelpxBIPr2pQmQnwK0Bq/
+         O12hEojPeWHj995j/KPsDLRQQ9EDe8GKxgk1DB5jsE+eapOJzA0DxxREsNff5+pmAJky
+         8oGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760014718; x=1760619518;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rW1G3rL+KumF5u3WwLC+tOU95q8htP+/xpt0iPYfuBA=;
+        b=d2//5r6qNPWbBuBNFuVPszLeORi/2ym8tn6y2Ube4gyx0J8OAPIrKvucX9yOG1XgZj
+         fL5TRItpH5UylRYhUZZ2ew8pgWv7TiOAdu9eXpNmc63dytaBTEGqdqKC1cXUV7VN9+fe
+         3+erG4QsO3wKNuCC0CFkwxJ0mOtVLI7T3PEj5q7lzf0Na0psAyoOh8GeNFuXxntAkLYK
+         4f0xDZA6m1Iei/gdpmSrty35MlQao2wdUoYEt6NRY4x9Nu7qWs6SdOewZq37G1MZf8HN
+         J5wMS1ZtEn/NAE7DPPSAz901IYdARfQ8M9Of24LX0Bu5NGw+O016DxB0WsujQkRl3pYG
+         ReUg==
+X-Forwarded-Encrypted: i=1; AJvYcCW08neNxscUTq1p5cMdRUnHBX8eD0D6FsmpRvylguzrfmsVh4ld4cecGbb0YhjY1Jgy+Xh18KqeRgX6xYtl/55i@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVuSmNKitb0gSSfZMxRrRrGxA7lOZDOZF8wOpi/5/mGBlF1ATp
+	wwyHzDOs2mwbcb7tQykefwUvR8pDVxisPvQKcXL9iAtjrs2Q6lZBRhoj9Xau023xsL6WO6POnaV
+	K4A+JPA==
+X-Google-Smtp-Source: AGHT+IH7h/AMFky1MZe0POKihyk6CBGGTuNOR3bkBF5NzMdZe3AIhToBPbzyEpzWmh5xCsVBnvVH62o1WfY=
+X-Received: from plbkv14.prod.google.com ([2002:a17:903:28ce:b0:268:eb:3b3b])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ef10:b0:271:5bde:697e
+ with SMTP id d9443c01a7336-29027213340mr92639575ad.3.1760014717676; Thu, 09
+ Oct 2025 05:58:37 -0700 (PDT)
+Date: Thu, 9 Oct 2025 05:58:35 -0700
+In-Reply-To: <e9e8f087-60f6-455a-b0e0-e5c29fc54129@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <10332b1f-f73c-4bfb-a4d4-74e1953b75ff@linaro.org>
+Mime-Version: 1.0
+References: <70b64347-2aca-4511-af78-a767d5fa8226@intel.com>
+ <25af94f5-79e3-4005-964e-e77b1320a16e@linux.intel.com> <aNvyjkuDLOfxAANd@google.com>
+ <3bbc4e6d-9f52-483c-a25d-166dca62fb25@intel.com> <00d0f3f3-d2b4-4885-9a49-5e6f8390142b@intel.com>
+ <e9e8f087-60f6-455a-b0e0-e5c29fc54129@linux.intel.com>
+Message-ID: <aOexe4LNpmJnHTm9@google.com>
+Subject: Re: REGRESSION on linux-next (next-20250919)
+From: Sean Christopherson <seanjc@google.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>, 
+	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, 
+	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>, 
+	Suresh Kumar Kurmi <suresh.kumar.kurmi@intel.com>, Jani Saarinen <jani.saarinen@intel.com>, 
+	lucas.demarchi@intel.com, linux-perf-users@vger.kernel.org, 
+	kvm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 09, 2025 at 11:02:35AM +0100, James Clark wrote:
-> On 29/09/2025 5:37 pm, Leo Yan wrote:
-> > Print the extended operation types and affiliate info.
-> > 
-> > Signed-off-by: Leo Yan <leo.yan@arm.com>
-> > ---
-> >   tools/include/uapi/linux/perf_event.h | 28 +++++++++++++++--
-> >   tools/perf/util/mem-events.c          | 58 +++++++++++++++++++++++++++++++++--
-> 
-> Minor nit: I would separate the commit to update the header and the tools
-> change. That way you can describe that it's a straight header copy, rather
-> than something else.
+On Thu, Oct 09, 2025, Dapeng Mi wrote:
+>=20
+> On 10/7/2025 2:22 PM, Borah, Chaitanya Kumar wrote:
+> > Hi,
+> >
+> > On 10/6/2025 1:33 PM, Borah, Chaitanya Kumar wrote:
+> >> Thank you for your responses.
+> >>
+> >> Following change fixes the issue for us.
+> >>
+> >>
+> >> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> >> index 40ac4cb44ed2..487ad19a236e 100644
+> >> --- a/arch/x86/kvm/pmu.c
+> >> +++ b/arch/x86/kvm/pmu.c
+> >> @@ -108,16 +108,18 @@ void kvm_init_pmu_capability(const struct=20
+> >> kvm_pmu_ops *pmu_ops)
+> >>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool is_intel =3D boot_cpu=
+_data.x86_vendor =3D=3D X86_VENDOR_INTEL;
+> >>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int min_nr_gp_ctrs =3D pmu=
+_ops->MIN_NR_GP_COUNTERS;
+> >>
+> >> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 perf_get_x86_pmu_capability(&kvm=
+_host_pmu);
+> >> -
+> >>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
+> >>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Hybrid PMUs don't =
+play nice with virtualization without careful
+> >>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * configuration by u=
+serspace, and KVM's APIs for reporting=20
+> >> supported
+> >>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * vPMU features do n=
+ot account for hybrid PMUs.=C2=A0 Disable vPMU=20
+> >> support
+> >>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * for hybrid PMUs un=
+til KVM gains a way to let userspace opt-in.
+> >>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+> >> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (cpu_feature_enabled(X86_FEAT=
+URE_HYBRID_CPU))
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (cpu_feature_enabled(X86_FEAT=
+URE_HYBRID_CPU)) {
+> >>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 enable_pmu =3D false;
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 memset(&kvm_host_pmu, 0, sizeof(kvm_host_pmu));
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 } else {
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 perf_get_x86_pmu_capability(&kvm_host_pmu);
+> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> > Can we expect a formal patch soon?
+>=20
+> I'd like to post a patch to fix this tomorrow if Sean has no bandwidth on
+> this. Thanks.
 
-Agreed.
-
-- Arnaldo
+Sorry, my bad, I was waiting for you to post a patch, but that wasn't at al=
+l
+clear.  So yeah, go ahead and post one :-)
