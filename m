@@ -1,30 +1,50 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AF552BE7A7;
-	Thu,  9 Oct 2025 07:52:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62F94A01;
+	Thu,  9 Oct 2025 08:35:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759996350; cv=none; b=F+JrDYYNrRuTVnFHNdiCqRukEZYzCNNNfJaRkOnrY0bKonxY2BIbm2ixOFTSnhtAh5vMTd0yG6/B7Hlrnre+1cxabTa2Dn2led1tD6EMkg9oxqEuaoe4ZFQKqfnX9JRPv6B3TYRXfEYtzpFvdfRbldPALV6ups6TOIu4hU/ewYc=
+	t=1759998922; cv=none; b=TUFBZ70xihrJjig6hE2JYolGbyM4qWndMwQZdNSW2csfkaAgyN/gosmk7hi9h8K+bdK1mxUGz4y7nEex2LvddP/yUpF+25QFWWQPQwyuK6/+AmfMFzWGPW7TI/2u0OhZH5Zh2PHZ5gANy6vKNA9P7cRs0NsFNj/vZGJgppAkieE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759996350; c=relaxed/simple;
-	bh=8kwwddGg4oMEWNPflqm4C7Fd2mOvwuYEWTUuJXSTDEE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=nk2gYar3ETiOzMHqhWoogWsGUjHFaFKfgWROhW0OFMIo6DOVg1T06WK/2rdPeCCyM8t77TXhSKjOtTAHTDrNAnu0Fyt2OrII49JHbeR+jL0Y71m2JF/FMg8yljnYIaDmGm70vQkSX9qbq6ER1MTLUD9ZnukRtewYtOjPjyI87sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4cj2Bz0bDmzKHLvG;
-	Thu,  9 Oct 2025 15:51:55 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 98CDA1A13FE;
-	Thu,  9 Oct 2025 15:52:23 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP2 (Coremail) with SMTP id Syh0CgCX4RW2aedo1u4pCQ--.63468S2;
-	Thu, 09 Oct 2025 15:52:23 +0800 (CST)
-Message-ID: <02ac6916-7bfa-4b6b-8bae-64fe02580731@huaweicloud.com>
-Date: Thu, 9 Oct 2025 15:52:22 +0800
+	s=arc-20240116; t=1759998922; c=relaxed/simple;
+	bh=cxIbOqNUR76AnDJ8XYf468KSYN5jwnxzGtZjYBXTQM4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZhwwtU6t/q7a8Tqp6hlWC8Df8FzyZJbXMTl10jOhbSPSu0EkW14BoqjNOTWMdJFEo5nCjbf/qpsDoGQqsLNt/qg3SWFIWxUuD+SLLgFORYd835jVM7p8qwgx8egVcXhLzMQDqMq7Fn6PyDb7ECLfBC8zPYXBG1G4D4uLvkETeX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vk0NKy7f; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vk0NKy7f"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1759998921; x=1791534921;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=cxIbOqNUR76AnDJ8XYf468KSYN5jwnxzGtZjYBXTQM4=;
+  b=Vk0NKy7fKxlQKFGRk4Ykugl9w/pxtiyz3qABXiS46sENW4MI4x7r/r+8
+   5kWUC+4KxOaH93a1vkwyuEYIYHOv7859SCxagE/pgdj7JpgzIrcP4hpaW
+   dwmD8JQe4ruoUTzocOMV14whAqoQLD6WQC/1dy8Kz9sIvdlLC7QV10IgK
+   yU81+A327IXWXMEqOoGo7SYKSa0nXGDEjcMN0DPpaekfkE5NCVo9z2TI7
+   mddulp9L6iSzsCZeoSFeeJ/f630QMt++jxasKs6zBGV8Tn9HYLaFvvOLw
+   jwTS0CV0JGm9ROM0o3yd+UF9nMk9PHlt/+mzS8F4lKSxBUquTAC0UObMR
+   A==;
+X-CSE-ConnectionGUID: GJ1aI5XjQhSLWYWMj9dR6w==
+X-CSE-MsgGUID: vzPerdInTnCCGtqwxnHK5g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11576"; a="72462630"
+X-IronPort-AV: E=Sophos;i="6.19,215,1754982000"; 
+   d="scan'208";a="72462630"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2025 01:35:21 -0700
+X-CSE-ConnectionGUID: cXIzzForQoaKN8tGXHcSPg==
+X-CSE-MsgGUID: vQA6LQBqS1qo3f2NMRZ3hA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,215,1754982000"; 
+   d="scan'208";a="181065729"
+Received: from unknown (HELO [10.238.2.75]) ([10.238.2.75])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2025 01:35:17 -0700
+Message-ID: <cef60d5a-a975-4b4e-b553-9aaaaf6da558@linux.intel.com>
+Date: Thu, 9 Oct 2025 16:35:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -32,142 +52,130 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf bpf_counter: Fix opening of "any"(-1) CPU events
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
+Subject: Re: [Patch v7 00/12] arch-PEBS enabling for Intel platforms
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20251008162347.4005288-1-irogers@google.com>
+ Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250828013435.1528459-1-dapeng1.mi@linux.intel.com>
 Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <20251008162347.4005288-1-irogers@google.com>
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250828013435.1528459-1-dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgCX4RW2aedo1u4pCQ--.63468S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxAF1xCFyUur13Xry3JFWrZrb_yoWrXFWUpr
-	4vkr13KryrXr90y3W3tF42ga4kCws5ZryYgwn8trWUGFsxX3sIqa17Ja45KryUWr1v9a4Y
-	q34qgr4Uuay8JaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUF1
-	v3UUUUU
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
 
+On 8/28/2025 9:34 AM, Dapeng Mi wrote:
+> Changes:
+> v6 -> v7:
+>   * Rebase code to last tip perf/core tree.
+>   * Opportunistically remove the redundant is_x86_event() prototype.
+>     (Patch 01/12)
+>   * Fix PEBS handler NULL event access and record loss issue.
+>     (Patch 02/12)
+>   * Reset MSR_IA32_PEBS_INDEX at the head of_drain_arch_pebs() instead
+>     of end. It avoids the processed PEBS records are processed again in
+>     some corner cases like event throttling. (Patch 08/12)
 
-On 2025/10/9 0:23, Ian Rogers wrote:
-> The bperf BPF counter code doesn't handle "any"(-1) CPU events, always
-> wanting to aggregate a count against a CPU, which avoids the need for
-> atomics so let's not change that. Force evsels used for BPF counters
-> to require a CPU when not in system-wide mode so that the "any"(-1)
-> value isn't used during map propagation and evsel's CPU map matches
-> that of the PMU.
-> 
-> Fixes: b91917c0c6fa ("perf bpf_counter: Fix handling of cpumap fixing hybrid")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-stat.c     | 13 +++++++++++++
->  tools/perf/util/bpf_counter.c |  1 +
->  2 files changed, 14 insertions(+)
-> 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 7006f848f87a..0fc6884c1bf1 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -2540,6 +2540,7 @@ int cmd_stat(int argc, const char **argv)
->  	unsigned int interval, timeout;
->  	const char * const stat_subcommands[] = { "record", "report" };
->  	char errbuf[BUFSIZ];
-> +	struct evsel *counter;
+Hi Peter,
+
+Do you have more comments on this arch-PEBS enabling patch-set? Thanks.
+
+(The warning raised by kernel test robot about patch 02/12 would be fixed
+in next version.)
+
+
+>
+> v5 -> v6:
+>   * Rebase code to last tip perf/core tree + "x86 perf bug fixes and
+>     optimization" patchset
 >  
->  	setlocale(LC_ALL, "");
->  
-> @@ -2797,6 +2798,18 @@ int cmd_stat(int argc, const char **argv)
->  
->  	evlist__warn_user_requested_cpus(evsel_list, target.cpu_list);
->  
-> +	evlist__for_each_entry(evsel_list, counter) {
-> +		/*
-> +		 * Setup BPF counters to require CPUs as any(-1) isn't
-> +		 * supported. evlist__create_maps below will propagate this
-> +		 * information to the evsels. Note, evsel__is_bperf isn't yet
-> +		 * set up, and this change must happen early, so directly use
-> +		 * the bpf_counter variable.
-> +		 */
-> +		if (counter->bpf_counter)
-> +			counter->core.requires_cpu = true;
-> +	}
-> +
->  	if (evlist__create_maps(evsel_list, &target) < 0) {
->  		if (target__has_task(&target)) {
->  			pr_err("Problems finding threads of monitor\n");
-> diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
-> index ca5d01b9017d..d3e5933b171b 100644
-> --- a/tools/perf/util/bpf_counter.c
-> +++ b/tools/perf/util/bpf_counter.c
-> @@ -495,6 +495,7 @@ static int bperf_reload_leader_program(struct evsel *evsel, int attr_map_fd,
->  	 * following evsel__open_per_cpu call
->  	 */
->  	evsel->leader_skel = skel;
-> +	assert(!perf_cpu_map__has_any_cpu_or_is_empty(evsel->core.cpus));
->  	evsel__open(evsel, evsel->core.cpus, evsel->core.threads);
->  
->  out:
-
-
-I must point out that `requires_cpu + evsel__open(evsel, evsel->core.cpus, evsel->core.threads)` 
-is not equivalent to the original `evsel__open_per_cpu(evsel, all_cpu_map, -1)`. The former
-specifies a pid, while the latter does not. This will lead to inaccurate final event counting.
-
-
-For `evsel__open_per_cpu(evsel, all_cpu_map, -1)`:
-
-$ ./perf stat -vv --bpf-counters -e task-clock ./perf test -w sqrtloop
-sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 13
-sys_perf_event_open: pid -1  cpu 1  group_fd -1  flags 0x8 = 14
-sys_perf_event_open: pid -1  cpu 2  group_fd -1  flags 0x8 = 15
-[...]
- Performance counter stats for './perf test -w sqrtloop':
-
-     1,016,156,671      task-clock                       #    1.000 CPUs utilized             
-
-       1.016294745 seconds time elapsed
-
-       1.005710000 seconds user
-       0.010637000 seconds sys
-
-
-For `requires_cpu + evsel__open(evsel, evsel->core.cpus, evsel->core.threads)`:
-
-$ ./perf stat -vv --bpf-counters -e task-clock ./perf test -w sqrtloop
-sys_perf_event_open: pid 75099  cpu 0  group_fd -1  flags 0x8 = 13
-sys_perf_event_open: pid 75099  cpu 1  group_fd -1  flags 0x8 = 14
-sys_perf_event_open: pid 75099  cpu 2  group_fd -1  flags 0x8 = 15
-[...]
- Performance counter stats for './perf test -w sqrtloop':
-
-        16,184,507      task-clock                       #    0.016 CPUs utilized             
-
-       1.018540734 seconds time elapsed
-
-       1.009143000 seconds user
-       0.009497000 seconds sys
-
-
-As you can see, after specifying a pid, the task-clock count has significantly decreased.
-So to correct the counting, we may also need to keep the pid as -1 without specifying it.
-
-Thanks,
-Tengda
-
+> v4 -> v5:
+>   * Rebase code to 6.16-rc3
+>   * Allocate/free arch-PEBS buffer in callbacks *prepare_cpu/*dead_cpu
+>     (patch 07/10, Peter)
+>   * Code and comments refine (patch 09/10, Peter)
+>
+>
+> This patchset introduces architectural PEBS support for Intel platforms
+> like Clearwater Forest (CWF) and Panther Lake (PTL). The detailed
+> information about arch-PEBS can be found in chapter 11
+> "architectural PEBS" of "Intel Architecture Instruction Set Extensions
+> and Future Features".
+>
+> This patch set doesn't include the SSP and SIMD regs (OPMASK/YMM/ZMM)
+> sampling support for arch-PEBS to avoid the dependency for the basic
+> SIMD regs sampling support patch series[1]. Once the basic SIMD regs
+> sampling is supported, the arch-PEBS based SSP and SIMD regs
+> (OPMASK/YMM/ZMM) sampling would be supported in a later patch set.
+>
+> Tests:
+>   Run below tests on Clearwater Forest and Pantherlake, no issue is
+>   found.
+>
+>   1. Basic perf counting case.
+>     perf stat -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles}' sleep 1
+>
+>   2. Basic PMI based perf sampling case.
+>     perf record -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles}' sleep 1
+>
+>   3. Basic PEBS based perf sampling case.
+>     perf record -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles}:p' sleep 1
+>
+>   4. PEBS sampling case with basic, GPRs, vector-registers and LBR groups
+>     perf record -e branches:p -Iax,bx,ip,xmm0 -b -c 10000 sleep 1
+>
+>   5. User space PEBS sampling case with basic, GPRs and LBR groups
+>     perf record -e branches:p --user-regs=ax,bx,ip -b -c 10000 sleep 1
+>
+>   6. PEBS sampling case with auxiliary (memory info) group
+>     perf mem record sleep 1
+>
+>   7. PEBS sampling case with counter group
+>     perf record -e '{branches:p,branches,cycles}:S' -c 10000 sleep 1
+>
+>   8. Perf stat and record test
+>     perf test 100; perf test 131
+>
+>
+> History:
+>   v6: https://lore.kernel.org/all/20250821035805.159494-1-dapeng1.mi@linux.intel.com/ 
+>   v5: https://lore.kernel.org/all/20250623223546.112465-1-dapeng1.mi@linux.intel.com/
+>   v4: https://lore.kernel.org/all/20250620103909.1586595-1-dapeng1.mi@linux.intel.com/
+>   v3: https://lore.kernel.org/all/20250415114428.341182-1-dapeng1.mi@linux.intel.com/
+>   v2: https://lore.kernel.org/all/20250218152818.158614-1-dapeng1.mi@linux.intel.com/
+>   v1: https://lore.kernel.org/all/20250123140721.2496639-1-dapeng1.mi@linux.intel.com/
+>
+> Ref:
+>   [1]: https://lore.kernel.org/all/20250815213435.1702022-1-kan.liang@linux.intel.com/
+>
+> Dapeng Mi (12):
+>   perf/x86: Remove redundant is_x86_event() prototype
+>   perf/x86/intel: Fix NULL event access and potential PEBS record loss
+>   perf/x86/intel: Replace x86_pmu.drain_pebs calling with static call
+>   perf/x86/intel: Correct large PEBS flag check
+>   perf/x86/intel: Initialize architectural PEBS
+>   perf/x86/intel/ds: Factor out PEBS record processing code to functions
+>   perf/x86/intel/ds: Factor out PEBS group processing code to functions
+>   perf/x86/intel: Process arch-PEBS records or record fragments
+>   perf/x86/intel: Allocate arch-PEBS buffer and initialize PEBS_BASE MSR
+>   perf/x86/intel: Update dyn_constranit base on PEBS event precise level
+>   perf/x86/intel: Setup PEBS data configuration and enable legacy groups
+>   perf/x86/intel: Add counter group support for arch-PEBS
+>
+>  arch/x86/events/core.c            |  21 +-
+>  arch/x86/events/intel/core.c      | 268 ++++++++++++-
+>  arch/x86/events/intel/ds.c        | 621 +++++++++++++++++++++++++-----
+>  arch/x86/events/perf_event.h      |  41 +-
+>  arch/x86/include/asm/intel_ds.h   |  10 +-
+>  arch/x86/include/asm/msr-index.h  |  20 +
+>  arch/x86/include/asm/perf_event.h | 116 +++++-
+>  7 files changed, 955 insertions(+), 142 deletions(-)
+>
+>
+> base-commit: f49e1be19542487921e82b29004908966cb99d7c
