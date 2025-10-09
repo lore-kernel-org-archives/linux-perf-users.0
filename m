@@ -1,61 +1,63 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08B92DD5EB
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Oct 2025 10:57:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5072DF152
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Oct 2025 10:57:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760007431; cv=none; b=iynsMvpjbAFkMkq9L9Imgmz1koPI004aG63rXVczugE6EQ3VKEDTxJzOSJS7ek/zAODNW35jQNi2gc6f4T+uqfg2H4xWYWwirDXkrj0+8/jeZueRFSaohuRWOvzvqwbviqBxlcnzazmbemZwQjpbAYPFs/m3dn2/3ssS7ikJ2Kc=
+	t=1760007433; cv=none; b=TDOCybxaakJtC+p69vru8MmNQJqUgnSqmDr5M0woiOKbxAIbFxfGE6s/pQ4mzkdUdIgNyZ1LwohwrFkbJ4EMZ6KU9ovEdlGNwHZVMuFEGKLuumBmBRbTnY/dVn5xWLyMnKKNnHlSSVEFMrFNLdUzfmdfwAY5ZvNuX4yphdp5VvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760007431; c=relaxed/simple;
-	bh=D/cb+JmAMPxI+tby9AeftLayL7EBPhafkToHtKd0f8k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MqjVkq2Rv9aN0lbeL8jG4oVSsuuccUhmwTPI0hhaYG9Z6ztguhEVMNdzIeI0dQuP+V5dbRYYiZaAcNP7EZgAuK0lqQnWpfeDaxue7eOE/YeZDABaUhCDZ/qJ6PxLcFWuZlB0lK6RjX6uufS4MVWAYVkMWN0mpnOWBf4+I/t78PE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b4oOtwJL; arc=none smtp.client-ip=209.85.210.182
+	s=arc-20240116; t=1760007433; c=relaxed/simple;
+	bh=X7rbGcP88vwI8LXFWSyD4f0KAHbEZ/JYDGwMupozUWE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=esKp7UnIAILVRu9TJCg1ETcYBswJC88+Zxbj4LqJOGoa68tGuHkkRyqMPO9y05lnFRtlU+shIF1cK0H5O1m2UA9puUPKy2eYGROlY9X9jvaQ+UTj1hlkaNBPlU02B0gyOlYAItSMYT6uSgHFhCm8DbVaqbmpbk4WgTBYMmXnJko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IQGY0ypD; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b4oOtwJL"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-78af743c232so733033b3a.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Oct 2025 03:57:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQGY0ypD"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-782e93932ffso746993b3a.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Oct 2025 03:57:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760007427; x=1760612227; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=r/KVNrCgkP/CpH67njDEKsgcguKTfOKueucBYEp6ELs=;
-        b=b4oOtwJLTUnsgzYr66fm5Iw+gqK2PSyF6Mgq87X68VDkYZMzbioEeFNoFsPshicWOK
-         TxwZvC3xfDsBf4D/9A021G7gZcsKpBpPT8k4hehtbDpFFSRgDeRRy7BrQOjkhSw+nyia
-         VW+ab40oUI5zg5AgsDVUj/HFV0gj8ya+zKxCwtDo1/yTVaNOWB3uXtWZETMLqfhbODpc
-         MKYxq45UaBGkjFkzeilV2JmRYlWFfd5E5mmOr6rTDeAe9VDyaKh0JLysX/cwVTpCNYxQ
-         GsA7K+EVPcw9sbr2tAs5jFoOt6Cs/NrDUu3OJVGirRvdg6R2yoNAVfnRt5v+Nc42hjEU
-         P4yw==
+        d=gmail.com; s=20230601; t=1760007431; x=1760612231; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kk8QwiK6ueKhbPm+iybiDp/pMjWX1cNh1XEGnvIxiQI=;
+        b=IQGY0ypDoDmlx7f0L9hk00bKMK8i4qC4rvDjN7oaDI0RpeEe17+92UYg8T0+uqhmBn
+         fT/jtMB0yYm335nfbUOT+bJdg4MKO/GyXtq6/cROq6vnLQM7kP/zZPbuIL64RUM7Fd9b
+         qWVV47xvVDoksZE/6Zu0pi84EI2ZrM2Jbv6UjWYR5DvF8QdQS5E7w3qWofECEfZ6YqlR
+         xvwx1wBC7TTiHAi/+ptDPaAajCSEPXcAp1Lts2hw+niN4qXy/vSalIADpnURnNqRhxIl
+         lBnxelkkxXhNX5bWJGsfeVU/mg75RXgsSkixOYxptB1eCJFUbUYtPqs41x5DutH75DbE
+         thBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760007427; x=1760612227;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r/KVNrCgkP/CpH67njDEKsgcguKTfOKueucBYEp6ELs=;
-        b=VTzm65JVVHjqwKqMZodZcPIahF8epytU6zadjw6MO6aPd+2XxDUEo5zL1Eh16szNeq
-         +NPGvMs78DCk0XQtpCtaT7azzeWX8yV0IDTE77B8RBYgPbB9dThlmcURjr+azdoAATBZ
-         OlFbLMAvTikTAX6ui4rBWkrOWvNvFBcGVakkNywKnndGr+ci2pN40AJMZvZk9KTY3Y8/
-         DNbdKgLzLFpXxkVsgf6GrXDh16BSTihVC3DlIGxppbdmO/bEEDPC+pP+A3goTste4A/6
-         CFIydtBpTw770O2Npqk5DXZwLN8GVWGnGSXMcEtjtqp2WeT+/vB2NeZAO5YVtzBe1WPW
-         5R/g==
-X-Forwarded-Encrypted: i=1; AJvYcCV2IK5L20t3jokta/8Iew3W13LBeXeU1zAp6JP4MAobEOvZckk8DJQ2/fXIOkoX9jJSyqIwbh5NSpmGVmQtv+eC@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4mwtKi8cYELf/6PnAjPLsjy4Y+TA/+TP4M2xV9K0lvxLcfyvj
-	qqeRnyH1EupDPXu99Bu4WTED872QhQG1gGsRcVWSE2YmDjjdlwGZl6ep
-X-Gm-Gg: ASbGncs1aYHcJBdmY+2XT23ToNLhxH6mp+fKi+u8UMm1CzVp6jZej1/YdZhuWrGGqZK
-	U/wbIwchZJwFLRfMr2pbWL6MiWVsCyba/92Z5mWFcEzfSFwBF5acF18nuJjj7z2BUqqgDPYVSfL
-	B8JEjieLUXB+47AYPfs3RdBZd4SirXE+QP+avljb72acuDNLRUVgQYq8XPU27IlR9zCLmW7AgHa
-	qXfHprNj2V19zfcRRzaGMkOesbZpBj29SdOKeWYmim0TBiwasR9Xbr30Gn8M1pYbS8doikSM2gW
-	GhLwaIG20f3rlWhp71cB/b9Ln07l/Kturj9dv8Rl4O7B/F7bhKsrBRRHv0Uf5y5n/aqL5RMCY1t
-	Dl3rnQ/rqKPadf3+ZKy6grbjDGysDTbdsgGv3b9IXxuyMu+OyWq/zJ5345/aB
-X-Google-Smtp-Source: AGHT+IHegRF+cDkS8n8iN1wDSqYkCY6Z+zS+A83OBf5JKqfA2hExCY0UD9dxNTVbTqOQx/6S6nxYew==
-X-Received: by 2002:a05:6a20:914f:b0:2c4:c85a:7da5 with SMTP id adf61e73a8af0-32da81345e5mr10045407637.6.1760007426930;
-        Thu, 09 Oct 2025 03:57:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1760007431; x=1760612231;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kk8QwiK6ueKhbPm+iybiDp/pMjWX1cNh1XEGnvIxiQI=;
+        b=hgC35jmnlhw4vbp1Ffo4e2wPmddSgUzAbCCZOQCY+PS6HP9AZh67xgzkqQYFAKG/P6
+         hd9toR3UW/aradqzMxJ51qgl6fYfL+x9HirstOVFKb/unLmSMTFb8IiMEPDs6Cvxa71T
+         Okl0DN20sGK1n89iKbG9Ep/akyk9FmelgJXzptmA9VgcCQ9n0y43PWya8l51q6MUrixo
+         M4DHRdsKHemfW8MglSzotRprxpk3c3G8mOZ0KNXxOSiZ2bP87Tj2YmjTqJunV3hDFsEY
+         BbwjeKX8JH1+FrRD+FTsUJq0QZCfBk5LtGXoBN7NN0NYcVMSciqV1mJKnuybX9MsBbuf
+         5azw==
+X-Forwarded-Encrypted: i=1; AJvYcCWlirf9nNGnXfl9DJjtMWpYPOqt4HEbzJ+o8iGrfoHBMefP+izxGcMpwWWJPqPXafkfvHWU9l4Z0y7lyzT9YOzR@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjwDll/winCpL+dE6h1T3TjWmfsFGvzL+a7BFuDiLQZ3X7zwWB
+	IkTDLwlhdNnRQgu+og18+OhOV/wLlAvdXxUQxFGlcUV5dD5030jPbU7y
+X-Gm-Gg: ASbGncs83A/HlsiDVWEK9HJ51X06P7xvxdLwqwsManZcZSennWS810hy37/cdGpPOfP
+	3WGZmhtmaS+l4e8ejOxou82Dr/tnZgCJluiur0BBA8+wbDxFSzpznswbrLUH0YFotL75o9pc8J5
+	U6G1sLALWv3gHsK+CPbZOsTIa5Uu2i1yZvJZJ3OKpeR0/tMaSFSWkd3r+yvLeDKnXkD7UR/CANT
+	elCZyR6XrJh9g4hQgyhvTD86PFZ/HYHIDfaGTboDAn/EiyfYGd/qnC5NtkKbiNxC7J4ekVLYZQO
+	77UEibETgyHwGURNU8ic5dNtakOrsNhBo8JCYfleB8Hx4DXS/wvvkg+toUf8sLO6zsOcFB23a2K
+	yQSKLHUqQ4zuzH/CateQ3OYxeAQ6cfIYkAEDPjqXCGw7qh34IHJftyjqXx2PG
+X-Google-Smtp-Source: AGHT+IHshqX+A1UBtsFjq9ppqRSHMn4X/cwBt945tWHGnCo2CaDOAkzF5ffG9Jlb6C7BXt3C9t6MkA==
+X-Received: by 2002:a05:6a20:2584:b0:2e5:655c:7f8f with SMTP id adf61e73a8af0-32da83e6319mr10105263637.46.1760007430823;
+        Thu, 09 Oct 2025 03:57:10 -0700 (PDT)
 Received: from localhost ([45.142.165.62])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-794e34e6f17sm2514275b3a.82.2025.10.09.03.57.05
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b6326d3af86sm6576895a12.14.2025.10.09.03.57.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Oct 2025 03:57:06 -0700 (PDT)
+        Thu, 09 Oct 2025 03:57:10 -0700 (PDT)
 From: Jinchao Wang <wangjinchao600@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -122,176 +124,247 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-trace-kernel@vger.kernel.org
 Cc: Jinchao Wang <wangjinchao600@gmail.com>
-Subject: [PATCH v7 00/23] mm/ksw: Introduce real-time KStackWatch debugging tool
-Date: Thu,  9 Oct 2025 18:55:36 +0800
-Message-ID: <20251009105650.168917-1-wangjinchao600@gmail.com>
+Subject: [PATCH v7 01/23] x86/hw_breakpoint: Unify breakpoint install/uninstall
+Date: Thu,  9 Oct 2025 18:55:37 +0800
+Message-ID: <20251009105650.168917-2-wangjinchao600@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20251009105650.168917-1-wangjinchao600@gmail.com>
+References: <20251009105650.168917-1-wangjinchao600@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This patch series introduces KStackWatch, a lightweight debugging tool to detect
-kernel stack corruption in real time. It installs a hardware breakpoint
-(watchpoint) at a function's specified offset using `kprobe.post_handler` and
-removes it in `fprobe.exit_handler`. This covers the full execution window and
-reports corruption immediately with time, location, and a call stack.
+Consolidate breakpoint management to reduce code duplication.
+The diffstat was misleading, so the stripped code size is compared instead.
+After refactoring, it is reduced from 11976 bytes to 11448 bytes on my
+x86_64 system built with clang.
 
-The motivation comes from scenarios where corruption occurs silently in one
-function but manifests later in another, without a direct call trace linking
-the two. Such bugs are often extremely hard to debug with existing tools.
-These scenarios are demonstrated in test 3–5 (silent corruption test, patch 20).
+This also makes it easier to introduce arch_reinstall_hw_breakpoint().
 
-Key features include:
+In addition, including linux/types.h to fix a missing build dependency.
 
-* Immediate and precise corruption detection
-* Support multiple watchpoints for concurrently called functions
-* Lockless design, usable in any context
-* Depth filter for recursive calls
-* Minimal impact on reproducibility
-* Flexible procfs configuration with key=val syntax
-
-To validate the approach, the patch includes a test module and a test script.
-
-There is a workflow example described in detail in the documentation (patch 22).
-Please read the document first if you want an overview.
-
+Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
-  Patches 1–3 of this series are also used in the wprobe work proposed by
-  Masami Hiramatsu, so there may be some overlap between our patches.
-  Patch 3 comes directly from Masami Hiramatsu (thanks).
----
-Changelog
+ arch/x86/include/asm/hw_breakpoint.h |   6 ++
+ arch/x86/kernel/hw_breakpoint.c      | 141 +++++++++++++++------------
+ 2 files changed, 84 insertions(+), 63 deletions(-)
 
-V7:
-  * Fix maintainer entry to alphabetical position
-
-V6:
-  * Replace procfs with debugfs interface
-  * Fix typos
-
-V5:
-  * Support key=value input format
-  * Support multiple watchpoints
-  * Support watching instruction inside loop
-  * Support recursion depth tracking with generation
-  * Ignore triggers from fprobe trampoline
-  * Split watch_on into watch_get and watch_on to fail fast
-  * Handle ksw_stack_prepare_watch error
-  * Rewrite silent corruption test
-  * Add multiple watchpoints test
-  * Add an example in documentation
-
-V4:
-  https://lore.kernel.org/all/20250912101145.465708-1-wangjinchao600@gmail.com/
-  * Solve the lockdep issues with:
-    * per-task KStackWatch context to track depth
-    * atomic flag to protect watched_addr
-  * Use refactored version of arch_reinstall_hw_breakpoint
-
-V3:
-  https://lore.kernel.org/all/20250910052335.1151048-1-wangjinchao600@gmail.com/
-  * Use modify_wide_hw_breakpoint_local() (from Masami)
-  * Add atomic flag to restrict /proc/kstackwatch to a single opener
-  * Protect stack probe with an atomic PID flag
-  * Handle CPU hotplug for watchpoints
-  * Add preempt_disable/enable in ksw_watch_on_local_cpu()
-  * Introduce const struct ksw_config *ksw_get_config(void) and use it
-  * Switch to global watch_attr, remove struct watch_info
-  * Validate local_var_len in parser()
-  * Handle case when canary is not found
-  * Use dump_stack() instead of show_regs() to allow module build
-  * Reduce logging and comments
-  * Format logs with KBUILD_MODNAME
-  * Remove unused headers
-  * Add new document
-
-V2:
-  https://lore.kernel.org/all/20250904002126.1514566-1-wangjinchao600@gmail.com/
-  * Make hardware breakpoint and stack operations architecture-independent.
-
-V1:
-  https://lore.kernel.org/all/20250828073311.1116593-1-wangjinchao600@gmail.com/
-  * Replaced kretprobe with fprobe for function exit hooking, as suggested
-    by Masami Hiramatsu
-  * Introduced per-task depth logic to track recursion across scheduling
-  * Removed the use of workqueue for a more efficient corruption check
-  * Reordered patches for better logical flow
-  * Simplified and improved commit messages throughout the series
-  * Removed initial archcheck which should be improved later
-  * Replaced the multiple-thread test with silent corruption test
-  * Split self-tests into a separate patch to improve clarity.
-  * Added a new entry for KStackWatch to the MAINTAINERS file.
-
-RFC:
-  https://lore.kernel.org/lkml/20250818122720.434981-1-wangjinchao600@gmail.com/
-
----
-
-The series is structured as follows:
-
-Jinchao Wang (22):
-  x86/hw_breakpoint: Unify breakpoint install/uninstall
-  x86/hw_breakpoint: Add arch_reinstall_hw_breakpoint
-  mm/ksw: add build system support
-  mm/ksw: add ksw_config struct and parser
-  mm/ksw: add singleton debugfs interface
-  mm/ksw: add HWBP pre-allocation
-  mm/ksw: Add atomic watchpoint management api
-  mm/ksw: ignore false positives from exit trampolines
-  mm/ksw: support CPU hotplug
-  sched: add per-task context
-  mm/ksw: add entry kprobe and exit fprobe management
-  mm/ksw: add per-task ctx tracking
-  mm/ksw: resolve stack watch addr and len
-  mm/ksw: manage probe and HWBP lifecycle via procfs
-  mm/ksw: add self-debug helpers
-  mm/ksw: add test module
-  mm/ksw: add stack overflow test
-  mm/ksw: add recursive depth test
-  mm/ksw: add multi-thread corruption test cases
-  tools/ksw: add test script
-  docs: add KStackWatch document
-  MAINTAINERS: add entry for KStackWatch
-
-Masami Hiramatsu (Google) (1):
-  HWBP: Add modify_wide_hw_breakpoint_local() API
-
- Documentation/dev-tools/index.rst       |   1 +
- Documentation/dev-tools/kstackwatch.rst | 314 ++++++++++++++++++++++
- MAINTAINERS                             |   8 +
- arch/Kconfig                            |  10 +
- arch/x86/Kconfig                        |   1 +
- arch/x86/include/asm/hw_breakpoint.h    |   8 +
- arch/x86/kernel/hw_breakpoint.c         | 148 +++++-----
- include/linux/hw_breakpoint.h           |   6 +
- include/linux/kstackwatch_types.h       |  14 +
- include/linux/sched.h                   |   5 +
- kernel/events/hw_breakpoint.c           |  37 +++
- mm/Kconfig.debug                        |  18 ++
- mm/Makefile                             |   1 +
- mm/kstackwatch/Makefile                 |   8 +
- mm/kstackwatch/kernel.c                 | 292 ++++++++++++++++++++
- mm/kstackwatch/kstackwatch.h            |  60 +++++
- mm/kstackwatch/stack.c                  | 240 +++++++++++++++++
- mm/kstackwatch/test.c                   | 343 ++++++++++++++++++++++++
- mm/kstackwatch/watch.c                  | 305 +++++++++++++++++++++
- tools/kstackwatch/kstackwatch_test.sh   |  52 ++++
- 20 files changed, 1809 insertions(+), 62 deletions(-)
- create mode 100644 Documentation/dev-tools/kstackwatch.rst
- create mode 100644 include/linux/kstackwatch_types.h
- create mode 100644 mm/kstackwatch/Makefile
- create mode 100644 mm/kstackwatch/kernel.c
- create mode 100644 mm/kstackwatch/kstackwatch.h
- create mode 100644 mm/kstackwatch/stack.c
- create mode 100644 mm/kstackwatch/test.c
- create mode 100644 mm/kstackwatch/watch.c
- create mode 100755 tools/kstackwatch/kstackwatch_test.sh
-
+diff --git a/arch/x86/include/asm/hw_breakpoint.h b/arch/x86/include/asm/hw_breakpoint.h
+index 0bc931cd0698..aa6adac6c3a2 100644
+--- a/arch/x86/include/asm/hw_breakpoint.h
++++ b/arch/x86/include/asm/hw_breakpoint.h
+@@ -5,6 +5,7 @@
+ #include <uapi/asm/hw_breakpoint.h>
+ 
+ #define	__ARCH_HW_BREAKPOINT_H
++#include <linux/types.h>
+ 
+ /*
+  * The name should probably be something dealt in
+@@ -18,6 +19,11 @@ struct arch_hw_breakpoint {
+ 	u8		type;
+ };
+ 
++enum bp_slot_action {
++	BP_SLOT_ACTION_INSTALL,
++	BP_SLOT_ACTION_UNINSTALL,
++};
++
+ #include <linux/kdebug.h>
+ #include <linux/percpu.h>
+ #include <linux/list.h>
+diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
+index b01644c949b2..3658ace4bd8d 100644
+--- a/arch/x86/kernel/hw_breakpoint.c
++++ b/arch/x86/kernel/hw_breakpoint.c
+@@ -48,7 +48,6 @@ static DEFINE_PER_CPU(unsigned long, cpu_debugreg[HBP_NUM]);
+  */
+ static DEFINE_PER_CPU(struct perf_event *, bp_per_reg[HBP_NUM]);
+ 
+-
+ static inline unsigned long
+ __encode_dr7(int drnum, unsigned int len, unsigned int type)
+ {
+@@ -85,96 +84,112 @@ int decode_dr7(unsigned long dr7, int bpnum, unsigned *len, unsigned *type)
+ }
+ 
+ /*
+- * Install a perf counter breakpoint.
+- *
+- * We seek a free debug address register and use it for this
+- * breakpoint. Eventually we enable it in the debug control register.
+- *
+- * Atomic: we hold the counter->ctx->lock and we only handle variables
+- * and registers local to this cpu.
++ * We seek a slot and change it or keep it based on the action.
++ * Returns slot number on success, negative error on failure.
++ * Must be called with IRQs disabled.
+  */
+-int arch_install_hw_breakpoint(struct perf_event *bp)
++static int manage_bp_slot(struct perf_event *bp, enum bp_slot_action action)
+ {
+-	struct arch_hw_breakpoint *info = counter_arch_bp(bp);
+-	unsigned long *dr7;
+-	int i;
+-
+-	lockdep_assert_irqs_disabled();
++	struct perf_event *old_bp;
++	struct perf_event *new_bp;
++	int slot;
++
++	switch (action) {
++	case BP_SLOT_ACTION_INSTALL:
++		old_bp = NULL;
++		new_bp = bp;
++		break;
++	case BP_SLOT_ACTION_UNINSTALL:
++		old_bp = bp;
++		new_bp = NULL;
++		break;
++	default:
++		return -EINVAL;
++	}
+ 
+-	for (i = 0; i < HBP_NUM; i++) {
+-		struct perf_event **slot = this_cpu_ptr(&bp_per_reg[i]);
++	for (slot = 0; slot < HBP_NUM; slot++) {
++		struct perf_event **curr = this_cpu_ptr(&bp_per_reg[slot]);
+ 
+-		if (!*slot) {
+-			*slot = bp;
+-			break;
++		if (*curr == old_bp) {
++			*curr = new_bp;
++			return slot;
+ 		}
+ 	}
+ 
+-	if (WARN_ONCE(i == HBP_NUM, "Can't find any breakpoint slot"))
+-		return -EBUSY;
++	if (old_bp) {
++		WARN_ONCE(1, "Can't find matching breakpoint slot");
++		return -EINVAL;
++	}
++
++	WARN_ONCE(1, "No free breakpoint slots");
++	return -EBUSY;
++}
++
++static void setup_hwbp(struct arch_hw_breakpoint *info, int slot, bool enable)
++{
++	unsigned long dr7;
+ 
+-	set_debugreg(info->address, i);
+-	__this_cpu_write(cpu_debugreg[i], info->address);
++	set_debugreg(info->address, slot);
++	__this_cpu_write(cpu_debugreg[slot], info->address);
+ 
+-	dr7 = this_cpu_ptr(&cpu_dr7);
+-	*dr7 |= encode_dr7(i, info->len, info->type);
++	dr7 = this_cpu_read(cpu_dr7);
++	if (enable)
++		dr7 |= encode_dr7(slot, info->len, info->type);
++	else
++		dr7 &= ~__encode_dr7(slot, info->len, info->type);
+ 
+ 	/*
+-	 * Ensure we first write cpu_dr7 before we set the DR7 register.
+-	 * This ensures an NMI never see cpu_dr7 0 when DR7 is not.
++	 * Enabling:
++	 *   Ensure we first write cpu_dr7 before we set the DR7 register.
++	 *   This ensures an NMI never see cpu_dr7 0 when DR7 is not.
+ 	 */
++	if (enable)
++		this_cpu_write(cpu_dr7, dr7);
++
+ 	barrier();
+ 
+-	set_debugreg(*dr7, 7);
++	set_debugreg(dr7, 7);
++
+ 	if (info->mask)
+-		amd_set_dr_addr_mask(info->mask, i);
++		amd_set_dr_addr_mask(enable ? info->mask : 0, slot);
+ 
+-	return 0;
++	/*
++	 * Disabling:
++	 *   Ensure the write to cpu_dr7 is after we've set the DR7 register.
++	 *   This ensures an NMI never see cpu_dr7 0 when DR7 is not.
++	 */
++	if (!enable)
++		this_cpu_write(cpu_dr7, dr7);
+ }
+ 
+ /*
+- * Uninstall the breakpoint contained in the given counter.
+- *
+- * First we search the debug address register it uses and then we disable
+- * it.
+- *
+- * Atomic: we hold the counter->ctx->lock and we only handle variables
+- * and registers local to this cpu.
++ * find suitable breakpoint slot and set it up based on the action
+  */
+-void arch_uninstall_hw_breakpoint(struct perf_event *bp)
++static int arch_manage_bp(struct perf_event *bp, enum bp_slot_action action)
+ {
+-	struct arch_hw_breakpoint *info = counter_arch_bp(bp);
+-	unsigned long dr7;
+-	int i;
++	struct arch_hw_breakpoint *info;
++	int slot;
+ 
+ 	lockdep_assert_irqs_disabled();
+ 
+-	for (i = 0; i < HBP_NUM; i++) {
+-		struct perf_event **slot = this_cpu_ptr(&bp_per_reg[i]);
+-
+-		if (*slot == bp) {
+-			*slot = NULL;
+-			break;
+-		}
+-	}
+-
+-	if (WARN_ONCE(i == HBP_NUM, "Can't find any breakpoint slot"))
+-		return;
++	slot = manage_bp_slot(bp, action);
++	if (slot < 0)
++		return slot;
+ 
+-	dr7 = this_cpu_read(cpu_dr7);
+-	dr7 &= ~__encode_dr7(i, info->len, info->type);
++	info = counter_arch_bp(bp);
++	setup_hwbp(info, slot, action != BP_SLOT_ACTION_UNINSTALL);
+ 
+-	set_debugreg(dr7, 7);
+-	if (info->mask)
+-		amd_set_dr_addr_mask(0, i);
++	return 0;
++}
+ 
+-	/*
+-	 * Ensure the write to cpu_dr7 is after we've set the DR7 register.
+-	 * This ensures an NMI never see cpu_dr7 0 when DR7 is not.
+-	 */
+-	barrier();
++int arch_install_hw_breakpoint(struct perf_event *bp)
++{
++	return arch_manage_bp(bp, BP_SLOT_ACTION_INSTALL);
++}
+ 
+-	this_cpu_write(cpu_dr7, dr7);
++void arch_uninstall_hw_breakpoint(struct perf_event *bp)
++{
++	arch_manage_bp(bp, BP_SLOT_ACTION_UNINSTALL);
+ }
+ 
+ static int arch_bp_generic_len(int x86_len)
 -- 
 2.43.0
 
