@@ -1,139 +1,103 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650A72EB84B
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Oct 2025 14:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88949B663
+	for <linux-perf-users@vger.kernel.org>; Thu,  9 Oct 2025 15:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760021999; cv=none; b=VrXQaf84ABpjpQZVyNKURZTSviCVjSv85FtRB3KugYlUwkwmTQ70V5r6YjKToXtODG/kDR4W+Dx6+wqFewJeJ0p9zDZoU75mQHn29H1nO/h815iYNr248Y0C3UpEwmciSp/N9ZWdfOm6H61zRlx22fX5w/IJwdjZvImvGDDnKcw=
+	t=1760023394; cv=none; b=GiSWofRkYo9EDRRZRN0EKUDovI1pVn/ApYx1j97KfiVxlgYeJqsaxIAcIesGVGa16cvYdgWvycBzusnr9U/o+Zygy63N4xDK0KTsogBuo7vxhsptfZ4G6ej7N8hpijF8y+x1Fba16qEFKM9yGux5a5HqvnfTL4xHMPEupFmEDPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760021999; c=relaxed/simple;
-	bh=L2Lo8kSdfBMnkNRq8XbcHS67JmwwIk/FQgvWpO5WtMA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=frDfyOYog0iHwOMR0tmPjOTohD0rogHeLncyuoorm5s9WnO01Kd4h+0s1oblt+WUpRSIGEVqb9qI2rA82fMfJMFAHnXcZm8fSZ52v5qD7KwdaTrO2X0K70UYgEV3tXMX8ZFPNhtB4m2rbjZlAahibz8Ez70j09CAvoM2IRnAK2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WzQ2hniD; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1760023394; c=relaxed/simple;
+	bh=MJFiOKnb50yHXXmJw6v2r67v6JzEr7Pu+ziuNKiQ750=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TRGSsxGNGVQbC5txeoQXYWqKww/GYoBW4jKGwWK8fRcG0SnPBpZuKpTu8VQhcWPFVqxmH9Jp9ovsu3ZyCZwCmXy3eJxtKzAIn9f0MjvvvEdCV9oz1NROq6hPIhx6FSzPRX3xaNc0Ki65X/HA7NqF8ItqWcjp7ThMH39V/ThPnH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fFGWqteb; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WzQ2hniD"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-46e4473d7f6so6705195e9.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Oct 2025 07:59:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1760021996; x=1760626796; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=10iT2oO+cEU1+lBYpHWczzbKaaulijrdCRW16Z1Rnx8=;
-        b=WzQ2hniD+oBsCVLh8Pzq53BAaK9JHKXoirfbrUM1jR6FqEZEDovSeZXLYmeE5oQsWI
-         xTFdQIxU8YkpyTOMNliRqdZTMNZVK90z1PXenLaPw2+rE6I0W2Yuwm6Qpz+iUkE6uddd
-         YNlwa4DIJIv4fRfcuc+TJYZDBo6Tf/Pn9XfZsZeu7iHzFDOvp5XLbCSUE85qcFC5K+w3
-         adDLFm6qak39ktqkA0pgnpHTNPQ6pyKOv4S5orV6vBjw4tkkg1QjqpWPgkaTXU7feTj/
-         m1NHhXQORX3pPk9P7EQyrQagmSEYk9amKLXXNSy/Ds3mnx9kB1YpsfO9Y1bAISbRCe45
-         LkfQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fFGWqteb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1760023391;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MJFiOKnb50yHXXmJw6v2r67v6JzEr7Pu+ziuNKiQ750=;
+	b=fFGWqtebc3TVpDX0ymhPjsKDdv/myMwCo8uIhSPakEKdYQxhk/c7JKG9aMtzoGG76eYKr0
+	CZn5FwWVsTw8pKgoaTejphH91oB8RGYAbXyyEnx+VN0lFFrGEt8lFbU4q31lv8vVGE8tJv
+	MgtC8PmHKmsBkLuu4erx0oM3dKq+K8g=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-9-CJtmOZRgMLCb5TpBuV5hJg-1; Thu, 09 Oct 2025 11:23:08 -0400
+X-MC-Unique: CJtmOZRgMLCb5TpBuV5hJg-1
+X-Mimecast-MFC-AGG-ID: CJtmOZRgMLCb5TpBuV5hJg_1760023387
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-369b2d355d0so6152021fa.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Oct 2025 08:23:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760021996; x=1760626796;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=10iT2oO+cEU1+lBYpHWczzbKaaulijrdCRW16Z1Rnx8=;
-        b=f7Hq228YWefqhaAp3Q36gJz9yVqE7EXSkWZ3mcjPEVOf635vx+plMC9E3zK/YrnjqB
-         xd2YNcIOcqt4xGWOpDFhgEYu/J/XMTAO9h9hUIhRZ37fj1qCQKPdFNBAJ7wuhk5EiHzN
-         juHuNrnZ5P3qIsPVEDantRozgGzSC6E9RLf20KKOyUOgxz8DtOsw2AzjBH4Q2BvVIdxl
-         kYMvT34BmToyMMWjvBiTagu5B8945jF6r/pbzLyCcN9px69MjzGUHFmIo+J13k/AGCfa
-         auImhJp2N98lT0eEghXGjDp408PObxeupHDRwFPfYXJenEz5LiJZlo6j1aZsZI08My04
-         vrJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUJRu297DplwN1G/q9Z0DW1FlhZO2f6zC89mPPLOJjSlOajWibR2Hr+uLoz3sXWhPGif69VM1o83rSQ9T8inbsX@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTBCdUrNWHP6L9LYsozr/MpiG8IYtYYFjFuZfH9FX5AOONBwR2
-	EYUWo21xwoZvb/Y2EcHL8cDmYpSfQjoEUTuMFCjWCj9oUiED2M6IBc9C+50mqj5/Dqg=
-X-Gm-Gg: ASbGnctZAOUjIF6i/87+It2cqBKfAPbB00t+sLGSzMxIspU8T2OF59YKEH9Txj1qpoQ
-	6gmzcOPloPk419rE5cbJ1qmKnVsqzK+a+pPhLS6hsvcjb9v9+0N5rZgGJdvbpImp32nZCLkQYac
-	2SNIxbLraixn1mOXxkjaonXlTXAxXwZhickii+Nbr30hhiPWmsoJkZqZLBGaDxj9smeDWearzDs
-	YC+jJ8gDmAZLbhLsmoD3ZvleTmELbn1o5UgEBmDKnSA0oqLHtJvgrJh8B9ni8kwdLaBMS72NXcm
-	yFJoBmftSejCwuH59rViKI+tkcrOpjh+DMUcDTcZcGsz1YRj4Saoa5SOaGd6+Fv5RShxzPObiwg
-	YJvG8ahmyDv7Foqety1hQrb4RIrd2BVPnXiW0gfL1QOaPKzL9FWmkIqZg4jt4CLI90l8=
-X-Google-Smtp-Source: AGHT+IGbguFErndnoTwqRl4rWZZWS65OJ9VHr1os7pR1Zp7kyGEsQwEzaK2RUNAV2tBsFHsjvVsISQ==
-X-Received: by 2002:a05:600d:420d:b0:45d:cfee:7058 with SMTP id 5b1f17b1804b1-46fa9af9041mr53862665e9.22.1760021995707;
-        Thu, 09 Oct 2025 07:59:55 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.76.109])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-46fb482ca80sm1473375e9.10.2025.10.09.07.59.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Oct 2025 07:59:55 -0700 (PDT)
-Message-ID: <58801744-44e4-4182-ab4e-bfcf8e2bfc69@linaro.org>
-Date: Thu, 9 Oct 2025 15:59:54 +0100
+        d=1e100.net; s=20230601; t=1760023386; x=1760628186;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MJFiOKnb50yHXXmJw6v2r67v6JzEr7Pu+ziuNKiQ750=;
+        b=uBUzTIYM55YMgZ2hVjSxdsPv7iLv1Zan/aMxYB07HVkX6NtddEGPKVJ+tNzK9mxhZC
+         PeUmtVAmvs7FvHZUFIN+zvkx2SnuW51fP1C0l6UZ5DShLpR9zE4f9PJheXtmk+blcFKW
+         zJfy/cP/Bz0LaTxovWlnUQwfYrOFF35zE/9AocR+D17wwbeMLfmQPiTn0HUyk8U/eiff
+         zFNgCfWF+ZjoYYJybgH87XrbeCaL4bSp/0mKDPTeBHHqU9YdBCFL5f1BPFpLBdaIsGAj
+         5TafZZHz3vaFYafptNUGy0Yfdxb1G7/7gMdnffMo5IY6T/asVzKXFej2ykIhG88Wg3Wq
+         NEww==
+X-Forwarded-Encrypted: i=1; AJvYcCUEAhtIqGHfTNXh1wg/29+LZiPs2SvA+OqkLt3zSnri/gT6gziz81cKYrrGlaTzvKTVtGmG9kyEo67ExYRc+xHW@vger.kernel.org
+X-Gm-Message-State: AOJu0YzD3OrJE2dI/oGXDvW/NyiwP+A4Qu+hcbSYHNkQUpkJsyEmp42Z
+	UERDqjWGGl5rHlHhco65i1SIT+/pKm3Tz2ImYx8FI2lhMk0P1cswpgwwz8qaXCdzgycxCr9peIO
+	N6Cl63NU3fvfal26226RWtslmliBBdcSFT2SQs1hWvpZesCm/Qe6P6PCYMWGJYmOxMBYl7j9DHo
+	3zlMALlcaUbw5azAnPO0ThApfGenKHWpbfce6n3lRWVJSA3w==
+X-Gm-Gg: ASbGncvVxWEOk3Fh1xKKodvOyu5+xlC+x2P/kl2pha+MVxTDxy6CNLwKVgPVfOeR8H7
+	gEcX5Dv29WGtqxJTh6qAoKJXKlHIwvCstaB10NNoXcIHlpcf15W3VViD1odTJubAameFUQoaI+4
+	I5nozTppS+hc9p2W4216xel1CK
+X-Received: by 2002:a2e:bcc6:0:b0:376:2802:84ac with SMTP id 38308e7fff4ca-37628028b0emr5484581fa.46.1760023386525;
+        Thu, 09 Oct 2025 08:23:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE+CQ++uJDYnzwvibsq4vWNVCIaKGnGLPwjj8X8WX4KDR65G6LtATG1bxSca6Or5cyXD86H+HapOAqGddQ58Js=
+X-Received: by 2002:a2e:bcc6:0:b0:376:2802:84ac with SMTP id
+ 38308e7fff4ca-37628028b0emr5484451fa.46.1760023386110; Thu, 09 Oct 2025
+ 08:23:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf tests record: allow for some difference in cycle
- count in leader sampling test on aarch64
-To: Anubhav Shelat <ashelat@redhat.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>, Namhyung Kim
- <namhyung@kernel.org>, mpetlan@redhat.com, acme@kernel.org,
- irogers@google.com, linux-perf-users@vger.kernel.org, peterz@infradead.org,
- mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
- jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- dapeng1.mi@linux.intel.com
-References: <20251001195047.541745-2-ashelat@redhat.com>
- <906a9e47-ec19-4897-bbc0-06101d7afd24@linux.ibm.com>
+References: <20251001195047.541745-2-ashelat@redhat.com> <906a9e47-ec19-4897-bbc0-06101d7afd24@linux.ibm.com>
  <CA+G8DhL49FWD47bkbcXYeb9T=AbxNhC-ypqjkNxRnW0JqmYnPw@mail.gmail.com>
- <901d2d1d-647a-4a76-a0ee-d8a687ed3f85@linux.ibm.com>
- <ff157071-e241-4b81-8241-cfd15e5705ef@linaro.org>
- <7a03fb30-87f9-4737-b59a-9f977acc7549@linux.ibm.com>
- <296700d2-878b-4eeb-b8cd-0252b2f92479@linaro.org>
+ <901d2d1d-647a-4a76-a0ee-d8a687ed3f85@linux.ibm.com> <ff157071-e241-4b81-8241-cfd15e5705ef@linaro.org>
+ <7a03fb30-87f9-4737-b59a-9f977acc7549@linux.ibm.com> <296700d2-878b-4eeb-b8cd-0252b2f92479@linaro.org>
  <CA+G8Dh+Odf40jdY4h1knjU+3sSjZokMx6OdzRT3o9v1=ndKORQ@mail.gmail.com>
  <CA+G8DhKDvkojDnwxXKe1iiLWwJ0uwD62-qc4_sJgBDdS+qLu-g@mail.gmail.com>
- <f4eba834-e45c-4eba-9650-5b6720fcd30f@linaro.org>
- <CA+G8DhKQkTKoNer5GfZedPUj4xMizWVJUWFocP2eQ_cmPJtBOQ@mail.gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <CA+G8DhKQkTKoNer5GfZedPUj4xMizWVJUWFocP2eQ_cmPJtBOQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+ <f4eba834-e45c-4eba-9650-5b6720fcd30f@linaro.org> <CA+G8DhKQkTKoNer5GfZedPUj4xMizWVJUWFocP2eQ_cmPJtBOQ@mail.gmail.com>
+ <58801744-44e4-4182-ab4e-bfcf8e2bfc69@linaro.org>
+In-Reply-To: <58801744-44e4-4182-ab4e-bfcf8e2bfc69@linaro.org>
+From: Anubhav Shelat <ashelat@redhat.com>
+Date: Thu, 9 Oct 2025 16:22:54 +0100
+X-Gm-Features: AS18NWCXsDnxcv0-cnyVIwc7bM1sEtpiXMZzP9S4ESMVLtPTpGj6oTIBYgWgLDQ
+Message-ID: <CA+G8DhKiiHusKbJ28oNH3Cofa49k_H+yLoAc9+Wt3KQYWPOg6Q@mail.gmail.com>
+Subject: Re: [PATCH] perf tests record: allow for some difference in cycle
+ count in leader sampling test on aarch64
+To: James Clark <james.clark@linaro.org>
+Cc: Thomas Richter <tmricht@linux.ibm.com>, Namhyung Kim <namhyung@kernel.org>, mpetlan@redhat.com, 
+	acme@kernel.org, irogers@google.com, linux-perf-users@vger.kernel.org, 
+	peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, dapeng1.mi@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Oct 9, 2025 at 4:00=E2=80=AFPM James Clark <james.clark@linaro.org>=
+ wrote:
+> Also what hardware is the VM running on?
+Both were running on an HPE Apollo CN99XX server.
 
-
-On 09/10/2025 3:43 pm, Anubhav Shelat wrote:
-> The first machine was running kernel 6.12.0-55.37.1.el10_0.aarch64 on a KVM
-> virtual machine.
-> The second machine was running kernel 6.12.0-119.el10.aarch64 also on a KVM.
-> 
-
-That's quite old. Make sure you test on the latest kernel before sending 
-patches. The tests in mainline should be targeting the latest kernel, 
-especially in this case because the throttling fix didn't have a fixes 
-tag so won't be backported.
-
-That change to fix throttling and group sampling is only from v6.16.
-
-Also what hardware is the VM running on?
-
-> On Thu, Oct 9, 2025 at 3:17 PM James Clark <james.clark@linaro.org> wrote:
->> After reading that patch it seems like we should actually be removing
->> the 80% tolerance from the leader sampling test. Both instances of the
->> cycles counts should be the same now.
-> 
-> If there's no tolerance then the leader sampling test would fail much more
-> often. In most of the runs there's at least one case where the leader event
-> has much fewer cycles.
-> 
-
-That's assuming that we've agreed that any difference in cycle counts is 
-expected and valid. I don't agree that's the case yet and I think it's a 
-bug. I only see identical counts, and the commit message in Kan's fix 
-describes that the values should be the same for all architectures.
-
->> (Excluding s390) I'm starting to think you were hitting this bug on an
->> older kernel? Or something else is going wrong that we should  get to
->> the bottom of. The test could have found something and we shouldn't
->> ignore it yet.
-> 
-> I agree that the first bug I mentioned might be from an older kernel, but
-> there's still the case here where the cycle counts don't match. I'll keep
-> looking into it.
-> 
-> Anubhav
-> 
+> That's assuming that we've agreed that any difference in cycle counts is
+> expected and valid. I don't agree that's the case yet and I think it's a
+> bug. I only see identical counts, and the commit message in Kan's fix
+> describes that the values should be the same for all architectures.
+True
 
