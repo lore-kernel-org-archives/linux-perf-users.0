@@ -1,182 +1,120 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6D32BE04B
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Oct 2025 06:50:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21243296BB7;
+	Thu,  9 Oct 2025 07:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759992655; cv=none; b=ix2PuhSi/G1tDdYUK66Uc8XSScXk0eOHkPBaTsEY0XgWSdEmcQRCbOvvFOQaIOMKUOuXT33wB3LwmxTX6xNVoSrB5zIIPc4tvyxviaOAOTuFv5KOTGmhto9MJtJlyu64B9+Lsey4kEs9RY0gE+X9pE5xuUNHT+y1t7VBMut3YDQ=
+	t=1759993998; cv=none; b=CP48PDoQwOnAjcBymrapc8Z248Wm3yKFG0r6RJ1yTNaLZq/xtEc41k1W07XCucDFYH6PMTO4WlhvWfuipnQ6rfsdGHh4OPZSyiX6nFKsZG4Ygn8Ok5HUP34ZtFnAhEOpTXkl/bnt6KCqtv03zpw72H+qJfj0AB/Uud2l3O3pd3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759992655; c=relaxed/simple;
-	bh=5iaDRjaHStX8bpORHYa3ggYGC4GJYP2AVm30MmJstLU=;
+	s=arc-20240116; t=1759993998; c=relaxed/simple;
+	bh=T5zn5Ca+xwqy9DqiIbsdQnH105gGdThs9cfyRZRrRTw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ld4Yds9jB+L7DmzhtjjNbA1b4hm/JuD9jSMWhlePi76AB6jIb2OwmuHiyEnOhDTwhAF2poVJF89/NMvC3GwXveeV4/sKfTkARUXrxRbyQvbqLykjiIStLd4lrxpoFXHvKqCES9JSS5G6NX7nZIozHVKCKkcmqxaTgaS2iqTsivw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vl3GJE+w; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=l+HEhsyqG1FcK5Z7XyCenSs15IVcqSRXLt6/7Urex8jrEZAPiLi/eGcaYWFW2hF9t38/SgjJOqMFCZAf2Fiuw1ZA/eZhhPjhrwx/S2gwHrmQSiw6JPQkpdjtm4bHz3hI4Xx3Uy1w4DLuHTyB9RxG61IuXRwFMcNpheVQGf915/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=H4efYigj; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vl3GJE+w"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-78af3fe5b17so462453b3a.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Oct 2025 23:50:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1759992653; x=1760597453; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=msPzO2LdAQxGndJ6DjHr10aS1oMz0X5JmsGbgMgwTiU=;
-        b=Vl3GJE+wDZX+vJoZQYqZ5ZU3Z0SQctrtVtmm/0vba35ymk6QBlLv+eCnG2JuOuB0Qy
-         nvmqEhWoNBGjFTV36YcAGEbBHJeEHSrSjX9cCf2LNDJQ4ieCDR+B6glXBPUYIMGy6AR+
-         OfxsapHPWChffiaxokBM9qbV0QPjTG+DEA1vUY+ItLTMttD0Yx2T6QT3p84j93DeAxZ6
-         8+OMHQIjOyi3A4McPZ8x5x9vQCzlGXm0dRA75T8l9Dyzq70gUzI8qS18aIG1i1xajKhx
-         Gv36ILfSWTD764v/y4u6fXTjAzrRyKHw1aFAa2aDdRDF2z6aUnUNzBfcwx9anjCU71in
-         TWBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759992653; x=1760597453;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=msPzO2LdAQxGndJ6DjHr10aS1oMz0X5JmsGbgMgwTiU=;
-        b=LxCuVU6nflX8/9JzdiJtt35Y0/rtdG9QChUEWjnee7+hehuC/ScNHcpqWhrrrx8aU0
-         fyDJAfMp6AsFfImyS1PsmAJYxnRrT0+v0ZGsLt1QycsysLVfJDNNI1bkEX1zVjeO52fM
-         WQgEy8L1XJlqFn48dG+5y+2J1JIqf4bPpV88TYwviNwYfk7orsuviCIZx1gdgFvHBx4m
-         86swl0Xc/gNS9Sl9Nj5+QaGZhOf7AWe6yY12iNyAr13jNS85nj6iF0dokb4SDzvhj8vb
-         UZ6X73HKmYVtiZAgwdeoUdfyM8zQI/gRLngaRAGqhFeWQwLrW0C9gAz4PY427QS4JFB/
-         b5eQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU/ja94hwzlFZU0pXY6oHteaZMTzY/cpmyG2PZ8oDFBNtsQpsLamhGudLn+GDVkRX2/i+ZsBbw6N2W8d6fstgbx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxk6XNxrWGxbgo5AAgX98da030v4aBhZ5Omx+XbzLlp6wxpsdvC
-	/28tavJOTe5C/aWpGfSkSDh+/q2EYm6ZMmONWCx9vuEmuy+J1fl9hW2V
-X-Gm-Gg: ASbGncsBRwqB9MmFSdD6HsBEyNwm8G5HijERgvsmoSufVXjmgf69XRxthujeCDEy29s
-	RNK8wKvMOgia83onLaOmrQ7Wst+smMbPgQW7bmWvjLIXbQYkU74UrJ0KFH92GstG2k3wVxl6f/K
-	80BNsQG48y3U+YmG/fJW1ceVuOj0HTrK4RS1oE0AFn5UtmM4aQkNgAq3NwdSUOQqAU3HyoO+Wn1
-	JBp+LWiUMnDqtb5bsw4NHZlbZdg0Ho/hYy9oXIuSeOoDKznyUIPbfY0GVMPujTUf77zkgsTp6YP
-	5+E86LJyK7L/R5dt4DF71KJHi9ubxBJkeYootzEH9DAeCzuzlAxs0xK1QlNw9Nnm6zfTFVSSLxr
-	TGH+y86zGR5V2/v4tjbHqrwQD7zuawFNziUm1cTo9MxCK+C4q0xrWSfGKo3tRBt5A3GGxQC33
-X-Google-Smtp-Source: AGHT+IFMMMzSXgtEWLK41QXTNZ3lVQJZHbdPqEPiYgjhZ+ACp4v2JbI3obgmT4HZPDkdNTRW4JUzPw==
-X-Received: by 2002:a17:903:1b30:b0:276:d3e:6844 with SMTP id d9443c01a7336-290272c0450mr82694985ad.33.1759992653189;
-        Wed, 08 Oct 2025 23:50:53 -0700 (PDT)
-Received: from localhost ([45.142.167.196])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29034de56desm18189935ad.19.2025.10.08.23.50.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Oct 2025 23:50:52 -0700 (PDT)
-Date: Thu, 9 Oct 2025 14:50:44 +0800
-From: Jinchao Wang <wangjinchao600@gmail.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Doug Anderson <dianders@chromium.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Will Deacon <will@kernel.org>, Yunhui Cui <cuiyunhui@bytedance.com>,
-	akpm@linux-foundation.org, catalin.marinas@arm.com,
-	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-	christophe.leroy@csgroup.eu, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-	acme@kernel.org, mark.rutland@arm.com,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H4efYigj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=iQjhKM78ouddX3MpS9K7Fayl/6sYD/3M0x3yfLZ4K5o=; b=H4efYigjJ1G6Z3m5rUJDaCyHYS
+	hCxaIL7hrQjGg8v4twsTQ3ku9lcBNtr+QStTSjn21d+6mcZS1OyAgxsVKx12dgZmSKOBsmliQXTnH
+	gmZ6yT49Q7rr0F4OxlLhgTkuxtjlOQ44ibibxIKXyFX8VJl/bm2apEtQzP8RpAxJ34bLpuuaKM5A6
+	QP+iVN65zD1K9l2XlWeQLPgO6rj38tcSl+gV7oCHXR9ksHVRBV1KMdUPU1ZFuXerMtpXOjtmXphaJ
+	GtV5+jkc45SmWjFkKMVwPRJoqPUYfJQCzQq9+lwlzMtp71EiOTS0aNIQNHE74Ep9D2ky4uGAvdyy4
+	y7KsJYtw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1v6kp0-00000001FpM-0zBT;
+	Thu, 09 Oct 2025 07:12:26 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C5BC930039F; Thu, 09 Oct 2025 09:12:17 +0200 (CEST)
+Date: Thu, 9 Oct 2025 09:12:17 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: George Kennedy <george.kennedy@oracle.com>, mingo@redhat.com,
+	harshit.m.mogalapalli@oracle.com, acme@kernel.org,
+	namhyung@kernel.org, mark.rutland@arm.com,
 	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, kees@kernel.org,
-	masahiroy@kernel.org, aliceryhl@google.com, ojeda@kernel.org,
-	thomas.weissschuh@linutronix.de, xur@google.com,
-	ruanjinjie@huawei.com, gshan@redhat.com, maz@kernel.org,
-	suzuki.poulose@arm.com, zhanjie9@hisilicon.com,
-	yangyicong@hisilicon.com, gautam@linux.ibm.com, arnd@arndb.de,
-	zhao.xichao@vivo.com, rppt@kernel.org, lihuafei1@huawei.com,
-	coxu@redhat.com, jpoimboe@kernel.org, yaozhenguo1@gmail.com,
-	luogengkun@huaweicloud.com, max.kellermann@ionos.com, tj@kernel.org,
-	yury.norov@gmail.com, thorsten.blum@linux.dev, x86@kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH V1] watchdog: Add boot-time selection for hard lockup
- detector
-Message-ID: <aOdbRI3BaMCbyvtv@mdev>
-References: <aMpRqlDXXOR5qYFd@mdev>
- <CAP-5=fV05++2Qvcxs=+tqhTdpGK8L9e5HzVu=y+xHxy9AqLMmg@mail.gmail.com>
- <CAD=FV=VNmjTVxcxgTQqjE7CTkK2NVGbRxFJSwv=yOHU8gj-urQ@mail.gmail.com>
- <CAP-5=fW64xHEW+4dKU_voNv7E67nUOFm27FFBuhtFii52NiQUQ@mail.gmail.com>
- <CAD=FV=U3ic707dLuUc+NfxtWF6-ZyRdE0OY2VA6TgvgWKCHUzg@mail.gmail.com>
- <CAP-5=fVkw6TLjVuR3UCNs+X1cwVmYk7UFABio4oDOwfshqoP_g@mail.gmail.com>
- <CAD=FV=UWkZx8xQD=jBkOO6h2f5tw_KCoqhHciw5hkEOYU=GM8A@mail.gmail.com>
- <CAP-5=fXTFHcCE8pf5qgEf1AVODs2+r+_nDUOiWgdQeEgUBHzfA@mail.gmail.com>
- <CAD=FV=VuDYiu5nL5ZeZcY2b+YXOzZtSu2E4qBBHz9fWTW8gPhg@mail.gmail.com>
- <CAP-5=fX4=fV70N3GCdXgV6o-YoJynnSppxJp0MwdRrtsyDrs0w@mail.gmail.com>
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, tglx@linutronix.de, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dongli.zhang@oracle.com
+Subject: Re: [PATCH] [PATCH v2] perf/x86/amd: check event before enable to
+ avoid GPF
+Message-ID: <20251009071217.GB4067720@noisy.programming.kicks-ass.net>
+References: <1727725947-18058-1-git-send-email-george.kennedy@oracle.com>
+ <5837f1b6-b111-4ab5-888a-7a00891f3a34@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fX4=fV70N3GCdXgV6o-YoJynnSppxJp0MwdRrtsyDrs0w@mail.gmail.com>
+In-Reply-To: <5837f1b6-b111-4ab5-888a-7a00891f3a34@amd.com>
 
-On Tue, Oct 07, 2025 at 05:11:52PM -0700, Ian Rogers wrote:
-> On Tue, Oct 7, 2025 at 3:58 PM Doug Anderson <dianders@chromium.org> wrote:
-> >
-> > Hi,
-> >
-> > On Tue, Oct 7, 2025 at 3:45 PM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > On Tue, Oct 7, 2025 at 2:43 PM Doug Anderson <dianders@chromium.org> wrote:
-> > > ...
-> > > > The buddy watchdog was pretty much following the conventions that were
-> > > > already in the code: that the hardlockup detector (whether backed by
-> > > > perf or not) was essentially called the "nmi watchdog". There were a
-> > > > number of people that were involved in reviews and I don't believe
-> > > > suggesting creating a whole different mechanism for enabling /
-> > > > disabling the buddy watchdog was never suggested.
-> > >
-> > > I suspect they lacked the context that 1 in the nmi_watchdog is taken
-> > > to mean there's a perf event in use by the kernel with implications on
-> > > how group events behave. This behavior has been user
-> > > visible/advertised for 9 years. I don't doubt that there were good
-> > > intentions by PowerPC's watchdog and in the buddy watchdog patches in
-> > > using the file, that use will lead to spurious warnings and behaviors
-> > > by perf.
-> > >
-> > > My points remain:
-> > > 1) using multiple files regresses perf's performance;
-> > > 2) the file name by its meaning is wrong;
-> > > 3) old perf tools on new kernels won't behave as expected wrt warnings
-> > > and metrics because the meaning of the file has changed.
-> > > Using a separate file for each watchdog resolves this. It seems that
-> > > there wasn't enough critical mass for getting this right to have
-> > > mattered before, but that doesn't mean we shouldn't get it right now.
-> >
-> > Presumably your next steps then are to find someone to submit a patch
-> > and try to convince others on the list that this is a good idea. The
-> > issue with perf has been known for a while now and I haven't seen any
-> > patches. As I've said, I won't stand in the way if everyone else
-> > agrees, but given that I'm still not convinced I'm not going to author
-> > any patches for this myself.
+On Mon, Oct 07, 2024 at 12:13:56PM +0530, Ravi Bangoria wrote:
+> On 01-Oct-24 1:22 AM, George Kennedy wrote:
+> > On AMD machines cpuc->events[idx] can become NULL in a subtle race
+> > condition with NMI->throttle->x86_pmu_stop().
+> > 
+> > Check event for NULL in amd_pmu_enable_all() before enable to avoid a GPF.
+> > This appears to be an AMD only issue.
+> > 
+> > Syzkaller reported a GPF in amd_pmu_enable_all.
+> > 
+> > INFO: NMI handler (perf_event_nmi_handler) took too long to run: 13.143
+> >     msecs
+> > Oops: general protection fault, probably for non-canonical address
+> >     0xdffffc0000000034: 0000  PREEMPT SMP KASAN NOPTI
+> > KASAN: null-ptr-deref in range [0x00000000000001a0-0x00000000000001a7]
+> > CPU: 0 UID: 0 PID: 328415 Comm: repro_36674776 Not tainted 6.12.0-rc1-syzk
+> > RIP: 0010:x86_pmu_enable_event (arch/x86/events/perf_event.h:1195
+> >     arch/x86/events/core.c:1430)
+> > RSP: 0018:ffff888118009d60 EFLAGS: 00010012
+> > RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+> > RDX: 0000000000000034 RSI: 0000000000000000 RDI: 00000000000001a0
+> > RBP: 0000000000000001 R08: 0000000000000000 R09: 0000000000000000
+> > R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000002
+> > R13: ffff88811802a440 R14: ffff88811802a240 R15: ffff8881132d8601
+> > FS:  00007f097dfaa700(0000) GS:ffff888118000000(0000) GS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 00000000200001c0 CR3: 0000000103d56000 CR4: 00000000000006f0
+> > Call Trace:
+> >  <IRQ>
+> > amd_pmu_enable_all (arch/x86/events/amd/core.c:760 (discriminator 2))
+> > x86_pmu_enable (arch/x86/events/core.c:1360)
+> > event_sched_out (kernel/events/core.c:1191 kernel/events/core.c:1186
+> >     kernel/events/core.c:2346)
+> > __perf_remove_from_context (kernel/events/core.c:2435)
+> > event_function (kernel/events/core.c:259)
+> > remote_function (kernel/events/core.c:92 (discriminator 1)
+> >     kernel/events/core.c:72 (discriminator 1))
+> > __flush_smp_call_function_queue (./arch/x86/include/asm/jump_label.h:27
+> >     ./include/linux/jump_label.h:207 ./include/trace/events/csd.h:64
+> >     kernel/smp.c:135 kernel/smp.c:540)
+> > __sysvec_call_function_single (./arch/x86/include/asm/jump_label.h:27
+> >     ./include/linux/jump_label.h:207
+> >     ./arch/x86/include/asm/trace/irq_vectors.h:99 arch/x86/kernel/smp.c:272)
+> > sysvec_call_function_single (arch/x86/kernel/smp.c:266 (discriminator 47)
+> >     arch/x86/kernel/smp.c:266 (discriminator 47))
+> >  </IRQ>
+> > 
+> > Reported-by: syzkaller <syzkaller@googlegroups.com>
+> > Signed-off-by: George Kennedy <george.kennedy@oracle.com>
 > 
-> Writing >1 of:
-> ```
-> static struct ctl_table watchdog_hardlockup_sysctl[] = {
-> {
-> .procname       = "nmi_watchdog",
-> .data = &watchdog_hardlockup_user_enabled,
-> .maxlen = sizeof(int),
-> .mode = 0444,
-> .proc_handler   = proc_nmi_watchdog,
-> .extra1 = SYSCTL_ZERO,
-> .extra2 = SYSCTL_ONE,
-> },
-> };
-> ```
-> is an exercise of copy-and-paste, if you need me to do the copy and
-> pasting then it is okay.
-Can we get whether a perf event is already in use directly from the
-perf subsystem? There may be (or will be) other kernel users of
-perf_event besides the NMI watchdog. Exposing that state from the perf
-side would avoid coupling unrelated users through nmi_watchdog and
-similar features.
+> Peter, Ingo,
+> 
+> I've been blocking this for quite some time without acting on it. Since
+> the patch is trivial and harmless, I'm giving an Ack here. However, the
+> underlying race condition is still unknown, so I will get back to it.
+> 
+> Acked-by: Ravi Bangoria <ravi.bangoria@amd.com>
 
-> 
-> Thanks,
-> Ian
-> 
-> 
-> > -Doug
-> >
-
--- 
-Jinchao
+Does this want a Fixes tag? If so, please reply to the v3 patch.
