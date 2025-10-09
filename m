@@ -1,212 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99AC34BA3C;
-	Thu,  9 Oct 2025 02:31:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8494A06;
+	Thu,  9 Oct 2025 02:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759977078; cv=none; b=pqpWiki8+9UtnGJG+88/+qqdghUiF6kF3NyY0LCZT1r0ZuESD2QldVpwaBqdkXFadr4+ejUgJ7XK7t00wLhGrJMAtG0EGczeG5lzlwSpub2qrfe61r6FVWw3WFIGzeoEtkdeNhRf6q5EA4DQIhAU3fowNRRJXY6dK8POktQ2TlE=
+	t=1759977613; cv=none; b=Rx4l4f1whmcHRZbN9eJubKYGc0CJcdtKesbN2VgWU/h7bwhSN9lAaPEiJTXaJ7A8X1St3XFIU2VHOT48BVrL1/a1tzZRVq43dNJ10gnI/ZC6n1t73s8toTjAwDIcl2I2odhoxr3abb3SM2mR2hBAmeTAIgNrXHtXHaIjuHCXr5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759977078; c=relaxed/simple;
-	bh=+7s9Br6cECwXBhfFA8GmgPo2i86Xbi2C0hgsN/FI2gk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kWBnQGXn6vH/waichiq+MwYI+eDrsPL0gf4/SQeKbqitQb+IyRPOCPGhKCSEQh6kYOTuum4SVgR7YW8v0xE4CgPs0i8sIcyflrqW52YAR7lkBFVWq46uiba9o6fEYg7Mlx/A882ZifwFXTeGlicI9oHOIcj0tqfuC24Dkt6amPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I1rvve7h; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1759977613; c=relaxed/simple;
+	bh=SfF8OsFdqWY0TzUpzXdg3+0k+Nk5GeXD7pfItdDcVj0=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=dpH+YjxNDj8xtUnyc4mGikHaSH2XRRHHH39ZLoTUIN6tW/PEaKNnrClcnFPacR09BL+af5KeEu3lugxTiyyoQhCmuXo73m8e10jrjtnzSjw4QgaQ2MpqtvwbZ7blXTdcLOIvLOMcn9mzVxsVI/FgCAHIf+T+XbsRsy2A4WCvsqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u9adfab5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I1rvve7h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1759977077; x=1791513077;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=+7s9Br6cECwXBhfFA8GmgPo2i86Xbi2C0hgsN/FI2gk=;
-  b=I1rvve7hh+Oyqbtn0oYTrmYcg895zt+J8U94a3dGo8fdzEZKuPKhZaSg
-   3t67UlOpVaGPkSZCPZ0D1vFFii36IsDnpi+YXKeshHpsiywGHPAcnorhG
-   L23qeENaPk73Z8vLmTw/ESRlbXhg7dd08DMxRx6oxBd18bubsqS8PZ2yA
-   Ekce8X9G9fR3ogQDEzTyd0uGY8ZLpaddsP4Ob7Yu/vryqayQuuY2j4ABC
-   yGzveZZFFRgvxAzuRrH0+6yD6A4p7HpmoBTOTALdttRch67zazwl9Gmto
-   A/WUeMGVpOgaIwe0/K+UQMP/rSRHlT6Mx8jAdfQCZpVerqWS6RFdN8i/O
-   A==;
-X-CSE-ConnectionGUID: UH3dqJhGSrikMbnN8WyMew==
-X-CSE-MsgGUID: JiM3ZekKQF2GcUjfTA0eOA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11576"; a="72792615"
-X-IronPort-AV: E=Sophos;i="6.19,215,1754982000"; 
-   d="scan'208";a="72792615"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2025 19:31:15 -0700
-X-CSE-ConnectionGUID: 3dsMEZceTeOzWYOdq2p59g==
-X-CSE-MsgGUID: x52x1ZdHTACOTyW4G9aN4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,215,1754982000"; 
-   d="scan'208";a="179847110"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.209]) ([10.124.232.209])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2025 19:31:11 -0700
-Message-ID: <fd91b8b2-7e6e-42b6-812d-3cf3ead882d3@linux.intel.com>
-Date: Thu, 9 Oct 2025 10:31:08 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u9adfab5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2C50C4CEF5;
+	Thu,  9 Oct 2025 02:40:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1759977612;
+	bh=SfF8OsFdqWY0TzUpzXdg3+0k+Nk5GeXD7pfItdDcVj0=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=u9adfab5FIQorOQIO7san3Wdh+BaE5n1Kn05qaKDNACQ5Dll1l/ee0xVTnc6nAa7y
+	 pL8NxheN5x+qIAPrNafWNtd5TQuEgSGfKdnc+sFB1G98Kj+hhREPoUb6PzOpEpB64U
+	 Oba1/miLnmfVQChTwvX85TM19txs+0aPFw34E2By/NL5tIKrFVbdsqU8CGh6s28JuM
+	 90tsMGeYa2qBCRmXkN82zVoEhlcpFqu1FHnFO7l/HFy3MmbhZh9TBUh0JauYriHxR3
+	 e9gWe1/7bHDAVTnUSk0bpWhG+0XHQFuf3Gv0H3nngcOFMIUJZUdX7rktA0HAbwPp03
+	 wkGImPZa8FR/g==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 5A39C3A41022;
+	Thu,  9 Oct 2025 02:40:02 +0000 (UTC)
+Subject: Re: [GIT PULL] perf tools changes for v6.18
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20251008202804.852200-1-acme@kernel.org>
+References: <20251008202804.852200-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20251008202804.852200-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-for-v6.18-1-2025-10-08
+X-PR-Tracked-Commit-Id: f3b601f900902ab80902c44f820a8985384ac021
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ec714e371f22f716a04e6ecb2a24988c92b26911
+Message-Id: <175997760107.3724664.13362648592696519117.pr-tracker-bot@kernel.org>
+Date: Thu, 09 Oct 2025 02:40:01 +0000
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Ankur Arora <ankur.a.arora@oracle.com>, Athira Rajeev <atrajeev@linux.ibm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Colin Ian King <colin.i.king@gmail.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, David Binderman <dcb314@hotmail.com>, Fushuai Wang <wangfushuai@baidu.com>, Gautam Menghani <gautam@linux.ibm.com>, GuoHan Zhao <zhaoguohan@kylinos.cn>, Howard Chu <howardchu95@gmail.com>, Ilkka Koskinen <ilkka@os.amperecomputing.com>, James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, Tejas Manhas <tejas05@linux.ibm.com>, Tho
+ mas Falcon <thomas.falcon@intel.com>, Thomas Richter <tmricht@linux.ibm.com>, Trevor Allison <tallison@redhat.com>, Venkat Rao Bagalkote <venkat88@linux.ibm.com>, Xudong Hao <xudong.hao@intel.com>, Yunseong Kim <ysk@kzalloc.com>, Zecheng Li <zecheng@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND][PATCH v2 0/2] perf record: ratio-to-prev event term for
- auto counter reload
-To: "Falcon, Thomas" <thomas.falcon@intel.com>,
- "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "acme@kernel.org" <acme@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
- "Hunter, Adrian" <adrian.hunter@intel.com>,
- "namhyung@kernel.org" <namhyung@kernel.org>,
- "jolsa@kernel.org" <jolsa@kernel.org>,
- "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
- "irogers@google.com" <irogers@google.com>,
- "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
- "ak@linux.intel.com" <ak@linux.intel.com>
-References: <20250902164047.64261-1-thomas.falcon@intel.com>
- <ed463cd8-495e-4769-b392-372413ca7db6@linux.intel.com>
- <cf7ae59b735f004b5c6dd53b82e3d3e2acfad973.camel@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <cf7ae59b735f004b5c6dd53b82e3d3e2acfad973.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
+The pull request you sent on Wed,  8 Oct 2025 17:28:04 -0300:
 
-On 10/2/2025 11:38 PM, Falcon, Thomas wrote:
-> On Tue, 2025-09-30 at 15:28 +0800, Mi, Dapeng wrote:
->> On 9/3/2025 12:40 AM, Thomas Falcon wrote:
->>> The Auto Counter Reload (ACR)[1] feature is used to track the
->>> relative rates of two or more perf events, only sampling
->>> when a given threshold is exceeded. This helps reduce overhead
->>> and unnecessary samples. However, enabling this feature
->>> currently requires setting two parameters:
->>>
->>>  -- Event sampling period ("period")
->>>  -- acr_mask, which determines which events get reloaded
->>>     when the sample period is reached.
->>>
->>> For example, in the following command:
->>>
->>> perf record -e "{cpu_atom/branch-misses,period=200000,\
->>> acr_mask=0x2/ppu,cpu_atom/branch-instructions,period=1000000,\
->>> acr_mask=0x3/u}" -- ./mispredict
->>>
->>> The goal is to limit event sampling to cases when the
->>> branch miss rate exceeds 20%. If the branch instructions
->>> sample period is exceeded first, both events are reloaded.
->>> If branch misses exceed their threshold first, only the
->>> second counter is reloaded, and a sample is taken.
->>>
->>> To simplify this, provide a new “ratio-to-prev” event term
->>> that works alongside the period event option or -c option.
->>> This would allow users to specify the desired relative rate
->>> between events as a ratio, making configuration more intuitive.
->>>
->>> With this enhancement, the equivalent command would be:
->>>
->>> perf record -e "{cpu_atom/branch-misses/ppu,\
->>> cpu_atom/branch-instructions,period=1000000,ratio_to_prev=5/u}" \
->>> -- ./mispredict
->> Hi Tom,
->>
->> Does this "ratio-to-prev" option support 3 and more events in ACR
->> group?
->>
-> Hi Dapeng,
->
-> The 'ratio-to-prev' option only supports groups with two events at this
-> time. For larger event groups, the "acr_mask" term is available.
->
->> If not, should we consider to support the cases there are 3 and more
->> events
->> in the ACR group? (If I remember correct, the PMU driver should
->> support it).
->>
-> Correct.
->
->> e.g.,
->>
->> perf record -e
->> "{cpu_atom/branch-
->> misses,period=200000,acr_mask=0x6/p,cpu_atom/branches,period=1000000,
->> acr_mask=0x7/,cpu_atom/branches,period=1000000,acr_mask=0x7/}"
->> -- sleep 1
->>
->> Of course, this is just an example that indicates the cases are
->> supported,
->> it doesn't mean the command is meaningful. But we can't exclude that
->> users
->> have such real requirements.
->>
->> If we want to support 3 and more events in ACR group (if not
->> already), we'd
->> better rename the "ratio-to-prev" option to "ratio-to-head" and only
->> allow
->> the group leader can be set the sampling period explicitly with
->> "period"
->> option and the sampling period of all other group members can only be
->> calculated base on the sampling period of group leader and
->> the "ratio-to-head", maybe like this.
->>
->> perf record -e
->> "{cpu_atom/branch-misses,period=200000/p,cpu_atom/branches,ratio-to-
->> head=5/,cpu_atom/branches,ratio-to-head=5/}"
->> -- sleep 1
->>
->> Thanks.
->>
->>
-> Thanks, those are good suggestions, but the goal of the feature was to
-> provide users a way to utilize ACR to make simple comparisons without
-> needing to use the "acr_mask" field. For tests comparing larger event
-> groups, the acr_mask field may be used instead.
+> git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-for-v6.18-1-2025-10-08
 
-Yeah, I understand the intent is to get a new simple option for using the
-ACR feature. But we already support 2 events for the ACR group, why not we
-make it more generic and can support more events? 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ec714e371f22f716a04e6ecb2a24988c92b26911
 
+Thank you!
 
->
-> Thanks,
-> Tom
->
->>> or
->>>
->>> perf record -e "{cpu_atom/branch-misses/ppu,\
->>> cpu_atom/branch-instructions,ratio-to-prev=5/u}" -c 1000000 \
->>> -- ./mispredict
->>>
->>> [1]
->>> https://lore.kernel.org/lkml/20250327195217.2683619-1-kan.liang@linux.intel.com/
->>>
->>> Changes in v2 (mostly suggested by Ian Rogers):
->>>
->>> -- Add documentation explaining acr_mask bitmask used by ACR
->>> -- Move ACR specific implementation to arch/x86/
->>> -- Provide test cases for event parsing and perf record tests
->>>
->>> Thomas Falcon (2):
->>>   perf record: Add ratio-to-prev term
->>>   perf record: add auto counter reload parse and regression tests
->>>
->>>  tools/perf/Documentation/intel-acr.txt | 53 ++++++++++++++++++
->>>  tools/perf/Documentation/perf-list.txt |  2 +
->>>  tools/perf/arch/x86/util/evsel.c       | 53 ++++++++++++++++++
->>>  tools/perf/tests/parse-events.c        | 54 ++++++++++++++++++
->>>  tools/perf/tests/shell/record.sh       | 40 ++++++++++++++
->>>  tools/perf/util/evsel.c                | 76
->>> ++++++++++++++++++++++++++
->>>  tools/perf/util/evsel.h                |  1 +
->>>  tools/perf/util/evsel_config.h         |  1 +
->>>  tools/perf/util/parse-events.c         | 22 ++++++++
->>>  tools/perf/util/parse-events.h         |  3 +-
->>>  tools/perf/util/parse-events.l         |  1 +
->>>  tools/perf/util/pmu.c                  |  3 +-
->>>  12 files changed, 307 insertions(+), 2 deletions(-)
->>>  create mode 100644 tools/perf/Documentation/intel-acr.txt
->>>
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
