@@ -1,103 +1,190 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88949B663
-	for <linux-perf-users@vger.kernel.org>; Thu,  9 Oct 2025 15:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2418229B18;
+	Thu,  9 Oct 2025 15:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760023394; cv=none; b=GiSWofRkYo9EDRRZRN0EKUDovI1pVn/ApYx1j97KfiVxlgYeJqsaxIAcIesGVGa16cvYdgWvycBzusnr9U/o+Zygy63N4xDK0KTsogBuo7vxhsptfZ4G6ej7N8hpijF8y+x1Fba16qEFKM9yGux5a5HqvnfTL4xHMPEupFmEDPk=
+	t=1760025556; cv=none; b=ZpeUZQ5q3fsTOQ3ZUkmIgmuU9C/kOZwJPJwHLdb0owTRiX1I9ByniykLQeAhZ2WhbmeEjDDFzDuT+AghQYD/wrEGiaHmoZ28qyhuk+ilp4XL5oCMaVYewX7Xkfk/I0Dd6hbJGzx8ppC8BIL5A5FCgpGfGh4DsUweLsETnC7bPd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760023394; c=relaxed/simple;
-	bh=MJFiOKnb50yHXXmJw6v2r67v6JzEr7Pu+ziuNKiQ750=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TRGSsxGNGVQbC5txeoQXYWqKww/GYoBW4jKGwWK8fRcG0SnPBpZuKpTu8VQhcWPFVqxmH9Jp9ovsu3ZyCZwCmXy3eJxtKzAIn9f0MjvvvEdCV9oz1NROq6hPIhx6FSzPRX3xaNc0Ki65X/HA7NqF8ItqWcjp7ThMH39V/ThPnH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fFGWqteb; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1760025556; c=relaxed/simple;
+	bh=lNQnHAsxUtANRW3ozb1ZTyH7qL2Wmh9+WYA8WvvuQto=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F0AZx/mBf9XlinWxTU7gc+d9q2xqnCUX6jbFOlv2czV/uVa3gAedETfzmzEOXbdXmNOW4mdbegaRu5caiMZ1NdU0FOrDUT9M6eBa2CXoQeldqoKzKhZB/x7wuA5VVAMEj2E/Ir7Hfg9qZZh1Citk1/S68LPfWcfB5SObyw5YaDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E/xFlAvx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fFGWqteb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760023391;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MJFiOKnb50yHXXmJw6v2r67v6JzEr7Pu+ziuNKiQ750=;
-	b=fFGWqtebc3TVpDX0ymhPjsKDdv/myMwCo8uIhSPakEKdYQxhk/c7JKG9aMtzoGG76eYKr0
-	CZn5FwWVsTw8pKgoaTejphH91oB8RGYAbXyyEnx+VN0lFFrGEt8lFbU4q31lv8vVGE8tJv
-	MgtC8PmHKmsBkLuu4erx0oM3dKq+K8g=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-9-CJtmOZRgMLCb5TpBuV5hJg-1; Thu, 09 Oct 2025 11:23:08 -0400
-X-MC-Unique: CJtmOZRgMLCb5TpBuV5hJg-1
-X-Mimecast-MFC-AGG-ID: CJtmOZRgMLCb5TpBuV5hJg_1760023387
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-369b2d355d0so6152021fa.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Oct 2025 08:23:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760023386; x=1760628186;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MJFiOKnb50yHXXmJw6v2r67v6JzEr7Pu+ziuNKiQ750=;
-        b=uBUzTIYM55YMgZ2hVjSxdsPv7iLv1Zan/aMxYB07HVkX6NtddEGPKVJ+tNzK9mxhZC
-         PeUmtVAmvs7FvHZUFIN+zvkx2SnuW51fP1C0l6UZ5DShLpR9zE4f9PJheXtmk+blcFKW
-         zJfy/cP/Bz0LaTxovWlnUQwfYrOFF35zE/9AocR+D17wwbeMLfmQPiTn0HUyk8U/eiff
-         zFNgCfWF+ZjoYYJybgH87XrbeCaL4bSp/0mKDPTeBHHqU9YdBCFL5f1BPFpLBdaIsGAj
-         5TafZZHz3vaFYafptNUGy0Yfdxb1G7/7gMdnffMo5IY6T/asVzKXFej2ykIhG88Wg3Wq
-         NEww==
-X-Forwarded-Encrypted: i=1; AJvYcCUEAhtIqGHfTNXh1wg/29+LZiPs2SvA+OqkLt3zSnri/gT6gziz81cKYrrGlaTzvKTVtGmG9kyEo67ExYRc+xHW@vger.kernel.org
-X-Gm-Message-State: AOJu0YzD3OrJE2dI/oGXDvW/NyiwP+A4Qu+hcbSYHNkQUpkJsyEmp42Z
-	UERDqjWGGl5rHlHhco65i1SIT+/pKm3Tz2ImYx8FI2lhMk0P1cswpgwwz8qaXCdzgycxCr9peIO
-	N6Cl63NU3fvfal26226RWtslmliBBdcSFT2SQs1hWvpZesCm/Qe6P6PCYMWGJYmOxMBYl7j9DHo
-	3zlMALlcaUbw5azAnPO0ThApfGenKHWpbfce6n3lRWVJSA3w==
-X-Gm-Gg: ASbGncvVxWEOk3Fh1xKKodvOyu5+xlC+x2P/kl2pha+MVxTDxy6CNLwKVgPVfOeR8H7
-	gEcX5Dv29WGtqxJTh6qAoKJXKlHIwvCstaB10NNoXcIHlpcf15W3VViD1odTJubAameFUQoaI+4
-	I5nozTppS+hc9p2W4216xel1CK
-X-Received: by 2002:a2e:bcc6:0:b0:376:2802:84ac with SMTP id 38308e7fff4ca-37628028b0emr5484581fa.46.1760023386525;
-        Thu, 09 Oct 2025 08:23:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE+CQ++uJDYnzwvibsq4vWNVCIaKGnGLPwjj8X8WX4KDR65G6LtATG1bxSca6Or5cyXD86H+HapOAqGddQ58Js=
-X-Received: by 2002:a2e:bcc6:0:b0:376:2802:84ac with SMTP id
- 38308e7fff4ca-37628028b0emr5484451fa.46.1760023386110; Thu, 09 Oct 2025
- 08:23:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E/xFlAvx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B74F3C4CEF8;
+	Thu,  9 Oct 2025 15:59:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760025556;
+	bh=lNQnHAsxUtANRW3ozb1ZTyH7qL2Wmh9+WYA8WvvuQto=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=E/xFlAvxv2rs71Kcn1NvRM79NveaPjIFaf0OOpk0QD+hj7Zi22tV3di55P26QPxM4
+	 70HCZtlD4bxCdWLkcj4aJjtW3Ggq0aKxFUTHTjXY9sAfQrS8CAADWYVH6sAFcGV/YC
+	 YmJuSUa9I64Dxr4YcwydpQP+U44oLNXhO7tvG5lBen/Ie4P1slX4wZk3bElG7qDSnH
+	 GY/XDCdYhmDXvEclA/GnwVO0/lgWtrlmgCMhWFXO8MTI6OvBk+emauO9iKYMwYCQBh
+	 gs2EoQx5P2an42NdmCtUBzX4BmAj/mV+YpEho3GezxZWryzOFVcXnOIS7WqLf3XToH
+	 IG4enfqzBk8RQ==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mhiramat@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.17-5.4] uprobe: Do not emulate/sstep original instruction when ip is changed
+Date: Thu,  9 Oct 2025 11:55:11 -0400
+Message-ID: <20251009155752.773732-45-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251009155752.773732-1-sashal@kernel.org>
+References: <20251009155752.773732-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251001195047.541745-2-ashelat@redhat.com> <906a9e47-ec19-4897-bbc0-06101d7afd24@linux.ibm.com>
- <CA+G8DhL49FWD47bkbcXYeb9T=AbxNhC-ypqjkNxRnW0JqmYnPw@mail.gmail.com>
- <901d2d1d-647a-4a76-a0ee-d8a687ed3f85@linux.ibm.com> <ff157071-e241-4b81-8241-cfd15e5705ef@linaro.org>
- <7a03fb30-87f9-4737-b59a-9f977acc7549@linux.ibm.com> <296700d2-878b-4eeb-b8cd-0252b2f92479@linaro.org>
- <CA+G8Dh+Odf40jdY4h1knjU+3sSjZokMx6OdzRT3o9v1=ndKORQ@mail.gmail.com>
- <CA+G8DhKDvkojDnwxXKe1iiLWwJ0uwD62-qc4_sJgBDdS+qLu-g@mail.gmail.com>
- <f4eba834-e45c-4eba-9650-5b6720fcd30f@linaro.org> <CA+G8DhKQkTKoNer5GfZedPUj4xMizWVJUWFocP2eQ_cmPJtBOQ@mail.gmail.com>
- <58801744-44e4-4182-ab4e-bfcf8e2bfc69@linaro.org>
-In-Reply-To: <58801744-44e4-4182-ab4e-bfcf8e2bfc69@linaro.org>
-From: Anubhav Shelat <ashelat@redhat.com>
-Date: Thu, 9 Oct 2025 16:22:54 +0100
-X-Gm-Features: AS18NWCXsDnxcv0-cnyVIwc7bM1sEtpiXMZzP9S4ESMVLtPTpGj6oTIBYgWgLDQ
-Message-ID: <CA+G8DhKiiHusKbJ28oNH3Cofa49k_H+yLoAc9+Wt3KQYWPOg6Q@mail.gmail.com>
-Subject: Re: [PATCH] perf tests record: allow for some difference in cycle
- count in leader sampling test on aarch64
-To: James Clark <james.clark@linaro.org>
-Cc: Thomas Richter <tmricht@linux.ibm.com>, Namhyung Kim <namhyung@kernel.org>, mpetlan@redhat.com, 
-	acme@kernel.org, irogers@google.com, linux-perf-users@vger.kernel.org, 
-	peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, dapeng1.mi@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.17.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 9, 2025 at 4:00=E2=80=AFPM James Clark <james.clark@linaro.org>=
- wrote:
-> Also what hardware is the VM running on?
-Both were running on an HPE Apollo CN99XX server.
+From: Jiri Olsa <jolsa@kernel.org>
 
-> That's assuming that we've agreed that any difference in cycle counts is
-> expected and valid. I don't agree that's the case yet and I think it's a
-> bug. I only see identical counts, and the commit message in Kan's fix
-> describes that the values should be the same for all architectures.
-True
+[ Upstream commit 4363264111e1297fa37aa39b0598faa19298ecca ]
+
+If uprobe handler changes instruction pointer we still execute single
+step) or emulate the original instruction and increment the (new) ip
+with its length.
+
+This makes the new instruction pointer bogus and application will
+likely crash on illegal instruction execution.
+
+If user decided to take execution elsewhere, it makes little sense
+to execute the original instruction, so let's skip it.
+
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Link: https://lore.kernel.org/r/20250916215301.664963-3-jolsa@kernel.org
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+
+LLM Generated explanations, may be completely bogus:
+
+YES
+
+Summary
+- This is a small, well-scoped bug fix in the generic uprobes core that
+  prevents executing or emulating the original instruction when a uprobe
+  consumer handler has redirected the instruction pointer (IP). The
+  previous behavior could corrupt the new IP and crash the traced
+  application. The change is minimal (7 lines), does not add features,
+  and aligns with expected semantics. It is suitable for stable
+  backport.
+
+What changed
+- In `handle_swbp()`, after running consumer handlers, the patch adds an
+  early exit if the handler changed IP away from the breakpoint address:
+  - New check added: `kernel/events/uprobes.c:2772`
+  - Surrounding context:
+    - Handler invocation: `kernel/events/uprobes.c:2769`
+    - Emulation/single-step path: `kernel/events/uprobes.c:2778` (arch
+      emulation) and `kernel/events/uprobes.c:2781` (XOL single-step
+      prep).
+- The key addition is:
+  - `kernel/events/uprobes.c:2772`: `if (instruction_pointer(regs) !=
+    bp_vaddr) goto out;`
+
+Why the bug happens
+- Before this change, `handle_swbp()` always proceeded to emulate
+  (`arch_uprobe_skip_sstep`) or to prepare out-of-line single-step
+  (`pre_ssout`) of the original instruction even if the handler altered
+  IP. On x86 and other arches, instruction emulation/step advances IP by
+  the probed instruction’s length; doing that after a handler-set new IP
+  advances the wrong address, making the IP bogus and often leading to
+  SIGILL.
+  - Where emulation executes: `kernel/events/uprobes.c:2778`
+  - Where XOL single-step is prepared: `kernel/events/uprobes.c:2781`
+- The patch fixes this by skipping the emulate/sstep path if IP was
+  changed by the handler, which is the correct intent when a handler
+  redirects control flow.
+
+Evidence in current/mainline and in stable
+- This exact fix is present in mainline commit 4363264111e12 (“uprobe:
+  Do not emulate/sstep original instruction when ip is changed”) and
+  adds only the early-out check in `handle_swbp()` (see
+  `kernel/events/uprobes.c:2769`–`2785` in the current tree).
+- Affected stable trees (e.g., 6.1/6.6/6.10/6.17) lack this check and
+  will incorrectly emulate/step even after IP changes. In your 6.17
+  workspace, `handle_swbp()` calls `handler_chain()` and then proceeds
+  directly to emulation/step without guarding against an IP change:
+  - Handler call: `kernel/events/uprobes.c:2742`
+  - Emulation call: `kernel/events/uprobes.c:2744`
+  - Single-step prep: `kernel/events/uprobes.c:2747`
+
+Risk and side effects
+- Scope: Single function (`handle_swbp()`), 7 insertions, no API or
+  architectural change.
+- Behavior change: Only when a handler changes IP; in that case, we skip
+  executing the original instruction. This matches handler intent and
+  prevents crashes.
+- Concurrency/locking: The check reads `instruction_pointer(regs)` and
+  compares to `bp_vaddr` under the same conditions as the rest of the
+  function; no new locking or ordering requirements.
+- Cross-arch impact: Safe and correct. All arches’
+  `arch_uprobe_skip_sstep()` implementations emulate or adjust IP
+  assuming execution should continue at the original site; skipping this
+  when IP was redirected avoids incorrect behavior.
+- No dependency on unrelated features (e.g., the
+  `arch_uprobe_optimize()` call that exists in some newer trees is not
+  part of this change and isn’t required for correctness).
+
+Stable tree criteria
+- Fixes a user-visible crash-causing bug in uprobes
+  (tracing/instrumentation).
+- Minimal, contained change with clear intent and low regression risk.
+- No new features or ABI changes.
+- Acked by maintainers and merged into mainline.
+
+Conclusion
+- This is a clear, low-risk bug fix preventing incorrect
+  emulation/single-step after handlers redirect IP. It should be
+  backported to stable kernels.
+
+ kernel/events/uprobes.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 7ca1940607bd8..2b32c32bcb776 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -2741,6 +2741,13 @@ static void handle_swbp(struct pt_regs *regs)
+ 
+ 	handler_chain(uprobe, regs);
+ 
++	/*
++	 * If user decided to take execution elsewhere, it makes little sense
++	 * to execute the original instruction, so let's skip it.
++	 */
++	if (instruction_pointer(regs) != bp_vaddr)
++		goto out;
++
+ 	if (arch_uprobe_skip_sstep(&uprobe->arch, regs))
+ 		goto out;
+ 
+-- 
+2.51.0
 
