@@ -1,114 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933281A275;
-	Fri, 10 Oct 2025 00:51:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADAD022F16E;
+	Fri, 10 Oct 2025 02:27:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760057470; cv=none; b=Z/VNNpIlRKgpMXsb0Dk91G0100yA6PuCUuFqBCZV/1BenAtJna7lByg3ByYDc6xedaj5PwQ+bbFaBbZGFeBsHdfaer5mMX0HyMYvI7wDF9BeBRSeQ+26UoEDAACSzCGqjrxWDcQT+pwNa6hodoTSW5DvufmqKA7KUYQUUxskqAA=
+	t=1760063250; cv=none; b=h7cCT7j8A7EVm1YFTakNwAl4qs1Eisv7OWkQakKigXO/RiwA/pLOPIiR9jT9KHMo6JmbCMaK0Mb/08Vcn4E5qoAvXR1FHDy4yVzsrlItFHU4mDVa9Sf9pXySWtxEDhBt0wEM7pQ22d5xVozDCQyW2jsMmMzmjrN1ONrWYaLOBQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760057470; c=relaxed/simple;
-	bh=A3UrofGwAstq0M2Uw/J4CU3Y1letTXoVhhSuZWoGGb8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=VIcx6jeqEOLAHTEOLuGbUcIbZQKWBi0qImk8Cz26SsFPTkOVtVNWcdVmnH9ej7QUt7S41OAV6MVOMk9X9nF8f5v306gkAcVCiRpzvKXBt/5fxPHurLeRVkNSPAyxc7m/dc2OxNZTmNavXOmK0FnSFeg2afZASJDyEJ5DQFNGv9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=2JktYbzm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760063250; c=relaxed/simple;
+	bh=ac4VtTda8SJRSe7ya6qERv9chI6J5rNgon5I14QHQy0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Pv9QroEVjAtZ5ql6w5+LRTxyNN3VT4kKQZV3/U//4OH04RwH4ZDo/B7ONYyEzzBykzSODaHdkc91MKJytiHwFmeLZoaeFoz+MBmAKCa+dUkyAXCnyPP1NYf53GM6HynqAWhmX6giWamb3Yo8ucAU3PT7Ma16veGFeLH46YtlBCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WNX0xmHv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="2JktYbzm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24497C4CEE7;
-	Fri, 10 Oct 2025 00:51:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1760057470;
-	bh=A3UrofGwAstq0M2Uw/J4CU3Y1letTXoVhhSuZWoGGb8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=2JktYbzmhzcnUjZxn4TJsLrCa4CdQmyNAz48GhTm60ifXFoRmbMF9Tc/M9RRLbvJV
-	 OTvz7R6JSbLUT9mEhQjhUsNNq5Xpz4vLivUTBLXDvZAdv81wS0YgNddSVET7bP2mj+
-	 E2cRLHzPEXFAzCsftZVpoY141RGvPOXXQkXJVlZA=
-Date: Thu, 9 Oct 2025 17:51:07 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Jinchao Wang <wangjinchao600@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Mike Rapoport <rppt@kernel.org>, Alexander
- Potapenko <glider@google.com>, Randy Dunlap <rdunlap@infradead.org>, Marco
- Elver <elver@google.com>, Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
- <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, Ben
- Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin
- Schneider <vschneid@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, David Hildenbrand
- <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
- <mhocko@suse.com>, Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers
- <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, Justin
- Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>, Alice Ryhl
- <aliceryhl@google.com>, Sami Tolvanen <samitolvanen@google.com>, Miguel
- Ojeda <ojeda@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, Rong Xu
- <xur@google.com>, Naveen N Rao <naveen@kernel.org>, David Kaplan
- <david.kaplan@amd.com>, Andrii Nakryiko <andrii@kernel.org>, Jinjie Ruan
- <ruanjinjie@huawei.com>, Nam Cao <namcao@linutronix.de>,
- workflows@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-mm@kvack.org, llvm@lists.linux.dev, Andrey Ryabinin
- <ryabinin.a.a@gmail.com>, Andrey Konovalov <andreyknvl@gmail.com>, Dmitry
- Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>,
- kasan-dev@googlegroups.com, "David S. Miller" <davem@davemloft.net>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 00/23] mm/ksw: Introduce real-time KStackWatch
- debugging tool
-Message-Id: <20251009175107.ee07228e3253afca5b487316@linux-foundation.org>
-In-Reply-To: <20251009105650.168917-1-wangjinchao600@gmail.com>
-References: <20251009105650.168917-1-wangjinchao600@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WNX0xmHv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CF31C4CEE7;
+	Fri, 10 Oct 2025 02:27:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760063250;
+	bh=ac4VtTda8SJRSe7ya6qERv9chI6J5rNgon5I14QHQy0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=WNX0xmHvBiFXxv4mqNdaXwfKcAosh5PPPpszwfbWljExYKQ7ylm65jrdqKFPAfARV
+	 WM9X/9nWqGrxDcDCPKBpkE3xWWjPAezq18hjJOOKfimQ8ePlsdOO/FKTz6Ye9EaiLn
+	 uw+mnHVAnUogKtYbbi/WGlWSKdLR/MQD7JN/rzXsccDpd0w3U3gqwKLRvHr9+9Tv9j
+	 rOJ6wTM6G9FYWM0+ZYTA8O7xWieWYWSr694a9UYw9MQ2Cj9qPUw9K544EZkaKfD8tW
+	 RG3PiLSsUteZ/HPfrn0wkKake8vRSb6bMLAbdIfY9IH4923Lc2riE3YTEBUoNXNe3V
+	 i/hRDi5gBaU9w==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33E633A55FB5;
+	Fri, 10 Oct 2025 02:27:19 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3 0/9] perf build: Support building with Clang
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <176006323800.354358.6110592426551858799.git-patchwork-notify@kernel.org>
+Date: Fri, 10 Oct 2025 02:27:18 +0000
+References: <20251006-perf_build_android_ndk-v3-0-4305590795b2@arm.com>
+In-Reply-To: <20251006-perf_build_android_ndk-v3-0-4305590795b2@arm.com>
+To: Leo Yan <leo.yan@arm.com>
+Cc: linux-riscv@lists.infradead.org, acme@kernel.org, namhyung@kernel.org,
+ jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+ nathan@kernel.org, nick.desaulniers+lkml@gmail.com, morbo@google.com,
+ justinstitt@google.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, alex@ghiti.fr, james.clark@linaro.org,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ llvm@lists.linux.dev
 
-On Thu,  9 Oct 2025 18:55:36 +0800 Jinchao Wang <wangjinchao600@gmail.com> wrote:
+Hello:
 
-> This patch series introduces KStackWatch, a lightweight debugging tool to detect
-> kernel stack corruption in real time. It installs a hardware breakpoint
-> (watchpoint) at a function's specified offset using `kprobe.post_handler` and
-> removes it in `fprobe.exit_handler`. This covers the full execution window and
-> reports corruption immediately with time, location, and a call stack.
+This series was applied to riscv/linux.git (fixes)
+by Arnaldo Carvalho de Melo <acme@redhat.com>:
+
+On Mon, 06 Oct 2025 17:21:22 +0100 you wrote:
+> This series adds support for building perf with Clang, following the
+> discussion in [1]. Because the Android NDK uses Clang by default,
+> enabling Clang builds naturally covers Android as well.
 > 
-> The motivation comes from scenarios where corruption occurs silently in one
-> function but manifests later in another, without a direct call trace linking
-> the two. Such bugs are often extremely hard to debug with existing tools.
-> These scenarios are demonstrated in test 3–5 (silent corruption test, patch 20).
+> The series is organized as follows:
 > 
-> ...
->
->  20 files changed, 1809 insertions(+), 62 deletions(-)
+>   - Patches 1~2: Fix two bugs found with Clang.
+>   - Patches 3~7: Correct CROSS_ARCH, Disable thread safety analysis for
+>                  perl header, and dismiss Clang build warnings.
+>   - Patches 8~9: Enable Clang in the Makefile and update the
+>                  documentation.
+> 
+> [...]
 
-It's obviously a substantial project.  We need to decide whether to add
-this to Linux.
+Here is the summary with links:
+  - [v3,1/9] tools build: Align warning options with perf
+    https://git.kernel.org/riscv/c/53d067feb8c4
+  - [v3,2/9] perf python: split Clang options when invoking Popen
+    https://git.kernel.org/riscv/c/c6a43bc3e8f6
+  - [v3,3/9] perf build: Correct CROSS_ARCH for clang
+    https://git.kernel.org/riscv/c/ed33e5e43c1e
+  - [v3,4/9] perf build: Disable thread safety analysis for perl header
+    https://git.kernel.org/riscv/c/e7e86d7697c6
+  - [v3,5/9] perf test coresight: Dismiss clang warning for memcpy thread
+    https://git.kernel.org/riscv/c/50b7e7082a3d
+  - [v3,6/9] perf test coresight: Dismiss clang warning for thread loop
+    https://git.kernel.org/riscv/c/244a1ac76a67
+  - [v3,7/9] perf test coresight: Dismiss clang warning for unroll loop thread
+    https://git.kernel.org/riscv/c/9ec46fc93803
+  - [v3,8/9] perf build: Support build with clang
+    https://git.kernel.org/riscv/c/4772e66cb45e
+  - [v3,9/9] perf docs: Document building with Clang
+    https://git.kernel.org/riscv/c/0a75ba3e842c
 
-There are some really important [0/N] changelog details which I'm not
-immediately seeing:
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Am I correct in thinking that it's x86-only?  If so, what's involved in
-enabling other architectures?  Is there any such work in progress?
 
-What motivated the work?  Was there some particular class of failures
-which you were persistently seeing and wished to fix more efficiently?
-
-Has this code (or something like it) been used in production systems? 
-If so, by whom and with what results?
-
-Has it actually found some kernel bugs yet?  If so, details please.
-
-Can this be enabled on production systems?  If so, what is the
-measured runtime overhead?
