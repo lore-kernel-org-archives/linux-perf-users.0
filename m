@@ -1,289 +1,225 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0A1274B35;
-	Fri, 10 Oct 2025 07:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760082147; cv=none; b=r6Xw6KOrKPhesSUOSOzRZRlNpCTnZ2fvjS1vjJUICjC5+6QX9z6xJlIXXLC1BYIU8kP1fKUOlKPpdiunVB+8g43X8ZWZPe8qiWF36uqc1fQUh9lkihvMzFfY1XJGI85+f0jOHFVNzwuIZ6hjMW1rFJTQkd2HSOMvnIQlWkOujnc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760082147; c=relaxed/simple;
-	bh=UkNCc5rNcj2Cd4A4xQhPhZIcN0glShgbuTUDnVkX6RI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uUeIoxQKepvVIReFRj34Oww/191R16Bv5i8Ud6EgRCNCicZKbQVsOmPYBXvVXEeHmuweHN4wlQqHPuZimYSAUKeZIMTfP/GKpBEmbprC98lNHA8zxm/XAGH6zTIUA56rUt8O62lnC+D6OdhwJrD3r6uJBchiLHM12z2/G9Isa6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OKKDeDGk; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D324E1531C1;
+	Fri, 10 Oct 2025 07:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760082599; cv=fail; b=A/j55CUNiqFy0tBkB+ZIQczol5DwEYZ//C9BH98xlBL1MxezKowppXmbKxQbHOAqyauXFq5D5gSkj3a12WdfBN0nHhBAdRqwuN8Rz+oAYAgrDVG5lM/I6KXivLgRKcuvfTuWqtfpwqFG0NOZK6p8MTRwtiRf6jam79X2I7YsDvc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760082599; c=relaxed/simple;
+	bh=v7oq4Rt3lwOz7Tc643Q7eCI2UbEx6eQM2t3OnmMaAbM=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ZE0pHe41rfSjvNgPKkisWDjtakTwvKK/hzlhBcOgc/i7Xxuo16DijydFPCC5goyY6G9rAbmMXkDO+0Uo9b57LsAxZD3UJSz3dDwR6gec2NsolnmKuNb9PAGm06cM7lO/FTzzVgLEYNsOnpGN2hbx7r2/cw+9wX2tiiOZYPW46DQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LgPvXBny; arc=fail smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OKKDeDGk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LgPvXBny"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760082145; x=1791618145;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=UkNCc5rNcj2Cd4A4xQhPhZIcN0glShgbuTUDnVkX6RI=;
-  b=OKKDeDGk481HH+dI2TMEvMQO3W7sOh4mUXzwurOXaXz0d470KXYXVMNx
-   jl6WTmFsSeDZwlPXXDuXBzYSp11nYgTl/neQwRwjFGooHbhsWGLE137x1
-   ublMr3lDI0vKI7Vr8zvmT2m0YV8Qt1AZ0IWAs7vH+sMVJPL2wfcJ7Ypwl
-   tQoIWPGvg13jclIqWZUETzH9eXEXwDhtsPKWgwYZgFBnUoC6+o2FAcE8p
-   SrZ/kllwfhbcNXlRwrpKM03B/AK5PjrrgwqPycdzKT1+B3Bk9SX2xeca3
-   ItH0nQy3/d0cwJgagCF7inHLJzLGIz2NLguXWwv208VHIFBSVXLTsCKMZ
-   Q==;
-X-CSE-ConnectionGUID: KjwdcsC1QES8uR6a70Udkg==
-X-CSE-MsgGUID: GhtjyqMOQvGl9OzS0Ll3gw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="62219342"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="62219342"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2025 00:42:24 -0700
-X-CSE-ConnectionGUID: 0u+F1JLRTtmDp9BVXRlx2A==
-X-CSE-MsgGUID: YVCJixKWTtewXa1X2wc3Zg==
-X-ExtLoop1: 1
+  t=1760082598; x=1791618598;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=v7oq4Rt3lwOz7Tc643Q7eCI2UbEx6eQM2t3OnmMaAbM=;
+  b=LgPvXBnyibXUnlDOchCps+GJZBWlGvKyLBnzTNFiFlZoPiu+SdlS/zLG
+   yfxFTMwWG3AxjnwPMOmbI0vH7PJ3UWju6/+DL/Hryzmvo+A2OjbMESuhG
+   3fKjE14DqZltv2eUoI2WBiI0O51jZo6lJXuOfGgR1GUQnhN7VvBr/EB46
+   hGmfz2xPHfbsDVKSPix9oVW5PwjuMqM9Vt94HndmcsNZ29XUrJ2F8S7gl
+   Qs9G92SCVNAEegAeKDBCTcAIxMG9baooIX3qgD11+YVfUIqernDS0NRLR
+   sXsvS9oLdWyGBwdkXpZlitQTtE5byEuDkgSfq1bX1lic31nwanup0UmIj
+   g==;
+X-CSE-ConnectionGUID: +p6wUPcyT9+weZJqbPUj4w==
+X-CSE-MsgGUID: HO81juuZSdiQgB5lHfmlKw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11577"; a="73644919"
 X-IronPort-AV: E=Sophos;i="6.19,218,1754982000"; 
-   d="scan'208";a="180022895"
-Received: from linux-pnp-server-27.sh.intel.com ([10.239.147.41])
-  by orviesa006.jf.intel.com with ESMTP; 10 Oct 2025 00:42:19 -0700
-From: Tianyou Li <tianyou.li@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	tianyou.li@intel.com,
-	wangyang.guo@intel.com,
-	pan.deng@intel.com,
-	zhiguo.zhou@intel.com,
-	jiebin.sun@intel.com,
-	thomas.falcon@intel.com,
-	dapeng1.mi@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 3/3] perf tools c2c: Highlight the contention line in the annotate browser
-Date: Fri, 10 Oct 2025 16:35:49 +0800
-Message-ID: <20251010083549.1839330-3-tianyou.li@intel.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <aOTOEcNOiUiEJ9tz@google.com>
+   d="scan'208";a="73644919"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2025 00:49:57 -0700
+X-CSE-ConnectionGUID: jngC/b3NQviNXsdpDxca6A==
+X-CSE-MsgGUID: ZsWSL30qSHqZxhsebELqBg==
+X-ExtLoop1: 1
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2025 00:49:57 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Fri, 10 Oct 2025 00:49:56 -0700
+Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27 via Frontend Transport; Fri, 10 Oct 2025 00:49:56 -0700
+Received: from SA9PR02CU001.outbound.protection.outlook.com (40.93.196.31) by
+ edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.27; Fri, 10 Oct 2025 00:49:55 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rJ6PeuUw29sBhp7XHPeo59ewJ8CJ7MzGKlPdJgNlfFKF5v02fBUKdsFUtiZZJ+++g1I+2duORlPgq+mEQDSpRXk3upj0y6Y8G9IPXPqxD9KL5TUssX3EJsz1t6Ogv6m9lg1LnFp+hAnp/94IAlrjzdmyeFVjR/9fG/dKtWaG5SR1LqEBOxA1YjSnA6oleFS5sFg96zFeS74zshwfHDPzve1GwNGAhFqdQXtQKdtowkGqqxAqr7ik/GGYDMeK4C2vDsuuaZczkl576GMYC0TN90JWovUWP8YpUjRJC8yIQiRueMHGqNg/b9PUz4sUW3oSNzMvVv5A9zrR4A+XHCqwyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=luVTT98XC9LJ87stflpZXGI6MUgaHK6jjewlMeuk6C0=;
+ b=lsXuQYXyBwKxy/L0eRopzIJK2v2IIbcddm+ujIMpUmQuMahSf9fE957KGmDKBV1fTReImKd0Iu91CG4WkKXqfkwe4XrKmW5oLlRgl7P6TMPmW4kF7Rey2nV9O60Xf4QBcioFROZ81444wZqWZzseoMyvvIz6OpljUlzgOe7S/5med5ufzW+9VHW+JbkqlM+JCOXFEoXfMwr/+1bdbny0y63/Hq/lxyrZl8LspYBwf1p3hxqk14U7zJyhlAlq79U1H/XAJyewoK7De5vVefwe2CstMu/mmVylTOTWcXY4TYYK0Hf0jNeTa3NEl6aqbxgEFhC13Z95P1XlG3VBrEOXNQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MW4PR11MB8289.namprd11.prod.outlook.com (2603:10b6:303:1e8::9)
+ by PH3PPF681F257FD.namprd11.prod.outlook.com (2603:10b6:518:1::d29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.19; Fri, 10 Oct
+ 2025 07:49:53 +0000
+Received: from MW4PR11MB8289.namprd11.prod.outlook.com
+ ([fe80::d626:a4f8:c029:5022]) by MW4PR11MB8289.namprd11.prod.outlook.com
+ ([fe80::d626:a4f8:c029:5022%6]) with mapi id 15.20.9203.009; Fri, 10 Oct 2025
+ 07:49:53 +0000
+Message-ID: <9a533ced-293d-4d18-aa8f-e6aafc429e2a@intel.com>
+Date: Fri, 10 Oct 2025 15:49:45 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6] perf tools c2c: Add annotation support to perf c2c
+ report
+To: Ravi Bangoria <ravi.bangoria@amd.com>, Arnaldo Carvalho de Melo
+	<acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Ian
+ Rogers" <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Kan
+ Liang" <kan.liang@linux.intel.com>, <wangyang.guo@intel.com>,
+	<pan.deng@intel.com>, <zhiguo.zhou@intel.com>, <jiebin.sun@intel.com>,
+	<thomas.falcon@intel.com>, <dapeng1.mi@intel.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 References: <aOTOEcNOiUiEJ9tz@google.com>
+ <20251009042839.1643396-1-tianyou.li@intel.com>
+ <43ac631c-3404-4e15-a02e-d1976ead4956@amd.com>
+Content-Language: en-US
+From: "Li, Tianyou" <tianyou.li@intel.com>
+In-Reply-To: <43ac631c-3404-4e15-a02e-d1976ead4956@amd.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PSBPR02CA0018.apcprd02.prod.outlook.com (2603:1096:301::28)
+ To MW4PR11MB8289.namprd11.prod.outlook.com (2603:10b6:303:1e8::9)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW4PR11MB8289:EE_|PH3PPF681F257FD:EE_
+X-MS-Office365-Filtering-Correlation-Id: 86911c42-5dcc-4d86-aef9-08de07d198f6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?L1J0b0MvMGtMbDEzKzRvUGxnWGp3Tk12NnFxU2pXd3ozN3hTNVZRQ0c0aGp2?=
+ =?utf-8?B?ZjEyQlozSFBuUGRwdDZKV0JaTHlvOHpwbGpRZHhhS0hURzBCZy8zTnNmOVYw?=
+ =?utf-8?B?NmlibmFvT3lrUndJVmNlN29vNHYrTnV3Qmxmblo4L0hJMzZOWXhPTmhMVWZJ?=
+ =?utf-8?B?QklpY3VEbVJpd2ZmNVE4NFJUYnc1R2RESFRVSmJvMnNVdzdYWjl0MTdDQmJu?=
+ =?utf-8?B?TXB3OHBkOTNkTnNJY0NFY1phVCt6L1RYalRNWTQ1ZUI1RmtacHlyb1VudGF4?=
+ =?utf-8?B?SkxVZDllYzYzSFNWZ2VSR1l3eXRDNlE0V09NYjZFQjJLdGJBQmxRYmlzVUU0?=
+ =?utf-8?B?NEIrY3d5THRscXQxcVBVSkpYZnZzeWRORHR4VWRFSWRHdFJxYjM2UWViSmN2?=
+ =?utf-8?B?bEpaU1hsRmtNRVNEbHl3SDFQZ1czWGZHM3V1K055bTNQdVMxV24vdmFIYmxy?=
+ =?utf-8?B?WC9VZEtYSVVWMytia0laN1lzVGhhWWZWSi9iUzlnUStybXhMdlQwNXZTOVB5?=
+ =?utf-8?B?clRWSnB2NWg0YWFMKzl2aGxRNU9EZFpIRVVyME9nNjBhT0ZQUkJoU3h5cmo3?=
+ =?utf-8?B?NTc5SUF5ekJqN0czbm9PUC9CYzFZMmorZkdwdTFDdHM0RDl6dU9lV1REODhX?=
+ =?utf-8?B?dExnbTVLd3dUeW9iUG1uNllJYTZEN3YwZTNFaVF4WHhtVDBqeGZqUWZzd2hU?=
+ =?utf-8?B?MlQ4cHRncytCMDJMbWgxcHpheDRhVDY0Z2xDSkVKazdrMnYxeEQ4RGpZa1dQ?=
+ =?utf-8?B?M2RMU0dhS3JlQUNMUUdPamwxeDg1STdZazhleDI1UTEvSlVKSmp0QnNrZVdQ?=
+ =?utf-8?B?cUoxbW1VYXBwK1VEdEpvL2Q0b1Q3SFJSWlJjWHpQeUFIQzhtOVl1NTVCME5u?=
+ =?utf-8?B?UG41bWRXWGNGVFpIR3cxVTNnQ2c1eTNwdi9LNGRndkdXd2ZQSXN3dGdNLy9E?=
+ =?utf-8?B?Zk45WEhUV2kwOEhvc0xxclhWeERDejdVSWEydm5LbVJLY2xSemJ3Y3NUV29t?=
+ =?utf-8?B?cjlDRkZKWCtFOW5oZW92N0dVcVYrd0w4cXhaNTlLay9iTGhIS2VIUURnQWE0?=
+ =?utf-8?B?QWttSGw3MkY1UmRjc1VWenk2QzlmSVlWbkErL2pVMnE4TG1zNSsyNENpamtp?=
+ =?utf-8?B?c3ZpaWhvNjY5YlMvUDIrQnRwTHNsa0EyMEFKa00zRmQvSFhXNTdneUhBQVlo?=
+ =?utf-8?B?TE9NbG1YRTdETlJtOWFtMHlLZFhuOGtYYmJNbkN6MjNzUFVuVVppOTRlMm9y?=
+ =?utf-8?B?enpnaE9TYXFIY1F0V3c2a3FxQXB6cDdmVDQ3NmcxTmdYTWVzV3Y4R0FqbWUx?=
+ =?utf-8?B?RTYzVm5sWFU1bEdKUHBCQXJuZmQ5NXJkQ1ZhTlNrang1eG1EWG1aV3V6ZjRB?=
+ =?utf-8?B?K3Y3Tk9QY1ZSYUIvZ2hDcXlBVFpEbnA2YTdSekVmN0FnYkUzR2VnKzFJSDdn?=
+ =?utf-8?B?enlETldxaUJMVEx6RkR2cHdaTXlBbEFQaFdEb2FZeVNpUjBldHlZbTV6Ly9B?=
+ =?utf-8?B?ZjVwbHNJVktzcTRueGRPRFcrVU9DK1dab056VFkrUy9QWi9lQURHcXZGaUg5?=
+ =?utf-8?B?dSt0SEtoR2JSRkRXNzk5Tis2cjJUL1djTUJSMS9FL3ppSnA5ck8wYWlxa295?=
+ =?utf-8?B?cjFHOCtITzgwem8wVVVZWkdkUkJFUkdpWi9yU2YzdGR2cnRSOEoySlRHN3Ri?=
+ =?utf-8?B?RFg5bkxmTWVoRkVTT0ZUb3lqRzF6bUFCTHlxdkZOOFJ2U21iVVYyM2FQM2pP?=
+ =?utf-8?B?ZGxoNk1raVVMaUxlcy9oZFJuMld6S3U4N0NHNElyYXRzTzVYU3liamtVYTNJ?=
+ =?utf-8?B?RDZ5N3M3WERFelMwTnJkc3RieHlRSUhqL0drZWR5eGhsYVBiemVyblNrU25k?=
+ =?utf-8?B?Um4yaUdyQWtvTzlBVWtBLzBDZUREOWpUZllUWEI0K1kwa2dMZDVOTmVaTDNY?=
+ =?utf-8?Q?s6GYbZPPnEKX0Jg/4byr05x2E0gCYfQ3?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR11MB8289.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NmtGUTh1dlF5YlpiN3dLSHUyS0NOaC9yd1BLakxKQUFIczJkMDJvNmNDWVdL?=
+ =?utf-8?B?d21GMXQ5K2R4NytkYlRGaXdwdXV1bUJFa3FiQWsvVDU1M1VWUzJQTDl5ajVo?=
+ =?utf-8?B?VFhucUo3c0liWDJQa2hmSUlCQ1Ewa25QOFpYb0U0c0lYREY1NW1ZditUSUww?=
+ =?utf-8?B?Z1lEV2pOQndvSURyYSs0TDJHWEpaV0ZNRVliaDNqVXlUZzNMOVkxSXJnZFFN?=
+ =?utf-8?B?RjNNaFR4SkFPaGl3S0ZzalhYRmQ0a1lRYVozSGI2U3ZHSDV3Y3daaU5LV0py?=
+ =?utf-8?B?dE9YUmdUdndlV01oLzRNaytrRk96ODRPVll6cG1WY2I5bzJTVldpWVJDQS9y?=
+ =?utf-8?B?amxtbERCVHFzemFaZmtmUVpJYkVSaFVYOWxEeHpKd2FsL0tkK1VwWFlxZWRY?=
+ =?utf-8?B?SnJPM0h3M0VicDIySTJ5N3VKa3pWaFYzek16T25vZ2tFZTNCOUxkL01ROHZr?=
+ =?utf-8?B?eFBPMW9HVVBIL2VJRTdSTy9ITFcwbElCYWRPWnhFRHhXMjhrR2lRa1FIYUxZ?=
+ =?utf-8?B?ak15dmw3cHdNUGdwRXAwN2crYW5Dc2xpbE51THJNNWhrajBzYjNtVjhXMFdr?=
+ =?utf-8?B?S2Y5OWJGN0NIaTJqbmRJRmxObFRVM0hibTVwOTFIbndzMGIwbXppdy9IM0NT?=
+ =?utf-8?B?VnNhZ2k1cENxRm91cXBWZi9xTS9UblA1dXZRdXhWRXJsNmJzYi9VcjBPZ2Jv?=
+ =?utf-8?B?VnVxb1M2bHpvaFh4MzVFYitJMDladXFjbk9GRGwwbWJYNmoxK3pTR2hZMXlP?=
+ =?utf-8?B?WXpYb0p4dWxlOFBDZVhwK2ZtWk5pN0k1TjU1Tk5RdUIxTm9CMjJKWndUN084?=
+ =?utf-8?B?NjFBYndGZ09RVFNVL1hTODVjbWNLbmhkeHAxQXNLdUZmVTJ3TDhmd1JzNjhw?=
+ =?utf-8?B?TU9WbFMyMlZLczVNc0haR21OQTJOUS9xOXZGN0JuLzluZVc3bUNKUlZWUkFx?=
+ =?utf-8?B?VXk4ZnR4bDNDdlYzcmlVN0ZIRXd2Q00wYW8zNnprZWgveHlvbVd4bmJ2OEIr?=
+ =?utf-8?B?aDV2MTJpZ3VLRUJQaG9KRU5wRitGZVRxM1ppSnowc2hxUUdnbWZxVjlXcFM5?=
+ =?utf-8?B?N2MxUkhpN094Zk5sT2IzZ2t5a1laSWVhRTdZcjZNM05KdklWdDlNT2dwSHVD?=
+ =?utf-8?B?dVdYdVMreC9zTHdwMmNJdU5CekFQZzFGeDM4YjB6TjkyZ0hmNTNITmVtS3Jv?=
+ =?utf-8?B?Q1dDRlh1MUVtMXo0TUV3bUhJUGczSlYxdVRRTVZZMlpxQXpPVmRucmtuY2FW?=
+ =?utf-8?B?bEhGU0ZEczJWVHU1RHpPWGE2b3duZjk2QnhOT2wvWHFaMHd3M2x0Z3c5L2d3?=
+ =?utf-8?B?UVBQVkFWVWdaWUVvWThmTkFtMmYxUGg3Q1VBYjRKSUsxcFkzd3RwNFJGamVN?=
+ =?utf-8?B?SEdWZUZyaElZVWZMNENlQ3dlN3loL2FiNkRYZCtLaDNCcm5IdW9OM2lTWFlr?=
+ =?utf-8?B?QWZKdnNaWmZLOUtQMkNCdnlGaXcyN0FpbFl3QVVGNSt5dERudjJnMkJxNmlO?=
+ =?utf-8?B?T2RSUW9CTVZuR0ZmU2xMYm9YVEpLdnVSenBaTXY5U2pzcGZyYmorMm9CUWt0?=
+ =?utf-8?B?c2Z5bHR4ZDZqbis0Mk9ZT2k4SW9mT0tKRERMQm8zSUw1WTNUb0loUmtKUEx6?=
+ =?utf-8?B?NU4wVmxBblRJT3ZQL0FseDhUOFFYNWcrMXUvUnRtZDNmT3RsemxRTHJKblgw?=
+ =?utf-8?B?NUNDY3RiV1B6VE5YT3VjbHQyYi9BUkFvamRHREdPZHdVVWZpdC9BdEUyd3ZN?=
+ =?utf-8?B?dFZaZmlLSXhSVW1XdjlnQjBEdWwwcTdUUVBJaEhMV2JTeGRTRDkvSC84WVM4?=
+ =?utf-8?B?ZGdFbVRGd1dwajAvZ1pKY1JkZ2ZZSjVpUFQwQ1Jpa2JxVnB2OFFMVk8yRXhp?=
+ =?utf-8?B?cmdmNWZLb2tneVowbC9TTDhJU1d0dXpiNFpONk90Ny9CS2JraFRDN2JTaXd1?=
+ =?utf-8?B?am1VRm9CTzVYWGtoLzhJeENrSTUxZ2FZK0p0WFZTd2tVVkJGTElQRUVoQlVB?=
+ =?utf-8?B?YlJTWWR1N3crRnU1ZWJ5SVQzZHVjVmJhaS9DMUpjeW02YWw3V3M0a25lZXF0?=
+ =?utf-8?B?cGxZTnpjUTA2eVRiMHdMS3ZVR3Z3Q3pqYnpRemVFZjNlRTF2aFIzbjY3clRZ?=
+ =?utf-8?Q?GUH6j+ML3+xRUUoKLx8LXsKlJ?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 86911c42-5dcc-4d86-aef9-08de07d198f6
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR11MB8289.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2025 07:49:53.7058
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GHntSozj0E95jvG10rjDIcuhcqC/C9L6U9g/ZKwbdLH9W1+fCkdYtY9asbQ38dKeumUDA3ChWBAsVQXHH21Hrg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH3PPF681F257FD
+X-OriginatorOrg: intel.com
 
-Add support to highlight the contention line in the annotate browser,
-use 'TAB'/'UNTAB' to refocus to the contention line.
+Thanks Ravi. I resent the patches and updated the 'Tested-by' tag. Very 
+appreciated.
 
-Signed-off-by: Tianyou Li <tianyou.li@intel.com>
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Reviewed-by: Thomas Falcon <thomas.falcon@intel.com>
-Reviewed-by: Jiebin Sun <jiebin.sun@intel.com>
-Reviewed-by: Pan Deng <pan.deng@intel.com>
-Reviewed-by: Zhiguo Zhou <zhiguo.zhou@intel.com>
-Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
-Tested-by: Ravi Bangoria <ravi.bangoria@amd.com>
----
- tools/perf/builtin-annotate.c     |  2 +-
- tools/perf/builtin-c2c.c          |  6 +++-
- tools/perf/ui/browsers/annotate.c | 52 ++++++++++++++++++++++++++++---
- tools/perf/ui/browsers/hists.c    |  2 +-
- tools/perf/util/hist.h            |  6 ++--
- 5 files changed, 59 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 646f43b0f7c4..d89796648bec 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -519,7 +519,7 @@ static void hists__find_annotations(struct hists *hists,
- 			/* skip missing symbols */
- 			nd = rb_next(nd);
- 		} else if (use_browser == 1) {
--			key = hist_entry__tui_annotate(he, evsel, NULL);
-+			key = hist_entry__tui_annotate(he, evsel, NULL, NO_INITIAL_AL_ADDR);
- 
- 			switch (key) {
- 			case -1:
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 878913115b45..7ee3c8a3f66c 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -2586,6 +2586,7 @@ static int perf_c2c__toggle_annotation(struct hist_browser *browser)
- 	struct symbol *sym = NULL;
- 	struct annotated_source *src = NULL;
- 	struct c2c_hist_entry *c2c_he = NULL;
-+	u64 al_addr = NO_INITIAL_AL_ADDR;
- 
- 	if (!perf_c2c__has_annotation(he->hists->hpp_list)) {
- 		ui_browser__help_window(&browser->b, "No annotation support");
-@@ -2609,8 +2610,11 @@ static int perf_c2c__toggle_annotation(struct hist_browser *browser)
- 		return 0;
- 	}
- 
-+	if (he->mem_info)
-+		al_addr = mem_info__iaddr(he->mem_info)->al_addr;
-+
- 	c2c_he = container_of(he, struct c2c_hist_entry, he);
--	return hist_entry__tui_annotate(he, c2c_he->evsel, NULL);
-+	return hist_entry__tui_annotate(he, c2c_he->evsel, NULL, al_addr);
- }
- 
- static void c2c_browser__update_nr_entries(struct hist_browser *hb)
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 32da310b3b62..1de9bb88c379 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -300,6 +300,13 @@ static void disasm_rb_tree__insert(struct annotate_browser *browser,
- 	rb_insert_color(&al->rb_node, root);
- }
- 
-+static void disasm_rb_tree__insert_if_empty(struct annotate_browser *browser,
-+				struct annotation_line *al)
-+{
-+	if (rb_first(&browser->entries) == NULL)
-+		disasm_rb_tree__insert(browser, al);
-+}
-+
- static void annotate_browser__set_top(struct annotate_browser *browser,
- 				      struct annotation_line *pos, u32 idx)
- {
-@@ -396,6 +403,22 @@ static struct annotation_line *annotate_browser__find_new_asm_line(
- 	return NULL;
- }
- 
-+static struct annotation_line *annotate_browser__find_al_addr(struct annotate_browser *browser,
-+						     u64 al_addr)
-+{
-+	struct symbol *sym = browser->he->ms.sym;
-+	struct list_head *head = browser->b.entries;
-+	struct annotation_line *al;
-+
-+	/* find an annotation line in the new list with the same al_addr */
-+	list_for_each_entry(al, head, node) {
-+		if (sym->start + al->offset == al_addr)
-+			return al;
-+	}
-+	/* There are no asm lines */
-+	return NULL;
-+}
-+
- static struct annotation_line *annotate_browser__find_next_asm_line(
- 					struct annotate_browser *browser,
- 					struct annotation_line *al)
-@@ -605,7 +628,7 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
- 	target_ms.map = ms->map;
- 	target_ms.sym = dl->ops.target.sym;
- 	annotation__unlock(notes);
--	__hist_entry__tui_annotate(browser->he, &target_ms, evsel, hbt);
-+	__hist_entry__tui_annotate(browser->he, &target_ms, evsel, hbt, NO_INITIAL_AL_ADDR);
- 
- 	/*
- 	 * The annotate_browser above changed the title with the target function
-@@ -897,6 +920,12 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 
- 	annotate_browser__calc_percent(browser, evsel);
- 
-+	if (browser->curr_hot == NULL && browser->selection != NULL) {
-+		disasm_rb_tree__insert_if_empty(browser, browser->selection);
-+		browser->curr_hot = rb_first(&browser->entries);
-+		browser->b.use_navkeypressed = false;
-+	}
-+
- 	if (browser->curr_hot) {
- 		annotate_browser__set_rb_top(browser, browser->curr_hot);
- 		browser->b.navkeypressed = false;
-@@ -1003,6 +1032,8 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 				nd = annotate_browser__rb_node_by_idx_asm(browser, idx_asm_nd);
- 				browser->curr_hot = annotate_browser__rb_node_by_idx_asm(browser,
- 							idx_asm_curr_hot);
-+				disasm_rb_tree__insert_if_empty(browser,
-+					rb_entry(nd, struct annotation_line, rb_node));
- 			}
- 			annotate__scnprintf_title(hists, title, sizeof(title));
- 			annotate_browser__show(browser, title, help);
-@@ -1139,19 +1170,19 @@ static int annotate_browser__run(struct annotate_browser *browser,
- }
- 
- int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
--			     struct hist_browser_timer *hbt)
-+			     struct hist_browser_timer *hbt, u64 al_addr)
- {
- 	/* reset abort key so that it can get Ctrl-C as a key */
- 	SLang_reset_tty();
- 	SLang_init_tty(0, 0, 0);
- 	SLtty_set_suspend_state(true);
- 
--	return __hist_entry__tui_annotate(he, &he->ms, evsel, hbt);
-+	return __hist_entry__tui_annotate(he, &he->ms, evsel, hbt, al_addr);
- }
- 
- int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
- 			       struct evsel *evsel,
--			       struct hist_browser_timer *hbt)
-+			       struct hist_browser_timer *hbt, u64 al_addr)
- {
- 	struct symbol *sym = ms->sym;
- 	struct annotation *notes = symbol__annotation(sym);
-@@ -1221,6 +1252,19 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
- 	if (annotate_opts.hide_src_code)
- 		ui_browser__init_asm_mode(&browser.b);
- 
-+	/*
-+	 * If al_addr is set, it means that there should be a line
-+	 * intentionally selected, not based on the percentages
-+	 * which caculated by the event sampling. In this case, we
-+	 * convey this information into the browser selection, where
-+	 * the selection in other cases should be empty.
-+	 */
-+	if (al_addr != NO_INITIAL_AL_ADDR) {
-+		struct annotation_line *al = annotate_browser__find_al_addr(&browser, al_addr);
-+
-+		browser.selection = al;
-+	}
-+
- 	ret = annotate_browser__run(&browser, evsel, hbt);
- 
- 	debuginfo__delete(browser.dbg);
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 487c0b08c003..c34ddc4ca13f 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -2485,7 +2485,7 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
- 		evsel = hists_to_evsel(browser->hists);
- 
- 	he = hist_browser__selected_entry(browser);
--	err = __hist_entry__tui_annotate(he, &act->ms, evsel, browser->hbt);
-+	err = __hist_entry__tui_annotate(he, &act->ms, evsel, browser->hbt, NO_INITIAL_AL_ADDR);
- 	/*
- 	 * offer option to annotate the other branch source or target
- 	 * (if they exists) when returning from annotate
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index c64005278687..9542cf43bd2a 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -713,12 +713,14 @@ struct block_hist {
- #include "../ui/keysyms.h"
- void attr_to_script(char *buf, struct perf_event_attr *attr);
- 
-+#define NO_INITIAL_AL_ADDR 0
-+
- int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
- 			       struct evsel *evsel,
--			       struct hist_browser_timer *hbt);
-+			       struct hist_browser_timer *hbt, u64 al_addr);
- 
- int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
--			     struct hist_browser_timer *hbt);
-+			     struct hist_browser_timer *hbt, u64 ad_addr);
- 
- int evlist__tui_browse_hists(struct evlist *evlist, const char *help, struct hist_browser_timer *hbt,
- 			     float min_pcnt, struct perf_env *env, bool warn_lost_event);
--- 
-2.47.1
+Regards,
 
+Tianyou
+
+On 10/10/2025 1:56 PM, Ravi Bangoria wrote:
+> On 09-Oct-25 9:58 AM, Tianyou Li wrote:
+>> Perf c2c report currently specified the code address and source:line
+>> information in the cacheline browser, while it is lack of annotation
+>> support like perf report to directly show the disassembly code for
+>> the particular symbol shared that same cacheline. This patches add
+>> a key 'a' binding to the cacheline browser which reuse the annotation
+>> browser to show the disassembly view for easier analysis of cacheline
+>> contentions.
+>>
+>> Signed-off-by: Tianyou Li <tianyou.li@intel.com>
+>> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> Reviewed-by: Thomas Falcon <thomas.falcon@intel.com>
+>> Reviewed-by: Jiebin Sun <jiebin.sun@intel.com>
+>> Reviewed-by: Pan Deng <pan.deng@intel.com>
+>> Reviewed-by: Zhiguo Zhou <zhiguo.zhou@intel.com>
+>> Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
+> Works fine on AMD.
+>
+> Tested-by: Ravi Bangoria <ravi.bangoria@amd.com>
+>
