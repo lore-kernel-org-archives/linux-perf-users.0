@@ -1,225 +1,228 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D324E1531C1;
-	Fri, 10 Oct 2025 07:49:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760082599; cv=fail; b=A/j55CUNiqFy0tBkB+ZIQczol5DwEYZ//C9BH98xlBL1MxezKowppXmbKxQbHOAqyauXFq5D5gSkj3a12WdfBN0nHhBAdRqwuN8Rz+oAYAgrDVG5lM/I6KXivLgRKcuvfTuWqtfpwqFG0NOZK6p8MTRwtiRf6jam79X2I7YsDvc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760082599; c=relaxed/simple;
-	bh=v7oq4Rt3lwOz7Tc643Q7eCI2UbEx6eQM2t3OnmMaAbM=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZE0pHe41rfSjvNgPKkisWDjtakTwvKK/hzlhBcOgc/i7Xxuo16DijydFPCC5goyY6G9rAbmMXkDO+0Uo9b57LsAxZD3UJSz3dDwR6gec2NsolnmKuNb9PAGm06cM7lO/FTzzVgLEYNsOnpGN2hbx7r2/cw+9wX2tiiOZYPW46DQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LgPvXBny; arc=fail smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE2523E320
+	for <linux-perf-users@vger.kernel.org>; Fri, 10 Oct 2025 07:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760083093; cv=none; b=T6VtOhuWT60AYb21Pb7nnbpfjNkG7UxpurZrxi0xzavMj4yWcsZ2sjMiJaHK95T/9mbQEYR95DkZSpxeRaD0IlrRKGjsm7Erz3OjIoWhPbK1joJAqhkt41KH0R4FvOFf1Pom3S039iGmuBYWxDQu/p3uGvi/mv9/LyRxudBTQOE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760083093; c=relaxed/simple;
+	bh=/EqQHNRDCS2YqzBq0RkItK1pvs5vi0KLmvOMTFqnmTo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fzL+xLt/tl8sT9UAo9VBAl4K2jKWoXdVgWbOT1itYUxCA96Zkn5xX+UP0ptzEwGepPhSf1aTUaZc/qRrZ2HtlEHJEwjecPFT+BGdGH9+0FZMvv2eOmY54p2IM94Tib97IegAaPDdJjyu/WoVJaoF4FyYVmsUcEsRPiTO/ShWDIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LnpTac5Z; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LgPvXBny"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760082598; x=1791618598;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=v7oq4Rt3lwOz7Tc643Q7eCI2UbEx6eQM2t3OnmMaAbM=;
-  b=LgPvXBnyibXUnlDOchCps+GJZBWlGvKyLBnzTNFiFlZoPiu+SdlS/zLG
-   yfxFTMwWG3AxjnwPMOmbI0vH7PJ3UWju6/+DL/Hryzmvo+A2OjbMESuhG
-   3fKjE14DqZltv2eUoI2WBiI0O51jZo6lJXuOfGgR1GUQnhN7VvBr/EB46
-   hGmfz2xPHfbsDVKSPix9oVW5PwjuMqM9Vt94HndmcsNZ29XUrJ2F8S7gl
-   Qs9G92SCVNAEegAeKDBCTcAIxMG9baooIX3qgD11+YVfUIqernDS0NRLR
-   sXsvS9oLdWyGBwdkXpZlitQTtE5byEuDkgSfq1bX1lic31nwanup0UmIj
-   g==;
-X-CSE-ConnectionGUID: +p6wUPcyT9+weZJqbPUj4w==
-X-CSE-MsgGUID: HO81juuZSdiQgB5lHfmlKw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11577"; a="73644919"
-X-IronPort-AV: E=Sophos;i="6.19,218,1754982000"; 
-   d="scan'208";a="73644919"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2025 00:49:57 -0700
-X-CSE-ConnectionGUID: jngC/b3NQviNXsdpDxca6A==
-X-CSE-MsgGUID: ZsWSL30qSHqZxhsebELqBg==
-X-ExtLoop1: 1
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2025 00:49:57 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Fri, 10 Oct 2025 00:49:56 -0700
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27 via Frontend Transport; Fri, 10 Oct 2025 00:49:56 -0700
-Received: from SA9PR02CU001.outbound.protection.outlook.com (40.93.196.31) by
- edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.27; Fri, 10 Oct 2025 00:49:55 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rJ6PeuUw29sBhp7XHPeo59ewJ8CJ7MzGKlPdJgNlfFKF5v02fBUKdsFUtiZZJ+++g1I+2duORlPgq+mEQDSpRXk3upj0y6Y8G9IPXPqxD9KL5TUssX3EJsz1t6Ogv6m9lg1LnFp+hAnp/94IAlrjzdmyeFVjR/9fG/dKtWaG5SR1LqEBOxA1YjSnA6oleFS5sFg96zFeS74zshwfHDPzve1GwNGAhFqdQXtQKdtowkGqqxAqr7ik/GGYDMeK4C2vDsuuaZczkl576GMYC0TN90JWovUWP8YpUjRJC8yIQiRueMHGqNg/b9PUz4sUW3oSNzMvVv5A9zrR4A+XHCqwyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=luVTT98XC9LJ87stflpZXGI6MUgaHK6jjewlMeuk6C0=;
- b=lsXuQYXyBwKxy/L0eRopzIJK2v2IIbcddm+ujIMpUmQuMahSf9fE957KGmDKBV1fTReImKd0Iu91CG4WkKXqfkwe4XrKmW5oLlRgl7P6TMPmW4kF7Rey2nV9O60Xf4QBcioFROZ81444wZqWZzseoMyvvIz6OpljUlzgOe7S/5med5ufzW+9VHW+JbkqlM+JCOXFEoXfMwr/+1bdbny0y63/Hq/lxyrZl8LspYBwf1p3hxqk14U7zJyhlAlq79U1H/XAJyewoK7De5vVefwe2CstMu/mmVylTOTWcXY4TYYK0Hf0jNeTa3NEl6aqbxgEFhC13Z95P1XlG3VBrEOXNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MW4PR11MB8289.namprd11.prod.outlook.com (2603:10b6:303:1e8::9)
- by PH3PPF681F257FD.namprd11.prod.outlook.com (2603:10b6:518:1::d29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.19; Fri, 10 Oct
- 2025 07:49:53 +0000
-Received: from MW4PR11MB8289.namprd11.prod.outlook.com
- ([fe80::d626:a4f8:c029:5022]) by MW4PR11MB8289.namprd11.prod.outlook.com
- ([fe80::d626:a4f8:c029:5022%6]) with mapi id 15.20.9203.009; Fri, 10 Oct 2025
- 07:49:53 +0000
-Message-ID: <9a533ced-293d-4d18-aa8f-e6aafc429e2a@intel.com>
-Date: Fri, 10 Oct 2025 15:49:45 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6] perf tools c2c: Add annotation support to perf c2c
- report
-To: Ravi Bangoria <ravi.bangoria@amd.com>, Arnaldo Carvalho de Melo
-	<acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Ian
- Rogers" <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Kan
- Liang" <kan.liang@linux.intel.com>, <wangyang.guo@intel.com>,
-	<pan.deng@intel.com>, <zhiguo.zhou@intel.com>, <jiebin.sun@intel.com>,
-	<thomas.falcon@intel.com>, <dapeng1.mi@intel.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <aOTOEcNOiUiEJ9tz@google.com>
- <20251009042839.1643396-1-tianyou.li@intel.com>
- <43ac631c-3404-4e15-a02e-d1976ead4956@amd.com>
-Content-Language: en-US
-From: "Li, Tianyou" <tianyou.li@intel.com>
-In-Reply-To: <43ac631c-3404-4e15-a02e-d1976ead4956@amd.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PSBPR02CA0018.apcprd02.prod.outlook.com (2603:1096:301::28)
- To MW4PR11MB8289.namprd11.prod.outlook.com (2603:10b6:303:1e8::9)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LnpTac5Z"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b6093f8f71dso1091893a12.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Oct 2025 00:58:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760083091; x=1760687891; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=2Nucw4E7LkwzxjCbFb3F737DKijbeBN9zMwZ0PDOoZQ=;
+        b=LnpTac5ZvTS/UYEVB7W5KdB+cWLKdYtewYzALu7433gOuYAcGX1oFy0Q19ip8xcFCa
+         VPvqP8SCUx+/XjNgHL8vB33TujuA0mC2YoXnFFaGf/K6hmYJQSStvsPkmYHDHvwWGBB9
+         H25tihr2gvHnD9+QUe7VqDsb4j4ikRlvsXp8WF71t3vbG8l1ehFojIQi9pYHpBP7W6/A
+         vqU5elROKHmEcCx+LOrpJDHvz4jqYqj6ZObpvjQ2rw6SyAsHiWwVY1K5mSEmwywqFgpO
+         xN/78d3SCni1185cDyOSCn+FmZXFwCwbuKfofh82uNWMtcsHZ4vfgd8JPfiDTxs1PC8C
+         1iDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760083091; x=1760687891;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2Nucw4E7LkwzxjCbFb3F737DKijbeBN9zMwZ0PDOoZQ=;
+        b=O9kopbmJeEh5XZMT+yB2DeobDt5+1PO5maHrmx/3FsNsyToow/wX28ifYy23tz5EgH
+         SA595MCvIEY9K7K8IE45eBQfrN57qpz4ihZuY3ZBzihd5MxgMz24QpGeqCQ4eVFoamig
+         roYM4L5ingYv4cnzu27fXpcOJBgaSM4mztBVs+RRMMAIwPC1/oD58MDnv5NBW9cfzMz4
+         ofP6A3sjB93cpcaSnHT+Y/ro8mIqElXkOmYX+ZIP/YrdTG+adYO2dc0MpLGlfg8dgjDM
+         7oJ813bjxTb36Ev9DlXYiBZuqzlPL+Tze+Oxgr7YyvdE8vtbCZnnjWRTRvgOL+Rv29ps
+         wPTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVjflqO+WG+sYY/k3/RxXvoAbSrvyuKdl1nyQDvgoPLzsp+NX5wJ2I4QKL8Dvr2N4ROH1iC6983wqropOkIJjkj@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfF2LSGaQbvCDReb0wPgYkoM0yY31a5ASG+Ya0qV0+Hk4hGLDD
+	9eSLTqMGsIek5GGEWjBE42+U60W299yW1qUyssDgWAaxzgWYEnh4XSjf
+X-Gm-Gg: ASbGncs/+WSRrgMDWM9xDFXbNpCpH6/4iJ2DfTn/coEbZ0fs3E14TcZl1B4e00g4YRt
+	5dcWzb3TBVjqTqB1LS3wINPMjnFxfs8ppHuElNK8nIGvLugYQRsT3KkIp5kq/UVM//f7MQ/ogwX
+	BmKLkB88aARvLotnv65urCfmmsgm71cZ9HVwJQrKfrujCkAWzPFR7cXIDV17T/STlzgYgg8SjKa
+	bY9VXbTxfLBKQnRBsi2vaNQK131dsfXtzTbNlPaGY5p55YnWCeQwEIycUy2TP6dxLw1FbS8Qc4U
+	9nz0dCvdA3CkrjwK9Rj91qjP3eGGAUzLfmAFlyvl5TDeU8BIgU3ewQtMD0f4TWT9v2ufgJQs+ms
+	fAVsWcGVXhy10/gSjqJEso3KYFXnYM1sGDdoDbq0mAki5TzKwpHxyxqzYUDEmdl1cNiI=
+X-Google-Smtp-Source: AGHT+IFeywA6gB4/SQbmJGvT2KY5YTMhXWywBtcaIqaAsauF4r7EzLqcGRXLsSas3aRqscvIRrL6Qg==
+X-Received: by 2002:a17:903:298e:b0:28e:756c:7082 with SMTP id d9443c01a7336-29027374b38mr134966335ad.15.1760083090502;
+        Fri, 10 Oct 2025 00:58:10 -0700 (PDT)
+Received: from localhost ([103.121.208.62])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29034f070ecsm49587725ad.60.2025.10.10.00.58.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Oct 2025 00:58:09 -0700 (PDT)
+Date: Fri, 10 Oct 2025 15:58:03 +0800
+From: Jinchao Wang <wangjinchao600@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Alexander Potapenko <glider@google.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Marco Elver <elver@google.com>, Jonathan Corbet <corbet@lwn.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>, Rong Xu <xur@google.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	David Kaplan <david.kaplan@amd.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Jinjie Ruan <ruanjinjie@huawei.com>, Nam Cao <namcao@linutronix.de>,
+	workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-mm@kvack.org, llvm@lists.linux.dev,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	kasan-dev@googlegroups.com, "David S. Miller" <davem@davemloft.net>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 00/23] mm/ksw: Introduce real-time KStackWatch
+ debugging tool
+Message-ID: <aOi8i1Y0decaamaX@mdev>
+References: <20251009105650.168917-1-wangjinchao600@gmail.com>
+ <20251009175107.ee07228e3253afca5b487316@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW4PR11MB8289:EE_|PH3PPF681F257FD:EE_
-X-MS-Office365-Filtering-Correlation-Id: 86911c42-5dcc-4d86-aef9-08de07d198f6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?L1J0b0MvMGtMbDEzKzRvUGxnWGp3Tk12NnFxU2pXd3ozN3hTNVZRQ0c0aGp2?=
- =?utf-8?B?ZjEyQlozSFBuUGRwdDZKV0JaTHlvOHpwbGpRZHhhS0hURzBCZy8zTnNmOVYw?=
- =?utf-8?B?NmlibmFvT3lrUndJVmNlN29vNHYrTnV3Qmxmblo4L0hJMzZOWXhPTmhMVWZJ?=
- =?utf-8?B?QklpY3VEbVJpd2ZmNVE4NFJUYnc1R2RESFRVSmJvMnNVdzdYWjl0MTdDQmJu?=
- =?utf-8?B?TXB3OHBkOTNkTnNJY0NFY1phVCt6L1RYalRNWTQ1ZUI1RmtacHlyb1VudGF4?=
- =?utf-8?B?SkxVZDllYzYzSFNWZ2VSR1l3eXRDNlE0V09NYjZFQjJLdGJBQmxRYmlzVUU0?=
- =?utf-8?B?NEIrY3d5THRscXQxcVBVSkpYZnZzeWRORHR4VWRFSWRHdFJxYjM2UWViSmN2?=
- =?utf-8?B?bEpaU1hsRmtNRVNEbHl3SDFQZ1czWGZHM3V1K055bTNQdVMxV24vdmFIYmxy?=
- =?utf-8?B?WC9VZEtYSVVWMytia0laN1lzVGhhWWZWSi9iUzlnUStybXhMdlQwNXZTOVB5?=
- =?utf-8?B?clRWSnB2NWg0YWFMKzl2aGxRNU9EZFpIRVVyME9nNjBhT0ZQUkJoU3h5cmo3?=
- =?utf-8?B?NTc5SUF5ekJqN0czbm9PUC9CYzFZMmorZkdwdTFDdHM0RDl6dU9lV1REODhX?=
- =?utf-8?B?dExnbTVLd3dUeW9iUG1uNllJYTZEN3YwZTNFaVF4WHhtVDBqeGZqUWZzd2hU?=
- =?utf-8?B?MlQ4cHRncytCMDJMbWgxcHpheDRhVDY0Z2xDSkVKazdrMnYxeEQ4RGpZa1dQ?=
- =?utf-8?B?M2RMU0dhS3JlQUNMUUdPamwxeDg1STdZazhleDI1UTEvSlVKSmp0QnNrZVdQ?=
- =?utf-8?B?cUoxbW1VYXBwK1VEdEpvL2Q0b1Q3SFJSWlJjWHpQeUFIQzhtOVl1NTVCME5u?=
- =?utf-8?B?UG41bWRXWGNGVFpIR3cxVTNnQ2c1eTNwdi9LNGRndkdXd2ZQSXN3dGdNLy9E?=
- =?utf-8?B?Zk45WEhUV2kwOEhvc0xxclhWeERDejdVSWEydm5LbVJLY2xSemJ3Y3NUV29t?=
- =?utf-8?B?cjlDRkZKWCtFOW5oZW92N0dVcVYrd0w4cXhaNTlLay9iTGhIS2VIUURnQWE0?=
- =?utf-8?B?QWttSGw3MkY1UmRjc1VWenk2QzlmSVlWbkErL2pVMnE4TG1zNSsyNENpamtp?=
- =?utf-8?B?c3ZpaWhvNjY5YlMvUDIrQnRwTHNsa0EyMEFKa00zRmQvSFhXNTdneUhBQVlo?=
- =?utf-8?B?TE9NbG1YRTdETlJtOWFtMHlLZFhuOGtYYmJNbkN6MjNzUFVuVVppOTRlMm9y?=
- =?utf-8?B?enpnaE9TYXFIY1F0V3c2a3FxQXB6cDdmVDQ3NmcxTmdYTWVzV3Y4R0FqbWUx?=
- =?utf-8?B?RTYzVm5sWFU1bEdKUHBCQXJuZmQ5NXJkQ1ZhTlNrang1eG1EWG1aV3V6ZjRB?=
- =?utf-8?B?K3Y3Tk9QY1ZSYUIvZ2hDcXlBVFpEbnA2YTdSekVmN0FnYkUzR2VnKzFJSDdn?=
- =?utf-8?B?enlETldxaUJMVEx6RkR2cHdaTXlBbEFQaFdEb2FZeVNpUjBldHlZbTV6Ly9B?=
- =?utf-8?B?ZjVwbHNJVktzcTRueGRPRFcrVU9DK1dab056VFkrUy9QWi9lQURHcXZGaUg5?=
- =?utf-8?B?dSt0SEtoR2JSRkRXNzk5Tis2cjJUL1djTUJSMS9FL3ppSnA5ck8wYWlxa295?=
- =?utf-8?B?cjFHOCtITzgwem8wVVVZWkdkUkJFUkdpWi9yU2YzdGR2cnRSOEoySlRHN3Ri?=
- =?utf-8?B?RFg5bkxmTWVoRkVTT0ZUb3lqRzF6bUFCTHlxdkZOOFJ2U21iVVYyM2FQM2pP?=
- =?utf-8?B?ZGxoNk1raVVMaUxlcy9oZFJuMld6S3U4N0NHNElyYXRzTzVYU3liamtVYTNJ?=
- =?utf-8?B?RDZ5N3M3WERFelMwTnJkc3RieHlRSUhqL0drZWR5eGhsYVBiemVyblNrU25k?=
- =?utf-8?B?Um4yaUdyQWtvTzlBVWtBLzBDZUREOWpUZllUWEI0K1kwa2dMZDVOTmVaTDNY?=
- =?utf-8?Q?s6GYbZPPnEKX0Jg/4byr05x2E0gCYfQ3?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR11MB8289.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NmtGUTh1dlF5YlpiN3dLSHUyS0NOaC9yd1BLakxKQUFIczJkMDJvNmNDWVdL?=
- =?utf-8?B?d21GMXQ5K2R4NytkYlRGaXdwdXV1bUJFa3FiQWsvVDU1M1VWUzJQTDl5ajVo?=
- =?utf-8?B?VFhucUo3c0liWDJQa2hmSUlCQ1Ewa25QOFpYb0U0c0lYREY1NW1ZditUSUww?=
- =?utf-8?B?Z1lEV2pOQndvSURyYSs0TDJHWEpaV0ZNRVliaDNqVXlUZzNMOVkxSXJnZFFN?=
- =?utf-8?B?RjNNaFR4SkFPaGl3S0ZzalhYRmQ0a1lRYVozSGI2U3ZHSDV3Y3daaU5LV0py?=
- =?utf-8?B?dE9YUmdUdndlV01oLzRNaytrRk96ODRPVll6cG1WY2I5bzJTVldpWVJDQS9y?=
- =?utf-8?B?amxtbERCVHFzemFaZmtmUVpJYkVSaFVYOWxEeHpKd2FsL0tkK1VwWFlxZWRY?=
- =?utf-8?B?SnJPM0h3M0VicDIySTJ5N3VKa3pWaFYzek16T25vZ2tFZTNCOUxkL01ROHZr?=
- =?utf-8?B?eFBPMW9HVVBIL2VJRTdSTy9ITFcwbElCYWRPWnhFRHhXMjhrR2lRa1FIYUxZ?=
- =?utf-8?B?ak15dmw3cHdNUGdwRXAwN2crYW5Dc2xpbE51THJNNWhrajBzYjNtVjhXMFdr?=
- =?utf-8?B?S2Y5OWJGN0NIaTJqbmRJRmxObFRVM0hibTVwOTFIbndzMGIwbXppdy9IM0NT?=
- =?utf-8?B?VnNhZ2k1cENxRm91cXBWZi9xTS9UblA1dXZRdXhWRXJsNmJzYi9VcjBPZ2Jv?=
- =?utf-8?B?VnVxb1M2bHpvaFh4MzVFYitJMDladXFjbk9GRGwwbWJYNmoxK3pTR2hZMXlP?=
- =?utf-8?B?WXpYb0p4dWxlOFBDZVhwK2ZtWk5pN0k1TjU1Tk5RdUIxTm9CMjJKWndUN084?=
- =?utf-8?B?NjFBYndGZ09RVFNVL1hTODVjbWNLbmhkeHAxQXNLdUZmVTJ3TDhmd1JzNjhw?=
- =?utf-8?B?TU9WbFMyMlZLczVNc0haR21OQTJOUS9xOXZGN0JuLzluZVc3bUNKUlZWUkFx?=
- =?utf-8?B?VXk4ZnR4bDNDdlYzcmlVN0ZIRXd2Q00wYW8zNnprZWgveHlvbVd4bmJ2OEIr?=
- =?utf-8?B?aDV2MTJpZ3VLRUJQaG9KRU5wRitGZVRxM1ppSnowc2hxUUdnbWZxVjlXcFM5?=
- =?utf-8?B?N2MxUkhpN094Zk5sT2IzZ2t5a1laSWVhRTdZcjZNM05KdklWdDlNT2dwSHVD?=
- =?utf-8?B?dVdYdVMreC9zTHdwMmNJdU5CekFQZzFGeDM4YjB6TjkyZ0hmNTNITmVtS3Jv?=
- =?utf-8?B?Q1dDRlh1MUVtMXo0TUV3bUhJUGczSlYxdVRRTVZZMlpxQXpPVmRucmtuY2FW?=
- =?utf-8?B?bEhGU0ZEczJWVHU1RHpPWGE2b3duZjk2QnhOT2wvWHFaMHd3M2x0Z3c5L2d3?=
- =?utf-8?B?UVBQVkFWVWdaWUVvWThmTkFtMmYxUGg3Q1VBYjRKSUsxcFkzd3RwNFJGamVN?=
- =?utf-8?B?SEdWZUZyaElZVWZMNENlQ3dlN3loL2FiNkRYZCtLaDNCcm5IdW9OM2lTWFlr?=
- =?utf-8?B?QWZKdnNaWmZLOUtQMkNCdnlGaXcyN0FpbFl3QVVGNSt5dERudjJnMkJxNmlO?=
- =?utf-8?B?T2RSUW9CTVZuR0ZmU2xMYm9YVEpLdnVSenBaTXY5U2pzcGZyYmorMm9CUWt0?=
- =?utf-8?B?c2Z5bHR4ZDZqbis0Mk9ZT2k4SW9mT0tKRERMQm8zSUw1WTNUb0loUmtKUEx6?=
- =?utf-8?B?NU4wVmxBblRJT3ZQL0FseDhUOFFYNWcrMXUvUnRtZDNmT3RsemxRTHJKblgw?=
- =?utf-8?B?NUNDY3RiV1B6VE5YT3VjbHQyYi9BUkFvamRHREdPZHdVVWZpdC9BdEUyd3ZN?=
- =?utf-8?B?dFZaZmlLSXhSVW1XdjlnQjBEdWwwcTdUUVBJaEhMV2JTeGRTRDkvSC84WVM4?=
- =?utf-8?B?ZGdFbVRGd1dwajAvZ1pKY1JkZ2ZZSjVpUFQwQ1Jpa2JxVnB2OFFMVk8yRXhp?=
- =?utf-8?B?cmdmNWZLb2tneVowbC9TTDhJU1d0dXpiNFpONk90Ny9CS2JraFRDN2JTaXd1?=
- =?utf-8?B?am1VRm9CTzVYWGtoLzhJeENrSTUxZ2FZK0p0WFZTd2tVVkJGTElQRUVoQlVB?=
- =?utf-8?B?YlJTWWR1N3crRnU1ZWJ5SVQzZHVjVmJhaS9DMUpjeW02YWw3V3M0a25lZXF0?=
- =?utf-8?B?cGxZTnpjUTA2eVRiMHdMS3ZVR3Z3Q3pqYnpRemVFZjNlRTF2aFIzbjY3clRZ?=
- =?utf-8?Q?GUH6j+ML3+xRUUoKLx8LXsKlJ?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86911c42-5dcc-4d86-aef9-08de07d198f6
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR11MB8289.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2025 07:49:53.7058
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GHntSozj0E95jvG10rjDIcuhcqC/C9L6U9g/ZKwbdLH9W1+fCkdYtY9asbQ38dKeumUDA3ChWBAsVQXHH21Hrg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH3PPF681F257FD
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20251009175107.ee07228e3253afca5b487316@linux-foundation.org>
 
-Thanks Ravi. I resent the patches and updated the 'Tested-by' tag. Very 
-appreciated.
+On Thu, Oct 09, 2025 at 05:51:07PM -0700, Andrew Morton wrote:
+> On Thu,  9 Oct 2025 18:55:36 +0800 Jinchao Wang <wangjinchao600@gmail.com> wrote:
+> 
+> > This patch series introduces KStackWatch, a lightweight debugging tool to detect
+> > kernel stack corruption in real time. It installs a hardware breakpoint
+> > (watchpoint) at a function's specified offset using `kprobe.post_handler` and
+> > removes it in `fprobe.exit_handler`. This covers the full execution window and
+> > reports corruption immediately with time, location, and a call stack.
+> > 
+> > The motivation comes from scenarios where corruption occurs silently in one
+> > function but manifests later in another, without a direct call trace linking
+> > the two. Such bugs are often extremely hard to debug with existing tools.
+> > These scenarios are demonstrated in test 3–5 (silent corruption test, patch 20).
+> > 
+> > ...
+> >
+> >  20 files changed, 1809 insertions(+), 62 deletions(-)
+> 
+> It's obviously a substantial project.  We need to decide whether to add
+> this to Linux.
+> 
+> There are some really important [0/N] changelog details which I'm not
+> immediately seeing:
 
+Thanks for the review and questions.
 
-Regards,
+> 
+> Am I correct in thinking that it's x86-only?  If so, what's involved in
+> enabling other architectures?  Is there any such work in progress?
 
-Tianyou
+Currently yes.
+There are two architecture-specific dependencies:
 
-On 10/10/2025 1:56 PM, Ravi Bangoria wrote:
-> On 09-Oct-25 9:58 AM, Tianyou Li wrote:
->> Perf c2c report currently specified the code address and source:line
->> information in the cacheline browser, while it is lack of annotation
->> support like perf report to directly show the disassembly code for
->> the particular symbol shared that same cacheline. This patches add
->> a key 'a' binding to the cacheline browser which reuse the annotation
->> browser to show the disassembly view for easier analysis of cacheline
->> contentions.
->>
->> Signed-off-by: Tianyou Li <tianyou.li@intel.com>
->> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> Reviewed-by: Thomas Falcon <thomas.falcon@intel.com>
->> Reviewed-by: Jiebin Sun <jiebin.sun@intel.com>
->> Reviewed-by: Pan Deng <pan.deng@intel.com>
->> Reviewed-by: Zhiguo Zhou <zhiguo.zhou@intel.com>
->> Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
-> Works fine on AMD.
->
-> Tested-by: Ravi Bangoria <ravi.bangoria@amd.com>
->
+- Hardware breakpoint (HWPB) modification in atomic context.
+  This has been implemented for x86 in patches 1–3.
+  I think it is not a big problem for other architectures.
+
+- Stack canary locating mechanism, which does not work on parisc:
+  - Automatic canary discovery scans from the stack base to high memory.
+  - This feature is optional; a stack offset address can be provided instead.
+
+Future work could include enabling support for other architectures such
+as arm64 and riscv once their hardware breakpoint implementations allow
+safe modification in atomic context. I do not currently have the
+environment to test those architectures, but the framework was designed
+to be generic and can be extended by contributors familiar with them.
+
+> What motivated the work?  Was there some particular class of failures
+> which you were persistently seeing and wished to fix more efficiently?
+> 
+> Has this code (or something like it) been used in production systems? 
+> If so, by whom and with what results?
+
+The motivation came from silent stack corruption issues. They occur
+rarely but are extremely difficult to debug. I personally encountered
+two such bugs which each took weeks to isolate, and I know similar
+issues exist in other environments. KStackWatch was developed as a
+result of those debugging efforts. It has been used mainly in my own
+debugging environment and verified with controlled test cases
+(patches 17–21). If it had existed earlier, similar bugs could have
+been resolved much faster.
+
+> 
+> Has it actually found some kernel bugs yet?  If so, details please.
+
+It was designed to help diagnose bugs whose existence was already known
+but whose root cause was difficult to locate. So far it has been used
+in my personal environment and can be validated with controlled test
+cases in patches 17–21.
+
+> 
+> Can this be enabled on production systems?  If so, what is the
+> measured runtime overhead?
+
+I believe it can.  The overhead is summarized below.
+
+Without watching:
+  - Per-task context: 2 * sizeof(ulong) + 4 bytes (≈20 bytes on x86_64)
+
+With watching:
+  - Same per-task context as above
+  - One or more preallocated HWBPs (configurable, at least one)
+  - Small additional memory for managing HWBP and context state
+  - Runtime overhead (measured on x86_64):
+
+       Type                 |   Time (ns)  |  Cycles
+       -----------------------------------------------
+       entry with watch     |     10892    |   32620
+       entry without watch  |       159    |     466
+       exit  with watch     |     12541    |   37556
+       exit  without watch  |       124    |     369
+
+Would you prefer that I include the measurement code (used to collect the
+timing and cycle statistics shown above) in the next version of the patch
+set, or submit it separately as an additional patch?
+
+-- 
+Jinchao
