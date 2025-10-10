@@ -1,122 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103D11A275;
-	Fri, 10 Oct 2025 00:47:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933281A275;
+	Fri, 10 Oct 2025 00:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760057245; cv=none; b=EtmIEBVPKnnrBJBT9DowEBHMEuW6dbN5y7XNd9Ylo7x6NmdzIm1Zjo/1nud5xUuePnCXGT4m/CUEsd8qyiNQfG/dklwExj/HfbX70PbPOtTDn58JIkQ5Hin2WC7HgCkt+M4jwLimThC45usooNG2tgBzuNJan7rtVWMPE4Wtomc=
+	t=1760057470; cv=none; b=Z/VNNpIlRKgpMXsb0Dk91G0100yA6PuCUuFqBCZV/1BenAtJna7lByg3ByYDc6xedaj5PwQ+bbFaBbZGFeBsHdfaer5mMX0HyMYvI7wDF9BeBRSeQ+26UoEDAACSzCGqjrxWDcQT+pwNa6hodoTSW5DvufmqKA7KUYQUUxskqAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760057245; c=relaxed/simple;
-	bh=6U1GR6HQN6L9uMYLb6utvpWeP7fXmMqpxnXNoNgTZ1c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UXQIXU8psVoaADaHUpkeDBHL/O6Z989fQ4V/2FUv4Qlvdm9oOBkKXNYTArSkipKar+Og6cy68NfcJrGx8RMvMT1iSBrmAnM8N3f+L+wCK9ZPnn0kzcA/rXzGgs5zYGUdErMhKE3QDGgaSX0uOOQLb8+luOJPwKtSywhI7B4scQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nh9l7eec; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1760057470; c=relaxed/simple;
+	bh=A3UrofGwAstq0M2Uw/J4CU3Y1letTXoVhhSuZWoGGb8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=VIcx6jeqEOLAHTEOLuGbUcIbZQKWBi0qImk8Cz26SsFPTkOVtVNWcdVmnH9ej7QUt7S41OAV6MVOMk9X9nF8f5v306gkAcVCiRpzvKXBt/5fxPHurLeRVkNSPAyxc7m/dc2OxNZTmNavXOmK0FnSFeg2afZASJDyEJ5DQFNGv9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=2JktYbzm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nh9l7eec"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760057244; x=1791593244;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=6U1GR6HQN6L9uMYLb6utvpWeP7fXmMqpxnXNoNgTZ1c=;
-  b=Nh9l7eecWVlT/1YXiwthoEyE8EBr0dfi5jce+LgIdb2vEZh0OhPVXS3a
-   3UwieTlnyYR5AdkSNpjs7Zm2HTpUPDbtbP2svkeZ3dAQZM2C44MlYrHpz
-   bBs9z673sWbQyI7iFY9w0BAJQ4p0jJa15HbJJbK2tZ8sAOgZHMFYGxoUk
-   K9ZTP/0IEMlY42JTtkEImTXHB1h2w/6L0qNvZAzFrZvgxwdyBoymau16e
-   rCkwHC39frvkie2ei26SHkrUB/8MlPkaSHwwGqFNXd8ZmkxM5YXrc6nP8
-   mGaWzpNAHHvtzpEkclVdHCijIipl+yjsdtC87/Vf+JsAmFoWQFnJitDA8
-   w==;
-X-CSE-ConnectionGUID: LGtDhSE1TCqITSHr66whrw==
-X-CSE-MsgGUID: 9jxLoEc9RkKef49oWNSzVw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11577"; a="62434274"
-X-IronPort-AV: E=Sophos;i="6.19,217,1754982000"; 
-   d="scan'208";a="62434274"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2025 17:47:23 -0700
-X-CSE-ConnectionGUID: Yk8PsyMMRRepxbxnTGcngg==
-X-CSE-MsgGUID: f+0bBtuaSQK7CZA6fKmccQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,217,1754982000"; 
-   d="scan'208";a="185225279"
-Received: from unknown (HELO [10.238.2.75]) ([10.238.2.75])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2025 17:47:20 -0700
-Message-ID: <cca2aa42-0e96-405d-a9aa-9d81b735b3ef@linux.intel.com>
-Date: Fri, 10 Oct 2025 08:47:18 +0800
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="2JktYbzm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24497C4CEE7;
+	Fri, 10 Oct 2025 00:51:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1760057470;
+	bh=A3UrofGwAstq0M2Uw/J4CU3Y1letTXoVhhSuZWoGGb8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=2JktYbzmhzcnUjZxn4TJsLrCa4CdQmyNAz48GhTm60ifXFoRmbMF9Tc/M9RRLbvJV
+	 OTvz7R6JSbLUT9mEhQjhUsNNq5Xpz4vLivUTBLXDvZAdv81wS0YgNddSVET7bP2mj+
+	 E2cRLHzPEXFAzCsftZVpoY141RGvPOXXQkXJVlZA=
+Date: Thu, 9 Oct 2025 17:51:07 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Jinchao Wang <wangjinchao600@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Mike Rapoport <rppt@kernel.org>, Alexander
+ Potapenko <glider@google.com>, Randy Dunlap <rdunlap@infradead.org>, Marco
+ Elver <elver@google.com>, Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
+ <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, Ben
+ Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin
+ Schneider <vschneid@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, David Hildenbrand
+ <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
+ <mhocko@suse.com>, Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers
+ <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, Justin
+ Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>, Alice Ryhl
+ <aliceryhl@google.com>, Sami Tolvanen <samitolvanen@google.com>, Miguel
+ Ojeda <ojeda@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, Rong Xu
+ <xur@google.com>, Naveen N Rao <naveen@kernel.org>, David Kaplan
+ <david.kaplan@amd.com>, Andrii Nakryiko <andrii@kernel.org>, Jinjie Ruan
+ <ruanjinjie@huawei.com>, Nam Cao <namcao@linutronix.de>,
+ workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-mm@kvack.org, llvm@lists.linux.dev, Andrey Ryabinin
+ <ryabinin.a.a@gmail.com>, Andrey Konovalov <andreyknvl@gmail.com>, Dmitry
+ Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>,
+ kasan-dev@googlegroups.com, "David S. Miller" <davem@davemloft.net>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 00/23] mm/ksw: Introduce real-time KStackWatch
+ debugging tool
+Message-Id: <20251009175107.ee07228e3253afca5b487316@linux-foundation.org>
+In-Reply-To: <20251009105650.168917-1-wangjinchao600@gmail.com>
+References: <20251009105650.168917-1-wangjinchao600@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: REGRESSION on linux-next (next-20250919)
-To: Sean Christopherson <seanjc@google.com>
-Cc: Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>,
- "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
- "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
- Suresh Kumar Kurmi <suresh.kumar.kurmi@intel.com>,
- Jani Saarinen <jani.saarinen@intel.com>, lucas.demarchi@intel.com,
- linux-perf-users@vger.kernel.org, kvm@vger.kernel.org
-References: <70b64347-2aca-4511-af78-a767d5fa8226@intel.com>
- <25af94f5-79e3-4005-964e-e77b1320a16e@linux.intel.com>
- <aNvyjkuDLOfxAANd@google.com>
- <3bbc4e6d-9f52-483c-a25d-166dca62fb25@intel.com>
- <00d0f3f3-d2b4-4885-9a49-5e6f8390142b@intel.com>
- <e9e8f087-60f6-455a-b0e0-e5c29fc54129@linux.intel.com>
- <aOexe4LNpmJnHTm9@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aOexe4LNpmJnHTm9@google.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+On Thu,  9 Oct 2025 18:55:36 +0800 Jinchao Wang <wangjinchao600@gmail.com> wrote:
 
-On 10/9/2025 8:58 PM, Sean Christopherson wrote:
-> On Thu, Oct 09, 2025, Dapeng Mi wrote:
->> On 10/7/2025 2:22 PM, Borah, Chaitanya Kumar wrote:
->>> Hi,
->>>
->>> On 10/6/2025 1:33 PM, Borah, Chaitanya Kumar wrote:
->>>> Thank you for your responses.
->>>>
->>>> Following change fixes the issue for us.
->>>>
->>>>
->>>> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
->>>> index 40ac4cb44ed2..487ad19a236e 100644
->>>> --- a/arch/x86/kvm/pmu.c
->>>> +++ b/arch/x86/kvm/pmu.c
->>>> @@ -108,16 +108,18 @@ void kvm_init_pmu_capability(const struct 
->>>> kvm_pmu_ops *pmu_ops)
->>>>          bool is_intel = boot_cpu_data.x86_vendor == X86_VENDOR_INTEL;
->>>>          int min_nr_gp_ctrs = pmu_ops->MIN_NR_GP_COUNTERS;
->>>>
->>>> -       perf_get_x86_pmu_capability(&kvm_host_pmu);
->>>> -
->>>>          /*
->>>>           * Hybrid PMUs don't play nice with virtualization without careful
->>>>           * configuration by userspace, and KVM's APIs for reporting 
->>>> supported
->>>>           * vPMU features do not account for hybrid PMUs.  Disable vPMU 
->>>> support
->>>>           * for hybrid PMUs until KVM gains a way to let userspace opt-in.
->>>>           */
->>>> -       if (cpu_feature_enabled(X86_FEATURE_HYBRID_CPU))
->>>> +       if (cpu_feature_enabled(X86_FEATURE_HYBRID_CPU)) {
->>>>                  enable_pmu = false;
->>>> +               memset(&kvm_host_pmu, 0, sizeof(kvm_host_pmu));
->>>> +       } else {
->>>> +               perf_get_x86_pmu_capability(&kvm_host_pmu);
->>>> +       }
->>> Can we expect a formal patch soon?
->> I'd like to post a patch to fix this tomorrow if Sean has no bandwidth on
->> this. Thanks.
-> Sorry, my bad, I was waiting for you to post a patch, but that wasn't at all
-> clear.  So yeah, go ahead and post one :-)
+> This patch series introduces KStackWatch, a lightweight debugging tool to detect
+> kernel stack corruption in real time. It installs a hardware breakpoint
+> (watchpoint) at a function's specified offset using `kprobe.post_handler` and
+> removes it in `fprobe.exit_handler`. This covers the full execution window and
+> reports corruption immediately with time, location, and a call stack.
+> 
+> The motivation comes from scenarios where corruption occurs silently in one
+> function but manifests later in another, without a direct call trace linking
+> the two. Such bugs are often extremely hard to debug with existing tools.
+> These scenarios are demonstrated in test 3–5 (silent corruption test, patch 20).
+> 
+> ...
+>
+>  20 files changed, 1809 insertions(+), 62 deletions(-)
 
-Sure. Would post it now.
+It's obviously a substantial project.  We need to decide whether to add
+this to Linux.
 
+There are some really important [0/N] changelog details which I'm not
+immediately seeing:
 
+Am I correct in thinking that it's x86-only?  If so, what's involved in
+enabling other architectures?  Is there any such work in progress?
+
+What motivated the work?  Was there some particular class of failures
+which you were persistently seeing and wished to fix more efficiently?
+
+Has this code (or something like it) been used in production systems? 
+If so, by whom and with what results?
+
+Has it actually found some kernel bugs yet?  If so, details please.
+
+Can this be enabled on production systems?  If so, what is the
+measured runtime overhead?
