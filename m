@@ -1,94 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C772C18A;
-	Mon, 13 Oct 2025 09:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB9915E5BB;
+	Mon, 13 Oct 2025 10:28:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760347022; cv=none; b=CnSdfeRsDnzHDEaB1eNYnpxdOBmcU1srchAsJnVcZPr7a8CP9sw/6lYSarMsPkBFEefbxAsJIbTTtZFR/BLKwxlTV65IL9jefX4IJsIJojCCmKP7v9BO/TxF4hD8KX3/00NekyWQekSRNp9beBikQttJdimVy/9bfG4X4XiVMIo=
+	t=1760351286; cv=none; b=GjrO7LlNZgOTziv9Ud9CMOPke2IYHJcacsLrHxt8qRqPX79p7uR0M9EaLtaQQ7C+Uc3UNsxgMUfykMV+6kbN/Znl2nL39jmG59rnv8DAy90FNiDpM+hSK9CSDiD46JWVznUuxkCafHGuGC6mB/uYkktAKYJg8ljDyn4pyTtJUBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760347022; c=relaxed/simple;
-	bh=/auT3UgIwSi0ev3BBmyrAvTGEjKox8DEHohP+Ue7Ahc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c1mXzPYaFU/e2Z9GHdow3D0fjcGK4QBjEknY6Y9WIdjureiYGGGsyO/IDKQO7Bx5p37HZqHr7myik8mg396QHOqyWMkMmj3kPNenMlq216tl6Bv5Aqlqmm+RC+TUk20fm/AaOdo0N+b8m2KlHyh4lBbkgkvMCQtdmE/MUq1nt8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UHkZf7Dq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760351286; c=relaxed/simple;
+	bh=s0w3JaZHDtFhUxNRTBxHh5RglvYahX/gtsSUHvYN60s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p9b41J0vbK3AxeJTDPcViOS7AzCg3U1RBGBBOboYxGEKx9hNCIjiCtBXIoVuFA0B7O0W3fCBROXuIY6DENbGy9pkO7ntCSYGBMEfBXyJiQdFK9qd41c9notE96hBTsL2fB6IDBeNQ+gvSxVmXz1EqS/NkqVChpM1hhXNtFNYQr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d1W0UT4W; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UHkZf7Dq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EC04C4CEE7;
-	Mon, 13 Oct 2025 09:16:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760347021;
-	bh=/auT3UgIwSi0ev3BBmyrAvTGEjKox8DEHohP+Ue7Ahc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UHkZf7DqqY0Y9WedIGvcr6spAb5M3fmj+83HQzre/CIe4aCD9af9E3/siVKO2faGU
-	 aHh4VkU8kY/xLzDLYDC4m6hCqypdMD9aBSObX6Tm1Ojd3FW4xTPvDOJ6Ay32VFhbLQ
-	 xD0vSbpZRoFbF34rPRGuUZPEB1gWW1qkFG/W/UAgILhmJKAVYx+Q1tqFMBZup5ZZR6
-	 XKYn2s7nOzL+j/RrPTQqVwj1uIjinfmeJGQpPTIKZK5xy8usHUSjvs1rFzABEGoZhO
-	 xdMasDGO4KKf7dMBJSKSPTTfOtivl3k+8dPGDkoB1Y3nZ82P2ZUj5yzbEiFsGz3Ze4
-	 Ost8ClewWTbVQ==
-Date: Mon, 13 Oct 2025 18:16:55 +0900
-From: Namhyung Kim <namhyung@kernel.org>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Miaoqian Lin <linmq006@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] perf tools: Fix bool return value in gzip_is_compressed()
-Message-ID: <aOzDh4yhR5F0nMTG@google.com>
-References: <20250828104652.53724-1-linmq006@gmail.com>
- <4ecf3e76-27f8-47fd-a07d-7da2489af55f@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d1W0UT4W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760351284; x=1791887284;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=s0w3JaZHDtFhUxNRTBxHh5RglvYahX/gtsSUHvYN60s=;
+  b=d1W0UT4WA/0ESYkO/0NoEwgMGnM1iJ3mzyeePytCH107nR9Ffk5r11aZ
+   39F7PMYpIyKYVcDKE+iidpQYj74SGOVBwxOiQZp/fVOqTYcV4m9xVWKda
+   VfOWgiigeK9HAT9Ugz0a8CugI/8ke24emR9ZUA12aF4wMjPTNS6VbNRvZ
+   FhEGwsUcyJUSTkI4hkAUB0ET527OVL4uh/41OGyrm556ugZCMlfB6kprr
+   cFHdsmCYZRXgG1njDFXsg3oq5/Ih38iVo2VleUC6su1ktED6eDTxpz1EJ
+   vdCS1kbaWbnkC8aNaQUCxe2cbQvzo0LLG/jrpWNJJ9bENbM/7ltYXyTYA
+   A==;
+X-CSE-ConnectionGUID: 03BksFiiS4atwkOhXkv76A==
+X-CSE-MsgGUID: 5RJ/ikreRB2Z2Jrc3hDh1g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11580"; a="72744233"
+X-IronPort-AV: E=Sophos;i="6.19,225,1754982000"; 
+   d="scan'208";a="72744233"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 03:28:03 -0700
+X-CSE-ConnectionGUID: CPI72lI4SLeQZnyRPzy0YQ==
+X-CSE-MsgGUID: /Zw2L53iSvO4+aRDFz7FQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,225,1754982000"; 
+   d="scan'208";a="186855631"
+Received: from unknown (HELO [10.238.2.75]) ([10.238.2.75])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 03:28:00 -0700
+Message-ID: <c8c40795-a459-4218-ba78-24f057c53a51@linux.intel.com>
+Date: Mon, 13 Oct 2025 18:27:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4ecf3e76-27f8-47fd-a07d-7da2489af55f@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf tools: Fix bool return value in gzip_is_compressed()
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Miaoqian Lin <linmq006@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250828104652.53724-1-linmq006@gmail.com>
+ <4ecf3e76-27f8-47fd-a07d-7da2489af55f@linux.intel.com>
+ <aOzDh4yhR5F0nMTG@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aOzDh4yhR5F0nMTG@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
 
-On Sat, Oct 11, 2025 at 11:48:56AM +0800, Mi, Dapeng wrote:
-> 
-> On 8/28/2025 6:46 PM, Miaoqian Lin wrote:
-> > gzip_is_compressed() returns -1 on error but is declared as bool.
-> > And -1 gets converted to true, which could be misleading.
-> > Return false instead to match the declared type.
-> >
-> > Fixes: 88c74dc76a30 ("perf tools: Add gzip_is_compressed function")
-> > Cc: <stable@vger.kernel.org>
-> > Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
-> > ---
-> >  tools/perf/util/zlib.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/util/zlib.c b/tools/perf/util/zlib.c
-> > index 78d2297c1b67..1f7c06523059 100644
-> > --- a/tools/perf/util/zlib.c
-> > +++ b/tools/perf/util/zlib.c
-> > @@ -88,7 +88,7 @@ bool gzip_is_compressed(const char *input)
-> >  	ssize_t rc;
-> >  
-> >  	if (fd < 0)
-> > -		return -1;
-> > +		return false;
-> >  
-> >  	rc = read(fd, buf, sizeof(buf));
-> >  	close(fd);
-> 
-> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+On 10/13/2025 5:16 PM, Namhyung Kim wrote:
+> Hello,
+>
+> On Sat, Oct 11, 2025 at 11:48:56AM +0800, Mi, Dapeng wrote:
+>> On 8/28/2025 6:46 PM, Miaoqian Lin wrote:
+>>> gzip_is_compressed() returns -1 on error but is declared as bool.
+>>> And -1 gets converted to true, which could be misleading.
+>>> Return false instead to match the declared type.
+>>>
+>>> Fixes: 88c74dc76a30 ("perf tools: Add gzip_is_compressed function")
+>>> Cc: <stable@vger.kernel.org>
+>>> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+>>> ---
+>>>  tools/perf/util/zlib.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/tools/perf/util/zlib.c b/tools/perf/util/zlib.c
+>>> index 78d2297c1b67..1f7c06523059 100644
+>>> --- a/tools/perf/util/zlib.c
+>>> +++ b/tools/perf/util/zlib.c
+>>> @@ -88,7 +88,7 @@ bool gzip_is_compressed(const char *input)
+>>>  	ssize_t rc;
+>>>  
+>>>  	if (fd < 0)
+>>> -		return -1;
+>>> +		return false;
+>>>  
+>>>  	rc = read(fd, buf, sizeof(buf));
+>>>  	close(fd);
+>> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> We have 43fa1141e2c1af79 ("perf util: Fix compression checks returning -1
+> as bool").
 
-We have 43fa1141e2c1af79 ("perf util: Fix compression checks returning -1
-as bool").
+Good to know this has been fixed. Thanks. :)
 
-Thanks,
-Namhyung
 
+>
+> Thanks,
+> Namhyung
+>
