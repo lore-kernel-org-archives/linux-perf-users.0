@@ -1,72 +1,72 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0072E7196
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 10:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A2E301460
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 10:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760352111; cv=none; b=mA7XgXa1mhwW82lii0fIyZip9rbbSbgmx7YI1UeqoBatRY7uz2aB4wRsYBM4ryfoGLQn7GKoKx/wR0V5SDnJGr4QhjLiPIZe6qsMeM2i2bUybqJA+48jH3sTvmGJSxKjvOjdukvkKzAByiG0F+2SYAB7MI8ZqIG7EITDemWAQsg=
+	t=1760352218; cv=none; b=AIsUJFZzr9XxxG8f2IgQwgDYJInjP9MTo4+Qzh6KAx5SwD1TNotmMUVjwZVnGduen3HvKWvVf/lAGQxS4lhxVYCjK4Wr2MNVHOqE/5IbyOehD2B//DWAEqnBItPJ3d6pAfvujWUJBGBQAYpBbKjg6fqVOKavwatoRQM9sxqwLEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760352111; c=relaxed/simple;
-	bh=YyN4Fy7cFjCuAQN9iofBCwnSheogXY7fB4MzJJ2Y+vU=;
+	s=arc-20240116; t=1760352218; c=relaxed/simple;
+	bh=RARMZDmBdSDpC7RVOxOxKN9neRejU+cWMFB+JB/5Aww=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EFDq0ebhHFnDyiq6CzrFoEjZlgzNGEC7/ihlMZHrTdwVfrKlsJitI2V3S2MCgO/OwH+pMvvzjctiKy8+KT7R5sC1dPVwQcwGaK5FPFc2rnJl5snojHU62N8G8t9A6R0jbpe6areyj1THhFpRcWZrjaUVSq4fWq+gIBsCvK0wV+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QMLNeca8; arc=none smtp.client-ip=209.85.218.48
+	 To:Cc:Content-Type; b=AE0s2OyFmowLnwQ/thRa19mjV4o+cut/atSKDim5DYHfEAZJE+koOD2G9D/5dxWezqwP6usVS+Tn4kOQQq1qn9rWQY9S4WYqPdwWkZl4/yy6861bTfmodk3cifR34U+Inuy2yWTz7ApuC5/76bTjr5YlLAOKH0lndgRQpKfASHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TtaZyemm; arc=none smtp.client-ip=209.85.218.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QMLNeca8"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b3dbf11fa9eso670671266b.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 03:41:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TtaZyemm"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b3ee18913c0so642855566b.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 03:43:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760352108; x=1760956908; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1760352211; x=1760957011; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mEjrZ5KI8ghZWNu9poLLDUVtxDcPQM62kH1Mxu75i/I=;
-        b=QMLNeca8qXj5XnmMR6N2GSLrQR9t5EqTCmtjLvxR3nZxlPn5fk0JwVgcRgszQ5yY7n
-         gHiXW4HJX40JRqfkhkwP1B/Z2irJm+V+pPztWm3b3kPWTbTiFLV8fSVTYI66lp0UvB9Z
-         +zvvpn9K3uRcstJh0KNnJSFtx1pqi8fYwRmupGkcMoSjQNlCoolW2Wf21Qzrijga3NZO
-         P3ymg3cfoAZIkOublcG02iUEitroFtzhPyk5GCgI7A7zTUH3pEDhSzSTVi2YZrHOwY0z
-         UaIPXXkX57IBKVVE8X2Vu48gAiocEF75unQzF4s0SNfR0GnnZpQeau+xdHNf1/2cCpZc
-         lRkw==
+        bh=EcFv0JvgUUiMF5k8y9cAyCMvmoFgRHs7l0aoa48VQc4=;
+        b=TtaZyemmTg5CmbMJdHp9Oxp57Mh2hTfsinDovJwIskm4XiIaDQ77uisuSYPXtyKhDu
+         oZEUwvhz+4BbFFV8AgQqBEBAq83RYqkICDI9jhUSfbSNYW/h+8kJHzm05QEKtldaifMO
+         kpIRPE1LGVTky8Y6YsQDiq9BwTnrtLtHNbire1JnjkyI2tiBgQokE1zGv0q0+kpgYyGi
+         bASPkeL9nEYaL75MQ/0DrmqEYxISLWS/FKrCk+eNeFyBkTVFJxy1HvsIDbpSN0itu+vk
+         J1u8rgUNMoFhWfQjlqJyoRgUODRIA8cWImX+Z/gzEb1S180ysrDV2laZNAyc6QEwg9XZ
+         RRrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760352108; x=1760956908;
+        d=1e100.net; s=20230601; t=1760352211; x=1760957011;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mEjrZ5KI8ghZWNu9poLLDUVtxDcPQM62kH1Mxu75i/I=;
-        b=klLHGIcwsyAyaGldlCL1UZEyz2vNcMH53MdOlqA0tD77ApCvBn6XP4MdNB3TrFOfLa
-         div39xbkkhRiJkO3qmpyTEg7KlWw/8MxYwFBI+qt/QiP4VEzx0b+XSz6wXvWfNP+n6GP
-         D+gJOrIMZsq7onXJ8bLbpn9fTrg0I1KmjC5yfMS2WXOeKWG+jixIBWNlwt5RdRECVyad
-         ackFlrwyhxD4ELgVY3+zavl+c8vn2IcFshWXpBt/McByQVtE4iobcJfZq1Jf5qk3l0nz
-         70LEusNrvbO5ax+FYIDnQNrxswVuh5xMtW1XWOpjCLEp5KZsiV5wG6Vw0EgLXF9iizA4
-         8l5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVsw/m3HBw/eRpjNvsrpk1lpVq6i6cuTjzjCOkElCNNCC7J71GB/MNjiuHZPmjwEJ2y11fVMTrMafQDHxKTMiwM@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzb5JMHk3nU4Ho5VbQEX33+zLbZsHovtwn1+T6lETTMX7tLPxh6
-	Fbpgw2848Taal4Aot0f0j/nDXldHtnXm6qN04Rov/Whl/KPRtpRlmU9QYYdHGA7+R4Fn0gf/ngi
-	oge7WHA5BcTBrDlS8g3gi5qb48pP1gpg=
-X-Gm-Gg: ASbGncuQW7FsXr9akCpgDzo8kzTLOBcP2q/caRo8WJU4NxNgpjagnSH01bx8vTU/5kJ
-	O0CxlMpVE9rC4dXNSKhVCNTa0sJShhnqwTnpV1PbYEpj85tduLZ4yYtulu3P3wqkMVI+f6vKsfy
-	gttrorJyyMR1XgyRYpHM6Jt5WatrimTmh5ZyFxEET4rPnazsCD1CFri81bjIRGsb8XOH1TONyeV
-	YpSAhAndcUuVGZLlKiyA2LPokEKzOICU/pbf77Jl/MMN1yOWKDVFHXYIyETlXiEm39YWg==
-X-Google-Smtp-Source: AGHT+IFYPmh1c36RwRLOo2uUUMUFucqAcao9E57aFUP92xiXGcbG+Q+UI4IibOC2MF1OpeyGkZNJn/CsiB4Jy+Wk1Ss=
-X-Received: by 2002:a17:907:2d0d:b0:b4e:f7cc:72f1 with SMTP id
- a640c23a62f3a-b50aaba1161mr2094538666b.22.1760352107918; Mon, 13 Oct 2025
- 03:41:47 -0700 (PDT)
+        bh=EcFv0JvgUUiMF5k8y9cAyCMvmoFgRHs7l0aoa48VQc4=;
+        b=ZHsdhmNoRogb9cNAo0a9KUd9gtPpYg5mcnOhM83k87dlxB/3uebXclHmzhYLWL2dmM
+         RMsemadDZQBjGRZQ1YOEBE8Chv0huN9EkQD1aEqNdh9oEE19dzNyJsHkFAF0GeP54mg8
+         hSo2rTWWqLjOWNCCxNOhH3B45GJsDtnnuxnTln53VwX+0FuHzBCZ1z9OiyBvtpwI31Dd
+         qtF+LCaA5QxZ2dxkYISQ183XWtYfiasaPzWhNTyZmMHlYmk3jcF+ZWXV5+cZRkNqMlsb
+         QuXnekv9SoTJEs91Ww8113luhsVjbVetoyWIGTt0h/jei7KaCqtOzgcqWs2T12T/l9bK
+         LEXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUzUDpg/BmOviNk7nCHyrRWIOwKEFdaiWhMfhfW5Ucp+Xg7XlvGsjXF86zufjK3QfirzTx+3SNpX3sUwKzmR1su@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9PCI69nDQ0IBATFao1fX7ZEzC+pISIQjtXR+ts5HV6ia6w7gX
+	SJl2D2nJgH5npeZfhBm4a55hiBt+aMqSUQLB7nAXjCp+c+c3VwgBe41myO0+Wo9AEJn8vYO6044
+	OxYjKDCGjUsv+PlIRN8Y7N0YCorDScvA=
+X-Gm-Gg: ASbGncv4rCpIJY/8F6oHtCcHBb2OK0fG1lQhbi4MTD7lBObP30uSYoINV2YSL1wYgbQ
+	5RpZXGx/FwzLArUNj1Qsjh99yMjuhpJ3kP26jZkCDSbnqKTW7MBc+lTEH6o40iQ9dgxAFcr37cZ
+	dCSXqj1XQGsonVlzI0Qj//7fdFbdDMj4nM8r5k+0Od3YsDRlfGP5gib6OWk4HVTEPkV3EoLDkNq
+	kI+StSwhLeiPwmptkZPT+FWtCDx7w7HoNAkSozQglXuw09uQcZuIM6fbhsaWKixu1VMpw==
+X-Google-Smtp-Source: AGHT+IFzNX+P3pRvMW2FAQ59SOQyqK2bEstHj5NDTUN+rvyTr/ypGkzaAvvpN1+r/clXISvXK/E8Cpge4p8hjlKIXuE=
+X-Received: by 2002:a17:906:f5a6:b0:b45:b1f2:fac0 with SMTP id
+ a640c23a62f3a-b50aa7a1910mr1902159766b.29.1760352210599; Mon, 13 Oct 2025
+ 03:43:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251013072244.82591-1-adrian.hunter@intel.com> <20251013072244.82591-2-adrian.hunter@intel.com>
-In-Reply-To: <20251013072244.82591-2-adrian.hunter@intel.com>
+References: <20251013072244.82591-1-adrian.hunter@intel.com> <20251013072244.82591-3-adrian.hunter@intel.com>
+In-Reply-To: <20251013072244.82591-3-adrian.hunter@intel.com>
 From: Amir Goldstein <amir73il@gmail.com>
-Date: Mon, 13 Oct 2025 12:41:37 +0200
-X-Gm-Features: AS18NWCRzdhF5PXYFFrI1cBupLRzeVMrGtQlFrsQVhAfncRQxbPI-PhmAr5Ayyc
-Message-ID: <CAOQ4uxjvMRXWeQx+mAugwGLftCPRQKxUfx8dZj+Jqk-Y_YJDcQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND 1/3] perf/core: Fix address filter match with
+Date: Mon, 13 Oct 2025 12:43:19 +0200
+X-Gm-Features: AS18NWB05SzNuGx1SK51LKQThAd0fI_UJoF4XpEyvTEmr-9RfOPg4zcyShW6HMw
+Message-ID: <CAOQ4uxjip6vRZq+ZWYemsOaeXvQ7LRmJWUnzF7R+53wYdeLNGA@mail.gmail.com>
+Subject: Re: [PATCH RESEND 2/3] perf/core: Fix MMAP event path names with
  backing files
 To: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -83,17 +83,18 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, Oct 13, 2025 at 9:23=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
 com> wrote:
 >
-> It was reported that Intel PT address filters do not work in Docker
-> containers.  That relates to the use of overlayfs.
+> Some file systems like FUSE-based ones or overlayfs may record the backin=
+g
+> file in struct vm_area_struct vm_file, instead of the user file that the
+> user mmapped.
 >
-> overlayfs records the backing file in struct vm_area_struct vm_file,
-> instead of the user file that the user mmapped.  In order for an address
-> filter to match, it must compare to the user file inode.  There is an
-> existing helper file_user_inode() for that situation.
+> Since commit def3ae83da02f ("fs: store real path instead of fake path in
+> backing file f_path"), file_path() no longer returns the user file path
+> when applied to a backing file.  There is an existing helper
+> file_user_path() for that situation.
 >
-> Use file_user_inode() instead of file_inode() to get the inode for addres=
-s
-> filter matching.
+> Use file_user_path() instead of file_path() to get the path for MMAP
+> and MMAP2 events.
 >
 > Example:
 >
@@ -104,73 +105,69 @@ s
 >     # cp `which cat` lower
 >     # mount -t overlay overlay -olowerdir=3Dlower,upperdir=3Dupper,workdi=
 r=3Dwork merged
->     # perf record --buildid-mmap -e intel_pt//u --filter 'filter * @ /roo=
-t/test/merged/cat' -- /root/test/merged/cat /proc/self/maps
+>     # perf record -e intel_pt//u -- /root/test/merged/cat /proc/self/maps
 >     ...
->     55d61d246000-55d61d2e1000 r-xp 00018000 00:1a 3418                   =
+>     55b0ba399000-55b0ba434000 r-xp 00018000 00:1a 3419                   =
     /root/test/merged/cat
 >     ...
 >     [ perf record: Woken up 1 times to write data ]
->     [ perf record: Captured and wrote 0.015 MB perf.data ]
->     # perf buildid-cache --add /root/test/merged/cat
+>     [ perf record: Captured and wrote 0.060 MB perf.data ]
+>     #
 >
 >   Before:
 >
->     Address filter does not match so there are no control flow packets
+>     File name is wrong (/cat), so decoding fails:
 >
->     # perf script --itrace=3De
->     # perf script --itrace=3Db | wc -l
->     0
->     # perf script -D | grep 'TIP.PGE' | wc -l
->     0
+>     # perf script --no-itrace --show-mmap-events
+>              cat     367 [016]   100.491492: PERF_RECORD_MMAP2 367/367: [=
+0x55b0ba399000(0x9b000) @ 0x18000 00:02 3419 489959280]: r-xp /cat
+>     ...
+>     # perf script --itrace=3De | wc -l
+>     Warning:
+>     19 instruction trace errors
+>     19
 >     #
 >
 >   After:
 >
->     Address filter does match so there are control flow packets
+>     File name is correct (/root/test/merged/cat), so decoding is ok:
 >
+>     # perf script --no-itrace --show-mmap-events
+>                  cat     364 [016]    72.153006: PERF_RECORD_MMAP2 364/36=
+4: [0x55ce4003d000(0x9b000) @ 0x18000 00:02 3419 3132534314]: r-xp /root/te=
+st/merged/cat
 >     # perf script --itrace=3De
->     # perf script --itrace=3Db | wc -l
->     235
->     # perf script -D | grep 'TIP.PGE' | wc -l
->     57
+>     # perf script --itrace=3De | wc -l
+>     0
 >     #
 >
-> With respect to stable kernels, overlayfs mmap function ovl_mmap() was
-> added in v4.19 but file_user_inode() was not added until v6.8 and never
-> back-ported to stable kernels.  FMODE_BACKING that it depends on was adde=
-d
-> in v6.5.  This issue has gone largely unnoticed, so back-porting before
-> v6.8 is probably not worth it, so put 6.8 as the stable kernel prerequisi=
-te
-> version, although in practice the next long term kernel is 6.12.
->
-> Reported-by: Edd Barrett <edd@theunixzoo.co.uk>
-> Closes: https://lore.kernel.org/linux-perf-users/aBCwoq7w8ohBRQCh@fremen.=
-lan
-> Cc: stable@vger.kernel.org # 6.8
+> Fixes: def3ae83da02f ("fs: store real path instead of fake path in backin=
+g file f_path")
+> Cc: stable@vger.kernel.org
 > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
 
 Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 
+> ---
 >  kernel/events/core.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 >
 > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 7541f6f85fcb..cd63ec84e386 100644
+> index cd63ec84e386..7b5c2373a8d7 100644
 > --- a/kernel/events/core.c
 > +++ b/kernel/events/core.c
-> @@ -9492,7 +9492,7 @@ static bool perf_addr_filter_match(struct perf_addr=
-_filter *filter,
->         if (!filter->path.dentry)
->                 return false;
->
-> -       if (d_inode(filter->path.dentry) !=3D file_inode(file))
-> +       if (d_inode(filter->path.dentry) !=3D file_user_inode(file))
->                 return false;
->
->         if (filter->offset > offset + size)
+> @@ -9416,7 +9416,7 @@ static void perf_event_mmap_event(struct perf_mmap_=
+event *mmap_event)
+>                  * need to add enough zero bytes after the string to hand=
+le
+>                  * the 64bit alignment we do later.
+>                  */
+> -               name =3D file_path(file, buf, PATH_MAX - sizeof(u64));
+> +               name =3D d_path(file_user_path(file), buf, PATH_MAX - siz=
+eof(u64));
+>                 if (IS_ERR(name)) {
+>                         name =3D "//toolong";
+>                         goto cpy_name;
 > --
 > 2.48.1
 >
