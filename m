@@ -1,153 +1,125 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2B81B4156;
-	Mon, 13 Oct 2025 08:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2E62EBBAD
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 08:06:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760342743; cv=none; b=G7ZWV3S6Q7LY3IeWyj/Fbn6U2UPEK/0OUZ8VbqO5YdexZ+XHTHA3EOUedttonakDi+uKLuW+WHkm6diT7ea8/2cPYXvzngwWF2kP4t9DxLh3GA4IvMwKVaweGwCayRSaDUhyK0kM2Sbg7MrEOv5UFGGgf3/cWQr3eMrF9UJ4vRk=
+	t=1760342788; cv=none; b=fNcp16Uo8zJspGl75sYxnQOF50TZzYUv/09UiMmm7ocAHNI0EIQpD5s1sC4VUE1yUz7q3/GnuI/YZAUbMgLPyRqegsdVUaZsT5vHFxuBGiMeG+CSEe9tXZpmIrvhDmSrtEqYmEeXKlf9vrTWmXSntrSIdDexKghPwDO/KteuzaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760342743; c=relaxed/simple;
-	bh=EyY1vptLQ4Mh8m69V026ogvAbJnnK8hecewRxznrDdQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g6vAY33x2AIyL5CbeSSzxmM5Hm8bdi0rC7NMU4hwj6+R7KY4buoQ7wF4Rfr7Qsh7RSDbRbN8TDu9sDDXy7yNrPutjSEiw4uRXvCLjBy5aXlc1GbTZmMUgo1wwYb/vnSW+NkJ+FcACLhMkz3QpJxlXeZnxNW4nbX7X53QPOeRh7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eE8UCNOT; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1760342788; c=relaxed/simple;
+	bh=hOAOtEgXEfPvU4v1A+ZiU4lUFGwlOBRW3P5putUViRE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rM4jU2PtVw7OL1T9N4ZKt/vDkJZKLGsiX84m8isxvJJ27c000IjapmPVw5WOV6EtGFjsHfaK6QNPmXvjcruO9BsakEHyGIvvR8JkXY7DqZ7UhRGPvBVD5TkgG45FLvg1RgS3cvVVbE0OKmIRiDGihTkjQBn9ixV3RSlNdp18Z58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=haO72Ys6; arc=none smtp.client-ip=209.85.214.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eE8UCNOT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=PhVyTJzr0MtR40Aa2Lc7JNLBbowuEgYIbKmkpnrAFlY=; b=eE8UCNOT/DVa91HJ1a7s7WL1gm
-	SNoAD05RaLQX4b770TFFghp723QQRsx04hi3ATZYS0dR0LjGotK4aWPQccDHPg/75ujZ7ystx3cYh
-	HeV1YJ+eR95DjLsorXEE3nPAhSZaT6Q67qAD7eJTdzxH9kMBUdJoL8A4FgvqCKi9aT1SGCicd3NLg
-	kIPYpHpkujvSgk9hAHuGbhFLx6o2mL9jV5pO0lTF1W/vKlMXZdIUM+HIlVptxFiDHJKSorK789f1h
-	cgpcGT7AuC5LB3WfyKMT8pHazGHCv4dfnWZFy9CrT/CS4gdLsPd67D/YAVdQCVYzO2AKRTzwab8Ik
-	/IwF3gNg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v8DYj-00000004Bwe-1Aii;
-	Mon, 13 Oct 2025 08:05:33 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C403C300212; Mon, 13 Oct 2025 10:05:31 +0200 (CEST)
-Date: Mon, 13 Oct 2025 10:05:31 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Octavia Togami <octavia.togami@gmail.com>, stable@vger.kernel.org,
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="haO72Ys6"
+Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-2897522a1dfso36958345ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 01:06:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760342786; x=1760947586; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HJhftlCC5zOMQAdQm97nUSpZIu/xXzcsfGJG7Gx/j5A=;
+        b=haO72Ys6dSz+0Nd7TXaREHi6PgGvXTJEwxzBUtQ/3KbvWmu13C/7vBGQOjC+nut+ni
+         h/2fUvAiTYlvNQ64u1UXHhzVW8QoYeyc+xzX2qHj5eiv5UcMZ2PnC034HHHDTGL3JXpm
+         E3cKtGDolUnoW9VwwJtvQswfR7Dkw8vPkftZR3l6CeOXVTSG8zTNIT2j9gl6+YBsc3ZL
+         GUKFaU+RGnCSAJMU6Dld+bF5TbcYS3jjYz8kOZKkz8c8ZIUAnCLvjkO8562WTPMEq1Wq
+         go4yxm701KJBHBeDJOjvILHC7ohXHyUMLldgsZwSEahqe/lxMLETXrutPJt62o1WMbAF
+         /EFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760342786; x=1760947586;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HJhftlCC5zOMQAdQm97nUSpZIu/xXzcsfGJG7Gx/j5A=;
+        b=qZiLMjm4Shj2DPkVRjXtcqqsnwyxgqnIcO4Iw0VDJiwWvYQcZnb9cY3ztqf1jcVRyZ
+         W6Jvnk5kdS+5rHzL9gXHheVypmzzef/o4jSBzAidk5OsnwMOGt096LC+pSAg/8MqLw1I
+         n1M0H/5edMLaDrPRM+OYuBtwg6Ocj4z9WvJCJlnPLWVNm9tjNdDKwc8fA1/GEPXeHINd
+         5TexatIUT2g4zAhkacGUvXjZa7YJ7vsYUlydvkPBcEF08PdLclUZR56FgjWWgOdiNoaU
+         viIQddPJ3eVsnWLuOaMGrit1S32GNh0+RDQrNJTL4CTXcadV9J145ZcloGZLavzLj0RT
+         Iqjg==
+X-Forwarded-Encrypted: i=1; AJvYcCVXKmGl0cXUoWS37Dk8yL/0Iuf03hHOPOmft/TEtoZkPsiGxWbFS72e7AFMqYo5I4A4OOvXTLxeLJUdJKvR1jJH@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLIoE9BJWzgUtmOF6OAe518aWtLBpU7HaIB2K12SyjYot5o4jT
+	xWN7mWnUUja5jmLgl0z6hy888qhg9yfdPaRjqhlkUFVJgxxCMtJnp/EA
+X-Gm-Gg: ASbGncuPi9ESs64MwLw7bgrTrZvvOOJjlQ75717wu/wRm4MmG+J46SJMdVzo2ohv70Q
+	xxYx1BHMdlZDHK9FF1NpSiGqWrNEtWGH31nrjfq+aQqSFf+5Js7tR810q5hqG3HFEgFi6f24ZOE
+	oD7qvqLRaVjZH6WyZd3d8BjMsr3zLMN5Ma3zDplTzpSlAnJkQhaiNtfSOUmwgaE5DoV8nelhKPL
+	7k7TYMEGqCirbIgS5zQ5y9dIUaoGTF6C2nMIwQB8d6GA0ZkZRJvMr+/8peQyJDX/ohmJ9+cX839
+	XWnqP9vRI3f276gTLeOruy9DCID8ZJIFyY09yCrkdnbv2qxwnsWEhJAyEO4V9cFbOxgIao+BsKW
+	LMCBI/mv83gOo6SfEyx4sIQcW1uth77BhIt9vtsyu
+X-Google-Smtp-Source: AGHT+IHQ13043OGf3lzcCk9/yyoLOoTPckOlyzbHmy01yW+ikauf/ymfxMTzft2/j6RWotQ9xEd8TQ==
+X-Received: by 2002:a17:902:fc4f:b0:280:fe18:8479 with SMTP id d9443c01a7336-290272e0ac5mr225467645ad.51.1760342786027;
+        Mon, 13 Oct 2025 01:06:26 -0700 (PDT)
+Received: from HUC.. ([202.43.239.100])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29034f070basm126638635ad.77.2025.10.13.01.06.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Oct 2025 01:06:25 -0700 (PDT)
+From: hupu <hupu.gm@gmail.com>
+To: namhyung@kernel.org,
+	irogers@google.com,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	adrian.hunter@intel.com,
+	nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com,
+	morbo@google.com,
+	justinstitt@google.com,
+	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [REGRESSION] bisected: perf: hang when using async-profiler
- caused by perf: Fix the POLL_HUP delivery breakage
-Message-ID: <20251013080531.GJ3245006@noisy.programming.kicks-ass.net>
-References: <CAHPNGSQpXEopYreir+uDDEbtXTBvBvi8c6fYXJvceqtgTPao3Q@mail.gmail.com>
- <8aed5e69-57b1-4a01-b90c-56402eb27b37@linux.intel.com>
+Cc: hupu.gm@gmail.com
+Subject: [RFC] perf build: Allow passing extra Clang flags via EXTRA_CLANG_FLAGS
+Date: Mon, 13 Oct 2025 16:06:09 +0800
+Message-ID: <20251013080609.2070555-1-hupu.gm@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8aed5e69-57b1-4a01-b90c-56402eb27b37@linux.intel.com>
 
-On Mon, Oct 13, 2025 at 10:34:27AM +0800, Mi, Dapeng wrote:
+When cross-compiling perf with the BPF option enabled, Clang is used
+during the build process. Some environments may require additional
+compiler options such as `--sysroot` or custom include paths. This patch
+adds a new make variable, `EXTRA_CLANG_FLAGS`, which appends user-specified
+options to `CLANG_OPTIONS` during BPF skeleton builds.
 
-> It looks the issue described in the link
-> (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.intel.com/T/#u)
-> happens again but in a different way. :(
-> 
-> As the commit message above link described,  cpu-clock (and task-clock) is
-> a specific SW event which rely on hrtimer. The hrtimer handler calls
-> __perf_event_overflow() and then event_stop (cpu_clock_event_stop()) and
-> eventually call hrtimer_cancel() which traps into a dead loop which waits
-> for the calling hrtimer handler finishes.
-> 
-> As the
-> change (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.intel.com/T/#u),
-> it should be enough to just disable the event and don't need an extra event
-> stop.
-> 
-> @Octavia, could you please check if the change below can fix this issue?
-> Thanks.
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 7541f6f85fcb..883b0e1fa5d3 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -10343,7 +10343,20 @@ static int __perf_event_overflow(struct perf_event
-> *event,
->                 ret = 1;
->                 event->pending_kill = POLL_HUP;
->                 perf_event_disable_inatomic(event);
-> -               event->pmu->stop(event, 0);
-> +
-> +               /*
-> +                * The cpu-clock and task-clock are two special SW events,
-> +                * which rely on the hrtimer. The __perf_event_overflow()
-> +                * is invoked from the hrtimer handler for these 2 events.
-> +                * Avoid to call event_stop()->hrtimer_cancel() for these
-> +                * 2 events since hrtimer_cancel() waits for the hrtimer
-> +                * handler to finish, which would trigger a deadlock.
-> +                * Only disabling the events is enough to stop the hrtimer.
-> +                * See perf_swevent_cancel_hrtimer().
-> +                */
-> +               if (event->attr.config != PERF_COUNT_SW_CPU_CLOCK &&
-> +                   event->attr.config != PERF_COUNT_SW_TASK_CLOCK)
-> +                       event->pmu->stop(event, 0);
+Example:
 
-This is broken though; you cannot test config without first knowing
-which PMU you're dealing with.
+  EXTRA_CLANG_FLAGS="--sysroot=$SYSROOT"
+  make perf ARCH=arm64 EXTRA_CLANG_FLAGS="$EXTRA_CLANG_FLAGS"
 
-Also, that timer really should get stopped, we can't know for certain
-this overflow is of the timer itself or not, it could be a related
-event.
+This enables more flexible cross-compilation setups without modifying
+Makefile.perf directly.
 
-Something like the below might do -- but please carefully consider the
-cases where hrtimer_try_to_cancel() might fail; in those cases we'll
-have set HES_STOPPED and the hrtimer callback *SHOULD* observe this and
-NORESTART.
+Signed-off-by: hupu <hupu.gm@gmail.com>
+---
+ tools/perf/Makefile.perf | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-But I didn't check all the details.
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 47c906b807ef..b0da7314a0d8 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -1249,6 +1249,11 @@ else
+ 	$(Q)cp "$(VMLINUX_H)" $@
+ endif
+ 
++# Allow users to specify additional Clang options (e.g. --sysroot)
++# when cross-compiling BPF skeletons, enabling more flexible
++# build configurations.
++CLANG_OPTIONS += $(EXTRA_CLANG_FLAGS)
++
+ $(SKEL_TMP_OUT)/%.bpf.o: $(OUTPUT)PERF-VERSION-FILE util/bpf_skel/perf_version.h | $(SKEL_TMP_OUT)
+ $(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(LIBBPF) $(SKEL_OUT)/vmlinux.h
+ 	$(QUIET_CLANG)$(CLANG) -g -O2 -fno-stack-protector --target=bpf \
+-- 
+2.43.0
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 820127536e62..a91481d57841 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11756,7 +11756,8 @@ static enum hrtimer_restart perf_swevent_hrtimer(struct hrtimer *hrtimer)
- 
- 	event = container_of(hrtimer, struct perf_event, hw.hrtimer);
- 
--	if (event->state != PERF_EVENT_STATE_ACTIVE)
-+	if (event->state != PERF_EVENT_STATE_ACTIVE ||
-+	    event->hw.state & PERF_HES_STOPPED)
- 		return HRTIMER_NORESTART;
- 
- 	event->pmu->read(event);
-@@ -11810,7 +11811,7 @@ static void perf_swevent_cancel_hrtimer(struct perf_event *event)
- 		ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
- 		local64_set(&hwc->period_left, ktime_to_ns(remaining));
- 
--		hrtimer_cancel(&hwc->hrtimer);
-+		hrtimer_try_to_cancel(&hwc->hrtimer);
- 	}
- }
- 
-@@ -11854,12 +11855,14 @@ static void cpu_clock_event_update(struct perf_event *event)
- 
- static void cpu_clock_event_start(struct perf_event *event, int flags)
- {
-+	event->hw.state = 0;
- 	local64_set(&event->hw.prev_count, local_clock());
- 	perf_swevent_start_hrtimer(event);
- }
- 
- static void cpu_clock_event_stop(struct perf_event *event, int flags)
- {
-+	event->hw.state = PERF_HES_STOPPED;
- 	perf_swevent_cancel_hrtimer(event);
- 	if (flags & PERF_EF_UPDATE)
- 		cpu_clock_event_update(event);
