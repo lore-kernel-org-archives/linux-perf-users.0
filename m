@@ -1,167 +1,153 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7842E7F20;
-	Mon, 13 Oct 2025 07:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2B81B4156;
+	Mon, 13 Oct 2025 08:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760340201; cv=none; b=oO163c+lz0fmXS2K6saip4JFF5pK3B09Tsl6ALDNCGjlNv8f/kKQoSHBd2OzbPCy7x9/1BJnVoup3gRlxeoRxVHymXZJUKezH7pKS6LB5q0zpgB/nkyzh0Kiesr6TyOgSs2OMIiyE7enPy0AK5HBimJBI9dN2rbKGuQbfnrrJZw=
+	t=1760342743; cv=none; b=G7ZWV3S6Q7LY3IeWyj/Fbn6U2UPEK/0OUZ8VbqO5YdexZ+XHTHA3EOUedttonakDi+uKLuW+WHkm6diT7ea8/2cPYXvzngwWF2kP4t9DxLh3GA4IvMwKVaweGwCayRSaDUhyK0kM2Sbg7MrEOv5UFGGgf3/cWQr3eMrF9UJ4vRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760340201; c=relaxed/simple;
-	bh=5rYjsN5XeOyunE3PUJZcaBEskdY9kWOsawHLMQzQslQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tcw+R9bVVn+JuDtAAYC/1xAuXObijz2hKFn3nA2NkFOtBdUAohoDK2OXTWrody7OKCwdSWpBuE1tOnMgRMtx4oGlIJbZsabvCkoiVrCLwG0g0t9fTxiZvRPrBs3ZE6m6ooZ86GJ7Ls9bDZn3VYWOoNF5/cvsmk/kJmilVqa3LZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aFxJ3RYe; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1760342743; c=relaxed/simple;
+	bh=EyY1vptLQ4Mh8m69V026ogvAbJnnK8hecewRxznrDdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g6vAY33x2AIyL5CbeSSzxmM5Hm8bdi0rC7NMU4hwj6+R7KY4buoQ7wF4Rfr7Qsh7RSDbRbN8TDu9sDDXy7yNrPutjSEiw4uRXvCLjBy5aXlc1GbTZmMUgo1wwYb/vnSW+NkJ+FcACLhMkz3QpJxlXeZnxNW4nbX7X53QPOeRh7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eE8UCNOT; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aFxJ3RYe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760340199; x=1791876199;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=5rYjsN5XeOyunE3PUJZcaBEskdY9kWOsawHLMQzQslQ=;
-  b=aFxJ3RYe+JpT5PtCZtf6A9mVVwtUh5ZANsotILAgPvpMU6p0616N/Q02
-   6zxN0sHx2AKlGVQrFOakLQqvXkcy/UU1gKoFXtlgA/mHeI1ojzBkaBV9Y
-   xILGsCvXABfbkQXJGpPGt79T/JiZeQSqlXLiNs/htLyNMxbp9UkkaBuWV
-   trl0Cy7uG4Yq/VtC5p4aYIsCgoY20a3a0llGGLKvZkDoM9vKosdLB0+W9
-   sUC25eUvqCgT71JF4Mhy+2RNt1oZigZ5p2sLs+nQd+GBdS0/kmGDYl8th
-   M0IzI70Hp9Q8jNbIw51dVPoGexTBlteNqmDvNNcUpQqBSIVkxVgAWAeC6
-   Q==;
-X-CSE-ConnectionGUID: /9bP2/SCRkuJPy31QpY77g==
-X-CSE-MsgGUID: ICFwt8cUQn6RehtxnrBHSw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11580"; a="61510111"
-X-IronPort-AV: E=Sophos;i="6.19,224,1754982000"; 
-   d="scan'208";a="61510111"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 00:23:16 -0700
-X-CSE-ConnectionGUID: LxgLBrP8Q4Wrhw0ocGu1Ow==
-X-CSE-MsgGUID: c65J513iRO+SljnR4gx7tQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,224,1754982000"; 
-   d="scan'208";a="185790523"
-Received: from bergbenj-mobl1.ger.corp.intel.com (HELO localhost.localdomain) ([10.245.244.25])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 00:23:11 -0700
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Ian Rogers <irogers@google.com>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Edd Barrett <edd@theunixzoo.co.uk>,
-	Laurence Tratt <laurie@tratt.net>,
-	linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eE8UCNOT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=PhVyTJzr0MtR40Aa2Lc7JNLBbowuEgYIbKmkpnrAFlY=; b=eE8UCNOT/DVa91HJ1a7s7WL1gm
+	SNoAD05RaLQX4b770TFFghp723QQRsx04hi3ATZYS0dR0LjGotK4aWPQccDHPg/75ujZ7ystx3cYh
+	HeV1YJ+eR95DjLsorXEE3nPAhSZaT6Q67qAD7eJTdzxH9kMBUdJoL8A4FgvqCKi9aT1SGCicd3NLg
+	kIPYpHpkujvSgk9hAHuGbhFLx6o2mL9jV5pO0lTF1W/vKlMXZdIUM+HIlVptxFiDHJKSorK789f1h
+	cgpcGT7AuC5LB3WfyKMT8pHazGHCv4dfnWZFy9CrT/CS4gdLsPd67D/YAVdQCVYzO2AKRTzwab8Ik
+	/IwF3gNg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1v8DYj-00000004Bwe-1Aii;
+	Mon, 13 Oct 2025 08:05:33 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C403C300212; Mon, 13 Oct 2025 10:05:31 +0200 (CEST)
+Date: Mon, 13 Oct 2025 10:05:31 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Octavia Togami <octavia.togami@gmail.com>, stable@vger.kernel.org,
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH RESEND 3/3] perf/core: Fix MMAP2 event device with backing files
-Date: Mon, 13 Oct 2025 10:22:44 +0300
-Message-ID: <20251013072244.82591-4-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20251013072244.82591-1-adrian.hunter@intel.com>
-References: <20251013072244.82591-1-adrian.hunter@intel.com>
+Subject: Re: [REGRESSION] bisected: perf: hang when using async-profiler
+ caused by perf: Fix the POLL_HUP delivery breakage
+Message-ID: <20251013080531.GJ3245006@noisy.programming.kicks-ass.net>
+References: <CAHPNGSQpXEopYreir+uDDEbtXTBvBvi8c6fYXJvceqtgTPao3Q@mail.gmail.com>
+ <8aed5e69-57b1-4a01-b90c-56402eb27b37@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <8aed5e69-57b1-4a01-b90c-56402eb27b37@linux.intel.com>
 
-Some file systems like FUSE-based ones or overlayfs may record the backing
-file in struct vm_area_struct vm_file, instead of the user file that the
-user mmapped.
+On Mon, Oct 13, 2025 at 10:34:27AM +0800, Mi, Dapeng wrote:
 
-That causes perf to misreport the device major/minor numbers of the file
-system of the file, and the generation of the file, and potentially other
-inode details.  There is an existing helper file_user_inode() for that
-situation.
+> It looks the issue described in the link
+> (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.intel.com/T/#u)
+> happens again but in a different way. :(
+> 
+> As the commit message above link described,  cpu-clock (and task-clock) is
+> a specific SW event which rely on hrtimer. The hrtimer handler calls
+> __perf_event_overflow() and then event_stop (cpu_clock_event_stop()) and
+> eventually call hrtimer_cancel() which traps into a dead loop which waits
+> for the calling hrtimer handler finishes.
+> 
+> As the
+> change (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.intel.com/T/#u),
+> it should be enough to just disable the event and don't need an extra event
+> stop.
+> 
+> @Octavia, could you please check if the change below can fix this issue?
+> Thanks.
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 7541f6f85fcb..883b0e1fa5d3 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -10343,7 +10343,20 @@ static int __perf_event_overflow(struct perf_event
+> *event,
+>                 ret = 1;
+>                 event->pending_kill = POLL_HUP;
+>                 perf_event_disable_inatomic(event);
+> -               event->pmu->stop(event, 0);
+> +
+> +               /*
+> +                * The cpu-clock and task-clock are two special SW events,
+> +                * which rely on the hrtimer. The __perf_event_overflow()
+> +                * is invoked from the hrtimer handler for these 2 events.
+> +                * Avoid to call event_stop()->hrtimer_cancel() for these
+> +                * 2 events since hrtimer_cancel() waits for the hrtimer
+> +                * handler to finish, which would trigger a deadlock.
+> +                * Only disabling the events is enough to stop the hrtimer.
+> +                * See perf_swevent_cancel_hrtimer().
+> +                */
+> +               if (event->attr.config != PERF_COUNT_SW_CPU_CLOCK &&
+> +                   event->attr.config != PERF_COUNT_SW_TASK_CLOCK)
+> +                       event->pmu->stop(event, 0);
 
-Use file_user_inode() instead of file_inode() to get the inode for MMAP2
-events.
+This is broken though; you cannot test config without first knowing
+which PMU you're dealing with.
 
-Example:
+Also, that timer really should get stopped, we can't know for certain
+this overflow is of the timer itself or not, it could be a related
+event.
 
-  Setup:
+Something like the below might do -- but please carefully consider the
+cases where hrtimer_try_to_cancel() might fail; in those cases we'll
+have set HES_STOPPED and the hrtimer callback *SHOULD* observe this and
+NORESTART.
 
-    # cd /root
-    # mkdir test ; cd test ; mkdir lower upper work merged
-    # cp `which cat` lower
-    # mount -t overlay overlay -olowerdir=lower,upperdir=upper,workdir=work merged
-    # perf record -e cycles:u -- /root/test/merged/cat /proc/self/maps
-    ...
-    55b2c91d0000-55b2c926b000 r-xp 00018000 00:1a 3419                       /root/test/merged/cat
-    ...
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 0.004 MB perf.data (5 samples) ]
-    #
-    # stat /root/test/merged/cat
-      File: /root/test/merged/cat
-      Size: 1127792         Blocks: 2208       IO Block: 4096   regular file
-    Device: 0,26    Inode: 3419        Links: 1
-    Access: (0755/-rwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
-    Access: 2025-09-08 12:23:59.453309624 +0000
-    Modify: 2025-09-08 12:23:59.454309624 +0000
-    Change: 2025-09-08 12:23:59.454309624 +0000
-     Birth: 2025-09-08 12:23:59.453309624 +0000
-
-  Before:
-
-    Device reported 00:02 differs from stat output and /proc/self/maps
-
-    # perf script --show-mmap-events | grep /root/test/merged/cat
-             cat     377 [-01]   243.078558: PERF_RECORD_MMAP2 377/377: [0x55b2c91d0000(0x9b000) @ 0x18000 00:02 3419 2068525940]: r-xp /root/test/merged/cat
-
-  After:
-
-    Device reported 00:1a is the same as stat output and /proc/self/maps
-
-    # perf script --show-mmap-events | grep /root/test/merged/cat
-             cat     362 [-01]   127.755167: PERF_RECORD_MMAP2 362/362: [0x55ba6e781000(0x9b000) @ 0x18000 00:1a 3419 0]: r-xp /root/test/merged/cat
-
-With respect to stable kernels, overlayfs mmap function ovl_mmap() was
-added in v4.19 but file_user_inode() was not added until v6.8 and never
-back-ported to stable kernels.  FMODE_BACKING that it depends on was added
-in v6.5.  This issue has gone largely unnoticed, so back-porting before
-v6.8 is probably not worth it, so put 6.8 as the stable kernel prerequisite
-version, although in practice the next long term kernel is 6.12.
-
-Cc: stable@vger.kernel.org # 6.8
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- kernel/events/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+But I didn't check all the details.
 
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 7b5c2373a8d7..177e57c1a362 100644
+index 820127536e62..a91481d57841 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -9403,7 +9403,7 @@ static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
- 		flags |= MAP_HUGETLB;
+@@ -11756,7 +11756,8 @@ static enum hrtimer_restart perf_swevent_hrtimer(struct hrtimer *hrtimer)
  
- 	if (file) {
--		struct inode *inode;
-+		const struct inode *inode;
- 		dev_t dev;
+ 	event = container_of(hrtimer, struct perf_event, hw.hrtimer);
  
- 		buf = kmalloc(PATH_MAX, GFP_KERNEL);
-@@ -9421,7 +9421,7 @@ static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
- 			name = "//toolong";
- 			goto cpy_name;
- 		}
--		inode = file_inode(vma->vm_file);
-+		inode = file_user_inode(vma->vm_file);
- 		dev = inode->i_sb->s_dev;
- 		ino = inode->i_ino;
- 		gen = inode->i_generation;
--- 
-2.48.1
-
+-	if (event->state != PERF_EVENT_STATE_ACTIVE)
++	if (event->state != PERF_EVENT_STATE_ACTIVE ||
++	    event->hw.state & PERF_HES_STOPPED)
+ 		return HRTIMER_NORESTART;
+ 
+ 	event->pmu->read(event);
+@@ -11810,7 +11811,7 @@ static void perf_swevent_cancel_hrtimer(struct perf_event *event)
+ 		ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
+ 		local64_set(&hwc->period_left, ktime_to_ns(remaining));
+ 
+-		hrtimer_cancel(&hwc->hrtimer);
++		hrtimer_try_to_cancel(&hwc->hrtimer);
+ 	}
+ }
+ 
+@@ -11854,12 +11855,14 @@ static void cpu_clock_event_update(struct perf_event *event)
+ 
+ static void cpu_clock_event_start(struct perf_event *event, int flags)
+ {
++	event->hw.state = 0;
+ 	local64_set(&event->hw.prev_count, local_clock());
+ 	perf_swevent_start_hrtimer(event);
+ }
+ 
+ static void cpu_clock_event_stop(struct perf_event *event, int flags)
+ {
++	event->hw.state = PERF_HES_STOPPED;
+ 	perf_swevent_cancel_hrtimer(event);
+ 	if (flags & PERF_EF_UPDATE)
+ 		cpu_clock_event_update(event);
