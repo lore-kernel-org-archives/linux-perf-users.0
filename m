@@ -1,257 +1,189 @@
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012041.outbound.protection.outlook.com [52.101.53.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3171DDC07;
-	Mon, 13 Oct 2025 05:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760334842; cv=fail; b=IULOfHc4Z8Cr4Hg2lKuI8WCvl6PDtfh7corzNaGSVYeKa1aahamx2DxNp0/rUSJJQWv8bxWTeIlZ+DGKCpkayIy+2l5x9cX6s6JIAbbVSzctUFBTE1lvUSm+GXJIoZy7LgFHdWJcvrrQZvOQD8AFoKSPNsHx+luxeRkUnE1EC9k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760334842; c=relaxed/simple;
-	bh=YlVlwygvOzBGB0+UtcJ0tf5JiNZV7jQn9WiRVKIiEeI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=vGBzA+wlSbm4ShXg9U5Yny30iPgxfcTiHV48dCZajtlwlkWBV3Zi8JSUrXXMObPb8WM3LqZC9uUWNA8vuRtrZznPVoj4gfO6UX8lKS1ZZ5vrUqElE/Des22mH4AsdINQLutiDrdvQdL0EF3C7zwKPk/CXFGXLHZHH51QKN4pCR4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jj/rN5Bf; arc=fail smtp.client-ip=52.101.53.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0181EDA03
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 06:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760338525; cv=none; b=h5ZlfdnMEs8boQ2j+EDqdsqAwjuWfx5ZcpHbksTjONxJ0bUxiF9MjE52FHRfkGtYKqsFeWJ0RG77IKuQ4nSi9mqWFPJiWtoRxHnUBENj3+qZyX6Kk6sxloRgg7csUetCgJmuhSutDVJUrPedWgRSlLK7s5lKgNfpV85NGwa1ALs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760338525; c=relaxed/simple;
+	bh=Mcf4k2Eb5y4ExxZYFmPUQtYFXmFaCUqStDbFVKSkiyI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YI3vECa22ldpaWJBndZ+aeJC/C+Z/IM4Bg1H5tS4kdjhLVdQkTkmcDThGlWOxBgetuFmHHJuWA9lzbjZN33UkjoEBZzMgrZ9S76CmGnoR9V5a8GtnRTxF5MHaw8XIPNw5cfx4Jukmwu3c36dG6QJ0wDD9Evq19GJA+FggQ+omRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fKHLBCNA; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jj/rN5Bf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=D8oQoPQKHqZ2tv6xv9dnnNvGkKMcqqL/ALF0/REQS2z8K7qXuno8U6OQaEzNzX0i9u28JIzkIvrZaKq+g9uJwZ/X6KEB6ElchKA55po3YO0c30dR6KTumRYzaDX0Rd4I4733dXjAG4nkkHzHCHCIB3HNK/CjxDZoxoG8uhL44x+Ol6iYXzjCsdZrkfeGxoG5d08QKgIlKbUGGGb25gN+fp97asArCjc0Q84gMJukAvOgJVgcyUjZHOK+yyv/94Ws1BOkov63xQCTyxztZrTh1Xgm8UKmIbkBrwiBvNSkyv7pBH13tdwJ0wbxiDibBiA2pbItBCOrJp8n6PMiuPqQsA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Jt9FNqqVAx2DnZE4P2zX8+fxY20/JMuz7uePJJHHmjk=;
- b=MaE/Din5n5FMcmi/P8pzTznR5Rj3E2CEf7S0rtL3awKkn+QKGMfsCs2mS/yd0FlgDHAdn+9sO5SGgJ+8sJea2QFMJbSwd4Ssxh8ntb4xz0yxquiyrxH8nLZgfwLwvQbEH+/Alu/WTYrZ6RvZUy8e7z9JHLIDdJfctTNobouR9odScvmN+Ah7OnE+hMV5M/hb4tNwOeHP6j+KJ8pdI9beFgE+JI5eDTE3uCcWVEK3nrLNjCpMmE6vRAtWcY6Zn4PW0yHNbmA3wZey4hLtaEt4kxeRn9EfPHLkJF/fQf0O4OzgowqKnjWqrR3Uy4jIWXcjotaa2/XpwJMWTGQmRIjz2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Jt9FNqqVAx2DnZE4P2zX8+fxY20/JMuz7uePJJHHmjk=;
- b=jj/rN5BfMM1WEpiifXr7Prl+LYHCdUP0Hp8nOkStMpolHsnrpbO7nn31dQAJeVxEQ8+N8s6bRhGINIM9+GdPho50uXWwDzHwRxegH/JEwzf26TmPTkcOa7qMBsQdWrmavDXUDnRKnBQ7Pm/95RHdMHqKkYslfvtX8dHZxG7z3VA=
-Received: from BN9PR03CA0493.namprd03.prod.outlook.com (2603:10b6:408:130::18)
- by BY5PR12MB4259.namprd12.prod.outlook.com (2603:10b6:a03:202::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9203.12; Mon, 13 Oct
- 2025 05:53:55 +0000
-Received: from BN1PEPF00004688.namprd05.prod.outlook.com
- (2603:10b6:408:130:cafe::f6) by BN9PR03CA0493.outlook.office365.com
- (2603:10b6:408:130::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9203.10 via Frontend Transport; Mon,
- 13 Oct 2025 05:53:53 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
-Received: from satlexmb08.amd.com (165.204.84.17) by
- BN1PEPF00004688.mail.protection.outlook.com (10.167.243.133) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9228.7 via Frontend Transport; Mon, 13 Oct 2025 05:53:55 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.17; Sun, 12 Oct
- 2025 22:53:54 -0700
-Received: from satlexmb07.amd.com (10.181.42.216) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 13 Oct
- 2025 00:53:54 -0500
-Received: from [10.252.198.192] (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
- Transport; Sun, 12 Oct 2025 22:53:51 -0700
-Message-ID: <8aa1c06d-bfb5-49ef-b452-3445481d8b8e@amd.com>
-Date: Mon, 13 Oct 2025 11:23:50 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fKHLBCNA"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-54bc04b9d07so1290325e0c.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 12 Oct 2025 23:55:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760338521; x=1760943321; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RxpYz31WTohbhJuOp5dj13ArRLPeR7dWLB0V/ZD3iF4=;
+        b=fKHLBCNAlXqZEPsvFAuop3Txqv/WO11eiMuJLhfSD5Z8/+J9IaVg4OH0id43d4bn4r
+         d5MYirzIuVoTNjBfi1lYpqRIEon2CfTajoYPDT3aYXAeG0a2AQqT0nikTp8DHs3nUke+
+         aKdtMgKlXups4GdOLWxVr37EROzwsMiz54JWfa3bdVJtznPGl45aUQ0aZ/IKc6FPK/Gn
+         hXuUQINzMrtZU9hVenQdiov4mMR7CXpy75U/wnJVBbpWs5JlXk1RnEG4xGRgHL4aeHzp
+         eSYHG8hcH78RlvBkPGAT5p9Jko9Ge8znKbE37v3aACS9GFAfLRfJpmCR55tX2xs2KB2x
+         EcUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760338521; x=1760943321;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RxpYz31WTohbhJuOp5dj13ArRLPeR7dWLB0V/ZD3iF4=;
+        b=nSG4taFtllagyUw4C7m/l//BU7Z5JN6MGCR6YRHRjYIaeM41qTApZW/aE4Tyj/K7Mc
+         aukbcabjffARPNO7xRar4BslK6Kkaw9x4CSKfuizfKBnaqrBC53oA6+rkVS5x6lpqSTh
+         LIz37lPwwUeLSK6rppn4zaAvManAQPvIQXTi9/mqprWMVsI4+TCb7rh6UgL37PJM9VNu
+         Kyr3qTqoJkLElCqB6cPE/Ah+UrBS8+lIWEKtLOgDmQf0NJPAT67ypQKXn6XNYk4WEw/l
+         YOY2wPaI1mbIe6+hwg28ylb3iBNBozJ5rZJcngb+gtrinVteha2Jllg4yw3JLJcEob5v
+         jX+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXDIEvnPd0AnUZEuOzPfQJIlUJo/7n4YhXDxqnri2af4nicT751xOxkAZ5QTu7dxwGp29bz3DU1/ce76ojgw35f@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHAR7u/WrEN46a/xHzbzPo74rNZTlZeZZtpFhBVWtVHocHSxeZ
+	JK9Ngx8HnscDC7pl38+a45QL7WEs7mv009LEkGtgjt2Q+cu+VZItSvcTn9QjeXjmwkvnHiFNyda
+	lPbKF/OrtH4PgG6+6/mOaK/OPkdNb4UbZTg==
+X-Gm-Gg: ASbGncsw60cRJ4xvmLatOp95cS0bv7TxqPoU0z6RwCzZKCRJfL87ORvJAs9KYItQfWH
+	esgJL3mQk/20JQWi81KI2e4JA+53Rf14DKEOO8XCyxEqA0UbzvaklVHjRuSFzNIL2D5pz8lHDMs
+	Z/srhyQUOnDh5ftpqWq+6in9XUTFKlTfFO4S9uNGrBtZjgEP6fCamThtHHDnc2tXR04r8VadWno
+	kbQ4slvkbVKP5OqAhjl+oC1mfZPwS7gw40G1395MIEQ8JvR4+qmc8kA4BZQ9shUeWTykA==
+X-Google-Smtp-Source: AGHT+IGOMc6+OPWoHO6gIAQkEJ03P+HPqmvDc5UtZHoVumqD2rBUYak0kFEk3JXPSfK/KAJ38UkZ5IpqrXXe7FWoo04=
+X-Received: by 2002:a05:6122:d93:b0:544:87b0:d1d1 with SMTP id
+ 71dfb90a1353d-554b8b03084mr6224895e0c.6.1760338520677; Sun, 12 Oct 2025
+ 23:55:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 02/12] KVM: x86: Refactor APIC register mask handling
- to support extended APIC registers
-To: Naveen N Rao <naveen@kernel.org>
-CC: <kvm@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <seanjc@google.com>, <pbonzini@redhat.com>,
-	<nikunj@amd.com>, <bp@alien8.de>, <peterz@infradead.org>, <mingo@redhat.com>,
-	<mizhang@google.com>, <thomas.lendacky@amd.com>, <ravi.bangoria@amd.com>,
-	<Sandipan.Das@amd.com>
-References: <20250901051656.209083-1-manali.shukla@amd.com>
- <20250901052118.209133-1-manali.shukla@amd.com>
- <koech6fbxpzzao3232pf4ozloanas4irecti2n3win2ow7aikj@3r72i5qyaxd4>
-Content-Language: en-US
-From: Manali Shukla <manali.shukla@amd.com>
-In-Reply-To: <koech6fbxpzzao3232pf4ozloanas4irecti2n3win2ow7aikj@3r72i5qyaxd4>
+References: <CAHPNGSQpXEopYreir+uDDEbtXTBvBvi8c6fYXJvceqtgTPao3Q@mail.gmail.com>
+ <8aed5e69-57b1-4a01-b90c-56402eb27b37@linux.intel.com>
+In-Reply-To: <8aed5e69-57b1-4a01-b90c-56402eb27b37@linux.intel.com>
+From: Octavia Togami <octavia.togami@gmail.com>
+Date: Sun, 12 Oct 2025 23:55:07 -0700
+X-Gm-Features: AS18NWAoz9Ux6LSe2hLCMxTynHVe4LPr0SYtTvRflAzfg_SGNukc-9z4G8Cp-ns
+Message-ID: <CAHPNGSTgahRhAg5eM=pnn45rw=TJzTz4AfeckcB2RcsPvxCeGg@mail.gmail.com>
+Subject: Re: [REGRESSION] bisected: perf: hang when using async-profiler
+ caused by perf: Fix the POLL_HUP delivery breakage
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Octavia Togami <octavia.togami@gmail.com>, stable@vger.kernel.org, 
+	regressions@lists.linux.dev, peterz@infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Received-SPF: None (SATLEXMB05.amd.com: manali.shukla@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00004688:EE_|BY5PR12MB4259:EE_
-X-MS-Office365-Filtering-Correlation-Id: 82dc8aee-ae3b-4234-a6cb-08de0a1ce518
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|7416014|376014|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dW90MTN2L0o0cDlCSWozZ1JnMU5DOE5oUnNSU0hNUS9qUlJZcmtvU2crZFFo?=
- =?utf-8?B?bTIyOHN4Ty9QRjNUYW13WStZUnRwT0tOcEJjY3lVenZleURxQTRxdW5yK1Vt?=
- =?utf-8?B?MXJuVVl3cEdOVEY1TjhEK3BwbEtiS21lRlJ6TGpCY2V3VXJhbldmeXpTNU9s?=
- =?utf-8?B?UmxBWmNxUzkzU3VKenRmeGhTcG1BN0djSSt6eHlkQk5DQVVTSHFxd2k1MDZF?=
- =?utf-8?B?WGdjT2U0dHNwV2crL1I3Qk1QQUhjcnEvR0ViTEZad2k4dUx0S0U4YTNrK3VB?=
- =?utf-8?B?OWVQUmxSdTZxZ2diOStxWm83WjZLNjVCMzFSeTlHQVRUemhHNzJ5WWUrUkdx?=
- =?utf-8?B?ckFFZ0FGbmNJbGo0TkFwcFNzdU9pZzZCSm5aUjZoWmdyakJNaG9YNDJ3dmFJ?=
- =?utf-8?B?c2QwZldoeVA2bjJOWlNJOWpVcVM3dEFudmhEelNPRjBWclozQkxyeHo1U2JG?=
- =?utf-8?B?SGE2ZExCemlTNmZwY01iM3AvM2NwTFRReldPY1dRRnVVakFSRERQeGI5NGZl?=
- =?utf-8?B?b2gyR3Q2aCtkdlpBMHBCZGs5ajcxRGNIUnZPUnBsb3N1NXhmTUdBVGlRakFE?=
- =?utf-8?B?WDg4TFhOeTlWYnRiQkNxYUtKMGhOV21kcktXakJ0ZVBFNEpRM3BObDVoNUox?=
- =?utf-8?B?cE9WUXFhM2ZJUFYyYyt2Vkl1NlFKaDR5djRPS29nQ094Z1NVR3pTTzlhYVV1?=
- =?utf-8?B?OHNsNnEwYklQMlNaaGNLQktkNXRaZVpOUEZ5OU12UDdEeFBCeXJCSzUyNEh5?=
- =?utf-8?B?RXFSNEhoVHZvZGloalh2dWY4R3hjTHp6ak1hWXNkWHEydUlqS2JFOXhqU1B5?=
- =?utf-8?B?MFM2SkdoZDd3cFBOdG0vTU9MZzBERjJnTWoxRmplY2RLRHdZOGE4RGw3eXpV?=
- =?utf-8?B?YnVPRmRTUDN5US9GNFdha3YwOVQyK0NsZzlQbVh2NDUyK0tKakRMUjFLeDFn?=
- =?utf-8?B?ZTkxSVBPMkNsaGVFV3ZVcjRPbGxTVTZvM0RRL3dySnJrc29aRjBuWWo1SldL?=
- =?utf-8?B?WTVDRnR3bWpWSWgyTjJPU2pXZFBic0lVcVR0K3JKT3daeTNJemsreDJ2RjlX?=
- =?utf-8?B?TjlWVXlta1pKUzJjS2d0QzQ4QkR6d3Qxbm1OaWQ5OTd6REhQbVlGaXlvV1Jt?=
- =?utf-8?B?U2gzVHlnelMwbGxJaGJnQ0VKY243VUhHVFRtVEVtbVFKQjVLVnZJU2k1S0pN?=
- =?utf-8?B?a3VLZEQyUnFHTkRCMzVHQmtkSE1hYVZMRXEzY0JMOGFpYzhJV21idlhQVm5K?=
- =?utf-8?B?TW1iTW85U0t3V0RmSnhWamhtd1N2amJGbGRVWE13VWUvcjJKY1FHQ1RXTFFm?=
- =?utf-8?B?SVlXT2pFaXlseXR3dWpjdDBrS0QyeFNqQTFhQ0VnQ055K1RJa2xCWklpM0hD?=
- =?utf-8?B?MU1WendvNXVTQ29NYlV3Q0ZOaUVGdHBCNTZZWFhVL2I5QWpwTXJyS0JLak1u?=
- =?utf-8?B?R1FldzdSOURGcFR6S0V0R0NqTGYzTlJ5MUpIbUFGaEJ4NklVNzBmWEhYSTZ2?=
- =?utf-8?B?eVo5cnRXT21jcEc0aVY2ZFhqSlNDUEZhT0RBZ2QwSVZwT251VkR6UkZCcFdx?=
- =?utf-8?B?WjlMYnM0WEVoazZISldFSTFWcDlxWE5PMGl1VkVTUmZnUVNReFRHcktlaWc1?=
- =?utf-8?B?bXlEUnlFUTFGZDJvdjFraVlPdUdsS1E1Z0dXUmZ1M1JSa2xPVzhIM1BsVHBQ?=
- =?utf-8?B?NjBsZnF1UXJ2K3ordVl3RXU2YVhwRmxONnlja29jM3R2czBseEc2MzRjMnFz?=
- =?utf-8?B?V08vbVcrb1phRUNLa1FzdnFLQ2NTTEIwOU9HSXR1Vm5XcERUQXAvZGMyditG?=
- =?utf-8?B?RWhLKzZqU05rVXVJTHRhMExUbkxRQnNhdzJMOXAwaW13WEhuZ044Nk9SMmVQ?=
- =?utf-8?B?aEl4YUtucCsrWnRrQWsxbVJxd0RYWTN0Y0ZyU2k0NnR2ZkcrV1RQZGh0UjNw?=
- =?utf-8?B?Z0RHeEd0TVhaUXV4QVpjNGQ3RHE5WkZaRkJiTStLTmljVEIvUDN0M0FyS1Vj?=
- =?utf-8?B?NFNBNnJ6bmZnUXpERnVINXNtbWpJUjZQbDRMV1dleDJHNUNxRm5aVkEvZnZJ?=
- =?utf-8?B?d2FHL2pjVnJVZUl5VFpHREZIOVBGMzNLcVdqQjExajZrNVhlL0RYOXRpU2lu?=
- =?utf-8?Q?Azq0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Oct 2025 05:53:55.1726
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 82dc8aee-ae3b-4234-a6cb-08de0a1ce518
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00004688.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4259
+Content-Transfer-Encoding: quoted-printable
 
-Hi Naveen,
+That change appears to fix the problem on my end. I ran my reproducer
+and some other tests multiple times without issue.
 
-On 10/6/2025 9:42 PM, Naveen N Rao wrote:
-> On Mon, Sep 01, 2025 at 10:51:18AM +0530, Manali Shukla wrote:
->> Modify the APIC register mask infrastructure to support both standard
->> APIC registers (0x0-0x3f0) and extended APIC registers (0x400-0x530).
->>
->> This refactoring:
->> - Replaces the single u64 bitmask with a u64[2] array to accommodate
->>   the extended register range(128 bitmask)
->> - Updates the APIC_REG_MASK macro to handle both standard and extended
->>   register spaces
->> - Adapts kvm_lapic_readable_reg_mask() to use the new approach
->> - Adds APIC_REG_TEST macro to check register validity for standard
->>   APIC registers and Exended APIC registers
->> - Updates all callers to use the new interface
->>
->> This is purely an infrastructure change to support the upcoming
->> extended APIC register emulation.
->>
->> Suggested-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> Signed-off-by: Manali Shukla <manali.shukla@amd.com>
->> ---
->>  arch/x86/kvm/lapic.c   | 99 ++++++++++++++++++++++++++----------------
->>  arch/x86/kvm/lapic.h   |  2 +-
->>  arch/x86/kvm/vmx/vmx.c | 10 +++--
->>  3 files changed, 70 insertions(+), 41 deletions(-)
->>
->> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
->> index e19545b8cc98..f92e3f53ee75 100644
->> --- a/arch/x86/kvm/lapic.c
->> +++ b/arch/x86/kvm/lapic.c
->> @@ -1587,53 +1587,77 @@ static inline struct kvm_lapic *to_lapic(struct kvm_io_device *dev)
->>  	return container_of(dev, struct kvm_lapic, dev);
->>  }
->>  
->> -#define APIC_REG_MASK(reg)	(1ull << ((reg) >> 4))
->> -#define APIC_REGS_MASK(first, count) \
->> -	(APIC_REG_MASK(first) * ((1ull << (count)) - 1))
->> -
->> -u64 kvm_lapic_readable_reg_mask(struct kvm_lapic *apic)
->> -{
->> -	/* Leave bits '0' for reserved and write-only registers. */
->> -	u64 valid_reg_mask =
->> -		APIC_REG_MASK(APIC_ID) |
->> -		APIC_REG_MASK(APIC_LVR) |
->> -		APIC_REG_MASK(APIC_TASKPRI) |
->> -		APIC_REG_MASK(APIC_PROCPRI) |
->> -		APIC_REG_MASK(APIC_LDR) |
->> -		APIC_REG_MASK(APIC_SPIV) |
->> -		APIC_REGS_MASK(APIC_ISR, APIC_ISR_NR) |
->> -		APIC_REGS_MASK(APIC_TMR, APIC_ISR_NR) |
->> -		APIC_REGS_MASK(APIC_IRR, APIC_ISR_NR) |
->> -		APIC_REG_MASK(APIC_ESR) |
->> -		APIC_REG_MASK(APIC_ICR) |
->> -		APIC_REG_MASK(APIC_LVTT) |
->> -		APIC_REG_MASK(APIC_LVTTHMR) |
->> -		APIC_REG_MASK(APIC_LVTPC) |
->> -		APIC_REG_MASK(APIC_LVT0) |
->> -		APIC_REG_MASK(APIC_LVT1) |
->> -		APIC_REG_MASK(APIC_LVTERR) |
->> -		APIC_REG_MASK(APIC_TMICT) |
->> -		APIC_REG_MASK(APIC_TMCCT) |
->> -		APIC_REG_MASK(APIC_TDCR);
->> +/*
->> + * Helper macros for APIC register bitmask handling
->> + * 2 element array is being used to represent 128-bit mask, where:
->> + * - mask[0] tracks standard APIC registers (0x0-0x3f0)
->> + * - mask[1] tracks extended APIC registers (0x400-0x530)
->> + */
->> +
->> +#define APIC_REG_INDEX(reg)	(((reg) < 0x400) ? 0 : 1)
->> +#define APIC_REG_BIT(reg)	(((reg) < 0x400) ? ((reg) >> 4) : (((reg) - 0x400) >> 4))
->> +
->> +/* Set a bit in the mask for a single APIC register. */
->> +#define APIC_REG_MASK(reg, mask) do { \
->> +	(mask)[APIC_REG_INDEX(reg)] |= (1ULL << APIC_REG_BIT(reg)); \
->> +} while (0)
->> +
->> +/* Set bits in the mask for a range of consecutive APIC registers. */
->> +#define APIC_REGS_MASK(first, count, mask) do { \
->> +	(mask)[APIC_REG_INDEX(first)] |= ((1ULL << (count)) - 1) << APIC_REG_BIT(first); \
->> +} while (0)
->> +
->> +/* Macro to check whether the an APIC register bit is set in the mask. */
->> +#define APIC_REG_TEST(reg, mask) \
->> +	((mask)[APIC_REG_INDEX(reg)] & (1ULL << APIC_REG_BIT(reg)))
->> +
->> +#define APIC_LAST_REG_OFFSET		0x3f0
->> +#define APIC_EXT_LAST_REG_OFFSET	0x530
->> +
->> +void kvm_lapic_readable_reg_mask(struct kvm_lapic *apic, u64 mask[2])
->> +{
->> +	mask[0] = 0;
->> +	mask[1] = 0;
-> 
-> Would it be simpler to use a bitmap for the mask?
-> 
-> 
-> - Naveen
-> 
-
-Thanks for the suggestion. I'll revisit this code and explore using
-the bitmap APIs from lib/bitmap.c and include/linux/bitmap.h. I'll
-include any improvements in v3.
-
--Manali
+On Sun, Oct 12, 2025 at 7:34=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.intel.=
+com> wrote:
+>
+>
+> On 10/11/2025 4:31 PM, Octavia Togami wrote:
+> > Using async-profiler
+> > (https://github.com/async-profiler/async-profiler/) on Linux
+> > 6.17.1-arch1-1 causes a complete hang of the CPU. This has been
+> > reported by many people at https://github.com/lucko/spark/issues/530.
+> > spark is a piece of software that uses async-profiler internally.
+> >
+> > As seen in https://github.com/lucko/spark/issues/530#issuecomment-33399=
+74827,
+> > this was bisected to 18dbcbfabfffc4a5d3ea10290c5ad27f22b0d240 perf:
+> > Fix the POLL_HUP delivery breakage. Reverting this commit on 6.17.1
+> > fixed the issue for me.
+> >
+> > Steps to reproduce:
+> > 1. Get a copy of async-profiler. I tested both v3 (affects older spark
+> > versions) and v4.1 (latest at time of writing). Unarchive it, this is
+> > <async-profiler-dir>.
+> > 2. Set kernel parameters kernel.perf_event_paranoid=3D1 and
+> > kernel.kptr_restrict=3D0 as instructed by
+> > https://github.com/async-profiler/async-profiler/blob/fb673227c7fb311f8=
+72ce9566769b006b357ecbe/docs/GettingStarted.md
+> > 3. Install a version of Java that comes with jshell, i.e. Java 9 or
+> > newer. Note: jshell is used for ease of reproduction. Any Java
+> > application that is actively running will work.
+> > 4. Run `printf 'int acc; while (true) { acc++; }' | jshell -`. This
+> > will start an infinitely running Java process.
+> > 5. Run `jps` and take the PID next to the text RemoteExecutionControl
+> > -- this is the process that was just started.
+> > 6. Attach async-profiler to this process by running
+> > `<async-profiler-dir>/bin/asprof -d 1 <PID>`. This will run for one
+> > second, then the system should freeze entirely shortly thereafter.
+> >
+> > I triggered a sysrq crash while the system was frozen, and the output
+> > I found in journalctl afterwards is at
+> > https://gist.github.com/octylFractal/76611ee76060051e5efc0c898dd0949e
+> > I'm not sure if that text is actually from the triggered crash, but it
+> > seems relevant. If needed, please tell me how to get the actual crash
+> > report, I'm not sure where it is.
+> >
+> > I'm using an AMD Ryzen 9 5900X 12-Core Processor. Given that I've seen
+> > no Intel reports, it may be AMD specific. I don't have an Intel CPU on
+> > hand to test with.
+> >
+> > /proc/version: Linux version 6.17.1-arch1-1 (linux@archlinux) (gcc
+> > (GCC) 15.2.1 20250813, GNU ld (GNU Binutils) 2.45.0) #1 SMP
+> > PREEMPT_DYNAMIC Mon, 06 Oct 2025 18:48:29 +0000
+> > Operating System: Arch Linux
+> > uname -mi: x86_64 unknown
+>
+> It looks the issue described in the link
+> (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.inte=
+l.com/T/#u)
+> happens again but in a different way. :(
+>
+> As the commit message above link described,  cpu-clock (and task-clock) i=
+s
+> a specific SW event which rely on hrtimer. The hrtimer handler calls
+> __perf_event_overflow() and then event_stop (cpu_clock_event_stop()) and
+> eventually call hrtimer_cancel() which traps into a dead loop which waits
+> for the calling hrtimer handler finishes.
+>
+> As the
+> change (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@lin=
+ux.intel.com/T/#u),
+> it should be enough to just disable the event and don't need an extra eve=
+nt
+> stop.
+>
+> @Octavia, could you please check if the change below can fix this issue?
+> Thanks.
+>
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 7541f6f85fcb..883b0e1fa5d3 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -10343,7 +10343,20 @@ static int __perf_event_overflow(struct perf_eve=
+nt
+> *event,
+>                 ret =3D 1;
+>                 event->pending_kill =3D POLL_HUP;
+>                 perf_event_disable_inatomic(event);
+> -               event->pmu->stop(event, 0);
+> +
+> +               /*
+> +                * The cpu-clock and task-clock are two special SW events=
+,
+> +                * which rely on the hrtimer. The __perf_event_overflow()
+> +                * is invoked from the hrtimer handler for these 2 events=
+.
+> +                * Avoid to call event_stop()->hrtimer_cancel() for these
+> +                * 2 events since hrtimer_cancel() waits for the hrtimer
+> +                * handler to finish, which would trigger a deadlock.
+> +                * Only disabling the events is enough to stop the hrtime=
+r.
+> +                * See perf_swevent_cancel_hrtimer().
+> +                */
+> +               if (event->attr.config !=3D PERF_COUNT_SW_CPU_CLOCK &&
+> +                   event->attr.config !=3D PERF_COUNT_SW_TASK_CLOCK)
+> +                       event->pmu->stop(event, 0);
+>         }
+>
+>         if (event->attr.sigtrap) {
+>
+>
