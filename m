@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FFC233D85;
-	Mon, 13 Oct 2025 13:55:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36AA2327A3;
+	Mon, 13 Oct 2025 13:56:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760363753; cv=none; b=XITDld7Rr5+WXPqCE2oF7QUyARQ3yp//kLd+sOLXv1xVb133teV+hffU7UlCa3a0DHTNBVsZYpvvoLZWAjahQfxmpMGjpKNsD+doj8mhHlJdWHVSXJVsTYmMUfg2ZyEWjNUpqt18PqhbyHwo4dmbIk+VZjpOTDsdZOkG9cjIeLs=
+	t=1760363765; cv=none; b=WruHO0C5Ce++pwV5sG/c+mMd4s9x5ep8MPvfnF95LWgTusWBO6ivvdOEA1sRGYPhSpwht3hQqytJCJZgB666opdMHN9J1Kx5jtIFu11Nu7wtLrSVHyhUV6fhPotfVz2LDO2snN82b/MLU/hhJPYcmLa9FNf3CGnUwRWLIG1wH6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760363753; c=relaxed/simple;
-	bh=8L3afJyJuzk/hQIsz/j+D37ecM6P27+uA0UQvQKXZpg=;
+	s=arc-20240116; t=1760363765; c=relaxed/simple;
+	bh=NQQQb26G66+hLsFaQm4txM0W98DV26W3zBXUHTnLYKs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mR6ROQbnvRgQvXoL+ORKCPhyLx9GpWcQUu+ICS+C+7i6jZiy6aNMxyZF2ApkJYMPMZNRCct53Je6GIjTZgDG8rcm61pM9V7gPmnnx4mnsfSIlSqBfs18pJJDvqqlyGhACXf4KFhn4cySpgGgqRqGZ7hxKEPgmlAEsSQ3p8mLBp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i8usQ78v; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=P0oe4KGASBoPd7VcGiTKOMLvog1K9tAAIBk8DkW/xZX7YAPlue3nH18gjN9sMMn5gJmTL40DzJEbu18YvaaiRLsYJMlhvaVIq1HCO0YT6v0arKucXDOYanqVJ//ots54NuLPcMQaDEznH28yQjaxPQbJ/5QLCZDgcavusiUGgcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C198P33o; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i8usQ78v"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C198P33o"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760363751; x=1791899751;
+  t=1760363763; x=1791899763;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=8L3afJyJuzk/hQIsz/j+D37ecM6P27+uA0UQvQKXZpg=;
-  b=i8usQ78v9weyD636iS8g+vRrzIUBwLGCq/JCjryCODqHNNwFMfy7b2e2
-   IuO+VxKHxjg21Dv0CQLWEyf4VJktbcL3Dk4bwZ8VH4BgRp8nXqAO1u682
-   fRdUC0Fy0TbxrYnwUOmqodudq40ujXXiEoAKWLsf1F1lgPauSwND4EhNS
-   a8YT6q0wxyWl/0+WDV5xD0ww7Uo9/hD3QhZOHaasxY+ONKDr39fLUg3Iw
-   Q/TGIzgtElWaCfSLRjZ8W2T02KYt9Rv5QVvc5fyi7rjT4+nXZW5dmtK75
-   WsJ88e2Xefnzp60hCyWUWhPnePsAmMZoZEeyR/4iyE9FwlVjW/+4vbQgY
-   Q==;
-X-CSE-ConnectionGUID: /vmfelUpRdKlYewmWSpYbA==
-X-CSE-MsgGUID: Q+mYqsbXSmeTXndbSVMceA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11581"; a="66156251"
+  bh=NQQQb26G66+hLsFaQm4txM0W98DV26W3zBXUHTnLYKs=;
+  b=C198P33oFSl/PPfSp+66V8lHtDhpU3P2tTdHNl5pRR2dfKtHUk4RHkhD
+   7E+hhM85EZR8DNMrbKxSynZ1d4Yv5J2roDzxzjVPOhtk7peiboo07Rqg/
+   cml3ay+p+GpartdzogigA9+qnPVqjkr2S2p9SRzxJ3kj43rGJcTBxJcGs
+   BYAmjmw7ZXVbX2wqZc7vWIyMZiPXx4+/RHpumTWuvfooKwP3BXbgDJTHF
+   lWxv2PgH9S7XKjG8P5OvaU1TT+W1tXgLpR05A1R06nAySmESU3YT+LyCZ
+   wTFNIKGFUR6e+QB3qcsJk32KnLtyV/cZJUuXrKStOol2E4nubblMu1bnW
+   A==;
+X-CSE-ConnectionGUID: 8tsQ5oL7RAaC/95aLH3FUg==
+X-CSE-MsgGUID: Pcaf4v7JQlq4mh7vI3T4xg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11581"; a="66156265"
 X-IronPort-AV: E=Sophos;i="6.19,225,1754982000"; 
-   d="scan'208";a="66156251"
+   d="scan'208";a="66156265"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 06:55:50 -0700
-X-CSE-ConnectionGUID: nIlltgnCSYO4S+TzvgHR2g==
-X-CSE-MsgGUID: rkVBFfiJRzGc3lMko1Lr0g==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 06:56:03 -0700
+X-CSE-ConnectionGUID: pPEiKuRgQp2aJcOr4rHvrg==
+X-CSE-MsgGUID: g2aH4JyUSEW8PMpKSCr+VQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,225,1754982000"; 
-   d="scan'208";a="181613422"
+   d="scan'208";a="181613463"
 Received: from linux-pnp-server-27.sh.intel.com ([10.239.147.41])
-  by orviesa008.jf.intel.com with ESMTP; 13 Oct 2025 06:55:45 -0700
+  by orviesa008.jf.intel.com with ESMTP; 13 Oct 2025 06:55:58 -0700
 From: Tianyou Li <tianyou.li@intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -64,9 +64,9 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	dapeng1.mi@intel.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v8 1/2] perf tools c2c: Add annotation support to perf c2c report
-Date: Mon, 13 Oct 2025 22:48:10 +0800
-Message-ID: <20251013144811.2021337-1-tianyou.li@intel.com>
+Subject: [PATCH v8 2/2] perf tools c2c: Highlight the contention line in the annotate browser
+Date: Mon, 13 Oct 2025 22:48:11 +0800
+Message-ID: <20251013144811.2021337-2-tianyou.li@intel.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <660c8ba1-635b-4acc-8824-d195f1b133a0@amd.com>
 References: <660c8ba1-635b-4acc-8824-d195f1b133a0@amd.com>
@@ -78,13 +78,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Perf c2c report currently specified the code address and source:line
-information in the cacheline browser, while it is lack of annotation
-support like perf report to directly show the disassembly code for
-the particular symbol shared that same cacheline. This patches add
-a key 'a' binding to the cacheline browser which reuse the annotation
-browser to show the disassembly view for easier analysis of cacheline
-contentions.
+Add support to highlight the contention line in the annotate browser,
+use 'TAB'/'UNTAB' to refocus to the contention line.
 
 Signed-off-by: Tianyou Li <tianyou.li@intel.com>
 Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
@@ -95,308 +90,191 @@ Reviewed-by: Zhiguo Zhou <zhiguo.zhou@intel.com>
 Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
 Tested-by: Ravi Bangoria <ravi.bangoria@amd.com>
 ---
- tools/perf/Documentation/perf-c2c.txt |   7 ++
- tools/perf/builtin-c2c.c              | 155 +++++++++++++++++++++++++-
- 2 files changed, 157 insertions(+), 5 deletions(-)
+ tools/perf/builtin-annotate.c     |  2 +-
+ tools/perf/builtin-c2c.c          |  6 +++-
+ tools/perf/ui/browsers/annotate.c | 48 ++++++++++++++++++++++++++++---
+ tools/perf/ui/browsers/hists.c    |  2 +-
+ tools/perf/util/hist.h            |  6 ++--
+ 5 files changed, 55 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
-index f4af2dd6ab31..40b0f71a2c44 100644
---- a/tools/perf/Documentation/perf-c2c.txt
-+++ b/tools/perf/Documentation/perf-c2c.txt
-@@ -143,6 +143,13 @@ REPORT OPTIONS
- 	feature, which causes cacheline sharing to behave like the cacheline
- 	size is doubled.
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 646f43b0f7c4..112b15952016 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -519,7 +519,7 @@ static void hists__find_annotations(struct hists *hists,
+ 			/* skip missing symbols */
+ 			nd = rb_next(nd);
+ 		} else if (use_browser == 1) {
+-			key = hist_entry__tui_annotate(he, evsel, NULL);
++			key = hist_entry__tui_annotate(he, evsel, NULL, NO_ADDR);
  
-+-M::
-+--disassembler-style=::
-+	Set disassembler style for objdump.
-+
-+--objdump=<path>::
-+        Path to objdump binary.
-+
- C2C RECORD
- ----------
- The perf c2c record command setup options related to HITM cacheline analysis
+ 			switch (key) {
+ 			case -1:
 diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 9e9ff471ddd1..a37e886ff3d7 100644
+index a37e886ff3d7..14c3823f8fed 100644
 --- a/tools/perf/builtin-c2c.c
 +++ b/tools/perf/builtin-c2c.c
-@@ -45,6 +45,8 @@
- #include "pmus.h"
- #include "string2.h"
- #include "util/util.h"
-+#include "util/symbol.h"
-+#include "util/annotate.h"
+@@ -2604,6 +2604,7 @@ static int perf_c2c__toggle_annotation(struct hist_browser *browser)
+ 	struct symbol *sym = NULL;
+ 	struct annotated_source *src = NULL;
+ 	struct c2c_hist_entry *c2c_he = NULL;
++	u64 al_addr = NO_ADDR;
  
- struct c2c_hists {
- 	struct hists		hists;
-@@ -62,6 +64,7 @@ struct compute_stats {
- 
- struct c2c_hist_entry {
- 	struct c2c_hists	*hists;
-+	struct evsel		*evsel;
- 	struct c2c_stats	 stats;
- 	unsigned long		*cpuset;
- 	unsigned long		*nodeset;
-@@ -225,6 +228,12 @@ he__get_c2c_hists(struct hist_entry *he,
- 	return hists;
- }
- 
-+static void c2c_he__set_evsel(struct c2c_hist_entry *c2c_he,
-+				struct evsel *evsel)
-+{
-+	c2c_he->evsel = evsel;
-+}
-+
- static void c2c_he__set_cpu(struct c2c_hist_entry *c2c_he,
- 			    struct perf_sample *sample)
- {
-@@ -275,6 +284,33 @@ static void compute_stats(struct c2c_hist_entry *c2c_he,
- 		update_stats(&cstats->load, weight);
- }
- 
-+/*
-+ * Return true if annotation is possible. When list is NULL,
-+ * it means that we are called at the c2c_browser level,
-+ * in that case we allow annotation to be initialized. When list
-+ * is non-NULL, it means that we are called at the cacheline_browser
-+ * level, in that case we allow annotation only if use_browser
-+ * is set and symbol information is available.
-+ */
-+static bool perf_c2c__has_annotation(struct perf_hpp_list *list)
-+{
-+	if (use_browser != 1)
-+		return false;
-+	return !list || list->sym;
-+}
-+
-+static void perf_c2c__evsel_hists_inc_stats(struct evsel *evsel,
-+					    struct hist_entry *he,
-+					    struct perf_sample *sample)
-+{
-+	struct hists *evsel_hists = evsel__hists(evsel);
-+
-+	hists__inc_nr_samples(evsel_hists, he->filtered);
-+	evsel_hists->stats.total_period += sample->period;
-+	if (!he->filtered)
-+		evsel_hists->stats.total_non_filtered_period += sample->period;
-+}
-+
- static int process_sample_event(const struct perf_tool *tool __maybe_unused,
- 				union perf_event *event,
- 				struct perf_sample *sample,
-@@ -334,8 +370,15 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
- 
- 	c2c_he__set_cpu(c2c_he, sample);
- 	c2c_he__set_node(c2c_he, sample);
-+	c2c_he__set_evsel(c2c_he, evsel);
- 
- 	hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
-+
-+	if (perf_c2c__has_annotation(NULL)) {
-+		perf_c2c__evsel_hists_inc_stats(evsel, he, sample);
-+		addr_map_symbol__inc_samples(mem_info__iaddr(mi), sample, evsel);
-+	}
-+
- 	ret = hist_entry__append_callchain(he, sample);
- 
- 	if (!ret) {
-@@ -371,6 +414,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
- 
- 		c2c_he__set_cpu(c2c_he, sample);
- 		c2c_he__set_node(c2c_he, sample);
-+		c2c_he__set_evsel(c2c_he, evsel);
- 
- 		hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
- 		ret = hist_entry__append_callchain(he, sample);
-@@ -1997,6 +2041,9 @@ static int c2c_hists__init_sort(struct perf_hpp_list *hpp_list, char *name, stru
- 	if (dim == &dim_dso)
- 		hpp_list->dso = 1;
- 
-+	if (dim == &dim_symbol || dim == &dim_iaddr)
-+		hpp_list->sym = 1;
-+
- 	perf_hpp_list__register_sort_field(hpp_list, &c2c_fmt->fmt);
- 	return 0;
- }
-@@ -2550,6 +2597,40 @@ static void perf_c2c__hists_fprintf(FILE *out, struct perf_session *session)
- }
- 
- #ifdef HAVE_SLANG_SUPPORT
-+
-+static int perf_c2c__toggle_annotation(struct hist_browser *browser)
-+{
-+	struct hist_entry *he = browser->he_selection;
-+	struct symbol *sym = NULL;
-+	struct annotated_source *src = NULL;
-+	struct c2c_hist_entry *c2c_he = NULL;
-+
-+	if (!perf_c2c__has_annotation(he->hists->hpp_list)) {
-+		ui_browser__help_window(&browser->b, "No annotation support");
-+		return 0;
-+	}
-+
-+	if (he == NULL) {
-+		ui_browser__help_window(&browser->b, "No entry selected for annotation");
-+		return 0;
-+	}
-+
-+	sym = he->ms.sym;
-+	if (sym == NULL) {
-+		ui_browser__help_window(&browser->b, "Can not annotate, no symbol found");
-+		return 0;
-+	}
-+
-+	src = symbol__hists(sym, 0);
-+	if (src == NULL) {
-+		ui_browser__help_window(&browser->b, "Failed to initialize annotation source");
-+		return 0;
-+	}
-+
-+	c2c_he = container_of(he, struct c2c_hist_entry, he);
-+	return hist_entry__tui_annotate(he, c2c_he->evsel, NULL);
-+}
-+
- static void c2c_browser__update_nr_entries(struct hist_browser *hb)
- {
- 	u64 nr_entries = 0;
-@@ -2617,6 +2698,7 @@ static int perf_c2c__browse_cacheline(struct hist_entry *he)
- 	" ENTER         Toggle callchains (if present) \n"
- 	" n             Toggle Node details info \n"
- 	" s             Toggle full length of symbol and source line columns \n"
-+	" a             Toggle annotation view \n"
- 	" q             Return back to cacheline list \n";
- 
- 	if (!he)
-@@ -2651,6 +2733,9 @@ static int perf_c2c__browse_cacheline(struct hist_entry *he)
- 			c2c.node_info = (c2c.node_info + 1) % 3;
- 			setup_nodes_header();
- 			break;
-+		case 'a':
-+			perf_c2c__toggle_annotation(browser);
-+			break;
- 		case 'q':
- 			goto out;
- 		case '?':
-@@ -3006,6 +3091,7 @@ static int perf_c2c__report(int argc, const char **argv)
- 	const char *display = NULL;
- 	const char *coalesce = NULL;
- 	bool no_source = false;
-+	const char *disassembler_style = NULL, *objdump_path = NULL;
- 	const struct option options[] = {
- 	OPT_STRING('k', "vmlinux", &symbol_conf.vmlinux_name,
- 		   "file", "vmlinux pathname"),
-@@ -3033,6 +3119,10 @@ static int perf_c2c__report(int argc, const char **argv)
- 	OPT_BOOLEAN(0, "stitch-lbr", &c2c.stitch_lbr,
- 		    "Enable LBR callgraph stitching approach"),
- 	OPT_BOOLEAN(0, "double-cl", &chk_double_cl, "Detect adjacent cacheline false sharing"),
-+	OPT_STRING('M', "disassembler-style", &disassembler_style, "disassembler style",
-+		   "Specify disassembler style (e.g. -M intel for intel syntax)"),
-+	OPT_STRING(0, "objdump", &objdump_path, "path",
-+		   "objdump binary to use for disassembly and annotations"),
- 	OPT_PARENT(c2c_options),
- 	OPT_END()
- 	};
-@@ -3040,6 +3130,12 @@ static int perf_c2c__report(int argc, const char **argv)
- 	const char *output_str, *sort_str = NULL;
- 	struct perf_env *env;
- 
-+	annotation_options__init();
-+
-+	err = hists__init();
-+	if (err < 0)
-+		goto out;
-+
- 	argc = parse_options(argc, argv, options, report_c2c_usage,
- 			     PARSE_OPT_STOP_AT_NON_OPTION);
- 	if (argc)
-@@ -3052,6 +3148,27 @@ static int perf_c2c__report(int argc, const char **argv)
- 	if (c2c.stats_only)
- 		c2c.use_stdio = true;
- 
-+	/**
-+	 * Annotation related options disassembler_style, objdump_path are set
-+	 * in the c2c_options, so we can use them here.
-+	 */
-+	if (disassembler_style) {
-+		annotate_opts.disassembler_style = strdup(disassembler_style);
-+		if (!annotate_opts.disassembler_style) {
-+			err = -ENOMEM;
-+			pr_err("Failed to allocate memory for annotation options\n");
-+			goto out;
-+		}
-+	}
-+	if (objdump_path) {
-+		annotate_opts.objdump_path = strdup(objdump_path);
-+		if (!annotate_opts.objdump_path) {
-+			err = -ENOMEM;
-+			pr_err("Failed to allocate memory for annotation options\n");
-+			goto out;
-+		}
-+	}
-+
- 	err = symbol__validate_sym_arguments();
- 	if (err)
- 		goto out;
-@@ -3126,6 +3243,38 @@ static int perf_c2c__report(int argc, const char **argv)
- 	if (err)
- 		goto out_mem2node;
- 
-+	if (c2c.use_stdio)
-+		use_browser = 0;
-+	else
-+		use_browser = 1;
-+
-+	/*
-+	 * Only in the TUI browser we are doing integrated annotation,
-+	 * so don't allocate extra space that won't be used in the stdio
-+	 * implementation.
-+	 */
-+	if (perf_c2c__has_annotation(NULL)) {
-+		int ret = symbol__annotation_init();
-+
-+		if (ret < 0)
-+			goto out_mem2node;
-+		/*
-+		 * For searching by name on the "Browse map details".
-+		 * providing it only in verbose mode not to bloat too
-+		 * much struct symbol.
-+		 */
-+		if (verbose > 0) {
-+			/*
-+			 * XXX: Need to provide a less kludgy way to ask for
-+			 * more space per symbol, the u32 is for the index on
-+			 * the ui browser.
-+			 * See symbol__browser_index.
-+			 */
-+			symbol_conf.priv_size += sizeof(u32);
-+		}
-+		annotation_config__init();
-+	}
-+
- 	if (symbol__init(env) < 0)
- 		goto out_mem2node;
- 
-@@ -3135,11 +3284,6 @@ static int perf_c2c__report(int argc, const char **argv)
- 		goto out_mem2node;
+ 	if (!perf_c2c__has_annotation(he->hists->hpp_list)) {
+ 		ui_browser__help_window(&browser->b, "No annotation support");
+@@ -2627,8 +2628,11 @@ static int perf_c2c__toggle_annotation(struct hist_browser *browser)
+ 		return 0;
  	}
  
--	if (c2c.use_stdio)
--		use_browser = 0;
--	else
--		use_browser = 1;
--
- 	setup_browser(false);
- 
- 	err = perf_session__process_events(session);
-@@ -3210,6 +3354,7 @@ static int perf_c2c__report(int argc, const char **argv)
- out_session:
- 	perf_session__delete(session);
- out:
-+	annotation_options__exit();
- 	return err;
++	if (he->mem_info)
++		al_addr = mem_info__iaddr(he->mem_info)->al_addr;
++
+ 	c2c_he = container_of(he, struct c2c_hist_entry, he);
+-	return hist_entry__tui_annotate(he, c2c_he->evsel, NULL);
++	return hist_entry__tui_annotate(he, c2c_he->evsel, NULL, al_addr);
  }
  
+ static void c2c_browser__update_nr_entries(struct hist_browser *hb)
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index 8fe699f98542..112fe6ad112e 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -605,7 +605,7 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
+ 	target_ms.map = ms->map;
+ 	target_ms.sym = dl->ops.target.sym;
+ 	annotation__unlock(notes);
+-	__hist_entry__tui_annotate(browser->he, &target_ms, evsel, hbt);
++	__hist_entry__tui_annotate(browser->he, &target_ms, evsel, hbt, NO_ADDR);
+ 
+ 	/*
+ 	 * The annotate_browser above changed the title with the target function
+@@ -852,6 +852,16 @@ static void annotate_browser__debuginfo_warning(struct annotate_browser *browser
+ 	}
+ }
+ 
++static s64 annotate_browser__curr_hot_offset(struct annotate_browser *browser)
++{
++	struct annotation_line *al = NULL;
++
++	if (browser->curr_hot)
++		al = rb_entry(browser->curr_hot, struct annotation_line, rb_node);
++
++	return al ? al->offset : 0;
++}
++
+ static int annotate_browser__run(struct annotate_browser *browser,
+ 				 struct evsel *evsel,
+ 				 struct hist_browser_timer *hbt)
+@@ -873,6 +883,11 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ 
+ 	annotate_browser__calc_percent(browser, evsel);
+ 
++	if (browser->selection != NULL) {
++		browser->curr_hot = &browser->selection->rb_node;
++		browser->b.use_navkeypressed = false;
++	}
++
+ 	if (browser->curr_hot) {
+ 		annotate_browser__set_rb_top(browser, browser->curr_hot);
+ 		browser->b.navkeypressed = false;
+@@ -969,8 +984,19 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ 			nd = browser->curr_hot;
+ 			break;
+ 		case 's':
++			struct annotation_line *al = NULL;
++			s64 offset = annotate_browser__curr_hot_offset(browser);
++
+ 			if (annotate_browser__toggle_source(browser, evsel))
+ 				ui_helpline__puts(help);
++
++			/* Update the annotation browser's rb_tree, and reset the nd */
++			annotate_browser__calc_percent(browser, evsel);
++			/* Try to find the same asm line as before */
++			al = annotated_source__get_line(notes->src, offset);
++			browser->curr_hot = al ? &al->rb_node : NULL;
++			nd = browser->curr_hot;
++
+ 			annotate__scnprintf_title(hists, title, sizeof(title));
+ 			annotate_browser__show(browser, title, help);
+ 			continue;
+@@ -1106,19 +1132,19 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ }
+ 
+ int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
+-			     struct hist_browser_timer *hbt)
++			     struct hist_browser_timer *hbt, u64 al_addr)
+ {
+ 	/* reset abort key so that it can get Ctrl-C as a key */
+ 	SLang_reset_tty();
+ 	SLang_init_tty(0, 0, 0);
+ 	SLtty_set_suspend_state(true);
+ 
+-	return __hist_entry__tui_annotate(he, &he->ms, evsel, hbt);
++	return __hist_entry__tui_annotate(he, &he->ms, evsel, hbt, al_addr);
+ }
+ 
+ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+ 			       struct evsel *evsel,
+-			       struct hist_browser_timer *hbt)
++			       struct hist_browser_timer *hbt, u64 al_addr)
+ {
+ 	struct symbol *sym = ms->sym;
+ 	struct annotation *notes = symbol__annotation(sym);
+@@ -1188,6 +1214,20 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+ 	if (annotate_opts.hide_src_code)
+ 		ui_browser__init_asm_mode(&browser.b);
+ 
++	/*
++	 * If al_addr is set, it means that there should be a line
++	 * intentionally selected, not based on the percentages
++	 * which caculated by the event sampling. In this case, we
++	 * convey this information into the browser selection, where
++	 * the selection in other cases should be empty.
++	 */
++	if (al_addr != NO_ADDR) {
++		struct annotation_line *al = annotated_source__get_line(notes->src,
++			al_addr - sym->start);
++
++		browser.selection = al;
++	}
++
+ 	ret = annotate_browser__run(&browser, evsel, hbt);
+ 
+ 	debuginfo__delete(browser.dbg);
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index 487c0b08c003..08fecbe28a52 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -2485,7 +2485,7 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
+ 		evsel = hists_to_evsel(browser->hists);
+ 
+ 	he = hist_browser__selected_entry(browser);
+-	err = __hist_entry__tui_annotate(he, &act->ms, evsel, browser->hbt);
++	err = __hist_entry__tui_annotate(he, &act->ms, evsel, browser->hbt, NO_ADDR);
+ 	/*
+ 	 * offer option to annotate the other branch source or target
+ 	 * (if they exists) when returning from annotate
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index c64005278687..6795816eee85 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -713,12 +713,14 @@ struct block_hist {
+ #include "../ui/keysyms.h"
+ void attr_to_script(char *buf, struct perf_event_attr *attr);
+ 
++#define NO_ADDR 0
++
+ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+ 			       struct evsel *evsel,
+-			       struct hist_browser_timer *hbt);
++			       struct hist_browser_timer *hbt, u64 al_addr);
+ 
+ int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
+-			     struct hist_browser_timer *hbt);
++			     struct hist_browser_timer *hbt, u64 al_addr);
+ 
+ int evlist__tui_browse_hists(struct evlist *evlist, const char *help, struct hist_browser_timer *hbt,
+ 			     float min_pcnt, struct perf_env *env, bool warn_lost_event);
 -- 
 2.47.1
 
