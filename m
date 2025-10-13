@@ -1,50 +1,69 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012055.outbound.protection.outlook.com [40.93.195.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456962F90CE;
-	Mon, 13 Oct 2025 08:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760344703; cv=none; b=TD7yJSTXWtJuK34JBBfsm83thGsVTlgkFP6N5JMcM2L7bQYvcfhSZuGrrnJergtQa8uzJypJ8WyNxOPdS/fk/q7EL89beX8I5HF+5Fot0Y+E9Wm0yBkBTdGN4ona8ZTQlKl/yNex3l9DahUVrsDcoOLoX4FKI4axoc4NmqwqZr8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760344703; c=relaxed/simple;
-	bh=26t7Q08DL+2PT4vvqMsKQUPvVz73YGp900Us8qtoeII=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q1jfAkSqnqLls9amXrpSEA6K8WbQIyvUc8T+K+9PNXwLdgpZxHmhWbVOpOl9Y4cx0DUnn6psA8p2L83U0MRKHgQvje4LRADtIxDW8Za+SS4DGPCyLMXv7R8hhXcvpxfrk46Gpt47vijcsi97PyP/x+7uPl+noRppjziNgwVrO2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lkUIJutH; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDF12FB0A3;
+	Mon, 13 Oct 2025 08:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1760345583; cv=fail; b=PFmDIepmnaRQS3Yc2tZZaAhq0SVu2Q12knhoPxXE+2ZtbzG0igtBv9Z/JY3SqfIKLCQcHdG4H54+t6lTPKN9oFyXQyZ6UHcKSjU69HwYn1g8h7PXrHcsuBNvL+wpbpKGOQu+s6oQ6xUAI/OC1bXZ7UDRmweW5cObUDPvzGD3C2Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1760345583; c=relaxed/simple;
+	bh=jjrZpYtsKwZuT5qkZVNAy9PYzfk+WOZzEVclQlR2VLg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Q3GOzka+fhp12v5QB1Ks+9A8/wN/gw/Lo8ieGiGAwgEJjQaxRCmlBTCItQa2Uvmf8WwquVO/n8/AOOCuuB36+0peTwpXBZvNgSIdlgZPtfdg+uWVM2ofzMCR6LMT30WmDcoUk4xA4J1nVcaTGgvgWrmiDXw2+izaYDXxFoh63rQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dRAQgOcr; arc=fail smtp.client-ip=40.93.195.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lkUIJutH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760344701; x=1791880701;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=26t7Q08DL+2PT4vvqMsKQUPvVz73YGp900Us8qtoeII=;
-  b=lkUIJutHr9yY0H/ZYB3i2JISsNxIOfPMlTo3lDBpoVCyABBWHo6cmGGx
-   q2JXr2O9kiLGcvJiQiDo/eC0+hNpDW9uohAJN0NRsaO6CA4Mo1A7Z4rgY
-   TM3tpC5rlB2TbohWxmN79GFKSSw4aRor4+1d3Am4bf7zPk1a3icQodqmW
-   +UMR5wFNcMZ4+CLH1TotzznxNSTOkr1HB3i8DbcgWkbAEe1vyeJnk6GPP
-   1iMu5MqgrSdi0RzVMIZUGEDd/QTHqq8Po8XshtanPNHPY48ByaBfssWYE
-   ImPv9PMxp0HuThN94j4STTsiRjZHp33qCfvBgENdwqxD/LfX1vh7vT13q
-   g==;
-X-CSE-ConnectionGUID: DlGtR1eORQWz1VTKepLVpQ==
-X-CSE-MsgGUID: xaivkSxtQtKYH4So7K6qtw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11580"; a="66332243"
-X-IronPort-AV: E=Sophos;i="6.19,225,1754982000"; 
-   d="scan'208";a="66332243"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 01:38:20 -0700
-X-CSE-ConnectionGUID: NM7kJcUdShCh09p123QYuA==
-X-CSE-MsgGUID: 1AgSA781SSGWq/B2gxPzRQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,225,1754982000"; 
-   d="scan'208";a="212172484"
-Received: from unknown (HELO [10.238.2.75]) ([10.238.2.75])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 01:38:18 -0700
-Message-ID: <30c62dee-2219-4b39-94c7-b9cc81130c9e@linux.intel.com>
-Date: Mon, 13 Oct 2025 16:38:15 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dRAQgOcr"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZASE6BipV4KfthZdoxNkcpQBOZyBwa/e7YOnAS/gOIH7YGsN9+JJRMEPdnh9xS1QEBZs+Z31yQvgphS73bZwAbLQWf0B003BP/onKvbCvVfF45gAspIf3y1DYQjlX4iuZaVtM3i99v6XDDQOp2RR4d+uI12dhYiujgIrRHV4zGTdn6Ue9ATQtdxVhe8tOqMu5UlHwpv7WT5PYMV14A9voWLORkV0F1tNedCP72xqoZH1gxsCCg0nm32Uf3BJ0uLEp5ViNjO6b5lNjwgqmlEemWcXxZBXQCRS5Of2NNRrjVjYu3BAn8I1TcaxWy5ErDH1vlThZZ7Ar+HUutSf8Y8DSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8gNLomOSIwN/J/juCwD88BUWLWmnVBrLxtK9m9v56j4=;
+ b=PoPbz/nvCcyphgKL2Pz4YpIcnUBDyvOjrXDAhSqMPbBf5n/qwbZd7irnr7og/tWqecHOFS2srZJs58IGZSWYIBLLs4qjUoJ3goorm/pl3OBBXLL+DIjrvxDfRLGtXMuNCnW4bef1qd6A8WG6o1qo9DuD4ssKMx0loGXw0uhPHGHsK976FrGxuTw/sU94QZ12IzpMrEgf5+rBO6v9vnJMywhzDe8PKywbEltI7GYu1lehe3tvY9b8Lfk8c3WLVB0uobHU2Jm6mrVbk128LYAF5pI+HJJZs68C/DfO0DxA1IyLIiS8ChDlKcN9SHsC/Es5njG9wO+HZSTBSVpvGcoiTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8gNLomOSIwN/J/juCwD88BUWLWmnVBrLxtK9m9v56j4=;
+ b=dRAQgOcrtkWt9kD9KixzM5dAo9sWSm1OkRJUWAe80LlU2wi+Fr4w6WJvIMxQVut6oTWkE7jZMIPTMjSDhxuG76ZFPoL23jeKXUeY5ScRSK1sdQEY964NSvBELcEByXL/L7AqeUBwiyXI1QGytH40MbZ4J11eIB4H7lFmQl0WJN4=
+Received: from SA9PR03CA0014.namprd03.prod.outlook.com (2603:10b6:806:20::19)
+ by SJ0PR12MB6902.namprd12.prod.outlook.com (2603:10b6:a03:484::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9203.12; Mon, 13 Oct
+ 2025 08:52:57 +0000
+Received: from SA2PEPF000015CD.namprd03.prod.outlook.com
+ (2603:10b6:806:20:cafe::6b) by SA9PR03CA0014.outlook.office365.com
+ (2603:10b6:806:20::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9203.12 via Frontend Transport; Mon,
+ 13 Oct 2025 08:52:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SA2PEPF000015CD.mail.protection.outlook.com (10.167.241.203) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9228.7 via Frontend Transport; Mon, 13 Oct 2025 08:52:57 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.17; Mon, 13 Oct
+ 2025 01:52:57 -0700
+Received: from satlexmb08.amd.com (10.181.42.217) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 13 Oct
+ 2025 03:52:56 -0500
+Received: from [10.252.82.201] (10.180.168.240) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server id 15.2.2562.17 via Frontend
+ Transport; Mon, 13 Oct 2025 01:52:46 -0700
+Message-ID: <660c8ba1-635b-4acc-8824-d195f1b133a0@amd.com>
+Date: Mon, 13 Oct 2025 14:22:45 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,130 +71,130 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] bisected: perf: hang when using async-profiler
- caused by perf: Fix the POLL_HUP delivery breakage
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Octavia Togami <octavia.togami@gmail.com>, stable@vger.kernel.org,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <CAHPNGSQpXEopYreir+uDDEbtXTBvBvi8c6fYXJvceqtgTPao3Q@mail.gmail.com>
- <8aed5e69-57b1-4a01-b90c-56402eb27b37@linux.intel.com>
- <20251013080531.GJ3245006@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH v7 1/2] perf tools c2c: Add annotation support to perf c2c
+ report
+To: Tianyou Li <tianyou.li@intel.com>, Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Ian
+ Rogers" <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Kan
+ Liang" <kan.liang@linux.intel.com>, <wangyang.guo@intel.com>,
+	<pan.deng@intel.com>, <zhiguo.zhou@intel.com>, <jiebin.sun@intel.com>,
+	<thomas.falcon@intel.com>, <dapeng1.mi@intel.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Ravi
+ Bangoria" <ravi.bangoria@amd.com>
+References: <aOkFWaFD42Jy7V0f@google.com>
+ <20251011081625.1953652-1-tianyou.li@intel.com>
 Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251013080531.GJ3245006@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <20251011081625.1953652-1-tianyou.li@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015CD:EE_|SJ0PR12MB6902:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3ad703e8-693d-4feb-4c86-08de0a35e828
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|82310400026|376014|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TlJMYmdIRGU1NXRJdHlqSkRwWUIxQ3F1T3UxWVFoTHBRV2R0bThPelJaOEJa?=
+ =?utf-8?B?U29lQzJkTjY1bHdZQmxSaUd6eHIvdEkreGttaDNNSFpSNzFjZmE0MTZPRmdO?=
+ =?utf-8?B?a3Q3T0MyTExrbXlseERsZm52UXdTZVBoV0xNb1dUYlVHZWFrSnVRRlNaVXlz?=
+ =?utf-8?B?dXNJQ0l1R2NrTWM1SmZJSVE2QVJpbWV3eU5lV2Y3TDlnU1lpZ2tNRG01TWEr?=
+ =?utf-8?B?eHVQNkJENW9oTmphRHZYcWl0RW5FWnp2SGUzc09FZFdDLzlWTUpTankwZkFm?=
+ =?utf-8?B?dys3TkpJa0JTckJtd0llTzhlUTcxTGw2bGQ4RjdZRUZaNlp4aCtHZms0cFNX?=
+ =?utf-8?B?L2N0R210WVVjRzhKQTZUUFRQUUNEMDhHNFcwOUtwY3VEbTNTYW41R0FkdDJ5?=
+ =?utf-8?B?dmIxM1BLSGhHMk9aTjBBUnl2VzVDSXdSeWNKbzRPdWRGaGpMaHFsYXhLZjFR?=
+ =?utf-8?B?VEZLTzVmLzBzTWxYU0JUMVAwMTBIdy8rcHRIcTZYalA1alovSTdVZlFRRmFa?=
+ =?utf-8?B?NmhITHdkRGdPdWJnbklHMGx2U1FNaEZ1UTRDY1ZzcE9aWjBtL1FBYTZub3JY?=
+ =?utf-8?B?RFE4Rzk1TjJvR0Y5ME9MOUFTallxQzZDQlhnamh5ZnZjMk5PNHVVVGhxOXIv?=
+ =?utf-8?B?MXhnUndwWm55anVKM3NTN2U0WUEzWWhjUFU0VTNyUEdRTjlKdmhsa3dkSjg4?=
+ =?utf-8?B?NGRvdUhnZVdsaGU0dFQxYUYzTzVLZmxmcnBQZmZjUnRpbkZOdGY0dkhpcjgz?=
+ =?utf-8?B?YldVMlh2c25UR0xNdXN0cmh5U2d2UjRSbkFmcEVVMFZXY3V2b1BBeVZiRERq?=
+ =?utf-8?B?Wko0UnpDRmMya0hiNitiYkREMjczS2dqVWdWZU00WG83OUhEd0o5bVpDVC9h?=
+ =?utf-8?B?c3JyZitCYTExTm9TQk0yVHFnWlZzM3BXYnN2YVkrSEt2NVhyVVpjdVNFTjFB?=
+ =?utf-8?B?aDBSRWl5YzYyaitEZm03ekhVclR5K2lTTW13ODhkYm9LS0Q1MkVwdVBCQzBw?=
+ =?utf-8?B?bFU0TDd4d09YdzAxTk14ZWNHenoranNCSU9nUzZTQlNLOHdsQ2xidWNDODNs?=
+ =?utf-8?B?SmpXdDdxRERqMXltVkFrREdhWVJLRmE5b01KM2RFTGFwblVGN1JncFFWREZN?=
+ =?utf-8?B?MG4vRXZUYlQ2VnZLcUFrNTBZbTJ2VVltdThmc3BpclNXb0tyanI4VWJIbFJm?=
+ =?utf-8?B?MkQ2aWJKZ0hxVnBGQ2dRdzAvZW9FRXdabkN5enlwVFRMVUxMZjg1L2JYRHIr?=
+ =?utf-8?B?cU4zUkVmK0g5ZlVoME1POU8yRnpCUDludWlJOWI5czNURUUwYWtoK05vb0Jv?=
+ =?utf-8?B?MWVra1orVFBTU21NcnpySnR5WXZGS1N3QXBBTzl5VzdMNmVzZFNSRmdNTXlM?=
+ =?utf-8?B?U0s4WW5ETklhaWZpYkpZaEV5Z2NoRzJjVHpKRmg4TCt2YXhVeVVyUWtLd0F4?=
+ =?utf-8?B?NXNSTjFUNzdBVTNaWDZKelVQYU80TXFhdzl4QnF5Zk1tVDF0MlpaYnFiUnpJ?=
+ =?utf-8?B?TDhLUXhjQS8vcWxnWGJiUVhqWjVqdlJDT0RDRGJ6ajZkU1ozdk5iLzBNR2d4?=
+ =?utf-8?B?ZGJhZklyaW9PRHdWZzBwbjNYbkFwMVZUbE5FZkJCcHVQTEUxemo2cWhhVy9x?=
+ =?utf-8?B?OWJZUFhXQTRmMGw0UHppYlNpZlJrS0lTeWduaHVJT2VDTFFWdEtZLytDNFVE?=
+ =?utf-8?B?cTZwaWQ0bWMrQTREcmRYaDJLUUlqSTZ4VjhzWHFVdy90bWRFR0F1ZzdUcVNi?=
+ =?utf-8?B?REVkc0RNQUhtNE5IY1U4djVBbm5aZEpFa3JDaWVoK2JJWlJuajV0SWtMWkV1?=
+ =?utf-8?B?ZHhSSlJpMmN1YWIyRjRKQnVOWEtEdnVNVytPZE5LTVF2SitaWFJnVS8xcmI5?=
+ =?utf-8?B?UFo5WWc2R0xoeEo1bHlZdUJvZXNxM3VmMHd4dHpPMEhZSC9zbTVTNTJPUGE1?=
+ =?utf-8?B?Q2lqak5uLzgzalZCY1RQQ25jYkNoUXRHUjQwdXBKOFJYYi9BSThLU0MxUTVR?=
+ =?utf-8?B?U3N5a3B6aGUrNnhydVJ1Z3JpV1p1SWRCOEIrV3Y3Z3JFV0NISXpJL2s4OWQv?=
+ =?utf-8?B?aHRBUGxpdUNWM2xDcEdaSEFDT1BlTjMzQ0NiZWwzaUtPbk93eXNYQzg0YUZJ?=
+ =?utf-8?Q?+PLw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(82310400026)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Oct 2025 08:52:57.7041
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ad703e8-693d-4feb-4c86-08de0a35e828
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF000015CD.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6902
+
+On 11-Oct-25 1:46 PM, Tianyou Li wrote:
+> Perf c2c report currently specified the code address and source:line
+> information in the cacheline browser, while it is lack of annotation
+> support like perf report to directly show the disassembly code for
+> the particular symbol shared that same cacheline. This patches add
+> a key 'a' binding to the cacheline browser which reuse the annotation
+> browser to show the disassembly view for easier analysis of cacheline
+> contentions.
+
+I still see annotate browser title with samples/event count as 0.
+Something like below (lightly tested) should fix it. Can you please
+check?
 
 
-On 10/13/2025 4:05 PM, Peter Zijlstra wrote:
-> On Mon, Oct 13, 2025 at 10:34:27AM +0800, Mi, Dapeng wrote:
->
->> It looks the issue described in the link
->> (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.intel.com/T/#u)
->> happens again but in a different way. :(
->>
->> As the commit message above link described,  cpu-clock (and task-clock) is
->> a specific SW event which rely on hrtimer. The hrtimer handler calls
->> __perf_event_overflow() and then event_stop (cpu_clock_event_stop()) and
->> eventually call hrtimer_cancel() which traps into a dead loop which waits
->> for the calling hrtimer handler finishes.
->>
->> As the
->> change (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.intel.com/T/#u),
->> it should be enough to just disable the event and don't need an extra event
->> stop.
->>
->> @Octavia, could you please check if the change below can fix this issue?
->> Thanks.
->>
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 7541f6f85fcb..883b0e1fa5d3 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -10343,7 +10343,20 @@ static int __perf_event_overflow(struct perf_event
->> *event,
->>                 ret = 1;
->>                 event->pending_kill = POLL_HUP;
->>                 perf_event_disable_inatomic(event);
->> -               event->pmu->stop(event, 0);
->> +
->> +               /*
->> +                * The cpu-clock and task-clock are two special SW events,
->> +                * which rely on the hrtimer. The __perf_event_overflow()
->> +                * is invoked from the hrtimer handler for these 2 events.
->> +                * Avoid to call event_stop()->hrtimer_cancel() for these
->> +                * 2 events since hrtimer_cancel() waits for the hrtimer
->> +                * handler to finish, which would trigger a deadlock.
->> +                * Only disabling the events is enough to stop the hrtimer.
->> +                * See perf_swevent_cancel_hrtimer().
->> +                */
->> +               if (event->attr.config != PERF_COUNT_SW_CPU_CLOCK &&
->> +                   event->attr.config != PERF_COUNT_SW_TASK_CLOCK)
->> +                       event->pmu->stop(event, 0);
-> This is broken though; you cannot test config without first knowing
-> which PMU you're dealing with.
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -299,6 +299,18 @@ static bool perf_c2c__has_annotation(struct perf_hpp_list *list)
+ 	return !list || list->sym;
+ }
+ 
++static void perf_c2c__evsel_hists_inc_stats(struct evsel *evsel,
++					    struct hist_entry *he,
++					    struct perf_sample *sample)
++{
++	struct hists *evsel_hists = evsel__hists(evsel);
++
++	hists__inc_nr_samples(evsel_hists, he->filtered);
++	evsel_hists->stats.total_period += sample->period;
++	if (!he->filtered)
++		evsel_hists->stats.total_non_filtered_period += sample->period;
++}
++
+ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 				union perf_event *event,
+ 				struct perf_sample *sample,
+@@ -363,6 +375,9 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+ 	hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
+ 	if (perf_c2c__has_annotation(NULL))
+ 		addr_map_symbol__inc_samples(mem_info__iaddr(mi), sample, evsel);
++
++	perf_c2c__evsel_hists_inc_stats(evsel, he, sample);
++
+ 	ret = hist_entry__append_callchain(he, sample);
+ 
+ 	if (!ret) {
 
-Ah, yes. Just ignore this.
-
-
->
-> Also, that timer really should get stopped, we can't know for certain
-> this overflow is of the timer itself or not, it could be a related
-> event.
->
-> Something like the below might do -- but please carefully consider the
-> cases where hrtimer_try_to_cancel() might fail; in those cases we'll
-> have set HES_STOPPED and the hrtimer callback *SHOULD* observe this and
-> NORESTART.
->
-> But I didn't check all the details.
-
-The only reason that hrtimer_try_to_cancel() could fail is that the hrtimer
-callback is currently executing, so current change should be fine. 
-
-
->
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 820127536e62..a91481d57841 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -11756,7 +11756,8 @@ static enum hrtimer_restart perf_swevent_hrtimer(struct hrtimer *hrtimer)
->  
->  	event = container_of(hrtimer, struct perf_event, hw.hrtimer);
->  
-> -	if (event->state != PERF_EVENT_STATE_ACTIVE)
-> +	if (event->state != PERF_EVENT_STATE_ACTIVE ||
-> +	    event->hw.state & PERF_HES_STOPPED)
->  		return HRTIMER_NORESTART;
->  
->  	event->pmu->read(event);
-> @@ -11810,7 +11811,7 @@ static void perf_swevent_cancel_hrtimer(struct perf_event *event)
->  		ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
->  		local64_set(&hwc->period_left, ktime_to_ns(remaining));
->  
-> -		hrtimer_cancel(&hwc->hrtimer);
-> +		hrtimer_try_to_cancel(&hwc->hrtimer);
->  	}
->  }
->  
-> @@ -11854,12 +11855,14 @@ static void cpu_clock_event_update(struct perf_event *event)
->  
->  static void cpu_clock_event_start(struct perf_event *event, int flags)
->  {
-> +	event->hw.state = 0;
->  	local64_set(&event->hw.prev_count, local_clock());
->  	perf_swevent_start_hrtimer(event);
->  }
->  
->  static void cpu_clock_event_stop(struct perf_event *event, int flags)
->  {
-> +	event->hw.state = PERF_HES_STOPPED;
->  	perf_swevent_cancel_hrtimer(event);
->  	if (flags & PERF_EF_UPDATE)
->  		cpu_clock_event_update(event);
-
-Besides cpu-clock, task-clock should need similar change as well. I would
-post a complete change later. 
-
-
+Thanks,
+Ravi
