@@ -1,119 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88BFE3112B6
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 15:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344EC30E0DC
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 15:46:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760369806; cv=none; b=dE3Op70BucSfTkNcCDIKKRvwwghxM4jKaeG6dCQKfjoP5lUd8qAG5qaHfTfxk02xskbiAqNaoRiuhjei0jobJhdYI0hpkESdfh1iJ5viJ814r7KjqLcph1zpT8/hLglnRXFU8IV9rPpVFoxvU+/F6iKiyYCHT9qa4rHWlcriWv8=
+	t=1760370376; cv=none; b=EGAmu8hdQgtfzxw8W5cW7CFOY3QdVB+tVj5DLLdi55646VzvCH4ftKdPmZnFDpJo29dqNZ+nBYupx1FWlCYslWGU3rj/PQHi/4cDe8he8cVxTXLbJkF+hSFO2FIzmKD0+PoZ7EDXiRh1VCqQfNbjuUhYnnpppukGVcSLAKf1jXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760369806; c=relaxed/simple;
-	bh=MeqC6i69hnBHqaLxtRCJF88WnNOpB53dXS9cvaGAylI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PMsjhukhC7sHRr7YLgnLeFLulVOdZ77I2LeSdYHY6VGjX4e17+alsNMpXGDU42J+ULZX0iiaHfRf/Kf9u5Qz2SjaK6bJlo16cRFG6KLovDHuNuFnYbz2rWF3yD4qWQcJ4iRke+JGkml0ycjBonEMT1SCdou5OIbj9R2NuueNMdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RBCtd4Kd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1760370376; c=relaxed/simple;
+	bh=Gh0xkG+HEMAZ8iif2uzqr6cU9prk01bUy/kDmxuuS/U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L/hpvClIj27ArnhEv422Ds7v3HasvXzXe9zZWyr1mycep8ZN2wBxE1Q6y8giMazQ8xU9MgT2mxkNtQ9CBB32RIXwfGoqyHNu8wdVTEWW4POePrRlVbVaw7hZK8d/ZRymORDP5ZQ7CEh0L9cCPPOK4sJZASFmjwF+CED1kGu2/LQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DbZQn7QQ; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RBCtd4Kd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D052FC4CEE7;
-	Mon, 13 Oct 2025 15:36:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760369806;
-	bh=MeqC6i69hnBHqaLxtRCJF88WnNOpB53dXS9cvaGAylI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RBCtd4KdlDzRFuYkcgCyw3uBFog5+xN2+EA0mLfJKkb9v9JJZgNC8IpW9htEbHWPx
-	 MtsNGBoO2sLCUsPOFAd1OWqEgoMIEiAtq2fcWzZb6Iq3hIBYql0OeVPs6Rg9b8Frj/
-	 tQmr8/g5dwn2zx7Iy4pWTRkfWnnOFrcpNoxL38CMYzcv314UtZ1Vm8CfAI/4AH/gHM
-	 16gbXkSyhtpk7tjZHw9z5iRQ4JCeEjRPnSL6rh1c1mL0VDp9hFap8DOuYy7agtwUz9
-	 OGmCeSXwESrAejzB1ev9vUWyFBlogIdQPObRgtKCQfkOZqBB+7ym5in8uzpHGz2JEI
-	 fwj2Jso3fVRCw==
-Date: Mon, 13 Oct 2025 12:36:43 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Anubhav Shelat <ashelat@redhat.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Namhyung Kim <namhyung@kernel.org>, mpetlan@redhat.com,
-	irogers@google.com, linux-perf-users@vger.kernel.org,
-	peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com,
-	dapeng1.mi@linux.intel.com
-Subject: Re: [PATCH] perf tests record: allow for some difference in cycle
- count in leader sampling test on aarch64
-Message-ID: <aO0ci1wX-J3au0-p@x1>
-References: <CA+G8DhL49FWD47bkbcXYeb9T=AbxNhC-ypqjkNxRnW0JqmYnPw@mail.gmail.com>
- <901d2d1d-647a-4a76-a0ee-d8a687ed3f85@linux.ibm.com>
- <ff157071-e241-4b81-8241-cfd15e5705ef@linaro.org>
- <7a03fb30-87f9-4737-b59a-9f977acc7549@linux.ibm.com>
- <296700d2-878b-4eeb-b8cd-0252b2f92479@linaro.org>
- <CA+G8Dh+Odf40jdY4h1knjU+3sSjZokMx6OdzRT3o9v1=ndKORQ@mail.gmail.com>
- <CA+G8DhKDvkojDnwxXKe1iiLWwJ0uwD62-qc4_sJgBDdS+qLu-g@mail.gmail.com>
- <f4eba834-e45c-4eba-9650-5b6720fcd30f@linaro.org>
- <CA+G8DhKQkTKoNer5GfZedPUj4xMizWVJUWFocP2eQ_cmPJtBOQ@mail.gmail.com>
- <58801744-44e4-4182-ab4e-bfcf8e2bfc69@linaro.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DbZQn7QQ"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-27eeafd4882so467805ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 08:46:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1760370374; x=1760975174; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Gh0xkG+HEMAZ8iif2uzqr6cU9prk01bUy/kDmxuuS/U=;
+        b=DbZQn7QQbkVwvsxfGu/hYMBmKynFftcCyOlq/COHZFBSI9BSDQP/hENqqZ23ARVy4e
+         5fP5H70U8y2B/W+9JDXDq/hne8iG4+El6tNlHR3G9riowKdjVvIQ95MSuLN6vuaqybZD
+         HhzfkRRQms509DdMecs7MnSwBrDpvEiq1MgmikBOaYS6hMYk/re8Zt4mH9GIr+QVceuX
+         vXU9TumgIpBFInDzA7WoIEofZoL9q/5so9zlswLKx4mSiWtPt2L0ZO6TPEx4jwRGEJ9b
+         W6TM8v3KRoU8Atzllx/GF9Ev3PCxJeCADmnmBaSWL4W5ppXA+Jy5q5/1Ccrn3i8/d3W0
+         Udqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760370374; x=1760975174;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Gh0xkG+HEMAZ8iif2uzqr6cU9prk01bUy/kDmxuuS/U=;
+        b=VXdGu9aklPnM1GVlRCe6om6pzRRFIu5klpHlGVdo/sTtJMrErEZj16Kd6dogLTn+wd
+         Wn6i+1Aj6oFwazMt69TmIyJhkRqFAC3aE/3vTgMo6nOL+dFgi3hRNICMkWDqYmS+vdtx
+         FYerqR9xbTzpqOBZBoQ1sMpBy1rV7N3SzgibLS59Wf32hBs7FG7qYcIR2p0UTQRBBUuf
+         6RwwkoeFehMsj9KbIrwbG63l2yXfL+OAXd79wq8WgsbM2esCIcWld7JHrEVZFDu2enfU
+         MXhnOic5pZePSvwCAd44NQ0zEfeHE71HCSnAEnI+vGc3e6IxVWBdwdS1oewvvULzdEOL
+         to1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVeC4eZrHDwqSKuWtSdgm2x35FqR5Qjpuj+Qzy/BP/YR7zTwBFbhvyzhsrBTeOOwQG/Sg60S55/xseKR/StzInN@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbJtjSc1RpNbPoX+Lp4bGzYEF4RG8QBB9f9QhAPuyywmoq/kmP
+	YWO1Ybhf4Qop75W6TrzkSAFauza7qfL7twOAdWQr5E1mVhFYO5wP9fSJTIxC2M35uj5hJ/guUHg
+	IDo1Yo3XFZ8k0MLq/BE+tBmIDwL80qKr2T4OIKgYJ
+X-Gm-Gg: ASbGncvdeWKHKnF+L7GGHXnH3YNjd65K58mhqmJFv+PZMbTvmFQQUmkgDoMna/NHu9q
+	9iqHEx5mseBRYOpQ1+GaE+hSjhdyj2+nB3w3OCwo7BgFWbFEKuNEM+JQEs0xCk997Nt8zLNxYju
+	K9q7OFsY0hXB/0CngKWdo9fRXrGvAheChcTyfgPP6/Lt4xCZ+vwa7W3scR8+jGqYWKRtnfvJ1De
+	cmMF4gZf2SGHpe46SvzwO191y9AYE4FLO/NtCwFfeGEfyuXCn339KjRJ+4O2pUpxeMro6Ed1Q==
+X-Google-Smtp-Source: AGHT+IFpkUdbriJp23+2Jb8eOJGaVHdsjhGARS/bTOlZqK6t4o+Ul77JlTrOQ+g9Lp/XnQzRqj62GmvLzwrp3fj478M=
+X-Received: by 2002:a17:903:1b66:b0:26a:f9c7:f335 with SMTP id
+ d9443c01a7336-29027699597mr25468055ad.9.1760370374228; Mon, 13 Oct 2025
+ 08:46:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <58801744-44e4-4182-ab4e-bfcf8e2bfc69@linaro.org>
+References: <20251013080609.2070555-1-hupu.gm@gmail.com> <CADHxFxRMUhn=VdG5uzrosTUpwAMHi+zO7NTYVikWzFdnKrUJ4w@mail.gmail.com>
+In-Reply-To: <CADHxFxRMUhn=VdG5uzrosTUpwAMHi+zO7NTYVikWzFdnKrUJ4w@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 13 Oct 2025 08:46:01 -0700
+X-Gm-Features: AS18NWCYdUVbOnDz-j3sbDrxzDX70h3ig4G8MD5wGb1R-4xJxXjeiEmchhKFwHI
+Message-ID: <CAP-5=fXykcQ7n3rw6RX3S+dLoLUC9BZKh=BP8yx8ak+f623aEg@mail.gmail.com>
+Subject: Re: [RFC] perf build: Allow passing extra Clang flags via EXTRA_CLANG_FLAGS
+To: hupu <hupu.gm@gmail.com>, Leo Yan <leo.yan@arm.com>
+Cc: namhyung@kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, nathan@kernel.org, 
+	nick.desaulniers+lkml@gmail.com, morbo@google.com, justinstitt@google.com, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 09, 2025 at 03:59:54PM +0100, James Clark wrote:
-> 
-> 
-> On 09/10/2025 3:43 pm, Anubhav Shelat wrote:
-> > The first machine was running kernel 6.12.0-55.37.1.el10_0.aarch64 on a KVM
-> > virtual machine.
-> > The second machine was running kernel 6.12.0-119.el10.aarch64 also on a KVM.
- 
-> That's quite old. Make sure you test on the latest kernel before sending
+On Mon, Oct 13, 2025 at 1:08=E2=80=AFAM hupu <hupu.gm@gmail.com> wrote:
+>
+> Hi Maintainer,
+>
+> I encountered some issues while cross-compiling perf (ARCH=3Darm64),
+> particularly when enabling the BPF option. During the build, Clang
+> fails to compile BPF programs due to missing header files. The
+> relevant error messages are as follows:
 
-While I agree with you I think that 6.12 is not really that 6.12ish, as
-its a disto kernel, an enterprise one at that, so tons of backports.
-
-Having said that, yeah, the right thing is to build the latest upstream
-kernel and see if it works, if it works, try to identify backports, and
-only when its determined that it is something present on upstream,
-report it publicly.
-
-> patches. The tests in mainline should be targeting the latest kernel,
-> especially in this case because the throttling fix didn't have a fixes tag
-> so won't be backported.
-
-Right.
- 
-> That change to fix throttling and group sampling is only from v6.16.
- 
-> Also what hardware is the VM running on?
-
-Anubhav, please provide this info,
+Thanks for reporting this issue! There has been some recent work in
+this area by Leo:
+https://lore.kernel.org/lkml/20251006-perf_build_android_ndk-v3-0-430559079=
+5b2@arm.com/
+The patches are in Linux v6.18-rc1. Perhaps you could try repeating
+your build with this tree and reporting issues?
 
 Thanks,
-
-- Arnaldo
- 
-> > On Thu, Oct 9, 2025 at 3:17 PM James Clark <james.clark@linaro.org> wrote:
-> > > After reading that patch it seems like we should actually be removing
-> > > the 80% tolerance from the leader sampling test. Both instances of the
-> > > cycles counts should be the same now.
-
-> > If there's no tolerance then the leader sampling test would fail much more
-> > often. In most of the runs there's at least one case where the leader event
-> > has much fewer cycles.
- 
-> That's assuming that we've agreed that any difference in cycle counts is
-> expected and valid. I don't agree that's the case yet and I think it's a
-> bug. I only see identical counts, and the commit message in Kan's fix
-> describes that the values should be the same for all architectures.
- 
-> > > (Excluding s390) I'm starting to think you were hitting this bug on an
-> > > older kernel? Or something else is going wrong that we should  get to
-> > > the bottom of. The test could have found something and we shouldn't
-> > > ignore it yet.
-
-> > I agree that the first bug I mentioned might be from an older kernel, but
-> > there's still the case here where the cycle counts don't match. I'll keep
-> > looking into it.
+Ian
