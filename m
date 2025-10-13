@@ -1,83 +1,83 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF45530F54C
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 22:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B233A2D7DE5
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 22:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760394864; cv=none; b=lEpYwqPRI+Bgc1+F0kiak4KIn9s63nhQRWn0soCibduHlSOy8rNg8hKI4BDTeKkW8ZcxblGGtmjarZ7oMmXMuT6lZsHCusFQ3Od30rcNFPmeYwK5IUegtm8QvO3+y6nBxvTKFLMCk30eeXU2Ef842AEBYN+zQCUj3bndow0uv7k=
+	t=1760395260; cv=none; b=t67m/3ZGS2xIlnJuBFdQsjOxbuuiePwRxLsPTNX1LFoJdKeYM4fIHvMvelMWNIw8188Tz/Ou/YrEFJYwcXcXbHFtP5oYmLct/g2xTlUyKkeEkrnu0oaTwIlOdYRV2+NrWEoZOgqgAIJTihi1bqCPrrfHL2xnkeyMAzqiur7ena4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760394864; c=relaxed/simple;
-	bh=UpuAxADbv7GA++YfwZct97abHEvsfJGjTfg+N9P5LSs=;
+	s=arc-20240116; t=1760395260; c=relaxed/simple;
+	bh=6B3K1VEohuDa2fuwXUpyKZdV1UfNnP+FFNPVNqcF+uY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KeNTglUJA6PbpoIvGQ/mG6ZFlFl8cGb2zMbpW+GZUNCWHRhjWI1Be3XkCCkdCiOwwAg/5rySJx5LgH+IjFBknBG+ZxSVWNrl+SqQrzvUwnZGfQnl/LRko/p8TsbecUpJbpls7hfmKbbPYvUT/HCuCODfxSBNkw01qvDGQp1G7Iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Xsu2N3bR; arc=none smtp.client-ip=209.85.216.46
+	 To:Cc:Content-Type; b=YaUZxqzZ2cHh3YvX8CIobJ/MeyBtJFP53H1yqyoNClk96MLe+irfcYYZX1yht+W1Dd8KdpDgzoWAdgbSpRUh9XrCIUfGIu8nDhWe7swrAhoyByMLl3tOlvYLKnmxHae7+QIw0v0T9XDHMlQ8zvXgJ28W4Dm4Gjn5Gc84joFxKSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EbyTRqax; arc=none smtp.client-ip=209.85.222.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xsu2N3bR"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-3352018e051so5434936a91.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 15:34:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EbyTRqax"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-8599c274188so561405385a.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 15:40:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1760394859; x=1760999659; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1760395257; x=1761000057; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XwbGv4J28a1dG4lLmSXG6e+W+t/2iTnwMsiuMvjryc0=;
-        b=Xsu2N3bRzic08PArIaedhsGebbkn7SG8s3Ei7IebWaugI4rbtFa2om0zHvmgH1m6LR
-         ATCR6mWdfzPYCTzaprdpPFgOWOmBs6c9AHPKNPQl0sMwvOZpf3SIVgRrLTd8meGrkUMi
-         44hfReYwVJ8qFwIpllysMq7uAxTXj2DGzw1lU=
+        bh=gtxL+uYHTrxBSaf2VJ6n4z+smdSSDd5JBl8pS6dLFSc=;
+        b=EbyTRqaxXYXOeYcoL6PLX+PswC1EZSX1EjYdPpM2aWZQQkXb1pl8EQPBuDIdFl92D9
+         cUTkhCpeMgx4wPt6eOIUZ7/1mL75Loi7DS+eEY+C+uTrTkdtEsmT0yaqVxyde5afBvAu
+         zJkUbrwMVKpnOCly3mauzAPZ6ivk4sKHNVbqU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760394859; x=1760999659;
+        d=1e100.net; s=20230601; t=1760395257; x=1761000057;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XwbGv4J28a1dG4lLmSXG6e+W+t/2iTnwMsiuMvjryc0=;
-        b=laotLhFzwWhfOseZXJalqqtxzqrq5jX65ncNEtauEHGlI6eadfa2E6LsTxB97/aTJT
-         E3zD+9hhC1SdQqUIBBEQgc/ZJ2LfmvA/OGrRtNCNn3JpnUOgRG80IfrjcxX8QvuuzNpY
-         uiP8x54xv9lxghOBcinyGFMLSLcR+NG5krwTDnfj+H++XiaFPAeWJR2RS4g+HNhwsI2x
-         mlHm87iV1WU6UAnjF9UuAKphPXThETOc8m5eI93eLRpRpKzt/baOuCaryaedXAjJLJFx
-         e771S/zWYuGiX6dmMPlH+BmUWx9GXe1/l6T0v6wlM2ixBd+dvc/GOieYRCUxNEoSDbQv
-         RXvg==
-X-Forwarded-Encrypted: i=1; AJvYcCXCzz8bjVRuGZIFHNtvdgVVjhjVaWqCJ65xmASL2FdNvH+UDjPN0OhGtblYpE08cF1IOpPnU0eZQea/TNyMZoBq@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+oq+h1fiFzpaDuBThewAjVFFdGy64MJeN+RHF9fbwCKq4lFy/
-	/UumN3gVo7kPqgjggvud2Fo85Q2kOWO8PGRUUMyxMGgUzLgjdQifCokrRKgvIn1KfUYl8nGDz0l
-	NkJk=
-X-Gm-Gg: ASbGncvMj+RpWg5EkTMngBtZg4hu7gjBm5Vd0l81/6ZL9DVNfiSW8gtkyuKWVfqdzuo
-	oLg3Nws5b6PqwLE22zDEXUOHUTuOJUjo8LC+cD9SGmrEtihEChUSzSitoqGJedhAW8cdjqMlkU2
-	xyVkpiSDmAZgv6J5tN0rZJFjDBIRC2IBPoUCBRznjY002iMiQ/MsGBEqPtoucw+3geTEOtBPg/Z
-	3MZ+J2E/ozMHa9zWY7jgYIlc9uWq+ag3faY/zEHoPlety48sLM3jpUB3nhMmXOswY9EocufZHUr
-	zvd0zhPPNQvPbWD/dkD6PTGjBNL00P1+XNabKqAzwCaB/MTpI+udn16g5WCXbyw9CyBnf+0ihDK
-	uPbM3LIP7iX4AaFquoOC9ikyNwkaeTyEIpoQ/7flGiDwztk60NpK6KraSlbZM4QInBJ+OgJzGZR
-	f8N1wp
-X-Google-Smtp-Source: AGHT+IHfpgw+9B6qsQd+FgLCghFRt2ncOCJAYfs0OErwzXkYiRm8Ds3AgQ7L3Zd/oH0xIbZSOdGIpA==
-X-Received: by 2002:a17:90b:3148:b0:330:84c8:92d0 with SMTP id 98e67ed59e1d1-33b5137587amr33577925a91.24.1760394858797;
-        Mon, 13 Oct 2025 15:34:18 -0700 (PDT)
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com. [209.85.216.49])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-33b6264734csm13349046a91.10.2025.10.13.15.34.16
+        bh=gtxL+uYHTrxBSaf2VJ6n4z+smdSSDd5JBl8pS6dLFSc=;
+        b=JVBoSpVBjas1a9ov28b5XRLzvUqNBzdegxueodqxWRD5i7olAuvi9F+mDw8kP0lATX
+         lWTWZLqFDyiFGJHK8OReccjAzw6pPahfLspFn/JTRW3ztYggBQovncniHMEi+5lFkzz4
+         I4cL/4qGvS0AVtNh5XHCh7iQKQhFTsWCLfJB7FxSOGEu3S1FEDDY7nMgIamBJJV/h53o
+         NDneOJDan0fgemc2FSeboL3pHno49SfTs0huuOSlPOdqllCQLwl6mSeKqknAvaH7ksWu
+         vNoSxMd6e2pj2hBIPJn6ncdBGO1ijxpi/H25UEXyrLYA1YOC84pLl65YE9rBTczIcEJI
+         q/rg==
+X-Forwarded-Encrypted: i=1; AJvYcCWFgIhANYfRl8UAxwPr13XjOzNRcuhXow4wp9xmQKakWuyFGhONCIIZV3ajQ3Sm7NPiw1odYQwZ9elhnWIuVqMe@vger.kernel.org
+X-Gm-Message-State: AOJu0YzR2ie3WNlcbAOgm+Y+fx0Z8G/dQIbveRydUZ2D3hvET3/qxm2Y
+	X0eaUR/RHXbldX6FmSvi0/piDS0pn9Qyu6kzHoOe4OAfLIAWHXg9nDfUO4MOFPfKfj0n7zrPp0X
+	Egb4=
+X-Gm-Gg: ASbGncuB1ILanHwNmbkf+5UX1vchdv7poxFOcZv8/ioCMfYC/K7oSODzMhR8uMtlTXQ
+	ZJaMehHBwW+zmiK5xcnYzGmesaeT49gcP80QaiTl7Gj2QUCv/+8bzK/ijh9sGkZUpAxP9GrmObh
+	tq+6Q4OSZ8ef/9uz9a0F1ncRznUFJtroDwv/AIPWshfoQpkY2H7S3KL29xFMIFiBmMDybvcvH9i
+	bSOyBP0BpDjWVLnV2VoEmlr5sZ6JiHAS4X6JNUXiLfD2DEfNnB1U/+/PmzEm8RLmpc84boTZoh/
+	fP0v0rGVlv7Wd8BgRSbu+kZZh5aSTlDRJrigA07nfx+GW/QoeucJlkW+FRGpIjfV1hMDGmxsoBL
+	pyE7dw+XgWtL5Uhfl6j/GzgcjiGZWYgw/dhtlcxHcJ79dExVJvu7qc5WQzwYJSbczRwCY2ojU+S
+	PaIReX
+X-Google-Smtp-Source: AGHT+IEECYucFq8Oqc+nTmtOAXn2oSaAoYtSQSoR6xGDShYUb5Uds+mwNhtE4mzFXUlrFjowqMJOXA==
+X-Received: by 2002:a05:622a:1f0b:b0:4cf:8fa2:ccd2 with SMTP id d75a77b69052e-4e6eacb3b68mr355621091cf.13.1760395256886;
+        Mon, 13 Oct 2025 15:40:56 -0700 (PDT)
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com. [209.85.219.50])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4e706dad3c3sm83566801cf.35.2025.10.13.15.40.54
         for <linux-perf-users@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Oct 2025 15:34:16 -0700 (PDT)
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3327f8ed081so5924321a91.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 15:34:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWdwexMFQoRi9JCz+HG8gAV4Z0fdeqRchgADPtPcFPbB1ht5EJ5kjK3cRds9B5Xo1HWzhFe5MnY7n3/nCWkVzRZ@vger.kernel.org
-X-Received: by 2002:a17:903:11cf:b0:269:63ea:6d4e with SMTP id
- d9443c01a7336-290272c1aa5mr269142435ad.37.1760394855700; Mon, 13 Oct 2025
- 15:34:15 -0700 (PDT)
+        Mon, 13 Oct 2025 15:40:55 -0700 (PDT)
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-799572d92b0so61539236d6.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 15:40:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUsu6UjZqb9Yyjop1vV2s1B+jWzpZ8vSvIQPFph6XBt47Dxl6YUDUieyxc9M4mTaw4AP6Y5WYmzpVSRXryGzDiT@vger.kernel.org
+X-Received: by 2002:a17:902:ebc5:b0:267:bd8d:19e with SMTP id
+ d9443c01a7336-290273799f8mr248133945ad.22.1760394928761; Mon, 13 Oct 2025
+ 15:35:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251009032838.63060-1-cuiyunhui@bytedance.com> <20251009032838.63060-2-cuiyunhui@bytedance.com>
-In-Reply-To: <20251009032838.63060-2-cuiyunhui@bytedance.com>
+References: <20251009032838.63060-1-cuiyunhui@bytedance.com> <20251009032838.63060-3-cuiyunhui@bytedance.com>
+In-Reply-To: <20251009032838.63060-3-cuiyunhui@bytedance.com>
 From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 13 Oct 2025 15:34:03 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VcgDFk-Ad8nhOYK8Ay_8==3JRxaZ=8j3SHCa2rTKJCTA@mail.gmail.com>
-X-Gm-Features: AS18NWDRlpKOc8vUNSnX7EzUSo2l7O6rFyMCga60WeZRtc9k0KplotG4eFs760Y
-Message-ID: <CAD=FV=VcgDFk-Ad8nhOYK8Ay_8==3JRxaZ=8j3SHCa2rTKJCTA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] watchdog: move arm64 watchdog_hld into common code
+Date: Mon, 13 Oct 2025 15:35:16 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XRp9=5yxR3Q1UhJhBS-wm59yssozKi55W7HGk+S94AjQ@mail.gmail.com>
+X-Gm-Features: AS18NWD-PlH4jDf4beOYtPWdSx7chQ77jPK1vKggaxR4OltLXyHgtJF5jyN2qPw
+Message-ID: <CAD=FV=XRp9=5yxR3Q1UhJhBS-wm59yssozKi55W7HGk+S94AjQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] riscv: add HARDLOCKUP_DETECTOR_PERF support
 To: Yunhui Cui <cuiyunhui@bytedance.com>
 Cc: akpm@linux-foundation.org, alex@ghiti.fr, anup@brainfault.org, 
 	aou@eecs.berkeley.edu, atish.patra@linux.dev, catalin.marinas@arm.com, 
@@ -96,38 +96,12 @@ Hi,
 On Wed, Oct 8, 2025 at 8:29=E2=80=AFPM Yunhui Cui <cuiyunhui@bytedance.com>=
  wrote:
 >
-> Move the contents of arch/arm64/watchdog_hld.c to kernel/watchdog_perf.c
-> to create a generic implementation that can be reused by other arch,
-> such as RISC-V.
+> Enable the HARDLOCKUP_DETECTOR_PERF function based on RISC-V SSE.
 >
 > Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
 > ---
->  arch/arm64/Kconfig               |  2 +
->  arch/arm64/kernel/Makefile       |  1 -
->  arch/arm64/kernel/watchdog_hld.c | 94 --------------------------------
->  drivers/perf/arm_pmu.c           | 10 +++-
->  include/linux/perf/arm_pmu.h     |  2 -
->  kernel/watchdog_perf.c           | 83 ++++++++++++++++++++++++++++
->  lib/Kconfig.debug                |  8 +++
->  7 files changed, 102 insertions(+), 98 deletions(-)
->  delete mode 100644 arch/arm64/kernel/watchdog_hld.c
->
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index b5438ff4772ce..4759e4969c4a6 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -231,6 +231,8 @@ config ARM64
->         select HAVE_GCC_PLUGINS
->         select HAVE_HARDLOCKUP_DETECTOR_PERF if PERF_EVENTS && \
->                 HW_PERF_EVENTS && HAVE_PERF_EVENTS_NMI
-> +       select WATCHDOG_PERF_ADJUST_PERIOD if HARDLOCKUP_DETECTOR_PERF &&=
- \
-> +       CPU_FREQ
-
-nit: the line limit is generally accepted to be ~100 characters now.
-It would be nice not to wrap. If you really need to wrap, indent like
-the wrapping above.
-
-In any case, this seems like a reasonable thing to do to me.
+>  arch/riscv/Kconfig           |  4 ++++
+>  drivers/perf/riscv_pmu_sbi.c | 10 ++++++++++
+>  2 files changed, 14 insertions(+)
 
 Reviewed-by: Douglas Anderson <dianders@chromium.org>
