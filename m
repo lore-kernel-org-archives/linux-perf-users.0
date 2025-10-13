@@ -1,190 +1,181 @@
-Received: from mail-lj1-f196.google.com (mail-lj1-f196.google.com [209.85.208.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F962EB5A1
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 08:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456962F90CE;
+	Mon, 13 Oct 2025 08:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760342894; cv=none; b=EfbmcrGooUr3efNGN1U4v67gzwY6kcSeFg6wlFQij6WxJkePc7gWpFROmvJeJ6ZHCRGDJhu53iS0iwRtd/d+bxRifW8+v4zg81Y3NgYrzvcvPNz9AzV+2pJh0weRgEmL6AltwEtfAzC7gxEKx9y2lran6ti2LZYowSsE2Tv3E1M=
+	t=1760344703; cv=none; b=TD7yJSTXWtJuK34JBBfsm83thGsVTlgkFP6N5JMcM2L7bQYvcfhSZuGrrnJergtQa8uzJypJ8WyNxOPdS/fk/q7EL89beX8I5HF+5Fot0Y+E9Wm0yBkBTdGN4ona8ZTQlKl/yNex3l9DahUVrsDcoOLoX4FKI4axoc4NmqwqZr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760342894; c=relaxed/simple;
-	bh=hxbMiKWHABlxCO+9GLfBy9IZNmOoeNGOwOAu7TFR9YE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=iMFskud6bOliR3bhRoV88d72pcV2TT0zGgpnTw8SUArD34OoN6YDNJC1xvZuiZJJ6Mtwv0SRhXtOXENPS5YLH2yDw3hf8d8sCPUiC9XHerBgxOpmLBYPPQdNP2prlmwQj2vS4/sBK9HIq9YJtCT0SEf6bJOtURPyQNNzhiXE+6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IDKHGhD5; arc=none smtp.client-ip=209.85.208.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1760344703; c=relaxed/simple;
+	bh=26t7Q08DL+2PT4vvqMsKQUPvVz73YGp900Us8qtoeII=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q1jfAkSqnqLls9amXrpSEA6K8WbQIyvUc8T+K+9PNXwLdgpZxHmhWbVOpOl9Y4cx0DUnn6psA8p2L83U0MRKHgQvje4LRADtIxDW8Za+SS4DGPCyLMXv7R8hhXcvpxfrk46Gpt47vijcsi97PyP/x+7uPl+noRppjziNgwVrO2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lkUIJutH; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IDKHGhD5"
-Received: by mail-lj1-f196.google.com with SMTP id 38308e7fff4ca-37634d352dfso26013661fa.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 01:08:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760342891; x=1760947691; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bz2QGidhgo+X/Fpd+rZ1lAEe7FF+RTcu3YPeYbCkLMw=;
-        b=IDKHGhD5RBk86ctzZbtJYCKi+6b01UkELHu8/Merm4de4z674kj8eNlpavEivOhbSr
-         MOSDtJFYj7MlPOb3QAuuN9F5dbR1FhSsh2i2iMc/pmK36gvOZ4rjSHmP9DahtTRXE3Jb
-         DMkQdRn0/13vPojVy0LZmULpGlW3BvmB6IYeO9GCGE9EiW3NAhOjtFP4M/NStG6nyCdQ
-         lilnRDH0RoNSMtJYTQzGKlVwNVLjpm+tLPsxa8MxbdnubQE8n9s0y7MJsQhm2f/4uOcz
-         f7VhICo5rGLDLTVMRaJ/gTvQQBlDT8LmG5QtvpuQ3nk2MHJz/neO3mwrGPxrLscIeNuC
-         xNkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760342891; x=1760947691;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bz2QGidhgo+X/Fpd+rZ1lAEe7FF+RTcu3YPeYbCkLMw=;
-        b=kIntZNY7fonJrupqJ1ZIJSfWuNxg2uXUeiw5JG/D8cKFvitNT1oVJU6B+vPTuxJdv2
-         4Z1fL2dmhr+3fQOobpsUKcD0A9DPMmIc+wku+A+83QRs2ztUMUtsrcNEUK9vlmXdHMBv
-         ohzdNmN8le3rznsAq8Zy7VEsl8RnkD3S5VZyeKZb7Frj1Jl4sE5ueVX+f7C9aDvj6OAr
-         UQ1copvled/fvCt4noULdMN54FxDos19/zCkE3jen66H1nUjFtwMt9Vt6HI9+xHcv/M4
-         u/D9jZqV850gHGZaOxH2VHOrMCSyj+3Y7WJ5QkgkytcJZsRf5xyvcccyeGo21KRC2RK0
-         z7/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWYh4Lpq4vu4kNqg/w1JiWbuc9jC2Spo+bVc3438RwK42wq7y+j/Bnf5DmBYLehFIJ35GLZdaG1woOjaRnoGx7E@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzj+2G7vAtClncgBc8hYD3GClspB+h56UtYmk0hc/ayRaHfsUB9
-	GD1kBiwfZpRRtqzWWKroJQWLe6++mKJ4p13BvybwVFRNPe2d6votb1rHaU+EGaOCSrYLbD/6GfY
-	F9JilnYtqccbs1K+PD6lqZNutb37Qttg=
-X-Gm-Gg: ASbGncu8B19EGNnQPXmOGhpLNVIH/ll0MbcqQuaSJlOKNdnUhl66vn3HDZa5F24uaLE
-	Z+Sru60GP4y11oFAN7MvQmJ8Ehu2RXhdzClQXlvrN5VDRCbySHJS8iyqV0KzLFc2JyfKm6GGRdX
-	ibuygXlCBYsI9LMEhCr/NCVASGSxYOUR3iI2iKKpJt5gjeOOESpUAFbfUF5ykp6NTamKBqg3PbL
-	5NjvOFcd+2OKvr6tqM/F+ktPuwLI/iHINfVqw==
-X-Google-Smtp-Source: AGHT+IEdRH2/twiTxUCsz2FNdqKhR4MJ7K55PctExmYC7IkUC3AAryzqJYOqRlICWr6mCwVYMBZBSQTtXPuwhbKdCl4=
-X-Received: by 2002:a05:651c:2126:b0:372:921b:4b7e with SMTP id
- 38308e7fff4ca-37609e46310mr51245101fa.27.1760342890304; Mon, 13 Oct 2025
- 01:08:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lkUIJutH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760344701; x=1791880701;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=26t7Q08DL+2PT4vvqMsKQUPvVz73YGp900Us8qtoeII=;
+  b=lkUIJutHr9yY0H/ZYB3i2JISsNxIOfPMlTo3lDBpoVCyABBWHo6cmGGx
+   q2JXr2O9kiLGcvJiQiDo/eC0+hNpDW9uohAJN0NRsaO6CA4Mo1A7Z4rgY
+   TM3tpC5rlB2TbohWxmN79GFKSSw4aRor4+1d3Am4bf7zPk1a3icQodqmW
+   +UMR5wFNcMZ4+CLH1TotzznxNSTOkr1HB3i8DbcgWkbAEe1vyeJnk6GPP
+   1iMu5MqgrSdi0RzVMIZUGEDd/QTHqq8Po8XshtanPNHPY48ByaBfssWYE
+   ImPv9PMxp0HuThN94j4STTsiRjZHp33qCfvBgENdwqxD/LfX1vh7vT13q
+   g==;
+X-CSE-ConnectionGUID: DlGtR1eORQWz1VTKepLVpQ==
+X-CSE-MsgGUID: xaivkSxtQtKYH4So7K6qtw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11580"; a="66332243"
+X-IronPort-AV: E=Sophos;i="6.19,225,1754982000"; 
+   d="scan'208";a="66332243"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 01:38:20 -0700
+X-CSE-ConnectionGUID: NM7kJcUdShCh09p123QYuA==
+X-CSE-MsgGUID: 1AgSA781SSGWq/B2gxPzRQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,225,1754982000"; 
+   d="scan'208";a="212172484"
+Received: from unknown (HELO [10.238.2.75]) ([10.238.2.75])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 01:38:18 -0700
+Message-ID: <30c62dee-2219-4b39-94c7-b9cc81130c9e@linux.intel.com>
+Date: Mon, 13 Oct 2025 16:38:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251013080609.2070555-1-hupu.gm@gmail.com>
-In-Reply-To: <20251013080609.2070555-1-hupu.gm@gmail.com>
-From: hupu <hupu.gm@gmail.com>
-Date: Mon, 13 Oct 2025 16:07:58 +0800
-X-Gm-Features: AS18NWDWUG__4MWsbz9WXnhdDbqgwYSwIyPc7H86fNfD4Zzu1kXnX_kRb05Hvug
-Message-ID: <CADHxFxRMUhn=VdG5uzrosTUpwAMHi+zO7NTYVikWzFdnKrUJ4w@mail.gmail.com>
-Subject: Re: [RFC] perf build: Allow passing extra Clang flags via EXTRA_CLANG_FLAGS
-To: namhyung@kernel.org, irogers@google.com, peterz@infradead.org, 
-	mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	nathan@kernel.org, nick.desaulniers+lkml@gmail.com, morbo@google.com, 
-	justinstitt@google.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-
-Hi Maintainer,
-
-I encountered some issues while cross-compiling perf (ARCH=arm64),
-particularly when enabling the BPF option. During the build, Clang
-fails to compile BPF programs due to missing header files. The
-relevant error messages are as follows:
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] bisected: perf: hang when using async-profiler
+ caused by perf: Fix the POLL_HUP delivery breakage
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Octavia Togami <octavia.togami@gmail.com>, stable@vger.kernel.org,
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <CAHPNGSQpXEopYreir+uDDEbtXTBvBvi8c6fYXJvceqtgTPao3Q@mail.gmail.com>
+ <8aed5e69-57b1-4a01-b90c-56402eb27b37@linux.intel.com>
+ <20251013080531.GJ3245006@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20251013080531.GJ3245006@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
----------------------------------------
-/usr/bin/ld: skipping incompatible
-/home/hupu/work/tools/crosstool-ng/output/aarch64-dumpstack-linux-gnu/bin/../aarch64-dumpstack-linux-gnu/sysroot/usr/lib/aarch64-linux-gnu/libzstd.a
-when searching for -lzstd
-/usr/bin/ld: skipping incompatible
-/home/hupu/work/tools/crosstool-ng/output/aarch64-dumpstack-linux-gnu/bin/../aarch64-dumpstack-linux-gnu/sysroot/usr/lib/libc.a
-when searching for -lc
-/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-dso_dlfcn.o):
-in function `dlfcn_globallookup':
-(.text+0x1f): warning: Using 'dlopen' in statically linked
-applications requires at runtime the shared libraries from the glibc
-version used for linking
-/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-bio_addr.o):
-in function `BIO_lookup_ex':
-(.text+0xdbc): warning: Using 'getaddrinfo' in statically linked
-applications requires at runtime the shared libraries from the glibc
-version used for linking
-/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/libcrypto.a(libcrypto-lib-bio_sock.o):
-in function `BIO_gethostbyname':
-(.text+0x85): warning: Using 'gethostbyname' in statically linked
-applications requires at runtime the shared libraries from the glibc
-version used for linking
-  CLANG   /home/hupu/work/code/explore/output/build-mainline/tools/perf/util/bpf_skel/.tmp/bpf_prog_profiler.bpf.o
-  CLANG   /home/hupu/work/code/explore/output/build-mainline/tools/perf/util/bpf_skel/.tmp/bperf_leader.bpf.o
-  CLANG   /home/hupu/work/code/explore/output/build-mainline/tools/perf/util/bpf_skel/.tmp/bperf_follower.bpf.o
-  CLANG   /home/hupu/work/code/explore/output/build-mainline/tools/perf/util/bpf_skel/.tmp/bperf_cgroup.bpf.o
-In file included from <built-in>:2:
-In file included from ./util/bpf_skel/perf_version.h:6:
-In file included from <built-in>:2:
-In file included from ./util/bpf_skel/perf_version.h:6:
-In file included from
-/home/hupu/work/code/explore/output/build-mainline/tools/perf/util/bpf_skel/.tmp/../vmlinux.h:7:
-In file included from
-/home/hupu/work/code/explore/linux-mainline/tools/include/uapi/linux/perf_event.h:19:
-/usr/include/linux/ioctl.h:5:10: fatal error: 'asm/ioctl.h' file not found
-    In file included from
-/home/hupu/work/code/explore/output/build-mainline/tools/perf/util/bpf_skel/.tmp/../vmlinux.h:5
-| #include <asm/ioctl.h>
-      |          ^~~~~~~~~~~~~
-7:
-In file included from
-/home/hupu/work/code/explore/linux-mainline/tools/include/uapi/linux/perf_event.h:19:
-In file included from <built-in>:2:
-In file included from ./util/bpf_skel/perf_version.h:6:
-In file included from
-/home/hupu/work/code/explore/output/build-mainline/tools/perf/util/bpf_skel/.tmp/../vmlinux.h:7:
-In file included from
-/home/hupu/work/code/explore/linux-mainline/tools/include/uapi/linux/perf_event.h:19:
-/usr/include/linux/ioctl.h:5:10: fatal error: 'asm/ioctl.h' file not found
-    5 | #include <asm/ioctl.h>
-      |          ^~~~~~~~~~~~~
-/usr/include/linux/ioctl.h:5:10: fatal error: 'asm/ioctl.h' file not found
-    5 | #include <asm/ioctl.h>
-      |          ^~~~~~~~~~~~~
-1 error generated.
-make[3]: *** [Makefile.perf:1259:
-/home/hupu/work/code/explore/output/build-mainline/tools/perf/util/bpf_skel/.tmp/bperf_leader.bpf.o]
-Error 1
-make[3]: *** Waiting for unfinished jobs....
-In file included from <built-in>:2:
-In file included from ./util/bpf_skel/perf_version.h:6:
-In file included from
-/home/hupu/work/code/explore/output/build-mainline/tools/perf/util/bpf_skel/.tmp/../vmlinux.h:7:
-In file included from
-/home/hupu/work/code/explore/linux-mainline/tools/include/uapi/linux/perf_event.h:19:
-/usr/include/linux/ioctl.h:5:10: fatal error: 'asm/ioctl.h' file not found
-    5 | #include <asm/ioctl.h>
-      |          ^~~~~~~~~~~~~
-1 error generated.
-make[3]: *** [Makefile.perf:1259:
-/home/hupu/work/code/explore/output/build-mainline/tools/perf/util/bpf_skel/.tmp/bperf_cgroup.bpf.o]
-Error 1
-1 error generated.
-1 error generated.
-make[3]: *** [Makefile.perf:1259:
-/home/hupu/work/code/explore/output/build-mainline/tools/perf/util/bpf_skel/.tmp/bpf_prog_profiler.bpf.o]
-Error 1
-make[3]: *** [Makefile.perf:1259:
-/home/hupu/work/code/explore/output/build-mainline/tools/perf/util/bpf_skel/.tmp/bperf_follower.bpf.o]
-Error 1
-make[2]: *** [Makefile.perf:289: sub-make] Error 2
-make[1]: *** [Makefile:76: all] Error 2
-make: *** [Makefile:93: perf] Error 2
----------------------------------------
+On 10/13/2025 4:05 PM, Peter Zijlstra wrote:
+> On Mon, Oct 13, 2025 at 10:34:27AM +0800, Mi, Dapeng wrote:
+>
+>> It looks the issue described in the link
+>> (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.intel.com/T/#u)
+>> happens again but in a different way. :(
+>>
+>> As the commit message above link described,  cpu-clock (and task-clock) is
+>> a specific SW event which rely on hrtimer. The hrtimer handler calls
+>> __perf_event_overflow() and then event_stop (cpu_clock_event_stop()) and
+>> eventually call hrtimer_cancel() which traps into a dead loop which waits
+>> for the calling hrtimer handler finishes.
+>>
+>> As the
+>> change (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.intel.com/T/#u),
+>> it should be enough to just disable the event and don't need an extra event
+>> stop.
+>>
+>> @Octavia, could you please check if the change below can fix this issue?
+>> Thanks.
+>>
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 7541f6f85fcb..883b0e1fa5d3 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -10343,7 +10343,20 @@ static int __perf_event_overflow(struct perf_event
+>> *event,
+>>                 ret = 1;
+>>                 event->pending_kill = POLL_HUP;
+>>                 perf_event_disable_inatomic(event);
+>> -               event->pmu->stop(event, 0);
+>> +
+>> +               /*
+>> +                * The cpu-clock and task-clock are two special SW events,
+>> +                * which rely on the hrtimer. The __perf_event_overflow()
+>> +                * is invoked from the hrtimer handler for these 2 events.
+>> +                * Avoid to call event_stop()->hrtimer_cancel() for these
+>> +                * 2 events since hrtimer_cancel() waits for the hrtimer
+>> +                * handler to finish, which would trigger a deadlock.
+>> +                * Only disabling the events is enough to stop the hrtimer.
+>> +                * See perf_swevent_cancel_hrtimer().
+>> +                */
+>> +               if (event->attr.config != PERF_COUNT_SW_CPU_CLOCK &&
+>> +                   event->attr.config != PERF_COUNT_SW_TASK_CLOCK)
+>> +                       event->pmu->stop(event, 0);
+> This is broken though; you cannot test config without first knowing
+> which PMU you're dealing with.
+
+Ah, yes. Just ignore this.
 
 
-This happens because the eBPF part of perf is compiled with Clang,
-which by default searches only the host /usr/include/ paths for
-headers, not the cross-compilation sysroot. As a result, it cannot
-find the ARM64-specific asm/ioctl.h.
+>
+> Also, that timer really should get stopped, we can't know for certain
+> this overflow is of the timer itself or not, it could be a related
+> event.
+>
+> Something like the below might do -- but please carefully consider the
+> cases where hrtimer_try_to_cancel() might fail; in those cases we'll
+> have set HES_STOPPED and the hrtimer callback *SHOULD* observe this and
+> NORESTART.
+>
+> But I didn't check all the details.
 
-To address this issue, I wrote a patch that introduces a new make
-variable, EXTRA_CLANG_FLAGS. This allows passing custom Clang options
-via the command line during the BPF skeleton build, for example
---sysroot or custom include paths, without modifying Makefile.perf
-itself.
+The only reason that hrtimer_try_to_cancel() could fail is that the hrtimer
+callback is currently executing, so current change should be fine. 
 
-Example usage:
-  EXTRA_CLANG_FLAGS="--sysroot=$SYSROOT"
-  make perf ARCH=arm64 EXTRA_CLANG_FLAGS="$EXTRA_CLANG_FLAGS"
 
-I have tested this approach and it works. However, I am not sure if
-this is the optimal solution, so I would like to discuss this further
-with you and get your feedback.
+>
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 820127536e62..a91481d57841 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -11756,7 +11756,8 @@ static enum hrtimer_restart perf_swevent_hrtimer(struct hrtimer *hrtimer)
+>  
+>  	event = container_of(hrtimer, struct perf_event, hw.hrtimer);
+>  
+> -	if (event->state != PERF_EVENT_STATE_ACTIVE)
+> +	if (event->state != PERF_EVENT_STATE_ACTIVE ||
+> +	    event->hw.state & PERF_HES_STOPPED)
+>  		return HRTIMER_NORESTART;
+>  
+>  	event->pmu->read(event);
+> @@ -11810,7 +11811,7 @@ static void perf_swevent_cancel_hrtimer(struct perf_event *event)
+>  		ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
+>  		local64_set(&hwc->period_left, ktime_to_ns(remaining));
+>  
+> -		hrtimer_cancel(&hwc->hrtimer);
+> +		hrtimer_try_to_cancel(&hwc->hrtimer);
+>  	}
+>  }
+>  
+> @@ -11854,12 +11855,14 @@ static void cpu_clock_event_update(struct perf_event *event)
+>  
+>  static void cpu_clock_event_start(struct perf_event *event, int flags)
+>  {
+> +	event->hw.state = 0;
+>  	local64_set(&event->hw.prev_count, local_clock());
+>  	perf_swevent_start_hrtimer(event);
+>  }
+>  
+>  static void cpu_clock_event_stop(struct perf_event *event, int flags)
+>  {
+> +	event->hw.state = PERF_HES_STOPPED;
+>  	perf_swevent_cancel_hrtimer(event);
+>  	if (flags & PERF_EF_UPDATE)
+>  		cpu_clock_event_update(event);
 
-Thanks,
-hupu
+Besides cpu-clock, task-clock should need similar change as well. I would
+post a complete change later. 
+
+
