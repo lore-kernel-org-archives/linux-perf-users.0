@@ -1,30 +1,32 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CE027FD52
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 17:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554EB2C15BF
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 17:48:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760377690; cv=none; b=U1t79aNaANkIEn5PbCtMNChpjXVX5nGUpVQ+H5uyWKH3j1OSp/a7t0a+Q5OL/M79cHz6oDgCTjLVVLs/1phzwQ/f2hCuyB29eEinvI64DU7ZGFGJhUesYHq/d/3ak03hYhnPPxyPmm3O5ZMZGmFod8lErguXunvaj0aglXvdu1E=
+	t=1760377701; cv=none; b=PNS6ozL6bfKuhtiCBJtyo9BPZjj1KhJ1gznwfXRR4avxHuc+DlGY3meSTDnNXwG0m51brTWp/NhRJDRxiZH6wUGTUI577SHVqycb9nMnWSUzkTJ49qwO1JxMLZO1WhsCpqjWZKVVlYNgp8bdFUTWo3lc2uHMKu6jTkTjX4os0Xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760377690; c=relaxed/simple;
-	bh=Fz2Z0NVg/DpxS1jweNIyZgePAu4cm4J9w/NK89KwvTo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PRRWTICq29A6VVEX5u9zC09BQJ3G2mAKvv+uzM2Ggx9F9rd5+GyB/fpCIBHN9i9rOVX+AOr9faWgXQDE8b8rjkX12ktm9G2Q4sQl3un+Kkr5XPVyqc4qjYJyXtk3Di2vQMj9vnO/xSf1/V2ZqUHI34aZjfk0Q9ZGK7pwBF3E+dQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VxzJxKIC; arc=none smtp.client-ip=91.218.175.179
+	s=arc-20240116; t=1760377701; c=relaxed/simple;
+	bh=U0voQM2oYnf6STeO6/rk9aLxKnrO1RiaTGJ/8zUau1w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Aa8e2fOf136ir/BuUh9jcXeR4iori7nEfY9g4uuQiIeri40wZ3C2fPrtRI61ISk8RVPkkMJfrxrHe1xnAkC6W6Q88HDYYViiHfBE1KQs6XOLMsW+Y+NXDm8PpAzPqqwrkrmQMzeowN++mNQBVo8LO/D3Jqi3xdhdBUAaqHA3nGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dqog44Hl; arc=none smtp.client-ip=91.218.175.186
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VxzJxKIC"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dqog44Hl"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1760377675;
+	t=1760377696;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=dQog++Z4DABPXGobwnLJdN42FYEo1zhiAYhURAKlFOI=;
-	b=VxzJxKICuu2V++rKVk+ZLlHlcziBjDWagVThwUkaCtfBN/Y7aJ0ivBFRXpZz05k6xpy8c5
-	xR4H4gPdQuOcUUiTsAeWifhnn4AV1wthnL304+12V5T7qzviNz329dKXh4BjsI7Q4e5pZd
-	keogQh+6AEcYloTIOsY1Y3ZrscMkOnk=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GFSgpLJ9oy5bTPXjycAjjR+uiZnaDlBjDtnbne3KHWA=;
+	b=dqog44HlD/xi4SmzgPayoGAyNglOXEbXHUVvDjSrKnNlF3zG9OY+/PnBjRu+tI5R08bv9L
+	9qo8QWSiIBxn8QVr5br7rI2wp/EfK/WDxBe87TvPgk/V9vehAAux3m0Izgp2PxAQJgot8B
+	Aw2WZP8/zaM7h7tp6DhqHswK/xTC768=
 From: Tao Chen <chen.dylane@linux.dev>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -51,9 +53,11 @@ Cc: linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	bpf@vger.kernel.org,
 	Tao Chen <chen.dylane@linux.dev>
-Subject: [PATCH bpf-next RFC 0/2] Pass external callchain entry to get_perf_callchain
-Date: Tue, 14 Oct 2025 01:47:19 +0800
-Message-ID: <20251013174721.2681091-1-chen.dylane@linux.dev>
+Subject: [PATCH bpf-next RFC 1/2] perf: Use extern perf_callchain_entry for get_perf_callchain
+Date: Tue, 14 Oct 2025 01:47:20 +0800
+Message-ID: <20251013174721.2681091-2-chen.dylane@linux.dev>
+In-Reply-To: <20251013174721.2681091-1-chen.dylane@linux.dev>
+References: <20251013174721.2681091-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -63,44 +67,109 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Background
-==========
-Alexei noted we should use preempt_disable to protect get_perf_callchain
-in bpf stackmap.
-https://lore.kernel.org/bpf/CAADnVQ+s8B7-fvR1TNO-bniSyKv57cH_ihRszmZV7pQDyV=VDQ@mail.gmail.com
+From bpf stack map, we want to use our own buffers to avoid unnecessary copy,
+so let us pass it directly.
 
-A previous patch was submitted to attempt fixing this issue. And Andrii
-suggested teach get_perf_callchain to let us pass that buffer directly to
-avoid that unnecessary copy.
-https://lore.kernel.org/bpf/20250926153952.1661146-1-chen.dylane@linux.dev
-
-Proposed Solution
-=================
-Add external perf_callchain_entry parameter for get_perf_callchain to
-allow us to use external buffer from BPF side. The biggest advantage is
-that it can reduce unnecessary copies.
-
-Todo
-====
-If the above changes are reasonable, it seems that get_callchain_entry_for_task
-could also use an external perf_callchain_entry.
-
-But I'm not sure if this modification is appropriate. After all, the
-implementation of get_callchain_entry in the perf subsystem seems much more
-complex than directly using an external buffer.
-
-Comments and suggestions are always welcome.
-
-Tao Chen (2):
-  perf: Use extern perf_callchain_entry for get_perf_callchain
-  bpf: Pass external callchain entry to get_perf_callchain
-
+Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+---
  include/linux/perf_event.h |  5 +++--
- kernel/bpf/stackmap.c      | 19 +++++++++++--------
+ kernel/bpf/stackmap.c      |  4 ++--
  kernel/events/callchain.c  | 18 ++++++++++++------
  kernel/events/core.c       |  2 +-
- 4 files changed, 27 insertions(+), 17 deletions(-)
+ 4 files changed, 18 insertions(+), 11 deletions(-)
 
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index ec9d9602568..ca69ad2723c 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1719,8 +1719,9 @@ DECLARE_PER_CPU(struct perf_callchain_entry, perf_callchain_entry);
+ extern void perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs);
+ extern void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs);
+ extern struct perf_callchain_entry *
+-get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
+-		   u32 max_stack, bool crosstask, bool add_mark);
++get_perf_callchain(struct pt_regs *regs, struct perf_callchain_entry *external_entry,
++		   u32 init_nr, bool kernel, bool user, u32 max_stack, bool crosstask,
++		   bool add_mark);
+ extern int get_callchain_buffers(int max_stack);
+ extern void put_callchain_buffers(void);
+ extern struct perf_callchain_entry *get_callchain_entry(int *rctx);
+diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+index 2e182a3ac4c..e6e40f22826 100644
+--- a/kernel/bpf/stackmap.c
++++ b/kernel/bpf/stackmap.c
+@@ -314,7 +314,7 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
+ 	if (max_depth > sysctl_perf_event_max_stack)
+ 		max_depth = sysctl_perf_event_max_stack;
+ 
+-	trace = get_perf_callchain(regs, 0, kernel, user, max_depth,
++	trace = get_perf_callchain(regs, NULL, 0, kernel, user, max_depth,
+ 				   false, false);
+ 
+ 	if (unlikely(!trace))
+@@ -451,7 +451,7 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
+ 	else if (kernel && task)
+ 		trace = get_callchain_entry_for_task(task, max_depth);
+ 	else
+-		trace = get_perf_callchain(regs, 0, kernel, user, max_depth,
++		trace = get_perf_callchain(regs, NULL, 0, kernel, user, max_depth,
+ 					   crosstask, false);
+ 
+ 	if (unlikely(!trace) || trace->nr < skip) {
+diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+index 6c83ad674d0..fe5d2d58deb 100644
+--- a/kernel/events/callchain.c
++++ b/kernel/events/callchain.c
+@@ -217,16 +217,21 @@ static void fixup_uretprobe_trampoline_entries(struct perf_callchain_entry *entr
+ }
+ 
+ struct perf_callchain_entry *
+-get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
+-		   u32 max_stack, bool crosstask, bool add_mark)
++get_perf_callchain(struct pt_regs *regs, struct perf_callchain_entry *external_entry,
++		   u32 init_nr, bool kernel, bool user, u32 max_stack, bool crosstask,
++		   bool add_mark)
+ {
+ 	struct perf_callchain_entry *entry;
+ 	struct perf_callchain_entry_ctx ctx;
+ 	int rctx, start_entry_idx;
+ 
+-	entry = get_callchain_entry(&rctx);
+-	if (!entry)
+-		return NULL;
++	if (external_entry) {
++		entry = external_entry;
++	} else {
++		entry = get_callchain_entry(&rctx);
++		if (!entry)
++			return NULL;
++	}
+ 
+ 	ctx.entry     = entry;
+ 	ctx.max_stack = max_stack;
+@@ -262,7 +267,8 @@ get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool user,
+ 	}
+ 
+ exit_put:
+-	put_callchain_entry(rctx);
++	if (!external_entry)
++		put_callchain_entry(rctx);
+ 
+ 	return entry;
+ }
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 1d354778dcd..08ce44db18f 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -8204,7 +8204,7 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
+ 	if (!kernel && !user)
+ 		return &__empty_callchain;
+ 
+-	callchain = get_perf_callchain(regs, 0, kernel, user,
++	callchain = get_perf_callchain(regs, NULL, 0, kernel, user,
+ 				       max_stack, crosstask, true);
+ 	return callchain ?: &__empty_callchain;
+ }
 -- 
 2.48.1
 
