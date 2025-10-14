@@ -1,166 +1,144 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E963309F0C
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Oct 2025 03:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB73726E6F2
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Oct 2025 05:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760411713; cv=none; b=JNES9Xso52SQvs6izO0noWNosVa8OWxinbKp//ONGcMiCQhM7BbE5mPFPw0w72s38m7oU/dZD6MkfOZlgHwdDvRyz44wsibuxmHJJwms9rx1YLEWdHd09Z647/a0R4mNvrq6Dt0s/fzisO+394te8sl2B6iQ59pVhMOuW5QIAJc=
+	t=1760420234; cv=none; b=PIQHzgfpTOcQfMpKWhKIyfcl+O9EHH/77b9gpeJN1rdmpAMbCu0RYcPlafggs/255uOB46AQudBUg3Axl16myMtbjCnl+9ta/Sc1Da+KL02WpuD+32iFbsugspNH3OPYIN/rsDNnR/+gPUvKOFoPR+ukxP3XmSXP1e1O5FJ4hTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760411713; c=relaxed/simple;
-	bh=OsVZTQ1MyiSKr3/7iUE60rxwcYFEmk0jXWEJNuaWHSU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MWGG+p1d7Ug1fNhKkQxAR9fRV27bPX7WLltTjkNI6BtmtXgvJ53Xp66Q9vT8aeXAEesSPVH01feOZo9BmDIwXxteknTCfWO8w0Zov7sUhdphfUCbIyVBaX6aw4r2wvcoAkHtGGRCHD+UljQKgBeAu7mcHbsy1My/2kdU+y7Gv3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Xx0hOixa; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1760420234; c=relaxed/simple;
+	bh=x6f619sWjWn8VzR+PJyJZc3YLAUI5y2rgeIbQboasNY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fkNOSnJCOVp81leMuWdII9LUigoqb+yseagOZTg+ar2nGfW5PW+HATGgpy6xl/DTl9qh0TvxBcrAxo0fFtXASIfbtU5j2p2T50iN98VN5HDO2qaC7cB5sNST2e+Gj0Lqy5+p2h44yGpnihDo6f+qK4PxQZv2G7W2mFvvXNAH+V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=P+cxWsPr; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Xx0hOixa"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b550a522a49so3989127a12.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 20:15:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1760411711; x=1761016511; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6P8xZEQeIO5H4AzeXprUKU3oEf9nN+exJfE8nbRaRqY=;
-        b=Xx0hOixavcFeu6tPsgTydMQDUVjaGTL+jFou2oMet9/laxKUBHnzvZP/kKfzbK+OKX
-         5z/B5S7TWtUnysMNccO2p1Y7TA+GbrfyOppkxdNhv2s/mHbH6RiR1aFDcIf9Gv3ZOq4Z
-         GufDcxHH9e6Dna9WlgBHLM73h5uNLKqoVQtHS73q2LDqcXqsRspsvvfMXbTsVym6zEpT
-         DXDECAHmsM+wv/CzIm4R1kEZYwGBfMySFqmMVjGdCM6ZK66Kh5VXy+xem78m+wKjG/Vo
-         zvunj+ZEGI7vxq8cb3ll7luThcIdkTyArY3YGmcjpUcByVz69GycfkH5M9hilYAP6o6j
-         +bzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760411711; x=1761016511;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6P8xZEQeIO5H4AzeXprUKU3oEf9nN+exJfE8nbRaRqY=;
-        b=vO+YG3hBPtiDRIQKxdZloNrQRRErk9VdWEChNUrEPglcguscMErw7BBrsqgMai++8A
-         VDzg4fiZI5Wbpbbpp+uIayFRj4V+K3YvD4R6l4x1ba/E0ssZcC5Fk+CxglU84Xj5/kac
-         sKfTTBxjJ8XMrUcHi8owYKQLUnqmj4hq/S84nosGfkuM0/qmpe1zjv2buOo/0/9y/SWm
-         hCdLUyOyTEIVc4SIZ+zTOVE06K5Fdh6enQapFKH/f3yXQlumDcdWL0wshnAxcBthPFPe
-         B2xlsGihJLvUPnIGWuNEYiT97BVesvTAMiUBryZlqCMhk5QdDE6Beu15hK1Eht2y6R9j
-         +4Tw==
-X-Forwarded-Encrypted: i=1; AJvYcCWwaT1WJvpTULqs1efgXy2EfJPD8dVRV8HE+mtTdiGMryZ+0rAUHAht2/SxjBTu8oet/RCDK0mH6K4xAv+RQjHJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3xIot5ebUxdgBB/1xwCthO+vZ8Rnd1iCoDM4s51Hb5alWOhmr
-	j9UDknlieHznUm5IK0HGk69sJZ4bRZXjW9uj4Ta4YwPcLRld61oCmN6kITSV9LSh2dA=
-X-Gm-Gg: ASbGnctJP0H8ya5CfCoYxC4J03a0YfwULuh3s6TLKBTlYD3WqEpCw/EInuq+IDZQdeo
-	M8r355IE3tOnG7bn/y5YtmkGGunS+Y4EyoGIZ7nzgo0AQrrZkmI9skSR6hg0NjFV5ruI2BrVpY8
-	ggNMOTs04lQ8YyX8U92ZgjNy/1759qp02tCK2aDRseZ/IB/pShgP7/Abi9RroSxhNF2lNKkeCpQ
-	BaXvn3fdVEJtcdMOyQWUTchpnb3C/HYkx9sIYwDK1xzCFf7avQaE5+Ar2BFJGKhHiLRoRlu/Ccr
-	SrYUmDRqlfT15xj7wP2JS4yYmhCdLfXI57zURHzXPhaQRL4Ms0n/qX6xA1620GpUpIEjmwZZxqx
-	kreeTEiVEk4e+eL7pcJHhD3wUdiGrDBQt3bVGcdh9308k1rNOTnNVQasCiujLi1QWWuG0r0PfVp
-	tW/Oq7tJK1SJqMF4IY/krm0itFVc4=
-X-Google-Smtp-Source: AGHT+IEnhbhgD5wvfXgKIYQpP+Lfyce302o3Owp60kynW6BbE9VY04c0yKjSZIvlB5ornO/n4cUtAg==
-X-Received: by 2002:a17:902:ef07:b0:269:82a5:fa19 with SMTP id d9443c01a7336-290272e3adcmr281603745ad.45.1760411710696;
-        Mon, 13 Oct 2025 20:15:10 -0700 (PDT)
-Received: from L6YN4KR4K9.bytedance.net ([139.177.225.226])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29034f3de4asm148315845ad.92.2025.10.13.20.15.00
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 13 Oct 2025 20:15:10 -0700 (PDT)
-From: Yunhui Cui <cuiyunhui@bytedance.com>
-To: akpm@linux-foundation.org,
-	alex@ghiti.fr,
-	anup@brainfault.org,
-	aou@eecs.berkeley.edu,
-	atish.patra@linux.dev,
-	catalin.marinas@arm.com,
-	cuiyunhui@bytedance.com,
-	dianders@chromium.org,
-	johannes@sipsolutions.net,
-	lihuafei1@huawei.com,
-	mark.rutland@arm.com,
-	masahiroy@kernel.org,
-	maz@kernel.org,
-	mingo@kernel.org,
-	nicolas.schier@linux.dev,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	suzuki.poulose@arm.com,
-	thorsten.blum@linux.dev,
-	wangjinchao600@gmail.com,
-	will@kernel.org,
-	yangyicong@hisilicon.com,
-	zhanjie9@hisilicon.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Cc: Paul Walmsley <pjw@kernel.org>
-Subject: [PATCH v4 2/2] riscv: add HARDLOCKUP_DETECTOR_PERF support
-Date: Tue, 14 Oct 2025 11:14:25 +0800
-Message-Id: <20251014031425.93284-3-cuiyunhui@bytedance.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
-In-Reply-To: <20251014031425.93284-1-cuiyunhui@bytedance.com>
-References: <20251014031425.93284-1-cuiyunhui@bytedance.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="P+cxWsPr"
+Message-ID: <cb3b054b-3c21-4941-800c-4519cae9ce31@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1760420215;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B1m+mNsKlXTM+cfL7n8n0pJBlEVyu9KaA8E5Nvi8xzQ=;
+	b=P+cxWsPrR4uWAHtXtXn+Bi9cCf33CTn6ApZExfCCLB+HQpWVnEV7yH6SO2m5PpIoKrp6a2
+	+qMZ0VxHsgFVJNVuwkqdFXjjLVSmeLukXKSIkBpoNzjLGcox7HYE9TG3+j5/UO2s/0Ryo0
+	baWxsb3QfXHLseF5VDnx8l5os/2u4Q8=
+Date: Tue, 14 Oct 2025 13:36:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH bpf-next RFC 0/2] Pass external callchain entry to
+ get_perf_callchain
+To: Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <olsajiri@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, song@kernel.org,
+ ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, john.fastabend@gmail.com,
+ kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
+References: <20251013174721.2681091-1-chen.dylane@linux.dev>
+ <aO1j747N7pkBTBAb@krava> <3cf98c31-4475-4e4a-8ce0-bc9c62922313@linux.dev>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Tao Chen <chen.dylane@linux.dev>
+In-Reply-To: <3cf98c31-4475-4e4a-8ce0-bc9c62922313@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Enable the HARDLOCKUP_DETECTOR_PERF function based on RISC-V SSE.
+在 2025/10/14 05:37, Yonghong Song 写道:
+> 
+> 
+> On 10/13/25 1:41 PM, Jiri Olsa wrote:
+>> On Tue, Oct 14, 2025 at 01:47:19AM +0800, Tao Chen wrote:
+>>> Background
+>>> ==========
+>>> Alexei noted we should use preempt_disable to protect get_perf_callchain
+>>> in bpf stackmap.
+>>> https://lore.kernel.org/bpf/CAADnVQ+s8B7-fvR1TNO- 
+>>> bniSyKv57cH_ihRszmZV7pQDyV=VDQ@mail.gmail.com
+>>>
+>>> A previous patch was submitted to attempt fixing this issue. And Andrii
+>>> suggested teach get_perf_callchain to let us pass that buffer 
+>>> directly to
+>>> avoid that unnecessary copy.
+>>> https://lore.kernel.org/bpf/20250926153952.1661146-1- 
+>>> chen.dylane@linux.dev
+>>>
+>>> Proposed Solution
+>>> =================
+>>> Add external perf_callchain_entry parameter for get_perf_callchain to
+>>> allow us to use external buffer from BPF side. The biggest advantage is
+>>> that it can reduce unnecessary copies.
+>>>
+>>> Todo
+>>> ====
+>>> If the above changes are reasonable, it seems that 
+>>> get_callchain_entry_for_task
+>>> could also use an external perf_callchain_entry.
+>>>
+>>> But I'm not sure if this modification is appropriate. After all, the
+>>> implementation of get_callchain_entry in the perf subsystem seems 
+>>> much more
+>>> complex than directly using an external buffer.
+>>>
+>>> Comments and suggestions are always welcome.
+>>>
+>>> Tao Chen (2):
+>>>    perf: Use extern perf_callchain_entry for get_perf_callchain
+>>>    bpf: Pass external callchain entry to get_perf_callchain
+>> hi,
+>> I can't get this applied on bpf-next/master, what do I miss?
+> 
+> This path is not based on top of latest bpf/bpf-next tree.
+> The current diff:
+> 
+>   struct perf_callchain_entry *
+> -get_perf_callchain(struct pt_regs *regs, u32 init_nr, bool kernel, bool 
+> user,
+> -           u32 max_stack, bool crosstask, bool add_mark)
+> +get_perf_callchain(struct pt_regs *regs, struct perf_callchain_entry 
+> *external_entry,
+> +           u32 init_nr, bool kernel, bool user, u32 max_stack, bool 
+> crosstask,
+> +           bool add_mark)
+>   {
+> 
+> The actual signature in kernel/events/callchain.c
+> 
+> struct perf_callchain_entry *
+> get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+>                     u32 max_stack, bool crosstask, bool add_mark)
+> {
+> 
+> 
+>>
+>> thanks,
+>> jirka
+>>
+>>
+>>>   include/linux/perf_event.h |  5 +++--
+>>>   kernel/bpf/stackmap.c      | 19 +++++++++++--------
+>>>   kernel/events/callchain.c  | 18 ++++++++++++------
+>>>   kernel/events/core.c       |  2 +-
+>>>   4 files changed, 27 insertions(+), 17 deletions(-)
+>>>
+>>> -- 
+>>> 2.48.1
+>>>
+> 
 
-Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Paul Walmsley <pjw@kernel.org>
----
- arch/riscv/Kconfig           |  3 +++
- drivers/perf/riscv_pmu_sbi.c | 10 ++++++++++
- 2 files changed, 13 insertions(+)
+My mistake. I’ll update the code and resend it.
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index badbb2b366946..0ae3291b303f9 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -186,6 +186,9 @@ config RISCV
- 	select HAVE_PAGE_SIZE_4KB
- 	select HAVE_PCI
- 	select HAVE_PERF_EVENTS
-+	select HAVE_PERF_EVENTS_NMI if RISCV_PMU_SBI_SSE
-+	select HAVE_HARDLOCKUP_DETECTOR_PERF if PERF_EVENTS && HAVE_PERF_EVENTS_NMI
-+	select WATCHDOG_PERF_ADJUST_PERIOD if HARDLOCKUP_DETECTOR_PERF && CPU_FREQ
- 	select HAVE_PERF_REGS
- 	select HAVE_PERF_USER_STACK_DUMP
- 	select HAVE_POSIX_CPU_TIMERS_TASK_WORK
-diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-index c852f64a50221..0c7c5924687c9 100644
---- a/drivers/perf/riscv_pmu_sbi.c
-+++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -22,6 +22,7 @@
- #include <linux/sched/clock.h>
- #include <linux/soc/andes/irq.h>
- #include <linux/workqueue.h>
-+#include <linux/nmi.h>
- 
- #include <asm/errata_list.h>
- #include <asm/sbi.h>
-@@ -1192,6 +1193,13 @@ static int pmu_sbi_setup_sse(struct riscv_pmu *pmu)
- }
- #endif
- 
-+#ifdef CONFIG_HARDLOCKUP_DETECTOR_PERF
-+bool arch_perf_nmi_is_available(void)
-+{
-+	return IS_ENABLED(CONFIG_RISCV_PMU_SBI_SSE);
-+}
-+#endif
-+
- static int pmu_sbi_starting_cpu(unsigned int cpu, struct hlist_node *node)
- {
- 	struct riscv_pmu *pmu = hlist_entry_safe(node, struct riscv_pmu, node);
-@@ -1618,6 +1626,8 @@ static int __init pmu_sbi_devinit(void)
- 	/* Notify legacy implementation that SBI pmu is available*/
- 	riscv_pmu_legacy_skip_init();
- 
-+	lockup_detector_retry_init();
-+
- 	return ret;
- }
- device_initcall(pmu_sbi_devinit)
 -- 
-2.39.5
-
+Best Regards
+Tao Chen
