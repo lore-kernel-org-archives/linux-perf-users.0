@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E52B3148B5;
-	Tue, 14 Oct 2025 14:05:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851EB314B85;
+	Tue, 14 Oct 2025 14:06:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760450720; cv=none; b=szJLrm+eoQTlDWicup9VnXcYqxYPn6u8gtwgN5piBhBvnWMwUNbIk7EsAbYV5BjZ6XYjDWCIpRZkqQiNu9U308WNsYvwBllubHQEd/dO5PMtoptNXkzGD70o+8tauVI+JSS4d9n5ivYuB+RNG3kE3VmlDISmfvwIw03eaktNXVo=
+	t=1760450783; cv=none; b=B+gsfZcR1kRLD1Av/233y6oh89QkD713mvU+Zm0Rfue4JKquKSYStqlbxyMSjLHv9d5ln29SnQQoSqjx7Qz0Thj4BNcTr92Fd9MSu5sKKiqJr6maJuZo3p+Re6JFBMhjhosu8J7ymk8bIJjo7JxTHull2c/CNl1jBS7surKa2c0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760450720; c=relaxed/simple;
-	bh=2MfDvynREwOPKM2rSXg1NAtdptV1OWDgLGMaa+9JWbs=;
+	s=arc-20240116; t=1760450783; c=relaxed/simple;
+	bh=wR2HX3Ov24o2Od5ZUKmuoqwoAIH2OIztzSM45ZrhFAs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BlP0vsx8d3hADzC4dyd6n1R2WKMbLvIdw6UA/aWsysqtTY12jJLQBt6MlfUw8mzTqBMz3Y49lXOVq2MfwpoyP04YcYBWdf36W0vBzytigRW49mSRUmkpo3DBHhDtkQaLtH2IBJcQzzvJMXojCO1h8mukfVhOnYmsRFEhuHgmwp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BevzrwrO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=M3VOb08hK9/5Djfj/ss6fjovgJCIMb4i85A3IKXbVGvv1B8434vpXDWlmreqya4WnENkQnLRHzg8JJCHcyAtBU0ZUUNKYfeZgFCFnAmsPMsVc4p6pW1iujpnAM/IA0KA8m4aVhPtaAOhBZI5kSOFALpSNx2a86cRtFZ5F4uHU9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UQKbDPrI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BevzrwrO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E81FC113D0;
-	Tue, 14 Oct 2025 14:05:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UQKbDPrI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90EE0C4CEE7;
+	Tue, 14 Oct 2025 14:06:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760450719;
-	bh=2MfDvynREwOPKM2rSXg1NAtdptV1OWDgLGMaa+9JWbs=;
+	s=k20201202; t=1760450783;
+	bh=wR2HX3Ov24o2Od5ZUKmuoqwoAIH2OIztzSM45ZrhFAs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BevzrwrOQioWYVZF5T/75LuuuIr+AfiWWVqd4Z8EfMLhkapb7llyBwpNJOeWy1G/P
-	 8K5Ub0w25pdyL3XDdHbegrce59cX7pTymL0V7MWkXrHt1V6pqwcDc2rG5lHl8qmuEl
-	 o1OikTQRctmEU/dyH8PUP9T87gjbwFdrZbq+G9HY0IihOTEl29tshY1wt9nZES989U
-	 8i2QHMCyDN8xWcEA1S6dOl1hE33w9SgECVXZJsWq6ZeEKLhdPie3wr9RP5F27QnWVK
-	 uEd8gd89k5Ehf2eAGsy3wWtmFCKWQa10JliN1rLuYRuc5C+edkJefVroYV3J1zMcFf
-	 Z8R58vjX5f9Ew==
-Date: Tue, 14 Oct 2025 23:05:14 +0900
+	b=UQKbDPrIEpj3FXKC8fC26WCSgLUH3q36UBwoxThdeX+fMv+cTvrzHfATJkOiAkENU
+	 ww7M26Fa9tjs29A5e9j3zktCvReb6jBqP40eEslCofUrRm8//dR/8d++y7nQgVryqw
+	 U48/MTkICO95v1amm9Pa5oBRqQlXBdSOiji+pW7dsxo56NHzkVxkn64DDounEjGhYU
+	 J6NqfSVyIzF3CPSvEaSan+TX6v7h4roH7OKfscqWMc9uA757VFmd4FYk23egsJpLQj
+	 tBeCssEx94sOAJJbL5V+qoE7eL7pGkR1HHwKzedC6QrxcFigBA5esGQwbdi9LVMMDM
+	 nHsG0at31lvMA==
+Date: Tue, 14 Oct 2025 23:06:12 +0900
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -34,17 +34,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v2] perf build python: Don't leave a.out file when
- building with clang
-Message-ID: <aO5YmjYdSjlpGzjV@google.com>
-References: <20251007153835.3578633-1-irogers@google.com>
+	Tengda Wu <wutengda@huaweicloud.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] perf bpf_counter: Fix opening of "any"(-1) CPU events
+Message-ID: <aO5Y1PSs_KOuuy32@google.com>
+References: <20251009132912.141116-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,19 +47,20 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251007153835.3578633-1-irogers@google.com>
+In-Reply-To: <20251009132912.141116-1-irogers@google.com>
 
-On Tue, Oct 07, 2025 at 08:38:35AM -0700, Ian Rogers wrote:
-> Testing clang features doesn't specify a "-o" option so an a.out file
-> is created and left in the make directory (not the output). Fix this
-> by specifying a "-o" of "/dev/null". Reorganize the code a little to
-> help with readability.
+On Thu, Oct 09, 2025 at 06:29:11AM -0700, Ian Rogers wrote:
+> The bperf BPF counter code doesn't handle "any"(-1) CPU events, always
+> wanting to aggregate a count against a CPU, which avoids the need for
+> atomics so let's not change that. Force evsels used for BPF counters
+> to require a CPU when not in system-wide mode so that the "any"(-1)
+> value isn't used during map propagation and evsel's CPU map matches
+> that of the PMU.
 > 
+> Fixes: b91917c0c6fa ("perf bpf_counter: Fix handling of cpumap fixing hybrid")
 > Signed-off-by: Ian Rogers <irogers@google.com>
-> Tested-by: Justin Stitt <justinstitt@google.com>
 
 Applied to perf-tools-next, thanks!
 
 Best regards,
 Namhyung
-
