@@ -1,110 +1,112 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF75630FC3E;
-	Tue, 14 Oct 2025 08:38:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40B9A1EEA5F
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Oct 2025 10:02:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760431091; cv=none; b=HUtnbetgoOF0TH43L2bO6dwMs0yWeJr2N7CBElti/lsmwQXrSoONAbCMnDCYy9K/G3hxuXZXFOvyXao7ZcjZfLBrhaWwfprDTMdLpVfxcDYbLTR0yS4PVVkXb5DEee3U1hiSyuwLXZcRFQi5vyYwTwpyLdLORCgWE10Ub+gKfoA=
+	t=1760436123; cv=none; b=Ffu6tjdSLWbMkjHlwqdMimZxGhIJWbXFRVHI5cwYRgoD5Pn2oKtb5hgdA075OA5CMLyaYWWlWuSsSglGz6pm/nX85Y++kXapSaJkjm32biV4ajRu185cwPGfg2EVjCFJUh6hb+N9zw/GfgnSK9Ony6exLPqtvBU1LN5RKUG5rKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760431091; c=relaxed/simple;
-	bh=xFxTZk9k8z1ceBZfTEHBte/M5l6HENgtLC2nPfTfCBg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a49Y9pIysn9ClIk/PGzjOfCXID5/xeropoYp7dVWUri+7uflx9yeVnLLsuJi0zcuPbzQm0/TOYonglsAitqXqfLqYkCTH8xcFe4cwIOmoZw55Sr76zB5cU3zUnwVp/+4+V8xzG33AFRZayCUs6bI2vP6tNTboLj+Ya6hZ+PlJjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=M3rH3JTA; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1760436123; c=relaxed/simple;
+	bh=//nKyMjQT/XUVl4ap1KlpQMlW3dQCozDjSt4HbI99YU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=trjSKrpY+yp0KWDmVYvlukKLg1S+c/mFxUKP8fWBAgfB8Tt8C88RkYDa0c9VuUl9otcgpvaRdwBZCkLaCEuzgqYTDuJ/KyW09UZqPzxE02hdLCS8YjptQqLio71sSl9VymF61f+2+M2bde2lGLaZtcHOWw3CjBIJMaVm7IZlt8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vF3gWFMA; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M3rH3JTA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=teelVvdHnPXhmeC0lPG5a8S5FoS735QXhS6EymF1m+s=; b=M3rH3JTAn+2Q8+raj9gahfIn1l
-	3hnHsRuGMSmqmi2R7nBl1IuhQItDEyWXRsSlymaygn5upUYJ3sT63/GF9CYS0ZkZ2XUlMyqSTripQ
-	L/ZQ/5LbOOPJMTPPB7r+rAOuu9YcYAPgEKHOzXKoqa4HKgcYuCcJ4+uilkNvfjEfEsfJBMs89cs3P
-	w39TknT3PBmvlZGRf8MGUWsWklPP5jgL24UZ4ayH+M7RZg1cFixqdExuOlN3T7Spr9x88zZzUI7Za
-	X50CnPRdUDd2QKK/M+45LfCIeXdRnlNMn/5oGERxdZyOTZft3a16hDB6uEO9yNg1kDqBP4LMv29ZM
-	lQ/M4AGw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1v8aXV-000000052l3-1yVI;
-	Tue, 14 Oct 2025 08:37:49 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E42FE300212; Tue, 14 Oct 2025 10:37:48 +0200 (CEST)
-Date: Tue, 14 Oct 2025 10:37:48 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: George Kennedy <george.kennedy@oracle.com>
-Cc: ravi.bangoria@amd.com, harshit.m.mogalapalli@oracle.com,
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, tglx@linutronix.de, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dongli.zhang@oracle.com, stable@vger.kernel.org
-Subject: Re: [PATCH] [PATCH v3] perf/x86/amd: check event before enable to
- avoid GPF
-Message-ID: <20251014083748.GP3245006@noisy.programming.kicks-ass.net>
-References: <1728392453-18658-1-git-send-email-george.kennedy@oracle.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vF3gWFMA"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1760436109;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=sbDoAjrS2xAf/gutlRdmjLlBlDoaX2SKsgUsS0O9aH0=;
+	b=vF3gWFMAiQfPe6tldLH2jPEuTzyo9XPBip1DGJPnV0xLBgGR3vXUggKZTeYpUzfNx1jFlH
+	GfqzaR0EqenXw1C66Jdnwrb2v1dPgrcUfU6co1XGPKJbRkcMGrOjBduFCmrzA49vIQa5As
+	EX1tBTO3LR8UoqsLAQdQYX+3d7lzOds=
+From: Tao Chen <chen.dylane@linux.dev>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	song@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	Tao Chen <chen.dylane@linux.dev>
+Subject: [RFC PATCH bpf-next v2 0/2] Pass external callchain entry to get_perf_callchain
+Date: Tue, 14 Oct 2025 18:01:26 +0800
+Message-ID: <20251014100128.2721104-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1728392453-18658-1-git-send-email-george.kennedy@oracle.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Oct 08, 2024 at 08:00:53AM -0500, George Kennedy wrote:
-> On AMD machines cpuc->events[idx] can become NULL in a subtle race
-> condition with NMI->throttle->x86_pmu_stop().
-> 
-> Check event for NULL in amd_pmu_enable_all() before enable to avoid a GPF.
-> This appears to be an AMD only issue.
-> 
-> Syzkaller reported a GPF in amd_pmu_enable_all.
-> 
-> INFO: NMI handler (perf_event_nmi_handler) took too long to run: 13.143
->     msecs
-> Oops: general protection fault, probably for non-canonical address
->     0xdffffc0000000034: 0000  PREEMPT SMP KASAN NOPTI
-> KASAN: null-ptr-deref in range [0x00000000000001a0-0x00000000000001a7]
-> CPU: 0 UID: 0 PID: 328415 Comm: repro_36674776 Not tainted 6.12.0-rc1-syzk
-> RIP: 0010:x86_pmu_enable_event (arch/x86/events/perf_event.h:1195
->     arch/x86/events/core.c:1430)
-> RSP: 0018:ffff888118009d60 EFLAGS: 00010012
-> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
-> RDX: 0000000000000034 RSI: 0000000000000000 RDI: 00000000000001a0
-> RBP: 0000000000000001 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000002
-> R13: ffff88811802a440 R14: ffff88811802a240 R15: ffff8881132d8601
-> FS:  00007f097dfaa700(0000) GS:ffff888118000000(0000) GS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00000000200001c0 CR3: 0000000103d56000 CR4: 00000000000006f0
-> Call Trace:
->  <IRQ>
-> amd_pmu_enable_all (arch/x86/events/amd/core.c:760 (discriminator 2))
-> x86_pmu_enable (arch/x86/events/core.c:1360)
-> event_sched_out (kernel/events/core.c:1191 kernel/events/core.c:1186
->     kernel/events/core.c:2346)
-> __perf_remove_from_context (kernel/events/core.c:2435)
-> event_function (kernel/events/core.c:259)
-> remote_function (kernel/events/core.c:92 (discriminator 1)
->     kernel/events/core.c:72 (discriminator 1))
-> __flush_smp_call_function_queue (./arch/x86/include/asm/jump_label.h:27
->     ./include/linux/jump_label.h:207 ./include/trace/events/csd.h:64
->     kernel/smp.c:135 kernel/smp.c:540)
-> __sysvec_call_function_single (./arch/x86/include/asm/jump_label.h:27
->     ./include/linux/jump_label.h:207
->     ./arch/x86/include/asm/trace/irq_vectors.h:99 arch/x86/kernel/smp.c:272)
-> sysvec_call_function_single (arch/x86/kernel/smp.c:266 (discriminator 47)
->     arch/x86/kernel/smp.c:266 (discriminator 47))
->  </IRQ>
-> 
-> Reported-by: syzkaller <syzkaller@googlegroups.com>
-> Signed-off-by: George Kennedy <george.kennedy@oracle.com>
-> ---
+Background
+==========
+Alexei noted we should use preempt_disable to protect get_perf_callchain
+in bpf stackmap.
+https://lore.kernel.org/bpf/CAADnVQ+s8B7-fvR1TNO-bniSyKv57cH_ihRszmZV7pQDyV=VDQ@mail.gmail.com
 
-Without a Fixes tag it goes into perf/core.
+A previous patch was submitted to attempt fixing this issue. And Andrii
+suggested teach get_perf_callchain to let us pass that buffer directly to
+avoid that unnecessary copy.
+https://lore.kernel.org/bpf/20250926153952.1661146-1-chen.dylane@linux.dev
+
+Proposed Solution
+=================
+Add external perf_callchain_entry parameter for get_perf_callchain to
+allow us to use external buffer from BPF side. The biggest advantage is
+that it can reduce unnecessary copies.
+
+Todo
+====
+If the above changes are reasonable, it seems that get_callchain_entry_for_task
+could also use an external perf_callchain_entry.
+
+But I'm not sure if this modification is appropriate. After all, the
+implementation of get_callchain_entry in the perf subsystem seems much more
+complex than directly using an external buffer.
+
+Comments and suggestions are always welcome.
+
+Change list:
+ - v1 -> v2
+   From Jiri
+   - rebase code, fix confict
+ - v1: https://lore.kernel.org/bpf/20251013174721.2681091-1-chen.dylane@linux.dev
+
+Tao Chen (2):
+  perf: Use extern perf_callchain_entry for get_perf_callchain
+  bpf: Pass external callchain entry to get_perf_callchain
+
+ include/linux/perf_event.h |  4 ++--
+ kernel/bpf/stackmap.c      | 19 +++++++++++--------
+ kernel/events/callchain.c  | 13 +++++++++----
+ kernel/events/core.c       |  2 +-
+ 4 files changed, 23 insertions(+), 15 deletions(-)
+
+-- 
+2.48.1
+
