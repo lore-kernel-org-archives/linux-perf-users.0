@@ -1,64 +1,64 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9412FD1B7
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Oct 2025 03:15:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E963309F0C
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Oct 2025 03:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760411702; cv=none; b=Afw+65M0GYhHgI7DlCTMzJI7Jl/7sl+FKNs2RqfEGRicNf0TgmjOqEovzOetv0mY39JMyX/AfvkBFgj0Vw4YAjf7jbDjFk3kTbp1VbAAs4RVnz/vyJYQjQdz9osnj3qzcgZH0QU4EoteksCjGaHEbzIoWazGwClTy8L3N3rY5Ro=
+	t=1760411713; cv=none; b=JNES9Xso52SQvs6izO0noWNosVa8OWxinbKp//ONGcMiCQhM7BbE5mPFPw0w72s38m7oU/dZD6MkfOZlgHwdDvRyz44wsibuxmHJJwms9rx1YLEWdHd09Z647/a0R4mNvrq6Dt0s/fzisO+394te8sl2B6iQ59pVhMOuW5QIAJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760411702; c=relaxed/simple;
-	bh=V9FM7Tg9n3f4d7CYo7NE9JJpV4txYTiyYxsaaJYPrfc=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=s5I3O+1HsqsY5lE8EhyPr8XnyAb3cV1MmbT9r1CEuMQ09TIIlMuuGNvPKB+GsIMRSTN1ZrBAQZcI8m5xguxq/4GSe7a4PajUBQ065mDCdmisYAhNwrwg7sd3E6/m/VDFmSuWMe/KaL4Ul0/mPEPEV+/ctbhZC64dIP5ZMp47YFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=YzF/wxSs; arc=none smtp.client-ip=209.85.215.179
+	s=arc-20240116; t=1760411713; c=relaxed/simple;
+	bh=OsVZTQ1MyiSKr3/7iUE60rxwcYFEmk0jXWEJNuaWHSU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=MWGG+p1d7Ug1fNhKkQxAR9fRV27bPX7WLltTjkNI6BtmtXgvJ53Xp66Q9vT8aeXAEesSPVH01feOZo9BmDIwXxteknTCfWO8w0Zov7sUhdphfUCbIyVBaX6aw4r2wvcoAkHtGGRCHD+UljQKgBeAu7mcHbsy1My/2kdU+y7Gv3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Xx0hOixa; arc=none smtp.client-ip=209.85.215.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="YzF/wxSs"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b55517e74e3so5334157a12.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 20:15:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Xx0hOixa"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b550a522a49so3989127a12.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Oct 2025 20:15:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1760411700; x=1761016500; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1760411711; x=1761016511; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=U0CkwtYJ00kWUx1+j2pAoMdQDJBRSeEDCDOjkRoM+EY=;
-        b=YzF/wxSsmh9ibOrVNAqQnfxvElm0Qvtnm/1Hrc6iaiHCNbZIaOUXOpai8DUa/heczM
-         snvSo72iBSwYbrnjlZO6CvGcqoeIij3EWAwo8hDM6HShjrwccGYp1azw1lHe6kz75DaH
-         GFHV6MfFeSMXX+kLpnJFC7P9izTdAv7U+aSRHD2c9A9rrMd3eLKp34ad8LN304p8h1B9
-         ksbAV6HWQBlGIPlmGhV/JmhMS6+acfN6QORkVDzASA8xqaCPIohUKIvnqxBNS33JAvDk
-         tCBoI6ong1besMUqqea9J+0g5GaPmBjc5WNLb4z7GkvnYjEiN46kLrFoQ4SPNPHbFMHy
-         5vsw==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6P8xZEQeIO5H4AzeXprUKU3oEf9nN+exJfE8nbRaRqY=;
+        b=Xx0hOixavcFeu6tPsgTydMQDUVjaGTL+jFou2oMet9/laxKUBHnzvZP/kKfzbK+OKX
+         5z/B5S7TWtUnysMNccO2p1Y7TA+GbrfyOppkxdNhv2s/mHbH6RiR1aFDcIf9Gv3ZOq4Z
+         GufDcxHH9e6Dna9WlgBHLM73h5uNLKqoVQtHS73q2LDqcXqsRspsvvfMXbTsVym6zEpT
+         DXDECAHmsM+wv/CzIm4R1kEZYwGBfMySFqmMVjGdCM6ZK66Kh5VXy+xem78m+wKjG/Vo
+         zvunj+ZEGI7vxq8cb3ll7luThcIdkTyArY3YGmcjpUcByVz69GycfkH5M9hilYAP6o6j
+         +bzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760411700; x=1761016500;
+        d=1e100.net; s=20230601; t=1760411711; x=1761016511;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=U0CkwtYJ00kWUx1+j2pAoMdQDJBRSeEDCDOjkRoM+EY=;
-        b=dzOdUrd6bXzECIc3ESXyJ/IWCexSuYo2Z8n80bOWTQFAoudbw2wPMb9tALCX7LjWh/
-         O0J5sCksTO+dIqovF2SdjnZI1XE6nfGjcmjvDHu/Mf3SYIbWBCwVAETho9GTM4uyZem8
-         /IT0FepyNzkzuPe/YEzMdZjdnL+2pWKIFxXOJKPdeqlLW+DAYmfSVQ/EKsSDt7cZTHvJ
-         WRuQaIDnNyvgywDb6r5LmlOCmgzavpYUSsFy/6Qba1Jd1FmRoul5fsS0JwV/V1XQiYPq
-         UT5TxKI/9JFmFOdpetIHDcw1RJpfxVsjAy1AQ2fMmgi/lHtEaVWK+yHl8AZkeBxgvaVF
-         GY0g==
-X-Forwarded-Encrypted: i=1; AJvYcCVTtynssjHaRQ+QtEOC2vObFH8sq6XSnMTlLqPJyW8j0frkhjagdXwr47RVtZ1xJ2hiqWYU4ExyGP9YRtpFbXdF@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLVaeKb5LpH8nNhoyk+LoSUpc2Ob2FVz2z8pivttYOJI1U40oT
-	Vx7fKolUQuUFu4guxrA8M7QPLVnwwUnqlbkyEctrXJTN/quizIJkEsXsqW7Kd+wQNro=
-X-Gm-Gg: ASbGncsUOzlnB7SrkAwjdVeJozWHLo2KPIMYfRf3Psr6spYkUF09n9cXoDC8hPAWQ2y
-	HH2Nll4hj1OPfHDUH7dIqZP2TO08y2rBix1CY9QQQpNQglojxBnOXUKTCyC4+i/8QzanCmQ+HIF
-	z6MZRaTCtJC05H0+srtAMBBXnx1Ms7vgqivpuHPY5kkX/mtmi0DjoaZkGzm5xF/xXtyB+4sC8MS
-	j5fSs0sCEkkk83lvDpGOWYYGRLUkOb71IpyueWK3ecBo/V9srqq/Z8JIF8Kb8ibi1wZMgwUZWP8
-	VKoJw87oSFuIwZIF0IPF+0jHae2F9KkjAAzPHXHbrt1zdf3Wbm2G1zS5Itrse43cxYsx+/noUvi
-	4fAcYUKAxiVN/6JRZi7eJbYdUlc1hexOvqVzXyIWuLDtB9908YU/nRrlRDxCUs730yZ6wAuQbvm
-	wDHrHgIce8siHUfLbn
-X-Google-Smtp-Source: AGHT+IHuXcrJrrIrjll72fsxv4RHpCBmdn7Yx1Z4GmzqoA4/59E8YLw53tmhFZ/k1k4idVPxjl767A==
-X-Received: by 2002:a17:903:94e:b0:290:55d5:41dd with SMTP id d9443c01a7336-29055d5427dmr141146545ad.5.1760411700144;
-        Mon, 13 Oct 2025 20:15:00 -0700 (PDT)
+        bh=6P8xZEQeIO5H4AzeXprUKU3oEf9nN+exJfE8nbRaRqY=;
+        b=vO+YG3hBPtiDRIQKxdZloNrQRRErk9VdWEChNUrEPglcguscMErw7BBrsqgMai++8A
+         VDzg4fiZI5Wbpbbpp+uIayFRj4V+K3YvD4R6l4x1ba/E0ssZcC5Fk+CxglU84Xj5/kac
+         sKfTTBxjJ8XMrUcHi8owYKQLUnqmj4hq/S84nosGfkuM0/qmpe1zjv2buOo/0/9y/SWm
+         hCdLUyOyTEIVc4SIZ+zTOVE06K5Fdh6enQapFKH/f3yXQlumDcdWL0wshnAxcBthPFPe
+         B2xlsGihJLvUPnIGWuNEYiT97BVesvTAMiUBryZlqCMhk5QdDE6Beu15hK1Eht2y6R9j
+         +4Tw==
+X-Forwarded-Encrypted: i=1; AJvYcCWwaT1WJvpTULqs1efgXy2EfJPD8dVRV8HE+mtTdiGMryZ+0rAUHAht2/SxjBTu8oet/RCDK0mH6K4xAv+RQjHJ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3xIot5ebUxdgBB/1xwCthO+vZ8Rnd1iCoDM4s51Hb5alWOhmr
+	j9UDknlieHznUm5IK0HGk69sJZ4bRZXjW9uj4Ta4YwPcLRld61oCmN6kITSV9LSh2dA=
+X-Gm-Gg: ASbGnctJP0H8ya5CfCoYxC4J03a0YfwULuh3s6TLKBTlYD3WqEpCw/EInuq+IDZQdeo
+	M8r355IE3tOnG7bn/y5YtmkGGunS+Y4EyoGIZ7nzgo0AQrrZkmI9skSR6hg0NjFV5ruI2BrVpY8
+	ggNMOTs04lQ8YyX8U92ZgjNy/1759qp02tCK2aDRseZ/IB/pShgP7/Abi9RroSxhNF2lNKkeCpQ
+	BaXvn3fdVEJtcdMOyQWUTchpnb3C/HYkx9sIYwDK1xzCFf7avQaE5+Ar2BFJGKhHiLRoRlu/Ccr
+	SrYUmDRqlfT15xj7wP2JS4yYmhCdLfXI57zURHzXPhaQRL4Ms0n/qX6xA1620GpUpIEjmwZZxqx
+	kreeTEiVEk4e+eL7pcJHhD3wUdiGrDBQt3bVGcdh9308k1rNOTnNVQasCiujLi1QWWuG0r0PfVp
+	tW/Oq7tJK1SJqMF4IY/krm0itFVc4=
+X-Google-Smtp-Source: AGHT+IEnhbhgD5wvfXgKIYQpP+Lfyce302o3Owp60kynW6BbE9VY04c0yKjSZIvlB5ornO/n4cUtAg==
+X-Received: by 2002:a17:902:ef07:b0:269:82a5:fa19 with SMTP id d9443c01a7336-290272e3adcmr281603745ad.45.1760411710696;
+        Mon, 13 Oct 2025 20:15:10 -0700 (PDT)
 Received: from L6YN4KR4K9.bytedance.net ([139.177.225.226])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29034f3de4asm148315845ad.92.2025.10.13.20.14.50
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29034f3de4asm148315845ad.92.2025.10.13.20.15.00
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 13 Oct 2025 20:14:59 -0700 (PDT)
+        Mon, 13 Oct 2025 20:15:10 -0700 (PDT)
 From: Yunhui Cui <cuiyunhui@bytedance.com>
 To: akpm@linux-foundation.org,
 	alex@ghiti.fr,
@@ -87,9 +87,10 @@ To: akpm@linux-foundation.org,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: [PATCH v4 1/2] watchdog: move arm64 watchdog_hld into common code
-Date: Tue, 14 Oct 2025 11:14:24 +0800
-Message-Id: <20251014031425.93284-2-cuiyunhui@bytedance.com>
+Cc: Paul Walmsley <pjw@kernel.org>
+Subject: [PATCH v4 2/2] riscv: add HARDLOCKUP_DETECTOR_PERF support
+Date: Tue, 14 Oct 2025 11:14:25 +0800
+Message-Id: <20251014031425.93284-3-cuiyunhui@bytedance.com>
 X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 In-Reply-To: <20251014031425.93284-1-cuiyunhui@bytedance.com>
 References: <20251014031425.93284-1-cuiyunhui@bytedance.com>
@@ -101,308 +102,65 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move the contents of arch/arm64/watchdog_hld.c to kernel/watchdog_perf.c
-to create a generic implementation that can be reused by other arch,
-such as RISC-V.
+Enable the HARDLOCKUP_DETECTOR_PERF function based on RISC-V SSE.
 
 Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
 Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Acked-by: Paul Walmsley <pjw@kernel.org>
 ---
- arch/arm64/Kconfig               |  1 +
- arch/arm64/kernel/Makefile       |  1 -
- arch/arm64/kernel/watchdog_hld.c | 94 --------------------------------
- drivers/perf/arm_pmu.c           | 10 +++-
- include/linux/perf/arm_pmu.h     |  2 -
- kernel/watchdog_perf.c           | 83 ++++++++++++++++++++++++++++
- lib/Kconfig.debug                |  8 +++
- 7 files changed, 101 insertions(+), 98 deletions(-)
- delete mode 100644 arch/arm64/kernel/watchdog_hld.c
+ arch/riscv/Kconfig           |  3 +++
+ drivers/perf/riscv_pmu_sbi.c | 10 ++++++++++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index b5438ff4772ce..33072adc88332 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -231,6 +231,7 @@ config ARM64
- 	select HAVE_GCC_PLUGINS
- 	select HAVE_HARDLOCKUP_DETECTOR_PERF if PERF_EVENTS && \
- 		HW_PERF_EVENTS && HAVE_PERF_EVENTS_NMI
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index badbb2b366946..0ae3291b303f9 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -186,6 +186,9 @@ config RISCV
+ 	select HAVE_PAGE_SIZE_4KB
+ 	select HAVE_PCI
+ 	select HAVE_PERF_EVENTS
++	select HAVE_PERF_EVENTS_NMI if RISCV_PMU_SBI_SSE
++	select HAVE_HARDLOCKUP_DETECTOR_PERF if PERF_EVENTS && HAVE_PERF_EVENTS_NMI
 +	select WATCHDOG_PERF_ADJUST_PERIOD if HARDLOCKUP_DETECTOR_PERF && CPU_FREQ
- 	select HAVE_HW_BREAKPOINT if PERF_EVENTS
- 	select HAVE_IOREMAP_PROT
- 	select HAVE_IRQ_TIME_ACCOUNTING
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index 76f32e424065e..12d77f373fea4 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -44,7 +44,6 @@ obj-$(CONFIG_KUSER_HELPERS)		+= kuser32.o
- obj-$(CONFIG_FUNCTION_TRACER)		+= ftrace.o entry-ftrace.o
- obj-$(CONFIG_MODULES)			+= module.o module-plts.o
- obj-$(CONFIG_PERF_EVENTS)		+= perf_regs.o perf_callchain.o
--obj-$(CONFIG_HARDLOCKUP_DETECTOR_PERF)	+= watchdog_hld.o
- obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
- obj-$(CONFIG_CPU_PM)			+= sleep.o suspend.o
- obj-$(CONFIG_KGDB)			+= kgdb.o
-diff --git a/arch/arm64/kernel/watchdog_hld.c b/arch/arm64/kernel/watchdog_hld.c
-deleted file mode 100644
-index 3093037dcb7be..0000000000000
---- a/arch/arm64/kernel/watchdog_hld.c
-+++ /dev/null
-@@ -1,94 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <linux/nmi.h>
--#include <linux/cpufreq.h>
--#include <linux/perf/arm_pmu.h>
--
--/*
-- * Safe maximum CPU frequency in case a particular platform doesn't implement
-- * cpufreq driver. Although, architecture doesn't put any restrictions on
-- * maximum frequency but 5 GHz seems to be safe maximum given the available
-- * Arm CPUs in the market which are clocked much less than 5 GHz. On the other
-- * hand, we can't make it much higher as it would lead to a large hard-lockup
-- * detection timeout on parts which are running slower (eg. 1GHz on
-- * Developerbox) and doesn't possess a cpufreq driver.
-- */
--#define SAFE_MAX_CPU_FREQ	5000000000UL // 5 GHz
--u64 hw_nmi_get_sample_period(int watchdog_thresh)
--{
--	unsigned int cpu = smp_processor_id();
--	unsigned long max_cpu_freq;
--
--	max_cpu_freq = cpufreq_get_hw_max_freq(cpu) * 1000UL;
--	if (!max_cpu_freq)
--		max_cpu_freq = SAFE_MAX_CPU_FREQ;
--
--	return (u64)max_cpu_freq * watchdog_thresh;
--}
--
--bool __init arch_perf_nmi_is_available(void)
--{
--	/*
--	 * hardlockup_detector_perf_init() will success even if Pseudo-NMI turns off,
--	 * however, the pmu interrupts will act like a normal interrupt instead of
--	 * NMI and the hardlockup detector would be broken.
--	 */
--	return arm_pmu_irq_is_nmi();
--}
--
--static int watchdog_perf_update_period(void *data)
--{
--	int cpu = smp_processor_id();
--	u64 max_cpu_freq, new_period;
--
--	max_cpu_freq = cpufreq_get_hw_max_freq(cpu) * 1000UL;
--	if (!max_cpu_freq)
--		return 0;
--
--	new_period = watchdog_thresh * max_cpu_freq;
--	hardlockup_detector_perf_adjust_period(new_period);
--
--	return 0;
--}
--
--static int watchdog_freq_notifier_callback(struct notifier_block *nb,
--					   unsigned long val, void *data)
--{
--	struct cpufreq_policy *policy = data;
--	int cpu;
--
--	if (val != CPUFREQ_CREATE_POLICY)
--		return NOTIFY_DONE;
--
--	/*
--	 * Let each online CPU related to the policy update the period by their
--	 * own. This will serialize with the framework on start/stop the lockup
--	 * detector (softlockup_{start,stop}_all) and avoid potential race
--	 * condition. Otherwise we may have below theoretical race condition:
--	 * (core 0/1 share the same policy)
--	 * [core 0]                      [core 1]
--	 *                               hardlockup_detector_event_create()
--	 *                                 hw_nmi_get_sample_period()
--	 * (cpufreq registered, notifier callback invoked)
--	 * watchdog_freq_notifier_callback()
--	 *   watchdog_perf_update_period()
--	 *   (since core 1's event's not yet created,
--	 *    the period is not set)
--	 *                                 perf_event_create_kernel_counter()
--	 *                                 (event's period is SAFE_MAX_CPU_FREQ)
--	 */
--	for_each_cpu(cpu, policy->cpus)
--		smp_call_on_cpu(cpu, watchdog_perf_update_period, NULL, false);
--
--	return NOTIFY_DONE;
--}
--
--static struct notifier_block watchdog_freq_notifier = {
--	.notifier_call = watchdog_freq_notifier_callback,
--};
--
--static int __init init_watchdog_freq_notifier(void)
--{
--	return cpufreq_register_notifier(&watchdog_freq_notifier,
--					 CPUFREQ_POLICY_NOTIFIER);
--}
--core_initcall(init_watchdog_freq_notifier);
-diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index 5c310e803dd78..ca4e1d07b61cb 100644
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -17,6 +17,7 @@
- #include <linux/cpu_pm.h>
- #include <linux/export.h>
- #include <linux/kernel.h>
-+#include <linux/nmi.h>
- #include <linux/perf/arm_pmu.h>
- #include <linux/slab.h>
+ 	select HAVE_PERF_REGS
+ 	select HAVE_PERF_USER_STACK_DUMP
+ 	select HAVE_POSIX_CPU_TIMERS_TASK_WORK
+diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+index c852f64a50221..0c7c5924687c9 100644
+--- a/drivers/perf/riscv_pmu_sbi.c
++++ b/drivers/perf/riscv_pmu_sbi.c
+@@ -22,6 +22,7 @@
  #include <linux/sched/clock.h>
-@@ -696,10 +697,17 @@ static int armpmu_get_cpu_irq(struct arm_pmu *pmu, int cpu)
- 	return per_cpu(hw_events->irq, cpu);
- }
+ #include <linux/soc/andes/irq.h>
+ #include <linux/workqueue.h>
++#include <linux/nmi.h>
  
--bool arm_pmu_irq_is_nmi(void)
-+#ifdef CONFIG_HARDLOCKUP_DETECTOR_PERF
-+bool arch_perf_nmi_is_available(void)
- {
-+	/*
-+	 * watchdog_hardlockup_probe() will success even if Pseudo-NMI turns off,
-+	 * however, the pmu interrupts will act like a normal interrupt instead of
-+	 * NMI and the hardlockup detector would be broken.
-+	 */
- 	return has_nmi;
+ #include <asm/errata_list.h>
+ #include <asm/sbi.h>
+@@ -1192,6 +1193,13 @@ static int pmu_sbi_setup_sse(struct riscv_pmu *pmu)
  }
-+#endif
- 
- /*
-  * PMU hardware loses all context when a CPU goes offline.
-diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-index 93c9a26492fcf..6b53fb453fd63 100644
---- a/include/linux/perf/arm_pmu.h
-+++ b/include/linux/perf/arm_pmu.h
-@@ -184,8 +184,6 @@ void kvm_host_pmu_init(struct arm_pmu *pmu);
- #define kvm_host_pmu_init(x)	do { } while(0)
  #endif
  
--bool arm_pmu_irq_is_nmi(void);
--
- /* Internal functions only for core arm_pmu code */
- struct arm_pmu *armpmu_alloc(void);
- void armpmu_free(struct arm_pmu *pmu);
-diff --git a/kernel/watchdog_perf.c b/kernel/watchdog_perf.c
-index d3ca70e3c256a..a61e35fc9673e 100644
---- a/kernel/watchdog_perf.c
-+++ b/kernel/watchdog_perf.c
-@@ -15,6 +15,7 @@
- #include <linux/panic.h>
- #include <linux/nmi.h>
- #include <linux/atomic.h>
-+#include <linux/cpufreq.h>
- #include <linux/module.h>
- #include <linux/sched/debug.h>
- 
-@@ -306,3 +307,85 @@ void __init hardlockup_config_perf_event(const char *str)
- 	wd_hw_attr.type = PERF_TYPE_RAW;
- 	wd_hw_attr.config = config;
- }
-+
-+#ifdef CONFIG_WATCHDOG_PERF_ADJUST_PERIOD
-+/*
-+ * Safe maximum CPU frequency in case a particular platform doesn't implement
-+ * cpufreq driver. Although, architecture doesn't put any restrictions on
-+ * maximum frequency but 5 GHz seems to be safe maximum given the available
-+ * CPUs in the market which are clocked much less than 5 GHz. On the other
-+ * hand, we can't make it much higher as it would lead to a large hard-lockup
-+ * detection timeout on parts which are running slower (eg. 1GHz on
-+ * Developerbox) and doesn't possess a cpufreq driver.
-+ */
-+#define SAFE_MAX_CPU_FREQ	5000000000UL // 5 GHz
-+__weak u64 hw_nmi_get_sample_period(int watchdog_thresh)
++#ifdef CONFIG_HARDLOCKUP_DETECTOR_PERF
++bool arch_perf_nmi_is_available(void)
 +{
-+	unsigned int cpu = smp_processor_id();
-+	unsigned long max_cpu_freq;
-+
-+	max_cpu_freq = cpufreq_get_hw_max_freq(cpu) * 1000UL;
-+	if (!max_cpu_freq)
-+		max_cpu_freq = SAFE_MAX_CPU_FREQ;
-+
-+	return (u64)max_cpu_freq * watchdog_thresh;
++	return IS_ENABLED(CONFIG_RISCV_PMU_SBI_SSE);
 +}
-+
-+static int watchdog_perf_update_period(void *data)
-+{
-+	int cpu = smp_processor_id();
-+	u64 max_cpu_freq, new_period;
-+
-+	max_cpu_freq = cpufreq_get_hw_max_freq(cpu) * 1000UL;
-+	if (!max_cpu_freq)
-+		return 0;
-+
-+	new_period = watchdog_thresh * max_cpu_freq;
-+	hardlockup_detector_perf_adjust_period(new_period);
-+
-+	return 0;
-+}
-+
-+static int watchdog_freq_notifier_callback(struct notifier_block *nb,
-+					   unsigned long val, void *data)
-+{
-+	struct cpufreq_policy *policy = data;
-+	int cpu;
-+
-+	if (val != CPUFREQ_CREATE_POLICY)
-+		return NOTIFY_DONE;
-+
-+	/*
-+	 * Let each online CPU related to the policy update the period by their
-+	 * own. This will serialize with the framework on start/stop the lockup
-+	 * detector (softlockup_{start,stop}_all) and avoid potential race
-+	 * condition. Otherwise we may have below theoretical race condition:
-+	 * (core 0/1 share the same policy)
-+	 * [core 0]                      [core 1]
-+	 *                               hardlockup_detector_event_create()
-+	 *                                 hw_nmi_get_sample_period()
-+	 * (cpufreq registered, notifier callback invoked)
-+	 * watchdog_freq_notifier_callback()
-+	 *   watchdog_perf_update_period()
-+	 *   (since core 1's event's not yet created,
-+	 *    the period is not set)
-+	 *                                 perf_event_create_kernel_counter()
-+	 *                                 (event's period is SAFE_MAX_CPU_FREQ)
-+	 */
-+	for_each_cpu(cpu, policy->cpus)
-+		smp_call_on_cpu(cpu, watchdog_perf_update_period, NULL, false);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static struct notifier_block watchdog_freq_notifier = {
-+	.notifier_call = watchdog_freq_notifier_callback,
-+};
-+
-+static int __init init_watchdog_freq_notifier(void)
-+{
-+	return cpufreq_register_notifier(&watchdog_freq_notifier,
-+					 CPUFREQ_POLICY_NOTIFIER);
-+}
-+core_initcall(init_watchdog_freq_notifier);
 +#endif
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 099abf128ce67..ceba3e28cb0d0 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1200,6 +1200,14 @@ config HARDLOCKUP_DETECTOR_PERF
- 	depends on !HAVE_HARDLOCKUP_DETECTOR_ARCH
- 	select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
- 
-+config WATCHDOG_PERF_ADJUST_PERIOD
-+	bool
-+	help
-+	  Adjust the watchdog hardlockup detector's period based on CPU max
-+	  frequency. Uses cpufreq if available; falls back to a safe 5 GHz
-+	  default otherwise. Registers a cpufreq notifier to update the period
-+	  automatically.
 +
- config HARDLOCKUP_DETECTOR_BUDDY
- 	bool
- 	depends on HARDLOCKUP_DETECTOR
+ static int pmu_sbi_starting_cpu(unsigned int cpu, struct hlist_node *node)
+ {
+ 	struct riscv_pmu *pmu = hlist_entry_safe(node, struct riscv_pmu, node);
+@@ -1618,6 +1626,8 @@ static int __init pmu_sbi_devinit(void)
+ 	/* Notify legacy implementation that SBI pmu is available*/
+ 	riscv_pmu_legacy_skip_init();
+ 
++	lockup_detector_retry_init();
++
+ 	return ret;
+ }
+ device_initcall(pmu_sbi_devinit)
 -- 
 2.39.5
 
