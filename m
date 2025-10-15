@@ -1,131 +1,172 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7C52FF667
-	for <linux-perf-users@vger.kernel.org>; Wed, 15 Oct 2025 18:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FFF0200BAE
+	for <linux-perf-users@vger.kernel.org>; Wed, 15 Oct 2025 21:24:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760554136; cv=none; b=hDAM+GHKY5jvX6+52zxulzG1VXrwIrhHWTtrOpu1NY1sTxg5Ma8SQE3hOGJNivG/nCywVyG8OfOkYexV5DRUFC1mLuYoti8rQHqWtA14WMCBjgBJ2hlH7JeLn8wUx9UHYJDkXpeHNsJV4CjdymnBYQ3Tah2ZXDZDqv+hA2CBTU0=
+	t=1760563495; cv=none; b=EaelrqhbZYxBUCbcJBm+T3V4dTZq7y3EG1w+0T6J5CeQcGyEXa5rgDHIaJ531mx8HVwmvaM2LBnA/yDxAtKSDKuaPvDJNsoqSuc4kmkv+daKup6A2rI96nE6WAmRWaF3Un3keKclRxq/jOFr/osEd57BuQpeKcApoEB3j+Zcj34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760554136; c=relaxed/simple;
-	bh=HqqF4x0s/r1hw3Xsgl35/OvKCY5LGibQ5keQMlJM4gM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bnrQby3osVH+0XVIEjH1iCJl6aWz6Xs2MyEi8S8ndV8bQMfhv3jD+FjEaAtiEbw1+t5U4ODRbBAJpHWS3dLI6RX486NADo5vxDO9JlzGLOXzlS4MC1FzAmZTFiGp4ZujlOB7lren+dhp5GUHRnmzJrHcZ3a0k4hAlvdtYd2leQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qeelexNl; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1760563495; c=relaxed/simple;
+	bh=W1g4/t3DMHUeDcN2igXiKHkc93YpFK6eSsbRMAAyTns=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b606Gv2507g2JmPt0JUqWfAg3Cz8umFMVx+qPaYWAC9HN+GRTrAZpQXQ9yL5YfuvZ3/5IUfkm+vD7p7QrUu1O5ASqeh7rwvO9V8UZ9Tg/X58OW7bHBEjCtDgnz7skIhvczdyvAMNPZJEv4J0T8DtYFaJgRpAuFSjDQEFD7eUC4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aUHAPlzB; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qeelexNl"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-339b704e2e3so12414988a91.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Oct 2025 11:48:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aUHAPlzB"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-27eeafd4882so67265ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Oct 2025 14:24:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1760554135; x=1761158935; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3naOg0AXa4lxy2J7qWFZUYdZmmuSUah42Rbajn2HebA=;
-        b=qeelexNlPOc96u61+Eb0yeGw64AFtOnOiRhuzlOc/ocO4dSiiqa36JnUERwy2ldzEv
-         R2zg8Jzc7m89B+ncngJBub+wRAY3ezryIBdDtGfVTH3PjPzLf500oOtQ2YWvm8aE0VRN
-         10uvm6TlE64Sr2lPle/uQkQQH16V8/C0QRu83Wb4Jd8dBs9arIzMC+2LjYwvyeGVIwRR
-         HLFOJaq65iKanWMC/Y5s1HA9hPpmKRQqZPOA2U18vcT+zKyJbRuxXi0nbl11+2HliYRH
-         x7J8wWBXH97UVgZZQG4ic9TBnDm1zLQj0MAEm55ay4/QxX512LXzE1RlsK4VjbfMIyRI
-         5EiQ==
+        d=google.com; s=20230601; t=1760563493; x=1761168293; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HFOj+Y3JzrGlsyh+9lR59Vs13yNcy5DdHPtE8235H5Q=;
+        b=aUHAPlzBQnMPcVy2ggFMHxkUaK1Yda6Lqgc4W1qbFvN7SqamfpAO3oVpbHG+6VZgq6
+         mMnrOvo49t2y2tOt/9PS+ZIw6i2q91BvbwlMuSt2hhwFc28H0oFKlZ0zufZ1qpsXEXU/
+         K7yU/dJjt6R6IxplC4+jYsNW24ShOZ+r0lmHqUktDlHxup9hM+AIlTTziZ7EZQ44XoH8
+         Td0X4+G66vyH1nTAShYzKya0vpEgYEs0E8juWuWbbzXdvlgt6By1EVOtWCUmt7+2BtBB
+         QeTEhLqrg5uT6mpTRYaWcPMGvosOM4JJHwUdRseVQ77fU016Ant1m0LWAFzmi8NUMnRO
+         S8Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760554135; x=1761158935;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3naOg0AXa4lxy2J7qWFZUYdZmmuSUah42Rbajn2HebA=;
-        b=PnB6NQ64OV69kA3TnXgZ5axQUZoullF3198JSRjhmq1mLpKjSCAvLj+zTVd3U6QsfB
-         RJnMa4WYEcXS8wSkbVNAB+pqddUN39PZacRAAEh7i4BQTRFIv/GUzwYne0BqWzDmSiDT
-         6tF7T0XFp46yLaMl02/nnZ1TXTWCll8CSXcbM6ql6NBKxdLjw/CGxJSiOnJ86tA4L5Ix
-         ht1ySp5aL4Faf8JAofUEHLNodDJb8v+PMd5sv2v7J6hP8SwMkWU5yeb6XCeuJtBNKHkM
-         sDw9sUWv+H+guUFMGvYDOUBUAgAxrnPN4UYbX6mtRDtk1XE35YxrLuC9BZ3LtnwDKQs1
-         aI1g==
-X-Forwarded-Encrypted: i=1; AJvYcCWqnJ+EPSXsh6DIdRFr35giepoxm0MglU80wBJdUpgO5abFebXblipbYgv1JDsWHvX6//xymGHGSDQZw3eKIkxr@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5JPuUVuitcHGMEG8Gugu6GZwB+uA40ku2R443vDrT7yUwzcXf
-	qhGEnmYsggIuuBZuOqp0P3exlQqL6WaAORABJ1Q+tiVL+gFCGg60KOd8PX9Sn/1VC+lecBinuah
-	JbFm1Uw==
-X-Google-Smtp-Source: AGHT+IE9eJmZgE8/vrWWkRhltj63ksxMU8MKwID4HHHoGFacVC2zof2bk9aQHK5Js4MPCgK0DcLQje9LyvY=
-X-Received: from pjpx13.prod.google.com ([2002:a17:90a:a38d:b0:33b:51fe:1a93])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3909:b0:336:bfcf:c50b
- with SMTP id 98e67ed59e1d1-33b513865a2mr39206696a91.20.1760554134578; Wed, 15
- Oct 2025 11:48:54 -0700 (PDT)
-Date: Wed, 15 Oct 2025 11:48:52 -0700
-In-Reply-To: <0276af52-c697-46c3-9db8-9284adb6beee@linux.intel.com>
+        d=1e100.net; s=20230601; t=1760563493; x=1761168293;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HFOj+Y3JzrGlsyh+9lR59Vs13yNcy5DdHPtE8235H5Q=;
+        b=ZH7ZxtJNpM+LaDFR/DrGY6+6i/sdllKDu39SoOcBL7OyfRvF1oBSbW1sDBma56DSiz
+         gPgcrnHhl5/pPA3sgIS20DgpfuZM4j1nxF2ZfonLSeZrvFBtkhupMeK1dpwG1p09Ebq7
+         ODHBsLl7jIYetUDiQvcgciDH2BhhjeGqdk5hGAF+skUw9V/d+DrNSAjWG64hKmMmArQH
+         IiE2oYbL2vohu2jyKZBWaGZC2jNGfu+eTrk931j9dUo2OQUSM2WJX/Wq0zIdpGDvNS+U
+         U669aODgnEWQZ1LVoKQG8Pfvyh37Wyh765vRp8KeR4LbLp9aBpskquGB0vqmRv2Y5x+k
+         yUzA==
+X-Forwarded-Encrypted: i=1; AJvYcCUwf6vvf4nJnmNbnzzn6nN71K4H9UT9fl2Hsr+4eO+lHJIBE+xbXpek/Z9hNSoX9M8CK96rphDTJ/0gqBxWtXab@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPPW39xTfrZhaHk4dlvr6OwiDqEZdia3q3MSiCQZZ/YHUcFXQw
+	9VnCSnPkt+QqSZmCW++mB44/zH4H1Hm0eFQ/9mMZYl8ZeI6HxpqAExBSd5tZEnV8DctgFQsslYT
+	DZ45ATQBWqxWQgXOPuKOahe/AAoSQWYHFfuENAmMb
+X-Gm-Gg: ASbGnct/w9io5ef+JK4bCdwR7UlpRJp2zZ1uXyP58hgjroiHUK1f0a8lckebSJmBtga
+	ahRYUWtNiep0HrahGpo0djBPxJrJlgi0dcSRHNRemlKya/2VFU/l06xXnV3zyWl3vsENQFArCVi
+	f2p852ZnR/dU9aZyP2m9KsuZehZhR8L6ICk9nHZrVNaDY9HxGhIJuH0njEmGtrcrNDI3Xfxpxpt
+	q/O+rvMPSB4t9NTXn0kKmzmnfwmJuQZ9keSIIdkqx7zCBmlVByX9DkWIKdWtR62tOe2mcXyGr90
+	NZwaGi0vrBG4/Tm6pTuTfP59MUDiiOYr
+X-Google-Smtp-Source: AGHT+IEW5YPLjBUnEmpkq2n072rZTOEa3bB8A8FX6Qjm4Df+twFjbBIiYmmxKWceu6WF8JREJH8kbhCKirJwZ9Ey/fg=
+X-Received: by 2002:a17:903:3884:b0:266:b8a2:f605 with SMTP id
+ d9443c01a7336-29088b3a4e6mr6336795ad.3.1760563492415; Wed, 15 Oct 2025
+ 14:24:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250806195706.1650976-1-seanjc@google.com> <20250806195706.1650976-33-seanjc@google.com>
- <f896966e-8925-4b4f-8f0d-f1ae8aa197f7@amd.com> <aN1vfykNs8Dmv_g0@google.com> <0276af52-c697-46c3-9db8-9284adb6beee@linux.intel.com>
-Message-ID: <aO_slNn8X1A84sI-@google.com>
-Subject: Re: [PATCH v5 32/44] KVM: x86/pmu: Disable interception of select PMU
- MSRs for mediated vPMUs
-From: Sean Christopherson <seanjc@google.com>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Sandipan Das <sandidas@amd.com>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Xin Li <xin@zytor.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+MIME-Version: 1.0
+References: <20251005182430.2791371-1-irogers@google.com> <176054362630.22559.13423487878652916137.b4-ty@kernel.org>
+ <a9f3b996-4fb4-463a-8392-16115862903a@linaro.org>
+In-Reply-To: <a9f3b996-4fb4-463a-8392-16115862903a@linaro.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 15 Oct 2025 14:24:40 -0700
+X-Gm-Features: AS18NWDXk7S0rdGhapkXDUl7AG-b9T2LxalgMsX3Hw5djZFKJRshjXgu_HXKANM
+Message-ID: <CAP-5=fX8ZV6WTmKcrrfPo0MUFiruJoWhYeUk3JrToEP=9-aPCA@mail.gmail.com>
+Subject: Re: [PATCH v7 00/27] Legacy hardware/cache events as json
+To: James Clark <james.clark@linaro.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Xu Yang <xu.yang_2@nxp.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Andi Kleen <ak@linux.intel.com>, 
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Kan Liang <kan.liang@linux.intel.com>, Yongwei Ma <yongwei.ma@intel.com>, 
-	Mingwei Zhang <mizhang@google.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Sandipan Das <sandipan.das@amd.com>
-Content-Type: text/plain; charset="utf-8"
+	Atish Patra <atishp@rivosinc.com>, Beeman Strong <beeman@rivosinc.com>, Leo Yan <leo.yan@arm.com>, 
+	Vince Weaver <vincent.weaver@maine.edu>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 09, 2025, Dapeng Mi wrote:
->=20
-> On 10/2/2025 2:14 AM, Sean Christopherson wrote:
-> > On Fri, Sep 26, 2025, Sandipan Das wrote:
-> >> On 8/7/2025 1:26 AM, Sean Christopherson wrote:
-> >>> +	return kvm_need_perf_global_ctrl_intercept(vcpu) ||
-> >>>  	       pmu->counter_bitmask[KVM_PMC_GP] !=3D (BIT_ULL(kvm_host_pmu.=
-bit_width_gp) - 1) ||
-> >>>  	       pmu->counter_bitmask[KVM_PMC_FIXED] !=3D (BIT_ULL(kvm_host_p=
-mu.bit_width_fixed) - 1);
-> >>>  }
-> >> There is a case for AMD processors where the global MSRs are absent in=
- the guest
-> >> but the guest still uses the same number of counters as what is advert=
-ised by the
-> >> host capabilities. So RDPMC interception is not necessary for all case=
-s where
-> >> global control is unavailable.o
-> > Hmm, I think Intel would be the same?  Ah, no, because the host will ha=
-ve fixed
-> > counters, but the guest will not.  However, that's not directly related=
- to
-> > kvm_pmu_has_perf_global_ctrl(), so I think this would be correct?
+On Wed, Oct 15, 2025 at 10:39=E2=80=AFAM James Clark <james.clark@linaro.or=
+g> wrote:
+>
+>
+>
+> On 15/10/2025 4:53 pm, Namhyung Kim wrote:
+> > On Sun, 05 Oct 2025 11:24:03 -0700, Ian Rogers wrote:
 > >
-> > diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> > index 4414d070c4f9..4c5b2712ee4c 100644
-> > --- a/arch/x86/kvm/pmu.c
-> > +++ b/arch/x86/kvm/pmu.c
-> > @@ -744,16 +744,13 @@ int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned=
- idx, u64 *data)
-> >         return 0;
-> >  }
-> > =20
-> > -bool kvm_need_perf_global_ctrl_intercept(struct kvm_vcpu *vcpu)
-> > +static bool kvm_need_pmc_intercept(struct kvm_vcpu *vcpu)
->=20
-> The function name kvm_need_pmc_intercept() seems a little bit misleading
-> and make users think this function is used to check if a certain PMC is
-> intercepted. Maybe we can rename the function to=C2=A0kvm_need_global_int=
-ercept().
+> >> Mirroring similar work for software events in commit 6e9fa4131abb
+> >> ("perf parse-events: Remove non-json software events"). These changes
+> >> migrate the legacy hardware and cache events to json.  With no hard
+> >> coded legacy hardware or cache events the wild card, case
+> >> insensitivity, etc. is consistent for events. This does, however, mean
+> >> events like cycles will wild card against all PMUs. A change doing the
+> >> same was originally posted and merged from:
+> >> https://lore.kernel.org/r/20240416061533.921723-10-irogers@google.com
+> >> and reverted by Linus in commit 4f1b067359ac ("Revert "perf
+> >> parse-events: Prefer sysfs/JSON hardware events over legacy"") due to
+> >> his dislike for the cycles behavior on ARM with perf record. Earlier
+> >> patches in this series make perf record event opening failures
+> >> non-fatal and hide the cycles event's failure to open on ARM in perf
+> >> record, so it is expected the behavior will now be transparent in perf
+> >> record on ARM. perf stat with a cycles event will wildcard open the
+> >> event on all PMUs, however, with default events the cycles event will
+> >> only be opened on core PMUs.
+> >>
+> >> [...]
+> >
+> > Applied to perf-tools-next, thanks!
+> >
+> > Best regards,
+> > Namhyung
+> >
+>
+> Hi Namhyung,
+>
+> I'm still getting the build failure that I mentioned on patch 5. This
+> only seems to happen with out of source builds:
+>
+>    $ make -C tools/perf O=3D../build/local/ V=3D1
+>
+>
+>    static const struct pmu_sys_events pmu_sys_event_tables[] =3D {
+>          {
+> -               .event_table =3D {
+> -                       .pmus =3D pmu_events__test_soc_sys,
+> -                       .num_pmus =3D ARRAY_SIZE(pmu_events__test_soc_sys=
+)
+> -               },
+> -               .name =3D "pmu_events__test_soc_sys",
+> -       },
+> -       {
+>                  .event_table =3D { 0, 0 },
+>                  .metric_table =3D { 0, 0 },
+>          },
+> make[3]: *** [pmu-events/Build:54:
+> /home/james/workspace/linux/build/local/pmu-events/empty-pmu-events.log]
+> Error 1
 
-Yeah, I don't love kvm_need_pmc_intercept() either.  But kvm_need_global_in=
-tercept()
-feels too close to kvm_need_perf_global_ctrl_intercept().
+Sorry for the issue. Is this happening when you don't do a clean
+first? I tried recreating your output path, but I can't reproduce the
+issue on a clean build. The diff above indicates some issue with the
+Makefile processing tools/perf/pmu-events/arch/test/test_soc/. This
+directory should be copied to
+../build/local/pmu-events/arch/test/test_soc/ and so I wonder if the
+copy failed for some reason.
 
-Maybe something like kvm_need_any_pmc_intercept()?
+The copy rule is:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/pmu-events/Build?h=3Dperf-tools-next#n33
+```
+# Copy checked-in json for generation.
+$(OUTPUT)pmu-events/arch/%: pmu-events/arch/%
+$(call rule_mkdir)
+$(Q)$(call echo-cmd,gen)cp $< $@
+```
+
+The mapping of file names happens in the patsubst in:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/pmu-events/Build?h=3Dperf-tools-next#n42
+```
+GEN_JSON =3D $(patsubst %,$(OUTPUT)%,$(JSON)) $(LEGACY_CACHE_JSON)
+```
+
+Those files are dependencies for the empty-pmu-events.c test so I'm
+not sure how this can be failing for you.
+
+Thanks,
+Ian
