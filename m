@@ -1,240 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18079946C;
-	Wed, 15 Oct 2025 00:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202761DFE22;
+	Wed, 15 Oct 2025 05:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760488081; cv=none; b=nit1kc422Jr0YzvCrN403TmYwDGo14+2cgh4DrR7suI7b8Xv2MlFGoLGmFBneJWJlhbGlUN93n/aWz49agipfw8HR8gDidea9EWF83O3W2h/a2TTNMqEmXkgChP3n/2vFrNgTJ9XzO/lMUwDuMoDXAKb44pFzz//qJaHkTLJm0U=
+	t=1760505622; cv=none; b=AK6TFwldlH9q5ZyIjnrywH4uloCx5zfDUBpoh8MNlj2BlPx5GkqB51HI2DFETA+o/By4j9ZKUr8gQKnqaI8ptzCEqhlFu3ZLbzrLS4PUKoBu5ZDjCDt1uuTJ5qzx+1gwkGpUb1TbIVcr3vIHP5fR6QMd5F2Rb8p+W/jhHuTIVEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760488081; c=relaxed/simple;
-	bh=i8lmuL7zRjgBAL4GZ0qUh6hQZpVvIrs7ANXDRLszzgk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TPquYdVpuKzOySLvYuVoptyzpsed6h/tSWI61pAmxTokbMRc5aGIJPhA46gT3Y9R3VY+A1BFzsUBFhEQt3NYeAdV2Tl5F+6lXMdgTKfyn2n9NF1BwaXMBCK6j2R4FDOobRq1tL1f5iKFRTeRz6dhgGGo8YTFiCmRCOZSy0oTPD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dbLIZOYi; arc=none smtp.client-ip=198.175.65.12
+	s=arc-20240116; t=1760505622; c=relaxed/simple;
+	bh=lb8DEPjuEO/X+Y+/tZytyx3QgBM917fmrE4/Glvc+Xk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ISXKlUWy/khyOF5PmLRN0uRe//mxeJNzxAm6XAoDbo13yWLpxWoU/ivW+lSxZVnH2qlVee8NHaBaIIhzbMyUQj7j+wQuXZFRw7KHy9hk+WKZKK+VY0AUaB53l03EM0gSE/pibQH5/G2z2emLhGXcUfWWAC16mhcQLfCvM4biu2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rx59igDn; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dbLIZOYi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rx59igDn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760488080; x=1792024080;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=i8lmuL7zRjgBAL4GZ0qUh6hQZpVvIrs7ANXDRLszzgk=;
-  b=dbLIZOYilTLzUX8zWDMRiC6pRS/OZp/ZApJF3BS2e1Sn6D+nYJUb73aV
-   wZgeSL3/XhDzcku/Aoral1VQa9Jhm151UiNWh8jGRnh4GlbJkA4R+JfqX
-   kdtVN7n2nI9ks99dzP8wCa0AhOGub9fYFvu5bAJ+x8AO2cgbFoQkyOGTA
-   z96nJkz55MTeNrqXH0za05VEkHqhp0O8SQa/axi5mV0nkjSakDuRgzQAr
-   zAFxzxzU4Ewq5l09R2HRAnnuV2H1Ir0V/Vp/ecyILH64Bqrb9v9dq4TTa
-   qNZ/VKBUnAeqBWbxE4cKJ5wLjzsDNMxOD9OnMLVo7MAdz5z0m2OBmIn53
+  t=1760505620; x=1792041620;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=lb8DEPjuEO/X+Y+/tZytyx3QgBM917fmrE4/Glvc+Xk=;
+  b=Rx59igDnn4heSbqgN9UNuf8Vrg2Lr8eMm2UB3KVp9oP+zcNGYqgurNvr
+   66dBhe6H1jR3FD68xutxF4rMV1JH3uKxJhlwJyaFMrKk+bgXs0B4dLxOY
+   nfZ3Q0gapfY3WdGZfsY0s/oqhdm07MuOFARRmSKu+GNlLGHaCfPKB4VN0
+   VvjYi+n1/t9k8/pf2b7xPRLguFsztrTSDWnZW3YNHQlPRaiaw8Aq6g5vD
+   61H6gOGkPxZgGuh2031pZNc3D+QNRhFoWIRomWeiiK2AsLWXNv3NivbsE
+   shLzsL0dkn7vjh4JE0Me6b8aHa7cPRG+Grg/RPXzbiFBBwbj9fhBD12e0
    g==;
-X-CSE-ConnectionGUID: xuvG4GSESDCYw6QhAnRFZQ==
-X-CSE-MsgGUID: X1AHHT9ZTM+rdilHUypt+A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="74105544"
-X-IronPort-AV: E=Sophos;i="6.19,229,1754982000"; 
-   d="scan'208";a="74105544"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 17:27:59 -0700
-X-CSE-ConnectionGUID: idNH5SqiRHOjmg8apePswg==
-X-CSE-MsgGUID: XPWiNgPAT6Cd8GfDge6i9g==
+X-CSE-ConnectionGUID: ThVmTQfJSpahl9Sf+fYyfg==
+X-CSE-MsgGUID: d0RF9Md9TPSEjd5skxaBpg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="62823445"
+X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
+   d="scan'208";a="62823445"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 22:20:19 -0700
+X-CSE-ConnectionGUID: GM4uPHDVRjaRnLyK8DLq2w==
+X-CSE-MsgGUID: RxORUPVbQDmy6x3AcBs8qQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,229,1754982000"; 
-   d="scan'208";a="219161715"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.209]) ([10.124.232.209])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 17:27:57 -0700
-Message-ID: <6967ca67-61c8-48c2-bf36-815ee960a318@linux.intel.com>
-Date: Wed, 15 Oct 2025 08:27:54 +0800
+X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
+   d="scan'208";a="182503930"
+Received: from spr.sh.intel.com ([10.112.229.196])
+  by fmviesa008.fm.intel.com with ESMTP; 14 Oct 2025 22:20:16 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Octavia Togami <octavia.togami@gmail.com>
+Subject: [PATCH] perf: Fix system hang caused by cpu-clock
+Date: Wed, 15 Oct 2025 13:18:28 +0800
+Message-Id: <20251015051828.12809-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] bisected: perf: hang when using async-profiler
- caused by perf: Fix the POLL_HUP delivery breakage
-To: Octavia Togami <octavia.togami@gmail.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- peterz@infradead.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <CAHPNGSQpXEopYreir+uDDEbtXTBvBvi8c6fYXJvceqtgTPao3Q@mail.gmail.com>
- <8aed5e69-57b1-4a01-b90c-56402eb27b37@linux.intel.com>
- <CAHPNGSTgahRhAg5eM=pnn45rw=TJzTz4AfeckcB2RcsPvxCeGg@mail.gmail.com>
- <ad3ef789-3f12-4107-abad-cf7b4775e38d@linux.intel.com>
- <CAHPNGSTmv7qxMYOs6h1uevB4Rjiy9R+-YTt0gZ2D1tVh7-cuxQ@mail.gmail.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <CAHPNGSTmv7qxMYOs6h1uevB4Rjiy9R+-YTt0gZ2D1tVh7-cuxQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+A system hang issue caused by cpu-clock is reported and bisection
+indicates the commit 18dbcbfabfff ("perf: Fix the POLL_HUP delivery
+ breakage") causes this issue.
 
-On 10/15/2025 4:13 AM, Octavia Togami wrote:
-> That patch is also working fine.
+The root cause of the hang issue is that cpu-clock is a specific SW
+event which relies on the hrtimer. The __perf_event_overflow()
+is invoked from the hrtimer handler for cpu-clock event, and
+__perf_event_overflow() tries to call event stop callback
+(cpu_clock_event_stop()) to stop the event, and cpu_clock_event_stop()
+calls htimer_cancel() to cancel the hrtimer. But unfortunately the
+hrtimer callback is currently executing and then traps into deadlock.
 
-Thanks for testing this patch. I would post it.
+To avoid this deadlock, use hrtimer_try_to_cancel() instead of
+hrtimer_cancel() to cancel the hrtimer, and set PERF_HES_STOPPED flag
+for the stopping events. perf_swevent_hrtimer() would stop the event
+hrtimer once it detects the PERF_HES_STOPPED flag.
 
+Reported-by: Octavia Togami <octavia.togami@gmail.com>
+Closes: https://lore.kernel.org/all/CAHPNGSQpXEopYreir+uDDEbtXTBvBvi8c6fYXJvceqtgTPao3Q@mail.gmail.com/
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Fixes: 18dbcbfabfff ("perf: Fix the POLL_HUP delivery breakage")
+Tested-by: Octavia Togami <octavia.togami@gmail.com>
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+---
+ kernel/events/core.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
->
-> On Mon, Oct 13, 2025 at 11:41 PM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
->>
->> On 10/13/2025 2:55 PM, Octavia Togami wrote:
->>> That change appears to fix the problem on my end. I ran my reproducer
->>> and some other tests multiple times without issue.
->> @Octavia Thanks for checking this patch. But following Peter's comments, we
->> need to update the fix. So could you please re-test the below changes? Thanks.
->>
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 7541f6f85fcb..ed236b8bbcaa 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -11773,7 +11773,8 @@ static enum hrtimer_restart
->> perf_swevent_hrtimer(struct hrtimer *hrtimer)
->>
->>         event = container_of(hrtimer, struct perf_event, hw.hrtimer);
->>
->> -       if (event->state != PERF_EVENT_STATE_ACTIVE)
->> +       if (event->state != PERF_EVENT_STATE_ACTIVE ||
->> +           event->hw.state & PERF_HES_STOPPED)
->>                 return HRTIMER_NORESTART;
->>
->>         event->pmu->read(event);
->> @@ -11827,7 +11828,7 @@ static void perf_swevent_cancel_hrtimer(struct
->> perf_event *event)
->>                 ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
->>                 local64_set(&hwc->period_left, ktime_to_ns(remaining));
->>
->> -               hrtimer_cancel(&hwc->hrtimer);
->> +               hrtimer_try_to_cancel(&hwc->hrtimer);
->>         }
->>  }
->>
->> @@ -11871,12 +11872,14 @@ static void cpu_clock_event_update(struct
->> perf_event *event)
->>
->>  static void cpu_clock_event_start(struct perf_event *event, int flags)
->>  {
->> +       event->hw.state = 0;
->>         local64_set(&event->hw.prev_count, local_clock());
->>         perf_swevent_start_hrtimer(event);
->>  }
->>
->>  static void cpu_clock_event_stop(struct perf_event *event, int flags)
->>  {
->> +       event->hw.state = PERF_HES_STOPPED;
->>         perf_swevent_cancel_hrtimer(event);
->>         if (flags & PERF_EF_UPDATE)
->>                 cpu_clock_event_update(event);
->> @@ -11950,12 +11953,14 @@ static void task_clock_event_update(struct
->> perf_event *event, u64 now)
->>
->>  static void task_clock_event_start(struct perf_event *event, int flags)
->>  {
->> +       event->hw.state = 0;
->>         local64_set(&event->hw.prev_count, event->ctx->time);
->>         perf_swevent_start_hrtimer(event);
->>  }
->>
->>  static void task_clock_event_stop(struct perf_event *event, int flags)
->>  {
->> +       event->hw.state = PERF_HES_STOPPED;
->>         perf_swevent_cancel_hrtimer(event);
->>         if (flags & PERF_EF_UPDATE)
->>                 task_clock_event_update(event, event->ctx->time);
->>
->>
->>> On Sun, Oct 12, 2025 at 7:34 PM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
->>>> On 10/11/2025 4:31 PM, Octavia Togami wrote:
->>>>> Using async-profiler
->>>>> (https://github.com/async-profiler/async-profiler/) on Linux
->>>>> 6.17.1-arch1-1 causes a complete hang of the CPU. This has been
->>>>> reported by many people at https://github.com/lucko/spark/issues/530.
->>>>> spark is a piece of software that uses async-profiler internally.
->>>>>
->>>>> As seen in https://github.com/lucko/spark/issues/530#issuecomment-3339974827,
->>>>> this was bisected to 18dbcbfabfffc4a5d3ea10290c5ad27f22b0d240 perf:
->>>>> Fix the POLL_HUP delivery breakage. Reverting this commit on 6.17.1
->>>>> fixed the issue for me.
->>>>>
->>>>> Steps to reproduce:
->>>>> 1. Get a copy of async-profiler. I tested both v3 (affects older spark
->>>>> versions) and v4.1 (latest at time of writing). Unarchive it, this is
->>>>> <async-profiler-dir>.
->>>>> 2. Set kernel parameters kernel.perf_event_paranoid=1 and
->>>>> kernel.kptr_restrict=0 as instructed by
->>>>> https://github.com/async-profiler/async-profiler/blob/fb673227c7fb311f872ce9566769b006b357ecbe/docs/GettingStarted.md
->>>>> 3. Install a version of Java that comes with jshell, i.e. Java 9 or
->>>>> newer. Note: jshell is used for ease of reproduction. Any Java
->>>>> application that is actively running will work.
->>>>> 4. Run `printf 'int acc; while (true) { acc++; }' | jshell -`. This
->>>>> will start an infinitely running Java process.
->>>>> 5. Run `jps` and take the PID next to the text RemoteExecutionControl
->>>>> -- this is the process that was just started.
->>>>> 6. Attach async-profiler to this process by running
->>>>> `<async-profiler-dir>/bin/asprof -d 1 <PID>`. This will run for one
->>>>> second, then the system should freeze entirely shortly thereafter.
->>>>>
->>>>> I triggered a sysrq crash while the system was frozen, and the output
->>>>> I found in journalctl afterwards is at
->>>>> https://gist.github.com/octylFractal/76611ee76060051e5efc0c898dd0949e
->>>>> I'm not sure if that text is actually from the triggered crash, but it
->>>>> seems relevant. If needed, please tell me how to get the actual crash
->>>>> report, I'm not sure where it is.
->>>>>
->>>>> I'm using an AMD Ryzen 9 5900X 12-Core Processor. Given that I've seen
->>>>> no Intel reports, it may be AMD specific. I don't have an Intel CPU on
->>>>> hand to test with.
->>>>>
->>>>> /proc/version: Linux version 6.17.1-arch1-1 (linux@archlinux) (gcc
->>>>> (GCC) 15.2.1 20250813, GNU ld (GNU Binutils) 2.45.0) #1 SMP
->>>>> PREEMPT_DYNAMIC Mon, 06 Oct 2025 18:48:29 +0000
->>>>> Operating System: Arch Linux
->>>>> uname -mi: x86_64 unknown
->>>> It looks the issue described in the link
->>>> (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.intel.com/T/#u)
->>>> happens again but in a different way. :(
->>>>
->>>> As the commit message above link described,  cpu-clock (and task-clock) is
->>>> a specific SW event which rely on hrtimer. The hrtimer handler calls
->>>> __perf_event_overflow() and then event_stop (cpu_clock_event_stop()) and
->>>> eventually call hrtimer_cancel() which traps into a dead loop which waits
->>>> for the calling hrtimer handler finishes.
->>>>
->>>> As the
->>>> change (https://lore.kernel.org/all/20250606192546.915765-1-kan.liang@linux.intel.com/T/#u),
->>>> it should be enough to just disable the event and don't need an extra event
->>>> stop.
->>>>
->>>> @Octavia, could you please check if the change below can fix this issue?
->>>> Thanks.
->>>>
->>>> diff --git a/kernel/events/core.c b/kernel/events/core.c
->>>> index 7541f6f85fcb..883b0e1fa5d3 100644
->>>> --- a/kernel/events/core.c
->>>> +++ b/kernel/events/core.c
->>>> @@ -10343,7 +10343,20 @@ static int __perf_event_overflow(struct perf_event
->>>> *event,
->>>>                 ret = 1;
->>>>                 event->pending_kill = POLL_HUP;
->>>>                 perf_event_disable_inatomic(event);
->>>> -               event->pmu->stop(event, 0);
->>>> +
->>>> +               /*
->>>> +                * The cpu-clock and task-clock are two special SW events,
->>>> +                * which rely on the hrtimer. The __perf_event_overflow()
->>>> +                * is invoked from the hrtimer handler for these 2 events.
->>>> +                * Avoid to call event_stop()->hrtimer_cancel() for these
->>>> +                * 2 events since hrtimer_cancel() waits for the hrtimer
->>>> +                * handler to finish, which would trigger a deadlock.
->>>> +                * Only disabling the events is enough to stop the hrtimer.
->>>> +                * See perf_swevent_cancel_hrtimer().
->>>> +                */
->>>> +               if (event->attr.config != PERF_COUNT_SW_CPU_CLOCK &&
->>>> +                   event->attr.config != PERF_COUNT_SW_TASK_CLOCK)
->>>> +                       event->pmu->stop(event, 0);
->>>>         }
->>>>
->>>>         if (event->attr.sigtrap) {
->>>>
->>>>
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 7541f6f85fcb..f90105d5f26a 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -11773,7 +11773,8 @@ static enum hrtimer_restart perf_swevent_hrtimer(struct hrtimer *hrtimer)
+ 
+ 	event = container_of(hrtimer, struct perf_event, hw.hrtimer);
+ 
+-	if (event->state != PERF_EVENT_STATE_ACTIVE)
++	if (event->state != PERF_EVENT_STATE_ACTIVE ||
++	    event->hw.state & PERF_HES_STOPPED)
+ 		return HRTIMER_NORESTART;
+ 
+ 	event->pmu->read(event);
+@@ -11819,15 +11820,18 @@ static void perf_swevent_cancel_hrtimer(struct perf_event *event)
+ 	struct hw_perf_event *hwc = &event->hw;
+ 
+ 	/*
+-	 * The throttle can be triggered in the hrtimer handler.
+-	 * The HRTIMER_NORESTART should be used to stop the timer,
+-	 * rather than hrtimer_cancel(). See perf_swevent_hrtimer()
++	 * The event stop can be triggered in the hrtimer handler.
++	 * So use hrtimer_try_to_cancel() instead of hrtimer_cancel()
++	 * to stop the hrtimer() to avoid trapping into a dead loop.
++	 * Simultaneously the event would be set PERF_HES_STOPPED flag,
++	 * perf_swevent_hrtimer() would stop the event hrtimer once it
++	 * detects the PERF_HES_STOPPED flag.
+ 	 */
+ 	if (is_sampling_event(event) && (hwc->interrupts != MAX_INTERRUPTS)) {
+ 		ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
+ 		local64_set(&hwc->period_left, ktime_to_ns(remaining));
+ 
+-		hrtimer_cancel(&hwc->hrtimer);
++		hrtimer_try_to_cancel(&hwc->hrtimer);
+ 	}
+ }
+ 
+@@ -11871,12 +11875,14 @@ static void cpu_clock_event_update(struct perf_event *event)
+ 
+ static void cpu_clock_event_start(struct perf_event *event, int flags)
+ {
++	event->hw.state = 0;
+ 	local64_set(&event->hw.prev_count, local_clock());
+ 	perf_swevent_start_hrtimer(event);
+ }
+ 
+ static void cpu_clock_event_stop(struct perf_event *event, int flags)
+ {
++	event->hw.state = PERF_HES_STOPPED;
+ 	perf_swevent_cancel_hrtimer(event);
+ 	if (flags & PERF_EF_UPDATE)
+ 		cpu_clock_event_update(event);
+@@ -11950,12 +11956,14 @@ static void task_clock_event_update(struct perf_event *event, u64 now)
+ 
+ static void task_clock_event_start(struct perf_event *event, int flags)
+ {
++	event->hw.state = 0;
+ 	local64_set(&event->hw.prev_count, event->ctx->time);
+ 	perf_swevent_start_hrtimer(event);
+ }
+ 
+ static void task_clock_event_stop(struct perf_event *event, int flags)
+ {
++	event->hw.state = PERF_HES_STOPPED;
+ 	perf_swevent_cancel_hrtimer(event);
+ 	if (flags & PERF_EF_UPDATE)
+ 		task_clock_event_update(event, event->ctx->time);
+
+base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
+-- 
+2.34.1
+
