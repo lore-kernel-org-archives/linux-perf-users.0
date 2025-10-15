@@ -1,47 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202761DFE22;
-	Wed, 15 Oct 2025 05:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5213D303CA4;
+	Wed, 15 Oct 2025 06:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760505622; cv=none; b=AK6TFwldlH9q5ZyIjnrywH4uloCx5zfDUBpoh8MNlj2BlPx5GkqB51HI2DFETA+o/By4j9ZKUr8gQKnqaI8ptzCEqhlFu3ZLbzrLS4PUKoBu5ZDjCDt1uuTJ5qzx+1gwkGpUb1TbIVcr3vIHP5fR6QMd5F2Rb8p+W/jhHuTIVEU=
+	t=1760510776; cv=none; b=aCIq0HwzGDCe+DDqgGRAPZp3OAnvZn/W4amsh9mgNcSbOa9k1tERLrO2k6Gq776MGFe9pG4Dib1mKAhjFk2dQWPSkpLN/pDb/Q2Fj9Ezger4kjKC7CRl0ZVCnW75i6NxGMcGtD8TDBNIxX1EIyPErKChMoDH+3iCzzVt/sYKgzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760505622; c=relaxed/simple;
-	bh=lb8DEPjuEO/X+Y+/tZytyx3QgBM917fmrE4/Glvc+Xk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ISXKlUWy/khyOF5PmLRN0uRe//mxeJNzxAm6XAoDbo13yWLpxWoU/ivW+lSxZVnH2qlVee8NHaBaIIhzbMyUQj7j+wQuXZFRw7KHy9hk+WKZKK+VY0AUaB53l03EM0gSE/pibQH5/G2z2emLhGXcUfWWAC16mhcQLfCvM4biu2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rx59igDn; arc=none smtp.client-ip=198.175.65.16
+	s=arc-20240116; t=1760510776; c=relaxed/simple;
+	bh=iwp4PIwHHvVvq/xh0/d6dCqML8i8PNGxZm0jY6Ccb44=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=L037A3SL1SpPr+fs5ccA5+ur/9E+IexEMu2cO+xGy5YCUhHq8VkQNTGukC2/GG7ee9W+oPNXkfYTD/vyAsBVH2986maEHoVuITgIgL0DKmp4wp5CDY+v3chHKx48Pd4neS9avZHRekmWy5gsMg1mQVRP5YekerOcOpcp3OwR3O0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U7qxdPAA; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rx59igDn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U7qxdPAA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760505620; x=1792041620;
+  t=1760510774; x=1792046774;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=lb8DEPjuEO/X+Y+/tZytyx3QgBM917fmrE4/Glvc+Xk=;
-  b=Rx59igDnn4heSbqgN9UNuf8Vrg2Lr8eMm2UB3KVp9oP+zcNGYqgurNvr
-   66dBhe6H1jR3FD68xutxF4rMV1JH3uKxJhlwJyaFMrKk+bgXs0B4dLxOY
-   nfZ3Q0gapfY3WdGZfsY0s/oqhdm07MuOFARRmSKu+GNlLGHaCfPKB4VN0
-   VvjYi+n1/t9k8/pf2b7xPRLguFsztrTSDWnZW3YNHQlPRaiaw8Aq6g5vD
-   61H6gOGkPxZgGuh2031pZNc3D+QNRhFoWIRomWeiiK2AsLWXNv3NivbsE
-   shLzsL0dkn7vjh4JE0Me6b8aHa7cPRG+Grg/RPXzbiFBBwbj9fhBD12e0
-   g==;
-X-CSE-ConnectionGUID: ThVmTQfJSpahl9Sf+fYyfg==
-X-CSE-MsgGUID: d0RF9Md9TPSEjd5skxaBpg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="62823445"
+  bh=iwp4PIwHHvVvq/xh0/d6dCqML8i8PNGxZm0jY6Ccb44=;
+  b=U7qxdPAAeJjfPkfYFGN6Kcg6J3Yv6sI6Bu0mPZQvKmjPKE6GQr27lBzD
+   vnCD37ItHtop+eMW6ydApefbRhHgxX3grNFRkOu9rJQY5X981BP/6NHXN
+   X/+39CUQKXtry8l+QO0sIfA2nNodQhpeRQEy1zX+iUCtnfCfw2Dszc44H
+   SWCxquMyeHQNFR9JfA9yNcuqQ8vwZq3DYKIpwu0Ups1WTyu8NT/n5vVeJ
+   H6wmUt7izg6y9kWutLzJ0HGZ2YmVZNNN5V4MDnMpRa9CFhFJXmFetvrcq
+   FTclNUxzNkGUyX4GmLojg8oNe54E0ivz9n1QRkAWL6s51BbVJSo8C219+
+   A==;
+X-CSE-ConnectionGUID: LyEHyyJlQruCKtFqcmwBwg==
+X-CSE-MsgGUID: CJUufqziRAusdG8oE2OHIQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11582"; a="50242437"
 X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
-   d="scan'208";a="62823445"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 22:20:19 -0700
-X-CSE-ConnectionGUID: GM4uPHDVRjaRnLyK8DLq2w==
-X-CSE-MsgGUID: RxORUPVbQDmy6x3AcBs8qQ==
+   d="scan'208";a="50242437"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2025 23:46:13 -0700
+X-CSE-ConnectionGUID: EHfnuvhUQ2uEbg3IJqpRJw==
+X-CSE-MsgGUID: 7cKFJrJnTjiEGUn2nFodzA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,230,1754982000"; 
-   d="scan'208";a="182503930"
+   d="scan'208";a="182029856"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by fmviesa008.fm.intel.com with ESMTP; 14 Oct 2025 22:20:16 -0700
+  by fmviesa006.fm.intel.com with ESMTP; 14 Oct 2025 23:46:07 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -55,11 +55,10 @@ To: Peter Zijlstra <peterz@infradead.org>,
 Cc: linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Octavia Togami <octavia.togami@gmail.com>
-Subject: [PATCH] perf: Fix system hang caused by cpu-clock
-Date: Wed, 15 Oct 2025 13:18:28 +0800
-Message-Id: <20251015051828.12809-1-dapeng1.mi@linux.intel.com>
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [Patch v8 00/12] arch-PEBS enabling for Intel platforms 
+Date: Wed, 15 Oct 2025 14:44:10 +0800
+Message-Id: <20251015064422.47437-1-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -69,100 +68,108 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A system hang issue caused by cpu-clock is reported and bisection
-indicates the commit 18dbcbfabfff ("perf: Fix the POLL_HUP delivery
- breakage") causes this issue.
+Changes:
+v7 -> v8:
+  * Fix the warning reported by Kernel test robot (Patch 02/12)
+  * Rebase code to 6.18-rc1.
 
-The root cause of the hang issue is that cpu-clock is a specific SW
-event which relies on the hrtimer. The __perf_event_overflow()
-is invoked from the hrtimer handler for cpu-clock event, and
-__perf_event_overflow() tries to call event stop callback
-(cpu_clock_event_stop()) to stop the event, and cpu_clock_event_stop()
-calls htimer_cancel() to cancel the hrtimer. But unfortunately the
-hrtimer callback is currently executing and then traps into deadlock.
+v6 -> v7:
+  * Rebase code to last tip perf/core tree.
+  * Opportunistically remove the redundant is_x86_event() prototype.
+    (Patch 01/12)
+  * Fix PEBS handler NULL event access and record loss issue.
+    (Patch 02/12)
+  * Reset MSR_IA32_PEBS_INDEX at the head of_drain_arch_pebs() instead
+    of end. It avoids the processed PEBS records are processed again in
+    some corner cases like event throttling. (Patch 08/12)
 
-To avoid this deadlock, use hrtimer_try_to_cancel() instead of
-hrtimer_cancel() to cancel the hrtimer, and set PERF_HES_STOPPED flag
-for the stopping events. perf_swevent_hrtimer() would stop the event
-hrtimer once it detects the PERF_HES_STOPPED flag.
+v5 -> v6:
+  * Rebase code to last tip perf/core tree + "x86 perf bug fixes and
+    optimization" patchset
+ 
+v4 -> v5:
+  * Rebase code to 6.16-rc3
+  * Allocate/free arch-PEBS buffer in callbacks *prepare_cpu/*dead_cpu
+    (patch 07/10, Peter)
+  * Code and comments refine (patch 09/10, Peter)
 
-Reported-by: Octavia Togami <octavia.togami@gmail.com>
-Closes: https://lore.kernel.org/all/CAHPNGSQpXEopYreir+uDDEbtXTBvBvi8c6fYXJvceqtgTPao3Q@mail.gmail.com/
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Fixes: 18dbcbfabfff ("perf: Fix the POLL_HUP delivery breakage")
-Tested-by: Octavia Togami <octavia.togami@gmail.com>
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- kernel/events/core.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 7541f6f85fcb..f90105d5f26a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11773,7 +11773,8 @@ static enum hrtimer_restart perf_swevent_hrtimer(struct hrtimer *hrtimer)
- 
- 	event = container_of(hrtimer, struct perf_event, hw.hrtimer);
- 
--	if (event->state != PERF_EVENT_STATE_ACTIVE)
-+	if (event->state != PERF_EVENT_STATE_ACTIVE ||
-+	    event->hw.state & PERF_HES_STOPPED)
- 		return HRTIMER_NORESTART;
- 
- 	event->pmu->read(event);
-@@ -11819,15 +11820,18 @@ static void perf_swevent_cancel_hrtimer(struct perf_event *event)
- 	struct hw_perf_event *hwc = &event->hw;
- 
- 	/*
--	 * The throttle can be triggered in the hrtimer handler.
--	 * The HRTIMER_NORESTART should be used to stop the timer,
--	 * rather than hrtimer_cancel(). See perf_swevent_hrtimer()
-+	 * The event stop can be triggered in the hrtimer handler.
-+	 * So use hrtimer_try_to_cancel() instead of hrtimer_cancel()
-+	 * to stop the hrtimer() to avoid trapping into a dead loop.
-+	 * Simultaneously the event would be set PERF_HES_STOPPED flag,
-+	 * perf_swevent_hrtimer() would stop the event hrtimer once it
-+	 * detects the PERF_HES_STOPPED flag.
- 	 */
- 	if (is_sampling_event(event) && (hwc->interrupts != MAX_INTERRUPTS)) {
- 		ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
- 		local64_set(&hwc->period_left, ktime_to_ns(remaining));
- 
--		hrtimer_cancel(&hwc->hrtimer);
-+		hrtimer_try_to_cancel(&hwc->hrtimer);
- 	}
- }
- 
-@@ -11871,12 +11875,14 @@ static void cpu_clock_event_update(struct perf_event *event)
- 
- static void cpu_clock_event_start(struct perf_event *event, int flags)
- {
-+	event->hw.state = 0;
- 	local64_set(&event->hw.prev_count, local_clock());
- 	perf_swevent_start_hrtimer(event);
- }
- 
- static void cpu_clock_event_stop(struct perf_event *event, int flags)
- {
-+	event->hw.state = PERF_HES_STOPPED;
- 	perf_swevent_cancel_hrtimer(event);
- 	if (flags & PERF_EF_UPDATE)
- 		cpu_clock_event_update(event);
-@@ -11950,12 +11956,14 @@ static void task_clock_event_update(struct perf_event *event, u64 now)
- 
- static void task_clock_event_start(struct perf_event *event, int flags)
- {
-+	event->hw.state = 0;
- 	local64_set(&event->hw.prev_count, event->ctx->time);
- 	perf_swevent_start_hrtimer(event);
- }
- 
- static void task_clock_event_stop(struct perf_event *event, int flags)
- {
-+	event->hw.state = PERF_HES_STOPPED;
- 	perf_swevent_cancel_hrtimer(event);
- 	if (flags & PERF_EF_UPDATE)
- 		task_clock_event_update(event, event->ctx->time);
+This patchset introduces architectural PEBS support for Intel platforms
+like Clearwater Forest (CWF) and Panther Lake (PTL). The detailed
+information about arch-PEBS can be found in chapter 11
+"architectural PEBS" of "Intel Architecture Instruction Set Extensions
+and Future Features".
+
+This patch set doesn't include the SSP and SIMD regs (OPMASK/YMM/ZMM)
+sampling support for arch-PEBS to avoid the dependency for the basic
+SIMD regs sampling support patch series[1]. Once the basic SIMD regs
+sampling is supported, the arch-PEBS based SSP and SIMD regs
+(OPMASK/YMM/ZMM) sampling would be supported in a later patch set.
+
+Tests:
+  Run below tests on Clearwater Forest and Pantherlake, no issue is
+  found.
+
+  1. Basic perf counting case.
+    perf stat -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles}' sleep 1
+
+  2. Basic PMI based perf sampling case.
+    perf record -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles}' sleep 1
+
+  3. Basic PEBS based perf sampling case.
+    perf record -e '{branches,branches,branches,branches,branches,branches,branches,branches,cycles,instructions,ref-cycles}:p' sleep 1
+
+  4. PEBS sampling case with basic, GPRs, vector-registers and LBR groups
+    perf record -e branches:p -Iax,bx,ip,xmm0 -b -c 10000 sleep 1
+
+  5. User space PEBS sampling case with basic, GPRs and LBR groups
+    perf record -e branches:p --user-regs=ax,bx,ip -b -c 10000 sleep 1
+
+  6. PEBS sampling case with auxiliary (memory info) group
+    perf mem record sleep 1
+
+  7. PEBS sampling case with counter group
+    perf record -e '{branches:p,branches,cycles}:S' -c 10000 sleep 1
+
+  8. Perf stat and record test
+    perf test 100; perf test 131
+
+
+History:
+  v7: https://lore.kernel.org/all/20250828013435.1528459-1-dapeng1.mi@linux.intel.com/
+  v6: https://lore.kernel.org/all/20250821035805.159494-1-dapeng1.mi@linux.intel.com/ 
+  v5: https://lore.kernel.org/all/20250623223546.112465-1-dapeng1.mi@linux.intel.com/
+  v4: https://lore.kernel.org/all/20250620103909.1586595-1-dapeng1.mi@linux.intel.com/
+  v3: https://lore.kernel.org/all/20250415114428.341182-1-dapeng1.mi@linux.intel.com/
+  v2: https://lore.kernel.org/all/20250218152818.158614-1-dapeng1.mi@linux.intel.com/
+  v1: https://lore.kernel.org/all/20250123140721.2496639-1-dapeng1.mi@linux.intel.com/
+
+Ref:
+  [1]: https://lore.kernel.org/all/20250925061213.178796-1-dapeng1.mi@linux.intel.com/
+
+Dapeng Mi (12):
+  perf/x86: Remove redundant is_x86_event() prototype
+  perf/x86/intel: Fix NULL event access and potential PEBS record loss
+  perf/x86/intel: Replace x86_pmu.drain_pebs calling with static call
+  perf/x86/intel: Correct large PEBS flag check
+  perf/x86/intel: Initialize architectural PEBS
+  perf/x86/intel/ds: Factor out PEBS record processing code to functions
+  perf/x86/intel/ds: Factor out PEBS group processing code to functions
+  perf/x86/intel: Process arch-PEBS records or record fragments
+  perf/x86/intel: Allocate arch-PEBS buffer and initialize PEBS_BASE MSR
+  perf/x86/intel: Update dyn_constranit base on PEBS event precise level
+  perf/x86/intel: Setup PEBS data configuration and enable legacy groups
+  perf/x86/intel: Add counter group support for arch-PEBS
+
+ arch/x86/events/core.c            |  21 +-
+ arch/x86/events/intel/core.c      | 268 ++++++++++++-
+ arch/x86/events/intel/ds.c        | 632 ++++++++++++++++++++++++------
+ arch/x86/events/perf_event.h      |  41 +-
+ arch/x86/include/asm/intel_ds.h   |  10 +-
+ arch/x86/include/asm/msr-index.h  |  20 +
+ arch/x86/include/asm/perf_event.h | 116 +++++-
+ 7 files changed, 963 insertions(+), 145 deletions(-)
+
 
 base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
 -- 
