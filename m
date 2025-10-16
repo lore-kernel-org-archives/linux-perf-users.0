@@ -1,21 +1,22 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A0D145348;
-	Thu, 16 Oct 2025 08:30:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F192AD3D;
+	Thu, 16 Oct 2025 08:41:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760603433; cv=none; b=nFG1kcW/xY6mkbVSsipz5GZUlZy/vHQ742ubbOuuYLs+8zvrCvuqbeHoOdM+SMUv23rOuZVZC8qU0EFDIJuUlfJFR3zundPFsC3SF/G/tjjCFz5A/JHa7BtH0Gq0Q6R90qKVAqJrx2qwWNOEzU/jrZuPo/g88RF0CzLC+722pR4=
+	t=1760604109; cv=none; b=E0xE9FoyuIlroC5vZI8FhtP45K0pCYDEi4vBw9I9jI9YISqbkXHfsZ+Mx0461BJMlMp9sDp0efzjrdHpTs26YfrHuDwpJsFDRyxENvu5k2znLPLMe2+n7zQo+lbMR6dtWrOboVZ1CFY1cusxnXKiRPdlfdywevSUTXEXBj2xQ6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760603433; c=relaxed/simple;
+	s=arc-20240116; t=1760604109; c=relaxed/simple;
 	bh=Sd9Do/Jjw3NN3FGRJWI9ryug/fIT264op5LRF4M/3xE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=t5C5+DjpiH4cOWSI7FmjuK/8JoVT+aOI+7k0HZXK91OSe2b6x3rB7dpjUkKONK3PnXAVxLWmNn2leF6ktXV08/q6FM33Dx8kUy/XshamKU9YZf0jPrW/LHyjh4tibW6/MYyGqr+QfN7WuAJTkqwWdoymerbrF3YtAj95cBIleFA=
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cWojAJS2WtKEzphekse7J/yjBcXqZZXoBFCtRoMj8KTKXk5vT4+ONzyDIFAtfqPY/tFjrBJ7RaEvjeWVxlh8W/1G89TeaU6vxFdUUkKg8G4CFAteCa9UD9/Xr3+zEgKL78/zlQaqSBCB12L57+pCVPyN4FnA2dA3cJwLfSOAgow=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 5c4481b8aa6a11f0a38c85956e01ac42-20251016
+X-UUID: eb40a756aa6b11f0a38c85956e01ac42-20251016
+X-CID-CACHE: Type:Local,Time:202510161630+08,HitQuantity:1
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:11e05e84-edd7-4313-8812-d04bac35b71e,IP:0,UR
+X-CID-O-INFO: VERSION:1.3.6,REQID:02f42891-db57-43d4-b388-6ed07773c7f2,IP:0,UR
 	L:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
 	release,TS:25
 X-CID-META: VersionHash:a9d874c,CLOUDID:d24af52aa30fd24840d7476069b00f81,BulkI
@@ -26,22 +27,26 @@ X-CID-BVR: 2,SSN|SDN
 X-CID-BAS: 2,SSN|SDN,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 5c4481b8aa6a11f0a38c85956e01ac42-20251016
+X-UUID: eb40a756aa6b11f0a38c85956e01ac42-20251016
 X-User: tanze@kylinos.cn
 Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
 	(envelope-from <tanze@kylinos.cn>)
 	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1044116877; Thu, 16 Oct 2025 16:30:23 +0800
+	with ESMTP id 1931016855; Thu, 16 Oct 2025 16:41:33 +0800
 From: tanze <tanze@kylinos.cn>
-To: james.clark@linaro.org
+To: james.clark@linaro.org,
+	leo.yan@linux.dev,
+	irogers@google.com,
+	john.g.garry@oracle.com
 Cc: linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	graham.woodward@arm.com,
+	mike.leach@linaro.org,
 	tanze <tanze@kylinos.cn>
 Subject: [PATCH v1] perf arm_spe: Add a macro definition to handle offset value
-Date: Thu, 16 Oct 2025 16:30:19 +0800
-Message-Id: <20251016083019.27935-1-tanze@kylinos.cn>
+Date: Thu, 16 Oct 2025 16:41:29 +0800
+Message-Id: <20251016084129.30587-1-tanze@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
