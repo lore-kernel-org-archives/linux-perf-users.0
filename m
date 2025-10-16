@@ -1,133 +1,149 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B063346B6
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Oct 2025 17:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD192DE1E6
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Oct 2025 20:39:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760637021; cv=none; b=BICIEIiTfUn34RIqJuoErbe+Pmf9TXTRKN6Zcc1vP9jDayHa5j/EUqwjcW64Fd5cDMtYD+4AxwmkP+73houBPjr3GD392OO1Pf6GYsqULTxz8PuueUICpOrCqzUmhy0m7Yz3csbQulA+RNVgYfA2g86KQ989P/2lTijYsZbHFss=
+	t=1760647176; cv=none; b=RfIUbMHexAc8ig3vPDYDmTvjiMATv+Z3cjGcVEJcRXS12RFS+hsuv7zSWdaRlIFWog48dNjAqcOHqX8CoRHgHfKMseXqUtv8dL2FO93er9Qu6E1XrqUq+YRAHO6T8WNfWafVGLauVGvexMU6EDlWi3VohaLdLmkEJIiZ54DuywE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760637021; c=relaxed/simple;
-	bh=Uwecva4dbuiF9S0m5wshcYD9Oa8avTRdAbqv4Ynlbs0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=atWShmwZf05QY4AkKs2H/+8t3QmXG9OTBdmHma5Gp1Jc9WHHpO+fCC84UiHfMKPFU2ZLwCFVM4DhmpbWjQ8x3ul5iYiFiEYCmlASkGwW3/1uf6ae5+7dqVBy+xpOjMQJxx4B0IiMQwuEeli4fVPvgL4O4zRVJ4VrNQmbCCuRzAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ee8KSWX5; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1760647176; c=relaxed/simple;
+	bh=j47gUxbffwQzSI5QkRAi1UGxgKVvkhYsy8R9Lk2cIp4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bg42g+hVpTuAWawJFyn/SLuSxpfVdAuee50HKznrQnREuA5L7ET/+UntvQ7xtZkvdv3UPAUufxbPPUHBJ/q/z3Vl953DMMKdzMQ0vwH5e06BK2r3YPnKWY9aeQzywx0Rn2NtMbQOwpK643U6J9xMG3hfZ4EV+TMhxcupXgtgRak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MuE1nlka; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ee8KSWX5"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-46e6a689bd0so9828565e9.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 16 Oct 2025 10:50:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MuE1nlka"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-33ba8d20888so1247247a91.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Oct 2025 13:39:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1760637018; x=1761241818; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bmtrNPsG0xLQVLEkpyMXhfs+pjUSEP8NlJW0XJwqMwk=;
-        b=ee8KSWX5o7NmQOfBU//+6PNOsbRpdsts8ztbX62VHhI7+jMBVe/SP2gAA6dfoDoFPm
-         boSQXpSqOTJk9Z9hqIP9RdME7mMoBd/e5Rms5cCLa865nG8Fd3PymeOAJsYSakQpuaAy
-         5nljoIJI8Z6BFgbuzwuni7icYtp8enDY6bGqwcsaqpP/LkC+NmAHIlmejLXggbr3yZtg
-         VKEl3bw7dz2cESqU1R9aU/h7e+zobld45eAJkLyQzk6euJh2NvAX9TIu6H3S/3y6SbbY
-         2FQ3y64rBniv3umd4nEV3M+tj2iZntHYl82YjXOD8PHdmfNH57sjPl7CPstB3CZSGT1O
-         OUWQ==
+        d=gmail.com; s=20230601; t=1760647174; x=1761251974; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EsEecsSQDVQd72weWcRmXLR+hYEbzg7jxqkKrhdHLo8=;
+        b=MuE1nlkaMBgUExM+2ri3mzDg0HeqleVSO5rzkIiI51vVivw8OR8Dl/jtYYRRJYuOyY
+         92kOxdZA5ZBR+9KXQN2AF7OhzphkmOBNFE2CBWkDusrQnNwSyLxjC4XzJSXT4Ws9nPii
+         RrVOfXLmp7np+HzkqUw+qs2BWN/SvTOXUJKK/lA1s9PyUp+Z7jcVuQpWoZLA36KFJP+t
+         uN6WJNWQIDl1xLgDPiy3DO65xrEQPv/xijIHEPd+pbpDbNUCZhyMJCIJ9cICrFIRkeQ9
+         eWgWIjSIAh5KHkJxq2asnlVDXevBqgZdLtj2OHLSuAHtlyGJQ1xbx7PCk3Izz9Jq9uZb
+         fKow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760637018; x=1761241818;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bmtrNPsG0xLQVLEkpyMXhfs+pjUSEP8NlJW0XJwqMwk=;
-        b=w5hZJ5ITRnuF3tNRXYla0juWT86Fl5qb1EslNfhP7+HB3NGkWm4JiDLzw4GIGN/3ef
-         HbY6nmqRdyyBPTtWfjPxkl23H0O4nD7yPicjaM35OIF6OsDYnc9Zi5/aj6aJdk8lll52
-         +JszVHqPk6zUijCP7hpQmRt6FeK/x140WVuVenE7Av3vDiP6mF8fjogORhGww8Ce7hlO
-         6A1q0XHxPCTOFC0rZZWz8eV5I4pnndfAPLLruqC0e6tghkq2gbW/mj19yUSGzPDyagm/
-         QmZDi2Tk5nhUP3GDBeHUclNxNwXK13IzP/4nERMTxRBR9B86xXpjS7y5MdmsrhL0dmZJ
-         mkpw==
-X-Forwarded-Encrypted: i=1; AJvYcCUOOBhlOim6IMIut8oZwmRPYhkul2z6dBtXNODpCRUccBJ85pWn00iYpkyDVCRz8vBOHRDxoy4qoYgc+cUfHkiL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0P4bKRwP1BlbreJuIzAB2W3CZQKZf3EWj0uHrYv3HwxIs2SHq
-	dMD6FDQc6G36Vl9tyqNPP2xjSfjIzj7hJwHy1QQ2AoNdRS8vjl9Ggn0o4MnVE1bDk4Q=
-X-Gm-Gg: ASbGnctuUXC9DlXY+BcP3yT01Iv0pLtBYl5EkiZ8HWpHKf3LoKo3C2QhSpsLZXj07OU
-	OljOBwv2rrE29DAQhqaYh4Y5LtB8lXLe1tM2SeWKSCf0eMuwUMK6ELhbotm3mPvWm+HnFigLeoP
-	w7WWqHyjkx8I/McPVkct78d0Mj+6d0A9vy4gG+slvBjDbRMktW1R5Man9on/bNIzn39HeqsOh13
-	G3vRKgAwEjfhkhUotRFOmNUaMlaegDe5PXDVJc9iJoGgO+rHF+9L72rEasaE/faZPYCFqMelR6Y
-	BUabh2cO5NFhtdcCCmB4KfxVejLqx0Z68eQuSX23BJF8BzIi0Yj5NwV58taNtI/TYDMgviZJgjg
-	bukkTmHf843MeH5rpQqqJTPFBWCXcMV8m7Yp3FMgzU67P0c0v6sLgcgxhtjqRzFpqC8E96jEu1E
-	HL5m+rt6liOn7QqFL1
-X-Google-Smtp-Source: AGHT+IHKthcGXs3C1tZqF5NlhckDQgMEr3FVHkAQk73l048mHOUAoRlCuk7a0BZxEc4BC81U90bstg==
-X-Received: by 2002:a05:600c:3513:b0:46f:b42e:e38c with SMTP id 5b1f17b1804b1-47117925e9fmr6135845e9.39.1760637018153;
-        Thu, 16 Oct 2025 10:50:18 -0700 (PDT)
-Received: from [192.168.1.3] ([185.48.76.109])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-426ff84cbb7sm4604532f8f.23.2025.10.16.10.50.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Oct 2025 10:50:16 -0700 (PDT)
-Message-ID: <dcd20146-bb88-442a-9bd6-e35fe816dcd1@linaro.org>
-Date: Thu, 16 Oct 2025 18:50:15 +0100
+        d=1e100.net; s=20230601; t=1760647174; x=1761251974;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EsEecsSQDVQd72weWcRmXLR+hYEbzg7jxqkKrhdHLo8=;
+        b=KspC3OJHrNQ2lo7KCXEfRqwV2KeVB9KIkCV93MPU4qkXzwrbtcgSpeNW4YhJb2x8Zd
+         lZFyhzO02jqufSG8Sgt3aQFZL3n7soGglsaCf0P7k+jmwit68lyHUyjA6Bqsf0q4dRPA
+         qKuvjkcy9ErzRM+joDxV8mAnNC14DetMEjFYDVPkf7HkgfaXN03o4J63eFlsQCTLqyV6
+         XcYqHckcuJjn/tcYl729HWclPufzELJiI5EJsovYiqkoxafUB5lOp6Ekm32QSysjLow8
+         Q1n6NSe0J62Oor+fS7Qogq3yycuTS7Ewpc8qIQx2L/feUDHojv0xHWFuQEMH9Fdm2pwh
+         HOsA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7c+ybuxHJ136BXfFLfVOyGxdnLbYZ8yHJOA2zMULZPb0FR29k8D/wO5lfyVNjUpZhL+Z1zpUq9hzkjna0ee/x@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT01/KQJkP2lfNhZ8dCwoencBW4c9nXgHaxotbRWHY5nFT3zwd
+	9cEdr3co93rJXPqY8TstnfOLm3QeN9z8azuF4MzeguqSdFHGX7sIjB3IjTfqUwpKKvssRKtlUvJ
+	4k88DZ+hAv4BI7hAtx8tM8D1PZaXFHvE=
+X-Gm-Gg: ASbGncsTyuXjCNIYLlb8MwPwThKDf3JRzp79Ns1+9Mkags7ivV3GZIOk9ASvvFHQgzu
+	xXPDSGdeQbS5v53WCMlUUHaFtY1z7eEjIsD8DH3u4PM2V+lxsfn90Gw2FefRB0df4GDPFgZkf0M
+	EV225Zz0CE0KrGFoUKVbxDr134unf9ruHuCIuYSESPHT/mJlHApouUX3BbfVQWflGgutqQ3vc4D
+	kh7uajH0BBdGUSttAdRncIgJMnGcMwVyh4X/NHdacv56Rtdyq1t3KvLYiDswqpMx2JwjdP2hGD1
+	jvyetv9zpIE=
+X-Google-Smtp-Source: AGHT+IHDr5J0KFk161wPAYc7kYj7KAxZHJ299Vu5BgTI/wRioKfbYD47CRXPhpJbNq7ELZ17QmNTDJWYHON81DsIz/o=
+X-Received: by 2002:a17:90b:54c6:b0:32e:dcc6:cd3f with SMTP id
+ 98e67ed59e1d1-33b9e28a808mr6232546a91.14.1760647174299; Thu, 16 Oct 2025
+ 13:39:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf tests record: allow for some difference in cycle
- count in leader sampling test on aarch64
-To: Anubhav Shelat <ashelat@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Thomas Richter <tmricht@linux.ibm.com>, Namhyung Kim <namhyung@kernel.org>,
- mpetlan@redhat.com, irogers@google.com, linux-perf-users@vger.kernel.org,
- peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- adrian.hunter@intel.com, kan.liang@linux.intel.com,
- dapeng1.mi@linux.intel.com
-References: <CA+G8DhL49FWD47bkbcXYeb9T=AbxNhC-ypqjkNxRnW0JqmYnPw@mail.gmail.com>
- <901d2d1d-647a-4a76-a0ee-d8a687ed3f85@linux.ibm.com>
- <ff157071-e241-4b81-8241-cfd15e5705ef@linaro.org>
- <7a03fb30-87f9-4737-b59a-9f977acc7549@linux.ibm.com>
- <296700d2-878b-4eeb-b8cd-0252b2f92479@linaro.org>
- <CA+G8Dh+Odf40jdY4h1knjU+3sSjZokMx6OdzRT3o9v1=ndKORQ@mail.gmail.com>
- <CA+G8DhKDvkojDnwxXKe1iiLWwJ0uwD62-qc4_sJgBDdS+qLu-g@mail.gmail.com>
- <f4eba834-e45c-4eba-9650-5b6720fcd30f@linaro.org>
- <CA+G8DhKQkTKoNer5GfZedPUj4xMizWVJUWFocP2eQ_cmPJtBOQ@mail.gmail.com>
- <58801744-44e4-4182-ab4e-bfcf8e2bfc69@linaro.org> <aO0ci1wX-J3au0-p@x1>
- <9e4d4f05-0c34-46b0-aad9-1431bf8cf9f4@linaro.org>
- <CA+G8DhJnRB=d+pv0k=uzM18EmhFiQ+AiVu3rb8w=anNgJ=dr2g@mail.gmail.com>
- <abc1cb61-8169-4a26-9daf-264a6d94cc84@linaro.org>
- <CA+G8DhKDeg61ZM+Pzurnbvvs0L=mdxYhZZTMqfri1wf3AnFaeQ@mail.gmail.com>
- <d207997c-bd73-4dd0-ba0f-93b994b14196@linaro.org>
- <CA+G8DhKUsbL1q_Av0MzKmJ2XdSpOJiAamrcqYjRekjMbcGtwDg@mail.gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <CA+G8DhKUsbL1q_Av0MzKmJ2XdSpOJiAamrcqYjRekjMbcGtwDg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20251014100128.2721104-1-chen.dylane@linux.dev>
+ <20251014100128.2721104-3-chen.dylane@linux.dev> <aO4-jAA5RIUY2yxc@krava> <CAADnVQLoF49pu8CT81FV1ddvysQzvYT4UO1P21fVxnafnO5vrQ@mail.gmail.com>
+In-Reply-To: <CAADnVQLoF49pu8CT81FV1ddvysQzvYT4UO1P21fVxnafnO5vrQ@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 16 Oct 2025 13:39:20 -0700
+X-Gm-Features: AS18NWA45dPZ_Bqm8aVj24uKxev9XFt4-GQ7iuJ9EiK13dkTykni87M8kGxIHSA
+Message-ID: <CAEf4BzbAt_3co0s-+DspnHuJryG2DKPLP9OwsN0bWWnbd5zsmQ@mail.gmail.com>
+Subject: Re: [RFC PATCH bpf-next v2 2/2] bpf: Pass external callchain entry to get_perf_callchain
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Tao Chen <chen.dylane@linux.dev>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Oct 14, 2025 at 8:02=E2=80=AFAM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Tue, Oct 14, 2025 at 5:14=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wr=
+ote:
+> >
+> > On Tue, Oct 14, 2025 at 06:01:28PM +0800, Tao Chen wrote:
+> > > As Alexei noted, get_perf_callchain() return values may be reused
+> > > if a task is preempted after the BPF program enters migrate disable
+> > > mode. Drawing on the per-cpu design of bpf_perf_callchain_entries,
+> > > stack-allocated memory of bpf_perf_callchain_entry is used here.
+> > >
+> > > Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+> > > ---
+> > >  kernel/bpf/stackmap.c | 19 +++++++++++--------
+> > >  1 file changed, 11 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+> > > index 94e46b7f340..acd72c021c0 100644
+> > > --- a/kernel/bpf/stackmap.c
+> > > +++ b/kernel/bpf/stackmap.c
+> > > @@ -31,6 +31,11 @@ struct bpf_stack_map {
+> > >       struct stack_map_bucket *buckets[] __counted_by(n_buckets);
+> > >  };
+> > >
+> > > +struct bpf_perf_callchain_entry {
+> > > +     u64 nr;
+> > > +     u64 ip[PERF_MAX_STACK_DEPTH];
+> > > +};
+> > > +
 
+we shouldn't introduce another type, there is perf_callchain_entry in
+linux/perf_event.h, what's the problem with using that?
 
-On 16/10/2025 4:50 pm, Anubhav Shelat wrote:
-> Yes. I had built perf manually from linux/tools/perf v6.17 so the
-> patch was definitely included.
+> > >  static inline bool stack_map_use_build_id(struct bpf_map *map)
+> > >  {
+> > >       return (map->map_flags & BPF_F_STACK_BUILD_ID);
+> > > @@ -305,6 +310,7 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, reg=
+s, struct bpf_map *, map,
+> > >       bool user =3D flags & BPF_F_USER_STACK;
+> > >       struct perf_callchain_entry *trace;
+> > >       bool kernel =3D !user;
+> > > +     struct bpf_perf_callchain_entry entry =3D { 0 };
+> >
+> > so IIUC having entries on stack we do not need to do preempt_disable
+> > you had in the previous version, right?
+> >
+> > I saw Andrii's justification to have this on the stack, I think it's
+> > fine, but does it have to be initialized? it seems that only used
+> > entries are copied to map
+>
+> No. We're not adding 1k stack consumption.
 
-But the patch is for the kernel, not for Perf. So building Perf isn't 
-enough, you need to run the test on a 6.16+ kernel too.
+Right, and I thought we concluded as much last time, so it's a bit
+surprising to see this in this patch.
 
-> 
-> On Thu, Oct 16, 2025 at 4:03 PM James Clark <james.clark@linaro.org> wrote:
->>
->>
->>
->> On 16/10/2025 3:59 pm, Anubhav Shelat wrote:
->>> On Thu, Oct 16, 2025 at 3:46 PM James Clark <james.clark@linaro.org> wrote:
->>>>
->>>> But the throttling fix was in 6.16, so I wouldn't expect it to work in 6.12.
->>>
->>> This is using perf built from the upstream source so the patch is included.
->>>
->>
->> The throttling fix that was linked previously in the thread [1] was in
->> the kernel though. Unless you are talking about a different patch than
->> that one? And that patch is in Perf?
->>
->> [1]:
->> https://lore.kernel.org/lkml/20250520181644.2673067-2-kan.liang@linux.intel.com/
->>
-> 
+Tao, you should go with 3 entries per CPU used in a stack-like
+fashion. And then passing that entry into get_perf_callchain() (to
+avoid one extra copy).
 
+>
+> pw-bot: cr
