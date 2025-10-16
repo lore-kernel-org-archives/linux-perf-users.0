@@ -1,149 +1,151 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD192DE1E6
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Oct 2025 20:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD24239E9B
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Oct 2025 20:53:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760647176; cv=none; b=RfIUbMHexAc8ig3vPDYDmTvjiMATv+Z3cjGcVEJcRXS12RFS+hsuv7zSWdaRlIFWog48dNjAqcOHqX8CoRHgHfKMseXqUtv8dL2FO93er9Qu6E1XrqUq+YRAHO6T8WNfWafVGLauVGvexMU6EDlWi3VohaLdLmkEJIiZ54DuywE=
+	t=1760647989; cv=none; b=kj8IDuMflo1GwsT2l3SaxLItHx483Z+i2OwEjobZZYlc+4kwJmpXQkicL6cG5qYehbztnm/eNjoV9Hn7omnsiVSun/9bCwK09Suw9PQkj/I/bpmarzr1dm5GGgSyHD9nsdDuuvMDVEXg7Nzx/EVYTZ9yvkhArhoLuzCxsW2IJNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760647176; c=relaxed/simple;
-	bh=j47gUxbffwQzSI5QkRAi1UGxgKVvkhYsy8R9Lk2cIp4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bg42g+hVpTuAWawJFyn/SLuSxpfVdAuee50HKznrQnREuA5L7ET/+UntvQ7xtZkvdv3UPAUufxbPPUHBJ/q/z3Vl953DMMKdzMQ0vwH5e06BK2r3YPnKWY9aeQzywx0Rn2NtMbQOwpK643U6J9xMG3hfZ4EV+TMhxcupXgtgRak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MuE1nlka; arc=none smtp.client-ip=209.85.216.44
+	s=arc-20240116; t=1760647989; c=relaxed/simple;
+	bh=KjSibwBEl5RvNt8FdRA6/VLAHMFHa4TcPKtGguhAw/U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=T4PoYCFhx5AYmMBDt8GjjkE82c5y3fYmwC4FTVRp7+CAWZli+DPA4m9XVPEfIGe2m+UTVNNbtiTg8JY7Ofp9TPmXz32dGFGaejf4M7AwzEhHosNn6PmT8D3UPxJsCozkk+n49ITIpkJYu149lngD+Hz4w9ApzE/00y2DqkKmmGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tq37NCE6; arc=none smtp.client-ip=209.85.215.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MuE1nlka"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-33ba8d20888so1247247a91.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 16 Oct 2025 13:39:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tq37NCE6"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b6a42604093so4725a12.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Oct 2025 13:53:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760647174; x=1761251974; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EsEecsSQDVQd72weWcRmXLR+hYEbzg7jxqkKrhdHLo8=;
-        b=MuE1nlkaMBgUExM+2ri3mzDg0HeqleVSO5rzkIiI51vVivw8OR8Dl/jtYYRRJYuOyY
-         92kOxdZA5ZBR+9KXQN2AF7OhzphkmOBNFE2CBWkDusrQnNwSyLxjC4XzJSXT4Ws9nPii
-         RrVOfXLmp7np+HzkqUw+qs2BWN/SvTOXUJKK/lA1s9PyUp+Z7jcVuQpWoZLA36KFJP+t
-         uN6WJNWQIDl1xLgDPiy3DO65xrEQPv/xijIHEPd+pbpDbNUCZhyMJCIJ9cICrFIRkeQ9
-         eWgWIjSIAh5KHkJxq2asnlVDXevBqgZdLtj2OHLSuAHtlyGJQ1xbx7PCk3Izz9Jq9uZb
-         fKow==
+        d=gmail.com; s=20230601; t=1760647986; x=1761252786; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WUGdHveixQiipUVAjag5n0t7zrVAHKQtIWI+mfEMlkY=;
+        b=Tq37NCE6PR+3dPBBJ31OiUdSt7MY5H4Tj1pP9/Rkzl3I/IMK5jrEniH8y2hKIfkre/
+         BSvWkVyLGgBJkWZYxMxv/0t/8euSxPQqnD+GRlS50ipLsSxbfK2lZiENtqppI3m034HV
+         NY1LYD/sM0Mk20W9yKtizJmeFk02T0GtuPR/oZtqfO74UfiaXvv0hXgfVngcH6BRn9Tb
+         MeFc5lfLev76ECHxhE20tHuvstb6woXcEeKFy3e8ZWDJyh+FXSa6aWzXvN7J5bdapHKi
+         9LUc3Q7/4m9tfvXMKwYOWO7H6kvQA+FPY1qDPVw2RgjcMwMO6iu7iI1EqLRjI+tNj8BJ
+         5q2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760647174; x=1761251974;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EsEecsSQDVQd72weWcRmXLR+hYEbzg7jxqkKrhdHLo8=;
-        b=KspC3OJHrNQ2lo7KCXEfRqwV2KeVB9KIkCV93MPU4qkXzwrbtcgSpeNW4YhJb2x8Zd
-         lZFyhzO02jqufSG8Sgt3aQFZL3n7soGglsaCf0P7k+jmwit68lyHUyjA6Bqsf0q4dRPA
-         qKuvjkcy9ErzRM+joDxV8mAnNC14DetMEjFYDVPkf7HkgfaXN03o4J63eFlsQCTLqyV6
-         XcYqHckcuJjn/tcYl729HWclPufzELJiI5EJsovYiqkoxafUB5lOp6Ekm32QSysjLow8
-         Q1n6NSe0J62Oor+fS7Qogq3yycuTS7Ewpc8qIQx2L/feUDHojv0xHWFuQEMH9Fdm2pwh
-         HOsA==
-X-Forwarded-Encrypted: i=1; AJvYcCU7c+ybuxHJ136BXfFLfVOyGxdnLbYZ8yHJOA2zMULZPb0FR29k8D/wO5lfyVNjUpZhL+Z1zpUq9hzkjna0ee/x@vger.kernel.org
-X-Gm-Message-State: AOJu0YyT01/KQJkP2lfNhZ8dCwoencBW4c9nXgHaxotbRWHY5nFT3zwd
-	9cEdr3co93rJXPqY8TstnfOLm3QeN9z8azuF4MzeguqSdFHGX7sIjB3IjTfqUwpKKvssRKtlUvJ
-	4k88DZ+hAv4BI7hAtx8tM8D1PZaXFHvE=
-X-Gm-Gg: ASbGncsTyuXjCNIYLlb8MwPwThKDf3JRzp79Ns1+9Mkags7ivV3GZIOk9ASvvFHQgzu
-	xXPDSGdeQbS5v53WCMlUUHaFtY1z7eEjIsD8DH3u4PM2V+lxsfn90Gw2FefRB0df4GDPFgZkf0M
-	EV225Zz0CE0KrGFoUKVbxDr134unf9ruHuCIuYSESPHT/mJlHApouUX3BbfVQWflGgutqQ3vc4D
-	kh7uajH0BBdGUSttAdRncIgJMnGcMwVyh4X/NHdacv56Rtdyq1t3KvLYiDswqpMx2JwjdP2hGD1
-	jvyetv9zpIE=
-X-Google-Smtp-Source: AGHT+IHDr5J0KFk161wPAYc7kYj7KAxZHJ299Vu5BgTI/wRioKfbYD47CRXPhpJbNq7ELZ17QmNTDJWYHON81DsIz/o=
-X-Received: by 2002:a17:90b:54c6:b0:32e:dcc6:cd3f with SMTP id
- 98e67ed59e1d1-33b9e28a808mr6232546a91.14.1760647174299; Thu, 16 Oct 2025
- 13:39:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1760647986; x=1761252786;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WUGdHveixQiipUVAjag5n0t7zrVAHKQtIWI+mfEMlkY=;
+        b=oyV3suEmt+hU6YqaVtOEDT9bLnPb81gZLQluFmT/VM7zNZ4mjw4veqpYcanMYHTRoC
+         fI6tZBvsld+/QfjmM39sWcJkN4q6uA56a6b0ziLXUWsogA9gL8RiJ5inv0cRJ/nzziAl
+         KSdX3ZP/u/POYsVcoU6ZoUVb9sWmh4nJMAycDLKnMVo4nP/w2uJaMRpf+oscRyk4hKDm
+         eNIiLb7RhducH7bXhG34bu/iKRYPxfLL8c6N1O3a3eX53KzRT6PiWfXds0pIJIcLmgvM
+         19yXRX/G7PJhlttvyUZjv07vA9DlmrE3/6MiIjk5kPnIyqtIAkG5RZwfh2KJIW7rKpr0
+         w00w==
+X-Forwarded-Encrypted: i=1; AJvYcCXoEQW9IswAM90YAORSk5xUE2xWtCrwoiThr6PMp3JXod7tFqY9MrsIHBvzk68KPJwPoMK8Ui5Tj40vqqyjZjj9@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdueZsxF2N7xak4yYpBxFEwAelXsiT996y/HmccjXY6GPGIV87
+	29E9fJNRUOlXZZyJwTTNDG0kklHEgyqsvGfwxGuQQJXovJhTqDTautRD
+X-Gm-Gg: ASbGncupvdzHohWTTnctHMXe5J0kGZgZ2yh3ac5YDY3/7Pok8qKtN6oY1Iq+q3f9knx
+	VQSkIsjcFH/MsFulxtgczNsHiDL3OQJlwn8YJSNCMggRRjw8HjCUcbKM3mcun5Doj5yuVNEL6d7
+	Q+namAsTV5wIxZNMWzFTaE7MBd/tM1Aslp4vByb8gX/dgVRLbMYwV8OJ9LFMfr3gB3LCklTl7Sr
+	fhDrJo4cNzWPTpaZyurdBz8ZsIbrvIpakM0eewho/y+5CGi9fiI07BzRc8McEwoBW3BwgcfepJ0
+	E44PriRQD0S+2qPY7QjqAtEX6omOXsNhbdZJBDiH+zFffSEWQLCemTjz/ixkoZuU/MpltjBC2g6
+	/dtd22twVqQvAxvn+SteMUKCSC5bHxi0IBcsJXp4jsr1bE30Mq9VIDkJKxn2ZFQ2SFpo/rzBFEa
+	dAAJY2jA==
+X-Google-Smtp-Source: AGHT+IGFqrhuRDzLp1B7vKAD/h5TSqISSfWh+qG6S2EB/f+0a7wn6hO5xl/a2yDTx2gN3DmjnP0BDA==
+X-Received: by 2002:a17:902:f645:b0:290:c3a9:42b5 with SMTP id d9443c01a7336-290c9d1fdefmr7632495ad.5.1760647986361;
+        Thu, 16 Oct 2025 13:53:06 -0700 (PDT)
+Received: from hobbes ([2600:70ff:f833:0:85d:f376:d78:d2b3])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29099ab1ca0sm40015035ad.96.2025.10.16.13.53.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Oct 2025 13:53:05 -0700 (PDT)
+Date: Thu, 16 Oct 2025 10:52:57 -1000
+From: Joey Pabalinas <joeypabalinas@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, 
+	Joey Pabalinas <joeypabalinas@gmail.com>
+Subject: [PATCH RESEND] perf/x86/amd/uncore: use kcalloc() instead of
+ multiplication
+Message-ID: <455fb1db8ab0811d2336e0ec198c728a0c703be9.1757744812.git.joeypabalinas@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251014100128.2721104-1-chen.dylane@linux.dev>
- <20251014100128.2721104-3-chen.dylane@linux.dev> <aO4-jAA5RIUY2yxc@krava> <CAADnVQLoF49pu8CT81FV1ddvysQzvYT4UO1P21fVxnafnO5vrQ@mail.gmail.com>
-In-Reply-To: <CAADnVQLoF49pu8CT81FV1ddvysQzvYT4UO1P21fVxnafnO5vrQ@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 16 Oct 2025 13:39:20 -0700
-X-Gm-Features: AS18NWA45dPZ_Bqm8aVj24uKxev9XFt4-GQ7iuJ9EiK13dkTykni87M8kGxIHSA
-Message-ID: <CAEf4BzbAt_3co0s-+DspnHuJryG2DKPLP9OwsN0bWWnbd5zsmQ@mail.gmail.com>
-Subject: Re: [RFC PATCH bpf-next v2 2/2] bpf: Pass external callchain entry to get_perf_callchain
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Tao Chen <chen.dylane@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vqsldrqglnjee27m"
+Content-Disposition: inline
+Message-ID: <20251016205257.Tv5ITMkLsrShDKXPXPBqYvQwSqoQG7wmLNplukV-75A@z>
+
+
+--vqsldrqglnjee27m
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: [PATCH RESEND] perf/x86/amd/uncore: use kcalloc() instead of
+ multiplication
+MIME-Version: 1.0
 
-On Tue, Oct 14, 2025 at 8:02=E2=80=AFAM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Tue, Oct 14, 2025 at 5:14=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wr=
-ote:
-> >
-> > On Tue, Oct 14, 2025 at 06:01:28PM +0800, Tao Chen wrote:
-> > > As Alexei noted, get_perf_callchain() return values may be reused
-> > > if a task is preempted after the BPF program enters migrate disable
-> > > mode. Drawing on the per-cpu design of bpf_perf_callchain_entries,
-> > > stack-allocated memory of bpf_perf_callchain_entry is used here.
-> > >
-> > > Signed-off-by: Tao Chen <chen.dylane@linux.dev>
-> > > ---
-> > >  kernel/bpf/stackmap.c | 19 +++++++++++--------
-> > >  1 file changed, 11 insertions(+), 8 deletions(-)
-> > >
-> > > diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-> > > index 94e46b7f340..acd72c021c0 100644
-> > > --- a/kernel/bpf/stackmap.c
-> > > +++ b/kernel/bpf/stackmap.c
-> > > @@ -31,6 +31,11 @@ struct bpf_stack_map {
-> > >       struct stack_map_bucket *buckets[] __counted_by(n_buckets);
-> > >  };
-> > >
-> > > +struct bpf_perf_callchain_entry {
-> > > +     u64 nr;
-> > > +     u64 ip[PERF_MAX_STACK_DEPTH];
-> > > +};
-> > > +
+Dynamic size calculations should not be performed in allocator
+function arguments due to overflow risk.
 
-we shouldn't introduce another type, there is perf_callchain_entry in
-linux/perf_event.h, what's the problem with using that?
+Use kcalloc() instead of multiplication in the first argument
+of kzalloc().
 
-> > >  static inline bool stack_map_use_build_id(struct bpf_map *map)
-> > >  {
-> > >       return (map->map_flags & BPF_F_STACK_BUILD_ID);
-> > > @@ -305,6 +310,7 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, reg=
-s, struct bpf_map *, map,
-> > >       bool user =3D flags & BPF_F_USER_STACK;
-> > >       struct perf_callchain_entry *trace;
-> > >       bool kernel =3D !user;
-> > > +     struct bpf_perf_callchain_entry entry =3D { 0 };
-> >
-> > so IIUC having entries on stack we do not need to do preempt_disable
-> > you had in the previous version, right?
-> >
-> > I saw Andrii's justification to have this on the stack, I think it's
-> > fine, but does it have to be initialized? it seems that only used
-> > entries are copied to map
->
-> No. We're not adding 1k stack consumption.
+Signed-off-by: Joey Pabalinas <joeypabalinas@gmail.com>
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>=20
+---
+ arch/x86/events/amd/uncore.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Right, and I thought we concluded as much last time, so it's a bit
-surprising to see this in this patch.
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index e8b6af199c738eb00b..d08e3054461f2ca07a 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -1036,11 +1036,11 @@ int amd_uncore_umc_ctx_init(struct amd_uncore *unco=
+re, unsigned int cpu)
+ 		group_num_pmus[gid] =3D hweight32(info.split.aux_data);
+ 		group_num_pmcs[gid] =3D info.split.num_pmcs;
+ 		uncore->num_pmus +=3D group_num_pmus[gid];
+ 	}
+=20
+-	uncore->pmus =3D kzalloc(sizeof(*uncore->pmus) * uncore->num_pmus,
++	uncore->pmus =3D kcalloc(uncore->num_pmus, sizeof(*uncore->pmus),
+ 			       GFP_KERNEL);
+ 	if (!uncore->pmus) {
+ 		uncore->num_pmus =3D 0;
+ 		goto done;
+ 	}
+--=20
+Cheers,
+Joey Pabalinas
 
-Tao, you should go with 3 entries per CPU used in a stack-like
-fashion. And then passing that entry into get_perf_callchain() (to
-avoid one extra copy).
 
->
-> pw-bot: cr
+--vqsldrqglnjee27m
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJPBAABCAA5FiEEx6b1SGGPTKxTmPDYqoHu9CTxowIFAmjxWykbFIAAAAAABAAO
+bWFudTIsMi41KzEuMTEsMiwyAAoJEKqB7vQk8aMCFAwQAKq3PKRByKJhX2KwbQjk
+skfl5xlEZzdfp/hFYftBkM3B62WE1USEIKxcUsdtDOoIkMLU+7gbUYtBpyb8PlA1
+8eMRVs8f20cOvBD9/9GKtRqXia4kK+YwNMoQqqzmN2LfSMobw/4f5IUnQw250/S4
+IZySErp9DrJ4XM94qp4F9RiMXHGQXBx6EhX2iKuAxnY20yxIIAp3OVw54zRYzLxI
+5gkMT311MxPorlzTHy0I+O+lpQtSS5pnTioBWB4B2GBELCAEIQQXbpfVx3U1d4aZ
+Bdr1x0Ek7zp/87L9z8oNGuzxxnhvbAPOzCIJWYbzDuoCRYrwbsQ+WSm9HnoK+9By
+2PLb0bzL0Gj8GCXAUnK11A3tJ2ldR+v/xDkdRk3Z9PafXUBGQTMBmzvFKgPXXcJx
+CSMoksqb9ijOM7ynK8cG6APcJDva+VJGhrXWoapz+8yd7yE8MNUB9hgDgj3pijZj
+qH5hByVhslsx+8EwbSzu+QNwSdsos9H+TLriOCWyI2wSkclPXLSzVV35qj4oEGoD
+6Oks/FWN5I/k/26Z4YpQLeONI60fTY8JnABrknFF3Q33WOgo9xouqv/emR7SN+iU
+zbpN9MDmt6IOZAmbryanWcQlwInbhFUkINxy7Vn2aPINPod6oksNB4EaHipW+7mW
+00LBepAkQSu0EPa9u5iq1hqy
+=irL1
+-----END PGP SIGNATURE-----
+
+--vqsldrqglnjee27m--
