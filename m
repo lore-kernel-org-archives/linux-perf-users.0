@@ -1,102 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8E31A0728
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Oct 2025 15:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC322FB984
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Oct 2025 15:03:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760626809; cv=none; b=Po5muWuhqZk8TqxfN5ZZev1P5Fowos6wY0KTVbkYSQpHBGv8cgAxAEuNoITOAq9uhBnY/5TZMUn0RXVEw+DWRJxiwpQK9WwgTVzDeJ2k9em9iYe3sScWDyhIAJlzu69ahpqEYy8xqo2pt0Yen8vU9fOzh7bhOO5SWekZIZUzOkM=
+	t=1760626982; cv=none; b=PAIEK0ZuMfoNMyHkpOwjZnJHLS9bjNQSHnt3WWEzCIL5YBbU2MG13UGFDt8S9qMwARwD5XBv7Vm+A1V/4VUI6ZZOhaVbcyL3Q+sMmtOjgLn41ZqiJLiYxL1QW2Iuzqv97/2N+VoOyhrwmUVcY9LWGAl1nvsoxKjtIo3uk0e5ZUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760626809; c=relaxed/simple;
-	bh=K6Nr+qsP7ddYVMM0xNSFBM5D76WG3DIjGyDNsyWN+oI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l3td+CIRmF+I34rKMkh7/camiFMpZvkbmcp4HQu7TZIgnf694SDQBBuQ47v+7HQT09vioWqUh90ubD2R26AgQrg9qSiIYF32midUNpr74YDYLnTp7b1ZQpUOEp+17b4dKQOpZ2ak67+0M2iKks3WX9fC3cayECJ+oltvqXopDk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HsIZEBxA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1760626982; c=relaxed/simple;
+	bh=OQ1A4dVm5DAdEeEBApKQzZKh7V+oPSeChL2356GfBfU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iPq788/uCeVi4qJk9+W8/BKlc8NktYfr3pjMHO+ynnhS12P0a/bu+mhNKznvKRxjwFs1VfugrstM0moVI7BuU2t4HuDD/V0goxvSB15ygKshodR69ExDeDPYTLj00DvSTXTvPz3X60YGxhKezPfMIegfi6oNj4norKcNEYW3zDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZnLbA8t0; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HsIZEBxA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1760626807;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K6Nr+qsP7ddYVMM0xNSFBM5D76WG3DIjGyDNsyWN+oI=;
-	b=HsIZEBxAZidwRaIaYvfCN78YHjMCq48sq2ZS7MyjS7H4NlIqIf67PC2bJpzVTO9mry4UfV
-	hjkuCPfk3172pmslL0ycO/E/aXmSYocJvMfSWYK2loR2IADJn/Agh5cOeAv22SxeEtt0+v
-	5UjuwYYqkWZetNoczZyVd140JLbIHXA=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-333-HbBzwjUhNFu2Co7zw4BVtw-1; Thu, 16 Oct 2025 11:00:05 -0400
-X-MC-Unique: HbBzwjUhNFu2Co7zw4BVtw-1
-X-Mimecast-MFC-AGG-ID: HbBzwjUhNFu2Co7zw4BVtw_1760626804
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-36b57abe6d0so10110401fa.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 16 Oct 2025 08:00:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZnLbA8t0"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-427007b1fe5so470184f8f.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Oct 2025 08:03:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1760626979; x=1761231779; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/aUPR08mmztRyTCr2P2Ef81F1uM0hF1XfMqoz+oB4jk=;
+        b=ZnLbA8t0q4EobfTdJINGpmgvwd4JfH43oED72kk1M6jv+B7l7ynKjVLrhq6pS/6rJR
+         sokjoh27Q5GMhFerIpAJqLfteOd3U7EpSjayvvCVddJuOEa7CuVuz6QBnFv0b+2IqzDf
+         My6Bk6gDLysCnY9yo4UNRACGQ3bvFL/epHbiZ9ThzuUWsgGit7ogsS7JFafzsgt16+f9
+         54cp3qjW/Ycr5xZqZtGzeZ97rMc3wnF2o23riq6iOkLyfGhdyBJdZrccnY9LtYFU1e1X
+         Du6g94h5eSXFhvQYt8U6xD0dobJNolvPd8YMgfwUil6lrNNVtcv0ZI9bvMrUkSqjKcyv
+         9PSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760626804; x=1761231604;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K6Nr+qsP7ddYVMM0xNSFBM5D76WG3DIjGyDNsyWN+oI=;
-        b=HhqV4eFUgi1jwxmjGr8DJZhrzKt6CKdXzucTAUbVkbb8UAxyX5Ocwa104D4sQGGgdv
-         jAruWcT59pIYhhNc+kYBzl36LAthJRL6va3biF0RV8ofroSTQZEcFVaZI3XBixlgcduc
-         Aenc5tI7LRTxMF5FgJeWASwBGumsAR1AonXx1QvT6+4CT0BbmshFc4DV5jlQq6lsWnC/
-         zLVJEICcx8x8FZf8tj70RboZy/pn3twBwtjLm6G/3MsQqkRCuFm2nPShrBwjt5gx6+U6
-         KTbrvRGETLdyNaqpkdWcd+dUJtOYtoGUG6JJ0kqQmBpXbqLLCn7Eq+SiRClBfpjOb5A5
-         Y0Rw==
-X-Forwarded-Encrypted: i=1; AJvYcCUuGnn5culdbEvwVYS2bxuH9Pcq9oexPlCiTwNQaJJrmdMgWg4BWorKmqjll8caqMq5mpsArX/ejlmErSJGuoew@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJJLsZR7REcykSIDcmG2h8sXJSh0Z1hVEPqZHCSgC44uovw7Pk
-	KpZ3RNMXvJxAlh9mpu9GE3uQy9KJIvnfVNmm7I8SVd8wMfLi9WJvpswg0lucvFOlewZzntBlGtX
-	DTJyuzZIQnia1emsxK35kBCvaUGUl/AzsGPBUxz4ewTgY+V3RcHqHb9k4TFyv3N8qIWnIQ8yZD3
-	M/kUo3LtGbjrka4jCRn4kfv2Vf34p+AO1dzV1sX8RAhuZtZA==
-X-Gm-Gg: ASbGncvV4RJaoTVlEGDaez54scnYywphKMGXZL8JeKanDgz0rvntvhnJhn28/X8AhVZ
-	QUKUm8dLxy/0XRQWZeaxIwAr4syPe3kBPQaWDp9eXfRIEvYfLImSrI2Dc9Fogbs5reYT7ZBFero
-	0W2lIfG07nElq6fPFpcRJw3f3P0R3y0P87iRYZ+Dmoln8aYQfZ1uvasQ==
-X-Received: by 2002:a05:651c:892:b0:336:b941:4ab1 with SMTP id 38308e7fff4ca-37797913c27mr1831311fa.17.1760626804144;
-        Thu, 16 Oct 2025 08:00:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGbb+8fYXwR4t+LQuCqpMvTU6vFmLTDZGJXQ2Z7+N2DICe0iWwBA6TmknQMi5WuWR5T1a5uWmb+9VrtS26Zi6g=
-X-Received: by 2002:a05:651c:892:b0:336:b941:4ab1 with SMTP id
- 38308e7fff4ca-37797913c27mr1831231fa.17.1760626803720; Thu, 16 Oct 2025
- 08:00:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1760626979; x=1761231779;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/aUPR08mmztRyTCr2P2Ef81F1uM0hF1XfMqoz+oB4jk=;
+        b=q3yymZqFtnN+1lqfeVE4Q3t9aLZxb3MgdljV9cfcAs2hZXToa+aGs25XjeEtBlj98s
+         xNpQGvWA1o06WJZsLh5t9AHBiY76sUGFOYXLao0Grl1Q3/KQSDGP9ADwITDkqvDOGsph
+         daYsYxjJprWk0IRKnNLJ8Et8MiTlhnJzR9RpZbK30/3Rl00fSOzVGm2QeJ18P5HKz3fb
+         A1FObwfddsSiqaePyMy0vy1wd6oCz5tmd/XgEbyL8mJ3azlu5seG6UDoJCoV4RPFi/PI
+         4XZa4HGi9R9+Vy/Vmn2qxXIsKHBsKzC0fK8AP3NhmxBaWyPQCbVrbI2h2BNFORP4VXMT
+         N2kQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVockPBcE99plRgWabh5N8Ndv0M+wb3C4wCzIlnzfpHpPcgaaJZ7tVY2pufnmF73h9y0LVVntnzGgBNdzZvkR1N@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMct3eUqrRoE8Tx6xSl5Dgcezjf9EJEeYURs/gul+0k51jqtDj
+	ze6fOovAOhc/JLP2An3RIHszC8IxcGMiUP8Cos5hJGvlhi74xnw39w6JffOaQEYszhc=
+X-Gm-Gg: ASbGncs5aFNRYr7oU0tnw0CE6cjckizCIo0tw16dSu+YhqwbgtDTlvblGx1FzVPNsoA
+	887R/n2Y+6ppKCBxWrR3RrgQPqiuyTz8f3xyjL08fssHePqTjXGmrCuKePVOl7vJzuBV9hY4Bov
+	iRC7dZ//vVFzQPO9RFmJ+08tZFe7HHsyDYQY9X92irDtp4gLnE+sux3GujlNQlBFm49BPHnmGdR
+	wavOyomN2zg8WLamQLkUEZIIVX6uSfitV83BYDeeQgCsIUZl9lkT1K746HxKQtkE3IEOLhzx7s9
+	7DFeE1i3buFMT77jQGx9eTCCDGU5243cp05A7CPTTheW+5Z3NROWNb0T66PzZjcp/tCBeQXV/7D
+	t9t0Q7MA9Ki7JvSGuKmozBmVkGQpLMOCfcj8xrihs/sIzPrei8lAp3Iwvm9hOwNWP/cmQEt01u/
+	pb3xMjlKm2QM4DgP21
+X-Google-Smtp-Source: AGHT+IFaMdEkFpJsDrxKqD6MGwkR/CHIUDk8m65eyyRnB61EOkq9YBFq8EPCvyuftako93662DzzOQ==
+X-Received: by 2002:a05:6000:2084:b0:401:e7a8:5c8d with SMTP id ffacd0b85a97d-42704d83e2bmr256901f8f.6.1760626978455;
+        Thu, 16 Oct 2025 08:02:58 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.76.109])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47114444b06sm33598495e9.12.2025.10.16.08.02.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Oct 2025 08:02:58 -0700 (PDT)
+Message-ID: <d207997c-bd73-4dd0-ba0f-93b994b14196@linaro.org>
+Date: Thu, 16 Oct 2025 16:02:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G8DhL49FWD47bkbcXYeb9T=AbxNhC-ypqjkNxRnW0JqmYnPw@mail.gmail.com>
- <901d2d1d-647a-4a76-a0ee-d8a687ed3f85@linux.ibm.com> <ff157071-e241-4b81-8241-cfd15e5705ef@linaro.org>
- <7a03fb30-87f9-4737-b59a-9f977acc7549@linux.ibm.com> <296700d2-878b-4eeb-b8cd-0252b2f92479@linaro.org>
- <CA+G8Dh+Odf40jdY4h1knjU+3sSjZokMx6OdzRT3o9v1=ndKORQ@mail.gmail.com>
- <CA+G8DhKDvkojDnwxXKe1iiLWwJ0uwD62-qc4_sJgBDdS+qLu-g@mail.gmail.com>
- <f4eba834-e45c-4eba-9650-5b6720fcd30f@linaro.org> <CA+G8DhKQkTKoNer5GfZedPUj4xMizWVJUWFocP2eQ_cmPJtBOQ@mail.gmail.com>
- <58801744-44e4-4182-ab4e-bfcf8e2bfc69@linaro.org> <aO0ci1wX-J3au0-p@x1>
- <9e4d4f05-0c34-46b0-aad9-1431bf8cf9f4@linaro.org> <CA+G8DhJnRB=d+pv0k=uzM18EmhFiQ+AiVu3rb8w=anNgJ=dr2g@mail.gmail.com>
- <abc1cb61-8169-4a26-9daf-264a6d94cc84@linaro.org>
-In-Reply-To: <abc1cb61-8169-4a26-9daf-264a6d94cc84@linaro.org>
-From: Anubhav Shelat <ashelat@redhat.com>
-Date: Thu, 16 Oct 2025 15:59:52 +0100
-X-Gm-Features: AS18NWDr8g9YgW2fcFUYTzCWzUfKrF5sSEB8D-wLBrAqCpGXhfEZ92cTM2779-g
-Message-ID: <CA+G8DhKDeg61ZM+Pzurnbvvs0L=mdxYhZZTMqfri1wf3AnFaeQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] perf tests record: allow for some difference in cycle
  count in leader sampling test on aarch64
-To: James Clark <james.clark@linaro.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Namhyung Kim <namhyung@kernel.org>, mpetlan@redhat.com, irogers@google.com, 
-	linux-perf-users@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	dapeng1.mi@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To: Anubhav Shelat <ashelat@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Thomas Richter <tmricht@linux.ibm.com>, Namhyung Kim <namhyung@kernel.org>,
+ mpetlan@redhat.com, irogers@google.com, linux-perf-users@vger.kernel.org,
+ peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ dapeng1.mi@linux.intel.com
+References: <CA+G8DhL49FWD47bkbcXYeb9T=AbxNhC-ypqjkNxRnW0JqmYnPw@mail.gmail.com>
+ <901d2d1d-647a-4a76-a0ee-d8a687ed3f85@linux.ibm.com>
+ <ff157071-e241-4b81-8241-cfd15e5705ef@linaro.org>
+ <7a03fb30-87f9-4737-b59a-9f977acc7549@linux.ibm.com>
+ <296700d2-878b-4eeb-b8cd-0252b2f92479@linaro.org>
+ <CA+G8Dh+Odf40jdY4h1knjU+3sSjZokMx6OdzRT3o9v1=ndKORQ@mail.gmail.com>
+ <CA+G8DhKDvkojDnwxXKe1iiLWwJ0uwD62-qc4_sJgBDdS+qLu-g@mail.gmail.com>
+ <f4eba834-e45c-4eba-9650-5b6720fcd30f@linaro.org>
+ <CA+G8DhKQkTKoNer5GfZedPUj4xMizWVJUWFocP2eQ_cmPJtBOQ@mail.gmail.com>
+ <58801744-44e4-4182-ab4e-bfcf8e2bfc69@linaro.org> <aO0ci1wX-J3au0-p@x1>
+ <9e4d4f05-0c34-46b0-aad9-1431bf8cf9f4@linaro.org>
+ <CA+G8DhJnRB=d+pv0k=uzM18EmhFiQ+AiVu3rb8w=anNgJ=dr2g@mail.gmail.com>
+ <abc1cb61-8169-4a26-9daf-264a6d94cc84@linaro.org>
+ <CA+G8DhKDeg61ZM+Pzurnbvvs0L=mdxYhZZTMqfri1wf3AnFaeQ@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CA+G8DhKDeg61ZM+Pzurnbvvs0L=mdxYhZZTMqfri1wf3AnFaeQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 16, 2025 at 3:46=E2=80=AFPM James Clark <james.clark@linaro.org=
-> wrote:
->
-> But the throttling fix was in 6.16, so I wouldn't expect it to work in 6.=
-12.
 
-This is using perf built from the upstream source so the patch is included.
+
+On 16/10/2025 3:59 pm, Anubhav Shelat wrote:
+> On Thu, Oct 16, 2025 at 3:46 PM James Clark <james.clark@linaro.org> wrote:
+>>
+>> But the throttling fix was in 6.16, so I wouldn't expect it to work in 6.12.
+> 
+> This is using perf built from the upstream source so the patch is included.
+> 
+
+The throttling fix that was linked previously in the thread [1] was in 
+the kernel though. Unless you are talking about a different patch than 
+that one? And that patch is in Perf?
+
+[1]: 
+https://lore.kernel.org/lkml/20250520181644.2673067-2-kan.liang@linux.intel.com/
 
