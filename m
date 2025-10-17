@@ -1,104 +1,130 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 789DE20C00A
-	for <linux-perf-users@vger.kernel.org>; Fri, 17 Oct 2025 15:50:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A16330B00;
+	Fri, 17 Oct 2025 15:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760716255; cv=none; b=ql5gUZ2vgBbJzxvyyaEMI1/IBfGeAJJkHHFOmHtT5HFwAI5KaXKC23On37TnzMKe3P5djLMmNuhyF0aXdiR/IwP5PPVXTmMDTRba45UBjy5XhmnJz2LD6rZ0q03hISNZM+OdA7xF3O9wv0ALxIter7S3BqkVHiNuow/gSeWEh24=
+	t=1760716325; cv=none; b=fYfX1ghdC7lyxMSMUnThebpjKnJdOmoci+BT4tr0OT1W2PA1PAale3vA03od79aY7eoFVPGB+uII/u0xit8k+zJX5hKfCTVGEzu0Qpnx5dvKXwnSKr4cpoCNGAddQa1mAZowUd/Sgesuq3c5SJPVh82Fy2FdwqA6WDTB6tuqPNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760716255; c=relaxed/simple;
-	bh=6Wqhms50dYo+mpC/2gnjNhYq7LooLhisZkEyDlyLBSo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=p4RhbzsJOS+usfD0lIG9hEQalPKu8pbccxZDvSzKJn5EgTL05mtMuqMjtwsJioY8r6mGdjsT3vD60HFnV86+RJeenx2ZKsp1H+cdJKe+HaZE1BIHQ/yUJP7grx7ouiXuyn+06QyX3PNDeobFLL4FwGtnhGjacVXbyBvwXR6t0j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D34881595;
-	Fri, 17 Oct 2025 08:50:44 -0700 (PDT)
-Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D4D73F66E;
-	Fri, 17 Oct 2025 08:50:51 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-Date: Fri, 17 Oct 2025 16:50:43 +0100
-Subject: [PATCH] perf arm_spe: Add CPU variants supporting common data
- source packet
+	s=arc-20240116; t=1760716325; c=relaxed/simple;
+	bh=exOzAKYyZqWdz3l/rN4xuKsrpx1NjgptUR/yfAc9w/0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rvqq7aWOtwXh8VeyZ2Nhx4hSAOddtHzjfRkwgcXtXWCQG6VL4d/W/eyr3KwSeA/HQp8zDuqEjW7890U64rJYtopQKgUjG/qVy3kzfkGGsCHO7QEAitox3qYSrmntg7mZaQb72pw4uRRgZQRpyGjylXuwyrqdC9e+sDJ/ZPWD3JY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=oLE88u86; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="oLE88u86"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5444CC116B1;
+	Fri, 17 Oct 2025 15:52:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1760716324;
+	bh=exOzAKYyZqWdz3l/rN4xuKsrpx1NjgptUR/yfAc9w/0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=oLE88u86G77oJrcRTZwIecPAKmfrB6e9/tRB1tYMLffW9mPUH4RJqJ1WVwaSJFkXt
+	 nGPmwQs1QjumTeLc1rs0NjnkmhRfKwU4pxwRTW2JFYpTibuLzbogPnUT9sXgSExHoQ
+	 1CyvTft/pwR1LmSoVXthVo4ck0GfuE2xx2a1NW9I=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Leo Yan <leo.yan@arm.com>,
+	Ian Rogers <irogers@google.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	linux-riscv@lists.infradead.org,
+	llvm@lists.linux.dev,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.15 152/276] tools build: Align warning options with perf
+Date: Fri, 17 Oct 2025 16:54:05 +0200
+Message-ID: <20251017145148.027432958@linuxfoundation.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251017145142.382145055@linuxfoundation.org>
+References: <20251017145142.382145055@linuxfoundation.org>
+User-Agent: quilt/0.69
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251017-perf_arm_spe_update_midr_list-v1-1-9de407550354@arm.com>
-X-B4-Tracking: v=1; b=H4sIANJl8mgC/x3MUQqDMAwA0KtIvldoi27gVcYItYlbQF1JVATx7
- iv7fD/vBGMVNuibE5R3MfkuFeHWQP6k5c1OqBqij13w4eEK64hJZ7TCuBVKK+MspDiJrW64d23
- OMWVPBPUoyqMc///5uq4fIa8rF28AAAA=
-X-Change-ID: 20251017-perf_arm_spe_update_midr_list-b654cc2ac0dd
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- James Clark <james.clark@linaro.org>, Namhyung Kim <namhyung@kernel.org>, 
- Ian Rogers <irogers@google.com>, Mark Rutland <mark.rutland@arm.com>, 
- Jiri Olsa <jolsa@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1760716251; l=2176;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=6Wqhms50dYo+mpC/2gnjNhYq7LooLhisZkEyDlyLBSo=;
- b=NPVrX0ce/W+YK8PqJr32Ok0ttL+esGUjb+brOzCBnglsKQQAk1a0GOqCQ8l1EJODXLLiFGwrF
- pVNbdFrK5/XD6oxv6Eu5gSiPU4IPxqxuQS8vN6ayViCtHVHyK2HWPhH
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
+Content-Transfer-Encoding: 8bit
 
-Add the following CPU variants to the list for data source decoding:
+5.15-stable review patch.  If anyone has any objections, please let me know.
 
-  - Cortex-A715 [1]
-  - Cortex-A78C [2]
-  - Cortex-X1 [3]
-  - Cortex-X4 [4]
-  - Neoverse V3 [5]
+------------------
 
-[1] https://developer.arm.com/documentation/101590/0103/Statistical-Profiling-Extension-Support/Statistical-Profiling-Extension-data-source-packet
-[2] https://developer.arm.com/documentation/102226/0002/Debug-descriptions/Statistical-Profiling-Extension/implementation-defined-features-of-SPE
-[3] https://developer.arm.com/documentation/101433/0102/Debug-descriptions/Statistical-Profiling-Extension/implementation-defined-features-of-SPE
-[4] https://developer.arm.com/documentation/102484/0003/Statistical-Profiling-Extension-support/Statistical-Profiling-Extension-data-source-packet
-[5] https://developer.arm.com/documentation/107734/0002/Statistical-Profiling-Extension-support/Statistical-Profiling-Extension-data-source-packet
+From: Leo Yan <leo.yan@arm.com>
 
+[ Upstream commit 53d067feb8c4f16d1f24ce3f4df4450bb18c555f ]
+
+The feature test programs are built without enabling '-Wall -Werror'
+options. As a result, a feature may appear to be available, but later
+building in perf can fail with stricter checks.
+
+Make the feature test program use the same warning options as perf.
+
+Fixes: 1925459b4d92 ("tools build: Fix feature Makefile issues with 'O='")
 Signed-off-by: Leo Yan <leo.yan@arm.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Link: https://lore.kernel.org/r/20251006-perf_build_android_ndk-v3-1-4305590795b2@arm.com
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Alexandre Ghiti <alex@ghiti.fr>
+Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
+Cc: Justin Stitt <justinstitt@google.com>
+Cc: Bill Wendling <morbo@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: James Clark <james.clark@linaro.org>
+Cc: linux-riscv@lists.infradead.org
+Cc: llvm@lists.linux.dev
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/arm-spe.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ tools/build/feature/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 71be979f507718caadc091714c40bcee073c1d60..47e86699fe3378e44df4dd04a0aab8aa832142cc 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -570,15 +570,20 @@ static int arm_spe__synth_instruction_sample(struct arm_spe_queue *speq,
- }
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index aa3b0d75e44b7..37aa85a81e0a0 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -268,10 +268,10 @@ $(OUTPUT)test-libbabeltrace.bin:
+ 	$(BUILD) # -lbabeltrace provided by $(FEATURE_CHECK_LDFLAGS-libbabeltrace)
  
- static const struct midr_range common_ds_encoding_cpus[] = {
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_A715),
- 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A720),
- 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A725),
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_A78C),
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_X1),
- 	MIDR_ALL_VERSIONS(MIDR_CORTEX_X1C),
- 	MIDR_ALL_VERSIONS(MIDR_CORTEX_X3),
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_X4),
- 	MIDR_ALL_VERSIONS(MIDR_CORTEX_X925),
- 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
- 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2),
- 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1),
- 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V2),
-+	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V3),
- 	{},
- };
+ $(OUTPUT)test-compile-32.bin:
+-	$(CC) -m32 -o $@ test-compile.c
++	$(CC) -m32 -Wall -Werror -o $@ test-compile.c
  
-
----
-base-commit: f3b601f900902ab80902c44f820a8985384ac021
-change-id: 20251017-perf_arm_spe_update_midr_list-b654cc2ac0dd
-
-Best regards,
+ $(OUTPUT)test-compile-x32.bin:
+-	$(CC) -mx32 -o $@ test-compile.c
++	$(CC) -mx32 -Wall -Werror -o $@ test-compile.c
+ 
+ $(OUTPUT)test-zlib.bin:
+ 	$(BUILD) -lz
 -- 
-Leo Yan <leo.yan@arm.com>
+2.51.0
+
+
 
