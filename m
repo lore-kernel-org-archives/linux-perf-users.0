@@ -1,150 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6127B2F12D2;
-	Fri, 17 Oct 2025 15:33:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 789DE20C00A
+	for <linux-perf-users@vger.kernel.org>; Fri, 17 Oct 2025 15:50:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760715186; cv=none; b=rWXyp90GoCvhATymUkJ5epyIL178sOk3prvPg/23kJtsbjidW5YNR1Pp3+ReiJoO0AI+xtQTUrNxf5CcWhJej5bEmUE+luUA0OVsg13akXvlzpF3g9U6C1pBtLfDVc7JGhd/O6s4+kMesGigrZWoXy6BNnPacw2JvULiwOh4znQ=
+	t=1760716255; cv=none; b=ql5gUZ2vgBbJzxvyyaEMI1/IBfGeAJJkHHFOmHtT5HFwAI5KaXKC23On37TnzMKe3P5djLMmNuhyF0aXdiR/IwP5PPVXTmMDTRba45UBjy5XhmnJz2LD6rZ0q03hISNZM+OdA7xF3O9wv0ALxIter7S3BqkVHiNuow/gSeWEh24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760715186; c=relaxed/simple;
-	bh=LiKIWFDNYNNAES7eZnL2gzfDuBzjxqEOphFOwMWdHrE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XtLfKRC6OD4HGP+7bxygdvauXLkHZJUsh0fBtUh38lgqu171T/BFKQ6yKjB/qUFAafxshIUgxZsZywbBZRcoe3BdrHY2N3uor+We/X1tGgnnW3Qk+hbuY3l/esCyJ6mm2vVMng01NwX2mT3Qa/agOUX7D5qCz08hFUPK5237UEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=nc1VWl3u; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="nc1VWl3u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52B5BC4CEE7;
-	Fri, 17 Oct 2025 15:33:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1760715184;
-	bh=LiKIWFDNYNNAES7eZnL2gzfDuBzjxqEOphFOwMWdHrE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nc1VWl3uSn0+5q4pOFcb70EJbz+FWE9fpH94zJEWKW8u9mUZ3/GaF1Oacm7pDR5XY
-	 FghuHkKA3YjOqExtEZBU7oxL6NNx/sHh5SwODlifkdoaMIm9PYyh61EgyXQyhansHe
-	 rxJAa2J3AZy2GJg4bY3J9fhaqVLNC6DBgJ7YNzz8=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	Leo Yan <leo.yan@arm.com>,
-	Ian Rogers <irogers@google.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	linux-riscv@lists.infradead.org,
-	llvm@lists.linux.dev,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.17 095/371] perf python: split Clang options when invoking Popen
-Date: Fri, 17 Oct 2025 16:51:10 +0200
-Message-ID: <20251017145205.376305398@linuxfoundation.org>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251017145201.780251198@linuxfoundation.org>
-References: <20251017145201.780251198@linuxfoundation.org>
-User-Agent: quilt/0.69
-X-stable: review
-X-Patchwork-Hint: ignore
+	s=arc-20240116; t=1760716255; c=relaxed/simple;
+	bh=6Wqhms50dYo+mpC/2gnjNhYq7LooLhisZkEyDlyLBSo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=p4RhbzsJOS+usfD0lIG9hEQalPKu8pbccxZDvSzKJn5EgTL05mtMuqMjtwsJioY8r6mGdjsT3vD60HFnV86+RJeenx2ZKsp1H+cdJKe+HaZE1BIHQ/yUJP7grx7ouiXuyn+06QyX3PNDeobFLL4FwGtnhGjacVXbyBvwXR6t0j0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D34881595;
+	Fri, 17 Oct 2025 08:50:44 -0700 (PDT)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D4D73F66E;
+	Fri, 17 Oct 2025 08:50:51 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+Date: Fri, 17 Oct 2025 16:50:43 +0100
+Subject: [PATCH] perf arm_spe: Add CPU variants supporting common data
+ source packet
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20251017-perf_arm_spe_update_midr_list-v1-1-9de407550354@arm.com>
+X-B4-Tracking: v=1; b=H4sIANJl8mgC/x3MUQqDMAwA0KtIvldoi27gVcYItYlbQF1JVATx7
+ iv7fD/vBGMVNuibE5R3MfkuFeHWQP6k5c1OqBqij13w4eEK64hJZ7TCuBVKK+MspDiJrW64d23
+ OMWVPBPUoyqMc///5uq4fIa8rF28AAAA=
+X-Change-ID: 20251017-perf_arm_spe_update_midr_list-b654cc2ac0dd
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ James Clark <james.clark@linaro.org>, Namhyung Kim <namhyung@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Mark Rutland <mark.rutland@arm.com>, 
+ Jiri Olsa <jolsa@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1760716251; l=2176;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=6Wqhms50dYo+mpC/2gnjNhYq7LooLhisZkEyDlyLBSo=;
+ b=NPVrX0ce/W+YK8PqJr32Ok0ttL+esGUjb+brOzCBnglsKQQAk1a0GOqCQ8l1EJODXLLiFGwrF
+ pVNbdFrK5/XD6oxv6Eu5gSiPU4IPxqxuQS8vN6ayViCtHVHyK2HWPhH
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-6.17-stable review patch.  If anyone has any objections, please let me know.
+Add the following CPU variants to the list for data source decoding:
 
-------------------
+  - Cortex-A715 [1]
+  - Cortex-A78C [2]
+  - Cortex-X1 [3]
+  - Cortex-X4 [4]
+  - Neoverse V3 [5]
 
-From: Leo Yan <leo.yan@arm.com>
+[1] https://developer.arm.com/documentation/101590/0103/Statistical-Profiling-Extension-Support/Statistical-Profiling-Extension-data-source-packet
+[2] https://developer.arm.com/documentation/102226/0002/Debug-descriptions/Statistical-Profiling-Extension/implementation-defined-features-of-SPE
+[3] https://developer.arm.com/documentation/101433/0102/Debug-descriptions/Statistical-Profiling-Extension/implementation-defined-features-of-SPE
+[4] https://developer.arm.com/documentation/102484/0003/Statistical-Profiling-Extension-support/Statistical-Profiling-Extension-data-source-packet
+[5] https://developer.arm.com/documentation/107734/0002/Statistical-Profiling-Extension-support/Statistical-Profiling-Extension-data-source-packet
 
-[ Upstream commit c6a43bc3e8f6102a47da0d2e53428d08f00172fb ]
-
-When passing a list to subprocess.Popen, each element maps to one argv
-token. Current code bundles multiple Clang flags into a single element,
-something like:
-
-  cmd = ['clang',
-         '--target=x86_64-linux-gnu -fintegrated-as -Wno-cast-function-type-mismatch',
-	 'test-hello.c']
-
-So Clang only sees one long, invalid option instead of separate flags,
-as a result, the script cannot capture any log via PIPE.
-
-Fix this by using shlex.split() to separate the string so each option
-becomes its own argv element. The fixed list will be:
-
-  cmd = ['clang',
-         '--target=x86_64-linux-gnu',
-	 '-fintegrated-as',
-	 '-Wno-cast-function-type-mismatch',
-	 'test-hello.c']
-
-Fixes: 09e6f9f98370 ("perf python: Fix splitting CC into compiler and options")
 Signed-off-by: Leo Yan <leo.yan@arm.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Link: https://lore.kernel.org/r/20251006-perf_build_android_ndk-v3-2-4305590795b2@arm.com
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Alexandre Ghiti <alex@ghiti.fr>
-Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: Bill Wendling <morbo@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: James Clark <james.clark@linaro.org>
-Cc: linux-riscv@lists.infradead.org
-Cc: llvm@lists.linux.dev
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/setup.py | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/util/arm-spe.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
-index dd289d15acfd6..9cae2c472f4ad 100644
---- a/tools/perf/util/setup.py
-+++ b/tools/perf/util/setup.py
-@@ -1,6 +1,7 @@
- from os import getenv, path
- from subprocess import Popen, PIPE
- from re import sub
-+import shlex
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index 71be979f507718caadc091714c40bcee073c1d60..47e86699fe3378e44df4dd04a0aab8aa832142cc 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -570,15 +570,20 @@ static int arm_spe__synth_instruction_sample(struct arm_spe_queue *speq,
+ }
  
- cc = getenv("CC")
- assert cc, "Environment variable CC not set"
-@@ -22,7 +23,9 @@ assert srctree, "Environment variable srctree, for the Linux sources, not set"
- src_feature_tests  = f'{srctree}/tools/build/feature'
+ static const struct midr_range common_ds_encoding_cpus[] = {
++	MIDR_ALL_VERSIONS(MIDR_CORTEX_A715),
+ 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A720),
+ 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A725),
++	MIDR_ALL_VERSIONS(MIDR_CORTEX_A78C),
++	MIDR_ALL_VERSIONS(MIDR_CORTEX_X1),
+ 	MIDR_ALL_VERSIONS(MIDR_CORTEX_X1C),
+ 	MIDR_ALL_VERSIONS(MIDR_CORTEX_X3),
++	MIDR_ALL_VERSIONS(MIDR_CORTEX_X4),
+ 	MIDR_ALL_VERSIONS(MIDR_CORTEX_X925),
+ 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
+ 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2),
+ 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1),
+ 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V2),
++	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V3),
+ 	{},
+ };
  
- def clang_has_option(option):
--    cc_output = Popen([cc, cc_options + option, path.join(src_feature_tests, "test-hello.c") ], stderr=PIPE).stderr.readlines()
-+    cmd = shlex.split(f"{cc} {cc_options} {option}")
-+    cmd.append(path.join(src_feature_tests, "test-hello.c"))
-+    cc_output = Popen(cmd, stderr=PIPE).stderr.readlines()
-     return [o for o in cc_output if ((b"unknown argument" in o) or (b"is not supported" in o) or (b"unknown warning option" in o))] == [ ]
- 
- if cc_is_clang:
+
+---
+base-commit: f3b601f900902ab80902c44f820a8985384ac021
+change-id: 20251017-perf_arm_spe_update_midr_list-b654cc2ac0dd
+
+Best regards,
 -- 
-2.51.0
-
-
+Leo Yan <leo.yan@arm.com>
 
