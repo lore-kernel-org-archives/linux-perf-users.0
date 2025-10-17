@@ -1,26 +1,27 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFE6030F556
-	for <linux-perf-users@vger.kernel.org>; Fri, 17 Oct 2025 10:05:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D39A30F818
+	for <linux-perf-users@vger.kernel.org>; Fri, 17 Oct 2025 10:05:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760695535; cv=none; b=aotHYDv8j2aa1dWtM+asfO0IaEEYXhpsMI568meIyGlhmeK/6VWZKxbFM8fwluzEI0BiM5i30Dw6dz9API74ST9lIPySqEFl5Jg+BrVGcH5nXzDVvdJ0h2L82t75zY0J52h01a8D4diIxob64SLgTlXBxO0wdklQIaNZQBgjldE=
+	t=1760695537; cv=none; b=rMhRAdFxvgDkV27QpVAWInBBpe1GSDe9YXhAzEWL7ngSsSxjasAtjNLuu/4eWQbUKy+Z1eclGNU4FG11t7zpiJ4boymjhKvXv16ttYD0p0sFNEfL4YWj4bKIIxByoA2svCrrJ/Z7yzUldjBVMr8izMTFBc1fVJdEBQCQoqn0NRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760695535; c=relaxed/simple;
-	bh=ixiUf5kOPNGqDsCLn1W0tcm157BdMTyzNAxILZdP0Es=;
+	s=arc-20240116; t=1760695537; c=relaxed/simple;
+	bh=0Rj939NM3iG/pLeQmRL25+gYfRynCaxeME2R2V47qeU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=idZfuhS3inP25C6gUwJGxE6+wH/JV2CU0nHpG19cxlCNG22FoKkfXGdBlg2PiohGMSxhnHCpujHkMqkLZA+L0Efm0o0UbOf4fFR0HFAAUtnsmy+7BS5/U4KYkUz6EEmpHPO6Ij58c2odWD7UBIOdLJl7tvCtQil5Z8WT23pCDQg=
+	 In-Reply-To:To:Cc; b=YnWJKuP27JogAL7Gk5FRVXSEeY5weHSXqkU99lQDZwmTtA6X3esEV2sRucd+3BLW/daDZOe4fKvFOw7SGaor5m4WEk1YzIxouNaLGmG6xUXR0Gey9VvdNqcNRIv8SFPHx3GcYg1nmeg5nZl/onmUs/x69PGkUHOPMuhvFvtel2A=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BDBA61596;
-	Fri, 17 Oct 2025 03:05:25 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68C301595;
+	Fri, 17 Oct 2025 03:05:27 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 495C53F59E;
-	Fri, 17 Oct 2025 03:05:32 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E88BB3F59E;
+	Fri, 17 Oct 2025 03:05:33 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Date: Fri, 17 Oct 2025 11:05:04 +0100
-Subject: [PATCH v2 15/25] perf arm_spe: Report GCS in record
+Date: Fri, 17 Oct 2025 11:05:05 +0100
+Subject: [PATCH v2 16/25] perf arm_spe: Expose SIMD information in other
+ operations
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,7 +30,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251017-perf_support_arm_spev1-3-v2-15-2d41e4746e1b@arm.com>
+Message-Id: <20251017-perf_support_arm_spev1-3-v2-16-2d41e4746e1b@arm.com>
 References: <20251017-perf_support_arm_spev1-3-v2-0-2d41e4746e1b@arm.com>
 In-Reply-To: <20251017-perf_support_arm_spev1-3-v2-0-2d41e4746e1b@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -40,54 +41,72 @@ Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
  linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1760695507; l=1911;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1760695507; l=2811;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=ixiUf5kOPNGqDsCLn1W0tcm157BdMTyzNAxILZdP0Es=;
- b=njlyUUBiX2qFoyCvQfsQzGV6HQ75k4jvWOwg3JItCR2qNUOKTLLRiHJ9/Urx5TcywCxYwlcKu
- W0LGV7nw2DKDjrWGXnY8m+PwZ/cp2FihnrD/H2+gHknhuBzOoPFKOGr
+ bh=0Rj939NM3iG/pLeQmRL25+gYfRynCaxeME2R2V47qeU=;
+ b=Lwkt+bfItWqpZRIhurBiueRZmXET+c8DqGXtURUImgnuLPxvnEj8WcRs7b3WegTfTwm482ORb
+ GI8YeRmXdrnBHAvT9uuSrSVGLYLJ1bLGXTKD3Ati4Vptl8f6OXveRCm
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Report GCS related info in records.
+The other operations contain SME data processing, ASE (Advanced SIMD)
+and floating-point operations. Expose these info in the records.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/util/arm-spe-decoder/arm-spe-decoder.c | 4 ++++
- tools/perf/util/arm-spe-decoder/arm-spe-decoder.h | 2 ++
- 2 files changed, 6 insertions(+)
+ tools/perf/util/arm-spe-decoder/arm-spe-decoder.c | 18 +++++++++++++++++-
+ tools/perf/util/arm-spe-decoder/arm-spe-decoder.h |  4 ++++
+ 2 files changed, 21 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-index 6f0390d4089599cd6bbf1357fa4cd6ec8190a58c..649471abef6a4386e1b250a19cda4f4caeb0a2ff 100644
+index 649471abef6a4386e1b250a19cda4f4caeb0a2ff..9e02b2bdd1177193996d071dd88f969e25b1ad86 100644
 --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
 +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-@@ -228,6 +228,10 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
- 					decoder->record.op |= ARM_SPE_OP_MEMCPY;
- 				} else if (SPE_OP_PKT_LDST_SUBCLASS_MEMSET(payload)) {
- 					decoder->record.op |= ARM_SPE_OP_MEMSET;
-+				} else if (SPE_OP_PKT_LDST_SUBCLASS_GCS(payload)) {
-+					decoder->record.op |= ARM_SPE_OP_GCS;
-+					if (payload & SPE_OP_PKT_GCS_COMM)
-+						decoder->record.op |= ARM_SPE_OP_COMM;
- 				}
- 
+@@ -237,8 +237,24 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
  				break;
+ 			case SPE_OP_PKT_HDR_CLASS_OTHER:
+ 				decoder->record.op |= ARM_SPE_OP_OTHER;
+-				if (SPE_OP_PKT_OTHER_SUBCLASS_SVE(payload))
++				if (SPE_OP_PKT_OTHER_SUBCLASS_SVE(payload)) {
+ 					decoder->record.op |= ARM_SPE_OP_SVE | ARM_SPE_OP_DP;
++					if (payload & SPE_OP_PKT_OTHER_FP)
++						decoder->record.op |= ARM_SPE_OP_FP;
++					if (payload & SPE_OP_PKT_SVE_PRED)
++						decoder->record.op |= ARM_SPE_OP_PRED;
++				} else if (SPE_OP_PKT_OTHER_SUBCLASS_SME(payload)) {
++					decoder->record.op |= ARM_SPE_OP_SME;
++					if (payload & SPE_OP_PKT_OTHER_FP)
++						decoder->record.op |= ARM_SPE_OP_FP;
++				} else if (SPE_OP_PKT_OTHER_SUBCLASS_OTHER(payload)) {
++					if (payload & SPE_OP_PKT_OTHER_ASE)
++						decoder->record.op |= ARM_SPE_OP_ASE;
++					if (payload & SPE_OP_PKT_OTHER_FP)
++						decoder->record.op |= ARM_SPE_OP_FP;
++					if (payload & SPE_OP_PKT_COND)
++						decoder->record.op |= ARM_SPE_OP_COND;
++				}
+ 				break;
+ 			case SPE_OP_PKT_HDR_CLASS_BR_ERET:
+ 				decoder->record.op |= ARM_SPE_OP_BRANCH_ERET;
 diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-index 3f4dae589c062d927d286b73ce53fa39795daffd..b838e9c6168c6b7c20bb63b8e7c9d27c35f416dc 100644
+index b838e9c6168c6b7c20bb63b8e7c9d27c35f416dc..3310e05122f02e8ef32f79f8ed3c6932cc43eecc 100644
 --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
 +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-@@ -47,6 +47,7 @@ enum arm_spe_2nd_op_ldst {
- 	ARM_SPE_OP_MTE_TAG		= 1 << 13,
+@@ -48,6 +48,8 @@ enum arm_spe_2nd_op_ldst {
  	ARM_SPE_OP_MEMCPY		= 1 << 14,
  	ARM_SPE_OP_MEMSET		= 1 << 15,
-+	ARM_SPE_OP_GCS			= 1 << 16,
+ 	ARM_SPE_OP_GCS			= 1 << 16,
++	ARM_SPE_OP_SME			= 1 << 17,
++	ARM_SPE_OP_ASE			= 1 << 18,
  
  	/* Assisted information for memory / SIMD */
  	ARM_SPE_OP_LD			= 1 << 20,
-@@ -57,6 +58,7 @@ enum arm_spe_2nd_op_ldst {
- 	ARM_SPE_OP_DP			= 1 << 25,	/* Data processing */
+@@ -59,6 +61,8 @@ enum arm_spe_2nd_op_ldst {
  	ARM_SPE_OP_PRED			= 1 << 26,	/* Predicated */
  	ARM_SPE_OP_SG			= 1 << 27,	/* Gather/Scatter */
-+	ARM_SPE_OP_COMM			= 1 << 28,	/* Common */
+ 	ARM_SPE_OP_COMM			= 1 << 28,	/* Common */
++	ARM_SPE_OP_FP			= 1 << 29,	/* Floating-point */
++	ARM_SPE_OP_COND			= 1 << 30,	/* Conditional */
  };
  
  enum arm_spe_2nd_op_branch {
