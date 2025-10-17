@@ -1,64 +1,85 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A8B230F951;
-	Fri, 17 Oct 2025 12:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from manage.vyzra.com (unknown [104.128.60.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FFF4331A6B
+	for <linux-perf-users@vger.kernel.org>; Fri, 17 Oct 2025 13:05:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=104.128.60.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760704149; cv=none; b=ZyXz+/4MnNJZPLz2TgvuTazHasMZZ6ULXPcAVvOHK97U94cd+TkDiVBUaiaUAXkTfhvZTCrdS6HNgiEsmAsXCZKDrSx2lc5LD+NjjcSyPbofKtqS6SdKzoGCpCXMUoCskIbeEOiMD6uy5Q6oQk1Gn5vZJ7RFRZfqzOxybWatntg=
+	t=1760706312; cv=none; b=g7opFx45hfEPXY3yU2GVEW/IBBldpif/DFjXd/FT4B4vst5PRjUZAkOix+Tf5W9+WylprPZTzR6k/Kv7VjVSAd952TzZJG7Jbwz1/Og+djx8WU8wOxAM+cpX8O6CiDsK4VSHTz6VfVNIdUYsjIiqdQfw4saiU2aEubuLd6LeONc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760704149; c=relaxed/simple;
-	bh=mbmBwEbwkAUHwpJy6E1FCPPNuZxST6LLw4ZV/OAAVXY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OjgiISgGkzACWfVZTBvQ9nnEo5RCw+3f2wLCxDOyQkNx4/xrTbuhylF2tMlDoZPh4HhpWo1SQFfSmPVc/vBioV2XU3opBwJscXvVUvmNC+ra1glhgH9NDrKBXpOzIh4eRz3Fje/eDa50vkkPiTyadzQlmcjyYMrrcoQTlIXerVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFB011595;
-	Fri, 17 Oct 2025 05:28:58 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4699A3F59E;
-	Fri, 17 Oct 2025 05:29:06 -0700 (PDT)
-Date: Fri, 17 Oct 2025 13:29:04 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] perf build: Add Debian/Ubuntu python-is-python3
-Message-ID: <20251017122904.GC281971@e132581.arm.com>
-References: <cover.1760617634.git.geert+renesas@glider.be>
- <e1c0c2acbab60630cf8538ac5446f91970dad92d.1760617634.git.geert+renesas@glider.be>
+	s=arc-20240116; t=1760706312; c=relaxed/simple;
+	bh=biLnUx9jTTyVdIbdiavoTAgEZeIqqOihfb373MH/e18=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ceEPnCNQa0joybnc6dmZWnoYOYjMczA3/vj0yVIsqOu0cEXDvorzd903WEAQJhvjj6fjl6QLQ9Y12IAFlSCf/vxt4/ao/bko5Rbb/R6jyCvVQtwYgk6Jou+fYgE4Oc7WGbpX3NDARpm2uhyLo1CcsrxDnvSvOcDOtUpMzRJ3b/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debtmanager.org; spf=none smtp.mailfrom=manage.vyzra.com; dkim=fail (0-bit key) header.d=debtmanager.org header.i=@debtmanager.org header.b=tQu+XBeJ reason="key not found in DNS"; arc=none smtp.client-ip=104.128.60.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debtmanager.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=manage.vyzra.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=debtmanager.org header.i=@debtmanager.org header.b="tQu+XBeJ"
+Received: from debtmanager.org (unknown [103.237.86.103])
+	by manage.vyzra.com (Postfix) with ESMTPA id 760AA53386F2
+	for <linux-perf-users@vger.kernel.org>; Fri, 17 Oct 2025 07:45:34 -0500 (CDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=debtmanager.org;
+	s=DKIM2021; t=1760705135; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=Aj8bDacQlJB5qNMC5+yWWged1+K/M8YReXQkzUminbQ=;
+	b=tQu+XBeJdFOGvOff7Gv7Dfao5GtC3V+9ZVg4LNSygdo2liV3IXGstufD5Idvt15gFNV/IK
+	gfGVsIwoVl7Dw06K4t1yQetzxFEFY4lLsa596sNcRCASkWne2BeHC7i0xnsKgRQQN1Dpvm
+	TPIlqq7Kq/jv1HBdKa36J99bFBEhDw9GfJwYAOEhlEuDiB0OuitCcRvDeLHe8rMhLN5xZ0
+	BZ5ftkrWjZKrcjK3nS1JFQv+x1hC5b4eISE76ZBGuBAxCh8AxfvunLC+/+MQ1p6nIGY0um
+	2FljsP+m9pFRc4G23dVmpfmNKQvRNM8LYKwIrLqjdT/R3SUlHNS04kRKkPtoiQ==
+Reply-To: vlad.dinu@rdslink.ro
+From: "Vlad Dinu" <info@debtmanager.org>
+To: linux-perf-users@vger.kernel.org
+Subject: *** Urgent Change ***
+Date: 17 Oct 2025 05:45:33 -0700
+Message-ID: <20251017054533.68E692A3948DB90C@debtmanager.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e1c0c2acbab60630cf8538ac5446f91970dad92d.1760617634.git.geert+renesas@glider.be>
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Score: -0.10
 
-Hi Geert,
+Hello,
 
-On Thu, Oct 16, 2025 at 02:44:12PM +0200, Geert Uytterhoeven wrote:
-> The build looks for "python" and "python-config", while modern
-> distributions provide only "python3" and "python3-config" by default.
-> Suggest installing "python-is-python3" and "python-dev-is-python3", as
-> available on Debian 11 (bullseye) and Ubuntu 20.04 LTS (focal) and
-> later.
+I am Vlad Dinu, the newly appointed Director of IMF Legal=20
+Affairs, Security and Investigation. I have been given the=20
+responsibility to look into all the payments that are still=20
+pending and owed to fund beneficiaries / scam victims worldwide.
 
-Seems to me, this change is not necessary. The Makefile [1] searches
-python[2|3]/python[2|3]-cofig if un-versioned executables are not found.
+This action was taken because there have been issues with some=20
+banks not being able to send or release money to the correct=20
+beneficiary accounts. We have found out that some directors in=20
+different organizations are moving pending funds to their own=20
+chosen accounts instead of where they should go.
 
-I confirmed that I can build successfully without installation
-python-dev-is-python3 package.
+During my investigation, I discovered that an account was=20
+reported to redirect your funds to a bank in Sweden.
+The details of that account are provided below. I would like you=20
+to confirm if you are aware of this new information, as we are=20
+now planning to send the payment to the account mentioned.
 
-Thanks,
-Leo
+NAME OF BENEFICIARY: ERIK KASPERSSON
+BANK NAME: SWEDBANK AB
+ADDRESS: REPSLAGAREGATAN 23A, 582 22 LINK=C3=96PING, SWEDEN
+SWIFT CODE: SWEDSESS
+ACCOUNT NUMBER: 84806-31282205
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/Makefile.config?//h=v6.18-rc1#n302
+
+A payment instruction has been issued by the Department of=20
+Treasury for an immediate release of your payment to the bank=20
+account above without further prejudice. We cannot approve or=20
+schedule payment to the 
+
+given bank account without your confirmation. May we proceed with=20
+the transfer to the Beneficiary: Erik Kaspersson, bank account in=20
+Sweden?
+
+I await your urgent response.
+
+Mr. Vlad Dinu.
