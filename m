@@ -1,26 +1,26 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93E153126C1
-	for <linux-perf-users@vger.kernel.org>; Fri, 17 Oct 2025 10:05:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF3003126C1
+	for <linux-perf-users@vger.kernel.org>; Fri, 17 Oct 2025 10:05:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760695527; cv=none; b=qaA2D9oYasKgcuM4Hw4uBiOy7ocIPeP/26yKYl+2fwrg83TpohHo11H0jIwNcMPnhxL0DtDEJfMZ3a/6qJSTcAuQNkDlsd1x7RWE9lQrZN2fAGSWJVZbY9sjvEHRmHI+tERlb9PA5lJ2wSNCM6R661Eufh46tyGmWfeBcs09DWQ=
+	t=1760695529; cv=none; b=eZ9rj8D1OceIn7DivyJ/3oGm/4rXwetoTjX7BQggZfANKmbWt557p6MG30XZSF1WCxN0NAMmEtrZQ09RxHJ/xFXpjRcRroozAYnYgo6iC0TQ37mQ16Sp1710vbd2g4eH0lKiihPADMdp6PtSF1+GD0G2b8rePiwo8FfHYzEsB7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760695527; c=relaxed/simple;
-	bh=HHOOdkzKuLKsg1t2wcgtmBC8Ve28pWlydemgtJS2c20=;
+	s=arc-20240116; t=1760695529; c=relaxed/simple;
+	bh=9xyqlRibKdfIEBA60SZCFaRYBKwargJv8y6O2L3jq+o=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=r4l7GhBq+MdRmLAuWcceSMXd0bhMH+eRQ2v/YNoDWT0CWraOZgW6sAj9X0ptbhGwnb7e3M7uxCXM/aYmKgaIAADWSUVPniGFISjl+m9PRfHtrrUOWuYY4Lv7a1ljnxQEh598II127UlMbpM7VLNoWqZoQvINpXm9VV5qI446RXc=
+	 In-Reply-To:To:Cc; b=Hw3mtuxadWnRhJzSPBPoWKMZx47UI5/0zEWUYA+KWfyVr7pjkM/ZIa4TaShYyXgASjGzwixEu6thFk6DojjCkPBoGRSKhhJ7bqtRyuuyD2g8mkYShhlTUwqc9J8Eowgh/sVG8CbTFM5gfcdT4O/NrBL/OIOB2N89mbTsEVoi++M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C7551595;
-	Fri, 17 Oct 2025 03:05:17 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 288BB1596;
+	Fri, 17 Oct 2025 03:05:19 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09A743F59E;
-	Fri, 17 Oct 2025 03:05:23 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A878D3F59E;
+	Fri, 17 Oct 2025 03:05:25 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Date: Fri, 17 Oct 2025 11:04:59 +0100
-Subject: [PATCH v2 10/25] perf arm_spe: Report register access in record
+Date: Fri, 17 Oct 2025 11:05:00 +0100
+Subject: [PATCH v2 11/25] perf arm_spe: Report MTE allocation tag in record
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,7 +29,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251017-perf_support_arm_spev1-3-v2-10-2d41e4746e1b@arm.com>
+Message-Id: <20251017-perf_support_arm_spev1-3-v2-11-2d41e4746e1b@arm.com>
 References: <20251017-perf_support_arm_spev1-3-v2-0-2d41e4746e1b@arm.com>
 In-Reply-To: <20251017-perf_support_arm_spev1-3-v2-0-2d41e4746e1b@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -40,46 +40,47 @@ Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
  linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1760695507; l=1481;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1760695507; l=1653;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=HHOOdkzKuLKsg1t2wcgtmBC8Ve28pWlydemgtJS2c20=;
- b=+SDmEsn7YUImvZLC+rpO9rSncg1b3+qxJT8vyR06OHk7R5KHTLONf33ZISxL/jSn0EZO37XbK
- xOcQ4aIl8yFCRtmFcXfnih9l99AWdErHKIoWVByyZWuyG6iWO4v7WqL
+ bh=9xyqlRibKdfIEBA60SZCFaRYBKwargJv8y6O2L3jq+o=;
+ b=ibo47XJONTx9L1NypgbygYZ3EIHgbZlMlhVH89a95xTvdbeRq2C7a7OJCqoyvgEeyKyrJeF8y
+ jCZ0gkFxIzlC5Dd1iymBSy3C9BhtmB6BMNvqDWpMgXR/djVMa3prv5b
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Record register access info for load / store operations.
+Save MTE tag info in memory record.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/util/arm-spe-decoder/arm-spe-decoder.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ tools/perf/util/arm-spe-decoder/arm-spe-decoder.c | 2 ++
+ tools/perf/util/arm-spe-decoder/arm-spe-decoder.h | 1 +
+ 2 files changed, 3 insertions(+)
 
 diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-index 6974f594f37c9916fff591ced1e9c2d60cf84f14..804dce129121b9d2600be01af7f1f2780a9d0fc9 100644
+index 804dce129121b9d2600be01af7f1f2780a9d0fc9..6696448bdf4f347e2032a1b4da46fcdd4016f9fc 100644
 --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
 +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-@@ -200,8 +200,19 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
- 					decoder->record.op |= ARM_SPE_OP_ST;
- 				else
- 					decoder->record.op |= ARM_SPE_OP_LD;
--				if (SPE_OP_PKT_LDST_SUBCLASS_SVE_SME_REG(payload))
-+
-+				if (SPE_OP_PKT_LDST_SUBCLASS_GP_REG(payload)) {
-+					decoder->record.op |= ARM_SPE_OP_GP_REG;
-+				} else if (SPE_OP_PKT_LDST_SUBCLASS_SIMD_FP(payload)) {
-+					decoder->record.op |= ARM_SPE_OP_SIMD_FP;
-+				} else if (SPE_OP_PKT_LDST_SUBCLASS_UNSPEC_REG(payload)) {
-+					decoder->record.op |= ARM_SPE_OP_UNSPEC_REG;
-+				} else if (SPE_OP_PKT_LDST_SUBCLASS_NV_SYSREG(payload)) {
-+					decoder->record.op |= ARM_SPE_OP_NV_SYSREG;
-+				} else if (SPE_OP_PKT_LDST_SUBCLASS_SVE_SME_REG(payload)) {
+@@ -209,6 +209,8 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
+ 					decoder->record.op |= ARM_SPE_OP_UNSPEC_REG;
+ 				} else if (SPE_OP_PKT_LDST_SUBCLASS_NV_SYSREG(payload)) {
+ 					decoder->record.op |= ARM_SPE_OP_NV_SYSREG;
++				} else if (SPE_OP_PKT_LDST_SUBCLASS_MTE_TAG(payload)) {
++					decoder->record.op |= ARM_SPE_OP_MTE_TAG;
+ 				} else if (SPE_OP_PKT_LDST_SUBCLASS_SVE_SME_REG(payload)) {
  					decoder->record.op |= ARM_SPE_OP_SVE;
-+				}
-+
- 				break;
- 			case SPE_OP_PKT_HDR_CLASS_OTHER:
- 				decoder->record.op |= ARM_SPE_OP_OTHER;
+ 				}
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+index acab6d11096b19b1d31a553c83cba9732ecf5ddb..7b4d26f2ebfe17a9187f959e5ec0b2479f70cc2f 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+@@ -44,6 +44,7 @@ enum arm_spe_2nd_op_ldst {
+ 	ARM_SPE_OP_NV_SYSREG		= 1 << 10,
+ 	ARM_SPE_OP_SIMD_FP		= 1 << 11,
+ 	ARM_SPE_OP_SVE			= 1 << 12,
++	ARM_SPE_OP_MTE_TAG		= 1 << 13,
+ 
+ 	/* Assisted information for memory / SIMD */
+ 	ARM_SPE_OP_LD			= 1 << 20,
 
 -- 
 2.34.1
