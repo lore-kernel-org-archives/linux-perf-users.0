@@ -1,26 +1,27 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70FBE31196D
-	for <linux-perf-users@vger.kernel.org>; Fri, 17 Oct 2025 10:05:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE8F630F804
+	for <linux-perf-users@vger.kernel.org>; Fri, 17 Oct 2025 10:05:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760695515; cv=none; b=PA2w3AhTa6bLRRLcZvL7bweIm0gjciUdkRH0Ya7Pzs3Nh+N7Mg6WDEU7fxVExZg0ifDAP1sre4Ar+sGxEGb9Q6LQvMa5l9Lk3Xr288Wu+fMtdhBBIKAYctp3SUyst8t46d5HKxVFNpWovGo5uFUzVPUMBW8rkuyyMUxY0qYSjec=
+	t=1760695517; cv=none; b=Z72i5rT2Umx6pRv0hnZ2rHRwssKvqy6Z4g/ErgG1k3u0ViChTRU+V4bXlxH8GgKEwlBSeZ41IdvJml8q28zPBtvC3WwwhKQWSmn5XnywvG73s+IoopZf8t2bXqFTc3AlDq0rbS2GnJAZutR+L19H5tRpidoBDuWQ2E8Vniicbww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760695515; c=relaxed/simple;
-	bh=AI7UBaNe19y2ZmOnZ10XQZCilrMUPhEQMhX054AblbQ=;
+	s=arc-20240116; t=1760695517; c=relaxed/simple;
+	bh=zixE5i3+mSZRJrxDBxY30q3IwlWCPYbQatyMldJsYEw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lpe/gsd6EXZP+JjEjM4t8m94NCzZjZ+UxgaqTQEo76kOBlK7T559IxdC5r8pIeAiY0opQB5JJwsOTWr7JEHpJw+vnw3AgPrGhBBXuAPzABdLig3WaswrUkF/ZTuocoH4dVg9nBOO2ZBnCJiOvRHjbio/dxY1VHMPngFinU+hAsI=
+	 In-Reply-To:To:Cc; b=KV8O8CHBCgpZV1cil+wPF5Cz5/fqni0LLa0kyqC9zTEMvVjHcqz3q54jr/xc69NuaCcg54/WnkkF/LUsiZMrw7zUbhv+QShwMzBd0FNxkhGqTFbt7ypcSo1Ntq0vNqKIXJezqF/NVkCL5i0SjWuqhoTN5JgRqHHP49T1l0xZGgg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E557C1596;
-	Fri, 17 Oct 2025 03:05:05 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 905CA1595;
+	Fri, 17 Oct 2025 03:05:07 -0700 (PDT)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73D143F59E;
-	Fri, 17 Oct 2025 03:05:12 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1EF3A3F59E;
+	Fri, 17 Oct 2025 03:05:13 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
-Date: Fri, 17 Oct 2025 11:04:52 +0100
-Subject: [PATCH v2 03/25] perf arm_spe: Decode GCS operation
+Date: Fri, 17 Oct 2025 11:04:53 +0100
+Subject: [PATCH v2 04/25] perf arm_spe: Rename SPE_OP_PKT_IS_OTHER_SVE_OP
+ macro
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,7 +30,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251017-perf_support_arm_spev1-3-v2-3-2d41e4746e1b@arm.com>
+Message-Id: <20251017-perf_support_arm_spev1-3-v2-4-2d41e4746e1b@arm.com>
 References: <20251017-perf_support_arm_spev1-3-v2-0-2d41e4746e1b@arm.com>
 In-Reply-To: <20251017-perf_support_arm_spev1-3-v2-0-2d41e4746e1b@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
@@ -40,60 +41,62 @@ Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
  linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1760695507; l=2306;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1760695507; l=2605;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=AI7UBaNe19y2ZmOnZ10XQZCilrMUPhEQMhX054AblbQ=;
- b=saS9Y+yl20L3IZCJAST4fGGclNj8Yx67kKxOEMVQ2qqHXvr8n9qInlkUbTUMp2NRH3V61Odhc
- 5a3RG49U8/SDGKWIIPVy4Vm+cPp0gMMI1bgbrPaqo2ooiHzHMdJNZgM
+ bh=zixE5i3+mSZRJrxDBxY30q3IwlWCPYbQatyMldJsYEw=;
+ b=DdoQjY2CZYt54rhcRvXTEyDXoxhqDd1jKHrrkGdanlFsO4eALn7mBbwX6yQVXtBkTVigqqkZ+
+ doBT9xYzb/GCZR5XCV/sKvFNKqZC7UJItQjoJKEGcinrWZyS2gzR8Ri
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Decode a load or store from a GCS operation and the associated "common"
-field.
-
-After:
-
-  .  00000000:  49 44                                           LD GCS COMM
-  .  00000002:  b2 18 3c d7 83 00 80 ff ff                      VA 0xffff800083d73c18
-  .  0000000b:  9a 00 00                                        LAT 0 XLAT
-  .  0000000e:  43 00                                           DATA-SOURCE 0
+Rename the macro to SPE_OP_PKT_OTHER_SUBCLASS_SVE to unify naming.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c | 4 ++++
- tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h | 4 ++++
- 2 files changed, 8 insertions(+)
+ tools/perf/util/arm-spe-decoder/arm-spe-decoder.c     | 2 +-
+ tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c | 2 +-
+ tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+index b0fb896abad48de93aa1ed560029f9bc9ae969e9..847c29385bea8618e14b2eb21a08896041890d89 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+@@ -205,7 +205,7 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
+ 				break;
+ 			case SPE_OP_PKT_HDR_CLASS_OTHER:
+ 				decoder->record.op |= ARM_SPE_OP_OTHER;
+-				if (SPE_OP_PKT_IS_OTHER_SVE_OP(payload))
++				if (SPE_OP_PKT_OTHER_SUBCLASS_SVE(payload))
+ 					decoder->record.op |= ARM_SPE_OP_SVE_OTHER;
+ 				break;
+ 			case SPE_OP_PKT_HDR_CLASS_BR_ERET:
 diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-index f6e9c58ce62f3ae227a79d91caefaef4bd87d98a..0046079edaccdd4d0c093f73395d1ecdc0007621 100644
+index 0046079edaccdd4d0c093f73395d1ecdc0007621..533920b738cbcb39136d1ba3d88e99f9d8009e74 100644
 --- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
 +++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-@@ -394,6 +394,10 @@ static int arm_spe_pkt_desc_op_type(const struct arm_spe_pkt *packet,
- 				arm_spe_pkt_out_string(&err, &buf, &buf_len, " PRED");
- 			if (payload & SPE_OP_PKT_SVE_SG)
- 				arm_spe_pkt_out_string(&err, &buf, &buf_len, " SG");
-+		} else if (SPE_OP_PKT_LDST_SUBCLASS_GCS(payload)) {
-+			arm_spe_pkt_out_string(&err, &buf, &buf_len, " GCS");
-+			if (payload & SPE_OP_PKT_GCS_COMM)
-+				arm_spe_pkt_out_string(&err, &buf, &buf_len, " COMM");
- 		}
- 		break;
- 	case SPE_OP_PKT_HDR_CLASS_BR_ERET:
+@@ -340,7 +340,7 @@ static int arm_spe_pkt_desc_op_type(const struct arm_spe_pkt *packet,
+ 
+ 	switch (packet->index) {
+ 	case SPE_OP_PKT_HDR_CLASS_OTHER:
+-		if (SPE_OP_PKT_IS_OTHER_SVE_OP(payload)) {
++		if (SPE_OP_PKT_OTHER_SUBCLASS_SVE(payload)) {
+ 			arm_spe_pkt_out_string(&err, &buf, &buf_len, "SVE-OTHER");
+ 
+ 			/* SVE effective vector length */
 diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-index cb947e625918922dc1fa25cf8843b09661197782..94333e7bc382deef119414e4f1de7c2878620035 100644
+index 94333e7bc382deef119414e4f1de7c2878620035..48bd9e9ef132b11b79ffe2e2fbc7cfe4c340ff92 100644
 --- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
 +++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-@@ -154,6 +154,10 @@ enum arm_spe_events {
- #define SPE_OP_PKT_SVE_PRED			BIT(2)
- #define SPE_OP_PKT_SVE_FP			BIT(1)
+@@ -123,7 +123,7 @@ enum arm_spe_events {
+ #define SPE_OP_PKT_HDR_CLASS_LD_ST_ATOMIC	0x1
+ #define SPE_OP_PKT_HDR_CLASS_BR_ERET		0x2
  
-+#define SPE_OP_PKT_LDST_SUBCLASS_GCS(v)		(((v) & (GENMASK_ULL(7, 3) | BIT(1))) == 0x40)
-+
-+#define SPE_OP_PKT_GCS_COMM			BIT(2)
-+
- #define SPE_OP_PKT_CR_MASK			GENMASK_ULL(4, 3)
- #define SPE_OP_PKT_CR_BL(v)			(FIELD_GET(SPE_OP_PKT_CR_MASK, (v)) == 1)
- #define SPE_OP_PKT_CR_RET(v)			(FIELD_GET(SPE_OP_PKT_CR_MASK, (v)) == 2)
+-#define SPE_OP_PKT_IS_OTHER_SVE_OP(v)		(((v) & (BIT(7) | BIT(3) | BIT(0))) == 0x8)
++#define SPE_OP_PKT_OTHER_SUBCLASS_SVE(v)	(((v) & (BIT(7) | BIT(3) | BIT(0))) == 0x8)
+ 
+ #define SPE_OP_PKT_LDST_SUBCLASS_GP_REG(v)	(((v) & GENMASK_ULL(7, 1)) == 0x0)
+ #define SPE_OP_PKT_LDST_SUBCLASS_SIMD_FP(v)	(((v) & GENMASK_ULL(7, 1)) == 0x4)
 
 -- 
 2.34.1
