@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EDC3370FB;
-	Fri, 17 Oct 2025 14:57:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB07B60DCF;
+	Fri, 17 Oct 2025 15:06:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760713071; cv=none; b=aB0llvgewPSp0raBrOeXt0vrPu6bF89D4a5lr0nxmkhv6tAL+uX2uxUYtSsXJ+mafD8Dzi5+ECh9iLWUymUrGRtTqKuLUeNprNpDun5wsOks0ROPjcWlU8ky3C98Oo6WJdeJJQijoiRrQT4aH1jJrn1qCp5cEFh0FXV4o7RlQBg=
+	t=1760713563; cv=none; b=Ly3YkF2NgrEspRJjjB5XgZa4Fb9IFTk1RH7m+KQuBcw77qIjFJFdokehT+c79fRZQunXBrNwCbf4/luZFmA1OkcYug4NTNHCRa9NREs88O8ZvWGmyhFnj1yyjYERo7xnc8b3rX/AkYsnlOgalbU9xCRjftnsgTQRfdc45gKLYS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760713071; c=relaxed/simple;
-	bh=yyXdbqmVBwCJBAnDFJ6uojdAFVjK3BND7ZL/z25OXiw=;
+	s=arc-20240116; t=1760713563; c=relaxed/simple;
+	bh=aXYiaW60kEXBJHbhpm7wTDTpf+hS7fd/uW32fo4VVJE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KGycjbHmGir7K1wlk/h6uzRBiWLLExMN+uKFazO18PDhx/14MwGPH5JczmX8pimU9Ynp3ww+fgZawyZ7/EG/AsHOaNxVzRE269vzg4ijSl+ZloV123O2Je+qIEXb2IpSGmoseITmw1ZYwWhbGz+W+J1oLsjPoWpRO2hhOCvd4gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=KlAO6bDX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=htXUeYumGAmrIDBm4nhngXGNv7TVJvdvXAv2VoxP04Z58X3GlUpgXXyis0y9S74v/i3lreGAkjP0F0Q58o2O20xLguAq0towRou6Q0lHbboGh/RrRY8K4ESJ36UQh1F0r+k0gkKnm1xc86KYsJE2lDGdsobtLG4//iC/6yW7EIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XuSKZPyu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="KlAO6bDX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2B84C4CEE7;
-	Fri, 17 Oct 2025 14:57:50 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XuSKZPyu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 438D7C4CEE7;
+	Fri, 17 Oct 2025 15:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1760713071;
-	bh=yyXdbqmVBwCJBAnDFJ6uojdAFVjK3BND7ZL/z25OXiw=;
+	s=korg; t=1760713562;
+	bh=aXYiaW60kEXBJHbhpm7wTDTpf+hS7fd/uW32fo4VVJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KlAO6bDXr0YEqUbd3vX7IqaM68TdJ5EHbXO1NaZf6BBEbusVCGtxyY9rO1BSqYdE5
-	 BWRw53ySzQ7x3gYfiEc/Q/0kRewETZyJ6FTMoff2Gd/4Osgp1QAIBuyNuSMyoH1NBB
-	 x9R3jRIFBDTr0A1q20lgTD3NzBMisr+KrKOb7+eM=
+	b=XuSKZPyukqnjuHC6kaqdVOeDM0IG1PRcjGOIfbTnwBthzWLoglC5cD/GtsAtUh2bJ
+	 iUCZhqQJlUbmLmc9Aqo0IsgnLoC6TllgKe53w+hZl0CzgxDddSDYr+/6ySjFP8TGGw
+	 NSU/FRN7cyV7dY54P/P7LNtV2f07CO9CORHWJ6os=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,12 +48,12 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.1 037/168] tools build: Align warning options with perf
-Date: Fri, 17 Oct 2025 16:51:56 +0200
-Message-ID: <20251017145130.385519209@linuxfoundation.org>
+Subject: [PATCH 6.6 039/201] tools build: Align warning options with perf
+Date: Fri, 17 Oct 2025 16:51:40 +0200
+Message-ID: <20251017145136.181864974@linuxfoundation.org>
 X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20251017145129.000176255@linuxfoundation.org>
-References: <20251017145129.000176255@linuxfoundation.org>
+In-Reply-To: <20251017145134.710337454@linuxfoundation.org>
+References: <20251017145134.710337454@linuxfoundation.org>
 User-Agent: quilt/0.69
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -65,7 +65,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-6.1-stable review patch.  If anyone has any objections, please let me know.
+6.6-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
@@ -107,10 +107,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 690fe97be1904..1b7886cbbb65a 100644
+index 4f869fff28fe4..17e03236e3461 100644
 --- a/tools/build/feature/Makefile
 +++ b/tools/build/feature/Makefile
-@@ -282,10 +282,10 @@ $(OUTPUT)test-libbabeltrace.bin:
+@@ -306,10 +306,10 @@ $(OUTPUT)test-libbabeltrace.bin:
  	$(BUILD) # -lbabeltrace provided by $(FEATURE_CHECK_LDFLAGS-libbabeltrace)
  
  $(OUTPUT)test-compile-32.bin:
