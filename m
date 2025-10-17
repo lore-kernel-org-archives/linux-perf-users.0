@@ -1,171 +1,238 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C53721255E;
-	Fri, 17 Oct 2025 02:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A53A23B0;
+	Fri, 17 Oct 2025 07:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760667359; cv=none; b=OYCcusILuw41sfq0jpzCtbwOcpkzBZEdijmUPa77tTRiHvjff7B4kMbXmBuoTgNulQ4STxSAPWEMGPtxHP8F0ErF5nSVpAOrsLi/Ut8StW5rDOFs3EsPMhpDDJcSHms1/E3OErU49OcfaHKf5dpaR9Pm8siWYuICbn8CxLb04a0=
+	t=1760685924; cv=none; b=SjhZNrK0m0Jl9PW+dLJ2YS8Cuy6Yatd97xlF7d/JI1UyvUDzlmqZrnIP9CJ/ChiPH0sb1WtbIePS9DTUSLlXL1hls0yJLp5SnrnN/p9A5Nq4WPw2eX/NAQMChztUDujWrP/9OeDnZuUXxk2+UkhE0WBMTZP/HLvGf7B/endwyi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760667359; c=relaxed/simple;
-	bh=ZzJqPnD022jUz0cHbE954AAwJiotHwE7/QBgp0IOop0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MAy5g8AFooXERbWuzS4kZt2kV6KKx2h6CYrinJGq9Jj4QuG0J/f/oZ+VgixwSiirhiUL1mLa9OG87fWoQkBPgTUfnGQwHis9V5MLKtIQDAcPUpj/PxM+CfbSdh5UFN4fRQGp/d8XeUj2tUcF9xlndez+03bHLFm5TgJGu5eMm+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 309e54e0aaff11f0a38c85956e01ac42-20251017
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:503234ec-d232-42f3-a237-b433a00c9253,IP:0,UR
-	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-25
-X-CID-META: VersionHash:a9d874c,CLOUDID:3ffe33a261b424441a311a096a81b706,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102|850,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
-	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 309e54e0aaff11f0a38c85956e01ac42-20251017
-X-User: tanze@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <tanze@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 139055187; Fri, 17 Oct 2025 10:15:45 +0800
-From: tanze <tanze@kylinos.cn>
-To: james.clark@linaro.org,
-	leo.yan@linux.dev,
-	irogers@google.com,
-	john.g.garry@oracle.com
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	graham.woodward@arm.com,
-	mike.leach@linaro.org,
-	tanze <tanze@kylinos.cn>
-Subject: [PATCH v2] perf arm_spe: Add a macro definition to handle offset value
-Date: Fri, 17 Oct 2025 10:15:40 +0800
-Message-Id: <20251017021540.45930-1-tanze@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20251016083019.27935-1-tanze@kylinos.cn>
-References: <20251016083019.27935-1-tanze@kylinos.cn>
+	s=arc-20240116; t=1760685924; c=relaxed/simple;
+	bh=Z7cyfSxaeuZUs6mlTYcEy3+AflyaN60cf+9SwynbcbE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WZIx3yL0Aku7KeiAnKbTtEihMbeJckMb5uPKeM3R44VF3dMQ+OSPDhNyF8MmCxQNoNZ0nnzm7SK/baj80qqr2pUhZMZUpvgJmpWS09ZlN1gCgFR6K0uyZPselHOvPCRSVJX1+jvLVX1qUvY8gD4z81x4MH8NI9ZAqNvADst8AyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hXdeuTmW; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hXdeuTmW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760685922; x=1792221922;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Z7cyfSxaeuZUs6mlTYcEy3+AflyaN60cf+9SwynbcbE=;
+  b=hXdeuTmWcZiFb3F9nI16R+cVCFotKmR2ZxjCzk1DVF66IhqJFEpEpTQa
+   3bkhpMTia1z/iTKYVIr0Z650XgP2xeaBnOrHLUn4g/J32srf0toJj3t7a
+   hhHRZGzhRp4YMCkGs5HF5GjT0bqAIgLiCgTajK/NofG488lHx1RBqAxTU
+   HKQSYaG/nZV5aixgMnTbCu5bWi0gyx6YhXhtyieIJA7vjM/wBhimzsAY8
+   EBAtEoWb0s1JtEVmepZnadaIdh0F8x0E73D5x9dQ+c8zH1F4CokgkG7Z9
+   w2/kP2pRYIGzVlRhhpiGBOjUclKdEGIvZYVEnVzH5dBVI3j92bQjnUK+/
+   g==;
+X-CSE-ConnectionGUID: QXX5TCJ9TWq1U/P0sdfYBw==
+X-CSE-MsgGUID: YCVM5OH4Tv6Zm/WVlKBy0A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11584"; a="66757998"
+X-IronPort-AV: E=Sophos;i="6.19,234,1754982000"; 
+   d="scan'208";a="66757998"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2025 00:25:20 -0700
+X-CSE-ConnectionGUID: 71AyV9i4TfOibcqOd+Sk6w==
+X-CSE-MsgGUID: cVAq1Ro+QAOV0KWi4B37Gg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,234,1754982000"; 
+   d="scan'208";a="187948572"
+Received: from unknown (HELO [10.124.233.173]) ([10.124.233.173])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2025 00:25:16 -0700
+Message-ID: <18f20d38-070c-4e17-bc90-cf7102e1e53d@linux.intel.com>
+Date: Fri, 17 Oct 2025 15:25:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 3/3] perf parse-events: Add 'X' modifier to exclude an
+ event from being regrouped
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Yoshihiro Furudera <fj5100bi@fujitsu.com>, Howard Chu
+ <howardchu95@gmail.com>, Thomas Falcon <thomas.falcon@intel.com>,
+ Andi Kleen <ak@linux.intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Xudong Hao <xudong.hao@intel.com>
+References: <20250825211204.2784695-1-irogers@google.com>
+ <20250825211204.2784695-4-irogers@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250825211204.2784695-4-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add a macro definition SPE_SYNTH_ID_OFFSET to handle the offset value
-and improve readability.
 
-Signed-off-by: tanze <tanze@kylinos.cn>
----
-Hi, Leo Yan
+On 8/26/2025 5:12 AM, Ian Rogers wrote:
+> The function parse_events__sort_events_and_fix_groups is needed to fix
+> uncore events like:
+> ```
+> $ perf stat -e '{data_read,data_write}' ...
+> ```
+> so that the multiple uncore PMUs have a group each of data_read and
+> data_write events.
+>
+> The same function will perform architecture sorting and group fixing,
+> in particular for Intel topdown/perf-metric events. Grouping multiple
+> perf metric events together causes perf_event_open to fail as the
+> group can only support one. This means command lines like:
+> ```
+> $ perf stat -e 'slots,slots' ...
+> ```
+> fail as the slots events are forced into a group together to try to
+> satisfy the perf-metric event constraints.
+>
+> As the user may know better than
+> parse_events__sort_events_and_fix_groups add a 'X' modifier to skip
+> its regrouping behavior. This allows the following to succeed rather
+> than fail on the second slots event being opened:
+> ```
+> $ perf stat -e 'slots,slots:X' -a sleep 1
+>
+>  Performance counter stats for 'system wide':
+>
+>      6,834,154,071      cpu_core/slots/                                                         (50.13%)
+>      5,548,629,453      cpu_core/slots/X                                                        (49.87%)
+>
+>        1.002634606 seconds time elapsed
+> ```
+>
+> Reported-by: Xudong Hao <xudong.hao@intel.com>
+> Reported-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Closes: https://lore.kernel.org/lkml/20250822082233.1850417-1-dapeng1.mi@linux.intel.com/
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/Documentation/perf-list.txt | 1 +
+>  tools/perf/util/evsel.h                | 1 +
+>  tools/perf/util/parse-events.c         | 5 +++--
+>  tools/perf/util/parse-events.h         | 1 +
+>  tools/perf/util/parse-events.l         | 5 +++--
+>  5 files changed, 9 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+> index 28215306a78a..a5039d1614f9 100644
+> --- a/tools/perf/Documentation/perf-list.txt
+> +++ b/tools/perf/Documentation/perf-list.txt
+> @@ -73,6 +73,7 @@ counted. The following modifiers exist:
+>   e - group or event are exclusive and do not share the PMU
+>   b - use BPF aggregration (see perf stat --bpf-counters)
+>   R - retire latency value of the event
+> + X - don't regroup the event to match PMUs
+>  
+>  The 'p' modifier can be used for specifying how precise the instruction
+>  address should be. The 'p' modifier can be specified multiple times:
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index e927a3a4fe0e..03f9f22e3a0c 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -89,6 +89,7 @@ struct evsel {
+>  		bool			use_config_name;
+>  		bool			skippable;
+>  		bool			retire_lat;
+> +		bool			dont_regroup;
+>  		int			bpf_fd;
+>  		struct bpf_object	*bpf_obj;
+>  		struct list_head	config_terms;
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 8282ddf68b98..43de19551c81 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -1892,6 +1892,8 @@ static int parse_events__modifier_list(struct parse_events_state *parse_state,
+>  			evsel->bpf_counter = true;
+>  		if (mod.retire_lat)
+>  			evsel->retire_lat = true;
+> +		if (mod.dont_regroup)
+> +			evsel->dont_regroup = true;
+>  	}
+>  	return 0;
+>  }
+> @@ -2188,13 +2190,12 @@ static int parse_events__sort_events_and_fix_groups(struct list_head *list)
+>  		 * Set the group leader respecting the given groupings and that
+>  		 * groups can't span PMUs.
+>  		 */
+> -		if (!cur_leader) {
+> +		if (!cur_leader || pos->dont_regroup) {
+>  			cur_leader = pos;
+>  			cur_leaders_grp = &pos->core;
+>  			if (pos_force_grouped)
+>  				force_grouped_leader = pos;
+>  		}
+> -
+>  		cur_leader_pmu_name = cur_leader->group_pmu_name;
+>  		if (strcmp(cur_leader_pmu_name, pos_pmu_name)) {
+>  			/* PMU changed so the group/leader must change. */
+> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+> index 62dc7202e3ba..a5c5fc39fd6f 100644
+> --- a/tools/perf/util/parse-events.h
+> +++ b/tools/perf/util/parse-events.h
+> @@ -216,6 +216,7 @@ struct parse_events_modifier {
+>  	bool guest : 1;		/* 'G' */
+>  	bool host : 1;		/* 'H' */
+>  	bool retire_lat : 1;	/* 'R' */
+> +	bool dont_regroup : 1;	/* 'X' */
+>  };
+>  
+>  int parse_events__modifier_event(struct parse_events_state *parse_state, void *loc,
+> diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+> index 2034590eb789..294e943bcdb4 100644
+> --- a/tools/perf/util/parse-events.l
+> +++ b/tools/perf/util/parse-events.l
+> @@ -206,6 +206,7 @@ static int modifiers(struct parse_events_state *parse_state, yyscan_t scanner)
+>  		CASE('e', exclusive);
+>  		CASE('b', bpf);
+>  		CASE('R', retire_lat);
+> +		CASE('X', dont_regroup);
+>  		default:
+>  			return PE_ERROR;
+>  		}
+> @@ -251,10 +252,10 @@ term_name	{name_start}[a-zA-Z0-9_*?.\[\]!\-:]*
+>  quoted_name	[\']{name_start}[a-zA-Z0-9_*?.\[\]!\-:,\.=]*[\']
+>  drv_cfg_term	[a-zA-Z0-9_\.]+(=[a-zA-Z0-9_*?\.:]+)?
+>  /*
+> - * If you add a modifier you need to update check_modifier().
+> + * If you add a modifier you need to update modifiers().
+>   * Also, the letters in modifier_event must not be in modifier_bp.
+>   */
+> -modifier_event	[ukhpPGHSDIWebR]{1,16}
+> +modifier_event	[ukhpPGHSDIWebRX]{1,17}
+>  modifier_bp	[rwx]{1,3}
+>  lc_type 	(L1-dcache|l1-d|l1d|L1-data|L1-icache|l1-i|l1i|L1-instruction|LLC|L2|dTLB|d-tlb|Data-TLB|iTLB|i-tlb|Instruction-TLB|branch|branches|bpu|btb|bpc|node)
+>  lc_op_result	(load|loads|read|store|stores|write|prefetch|prefetches|speculative-read|speculative-load|refs|Re
 
-Thank you for your guidance and suggestions. I have made revisions according to your requirements. 
-Do you have any further suggestions?
----
-Changes in v2:
-- Migrate the macro definitions to the synthetic-events.h file
-- Add modifications to other source files that use the offset value
----
- tools/perf/util/arm-spe.c          | 2 +-
- tools/perf/util/cs-etm.c           | 2 +-
- tools/perf/util/intel-bts.c        | 2 +-
- tools/perf/util/intel-pt.c         | 2 +-
- tools/perf/util/powerpc-vpadtl.c   | 3 ++-
- tools/perf/util/synthetic-events.h | 2 ++
- 6 files changed, 8 insertions(+), 5 deletions(-)
+Hi Ian,
 
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 71be979f5077..b082cb1666a6 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -1732,7 +1732,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
- 	attr.sample_period = spe->synth_opts.period;
- 
- 	/* create new id val to be a fixed offset from evsel id */
--	id = evsel->core.id[0] + 1000000000;
-+	id = evsel->core.id[0] + PERF_SYNTH_EVENT_ID_OFFSET;
- 
- 	if (!id)
- 		id = 1;
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 30f4bb3e7fa3..46902f7b69f1 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -1726,7 +1726,7 @@ static int cs_etm__synth_events(struct cs_etm_auxtrace *etm,
- 	attr.read_format = evsel->core.attr.read_format;
- 
- 	/* create new id val to be a fixed offset from evsel id */
--	id = evsel->core.id[0] + 1000000000;
-+	id = evsel->core.id[0] + PERF_SYNTH_EVENT_ID_OFFSET;
- 
- 	if (!id)
- 		id = 1;
-diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
-index 3625c6224750..98b928eca724 100644
---- a/tools/perf/util/intel-bts.c
-+++ b/tools/perf/util/intel-bts.c
-@@ -777,7 +777,7 @@ static int intel_bts_synth_events(struct intel_bts *bts,
- 	attr.sample_id_all = evsel->core.attr.sample_id_all;
- 	attr.read_format = evsel->core.attr.read_format;
- 
--	id = evsel->core.id[0] + 1000000000;
-+	id = evsel->core.id[0] + PERF_SYNTH_EVENT_ID_OFFSET;
- 	if (!id)
- 		id = 1;
- 
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 9b1011fe4826..4fb9600a7369 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -3987,7 +3987,7 @@ static int intel_pt_synth_events(struct intel_pt *pt,
- 	attr.sample_id_all = evsel->core.attr.sample_id_all;
- 	attr.read_format = evsel->core.attr.read_format;
- 
--	id = evsel->core.id[0] + 1000000000;
-+	id = evsel->core.id[0] + PERF_SYNTH_EVENT_ID_OFFSET;
- 	if (!id)
- 		id = 1;
- 
-diff --git a/tools/perf/util/powerpc-vpadtl.c b/tools/perf/util/powerpc-vpadtl.c
-index 39a3fb3f1330..5ce5d2bf4c6c 100644
---- a/tools/perf/util/powerpc-vpadtl.c
-+++ b/tools/perf/util/powerpc-vpadtl.c
-@@ -15,6 +15,7 @@
- #include "powerpc-vpadtl.h"
- #include "sample.h"
- #include "tool.h"
-+#include "util/synthetic-events.h"
- 
- /*
-  * Structure to save the auxtrace queue
-@@ -656,7 +657,7 @@ powerpc_vpadtl_synth_events(struct powerpc_vpadtl *vpa, struct perf_session *ses
- 	attr.config = PERF_SYNTH_POWERPC_VPA_DTL;
- 
- 	/* create new id val to be a fixed offset from evsel id */
--	id = evsel->core.id[0] + 1000000000;
-+	id = evsel->core.id[0] + PERF_SYNTH_EVENT_ID_OFFSET;
- 	if (!id)
- 		id = 1;
- 
-diff --git a/tools/perf/util/synthetic-events.h b/tools/perf/util/synthetic-events.h
-index ee29615d68e5..c8a1fe7a3fa4 100644
---- a/tools/perf/util/synthetic-events.h
-+++ b/tools/perf/util/synthetic-events.h
-@@ -39,6 +39,8 @@ enum perf_record_synth {
- };
- #define PERF_SYNTH_ALL  (PERF_SYNTH_MAX - 1)
- 
-+#define PERF_SYNTH_EVENT_ID_OFFSET	(1000000000ULL)
-+
- int parse_synth_opt(char *str);
- 
- typedef int (*perf_event__handler_t)(const struct perf_tool *tool, union perf_event *event,
--- 
-2.25.1
+It looks the "X" modifier only works for the cases without explicit group,
+like this.
 
+sudo ./perf record -e cpu/mem-stores/ppu,cpu/slots/uX -- sleep 1
+[ perf record: Woken up 2 times to write data ]
+[ perf record: Captured and wrote 0.019 MB perf.data (7 samples) ]
+
+Once there is an explicit group, the "X" modifier would not work and the
+regroup still happens, e.g.,
+
+sudo ./perf record -e '{cpu/mem-stores/ppu,cpu/slots/uX}' -- sleep 1
+WARNING: events were regrouped to match PMUs
+[ perf record: Woken up 2 times to write data ]
+[ perf record: Captured and wrote 0.019 MB perf.data (7 samples) ]
+
+I suppose we should enhance the "X" modifier and make it work in 2nd case
+as well. How's your idea?
+
+Thanks,
+
+Dapeng Mi
+
+> ference|ops|access|misses|miss)
