@@ -1,52 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3EB61E492A;
-	Sun, 19 Oct 2025 02:30:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34F6354AF5;
+	Sun, 19 Oct 2025 02:50:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760841041; cv=none; b=aVrOdGgWfe5Ld6qKPQc/n5LmgMnq0N5c+zfeEvY57sIkKhd2CQVeXHaftwYqhr4FANZeBxb/AANuBNps2OnY/3e5YUgjenvIU7uIafBflBUnZuNwGNiuUuVV1fWgXsO6+50URp7NH9kAMaBMhmi2/PPGDkN7Ew4dnUbBJVOZ8pI=
+	t=1760842201; cv=none; b=q7ETQLE/3rf5mFeTiKD6G46qptxlIhO8Qgs4N20QxWfCHWS0JFhcuvTEhoLY9c+WGgMy+Od2nKjRv2kKPwJ2PaZSkGYzdN3HJg2DuE2i+vMR+Fwf3CXMTylprCFdp2FaHc/sFCFTYgQ3UFRBEFFtXf2sb/l+ua73iDj8UOcQolE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760841041; c=relaxed/simple;
-	bh=ljwOH8bw9vDLCgJ0tLC/SZkVGwzd5vMvvBEpIPMtamc=;
+	s=arc-20240116; t=1760842201; c=relaxed/simple;
+	bh=j+jxkbQzSxWIMmjxVYciZ1m6Fj9nJ3b1MJ51VoCVWFU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NQCEKeC8Lp8XDpEtVgLaqo7i22Nr2XKiNuejwBk5iNyjXw7+gnRe3ZMgut6g0ac4elKKlQpCKcvPfgp82OabKl0AgEwGLAQ9e9Aau83uuo0zM8xZzlLmE51RyScy+MAtPO1R9xh7Pd8EBi9MPM9Q/5LKEr9FnKFgIEfQqHB+t6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dVaSgUga; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rKq8ufaEmg6gIE5eqx+jFqvpJVx/mtDvnYu7YKehSE5Kt6L+wD3kA8Hssz8hTXYkiChOFKFeQZkMvfc04VQQueg7P3xBvMUNu1HycMiYgPouhk9WaZWZIBhcQcB4R/5hW8DHYg5OVINyUkUTTGHTLG0/Eog1oR8VLngowqMhV0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NXpyuNGR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dVaSgUga"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D39AC116C6;
-	Sun, 19 Oct 2025 02:30:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NXpyuNGR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B514C4CEF8;
+	Sun, 19 Oct 2025 02:49:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760841040;
-	bh=ljwOH8bw9vDLCgJ0tLC/SZkVGwzd5vMvvBEpIPMtamc=;
+	s=k20201202; t=1760842201;
+	bh=j+jxkbQzSxWIMmjxVYciZ1m6Fj9nJ3b1MJ51VoCVWFU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dVaSgUganfDxsd+8KG7fKBjFWA3STLMvQSlff/ouNrRgzt68rLQoBXcqdzB3m3OHj
-	 hqpPoY6hv6iC4A9JRN93lNSm/371VZG44xpcnD0L0O0CKFFPvXn21U5a5nzF7TyQxK
-	 Uwv7BesJqy1HUcHhbX2PywOruXYTvpNDLlbMeASdiK1Q4Gk7R1nu2NFYrCuv3uun1X
-	 fO+46rKaDlaJC2wuFZcKwhOjLFw7l7u+sw5T+UdiAets3jQdKHrDN4Njj3nMZ29VQE
-	 Z3U1J5RNk0FD/5SraU8HQtk/E3ixsT305zCcMTlbmZCWhlY1GFyoCfX68FvCcH3EZC
-	 YCR6ogu84G4yA==
-Date: Sun, 19 Oct 2025 11:30:34 +0900
+	b=NXpyuNGRJh/aNj4zXwtdtZb4RTqK9YcNBEJa63+BqYIXRLmzuk5WVpPCmZymZyFPV
+	 ipkfOo8DBfIlPi+XXg55LqZFAtwnKk2NjLDDEkjUkcg/UxxkccZPl4B2JKf+49iYvk
+	 43S4FojYB34EiICP7wG7SJnwviWVf8ObX8tSxLx14c40sOHAizU3h5BlTwIgJ3YStS
+	 1XgmhPi0uKhPCJP2/RBVyd8OjLkf74QDQRg/1W+1XucP/hq5wBjhzRDrCNRDmxb092
+	 h1HukhjsdQdksSlCi9aeng/mvoEc8D55g4QlYI7/5rB0HS6o3FQF25/hRqbWR62su8
+	 vdxwb2UQLSI/w==
+Date: Sun, 19 Oct 2025 11:49:56 +0900
 From: Namhyung Kim <namhyung@kernel.org>
-To: hupu <hupu.gm@gmail.com>
-Cc: Leo Yan <leo.yan@arm.com>, Ian Rogers <irogers@google.com>,
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, adrian.hunter@intel.com, nathan@kernel.org,
-	nick.desaulniers+lkml@gmail.com, morbo@google.com,
-	justinstitt@google.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [RFC] perf build: Allow passing extra Clang flags via
- EXTRA_CLANG_FLAGS
-Message-ID: <aPRNSgunb8K9boWx@google.com>
-References: <20251013080609.2070555-1-hupu.gm@gmail.com>
- <CADHxFxRMUhn=VdG5uzrosTUpwAMHi+zO7NTYVikWzFdnKrUJ4w@mail.gmail.com>
- <CAP-5=fXykcQ7n3rw6RX3S+dLoLUC9BZKh=BP8yx8ak+f623aEg@mail.gmail.com>
- <20251013161429.GE77665@e132581.arm.com>
- <CADHxFxQg2ZKwLEOa6wic_KP49PRBp=hF=cY16aVmR0O0pa8ZkA@mail.gmail.com>
- <20251015093037.GA109737@e132581.arm.com>
- <CADHxFxQyOBurB0LB9qRdc3DEDNU+vatqOybNdcizPnWZngiPZg@mail.gmail.com>
- <CADHxFxS3kDeSM7NvZHbdoOyqxzzcKeAc1xzr=q_f+T96G9preA@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Leo Yan <leo.yan@arm.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] perf build: Add Debian/Ubuntu python-is-python3
+Message-ID: <aPRR1APPW8vro4HB@google.com>
+References: <cover.1760617634.git.geert+renesas@glider.be>
+ <e1c0c2acbab60630cf8538ac5446f91970dad92d.1760617634.git.geert+renesas@glider.be>
+ <20251017122904.GC281971@e132581.arm.com>
+ <CAMuHMdUUH2AN7tE3C7cPWeNJDW6jL9vQOktaRDW2HChDwvroSg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,61 +51,71 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADHxFxS3kDeSM7NvZHbdoOyqxzzcKeAc1xzr=q_f+T96G9preA@mail.gmail.com>
+In-Reply-To: <CAMuHMdUUH2AN7tE3C7cPWeNJDW6jL9vQOktaRDW2HChDwvroSg@mail.gmail.com>
 
 Hello,
 
-On Sat, Oct 18, 2025 at 06:05:03PM +0800, hupu wrote:
-> Hi Leo, Ian, and fellow maintainers.
+On Fri, Oct 17, 2025 at 06:39:04PM +0200, Geert Uytterhoeven wrote:
+> Hi Leo,
 > 
-> On Wed, Oct 15, 2025 at 7:47 PM hupu <hupu.gm@gmail.com> wrote:
+> On Fri, 17 Oct 2025 at 14:29, Leo Yan <leo.yan@arm.com> wrote:
+> > On Thu, Oct 16, 2025 at 02:44:12PM +0200, Geert Uytterhoeven wrote:
+> > > The build looks for "python" and "python-config", while modern
+> > > distributions provide only "python3" and "python3-config" by default.
+> > > Suggest installing "python-is-python3" and "python-dev-is-python3", as
+> > > available on Debian 11 (bullseye) and Ubuntu 20.04 LTS (focal) and
+> > > later.
 > >
-> > Hi Leo,
-> > Thank you for your reply.
+> > Seems to me, this change is not necessary. The Makefile [1] searches
+> > python[2|3]/python[2|3]-cofig if un-versioned executables are not found.
 > >
-> > On Wed, Oct 15, 2025 at 5:30 PM Leo Yan <leo.yan@arm.com> wrote:
-> > >
-> > > Have you installed the GCC cross packages ?
-> > >
-> > >  $ sudo apt-get install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
-> > >  $ sudo apt-get install libc6-dev-aarch64-cross linux-libc-dev-aarch64-cross
-> > >  $ sudo apt-get install libc6-dev-arm64-cross linux-libc-dev-arm64-cross
-> > >
-> > > My understanding is arm64 cross compilation tries to find headers in the
-> > > path /usr/aarch64-linux-gnu/include/ (I confirmed this on Ubuntu/Debian
-> > > distros).  After install GCC cross packages, the headers should appear
-> > > in the folder.
-> > >
-> >
-> > I hadn’t installed the packages you mentioned earlier, but after
-> > running the installation commands you provided, I was indeed able to
-> > successfully build perf.
-> >
-> > In fact, I’m currently working on creating an SDK package, which
-> > includes a cross-toolchain that I built myself using crosstool-NG. My
-> > initial idea was to install certain third-party libraries (such as the
-> > packages you mentioned) into the cross-toolchain’s sysroot directory.
-> > With this approach, even when developing on different host machines,
-> > we could simply specify the header search path (pointing to the
-> > cross-toolchain’s sysroot directory) during compilation, and the build
-> > should succeed without requiring any additional package installation
-> > on the system.
-> >
-> > Based on this, I think allowing users to extend some options via
-> > EXTRA_CLANG_FLAGS could be a flexible way to handle such cases.
-> > However, this is just my personal thought and might not be entirely
-> > correct, so I’d like to hear your advice.
-> >
+> > I confirmed that I can build successfully without installation
+> > python-dev-is-python3 package.
 > 
+>     $ sudo apt remove python-dev-is-python3 python-is-python3
+>     $ make tools/perf
 > 
-> Although installing the GCC cross packages allows me to build perf
-> successfully, I still prefer to be able to pass additional Clang flags
-> via EXTRA_CLANG_FLAGS, as this approach feels more flexible to me.
+> Indeed, it still works. I am quite sure I had to install both, and
+> even verified that uninstalling them again broke the build again before
+> creating my patch.
 > 
-> I look forward to continuing the discussion on this topic.
+> /me dives deeper.
+> 
+> Aha, I found it.  After uninstalling python3-dev, I got into the same
+> state as yesterday:
+> 
+>     $ make tools/perf
+>     [...]
+>     Makefile.config:875: No python interpreter was found: disables
+> Python support - please install python-devel/python-dev
+>     Makefile.config:918: *** ERROR: No python interpreter needed for
+> jevents generation. Install python or build with NO_JEVENTS=1..  Stop.
+> 
+> So these error messages sound like python is missing. And "python"
+> is indeed missing, but "python3" is available.
+> Hence I installed python-is-python3, but that turned out not to be
+> sufficient.
+> Hence I also installed python-dev-is-python3, and that fixed the issue,
+> as python-dev-is-python3 depends on python3-dev, so the latter was
+> installed, too.
+> 
+> After removing python-is-python3 and python-dev-is-python3, everything
+> keeps on working.  But if you never installed python3-dev manually,
+> and run "sudo apt autoremove", python3-dev is uninstalled, reintroducing
+> the issue.
+> 
+> So just recomming to install python-dev-is-python3 in the error
+> message should be sufficient?
+> 
+> What do you think?
+> Thanks!
 
-Doesn't EXTRA_CFLAGS work for you?
+Thanks for looking at the issue.
+
+I think the code was to deal with either python2 or python3 in the past
+and we removed python2 support recently.  I don't know if any distro
+made 'python' to refer python3 and removed 'python3' otherwise we can
+just check python3.
 
 Thanks,
 Namhyung
