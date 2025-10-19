@@ -1,140 +1,142 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF14C1898F8
-	for <linux-perf-users@vger.kernel.org>; Sun, 19 Oct 2025 20:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2262586C7
+	for <linux-perf-users@vger.kernel.org>; Sun, 19 Oct 2025 23:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760905210; cv=none; b=AcDOPsh5W1AuoPbnNQCiC7vjphL2mCoz+0VpS45NfyhoSPjlMtP5H4ZDeeOWYEjGN16ZJ6a6zho2s1SrNGPHIkz0Tc2qVAGhj/9G+fO6JdbXgYQnvu/UTlWlzZu7/0TAnPDbQv9FqV/QO9+LHJU3OXcThVXJvHi/r1W8h0Ovgd8=
+	t=1760915071; cv=none; b=FyYj2ZFeEZcSr+hWdbHna8cMKVDkIfRdcMjQw1vWVFwu9LdycbtLYPRfz6zcNjkNOWeE78d0X8G2MSbocYyhAudDoda9WgMEc7rdU3a0CW4q+6bIWowDnMCqMQVDeH1p07PcBYfx8VY//aAfpabgwRBOg+gIN7n9avQVXKwn9Vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760905210; c=relaxed/simple;
-	bh=2CxS4y+l0L27meZSjGJEaayPPI49yDmtzC0d6yfWETU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=BGxnl+0ckFK7t7LdVdvXDWivL/UfsHZ14gFjGkfC8cCr6j71cy/e2VxICcrZPC2u6ykGEdGDAHfT0UEA1MPWU9g32qg5mZjm4lc4Rc9zakFsFNvPiCflF/aTOusSDvHOkmq8/nJ5//KUcfAYrxwz9Rd1XEwehc9rJLzelzw6tog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nJuXJq2v; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1760915071; c=relaxed/simple;
+	bh=e9xtSDiNYg+DNrvVVti65ywV5UyHZvvlWtLFm7e5TE4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eCY964ZXmvtAOUZ11TotX/3ugHZMz57y45j60qA/VTtIzOC5UDe5Uhf3itHvxO4IByUdwMFbZSctNYCkn41tnwxeRZFN5CX/DcDSWA2+Ayh2CGuWrlGAIAwZo7LdZUiLFjz9CCNWKqaqalvT1k3EkjjFobAuLLcs2yN75Y8TTQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t3dqTKHG; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nJuXJq2v"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-781206cce18so3687103b3a.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Oct 2025 13:20:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t3dqTKHG"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-27d67abd215so245545ad.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Oct 2025 16:04:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760905207; x=1761510007; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=g4HxyRRBlNg3Uy1WJvknBsTLo2+VRNyQvX/LTki0p1M=;
-        b=nJuXJq2vZba8COtuIkvM56AsjsEWrMlMcmk72upy7pP8O7IsPz9KnA4ONvJeX/owoQ
-         modUpVu2ZriYOAvy5Ux7PE2Ez2n0+ESRF2KKF2ALPTDy0bjE7OTjQ62jgJPTTufKmFM6
-         4s4C4JupGSlnBiLuVfmDLuWY0YPNNISCwgmRRd0WbMmc+DRVyHYV6VXrVRP7/8Ele14b
-         TpgvmXKSEmbdOCDq8YAgtBPKTQS2rBYV147ItOvagZGZXVnr0WQVZcpS+F5paroUt83k
-         ALn82IoLzL+msuyPSnLR9CcXmJLt7zHRvUydfKW4pkDduoOij04TH8p4OrcifpMdqAEA
-         BJlg==
+        d=google.com; s=20230601; t=1760915069; x=1761519869; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VtIwbbtQZ22ksMvGjX6G4k0g6OAJbt4lX9wIiRbTpkY=;
+        b=t3dqTKHGuj/v1xo75SDLUHys/xFMVQgfhPaHq4ikR1tkDOJD1nPF/lF0ej4JnGkI7Z
+         5kVqVRoRFaEIFUFazDfpZWD0skK7RECeUnjz1ODsnHJGjsOAslQ1H2xv8qGXjqUcyY2J
+         ROPcU5LQCd1WwoVuzDnH4y9otW2dCD2avLUa7HcwXQuuTw8zBO6R7jps3TyuXzjrWGMP
+         YRXwmkQaCSE/WVNDILCAz2Dfi2ly71Qu8nm5+aaCIInlGjQcMyLUHcJnGLfq79lHXeBo
+         FwzPUrdkhgc5iclHJsCeBk1Y7rEpz0Wtzli8HkNTq/gdoTzK+U9rMUypK8ntX5ScbKns
+         hMcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760905207; x=1761510007;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=g4HxyRRBlNg3Uy1WJvknBsTLo2+VRNyQvX/LTki0p1M=;
-        b=bXTfKO+vheZHR/U5w1HhUW0qnoXTC6rA41MOyTJ+551iZPfU/8Kvpwv4Z5Wgbqpfyi
-         ZNfsi94PpT1jsXUkPdTpQXAWZqGtjPptd6mtlosTas779AOGjS0iPQ3CCxFZthsHkUcQ
-         8AOkooM1jLCWpTG4ToTr/3ffcRKqNt+76dqiySPLEwvwgcL5ikbmvtazkAIe3FWzTEGx
-         g/Q0ST7J+MxpFtj1BYYaUGUIE9RqrOtP/dMwxtT4pbTJ+4HjXK/gsxtQv3N8iowXRLak
-         oyR3rdYlrtiKwzFmYoqvZHERlr9Aaf1/mmQRXco+GnpbB1NTRJnWyzkzeRsvlWs49Dec
-         v1ng==
-X-Forwarded-Encrypted: i=1; AJvYcCVXSHYX8XTHuJ+dySA2ZSkwa9n/HxcLtQRdzFzpXsYfNDvfGBd1lxHGsGCbsX9dafueZTjjHKC25JZTUgvLZbi6@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfQVELSdmSWJJy5sbdwYtcInZJmw23QI+c4cOoUXPsEH8KSOQj
-	n6FT1C6nzVBycsLzUo5Xj9YOMhuVGw+1cGITILn9nWJwhds/6fRIJZTBm7svTQ==
-X-Gm-Gg: ASbGncvoTnZxGJKWv1t4JzOQ4cuJLvzmScgN+tybhbe5yqya2JE+Lps0pERk8WlBscx
-	HfabTqud2pPHzU0G4Qicp6Kv9jOMpgo7pAWVaOZAB5K3Pk80EbsqVhLg9p43Ih4M5XL49QWc8lR
-	zFdabqaflvTNNxer7CF/4bHS+Pm+otv11mKZWuy4V6nXxoj2HUABN7qk/Kg8MDAogq/oBhHeBek
-	YRSPSkFR9SP/7K6IWgv85VTE/HY9x7nnUhlX7ony8pBdXB8DNCRAsByzjxdGs6mGChhKxgSgCdU
-	IgTHyRuC0PejovJBIuk0r5t0/76cIYaF9kbXI5O0ztnT8wo86Ashryua2GZqAeDRbO5hhs6biYa
-	7vUm/1VzRhdPYbqHatEMb8S7bKKQwHKwdXtZWZOJys8ZFxwcKV4FaOUfsM5lkS7h/8EmmUANvjz
-	k18j24n0FEAPxA
-X-Google-Smtp-Source: AGHT+IGLgRfuhRQYRvtZHHbuh2zLZ6kne8DSM040Adl2P8ZbLAe+9zKBhxIgTG2lMIP+fhk5iprQyQ==
-X-Received: by 2002:a05:6a20:72a3:b0:249:18e4:52a9 with SMTP id adf61e73a8af0-334a7876b76mr13581094637.9.1760905207057;
-        Sun, 19 Oct 2025 13:20:07 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b6a76b33c7asm5967650a12.21.2025.10.19.13.20.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Oct 2025 13:20:06 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Sun, 19 Oct 2025 13:20:03 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Helge Deller <deller@gmx.de>
-Cc: linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] parisc: Add initial kernel-side perf_event support
-Message-ID: <eec4fe59-c750-4460-9a88-6bbccffed89c@roeck-us.net>
+        d=1e100.net; s=20230601; t=1760915069; x=1761519869;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VtIwbbtQZ22ksMvGjX6G4k0g6OAJbt4lX9wIiRbTpkY=;
+        b=gkRMjFfyKA/xTImR5imnGWrkWC/3EE/43jsqIlxGld8M24jT7cMIujuzf2zwB+dqJY
+         DXZQvg2DjuQ4CaChIwlpTZi2xOr3dXeFlvs1Knkk9en7yoatamid1+3EIjqTNMFIk5RP
+         cMuASd+9ugEn2ufa/5POWSKBirg3E7iohU+77liMQZxBrrwUQB23fxt1+Bc2K79nlEFv
+         U8IgsiJXBx7xoDi15diNlBw3Ohg8dFtJQ8jPNE+i4UNm4DWZ/y2Up6qiks8xu01Wotiq
+         fo1piTB8nFl40j4b+v0G9035Jd/frwTxW/gfQFaQ308fri0viiWBW9mLK2w4VGnzOTXB
+         HkFg==
+X-Forwarded-Encrypted: i=1; AJvYcCXvrkOKDMXoe3fgYUkc/68zLkNL2JpqhxKzMRzynQPqkfgysL3nIYcb5L1kh7SPz/miwNj6E7Xrcn4M5dTSNPw0@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYzpGQooF1HsfW+KiYtdYdBZ4+qdOW2EK2meSZB6/WR1j9v0Uq
+	nB2HAwt2X2fwKKed8VjVq03dWwDBEJQuKs2C2lJjHeJS3QQU2v8XV/Ih1vM9Nu4eqXhUEQu/3Qz
+	C7fSAsMX3Q2OexrhGfv6c0TqEtHIpodytmrRCz8A2
+X-Gm-Gg: ASbGncsUPfrJEoyDNmoy7YgDiWSzH3bFc84rmbkk7qzwLvVMbNumQ05j41Dtq7DyII1
+	9nqeZBH96rb8rMHD1+Z5aUKXpWRiQISyKyoydyKgkatb8x44Ka+1+r1beCvjCH43tyou/ajV9OL
+	v4AwM4VhDzrzF1rwkfRz3Ux0+fOVwEDOrs4yIeamp6FFIDyr5r6Oan2QveB2SjHJN0dBsxjFFYI
+	aabqa+ovFUkHN3KT80lKIPRLGwLuKqOmoMlkTJtnu+CKxHdebbCDMErwvmrzWzdIKE69ig=
+X-Google-Smtp-Source: AGHT+IF9yBT/ZwnpY3KzH5KBTz6AKdIa/kZ/Sj5ndS3FHOcw0TJENKL1Nucn1cYklbiHJR/s6+zUFaChmGa8DfjFiEE=
+X-Received: by 2002:a17:903:388c:b0:265:e66:6c10 with SMTP id
+ d9443c01a7336-2908790f0c5mr22070155ad.4.1760915069394; Sun, 19 Oct 2025
+ 16:04:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20251016222228.2926870-1-irogers@google.com> <aPRTQLcOBtHiTGms@google.com>
+ <CAH0uvohtoVR=iXNwJWYXXgnt4LLWCMheSt66Hnx5hq=QB0KU3w@mail.gmail.com>
+In-Reply-To: <CAH0uvohtoVR=iXNwJWYXXgnt4LLWCMheSt66Hnx5hq=QB0KU3w@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Sun, 19 Oct 2025 16:04:17 -0700
+X-Gm-Features: AS18NWDEC7Vnh7xzfyEGkb8GoYCR5suU_v90J29I9PtusCfj_VaIEJaCEohdgZw
+Message-ID: <CAP-5=fWDqE8SYfOLZkg_0=4Ayx6E7O+h7uUp4NDeCFkiN4b7-w@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] perf ilist: Don't display deprecated events
+To: Howard Chu <howardchu95@gmail.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Gautam Menghani <gautam@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Helge,
+On Sat, Oct 18, 2025 at 11:50=E2=80=AFPM Howard Chu <howardchu95@gmail.com>=
+ wrote:
+>
+> Hi Namhyung,
+>
+> On Sat, Oct 18, 2025 at 7:56=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
+> wrote:
+> >
+> > Hi Ian,
+> >
+> > On Thu, Oct 16, 2025 at 03:22:26PM -0700, Ian Rogers wrote:
+> > > Unsupported legacy events are flagged as deprecated. Don't display
+> > > these events in ilist as they won't open and there are over 1,000
+> > > legacy cache events.
+> >
+> > Off-topic, any chance to integrate this into a perf command?
+> > It'd be convenient if we can call this like `perf list --interactive`
+> > or some other way.
+>
+> You have my vote, user-friendliness is important.
+> I think Ian mentioned that the major drawback is the difficulty of
+> forwarding arguments passed to the ilist.py program. A random thought:
+> perf is known for binding everything under a single command, but to
+> make scripting more flexible, perhaps some Bash scripts added to
+> .bashrc could be considered. After all, perf is fundamentally a
+> command-line tool.
 
-On Tue, Oct 07, 2025 at 05:08:16PM +0200, Helge Deller wrote:
-> Signed-off-by: Helge Deller <deller@gmx.de>
-> ---
+Thanks Howard and Namhyung,
 
-This patch triggers a spinlock recursion and subsequent hang in my testing.
+I think Arnaldo also raised this in the past.  My thought on how to do
+this is to build in to `perf script`:
 
-Starting network: udhcpc: started, v1.36.1
-[   96.037009] Backtrace:
-[   96.037545]  [<104320d4>] unwind_once+0x1c/0x5c
-[   96.037802]  [<10434a00>] walk_stackframe.isra.0+0x74/0xb8
-[   96.037959]  [<10434a6c>] arch_stack_walk+0x28/0x38
-[   96.038074]  [<104e5e18>] stack_trace_save+0x48/0x5c
-[   96.038190]  [<105d1ac0>] set_track_prepare+0x44/0x6c
-[   96.038312]  [<105d9b64>] ___slab_alloc+0xfc4/0x1024
-[   96.038421]  [<105d9c1c>] __slab_alloc.isra.0+0x58/0x90
-[   96.038529]  [<105dc6f0>] kmem_cache_alloc_noprof+0x2ac/0x4a0
-[   96.038646]  [<105b8d38>] __anon_vma_prepare+0x60/0x280
-[   96.038762]  [<105a8120>] __vmf_anon_prepare+0x68/0x94
-[   96.038870]  [<105a8a18>] do_wp_page+0x8cc/0xf10
-[   96.038969]  [<105aac6c>] handle_mm_fault+0x6c0/0xf08
-[   96.039076]  [<10425568>] do_page_fault+0x110/0x440
-[   96.039179]  [<10427938>] handle_interruption+0x184/0x748
-[   96.039299]  [<111781c8>] schedule+0x4c/0x190
-[   96.039567] BUG: spinlock recursion on CPU#0, ifconfig/2433
-[   96.039720]  lock: terminate_lock.2+0x0/0x1c, .magic: dead4ead, .owner: ifconfig/2433, .owner_cpu: 0
+1) `perf script` currently uses libpython and then exposes a
+trace_start, trace_end and process_event method. When building the
+flamegraph work the only place that textual can run is in trace_end as
+it needs to run on the main python thread. This means we can't do
+incremental loading of data files while textual is showing the data as
+perf wants to be the main thread. So step 1 is to create a python
+version of the trace_start, trace_end and process_event callbacks. To
+do this something like the session API needs wrapping or writing in
+python. I'm not sure I'd keep the API the same as the C one. It'd be
+interesting to think of async file processing. It'd be nice to make
+the generation of strings.. in the event lazier. We could start with
+the existing API though, and then migrate to something more complex
+later.
 
-Bisect log is attached.
+2) Once we have a session like API in python we can convert the
+existing `perf script` commands to be standalone tools similar to
+ilist. So we can convert all the existing tools to be standalone.
 
-Guenter
+3) Once we have standalone versions of the `perf script` scripts then
+we can have `perf script` just exec the commands. The install step can
+install the scripts like it currently does and we can move ilist into
+the scripts location.
 
----
-# bad: [d9043c79ba68a089f95bb4344ab0232c3585f9f1] Merge tag 'sched_urgent_for_v6.18_rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-# good: [e5f0a698b34ed76002dc5cff3804a61c80233a7a] Linux 6.17
-git bisect start 'HEAD' 'v6.17'
-# good: [58809f614e0e3f4e12b489bddf680bfeb31c0a20] Merge tag 'drm-next-2025-10-01' of https://gitlab.freedesktop.org/drm/kernel
-git bisect good 58809f614e0e3f4e12b489bddf680bfeb31c0a20
-# good: [7dbec0bbc3b468310be172f1ce6ddc9411c84952] Merge tag 'for-6.18/dm-changes' of git://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm
-git bisect good 7dbec0bbc3b468310be172f1ce6ddc9411c84952
-# good: [2f2c7254931f41b5736e3ba12aaa9ac1bbeeeb92] Merge tag 'pci-v6.18-changes' of git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci
-git bisect good 2f2c7254931f41b5736e3ba12aaa9ac1bbeeeb92
-# good: [37bfdbc11b245119210ac9924a192aec8bd07d16] Merge tag 'pci-v6.18-fixes-1' of git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci
-git bisect good 37bfdbc11b245119210ac9924a192aec8bd07d16
-# bad: [ae13bd23102805383bf04f26e0b043f3d02c9b15] Merge tag 'mm-nonmm-stable-2025-10-10-15-03' of git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
-git bisect bad ae13bd23102805383bf04f26e0b043f3d02c9b15
-# good: [18a7e218cfcdca6666e1f7356533e4c988780b57] Merge tag 'net-6.18-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
-git bisect good 18a7e218cfcdca6666e1f7356533e4c988780b57
-# bad: [1b1391b9c4bfadcaeb89a87edf6c3520dd349e35] Merge tag 'block-6.18-20251009' of git://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux
-git bisect bad 1b1391b9c4bfadcaeb89a87edf6c3520dd349e35
-# good: [9976831f401eeb302d699b2d37624153d7cd2892] Merge tag 'gpio-fixes-for-v6.18-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux
-git bisect good 9976831f401eeb302d699b2d37624153d7cd2892
-# good: [fdfa38e95e1229ec2fb2f18540987c97f861d470] Merge tag 'sound-fix-6.18-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound
-git bisect good fdfa38e95e1229ec2fb2f18540987c97f861d470
-# bad: [8cc8ea228c4199482cf087fc6ed2d6e31b7a49e2] Merge tag 'parisc-for-6.18-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux
-git bisect bad 8cc8ea228c4199482cf087fc6ed2d6e31b7a49e2
-# good: [912b9fd7c7775060900ad315f0ceb616f9381bc3] parisc: Report software alignment faults via perf
-git bisect good 912b9fd7c7775060900ad315f0ceb616f9381bc3
-# bad: [44ac7f5c6d4c7fd62784bb2700245dbc4ac7e102] parisc: Firmware: Fix returned path for PDC_MODULE_FIND on older machines
-git bisect bad 44ac7f5c6d4c7fd62784bb2700245dbc4ac7e102
-# bad: [610cb23bcc75bcd9fead3e41cbd867cccd0eb229] parisc: Add initial kernel-side perf_event support
-git bisect bad 610cb23bcc75bcd9fead3e41cbd867cccd0eb229
-# first bad commit: [610cb23bcc75bcd9fead3e41cbd867cccd0eb229] parisc: Add initial kernel-side perf_event support
+4) Once we run python things as tools in their own right we can
+deprecate the libpython stuff, probably make it a build opt-in thing,
+etc. It seems hard to delete unused features, like libbfd, from the
+codebase. We did merge a patch deprecating libperl as a step in this
+direction.
+
+Thanks,
+Ian
