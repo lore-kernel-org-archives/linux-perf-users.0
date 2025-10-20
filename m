@@ -1,106 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9F22E40E;
-	Mon, 20 Oct 2025 01:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35A91CAA4;
+	Mon, 20 Oct 2025 01:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760922958; cv=none; b=q/kTkFceeaZGInBvOCXO+SJP9dwMvg4QJPCHrj7DO1Ks7UtRwVTGaK4X483Mqc3zdHlabXFtTtA0oI3oDiGh7WbUVO5J+770iUMMB8tkv3laRB4Fg3hZsCkS/WsNELBxLnYGzEdA0g7UTTpywndcj+VF6GwucXhnn6It+ZrNxRA=
+	t=1760922991; cv=none; b=bME5Or8e0Nzy6PQF9dFUGuRzF4eIrOOC3QSDhuNjWGhHsdV+a55BPqwnFzm0PF9IelZRrUesJNeNrO0fVl9ZLjfeW8+jJBV469LvGyG9KwbCSgSYr5MhsgjXs72Wg5VsgIaoXSNJAyaD5pivNPLV3MV1WNqBRUSCcx6QU33oRQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760922958; c=relaxed/simple;
-	bh=KT8U6ugMgpwakjHE7nx7F2fe8sHW+2AY6AOoDrhd2NI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SJl+fyDAqOy+DFG6KIolgBK4X007j5bHSHxP6m2AVmpgS6Eo0UHMVQSA9jfi/7P8sNgWPg6openyyYm+EByVe/qy6m8wyDxTbnE5nFd5B//j59E8ulhqfSWmXQySb6sN9weE3HuqHOWyswxBwHZok+IKttqWWSBE64Z26Yhuh2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TVYv9fQu; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1760922991; c=relaxed/simple;
+	bh=398WOaVPLyCRzHWXfwnxDvL/IwRFQ32YxB/rTo0FKQ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j1soyy4fzdustw6Ckf17vKOSeQOlBh6IfiNqEgboZfWtDDbw1oEuoElPUHjkLXkRUtAq7XUDl6Du/uxmGe1c0lW+NNhP04BWXzp+HnP10chijfIC90REKm94tnuQy779x03PP4ECSispb9LLS0Mu2IS003hN+cQ4MggxzsZIIl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dtsgVtgF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TVYv9fQu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760922956; x=1792458956;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KT8U6ugMgpwakjHE7nx7F2fe8sHW+2AY6AOoDrhd2NI=;
-  b=TVYv9fQuq8GaL2zF+kM3/AB0koV8ZP8Gcr/la7m7t/e5EYybaHz+OjZs
-   4IXUv3Rlm6X87stVBBx+Ue0sfIpjASV8KgsjCDmzg/EXakEhFMW9jQJtu
-   1PAqn0mY7ejryCv18tWCNBuZF7O3ITGSyVpGsfBRkfpg66OoowUEhEsn4
-   LOedwevzzJ+kBMUYmD+ScInC2xMjEUqW96XwT7QMlYmmWsvhnlUMKVkBH
-   /AmZUVgVdrtsjSFkX/sO2LumuNBghwlWgRmQnSdx5fegLPo63X2i2+QFf
-   u+hPqkbVSz85YrFvbUZ53sRVKPekBy4Sylu80Yb9ha/2lgsV5IyQ6Vcc1
-   g==;
-X-CSE-ConnectionGUID: 9UBEyed+R3yi8VC0WBBvPA==
-X-CSE-MsgGUID: UVGNO3NFSm64xUSsRgC4Kg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11587"; a="62251742"
-X-IronPort-AV: E=Sophos;i="6.19,241,1754982000"; 
-   d="scan'208";a="62251742"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2025 18:15:56 -0700
-X-CSE-ConnectionGUID: fhyOkvBfRhGFwKf1Dn/jZg==
-X-CSE-MsgGUID: hnB9vB4cTLSl398D+vKO4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,241,1754982000"; 
-   d="scan'208";a="182401398"
-Received: from linux-pnp-server-27.sh.intel.com ([10.239.147.41])
-  by orviesa010.jf.intel.com with ESMTP; 19 Oct 2025 18:15:51 -0700
-From: Tianyou Li <tianyou.li@intel.com>
-To: Namhyung Kim <namhyung@kernel.org>,
-	James Clark <james.clark@linaro.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	tianyou.li@intel.com,
-	wangyang.guo@intel.com,
-	pan.deng@intel.com,
-	zhiguo.zhou@intel.com,
-	jiebin.sun@intel.com,
-	thomas.falcon@intel.com,
-	dapeng1.mi@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] perf tools annotate: Align the symbol_annotate return code
-Date: Mon, 20 Oct 2025 10:14:34 +0800
-Message-ID: <20251020021434.29082-2-tianyou.li@intel.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <aPRbfdU92XRLR-2N@google.com>
-References: <aPRbfdU92XRLR-2N@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dtsgVtgF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0481DC116D0;
+	Mon, 20 Oct 2025 01:16:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1760922991;
+	bh=398WOaVPLyCRzHWXfwnxDvL/IwRFQ32YxB/rTo0FKQ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dtsgVtgFbEsRatpRXFc4vMlGFyN7nR0lfEf0ItIF57+WuyuqdJPlxUdo4f/Y3xggV
+	 Z9UIzKrRTYl1BV+h6eGZbqFk9cjHJjf/Uv+eTUCD6ooFtHtJEwYX5wxiJeIHaqFkG4
+	 tKe2jvlQWcmRrtG0Q+mUtiyhzG0H+rjfCHHG2EZk6+AkelhaSKWDlkpq4e5lTg6LWE
+	 FZXIydN0GrV/GubgUYxLezagdkejz2PxXoEAxNL/TIif19z1V6W71YjKQav/PPLXeb
+	 XawlTrt3A+Y9iBaKZ9DsxyjEBOfV1R/4EAtgM6JgeOdsMdqjnmTDDgDNel+AvjEhyC
+	 Hgy1Mcagui//g==
+Date: Mon, 20 Oct 2025 10:16:24 +0900
+From: Namhyung Kim <namhyung@kernel.org>
+To: hupu <hupu.gm@gmail.com>
+Cc: Leo Yan <leo.yan@arm.com>, Ian Rogers <irogers@google.com>,
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, adrian.hunter@intel.com, nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com, morbo@google.com,
+	justinstitt@google.com, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [RFC] perf build: Allow passing extra Clang flags via
+ EXTRA_CLANG_FLAGS
+Message-ID: <aPWNaOqocEPgAJcq@google.com>
+References: <20251013080609.2070555-1-hupu.gm@gmail.com>
+ <CADHxFxRMUhn=VdG5uzrosTUpwAMHi+zO7NTYVikWzFdnKrUJ4w@mail.gmail.com>
+ <CAP-5=fXykcQ7n3rw6RX3S+dLoLUC9BZKh=BP8yx8ak+f623aEg@mail.gmail.com>
+ <20251013161429.GE77665@e132581.arm.com>
+ <CADHxFxQg2ZKwLEOa6wic_KP49PRBp=hF=cY16aVmR0O0pa8ZkA@mail.gmail.com>
+ <20251015093037.GA109737@e132581.arm.com>
+ <CADHxFxQyOBurB0LB9qRdc3DEDNU+vatqOybNdcizPnWZngiPZg@mail.gmail.com>
+ <CADHxFxS3kDeSM7NvZHbdoOyqxzzcKeAc1xzr=q_f+T96G9preA@mail.gmail.com>
+ <aPRNSgunb8K9boWx@google.com>
+ <CADHxFxQ5ph5P+ihVw2Qm-f1T-OFUQziyc8fi-k+q3-YgL-XCMw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADHxFxQ5ph5P+ihVw2Qm-f1T-OFUQziyc8fi-k+q3-YgL-XCMw@mail.gmail.com>
 
-Return error code from the symbol_annotate previously checks the
-evsel__get_arch from '<0', now to '!=0'.
+On Sun, Oct 19, 2025 at 03:57:27PM +0800, hupu wrote:
+> Hi Namhyung,
+> Thanks for your reply.
+> 
+> On Sun, Oct 19, 2025 at 10:30 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hello,
+> >
+> > On Sat, Oct 18, 2025 at 06:05:03PM +0800, hupu wrote:
+> > > Hi Leo, Ian, and fellow maintainers.
+> > >
+> > > On Wed, Oct 15, 2025 at 7:47 PM hupu <hupu.gm@gmail.com> wrote:
+> > > >
+> > > > Hi Leo,
+> > > > Thank you for your reply.
+> > > >
+> > > > On Wed, Oct 15, 2025 at 5:30 PM Leo Yan <leo.yan@arm.com> wrote:
+> > > > >
+> > > > > Have you installed the GCC cross packages ?
+> > > > >
+> > > > >  $ sudo apt-get install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+> > > > >  $ sudo apt-get install libc6-dev-aarch64-cross linux-libc-dev-aarch64-cross
+> > > > >  $ sudo apt-get install libc6-dev-arm64-cross linux-libc-dev-arm64-cross
+> > > > >
+> > > > > My understanding is arm64 cross compilation tries to find headers in the
+> > > > > path /usr/aarch64-linux-gnu/include/ (I confirmed this on Ubuntu/Debian
+> > > > > distros).  After install GCC cross packages, the headers should appear
+> > > > > in the folder.
+> > > > >
+> > > >
+> > > > I hadn’t installed the packages you mentioned earlier, but after
+> > > > running the installation commands you provided, I was indeed able to
+> > > > successfully build perf.
+> > > >
+> > > > In fact, I’m currently working on creating an SDK package, which
+> > > > includes a cross-toolchain that I built myself using crosstool-NG. My
+> > > > initial idea was to install certain third-party libraries (such as the
+> > > > packages you mentioned) into the cross-toolchain’s sysroot directory.
+> > > > With this approach, even when developing on different host machines,
+> > > > we could simply specify the header search path (pointing to the
+> > > > cross-toolchain’s sysroot directory) during compilation, and the build
+> > > > should succeed without requiring any additional package installation
+> > > > on the system.
+> > > >
+> > > > Based on this, I think allowing users to extend some options via
+> > > > EXTRA_CLANG_FLAGS could be a flexible way to handle such cases.
+> > > > However, this is just my personal thought and might not be entirely
+> > > > correct, so I’d like to hear your advice.
+> > > >
+> > >
+> > >
+> > > Although installing the GCC cross packages allows me to build perf
+> > > successfully, I still prefer to be able to pass additional Clang flags
+> > > via EXTRA_CLANG_FLAGS, as this approach feels more flexible to me.
+> > >
+> > > I look forward to continuing the discussion on this topic.
+> >
+> > Doesn't EXTRA_CFLAGS work for you?
+> >
+> 
+> 
+> I’ve tried using EXTRA_CFLAGS and confirm that it doesn’t work. When I
+> build perf with the following command, it still reports errors:
+>   make perf ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE
+> EXTRA_CFLAGS="--sysroot=$SYSROOT"
 
-Suggested-by: James Clark <james.clark@linaro.org>
-Tested-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Tianyou Li <tianyou.li@intel.com>
----
- tools/perf/util/annotate.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for checking this.
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 39d6594850f1..859e802a1e5e 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1021,7 +1021,7 @@ int symbol__annotate(struct map_symbol *ms, struct evsel *evsel,
- 	int err, nr;
- 
- 	err = evsel__get_arch(evsel, &arch);
--	if (err < 0)
-+	if (err)
- 		return err;
- 
- 	if (parch)
--- 
-2.47.1
+> 
+> In fact, by checking the code in tools/perf/Makefile.perf, we can see
+> that the EXTRA_CFLAGS variable is not passed to Clang at all:
+> 
+> $(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(LIBBPF) $(SKEL_OUT)/vmlinux.h
+> $(QUIET_CLANG)$(CLANG) -g -O2 -fno-stack-protector --target=bpf \
+>   $(CLANG_OPTIONS) $(BPF_INCLUDE) $(TOOLS_UAPI_INCLUDE) \
+>   -include $(OUTPUT)PERF-VERSION-FILE -include util/bpf_skel/perf_version.h \
+>   -c $(filter util/bpf_skel/%.bpf.c,$^) -o $@
+> 
+> 
+> As shown above, EXTRA_CFLAGS only affects the GCC cross-compilation
+> process and has no impact on the Clang build process.
+> That’s why I proposed introducing an EXTRA_CLANG_FLAGS variable to
+> provide a way to control Clang’s compilation behavior more flexibly.
+
+One thing I care is that we can set clang as a default compiler using CC
+variable then meaning of EXTRA_CFLAGS and EXTRA_CLANG_FLAGS may be
+confusing.  I guess EXTRA_BPF_FLAGS is clearer that we want to pass
+something when it builds BPF programs.
+
+Thanks,
+Namhyung
 
