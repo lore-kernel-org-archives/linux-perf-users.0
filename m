@@ -1,234 +1,204 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E942BDC15
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Oct 2025 05:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D914354AFF;
+	Mon, 20 Oct 2025 06:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760939531; cv=none; b=PSI4+p7oS2k209kHOW4Tmmwxx6HBKVcKv/XxWghSKFr9f9pO2ouBY5oAhB0GwfSxNekstlH4XOIYE0s9eWKdK1PAFliJiyeDrzxsyio/DDxKFCzzdS4vvkamtrHpsSDI/9+4MngaRmoQPH9R5frOTL0an4EDu2zWvAhrUNQsy00=
+	t=1760941870; cv=none; b=do8VRBtdkMWXKn2Pn+jNakuSIJ6eS4oKK71n/gISwVuppgBMTQOmIoL6Xhlf/qKYO0OkTw+A9z9UAodO/q7OtSxwAt9/TlS91FAn9x7TGlGis3m6awBdpEF1MFt2KWtiETUrkMHLraxZsPzsRO0fxJA77haqcQ3wwWIQxb4JRzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760939531; c=relaxed/simple;
-	bh=JUpJDQR3IVbpV0Ak3uyxX1Ysi6l/QYP0HVY4pRL7lco=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b4TTPQh2DbXHFUy5NOUrpFyLQG7cLn5xyK20vAw20nL9kG4flRpjdZzgnGVGtDOvvN6RtN/DV0M7fMwQqiqpZoOeNDD9k8RRBsF3psEN2Skj1lFxmLKzUln8uJ4ZMqlZ77eyccUkbWEYwBgmpbXACiWw/9KG4EEJ5UGThFa4Dqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cxqv0CxG; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1760941870; c=relaxed/simple;
+	bh=BBcennXpMEhl1UnVlNA14H6tBKsmaFEnykLIw+A9FBU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aO8rhX0MWgQUCzpdzDnRDomgIKKyhcswtKkX7wndNoJr2zOVuUZRwFVBqsMVRJEHVRQSytb/N6P23MLJtKxEWjZ11w71PA8ur31sMdQquD8fB7U9lkttI0754LSWkAhkBqrI/0oCsQ2fAsVMx8J0G34rxqo0vYw26uNkVpyGewE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ngynlP3Z; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cxqv0CxG"
-Message-ID: <4c35feba-e075-42c1-82c5-5589c16f088e@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1760939512;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sjVuQKaiuc0hIwq42aM+do7ZKk3BIqGf7ik88PurFHE=;
-	b=cxqv0CxGpcshgrZsY1LRThOa7biRiKqLYaDEXTjBzYZnfvHzsWTz4qgwHhhsseEWin/WhA
-	As5h76Kdj/XRZ3iuS2+Svy4pmjAHKZusI7TE1g+r7+bnoAz5HoyWAEiG5fG9G1Px2QCIQw
-	xG+omsR0R6oIvo5LHObWFYaqtLlmonY=
-Date: Mon, 20 Oct 2025 13:50:50 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ngynlP3Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1760941869; x=1792477869;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=BBcennXpMEhl1UnVlNA14H6tBKsmaFEnykLIw+A9FBU=;
+  b=ngynlP3ZPv9KagE/E/sGiFxTNx0yksANRNag//ef3WO9CIZCdovrnqPn
+   d7bFtsfoJWxFSplAi+Z6pItT3BK6tjaKyRkpf4izW59J6eXfu5NwaYUX5
+   KSdM+gYSoQi/Gs36CXS9zRJR/PtCZHvaauZ+yoHsq2P2b1HqqIrkzWNBO
+   el3+XJ6SeflYF6puDza3fqsaYRdPMew2gLNZrdbO98aLCOpYpHsGODX2i
+   a37xh7UjRAiZ4XYVuFtDMd9BHznWITtiRz1hgK4gNRryCdbBbV/4sdSY9
+   LSzMgW+ZrY50KXdIpMNzYoYSUuUDfL18BEj38b2CaUElNamTnmJYeT+e6
+   g==;
+X-CSE-ConnectionGUID: 9WFFNRnYTx+BYZYbV9PKBg==
+X-CSE-MsgGUID: jA/E4tyvQ9e7zj9gar6W3g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11587"; a="74493196"
+X-IronPort-AV: E=Sophos;i="6.19,242,1754982000"; 
+   d="scan'208";a="74493196"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2025 23:31:08 -0700
+X-CSE-ConnectionGUID: sy9f60bTRZauy0+YTdLRPQ==
+X-CSE-MsgGUID: MNV9BTikSTaEGmLPyWJQOQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,242,1754982000"; 
+   d="scan'208";a="188550776"
+Received: from linux-pnp-server-27.sh.intel.com ([10.239.147.41])
+  by fmviesa004.fm.intel.com with ESMTP; 19 Oct 2025 23:31:03 -0700
+From: Tianyou Li <tianyou.li@intel.com>
+To: Namhyung Kim <namhyung@kernel.org>,
+	James Clark <james.clark@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	tianyou.li@intel.com,
+	wangyang.guo@intel.com,
+	pan.deng@intel.com,
+	zhiguo.zhou@intel.com,
+	jiebin.sun@intel.com,
+	thomas.falcon@intel.com,
+	dapeng1.mi@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 1/2] perf tools annotate: fix a crash when annotate the same symbol with 's' and 'T'
+Date: Mon, 20 Oct 2025 15:30:04 +0800
+Message-ID: <20251020073005.957524-1-tianyou.li@intel.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <aPW2iiNeheOxDGw8@google.com>
+References: <aPW2iiNeheOxDGw8@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v3 2/2] bpf: Use per-cpu BPF callchain entry to
- save callchain
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com, song@kernel.org,
- ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, yonghong.song@linux.dev,
- john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-References: <20251019170118.2955346-1-chen.dylane@linux.dev>
- <20251019170118.2955346-3-chen.dylane@linux.dev>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <20251019170118.2955346-3-chen.dylane@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-在 2025/10/20 01:01, Tao Chen 写道:
-> As Alexei noted, get_perf_callchain() return values may be reused
-> if a task is preempted after the BPF program enters migrate disable
-> mode. Drawing on the per-cpu design of bpf_bprintf_buffers,
-> per-cpu BPF callchain entry is used here.
-> 
-> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
-> ---
->   kernel/bpf/stackmap.c | 98 ++++++++++++++++++++++++++++++++-----------
->   1 file changed, 74 insertions(+), 24 deletions(-)
-> 
-> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-> index 94e46b7f340..3513077c57d 100644
-> --- a/kernel/bpf/stackmap.c
-> +++ b/kernel/bpf/stackmap.c
-> @@ -31,6 +31,52 @@ struct bpf_stack_map {
->   	struct stack_map_bucket *buckets[] __counted_by(n_buckets);
->   };
->   
-> +struct bpf_perf_callchain_entry {
-> +	u64 nr;
-> +	u64 ip[PERF_MAX_STACK_DEPTH];
-> +};
-> +
-> +#define MAX_PERF_CALLCHAIN_PREEMPT 3
-> +static DEFINE_PER_CPU(struct bpf_perf_callchain_entry[MAX_PERF_CALLCHAIN_PREEMPT],
-> +		      bpf_perf_callchain_entries);
-> +static DEFINE_PER_CPU(int, bpf_perf_callchain_preempt_cnt);
-> +
-> +static int bpf_get_perf_callchain_or_entry(struct perf_callchain_entry **entry,
-> +					   struct pt_regs *regs, bool kernel,
-> +					   bool user, u32 max_stack, bool crosstack,
-> +					   bool add_mark, bool get_callchain)
-> +{
-> +	struct bpf_perf_callchain_entry *bpf_entry;
-> +	struct perf_callchain_entry *perf_entry;
-> +	int preempt_cnt;
-> +
-> +	preempt_cnt = this_cpu_inc_return(bpf_perf_callchain_preempt_cnt);
-> +	if (WARN_ON_ONCE(preempt_cnt > MAX_PERF_CALLCHAIN_PREEMPT)) {
-> +		this_cpu_dec(bpf_perf_callchain_preempt_cnt);
-> +		return -EBUSY;
-> +	}
-> +
-> +	bpf_entry = this_cpu_ptr(&bpf_perf_callchain_entries[preempt_cnt - 1]);
-> +	if (!get_callchain) {
-> +		*entry = (struct perf_callchain_entry *)bpf_entry;
-> +		return 0;
-> +	}
-> +
-> +	perf_entry = get_perf_callchain(regs, (struct perf_callchain_entry *)bpf_entry,
-> +					kernel, user, max_stack,
-> +					crosstack, add_mark);
-> +	*entry = perf_entry;
-> +
-> +	return 0;
-> +}
-> +
-> +static void bpf_put_perf_callchain(void)
-> +{
-> +	if (WARN_ON_ONCE(this_cpu_read(bpf_perf_callchain_preempt_cnt) == 0))
-> +		return;
-> +	this_cpu_dec(bpf_perf_callchain_preempt_cnt);
-> +}
-> +
->   static inline bool stack_map_use_build_id(struct bpf_map *map)
->   {
->   	return (map->map_flags & BPF_F_STACK_BUILD_ID);
-> @@ -192,11 +238,11 @@ get_callchain_entry_for_task(struct task_struct *task, u32 max_depth)
->   {
->   #ifdef CONFIG_STACKTRACE
->   	struct perf_callchain_entry *entry;
-> -	int rctx;
-> -
-> -	entry = get_callchain_entry(&rctx);
-> +	int ret;
->   
-> -	if (!entry)
-> +	ret = bpf_get_perf_callchain_or_entry(&entry, NULL, false, false, 0, false, false,
-> +					      false);
-> +	if (ret)
->   		return NULL;
->   
->   	entry->nr = stack_trace_save_tsk(task, (unsigned long *)entry->ip,
-> @@ -216,7 +262,7 @@ get_callchain_entry_for_task(struct task_struct *task, u32 max_depth)
->   			to[i] = (u64)(from[i]);
->   	}
->   
-> -	put_callchain_entry(rctx);
-> +	bpf_put_perf_callchain();
+When perf report with annotation for a symbol, press 's' and 'T', then exit
+the annotate browser. Once annotate the same symbol, the annotate browser
+will crash.
 
-double-put issue here reported by AI, i will fix it.
+The browser.arch was required to be correctly updated when data type
+feature was enabled by 'T'. Usually it was initialized by symbol__annotate2
+function. If a symbol has already been correctly annotated at the first
+time, it should not call the symbol__annotate2 function again, thus the
+browser.arch will not get initialized. Then at the second time to show the
+annotate browser, the data type needs to be displayed but the browser.arch
+is empty.
 
->   
->   	return entry;
->   #else /* CONFIG_STACKTRACE */
-> @@ -305,6 +351,7 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
->   	bool user = flags & BPF_F_USER_STACK;
->   	struct perf_callchain_entry *trace;
->   	bool kernel = !user;
-> +	int err;
->   
->   	if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
->   			       BPF_F_FAST_STACK_CMP | BPF_F_REUSE_STACKID)))
-> @@ -314,14 +361,15 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
->   	if (max_depth > sysctl_perf_event_max_stack)
->   		max_depth = sysctl_perf_event_max_stack;
->   
-> -	trace = get_perf_callchain(regs, NULL, kernel, user, max_depth,
-> -				   false, false);
-> +	err = bpf_get_perf_callchain_or_entry(&trace, regs, kernel, user, max_depth,
-> +					      false, false, true);
-> +	if (err)
-> +		return err;
->   
-> -	if (unlikely(!trace))
-> -		/* couldn't fetch the stack trace */
-> -		return -EFAULT;
-> +	err = __bpf_get_stackid(map, trace, flags);
-> +	bpf_put_perf_callchain();
->   
-> -	return __bpf_get_stackid(map, trace, flags);
-> +	return err;
->   }
->   
->   const struct bpf_func_proto bpf_get_stackid_proto = {
-> @@ -443,20 +491,23 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
->   	if (sysctl_perf_event_max_stack < max_depth)
->   		max_depth = sysctl_perf_event_max_stack;
->   
-> -	if (may_fault)
-> -		rcu_read_lock(); /* need RCU for perf's callchain below */
-> -
->   	if (trace_in)
->   		trace = trace_in;
-> -	else if (kernel && task)
-> +	else if (kernel && task) {
->   		trace = get_callchain_entry_for_task(task, max_depth);
-> -	else
-> -		trace = get_perf_callchain(regs, NULL, kernel, user, max_depth,
-> -					   crosstask, false);
-> +	} else {
-> +		err = bpf_get_perf_callchain_or_entry(&trace, regs, kernel, user, max_depth,
-> +						      false, false, true);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	if (unlikely(!trace))
-> +		goto err_fault;
->   
-> -	if (unlikely(!trace) || trace->nr < skip) {
-> -		if (may_fault)
-> -			rcu_read_unlock();
-> +	if (trace->nr < skip) {
-> +		if (!trace_in)
-> +			bpf_put_perf_callchain();
->   		goto err_fault;
->   	}
->   
-> @@ -475,9 +526,8 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
->   		memcpy(buf, ips, copy_len);
->   	}
->   
-> -	/* trace/ips should not be dereferenced after this point */
-> -	if (may_fault)
-> -		rcu_read_unlock();
-> +	if (!trace_in)
-> +		bpf_put_perf_callchain();
->   
->   	if (user_build_id)
->   		stack_map_get_build_id_offset(buf, trace_nr, user, may_fault);
+Stack trace as below:
 
+Perf: Segmentation fault
+-------- backtrace --------
+    #0 0x55d365 in ui__signal_backtrace setup.c:0
+    #1 0x7f5ff1a3e930 in __restore_rt libc.so.6[3e930]
+    #2 0x570f08 in arch__is perf[570f08]
+    #3 0x562186 in annotate_get_insn_location perf[562186]
+    #4 0x562626 in __hist_entry__get_data_type annotate.c:0
+    #5 0x56476d in annotation_line__write perf[56476d]
+    #6 0x54e2db in annotate_browser__write annotate.c:0
+    #7 0x54d061 in ui_browser__list_head_refresh perf[54d061]
+    #8 0x54dc9e in annotate_browser__refresh annotate.c:0
+    #9 0x54c03d in __ui_browser__refresh browser.c:0
+    #10 0x54ccf8 in ui_browser__run perf[54ccf8]
+    #11 0x54eb92 in __hist_entry__tui_annotate perf[54eb92]
+    #12 0x552293 in do_annotate hists.c:0
+    #13 0x55941c in evsel__hists_browse hists.c:0
+    #14 0x55b00f in evlist__tui_browse_hists perf[55b00f]
+    #15 0x42ff02 in cmd_report perf[42ff02]
+    #16 0x494008 in run_builtin perf.c:0
+    #17 0x494305 in handle_internal_command perf.c:0
+    #18 0x410547 in main perf[410547]
+    #19 0x7f5ff1a295d0 in __libc_start_call_main libc.so.6[295d0]
+    #20 0x7f5ff1a29680 in __libc_start_main@@GLIBC_2.34 libc.so.6[29680]
+    #21 0x410b75 in _start perf[410b75]
 
+Fixes: 1d4374afd000 ("perf annotate: Add 'T' hot key to toggle data type display")
+Reviewed-by: James Clark <james.clark@linaro.org>
+Tested-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Tianyou Li <tianyou.li@intel.com>
+---
+ tools/perf/ui/browsers/annotate.c | 23 +++++++++++++++++++----
+ tools/perf/util/annotate.c        |  2 +-
+ tools/perf/util/annotate.h        |  2 ++
+ 3 files changed, 22 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index 112fe6ad112e..3a81912279ad 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -862,6 +862,18 @@ static s64 annotate_browser__curr_hot_offset(struct annotate_browser *browser)
+ 	return al ? al->offset : 0;
+ }
+ 
++static void annotate_browser__symbol_annotate_error(struct annotate_browser *browser, int err)
++{
++	struct map_symbol *ms = browser->b.priv;
++	struct symbol *sym = ms->sym;
++	struct dso *dso = map__dso(ms->map);
++	char msg[BUFSIZ];
++
++	dso__set_annotate_warned(dso);
++	symbol__strerror_disassemble(ms, err, msg, sizeof(msg));
++	ui__error("Couldn't annotate %s:\n%s", sym->name, msg);
++}
++
+ static int annotate_browser__run(struct annotate_browser *browser,
+ 				 struct evsel *evsel,
+ 				 struct hist_browser_timer *hbt)
+@@ -1175,10 +1187,7 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+ 	if (not_annotated || !sym->annotate2) {
+ 		err = symbol__annotate2(ms, evsel, &browser.arch);
+ 		if (err) {
+-			char msg[BUFSIZ];
+-			dso__set_annotate_warned(dso);
+-			symbol__strerror_disassemble(ms, err, msg, sizeof(msg));
+-			ui__error("Couldn't annotate %s:\n%s", sym->name, msg);
++			annotate_browser__symbol_annotate_error(&browser, err);
+ 			return -1;
+ 		}
+ 
+@@ -1187,6 +1196,12 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
+ 			if (!annotation__has_source(notes))
+ 				ui__warning("Annotation has no source code.");
+ 		}
++	} else {
++		err = evsel__get_arch(evsel, &browser.arch);
++		if (err) {
++			annotate_browser__symbol_annotate_error(&browser, err);
++			return -1;
++		}
+ 	}
+ 
+ 	/* Copy necessary information when it's called from perf top */
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index a2e34f149a07..39d6594850f1 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -980,7 +980,7 @@ void symbol__calc_percent(struct symbol *sym, struct evsel *evsel)
+ 	annotation__calc_percent(notes, evsel, symbol__size(sym));
+ }
+ 
+-static int evsel__get_arch(struct evsel *evsel, struct arch **parch)
++int evsel__get_arch(struct evsel *evsel, struct arch **parch)
+ {
+ 	struct perf_env *env = evsel__env(evsel);
+ 	const char *arch_name = perf_env__arch(env);
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index eaf6c8aa7f47..d4990bff29a7 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -585,4 +585,6 @@ void debuginfo_cache__delete(void);
+ int annotation_br_cntr_entry(char **str, int br_cntr_nr, u64 *br_cntr,
+ 			     int num_aggr, struct evsel *evsel);
+ int annotation_br_cntr_abbr_list(char **str, struct evsel *evsel, bool header);
++
++int evsel__get_arch(struct evsel *evsel, struct arch **parch);
+ #endif	/* __PERF_ANNOTATE_H */
 -- 
-Best Regards
-Tao Chen
+2.47.1
+
