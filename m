@@ -1,57 +1,39 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1351723507E;
-	Mon, 20 Oct 2025 10:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.17
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D79C2F618F;
+	Mon, 20 Oct 2025 10:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760954593; cv=none; b=lDxnDFGb8jB56O3l20keapf/TWqh82uDuYJ8t6jpzrOw8XXcimcJLuPR1clSdPpJLB5vER+1/sTAtEkAL2qse40/uzm1G+83a0P5cEkMtppqcIdp2Jw5qvSrV2EKdlkhfz3YEE4VN7uy6lkHp6N4+Ud+Ifv8dTVfqCrxP+era30=
+	t=1760955328; cv=none; b=Z4gOkS8GEqHYekTApJmmJCruyZUNE1FG3k6TKx31S9GiRhpWBWJVge1fKKMfo+MHLV+B5Dkt/MJaI0Hh+40r4RGNNU22SFWW/u+4+syTNZ0zv1dI+PtPBjaBcmoRkm9ceCYoyuPpQ+UTIUurs9V+rKKqFvo3zEqQbRiD4LEsuII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760954593; c=relaxed/simple;
-	bh=JQfE3KNG+D5b8f84jPlSpb+DOEVmhCtdtf+KQumTN+I=;
+	s=arc-20240116; t=1760955328; c=relaxed/simple;
+	bh=6i+WB0Tq8+B4dcsaJzgkmAvi1jwR+YbvQcxpaUoU47U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lrl0o46rEb7NKvYiNTItFyWSZe1vMOK2BFVkdP4BBImK58SOXtR9cZrlIJkGlIVkhYgV7tEivHtM5MfI3K9o4rw6G6/LZL46lsOH/i1wg751etXS93Uhoy747/N8CIyoZCY1PX2Zc1L1xUJ3svTXy0xjB/u7yFmkJQNPwoJaKp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=UvPDScRh; arc=none smtp.client-ip=220.197.32.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="UvPDScRh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=UlfP0VetgKs41Qf2UYWtLeAZdZiBKKUyFtRjTgmHDK4=;
-	b=UvPDScRhxxrNnRdKq9YBwOvp34T8zAgVT09Dqd5Ix5HmxyhBjSeliEl9lD/U3i
-	/KO8cbHFehRK+amVNYQOWp6HhIGq+0aSFfRDIFqwmeOEbfIaUYaxZNj3pzEbs4rN
-	ktQ2bMgW6ENQgYs4ZQx2mMbJOOfaNt7gF9FSnT+iJaheU=
-Received: from dragon (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id M88vCgD3H7B0CPZoxAhSAA--.26000S3;
-	Mon, 20 Oct 2025 18:01:27 +0800 (CST)
-Date: Mon, 20 Oct 2025 18:01:24 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Xu Yang <xu.yang_2@nxp.com>
-Cc: Frank Li <Frank.li@nxp.com>, Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	John Garry <john.g.garry@oracle.com>,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
-	imx@lists.linux.dev
-Subject: Re: [PATCH v2 5/5] arm64: dts: imx94: add DDR Perf Monitor node
-Message-ID: <aPYIdGPhr81i2w2F@dragon>
-References: <20250821-imx94-ddr-pmu-v2-0-052c6420605d@nxp.com>
- <20250821-imx94-ddr-pmu-v2-5-052c6420605d@nxp.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=L3m2NUsarIDWxBLSm6SkjPEgc7vSlQVoEVDGurSQuZH6MgMmhKdEgbEEl3YnBqQdEKR5ehHq2hJpTkasL4A+xcqgk0aQ+TNIsjovInBJyLtAaLI9l4+u+RTt0/jFHEM/Dgzv5KxehLJFn2+0U+4QP1alg61UPb6g9SINYvFGWO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D13A1063;
+	Mon, 20 Oct 2025 03:15:17 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E01453F63F;
+	Mon, 20 Oct 2025 03:15:24 -0700 (PDT)
+Date: Mon, 20 Oct 2025 11:15:23 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: hupu <hupu.gm@gmail.com>, acme@kernel.org, adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com, irogers@google.com,
+	jolsa@kernel.org, justinstitt@google.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	mark.rutland@arm.com, mingo@redhat.com, morbo@google.com,
+	nathan@kernel.org, nick.desaulniers+lkml@gmail.com,
+	peterz@infradead.org
+Subject: Re: [PATCH] perf build: Support passing extra Clang options via
+ EXTRA_BPF_FLAGS
+Message-ID: <20251020101523.GE281971@e132581.arm.com>
+References: <CADHxFxQHFkn-J9R6AJY8LxkDN-eTWjp34VvoQDcshfZs1eF0rQ@mail.gmail.com>
+ <20251020024049.6877-1-hupu.gm@gmail.com>
+ <aPW3rilb8DtFDIMC@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,16 +42,31 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250821-imx94-ddr-pmu-v2-5-052c6420605d@nxp.com>
-X-CM-TRANSID:M88vCgD3H7B0CPZoxAhSAA--.26000S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU7zuWDUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiNhf2XGj2CHfydwAA3v
+In-Reply-To: <aPW3rilb8DtFDIMC@google.com>
 
-On Thu, Aug 21, 2025 at 07:01:53PM +0800, Xu Yang wrote:
-> Add DDR Perf Monitor for i.MX94.
-> 
-> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
+On Mon, Oct 20, 2025 at 01:16:46PM +0900, Namhyung Kim wrote:
 
-Applied, thanks!
+[...]
 
+> On Mon, Oct 20, 2025 at 10:40:49AM +0800, hupu wrote:
+> > When cross-compiling perf with BPF enabled, Clang is invoked during the
+> > build. Some cross-compilation environments require additional compiler
+> > options, such as `--sysroot` or custom include paths.
+
+[...]
+
+> Leo, are you ok with this?
+
+To be clear, now we are not talking cross build for perf program or any
+targeting a CPU arch, it is a build failure for eBPF program.
+
+This patch does not make clear why we cannot build eBPF program in
+self-contained way. E.g., after installed kernel headers, why Makefile
+misses to include installed headers when build eBPF program.
+
+I am not saying we cannot specify an external sysroot path, but before
+proceed that, we should make sure the build can work with self-contained
+headers.
+
+Thanks,
+Leo
