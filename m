@@ -1,59 +1,58 @@
-Received: from mail-lj1-f194.google.com (mail-lj1-f194.google.com [209.85.208.194])
+Received: from mail-ot1-f65.google.com (mail-ot1-f65.google.com [209.85.210.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893D22E62A8
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Oct 2025 08:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21E821D3DF
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Oct 2025 08:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760947226; cv=none; b=mHwX7uMzkvRZ1CuCygLaPG9cmlsWbATDOg8pXiXss2o1jh9Vk6QHofFNwJAIxWu4dFUV0i9IGI6uVAubiPrwLWbSGmPGqPBmu+/KyQw8vuQh+waXbjDXb3K/Z705+KZUMrTxpSB55VzVHq/mpBBbQjfTKyG+1mEFQlIOLI7ElZ4=
+	t=1760947395; cv=none; b=jCxucYQ804QU6VCz9XIytYcZiaUxQ2IxtdYrcwvKRnQI62EtGmUT86mwaKD5WcKYNdj94GxOjDpa+DUFKOzi4LGHxHit/uPhikebCZMLsT771QlwjcungEGr5mlqjogZSKTUeA+u4X3XGHB1FNNjqVFiQICAGu5+MCvRwa9M5Kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760947226; c=relaxed/simple;
-	bh=Zmqo4L+meBOETvdur9HriUdnxH1JJd48yOGhQ75ip1o=;
+	s=arc-20240116; t=1760947395; c=relaxed/simple;
+	bh=zSrHgFoFLOuMfBq+ow59MxETNiEc7Ug75WckEpH0B1c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HK063p1tWYqlzkUBER7cSfFoD4TcEBwSa507SEZTlUFqPpCXxhMcTlmmTz8nC0fQgtEiULWlhnK79XaEs9tNxMtmlDXVrZqTDc2SziC8OTXyijXe+disyfkjcEAzEFi5HY80GctP1mT803R98rRtJ55M2nuSFl1O/XHR2bmza/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XcyUDAUP; arc=none smtp.client-ip=209.85.208.194
+	 To:Cc:Content-Type; b=IFNFE35fKGn0hieDzKkTfHBzKU+tx69vrRIRQ2FbH7nreKxAroRoTuVpbT7AbMCJLfvET+l1AX8+HzSr/MxRvfAVV7qtnuoFI8/wsR4lTgVmKZ8Z165WCme0dyHBdtOGGGjD4cGlBpkqPBJOPHIY6kQaEM8Jpi9UoZ9Xmi92CS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J3hGRfM/; arc=none smtp.client-ip=209.85.210.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XcyUDAUP"
-Received: by mail-lj1-f194.google.com with SMTP id 38308e7fff4ca-36a6a397477so40779781fa.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Oct 2025 01:00:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J3hGRfM/"
+Received: by mail-ot1-f65.google.com with SMTP id 46e09a7af769-7c2917b92bcso1282933a34.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Oct 2025 01:03:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1760947223; x=1761552023; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FqFqpQMzveXZ0RGEyviEw8DDVWwyBqtk13RJd8bj4CU=;
-        b=XcyUDAUPPTFohquNJG9Wt+PeHhyqoozQHTXCFY0p6WwxojSFpve1rgiCYW7EuK7cDq
-         5vsNTUhgj+8O6yimk5SKHn7J7y84SKPmpFC4S2zDLDD4bFljVGTifpwvg9pmm49oImon
-         q6Z//8Q5r4fOVLC0g7WDMOf0TD83nzq4Ji3v6z4Mj1N1mrR6xdEW5PwCvlr8S1aqwjen
-         6fBbEtZMdm20qow3g/08ROuxMzJEycBJ8ABo45nrb36PLHEFW8Eifl/A5Bo9PUhETj9N
-         UWhwP6GEBRyJCEmI8P7qcA3MvTIyiVyEkgm5wYAVlcMLdp9hQtYttYDDm1GjVxPBhhIG
-         M7yQ==
+        d=gmail.com; s=20230601; t=1760947392; x=1761552192; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=KViY3RZGThzhrj6fWVe1XUp0201BJSec3EfLEu40ZP4=;
+        b=J3hGRfM/RJk/toV1V/m5yeWxruG4HadpeLFi0EHfgcdcJVkuBMT4CJ0Tmk/yUBk1tC
+         LDg2rcXcVLgLEYPs5ZB/TvgJYz2q2TkEsKpa1Dza0XzbSmL1wZqi87xmCJ/FWOctPau+
+         P16CLfwww/EF8fDDaCSednINEcUdDfrzB2xoqptcU1bCtBYea0j7cT2W13umS5D2AYV5
+         L67U4xkUdsSpnBPsnAz82ye/6TRn1qsDi3PUgmE0X4SfOjgAC8WPuWHhCUatU8veb5i8
+         kXcLJs3ethOM7x+4W0gmAhOb242sY9VRRtEWkbqT1kQ6eltlLyLyjRynXJNRvO6h1e8p
+         OGGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760947223; x=1761552023;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FqFqpQMzveXZ0RGEyviEw8DDVWwyBqtk13RJd8bj4CU=;
-        b=k9jog+dI0YLilFbt34XxIkR0L1m8HJ3gxcci0Q3JoASdn+kdtBcW47yEWcdNGlRJxH
-         Ol4ls7GZD7EQD9WX/lxXvKxBt5IdwvMPHJ+Oz+bdkyBd5YF60olg6ZdHM+iilMV4WLKT
-         GeleNS7pJ6RPtBh41FrrnUSL7yxJNJ9+Re+J2rdNzz9yMY3iK6KZXBRc0RY0IiCzkIiW
-         SfLksOdjMEKlZVRyhALzedpJ+X8LQPVbSwqjiM3QEN8uSAdYSIPKDNYAfPdHH9UQhPsP
-         pCGM9eKY7GonVf6f4KBrk/8Hp9GqxSzxqFIBXEXNLWLP9c3Dkiq/sb5XEVq8Zo8L/MYE
-         c2Pw==
-X-Forwarded-Encrypted: i=1; AJvYcCVWsl9LprZAAD7rbFHvFJhM8ONL69MmUMmiXZ5/PvyRvK0HHnjcDhzd/3Csg/HneeV5AWRvGFdKP91vf4q3E6Cs@vger.kernel.org
-X-Gm-Message-State: AOJu0YzehDtcZ6YXm8SDF6+QfKmm3mBwgOm+PTMGMOY83uUQEjf2+RlL
-	NXAlII6zJq6tK/JNXIpV1PAd000TgDe48d+6Xcgeil15BGbpMYKjXRXYFLvHRMS0eIFk0K4/1U+
-	aFOU4VeVR2WRrPkUqmCXRAeTzY5DhiJA=
-X-Gm-Gg: ASbGnctrQBoIo3dm/56eZgYXLjG+gK1+eiCPxMRTurrJZfZ4EHD+aR2HkQOhzFcwMXH
-	BI1leucWqaRKWB0PA8hZv0YUSdaRlCvQSST3YiS/D29NLtdSK5kdTr4+/wkPMoc56n1LGambRh7
-	3QD9WLc/JtzxQ21pmGO/F05unCBm46W6fkiykyH4DANUjaSFYM4YDloIJQYfjw20mhoLX3yRIDy
-	Nv9N65tmdQpVHbDvvR3H0uNvDmG3F9iuU+4ojIgqs9fM+otEyWkQ9fUEsjamcBkuoAhg5U=
-X-Google-Smtp-Source: AGHT+IEb6aTrOmEOubjtMhNC4fScG5O+4jxoJC7WfiJ+3w31K1dW+u/j2kGMtu9zgMz0h6FWV//Soz3m52hhkz09Slo=
-X-Received: by 2002:a05:651c:1b96:b0:372:9f0c:2154 with SMTP id
- 38308e7fff4ca-37797a63033mr32880721fa.42.1760947222240; Mon, 20 Oct 2025
- 01:00:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1760947392; x=1761552192;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KViY3RZGThzhrj6fWVe1XUp0201BJSec3EfLEu40ZP4=;
+        b=WvqTEOj4uBX35cjElxNjfHtMbhd08rtjtdW6dxeT+mnhUoelm4/10Rd735MeEw03if
+         7ia43hCJtkHqICcVJRAN0bsRVxPM2wkm15pPwg85IhfGNd3CPoOalug/noEIUo3a4ifS
+         ZYMuj3+coWSROobjR4I3uvQDO+y0k5N/4N/PyCku2sjrqv8rTqluiLV7R2OXej3ykw+h
+         NbCUc67JqvHwC9GE2e7y1PvUNHY3wdQg3EwR91DbcHJ0W7R+Qw8Ny5L0RNk27sJl3T0v
+         yBoRbC3xctFcyoqgR7iNZYWImuPbA250vFuTdO0EBvCu7cqU4DMRt2vihOHzyh5/9Hxz
+         BVew==
+X-Forwarded-Encrypted: i=1; AJvYcCXrN5CkBjr8u3foPzh7nQNNl2W+zUWZ5DvKvvo0lqUcuW+8xrVSBmJ1C3rlXyEiYzTC76F8VF8SMXyxhxHQ29s0@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7vNOxHoCETP3UDMHSvSYamxbgyCei+n89r69ay9A8tqPfqgED
+	3/EpPLnAYT6EhmFDfmWC+QDk0Nhn0KVY+GZwAM6O9Xc7LJv+3WnfcDfTQajHXiRo1fgzG6Jd/Vq
+	gy65C1VHSjS+uQze8J99NjP/H9Om9+/I=
+X-Gm-Gg: ASbGnctxOu9fM+QUSoGFSmpJo38VwdEC3Zfhu9Z345i5/rGYcuV7Nw06xg7+KqsyAU6
+	mQg2JeOt8BO54DKFK2JSz8GH20f6AGbFSKR8C4eozJNCTdqBcdZWl3KYarEGo/HSWDvskYW3KEV
+	S70/zr0RGB5XqWBUDpAEvY82rsJg0EMA1USEvg+6gwNSB9QJBlVbauIyHaK4t166yzTnTSHsGnP
+	tnERZiJGNta8kB9tbyq8/fzVcqwojMY85Ou8Xoz6LJUA9I2k9xSJUb3cHsW
+X-Google-Smtp-Source: AGHT+IFrxgQq6FNZjWNsabTJQdU5Xs0avQkPCZRU83HNIJglyrvEYlBJqaN4elUocNpHwxjNqmdvpiJFgA8xvl/dosM=
+X-Received: by 2002:a05:6830:6733:b0:745:5748:b328 with SMTP id
+ 46e09a7af769-7c27b5e213bmr5437222a34.2.1760947391690; Mon, 20 Oct 2025
+ 01:03:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,81 +60,72 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <CADHxFxQHFkn-J9R6AJY8LxkDN-eTWjp34VvoQDcshfZs1eF0rQ@mail.gmail.com>
- <20251020024049.6877-1-hupu.gm@gmail.com> <aPW3rilb8DtFDIMC@google.com>
-In-Reply-To: <aPW3rilb8DtFDIMC@google.com>
+ <20251020024049.6877-1-hupu.gm@gmail.com> <aPW3rilb8DtFDIMC@google.com> <CADHxFxQF033b97sBx8rtRHAo5Ou5Uc3WLUH1Y5+qA3f1i2MMjw@mail.gmail.com>
+In-Reply-To: <CADHxFxQF033b97sBx8rtRHAo5Ou5Uc3WLUH1Y5+qA3f1i2MMjw@mail.gmail.com>
 From: hupu <hupu.gm@gmail.com>
-Date: Mon, 20 Oct 2025 16:00:10 +0800
-X-Gm-Features: AS18NWCPgKC5zJlAEPd5vuFyJxDJdYi3AQG_LXrD3kVoNlN710m-tOjCqzYruQQ
-Message-ID: <CADHxFxQF033b97sBx8rtRHAo5Ou5Uc3WLUH1Y5+qA3f1i2MMjw@mail.gmail.com>
+Date: Mon, 20 Oct 2025 16:02:58 +0800
+X-Gm-Features: AS18NWDnZMZHqbYH3qe8wZocpzunzmeo2BMa6O9uF8rZux20-oSim6ooTsO5dwo
+Message-ID: <CADHxFxQB0n4P-BZkbJfqtvfHHo=JZWtgAEVnedZcQOkCwqJWEw@mail.gmail.com>
 Subject: Re: [PATCH] perf build: Support passing extra Clang options via EXTRA_BPF_FLAGS
-To: Namhyung Kim <namhyung@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>, leo.yan@arm.com, irogers@google.com
 Cc: acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
-	justinstitt@google.com, leo.yan@arm.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
-	morbo@google.com, nathan@kernel.org, nick.desaulniers+lkml@gmail.com, 
-	peterz@infradead.org
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, justinstitt@google.com, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mark.rutland@arm.com, mingo@redhat.com, morbo@google.com, nathan@kernel.org, 
+	nick.desaulniers+lkml@gmail.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Namhyung,
-Thanks for your review.
+When cross-compiling perf with BPF enabled, Clang is invoked during the
+build. Some cross-compilation environments require additional compiler
+options, such as `--sysroot` or custom include paths.
 
-On Mon, Oct 20, 2025 at 12:16=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> On Mon, Oct 20, 2025 at 10:40:49AM +0800, hupu wrote:
-> > When cross-compiling perf with BPF enabled, Clang is invoked during the
-> > build. Some cross-compilation environments require additional compiler
-> > options, such as `--sysroot` or custom include paths.
-> >
-> > This patch introduces a new Make variable, `EXTRA_BPF_FLAGS`. During BP=
-F
-> > skeleton builds, it appends user-provided options to `CLANG_OPTIONS`,
-> > allowing extra Clang flags to be set without modifying Makefile.perf
-> > directly.
-> >
-> > Example usage:
-> >     EXTRA_BPF_FLAGS=3D"--sysroot=3D$SYSROOT"
-> >     make perf ARCH=3D"$ARCH" EXTRA_BPF_FLAGS=3D"$EXTRA_BPF_FLAGS"
->
-> Why not just:
->
->   make perf ARCH=3D"arm64" EXTRA_BPF_FLAGS=3D"--sysroot=3D..."
->
-> >
-> > Change history:
-> >   v2:
-> >     - Rename EXTRA_CLANG_FLAGS to EXTRA_BPF_FLAGS
-> >     - Update commit message
-> >   v1:
-> >     - Introduce EXTRA_CLANG_FLAGS to allow passing extra Clang options
-> >
-> > Signed-off-by: hupu <hupu.gm@gmail.com>
->
-> Leo, are you ok with this?
->
-> > ---
-> >  tools/perf/Makefile.perf | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> > index 47c906b807ef..f1f2efdbab8c 100644
-> > --- a/tools/perf/Makefile.perf
-> > +++ b/tools/perf/Makefile.perf
-> > @@ -1249,6 +1249,11 @@ else
-> >       $(Q)cp "$(VMLINUX_H)" $@
-> >  endif
-> >
-> > +# Allow users to specify additional Clang options (e.g. --sysroot)
-> > +# when cross-compiling BPF skeletons, enabling more flexible
-> > +# build configurations.
->
-> Can you please move this comment or add new one at the top of the file
-> along with EXTRA_CFLAGS?
->
+This patch introduces a new Make variable, `EXTRA_BPF_FLAGS`. During BPF
+skeleton builds, it appends user-provided options to `CLANG_OPTIONS`,
+allowing extra Clang flags to be set without modifying Makefile.perf
+directly.
 
-Alright, I will prepare a v3 patch based on your review comments.
+Example usage:
+    make perf ARCH="arm64" EXTRA_BPF_FLAGS="--sysroot=..."
 
-Thanks,
-hupu
+Change history:
+  v3:
+    - Move the variable description comment to the top of Makefile.perf
+    - Update commit message
+  v2:
+    - Rename EXTRA_CLANG_FLAGS to EXTRA_BPF_FLAGS
+    - Update commit message
+  v1:
+    - Introduce EXTRA_CLANG_FLAGS to allow passing extra Clang options
+
+Signed-off-by: hupu <hupu.gm@gmail.com>
+---
+ tools/perf/Makefile.perf | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 47c906b807ef..c1a66cf3d1a7 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -35,6 +35,9 @@ include ../scripts/utilities.mak
+ #
+ # Define EXTRA_CFLAGS=-m64 or EXTRA_CFLAGS=-m32 as appropriate for
+cross-builds.
+ #
++# Define EXTRA_BPF_FLAGS="--sysroot=<path>" or other custom include paths for
++# cross-compiling BPF skeletons
++#
+ # Define EXCLUDE_EXTLIBS=-lmylib to exclude libmylib from the auto-generated
+ # EXTLIBS.
+ #
+@@ -1249,6 +1252,8 @@ else
+  $(Q)cp "$(VMLINUX_H)" $@
+ endif
+
++CLANG_OPTIONS += $(EXTRA_BPF_FLAGS)
++
+ $(SKEL_TMP_OUT)/%.bpf.o: $(OUTPUT)PERF-VERSION-FILE
+util/bpf_skel/perf_version.h | $(SKEL_TMP_OUT)
+ $(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(LIBBPF) $(SKEL_OUT)/vmlinux.h
+  $(QUIET_CLANG)$(CLANG) -g -O2 -fno-stack-protector --target=bpf \
+-- 
+2.43.0
