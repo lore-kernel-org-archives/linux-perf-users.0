@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7814822F16E;
-	Mon, 20 Oct 2025 02:12:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B914239072;
+	Mon, 20 Oct 2025 02:12:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760926324; cv=none; b=ScmGJatFLVKGla2ZW/pLLfPtTIHXCgBlTTj4ogsddbixEBd+QBo44W5Av4fIONPnFIS6Hr6urmTnXsn79e8xhu2OSczs/BHLY0J2N4GMk/gwhww+4nOcEkWQoEkLJO7qnk8fy4bMvDEgXs4l62ekmy0vuSQOfN+gZRSgX/R2Pe4=
+	t=1760926327; cv=none; b=aLQ04KR4kDqatZKkoq5D1Z3hUZmGwAAmV0y+niBAphrlMfC5vCQP2ZHMpCsnEhB02C8GjK7fZilvajJ+P/kbnm/iVhVckMAyIsju9ZALktGZ7IJGjGuKn4Y8jBLD5K0U7+YrgCs9AzWI01bdNI2/RqeMu79Y/PBtsqtHHFGSoXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760926324; c=relaxed/simple;
-	bh=H7xYtioKAwN2ukIQqQhuiVR7ZlhAKwViyl3BipqF3/Q=;
+	s=arc-20240116; t=1760926327; c=relaxed/simple;
+	bh=gX2MoPkKeBy21P54fODg5jJxYzVDoGKL+IdZJTCcDHU=;
 	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=nXLGa0tYQ76ebbspXUqTkNUg1Q1Eho+pIUSkpv5uE1muRJVKRjFLc9lsvqYoRnRc3avla0+7OmworFcFhOTls4dEK9MUi+ZdPnGqAooNo3blmNyiK6GOC98Uqxc2/U/N9S8sz9f/9GDX+ahFFvPZhAM9Wc5hNkwUkUDe6u5fkdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=grLJdnwq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=YFix453kMv3Qr49MgSCoTDK4s5hSTJXpBrjQhAMRckLyxgXgtOVEqd41VKtDDgxcQb1ZNGrREwB77BqraRcgYkUe7vXN3TYP05dsD5ctAjq9mH+T6XCCbZfSkB+ncpMZYiqHCrE5SsBAi4mZ8m7UNQBaBPyrDCNg3SA4rjeJR4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r72YhEDF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="grLJdnwq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A0A4C4CEF1;
-	Mon, 20 Oct 2025 02:12:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r72YhEDF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DC23C4CEE7;
+	Mon, 20 Oct 2025 02:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760926324;
-	bh=H7xYtioKAwN2ukIQqQhuiVR7ZlhAKwViyl3BipqF3/Q=;
+	s=k20201202; t=1760926326;
+	bh=gX2MoPkKeBy21P54fODg5jJxYzVDoGKL+IdZJTCcDHU=;
 	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=grLJdnwq79xsApmPsTflwrarVX0pOc7dS+zWzv6fJQaBJpXpkpmG/Pt/ziq1DrVgl
-	 EMStfeFvEIEK2y0eF5zbrxIU5jpGcTxq1r0wjGyz7wG/YSTcePxiua+rh2nvolMnJl
-	 TtkvoM/Xloqi46Uyz2AAGBRiWZEyQtVbMMj9BWq8ThnSzAItNnYsW9j0eWger/kQuj
-	 VTiZKX4a9cbDmu4xExcR6aGS4JQRljLCvNhbti+cqi2c7NqtY0hCTvhlXxY0C6uvk3
-	 1EJBfG9ALYdQBXunvhZG3IIBnEZiScERHyuKn6y0CFrl3DDDeI/lFYUBEVTlLe5jVx
-	 ItkqiJCrjOJ6A==
+	b=r72YhEDFXM8S5wWtOVe7XRa/k/ud0Pc/kBm18oA1f1YLVaMyhoSoYNxVagF1LY9GH
+	 768AR7foewYgAnsOSW3EEbkIB44+fz4Gkr1qNW9ZSjqPSwSHcIMbB4dD6IeF2Syivb
+	 OZhdTBaCxHmHDNTmoVL8znq0r+Fo4cdGYpPtwFgH4jVKgqXnmn7e+xhnbMWsafygkW
+	 4g6oN0B1hL7zMtC/jFqO/KAOO9O93G8uuGX49A7vYWZdbuHAYDZ82PxTFDFFHJTAt0
+	 LLCw+I9p2FWy6DwoD5DwB+CKN2eBD+q28tUtdtU466r3Pclo50M3a+H7jXk/bkTKbG
+	 Ool7V9EmI269g==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
  Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
  Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- Howard Chu <howardchu95@gmail.com>, Gautam Menghani <gautam@linux.ibm.com>, 
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Ian Rogers <irogers@google.com>
-In-Reply-To: <20251016222228.2926870-1-irogers@google.com>
-References: <20251016222228.2926870-1-irogers@google.com>
-Subject: Re: [PATCH v1 1/3] perf ilist: Don't display deprecated events
-Message-Id: <176092632104.143093.4764121806345268425.b4-ty@kernel.org>
-Date: Mon, 20 Oct 2025 11:12:01 +0900
+ bpf@vger.kernel.org, Ian Rogers <irogers@google.com>
+In-Reply-To: <20251016150718.2778187-1-irogers@google.com>
+References: <20251016150718.2778187-1-irogers@google.com>
+Subject: Re: [PATCH v1] perf stat bperf cgroup: Increase MAX_EVENTS from 32
+ to 1024
+Message-Id: <176092632423.143093.13411796449610394890.b4-ty@kernel.org>
+Date: Mon, 20 Oct 2025 11:12:04 +0900
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,11 +49,12 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.14-dev-d4707
 
-On Thu, 16 Oct 2025 15:22:26 -0700, Ian Rogers wrote:
+On Thu, 16 Oct 2025 08:07:18 -0700, Ian Rogers wrote:
 
-> Unsupported legacy events are flagged as deprecated. Don't display
-> these events in ilist as they won't open and there are over 1,000
-> legacy cache events.
+> The MAX_EVENTS value ensured a counted loop presumably to satisfy the
+> BPF verifier. It is possible to go past 32 events when gathering
+> uncore events. Increase the amount to 1024 as that should provide some
+> amount of headroom.
 > 
 > 
 
