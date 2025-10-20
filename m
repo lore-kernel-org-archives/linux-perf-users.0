@@ -1,128 +1,185 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC9C7303A27;
-	Mon, 20 Oct 2025 12:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lj1-f195.google.com (mail-lj1-f195.google.com [209.85.208.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53DA82F6933
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Oct 2025 12:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760962794; cv=none; b=SF5yXY27zwdAxWfUWAkqhjxUW0+s2wfX9vsCRrMDHz/drJvpd63oFpV8pJXYJm0EWfDV6A7Ditgae3hSUnN6il29tFOX8C5VRUgiprW7UFpD+Rt6I8UodhU3afxxAAfr5qfeFc5ydNsVy0bEmFm3TNBapa04f7VS+MkLUu44MC4=
+	t=1760964729; cv=none; b=OAqoZtnUQxEqQShykpPn+Nxu1qlQhkhYuRC+wv2czPFTBT4iDp4uyu6Dj7IHOy9Vnl4cPCO13t/A92vBt7O26O51EbV4aM5aAppGOh2J3lm+pVHjtkZsIxoq4HESLbs+zXMzPXDEHbgYYshGULvOxcQgzzkiHCVsS9l7wtkP67w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760962794; c=relaxed/simple;
-	bh=xiucUNFP5MWuohojeRMYflL1g5SM9B4vl+aqFxwQbHU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gjp1USBcqhX2XLYjEFTAg4wXdOomWIr4JhFb4ovzNHMsy5fteAPnMti4AIcUs2s3Ux0aJTz6MlWOKksXZNbVKOJ4+K6m9KkmIbIJCOScnhSueYTlA2ToqKkGydi7Rss/VuMljZM/kMiHvyaQF4uUwY48etIPcUNa3yU71H7zt6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2EF421007;
-	Mon, 20 Oct 2025 05:19:44 -0700 (PDT)
-Received: from [10.1.26.49] (e132430.arm.com [10.1.26.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A55443F63F;
-	Mon, 20 Oct 2025 05:19:48 -0700 (PDT)
-Message-ID: <8d15e5a6-e80a-4707-a43a-4cbb6d810222@arm.com>
-Date: Mon, 20 Oct 2025 13:19:46 +0100
+	s=arc-20240116; t=1760964729; c=relaxed/simple;
+	bh=NoKN/VklOZ0PsX6E7d/ZEOoFp7KZ+BZQhEK8O2S1oJc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hb2xGYBoWFh+tJFSY/LU3fZbIVMoyvk0Tv6W9E2/12BTn9gOFKGXfJJHpbhfLtnmqQW17zbMORo5OfZhfw2x6lq1KJRbqVPvS4v3i2RGtJpsn+v7PAAmRvnGmJ1mDiMJWYrvFQ/CJcn2gsfooxT6y7ihB2N2h4WTFOaJe0msjfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g8rkt97q; arc=none smtp.client-ip=209.85.208.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g8rkt97q"
+Received: by mail-lj1-f195.google.com with SMTP id 38308e7fff4ca-37612b15a53so48188381fa.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Oct 2025 05:52:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760964725; x=1761569525; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wJLLkJALqNt2BGM9vipmlGBox7Ra/Q013j8h0mIEzZI=;
+        b=g8rkt97qs3QC4rL3qsh3PR+Pqzj2V8iWAAr5az8X1vOd+jbjaRLAzQJHnxU+OZttfz
+         db9tNHw/8Nu6fs7LubjPtWC1yGuSOM1AlDMLnEA5ozugUD9dmQxziwhD/8FdnaNzVVZI
+         ig8YFQJxIowlcHyAZxjrTwgsuRbAf6a36KjFchc64oEv/Tsexvl6mNGf1Ttf/NGTKUT4
+         puL0856gWwIAN5MxfGcXu0DsblcCj34Sva61thcFons+e2Y0N7VixAGfhHb1vLijH83y
+         tzE7p03RmpYUKFFf47eCOYfPaPLWfELrNYS7beqH0ARziajpP+PLitetJi2+e7UcwV8L
+         xKXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760964725; x=1761569525;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wJLLkJALqNt2BGM9vipmlGBox7Ra/Q013j8h0mIEzZI=;
+        b=K4LH5jg6badQKG1/zVbfmE4M0EA8T4d5RawtKGuidQTUmYOC4yqNYJviwbxK52NZlb
+         wF9ePOGRZkGgObBsHToL3RR3r604JB2LJSfPzjlJd8wjyU6IBDnUQWP8YEMMpWlbtE7S
+         IRKCvdMuCyWEuKuvV5dzIMR3ba6n9y5bHL1PGdmhHcbmc0A7V0cbIOFju3PZ701O4yac
+         5FoDp9tW5LDUR1zlY7pC50kG4EZt7BljOATV3R5BXm+YPq2Rh7vsiZuQw3V+N/HlyqFk
+         vRUuf6smovlMN8PaCUg5rFJXpav7wJwl8VZfZr+MGkw+W4p2XO0vXFFuMMmUJo1C961j
+         Y19w==
+X-Forwarded-Encrypted: i=1; AJvYcCV9Uu/kmzUGKQxNnaHuSu4oIjpupGkhcMZdOGfPpbXaom6sT7R/Xa/TB3m0fgGI0/eyvCiTxQ+ThUHTc/AV3XIr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4pMbEbBdf2vRlszZeRRZc8BmgcmMaGicvHFxpxh06yU0stTJ4
+	kjMD295ZQCltq/WSPiLi4JslDCSJgEA9rkdinMGoNLpoFjkisKb3ICsd9CU/LOYMI4Ze/zli2Oy
+	zRBlTi8j7JRTg9lpKqkNDbt7DhOYgtKo=
+X-Gm-Gg: ASbGnctSctxnQurKzXfg6KU6PlANZSF1U6USyM5HNUaA/BkppTmJlvYk4MNurdKP2a6
+	fLRSjISJ0wAhMfM+COF/C2riYMHSqUNQn2bjFo7WyErE1bx6T3Y29PorfedCt5c6nDmHdGOjXqy
+	e9hDF8QjC5jRLrtV4KAfnSsVWpF8XcnEBJybbbp3ues1c5P7hIWL2s8Ovxu7WBQYulbuT3fZyrx
+	rxXwigJXo7jYJbb00Jw/6EatAY5hysFETt6vhU3mjmlM0ROLopkWgjDT2YI
+X-Google-Smtp-Source: AGHT+IGamRLPldBcGCNTyINQ6T9zJDiT6xEn1aaKY8nTPcFl2bpamrI0VbQ+h0d3P2S96PS2ryWOeFNU1dzTbr4RLrw=
+X-Received: by 2002:a05:651c:1595:b0:372:17eb:1191 with SMTP id
+ 38308e7fff4ca-3779793eaedmr38894401fa.18.1760964724945; Mon, 20 Oct 2025
+ 05:52:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 12/13] tracing: Check for printable characters when
- printing field dyn strings
-To: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>, Namhyung Kim <namhyung@kernel.org>,
- Takaya Saeki <takayas@google.com>, Tom Zanussi <zanussi@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ian Rogers <irogers@google.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar <mingo@redhat.com>
-References: <20251015173214.760495866@kernel.org>
- <20251015173550.062240695@kernel.org>
-Content-Language: en-US
-From: Douglas Raillard <douglas.raillard@arm.com>
-In-Reply-To: <20251015173550.062240695@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <CADHxFxQHFkn-J9R6AJY8LxkDN-eTWjp34VvoQDcshfZs1eF0rQ@mail.gmail.com>
+ <20251020024049.6877-1-hupu.gm@gmail.com> <aPW3rilb8DtFDIMC@google.com> <20251020101523.GE281971@e132581.arm.com>
+In-Reply-To: <20251020101523.GE281971@e132581.arm.com>
+From: hupu <hupu.gm@gmail.com>
+Date: Mon, 20 Oct 2025 20:51:52 +0800
+X-Gm-Features: AS18NWBR03yV6R3tb_Tq7HsUgE_JE6nP9lFhGsbqder5VlR8vuplgzTZM726trU
+Message-ID: <CADHxFxQjMy9n7G1dUX=HLi3b5VFjMd8YpBP7DOQyOdaQp443mA@mail.gmail.com>
+Subject: Re: [PATCH] perf build: Support passing extra Clang options via EXTRA_BPF_FLAGS
+To: Leo Yan <leo.yan@arm.com>, Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
+	justinstitt@google.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
+	morbo@google.com, nathan@kernel.org, nick.desaulniers+lkml@gmail.com, 
+	peterz@infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Steve,
+Hi Leo,
+Thank you for your reply and for taking the time to discuss this in detail.
 
-On 15-10-2025 18:32, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> When the "fields" option is enabled, it prints each trace event field
-> based on its type. But a dynamic array and a dynamic string can both have
-> a "char *" type. Printing it as a string can cause escape characters to be
-> printed and mess up the output of the trace.
+On Mon, Oct 20, 2025 at 6:15=E2=80=AFPM Leo Yan <leo.yan@arm.com> wrote:
+>
+> On Mon, Oct 20, 2025 at 01:16:46PM +0900, Namhyung Kim wrote:
+>
+> [...]
+>
+> > On Mon, Oct 20, 2025 at 10:40:49AM +0800, hupu wrote:
+> > > When cross-compiling perf with BPF enabled, Clang is invoked during t=
+he
+> > > build. Some cross-compilation environments require additional compile=
+r
+> > > options, such as `--sysroot` or custom include paths.
+>
+> [...]
+>
+> > Leo, are you ok with this?
+>
+> To be clear, now we are not talking cross build for perf program or any
+> targeting a CPU arch, it is a build failure for eBPF program.
+>
 
-We faced the same issue when converting trace.dat to other formats that distinguish
-between a byte buffer and an actual string. The current solution we have is to
-reserve "char []" for actual string and use "u8 []"/"uint8_t []" for byte buffers.
+I=E2=80=99d like to clarify the background and scenario once more:
+I=E2=80=99m building an SDK that includes a cross-compilation toolchain for
+the target architecture along with a copy of the kernel source tree.
+The goal is to make this SDK usable on any host system to build
+software, including perf with eBPF enabled, without requiring the host
+to install any additional packages. This is a common requirement in
+embedded environments, where we often cannot control or modify the
+host system setup.
 
-Obviously it does not solve the problem for existing events but that could be worth
-establishing a convention like that for new code and support it in trace_output.c ?
-Most uses of trace data beyond direct printing would require knowing the data schema
-from the header info, so value-based criteria are typically not suitable for that.
 
-> For dynamic strings, test if there are any non-printable characters, and
-> if so, print both the string with the non printable characters as '.', and
-> the print the hex value of the array.
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->   kernel/trace/trace_output.c | 27 +++++++++++++++++++++++++--
->   1 file changed, 25 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-> index 97db0b0ccf3e..718b255b6fd8 100644
-> --- a/kernel/trace/trace_output.c
-> +++ b/kernel/trace/trace_output.c
-> @@ -950,7 +950,9 @@ static void print_fields(struct trace_iterator *iter, struct trace_event_call *c
->   	int offset;
->   	int len;
->   	int ret;
-> +	int i;
->   	void *pos;
-> +	char *str;
->   
->   	list_for_each_entry_reverse(field, head, link) {
->   		trace_seq_printf(&iter->seq, " %s=", field->name);
-> @@ -977,8 +979,29 @@ static void print_fields(struct trace_iterator *iter, struct trace_event_call *c
->   				trace_seq_puts(&iter->seq, "<OVERFLOW>");
->   				break;
->   			}
-> -			pos = (void *)iter->ent + offset;
-> -			trace_seq_printf(&iter->seq, "%.*s", len, (char *)pos);
-> +			str = (char *)iter->ent + offset;
-> +			/* Check if there's any non printable strings */
-> +			for (i = 0; i < len; i++) {
-> +				if (str[i] && !(isascii(str[i]) && isprint(str[i])))
-> +					break;
-> +			}
-> +			if (i < len) {
-> +				for (i = 0; i < len; i++) {
-> +					if (isascii(str[i]) && isprint(str[i]))
-> +						trace_seq_putc(&iter->seq, str[i]);
-> +					else
-> +						trace_seq_putc(&iter->seq, '.');
-> +				}
-> +				trace_seq_puts(&iter->seq, " (");
-> +				for (i = 0; i < len; i++) {
-> +					if (i)
-> +						trace_seq_putc(&iter->seq, ':');
-> +					trace_seq_printf(&iter->seq, "%02x", str[i]);
-> +				}
-> +				trace_seq_putc(&iter->seq, ')');
-> +			} else {
-> +				trace_seq_printf(&iter->seq, "%.*s", len, str);
-> +			}
->   			break;
->   		case FILTER_PTR_STRING:
->   			if (!iter->fmt_size)
+On Wed, Oct 15, 2025 at 5:30=E2=80=AFPM Leo Yan <leo.yan@arm.com> wrote:
+>
+> Have you installed the GCC cross packages ?
+>
+>  $ sudo apt-get install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+>  $ sudo apt-get install libc6-dev-aarch64-cross linux-libc-dev-aarch64-cr=
+oss
+>  $ sudo apt-get install libc6-dev-arm64-cross linux-libc-dev-arm64-cross
+>
+> My understanding is arm64 cross compilation tries to find headers in the
+> path /usr/aarch64-linux-gnu/include/ (I confirmed this on Ubuntu/Debian
+> distros).  After install GCC cross packages, the headers should appear
+> in the folder.
+>
 
---
+As you mentioned earlier, installing the GCC cross packages on the
+host does allow perf to be cross-built successfully. This works in my
+current setup (Ubuntu host kernel 6.14, SDK kernel source 6.18).
 
-Douglas
+However, this approach has two key drawbacks:
+a) Limited portability
+If the SDK is moved to a different host, these packages must be
+installed again for it to work, breaking the =E2=80=9Cplug-and-play=E2=80=
+=9D goal and
+increasing deployment complexity.
+b) Kernel version mismatch risk
+The headers from these packages are determined by the kernel version
+in the host=E2=80=99s distribution repository, not the kernel version in th=
+e
+SDK. For example, the host apt repository might ship headers from
+kernel 5.0 while the SDK contains kernel 6.18; differences in UAPI
+files (e.g., linux/bpf.h) could cause eBPF programs to fail to build
+due to missing APIs or structure changes. This risk is greater with
+fast-evolving subsystems like eBPF, even if it does not happen in my
+current environment.
+
+This is why I don=E2=80=99t consider relying on host-installed packages as =
+an
+optimal solution for my case.
+
+
+> This patch does not make clear why we cannot build eBPF program in
+> self-contained way. E.g., after installed kernel headers, why Makefile
+> misses to include installed headers when build eBPF program.
+>
+
+I may not have explained myself clearly. As noted above, installing
+the headers you mentioned does allow perf to build successfully, but
+this is not the approach I ideally want, and it is not the most
+suitable option for my current context.
+
+The aim of my patch is to explicitly direct the build system to use
+the SDK=E2=80=99s own header files (via --sysroot or an additional -I path)=
+,
+ensuring that:
+a) The build works without installing any host packages;
+b) The headers used always match the SDK=E2=80=99s kernel version, eliminat=
+ing
+potential version mismatch problems.
+
+I believe this approach meets the principle of self-contained builds
+and aligns well with real-world embedded development needs.
+
+In addition, allowing additional parameters to be passed to clang via
+EXTRA_BPF_FLAGS would provide greater flexibility in the build
+process.
+
+Looking forward to further discussion.
+
+Thanks,
+hupu
