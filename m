@@ -1,48 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D914354AFF;
-	Mon, 20 Oct 2025 06:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00463354AFF;
+	Mon, 20 Oct 2025 06:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760941870; cv=none; b=do8VRBtdkMWXKn2Pn+jNakuSIJ6eS4oKK71n/gISwVuppgBMTQOmIoL6Xhlf/qKYO0OkTw+A9z9UAodO/q7OtSxwAt9/TlS91FAn9x7TGlGis3m6awBdpEF1MFt2KWtiETUrkMHLraxZsPzsRO0fxJA77haqcQ3wwWIQxb4JRzI=
+	t=1760941884; cv=none; b=hjzSkOFLeTK6OhOKI7w/adlmuuHD51Dl2TVeyD095G/CmVeznM1NeqRFyukoOwfW3a/kWp3zOHxD4ppKet6arGE7nD1DJBDxT3NFM+sqHeXa+lh2Ids64xZMmbhDlbX5TSVM5LTk7AiiEOoaAxdJMBvbTmQQENsvC0/aKhi+Jp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760941870; c=relaxed/simple;
-	bh=BBcennXpMEhl1UnVlNA14H6tBKsmaFEnykLIw+A9FBU=;
+	s=arc-20240116; t=1760941884; c=relaxed/simple;
+	bh=qyBM+Jnm2MByZNlMcaSbOGK+smc1LK7AJ8Z/c/XczKk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aO8rhX0MWgQUCzpdzDnRDomgIKKyhcswtKkX7wndNoJr2zOVuUZRwFVBqsMVRJEHVRQSytb/N6P23MLJtKxEWjZ11w71PA8ur31sMdQquD8fB7U9lkttI0754LSWkAhkBqrI/0oCsQ2fAsVMx8J0G34rxqo0vYw26uNkVpyGewE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ngynlP3Z; arc=none smtp.client-ip=198.175.65.12
+	 MIME-Version; b=bWL3TdKdI6baafwNH1XYdL1R2Oui9BeBbdS45uiZPEftVDp9BoW2T/5pmi1MTfxNDapqv92ms7+VfMMrutZI41WmI/8wGJLv4oMmRrXd5PFHy41Cm10vlxRUadjlCQzYjaURUGz+uwUGnsyJj4FBitJRkG59/7nT792ZqAhSGnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jXq+JoGb; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ngynlP3Z"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jXq+JoGb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760941869; x=1792477869;
+  t=1760941883; x=1792477883;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=BBcennXpMEhl1UnVlNA14H6tBKsmaFEnykLIw+A9FBU=;
-  b=ngynlP3ZPv9KagE/E/sGiFxTNx0yksANRNag//ef3WO9CIZCdovrnqPn
-   d7bFtsfoJWxFSplAi+Z6pItT3BK6tjaKyRkpf4izW59J6eXfu5NwaYUX5
-   KSdM+gYSoQi/Gs36CXS9zRJR/PtCZHvaauZ+yoHsq2P2b1HqqIrkzWNBO
-   el3+XJ6SeflYF6puDza3fqsaYRdPMew2gLNZrdbO98aLCOpYpHsGODX2i
-   a37xh7UjRAiZ4XYVuFtDMd9BHznWITtiRz1hgK4gNRryCdbBbV/4sdSY9
-   LSzMgW+ZrY50KXdIpMNzYoYSUuUDfL18BEj38b2CaUElNamTnmJYeT+e6
-   g==;
-X-CSE-ConnectionGUID: 9WFFNRnYTx+BYZYbV9PKBg==
-X-CSE-MsgGUID: jA/E4tyvQ9e7zj9gar6W3g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11587"; a="74493196"
-X-IronPort-AV: E=Sophos;i="6.19,242,1754982000"; 
-   d="scan'208";a="74493196"
+  bh=qyBM+Jnm2MByZNlMcaSbOGK+smc1LK7AJ8Z/c/XczKk=;
+  b=jXq+JoGbM4qasURUdhZZqQKmBOVohCNrxRHzLdaSILtIEfXqNZpvfugV
+   UW6mGlRRx2XPIK05QYW6cvEOmq1E9WlaagBZFfK+iKxhmlatFRNjAuGce
+   XSo8RlmYyh2yD8Ybp00SHKx+ws+43Zy6p0m1BMPBLqpggPbgmkT+YglVU
+   pbD6hM8xI1hxBX7FrmlPgFKAORFOpMOXAL2pSOTHn1LrP/3J5DjUse6X9
+   1EpeOa+0/lJHY6JNuk8jsr5dUV6mgFFWodiUGjdjojtErCbsaPBY2nq7b
+   J7UDpZELTVfPEof0vrF3y/7vCiivYDsUzvvKyAeAqw13Z9DKoi1JnhENP
+   A==;
+X-CSE-ConnectionGUID: o/I8tuvbQgWGVEk5wRrx9Q==
+X-CSE-MsgGUID: hyDFc+XPSZmOto2pRl3FqQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="62960738"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="62960738"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2025 23:31:08 -0700
-X-CSE-ConnectionGUID: sy9f60bTRZauy0+YTdLRPQ==
-X-CSE-MsgGUID: MNV9BTikSTaEGmLPyWJQOQ==
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2025 23:31:23 -0700
+X-CSE-ConnectionGUID: gmNbTvdvRl277lUk5eP00Q==
+X-CSE-MsgGUID: 9S5I2fMfTiiSARJ41lMXrA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,242,1754982000"; 
-   d="scan'208";a="188550776"
+   d="scan'208";a="188550815"
 Received: from linux-pnp-server-27.sh.intel.com ([10.239.147.41])
-  by fmviesa004.fm.intel.com with ESMTP; 19 Oct 2025 23:31:03 -0700
+  by fmviesa004.fm.intel.com with ESMTP; 19 Oct 2025 23:31:18 -0700
 From: Tianyou Li <tianyou.li@intel.com>
 To: Namhyung Kim <namhyung@kernel.org>,
 	James Clark <james.clark@linaro.org>
@@ -64,9 +64,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	dapeng1.mi@intel.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/2] perf tools annotate: fix a crash when annotate the same symbol with 's' and 'T'
-Date: Mon, 20 Oct 2025 15:30:04 +0800
-Message-ID: <20251020073005.957524-1-tianyou.li@intel.com>
+Subject: [PATCH v4 2/2] perf tools annotate: Align the symbol_annotate return code
+Date: Mon, 20 Oct 2025 15:30:05 +0800
+Message-ID: <20251020073005.957524-2-tianyou.li@intel.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <aPW2iiNeheOxDGw8@google.com>
 References: <aPW2iiNeheOxDGw8@google.com>
@@ -78,127 +78,29 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When perf report with annotation for a symbol, press 's' and 'T', then exit
-the annotate browser. Once annotate the same symbol, the annotate browser
-will crash.
+Return error code from the symbol_annotate previously checks the
+evsel__get_arch from '<0', now to '!=0'.
 
-The browser.arch was required to be correctly updated when data type
-feature was enabled by 'T'. Usually it was initialized by symbol__annotate2
-function. If a symbol has already been correctly annotated at the first
-time, it should not call the symbol__annotate2 function again, thus the
-browser.arch will not get initialized. Then at the second time to show the
-annotate browser, the data type needs to be displayed but the browser.arch
-is empty.
-
-Stack trace as below:
-
-Perf: Segmentation fault
--------- backtrace --------
-    #0 0x55d365 in ui__signal_backtrace setup.c:0
-    #1 0x7f5ff1a3e930 in __restore_rt libc.so.6[3e930]
-    #2 0x570f08 in arch__is perf[570f08]
-    #3 0x562186 in annotate_get_insn_location perf[562186]
-    #4 0x562626 in __hist_entry__get_data_type annotate.c:0
-    #5 0x56476d in annotation_line__write perf[56476d]
-    #6 0x54e2db in annotate_browser__write annotate.c:0
-    #7 0x54d061 in ui_browser__list_head_refresh perf[54d061]
-    #8 0x54dc9e in annotate_browser__refresh annotate.c:0
-    #9 0x54c03d in __ui_browser__refresh browser.c:0
-    #10 0x54ccf8 in ui_browser__run perf[54ccf8]
-    #11 0x54eb92 in __hist_entry__tui_annotate perf[54eb92]
-    #12 0x552293 in do_annotate hists.c:0
-    #13 0x55941c in evsel__hists_browse hists.c:0
-    #14 0x55b00f in evlist__tui_browse_hists perf[55b00f]
-    #15 0x42ff02 in cmd_report perf[42ff02]
-    #16 0x494008 in run_builtin perf.c:0
-    #17 0x494305 in handle_internal_command perf.c:0
-    #18 0x410547 in main perf[410547]
-    #19 0x7f5ff1a295d0 in __libc_start_call_main libc.so.6[295d0]
-    #20 0x7f5ff1a29680 in __libc_start_main@@GLIBC_2.34 libc.so.6[29680]
-    #21 0x410b75 in _start perf[410b75]
-
-Fixes: 1d4374afd000 ("perf annotate: Add 'T' hot key to toggle data type display")
-Reviewed-by: James Clark <james.clark@linaro.org>
-Tested-by: Namhyung Kim <namhyung@kernel.org>
+Suggested-by: James Clark <james.clark@linaro.org>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Tianyou Li <tianyou.li@intel.com>
 ---
- tools/perf/ui/browsers/annotate.c | 23 +++++++++++++++++++----
- tools/perf/util/annotate.c        |  2 +-
- tools/perf/util/annotate.h        |  2 ++
- 3 files changed, 22 insertions(+), 5 deletions(-)
+ tools/perf/util/annotate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 112fe6ad112e..3a81912279ad 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -862,6 +862,18 @@ static s64 annotate_browser__curr_hot_offset(struct annotate_browser *browser)
- 	return al ? al->offset : 0;
- }
- 
-+static void annotate_browser__symbol_annotate_error(struct annotate_browser *browser, int err)
-+{
-+	struct map_symbol *ms = browser->b.priv;
-+	struct symbol *sym = ms->sym;
-+	struct dso *dso = map__dso(ms->map);
-+	char msg[BUFSIZ];
-+
-+	dso__set_annotate_warned(dso);
-+	symbol__strerror_disassemble(ms, err, msg, sizeof(msg));
-+	ui__error("Couldn't annotate %s:\n%s", sym->name, msg);
-+}
-+
- static int annotate_browser__run(struct annotate_browser *browser,
- 				 struct evsel *evsel,
- 				 struct hist_browser_timer *hbt)
-@@ -1175,10 +1187,7 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
- 	if (not_annotated || !sym->annotate2) {
- 		err = symbol__annotate2(ms, evsel, &browser.arch);
- 		if (err) {
--			char msg[BUFSIZ];
--			dso__set_annotate_warned(dso);
--			symbol__strerror_disassemble(ms, err, msg, sizeof(msg));
--			ui__error("Couldn't annotate %s:\n%s", sym->name, msg);
-+			annotate_browser__symbol_annotate_error(&browser, err);
- 			return -1;
- 		}
- 
-@@ -1187,6 +1196,12 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
- 			if (!annotation__has_source(notes))
- 				ui__warning("Annotation has no source code.");
- 		}
-+	} else {
-+		err = evsel__get_arch(evsel, &browser.arch);
-+		if (err) {
-+			annotate_browser__symbol_annotate_error(&browser, err);
-+			return -1;
-+		}
- 	}
- 
- 	/* Copy necessary information when it's called from perf top */
 diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index a2e34f149a07..39d6594850f1 100644
+index 39d6594850f1..859e802a1e5e 100644
 --- a/tools/perf/util/annotate.c
 +++ b/tools/perf/util/annotate.c
-@@ -980,7 +980,7 @@ void symbol__calc_percent(struct symbol *sym, struct evsel *evsel)
- 	annotation__calc_percent(notes, evsel, symbol__size(sym));
- }
+@@ -1021,7 +1021,7 @@ int symbol__annotate(struct map_symbol *ms, struct evsel *evsel,
+ 	int err, nr;
  
--static int evsel__get_arch(struct evsel *evsel, struct arch **parch)
-+int evsel__get_arch(struct evsel *evsel, struct arch **parch)
- {
- 	struct perf_env *env = evsel__env(evsel);
- 	const char *arch_name = perf_env__arch(env);
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index eaf6c8aa7f47..d4990bff29a7 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -585,4 +585,6 @@ void debuginfo_cache__delete(void);
- int annotation_br_cntr_entry(char **str, int br_cntr_nr, u64 *br_cntr,
- 			     int num_aggr, struct evsel *evsel);
- int annotation_br_cntr_abbr_list(char **str, struct evsel *evsel, bool header);
-+
-+int evsel__get_arch(struct evsel *evsel, struct arch **parch);
- #endif	/* __PERF_ANNOTATE_H */
+ 	err = evsel__get_arch(evsel, &arch);
+-	if (err < 0)
++	if (err)
+ 		return err;
+ 
+ 	if (parch)
 -- 
 2.47.1
 
