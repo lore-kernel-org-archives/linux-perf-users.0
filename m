@@ -1,120 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f193.google.com (mail-lj1-f193.google.com [209.85.208.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5961A3166;
-	Tue, 21 Oct 2025 03:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E5F1EB5FD
+	for <linux-perf-users@vger.kernel.org>; Tue, 21 Oct 2025 03:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761016075; cv=none; b=mSoBOFFhNqkS3xl2A9+oZU9e6oJ4qG38WZEciGQunDstXbW0+oH7E60T2uPm5CfE0HwE2pDxz9INHX57kEqW4lsY5+bI0PiFQr9P7HTpDh36oAiWX7XK0JShUSM6MyPJw+pHs0zF579k2KUsVyB22JqOKsrxAXD72iNi6eERTiY=
+	t=1761016303; cv=none; b=LCT1e4cdgLxxgYn+txR8KnOPN2PtzMQaf+VOKOtFtjLyzLLPiLsZEbmeRqpB2K27990l40H55SWJS8dsxF+anWKSOaaSOr9lKgAi6vC2B4AYfECT3uKlyVs8933byE3HdrwKB7jZ2j2xQM1CgQmJCz0XkgNTvTIeDMAhv1d8D5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761016075; c=relaxed/simple;
-	bh=sCq2PWQBi6avOIyc/gQ5GDOwRQDRQWYucGOCptWi6Hk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jkoQ8mWyUl0QzlsBjr+ece0xqyyIzjD46G4HjpBUpovu19WnP0pmsFzlF0rvZlqjrAjkslsMkwWKLHN582a+36TAFIF0XC/93rAH6siDUhV55uPkxFMmegMX6Wlh3Q3l+nSAjZpTQ5uQM4Kz35kGMWvTeRR3/sRawBwCefwsAck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dGY3EYC3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761016303; c=relaxed/simple;
+	bh=qcon7731kM8DtAFClgJC8hpcM8vS0wf/25XVt6j5B9g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nTyWmxysjjk2+vEBLMrfLJN6BI4ORJNoWZ4tVlyP47TcQgVsDDucIOLCOL7LbaeCPfadlr19tZ6mC7puCvcKSsymNEiqH9TGeZF334jpFAORcPrzhNE2ITpiSeHFa19c+CSb0NZmpZ+a6jai54xfnCzD/fpybti+iuxT/xkxGy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VzPfYY65; arc=none smtp.client-ip=209.85.208.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dGY3EYC3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D86FBC4CEFB;
-	Tue, 21 Oct 2025 03:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761016074;
-	bh=sCq2PWQBi6avOIyc/gQ5GDOwRQDRQWYucGOCptWi6Hk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=dGY3EYC3EIuYaSW2tPpNpkkselhAV+5am7P6vsyFEnLTyvcVn5h3iqUY+MrozPNZe
-	 i5/HsWseN7zJWlaEeBrAQYka5D426CbwIFOtGo23SFyYka5jX+4XdezelPaRS1c3nZ
-	 YGlW6iiDlARHmAU8o1kXOQg9Hpf7EspZRaLWLyAYYnRe0TkJ9ikoKk1DBZwUseUQYg
-	 b3zTa6f5nHwm0UzoKjn3WWQdvAnUUSC8FcUoHFtXTHgOXBZRPKmnt1T15ibDnMSVE1
-	 Auq6TqiTXnDBNIYlkzAHd0ukqt1yjrltVqaNhFDWHauhFb46I7kd8hprt2W/p+2k/5
-	 g1VN5JlkthdRQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	James Clark <james.clark@linaro.org>,
-	Tianyou Li <tianyou.li@intel.com>
-Subject: [PATCH] perf annotate: Fix build with NO_SLANG=1
-Date: Tue, 21 Oct 2025 12:07:50 +0900
-Message-ID: <20251021030750.254186-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.51.0.869.ge66316f041-goog
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VzPfYY65"
+Received: by mail-lj1-f193.google.com with SMTP id 38308e7fff4ca-36a6a397477so52466101fa.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Oct 2025 20:11:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761016300; x=1761621100; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2gxGV6t4KaQKIEkuqcnqWAwcGIC+MCONMaxXtiyj/QU=;
+        b=VzPfYY65CAwpjVcVoYj6Hzl2naDrnjrLsMOIug0DlFeq+2vHZ0ZZwI2lyuxKeUoAmP
+         COxlZ8kivif/btxdfN6G4Y3wTA84kjmUeWGugd+zhhOLwpdryYHLSgyEMPsONL5OSrnq
+         TM1TrZ4saUzfEa6CZFkdMe2pkIKEM7yNfTpoeivCmmEfybSqcQ0qyw2fI+t082iyYzhj
+         +FTl0sNXU08wLwHXENaIpPfxw9aEHso1vF8EvRb8pb8ynKC7Rcp6EhvtkUxOX2/sa0oH
+         NXpQZOJjZz/D0lSbvMweadO11LWt6Bt1pE4K1HhNpULWgct0A0dfV7czbimqBaNFVIEL
+         3LFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761016300; x=1761621100;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2gxGV6t4KaQKIEkuqcnqWAwcGIC+MCONMaxXtiyj/QU=;
+        b=HIgpJOk3FEV21R01kmq2rH03A3OlI+JuE5RfMk2kguXiVsdgWFshbuljgOHJKjRwBm
+         qgKQsv33WmR3YZ9amRDWOsCjuvEh3Kl35/D3csc5qOQUovWIxeZu0Nw8tInHFTNFiX2t
+         ChEkzgq7Hy2yBQMzKENoEe9+KlAiQoCS5LSear1mpBTsLZGhSqOq9A7CBiZbviHHPDxh
+         0wDsOtD8syykTIdqgz5Cje/s8NaZAB3cXqH5HlsRGnQkge1fdDU+1NzZkwBpu6jRbpcD
+         9TQ8G9/MJtcNOsHAcUpwu2bQJw3ot6EEXtKwkDMnQOT/Hxd4EK4hke5UabzeqO9GcITb
+         OQLw==
+X-Forwarded-Encrypted: i=1; AJvYcCXBnkm6QR32gbD5fsplpmw/+FIksAfFvM5sCINgzDes77tpEtx3KGHz4+u9/AFcuMkaYPxGT1FOywtJm4aR5Okp@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDM5O4dxtvyhvyTEppWb98CnXs/ZSt2CXHF3r8ipM1t6dUbFkj
+	6zIADkBJiM2zRQgKbweOoHh3nFu/bTAXAeaIB2fFvXd0qVzvpA5UzphviYP7bWtBDYA/WXhN/FG
+	7vQW5zhNZGweUIPof4POb94MPidD1q5w=
+X-Gm-Gg: ASbGncv6i4UXFkdv4/m2kK60cXeBrfkLcxF9rIpEUtp2i4tij9+glbCiN2QTO62o85T
+	y8wNXrdYiSjnywLoYLfkf0Evjw7cIhFQkT2tYQJnUvqoN3EmYVDQBoBCjRojF7k7Ad9plGsiFsR
+	mB5OalZoi7CtDASjcr7jc2XvICWBqMTKrcgoFaJ2mpkROQZC/IvFd0XwXUK9u9vGIMeEDVfz1QO
+	cv4nqT8CTiEFfn2xqBldMJq5gKlDouOQ9b/Fr8So0sBhsbEPwDSdK1oTuA4
+X-Google-Smtp-Source: AGHT+IFpveaJSVS4mgWlRM9jSoTpjoRFFU+f4lYGlQNbGnNFQGEff880W4rCMgaiIJe25Pb4mW6KaNs0FJ/ahUudfag=
+X-Received: by 2002:a05:651c:2221:b0:336:5d33:c394 with SMTP id
+ 38308e7fff4ca-37797a3ed65mr48068101fa.33.1761016299796; Mon, 20 Oct 2025
+ 20:11:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CADHxFxQHFkn-J9R6AJY8LxkDN-eTWjp34VvoQDcshfZs1eF0rQ@mail.gmail.com>
+ <20251020024049.6877-1-hupu.gm@gmail.com> <aPW3rilb8DtFDIMC@google.com>
+ <20251020101523.GE281971@e132581.arm.com> <CADHxFxQjMy9n7G1dUX=HLi3b5VFjMd8YpBP7DOQyOdaQp443mA@mail.gmail.com>
+ <CADHxFxTHYwjqAjURTbkZ=6-4Ti0GGc7uKsrjthL9s78rAgv5EA@mail.gmail.com>
+In-Reply-To: <CADHxFxTHYwjqAjURTbkZ=6-4Ti0GGc7uKsrjthL9s78rAgv5EA@mail.gmail.com>
+From: hupu <hupu.gm@gmail.com>
+Date: Tue, 21 Oct 2025 11:11:27 +0800
+X-Gm-Features: AS18NWDEDTT28sB3PMCUs6Kzey9uCcXUf6Pr04BcrxLqqHzOIKq4mXBOkBPItE0
+Message-ID: <CADHxFxT9fXfKVDXWxoFs0KeG+gssNhZE3y6TGKGtS=AhKPdGAg@mail.gmail.com>
+Subject: Re: [PATCH] perf build: Support passing extra Clang options via EXTRA_BPF_FLAGS
+To: Leo Yan <leo.yan@arm.com>, Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
+	justinstitt@google.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
+	morbo@google.com, nathan@kernel.org, nick.desaulniers+lkml@gmail.com, 
+	peterz@infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The recent change for perf c2c annotate broke build without slang
-support like below.
+Hi Leo,
+Thank you for your reply.
 
-  builtin-annotate.c: In function 'hists__find_annotations':
-  builtin-annotate.c:522:73: error: 'NO_ADDR' undeclared (first use in this function); did you mean 'NR_ADDR'?
-    522 |                         key = hist_entry__tui_annotate(he, evsel, NULL, NO_ADDR);
-        |                                                                         ^~~~~~~
-        |                                                                         NR_ADDR
-  builtin-annotate.c:522:73: note: each undeclared identifier is reported only once for each function it appears in
+> > > To be clear, now we are not talking cross build for perf program or a=
+ny
+> > > targeting a CPU arch, it is a build failure for eBPF program.
+> > >
+> >
+> > I=E2=80=99d like to clarify the background and scenario once more:
+> > I=E2=80=99m building an SDK that includes a cross-compilation toolchain=
+ for
+> > the target architecture along with a copy of the kernel source tree.
+>
+> I am not preventing to use toolchains in you mentioned SDK.  I just
+> prefer to give priority the headers provided by the kernel source.
+>
+> Seems to me, a more reasonable series would be:
+>
+>  - Fix the eBPF program build with using self-contained headers;
+>  - Extend to support external headers.
+>
 
-  builtin-annotate.c:522:31: error: too many arguments to function 'hist_entry__tui_annotate'
-    522 |                         key = hist_entry__tui_annotate(he, evsel, NULL, NO_ADDR);
-        |                               ^~~~~~~~~~~~~~~~~~~~~~~~
-  In file included from util/sort.h:6,
-                   from builtin-annotate.c:28:
-  util/hist.h:756:19: note: declared here
-    756 | static inline int hist_entry__tui_annotate(struct hist_entry *he __maybe_unused,
-        |                   ^~~~~~~~~~~~~~~~~~~~~~~~
+I=E2=80=99m sorry, but I believe there may be some misunderstanding between=
+ us
+regarding the term "self-contained headers". May I ask what exactly
+you mean by "self-contained headers" in your message above?
 
-And I noticed that it missed to update the other side of #ifdef
-HAVE_SLANG_SUPPORT.  Let's fix it.
+From my perspective, it could refer to one of the following:
 
-Fixes: cd3466cd2639783d ("perf c2c: Add annotation support to perf c2c report")
-Cc: Tianyou Li <tianyou.li@intel.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/hist.h | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+a) The header files installed via the following apt commands:
+> Have you installed the GCC cross packages ?
+>
+>  $ sudo apt-get install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+>  $ sudo apt-get install libc6-dev-aarch64-cross linux-libc-dev-aarch64-cr=
+oss
+>  $ sudo apt-get install libc6-dev-arm64-cross linux-libc-dev-arm64-cross
 
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 6795816eee856e8f..1d5ea632ca4e1b0b 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -709,12 +709,12 @@ struct block_hist {
- 	struct hist_entry	he;
- };
- 
-+#define NO_ADDR 0
-+
- #ifdef HAVE_SLANG_SUPPORT
- #include "../ui/keysyms.h"
- void attr_to_script(char *buf, struct perf_event_attr *attr);
- 
--#define NO_ADDR 0
--
- int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
- 			       struct evsel *evsel,
- 			       struct hist_browser_timer *hbt, u64 al_addr);
-@@ -748,14 +748,16 @@ int evlist__tui_browse_hists(struct evlist *evlist __maybe_unused,
- static inline int __hist_entry__tui_annotate(struct hist_entry *he __maybe_unused,
- 					     struct map_symbol *ms __maybe_unused,
- 					     struct evsel *evsel __maybe_unused,
--					     struct hist_browser_timer *hbt __maybe_unused)
-+					     struct hist_browser_timer *hbt __maybe_unused,
-+					     u64 al_addr __maybe_unused)
- {
- 	return 0;
- }
- 
- static inline int hist_entry__tui_annotate(struct hist_entry *he __maybe_unused,
- 					   struct evsel *evsel __maybe_unused,
--					   struct hist_browser_timer *hbt __maybe_unused)
-+					   struct hist_browser_timer *hbt __maybe_unused,
-+					   u64 al_addr __maybe_unused)
- {
- 	return 0;
- }
--- 
-2.51.0.869.ge66316f041-goog
+b) The headers from the Linux kernel source tree.
+c) The headers located under the sysroot path of the cross-toolchain.
 
+At the moment, I=E2=80=99m not entirely sure which one you=E2=80=99re refer=
+ring to,
+and this uncertainty might have led to some misalignment in our
+previous discussion. Therefore, it would be very helpful if you could
+kindly clarify this point.
+
+
+Thanks,
+hupu
