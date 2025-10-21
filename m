@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B2762475D0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7492257848;
 	Tue, 21 Oct 2025 00:52:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761007933; cv=none; b=iIYFmjbEatSLwxAN1Yj0Btyoj1rVal4ci+MhWNXP6xxoZL3fFfzB7iqXGCBOYufYdAFec3fyfL+ZbPZilSgG5fLrNvVNhe/nDmk6f7NjW9a+vlW9FsuF1+GN5ia7q+5ifP0ylAk+Nw7IKHYssXF45R5dGZKL966qKYqm4WK0g4s=
+	t=1761007933; cv=none; b=MPDI9nCe00kKvvtmdgXOEwH3ZFmP83dxtnOUJiRapSIbs8nTZFVlx//MkUAH+rTS13AUQD/tmFWojLaSA/WnPswh6f1814wPliJ+qX7Mpq5aCGGPpxGpd9UlU1xthP41HAaC6HZLRL4eqUGhlNMhT4FPmDiTbEE9muLeNexb18A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1761007933; c=relaxed/simple;
-	bh=NL9iIQKnbH6K9GToF0sv02OS9AVX9FPs4V0PIEqbP9k=;
+	bh=UQDz1VR9VWyasMtuZd7MP4v+qxsLEjU3f+GwlGCWrEA=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=evoomSZrYH0aQ7hjN7FHszkMGmnA/3eIuOk3f+KRaVKRQYIatK+BbjuraJPrUex2TmIE7GFg1oJoKREFyCe3e7NZfk9K0BxwIV0B2va8nIkJS3QsKHyv2G3Avdg5XoEuvkHmreNYZ5S32/V5+bPp+bcLIMmEM40aj0CJ0IlCFeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N7zRvsST; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=PgfVU3OYue0PgcX38B2fchCDeImFE6VhDvJbhu54jz7w7KPjfoPcGz07qpUWOGkV/H6Y9qnm37SOFINVJ8xzvvNCxWHToG+9NxHpqgnn/xZtr5UR9S78cY04efjLSCswNdF9JHowUok3TG7pOzdlMqaQPh90lskcWoy0S9G4wj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e1BYNdW2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N7zRvsST"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56E6CC4CEFB;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e1BYNdW2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5A93C2BCB2;
 	Tue, 21 Oct 2025 00:52:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1761007933;
-	bh=NL9iIQKnbH6K9GToF0sv02OS9AVX9FPs4V0PIEqbP9k=;
+	bh=UQDz1VR9VWyasMtuZd7MP4v+qxsLEjU3f+GwlGCWrEA=;
 	h=Date:From:To:Cc:Subject:References:From;
-	b=N7zRvsSTBmTFIq59XFUzI0DDO80wRn5UKCqBqqg3iJfHxRw7diobAa7nHMwgmer/B
-	 O+mRTpwpZegvDtV150GvmnKoGuB9xCLn0QkMCyFE9evI3Via2WTIYeluKVlQ3O+og1
-	 I0xgx+54YCKPr6KB8qlFBhlIkP7smfRUMy49SM07d0lrQo+/CoNd5lPjufqouufd8b
-	 5Hl/jJWePHz0Dko6ZEMrHiw8vBHiNJsK9qGzptgi35nlyMqZ3ecsCfJqu0Jz0xKgb/
-	 5YNFAq5vVtp3ufKMZ2ZgnPrQq3Zqwe+YQ2FrYvuDUGGt4VMiRZBX+W4WZWdUHDVX4Z
-	 +MfdSd0kc4G6A==
+	b=e1BYNdW2eTIA8pAi7ppSc3M+++VcaSBgPZgNB8MlKpLQJBBh4bNB9fpWvKDjRSoe8
+	 /yNv2xj8MXe393oPf/AFV1kU/TZXyedT0Tq2xHUt6Ox4ov8m4XPPiBqrIWebyP2fJ2
+	 2A41U662vfx1Y24xGlTU0oqLCgIcszgtkj+iEeFD/iD/RtkH1RN7uyZCH6Uh8c7TR8
+	 c73lv7IZlCQwaooeTb7Iva8nEWst+8lZR7AdxPmk/mXlMOddJH/zekWW0A9xKh330l
+	 8k/sQlX15uNKDiT8q4a5/WuXVFXngEIdt7W7+vTK0VfGtrhhO7G1LPz1jqmC/QolV9
+	 BHSgtkRvcfvtQ==
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@kernel.org>)
-	id 1vB0c6-000000020AL-0xCa;
+	id 1vB0c6-000000020BK-2LUX;
 	Mon, 20 Oct 2025 20:52:34 -0400
-Message-ID: <20251021005234.079555745@kernel.org>
+Message-ID: <20251021005234.413066934@kernel.org>
 User-Agent: quilt/0.68
-Date: Mon, 20 Oct 2025 20:52:06 -0400
+Date: Mon, 20 Oct 2025 20:52:08 -0400
 From: Steven Rostedt <rostedt@kernel.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -52,7 +52,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Jiri Olsa <jolsa@kernel.org>,
  Adrian Hunter <adrian.hunter@intel.com>,
  Ingo Molnar <mingo@redhat.com>
-Subject: [PATCH v4 11/13] tracing: Add parsing of flags to the sys_enter_openat trace event
+Subject: [PATCH v4 13/13] tracing: Have persistent ring buffer print syscalls normally
 References: <20251021005155.705735078@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -64,260 +64,118 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-Add some logic to give the openat system call trace event a bit more human
-readable information:
+The persistent ring buffer from a previous boot has to be careful printing
+events as the print formats of random events can have pointers to strings
+and such that are not available.
 
-   syscalls:sys_enter_openat: dfd: 0xffffff9c, filename: 0x7f0053dc121c "/etc/ld.so.cache", flags: O_RDONLY|O_CLOEXEC, mode: 0000
+Ftrace static events (like the function tracer event) are stable and are
+printed normally.
 
-The above is output from "perf script" and now shows the flags used by the
-openat system call.
+System call event formats are also stable. Allow them to be printed
+normally as well:
 
-Since the output from tracing is in the kernel, it can also remove the
-mode field when not used (when flags does not contain O_CREATE|O_TMPFILE)
+Instead of:
 
-   touch-1185    [002] ...1.  1291.690154: sys_openat(dfd: 4294967196, filename: 139785545139344 "/usr/lib/locale/locale-archive", flags: O_RDONLY|O_CLOEXEC)
-   touch-1185    [002] ...1.  1291.690504: sys_openat(dfd: 18446744073709551516, filename: 140733603151330 "/tmp/x", flags: O_WRONLY|O_CREAT|O_NOCTTY|O_NONBLOCK, mode: 0666)
+  <...>-1       [005] ...1.    57.240405: sys_enter_waitid: __syscall_nr=0xf7 (247) which=0x1 (1) upid=0x499 (1177) infop=0x7ffd5294d690 (140725988939408) options=0x5 (5) ru=0x0 (0)
+  <...>-1       [005] ...1.    57.240433: sys_exit_waitid: __syscall_nr=0xf7 (247) ret=0x0 (0)
+  <...>-1       [005] ...1.    57.240437: sys_enter_rt_sigprocmask: __syscall_nr=0xe (14) how=0x2 (2) nset=0x7ffd5294d7c0 (140725988939712) oset=0x0 (0) sigsetsize=0x8 (8)
+  <...>-1       [005] ...1.    57.240438: sys_exit_rt_sigprocmask: __syscall_nr=0xe (14) ret=0x0 (0)
+  <...>-1       [005] ...1.    57.240442: sys_enter_close: __syscall_nr=0x3 (3) fd=0x4 (4)
+  <...>-1       [005] ...1.    57.240463: sys_exit_close: __syscall_nr=0x3 (3) ret=0x0 (0)
+  <...>-1       [005] ...1.    57.240485: sys_enter_openat: __syscall_nr=0x101 (257) dfd=0xffffffffffdfff9c (-2097252) filename=(0xffff8b81639ca01c) flags=0x80000 (524288) mode=0x0 (0) __filename_val=/run/systemd/reboot-param
+  <...>-1       [005] ...1.    57.240555: sys_exit_openat: __syscall_nr=0x101 (257) ret=0xffffffffffdffffe (-2097154)
+  <...>-1       [005] ...1.    57.240571: sys_enter_openat: __syscall_nr=0x101 (257) dfd=0xffffffffffdfff9c (-2097252) filename=(0xffff8b81639ca01c) flags=0x80000 (524288) mode=0x0 (0) __filename_val=/run/systemd/reboot-param
+  <...>-1       [005] ...1.    57.240620: sys_exit_openat: __syscall_nr=0x101 (257) ret=0xffffffffffdffffe (-2097154)
+  <...>-1       [005] ...1.    57.240629: sys_enter_writev: __syscall_nr=0x14 (20) fd=0x3 (3) vec=0x7ffd5294ce50 (140725988937296) vlen=0x7 (7)
+  <...>-1       [005] ...1.    57.242281: sys_exit_writev: __syscall_nr=0x14 (20) ret=0x24 (36)
+  <...>-1       [005] ...1.    57.242286: sys_enter_reboot: __syscall_nr=0xa9 (169) magic1=0xfee1dead (4276215469) magic2=0x28121969 (672274793) cmd=0x1234567 (19088743) arg=0x0 (0)
 
-As system calls have a fixed ABI, their trace events can be extended. This
-currently only updates the openat system call, but others may be extended
-in the future.
+Have:
+
+  <...>-1       [000] ...1.    91.446011: sys_waitid(which: 1, upid: 0x4d2, infop: 0x7ffdccdadfd0, options: 5, ru: 0)
+  <...>-1       [000] ...1.    91.446042: sys_waitid -> 0x0
+  <...>-1       [000] ...1.    91.446045: sys_rt_sigprocmask(how: 2, nset: 0x7ffdccdae100, oset: 0, sigsetsize: 8)
+  <...>-1       [000] ...1.    91.446047: sys_rt_sigprocmask -> 0x0
+  <...>-1       [000] ...1.    91.446051: sys_close(fd: 4)
+  <...>-1       [000] ...1.    91.446073: sys_close -> 0x0
+  <...>-1       [000] ...1.    91.446095: sys_openat(dfd: 18446744073709551516, filename: 139732544945794 "/run/systemd/reboot-param", flags: O_RDONLY|O_CLOEXEC)
+  <...>-1       [000] ...1.    91.446165: sys_openat -> 0xfffffffffffffffe
+  <...>-1       [000] ...1.    91.446182: sys_openat(dfd: 18446744073709551516, filename: 139732544945794 "/run/systemd/reboot-param", flags: O_RDONLY|O_CLOEXEC)
+  <...>-1       [000] ...1.    91.446233: sys_openat -> 0xfffffffffffffffe
+  <...>-1       [000] ...1.    91.446242: sys_writev(fd: 3, vec: 0x7ffdccdad790, vlen: 7)
+  <...>-1       [000] ...1.    91.447877: sys_writev -> 0x24
+  <...>-1       [000] ...1.    91.447883: sys_reboot(magic1: 0xfee1dead, magic2: 0x28121969, cmd: 0x1234567, arg: 0)
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_syscalls.c | 192 ++++++++++++++++++++++++++++++++--
- 1 file changed, 182 insertions(+), 10 deletions(-)
+Changes since v3: https://lore.kernel.org/20251015173550.225723717@kernel.org
 
-diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
-index b589bdc28f59..6e9e3c83db1c 100644
---- a/kernel/trace/trace_syscalls.c
-+++ b/kernel/trace/trace_syscalls.c
-@@ -127,6 +127,116 @@ const char *get_syscall_name(int syscall)
- /* Added to user strings or arrays when max limit is reached */
- #define EXTRA "..."
+- Fixed up the code to determine if it's a syscall event or not
+  when CONFIG_FTRACE_SYSCALLS is not defined (kernel test robot)
+
+ kernel/trace/trace.c | 27 +++++++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 2aee9a3088f4..a765792d3428 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -20,6 +20,7 @@
+ #include <linux/security.h>
+ #include <linux/seq_file.h>
+ #include <linux/irqflags.h>
++#include <linux/syscalls.h>
+ #include <linux/debugfs.h>
+ #include <linux/tracefs.h>
+ #include <linux/pagemap.h>
+@@ -4219,6 +4220,22 @@ static void test_cpu_buff_start(struct trace_iterator *iter)
+ 				iter->cpu);
+ }
  
-+static void get_dynamic_len_ptr(struct syscall_trace_enter *trace,
-+				struct syscall_metadata *entry,
-+				int *offset_p, int *len_p, unsigned char **ptr_p)
++#ifdef CONFIG_FTRACE_SYSCALLS
++static bool is_syscall_event(struct trace_event *event)
 +{
-+	unsigned char *ptr;
-+	int offset = *offset_p;
-+	int val;
++	return (event->funcs == &enter_syscall_print_funcs) ||
++	       (event->funcs == &exit_syscall_print_funcs);
 +
-+	/* This arg points to a user space string */
-+	ptr = (void *)trace->args + sizeof(long) * entry->nb_args + offset;
-+	val = *(int *)ptr;
-+
-+	/* The value is a dynamic string (len << 16 | offset) */
-+	ptr = (void *)trace + (val & 0xffff);
-+	*len_p = val >> 16;
-+	offset += 4;
-+
-+	*ptr_p = ptr;
-+	*offset_p = offset;
 +}
-+
-+static enum print_line_t
-+sys_enter_openat_print(struct syscall_trace_enter *trace, struct syscall_metadata *entry,
-+		       struct trace_seq *s, struct trace_event *event)
++#define syscall_buf_size CONFIG_TRACE_SYSCALL_BUF_SIZE_DEFAULT
++#else
++static inline bool is_syscall_event(struct trace_event *event)
 +{
-+	unsigned char *ptr;
-+	int offset = 0;
-+	int bits, len;
-+	bool done = false;
-+	static const struct trace_print_flags __flags[] =
-+		{
-+			{ O_TMPFILE, "O_TMPFILE" },
-+			{ O_WRONLY, "O_WRONLY" },
-+			{ O_RDWR, "O_RDWR" },
-+			{ O_CREAT, "O_CREAT" },
-+			{ O_EXCL, "O_EXCL" },
-+			{ O_NOCTTY, "O_NOCTTY" },
-+			{ O_TRUNC, "O_TRUNC" },
-+			{ O_APPEND, "O_APPEND" },
-+			{ O_NONBLOCK, "O_NONBLOCK" },
-+			{ O_DSYNC, "O_DSYNC" },
-+			{ O_DIRECT, "O_DIRECT" },
-+			{ O_LARGEFILE, "O_LARGEFILE" },
-+			{ O_DIRECTORY, "O_DIRECTORY" },
-+			{ O_NOFOLLOW, "O_NOFOLLOW" },
-+			{ O_NOATIME, "O_NOATIME" },
-+			{ O_CLOEXEC, "O_CLOEXEC" },
-+			{ -1, NULL }
-+		};
++	return false;
++}
++#define syscall_buf_size 0
++#endif /* CONFIG_FTRACE_SYSCALLS */
 +
-+	trace_seq_printf(s, "%s(", entry->name);
-+
-+	for (int i = 0; !done && i < entry->nb_args; i++) {
-+
-+		if (trace_seq_has_overflowed(s))
-+			goto end;
-+
-+		if (i)
-+			trace_seq_puts(s, ", ");
-+
-+		switch (i) {
-+		case 2:
-+			bits = trace->args[2];
-+
-+			trace_seq_puts(s, "flags: ");
-+
-+			/* No need to show mode when not creating the file */
-+			if (!(bits & (O_CREAT|O_TMPFILE)))
-+				done = true;
-+
-+			if (!(bits & O_ACCMODE)) {
-+				if (!bits) {
-+					trace_seq_puts(s, "O_RDONLY");
-+					continue;
-+				}
-+				trace_seq_puts(s, "O_RDONLY|");
-+			}
-+
-+			trace_print_flags_seq(s, "|", bits, __flags);
-+			/*
-+			 * trace_print_flags_seq() adds a '\0' to the
-+			 * buffer, but this needs to append more to the seq.
-+			 */
-+			if (!trace_seq_has_overflowed(s))
-+				trace_seq_pop(s);
-+
-+			continue;
-+		case 3:
-+			trace_seq_printf(s, "%s: 0%03o", entry->args[i],
-+					 (unsigned int)trace->args[i]);
-+			continue;
+ static enum print_line_t print_trace_fmt(struct trace_iterator *iter)
+ {
+ 	struct trace_array *tr = iter->tr;
+@@ -4251,10 +4268,12 @@ static enum print_line_t print_trace_fmt(struct trace_iterator *iter)
+ 		 * safe to use if the array has delta offsets
+ 		 * Force printing via the fields.
+ 		 */
+-		if ((tr->text_delta) &&
+-		    event->type > __TRACE_LAST_TYPE)
++		if ((tr->text_delta)) {
++			/* ftrace and system call events are still OK */
++			if ((event->type > __TRACE_LAST_TYPE) &&
++			    !is_syscall_event(event))
+ 			return print_event_fields(iter, event);
+-
 +		}
-+
-+		trace_seq_printf(s, "%s: %lu", entry->args[i],
-+				 trace->args[i]);
-+
-+		if (!(BIT(i) & entry->user_mask))
-+			continue;
-+
-+		get_dynamic_len_ptr(trace, entry, &offset, &len, &ptr);
-+		trace_seq_printf(s, " \"%.*s\"", len, ptr);
-+	}
-+
-+	trace_seq_putc(s, ')');
-+end:
-+	trace_seq_putc(s, '\n');
-+
-+	return trace_handle_return(s);
-+}
-+
- static enum print_line_t
- print_syscall_enter(struct trace_iterator *iter, int flags,
- 		    struct trace_event *event)
-@@ -152,6 +262,15 @@ print_syscall_enter(struct trace_iterator *iter, int flags,
- 		goto end;
+ 		return event->funcs->trace(iter, sym_flags, event);
  	}
  
-+	switch (entry->syscall_nr) {
-+	case __NR_openat:
-+		if (!tr || !(tr->trace_flags & TRACE_ITER_VERBOSE))
-+			return sys_enter_openat_print(trace, entry, s, event);
-+		break;
-+	default:
-+		break;
-+	}
-+
- 	trace_seq_printf(s, "%s(", entry->name);
+@@ -11436,7 +11455,7 @@ __init static int tracer_alloc_buffers(void)
  
- 	for (i = 0; i < entry->nb_args; i++) {
-@@ -179,14 +298,7 @@ print_syscall_enter(struct trace_iterator *iter, int flags,
- 		if (!(BIT(i) & entry->user_mask))
- 			continue;
+ 	global_trace.flags = TRACE_ARRAY_FL_GLOBAL;
  
--		/* This arg points to a user space string */
--		ptr = (void *)trace->args + sizeof(long) * entry->nb_args + offset;
--		val = *(int *)ptr;
--
--		/* The value is a dynamic string (len << 16 | offset) */
--		ptr = (void *)ent + (val & 0xffff);
--		len = val >> 16;
--		offset += 4;
-+		get_dynamic_len_ptr(trace, entry, &offset, &len, &ptr);
+-	global_trace.syscall_buf_sz = CONFIG_TRACE_SYSCALL_BUF_SIZE_DEFAULT;
++	global_trace.syscall_buf_sz = syscall_buf_size;
  
- 		if (entry->user_arg_size < 0 || entry->user_arg_is_str) {
- 			trace_seq_printf(s, " \"%.*s\"", len, ptr);
-@@ -269,6 +381,62 @@ print_syscall_exit(struct trace_iterator *iter, int flags,
- 	.size = sizeof(_type), .align = __alignof__(_type),		\
- 	.is_signed = is_signed_type(_type), .filter_type = FILTER_OTHER }
- 
-+/* When len=0, we just calculate the needed length */
-+#define LEN_OR_ZERO (len ? len - pos : 0)
-+
-+static int __init
-+sys_enter_openat_print_fmt(struct syscall_metadata *entry, char *buf, int len)
-+{
-+	int pos = 0;
-+
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			"\"dfd: 0x%%08lx, filename: 0x%%08lx \\\"%%s\\\", flags: %%s%%s, mode: 0%%03o\",");
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			" ((unsigned long)(REC->dfd)),");
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			" ((unsigned long)(REC->filename)),");
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			" __get_str(__filename_val),");
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			" (REC->flags & ~3) && !(REC->flags & 3) ? \"O_RDONLY|\" : \"\", ");
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			" REC->flags ? __print_flags(REC->flags, \"|\", ");
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			"{ 0x%x, \"O_WRONLY\" }, ", O_WRONLY);
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			"{ 0x%x, \"O_RDWR\" }, ", O_RDWR);
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			"{ 0x%x, \"O_CREAT\" }, ", O_CREAT);
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			"{ 0x%x, \"O_EXCL\" }, ", O_EXCL);
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			"{ 0x%x, \"O_NOCTTY\" }, ", O_NOCTTY);
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			"{ 0x%x, \"O_TRUNC\" }, ", O_TRUNC);
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			"{ 0x%x, \"O_APPEND\" }, ", O_APPEND);
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			"{ 0x%x, \"O_NONBLOCK\" }, ", O_NONBLOCK);
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			"{ 0x%x, \"O_DSYNC\" }, ", O_DSYNC);
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			"{ 0x%x, \"O_DIRECT\" }, ", O_DIRECT);
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			"{ 0x%x, \"O_LARGEFILE\" }, ", O_LARGEFILE);
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			"{ 0x%x, \"O_DIRECTORY\" }, ", O_DIRECTORY);
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			"{ 0x%x, \"O_NOFOLLOW\" }, ", O_NOFOLLOW);
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			"{ 0x%x, \"O_NOATIME\" }, ", O_NOATIME);
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			"{ 0x%x, \"O_CLOEXEC\" }) : \"O_RDONLY\", ", O_CLOEXEC);
-+
-+	pos += snprintf(buf + pos, LEN_OR_ZERO,
-+			" ((unsigned long)(REC->mode))");
-+	return pos;
-+}
-+
- static int __init
- __set_enter_print_fmt(struct syscall_metadata *entry, char *buf, int len)
- {
-@@ -276,8 +444,12 @@ __set_enter_print_fmt(struct syscall_metadata *entry, char *buf, int len)
- 	int i;
- 	int pos = 0;
- 
--	/* When len=0, we just calculate the needed length */
--#define LEN_OR_ZERO (len ? len - pos : 0)
-+	switch (entry->syscall_nr) {
-+	case __NR_openat:
-+		return sys_enter_openat_print_fmt(entry, buf, len);
-+	default:
-+		break;
-+	}
- 
- 	pos += snprintf(buf + pos, LEN_OR_ZERO, "\"");
- 	for (i = 0; i < entry->nb_args; i++) {
+ 	INIT_LIST_HEAD(&global_trace.systems);
+ 	INIT_LIST_HEAD(&global_trace.events);
 -- 
 2.51.0
 
