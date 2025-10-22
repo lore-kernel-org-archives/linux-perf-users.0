@@ -1,303 +1,168 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D904203706
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Oct 2025 15:15:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC0A9224B14
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Oct 2025 15:46:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761146116; cv=none; b=d3Tyga1WP3Y3kM3ASs6ZLwMLgID3eeIvbDhanmPgxHh8EEweD2t0D/B2PxTRk0uETbDVaGzbS6AIhX1QwVeiA4o1eh4uLEOtws5a6TkRd1aMpMfVtvJDyu4NLIndzygvnjlJ3Iyc8ZisCwRiXmAHli2NGreSIPXUEBWR/GmDuVk=
+	t=1761147992; cv=none; b=mUtf63DYmltS1W4fLrD91/+ofs6lNsyddeZK/VWT8whGJ3xYR1VsWo3DUWqVq4hs4OYjHWT8SQrqBTzD4PP/BnBmUYa/d/vAKxJvnDmnCXRg5Q24hhb4LKg9fZKWKQvwyqk7/9PZ0A5a5qWxBY0O1lguAWRKIzuV51Im9I7wKhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761146116; c=relaxed/simple;
-	bh=4mblRB768g0mR+5jJ6ggp8VkkejsrNbpM/I/hxaLvgQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RFatC3rCesoyRKEabfKPI/RCvYf9LjwWYX4F/R+YiZxl5bmJwjugrMgtmmdVg4N+4jieQ33dt9tFl1K2mK9JGK703HDZWcn68p8ZrBkQNV+8A2JDeQhVgnDLkXs0dXHinHeHoEDgijdWfnOOZ2IMCATAt8a2WKxkPbCkeiSopXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gDv9PvMw; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1761147992; c=relaxed/simple;
+	bh=ekujxy+UFb0YpAeRLAHs88V3FcRJwlm0QE0mKkW+7CE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GHWF8dgoo/xgb9L8mgN5ySpxhWamllTTzWN3K6ViFY8H7vl89OCXXrqRTnt/F7SokN6vR5qkvY9RjGzXsTvvRwBQygRg2Rh62XexVlL6SRj2tt6Rp8Fu2sG0YJIYcMRGOf6bJjMETAa1lSJqhA4zFyyrJ6nalauXnZPo2vO1JK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yeOQCUkX; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gDv9PvMw"
-Message-ID: <947b1121-ddfc-4f49-825d-103699b62d0c@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1761146101;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gPD7KYgHjZ2Kx2EBhuhfRI/lFZmifGXs9ZgWPA9xXqg=;
-	b=gDv9PvMwi7yFV5RizFwxLazuRUHH3JAn2AKGNIfPpXeMPmJmGEaUAgN4Ns2irU/AQMwql+
-	AcxaIN3Jh4BpVJWspOqCcRpLJjth8UmNYw1q1uN+iFQoCvEshG5BYuyFS7xMdtaieY32/Y
-	Wr3OEOsJJ8w4GhFNCE7pHbAqFab3CwE=
-Date: Wed, 22 Oct 2025 23:14:46 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yeOQCUkX"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3f2cf786abeso5408690f8f.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Oct 2025 08:46:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1761147989; x=1761752789; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4S8eWzeWjY0y1rCtzP037XhZn6Fr5haqVonw4C5SH4M=;
+        b=yeOQCUkXFEeJQpIPx6AmlinnYjGfqErWsDTRQX81k2+Nz3KVi66q1kwlYxWi5YNpo8
+         0qXCaLh57wnu5/T6B851vchXyA5QU8Thq3cxArkeoGAXqHWTbThfgCKrKAaF4WWULkZ5
+         C4jjWG4nz3dJYWJTcidwHF8hUNCvaz5WpTOLextStnze/dhUZutpl+OACPhfkmAdsIbh
+         GtGCDQYpDln1lKNrorwN5ZNshpNtjHK4o+SLcqAXtkpnvdgsPrplKu6KuGc67RWb8PUy
+         orSslmCuZf2oxc54fcUMDJk2yP5JneTueuqHV4gnRknhRlnXUIvysqYBMzjrX67pwIi0
+         5hoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761147989; x=1761752789;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4S8eWzeWjY0y1rCtzP037XhZn6Fr5haqVonw4C5SH4M=;
+        b=ppzdnXIMDwxblVTuBUxRsPmErZlHugj2CsA6esBszHp7kRrCDESB5Gi5FfJ89xiRgw
+         LfPmCTrGTBbjtybMrPm35unnqfRSvI0MXrH02i0AliQQafMyBYdSpgEcFtk332TSm6h0
+         Ckjj1HGgBsO3z9YN5jVax9eQSbIaeXKO37K62tzRfCZjCh826iwmV9NgsBToEyYSuQmx
+         g30ftnthSo27Y7M5IMON/A4rpVfXS9FBZnC4mgN6aiLPpvHqLGEw/j0ucB9xF2V0EMC2
+         r5Wynrr3zEXzarELGjn9/bCq4eh8+jpUYm+hvUF6OObnr/QokGNgV+Suum/xUY6M6QP6
+         X1ag==
+X-Gm-Message-State: AOJu0YziTJiOn2QYtFWB+R9UwSMEu4AsizopACdFv1fpzcoNmZbjagHF
+	TqoIg/jJwFBw4R8rZEme+HRfTEo1v3R4HPkfHWWRpwyq/n9TeqcfbtoiqHxaYlgAH+l70c/kGKd
+	FTj6SWis=
+X-Gm-Gg: ASbGncuslsHj24x7Ff13enFlLA+LNm0cbV3HfHTZBC6J9XTTsAyrex+hH5y1GtWRAAr
+	o0dYHdqcY1e330gYMyqMHpG5xuGjOJS7EwORdDtDfmTarCWj82cCOuTUL4CT4LskruhvTEVQR0z
+	trFr9KkqPbl6XvOed+qaULwXtRM7IgrF7fMqCat1gEGbtrI1w0AIDLISx6NaflbZ0sudN8ru1on
+	gbOugQifIo+3oE5aAc1CmUarkbY8WjvT6OueAlvfxqz/oNPEcydgVh+jRsD1LDfxW9VIgnXQgGT
+	0KHFkf1sXwo1y+Y0e2UEMcg/1jU6uxa0zAuOKypXYQpNwbAVp4fcxEGZhCo8XmuzzTLX3O/c9Ju
+	2ltY5+zOHByGGV6VFW60r3vkEgl/YWXLWlQu7UJt1gf7FzkCZFnCit4I09aHXDwUjCVHHpjCoZV
+	ylOi6o18Uamg==
+X-Google-Smtp-Source: AGHT+IGuiiKfj9Ky5M1IDQgKZkxwXGmuB8ci8DJvywCD6DA1DRBpsOavOAqbqIZxzYDFgjso4gB+4w==
+X-Received: by 2002:a05:6000:2c0c:b0:426:d619:cac7 with SMTP id ffacd0b85a97d-42704d9397amr15295627f8f.36.1761147989174;
+        Wed, 22 Oct 2025 08:46:29 -0700 (PDT)
+Received: from ho-tower-lan.lan ([185.48.76.109])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-427f009a781sm26171759f8f.30.2025.10.22.08.46.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Oct 2025 08:46:28 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+Date: Wed, 22 Oct 2025 16:46:16 +0100
+Subject: [PATCH] perf dsos: Don't block when reading build IDs
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v3 1/2] perf: Use extern perf_callchain_entry for
- get_perf_callchain
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- song@kernel.org, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, yonghong.song@linux.dev,
- john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20251019170118.2955346-1-chen.dylane@linux.dev>
- <20251019170118.2955346-2-chen.dylane@linux.dev>
- <20251020114040.GT3419281@noisy.programming.kicks-ass.net>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <20251020114040.GT3419281@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20251022-james-perf-fix-dso-block-v1-1-c4faab150546@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAEf8+GgC/x2MywrCMBAAfyXs2YUkKkp/RTzksWlXa1J2QQqh/
+ 27wODAzHZSESWEyHYS+rNzqAHcykJZQZ0LOg8Fbf3XWe3yFDyluJAUL75i1YVxbemMKLt8v51u
+ MycLIN6Eh/NeP53H8ADds20dqAAAA
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.14.0
 
-在 2025/10/20 19:40, Peter Zijlstra 写道:
+The following command will hang consistently when the GPU is being used
+due to non regular files (e.g. /dev/dri/renderD129, /dev/dri/card2)
+being opened to read build IDs:
 
-Hi, Peter
+ $ perf record -asdg -e cpu-clock -- true
 
-> On Mon, Oct 20, 2025 at 01:01:17AM +0800, Tao Chen wrote:
->>  From bpf stack map, we want to use our own buffers to avoid unnecessary
->> copy, so let us pass it directly. BPF will use this in the next patch.
->>
->> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
->> ---
-> 
->> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
->> index 808c0d7a31f..851e8f9d026 100644
->> --- a/kernel/events/callchain.c
->> +++ b/kernel/events/callchain.c
->> @@ -217,8 +217,8 @@ static void fixup_uretprobe_trampoline_entries(struct perf_callchain_entry *entr
->>   }
->>   
->>   struct perf_callchain_entry *
->> -get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
->> -		   u32 max_stack, bool crosstask, bool add_mark)
->> +get_perf_callchain(struct pt_regs *regs, struct perf_callchain_entry *external_entry,
->> +		   bool kernel, bool user, u32 max_stack, bool crosstask, bool add_mark)
->>   {
->>   	struct perf_callchain_entry *entry;
->>   	struct perf_callchain_entry_ctx ctx;
->> @@ -228,7 +228,11 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
->>   	if (crosstask && user && !kernel)
->>   		return NULL;
->>   
->> -	entry = get_callchain_entry(&rctx);
->> +	if (external_entry)
->> +		entry = external_entry;
->> +	else
->> +		entry = get_callchain_entry(&rctx);
->> +
->>   	if (!entry)
->>   		return NULL;
->>   
->> @@ -260,7 +264,8 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
->>   	}
->>   
->>   exit_put:
->> -	put_callchain_entry(rctx);
->> +	if (!external_entry)
->> +		put_callchain_entry(rctx);
->>   
->>   	return entry;
->>   }
-> 
-> Urgh.. How about something like the below, and then you fix up
-> __bpf_get_stack() a little like this:
-> 
+Change to non blocking reads to avoid the hang here:
 
-Your solution seems to be more scalable, i will develop based on 
-yours，thanks a lot.
+  #0  __libc_pread64 (offset=<optimised out>, count=0, buf=0x7fffffffa4a0, fd=237) at ../sysdeps/unix/sysv/linux/pread64.c:25
+  #1  __libc_pread64 (fd=237, buf=0x7fffffffa4a0, count=0, offset=0) at ../sysdeps/unix/sysv/linux/pread64.c:23
+  #2  ?? () from /lib/x86_64-linux-gnu/libelf.so.1
+  #3  read_build_id (filename=0x5555562df333 "/dev/dri/card2", bid=0x7fffffffb680, block=true) at util/symbol-elf.c:880
+  #4  filename__read_build_id (filename=0x5555562df333 "/dev/dri/card2", bid=0x7fffffffb680, block=true) at util/symbol-elf.c:924
+  #5  dsos__read_build_ids_cb (dso=0x5555562df1d0, data=0x7fffffffb750) at util/dsos.c:84
+  #6  __dsos__for_each_dso (dsos=0x55555623de68, cb=0x5555557e7030 <dsos__read_build_ids_cb>, data=0x7fffffffb750) at util/dsos.c:59
+  #7  dsos__for_each_dso (dsos=0x55555623de68, cb=0x5555557e7030 <dsos__read_build_ids_cb>, data=0x7fffffffb750) at util/dsos.c:503
+  #8  dsos__read_build_ids (dsos=0x55555623de68, with_hits=true) at util/dsos.c:107
+  #9  machine__read_build_ids (machine=0x55555623da58, with_hits=true) at util/build-id.c:950
+  #10 perf_session__read_build_ids (session=0x55555623d840, with_hits=true) at util/build-id.c:956
+  #11 write_build_id (ff=0x7fffffffb958, evlist=0x5555562323d0) at util/header.c:327
+  #12 do_write_feat (ff=0x7fffffffb958, type=2, p=0x7fffffffb950, evlist=0x5555562323d0, fc=0x0) at util/header.c:3588
+  #13 perf_header__adds_write (header=0x55555623d840, evlist=0x5555562323d0, fd=3, fc=0x0) at util/header.c:3632
+  #14 perf_session__do_write_header (session=0x55555623d840, evlist=0x5555562323d0, fd=3, at_exit=true, fc=0x0, write_attrs_after_data=false) at util/header.c:3756
+  #15 perf_session__write_header (session=0x55555623d840, evlist=0x5555562323d0, fd=3, at_exit=true) at util/header.c:3796
+  #16 record__finish_output (rec=0x5555561838d8 <record>) at builtin-record.c:1899
+  #17 __cmd_record (rec=0x5555561838d8 <record>, argc=2, argv=0x7fffffffe320) at builtin-record.c:2967
+  #18 cmd_record (argc=2, argv=0x7fffffffe320) at builtin-record.c:4453
+  #19 run_builtin (p=0x55555618cbb0 <commands+288>, argc=9, argv=0x7fffffffe320) at perf.c:349
+  #20 handle_internal_command (argc=9, argv=0x7fffffffe320) at perf.c:401
+  #21 run_argv (argcp=0x7fffffffe16c, argv=0x7fffffffe160) at perf.c:445
+  #22 main (argc=9, argv=0x7fffffffe320) at perf.c:553
 
-> 
-> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-> index 4d53cdd1374c..8b85b49cecf7 100644
-> --- a/kernel/bpf/stackmap.c
-> +++ b/kernel/bpf/stackmap.c
-> @@ -303,8 +303,8 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
->   	u32 max_depth = map->value_size / stack_map_data_size(map);
->   	u32 skip = flags & BPF_F_SKIP_FIELD_MASK;
->   	bool user = flags & BPF_F_USER_STACK;
-> +	struct perf_callchain_entry_ctx ctx;
->   	struct perf_callchain_entry *trace;
-> -	bool kernel = !user;
->   
->   	if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
->   			       BPF_F_FAST_STACK_CMP | BPF_F_REUSE_STACKID)))
-> @@ -314,8 +314,13 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
->   	if (max_depth > sysctl_perf_event_max_stack)
->   		max_depth = sysctl_perf_event_max_stack;
->   
-> -	trace = get_perf_callchain(regs, kernel, user, max_depth,
-> -				   false, false);
-> +	trace = your-stuff;
-> +
-> +	__init_perf_callchain_ctx(&ctx, trace, max_depth, false);
-> +	if (!user)
-> +		__get_perf_callchain_kernel(&ctx, regs);
-> +	else
-> +		__get_perf_callchain_user(&ctx, regs);
->   
->   	if (unlikely(!trace))
->   		/* couldn't fetch the stack trace */
-> 
-> 
-> 
-> ---
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index fd1d91017b99..14a382cad1dd 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -67,6 +67,7 @@ struct perf_callchain_entry_ctx {
->   	u32				nr;
->   	short				contexts;
->   	bool				contexts_maxed;
-> +	bool				add_mark;
->   };
->   
->   typedef unsigned long (*perf_copy_f)(void *dst, const void *src,
-> @@ -1718,9 +1719,17 @@ DECLARE_PER_CPU(struct perf_callchain_entry, perf_callchain_entry);
->   
->   extern void perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs);
->   extern void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs);
-> +
-> +extern void __init_perf_callchain_ctx(struct perf_callchain_entry_ctx *ctx,
-> +				      struct perf_callchain_entry *entry,
-> +				      u32 max_stack, bool add_mark);
-> +
-> +extern void __get_perf_callchain_kernel(struct perf_callchain_entry_ctx *ctx, struct pt_regs *regs);
-> +extern void __get_perf_callchain_user(struct perf_callchain_entry_ctx *ctx, struct pt_regs *regs);
-> +
->   extern struct perf_callchain_entry *
->   get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
-> -		   u32 max_stack, bool crosstask, bool add_mark);
-> +		   u32 max_stack, bool crosstask);
->   extern int get_callchain_buffers(int max_stack);
->   extern void put_callchain_buffers(void);
->   extern struct perf_callchain_entry *get_callchain_entry(int *rctx);
-> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-> index 808c0d7a31fa..edd76e3bb139 100644
-> --- a/kernel/events/callchain.c
-> +++ b/kernel/events/callchain.c
-> @@ -216,50 +216,70 @@ static void fixup_uretprobe_trampoline_entries(struct perf_callchain_entry *entr
->   #endif
->   }
->   
-> +void __init_perf_callchain_ctx(struct perf_callchain_entry_ctx *ctx,
-> +			       struct perf_callchain_entry *entry,
-> +			       u32 max_stack, bool add_mark)
-> +
-> +{
-> +	ctx->entry		= entry;
-> +	ctx->max_stack		= max_stack;
-> +	ctx->nr			= entry->nr = 0;
-> +	ctx->contexts		= 0;
-> +	ctx->contexts_maxed	= false;
-> +	ctx->add_mark		= add_mark;
-> +}
-> +
-> +void __get_perf_callchain_kernel(struct perf_callchain_entry_ctx *ctx, struct pt_regs *regs)
-> +{
-> +	if (user_mode(regs))
-> +		return;
-> +
-> +	if (ctx->add_mark)
-> +		perf_callchain_store_context(&ctx, PERF_CONTEXT_KERNEL);
-> +	perf_callchain_kernel(ctx, regs);
-> +}
-> +
-> +void __get_perf_callchain_user(struct perf_callchain_entry_ctx *ctx, struct pt_regs *regs)
-> +{
-> +	int start_entry_idx;
-> +
-> +	if (!user_mode(regs)) {
-> +		if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
-> +			return;
-> +		regs = task_pt_regs(current);
-> +	}
-> +
-> +	if (ctx->add_mark)
-> +		perf_callchain_store_context(ctx, PERF_CONTEXT_USER);
-> +
-> +	start_entry_idx = entry->nr;
-> +	perf_callchain_user(ctx, regs);
-> +	fixup_uretprobe_trampoline_entries(entry, start_entry_idx);
-> +}
-> +
->   struct perf_callchain_entry *
->   get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
-> -		   u32 max_stack, bool crosstask, bool add_mark)
-> +		   u32 max_stack, bool crosstask)
->   {
-> -	struct perf_callchain_entry *entry;
->   	struct perf_callchain_entry_ctx ctx;
-> -	int rctx, start_entry_idx;
-> +	struct perf_callchain_entry *entry;
-> +	int rctx;
->   
->   	/* crosstask is not supported for user stacks */
->   	if (crosstask && user && !kernel)
->   		return NULL;
->   
-> -	entry = get_callchain_entry(&rctx);
-> +	entry = get_callchain_entry(&rctx, regs);
->   	if (!entry)
->   		return NULL;
->   
-> -	ctx.entry		= entry;
-> -	ctx.max_stack		= max_stack;
-> -	ctx.nr			= entry->nr = 0;
-> -	ctx.contexts		= 0;
-> -	ctx.contexts_maxed	= false;
-> +	__init_perf_callchain_ctx(&ctx, entry, max_stack, true);
->   
-> -	if (kernel && !user_mode(regs)) {
-> -		if (add_mark)
-> -			perf_callchain_store_context(&ctx, PERF_CONTEXT_KERNEL);
-> -		perf_callchain_kernel(&ctx, regs);
-> -	}
-> +	if (kernel)
-> +		__get_perf_callchain_kernel(&ctx, regs);
-> +	if (user && !crosstask)
-> +		__get_perf_callchain_user(&ctx, regs);
->   
-> -	if (user && !crosstask) {
-> -		if (!user_mode(regs)) {
-> -			if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
-> -				goto exit_put;
-> -			regs = task_pt_regs(current);
-> -		}
-> -
-> -		if (add_mark)
-> -			perf_callchain_store_context(&ctx, PERF_CONTEXT_USER);
-> -
-> -		start_entry_idx = entry->nr;
-> -		perf_callchain_user(&ctx, regs);
-> -		fixup_uretprobe_trampoline_entries(entry, start_entry_idx);
-> -	}
-> -
-> -exit_put:
->   	put_callchain_entry(rctx);
->   
->   	return entry;
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 177e57c1a362..cbe073d761a8 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -8218,7 +8218,7 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
->   		return &__empty_callchain;
->   
->   	callchain = get_perf_callchain(regs, kernel, user,
-> -				       max_stack, crosstask, true);
-> +				       max_stack, crosstask);
->   	return callchain ?: &__empty_callchain;
->   }
->   
+Fixes: 53b00ff358dc ("perf record: Make --buildid-mmap the default")
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+I'm not actually sure if this is the right fix for this. Commit
+2c369d91d093 ("perf symbol: Add blocking argument to
+filename__read_build_id") which added the blocking argument says that it
+should be non-blocking reads for event synthesis, but the callstack here
+is when writing the header out.
 
+There was also an is_regular_file() check added in commit c21986d33d6b
+("perf unwind-libdw: skip non-regular files"), which presumably falls
+afoul of the "which unfortunately fails for symlinks" part of the other
+linked commit message?
 
+So I can't tell if we should add the is_regular_file() check here too,
+or just set it to non-blocking, or it needs some extra state to be
+passed all the way down to dsos__read_build_ids_cb() to do different
+things.
+---
+ tools/perf/util/dsos.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
+index 64c1d65b0149..5e1c815d7cb0 100644
+--- a/tools/perf/util/dsos.c
++++ b/tools/perf/util/dsos.c
+@@ -81,13 +81,14 @@ static int dsos__read_build_ids_cb(struct dso *dso, void *data)
+ 		return 0;
+ 	}
+ 	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+-	if (filename__read_build_id(dso__long_name(dso), &bid, /*block=*/true) > 0) {
++	/* Don't block in case path isn't for a regular file. */
++	if (filename__read_build_id(dso__long_name(dso), &bid, /*block=*/false) > 0) {
+ 		dso__set_build_id(dso, &bid);
+ 		args->have_build_id = true;
+ 	} else if (errno == ENOENT && dso__nsinfo(dso)) {
+ 		char *new_name = dso__filename_with_chroot(dso, dso__long_name(dso));
+ 
+-		if (new_name && filename__read_build_id(new_name, &bid, /*block=*/true) > 0) {
++		if (new_name && filename__read_build_id(new_name, &bid, /*block=*/false) > 0) {
+ 			dso__set_build_id(dso, &bid);
+ 			args->have_build_id = true;
+ 		}
+
+---
+base-commit: a1d8548c23076c66d96647f5f6f25aa43567f247
+change-id: 20251022-james-perf-fix-dso-block-ca1d8437bbc0
+
+Best regards,
 -- 
-Best Regards
-Tao Chen
+James Clark <james.clark@linaro.org>
+
