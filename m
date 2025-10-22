@@ -1,77 +1,67 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BAC434847A
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Oct 2025 18:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225C52FB0A4;
+	Wed, 22 Oct 2025 22:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761158569; cv=none; b=Iu0t7ngV1g1dqcz8gja53o0VSZfKPuPuMyzhK3ByPWBYtFO94G9IKB6MMurFhpFNwevhrIwx05vPctpmgMsqfrHV5w6ekCqSJj0Avr/rvMlh06ezK1vvG/oGuKeikXDrxMWag+mGb/eUoF1ykt1ZkDl3JmN6DUId/gjAW5v5dXY=
+	t=1761171272; cv=none; b=HHmQILsJF/7YQwXe3xbktwrTHXidYiPQ8WMx57sBOWQ1e/QsnEruIaGkrTbEPEVJxE9UXJxVh2cAGMmoZ+GBC9+jds9MWTAxr911S9UclObu35ndRzxESp5PWziPM4D5bljlN7b++L4/3b6X96RzSTkA3syTGtWmh3jCYQLNWdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761158569; c=relaxed/simple;
-	bh=62Rd9Cj+tuLxEAc6371oplypJXVUPm0OX7f4j/blxSw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bHwjX6ykXXXh72BIOccVdt/Um/3m6/UZUeRx4HLd8ObKcBMSjy8sJKdjNAga737DjyEeTlRd6lnPcSqUnHRFzVAfVdJ3jhChFXtBACHqGcrIHNVvZvqZgEqsXpW7Wk+QaKHKn0t1KlQELIfuDDETApkyu3LtR2ZsK6RuXVUgHpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N3UA6Hud; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1761171272; c=relaxed/simple;
+	bh=M7JNCkBzWiAR2xNNK2WourqTZyvlf3fBBzC0e2GerT4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RJSMKT0Vw/1hGLZCmpfZF/SLB40i+OIcpkAtyPCt/nJKRYNy5/8EoHU61maEmTTAe3k6//qxhq4Lslb1Ka/d2RNgfc7mt72qA6U/K0UYkFSSGTgOYLs9GYnz5o2Jp92nlv2tX9eyXI1v1Hm3uLOxq3r/UnBxX79gBLJ11s6Sy6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MJOChMm3; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N3UA6Hud"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-781251eec51so5699648b3a.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Oct 2025 11:42:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761158566; x=1761763366; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OaDPVD10QzAGywMTcZ8MVoJwwj1EgOUaXLk9q2JTmq8=;
-        b=N3UA6HudxvgWUIjXDO4j629xlo21BLNMA9iQWqfn9FTqvB9BOksUxpongzUDqLZnD0
-         jrusS04akv5oqzG7Mtl+xg2W110DRcUv8zXlFlEpwxI4DY1kNEUw2mMYx75qTEe7IeA0
-         0ffNl38nW8yWQ3pVTvTZWczwVWFGrOBsrI1WQ5RJGhehUqS4WhxDZepbfTnTS+FKnVz1
-         gd+BxuWQqX2aHeVZDhg6uaZsaZ1oKYRKfzsjJnDQNBsdgjmphmQDBnqhBWIQLyKeq6R+
-         ijSRz8d+iBHJh6ZYaWP5ZxXEZ4t+YWWLNQml6fP7ZjRw5ya41xuiTLlTHJVx+74UIetA
-         7LYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761158566; x=1761763366;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OaDPVD10QzAGywMTcZ8MVoJwwj1EgOUaXLk9q2JTmq8=;
-        b=DNsR55slnP8gSmdd3s1snF0E+fyaZVxHQRYPbks9623+llrQmGTFTWvqgVZNDKmnTj
-         aLmXgV33TFu95YaVWHvl9rsYpRONpwzPD5vZXfcomom00vPT4rcpLtAoZtN9diqc+tKO
-         vjXcN14hEYtFaBfF5+hwsnmZTIqiNy3gYxlt7L31qYnv/D+XWeJeTZjLS1rtOre45+2Z
-         q1z+GGM6dyJE7CPIqhYNyAUgfVZfYVfjCPJQHaCGykd7VnM02KCEWF922mfff4WcOfGM
-         nA7B7x2CIUBKz4Zp+EDOEBMpp1vzWFMk9KLKgCTtfVlbhKTwe78NYrlWadzD7jbPwecT
-         sfyg==
-X-Forwarded-Encrypted: i=1; AJvYcCXjBehip5SY5nZ87lyrw0ewkqVoCIDgdnMnTa9bnTrhOOAG8JlPcjMU3Qeq+PJPlFnQF2JSgDvl9yl7WC15yBkM@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMaVCRHhXokb6Aexhlqwvp7TwmRWGohRSJGez3Tis9Lbxmbg68
-	VGsYGK7aTxiqtX+BGUQ430aZaCBhFlQPzeYCSAq3zJitAYqpzrEdDhiO
-X-Gm-Gg: ASbGncso94jlHR6ixXC6pUazHPls3bWBwgeYKxRHxGIkfNBaegN5HW4WRYPzvH95P/H
-	quTOOB3gHp1bfVujbfRMy5DzMP4j+GAF182Qr9OwN3iSN6dhho7gQJPO9SQldfRIpGETED1Ec5n
-	mDuJm06R4TRRa0SaZ1SSGDbPFEIz5eBw54feublbjkgC2autWVqU7ycHqAgIiuLa02+Gu15OMrz
-	yfKLkaKXzfVEzYh6R/Taz0MLcXf61fpKPiwPOXfBAy0LcKWxCUNnR95CUIloyoF5bawtfs20yQl
-	/Q+xeQos/keGsvYWLVz97Xk5DVm+JC/yeKGm84eNY2ZX3WIyimgUv7JeZF4aPHGlb4fGWEUKmgI
-	0bdlgQ4PvS93QY+HGx3V8dMnDCMZhxDMJ52H+WBcqNc6rZqtZLMdWUpjR/43o1HZhDKYzhN/Odv
-	DeOA==
-X-Google-Smtp-Source: AGHT+IGEuNl7KxT0ZBg1REm9jtYV03SiCDzrf1MkAQZm9SCvvp7AAFvvgs3enN+dhrzrLl2aRLXWTg==
-X-Received: by 2002:a05:6300:8052:b0:334:a916:8b4 with SMTP id adf61e73a8af0-334a9160985mr26107060637.8.1761158566294;
-        Wed, 22 Oct 2025 11:42:46 -0700 (PDT)
-Received: from fedora ([2401:4900:1c6a:bfa2:49f8:6793:8484:a709])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b6a76b6f7absm13489547a12.39.2025.10.22.11.42.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Oct 2025 11:42:46 -0700 (PDT)
-From: Shi Hao <i.shihao.999@gmail.com>
-To: peterz@infradead.org
-Cc: mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	x86@kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	hpa@zytor.com,
-	Shi Hao <i.shihao.999@gmail.com>,
-	Smatch static checker <smatch@kernel.org>
-Subject: [PATCH] _x86: intel: pt: fix potential null dereferences
-Date: Thu, 23 Oct 2025 00:12:30 +0530
-Message-ID: <20251022184230.124113-1-i.shihao.999@gmail.com>
-X-Mailer: git-send-email 2.51.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MJOChMm3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761171271; x=1792707271;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=M7JNCkBzWiAR2xNNK2WourqTZyvlf3fBBzC0e2GerT4=;
+  b=MJOChMm3dmq3xh3zqDrKEVDONutDMRfwIGHJ0kHT3elTHfIzU3dcyRmA
+   WfHZv1H9Q9+0XtXrPfLj9lYaYv79Wa7dH8S3oPdhWPOnDVUXrfWl9e1MC
+   QnPkOy8A++1ruyVlCylv/1ZWzGajZCzxaSCBaYAvJr3xKRBWOxwD193pq
+   QzWHIEC4dNoKDlcxanHalE12zhqwoH9mRYonIuHh8lCdYp3JXjmDYfWT+
+   D2bQFSZQ63tv7wgun+0bOIPsA23WNZAXaGOc/+I+rB8r4akpv3t5PAZdA
+   QcUT3PsQVnkCwRvvOSDDeY4o9FCg7V9Xn+AdP4ebMc5PuYAOn4eH8mmGV
+   w==;
+X-CSE-ConnectionGUID: 4dOtSecYStGvMxqT0me/Tg==
+X-CSE-MsgGUID: K44LM05tR7eYfx0wT3oXeg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63369220"
+X-IronPort-AV: E=Sophos;i="6.19,248,1754982000"; 
+   d="scan'208";a="63369220"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 15:14:30 -0700
+X-CSE-ConnectionGUID: pl5F504CSbCpcmn0bV50Sw==
+X-CSE-MsgGUID: X8wysPAnSeadWwulB41ohA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,248,1754982000"; 
+   d="scan'208";a="184043752"
+Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.43])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 15:14:30 -0700
+From: Zide Chen <zide.chen@intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	thomas.falcon@intel.com,
+	dapeng1.mi@linux.intel.com,
+	xudong.hao@intel.com,
+	Zide Chen <zide.chen@intel.com>
+Subject: [PATCH] perf tools: Refactor precise_ip fallback logic
+Date: Wed, 22 Oct 2025 15:08:02 -0700
+Message-ID: <20251022220802.1335131-1-zide.chen@intel.com>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -80,62 +70,62 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add checks to prevent potential null dereferences of buf->stop_te
-and buf->intr_te in pt_buffer_reset_markers function.
+Commit c33aea446bf555ab ("perf tools: Fix precise_ip fallback logic")
+unconditionally called the precise_ip fallback and moved it after the
+missing-feature checks so that it could handle EINVAL as well.
 
-Smatch reported possible null dereferences of buf->stop_te and
-buf->intr_te in the pt_buffer_reset_markers() and when i checked
-both pointers were checked for null dereferences in earlier lines
-however,after calling pt_topa_entry_for_page() where its return
-value is NULL in certain conditions there were no checks for further
-buf->stop_te and buf->intr_te uses which could potentially be null
-dereferenced.
+However, this introduced an issue: after disabling missing features,
+the event could fail to open, which makes the subsequent precise_ip
+fallback useless since it will always fail.
 
-To avoid null dereference add checks after each pt_topa_entry_for_page()
-call to safely handle null returns and also add checks where there was
-direct dereference of the pointers.
+For example, run the following command on Intel SPR:
 
-Reported-by: Smatch static checker <smatch@kernel.org>
-Signed-off-by: Shi Hao <i.shihao.999@gmail.com>
+$ perf record -e '{cpu/mem-loads-aux/S,cpu/mem-loads,ldlat=3/PS}' -- ls
+
+Opening the event "cpu/mem-loads,ldlat=3/PS" returns EINVAL when
+precise_ip == 3. It then sets attr.inherit = false, which triggers a
+kernel check failure since it doesn't match the group leader's inherit
+attribute. As a result, it continues to fail even after precise_ip is
+reduced.
+
+By moving the precise_ip fallback earlier, this issue is resolved, as
+well as the kernel test robot report mentioned in commit
+c33aea446bf555ab.
+
+No negative side effects are expected, because the precise_ip level is
+restored by evsel__precise_ip_fallback() if the fallback does not help.
+
+This also aligns with commit 2b70702917337a8d ("perf tools: Remove
+evsel__handle_error_quirks()").
+
+Fixes: af954f76eea56453 ("perf tools: Check fallback error and order")
+Fixes: c33aea446bf555ab ("perf tools: Fix precise_ip fallback logic")
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Zide Chen <zide.chen@intel.com>
 ---
- arch/x86/events/intel/pt.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ tools/perf/util/evsel.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-index e8cf29d2b10c..2b7d5d118b48 100644
---- a/arch/x86/events/intel/pt.c
-+++ b/arch/x86/events/intel/pt.c
-@@ -1148,7 +1148,8 @@ static int pt_buffer_reset_markers(struct pt_buffer *buf,
- 	if (idx != buf->stop_pos) {
- 		buf->stop_pos = idx;
- 		buf->stop_te = pt_topa_entry_for_page(buf, idx);
--		buf->stop_te = pt_topa_prev_entry(buf, buf->stop_te);
-+		if (buf->stop_te)
-+			buf->stop_te = pt_topa_prev_entry(buf, buf->stop_te);
- 	}
-
- 	wakeup = handle->wakeup >> PAGE_SHIFT;
-@@ -1162,12 +1163,16 @@ static int pt_buffer_reset_markers(struct pt_buffer *buf,
- 	if (idx != buf->intr_pos) {
- 		buf->intr_pos = idx;
- 		buf->intr_te = pt_topa_entry_for_page(buf, idx);
--		buf->intr_te = pt_topa_prev_entry(buf, buf->intr_te);
-+		if (buf->intr_te)
-+			buf->intr_te = pt_topa_prev_entry(buf, buf->intr_te);
- 	}
-
--	buf->stop_te->stop = 1;
--	buf->stop_te->intr = 1;
--	buf->intr_te->intr = 1;
-+	if (buf->stop_te) {
-+		buf->stop_te->stop = 1;
-+		buf->stop_te->intr = 1;
-+	}
-+	if (buf->intr_te)
-+		buf->intr_te->intr = 1;
-
- 	return 0;
- }
---
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index ca74514c8707..6ce32533a213 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2714,12 +2714,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	if (err == -EMFILE && rlimit__increase_nofile(&set_rlimit))
+ 		goto retry_open;
+ 
++	if (evsel__precise_ip_fallback(evsel))
++		goto retry_open;
++
+ 	if (err == -EINVAL && evsel__detect_missing_features(evsel, cpu))
+ 		goto fallback_missing_features;
+ 
+-	if (evsel__precise_ip_fallback(evsel))
+-		goto retry_open;
+-
+ out_close:
+ 	if (err)
+ 		threads->err_thread = thread;
+-- 
 2.51.0
 
