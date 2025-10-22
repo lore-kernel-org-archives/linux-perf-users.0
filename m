@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82D92E9EAA;
-	Wed, 22 Oct 2025 05:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8C7241665;
+	Wed, 22 Oct 2025 05:34:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761111166; cv=none; b=oPKo56+yfvhTSMlFq4r8bE0n4r++awwYfTgkdMs59OHM1Q9jCbic0dBKoO78caiuwBTHFvE64k4GV9UTUejh/4Z+ROil59UOVDQ8bQuDlWlvsThJUae4R3o1XNMncAH+bv8fEg77s2n2PEUrb/N4o/kSOb18BaHJ+a6ndiIP0A4=
+	t=1761111257; cv=none; b=H6q6gTJ3KoZn43OOXSFu+6efiz/iwSih2TEfotk9QdTPynLgsDOvSbuVjXmwKLsO0SmnbB0v+xMOdNRbqj3uJgf8SExE1vVWzOFCA8NjM+oYuRVnFpo2vJ0bo5k5Qb7JGmWENh8hbSF+ptg7NRiJHYXREX0sYHn4tOuzpdkTI70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761111166; c=relaxed/simple;
-	bh=8zSEiF36ipnnOp5Cl4mjwp2hGY2pohj//TJmI3JvvNM=;
+	s=arc-20240116; t=1761111257; c=relaxed/simple;
+	bh=Q+2L31TAAXSUvlTuut2rydHBadxA1eJyvA7IN+1hKVs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oUFOpsbH15qY/9rHIiKmnW5+x9FxDfIZBm4hBKmbCgmb8s7z5+cQHuizBk9W5A0oWgdlYhsZxO1UWImC6wtc9VkLaPHUlQxOPKMTmPCxOTMNzKFKfJtQQOuHd8jzwJgQM7cQng2VMgTEcsWPDQI/8GgkpJg+fs03oKk+HgJuwm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ga1MtAOY; arc=none smtp.client-ip=192.198.163.13
+	 In-Reply-To:Content-Type; b=BW1P4nidQayuIMz7iQi3pn9y/xbif5hokcFWu+jU/U0qVOQvuA34/w40ShAOPfJ2mSrLzgfroshg33jvpFX0AEZXDUxTxipNKw8MEERNNqi2ZgF/1kMAuN90obMUCIYd/b+y4qIObrdsSRz4vhTrjb3HAuXA/OOi2yxbokKuQuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dZZ0xpPc; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ga1MtAOY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dZZ0xpPc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761111165; x=1792647165;
+  t=1761111255; x=1792647255;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=8zSEiF36ipnnOp5Cl4mjwp2hGY2pohj//TJmI3JvvNM=;
-  b=Ga1MtAOYeCL/9epI9xWzXG4pDak035IFKkn3EQgNKpXcyv/NAqwlSBI/
-   00+4flagT5Uc7PrArHrwhMmz/zEwEKOR1hk+tZHVqwef91bdADeV+UBFB
-   R8I2NcAXszfstD0NKOpIhh2sTE6EnvjfUMdFj05kF1IIFxqcxikvd5ln/
-   D7npgbc/ICVV9+sGb6TeTbU7IQxs9gGCfkM0RCFlIadT7oCe2T7GXYAYk
-   ZeI+esT1YsdMP23YNyzIh5ci/Fla339MRvcqZ/JYI7YjWzENB89ZZDV0o
-   W38Vtj5nEzETyHKI42GwbESMwDK+I9RoloJtiBmWgvMhfEs5OMpETbKNK
-   Q==;
-X-CSE-ConnectionGUID: J5McSP8CRzixBtyuBphIRA==
-X-CSE-MsgGUID: RUYs++9qQ0uDT8yP6tftAA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="65865062"
+  bh=Q+2L31TAAXSUvlTuut2rydHBadxA1eJyvA7IN+1hKVs=;
+  b=dZZ0xpPcNqRdCCIgI8OjEQRc45FvIDdXMMcD+RzwYyG8EoDFWtS/MOFx
+   N3z7QObQj8m8xfrSquCp3lD6WtFeFkqsU5VvNmzfu8smEqZu1nrQ6NuGA
+   RfnjPMatBQNPjF8VLHYYxc9of6qhXHSV3xFMUFRl/etivTmQiTR4OD9Ic
+   a6DDoie/8ubw1yaNo5h/adhe/ELUwvt0A7S7js2YM+CkO28Uv9/f9lSqT
+   VTrcdrnhxoeemcTPf32aEG78F9aYftX3Ne4ZsQQOtptbSa75FParUI5Fm
+   2BdLQSA4BrSiuc3MNASDj9k6XoA0Q4UhjnLlZ9mpVjCP1tnMk6RWwvGsf
+   A==;
+X-CSE-ConnectionGUID: m3HpiIPvR/mi1fwrwZfSOg==
+X-CSE-MsgGUID: YhVfUAJVQw+43gHoiDWBaQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="85872768"
 X-IronPort-AV: E=Sophos;i="6.19,246,1754982000"; 
-   d="scan'208";a="65865062"
+   d="scan'208";a="85872768"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 22:32:44 -0700
-X-CSE-ConnectionGUID: uor9ZTk5RDCnlN9/zYMa6w==
-X-CSE-MsgGUID: t6m8ZgC3RryEIq4AloOdNA==
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 22:34:14 -0700
+X-CSE-ConnectionGUID: H9l9op39R6+mz8g14PYjpQ==
+X-CSE-MsgGUID: M4LgcRvxTLeqP9rZ2R+iEg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,246,1754982000"; 
-   d="scan'208";a="182945794"
+   d="scan'208";a="182946007"
 Received: from unknown (HELO [10.238.3.234]) ([10.238.3.234])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 22:32:41 -0700
-Message-ID: <da62c4ed-ce15-45cc-94f6-3689b8f46d14@linux.intel.com>
-Date: Wed, 22 Oct 2025 13:32:38 +0800
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 22:34:12 -0700
+Message-ID: <9f45329d-e49b-4055-bfb0-458db6ae319d@linux.intel.com>
+Date: Wed, 22 Oct 2025 13:34:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,8 +52,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v8 06/12] perf/x86/intel/ds: Factor out PEBS record
- processing code to functions
+Subject: Re: [PATCH] perf: Fix system hang caused by cpu-clock
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
  <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
@@ -61,96 +60,72 @@ Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
  Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
  linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Kan Liang <kan.liang@linux.intel.com>
-References: <20251015064422.47437-1-dapeng1.mi@linux.intel.com>
- <20251015064422.47437-7-dapeng1.mi@linux.intel.com>
- <20251021154930.GS3245006@noisy.programming.kicks-ass.net>
+ Dapeng Mi <dapeng1.mi@intel.com>, Octavia Togami <octavia.togami@gmail.com>
+References: <20251015051828.12809-1-dapeng1.mi@linux.intel.com>
+ <20251021144751.GQ3245006@noisy.programming.kicks-ass.net>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251021154930.GS3245006@noisy.programming.kicks-ass.net>
+In-Reply-To: <20251021144751.GQ3245006@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-On 10/21/2025 11:49 PM, Peter Zijlstra wrote:
-> On Wed, Oct 15, 2025 at 02:44:16PM +0800, Dapeng Mi wrote:
->
->> +static inline void __intel_pmu_handle_pebs_record(struct pt_regs *iregs,
->> +						  struct pt_regs *regs,
->> +						  struct perf_sample_data *data,
->> +						  void *at, u64 pebs_status,
->> +						  struct perf_event *events[],
->> +						  short *counts, void **last,
->> +						  setup_fn setup_sample)
->> +{
->> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->> +	struct perf_event *event;
->> +	int bit;
->> +
->> +	for_each_set_bit(bit, (unsigned long *)&pebs_status, X86_PMC_IDX_MAX) {
->> +		event = cpuc->events[bit];
->> +
->> +		if (WARN_ON_ONCE(!event) ||
->> +		    WARN_ON_ONCE(!event->attr.precise_ip))
->> +			continue;
->> +
->> +		if (counts[bit]++)
->> +			__intel_pmu_pebs_event(event, iregs, regs, data,
->> +					       last[bit], setup_sample);
-> No brackets, while coding style requires.
-
-Sure. Not sure why checkpatch.pl doesn't found it. Thanks.
-
-
->
->> +
->> +		last[bit] = at;
->> +		/*
->> +		 * perf_event_overflow() called by below __intel_pmu_pebs_last_event()
->> +		 * could trigger interrupt throttle and clear all event pointers of
->> +		 * the group in cpuc->events[] to NULL. So snapshot the event[] before
->> +		 * it could be cleared. This avoids the possible NULL event pointer
->> +		 * access and PEBS record loss.
->> +		 */
->> +		if (counts[bit] && !events[bit])
->> +			events[bit] = cpuc->events[bit];
->> +	}
->> +}
->
->> @@ -2671,41 +2728,15 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_d
->>  		if (basic->format_size != cpuc->pebs_record_size)
->>  			continue;
+On 10/21/2025 10:47 PM, Peter Zijlstra wrote:
+> On Wed, Oct 15, 2025 at 01:18:28PM +0800, Dapeng Mi wrote:
+>> A system hang issue caused by cpu-clock is reported and bisection
+>> indicates the commit 18dbcbfabfff ("perf: Fix the POLL_HUP delivery
+>>  breakage") causes this issue.
+>>
+>> The root cause of the hang issue is that cpu-clock is a specific SW
+>> event which relies on the hrtimer. The __perf_event_overflow()
+>> is invoked from the hrtimer handler for cpu-clock event, and
+>> __perf_event_overflow() tries to call event stop callback
+>> (cpu_clock_event_stop()) to stop the event, and cpu_clock_event_stop()
+>> calls htimer_cancel() to cancel the hrtimer. But unfortunately the
+>> hrtimer callback is currently executing and then traps into deadlock.
+>>
+>> To avoid this deadlock, use hrtimer_try_to_cancel() instead of
+>> hrtimer_cancel() to cancel the hrtimer, and set PERF_HES_STOPPED flag
+>> for the stopping events. perf_swevent_hrtimer() would stop the event
+>> hrtimer once it detects the PERF_HES_STOPPED flag.
+>>
+>> Reported-by: Octavia Togami <octavia.togami@gmail.com>
+>> Closes: https://lore.kernel.org/all/CAHPNGSQpXEopYreir+uDDEbtXTBvBvi8c6fYXJvceqtgTPao3Q@mail.gmail.com/
+>> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+>> Fixes: 18dbcbfabfff ("perf: Fix the POLL_HUP delivery breakage")
+>> Tested-by: Octavia Togami <octavia.togami@gmail.com>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>  kernel/events/core.c | 18 +++++++++++++-----
+>>  1 file changed, 13 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 7541f6f85fcb..f90105d5f26a 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -11773,7 +11773,8 @@ static enum hrtimer_restart perf_swevent_hrtimer(struct hrtimer *hrtimer)
 >>  
->> -		pebs_status = basic->applicable_counters & cpuc->pebs_enabled & mask;
->> -		for_each_set_bit(bit, (unsigned long *)&pebs_status, X86_PMC_IDX_MAX) {
->> -			event = cpuc->events[bit];
->> -
->> -			if (WARN_ON_ONCE(!event) ||
->> -			    WARN_ON_ONCE(!event->attr.precise_ip))
->> -				continue;
->> -
->> -			if (counts[bit]++) {
->> -				__intel_pmu_pebs_event(event, iregs, regs, data, last[bit],
->> -						       setup_pebs_adaptive_sample_data);
->> -			}
-> Brackets. Which suggests you took effort to remove them, since cut-paste
-> code movement would've preserved them.
+>>  	event = container_of(hrtimer, struct perf_event, hw.hrtimer);
+>>  
+>> -	if (event->state != PERF_EVENT_STATE_ACTIVE)
+>> +	if (event->state != PERF_EVENT_STATE_ACTIVE ||
+>> +	    event->hw.state & PERF_HES_STOPPED)
+>>  		return HRTIMER_NORESTART;
+>>  
+>>  	event->pmu->read(event);
+> I was wondering if we need a HES_STOPPED check after calling
+> __perf_event_overflow(), but typically that will return 1 when it does
+> the stop itself, which then already does NORESTART.
+
+Yes.
+
+
 >
-> I've re-instated them.
+> So yeah, I suppose this works. Let me go queue this up.
+
+Thanks for reviewing this patch.
+
+
 >
->> -			last[bit] = at;
->> -
->> -			/*
->> -			 * perf_event_overflow() called by below __intel_pmu_pebs_last_event()
->> -			 * could trigger interrupt throttle and clear all event pointers of
->> -			 * the group in cpuc->events[] to NULL. So snapshot the event[] before
->> -			 * it could be cleared. This avoids the possible NULL event pointer
->> -			 * access and PEBS record loss.
->> -			 */
->> -			if (counts[bit] && !events[bit])
->> -				events[bit] = cpuc->events[bit];
->> -		}
->> +		pebs_status = mask & basic->applicable_counters;
->> +		__intel_pmu_handle_pebs_record(iregs, regs, data, at,
->> +					       pebs_status, events, counts, last,
->> +					       setup_pebs_adaptive_sample_data);
+> Thanks!
+>
