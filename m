@@ -1,168 +1,187 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC0A9224B14
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Oct 2025 15:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E13623ED5B
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Oct 2025 15:48:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761147992; cv=none; b=mUtf63DYmltS1W4fLrD91/+ofs6lNsyddeZK/VWT8whGJ3xYR1VsWo3DUWqVq4hs4OYjHWT8SQrqBTzD4PP/BnBmUYa/d/vAKxJvnDmnCXRg5Q24hhb4LKg9fZKWKQvwyqk7/9PZ0A5a5qWxBY0O1lguAWRKIzuV51Im9I7wKhA=
+	t=1761148138; cv=none; b=D9RJqc50hJcL5R1gP8lRKdsMot23pjS9tP4mNrNYJcYIw2Se13tC5hRIfJUpadl1/2id+6bQKf69TNeE5+Cp4diPk+UaU5xhGUu/bqgE0fjO9gMj3nxh6rAf4c4yjWGpBCw9msrKVjHMhxyn7wx5DntGgi0efAIGOt6f6N//NIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761147992; c=relaxed/simple;
-	bh=ekujxy+UFb0YpAeRLAHs88V3FcRJwlm0QE0mKkW+7CE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GHWF8dgoo/xgb9L8mgN5ySpxhWamllTTzWN3K6ViFY8H7vl89OCXXrqRTnt/F7SokN6vR5qkvY9RjGzXsTvvRwBQygRg2Rh62XexVlL6SRj2tt6Rp8Fu2sG0YJIYcMRGOf6bJjMETAa1lSJqhA4zFyyrJ6nalauXnZPo2vO1JK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yeOQCUkX; arc=none smtp.client-ip=209.85.221.51
+	s=arc-20240116; t=1761148138; c=relaxed/simple;
+	bh=eRMkAlvTEnwZ4qMUtrPf6xT4pGmVA/ofhMcO3oCKa+w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=X39EnH0Y82UAtnBvVHtmK20DCGTI0cJhXCsc/h3GP2aQLeiGO779fRM60ImcBSTzmYal8NmcIFb8XNXAZbgjhA2JCHqvMnNV0qiHy8VupG3cSwFsdFUr5B0MscHGJ5DH8Ohb/VuKju2CytgVo/TlXXqcio/R0+qW4wM9W0wDq3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P9Hhi/Je; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yeOQCUkX"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3f2cf786abeso5408690f8f.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Oct 2025 08:46:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P9Hhi/Je"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3ee15b5435bso6602792f8f.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Oct 2025 08:48:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1761147989; x=1761752789; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4S8eWzeWjY0y1rCtzP037XhZn6Fr5haqVonw4C5SH4M=;
-        b=yeOQCUkXFEeJQpIPx6AmlinnYjGfqErWsDTRQX81k2+Nz3KVi66q1kwlYxWi5YNpo8
-         0qXCaLh57wnu5/T6B851vchXyA5QU8Thq3cxArkeoGAXqHWTbThfgCKrKAaF4WWULkZ5
-         C4jjWG4nz3dJYWJTcidwHF8hUNCvaz5WpTOLextStnze/dhUZutpl+OACPhfkmAdsIbh
-         GtGCDQYpDln1lKNrorwN5ZNshpNtjHK4o+SLcqAXtkpnvdgsPrplKu6KuGc67RWb8PUy
-         orSslmCuZf2oxc54fcUMDJk2yP5JneTueuqHV4gnRknhRlnXUIvysqYBMzjrX67pwIi0
-         5hoA==
+        d=linaro.org; s=google; t=1761148135; x=1761752935; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=nQKCc3o8CpOmEjXqvj1OmhWFZYzGoBkXsANUxN2NNQk=;
+        b=P9Hhi/JenkLQTL1G0jBToMUqqDeoPxyEK4G0LWD1ba1kNMZO5JINY35oPSBo4/T/PB
+         QpBRQF2k1BNLur3wm7UrxawXOKjxwxH0+VvMKRER/Z4wrvjSRffYMyOXLy1rEEujG81n
+         c8glSKS2CIs38MRkDdxOeA7YAeSmCN+Q6kSOP+4xtnREj5FlMu3FlVz5ugZY1R/dVTlI
+         rs/Ox0BVZvsOyUkOxyFlIosvrBBcZ+2SpscBihY+YtxPi29fcN8WZceDsnX8W7rIl+Vn
+         CpDBhFsXboL+EQyBJb6U0ko5RXU2rgzcagwh5HZ+75rWIXetFjNkmdR57tsfBk3sMlIg
+         sXeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761147989; x=1761752789;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4S8eWzeWjY0y1rCtzP037XhZn6Fr5haqVonw4C5SH4M=;
-        b=ppzdnXIMDwxblVTuBUxRsPmErZlHugj2CsA6esBszHp7kRrCDESB5Gi5FfJ89xiRgw
-         LfPmCTrGTBbjtybMrPm35unnqfRSvI0MXrH02i0AliQQafMyBYdSpgEcFtk332TSm6h0
-         Ckjj1HGgBsO3z9YN5jVax9eQSbIaeXKO37K62tzRfCZjCh826iwmV9NgsBToEyYSuQmx
-         g30ftnthSo27Y7M5IMON/A4rpVfXS9FBZnC4mgN6aiLPpvHqLGEw/j0ucB9xF2V0EMC2
-         r5Wynrr3zEXzarELGjn9/bCq4eh8+jpUYm+hvUF6OObnr/QokGNgV+Suum/xUY6M6QP6
-         X1ag==
-X-Gm-Message-State: AOJu0YziTJiOn2QYtFWB+R9UwSMEu4AsizopACdFv1fpzcoNmZbjagHF
-	TqoIg/jJwFBw4R8rZEme+HRfTEo1v3R4HPkfHWWRpwyq/n9TeqcfbtoiqHxaYlgAH+l70c/kGKd
-	FTj6SWis=
-X-Gm-Gg: ASbGncuslsHj24x7Ff13enFlLA+LNm0cbV3HfHTZBC6J9XTTsAyrex+hH5y1GtWRAAr
-	o0dYHdqcY1e330gYMyqMHpG5xuGjOJS7EwORdDtDfmTarCWj82cCOuTUL4CT4LskruhvTEVQR0z
-	trFr9KkqPbl6XvOed+qaULwXtRM7IgrF7fMqCat1gEGbtrI1w0AIDLISx6NaflbZ0sudN8ru1on
-	gbOugQifIo+3oE5aAc1CmUarkbY8WjvT6OueAlvfxqz/oNPEcydgVh+jRsD1LDfxW9VIgnXQgGT
-	0KHFkf1sXwo1y+Y0e2UEMcg/1jU6uxa0zAuOKypXYQpNwbAVp4fcxEGZhCo8XmuzzTLX3O/c9Ju
-	2ltY5+zOHByGGV6VFW60r3vkEgl/YWXLWlQu7UJt1gf7FzkCZFnCit4I09aHXDwUjCVHHpjCoZV
-	ylOi6o18Uamg==
-X-Google-Smtp-Source: AGHT+IGuiiKfj9Ky5M1IDQgKZkxwXGmuB8ci8DJvywCD6DA1DRBpsOavOAqbqIZxzYDFgjso4gB+4w==
-X-Received: by 2002:a05:6000:2c0c:b0:426:d619:cac7 with SMTP id ffacd0b85a97d-42704d9397amr15295627f8f.36.1761147989174;
-        Wed, 22 Oct 2025 08:46:29 -0700 (PDT)
-Received: from ho-tower-lan.lan ([185.48.76.109])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-427f009a781sm26171759f8f.30.2025.10.22.08.46.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Oct 2025 08:46:28 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Wed, 22 Oct 2025 16:46:16 +0100
-Subject: [PATCH] perf dsos: Don't block when reading build IDs
+        d=1e100.net; s=20230601; t=1761148135; x=1761752935;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nQKCc3o8CpOmEjXqvj1OmhWFZYzGoBkXsANUxN2NNQk=;
+        b=DQ+aKgKiYy21fx/NF/CyiCs4u+1OaMPurcr0SUgq4Z8MwJFroK6mq91T36D7DspjSh
+         upp+gOF5itntiaf//MzAs8NKys6Dp+6zh9cabqLva6Pcd+xjTURpLl8dZpcbUIwVBKtW
+         A53PYj3mPnZ6axL+BVHY8HI0VkcaZJdNzzfPZh1LGxyqt+gtiGaFeZ+TMHjGm7n+s0SH
+         OkoP5aUzkFMaMKlG7kd4jrCSGz2muKvKT9YmZsPQIhERb0dWP/kh4LH1Rl9xYfmozFLB
+         aOvPUO8dsvJvnVAz7EFeCCuIwB1iDJ4PcnPJWRu0SLZhHOXE6U1bsu3wVnqAEP8RYKhL
+         FTZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVOOsk5fqOWjgkDGw9RXfr778AnqPeeFdoedRN+fpV96QginjQV/H9KSF/0Cfc3jYoDsjNz6y+Je21IMKxFNfUQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJ0H1nyEnV6jg41ZKPGJlbBjKKue7NtwXsmYPq4GwMzdUHaTHC
+	iYguN2KFf3QVECU+dqHycq7Y8/zV+x+83K1KsQxMFn1Ze6vMzYyGLlhjoM439LDlGYE=
+X-Gm-Gg: ASbGncucjOXy02B9JBzndUe4I9l9cLuHLKIM/iWSBimlOOXt8xtDlBMbXcuM29nQcNr
+	jPkPLx/Ou5pWjzySRNiFbB9C3klWK74VHmnZ0p/vzT17t4lCfIM9t204tpui5zjarLMgOsMMj8S
+	iWosj+dLbzSqFrZxzLwxgDMUrLwcyhTx2a4FP+xc8BaOfC4Ocxf9VI14z5FIISskSoYnaPsCOq6
+	9e/JJm5WmHKHWyU/QeJhAxwhyzmIYoXffeBoukCqHn4XmuSaNvgOy9PrAX60csEkWMfFIxuTO9u
+	EYBvqRgqn02RFVtdL5GbCJmDvv8BpOVsUPZnF6BNzWO2ZbTZfih36iawNTFJwkfibgDJ6SwURdy
+	hTo7fV2oC2/CPy5hZ4vAhPzL9t4SHpWBuPMTNth5bYaCGosxqRG0W1XQNz6l6jnOXWip0mg1pv0
+	RB8Z0Stg==
+X-Google-Smtp-Source: AGHT+IHOKlM9ZXbVarUrdxd9Z6TXrWDN7PTBigcURwaaklRyyWxBtRFHep1+wcz22TEjatLqlseBVg==
+X-Received: by 2002:a5d:5886:0:b0:428:1475:6a17 with SMTP id ffacd0b85a97d-42814756be9mr12100399f8f.53.1761148134341;
+        Wed, 22 Oct 2025 08:48:54 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.76.109])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-427ea5b3ae9sm25465267f8f.13.2025.10.22.08.48.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Oct 2025 08:48:53 -0700 (PDT)
+Message-ID: <6cb692cf-cb7a-4d47-9694-e3db4478fa4c@linaro.org>
+Date: Wed, 22 Oct 2025 16:48:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf cs-etm: Mute enumeration value warning
+To: Leo Yan <leo.yan@arm.com>
+References: <20251022142849.1537706-1-leo.yan@arm.com>
+Content-Language: en-US
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Mike Leach <mike.leach@linaro.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20251022142849.1537706-1-leo.yan@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251022-james-perf-fix-dso-block-v1-1-c4faab150546@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAEf8+GgC/x2MywrCMBAAfyXs2YUkKkp/RTzksWlXa1J2QQqh/
- 27wODAzHZSESWEyHYS+rNzqAHcykJZQZ0LOg8Fbf3XWe3yFDyluJAUL75i1YVxbemMKLt8v51u
- MycLIN6Eh/NeP53H8ADds20dqAAAA
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.14.0
 
-The following command will hang consistently when the GPU is being used
-due to non regular files (e.g. /dev/dri/renderD129, /dev/dri/card2)
-being opened to read build IDs:
 
- $ perf record -asdg -e cpu-clock -- true
 
-Change to non blocking reads to avoid the hang here:
+On 22/10/2025 3:28 pm, Leo Yan wrote:
+> When the OpenCSD library introduces a new enumeration value (for example,
+> in the v1.7.1 release), the perf build fails with an error:
+> 
+>    util/cs-etm-decoder/cs-etm-decoder.c:600:10: error: enumeration value 'OCSD_GEN_TRC_ELEM_ITMTRACE' not explicitly handled in switch [-Werror, -Wswitch-enum]
+>      600 |         switch (elem->elem_type) {
+> 	|                 ^~~~~~~~~~~~~~~
+>    1 error generated.
+> 
+> Convert to if-else sentences to mute the enumeration value warning,
+> which can avoid build failures whenever the lib is updated.
+> 
+> No functional change.
+> 
+> Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 
-  #0  __libc_pread64 (offset=<optimised out>, count=0, buf=0x7fffffffa4a0, fd=237) at ../sysdeps/unix/sysv/linux/pread64.c:25
-  #1  __libc_pread64 (fd=237, buf=0x7fffffffa4a0, count=0, offset=0) at ../sysdeps/unix/sysv/linux/pread64.c:23
-  #2  ?? () from /lib/x86_64-linux-gnu/libelf.so.1
-  #3  read_build_id (filename=0x5555562df333 "/dev/dri/card2", bid=0x7fffffffb680, block=true) at util/symbol-elf.c:880
-  #4  filename__read_build_id (filename=0x5555562df333 "/dev/dri/card2", bid=0x7fffffffb680, block=true) at util/symbol-elf.c:924
-  #5  dsos__read_build_ids_cb (dso=0x5555562df1d0, data=0x7fffffffb750) at util/dsos.c:84
-  #6  __dsos__for_each_dso (dsos=0x55555623de68, cb=0x5555557e7030 <dsos__read_build_ids_cb>, data=0x7fffffffb750) at util/dsos.c:59
-  #7  dsos__for_each_dso (dsos=0x55555623de68, cb=0x5555557e7030 <dsos__read_build_ids_cb>, data=0x7fffffffb750) at util/dsos.c:503
-  #8  dsos__read_build_ids (dsos=0x55555623de68, with_hits=true) at util/dsos.c:107
-  #9  machine__read_build_ids (machine=0x55555623da58, with_hits=true) at util/build-id.c:950
-  #10 perf_session__read_build_ids (session=0x55555623d840, with_hits=true) at util/build-id.c:956
-  #11 write_build_id (ff=0x7fffffffb958, evlist=0x5555562323d0) at util/header.c:327
-  #12 do_write_feat (ff=0x7fffffffb958, type=2, p=0x7fffffffb950, evlist=0x5555562323d0, fc=0x0) at util/header.c:3588
-  #13 perf_header__adds_write (header=0x55555623d840, evlist=0x5555562323d0, fd=3, fc=0x0) at util/header.c:3632
-  #14 perf_session__do_write_header (session=0x55555623d840, evlist=0x5555562323d0, fd=3, at_exit=true, fc=0x0, write_attrs_after_data=false) at util/header.c:3756
-  #15 perf_session__write_header (session=0x55555623d840, evlist=0x5555562323d0, fd=3, at_exit=true) at util/header.c:3796
-  #16 record__finish_output (rec=0x5555561838d8 <record>) at builtin-record.c:1899
-  #17 __cmd_record (rec=0x5555561838d8 <record>, argc=2, argv=0x7fffffffe320) at builtin-record.c:2967
-  #18 cmd_record (argc=2, argv=0x7fffffffe320) at builtin-record.c:4453
-  #19 run_builtin (p=0x55555618cbb0 <commands+288>, argc=9, argv=0x7fffffffe320) at perf.c:349
-  #20 handle_internal_command (argc=9, argv=0x7fffffffe320) at perf.c:401
-  #21 run_argv (argcp=0x7fffffffe16c, argv=0x7fffffffe160) at perf.c:445
-  #22 main (argc=9, argv=0x7fffffffe320) at perf.c:553
+Reviewed-by: James Clark <james.clark@linaro.org>
 
-Fixes: 53b00ff358dc ("perf record: Make --buildid-mmap the default")
-Signed-off-by: James Clark <james.clark@linaro.org>
----
-I'm not actually sure if this is the right fix for this. Commit
-2c369d91d093 ("perf symbol: Add blocking argument to
-filename__read_build_id") which added the blocking argument says that it
-should be non-blocking reads for event synthesis, but the callstack here
-is when writing the header out.
-
-There was also an is_regular_file() check added in commit c21986d33d6b
-("perf unwind-libdw: skip non-regular files"), which presumably falls
-afoul of the "which unfortunately fails for symlinks" part of the other
-linked commit message?
-
-So I can't tell if we should add the is_regular_file() check here too,
-or just set it to non-blocking, or it needs some extra state to be
-passed all the way down to dsos__read_build_ids_cb() to do different
-things.
----
- tools/perf/util/dsos.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-index 64c1d65b0149..5e1c815d7cb0 100644
---- a/tools/perf/util/dsos.c
-+++ b/tools/perf/util/dsos.c
-@@ -81,13 +81,14 @@ static int dsos__read_build_ids_cb(struct dso *dso, void *data)
- 		return 0;
- 	}
- 	nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
--	if (filename__read_build_id(dso__long_name(dso), &bid, /*block=*/true) > 0) {
-+	/* Don't block in case path isn't for a regular file. */
-+	if (filename__read_build_id(dso__long_name(dso), &bid, /*block=*/false) > 0) {
- 		dso__set_build_id(dso, &bid);
- 		args->have_build_id = true;
- 	} else if (errno == ENOENT && dso__nsinfo(dso)) {
- 		char *new_name = dso__filename_with_chroot(dso, dso__long_name(dso));
- 
--		if (new_name && filename__read_build_id(new_name, &bid, /*block=*/true) > 0) {
-+		if (new_name && filename__read_build_id(new_name, &bid, /*block=*/false) > 0) {
- 			dso__set_build_id(dso, &bid);
- 			args->have_build_id = true;
- 		}
-
----
-base-commit: a1d8548c23076c66d96647f5f6f25aa43567f247
-change-id: 20251022-james-perf-fix-dso-block-ca1d8437bbc0
-
-Best regards,
--- 
-James Clark <james.clark@linaro.org>
+> ---
+>   .../perf/util/cs-etm-decoder/cs-etm-decoder.c | 44 +++++--------------
+>   1 file changed, 11 insertions(+), 33 deletions(-)
+> 
+> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> index b85a8837bddc..3050fe212666 100644
+> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> @@ -588,6 +588,7 @@ static ocsd_datapath_resp_t cs_etm_decoder__gen_trace_elem_printer(
+>   				const ocsd_generic_trace_elem *elem)
+>   {
+>   	ocsd_datapath_resp_t resp = OCSD_RESP_CONT;
+> +	ocsd_gen_trc_elem_t type;
+>   	struct cs_etm_decoder *decoder = (struct cs_etm_decoder *) context;
+>   	struct cs_etm_queue *etmq = decoder->data;
+>   	struct cs_etm_packet_queue *packet_queue;
+> @@ -597,52 +598,29 @@ static ocsd_datapath_resp_t cs_etm_decoder__gen_trace_elem_printer(
+>   	if (!packet_queue)
+>   		return OCSD_RESP_FATAL_SYS_ERR;
+>   
+> -	switch (elem->elem_type) {
+> -	case OCSD_GEN_TRC_ELEM_UNKNOWN:
+> -		break;
+> -	case OCSD_GEN_TRC_ELEM_EO_TRACE:
+> -	case OCSD_GEN_TRC_ELEM_NO_SYNC:
+> -	case OCSD_GEN_TRC_ELEM_TRACE_ON:
+> +	type = elem->elem_type;
+> +
+> +	if (type == OCSD_GEN_TRC_ELEM_EO_TRACE ||
+> +	    type == OCSD_GEN_TRC_ELEM_NO_SYNC ||
+> +	    type == OCSD_GEN_TRC_ELEM_TRACE_ON)
+>   		resp = cs_etm_decoder__buffer_discontinuity(etmq, packet_queue,
+>   							    trace_chan_id);
+> -		break;
+> -	case OCSD_GEN_TRC_ELEM_INSTR_RANGE:
+> +	else if (type == OCSD_GEN_TRC_ELEM_INSTR_RANGE)
+>   		resp = cs_etm_decoder__buffer_range(etmq, packet_queue, elem,
+>   						    trace_chan_id);
+> -		break;
+> -	case OCSD_GEN_TRC_ELEM_EXCEPTION:
+> +	else if (type == OCSD_GEN_TRC_ELEM_EXCEPTION)
+>   		resp = cs_etm_decoder__buffer_exception(etmq, packet_queue, elem,
+>   							trace_chan_id);
+> -		break;
+> -	case OCSD_GEN_TRC_ELEM_EXCEPTION_RET:
+> +	else if (type == OCSD_GEN_TRC_ELEM_EXCEPTION_RET)
+>   		resp = cs_etm_decoder__buffer_exception_ret(etmq, packet_queue,
+>   							    trace_chan_id);
+> -		break;
+> -	case OCSD_GEN_TRC_ELEM_TIMESTAMP:
+> +	else if (type == OCSD_GEN_TRC_ELEM_TIMESTAMP)
+>   		resp = cs_etm_decoder__do_hard_timestamp(etmq, elem,
+>   							 trace_chan_id,
+>   							 indx);
+> -		break;
+> -	case OCSD_GEN_TRC_ELEM_PE_CONTEXT:
+> +	else if (type == OCSD_GEN_TRC_ELEM_PE_CONTEXT)
+>   		resp = cs_etm_decoder__set_tid(etmq, packet_queue,
+>   					       elem, trace_chan_id);
+> -		break;
+> -	/* Unused packet types */
+> -	case OCSD_GEN_TRC_ELEM_I_RANGE_NOPATH:
+> -	case OCSD_GEN_TRC_ELEM_ADDR_NACC:
+> -	case OCSD_GEN_TRC_ELEM_CYCLE_COUNT:
+> -	case OCSD_GEN_TRC_ELEM_ADDR_UNKNOWN:
+> -	case OCSD_GEN_TRC_ELEM_EVENT:
+> -	case OCSD_GEN_TRC_ELEM_SWTRACE:
+> -	case OCSD_GEN_TRC_ELEM_CUSTOM:
+> -	case OCSD_GEN_TRC_ELEM_SYNC_MARKER:
+> -	case OCSD_GEN_TRC_ELEM_MEMTRANS:
+> -#if (OCSD_VER_NUM >= 0x010400)
+> -	case OCSD_GEN_TRC_ELEM_INSTRUMENTATION:
+> -#endif
+> -	default:
+> -		break;
+> -	}
+>   
+>   	return resp;
+>   }
 
