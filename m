@@ -1,40 +1,40 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FCD933711B;
-	Wed, 22 Oct 2025 11:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BFB32E745;
+	Wed, 22 Oct 2025 11:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761132282; cv=none; b=ZDa9qhhO5sXGRJcQ9pQsCP6WqnWfU86J/kKVhGfP3gJTtCIXJruI53DFRgpwVgaY66zEUje1Opqn7PNTlW44ErlrsUKVyIkN4IsF96qpwt/L9aa9LP/G+3lP6ipazOfJtryX8GnnVYz3k3n0e3d/T+RlRwJWWQxTX76/wKmmahA=
+	t=1761133771; cv=none; b=r8oedMvLldJsL5PxnHYRylTA9rXdCLPIeuat+MGLHcIH6NbQvlDTfRFjJXBRTLKb8Vws/uYBET3io4/5gQjoxTwpguCEkvCgblOM4anxvR4lIsnZjMOGyDboleyleZwyhUwFuzlVY3orxHe3HREpVHk4HgzPIJecmev5HPPT1Bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761132282; c=relaxed/simple;
-	bh=saJh2pYKcHbfNeU6j5aIeEhHMmEGD6ngNfMdHtFav24=;
+	s=arc-20240116; t=1761133771; c=relaxed/simple;
+	bh=KnivbPc4Z2ekQldbY1k9O11RMbzSito1tPPROx4DQFo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gc2qrAAbdK+W3oNnl1VpJRh309/z2woDeJfe3Y2EpFGMizHkd81bRw29TnkTbd/OncOPpMeG1CzvsRwn+xCqmrbNdDvFtLUeX+cnxRsv+W/KVay4B2E83pr6OrMWxcYRh8NtjCT6bLB1vHtBPmcwoIsC68bfbskTCW5uPrfVAPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fvhbRdIY; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:Content-Disposition:In-Reply-To; b=km5cVottomy3XkHM9nbNFpEMiSVHoNjvtWzAEJuOA4IVSJeIyaJh9miCgRsTQMrsVjRx//sgFP9aRvsO9b+G7ckbia+Bf0tn+Av07BASjtAz5WK6+54a3LtHbw2RKj5wcvC834+1RU9JNHcgRd+FPANhEr26oE/hLSZ+TPuzsZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IOL5DxkN; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fvhbRdIY"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IOL5DxkN"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=Hx7IMRRxA9uFUyCzmuFFLeFf+897nJgZOnLj3popP8E=; b=fvhbRdIY1zIWUU8ihlkZOHEgnE
-	MzODHMfk/jyzVyCCcMqOwN9DM4KwxFu4JWrlgqIhMLgv+3iol/YUkza4iHE/THkZU1euUlpqKtVAn
-	dYBNjMS8/MY6P6DdoQWa5No2zJVd9VrmN5qher8vFYD+eL7tJ3hfxYluYLS8iB3UxTziwDCrNPRQL
-	PqLzEc8wIGsis2nfNHIHj8iupqVRbmIO6GY5+Azdgv8ymSlChPGG1DkFfdjqY2WmhQH0hVqLmZvol
-	bsD3P0ZFZcQ3l84sE91CXlk42UtZ+oaTjcN8HOEBk6LSKwGRwY5lWTeVze2gVoHisaqmyoh9i1dDH
-	MMN3IIBQ==;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=l1x0AilQYrSx229yxEwfmMTRySwBVQwUcACuiygmXLk=; b=IOL5DxkNFVWR8ZUBvDwkOtu9T/
+	YeWiK3NcUudIZwvh8jMf/SVNcbEGF/hs8hOJC/M73TIFIkxX4kyNDFzSbL9QTw/J7WKq3HVxW5Dtf
+	C9r2XJaZFZv7tVHD8jubqmomLG4tkdW4JUiJkenpEc/XBrgeeiWpVBPhQT1dyx/mjLinrL/2J/+YL
+	qQROR9qheHijjJxqdS8Q+fLXiM3XqOR1bfSPxiTNN/GcgYDnXfmAEx0R+0+gagiqQQgeXA9XHxB58
+	Vlyd8jjeCRwX+Z0XwYYN0E4SuHEpID0vb75uY6fYAcHbjP3Tv449MFActqrT0ozWuQRlwuGerTE8V
+	FpxYIkjg==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vBWxE-000000043BQ-07IZ;
-	Wed, 22 Oct 2025 11:24:33 +0000
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vBWTX-00000000VRA-0xwD;
+	Wed, 22 Oct 2025 10:53:51 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id BBDE63003C4; Wed, 22 Oct 2025 13:24:32 +0200 (CEST)
-Date: Wed, 22 Oct 2025 13:24:32 +0200
+	id 08C3B30039F; Wed, 22 Oct 2025 13:49:18 +0200 (CEST)
+Date: Wed, 22 Oct 2025 13:49:17 +0200
 From: Peter Zijlstra <peterz@infradead.org>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Cc: Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
@@ -43,103 +43,102 @@ Cc: Ingo Molnar <mingo@redhat.com>,
 	Andi Kleen <ak@linux.intel.com>,
 	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
-	kernel test robot <oliver.sang@intel.com>,
 	Kan Liang <kan.liang@linux.intel.com>
-Subject: Re: [Patch v8 02/12] perf/x86/intel: Fix NULL event access and
- potential PEBS record loss
-Message-ID: <20251022112432.GN4067720@noisy.programming.kicks-ass.net>
+Subject: Re: [Patch v8 06/12] perf/x86/intel/ds: Factor out PEBS record
+ processing code to functions
+Message-ID: <20251022114917.GT3245006@noisy.programming.kicks-ass.net>
 References: <20251015064422.47437-1-dapeng1.mi@linux.intel.com>
- <20251015064422.47437-3-dapeng1.mi@linux.intel.com>
- <fcb09e14-970c-4ebd-82f2-a12150fe3708@linux.intel.com>
+ <20251015064422.47437-7-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fcb09e14-970c-4ebd-82f2-a12150fe3708@linux.intel.com>
+In-Reply-To: <20251015064422.47437-7-dapeng1.mi@linux.intel.com>
 
-On Wed, Oct 22, 2025 at 04:12:14PM +0800, Mi, Dapeng wrote:
-
-> Just think twice about this fix, it seems current fix is incomplete.
-> Besides the PEBS handler, the basic PMI handler could encounter same issue,
-> like the below code in handle_pmi_common(),
+On Wed, Oct 15, 2025 at 02:44:16PM +0800, Dapeng Mi wrote:
+> Beside some PEBS record layout difference, arch-PEBS can share most of
+> PEBS record processing code with adaptive PEBS. Thus, factor out these
+> common processing code to independent inline functions, so they can be
+> reused by subsequent arch-PEBS handler.
 > 
->     for_each_set_bit(bit, (unsigned long *)&status, X86_PMC_IDX_MAX) {
->         struct perf_event *event = cpuc->events[bit];
->         u64 last_period;
+> Suggested-by: Kan Liang <kan.liang@linux.intel.com>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> ---
+>  arch/x86/events/intel/ds.c | 101 ++++++++++++++++++++++++-------------
+>  1 file changed, 66 insertions(+), 35 deletions(-)
 > 
->         handled++;
-> 
->         if (!test_bit(bit, cpuc->active_mask))
->             continue;
-> 
-> Although the NULL event would not be accessed by checking
-> the cpuc->active_mask, the potential overflow process of these NULL events
-> is skipped as well, it may cause data loss.
-> 
-> Moreover, current approach defines temporary variables to snapshot the
-> active events, the temporary variables may consume too much stack memory
-> (384 bytes).
-> 
-> So I enhance the fix as below. Do you have any comment on this? Thanks.
+> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+> index a80881a20321..41acbf0a11c9 100644
+> --- a/arch/x86/events/intel/ds.c
+> +++ b/arch/x86/events/intel/ds.c
+> @@ -2629,6 +2629,64 @@ static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_d
+>  	}
+>  }
+>  
+> +static inline void __intel_pmu_handle_pebs_record(struct pt_regs *iregs,
+> +						  struct pt_regs *regs,
+> +						  struct perf_sample_data *data,
+> +						  void *at, u64 pebs_status,
+> +						  struct perf_event *events[],
+> +						  short *counts, void **last,
+> +						  setup_fn setup_sample)
+> +{
+> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> +	struct perf_event *event;
+> +	int bit;
+> +
+> +	for_each_set_bit(bit, (unsigned long *)&pebs_status, X86_PMC_IDX_MAX) {
+> +		event = cpuc->events[bit];
+> +
+> +		if (WARN_ON_ONCE(!event) ||
+> +		    WARN_ON_ONCE(!event->attr.precise_ip))
+> +			continue;
+> +
+> +		if (counts[bit]++)
+> +			__intel_pmu_pebs_event(event, iregs, regs, data,
+> +					       last[bit], setup_sample);
+> +
+> +		last[bit] = at;
+> +		/*
+> +		 * perf_event_overflow() called by below __intel_pmu_pebs_last_event()
+> +		 * could trigger interrupt throttle and clear all event pointers of
+> +		 * the group in cpuc->events[] to NULL. So snapshot the event[] before
+> +		 * it could be cleared. This avoids the possible NULL event pointer
+> +		 * access and PEBS record loss.
+> +		 */
+> +		if (counts[bit] && !events[bit])
+> +			events[bit] = cpuc->events[bit];
+> +	}
+> +}
+> +
+> +static inline void
+> +__intel_pmu_handle_last_pebs_record(struct pt_regs *iregs, struct pt_regs *regs,
+> +				    struct perf_sample_data *data, u64 mask,
+> +				    struct perf_event *events[],
+> +				    short *counts, void **last,
+> +				    setup_fn setup_sample)
+> +{
+> +	struct perf_event *event;
+> +	int bit;
+> +
+> +	for_each_set_bit(bit, (unsigned long *)&mask, X86_PMC_IDX_MAX) {
+> +		if (!counts[bit])
+> +			continue;
+> +
+> +		event = events[bit];
+> +
+> +		__intel_pmu_pebs_last_event(event, iregs, regs, data, last[bit],
+> +					    counts[bit], setup_sample);
+> +	}
+> +
+> +}
 
-So I didn't like the previous and I like this even less. What about
-something like this instead?
+These need to be __always_inline, like the other functions that take
+setup_fn. Otherwise the compiler might decide to not inline and then it
+can't constant propagate this function and we get indirect calls.
 
-I quickly went through the cpuc->event[ users and they all either check
-active_mask or, in case of the PEBS stuff, check pebs_enabled mask
-(which should be a subset of active_mask).
 
-(the PEBS last case depends on count being 0 for all counters that are
-not set in pebs_enabled)
-
-WDYT?
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 745caa6c15a3..74479f9d6eed 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1344,6 +1344,7 @@ static void x86_pmu_enable(struct pmu *pmu)
- 				hwc->state |= PERF_HES_ARCH;
- 
- 			x86_pmu_stop(event, PERF_EF_UPDATE);
-+			cpuc->events[hwc->idx] = NULL;
- 		}
- 
- 		/*
-@@ -1365,6 +1366,7 @@ static void x86_pmu_enable(struct pmu *pmu)
- 			 * if cpuc->enabled = 0, then no wrmsr as
- 			 * per x86_pmu_enable_event()
- 			 */
-+			cpuc->events[hwc->idx] = event;
- 			x86_pmu_start(event, PERF_EF_RELOAD);
- 		}
- 		cpuc->n_added = 0;
-@@ -1531,7 +1533,6 @@ static void x86_pmu_start(struct perf_event *event, int flags)
- 
- 	event->hw.state = 0;
- 
--	cpuc->events[idx] = event;
- 	__set_bit(idx, cpuc->active_mask);
- 	static_call(x86_pmu_enable)(event);
- 	perf_event_update_userpage(event);
-@@ -1610,7 +1611,6 @@ void x86_pmu_stop(struct perf_event *event, int flags)
- 	if (test_bit(hwc->idx, cpuc->active_mask)) {
- 		static_call(x86_pmu_disable)(event);
- 		__clear_bit(hwc->idx, cpuc->active_mask);
--		cpuc->events[hwc->idx] = NULL;
- 		WARN_ON_ONCE(hwc->state & PERF_HES_STOPPED);
- 		hwc->state |= PERF_HES_STOPPED;
- 	}
-@@ -1648,6 +1648,7 @@ static void x86_pmu_del(struct perf_event *event, int flags)
- 	 * Not a TXN, therefore cleanup properly.
- 	 */
- 	x86_pmu_stop(event, PERF_EF_UPDATE);
-+	cpuc->events[event->hw.idx] = NULL;
- 
- 	for (i = 0; i < cpuc->n_events; i++) {
- 		if (event == cpuc->event_list[i])
