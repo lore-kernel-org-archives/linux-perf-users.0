@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3292EA146;
-	Wed, 22 Oct 2025 05:27:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82D92E9EAA;
+	Wed, 22 Oct 2025 05:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761110859; cv=none; b=LeAM+zcVNcAuFOywadkgbeU6jowXn9rjtKN1ZTnqT+lovglzGCWuteVi8g17w84ttByCva5XLp5LNyPDImtRW1nNEQn/YYYh9rQTr+eRiVB8WIuevuGThlO/33Yqgzz3Zac0dZJn1TNwWSrT7qxAeNBJ3KX6yaKk5YVcNKgrSL8=
+	t=1761111166; cv=none; b=oPKo56+yfvhTSMlFq4r8bE0n4r++awwYfTgkdMs59OHM1Q9jCbic0dBKoO78caiuwBTHFvE64k4GV9UTUejh/4Z+ROil59UOVDQ8bQuDlWlvsThJUae4R3o1XNMncAH+bv8fEg77s2n2PEUrb/N4o/kSOb18BaHJ+a6ndiIP0A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761110859; c=relaxed/simple;
-	bh=CMdKtjJakC4PRWfnRMn4BZN4cB1q58qD0lJeXy4UXwQ=;
+	s=arc-20240116; t=1761111166; c=relaxed/simple;
+	bh=8zSEiF36ipnnOp5Cl4mjwp2hGY2pohj//TJmI3JvvNM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h7iOc+SyUeysLsMjUy4SlRY+10jjsuZHf2vg9eCm68vs4TwSIj77fIx/kNw0sqQfjA1pzL8BTHpInrFpIfA/AF6VoEfutJt8TdlXh6RBzsbnv7O/Pb+SKgOIyVj54WVX5dUMrzhISYYfJ24KXXqHj59KaOlulqVAMLWoee6ppjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SSXqXM42; arc=none smtp.client-ip=198.175.65.20
+	 In-Reply-To:Content-Type; b=oUFOpsbH15qY/9rHIiKmnW5+x9FxDfIZBm4hBKmbCgmb8s7z5+cQHuizBk9W5A0oWgdlYhsZxO1UWImC6wtc9VkLaPHUlQxOPKMTmPCxOTMNzKFKfJtQQOuHd8jzwJgQM7cQng2VMgTEcsWPDQI/8GgkpJg+fs03oKk+HgJuwm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ga1MtAOY; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SSXqXM42"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ga1MtAOY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761110857; x=1792646857;
+  t=1761111165; x=1792647165;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=CMdKtjJakC4PRWfnRMn4BZN4cB1q58qD0lJeXy4UXwQ=;
-  b=SSXqXM42xEueGLuB2ts/yyU5pjxKV+qXm3p+KfcpAOMrRsb43MRy50XN
-   7llFkDf+wYqoeGs8OdJBoCw35em6PTY/QuTPO6VeoVhfTNq2juJfCEjDi
-   7vXe5PD471jHDvYMjNVxqEKAipLw+nlxUazUK66jDJsPTnlBR9Y97MtIt
-   DkH/gXzQLVTcJ1+idtMVKK+JSFCWgSptIla6Ek36gXLhsG6353AxJKcSu
-   OWeZrdNxTMcqb+xo028Zp8NgBXTek6Rc1M7woBUFESo46RnJQAdB8lzSU
-   /fmaz0FzrbmbdVRV5YgdFSaXYMhUdfOloocO4Zt3cg+9nLErSmSyxg4BV
-   A==;
-X-CSE-ConnectionGUID: fmK903Z7SOqey51e6XhfxA==
-X-CSE-MsgGUID: HL7KypReSTea4ik2mCj0yQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="62951365"
+  bh=8zSEiF36ipnnOp5Cl4mjwp2hGY2pohj//TJmI3JvvNM=;
+  b=Ga1MtAOYeCL/9epI9xWzXG4pDak035IFKkn3EQgNKpXcyv/NAqwlSBI/
+   00+4flagT5Uc7PrArHrwhMmz/zEwEKOR1hk+tZHVqwef91bdADeV+UBFB
+   R8I2NcAXszfstD0NKOpIhh2sTE6EnvjfUMdFj05kF1IIFxqcxikvd5ln/
+   D7npgbc/ICVV9+sGb6TeTbU7IQxs9gGCfkM0RCFlIadT7oCe2T7GXYAYk
+   ZeI+esT1YsdMP23YNyzIh5ci/Fla339MRvcqZ/JYI7YjWzENB89ZZDV0o
+   W38Vtj5nEzETyHKI42GwbESMwDK+I9RoloJtiBmWgvMhfEs5OMpETbKNK
+   Q==;
+X-CSE-ConnectionGUID: J5McSP8CRzixBtyuBphIRA==
+X-CSE-MsgGUID: RUYs++9qQ0uDT8yP6tftAA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="65865062"
 X-IronPort-AV: E=Sophos;i="6.19,246,1754982000"; 
-   d="scan'208";a="62951365"
+   d="scan'208";a="65865062"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 22:27:37 -0700
-X-CSE-ConnectionGUID: tGott0CCSv2MJ72NpdWhXg==
-X-CSE-MsgGUID: ZFBdv2q9RyK8IGEXpwM0VQ==
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 22:32:44 -0700
+X-CSE-ConnectionGUID: uor9ZTk5RDCnlN9/zYMa6w==
+X-CSE-MsgGUID: t6m8ZgC3RryEIq4AloOdNA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,246,1754982000"; 
-   d="scan'208";a="182944771"
+   d="scan'208";a="182945794"
 Received: from unknown (HELO [10.238.3.234]) ([10.238.3.234])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 22:27:34 -0700
-Message-ID: <ba31c391-e703-4ff6-9742-4518d36bffa6@linux.intel.com>
-Date: Wed, 22 Oct 2025 13:27:31 +0800
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Oct 2025 22:32:41 -0700
+Message-ID: <da62c4ed-ce15-45cc-94f6-3689b8f46d14@linux.intel.com>
+Date: Wed, 22 Oct 2025 13:32:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,7 +52,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v8 05/12] perf/x86/intel: Initialize architectural PEBS
+Subject: Re: [Patch v8 06/12] perf/x86/intel/ds: Factor out PEBS record
+ processing code to functions
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
  <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
@@ -60,141 +61,96 @@ Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
  Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
  linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>
+ Dapeng Mi <dapeng1.mi@intel.com>, Kan Liang <kan.liang@linux.intel.com>
 References: <20251015064422.47437-1-dapeng1.mi@linux.intel.com>
- <20251015064422.47437-6-dapeng1.mi@linux.intel.com>
- <20251021154349.GR3245006@noisy.programming.kicks-ass.net>
+ <20251015064422.47437-7-dapeng1.mi@linux.intel.com>
+ <20251021154930.GS3245006@noisy.programming.kicks-ass.net>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251021154349.GR3245006@noisy.programming.kicks-ass.net>
+In-Reply-To: <20251021154930.GS3245006@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-On 10/21/2025 11:43 PM, Peter Zijlstra wrote:
-> On Wed, Oct 15, 2025 at 02:44:15PM +0800, Dapeng Mi wrote:
->> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->> index c88bcd5d2bc4..bfb123ff7c9a 100644
->> --- a/arch/x86/events/intel/core.c
->> +++ b/arch/x86/events/intel/core.c
->> @@ -5273,34 +5273,58 @@ static inline bool intel_pmu_broken_perf_cap(void)
->>  
->>  static void update_pmu_cap(struct pmu *pmu)
->>  {
->> -	unsigned int cntr, fixed_cntr, ecx, edx;
->> -	union cpuid35_eax eax;
->> -	union cpuid35_ebx ebx;
->> +	unsigned int eax, ebx, ecx, edx;
->> +	union cpuid35_eax eax_0;
->> +	union cpuid35_ebx ebx_0;
->> +	u64 cntrs_mask = 0;
->> +	u64 pebs_mask = 0;
->> +	u64 pdists_mask = 0;
->>  
->> -	cpuid(ARCH_PERFMON_EXT_LEAF, &eax.full, &ebx.full, &ecx, &edx);
->> +	cpuid(ARCH_PERFMON_EXT_LEAF, &eax_0.full, &ebx_0.full, &ecx, &edx);
->>  
->> -	if (ebx.split.umask2)
->> +	if (ebx_0.split.umask2)
->>  		hybrid(pmu, config_mask) |= ARCH_PERFMON_EVENTSEL_UMASK2;
->> -	if (ebx.split.eq)
->> +	if (ebx_0.split.eq)
->>  		hybrid(pmu, config_mask) |= ARCH_PERFMON_EVENTSEL_EQ;
->>  
->> -	if (eax.split.cntr_subleaf) {
->> +	if (eax_0.split.cntr_subleaf) {
->>  		cpuid_count(ARCH_PERFMON_EXT_LEAF, ARCH_PERFMON_NUM_COUNTER_LEAF,
->> -			    &cntr, &fixed_cntr, &ecx, &edx);
->> -		hybrid(pmu, cntr_mask64) = cntr;
->> -		hybrid(pmu, fixed_cntr_mask64) = fixed_cntr;
->> +			    &eax, &ebx, &ecx, &edx);
->> +		hybrid(pmu, cntr_mask64) = eax;
->> +		hybrid(pmu, fixed_cntr_mask64) = ebx;
->> +		cntrs_mask = (u64)ebx << INTEL_PMC_IDX_FIXED | eax;
->>  	}
->>  
->> -	if (eax.split.acr_subleaf) {
->> +	if (eax_0.split.acr_subleaf) {
->>  		cpuid_count(ARCH_PERFMON_EXT_LEAF, ARCH_PERFMON_ACR_LEAF,
->> -			    &cntr, &fixed_cntr, &ecx, &edx);
->> +			    &eax, &ebx, &ecx, &edx);
->>  		/* The mask of the counters which can be reloaded */
->> -		hybrid(pmu, acr_cntr_mask64) = cntr | ((u64)fixed_cntr << INTEL_PMC_IDX_FIXED);
->> +		hybrid(pmu, acr_cntr_mask64) = eax | ((u64)ebx << INTEL_PMC_IDX_FIXED);
->>  
->>  		/* The mask of the counters which can cause a reload of reloadable counters */
->>  		hybrid(pmu, acr_cause_mask64) = ecx | ((u64)edx << INTEL_PMC_IDX_FIXED);
->>  	}
->>  
->> +	/* Bits[5:4] should be set simultaneously if arch-PEBS is supported */
->> +	if (eax_0.split.pebs_caps_subleaf && eax_0.split.pebs_cnts_subleaf) {
->> +		cpuid_count(ARCH_PERFMON_EXT_LEAF, ARCH_PERFMON_PEBS_CAP_LEAF,
->> +			    &eax, &ebx, &ecx, &edx);
->> +		hybrid(pmu, arch_pebs_cap).caps = (u64)ebx << 32;
->> +
->> +		cpuid_count(ARCH_PERFMON_EXT_LEAF, ARCH_PERFMON_PEBS_COUNTER_LEAF,
->> +			    &eax, &ebx, &ecx, &edx);
->> +		pebs_mask = ((u64)ecx << INTEL_PMC_IDX_FIXED) | eax;
->> +		pdists_mask = ((u64)edx << INTEL_PMC_IDX_FIXED) | ebx;
->> +		hybrid(pmu, arch_pebs_cap).counters = pebs_mask;
->> +		hybrid(pmu, arch_pebs_cap).pdists = pdists_mask;
->> +
->> +		if (WARN_ON((pebs_mask | pdists_mask) & ~cntrs_mask))
->> +			x86_pmu.arch_pebs = 0;
->> +	} else {
->> +		WARN_ON(x86_pmu.arch_pebs == 1);
->> +		x86_pmu.arch_pebs = 0;
->> +	}
->> +
->>  	if (!intel_pmu_broken_perf_cap()) {
->>  		/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
->>  		rdmsrq(MSR_IA32_PERF_CAPABILITIES, hybrid(pmu, intel_cap).capabilities);
-> I've stuck this on top.
+On 10/21/2025 11:49 PM, Peter Zijlstra wrote:
+> On Wed, Oct 15, 2025 at 02:44:16PM +0800, Dapeng Mi wrote:
 >
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -5271,6 +5271,8 @@ static inline bool intel_pmu_broken_perf
->  	return false;
->  }
->  
-> +#define counter_mask(_gp, _fixed) ((_gp) | ((u64)(_fixed) << INTEL_PMC_IDX_FIXED))
-> +
->  static void update_pmu_cap(struct pmu *pmu)
->  {
->  	unsigned int eax, ebx, ecx, edx;
-> @@ -5292,17 +5294,16 @@ static void update_pmu_cap(struct pmu *p
->  			    &eax, &ebx, &ecx, &edx);
->  		hybrid(pmu, cntr_mask64) = eax;
->  		hybrid(pmu, fixed_cntr_mask64) = ebx;
-> -		cntrs_mask = (u64)ebx << INTEL_PMC_IDX_FIXED | eax;
-> +		cntrs_mask = counter_mask(eax, ebx);
->  	}
->  
->  	if (eax_0.split.acr_subleaf) {
->  		cpuid_count(ARCH_PERFMON_EXT_LEAF, ARCH_PERFMON_ACR_LEAF,
->  			    &eax, &ebx, &ecx, &edx);
->  		/* The mask of the counters which can be reloaded */
-> -		hybrid(pmu, acr_cntr_mask64) = eax | ((u64)ebx << INTEL_PMC_IDX_FIXED);
-> -
-> +		hybrid(pmu, acr_cntr_mask64) = counter_mask(eax, ebx);
->  		/* The mask of the counters which can cause a reload of reloadable counters */
-> -		hybrid(pmu, acr_cause_mask64) = ecx | ((u64)edx << INTEL_PMC_IDX_FIXED);
-> +		hybrid(pmu, acr_cause_mask64) = counter_mask(ecx, edx);
->  	}
->  
->  	/* Bits[5:4] should be set simultaneously if arch-PEBS is supported */
-> @@ -5313,8 +5314,8 @@ static void update_pmu_cap(struct pmu *p
->  
->  		cpuid_count(ARCH_PERFMON_EXT_LEAF, ARCH_PERFMON_PEBS_COUNTER_LEAF,
->  			    &eax, &ebx, &ecx, &edx);
-> -		pebs_mask = ((u64)ecx << INTEL_PMC_IDX_FIXED) | eax;
-> -		pdists_mask = ((u64)edx << INTEL_PMC_IDX_FIXED) | ebx;
-> +		pebs_mask   = counter_mask(eax, ecx);
-> +		pdists_mask = counter_mask(ebx, edx);
->  		hybrid(pmu, arch_pebs_cap).counters = pebs_mask;
->  		hybrid(pmu, arch_pebs_cap).pdists = pdists_mask;
+>> +static inline void __intel_pmu_handle_pebs_record(struct pt_regs *iregs,
+>> +						  struct pt_regs *regs,
+>> +						  struct perf_sample_data *data,
+>> +						  void *at, u64 pebs_status,
+>> +						  struct perf_event *events[],
+>> +						  short *counts, void **last,
+>> +						  setup_fn setup_sample)
+>> +{
+>> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>> +	struct perf_event *event;
+>> +	int bit;
+>> +
+>> +	for_each_set_bit(bit, (unsigned long *)&pebs_status, X86_PMC_IDX_MAX) {
+>> +		event = cpuc->events[bit];
+>> +
+>> +		if (WARN_ON_ONCE(!event) ||
+>> +		    WARN_ON_ONCE(!event->attr.precise_ip))
+>> +			continue;
+>> +
+>> +		if (counts[bit]++)
+>> +			__intel_pmu_pebs_event(event, iregs, regs, data,
+>> +					       last[bit], setup_sample);
+> No brackets, while coding style requires.
 
-Nice suggestion. Would do. Thanks.
+Sure. Not sure why checkpatch.pl doesn't found it. Thanks.
 
 
->  
+>
+>> +
+>> +		last[bit] = at;
+>> +		/*
+>> +		 * perf_event_overflow() called by below __intel_pmu_pebs_last_event()
+>> +		 * could trigger interrupt throttle and clear all event pointers of
+>> +		 * the group in cpuc->events[] to NULL. So snapshot the event[] before
+>> +		 * it could be cleared. This avoids the possible NULL event pointer
+>> +		 * access and PEBS record loss.
+>> +		 */
+>> +		if (counts[bit] && !events[bit])
+>> +			events[bit] = cpuc->events[bit];
+>> +	}
+>> +}
+>
+>> @@ -2671,41 +2728,15 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_d
+>>  		if (basic->format_size != cpuc->pebs_record_size)
+>>  			continue;
+>>  
+>> -		pebs_status = basic->applicable_counters & cpuc->pebs_enabled & mask;
+>> -		for_each_set_bit(bit, (unsigned long *)&pebs_status, X86_PMC_IDX_MAX) {
+>> -			event = cpuc->events[bit];
+>> -
+>> -			if (WARN_ON_ONCE(!event) ||
+>> -			    WARN_ON_ONCE(!event->attr.precise_ip))
+>> -				continue;
+>> -
+>> -			if (counts[bit]++) {
+>> -				__intel_pmu_pebs_event(event, iregs, regs, data, last[bit],
+>> -						       setup_pebs_adaptive_sample_data);
+>> -			}
+> Brackets. Which suggests you took effort to remove them, since cut-paste
+> code movement would've preserved them.
+>
+> I've re-instated them.
+>
+>> -			last[bit] = at;
+>> -
+>> -			/*
+>> -			 * perf_event_overflow() called by below __intel_pmu_pebs_last_event()
+>> -			 * could trigger interrupt throttle and clear all event pointers of
+>> -			 * the group in cpuc->events[] to NULL. So snapshot the event[] before
+>> -			 * it could be cleared. This avoids the possible NULL event pointer
+>> -			 * access and PEBS record loss.
+>> -			 */
+>> -			if (counts[bit] && !events[bit])
+>> -				events[bit] = cpuc->events[bit];
+>> -		}
+>> +		pebs_status = mask & basic->applicable_counters;
+>> +		__intel_pmu_handle_pebs_record(iregs, regs, data, at,
+>> +					       pebs_status, events, counts, last,
+>> +					       setup_pebs_adaptive_sample_data);
