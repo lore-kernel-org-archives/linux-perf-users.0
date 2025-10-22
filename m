@@ -1,75 +1,89 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164D41F09A3
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Oct 2025 10:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFD2299A8C
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Oct 2025 11:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761129542; cv=none; b=tzyGuH8cjYu/zqNpXCz6Wf1QCpH5ixu9df3xOPF64YQUpUUusctGnrCq+5MqSpP4h1tqmEufeuDKFhLwD+KGHV8hKSTVaHVeiy4ADI/CH2qtwLHfmAz2ngvLTk0dvAkdtykWk41JtwdQn+VT35BmJx8AT00cjHF82DB1DHUKoh0=
+	t=1761130999; cv=none; b=JYpANxrfBvMsUYDLOvzGCu9OJbXtHmySj08Ne3dw1DlhVystn47qh9j08aAdQckEGRNSBeGrfZG2TF9e0lI7BLMyoJrdkqx7Jk21t/C5FGRjksJmDs8cE901T8mckQrZcUsZaY8DhruOzsvC0ACdJLaFUTWKyL7ZJ0H6wfjQ8s4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761129542; c=relaxed/simple;
-	bh=fH2qE4z2R9nG6ICsDw88KbQ2BeHjA6h90I3Uf4mFaho=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Wx2MJDGPH3rIWSHcwd2o5H7vDXdCjb5yvaf/aunA6HgjYcrHJx+ytLc3UgAXKtMETy7xBcZB7sojmfuNraPytYYHcrYDDT0zfl8CtryFhvaN/+bkGUv4wefWImfshrOreZ35X+7HScYVWpv/jwG115Zh7E49h5kOmQn3IYLuR8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=B3ufqTr8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jmVxpWK9; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=oLt37Wwy; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ySFGeMdm; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1761130999; c=relaxed/simple;
+	bh=4JavVz8FkRkGctrnUlx06KbkSyRHDh5aZttv1CaU6Kc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SbfXkutjRACYkwuDFXyp3vGYgedr9h/diNdhU0vpM5XYmUR6jvLJYKIAaJm/kkWYl+wAlezTWC8UkOe644h3FqW5LNgukxyfRt1DB7+KAgt4lvXmmUh/NTnmLh0Fg20ZxmVSneTZeF4RwhaWuQ9CN4PXWJ0jGD6T9CCR7c3wZBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I9nZJOBQ; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="B3ufqTr8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jmVxpWK9";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oLt37Wwy";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ySFGeMdm"
-Received: from kitsune.suse.cz (unknown [10.100.12.127])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 1C7372116F;
-	Wed, 22 Oct 2025 10:38:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1761129535; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=EkHE8TZpCym2hPkSeXljdO60kEKl/a+V0MkzQJl2IWA=;
-	b=B3ufqTr885uBzTtazvNrefAS6mguBlLMXpSaLq7Q/jqQCQ2j9g8aw4oMG+oj7EzOBeBOxx
-	LS1yvIyi7rHXRpFmC/TEcPW52dmHdGNNvZzfaY+QlLcJ2QahiUoJ31w18C49XO4YH+w5J0
-	4Z5OaKtkPMgjdhENf9kszABZCQHf80s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1761129535;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=EkHE8TZpCym2hPkSeXljdO60kEKl/a+V0MkzQJl2IWA=;
-	b=jmVxpWK9eW7SJSNVzFbVxLAKnS5rQoMFuM0PW8rwFj5Bfpwmei/ppwA/4dQCLufI+3gvKx
-	wpp9ORgyBKu+QHAA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1761129531; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=EkHE8TZpCym2hPkSeXljdO60kEKl/a+V0MkzQJl2IWA=;
-	b=oLt37Wwy+7TvWa9w/NJEtvI0NwYtANlzJockTzEG5WSwrMCYWM9yazxvOXhpoK56bVeU+A
-	RtZz2DYuT2V5J9iI5Utz0JIhI5fNeeYbjH2ka+BmCsLb5AtD7d2G1hACue3f4ufyL/VtTq
-	+l70afvghy50TLqEtZ7B5+VXKsD9cR0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1761129531;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=EkHE8TZpCym2hPkSeXljdO60kEKl/a+V0MkzQJl2IWA=;
-	b=ySFGeMdmJcW2m4iU6oMRbfI23ITFdvrBytvO+lVHe7RF+GETuUUeejWrYvb7GO4eNnAFKg
-	vj8cJeaFapvTdMCQ==
-From: Michal Suchanek <msuchanek@suse.de>
-To: linux-perf-users@vger.kernel.org
-Cc: Michal Suchanek <msuchanek@suse.de>,
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I9nZJOBQ"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-471131d6121so51153035e9.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Oct 2025 04:03:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1761130996; x=1761735796; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PPx6FKp7wmsKPVdZUwCuuivNwZpWI/suVikvoWWTCC4=;
+        b=I9nZJOBQWHuvkALQw7x/4/IHwjikF1LT/jGknpEgoPj+79csdyT55R5BQP2d3IPHzz
+         9tagl4z7/WibDdqDod6djpXW+xDUREmHIcWA8ZrV8HFR0Euy5JtCnwJOkdLQ1h8/kday
+         en6+HK1Y2dm3JWuUkQiF66nceBES9jdZmpO4PYNuFstuBA2iv35GEzIsZ/lDS7hDEAt0
+         fEBIdIP2s4sGLK3v+/PRtG9iZRQZTQ0yD+1+jW88SZw5fJuI3LILYHEppy6/r+EeEnzJ
+         +SvkkENaz9OpQ8ZyUjFEjRBB+PvGkhff+e+JirCMM6ZXJ+E1zyyQbvYa+CWQhRZnNJWh
+         nyHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761130996; x=1761735796;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PPx6FKp7wmsKPVdZUwCuuivNwZpWI/suVikvoWWTCC4=;
+        b=cf2sYuAgKPUS4F22olHu5lDiY9ubMGd9RoRsV9sn+OzkXR87BdPPt9PhRO8qB1JFoF
+         Uw54Je43iNGeW8o716a+pUZ9biWfrThjUJyIG8L/zZuGcvWeys6EizXN3z3k6/TNUBw7
+         QQQ8jBlomKTLdhfIPUj0YehJwBjGx1Z2JSPIC/ffSmKZ7pWXzR1zQookbf4MZhdMm4cf
+         Q8fZ7ZmVSvcq6knE1Ss6kO5gnRQoZF9RBmMKRESzTLBcf6zkomK7vaAeUt5kCpZZiwTy
+         o4sC8wbQww4c3oq7kYWRgcmiYGgoMexnFoSuT3Hav55FHX9d6VbWcOMBJF92qYDWc8wB
+         L4Sw==
+X-Gm-Message-State: AOJu0YwDe/GI5uVv2oj3uFay0/7zKiHHeB58ur0zOwR2BGqOe+FuKxtR
+	DVpU0CMR+9gcmNIAXajXdNCwrj4Fb471DYUohQJd0NhZFz06MjwbleLWZNMTfxBr5+N1gt4Iju7
+	2hn8tKwE=
+X-Gm-Gg: ASbGncvhmHhY+Ghk3YU31p0bZEH2V28xArQ3T0k630zviLBHRfLMvh0Uu67qY1SIABl
+	XWOBujYXPh6ZfypTxxSSGzxUQDvN/PfNY3Hm+ZR9PgZ6f082ala87KICa2ArCEBkpBMeZyRgzkV
+	NKPs6UBWOA8VGJx1e7uoNvaEL0kK9zAk7TMzZwuJsUki0cu3hxg16bR3GBOGbIibp9nCQ90gBIi
+	pyarja5HVygtFjtpzCZO9dv+keNedALf0gu3I1SA3mRcbEhAJJwh6MSVsR4kHPCSwC2dV12h7Bn
+	F8XcaR8QHjKTW8w75L3LDqJ1XJtksmyK0k0rgUvG8fr4iFTG6o1tKJYsBCy2aNvJaSTBrqP6Xur
+	N9dqXOLmbdZzISjSYlIBz7JidC3AVwY+A/+HE/tIKDCE0YYVZ7Ueq6CkwcVsQrR7RTTOhP+1GbL
+	tSB7xSJcDB6YHZBRR6Hmlf0BkpqFZEqTAQ1QN0GA==
+X-Google-Smtp-Source: AGHT+IF8LilulXH5At0tgqLHRXCGDcvcWLjbyZ+//qsb5pM2DM6kkE8yghXjTsH7iBfpaK0P/8VeBQ==
+X-Received: by 2002:a05:600c:870b:b0:46f:b42e:e366 with SMTP id 5b1f17b1804b1-4711791fa34mr146867135e9.40.1761130995897;
+        Wed, 22 Oct 2025 04:03:15 -0700 (PDT)
+Received: from localhost.localdomain ([185.48.76.109])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-475c4369b33sm37756895e9.14.2025.10.22.04.03.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Oct 2025 04:03:15 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+To: linux-perf-users@vger.kernel.org,
+	namhyung@kernel.org,
+	acme@kernel.org
+Cc: irogers@google.com,
+	James Clark <james.clark@linaro.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Tianyou Li <tianyou.li@intel.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Zhiguo Zhou <zhiguo.zhou@intel.com>,
+	Wangyang Guo <wangyang.guo@intel.com>,
+	Pan Deng <pan.deng@intel.com>,
 	linux-kernel@vger.kernel.org,
-	Tony Jones <tonyj@suse.de>
-Subject: [PATCH] perf hwmon_pmu: Fix uninitialized variable warning
-Date: Wed, 22 Oct 2025 12:38:35 +0200
-Message-ID: <20251022103839.19550-1-msuchanek@suse.de>
-X-Mailer: git-send-email 2.51.0
+	llvm@lists.linux.dev
+Subject: [PATCH] perf annotate: Fix Clang build by adding block in switch case
+Date: Wed, 22 Oct 2025 12:02:40 +0100
+Message-Id: <20251022110241.1283519-1-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -77,49 +91,61 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email]
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
-X-Spam-Level: 
 
-The line_len is only set on success. Check the return value instead.
+Clang and GCC disagree with what constitutes a "declaration after
+statement". GCC allows declarations in switch cases without an extra
+block, as long as it's immediately after the label. Clang does not.
+Unfortunately this is the case even in the latest versions of both
+compilers. The only option that makes them behave in the same way is
+-Wpedantic, which can't be enabled in Perf because of the number of
+warnings it generates.
 
-Fixes: 53cc0b351ec9 ("perf hwmon_pmu: Add a tool PMU exposing events from hwmon in sysfs")
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+Add a block to fix the Clang build, which is the only thing we can do.
+
+Fixes the build error:
+
+  ui/browsers/annotate.c:999:4: error: expected expression
+  struct annotation_line *al = NULL;
+
+  ui/browsers/annotate.c:1008:4: error: use of undeclared identifier 'al'
+  al = annotated_source__get_line(notes->src, offset);
+
+  ui/browsers/annotate.c:1009:24: error: use of undeclared identifier 'al'
+  browser->curr_hot = al ? &al->rb_node : NULL;
+
+  ui/browsers/annotate.c:1009:30: error: use of undeclared identifier 'al'
+  browser->curr_hot = al ? &al->rb_node : NULL;
+
+  ui/browsers/annotate.c:1000:8: error: mixing declarations and code is incompatible with standards before C99 [-Werror,-Wdeclaration-after-statement]
+  s64 offset = annotate_browser__curr_hot_offset(browser);
+
+Fixes: ad83f3b7155d ("perf c2c annotate: Start from the contention line")
+Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/util/hwmon_pmu.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ tools/perf/ui/browsers/annotate.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
-index 416dfea9ffff..5c27256a220a 100644
---- a/tools/perf/util/hwmon_pmu.c
-+++ b/tools/perf/util/hwmon_pmu.c
-@@ -742,8 +742,7 @@ int perf_pmus__read_hwmon_pmus(struct list_head *pmus)
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index 3a81912279ad..36aca8d6d003 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -995,7 +995,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ 		case 'H':
+ 			nd = browser->curr_hot;
+ 			break;
+-		case 's':
++		case 's': {
+ 			struct annotation_line *al = NULL;
+ 			s64 offset = annotate_browser__curr_hot_offset(browser);
+ 
+@@ -1012,6 +1012,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ 			annotate__scnprintf_title(hists, title, sizeof(title));
+ 			annotate_browser__show(browser, title, help);
  			continue;
- 		}
- 		io__init(&io, name_fd, buf2, sizeof(buf2));
--		io__getline(&io, &line, &line_len);
--		if (line_len > 0 && line[line_len - 1] == '\n')
-+		if (io__getline(&io, &line, &line_len) > 0 && line[line_len - 1] == '\n')
- 			line[line_len - 1] = '\0';
- 		hwmon_pmu__new(pmus, buf, class_hwmon_ent->d_name, line);
- 		close(name_fd);
++		}
+ 		case 'o':
+ 			annotate_opts.use_offset = !annotate_opts.use_offset;
+ 			annotation__update_column_widths(notes);
 -- 
-2.51.0
+2.34.1
 
