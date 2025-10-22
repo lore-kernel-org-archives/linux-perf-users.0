@@ -1,42 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376321C4A24;
-	Wed, 22 Oct 2025 00:39:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED14A1DB551;
+	Wed, 22 Oct 2025 00:39:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761093558; cv=none; b=Piw4EtnTuo5ZOD9zUhPq/0iOgbHq23nSW5jjTKdFuyzRvNqjJlABZ+xawD0CljI96Be6hUDXZwD9r81A9K6WK5J7Oiw/fwj1gfbdcIxYL+92jbMBPoiHVQXKOG/ha5PGN4q83JLAseQ7CCslnS+mrWnCpnnzpzPox4pf/1zpglI=
+	t=1761093559; cv=none; b=f9Xodn7Q68n4b4PSLBZPJ1BbhKYLWsHsiHhLgt3FPI7B7c6XVK2cnTR9K8sYiFcjMvqfayKx9d8oR2sqhCERJofOtTgZ2zy4Gs9IBhrk3uLHeBZsPPIDRCHtwMY7pBBxIRSMtH2MCxg2S0VrP2ofi+KwUpROV6Ubo+FE7y4AxDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761093558; c=relaxed/simple;
-	bh=tUtAJYcu718g9kcKB6ppq+zP6sGH+i+ouEiFkgFgBlg=;
+	s=arc-20240116; t=1761093559; c=relaxed/simple;
+	bh=X44HyL73IiaW+fZkqQgpSvq33GrGcXgftuScMPznq1Y=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=CV23oJbyO0KUyJ074+5aZ7KeAAYiIgCpRMh4XmDdwOY24SVqvWJ5LvBMO68L2lrRibj1Z2DpqDnsdESkKKUflOmH3s2b5oePAYjcAUX3gfJy83Ssy/mqQhirCaw5WxwOWXL1feahKvnRXq74pU2YX/JNtxWsksjmcOUeMvHbAk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pYg9FRyT; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=tVGZIESdyAY6XpJUpOefWEyVZE04pmyek4ni1ZXcPRlx/1bs8Cp2V4ALGw7euK5VBlZJLXp9zZZf0agE3QxQ5n9bTsBzNvigztvRWia3g5VQDYT0VWSEsuZRxU0U6xHOAX0iKag/vxR0DMupzAs8XVHOuMQUQIrYPLabu+89rng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lCKvuUfd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pYg9FRyT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 419F1C4CEFF;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lCKvuUfd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA843C116C6;
 	Wed, 22 Oct 2025 00:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761093557;
-	bh=tUtAJYcu718g9kcKB6ppq+zP6sGH+i+ouEiFkgFgBlg=;
+	s=k20201202; t=1761093558;
+	bh=X44HyL73IiaW+fZkqQgpSvq33GrGcXgftuScMPznq1Y=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=pYg9FRyTMjST8mVEXMcfNGlkINg2qzASwY29nhBp0EG3aqSJ9urim9ZdOjRsadQFu
-	 aCasrFWz1hAdh79dXq0B6ai08QfNfSCRIIMQ+KZIA+xpUDZJ0BgakFN7q6KIavssJb
-	 ICNrBMkdv6bm3lEEi/ZF11H5XWSze/RgEfIKmaTz/+/VE5vo9+upnwzV6UZW2FQ19T
-	 Rqy8AGgAMCd7mFl4VcwSxsv232u67IxrxyqGACQnkMww4/tY+rvuOyvivAwn2FeCAa
-	 2mmjMsImUncvwg0zQdds1bboePS2ermiS6K7XxI9LRy6xzMoT56QuP8LU3Jcv5WFbH
-	 opMHgpXpHlTxA==
+	b=lCKvuUfdUL/0a40QEbOwZ1mgIDJ4lxzk05xjVrXgcoD15a62uu7ICsoYsVNEd/7Cu
+	 bs9cQKzYLbko+la5sErowOyidkbc2/4puNwRpuWPx1B9n93Y/RVAiZpvPG5Xn9eF4w
+	 Ghz9FOhVOCFcQ6ZHkVF+PqlwJ4gYnEaz4eu4DliaT/g83+2mYvXZDYQpNBhaJ3WX1m
+	 5/jsY5S8ijWjTRcgm+9uJX3aPAq5CrednZdxaj6FzWzIdnmyBPdAakbhIY/TnyCQd7
+	 iv6YdOcEKa/2IHWDgyfypXV8qLJeda3C9izb1LxZNzFovPZUYeH7nbH9+5FAyHOlEq
+	 4byRShy8fl9zA==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
- James Clark <james.clark@linaro.org>, Tianyou Li <tianyou.li@intel.com>
-In-Reply-To: <20251021030750.254186-1-namhyung@kernel.org>
-References: <20251021030750.254186-1-namhyung@kernel.org>
-Subject: Re: [PATCH] perf annotate: Fix build with NO_SLANG=1
-Message-Id: <176109355722.1850903.12007508719780031483.b4-ty@kernel.org>
+To: James Clark <james.clark@linaro.org>, Tianyou Li <tianyou.li@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Kan Liang <kan.liang@linux.intel.com>, 
+ Ravi Bangoria <ravi.bangoria@amd.com>, wangyang.guo@intel.com, 
+ pan.deng@intel.com, zhiguo.zhou@intel.com, jiebin.sun@intel.com, 
+ thomas.falcon@intel.com, dapeng1.mi@intel.com, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20251020073005.957524-1-tianyou.li@intel.com>
+References: <aPW2iiNeheOxDGw8@google.com>
+ <20251020073005.957524-1-tianyou.li@intel.com>
+Subject: Re: [PATCH v4 1/2] perf tools annotate: fix a crash when annotate
+ the same symbol with 's' and 'T'
+Message-Id: <176109355778.1850903.1376466916179653638.b4-ty@kernel.org>
 Date: Tue, 21 Oct 2025 17:39:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -48,16 +56,18 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Tue, 21 Oct 2025 12:07:50 +0900, Namhyung Kim wrote:
-> The recent change for perf c2c annotate broke build without slang
-> support like below.
+On Mon, 20 Oct 2025 15:30:04 +0800, Tianyou Li wrote:
+> When perf report with annotation for a symbol, press 's' and 'T', then exit
+> the annotate browser. Once annotate the same symbol, the annotate browser
+> will crash.
 > 
->   builtin-annotate.c: In function 'hists__find_annotations':
->   builtin-annotate.c:522:73: error: 'NO_ADDR' undeclared (first use in this function); did you mean 'NR_ADDR'?
->     522 |                         key = hist_entry__tui_annotate(he, evsel, NULL, NO_ADDR);
->         |                                                                         ^~~~~~~
->         |                                                                         NR_ADDR
->   builtin-annotate.c:522:73: note: each undeclared identifier is reported only once for each function it appears in
+> The browser.arch was required to be correctly updated when data type
+> feature was enabled by 'T'. Usually it was initialized by symbol__annotate2
+> function. If a symbol has already been correctly annotated at the first
+> time, it should not call the symbol__annotate2 function again, thus the
+> browser.arch will not get initialized. Then at the second time to show the
+> annotate browser, the data type needs to be displayed but the browser.arch
+> is empty.
 > 
 > [...]
 Applied to perf-tools-next, thanks!
