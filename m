@@ -1,97 +1,142 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78EC12F8BF7;
-	Wed, 22 Oct 2025 11:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07794333448
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Oct 2025 14:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761134032; cv=none; b=gR6opx2RZFw4NIAzD7P7E/MpUHsGjUm8UGXxPqPEqgxSOoxkdG9TyCuEuip//gwgl89HNNtFWohc8FkJb/AZeVoXvBM3d6uUuEZ4lyB35Jm3PGaRr4RNZyhHXrlS6wLeRc5IIRq/qn+bDd5g9hC/cq4AIDhWWXs9G3gXEggM0A8=
+	t=1761143350; cv=none; b=KR5KDf5KJHTMszlpjNd/TfQvIViiIaasM1pfg1ndJQJVzZdhQ1iQrsBHqo0v0Rht+ek1WoHyJpxM8NTAY9CChLwVRIL9t0Fduy5t7dlRGAO5/J6ZpXCUUgu8HDvhtvUaqMoRiKHwedV8sQ+tb4S3GssNnJHNUa6VF48OvULEA3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761134032; c=relaxed/simple;
-	bh=pwQk5zAt/ju7QPDJfmEeV5nnlUGY2G1Vk6+0+y39tYM=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=mPa8yxzUlDPbFltS3iSDikCJDaeR7WGUlUInXCN3Kt86kUTO0ctCPNzwR0mgyWMz5GHgWYATRzrpyd+TAQLqOycnVRz6w/txTQFrr/LWskVnJ8xf3uB2WT6E9vF6ouTXkarPQ69IxkA5dIQ8Fvj+CjaMqVbG1EYsN9L9oCw+k2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [202.112.113.212])
-	by APP-01 (Coremail) with SMTP id qwCowACnAaS3xfho7Kr3Ew--.6894S2;
-	Wed, 22 Oct 2025 19:53:35 +0800 (CST)
-From: Ma Ke <make24@iscas.ac.cn>
-To: will@kernel.org,
-	mark.rutland@arm.com,
-	robin.murphy@arm.com,
-	james.clark@linaro.org,
-	ilkka@os.amperecomputing.com,
-	make24@iscas.ac.cn,
-	u.kleine-koenig@baylibre.com,
-	bwicaksono@nvidia.com,
-	suzuki.poulose@arm.com
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	stable@vger.kernel.org
-Subject: [PATCH RESEND] perf: arm_cspmu: fix error handling in arm_cspmu_impl_unregister()
-Date: Wed, 22 Oct 2025 19:53:25 +0800
-Message-Id: <20251022115325.25900-1-make24@iscas.ac.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:qwCowACnAaS3xfho7Kr3Ew--.6894S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZF1DtrWrtF1DCry5Xr43KFg_yoW8GryUpF
-	47CFW5ZFyvgr4UK39rA3yUZFWUCa1YkwnYkry8G34F9Fn3Zry3t348Kr9ag3W8JFZ8Jayj
-	q34aqrn5G3W5t3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPj14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr
-	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
-	rcIFxwACI402YVCY1x02628vn2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14
-	v_Gw4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
-	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrx
-	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v2
-	6r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
-	CI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUO38nUUUU
-	U
-X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
+	s=arc-20240116; t=1761143350; c=relaxed/simple;
+	bh=YDzN9FAdSnljYvnJxEGhsgDoddgCVmvOT4gkC/3Mks0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=axS3aWMBNsum5Dh0gQPfKxzFD1c5Ni+H7haSsD74YzHvtDDcbNOwO6wMcFv1Go+omkjT0Hn7MMGBtVbz9ufHu0mO0AO3mJRU94R8YkvvAgEd5OVGugzKcVlIOn+X5TtpkktnGl5z5NmahH+DT10DAWdUELN3xR6MybzC1Mbq7aY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A0511063;
+	Wed, 22 Oct 2025 07:28:59 -0700 (PDT)
+Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5BF293F59E;
+	Wed, 22 Oct 2025 07:29:05 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org
+Cc: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH] perf cs-etm: Mute enumeration value warning
+Date: Wed, 22 Oct 2025 15:28:49 +0100
+Message-Id: <20251022142849.1537706-1-leo.yan@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-driver_find_device() calls get_device() to increment the reference
-count once a matching device is found. device_release_driver()
-releases the driver, but it does not decrease the reference count that
-was incremented by driver_find_device(). At the end of the loop, there
-is no put_device() to balance the reference count. To avoid reference
-count leakage, add put_device() to decrease the reference count.
+When the OpenCSD library introduces a new enumeration value (for example,
+in the v1.7.1 release), the perf build fails with an error:
 
-Found by code review.
+  util/cs-etm-decoder/cs-etm-decoder.c:600:10: error: enumeration value 'OCSD_GEN_TRC_ELEM_ITMTRACE' not explicitly handled in switch [-Werror, -Wswitch-enum]
+    600 |         switch (elem->elem_type) {
+	|                 ^~~~~~~~~~~~~~~
+  1 error generated.
 
-Cc: stable@vger.kernel.org
-Fixes: bfc653aa89cb ("perf: arm_cspmu: Separate Arm and vendor module")
-Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+Convert to if-else sentences to mute the enumeration value warning,
+which can avoid build failures whenever the lib is updated.
+
+No functional change.
+
+Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- drivers/perf/arm_cspmu/arm_cspmu.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../perf/util/cs-etm-decoder/cs-etm-decoder.c | 44 +++++--------------
+ 1 file changed, 11 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/perf/arm_cspmu/arm_cspmu.c b/drivers/perf/arm_cspmu/arm_cspmu.c
-index efa9b229e701..e0d4293f06f9 100644
---- a/drivers/perf/arm_cspmu/arm_cspmu.c
-+++ b/drivers/perf/arm_cspmu/arm_cspmu.c
-@@ -1365,8 +1365,10 @@ void arm_cspmu_impl_unregister(const struct arm_cspmu_impl_match *impl_match)
+diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+index b85a8837bddc..3050fe212666 100644
+--- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
++++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+@@ -588,6 +588,7 @@ static ocsd_datapath_resp_t cs_etm_decoder__gen_trace_elem_printer(
+ 				const ocsd_generic_trace_elem *elem)
+ {
+ 	ocsd_datapath_resp_t resp = OCSD_RESP_CONT;
++	ocsd_gen_trc_elem_t type;
+ 	struct cs_etm_decoder *decoder = (struct cs_etm_decoder *) context;
+ 	struct cs_etm_queue *etmq = decoder->data;
+ 	struct cs_etm_packet_queue *packet_queue;
+@@ -597,52 +598,29 @@ static ocsd_datapath_resp_t cs_etm_decoder__gen_trace_elem_printer(
+ 	if (!packet_queue)
+ 		return OCSD_RESP_FATAL_SYS_ERR;
  
- 	/* Unbind the driver from all matching backend devices. */
- 	while ((dev = driver_find_device(&arm_cspmu_driver.driver, NULL,
--			match, arm_cspmu_match_device)))
-+			match, arm_cspmu_match_device))) {
- 		device_release_driver(dev);
-+		put_device(dev);
-+	}
+-	switch (elem->elem_type) {
+-	case OCSD_GEN_TRC_ELEM_UNKNOWN:
+-		break;
+-	case OCSD_GEN_TRC_ELEM_EO_TRACE:
+-	case OCSD_GEN_TRC_ELEM_NO_SYNC:
+-	case OCSD_GEN_TRC_ELEM_TRACE_ON:
++	type = elem->elem_type;
++
++	if (type == OCSD_GEN_TRC_ELEM_EO_TRACE ||
++	    type == OCSD_GEN_TRC_ELEM_NO_SYNC ||
++	    type == OCSD_GEN_TRC_ELEM_TRACE_ON)
+ 		resp = cs_etm_decoder__buffer_discontinuity(etmq, packet_queue,
+ 							    trace_chan_id);
+-		break;
+-	case OCSD_GEN_TRC_ELEM_INSTR_RANGE:
++	else if (type == OCSD_GEN_TRC_ELEM_INSTR_RANGE)
+ 		resp = cs_etm_decoder__buffer_range(etmq, packet_queue, elem,
+ 						    trace_chan_id);
+-		break;
+-	case OCSD_GEN_TRC_ELEM_EXCEPTION:
++	else if (type == OCSD_GEN_TRC_ELEM_EXCEPTION)
+ 		resp = cs_etm_decoder__buffer_exception(etmq, packet_queue, elem,
+ 							trace_chan_id);
+-		break;
+-	case OCSD_GEN_TRC_ELEM_EXCEPTION_RET:
++	else if (type == OCSD_GEN_TRC_ELEM_EXCEPTION_RET)
+ 		resp = cs_etm_decoder__buffer_exception_ret(etmq, packet_queue,
+ 							    trace_chan_id);
+-		break;
+-	case OCSD_GEN_TRC_ELEM_TIMESTAMP:
++	else if (type == OCSD_GEN_TRC_ELEM_TIMESTAMP)
+ 		resp = cs_etm_decoder__do_hard_timestamp(etmq, elem,
+ 							 trace_chan_id,
+ 							 indx);
+-		break;
+-	case OCSD_GEN_TRC_ELEM_PE_CONTEXT:
++	else if (type == OCSD_GEN_TRC_ELEM_PE_CONTEXT)
+ 		resp = cs_etm_decoder__set_tid(etmq, packet_queue,
+ 					       elem, trace_chan_id);
+-		break;
+-	/* Unused packet types */
+-	case OCSD_GEN_TRC_ELEM_I_RANGE_NOPATH:
+-	case OCSD_GEN_TRC_ELEM_ADDR_NACC:
+-	case OCSD_GEN_TRC_ELEM_CYCLE_COUNT:
+-	case OCSD_GEN_TRC_ELEM_ADDR_UNKNOWN:
+-	case OCSD_GEN_TRC_ELEM_EVENT:
+-	case OCSD_GEN_TRC_ELEM_SWTRACE:
+-	case OCSD_GEN_TRC_ELEM_CUSTOM:
+-	case OCSD_GEN_TRC_ELEM_SYNC_MARKER:
+-	case OCSD_GEN_TRC_ELEM_MEMTRANS:
+-#if (OCSD_VER_NUM >= 0x010400)
+-	case OCSD_GEN_TRC_ELEM_INSTRUMENTATION:
+-#endif
+-	default:
+-		break;
+-	}
  
- 	mutex_lock(&arm_cspmu_lock);
- 
+ 	return resp;
+ }
 -- 
-2.17.1
+2.34.1
 
