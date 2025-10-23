@@ -1,131 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225C52FB0A4;
-	Wed, 22 Oct 2025 22:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75B61459FA;
+	Thu, 23 Oct 2025 01:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761171272; cv=none; b=HHmQILsJF/7YQwXe3xbktwrTHXidYiPQ8WMx57sBOWQ1e/QsnEruIaGkrTbEPEVJxE9UXJxVh2cAGMmoZ+GBC9+jds9MWTAxr911S9UclObu35ndRzxESp5PWziPM4D5bljlN7b++L4/3b6X96RzSTkA3syTGtWmh3jCYQLNWdY=
+	t=1761181572; cv=none; b=CUL8N24aKPfDe/c7kYy32AGT8IU6Zv3qzbESWVGW1M+WAn+TG7w0aW3XQHVcARewPTKa61up0CzG/oHoMUalWD27AF+eOCgTQv/TUiGRlDBs9fBrYk/aZ/J/HVTOQ/9k5/WkeoI3bUq6QLStreHJE8rMdkNx/z5IbjZMnwbNueQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761171272; c=relaxed/simple;
-	bh=M7JNCkBzWiAR2xNNK2WourqTZyvlf3fBBzC0e2GerT4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RJSMKT0Vw/1hGLZCmpfZF/SLB40i+OIcpkAtyPCt/nJKRYNy5/8EoHU61maEmTTAe3k6//qxhq4Lslb1Ka/d2RNgfc7mt72qA6U/K0UYkFSSGTgOYLs9GYnz5o2Jp92nlv2tX9eyXI1v1Hm3uLOxq3r/UnBxX79gBLJ11s6Sy6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MJOChMm3; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1761181572; c=relaxed/simple;
+	bh=ZX8m9kjrcUsYyQ4FD1d3RvxC2stOsNoYQXsteKbBNFY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nIINTxlMAGBkiU83Btrxe+hycwQi41qRAisSVZNPnB2sP4YpCH95pnukPvvcu7UzLDgzzKrZ2N8+/GFbUgAZa9WiTgJZKEGLaHrvtZDtltdcgfXxzkR/8uTyofFKHG9d2vmwPCw8US0BXcW+6FmlIBFCdwdgWfua9V7vkxxT4ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mzyvGlSC; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MJOChMm3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mzyvGlSC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761171271; x=1792707271;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=M7JNCkBzWiAR2xNNK2WourqTZyvlf3fBBzC0e2GerT4=;
-  b=MJOChMm3dmq3xh3zqDrKEVDONutDMRfwIGHJ0kHT3elTHfIzU3dcyRmA
-   WfHZv1H9Q9+0XtXrPfLj9lYaYv79Wa7dH8S3oPdhWPOnDVUXrfWl9e1MC
-   QnPkOy8A++1ruyVlCylv/1ZWzGajZCzxaSCBaYAvJr3xKRBWOxwD193pq
-   QzWHIEC4dNoKDlcxanHalE12zhqwoH9mRYonIuHh8lCdYp3JXjmDYfWT+
-   D2bQFSZQ63tv7wgun+0bOIPsA23WNZAXaGOc/+I+rB8r4akpv3t5PAZdA
-   QcUT3PsQVnkCwRvvOSDDeY4o9FCg7V9Xn+AdP4ebMc5PuYAOn4eH8mmGV
+  t=1761181571; x=1792717571;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ZX8m9kjrcUsYyQ4FD1d3RvxC2stOsNoYQXsteKbBNFY=;
+  b=mzyvGlSCPeGmMVmxUJ2REx/XsLw5azJeq4jAPmLH54M9oazLu8wZry0Q
+   6tl+onBYh8hJgoUESVHOq/3lbpJag+4AXnlJGefzVwgHPBi6s+o39+yzF
+   rrJWuZ+7OK9JgiPhELOpiZg8BGzelXdg2aMf9oEJh1LayJWPla2tyK8OJ
+   qElJpwg1pl19QPAKe/wzxvTCtGPRZp4HrYCeecQhX0b3biUMYjN+9F85U
+   4S/4uMy1fM68r5uyyMezHlUmOTKc9evLhLd3yhrMBUME2CVWr1xZ4sQRF
+   CzOClPBlDFrcs6SdttuoacXeQs7rsq2D5OtIcLjakTtGU1RoijMmUTTCv
    w==;
-X-CSE-ConnectionGUID: 4dOtSecYStGvMxqT0me/Tg==
-X-CSE-MsgGUID: K44LM05tR7eYfx0wT3oXeg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63369220"
+X-CSE-ConnectionGUID: 01QDCCPtTq+aqrLlfQ80/Q==
+X-CSE-MsgGUID: asjRoc7OR2ac6jZOra7JQQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="74011897"
 X-IronPort-AV: E=Sophos;i="6.19,248,1754982000"; 
-   d="scan'208";a="63369220"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 15:14:30 -0700
-X-CSE-ConnectionGUID: pl5F504CSbCpcmn0bV50Sw==
-X-CSE-MsgGUID: X8wysPAnSeadWwulB41ohA==
+   d="scan'208";a="74011897"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 18:06:10 -0700
+X-CSE-ConnectionGUID: AXYumXuaSe6WYUf7DnY38A==
+X-CSE-MsgGUID: ELne1++VRIG5BqpWAxOnnA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,248,1754982000"; 
-   d="scan'208";a="184043752"
-Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.43])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 15:14:30 -0700
-From: Zide Chen <zide.chen@intel.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	thomas.falcon@intel.com,
-	dapeng1.mi@linux.intel.com,
-	xudong.hao@intel.com,
-	Zide Chen <zide.chen@intel.com>
-Subject: [PATCH] perf tools: Refactor precise_ip fallback logic
-Date: Wed, 22 Oct 2025 15:08:02 -0700
-Message-ID: <20251022220802.1335131-1-zide.chen@intel.com>
-X-Mailer: git-send-email 2.51.1
+   d="scan'208";a="188306021"
+Received: from unknown (HELO [10.238.3.234]) ([10.238.3.234])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 18:06:06 -0700
+Message-ID: <e9fd0e89-03ca-4c67-aee6-9d1d2937269c@linux.intel.com>
+Date: Thu, 23 Oct 2025 09:06:04 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v8 06/12] perf/x86/intel/ds: Factor out PEBS record
+ processing code to functions
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>, Kan Liang <kan.liang@linux.intel.com>
+References: <20251015064422.47437-1-dapeng1.mi@linux.intel.com>
+ <20251015064422.47437-7-dapeng1.mi@linux.intel.com>
+ <20251022114917.GT3245006@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20251022114917.GT3245006@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Commit c33aea446bf555ab ("perf tools: Fix precise_ip fallback logic")
-unconditionally called the precise_ip fallback and moved it after the
-missing-feature checks so that it could handle EINVAL as well.
 
-However, this introduced an issue: after disabling missing features,
-the event could fail to open, which makes the subsequent precise_ip
-fallback useless since it will always fail.
+On 10/22/2025 7:49 PM, Peter Zijlstra wrote:
+> On Wed, Oct 15, 2025 at 02:44:16PM +0800, Dapeng Mi wrote:
+>> Beside some PEBS record layout difference, arch-PEBS can share most of
+>> PEBS record processing code with adaptive PEBS. Thus, factor out these
+>> common processing code to independent inline functions, so they can be
+>> reused by subsequent arch-PEBS handler.
+>>
+>> Suggested-by: Kan Liang <kan.liang@linux.intel.com>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>  arch/x86/events/intel/ds.c | 101 ++++++++++++++++++++++++-------------
+>>  1 file changed, 66 insertions(+), 35 deletions(-)
+>>
+>> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+>> index a80881a20321..41acbf0a11c9 100644
+>> --- a/arch/x86/events/intel/ds.c
+>> +++ b/arch/x86/events/intel/ds.c
+>> @@ -2629,6 +2629,64 @@ static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs, struct perf_sample_d
+>>  	}
+>>  }
+>>  
+>> +static inline void __intel_pmu_handle_pebs_record(struct pt_regs *iregs,
+>> +						  struct pt_regs *regs,
+>> +						  struct perf_sample_data *data,
+>> +						  void *at, u64 pebs_status,
+>> +						  struct perf_event *events[],
+>> +						  short *counts, void **last,
+>> +						  setup_fn setup_sample)
+>> +{
+>> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>> +	struct perf_event *event;
+>> +	int bit;
+>> +
+>> +	for_each_set_bit(bit, (unsigned long *)&pebs_status, X86_PMC_IDX_MAX) {
+>> +		event = cpuc->events[bit];
+>> +
+>> +		if (WARN_ON_ONCE(!event) ||
+>> +		    WARN_ON_ONCE(!event->attr.precise_ip))
+>> +			continue;
+>> +
+>> +		if (counts[bit]++)
+>> +			__intel_pmu_pebs_event(event, iregs, regs, data,
+>> +					       last[bit], setup_sample);
+>> +
+>> +		last[bit] = at;
+>> +		/*
+>> +		 * perf_event_overflow() called by below __intel_pmu_pebs_last_event()
+>> +		 * could trigger interrupt throttle and clear all event pointers of
+>> +		 * the group in cpuc->events[] to NULL. So snapshot the event[] before
+>> +		 * it could be cleared. This avoids the possible NULL event pointer
+>> +		 * access and PEBS record loss.
+>> +		 */
+>> +		if (counts[bit] && !events[bit])
+>> +			events[bit] = cpuc->events[bit];
+>> +	}
+>> +}
+>> +
+>> +static inline void
+>> +__intel_pmu_handle_last_pebs_record(struct pt_regs *iregs, struct pt_regs *regs,
+>> +				    struct perf_sample_data *data, u64 mask,
+>> +				    struct perf_event *events[],
+>> +				    short *counts, void **last,
+>> +				    setup_fn setup_sample)
+>> +{
+>> +	struct perf_event *event;
+>> +	int bit;
+>> +
+>> +	for_each_set_bit(bit, (unsigned long *)&mask, X86_PMC_IDX_MAX) {
+>> +		if (!counts[bit])
+>> +			continue;
+>> +
+>> +		event = events[bit];
+>> +
+>> +		__intel_pmu_pebs_last_event(event, iregs, regs, data, last[bit],
+>> +					    counts[bit], setup_sample);
+>> +	}
+>> +
+>> +}
+> These need to be __always_inline, like the other functions that take
+> setup_fn. Otherwise the compiler might decide to not inline and then it
+> can't constant propagate this function and we get indirect calls.
 
-For example, run the following command on Intel SPR:
+Indeed. Would change it. Thanks.
 
-$ perf record -e '{cpu/mem-loads-aux/S,cpu/mem-loads,ldlat=3/PS}' -- ls
 
-Opening the event "cpu/mem-loads,ldlat=3/PS" returns EINVAL when
-precise_ip == 3. It then sets attr.inherit = false, which triggers a
-kernel check failure since it doesn't match the group leader's inherit
-attribute. As a result, it continues to fail even after precise_ip is
-reduced.
-
-By moving the precise_ip fallback earlier, this issue is resolved, as
-well as the kernel test robot report mentioned in commit
-c33aea446bf555ab.
-
-No negative side effects are expected, because the precise_ip level is
-restored by evsel__precise_ip_fallback() if the fallback does not help.
-
-This also aligns with commit 2b70702917337a8d ("perf tools: Remove
-evsel__handle_error_quirks()").
-
-Fixes: af954f76eea56453 ("perf tools: Check fallback error and order")
-Fixes: c33aea446bf555ab ("perf tools: Fix precise_ip fallback logic")
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Signed-off-by: Zide Chen <zide.chen@intel.com>
----
- tools/perf/util/evsel.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index ca74514c8707..6ce32533a213 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2714,12 +2714,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	if (err == -EMFILE && rlimit__increase_nofile(&set_rlimit))
- 		goto retry_open;
- 
-+	if (evsel__precise_ip_fallback(evsel))
-+		goto retry_open;
-+
- 	if (err == -EINVAL && evsel__detect_missing_features(evsel, cpu))
- 		goto fallback_missing_features;
- 
--	if (evsel__precise_ip_fallback(evsel))
--		goto retry_open;
--
- out_close:
- 	if (err)
- 		threads->err_thread = thread;
--- 
-2.51.0
-
+>
+>
