@@ -1,159 +1,104 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F9128BAB1
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Oct 2025 16:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AA0236453;
+	Thu, 23 Oct 2025 17:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761236070; cv=none; b=GQGUHqazHzOT8zCXcLw35HyVgf2gnCbUa3rKWSxzcab9se0QNisCKLAAK5q7gNHjL/Zx9YyqUNeoS3GmnDeJ5oHqJmlqKq54bgnHCeFSIS5uNVpDhgxb5/eAI9+FRiMMga/edv5aBvtQg/Mxk7s//IDIJ4EiBHX1cQnJAOr1/Yw=
+	t=1761241067; cv=none; b=hxABUoBzH/gpe5j5oj1AHpVavihfHKARHDgXOuJx48DRiRzJHeKY3dG3BAB4ypHIpIe9eH3XLm2XGtZTDZrO3ulbDOMiIlenXtgipdlSaJluBaefujZGzlUjHhPEGYzSrfuge1XeqVDWejfKRqGPzqabskoTF9E5oOjaWgG4kfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761236070; c=relaxed/simple;
-	bh=msVqp6lO9/4vj+yXj/9gsQ88ASClzyzh0hFMFZXfGJY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GycVqWnwvBAIBj/zHCpG8e9sI0ngj0eIHaN9QmTm2tWAwQ90f5cxEUZr36o4olT2VAc6FkJ3gIEmDdntBDUztCD5j7t4OcOkSNOHjDh7kdGN/N6MIJt5bR7+ZRqxN4iKCv2QrZWQEJ2NxZqz+WStUx4nb/C6MG5D4AvZsxwaaEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h5CKdoHj; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1761241067; c=relaxed/simple;
+	bh=lzcFnpcqKVPEICy/2QE1hnpva5jbOl2bOYeT8Uaf9Qw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KAnmxUAW2xQzXKRb0PAe2TAJwhOrUmm+n0XF9VIDPH7PXjdptcq0KCKdrsFB1pe/+MhQ9gnx8FIIrzz+9Gh97phqC9d4hbGvkQRrn5zr8zPpuKpv0p2oJH8RlCUTuHys1S0JWLc1NnabUgG6s6ZZgO9BNz7C0TY7atXp8Tqp5T4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aMDL39t7; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h5CKdoHj"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-290d48e9f1fso207105ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Oct 2025 09:14:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761236069; x=1761840869; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jux2OKRYi4F5rIr51U0/cJ7dhC9vk3290S0zPifbrQU=;
-        b=h5CKdoHjbqhBAFNRlU80GwSfBJOQCDYdr4BS9Lgcz2biIPjvkUbYUTuIZuxj32eZDW
-         LgRMHbVoH3zbF9PzxtuP+plC1mrgGIXYa3bRIhxeCI4Lu/mu67FMWQx2z/lrm83YUcIb
-         GtJsbfAZrZ4X5r7OJnJxqaHthY3sViDaOoq5i9py+hm6u81zVOZ7wnCgWnTDLpfG/8SE
-         pDJFCG1mUymLzzE/b8ByuaJ4Enh0n0yUvU11s/RyjytxWCB6foSsC8rGyVFDp7VjCtoV
-         XagBJ5Hy6Z2SfF8XP1B13WKrBtRYG12f9C9malvS4vmW+KK6YR5tQZt8lHbq3yFsEsK5
-         RD2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761236069; x=1761840869;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jux2OKRYi4F5rIr51U0/cJ7dhC9vk3290S0zPifbrQU=;
-        b=kUJqCK8Cmdn6wZ/ImUY8JRyVISvTWveBf4/T8IyNWTTpvTADXQc2tWzJdp1T66A4qv
-         nUDbbviQ8hEPf23afz4Yqv2vZEaXL+uPpm6KVGTtLt+2GPG3Ust4dd2p0PQ0lScdOX5I
-         sPDaGenOeRikvqZqHv9hBtOltL5Qu/E8hzSSQbyZZ0W0i0m8ShJ8lUiu6lCqKiiZk3w1
-         B+ZS7WbOa4p2TejNGHZJpChRBe+USqzSH0cuC3IhcAUNGOnymxFlmdrH+mhfShVGJeEJ
-         g4vmB72jXiXnd5o1ziELJByVCwltAIS68soEifZ5zpQUQuJ5Te7NHzbyKbvH4upM2r5b
-         ppHw==
-X-Forwarded-Encrypted: i=1; AJvYcCXX3vXQ0i6wVr8ljtP/21zB7zbvDWNZcS6xIPeM8VwgUzhBlAtQMThFTynBSuhDIJrdgJLPyRkKFUi/h8KexhK7@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvYRKSaBpqW5SJ2gffjpB6xnpC/MNV3PGjPKzqB+hOyew76QsB
-	ZVcatmh6EuY2sD84wzfNVJfqGL25+GUplrhURHxoZIcuNOFbVyt27Mpgm+4vOGbOERj7lwBzYpe
-	2v8MzcHNrDLHHei5+7KPT4g+1B69n4GGalPBBO4nU
-X-Gm-Gg: ASbGnctg4Dlsar07LnG3skZsE9kGoURbVEEEhqtZ1MvEmD9CPDQkLTF1FlVdMaPMLQd
-	DqSOl96P4F7xAp75iWpM2qtY4zgbD+ZTAk+2cl6XI85Ca1DCdCU+VUP7RwvNVhtxH5UXlIlK9Z7
-	zc1pDmSocm/NZZ5rIyB1vociJVcxx+fMS3TED0HSJlQMv6JfA9Xfnvmbzj9jukQlbAFk/+QSO3m
-	EYMgLHM57LjtJbwNeq4kTo1UDabkIyBrTKu4v/6DQDtwIzDdBkX5TVCSZd+0aWtDGZumbt953Td
-	m7UokC3LTEz02CyHGrOstErenmAX13oHYvIK
-X-Google-Smtp-Source: AGHT+IG+3mSaXvzfHQTY7bpJd5yQVbFC0C4UzDpWcIl4Hl4G7l40P0lQ2DoTx7fK64RDLun+ivwWqag7/5rPr949bwQ=
-X-Received: by 2002:a17:902:f548:b0:292:4d93:b501 with SMTP id
- d9443c01a7336-294873808b2mr575675ad.11.1761236068215; Thu, 23 Oct 2025
- 09:14:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aMDL39t7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761241066; x=1792777066;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=lzcFnpcqKVPEICy/2QE1hnpva5jbOl2bOYeT8Uaf9Qw=;
+  b=aMDL39t73nv21hpJLgmEOE24kBEzLeZWx3M1PxcG6+QWuXGzQqwMtdjs
+   lwJOY3Y9/TRu9dQxT9NE+e+rdOlGoFG7awyjl2LarnzTqG/yG2vixyBdq
+   8apshZvirQ0DOg1PPFd6/80i3eVp5SuDRxs1tfm3iEjEzhe4sSUSiJpd4
+   lcejXhlxXtpX8NXB7TAS7y2YnXEGQX9rakQHTaD99+vIZmLjf61O7UgJW
+   XnE8Vu8IHWJGlzWEowfsu3GC399nW8+ug4mFY/Q7XP9xeg5Wqz/LOhOD0
+   2BOC2UBkPQFxF90OqWk4WIHW9Uww7sAuBXALDcCw5aCQiuSskURBRNOxo
+   w==;
+X-CSE-ConnectionGUID: z+hb8kxPTbaV8utc6Uv/9g==
+X-CSE-MsgGUID: 7bN4UnRySkqgFhOzFwu6Mg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63459236"
+X-IronPort-AV: E=Sophos;i="6.19,250,1754982000"; 
+   d="scan'208";a="63459236"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2025 10:37:45 -0700
+X-CSE-ConnectionGUID: eZL2laQuT0W+6mnmBxoEXg==
+X-CSE-MsgGUID: Fbsuxk7LRQ2lxB0shpB1BA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,250,1754982000"; 
+   d="scan'208";a="183440547"
+Received: from unknown (HELO [10.241.241.181]) ([10.241.241.181])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2025 10:37:44 -0700
+Message-ID: <725ad7f4-f383-4dd8-8134-0ae2fc3d37b2@intel.com>
+Date: Thu, 23 Oct 2025 10:37:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251022220802.1335131-1-zide.chen@intel.com>
-In-Reply-To: <20251022220802.1335131-1-zide.chen@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 23 Oct 2025 09:14:17 -0700
-X-Gm-Features: AS18NWAp-JONLAyYSe-4dQoTVRjuxz5E3zfJmTGpg7goE3FX9w7Ekd9P-6YsoeA
-Message-ID: <CAP-5=fUKH8Qw9t173G4HP-UzujUKJrLPPmkDSjBs=2YzV=9LHA@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: Refactor precise_ip fallback logic
-To: Zide Chen <zide.chen@intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, thomas.falcon@intel.com, 
-	dapeng1.mi@linux.intel.com, xudong.hao@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] perf/x86/intel: Add PMU support for WildcatLake
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250908061639.938105-1-dapeng1.mi@linux.intel.com>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <20250908061639.938105-1-dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Oct 22, 2025 at 3:14=E2=80=AFPM Zide Chen <zide.chen@intel.com> wro=
-te:
->
-> Commit c33aea446bf555ab ("perf tools: Fix precise_ip fallback logic")
-> unconditionally called the precise_ip fallback and moved it after the
-> missing-feature checks so that it could handle EINVAL as well.
->
-> However, this introduced an issue: after disabling missing features,
-> the event could fail to open, which makes the subsequent precise_ip
-> fallback useless since it will always fail.
->
-> For example, run the following command on Intel SPR:
->
-> $ perf record -e '{cpu/mem-loads-aux/S,cpu/mem-loads,ldlat=3D3/PS}' -- ls
->
-> Opening the event "cpu/mem-loads,ldlat=3D3/PS" returns EINVAL when
-> precise_ip =3D=3D 3. It then sets attr.inherit =3D false, which triggers =
-a
-> kernel check failure since it doesn't match the group leader's inherit
-> attribute. As a result, it continues to fail even after precise_ip is
-> reduced.
->
-> By moving the precise_ip fallback earlier, this issue is resolved, as
-> well as the kernel test robot report mentioned in commit
-> c33aea446bf555ab.
->
-> No negative side effects are expected, because the precise_ip level is
-> restored by evsel__precise_ip_fallback() if the fallback does not help.
->
-> This also aligns with commit 2b70702917337a8d ("perf tools: Remove
-> evsel__handle_error_quirks()").
->
-> Fixes: af954f76eea56453 ("perf tools: Check fallback error and order")
-> Fixes: c33aea446bf555ab ("perf tools: Fix precise_ip fallback logic")
-> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Signed-off-by: Zide Chen <zide.chen@intel.com>
 
-Acked-by: Ian Rogers <irogers@google.com>
 
-Any chance you could help with a test case that covers this? The
-fallback logic is spread out and easy to introduce subtle bugs into.
-Just having a test case that does ` perf record -e
-'{cpu/mem-loads-aux/S,cpu/mem-loads,ldlat=3D3/PS}' -- ls` and checks the
-output for EINVAL when the events are present would be useful, as then
-we can make sure this doesn't regress on SPR and later. Something with
-more generic events would of course be better :-)
+On 9/7/2025 11:16 PM, Dapeng Mi wrote:
+> WildcatLake is a variant of PantherLake and shares same PMU features,
+> so directly reuse Pantherlake's code to enable PMU features for
+> WildcatLake.
+> 
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Thanks,
-Ian
+For the patch set:
+
+Reviewed-by: Zide Chen <zide.chen@intel.com>
 
 > ---
->  tools/perf/util/evsel.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index ca74514c8707..6ce32533a213 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -2714,12 +2714,12 @@ static int evsel__open_cpu(struct evsel *evsel, s=
-truct perf_cpu_map *cpus,
->         if (err =3D=3D -EMFILE && rlimit__increase_nofile(&set_rlimit))
->                 goto retry_open;
->
-> +       if (evsel__precise_ip_fallback(evsel))
-> +               goto retry_open;
-> +
->         if (err =3D=3D -EINVAL && evsel__detect_missing_features(evsel, c=
-pu))
->                 goto fallback_missing_features;
->
-> -       if (evsel__precise_ip_fallback(evsel))
-> -               goto retry_open;
-> -
->  out_close:
->         if (err)
->                 threads->err_thread =3D thread;
-> --
-> 2.51.0
->
+>  arch/x86/events/intel/core.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 28f5468a6ea3..fe65be0b9d9c 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -7596,6 +7596,7 @@ __init int intel_pmu_init(void)
+>  		break;
+>  
+>  	case INTEL_PANTHERLAKE_L:
+> +	case INTEL_WILDCATLAKE_L:
+>  		pr_cont("Pantherlake Hybrid events, ");
+>  		name = "pantherlake_hybrid";
+>  		goto lnl_common;
+> 
+> base-commit: 16ed389227651330879e17bd83d43bd234006722
+
