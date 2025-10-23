@@ -1,170 +1,455 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FF81A9FAA;
-	Thu, 23 Oct 2025 02:29:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DCE27F749
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Oct 2025 06:11:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761186575; cv=none; b=UqJzRkW2ZMx9/m2XqmIeFniz7tgvMrl6p5FTHzYRsR1OXCwOxalFc4ysnwSik5dgtxLylMvmDaoCO9xJHIYhRrFummS4bYNejJZgh359J3Zl5jDmlpGBJTMCCoNtDnOIAuvOdioKpWdlvXYLumJgcf5uE99q+g4bKXW4DNi8uY4=
+	t=1761199919; cv=none; b=kgJeRoEH8riUyVf09refcuxEOQspFQj3anwBfj/2lOFb2DWRRAsBznWV8IVEeFOukvGOBlD0h9K30jSk13rH/Eva40jI7ZDUPiUIHax+IDEYqh5AlyylsKVNyM/woOSmqdpjUsYT+mnltY3Iq7rlTWl+jYUl0TwnZZfkgv28IR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761186575; c=relaxed/simple;
-	bh=mhVovYrN43YXZHi0w7HO1gTno9goaEA7sg/nYs14rAg=;
+	s=arc-20240116; t=1761199919; c=relaxed/simple;
+	bh=wdaVwDtAh+xzW3oYCE8lhLcNeQkNEiruuO30tZexr64=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RFsx2fGK5iWLIFPpTDHoktF2aYy49G3WKx7xL3NFgjIwg23a0gw6wSwvW1g+LFZwP4nE+sPrVeapscuWFacap5rI9iHEncU1oCXNzjoNx9UwlOA5fNTQGjdqlym6Vk5wlYeVvc5Gbcg0EEML/L3Ev66GqtloAzuZatPpplHCJvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f7s//+BL; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=huIFybTQxxALN0usxPgUADM2NHGRdzqbfVmMz4EIUQrd1/iI4xvG0iuJ4rvN8E3x7QCWiLyMYVa/zV5CpPHz9Om1/Rhl1o6WkZp6+mHH2dByGcl9H9Qz23Xske1h3x22y9qN+9hjI3JFSDhnbSfuNqAHqPyzLKwzFch3FRYSeZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qG1HcRaJ; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f7s//+BL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761186573; x=1792722573;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=mhVovYrN43YXZHi0w7HO1gTno9goaEA7sg/nYs14rAg=;
-  b=f7s//+BLqLPk8tAuGUHeh4JE5CiW+gqPLA1PH7gJAuQKbHhwLL3B39D+
-   Sg5GCArVICCf5t4Zhsf2tFaDbYObfehL3JIKg0KD2A429UNcD0xfn9cYw
-   upTgLi59ud644eGwPdSKc4uP+eZyoFqrKXHezKYhQzGtYsXp+tWQhx+/1
-   PZ1ck4nZjIRXNtN1RpOH03789Ehri9XdAU0rlS6NqiG0kjlDMTAjCIZ8N
-   xRFg0G+gTv/Nh0tzF+GGG+Un4vpwj2DrTYt4ctbFaXBc0RrYG0jA37kbm
-   Sf80fGvWG3sP5DPIsezM14HPdXiIIsr+Bj/5q46IB8tNNpqBmIVZ7r/Ua
-   Q==;
-X-CSE-ConnectionGUID: S07AW26USYGdUnQBKmDIZA==
-X-CSE-MsgGUID: gX0/cyQbSHeFff6gXdSU6g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="74016098"
-X-IronPort-AV: E=Sophos;i="6.19,248,1754982000"; 
-   d="scan'208";a="74016098"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 19:29:33 -0700
-X-CSE-ConnectionGUID: lqGJ9xqWRsq7YZHRRpD5fw==
-X-CSE-MsgGUID: Je5oPvzaTnmff52U59Kz/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,248,1754982000"; 
-   d="scan'208";a="188318580"
-Received: from unknown (HELO [10.238.3.234]) ([10.238.3.234])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2025 19:29:29 -0700
-Message-ID: <aa0667d2-c0ad-4a40-898b-cf1363a0941f@linux.intel.com>
-Date: Thu, 23 Oct 2025 10:29:27 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qG1HcRaJ"
+Message-ID: <eb6328bf-2b96-4b91-811c-dd8dd303fdbc@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1761199905;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8b9Xl9t/F/Zd9A3cHpf9cxx3vOlRhkRz/axJ6cIiX6w=;
+	b=qG1HcRaJ/21gF2OmS1N7C4DLCJbx9Dvm78VWWyg7uHAZ+sC5XgCsaQcZVZPlLX+Msx+u9e
+	/aE5fJXHORO2C1rvlK+MyXuuJoN8P9bwkhLDAVE6tt2rGgGeZFrXxTr7jaIx+LxUeVHORj
+	Zy9zgcplK+DpSM2DOkidi7P5iXP4S3Q=
+Date: Thu, 23 Oct 2025 14:11:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v8 02/12] perf/x86/intel: Fix NULL event access and
- potential PEBS record loss
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+Subject: Re: [RFC PATCH bpf-next v2 2/2] bpf: Pass external callchain entry to
+ get_perf_callchain
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Jiri Olsa <olsajiri@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, kernel test robot <oliver.sang@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>
-References: <20251015064422.47437-1-dapeng1.mi@linux.intel.com>
- <20251015064422.47437-3-dapeng1.mi@linux.intel.com>
- <fcb09e14-970c-4ebd-82f2-a12150fe3708@linux.intel.com>
- <20251022112432.GN4067720@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251022112432.GN4067720@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Song Liu <song@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+References: <20251014100128.2721104-1-chen.dylane@linux.dev>
+ <20251014100128.2721104-3-chen.dylane@linux.dev> <aO4-jAA5RIUY2yxc@krava>
+ <CAADnVQLoF49pu8CT81FV1ddvysQzvYT4UO1P21fVxnafnO5vrQ@mail.gmail.com>
+ <CAEf4BzbAt_3co0s-+DspnHuJryG2DKPLP9OwsN0bWWnbd5zsmQ@mail.gmail.com>
+ <abd75aed-9ff2-4e6d-8fec-2b118264efa9@linux.dev>
+ <CAEf4BzbtU2m9mh+Wi-BvuJ7U5_oHL3TWB8w2M5pRO6w6CCbfVw@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Tao Chen <chen.dylane@linux.dev>
+In-Reply-To: <CAEf4BzbtU2m9mh+Wi-BvuJ7U5_oHL3TWB8w2M5pRO6w6CCbfVw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-
-On 10/22/2025 7:24 PM, Peter Zijlstra wrote:
-> On Wed, Oct 22, 2025 at 04:12:14PM +0800, Mi, Dapeng wrote:
->
->> Just think twice about this fix, it seems current fix is incomplete.
->> Besides the PEBS handler, the basic PMI handler could encounter same issue,
->> like the below code in handle_pmi_common(),
+在 2025/10/22 00:37, Andrii Nakryiko 写道:
+> On Sat, Oct 18, 2025 at 12:51 AM Tao Chen <chen.dylane@linux.dev> wrote:
 >>
->>     for_each_set_bit(bit, (unsigned long *)&status, X86_PMC_IDX_MAX) {
->>         struct perf_event *event = cpuc->events[bit];
->>         u64 last_period;
+>> 在 2025/10/17 04:39, Andrii Nakryiko 写道:
+>>> On Tue, Oct 14, 2025 at 8:02 AM Alexei Starovoitov
+>>> <alexei.starovoitov@gmail.com> wrote:
+>>>>
+>>>> On Tue, Oct 14, 2025 at 5:14 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+>>>>>
+>>>>> On Tue, Oct 14, 2025 at 06:01:28PM +0800, Tao Chen wrote:
+>>>>>> As Alexei noted, get_perf_callchain() return values may be reused
+>>>>>> if a task is preempted after the BPF program enters migrate disable
+>>>>>> mode. Drawing on the per-cpu design of bpf_perf_callchain_entries,
+>>>>>> stack-allocated memory of bpf_perf_callchain_entry is used here.
+>>>>>>
+>>>>>> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+>>>>>> ---
+>>>>>>    kernel/bpf/stackmap.c | 19 +++++++++++--------
+>>>>>>    1 file changed, 11 insertions(+), 8 deletions(-)
+>>>>>>
+>>>>>> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+>>>>>> index 94e46b7f340..acd72c021c0 100644
+>>>>>> --- a/kernel/bpf/stackmap.c
+>>>>>> +++ b/kernel/bpf/stackmap.c
+>>>>>> @@ -31,6 +31,11 @@ struct bpf_stack_map {
+>>>>>>         struct stack_map_bucket *buckets[] __counted_by(n_buckets);
+>>>>>>    };
+>>>>>>
+>>>>>> +struct bpf_perf_callchain_entry {
+>>>>>> +     u64 nr;
+>>>>>> +     u64 ip[PERF_MAX_STACK_DEPTH];
+>>>>>> +};
+>>>>>> +
+>>>
+>>> we shouldn't introduce another type, there is perf_callchain_entry in
+>>> linux/perf_event.h, what's the problem with using that?
 >>
->>         handled++;
+>> perf_callchain_entry uses flexible array, DEFINE_PER_CPU seems do not
+>> create buffer for this, for ease of use, the size of the ip array has
+>> been explicitly defined.
 >>
->>         if (!test_bit(bit, cpuc->active_mask))
->>             continue;
+>> struct perf_callchain_entry {
+>>           u64                             nr;
+>>           u64                             ip[]; /*
+>> /proc/sys/kernel/perf_event_max_stack */
+>> };
 >>
->> Although the NULL event would not be accessed by checking
->> the cpuc->active_mask, the potential overflow process of these NULL events
->> is skipped as well, it may cause data loss.
+> 
+> Ok, fair enough, but instead of casting between perf_callchain_entry
+> and bpf_perf_callchain_entry, why not put perf_callchain_entry inside
+> bpf_perf_callchain_entry as a first struct and pass a pointer to it.
+> That looks a bit more appropriate? Though I'm not sure if compiler
+> will complain about that flex array...
+> 
+> But on related note, I looked briefly at how perf gets those
+> perf_callchain_entries, and it does seem like it also has a small
+> stack of entries, so maybe we don't really need to invent anything
+> here. See PERF_NR_CONTEXTS and how that's used.
+> 
+
+It seems so. The implementation of get_callchain_entry and 
+put_callchain_entry is similar to a simple stack management.
+
+struct perf_callchain_entry *get_callchain_entry(int *rctx)
+{
+         int cpu;
+         struct callchain_cpus_entries *entries;
+
+         *rctx = get_recursion_context(this_cpu_ptr(callchain_recursion));
+         if (*rctx == -1)
+                 return NULL;
+
+         entries = rcu_dereference(callchain_cpus_entries);
+         if (!entries) {
+  
+put_recursion_context(this_cpu_ptr(callchain_recursion), *rctx);
+                 return NULL;
+         }
+
+         cpu = smp_processor_id();
+
+         return (((void *)entries->cpu_entries[cpu]) +
+                 (*rctx * perf_callchain_entry__sizeof()));
+}
+
+void
+put_callchain_entry(int rctx)
+{
+         put_recursion_context(this_cpu_ptr(callchain_recursion), rctx);
+}
+
+> If instead of disabling preemption we disable migration, then I think
+> we should be good with relying on perf's callchain management, or am I
+> missing something?
+> 
+
+Peter proposed refactoring the get_perf_callchain interface in v3, i 
+think after that we can still use perf callchain, but with the 
+refactored API, it can prevent being overwritten by preemption.
+
+BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map
+{
+	...
+	entry = bpf_get_perf_callchain;
+	__bpf_get_stackid(map, entry, flags);
+	bpf_put_callchain_entry(entry);
+	...
+}
+
+A simple specific implementation is as follows:
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index fd1d91017b9..1c7573f085f 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -67,6 +67,7 @@ struct perf_callchain_entry_ctx {
+  	u32				nr;
+  	short				contexts;
+  	bool				contexts_maxed;
++	bool				add_mark;
+  };
+
+  typedef unsigned long (*perf_copy_f)(void *dst, const void *src,
+@@ -1718,9 +1719,18 @@ DECLARE_PER_CPU(struct perf_callchain_entry, 
+perf_callchain_entry);
+
+  extern void perf_callchain_user(struct perf_callchain_entry_ctx 
+*entry, struct pt_regs *regs);
+  extern void perf_callchain_kernel(struct perf_callchain_entry_ctx 
+*entry, struct pt_regs *regs);
++
++extern void __init_perf_callchain_ctx(struct perf_callchain_entry_ctx *ctx,
++				      struct perf_callchain_entry *entry,
++				      u32 max_stack, bool add_mark);
++
++extern void __get_perf_callchain_kernel(struct perf_callchain_entry_ctx 
+*ctx, struct pt_regs *regs);
++extern void __get_perf_callchain_user(struct perf_callchain_entry_ctx 
+*ctx, struct pt_regs *regs);
++
++
+  extern struct perf_callchain_entry *
+  get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+-		   u32 max_stack, bool crosstask, bool add_mark);
++		   u32 max_stack, bool crosstask);
+  extern int get_callchain_buffers(int max_stack);
+  extern void put_callchain_buffers(void);
+  extern struct perf_callchain_entry *get_callchain_entry(int *rctx);
+diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+index 4d53cdd1374..3f2543e5244 100644
+--- a/kernel/bpf/stackmap.c
++++ b/kernel/bpf/stackmap.c
+@@ -297,14 +297,38 @@ static long __bpf_get_stackid(struct bpf_map *map,
+  	return id;
+  }
+
++static struct perf_callchain_entry *entry
++bpf_get_perf_callchain(int *rctx, struct pt_regs *regs, bool kernel, 
+bool user, int max_stack)
++{
++	struct perf_callchain_entry_ctx ctx;
++	struct perf_callchain_entry *entry;
++
++	entry = get_callchain_entry(&rctx);
++	if (unlikely(!entry))
++		return NULL;
++
++	__init_perf_callchain_ctx(&ctx, entry)
++	if (kernel)
++		__get_perf_callchain_kernel(&ctx, regs);
++	if (user)
++		__get_perf_callchain_user(&ctx, regs);
++	return entry;
++}
++
++static bpf_put_perf_callchain(int rctx)
++{
++	put_callchain_entry(rctx);
++}
++
+  BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
+  	   u64, flags)
+  {
+  	u32 max_depth = map->value_size / stack_map_data_size(map);
+  	u32 skip = flags & BPF_F_SKIP_FIELD_MASK;
+  	bool user = flags & BPF_F_USER_STACK;
+-	struct perf_callchain_entry *trace;
++	struct perf_callchain_entry *entry;
+  	bool kernel = !user;
++	int rctx, ret;
+
+  	if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
+  			       BPF_F_FAST_STACK_CMP | BPF_F_REUSE_STACKID)))
+@@ -314,14 +338,14 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, 
+regs, struct bpf_map *, map,
+  	if (max_depth > sysctl_perf_event_max_stack)
+  		max_depth = sysctl_perf_event_max_stack;
+
+-	trace = get_perf_callchain(regs, kernel, user, max_depth,
+-				   false, false);
+-
+-	if (unlikely(!trace))
+-		/* couldn't fetch the stack trace */
++	entry = bpf_get_perf_callchain(&rctx, regs, kernel, user, max_depth);
++	if (unlikely(!entry))
+  		return -EFAULT;
+
+-	return __bpf_get_stackid(map, trace, flags);
++	ret = __bpf_get_stackid(map, entry, flags);
++	bpf_put_callchain_entry(rctx);
++
++	return ret;
+  }
+
+  const struct bpf_func_proto bpf_get_stackid_proto = {
+@@ -452,7 +476,7 @@ static long __bpf_get_stack(struct pt_regs *regs, 
+struct task_struct *task,
+  		trace = get_callchain_entry_for_task(task, max_depth);
+  	else
+  		trace = get_perf_callchain(regs, kernel, user, max_depth,
+-					   crosstask, false);
++					   crosstask);
+
+  	if (unlikely(!trace) || trace->nr < skip) {
+  		if (may_fault)
+diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+index 808c0d7a31f..2c36e490625 100644
+--- a/kernel/events/callchain.c
++++ b/kernel/events/callchain.c
+@@ -216,13 +216,54 @@ static void 
+fixup_uretprobe_trampoline_entries(struct perf_callchain_entry *entr
+  #endif
+  }
+
++void __init_perf_callchain_ctx(struct perf_callchain_entry_ctx *ctx,
++			       struct perf_callchain_entry *entry,
++			       u32 max_stack, bool add_mark)
++
++{
++	ctx->entry		= entry;
++	ctx->max_stack		= max_stack;
++	ctx->nr			= entry->nr = 0;
++	ctx->contexts		= 0;
++	ctx->contexts_maxed	= false;
++	ctx->add_mark		= add_mark;
++}
++
++void __get_perf_callchain_kernel(struct perf_callchain_entry_ctx *ctx, 
+struct pt_regs *regs)
++{
++	if (user_mode(regs))
++		return;
++
++	if (ctx->add_mark)
++		perf_callchain_store_context(ctx, PERF_CONTEXT_KERNEL);
++	perf_callchain_kernel(ctx, regs);
++}
++
++void __get_perf_callchain_user(struct perf_callchain_entry_ctx *ctx, 
+struct pt_regs *regs)
++{
++	int start_entry_idx;
++
++	if (!user_mode(regs)) {
++		if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
++			return;
++		regs = task_pt_regs(current);
++	}
++
++	if (ctx->add_mark)
++		perf_callchain_store_context(ctx, PERF_CONTEXT_USER);
++
++	start_entry_idx = ctx->nr;
++	perf_callchain_user(ctx, regs);
++	fixup_uretprobe_trampoline_entries(ctx->entry, start_entry_idx);
++}
++
+  struct perf_callchain_entry *
+  get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+-		   u32 max_stack, bool crosstask, bool add_mark)
++		   u32 max_stack, bool crosstask)
+  {
+  	struct perf_callchain_entry *entry;
+  	struct perf_callchain_entry_ctx ctx;
+-	int rctx, start_entry_idx;
++	int rctx;
+
+  	/* crosstask is not supported for user stacks */
+  	if (crosstask && user && !kernel)
+@@ -232,34 +273,14 @@ get_perf_callchain(struct pt_regs *regs, bool 
+kernel, bool user,
+  	if (!entry)
+  		return NULL;
+
+-	ctx.entry		= entry;
+-	ctx.max_stack		= max_stack;
+-	ctx.nr			= entry->nr = 0;
+-	ctx.contexts		= 0;
+-	ctx.contexts_maxed	= false;
++	__init_perf_callchain_ctx(&ctx, entry, max_stack, true);
+
+-	if (kernel && !user_mode(regs)) {
+-		if (add_mark)
+-			perf_callchain_store_context(&ctx, PERF_CONTEXT_KERNEL);
+-		perf_callchain_kernel(&ctx, regs);
+-	}
+-
+-	if (user && !crosstask) {
+-		if (!user_mode(regs)) {
+-			if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
+-				goto exit_put;
+-			regs = task_pt_regs(current);
+-		}
++	if (kernel)
++		__get_perf_callchain_kernel(&ctx, regs);
+
+-		if (add_mark)
+-			perf_callchain_store_context(&ctx, PERF_CONTEXT_USER);
+-
+-		start_entry_idx = entry->nr;
+-		perf_callchain_user(&ctx, regs);
+-		fixup_uretprobe_trampoline_entries(entry, start_entry_idx);
+-	}
++	if (user && !crosstask)
++		__get_perf_callchain_user(&ctx, regs);
+
+-exit_put:
+  	put_callchain_entry(rctx);
+
+  	return entry;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 7541f6f85fc..eb0f110593d 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -8218,7 +8218,7 @@ perf_callchain(struct perf_event *event, struct 
+pt_regs *regs)
+  		return &__empty_callchain;
+
+  	callchain = get_perf_callchain(regs, kernel, user,
+-				       max_stack, crosstask, true);
++				       max_stack, crosstask);
+  	return callchain ?: &__empty_callchain;
+  }
+
+>>>
+>>>>>>    static inline bool stack_map_use_build_id(struct bpf_map *map)
+>>>>>>    {
+>>>>>>         return (map->map_flags & BPF_F_STACK_BUILD_ID);
+>>>>>> @@ -305,6 +310,7 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
+>>>>>>         bool user = flags & BPF_F_USER_STACK;
+>>>>>>         struct perf_callchain_entry *trace;
+>>>>>>         bool kernel = !user;
+>>>>>> +     struct bpf_perf_callchain_entry entry = { 0 };
+>>>>>
+>>>>> so IIUC having entries on stack we do not need to do preempt_disable
+>>>>> you had in the previous version, right?
+>>>>>
+>>>>> I saw Andrii's justification to have this on the stack, I think it's
+>>>>> fine, but does it have to be initialized? it seems that only used
+>>>>> entries are copied to map
+>>>>
+>>>> No. We're not adding 1k stack consumption.
+>>>
+>>> Right, and I thought we concluded as much last time, so it's a bit
+>>> surprising to see this in this patch.
+>>>
 >>
->> Moreover, current approach defines temporary variables to snapshot the
->> active events, the temporary variables may consume too much stack memory
->> (384 bytes).
+>> Ok, I feel like I'm missing some context from our previous exchange.
 >>
->> So I enhance the fix as below. Do you have any comment on this? Thanks.
-> So I didn't like the previous and I like this even less. What about
-> something like this instead?
->
-> I quickly went through the cpuc->event[ users and they all either check
-> active_mask or, in case of the PEBS stuff, check pebs_enabled mask
-> (which should be a subset of active_mask).
->
-> (the PEBS last case depends on count being 0 for all counters that are
-> not set in pebs_enabled)
-
-Yes.
-
-
->
-> WDYT?
->
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 745caa6c15a3..74479f9d6eed 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -1344,6 +1344,7 @@ static void x86_pmu_enable(struct pmu *pmu)
->  				hwc->state |= PERF_HES_ARCH;
->  
->  			x86_pmu_stop(event, PERF_EF_UPDATE);
-> +			cpuc->events[hwc->idx] = NULL;
->  		}
->  
->  		/*
-> @@ -1365,6 +1366,7 @@ static void x86_pmu_enable(struct pmu *pmu)
->  			 * if cpuc->enabled = 0, then no wrmsr as
->  			 * per x86_pmu_enable_event()
->  			 */
-> +			cpuc->events[hwc->idx] = event;
->  			x86_pmu_start(event, PERF_EF_RELOAD);
->  		}
->  		cpuc->n_added = 0;
-> @@ -1531,7 +1533,6 @@ static void x86_pmu_start(struct perf_event *event, int flags)
->  
->  	event->hw.state = 0;
->  
-> -	cpuc->events[idx] = event;
->  	__set_bit(idx, cpuc->active_mask);
->  	static_call(x86_pmu_enable)(event);
->  	perf_event_update_userpage(event);
-> @@ -1610,7 +1611,6 @@ void x86_pmu_stop(struct perf_event *event, int flags)
->  	if (test_bit(hwc->idx, cpuc->active_mask)) {
->  		static_call(x86_pmu_disable)(event);
->  		__clear_bit(hwc->idx, cpuc->active_mask);
-> -		cpuc->events[hwc->idx] = NULL;
->  		WARN_ON_ONCE(hwc->state & PERF_HES_STOPPED);
->  		hwc->state |= PERF_HES_STOPPED;
->  	}
-> @@ -1648,6 +1648,7 @@ static void x86_pmu_del(struct perf_event *event, int flags)
->  	 * Not a TXN, therefore cleanup properly.
->  	 */
->  	x86_pmu_stop(event, PERF_EF_UPDATE);
-> +	cpuc->events[event->hw.idx] = NULL;
->  
->  	for (i = 0; i < cpuc->n_events; i++) {
->  		if (event == cpuc->event_list[i])
-
-This is a much prettier fix. Thanks.👍 
-
-It looks good to me. I did basic tests with this fix, and didn't find any
-issues. But considering this is a such fundamental change, I would do more
-tests later. 
+>>> Tao, you should go with 3 entries per CPU used in a stack-like
+>>> fashion. And then passing that entry into get_perf_callchain() (to
+>>> avoid one extra copy).
+>>>
+>>
+>> Got it. It is more clearer, will change it in v3.
+>>
+>>>>
+>>>> pw-bot: cr
+>>
+>>
+>> --
+>> Best Regards
+>> Tao Chen
 
 
->
+-- 
+Best Regards
+Tao Chen
