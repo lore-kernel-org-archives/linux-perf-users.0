@@ -1,120 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B225F8405C;
-	Thu, 23 Oct 2025 22:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD668405C
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Oct 2025 22:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761257481; cv=none; b=NF9b7KZsYffJ0cJ2+Tdo1F+ZYp1i01NcR2S57yhaElHM+3gZypCafqOLnvs9vWb/swDCV4IiIyyc/OpeeA41WNgYCSNmwZSLp9EzVBp22/1isPwFR1R6QvLoglI9yuRUHcazmoAZRstdLDbEcIf8Fr57lvOcXtMVQD2gi1w3IyA=
+	t=1761257514; cv=none; b=Uay6Og/5Xb05RcotpdtqpzfKHW75oxGSOuzItGI4amPqn2pY5qrl/aIuY8buxaCwhSni0nRm+ladW5d4OAoBKWYEmafSy+Uxv1j4F92qErl+ziX8hRDoSTQB/x3vO8glmUh13QMDqUI7eskT86qPzxJiVN/54pEKjWMr4byx6/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761257481; c=relaxed/simple;
-	bh=nmrxt0pWUJZ6JqvHMmNY6vhSh4t/+5RrRkIo43hz+fA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l1iNgA0LNCdSmFDXqCXo0o/jl82i1SAZ+bkc9aIJyl+RatkC3CRaFEM3NhWSyk86B26XBwMLUACTqkvJV7ZkPMQxLolEh3RQpUEQGP6/O1PmyFCq+1neAENrXY2OKvOfmP4IIfmK8cYDW4TLiMwt/H2kM/5YXGKBJwYdebAZpEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DUBqjoi6; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1761257514; c=relaxed/simple;
+	bh=B+UUUp6uNHLrzyagMuHBGzkaTB2vsSCjuib0ZOuQjVY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XrOlSJMxz5zenCN4oIhqCV8mgpAalaWoKAXwwBXcCt6NuhCZYbuyKOECYgieXOen84+J2UYhY07WlU1hNZUZBi6ZG+shX+Dio52z+tNOLu9UB1z1bjly5SrQVzU1sghpQBUAngFcMo5hf3hVe7kerlNnsgJ7U6AwNfNeSIWq/P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kyFMZ/Ju; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=56f2uXX5; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=euZg90e8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/f+2orCV; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DUBqjoi6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761257479; x=1792793479;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=nmrxt0pWUJZ6JqvHMmNY6vhSh4t/+5RrRkIo43hz+fA=;
-  b=DUBqjoi6a0ve8SUFb6w45vsLbIdTQAjkQX/XsyFiDcX6ItJk70z59Vmt
-   xc1+drXILyNHU9a8l1wiZlVbveZ7wb50zsJCs4CgRgeODHwcLDqOEr7RK
-   JEOYwNA1dn7gGKA9NbAZTwx0RihMKGGwatNN+T1HvQvRjXm9Ryo/eGJLN
-   KM2q+Opnu6f6Sy+W3ZKhHa58iwTcPNMfMuYdJu6DwEIimsvCfoy42smZX
-   8iIcl213L9Z9ODNmjjPWIkQ2buZBIivWM9oHe0vXOtMXrNmt9LCxfZ9qx
-   Tl1w3ezSr9GULmo3IWJRzklUDGGPTVOeEiQSZSB2Lo24glrlu92EyijX3
-   w==;
-X-CSE-ConnectionGUID: DlfqKZADSrGLlQMx7Z06rA==
-X-CSE-MsgGUID: srDguvzGT3St6Ky6H+3Ulg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="62470431"
-X-IronPort-AV: E=Sophos;i="6.19,250,1754982000"; 
-   d="scan'208";a="62470431"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2025 15:11:19 -0700
-X-CSE-ConnectionGUID: FZogax42RQGJW8M3RNN4rQ==
-X-CSE-MsgGUID: 7qEFBgt8TGqSfG41hAc3ww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,250,1754982000"; 
-   d="scan'208";a="184342221"
-Received: from soc-cp83kr3.clients.intel.com (HELO [10.241.241.181]) ([10.241.241.181])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2025 15:11:10 -0700
-Message-ID: <5c3e30ac-7fe3-47fb-923e-3def7902a772@intel.com>
-Date: Thu, 23 Oct 2025 15:11:07 -0700
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kyFMZ/Ju";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="56f2uXX5";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="euZg90e8";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/f+2orCV"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 5D9091F397;
+	Thu, 23 Oct 2025 22:11:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1761257506; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xQ8YJL6c4otX3rpW5Q4ZskCTfDtlTHaM9dPQ9OJN+YY=;
+	b=kyFMZ/Juw4TULUzkLvPddYAlTRTefS/LXQUDo1YilZAY8kMn5yxAv8ZziEqXdQ2lmBOV8G
+	hZMIZQ4aFmkZzVtNUewUwA87Fv7/Vu3WaW4jKnR5kR4cSKXVKHwLBfWld8ScfzAjxa6csy
+	vq8ZIBHpa9YZmVmdikOGO5pgzrtJ2aE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1761257506;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xQ8YJL6c4otX3rpW5Q4ZskCTfDtlTHaM9dPQ9OJN+YY=;
+	b=56f2uXX5aL1uqNT48a4EEdvdGLcKcQeiBLogcxE3KqFrX7EeZP3bjPOfKk8kHglZLaLMMA
+	ePNU5DOa/nfpiKCw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=euZg90e8;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="/f+2orCV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1761257502; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xQ8YJL6c4otX3rpW5Q4ZskCTfDtlTHaM9dPQ9OJN+YY=;
+	b=euZg90e8yDnMZG/JOsAJw2yOoL4qdlb+j+vvaVkAXJYbWMZesAcmEVAxJWDzR2sBgxEGqI
+	WhG/ydOe2VL20yRIXknrR4638Pq1A7/FvVZkXgbyYNGQeVvEe22JIk1rG1YbBufZnpomgb
+	Bj2pm9eaDxb6pioH2i+287Boc+vxVZg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1761257502;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xQ8YJL6c4otX3rpW5Q4ZskCTfDtlTHaM9dPQ9OJN+YY=;
+	b=/f+2orCV6Yn8+jtEf25EKXY03nGbUw6kEkhBwEMQUmST8YueHiQow8fLmeOqAqRb06Zbd3
+	PqmCvm80enwaY4BA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6C619139D2;
+	Thu, 23 Oct 2025 22:11:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id NdylDx2o+mhfFgAAD6G6ig
+	(envelope-from <tonyj@suse.de>); Thu, 23 Oct 2025 22:11:41 +0000
+Date: Thu, 23 Oct 2025 15:11:37 -0700
+From: Tony Jones <tonyj@suse.de>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Michal Suchanek <msuchanek@suse.de>, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf hwmon_pmu: Fix uninitialized variable warning
+Message-ID: <aPqoGTyM9nKSQYQ9@suse.de>
+References: <20251022103839.19550-1-msuchanek@suse.de>
+ <aPqjMzxyYeKCp91K@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf tools: Refactor precise_ip fallback logic
-To: Ian Rogers <irogers@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar <mingo@redhat.com>,
- Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- thomas.falcon@intel.com, dapeng1.mi@linux.intel.com, xudong.hao@intel.com
-References: <20251022220802.1335131-1-zide.chen@intel.com>
- <CAP-5=fUKH8Qw9t173G4HP-UzujUKJrLPPmkDSjBs=2YzV=9LHA@mail.gmail.com>
-Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <CAP-5=fUKH8Qw9t173G4HP-UzujUKJrLPPmkDSjBs=2YzV=9LHA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <aPqjMzxyYeKCp91K@google.com>
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 5D9091F397
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Score: -4.51
 
-
-
-On 10/23/2025 9:14 AM, Ian Rogers wrote:
-> On Wed, Oct 22, 2025 at 3:14 PM Zide Chen <zide.chen@intel.com> wrote:
->>
->> Commit c33aea446bf555ab ("perf tools: Fix precise_ip fallback logic")
->> unconditionally called the precise_ip fallback and moved it after the
->> missing-feature checks so that it could handle EINVAL as well.
->>
->> However, this introduced an issue: after disabling missing features,
->> the event could fail to open, which makes the subsequent precise_ip
->> fallback useless since it will always fail.
->>
->> For example, run the following command on Intel SPR:
->>
->> $ perf record -e '{cpu/mem-loads-aux/S,cpu/mem-loads,ldlat=3/PS}' -- ls
->>
->> Opening the event "cpu/mem-loads,ldlat=3/PS" returns EINVAL when
->> precise_ip == 3. It then sets attr.inherit = false, which triggers a
->> kernel check failure since it doesn't match the group leader's inherit
->> attribute. As a result, it continues to fail even after precise_ip is
->> reduced.
->>
->> By moving the precise_ip fallback earlier, this issue is resolved, as
->> well as the kernel test robot report mentioned in commit
->> c33aea446bf555ab.
->>
->> No negative side effects are expected, because the precise_ip level is
->> restored by evsel__precise_ip_fallback() if the fallback does not help.
->>
->> This also aligns with commit 2b70702917337a8d ("perf tools: Remove
->> evsel__handle_error_quirks()").
->>
->> Fixes: af954f76eea56453 ("perf tools: Check fallback error and order")
->> Fixes: c33aea446bf555ab ("perf tools: Fix precise_ip fallback logic")
->> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> Signed-off-by: Zide Chen <zide.chen@intel.com>
+On Thu, Oct 23, 2025 at 02:50:43PM -0700, Namhyung Kim wrote:
+> Hello,
 > 
-> Acked-by: Ian Rogers <irogers@google.com>
+> On Wed, Oct 22, 2025 at 12:38:35PM +0200, Michal Suchanek wrote:
+> > The line_len is only set on success. Check the return value instead.
 > 
-> Any chance you could help with a test case that covers this? The
-> fallback logic is spread out and easy to introduce subtle bugs into.
-> Just having a test case that does ` perf record -e
-> '{cpu/mem-loads-aux/S,cpu/mem-loads,ldlat=3/PS}' -- ls` and checks the
-> output for EINVAL when the events are present would be useful, as then
-> we can make sure this doesn't regress on SPR and later. Something with
-> more generic events would of course be better :-)
+> Can you please share the actual warning messages from the compiler?
+> 
+> Thanks,
+> Namhyung
 
-OK. Maybe a new test "PMU event open fallback tests".
+[snipped CC]
+
+I believe it was the following (gcc13):
+
+[   38s] util/hwmon_pmu.c: In function ‘perf_pmus__read_hwmon_pmus’:
+[   38s] util/hwmon_pmu.c:742:20: warning: ‘line_len’ may be used uninitialized [-Wmaybe-uninitialized]
+[   38s]   742 |                 if (line_len > 0 && line[line_len - 1] == '\n')
+[   38s]       |                    ^
+[   38s] util/hwmon_pmu.c:719:24: note: ‘line_len’ was declared here
+[   38s]   719 |                 size_t line_len;
+[   38s]  
+
+
+Tony
