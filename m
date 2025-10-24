@@ -1,152 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1EF2288C24;
-	Thu, 23 Oct 2025 22:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94BCA2F5B;
+	Fri, 24 Oct 2025 00:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761259462; cv=none; b=Zdiu09zVqPCPhezZ+8Fp3jILTSSqsAHjxg4OMIM85FMqvChmGJXrIVpKYebyoXuTUpYB+RndbWebE1ZuVsUOvj3g6X2QUli4dKcBcvl5Y0Z5MIwP7AsZyxmW9ZJ/UTMn2dgz0Ho48uVpDg/BAwIBvQzhNV4X3G/eTa1Muc/UZI0=
+	t=1761266252; cv=none; b=bmoX6n4Wpfyb14t9TsbpRb5ZrHzoKf6JLGejmLr4osENmYyPf0yC+bJKwCuqaLw2kMMBlTgCGqjURLxUTVBNXRWengGLauCqlKZx9lBcnOexJSmMnA2NaZEhGhLljIU/sN2rtjijhRPmQYnyCtwB1Xl+AwP71UkTY/RqEaO860I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761259462; c=relaxed/simple;
-	bh=ltxwjcO6fbW7VFGHu2ab0NFMy4SRYIsPlADiG3WOl94=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=M/fdLWm+QInSYUW3fORM+rIL6483SgFuFVQ+ZryV+4RKoczUkdBAvrJe21S01lgt+OxPBW9TwC8+XJElcJgmEuFHkp0ht4lnV6gvf7KVaTQSKDc2qmQU9KZkQdDnv9XidkgRdbzSXJq6sd2Ncwf6nZl/UraZ8fqJc+ykmY3gqxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IU9VFnCn; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1761266252; c=relaxed/simple;
+	bh=9yShpyOWWMUvahOeespSxEMzsqNOgtuRA/MeBuJl6ls=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g83Bf3r+OgBFolURNis7LKeqv1pB6+o6K6B4UJsd/LHgGnxN+eeXygCs6S/k6N3wOajDKXxqbSz16cBeMaCz5olaFPoUg9+G6N1K71buQUxhMtgnu9kDy9Wwx+EtX2SA+xcWZei5o85MqWFPZz4ftxKiv+2smZVpns47v9kBbRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fxQg/7Lo; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IU9VFnCn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fxQg/7Lo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761259461; x=1792795461;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ltxwjcO6fbW7VFGHu2ab0NFMy4SRYIsPlADiG3WOl94=;
-  b=IU9VFnCn6DzYkDwis6CskInn2tUVGy0+UvNsvBZnl9bOLdsM3QLGP2k3
-   DArfIvLXIKpVQhkXf7KaWiJmI0ep0f3w2gdI+NVHdaxZJ4j6MrROzHTAo
-   xTrFTQolC4J+gLbJUsu8mXDJzu4IiqKYyDrAhhQMnmws7jdfXIq7So4cq
-   oWxPHt419gyzWaTehIvUrNze1h+pPitoKN/sAEgS3OOQWdZgiASQP7qnu
-   0xlZk8q8XCksp/JlMHGSLvstqrcVIDnhfTIjHZudbSVk42WHOQT03OMV4
-   +lo8gt4Dppliezvij9RYLUxvB+7Nof5ya4Iz9n7+gR1lWnFy7Q2bisoSK
-   Q==;
-X-CSE-ConnectionGUID: oJilxQzuRsmkGX9JGJbCkg==
-X-CSE-MsgGUID: 7UPJSQH6Tr6qs2FyWISt5A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63333510"
-X-IronPort-AV: E=Sophos;i="6.19,250,1754982000"; 
-   d="scan'208";a="63333510"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2025 15:44:20 -0700
-X-CSE-ConnectionGUID: TbDhDJyvTRyaJTSWgC9p2w==
-X-CSE-MsgGUID: TkdAOh+4RZaSy/U+ucfTag==
+  t=1761266250; x=1792802250;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9yShpyOWWMUvahOeespSxEMzsqNOgtuRA/MeBuJl6ls=;
+  b=fxQg/7LoNF03HtrcekGcMYkofM4ignc6pLgKp3tUt3r6XQeE6QOXSLiZ
+   yEea0KhEJAd4u+Gx3AeAM1owWeyAz17trgsFTcZ5NBddttJ5nyr9xWMIH
+   Oi72iDZFehKuG9Exjr84S/bXobSRrwkW6u/lRSzmYNk6Io8fl4YsNUx2k
+   u5gJw5Nca3uIu+uYCPMo+DVZKBo1U2WzEb+bt8dtY3YQNwXLXSE8frAAv
+   s3QTJPmmjWbjlPLuIjF4JDibVMD2JEYEftgWVdp+z7CeSugdsNAdQyfdV
+   kfg5PakbTGn6hZxiearF6leq79XicKnVslSuu1ztRUmVsk/9c8WslahOU
+   w==;
+X-CSE-ConnectionGUID: ebRlUkKoTkKyBEjF+g4nTg==
+X-CSE-MsgGUID: xdyUAAJvTPuv8XxTVX94lQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="73737428"
+X-IronPort-AV: E=Sophos;i="6.19,251,1754982000"; 
+   d="scan'208";a="73737428"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2025 17:37:29 -0700
+X-CSE-ConnectionGUID: y9Gquh9oQsO7z+ZBiAi34g==
+X-CSE-MsgGUID: hDYgPVQQQzKdBr3byVVOww==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,250,1754982000"; 
-   d="scan'208";a="183885487"
-Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.43])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2025 15:44:20 -0700
-From: Zide Chen <zide.chen@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH RESEND 3/3] perf/x86/intel/cstate: Add Pantherlake support
-Date: Thu, 23 Oct 2025 15:37:53 -0700
-Message-ID: <20251023223754.1743928-4-zide.chen@intel.com>
-X-Mailer: git-send-email 2.51.1
-In-Reply-To: <20251023223754.1743928-1-zide.chen@intel.com>
-References: <20251023223754.1743928-1-zide.chen@intel.com>
+X-IronPort-AV: E=Sophos;i="6.19,251,1754982000"; 
+   d="scan'208";a="188356328"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.233.250]) ([10.124.233.250])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2025 17:37:25 -0700
+Message-ID: <2a9759f6-c1b0-4262-9414-0b8e6b742eb1@linux.intel.com>
+Date: Fri, 24 Oct 2025 08:37:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/intel: Fix KASAN global-out-of-bounds warning
+To: "Chen, Zide" <zide.chen@intel.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>, Xudong Hao <xudong.hao@intel.com>,
+ stable@vger.kernel.org
+References: <20250904012419.266400-1-dapeng1.mi@linux.intel.com>
+ <400d2ef8-07bd-4620-ace8-6eaa05cd200b@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <400d2ef8-07bd-4620-ace8-6eaa05cd200b@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Zhang Rui <rui.zhang@intel.com>
 
-Like Lunarlake, Pantherlake supports CC1/CC6/CC7 and PC2/PC6/PC10.
+On 10/24/2025 1:45 AM, Chen, Zide wrote:
+>
+> On 9/3/2025 6:24 PM, Dapeng Mi wrote:
+>> When running "perf mem record" command on CWF, the below KASAN
+>> global-out-of-bounds warning is seen.
+>>
+>>   196.273657] ==================================================================
+>> [  196.273662] BUG: KASAN: global-out-of-bounds in cmt_latency_data+0x176/0x1b0
+>> [  196.273669] Read of size 4 at addr ffffffffb721d000 by task dtlb/9850
+>>
+>> [  196.273676] CPU: 126 UID: 0 PID: 9850 Comm: dtlb Kdump: loaded Not tainted 6.17.0-rc3-2025-08-29-intel-next-34160-g316938187eb0 #1 PREEMPT(none)
+>> [  196.273680] Hardware name: Intel Corporation AvenueCity/AvenueCity, BIOS BHSDCRB1.IPC.3544.P83.2507110208 07/11/2025
+>> [  196.273682] Call Trace:
+>> [  196.273683]  <NMI>
+>> [  196.273684]  dump_stack_lvl+0x55/0x70
+>> [  196.273689]  print_address_description.constprop.0+0x2c/0x3d0
+>> [  196.273694]  ? cmt_latency_data+0x176/0x1b0
+>> [  196.273696]  print_report+0xb4/0x270
+>> [  196.273699]  ? kasan_addr_to_slab+0xd/0xa0
+>> [  196.273702]  kasan_report+0xb8/0xf0
+>> [  196.273705]  ? cmt_latency_data+0x176/0x1b0
+>> [  196.273707]  cmt_latency_data+0x176/0x1b0
+>> [  196.273710]  setup_arch_pebs_sample_data+0xf49/0x2560
+>> [  196.273713]  intel_pmu_drain_arch_pebs+0x577/0xb00
+>> [  196.273716]  ? __pfx_intel_pmu_drain_arch_pebs+0x10/0x10
+>> [  196.273719]  ? perf_output_begin+0x3e4/0xa10
+>> [  196.273724]  ? intel_pmu_drain_bts_buffer+0xc2/0x6a0
+>> [  196.273727]  ? __pfx_intel_pmu_drain_bts_buffer+0x10/0x10
+>> [  196.273730]  handle_pmi_common+0x6c4/0xc80
+>> [  196.273734]  ? __pfx_handle_pmi_common+0x10/0x10
+>> [  196.273738]  ? intel_bts_interrupt+0xd3/0x4d0
+>> [  196.273740]  ? __pfx_intel_bts_interrupt+0x10/0x10
+>> [  196.273742]  ? intel_pmu_lbr_enable_all+0x25/0x150
+>> [  196.273745]  intel_pmu_handle_irq+0x388/0x700
+>> [  196.273748]  perf_event_nmi_handler+0xff/0x150
+>> [  196.273751]  nmi_handle.part.0+0xa8/0x2d0
+>> [  196.273755]  ? perf_output_begin+0x3e9/0xa10
+>> [  196.273757]  default_do_nmi+0x79/0x1a0
+>> [  196.273760]  fred_exc_nmi+0x40/0x90
+>> [  196.273762]  asm_fred_entrypoint_kernel+0x45/0x60
+>> [  196.273765] RIP: 0010:perf_output_begin+0x3e9/0xa10
+>> [  196.273768] Code: 54 24 1c 85 d2 0f 85 19 03 00 00 48 8b 44 24 18 48 c1 e8 03 42 0f b6 04 28 84 c0 74 08 3c 03 0f 8e 25 05 00 00 41 8b 44 24 18 <c1> e0 0c 48 98 48 83 e8 01 80 7c 24 2a 00 0f 85 f9 02 00 00 4c 29
+>> [  196.273770] RSP: 0018:ffffc9001cf575e8 EFLAGS: 00000246
+>> [  196.273774] RAX: 0000000000000080 RBX: ffff88c1a0f95028 RCX: 0000000000000004
+>> [  196.273775] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88c08c8f9408
+>>
+>> [  196.273777] RBP: 0000000000000028 R08: 0000000000000000 R09: ffffed18341f2a05
+>> [  196.273778] R10: ffff88c1a0f9502f R11: ffff88c1a0dbe1b8 R12: ffff88c1a0f95000
+>> [  196.273779] R13: dffffc0000000000 R14: 0000000000000000 R15: ffffc9001cf577e0
+>> [  196.273782]  </NMI>
+>>
+>> The issue is caused by below code in __grt_latency_data(). The code
+>> tries to access x86_hybrid_pmu structure which doesn't exist on
+>> non-hybrid platform like CWF.
+>>
+>>         WARN_ON_ONCE(hybrid_pmu(event->pmu)->pmu_type == hybrid_big)
+>>
+>> So add is_hybrid() check before calling this WARN_ON_ONCE to fix the
+>> global-out-of-bounds access issue.
+>>
+>> Reported-by: Xudong Hao <xudong.hao@intel.com>
+>> Cc: stable@vger.kernel.org
+>> Fixes: 090262439f66 ("perf/x86/intel: Rename model-specific pebs_latency_data functions")
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>  arch/x86/events/intel/ds.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+>> index c0b7ac1c7594..d1ac1f1ceee9 100644
+>> --- a/arch/x86/events/intel/ds.c
+>> +++ b/arch/x86/events/intel/ds.c
+>> @@ -317,7 +317,7 @@ static u64 __grt_latency_data(struct perf_event *event, u64 status,
+>>  {
+>>  	u64 val;
+>>  
+>> -	WARN_ON_ONCE(hybrid_pmu(event->pmu)->pmu_type == hybrid_big);
+>> +	WARN_ON_ONCE(is_hybrid() && hybrid_pmu(event->pmu)->pmu_type == hybrid_big);
+> BTW, this line has more than 80 characters.
 
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
----
- arch/x86/events/intel/cstate.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+Ah, yes, I would fix it in v2. Thanks.
 
-diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-index 2bfd011f99da..fa67fda6e45b 100644
---- a/arch/x86/events/intel/cstate.c
-+++ b/arch/x86/events/intel/cstate.c
-@@ -41,7 +41,7 @@
-  *	MSR_CORE_C1_RES: CORE C1 Residency Counter
-  *			 perf code: 0x00
-  *			 Available model: SLM,AMT,GLM,CNL,ICX,TNT,ADL,RPL
-- *					  MTL,SRF,GRR,ARL,LNL
-+ *					  MTL,SRF,GRR,ARL,LNL,PTL
-  *			 Scope: Core (each processor core has a MSR)
-  *	MSR_CORE_C3_RESIDENCY: CORE C3 Residency Counter
-  *			       perf code: 0x01
-@@ -53,18 +53,19 @@
-  *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW,
-  *						SKL,KNL,GLM,CNL,KBL,CML,ICL,ICX,
-  *						TGL,TNT,RKL,ADL,RPL,SPR,MTL,SRF,
-- *						GRR,ARL,LNL
-+ *						GRR,ARL,LNL,PTL
-  *			       Scope: Core
-  *	MSR_CORE_C7_RESIDENCY: CORE C7 Residency Counter
-  *			       perf code: 0x03
-  *			       Available model: SNB,IVB,HSW,BDW,SKL,CNL,KBL,CML,
-- *						ICL,TGL,RKL,ADL,RPL,MTL,ARL,LNL
-+ *						ICL,TGL,RKL,ADL,RPL,MTL,ARL,LNL,
-+ *						PTL
-  *			       Scope: Core
-  *	MSR_PKG_C2_RESIDENCY:  Package C2 Residency Counter.
-  *			       perf code: 0x00
-  *			       Available model: SNB,IVB,HSW,BDW,SKL,KNL,GLM,CNL,
-  *						KBL,CML,ICL,ICX,TGL,TNT,RKL,ADL,
-- *						RPL,SPR,MTL,ARL,LNL,SRF
-+ *						RPL,SPR,MTL,ARL,LNL,SRF,PTL
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C3_RESIDENCY:  Package C3 Residency Counter.
-  *			       perf code: 0x01
-@@ -77,7 +78,7 @@
-  *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW,
-  *						SKL,KNL,GLM,CNL,KBL,CML,ICL,ICX,
-  *						TGL,TNT,RKL,ADL,RPL,SPR,MTL,SRF,
-- *						ARL,LNL
-+ *						ARL,LNL,PTL
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C7_RESIDENCY:  Package C7 Residency Counter.
-  *			       perf code: 0x03
-@@ -96,7 +97,7 @@
-  *	MSR_PKG_C10_RESIDENCY: Package C10 Residency Counter.
-  *			       perf code: 0x06
-  *			       Available model: HSW ULT,KBL,GLM,CNL,CML,ICL,TGL,
-- *						TNT,RKL,ADL,RPL,MTL,ARL,LNL
-+ *						TNT,RKL,ADL,RPL,MTL,ARL,LNL,PTL
-  *			       Scope: Package (physical package)
-  *	MSR_MODULE_C6_RES_MS:  Module C6 Residency Counter.
-  *			       perf code: 0x00
-@@ -652,6 +653,7 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
- 	X86_MATCH_VFM(INTEL_ARROWLAKE_H,	&adl_cstates),
- 	X86_MATCH_VFM(INTEL_ARROWLAKE_U,	&adl_cstates),
- 	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	&lnl_cstates),
-+	X86_MATCH_VFM(INTEL_PANTHERLAKE_L,	&lnl_cstates),
- 	{ },
- };
- MODULE_DEVICE_TABLE(x86cpu, intel_cstates_match);
--- 
-2.51.1
 
+>
+> Reviewed-by: Zide Chen <zide.chen@intel.com>
+>
+>
+>>  
+>>  	dse &= PERF_PEBS_DATA_SOURCE_GRT_MASK;
+>>  	val = hybrid_var(event->pmu, pebs_data_source)[dse];
+>>
+>> base-commit: 16ed389227651330879e17bd83d43bd234006722
