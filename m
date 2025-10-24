@@ -1,119 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E754309DDC;
-	Fri, 24 Oct 2025 21:31:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A941D61B7;
+	Fri, 24 Oct 2025 21:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761341470; cv=none; b=NwoWHwSlLr+F2TCuNsYK/MYQv952YOsVCTn8KrRZ7ocIGVcR8jUcc8ElL8qH3+ds5WD+4b9vJarcSY5+THsrEDVmIMPdUptkdEmhXibsDcXr/EncgfRRDB7hEgh35rWxaRZ0dclLSql9rsqistZNC9NV7mp3cZfYG3XNdRRBuk0=
+	t=1761341883; cv=none; b=TSbJz2GYZcO5YKtnhmNdOBewaa7RenQjHtkW2FbYg8c3DSeqz1o4FlqJdzoOmu6Of/kKyaIzkB/CWLw1k633/AO0onR0iwPGXAovR7sfjrLiLTnRLPQfhhoHoNBIBZDltcvtw9D/bCu5cLOWB7JJ/KOT7BdwOHvLnUfE2ESfAZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761341470; c=relaxed/simple;
-	bh=a5nWUpgjX/SlORZFuatSeSBNce6QWI/+338uOL8xONg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FjY29lKc2YHC33hMaKJp2nvRi8PiQHeKG0GbJ47kVQorNVd4Q2Z1yY9lKSg8M6pkYFWQmcSoat4uIh7cWZNwyVSLe2Fxb/UW8JFiJMNTuKbzZduuZcoijBWBEE807WQaoh75mejUr80P/Uc4OuCnF3kkpYZkYFltWdLpJpB8AhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HyL8oXea; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761341883; c=relaxed/simple;
+	bh=AdZv2kUB1G+gRD8CSgpDBsJ60BPFkQUuJ8yYQs6IiPw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=syWA1Iv6yR5+4vtKqjhBeXZUoLLDmYbxa/rXr78I4NekIN6HWFww2WdrnhU1HDCa5NihMKBVv2rCxfHjSLPKTQyr2WitCT9QjLXQNfiBixCANbIH6mzw+RQQESvwfxAAQeFp9ckaOHalJs+ilHDciirmNJ/nugx2ohdsxtLEB14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=eirEBfxT; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HyL8oXea"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2417FC4CEFB;
-	Fri, 24 Oct 2025 21:31:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761341469;
-	bh=a5nWUpgjX/SlORZFuatSeSBNce6QWI/+338uOL8xONg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HyL8oXeaWrFMDlD9J8tvQ+EpR0SEF9YQaVtb9n7hr8mf6qkeMarkAs63/SjVBsxbU
-	 lIEcBEySOLQ9o83+yugk/MKmKn4Xd8qmMN9m6KaB6aGgQ788ff7+1w5nZioSOTWNgi
-	 a2x52tiEce1NT5KTnI3PltTCiDs3m6FgoJWutnJaSWdE8ogTJ0sE3aJb2NWzWMNG9D
-	 ebtrFBA/pQNapiMmuyFZEwfpxiSeE2esfOqgtSdy9hFPzn7pSpaf+BRHvXEsnFu38o
-	 nInC9D/uAEmsBA2FUMjt6fgTVZXRBs7Tm1uoQ+6i3SS1r9Y8+/pVRlBQtwDQ7l+9hK
-	 srfU/xPq05sDg==
-Date: Fri, 24 Oct 2025 22:31:06 +0100
-From: Mark Brown <broonie@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
-	Jinchao Wang <wangjinchao600@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v5 6/8] selftests: tracing: Add a basic testcase for
- wprobe
-Message-ID: <aPvwGhMBJqMKcC9D@finisterre.sirena.org.uk>
-References: <175859019940.374439.7398451124225791618.stgit@devnote2>
- <175859026716.374439.14852239332989324292.stgit@devnote2>
+	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="eirEBfxT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
+	; s=mail; h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=AdZv2kUB1G+gRD8CSgpDBsJ60BPFkQUuJ8yYQs6IiPw=; b=eirEBfxTgpIotEWF93BmQLaU+K
+	mwc9CzZUmufZkl62CYBwLsTlYh23gSM9Lb7TY5qB5bijOgCihqmHNV0rueXZHAlxC3G9Iu2+kd/XK
+	/rZkHGvewhmdszfmoOhU+5KgctL5Ou7KT40r5HlMGeCRMY8VmC1qlZmb6PyVyHiNUGb8kz7V014L2
+	prijPRt4pCP92nDEoQFojDXD81rKR/7K5kAEYG5pOil+5+Z+p+uV7j2BJWouF0e7Ub9dM0pwLI2aJ
+	WuXyQoUZfCFqgFQDi4K9YaRJVodneDbAowg5mnDq2PbT2sH6XD21zwSkzT/+wujOlJ/IIs4w2oCV+
+	zWOle8WA==;
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@surriel.com>)
+	id 1vCPSA-0000000013r-3I5H;
+	Fri, 24 Oct 2025 17:36:06 -0400
+Message-ID: <18734a4944e47952b7ad3e10a36c902392bdaa91.camel@surriel.com>
+Subject: Re: [PATCH 2/3] Provide and use an always inline version of
+ finish_task_switch
+From: Rik van Riel <riel@surriel.com>
+To: Xie Yuanbin <qq570070308@gmail.com>, linux@armlinux.org.uk, 
+	mathieu.desnoyers@efficios.com, paulmck@kernel.org, pjw@kernel.org, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+ hca@linux.ibm.com, 	gor@linux.ibm.com, agordeev@linux.ibm.com,
+ borntraeger@linux.ibm.com, 	svens@linux.ibm.com, davem@davemloft.net,
+ andreas@gaisler.com, tglx@linutronix.de, 	mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, 	luto@kernel.org,
+ peterz@infradead.org, acme@kernel.org, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ 	irogers@google.com, adrian.hunter@intel.com, anna-maria@linutronix.de, 
+	frederic@kernel.org, juri.lelli@redhat.com, vincent.guittot@linaro.org, 
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, 	vschneid@redhat.com, thuth@redhat.com,
+ akpm@linux-foundation.org, david@redhat.com, 	lorenzo.stoakes@oracle.com,
+ segher@kernel.crashing.org, ryan.roberts@arm.com, 
+	max.kellermann@ionos.com, urezki@gmail.com, nysal@linux.ibm.com
+Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, will@kernel.org
+Date: Fri, 24 Oct 2025 17:36:06 -0400
+In-Reply-To: <20251024183541.68955-1-qq570070308@gmail.com>
+References: <20251024182628.68921-1-qq570070308@gmail.com>
+	 <20251024183541.68955-1-qq570070308@gmail.com>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fjZBpNS/k9vJ6kRK"
-Content-Disposition: inline
-In-Reply-To: <175859026716.374439.14852239332989324292.stgit@devnote2>
-X-Cookie: Don't read everything you believe.
 
-
---fjZBpNS/k9vJ6kRK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Sep 23, 2025 at 10:17:47AM +0900, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Sat, 2025-10-25 at 02:35 +0800, Xie Yuanbin wrote:
+> finish_task_switch is called during context switching,
+> inlining it can bring some performance benefits.
 >=20
-> Add 'add_remove_wprobe.tc' testcase for testing wprobe event that
-> tests adding and removing operations of the wprobe event.
+> Add an always inline version `finish_task_switch_ainline` to be
+> called
+> during context switching, and keep the original version for being
+> called
+> elsewhere, so as to take into account the size impact.
 
-Since this series has landed in -next we've been seeing hangs on a range
-of arm64 platforms running the ftrace tests, it looks like it's all of
-them.  Unfortunately the systems lock up with no output as soon as they
-start trying to do something with wprobes:
+Does that actually work, or does the compiler
+still inline some of those "non-inlined" versions,
+anyway?
 
-# ok 19 Generic dynamic event - add/remove kprobe events
-# ok 20 Generic dynamic event - add/remove synthetic events
-# ok 21 Generic dynamic event - add/remove tracepoint probe events
-# ok 22 Generic dynamic event - add/remove tracepoint probe events on module
-# ok 23 Generic dynamic event - add/remove/test uprobe events
+Also, what kind of performance improvement
+have you measured with these changes?
 
-the next test being add_remove_wprobe.tc, which doesn't seem to
-complete.  Full log (for what little it's worth):
-
-   https://lava.sirena.org.uk/scheduler/job/2000440#L1860
-
-I turned on -vvv logging and that generated the rather spectacularly
-more verbose:
-
-   https://lava.sirena.org.uk/scheduler/job/2000676/log_file/plain
-
-(in a somewhat processed format unfortunately.).  Looking at that log I
-do notice a bunch of "unexpected operators" reported by the shell, these
-systems are running dash not bash, though that doesn't seem related.  It
-looks like the script hangs in reset_trigger_file while grepping the
-trigger files rather than actually trying to do the test.
-
-Sorry about the delay in reporting this.
-
---fjZBpNS/k9vJ6kRK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmj78BYACgkQJNaLcl1U
-h9AkyQf/e3e7F7Pk3OKUC6Sce26wTUo8MDGLo0PgSFK+bCCeLWau+ZqDOUr9a5mZ
-dge4XBD6WJ1HMCDcU3qLdCXrHwmspyDA/LijDx/TcmChx1qnWYJtT/CfPLoSP9Y4
-fs9A6ckI+P3ZO82/4bEwxMu9e0vDsKKOikzoOdZn0O8iTMauwpqbot/if0oMIPPA
-ddHn84SkdqyXCjJe8KOEp3cfYIg/D3oa9h/mJJVaJWaz/H8C97jkkZgiob6Xcem3
-TzjGQpLtFx8wbERoS6c4NtI3SfCZkBXhBaVEHcAl0/iv56xnedDn/JcCEkIVxqE1
-E97DvONInVFwS/6rrs3eTE45VFAeHQ==
-=/RTT
------END PGP SIGNATURE-----
-
---fjZBpNS/k9vJ6kRK--
+--=20
+All Rights Reversed.
