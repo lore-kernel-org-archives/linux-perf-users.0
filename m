@@ -1,157 +1,239 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8B513C695;
-	Fri, 24 Oct 2025 15:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC33C86340
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Oct 2025 17:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761321051; cv=none; b=Hp9Vn/qjvUkgD4r53nSgSki+7ELAWEICfZ6RwRUmXh65P5vtNXUBFarU6cvQ4h7X+MaRvZC5usAL/yG050YjxfnKERDlljXPct0pjLFSX1jiT6rbqYKIESA/ncIxYGMoGPJma+entYE0CzMQkeIqz8uR/jdRlgl5BIn+bF63nb0=
+	t=1761325554; cv=none; b=AX4PmxW3i9njVfAfRLL4tgOoFDXXGBS7ZOt9JY0LRYTH+aaKekqO/gE1b/SOKrBCa2S7PPukzlhEDU1atchE4p1SvQXzAr7AtCQYlbBaZ5qxTmBZmhJL8K6JcZs7ILcCWic25yDOjzwhXPQRcNcN3Rm3kaIwTo7Rjj6lDCXEmpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761321051; c=relaxed/simple;
-	bh=caJsNtgZ4UnTHpwxb1JsZHxyp481OSCnnMZxp4OUvI4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n5DeHmklsBi9l7TUxbj2ma8xGcaNt9B3EaiVXQkBflOYHOns0/ZUqIWe7OAie6PargzkoFT6ALPdLVx34OTgr1qOuF+jkJz2lt9vuKMCnAmhISRvuGOyEW1Nikcy9UR9Y8+5zOBEC6ktCNfPX+U7AOjhvQU4atBW8w/1dbFo57A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BNEKdlpa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761325554; c=relaxed/simple;
+	bh=ywL2XffooPaoJtOW52uoNolWTfO4L1cPqhwxEZrSkdI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sOgjOjrgCdgnF6hwpKF95LxkC70MpCHLgDJUNEDkb/i5YORW67hFEhZn/GNIWPSgp7GltnOk7IZPEjMeAVUATyMer0lR9Q9sO305u6f8FbaHuGkN7yh7wjT4dFA1mLRWGP6s+OTWBpJKiZTJlfflG4SjoeWOM+NEpk4qFGm9t9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QEfJ11fc; arc=none smtp.client-ip=209.85.210.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BNEKdlpa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04C31C4CEF1;
-	Fri, 24 Oct 2025 15:50:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761321051;
-	bh=caJsNtgZ4UnTHpwxb1JsZHxyp481OSCnnMZxp4OUvI4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BNEKdlpaH0GMmuWzImYsHZ+SBCAOj9GpB+X/JuEmYSiFjTt90a7naRsqQS89O/wPt
-	 72tfuVPoz4demRI0EbmGvGtKYrAj3tuudV7oJ3NVh8pPCP47HVuxkGTXFf/VjOHRlv
-	 rUfusps+FwYwqbcxnGHP6so6tJAFvgqK2/jBfBAoqgfi35tHAxYzlF7pyiImwAp8Fo
-	 TL5qgTvJid+KjZP3oGV+0g4mfyk7YChJa9JcwSjC7DEy1oh89opcQ5tOuGrH3qvpBt
-	 gpeYlAgL8cL1AuxwPMtsVW9KqWB0Ym6270gWt/PpBnL3w7W5mZ3qv0I29hGWGrWt2/
-	 NXgx3nX9E8Bcg==
-Message-ID: <71fd8843-0a41-40b3-9cbe-dc3f7f77260d@kernel.org>
-Date: Fri, 24 Oct 2025 17:50:45 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QEfJ11fc"
+Received: by mail-pf1-f196.google.com with SMTP id d2e1a72fcca58-7a27053843bso3266980b3a.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 24 Oct 2025 10:05:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1761325551; x=1761930351; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FlJMjioQT5hFyjTQfgGib/nn3aRlpyKPcJRzd9y5r+E=;
+        b=QEfJ11fcA01RRFgcatosxDl+0Ay1YD1NiIUGslkFEcUesOPHG2gKNfyA1z8t87BhrF
+         LnXmtGQhOTOPbugy6iv3QweOLAerAYFkT+fJYGUM6nDV0O7Zq9QaQZkt3CJw6QwP+pzJ
+         3LZ15Txa6gzxgI12YCS/bDKxfol5a9rSBnX0osK/h99gAfDmGsW0S4BbQ9IobeTY7oyO
+         OBCfmmpEhgcIE6XYE9sg+EHPaPX41fsPAkQzqdr/1oYeyhw2MNLlG06VQ9grZAncgHlc
+         5I8qXn7PmPU8N0oFQBMVY6ApdGQzPgGrdnrtDxk/tG1dPTqqYBXtFnnSQNhZxQHMA/xu
+         mAag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761325551; x=1761930351;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FlJMjioQT5hFyjTQfgGib/nn3aRlpyKPcJRzd9y5r+E=;
+        b=b/pNcxxRLHdJ4wSZBr3aiai7Xz8B1nwOHWgXam39cuvWNKH0smiTIhcm2V4y24eGnd
+         mnnU4PrQUyidPqXtiW+LT/PO2BS3D6qnhLO2PXf/acUnI4bNa82Pga4Oe1uOW7FG93rH
+         d1IV66NcZhFQHU48Kbept+DfFzf7G5BNXzZjJztfvBQyAVHXC2YXhtuXLtK7Fhyx3nj7
+         OYt0RHkxxhXmNT7EbIoDD4dS30leZNb847VME8D/JiMZYulbz12O4mTsddTNOtIDE1/5
+         feBKZWzk9mCcecJZnmysF6krVV6E2mY2czeeCbiBWc2wDpvPePJWC6wVtn0LEY6m8Cuk
+         3Wrw==
+X-Gm-Message-State: AOJu0YzaNpCSsFu8C781oj8jgoq1+KT5xHO/AuNBAB7hj4LxT4k7vpyU
+	AG6lErnyBBSwioCm5jRoNcAl8DttqtchYlNpWGtFvnoH3BBHBRnRHwSe
+X-Gm-Gg: ASbGnctJk8572D350Xdiplsk/4qktuzNPDTN0EjLl/yCDfTuOUOD1hmzos+Rap54rju
+	Wh9excBur6JWBN50B4K7Nqcg3YV/h1TLfHTxabZvOMCcFTLoGy7Ypebbs/PKDx9OP/uROL8W2p0
+	ftkP8JmfSF4D6Br3CUj3QqGFMzcNqXtJGDQcj0rDASargLk537WkaLmTGoPIBKwJ6Va+wXkUYQe
+	FX5PiNbn42wOdiBU5CLphf4NHEh9IuF4e35cEKDNBMnn2lBsjxG0QlnchQS4okt9egwxMVJf/Fy
+	EoslA1L5lAgssy/IiqfYX7h0MGSAn+gmmpNxdyRHM98SMx3P0hcEGEMxu96S161G7BWXxpVNUzf
+	ooU8rXsAukKUGpzfJtJjPfv9xB8HAOEL78SPj4+7Ojd3PQvYP0BrElOs/Y+TXI8rcPdazJhfEES
+	40iprbkg==
+X-Google-Smtp-Source: AGHT+IG4XfOYYNzUXM+7Yx0Buo4o5e56GVlMcvjrf3CpNTQnLFTr/XojsAx61GxG2MZlMHY8rXL4JQ==
+X-Received: by 2002:a05:6a20:12ce:b0:2e3:a914:aa93 with SMTP id adf61e73a8af0-33dec02dd8cmr3977713637.30.1761325550625;
+        Fri, 24 Oct 2025 10:05:50 -0700 (PDT)
+Received: from nixos ([115.192.189.58])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b6cf4e158fdsm5568972a12.19.2025.10.24.10.05.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Oct 2025 10:05:50 -0700 (PDT)
+From: Thaumy Cheng <thaumy.love@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thaumy Cheng <thaumy.love@gmail.com>
+Subject: [PATCH v3] perf/core: Fix missing read event generation on task exit
+Date: Sat, 25 Oct 2025 01:05:43 +0800
+Message-ID: <20251024170543.11201-1-thaumy.love@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] dt-bindings: perf: fsl-imx-ddr: Add compatible string
- for i.MX8QM, i.MX8QXP and i.MX8DXL
-To: Frank Li <Frank.li@nxp.com>
-Cc: Xu Yang <xu.yang_2@nxp.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20251023-qm_dts-v1-0-9830d6a45939@nxp.com>
- <20251023-qm_dts-v1-1-9830d6a45939@nxp.com>
- <fbef6d02-74e8-4550-81af-afe7ac4c989b@kernel.org>
- <aPt8/exvRPlP0iNl@lizhi-Precision-Tower-5810>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <aPt8/exvRPlP0iNl@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 24/10/2025 15:19, Frank Li wrote:
-> On Fri, Oct 24, 2025 at 03:03:10PM +0200, Krzysztof Kozlowski wrote:
->> On 23/10/2025 20:56, Frank Li wrote:
->>> Add compatible string fsl,imx8qm-ddr-pmu, fsl,imx8qxp-ddr-pmu and
->>> fsl,imx8dxl-db-pmu (for data bus fabric).
->>>
->>> Add clocks and clock-names for fsl,imx8dxl-db-pmu and keep the same
->>> restriction for existing compatible strings.
->>>
->>> Signed-off-by: Frank Li <Frank.Li@nxp.com>
->>> ---
->>>  .../devicetree/bindings/perf/fsl-imx-ddr.yaml      | 26 ++++++++++++++++++++++
->>>  1 file changed, 26 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
->>> index d2e578d6b83b8847c7a0ca9d5aeb208a90e2fa6a..13eb13a79e2100ae1d747ddf6fc4db5b470112a8 100644
->>> --- a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
->>> +++ b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
->>> @@ -14,6 +14,7 @@ properties:
->>>      oneOf:
->>>        - enum:
->>>            - fsl,imx8-ddr-pmu
->>> +          - fsl,imx8dxl-db-pmu
->>>            - fsl,imx8m-ddr-pmu
->>>            - fsl,imx8mq-ddr-pmu
->>>            - fsl,imx8mm-ddr-pmu
->>> @@ -29,6 +30,8 @@ properties:
->>>            - const: fsl,imx8m-ddr-pmu
->>>        - items:
->>>            - const: fsl,imx8dxl-ddr-pmu
->>> +          - const: fsl,imx8qm-ddr-pmu
->>> +          - const: fsl,imx8qxp-ddr-pmu
->>
->>
->> I don't understand the need for this change, not explained in commit
->> msg. Why do you change 8dxl-ddr?
-> 
-> I have not change 8dxl-ddr, but add fsl,imx8dxl-db-pmu, which is difference
+For events with inherit_stat enabled, a "read" event will be generated
+to collect per task event counts on task exit.
 
+The call chain is as follows:
 
-I talk about this exact hunk. You clearly have list for imx8dxl-ddr-pmu
-being modified.
+do_exit
+  -> perf_event_exit_task
+    -> perf_event_exit_task_context
+      -> perf_event_exit_event
+        -> perf_remove_from_context
+          -> perf_child_detach
+            -> sync_child_event
+              -> perf_event_read_event
 
-> with fsl,imx8dxl-ddr-pmu. (db vs ddr). db have less events compared to
-> ddr's pmu.
-> 
-> Frank
-> 
->>
->> Best regards,
->> Krzysztof
+However, the child event context detaches the task too early in
+perf_event_exit_task_context, which causes sync_child_event to never
+generate the read event in this case, since child_event->ctx->task is
+always set to TASK_TOMBSTONE. Fix that by moving context lock section
+backward to ensure ctx->task is not set to TASK_TOMBSTONE before
+generating the read event.
 
+Because perf_event_free_task calls perf_event_exit_task_context with
+exit = false to tear down all child events from the context, and the
+task never lived, accessing the task PID can lead to a use-after-free.
 
-Best regards,
-Krzysztof
+To fix that, let sync_child_event read task from argument and move the
+call to the only place it should be triggered to avoid the effect of
+setting ctx->task to TASK_TOMESTONE, and add a task parameter to
+perf_event_exit_event to trigger the sync_child_event properly when
+needed.
+
+This bug can be reproduced by running "perf record -s" and attaching to
+any program that generates perf events in its child tasks. If we check
+the result with "perf report -T", the last line of the report will leave
+an empty table like "# PID  TID", which is expected to contain the
+per-task event counts by design.
+
+Fixes: ef54c1a476ae ("perf: Rework perf_event_exit_event()")
+Signed-off-by: Thaumy Cheng <thaumy.love@gmail.com>
+---
+Changes in v3:
+- Fix the bug in a more direct way by moving the call to
+  sync_child_event and bring back the task param to
+  perf_event_exit_event.
+  This approach avoids the event unscheduling issue in v2.
+
+Changes in v2:
+- Only trigger read event on task exit.
+- Rename perf_event_exit_event to perf_event_detach_event.
+- Link to v2: https://lore.kernel.org/all/20250817132742.85154-1-thaumy.love@gmail.com/
+
+Changes in v1:
+- Set TASK_TOMBSTONE after the read event is tirggered.
+- Link to v1: https://lore.kernel.org/all/20250720000424.12572-1-thaumy.love@gmail.com/
+
+ kernel/events/core.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 177e57c1a362..618e7947c358 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2316,7 +2316,8 @@ static void perf_group_detach(struct perf_event *event)
+ 	perf_event__header_size(leader);
+ }
+
+-static void sync_child_event(struct perf_event *child_event);
++static void sync_child_event(struct perf_event *child_event,
++			     struct task_struct *task);
+
+ static void perf_child_detach(struct perf_event *event)
+ {
+@@ -2336,7 +2337,6 @@ static void perf_child_detach(struct perf_event *event)
+ 	lockdep_assert_held(&parent_event->child_mutex);
+ 	 */
+
+-	sync_child_event(event);
+ 	list_del_init(&event->child_list);
+ }
+
+@@ -4587,6 +4587,7 @@ static void perf_event_enable_on_exec(struct perf_event_context *ctx)
+ static void perf_remove_from_owner(struct perf_event *event);
+ static void perf_event_exit_event(struct perf_event *event,
+ 				  struct perf_event_context *ctx,
++				  struct task_struct *task,
+ 				  bool revoke);
+
+ /*
+@@ -4614,7 +4615,7 @@ static void perf_event_remove_on_exec(struct perf_event_context *ctx)
+
+ 		modified = true;
+
+-		perf_event_exit_event(event, ctx, false);
++		perf_event_exit_event(event, ctx, ctx->task, false);
+ 	}
+
+ 	raw_spin_lock_irqsave(&ctx->lock, flags);
+@@ -12437,7 +12438,7 @@ static void __pmu_detach_event(struct pmu *pmu, struct perf_event *event,
+ 	/*
+ 	 * De-schedule the event and mark it REVOKED.
+ 	 */
+-	perf_event_exit_event(event, ctx, true);
++	perf_event_exit_event(event, ctx, ctx->task, true);
+
+ 	/*
+ 	 * All _free_event() bits that rely on event->pmu:
+@@ -13994,14 +13995,13 @@ void perf_pmu_migrate_context(struct pmu *pmu, int src_cpu, int dst_cpu)
+ }
+ EXPORT_SYMBOL_GPL(perf_pmu_migrate_context);
+
+-static void sync_child_event(struct perf_event *child_event)
++static void sync_child_event(struct perf_event *child_event,
++			     struct task_struct *task)
+ {
+ 	struct perf_event *parent_event = child_event->parent;
+ 	u64 child_val;
+
+ 	if (child_event->attr.inherit_stat) {
+-		struct task_struct *task = child_event->ctx->task;
+-
+ 		if (task && task != TASK_TOMBSTONE)
+ 			perf_event_read_event(child_event, task);
+ 	}
+@@ -14020,7 +14020,9 @@ static void sync_child_event(struct perf_event *child_event)
+
+ static void
+ perf_event_exit_event(struct perf_event *event,
+-		      struct perf_event_context *ctx, bool revoke)
++		      struct perf_event_context *ctx,
++		      struct task_struct *task,
++		      bool revoke)
+ {
+ 	struct perf_event *parent_event = event->parent;
+ 	unsigned long detach_flags = DETACH_EXIT;
+@@ -14043,6 +14045,9 @@ perf_event_exit_event(struct perf_event *event,
+ 		mutex_lock(&parent_event->child_mutex);
+ 		/* PERF_ATTACH_ITRACE might be set concurrently */
+ 		attach_state = READ_ONCE(event->attach_state);
++
++		if (attach_state & PERF_ATTACH_CHILD)
++			sync_child_event(event, task);
+ 	}
+
+ 	if (revoke)
+@@ -14134,7 +14139,7 @@ static void perf_event_exit_task_context(struct task_struct *task, bool exit)
+ 		perf_event_task(task, ctx, 0);
+
+ 	list_for_each_entry_safe(child_event, next, &ctx->event_list, event_entry)
+-		perf_event_exit_event(child_event, ctx, false);
++		perf_event_exit_event(child_event, ctx, exit ? task : NULL, false);
+
+ 	mutex_unlock(&ctx->mutex);
+
+--
+2.51.0
