@@ -1,55 +1,55 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CD134BA54
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Oct 2025 17:59:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B1AD34BA49
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Oct 2025 17:59:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761328775; cv=none; b=C/rIx0m652p1tw4XUQXlqqNEiRGufxw0/iMjECj6AZyO0uOC3GS8eKofkU+Rz5dQv7Jxm9ZmbBjxVjaF8nTomi0Hez3+Dbs2U/YrXIVDNeOdQ/26C/yS2vxQ9anATBTdGSrYPshgEXmBubqcURAIWLKbZScBFrZ2eGmw5dGUTng=
+	t=1761328777; cv=none; b=XJsX6Z6Eq/6al6ZrweVkdXVphEz79P0m7zaWlzDs3WinGHDuh8/ItE90X1DZs3wb99En9L0wGXBmKVjG3FwurSjF9YmlBxZek3UorKLAx2IsbvSsZTzdVwLLj8F/yXTPm/C+O4zaUjhp7hjstJnqF6FvmbswU/pZC2lPF1E1Qgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761328775; c=relaxed/simple;
-	bh=BqNKmhYdLVVOMxSxOJ05Qh+AKv/HTqCJorm5Grxp6zY=;
+	s=arc-20240116; t=1761328777; c=relaxed/simple;
+	bh=oyhHdo1LBjj0VodlYK8qf6Zt9QK2SSQps2VhISTUJHY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=goD2I2I9ywVMADUbVttXaHHQ/uiyA7+iWS9Ter4N0rjYIXS4o24DruhYWxf6+ueWtyPly98gQGa8nRUJFD5WYJlrtKVG1BDxzrcrt//wyqZmedeAAwKFbHP6MvHB3FhPujspWWCPX67T6gR9Rq5w7Q0CNNowT1z7e+P3H3PztYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4euEVdb/; arc=none smtp.client-ip=209.85.216.73
+	 To:Content-Type; b=GGMWDaawVVnOANscu+7vmnd0kusXIBQoKcTGzmc7axD4xcEf9ykOBq64Z0SvOBk0yV0YyUWp9F/Qie/wrOAlCETyrjfdQCdRpujh3jIFqkRPZvMmt+VyO+1Ac/bjPczkz24f8pH0oqff10gFpalxDpH8xlokCjLA3NNqtUHwvCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cAJSdZA2; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4euEVdb/"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-33da1f30fdfso4973049a91.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 24 Oct 2025 10:59:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cAJSdZA2"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-332560b7171so2611777a91.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 24 Oct 2025 10:59:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761328773; x=1761933573; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1761328775; x=1761933575; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=uCPacSqb5S79ptlAfnfLDbabLvPXVS08f3+jSVTqtcg=;
-        b=4euEVdb/LrdS6ac9gwLpNgna+PPsM+HpYe0et4sw8KpGXCnIgzgCNvzV5uY5kKHt+G
-         w7P0PKjo+tAeo5ksRBekFIrielR4MXteHeDHVdcZe1mdjBfbhEDPDP9vESw8RmQUtdyc
-         HXlk9TLs+CiNiqKoGQdAnHrDz5Y2fES8bQp2ydViqUi2lKdVaj143l+ME911BnXKwjv5
-         YYeJ0YWYXYoMUqKj5orq/8pFTU9ijXvEXySGz4CbAJOC18BDHkYmLHoLLzN6SbpLsuW0
-         fL59EH8BjQw3FU2pHAxw0QOyaB73jEifbClYPHj+UodfcWfL3KzokyLjtj8aQjSXzbXE
-         hN0Q==
+        bh=doWCJlIodi2evuV1XPBQp6vnTKO7fG8Tf8DSVry8FPk=;
+        b=cAJSdZA24nx+56SEGKBJ3XUptbYA1H3ScGHmJTOkQpScxbrTmpxjaQ8cMu8bRe0lee
+         rsC1umRRF4JchjpOkJGeeQPNU6GQQHJdHEcNd7Uqy/Drb09sTxvzsih44QPjcpFMkw/p
+         i7wtGcpyDp8chhxJlv4ucO2xBh4bRn8nsdAPpSwi/vYqf/i5/D22rgLm3+F8XKWVbCsE
+         zNplzWQtYTNUClhEIEPMZnQEuKbb/UX1uUlwVsdttdrM5UNc0siTquMVp2iNo/4xoHiR
+         k63K+Re8d7mcc1grHU5HeIakdln7eeVneTlkeatEdpxIMYQhHWjsY0jj8lM7oZLiNG0r
+         5S+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761328773; x=1761933573;
+        d=1e100.net; s=20230601; t=1761328775; x=1761933575;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uCPacSqb5S79ptlAfnfLDbabLvPXVS08f3+jSVTqtcg=;
-        b=hhc0L2z+6urzjj9AU3wWIh/wkiNMsjuMhpsy9zH2onAA315X1NQSxFMgEhJVMiBb6u
-         eWeEDpXCTU3H+Ham3RlBD43t/GyPvie2TtJ19NBe+LQlMB7KuGbVLpx4J3mkn6eCOprS
-         OaSrI4VtzhNCDYw2J3pqoGgt9/unJbb/QTeIv6i6GqhVNy/BdLhnvbEmA/l8wCxL1HNn
-         FXRCC7zhWLbQRiWEG4d1mE3FVtxucSGZoYbQGYM6z+UohJBhOxvP4bxVhoh7OB7ASDqm
-         +rXcjDsGlY3KQoY5sK0rRXefyesYYcqijv5d6zUw/isJ54mCmbLumVDIwAQFtiOkayyE
-         WWng==
-X-Forwarded-Encrypted: i=1; AJvYcCW7dGQ0toGI4oteHxAW716LBX5FYD2vOnLZvueLs88kA7p2+imu+f+NdjiiyRMIeiT73QQYv3xeHBbRDPSDEQAk@vger.kernel.org
-X-Gm-Message-State: AOJu0YydGtKh/kWLdsOai+aJnCFaLdwogEbw/ab4mz85gJadf1hm5jh3
-	5isYUU4B7D6SqAXVYh06Zaz40cfo6EMrkGDm1ja63y1LOfPggA2H6wVLLHxuyxRGaPbderXSLWf
-	PfWgz5zYOew==
-X-Google-Smtp-Source: AGHT+IFK0u6JY2sQK+J+PSCyGOXlBWsHHnuv48u/sSFbbHB8oDEd4cACgo0M8Xw0uOhqqHeHuKQoxiCdKIXH
-X-Received: from pjyj8.prod.google.com ([2002:a17:90a:e608:b0:33b:51fe:1a8b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1dc4:b0:330:6f13:53fc
- with SMTP id 98e67ed59e1d1-33bcf8f870bmr35826864a91.27.1761328773449; Fri, 24
- Oct 2025 10:59:33 -0700 (PDT)
-Date: Fri, 24 Oct 2025 10:58:50 -0700
+        bh=doWCJlIodi2evuV1XPBQp6vnTKO7fG8Tf8DSVry8FPk=;
+        b=LyUG3wfYO2kdXxnuBmHWCuIlv7uVujy/Ksgj0NKI3wSxcqQGHxDahn56ejB/Q/Hts5
+         nVoAqghCLvG35N0+U2IzhpD59zoo4Qx0c//dby/8RMyN9lRQ/WEDVf7QbFmBsi3ODGt0
+         RWieBQPYTcWpdHSJxKmdArnQ4RXubf8cxo45KV6ZjmPiIer+72oHaUsMlNEUY/74wq8p
+         ADWjvVn2y2rA1tsUTVm9b0ytbzlob3/nf7oP3a8tACGTLYU6RJTYyIEky1gmGRJbDa1f
+         gUeuW/hlP6hTsUKfqijUV8X5FOA9eEhLjfRVHWNS2CfdOtSeugw5mP6E18VVStUc7W9g
+         2RXg==
+X-Forwarded-Encrypted: i=1; AJvYcCWApJfhUP4IQx4BUEerbpsTl9/byWTCldF7w0i+UaeE8ae9Kw4ZVdLlNp7zrN+3zwUHdfHdJ7RSbcZGvFdZwXBl@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+Y6QfR0rFNrfxMgimQnki4OA5JyDJ22wWQoMND5vj7x45yRL4
+	nwj7CtItoKsZsbIBTWAZ9OlcKZllX4GKcYU6Sy9Q4hIwRb2/OM3hCo8Pxgm4g0+ScSv7NEATE/Y
+	4Hk5jmv0BPA==
+X-Google-Smtp-Source: AGHT+IFly8CqIb+NCd0ZCTDC/mipInJiYu7MMuTrzCPyxtjDDRcyMm2QdKhaWwsD4uTg7mLm18tnoe1cQHH6
+X-Received: from pjbgx22.prod.google.com ([2002:a17:90b:1256:b0:332:4129:51b2])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1b50:b0:33b:dff1:5f44
+ with SMTP id 98e67ed59e1d1-33fd3a566ffmr4234320a91.6.1761328775447; Fri, 24
+ Oct 2025 10:59:35 -0700 (PDT)
+Date: Fri, 24 Oct 2025 10:58:51 -0700
 In-Reply-To: <20251024175857.808401-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251024175857.808401-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.1.821.gb6fe4d2222-goog
-Message-ID: <20251024175857.808401-16-irogers@google.com>
-Subject: [PATCH v1 15/22] perf stat: Remove "unit" workarounds for metric-only
+Message-ID: <20251024175857.808401-17-irogers@google.com>
+Subject: [PATCH v1 16/22] perf test stat+json: Improve metric-only testing
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -75,118 +75,54 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Remove code that tested the "unit" as in KB/sec for certain hard coded
-metric values and did workarounds.
+When testing metric-only, pass a metric to perf rather than expecting
+a hard coded metric value to be generated.
+
+Remove keys that were really metric-only units and instead don't
+expect metric only to have a matching json key as it encodes metrics
+as {"metric_name", "metric_value"}.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/stat-display.c | 47 ++++++----------------------------
- 1 file changed, 8 insertions(+), 39 deletions(-)
+ tools/perf/tests/shell/lib/perf_json_output_lint.py | 4 ++--
+ tools/perf/tests/shell/stat+json_output.sh          | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index eabeab5e6614..b3596f9f5cdd 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -592,42 +592,18 @@ static void print_metricgroup_header_std(struct perf_stat_config *config,
- 	fprintf(config->output, "%*s", MGROUP_LEN - n - 1, "");
+diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+index c6750ef06c0f..1369baaa0361 100644
+--- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
++++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+@@ -65,8 +65,6 @@ def check_json_output(expected_items):
+       'socket': lambda x: True,
+       'thread': lambda x: True,
+       'unit': lambda x: True,
+-      'insn per cycle': lambda x: isfloat(x),
+-      'GHz': lambda x: True,  # FIXME: it seems unintended for --metric-only
+   }
+   input = '[\n' + ','.join(Lines) + '\n]'
+   for item in json.loads(input):
+@@ -88,6 +86,8 @@ def check_json_output(expected_items):
+                            f' in \'{item}\'')
+     for key, value in item.items():
+       if key not in checks:
++        if args.metric_only:
++          continue
+         raise RuntimeError(f'Unexpected key: key={key} value={value}')
+       if not checks[key](value):
+         raise RuntimeError(f'Check failed for: key={key} value={value}')
+diff --git a/tools/perf/tests/shell/stat+json_output.sh b/tools/perf/tests/shell/stat+json_output.sh
+index 98fb65274ac4..85d1ad7186c6 100755
+--- a/tools/perf/tests/shell/stat+json_output.sh
++++ b/tools/perf/tests/shell/stat+json_output.sh
+@@ -181,7 +181,7 @@ check_metric_only()
+ 		echo "[Skip] CPU-measurement counter facility not installed"
+ 		return
+ 	fi
+-	perf stat -j --metric-only -e instructions,cycles -o "${stat_output}" true
++	perf stat -j --metric-only -M page_faults_per_second -o "${stat_output}" true
+ 	$PYTHON $pythonchecker --metric-only --file "${stat_output}"
+ 	echo "[Success]"
  }
- 
--/* Filter out some columns that don't work well in metrics only mode */
--
--static bool valid_only_metric(const char *unit)
--{
--	if (!unit)
--		return false;
--	if (strstr(unit, "/sec") ||
--	    strstr(unit, "CPUs utilized"))
--		return false;
--	return true;
--}
--
--static const char *fixunit(char *buf, struct evsel *evsel,
--			   const char *unit)
--{
--	if (!strncmp(unit, "of all", 6)) {
--		snprintf(buf, 1024, "%s %s", evsel__name(evsel),
--			 unit);
--		return buf;
--	}
--	return unit;
--}
--
- static void print_metric_only(struct perf_stat_config *config,
- 			      void *ctx, enum metric_threshold_classify thresh,
- 			      const char *fmt, const char *unit, double val)
- {
- 	struct outstate *os = ctx;
- 	FILE *out = os->fh;
--	char buf[1024], str[1024];
-+	char str[1024];
- 	unsigned mlen = config->metric_only_len;
- 	const char *color = metric_threshold_classify__color(thresh);
- 
--	if (!valid_only_metric(unit))
--		return;
--	unit = fixunit(buf, os->evsel, unit);
-+	if (!unit)
-+		unit = "";
- 	if (mlen < strlen(unit))
- 		mlen = strlen(unit) + 1;
- 
-@@ -643,16 +619,15 @@ static void print_metric_only_csv(struct perf_stat_config *config __maybe_unused
- 				  void *ctx,
- 				  enum metric_threshold_classify thresh __maybe_unused,
- 				  const char *fmt,
--				  const char *unit, double val)
-+				  const char *unit __maybe_unused, double val)
- {
- 	struct outstate *os = ctx;
- 	FILE *out = os->fh;
- 	char buf[64], *vals, *ends;
--	char tbuf[1024];
- 
--	if (!valid_only_metric(unit))
-+	if (!unit)
- 		return;
--	unit = fixunit(tbuf, os->evsel, unit);
-+
- 	snprintf(buf, sizeof(buf), fmt ?: "", val);
- 	ends = vals = skip_spaces(buf);
- 	while (isdigit(*ends) || *ends == '.')
-@@ -670,13 +645,9 @@ static void print_metric_only_json(struct perf_stat_config *config __maybe_unuse
- {
- 	struct outstate *os = ctx;
- 	char buf[64], *ends;
--	char tbuf[1024];
- 	const char *vals;
- 
--	if (!valid_only_metric(unit))
--		return;
--	unit = fixunit(tbuf, os->evsel, unit);
--	if (!unit[0])
-+	if (!unit || !unit[0])
- 		return;
- 	snprintf(buf, sizeof(buf), fmt ?: "", val);
- 	vals = ends = skip_spaces(buf);
-@@ -695,7 +666,6 @@ static void print_metric_header(struct perf_stat_config *config,
- 				const char *unit, double val __maybe_unused)
- {
- 	struct outstate *os = ctx;
--	char tbuf[1024];
- 
- 	/* In case of iostat, print metric header for first root port only */
- 	if (config->iostat_run &&
-@@ -705,9 +675,8 @@ static void print_metric_header(struct perf_stat_config *config,
- 	if (os->evsel->cgrp != os->cgrp)
- 		return;
- 
--	if (!valid_only_metric(unit))
-+	if (!unit)
- 		return;
--	unit = fixunit(tbuf, os->evsel, unit);
- 
- 	if (config->json_output)
- 		return;
 -- 
 2.51.1.821.gb6fe4d2222-goog
 
