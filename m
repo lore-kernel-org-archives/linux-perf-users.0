@@ -1,116 +1,174 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16BA734EEFD
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Oct 2025 17:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65BB31990A7;
+	Fri, 24 Oct 2025 18:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761328790; cv=none; b=WPw4NBkMnIUsQ+gfM3m/Zlg2fs1351+9wLtUIypmAohBph5uWrl3AtYZZ3sknNwdJFVUyZMt9GyYukxk6PW7RiuK61e77L5JoGds932rTpOAiZ0n4k51ViH6aedoKBK+sc/35k0UNABjCDPnBXw3HPoyqR5xnWFoG7BuHT99eSM=
+	t=1761329001; cv=none; b=a0XE1N3ZrWABv1dBV8dMoymLmKlOZkeeHzyOzlvHqyilaDO1aoHDP+Q/tWNI7g+ZYlVcFPGAJ4/73jUCC3djjMDsnyvIzQt2OahWpTzLP5nV7xfZ/7lcjfLbCvAZ65A7ms/LAKpVtKUzqvad0Tf9YmFv5Dh5Xl137ONTyhsL5Gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761328790; c=relaxed/simple;
-	bh=yAXsZhxvHyHEQLXos94jIHAJ3UZbjk6e3qIEtM58ctc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=P9npUTefogzmAADbTj4/BMAJCMBo2w0AwqXz6KzplaHe1unvfipfve9rGpTvRQm4vohOTcn5TpNYohYTB+WQVoG3vyq3xyBLieky7C7jq5davqAU9sC2lbYD+6OOIm35d+yMEaqk1VPUrStvYDU8RZimv7DeDy3tFHJH9soVA1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YRMTlaKD; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1761329001; c=relaxed/simple;
+	bh=zDmHT6EI+5KM36Gi2vKqy6ReftN+8VK2vT+rpSoN2RI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LepGu+OjCfZ6FEgbESw4RCUXyDB3VrJ0/omhvNGmMhtBimezOKW2UYxanqPPrJ2CGlJUQbup3AoyPHo2Tk/6gMXb1XARrw/SFKDWogt0IvjgNln+lEPZGiMhb+fTRlwuinvigXZ2ToT2qCzpU4DmaxhFEI0EgsUEOe6gRROrKJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XUcqSN5j; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YRMTlaKD"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-33bbbb41a84so4894818a91.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 24 Oct 2025 10:59:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761328788; x=1761933588; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+GqPNh/zh5jE+hbuHQPcYDyfHhHCRzurjNcqVZkY2gg=;
-        b=YRMTlaKDCXaJjZWE/GVULI7UW6UzTbOREPsR+ErTuoVR8Ch1gLLVGD6yqM2stBcI7E
-         sYAXjcxPLL58ZhhP+YjsLmQJS4GKHvpk1XQTg/qGU/8qI4EnwV+1lPaUGUbuZMQKJ8KU
-         tSluW4dIsIiQs5pdT7SVpPczyfLMM9ovFL/051Rl4kthfiXKRn740b6myXGaTNdFkB+F
-         0Zd1YBv5WWV2SVBYI0DqKYtydMWJeFWKeQsavTD3+chmo06FDlwmnZZG70a/Qj/5mfej
-         QVcy3fiFDZbRZ9k336PclyqSNnKof1rG+lXM/t8SAkr3SsMx2YH/gT3HWb/zUFqNDNdC
-         vJlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761328788; x=1761933588;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+GqPNh/zh5jE+hbuHQPcYDyfHhHCRzurjNcqVZkY2gg=;
-        b=L0kOBXIxu/5SVQj5bY1K2gXMZVe+jfYNrFBcToCkjYNNuaUPluPeQck/urv/S3Xjef
-         JwgQAbSo4NEJ8VYD5v8juUZC164t6Q30JbLba3QgOlPK/y6FRDtrGbm8DzYfhJoCH5CK
-         aiHwIC4Nuy+VYnXWc4uqS58r38qRiflQj5LoZicS/vye3WQ6vTVq/DRIuhZPPk3ZQpTp
-         s77jwcb0p5I77hv6f+eeTaGzPJN2hbRfH67nYGBcVmcB062ocVkURflqjfvG82ggphEG
-         cJKkugIKM+Xxo75ixuyJPLYe/2JiSrY8JkFj2x0C+mxM/t5UVRhCF3lTK4tmwnOXooEw
-         Nsvg==
-X-Forwarded-Encrypted: i=1; AJvYcCUl/JN0uFz7rnG63dFRg+Jl85OhJImrXsMxZPrQxyHZuTOg6CjAcWQEu47mGsmcJL6UCoJP8Nn18rk1tC3nQnLN@vger.kernel.org
-X-Gm-Message-State: AOJu0YygcU1szBSiScCO5fO+f2Zh2DxXw6pZqwBlQUFRbA8IF49WOwy2
-	gWNmYeGz1eQC2lO7iEytxm1Tm5ZpaLib7Tcz2xGU0/+xa2aCG6/AXLBRy3Yyd6/2YqkhP8Gx9cs
-	mxJ8T/I/kjQ==
-X-Google-Smtp-Source: AGHT+IGI97mAtuqdO6OgV7iYK43SUTMj0/LhdECvBdjMp+FRWjR96CthVK9UYiaa2g7HS9K9cguw9qEme2CU
-X-Received: from pjbmd3.prod.google.com ([2002:a17:90b:23c3:b0:32b:35fb:187f])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d60f:b0:329:ed5b:ecd5
- with SMTP id 98e67ed59e1d1-33bcf8eb21fmr38489811a91.19.1761328788381; Fri, 24
- Oct 2025 10:59:48 -0700 (PDT)
-Date: Fri, 24 Oct 2025 10:58:57 -0700
-In-Reply-To: <20251024175857.808401-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XUcqSN5j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761328999; x=1792864999;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=zDmHT6EI+5KM36Gi2vKqy6ReftN+8VK2vT+rpSoN2RI=;
+  b=XUcqSN5jbr310iDgdxmw0/rUNWnksQE0pSgoLoS6LGvfmJrD9FsB2XXK
+   X9APqwXbaTiZxfWziFazocx6PLYFcKNRPp8oIqhCZBZLLq18yjOROLiYb
+   qXAacxxRaCRMJJ2YA2bM9dzoUqhf5ai7Sf3EeA0JDsX77a+gf/69O2UQM
+   eba/2XVYnpY+lm+5xFTdBdQ2v+iaPqrGkvWqb0As8HBU/C3NHC+jPiO/W
+   u8/LCMEAzMW34rCHjj/uAODxhpE07BHXmKZWk/08mQNvcyoa4nsSgGg0S
+   sr9Qsh/V1rZy6gLiOgbQFqeEM/s7LAjpv7SiIewfUQ8vtuIcTTKk9TbOw
+   Q==;
+X-CSE-ConnectionGUID: 0Vs/D58/QFik6nNU7364QQ==
+X-CSE-MsgGUID: Ugs2M8MITX+wVkXknVODFQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63406583"
+X-IronPort-AV: E=Sophos;i="6.19,253,1754982000"; 
+   d="scan'208";a="63406583"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2025 11:03:18 -0700
+X-CSE-ConnectionGUID: eWSF1972SSCSbwwEROgUEg==
+X-CSE-MsgGUID: a9zmkhTUROmCyfJhhXLbZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,253,1754982000"; 
+   d="scan'208";a="188876624"
+Received: from soc-cp83kr3.clients.intel.com (HELO [10.241.241.181]) ([10.241.241.181])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2025 11:03:18 -0700
+Message-ID: <576a7d2b-0a82-4738-8b86-507e4d841524@intel.com>
+Date: Fri, 24 Oct 2025 11:03:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20251024175857.808401-1-irogers@google.com>
-X-Mailer: git-send-email 2.51.1.821.gb6fe4d2222-goog
-Message-ID: <20251024175857.808401-23-irogers@google.com>
-Subject: [PATCH v1 22/22] perf test stat csv: Update test expectations and events
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Sumanth Korikkar <sumanthk@linux.ibm.com>, Collin Funk <collin.funk1@gmail.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Howard Chu <howardchu95@gmail.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Levi Yun <yeoreum.yun@arm.com>, 
-	Yang Li <yang.lee@linux.alibaba.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf tools: Refactor precise_ip fallback logic
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>,
+ Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar <mingo@redhat.com>,
+ Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ thomas.falcon@intel.com, dapeng1.mi@linux.intel.com, xudong.hao@intel.com
+References: <20251022220802.1335131-1-zide.chen@intel.com>
+ <aPrktlANBHFtV52B@google.com>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <aPrktlANBHFtV52B@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Explicitly use a metric rather than implicitly expecting '-e
-instructions,cycles' to produce a metric. Use a metric with software
-events to make it more compatible.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/shell/lib/stat_output.sh | 2 +-
- tools/perf/tests/shell/stat+csv_output.sh | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/shell/lib/stat_output.sh b/tools/perf/tests/shell/lib/stat_output.sh
-index c2ec7881ec1d..3c36e80fe422 100644
---- a/tools/perf/tests/shell/lib/stat_output.sh
-+++ b/tools/perf/tests/shell/lib/stat_output.sh
-@@ -156,7 +156,7 @@ check_metric_only()
- 		echo "[Skip] CPU-measurement counter facility not installed"
- 		return
- 	fi
--	perf stat --metric-only $2 -e instructions,cycles true
-+	perf stat --metric-only $2 -M page_faults_per_second true
- 	commachecker --metric-only
- 	echo "[Success]"
- }
-diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
-index 7a6f6e177402..cd6fff597091 100755
---- a/tools/perf/tests/shell/stat+csv_output.sh
-+++ b/tools/perf/tests/shell/stat+csv_output.sh
-@@ -44,7 +44,7 @@ function commachecker()
- 	;; "--per-die")		exp=8
- 	;; "--per-cluster")	exp=8
- 	;; "--per-cache")	exp=8
--	;; "--metric-only")	exp=2
-+	;; "--metric-only")	exp=1
- 	esac
- 
- 	while read line
--- 
-2.51.1.821.gb6fe4d2222-goog
+On 10/23/2025 7:30 PM, Namhyung Kim wrote:
+> Hello,
+> 
+> On Wed, Oct 22, 2025 at 03:08:02PM -0700, Zide Chen wrote:
+>> Commit c33aea446bf555ab ("perf tools: Fix precise_ip fallback logic")
+>> unconditionally called the precise_ip fallback and moved it after the
+>> missing-feature checks so that it could handle EINVAL as well.
+>>
+>> However, this introduced an issue: after disabling missing features,
+>> the event could fail to open, which makes the subsequent precise_ip
+>> fallback useless since it will always fail.
+>>
+>> For example, run the following command on Intel SPR:
+>>
+>> $ perf record -e '{cpu/mem-loads-aux/S,cpu/mem-loads,ldlat=3/PS}' -- ls
+>>
+>> Opening the event "cpu/mem-loads,ldlat=3/PS" returns EINVAL when
+>> precise_ip == 3. It then sets attr.inherit = false, which triggers a
+> 
+> I'm curious about this part.  Why the kernel set 'inherit = false'?  IOW
+> how did the leader event (mem-loads-aux) succeed with inherit = true
+> then?
+
+Initially, the inherit = true for both the group leader
+(cpu/mem-loads-aux/S) and the event in question (cpu/mem-loads,ldlat=3/PS).
+
+When the second event fails with EINVAL, the current logic calls
+evsel__detect_missing_features() first. Since this is a PERF_SAMPLE_READ
+event, the inherit attribute falls back to false, according to the
+fallback order implemented in evsel__detect_missing_features().
+
+> 
+>> kernel check failure since it doesn't match the group leader's inherit
+>> attribute. As a result, it continues to fail even after precise_ip is
+>> reduced.
+>>
+>> By moving the precise_ip fallback earlier, this issue is resolved, as
+>> well as the kernel test robot report mentioned in commit
+>> c33aea446bf555ab.
+>>
+>> No negative side effects are expected, because the precise_ip level is
+>> restored by evsel__precise_ip_fallback() if the fallback does not help.
+> 
+> I'm not sure.. some events may need a different (i.e. lower) precise
+> level than the max.  I think checking the missing feature later will
+> use the max precise level always.
+
+Yes, but seems the basic idea of the event open fallback logic is to
+check whether it's lucky enough to open the event by falling back one
+single attribute, not multiple attributes.
+
+evsel__precise_ip_fallback() can restore the precise_ip level after a
+failed attempt, while evsel__detect_missing_features() cannot recover
+the event attributes from its failed try.
+
+Therefore, falling back precise_ip first maintains the intended
+“one-by-one” fallback logic. If it’s placed later, it may combine two
+fallbacks, which can cause failures like the example above.  Of course,
+in theory, there might be cases where an event can be opened if both
+precise_ip and another feature are relaxed together, but I haven’t
+exhaustively checked whether such cases actually exist.
+
+> Thanks,
+> Namhyung
+> 
+>>
+>> This also aligns with commit 2b70702917337a8d ("perf tools: Remove
+>> evsel__handle_error_quirks()").
+>>
+>> Fixes: af954f76eea56453 ("perf tools: Check fallback error and order")
+>> Fixes: c33aea446bf555ab ("perf tools: Fix precise_ip fallback logic")
+>> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> Signed-off-by: Zide Chen <zide.chen@intel.com>
+>> ---
+>>  tools/perf/util/evsel.c | 6 +++---
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+>> index ca74514c8707..6ce32533a213 100644
+>> --- a/tools/perf/util/evsel.c
+>> +++ b/tools/perf/util/evsel.c
+>> @@ -2714,12 +2714,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+>>  	if (err == -EMFILE && rlimit__increase_nofile(&set_rlimit))
+>>  		goto retry_open;
+>>  
+>> +	if (evsel__precise_ip_fallback(evsel))
+>> +		goto retry_open;
+>> +
+>>  	if (err == -EINVAL && evsel__detect_missing_features(evsel, cpu))
+>>  		goto fallback_missing_features;
+>>  
+>> -	if (evsel__precise_ip_fallback(evsel))
+>> -		goto retry_open;
+>> -
+>>  out_close:
+>>  	if (err)
+>>  		threads->err_thread = thread;
+>> -- 
+>> 2.51.0
+>>
 
