@@ -1,241 +1,224 @@
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011018.outbound.protection.outlook.com [40.107.130.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677E2348446;
-	Fri, 24 Oct 2025 18:18:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761329882; cv=fail; b=Q1Z8j63URVOPs1JwlLFHOg9X5DwrWCjLZwvEENvl10pnoVmY2WYYQrgzjR6GdYz8Ubep8EC0b/t2vJY8wqxmVvrECl+PaUXyhGC9nQ5Oc01RuMpCtgM8wWu+zLYmY0TQTodcy13svUQbsDnX9N3/M+//xIt33r1bnqIHNP2szVk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761329882; c=relaxed/simple;
-	bh=5aNPbmICzuDmt8HqRTvDr2QJitYKq8z3hwoe699hYRU=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=sH2RXXt1JHjU9C+8Km+hQFeoL1MM27jlBLQ9wU3THWMnuuhh6brhfwOGDqKI6fmpG9cmrlGZqSz0t8h2yWyJdp9DYvaBx5KYhrXdWWWCuEqogTiDa+KpCYKZUbgvEGuZWCeW8JaoVuVc9ipXPLrZMh9serJsZP+ZQ4R0yAEzZsI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=dp88EjTj; arc=fail smtp.client-ip=40.107.130.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142C526AEC
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Oct 2025 18:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761330394; cv=none; b=oLLQ0lRt6wlznGuY+KifNBiBecmRgOOIMpMtmSkBsBTM23xUK45GZKp3pQF0X+Bv0We3XRG2h0WqAcOshVw03JZTIcipTKjGravUyk4UlFujY4aM7oXBZH3OnAjcgyzVVPwdafyz2ACV/EbUI5TGUve121q2rHUnN1T2ca5JdqE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761330394; c=relaxed/simple;
+	bh=/xXYT/dLZvs79m30ucc/SA6mjHSB6UGSKFkcpqjvd78=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m/uNlSwE9e/xNnT9tBktOsMb/2gM9nBeaj2MrUcbBpn5HUfCNf+issNFsucEX5TP0KlsHIVE7lW9s0roaoK3xynryqH2mxVKiHkuelxGNQi4LQvtIWPg+SPPxpm+n2qz0GsEXzp3AVxpMM3HSQ7mYpEDrTn1Y6OhUCono2VOlM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dRMtWeTm; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="dp88EjTj"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=K4mFLZ3FfmSWipbrh30+O39D3Rp68u+WjMl09knBQQKg2RZKI8fTPfEQYGSKX+CXKd7IOoFUoBr3OIVRUkJr8y1X9K+gJQhDimzRBdKGbTNTMt5yDXLrri+zssFQgvx8xzBmG4pBJqtu7IA436Op5RzLjZAgaWyxfzblVnax7ys4Mr5Ad28WKR59hdl01+p2lKmHJ2Bvp8Iv578FfmXB+aRWNgdxegiyAecmhZ6u4oqLRCfNTf5FO/9aUuTZaKRMkNqYGxPpxSJYHQF0eNqqYFW4VBHPqyGlxbkd3qLA+LB0ZgB0TU/gv34WR2hoVtSlxe4JQfF7FhvCCQYeE0ftYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TTQ+/eoAn+aZqDJLqryvHIkv7HpjCVbKwDoZrK9Vy3o=;
- b=Ggo9EM5dh0JoVxzyjZXMgxO7MioXzQUdINmO1udGtHamC1s6Lqum82HSkWSGFp6Qs68Rt6w7rxUCsARIlpdLJGA+eJ8EOw1YxW1g1Gs1jyZ44eHhLGodAD4/TS4S48lLTR5Z31hYl/37LV1KuuczLNmjTtPj9roSQqFBeNehzSd98nKioYfAbzVYBhbxwqA+6xr8ue64VzH7f4O0/VdmsVazI7P9EdRGyfRU5Ufuav1AhBDgIw9Wa6hZme8Egx5Ky2EoF8L+WQFlJqbkZjBEDpAJcWiC3BfYQLHq3m48S6PxP+ws9Lb1sa7FE6hu0x6d2iAE9I+Ot/STWdCOrcs+kQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TTQ+/eoAn+aZqDJLqryvHIkv7HpjCVbKwDoZrK9Vy3o=;
- b=dp88EjTjAl83eRTfSDKkTwUADMObNc+R66tR5Nu1U6r22R3CIRayqErSlTYAH2b9lIeoRlgmoL0rz01DnTMrUul/wxeO00dQb0scqF+If4DgWsjpuKdL9yulAJdCZoWM8X/VOwP/aVb5/nBVwm8pR4Y9sdTZr2Iu6v7R+XuoE4m27FufaBGKIgNRqU46Ho+vYImet2F1EEr0PvnmeZy/f52Kc9HXq9yNaf2YuBgcfBRQQLjTB1tSRi8pMpGXkGd97vPErwSxZcVSClk+B1hdUxi+kQdX26v166pk7JAlzwNto/SZzYZs/nFHHA2QAPk0snJRMANtGdzCzsIP4FSnUA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
- by DU2PR04MB8936.eurprd04.prod.outlook.com (2603:10a6:10:2e3::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.13; Fri, 24 Oct
- 2025 18:17:58 +0000
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::55ef:fa41:b021:b5dd]) by DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::55ef:fa41:b021:b5dd%4]) with mapi id 15.20.9253.011; Fri, 24 Oct 2025
- 18:17:57 +0000
-From: Frank Li <Frank.Li@nxp.com>
-Date: Fri, 24 Oct 2025 14:17:16 -0400
-Subject: [PATCH v2 6/6] arm64: dts: imx8dxl-ss-ddr: Add DB (system
- interconnects) pmu support for i.MX8DXL
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251024-qm_dts-v2-6-7a7e07022ed6@nxp.com>
-References: <20251024-qm_dts-v2-0-7a7e07022ed6@nxp.com>
-In-Reply-To: <20251024-qm_dts-v2-0-7a7e07022ed6@nxp.com>
-To: Frank Li <Frank.li@nxp.com>, Xu Yang <xu.yang_2@nxp.com>, 
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>
-Cc: Frank Li <frank.li@nxp.com>, linux-arm-kernel@lists.infradead.org, 
- linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, 
- imx@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Frank Li <Frank.Li@nxp.com>, Jacky Bai <ping.bai@nxp.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1761329844; l=2241;
- i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
- bh=PisC1FFnqO8CpYCnMicfreqFJ284Xm7e1m95ZljMa9g=;
- b=Xlpna1l1lWwUPkm1FcCPmD5gq3SKiztjAna4QLZtlbjGc1rJ7JJUkevQuH9CDnS53uJ/DwKRN
- 9ZlnQvenzeLA67L5zv5PCWJcg0bOXNhBscshWIdh2fSlVxlAR0ycuFY
-X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
- pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
-X-ClientProxiedBy: BYAPR11CA0047.namprd11.prod.outlook.com
- (2603:10b6:a03:80::24) To DB9PR04MB9626.eurprd04.prod.outlook.com
- (2603:10a6:10:309::18)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dRMtWeTm"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-27eeafd4882so27545ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 24 Oct 2025 11:26:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1761330392; x=1761935192; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6URo0RHCzgXmccx7rlNSvSKMolAOCwrmZ6PQotsL+68=;
+        b=dRMtWeTmLea/xzT1JlBg9Oy6uMQf8onbFF0V4XYRy36iXggpnDse/XjfH9Csx0fnLd
+         SmpsJF4wFp2NqCu5yJNvIkELvptDDFytA+6vt9dn5tilB2Xn+JE2WkJAHOJTuFv4T0L7
+         F7yG7/O+bvdQcjRlEhF3mdWl4M92zeWb0ssxdYWmwSa6NO9ri2XDKLKHIiJBPs5k47Zl
+         R/GWP52b6J46ki6/OM5MAPffiQ5CyhldVvVRPeg0Rws6jKUZSloQDunkeBehDYhmGkTu
+         0uBTO4rRwSVmVNvP7F6UuP0O7gHtsqXk7aHW+hm9JUu3ZopYfj+aEHezzefhtQ6VcDNR
+         EJbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761330392; x=1761935192;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6URo0RHCzgXmccx7rlNSvSKMolAOCwrmZ6PQotsL+68=;
+        b=GlnA8KbZ40OLaZbVoJvdz+la63te+ZqiPPhihSrr0DW0AIh21+bGsWW83n0Yl0Gkrc
+         nhExEPAtQg3/48xWhTsjq243W16lYURVjo4EEyz/7Z7e5NS5GpK7fF8/Y9QWkOW2u8DI
+         zlqvvQAiysK1CbzVTSD3sNOdSkjyYacuOjf/er9cNdYc064arfDWyJjisp8jfgj7fr5T
+         kdt7XCcTIKlvDpBIJWErgYWbVcQdKFcjXmIZ3ajkwzLlMboQjRWN1oSQfYm4RGaQY5W+
+         S1nXpHCOnKsos6mEioC7TPB/PRS8qa0vFfuES7gLUGF7k/pKHb0yfcd521aroA53zZeJ
+         k+kg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+0PZ5eH8dW2yzkEYLlyb5NwhHouFi08K26HAZHUUtOMZoTJ4iG/rmfS8DEseKwymflURD2cPasdycUZKQEXCn@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAqZ0aDnW0rDuLvKctSYGj5v1Xzh+d8s4Y1D45l6hsLYV6DLwN
+	xfSnZdtwTgZn+km0VVaf4SShT4RVHDzNFrE6sxlpSITbct7V7IXG9cO24arNAqog0KOoYSu4M2M
+	CrmPodXF2nBiJVnM43JcQu1uHBkkI3S0ke9BrxZM8
+X-Gm-Gg: ASbGnctKa2GUDxvgPESNHSjheAwirqYMg7E3eDo21XID4Y7D5Rmei3RjO7s5GDnUp53
+	RsFj7p6hmg0EiDraE9PD129hzrnHaoWB0UaK5cqe/7Uwo+iGBJulQlTjUpRd84WL9WRqBbn+0jl
+	qtiyNXqwiTDDHZeKk92uKB0O9Y4Ec1K7JswC4K0jXmR3dmC4Ko20Cql4OMWulWZkLqaTHVqT6Ui
+	vkSru9ulylS/RzK2tADyySAfSYReqOhMX+o8OFLbSVtlMgTFcVxKgm9eKM1lrHppXTBJq6ijm1p
+	zbUPPx5uxVv6s7EgIFK7wsKl
+X-Google-Smtp-Source: AGHT+IE/R1MWUMoRED9m8KDFeIvwsQdy8ET29v31C+Q9bortUC4rMaEW0+tjaZB8YlaiwfwGZSQhF9utyG5KG6THwWQ=
+X-Received: by 2002:a17:902:f605:b0:271:9873:80d9 with SMTP id
+ d9443c01a7336-29497c0c9d2mr351855ad.7.1761330391641; Fri, 24 Oct 2025
+ 11:26:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|DU2PR04MB8936:EE_
-X-MS-Office365-Filtering-Correlation-Id: 95cd1f7a-ee10-4f1f-c63f-08de1329a89a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|52116014|19092799006|366016|38350700014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Mmt3MUp2TFVPTXRwcDFCVWxVSXQzeTdLZTFTYVZGSnNPVWRqQXk4K1NESDlG?=
- =?utf-8?B?L09Mc0ErM081TkhIdjhPcEZIRGtsOFdmbkdIQXVBcHB1WFpHbTVIMHorU2Vu?=
- =?utf-8?B?WE5zRVlicmNzbjRob1VWdjBLZ084akVYellJMlYvZnU3U0RURGN3VlE2K3Ev?=
- =?utf-8?B?dFFNaUVzY0cxOXpXcEtDWTFiaW8xUmhoQm1GNGNSTXN5TFNjeFV2NHgxbUFk?=
- =?utf-8?B?azhTRDBsbEZXQ2J0a043cmdjK0hZQmk2N0FzV3lIS1NGYXlLc3Nmcm1hcTN2?=
- =?utf-8?B?eXloRlcyQ1paU0ZYa3J5RjdjZkljUnZDQlNlYThncEhtY0lvcjBUS0dWRUpq?=
- =?utf-8?B?YmVxOUh5ek9OOUovaUg1SGltREVVeExMaVdRYkJpMkxQbW9RZ1VDY3M1YTM4?=
- =?utf-8?B?Rjh3MjhzL3U3enZkM09La0wvejBONW1laThjSWpmWlpaQjFXaHRSVGhMQW8v?=
- =?utf-8?B?THFxRnE5MWo0WHNqc0FpT0tMTEFIakpxUG1yaVczbXQ3c0s4QmVQak9lbHNk?=
- =?utf-8?B?R0xObHo5NVlCVWhnQ2VzdFNwaFRsQVBmdHgrUHZxMHI0Q2RxaFFHK0dmS2lp?=
- =?utf-8?B?NnF5K3NIT0I2UHRKb2djY1pEcmhBTkZVZW0zSjhBOE1hK1BqeXNQSTRqRzd5?=
- =?utf-8?B?UHR5SEI0R1pySmlGUzlWYUJtMEptNUtsRFprbm5yaURyRVBBYXdoTHhkTzdR?=
- =?utf-8?B?bTBVR2N4S0k5bUtBQzlMamlMZDdKTWluVVNTT1JMdjBjTUJEY0hpTlN2MVpp?=
- =?utf-8?B?TkpiSy9nbXd4bU1kWnp3NzBjeFV4YmlWSnhnUVJMUzRrVUFvYkVPVzVVc1RE?=
- =?utf-8?B?WmJTMWphRldrd29na2dQVHhYR1Ayek0yZVpzbEM4TnA0Q0I3cnEyeDUyV005?=
- =?utf-8?B?bmF6V0pTdmFVeWcrcU13TmZFNnFwK3Y0eHdLaVc3bHJoejlsRm5pVk5SNzNk?=
- =?utf-8?B?TThqSkNTU29QK1ZQNDIxb2J2VlMwRTdrUDd1bVdzejBGa3hlMWthR3p1TXlG?=
- =?utf-8?B?eHcyUFNzVjBJaUdBOEtudVhvUm1BaVJPK1E0V2JuM2VGdEpjdzY1ZXpGR3lT?=
- =?utf-8?B?c050RU14OE15L0xnOVJ3aFZaQitxdXhMSnl0VC9GYSsrMnJhM1RjZ2xNRTNX?=
- =?utf-8?B?ZG4vSlBzSFpYYWh5M2tYOWkyUkFGOXM1aWpzaHZxcXV4d1NhU3BCclRnbTRl?=
- =?utf-8?B?ZVFSZ2xRbHo2a3ExY1VWVzdNeVJjTDVCQU9pZ25nRU9pZUhKWkd2dG9Cdkl5?=
- =?utf-8?B?NnlCRXFSMmJVNmRhSWVpL1plWGpGWnlHWURTTjBUbkY5ejNMb0F2OS9rbWJR?=
- =?utf-8?B?bWlzN3pXcUFzNnUxL2R3RU1nOEFuV2NDUis5TThKOXR4RDBHQSt4UFIrSG5v?=
- =?utf-8?B?N1VoY0ZkemtQZU81cm9rN29mSUprcDg1T3MzQjRJYTdSa1FKdHgxdVNvOWp4?=
- =?utf-8?B?SVB4ejB5T3VCU3V0dnU3eDJ3V3ZCVlRGOGNZMVlsNkh4MmpDbFBFSkEwWW8r?=
- =?utf-8?B?ZDNFSExEeC9zWFU5alJQeTZzdlViOEljZ3ozajlEWmpGMEpKdXJmVk1JTzZj?=
- =?utf-8?B?NGNlcGd0ZytURjJxUE1ycHhmWk84aUpMWFduZnNEbmJVc2g4Y3dsU1NhZEtl?=
- =?utf-8?B?dGRTOUhsWG9RcXhTMmU5cWpuYmliQ0hiYnZpMjNyRER5K0wrekpONnBnSzRl?=
- =?utf-8?B?SWJGVGhENWdBQkZyVFRjd21hRUpIZlVNM2ZIWnBKWGkySm5wN3o3Y1kyZ1ZH?=
- =?utf-8?B?VmlvMmoydWFELzBiT3hIRlVBUHBUdnMwUGkrWjVGZWF4ZzNFRDFGb1pQZmxK?=
- =?utf-8?B?clEyQVVqdEgzd1NDLy9WSHBVa2NHdUV3UkJzMHNhUjI1cXE2UjVIeGFHaFF0?=
- =?utf-8?B?MFF5TkdZYkx2cm9ma3VUTXhVVzIvRElPakJHWUl0WkMwMnMybXYzeGgrZzk3?=
- =?utf-8?B?ZnR1bEFyRm9FNXgwKzdUemo2WW8xTWdQN2h2ODJXWWh6WEJlYkhHclhFV3B6?=
- =?utf-8?B?LzFobzZUYnhydEduTHRvRllhb0FNYnJSZ1RtWGxZSE1KUm8vZWhpeTZ2NERB?=
- =?utf-8?B?d0FjM3o1NUppS0NKVm5IelYzMTVBb3VuNUw3UT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(52116014)(19092799006)(366016)(38350700014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SGJTNjByZUhuVW9aZW9qczgvcUthSXhINTJVdmgrZExKWjdzRFU0ZUNzTnV3?=
- =?utf-8?B?dU5wb1pFUXN4TWkwZEZtSjhVdUUvRzM3UEpQZ1dRQW1ab3RqUEFZTHRTY2do?=
- =?utf-8?B?dDNUc3o3TWJWaTh6dXNQc1V0MVppeXh5SExSZGF5MDR0MXVadXZJekNrc3dm?=
- =?utf-8?B?ano4ZEFSQXRscEhpOWp2N21SOElHcElsMm8zY2N0ZTFWbE56RmovQjh5VXJX?=
- =?utf-8?B?SmlOUUU0dkZGczl6NGxMa1Z1Q093dkl4SnJaaURkOU9ESHpGcWE0b1NpdW9U?=
- =?utf-8?B?TVFXY2dEajZzbktxODhjeTFjS0ZFV2pLZWl4Tm9xU3k5eEdwV2xkUGhBZHRG?=
- =?utf-8?B?bUN3QXV2UWI5SGY1MlkvZ21YK01ZdUFqdGp3WWs5cnJmaEhqWEUvYlNMUU4y?=
- =?utf-8?B?c2JXeFJiTUpQVE12MHRqUktBYXltYVNXa3Q2Qzh2MHlrenFKNDNhbUpCMFdi?=
- =?utf-8?B?aHI4QzRLZzJoYlBQVDlkL1dmYzEvcXlWWlBKL0wxd2gxeUc3cEptMlo1Z05k?=
- =?utf-8?B?d0gwQ2FnWmU1UTk5NkJzNi9QNVNXb0pLRWJMandtbFR0dndRajI3Y0JpL0c3?=
- =?utf-8?B?OFduaDVYcjhlZ1MrSys2TnlyNDdXVUFZZW1xaEh5dE5CQTJvQ1NqbGlobEpx?=
- =?utf-8?B?dnpJY21EKzhKZDdaNWNzSzZWV1UwUEk1UkQ5cWZ2ckhnL1NES2NEcXhzeno0?=
- =?utf-8?B?ZjE2ZE5uRDNSOS9BL1kyVjVqcDRtdHhzZUJmanBGZmI2cXRCWE9wa2FpLzJn?=
- =?utf-8?B?dkZyR1ZsQ2Y2Tytia1hURVNhdEFCM1h2VEs3Q3c4aXdKOVN0U1AxcjVJMkh6?=
- =?utf-8?B?RkJnbzBFL2ZlS1ZLcHBTbzFOS1JKRUQ0azg2aEY5YU9sTjcxSXZXZHVRUW1p?=
- =?utf-8?B?QUFaQ0pWOUtvSTJZL3BzMGV1Z21NNldqYXREYVp6N3pEYVgrbWdRZVRvcUgv?=
- =?utf-8?B?VmRXS2xGcW1EYmxTYXQ1anc3cHhqOXBjdWJvUEdFOG5pUS9JUE10KzFjQXh0?=
- =?utf-8?B?d05Xd29ZcFlMYTc2d2VsMEVXMS9ZS0ZVL0ovYTRyZ1ZxTDZMMUtZSmlvWjMv?=
- =?utf-8?B?OGNVQjlEUUs4UmZjOENPd2pSVHdLSEsvN2tWd3lXcWRWaDJ0b1Ayc3VrVnMz?=
- =?utf-8?B?aWRvK0M5RWxhU1N2akthV1orWFkrOUdncWRTQ2VuMTYyL0RaZW15aHlDRG80?=
- =?utf-8?B?RGpuS3BMMCt5b3lMMkx1MmZ1bVY1dkMrODBjS3Z3ZU5Hb25Kd1gzT3l5Tm42?=
- =?utf-8?B?aUh6cmNtRUM2N215SHZtQW10c1M0dVljZEFHNXZ4NnFValB1YXdhTVRiaDBv?=
- =?utf-8?B?ODhpUExnSWNEVWtxaHVidXRVYlR1Qm01R09BUG4yZTRHRFZ2cXJEZFdlTmc3?=
- =?utf-8?B?YnNVeWZPanlwUWVVQmpJenpjSmhTZlFsTm5oS1kzdnBHT2NaWkdwWVJnUXZG?=
- =?utf-8?B?WGNBd1Y4b1ViS3pyMHNuVFpUVU9iZG5aY2x5aEkyWksyNzFsMFdQcGN4ZFFQ?=
- =?utf-8?B?bitobWZDR085WFJrOUFYTmZBalNFQTVldDNFWk05aTNFNFlqR1Z2ZWZWWTlk?=
- =?utf-8?B?bW8zRnpXUkVkdEJhQzFhWkw1V3R3dUxzV0Z4NHAzSW9CcW9QZWtFZXVrV2Z0?=
- =?utf-8?B?ZWd4TkVEUVBjME43WEVpNHFyTHZOTWJ5QTlOc1VnN1BBNGw1VGRXMGVuTGUy?=
- =?utf-8?B?SU1YM2swM1hXaUN4OFhleTV2SStDQ21yYzM4SWpUZVJCWk4vN1ZrUkpXTkxS?=
- =?utf-8?B?bE5KODZIR1l2QzVrem9wVHpMOW1UaXdaMkN2UGNzZDg2b0MwYzd6OEVXUmhZ?=
- =?utf-8?B?UXA0d2tuREFyNU9iWjRmWHlCUllVNWRUby9XU0pBMWRYL1pPMzMvNlJveTZQ?=
- =?utf-8?B?VHRsVVk3TUVuVEtabTlOTklQZXVxN3piYTRxZElOWHhOaVdodlJ2NDQ2SG9V?=
- =?utf-8?B?a2hNVUxvR081VDFWWVl0MUhvdzR2b29tZVhCRjRycWNJS3FOZWVBOTBadmZM?=
- =?utf-8?B?QzhhMG9OT2VZeFMwbVFjR1A5bW8wenFLbUtyeTVOOFFWRllNcXVCRFphYVV6?=
- =?utf-8?B?OEUyb2xEajVabnZZYVg0ZU1ZYUsvNW1mTVZhTVl2V1Q5NFQzZitvNU9md09q?=
- =?utf-8?Q?ZdzXT2Kn27zSJO6T52ELPFfjs?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95cd1f7a-ee10-4f1f-c63f-08de1329a89a
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2025 18:17:57.8682
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: m/ty1fsGTuaHUSsU909yduCPyrIGbXyyyiJSmGbhYyzqHyx43invo3QAn0vbJolAmuQcJvHGW7+YuSy0L19CwQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8936
+References: <20251022-james-perf-fix-dso-block-v1-1-c4faab150546@linaro.org>
+In-Reply-To: <20251022-james-perf-fix-dso-block-v1-1-c4faab150546@linaro.org>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 24 Oct 2025 11:26:18 -0700
+X-Gm-Features: AS18NWDqeMJm0qdg4y_7XXPpGJ0ljpcenxt2e3n92QfttyvGjhVX5ObkesE21ZY
+Message-ID: <CAP-5=fUF8C=yFkPb_ohJVzX01PvS5n++yZZifWSV-4sMNKZAZA@mail.gmail.com>
+Subject: Re: [PATCH] perf dsos: Don't block when reading build IDs
+To: James Clark <james.clark@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Jacky Bai <ping.bai@nxp.com>
+On Wed, Oct 22, 2025 at 8:46=E2=80=AFAM James Clark <james.clark@linaro.org=
+> wrote:
+>
+> The following command will hang consistently when the GPU is being used
+> due to non regular files (e.g. /dev/dri/renderD129, /dev/dri/card2)
+> being opened to read build IDs:
+>
+>  $ perf record -asdg -e cpu-clock -- true
+>
+> Change to non blocking reads to avoid the hang here:
+>
+>   #0  __libc_pread64 (offset=3D<optimised out>, count=3D0, buf=3D0x7fffff=
+ffa4a0, fd=3D237) at ../sysdeps/unix/sysv/linux/pread64.c:25
+>   #1  __libc_pread64 (fd=3D237, buf=3D0x7fffffffa4a0, count=3D0, offset=
+=3D0) at ../sysdeps/unix/sysv/linux/pread64.c:23
+>   #2  ?? () from /lib/x86_64-linux-gnu/libelf.so.1
+>   #3  read_build_id (filename=3D0x5555562df333 "/dev/dri/card2", bid=3D0x=
+7fffffffb680, block=3Dtrue) at util/symbol-elf.c:880
+>   #4  filename__read_build_id (filename=3D0x5555562df333 "/dev/dri/card2"=
+, bid=3D0x7fffffffb680, block=3Dtrue) at util/symbol-elf.c:924
+>   #5  dsos__read_build_ids_cb (dso=3D0x5555562df1d0, data=3D0x7fffffffb75=
+0) at util/dsos.c:84
+>   #6  __dsos__for_each_dso (dsos=3D0x55555623de68, cb=3D0x5555557e7030 <d=
+sos__read_build_ids_cb>, data=3D0x7fffffffb750) at util/dsos.c:59
+>   #7  dsos__for_each_dso (dsos=3D0x55555623de68, cb=3D0x5555557e7030 <dso=
+s__read_build_ids_cb>, data=3D0x7fffffffb750) at util/dsos.c:503
+>   #8  dsos__read_build_ids (dsos=3D0x55555623de68, with_hits=3Dtrue) at u=
+til/dsos.c:107
+>   #9  machine__read_build_ids (machine=3D0x55555623da58, with_hits=3Dtrue=
+) at util/build-id.c:950
+>   #10 perf_session__read_build_ids (session=3D0x55555623d840, with_hits=
+=3Dtrue) at util/build-id.c:956
+>   #11 write_build_id (ff=3D0x7fffffffb958, evlist=3D0x5555562323d0) at ut=
+il/header.c:327
+>   #12 do_write_feat (ff=3D0x7fffffffb958, type=3D2, p=3D0x7fffffffb950, e=
+vlist=3D0x5555562323d0, fc=3D0x0) at util/header.c:3588
+>   #13 perf_header__adds_write (header=3D0x55555623d840, evlist=3D0x555556=
+2323d0, fd=3D3, fc=3D0x0) at util/header.c:3632
+>   #14 perf_session__do_write_header (session=3D0x55555623d840, evlist=3D0=
+x5555562323d0, fd=3D3, at_exit=3Dtrue, fc=3D0x0, write_attrs_after_data=3Df=
+alse) at util/header.c:3756
+>   #15 perf_session__write_header (session=3D0x55555623d840, evlist=3D0x55=
+55562323d0, fd=3D3, at_exit=3Dtrue) at util/header.c:3796
+>   #16 record__finish_output (rec=3D0x5555561838d8 <record>) at builtin-re=
+cord.c:1899
+>   #17 __cmd_record (rec=3D0x5555561838d8 <record>, argc=3D2, argv=3D0x7ff=
+fffffe320) at builtin-record.c:2967
+>   #18 cmd_record (argc=3D2, argv=3D0x7fffffffe320) at builtin-record.c:44=
+53
+>   #19 run_builtin (p=3D0x55555618cbb0 <commands+288>, argc=3D9, argv=3D0x=
+7fffffffe320) at perf.c:349
+>   #20 handle_internal_command (argc=3D9, argv=3D0x7fffffffe320) at perf.c=
+:401
+>   #21 run_argv (argcp=3D0x7fffffffe16c, argv=3D0x7fffffffe160) at perf.c:=
+445
+>   #22 main (argc=3D9, argv=3D0x7fffffffe320) at perf.c:553
+>
+> Fixes: 53b00ff358dc ("perf record: Make --buildid-mmap the default")
+> Signed-off-by: James Clark <james.clark@linaro.org>
+> ---
+> I'm not actually sure if this is the right fix for this. Commit
+> 2c369d91d093 ("perf symbol: Add blocking argument to
+> filename__read_build_id") which added the blocking argument says that it
+> should be non-blocking reads for event synthesis, but the callstack here
+> is when writing the header out.
+>
+> There was also an is_regular_file() check added in commit c21986d33d6b
+> ("perf unwind-libdw: skip non-regular files"), which presumably falls
+> afoul of the "which unfortunately fails for symlinks" part of the other
+> linked commit message?
+>
+> So I can't tell if we should add the is_regular_file() check here too,
+> or just set it to non-blocking, or it needs some extra state to be
+> passed all the way down to dsos__read_build_ids_cb() to do different
+> things.
 
-Add DB pmu related nodes. This pmu is in DB (system interconnects).
+The fix lgtm but I worry about making all the build ID reading
+non-blocking meaning build IDs getting lost. It seems that generating
+the build ID feature table is unnecessary if we have build ID mmap
+events, including synthesized ones that will have read the build IDs.
+I wonder if a better "fix" is:
+```
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index cb52aea9607d..15f75c70eb76 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1842,7 +1842,7 @@ static void record__init_features(struct record *rec)
+       for (feat =3D HEADER_FIRST_FEATURE; feat < HEADER_LAST_FEATURE; feat=
+++)
+               perf_header__set_feat(&session->header, feat);
 
-Signed-off-by: Jacky Bai <ping.bai@nxp.com>
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-change in v2
-- move clock-db-ipg to imx8dxl.dtsi
----
- arch/arm64/boot/dts/freescale/imx8dxl-ss-ddr.dtsi | 22 ++++++++++++++++++++++
- arch/arm64/boot/dts/freescale/imx8dxl.dtsi        |  7 +++++++
- 2 files changed, 29 insertions(+)
+-       if (rec->no_buildid)
++       if (rec->no_buildid || rec->buildid_mmap)
+               perf_header__clear_feat(&session->header, HEADER_BUILD_ID);
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8dxl-ss-ddr.dtsi b/arch/arm64/boot/dts/freescale/imx8dxl-ss-ddr.dtsi
-index 3569abb5bb9befd4d1504e3e2a352c64229533c0..adc6e394dbc5598c50e0e288ee605ac91087d36b 100644
---- a/arch/arm64/boot/dts/freescale/imx8dxl-ss-ddr.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8dxl-ss-ddr.dtsi
-@@ -7,3 +7,25 @@ &ddr_pmu0 {
- 	compatible = "fsl,imx8dxl-ddr-pmu", "fsl,imx8-ddr-pmu";
- 	interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
- };
-+
-+&ddr_subsys {
-+	db_pmu0: db-pmu@5ca40000 {
-+		compatible = "fsl,imx8dxl-db-pmu";
-+		reg = <0x5ca40000 0x10000>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_SPI 338 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&db_pmu0_lpcg IMX_LPCG_CLK_4>, <&db_pmu0_lpcg IMX_LPCG_CLK_0>;
-+		clock-names = "ipg", "cnt";
-+	};
-+
-+	db_pmu0_lpcg: clock-controller@5cae0000 {
-+		compatible = "fsl,imx8qxp-lpcg";
-+		reg = <0x5cae0000 0x10000>;
-+		#clock-cells = <1>;
-+		clocks = <&db_ipg_clk>, <&db_ipg_clk>;
-+		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
-+		clock-output-names = "perf_lpcg_cnt_clk",
-+				     "perf_lpcg_ipg_clk";
-+		power-domains = <&pd IMX_SC_R_PERF>;
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/freescale/imx8dxl.dtsi b/arch/arm64/boot/dts/freescale/imx8dxl.dtsi
-index 8d60827822ed1cc6cfb1a9369faaebfd711708d1..5106be2fde6e025cc066b796ba7987d0d9c21bd5 100644
---- a/arch/arm64/boot/dts/freescale/imx8dxl.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8dxl.dtsi
-@@ -236,6 +236,13 @@ xtal24m: clock-xtal24m {
- 		clock-output-names = "xtal_24MHz";
- 	};
- 
-+	db_ipg_clk: clock-db-ipg {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <456000000>;
-+		clock-output-names = "db_ipg_clk";
-+	};
-+
- 	/* sorted in register address */
- 	#include "imx8-ss-cm40.dtsi"
- 	#include "imx8-ss-adma.dtsi"
+       if (!have_tracepoints(&rec->evlist->core.entries))
+```
+that should disable the build ID feature table generation when build
+ID mmaps are in use (the default). Having the build IDs twice in the
+data file feels redundant. Or we could do your fix or both, wdyt?
 
--- 
-2.34.1
+Thanks,
+Ian
 
+> ---
+>  tools/perf/util/dsos.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
+> index 64c1d65b0149..5e1c815d7cb0 100644
+> --- a/tools/perf/util/dsos.c
+> +++ b/tools/perf/util/dsos.c
+> @@ -81,13 +81,14 @@ static int dsos__read_build_ids_cb(struct dso *dso, v=
+oid *data)
+>                 return 0;
+>         }
+>         nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+> -       if (filename__read_build_id(dso__long_name(dso), &bid, /*block=3D=
+*/true) > 0) {
+> +       /* Don't block in case path isn't for a regular file. */
+> +       if (filename__read_build_id(dso__long_name(dso), &bid, /*block=3D=
+*/false) > 0) {
+>                 dso__set_build_id(dso, &bid);
+>                 args->have_build_id =3D true;
+>         } else if (errno =3D=3D ENOENT && dso__nsinfo(dso)) {
+>                 char *new_name =3D dso__filename_with_chroot(dso, dso__lo=
+ng_name(dso));
+>
+> -               if (new_name && filename__read_build_id(new_name, &bid, /=
+*block=3D*/true) > 0) {
+> +               if (new_name && filename__read_build_id(new_name, &bid, /=
+*block=3D*/false) > 0) {
+>                         dso__set_build_id(dso, &bid);
+>                         args->have_build_id =3D true;
+>                 }
+>
+> ---
+> base-commit: a1d8548c23076c66d96647f5f6f25aa43567f247
+> change-id: 20251022-james-perf-fix-dso-block-ca1d8437bbc0
+>
+> Best regards,
+> --
+> James Clark <james.clark@linaro.org>
+>
