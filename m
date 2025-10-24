@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5BEC347FC6
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Oct 2025 17:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C628346A13
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Oct 2025 17:59:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761328753; cv=none; b=AyKuUT9u5Ri64PJyqMGNU+TV327OZJg3kfWompJJao7RhXo8SKfZ96BqMGCb+wUdD9YyEpmj+KkK/zcccGQJ584MpzxawaHrAXCOsWbhKBoQAxkch0N8FUgIGUFuiFxRW+0rpshSkqh4sEhsR/IJzc/szfCCC8k6alWrrVSVu38=
+	t=1761328755; cv=none; b=u9t4rN9pI0QkRfTZrxiSLx4xfHgY41i1wz3KDyH62QNfdRue7Lhdo+KYDFbwIFjNJIbIDUaevKCHnFdJuAdAPNcPseMe3AiknpWoKbK4yGpZF4Mo1/kh4fKL2gCQXU5RfTKjqxW9pP0IkG3nBppeuEdBAM2ReAUAradnFzAVa9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761328753; c=relaxed/simple;
-	bh=xOECeydUAevHBImyehHqQIDEGR3heRJ/Ena8jgNX4vo=;
+	s=arc-20240116; t=1761328755; c=relaxed/simple;
+	bh=e4R6AVkXL/b1gApEzWYidv1J/iqwS7GQ4hazLe6UCLU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=kN7KWXaNK6tciCGIlL98McRyWF4hChBsoS9LkDmi5oVhkz8WNDz1P5x55xa2GKGUMz/diw6PVR3/sxC9uXnAMIA1L8rm51YNKTtJKn/6wCFS+nEzqsh/H+dtUZk+Gm+Ynm9gE7gmwxcOVKkd7P1nZXP67HLtfWYaNjX064tfT7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GnXpz8ec; arc=none smtp.client-ip=209.85.214.201
+	 To:Content-Type; b=uD27Crape8fs8/yHDNw3ht0KnUtkmQ9AknIsf3ZS87fNQh3NWAs/V/c3fqAwZao1TZ7Pb1ptOu5nJfe8WaaMHblBVjZXRYR+9YxZtT0T2BZPN+eRjVW2yqM4mcxbOndAD4lmlmTd/iRIiJfWhdHje+CjyEHjjvtN5w5WjH+zFvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qZii0vf4; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GnXpz8ec"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-28a5b8b12bbso58445205ad.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 24 Oct 2025 10:59:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qZii0vf4"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b522037281bso1442454a12.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 24 Oct 2025 10:59:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761328751; x=1761933551; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1761328753; x=1761933553; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=98oLZpU0UKUZs5WlacgZXv8UPFSEP004mNHHINow/FA=;
-        b=GnXpz8ecjIkB71UIuCyJiHBHs+S/hV2dXt8h6Xnl4jHWIajy7oUQ7rneOo2xzWiP4v
-         iIwz7zscuSoLwGPxubrMM7WOKXUqpxmaszHccmkvNemejzLZAP3y5HhF5Ii60m9E367X
-         PO7peALLj8EPzQfDOtHf0kIrSq95pCZ2Ql6YSB5cdlLyJ6XgZEBBqeQIbIy3cZ8H7AYR
-         w7wdtupUolfdiAX5cM1eZknFyjTEWGzmsjd/0zoUKyDdtyv2OXE5DncNPjFa1y7WQ63Y
-         mzBfSSAfnkA+lJTESTl36I20S9oEjZZEjp3/kjE5WqgzOdCTnuSDbyeputrbod3GIGtJ
-         CyNA==
+        bh=nG2hV1s5ki9YDnz6tl1mLOAmUldYkmEMzzCVZ1F8mHU=;
+        b=qZii0vf4cZqcISjkB2gZFbGRrAdyCZ7zFWbRFMLAMfhLowyYGD5v92Hha0wQpzFLzq
+         olGjzLv8Km6yYuh1bKkk4j5NaQVCo1NYUf1Eyss0L3jL8QZvnKkqTVfdiyxjt6PN6okI
+         Vb2ZKPGjb9MYujb73/CrHhgOMu94FljpYLK9i+y8v+3lOScwYyf96i0faoc38iuY0mxU
+         GaMcfs80S7kQUi/XFeFT8vayWIANUvGAAvkEfD0lXmFj3hRqO61bx+8qU5sqh+93pfiB
+         +ecpFhYKaBon3zLpdC1V7EeH8YAfmJOaKO1KekK+DveSw78gvYycgaNwAcUPCnl6fCdN
+         59AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761328751; x=1761933551;
+        d=1e100.net; s=20230601; t=1761328753; x=1761933553;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=98oLZpU0UKUZs5WlacgZXv8UPFSEP004mNHHINow/FA=;
-        b=IyVsgFSKbGWlaFb6oFlRsEzwdXQ3kfrE0P/AzrjGbVbmla6tymgWWVpKUgIpyueb84
-         8nVv1OYHAnjVkFCBlRhKDqWGTCLfaDaaie0Ld8gMu0ZMZj7uPtNRGu72vA+gpdnySOQf
-         8E7xLyJQ4/CgfNShcIiOQppoC1HsgWwf9alUSDZtq6xNxC1GIXCVBnFvvSmrIak65l1R
-         e+qbeAU4d9M3b47fCXTLthCSg5nHwR2kmz45SyvZsLi3g5tQdephL81YMfyLZMXKa+l1
-         k7BF0BtE4E8WaXQzdYWGKDn+B/SJpv2MpwbrQ0D/kyYgtingD7bskGpwpmonAAEp9tCp
-         e1bA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJk4Z+AS7BPYLs8/P3G4J9K91f5XM/gIo1TkQ9mvTYouww7HUw9oAFkaG6WF7ufXSQwNatCuB1ePvgxHHp456H@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTzMY4TTFWJUfMF2vxsP+Am1TABzuUnlWOWq5enycNOIYZ7bfV
-	4zYguTUodebpQ6cYVrEGEoB5wDIRymsJXql2xiP8rjOwF+5w4t/Tvbuhf/Vdz4wPv0LoIokDmD2
-	ev8Jtlb6Y9g==
-X-Google-Smtp-Source: AGHT+IGURs6TgqUzd4+g7oypheTbZWq/9fAOSSxydJkcNYBtbW3Uk34LKWNJlF637subW+6jd5Zcg4J1sRSb
-X-Received: from plsm23.prod.google.com ([2002:a17:902:bb97:b0:268:842a:ea02])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:18d:b0:269:b2ff:5c0e
- with SMTP id d9443c01a7336-2948ba5aac4mr43836265ad.46.1761328751064; Fri, 24
- Oct 2025 10:59:11 -0700 (PDT)
-Date: Fri, 24 Oct 2025 10:58:40 -0700
+        bh=nG2hV1s5ki9YDnz6tl1mLOAmUldYkmEMzzCVZ1F8mHU=;
+        b=ej/nGpwYF0odY7eOysBzkBD7V56dhuKgQOn4lVslZwP+u1c6kZzWa0P7W13PQ1c6sc
+         QJRQA/5AK9AFF1DX/SqgVaC5nhlmeJpaoDKSNxKNU+Ytfk9dmRr3HR4IJAamfsvs/fAQ
+         Sfwvyf5AAG4lZdToCSZq61kW/R3+lu2yoGNCQ1Wrp0//KduRIW6BlWmDZcusb+2YEG2l
+         UkuhH8T1WiPFYgieu6w/tsebaaIdo9sDtFTleuggjATImXx+VGCxNQr6gxGyFIGgQNJf
+         16urcvzN+IEr6OLduA5sBMU1bQB08o/t6wbZSiW2YowPnl77L1EJkmI8ugQ5SNel5+I5
+         GVjw==
+X-Forwarded-Encrypted: i=1; AJvYcCVfo5rfqy04M5VrkTX/I4wrwcv2sPS33B4kXdfbZvntNbgFOdoKSpkWVz5oKKWav/3RoA2K1HJH3Y7pJ7KQN49z@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQBQf6ccAQM0gdVMi/lRuD2r/TGUn494hBwD411SxiaO0frMB9
+	VBYJDuisFCnxl3zmfyxzEFdkEQF+kpnrzj+0ox9DXdLJCyt8pBuGOVp46Jgw6CKFh3aB7J38mCp
+	Xaii8ExKQXA==
+X-Google-Smtp-Source: AGHT+IErrc3a+M+Y7idOuC3m/1xAORwpqR28MnITxE1vZU6cFGOIA0Krct48wBGfAWPzIT+JWfWUg52NODQo
+X-Received: from pltf1.prod.google.com ([2002:a17:902:74c1:b0:267:ddd1:bc97])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d506:b0:290:c5c8:9412
+ with SMTP id d9443c01a7336-290c9cf37demr393918065ad.5.1761328753299; Fri, 24
+ Oct 2025 10:59:13 -0700 (PDT)
+Date: Fri, 24 Oct 2025 10:58:41 -0700
 In-Reply-To: <20251024175857.808401-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251024175857.808401-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.1.821.gb6fe4d2222-goog
-Message-ID: <20251024175857.808401-6-irogers@google.com>
-Subject: [PATCH v1 05/22] perf metricgroup: Add care to picking the evsel for
- displaying a metric
+Message-ID: <20251024175857.808401-7-irogers@google.com>
+Subject: [PATCH v1 06/22] perf jevents: Make all tables static
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,85 +75,96 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Rather than using the first evsel in the matched events, try to find
-the least shared non-tool evsel. The aim is to pick the first evsel
-that typifies the metric within the list of metrics.
-
-This addresses an issue where Default metric group metrics may lose
-their counter value due to how the stat displaying hides counters for
-default event/metric output.
+The tables created by jevents.py are only used within the pmu-events.c
+file. Change the declarations of those global variables to be static
+to encapsulate this.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/metricgroup.c | 48 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 47 insertions(+), 1 deletion(-)
+ tools/perf/pmu-events/empty-pmu-events.c | 10 +++++-----
+ tools/perf/pmu-events/jevents.py         |  6 +++---
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 48936e517803..76092ee26761 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -1323,6 +1323,51 @@ static int parse_ids(bool metric_no_merge, bool fake_pmu,
- 	return ret;
- }
+diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
+index 336e3924ce84..5120fb93690e 100644
+--- a/tools/perf/pmu-events/empty-pmu-events.c
++++ b/tools/perf/pmu-events/empty-pmu-events.c
+@@ -2585,7 +2585,7 @@ static const struct compact_pmu_event pmu_events__common_tool[] = {
  
-+/* How many times will a given evsel be used in a set of metrics? */
-+static int count_uses(struct list_head *metric_list, struct evsel *evsel)
-+{
-+	const char *metric_id = evsel__metric_id(evsel);
-+	struct metric *m;
-+	int uses = 0;
-+
-+	list_for_each_entry(m, metric_list, nd) {
-+		if (hashmap__find(m->pctx->ids, metric_id, NULL))
-+			uses++;
-+	}
-+	return uses;
-+}
-+
-+/*
-+ * Select the evsel that stat-display will use to trigger shadow/metric
-+ * printing. Pick the least shared non-tool evsel, encouraging metrics to be
-+ * with a hardware counter that is specific to them.
-+ */
-+static struct evsel *pick_display_evsel(struct list_head *metric_list,
-+					struct evsel **metric_events)
-+{
-+	struct evsel *selected = metric_events[0];
-+	size_t selected_uses;
-+	bool selected_is_tool;
-+
-+	if (!selected)
-+		return NULL;
-+
-+	selected_uses = count_uses(metric_list, selected);
-+	selected_is_tool = evsel__is_tool(selected);
-+	for (int i = 1; metric_events[i]; i++) {
-+		struct evsel *candidate = metric_events[i];
-+		size_t candidate_uses = count_uses(metric_list, candidate);
-+
-+		if ((selected_is_tool && !evsel__is_tool(candidate)) ||
-+		    (candidate_uses < selected_uses)) {
-+			selected = candidate;
-+			selected_uses = candidate_uses;
-+			selected_is_tool = evsel__is_tool(selected);
-+		}
-+	}
-+	return selected;
-+}
-+
- static int parse_groups(struct evlist *perf_evlist,
- 			const char *pmu, const char *str,
- 			bool metric_no_group,
-@@ -1430,7 +1475,8 @@ static int parse_groups(struct evlist *perf_evlist,
- 			goto out;
- 		}
+ };
  
--		me = metricgroup__lookup(&perf_evlist->metric_events, metric_events[0],
-+		me = metricgroup__lookup(&perf_evlist->metric_events,
-+					 pick_display_evsel(&metric_list, metric_events),
- 					 /*create=*/true);
+-const struct pmu_table_entry pmu_events__common[] = {
++static const struct pmu_table_entry pmu_events__common[] = {
+ {
+      .entries = pmu_events__common_default_core,
+      .num_entries = ARRAY_SIZE(pmu_events__common_default_core),
+@@ -2630,7 +2630,7 @@ static const struct compact_pmu_event pmu_events__test_soc_cpu_uncore_imc_free_r
  
- 		expr = malloc(sizeof(struct metric_expr));
+ };
+ 
+-const struct pmu_table_entry pmu_events__test_soc_cpu[] = {
++static const struct pmu_table_entry pmu_events__test_soc_cpu[] = {
+ {
+      .entries = pmu_events__test_soc_cpu_default_core,
+      .num_entries = ARRAY_SIZE(pmu_events__test_soc_cpu_default_core),
+@@ -2682,7 +2682,7 @@ static const struct compact_pmu_event pmu_metrics__test_soc_cpu_default_core[] =
+ 
+ };
+ 
+-const struct pmu_table_entry pmu_metrics__test_soc_cpu[] = {
++static const struct pmu_table_entry pmu_metrics__test_soc_cpu[] = {
+ {
+      .entries = pmu_metrics__test_soc_cpu_default_core,
+      .num_entries = ARRAY_SIZE(pmu_metrics__test_soc_cpu_default_core),
+@@ -2701,7 +2701,7 @@ static const struct compact_pmu_event pmu_events__test_soc_sys_uncore_sys_ddr_pm
+ 
+ };
+ 
+-const struct pmu_table_entry pmu_events__test_soc_sys[] = {
++static const struct pmu_table_entry pmu_events__test_soc_sys[] = {
+ {
+      .entries = pmu_events__test_soc_sys_uncore_sys_ccn_pmu,
+      .num_entries = ARRAY_SIZE(pmu_events__test_soc_sys_uncore_sys_ccn_pmu),
+@@ -2751,7 +2751,7 @@ struct pmu_events_map {
+  * Global table mapping each known CPU for the architecture to its
+  * table of PMU events.
+  */
+-const struct pmu_events_map pmu_events_map[] = {
++static const struct pmu_events_map pmu_events_map[] = {
+ {
+ 	.arch = "common",
+ 	.cpuid = "common",
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 1f3917cbff87..786a7049363f 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -550,7 +550,7 @@ def print_pending_events() -> None:
+   _args.output_file.write(f"""
+ }};
+ 
+-const struct pmu_table_entry {_pending_events_tblname}[] = {{
++static const struct pmu_table_entry {_pending_events_tblname}[] = {{
+ """)
+   for (pmu, tbl_pmu) in sorted(pmus):
+     pmu_name = f"{pmu}\\000"
+@@ -605,7 +605,7 @@ def print_pending_metrics() -> None:
+   _args.output_file.write(f"""
+ }};
+ 
+-const struct pmu_table_entry {_pending_metrics_tblname}[] = {{
++static const struct pmu_table_entry {_pending_metrics_tblname}[] = {{
+ """)
+   for (pmu, tbl_pmu) in sorted(pmus):
+     pmu_name = f"{pmu}\\000"
+@@ -730,7 +730,7 @@ struct pmu_events_map {
+  * Global table mapping each known CPU for the architecture to its
+  * table of PMU events.
+  */
+-const struct pmu_events_map pmu_events_map[] = {
++static const struct pmu_events_map pmu_events_map[] = {
+ """)
+   for arch in archs:
+     if arch == 'test':
 -- 
 2.51.1.821.gb6fe4d2222-goog
 
