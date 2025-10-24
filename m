@@ -1,342 +1,212 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39FE830F52D
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Oct 2025 17:21:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9FDA25DAF0
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Oct 2025 17:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761326485; cv=none; b=a1HB6rMP8o+PXHsJklTZlMdRnreXBf02l4vWArtYnTW1Ymeqj/8SXa/pX7FWDLMkOFJlr8DMKEpQDTbBUa7Ml2gcJ6JmJQWtcxXUF3I7OkiiHzXcdNxDGuUbiB6YPcIp1XQMx1ANEMLpX1AFaFRf8cXxtxc3+B11YhXS+F3N4y0=
+	t=1761328743; cv=none; b=hFz02hwk4u1B1ItyAOsphOdd77+3g6mSL7mLxOZq7qNMIyBVLmXzWmcc8UStGJEMl9lYoN2f3Swr8cZzI3LJd1ZJrSS5qo6WQfoqrvnxokotD5qY+ILsQuwffKgXHFcB0oKZKDzjb3ReamwCQU4p7Ofi5EYKmG3bNYdnZ/yFZWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761326485; c=relaxed/simple;
-	bh=wDo0H1pOd7pyMs1PSc7DacG7oWEgK7FXoIq1tvZOPeI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DwAvDO1B5vxlFyjgOZJkR/R17X0Y2F20b1emstjH4l6beZynzBxZq0hyfHjM1U+d23yGqHeZQ6mXn81tACIBnSB+KsoXbmNZ6EH5H4EWXRlmqkbIssWc+25xRkYKhOjYPLsQKVnoFZzxremesYW+UZ0+LfPgl+C/cd8z/oOLCWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fCwtOnj3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1761328743; c=relaxed/simple;
+	bh=Crk8CTpd08KWCftkqr3kJuq5FAokhx59ciV+ljDj6BI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=AxcwovelDtzTQ16Ezsmiu1wfK8sgiVeGvE3wzWOPHCqBiIk4ZtNqsLhdG6JkEjBdUOZo8boLrRY2GOuPpa57vuqDxxxrMwp7iFchtNjr18dduYZrehjKOu+YNRphduo2rRMimgnkCIgRe/TBRaHel/ufWB0Qo3kqZkBN331abBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t7z8PG8P; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fCwtOnj3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761326482;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nIYBTWAmoHrBgeo59+/76sWXW0Tfht4GLSBzlyT5i/A=;
-	b=fCwtOnj3sfj1/a+xP+1ptSG4SB6mfhsH/elohwCl4ilNgGTTcISdQrkT95kdd6J7FhhSjT
-	sxjIMQeH/SU03BV8jWisQiW1524AZYWJ/FlU2mcLLUSB11/EAv1QKDXg95XW817iyOMEUH
-	FoXqL7j+bPPymBJVLMvfKkAqIaAfF0U=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-178-um5Q5TlTPM2BhXamCjRI1w-1; Fri, 24 Oct 2025 13:21:20 -0400
-X-MC-Unique: um5Q5TlTPM2BhXamCjRI1w-1
-X-Mimecast-MFC-AGG-ID: um5Q5TlTPM2BhXamCjRI1w_1761326479
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-378dd2050b9so11699471fa.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 24 Oct 2025 10:21:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t7z8PG8P"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-29085106b99so24432765ad.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 24 Oct 2025 10:59:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1761328740; x=1761933540; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=M6FG788WNKrt2YuSQqRoqntPq3sCKgDaC4SShSJk7Ok=;
+        b=t7z8PG8PIlvunnPvQvM0R5d2VL/a8HtFaChOCAQxPPC4auUDkTitl7AYzP+BOKJA0V
+         Tf3wuITmmcuxFEndW5KIvwGSnnwqnSD5N63OtuGr+3MPUK8N0yyulXZH1/dNsiX5thy1
+         9+h2n4c0zGWaRw4G6U4jv7rdtjzdT8XdwEGnxJUrM219aySlH4wz1FYmwMN79s40vViG
+         dke6FnTG6v8VYyo3io1krjc3mDRdvYCYeL5v1HoRvaJXCeCpiOZL++A66uHBeturHZZW
+         t61EXxT22LeEf7BtVEnSwOTaVMTJaMxLO1eamf8m9EfX8DGoKcWK3cjxViIwCOxBY5Y1
+         uVug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761326479; x=1761931279;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nIYBTWAmoHrBgeo59+/76sWXW0Tfht4GLSBzlyT5i/A=;
-        b=eDeEa97VroDqvjZO1H4H3ooB1/k6UiYmtIT0PoUt97HnvnHJfm2badlbGV2BrG8E9l
-         xkjmgMTwQxlbFS29B2W9MT0IQngQBWlJHDNpZP9K+uyNVS6Ph+wwSpURPHnAk8Y2/t67
-         8XROM2xljU0UJKP0eonXWFtNMWTI0ma1TMbjU5RAq0N2MiucezLpPYJZAM028ipp/RGU
-         cs28QAZA3zI6Ir1glRQlmlodwWzOUltkJ/oOJ1HZES5dZxH/yDSdb2RLZDI6NEifLKv2
-         hIS0VwkPFxA8cpgZQwLk55HSmT8P6NbOeecNggnHwWHoFlgPTmRMQT7TlHD4CczFEWJF
-         sVFw==
-X-Forwarded-Encrypted: i=1; AJvYcCVcroKVPkta//TDDNM6KkLX+Uz09f8wdjkeIff7QdC3erT73oIIFJJW/2Stqu5WprKVeNn4f/SkGkb3R42ONnji@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyf6PVW5arKJnV0guKRkb9tM3eIy2ZbLeIXGKqVEBItQDCvqITX
-	Glh+1VJhTUqJntSHUBohiRvB2EXoUFGFrwl6jFgYSkJiZIjChoCksVTHDy+KEtx46dMtJklLr6e
-	Yvbpa34UMHsb1po+pQAS0SfZ4mtiHEMewr3Rgl1gx650S/9U0cKtaOz6uktxGhUzY7kA0FR3A2G
-	EDxbIDGwOcwh89VWqF3jtsYq6BphJAGhdmwNHbnRQ5Dqk57w==
-X-Gm-Gg: ASbGncuC2iyA0P/0AE3YpJuj7xtgw4P41V4fj9TY22Goa074rYGIwua+t57ca5/lsZk
-	GESRZXgrA7M7kJcjHvUZIJJvMcuP1rkkPsB8r+Hs6nEovEwtVnTT5uiDRIurdSTmFmNF/mOvjuB
-	Txc7rSNew81UFAJ+GG2usaEQwpigVJH33SZvSkmlPAH7/x2pPxtYXaiRc=
-X-Received: by 2002:a2e:bcd1:0:b0:36a:a8bb:9b9a with SMTP id 38308e7fff4ca-378e4162236mr11502871fa.0.1761326478690;
-        Fri, 24 Oct 2025 10:21:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFGXISwzvZ/DsySRseKkQcC0UE8bAautLr+I9rS/dWAuyPBHZaY977hT5OrBFa3h0oGKRJbQp6GxgcPB5eSzJI=
-X-Received: by 2002:a2e:bcd1:0:b0:36a:a8bb:9b9a with SMTP id
- 38308e7fff4ca-378e4162236mr11502711fa.0.1761326478184; Fri, 24 Oct 2025
- 10:21:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1761328740; x=1761933540;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=M6FG788WNKrt2YuSQqRoqntPq3sCKgDaC4SShSJk7Ok=;
+        b=JjVsrw/O3n5udhS/ovd5Phh6/0edV51DDEHARY0wmVnSmYM5pj607X8hdEihDD1TEI
+         hJRBAaJEB+2y40F27GAaQBLKxSQk+Do1oAupzwgAT46DVYm06eFT4p7eA8qkgkmeY+r3
+         4kukqH3PK7ziJSsoCg7Rn+E5n5FoxBpM386mXOyi70Lt8c602wNNpouXMjJIFDvPTsTM
+         FHgry46Y0zQj2E5nVnfG6XFtLms6vgdrer19NVjQXVRv8JIIkShBy4c5Diijd2jViJ9s
+         +gIUey7EM0R9wz/XJWWx8Nn1by1mc2DEvnwjAPrBQ8PvzBzZ87jCJwElSdL2sw+7dggT
+         aOEA==
+X-Forwarded-Encrypted: i=1; AJvYcCUrBX28YlPg59DXiG+cxyzZlCLPddkbk9oP2YmGSU9UClWZhi7FdkAH0NteB7ygfF8StDAt9wI1PCYQttq5IZyR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9a8w47CsqXR69PQLrAjn4R8+qYMjMNucgYpcjRKWHwisJnPZK
+	SB05YcI+9A6itgrM1l5nbnXk1lh8MYDYeWnmpeK3vW+JQrvpHL6L6cTZtnibmR9yqTFo1zNJn1S
+	RNHo39Vi2FQ==
+X-Google-Smtp-Source: AGHT+IHp7Ea0p2UPKRz+HcoP7tb2owWmT2q1MmTFcCpt4eK8NPX6uU54zQVDO5dJfOtmFQxBaHZDnZ63p9Oi
+X-Received: from pjtv19.prod.google.com ([2002:a17:90a:c913:b0:33b:dccb:b328])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2446:b0:26a:f6e6:ef4f
+ with SMTP id d9443c01a7336-2946e29d5c3mr74487725ad.60.1761328740079; Fri, 24
+ Oct 2025 10:59:00 -0700 (PDT)
+Date: Fri, 24 Oct 2025 10:58:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20251023132406.78359-2-ashelat@redhat.com> <5b02372a-f0be-4d3a-a875-c5ea65f2bafe@linux.ibm.com>
-In-Reply-To: <5b02372a-f0be-4d3a-a875-c5ea65f2bafe@linux.ibm.com>
-From: Anubhav Shelat <ashelat@redhat.com>
-Date: Fri, 24 Oct 2025 18:21:06 +0100
-X-Gm-Features: AS18NWBHegFU3J-b1B1Qcb9u9LpbOnqpm3OGMMaRqBdyFWtd4MeIHGlfmQwsn30
-Message-ID: <CA+G8Dh+DaVp1XVHm=Hh1aLP=5YOmChTRu4=nSUAwTKJO-a4LDw@mail.gmail.com>
-Subject: Re: [PATCH] Revert "perf test: Allow tolerance for leader sampling test"
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: mpetlan@redhat.com, acme@kernel.org, namhyung@kernel.org, 
-	irogers@google.com, linux-perf-users@vger.kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	dapeng1.mi@linux.intel.com, james.clark@linaro.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.51.1.821.gb6fe4d2222-goog
+Message-ID: <20251024175857.808401-1-irogers@google.com>
+Subject: [PATCH v1 00/22] Switch the default perf stat metrics to json
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Sumanth Korikkar <sumanthk@linux.ibm.com>, Collin Funk <collin.funk1@gmail.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Howard Chu <howardchu95@gmail.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Levi Yun <yeoreum.yun@arm.com>, 
+	Yang Li <yang.lee@linux.alibaba.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-The issue on arm is similar. Failing about half the time, with 1
-failing case. So maybe the same issue on arm.
+Prior to this series stat-shadow would produce hard coded metrics if
+certain events appeared in the evlist. This series produces equivalent
+json metrics and cleans up the consequences in tests and display
+output. A before and after of the default display output on a
+tigerlake is:
 
-Anubhav
+Before:
+```
+$ perf stat -a sleep 1
 
-On Fri, Oct 24, 2025 at 9:40=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
-om> wrote:
->
-> On 10/23/25 15:24, Anubhav Shelat wrote:
-> > This reverts commit 1c5721ca89a1c8ae71082d3a102b39fd1ec0a205.
-> >
-> > The throttling bug has been fixed in 9734e25fbf5a perf: Fix the throttl=
-e
-> > logic for a group. So this commit can be reverted.
-> >
-> > Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
-> > ---
-> >  tools/perf/tests/shell/record.sh | 33 ++++++--------------------------
-> >  1 file changed, 6 insertions(+), 27 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/=
-record.sh
-> > index 0f5841c479e7..13e0d6ef66c9 100755
-> > --- a/tools/perf/tests/shell/record.sh
-> > +++ b/tools/perf/tests/shell/record.sh
-> > @@ -267,43 +267,22 @@ test_leader_sampling() {
-> >      err=3D1
-> >      return
-> >    fi
-> > -  perf script -i "${perfdata}" | grep brstack > $script_output
-> > -  # Check if the two instruction counts are equal in each record.
-> > -  # However, the throttling code doesn't consider event grouping. Duri=
-ng throttling, only the
-> > -  # leader is stopped, causing the slave's counts significantly higher=
-. To temporarily solve this,
-> > -  # let's set the tolerance rate to 80%.
-> > -  # TODO: Revert the code for tolerance once the throttling mechanism =
-is fixed.
-> >    index=3D0
-> > -  valid_counts=3D0
-> > -  invalid_counts=3D0
-> > -  tolerance_rate=3D0.8
-> > +  perf script -i "${perfdata}" | grep brstack > "${script_output}"
-> >    while IFS=3D read -r line
-> >    do
-> > +    # Check if the two instruction counts are equal in each record
-> >      cycles=3D$(echo $line | awk '{for(i=3D1;i<=3DNF;i++) if($i=3D=3D"c=
-ycles:") print $(i-1)}')
-> >      if [ $(($index%2)) -ne 0 ] && [ ${cycles}x !=3D ${prev_cycles}x ]
-> >      then
-> > -      invalid_counts=3D$(($invalid_counts+1))
-> > -    else
-> > -      valid_counts=3D$(($valid_counts+1))
-> > +      echo "Leader sampling [Failed inconsistent cycles count]"
-> > +      err=3D1
-> > +      return
-> >      fi
-> >      index=3D$(($index+1))
-> >      prev_cycles=3D$cycles
-> >    done < "${script_output}"
-> > -  total_counts=3D$(bc <<< "$invalid_counts+$valid_counts")
-> > -  if (( $(bc <<< "$total_counts <=3D 0") ))
-> > -  then
-> > -    echo "Leader sampling [No sample generated]"
-> > -    err=3D1
-> > -    return
-> > -  fi
-> > -  isok=3D$(bc <<< "scale=3D2; if (($invalid_counts/$total_counts) < (1=
--$tolerance_rate)) { 0 } else { 1 };")
-> > -  if [ $isok -eq 1 ]
-> > -  then
-> > -     echo "Leader sampling [Failed inconsistent cycles count]"
-> > -     err=3D1
-> > -  else
-> > -    echo "Basic leader sampling test [Success]"
-> > -  fi
-> > +  echo "Basic leader sampling test [Success]"
-> >  }
-> >
-> >  test_topdown_leader_sampling() {
->
-> I disagree here. Reverting this patch cause the test case to fail very of=
-ten on s390.
-> The test fails about every 2nd run, because the is one run-away value out=
- of many.
-> Here is an example:
->
-> # ./perf record -e "{cycles,cycles}:Su" -- perf test -w brstack
-> [ perf record: Woken up 2 times to write data ]
-> [ perf record: Captured and wrote 0.015 MB perf.data (74 samples) ]
-> [root@b83lp65 perf]# perf script | grep brstack
->             perf  136408 340637.903395:    1377000 cycles:           1171=
-606 brstack_foo+0x1e (/root/linux/tools/perf/perf)
->             perf  136408 340637.903396:    1377000 cycles:           1171=
-664 brstack_bench+0x24 (/root/linux/tools/perf/perf)
->             perf  136408 340637.903396:    1377000 cycles:           1171=
-6d4 brstack_bench+0x94 (/root/linux/tools/perf/perf)
->             perf  136408 340637.903397:    1377000 cycles:           1171=
-6d4 brstack_bench+0x94 (/root/linux/tools/perf/perf)
->             perf  136408 340637.903398:    1377000 cycles:           1171=
-6e8 brstack_bench+0xa8 (/root/linux/tools/perf/perf)
->             perf  136408 340637.903398:    1377000 cycles:           1171=
-606 brstack_foo+0x1e (/root/linux/tools/perf/perf)
->             perf  136408 340637.903399:    1377000 cycles:           1171=
-5cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
->             perf  136408 340637.910844:    1377000 cycles:           1171=
-6e4 brstack_bench+0xa4 (/root/linux/tools/perf/perf)
->             perf  136408 340637.910844:   39843371 cycles:           1171=
-6e4 brstack_bench+0xa4 (/root/linux/tools/perf/perf)
->             perf  136408 340637.910845:    1377000 cycles:           1171=
-632 brstack_foo+0x4a (/root/linux/tools/perf/perf)
->             perf  136408 340637.910846:    1377000 cycles:           1171=
-692 brstack_bench+0x52 (/root/linux/tools/perf/perf)
->             perf  136408 340637.910847:    1377000 cycles:           1171=
-6ee brstack_bench+0xae (/root/linux/tools/perf/perf)
->             perf  136408 340637.910847:    1377000 cycles:           1171=
-5cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
->             perf  136408 340637.910848:    1377000 cycles:           1171=
-598 brstack_bar+0x0 (/root/linux/tools/perf/perf)
->             perf  136408 340637.910848:    1377000 cycles:           1171=
-5e8 brstack_foo+0x0 (/root/linux/tools/perf/perf)
->             perf  136408 340637.910849:    1377000 cycles:           1171=
-7ae brstack+0x86 (/root/linux/tools/perf/perf)
->             perf  136408 340637.910850:    1377000 cycles:           1171=
-5cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
->             perf  136408 340637.910850:    1377000 cycles:           1171=
-6ee brstack_bench+0xae (/root/linux/tools/perf/perf)
->             perf  136408 340637.910851:    1377000 cycles:           1171=
-6ee brstack_bench+0xae (/root/linux/tools/perf/perf)
->             perf  136408 340637.910851:    1377000 cycles:           1171=
-59e brstack_bar+0x6 (/root/linux/tools/perf/perf)
->             perf  136408 340637.910852:    1377000 cycles:           1171=
-598 brstack_bar+0x0 (/root/linux/tools/perf/perf)
->             perf  136408 340637.910853:    1377000 cycles:           1171=
-79e brstack+0x76 (/root/linux/tools/perf/perf)
->             perf  136408 340637.910853:    1377000 cycles:           1171=
-606 brstack_foo+0x1e (/root/linux/tools/perf/perf)
->             perf  136408 340637.910854:    1377000 cycles:           1171=
-6d4 brstack_bench+0x94 (/root/linux/tools/perf/perf)
->             perf  136408 340637.910855:    1377000 cycles:           1171=
-612 brstack_foo+0x2a (/root/linux/tools/perf/perf)
->             perf  136408 340637.910855:    1377000 cycles:           1171=
-5cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
->             perf  136408 340637.910856:    1377000 cycles:           1171=
-598 brstack_bar+0x0 (/root/linux/tools/perf/perf)
->             perf  136408 340637.910856:    1377000 cycles:           1171=
-5cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
->             perf  136408 340637.910857:    1377000 cycles:           1171=
-632 brstack_foo+0x4a (/root/linux/tools/perf/perf)
-> .... many more lines with identical cycles value.
->
-> I have contacted our hardware/firmware team, but have not gotten a respon=
-se back.
-> I still think this has to do with s390 LPAR running under hyperviser cont=
-rol and I do not know what
-> happens when the hipervisor kicks in.
->
-> I agree with James Clark that this should be handled transperently by the=
- hipervisor, that means
-> stopping the LPAR should stop the CPU measurement unit, before giving con=
-trol to a different lpar.
->
-> But what happens when the hipervisor just kicks in and returns to the sam=
-e LPAR again? Or does
-> some admin work on behalf of this LPAR. As long as I can not answer this =
-question, I would like
-> to keep some ratio to handle run-away values.
->
-> As said before, this happens in roughly 50% of the runs...
->
-> Here is a run where the test succeeds without a run-away value:
->
-> # ./perf record -e "{cycles,cycles}:Su" -- perf test -w brstack
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.015 MB perf.data (70 samples) ]
-> # perf script | grep brstack
->             perf  136455 341212.430466:    1377000 cycles:           1171=
-59e brstack_bar+0x6 (/root/linux/tools/perf/perf)
->             perf  136455 341212.430467:    1377000 cycles:           1171=
-5cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
->             perf  136455 341212.430468:    1377000 cycles:           1171=
-612 brstack_foo+0x2a (/root/linux/tools/perf/perf)
->             perf  136455 341212.430468:    1377000 cycles:           1171=
-656 brstack_bench+0x16 (/root/linux/tools/perf/perf)
->             perf  136455 341212.430469:    1377000 cycles:           1171=
-6ee brstack_bench+0xae (/root/linux/tools/perf/perf)
->             perf  136455 341212.430469:    1377000 cycles:           1171=
-5cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
->             perf  136455 341212.430470:    1377000 cycles:           1171=
-5e8 brstack_foo+0x0 (/root/linux/tools/perf/perf)
->             perf  136455 341212.430471:    1377000 cycles:           1171=
-6c6 brstack_bench+0x86 (/root/linux/tools/perf/perf)
->             perf  136455 341212.430471:    1377000 cycles:           1171=
-622 brstack_foo+0x3a (/root/linux/tools/perf/perf)
->             perf  136455 341212.430472:    1377000 cycles:           1171=
-5cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
->             perf  136455 341212.430472:    1377000 cycles:           1171=
-692 brstack_bench+0x52 (/root/linux/tools/perf/perf)
->             perf  136455 341212.430473:    1377000 cycles:           1171=
-70c brstack_bench+0xcc (/root/linux/tools/perf/perf)
->             perf  136455 341212.430474:    1377000 cycles:           1171=
-6e4 brstack_bench+0xa4 (/root/linux/tools/perf/perf)
->             perf  136455 341212.430474:    1377000 cycles:           1171=
-69a brstack_bench+0x5a (/root/linux/tools/perf/perf)
->             perf  136455 341212.430475:    1377000 cycles:           1171=
-5cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
->             perf  136455 341212.430475:    1377000 cycles:           1171=
-5cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
->             perf  136455 341212.430476:    1377000 cycles:           1171=
-6e4 brstack_bench+0xa4 (/root/linux/tools/perf/perf)
->             perf  136455 341212.430476:    1377000 cycles:           1171=
-5cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
->             perf  136455 341212.430477:    1377000 cycles:           1171=
-5e8 brstack_foo+0x0 (/root/linux/tools/perf/perf)
->             perf  136455 341212.430478:    1377000 cycles:           1171=
-70c brstack_bench+0xcc (/root/linux/tools/perf/perf)
->             perf  136455 341212.430478:    1377000 cycles:           1171=
-70c brstack_bench+0xcc (/root/linux/tools/perf/perf)
->             perf  136455 341212.430479:    1377000 cycles:           1171=
-6ee brstack_bench+0xae (/root/linux/tools/perf/perf)
->             perf  136455 341212.430479:    1377000 cycles:           1171=
-598 brstack_bar+0x0 (/root/linux/tools/perf/perf)
->             perf  136455 341212.430480:    1377000 cycles:           1171=
-5cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
->             perf  136455 341212.430481:    1377000 cycles:           1171=
-5fc brstack_foo+0x14 (/root/linux/tools/perf/perf)
->             perf  136455 341212.430481:    1377000 cycles:           1171=
-5cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
->             perf  136455 341212.430482:    1377000 cycles:           1171=
-6ee brstack_bench+0xae (/root/linux/tools/perf/perf)
->             perf  136455 341212.430482:    1377000 cycles:           1171=
-664 brstack_bench+0x24 (/root/linux/tools/perf/perf)
->             perf  136455 341212.430483:    1377000 cycles:           1171=
-70c brstack_bench+0xcc (/root/linux/tools/perf/perf)
->             perf  136455 341212.430484:    1377000 cycles:           1171=
-70c brstack_bench+0xcc (/root/linux/tools/perf/perf)
->             perf  136455 341212.430484:    1377000 cycles:           1171=
-5cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
-> #
->
-> So please let this code in otherwise we need an s390 specific check for s=
-uccess.
->
-> Thanks a lot
-> --
-> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, German=
-y
-> --
-> IBM Deutschland Research & Development GmbH
->
-> Vorsitzender des Aufsichtsrats: Wolfgang Wendt
->
-> Gesch=C3=A4ftsf=C3=BChrung: David Faller
->
-> Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht Stut=
-tgart, HRB 243294
->
+ Performance counter stats for 'system wide':
+
+    16,041,816,418      cpu-clock                        #   15.995 CPUs utilized             
+             5,749      context-switches                 #  358.376 /sec                      
+               121      cpu-migrations                   #    7.543 /sec                      
+             1,806      page-faults                      #  112.581 /sec                      
+       825,965,204      instructions                     #    0.70  insn per cycle            
+     1,180,799,101      cycles                           #    0.074 GHz                       
+       168,945,109      branches                         #   10.532 M/sec                     
+         4,629,567      branch-misses                    #    2.74% of all branches           
+ #     30.2 %  tma_backend_bound      
+                                                  #      7.8 %  tma_bad_speculation    
+                                                  #     47.1 %  tma_frontend_bound     
+ #     14.9 %  tma_retiring           
+```
+
+After:
+```
+$ perf stat -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+             2,890      context-switches                 #    179.9 cs/sec  cs_per_second     
+    16,061,923,339      cpu-clock                        #     16.0 CPUs  CPUs_utilized       
+                43      cpu-migrations                   #      2.7 migrations/sec  migrations_per_second
+             5,645      page-faults                      #    351.5 faults/sec  page_faults_per_second
+         5,708,413      branch-misses                    #      1.4 %  branch_miss_rate         (88.83%)
+       429,978,120      branches                         #     26.8 K/sec  branch_frequency     (88.85%)
+     1,626,915,897      cpu-cycles                       #      0.1 GHz  cycles_frequency       (88.84%)
+     2,556,805,534      instructions                     #      1.5 instructions  insn_per_cycle  (88.86%)
+                        TopdownL1                 #     20.1 %  tma_backend_bound      
+                                                  #     40.5 %  tma_bad_speculation      (88.90%)
+                                                  #     17.2 %  tma_frontend_bound       (78.05%)
+                                                  #     22.2 %  tma_retiring             (88.89%)
+
+       1.002994394 seconds time elapsed
+```
+
+Having the metrics in json brings greater uniformity, allows events to
+be shared by metrics, and it also allows descriptions like:
+```
+$ perf list cs_per_second
+...
+  cs_per_second
+       [Context switches per CPU second]
+```
+
+A thorn in the side of doing this work was that the hard coded metrics
+were used by perf script with '-F metric'. This functionality didn't
+work for me (I was testing `perf record -e instructions,cycles` and
+then `perf script -F metric` but saw nothing but empty lines) but
+anyway I decided to fix it to the best of my ability in this
+series. So the script side counters were removed and the regular ones
+associated with the evsel used. The json metrics were all searched
+looking for ones that have a subset of events matching those in the
+perf script session, and all metrics are printed. This is kind of
+weird as the counters are being set by the period of samples, but I
+carried the behavior forward. I suspect there needs to be follow up
+work to make this better, but what is in the series is superior to
+what is currently in the tree. Follow up work could include finding
+metrics for the machine in the perf.data rather than using the host,
+allowing multiple metrics even if the metric ids of the events differ,
+fixing pre-existing `perf stat record/report` issues, etc.
+
+There is a lot of stat tests that, for example, assume '-e
+instructions,cycles' will produce an IPC metric. These things needed
+tidying as now the metric must be explicitly asked for and when doing
+this ones using software events were preferred to increase
+compatibility. As the test updates were numerous they are distinct to
+the patches updating the functionality causing periods in the series
+where not all tests are passing. If this is undesirable the test fixes
+can be squashed into the functionality updates.
+
+Ian Rogers (22):
+  perf evsel: Remove unused metric_events variable
+  perf metricgroup: Update comment on location of metric_event list
+  perf metricgroup: Missed free on error path
+  perf metricgroup: When copy metrics copy default information
+  perf metricgroup: Add care to picking the evsel for displaying a
+    metric
+  perf jevents: Make all tables static
+  perf expr: Add #target_cpu literal
+  perf jevents: Add set of common metrics based on default ones
+  perf jevents: Add metric DefaultShowEvents
+  perf stat: Add detail -d,-dd,-ddd metrics
+  perf script: Change metric format to use json metrics
+  perf stat: Remove hard coded shadow metrics
+  perf stat: Fix default metricgroup display on hybrid
+  perf stat: Sort default events/metrics
+  perf stat: Remove "unit" workarounds for metric-only
+  perf test stat+json: Improve metric-only testing
+  perf test stat: Ignore failures in Default[234] metricgroups
+  perf test stat: Update std_output testing metric expectations
+  perf test metrics: Update all metrics for possibly failing default
+    metrics
+  perf test stat: Update shadow test to use metrics
+  perf test stat: Update test expectations and events
+  perf test stat csv: Update test expectations and events
+
+ tools/perf/builtin-script.c                   | 238 ++++++++++-
+ tools/perf/builtin-stat.c                     | 154 ++-----
+ .../arch/common/common/metrics.json           | 151 +++++++
+ tools/perf/pmu-events/empty-pmu-events.c      | 139 ++++--
+ tools/perf/pmu-events/jevents.py              |  34 +-
+ tools/perf/pmu-events/pmu-events.h            |   2 +
+ .../tests/shell/lib/perf_json_output_lint.py  |   4 +-
+ tools/perf/tests/shell/lib/stat_output.sh     |   2 +-
+ tools/perf/tests/shell/stat+csv_output.sh     |   2 +-
+ tools/perf/tests/shell/stat+json_output.sh    |   2 +-
+ tools/perf/tests/shell/stat+shadow_stat.sh    |   4 +-
+ tools/perf/tests/shell/stat+std_output.sh     |   4 +-
+ tools/perf/tests/shell/stat.sh                |   6 +-
+ .../perf/tests/shell/stat_all_metricgroups.sh |   3 +
+ tools/perf/tests/shell/stat_all_metrics.sh    |   7 +-
+ tools/perf/util/evsel.c                       |   2 -
+ tools/perf/util/evsel.h                       |   2 +-
+ tools/perf/util/expr.c                        |   3 +
+ tools/perf/util/metricgroup.c                 |  95 ++++-
+ tools/perf/util/metricgroup.h                 |   2 +-
+ tools/perf/util/stat-display.c                |  55 +--
+ tools/perf/util/stat-shadow.c                 | 402 +-----------------
+ tools/perf/util/stat.h                        |   2 +-
+ 23 files changed, 672 insertions(+), 643 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/common/common/metrics.json
+
+-- 
+2.51.1.821.gb6fe4d2222-goog
 
