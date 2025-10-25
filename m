@@ -1,380 +1,188 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C2B302775
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Oct 2025 20:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF672F5B;
+	Sat, 25 Oct 2025 23:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761424204; cv=none; b=L6geHGg8CFxPB+uYOrZ1SBtachY0oQn3f5dZ9p958E8a+nGCAquQN9rk98B/fUsdotkgapWYbO9ghSRTcwuMW0KcLZij1PdFytikLXVBroA/+ccNhO9L6Lzk4opxVYh/c43QtKDLBXzAqmN9Ymrp6UYetY7W1SsH5tonVFWh8IQ=
+	t=1761436750; cv=none; b=onZTFoclGAVKEj8DWTqdcg+hEOQeA/3s3yrR0IKmdp03hT4PRg/nE2KzR3k5FCB0fPNYoGFoLoUAVp9ZLzzKO+xTzINLZ68JwEEOymCqu/XMSaQ+7xy7q/dlLswn7uJvMZeqXR75MXESDViZY4mUUtW0WPrV7+qnhWNqyXWQOxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761424204; c=relaxed/simple;
-	bh=UpPBBRo7/X6f1t+CtHQSKjLCXTLpZBse52uCRp1hEZU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oyPKquXtd2xYAzvZajOQk0bNMnvOeHIDP932IZAt28nv8XvGX4kaLaDpsgsfuUE9LoSo1P23XiJ7dmD6k3s+xjnTF5wMWLrW/0St+JAl4QyZje8UmDI3+PH5uuU75s7Tx0ZPo+xOsOQd35JUvK45Mpfky/1MkuiGqP5e9K/8i4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uYxwuqwH; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1761436750; c=relaxed/simple;
+	bh=06zKdO6I7W5EZ/u4lGAMePBVjzLmVb5JfE/SpsSIUz0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EeTlelaN/zCIVt/OoL0SZS0vmwosAzMTe5N7YFq0WLsj4GJt6UolHLbKbgFMTaQLpdFSvoK64+FMqPmiP44GONC1WZr4bPjJlcbu/Sesu8HC1GlOSmz7/nFOe+M00YCqmu1t7iKg2ZWpDSf0mNKos36qcdG+73At4V+NPyvYfPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JZ8F/zae; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uYxwuqwH"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-27d67abd215so152405ad.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 25 Oct 2025 13:30:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761424201; x=1762029001; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YJhRqlwmiH3f/yG21RCdpA5THgy+qYRFYxl1VtGsxCE=;
-        b=uYxwuqwHfRIIyHl5Q67f/axJyCUrgBZG0eBedyOmgrBTAyBJ6NzwerHaJKZzaNi6NJ
-         T/TTTKjPUUFwhJheKJhbvJQouS4e1e4slWYyU9M06MfdrOyzqBufn869CHEtpDOiWJkD
-         VzwnLNo/JJT1E9DVfybEI5qAU8tXOPASUIRzVw/rOUSpSScuR0VLnCtfWNRGoagWq61r
-         BN3YiZZWHaqyc8ReO6xtf7LGex53VqnalwdXMWlqTXPKkcijH6hHDgKhprfv0ePVFefV
-         25UJgB9zShW+jxIgs0dKV9s+meMvJixPQVkZG/p8J6oPvsoRXBsSr6Xc4toZtaRafwEO
-         DJhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761424201; x=1762029001;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YJhRqlwmiH3f/yG21RCdpA5THgy+qYRFYxl1VtGsxCE=;
-        b=edTf0NZL39o+uUG3fpRaYFsscg+IUKfUcxf0BO4Gz1W17e4Dv8z9cyBj2QoQEkD579
-         8L18jPW/3+xJIzydXwk0QftT3pQalF9+48kIbkTkVPOS6OU7/JFV025Z+qaiQk1+LlHx
-         4yiyMb7N+5cUbM7n3SEwqzXtGvd0DRNXtrqgfcH/bWtY3011Intm9Gh9YimxEzIy9/nz
-         CMrbARHJMv8rCQyAUkeB2v8eaq+qBdUPjgVyHMd4ysPyQApB2eZdb1X3YGooQLOu/ybV
-         x8VRYoWlnPL4ANLuE+7GY5WUsiyhsCWikOSYmfd/y0ES6qDgkQG9nPi7ce9wCb4FhhpL
-         mE+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXPjhJmsndtgWuOetFEiCvQQtbowVzdH6M2V79Q/EI6bxb1DY29LLuD862QYS4Drm2JWSH/vYoJxuR9E9cLmKQR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6Jjv5XTs2oBgA+P2kl/r4Mq9giJLgCwvX0FyJT8FYK/zq0C9L
-	TXXj2trtLLkia/DHxdJiZD7ENrrAn14JbwisvMnyGkGxYJnupi3eVhytKwDDKNkdYv2TMedNlry
-	qofldKJ1ttXdKync6k8OJzQk81FkD7bEaBI55GHjV
-X-Gm-Gg: ASbGncsTDCpfTuK+DV6VDgyNb9i+ZEY+9aLfmbQ+GTfAGb3xYMTKvVaU1IRdUIXLMGc
-	bzvGyX6H/YZsqpTEEMIWPTMjxYzHY+mJxGeXf2fydhviKjELF83w/yHry6DAavPf5XhAkymqh2w
-	+NzRzj0nkiTsHlqIOzQSa7QCsxtbvTGyqWYg/5/dUGaqObcSyJBbxLVtZac3LGZQzv4gTS+0NSc
-	0Y4BidWiVB5gD4N1bEhAmyA7w0OzXJZqYVmDt9LFzETO/wd26YuYMv5Fp/TRBLPLZAm8hlGaTYw
-	M/y1CA==
-X-Google-Smtp-Source: AGHT+IHWr2JPxH7y9j+mQC3VSxMbWYJGSiFZO3Di9KI+6bfHTdwSoy+HJYRlE7XL9WajetVQ++MdeVvngfZjrSZjASU=
-X-Received: by 2002:a17:903:17cc:b0:290:b527:97ec with SMTP id
- d9443c01a7336-29497cb7435mr3083615ad.5.1761424200944; Sat, 25 Oct 2025
- 13:30:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JZ8F/zae"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABF94C4CEF5;
+	Sat, 25 Oct 2025 23:59:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761436748;
+	bh=06zKdO6I7W5EZ/u4lGAMePBVjzLmVb5JfE/SpsSIUz0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JZ8F/zaezdd8RK5F1IbDyfZVKVQ3LoqH5cEbdMROi36mprGMqmhdoK6CJNhfFecfP
+	 3jFu0Cp+6J/RDUaThrRvFZYciv3QHR7N4vAL/wGCkqUHC80UypDYeNMYtbs69rPR1S
+	 w0FRBtxWIEZyLIgTlRcUvu7Z3+sCAoRXPvsSKPBeeNKn4129BAALx6uj/Np6bJ26yO
+	 NK0DE/FlpBbWBqsCAWrgZUAPtXzmQd25C/nLQmaucZB83vBPQIKHwTZtzF1wfkvKFp
+	 tLJENk/s76/66PkFZXTAOZ+JfiVU/6eX43h5hnPyX6zF+FTarcpaKcIFwnC0WYqz4Z
+	 WKrjUHNM50uzg==
+Date: Sat, 25 Oct 2025 16:59:05 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf dsos: Don't block when reading build IDs
+Message-ID: <aP1kSdZJKYIpnRia@google.com>
+References: <20251022-james-perf-fix-dso-block-v1-1-c4faab150546@linaro.org>
+ <CAP-5=fUF8C=yFkPb_ohJVzX01PvS5n++yZZifWSV-4sMNKZAZA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251025165019.1109315-1-irogers@google.com> <aP0KyW5MmTL3yTtu@google.com>
-In-Reply-To: <aP0KyW5MmTL3yTtu@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Sat, 25 Oct 2025 13:29:48 -0700
-X-Gm-Features: AWmQ_bkXGEyE04xBQfH-AIAEMMx3xHiHPbiZW3gstjMDXAsKRtB3yxiRyBTHcik
-Message-ID: <CAP-5=fWpGm9OhWFjrm9qZL8Ja-uqU76x60gB9MUU++JX6Nuyug@mail.gmail.com>
-Subject: Re: [PATCH v2] perf stat: Add/fix bperf cgroup max events workarounds
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUF8C=yFkPb_ohJVzX01PvS5n++yZZifWSV-4sMNKZAZA@mail.gmail.com>
 
-On Sat, Oct 25, 2025 at 10:37=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> Hi Ian,
->
-> On Sat, Oct 25, 2025 at 09:50:19AM -0700, Ian Rogers wrote:
-> > Commit b8308511f6e0 bumped the max events to 1024 but this results in
-> > BPF verifier issues if the number of command line events is too
-> > large. Workaround this by:
-> >
-> > 1) moving the constants to a header file to share between BPF and perf
-> >    C code,
-> > 2) testing that the maximum number of events doesn't cause BPF
-> >    verifier issues in debug builds,
-> > 3) lower the max events from 1024 to 128,
-> > 4) in perf stat, if there are more events than the BPF counters can
-> >    support then disable BPF counter usage.
-> >
-> > The rodata setup is factored into its own function to avoid
-> > duplicating it in the testing code.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > Fixes: b8308511f6e0 ("perf stat bperf cgroup: Increase MAX_EVENTS from =
-32 to 1024")
-> > ---
-> > v2: Add missing header file
-> > ---
-> >  tools/perf/builtin-stat.c                   | 13 +++-
-> >  tools/perf/util/bpf_counter_cgroup.c        | 79 +++++++++++++++------
-> >  tools/perf/util/bpf_skel/bperf_cgroup.bpf.c | 18 +++--
-> >  tools/perf/util/bpf_skel/bperf_cgroup.h     | 15 ++++
-> >  4 files changed, 91 insertions(+), 34 deletions(-)
-> >  create mode 100644 tools/perf/util/bpf_skel/bperf_cgroup.h
-> >
-> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > index 3c3188a57016..130515f87ee0 100644
-> > --- a/tools/perf/builtin-stat.c
-> > +++ b/tools/perf/builtin-stat.c
-> > @@ -96,6 +96,10 @@
-> >  #include <perf/evlist.h>
-> >  #include <internal/threadmap.h>
-> >
-> > +#ifdef HAVE_BPF_SKEL
-> > +#include "util/bpf_skel/bperf_cgroup.h"
-> > +#endif
-> > +
-> >  #define DEFAULT_SEPARATOR    " "
-> >  #define FREEZE_ON_SMI_PATH   "bus/event_source/devices/cpu/freeze_on_s=
-mi"
-> >
-> > @@ -2852,7 +2856,14 @@ int cmd_stat(int argc, const char **argv)
-> >                       goto out;
-> >               }
-> >       }
-> > -
-> > +#ifdef HAVE_BPF_SKEL
-> > +     if (target.use_bpf &&
-> > +         (evsel_list->core.nr_entries / nr_cgroups) > BPERF_CGROUP__MA=
-X_EVENTS) {
->
-> I guess you also need to check if nr_cgroups is not zero.  Otherwise
-> looks good to me.
+Hello,
 
-Good catch! Fixed in v3.
+On Fri, Oct 24, 2025 at 11:26:18AM -0700, Ian Rogers wrote:
+> On Wed, Oct 22, 2025 at 8:46 AM James Clark <james.clark@linaro.org> wrote:
+> >
+> > The following command will hang consistently when the GPU is being used
+> > due to non regular files (e.g. /dev/dri/renderD129, /dev/dri/card2)
+> > being opened to read build IDs:
+> >
+> >  $ perf record -asdg -e cpu-clock -- true
+> >
+> > Change to non blocking reads to avoid the hang here:
+> >
+> >   #0  __libc_pread64 (offset=<optimised out>, count=0, buf=0x7fffffffa4a0, fd=237) at ../sysdeps/unix/sysv/linux/pread64.c:25
+> >   #1  __libc_pread64 (fd=237, buf=0x7fffffffa4a0, count=0, offset=0) at ../sysdeps/unix/sysv/linux/pread64.c:23
+> >   #2  ?? () from /lib/x86_64-linux-gnu/libelf.so.1
+> >   #3  read_build_id (filename=0x5555562df333 "/dev/dri/card2", bid=0x7fffffffb680, block=true) at util/symbol-elf.c:880
+> >   #4  filename__read_build_id (filename=0x5555562df333 "/dev/dri/card2", bid=0x7fffffffb680, block=true) at util/symbol-elf.c:924
+> >   #5  dsos__read_build_ids_cb (dso=0x5555562df1d0, data=0x7fffffffb750) at util/dsos.c:84
+> >   #6  __dsos__for_each_dso (dsos=0x55555623de68, cb=0x5555557e7030 <dsos__read_build_ids_cb>, data=0x7fffffffb750) at util/dsos.c:59
+> >   #7  dsos__for_each_dso (dsos=0x55555623de68, cb=0x5555557e7030 <dsos__read_build_ids_cb>, data=0x7fffffffb750) at util/dsos.c:503
+> >   #8  dsos__read_build_ids (dsos=0x55555623de68, with_hits=true) at util/dsos.c:107
+> >   #9  machine__read_build_ids (machine=0x55555623da58, with_hits=true) at util/build-id.c:950
+> >   #10 perf_session__read_build_ids (session=0x55555623d840, with_hits=true) at util/build-id.c:956
+> >   #11 write_build_id (ff=0x7fffffffb958, evlist=0x5555562323d0) at util/header.c:327
+> >   #12 do_write_feat (ff=0x7fffffffb958, type=2, p=0x7fffffffb950, evlist=0x5555562323d0, fc=0x0) at util/header.c:3588
+> >   #13 perf_header__adds_write (header=0x55555623d840, evlist=0x5555562323d0, fd=3, fc=0x0) at util/header.c:3632
+> >   #14 perf_session__do_write_header (session=0x55555623d840, evlist=0x5555562323d0, fd=3, at_exit=true, fc=0x0, write_attrs_after_data=false) at util/header.c:3756
+> >   #15 perf_session__write_header (session=0x55555623d840, evlist=0x5555562323d0, fd=3, at_exit=true) at util/header.c:3796
+> >   #16 record__finish_output (rec=0x5555561838d8 <record>) at builtin-record.c:1899
+> >   #17 __cmd_record (rec=0x5555561838d8 <record>, argc=2, argv=0x7fffffffe320) at builtin-record.c:2967
+> >   #18 cmd_record (argc=2, argv=0x7fffffffe320) at builtin-record.c:4453
+> >   #19 run_builtin (p=0x55555618cbb0 <commands+288>, argc=9, argv=0x7fffffffe320) at perf.c:349
+> >   #20 handle_internal_command (argc=9, argv=0x7fffffffe320) at perf.c:401
+> >   #21 run_argv (argcp=0x7fffffffe16c, argv=0x7fffffffe160) at perf.c:445
+> >   #22 main (argc=9, argv=0x7fffffffe320) at perf.c:553
+> >
+> > Fixes: 53b00ff358dc ("perf record: Make --buildid-mmap the default")
+> > Signed-off-by: James Clark <james.clark@linaro.org>
+> > ---
+> > I'm not actually sure if this is the right fix for this. Commit
+> > 2c369d91d093 ("perf symbol: Add blocking argument to
+> > filename__read_build_id") which added the blocking argument says that it
+> > should be non-blocking reads for event synthesis, but the callstack here
+> > is when writing the header out.
+> >
+> > There was also an is_regular_file() check added in commit c21986d33d6b
+> > ("perf unwind-libdw: skip non-regular files"), which presumably falls
+> > afoul of the "which unfortunately fails for symlinks" part of the other
+> > linked commit message?
+> >
+> > So I can't tell if we should add the is_regular_file() check here too,
+> > or just set it to non-blocking, or it needs some extra state to be
+> > passed all the way down to dsos__read_build_ids_cb() to do different
+> > things.
+> 
+> The fix lgtm but I worry about making all the build ID reading
+> non-blocking meaning build IDs getting lost. 
+
+I'm not sure what non-blocking means for regular file system operations
+on a block device.  But it may have some impact on regular files on a
+network filesystem.
+
+> It seems that generating
+> the build ID feature table is unnecessary if we have build ID mmap
+> events, including synthesized ones that will have read the build IDs.
+> I wonder if a better "fix" is:
+> ```
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index cb52aea9607d..15f75c70eb76 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -1842,7 +1842,7 @@ static void record__init_features(struct record *rec)
+>        for (feat = HEADER_FIRST_FEATURE; feat < HEADER_LAST_FEATURE; feat++)
+>                perf_header__set_feat(&session->header, feat);
+> 
+> -       if (rec->no_buildid)
+> +       if (rec->no_buildid || rec->buildid_mmap)
+>                perf_header__clear_feat(&session->header, HEADER_BUILD_ID);
+> 
+>        if (!have_tracepoints(&rec->evlist->core.entries))
+> ```
+> that should disable the build ID feature table generation when build
+> ID mmaps are in use (the default). Having the build IDs twice in the
+> data file feels redundant. Or we could do your fix or both, wdyt?
+
+I'm ok to remove the header feature but I think it should update
+build-ID cache even with this change.
+
+I'm also curious if the device has samples actually.  It should be
+checked by dso->hit.
 
 Thanks,
-Ian
+Namhyung
 
+> 
 > Thanks,
-> Namhyung
->
-> > +             pr_warning("Disabling BPF counters due to more events (%d=
-) than the max (%d)\n",
-> > +                        evsel_list->core.nr_entries / nr_cgroups, BPER=
-F_CGROUP__MAX_EVENTS);
-> > +             target.use_bpf =3D false;
-> > +     }
-> > +#endif // HAVE_BPF_SKEL
-> >       evlist__warn_user_requested_cpus(evsel_list, target.cpu_list);
+> Ian
+> 
+> > ---
+> >  tools/perf/util/dsos.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
 > >
-> >       evlist__for_each_entry(evsel_list, counter) {
-> > diff --git a/tools/perf/util/bpf_counter_cgroup.c b/tools/perf/util/bpf=
-_counter_cgroup.c
-> > index 690be3ce3e11..68bd994c8880 100644
-> > --- a/tools/perf/util/bpf_counter_cgroup.c
-> > +++ b/tools/perf/util/bpf_counter_cgroup.c
-> > @@ -27,6 +27,7 @@
-> >  #include "cpumap.h"
-> >  #include "thread_map.h"
+> > diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
+> > index 64c1d65b0149..5e1c815d7cb0 100644
+> > --- a/tools/perf/util/dsos.c
+> > +++ b/tools/perf/util/dsos.c
+> > @@ -81,13 +81,14 @@ static int dsos__read_build_ids_cb(struct dso *dso, void *data)
+> >                 return 0;
+> >         }
+> >         nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
+> > -       if (filename__read_build_id(dso__long_name(dso), &bid, /*block=*/true) > 0) {
+> > +       /* Don't block in case path isn't for a regular file. */
+> > +       if (filename__read_build_id(dso__long_name(dso), &bid, /*block=*/false) > 0) {
+> >                 dso__set_build_id(dso, &bid);
+> >                 args->have_build_id = true;
+> >         } else if (errno == ENOENT && dso__nsinfo(dso)) {
+> >                 char *new_name = dso__filename_with_chroot(dso, dso__long_name(dso));
 > >
-> > +#include "bpf_skel/bperf_cgroup.h"
-> >  #include "bpf_skel/bperf_cgroup.skel.h"
+> > -               if (new_name && filename__read_build_id(new_name, &bid, /*block=*/true) > 0) {
+> > +               if (new_name && filename__read_build_id(new_name, &bid, /*block=*/false) > 0) {
+> >                         dso__set_build_id(dso, &bid);
+> >                         args->have_build_id = true;
+> >                 }
 > >
-> >  static struct perf_event_attr cgrp_switch_attr =3D {
-> > @@ -42,6 +43,55 @@ static struct bperf_cgroup_bpf *skel;
+> > ---
+> > base-commit: a1d8548c23076c66d96647f5f6f25aa43567f247
+> > change-id: 20251022-james-perf-fix-dso-block-ca1d8437bbc0
 > >
-> >  #define FD(evt, cpu) (*(int *)xyarray__entry(evt->core.fd, cpu, 0))
-> >
-> > +static void setup_rodata(struct bperf_cgroup_bpf *sk, int evlist_size)
-> > +{
-> > +     int map_size, total_cpus =3D cpu__max_cpu().cpu;
-> > +
-> > +     sk->rodata->num_cpus =3D total_cpus;
-> > +     sk->rodata->num_events =3D evlist_size / nr_cgroups;
-> > +
-> > +     if (cgroup_is_v2("perf_event") > 0)
-> > +             sk->rodata->use_cgroup_v2 =3D 1;
-> > +
-> > +     BUG_ON(evlist_size % nr_cgroups !=3D 0);
-> > +
-> > +     /* we need one copy of events per cpu for reading */
-> > +     map_size =3D total_cpus * evlist_size / nr_cgroups;
-> > +     bpf_map__set_max_entries(sk->maps.events, map_size);
-> > +     bpf_map__set_max_entries(sk->maps.cgrp_idx, nr_cgroups);
-> > +     /* previous result is saved in a per-cpu array */
-> > +     map_size =3D evlist_size / nr_cgroups;
-> > +     bpf_map__set_max_entries(sk->maps.prev_readings, map_size);
-> > +     /* cgroup result needs all events (per-cpu) */
-> > +     map_size =3D evlist_size;
-> > +     bpf_map__set_max_entries(sk->maps.cgrp_readings, map_size);
-> > +}
-> > +
-> > +static void test_max_events_program_load(void)
-> > +{
-> > +#ifndef NDEBUG
-> > +     /*
-> > +      * Test that the program verifies with the maximum number of even=
-ts. If
-> > +      * this test fails unfortunately perf needs recompiling with a lo=
-wer
-> > +      * BPERF_CGROUP__MAX_EVENTS to avoid BPF verifier issues.
-> > +      */
-> > +     int err, max_events =3D BPERF_CGROUP__MAX_EVENTS * nr_cgroups;
-> > +     struct bperf_cgroup_bpf *test_skel =3D bperf_cgroup_bpf__open();
-> > +
-> > +     if (!test_skel) {
-> > +             pr_err("Failed to open cgroup skeleton\n");
-> > +             return;
-> > +     }
-> > +     setup_rodata(test_skel, max_events);
-> > +     err =3D bperf_cgroup_bpf__load(test_skel);
-> > +     if (err) {
-> > +             pr_err("Failed to load cgroup skeleton with max events %d=
-.\n",
-> > +                     BPERF_CGROUP__MAX_EVENTS);
-> > +     }
-> > +     bperf_cgroup_bpf__destroy(test_skel);
-> > +#endif
-> > +}
-> > +
-> >  static int bperf_load_program(struct evlist *evlist)
-> >  {
-> >       struct bpf_link *link;
-> > @@ -50,35 +100,18 @@ static int bperf_load_program(struct evlist *evlis=
-t)
-> >       int i, j;
-> >       struct perf_cpu cpu;
-> >       int total_cpus =3D cpu__max_cpu().cpu;
-> > -     int map_size, map_fd;
-> > -     int prog_fd, err;
-> > +     int map_fd, prog_fd, err;
-> > +
-> > +     set_max_rlimit();
-> > +
-> > +     test_max_events_program_load();
-> >
-> >       skel =3D bperf_cgroup_bpf__open();
-> >       if (!skel) {
-> >               pr_err("Failed to open cgroup skeleton\n");
-> >               return -1;
-> >       }
-> > -
-> > -     skel->rodata->num_cpus =3D total_cpus;
-> > -     skel->rodata->num_events =3D evlist->core.nr_entries / nr_cgroups=
-;
-> > -
-> > -     if (cgroup_is_v2("perf_event") > 0)
-> > -             skel->rodata->use_cgroup_v2 =3D 1;
-> > -
-> > -     BUG_ON(evlist->core.nr_entries % nr_cgroups !=3D 0);
-> > -
-> > -     /* we need one copy of events per cpu for reading */
-> > -     map_size =3D total_cpus * evlist->core.nr_entries / nr_cgroups;
-> > -     bpf_map__set_max_entries(skel->maps.events, map_size);
-> > -     bpf_map__set_max_entries(skel->maps.cgrp_idx, nr_cgroups);
-> > -     /* previous result is saved in a per-cpu array */
-> > -     map_size =3D evlist->core.nr_entries / nr_cgroups;
-> > -     bpf_map__set_max_entries(skel->maps.prev_readings, map_size);
-> > -     /* cgroup result needs all events (per-cpu) */
-> > -     map_size =3D evlist->core.nr_entries;
-> > -     bpf_map__set_max_entries(skel->maps.cgrp_readings, map_size);
-> > -
-> > -     set_max_rlimit();
-> > +     setup_rodata(skel, evlist->core.nr_entries);
-> >
-> >       err =3D bperf_cgroup_bpf__load(skel);
-> >       if (err) {
-> > diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/u=
-til/bpf_skel/bperf_cgroup.bpf.c
-> > index 18ab4d9b49ff..c2298a2decc9 100644
-> > --- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > +++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > @@ -1,14 +1,12 @@
-> >  // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >  // Copyright (c) 2021 Facebook
-> >  // Copyright (c) 2021 Google
-> > +#include "bperf_cgroup.h"
-> >  #include "vmlinux.h"
-> >  #include <bpf/bpf_helpers.h>
-> >  #include <bpf/bpf_tracing.h>
-> >  #include <bpf/bpf_core_read.h>
-> >
-> > -#define MAX_LEVELS  10  // max cgroup hierarchy level: arbitrary
-> > -#define MAX_EVENTS  1024  // max events per cgroup: arbitrary
-> > -
-> >  // NOTE: many of map and global data will be modified before loading
-> >  //       from the userspace (perf tool) using the skeleton helpers.
-> >
-> > @@ -97,7 +95,7 @@ static inline int get_cgroup_v1_idx(__u32 *cgrps, int=
- size)
-> >       cgrp =3D BPF_CORE_READ(p, cgroups, subsys[perf_subsys_id], cgroup=
-);
-> >       level =3D BPF_CORE_READ(cgrp, level);
-> >
-> > -     for (cnt =3D 0; i < MAX_LEVELS; i++) {
-> > +     for (cnt =3D 0; i < BPERF_CGROUP__MAX_LEVELS; i++) {
-> >               __u64 cgrp_id;
-> >
-> >               if (i > level)
-> > @@ -123,7 +121,7 @@ static inline int get_cgroup_v2_idx(__u32 *cgrps, i=
-nt size)
-> >       __u32 *elem;
-> >       int cnt;
-> >
-> > -     for (cnt =3D 0; i < MAX_LEVELS; i++) {
-> > +     for (cnt =3D 0; i < BPERF_CGROUP__MAX_LEVELS; i++) {
-> >               __u64 cgrp_id =3D bpf_get_current_ancestor_cgroup_id(i);
-> >
-> >               if (cgrp_id =3D=3D 0)
-> > @@ -148,17 +146,17 @@ static int bperf_cgroup_count(void)
-> >       register int c =3D 0;
-> >       struct bpf_perf_event_value val, delta, *prev_val, *cgrp_val;
-> >       __u32 cpu =3D bpf_get_smp_processor_id();
-> > -     __u32 cgrp_idx[MAX_LEVELS];
-> > +     __u32 cgrp_idx[BPERF_CGROUP__MAX_LEVELS];
-> >       int cgrp_cnt;
-> >       __u32 key, cgrp;
-> >       long err;
-> >
-> >       if (use_cgroup_v2)
-> > -             cgrp_cnt =3D get_cgroup_v2_idx(cgrp_idx, MAX_LEVELS);
-> > +             cgrp_cnt =3D get_cgroup_v2_idx(cgrp_idx, BPERF_CGROUP__MA=
-X_LEVELS);
-> >       else
-> > -             cgrp_cnt =3D get_cgroup_v1_idx(cgrp_idx, MAX_LEVELS);
-> > +             cgrp_cnt =3D get_cgroup_v1_idx(cgrp_idx, BPERF_CGROUP__MA=
-X_LEVELS);
-> >
-> > -     for ( ; idx < MAX_EVENTS; idx++) {
-> > +     for ( ; idx < BPERF_CGROUP__MAX_EVENTS; idx++) {
-> >               if (idx =3D=3D num_events)
-> >                       break;
-> >
-> > @@ -186,7 +184,7 @@ static int bperf_cgroup_count(void)
-> >                       delta.enabled =3D val.enabled - prev_val->enabled=
-;
-> >                       delta.running =3D val.running - prev_val->running=
-;
-> >
-> > -                     for (c =3D 0; c < MAX_LEVELS; c++) {
-> > +                     for (c =3D 0; c < BPERF_CGROUP__MAX_LEVELS; c++) =
-{
-> >                               if (c =3D=3D cgrp_cnt)
-> >                                       break;
-> >
-> > diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.h b/tools/perf/util/=
-bpf_skel/bperf_cgroup.h
-> > new file mode 100644
-> > index 000000000000..3fb84b19d39a
-> > --- /dev/null
-> > +++ b/tools/perf/util/bpf_skel/bperf_cgroup.h
-> > @@ -0,0 +1,15 @@
-> > +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-> > +/* Data structures shared between BPF and tools. */
-> > +#ifndef __BPERF_CGROUP_H
-> > +#define __BPERF_CGROUP_H
-> > +
-> > +// These constants impact code size of bperf_cgroup.bpf.c that may res=
-ult in BPF
-> > +// verifier issues. They are exposed to control the size and also to d=
-isable BPF
-> > +// counters when the number of user events is too large.
-> > +
-> > +// max cgroup hierarchy level: arbitrary
-> > +#define BPERF_CGROUP__MAX_LEVELS  10
-> > +// max events per cgroup: arbitrary
-> > +#define BPERF_CGROUP__MAX_EVENTS  128
-> > +
-> > +#endif /* __BPERF_CGROUP_H */
+> > Best regards,
 > > --
-> > 2.51.1.821.gb6fe4d2222-goog
+> > James Clark <james.clark@linaro.org>
 > >
