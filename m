@@ -1,54 +1,54 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D7E2EF660
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Oct 2025 15:32:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946302580F2
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Oct 2025 16:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761406364; cv=none; b=Y/vGOaipO+bPC7n0qEadrJMket2+3sFZLk9GitUo5S89bC0R8RxEk86jgGBBr3p9aShDlX7gqEKzZYJZqKJnrf4/MlBZPDYwm0UWsG9qGFXj+u9KjF+8L7M3f/U7h4Ua1Wpz/xBAtGrDkNyNWw0nGT7frLsZCqyOa8v4RfFk2NQ=
+	t=1761411025; cv=none; b=fLsWR7VI7pYYC9V/+0l7EDuPNg1le6a23VmWNPfhwjqlaSkLmFgBf3kxaduWYYBSk0//LkGOaPrNZ8kc95BGy6EgTSN8LkZsJAaHp8bRDoV+Bo7GbuI6mV2+cA4LLppRRn0TSpF4xNd8TuyLBmBGnThjWzr4TSbI93y8Qz13YyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761406364; c=relaxed/simple;
-	bh=hWDeiL3W9fWYqMezt71RAU3HPaOUiLMJ4gsoEP1hTnU=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=I6ZV9fr3W39wO1P1tAIZxMxo/jFe6Bl0vHty+KwJ9Wvy63jSVt5sdkXqzADnvMDQUDeh08bi1Ri8fhToqzWq4O3/f6x5BV5nlDTvHheCFIU4LuNMSamzUxB2/fKM4mfTbt0IuOuPDWVAYMcKRkNd8gp4n7XgOTqusPTI7SzmLws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KRm4cCB0; arc=none smtp.client-ip=209.85.215.202
+	s=arc-20240116; t=1761411025; c=relaxed/simple;
+	bh=vUX0wnR3ltklvYoGUreDdvADl4EBrcQf02nJyAaX7m0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=CeI0fYp7yatToJVyATtQeTbdO2HRN7g9b1bYfYpWPA3VJGTw5NXcTNHRyv98CDIX1iXJP0RcA4NKEihDqUbldptuGIHE9A/5i3eOS5rYGYEKnaB+SAi2pbsPTLyzKtzEO9pLlEnBujOhl0qcfYR2cd7s1Z4PBgn0QLSvP6PPzgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SafOhGIb; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KRm4cCB0"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b6097ca315bso6136184a12.3
-        for <linux-perf-users@vger.kernel.org>; Sat, 25 Oct 2025 08:32:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SafOhGIb"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-28eb14e3cafso58768075ad.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 25 Oct 2025 09:50:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761406362; x=1762011162; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1761411023; x=1762015823; darn=vger.kernel.org;
         h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=yO2mWFSLhq6NqYN6b4GFq0YvrG3c9t/f/H9KA1+pHEU=;
-        b=KRm4cCB0wtstsueCzRDz4TR0/HNalMz4vSiTf36zyk6EEm3/EyBwOcs52l7U4LTVgE
-         QOZ9mZZqEtf1oFCUB5+wvfHTgXUB13ks1eG/a4tue6qzF6TK29DlGwr7za74Qj/nsXHn
-         k4GvgMKlApdw+blhElfex4NNwMPhEn7FA0rXv4YAAiKWLe3McTf8WQqW1fP2dp8JVnHk
-         fjtcsY5DEVIQBlSEO8Jhn3vhFNll+4lGrMLpya4jxnmOSHA8Wr9Et1L4qPIzVeEa3Ceq
-         gAfEdJ+m+HZauZqmBz8TrESlCL3YlynweMgg3sIn/3imatJ5tIaJKQmP9fUshIYEjmMc
-         v3Uw==
+        bh=PbGkxjOXGWrEgTp5QakCt0It50nbJEvjwnjbwD1ks4c=;
+        b=SafOhGIb+rtbQejTpyfqwat+A22ARr17D3vJCrwhxB6ltFmcCOPM2r+TRsKCaQmORB
+         shyTl1Np17qf5ol21Sx1Q+PTlpt3xhiEebdO6yNDNnthRql000OLXy8xJLU42EZA1hKJ
+         ETUmfNNwCmgpm9HBXlsaAyDIvTz5Ld/l/KFUETTuXcs5/Px03Wv9+Tzkm0CHbAlZY32B
+         STjbWI3mztTSxl0wxGmH1KR3XQShfqdZdFZyU4SvNlulET8QzdJ7w03XZRj6myWSbzmV
+         19EVoHsW4aW4/PItRNv40GveU7+dcprnqH7xAhCO0xWH0OErSNIAuBgX1JGSpml0t4nu
+         bwfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761406362; x=1762011162;
+        d=1e100.net; s=20230601; t=1761411023; x=1762015823;
         h=to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=yO2mWFSLhq6NqYN6b4GFq0YvrG3c9t/f/H9KA1+pHEU=;
-        b=aWqOJnr/bMI/qEw+cm3jAO95eJmBM/GlOvaPTpJ54HkpSl5jH6JlDcvzMopGTNLewI
-         SKUapwmTUXPKig70FwcK0DWICY1Kxaln+UYX48T69PCWv1mEFvCbALxNTAgHYFvSX0jx
-         NgsgywQEr90Sc2u0r3lvqjBM7vhJAnJOFJLqrPMVIWtY3pS/KiMOTnnrhR7x1K5M1PzF
-         HXNoWaB4Nn1A2RBUWjxWUlbqqUMzvIIm0gAvzIZRZoKI+rZ+nhKzIf13BTIudz7szRqd
-         Lk5Ch3w5pUUJ41oOguT2V+Goy4NiuaXUPHUAPRDlRCu31vXtOLh9tc7cIazvNDyOry/M
-         1PNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUYDXqla0SEjnPr0QPgsl8bZkpy6+hOhiA+xrurR5raeAp50yXl1uodZiL2MMRfoGs2jq5cUK1NI5vujadRtiSu@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCZ9U1QawzEN11lqWi55V84j+OxU8IjksstvcLrEI5OXwU9o4m
-	PcSS3Xja2Lu3Bk88uu+2YP8wwN+rsQEHE+yFE2cQu/NNcu0HqkkfIc9qCsbWSflZACgONt87h7E
-	2Gf9VCGaezA==
-X-Google-Smtp-Source: AGHT+IEMHNT2jZoKx91/ee2Eojn/oUOJwBe81BYnxPFDlFIqEupCxCnYx80mYOFWVk+J/Gqt7zCmjVDg5w32
-X-Received: from pjzm22.prod.google.com ([2002:a17:90b:696:b0:339:ee20:f620])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:99a1:b0:334:a915:f403
- with SMTP id adf61e73a8af0-33dea08a733mr7071510637.2.1761406361815; Sat, 25
- Oct 2025 08:32:41 -0700 (PDT)
-Date: Sat, 25 Oct 2025 08:32:31 -0700
+        bh=PbGkxjOXGWrEgTp5QakCt0It50nbJEvjwnjbwD1ks4c=;
+        b=hNynYceYUPmd/EiwtJE4VcquIuI9cPEQrOtR7svbXk3hbzepb5ezcjazpVdjCgU23z
+         ox/OU1JeYpUvGuwhCvwx7XHKbcrcJnB/9PV6gfGRZrKn8qV9DLvHEi5CA2IG2GM+zi7/
+         LRKYmz/Q6BsTMFJnwccOfDEMj492s7i9GiM/CdNQtNbb9YxR1/lpFqJWA0d07eTJS8yE
+         yG8CyeaWh1Le+92UOZOeiiUQPTHXxkLmlkTMVW5eWoa8QHWlo4BbUdxCCXeFoCYebDWy
+         shAEVShhOrOfJ7DBg07uBnsk21ROseHxz0je6mFZuSBl9G2CyW6YFHEeTwio5ggXe+8h
+         GhZw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+PW5c6kfcye8emuglkEDYgRazN1VP56eSiGHVQTJygJQQBSrCILgdKATtwXtX6Ma42T3a4r0WfY+92oSGMyHG@vger.kernel.org
+X-Gm-Message-State: AOJu0YxA9L3IVZ/ynQh1k18tMDSdKZ6gDO4HzOWqT0P53sjZe9MK0rfM
+	UX20q052iENA5PoJGgY/DfiC07mT7dw/+AXZB/2DT/VCurACdbfrA5+aHneF6MejRbhpAi2v+kJ
+	2aofRbAvhig==
+X-Google-Smtp-Source: AGHT+IFsh9IbMsV3ZBy5lXdEkLrpnjU6Yx4V1KOWGFeRMyFC4jJXCj1hGL69/mC5cPdK+spLVhVRs6yi3QDl
+X-Received: from pjbsb7.prod.google.com ([2002:a17:90b:50c7:b0:33b:51fe:1a94])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d482:b0:267:44e6:11d3
+ with SMTP id d9443c01a7336-2948b9a162bmr89107795ad.21.1761411022891; Sat, 25
+ Oct 2025 09:50:22 -0700 (PDT)
+Date: Sat, 25 Oct 2025 09:50:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -56,8 +56,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.51.1.821.gb6fe4d2222-goog
-Message-ID: <20251025153231.1090855-1-irogers@google.com>
-Subject: [PATCH v1] perf stat: Add/fix bperf cgroup max events workarounds
+Message-ID: <20251025165019.1109315-1-irogers@google.com>
+Subject: [PATCH v2] perf stat: Add/fix bperf cgroup max events workarounds
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -84,10 +84,14 @@ duplicating it in the testing code.
 Signed-off-by: Ian Rogers <irogers@google.com>
 Fixes: b8308511f6e0 ("perf stat bperf cgroup: Increase MAX_EVENTS from 32 to 1024")
 ---
+v2: Add missing header file
+---
  tools/perf/builtin-stat.c                   | 13 +++-
  tools/perf/util/bpf_counter_cgroup.c        | 79 +++++++++++++++------
  tools/perf/util/bpf_skel/bperf_cgroup.bpf.c | 18 +++--
- 3 files changed, 76 insertions(+), 34 deletions(-)
+ tools/perf/util/bpf_skel/bperf_cgroup.h     | 15 ++++
+ 4 files changed, 91 insertions(+), 34 deletions(-)
+ create mode 100644 tools/perf/util/bpf_skel/bperf_cgroup.h
 
 diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
 index 3c3188a57016..130515f87ee0 100644
@@ -299,6 +303,27 @@ index 18ab4d9b49ff..c2298a2decc9 100644
  				if (c == cgrp_cnt)
  					break;
  
+diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.h b/tools/perf/util/bpf_skel/bperf_cgroup.h
+new file mode 100644
+index 000000000000..3fb84b19d39a
+--- /dev/null
++++ b/tools/perf/util/bpf_skel/bperf_cgroup.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/* Data structures shared between BPF and tools. */
++#ifndef __BPERF_CGROUP_H
++#define __BPERF_CGROUP_H
++
++// These constants impact code size of bperf_cgroup.bpf.c that may result in BPF
++// verifier issues. They are exposed to control the size and also to disable BPF
++// counters when the number of user events is too large.
++
++// max cgroup hierarchy level: arbitrary
++#define BPERF_CGROUP__MAX_LEVELS  10
++// max events per cgroup: arbitrary
++#define BPERF_CGROUP__MAX_EVENTS  128
++
++#endif /* __BPERF_CGROUP_H */
 -- 
 2.51.1.821.gb6fe4d2222-goog
 
