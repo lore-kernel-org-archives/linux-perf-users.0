@@ -1,54 +1,54 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94E21FBC8C
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Oct 2025 15:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D7E2EF660
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Oct 2025 15:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761406293; cv=none; b=sL0LSFY9IqO+K0WmJ8cvFl/2v9uGFk/+VBiNtqyKFvLizsRRmST2CewLC2zacH8jNNZpI31qtgLeYa5dO8mbUG+OqcxKGOAoOS6MSB7iDSFpNjXamei8O9Jk8hZUDHsQrdykO6MJLnMB5xL/lbTnIkeAoUtv5Kfm/vaxijfHbco=
+	t=1761406364; cv=none; b=Y/vGOaipO+bPC7n0qEadrJMket2+3sFZLk9GitUo5S89bC0R8RxEk86jgGBBr3p9aShDlX7gqEKzZYJZqKJnrf4/MlBZPDYwm0UWsG9qGFXj+u9KjF+8L7M3f/U7h4Ua1Wpz/xBAtGrDkNyNWw0nGT7frLsZCqyOa8v4RfFk2NQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761406293; c=relaxed/simple;
+	s=arc-20240116; t=1761406364; c=relaxed/simple;
 	bh=hWDeiL3W9fWYqMezt71RAU3HPaOUiLMJ4gsoEP1hTnU=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=lgTo0ICLfiNugzl5nRtVD6nOSEeJxy4zPpps2cRpbXzNXOPkGdw3zAnPJh1sy9rMzcyDpDRKaaqUwVVArfi/1eWKuorUyx5kUKEWlduVrg+vXEsqNN5miRrx5erEpiD098LQgcjxtX1O+m8PcVx7SfFSetxH6eKL4SUypryNjvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OnPXEVyP; arc=none smtp.client-ip=209.85.216.73
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=I6ZV9fr3W39wO1P1tAIZxMxo/jFe6Bl0vHty+KwJ9Wvy63jSVt5sdkXqzADnvMDQUDeh08bi1Ri8fhToqzWq4O3/f6x5BV5nlDTvHheCFIU4LuNMSamzUxB2/fKM4mfTbt0IuOuPDWVAYMcKRkNd8gp4n7XgOTqusPTI7SzmLws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KRm4cCB0; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OnPXEVyP"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-32eb18b5659so2440675a91.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 25 Oct 2025 08:31:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KRm4cCB0"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b6097ca315bso6136184a12.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 25 Oct 2025 08:32:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761406291; x=1762011091; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1761406362; x=1762011162; darn=vger.kernel.org;
         h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
         bh=yO2mWFSLhq6NqYN6b4GFq0YvrG3c9t/f/H9KA1+pHEU=;
-        b=OnPXEVyPVn75UlrrXKPGkV1HLfLsztM3ts2N3Bw4+xelO43dGMcOgqxtp41xazKs1O
-         Ta87Imw8G2V7S2vydmHSoEcf9vzQviINnZBvuNpyXgVmLKLDFY4VgGQ2sJzzvW0xsljl
-         y7aKb0ihZ6hFnWbXR5Y75HTyNAmH+6W6nX6Z2LPOGfcS1fBMzkMO0tZtJsSqwSE/vxiJ
-         tMzEBcSCEm8eI0X2HokwNARBx0YLYMnakrW+C+hkJMtO5k90VbuAskEOnYMCf8fEEv4q
-         TsL9hrpQMET0npt4Wh1yxrlOqA61DwwqpnUWL+rYZxh9TPU/AA8LrBySBpW5Y6mBnKQN
-         Hp/w==
+        b=KRm4cCB0wtstsueCzRDz4TR0/HNalMz4vSiTf36zyk6EEm3/EyBwOcs52l7U4LTVgE
+         QOZ9mZZqEtf1oFCUB5+wvfHTgXUB13ks1eG/a4tue6qzF6TK29DlGwr7za74Qj/nsXHn
+         k4GvgMKlApdw+blhElfex4NNwMPhEn7FA0rXv4YAAiKWLe3McTf8WQqW1fP2dp8JVnHk
+         fjtcsY5DEVIQBlSEO8Jhn3vhFNll+4lGrMLpya4jxnmOSHA8Wr9Et1L4qPIzVeEa3Ceq
+         gAfEdJ+m+HZauZqmBz8TrESlCL3YlynweMgg3sIn/3imatJ5tIaJKQmP9fUshIYEjmMc
+         v3Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761406291; x=1762011091;
+        d=1e100.net; s=20230601; t=1761406362; x=1762011162;
         h=to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
         bh=yO2mWFSLhq6NqYN6b4GFq0YvrG3c9t/f/H9KA1+pHEU=;
-        b=rss+zg6CHCV2hFtt0MVNz0LWSt79I/uku0jTiNoKN66e38BLeRhX98ufp/iq2Tn8pS
-         YIna4Vpft/G/2YaVNXsQ6eoZRhsueHI/5BnEfJKOgE8H9tCkAL5gtwfY1W7d/pWWy0lN
-         cTOGnV5aW1dD0cwv2BswCR++su26DncRBAQ+Z7XiSTAJX1/+shXeMnnPaHzlinUF2XIy
-         L1BMEPe44C3ZFzF5RvmqTLgm4Xt67qDY1nClPgsYlaVXAvSnAcnXA73kI2VmiaRBrOnL
-         GtVh6Jcw7YkHqxbcpnJvj/uwHr/EUYXCFyHsSmgwjjW7TPpdTI0TU7a8xzNuq/BQS5YG
-         +G1A==
-X-Forwarded-Encrypted: i=1; AJvYcCWHX3DEKJ+hGoXQKy6kjmMo/a0yhGlx+AVxB9H3rvNKwW3Q/wVRnaK6SYkqMZarSRXBS+ss62RmoH4ceJxWjc9l@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOCDzdZC/3kLRsNeR+c9YNkKaX6x1UWKZXIIMWXQzEeB1zCuhO
-	FFwuYaIeYZcrXuQK6rNvz20pCADQanQGGWzjmtmPyEzDxZiNGs+ljDIzAGYteiVaegQ2HLDO/CJ
-	BMq2r7Tc6Fg==
-X-Google-Smtp-Source: AGHT+IFeXRjR296ojQNwwRuEgXo1Q6W58leaVPcGSElTIn86dqCpkfne/2trdTQzjbKhUHetpGID5DSaYtrX
-X-Received: from pjbcv19.prod.google.com ([2002:a17:90a:fd13:b0:33b:c226:ff96])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4a50:b0:33b:938c:570a
- with SMTP id 98e67ed59e1d1-33bcf90e727mr45841416a91.33.1761406291179; Sat, 25
- Oct 2025 08:31:31 -0700 (PDT)
-Date: Sat, 25 Oct 2025 08:31:19 -0700
+        b=aWqOJnr/bMI/qEw+cm3jAO95eJmBM/GlOvaPTpJ54HkpSl5jH6JlDcvzMopGTNLewI
+         SKUapwmTUXPKig70FwcK0DWICY1Kxaln+UYX48T69PCWv1mEFvCbALxNTAgHYFvSX0jx
+         NgsgywQEr90Sc2u0r3lvqjBM7vhJAnJOFJLqrPMVIWtY3pS/KiMOTnnrhR7x1K5M1PzF
+         HXNoWaB4Nn1A2RBUWjxWUlbqqUMzvIIm0gAvzIZRZoKI+rZ+nhKzIf13BTIudz7szRqd
+         Lk5Ch3w5pUUJ41oOguT2V+Goy4NiuaXUPHUAPRDlRCu31vXtOLh9tc7cIazvNDyOry/M
+         1PNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUYDXqla0SEjnPr0QPgsl8bZkpy6+hOhiA+xrurR5raeAp50yXl1uodZiL2MMRfoGs2jq5cUK1NI5vujadRtiSu@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCZ9U1QawzEN11lqWi55V84j+OxU8IjksstvcLrEI5OXwU9o4m
+	PcSS3Xja2Lu3Bk88uu+2YP8wwN+rsQEHE+yFE2cQu/NNcu0HqkkfIc9qCsbWSflZACgONt87h7E
+	2Gf9VCGaezA==
+X-Google-Smtp-Source: AGHT+IEMHNT2jZoKx91/ee2Eojn/oUOJwBe81BYnxPFDlFIqEupCxCnYx80mYOFWVk+J/Gqt7zCmjVDg5w32
+X-Received: from pjzm22.prod.google.com ([2002:a17:90b:696:b0:339:ee20:f620])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:99a1:b0:334:a915:f403
+ with SMTP id adf61e73a8af0-33dea08a733mr7071510637.2.1761406361815; Sat, 25
+ Oct 2025 08:32:41 -0700 (PDT)
+Date: Sat, 25 Oct 2025 08:32:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -56,14 +56,14 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.51.1.821.gb6fe4d2222-goog
-Message-ID: <20251025153119.1090553-1-irogers@google.com>
+Message-ID: <20251025153231.1090855-1-irogers@google.com>
 Subject: [PATCH v1] perf stat: Add/fix bperf cgroup max events workarounds
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
 Commit b8308511f6e0 bumped the max events to 1024 but this results in
