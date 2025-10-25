@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D3F22D4F1;
-	Sat, 25 Oct 2025 17:40:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4911A2C25;
+	Sat, 25 Oct 2025 17:46:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761414036; cv=none; b=KO6coXXWS7TJHrusjTm7JS/Jk21bj18zSBVpK08RPzJglfp4H1JcfoKY+5Xmb117HJsWsIFetVQrAlXkqaRR+j8goa9gVu6St0jmFrJanRuZl9gCw/a+4zvL4j6n5xQA71EgDmUKWl3yx9CRn0Zln/bZsSOkglUewsRnKj77gsE=
+	t=1761414394; cv=none; b=Z8pV2FjE+jgo5Hgo22SBy1w6NQdS1JHw0LGypLw3f/Aogw89cw1nBq1f56KMg7I6MONi90dpnXRmQKYVvcNkyp4GVWzZ8OvtQUfGMaqZV/30Sud6jy3RzKrgkNP5LWhhmPmzth/wIUUNEtja3oywWZZYMG+jPEozkFIqU/D9cu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761414036; c=relaxed/simple;
-	bh=RjlO/VhXM00gnisSyTmBDQTxNNV+9bUZv6mBi9rqeC8=;
+	s=arc-20240116; t=1761414394; c=relaxed/simple;
+	bh=pMdDhf7+f8LQWh9TSxUM4Jk25+Fa7+4ZLnX2JnEUCtc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mKvGQUdzhOUPG2pqALXIJSogGLHLIfNI3XUfMkZ4Sn/LD1GJ6NScNIVdvYMU399uwCqDkjMHHCAI7oj6tHrqOXFTPymqvC0GYnUekW5sDLeF7xxv6GHepRrh/8zbSuSH95kViZzBoUNfOWXRCUvHsx7fEKFUkMeypLsU6q2u9K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lJ6AsE3z; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=hE1/K0ot9+USgin7rO2WvW1ydIhgvItN4pi9c3uDknjWiDePeUOJcccIU+m9VE0cZZuD7pEEPoX0QCAzN7B4KFpVBCAjVrbDACbSovpKhHtR52WFFfINyruP9EwY26tBgfQPxGwhUK0N0zPhIPoUjBkIRvB5CCHzsMOkfNsNLmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YfUKa476; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lJ6AsE3z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD5BFC4CEF5;
-	Sat, 25 Oct 2025 17:40:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YfUKa476"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0652EC4CEF5;
+	Sat, 25 Oct 2025 17:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761414036;
-	bh=RjlO/VhXM00gnisSyTmBDQTxNNV+9bUZv6mBi9rqeC8=;
+	s=k20201202; t=1761414393;
+	bh=pMdDhf7+f8LQWh9TSxUM4Jk25+Fa7+4ZLnX2JnEUCtc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lJ6AsE3zvkDjyGJbCrPBVtU8xiIBeUBwsCqB3pHwK8yUlPx5BG//HoE7f06RmC43O
-	 VAEslrEEVXrsNsja7tL+kfMDm6JZzS67bS17+bv5AgA93edH5OWWJS7dSRhwuu9kEo
-	 WxiGkrknNc2/viIkwJsOcnP4751Vd1udU1BQum2gvpqz9Ny7g4xpup7Gl9M0ZdK5Yu
-	 15kjq22nyVGuEWksQNKrdFrT2fRKIsYq+PTPPyyUQ9cjmxpwzbV8I7760lGc89sxPD
-	 iUSyCsG4UmBNRTEvRRs0eXpDg2jEfXazRsifE98+n86unJ3lynjvnjHu5whW/zYn6L
-	 EuGS+QB3xamfA==
-Date: Sat, 25 Oct 2025 10:40:34 -0700
+	b=YfUKa476Qh8cj1LE6SmnBD7TJO4qRgjsngRN+098oXTcsgXVFhHvjBL9SlRiGhP1w
+	 kckV1zn6pFo9p2QbyP4S+9w9KCJnqBfqgJKch6cqtITj3TG9IwgpytIrAqleiS/7iJ
+	 BptM0K5st8ZXh5yfWUIQHgYVDT97kEGuZZwmbeGDiV313MRJ9LvrUjunXsyOeqLo/U
+	 MHmqmf2ODLIyDEBtyE4jc38ShOE6XvGcwRATRXzKA3lj7rrHc7r10PMjTje1/e3KJg
+	 OxXkuX28iRAkt3pgTmntxrINFLFKg+Bvn/MLXQN89PJ2c1o06q5joOmzO/vjt3Dmnp
+	 k41iZT6d2H6Lw==
+Date: Sat, 25 Oct 2025 10:46:31 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Zecheng Li <zecheng@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -38,11 +38,11 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Xu Liu <xliuprof@google.com>, linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 7/9] perf dwarf-aux: Preserve typedefs in
- match_var_offset
-Message-ID: <aP0LkimOCj389dNl@google.com>
+Subject: Re: [PATCH v4 8/9] perf annotate: Improve type comparison from
+ different scopes
+Message-ID: <aP0M95FMF0fB48x9@google.com>
 References: <20251013181607.2745653-1-zecheng@google.com>
- <20251013181607.2745653-8-zecheng@google.com>
+ <20251013181607.2745653-9-zecheng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,64 +51,50 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251013181607.2745653-8-zecheng@google.com>
+In-Reply-To: <20251013181607.2745653-9-zecheng@google.com>
 
-On Mon, Oct 13, 2025 at 06:16:04PM +0000, Zecheng Li wrote:
-> Since we are skipping the check_variable, we need to preserve typedefs
-> in match_var_offset to match the results by __die_get_real_type. Also
-> move the (offset == 0) branch after the is_pointer check to ensure the
-> correct type is used, fixing cases where an incorrect pointer type was
-> chosen when the access offset was 0.
-> 
-> Signed-off-by: Zecheng Li <zecheng@google.com>
-> ---
->  tools/perf/util/dwarf-aux.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> index b57cdc8860f0..b2189de07daf 100644
-> --- a/tools/perf/util/dwarf-aux.c
-> +++ b/tools/perf/util/dwarf-aux.c
-> @@ -1395,24 +1395,24 @@ static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
->  	Dwarf_Word size;
->  	s64 offset = addr_offset - addr_type;
->  
-> -	if (offset == 0) {
-> -		/* Update offset relative to the start of the variable */
-> -		data->offset = 0;
-> -		return true;
-> -	}
-> -
->  	if (offset < 0)
->  		return false;
->  
-> -	if (die_get_real_type(die_mem, &data->type) == NULL)
-> +	if (__die_get_real_type(die_mem, &data->type) == NULL)
->  		return false;
+On Mon, Oct 13, 2025 at 06:16:05PM +0000, Zecheng Li wrote:
+> When comparing types from different scopes, first compare their type
+> offsets. A larger offset means the field belongs to an outer
+> (enclosing) struct. This helps resolve cases where a pointer is found
+> in an inner scope, but a struct containing that pointer exists in an
+> outer scope. Previously, is_better_type would prefer the pointer type,
+> but the struct type is actually more complete and should be chosen.
 
-If the type was a typedef of a pointer, then the following check for a
-pointer cannot detect the target type.
+Wouldn't the size check be sufficient?  I think we need to get read of
+the pointer preference.
+
+> 
+> Prefer types from outer scopes when is_better_type cannot determine
+> a better type. This sometimes helps pick a more complete type.
+
+This code has a loop for the scopes so detecting larger struct would
+work well?
 
 Thanks,
 Namhyung
 
+> 
+> Signed-off-by: Zecheng Li <zecheng@google.com>
+> ---
+>  tools/perf/util/annotate-data.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+> index 4b08331b9dd3..4b510eb29a5f 100644
+> --- a/tools/perf/util/annotate-data.c
+> +++ b/tools/perf/util/annotate-data.c
+> @@ -1629,7 +1629,9 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
+>  				pr_debug_dtp("type_offset=%#x\n", type_offset);
+>  			}
 >  
->  	if (is_pointer && dwarf_tag(&data->type) == DW_TAG_pointer_type) {
->  		/* Get the target type of the pointer */
-> -		if (die_get_real_type(&data->type, &data->type) == NULL)
-> +		if (__die_get_real_type(&data->type, &data->type) == NULL)
->  			return false;
->  	}
->  
-> +	if (offset == 0) {
-> +		/* Update offset relative to the start of the variable */
-> +		data->offset = 0;
-> +		return true;
-> +	}
-> +
->  	if (dwarf_aggregate_size(&data->type, &size) < 0)
->  		return false;
->  
+> -			if (!found || is_better_type(type_die, &mem_die)) {
+> +			if (!found || dloc->type_offset < type_offset ||
+> +				(dloc->type_offset == type_offset &&
+> +				 !is_better_type(&mem_die, type_die))) {
+>  				*type_die = mem_die;
+>  				dloc->type_offset = type_offset;
+>  				found = true;
 > -- 
 > 2.51.0.788.g6d19910ace-goog
 > 
