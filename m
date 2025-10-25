@@ -1,151 +1,330 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A016E301015
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Oct 2025 19:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7496923504B
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Oct 2025 20:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761419940; cv=none; b=sn3EzG+0uCUgdkyohUzviw1A/IQDvfZzz0YbqNELCsKrRxqju52JP0iQ4nm4AG1EPkUCcov5djTSHZkqiIjOz/mXnVIWVL4qQY//CPB7u6BBgqPQiHwaohPv0fNCcsm2d38C0bSBCy32sLlswVDVr2wpPgM3nIVj1e11/hLECt8=
+	t=1761424121; cv=none; b=hVKUztcqLMetPBtHTjMDlIAWRWPmbf/hOT87RsgRf/ifLzInqsCbapmr4uR1eSTGPDp5oE6HeNyDG+wMUylMHo9JeEbm5efz/mEQOf5tMVoz6KGEfwyi082KOU7p8+Le18iqE/mb+6u3+J1OAEgb0ik1wjuFTArBbmLVrcUxJP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761419940; c=relaxed/simple;
-	bh=b50a9arCrSL/MR93BKO9o7wTWQtm+XsywFPqsAesqkQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RYNpJAfoKnj3ciOhCgJbhLVqgZS6Ca4KsTcnVjvGOeP42uEknxie/z99HeFfNw1VALxlSVkzMF1xjLGvsgzB4HM5wvL2IAd4L7CZLPugf4tkQV96p2+zz7CgUSLs1isqNO11HOBeTMGUU7RxRDFENfr70H8hrQGgIIuV+2mcH18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gAqx+o/z; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1761424121; c=relaxed/simple;
+	bh=LTPoykhcpzckSrOEkBaZ6aNxTpHWp5uyEO9aBYEG1z4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=reaMTBZ+qLJuTlvdVZreexXIpC3568Y14DO1wVA6kSAERJWv04LW++B3jsxccl95Ure/si+xbqWMCZDx8OeHm4g2ZCG2a5VPz/c9GXPRZVJoRSfUNPNRQokOYiFpWFiEIc6fGvK3NIYzzAkUFOW5aguiG0yIbvW+VqlFBRADjMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZouNSEu/; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gAqx+o/z"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-27eec33b737so47200585ad.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 25 Oct 2025 12:18:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZouNSEu/"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-33be01bcda8so3172513a91.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 25 Oct 2025 13:28:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761419938; x=1762024738; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b50a9arCrSL/MR93BKO9o7wTWQtm+XsywFPqsAesqkQ=;
-        b=gAqx+o/zrW38qe8vTmotvOS8G1BK0a4PPbPHZ+5uhUNrTPl0NW2TqVA1EU6TpCrRGh
-         GzuApbZZFeg9EVYXfwWy7qYrWubTWy6BJ7kHjZkrF0kNtyxw+T/eakjNqr0cxpSkN/Qv
-         nAw6QtAgDQefdqru9VnlBqrFJHd3RCOH+8AnkHQjNJTOHe4M5aTuzcyKYQMDCvZAcI8Z
-         0jOS+mw4XTEKwmU/ll2iTsbuLIAvslDOMRR5zE9wIPbqSjzmFcEZqqDUXfK0LXuM48yD
-         ydHJcVDEhcOnxguGJa4DAIB8Iwmt9VspSbWk5Q1aXtDod5j0Rh/g1fQZaDF5Jon3nN92
-         7OJQ==
+        d=google.com; s=20230601; t=1761424119; x=1762028919; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3WgmypHwLY9h7vw2IX18Gnhp9ixvaUGbMN+tLQv6r1w=;
+        b=ZouNSEu/XIuGXLLgsTugV4MRg+TOsVwNJecwK479LDBi+yjD2/48zkOnXbc1ZMS1as
+         jyPUCW2cC6S7opl90uJPy6hP3454IKej4Sw20tXjX2oeyWJ+52f25mIll8wxV33hoFEC
+         vjpoCqV14Q5bXsxAt1YbHECgBQ/25pddJK944LCwJGGftXQrkMRB+SUSVVpYxipZ+id0
+         nJRT3IA2VrDovkAciuIZfBj0lbeO/eKsHYTV2OTqqTRSLkuB7DC8q4EvoQdxaRg+VofI
+         v6GwmAdr6AWhZ7OVzfruMJ+ubPUhkydyp0koi2Om4KcSd5Tt5K/aXBNHTsgNOaJATH28
+         gSBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761419938; x=1762024738;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b50a9arCrSL/MR93BKO9o7wTWQtm+XsywFPqsAesqkQ=;
-        b=AV8OlJjh33qC4xQA5fhry2IjaP+hGqMNvm2X8uzlSnQlGodOsDA0aYCVmV3rjcjCaL
-         LyyPGdJVED8LwcQ3bmXKiWiDJwZk57Zrxq5VYm7+ebZWaPYJyMvr5zLn4mc/R5oKDDBM
-         AWvL9s2jUORFZxQH/Fuf4wmanqb5/RIl94kmvuhxzWp2FV9U39q1ctyqdFQ9y8e+2tGJ
-         5hMjSXYmj3w7VAAnU26/cGfhonouLeAfaE8ezYhdR91npuB5raSmyMrYglzmxNEsieY+
-         ctlHxZCmT9ege0XANaFAUtty2BKenY1ETNzJ3p54kqLqfUbQYPt7BBcw1FQ3SE8uJViI
-         BS7w==
-X-Forwarded-Encrypted: i=1; AJvYcCXiNreE1Ym4X9Khr5sxliKLoSBDGaOP0KxhHphDEZKps2VWBtE1EOW8xdpt/Z/iTqHLi3uAGuTNyRg6Bps64pbt@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNM1TrEFQwmjMDJtuNDyJTgoGYWIGfgI1SzF4YFCMyy0mUFuti
-	NCNAtQfN+X/lYqKO9BJRMFe8JmHNDrPHcAyKIYrpX7HK2/GlK0nKyb8I
-X-Gm-Gg: ASbGncu5sm/O+KBjSQwiMGTR/vGHoRQFP4xxK0bxUZy1ik+9LhbM5GYDqqlrG8gT9/k
-	7hRubcOKUYLiJmi4uJoaOYgZ4UwlNeF2DtmIKCg/ZghhchZ7b4DCikZUblBmBpMiBbz+Acdrvdl
-	WbEUBU0xEaCntW1kEkgHC9skdokVZlhdXnrNIeM2uNqEwrGiUcjewzSdWaer52izZRbScIS2C0P
-	FU3WZxD4d5Je5vqJs6vmKeBVTZTljFA7BuX3kNANIcYDSi0YCVAgq1gs8u7ciZQ3vY8nKcV6azq
-	Nyucq2Ox4nsyGco0mAW0lgENWldo6D2uJQEB+UKs2XbsTxBF/rh1tsYMfLyG7F91jLJMrp09iTG
-	3AZdsVlOwDGnh7APWfknLhhjKfz2CklDBfa98EkOlB2POUWNP/po92uCk4IKzQUsozHUtZ1uC88
-	3KxEnIiSYcwgfiNOpDLukbhoOlvNX+vZE=
-X-Google-Smtp-Source: AGHT+IGB2o/5lEiKd9cWH/x2UTjOp0RZ2ut0VtofYuc7VyGMeDPM/lJA9l37C37EEgCCcQfgsU8H7w==
-X-Received: by 2002:a17:902:e889:b0:27d:6f49:febc with SMTP id d9443c01a7336-290c9c93af5mr423757525ad.1.1761419937751;
-        Sat, 25 Oct 2025 12:18:57 -0700 (PDT)
-Received: from DESKTOP-8TIG9K0.localdomain ([119.28.20.50])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29498e429d9sm30054435ad.100.2025.10.25.12.18.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Oct 2025 12:18:57 -0700 (PDT)
-From: Xie Yuanbin <qq570070308@gmail.com>
-To: riel@surriel.com,
-	segher@kernel.crashing.org
-Cc: acme@kernel.org,
-	adrian.hunter@intel.com,
-	agordeev@linux.ibm.com,
-	akpm@linux-foundation.org,
-	alex@ghiti.fr,
-	alexander.shishkin@linux.intel.com,
-	andreas@gaisler.com,
-	anna-maria@linutronix.de,
-	aou@eecs.berkeley.edu,
-	borntraeger@linux.ibm.com,
-	bp@alien8.de,
-	bsegall@google.com,
-	dave.hansen@linux.intel.com,
-	davem@davemloft.net,
-	david@redhat.com,
-	dietmar.eggemann@arm.com,
-	frederic@kernel.org,
-	gor@linux.ibm.com,
-	hca@linux.ibm.com,
-	hpa@zytor.com,
-	irogers@google.com,
-	jolsa@kernel.org,
-	juri.lelli@redhat.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux@armlinux.org.uk,
-	lorenzo.stoakes@oracle.com,
-	luto@kernel.org,
-	mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com,
-	max.kellermann@ionos.com,
-	mgorman@suse.de,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	nysal@linux.ibm.com,
-	palmer@dabbelt.com,
-	paulmck@kernel.org,
-	peterz@infradead.org,
-	pjw@kernel.org,
-	qq570070308@gmail.com,
-	rostedt@goodmis.org,
-	ryan.roberts@arm.com,
-	sparclinux@vger.kernel.org,
-	svens@linux.ibm.com,
-	tglx@linutronix.de,
-	thuth@redhat.com,
-	urezki@gmail.com,
-	vincent.guittot@linaro.org,
-	vschneid@redhat.com,
-	will@kernel.org,
-	x86@kernel.org
-Subject: Re: [PATCH 2/3] Provide and use an always inline version of finish_task_switch
-Date: Sun, 26 Oct 2025 03:18:39 +0800
-Message-ID: <20251025191839.6907-1-qq570070308@gmail.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <18734a4944e47952b7ad3e10a36c902392bdaa91.camel@surriel.com>
-References: <18734a4944e47952b7ad3e10a36c902392bdaa91.camel@surriel.com>
+        d=1e100.net; s=20230601; t=1761424119; x=1762028919;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3WgmypHwLY9h7vw2IX18Gnhp9ixvaUGbMN+tLQv6r1w=;
+        b=P6qcBawafFs3NtRRbhr8zNnko1nO3hw5wbmoNpb2PZnL5OsLc/ehMnqQcUUNAKclyj
+         o/LxEO+Ssk/b1laR1znt/SP9LqJ66rwiEEYEP4sodDaVUNvFyM1wykRe0VwJympKdQwa
+         NpsPUIby7oRgb32Be3hG+ZeY48hD6/9L7q+7HfitICn+S1TltjrEUGU7tc9bbF6xMRlv
+         gMnTHjIfBxl6b604CbN87e2TpPNU3+DO1cQf63B4g4JBowIUFBjjHG60Hb6YPEDB0jPI
+         nXTFb9UnxfYSdNCIv+5PlnKbVy5RHq7pFHJdP7r85lmivISeCCnUxTl83WPdllJZ6ouu
+         CaRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUr/SIQRh4qJ6Ys/rLBdOwGVjecGy2PQlgwcUMFXlgvR77RoY0VS68otyqZjQVVsrzLJ7NbMw9TCdq8dWSsGDWJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUqp5y1C3gu88FtEE6RAakP0JuBGZuqdPj9cFmXaw2E/agPEwv
+	8Dl4r9KCJRkLyHSZ0CLFeLEph9Od5HRZTG8SG5+0KkaopBQqeODVIaEH2QHiB4LIYAMyahs7Yy0
+	I9udI0JD4mg==
+X-Google-Smtp-Source: AGHT+IEbdOFvB5Mrku0xzqSazHXITe10U2F9YigbDBK0cjelUHaSzxan7LNOSDbe4MJCEG/C26qj1G16aiW4
+X-Received: from pjo1.prod.google.com ([2002:a17:90b:5661:b0:33b:d40a:d93a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:39cd:b0:332:3515:3049
+ with SMTP id 98e67ed59e1d1-33bcf85acb9mr46403299a91.4.1761424118680; Sat, 25
+ Oct 2025 13:28:38 -0700 (PDT)
+Date: Sat, 25 Oct 2025 13:28:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.51.1.821.gb6fe4d2222-goog
+Message-ID: <20251025202834.1133359-1-irogers@google.com>
+Subject: [PATCH v3] perf stat: Add/fix bperf cgroup max events workarounds
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 24 Oct 2025 17:36:06 -0400, Rik van Riel wrote:
-> Does that actually work, or does the compiler
-> still inline some of those "non-inlined" versions,
-> anyway?
+Commit b8308511f6e0 bumped the max events to 1024 but this results in
+BPF verifier issues if the number of command line events is too
+large. Workaround this by:
 
-For the current code, adding a new finish_task_switch_ainline function
-and calling it has the same effect as directly changing the
-finish_task_switch function attribute to __always_inline. This is because
-there are only two references to the finish_task_switch function in
-core.c. When one is inlined, the other becomes the only call point and it
-must be inlined (unless the no-inline option/attribute is added or the
-static attribute is removed). The uninlined finish_task_switch assembly
-code will not exist.
+1) moving the constants to a header file to share between BPF and perf
+   C code,
+2) testing that the maximum number of events doesn't cause BPF
+   verifier issues in debug builds,
+3) lower the max events from 1024 to 128,
+4) in perf stat, if there are more events than the BPF counters can
+   support then disable BPF counter usage.
 
-However, if the call point of the finish_task_switch function in core.c is
-increased in the future, as long as one point is added, a non inline
-function will be generated and codesize revenue will be obtained.
+The rodata setup is factored into its own function to avoid
+duplicating it in the testing code.
 
-Xie Yuanbin
+Signed-off-by: Ian Rogers <irogers@google.com>
+Fixes: b8308511f6e0 ("perf stat bperf cgroup: Increase MAX_EVENTS from 32 to 1024")
+---
+v3: Avoid divide by zero, suggested by Namhyung.
+v2: Add missing header file
+---
+ tools/perf/builtin-stat.c                   | 13 +++-
+ tools/perf/util/bpf_counter_cgroup.c        | 79 +++++++++++++++------
+ tools/perf/util/bpf_skel/bperf_cgroup.bpf.c | 18 +++--
+ tools/perf/util/bpf_skel/bperf_cgroup.h     | 15 ++++
+ 4 files changed, 91 insertions(+), 34 deletions(-)
+ create mode 100644 tools/perf/util/bpf_skel/bperf_cgroup.h
+
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 3c3188a57016..886727ae8529 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -96,6 +96,10 @@
+ #include <perf/evlist.h>
+ #include <internal/threadmap.h>
+ 
++#ifdef HAVE_BPF_SKEL
++#include "util/bpf_skel/bperf_cgroup.h"
++#endif
++
+ #define DEFAULT_SEPARATOR	" "
+ #define FREEZE_ON_SMI_PATH	"bus/event_source/devices/cpu/freeze_on_smi"
+ 
+@@ -2852,7 +2856,14 @@ int cmd_stat(int argc, const char **argv)
+ 			goto out;
+ 		}
+ 	}
+-
++#ifdef HAVE_BPF_SKEL
++	if (target.use_bpf && nr_cgroups &&
++	    (evsel_list->core.nr_entries / nr_cgroups) > BPERF_CGROUP__MAX_EVENTS) {
++		pr_warning("Disabling BPF counters due to more events (%d) than the max (%d)\n",
++			   evsel_list->core.nr_entries / nr_cgroups, BPERF_CGROUP__MAX_EVENTS);
++		target.use_bpf = false;
++	}
++#endif // HAVE_BPF_SKEL
+ 	evlist__warn_user_requested_cpus(evsel_list, target.cpu_list);
+ 
+ 	evlist__for_each_entry(evsel_list, counter) {
+diff --git a/tools/perf/util/bpf_counter_cgroup.c b/tools/perf/util/bpf_counter_cgroup.c
+index 690be3ce3e11..68bd994c8880 100644
+--- a/tools/perf/util/bpf_counter_cgroup.c
++++ b/tools/perf/util/bpf_counter_cgroup.c
+@@ -27,6 +27,7 @@
+ #include "cpumap.h"
+ #include "thread_map.h"
+ 
++#include "bpf_skel/bperf_cgroup.h"
+ #include "bpf_skel/bperf_cgroup.skel.h"
+ 
+ static struct perf_event_attr cgrp_switch_attr = {
+@@ -42,6 +43,55 @@ static struct bperf_cgroup_bpf *skel;
+ 
+ #define FD(evt, cpu) (*(int *)xyarray__entry(evt->core.fd, cpu, 0))
+ 
++static void setup_rodata(struct bperf_cgroup_bpf *sk, int evlist_size)
++{
++	int map_size, total_cpus = cpu__max_cpu().cpu;
++
++	sk->rodata->num_cpus = total_cpus;
++	sk->rodata->num_events = evlist_size / nr_cgroups;
++
++	if (cgroup_is_v2("perf_event") > 0)
++		sk->rodata->use_cgroup_v2 = 1;
++
++	BUG_ON(evlist_size % nr_cgroups != 0);
++
++	/* we need one copy of events per cpu for reading */
++	map_size = total_cpus * evlist_size / nr_cgroups;
++	bpf_map__set_max_entries(sk->maps.events, map_size);
++	bpf_map__set_max_entries(sk->maps.cgrp_idx, nr_cgroups);
++	/* previous result is saved in a per-cpu array */
++	map_size = evlist_size / nr_cgroups;
++	bpf_map__set_max_entries(sk->maps.prev_readings, map_size);
++	/* cgroup result needs all events (per-cpu) */
++	map_size = evlist_size;
++	bpf_map__set_max_entries(sk->maps.cgrp_readings, map_size);
++}
++
++static void test_max_events_program_load(void)
++{
++#ifndef NDEBUG
++	/*
++	 * Test that the program verifies with the maximum number of events. If
++	 * this test fails unfortunately perf needs recompiling with a lower
++	 * BPERF_CGROUP__MAX_EVENTS to avoid BPF verifier issues.
++	 */
++	int err, max_events = BPERF_CGROUP__MAX_EVENTS * nr_cgroups;
++	struct bperf_cgroup_bpf *test_skel = bperf_cgroup_bpf__open();
++
++	if (!test_skel) {
++		pr_err("Failed to open cgroup skeleton\n");
++		return;
++	}
++	setup_rodata(test_skel, max_events);
++	err = bperf_cgroup_bpf__load(test_skel);
++	if (err) {
++		pr_err("Failed to load cgroup skeleton with max events %d.\n",
++			BPERF_CGROUP__MAX_EVENTS);
++	}
++	bperf_cgroup_bpf__destroy(test_skel);
++#endif
++}
++
+ static int bperf_load_program(struct evlist *evlist)
+ {
+ 	struct bpf_link *link;
+@@ -50,35 +100,18 @@ static int bperf_load_program(struct evlist *evlist)
+ 	int i, j;
+ 	struct perf_cpu cpu;
+ 	int total_cpus = cpu__max_cpu().cpu;
+-	int map_size, map_fd;
+-	int prog_fd, err;
++	int map_fd, prog_fd, err;
++
++	set_max_rlimit();
++
++	test_max_events_program_load();
+ 
+ 	skel = bperf_cgroup_bpf__open();
+ 	if (!skel) {
+ 		pr_err("Failed to open cgroup skeleton\n");
+ 		return -1;
+ 	}
+-
+-	skel->rodata->num_cpus = total_cpus;
+-	skel->rodata->num_events = evlist->core.nr_entries / nr_cgroups;
+-
+-	if (cgroup_is_v2("perf_event") > 0)
+-		skel->rodata->use_cgroup_v2 = 1;
+-
+-	BUG_ON(evlist->core.nr_entries % nr_cgroups != 0);
+-
+-	/* we need one copy of events per cpu for reading */
+-	map_size = total_cpus * evlist->core.nr_entries / nr_cgroups;
+-	bpf_map__set_max_entries(skel->maps.events, map_size);
+-	bpf_map__set_max_entries(skel->maps.cgrp_idx, nr_cgroups);
+-	/* previous result is saved in a per-cpu array */
+-	map_size = evlist->core.nr_entries / nr_cgroups;
+-	bpf_map__set_max_entries(skel->maps.prev_readings, map_size);
+-	/* cgroup result needs all events (per-cpu) */
+-	map_size = evlist->core.nr_entries;
+-	bpf_map__set_max_entries(skel->maps.cgrp_readings, map_size);
+-
+-	set_max_rlimit();
++	setup_rodata(skel, evlist->core.nr_entries);
+ 
+ 	err = bperf_cgroup_bpf__load(skel);
+ 	if (err) {
+diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+index 18ab4d9b49ff..c2298a2decc9 100644
+--- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
++++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+@@ -1,14 +1,12 @@
+ // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+ // Copyright (c) 2021 Facebook
+ // Copyright (c) 2021 Google
++#include "bperf_cgroup.h"
+ #include "vmlinux.h"
+ #include <bpf/bpf_helpers.h>
+ #include <bpf/bpf_tracing.h>
+ #include <bpf/bpf_core_read.h>
+ 
+-#define MAX_LEVELS  10  // max cgroup hierarchy level: arbitrary
+-#define MAX_EVENTS  1024  // max events per cgroup: arbitrary
+-
+ // NOTE: many of map and global data will be modified before loading
+ //       from the userspace (perf tool) using the skeleton helpers.
+ 
+@@ -97,7 +95,7 @@ static inline int get_cgroup_v1_idx(__u32 *cgrps, int size)
+ 	cgrp = BPF_CORE_READ(p, cgroups, subsys[perf_subsys_id], cgroup);
+ 	level = BPF_CORE_READ(cgrp, level);
+ 
+-	for (cnt = 0; i < MAX_LEVELS; i++) {
++	for (cnt = 0; i < BPERF_CGROUP__MAX_LEVELS; i++) {
+ 		__u64 cgrp_id;
+ 
+ 		if (i > level)
+@@ -123,7 +121,7 @@ static inline int get_cgroup_v2_idx(__u32 *cgrps, int size)
+ 	__u32 *elem;
+ 	int cnt;
+ 
+-	for (cnt = 0; i < MAX_LEVELS; i++) {
++	for (cnt = 0; i < BPERF_CGROUP__MAX_LEVELS; i++) {
+ 		__u64 cgrp_id = bpf_get_current_ancestor_cgroup_id(i);
+ 
+ 		if (cgrp_id == 0)
+@@ -148,17 +146,17 @@ static int bperf_cgroup_count(void)
+ 	register int c = 0;
+ 	struct bpf_perf_event_value val, delta, *prev_val, *cgrp_val;
+ 	__u32 cpu = bpf_get_smp_processor_id();
+-	__u32 cgrp_idx[MAX_LEVELS];
++	__u32 cgrp_idx[BPERF_CGROUP__MAX_LEVELS];
+ 	int cgrp_cnt;
+ 	__u32 key, cgrp;
+ 	long err;
+ 
+ 	if (use_cgroup_v2)
+-		cgrp_cnt = get_cgroup_v2_idx(cgrp_idx, MAX_LEVELS);
++		cgrp_cnt = get_cgroup_v2_idx(cgrp_idx, BPERF_CGROUP__MAX_LEVELS);
+ 	else
+-		cgrp_cnt = get_cgroup_v1_idx(cgrp_idx, MAX_LEVELS);
++		cgrp_cnt = get_cgroup_v1_idx(cgrp_idx, BPERF_CGROUP__MAX_LEVELS);
+ 
+-	for ( ; idx < MAX_EVENTS; idx++) {
++	for ( ; idx < BPERF_CGROUP__MAX_EVENTS; idx++) {
+ 		if (idx == num_events)
+ 			break;
+ 
+@@ -186,7 +184,7 @@ static int bperf_cgroup_count(void)
+ 			delta.enabled = val.enabled - prev_val->enabled;
+ 			delta.running = val.running - prev_val->running;
+ 
+-			for (c = 0; c < MAX_LEVELS; c++) {
++			for (c = 0; c < BPERF_CGROUP__MAX_LEVELS; c++) {
+ 				if (c == cgrp_cnt)
+ 					break;
+ 
+diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.h b/tools/perf/util/bpf_skel/bperf_cgroup.h
+new file mode 100644
+index 000000000000..3fb84b19d39a
+--- /dev/null
++++ b/tools/perf/util/bpf_skel/bperf_cgroup.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/* Data structures shared between BPF and tools. */
++#ifndef __BPERF_CGROUP_H
++#define __BPERF_CGROUP_H
++
++// These constants impact code size of bperf_cgroup.bpf.c that may result in BPF
++// verifier issues. They are exposed to control the size and also to disable BPF
++// counters when the number of user events is too large.
++
++// max cgroup hierarchy level: arbitrary
++#define BPERF_CGROUP__MAX_LEVELS  10
++// max events per cgroup: arbitrary
++#define BPERF_CGROUP__MAX_EVENTS  128
++
++#endif /* __BPERF_CGROUP_H */
+-- 
+2.51.1.821.gb6fe4d2222-goog
+
