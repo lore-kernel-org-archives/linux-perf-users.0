@@ -1,259 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11020134.outbound.protection.outlook.com [52.101.61.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84292200BBC;
-	Mon, 27 Oct 2025 05:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761541943; cv=none; b=gvRG0IDvPo/YaUhoqMA2DEeAe9xOIGdz7SsZFi+l/76xqouAzLAiWsMsYk4UeQjVKohMR9mc0otVeLf3U79uEgDrwy270qXgrRbri34+lMzmDD1hV1jYuKjWed6iKVrpF+gb2v9u+iP2JiaYUFNzIEfBuBC0hgHe3XRF4Y80Rr0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761541943; c=relaxed/simple;
-	bh=A0q+CvQfamxlIZBjRtufx4OYKQoedhxJRf3w5vgrS8Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=geT5KQm7v2eVsY4MxAmDO3THEddQ+QF28OqGobErahN485Zd7/kE9TJfsoMkmuAs/Xi3xRyl3PlyMZO1yOhSpmz6StF34c2MS84vic5Mu8Ltjn8kJgBzJBMpfbvsIpf0F21gtZNN91IO3w4Ne5joLUkV5U8xq/aOmdZROH9ty70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lILmd1z4; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31452D9EDF;
+	Mon, 27 Oct 2025 09:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.134
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761555773; cv=fail; b=pG7zrCozOCIy847Ljv8AHPjaSJFB1y11/e6fSeCO57VGL9jqH9sXfwI1SSlRx1V1zHLzf4RthIznAQbXqNS+Q3ZYyuxH7Z3s2c5ZnDSZ6TAr3eRw4wVdjxBcpNP/Xvu5Ui+TPGELxtAL5aCVlYfnSe/DrcI/5DECszu69GE/Rag=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761555773; c=relaxed/simple;
+	bh=DRQq8MGnaC5AbOBzBqQ0Bd2jeoDIAwHq0HstjQZddjE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=BHKXVfDaQwfwNC44DDexPoqta0MwmtpbCH6SAG8R2MpApYU1sq6d8+Ohxgv2G/DiYgndDo1PuF9XRqEDerv/fUMTziFRJRut4CE2k10yWaxAcDBC0r8aLE6FRkRnsfBvcP6yu8ez8nNWXfyzoMUhTdF0nJD1Z6Uw+amauExbiw8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=amperemail.onmicrosoft.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=fail (0-bit key) header.d=amperemail.onmicrosoft.com header.i=@amperemail.onmicrosoft.com header.b=0layrOce reason="key not found in DNS"; arc=fail smtp.client-ip=52.101.61.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=amperemail.onmicrosoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lILmd1z4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91404C4CEFB;
-	Mon, 27 Oct 2025 05:12:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761541943;
-	bh=A0q+CvQfamxlIZBjRtufx4OYKQoedhxJRf3w5vgrS8Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lILmd1z4rEu7bhyvatmNKIBsObiAWVMayyIwUZ8VU+O3Spt4FbHL9MDnaHnn7ipwa
-	 oEqRRKW+2NIUZZRLYTlwtipibAP6mR/ZTXIwZPxlfoE0sK2/BTec2g8uCmVCsA2b05
-	 eSPwVgG0OV8PZ7aIwadLPv0lMbdgtN0Lg67sK1ZxjxcYm5WPnaKjV0VY7i6/iSU/dG
-	 zWPaLox8OF/Gyo9a6tKBvkttdSGlw4Czs0dENshU1H9uRtm2zqxmjSzWDwceD1bety
-	 G9zDVqnrjBLrZ2icomI5ZiOuJSRn8tosUI4XvkHSQgNkyd9DmLcTds0qDsTNxVBJ7w
-	 QbSPD4XzYlubg==
-Date: Sun, 26 Oct 2025 22:12:21 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf dsos: Don't block when reading build IDs
-Message-ID: <aP7_Ne-3JO9pB5Uh@google.com>
-References: <20251022-james-perf-fix-dso-block-v1-1-c4faab150546@linaro.org>
- <CAP-5=fUF8C=yFkPb_ohJVzX01PvS5n++yZZifWSV-4sMNKZAZA@mail.gmail.com>
- <aP1kSdZJKYIpnRia@google.com>
- <CAP-5=fUiO1uypnsw=G-FFj0xE=uCowG5FetaC9JGygOxybuGGA@mail.gmail.com>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=amperemail.onmicrosoft.com header.i=@amperemail.onmicrosoft.com header.b="0layrOce"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=S+uaphcL0ezGnqeePD07++dQ90/pqiDxyCRIUeBjGd+wHf5fFz+ZCzhPIAMXXGo6mE9IfQeSegE8fJknSeuUdx2v8k4zJnZqNXUiFwl2kyYYDPpDRxKLWAeTt/mq3nQInBXQKao//G1s5feSyD2vMNfposPFXYYqL8MV/e59JZt7ITGO6v00E4tVNKc66WPrBKdWE0zr725aQbxFqEyCFWzl5ZjGOt97aefFuXFkeDfrdK/xWV0TIuXv0lvnfyABmdNt61OQoOGKzapeStTF2Zm9kPdt38Us9vygD2DBbrRb3YuQRIrgvGPBVZ4FB6uQ6UExzhh4F441TDi4SX1KZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YRUZ1l8MoUtD6OpPlEJDxrvsSpty1CZSFEg2JevoJxs=;
+ b=gF+6xvJdFFRfDRHUM6OLXnnrRueZLVsncbNoaaphNsv5KkCIjRBj6cUIBikDPhoI4zdBYNVv7A+Dg5Wl49zVYQkrQaMIiKNoLbj/eZJFRSU82E0QrdpWvxTSPjPHGOGmY/qdw7s3D8FTBaQI1wACpqspgc6HaezYzyuarHIwgPr8nFEl+jSZc9WyAfQcAeqJ1fGdSDKSRvZbAbHDWs5GQOxSoAJXIFNUANDPZ8XSrl3cRXpocfAL1aBEJ22eQRWeTbg/Yg90d3Cy/0Wpbv3GE44yyHL10nCp1wx7elH9ABZgGkn67wbptmEPDv4rnuQkMvRLUSOkFuRov4WufyNcyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=amperemail.onmicrosoft.com; dkim=pass
+ header.d=amperemail.onmicrosoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amperemail.onmicrosoft.com; s=selector1-amperemail-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YRUZ1l8MoUtD6OpPlEJDxrvsSpty1CZSFEg2JevoJxs=;
+ b=0layrOceRMdSCbjyyZeVlBv1+FKn8BBCdQu0T/QtDvmzUrz0cfvO+fkt4zKJljHmQEpwHjGqegrbUtFegctzjGDpCJ85ubuVsuZ3pyZgpm1T7TnjKhBH8QgjyZyrBLF26WdjIrmpu6AqrLVFfQre3kSLiG7k/h1aGtrOyqH7p6Q=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amperemail.onmicrosoft.com;
+Received: from PH0PR01MB7975.prod.exchangelabs.com (2603:10b6:510:26d::15) by
+ SN7PR01MB8186.prod.exchangelabs.com (2603:10b6:806:322::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9253.18; Mon, 27 Oct 2025 09:02:48 +0000
+Received: from PH0PR01MB7975.prod.exchangelabs.com
+ ([fe80::6926:a627:118e:8050]) by PH0PR01MB7975.prod.exchangelabs.com
+ ([fe80::6926:a627:118e:8050%4]) with mapi id 15.20.9228.016; Mon, 27 Oct 2025
+ 09:02:48 +0000
+Message-ID: <dbc532c8-4624-45ad-89f4-fc080be2a400@amperemail.onmicrosoft.com>
+Date: Mon, 27 Oct 2025 17:02:34 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf: arm-spe: set the correct interval for PMSIRR_EL1
+To: Huang Shijie <shijie@os.amperecomputing.com>, will@kernel.org,
+ mark.rutland@arm.com
+Cc: patches@amperecomputing.com, cl@linux.com,
+ Shubhang@os.amperecomputing.com, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20251027022445.892607-1-shijie@os.amperecomputing.com>
+Content-Language: en-GB
+From: Shijie Huang <shijie@amperemail.onmicrosoft.com>
+In-Reply-To: <20251027022445.892607-1-shijie@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: KU2P306CA0029.MYSP306.PROD.OUTLOOK.COM
+ (2603:1096:d10:3b::11) To PH0PR01MB7975.prod.exchangelabs.com
+ (2603:10b6:510:26d::15)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUiO1uypnsw=G-FFj0xE=uCowG5FetaC9JGygOxybuGGA@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR01MB7975:EE_|SN7PR01MB8186:EE_
+X-MS-Office365-Filtering-Correlation-Id: dae2964e-3f87-4e5f-1ade-08de153799a0
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OWtBZ2NwMzdwakt4NWhqV05IaDBYSmJmamxqbVFGWUN5a2pXS0hROENOMGxl?=
+ =?utf-8?B?N3VLUFZIeGcwY1NPNHR0Rk5pdk9nZ1Fxek9ReExYY0prRHdKV2ZqYW94MEZr?=
+ =?utf-8?B?MTR1U3ZsL3RZRXhiZXBnYXpTUWNDQ2FaMXRHQlYzL2UyME1VNFRkYmc3bjNt?=
+ =?utf-8?B?NlNaUTg0MFp5V3ZWajJCVCtjQWFET200T0F6U0xKMEFuRkVVWE4wcGJRL1Yv?=
+ =?utf-8?B?cnZKVTlqU08rZGF4US85REI4Wm4vajRvN3hRRlIvSTcxUWFtalppa2ZWTVdl?=
+ =?utf-8?B?VTQrenRxTFZrRENyYkoxUCtLbDZaT0szN0pTbHczQTlzTzc2R2UzQkY5dHpO?=
+ =?utf-8?B?ZXVpdVBMQ29OTFZ1TVJhWlUveWo3dWgvbU00RjFROTJTdStkOVp2cGJUSjQx?=
+ =?utf-8?B?aHA2akJqbkNsQ3RZKy9QUjlJSDNpQ1BPWi8yMHdwOG9vRXdIN2x0N290eFFJ?=
+ =?utf-8?B?WUttazBkVWwzcW1ON2dJOUo3YlFxVGdpQ3VZaVNzQS9TL0R5NjRuWDVNcStW?=
+ =?utf-8?B?aHdFVmc5eWNLeUs2SG5MazVWRk9QL0djTVRiSmdMeWpCSTc0Qkdjenk5ZzNi?=
+ =?utf-8?B?VGZ4K1BpV25DbFE2RENvUE1PSlVMWXVZOHM3ZGxFWC95VVR5ZnJBWWJzVDBk?=
+ =?utf-8?B?WklQTWJJMDhab0hvaENwaStIQlAyMThOQnlIUVIvMS9YR1pLbzBxL2sxdUsv?=
+ =?utf-8?B?ZUxyaEFiYXR1YXF3ODBxUXlLbWRhUVN6M08xclhIbUhIdnVOMUJTMzZPTHdL?=
+ =?utf-8?B?RG5sK2FxemhDZzhHWUwvT1I3N0dNSHU2NlYybGhzaUZpT1NxQXFQUEQrNmtB?=
+ =?utf-8?B?cjBubzJPK0ZaVlNxZWZYdXJja3JCbnFoVXE0Y1V1SURIKzZnVGtxL3E3OFNK?=
+ =?utf-8?B?bzBvWHFTQk5RUGZlQ0sxY3ZHL0RzUjc4QlVVRkVCdzM0a1J3YjlhWVB5N01U?=
+ =?utf-8?B?UEpScTFsOU1KZi9XZjZaQlcvbzB3ckY0dlZ5aEN4Y0dYNzY2MXpBeUp3RFdr?=
+ =?utf-8?B?dlFBdTBsR3dYQWtXTklGWlJoUFhqbEVZd2ZnSElqajZxNEtjM05Sd2dYaExq?=
+ =?utf-8?B?QWVpZTF1dGZYVFZOTmV5Z2lORGdxanZKd3ZOYmVOdzEzM1hVWWZSRVZnWm5s?=
+ =?utf-8?B?VjNDWkp0dWowbnFINVVUaSthamZXSkJESXVCZ0N6SDdWRWN5QS8vcy91ajZM?=
+ =?utf-8?B?blpEcnJQV2NpR0FFS0VObDhjcXVja21UQjNMRS9LeHVwZmRYM0Yyb3RhUm4z?=
+ =?utf-8?B?RjN2Z3BCS0xmNGR6dDgvT0FOUGhPM1FvMzZpRUl4eUNVa1RBaXUzM1VNOGd5?=
+ =?utf-8?B?OFJXTC94anIxOC81VmtNN3k5T2ZjaDNWd0VueVV4dFlIYmk3TXp6bEhvSDNh?=
+ =?utf-8?B?L2hNY0tvRHhZNkhNUjJtZFNoQWRkbGVzQzEwUExRUjBuTVdDL3gySzltN3k1?=
+ =?utf-8?B?azVqK0wveWRZbU5mQjhHMUdQVnRVREtZYUpqV2ZRaVdCUnZiVElIUXhYSkdi?=
+ =?utf-8?B?VDUvVzc4MFlJRGpHUzRicnFudHc1TGpaMGVqRDhpMHVlUk5GR2MwOHhxRklK?=
+ =?utf-8?B?MWJJUnpJRHlPSm92cWVPTGFmSDlRR2hjaU1RVVlGaXN2YnNqWmdmaE1EdTQ2?=
+ =?utf-8?B?cXYzTlRwOU9yZEh4STFDQ2NkRWRFYUIrem5xMjdFeEFpbUpCUTczWVBaSllB?=
+ =?utf-8?B?RDBUV0ZmRU5JQTRXWUdXQ01yS2lYUkJBaUwwUTN4Sktod1RHWVVTY21zd3F4?=
+ =?utf-8?B?SWZWY0lBZ25DdFJxdW9oY3EzNlhuN0orZ2crZG5xdEY4NG0yaFo4a1JrZTlH?=
+ =?utf-8?B?NGIzVmtrOUw5czFRdEF6OU01aHdVRklGdEpCVGpIallwNHkrYzd0M0xjd3gz?=
+ =?utf-8?B?US9VQWlCbGhhOFd6NEpSVllDM0RiRjVYdENYa3NXTFYyaEpnRWdaY2JsWjd6?=
+ =?utf-8?Q?01qgcV1IbCqnQkPuh3KVHBasHvhUzWlB?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR01MB7975.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VEU3M2JKSWE1cFFBdG1iSmo1QmNLNndhR3E5TTRRVm44VFFuUjlOK1Eyajdl?=
+ =?utf-8?B?WVhsNUdrZ04vWlJJcXNOcUR5dGdiQ2laYmhyeWRRYlVYbHNsQUZYRTBiNXJJ?=
+ =?utf-8?B?bGMyTzdpem00Rmd3ZzBxbWc1UjljVVBMdlEvejA1OXcxdU43dTFyZW1QdXNE?=
+ =?utf-8?B?bWxPOXl3dUhtM0NMZEJUWTV6YjVxSFkvZ2tXbHE3RHQ5WjlacEc4RVZjTFFv?=
+ =?utf-8?B?RENLMnJUK0tFOTMvWXJReWcySmpXL2J3NVRBc2o5cW1SMUxFQnZ4SnVtYVRa?=
+ =?utf-8?B?TEZUbm5mQWpoTUtiakZlK3JWdC9DOG41MTBTa04zL1JONWlHam5ZSkhxeUVi?=
+ =?utf-8?B?d0tiK0hEam9nU1hRdDVZSzkvWHBpSVc1YldkVzdCWTFESlJIS1NrbFhsRnNs?=
+ =?utf-8?B?SlVqSlU4YmNhUm9ObG9WME0vZmF5bXJrYlRTT2ZQT1BFZW5vTDhwV1lPMzNn?=
+ =?utf-8?B?SkVERjFMMmZvK3h6TWdIa1dWVTB4eXBLNDkxZlB5TWNxNjFvTm91NDJydU8r?=
+ =?utf-8?B?NXRoak84d1ZMWkJHK2l3UDhpbnlVUWRNM3lXU1VJRVFRRHNtTldHTmZDQndz?=
+ =?utf-8?B?MEpzdzI2YVk2K3B4RWVRYjlaT3dGL3pOL3ViaGRvT1lPNCt1MnBmcVpISmli?=
+ =?utf-8?B?NWQzY3NTWWhzMDZZMXdZNFVwOEVMaTFpeCtHd0lodk1ZZlJpa1lIQStPTDVq?=
+ =?utf-8?B?a1BheWJYTkhhNlhkWkVnb3VKTFBoVlpva25LRk9WSTdBNkFiR0FZNmp4cGdU?=
+ =?utf-8?B?ZE9zdTJqLzN4MGhhWTNMVnVPVmsycE84UVNIZzZBT3VDUllZM2crZWpXYjI2?=
+ =?utf-8?B?eDVTVnMyZVcrajJONmlFTDI2ajluTjBOU0o3TXljVFJkWFZjdnFBRFNBbGdV?=
+ =?utf-8?B?VU85NDVPT0VXOWNteTZOWVZDNW1YVFFJSUdnUEt3eHNia3BNNWxXNDJGVUF6?=
+ =?utf-8?B?TzVnYWxFb2hZSWxNcWZrN2Y5bkRUalIzZUxhUGJwRHQ4N211Nzc4ZEY4STJi?=
+ =?utf-8?B?eDMyYVYxZ05VaURPQmxYKzgvc252SnM1SUpsaFUxUW4yaDhwTGtpMlc1MGZm?=
+ =?utf-8?B?WEYvLy9jZG5JMWNIQjhPYjNrVTJHcG5tWUFyTU5IUGxpZFJWNWF1T2lzc3Nl?=
+ =?utf-8?B?dEtyMVRSekNDQXhFM0lWSWdrMUJ0YjZKSWdHMVNWZnAxaDEra0hBUHBnQ01j?=
+ =?utf-8?B?ZjRxREtDZ2RkQUVreklORnJKbGswMFR4Nk5qMlpmMnU0bUQ5RUFIUVJ5VDBC?=
+ =?utf-8?B?MkhOOWk4bU42WHJrYkFyVkZZSnIydEFkMW5QV0dDTGk1Z1diV3NTbEdmTitQ?=
+ =?utf-8?B?OXYxV0l0MUg4YUEzc29qazVUSGMraTUxMmhBZUxyTys5OGdNay9nMTBja1ls?=
+ =?utf-8?B?YVhGVXMyRlgwRVhQR2MwN0R6ajlUL01iOGI0VzhOZVo2L2Evb1d3SEV5RDQ4?=
+ =?utf-8?B?UldFcTRFZitvTGhFb1B2QlhzYkhrRW1oNWlYbWJjS2UyNGlOd3VLZk83TFBu?=
+ =?utf-8?B?TmN5RUdMTWllZFJIaEI2RXNWTGxsMUxubHdqamUxNFltOFBTTmNoQllpZVM1?=
+ =?utf-8?B?NFN4a240NC9VS0N0a0ErRVBtazRGM014OWg0ZVVHdlZzcXNQeGhzSlB2c3JT?=
+ =?utf-8?B?bmpRbGE0TVNaT3BsUWZJV0pvT3NGMkV1cmZVNnpFd0V1NEZUdXRQWm15UXdW?=
+ =?utf-8?B?ZkhGS3pJSlFGbi9KMUljVWowZWx2R3BKZ2xUdHlRSnRPdGt2ZlpOak5KeWg0?=
+ =?utf-8?B?RHdMNkJPaVJJOHh0S3hDRFVGNWd4N0pPQnphZ2pZbjNyVFQ3Z2hsTk5BWUhP?=
+ =?utf-8?B?TXIzN1crbUZsTEk2eGNBS3phcEJ4a05Ta21KYVZ1WFZIbFkxdWprc29rQ25t?=
+ =?utf-8?B?VlBHUDB4Mnl2c0cvNTRhVHQ1OGxTOCt1UzQ5QWN2Y0lwQnZibSszaGxiYXAx?=
+ =?utf-8?B?b3doalNxOHFjUkZkODhPMStTRnVWOThyb0RSTkFEODJZeXJOQlZYcm5mc2VH?=
+ =?utf-8?B?dHFNTGpDYkYrM3hoS0pkUmJDdlJIRkxhMEVqbEoybGNnTGNEWkVDMlZHb2FP?=
+ =?utf-8?B?aDlRcEpjbGk0SmkzbnllTXBnSDZDVzVvYWJzR2dyMFBLcmZpbDkzWS93TTIw?=
+ =?utf-8?B?ei9jVTExYWd5QU1wWFEwRHhQSEFoMXlrcGFVeis4dE5hNzdoSlFrN24xTWhl?=
+ =?utf-8?Q?my+6NKS6cfWENdBXm3C8grc=3D?=
+X-OriginatorOrg: amperemail.onmicrosoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dae2964e-3f87-4e5f-1ade-08de153799a0
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR01MB7975.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2025 09:02:48.1823
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KxODO4RPuf1CdFk62PsCf9DheO9wcxCi9qFA9SS5qXIXNH1c7jc+MvDOuQMq0iXQiwdsnR8uoMrJmJAhZLJvr+AxAxnKtwOQfea6TjFISzS07cAMhj3esztOYHerACDX
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR01MB8186
 
-On Sat, Oct 25, 2025 at 09:52:01PM -0700, Ian Rogers wrote:
-> On Sat, Oct 25, 2025 at 4:59 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hello,
-> >
-> > On Fri, Oct 24, 2025 at 11:26:18AM -0700, Ian Rogers wrote:
-> > > On Wed, Oct 22, 2025 at 8:46 AM James Clark <james.clark@linaro.org> wrote:
-> > > >
-> > > > The following command will hang consistently when the GPU is being used
-> > > > due to non regular files (e.g. /dev/dri/renderD129, /dev/dri/card2)
-> > > > being opened to read build IDs:
-> > > >
-> > > >  $ perf record -asdg -e cpu-clock -- true
-> > > >
-> > > > Change to non blocking reads to avoid the hang here:
-> > > >
-> > > >   #0  __libc_pread64 (offset=<optimised out>, count=0, buf=0x7fffffffa4a0, fd=237) at ../sysdeps/unix/sysv/linux/pread64.c:25
-> > > >   #1  __libc_pread64 (fd=237, buf=0x7fffffffa4a0, count=0, offset=0) at ../sysdeps/unix/sysv/linux/pread64.c:23
-> > > >   #2  ?? () from /lib/x86_64-linux-gnu/libelf.so.1
-> > > >   #3  read_build_id (filename=0x5555562df333 "/dev/dri/card2", bid=0x7fffffffb680, block=true) at util/symbol-elf.c:880
-> > > >   #4  filename__read_build_id (filename=0x5555562df333 "/dev/dri/card2", bid=0x7fffffffb680, block=true) at util/symbol-elf.c:924
-> > > >   #5  dsos__read_build_ids_cb (dso=0x5555562df1d0, data=0x7fffffffb750) at util/dsos.c:84
-> > > >   #6  __dsos__for_each_dso (dsos=0x55555623de68, cb=0x5555557e7030 <dsos__read_build_ids_cb>, data=0x7fffffffb750) at util/dsos.c:59
-> > > >   #7  dsos__for_each_dso (dsos=0x55555623de68, cb=0x5555557e7030 <dsos__read_build_ids_cb>, data=0x7fffffffb750) at util/dsos.c:503
-> > > >   #8  dsos__read_build_ids (dsos=0x55555623de68, with_hits=true) at util/dsos.c:107
-> > > >   #9  machine__read_build_ids (machine=0x55555623da58, with_hits=true) at util/build-id.c:950
-> > > >   #10 perf_session__read_build_ids (session=0x55555623d840, with_hits=true) at util/build-id.c:956
-> > > >   #11 write_build_id (ff=0x7fffffffb958, evlist=0x5555562323d0) at util/header.c:327
-> > > >   #12 do_write_feat (ff=0x7fffffffb958, type=2, p=0x7fffffffb950, evlist=0x5555562323d0, fc=0x0) at util/header.c:3588
-> > > >   #13 perf_header__adds_write (header=0x55555623d840, evlist=0x5555562323d0, fd=3, fc=0x0) at util/header.c:3632
-> > > >   #14 perf_session__do_write_header (session=0x55555623d840, evlist=0x5555562323d0, fd=3, at_exit=true, fc=0x0, write_attrs_after_data=false) at util/header.c:3756
-> > > >   #15 perf_session__write_header (session=0x55555623d840, evlist=0x5555562323d0, fd=3, at_exit=true) at util/header.c:3796
-> > > >   #16 record__finish_output (rec=0x5555561838d8 <record>) at builtin-record.c:1899
-> > > >   #17 __cmd_record (rec=0x5555561838d8 <record>, argc=2, argv=0x7fffffffe320) at builtin-record.c:2967
-> > > >   #18 cmd_record (argc=2, argv=0x7fffffffe320) at builtin-record.c:4453
-> > > >   #19 run_builtin (p=0x55555618cbb0 <commands+288>, argc=9, argv=0x7fffffffe320) at perf.c:349
-> > > >   #20 handle_internal_command (argc=9, argv=0x7fffffffe320) at perf.c:401
-> > > >   #21 run_argv (argcp=0x7fffffffe16c, argv=0x7fffffffe160) at perf.c:445
-> > > >   #22 main (argc=9, argv=0x7fffffffe320) at perf.c:553
-> > > >
-> > > > Fixes: 53b00ff358dc ("perf record: Make --buildid-mmap the default")
-> > > > Signed-off-by: James Clark <james.clark@linaro.org>
-> > > > ---
-> > > > I'm not actually sure if this is the right fix for this. Commit
-> > > > 2c369d91d093 ("perf symbol: Add blocking argument to
-> > > > filename__read_build_id") which added the blocking argument says that it
-> > > > should be non-blocking reads for event synthesis, but the callstack here
-> > > > is when writing the header out.
-> > > >
-> > > > There was also an is_regular_file() check added in commit c21986d33d6b
-> > > > ("perf unwind-libdw: skip non-regular files"), which presumably falls
-> > > > afoul of the "which unfortunately fails for symlinks" part of the other
-> > > > linked commit message?
-> > > >
-> > > > So I can't tell if we should add the is_regular_file() check here too,
-> > > > or just set it to non-blocking, or it needs some extra state to be
-> > > > passed all the way down to dsos__read_build_ids_cb() to do different
-> > > > things.
-> > >
-> > > The fix lgtm but I worry about making all the build ID reading
-> > > non-blocking meaning build IDs getting lost.
-> >
-> > I'm not sure what non-blocking means for regular file system operations
-> > on a block device.  But it may have some impact on regular files on a
-> > network filesystem.
-> 
-> Agreed. Prior to using blocking we tried to imply from the file type
-> from stat, but that skipped things like symlinks :-/
-> 
-> > > It seems that generating
-> > > the build ID feature table is unnecessary if we have build ID mmap
-> > > events, including synthesized ones that will have read the build IDs.
-> > > I wonder if a better "fix" is:
-> > > ```
-> > > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > > index cb52aea9607d..15f75c70eb76 100644
-> > > --- a/tools/perf/builtin-record.c
-> > > +++ b/tools/perf/builtin-record.c
-> > > @@ -1842,7 +1842,7 @@ static void record__init_features(struct record *rec)
-> > >        for (feat = HEADER_FIRST_FEATURE; feat < HEADER_LAST_FEATURE; feat++)
-> > >                perf_header__set_feat(&session->header, feat);
-> > >
-> > > -       if (rec->no_buildid)
-> > > +       if (rec->no_buildid || rec->buildid_mmap)
-> > >                perf_header__clear_feat(&session->header, HEADER_BUILD_ID);
-> > >
-> > >        if (!have_tracepoints(&rec->evlist->core.entries))
-> > > ```
-> > > that should disable the build ID feature table generation when build
-> > > ID mmaps are in use (the default). Having the build IDs twice in the
-> > > data file feels redundant. Or we could do your fix or both, wdyt?
-> >
-> > I'm ok to remove the header feature but I think it should update
-> > build-ID cache even with this change.
-> 
-> Yeah, dropping the feature writing also impacts updating the build ID
-> cache because:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/header.c?h=perf-tools-next#n338
-> It is kind of strange that writing a header feature does this. What if
-> I want to write a header with build IDs but not update the cache? It'd
+Please ignore this email...
 
-There's -N/--no-buildid-cache option for that. :)
+Current driver is okay.
 
 
-> make more sense, I think, for perf_session__cache_build_ids to be
-> called explicitly. There is also the global no_buildid_cache
-> controlling behavior:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/build-id.c?h=perf-tools-next#n43
-> But that's kind of a hack as we may have >1 session such as with TPEBS.
-
-Ouch.
-
-> 
-> > I'm also curious if the device has samples actually.  It should be
-> > checked by dso->hit.
-
-Anyway, --buildid-all would trigger the problem too.
-
-> 
-> In this case the header writing is happening after the samples have
-> been processed, but it looks like marking of samples doesn't consider
-> data addresses:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/build-id.c?h=perf-tools-next#n55
-> just sample->ip and the callchain. If the marking was updated for data
-> pages then just writing build IDs for marked dsos would make sense.
-
-Makes sense.
-
-> There could be callers not marking dsos so they'd need altering, or
-> two versions of the code.
-
-Hmm.. I think --buildid-mmap should enable caching by default while
-skips the header feature.
-
-How about this?
-
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index cb52aea9607d4612..ea778343f3c2d525 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1890,7 +1890,7 @@ record__finish_output(struct record *rec)
- 	}
- 
- 	/* Buildid scanning disabled or build ID in kernel and synthesized map events. */
--	if (!rec->no_buildid) {
-+	if (!rec->no_buildid || !rec->no_buildid_cache) {
- 		process_buildids(rec);
- 
- 		if (rec->buildid_all)
-@@ -3083,7 +3083,7 @@ static int perf_record_config(const char *var, const char *value, void *cb)
- 		else if (!strcmp(value, "no-cache"))
- 			rec->no_buildid_cache = true;
- 		else if (!strcmp(value, "skip"))
--			rec->no_buildid = true;
-+			rec->no_buildid = rec->no_buildid_cache = true;
- 		else if (!strcmp(value, "mmap"))
- 			rec->buildid_mmap = true;
- 		else if (!strcmp(value, "no-mmap"))
-@@ -4192,16 +4192,6 @@ int cmd_record(int argc, const char **argv)
- 		record.opts.record_switch_events = true;
- 	}
- 
--	if (!rec->buildid_mmap) {
--		pr_debug("Disabling build id in synthesized mmap2 events.\n");
--		symbol_conf.no_buildid_mmap2 = true;
--	} else if (rec->buildid_mmap_set) {
--		/*
--		 * Explicitly passing --buildid-mmap disables buildid processing
--		 * and cache generation.
--		 */
--		rec->no_buildid = true;
--	}
- 	if (rec->buildid_mmap && !perf_can_record_build_id()) {
- 		pr_warning("Missing support for build id in kernel mmap events.\n"
- 			   "Disable this warning with --no-buildid-mmap\n");
-@@ -4210,6 +4200,16 @@ int cmd_record(int argc, const char **argv)
- 	if (rec->buildid_mmap) {
- 		/* Enable perf_event_attr::build_id bit. */
- 		rec->opts.build_id = true;
-+		/* Disable build-ID table in the header */
-+		rec->no_buildid = true;
-+	} else {
-+		pr_debug("Disabling build id in synthesized mmap2 events.\n");
-+		symbol_conf.no_buildid_mmap2 = true;
-+	}
-+
-+	if (rec->no_buildid_set && rec->no_buildid) {
-+		/* -B implies -N for historic reason */
-+		rec->no_buildid_cache = true;
- 	}
- 
- 	if (rec->opts.record_cgroup && !perf_can_record_cgroup()) {
-@@ -4306,7 +4306,7 @@ int cmd_record(int argc, const char **argv)
- 
- 	err = -ENOMEM;
- 
--	if (rec->no_buildid_cache || rec->no_buildid) {
-+	if (rec->no_buildid_cache) {
- 		disable_buildid_cache();
- 	} else if (rec->switch_output.enabled) {
- 		/*
+On 27/10/2025 10:24, Huang Shijie wrote:
+>  From the spec, the "interval" value for PMSIRR_EL1 is in the [31, 8] bits.
+> Current code does not set it correctly.
+>
+> This patch fixes it.
+>
+> Fixes: d5d9696b03808 ("drivers/perf: Add support for ARMv8.2 Statistical Profiling Extension")
+> Signed-off-by: Huang Shijie <shijie@os.amperecomputing.com>
+> ---
+>   drivers/perf/arm_spe_pmu.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+> index fa50645fedda..d424721b79ee 100644
+> --- a/drivers/perf/arm_spe_pmu.c
+> +++ b/drivers/perf/arm_spe_pmu.c
+> @@ -400,7 +400,7 @@ static u64 arm_spe_event_to_pmsirr(struct perf_event *event)
+>   	arm_spe_event_sanitise_period(event);
+>   
+>   	reg |= FIELD_PREP(PMSIRR_EL1_RND, ATTR_CFG_GET_FLD(attr, jitter));
+> -	reg |= event->hw.sample_period;
+> +	reg |= FIELD_PREP(PMSIRR_EL1_INTERVAL, event->hw.sample_period);
+>   
+>   	return reg;
+>   }
