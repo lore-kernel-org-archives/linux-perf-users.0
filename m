@@ -1,197 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3074132D0FA;
-	Tue, 28 Oct 2025 17:09:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237AF244691;
+	Tue, 28 Oct 2025 19:13:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761671371; cv=none; b=HYKtOkTJzhrUqe3xWzada72hR8PoQi3OSOeVYBSeu3FStGu0qEANs8KfV3ZGQN9z6S6livj7VLzag2HksS+J15UoyiHhXg/3EDOWwsuMauUx31WGfE54YknOe9DHZb3C5b13+T06pizbhv7rOwrq3Evmv4ToAHv1fp9m7WNjUoU=
+	t=1761678813; cv=none; b=gYBfHa6NQZtktQxdUhNU2k8jT4PHMpw0Nx7/NRd8JH05IU0LZx+Jc628ZgYsNsJo/Vxf8+DekdAUgoqEKUNuubQtmSB4YM/MCHfuMxpsMliAK7N8jyB0DLVUvsI+XkKxEX0EBHCL94JCkvNtEl7RL2/GZw/vS1QedTeMgb//m+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761671371; c=relaxed/simple;
-	bh=Q/DvAf8uCkX2SPY6TkNj/fjy6KkdM9UtV7Vt2f04sMY=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=V+RUDQ0z8XYuDjlEjN0t9H3BknG1ad5S5DJCdVMbrhCirjVcmmms/hjtaTxJEbZ4X8iL31DjU7D0k5OqEydEVT+9z4Txvksb4zN3+pbC0bZFlTp7cYx49XBWGpdy+NfU3v0BY3wfaTeEIjCAHJz/42b3kg1a4dXORtf+N5yTx4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mFsEAYZR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761678813; c=relaxed/simple;
+	bh=sZIrF5BC7ksSsWzA+ZVd/ZRBeM5EUfucbSmCQoGjJpU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p/OvFuggHrWl2dGVrz+lDr6enR96g39K+Gx0q513fgZUKd3/suGPYUKd15v/ppiEWCjphy9bC8woKMqJ6cX0WktI3uIpQFsBAPAkctaKLV85+alBuBGhgiHtrU2NLTUK3/8svwgHwKw6A7+i+wA0zYkmiIa+iQZ7YszXRIro1lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SMknY+ux; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mFsEAYZR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 931ADC4CEE7;
-	Tue, 28 Oct 2025 17:09:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SMknY+ux"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CAF7C4CEE7;
+	Tue, 28 Oct 2025 19:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761671370;
-	bh=Q/DvAf8uCkX2SPY6TkNj/fjy6KkdM9UtV7Vt2f04sMY=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-	b=mFsEAYZRCq4UENune6IVXZdDlYzHgHBAwXb8WugQxY6+syeePOp+ipAyNcx50ahmG
-	 O5+SL4Hbaj/XZ4qDPrEdGABNuzalNBc2QKpKkNGsHFCvFS1dLjgAdXotJkPiqqH3kR
-	 SZx4o84mEt9zrh30Wd0vaMrfi5ogJIeMrxe8bPuB6a1x4r+M9QDArvkwry6q2qeP+O
-	 NOQy1j0c3bCQ8TANoCaWQtcSMWd7vNxUoG0PS0wN1Uerwxr6GNCD7ZjiANvRrRGKNV
-	 3l+d5AFNOJxNmu6XwqLoYp3Ne/L+qA1IS+bGbata46auw5Yv4s5/WvecO/6niXiOaj
-	 bXzALiH5vNOvg==
-Content-Type: multipart/mixed; boundary="===============9046533533940140989=="
+	s=k20201202; t=1761678812;
+	bh=sZIrF5BC7ksSsWzA+ZVd/ZRBeM5EUfucbSmCQoGjJpU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SMknY+uxdXCS6M7DgL/O8lllk3C/4IEmUM8+wtrkh8yDZRnvBgA5+lEPjJoa+desw
+	 wrFvea+RngTjoT6geDFzTy0NU4pY+71t8BbdVJtYhSxobiRrvOq3hkLl05w6Otv0sc
+	 BrsnPlnPl2EleChu+WQgWMsxdUMtQtApCnS57Om0n63jE9/3CBeVku37dZTpN4+HO1
+	 LVco4JKMqGTqI40P8ADCW9Be3jHI62aD8nU6mgLmw8XHB7Cu90HtA6Y7ndt4FkapK8
+	 V6ek33aUqOrAeYqSMXkkJ7FYUq+4hWc/NXEATIFBq9eI5ZyN8J8GAR5UVrVQqfqPZ3
+	 N/JOk4DgiESZQ==
+Date: Tue, 28 Oct 2025 16:13:28 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf test workload: Add thread count argument to
+ thloop
+Message-ID: <aQEV2ABm7JaGH3UO@x1>
+References: <20251028153821.4003666-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <a48e281e6912037490270da40f79e45c1ad1e430c8c1cc84c48306106b06113a@mail.kernel.org>
-In-Reply-To: <20251028162502.3418817-2-chen.dylane@linux.dev>
-References: <20251028162502.3418817-2-chen.dylane@linux.dev>
-Subject: Re: [PATCH bpf-next v4 1/2] perf: Refactor get_perf_callchain
-From: bot+bpf-ci@kernel.org
-To: chen.dylane@linux.dev,peterz@infradead.org,mingo@redhat.com,acme@kernel.org,namhyung@kernel.org,mark.rutland@arm.com,alexander.shishkin@linux.intel.com,jolsa@kernel.org,irogers@google.com,adrian.hunter@intel.com,kan.liang@linux.intel.com,song@kernel.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,martin.lau@linux.dev,eddyz87@gmail.com,yonghong.song@linux.dev,john.fastabend@gmail.com,kpsingh@kernel.org,sdf@fomichev.me,haoluo@google.com
-Cc: linux-perf-users@vger.kernel.org,linux-kernel@vger.kernel.org,bpf@vger.kernel.org,chen.dylane@linux.dev,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Tue, 28 Oct 2025 17:09:28 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251028153821.4003666-1-irogers@google.com>
 
---===============9046533533940140989==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-
-
-```
-commit 59cfc61f83ad4ec998f4242ca000c554e3001b47
-Author: Tao Chen <chen.dylane@linux.dev>
-
-perf: Refactor get_perf_callchain
-
-This patch refactors get_perf_callchain() by extracting logic into new
-helper functions to provide more flexible stack-sampling APIs for BPF.
-
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index fd1d91017..14a382cad 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -67,6 +67,7 @@ struct perf_callchain_entry_ctx {
->  	u32				nr;
->  	short				contexts;
->  	bool				contexts_maxed;
-> +	bool				add_mark;
->  };
-
-[ ... ]
-
-> @@ -1718,9 +1719,17 @@ DECLARE_PER_CPU(struct perf_callchain_entry, perf_callchain_entry);
->
->  extern void perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs);
->  extern void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs);
-> +
-> +extern void __init_perf_callchain_ctx(struct perf_callchain_entry_ctx *ctx,
-> +				      struct perf_callchain_entry *entry,
-> +				      u32 max_stack, bool add_mark);
-> +
-> +extern void __get_perf_callchain_kernel(struct perf_callchain_entry_ctx *ctx, struct pt_regs *regs);
-> +extern void __get_perf_callchain_user(struct perf_callchain_entry_ctx *ctx, struct pt_regs *regs);
-> +
->  extern struct perf_callchain_entry *
->  get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
-> -		   u32 max_stack, bool crosstask, bool add_mark);
-> +		   u32 max_stack, bool crosstask);
-
-> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-> index 4d53cdd13..e28b35c7e 100644
-> --- a/kernel/bpf/stackmap.c
-> +++ b/kernel/bpf/stackmap.c
-> @@ -315,7 +315,7 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
->  		max_depth = sysctl_perf_event_max_stack;
->
->  	trace = get_perf_callchain(regs, kernel, user, max_depth,
-> -				   false, false);
-> +				   false);
-                                       ^^^^^ removed last parameter
-
-Previously bpf_get_stackid() passed add_mark=false to get_perf_callchain().
-Now the parameter is gone, but get_perf_callchain() hardcodes add_mark=true
-when calling __init_perf_callchain_ctx(). This means BPF stack traces will
-now include PERF_CONTEXT_KERNEL/PERF_CONTEXT_USER marker values when they
-didn't before.
-
-The markers get added by __get_perf_callchain_kernel() and
-__get_perf_callchain_user() when ctx->add_mark is true. These markers are
-sentinel values (-128 for KERNEL, -512 for USER) that appear in the trace
-IP array alongside actual instruction pointers.
-
->
->  	if (unlikely(!trace))
->  		/* couldn't fetch the stack trace */
-> @@ -452,7 +452,7 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
->  		trace = get_callchain_entry_for_task(task, max_depth);
->  	else
->  		trace = get_perf_callchain(regs, kernel, user, max_depth,
-> -					   crosstask, false);
-> +					   crosstask);
-                                                   ^^^^^ same issue here
-
-Same problem in __bpf_get_stack() which was also passing add_mark=false.
-
-This changes BPF stack map behavior in user-visible ways:
-
-1) bpf_get_stackid() hashes the entire trace->ip[] array including any
-   markers, so identical stacks will now produce different stack IDs.
-
-2) bpf_get_stack() copies trace->ip[] directly to userspace buffers,
-   so BPF programs will see marker values mixed with instruction pointers.
-
-Can BPF tools handle these unexpected marker values? The commit message
-says "The next patch will modify the BPF part" but doesn't explain this
-intermediate behavior change.
-
-> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-> index 808c0d7a3..2c36e4906 100644
-> --- a/kernel/events/callchain.c
-> +++ b/kernel/events/callchain.c
-
-[ ... ]
-
->  struct perf_callchain_entry *
->  get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
-> -		   u32 max_stack, bool crosstask, bool add_mark)
-> +		   u32 max_stack, bool crosstask)
+On Tue, Oct 28, 2025 at 08:38:20AM -0700, Ian Rogers wrote:
+> Allow the number of threads for the thloop workload to be increased
+> beyond the normal 2. Add error checking to the parsed time and thread
+> count values.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+> v2: Perform the pthread_join unconditionally and ensure started
+>     threads terminate.
+> ---
+>  tools/perf/tests/workloads/thloop.c | 45 ++++++++++++++++++++++++-----
+>  1 file changed, 38 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/perf/tests/workloads/thloop.c b/tools/perf/tests/workloads/thloop.c
+> index 457b29f91c3e..bd8168f883fb 100644
+> --- a/tools/perf/tests/workloads/thloop.c
+> +++ b/tools/perf/tests/workloads/thloop.c
+> @@ -31,21 +31,52 @@ static void *thfunc(void *arg)
+>  
+>  static int thloop(int argc, const char **argv)
 >  {
->  	struct perf_callchain_entry *entry;
->  	struct perf_callchain_entry_ctx ctx;
-> -	int rctx, start_entry_idx;
-> +	int rctx;
->
->  	/* crosstask is not supported for user stacks */
->  	if (crosstask && user && !kernel)
-> @@ -232,34 +273,14 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
->  	if (!entry)
->  		return NULL;
->
-> -	ctx.entry		= entry;
-> -	ctx.max_stack		= max_stack;
-> -	ctx.nr			= entry->nr = 0;
-> -	ctx.contexts		= 0;
-> -	ctx.contexts_maxed	= false;
-> +	__init_perf_callchain_ctx(&ctx, entry, max_stack, true);
-                                                                ^^^^
-Here's where add_mark is hardcoded to true for all callers. The old code
-allowed callers to control this via parameter. BPF was passing false,
-perf_callchain() was passing true. Now both get true unconditionally.
+> -	int sec = 1;
+> -	pthread_t th;
+> +	int nt = 2, sec = 1, err = 1;
+> +	pthread_t *thread_list = NULL;
+>  
+>  	if (argc > 0)
+>  		sec = atoi(argv[0]);
+>  
+> +	if (sec <= 0) {
+> +		fprintf(stderr, "Error: seconds (%d) must be >= 1\n", sec);
+> +		return 1;
+> +	}
+> +
+> +	if (argc > 1)
+> +		nt = atoi(argv[1]);
+> +
+> +	if (nt <= 0) {
+> +		fprintf(stderr, "Error: thread count (%d) must be >= 1\n", nt);
+> +		return 1;
+> +	}
+> +
+>  	signal(SIGINT, sighandler);
+>  	signal(SIGALRM, sighandler);
+> -	alarm(sec);
+>  
+> -	pthread_create(&th, NULL, thfunc, test_loop);
+> -	test_loop();
+> -	pthread_join(th, NULL);
+> +	thread_list = calloc(nt, sizeof(pthread_t));
+> +	if (thread_list == NULL) {
+> +		fprintf(stderr, "Error: malloc failed for %d threads\n", nt);
+> +		goto out;
+> +	}
+> +	for (int i = 1; i < nt; i++) {
 
-[ ... ]
+Why do you start at 1? What goes in thread[0]? calloc() leaves it at
+NULL, then if you have two threads you'll allocate thread[1], i gets
+incremented, 2 < 2 fails, you get just one thread created, when two were
+asked?
 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 7541f6f85..eb0f11059 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -8218,7 +8218,7 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
->  		return &__empty_callchain;
->
->  	callchain = get_perf_callchain(regs, kernel, user,
-> -				       max_stack, crosstask, true);
-> +				       max_stack, crosstask);
->  	return callchain ?: &__empty_callchain;
+Oh, I see, you use the main thread to run, that test_loop() just before
+the err = 0, its just that you allocate thread[0] for nothing, that
+confused me.
+
+- Arnaldo
+
+> +		int ret = pthread_create(&thread_list[i], NULL, thfunc, test_loop);
+>  
+> -	return 0;
+> +		if (ret) {
+> +			fprintf(stderr, "Error: failed to create thread %d\n", i);
+> +			done = 1; // Ensure started threads terminate.
+> +			goto out;
+> +		}
+> +	}
+> +	alarm(sec);
+> +	test_loop();
+> +	err = 0;
+> +out:
+> +	for (int i = 1; i < nt; i++) {
+> +		if (thread_list && thread_list[i])
+> +			pthread_join(thread_list[i], /*retval=*/NULL);
+> +	}
+> +	free(thread_list);
+> +	return err;
 >  }
-
-
-```
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-In-Reply-To-Subject: `perf: Refactor get_perf_callchain`
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/18882141979
-
---===============9046533533940140989==--
+>  
+>  DEFINE_WORKLOAD(thloop);
+> -- 
+> 2.51.1.851.g4ebd6896fd-goog
