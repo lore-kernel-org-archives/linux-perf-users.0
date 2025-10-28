@@ -1,66 +1,66 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304D8260587
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 Oct 2025 10:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A524A3081B0
+	for <linux-perf-users@vger.kernel.org>; Tue, 28 Oct 2025 11:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761647621; cv=none; b=K+h93bmNRB3CUWYtNrpGNPaM/uMSqKMSnZTBVGNpN/mzE3CH6NGGoJjoh/GxoN5VTa9xaxvXF+zynawDXNp2M9gNHLYNmrpBggjCVguKCImyF/l4JHSyJD2GHlMI8mDQGWVpiZ6ZV27gglJTEWi5jfFs6AanfhSu4dsNKrLyenI=
+	t=1761651059; cv=none; b=OKGyJJmwisziRwPcMZptZdimCnGlfLqHOgO0c1wi9eeTiI+8s3h83EyZxxVG/PKnhJ4L+RJ74yF+uJQnNo/tjjJrWGZ040brFh4cI+wP/R8XCM3Dw1TSU6Y5aO07LGCwJBs3H4PiMhGYPtk9EakBSF4ezz7u6GGw8ddGRG3Sz74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761647621; c=relaxed/simple;
-	bh=jfnXEYrHXZSPtQmk7wsHM/xN8Pr2jjG6r0cZoWL4ZjM=;
+	s=arc-20240116; t=1761651059; c=relaxed/simple;
+	bh=8QU2GrBbd860WeDq06DbmVwU8RUw+T6KdFpwKfmYV9M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CfRD7NYIC19U5DZ7ibPKQ9CX8GhEwB4HacYggo0m3hvSs0Zn7HSnr9xRJDxet7akMZYxue8qLWfGRIOlErplmV6+YZalTRy3fUaqBexGcw020X1zjjlwITLh3+bVXYf7xZQt3C5iXkh2QERN1zeNb9a56hzWYaIgsan+n5kLnzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=R2rsvr3B; arc=none smtp.client-ip=209.85.221.44
+	 In-Reply-To:Content-Type; b=exrZr150wZpR2Gt1y5gWV3CSlPB3GqG6S1BD6LFBnVYcTDRFd6iNrn83e/P/aJGFrtMUGaR7vaqw7anq9ZJerYjQ8yJlVjW2/wyzWMHiKC6ZBQkYCqV/uXuK65VjMIQqDlQy+M+wMb5ZrtPRur04FgPU7o+kucuEE5BcnXQyAdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B++vlLdd; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R2rsvr3B"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3ecdf2b1751so4000575f8f.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Oct 2025 03:33:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B++vlLdd"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-4270a3464caso2883687f8f.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Oct 2025 04:30:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1761647617; x=1762252417; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1761651056; x=1762255856; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Cki6A/3DOrWXLjn1KekLtiW9w70bgZ5ARJRJ40RY+CQ=;
-        b=R2rsvr3Bzz1cqIbH0PZ1e2XYk9fJhp9wMrr6qhi/9EHg+PYBohD75vN3++yn5Eawpu
-         i3sCNE/yS066r4Ues3wKoIUNoG01I1/t4kWrfKIdeCGV0DM59NTiZ42wYP2DBE7OByLZ
-         C5mvcNoKOrqU8owjNclWFG7OSF1eyesZAIE3B5chHdEZV5lTcQK2t9mHo0T4hPMCjU14
-         cKVn5h4oaQffMkU6/8tUZ1EpZAsVF5W+L44KbNVZlCPqPAEgmf1QJZ5QpFPDcpTOFFc1
-         p/8XjdFI9M3kfLqpQ6JXJgPaJ3VSb/v1njbSzfwPxHQTfbuM6DjAk4k/PnUtnO2/PXmc
-         3kWA==
+        bh=sNOr8Q0SeNamqMGPBECAkcyAUl2z9vqdfxVAv1A4JW8=;
+        b=B++vlLddnHn4RV5mF6VOTson2mymWFnxn3Sod7WasWCts4rdBM8FKW2mIU49RKL2C8
+         bQEpqEPRR3UoayHpM7o97q50FZNNBiwjbkwyOquzTpA/YS2Megq0XGQY/D9XpSolJxYt
+         0psk9BlAJRgzIxf8K8kRjsUn+mpzzM4D21PhE+HACh7nk15Lb/0pt5+uR3mCsfzYRV+Y
+         DZklzMcOOsIkpNp8nddFCGvmBYDY+xjq++brOZ7IR8KebdQLNwUYsz/JJ1hn/lzjEo67
+         MHiz215oIRgMvQIIMwWM9W0PMmJtShFeqCPhV6VJwSJKFKM+1qEbEKGRxSQtlGjrTeEh
+         jFdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761647617; x=1762252417;
+        d=1e100.net; s=20230601; t=1761651056; x=1762255856;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cki6A/3DOrWXLjn1KekLtiW9w70bgZ5ARJRJ40RY+CQ=;
-        b=aPrnjrvXa7E3Hidys+OXEMg/YObnNcAt76oPhL3ng+E/7lxVM3G1hxXqB9Np53bd+Q
-         MT4cUDYWUd7purfylbJ+mPOedHuY7By5ISyVLs/Bq5akmH/v6NSkM5OlQ7GJlhq6skRY
-         vMwmyjpkaO1N2adSvnxktuGY/n6hNFA8k0OKap6LjsVp4bQQDPfHBEx34DHRBok9p9bM
-         HECFr8UKnMn4YiAHiqvB4XDjp9gwajJCGD9KjOppRNz0CooeLio8OjH9keZJyNjpPa2n
-         ZsNfuzBPZUS59A9qCgp2m+doTZQFbIl2Jr6yxr78NrfjWoQFL7bhUV90+TlcznJnaYKL
-         JyJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXx0QuoNWlF3bRsnWNU84atyPT0CO69OwaoicaLMnHhS8AJQn25ai2ifIuwqa04fIKcNmctGoMPVv4+lSY3KniB@vger.kernel.org
-X-Gm-Message-State: AOJu0YwY7pWs586+KkMvUORpBtaeskRtbxF9sLeKsxuPiSsUbdg3UIDH
-	3K9gyVnZgIHAqB/7O3LNZ6w46W11haYnxfIYrRFnYm2G1zHbVSWk4G5ZRjBqLBLPti8=
-X-Gm-Gg: ASbGnctvpn2MqJMv34ZvWbhgl2HFIHyeHjvSfpvQqmCjnCPkRx5c9EyaQKF55lGgTrf
-	tSei6KQXF79u/VSJhGe2KTVFpM2d27Toj6T2Tex9cCFDhiIgZt1LCtNQMhpEKGEj18T3nbKCdiq
-	E9dQ6zwLQ7kLC8+eCGxVsAqgbT9XfZvFdFlYd8z+IlLdLlZT5g0T2YTtnfut2KgThyMTOyK6zxV
-	+BPcAkurdqpDjYd+1mcDWKsScwsp13b/g4x8gMA08KAdiff5H03BKlJ7ZpJ5G4qpHIndma9D1cT
-	cdkt0O+K583wYLkBxoV+MdZzsIyLtd0zB/dw08OpBoRTujkv931s9L1buflRToNkyROzdvO4Rcr
-	a/sH/sLiyC7yDs/zfcbBdK32dzrISY3VKgFJsJBZeY03sSv8iWJDRXLTl7DgqkhIi/wqf/VYQ6P
-	TFzjgxmw==
-X-Google-Smtp-Source: AGHT+IFCUgcaVi5csDzOmM6gRSPXUaNzMWqWGnHVf7wRbZPsIEmEq7Xm+UHnjx1AZJXjLSFKzZVqnA==
-X-Received: by 2002:a05:6000:2c13:b0:427:167:c2c3 with SMTP id ffacd0b85a97d-429a7e9327amr2062485f8f.48.1761647617367;
-        Tue, 28 Oct 2025 03:33:37 -0700 (PDT)
+        bh=sNOr8Q0SeNamqMGPBECAkcyAUl2z9vqdfxVAv1A4JW8=;
+        b=oz4vTN3DVPXGl3jcNpFOiDqGvAD9RYionctM5TiLPEh7UaCY5iEvBIextCQOMWFnmk
+         2p/2MNEt86Aa64jWnhfUvtgrGhwMFzo+BJIN3Eu9jOSqUW9It94DQx1BE/s3Y+lxiNUC
+         dBmJ1iOUUBfyLXptMtiXi7UhDbBc1sIXgcn9QEXMRdsR+DmY04FzL/L9O43Y7mjk3nli
+         IoSXlmx3Ji52YZ/F78DKHcJ01ByAn5jplxWEM+x01GksBCNNsKfliUWBE4bL+JczPKaS
+         MoKovTF3ocnPLIqoT3Y4M/+wamHVci7jQ9WMLUJOyZ6DqRbGb/obFY8aoCcbiVc0JoTe
+         9zyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXf63b/sZb3LGLzW7VyCW6PHV8D/tK0lSjgwuYvrjv9OGne0u3v0xA7vGP/yWAgsGmgUL1SCYLLwCncSdy6jCrK@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKulbNWwo2rUXAOqZ91rauoLdUU20rv1aW3YBzxHlox8vDoye9
+	38rNle26jMhE5U9M7xcA70xwf/x/muy7WxczdDn0R3bpmvSjq5z35H30BPXeijnbw0Y=
+X-Gm-Gg: ASbGncsLJrJ6czPdfTHU34cC4yjUkWI4D1MVdJ6FwIffnbw3AHo1Yu8+nIT2gzhIBZW
+	e5S8exC3aZH9Gd/ECQ7jwK+sIR+u+zT1OcA4KYxB2a0HHMcW7V/cUZBKlKmjm+rpvg9+ks8OYBF
+	vUhTU6L1bsN5WPnLUJIH+3tm80jrgcM/sGlkBv+Aee4bajs0vn4YP5iSszG1Mb2Bi+69l+6AU0v
+	6WUTNCtLujmlRH+0+VKtkHImyQx+5f0pGWLOdCd86MH/wHT8rJWy4HDgufYjmlWV559T/P6Zeva
+	DQ0+Kp57WOxH6XkgqdpUl8Ds0Y6jRQJggTFhtfsHwoDjsDZxJTX0V3tA/AbYluA4Q8DrjLGqu4c
+	+1zg+gvlVM9EpcOpn3MYwy8+SttGZ9hhkPpfiIFG3JooQwA6F5cICRVlDCxDQqHDogVGu20Yxzl
+	/riP0s3g==
+X-Google-Smtp-Source: AGHT+IHazDrvQ/kry22rCs2Cj3yRv1v3osQoKSlqpMuRhihPgjCbeUfSfLF9kLe+8/16GB53Eeu5fg==
+X-Received: by 2002:a5d:64c6:0:b0:428:3cd7:a340 with SMTP id ffacd0b85a97d-429a7e760bdmr2772053f8f.35.1761651055853;
+        Tue, 28 Oct 2025 04:30:55 -0700 (PDT)
 Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429952b7a94sm22789655f8f.5.2025.10.28.03.33.36
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429952d5678sm19629706f8f.22.2025.10.28.04.30.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Oct 2025 03:33:36 -0700 (PDT)
-Message-ID: <17f00d4d-5cbf-4c9c-a51a-f0ae34f181cf@linaro.org>
-Date: Tue, 28 Oct 2025 10:33:35 +0000
+        Tue, 28 Oct 2025 04:30:55 -0700 (PDT)
+Message-ID: <f674d1eb-c492-4dec-a49c-8b40833741a4@linaro.org>
+Date: Tue, 28 Oct 2025 11:30:53 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,205 +68,257 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf dsos: Don't block when reading build IDs
-To: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20251022-james-perf-fix-dso-block-v1-1-c4faab150546@linaro.org>
- <CAP-5=fUF8C=yFkPb_ohJVzX01PvS5n++yZZifWSV-4sMNKZAZA@mail.gmail.com>
- <aP1kSdZJKYIpnRia@google.com>
- <CAP-5=fUiO1uypnsw=G-FFj0xE=uCowG5FetaC9JGygOxybuGGA@mail.gmail.com>
+Subject: Re: [PATCH] Revert "perf test: Allow tolerance for leader sampling
+ test"
+To: Anubhav Shelat <ashelat@redhat.com>,
+ Thomas Richter <tmricht@linux.ibm.com>
+Cc: mpetlan@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ irogers@google.com, linux-perf-users@vger.kernel.org, peterz@infradead.org,
+ mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+ jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ dapeng1.mi@linux.intel.com
+References: <20251023132406.78359-2-ashelat@redhat.com>
+ <5b02372a-f0be-4d3a-a875-c5ea65f2bafe@linux.ibm.com>
+ <CA+G8Dh+DaVp1XVHm=Hh1aLP=5YOmChTRu4=nSUAwTKJO-a4LDw@mail.gmail.com>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <CAP-5=fUiO1uypnsw=G-FFj0xE=uCowG5FetaC9JGygOxybuGGA@mail.gmail.com>
+In-Reply-To: <CA+G8Dh+DaVp1XVHm=Hh1aLP=5YOmChTRu4=nSUAwTKJO-a4LDw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
 
-On 26/10/2025 4:52 am, Ian Rogers wrote:
-> On Sat, Oct 25, 2025 at 4:59 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On 24/10/2025 6:21 pm, Anubhav Shelat wrote:
+> The issue on arm is similar. Failing about half the time, with 1
+> failing case. So maybe the same issue on arm.
+> 
+> Anubhav
+> 
+
+You mentioned on the other thread that it's failing "differently", can 
+you expand on that? I'm wondering why you sent the revert patch then?
+
+As I mentioned before I'm not seeing any issues. Can you share the 
+kernel version that you tested on and your kernel config? And can you 
+share the same outputs that I asked Thomas for below please.
+
+> On Fri, Oct 24, 2025 at 9:40 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
 >>
->> Hello,
->>
->> On Fri, Oct 24, 2025 at 11:26:18AM -0700, Ian Rogers wrote:
->>> On Wed, Oct 22, 2025 at 8:46 AM James Clark <james.clark@linaro.org> wrote:
->>>>
->>>> The following command will hang consistently when the GPU is being used
->>>> due to non regular files (e.g. /dev/dri/renderD129, /dev/dri/card2)
->>>> being opened to read build IDs:
->>>>
->>>>   $ perf record -asdg -e cpu-clock -- true
->>>>
->>>> Change to non blocking reads to avoid the hang here:
->>>>
->>>>    #0  __libc_pread64 (offset=<optimised out>, count=0, buf=0x7fffffffa4a0, fd=237) at ../sysdeps/unix/sysv/linux/pread64.c:25
->>>>    #1  __libc_pread64 (fd=237, buf=0x7fffffffa4a0, count=0, offset=0) at ../sysdeps/unix/sysv/linux/pread64.c:23
->>>>    #2  ?? () from /lib/x86_64-linux-gnu/libelf.so.1
->>>>    #3  read_build_id (filename=0x5555562df333 "/dev/dri/card2", bid=0x7fffffffb680, block=true) at util/symbol-elf.c:880
->>>>    #4  filename__read_build_id (filename=0x5555562df333 "/dev/dri/card2", bid=0x7fffffffb680, block=true) at util/symbol-elf.c:924
->>>>    #5  dsos__read_build_ids_cb (dso=0x5555562df1d0, data=0x7fffffffb750) at util/dsos.c:84
->>>>    #6  __dsos__for_each_dso (dsos=0x55555623de68, cb=0x5555557e7030 <dsos__read_build_ids_cb>, data=0x7fffffffb750) at util/dsos.c:59
->>>>    #7  dsos__for_each_dso (dsos=0x55555623de68, cb=0x5555557e7030 <dsos__read_build_ids_cb>, data=0x7fffffffb750) at util/dsos.c:503
->>>>    #8  dsos__read_build_ids (dsos=0x55555623de68, with_hits=true) at util/dsos.c:107
->>>>    #9  machine__read_build_ids (machine=0x55555623da58, with_hits=true) at util/build-id.c:950
->>>>    #10 perf_session__read_build_ids (session=0x55555623d840, with_hits=true) at util/build-id.c:956
->>>>    #11 write_build_id (ff=0x7fffffffb958, evlist=0x5555562323d0) at util/header.c:327
->>>>    #12 do_write_feat (ff=0x7fffffffb958, type=2, p=0x7fffffffb950, evlist=0x5555562323d0, fc=0x0) at util/header.c:3588
->>>>    #13 perf_header__adds_write (header=0x55555623d840, evlist=0x5555562323d0, fd=3, fc=0x0) at util/header.c:3632
->>>>    #14 perf_session__do_write_header (session=0x55555623d840, evlist=0x5555562323d0, fd=3, at_exit=true, fc=0x0, write_attrs_after_data=false) at util/header.c:3756
->>>>    #15 perf_session__write_header (session=0x55555623d840, evlist=0x5555562323d0, fd=3, at_exit=true) at util/header.c:3796
->>>>    #16 record__finish_output (rec=0x5555561838d8 <record>) at builtin-record.c:1899
->>>>    #17 __cmd_record (rec=0x5555561838d8 <record>, argc=2, argv=0x7fffffffe320) at builtin-record.c:2967
->>>>    #18 cmd_record (argc=2, argv=0x7fffffffe320) at builtin-record.c:4453
->>>>    #19 run_builtin (p=0x55555618cbb0 <commands+288>, argc=9, argv=0x7fffffffe320) at perf.c:349
->>>>    #20 handle_internal_command (argc=9, argv=0x7fffffffe320) at perf.c:401
->>>>    #21 run_argv (argcp=0x7fffffffe16c, argv=0x7fffffffe160) at perf.c:445
->>>>    #22 main (argc=9, argv=0x7fffffffe320) at perf.c:553
->>>>
->>>> Fixes: 53b00ff358dc ("perf record: Make --buildid-mmap the default")
->>>> Signed-off-by: James Clark <james.clark@linaro.org>
->>>> ---
->>>> I'm not actually sure if this is the right fix for this. Commit
->>>> 2c369d91d093 ("perf symbol: Add blocking argument to
->>>> filename__read_build_id") which added the blocking argument says that it
->>>> should be non-blocking reads for event synthesis, but the callstack here
->>>> is when writing the header out.
->>>>
->>>> There was also an is_regular_file() check added in commit c21986d33d6b
->>>> ("perf unwind-libdw: skip non-regular files"), which presumably falls
->>>> afoul of the "which unfortunately fails for symlinks" part of the other
->>>> linked commit message?
->>>>
->>>> So I can't tell if we should add the is_regular_file() check here too,
->>>> or just set it to non-blocking, or it needs some extra state to be
->>>> passed all the way down to dsos__read_build_ids_cb() to do different
->>>> things.
+>> On 10/23/25 15:24, Anubhav Shelat wrote:
+>>> This reverts commit 1c5721ca89a1c8ae71082d3a102b39fd1ec0a205.
 >>>
->>> The fix lgtm but I worry about making all the build ID reading
->>> non-blocking meaning build IDs getting lost.
+>>> The throttling bug has been fixed in 9734e25fbf5a perf: Fix the throttle
+>>> logic for a group. So this commit can be reverted.
+>>>
+>>> Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+>>> ---
+>>>   tools/perf/tests/shell/record.sh | 33 ++++++--------------------------
+>>>   1 file changed, 6 insertions(+), 27 deletions(-)
+>>>
+>>> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+>>> index 0f5841c479e7..13e0d6ef66c9 100755
+>>> --- a/tools/perf/tests/shell/record.sh
+>>> +++ b/tools/perf/tests/shell/record.sh
+>>> @@ -267,43 +267,22 @@ test_leader_sampling() {
+>>>       err=1
+>>>       return
+>>>     fi
+>>> -  perf script -i "${perfdata}" | grep brstack > $script_output
+>>> -  # Check if the two instruction counts are equal in each record.
+>>> -  # However, the throttling code doesn't consider event grouping. During throttling, only the
+>>> -  # leader is stopped, causing the slave's counts significantly higher. To temporarily solve this,
+>>> -  # let's set the tolerance rate to 80%.
+>>> -  # TODO: Revert the code for tolerance once the throttling mechanism is fixed.
+>>>     index=0
+>>> -  valid_counts=0
+>>> -  invalid_counts=0
+>>> -  tolerance_rate=0.8
+>>> +  perf script -i "${perfdata}" | grep brstack > "${script_output}"
+>>>     while IFS= read -r line
+>>>     do
+>>> +    # Check if the two instruction counts are equal in each record
+>>>       cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
+>>>       if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
+>>>       then
+>>> -      invalid_counts=$(($invalid_counts+1))
+>>> -    else
+>>> -      valid_counts=$(($valid_counts+1))
+>>> +      echo "Leader sampling [Failed inconsistent cycles count]"
+>>> +      err=1
+>>> +      return
+>>>       fi
+>>>       index=$(($index+1))
+>>>       prev_cycles=$cycles
+>>>     done < "${script_output}"
+>>> -  total_counts=$(bc <<< "$invalid_counts+$valid_counts")
+>>> -  if (( $(bc <<< "$total_counts <= 0") ))
+>>> -  then
+>>> -    echo "Leader sampling [No sample generated]"
+>>> -    err=1
+>>> -    return
+>>> -  fi
+>>> -  isok=$(bc <<< "scale=2; if (($invalid_counts/$total_counts) < (1-$tolerance_rate)) { 0 } else { 1 };")
+>>> -  if [ $isok -eq 1 ]
+>>> -  then
+>>> -     echo "Leader sampling [Failed inconsistent cycles count]"
+>>> -     err=1
+>>> -  else
+>>> -    echo "Basic leader sampling test [Success]"
+>>> -  fi
+>>> +  echo "Basic leader sampling test [Success]"
+>>>   }
+>>>
+>>>   test_topdown_leader_sampling() {
 >>
->> I'm not sure what non-blocking means for regular file system operations
->> on a block device.  But it may have some impact on regular files on a
->> network filesystem.
+>> I disagree here. Reverting this patch cause the test case to fail very often on s390.
+>> The test fails about every 2nd run, because the is one run-away value out of many.
+>> Here is an example:
 
-It depends on the filesystem, but I think the assurances given by 
-O_NONBLOCK are very weak anyway. It can be practically ignored or do 
-different things in different situations. Especially as we don't handle 
-EAGAIN or do anything fancy we shouldn't use it.
+I suppose that depends on what the reason for the failure is. I don't 
+think we've gotten to the bottom of that yet. It's ok to have a test 
+failure if the actual behaviour doesn't match the intented behaviour.
 
-For our case it looks like we should always do blocking reads but make 
-sure to not open a non-regular file.
+At the moment it looks like we're trying to hide some defect with a 
+tolerance value. This makes the test less useful, and it also wastes 
+developer time when the tolerance value will inevitably be increased and 
+increased with more and more investigations until it tests nothing. Not 
+having any tolerance to begin with will make this less likely to happen.
 
-> 
-> Agreed. Prior to using blocking we tried to imply from the file type
-> from stat, but that skipped things like symlinks :-/
-> 
+>>
+>> # ./perf record -e "{cycles,cycles}:Su" -- perf test -w brstack
+>> [ perf record: Woken up 2 times to write data ]
+>> [ perf record: Captured and wrote 0.015 MB perf.data (74 samples) ]
+>> [root@b83lp65 perf]# perf script | grep brstack
+>>              perf  136408 340637.903395:    1377000 cycles:           1171606 brstack_foo+0x1e (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.903396:    1377000 cycles:           1171664 brstack_bench+0x24 (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.903396:    1377000 cycles:           11716d4 brstack_bench+0x94 (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.903397:    1377000 cycles:           11716d4 brstack_bench+0x94 (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.903398:    1377000 cycles:           11716e8 brstack_bench+0xa8 (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.903398:    1377000 cycles:           1171606 brstack_foo+0x1e (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.903399:    1377000 cycles:           11715cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910844:    1377000 cycles:           11716e4 brstack_bench+0xa4 (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910844:   39843371 cycles:           11716e4 brstack_bench+0xa4 (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910845:    1377000 cycles:           1171632 brstack_foo+0x4a (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910846:    1377000 cycles:           1171692 brstack_bench+0x52 (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910847:    1377000 cycles:           11716ee brstack_bench+0xae (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910847:    1377000 cycles:           11715cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910848:    1377000 cycles:           1171598 brstack_bar+0x0 (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910848:    1377000 cycles:           11715e8 brstack_foo+0x0 (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910849:    1377000 cycles:           11717ae brstack+0x86 (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910850:    1377000 cycles:           11715cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910850:    1377000 cycles:           11716ee brstack_bench+0xae (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910851:    1377000 cycles:           11716ee brstack_bench+0xae (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910851:    1377000 cycles:           117159e brstack_bar+0x6 (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910852:    1377000 cycles:           1171598 brstack_bar+0x0 (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910853:    1377000 cycles:           117179e brstack+0x76 (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910853:    1377000 cycles:           1171606 brstack_foo+0x1e (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910854:    1377000 cycles:           11716d4 brstack_bench+0x94 (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910855:    1377000 cycles:           1171612 brstack_foo+0x2a (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910855:    1377000 cycles:           11715cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910856:    1377000 cycles:           1171598 brstack_bar+0x0 (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910856:    1377000 cycles:           11715cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
+>>              perf  136408 340637.910857:    1377000 cycles:           1171632 brstack_foo+0x4a (/root/linux/tools/perf/perf)
+>> .... many more lines with identical cycles value.
+>>
+>> I have contacted our hardware/firmware team, but have not gotten a response back.
+>> I still think this has to do with s390 LPAR running under hyperviser control and I do not know what
+>> happens when the hipervisor kicks in.
+>>
+>> I agree with James Clark that this should be handled transperently by the hipervisor, that means
+>> stopping the LPAR should stop the CPU measurement unit, before giving control to a different lpar.
+>>
+>> But what happens when the hipervisor just kicks in and returns to the same LPAR again? Or does
+>> some admin work on behalf of this LPAR. As long as I can not answer this question, I would like
+>> to keep some ratio to handle run-away values.
+>>
+>> As said before, this happens in roughly 50% of the runs...
+>>
+>> Here is a run where the test succeeds without a run-away value:
+>>
+>> # ./perf record -e "{cycles,cycles}:Su" -- perf test -w brstack
+>> [ perf record: Woken up 1 times to write data ]
+>> [ perf record: Captured and wrote 0.015 MB perf.data (70 samples) ]
+>> # perf script | grep brstack
+>>              perf  136455 341212.430466:    1377000 cycles:           117159e brstack_bar+0x6 (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430467:    1377000 cycles:           11715cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430468:    1377000 cycles:           1171612 brstack_foo+0x2a (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430468:    1377000 cycles:           1171656 brstack_bench+0x16 (/root/linux/tools/perf/perf)
 
-Am I missing something here? is_regular_file() uses stat() which returns 
-info about the target file, rather than the symlink, so they wouldn't be 
-skipped. lstat() is the one that returns info about the link file.
+I'm a bit confused how the instruction pointers and timestamps are 
+different. Shouldn't the counters be part of a single sample?
 
-I tested is_regular_file() with links, links to links, pipes, files and 
-devices and it works as expected and would avoid the need to use O_NONBLOCK.
+Which kernel version is this exactly?
+
+Can you skip the grep, we only care about the samples and not what 
+process it happened to be in so that might be hiding something. And can 
+you share the raw dump of a sample (perf report -D). One sample that has 
+the matching counts and one that doesn't.
+
+Mine look like this, although I can't share one that doesn't match 
+because I can't reproduce it:
+
+0 1381669508860 0x24b20 [0x70]: PERF_RECORD_SAMPLE(IP, 0x2): 1136/1136: 
+0xaaaac8f51588 period: 414710 addr: 0
+... sample_read:
+.... group nr 2
+..... id 0000000000000336, value 00000000000f38f0, lost 0
+..... id 0000000000000337, value 00000000000f38f0, lost 0
+  ... thread: stress:1136
+  ...... dso: /usr/bin/stress
+  ... thread: stress:1136
+  ...... dso: /usr/bin/stress
+
+
+>>              perf  136455 341212.430469:    1377000 cycles:           11716ee brstack_bench+0xae (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430469:    1377000 cycles:           11715cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430470:    1377000 cycles:           11715e8 brstack_foo+0x0 (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430471:    1377000 cycles:           11716c6 brstack_bench+0x86 (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430471:    1377000 cycles:           1171622 brstack_foo+0x3a (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430472:    1377000 cycles:           11715cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430472:    1377000 cycles:           1171692 brstack_bench+0x52 (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430473:    1377000 cycles:           117170c brstack_bench+0xcc (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430474:    1377000 cycles:           11716e4 brstack_bench+0xa4 (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430474:    1377000 cycles:           117169a brstack_bench+0x5a (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430475:    1377000 cycles:           11715cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430475:    1377000 cycles:           11715cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430476:    1377000 cycles:           11716e4 brstack_bench+0xa4 (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430476:    1377000 cycles:           11715cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430477:    1377000 cycles:           11715e8 brstack_foo+0x0 (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430478:    1377000 cycles:           117170c brstack_bench+0xcc (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430478:    1377000 cycles:           117170c brstack_bench+0xcc (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430479:    1377000 cycles:           11716ee brstack_bench+0xae (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430479:    1377000 cycles:           1171598 brstack_bar+0x0 (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430480:    1377000 cycles:           11715cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430481:    1377000 cycles:           11715fc brstack_foo+0x14 (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430481:    1377000 cycles:           11715cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430482:    1377000 cycles:           11716ee brstack_bench+0xae (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430482:    1377000 cycles:           1171664 brstack_bench+0x24 (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430483:    1377000 cycles:           117170c brstack_bench+0xcc (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430484:    1377000 cycles:           117170c brstack_bench+0xcc (/root/linux/tools/perf/perf)
+>>              perf  136455 341212.430484:    1377000 cycles:           11715cc brstack_bar+0x34 (/root/linux/tools/perf/perf)
+>> #
+>>
+>> So please let this code in otherwise we need an s390 specific check for success.
+
+This might be an option if there is something in the hardware that 
+prevents the counts from being the same. But because they are the same 
+99% of the time it seems like it has the capability and it's just a bug 
+somewhere.
 
 James
 
->>> It seems that generating
->>> the build ID feature table is unnecessary if we have build ID mmap
->>> events, including synthesized ones that will have read the build IDs.
->>> I wonder if a better "fix" is:
->>> ```
->>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
->>> index cb52aea9607d..15f75c70eb76 100644
->>> --- a/tools/perf/builtin-record.c
->>> +++ b/tools/perf/builtin-record.c
->>> @@ -1842,7 +1842,7 @@ static void record__init_features(struct record *rec)
->>>         for (feat = HEADER_FIRST_FEATURE; feat < HEADER_LAST_FEATURE; feat++)
->>>                 perf_header__set_feat(&session->header, feat);
->>>
->>> -       if (rec->no_buildid)
->>> +       if (rec->no_buildid || rec->buildid_mmap)
->>>                 perf_header__clear_feat(&session->header, HEADER_BUILD_ID);
->>>
->>>         if (!have_tracepoints(&rec->evlist->core.entries))
->>> ```
->>> that should disable the build ID feature table generation when build
->>> ID mmaps are in use (the default). Having the build IDs twice in the
->>> data file feels redundant. Or we could do your fix or both, wdyt?
 >>
->> I'm ok to remove the header feature but I think it should update
->> build-ID cache even with this change.
-> 
-> Yeah, dropping the feature writing also impacts updating the build ID
-> cache because:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/header.c?h=perf-tools-next#n338
-> It is kind of strange that writing a header feature does this. What if
-> I want to write a header with build IDs but not update the cache? It'd
-> make more sense, I think, for perf_session__cache_build_ids to be
-> called explicitly. There is also the global no_buildid_cache
-> controlling behavior:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/build-id.c?h=perf-tools-next#n43
-> But that's kind of a hack as we may have >1 session such as with TPEBS.
-> 
->> I'm also curious if the device has samples actually.  It should be
->> checked by dso->hit.
-> 
-> In this case the header writing is happening after the samples have
-> been processed, but it looks like marking of samples doesn't consider
-> data addresses:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/build-id.c?h=perf-tools-next#n55
-> just sample->ip and the callchain. If the marking was updated for data
-> pages then just writing build IDs for marked dsos would make sense.
-> There could be callers not marking dsos so they'd need altering, or
-> two versions of the code.
-> 
-> Thanks,
-> Ian
-> 
->> Thanks,
->> Namhyung
+>> Thanks a lot
+>> --
+>> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+>> --
+>> IBM Deutschland Research & Development GmbH
 >>
->>>
->>> Thanks,
->>> Ian
->>>
->>>> ---
->>>>   tools/perf/util/dsos.c | 5 +++--
->>>>   1 file changed, 3 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
->>>> index 64c1d65b0149..5e1c815d7cb0 100644
->>>> --- a/tools/perf/util/dsos.c
->>>> +++ b/tools/perf/util/dsos.c
->>>> @@ -81,13 +81,14 @@ static int dsos__read_build_ids_cb(struct dso *dso, void *data)
->>>>                  return 0;
->>>>          }
->>>>          nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
->>>> -       if (filename__read_build_id(dso__long_name(dso), &bid, /*block=*/true) > 0) {
->>>> +       /* Don't block in case path isn't for a regular file. */
->>>> +       if (filename__read_build_id(dso__long_name(dso), &bid, /*block=*/false) > 0) {
->>>>                  dso__set_build_id(dso, &bid);
->>>>                  args->have_build_id = true;
->>>>          } else if (errno == ENOENT && dso__nsinfo(dso)) {
->>>>                  char *new_name = dso__filename_with_chroot(dso, dso__long_name(dso));
->>>>
->>>> -               if (new_name && filename__read_build_id(new_name, &bid, /*block=*/true) > 0) {
->>>> +               if (new_name && filename__read_build_id(new_name, &bid, /*block=*/false) > 0) {
->>>>                          dso__set_build_id(dso, &bid);
->>>>                          args->have_build_id = true;
->>>>                  }
->>>>
->>>> ---
->>>> base-commit: a1d8548c23076c66d96647f5f6f25aa43567f247
->>>> change-id: 20251022-james-perf-fix-dso-block-ca1d8437bbc0
->>>>
->>>> Best regards,
->>>> --
->>>> James Clark <james.clark@linaro.org>
->>>>
+>> Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+>>
+>> Geschäftsführung: David Faller
+>>
+>> Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+>>
+> 
 
