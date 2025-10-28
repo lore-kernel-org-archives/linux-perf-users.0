@@ -1,155 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outbound.ms.icloud.com (p-west3-cluster4-host4-snip4-6.eps.apple.com [57.103.74.167])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36211662E7;
-	Tue, 28 Oct 2025 01:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A911E32CF
+	for <linux-perf-users@vger.kernel.org>; Tue, 28 Oct 2025 04:00:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.74.167
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761616556; cv=none; b=YFa57RKFoTdmsyeBaMFZOqqRsULOrFrESuPDVb32seFtv6X3Bl1aFIohRelljloBpNW/zRZD62+NB9CPHuARB7v1x3QYJuU29iXEt/6hihZs8+EVIAGfm73sQA1C5mCYkublunJf9/U0eEZtapp65lsEclqSwThhBVwYFTKjNoY=
+	t=1761624053; cv=none; b=kU28sXl1L+eNPZwK2f5hSjfWVRUjXcGKYNnbm7ehMhKOwua2YVk37Xa6yvG6MiHbAXjcqDym08Ww5m5DCSb+JwZZSGtPShxeiztxR9Uw76rX5z6li8r8PQ1hL9r/8nonXoMdMH+pqvPx8DcFz5l0vGPu+DNVdH47mfwZF+BUUAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761616556; c=relaxed/simple;
-	bh=6IlL0RD/b1cmQ2o28E1LFzW/+KMUWhpSmqh1P0RR74k=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=sHEf8SKDY4L/8SrYQ164Ic25dapc1c0U/+29Xc+fM0EP7bt5L1QLlUzVNPRX35hZrU6dr7+0fd5jtTGPTNbfFFwWDaLkfrRFvb4l/gNvvYnT4urhSZnhK/yj384cZEMCrvLRncPW78gyZ5qFITbdf2UBZeWX3CuRmPiNX23Z+Ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jdza6PTp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761624053; c=relaxed/simple;
+	bh=QgTCoX8qo/SLFHQ2dG8+BUWQyjIhaj/HhIl7y6MNAAk=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=unarRtHF3q8n9RRexqRSoh2DZxJwEkV0Xewx44tZe23J5xG4G/8K1pcaJZefFgh5j9g0kQ+Z6AvrA7Gq3ExBm/s+mYLygRSTUCOr9vwGzjvcNe9qgD/W25m3VPT95jp8vn9nXPoEDZJnW8Zf2yuNQcLrgUPo324v0jUtu2Kknnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=FNXgeylu; arc=none smtp.client-ip=57.103.74.167
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jdza6PTp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B62A1C4CEF1;
-	Tue, 28 Oct 2025 01:55:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761616556;
-	bh=6IlL0RD/b1cmQ2o28E1LFzW/+KMUWhpSmqh1P0RR74k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jdza6PTpVIv54MadO3APb4bau5qFddYhcpvXjSTnjv2TfyE08Z4O4glutGY6oaVhu
-	 nYR75QQXC3SO8VyxMdcwoAVaMYw8Xy0BUdy3xJCg64/2eBMukdCrYKZS6TtEKR2ChL
-	 vK6A0SuB/mo+5xJJ3XLIYsS+pZRZJ0Abcr6Ni1a6iO1CXyo7+YarkUnsfxILXhESBQ
-	 qxbWXagybJU32oddPCU3AnViWYCTgv6gDWtsfwN0AqpXQwRHEO+9YyEUqA2nDm/xxy
-	 Vfju0PPjbRwyhvg21/4c5JIrFUZoBKyycNEa44C5NEQq7MuSbeO1+/2kWuELXZDfVL
-	 TJcr1Hh5zEHlA==
-Date: Tue, 28 Oct 2025 10:55:49 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- x86@kernel.org, Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v5 6/8] selftests: tracing: Add a basic testcase for
- wprobe
-Message-Id: <20251028105549.ae94e8eeb42f4efc183d2807@kernel.org>
-In-Reply-To: <20251028084222.a3c1ae97d125d9bd88fc565b@kernel.org>
-References: <175859019940.374439.7398451124225791618.stgit@devnote2>
-	<175859026716.374439.14852239332989324292.stgit@devnote2>
-	<aPvwGhMBJqMKcC9D@finisterre.sirena.org.uk>
-	<20251027224347.4c887cc956df63602f377550@kernel.org>
-	<20251028084222.a3c1ae97d125d9bd88fc565b@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="FNXgeylu"
+Received: from outbound.ms.icloud.com (unknown [127.0.0.2])
+	by p00-icloudmta-asmtp-us-west-3a-60-percent-7 (Postfix) with ESMTPS id 71D261800135;
+	Tue, 28 Oct 2025 04:00:47 +0000 (UTC)
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com; s=1a1hai; bh=XiKJhFcVH3GBeZzyLQX9HZdUzIp8uSwZB2eZvvT/sSk=; h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version:x-icloud-hme; b=FNXgeylunTt9jK0P2M0it3dMvrLXHyI25HfKp5rICPOjjmM0wufvRH/U5SsgfRjsrFxtvi47VmrofpXrva/nJ+Y6KhFdeztNWghiVkf19YUDhYyA6tbVC6EP0tDL+x9Y1Pg0u85qWBBP8l67yl+GaWbvxgxqxnE5FlajywsR8884OOYc1fCv4bDpwL/2OHxW3yahyAXtMy90PO696C6neByquoxryGPkA2ieXLqp5KWbR63APXSOK1G+RscmEK6jSiABTUh3KjMRdqQjjDzmbI3wgrVNvaIOvJlTm6so2i/z4fSQPHOVl77yxpcVnCs0S/sZeVWa9BW+BarD6Cqmpw==
+Received: from [192.168.4.116] (unknown [17.57.154.37])
+	by p00-icloudmta-asmtp-us-west-3a-60-percent-7 (Postfix) with ESMTPSA id 35A1D1800122;
+	Tue, 28 Oct 2025 04:00:45 +0000 (UTC)
+Message-ID: <6b7c6221032fe9ca888d9905479d0bd502f583f7.camel@icloud.com>
+Subject: [PATCH 1/3] perf trace: Fix filter expansion length typo
+From: Zoe Gates <zoe.blair.gates@icloud.com>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org
+Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+ jolsa@kernel.org, 	irogers@google.com, adrian.hunter@intel.com,
+ zoe@zeocities.dev, 	yujie.liu@intel.com, sandipan.das@amd.com,
+ leo.yan@arm.com, 	linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Date: Mon, 27 Oct 2025 23:00:33 -0500
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.1 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-Proofpoint-ORIG-GUID: WPGfsYmprXv-07iSOgifEUNSLsakzONp
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDI4MDAzMyBTYWx0ZWRfXzuFq2uqQ87Ar
+ CcfFup3OpQvNTdErZjXh8aav7njV91dyfhIckKXGVkGbiIVebyyaKGBRHZ2x99vlhL8DLj3RLV/
+ gAs1mtYwzesRhkw6sg5OV9YL25Fa4jpHmDKo5TD+V5AKurPsF3sTY/21VgGN/ykGzu8Ek5aDDG6
+ yXFzH3YlqcQk5xm2YqMYxXESjTSiyhr0mvZLSBTpcxOBEH+NBk19PtpbXEhu9HNoxlHksrvsd3S
+ V7ND1ok7VVASoclLkY/gpTONxDIqpnNO2KseT8tUKyHHmWG4F0x3BRRAI/2HNPZzPpHq5kyco=
+X-Proofpoint-GUID: WPGfsYmprXv-07iSOgifEUNSLsakzONp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-28_02,2025-10-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0
+ phishscore=0 adultscore=0 bulkscore=0 suspectscore=0 clxscore=1015 mlxscore=0
+ spamscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.22.0-2506270000 definitions=main-2510280033
+X-JNJ: AAAAAAABrRe3sbH4g6hZZm1ptChxtS25a0jbrbm/bKjXZQXPs0yXNerFrJcNbNRDIDTR24w2AwE5qlL6dAb+y5Q3CE3iUv3bXzYxlso+30YQ94O+hbdQxhzkiQ041uAfc64C6sjd/M1W8JMGPl336rAxJPyiqh8bt58U123OWx9t60Co3+69rfervJPa+kadI70HRtBNIRRkNUCve5mpjskJBvWVuKqiQHR0QOzWRpPfPuebRPfkKwxWK4Gp8GSqr0nlllEXBQ5imPBzqgYevopmXYD0kIM68c8Wh70UgrwW9L4LoUYzVIdY2Lmru6TLwAf4V3DgTncNMazzSTjFjGHvlbEY9HXXBSFrGSzQrWLo61uSrILuGI49fTEMudyZn/bDfv6GHvU80IgKBntrAJXU66363B2nRzVpzLlk8aFNB4g2la4EIZ46bUu6UGcirh/u1nNMIsdWxL92CEeSHx+V/Ooy6s3pkvI5aehFli9pJwzmzS6JKYo5Z7NZ04cnXEQX/8VFMveuE5mrNb4vz49t03PYOX7Vma7yRfObI1XgSz2J28hjLpumySAAz+QkEhH66XA25P+fzymmNAm4mX6XfC9QAE09EKK0PL2g8R/HuecXHiOhQph+aYSvONcT6nreyHvA7ZGfm1WDTILRRUQFSfLMzJjErLFl2/TCqapIXGnYTgmCKqtQRnb9G9W5+bVBmv6YEFACHTmcP4V391FqDCVr8mKBWzaINblgYe98SLXR8SR03BOwVAeZqws5/bXXXxZCAfpsmEObN7koz8lL8OFjYko9iJWHpdxzIzXl+U1LAmaimEn6JF0eEIyTobjmFwHUjuTRFzl5hOiKy4sSPi9z2QSkAhQKpIKhIESsWGs=
 
-On Tue, 28 Oct 2025 08:42:22 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+From 08185c5be135eb83194a49e593be9258cec78d77 Mon Sep 17 00:00:00 2001
+From: Zoe Gates <zoe@zeocities.dev>
+Date: Mon, 27 Oct 2025 22:14:24 -0500
+Subject: [PATCH 1/3] perf trace: Fix filter expansion length typo
 
-> ~ # cd /sys/kernel/tracing/
-> /sys/kernel/tracing # echo 'w:my_wprobe w@jiffies' >> dynamic_events 
-> /sys/kernel/tracing # echo 1 > events/wprobes/my_wprobe/enable 
-> [   54.942288] trace_wprobe: enable_trace_wprobe called
-> [   54.945306] trace_wprobe: trying to register wprobes
-> [   54.947367] trace_wprobe: __register_trace_wprobe called
-> [   54.949586] trace_wprobe: registering wprobe at addr: 0xffffb6ce429fb200, len: 4, type: 2
-> [   54.951639] Creating wide hw breakpoint on CPU 0
-> [   54.966390] Creating kernel counter on CPU 0 for event type 5
-> [   54.967758] perf_install_in_context: event 00000000736da1d9 ctx 000000005d4db900 cpu 0
-> [   54.972015] perf_install_in_context2: event 00000000736da1d9 ctx set to 000000005d4db900
-> [   54.976697] cpu_function_call: calling function on CPU 0, func: __perf_install_in_context+0x0/0x2c8
-> 
-> What happen if the cpu calls function on itself by
-> smp_call_function_single() on arm64?
-> 
->   smp_call_function_single(this_cpu, remote_function, &data, 1);
+Keep the filter expansion helper readable by using
+expansion_length everywhere and wrapping the scnprintf call.
 
-Sorry, that was printk buffering issue. I used trace_printk() instead
-and persistent ring buffer[1] to trace it.
+Signed-off-by: Zoe Gates <zoe@zeocities.dev>
+---
+ tools/perf/Documentation/perf-script.txt | 2 +-
+ tools/perf/builtin-trace.c               | 7 +++++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-[1] https://docs.kernel.org/trace/debugging.html#persistent-buffers-across-boots
+diff --git a/tools/perf/Documentation/perf-script.txt
+b/tools/perf/Documentation/perf-script.txt
+index 28bec7e78bc8..e136ca35d380 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -262,7 +262,7 @@ OPTIONS
+ 	is printed. This is the full execution path leading to the
+sample. This is only supported when the
+ 	sample was recorded with perf record -b or -j any.
+=20
+-	Use brstackinsnlen to print the brstackinsn lenght. For
+example, you
++	Use brstackinsnlen to print the brstackinsn length. For
+example, you
+ 	can=E2=80=99t know the next sequential instruction after an
+unconditional branch unless
+ 	you calculate that based on its length.
+=20
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index c607f39b8c8b..ae5fabf91c96 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -4291,7 +4291,10 @@ static int trace__expand_filter(struct trace
+*trace, struct evsel *evsel)
+=20
+ 				if (fmt->strtoul(right, right_size,
+&syscall_arg, &val)) {
+ 					char *n, expansion[19];
+-					int expansion_lenght =3D
+scnprintf(expansion, sizeof(expansion), "%#" PRIx64, val);
++					int expansion_length;
++
++					expansion_length =3D
+scnprintf(expansion, sizeof(expansion),
++								   =20
+"%#" PRIx64, val);
+ 					int expansion_offset =3D right -
+new_filter;
+=20
+ 					pr_debug("%s", expansion);
+@@ -4303,7 +4306,7 @@ static int trace__expand_filter(struct trace
+*trace, struct evsel *evsel)
+ 					}
+ 					if (new_filter !=3D evsel-
+>filter)
+ 						free(new_filter);
+-					left =3D n + expansion_offset +
+expansion_lenght;
++					left =3D n + expansion_offset +
+expansion_length;
+ 					new_filter =3D n;
+ 				} else {
+ 					pr_err("\"%.*s\" not found for
+\"%s\" in \"%s\", can't set filter \"%s\"\n",
 
-~ # echo 1 > /sys/kernel/tracing/instances/boot_map/options/trace_printk_dest
-~ # echo 'w:my_wprobe w@jiffies' >> /sys/kernel/tracing/dynamic_events 
-~ # echo 1 > /sys/kernel/tracing/events/wprobes/my_wprobe/enable 
-QEMU 8.2.2 monitor - type 'help' for more information
-(qemu) system_reset
-...
-
-~ # cat /sys/kernel/tracing/instances/boot_map/trace 
-# tracer: nop
-#
-# entries-in-buffer/entries-written: 16/16   #P:1
-#
-#                                _-----=> irqs-off/BH-disabled
-#                               / _----=> need-resched
-#                              | / _---=> hardirq/softirq
-#                              || / _--=> preempt-depth
-#                              ||| / _-=> migrate-disable
-#                              |||| /     delay
-#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-#              | |         |   |||||     |         |
-           <...>-63      [000] .....    21.065038: register_wide_hw_breakpoint: Creating wide hw breakpoint on CPU 0
-           <...>-63      [000] .....    21.079678: perf_event_create_kernel_counter: Creating kernel counter on CPU 0 for event type 5
-           <...>-63      [000] .....    21.080051: perf_install_in_context: perf_install_in_context: event 000000000b3ac4d3 ctx 00000000097d6337 cpu 0
-           <...>-63      [000] .....    21.080140: perf_install_in_context: perf_install_in_context2: event 000000000b3ac4d3 ctx set to 00000000097d6337
-           <...>-63      [000] .....    21.080939: cpu_function_call: cpu_function_call: calling function on CPU 0, func: __perf_install_in_context+0x0/0x2f0
-           <...>-63      [000] .....    21.080966: smp_call_function_single: smp_call_function_single: calling function on CPU 0, func: remote_function+0x0/0x78, wait=1
-           <...>-63      [000] ...1.    21.080973: smp_call_function_single: smp_call_function_single: running on CPU 0, call CPU 0
-           <...>-63      [000] ...1.    21.081099: smp_call_function_single: smp_call_function_single: checking for potential deadlock conditions
-           <...>-63      [000] ...1.    21.081259: generic_exec_single: generic_exec_single: preparing to call function on CPU 0, func: remote_function+0x0/0x78
-           <...>-63      [000] ...1.    21.081269: generic_exec_single: Executing smp_call_function_single on self CPU 0, func: remote_function+0x0/0x78
-           <...>-63      [000] d..1.    21.081289: csd_do_func: csd_do_func: CPU 0 executing func remote_function+0x0/0x78
-           <...>-63      [000] d..1.    21.081429: __perf_install_in_context: __perf_install_in_context: event 000000000b3ac4d3 ctx 00000000097d6337
-           <...>-63      [000] d..2.    21.083211: hw_breakpoint_control: hw_breakpoint_control: ops=0
-           <...>-63      [000] d..1.    21.084191: __perf_install_in_context: __perf_install_in_context: event 000000000b3ac4d3 done, ret=0
-           <...>-63      [000] d..1.    21.084237: csd_do_func: csd_do_func: CPU 0 finished func remote_function+0x0/0x78
-           <...>-63      [000] d..1.    21.084243: generic_exec_single: Finished csd_lock_record(NULL)
-~ # 
-
-
-So the last message is right before the local_irq_restore() in
-generic_exec_single().
-
-static int generic_exec_single(int cpu, call_single_data_t *csd)
-{
-	...
-		csd_lock_record(csd);
-		csd_unlock(csd);
-		local_irq_save(flags);
-		csd_do_func(func, info, NULL);
-		csd_lock_record(NULL);
-		trace_printk("Finished csd_lock_record(NULL)\n"); <- 
-		local_irq_restore(flags);
-		return 0;
-
-Actually, I added another trace_printk() right after generic_exec_single().
-
-	err = generic_exec_single(cpu, csd);
-	trace_printk("generic_exec_single returned %d for CPU %d, func: %pS\n",
-		err, cpu, func);
-
-This means after setting the hw_breakpoint, when enabing the IRQ,
-the machine is frozen - but qemu is running busy.
-
-Can we specify the kernel memory address to HW breakpoint on arm64?
-
-Thank you,
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+base-commit: fd57572253bc356330dbe5b233c2e1d8426c66fd
+--=20
+2.51.1
