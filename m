@@ -1,147 +1,178 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5E032ED53
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 Oct 2025 15:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5232857EA;
+	Tue, 28 Oct 2025 15:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761665917; cv=none; b=WT2FwKbm+wDzvx8wstKmeVPMZri9novFBRM6b1X2hR4FVNr6zv1EC5YSFh1PvNOsDYZEQuogVZvXDmm0R5n/EQM7AlcvWcxgC5qdLXtAi7UTZ//Uyj6vP/gKVjkltOkk673eCUE+c0NVgLGEl5ozFeNi9GDb2U0qBu13ktfK1Pw=
+	t=1761666146; cv=none; b=CQFFFb3Kj+dAwkrd2+XF8mViyaEdbU5CHQBl8Nlo7/YMkc9FenS8IMQVwBXx2u4QJJwoHrI7pHvqY2tEQHhSKnKejb0QCqx+tWq5q2tNGH0uN0/6HINfnT2TYnvskbuYNIhi6cM7ehL80dvr9px1Jp/OPZcxAmuCO2IA3ZWtTHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761665917; c=relaxed/simple;
-	bh=8aJ7RCMolVhgm0esdxXTYhaHsDH2PgxB0ZdrzK0aDH0=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=kH7p2pVLXnHObjdy+nDnLGlSE5FM7hG/8Wd3fM0pnArtDgqtR2fowXD1h0ZtagpJdYcacporZujp5t8D/CBDZJMIbDOhrXcQ6zJwJ7v6oPTUXAIYdqRo1ske38n37ehpXwxRc+fCjTO8Grf7fXph7qo3FOfElJdAWHl1xnjk7nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ayq5EY2V; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1761666146; c=relaxed/simple;
+	bh=cTwXXNk/yazHQqObZ+jp4ZVZEgnfPcH4tyN7EE1hfbc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=OB5uHf3Qo0xuwr9zvBxpK8EtkC1Cj7JUI8frCmoMiBcToiYhivV6lydruysZrI5yJo3am6xpEQs6NV6MNdisQM3K2lQpvHiXaX/g8WuXr3cGjK6jNf5EYEq9OiaNwDNK7B1eIVQ4/5XRMvaUFo5HC4Vc5pHuas/rORowwH4gQz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CBSqhqpi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ayq5EY2V"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2930e2e8e7fso50319085ad.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Oct 2025 08:38:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761665915; x=1762270715; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=j3RgjPX6qcL4gH8q8/DJ2NiBHunt2U+fGlLP8/lcz+4=;
-        b=ayq5EY2VyIcKGdjsqQOlv1lgCQBcbbJ0xeagX/FPkEQk982EvVedHOKl1ipimh9EMv
-         86E1qh2F7lbO82xcM4k464T6+QXiuk+GjPdJmbXHPcxVpPsEiJgOuGLJitE0nrlu5GTa
-         5CZA1HkSfhN30QtBKb7ilxrFEEv+VNJkhR8YonTuBBG/B8ithcc94SI3YRnQkZ2fLJMY
-         7AuUAhO8yV/t3odJ8fV7sz6+wkU5u0XuziKJeQSW3bjv50a2ez1W9uRktA3P8BztWqHH
-         14zDY1CV5EY0uirEJRXq3awfjlNJ+A57YTgDecxvsav9ifkEvE/tFzVVXXsp2rN6tOma
-         SkGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761665915; x=1762270715;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=j3RgjPX6qcL4gH8q8/DJ2NiBHunt2U+fGlLP8/lcz+4=;
-        b=N3yy4hbYHa609vzEg3GdT9K58BUXJ+dhLysw6YqIIiApjmaRTzOIDxDr7mjsnvKjE3
-         ECbHA/M/i/XsPCDtq5cmSNcAbuPGpDXED1gtutS/HnC3K3m8F2u9LUwAQiWbKfWypU3+
-         4z3hQ+YRn6Oh/D8xHRCnp1NGAqPsFoQE1s6DVia/vkkeHXFZTTNWwWE+Z29h+50QmwMq
-         8V43bPO9tyHAcyHv6zUlHsjslRBjT16lkzJlvaSafpFnVEceCTDQRh23PRXNgL1HOX/v
-         vPDWHpQK2P21HPY/hWnDw2ZsuTrWTfmo+IL067vKhBJcUEWDKYca8a0YnJszQ+6SLMRI
-         4L/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVX8IZ1kkgNMGqNgDOEfktNv+2LgscDN28trkWh/AFlt2+UPF4DszmESm2188pUvSBFIbyU4HjI4lmQk/ZlsOuH@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAmtEKPBtOPfK4Y/xOO/oF58B/zS4FyGkt4J+N4qOq7J9dTHZ1
-	Hfa0a9BTLxbbS/GFmCHZ8bPIJhLcJnbx3NEIzpSGcr6oJEIylglwY/FZwt48FqlzFt+vc57LLLN
-	mQW6YN0MJsg==
-X-Google-Smtp-Source: AGHT+IH6vp7LNz1krWqBJUvMVVa+KG04FBPh9OwGZAOJAtiIT6D1L6yZGR5noKXy9oz35N/XrcI/30PCe8BF
-X-Received: from plsu9.prod.google.com ([2002:a17:902:bf49:b0:290:d4c5:90ad])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1c2:b0:28e:7841:d437
- with SMTP id d9443c01a7336-294cb51090amr43843535ad.38.1761665915319; Tue, 28
- Oct 2025 08:38:35 -0700 (PDT)
-Date: Tue, 28 Oct 2025 08:38:20 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CBSqhqpi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E1BFC4CEE7;
+	Tue, 28 Oct 2025 15:42:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761666146;
+	bh=cTwXXNk/yazHQqObZ+jp4ZVZEgnfPcH4tyN7EE1hfbc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=CBSqhqpiDvSVCBoorZfiWuqmKKOLf3RbBbvI/0ey2715+0aQIozCPcM6PtfsgkyUC
+	 Eo09m6w1VxzOLe4xj6zyETxQdPM8ZjHmRvDpPwUHN9yg6sbpY4qArB5Lvn/r02sE/5
+	 bwtxn6So0kb4uRlvXWbR5ar7ByHanVxjiObqLj1b2D2xxZAtxdawfZ739O1lTIYV/R
+	 crboLtqB/j9E9Qzb0OfsmsjDnPUBs+ypg6wiVZ3h0PJuvqSEghkyaXSTQvBkQyJNV+
+	 OFe5JcXnfCD6KoNqOJKDNZk4i2Ityaj6rYLPVQ8z5+MqW97oshY+RUqFZJtuCtp/Vk
+	 IBL5L5rVrfKzw==
+Date: Wed, 29 Oct 2025 00:42:19 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Mark Brown <broonie@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+ <mingo@kernel.org>, x86@kernel.org, Jinchao Wang
+ <wangjinchao600@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v5 6/8] selftests: tracing: Add a basic testcase for
+ wprobe
+Message-Id: <20251029004219.dc9cda0eb56ae46c55855844@kernel.org>
+In-Reply-To: <20251028105549.ae94e8eeb42f4efc183d2807@kernel.org>
+References: <175859019940.374439.7398451124225791618.stgit@devnote2>
+	<175859026716.374439.14852239332989324292.stgit@devnote2>
+	<aPvwGhMBJqMKcC9D@finisterre.sirena.org.uk>
+	<20251027224347.4c887cc956df63602f377550@kernel.org>
+	<20251028084222.a3c1ae97d125d9bd88fc565b@kernel.org>
+	<20251028105549.ae94e8eeb42f4efc183d2807@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-Mailer: git-send-email 2.51.1.851.g4ebd6896fd-goog
-Message-ID: <20251028153821.4003666-1-irogers@google.com>
-Subject: [PATCH v2] perf test workload: Add thread count argument to thloop
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Allow the number of threads for the thloop workload to be increased
-beyond the normal 2. Add error checking to the parsed time and thread
-count values.
+On Tue, 28 Oct 2025 10:55:49 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
-v2: Perform the pthread_join unconditionally and ensure started
-    threads terminate.
----
- tools/perf/tests/workloads/thloop.c | 45 ++++++++++++++++++++++++-----
- 1 file changed, 38 insertions(+), 7 deletions(-)
+> On Tue, 28 Oct 2025 08:42:22 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> 
+> > ~ # cd /sys/kernel/tracing/
+> > /sys/kernel/tracing # echo 'w:my_wprobe w@jiffies' >> dynamic_events 
+> > /sys/kernel/tracing # echo 1 > events/wprobes/my_wprobe/enable 
+> > [   54.942288] trace_wprobe: enable_trace_wprobe called
+> > [   54.945306] trace_wprobe: trying to register wprobes
+> > [   54.947367] trace_wprobe: __register_trace_wprobe called
+> > [   54.949586] trace_wprobe: registering wprobe at addr: 0xffffb6ce429fb200, len: 4, type: 2
+> > [   54.951639] Creating wide hw breakpoint on CPU 0
+> > [   54.966390] Creating kernel counter on CPU 0 for event type 5
+> > [   54.967758] perf_install_in_context: event 00000000736da1d9 ctx 000000005d4db900 cpu 0
+> > [   54.972015] perf_install_in_context2: event 00000000736da1d9 ctx set to 000000005d4db900
+> > [   54.976697] cpu_function_call: calling function on CPU 0, func: __perf_install_in_context+0x0/0x2c8
+> > 
+> > What happen if the cpu calls function on itself by
+> > smp_call_function_single() on arm64?
+> > 
+> >   smp_call_function_single(this_cpu, remote_function, &data, 1);
+> 
+> Sorry, that was printk buffering issue. I used trace_printk() instead
+> and persistent ring buffer[1] to trace it.
+> 
+> [1] https://docs.kernel.org/trace/debugging.html#persistent-buffers-across-boots
+> 
+> ~ # echo 1 > /sys/kernel/tracing/instances/boot_map/options/trace_printk_dest
+> ~ # echo 'w:my_wprobe w@jiffies' >> /sys/kernel/tracing/dynamic_events 
+> ~ # echo 1 > /sys/kernel/tracing/events/wprobes/my_wprobe/enable 
+> QEMU 8.2.2 monitor - type 'help' for more information
+> (qemu) system_reset
+> ...
+> 
+> ~ # cat /sys/kernel/tracing/instances/boot_map/trace 
+> # tracer: nop
+> #
+> # entries-in-buffer/entries-written: 16/16   #P:1
+> #
+> #                                _-----=> irqs-off/BH-disabled
+> #                               / _----=> need-resched
+> #                              | / _---=> hardirq/softirq
+> #                              || / _--=> preempt-depth
+> #                              ||| / _-=> migrate-disable
+> #                              |||| /     delay
+> #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+> #              | |         |   |||||     |         |
+>            <...>-63      [000] .....    21.065038: register_wide_hw_breakpoint: Creating wide hw breakpoint on CPU 0
+>            <...>-63      [000] .....    21.079678: perf_event_create_kernel_counter: Creating kernel counter on CPU 0 for event type 5
+>            <...>-63      [000] .....    21.080051: perf_install_in_context: perf_install_in_context: event 000000000b3ac4d3 ctx 00000000097d6337 cpu 0
+>            <...>-63      [000] .....    21.080140: perf_install_in_context: perf_install_in_context2: event 000000000b3ac4d3 ctx set to 00000000097d6337
+>            <...>-63      [000] .....    21.080939: cpu_function_call: cpu_function_call: calling function on CPU 0, func: __perf_install_in_context+0x0/0x2f0
+>            <...>-63      [000] .....    21.080966: smp_call_function_single: smp_call_function_single: calling function on CPU 0, func: remote_function+0x0/0x78, wait=1
+>            <...>-63      [000] ...1.    21.080973: smp_call_function_single: smp_call_function_single: running on CPU 0, call CPU 0
+>            <...>-63      [000] ...1.    21.081099: smp_call_function_single: smp_call_function_single: checking for potential deadlock conditions
+>            <...>-63      [000] ...1.    21.081259: generic_exec_single: generic_exec_single: preparing to call function on CPU 0, func: remote_function+0x0/0x78
+>            <...>-63      [000] ...1.    21.081269: generic_exec_single: Executing smp_call_function_single on self CPU 0, func: remote_function+0x0/0x78
+>            <...>-63      [000] d..1.    21.081289: csd_do_func: csd_do_func: CPU 0 executing func remote_function+0x0/0x78
+>            <...>-63      [000] d..1.    21.081429: __perf_install_in_context: __perf_install_in_context: event 000000000b3ac4d3 ctx 00000000097d6337
+>            <...>-63      [000] d..2.    21.083211: hw_breakpoint_control: hw_breakpoint_control: ops=0
+>            <...>-63      [000] d..1.    21.084191: __perf_install_in_context: __perf_install_in_context: event 000000000b3ac4d3 done, ret=0
+>            <...>-63      [000] d..1.    21.084237: csd_do_func: csd_do_func: CPU 0 finished func remote_function+0x0/0x78
+>            <...>-63      [000] d..1.    21.084243: generic_exec_single: Finished csd_lock_record(NULL)
+> ~ # 
+> 
+> 
+> So the last message is right before the local_irq_restore() in
+> generic_exec_single().
+> 
+> static int generic_exec_single(int cpu, call_single_data_t *csd)
+> {
+> 	...
+> 		csd_lock_record(csd);
+> 		csd_unlock(csd);
+> 		local_irq_save(flags);
+> 		csd_do_func(func, info, NULL);
+> 		csd_lock_record(NULL);
+> 		trace_printk("Finished csd_lock_record(NULL)\n"); <- 
+> 		local_irq_restore(flags);
+> 		return 0;
+> 
+> Actually, I added another trace_printk() right after generic_exec_single().
+> 
+> 	err = generic_exec_single(cpu, csd);
+> 	trace_printk("generic_exec_single returned %d for CPU %d, func: %pS\n",
+> 		err, cpu, func);
+> 
+> This means after setting the hw_breakpoint, when enabing the IRQ,
+> the machine is frozen - but qemu is running busy.
+> 
+> Can we specify the kernel memory address to HW breakpoint on arm64?
 
-diff --git a/tools/perf/tests/workloads/thloop.c b/tools/perf/tests/workloads/thloop.c
-index 457b29f91c3e..bd8168f883fb 100644
---- a/tools/perf/tests/workloads/thloop.c
-+++ b/tools/perf/tests/workloads/thloop.c
-@@ -31,21 +31,52 @@ static void *thfunc(void *arg)
- 
- static int thloop(int argc, const char **argv)
- {
--	int sec = 1;
--	pthread_t th;
-+	int nt = 2, sec = 1, err = 1;
-+	pthread_t *thread_list = NULL;
- 
- 	if (argc > 0)
- 		sec = atoi(argv[0]);
- 
-+	if (sec <= 0) {
-+		fprintf(stderr, "Error: seconds (%d) must be >= 1\n", sec);
-+		return 1;
-+	}
-+
-+	if (argc > 1)
-+		nt = atoi(argv[1]);
-+
-+	if (nt <= 0) {
-+		fprintf(stderr, "Error: thread count (%d) must be >= 1\n", nt);
-+		return 1;
-+	}
-+
- 	signal(SIGINT, sighandler);
- 	signal(SIGALRM, sighandler);
--	alarm(sec);
- 
--	pthread_create(&th, NULL, thfunc, test_loop);
--	test_loop();
--	pthread_join(th, NULL);
-+	thread_list = calloc(nt, sizeof(pthread_t));
-+	if (thread_list == NULL) {
-+		fprintf(stderr, "Error: malloc failed for %d threads\n", nt);
-+		goto out;
-+	}
-+	for (int i = 1; i < nt; i++) {
-+		int ret = pthread_create(&thread_list[i], NULL, thfunc, test_loop);
- 
--	return 0;
-+		if (ret) {
-+			fprintf(stderr, "Error: failed to create thread %d\n", i);
-+			done = 1; // Ensure started threads terminate.
-+			goto out;
-+		}
-+	}
-+	alarm(sec);
-+	test_loop();
-+	err = 0;
-+out:
-+	for (int i = 1; i < nt; i++) {
-+		if (thread_list && thread_list[i])
-+			pthread_join(thread_list[i], /*retval=*/NULL);
-+	}
-+	free(thread_list);
-+	return err;
- }
- 
- DEFINE_WORKLOAD(thloop);
+Hmm, it seems that jiffies related things are updated frequently
+and it may cause interrupt storm or infinit recursive call.
+
+Basically, I think it should be temporarily disabled so that the
+interrupt does not occur during the extension of the HWBP interrupt,
+but I wonder how this works in arm64?
+
+If you know the path, you may be able to prohibit access to the
+related variables. But that maybe more difficult than SWBP like
+kprobes. Maybe this should add at least taint flag.
+
+Thank you,
+
+> 
+> Thank you,
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+
 -- 
-2.51.1.851.g4ebd6896fd-goog
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
