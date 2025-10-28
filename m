@@ -1,222 +1,197 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0D62857FA
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 Oct 2025 16:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3074132D0FA;
+	Tue, 28 Oct 2025 17:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761668809; cv=none; b=AsnSdQWHn4T0OetuaNVc33qewHIkOYN5gtCrbFEwajIv47Ajs+OuIIT0brdSmk07PyRiyN6OtrTDea29NfvBUw4UFnC82+t2xo7jjmjzGcWETdyxpKoLo4J+Fw7oU4Zlzh5Mjo/yLMwIgHP9fi2+4SHBhAVck8IVRsFzLubgzyc=
+	t=1761671371; cv=none; b=HYKtOkTJzhrUqe3xWzada72hR8PoQi3OSOeVYBSeu3FStGu0qEANs8KfV3ZGQN9z6S6livj7VLzag2HksS+J15UoyiHhXg/3EDOWwsuMauUx31WGfE54YknOe9DHZb3C5b13+T06pizbhv7rOwrq3Evmv4ToAHv1fp9m7WNjUoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761668809; c=relaxed/simple;
-	bh=C77mCOcYKZDT1tjjWTbER/wZyL1dVdsIKBcn719SqSw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KbKJCAYyGLURXXfTHExq3CYNeuoRC299V/rNJjDVqXc9RlTrsYgVuFJH3al/Wu/Pk2IhcIJTcAdx3g5gG8UzIxoEkB9xbzFIim3MwSMXvUbEeh8Yu2Je+0b5B5j4TG2Ai5yC7bvA1iSPmAI8d/VQiaicBCYOERwMWmA5iDgnMzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=a0PCiNY5; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1761671371; c=relaxed/simple;
+	bh=Q/DvAf8uCkX2SPY6TkNj/fjy6KkdM9UtV7Vt2f04sMY=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=V+RUDQ0z8XYuDjlEjN0t9H3BknG1ad5S5DJCdVMbrhCirjVcmmms/hjtaTxJEbZ4X8iL31DjU7D0k5OqEydEVT+9z4Txvksb4zN3+pbC0bZFlTp7cYx49XBWGpdy+NfU3v0BY3wfaTeEIjCAHJz/42b3kg1a4dXORtf+N5yTx4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mFsEAYZR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="a0PCiNY5"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1761668805;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K3lqjGd6Xn2XO6sjJZ+0OWHHK1rsFpO56tXY2t0cYhs=;
-	b=a0PCiNY5lQxcHytYeRlIhR7nevUi+ijJoAYHK+qLd1TLrzdawejupjN6sogsllFKiSQeAn
-	4bULc/bSvMz6MnUftVg13hbmMM9VqgOjoH8gIYqMxd9ae7QuTEVljlbvPjZy19zS5qtV+A
-	YP7mC8PAUdlB/KflPDUOvUWtd9XNsxo=
-From: Tao Chen <chen.dylane@linux.dev>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	song@kernel.org,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Tao Chen <chen.dylane@linux.dev>
-Subject: [PATCH bpf-next v4 2/2] bpf: Hold the perf callchain entry until used completely
-Date: Wed, 29 Oct 2025 00:25:02 +0800
-Message-ID: <20251028162502.3418817-3-chen.dylane@linux.dev>
-In-Reply-To: <20251028162502.3418817-1-chen.dylane@linux.dev>
-References: <20251028162502.3418817-1-chen.dylane@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mFsEAYZR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 931ADC4CEE7;
+	Tue, 28 Oct 2025 17:09:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761671370;
+	bh=Q/DvAf8uCkX2SPY6TkNj/fjy6KkdM9UtV7Vt2f04sMY=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
+	b=mFsEAYZRCq4UENune6IVXZdDlYzHgHBAwXb8WugQxY6+syeePOp+ipAyNcx50ahmG
+	 O5+SL4Hbaj/XZ4qDPrEdGABNuzalNBc2QKpKkNGsHFCvFS1dLjgAdXotJkPiqqH3kR
+	 SZx4o84mEt9zrh30Wd0vaMrfi5ogJIeMrxe8bPuB6a1x4r+M9QDArvkwry6q2qeP+O
+	 NOQy1j0c3bCQ8TANoCaWQtcSMWd7vNxUoG0PS0wN1Uerwxr6GNCD7ZjiANvRrRGKNV
+	 3l+d5AFNOJxNmu6XwqLoYp3Ne/L+qA1IS+bGbata46auw5Yv4s5/WvecO/6niXiOaj
+	 bXzALiH5vNOvg==
+Content-Type: multipart/mixed; boundary="===============9046533533940140989=="
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Message-Id: <a48e281e6912037490270da40f79e45c1ad1e430c8c1cc84c48306106b06113a@mail.kernel.org>
+In-Reply-To: <20251028162502.3418817-2-chen.dylane@linux.dev>
+References: <20251028162502.3418817-2-chen.dylane@linux.dev>
+Subject: Re: [PATCH bpf-next v4 1/2] perf: Refactor get_perf_callchain
+From: bot+bpf-ci@kernel.org
+To: chen.dylane@linux.dev,peterz@infradead.org,mingo@redhat.com,acme@kernel.org,namhyung@kernel.org,mark.rutland@arm.com,alexander.shishkin@linux.intel.com,jolsa@kernel.org,irogers@google.com,adrian.hunter@intel.com,kan.liang@linux.intel.com,song@kernel.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,martin.lau@linux.dev,eddyz87@gmail.com,yonghong.song@linux.dev,john.fastabend@gmail.com,kpsingh@kernel.org,sdf@fomichev.me,haoluo@google.com
+Cc: linux-perf-users@vger.kernel.org,linux-kernel@vger.kernel.org,bpf@vger.kernel.org,chen.dylane@linux.dev,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Tue, 28 Oct 2025 17:09:28 +0000 (UTC)
 
-As Alexei noted, get_perf_callchain() return values may be reused
-if a task is preempted after the BPF program enters migrate disable
-mode. The perf_callchain_entres has a small stack of entries, and
-we can reuse it as follows:
+--===============9046533533940140989==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-1. get the perf callchain entry
-2. BPF use...
-3. put the perf callchain entry
 
-Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+```
+commit 59cfc61f83ad4ec998f4242ca000c554e3001b47
+Author: Tao Chen <chen.dylane@linux.dev>
+
+perf: Refactor get_perf_callchain
+
+This patch refactors get_perf_callchain() by extracting logic into new
+helper functions to provide more flexible stack-sampling APIs for BPF.
+
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index fd1d91017..14a382cad 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -67,6 +67,7 @@ struct perf_callchain_entry_ctx {
+>  	u32				nr;
+>  	short				contexts;
+>  	bool				contexts_maxed;
+> +	bool				add_mark;
+>  };
+
+[ ... ]
+
+> @@ -1718,9 +1719,17 @@ DECLARE_PER_CPU(struct perf_callchain_entry, perf_callchain_entry);
+>
+>  extern void perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs);
+>  extern void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs);
+> +
+> +extern void __init_perf_callchain_ctx(struct perf_callchain_entry_ctx *ctx,
+> +				      struct perf_callchain_entry *entry,
+> +				      u32 max_stack, bool add_mark);
+> +
+> +extern void __get_perf_callchain_kernel(struct perf_callchain_entry_ctx *ctx, struct pt_regs *regs);
+> +extern void __get_perf_callchain_user(struct perf_callchain_entry_ctx *ctx, struct pt_regs *regs);
+> +
+>  extern struct perf_callchain_entry *
+>  get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+> -		   u32 max_stack, bool crosstask, bool add_mark);
+> +		   u32 max_stack, bool crosstask);
+
+> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+> index 4d53cdd13..e28b35c7e 100644
+> --- a/kernel/bpf/stackmap.c
+> +++ b/kernel/bpf/stackmap.c
+> @@ -315,7 +315,7 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
+>  		max_depth = sysctl_perf_event_max_stack;
+>
+>  	trace = get_perf_callchain(regs, kernel, user, max_depth,
+> -				   false, false);
+> +				   false);
+                                       ^^^^^ removed last parameter
+
+Previously bpf_get_stackid() passed add_mark=false to get_perf_callchain().
+Now the parameter is gone, but get_perf_callchain() hardcodes add_mark=true
+when calling __init_perf_callchain_ctx(). This means BPF stack traces will
+now include PERF_CONTEXT_KERNEL/PERF_CONTEXT_USER marker values when they
+didn't before.
+
+The markers get added by __get_perf_callchain_kernel() and
+__get_perf_callchain_user() when ctx->add_mark is true. These markers are
+sentinel values (-128 for KERNEL, -512 for USER) that appear in the trace
+IP array alongside actual instruction pointers.
+
+>
+>  	if (unlikely(!trace))
+>  		/* couldn't fetch the stack trace */
+> @@ -452,7 +452,7 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
+>  		trace = get_callchain_entry_for_task(task, max_depth);
+>  	else
+>  		trace = get_perf_callchain(regs, kernel, user, max_depth,
+> -					   crosstask, false);
+> +					   crosstask);
+                                                   ^^^^^ same issue here
+
+Same problem in __bpf_get_stack() which was also passing add_mark=false.
+
+This changes BPF stack map behavior in user-visible ways:
+
+1) bpf_get_stackid() hashes the entire trace->ip[] array including any
+   markers, so identical stacks will now produce different stack IDs.
+
+2) bpf_get_stack() copies trace->ip[] directly to userspace buffers,
+   so BPF programs will see marker values mixed with instruction pointers.
+
+Can BPF tools handle these unexpected marker values? The commit message
+says "The next patch will modify the BPF part" but doesn't explain this
+intermediate behavior change.
+
+> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+> index 808c0d7a3..2c36e4906 100644
+> --- a/kernel/events/callchain.c
+> +++ b/kernel/events/callchain.c
+
+[ ... ]
+
+>  struct perf_callchain_entry *
+>  get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+> -		   u32 max_stack, bool crosstask, bool add_mark)
+> +		   u32 max_stack, bool crosstask)
+>  {
+>  	struct perf_callchain_entry *entry;
+>  	struct perf_callchain_entry_ctx ctx;
+> -	int rctx, start_entry_idx;
+> +	int rctx;
+>
+>  	/* crosstask is not supported for user stacks */
+>  	if (crosstask && user && !kernel)
+> @@ -232,34 +273,14 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+>  	if (!entry)
+>  		return NULL;
+>
+> -	ctx.entry		= entry;
+> -	ctx.max_stack		= max_stack;
+> -	ctx.nr			= entry->nr = 0;
+> -	ctx.contexts		= 0;
+> -	ctx.contexts_maxed	= false;
+> +	__init_perf_callchain_ctx(&ctx, entry, max_stack, true);
+                                                                ^^^^
+Here's where add_mark is hardcoded to true for all callers. The old code
+allowed callers to control this via parameter. BPF was passing false,
+perf_callchain() was passing true. Now both get true unconditionally.
+
+[ ... ]
+
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 7541f6f85..eb0f11059 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -8218,7 +8218,7 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
+>  		return &__empty_callchain;
+>
+>  	callchain = get_perf_callchain(regs, kernel, user,
+> -				       max_stack, crosstask, true);
+> +				       max_stack, crosstask);
+>  	return callchain ?: &__empty_callchain;
+>  }
+
+
+```
+
 ---
- kernel/bpf/stackmap.c | 61 ++++++++++++++++++++++++++++++++++---------
- 1 file changed, 48 insertions(+), 13 deletions(-)
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
-diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-index e28b35c7e0b..70d38249083 100644
---- a/kernel/bpf/stackmap.c
-+++ b/kernel/bpf/stackmap.c
-@@ -188,13 +188,12 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
- }
- 
- static struct perf_callchain_entry *
--get_callchain_entry_for_task(struct task_struct *task, u32 max_depth)
-+get_callchain_entry_for_task(int *rctx, struct task_struct *task, u32 max_depth)
- {
- #ifdef CONFIG_STACKTRACE
- 	struct perf_callchain_entry *entry;
--	int rctx;
- 
--	entry = get_callchain_entry(&rctx);
-+	entry = get_callchain_entry(rctx);
- 
- 	if (!entry)
- 		return NULL;
-@@ -216,8 +215,6 @@ get_callchain_entry_for_task(struct task_struct *task, u32 max_depth)
- 			to[i] = (u64)(from[i]);
- 	}
- 
--	put_callchain_entry(rctx);
--
- 	return entry;
- #else /* CONFIG_STACKTRACE */
- 	return NULL;
-@@ -297,6 +294,31 @@ static long __bpf_get_stackid(struct bpf_map *map,
- 	return id;
- }
- 
-+static struct perf_callchain_entry *
-+bpf_get_perf_callchain(int *rctx, struct pt_regs *regs, bool kernel, bool user,
-+		       int max_stack, bool crosstask)
-+{
-+	struct perf_callchain_entry_ctx ctx;
-+	struct perf_callchain_entry *entry;
-+
-+	entry = get_callchain_entry(rctx);
-+	if (unlikely(!entry))
-+		return NULL;
-+
-+	__init_perf_callchain_ctx(&ctx, entry, max_stack, false);
-+	if (kernel)
-+		__get_perf_callchain_kernel(&ctx, regs);
-+	if (user && !crosstask)
-+		__get_perf_callchain_user(&ctx, regs);
-+
-+	return entry;
-+}
-+
-+static void bpf_put_callchain_entry(int rctx)
-+{
-+	put_callchain_entry(rctx);
-+}
-+
- BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
- 	   u64, flags)
- {
-@@ -305,6 +327,7 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
- 	bool user = flags & BPF_F_USER_STACK;
- 	struct perf_callchain_entry *trace;
- 	bool kernel = !user;
-+	int rctx, ret;
- 
- 	if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
- 			       BPF_F_FAST_STACK_CMP | BPF_F_REUSE_STACKID)))
-@@ -314,14 +337,15 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
- 	if (max_depth > sysctl_perf_event_max_stack)
- 		max_depth = sysctl_perf_event_max_stack;
- 
--	trace = get_perf_callchain(regs, kernel, user, max_depth,
--				   false);
--
-+	trace = bpf_get_perf_callchain(&rctx, regs, kernel, user, max_depth, false);
- 	if (unlikely(!trace))
- 		/* couldn't fetch the stack trace */
- 		return -EFAULT;
- 
--	return __bpf_get_stackid(map, trace, flags);
-+	ret = __bpf_get_stackid(map, trace, flags);
-+	bpf_put_callchain_entry(rctx);
-+
-+	return ret;
- }
- 
- const struct bpf_func_proto bpf_get_stackid_proto = {
-@@ -415,6 +439,7 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
- 	bool kernel = !user;
- 	int err = -EINVAL;
- 	u64 *ips;
-+	int rctx;
- 
- 	if (unlikely(flags & ~(BPF_F_SKIP_FIELD_MASK | BPF_F_USER_STACK |
- 			       BPF_F_USER_BUILD_ID)))
-@@ -449,17 +474,24 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
- 	if (trace_in)
- 		trace = trace_in;
- 	else if (kernel && task)
--		trace = get_callchain_entry_for_task(task, max_depth);
-+		trace = get_callchain_entry_for_task(&rctx, task, max_depth);
- 	else
--		trace = get_perf_callchain(regs, kernel, user, max_depth,
--					   crosstask);
-+		trace = bpf_get_perf_callchain(&rctx, regs, kernel, user, max_depth, crosstask);
- 
--	if (unlikely(!trace) || trace->nr < skip) {
-+	if (unlikely(!trace)) {
- 		if (may_fault)
- 			rcu_read_unlock();
- 		goto err_fault;
- 	}
- 
-+	if (trace->nr < skip) {
-+		if (may_fault)
-+			rcu_read_unlock();
-+		if (!trace_in)
-+			bpf_put_callchain_entry(rctx);
-+		goto err_fault;
-+	}
-+
- 	trace_nr = trace->nr - skip;
- 	trace_nr = (trace_nr <= num_elem) ? trace_nr : num_elem;
- 	copy_len = trace_nr * elem_size;
-@@ -479,6 +511,9 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
- 	if (may_fault)
- 		rcu_read_unlock();
- 
-+	if (!trace_in)
-+		bpf_put_callchain_entry(rctx);
-+
- 	if (user_build_id)
- 		stack_map_get_build_id_offset(buf, trace_nr, user, may_fault);
- 
--- 
-2.48.1
+In-Reply-To-Subject: `perf: Refactor get_perf_callchain`
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/18882141979
 
+--===============9046533533940140989==--
