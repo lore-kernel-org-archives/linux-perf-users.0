@@ -1,161 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5631C5D46;
-	Tue, 28 Oct 2025 06:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6152F99AE;
+	Tue, 28 Oct 2025 09:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761633897; cv=none; b=Q8NHc/bk/6sdA9aCIzJw4R6gDXJyZbyiXt/YZvRzke8TJjRdZ7E0ODAbhZ2bn5PGzPLNrNKNkCU7MdfJ6FvzOrt+5EJ8mjLxYWKvB/OqLbpXk9itG0Jja67YgChlrAeyhArjBaHZN7y2B0D/m4H51bOHr31OV9poTG7wrh7L7Vw=
+	t=1761642356; cv=none; b=t8mCu/DqXj8Qg8OEi26riJZAgkR+yZk+OrZcaZRkOOF+8KTpv38vKpdtKmQM13d5C+FyjO3Aa2LJvo1zxfKy1PlhJ/qd4vdNFCl+PBPw21fNHxdv6RlJtThennZVZg3y2k+tuK5NzE1upfBFt7NKcqxejzIwJis8HUchF4N7pmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761633897; c=relaxed/simple;
-	bh=7R93AM51irQ+2d/T+qJcF1Qkq5IbJli4SD6al94qH0o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=j983bZUWyG0oAxjtiOTZdRWi1h+uYWoo03pMGMRSkWTYpJMI8NoFZto5pjj7oBtTJpl6QQcZVHmr/cSVtQ0zvrcM2QnosbBB38BqV3zzwCqx6VNYe2uNb0qvUQM5+iVuI/9/LQFZUwwbDoajePZctNvhi+0ectUSefVdfG458ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aHHppmGV; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1761642356; c=relaxed/simple;
+	bh=3im3l8K/9pyuBztfKfPyRxSlqJxJuGXKV429IhMtykI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R6aaZ68Ia4N9pFUwaOkDe4jOZz2XOBNZbSvQntBuQ6s21qh1oqnCNa8ruNWqvvOC6nugobqXfmHvwomiMXiMxWQmtZgwlQnHWP+8ykwTSY3at9vC/125vrCRB8dXT4nHI6H+xnSgj4LT6UFdfEP1ToG5AUV3J0X4cGw214x6adI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k6Is/+tq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aHHppmGV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761633896; x=1793169896;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=7R93AM51irQ+2d/T+qJcF1Qkq5IbJli4SD6al94qH0o=;
-  b=aHHppmGVtFw1j/LHvW6AKDiC4vJlN83WPFQ9/oo7FY+IKZkwncBn0FCY
-   L/xFMy/JHeeUaEmiYOkjYV53oKt7wZm61PjpuBuA/3hKcBQEVlN0c6Irb
-   ZRsyMJ+N9eYogeumrJGD+S02dJ7kdUneTQwTRv+hs5CodbmjjkwX7zUFt
-   iqEALR7t24pZ8BVajAIBMh5FWCwfPLwaWPyCJACSPw1WWZj1djuKAvcAv
-   6kbnHUJp0ssOaIqzgtoGpwJuX9cDfkbUhS/lmI/Tgovj+LLllOSt7x6IR
-   nwXqnC7RRpFPCj+Zr/z3PRl/FsPr1Bkxr213t6ksM1mMUBlioHMnSZamZ
-   Q==;
-X-CSE-ConnectionGUID: 4nMlwNUjT1iu+JFuLU6I7A==
-X-CSE-MsgGUID: a2Rxx/pWT165SLPm8GBcyA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63876136"
-X-IronPort-AV: E=Sophos;i="6.19,260,1754982000"; 
-   d="scan'208";a="63876136"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2025 23:44:55 -0700
-X-CSE-ConnectionGUID: Z+Al2gEkQS6Ii/zTaKOxqg==
-X-CSE-MsgGUID: zKGaDDSzT1eHFUdG72tb4g==
-X-ExtLoop1: 1
-Received: from spr.sh.intel.com ([10.112.230.239])
-  by fmviesa003.fm.intel.com with ESMTP; 27 Oct 2025 23:44:51 -0700
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	stable@vger.kernel.org
-Subject: [Patch v2] perf/x86/intel: Fix KASAN global-out-of-bounds warning
-Date: Tue, 28 Oct 2025 14:42:14 +0800
-Message-Id: <20251028064214.1451968-1-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k6Is/+tq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 893AFC116B1;
+	Tue, 28 Oct 2025 09:05:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761642355;
+	bh=3im3l8K/9pyuBztfKfPyRxSlqJxJuGXKV429IhMtykI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=k6Is/+tqbHhSxYZdkJbXjioTiUf/AjknWNzBey6X7M1UL0mX8giHqVBpqPtNEql1i
+	 erNTjoPtKyOVq0PKgQKvj+8dERJt7faLKhHYSNfrfr8LAO9ETxzF2LSiwYX+eZ02Dh
+	 C9c2a6zCWbwAzEcgoG9oyI/Op3jcJ+lm1QpnA1gcropgA+FKuLdp3bAnW/kI93Ru6B
+	 VKnEbsldC2tasgI6ls41Q0odMYuRsyMz8VhaIkkEo1Q0hU3DKY/YBseNqu55qpSmy5
+	 OwHThYUKdDX2M9zAf6pe5Qgk8jIGwAgDnNx8LDZAp9UykLM07wkkux2wDtiGa3yvHl
+	 24iFnnLdC45sg==
+Message-ID: <d6a63399-361f-4f1c-845c-b69192bfc822@kernel.org>
+Date: Tue, 28 Oct 2025 10:05:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] bpftool: Build failure due to opensslv.h
+To: Namhyung Kim <namhyung@kernel.org>, KP Singh <kpsingh@kernel.org>
+Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <aP7uq6eVieG8v_v4@google.com>
+ <2cb226f8-a67c-4bdb-8c59-507c99a46bab@kernel.org>
+ <aP-5fUaroYE5xSnw@google.com>
+From: Quentin Monnet <qmo@kernel.org>
+Content-Language: en-GB
+In-Reply-To: <aP-5fUaroYE5xSnw@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When running "perf mem record" command on CWF, the below KASAN
-global-out-of-bounds warning is seen.
+2025-10-27 11:27 UTC-0700 ~ Namhyung Kim <namhyung@kernel.org>
+> On Mon, Oct 27, 2025 at 11:41:01AM +0000, Quentin Monnet wrote:
+>> 2025-10-26 21:01 UTC-0700 ~ Namhyung Kim <namhyung@kernel.org>
+>>> Hello,
+>>>
+>>> I'm seeing a build failure like below in Fedora 40 and others.  I'm not
+>>> sure if it's reported already but it failed to build perf tools due to
+>>> errors in the bootstrap bpftool.
+>>>
+>>>     CC      /build/util/bpf_skel/.tmp/bootstrap/sign.o
+>>>   sign.c:16:10: fatal error: openssl/opensslv.h: No such file or directory
+>>>      16 | #include <openssl/opensslv.h>
+>>>         |          ^~~~~~~~~~~~~~~~~~~~
+>>>   compilation terminated.
+>>>   make[3]: *** [Makefile:256: /build/util/bpf_skel/.tmp/bootstrap/sign.o] Error 1
+>>>   make[3]: *** Waiting for unfinished jobs....
+>>>   make[2]: *** [Makefile.perf:1213: /build/util/bpf_skel/.tmp/bootstrap/bpftool] Error 2
+>>>   make[1]: *** [Makefile.perf:289: sub-make] Error 2
+>>>   make: *** [Makefile:76: all] Error 2
+>>>
+>>> I think it's from the recent signing change.  I'm not familiar with
+>>> openssl but I guess there's a proper feature check for it.  Is this a
+>>> known issue?
+>>
+>>
+>> Hi Namhyung,
+> 
+> Hello!
+> 
+>>
+>> This looks related to the program signing change indeed, commit
+>> 40863f4d6ef2 ("bpftool: Add support for signing BPF programs")
+>> introduced a dependency on OpenSSL's development headers for bpftool.
+>> It's not gated behind a feature check. On Fedora, I think the headers
+>> come with openssl-devel, do you have this package installed?
+> 
+> No I don't, but I guess it should be able to build on such systems.  Or
+> is it required for bpftool?  Anyway I feel like it should have a feature
+> check and appropriate error messages.
+> 
 
-  196.273657] ==================================================================
-[  196.273662] BUG: KASAN: global-out-of-bounds in cmt_latency_data+0x176/0x1b0
-[  196.273669] Read of size 4 at addr ffffffffb721d000 by task dtlb/9850
++Cc KP
 
-[  196.273676] CPU: 126 UID: 0 PID: 9850 Comm: dtlb Kdump: loaded Not tainted 6.17.0-rc3-2025-08-29-intel-next-34160-g316938187eb0 #1 PREEMPT(none)
-[  196.273680] Hardware name: Intel Corporation AvenueCity/AvenueCity, BIOS BHSDCRB1.IPC.3544.P83.2507110208 07/11/2025
-[  196.273682] Call Trace:
-[  196.273683]  <NMI>
-[  196.273684]  dump_stack_lvl+0x55/0x70
-[  196.273689]  print_address_description.constprop.0+0x2c/0x3d0
-[  196.273694]  ? cmt_latency_data+0x176/0x1b0
-[  196.273696]  print_report+0xb4/0x270
-[  196.273699]  ? kasan_addr_to_slab+0xd/0xa0
-[  196.273702]  kasan_report+0xb8/0xf0
-[  196.273705]  ? cmt_latency_data+0x176/0x1b0
-[  196.273707]  cmt_latency_data+0x176/0x1b0
-[  196.273710]  setup_arch_pebs_sample_data+0xf49/0x2560
-[  196.273713]  intel_pmu_drain_arch_pebs+0x577/0xb00
-[  196.273716]  ? __pfx_intel_pmu_drain_arch_pebs+0x10/0x10
-[  196.273719]  ? perf_output_begin+0x3e4/0xa10
-[  196.273724]  ? intel_pmu_drain_bts_buffer+0xc2/0x6a0
-[  196.273727]  ? __pfx_intel_pmu_drain_bts_buffer+0x10/0x10
-[  196.273730]  handle_pmi_common+0x6c4/0xc80
-[  196.273734]  ? __pfx_handle_pmi_common+0x10/0x10
-[  196.273738]  ? intel_bts_interrupt+0xd3/0x4d0
-[  196.273740]  ? __pfx_intel_bts_interrupt+0x10/0x10
-[  196.273742]  ? intel_pmu_lbr_enable_all+0x25/0x150
-[  196.273745]  intel_pmu_handle_irq+0x388/0x700
-[  196.273748]  perf_event_nmi_handler+0xff/0x150
-[  196.273751]  nmi_handle.part.0+0xa8/0x2d0
-[  196.273755]  ? perf_output_begin+0x3e9/0xa10
-[  196.273757]  default_do_nmi+0x79/0x1a0
-[  196.273760]  fred_exc_nmi+0x40/0x90
-[  196.273762]  asm_fred_entrypoint_kernel+0x45/0x60
-[  196.273765] RIP: 0010:perf_output_begin+0x3e9/0xa10
-[  196.273768] Code: 54 24 1c 85 d2 0f 85 19 03 00 00 48 8b 44 24 18 48 c1 e8 03 42 0f b6 04 28 84 c0 74 08 3c 03 0f 8e 25 05 00 00 41 8b 44 24 18 <c1> e0 0c 48 98 48 83 e8 01 80 7c 24 2a 00 0f 85 f9 02 00 00 4c 29
-[  196.273770] RSP: 0018:ffffc9001cf575e8 EFLAGS: 00000246
-[  196.273774] RAX: 0000000000000080 RBX: ffff88c1a0f95028 RCX: 0000000000000004
-[  196.273775] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88c08c8f9408
+We usually have feature checks when optional features bring in new
+dependencies for bpftool, but we haven't discussed it this time. My
+understanding was that program signing is important enough that it
+should always be present in newer versions of bpftool, making OpenSSL
+one of the required dependencies going forward.
 
-[  196.273777] RBP: 0000000000000028 R08: 0000000000000000 R09: ffffed18341f2a05
-[  196.273778] R10: ffff88c1a0f9502f R11: ffff88c1a0dbe1b8 R12: ffff88c1a0f95000
-[  196.273779] R13: dffffc0000000000 R14: 0000000000000000 R15: ffffc9001cf577e0
-[  196.273782]  </NMI>
+We don't currently have feature checks to tell when required
+dependencies are missing for bpftool (it's just the build failing, in
+that case). I know perf does a great job at it, we could look into it
+for bpftool, too.
 
-The issue is caused by below code in __grt_latency_data(). The code
-tries to access x86_hybrid_pmu structure which doesn't exist on
-non-hybrid platform like CWF.
-
-        WARN_ON_ONCE(hybrid_pmu(event->pmu)->pmu_type == hybrid_big)
-
-So add is_hybrid() check before calling this WARN_ON_ONCE to fix the
-global-out-of-bounds access issue.
-
-Reported-by: Xudong Hao <xudong.hao@intel.com>
-Cc: stable@vger.kernel.org
-Fixes: 090262439f66 ("perf/x86/intel: Rename model-specific pebs_latency_data functions")
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Reviewed-by: Zide Chen <zide.chen@intel.com>
----
-
-Changes:
-  v2: Wrap the line that exceeds 80 characters (Zide)
-
- arch/x86/events/intel/ds.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index c0b7ac1c7594..01bc59e9286c 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -317,7 +317,8 @@ static u64 __grt_latency_data(struct perf_event *event, u64 status,
- {
- 	u64 val;
- 
--	WARN_ON_ONCE(hybrid_pmu(event->pmu)->pmu_type == hybrid_big);
-+	WARN_ON_ONCE(is_hybrid() &&
-+		     hybrid_pmu(event->pmu)->pmu_type == hybrid_big);
- 
- 	dse &= PERF_PEBS_DATA_SOURCE_GRT_MASK;
- 	val = hybrid_var(event->pmu, pebs_data_source)[dse];
-
-base-commit: 45e1dccc0653c50e377dae57ef086a8d0f71061d
--- 
-2.34.1
-
+Quentin
