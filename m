@@ -1,222 +1,754 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB3E2FC031
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2025 05:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C6918FDBD
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2025 07:37:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761716087; cv=none; b=BhGFAUXPgJr/WU8RpSh8CS15B5VBHBvJZjFqWdQmlnQdXEApL+ekficcwoHvZ/FILpIwJ1d0bF0Wbz+n/3Oq7aUgXJNZDcCVmx7+ELB7L9VaNI6sm3iaZ2Lv4QPzl/yLQPJw64wqNmcUKUsXrVDhimGp8JmDJUXDbHF6cYgJX5g=
+	t=1761723448; cv=none; b=bhL/uNkr9swtgT9LauFkt1uOhqTgtwTl6EDFq58D7W4U5m6K9+o39lEpWKzsGIs+d4+MmRl3na3HVm2rWRmkZ5FUGoVK3/DT6VScE3ik29cM5Eu97H8DR4u7NQwqg5T9QxY4k8PPI6xBgc3eDd893hmKgQe317DB3illUi53RIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761716087; c=relaxed/simple;
-	bh=cXBb0FpLHE2+FneP8Fo+45jo0Wy454pCH8ScJIJcmqA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=iezpiFlHz/fMylmZC8CDJfcsWAtnzPXVgf8cJy1TPia1BZO30cHXYOMCk58TagKWWTvXkvrDjXRJpmPJkINJuaaEMef8asbsZgM6y5aK5L3OCgxLbvy9ZNTioWUEM/ow51ECbgPbinAKla2xmkhhFYEPNxybhfQQiXu3yeBbs+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cx3NmWig; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1761723448; c=relaxed/simple;
+	bh=+BYv9N2meNbR8doxhJc8KjH3Ys1XxeK0oZAzNoqDw8c=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To; b=CU3yJAhPsrCGUfmAqZCzd04nSZE74O6MW4rGE6D7a0NJqbKb5hA4cN0lpMRqY/GExQftptg89ndxQRsgtlnghnXG1IvPk+u7aaUAChR7e35hVHXUVzgT+vd4pmzHHKvx6J2EX7O4NEpcwcwsPbFJ7OQN17qqmqI+FWVMj+VTwPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VbMwUnhj; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cx3NmWig"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-33da21394adso6534012a91.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Oct 2025 22:34:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761716085; x=1762320885; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gC3uJBytFjGETcDOSgD3LOM/9/gCLbGFWg1YShV84iU=;
-        b=cx3NmWigG++FEG+yZxZLKwDkLaP9dRHHR+Uif9tw5qQq1g8R2ON2Jryv3wDAi+hrpo
-         zQwE6o/7E9HMCyKy4w32R4VuX/daoUOqIZMhBD+Fft2zd+Fqd7KZtVHcpf+vl+lXtYR0
-         jvoCVXJkdLMmp988WFnz/P4idsG+0E09LrZA0oMYUDEWLbY9UXFGqqQw8HLCpRUUGFVc
-         +tQieKwFUAh9kk2touFuVeivz6yBFb/xntiV8mEew0wmlAiUG+Brd0WI6KB7JGUAMtUs
-         Spg9zOa8Uxwjv120gqFXfMw72nAMnKroCGx32gAtwnAillCR+ohfW/wJWNdTvNHcVxJ+
-         4rMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761716085; x=1762320885;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gC3uJBytFjGETcDOSgD3LOM/9/gCLbGFWg1YShV84iU=;
-        b=r8D4Ameab3Qm6tP6nL9c83S4yUqra2LA/QmYKbfwSh5pAGtdU1fZGyBMXgvbzUwQ8S
-         PvSwgMY1JOCjYPvgokFxd6Klzsnh0xuo1ebjO8E8aRXTaaOsUow62pJRkuiEJL50Blj5
-         JoUcr6VTIA9FjbMX2JPWF26cYUWtL/2cmmffFA4J2ncw9rhmrSAqqg/MzA4a8FrV6gCO
-         MDC4SGqPkXZcqQFo6z6K0cjcwIRREkXO311SixStiZnj1fU788Qo+8PCqbrZTh4NYlrJ
-         +9K/sQbWnbUPeO7hF0Qc+9My7uGGNlYM4ec+IXLHOC8qillXkP5OatYtrfcrXi8peLrp
-         iOpA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9Gy2Ec93Y4DTl67OFDvur1hvfeM78tv5gtdfQM6i1HSxqoDc3uouMhWv7Zky1sOMwRzvOAoKw9mCLj7pbmvIi@vger.kernel.org
-X-Gm-Message-State: AOJu0YytwtSUsA1nJzs/82OaFEkYMSbS5DW1w9Qgj2FbPElCJoRKJApn
-	w4VaMP05GWkgsFQDoVGT0Sdv0kGGjbYL85hnz4Yt6WkuGqZToaIusO56RQevgcWEJCa2eswpy8Y
-	gZanRTctvJg==
-X-Google-Smtp-Source: AGHT+IHyABFgO5ifFMRWloVxbgKF6DgOKTCx7hX5z8zDswf1AZ0hIWHCguMLeQj+zWYBmU7ntB23e4WGxRng
-X-Received: from pjob9.prod.google.com ([2002:a17:90a:8c89:b0:33b:8aa1:75ed])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2e4b:b0:33b:bf8d:6172
- with SMTP id 98e67ed59e1d1-3403a305995mr1671076a91.34.1761716085290; Tue, 28
- Oct 2025 22:34:45 -0700 (PDT)
-Date: Tue, 28 Oct 2025 22:34:13 -0700
-In-Reply-To: <20251029053413.355154-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VbMwUnhj"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59SJlxUY025829;
+	Wed, 29 Oct 2025 07:37:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=rUU0tovq73jtc6DvaoTfGamhxHl9C1
+	EvcW5faSf8pZI=; b=VbMwUnhjZR3celM7j2Rs8Nm/BKXwf42bjxWxv5QSTtxF+y
+	nQGfZjZPpLmgrtrdjT/fI6CqOb/Fdj3NbRilqxBzBbTtKPWo2y70GAYvfpZzAEsN
+	MF7WgH+GPH3AC3pASymM8BoBllGPxl8viSlEoeYURv9nfaWytEFS4gxPLeKyAVU4
+	ICjv4q+B1cOb6ObWvb9AaWL0n4Db3Z+S8sE7JxQZ8qCIRAmN1p+4GfWE8RyZXFL3
+	skGIXUYwc0FhSk48+lx7fTR5/CsYoofQGRiRqyr+SiN2Lz+jLVF/QoT+FKwLg/7G
+	Y3Tj/LOYiqGSNjac9zpS2TthH71l6lQ2CCH6gAhw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34aahxke-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Oct 2025 07:37:12 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59T7Yd3T005679;
+	Wed, 29 Oct 2025 07:37:11 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34aahxkb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Oct 2025 07:37:11 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59T56hUC023844;
+	Wed, 29 Oct 2025 07:37:11 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4a33vx270e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Oct 2025 07:37:10 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59T7b8kP52298010
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 29 Oct 2025 07:37:08 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B51112004B;
+	Wed, 29 Oct 2025 07:37:08 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5EE2C20049;
+	Wed, 29 Oct 2025 07:37:08 +0000 (GMT)
+Received: from [9.152.212.92] (unknown [9.152.212.92])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 29 Oct 2025 07:37:08 +0000 (GMT)
+Content-Type: multipart/mixed; boundary="------------USIhevWXX90Jq6lIWzI9qEw3"
+Message-ID: <a6218625-a08e-4466-837d-7bdd0c8631a5@linux.ibm.com>
+Date: Wed, 29 Oct 2025 08:37:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20251029053413.355154-1-irogers@google.com>
-X-Mailer: git-send-email 2.51.1.851.g4ebd6896fd-goog
-Message-ID: <20251029053413.355154-16-irogers@google.com>
-Subject: [RFC PATCH v1 15/15] perf mem-phys-addr.py: Port to standalone
- application from perf script
-From: Ian Rogers <irogers@google.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
-	James Clark <james.clark@linaro.org>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
-	Howard Chu <howardchu95@gmail.com>, Song Liu <song@kernel.org>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Levi Yun <yeoreum.yun@arm.com>, 
-	Zhongqiu Han <quic_zhonhan@quicinc.com>, Blake Jones <blakejones@google.com>, 
-	Anubhav Shelat <ashelat@redhat.com>, Chun-Tse Shao <ctshao@google.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Gautam Menghani <gautam@linux.ibm.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Yang Li <yang.lee@linux.alibaba.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Andi Kleen <ak@linux.intel.com>, Weilin Wang <weilin.wang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Revert "perf test: Allow tolerance for leader sampling
+ test"
+To: James Clark <james.clark@linaro.org>, Anubhav Shelat <ashelat@redhat.com>
+Cc: mpetlan@redhat.com, acme@kernel.org, namhyung@kernel.org,
+        irogers@google.com, linux-perf-users@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        dapeng1.mi@linux.intel.com
+References: <20251023132406.78359-2-ashelat@redhat.com>
+ <5b02372a-f0be-4d3a-a875-c5ea65f2bafe@linux.ibm.com>
+ <CA+G8Dh+DaVp1XVHm=Hh1aLP=5YOmChTRu4=nSUAwTKJO-a4LDw@mail.gmail.com>
+ <f674d1eb-c492-4dec-a49c-8b40833741a4@linaro.org>
+ <2e756e75-7dc9-4838-8651-ca1a0f056966@linux.ibm.com>
+ <be8f4890-1c45-4116-9c9f-1e40e908747b@linaro.org>
+Content-Language: en-US
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <be8f4890-1c45-4116-9c9f-1e40e908747b@linaro.org>
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=ALkgKXG8 c=1 sm=1 tr=0 ts=6901c428 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=r77TgQKjGQsHNAKrUKIA:9
+ a=Zcx2_aZ3jWMu7LN7fgwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=2L6-gc2HLIFv01j2mp8A:9 a=BKfhHJFjwJIA:10 a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-ORIG-GUID: TNpO6fHFtCy1MouL0JCfbyowYYyl85Pu
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDI4MDE2NiBTYWx0ZWRfX/C6FVYBfYv/W
+ +KwERz27uFKRetZEP+b50zCLl7KG4HOzD6CJ+c6Cyqfkt0HSc1s8P3MiGNoaZ4Gw+zhhDlLCJdD
+ rZpCjlAzHTL2NDCd7aJUVCE3aNn4FFb+N07iZEaKkErHW64cu1gAr9hs6W4jS50QrR8+ftTsSQH
+ otlqzCc9pP0TGlJFsBsgfsoiFXVxSeYA3sKmuWmw+NIAnWQdxXjp4XqI0d3r/cjvWmmWMfHWa6t
+ N4LhTgoqGpeAqjyahSYgI4KWG37Bg03tNYDqYC7DM5SCLKsyK/+HlKg8N0JRxT3idIOzesD51mP
+ lU9uypVWIQ2jtDxr+o5DqjLRkTSftHkr6BqG9XkkImtc0LKknMNU9g0MY5kCpbFQzSKYY/eM3Mj
+ n7mDyXziq09EGMQYLVewm7Hw6vGnlw==
+X-Proofpoint-GUID: s7_zyk7ci7ICuo82BCMxo-rrZjBdkgAO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-29_03,2025-10-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 suspectscore=0 impostorscore=0 lowpriorityscore=0
+ clxscore=1015 adultscore=0 bulkscore=0 malwarescore=0 phishscore=0
+ spamscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
+ definitions=main-2510280166
 
-Give an example of using the perf python session API to load a
-perf.data file and perform the behavior of
-tools/perf/scripts/python/mem-phys-addr.py.
+This is a multi-part message in MIME format.
+--------------USIhevWXX90Jq6lIWzI9qEw3
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/python/mem-phys-addr.py | 117 +++++++++++++++++++++++++++++
- 1 file changed, 117 insertions(+)
- create mode 100644 tools/perf/python/mem-phys-addr.py
+On 10/28/25 16:23, James Clark wrote:
+> 
+> 
+> On 28/10/2025 12:55 pm, Thomas Richter wrote:
+.....
 
-diff --git a/tools/perf/python/mem-phys-addr.py b/tools/perf/python/mem-phys-addr.py
-new file mode 100644
-index 000000000000..32bb63598239
---- /dev/null
-+++ b/tools/perf/python/mem-phys-addr.py
-@@ -0,0 +1,117 @@
-+# mem-phys-addr.py: Resolve physical address samples
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Copyright (c) 2018, Intel Corporation.
-+
-+import bisect
-+import collections
-+import os
-+import perf
-+import re
-+import sys
-+from dataclasses import dataclass
-+from typing import (Dict, Optional)
-+
-+@dataclass(frozen=True)
-+class IomemEntry:
-+    """Read from a line in /proc/iomem"""
-+    begin: int
-+    end: int
-+    indent: int
-+    label: str
-+
-+# Physical memory layout from /proc/iomem. Key is the indent and then
-+# a list of ranges.
-+iomem: Dict[int, list[IomemEntry]] = collections.defaultdict(list)
-+# Child nodes from the iomem parent.
-+children: Dict[IomemEntry, set[IomemEntry]] = collections.defaultdict(set)
-+# Maximum indent seen before an entry in the iomem file.
-+max_indent: int = 0
-+# Count for each range of memory.
-+load_mem_type_cnt: Dict[IomemEntry, int] = collections.Counter()
-+# Perf event name set from the first sample in the data.
-+event_name: Optional[str] = None
-+
-+def parse_iomem():
-+    """Populate iomem from /proc/iomem file"""
-+    global iomem
-+    global max_indent
-+    global children
-+    with open('/proc/iomem', 'r', encoding='ascii') as f:
-+        for line in f:
-+            indent = 0
-+            while line[indent] == ' ':
-+                indent += 1
-+            if indent > max_indent:
-+                max_indent = indent
-+            m = re.split('-|:', line, maxsplit=2)
-+            begin = int(m[0], 16)
-+            end = int(m[1], 16)
-+            label = m[2].strip()
-+            entry = IomemEntry(begin, end, indent, label)
-+            # Before adding entry, search for a parent node using its begin.
-+            if indent > 0:
-+                parent = find_memory_type(begin)
-+                assert parent, f"Given indent expected a parent for {label}"
-+                children[parent].add(entry)
-+            iomem[indent].append(entry)
-+
-+def find_memory_type(phys_addr) -> Optional[IomemEntry]:
-+    """Search iomem for the range containing phys_addr with the maximum indent"""
-+    for i in range(max_indent, -1, -1):
-+        if i not in iomem:
-+            continue
-+        position = bisect.bisect_right(iomem[i], phys_addr,
-+                                       key=lambda entry: entry.begin)
-+        if position is None:
-+            continue
-+        iomem_entry = iomem[i][position-1]
-+        if  iomem_entry.begin <= phys_addr <= iomem_entry.end:
-+            return iomem_entry
-+    print(f"Didn't find {phys_addr}")
-+    return None
-+
-+def print_memory_type():
-+    print(f"Event: {event_name}")
-+    print(f"{'Memory type':<40}  {'count':>10}  {'percentage':>10}")
-+    print(f"{'-' * 40:<40}  {'-' * 10:>10}  {'-' * 10:>10}")
-+    total = sum(load_mem_type_cnt.values())
-+    # Add count from children into the parent.
-+    for i in range(max_indent, -1, -1):
-+        if i not in iomem:
-+            continue
-+        for entry in iomem[i]:
-+            global children
-+            for child in children[entry]:
-+                if load_mem_type_cnt[child] > 0:
-+                    load_mem_type_cnt[entry] += load_mem_type_cnt[child]
-+
-+    def print_entries(entries):
-+        """Print counts from parents down to their children"""
-+        global children
-+        for entry in sorted(entries,
-+                            key = lambda entry: load_mem_type_cnt[entry],
-+                            reverse = True):
-+            count = load_mem_type_cnt[entry]
-+            if count > 0:
-+                mem_type = ' ' * entry.indent + f"{entry.begin:x}-{entry.end:x} : {entry.label}"
-+                percent = 100 * count / total
-+                print(f"{mem_type:<40}  {count:>10}  {percent:>10.1f}")
-+                print_entries(children[entry])
-+
-+    print_entries(iomem[0])
-+
-+if __name__ == "__main__":
-+    def process_event(sample):
-+        phys_addr  = sample.sample_phys_addr
-+        entry = find_memory_type(phys_addr)
-+        if entry:
-+            load_mem_type_cnt[entry] += 1
-+
-+            global event_name
-+            if event_name is None:
-+                event_name  = str(sample.evsel)
-+
-+    parse_iomem()
-+    perf.session(perf.data("perf.data"), sample=process_event).process_events()
-+    print_memory_type()
+>> When I skip the grep it actually gets worse, there re more run away values:
+>> # perf record -e "{cycles,cycles}:Su" -- perf test -w brstack
+>> [ perf record: Woken up 2 times to write data ]
+>> [ perf record: Captured and wrote 0.012 MB perf.data (50 samples) ]
+>> # perf script | head -20
+>>              perf  919810  6726.456179:    2754000 cycles:       3ff95608ec8 _dl_map_object_from_fd+0xb18 (/usr/lib/ld64.so.1)
+>>              perf  919810  6726.456179:   58638457 cycles:       3ff95608ec8 _dl_map_object_from_fd+0xb18 (/usr/lib/ld64.so.1)
+>>              perf  919810  6726.456182:    1377000 cycles:       3ff9560a696 check_match+0x76 (/usr/lib/ld64.so.1)
+>>              perf  919810  6726.456182:    1377000 cycles:       3ff9560fa6a _dl_relocate_object_no_relro+0x5fa (/usr/lib/ld64.so.1)
+> 
+> Can you share the raw output for the second sample as well? Or even the whole file would be better.
+
+Ok I will append a perf.data from today and hopefully it will be delivered to you:
+See attachment perf.data.tmrs390 (binary file, big endian from s390)
+
+> 
+> It's the addresses from this sample that are confusing. 0x3ff95608ec8 is the same for both counters on the first sample (correctly), but the second sample has 0x3ff9560a696 and 0x3ff9560fa6a even though the cycles counts are the same.
+> 
+
+Command 
+  ./perf record -r 99 -e "{cycles,cycles}:Su" -- ./perf test -w brstack
+is testing leadership group sampling in tests/shell/record.sh and
+fails most of the time on s390.
+
+The command opens event cycles (as group leader) for sampling and the s390
+sampling facility is started with default frequency of 4000.
+This can be seen in the debug output:
+
+perf record opening and mmapping events
+Opening: cycles
+------------------------------------------------------------
+perf_event_attr:
+  type                             0 (PERF_TYPE_HARDWARE)
+  size                             136
+  config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+  { sample_period, sample_freq }   4000
+  sample_type                      IP|TID|TIME|READ|ID|PERIOD
+  read_format                      ID|GROUP|LOST
+  disabled                         1
+  inherit                          1
+  exclude_kernel                   1
+  exclude_hv                       1
+  mmap                             1
+  comm                             1
+  freq                             1
+  enable_on_exec                   1
+  task                             1
+  sample_id_all                    1
+  mmap2                            1
+  comm_exec                        1
+  ksymbol                          1
+  bpf_event                        1
+  build_id                         1
+....
+Next event cycles is opened in the s390 counting facility:
+Opening: cycles
+perf_event_attr:
+  type                             0 (PERF_TYPE_HARDWARE)
+  size                             136
+  config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+  sample_type                      IP|TID|TIME|READ|ID|PERIOD
+  read_format                      ID|GROUP|LOST
+  inherit                          1
+  exclude_kernel                   1
+  exclude_hv                       1
+  sample_id_all                    1
+
+So now there are 2 hardware events when are mapped on s390 to
+ 1. event handled by CPU Measurement sampling facility, hardware writes 32 byte
+    large samples to buffers. The frequency of 4000 Hz translates
+    to a sample every 1300000 instructions. Interrupt driven.
+ 2. event handled by CPU Measurement  counting facilitly, hardware
+    runs in the background and increments counters accordingly.
+    All available counters (about 400) are running in the background
+    and read via assembler instruction until stopped. No interrupts.
+
+If I understand this setup correctly, the first event is the group
+leader and either both events run and are active or non of them.
+That is the reason why both values should be identitical
+Is this true?
+
+Now given two independent CPU measurement units on s390, one running
+in the background incrementing counters, the other interrupt driven
+reading samples, there is always room the both counters to differ.
+The question is how much and how often.
+
+When I look at the debug output of the perf.data file; I get this:
+
+55805554120788 0x22a8 [0x68]: PERF_RECORD_SAMPLE(IP, 0x2):
+                14135/14135: 0x3ff9ae90340 period: 1300000 addr: 0
+... sample_read:
+.... group nr 2
+..... id 00000000000000b4, value 000000000115b5c0, lost 0
+..... id 00000000000000bc, value 000000000195ac03, lost 0
+ ... thread: perf:14135
+ ...... dso: /usr/lib/ld64.so.1
+
+The first value is the count from the sampling event, it gets
+incremented with 4000 Hz frequency:
+
+ # perf report -D -i/tmp/perf.data.tmrs390|grep 00000000000000b4,|head -10
+..... id 00000000000000b4, value 000000000101dfa0, lost 0
+..... id 00000000000000b4, value 000000000115b5c0, lost 0
+..... id 00000000000000b4, value 00000000013d6200, lost 0
+..... id 00000000000000b4, value 0000000001513820, lost 0
+..... id 00000000000000b4, value 0000000001650e40, lost 0
+..... id 00000000000000b4, value 00000000018cba80, lost 0
+..... id 00000000000000b4, value 0000000001a090a0, lost 0
+..... id 00000000000000b4, value 0000000001b466c0, lost 0
+..... id 00000000000000b4, value 0000000001c83ce0, lost 0
+..... id 00000000000000b4, value 0000000001dc1300, lost 0
+
+value 115b5c0 - 101dfa0 = 13d620 --> 1300000 period time.
+So that value always increments by period time.
+
+The other counter id is:
+ # perf report -D -i/tmp/perf.data.tmrs390|grep 00000000000000bc,| sort | uniq -d
+..... id 00000000000000bc, value 000000000195ac03, lost 0
+..... id 00000000000000bc, value 0000000002fd8b45, lost 0
+..... id 00000000000000bc, value 0000000005f0b1ce, lost 0
+ #
+It reads out the value of counter 0 (cycles) 85 times, but has only 3 different
+values.
+
+Anyway what does perf script print out? The value of the samples frequency?
+Where does perf record read out the value of the counter event?
+Any ideas where to start debugging?
+
+Thanks a lot.
+
 -- 
-2.51.1.851.g4ebd6896fd-goog
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
+
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+--------------USIhevWXX90Jq6lIWzI9qEw3
+Content-Type: application/octet-stream; name="perf.data.tmrs390"
+Content-Disposition: attachment; filename="perf.data.tmrs390"
+Content-Transfer-Encoding: base64
+
+MkVMSUZSRVAAAAAAAAAAaAAAAAAAAACYAAAAAAAAAOgAAAAAAAABMAAAAAAAAAIYAAAAAAAA
+QogAAAAAAAAAAAAAAAAAAAAAAAAAAIZzf/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAArgAAAAAAAACvAAAAAAAAALAAAAAAAAAAsQAAAAAAAACyAAAAAAAAALMAAAAAAAAAtAAA
+AAAAAAC1AAAAAAAAALYAAAAAAAAAtwAAAAAAAAC4AAAAAAAAALkAAAAAAAAAugAAAAAAAAC7
+AAAAAAAAALwAAAAAAAAAvQAAAAAAAACIAAAAAAAAAAAAAAAAAAAPoAAAAAAAAAFXAAAAAAAA
+ABzG7CGGIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaAAA
+AAAAAABAAAAAAAAAAIgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVcAAAAAAAAAHEYAIAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACoAAAAAAAAAEAAAABF
+AAACEAAAAAAAAAAQAAAAAAAAAK4AAAAAAAAAAAAAAAAAAAAAAAAAAAAANzcAAAAAAAAArwAA
+AAAAAAABAAAAAAAAAAEAAAAAAAA3NwAAAAAAAACwAAAAAAAAAAIAAAAAAAAAAgAAAAAAADc3
+AAAAAAAAALEAAAAAAAAAAwAAAAAAAAADAAAAAAAANzcAAAAAAAAAsgAAAAAAAAAEAAAAAAAA
+AAQAAAAAAAA3NwAAAAAAAACzAAAAAAAAAAUAAAAAAAAABQAAAAAAADc3AAAAAAAAALQAAAAA
+AAAABgAAAAAAAAAGAAAAAAAANzcAAAAAAAAAtQAAAAAAAAAHAAAAAAAAAAcAAAAAAAA3NwAA
+AAAAAAC2AAAAAAAAAAAAAAAAAAAAAAAAAAAAADc3AAAAAAAAALcAAAAAAAAAAQAAAAAAAAAB
+AAAAAAAANzcAAAAAAAAAuAAAAAAAAAACAAAAAAAAAAIAAAAAAAA3NwAAAAAAAAC5AAAAAAAA
+AAMAAAAAAAAAAwAAAAAAADc3AAAAAAAAALoAAAAAAAAABAAAAAAAAAAEAAAAAAAANzcAAAAA
+AAAAuwAAAAAAAAAFAAAAAAAAAAUAAAAAAAA3NwAAAAAAAAC8AAAAAAAAAAYAAAAAAAAABgAA
+AAAAADc3AAAAAAAAAL0AAAAAAAAABwAAAAAAAAAHAAAAAAAANzcAAABOAAAAIAAAAAAAAAAD
+AAAAAAAAAK4AAgAAAAAABwAAAE4AAAAgAAAAAAAAAAMAAAAAAAAAtgACAAAAAAAHAAAASQAA
+ACgAAAAAAAAAAQAAAAAAADc3AAAAAAAAAAAAAAAAAAAAAAAAAEoAAAAQAAIAAAAAAAcAAAAD
+AAAAOAAANzcAADc3cGVyZi1leGVjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AFIAAAAIAAAAAyAAADAAADc3AAA3N3BlcmYAAAAAAAA3NwAANzcAADLBPYRHNwAAAAAAAAC0
+AAAACkACAIAAADc3AAA3NwAAAAABAAAAAAAAAABiEAAAAAAAAAAAABQAAACrndM3P2RMoHLp
+AHJuREy5WXG2cwAAAAUAAAACL3Jvb3QvbGludXgvdG9vbHMvcGVyZi9wZXJmAAAAAAAAADc3
+AAA3NwAAMsE9hKyxAAAAAAAAALQAAAAKQAIAeAAANzcAADc3AAAD/5roAAAAAAAAAAMAAAAA
+AAAAAAAAFAAAAOVhEHDs+llE84w8n59gBpKwo6MIAAAABQAAAAIvdXNyL2xpYi9sZDY0LnNv
+LjEAAAAAAAAAADc3AAA3NwAAMsE9hQgdAAAAAAAAALQAAAAKAAIAaAAANzcAADc3AAAD/+Vv
+4AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQAAAAJbdmRz
+b10AAAAANzcAADc3AAAywT2FZEsAAAAAAAAAtAAAAApAAgB4AAA3NwAANzcAAAP/mtAAAAAA
+AAAACVAAAAAAAAAAAAAUAAAAgAHOCTvF4FWRjxkYCZq8RyIqH/kAAAAFAAAAAi91c3IvbGli
+NjQvbGlibS5zby42AAAAAAAANzcAADc3AAAywT2HgOwAAAAAAAAAtAAAAApAAgCIAAA3NwAA
+NzcAAAP/msgAAAAAAAAAAcAAAAAAAAAAAAAUAAAAym+BfzCGJYMTx0ISPsOZYotR8/0AAAAF
+AAAAAi91c3IvbGliNjQvbGliei5zby4xLjMuMS56bGliLW5nAAAAAAAAAAAAADc3AAA3NwAA
+MsE9iDQ9AAAAAAAAALQAAAAKQAIAgAAANzcAADc3AAAD/5rAAAAAAAAAAAHwAAAAAAAAAAAA
+FAAAAHEkyIj1FPZV8UZ1sVrvjBvAZp1zAAAABQAAAAIvdXNyL2xpYjY0L2xpYmVsZi0wLjE5
+My5zbwAAAAAAAAAANzcAADc3AAAywT2Iz9cAAAAAAAAAtAAAAApAAgCIAAA3NwAANzcAAAP/
+mrgAAAAAAAAAAOAAAAAAAAAAAAAUAAAAMJmxjQ8PoYzJlplLiR12nzLwei4AAAAFAAAAAi91
+c3IvbGliNjQvbGliZGVidWdpbmZvZC0wLjE5My5zbwAAAAAAAAAAADc3AAA3NwAAMsE9iWj9
+AAAAAAAAALQAAAAKQAIAgAAANzcAADc3AAAD/5qoAAAAAAAAAAsAAAAAAAAAAAAAFAAAAERO
+EuQhna5zSOWLW1kZwuXu1gdYAAAABQAAAAIvdXNyL2xpYjY0L2xpYmR3LTAuMTkzLnNvAAAA
+AAAAAAAANzcAADc3AAAywT2KBiMAAAAAAAAAtAAAAApAAgCAAAA3NwAANzcAAAP/mnAAAAAA
+AAAAN8AAAAAAAAAAAAAUAAAAv7PZ4aRkAGTb2ZU12YckAaJ1oxQAAAAFAAAAAi91c3IvbGli
+NjQvbGlic2xhbmcuc28uMi4zLjMAAAAAAAA3NwAANzcAADLBPYqnFAAAAAAAAAC0AAAACkAC
+AIAAADc3AAA3NwAAA/+aAAAAAAAAAABnAAAAAAAAAAAAABQAAACqktcVIG69EBdHiImoitfv
+zDJR+wAAAAUAAAACL3Vzci9saWI2NC9saWJweXRob24zLjE0LnNvLjEuMAAAADc3AAA3NwAA
+MsE9i4YhAAAAAAAAALQAAAAKQAIAgAAANzcAADc3AAAD/5SEwAAAAAAABUYAAAAAAAAD9LAA
+FAAAAAV951cKJ+b/gSP+gXHYDWo/rWRFAAAABQAAAAIvdXNyL2xpYjY0L2xpYkxMVk0uc28u
+MjEuMQAAAAAAAAAANzcAADc3AAAywT2Mh7cAAAAAAAAAtAAAAApAAgCAAAA3NwAANzcAAAP/
+kGAAAAAAAAAALHAAAAAAAAAAAAAUAAAA40IlKLStoG0cWXXxUZQVHwUnm/0AAAAFAAAAAi91
+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
+NzcAADLBPZf82QAAAAAAAAC0AAAACkACAIAAADc3AAA3NwAAA/+O0AAAAAAAAAAYUAAAAAAA
+AAAAABQAAACr0RqT17aMSX0I0xvGEYg1o68SNAAAAAUAAAACL3Vzci9saWI2NC9saWJ4bWwy
+LnNvLjIuMTIuMTAAAAAAADc3AAA3NwAAMsE9mOY0AAAAAAAAALQAAAAKQAIAiAAANzcAADc3
+AAAD/47wAAAAAAAAAAFQAAAAAAAAAAAAFAAAAMnQpcjPOMD5toCFW1FikGzfhX3PAAAABQAA
+AAIvdXNyL2xpYjY0L2xpYmdjY19zLTE1LTIwMjUwOTI0LnNvLjEAAAAAAAA3NwAANzcAADLB
+PZodUwAAAAAAAAC0AAAACkACAIAAADc3AAA3NwAAA/+OyAAAAAAAAAAAkAAAAAAAAAAAABQA
+AADmVF0pCdKmkpcf2PxPZt7O1fXd9QAAAAUAAAACL3Vzci9saWI2NC9saWJhdG9taWMuc28u
+MS4yLjAAAAAAADc3AAA3NwAAMsE9mv3xAAAAAAAAALQAAAAKQAIAiAAANzcAADc3AAAD/47A
+AAAAAAAAAAEAAAAAAAAAAAAAFAAAAIa/TzrxON6evP75F34GRrm9ijWHAAAABQAAAAIvdXNy
+L2xpYjY0L2xpYmJhYmVsdHJhY2Uuc28uMS4wLjAAAAAAAAAAAAA3NwAANzcAADLBPZvaJgAA
+AAAAAAC0AAAACkACAIAAADc3AAA3NwAAA/+OuAAAAAAAAAABAAAAAAAAAAAAABQAAADye4F6
+2rgxKYno45hEGGq6mv56kQAAAAUAAAACL3Vzci9saWI2NC9saWJwb3B0LnNvLjAuMC4yAAAA
+AAAAADc3AAA3NwAAMsE9nKEgAAAAAAAAALQAAAAKQAIAgAAANzcAADc3AAAD/46wAAAAAAAA
+AACQAAAAAAAAAAAAFAAAAC3ELv4JqCJeSIvF4je/3sE02ZC2AAAABQAAAAIvdXNyL2xpYjY0
+L2xpYnV1aWQuc28uMS4zLjAAAAAAAAAANzcAADc3AAAywT2dZqoAAAAAAAAAtAAAAApAAgCI
+AAA3NwAANzcAAAP/kDAAAAAAAAAAAFAAAAAAAAAAAAAUAAAA6TWzFvP4ajKAdX6BXCoqr/GC
+81YAAAAFAAAAAi91c3IvbGliNjQvbGliZ21vZHVsZS0yLjAuc28uMC44NjAwLjAAAAAAADc3
+AAA3NwAAMsE9nimUAAAAAAAAALQAAAAKQAIAiAAANzcAADc3AAAD/46QAAAAAAAAABagAAAA
+AAAAAAAAFAAAAOzkvcBBKT5nVnx3HtFPmRB7d3XAAAAABQAAAAIvdXNyL2xpYjY0L2xpYmds
+aWItMi4wLnNvLjAuODYwMC4wAAAAAAAAAAA3NwAANzcAADLBPZ70SAAAAAAAAAC0AAAACkAC
+AIgAADc3AAA3NwAAA/+OiAAAAAAAAAACoAAAAAAAAAAAABQAAADUW5s02e8PskkgOEgyNm5k
+H4IqVQAAAAUAAAACL3Vzci9saWI2NC9saWJuZ2h0dHAyLnNvLjE0LjI4LjUAAAAAAAAAAAAA
+NzcAADc3AAAywT2f/bcAAAAAAAAAtAAAAApAAgCAAAA3NwAANzcAAAP/joAAAAAAAAAABSAA
+AAAAAAAAAAAUAAAADExxWJbysfBdgihrIwmQpvHs8nkAAAAFAAAAAi91c3IvbGliNjQvbGli
+aWRuMi5zby4wLjQuMAAAAAAAAAA3NwAANzcAADLBPaD4uQAAAAAAAAC0AAAACkACAIAAADc3
+AAA3NwAAA/+OeAAAAAAAAAAGkAAAAAAAAAAAABQAAAAUkKUZOl0FL6wG2YVt7CbJa09GzQAA
+AAUAAAACL3Vzci9saWI2NC9saWJsZGFwLnNvLjIuMC4yMDAAAAAAADc3AAA3NwAAMsE9obeV
+AAAAAAAAALQAAAAKQAIAgAAANzcAADc3AAAD/46oAAAAAAAAAAEQAAAAAAAAAAAAFAAAALQm
+oeTviKaY2IaUEBAdhr69fJMeAAAABQAAAAIvdXNyL2xpYjY0L2xpYmxiZXIuc28uMi4wLjIw
+MAAAAAAANzcAADc3AAAywT2irHkAAAAAAAAAtAAAAApAAgCAAAA3NwAANzcAAAP/jmgAAAAA
+AAAACBAAAAAAAAAAAAAUAAAA9brBjOulQ3hI6Zw0q87sVlJFE4AAAAAFAAAAAi91c3IvbGli
+NjQvbGlic3NoLnNvLjQuMTAuMwAAAAAAAAA3NwAANzcAADLBPaN5UgAAAAAAAAC0AAAACkAC
+AIAAADc3AAA3NwAAA/+OYAAAAAAAAAABQAAAAAAAAAAAABQAAAC+UlK7WpPxQxtJIsHRASBO
+lVuPugAAAAUAAAACL3Vzci9saWI2NC9saWJwc2wuc28uNS4zLjUAAAAAAAAAADc3AAA3NwAA
+MsE9pIKjAAAAAAAAALQAAAAKQAIAgAAANzcAADc3AAAD/45QAAAAAAAAAA+gAAAAAAAAAAAA
+FAAAALEb9DG/zWBy/xFZOzF03YsHVdX/AAAABQAAAAIvdXNyL2xpYjY0L2xpYnNzbC5zby4z
+LjUuNAAAAAAAAAAANzcAADc3AAAywT2lS5sAAAAAAAAAtAAAAApAAgCIAAA3NwAANzcAAAP/
+jkgAAAAAAAAABYAAAAAAAAAAAAAUAAAA0poNbQ1RrJbI+lHAXV34hsxQYnIAAAAFAAAAAi91
+c3IvbGliNjQvbGliZ3NzYXBpX2tyYjUuc28uMi4yAAAAAAAAAAAAADc3AAA3NwAAMsE9pkBq
+AAAAAAAAALQAAAAKQAIAiAAANzcAADc3AAAD/45AAAAAAAAAAADwAAAAAAAAAAAAFAAAAHzL
+rJi+p8GWHvwb1WIWjzewQ/O1AAAABQAAAAIvdXNyL2xpYjY0L2xpYmJyb3RsaWRlYy5zby4x
+LjEuMAAAAAAAAAAAAAA3NwAANzcAADLBPac6NAAAAAAAAAC0AAAACkACAIgAADc3AAA3NwAA
+A/+OOAAAAAAAAAACIAAAAAAAAAAAABQAAACPl9RyZOSI0YDVtnyXhg26Y8vY8QAAAAUAAAAC
+L3Vzci9saWI2NC9saWJicm90bGljb21tb24uc28uMS4xLjAAAAAAAAAANzcAADc3AAAywT2n
++tQAAAAAAAAAtAAAAApAAgCAAAA3NwAANzcAAAP/jjAAAAAAAAAAA5AAAAAAAAAAAAAUAAAA
+qC2oaANENU1uW5llUHVNpbaQlLQAAAAFAAAAAi91c3IvbGliNjQvbGlidGluZm8uc28uNi41
+AAAAAAAAAAA3NwAANzcAADLBPajbqwAAAAAAAAC0AAAACkACAIAAADc3AAA3NwAAA/+OIAAA
+AAAAAAALIAAAAAAAAAAAABQAAADVZ08gCdGvqI/E4Y6thv5wf/MRLwAAAAUAAAACL3Vzci9s
+aWI2NC9saWJwY3JlMi04LnNvLjAuMTQuMAAAADc3AAA3NwAAMsE9qf37AAAAAAAAALQAAAAK
+QAIAiAAANzcAADc3AAAD/44AAAAAAAAAABtgAAAAAAAAAAAAFAAAACnCyyr1tC8frwR2YEeL
+Nl9AaDMYAAAABQAAAAIvdXNyL2xpYjY0L2xpYnVuaXN0cmluZy5zby41LjAuMAAAAAAAAAAA
+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
+AAAAAAAAAAAAAAAAAAAAQHMzOTB4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAACAAAAEBJQk0vUzM5MAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQElC
+TSwzOTMxLDcwNCxBMDEsMy43LDAwMmYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAADnFsAAAAAEAAABAL3Jvb3QvbGludXgvdG9vbHMvcGVyZi9wZXJmAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAACIAAAAAAAAAIgAAAAA
+AAAAAAAAAAAAAA+gAAAAAAAAAVcAAAAAAAAAHMbsIYYgAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAgAAABAY3ljbGVzAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACuAAAAAAAAAK8AAAAA
+AAAAsAAAAAAAAACxAAAAAAAAALIAAAAAAAAAswAAAAAAAAC0AAAAAAAAALUAAAAAAAAAiAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAABVwAAAAAAAAAcRgAgAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAEBjeWNsZXMAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALYAAAAAAAAAtwAA
+AAAAAAC4AAAAAAAAALkAAAAAAAAAugAAAAAAAAC7AAAAAAAAALwAAAAAAAAAvQAAAAEAAABA
+MC03AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAQAAABAMC0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAyLTMAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQDQtNQAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAABANi03AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAABAAAAAQAAAAEAAAABAAAAAgAA
+AAEAAAACAAAAAQAAAAMAAAABAAAAAwAAAAEAAAABAAAAAAAAAAAAOcWwAAAAAAAnSjgAAABA
+MC03AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAoAAAAKAAAAQGNwdW1fY2YAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALAAAAQGNwdW1fY2ZfZGlhZwAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE
+AAAAQGNwdW1fc2YAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAIAAAAQGtwcm9iZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAQHBhaV9jcnlwdG8AAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN
+AAAAQHBhaV9leHQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAABAAAAQHNvZnR3YXJlAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD////+AAAAQHRvb2wAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC
+AAAAQHRyYWNlcG9pbnQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAJAAAAQHVwcm9iZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAQHthbm9uX2dyb3VwfQAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAgAAAAEAAAAYAAAAAQAAAQAAAABAAAAACAAAAEBEYXRhAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQDEyOEsAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAABAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAEAAAEAAAAAQAAAAAgAAABASW5zdHJ1Y3Rpb24AAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAxMjhL
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAQDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAABAAAAAEAAAAAIAAAAQERhdGEAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA
+MTI4SwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAEAxAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAQAAAABAAAAACAAAAEBJbnN0cnVjdGlv
+bgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAQDEyOEsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAABAMQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAEAAAAAQAAAAAgAAABARGF0YQAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAEAxMjhLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAQDIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAABAAAAAEAAAAAIAAAAQElu
+c3RydWN0aW9uAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAABAMTI4SwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAyAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAQAAAABAAAAACAAA
+AEBEYXRhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAQDEyOEsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAMwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAEAAAAAQAAA
+AAgAAABASW5zdHJ1Y3Rpb24AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAEAxMjhLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQDMAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAABAAAA
+AEAAAAAIAAAAQERhdGEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAMTI4SwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA0AAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA
+AQAAAABAAAAACAAAAEBJbnN0cnVjdGlvbgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQDEyOEsAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABANAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAEAAAEAAAAAQAAAAAgAAABARGF0YQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAxMjhLAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQDUAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAABAAABAAAAAEAAAAAIAAAAQEluc3RydWN0aW9uAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAMTI4SwAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA1AAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAQAAAQAAAABAAAAACAAAAEBEYXRhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQDEyOEsAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABA
+NgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAEAAAEAAAAAQAAAAAgAAABASW5zdHJ1Y3Rpb24AAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAxMjhLAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAQDYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAABAAABAAAAAEAAAAAIAAAAQERhdGEAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAMTI4SwAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAEA3AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAQAAAABAAAAACAAAAEBJbnN0cnVjdGlvbgAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQDEy
+OEsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAABANwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAEAAAAgAAAAABAAAABAVW5pZmllZAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AEAzMjc2OEsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAQDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAABAAAAIAAAAAAQAAAAQFVuaWZpZWQA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAABAMzI3NjhLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAEAxAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAQAAACAAAAAAEAAAAEBVbmlm
+aWVkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAQDMyNzY4SwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAMgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAEAAAAgAAAAABAAAABA
+VW5pZmllZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAEAzMjc2OEsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQDMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAABAAAAIAAAAAAQ
+AAAAQFVuaWZpZWQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAABAMzI3NjhLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA0AAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAQAAACAA
+AAAAEAAAAEBVbmlmaWVkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAQDMyNzY4SwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABANQAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAEA
+AAAgAAAAABAAAABAVW5pZmllZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAzMjc2OEsAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQDYAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC
+AAABAAAAIAAAAAAQAAAAQFVuaWZpZWQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAMzI3NjhLAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA3AAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAywT46sWkAADLBP5oxAwAAAAAAAAABAAAAAEAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAA
+AAQAAAAAAAAABAAAAAAAAAAPAAAAAA==
+
+--------------USIhevWXX90Jq6lIWzI9qEw3--
 
