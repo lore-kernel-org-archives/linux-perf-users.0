@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4243D32D7DA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8AE132E69A;
 	Wed, 29 Oct 2025 10:24:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761733499; cv=none; b=ITtU1Hx+Ep0VHNjc1OSszSwulMBZzmAHuhtQ95xodnZ9VITBDznG+uSxsddzqsuQC6JwHUPVFdnZ/u7oRoi+fKRtKGaFsYJ7NquoSC5f6UzBHvem6yg2aLETRVHRiyLMaoYoOxqmod3xBirmodIX94U9d9Ad58GI6yFJqUwKh3o=
+	t=1761733499; cv=none; b=iIELSH8Jvjl/Dmn4HMJ+06bHcrK7zCOtO38OpUlpSfaKP3Fo5wUOYzzi/ZKnlHNi/Ih6SFmgaL78lhKzQ5XJwWNEMCL9E5Kry+CyWPYnI/xPFPC49wYo98cn7lMZsdRs/kwYlWBBgkFSO09Z/JWQwW76FPNzxO743dDczDoTF1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1761733499; c=relaxed/simple;
-	bh=evPKIzQcVCLPzC/dYnUa+rZprMXDjYWXTtFOplZc0ko=;
+	bh=GzyOmcFUUttQzzYjaAaVDitcl+kbM5mpjqqNBe0bvJg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=G4TlMDZ0lwvJoosgERTEP6rw97WVpZUF/R3xsxnpzkMMZ09kx9VhUZbLBTef4HOk90YsYGHXCEbBHzndPIR5V4y6o0T4dLbNJ20OA46D76DNwf2Snxa5cGnqrWm4iPWm1s4VRAcgKFwXnBmSpXOoxjteZ/UmMxSR/eQPFOW1THI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eg0xzVm4; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version; b=KSoQS3XiR9xGf/d3qsQfwYA9TUqCHJEz6xqm/Pwf/aIah/afWdlSa/TN7q8PjjE/guum06HTtPMu08OWYgtrZTirnm9HY8BWdYElzAUX+KYCiitIx/nrLTp9FE+QPqkhA4R+VgYJoPgEvRA/YbF4epNBSO8q5NQoET5/nUQoSQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HSZQYZEw; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eg0xzVm4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HSZQYZEw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761733497; x=1793269497;
+  t=1761733498; x=1793269498;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=evPKIzQcVCLPzC/dYnUa+rZprMXDjYWXTtFOplZc0ko=;
-  b=eg0xzVm4tqOOG48uRtFkDC3Bh7dNLVAs+ZXplOrhawbPttusn3LtbJWD
-   ufbMMv8Qv94+L8TCtJ3XL33TuSwxYylGJk6qphF6CJQLn50k/ZtoOgJCU
-   Ou+0L7n0Vw9Tfrh6YSjAIdpi6a7alNwFgtS0ju9sobJHy9l1tr6CwWU4P
-   uscwzEwQVPPOUwEBcEVxASeC5KjeNi+Rhpc0WIV4TuWi68tY8f/mcFH0B
-   6rvznXIiF4llnHOU8OKa6NTlxFtAhbYU5hQ77cXCm4wq7+wXXt7a6/X/S
-   5jZXU6jdeiI1nHGPu9EEfRUZFXTyl158HWGhe3IiIcNFUqyksL7iGV9xb
+  bh=GzyOmcFUUttQzzYjaAaVDitcl+kbM5mpjqqNBe0bvJg=;
+  b=HSZQYZEwOnDgBhNPLhn8CbyPnyRJybsPNdcXuFMc4zcVo87iu0RdBURZ
+   J6uAZGtwVIwnjkp1GdT4E+YJamciQjDtoUnjpyLp7NvSRCgijl6BRvJf7
+   4u4tQMDWkQNEdsDam9quwt6g2hUaNUZMufb2fthMiV/raLBBZoNIQO4gf
+   967deddrLePvgulQ9Mb2Mob3XdrneedzFSmivQWotbVyr/G60dR0UusxH
+   rcYQrcGxn+gse3VTnBYodh5ZJlMdUTvK4R94uev9f6skTXK0xnQY31pt8
+   29pnMiuaOAIUQP019GiBeYXzUWro4R18kok/P6GQKG2iAhu9ZKf9cLkm0
    g==;
-X-CSE-ConnectionGUID: wB6Vz0hQTxm1J4osmBZz2Q==
-X-CSE-MsgGUID: oPGhsTQOTBe73DSWcLAzhg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11596"; a="63891045"
+X-CSE-ConnectionGUID: kNiJyE2fSamg0OIbES0pRw==
+X-CSE-MsgGUID: alG3bUdjS3GNa/06dlAs2Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11596"; a="63891052"
 X-IronPort-AV: E=Sophos;i="6.19,263,1754982000"; 
-   d="scan'208";a="63891045"
+   d="scan'208";a="63891052"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 03:24:54 -0700
-X-CSE-ConnectionGUID: VWA3e2ldTTeBxd7cjFPZbg==
-X-CSE-MsgGUID: qXMA73bwRs2rghtOscHfWQ==
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 03:24:57 -0700
+X-CSE-ConnectionGUID: Ef5YVVTyRZ2rWyXVbUlVfg==
+X-CSE-MsgGUID: canPoHfZTemauigk2lipRQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,263,1754982000"; 
-   d="scan'208";a="185963437"
+   d="scan'208";a="185963452"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by fmviesa008.fm.intel.com with ESMTP; 29 Oct 2025 03:24:47 -0700
+  by fmviesa008.fm.intel.com with ESMTP; 29 Oct 2025 03:24:52 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -59,10 +59,11 @@ Cc: linux-kernel@vger.kernel.org,
 	Zide Chen <zide.chen@intel.com>,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v9 08/12] perf/x86/intel: Process arch-PEBS records or record fragments
-Date: Wed, 29 Oct 2025 18:21:32 +0800
-Message-Id: <20251029102136.61364-9-dapeng1.mi@linux.intel.com>
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: [Patch v9 09/12] perf/x86/intel: Allocate arch-PEBS buffer and initialize PEBS_BASE MSR
+Date: Wed, 29 Oct 2025 18:21:33 +0800
+Message-Id: <20251029102136.61364-10-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251029102136.61364-1-dapeng1.mi@linux.intel.com>
 References: <20251029102136.61364-1-dapeng1.mi@linux.intel.com>
@@ -74,389 +75,237 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A significant difference with adaptive PEBS is that arch-PEBS record
-supports fragments which means an arch-PEBS record could be split into
-several independent fragments which have its own arch-PEBS header in
-each fragment.
+Arch-PEBS introduces a new MSR IA32_PEBS_BASE to store the arch-PEBS
+buffer physical address. This patch allocates arch-PEBS buffer and then
+initialize IA32_PEBS_BASE MSR with the buffer physical address.
 
-This patch defines architectural PEBS record layout structures and add
-helpers to process arch-PEBS records or fragments. Only legacy PEBS
-groups like basic, GPR, XMM and LBR groups are supported in this patch,
-the new added YMM/ZMM/OPMASK vector registers capturing would be
-supported in the future.
-
+Co-developed-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/intel/core.c      |  13 +++
- arch/x86/events/intel/ds.c        | 184 ++++++++++++++++++++++++++++++
- arch/x86/include/asm/msr-index.h  |   6 +
- arch/x86/include/asm/perf_event.h |  96 ++++++++++++++++
- 4 files changed, 299 insertions(+)
+ arch/x86/events/intel/core.c    | 11 ++++-
+ arch/x86/events/intel/ds.c      | 82 ++++++++++++++++++++++++++++-----
+ arch/x86/events/perf_event.h    | 11 ++++-
+ arch/x86/include/asm/intel_ds.h |  3 +-
+ 4 files changed, 92 insertions(+), 15 deletions(-)
 
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 9ce27b326923..de4dbde28adc 100644
+index de4dbde28adc..6e04d73dfae5 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -3215,6 +3215,19 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
- 			status &= ~GLOBAL_STATUS_PERF_METRICS_OVF_BIT;
- 	}
+@@ -5227,7 +5227,13 @@ int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu)
  
-+	/*
-+	 * Arch PEBS sets bit 54 in the global status register
-+	 */
-+	if (__test_and_clear_bit(GLOBAL_STATUS_ARCH_PEBS_THRESHOLD_BIT,
-+				 (unsigned long *)&status)) {
-+		handled++;
-+		static_call(x86_pmu_drain_pebs)(regs, &data);
+ static int intel_pmu_cpu_prepare(int cpu)
+ {
+-	return intel_cpuc_prepare(&per_cpu(cpu_hw_events, cpu), cpu);
++	int ret;
 +
-+		if (cpuc->events[INTEL_PMC_IDX_FIXED_SLOTS] &&
-+		    is_pebs_counter_event_group(cpuc->events[INTEL_PMC_IDX_FIXED_SLOTS]))
-+			status &= ~GLOBAL_STATUS_PERF_METRICS_OVF_BIT;
-+	}
++	ret = intel_cpuc_prepare(&per_cpu(cpu_hw_events, cpu), cpu);
++	if (ret)
++		return ret;
 +
++	return alloc_arch_pebs_buf_on_cpu(cpu);
+ }
+ 
+ static void flip_smm_bit(void *data)
+@@ -5458,6 +5464,7 @@ static void intel_pmu_cpu_starting(int cpu)
+ 		return;
+ 
+ 	init_debug_store_on_cpu(cpu);
++	init_arch_pebs_on_cpu(cpu);
  	/*
- 	 * Intel PT
- 	 */
+ 	 * Deal with CPUs that don't clear their LBRs on power-up, and that may
+ 	 * even boot with LBRs enabled.
+@@ -5555,6 +5562,7 @@ static void free_excl_cntrs(struct cpu_hw_events *cpuc)
+ static void intel_pmu_cpu_dying(int cpu)
+ {
+ 	fini_debug_store_on_cpu(cpu);
++	fini_arch_pebs_on_cpu(cpu);
+ }
+ 
+ void intel_cpuc_finish(struct cpu_hw_events *cpuc)
+@@ -5575,6 +5583,7 @@ static void intel_pmu_cpu_dead(int cpu)
+ {
+ 	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
+ 
++	release_arch_pebs_buf_on_cpu(cpu);
+ 	intel_cpuc_finish(cpuc);
+ 
+ 	if (is_hybrid() && cpuc->pmu)
 diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 68664526443f..fe1bf373409e 100644
+index fe1bf373409e..5c26a5235f94 100644
 --- a/arch/x86/events/intel/ds.c
 +++ b/arch/x86/events/intel/ds.c
-@@ -2270,6 +2270,117 @@ static void setup_pebs_adaptive_sample_data(struct perf_event *event,
- 			format_group);
+@@ -625,13 +625,18 @@ static int alloc_pebs_buffer(int cpu)
+ 	int max, node = cpu_to_node(cpu);
+ 	void *buffer, *insn_buff, *cea;
+ 
+-	if (!x86_pmu.ds_pebs)
++	if (!intel_pmu_has_pebs())
+ 		return 0;
+ 
+ 	buffer = dsalloc_pages(bsiz, GFP_KERNEL, cpu);
+ 	if (unlikely(!buffer))
+ 		return -ENOMEM;
+ 
++	if (x86_pmu.arch_pebs) {
++		hwev->pebs_vaddr = buffer;
++		return 0;
++	}
++
+ 	/*
+ 	 * HSW+ already provides us the eventing ip; no need to allocate this
+ 	 * buffer then.
+@@ -644,7 +649,7 @@ static int alloc_pebs_buffer(int cpu)
+ 		}
+ 		per_cpu(insn_buffer, cpu) = insn_buff;
+ 	}
+-	hwev->ds_pebs_vaddr = buffer;
++	hwev->pebs_vaddr = buffer;
+ 	/* Update the cpu entry area mapping */
+ 	cea = &get_cpu_entry_area(cpu)->cpu_debug_buffers.pebs_buffer;
+ 	ds->pebs_buffer_base = (unsigned long) cea;
+@@ -660,17 +665,20 @@ static void release_pebs_buffer(int cpu)
+ 	struct cpu_hw_events *hwev = per_cpu_ptr(&cpu_hw_events, cpu);
+ 	void *cea;
+ 
+-	if (!x86_pmu.ds_pebs)
++	if (!intel_pmu_has_pebs())
+ 		return;
+ 
+-	kfree(per_cpu(insn_buffer, cpu));
+-	per_cpu(insn_buffer, cpu) = NULL;
++	if (x86_pmu.ds_pebs) {
++		kfree(per_cpu(insn_buffer, cpu));
++		per_cpu(insn_buffer, cpu) = NULL;
+ 
+-	/* Clear the fixmap */
+-	cea = &get_cpu_entry_area(cpu)->cpu_debug_buffers.pebs_buffer;
+-	ds_clear_cea(cea, x86_pmu.pebs_buffer_size);
+-	dsfree_pages(hwev->ds_pebs_vaddr, x86_pmu.pebs_buffer_size);
+-	hwev->ds_pebs_vaddr = NULL;
++		/* Clear the fixmap */
++		cea = &get_cpu_entry_area(cpu)->cpu_debug_buffers.pebs_buffer;
++		ds_clear_cea(cea, x86_pmu.pebs_buffer_size);
++	}
++
++	dsfree_pages(hwev->pebs_vaddr, x86_pmu.pebs_buffer_size);
++	hwev->pebs_vaddr = NULL;
  }
  
-+static inline bool arch_pebs_record_continued(struct arch_pebs_header *header)
+ static int alloc_bts_buffer(int cpu)
+@@ -823,6 +831,56 @@ void reserve_ds_buffers(void)
+ 	}
+ }
+ 
++inline int alloc_arch_pebs_buf_on_cpu(int cpu)
 +{
-+	/* Continue bit or null PEBS record indicates fragment follows. */
-+	return header->cont || !(header->format & GENMASK_ULL(63, 16));
++	if (!x86_pmu.arch_pebs)
++		return 0;
++
++	return alloc_pebs_buffer(cpu);
 +}
 +
-+static void setup_arch_pebs_sample_data(struct perf_event *event,
-+					struct pt_regs *iregs,
-+					void *__pebs,
-+					struct perf_sample_data *data,
-+					struct pt_regs *regs)
++inline void release_arch_pebs_buf_on_cpu(int cpu)
 +{
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	u64 sample_type = event->attr.sample_type;
-+	struct arch_pebs_header *header = NULL;
-+	struct arch_pebs_aux *meminfo = NULL;
-+	struct arch_pebs_gprs *gprs = NULL;
-+	struct x86_perf_regs *perf_regs;
-+	void *next_record;
-+	void *at = __pebs;
-+
-+	if (at == NULL)
++	if (!x86_pmu.arch_pebs)
 +		return;
 +
-+	perf_regs = container_of(regs, struct x86_perf_regs, regs);
-+	perf_regs->xmm_regs = NULL;
++	release_pebs_buffer(cpu);
++}
 +
-+	__setup_perf_sample_data(event, iregs, data);
++void init_arch_pebs_on_cpu(int cpu)
++{
++	struct cpu_hw_events *cpuc = per_cpu_ptr(&cpu_hw_events, cpu);
++	u64 arch_pebs_base;
 +
-+	*regs = *iregs;
++	if (!x86_pmu.arch_pebs)
++		return;
 +
-+again:
-+	header = at;
-+	next_record = at + sizeof(struct arch_pebs_header);
-+	if (header->basic) {
-+		struct arch_pebs_basic *basic = next_record;
-+		u16 retire = 0;
-+
-+		next_record = basic + 1;
-+
-+		if (sample_type & PERF_SAMPLE_WEIGHT_STRUCT)
-+			retire = basic->valid ? basic->retire : 0;
-+		__setup_pebs_basic_group(event, regs, data, sample_type,
-+				 basic->ip, basic->tsc, retire);
++	if (!cpuc->pebs_vaddr) {
++		WARN(1, "Fail to allocate PEBS buffer on CPU %d\n", cpu);
++		x86_pmu.pebs_active = 0;
++		return;
 +	}
 +
 +	/*
-+	 * The record for MEMINFO is in front of GP
-+	 * But PERF_SAMPLE_TRANSACTION needs gprs->ax.
-+	 * Save the pointer here but process later.
++	 * 4KB-aligned pointer of the output buffer
++	 * (__alloc_pages_node() return page aligned address)
++	 * Buffer Size = 4KB * 2^SIZE
++	 * contiguous physical buffer (__alloc_pages_node() with order)
 +	 */
-+	if (header->aux) {
-+		meminfo = next_record;
-+		next_record = meminfo + 1;
-+	}
-+
-+	if (header->gpr) {
-+		gprs = next_record;
-+		next_record = gprs + 1;
-+
-+		__setup_pebs_gpr_group(event, regs,
-+				       (struct pebs_gprs *)gprs,
-+				       sample_type);
-+	}
-+
-+	if (header->aux) {
-+		u64 ax = gprs ? gprs->ax : 0;
-+
-+		__setup_pebs_meminfo_group(event, data, sample_type,
-+					   meminfo->cache_latency,
-+					   meminfo->instr_latency,
-+					   meminfo->address, meminfo->aux,
-+					   meminfo->tsx_tuning, ax);
-+	}
-+
-+	if (header->xmm) {
-+		struct pebs_xmm *xmm;
-+
-+		next_record += sizeof(struct arch_pebs_xer_header);
-+
-+		xmm = next_record;
-+		perf_regs->xmm_regs = xmm->xmm;
-+		next_record = xmm + 1;
-+	}
-+
-+	if (header->lbr) {
-+		struct arch_pebs_lbr_header *lbr_header = next_record;
-+		struct lbr_entry *lbr;
-+		int num_lbr;
-+
-+		next_record = lbr_header + 1;
-+		lbr = next_record;
-+
-+		num_lbr = header->lbr == ARCH_PEBS_LBR_NUM_VAR ?
-+				lbr_header->depth :
-+				header->lbr * ARCH_PEBS_BASE_LBR_ENTRIES;
-+		next_record += num_lbr * sizeof(struct lbr_entry);
-+
-+		if (has_branch_stack(event)) {
-+			intel_pmu_store_pebs_lbrs(lbr);
-+			intel_pmu_lbr_save_brstack(data, cpuc, event);
-+		}
-+	}
-+
-+	/* Parse followed fragments if there are. */
-+	if (arch_pebs_record_continued(header)) {
-+		at = at + header->size;
-+		goto again;
-+	}
++	arch_pebs_base = virt_to_phys(cpuc->pebs_vaddr) | PEBS_BUFFER_SHIFT;
++	wrmsr_on_cpu(cpu, MSR_IA32_PEBS_BASE, (u32)arch_pebs_base,
++		     (u32)(arch_pebs_base >> 32));
++	x86_pmu.pebs_active = 1;
 +}
 +
- static inline void *
- get_next_pebs_record_by_bit(void *base, void *top, int bit)
- {
-@@ -2753,6 +2864,78 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_d
- 					    setup_pebs_adaptive_sample_data);
- }
- 
-+static void intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
-+				      struct perf_sample_data *data)
++inline void fini_arch_pebs_on_cpu(int cpu)
 +{
-+	short counts[INTEL_PMC_IDX_FIXED + MAX_FIXED_PEBS_EVENTS] = {};
-+	void *last[INTEL_PMC_IDX_FIXED + MAX_FIXED_PEBS_EVENTS];
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	union arch_pebs_index index;
-+	struct x86_perf_regs perf_regs;
-+	struct pt_regs *regs = &perf_regs.regs;
-+	void *base, *at, *top;
-+	u64 mask;
-+
-+	rdmsrq(MSR_IA32_PEBS_INDEX, index.whole);
-+
-+	if (unlikely(!index.wr)) {
-+		intel_pmu_pebs_event_update_no_drain(cpuc, X86_PMC_IDX_MAX);
++	if (!x86_pmu.arch_pebs)
 +		return;
-+	}
 +
-+	base = cpuc->ds_pebs_vaddr;
-+	top = (void *)((u64)cpuc->ds_pebs_vaddr +
-+		       (index.wr << ARCH_PEBS_INDEX_WR_SHIFT));
-+
-+	index.wr = 0;
-+	index.full = 0;
-+	wrmsrq(MSR_IA32_PEBS_INDEX, index.whole);
-+
-+	mask = hybrid(cpuc->pmu, arch_pebs_cap).counters & cpuc->pebs_enabled;
-+
-+	if (!iregs)
-+		iregs = &dummy_iregs;
-+
-+	/* Process all but the last event for each counter. */
-+	for (at = base; at < top;) {
-+		struct arch_pebs_header *header;
-+		struct arch_pebs_basic *basic;
-+		u64 pebs_status;
-+
-+		header = at;
-+
-+		if (WARN_ON_ONCE(!header->size))
-+			break;
-+
-+		/* 1st fragment or single record must have basic group */
-+		if (!header->basic) {
-+			at += header->size;
-+			continue;
-+		}
-+
-+		basic = at + sizeof(struct arch_pebs_header);
-+		pebs_status = mask & basic->applicable_counters;
-+		__intel_pmu_handle_pebs_record(iregs, regs, data, at,
-+					       pebs_status, counts, last,
-+					       setup_arch_pebs_sample_data);
-+
-+		/* Skip non-last fragments */
-+		while (arch_pebs_record_continued(header)) {
-+			if (!header->size)
-+				break;
-+			at += header->size;
-+			header = at;
-+		}
-+
-+		/* Skip last fragment or the single record */
-+		at += header->size;
-+	}
-+
-+	__intel_pmu_handle_last_pebs_record(iregs, regs, data, mask,
-+					    counts, last,
-+					    setup_arch_pebs_sample_data);
++	wrmsr_on_cpu(cpu, MSR_IA32_PEBS_BASE, 0, 0);
 +}
-+
- static void __init intel_arch_pebs_init(void)
- {
- 	/*
-@@ -2762,6 +2945,7 @@ static void __init intel_arch_pebs_init(void)
- 	 */
- 	x86_pmu.arch_pebs = 1;
- 	x86_pmu.pebs_buffer_size = PEBS_BUFFER_SIZE;
-+	x86_pmu.drain_pebs = intel_pmu_drain_arch_pebs;
- 	x86_pmu.pebs_capable = ~0ULL;
- 
- 	x86_pmu.pebs_enable = __intel_pmu_pebs_enable;
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 9e1720d73244..fc7a4e7c718d 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -327,6 +327,12 @@
- 					 PERF_CAP_PEBS_FORMAT | PERF_CAP_PEBS_BASELINE | \
- 					 PERF_CAP_PEBS_TIMING_INFO)
- 
-+/* Arch PEBS */
-+#define MSR_IA32_PEBS_BASE		0x000003f4
-+#define MSR_IA32_PEBS_INDEX		0x000003f5
-+#define ARCH_PEBS_OFFSET_MASK		0x7fffff
-+#define ARCH_PEBS_INDEX_WR_SHIFT	4
-+
- #define MSR_IA32_RTIT_CTL		0x00000570
- #define RTIT_CTL_TRACEEN		BIT(0)
- #define RTIT_CTL_CYCLEACC		BIT(1)
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 0dfa06722bab..3b3848f0d339 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -437,6 +437,8 @@ static inline bool is_topdown_idx(int idx)
- #define GLOBAL_STATUS_LBRS_FROZEN		BIT_ULL(GLOBAL_STATUS_LBRS_FROZEN_BIT)
- #define GLOBAL_STATUS_TRACE_TOPAPMI_BIT		55
- #define GLOBAL_STATUS_TRACE_TOPAPMI		BIT_ULL(GLOBAL_STATUS_TRACE_TOPAPMI_BIT)
-+#define GLOBAL_STATUS_ARCH_PEBS_THRESHOLD_BIT	54
-+#define GLOBAL_STATUS_ARCH_PEBS_THRESHOLD	BIT_ULL(GLOBAL_STATUS_ARCH_PEBS_THRESHOLD_BIT)
- #define GLOBAL_STATUS_PERF_METRICS_OVF_BIT	48
- 
- #define GLOBAL_CTRL_EN_PERF_METRICS		BIT_ULL(48)
-@@ -507,6 +509,100 @@ struct pebs_cntr_header {
- 
- #define INTEL_CNTR_METRICS		0x3
- 
-+/*
-+ * Arch PEBS
-+ */
-+union arch_pebs_index {
-+	struct {
-+		u64 rsvd:4,
-+		    wr:23,
-+		    rsvd2:4,
-+		    full:1,
-+		    en:1,
-+		    rsvd3:3,
-+		    thresh:23,
-+		    rsvd4:5;
-+	};
-+	u64 whole;
-+};
-+
-+struct arch_pebs_header {
-+	union {
-+		u64 format;
-+		struct {
-+			u64 size:16,	/* Record size */
-+			    rsvd:14,
-+			    mode:1,	/* 64BIT_MODE */
-+			    cont:1,
-+			    rsvd2:3,
-+			    cntr:5,
-+			    lbr:2,
-+			    rsvd3:7,
-+			    xmm:1,
-+			    ymmh:1,
-+			    rsvd4:2,
-+			    opmask:1,
-+			    zmmh:1,
-+			    h16zmm:1,
-+			    rsvd5:5,
-+			    gpr:1,
-+			    aux:1,
-+			    basic:1;
-+		};
-+	};
-+	u64 rsvd6;
-+};
-+
-+struct arch_pebs_basic {
-+	u64 ip;
-+	u64 applicable_counters;
-+	u64 tsc;
-+	u64 retire	:16,	/* Retire Latency */
-+	    valid	:1,
-+	    rsvd	:47;
-+	u64 rsvd2;
-+	u64 rsvd3;
-+};
-+
-+struct arch_pebs_aux {
-+	u64 address;
-+	u64 rsvd;
-+	u64 rsvd2;
-+	u64 rsvd3;
-+	u64 rsvd4;
-+	u64 aux;
-+	u64 instr_latency	:16,
-+	    pad2		:16,
-+	    cache_latency	:16,
-+	    pad3		:16;
-+	u64 tsx_tuning;
-+};
-+
-+struct arch_pebs_gprs {
-+	u64 flags, ip, ax, cx, dx, bx, sp, bp, si, di;
-+	u64 r8, r9, r10, r11, r12, r13, r14, r15, ssp;
-+	u64 rsvd;
-+};
-+
-+struct arch_pebs_xer_header {
-+	u64 xstate;
-+	u64 rsvd;
-+};
-+
-+#define ARCH_PEBS_LBR_NAN		0x0
-+#define ARCH_PEBS_LBR_NUM_8		0x1
-+#define ARCH_PEBS_LBR_NUM_16		0x2
-+#define ARCH_PEBS_LBR_NUM_VAR		0x3
-+#define ARCH_PEBS_BASE_LBR_ENTRIES	8
-+struct arch_pebs_lbr_header {
-+	u64 rsvd;
-+	u64 ctl;
-+	u64 depth;
-+	u64 ler_from;
-+	u64 ler_to;
-+	u64 ler_info;
-+};
 +
  /*
-  * AMD Extended Performance Monitoring and Debug cpuid feature detection
+  * BTS
   */
+@@ -2883,8 +2941,8 @@ static void intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
+ 		return;
+ 	}
+ 
+-	base = cpuc->ds_pebs_vaddr;
+-	top = (void *)((u64)cpuc->ds_pebs_vaddr +
++	base = cpuc->pebs_vaddr;
++	top = (void *)((u64)cpuc->pebs_vaddr +
+ 		       (index.wr << ARCH_PEBS_INDEX_WR_SHIFT));
+ 
+ 	index.wr = 0;
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index ca5289980b52..13f411bca6bc 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -283,8 +283,9 @@ struct cpu_hw_events {
+ 	 * Intel DebugStore bits
+ 	 */
+ 	struct debug_store	*ds;
+-	void			*ds_pebs_vaddr;
+ 	void			*ds_bts_vaddr;
++	/* DS based PEBS or arch-PEBS buffer address */
++	void			*pebs_vaddr;
+ 	u64			pebs_enabled;
+ 	int			n_pebs;
+ 	int			n_large_pebs;
+@@ -1617,6 +1618,14 @@ extern void intel_cpuc_finish(struct cpu_hw_events *cpuc);
+ 
+ int intel_pmu_init(void);
+ 
++int alloc_arch_pebs_buf_on_cpu(int cpu);
++
++void release_arch_pebs_buf_on_cpu(int cpu);
++
++void init_arch_pebs_on_cpu(int cpu);
++
++void fini_arch_pebs_on_cpu(int cpu);
++
+ void init_debug_store_on_cpu(int cpu);
+ 
+ void fini_debug_store_on_cpu(int cpu);
+diff --git a/arch/x86/include/asm/intel_ds.h b/arch/x86/include/asm/intel_ds.h
+index 5dbeac48a5b9..023c2883f9f3 100644
+--- a/arch/x86/include/asm/intel_ds.h
++++ b/arch/x86/include/asm/intel_ds.h
+@@ -4,7 +4,8 @@
+ #include <linux/percpu-defs.h>
+ 
+ #define BTS_BUFFER_SIZE		(PAGE_SIZE << 4)
+-#define PEBS_BUFFER_SIZE	(PAGE_SIZE << 4)
++#define PEBS_BUFFER_SHIFT	4
++#define PEBS_BUFFER_SIZE	(PAGE_SIZE << PEBS_BUFFER_SHIFT)
+ 
+ /* The maximal number of PEBS events: */
+ #define MAX_PEBS_EVENTS_FMT4	8
 -- 
 2.34.1
 
