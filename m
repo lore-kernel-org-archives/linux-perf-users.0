@@ -1,132 +1,134 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A05278E5D
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2025 15:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676C52D6E69
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2025 15:28:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761750805; cv=none; b=eF1+E8czm8fttnDVohK3G2CGcIW69OH2M5q21SeUC5s9OpwhZ+bYFeCGNEeYQENa2z0JyAJIBFuY0jw6wg5IpePUz6Cf/MThPuVuF7tdmZHGQ5qhjGLLVtAn9PJSZsC8NmTtwmS4eIpTzexOixAbsyBR+8R1dYLpr5JSHKaL11g=
+	t=1761751728; cv=none; b=Pd/x8TCiMouRTI9IVYG+L/udLuPWKyWNgzJug8irnQM1sZ1ejfbszlep6Z8DFXNbx2rqyVccETFo9ZWGLwiK45N3WUCp+lkXHjJa+wjPpS9Zpux4u2xWp0//apHAUiA3wkK02DzdaHhLiN4/y9C7vPDObeRRmmUkSo5cl7XiIEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761750805; c=relaxed/simple;
-	bh=9PJ9EARvOsp5wxpB2XNAHlJswvMLpeemrLKV6P+lLME=;
+	s=arc-20240116; t=1761751728; c=relaxed/simple;
+	bh=TJHFnnFKIqy6xvnPpB0BOQQvgK6dk7JKH68jj6ONkWw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s7WSS/8ngzCqMIp+xl/0yQGVG5zWtUN8secWurhcYIZsU/kFSv3Oq1FsACt5B6qJmUTNGjwMlhuAdNsepuF31uMdlBvxWa/gI7lgh6LTdaEBkQm/CPbD2cQiMIXQKCeKKsBJnEJggioVwn8g+0vgZKU8GhTCW4V4Fn8WFuT1Rx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xJjEJMb2; arc=none smtp.client-ip=209.85.214.178
+	 To:Cc:Content-Type; b=uyWemxTsPy0i9J0Y0vwS6UAFEZol9GUuL21TTbvdwhUM7ryGfbodDHrormMnCdfXvTwEdANuU3jxr7cR4QD0/0jp3X6dw91edo5Xnt3lkL/aSdsTPBQWOm3EcT27MPf06D9yXxqjsGwrgXOvKpWlYdNElNIXkytAJuB6Z2P5E1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wmy0ybJt; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xJjEJMb2"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-27d67abd215so226455ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2025 08:13:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wmy0ybJt"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-27d67abd215so230495ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2025 08:28:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761750803; x=1762355603; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1761751726; x=1762356526; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=G0dYPU3Bn2piGd/ljPrwHid5cgPmP+amO0tRotO4NIY=;
-        b=xJjEJMb2fQYziHEQO56Nk9t0zzMUDiCuOOr9COb3jBMPr7bD+Lx8cPrJEoTGQfKxgM
-         /vHg+bqWDPQbPZ9d2sIkByiy3TwgT5Ofm/xLjLYY22plCUMn9T9Rir1TftMXGkHGqwPz
-         bLf5YwScifvD/uaGcpGCtsXbCwStUxJBiyMVEFC42ztJuQEeu8kWiF9ELaFE2S5z3eCw
-         esJtZpNVJ8EA7dPRLVUzFItGBXg7fi4oCG+OcOAX/ot/uTESugmZ3e6VcbBFqzdcZOow
-         DQy1H4b1w5TdfjjEMFMSw7Pf50Xpvv0ZX6Cb7LIG1dOPWrBnrgT6Bmt6mMs9J/NxbRRk
-         3PJA==
+        bh=F4LDGDuuvy1GZmmeIYc2HRo9Q3u3XPw/hRPINr8ofC8=;
+        b=Wmy0ybJtG/chSY4gZRAsG5qm7CriFZMPrtWJ2gnTk3PLBfc7P/W+BhZaADu5yOwQOw
+         GTn8onLLcaV3AKVfX2uTLWjWxFJQRR2u+lNudfdIYkMisMo8JMq2rmVHrvX45Sqp+sAk
+         2Hm4i3QZaSNsuVL8hckiSeyGSJlA7W6p1R9XFAzLYGiaYeQTYS6fKcMWcr08qB4c5mUZ
+         4U2YopKCdsoOI6AwxBy7L4rS7SErKluohlpGTzkoc39yjiBVE3y4s/6LBn3qDD4ZRH9G
+         MOORkLdoY+ZOJS+3YXEgSIVU9xw/wZ3PvKk7P6i+cBkcKOAq3vb/+oglrzwsJBbLJPOJ
+         ms+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761750803; x=1762355603;
+        d=1e100.net; s=20230601; t=1761751726; x=1762356526;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=G0dYPU3Bn2piGd/ljPrwHid5cgPmP+amO0tRotO4NIY=;
-        b=BpGRj0OdskrjgTDijsEsbn53uUjFjrmeiJfPV07vEZbT0qcRzc6URdp4FxhYJRFd5C
-         aEbFvx4qlpLj/iPs4YDlhTRsIr+xDqQhJaOERvbp+qdP889xiW2xV7p5QT69WN4Ldm8U
-         UiiZHOYQauJXr/Bsk8zlIexgc3qrDQPK2cIGh11qnGdgqlaevHkD5eD8C315XDoJg4a2
-         v60+Zdb4h49GCGceMFPI5TpfpIUhHxyFnqFTXik4Za1YbT0cnUG2Gi+L4GQUxZ+uaSZl
-         T6pXYsm0mUN8WnvtpDmLeIPn9VvbQRceHZLPe5pExjV5kn3RajHKJKEI+N6B2L0MgW+A
-         iZ4A==
-X-Gm-Message-State: AOJu0YyqRqt8rpCUyOMMKBu896d+5t0z/PiO0iddOz1fAhn2AdKhXS7L
-	BQUlpSgPs77tVib94njGkr2eYJUhoT54/YKLhGofbQa4u/VA8IO0lW5XBY0AVWy5r4YITVymomd
-	ZlYFn6E/WKHBWvau3Z81TPdbIZuFIuc6nsIcYRgwj
-X-Gm-Gg: ASbGncvFEuEePMQEokfUmuMmz94qD/DB96iN3ju/cGyjldsKLH6b1ByQRZFY/2fM9T5
-	godPbpWbNB5Xhj+rGdN9HsgKJxBqJKc1mmjs5Tmy/Bd8kyzjVnOrI5c/77CoCRDu2NLJ0+psudV
-	uoVe2PTupWvuAAsqJwd3Mr7QFqitqNyyiaxgS7QSBeYw3oJjSIXz2hIA3u8Vudt2HfcaFI5Zcqt
-	OWktHrKPKQxAQP5A4bgI+ihZ+xrNIXt1jhmmldIlIgwm3kpvthfil5wqT9IBkoi1ozI5feu2LrB
-	V5sAa3240xwIjtKf12YGGO/P
-X-Google-Smtp-Source: AGHT+IGqO6PIJQ6x6mvspPUugJ6k9sPrGPr9n7imDSf1cIoNsMDUtbvcr0nLVJ5V4XVEDzZYj2dlFYtKcvBrJboCrvc=
-X-Received: by 2002:a17:902:d508:b0:290:be4a:40d2 with SMTP id
- d9443c01a7336-294e0190e79mr4805085ad.13.1761750802764; Wed, 29 Oct 2025
- 08:13:22 -0700 (PDT)
+        bh=F4LDGDuuvy1GZmmeIYc2HRo9Q3u3XPw/hRPINr8ofC8=;
+        b=Oop+hhCxkN2rxAdw1FCitsc4rIVNgWuBrAfUiGFs3EnesazZOrWcyN1SwM29FmeObO
+         In+7Qg6ceuBw+jCDeYRAu2xAwdMEMvqlYrb+jhy3zJR2waqpYEhv7QKB61spwV80U4vj
+         1d8rjWhlmzowe1lfUnJ4oaz2MHWcWZx3uM+2Cu5WtDdNYCEzOd4/GLshtO3zUtd/LkK0
+         7zAuYx8Cak4cJN1GCXppT2f1X07nj+/YOkuelhOg3FTLnaGqAKhOT0aiG2d/QpR70pWO
+         yPd2ggan7VBvQ4/H33+WOa/VYM49DBL1j7o6NbfTaiEWpaBvnWKcyBUR5d60FWEHtysb
+         UXdA==
+X-Gm-Message-State: AOJu0YwYsebDezQkEYNh9sWVtuZgvnQ56U9tEAobwdxLKoMeMjHJpXLs
+	mOgitutlZ4yMRecI5ZXGzKwMcjLXlHQNAa3GOE9VgEbG0scrRBBb40tSGx3Go04kQK/39GMBv8X
+	Yy+NaJCcxvjT8FGBPEs2fyTH78g6i7eG4/+9G+9Az4UN/NBzNf1YgAZNJktc=
+X-Gm-Gg: ASbGncv7E5kp3RAl7ZHM5+/Ynl+RO1oGgFmaLVmCjSCaTG+rQZDCDoto4eeMMHaDyZo
+	/E7rOjehKu/O+Gm1eWnGEXWbvDqh0wWFlSJeqfeOD8VcywyZO9sythmareiWQG6IQp4LprLftye
+	NQTQAy49GfyZLatTwfD3anri6ZUrqhk2sbUGPNkNKyob1u0z/u5P04S6omU9T5uDpcMsOI0nySW
+	Dta91FYaXZ6ZffUo0Cdb3YPJWwMpyh9EuaFqdquMUfIWmOzDdswTMtLJXfGIQ9HzJhubDAlibVH
+	rl2ZpxNfbRkZivPRgoSQXD8v
+X-Google-Smtp-Source: AGHT+IGbAZc0pTGcyKUm8UV42riCk2JGr2M35EYk/AjWbjgSxCBTcDpVkkadUgGMPm4WDB7W2gcwK1N4m1I6xmRQiBg=
+X-Received: by 2002:a17:903:1205:b0:292:6145:c2a with SMTP id
+ d9443c01a7336-294de569863mr5105485ad.8.1761751725844; Wed, 29 Oct 2025
+ 08:28:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <09943f4f-516c-4b93-877c-e4a64ed61d38@linux.ibm.com>
-In-Reply-To: <09943f4f-516c-4b93-877c-e4a64ed61d38@linux.ibm.com>
+References: <aP_AyZAzBBGXaTgR@google.com>
+In-Reply-To: <aP_AyZAzBBGXaTgR@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 29 Oct 2025 08:13:11 -0700
-X-Gm-Features: AWmQ_bll24LPz5eEyAO1BmgyHONOERtlPy7igC0cK4BIdmzwHQaWEObLij16MHw
-Message-ID: <CAP-5=fU7zGF90yPyPhNUKqZp6zvynjZ_fQd_+x4hB6+KFumrhg@mail.gmail.com>
-Subject: Re: [linux-next] perf report runtime extremely long
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>, Jan Polensky <japo@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>
+Date: Wed, 29 Oct 2025 08:28:34 -0700
+X-Gm-Features: AWmQ_blFb_K-LJIjiLaao8mgxsSM4O0niKSdLT-yr3T_PbYJZjZrlItzJGbxxtc
+Message-ID: <CAP-5=fW==xQ=fgyCTZmrPDTc3aikdoLdRUYk5NxEbDq+0HP6mQ@mail.gmail.com>
+Subject: Re: [RFC] perf tools: Update JSON event description
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 29, 2025 at 1:04=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
-om> wrote:
+On Mon, Oct 27, 2025 at 11:58=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
 >
-> Hi all,
+> Hi Ian,
 >
-> has something changed recently in perf report in linux-next repo?
+> I'm trying to make this change in the JSON description for hardware and
+> software events.  But I got a build failure in the empty-pmu-events.c
+> even after I re-generated it like below.
 >
-> I run perf report -i <file> -D | grep something
-> on s390 with 2 different kernels:
+>   cd pmu-events
+>   ./jevents.py none none $PWD empty-pmu-events.c
 >
-> master 6.18.0rc3:
-> # uname -a
-> Linux a35lp67.lnxne.boe 6.18.0-rc3m-perf+ #23 SMP Tue Oct 28 15:53:44 CET=
- 2025 s390x GNU/Linux
-> # ll /tmp/perf2-eSso2q-2
-> -rw------- 1 root root 8538184 Oct 29 08:44 /tmp/perf2-eSso2q-2
-> # time perf report -i/tmp/perf2-eSso2q-2 -D | grep Counter:000 > /dev/nul=
-l
->
-> real    0m22.262s
-> user    0m22.068s
-> sys     0m0.200s
-> #
->
-> This runtime is ok for the perf.data file size.
->
-> linux-next:
-> # uname -a
-> Linux s83lp47.lnxne.boe 6.18.0-20251028.rc3.git141.f7d2388eeec2.63.fc42.s=
-390x+next #1 SMP Tue Oct 28 20:06:13 CET 2025 s390x GNU/Linux
-> #ll /tmp/perf2-eSso2q-2
-> -rw-------. 1 root root 8538184 Oct 29 08:47 /tmp/perf2-eSso2q-2
-> # time perf report -i/tmp/perf2-eSso2q-2 -D | grep Counter:000 > /dev/nul=
-l
->
-> real    2m53.601s
-> user    2m52.938s
-> sys     0m0.575s
-> #
->
-> Same perf.data file and run time increased from 22 seconds to nearly 300 =
-seconds, roughly 14 times longer
-> for the same input!
->
-> Has anybody similar observations?
+> Did I miss something?
 
-So there were changes relating to addr2line that could impact this:
-https://lore.kernel.org/lkml/20251005212212.2892175-1-irogers@google.com/
+So the build failure/diff has the path to the generated
+empty-pmu-events.c. I'd copy that file rather than try to recreate the
+command line - although there should be no reason generating the
+command line fails it looks to me that you need to pass "$PWD/arch"
+rather than "$PWD":
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/pmu-events/Build?h=3Dtmp.perf-tools-next#n51
+Fwiw, the formatting in legacy-hardware.json was based on Intel doing
+the same thing and not wanting to start new conventions:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/pmu-events/arch/x86/skylakex/pipeline.json?h=3Dtmp.perf-t=
+ools-next#n32
+```
+    {
+        "BriefDescription": "Conditional branch instructions retired.
+[This event is alias to BR_INST_RETIRED.CONDITIONAL]",
+        "Counter": "0,1,2,3",
+        "Errata": "SKL091",
+        "EventCode": "0xC4",
+        "EventName": "BR_INST_RETIRED.COND",
+        "PublicDescription": "This event counts conditional branch
+instructions retired. [This event is alias to
+BR_INST_RETIRED.CONDITIONAL]",
+        "SampleAfterValue": "400009",
+        "UMask": "0x1"
+    },
+    {
+        "BriefDescription": "Conditional branch instructions retired.
+[This event is alias to BR_INST_RETIRED.COND]",
+        "Counter": "0,1,2,3",
+        "Errata": "SKL091",
+        "EventCode": "0xC4",
+        "EventName": "BR_INST_RETIRED.CONDITIONAL",
+        "PEBS": "1",
+        "PublicDescription": "This event counts conditional branch
+instructions retired. [This event is alias to BR_INST_RETIRED.COND]",
+        "SampleAfterValue": "400009",
+        "UMask": "0x1"
+    },
+```
+As the order of seeing events isn't well defined, I'm not sure what we
+gain by shorter descriptions and it could be frustrating for a user to
+see that 'cycles' definition is in effect a redirection.
 
-There was also the switch to always using build IDs:
-https://lore.kernel.org/lkml/20250724163302.596743-1-irogers@google.com/
-
-Any chance you could do a `perf record`/`perf report` to see where the
-time is going?
-
-Thanks!
+Thanks,
 Ian
