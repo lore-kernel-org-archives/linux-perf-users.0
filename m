@@ -1,195 +1,242 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A42283129;
-	Wed, 29 Oct 2025 02:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF852DC336
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2025 05:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761705805; cv=none; b=RaWX7XtEkUpuXRZ2V9Nix61N1v8L4lemEBGXzC8j5JZ1X9nGXdc+08Cx82/UlHhjXQG2VnsBLFEDqHkARklu26HAhHCDfsg5sI1TmUs7migPpGb9hYRLJzo0tHSww0OxN/atXoembwB0Kf+w7vAyLeBxhQ5gmqxj+6NlYHvJvLw=
+	t=1761716060; cv=none; b=KaPMX3JiM/rtnE8SqGsQeIjyelgK+L03WGj02TileOa1ww7CRKANCZo3JD0FoGeeMhzO/9IRNfWAAEneDZcjGVYkIAD6r6rdzJkBoguXFqE/FFdKSXCpR6iUAnK3/HOFwAK4xJ0i7KvXGrbH1x8oOwm1PJNuhTVwKey6NrOWpVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761705805; c=relaxed/simple;
-	bh=Km83RPcsFyOOaHMC0IXrd8w/TKJKJjJESuj/zLlhIeY=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=L5jHV1QfkAXxFGpqAJDDqAVDLvSUSDnR7gqwVVYv0//WVYwxlhVo709xV8QuVZz8+T+Fqybiprx6sXgzeXNYnWy/a+Sj9C0z2bAUOY/L9uF6yNe+mm2PZKHYe1dmEAA4XqOA9Q4NLaUps65RnnKWvuij93Tfpjt5kshsHv6Qyjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bUez+F0C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761716060; c=relaxed/simple;
+	bh=NJ+hTolWc4xkY7BMglYVo4imVv7Wplrz6gOXCSJq2Ds=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=dvs8586PrlprjWK1xTnrUCvD4Ki5XFzk96shefa2p6AzXFVTy585j4/e4156b+JnC14WFXIf2HIIgldowJv4LbSHeB6U2Huh8JZGoWL2HAjG3eQe3dOkH7giqOTKjVs7QYAXGTUffvYS+9XZgNnKzvp+rS6dSsFYoEZzab1U2G4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VUgmMN2t; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bUez+F0C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14C86C4CEFD;
-	Wed, 29 Oct 2025 02:43:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761705804;
-	bh=Km83RPcsFyOOaHMC0IXrd8w/TKJKJjJESuj/zLlhIeY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bUez+F0C+mbjixIPs6/hVqz+YUV9Qv8Ide9LxpNZCNtWbDQEsiBKA62iBhXhbzk0g
-	 ODpTKlZqPCDwcv/xiA7X8ZJ0fMnsRlopbFUvy4vq7kNFdqHYPkfuJhy3EmguhCfi6F
-	 XCT04x95a5UA4+NLvTN+Cf8LK9Gc5jkmdsH+GBkHIFuvz8j1KOnBVkwD11+CUTipqC
-	 FsvJFlX6jT/D7ahOc48XZxT6tUKBIhJ/AhPqyr9gPBI/o8LFlQVls1C1YJewS+Gr4P
-	 oadJoD3Fjf/B93KcYjVDaw+vOpMA25ElW1/Hu1mO8bfhnpY5LoHMpuu6gIOhKYhI61
-	 avwMqaX3fP4rg==
-Date: Wed, 29 Oct 2025 11:43:17 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
- <will@kernel.org>, Mark Brown <broonie@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
- <mingo@kernel.org>, x86@kernel.org, Jinchao Wang
- <wangjinchao600@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v5 6/8] selftests: tracing: Add a basic testcase for
- wprobe
-Message-Id: <20251029114317.167b7d908533385c1c9e6782@kernel.org>
-In-Reply-To: <20251029004219.dc9cda0eb56ae46c55855844@kernel.org>
-References: <175859019940.374439.7398451124225791618.stgit@devnote2>
-	<175859026716.374439.14852239332989324292.stgit@devnote2>
-	<aPvwGhMBJqMKcC9D@finisterre.sirena.org.uk>
-	<20251027224347.4c887cc956df63602f377550@kernel.org>
-	<20251028084222.a3c1ae97d125d9bd88fc565b@kernel.org>
-	<20251028105549.ae94e8eeb42f4efc183d2807@kernel.org>
-	<20251029004219.dc9cda0eb56ae46c55855844@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VUgmMN2t"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3307af9b55eso5169179a91.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Oct 2025 22:34:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1761716059; x=1762320859; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EskCADth3YkVR5hqBOBJMx3UfzeP9v/HlYYqFyqmjNg=;
+        b=VUgmMN2tb2M6ZCpc4JwlUMmLEVha2ZCABlkGmSOOAVyHXxMKcOTHv79LSLvl0yD6Ac
+         U+1WchxrTnA2YoeXCaHE+zEPKMmUn4vz8MPg7mBMqUAjWdrLDG7JecvtG3+z1+o/JWpx
+         fooXXC+11/ZXbEDwj81zwx8FNa06p3fhB71J2P0/kKJ5DkA39RsiyEpLWwyJWPm1eYRw
+         CukP6u2xfJ1EXMV0yHJwKKyy47r8lU961qibzJB5rk32BCZnXqKmOTXlIyjnAWSBcUX6
+         ROsqZlyQWEMr6hlXOj6rxkCKlNgWQxGIv5ODI8Hgj+fE9AtCAgzNY+xGEoJUmXvwmTdd
+         EtLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761716059; x=1762320859;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EskCADth3YkVR5hqBOBJMx3UfzeP9v/HlYYqFyqmjNg=;
+        b=WvzJQgRCIAHFSSe8t7IXohWblz4MO5VnWIvKr3uBQDVPSw32iKrgv55da/v2f/jK6h
+         pNs/QqaUZP2hsLaF8lU0EWXZ3LFfCuAVokEcdvuNjIngyPWh4k9I0zVF3+k61nqu/Hmx
+         pIsfLh20A7aOJ2G+OLgO2eQUfQWXFv/qHqCDH4rtxo6HvBRadwi8z8o9H1tI6R17T5OZ
+         ltDxX3LPsxvEXXhdu9yy5IiDTWI9AWJQ9HVRBvu9vqf2DLE5oAYGxDcX49KHQ03nTFg2
+         cWvxRwXHKh3Gsr7hMHJeYq+760sUNyOxC6cfV7aOrNTasyIxQl1wRcD9ecBsPR/K2Kvd
+         CUWA==
+X-Forwarded-Encrypted: i=1; AJvYcCXHKvkB0ELtqA2gz6S2ZaV0SdTVR/HcMPHZPM+rUk9GzijA2gShnZ1Jy7z0EFCriTMiR4lCpmk99/rzUs66VPb1@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyn2xW1t22S9dWltS0jqVn8QYPRmXBefTAqgAxqK3mTOk24QOX/
+	b15g9ZIGentonZvgfWKaf6BV5Fahm+NDoKJypxZxvXwGhLhWaRIJRqZau7ZzQXD0IaFWKJRKH1q
+	GcHZGCEjoqw==
+X-Google-Smtp-Source: AGHT+IFPNXoSGhjR7OA9Vl3X20TTJL+tNHDOIMRqTV+avvu9i2EoGYohtUBzaMR+zCMk/654e3znpCZDBHZq
+X-Received: from pjtf19.prod.google.com ([2002:a17:90a:c293:b0:33b:da89:9788])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:38cb:b0:32e:389b:8762
+ with SMTP id 98e67ed59e1d1-3403a0d852fmr1778390a91.0.1761716058566; Tue, 28
+ Oct 2025 22:34:18 -0700 (PDT)
+Date: Tue, 28 Oct 2025 22:33:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Mailer: git-send-email 2.51.1.851.g4ebd6896fd-goog
+Message-ID: <20251029053413.355154-1-irogers@google.com>
+Subject: [RFC PATCH v1 00/15] Addition of session API to python module
+From: Ian Rogers <irogers@google.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
+	James Clark <james.clark@linaro.org>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
+	Howard Chu <howardchu95@gmail.com>, Song Liu <song@kernel.org>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Levi Yun <yeoreum.yun@arm.com>, 
+	Zhongqiu Han <quic_zhonhan@quicinc.com>, Blake Jones <blakejones@google.com>, 
+	Anubhav Shelat <ashelat@redhat.com>, Chun-Tse Shao <ctshao@google.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Gautam Menghani <gautam@linux.ibm.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Yang Li <yang.lee@linux.alibaba.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Andi Kleen <ak@linux.intel.com>, Weilin Wang <weilin.wang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 29 Oct 2025 00:42:19 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+The perf script command uses a session with process_events to call
+through to the python process_events function. The event is turned
+into a python dictionary, whether the entries are used or not, adding
+overhead. To avoid the overhead, add a session API abstraction and
+pass callbacks that can be used to perform the existing perf script
+functions. The implementation is incomplete in this RFC.
 
-> On Tue, 28 Oct 2025 10:55:49 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > On Tue, 28 Oct 2025 08:42:22 +0900
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> > 
-> > > ~ # cd /sys/kernel/tracing/
-> > > /sys/kernel/tracing # echo 'w:my_wprobe w@jiffies' >> dynamic_events 
-> > > /sys/kernel/tracing # echo 1 > events/wprobes/my_wprobe/enable 
-> > > [   54.942288] trace_wprobe: enable_trace_wprobe called
-> > > [   54.945306] trace_wprobe: trying to register wprobes
-> > > [   54.947367] trace_wprobe: __register_trace_wprobe called
-> > > [   54.949586] trace_wprobe: registering wprobe at addr: 0xffffb6ce429fb200, len: 4, type: 2
-> > > [   54.951639] Creating wide hw breakpoint on CPU 0
-> > > [   54.966390] Creating kernel counter on CPU 0 for event type 5
-> > > [   54.967758] perf_install_in_context: event 00000000736da1d9 ctx 000000005d4db900 cpu 0
-> > > [   54.972015] perf_install_in_context2: event 00000000736da1d9 ctx set to 000000005d4db900
-> > > [   54.976697] cpu_function_call: calling function on CPU 0, func: __perf_install_in_context+0x0/0x2c8
-> > > 
-> > > What happen if the cpu calls function on itself by
-> > > smp_call_function_single() on arm64?
-> > > 
-> > >   smp_call_function_single(this_cpu, remote_function, &data, 1);
-> > 
-> > Sorry, that was printk buffering issue. I used trace_printk() instead
-> > and persistent ring buffer[1] to trace it.
-> > 
-> > [1] https://docs.kernel.org/trace/debugging.html#persistent-buffers-across-boots
-> > 
-> > ~ # echo 1 > /sys/kernel/tracing/instances/boot_map/options/trace_printk_dest
-> > ~ # echo 'w:my_wprobe w@jiffies' >> /sys/kernel/tracing/dynamic_events 
-> > ~ # echo 1 > /sys/kernel/tracing/events/wprobes/my_wprobe/enable 
-> > QEMU 8.2.2 monitor - type 'help' for more information
-> > (qemu) system_reset
-> > ...
-> > 
-> > ~ # cat /sys/kernel/tracing/instances/boot_map/trace 
-> > # tracer: nop
-> > #
-> > # entries-in-buffer/entries-written: 16/16   #P:1
-> > #
-> > #                                _-----=> irqs-off/BH-disabled
-> > #                               / _----=> need-resched
-> > #                              | / _---=> hardirq/softirq
-> > #                              || / _--=> preempt-depth
-> > #                              ||| / _-=> migrate-disable
-> > #                              |||| /     delay
-> > #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-> > #              | |         |   |||||     |         |
-> >            <...>-63      [000] .....    21.065038: register_wide_hw_breakpoint: Creating wide hw breakpoint on CPU 0
-> >            <...>-63      [000] .....    21.079678: perf_event_create_kernel_counter: Creating kernel counter on CPU 0 for event type 5
-> >            <...>-63      [000] .....    21.080051: perf_install_in_context: perf_install_in_context: event 000000000b3ac4d3 ctx 00000000097d6337 cpu 0
-> >            <...>-63      [000] .....    21.080140: perf_install_in_context: perf_install_in_context2: event 000000000b3ac4d3 ctx set to 00000000097d6337
-> >            <...>-63      [000] .....    21.080939: cpu_function_call: cpu_function_call: calling function on CPU 0, func: __perf_install_in_context+0x0/0x2f0
-> >            <...>-63      [000] .....    21.080966: smp_call_function_single: smp_call_function_single: calling function on CPU 0, func: remote_function+0x0/0x78, wait=1
-> >            <...>-63      [000] ...1.    21.080973: smp_call_function_single: smp_call_function_single: running on CPU 0, call CPU 0
-> >            <...>-63      [000] ...1.    21.081099: smp_call_function_single: smp_call_function_single: checking for potential deadlock conditions
-> >            <...>-63      [000] ...1.    21.081259: generic_exec_single: generic_exec_single: preparing to call function on CPU 0, func: remote_function+0x0/0x78
-> >            <...>-63      [000] ...1.    21.081269: generic_exec_single: Executing smp_call_function_single on self CPU 0, func: remote_function+0x0/0x78
-> >            <...>-63      [000] d..1.    21.081289: csd_do_func: csd_do_func: CPU 0 executing func remote_function+0x0/0x78
-> >            <...>-63      [000] d..1.    21.081429: __perf_install_in_context: __perf_install_in_context: event 000000000b3ac4d3 ctx 00000000097d6337
-> >            <...>-63      [000] d..2.    21.083211: hw_breakpoint_control: hw_breakpoint_control: ops=0
-> >            <...>-63      [000] d..1.    21.084191: __perf_install_in_context: __perf_install_in_context: event 000000000b3ac4d3 done, ret=0
-> >            <...>-63      [000] d..1.    21.084237: csd_do_func: csd_do_func: CPU 0 finished func remote_function+0x0/0x78
-> >            <...>-63      [000] d..1.    21.084243: generic_exec_single: Finished csd_lock_record(NULL)
-> > ~ # 
-> > 
-> > 
-> > So the last message is right before the local_irq_restore() in
-> > generic_exec_single().
-> > 
-> > static int generic_exec_single(int cpu, call_single_data_t *csd)
-> > {
-> > 	...
-> > 		csd_lock_record(csd);
-> > 		csd_unlock(csd);
-> > 		local_irq_save(flags);
-> > 		csd_do_func(func, info, NULL);
-> > 		csd_lock_record(NULL);
-> > 		trace_printk("Finished csd_lock_record(NULL)\n"); <- 
-> > 		local_irq_restore(flags);
-> > 		return 0;
-> > 
-> > Actually, I added another trace_printk() right after generic_exec_single().
-> > 
-> > 	err = generic_exec_single(cpu, csd);
-> > 	trace_printk("generic_exec_single returned %d for CPU %d, func: %pS\n",
-> > 		err, cpu, func);
-> > 
-> > This means after setting the hw_breakpoint, when enabing the IRQ,
-> > the machine is frozen - but qemu is running busy.
-> > 
-> > Can we specify the kernel memory address to HW breakpoint on arm64?
-> 
-> Hmm, it seems that jiffies related things are updated frequently
-> and it may cause interrupt storm or infinit recursive call.
+In this series the mem-phys-addr.py command is ported from perf script
+to using the session API. The performance before and after is:
 
-I added another trace_printk() in el1_watchpt(). It seems el1_watchpt()
-takes too long and there is no time to do any other things.
-(Note the interval shown below is only within the el1_watchpt function,
- and in reality various processes (save/restore registers etc) for
- exception handling will be inserted before and after.)
+Before:
+```
+$ perf mem record -a sleep 1
+$ time perf script tools/perf/scripts/python/mem-phys-addr.py
+Event: cpu_core/mem-loads-aux/
+Memory type                                    count  percentage
+ ---------------------------------------  ----------  ----------
+0-fff : Reserved                                3217       100.0
 
-   kworker/u32:3-75      [001] d.h2.    43.216706: el1_watchpt: FAR=0xjiffies+0x0/0x40, ESR=0xd6000062, WP index=0, n
-est=0
-   kworker/u32:3-75      [001] d.h2.    43.216750: el1_watchpt: returning to EL1: nest=0
-   kworker/u32:3-75      [001] d.h2.    43.216816: el1_watchpt: FAR=0xjiffies+0x0/0x40, ESR=0xd6000062, WP index=0, n
-est=0
-   kworker/u32:3-75      [001] d.h2.    43.216860: el1_watchpt: returning to EL1: nest=0
-   kworker/u32:3-75      [001] d.h2.    43.216927: el1_watchpt: FAR=0xjiffies+0x0/0x40, ESR=0xd6000062, WP index=0, n
-est=0
-   kworker/u32:3-75      [001] d.h2.    43.216971: el1_watchpt: returning to EL1: nest=0
-   kworker/u32:3-75      [001] d.h2.    43.217058: el1_watchpt: FAR=0xjiffies+0x0/0x40, ESR=0xd6000062, WP index=0, n
-est=0
-   kworker/u32:3-75      [001] d.h2.    43.217106: el1_watchpt: returning to EL1: nest=0
-   kworker/u32:3-75      [001] d.h2.    43.217175: el1_watchpt: FAR=0xjiffies+0x0/0x40, ESR=0xd6000062, WP index=0, n
-est=0
-   kworker/u32:3-75      [001] d.h2.    43.217219: el1_watchpt: returning to EL1: nest=0
+real    0m3.754s
+user    0m0.023s
+sys     0m0.018s
+```
 
-So watching any variables which is frequently updated will
-almost freeze the system. Hmmm, the handler should check the
-interval and if it is too frequently, it should disable the
-wprobe.
+After:
+```
+$ PYTHONPATH=/tmp/perf/python time python3 tools/perf/python/mem-phys-addr.py
+Event: evsel(cpu_core/mem-loads-aux/)
+Memory type                                    count  percentage
+ ---------------------------------------  ----------  ----------
+0-fff : Reserved                                3217       100.0
 
-Thank you,
+real    0m0.106s
+user    0m0.021s
+sys     0m0.020s
+```
+
+So a roughly 35x speedup, but it maybe that some of that is one time
+start-up overhead of libpython which wouldn't be present for larger
+perf.data files.
+
+Before porting all the script commands and adding things like
+callchain support to the python module, I wanted to get feedback. One
+thing that particularly simplifies the series is adding reference
+counts to evsel and evlist to avoid copying/cloning evsels created by
+the session API when loading a perf.data file.
+
+The approach of moving away from libpython and scripts was most
+recently discussed as a topic in:
+https://lore.kernel.org/lkml/CAP-5=fWDqE8SYfOLZkg_0=4Ayx6E7O+h7uUp4NDeCFkiN4b7-w@mail.gmail.com/
+
+When creating the python wrapper some house keeping was done around
+includes and perf_data's encapsulation.
+
+The perf script callbacks differ from those in perf_tool, for example,
+stat is the perf_tool callback is for a stat event while the scripting
+ops combine things and have a stat callback associated with
+stat_round. Should the session API match the tool or the script API?
+The former feels better for long term, while the latter could simplify
+porting perf scripts.
+
+Ian Rogers (15):
+  perf arch arm: Sort includes and add missed explicit dependencies
+  perf arch x86: Sort includes and add missed explicit dependencies
+  perf tests: Sort includes and add missed explicit dependencies
+  perf script: Sort includes and add missed explicit dependencies
+  perf util: Sort includes and add missed explicit dependencies
+  perf python: Add add missed explicit dependencies
+  perf evsel/evlist: Avoid unnecessary #includes
+  perf maps: Move getting debug_file to verbose path
+  perf data: Clean up use_stdio and structures
+  perf python: Add wrapper for perf_data file abstraction
+  perf python: Add python session abstraction wrapping perf's session
+  perf evlist: Add reference count
+  perf evsel: Add reference count
+  perf python: Add access to evsel and phys_addr in event
+  perf mem-phys-addr.py: Port to standalone application from perf script
+
+ tools/perf/arch/arm/util/cs-etm.c           |  22 +-
+ tools/perf/arch/x86/tests/hybrid.c          |   2 +-
+ tools/perf/arch/x86/tests/topdown.c         |   2 +-
+ tools/perf/arch/x86/util/intel-bts.c        |  14 +-
+ tools/perf/arch/x86/util/intel-pt.c         |  31 +-
+ tools/perf/arch/x86/util/iostat.c           |   2 +-
+ tools/perf/bench/evlist-open-close.c        |  18 +-
+ tools/perf/builtin-ftrace.c                 |   8 +-
+ tools/perf/builtin-inject.c                 |   7 +-
+ tools/perf/builtin-kvm.c                    |   4 +-
+ tools/perf/builtin-lock.c                   |   2 +-
+ tools/perf/builtin-record.c                 |  14 +-
+ tools/perf/builtin-script.c                 | 109 ++--
+ tools/perf/builtin-stat.c                   |   8 +-
+ tools/perf/builtin-top.c                    |  52 +-
+ tools/perf/builtin-trace.c                  |  38 +-
+ tools/perf/python/mem-phys-addr.py          | 117 ++++
+ tools/perf/tests/backward-ring-buffer.c     |  18 +-
+ tools/perf/tests/code-reading.c             |   4 +-
+ tools/perf/tests/event-times.c              |   4 +-
+ tools/perf/tests/event_update.c             |   2 +-
+ tools/perf/tests/evsel-roundtrip-name.c     |   8 +-
+ tools/perf/tests/evsel-tp-sched.c           |   4 +-
+ tools/perf/tests/expand-cgroup.c            |   8 +-
+ tools/perf/tests/hists_cumulate.c           |   2 +-
+ tools/perf/tests/hists_filter.c             |   2 +-
+ tools/perf/tests/hists_link.c               |   2 +-
+ tools/perf/tests/hists_output.c             |   2 +-
+ tools/perf/tests/hwmon_pmu.c                |  14 +-
+ tools/perf/tests/keep-tracking.c            |   2 +-
+ tools/perf/tests/mmap-basic.c               |  31 +-
+ tools/perf/tests/openat-syscall-all-cpus.c  |   6 +-
+ tools/perf/tests/openat-syscall-tp-fields.c |  18 +-
+ tools/perf/tests/openat-syscall.c           |   6 +-
+ tools/perf/tests/parse-events.c             |   4 +-
+ tools/perf/tests/parse-metric.c             |   4 +-
+ tools/perf/tests/parse-no-sample-id-all.c   |   2 +-
+ tools/perf/tests/perf-record.c              |  18 +-
+ tools/perf/tests/perf-time-to-tsc.c         |   2 +-
+ tools/perf/tests/pfm.c                      |   4 +-
+ tools/perf/tests/pmu-events.c               |   6 +-
+ tools/perf/tests/pmu.c                      |   2 +-
+ tools/perf/tests/sw-clock.c                 |  14 +-
+ tools/perf/tests/switch-tracking.c          |   2 +-
+ tools/perf/tests/task-exit.c                |  14 +-
+ tools/perf/tests/tool_pmu.c                 |   2 +-
+ tools/perf/tests/topology.c                 |   5 +-
+ tools/perf/util/bpf_counter_cgroup.c        |   2 +-
+ tools/perf/util/bpf_off_cpu.c               |  28 +-
+ tools/perf/util/bpf_trace_augment.c         |   7 +-
+ tools/perf/util/cgroup.c                    |   6 +-
+ tools/perf/util/data-convert-bt.c           |   2 +-
+ tools/perf/util/data.c                      |  81 ++-
+ tools/perf/util/data.h                      |  52 +-
+ tools/perf/util/evlist.c                    | 100 ++--
+ tools/perf/util/evlist.h                    |  23 +-
+ tools/perf/util/evsel.c                     | 103 ++--
+ tools/perf/util/evsel.h                     |  30 +-
+ tools/perf/util/expr.c                      |   2 +-
+ tools/perf/util/header.c                    |  12 +-
+ tools/perf/util/map.h                       |   6 +-
+ tools/perf/util/maps.c                      |   9 +-
+ tools/perf/util/metricgroup.c               |   6 +-
+ tools/perf/util/parse-events.c              |   4 +-
+ tools/perf/util/parse-events.y              |   2 +-
+ tools/perf/util/perf_api_probe.c            |  19 +-
+ tools/perf/util/pfm.c                       |   2 +-
+ tools/perf/util/print-events.c              |   2 +-
+ tools/perf/util/print_insn.h                |   5 +-
+ tools/perf/util/python.c                    | 584 +++++++++++++++-----
+ tools/perf/util/record.c                    |   2 +-
+ tools/perf/util/s390-sample-raw.c           |  15 +-
+ tools/perf/util/session.c                   |   4 +-
+ tools/perf/util/sideband_evlist.c           |  16 +-
+ tools/perf/util/stat-shadow.c               |   1 +
+ tools/perf/util/stat.c                      |  15 +-
+ 76 files changed, 1152 insertions(+), 650 deletions(-)
+ create mode 100644 tools/perf/python/mem-phys-addr.py
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.51.1.851.g4ebd6896fd-goog
+
