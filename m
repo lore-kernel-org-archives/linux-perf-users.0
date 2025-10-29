@@ -1,73 +1,31 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB3530103F
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2025 10:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC47333507B;
+	Wed, 29 Oct 2025 12:55:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761733609; cv=none; b=NNHeB0nGLUOxdSRcUe59MlvZHFuRbnIJOtaYzeBnAxwovh6h/Ggl/JOWScz9vIQYqq7mQqwUomzBgiF0IzbHcGNrvW2tLnMMtC+VeoXtp1uEv7W8Q5hkqp0heTj0JFdOqBl0unx1Ca66LJ4mevF/UPNWpSZeW6E8SQg3aHW7kOg=
+	t=1761742527; cv=none; b=cUzjCDZz/WuXbj/Qiisp7+SR0t7+34H6q0lOzXHnSjaBA90qlWEf+dKOwx9pfY90BEWkZyOgvPx81Zx3AO/+xaBqgU2BeNF9nI2PHe48Klie4hBB6XN6R26PnKVvGxIzh2v/dz1esJOujGcvxIkMc+EB3ZWarxdEMij04/v8Y3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761733609; c=relaxed/simple;
-	bh=zkE0vyis83Qnd4j3qFtBbD4uxT5fDgXxEKk32YXAR1I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JdBIbSiMrpcuXWhJXxylAq2FoETDrG6U3NbO+Vjtkm4NkC+yMLMhNoKFK5Ix8NqWXccSVbIQIt8suaZmytZN7fCXr5R641DHx2LWEdbFSjnQIKJ5DpbzQFpERrM16a2Si8YOvyPkII6fOtYiTg4dESCkozWhhTM3jOO1a35i4Eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cnncW+AO; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1761742527; c=relaxed/simple;
+	bh=0wMW0XC224Kej5/7Y/10VzAOIoK/Gr9bBang0zCkkec=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=T4bY+lSVbxM65yT2xAuzqMRgeM8p6rGBY5nCuDg+qUf/AEOem63Ca4oE6OVu50GjphiOsAZL//WlIgURp/a0a87KEc8FPX04go6oIroxussfVNY5WCs6b+pKyUCam8QnQ/HrutoZmKJwt/zN4fq05AqTiEw+pN2ctXqPrm7UN+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=EpvyDtnD; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cnncW+AO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761733606;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=/l/eBTg6PDk2gq24yxrQmlGvSlksP+1NRV8KnJwBP8E=;
-	b=cnncW+AON+djwLkCGRV01SWIpFPM/uefZqgxtKSyfKIdwhdN2cEMX5WYCgx9cWmbY//jV0
-	aPxQfs0D+r5sOG5glob+B5YMFQLOI6VfJZw/5nsCWh3cW2TILgfBEDWjLQrBC3S0cq1RoZ
-	2mDCh4qfsQy9PIfuMEbjTEw8m8Mq/hE=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-578-r9cyzSrwN5e-MMxr59ztzA-1; Wed, 29 Oct 2025 06:26:45 -0400
-X-MC-Unique: r9cyzSrwN5e-MMxr59ztzA-1
-X-Mimecast-MFC-AGG-ID: r9cyzSrwN5e-MMxr59ztzA_1761733604
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4770e0910a1so19796565e9.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2025 03:26:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761733604; x=1762338404;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/l/eBTg6PDk2gq24yxrQmlGvSlksP+1NRV8KnJwBP8E=;
-        b=MbHxIB2rxfuoeU26Mxum73mJIOVeyHd6hkiKaxnt7zWF6Ts3Vl2s1DR75MZPpS1SY4
-         SKiKNfTFxFEgDfO8Krk0mEsPvIQrtRl8d/Of4TvxNW984jF5PysxwSr3alzrBLkOfreA
-         Zpuk8YnxaChkklt8qGS2VQ0b84qDmX6wk4AtJwBt97UJLYO9rTM0j8SPA5kDdcBj4eZY
-         H8IySfrkEzP72IYKjgTYevnH3swL27X/7cnDf9ExLKjRjru6kHi090ktDU2Q1Zn6HTfw
-         MO5XkgjERkRwyGj1lRQznMbw1xXkwapvfCPSeR+RX7MVoxJ2Sn1PjfTTuTiz/cqvpWA8
-         RYmw==
-X-Forwarded-Encrypted: i=1; AJvYcCWpPuddzYb7SxjguYvf0fCq+juzA/uFQikPuncTHfvWfzqFFm02RCEwEkIEpUJAHxIp1N20PHkrJC2yBi76cgvl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3hynp1279snvvlH5O6qFlcLz5BCpQTLwdm7Iir2MfR0FmpyIV
-	gscYkKoVvaie6QpQw8W84/M5WLsjpiCuGtKOybf6EhJWThk3wlQcY4Z4uYNO/+7PknD+WvsoRUo
-	mZZDHYu5ARwEe6hh3DD2XGxKKuoZ+0wjOBNyZ513NVUhPTfFF8qjPAFjEczxU7agZ4GuJt/8=
-X-Gm-Gg: ASbGncv0TlpHsMISlcXww20QUSx4YCXwOiQnE6AM8IpepJJ7xYyr4g0Z4fRZKZjXjfQ
-	IiLobVWollM+wFV8/xv+KzJN8JAu78nnGpU9zFaDSoCAHVgeVKFAGuqOwT56fpvdx2NxHwByZQm
-	dsqZkrPZ2PxgiNVfS1+fmGKc8UgPFuobSvydvZxpKYkQMSZeMeJoDcrrrfhxLJBezGnin1ViDJ8
-	nWxqRBAEqbmUg4bdpbsNaoNaXl1CtLpcUP6cjI0VnKbxKcVvzAa8ld58Z+sPOA1QgcCrTMGc4Fg
-	BoKlAYH4E7b58J0qMguwULq/ThaEPLoNhUJp4nRYlKdPuh8BGIvwaY0J6hmwBjDMID4QlwfUQnl
-	X0tUl8Km6Y13e0hR01eumig==
-X-Received: by 2002:a05:600c:4591:b0:471:115e:624b with SMTP id 5b1f17b1804b1-4771e18cc1fmr23358955e9.17.1761733603649;
-        Wed, 29 Oct 2025 03:26:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGtQTrCoapOr6bX5uVmtmRqcuUC4lYBRzIXvtaTPDducTLRlHN+f7pxZPgextJafstOMsxSuw==
-X-Received: by 2002:a05:600c:4591:b0:471:115e:624b with SMTP id 5b1f17b1804b1-4771e18cc1fmr23358735e9.17.1761733603198;
-        Wed, 29 Oct 2025 03:26:43 -0700 (PDT)
-Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4771e202093sm43202745e9.11.2025.10.29.03.26.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Oct 2025 03:26:41 -0700 (PDT)
-Message-ID: <c6f8871a-5118-4947-9801-43b2a7a42993@redhat.com>
-Date: Wed, 29 Oct 2025 11:26:39 +0100
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="EpvyDtnD"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1761742520; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
+	bh=1/s8TOdfgqqMhs6MPkKtJvuM4gO1U3iasXipTZ9JtZQ=;
+	b=EpvyDtnDaPezKIVx6Xq+/nz15ofVNiB9hS5v2gD51IH2AIe1VbxozYCjthGjchjAPSJFCtkyQgrsaoABfiMgdBP+04T0gK2i6072iYq/0JBVP+L/IISKd5XsKnzU9Pt+vWOk8ifbxhBl/YsH/e72mzN4Sgp+LipR7LpMYUCSJ4s=
+Received: from 30.246.176.102(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WrG16KC_1761742518 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 29 Oct 2025 20:55:19 +0800
+Message-ID: <eed27aaf-fd0a-4609-a30b-68e7c5c11890@linux.alibaba.com>
+Date: Wed, 29 Oct 2025 20:55:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -75,120 +33,123 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Optimize code generation during context
-To: Xie Yuanbin <qq570070308@gmail.com>, riel@surriel.com,
- linux@armlinux.org.uk, mathieu.desnoyers@efficios.com, paulmck@kernel.org,
- pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
- borntraeger@linux.ibm.com, svens@linux.ibm.com, davem@davemloft.net,
- andreas@gaisler.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, luto@kernel.org,
- peterz@infradead.org, acme@kernel.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, anna-maria@linutronix.de,
- frederic@kernel.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, vschneid@redhat.com, thuth@redhat.com,
- akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
- segher@kernel.crashing.org, ryan.roberts@arm.com, max.kellermann@ionos.com,
- urezki@gmail.com, nysal@linux.ibm.com
-Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-perf-users@vger.kernel.org, will@kernel.org
-References: <18734a4944e47952b7ad3e10a36c902392bdaa91.camel@surriel.com>
- <20251025173700.754-1-qq570070308@gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20251025173700.754-1-qq570070308@gmail.com>
+Subject: Re: [PATCH] perf record: skip synthesize event when open evsel failed
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: Ian Rogers <irogers@google.com>
+Cc: alexander.shishkin@linux.intel.com, peterz@infradead.org,
+ james.clark@arm.com, leo.yan@linaro.org, mingo@redhat.com,
+ baolin.wang@linux.alibaba.com, acme@kernel.org, mark.rutland@arm.com,
+ jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ nathan@kernel.org, bpf@vger.kernel.org
+References: <20251023015043.38868-1-xueshuai@linux.alibaba.com>
+ <CAP-5=fWupb62_QKM3bZO9K9yeJqC2H-bdi6dQNM7zAsLTJoDow@mail.gmail.com>
+ <fc75b170-86c1-49b6-a321-7dca56ad824a@linux.alibaba.com>
+In-Reply-To: <fc75b170-86c1-49b6-a321-7dca56ad824a@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 25.10.25 19:37, Xie Yuanbin wrote:
-> On Fri, 24 Oct 2025 17:36:06 -0400, Rik van Riel wrote:
->> Also, what kind of performance improvement
->> have you measured with these changes?
+
+
+在 2025/10/24 10:45, Shuai Xue 写道:
 > 
-> When I debugged performance issues before, I used the company's equipment.
-> I could only observe the macro business performance data, but not the
-> specific scheduling time. Today I did some testing using my devices,
-> and the testing logic is as follows:
-> ```
-> -	return finish_task_switch(prev);
-> +	start_time = rdtsc();
-> +	barrier();
-> +	rq = finish_task_switch(prev);
-> +	barrier();
-> +	end_time = rdtsc;
-> +	return rq;
-> ```
 > 
-> The test data is as follows:
-> 1. mitigations Off, without patches: 13.5 - 13.7
-> 2. mitigations Off, with patches: 13.5 - 13.7
-> 3. mitigations On, without patches: 23.3 - 23.6
-> 4. mitigations On, with patches: 16.6 - 16.8
+> 在 2025/10/24 00:08, Ian Rogers 写道:
+>> On Wed, Oct 22, 2025 at 6:50 PM Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+>>>
+>>> When using perf record with the `--overwrite` option, a segmentation fault
+>>> occurs if an event fails to open. For example:
+>>>
+>>>    perf record -e cycles-ct -F 1000 -a --overwrite
+>>>    Error:
+>>>    cycles-ct:H: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
+>>>    perf: Segmentation fault
+>>>        #0 0x6466b6 in dump_stack debug.c:366
+>>>        #1 0x646729 in sighandler_dump_stack debug.c:378
+>>>        #2 0x453fd1 in sigsegv_handler builtin-record.c:722
+>>>        #3 0x7f8454e65090 in __restore_rt libc-2.32.so[54090]
+>>>        #4 0x6c5671 in __perf_event__synthesize_id_index synthetic-events.c:1862
+>>>        #5 0x6c5ac0 in perf_event__synthesize_id_index synthetic-events.c:1943
+>>>        #6 0x458090 in record__synthesize builtin-record.c:2075
+>>>        #7 0x45a85a in __cmd_record builtin-record.c:2888
+>>>        #8 0x45deb6 in cmd_record builtin-record.c:4374
+>>>        #9 0x4e5e33 in run_builtin perf.c:349
+>>>        #10 0x4e60bf in handle_internal_command perf.c:401
+>>>        #11 0x4e6215 in run_argv perf.c:448
+>>>        #12 0x4e653a in main perf.c:555
+>>>        #13 0x7f8454e4fa72 in __libc_start_main libc-2.32.so[3ea72]
+>>>        #14 0x43a3ee in _start ??:0
+>>>
+>>> The --overwrite option implies --tail-synthesize, which collects non-sample
+>>> events reflecting the system status when recording finishes. However, when
+>>> evsel opening fails (e.g., unsupported event 'cycles-ct'), session->evlist
+>>> is not initialized and remains NULL. The code unconditionally calls
+>>> record__synthesize() in the error path, which iterates through the NULL
+>>> evlist pointer and causes a segfault.
+>>>
+>>> To fix it, move the record__synthesize() call inside the error check block, so
+>>> it's only called when there was no error during recording, ensuring that evlist
+>>> is properly initialized.
+>>>
+>>> Fixes: 4ea648aec019 ("perf record: Add --tail-synthesize option")
+>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>>
+>> This looks great! I wonder if we can add a test, perhaps here:
+>> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/shell/record.sh?h=perf-tools-next#n435
+>> something like:
+>> ```
+>> $ perf record -e foobar -F 1000 -a --overwrite -o /dev/null -- sleep 0.1
+>> ```
+>> in a new test subsection for test_overwrite? foobar would be an event
+>> that we could assume isn't present. Could you help with a test
+>> covering the problems you've uncovered and perhaps related flags?
+>>
+> 
+> Hi, Ian,
+> 
+> Good suggestion, I'd like to add a test. But foobar may not a good case.
+> 
+> Regarding your example:
+> 
+>    perf record -e foobar -a --overwrite -o /dev/null -- sleep 0.1
+>    event syntax error: 'foobar'
+>                         \___ Bad event name
+> 
+>    Unable to find event on a PMU of 'foobar'
+>    Run 'perf list' for a list of valid events
+> 
+>     Usage: perf record [<options>] [<command>]
+>        or: perf record [<options>] -- <command> [<options>]
+> 
+>        -e, --event <event>   event selector. use 'perf list' to list available events
+> 
+> 
+> The issue with using foobar is that it's an invalid event name, and the
+> perf parser will reject it much earlier. This means the test would exit
+> before reaching the part of the code path we want to verify (where
+> record__synthesize() could be called).
+> 
+> A potential alternative could be testing an error case such as EACCES:
+> 
+>    perf record -e cycles -C 0 --overwrite -o /dev/null -- sleep 0.1
+> 
+> This could reproduce the scenario of a failure when attempting to access
+> a valid event, such as due to permission restrictions. However, the
+> limitation here is that users may override
+> /proc/sys/kernel/perf_event_paranoid, which affects whether or not this
+> test would succeed in triggering an EACCES error.
+> 
+> 
+> If you have any other suggestions or ideas for a better way to simulate
+> this situation, I'd love to hear them.
+> 
+> Thanks.
+> Shuai
 
-Such numbers absolutely have to be part of the relevant patches / cover 
-letter to show that the compiler is not actually smart enough to make a 
-good decision.
+Hi, Ian,
 
-Having that said, sometimes it helps to understand "why" the compiler 
-does a bad job, and try to tackle that instead.
+Gentle ping.
 
-For example, compilers will not inline functions that might be too big 
-(there is a compiler tunable), factoring out slow-paths etc could help 
-to convince the compiler to do the right thing.
-
-Of course, it's not always possible, and sometimes we just now that we 
-always want to inline.
-
--- 
-Cheers
-
-David / dhildenb
+Thanks.
+Shuai
 
