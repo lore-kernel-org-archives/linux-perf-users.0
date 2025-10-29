@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE8F32861D;
-	Wed, 29 Oct 2025 10:24:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE54A3563C7;
+	Wed, 29 Oct 2025 10:24:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761733471; cv=none; b=qO5Xpq0RAKq9Y9Ndw38AMw83GmPIbKuCV3mGxoujrJCn9Hb/XoJwvhaIPj64pLIX2FTliHZw8wx0NHds0Sjp5liofzM+lGukLiBxG7aFhxeGB5cqj+Lbv83L5F4oAqk9ncimwFepr/w40cOTugydvg95T7INN6pZnIOoNBmQq+k=
+	t=1761733475; cv=none; b=d/QOheh8ljTxUZmVkJXtmlG3W7LpUWkQLB14F7Wv8FPAFzqLCM76CtEF/yHbxp2yJ0Pv3Lmdm5oZ1gg28114yLzYgzP8QyjI0zCAacEUtMcra6l3IiYfs83owpwScRMXVirjW30va/XqcRum49P+CokSWFmtEjtXXbGYvhv0wvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761733471; c=relaxed/simple;
-	bh=ZglxdEiMhwZbOJ7YeIwThviIiLv7/83iyeKDAIzrU7s=;
+	s=arc-20240116; t=1761733475; c=relaxed/simple;
+	bh=fypXV+RT+IE5ge/LUHhQaTkgcv75JX94HM2lko8sqP0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZbuexBnCNkOCDvg6kwWJ9upfQ3RHUSumMW29SBOPLY/0Y2m7QBBJItRXFVRpH1oSf0yRQ67U5gXegl5GdHO9u+beK1ng3Y2vSrAa2HPXOyJvX/81ZYaQe5Ka4ei6QQXG3Kja8f+wFaqYMDHhXdbOcryhA9tqMudnL1mKRs/HJsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aFHIYmX+; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version; b=ZieKZc3tuAmFh8RksXvzjxbyV3pbGVExIoJS8qyNktGN8PRap+yVthaP1OOBsVApB2kTX/GPkOw2Vrk0vfDZb1WPCKW2X+AIeU5X6QzEOXlg0yXdciJ/0Ab4a+2lWAAB6YuizFYYXwhX8zCrlOIFUZKNdlyUGUzU3RKzPn44IOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=btxPUHAn; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aFHIYmX+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="btxPUHAn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761733470; x=1793269470;
+  t=1761733474; x=1793269474;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ZglxdEiMhwZbOJ7YeIwThviIiLv7/83iyeKDAIzrU7s=;
-  b=aFHIYmX+nQdqSg6ycx9E9i0l5tqGyCRdPfgd6zXwyco5M1R0YjVxbOQl
-   j5bqgEp043mSHuwD7pQSG2aghWyO4opeZ8URKSw3LSYwQ9v+Hb+yX6drK
-   CZdJp8u1EpB92H2FHQEOb8mih4ErMBwg+hgUTZpgbeCkpeEkdPSLpCx6H
-   AwaFIc1CDpBo+cSHFekzYA78+QMCiAUfiuvFC2m6iZtOSr2Y4+cn2gm1b
-   U85GQ6Ngra1n8eySlwtixHd3DdLmT2ypkcsdsKAU9v5X0R7hKoJQRbxZQ
-   hjzKxrnS+GjsQyu2Ocd27rZahvRGkpbqHH2kdXOvPPkjCfzThdcWU6xMp
+  bh=fypXV+RT+IE5ge/LUHhQaTkgcv75JX94HM2lko8sqP0=;
+  b=btxPUHAn5dRFDXsVsaVVCVCz40XBg9d6BWhn8Lh+h3zLpsDmBm/S4zX5
+   EyrnJtb7Wtdo7VvG1OXivRT8bRJRH8lmvoRcr2Z6KcyvqHZJuMo2ikFMU
+   89wVs5jv3YXhr46mrgOIyTRAj7FMHgh2sZBjjR9G7Bf0Hjqnyf1esIYP/
+   402bD/FDbedQvrgIt/aGVLdHI1wxQg8K7pZLI/9jrDnF3DnApiEnbZweF
+   P1mSWeOU+7ZMe/ceqiJ6eX5YX0T25lQ0RceDUQukcYb6M1b9NqEVQBURe
+   bLxmKD2By5tH5rLrQ4lzARoHzXXwCKUELuEyZAed3hWftDYjpgPmPEmww
    Q==;
-X-CSE-ConnectionGUID: ftPVeLjbRBeVE12udlk4fg==
-X-CSE-MsgGUID: IFfYSycOTSin2lXHUqqaQw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11596"; a="63885953"
+X-CSE-ConnectionGUID: 7bJxYgbxRsu0bSCo2mD8kg==
+X-CSE-MsgGUID: okp/aR+XRNuuMJIq0MSzIA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11596"; a="63885962"
 X-IronPort-AV: E=Sophos;i="6.19,263,1754982000"; 
-   d="scan'208";a="63885953"
+   d="scan'208";a="63885962"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 03:24:29 -0700
-X-CSE-ConnectionGUID: dNskTaukR1uHkFMLYsLlzw==
-X-CSE-MsgGUID: X8Pph07YTDmIAOGg7wIpqg==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 03:24:33 -0700
+X-CSE-ConnectionGUID: 98A+4xsHSNOR5yvM7sx6Aw==
+X-CSE-MsgGUID: khXG2NKxRc6qOnZjgxMTeg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.19,263,1754982000"; 
-   d="scan'208";a="185963352"
+   d="scan'208";a="185963357"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by fmviesa008.fm.intel.com with ESMTP; 29 Oct 2025 03:24:26 -0700
+  by fmviesa008.fm.intel.com with ESMTP; 29 Oct 2025 03:24:30 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -60,9 +60,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v9 03/12] perf/x86/intel: Replace x86_pmu.drain_pebs calling with static call
-Date: Wed, 29 Oct 2025 18:21:27 +0800
-Message-Id: <20251029102136.61364-4-dapeng1.mi@linux.intel.com>
+Subject: [Patch v9 04/12] perf/x86/intel: Correct large PEBS flag check
+Date: Wed, 29 Oct 2025 18:21:28 +0800
+Message-Id: <20251029102136.61364-5-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251029102136.61364-1-dapeng1.mi@linux.intel.com>
 References: <20251029102136.61364-1-dapeng1.mi@linux.intel.com>
@@ -74,27 +74,36 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use x86_pmu_drain_pebs static call to replace calling x86_pmu.drain_pebs
-function pointer.
+current large PEBS flag check only checks if sample_regs_user contains
+unsupported GPRs but doesn't check if sample_regs_intr contains
+unsupported GPRs.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Of course, currently PEBS HW supports to sample all perf supported GPRs,
+the missed check doesn't cause real issue. But it won't be true any more
+after the subsequent patches support to sample SSP register. SSP
+sampling is not supported by adaptive PEBS HW and it would be supported
+until arch-PEBS HW. So correct this issue.
+
+Fixes: a47ba4d77e12 ("perf/x86: Enable free running PEBS for REGS_USER/INTR")
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/events/intel/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/events/intel/core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 28f5468a6ea3..46a000eb0bb3 100644
+index 46a000eb0bb3..c88bcd5d2bc4 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -3269,7 +3269,7 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
- 		 * The PEBS buffer has to be drained before handling the A-PMI
- 		 */
- 		if (is_pebs_counter_event_group(event))
--			x86_pmu.drain_pebs(regs, &data);
-+			static_call(x86_pmu_drain_pebs)(regs, &data);
- 
- 		last_period = event->hw.last_period;
+@@ -4029,7 +4029,9 @@ static unsigned long intel_pmu_large_pebs_flags(struct perf_event *event)
+ 	if (!event->attr.exclude_kernel)
+ 		flags &= ~PERF_SAMPLE_REGS_USER;
+ 	if (event->attr.sample_regs_user & ~PEBS_GP_REGS)
+-		flags &= ~(PERF_SAMPLE_REGS_USER | PERF_SAMPLE_REGS_INTR);
++		flags &= ~PERF_SAMPLE_REGS_USER;
++	if (event->attr.sample_regs_intr & ~PEBS_GP_REGS)
++		flags &= ~PERF_SAMPLE_REGS_INTR;
+ 	return flags;
+ }
  
 -- 
 2.34.1
