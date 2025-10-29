@@ -1,72 +1,71 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC6172EC56D
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2025 16:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCBC2848A8
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2025 16:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761755166; cv=none; b=BD5u3580Yk5iGvIHzE9wzZ8qoVC9GbzDyBrTDMV102C/dgAI3wQo+yCR+eNAOlD4O8CYyuSyMxIx3wrSaSrj/zd1/Xi/yOTf55MlGg9eGolwxNZ83qCMslzS0USTphZw1VjUyqw73D2MC8ZzK1L0386RP6dURZce7RUt5yMtA6U=
+	t=1761756433; cv=none; b=IwwYiSuwakghi/O6hrJoe7e+pu6iPrNwI4dLmRcSK2bt9cyAtcN2crkNlOF5EAXrY5hfeZbwgxGeIIcQ7D9fgJt8GGWnOAu/Hz9NFZB0HTBuWtSElhf9A5vDk8arX85CMvGbj5fG8QXA+ajG/3sq00AbMdWdYjUs1ix7G9XtKkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761755166; c=relaxed/simple;
-	bh=uS3mSxTQ6C/PIAkVzcpaQUTosNV7h2QI+JFbTaee4hs=;
+	s=arc-20240116; t=1761756433; c=relaxed/simple;
+	bh=XeE2248l8L/72ygAF7Bexy+VhtYVq8rb4yDrxujTcOs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F6+OczkKSuqc5Jgx9xVsPL7Q7AdwAqIHrKH1ca7O9XygAA+0KfNViVqxo0jlaaU/zRg9QHAF/F0sQiKBblWbv6aKDWn51d+gjlNXe0fwM2IjdVsAmJ+u0DycBvMOCnAMAdQQDgUcafBxt+gcmM4G/4i/NBLYxGj/M3BWes2TUXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zm1KnPAA; arc=none smtp.client-ip=209.85.214.176
+	 To:Cc:Content-Type; b=PkQcxDWUsJKp4Im57S7AzZYyN2wF+TRk+TlG8DHOZPmKTYtjVDfxvEdN54zJ5JnsZxJ0yEyRg+CQ9mdhzGpYC9aFeobvmOuJDt5m/t48uTC3b3NttEbcJ1pki9eLHJB+nheNYE2FCcjPlGmtygsQH7YDERgLbWLdghmkiFJYo90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4aDOFaYu; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zm1KnPAA"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-27eeafd4882so262065ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2025 09:26:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4aDOFaYu"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-290d48e9f1fso1875ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2025 09:47:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761755164; x=1762359964; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1761756431; x=1762361231; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AkrDz7763tHjWxGWwBj78bmOlQLD3Xq/Qp4yr3NJWEM=;
-        b=zm1KnPAA/FqZeD3KISrzSMzwa9+3vhHCGc5/pl0nSru6VKDnt9+JzxzYEzNY+hil1C
-         awt+/wiI/JT2ALmvrIsFPCIABHmHd5xgUO6CQ81Sx6gTSgWxHAa6HfK2CpznzbRE+bea
-         8qh/2A2dDlrH9hKh1LdWhmO28CZfFee+HRTAalkWUMDf/5NHx3+8aAbbNF+8FD1uwQp5
-         kAdqBitPkoNHJoBEygaDPOG6WlGV0vQzN6FGNxJkywLIamedvw+Kz0wjQ7B0Ilk29K4/
-         jKcWiAV5rbev+PYEMOpJBJGr1+Hsm/uz1hBk6B1FoapsnUyzEuQPEbgbRgz9ZLo9W4fz
-         hijQ==
+        bh=1S+2D3A1zxW1NR0S2yjc3Iwn47ykFEO8hoiIp/5Vd/4=;
+        b=4aDOFaYu6IJcCtvEONhG7pJ4HvdDRM2mK7Nr8+NK0UBsMjsyk2pgDI6lXCCanLLOPs
+         ohgsosYEW8ljSDV4K4Y53rRu77wXdED1h8zQeDc4FtJ9puABB/aQQ7ZK29dd73RPPCdM
+         /be5CdHDNCN4Jvi+YEZS4LM+PiEIDqtq4f1VpDN+4mc++Kh1PqZokSYtvah9q2QGOOF2
+         Rpf33epbE6dNjstKsFOaqPwevINtecCGmYhkH81pPsAJXYSXzCa3UWcbw/rggBmwXfwG
+         0G/gz17nK4ap7HbTsII6b8w68UQjsSTRcKullct7pKMY/YK7FpjmNA/6+k4h/8Hzy7Fc
+         3JsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761755164; x=1762359964;
+        d=1e100.net; s=20230601; t=1761756431; x=1762361231;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AkrDz7763tHjWxGWwBj78bmOlQLD3Xq/Qp4yr3NJWEM=;
-        b=wWGVeNEWmScB+W5eLQaq9YACBDsgV1zPwU2smN2Pu6OvIHGpsGxRPTG1DJot6rhfN7
-         I91PtgHmD1gZZkm0eXjw8qlqhb9K4SAt4sr0InVpVrvAHi5142wyLQqPQ5jim+9Glvdy
-         H0+CUC1CpTigylcn1998OeZ5XdAGbqp95ZHPGtMEG/JU+lW2kK16+aoQmR186I08CYoU
-         HEKMtk3uqzrdnI8Ds683Z8TAC/wGIEfz+Ewm7Z6DQFdh8UWyFCVcr3iTWA0YqJ4AzGbY
-         9gBufjnJ/Kkw8f6ZlPeL0XpDm3J7HyeiMkQs1iSHmoMqir29Osw5MWuKq+XJWv8jyrpv
-         eraQ==
-X-Gm-Message-State: AOJu0YwFwYLN6/AUh6e17SiNTUTSG9ZkGgE2JBVGxf0nYDC9F6WeME1L
-	BeB3s5+grGmgbegaqOH3JFRLv3NQGhzvQG6Q5Q0vKYeqKRN8uplrSHZ4i/3YWiYLEZZ3S0SLxN6
-	FcxaBXAqWliMecyMx1aUW808hvzo5QBEZcaPdFOW1
-X-Gm-Gg: ASbGnctGLrQEfzrxRPMroAoxhVe/3lbWa7/WoJddQAOEn6zTd8YXFutI5VqQO4jOyRa
-	PJvY/zB5w6y234mvjFf+nDGGbApm2uwl6MXcSe6J1m2qd+OjmSSSlbQ+vRuOJE1oM5ifsPk+Ds8
-	bfhQuwo3XajCbUnZWmgdttLCSrASZqkEGyqRew7Et5PU+PoTQM4XfNHlhD0hez6Uhk+fCppP6jZ
-	SU9bknhX1kbZRoUDcna33EgPNOgPjMej7iTBmR4R5UkQZgH4SnH4Nx7uTDYkEQsa8sGTJybt4Bx
-	wN0etGlfwSDk4Bs=
-X-Google-Smtp-Source: AGHT+IFz2HpvjVEub9B+nM/D2UULab8FiNUT7eYNhjZUB5uX7MWMUZkSXvSvi9+IgkHFz1faTgdFEgOPHKHdUcGwZT0=
-X-Received: by 2002:a17:903:1107:b0:290:d7fd:6297 with SMTP id
- d9443c01a7336-294de368a80mr5995365ad.2.1761755163312; Wed, 29 Oct 2025
- 09:26:03 -0700 (PDT)
+        bh=1S+2D3A1zxW1NR0S2yjc3Iwn47ykFEO8hoiIp/5Vd/4=;
+        b=jmd84krP+YJXnDHL1frby1FRP2UoU2EAJR7D9VQwkUcFoz/FoBPcLSikwMTtdqlds5
+         4kRXYb3NUwvkNgwxsIUO3tiHiaw/1hp8S4nmvsmygddmRKajJn+8+RW5ZacYlrsZjn81
+         Y0eQHVxXiI0UR/ZcuPeYNevOZwv0YKz43Jg1RYlTfZlvxR5FtUhbqLun2wItP4LndG8x
+         6t/ZStw9/uheWHiKmxSzzq80IZm0HkRGpw4olKBLoyNqwmHt6VMlzXhaQ/ygGJYtcf2U
+         pm8V1w87pTSKVJttk4pVYWcdXO1C/MDQL+8wYHQTYc2GiZTzBqVbQSX9X3v9gNJYakvf
+         TCag==
+X-Gm-Message-State: AOJu0YyWeznuq7stZRyEwIiLE+wZMBxRdIrrRPFG/SNQW+RQ7KvRqP5Y
+	rtonwDcl0S9wl+IYSA/L+FvtK+9gCv2NMCSydDyl0Sjhu8ZL6XH4g1W74PK7Fw7YkJS23VIFswo
+	jZxn54BigFDKFT1cCyxxiutL9Zn+H71DLX3Epg7q+
+X-Gm-Gg: ASbGncum7QfjAQNsB7eYejfy0ZmPXx8B6pTKv4lHhjXUYOtwsrpsnk8jcGXN0mckr72
+	m14YM4al7eRQByKQDOaQx4NNV514eIMCIb6M22dULp49B45qoV28IDxv4zIZnpIEM16bGiORZpZ
+	e1KTY0bA+ZFrRLx6N53Vxuh6qTrCvUW83ybYU0eV4C4xunvHV6MotAm2tmplVJmEfqxMGF+JslY
+	1gZiRSQ59ExGc8B9eSaJQuc6pfzCOurEyQih6Cc/14UG+LuacTn6NhgmZbFa7Pe42jvSRLi6LIU
+	J7OEWlLW/alpAeaObYqG8QULAAMhY7rH99Uh
+X-Google-Smtp-Source: AGHT+IHzCxhoMf6ohoA+266CSdltTcSDXJIxs8ks0UJy0hc1h+PYNIXZcA3hHH+ewCO4/aJ7hE9IYR/DGeZr5HeYugc=
+X-Received: by 2002:a17:903:191:b0:274:1a09:9553 with SMTP id
+ d9443c01a7336-294de454d78mr6329145ad.6.1761756431154; Wed, 29 Oct 2025
+ 09:47:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <09943f4f-516c-4b93-877c-e4a64ed61d38@linux.ibm.com>
- <CAP-5=fU7zGF90yPyPhNUKqZp6zvynjZ_fQd_+x4hB6+KFumrhg@mail.gmail.com> <219af201-12d4-4700-8d84-575969f83f0e@linux.ibm.com>
-In-Reply-To: <219af201-12d4-4700-8d84-575969f83f0e@linux.ibm.com>
+References: <09943f4f-516c-4b93-877c-e4a64ed61d38@linux.ibm.com> <79195870-7223-4aeb-beb4-a7d8f1895caa@linux.ibm.com>
+In-Reply-To: <79195870-7223-4aeb-beb4-a7d8f1895caa@linux.ibm.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 29 Oct 2025 09:25:52 -0700
-X-Gm-Features: AWmQ_bk7h50diC9F5nRpf5MjjMK2qGZsQXl4pCnluRs2emgcberIHri0isxA4s4
-Message-ID: <CAP-5=fWq90oMw6KfTv0zB8Cfr=BcCdO5V5jxRYx25ks-hO7PJw@mail.gmail.com>
+Date: Wed, 29 Oct 2025 09:47:00 -0700
+X-Gm-Features: AWmQ_bnN8vW48kP-OiuRijfYMeimHwgzwVuOHpPkjR6Nx_WJuu5h2BPnHyjPnKU
+Message-ID: <CAP-5=fXi=EDU7-tdNLwTKbCHR80_p3=TAe0qF0oE-tXbx35znw@mail.gmail.com>
 Subject: Re: [linux-next] perf report runtime extremely long
 To: Thomas Richter <tmricht@linux.ibm.com>
 Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>, Jan Polensky <japo@linux.ibm.com>, 
@@ -74,90 +73,78 @@ Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>, Jan Polensky <japo@lin
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 29, 2025 at 8:52=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
+On Wed, Oct 29, 2025 at 9:12=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
 om> wrote:
 >
-> On 10/29/25 16:13, Ian Rogers wrote:
-> > On Wed, Oct 29, 2025 at 1:04=E2=80=AFAM Thomas Richter <tmricht@linux.i=
-bm.com> wrote:
-> >>
-> >> Hi all,
-> >>
-> >> has something changed recently in perf report in linux-next repo?
-> >>
-> >> I run perf report -i <file> -D | grep something
-> >> on s390 with 2 different kernels:
-> >>
-> >> master 6.18.0rc3:
-> >> # uname -a
-> >> Linux a35lp67.lnxne.boe 6.18.0-rc3m-perf+ #23 SMP Tue Oct 28 15:53:44 =
-CET 2025 s390x GNU/Linux
-> >> # ll /tmp/perf2-eSso2q-2
-> >> -rw------- 1 root root 8538184 Oct 29 08:44 /tmp/perf2-eSso2q-2
-> >> # time perf report -i/tmp/perf2-eSso2q-2 -D | grep Counter:000 > /dev/=
-null
-> >>
-> >> real    0m22.262s
-> >> user    0m22.068s
-> >> sys     0m0.200s
-> >> #
-> >>
-> >> This runtime is ok for the perf.data file size.
-> >>
-> >> linux-next:
-> >> # uname -a
-> >> Linux s83lp47.lnxne.boe 6.18.0-20251028.rc3.git141.f7d2388eeec2.63.fc4=
-2.s390x+next #1 SMP Tue Oct 28 20:06:13 CET 2025 s390x GNU/Linux
-> >> #ll /tmp/perf2-eSso2q-2
-> >> -rw-------. 1 root root 8538184 Oct 29 08:47 /tmp/perf2-eSso2q-2
-> >> # time perf report -i/tmp/perf2-eSso2q-2 -D | grep Counter:000 > /dev/=
-null
-> >>
-> >> real    2m53.601s
-> >> user    2m52.938s
-> >> sys     0m0.575s
-> >> #
-> >>
-> >> Same perf.data file and run time increased from 22 seconds to nearly 3=
-00 seconds, roughly 14 times longer
-> >> for the same input!
-> >>
-> >> Has anybody similar observations?
+> On 10/29/25 09:03, Thomas Richter wrote:
+> > Hi all,
 > >
-> > So there were changes relating to addr2line that could impact this:
-> > https://lore.kernel.org/lkml/20251005212212.2892175-1-irogers@google.co=
-m/
+> > has something changed recently in perf report in linux-next repo?
 > >
-> > There was also the switch to always using build IDs:
-> > https://lore.kernel.org/lkml/20250724163302.596743-1-irogers@google.com=
-/
+> > I run perf report -i <file> -D | grep something
+> > on s390 with 2 different kernels:
 > >
-> > Any chance you could do a `perf record`/`perf report` to see where the
-> > time is going?
+> > master 6.18.0rc3:
+> > # uname -a
+> > Linux a35lp67.lnxne.boe 6.18.0-rc3m-perf+ #23 SMP Tue Oct 28 15:53:44 C=
+ET 2025 s390x GNU/Linux
+> > # ll /tmp/perf2-eSso2q-2
+> > -rw------- 1 root root 8538184 Oct 29 08:44 /tmp/perf2-eSso2q-2
+> > # time perf report -i/tmp/perf2-eSso2q-2 -D | grep Counter:000 > /dev/n=
+ull
 > >
-> > Thanks!
-> > Ian
+> > real  0m22.262s
+> > user  0m22.068s
+> > sys   0m0.200s
+> > #
+> >
+> > This runtime is ok for the perf.data file size.
+> >
+> > linux-next:
+> > # uname -a
+> > Linux s83lp47.lnxne.boe 6.18.0-20251028.rc3.git141.f7d2388eeec2.63.fc42=
+.s390x+next #1 SMP Tue Oct 28 20:06:13 CET 2025 s390x GNU/Linux
+> > #ll /tmp/perf2-eSso2q-2
+> > -rw-------. 1 root root 8538184 Oct 29 08:47 /tmp/perf2-eSso2q-2
+> > # time perf report -i/tmp/perf2-eSso2q-2 -D | grep Counter:000 > /dev/n=
+ull
+> >
+> > real  2m53.601s
+> > user  2m52.938s
+> > sys   0m0.575s
+> > #
+> >
+> > Same perf.data file and run time increased from 22 seconds to nearly 30=
+0 seconds, roughly 14 times longer
+> > for the same input!
+> >
+> > Has anybody similar observations?
+> >
+> > Thanks a lot
+> >
 >
-> Ok here is a first try, can do more tests tomorrow morning.
-> The file perf1.data has this size:
+> Ian,
+>
+> sorry sent button pushed too early...
+>
+> here is a second try without option -D.
+>
+> This is much better:
 >
 > root in =F0=9F=8C=90 s83lp47 in ~
 > =E2=9D=AF ll perf1.data
 > -rw-------. 1 root root 99692290 Oct 29 16:17 perf1.data
 >
 > root in =F0=9F=8C=90 s83lp47 in ~
-> =E2=9D=AF
+> =E2=9D=AF time perf record -- perf report -i perf1.data  > /dev/null
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.027 MB perf.data (246 samples) ]
 >
-> time perf record -- perf report -i perf1.data -D > /dev/null
-> ^C[ perf record: Woken up 6 times to write data ]
-> [ perf record: Captured and wrote 2.742 MB perf.data (70481 samples) ]
-> Terminated
+> real    0m1.097s
+> user    0m0.082s
+> sys     0m0.167s
 >
-> real    13m9.894s
-> user    13m6.583s
-> sys     0m2.449s
->
-> root in =F0=9F=8C=90 s83lp47 in ~ took 13m9s
+> root in =F0=9F=8C=90 s83lp47 in ~
 > =E2=9D=AF perf report --stdio
 > # To display the perf.data header info, please use --header/--header-only=
  options.
@@ -165,76 +152,105 @@ m/
 > #
 > # Total Lost Samples: 0
 > #
-> # Samples: 70K of event 'cpum_cf/cycles/P'
-> # Event count (approx.): 88101250000
+> # Samples: 246  of event 'cpum_cf/cycles/P'
+> # Event count (approx.): 307500000
 > #
-> # Overhead  Command  Shared Object      Symbol
-> # ........  .......  .................  .................................=
-.................................................
+> # Overhead  Command  Shared Object        Symbol
+> # ........  .......  ...................  ...............................=
+...................
 > #
->     26.67%  perf     libc.so.6          [.] __printf_buffer
->     12.43%  perf     libc.so.6          [.] __GI___strnlen
->     12.30%  perf     libc.so.6          [.] __strstr_vx
->     11.92%  perf     perf               [.] perf_pmu__for_each_event
->      7.46%  perf     libc.so.6          [.] __printf_buffer_write
->      5.48%  perf     libc.so.6          [.] memcpy
->      5.13%  perf     libc.so.6          [.] __GI___strchrnul
->      3.25%  perf     libc.so.6          [.] __vfscanf_internal
->      2.61%  perf     libc.so.6          [.] strchr
->      2.39%  perf     libc.so.6          [.] __vsnprintf_internal
->      2.19%  perf     libc.so.6          [.] __printf_buffer_done
->      2.03%  perf     perf               [.] perf_pmu__is_tool
->      1.14%  perf     libc.so.6          [.] __snprintf_chk@@GLIBC_2.4
->      1.05%  perf     perf               [.] get_counter_name_callback
->      0.73%  perf     libc.so.6          [.] __GI_____strtoull_l_internal
->      0.60%  perf     libc.so.6          [.] memcmp
->      0.28%  perf     libc.so.6          [.] _IO_str_init_static_internal
->      0.19%  perf     libc.so.6          [.] strlen
+>      9.35%  perf     perf                 [.] reader__read_event
+>      4.47%  perf     perf                 [.] perf_env__arch
+>      2.85%  perf     ld64.so.1            [.] _dl_relocate_object_no_relr=
+o
+>      2.44%  perf     ld64.so.1            [.] _dl_lookup_symbol_x
+>      2.44%  perf     ld64.so.1            [.] do_lookup_x
+>      2.44%  perf     perf                 [.] down_read
+>      2.03%  perf     perf                 [.] hists__findnew_entry
+>      2.03%  perf     perf                 [.] perf_hpp__is_dynamic_entry
+>      1.63%  perf     [kernel.kallsyms]    [k] __s390_indirect_jump_r14
+>      1.63%  perf     [kernel.kallsyms]    [k] format_decode
+>      1.63%  perf     libc.so.6            [.] cfree@GLIBC_2.2
+>      1.63%  perf     perf                 [.] evsel__parse_sample
+>      1.63%  perf     perf                 [.] map__put
+>      1.63%  perf     perf                 [.] sort__comm_cmp
+>      1.63%  perf     perf                 [.] thread__put
+>      1.22%  perf     [kernel.kallsyms]    [k] folio_add_file_rmap_ptes
+>      1.22%  perf     [kernel.kallsyms]    [k] get_page_from_freelist
+>      1.22%  perf     ld64.so.1            [.] _dl_name_match_p
+>      1.22%  perf     perf                 [.] dump_printf
+>      1.22%  perf     perf                 [.] evlist__event2evsel
+>      1.22%  perf     perf                 [.] hashmap_find
+>      1.22%  perf     perf                 [.] perf_session__deliver_event
 
-
-Looks like the time is in s390-sample-raw.c but I don't see recent
-changes there:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/log/tools/perf/util/s390-sample-raw.c?h=3Dperf-tools-next
-
-I wonder for the scanf if the following would help:
+Hmm.. for perf_env__arch we could probably cache better:
 ```
-diff --git a/tools/perf/util/s390-sample-raw.c
-b/tools/perf/util/s390-sample-raw.c
-index a2d6a1f93cce..21edd359a43a 100644
---- a/tools/perf/util/s390-sample-raw.c
-+++ b/tools/perf/util/s390-sample-raw.c
-@@ -140,8 +140,9 @@ struct get_counter_name_data {
-static int get_counter_name_callback(void *vdata, struct pmu_event_info *in=
-fo)
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index f1626d2032cd..2591f71c7c42 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -593,17 +593,27 @@ static const char *normalize_arch(char *arch)
+
+const char *perf_env__arch(struct perf_env *env)
 {
-       struct get_counter_name_data *data =3D vdata;
--       int rc, event_nr;
-+       int event_nr;
-       const char *event_str;
-+       char *end_ptr;
+-       char *arch_name;
++       if (env && env->arch && env->arch_name_normalized)
++               return env->arch;
 
-       if (info->str =3D=3D NULL)
-               return 0;
-@@ -150,8 +151,8 @@ static int get_counter_name_callback(void *vdata,
-struct pmu_event_info *info)
-       if (!event_str)
-               return 0;
+       if (!env || !env->arch) { /* Assume local operation */
+               static struct utsname uts =3D { .machine[0] =3D '\0', };
+               if (uts.machine[0] =3D=3D '\0' && uname(&uts) < 0)
+                       return NULL;
+-               arch_name =3D uts.machine;
+-       } else
+-               arch_name =3D env->arch;
 
--       rc =3D sscanf(event_str, "event=3D%x", &event_nr);
--       if (rc =3D=3D 1 && event_nr =3D=3D data->wanted) {
-+       event_nr =3D strtol(event_str + 6, &end_ptr, /*base=3D*/16);
-+       if ((end_ptr !=3D event_str + 6) && event_nr =3D=3D data->wanted) {
-               data->result =3D strdup(info->name);
-               return 1; /* Terminate the search. */
-       }
+-       return normalize_arch(arch_name);
++               if (!env)
++                       return normalize_arch(uts.machine);
++
++               env->arch =3D strdup(normalize_arch(uts.machine));
++               env->arch_name_normalized =3D true;
++       } else {
++               char *normalized =3D strdup(normalize_arch(env->arch));
++
++               free(env->arch);
++               env->arch =3D normalized;
++               env->arch_name_normalized =3D true;
++       }
++       return env->arch;
+}
+
+#if defined(HAVE_LIBTRACEEVENT)
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index 9977b85523a8..da20bc3810bd 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -61,6 +61,7 @@ struct perf_env {
+       char                    *os_release;
+       char                    *version;
+       char                    *arch;
++       bool                    arch_name_normalized;
+       int                     nr_cpus_online;
+       int                     nr_cpus_avail;
+       char                    *cpu_desc;
 ```
+or just force the normalize before assignment.
 
-ah, new email, let me follow up further there.
+For reader__read_event and the perf_env these changes may be relevant:
+"perf sample: Remove arch notion of sample parsing"
+https://lore.kernel.org/r/20250724163302.596743-21-irogers@google.com
+"perf env: Remove global perf_env"
+https://lore.kernel.org/r/20250724163302.596743-20-irogers@google.com
 
-> Hope this helps
->
-> Kind regards
+I wonder if for some reason the env is NULL in your cases, so we go
+slow path a lot.
+
+The histogram stuff, Namhyung may know more.
+
+Thanks!
+Ian
+
 > --
 > Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, German=
 y
@@ -247,3 +263,4 @@ y
 >
 > Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht Stut=
 tgart, HRB 243294
+>
