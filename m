@@ -1,300 +1,194 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DAF4359FBD;
-	Wed, 29 Oct 2025 10:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB3530103F
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2025 10:26:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761733512; cv=none; b=jH34mHxZNKislcdE6Krb6PsgwLIpjAr4o3Vbuv/09FfpjhvIFPh20hFcREEerORm44D6zMNkAnzZRzABdDgKswK8tTf8PRz8lfGSVLArj+C3uhXWnf42+fI/hA27AqchReqct+mv1422sVvs0QbCC0uUrvu8C+1fYz5jS6CxSWs=
+	t=1761733609; cv=none; b=NNHeB0nGLUOxdSRcUe59MlvZHFuRbnIJOtaYzeBnAxwovh6h/Ggl/JOWScz9vIQYqq7mQqwUomzBgiF0IzbHcGNrvW2tLnMMtC+VeoXtp1uEv7W8Q5hkqp0heTj0JFdOqBl0unx1Ca66LJ4mevF/UPNWpSZeW6E8SQg3aHW7kOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761733512; c=relaxed/simple;
-	bh=b00xQst6nrwrN3Jq6hQot0Q99rOLgUDKri1bVzxSqTc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rXwUEvLyAhyR9syNzNvGR6RE6b2HghgrggudTEEKc2k/JlAm7VuHDHFnkH6egySvqhs7jX2deAzxd8OwVm8yuNQB0Z4F56bocUvXKd6s9h0wJiGGuC+Gt2arMhmmRUy2QOfUdEmy9CqDPDW/PkQiydxIOcyCwoafabKwaU+4+do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X6ek95aL; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1761733609; c=relaxed/simple;
+	bh=zkE0vyis83Qnd4j3qFtBbD4uxT5fDgXxEKk32YXAR1I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JdBIbSiMrpcuXWhJXxylAq2FoETDrG6U3NbO+Vjtkm4NkC+yMLMhNoKFK5Ix8NqWXccSVbIQIt8suaZmytZN7fCXr5R641DHx2LWEdbFSjnQIKJ5DpbzQFpERrM16a2Si8YOvyPkII6fOtYiTg4dESCkozWhhTM3jOO1a35i4Eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cnncW+AO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X6ek95aL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761733510; x=1793269510;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=b00xQst6nrwrN3Jq6hQot0Q99rOLgUDKri1bVzxSqTc=;
-  b=X6ek95aLNvsubhrXGaVN94jW2unjF0XqGNRTW9Npxz6wck1ir3ve4khm
-   UAXakipX2aNmI9BCf5G2cljziGZ044yNcyRVGEtgh6nN2uIpNOov1AnKP
-   MfzhIeYucMCb08DHRmmdlFbyEV1AXam2K06/tjDSi8wh3K5Gnkdq4oIlP
-   EQxfbgcWcYAlRf83lfhb7Eqx2h83PV9xkhNq6BP/ES0eAn81y7QrO3Ygg
-   O1F50lHd5DgQrxeTQo//p5LJvljr8iwiqCbPiNGjqAjrzFFFZF/0cbJhC
-   pciC65BPbx2G2+vm6vhh5eIsmWMg/i/E5QY8ssS16ecSur62bvd7ypGXs
-   w==;
-X-CSE-ConnectionGUID: ZikI/mGdRO6vk6vz48hS1Q==
-X-CSE-MsgGUID: JSrAwcApR3KTkgeSTIWuyg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11596"; a="63891078"
-X-IronPort-AV: E=Sophos;i="6.19,263,1754982000"; 
-   d="scan'208";a="63891078"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 03:25:10 -0700
-X-CSE-ConnectionGUID: BEa/klD8RsCo+N7BqCeOJQ==
-X-CSE-MsgGUID: 1aJ5BgnNQBykeo7u/fZSCg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,263,1754982000"; 
-   d="scan'208";a="185963532"
-Received: from spr.sh.intel.com ([10.112.229.196])
-  by fmviesa008.fm.intel.com with ESMTP; 29 Oct 2025 03:25:06 -0700
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v9 12/12] perf/x86/intel: Add counter group support for arch-PEBS
-Date: Wed, 29 Oct 2025 18:21:36 +0800
-Message-Id: <20251029102136.61364-13-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20251029102136.61364-1-dapeng1.mi@linux.intel.com>
-References: <20251029102136.61364-1-dapeng1.mi@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cnncW+AO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1761733606;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=/l/eBTg6PDk2gq24yxrQmlGvSlksP+1NRV8KnJwBP8E=;
+	b=cnncW+AON+djwLkCGRV01SWIpFPM/uefZqgxtKSyfKIdwhdN2cEMX5WYCgx9cWmbY//jV0
+	aPxQfs0D+r5sOG5glob+B5YMFQLOI6VfJZw/5nsCWh3cW2TILgfBEDWjLQrBC3S0cq1RoZ
+	2mDCh4qfsQy9PIfuMEbjTEw8m8Mq/hE=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-578-r9cyzSrwN5e-MMxr59ztzA-1; Wed, 29 Oct 2025 06:26:45 -0400
+X-MC-Unique: r9cyzSrwN5e-MMxr59ztzA-1
+X-Mimecast-MFC-AGG-ID: r9cyzSrwN5e-MMxr59ztzA_1761733604
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4770e0910a1so19796565e9.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2025 03:26:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761733604; x=1762338404;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/l/eBTg6PDk2gq24yxrQmlGvSlksP+1NRV8KnJwBP8E=;
+        b=MbHxIB2rxfuoeU26Mxum73mJIOVeyHd6hkiKaxnt7zWF6Ts3Vl2s1DR75MZPpS1SY4
+         SKiKNfTFxFEgDfO8Krk0mEsPvIQrtRl8d/Of4TvxNW984jF5PysxwSr3alzrBLkOfreA
+         Zpuk8YnxaChkklt8qGS2VQ0b84qDmX6wk4AtJwBt97UJLYO9rTM0j8SPA5kDdcBj4eZY
+         H8IySfrkEzP72IYKjgTYevnH3swL27X/7cnDf9ExLKjRjru6kHi090ktDU2Q1Zn6HTfw
+         MO5XkgjERkRwyGj1lRQznMbw1xXkwapvfCPSeR+RX7MVoxJ2Sn1PjfTTuTiz/cqvpWA8
+         RYmw==
+X-Forwarded-Encrypted: i=1; AJvYcCWpPuddzYb7SxjguYvf0fCq+juzA/uFQikPuncTHfvWfzqFFm02RCEwEkIEpUJAHxIp1N20PHkrJC2yBi76cgvl@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3hynp1279snvvlH5O6qFlcLz5BCpQTLwdm7Iir2MfR0FmpyIV
+	gscYkKoVvaie6QpQw8W84/M5WLsjpiCuGtKOybf6EhJWThk3wlQcY4Z4uYNO/+7PknD+WvsoRUo
+	mZZDHYu5ARwEe6hh3DD2XGxKKuoZ+0wjOBNyZ513NVUhPTfFF8qjPAFjEczxU7agZ4GuJt/8=
+X-Gm-Gg: ASbGncv0TlpHsMISlcXww20QUSx4YCXwOiQnE6AM8IpepJJ7xYyr4g0Z4fRZKZjXjfQ
+	IiLobVWollM+wFV8/xv+KzJN8JAu78nnGpU9zFaDSoCAHVgeVKFAGuqOwT56fpvdx2NxHwByZQm
+	dsqZkrPZ2PxgiNVfS1+fmGKc8UgPFuobSvydvZxpKYkQMSZeMeJoDcrrrfhxLJBezGnin1ViDJ8
+	nWxqRBAEqbmUg4bdpbsNaoNaXl1CtLpcUP6cjI0VnKbxKcVvzAa8ld58Z+sPOA1QgcCrTMGc4Fg
+	BoKlAYH4E7b58J0qMguwULq/ThaEPLoNhUJp4nRYlKdPuh8BGIvwaY0J6hmwBjDMID4QlwfUQnl
+	X0tUl8Km6Y13e0hR01eumig==
+X-Received: by 2002:a05:600c:4591:b0:471:115e:624b with SMTP id 5b1f17b1804b1-4771e18cc1fmr23358955e9.17.1761733603649;
+        Wed, 29 Oct 2025 03:26:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGtQTrCoapOr6bX5uVmtmRqcuUC4lYBRzIXvtaTPDducTLRlHN+f7pxZPgextJafstOMsxSuw==
+X-Received: by 2002:a05:600c:4591:b0:471:115e:624b with SMTP id 5b1f17b1804b1-4771e18cc1fmr23358735e9.17.1761733603198;
+        Wed, 29 Oct 2025 03:26:43 -0700 (PDT)
+Received: from [10.32.64.156] (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4771e202093sm43202745e9.11.2025.10.29.03.26.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Oct 2025 03:26:41 -0700 (PDT)
+Message-ID: <c6f8871a-5118-4947-9801-43b2a7a42993@redhat.com>
+Date: Wed, 29 Oct 2025 11:26:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] Optimize code generation during context
+To: Xie Yuanbin <qq570070308@gmail.com>, riel@surriel.com,
+ linux@armlinux.org.uk, mathieu.desnoyers@efficios.com, paulmck@kernel.org,
+ pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+ hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+ borntraeger@linux.ibm.com, svens@linux.ibm.com, davem@davemloft.net,
+ andreas@gaisler.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, luto@kernel.org,
+ peterz@infradead.org, acme@kernel.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, anna-maria@linutronix.de,
+ frederic@kernel.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, vschneid@redhat.com, thuth@redhat.com,
+ akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
+ segher@kernel.crashing.org, ryan.roberts@arm.com, max.kellermann@ionos.com,
+ urezki@gmail.com, nysal@linux.ibm.com
+Cc: x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, will@kernel.org
+References: <18734a4944e47952b7ad3e10a36c902392bdaa91.camel@surriel.com>
+ <20251025173700.754-1-qq570070308@gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZoEEwEIAEQCGwMCF4ACGQEFCwkIBwICIgIG
+ FQoJCAsCBBYCAwECHgcWIQQb2cqtc1xMOkYN/MpN3hD3AP+DWgUCaJzangUJJlgIpAAKCRBN
+ 3hD3AP+DWhAxD/9wcL0A+2rtaAmutaKTfxhTP0b4AAp1r/eLxjrbfbCCmh4pqzBhmSX/4z11
+ opn2KqcOsueRF1t2ENLOWzQu3Roiny2HOU7DajqB4dm1BVMaXQya5ae2ghzlJN9SIoopTWlR
+ 0Af3hPj5E2PYvQhlcqeoehKlBo9rROJv/rjmr2x0yOM8qeTroH/ZzNlCtJ56AsE6Tvl+r7cW
+ 3x7/Jq5WvWeudKrhFh7/yQ7eRvHCjd9bBrZTlgAfiHmX9AnCCPRPpNGNedV9Yty2Jnxhfmbv
+ Pw37LA/jef8zlCDyUh2KCU1xVEOWqg15o1RtTyGV1nXV2O/mfuQJud5vIgzBvHhypc3p6VZJ
+ lEf8YmT+Ol5P7SfCs5/uGdWUYQEMqOlg6w9R4Pe8d+mk8KGvfE9/zTwGg0nRgKqlQXrWRERv
+ cuEwQbridlPAoQHrFWtwpgYMXx2TaZ3sihcIPo9uU5eBs0rf4mOERY75SK+Ekayv2ucTfjxr
+ Kf014py2aoRJHuvy85ee/zIyLmve5hngZTTe3Wg3TInT9UTFzTPhItam6dZ1xqdTGHZYGU0O
+ otRHcwLGt470grdiob6PfVTXoHlBvkWRadMhSuG4RORCDpq89vu5QralFNIf3EysNohoFy2A
+ LYg2/D53xbU/aa4DDzBb5b1Rkg/udO1gZocVQWrDh6I2K3+cCs7BTQRVy5+RARAA59fefSDR
+ 9nMGCb9LbMX+TFAoIQo/wgP5XPyzLYakO+94GrgfZjfhdaxPXMsl2+o8jhp/hlIzG56taNdt
+ VZtPp3ih1AgbR8rHgXw1xwOpuAd5lE1qNd54ndHuADO9a9A0vPimIes78Hi1/yy+ZEEvRkHk
+ /kDa6F3AtTc1m4rbbOk2fiKzzsE9YXweFjQvl9p+AMw6qd/iC4lUk9g0+FQXNdRs+o4o6Qvy
+ iOQJfGQ4UcBuOy1IrkJrd8qq5jet1fcM2j4QvsW8CLDWZS1L7kZ5gT5EycMKxUWb8LuRjxzZ
+ 3QY1aQH2kkzn6acigU3HLtgFyV1gBNV44ehjgvJpRY2cC8VhanTx0dZ9mj1YKIky5N+C0f21
+ zvntBqcxV0+3p8MrxRRcgEtDZNav+xAoT3G0W4SahAaUTWXpsZoOecwtxi74CyneQNPTDjNg
+ azHmvpdBVEfj7k3p4dmJp5i0U66Onmf6mMFpArvBRSMOKU9DlAzMi4IvhiNWjKVaIE2Se9BY
+ FdKVAJaZq85P2y20ZBd08ILnKcj7XKZkLU5FkoA0udEBvQ0f9QLNyyy3DZMCQWcwRuj1m73D
+ sq8DEFBdZ5eEkj1dCyx+t/ga6x2rHyc8Sl86oK1tvAkwBNsfKou3v+jP/l14a7DGBvrmlYjO
+ 59o3t6inu6H7pt7OL6u6BQj7DoMAEQEAAcLBfAQYAQgAJgIbDBYhBBvZyq1zXEw6Rg38yk3e
+ EPcA/4NaBQJonNqrBQkmWAihAAoJEE3eEPcA/4NaKtMQALAJ8PzprBEXbXcEXwDKQu+P/vts
+ IfUb1UNMfMV76BicGa5NCZnJNQASDP/+bFg6O3gx5NbhHHPeaWz/VxlOmYHokHodOvtL0WCC
+ 8A5PEP8tOk6029Z+J+xUcMrJClNVFpzVvOpb1lCbhjwAV465Hy+NUSbbUiRxdzNQtLtgZzOV
+ Zw7jxUCs4UUZLQTCuBpFgb15bBxYZ/BL9MbzxPxvfUQIPbnzQMcqtpUs21CMK2PdfCh5c4gS
+ sDci6D5/ZIBw94UQWmGpM/O1ilGXde2ZzzGYl64glmccD8e87OnEgKnH3FbnJnT4iJchtSvx
+ yJNi1+t0+qDti4m88+/9IuPqCKb6Stl+s2dnLtJNrjXBGJtsQG/sRpqsJz5x1/2nPJSRMsx9
+ 5YfqbdrJSOFXDzZ8/r82HgQEtUvlSXNaXCa95ez0UkOG7+bDm2b3s0XahBQeLVCH0mw3RAQg
+ r7xDAYKIrAwfHHmMTnBQDPJwVqxJjVNr7yBic4yfzVWGCGNE4DnOW0vcIeoyhy9vnIa3w1uZ
+ 3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
+ CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
+ qIws/H2t
+In-Reply-To: <20251025173700.754-1-qq570070308@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Base on previous adaptive PEBS counter snapshot support, add counter
-group support for architectural PEBS. Since arch-PEBS shares same
-counter group layout with adaptive PEBS, directly reuse
-__setup_pebs_counter_group() helper to process arch-PEBS counter group.
+On 25.10.25 19:37, Xie Yuanbin wrote:
+> On Fri, 24 Oct 2025 17:36:06 -0400, Rik van Riel wrote:
+>> Also, what kind of performance improvement
+>> have you measured with these changes?
+> 
+> When I debugged performance issues before, I used the company's equipment.
+> I could only observe the macro business performance data, but not the
+> specific scheduling time. Today I did some testing using my devices,
+> and the testing logic is as follows:
+> ```
+> -	return finish_task_switch(prev);
+> +	start_time = rdtsc();
+> +	barrier();
+> +	rq = finish_task_switch(prev);
+> +	barrier();
+> +	end_time = rdtsc;
+> +	return rq;
+> ```
+> 
+> The test data is as follows:
+> 1. mitigations Off, without patches: 13.5 - 13.7
+> 2. mitigations Off, with patches: 13.5 - 13.7
+> 3. mitigations On, without patches: 23.3 - 23.6
+> 4. mitigations On, with patches: 16.6 - 16.8
 
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- arch/x86/events/intel/core.c      | 38 ++++++++++++++++++++++++++++---
- arch/x86/events/intel/ds.c        | 29 ++++++++++++++++++++---
- arch/x86/include/asm/msr-index.h  |  6 +++++
- arch/x86/include/asm/perf_event.h | 13 ++++++++---
- 4 files changed, 77 insertions(+), 9 deletions(-)
+Such numbers absolutely have to be part of the relevant patches / cover 
+letter to show that the compiler is not actually smart enough to make a 
+good decision.
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 75cba28b86d5..cb64018321dd 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3014,6 +3014,17 @@ static void intel_pmu_enable_event_ext(struct perf_event *event)
- 
- 			if (pebs_data_cfg & PEBS_DATACFG_LBRS)
- 				ext |= ARCH_PEBS_LBR & cap.caps;
-+
-+			if (pebs_data_cfg &
-+			    (PEBS_DATACFG_CNTR_MASK << PEBS_DATACFG_CNTR_SHIFT))
-+				ext |= ARCH_PEBS_CNTR_GP & cap.caps;
-+
-+			if (pebs_data_cfg &
-+			    (PEBS_DATACFG_FIX_MASK << PEBS_DATACFG_FIX_SHIFT))
-+				ext |= ARCH_PEBS_CNTR_FIXED & cap.caps;
-+
-+			if (pebs_data_cfg & PEBS_DATACFG_METRICS)
-+				ext |= ARCH_PEBS_CNTR_METRICS & cap.caps;
- 		}
- 
- 		if (cpuc->n_pebs == cpuc->n_large_pebs)
-@@ -3038,6 +3049,9 @@ static void intel_pmu_enable_event_ext(struct perf_event *event)
- 		}
- 	}
- 
-+	if (is_pebs_counter_event_group(event))
-+		ext |= ARCH_PEBS_CNTR_ALLOW;
-+
- 	if (cpuc->cfg_c_val[hwc->idx] != ext)
- 		__intel_pmu_update_event_ext(hwc->idx, ext);
- }
-@@ -4323,6 +4337,20 @@ static bool intel_pmu_is_acr_group(struct perf_event *event)
- 	return false;
- }
- 
-+static inline bool intel_pmu_has_pebs_counter_group(struct pmu *pmu)
-+{
-+	u64 caps;
-+
-+	if (x86_pmu.intel_cap.pebs_format >= 6 && x86_pmu.intel_cap.pebs_baseline)
-+		return true;
-+
-+	caps = hybrid(pmu, arch_pebs_cap).caps;
-+	if (x86_pmu.arch_pebs && (caps & ARCH_PEBS_CNTR_MASK))
-+		return true;
-+
-+	return false;
-+}
-+
- static inline void intel_pmu_set_acr_cntr_constr(struct perf_event *event,
- 						 u64 *cause_mask, int *num)
- {
-@@ -4471,8 +4499,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 	}
- 
- 	if ((event->attr.sample_type & PERF_SAMPLE_READ) &&
--	    (x86_pmu.intel_cap.pebs_format >= 6) &&
--	    x86_pmu.intel_cap.pebs_baseline &&
-+	    intel_pmu_has_pebs_counter_group(event->pmu) &&
- 	    is_sampling_event(event) &&
- 	    event->attr.precise_ip)
- 		event->group_leader->hw.flags |= PERF_X86_EVENT_PEBS_CNTR;
-@@ -5420,6 +5447,8 @@ static inline void __intel_update_large_pebs_flags(struct pmu *pmu)
- 	x86_pmu.large_pebs_flags |= PERF_SAMPLE_TIME;
- 	if (caps & ARCH_PEBS_LBR)
- 		x86_pmu.large_pebs_flags |= PERF_SAMPLE_BRANCH_STACK;
-+	if (caps & ARCH_PEBS_CNTR_MASK)
-+		x86_pmu.large_pebs_flags |= PERF_SAMPLE_READ;
- 
- 	if (!(caps & ARCH_PEBS_AUX))
- 		x86_pmu.large_pebs_flags &= ~PERF_SAMPLE_DATA_SRC;
-@@ -7134,8 +7163,11 @@ __init int intel_pmu_init(void)
- 	 * Many features on and after V6 require dynamic constraint,
- 	 * e.g., Arch PEBS, ACR.
- 	 */
--	if (version >= 6)
-+	if (version >= 6) {
- 		x86_pmu.flags |= PMU_FL_DYN_CONSTRAINT;
-+		x86_pmu.late_setup = intel_pmu_late_setup;
-+	}
-+
- 	/*
- 	 * Install the hw-cache-events table:
- 	 */
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index c66e9b562de3..c93bf971d97b 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1530,13 +1530,20 @@ pebs_update_state(bool needed_cb, struct cpu_hw_events *cpuc,
- 
- u64 intel_get_arch_pebs_data_config(struct perf_event *event)
- {
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	u64 pebs_data_cfg = 0;
-+	u64 cntr_mask;
- 
- 	if (WARN_ON(event->hw.idx < 0 || event->hw.idx >= X86_PMC_IDX_MAX))
- 		return 0;
- 
- 	pebs_data_cfg |= pebs_update_adaptive_cfg(event);
- 
-+	cntr_mask = (PEBS_DATACFG_CNTR_MASK << PEBS_DATACFG_CNTR_SHIFT) |
-+		    (PEBS_DATACFG_FIX_MASK << PEBS_DATACFG_FIX_SHIFT) |
-+		    PEBS_DATACFG_CNTR | PEBS_DATACFG_METRICS;
-+	pebs_data_cfg |= cpuc->pebs_data_cfg & cntr_mask;
-+
- 	return pebs_data_cfg;
- }
- 
-@@ -2444,6 +2451,24 @@ static void setup_arch_pebs_sample_data(struct perf_event *event,
- 		}
- 	}
- 
-+	if (header->cntr) {
-+		struct arch_pebs_cntr_header *cntr = next_record;
-+		unsigned int nr;
-+
-+		next_record += sizeof(struct arch_pebs_cntr_header);
-+
-+		if (is_pebs_counter_event_group(event)) {
-+			__setup_pebs_counter_group(cpuc, event,
-+				(struct pebs_cntr_header *)cntr, next_record);
-+			data->sample_flags |= PERF_SAMPLE_READ;
-+		}
-+
-+		nr = hweight32(cntr->cntr) + hweight32(cntr->fixed);
-+		if (cntr->metrics == INTEL_CNTR_METRICS)
-+			nr += 2;
-+		next_record += nr * sizeof(u64);
-+	}
-+
- 	/* Parse followed fragments if there are. */
- 	if (arch_pebs_record_continued(header)) {
- 		at = at + header->size;
-@@ -3094,10 +3119,8 @@ static void __init intel_ds_pebs_init(void)
- 			break;
- 
- 		case 6:
--			if (x86_pmu.intel_cap.pebs_baseline) {
-+			if (x86_pmu.intel_cap.pebs_baseline)
- 				x86_pmu.large_pebs_flags |= PERF_SAMPLE_READ;
--				x86_pmu.late_setup = intel_pmu_late_setup;
--			}
- 			fallthrough;
- 		case 5:
- 			x86_pmu.pebs_ept = 1;
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index f1ef9ac38bfb..65cc528fbad8 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -334,12 +334,18 @@
- #define ARCH_PEBS_INDEX_WR_SHIFT	4
- 
- #define ARCH_PEBS_RELOAD		0xffffffff
-+#define ARCH_PEBS_CNTR_ALLOW		BIT_ULL(35)
-+#define ARCH_PEBS_CNTR_GP		BIT_ULL(36)
-+#define ARCH_PEBS_CNTR_FIXED		BIT_ULL(37)
-+#define ARCH_PEBS_CNTR_METRICS		BIT_ULL(38)
- #define ARCH_PEBS_LBR_SHIFT		40
- #define ARCH_PEBS_LBR			(0x3ull << ARCH_PEBS_LBR_SHIFT)
- #define ARCH_PEBS_VECR_XMM		BIT_ULL(49)
- #define ARCH_PEBS_GPR			BIT_ULL(61)
- #define ARCH_PEBS_AUX			BIT_ULL(62)
- #define ARCH_PEBS_EN			BIT_ULL(63)
-+#define ARCH_PEBS_CNTR_MASK		(ARCH_PEBS_CNTR_GP | ARCH_PEBS_CNTR_FIXED | \
-+					 ARCH_PEBS_CNTR_METRICS)
- 
- #define MSR_IA32_RTIT_CTL		0x00000570
- #define RTIT_CTL_TRACEEN		BIT(0)
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 3b3848f0d339..7276ba70c88a 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -141,16 +141,16 @@
- #define ARCH_PERFMON_EVENTS_COUNT			7
- 
- #define PEBS_DATACFG_MEMINFO	BIT_ULL(0)
--#define PEBS_DATACFG_GP	BIT_ULL(1)
-+#define PEBS_DATACFG_GP		BIT_ULL(1)
- #define PEBS_DATACFG_XMMS	BIT_ULL(2)
- #define PEBS_DATACFG_LBRS	BIT_ULL(3)
--#define PEBS_DATACFG_LBR_SHIFT	24
- #define PEBS_DATACFG_CNTR	BIT_ULL(4)
-+#define PEBS_DATACFG_METRICS	BIT_ULL(5)
-+#define PEBS_DATACFG_LBR_SHIFT	24
- #define PEBS_DATACFG_CNTR_SHIFT	32
- #define PEBS_DATACFG_CNTR_MASK	GENMASK_ULL(15, 0)
- #define PEBS_DATACFG_FIX_SHIFT	48
- #define PEBS_DATACFG_FIX_MASK	GENMASK_ULL(7, 0)
--#define PEBS_DATACFG_METRICS	BIT_ULL(5)
- 
- /* Steal the highest bit of pebs_data_cfg for SW usage */
- #define PEBS_UPDATE_DS_SW	BIT_ULL(63)
-@@ -603,6 +603,13 @@ struct arch_pebs_lbr_header {
- 	u64 ler_info;
- };
- 
-+struct arch_pebs_cntr_header {
-+	u32 cntr;
-+	u32 fixed;
-+	u32 metrics;
-+	u32 reserved;
-+};
-+
- /*
-  * AMD Extended Performance Monitoring and Debug cpuid feature detection
-  */
+Having that said, sometimes it helps to understand "why" the compiler 
+does a bad job, and try to tackle that instead.
+
+For example, compilers will not inline functions that might be too big 
+(there is a compiler tunable), factoring out slow-paths etc could help 
+to convince the compiler to do the right thing.
+
+Of course, it's not always possible, and sometimes we just now that we 
+always want to inline.
+
 -- 
-2.34.1
+Cheers
+
+David / dhildenb
 
