@@ -1,258 +1,138 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B07348462
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2025 15:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6B0350A39
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2025 15:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761752810; cv=none; b=QvJfP2jqV6T9UWL/Ro/38YdslMJ7iuiyU10oUKoZ63pMkP/7JjoGPfjN7YciqHS34CrwwUDOJsg8QsYBjcmwxhLgmqKTlxbwADZduo1usbhqmPXJUUVulCqopZxmHnKvw2iHFLathC+sDx8R2meB+kOv9CjzKfvX6Pfvp6v3IzQ=
+	t=1761753087; cv=none; b=qmjmE2THgMGLn8Y0hoffCcTtkpH2qnfRd85nOmx15T+2sCc9gc3ZkqF0KMogSvuucZ0iePyJcOdNv8LlkkNF8FczQxR5bR5XQlNK5SlFM0aNZG1tEFxdDvrO/L711mVXkN1yrQoOjmXxVsM+AZK1wBQOKXrSkxT4sHExUdHSqQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761752810; c=relaxed/simple;
-	bh=HCAve+/meC9Wab9CoQxypeNR03XvBSi8OfLDRXMNQeE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bnDgJAa378+DXjqt5SmnvZBl4uLTvS/3EpwfX6+vJGY8KTKCsaXPLJmN8gNPI+s/u1RMapCfrqXWdIPDDqdxEdi1pvLPEyQiyS5AcATDpvfsWYGMZSUVwkEklLN5JokQvaoX2D5NnXkM28YcOpk7aOt/krC0baBdW0YKG/v8mhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I4+Lt2oE; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1761753087; c=relaxed/simple;
+	bh=3bEomzO+Em1EB3N65Xv0TWxi7FEIz9wM74Y684nja5o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pr1BHLiu69751dscIc+Z6maN6T+AwqdXk18D4kwYCWXjIZi9gekEnE3nGD3prbyCSVvz21+fS+rMKFhZ16s2VW+kU6CjCWN+gE9f/ZqOXrSFEiilGElfzVmdNB45OTq6Xh9dhteBWWK/vqUWav0KQwqqMr5uMf2xnoRbpmc/JDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i0xNNR0J; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I4+Lt2oE"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-475dae5d473so46532975e9.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2025 08:46:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i0xNNR0J"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-27eeafd4882so252405ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Oct 2025 08:51:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1761752806; x=1762357606; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=503A5zbvnWzbfI+gim0EXQRVNQ1ZkO34HFUXzTRqSG8=;
-        b=I4+Lt2oE/T9wr+/kijSDFazAqM3WRPTSV4eGcoUlbYNBzPtT4cCPmMruB47R7+qTnm
-         8pgBXFiXONSmAgpelbgi1zebE3OlXsJvUl3NLPhEIZjnrrA/e2dezi3/APKEiXhVp/SP
-         iqa82LKhPXOVKC2puJWPUIMc7uS3fRiTGXNe2fkZ8cycMWFbu+mgRYO+PFUPzFK4MmtQ
-         wR6VW8+z6IWd7CC6pPq4tPs69PV8rNIuLCUPdSBi0d7UNAu9mbry2+v5U4avN+L6ji88
-         RkPvFKClW4j/ZF17LJBeJ7BPO29/MJBaqmbPOUe+tEFOwcbkAsxWl58yXotretGInSXM
-         bKdg==
+        d=google.com; s=20230601; t=1761753085; x=1762357885; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L5ZanK+qIbdS1y0Xd1H0WJwWTeFqf0pFYX63nf1APa8=;
+        b=i0xNNR0JRRuR2/WCI+syogoE4/YMozJQ6+hoy8izSLDP1OuPBbJ1iJPMkm9AZJYmKe
+         Y6jnybUtz+X2zVZp44l8n/eQwHGAtYIyVxVuntkUoywHEIDEyvkaIXzICOnwnzCc9ool
+         yCUZaikELrKxUosmjrqmMbFCk/aMs325WuIIAEWVi0O7yc4BOeqeolCE5pC2VfZRJ3N3
+         qA3sfDI1FNRnDSF+hG3gLOgy6NfVmdwvv6doDWAhTNhDSXkh3B9RIDTq7mqcd4d6DaNG
+         bslyNX+bYe4fW1UbsCyV/+G+MhQhRj0t+EsBiN+lwXPFQ2To4jE1xVJ9JLvSjQPFfpqO
+         0iyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761752806; x=1762357606;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1761753085; x=1762357885;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=503A5zbvnWzbfI+gim0EXQRVNQ1ZkO34HFUXzTRqSG8=;
-        b=TEtf2MU8MG6jcM7cC4VtDh3MnG+9G0i9/yo/p1xuCp+RoQ+sdESBljOhbbDPxRiJNL
-         whwEOlqaupiY4HkyaiuAxxam9fPJE2w7ejSLNv5unqPpu6DXZiXNb78RNbnjfzeohXWb
-         cgbF/OHfdQpaMsK/IdQJ3JuRhH08OXg6caYEpKjUQOmiTKlAafZtRFIe7GvCAjjhHF/U
-         XzY7Lu2x4+ud6uTC/znUvO8ccridjLZP/xXDkAh53WvLhax+Ufyd8h5Ki6rKbWlHQmz6
-         gf6LPjVvWvMfYSaU1USxS6wm3NN5HRiRTaYx9fu4iUoFpYGCnf4byi+0UXwm/Lo+yxLg
-         dsvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUWJ4BOoukmZEB6zLh0E1SlT7LpSvRZp85EmMJw4/w1i43Tc8bBaA8hzpIuu5cFSX41rhzQsz2kiZiFt1NXkWIr@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywz4PsZRAH+HSV/9RQPSNidivhKyjjzPb02wleFDz/yE6aq80pC
-	D84o7dgGs9VdSrb1gAT8leM7pt1Vr3HbQ5IqJW4KPUWYzp2GIXePy6qrDTkKbpaczUg=
-X-Gm-Gg: ASbGnct8P730/MwEw3wH1efg/cHgjjh1josO5SAaeRqgjl8NKM8AFgKnwt5GjFn2Y/B
-	SFBN+7spow2pLRj9DTsZgZ4lWNJ83MSYBe5+vlP852gPA/IrvrLuM8UM1LDG/uIf5jyTDkJyO+t
-	dRW9DmXSJhlBR6YD0Rq8QvNX+xzEeLSd2N1E3eJ1Zpw9seSo5d8oMRRxemzpWvdvvtFhZj5Le2v
-	ThYH+KMC7pb9mmiJOfwXt1VtV3ihfJz4MnYwMxxnZHQruW7wSkbFXgh+o9nGcnvnNhzBz/WxWLt
-	Sjz3KdSHHT7kMpdyuLIRctegrO2P+N0wMhaNYUipy9bTwVoGjSw9Ou3MhGOJz/4mfMcroPcZcmg
-	RztZqa/SGA7IoQHXF3OOrC886qJ4YN0dA1Ep0kAnu3IkndAFBsWkHkD6ZF8+7FWtw42KgY7bso1
-	MYtMB1Q88ASA==
-X-Google-Smtp-Source: AGHT+IFxMszeTbt26+vm2qf8PR51SToHcyHX6Al+xszsdOkaF3Bhz+urG9unl5uk6WFwad6ovDkqAQ==
-X-Received: by 2002:a05:600c:502b:b0:471:14f5:126f with SMTP id 5b1f17b1804b1-4771e3b8637mr30603445e9.33.1761752806069;
-        Wed, 29 Oct 2025 08:46:46 -0700 (PDT)
-Received: from ho-tower-lan.lan ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4771e3b9994sm53745535e9.16.2025.10.29.08.46.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Oct 2025 08:46:45 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Wed, 29 Oct 2025 15:46:05 +0000
-Subject: [PATCH v9 5/5] perf docs: arm-spe: Document new SPE filtering
- features
+        bh=L5ZanK+qIbdS1y0Xd1H0WJwWTeFqf0pFYX63nf1APa8=;
+        b=rzvYSyVpGNGmxpbkddttvE+z20Ljnqu6emJ7BUztMU6FTs8keSCdfj5fdIwasYwVgZ
+         paV8OKzQganltTbuyloEaMIwkAZft2xov3bY1LgbVVWizxL7jYu8WOsAPDFATQlHmzw+
+         R/a0ZfHIi9hlHRLtt7ZOWBh6WtX4YELELoGK3Fx4Wi4G9u4Ys/vulFBf0DpanCaDS7wD
+         4BIogFr+1JXkTweCMi4T5xWQf3+/5hn6Bu+zTTkff3RaF8IYNGc/WdlRvsZmi1Chpni+
+         wEITg5Ynzk9SIpLdp2uDqPrtRixWPCLQCTkXGXK7cBDq8YIjVDi0QTvx9oizL2VqjQBC
+         MNPA==
+X-Gm-Message-State: AOJu0YxxH8+bqz9NfYGOcE4tYV89eVMpYm0iVAngWWfIPO4AQC0WTIFJ
+	cmjSXb7VODp7HJikqxP8IaM8Y24X/zkZCEPX8aDGp7IcsYFJCF6Y7Ca9iEPWvVaTly16OXkHoHa
+	Oil3vhQtKuNgBuipRxsa4FF3MvzjY5+thu538cvGE
+X-Gm-Gg: ASbGncsjZc6i4k3AmwU1jgzH7l50Y1m3xQGy7lIfR2ToX6f8XlB4VKgJ9A3uhHl26lr
+	s3AcwB5AjAb+tl39YY4ZE47sq7UWvkBsPknM5tC5/WPGFGdJGSD98cJ/hjnnqU0u8acqZMxv/Ow
+	sg7juZlJzF695pbrVS3u7Ee0xfmEJC8YRONJxEksZTFcoZsyKAGiD8+HNcL+fMmXXkF0qAzDy3j
+	IBcjQEqAy+xCp2moynockzL2tlknatbUWspKLHDbusT/3DcX543dStrHteJsNo0w4kqvkBezFHG
+	XkbUfW649Dfhig==
+X-Google-Smtp-Source: AGHT+IFRx6FewEYdw5JrBQ7WWIgIepepPzoEOpUGJEGwgkJbFAiqJHPWXcOFAovdJPumnLppL8nmMeoo0aqXydkU4ps=
+X-Received: by 2002:a17:902:d50e:b0:292:b6a0:80df with SMTP id
+ d9443c01a7336-294de45c881mr6778855ad.10.1761753084488; Wed, 29 Oct 2025
+ 08:51:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251029-james-perf-feat_spe_eft-v9-5-d22536b9cf94@linaro.org>
-References: <20251029-james-perf-feat_spe_eft-v9-0-d22536b9cf94@linaro.org>
-In-Reply-To: <20251029-james-perf-feat_spe_eft-v9-0-d22536b9cf94@linaro.org>
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
- Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Zenghui Yu <yuzenghui@huawei.com>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>, 
- Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org, 
- kvmarm@lists.linux.dev, James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.14.0
+References: <aPkivW2WoySU1Zkc@suse.de>
+In-Reply-To: <aPkivW2WoySU1Zkc@suse.de>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 29 Oct 2025 08:51:12 -0700
+X-Gm-Features: AWmQ_bkPfy2On_5x92MddqIyt9lSnrnRp05PkxSAoBIyhr-qrvCx5jKneAhP7-E
+Message-ID: <CAP-5=fU4y2y+pOT590GZG-A+zO5YdAAzUyPgUX5RTji0nh6Z+g@mail.gmail.com>
+Subject: Re: addr2line performance
+To: Tony Jones <tonyj@suse.de>
+Cc: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-FEAT_SPE_EFT and FEAT_SPE_FDS etc have new user facing format attributes
-so document them. Also document existing 'event_filter' bits that were
-missing from the doc and the fact that latency values are stored in the
-weight field.
+On Wed, Oct 22, 2025 at 11:30=E2=80=AFAM Tony Jones <tonyj@suse.de> wrote:
+>
+> Hi.
+>
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D218996#c1 mentions
+> "there are proposals to move this logic to being from a library again.
+> I think the addr2line processing attempted is valiant but ultimately
+> using a library will be best" (this was when LLVM addr2line support
+> was already present),
+>
+> Obviously the test patch mentioned in the above bug doesn't address
+> the underlying performance issue, only better classifying a timeout
+> error.
+>
+> We have a customer bug complaining about the performance of addr2line.
+> I'm seeing cases where it's taking over 20 seconds wall clock to
+> resolve certain addresses which obviously causes the io_timer to trip
+> but the performance of the success path isn't great either.
+>
+> Obviously BFD isn't an option and (for various reasons) we can't use
+> LLVM for this specific distro so I'm looking at the performance
+> of addr2line.
+>
+> Can someone point me to the prior "using a library" discussion
+> referenced in the above bug or whatever the current thinking is.  I
+> couldn't find anything searching the archive.
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
-Tested-by: Leo Yan <leo.yan@arm.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- tools/perf/Documentation/perf-arm-spe.txt | 104 +++++++++++++++++++++++++++---
- 1 file changed, 95 insertions(+), 9 deletions(-)
+I'm not sure there is an explicit discussion rather than discussion on
+individual patch sets. It is something that comes up when fixing the
+text parsing of addr2line, something that is particularly problematic
+because of inlining. It comes up wrt removing non-distributable stuff,
+most recently in:
+https://lore.kernel.org/lkml/20250823003216.733941-1-irogers@google.com/
 
-diff --git a/tools/perf/Documentation/perf-arm-spe.txt b/tools/perf/Documentation/perf-arm-spe.txt
-index cda8dd47fc4d..8b02e5b983fa 100644
---- a/tools/perf/Documentation/perf-arm-spe.txt
-+++ b/tools/perf/Documentation/perf-arm-spe.txt
-@@ -141,27 +141,65 @@ Config parameters
- These are placed between the // in the event and comma separated. For example '-e
- arm_spe/load_filter=1,min_latency=10/'
- 
--  branch_filter=1     - collect branches only (PMSFCR.B)
--  event_filter=<mask> - filter on specific events (PMSEVFR) - see bitfield description below
-+  event_filter=<mask> - logical AND filter on specific events (PMSEVFR) - see bitfield description below
-+  inv_event_filter=<mask> - logical OR to filter out specific events (PMSNEVFR, FEAT_SPEv1p2) - see bitfield description below
-   jitter=1            - use jitter to avoid resonance when sampling (PMSIRR.RND)
--  load_filter=1       - collect loads only (PMSFCR.LD)
-   min_latency=<n>     - collect only samples with this latency or higher* (PMSLATFR)
-   pa_enable=1         - collect physical address (as well as VA) of loads/stores (PMSCR.PA) - requires privilege
-   pct_enable=1        - collect physical timestamp instead of virtual timestamp (PMSCR.PCT) - requires privilege
--  store_filter=1      - collect stores only (PMSFCR.ST)
-   ts_enable=1         - enable timestamping with value of generic timer (PMSCR.TS)
-   discard=1           - enable SPE PMU events but don't collect sample data - see 'Discard mode' (PMBLIMITR.FM = DISCARD)
-+  inv_data_src_filter=<mask> - mask to filter from 0-63 possible data sources (PMSDSFR, FEAT_SPE_FDS) - See 'Data source filtering'
- 
- +++*+++ Latency is the total latency from the point at which sampling started on that instruction, rather
- than only the execution latency.
- 
--Only some events can be filtered on; these include:
--
--  bit 1     - instruction retired (i.e. omit speculative instructions)
-+Only some events can be filtered on using 'event_filter' bits. The overall
-+filter is the logical AND of these bits, for example if bits 3 and 5 are set
-+only samples that have both 'L1D cache refill' AND 'TLB walk' are recorded. When
-+FEAT_SPEv1p2 is implemented 'inv_event_filter' can also be used to exclude
-+events that have any (OR) of the filter's bits set. For example setting bits 3
-+and 5 in 'inv_event_filter' will exclude any events that are either L1D cache
-+refill OR TLB walk. If the same bit is set in both filters it's UNPREDICTABLE
-+whether the sample is included or excluded. Filter bits for both event_filter
-+and inv_event_filter are:
-+
-+  bit 1     - Instruction retired (i.e. omit speculative instructions)
-+  bit 2     - L1D access (FEAT_SPEv1p4)
-   bit 3     - L1D refill
-+  bit 4     - TLB access (FEAT_SPEv1p4)
-   bit 5     - TLB refill
--  bit 7     - mispredict
--  bit 11    - misaligned access
-+  bit 6     - Not taken event (FEAT_SPEv1p2)
-+  bit 7     - Mispredict
-+  bit 8     - Last level cache access (FEAT_SPEv1p4)
-+  bit 9     - Last level cache miss (FEAT_SPEv1p4)
-+  bit 10    - Remote access (FEAT_SPEv1p4)
-+  bit 11    - Misaligned access (FEAT_SPEv1p1)
-+  bit 12-15 - IMPLEMENTATION DEFINED events (when implemented)
-+  bit 16    - Transaction (FEAT_TME)
-+  bit 17    - Partial or empty SME or SVE predicate (FEAT_SPEv1p1)
-+  bit 18    - Empty SME or SVE predicate (FEAT_SPEv1p1)
-+  bit 19    - L2D access (FEAT_SPEv1p4)
-+  bit 20    - L2D miss (FEAT_SPEv1p4)
-+  bit 21    - Cache data modified (FEAT_SPEv1p4)
-+  bit 22    - Recently fetched (FEAT_SPEv1p4)
-+  bit 23    - Data snooped (FEAT_SPEv1p4)
-+  bit 24    - Streaming SVE mode event (when FEAT_SPE_SME is implemented), or
-+              IMPLEMENTATION DEFINED event 24 (when implemented, only versions
-+              less than FEAT_SPEv1p4)
-+  bit 25    - SMCU or external coprocessor operation event when FEAT_SPE_SME is
-+              implemented, or IMPLEMENTATION DEFINED event 25 (when implemented,
-+              only versions less than FEAT_SPEv1p4)
-+  bit 26-31 - IMPLEMENTATION DEFINED events (only versions less than FEAT_SPEv1p4)
-+  bit 48-63 - IMPLEMENTATION DEFINED events (when implemented)
-+
-+For IMPLEMENTATION DEFINED bits, refer to the CPU TRM if these bits are
-+implemented.
-+
-+The driver will reject events if requested filter bits require unimplemented SPE
-+versions, but will not reject filter bits for unimplemented IMPDEF bits or when
-+their related feature is not present (e.g. SME). For example, if FEAT_SPEv1p2 is
-+not implemented, filtering on "Not taken event" (bit 6) will be rejected.
- 
- So to sample just retired instructions:
- 
-@@ -171,6 +209,31 @@ or just mispredicted branches:
- 
-   perf record -e arm_spe/event_filter=0x80/ -- ./mybench
- 
-+When set, the following filters can be used to select samples that match any of
-+the operation types (OR filtering). If only one is set then only samples of that
-+type are collected:
-+
-+  branch_filter=1     - Collect branches (PMSFCR.B)
-+  load_filter=1       - Collect loads (PMSFCR.LD)
-+  store_filter=1      - Collect stores (PMSFCR.ST)
-+
-+When extended filtering is supported (FEAT_SPE_EFT), SIMD and float
-+pointer operations can also be selected:
-+
-+  simd_filter=1         - Collect SIMD loads, stores and operations (PMSFCR.SIMD)
-+  float_filter=1        - Collect floating point loads, stores and operations (PMSFCR.FP)
-+
-+When extended filtering is supported (FEAT_SPE_EFT), operation type filters can
-+be changed to AND using _mask fields. For example samples could be selected if
-+they are store AND SIMD by setting 'store_filter=1,simd_filter=1,
-+store_filter_mask=1,simd_filter_mask=1'. The new masks are as follows:
-+
-+  branch_filter_mask=1  - Change branch filter behavior from OR to AND (PMSFCR.Bm)
-+  load_filter_mask=1    - Change load filter behavior from OR to AND (PMSFCR.LDm)
-+  store_filter_mask=1   - Change store filter behavior from OR to AND (PMSFCR.STm)
-+  simd_filter_mask=1    - Change SIMD filter behavior from OR to AND (PMSFCR.SIMDm)
-+  float_filter_mask=1   - Change floating point filter behavior from OR to AND (PMSFCR.FPm)
-+
- Viewing the data
- ~~~~~~~~~~~~~~~~~
- 
-@@ -210,6 +273,10 @@ Memory access details are also stored on the samples and this can be viewed with
- 
-   perf report --mem-mode
- 
-+The latency value from the SPE sample is stored in the 'weight' field of the
-+Perf samples and can be displayed in Perf script and report outputs by enabling
-+its display from the command line.
-+
- Common errors
- ~~~~~~~~~~~~~
- 
-@@ -253,6 +320,25 @@ to minimize output. Then run perf stat:
-   perf record -e arm_spe/discard/ -a -N -B --no-bpf-event -o - > /dev/null &
-   perf stat -e SAMPLE_FEED_LD
- 
-+Data source filtering
-+~~~~~~~~~~~~~~~~~~~~~
-+
-+When FEAT_SPE_FDS is present, 'inv_data_src_filter' can be used as a mask to
-+filter on a subset (0 - 63) of possible data source IDs. The full range of data
-+sources is 0 - 65535 although these are unlikely to be used in practice. Data
-+sources are IMPDEF so refer to the TRM for the mappings. Each bit N of the
-+filter maps to data source N. The filter is an OR of all the bits, and the value
-+provided inv_data_src_filter is inverted before writing to PMSDSFR_EL1 so that
-+set bits exclude that data source and cleared bits include that data source.
-+Therefore the default value of 0 is equivalent to no filtering (all data sources
-+included).
-+
-+For example, to include only data sources 0 and 3, clear bits 0 and 3
-+(0xFFFFFFFFFFFFFFF6)
-+
-+When 'inv_data_src_filter' is set to 0xFFFFFFFFFFFFFFFF, any samples with any
-+data source set are excluded.
-+
- SEE ALSO
- --------
- 
+Wrt the bug, the --addr2line option for `perf script` is merged:
+https://lore.kernel.org/r/eadc3e36-029d-4848-9d69-272fe5a83a26@foxlink.cz
 
--- 
-2.34.1
+There has also been clean up into how the addr2line implementation is
+picked, see:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/srcline.c?h=3Dtmp.perf-tools-next#n117
+which came from:
+https://lore.kernel.org/lkml/20251005212212.2892175-8-irogers@google.com/
 
+Wrt dependencies, I have been pushing these patches that use dlopen
+for libLLVM mean installing libLLVM can be done separately from
+building perf against it:
+https://lore.kernel.org/lkml/20251007163835.3152881-1-irogers@google.com/
+
+So if addr2line is the problem, perhaps use the command line option to
+switch to the llvm version. If that's not fast enough, and you can't
+distribute linked against libLLVM, some feedback on the dlopen libLLVM
+changes would be appreciated!
+
+Thanks,
+Ian
+
+> Thanks in advance!
+>
+> Tony
+>
+> --
+> Tony Jones
+> SUSE Kernel Performance Team
