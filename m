@@ -1,97 +1,158 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1564338934
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 08:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477DA30170D;
+	Thu, 30 Oct 2025 08:36:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761811571; cv=none; b=fX7QBM7R48VN09idlIRrYe0WEDapptj3mK3NgK619NY1VVlKBa45dO/0eIFFUuNdCF5epfkk7JuRWd+VGUZ1weGQoDQbXD2A54oj1VOEvGpeAwCi+T/EVFNsHwRuuOSSkE489GVvHD/tTF0udPqVbeGwWfzk2jelNxfEWw7s/hM=
+	t=1761813403; cv=none; b=Bn0/t3duKkIZ9rIu9i14mu3t7f35dOacbiYNO04AgpMXMkRLZxtVlgqMuM3L2wOmbMoW5y9lMEcJUf4/HS9ifrpXLJ2biKrPwuoUJ4VHVi9Mb1bZm7raweLjdlDPC1/SaAdacFyJUX/eMU6MZsdflypCfvz3BUh/kl4qM1uvlXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761811571; c=relaxed/simple;
-	bh=lOLWB+sn53IEBJ2NfXNAqi9W2x7ka3pC9NCkNFlL6yY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GKGhnD5rJrF0EMWWkKkk1ckrn3MOZJJyyNhgG+XJBFNYr50/o/dz3Dq1aowabGYaajVSRu8nAd2Lg0EOBTS0mwzWuUUR3WZkRjDiVxMKQkP0l4OlLPgqGogRUPqvH47MQPp01CjbfiVf2smvPdffjv0T1EWAjLp14DZBf76ddJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bounIDoT; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1761813403; c=relaxed/simple;
+	bh=1JNCPHckQsQWix8dflRYg6fL5EFdVbqFZ47yvvDxetQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h+l0uPAeGQ3v2//24baLnu3yIIgesUXjMe5Uyea7OXZqHIvUW7/lzHw3LOTx7n4jI+sX6+Ys2tgz7xp6ib2FUWyChSLrIK37e7/2UdeVmFCIOWzKB5WNWXR6WPz9M0TZ0R2gg6jwoETY4H3tei47GXaNBqJKRpKrIhuGYxRI2wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b301ppCx; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bounIDoT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1761811566;
-	h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:in-reply-to:in-reply-to:  references:references;
-	bh=zBFIdlgABwYbbBOS3RkdoYsL1Gh/EHDnSfDmTuI8UhM=;
-	b=bounIDoTM/x6oqIpya8TJQxPGDqaTgXgkZnJeOcEi8yIuoiAYcdkGyWp76UjrD8br3MfJ2
-	I/koIAZe6LbMRgLR3tcyyFhkz+xRkhxAxxKrkicv0g16kQLk4Tc6u9FqDg3DpqkYRX67OH
-	CF7GdmzubP5yqv9b3PJZeibQyU05cRw=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-61-sRKpnhg7OSC5mR7r32yTQQ-1; Thu,
- 30 Oct 2025 04:05:59 -0400
-X-MC-Unique: sRKpnhg7OSC5mR7r32yTQQ-1
-X-Mimecast-MFC-AGG-ID: sRKpnhg7OSC5mR7r32yTQQ_1761811558
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 43A6B180A225;
-	Thu, 30 Oct 2025 08:05:58 +0000 (UTC)
-Received: from tucnak.zalov.cz (unknown [10.44.32.9])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B574B1800579;
-	Thu, 30 Oct 2025 08:05:57 +0000 (UTC)
-Received: from tucnak.zalov.cz (localhost [127.0.0.1])
-	by tucnak.zalov.cz (8.17.1/8.17.1) with ESMTPS id 59U85sOE4065049
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Thu, 30 Oct 2025 09:05:54 +0100
-Received: (from jakub@localhost)
-	by tucnak.zalov.cz (8.17.1/8.17.1/Submit) id 59U85stU4065048;
-	Thu, 30 Oct 2025 09:05:54 +0100
-Date: Thu, 30 Oct 2025 09:05:53 +0100
-From: Jakub Jelinek <jakub@redhat.com>
-To: Fangrui Song <maskray@sourceware.org>
-Cc: linux-toolchains@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Concerns about SFrame viability for userspace stack walking
-Message-ID: <aQMcYe5BK+Rsu3xF@tucnak>
-Reply-To: Jakub Jelinek <jakub@redhat.com>
-References: <3xd4fqvwflefvsjjoagytoi3y3sf7lxqjremhe2zo5tounihe4@3ftafgryadsr>
- <aQMUGvXv6sy75nKn@tucnak>
- <CAN30aBHOw16Tzdn_Z0TZKie7Fyi39bmB2PQK4LB-rjU1vn3zQQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b301ppCx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761813401; x=1793349401;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1JNCPHckQsQWix8dflRYg6fL5EFdVbqFZ47yvvDxetQ=;
+  b=b301ppCxpzlRK8ExXn7IFEWb6H3hpc5LJ9J9dWJ0l0F/N3NzSzRDB1IS
+   jJTJ7NuaNGZHJPtld8o/LXxiq9Vn7CGKk9CZB7IFqHTzBASUIv6BwnM7X
+   Hnld7besXux+Qads0wwkYXhFKhqEjLmy0Dc6/jBbS+cUc/CVmwZHo+CFF
+   4iiDvKo3GbMHWI+iGmSZXzOBnRfTujUgnY8IzCVc0q62OCRNUQquB8fFK
+   D4559WKEog522wt48GwP0HqlMe1VMVQVUEvRyxE79VdHG6pxuMuuuKJoj
+   WVU1YadmpqCL8rzqI1BkJIJ+k0VBxhPVU24uf3sWe0xH2WNZYlntNpRh3
+   Q==;
+X-CSE-ConnectionGUID: Ne1ivf9aQe+6ZHaAo9MrOw==
+X-CSE-MsgGUID: zLQoWG3ORoKRfmSjMUSVyg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11597"; a="67600484"
+X-IronPort-AV: E=Sophos;i="6.19,266,1754982000"; 
+   d="scan'208";a="67600484"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2025 01:36:40 -0700
+X-CSE-ConnectionGUID: D+2op7OhQIa4sO1T8EBovg==
+X-CSE-MsgGUID: dIReLDwRTZy6lSWzPzt7zg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,266,1754982000"; 
+   d="scan'208";a="185774788"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa006.fm.intel.com with ESMTP; 30 Oct 2025 01:36:35 -0700
+Received: by black.igk.intel.com (Postfix, from userid 1003)
+	id 2586695; Thu, 30 Oct 2025 09:36:34 +0100 (CET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Raag Jadav <raag.jadav@intel.com>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	netdev@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Florian Westphal <fw@strlen.de>,
+	Phil Sutter <phil@nwl.cc>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>
+Subject: [PATCH net-next v1 1/1] treewide: Rename ERR_PTR_PCPU() --> PCPU_ERR_PTR()
+Date: Thu, 30 Oct 2025 09:35:53 +0100
+Message-ID: <20251030083632.3315128-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAN30aBHOw16Tzdn_Z0TZKie7Fyi39bmB2PQK4LB-rjU1vn3zQQ@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 30, 2025 at 12:50:42AM -0700, Fangrui Song wrote:
-> An effective compact unwinding scheme needs to leverage ISA-specific properties.
+Make the namespace of specific ERR_PTR() macro leading the thing.
+This is already done for IOMEM_ERR_PTR(). Follow the same pattern
+in PCPU_ERR_PTR().
 
-Having 40-50 completely different unwinding schemes, one for each
-architecture or even ISA subset, would be a complete nightmare.  Plus the
-important property of DWARF is that it is easily extensible.  So, I think it
-would be better to invent new DWARF DW_CFA_* arch specific opcodes which
-would be a shorthand for the most common sequences of unwind info, or allow
-the CIEs to define a library of DW_CFA_* sets perhaps with parameters which
-would then be usable in the FDEs.  There are already some arch specific
-opcodes, DW_CFA_GNU_window_save for SPARC and
-DW_CFA_AARCH64_negate_ra_state_with_pc/DW_CFA_AARCH64_negate_ra_state for
-AArch64, but if somebody took time to look through .eh_frame of many
-binaries/libraries on several different distributions for particular arch
-(so that there is no bias in what exact options those distros use etc.) and
-found something that keeps repeating there commonly that could be shortened,
-perhaps the assembler or linker could rewrite sequences of specific .cfi_*
-directives into something equivalent but shorter once the extension opcodes
-are added.  Though, there are only very few opcodes left, so taking them
-should be done with great care and at least one should be left as a
-multiplexer (single byte opcode followed by uleb128 code for further
-operation + arguments).
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
 
-	Jakub
+I believe taking it via net-next makes most of sense, if no objections.
+
+ include/linux/err.h           | 2 +-
+ kernel/events/hw_breakpoint.c | 4 ++--
+ net/netfilter/nf_tables_api.c | 6 +++---
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/include/linux/err.h b/include/linux/err.h
+index 1d60aa86db53..8aafcf9492a4 100644
+--- a/include/linux/err.h
++++ b/include/linux/err.h
+@@ -42,7 +42,7 @@ static inline void * __must_check ERR_PTR(long error)
+ }
+ 
+ /* Return the pointer in the percpu address space. */
+-#define ERR_PTR_PCPU(error) ((void __percpu *)(unsigned long)ERR_PTR(error))
++#define PCPU_ERR_PTR(error) ((void __percpu *)(unsigned long)ERR_PTR(error))
+ 
+ /* Cast an error pointer to __iomem. */
+ #define IOMEM_ERR_PTR(error) (__force void __iomem *)ERR_PTR(error)
+diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
+index 8ec2cb688903..67fc1367d649 100644
+--- a/kernel/events/hw_breakpoint.c
++++ b/kernel/events/hw_breakpoint.c
+@@ -849,7 +849,7 @@ register_wide_hw_breakpoint(struct perf_event_attr *attr,
+ 
+ 	cpu_events = alloc_percpu(typeof(*cpu_events));
+ 	if (!cpu_events)
+-		return ERR_PTR_PCPU(-ENOMEM);
++		return PCPU_ERR_PTR(-ENOMEM);
+ 
+ 	cpus_read_lock();
+ 	for_each_online_cpu(cpu) {
+@@ -868,7 +868,7 @@ register_wide_hw_breakpoint(struct perf_event_attr *attr,
+ 		return cpu_events;
+ 
+ 	unregister_wide_hw_breakpoint(cpu_events);
+-	return ERR_PTR_PCPU(err);
++	return PCPU_ERR_PTR(err);
+ }
+ EXPORT_SYMBOL_GPL(register_wide_hw_breakpoint);
+ 
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index eed434e0a970..1b5286545a3c 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -2228,14 +2228,14 @@ static struct nft_stats __percpu *nft_stats_alloc(const struct nlattr *attr)
+ 	err = nla_parse_nested_deprecated(tb, NFTA_COUNTER_MAX, attr,
+ 					  nft_counter_policy, NULL);
+ 	if (err < 0)
+-		return ERR_PTR_PCPU(err);
++		return PCPU_ERR_PTR(err);
+ 
+ 	if (!tb[NFTA_COUNTER_BYTES] || !tb[NFTA_COUNTER_PACKETS])
+-		return ERR_PTR_PCPU(-EINVAL);
++		return PCPU_ERR_PTR(-EINVAL);
+ 
+ 	newstats = netdev_alloc_pcpu_stats(struct nft_stats);
+ 	if (newstats == NULL)
+-		return ERR_PTR_PCPU(-ENOMEM);
++		return PCPU_ERR_PTR(-ENOMEM);
+ 
+ 	/* Restore old counters on this cpu, no problem. Per-cpu statistics
+ 	 * are not exposed to userspace.
+-- 
+2.50.1
 
