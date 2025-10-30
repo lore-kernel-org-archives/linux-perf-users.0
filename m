@@ -1,231 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5382D4B57
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 06:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2BD20C001;
+	Thu, 30 Oct 2025 06:23:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761804289; cv=none; b=T6/mqKGll4sg11cMAHRJaPcltREwYnU7jaRK2/RTJk27pE/FcU/mlwO5LnH99f9WVg6HztabaPGBPjHJORzD3Eim6LeOtkWWEpn5Ut6mAwFDnD+0XKPitY+I7B7ugTr1Zy1ZwWrIe8c2WZiLgg/D23HsMO8GngRejNyEX6IRQNU=
+	t=1761805398; cv=none; b=EQGg0J+9QbMPME+KEEvY3eOUjmhKdYt9CALwuVOtf4BCYiYPhn27Jq6DXZYllltN41qCfb53TgkN/vJ7c2ayn9DAMuvpNXTfVpiDUL2O/yJjytRNMbPmwSVkXGR6wC/FJ/jFVAUk3vCu08b/MM3ygMdMa4idsP43AwjHMGkQ9p8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761804289; c=relaxed/simple;
-	bh=ypv3xB5mcI3OLqy0zGi57V5CMm2FjIzu1JAajaSWGmw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZDgeW3fN0ltXqT+BcGQ79vMenqTvQVOtuhMovEGdrxC6dPlZYSpcd+WW2TS1KdWR8BEv3cBXT7TbTxjTl81Tigyj8O7uEbJZVPkUeHwzL2pAfRHDG2z0i4oAoUavF6/21EQ6i4+t0/Rpnqiir7WuQLRxQFi6OzRVuoWFj2xamrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJLKF4Ju; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761805398; c=relaxed/simple;
+	bh=8JEvfJznp6jGS3DzFu1jptEDBsT3mI082oE29zkbrJo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z+OS3IxIG/lnTt5Ax5Gaiw7pbGfX2jYvtnWwoaQ8aAud9KQBEjFkxe1iQKCoWUEj0VukKvFAN00eS3FOuwKWo02vWQpOyu/syX/XXiSjBXqfbaBD9Uxv2ITtDyVoQ1O9FENHSiJvBJq9dPOSA5s2zXtJH9iYIZd1QZ5dFNBWDyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UCaQy/8c; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJLKF4Ju"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 625A2C4CEF1;
-	Thu, 30 Oct 2025 06:04:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761804287;
-	bh=ypv3xB5mcI3OLqy0zGi57V5CMm2FjIzu1JAajaSWGmw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OJLKF4JuPUfaEwxVllRAP1zS+n/bqeflV/+ctBqi12UUuSe9ym7xmDk7pvoS7p2Fx
-	 YTHi9lIDvFbwk0p6Yz0XTSMiFoEsqgaXzOClCqBYIsngtmnTRWIDrPVhK2GLuBz0DF
-	 aBT/0xBNMxZyLPffgAhG1Sj0NyIyik+dnSysLboytuPORY+nNoaINhaayDiDqqVMxV
-	 uFR84pMvPZTetMrN2zBMSY27hXb20ePUpXcA5g/3WRCT3q7JGFmSo1pkc6AyGv7iEc
-	 O+Vu8aj6uBCbyRZQ1I9gRkGlrq8qbrWpXPDXmGMtH42PyC9cJ34MqmX0FRNbDV8O2t
-	 106YM+jT0oyIg==
-Date: Wed, 29 Oct 2025 23:04:44 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>,
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>,
-	Jan Polensky <japo@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: Re: [linux-next] perf report runtime extremely long
-Message-ID: <aQL__CvbnNHw_bXV@google.com>
-References: <09943f4f-516c-4b93-877c-e4a64ed61d38@linux.ibm.com>
- <79195870-7223-4aeb-beb4-a7d8f1895caa@linux.ibm.com>
- <CAP-5=fXi=EDU7-tdNLwTKbCHR80_p3=TAe0qF0oE-tXbx35znw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UCaQy/8c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761805396; x=1793341396;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=8JEvfJznp6jGS3DzFu1jptEDBsT3mI082oE29zkbrJo=;
+  b=UCaQy/8cN8s1IHyIxRik2R5+zvrhcmWlDELieXzUwCiGyEvDxzDorTib
+   a2vbh2fhLBS+ktTSo1nb/8RNo5EVHSXdEJiQpe0hkarCwZZvdjnxjNA2D
+   pj3zTI7T8lDQ9WF1MvBvpx7BgB1AQ8SepMqTsXN1wcy54rmqq0o/tEsmY
+   jE+xy00F1lrdCKydlVd+U6+V1b3OM/jk0dFYePs0reHPtSwwpnfG2lXJf
+   +woJt3EcZr4Ek7Y8xFaL/w4VOS77G45AkhIcIS93DapziyJ3owAX33dgs
+   pd9orufy+StHNu9bftgasO3VY8iOZRa/5HWV2E+nAJX7B3fSFjkC6aUvk
+   g==;
+X-CSE-ConnectionGUID: UvJughhSSI6GpjRe7n+gog==
+X-CSE-MsgGUID: DnN4MseDRdiM0wmHPRvYjA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11597"; a="63637520"
+X-IronPort-AV: E=Sophos;i="6.19,265,1754982000"; 
+   d="scan'208";a="63637520"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 23:23:15 -0700
+X-CSE-ConnectionGUID: 8Qw0+HVuRrG4/FaLyl+1dA==
+X-CSE-MsgGUID: DwV7meWpTEyxh9YB/uvt1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,265,1754982000"; 
+   d="scan'208";a="216528980"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.233.250]) ([10.124.233.250])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 23:23:12 -0700
+Message-ID: <2d5456ec-b799-4a90-ac7a-f49deafa110d@linux.intel.com>
+Date: Thu, 30 Oct 2025 14:23:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXi=EDU7-tdNLwTKbCHR80_p3=TAe0qF0oE-tXbx35znw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] perf/x86/intel/uncore: Skip discovery table for
+ offline dies
+To: "Chen, Zide" <zide.chen@intel.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Xudong Hao <xudong.hao@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
+ Steve Wahl <steve.wahl@hpe.com>
+References: <20251029220711.57909-1-zide.chen@intel.com>
+ <8b53854e-f407-4c58-badc-01327d2d4be0@linux.intel.com>
+ <189f3475-81e3-4353-8f7e-f7a5933143a5@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <189f3475-81e3-4353-8f7e-f7a5933143a5@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
 
-On Wed, Oct 29, 2025 at 09:47:00AM -0700, Ian Rogers wrote:
-> On Wed, Oct 29, 2025 at 9:12 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
-> >
-> > On 10/29/25 09:03, Thomas Richter wrote:
-> > > Hi all,
-> > >
-> > > has something changed recently in perf report in linux-next repo?
-> > >
-> > > I run perf report -i <file> -D | grep something
-> > > on s390 with 2 different kernels:
-> > >
-> > > master 6.18.0rc3:
-> > > # uname -a
-> > > Linux a35lp67.lnxne.boe 6.18.0-rc3m-perf+ #23 SMP Tue Oct 28 15:53:44 CET 2025 s390x GNU/Linux
-> > > # ll /tmp/perf2-eSso2q-2
-> > > -rw------- 1 root root 8538184 Oct 29 08:44 /tmp/perf2-eSso2q-2
-> > > # time perf report -i/tmp/perf2-eSso2q-2 -D | grep Counter:000 > /dev/null
-> > >
-> > > real  0m22.262s
-> > > user  0m22.068s
-> > > sys   0m0.200s
-> > > #
-> > >
-> > > This runtime is ok for the perf.data file size.
-> > >
-> > > linux-next:
-> > > # uname -a
-> > > Linux s83lp47.lnxne.boe 6.18.0-20251028.rc3.git141.f7d2388eeec2.63.fc42.s390x+next #1 SMP Tue Oct 28 20:06:13 CET 2025 s390x GNU/Linux
-> > > #ll /tmp/perf2-eSso2q-2
-> > > -rw-------. 1 root root 8538184 Oct 29 08:47 /tmp/perf2-eSso2q-2
-> > > # time perf report -i/tmp/perf2-eSso2q-2 -D | grep Counter:000 > /dev/null
-> > >
-> > > real  2m53.601s
-> > > user  2m52.938s
-> > > sys   0m0.575s
-> > > #
-> > >
-> > > Same perf.data file and run time increased from 22 seconds to nearly 300 seconds, roughly 14 times longer
-> > > for the same input!
-> > >
-> > > Has anybody similar observations?
-> > >
-> > > Thanks a lot
-> > >
-> >
-> > Ian,
-> >
-> > sorry sent button pushed too early...
-> >
-> > here is a second try without option -D.
-> >
-> > This is much better:
-> >
-> > root in 🌐 s83lp47 in ~
-> > ❯ ll perf1.data
-> > -rw-------. 1 root root 99692290 Oct 29 16:17 perf1.data
-> >
-> > root in 🌐 s83lp47 in ~
-> > ❯ time perf record -- perf report -i perf1.data  > /dev/null
-> > [ perf record: Woken up 1 times to write data ]
-> > [ perf record: Captured and wrote 0.027 MB perf.data (246 samples) ]
-> >
-> > real    0m1.097s
-> > user    0m0.082s
-> > sys     0m0.167s
-> >
-> > root in 🌐 s83lp47 in ~
-> > ❯ perf report --stdio
-> > # To display the perf.data header info, please use --header/--header-only options.
-> > #
-> > #
-> > # Total Lost Samples: 0
-> > #
-> > # Samples: 246  of event 'cpum_cf/cycles/P'
-> > # Event count (approx.): 307500000
-> > #
-> > # Overhead  Command  Shared Object        Symbol
-> > # ........  .......  ...................  ..................................................
-> > #
-> >      9.35%  perf     perf                 [.] reader__read_event
-> >      4.47%  perf     perf                 [.] perf_env__arch
-> >      2.85%  perf     ld64.so.1            [.] _dl_relocate_object_no_relro
-> >      2.44%  perf     ld64.so.1            [.] _dl_lookup_symbol_x
-> >      2.44%  perf     ld64.so.1            [.] do_lookup_x
-> >      2.44%  perf     perf                 [.] down_read
-> >      2.03%  perf     perf                 [.] hists__findnew_entry
-> >      2.03%  perf     perf                 [.] perf_hpp__is_dynamic_entry
-> >      1.63%  perf     [kernel.kallsyms]    [k] __s390_indirect_jump_r14
-> >      1.63%  perf     [kernel.kallsyms]    [k] format_decode
-> >      1.63%  perf     libc.so.6            [.] cfree@GLIBC_2.2
-> >      1.63%  perf     perf                 [.] evsel__parse_sample
-> >      1.63%  perf     perf                 [.] map__put
-> >      1.63%  perf     perf                 [.] sort__comm_cmp
-> >      1.63%  perf     perf                 [.] thread__put
-> >      1.22%  perf     [kernel.kallsyms]    [k] folio_add_file_rmap_ptes
-> >      1.22%  perf     [kernel.kallsyms]    [k] get_page_from_freelist
-> >      1.22%  perf     ld64.so.1            [.] _dl_name_match_p
-> >      1.22%  perf     perf                 [.] dump_printf
-> >      1.22%  perf     perf                 [.] evlist__event2evsel
-> >      1.22%  perf     perf                 [.] hashmap_find
-> >      1.22%  perf     perf                 [.] perf_session__deliver_event
-> 
-> Hmm.. for perf_env__arch we could probably cache better:
-> ```
-> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> index f1626d2032cd..2591f71c7c42 100644
-> --- a/tools/perf/util/env.c
-> +++ b/tools/perf/util/env.c
-> @@ -593,17 +593,27 @@ static const char *normalize_arch(char *arch)
-> 
-> const char *perf_env__arch(struct perf_env *env)
-> {
-> -       char *arch_name;
-> +       if (env && env->arch && env->arch_name_normalized)
-> +               return env->arch;
-> 
->        if (!env || !env->arch) { /* Assume local operation */
->                static struct utsname uts = { .machine[0] = '\0', };
->                if (uts.machine[0] == '\0' && uname(&uts) < 0)
->                        return NULL;
-> -               arch_name = uts.machine;
-> -       } else
-> -               arch_name = env->arch;
-> 
-> -       return normalize_arch(arch_name);
-> +               if (!env)
-> +                       return normalize_arch(uts.machine);
-> +
-> +               env->arch = strdup(normalize_arch(uts.machine));
-> +               env->arch_name_normalized = true;
-> +       } else {
-> +               char *normalized = strdup(normalize_arch(env->arch));
-> +
-> +               free(env->arch);
-> +               env->arch = normalized;
-> +               env->arch_name_normalized = true;
-> +       }
-> +       return env->arch;
-> }
-> 
-> #if defined(HAVE_LIBTRACEEVENT)
-> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-> index 9977b85523a8..da20bc3810bd 100644
-> --- a/tools/perf/util/env.h
-> +++ b/tools/perf/util/env.h
-> @@ -61,6 +61,7 @@ struct perf_env {
->        char                    *os_release;
->        char                    *version;
->        char                    *arch;
-> +       bool                    arch_name_normalized;
->        int                     nr_cpus_online;
->        int                     nr_cpus_avail;
->        char                    *cpu_desc;
-> ```
-> or just force the normalize before assignment.
-> 
-> For reader__read_event and the perf_env these changes may be relevant:
-> "perf sample: Remove arch notion of sample parsing"
-> https://lore.kernel.org/r/20250724163302.596743-21-irogers@google.com
-> "perf env: Remove global perf_env"
-> https://lore.kernel.org/r/20250724163302.596743-20-irogers@google.com
-> 
-> I wonder if for some reason the env is NULL in your cases, so we go
-> slow path a lot.
-> 
-> The histogram stuff, Namhyung may know more.
+On 10/30/2025 12:38 PM, Chen, Zide wrote:
+> On 10/29/2025 6:37 PM, Mi, Dapeng wrote:
+>> On 10/30/2025 6:07 AM, Zide Chen wrote:
+>>> This warning can be triggered if NUMA is disabled and the system
+>>> boots with fewer CPUs than the number of CPUs in die 0.
+>>>
+>>> WARNING: CPU: 9 PID: 7257 at uncore.c:1157 uncore_pci_pmu_register+0x136/0x160 [intel_uncore]
+>>>
+>>> Currently, the discovery table continues to be parsed even if all CPUs
+>>> in the associated die are offline. This can lead to an array overflow
+>>> at "pmu->boxes[die] = box" in uncore_pci_pmu_register(), which may
+>>> trigger the warning above or cause other issues.
+>>>
+>>> Reported-by: Steve Wahl <steve.wahl@hpe.com>
+>>> Fixes: edae1f06c2cd ("perf/x86/intel/uncore: Parse uncore discovery tables")
+>>> Signed-off-by: Zide Chen <zide.chen@intel.com>
+>>> ---
+>>>  arch/x86/events/intel/uncore.c           | 4 ++++
+>>>  arch/x86/events/intel/uncore_discovery.c | 2 +-
+>>>  2 files changed, 5 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+>>> index ee586eb714ec..5c3aeea5c78d 100644
+>>> --- a/arch/x86/events/intel/uncore.c
+>>> +++ b/arch/x86/events/intel/uncore.c
+>>> @@ -1380,6 +1380,10 @@ static void uncore_pci_pmus_register(void)
+>>>  
+>>>  		for (node = rb_first(type->boxes); node; node = rb_next(node)) {
+>>>  			unit = rb_entry(node, struct intel_uncore_discovery_unit, node);
+>>> +
+>>> +			if (WARN_ON(unit->die >= uncore_max_dies()))
+>> Base on my understanding, it seems an valid situation which could happen.
+>> If so, we'd better remove the WARN_on to avoid it mislead users. Thanks.
+> Now, for invalid or offline die IDs, we skip parsing the discovery
+> table, and no PMON units are expected to be inserted into the RB tree.
+> Therefore, using WARN_ON() here seems appropriate.
+>
+> I put a WARN_ON() here because invalid die ID could cause array overflow.
 
-There only 2 entries for the hist code.  The hists__findnew_entry() is
-expected as it's the main routine to aggregate the samples.  But the
-perf_hpp__is_dynamic_entry() is strange.  It should be very small and
-fast.
+Ok, it's good then. Thanks.
 
-But I guess the actual problem is when you use -D in perf report.  And
-it doesn't show hist related functions IIUC.
 
-Thanks,
-Namhyung
-
+>
+>  >> +				continue;
+>>> +
+>>>  			pdev = pci_get_domain_bus_and_slot(UNCORE_DISCOVERY_PCI_DOMAIN(unit->addr),
+>>>  							   UNCORE_DISCOVERY_PCI_BUS(unit->addr),
+>>>  							   UNCORE_DISCOVERY_PCI_DEVFN(unit->addr));
+>>> diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
+>>> index 1bf6e4288577..d6aee12139f1 100644
+>>> --- a/arch/x86/events/intel/uncore_discovery.c
+>>> +++ b/arch/x86/events/intel/uncore_discovery.c
+>>> @@ -388,7 +388,7 @@ static bool intel_uncore_has_discovery_tables_pci(int *ignore)
+>>>  				     (val & UNCORE_DISCOVERY_DVSEC2_BIR_MASK) * UNCORE_DISCOVERY_BIR_STEP;
+>>>  
+>>>  			die = get_device_die_id(dev);
+>>> -			if (die < 0)
+>>> +			if ((die < 0) || (die >= uncore_max_dies()))
+>>>  				continue;
+>>>  
+>>>  			parse_discovery_table(dev, die, bar_offset, &parsed, ignore);
