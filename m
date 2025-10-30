@@ -1,118 +1,116 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA5935770E;
-	Thu, 30 Oct 2025 10:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E017735504F;
+	Thu, 30 Oct 2025 13:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761819993; cv=none; b=AQDCe9Msdo0sXbG/f2kYxt9iRGdUsEHhh1YptLks5/jySY0nmwolbB8+xDhHHvf4uXL2NQ+3IiLQjcSqnIAgtHgSQxgDNICcHBKpBRYCkQEwNZJ6mylrbpMdeEeSSYl5RMkZ5/aAlZ+pgS5JkZkd8jU7VXnqr8ic2JRQZnGPyDQ=
+	t=1761829788; cv=none; b=uKNCbIFa5HcrC0JiOMuugvB2eXHT19rRGwHR2sG3+UTWxP50W13nla0BiUT44E6LCXTfd9QddL8RRpBePhzXREPmIbWjae9EVg5+UPMUYR1s6CepwNxHlyX9pFmUU/BZ0+4Uu9vmiFD7SsJkWR4oh59KNwK4tsZDV+iOH7ny81M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761819993; c=relaxed/simple;
-	bh=ZQeaTIYo2PFyGQuYnH377IMHaMcvvo9URIFWHLeo0VI=;
+	s=arc-20240116; t=1761829788; c=relaxed/simple;
+	bh=SUrknLG6QL1vQeKkYQ9LgNsZWR2AlazjvKoTTCaah5Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gImi+kq/7o4SgVIOCVG95Jqh/w5bqKe6SUCnmyT31tcAQjpHeL9AUxwsuXsRXCDshVTid49HX+nj27JB71HttAMNyhrMrq/9dLpcvtiKBA94ZnT3LUiaMcMhT5IwsVpB9qk18CB9lVJUQ98aTuNwJv6DdbIWa/Ma3qj67G1a9QA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tyxxwIBq; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=TQXirzIltLE9vaduRx7MESU/1dUshzbFVMWWAROvsljsQOutWtQs8bQaEcUz/ApbFGoQjkNJPzNy3O4yUGVsF0erGyEZN/RAbIKy1rFJOlUG2qp+j+aIEucq9/sVvTpvuMW0inub3+vZVml7UACNsX8sp0D3fMGox2r4yIs36fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NNbbo1TN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tyxxwIBq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=qZnGQAq5O4/vMj3v2hACrPoi8P+jbL/qYhOyDwFD/Kc=; b=tyxxwIBq7tHMVKJrNyLmjFBeSZ
-	/8x/LWNZGtlRWqC6d8UQ32z5RzEh2Sn/SZk6U22iOqxuS6SUMj5D2Ih+9B8AImKeopZkyqAVGlB4F
-	Azdl0mh7yWuEg+wiHcp7QGFfCMVOlqxadZ8PWgG+YxFdD1cCpKs2XEjpziRxslrPE9A0o3snD0ZP6
-	t24dASKEDrHbXl9IHVjue0Q1ZaXnltqRPkbasMuAN0asT4uEXMblsE41IbUJM1jr+2Wdg2e0XZqBn
-	DGms2Fj+SwzIMVlLas2kwbSRcwbTkBhBUxVuWMCqGCKpEb4EMGlZ1c2fu44YOZ/Kzwr990sAqMHqn
-	9yuNXI8A==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vEPrO-00000002AaN-30xr;
-	Thu, 30 Oct 2025 10:26:28 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id CE61830029E; Thu, 30 Oct 2025 11:26:26 +0100 (CET)
-Date: Thu, 30 Oct 2025 11:26:26 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Fangrui Song <maskray@sourceware.org>
-Cc: linux-toolchains@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: Concerns about SFrame viability for userspace stack walking
-Message-ID: <20251030102626.GR3245006@noisy.programming.kicks-ass.net>
-References: <3xd4fqvwflefvsjjoagytoi3y3sf7lxqjremhe2zo5tounihe4@3ftafgryadsr>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NNbbo1TN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B796AC116C6;
+	Thu, 30 Oct 2025 13:09:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761829787;
+	bh=SUrknLG6QL1vQeKkYQ9LgNsZWR2AlazjvKoTTCaah5Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NNbbo1TNVYrGDJMyIf32j6DBUmdBhPNsSdrOSV5SUrhahDUEescR04yjH5RFV2e6t
+	 x82u6S9t/s8K/GdbKNbq5hxjFgK2NgkEH/22IsycijNKYYbfoMA/WyCyC/wz+irwDH
+	 QNagLe62maPjlla9DDEP5BWBKZ/zGw1Mad066mC+Nfg/6gxzVU5UGDwIxUP2+rCeqX
+	 QNejnQwqVVz0JVZWFri83rQYt3tlC+qlOUb8Usw7xEtt6YjLaM08aDba7emI+1s7wK
+	 Pr/BaD8lqA+rpD50JZ9n60iQWAvQZUDs2gRxrNetylBqhMHnhr2bPCDbEg/RE9FA0Z
+	 i91DMj5owhaAg==
+Date: Thu, 30 Oct 2025 10:09:44 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Athira Rajeev <atrajeev@linux.ibm.com>,
+	Howard Chu <howardchu95@gmail.com>, Song Liu <song@kernel.org>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Levi Yun <yeoreum.yun@arm.com>,
+	Zhongqiu Han <quic_zhonhan@quicinc.com>,
+	Blake Jones <blakejones@google.com>,
+	Anubhav Shelat <ashelat@redhat.com>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Gautam Menghani <gautam@linux.ibm.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Yang Li <yang.lee@linux.alibaba.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+	Weilin Wang <weilin.wang@intel.com>
+Subject: Re: [RFC PATCH v1 12/15] perf evlist: Add reference count
+Message-ID: <aQNjmD6hh8rhaACb@x1>
+References: <20251029053413.355154-1-irogers@google.com>
+ <20251029053413.355154-13-irogers@google.com>
+ <aQI_OJziRPMRqzM9@x1>
+ <CAP-5=fXz+tG-6q54FNY2OrKcz4zjncRXEWzV8E2suXmOA4MzEw@mail.gmail.com>
+ <aQJeEFKHUfevLB50@x1>
+ <CAP-5=fX=oDBeJ4aLW4ARB3x_=UJ7zSYQWjJf28E2jgTc_rxJyg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <3xd4fqvwflefvsjjoagytoi3y3sf7lxqjremhe2zo5tounihe4@3ftafgryadsr>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fX=oDBeJ4aLW4ARB3x_=UJ7zSYQWjJf28E2jgTc_rxJyg@mail.gmail.com>
 
-On Wed, Oct 29, 2025 at 11:53:32PM -0700, Fangrui Song wrote:
-> I've been following the SFrame discussion and wanted to share some
-> concerns about its viability for userspace adoption, based on concrete
-> measurements and comparison with existing compact unwind
-> implementations in LLVM.
-> 
-> **Size overhead concerns**
-> 
-> Measurements on a x86-64 clang binary show that .sframe (8.87 MiB) is
-> approximately 10% larger than the combined size of .eh_frame and
-> .eh_frame_hdr (8.06 MiB total).  This is problematic because .eh_frame
-> cannot be eliminated - it contains essential information for restoring
-> callee-saved registers, LSDA, and personality information needed for
-> debugging (e.g. reading local variables in a coredump) and C++
-> exception handling.
-> 
-> This means adopting SFrame would result in carrying both formats, with
-> a large net size increase.
+On Wed, Oct 29, 2025 at 02:12:11PM -0700, Ian Rogers wrote:
+> On Wed, Oct 29, 2025 at 11:33 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-So the SFrame unwinder is fairly simple code, but what does an .eh_frame
-unwinder look like? Having read most of the links in your email, there
-seem to be references to DWARF byte code interpreters and stuff like
-that.
+> > On Wed, Oct 29, 2025 at 09:56:50AM -0700, Ian Rogers wrote:
+> > > On Wed, Oct 29, 2025 at 9:22 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-So while the format compactness is one aspect, the thing I find no
-mention of, is the unwinder complexity.
+> > > > On Tue, Oct 28, 2025 at 10:34:10PM -0700, Ian Rogers wrote:
+> > > > > This a no-op for most of the perf tool. The reference count is set to
+> > > > > 1 at allocation, the put will see the 1, decrement it and perform the
+> > > > > delete. The purpose for adding the reference count is for the python
+> > > > > code. Prior to this change the python code would clone evlists, but
+> > > > > this has issues if events are opened, etc. This change adds a
+> > > > > reference count for the evlists and a later change will add it to
+> > > > > evsels. The combination is needed for the python code to operate
+> > > > > correctly (not hit asserts in the evsel clone), but the changes are
+> > > > > broken apart for the sake of smaller patches.
 
-There have been a number of attempts to do DWARF unwinding in
-kernel space and while I think some architecture do it, x86_64 has had
-very bad experiences with it. At some point I think Linus just said no
-more, no DWARF, not ever.
+> > > > Looks ok, noisy for all the s/delete/put/ but that is ok, but then you
+> > > > are not using the RC_CHK_ACCESS stuff from the get go, why not?
 
-So from a situation where compilers were generating bad CFI unwind
-information, a horribly complex unwinder that could crash the kernel
-harder than the thing it was reporting on and manual CFI annotations in
-assembly that were never quite right, objtool and ORC were born.
+> > > So if I did RC_CHK_ACCESS then every evsel access would need updating,
 
-The win was many:
+> > Fair enough, I think it would be informative to have a comment
+> > mentioning this near the refcount_t to avoid this question popping up
+> > again.
+ 
+> Sgtm. I think we can also add the RC_CHK_ACCESS to evlist as that is a
+> boring blob of a thing to pass around.
+ 
+> How are things outside of this? The python changes, how to do the
+> process_events callbacks, etc. Any thoughts on the tool API vs the
+> script API (stat vs stat_round) ?
 
- - simple robust unwinder
- - no manual CFI annotations that could be wrong
- - no reliance on compilers that would get it wrong
+I'll try and resume reviewing at that point, but I don't antecipate
+problems and like the direction of this work.
 
-and I think this is where SFrame came from. I don't think the x86_64
-Linux kernel will ever natively adopt SFrame, ORC works really well for
-us.
-
-However, we do need something to unwind userspace. And yes, personally
-I'm in the frame-pointer camp, that's always worked well for me.
-Distro's however don't seem to like it much, which means that every time
-I do have to profile something userspace, I get to rebuild all the
-relevant code with framepointers on (which is not hard, but tedious).
-
-Barring that, we need something for which the unwind code is simple and
-robust -- and I *think* this has disqualified .eh_frame and full on
-DWARF.
-
-And this is again where SFrame comes in -- its unwinder is simple,
-something we can run in kernel space.
-
-I really don't much care for the particulars, and frame pointers work
-for me -- but I do care about the kernel unwinder code. It had better be
-simple and robvst.
-
-So if you want us to use .eh_frame, great, show us a simple and robust
-unwinder.
+- Arnaldo
