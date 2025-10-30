@@ -1,42 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F111228CA9;
-	Thu, 30 Oct 2025 05:44:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0F837A3BB;
+	Thu, 30 Oct 2025 05:47:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761803097; cv=none; b=BCWDlie9VLfz40fIyIQgOLV7G5hTP1FnxEy7thXriMI5uGztCm1WXKy6GN5SzIvSqgOc3iWuhCnpFyDu3zChEUzchJ/c98M/BcA0T7JhgLayPuxX926QUZ+AJVvUcKwCenv7JraZ+KkgwDjQrSods44j/ypzU8qNMUDm8pRoTfc=
+	t=1761803221; cv=none; b=MP67XT4qo56RLISxcV56TwQ+2YZrjGsvSg3eJZ+05buspXHubsRfyXA8LaTNNh+JrqP/czPy0DGurt4wXpOVerV5KhslG++RAr9qYpHSaNTXM9ZLzwSsJXcmz666DVfrp3OjRGFfZjXJo/yKTSNPqA+0FpnE5fASRopRpMJX4tU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761803097; c=relaxed/simple;
-	bh=uo66Dy0uiF0O+hdZ0X1088dBsMEaPVjdELsKtaWghds=;
+	s=arc-20240116; t=1761803221; c=relaxed/simple;
+	bh=G+Ji/wAtkK2VXrXK/TPWjSMQTXNUNbkZgTV0hBZ1Iv4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jO/Qm0ZpSilm94+ZBKZFTpUKNWrVoRGWGFDoJI5KN4ZTJS7Se8g62w25fi9o68zy/1VLn4OW2IQBR9M7fmzpPW9sqHnl30cFB3cNvzL0Bdf9Xc1KFB7IfxEaQDpKi1DFbQMPstLIGFxK41T9NIMV31uq8c6C3Dx7QN/nvYpGZOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oTinanvm; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=aE93u8lHDk8JgdAaa5gPNrpt0I9q5U5AJ2eWcJ/y+dJAntGvNuLL5NMZ84dj2lBnRJYItRxhTOiPBed0GElhzyxCK0YYp9oNxnEgXCClJGe6+r278synfDQ5BDDCUFD4FzFlco5bBCCljdHwBx19VRisncZwq0llNXKCxrBvrds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t9agkIeD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oTinanvm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECC88C4CEF1;
-	Thu, 30 Oct 2025 05:44:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t9agkIeD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C694C4CEF1;
+	Thu, 30 Oct 2025 05:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761803097;
-	bh=uo66Dy0uiF0O+hdZ0X1088dBsMEaPVjdELsKtaWghds=;
+	s=k20201202; t=1761803220;
+	bh=G+Ji/wAtkK2VXrXK/TPWjSMQTXNUNbkZgTV0hBZ1Iv4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oTinanvmdKQeEKjDjTOy++2bJoot2SCmxBRawWsxysLQbRg/k3ZIikeH4+zXurga2
-	 pnOa361ka2FwbyoFKOZla+jPiemosGE1ZNCUcihtwhA5NzGeKVHA6lRbaVSkcf3hIj
-	 /CJcsaPC7NG8Xwy4Rt/cv19INZ+DiPGXGiBaqxQ1qvBLcE54IaWNdHfjP4bEihColI
-	 ToNMWoAD15Ednnu7DMjgxTHrtRR6MggOGrzJ8tBTG6q9HpozMLqPCWOn0fho6oyp4H
-	 vqdZh+9v8FCGvBuDDGqBi2Dvx5a6ScdEm/i883wZzbj6sQE1ndlc/GLPC9wnMBgZ4K
-	 rAnVXmKJpqUvQ==
-Date: Wed, 29 Oct 2025 22:44:54 -0700
+	b=t9agkIeDywN7X0/n8zZG7U6xnZJzXTIFYvCqzzMS4BgqWuUStb2ymns3fpWJWzk8Y
+	 dIEh8Ksg8nMZmiaTZiyI5hLM/qwcvLs3ZgDMSCSCMMKmfWcZpdpjltnug9OpPVEo2x
+	 lDbqyqwJ7Pw+rRYwexMPZuBxe7ygNgq/VODuPqkh54Z+lR4V3ix6m8st/TX4wZTBqy
+	 8aNFPUgQBKcWstlV92XRLm5MMOOK26m/Lb2oP21hxoRU79iFDDBaCDq9kdNZ941tPD
+	 sHiXP3dc6h7+uio5b6xVZviGcPcDn0fAQmQERa3ermbR+n/mErAosjhDhy7aN1BUYK
+	 Pj/DzSF9VrvRg==
+Date: Wed, 29 Oct 2025 22:46:58 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Quentin Monnet <qmo@kernel.org>
-Cc: KP Singh <kpsingh@kernel.org>, bpf@vger.kernel.org,
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [BUG] bpftool: Build failure due to opensslv.h
-Message-ID: <aQL7VuWn8xa--8qg@google.com>
-References: <aP7uq6eVieG8v_v4@google.com>
- <2cb226f8-a67c-4bdb-8c59-507c99a46bab@kernel.org>
- <aP-5fUaroYE5xSnw@google.com>
- <d6a63399-361f-4f1c-845c-b69192bfc822@kernel.org>
+Subject: Re: [PATCH v1 1/2] perf pmu: Make pmu_alias_terms weak again
+Message-ID: <aQL70qlYohRT7cT8@google.com>
+References: <20251029222638.816100-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,68 +48,52 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <d6a63399-361f-4f1c-845c-b69192bfc822@kernel.org>
+In-Reply-To: <20251029222638.816100-1-irogers@google.com>
 
-On Tue, Oct 28, 2025 at 10:05:52AM +0100, Quentin Monnet wrote:
-> 2025-10-27 11:27 UTC-0700 ~ Namhyung Kim <namhyung@kernel.org>
-> > On Mon, Oct 27, 2025 at 11:41:01AM +0000, Quentin Monnet wrote:
-> >> 2025-10-26 21:01 UTC-0700 ~ Namhyung Kim <namhyung@kernel.org>
-> >>> Hello,
-> >>>
-> >>> I'm seeing a build failure like below in Fedora 40 and others.  I'm not
-> >>> sure if it's reported already but it failed to build perf tools due to
-> >>> errors in the bootstrap bpftool.
-> >>>
-> >>>     CC      /build/util/bpf_skel/.tmp/bootstrap/sign.o
-> >>>   sign.c:16:10: fatal error: openssl/opensslv.h: No such file or directory
-> >>>      16 | #include <openssl/opensslv.h>
-> >>>         |          ^~~~~~~~~~~~~~~~~~~~
-> >>>   compilation terminated.
-> >>>   make[3]: *** [Makefile:256: /build/util/bpf_skel/.tmp/bootstrap/sign.o] Error 1
-> >>>   make[3]: *** Waiting for unfinished jobs....
-> >>>   make[2]: *** [Makefile.perf:1213: /build/util/bpf_skel/.tmp/bootstrap/bpftool] Error 2
-> >>>   make[1]: *** [Makefile.perf:289: sub-make] Error 2
-> >>>   make: *** [Makefile:76: all] Error 2
-> >>>
-> >>> I think it's from the recent signing change.  I'm not familiar with
-> >>> openssl but I guess there's a proper feature check for it.  Is this a
-> >>> known issue?
-> >>
-> >>
-> >> Hi Namhyung,
-> > 
-> > Hello!
-> > 
-> >>
-> >> This looks related to the program signing change indeed, commit
-> >> 40863f4d6ef2 ("bpftool: Add support for signing BPF programs")
-> >> introduced a dependency on OpenSSL's development headers for bpftool.
-> >> It's not gated behind a feature check. On Fedora, I think the headers
-> >> come with openssl-devel, do you have this package installed?
-> > 
-> > No I don't, but I guess it should be able to build on such systems.  Or
-> > is it required for bpftool?  Anyway I feel like it should have a feature
-> > check and appropriate error messages.
-> > 
-> 
-> +Cc KP
-> 
-> We usually have feature checks when optional features bring in new
-> dependencies for bpftool, but we haven't discussed it this time. My
-> understanding was that program signing is important enough that it
-> should always be present in newer versions of bpftool, making OpenSSL
-> one of the required dependencies going forward.
+Hi Ian,
 
-Yeah, the problem is that it also affects to perf build.
+On Wed, Oct 29, 2025 at 03:26:37PM -0700, Ian Rogers wrote:
+> The terms for a json event should be weak so they don't override
+> command line options.
 
-> 
-> We don't currently have feature checks to tell when required
-> dependencies are missing for bpftool (it's just the build failing, in
-> that case). I know perf does a great job at it, we could look into it
-> for bpftool, too.
-
-It's in the tools/build directory. :)
+Can you please give an example command line and the error?
 
 Thanks,
 Namhyung
 
+> 
+> Fixes: 84bae3af20d0 ("perf pmu: Don't eagerly parse event terms")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/pmu.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index d597263fab4f..f14f2a12d061 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -802,6 +802,7 @@ static int pmu_aliases_parse_eager(struct perf_pmu *pmu, int sysfs_fd)
+>  static int pmu_alias_terms(struct perf_pmu_alias *alias, struct list_head *terms)
+>  {
+>  	struct parse_events_terms alias_terms;
+> +	struct parse_events_term *term;
+>  	int ret;
+>  
+>  	parse_events_terms__init(&alias_terms);
+> @@ -812,6 +813,13 @@ static int pmu_alias_terms(struct perf_pmu_alias *alias, struct list_head *terms
+>  		parse_events_terms__exit(&alias_terms);
+>  		return ret;
+>  	}
+> +	list_for_each_entry(term, &alias_terms.terms, list) {
+> +		/*
+> +		 * Weak terms don't override command line options,
+> +		 * which we don't want for implicit terms in aliases.
+> +		 */
+> +		term->weak = true;
+> +	}
+>  	list_splice_init(&alias_terms.terms, terms);
+>  	parse_events_terms__exit(&alias_terms);
+>  	return 0;
+> -- 
+> 2.51.1.851.g4ebd6896fd-goog
+> 
