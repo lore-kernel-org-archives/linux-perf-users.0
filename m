@@ -1,116 +1,362 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E017735504F;
-	Thu, 30 Oct 2025 13:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B432F6927
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 13:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761829788; cv=none; b=uKNCbIFa5HcrC0JiOMuugvB2eXHT19rRGwHR2sG3+UTWxP50W13nla0BiUT44E6LCXTfd9QddL8RRpBePhzXREPmIbWjae9EVg5+UPMUYR1s6CepwNxHlyX9pFmUU/BZ0+4Uu9vmiFD7SsJkWR4oh59KNwK4tsZDV+iOH7ny81M=
+	t=1761830757; cv=none; b=Dup3thWBLlvjiGC0x06ZvF4Ig9zZZM32/cdCT/5v6DknxQi1b8OvVcdARY8I8nmcFENj/29rTFNbbUINj5/UQHnzQptwolpUf36uUl/MMeNCPfgs6/BFVKxUciYnsT8XZC4y0fqGeiyGL4BbObrfWgvdL+DB5+Y06zfvc7rjmJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761829788; c=relaxed/simple;
-	bh=SUrknLG6QL1vQeKkYQ9LgNsZWR2AlazjvKoTTCaah5Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TQXirzIltLE9vaduRx7MESU/1dUshzbFVMWWAROvsljsQOutWtQs8bQaEcUz/ApbFGoQjkNJPzNy3O4yUGVsF0erGyEZN/RAbIKy1rFJOlUG2qp+j+aIEucq9/sVvTpvuMW0inub3+vZVml7UACNsX8sp0D3fMGox2r4yIs36fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NNbbo1TN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761830757; c=relaxed/simple;
+	bh=Alf7FG3xKB+wGygDIpa6N5AriIZQF5fBujd1fF3CeB8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=MGDVX/LmTp24NsJCTUYrx8OEv8b2cdqWMTE04iQUFjRLM8babs3U9ZdV+BOozSw9BQ4XvLz7SaGsg7oaYqKfVrMKED25tmsXXdN8jVpuzG0Y63OX2J9gdPoucQSQ8EIvemNdVstTGiM2zA8XDWrw+A739o1jlGOBQ4WQf4ANUEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fi4xApm5; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NNbbo1TN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B796AC116C6;
-	Thu, 30 Oct 2025 13:09:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761829787;
-	bh=SUrknLG6QL1vQeKkYQ9LgNsZWR2AlazjvKoTTCaah5Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NNbbo1TNVYrGDJMyIf32j6DBUmdBhPNsSdrOSV5SUrhahDUEescR04yjH5RFV2e6t
-	 x82u6S9t/s8K/GdbKNbq5hxjFgK2NgkEH/22IsycijNKYYbfoMA/WyCyC/wz+irwDH
-	 QNagLe62maPjlla9DDEP5BWBKZ/zGw1Mad066mC+Nfg/6gxzVU5UGDwIxUP2+rCeqX
-	 QNejnQwqVVz0JVZWFri83rQYt3tlC+qlOUb8Usw7xEtt6YjLaM08aDba7emI+1s7wK
-	 Pr/BaD8lqA+rpD50JZ9n60iQWAvQZUDs2gRxrNetylBqhMHnhr2bPCDbEg/RE9FA0Z
-	 i91DMj5owhaAg==
-Date: Thu, 30 Oct 2025 10:09:44 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.ibm.com>,
-	Howard Chu <howardchu95@gmail.com>, Song Liu <song@kernel.org>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Levi Yun <yeoreum.yun@arm.com>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>,
-	Blake Jones <blakejones@google.com>,
-	Anubhav Shelat <ashelat@redhat.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	Gautam Menghani <gautam@linux.ibm.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Yang Li <yang.lee@linux.alibaba.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-	Weilin Wang <weilin.wang@intel.com>
-Subject: Re: [RFC PATCH v1 12/15] perf evlist: Add reference count
-Message-ID: <aQNjmD6hh8rhaACb@x1>
-References: <20251029053413.355154-1-irogers@google.com>
- <20251029053413.355154-13-irogers@google.com>
- <aQI_OJziRPMRqzM9@x1>
- <CAP-5=fXz+tG-6q54FNY2OrKcz4zjncRXEWzV8E2suXmOA4MzEw@mail.gmail.com>
- <aQJeEFKHUfevLB50@x1>
- <CAP-5=fX=oDBeJ4aLW4ARB3x_=UJ7zSYQWjJf28E2jgTc_rxJyg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fi4xApm5"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59UDN9di026804
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 13:25:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=KiCohA
+	yz9S77IjsY90jhZK//xtk8zzbr6ZVGoN0jiXE=; b=fi4xApm5D1qRWDAELnbSOM
+	s4Zl8M+M4TZPFFa6ff8Z/EcEoUCM/pq0WzIetAhA6zCUpebiEXdCErBZ+H9h73uj
+	QoqgknqgX3WNKGinLLIiEoCFyTWiK9uONFw9cLiyLp9I/a7lPZRCGtKBnyygZq/p
+	216FbPhAYjM2WWRKUS95Dkj3PEDVbYMhZ+FllT9POLZdTTcxRGj+WgXD79zy5DLs
+	FmVcltjbi+zKfBdTV8TQJfV1gN6RajBvDVkjzZJC/SUV/qQ5F+A71Qojcd14c2Gc
+	b1M7kd7+XUnaK2EvHVi47fFARLwWzjyU8GtF3TGqg+EFNFOImmGbA9Xq0L9T3G4A
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34acrgwe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 13:25:54 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59UDLNFG011049
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 13:25:53 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34acrgwc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Oct 2025 13:25:53 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59UD9ivd030770;
+	Thu, 30 Oct 2025 13:25:52 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4a33wwru7p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Oct 2025 13:25:52 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59UDPmPl43974934
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 30 Oct 2025 13:25:48 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3E4AD20043;
+	Thu, 30 Oct 2025 13:25:48 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0FFBE2005A;
+	Thu, 30 Oct 2025 13:25:48 +0000 (GMT)
+Received: from [9.152.212.92] (unknown [9.152.212.92])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 30 Oct 2025 13:25:48 +0000 (GMT)
+Message-ID: <3b86c7e0-5b3e-468c-8077-7efa3959d221@linux.ibm.com>
+Date: Thu, 30 Oct 2025 14:25:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [linux-next] perf report runtime extremely long
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: Ian Rogers <irogers@google.com>
+Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Jan Polensky <japo@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>
+References: <09943f4f-516c-4b93-877c-e4a64ed61d38@linux.ibm.com>
+ <79195870-7223-4aeb-beb4-a7d8f1895caa@linux.ibm.com>
+ <CAP-5=fXi=EDU7-tdNLwTKbCHR80_p3=TAe0qF0oE-tXbx35znw@mail.gmail.com>
+ <13800bed-1256-4414-ac8b-e99439c748ec@linux.ibm.com>
+Content-Language: en-US
+Organization: IBM
+In-Reply-To: <13800bed-1256-4414-ac8b-e99439c748ec@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fX=oDBeJ4aLW4ARB3x_=UJ7zSYQWjJf28E2jgTc_rxJyg@mail.gmail.com>
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=XbuEDY55 c=1 sm=1 tr=0 ts=69036762 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=1XWaLZrsAAAA:8 a=VnNF1IyMAAAA:8 a=g9zxSzfddf4b3aR5VW8A:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: aIoKJ0n3Y22Qpdd1TOol0XdACjJWID5A
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDI4MDE2NiBTYWx0ZWRfX1zPRknopsfkG
+ pDtb5O2Uro2LldLD2u5/ug99skBwk3bLdjer8p2kXRe6g6NpmIM4tt0AHnfFIdnqfBu35A6W4r3
+ 3XGbsxoxMfNbHDQua0u/EDC3eZbmKjLULDYd5MRNyqzeV9p7xc8T8k9RifYRLCT97skNt05j3Cu
+ BIWH2AQZzsnlxhqD3PNJr51D458OxK6rvKEzFIOMosw6gfiQFW9HbS8yzZ2yjQNS/7wWEcjFkne
+ apnjUBU588ZkhqxMJyERyiv6E90cI6LEdoBsLmrdLEGILEdtMUU7bRDd9JrU2X6eVbRPdDIQfqi
+ TOcItcphBoaLN91oXkX39T7t/ONtbharoVg4163PS4fyHe6+5rFFcjHFvlxUAA8sv1qZBkf9S/b
+ 4UbEeDUuM0jpFIwNXpk/2dLRhf2zOg==
+X-Proofpoint-GUID: X020dM13hesRmW0BP1P_XGQo7z-ZBx5P
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-10-30_04,2025-10-29_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 suspectscore=0 bulkscore=0 spamscore=0
+ impostorscore=0 phishscore=0 priorityscore=1501 clxscore=1015
+ lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
+ definitions=main-2510280166
 
-On Wed, Oct 29, 2025 at 02:12:11PM -0700, Ian Rogers wrote:
-> On Wed, Oct 29, 2025 at 11:33 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+On 10/30/25 09:59, Thomas Richter wrote:
+> On 10/29/25 17:47, Ian Rogers wrote:
+>> On Wed, Oct 29, 2025 at 9:12 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+>>>
+>>> On 10/29/25 09:03, Thomas Richter wrote:
+>>>> Hi all,
+>>>>
+>>>> has something changed recently in perf report in linux-next repo?
+>>>>
+>>>> I run perf report -i <file> -D | grep something
+>>>> on s390 with 2 different kernels:
+>>>>
+>>>> master 6.18.0rc3:
+>>>> # uname -a
+>>>> Linux a35lp67.lnxne.boe 6.18.0-rc3m-perf+ #23 SMP Tue Oct 28 15:53:44 CET 2025 s390x GNU/Linux
+>>>> # ll /tmp/perf2-eSso2q-2
+>>>> -rw------- 1 root root 8538184 Oct 29 08:44 /tmp/perf2-eSso2q-2
+>>>> # time perf report -i/tmp/perf2-eSso2q-2 -D | grep Counter:000 > /dev/null
+>>>>
+>>>> real  0m22.262s
+>>>> user  0m22.068s
+>>>> sys   0m0.200s
+>>>> #
+>>>>
+>>>> This runtime is ok for the perf.data file size.
+>>>>
+>>>> linux-next:
+>>>> # uname -a
+>>>> Linux s83lp47.lnxne.boe 6.18.0-20251028.rc3.git141.f7d2388eeec2.63.fc42.s390x+next #1 SMP Tue Oct 28 20:06:13 CET 2025 s390x GNU/Linux
+>>>> #ll /tmp/perf2-eSso2q-2
+>>>> -rw-------. 1 root root 8538184 Oct 29 08:47 /tmp/perf2-eSso2q-2
+>>>> # time perf report -i/tmp/perf2-eSso2q-2 -D | grep Counter:000 > /dev/null
+>>>>
+>>>> real  2m53.601s
+>>>> user  2m52.938s
+>>>> sys   0m0.575s
+>>>> #
+>>>>
+>>>> Same perf.data file and run time increased from 22 seconds to nearly 300 seconds, roughly 14 times longer
+>>>> for the same input!
+>>>>
+>>>> Has anybody similar observations?
+>>>>
+>>>> Thanks a lot
+>>>>
+>>>
+>>> Ian,
+>>>
+>>> sorry sent button pushed too early...
+>>>
+>>> here is a second try without option -D.
+>>>
+>>> This is much better:
+>>>
+>>> root in 🌐 s83lp47 in ~
+>>> ❯ ll perf1.data
+>>> -rw-------. 1 root root 99692290 Oct 29 16:17 perf1.data
+>>>
+>>> root in 🌐 s83lp47 in ~
+>>> ❯ time perf record -- perf report -i perf1.data  > /dev/null
+>>> [ perf record: Woken up 1 times to write data ]
+>>> [ perf record: Captured and wrote 0.027 MB perf.data (246 samples) ]
+>>>
+>>> real    0m1.097s
+>>> user    0m0.082s
+>>> sys     0m0.167s
+>>>
+>>> root in 🌐 s83lp47 in ~
+>>> ❯ perf report --stdio
+>>> # To display the perf.data header info, please use --header/--header-only options.
+>>> #
+>>> #
+>>> # Total Lost Samples: 0
+>>> #
+>>> # Samples: 246  of event 'cpum_cf/cycles/P'
+>>> # Event count (approx.): 307500000
+>>> #
+>>> # Overhead  Command  Shared Object        Symbol
+>>> # ........  .......  ...................  ..................................................
+>>> #
+>>>      9.35%  perf     perf                 [.] reader__read_event
+>>>      4.47%  perf     perf                 [.] perf_env__arch
+>>>      2.85%  perf     ld64.so.1            [.] _dl_relocate_object_no_relro
+>>>      2.44%  perf     ld64.so.1            [.] _dl_lookup_symbol_x
+>>>      2.44%  perf     ld64.so.1            [.] do_lookup_x
+>>>      2.44%  perf     perf                 [.] down_read
+>>>      2.03%  perf     perf                 [.] hists__findnew_entry
+>>>      2.03%  perf     perf                 [.] perf_hpp__is_dynamic_entry
+>>>      1.63%  perf     [kernel.kallsyms]    [k] __s390_indirect_jump_r14
+>>>      1.63%  perf     [kernel.kallsyms]    [k] format_decode
+>>>      1.63%  perf     libc.so.6            [.] cfree@GLIBC_2.2
+>>>      1.63%  perf     perf                 [.] evsel__parse_sample
+>>>      1.63%  perf     perf                 [.] map__put
+>>>      1.63%  perf     perf                 [.] sort__comm_cmp
+>>>      1.63%  perf     perf                 [.] thread__put
+>>>      1.22%  perf     [kernel.kallsyms]    [k] folio_add_file_rmap_ptes
+>>>      1.22%  perf     [kernel.kallsyms]    [k] get_page_from_freelist
+>>>      1.22%  perf     ld64.so.1            [.] _dl_name_match_p
+>>>      1.22%  perf     perf                 [.] dump_printf
+>>>      1.22%  perf     perf                 [.] evlist__event2evsel
+>>>      1.22%  perf     perf                 [.] hashmap_find
+>>>      1.22%  perf     perf                 [.] perf_session__deliver_event
+>>
+>> Hmm.. for perf_env__arch we could probably cache better:
+>> ```
+>> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+>> index f1626d2032cd..2591f71c7c42 100644
+>> --- a/tools/perf/util/env.c
+>> +++ b/tools/perf/util/env.c
+>> @@ -593,17 +593,27 @@ static const char *normalize_arch(char *arch)
+>>
+>> const char *perf_env__arch(struct perf_env *env)
+>> {
+>> -       char *arch_name;
+>> +       if (env && env->arch && env->arch_name_normalized)
+>> +               return env->arch;
+>>
+>>        if (!env || !env->arch) { /* Assume local operation */
+>>                static struct utsname uts = { .machine[0] = '\0', };
+>>                if (uts.machine[0] == '\0' && uname(&uts) < 0)
+>>                        return NULL;
+>> -               arch_name = uts.machine;
+>> -       } else
+>> -               arch_name = env->arch;
+>>
+>> -       return normalize_arch(arch_name);
+>> +               if (!env)
+>> +                       return normalize_arch(uts.machine);
+>> +
+>> +               env->arch = strdup(normalize_arch(uts.machine));
+>> +               env->arch_name_normalized = true;
+>> +       } else {
+>> +               char *normalized = strdup(normalize_arch(env->arch));
+>> +
+>> +               free(env->arch);
+>> +               env->arch = normalized;
+>> +               env->arch_name_normalized = true;
+>> +       }
+>> +       return env->arch;
+>> }
+>>
+>> #if defined(HAVE_LIBTRACEEVENT)
+>> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+>> index 9977b85523a8..da20bc3810bd 100644
+>> --- a/tools/perf/util/env.h
+>> +++ b/tools/perf/util/env.h
+>> @@ -61,6 +61,7 @@ struct perf_env {
+>>        char                    *os_release;
+>>        char                    *version;
+>>        char                    *arch;
+>> +       bool                    arch_name_normalized;
+>>        int                     nr_cpus_online;
+>>        int                     nr_cpus_avail;
+>>        char                    *cpu_desc;
+>> ```
+>> or just force the normalize before assignment.
+>>
+>> For reader__read_event and the perf_env these changes may be relevant:
+>> "perf sample: Remove arch notion of sample parsing"
+>> https://lore.kernel.org/r/20250724163302.596743-21-irogers@google.com
+>> "perf env: Remove global perf_env"
+>> https://lore.kernel.org/r/20250724163302.596743-20-irogers@google.com
+>>
+>> I wonder if for some reason the env is NULL in your cases, so we go
+>> slow path a lot.
+>>
+>> The histogram stuff, Namhyung may know more.
+>>
+>> Thanks!
+>> Ian
+>>
+> 
+> Thanks Ian,
+> 
+> I tested your patch, but there is no big difference:
+> root in 🌐 s83lp47 in ~ 
+> ❯ ll ~/perf.data-test
+> -rw-------. 1 root root 152280778 Oct 30 07:58 /root/perf.data-test
+> 
+> here is the output with your patch:
+> root in 🌐 s83lp47 in ~ 
+> ❯ time mirror-linux-next/tools/perf/perf report -D -i ~/perf.data-test > /dev/null
+> 
+> real	46m26.350s
+> user	46m17.559s
+> sys	0m7.434s
+> 
+> 
+> Here is the output from the linux-next perf version:
+> 
+> root in 🌐 s83lp47 in ~ took 46m26s 
+> ❯ time perf report -D -i ~/perf.data-test > /dev/null
+> 
+> real	49m14.364s
+> user	49m4.872s
+> sys	0m8.037s
+> 
+> root in 🌐 s83lp47 in ~ took 49m14s 
+> 
+> When I go back history and use:
+> 
+> # pwd
+> /root/mirror-linux-next/tools/perf
+> # git branch
+> * (HEAD detached at v6.10)
+>   master
+> ]# ll ~/perf.data-test
+> -rw------- 1 root root 152280778 Oct 30 08:38 /root/perf.data-test
+> # time ./perf report -D -i ~/perf.data-test > /dev/null
+> 
+> real	8m49.089s
+> user	8m47.898s
+> sys	0m0.848s
+> # 
+> 
+> Thanks for the pointer. Since the issue is with s390 specific code
+> I will do a git bisect and we go from there.
+> 
 
-> > On Wed, Oct 29, 2025 at 09:56:50AM -0700, Ian Rogers wrote:
-> > > On Wed, Oct 29, 2025 at 9:22 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+This is the first bad commit.... (I actually tested it :-(, obviously without -D option )
 
-> > > > On Tue, Oct 28, 2025 at 10:34:10PM -0700, Ian Rogers wrote:
-> > > > > This a no-op for most of the perf tool. The reference count is set to
-> > > > > 1 at allocation, the put will see the 1, decrement it and perform the
-> > > > > delete. The purpose for adding the reference count is for the python
-> > > > > code. Prior to this change the python code would clone evlists, but
-> > > > > this has issues if events are opened, etc. This change adds a
-> > > > > reference count for the evlists and a later change will add it to
-> > > > > evsels. The combination is needed for the python code to operate
-> > > > > correctly (not hit asserts in the evsel clone), but the changes are
-> > > > > broken apart for the sake of smaller patches.
+commit 0012e0fa221bf9cc54aa6a0e94d848653dc781bb (HEAD)
+Author: Ian Rogers <irogers@google.com>
+Date:   Sun Oct 5 11:24:16 2025 -0700
 
-> > > > Looks ok, noisy for all the s/delete/put/ but that is ok, but then you
-> > > > are not using the RC_CHK_ACCESS stuff from the get go, why not?
+    perf jevents: Add legacy-hardware and legacy-cache json
+    
+    The legacy-hardware.json is added containing hardware events similarly
+    to the software.json file. A difference is that for the software PMU
+    the name is known and matches sysfs. In the legacy-hardware.json no
+    Unit/PMU is specified for the events meaning default_core is used and
+    the events will appear for all core PMUs.
+    ......
 
-> > > So if I did RC_CHK_ACCESS then every evsel access would need updating,
+What puzzles me is that the above patch does not change anything in
+util/s390-sample-raw.c which handles s390 specific sample interpretation.
 
-> > Fair enough, I think it would be informative to have a comment
-> > mentioning this near the refcount_t to avoid this question popping up
-> > again.
- 
-> Sgtm. I think we can also add the RC_CHK_ACCESS to evlist as that is a
-> boring blob of a thing to pass around.
- 
-> How are things outside of this? The python changes, how to do the
-> process_events callbacks, etc. Any thoughts on the tool API vs the
-> script API (stat vs stat_round) ?
+Maybe that patch affects perf_pmus__find()?
+Not sure how to proceed.
 
-I'll try and resume reviewing at that point, but I don't antecipate
-problems and like the direction of this work.
+Thanks a lot
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
 
-- Arnaldo
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
