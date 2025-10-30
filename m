@@ -1,53 +1,45 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8C0333B961;
-	Thu, 30 Oct 2025 09:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA5935770E;
+	Thu, 30 Oct 2025 10:26:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761815360; cv=none; b=Fim05cyUCIc/BmPoW7MGXWo5IrGZ+4oMBm/3K5A/ZbqOViZVjKdLhdTSPJyq1N0M/UmEwgMySbtMsH5NkoNjcNIGY3U2aQV5gaVbi35K8vGFOk6GAYL09AU4dtcYXHY36pY0eX59KGiiXnXPO21/cpABtXPmu4gPEVT6qYFyDRE=
+	t=1761819993; cv=none; b=AQDCe9Msdo0sXbG/f2kYxt9iRGdUsEHhh1YptLks5/jySY0nmwolbB8+xDhHHvf4uXL2NQ+3IiLQjcSqnIAgtHgSQxgDNICcHBKpBRYCkQEwNZJ6mylrbpMdeEeSSYl5RMkZ5/aAlZ+pgS5JkZkd8jU7VXnqr8ic2JRQZnGPyDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761815360; c=relaxed/simple;
-	bh=mvf1imlMzjmlPqLM7MATPvQDTa7Xp5Eb92w0I9oD1Q8=;
+	s=arc-20240116; t=1761819993; c=relaxed/simple;
+	bh=ZQeaTIYo2PFyGQuYnH377IMHaMcvvo9URIFWHLeo0VI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CsnzGXHgCyN0mjcDHdHd+kFpHFyEdQ77QCzSgncDEmYY4NY5V7dBaU6Ly8oUpXqnt0fbskhfwHfvv1WpA/PgGqlnZZ/Bqsjwc1k/ECtqE5q0ybAodCQFEVFq4xVzarvvDG7u6XGrkMHBSrSNoSq6BV5LuBS8BhgZU9g1ZvA7nlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y1/eKes6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gImi+kq/7o4SgVIOCVG95Jqh/w5bqKe6SUCnmyT31tcAQjpHeL9AUxwsuXsRXCDshVTid49HX+nj27JB71HttAMNyhrMrq/9dLpcvtiKBA94ZnT3LUiaMcMhT5IwsVpB9qk18CB9lVJUQ98aTuNwJv6DdbIWa/Ma3qj67G1a9QA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tyxxwIBq; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y1/eKes6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82741C4CEF1;
-	Thu, 30 Oct 2025 09:09:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761815359;
-	bh=mvf1imlMzjmlPqLM7MATPvQDTa7Xp5Eb92w0I9oD1Q8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y1/eKes6tGKBGDR/slEUxunAeBiQQI+EVCeXtjMtWtyXpU/q1+KThUPJCC5+gu9lG
-	 YH7Z5cjUKZg9M+AT4NN3g0wA9RnWFv0PIXR2GTnNgHd/B45Ss/eU3E8LfhxjdK92QY
-	 nJ6oAT1DQEPLXTB0bfLjT9f2G3FSDS8Fo5PhktwDcWL+rvqipwsYZ7Y9CeWQXioBqP
-	 6YGX3/gNmISuOb0UsJtDObx8mZLZhTGpJozVF4B9ZPD6OlSZqsW8Eb5+y1o/8cHHix
-	 9iOwmN+lH4kEsWmYJ+KI/C1/bPrJrz41a8fy5bi0FDRoJsHQp7EFSQi+upb8T5hdvh
-	 03031Wsw0booQ==
-Date: Thu, 30 Oct 2025 10:09:12 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Zide Chen <zide.chen@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Artem Bityutskiy <artem.bityutskiy@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Zhenyu Wang <zhenyuw.linux@gmail.com>
-Subject: Re: [PATCH RESEND 1/3] perf/x86/intel/cstate: Add Clearwater Forest
- support
-Message-ID: <aQMrONyVjGsCFXe2@gmail.com>
-References: <20251023223754.1743928-1-zide.chen@intel.com>
- <20251023223754.1743928-2-zide.chen@intel.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tyxxwIBq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=qZnGQAq5O4/vMj3v2hACrPoi8P+jbL/qYhOyDwFD/Kc=; b=tyxxwIBq7tHMVKJrNyLmjFBeSZ
+	/8x/LWNZGtlRWqC6d8UQ32z5RzEh2Sn/SZk6U22iOqxuS6SUMj5D2Ih+9B8AImKeopZkyqAVGlB4F
+	Azdl0mh7yWuEg+wiHcp7QGFfCMVOlqxadZ8PWgG+YxFdD1cCpKs2XEjpziRxslrPE9A0o3snD0ZP6
+	t24dASKEDrHbXl9IHVjue0Q1ZaXnltqRPkbasMuAN0asT4uEXMblsE41IbUJM1jr+2Wdg2e0XZqBn
+	DGms2Fj+SwzIMVlLas2kwbSRcwbTkBhBUxVuWMCqGCKpEb4EMGlZ1c2fu44YOZ/Kzwr990sAqMHqn
+	9yuNXI8A==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vEPrO-00000002AaN-30xr;
+	Thu, 30 Oct 2025 10:26:28 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id CE61830029E; Thu, 30 Oct 2025 11:26:26 +0100 (CET)
+Date: Thu, 30 Oct 2025 11:26:26 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Fangrui Song <maskray@sourceware.org>
+Cc: linux-toolchains@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: Concerns about SFrame viability for userspace stack walking
+Message-ID: <20251030102626.GR3245006@noisy.programming.kicks-ass.net>
+References: <3xd4fqvwflefvsjjoagytoi3y3sf7lxqjremhe2zo5tounihe4@3ftafgryadsr>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -56,61 +48,71 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251023223754.1743928-2-zide.chen@intel.com>
+In-Reply-To: <3xd4fqvwflefvsjjoagytoi3y3sf7lxqjremhe2zo5tounihe4@3ftafgryadsr>
 
-
-* Zide Chen <zide.chen@intel.com> wrote:
-
-> Clearwater Forest is based on the Darkmont Atom microarchitecture.
-> From the perspective of C-state residency profiling, it supports the
-> same residency counters as Sierra Forest: CC1/CC6, PC2/PC6, and MC6.
+On Wed, Oct 29, 2025 at 11:53:32PM -0700, Fangrui Song wrote:
+> I've been following the SFrame discussion and wanted to share some
+> concerns about its viability for userspace adoption, based on concrete
+> measurements and comparison with existing compact unwind
+> implementations in LLVM.
 > 
-> Please note that the C1E residency counter can only be read via PMT,
-> not MSR. Therefore, tools relying on the perf_event framework cannot
-> access the C1E residency.
+> **Size overhead concerns**
 > 
-> Cc: Artem Bityutskiy <artem.bityutskiy@intel.com>
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> Signed-off-by: Zhenyu Wang <zhenyuw.linux@gmail.com>
-> Signed-off-by: Zide Chen <zide.chen@intel.com>
+> Measurements on a x86-64 clang binary show that .sframe (8.87 MiB) is
+> approximately 10% larger than the combined size of .eh_frame and
+> .eh_frame_hdr (8.06 MiB total).  This is problematic because .eh_frame
+> cannot be eliminated - it contains essential information for restoring
+> callee-saved registers, LSDA, and personality information needed for
+> debugging (e.g. reading local variables in a coredump) and C++
+> exception handling.
+> 
+> This means adopting SFrame would result in carrying both formats, with
+> a large net size increase.
 
-So, this is not a valid SOB chain: primary author should be the first 
-SOB, or if it was co-developed, it should have the proper 
-Co-developed-by tags.
+So the SFrame unwinder is fairly simple code, but what does an .eh_frame
+unwinder look like? Having read most of the links in your email, there
+seem to be references to DWARF byte code interpreters and stuff like
+that.
 
-Here I can see two possibilities:
+So while the format compactness is one aspect, the thing I find no
+mention of, is the unwinder complexity.
 
-(1) if Zhenyu Wang was the primary author, and Zide Chen reviewed, 
-    tested and submitted it upstream, then:
+There have been a number of attempts to do DWARF unwinding in
+kernel space and while I think some architecture do it, x86_64 has had
+very bad experiences with it. At some point I think Linus just said no
+more, no DWARF, not ever.
 
+So from a situation where compilers were generating bad CFI unwind
+information, a horribly complex unwinder that could crash the kernel
+harder than the thing it was reporting on and manual CFI annotations in
+assembly that were never quite right, objtool and ORC were born.
 
-  | From: Zide Chen <zide.chen@intel.com>
-  | Subject: [PATCH 1/3] perf/x86/intel/cstate: Add Clearwater Forest support
+The win was many:
 
-    From: Zhenyu Wang <zhenyuw.linux@gmail.com>
-    ...
+ - simple robust unwinder
+ - no manual CFI annotations that could be wrong
+ - no reliance on compilers that would get it wrong
 
-    Signed-off-by: Zhenyu Wang <zhenyuw.linux@gmail.com>
-    Signed-off-by: Zide Chen <zide.chen@intel.com>
+and I think this is where SFrame came from. I don't think the x86_64
+Linux kernel will ever natively adopt SFrame, ORC works really well for
+us.
 
-(I.e. add the extra From line as the first line of the changelog.)
+However, we do need something to unwind userspace. And yes, personally
+I'm in the frame-pointer camp, that's always worked well for me.
+Distro's however don't seem to like it much, which means that every time
+I do have to profile something userspace, I get to rebuild all the
+relevant code with framepointers on (which is not hard, but tedious).
 
-(2) if it was co-developed, with Zhenyu Wang and Zide Chen having each 
-    written unique lines of code of their own that finally resulted in 
-    this submission, then:
+Barring that, we need something for which the unwind code is simple and
+robust -- and I *think* this has disqualified .eh_frame and full on
+DWARF.
 
-  | From: Zide Chen <zide.chen@intel.com>
-  | Subject: [PATCH 1/3] perf/x86/intel/cstate: Add Clearwater Forest support
+And this is again where SFrame comes in -- its unwinder is simple,
+something we can run in kernel space.
 
-    ...
+I really don't much care for the particulars, and frame pointers work
+for me -- but I do care about the kernel unwinder code. It had better be
+simple and robvst.
 
-    Co-developed-by: Zide Chen <zide.chen@intel.com>
-    Signed-off-by: Zide Chen <zide.chen@intel.com>
-    Co-developed-by: Zhenyu Wang <zhenyuw.linux@gmail.com>
-    Signed-off-by: Zhenyu Wang <zhenyuw.linux@gmail.com>
-
-Which one was it? :-)
-
-Thanks,
-
-	Ingo
+So if you want us to use .eh_frame, great, show us a simple and robust
+unwinder.
