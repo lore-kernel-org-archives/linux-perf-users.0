@@ -1,114 +1,97 @@
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68D830C358
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 07:50:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1564338934
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 08:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761810631; cv=none; b=YS4cozYfjsAgI2BeCflugF7XBHq26S9tFz0uLV3y/EtME4I/+9OeKMERJdKsrOZyhIDeGjf+er9dEbX5ULUuGpB50fWxXWH9KcHqqsv4n3uZR6m8kQxp7V1KlRDeP6Rw0KqJKYTh51vltZRjEYTopDzydRu4U6fym7f0SFJ8H7A=
+	t=1761811571; cv=none; b=fX7QBM7R48VN09idlIRrYe0WEDapptj3mK3NgK619NY1VVlKBa45dO/0eIFFUuNdCF5epfkk7JuRWd+VGUZ1weGQoDQbXD2A54oj1VOEvGpeAwCi+T/EVFNsHwRuuOSSkE489GVvHD/tTF0udPqVbeGwWfzk2jelNxfEWw7s/hM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761810631; c=relaxed/simple;
-	bh=CdfXVXdcEVWV8KxlMBFv8tqG6D/onHIHIshcEqcEa2w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZzEJgU1m/+t3OvtRtLwbxPSL1t6MpLrH++m8tMBVZBwWbR6S/QoPL1mpKEkIUyR4ht+JVKQlczd+GK/9BC93WlzKazuepzhLzGmQo2RD01y6ZKFljGLwOqLXptjLcF5NO5l9KHK2C5aF9dZbWt3N/ZeGv5dPcLCBSClMPEpmJfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sourceware.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sourceware.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-5db2d2030bbso348372137.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 00:50:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761810628; x=1762415428;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PKqtAUe6d6BWCG6Zj08y0hgYpvyRn/Yr9YKqc5tlCW8=;
-        b=aKOGVsbSbKLxOvIp11BZyW7fwm1yFFAr82SzP3XKjjrnlNoMEfaxGFs8Sx3Kclh0EG
-         mM72K7cs1jO13DcOEYFcqF+WCAIcb3RGg+9LjJw+D/HKwO7vaDmSMzqGRmawA5HLyAis
-         K55F8gwbTxdpCn/wEbDv/22Eygb3fuLqwBpdlBvl85VdCel/dyrfz+pV4JDQf+HfpZIX
-         LVko8886V4LxH01mAOkFQD179ptYnNqp5aE8P1VvTzT2NgWkKi/V6YOCTpus06Ms3otB
-         UGeFXu28Ocyblnjt0m86hseae/N78tqy41k8I+ryLeXz7PShUfyoOOcW8iRpgYCBqEcz
-         iR4A==
-X-Forwarded-Encrypted: i=1; AJvYcCXSVv+sMAM9Hd4IqiEjX0NlHGBVvst1ttLTMFT0kBx1fyuX0BECh78IEN85ExpJGRY7S9Xwofcu2x5sKqwyYPPh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4khfA6I/w+2HmDVCrAvDfSEI3JGobZsbaE9OfX1SHTvdzp7NO
-	jz+XeMhVPW2iZGwbCkYedVPQ6f1qbpX1NN+eJroiB/Cw3TvR3y/rqL4MrM/sTw==
-X-Gm-Gg: ASbGncscm2N39HpF+0E17IYL/fjZeupbN43BVSdCXVSYk6gPRdNlkzwrdD3qsbFThYc
-	tN+XAHSQDaJ3jfsOh4bIcaeoBP5fucUZcdgHUOLop+faPNk2dO/BKwJkUxJGW1l5h79SmwrzAd2
-	9bjCJL2ApUsgPajgPkol7FoLJltiQzIV/7iTXq1aezEEr+6VoWBzAlcP1c/7akq5dABnljYX39H
-	IP0NXOgh8ocZs1OPjKmlF/uREF3rsiVf6r7pWtUBq6PHa77MX42LccJTjxL3Ep9YQ9mF3gTIrpu
-	7Le9K8b37VoUhhjLmQPj6PeEHYuOASrttjNPzQDSb60d0bcLOfGJ/sT74mkQo1XjQjyhZe+TGhz
-	c1msoqB2XBrXLHnuxsg6ro6Le7qRNQ7UrEeUritYidk9gdF1wO1d/f+uyu3cHee+KhOlgfnrU4k
-	DYljnzxNdjhi1JgFOmJeVRKLTY42ZgLATTVwefDrlO
-X-Google-Smtp-Source: AGHT+IHol/a5Sz/hXrvhXNdfyWPiy/+aLNM3mFqhPSWmt2OXGix7TxNmeKACXORsk8iz2o6Am4Jugw==
-X-Received: by 2002:a05:6102:358e:b0:523:863d:ece1 with SMTP id ada2fe7eead31-5db905c95e8mr1895169137.17.1761810628414;
-        Thu, 30 Oct 2025 00:50:28 -0700 (PDT)
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-93501888dacsm432120241.5.2025.10.30.00.50.28
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Oct 2025 00:50:28 -0700 (PDT)
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-932c3aa32f3so386753241.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 00:50:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXQMcVtsNSxtWnsHnT/ljkKjqzRt3PEAI4tVFEXGSVhzziCxQ8n5jnIkUH1zxGzrAcRfuIYUDM/VyrMKXJJYagY@vger.kernel.org
-X-Received: by 2002:a05:6122:1d9f:b0:556:4f4e:812a with SMTP id
- 71dfb90a1353d-55814105b1cmr1922901e0c.7.1761810627957; Thu, 30 Oct 2025
- 00:50:27 -0700 (PDT)
+	s=arc-20240116; t=1761811571; c=relaxed/simple;
+	bh=lOLWB+sn53IEBJ2NfXNAqi9W2x7ka3pC9NCkNFlL6yY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GKGhnD5rJrF0EMWWkKkk1ckrn3MOZJJyyNhgG+XJBFNYr50/o/dz3Dq1aowabGYaajVSRu8nAd2Lg0EOBTS0mwzWuUUR3WZkRjDiVxMKQkP0l4OlLPgqGogRUPqvH47MQPp01CjbfiVf2smvPdffjv0T1EWAjLp14DZBf76ddJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bounIDoT; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bounIDoT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1761811566;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:in-reply-to:in-reply-to:  references:references;
+	bh=zBFIdlgABwYbbBOS3RkdoYsL1Gh/EHDnSfDmTuI8UhM=;
+	b=bounIDoTM/x6oqIpya8TJQxPGDqaTgXgkZnJeOcEi8yIuoiAYcdkGyWp76UjrD8br3MfJ2
+	I/koIAZe6LbMRgLR3tcyyFhkz+xRkhxAxxKrkicv0g16kQLk4Tc6u9FqDg3DpqkYRX67OH
+	CF7GdmzubP5yqv9b3PJZeibQyU05cRw=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-61-sRKpnhg7OSC5mR7r32yTQQ-1; Thu,
+ 30 Oct 2025 04:05:59 -0400
+X-MC-Unique: sRKpnhg7OSC5mR7r32yTQQ-1
+X-Mimecast-MFC-AGG-ID: sRKpnhg7OSC5mR7r32yTQQ_1761811558
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 43A6B180A225;
+	Thu, 30 Oct 2025 08:05:58 +0000 (UTC)
+Received: from tucnak.zalov.cz (unknown [10.44.32.9])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B574B1800579;
+	Thu, 30 Oct 2025 08:05:57 +0000 (UTC)
+Received: from tucnak.zalov.cz (localhost [127.0.0.1])
+	by tucnak.zalov.cz (8.17.1/8.17.1) with ESMTPS id 59U85sOE4065049
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Thu, 30 Oct 2025 09:05:54 +0100
+Received: (from jakub@localhost)
+	by tucnak.zalov.cz (8.17.1/8.17.1/Submit) id 59U85stU4065048;
+	Thu, 30 Oct 2025 09:05:54 +0100
+Date: Thu, 30 Oct 2025 09:05:53 +0100
+From: Jakub Jelinek <jakub@redhat.com>
+To: Fangrui Song <maskray@sourceware.org>
+Cc: linux-toolchains@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Concerns about SFrame viability for userspace stack walking
+Message-ID: <aQMcYe5BK+Rsu3xF@tucnak>
+Reply-To: Jakub Jelinek <jakub@redhat.com>
+References: <3xd4fqvwflefvsjjoagytoi3y3sf7lxqjremhe2zo5tounihe4@3ftafgryadsr>
+ <aQMUGvXv6sy75nKn@tucnak>
+ <CAN30aBHOw16Tzdn_Z0TZKie7Fyi39bmB2PQK4LB-rjU1vn3zQQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <3xd4fqvwflefvsjjoagytoi3y3sf7lxqjremhe2zo5tounihe4@3ftafgryadsr> <aQMUGvXv6sy75nKn@tucnak>
-In-Reply-To: <aQMUGvXv6sy75nKn@tucnak>
-From: Fangrui Song <maskray@sourceware.org>
-Date: Thu, 30 Oct 2025 00:50:42 -0700
-X-Gmail-Original-Message-ID: <CAN30aBHOw16Tzdn_Z0TZKie7Fyi39bmB2PQK4LB-rjU1vn3zQQ@mail.gmail.com>
-X-Gm-Features: AWmQ_blIh4FHNSYYQRBDu76pw1cN_M4hli274r6aO84F-zHC22yGF-j77KUjiOI
-Message-ID: <CAN30aBHOw16Tzdn_Z0TZKie7Fyi39bmB2PQK4LB-rjU1vn3zQQ@mail.gmail.com>
-Subject: Re: Concerns about SFrame viability for userspace stack walking
-To: Jakub Jelinek <jakub@redhat.com>
-Cc: Fangrui Song <maskray@sourceware.org>, linux-toolchains@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAN30aBHOw16Tzdn_Z0TZKie7Fyi39bmB2PQK4LB-rjU1vn3zQQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Thu, Oct 30, 2025 at 12:30=E2=80=AFAM Jakub Jelinek <jakub@redhat.com> w=
-rote:
->
-> On Wed, Oct 29, 2025 at 11:53:32PM -0700, Fangrui Song wrote:
-> > I've been following the SFrame discussion and wanted to share some conc=
-erns about its viability for userspace adoption, based on concrete measurem=
-ents and comparison with existing compact unwind implementations in LLVM.
-> >
-> > **Size overhead concerns**
-> >
-> > Measurements on a x86-64 clang binary show that .sframe (8.87 MiB) is a=
-pproximately 10% larger than the combined size of .eh_frame and .eh_frame_h=
-dr (8.06 MiB total).
-> > This is problematic because .eh_frame cannot be eliminated - it contain=
-s essential information for restoring callee-saved registers, LSDA, and per=
-sonality information needed for debugging (e.g. reading local variables in =
-a coredump) and C++ exception handling.
->
-> I believe .sframe only provides a subset of the .eh_frame information, so
-> can't be used for exception throwing, and you don't want to lose
-> .eh_frame_hdr either because then dlopen becomes very costly and it will
-> even slow down exception throwing.
+On Thu, Oct 30, 2025 at 12:50:42AM -0700, Fangrui Song wrote:
+> An effective compact unwinding scheme needs to leverage ISA-specific properties.
 
-Right.
+Having 40-50 completely different unwinding schemes, one for each
+architecture or even ISA subset, would be a complete nightmare.  Plus the
+important property of DWARF is that it is easily extensible.  So, I think it
+would be better to invent new DWARF DW_CFA_* arch specific opcodes which
+would be a shorthand for the most common sequences of unwind info, or allow
+the CIEs to define a library of DW_CFA_* sets perhaps with parameters which
+would then be usable in the FDEs.  There are already some arch specific
+opcodes, DW_CFA_GNU_window_save for SPARC and
+DW_CFA_AARCH64_negate_ra_state_with_pc/DW_CFA_AARCH64_negate_ra_state for
+AArch64, but if somebody took time to look through .eh_frame of many
+binaries/libraries on several different distributions for particular arch
+(so that there is no bias in what exact options those distros use etc.) and
+found something that keeps repeating there commonly that could be shortened,
+perhaps the assembler or linker could rewrite sequences of specific .cfi_*
+directives into something equivalent but shorter once the extension opcodes
+are added.  Though, there are only very few opcodes left, so taking them
+should be done with great care and at least one should be left as a
+multiplexer (single byte opcode followed by uleb128 code for further
+operation + arguments).
 
-> If .eh_frame is considered too large, rather than inventing a new format =
-I'd
-> suggest to work in the DWARF committee and provide further size
-> optimizations for .dwarf_frame which can then be used in .eh_frame, or ag=
-ree
-> on .eh_frame extensions to make it smaller.
->
->         Jakub
+	Jakub
 
-Thanks for the suggestion.
-An effective compact unwinding scheme needs to leverage ISA-specific proper=
-ties.
-This architecture-specific nature makes it likely fall outside the
-DWARF's scope.
-That said, input from the DWARF committee would certainly be valuable.
