@@ -1,154 +1,215 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447CB288C3F;
-	Thu, 30 Oct 2025 01:39:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D052F9998
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 02:37:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761788367; cv=none; b=sNaGw8el0JdFNVVrsyFI23P/4xDIJFp3mPyXnvM4YWXVqmS0sNGG7WqAOGv38dBKve0nHTfnOl9EfLd1wosJ8lcvPo5sZNtZU+fso1kZoYNp6r8SyUxw5E7eWgYyK+6DmMeoJeO6+yNlQ6vru55ykdw8mUgq36VF9MJaXsvbdHo=
+	t=1761791855; cv=none; b=oBAXQ5hoabInWn23GVGrFGmji/IqwkBTCPzYrrPIjUfLOo7GsiOHJwdBhK5V/wpK73cDdoqXQgYksDdY/eJwg5HvdLMY4SBk3Lxh9uDjwsv1HgWWHKCtoz73IIKaDxA9QxwThhnB0kHS5Xta0PzIzq/T1UREjjzcrmu0md96lUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761788367; c=relaxed/simple;
-	bh=adm5ygKpSDNzeRAC32xf829c/z3nWD3Ca4EKvxVtclI=;
+	s=arc-20240116; t=1761791855; c=relaxed/simple;
+	bh=oC9Ig42hWklRcp3NJPqZXoxu09JQxObjX3p/oUGkPV4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D8Kro7BfnyUNmPXwuOevI0z4138PLpm02x83Vu47mE3DXNo/OAAV0l4TT811cT4BkEHNrMTYdOgxnUuzVYhMFxmu40L9WjwweKPpjHmHhVhLnYs0Vyo2UfLW4w/MP8BSgorZobaJJKMWVIme+Nb7XCaCFupeTUSV1iJ2EU0sRWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UcsOAiPp; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=tYCiAjB4/4mqxBQ0pyeEibUozJ8gRTM63+Bxan+D5KMLZK7s07gbKQgzY4q3D8GyuDVfProdDof1ByGKoKpt6BJpSx5PQsJ2gCJn3wbTa7V9whbn17L7d2Hzhlzgj8K2L41SpZ2BHnabwnZM/p6dR4Cw5K0f8F4mIZ1b1kRUj+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=X9QtkD2P; arc=none smtp.client-ip=95.215.58.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UcsOAiPp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761788366; x=1793324366;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=adm5ygKpSDNzeRAC32xf829c/z3nWD3Ca4EKvxVtclI=;
-  b=UcsOAiPp5SK+li3yS28jt9Wv20qpg55FfQ7d/WTRYhTqIryD5Tl6WQ+t
-   0ATVhRFgtQstqEvZaf4zbsNy6TYj8ljeP5POiPW4oNO5YLtmr3SuqafAT
-   ijHNcxY5XFpoU2a3aKmyyvIWUwtsal5kLEQNOnLCaAOBTQjatFsQAYg7f
-   vtIv4wrjpO83p1RbX+fTmlQukOUPVkXrSW5+VvuONKcKV0foZNNHFit8C
-   91/rXBfPSHN+RBjWdriLnMWAgQX+VzhMA+P69+z08Yu/K7MlgHhcuvqp9
-   gnIRbbUUn/ugDWd/NDPW3wiojeA0Nhvo3D5YVU+5eFmBndJ3HDS7hHv8S
-   Q==;
-X-CSE-ConnectionGUID: KJG7yNaGQv6OFcRVlJ52Qw==
-X-CSE-MsgGUID: QHoVBMwhSw6XJSrTJq6I4A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11597"; a="74598594"
-X-IronPort-AV: E=Sophos;i="6.19,265,1754982000"; 
-   d="scan'208";a="74598594"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 18:39:26 -0700
-X-CSE-ConnectionGUID: jYIG8WygRHyNb4Y26ufaSg==
-X-CSE-MsgGUID: bi04rw+CR4iop/PZqvi46w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,265,1754982000"; 
-   d="scan'208";a="185910626"
-Received: from haochenw-mobl1.ccr.corp.intel.com (HELO [10.238.3.228]) ([10.238.3.228])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 18:39:22 -0700
-Message-ID: <926de635-35ae-4ac9-b235-2d394f20ae7e@linux.intel.com>
-Date: Thu, 30 Oct 2025 09:39:19 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="X9QtkD2P"
+Message-ID: <2dbebe3a-5b96-4076-a3e3-00ae8de990d8@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1761791850;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HLvjLcI/0DbJGC9Bc0bi6CFAYKKHC4jWpCjENERXsTk=;
+	b=X9QtkD2Pe4Zq+yV7u5SP7kxWg9suXEIuWSxXX/Cqm88rD33ASllGFv4Irl77jhnU4j7jGu
+	/2mgDdOxQq8KhUF/nWoWrTT7jCbQiOhOZzZ4Y8h1piJo/BSJ5MC8/ioiIxOBeqteaoV3md
+	mo5DVcWFR08U4A66r1UUeE0wG1G8tRc=
+Date: Thu, 30 Oct 2025 10:36:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] perf/x86/intel/uncore: Fix die ID init and look up
- bugs
-To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Xudong Hao <xudong.hao@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
- Steve Wahl <steve.wahl@hpe.com>
-References: <20251029220711.57909-1-zide.chen@intel.com>
- <20251029220711.57909-2-zide.chen@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251029220711.57909-2-zide.chen@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH bpf-next v4 1/2] perf: Refactor get_perf_callchain
+To: bot+bpf-ci@kernel.org, peterz@infradead.org, mingo@redhat.com,
+ acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, song@kernel.org,
+ ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, yonghong.song@linux.dev,
+ john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
+ haoluo@google.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, martin.lau@kernel.org, clm@meta.com,
+ ihor.solodrai@linux.dev
+References: <20251028162502.3418817-2-chen.dylane@linux.dev>
+ <a48e281e6912037490270da40f79e45c1ad1e430c8c1cc84c48306106b06113a@mail.kernel.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Tao Chen <chen.dylane@linux.dev>
+In-Reply-To: <a48e281e6912037490270da40f79e45c1ad1e430c8c1cc84c48306106b06113a@mail.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
+在 2025/10/29 01:09, bot+bpf-ci@kernel.org 写道:
+> 
+> ```
+> commit 59cfc61f83ad4ec998f4242ca000c554e3001b47
+> Author: Tao Chen <chen.dylane@linux.dev>
+> 
+> perf: Refactor get_perf_callchain
+> 
+> This patch refactors get_perf_callchain() by extracting logic into new
+> helper functions to provide more flexible stack-sampling APIs for BPF.
+> 
+>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+>> index fd1d91017..14a382cad 100644
+>> --- a/include/linux/perf_event.h
+>> +++ b/include/linux/perf_event.h
+>> @@ -67,6 +67,7 @@ struct perf_callchain_entry_ctx {
+>>   	u32				nr;
+>>   	short				contexts;
+>>   	bool				contexts_maxed;
+>> +	bool				add_mark;
+>>   };
+> 
+> [ ... ]
+> 
+>> @@ -1718,9 +1719,17 @@ DECLARE_PER_CPU(struct perf_callchain_entry, perf_callchain_entry);
+>>
+>>   extern void perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs);
+>>   extern void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs);
+>> +
+>> +extern void __init_perf_callchain_ctx(struct perf_callchain_entry_ctx *ctx,
+>> +				      struct perf_callchain_entry *entry,
+>> +				      u32 max_stack, bool add_mark);
+>> +
+>> +extern void __get_perf_callchain_kernel(struct perf_callchain_entry_ctx *ctx, struct pt_regs *regs);
+>> +extern void __get_perf_callchain_user(struct perf_callchain_entry_ctx *ctx, struct pt_regs *regs);
+>> +
+>>   extern struct perf_callchain_entry *
+>>   get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+>> -		   u32 max_stack, bool crosstask, bool add_mark);
+>> +		   u32 max_stack, bool crosstask);
+> 
+>> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+>> index 4d53cdd13..e28b35c7e 100644
+>> --- a/kernel/bpf/stackmap.c
+>> +++ b/kernel/bpf/stackmap.c
+>> @@ -315,7 +315,7 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
+>>   		max_depth = sysctl_perf_event_max_stack;
+>>
+>>   	trace = get_perf_callchain(regs, kernel, user, max_depth,
+>> -				   false, false);
+>> +				   false);
+>                                         ^^^^^ removed last parameter
+> 
+> Previously bpf_get_stackid() passed add_mark=false to get_perf_callchain().
+> Now the parameter is gone, but get_perf_callchain() hardcodes add_mark=true
+> when calling __init_perf_callchain_ctx(). This means BPF stack traces will
+> now include PERF_CONTEXT_KERNEL/PERF_CONTEXT_USER marker values when they
+> didn't before.
+> 
 
-On 10/30/2025 6:07 AM, Zide Chen wrote:
-> In snbep_pci2phy_map_init(), if there are more than 8 nodes,
-> uncore_device_to_die(ubox_dev) may return -1 if all CPUs
-> associated with the UBOX device are offline.  This is not an error
-> and we still need to populate map->pbus_to_dieid[].
->
-> If NUMA is disabled on a NUMA-capable platform, pcibus_to_node()
-> returns NUMA_NO_NODE and uncore_device_to_die() returns -1.  As a
-> result, in spr_update_device_location(), which is used on Intel SPR,
-> GNR etc., the PMON units are ignored and not added to the RB tree.
+The entire modification involves changes to two subsystems. To make the 
+review easier, the get_perf_callchain has been simply adapted here. In 
+the next patch, BPF will no longer use get_perf_callchain, and add_mark 
+will be set to false.
 
-It seems spr_update_device_location() currently is only called by SPR,
-please double check. 
-
-BTW, is this a SPR specific issue or a common issue? Thanks.
-
-
->
-> Use uncore_pcibus_to_dieid() instead, which retrieves topology
-> information from the GIDNIDMAP register of the UBOX device.
->
-> Fixes: 9a7832ce3d92 ("perf/x86/intel/uncore: With > 8 nodes, get pci bus die id from NUMA info")
-> Fixes: 65248a9a9ee1 ("perf/x86/uncore: Add a quirk for UPI on SPR")
-> Signed-off-by: Zide Chen <zide.chen@intel.com>
+> The markers get added by __get_perf_callchain_kernel() and
+> __get_perf_callchain_user() when ctx->add_mark is true. These markers are
+> sentinel values (-128 for KERNEL, -512 for USER) that appear in the trace
+> IP array alongside actual instruction pointers.
+> 
+>>
+>>   	if (unlikely(!trace))
+>>   		/* couldn't fetch the stack trace */
+>> @@ -452,7 +452,7 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
+>>   		trace = get_callchain_entry_for_task(task, max_depth);
+>>   	else
+>>   		trace = get_perf_callchain(regs, kernel, user, max_depth,
+>> -					   crosstask, false);
+>> +					   crosstask);
+>                                                     ^^^^^ same issue here
+> 
+> Same problem in __bpf_get_stack() which was also passing add_mark=false.
+> 
+> This changes BPF stack map behavior in user-visible ways:
+> 
+> 1) bpf_get_stackid() hashes the entire trace->ip[] array including any
+>     markers, so identical stacks will now produce different stack IDs.
+> 
+> 2) bpf_get_stack() copies trace->ip[] directly to userspace buffers,
+>     so BPF programs will see marker values mixed with instruction pointers.
+> 
+> Can BPF tools handle these unexpected marker values? The commit message
+> says "The next patch will modify the BPF part" but doesn't explain this
+> intermediate behavior change.
+> 
+>> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+>> index 808c0d7a3..2c36e4906 100644
+>> --- a/kernel/events/callchain.c
+>> +++ b/kernel/events/callchain.c
+> 
+> [ ... ]
+> 
+>>   struct perf_callchain_entry *
+>>   get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+>> -		   u32 max_stack, bool crosstask, bool add_mark)
+>> +		   u32 max_stack, bool crosstask)
+>>   {
+>>   	struct perf_callchain_entry *entry;
+>>   	struct perf_callchain_entry_ctx ctx;
+>> -	int rctx, start_entry_idx;
+>> +	int rctx;
+>>
+>>   	/* crosstask is not supported for user stacks */
+>>   	if (crosstask && user && !kernel)
+>> @@ -232,34 +273,14 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+>>   	if (!entry)
+>>   		return NULL;
+>>
+>> -	ctx.entry		= entry;
+>> -	ctx.max_stack		= max_stack;
+>> -	ctx.nr			= entry->nr = 0;
+>> -	ctx.contexts		= 0;
+>> -	ctx.contexts_maxed	= false;
+>> +	__init_perf_callchain_ctx(&ctx, entry, max_stack, true);
+>                                                                  ^^^^
+> Here's where add_mark is hardcoded to true for all callers. The old code
+> allowed callers to control this via parameter. BPF was passing false,
+> perf_callchain() was passing true. Now both get true unconditionally.
+> 
+> [ ... ]
+> 
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 7541f6f85..eb0f11059 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -8218,7 +8218,7 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
+>>   		return &__empty_callchain;
+>>
+>>   	callchain = get_perf_callchain(regs, kernel, user,
+>> -				       max_stack, crosstask, true);
+>> +				       max_stack, crosstask);
+>>   	return callchain ?: &__empty_callchain;
+>>   }
+> 
+> 
+> ```
+> 
 > ---
->  arch/x86/events/intel/uncore.c       |  1 +
->  arch/x86/events/intel/uncore_snbep.c | 13 ++++++-------
->  2 files changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-> index 5c3aeea5c78d..84d6e481f18f 100644
-> --- a/arch/x86/events/intel/uncore.c
-> +++ b/arch/x86/events/intel/uncore.c
-> @@ -77,6 +77,7 @@ int uncore_die_to_segment(int die)
->  	return bus ? pci_domain_nr(bus) : -EINVAL;
->  }
->  
-> +/* Note: This API can only be used when NUMA information is available. */
->  int uncore_device_to_die(struct pci_dev *dev)
->  {
->  	int node = pcibus_to_node(dev->bus);
-> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-> index ad4d11762ecf..e68467f617f9 100644
-> --- a/arch/x86/events/intel/uncore_snbep.c
-> +++ b/arch/x86/events/intel/uncore_snbep.c
-> @@ -1471,13 +1471,7 @@ static int snbep_pci2phy_map_init(int devid, int nodeid_loc, int idmap_loc, bool
->  			}
->  
->  			map->pbus_to_dieid[bus] = die_id = uncore_device_to_die(ubox_dev);
-> -
->  			raw_spin_unlock(&pci2phy_map_lock);
-> -
-> -			if (WARN_ON_ONCE(die_id == -1)) {
-> -				err = -EINVAL;
-> -				break;
-> -			}
->  		}
->  	}
->  
-> @@ -6530,7 +6524,7 @@ static void spr_update_device_location(int type_id)
->  
->  	while ((dev = pci_get_device(PCI_VENDOR_ID_INTEL, device, dev)) != NULL) {
->  
-> -		die = uncore_device_to_die(dev);
-> +		die = uncore_pcibus_to_dieid(dev->bus);
->  		if (die < 0)
->  			continue;
->  
-> @@ -6554,6 +6548,11 @@ static void spr_update_device_location(int type_id)
->  
->  int spr_uncore_pci_init(void)
->  {
-> +	int ret = snbep_pci2phy_map_init(0x3250, SKX_CPUNODEID, SKX_GIDNIDMAP, true);
-> +
-> +	if (ret)
-> +		return ret;
-> +
->  	/*
->  	 * The discovery table of UPI on some SPR variant is broken,
->  	 * which impacts the detection of both UPI and M3UPI uncore PMON.
+> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+> 
+> In-Reply-To-Subject: `perf: Refactor get_perf_callchain`
+> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/18882141979
+
+
+-- 
+Best Regards
+Tao Chen
