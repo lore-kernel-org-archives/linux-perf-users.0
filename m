@@ -1,162 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B271A1F4631;
-	Thu, 30 Oct 2025 05:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F111228CA9;
+	Thu, 30 Oct 2025 05:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761801459; cv=none; b=OS/eSeFU1HgjmDR+5bWIox19q+Xzf8LheMqxN7YJSAGFKfRYa8J8SxRs8fm4wEzRTEBZP9d+i8nLgZJEBJ4/4+wggVfTzQ20D/l/eYjAq3XKYv3qyNOWnYSNJdFcKh7i/fg/N4IDyFSqM19UXdnnECj/+dkLzie9tvmJge/o6TE=
+	t=1761803097; cv=none; b=BCWDlie9VLfz40fIyIQgOLV7G5hTP1FnxEy7thXriMI5uGztCm1WXKy6GN5SzIvSqgOc3iWuhCnpFyDu3zChEUzchJ/c98M/BcA0T7JhgLayPuxX926QUZ+AJVvUcKwCenv7JraZ+KkgwDjQrSods44j/ypzU8qNMUDm8pRoTfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761801459; c=relaxed/simple;
-	bh=f7TlgeVtEnw5QuGJCBWUdQupgLGr0mILsmLnG2oC5ns=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L5sbkS4rWKlASPYHQx/C9QTX0z/y9SIQRSdMTdV6oNOC3xhLpWPgIAKT+u2HwsYQeqD0iQXCIDQsFoRivsAIvlEHyPxuM1JjoxvouD9PUqykYUQ8ISO1EXUBD4pWEsLzz8q2x+5Avxle4rH8RYlFdqDjfTIB810a55Ff9kj7KxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UQF/lNxo; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1761803097; c=relaxed/simple;
+	bh=uo66Dy0uiF0O+hdZ0X1088dBsMEaPVjdELsKtaWghds=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jO/Qm0ZpSilm94+ZBKZFTpUKNWrVoRGWGFDoJI5KN4ZTJS7Se8g62w25fi9o68zy/1VLn4OW2IQBR9M7fmzpPW9sqHnl30cFB3cNvzL0Bdf9Xc1KFB7IfxEaQDpKi1DFbQMPstLIGFxK41T9NIMV31uq8c6C3Dx7QN/nvYpGZOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oTinanvm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UQF/lNxo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761801457; x=1793337457;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=f7TlgeVtEnw5QuGJCBWUdQupgLGr0mILsmLnG2oC5ns=;
-  b=UQF/lNxoIRfp/L0XR9BfIZG+VCBCAs77ZVB11/HZt5Kq6VJAQCm33jID
-   LHnjabSb/VBcnWc3nAG1kVZF+fJmOrx0gs90eOhAxSEVHMByZJkNBtclM
-   u8w7UTYZ0Off8T90gtsSsXaWyYcpl0092QPzPL4/6/ChkpTe/V+JOz75J
-   6ElUL+TAAnitjxvp6pyukKYK3sYCkHCwh48YqPUc1unaYo5cBe3Ha3bpn
-   LiZx2B+MljE5bBZtWknsTRUvfFkIVDbL/R5T6FLLsXWHS/y8U/LvtvJdJ
-   RH5g80wu98BL0/eqrlDku+UJO+y9Ix+p+fyRciUP3zVBJiPAlzLYnTCP2
-   A==;
-X-CSE-ConnectionGUID: 5pioP2mhSCaLUD0KwelmeA==
-X-CSE-MsgGUID: 6X93XcfTRWGDO/jjsz40+A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11597"; a="81353598"
-X-IronPort-AV: E=Sophos;i="6.19,265,1754982000"; 
-   d="scan'208";a="81353598"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 22:17:37 -0700
-X-CSE-ConnectionGUID: m+F77FaHQH2ObhV/IqfVdQ==
-X-CSE-MsgGUID: 7fKGZ7v0TX+KksZ24RwISg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,265,1754982000"; 
-   d="scan'208";a="190994513"
-Received: from yjung-mobl.amr.corp.intel.com (HELO [10.125.83.0]) ([10.125.83.0])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 22:17:36 -0700
-Message-ID: <370b7f4b-3996-466f-ae40-83c4890e8527@intel.com>
-Date: Wed, 29 Oct 2025 22:17:36 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oTinanvm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECC88C4CEF1;
+	Thu, 30 Oct 2025 05:44:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761803097;
+	bh=uo66Dy0uiF0O+hdZ0X1088dBsMEaPVjdELsKtaWghds=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oTinanvmdKQeEKjDjTOy++2bJoot2SCmxBRawWsxysLQbRg/k3ZIikeH4+zXurga2
+	 pnOa361ka2FwbyoFKOZla+jPiemosGE1ZNCUcihtwhA5NzGeKVHA6lRbaVSkcf3hIj
+	 /CJcsaPC7NG8Xwy4Rt/cv19INZ+DiPGXGiBaqxQ1qvBLcE54IaWNdHfjP4bEihColI
+	 ToNMWoAD15Ednnu7DMjgxTHrtRR6MggOGrzJ8tBTG6q9HpozMLqPCWOn0fho6oyp4H
+	 vqdZh+9v8FCGvBuDDGqBi2Dvx5a6ScdEm/i883wZzbj6sQE1ndlc/GLPC9wnMBgZ4K
+	 rAnVXmKJpqUvQ==
+Date: Wed, 29 Oct 2025 22:44:54 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Quentin Monnet <qmo@kernel.org>
+Cc: KP Singh <kpsingh@kernel.org>, bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [BUG] bpftool: Build failure due to opensslv.h
+Message-ID: <aQL7VuWn8xa--8qg@google.com>
+References: <aP7uq6eVieG8v_v4@google.com>
+ <2cb226f8-a67c-4bdb-8c59-507c99a46bab@kernel.org>
+ <aP-5fUaroYE5xSnw@google.com>
+ <d6a63399-361f-4f1c-845c-b69192bfc822@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] perf/x86/intel/uncore: Fix die ID init and look up
- bugs
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Xudong Hao <xudong.hao@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
- Steve Wahl <steve.wahl@hpe.com>
-References: <20251029220711.57909-1-zide.chen@intel.com>
- <20251029220711.57909-2-zide.chen@intel.com>
- <926de635-35ae-4ac9-b235-2d394f20ae7e@linux.intel.com>
-Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <926de635-35ae-4ac9-b235-2d394f20ae7e@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <d6a63399-361f-4f1c-845c-b69192bfc822@kernel.org>
 
-
-
-On 10/29/2025 6:39 PM, Mi, Dapeng wrote:
+On Tue, Oct 28, 2025 at 10:05:52AM +0100, Quentin Monnet wrote:
+> 2025-10-27 11:27 UTC-0700 ~ Namhyung Kim <namhyung@kernel.org>
+> > On Mon, Oct 27, 2025 at 11:41:01AM +0000, Quentin Monnet wrote:
+> >> 2025-10-26 21:01 UTC-0700 ~ Namhyung Kim <namhyung@kernel.org>
+> >>> Hello,
+> >>>
+> >>> I'm seeing a build failure like below in Fedora 40 and others.  I'm not
+> >>> sure if it's reported already but it failed to build perf tools due to
+> >>> errors in the bootstrap bpftool.
+> >>>
+> >>>     CC      /build/util/bpf_skel/.tmp/bootstrap/sign.o
+> >>>   sign.c:16:10: fatal error: openssl/opensslv.h: No such file or directory
+> >>>      16 | #include <openssl/opensslv.h>
+> >>>         |          ^~~~~~~~~~~~~~~~~~~~
+> >>>   compilation terminated.
+> >>>   make[3]: *** [Makefile:256: /build/util/bpf_skel/.tmp/bootstrap/sign.o] Error 1
+> >>>   make[3]: *** Waiting for unfinished jobs....
+> >>>   make[2]: *** [Makefile.perf:1213: /build/util/bpf_skel/.tmp/bootstrap/bpftool] Error 2
+> >>>   make[1]: *** [Makefile.perf:289: sub-make] Error 2
+> >>>   make: *** [Makefile:76: all] Error 2
+> >>>
+> >>> I think it's from the recent signing change.  I'm not familiar with
+> >>> openssl but I guess there's a proper feature check for it.  Is this a
+> >>> known issue?
+> >>
+> >>
+> >> Hi Namhyung,
+> > 
+> > Hello!
+> > 
+> >>
+> >> This looks related to the program signing change indeed, commit
+> >> 40863f4d6ef2 ("bpftool: Add support for signing BPF programs")
+> >> introduced a dependency on OpenSSL's development headers for bpftool.
+> >> It's not gated behind a feature check. On Fedora, I think the headers
+> >> come with openssl-devel, do you have this package installed?
+> > 
+> > No I don't, but I guess it should be able to build on such systems.  Or
+> > is it required for bpftool?  Anyway I feel like it should have a feature
+> > check and appropriate error messages.
+> > 
 > 
-> On 10/30/2025 6:07 AM, Zide Chen wrote:
->> In snbep_pci2phy_map_init(), if there are more than 8 nodes,
->> uncore_device_to_die(ubox_dev) may return -1 if all CPUs
->> associated with the UBOX device are offline.  This is not an error
->> and we still need to populate map->pbus_to_dieid[].
->>
->> If NUMA is disabled on a NUMA-capable platform, pcibus_to_node()
->> returns NUMA_NO_NODE and uncore_device_to_die() returns -1.  As a
->> result, in spr_update_device_location(), which is used on Intel SPR,
->> GNR etc., the PMON units are ignored and not added to the RB tree.
+> +Cc KP
 > 
-> It seems spr_update_device_location() currently is only called by SPR,
-> please double check. 
+> We usually have feature checks when optional features bring in new
+> dependencies for bpftool, but we haven't discussed it this time. My
+> understanding was that program signing is important enough that it
+> should always be present in newer versions of bpftool, making OpenSSL
+> one of the required dependencies going forward.
 
-Woops, it's used by SPR and EMR, not GNR.
-> BTW, is this a SPR specific issue or a common issue? Thanks.
-This is a general statement: uncore_device_to_die() can't be used when
-numa=off. However, in the current code, it is misused only in
-spr_update_device_location().
->>
->> Use uncore_pcibus_to_dieid() instead, which retrieves topology
->> information from the GIDNIDMAP register of the UBOX device.
->>
->> Fixes: 9a7832ce3d92 ("perf/x86/intel/uncore: With > 8 nodes, get pci bus die id from NUMA info")
->> Fixes: 65248a9a9ee1 ("perf/x86/uncore: Add a quirk for UPI on SPR")
->> Signed-off-by: Zide Chen <zide.chen@intel.com>
->> ---
->>  arch/x86/events/intel/uncore.c       |  1 +
->>  arch/x86/events/intel/uncore_snbep.c | 13 ++++++-------
->>  2 files changed, 7 insertions(+), 7 deletions(-)
->>
->> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
->> index 5c3aeea5c78d..84d6e481f18f 100644
->> --- a/arch/x86/events/intel/uncore.c
->> +++ b/arch/x86/events/intel/uncore.c
->> @@ -77,6 +77,7 @@ int uncore_die_to_segment(int die)
->>  	return bus ? pci_domain_nr(bus) : -EINVAL;
->>  }
->>  
->> +/* Note: This API can only be used when NUMA information is available. */
->>  int uncore_device_to_die(struct pci_dev *dev)
->>  {
->>  	int node = pcibus_to_node(dev->bus);
->> diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
->> index ad4d11762ecf..e68467f617f9 100644
->> --- a/arch/x86/events/intel/uncore_snbep.c
->> +++ b/arch/x86/events/intel/uncore_snbep.c
->> @@ -1471,13 +1471,7 @@ static int snbep_pci2phy_map_init(int devid, int nodeid_loc, int idmap_loc, bool
->>  			}
->>  
->>  			map->pbus_to_dieid[bus] = die_id = uncore_device_to_die(ubox_dev);
->> -
->>  			raw_spin_unlock(&pci2phy_map_lock);
->> -
->> -			if (WARN_ON_ONCE(die_id == -1)) {
->> -				err = -EINVAL;
->> -				break;
->> -			}
->>  		}
->>  	}
->>  
->> @@ -6530,7 +6524,7 @@ static void spr_update_device_location(int type_id)
->>  
->>  	while ((dev = pci_get_device(PCI_VENDOR_ID_INTEL, device, dev)) != NULL) {
->>  
->> -		die = uncore_device_to_die(dev);
->> +		die = uncore_pcibus_to_dieid(dev->bus);
->>  		if (die < 0)
->>  			continue;
->>  
->> @@ -6554,6 +6548,11 @@ static void spr_update_device_location(int type_id)
->>  
->>  int spr_uncore_pci_init(void)
->>  {
->> +	int ret = snbep_pci2phy_map_init(0x3250, SKX_CPUNODEID, SKX_GIDNIDMAP, true);
->> +
->> +	if (ret)
->> +		return ret;
->> +
->>  	/*
->>  	 * The discovery table of UPI on some SPR variant is broken,
->>  	 * which impacts the detection of both UPI and M3UPI uncore PMON.
+Yeah, the problem is that it also affects to perf build.
+
+> 
+> We don't currently have feature checks to tell when required
+> dependencies are missing for bpftool (it's just the build failing, in
+> that case). I know perf does a great job at it, we could look into it
+> for bpftool, too.
+
+It's in the tools/build directory. :)
+
+Thanks,
+Namhyung
 
