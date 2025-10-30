@@ -1,188 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCBE41C69;
-	Thu, 30 Oct 2025 00:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E93230BCB;
+	Thu, 30 Oct 2025 01:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761783000; cv=none; b=ug7ScxxvJ0BiUDg6JQG2KyoSE8OTP6TIMCVnarrcx4ZdZJAaxbWvFZqRDO0PwMhehjsL2WZsfFcoetSVo4l8uFYE5TBr+FgljZTHDJLx0I0xlQO4kzLv+iNjbAqAbvLyfWNKfGGPETABYRvNm2eiN8ZkI0Pc1Y2/Ceq5l3V4264=
+	t=1761788285; cv=none; b=q9ttNXBLjIgam09GDPRZ4tNgmLCnBQs4JHQ5pcR7DbYsiG3YD96VgMAxuKmJ4l8pYVodo8EVqUqsjdUEZH1rQDsL6/VfHQWOgxDZaXJB99Zsfh8q/H+tVtYQeS5MBxZ883SowIpJ3E1ZIZmekxr9AoPTMj8/A9cZZv9fzrdwUgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761783000; c=relaxed/simple;
-	bh=AceE3gCsdl1DA5X4XGmZcEf7H6HBtxryjxL7lc5Pcck=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=uH/kt+cay4bb2Wi6oTBdiSgVR5Bhn4lFObbyVJao1IazgvJhIJBAgIPz02gzC4mxLOejmtzozyl2RAM++nH+Nb9aygldLTlKoH8yp+0Z8LCP7wAZrwa5udfYWXQHpTQhpBbNVRmUE/i+cpefJSRhGpPHsTuccsU2RZeUbxhoqOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SbRGlLY+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1761788285; c=relaxed/simple;
+	bh=8CXfEmdN7+qbIHv8ZgbRK4KEOPrzqAYXFfVFVXNHKCo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z36XAqut4KRH8JHGiASnJ5ZdtNDMYndh16sua7ckccLj+hE8Pe3SmI+42sAuGULrM3b7fLAWBfpMkxpcA0HXe1mlKsaKJy9QSAOm0VaHxjGm0dysjRFtYUTadajel8XJaSYGXh/Y1ojqs2gwXqzdpklvvLJdhoOtePi5AIWQ5SU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jpeMWmtz; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SbRGlLY+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BF33C4CEFD;
-	Thu, 30 Oct 2025 00:09:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761782999;
-	bh=AceE3gCsdl1DA5X4XGmZcEf7H6HBtxryjxL7lc5Pcck=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=SbRGlLY+9om9klZoA9dwo0WYQHobN4e/PU1/Y8xveEi/7ZI2WDhT5chQdEcNm1QSX
-	 U8hGhrLPNXFnMwwB3ACZxo2YQNKuLaIiHTcQhYxHMqxt4JoujiphZ5LBZBBhelmbUd
-	 G7An3QlOisuhVQ1yrhtLK35Yq0yrOIahqOORflXgp+X4SR+NKCLqkK3hWBQanEbb2c
-	 X+wCNdVumjh3z/wYYIwZCKTGlnosCMgUaPWVk/qfexbcUkj4JSOE1F2zDqdo/adp1H
-	 GFrCHO9OVd0GlFFJnZxrokMcF8fueJmg23t7c2ZO327wRVhEZFzq6Ts8DIb1GBMyn6
-	 r18V3ftUKJGjQ==
-Date: Thu, 30 Oct 2025 09:09:52 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
- <will@kernel.org>, Mark Brown <broonie@kernel.org>, Masami Hiramatsu
- (Google) <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
- Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v5 6/8] selftests: tracing: Add a basic testcase for
- wprobe
-Message-Id: <20251030090952.befea7f0cecd5518c7fda02c@kernel.org>
-In-Reply-To: <20251029172004.a0aca144735f20a6a59d2aa6@kernel.org>
-References: <175859019940.374439.7398451124225791618.stgit@devnote2>
-	<175859026716.374439.14852239332989324292.stgit@devnote2>
-	<aPvwGhMBJqMKcC9D@finisterre.sirena.org.uk>
-	<20251027224347.4c887cc956df63602f377550@kernel.org>
-	<20251028084222.a3c1ae97d125d9bd88fc565b@kernel.org>
-	<20251028105549.ae94e8eeb42f4efc183d2807@kernel.org>
-	<20251029004219.dc9cda0eb56ae46c55855844@kernel.org>
-	<20251029114317.167b7d908533385c1c9e6782@kernel.org>
-	<20251029172004.a0aca144735f20a6a59d2aa6@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jpeMWmtz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1761788282; x=1793324282;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=8CXfEmdN7+qbIHv8ZgbRK4KEOPrzqAYXFfVFVXNHKCo=;
+  b=jpeMWmtzGRm0aoL0Y5Kn4ojzxcCm25O9jRlLUWUq2dfzLs9ZxX163biZ
+   tjKsTP4hj7tNJWxVgrog9lIlK5VBlSODaLyZRDX90UGVoeouA4Zw+v9hW
+   eZ1MGW8dulrWhqq+WFwlnD3RWCGTs0YPQBdyzYeLADuUMIE1sbbFA49en
+   JYZeraTbR0aVhaHzTsH0SdiP5ljAf3b+s/z8FiozDKZ2KK8fx934/PrTI
+   l4bwIIZnuHPhHI7JcPyx3OFoKN6kJpgRsilca650wry232RICm2e6deTu
+   EK6A3o7BVGe9clESEOKUPcmvMxBHHCH5KWklXr8Q8mBmHDQbLG+hKJ+pW
+   A==;
+X-CSE-ConnectionGUID: GqFjvIw1TyCzT8jiPNo3MA==
+X-CSE-MsgGUID: ti5p83lcQgaMsunPKEdYzg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11597"; a="62946809"
+X-IronPort-AV: E=Sophos;i="6.19,265,1754982000"; 
+   d="scan'208";a="62946809"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 18:38:01 -0700
+X-CSE-ConnectionGUID: WyGLG1SGRci4D4Kk5FReCw==
+X-CSE-MsgGUID: ADaadpWjRrin+SsKlbWaOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,265,1754982000"; 
+   d="scan'208";a="185910309"
+Received: from haochenw-mobl1.ccr.corp.intel.com (HELO [10.238.3.228]) ([10.238.3.228])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2025 18:37:57 -0700
+Message-ID: <8b53854e-f407-4c58-badc-01327d2d4be0@linux.intel.com>
+Date: Thu, 30 Oct 2025 09:37:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] perf/x86/intel/uncore: Skip discovery table for
+ offline dies
+To: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Xudong Hao <xudong.hao@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
+ Steve Wahl <steve.wahl@hpe.com>
+References: <20251029220711.57909-1-zide.chen@intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20251029220711.57909-1-zide.chen@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Wed, 29 Oct 2025 17:20:04 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> On Wed, 29 Oct 2025 11:43:17 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > > Hmm, it seems that jiffies related things are updated frequently
-> > > and it may cause interrupt storm or infinit recursive call.
-> > 
-> > I added another trace_printk() in el1_watchpt(). It seems el1_watchpt()
-> > takes too long and there is no time to do any other things.
-> > (Note the interval shown below is only within the el1_watchpt function,
-> >  and in reality various processes (save/restore registers etc) for
-> >  exception handling will be inserted before and after.)
-> 
-> Forget about this. I found the root cause. The x86 watchpoint exception
-> happens after the instruction is executed, the arm64 happens before.
-> 
-> Thus what we need is to emulate or do single step the hooked instruction
-> and restart from the next instruction from the watchpoint exception on
-> arm64. I thought hw_breakpoint does that, but doesn't. Should we do this
-> in do_watchpoint() or in user_handler?
+On 10/30/2025 6:07 AM, Zide Chen wrote:
+> This warning can be triggered if NUMA is disabled and the system
+> boots with fewer CPUs than the number of CPUs in die 0.
+>
+> WARNING: CPU: 9 PID: 7257 at uncore.c:1157 uncore_pci_pmu_register+0x136/0x160 [intel_uncore]
+>
+> Currently, the discovery table continues to be parsed even if all CPUs
+> in the associated die are offline. This can lead to an array overflow
+> at "pmu->boxes[die] = box" in uncore_pci_pmu_register(), which may
+> trigger the warning above or cause other issues.
+>
+> Reported-by: Steve Wahl <steve.wahl@hpe.com>
+> Fixes: edae1f06c2cd ("perf/x86/intel/uncore: Parse uncore discovery tables")
+> Signed-off-by: Zide Chen <zide.chen@intel.com>
+> ---
+>  arch/x86/events/intel/uncore.c           | 4 ++++
+>  arch/x86/events/intel/uncore_discovery.c | 2 +-
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+> index ee586eb714ec..5c3aeea5c78d 100644
+> --- a/arch/x86/events/intel/uncore.c
+> +++ b/arch/x86/events/intel/uncore.c
+> @@ -1380,6 +1380,10 @@ static void uncore_pci_pmus_register(void)
+>  
+>  		for (node = rb_first(type->boxes); node; node = rb_next(node)) {
+>  			unit = rb_entry(node, struct intel_uncore_discovery_unit, node);
+> +
+> +			if (WARN_ON(unit->die >= uncore_max_dies()))
 
-There is a single step execution code but only for default overflow_handlers.
-This is a bit strange becuase other users can not set it up outside of
-the arch dependent code. Even if it can, it is simply redundant.
+Base on my understanding, it seems an valid situation which could happen.
+If so, we'd better remove the WARN_on to avoid it mislead users. Thanks.
 
-So I made changes below which allow users to set its own custom handler is
-compatible with perf default overflow handlers.
-I confirmed this works on both arm and arm64.
 
-diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-index ab76b36dce82..e12ec95b471e 100644
---- a/arch/arm64/kernel/hw_breakpoint.c
-+++ b/arch/arm64/kernel/hw_breakpoint.c
-@@ -632,6 +632,7 @@ void do_breakpoint(unsigned long esr, struct pt_regs *regs)
- 	addr = instruction_pointer(regs);
- 	debug_info = &current->thread.debug;
- 
-+	trace_printk("breakpoint exception at address: 0x%lx\n", addr);
- 	for (i = 0; i < core_num_brps; ++i) {
- 		rcu_read_lock();
- 
-@@ -661,6 +662,7 @@ void do_breakpoint(unsigned long esr, struct pt_regs *regs)
- 		rcu_read_unlock();
- 	}
- 
-+	trace_printk("breakpoint handling complete, step=%d\n", step);
- 	if (!step)
- 		return;
- 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index fd1d91017b99..40dd897e26b0 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -902,6 +902,7 @@ struct perf_event {
- 	u64				(*clock)(void);
- 	perf_overflow_handler_t		overflow_handler;
- 	void				*overflow_handler_context;
-+	bool				default_overflow_compatible;
- 	struct bpf_prog			*prog;
- 	u64				bpf_cookie;
- 
-@@ -1505,13 +1506,7 @@ extern int perf_event_output(struct perf_event *event,
- static inline bool
- is_default_overflow_handler(struct perf_event *event)
- {
--	perf_overflow_handler_t overflow_handler = event->overflow_handler;
--
--	if (likely(overflow_handler == perf_event_output_forward))
--		return true;
--	if (unlikely(overflow_handler == perf_event_output_backward))
--		return true;
--	return false;
-+	return event->default_overflow_compatible;
- }
- 
- extern void
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 177e57c1a362..6bbbde82cb21 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -12946,9 +12946,11 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 	} else if (is_write_backward(event)){
- 		event->overflow_handler = perf_event_output_backward;
- 		event->overflow_handler_context = NULL;
-+		event->default_overflow_compatible = true;
- 	} else {
- 		event->overflow_handler = perf_event_output_forward;
- 		event->overflow_handler_context = NULL;
-+		event->default_overflow_compatible = true;
- 	}
- 
- 	perf_event__state_init(event);
-diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
-index 98605b207f43..f2c2f26fd668 100644
---- a/kernel/trace/trace_wprobe.c
-+++ b/kernel/trace/trace_wprobe.c
-@@ -163,6 +163,8 @@ static void wprobe_perf_handler(struct perf_event *bp,
- static int __register_trace_wprobe(struct trace_wprobe *tw)
- {
- 	struct perf_event_attr attr;
-+	struct perf_event *bp;
-+	int cpu;
- 
- 	if (tw->bp_event)
- 		return -EINVAL;
-@@ -179,6 +181,11 @@ static int __register_trace_wprobe(struct trace_wprobe *tw)
- 		tw->bp_event = NULL;
- 		return ret;
- 	}
-+	/* Mark wprobe_perf_handler is compatible with default one. */
-+	for_each_online_cpu(cpu) {
-+		bp = per_cpu(*tw->bp_event, cpu);
-+		bp->default_overflow_compatible = true;
-+	}
- 
- 	return 0;
- }
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> +				continue;
+> +
+>  			pdev = pci_get_domain_bus_and_slot(UNCORE_DISCOVERY_PCI_DOMAIN(unit->addr),
+>  							   UNCORE_DISCOVERY_PCI_BUS(unit->addr),
+>  							   UNCORE_DISCOVERY_PCI_DEVFN(unit->addr));
+> diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
+> index 1bf6e4288577..d6aee12139f1 100644
+> --- a/arch/x86/events/intel/uncore_discovery.c
+> +++ b/arch/x86/events/intel/uncore_discovery.c
+> @@ -388,7 +388,7 @@ static bool intel_uncore_has_discovery_tables_pci(int *ignore)
+>  				     (val & UNCORE_DISCOVERY_DVSEC2_BIR_MASK) * UNCORE_DISCOVERY_BIR_STEP;
+>  
+>  			die = get_device_die_id(dev);
+> -			if (die < 0)
+> +			if ((die < 0) || (die >= uncore_max_dies()))
+>  				continue;
+>  
+>  			parse_discovery_table(dev, die, bar_offset, &parsed, ignore);
