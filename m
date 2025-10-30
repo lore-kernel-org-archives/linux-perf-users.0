@@ -1,362 +1,216 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B432F6927
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 13:25:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B83D223311
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 13:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761830757; cv=none; b=Dup3thWBLlvjiGC0x06ZvF4Ig9zZZM32/cdCT/5v6DknxQi1b8OvVcdARY8I8nmcFENj/29rTFNbbUINj5/UQHnzQptwolpUf36uUl/MMeNCPfgs6/BFVKxUciYnsT8XZC4y0fqGeiyGL4BbObrfWgvdL+DB5+Y06zfvc7rjmJc=
+	t=1761832385; cv=none; b=udP1FXB27svBsr7dqcOJA0n/hep3s/pLFBdvgeXznbvACY0qwk3l4G2mvWv/Qj4IQ43khFF6YOWewAdhVJu1ywAnMAek84FI3X1rWC9cHBtepWiXWoUV8KzajA1fXEkhUMcF/pkP8KRooUVtNubOlG7Qfc59J4GFPcjAJJ4O6e0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761830757; c=relaxed/simple;
-	bh=Alf7FG3xKB+wGygDIpa6N5AriIZQF5fBujd1fF3CeB8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=MGDVX/LmTp24NsJCTUYrx8OEv8b2cdqWMTE04iQUFjRLM8babs3U9ZdV+BOozSw9BQ4XvLz7SaGsg7oaYqKfVrMKED25tmsXXdN8jVpuzG0Y63OX2J9gdPoucQSQ8EIvemNdVstTGiM2zA8XDWrw+A739o1jlGOBQ4WQf4ANUEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fi4xApm5; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1761832385; c=relaxed/simple;
+	bh=ch9av5pawvwQYQQqqinPkuAgW5cUL52K6zwvuPZ6HzU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lhFmzOwR6mhLF68D7qkqC+YWYZ4rhgVWnCn1SOSEYwHEtqTe4PRIt7fcwW40qjCwVhDegyt1pzMhnTY+64ozK0FqEATlcTIb5LU6r+lOtak1NRc6QSzARwQvQ1f9BTOtu5PPJt6XJiYYRQ2f/JxRqecfgb4TMCaE/hQHioMCsHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hCIcc68x; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fi4xApm5"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59UDN9di026804
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 13:25:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=KiCohA
-	yz9S77IjsY90jhZK//xtk8zzbr6ZVGoN0jiXE=; b=fi4xApm5D1qRWDAELnbSOM
-	s4Zl8M+M4TZPFFa6ff8Z/EcEoUCM/pq0WzIetAhA6zCUpebiEXdCErBZ+H9h73uj
-	QoqgknqgX3WNKGinLLIiEoCFyTWiK9uONFw9cLiyLp9I/a7lPZRCGtKBnyygZq/p
-	216FbPhAYjM2WWRKUS95Dkj3PEDVbYMhZ+FllT9POLZdTTcxRGj+WgXD79zy5DLs
-	FmVcltjbi+zKfBdTV8TQJfV1gN6RajBvDVkjzZJC/SUV/qQ5F+A71Qojcd14c2Gc
-	b1M7kd7+XUnaK2EvHVi47fFARLwWzjyU8GtF3TGqg+EFNFOImmGbA9Xq0L9T3G4A
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34acrgwe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 13:25:54 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59UDLNFG011049
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 13:25:53 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34acrgwc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Oct 2025 13:25:53 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59UD9ivd030770;
-	Thu, 30 Oct 2025 13:25:52 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4a33wwru7p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Oct 2025 13:25:52 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59UDPmPl43974934
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Oct 2025 13:25:48 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3E4AD20043;
-	Thu, 30 Oct 2025 13:25:48 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0FFBE2005A;
-	Thu, 30 Oct 2025 13:25:48 +0000 (GMT)
-Received: from [9.152.212.92] (unknown [9.152.212.92])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 30 Oct 2025 13:25:48 +0000 (GMT)
-Message-ID: <3b86c7e0-5b3e-468c-8077-7efa3959d221@linux.ibm.com>
-Date: Thu, 30 Oct 2025 14:25:47 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hCIcc68x"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1761832383;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UiD+9PFw/UEgLmukuI7fneU0DXWRAFm+QQ8XrA1QPRU=;
+	b=hCIcc68xbSwN+UMDaNffeyTJDHSsvHWZIvDiEQmEBLeSYnPYwFTuCn2/bXw58MZdtSyax1
+	JjrGJ1J/QGI6aKhU6Zl3oidpcaSBHXlpR6jcW1+0uoQqZFgZEA+GQjuT8gr8mU6NFeXOUj
+	i+IdAPAjYrULmp2WJghXr+I05FW6x/U=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-41-1G37X9pwP0GMx3x9c2KivQ-1; Thu, 30 Oct 2025 09:53:01 -0400
+X-MC-Unique: 1G37X9pwP0GMx3x9c2KivQ-1
+X-Mimecast-MFC-AGG-ID: 1G37X9pwP0GMx3x9c2KivQ_1761832380
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-592f3372a26so504869e87.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 06:53:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761832380; x=1762437180;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UiD+9PFw/UEgLmukuI7fneU0DXWRAFm+QQ8XrA1QPRU=;
+        b=iHBvK6RJesJzBKA7UswYgmrTB3M4yFuSyksaCvAU6/nZ4IAKnCEGibnnB0ZIsHZR5C
+         UTs/mlPHAbsVWDzMdbWZm0YFaiFbEMNHC0YyjLeAEH7CGKQdOG0zaEhwFuzhgLXcAvsq
+         vfo3dlQYNpaM+SUEWfYQXQ4cT1TWcqPNAA8qeGz7MsCBHGN0HQ/N9v0ClCqRUbLTI94e
+         lj3wPF8IYObrhNY89pmyfQ166F1znr+CMim+eb1vCjJtjKe+6i2okpxOquVYQlYL7IhH
+         BwfYYMVduJGAnmvnHzLADtXuEBtiUC9SdG1LLE3RxANsV8z9eM7dyYDfM7gLreLJRkpW
+         3PzA==
+X-Forwarded-Encrypted: i=1; AJvYcCXfyku20kvORuBPetvBDCU+MSooLSF35mxE1GJ4f6x8fwiNR7QqMg25w1RebsFDgIQa9aY5XdBswWORgpVBLdsN@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhszokWvkwe+RbxWPXJt5yPWCl5H4k/dYVPyxV1Hy3EIol4dlj
+	WeNTDm+46GpMLmfr5/5T2mlbmNH9HlTu0OU62+CXgOPZBl+dtyaK3IX/7DdFGKzamN2E9aPOdYI
+	GKbxMNieD4HdV/oPmtICSPZp6XqbdFaVx+F8XQQ79y4GsNMCqeNG6Rbb7oNXkFezCemtmeHE7pm
+	yPes/5sNjPKhGoZuOuIHgGEO1zIX4AWIL+UFpvJ2KXFmR8vQ==
+X-Gm-Gg: ASbGncsG+2uGaWJNJCWanGMlSwdNzWTAP6FeM7hSTdjh56whAxwPVILtTepXcR5i4jG
+	vP10ybqC2iiLGPSPPyypzrAhkwLprRteuQaI0KgHZsXRH9QwGhlRJfesnA6t9TRoN0mFSdaHTcw
+	r0LtUV2c4huzs/TVBb8uOXslSYLkmcUfG8pz8ZsbkChYcMrtWnX4BCYA==
+X-Received: by 2002:a05:6512:660e:b0:594:1d20:22e8 with SMTP id 2adb3069b0e04-5941d202940mr9522e87.37.1761832379896;
+        Thu, 30 Oct 2025 06:52:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF3I0ZK5UyhQXE6WtqxOhmH2il+0opqitZKwbOTT+UIO22pJyBr+OX/7QUH2gGidAgQyY0KfY3CMYIdOfO8vAo=
+X-Received: by 2002:a05:6512:660e:b0:594:1d20:22e8 with SMTP id
+ 2adb3069b0e04-5941d202940mr9518e87.37.1761832379423; Thu, 30 Oct 2025
+ 06:52:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [linux-next] perf report runtime extremely long
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: Ian Rogers <irogers@google.com>
-Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Jan Polensky <japo@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>
-References: <09943f4f-516c-4b93-877c-e4a64ed61d38@linux.ibm.com>
- <79195870-7223-4aeb-beb4-a7d8f1895caa@linux.ibm.com>
- <CAP-5=fXi=EDU7-tdNLwTKbCHR80_p3=TAe0qF0oE-tXbx35znw@mail.gmail.com>
- <13800bed-1256-4414-ac8b-e99439c748ec@linux.ibm.com>
-Content-Language: en-US
-Organization: IBM
-In-Reply-To: <13800bed-1256-4414-ac8b-e99439c748ec@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=XbuEDY55 c=1 sm=1 tr=0 ts=69036762 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=1XWaLZrsAAAA:8 a=VnNF1IyMAAAA:8 a=g9zxSzfddf4b3aR5VW8A:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: aIoKJ0n3Y22Qpdd1TOol0XdACjJWID5A
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDI4MDE2NiBTYWx0ZWRfX1zPRknopsfkG
- pDtb5O2Uro2LldLD2u5/ug99skBwk3bLdjer8p2kXRe6g6NpmIM4tt0AHnfFIdnqfBu35A6W4r3
- 3XGbsxoxMfNbHDQua0u/EDC3eZbmKjLULDYd5MRNyqzeV9p7xc8T8k9RifYRLCT97skNt05j3Cu
- BIWH2AQZzsnlxhqD3PNJr51D458OxK6rvKEzFIOMosw6gfiQFW9HbS8yzZ2yjQNS/7wWEcjFkne
- apnjUBU588ZkhqxMJyERyiv6E90cI6LEdoBsLmrdLEGILEdtMUU7bRDd9JrU2X6eVbRPdDIQfqi
- TOcItcphBoaLN91oXkX39T7t/ONtbharoVg4163PS4fyHe6+5rFFcjHFvlxUAA8sv1qZBkf9S/b
- 4UbEeDUuM0jpFIwNXpk/2dLRhf2zOg==
-X-Proofpoint-GUID: X020dM13hesRmW0BP1P_XGQo7z-ZBx5P
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-10-30_04,2025-10-29_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 adultscore=0 suspectscore=0 bulkscore=0 spamscore=0
- impostorscore=0 phishscore=0 priorityscore=1501 clxscore=1015
- lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
- definitions=main-2510280166
+References: <20251023132406.78359-2-ashelat@redhat.com> <5b02372a-f0be-4d3a-a875-c5ea65f2bafe@linux.ibm.com>
+ <CA+G8Dh+DaVp1XVHm=Hh1aLP=5YOmChTRu4=nSUAwTKJO-a4LDw@mail.gmail.com>
+ <f674d1eb-c492-4dec-a49c-8b40833741a4@linaro.org> <2e756e75-7dc9-4838-8651-ca1a0f056966@linux.ibm.com>
+In-Reply-To: <2e756e75-7dc9-4838-8651-ca1a0f056966@linux.ibm.com>
+From: Anubhav Shelat <ashelat@redhat.com>
+Date: Thu, 30 Oct 2025 13:52:48 +0000
+X-Gm-Features: AWmQ_bmn0Wz5Mm0lC5uunzkfDLWG-g3sdVrG8lhFv0Wvn27zZm_LqJkWs9XuI6M
+Message-ID: <CA+G8DhKTpZLzRbZvGiS6YZxOXecEcrtOUcNdHOpjDM9Cz0qzxg@mail.gmail.com>
+Subject: Re: [PATCH] Revert "perf test: Allow tolerance for leader sampling test"
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: James Clark <james.clark@linaro.org>, mpetlan@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, irogers@google.com, linux-perf-users@vger.kernel.org, 
+	peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, dapeng1.mi@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 10/30/25 09:59, Thomas Richter wrote:
-> On 10/29/25 17:47, Ian Rogers wrote:
->> On Wed, Oct 29, 2025 at 9:12 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
->>>
->>> On 10/29/25 09:03, Thomas Richter wrote:
->>>> Hi all,
->>>>
->>>> has something changed recently in perf report in linux-next repo?
->>>>
->>>> I run perf report -i <file> -D | grep something
->>>> on s390 with 2 different kernels:
->>>>
->>>> master 6.18.0rc3:
->>>> # uname -a
->>>> Linux a35lp67.lnxne.boe 6.18.0-rc3m-perf+ #23 SMP Tue Oct 28 15:53:44 CET 2025 s390x GNU/Linux
->>>> # ll /tmp/perf2-eSso2q-2
->>>> -rw------- 1 root root 8538184 Oct 29 08:44 /tmp/perf2-eSso2q-2
->>>> # time perf report -i/tmp/perf2-eSso2q-2 -D | grep Counter:000 > /dev/null
->>>>
->>>> real  0m22.262s
->>>> user  0m22.068s
->>>> sys   0m0.200s
->>>> #
->>>>
->>>> This runtime is ok for the perf.data file size.
->>>>
->>>> linux-next:
->>>> # uname -a
->>>> Linux s83lp47.lnxne.boe 6.18.0-20251028.rc3.git141.f7d2388eeec2.63.fc42.s390x+next #1 SMP Tue Oct 28 20:06:13 CET 2025 s390x GNU/Linux
->>>> #ll /tmp/perf2-eSso2q-2
->>>> -rw-------. 1 root root 8538184 Oct 29 08:47 /tmp/perf2-eSso2q-2
->>>> # time perf report -i/tmp/perf2-eSso2q-2 -D | grep Counter:000 > /dev/null
->>>>
->>>> real  2m53.601s
->>>> user  2m52.938s
->>>> sys   0m0.575s
->>>> #
->>>>
->>>> Same perf.data file and run time increased from 22 seconds to nearly 300 seconds, roughly 14 times longer
->>>> for the same input!
->>>>
->>>> Has anybody similar observations?
->>>>
->>>> Thanks a lot
->>>>
->>>
->>> Ian,
->>>
->>> sorry sent button pushed too early...
->>>
->>> here is a second try without option -D.
->>>
->>> This is much better:
->>>
->>> root in 🌐 s83lp47 in ~
->>> ❯ ll perf1.data
->>> -rw-------. 1 root root 99692290 Oct 29 16:17 perf1.data
->>>
->>> root in 🌐 s83lp47 in ~
->>> ❯ time perf record -- perf report -i perf1.data  > /dev/null
->>> [ perf record: Woken up 1 times to write data ]
->>> [ perf record: Captured and wrote 0.027 MB perf.data (246 samples) ]
->>>
->>> real    0m1.097s
->>> user    0m0.082s
->>> sys     0m0.167s
->>>
->>> root in 🌐 s83lp47 in ~
->>> ❯ perf report --stdio
->>> # To display the perf.data header info, please use --header/--header-only options.
->>> #
->>> #
->>> # Total Lost Samples: 0
->>> #
->>> # Samples: 246  of event 'cpum_cf/cycles/P'
->>> # Event count (approx.): 307500000
->>> #
->>> # Overhead  Command  Shared Object        Symbol
->>> # ........  .......  ...................  ..................................................
->>> #
->>>      9.35%  perf     perf                 [.] reader__read_event
->>>      4.47%  perf     perf                 [.] perf_env__arch
->>>      2.85%  perf     ld64.so.1            [.] _dl_relocate_object_no_relro
->>>      2.44%  perf     ld64.so.1            [.] _dl_lookup_symbol_x
->>>      2.44%  perf     ld64.so.1            [.] do_lookup_x
->>>      2.44%  perf     perf                 [.] down_read
->>>      2.03%  perf     perf                 [.] hists__findnew_entry
->>>      2.03%  perf     perf                 [.] perf_hpp__is_dynamic_entry
->>>      1.63%  perf     [kernel.kallsyms]    [k] __s390_indirect_jump_r14
->>>      1.63%  perf     [kernel.kallsyms]    [k] format_decode
->>>      1.63%  perf     libc.so.6            [.] cfree@GLIBC_2.2
->>>      1.63%  perf     perf                 [.] evsel__parse_sample
->>>      1.63%  perf     perf                 [.] map__put
->>>      1.63%  perf     perf                 [.] sort__comm_cmp
->>>      1.63%  perf     perf                 [.] thread__put
->>>      1.22%  perf     [kernel.kallsyms]    [k] folio_add_file_rmap_ptes
->>>      1.22%  perf     [kernel.kallsyms]    [k] get_page_from_freelist
->>>      1.22%  perf     ld64.so.1            [.] _dl_name_match_p
->>>      1.22%  perf     perf                 [.] dump_printf
->>>      1.22%  perf     perf                 [.] evlist__event2evsel
->>>      1.22%  perf     perf                 [.] hashmap_find
->>>      1.22%  perf     perf                 [.] perf_session__deliver_event
->>
->> Hmm.. for perf_env__arch we could probably cache better:
->> ```
->> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
->> index f1626d2032cd..2591f71c7c42 100644
->> --- a/tools/perf/util/env.c
->> +++ b/tools/perf/util/env.c
->> @@ -593,17 +593,27 @@ static const char *normalize_arch(char *arch)
->>
->> const char *perf_env__arch(struct perf_env *env)
->> {
->> -       char *arch_name;
->> +       if (env && env->arch && env->arch_name_normalized)
->> +               return env->arch;
->>
->>        if (!env || !env->arch) { /* Assume local operation */
->>                static struct utsname uts = { .machine[0] = '\0', };
->>                if (uts.machine[0] == '\0' && uname(&uts) < 0)
->>                        return NULL;
->> -               arch_name = uts.machine;
->> -       } else
->> -               arch_name = env->arch;
->>
->> -       return normalize_arch(arch_name);
->> +               if (!env)
->> +                       return normalize_arch(uts.machine);
->> +
->> +               env->arch = strdup(normalize_arch(uts.machine));
->> +               env->arch_name_normalized = true;
->> +       } else {
->> +               char *normalized = strdup(normalize_arch(env->arch));
->> +
->> +               free(env->arch);
->> +               env->arch = normalized;
->> +               env->arch_name_normalized = true;
->> +       }
->> +       return env->arch;
->> }
->>
->> #if defined(HAVE_LIBTRACEEVENT)
->> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
->> index 9977b85523a8..da20bc3810bd 100644
->> --- a/tools/perf/util/env.h
->> +++ b/tools/perf/util/env.h
->> @@ -61,6 +61,7 @@ struct perf_env {
->>        char                    *os_release;
->>        char                    *version;
->>        char                    *arch;
->> +       bool                    arch_name_normalized;
->>        int                     nr_cpus_online;
->>        int                     nr_cpus_avail;
->>        char                    *cpu_desc;
->> ```
->> or just force the normalize before assignment.
->>
->> For reader__read_event and the perf_env these changes may be relevant:
->> "perf sample: Remove arch notion of sample parsing"
->> https://lore.kernel.org/r/20250724163302.596743-21-irogers@google.com
->> "perf env: Remove global perf_env"
->> https://lore.kernel.org/r/20250724163302.596743-20-irogers@google.com
->>
->> I wonder if for some reason the env is NULL in your cases, so we go
->> slow path a lot.
->>
->> The histogram stuff, Namhyung may know more.
->>
->> Thanks!
->> Ian
->>
-> 
-> Thanks Ian,
-> 
-> I tested your patch, but there is no big difference:
-> root in 🌐 s83lp47 in ~ 
-> ❯ ll ~/perf.data-test
-> -rw-------. 1 root root 152280778 Oct 30 07:58 /root/perf.data-test
-> 
-> here is the output with your patch:
-> root in 🌐 s83lp47 in ~ 
-> ❯ time mirror-linux-next/tools/perf/perf report -D -i ~/perf.data-test > /dev/null
-> 
-> real	46m26.350s
-> user	46m17.559s
-> sys	0m7.434s
-> 
-> 
-> Here is the output from the linux-next perf version:
-> 
-> root in 🌐 s83lp47 in ~ took 46m26s 
-> ❯ time perf report -D -i ~/perf.data-test > /dev/null
-> 
-> real	49m14.364s
-> user	49m4.872s
-> sys	0m8.037s
-> 
-> root in 🌐 s83lp47 in ~ took 49m14s 
-> 
-> When I go back history and use:
-> 
-> # pwd
-> /root/mirror-linux-next/tools/perf
-> # git branch
-> * (HEAD detached at v6.10)
->   master
-> ]# ll ~/perf.data-test
-> -rw------- 1 root root 152280778 Oct 30 08:38 /root/perf.data-test
-> # time ./perf report -D -i ~/perf.data-test > /dev/null
-> 
-> real	8m49.089s
-> user	8m47.898s
-> sys	0m0.848s
-> # 
-> 
-> Thanks for the pointer. Since the issue is with s390 specific code
-> I will do a git bisect and we go from there.
-> 
+> On 10/28/25 12:30, James Clark wrote:
+> > You mentioned on the other thread that it's failing "differently", can you expand on that? I'm wondering why you sent the revert patch then?
+The issue was that for every (leader, sibling) event pair there was an
+18 cycle difference between the sibling and the leader. Initially I
+thought that this was fixed by the group throttle fixing patch
+(9734e25fbf5a), but I just got a VM running 6.12.0-145.el10.aarch64
+which is up to date with v6.16 and it has that bug.
+I want to revert the patch since the bug it exists for has been fixed,
+and as you mentioned it could be silencing other bugs. Since I'm able
+to reprouce Thomas's issue on an arm machine it seems like this is not
+a hardware issue inherent to s390x and there's no reason for this
+patch to be in the kernel anymore.
 
-This is the first bad commit.... (I actually tested it :-(, obviously without -D option )
+> > As I mentioned before I'm not seeing any issues. Can you share the kernel version that you tested on and your kernel config? And can you share the same outputs that I asked Thomas for below please.
+For the system experiencing the 18 cycle difference bug:
+Linux ampere-mtsnow-altramax-03-vm-13.lab.eng.rdu2.redhat.com
+6.12.0-145.el10.aarch64 #1 SMP PREEMPT_DYNAMIC Fri Oct 24 12:39:51 UTC
+2025 aarch64 GNU/Linux
+[root@ampere-mtsnow-altramax-03-vm-13 ~]# perf script | head -30
+            perf   91202 168884.094165:        146 cycles:
+ffff9e94ba40 _start+0x0 (/usr/lib/ld-linux-aarch64.so.1)
+            perf   91202 168884.094165:        164 cycles:
+ffff9e94ba40 _start+0x0 (/usr/lib/ld-linux-aarch64.so.1)
+            perf   91202 168884.094188:         74 cycles:
+ffffc6fe45649728 [unknown] ([unknown])
+            perf   91202 168884.094188:         74 cycles:
+ffffc6fe45649728 [unknown] ([unknown])
+            perf   91202 168884.094213:        134 cycles:
+ffff9e94ba40 _start+0x0 (/usr/lib/ld-linux-aarch64.so.1)
+            perf   91202 168884.094213:        152 cycles:
+ffff9e94ba40 _start+0x0 (/usr/lib/ld-linux-aarch64.so.1)
+            perf   91202 168884.094233:        136 cycles:
+ffff9e9473cc _dl_start+0x0 (/usr/lib/ld-linux-aarch64.so.1)
+            perf   91202 168884.094233:        154 cycles:
+ffff9e9473cc _dl_start+0x0 (/usr/lib/ld-linux-aarch64.so.1)
+            perf   91202 168884.094252:        293 cycles:
+ffffc6fe45648e18 [unknown] ([unknown])
+            perf   91202 168884.094252:        293 cycles:
+ffffc6fe45648e18 [unknown] ([unknown])
+            perf   91202 168884.094273:        275 cycles:
+ffff9e9473fc _dl_start+0x30 (/usr/lib/ld-linux-aarch64.so.1)
+            perf   91202 168884.094273:        293 cycles:
+ffff9e9473fc _dl_start+0x30 (/usr/lib/ld-linux-aarch64.so.1)
+            perf   91202 168884.094291:         56 cycles:
+ffffc6fe45648e18 [unknown] ([unknown])
+            perf   91202 168884.094291:         56 cycles:
+ffffc6fe45648e18 [unknown] ([unknown])
+            perf   91202 168884.094312:       1138 cycles:
+ffff9e947400 _dl_start+0x34 (/usr/lib/ld-linux-aarch64.so.1)
+            perf   91202 168884.094312:       1156 cycles:
+ffff9e947400 _dl_start+0x34 (/usr/lib/ld-linux-aarch64.so.1)
+            perf   91202 168884.094336:        414 cycles:
+ffff9e947454 _dl_start+0x88 (/usr/lib/ld-linux-aarch64.so.1)
+            perf   91202 168884.094336:        432 cycles:
+ffff9e947454 _dl_start+0x88 (/usr/lib/ld-linux-aarch64.so.1)
+            perf   91202 168884.094355:        692 cycles:
+ffff9e947444 _dl_start+0x78 (/usr/lib/ld-linux-aarch64.so.1)
+            perf   91202 168884.094355:        710 cycles:
+ffff9e947444 _dl_start+0x78 (/usr/lib/ld-linux-aarch64.so.1)
+            perf   91202 168884.094379:       1328 cycles:
+ffffc6fe45648e18 [unknown] ([unknown])
+            perf   91202 168884.094379:       1328 cycles:
+ffffc6fe45648e18 [unknown] ([unknown])
+            perf   91202 168884.094403:       3871 cycles:
+ffff9e941550 __GI___tunables_init+0xd0
+(/usr/lib/ld-linux-aarch64.so.1)
+            perf   91202 168884.094403:       3889 cycles:
+ffff9e941550 __GI___tunables_init+0xd0
+(/usr/lib/ld-linux-aarch64.so.1)
+            perf   91202 168884.094425:       7787 cycles:
+ffff9e94153c __GI___tunables_init+0xbc
+(/usr/lib/ld-linux-aarch64.so.1)
+            perf   91202 168884.094425:       7805 cycles:
+ffff9e94153c __GI___tunables_init+0xbc
+(/usr/lib/ld-linux-aarch64.so.1)
+            perf   91202 168884.094464:      17320 cycles:
+ffff9e94c794 __set_vma_name+0x54 (/usr/lib/ld-linux-aarch64.so.1)
+            perf   91202 168884.094464:      17338 cycles:
+ffff9e94c794 __set_vma_name+0x54 (/usr/lib/ld-linux-aarch64.so.1)
+            perf   91202 168884.094606:      38889 cycles:
+ffffc6fe45649bcc [unknown] ([unknown])
+            perf   91202 168884.094606:      38889 cycles:
+ffffc6fe45649bcc [unknown] ([unknown])
 
-commit 0012e0fa221bf9cc54aa6a0e94d848653dc781bb (HEAD)
-Author: Ian Rogers <irogers@google.com>
-Date:   Sun Oct 5 11:24:16 2025 -0700
-
-    perf jevents: Add legacy-hardware and legacy-cache json
-    
-    The legacy-hardware.json is added containing hardware events similarly
-    to the software.json file. A difference is that for the software PMU
-    the name is known and matches sysfs. In the legacy-hardware.json no
-    Unit/PMU is specified for the events meaning default_core is used and
-    the events will appear for all core PMUs.
-    ......
-
-What puzzles me is that the above patch does not change anything in
-util/s390-sample-raw.c which handles s390 specific sample interpretation.
-
-Maybe that patch affects perf_pmus__find()?
-Not sure how to proceed.
-
-Thanks a lot
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+For the first mismatching sample:
+[root@ampere-mtsnow-altramax-03-vm-13 ~]# perf report -D | grep
+ffff9e94ba40 -A 8
+168884094165520 0x6a0 [0x68]: PERF_RECORD_SAMPLE(IP, 0x2):
+91202/91202: 0xffff9e94ba40 period: 1 addr: 0
+... sample_read:
+.... group nr 2
+..... id 000000000000002c, value 0000000000000092, lost 0
+..... id 0000000000000034, value 00000000000000a4, lost 0
+ ... thread: perf:91202
+ ...... dso: /usr/lib/ld-linux-aarch64.so.1
+ ... thread: perf:91202
+ ...... dso: /usr/lib/ld-linux-aarch64.so.1
 --
-IBM Deutschland Research & Development GmbH
+168884094213520 0x770 [0x68]: PERF_RECORD_SAMPLE(IP, 0x2):
+91202/91202: 0xffff9e94ba40 period: 1 addr: 0
+... sample_read:
+.... group nr 2
+..... id 000000000000002c, value 0000000000000162, lost 0
+..... id 0000000000000034, value 0000000000000186, lost 0
+ ... thread: perf:91202
+ ...... dso: /usr/lib/ld-linux-aarch64.so.1
+ ... thread: perf:91202
+ ...... dso: /usr/lib/ld-linux-aarch64.so.1
 
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+For the first matching sample:
+[root@ampere-mtsnow-altramax-03-vm-13 ~]# perf report -D | grep
+ffffc6fe45649728 -A 8
+168884094188520 0x708 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
+91202/91202: 0xffffc6fe45649728 period: 1 addr: 0
+... sample_read:
+.... group nr 2
+..... id 000000000000002c, value 00000000000000dc, lost 0
+..... id 0000000000000034, value 00000000000000ee, lost 0
+ ... thread: perf:91202
+ ...... dso: <not found>
+ ... thread: perf:91202
+ ...... dso: <not found>
 
-Geschäftsführung: David Faller
 
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+I also was able to get a bare metal arm machine with the same kernel
+version: Linux ampere-mtsnow-altra-01.khw.eng.rdu2.dc.redhat.com
+6.12.0-145.el10.aarch64 #1 SMP PREEMPT_DYNAMIC Fri Oct 24 12:39:51 UTC
+2025 aarch64 GNU/Linux. On this machine I wasn't able to reproduce any
+issue. I'm trying to get another vm to reproduce Thomas' issue again.
+
+Anubhav
+
