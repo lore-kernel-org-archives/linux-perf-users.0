@@ -1,191 +1,71 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0E124677C
-	for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 17:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2013A30C635;
+	Thu, 30 Oct 2025 17:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761844906; cv=none; b=NGUTGy5b2jPMZiTZ9cFuSji/A8B645AOYDz7oDTxya79t92XBksLTqjPkDsoH2uUWoQPgH+afPlZP3KDf1rnn8xDSPsd9T3UhyxyDao8s3ASQxJ5qk9VMz9xSgXciB2khDOuYmAL4Avb4dE3esrEZPGgk64eEMcxzEfHoRuZy4A=
+	t=1761845573; cv=none; b=cQfISzv6T5W4nVznkzwY8WS6eVRxP2puHdrz19VwrYGSrSMx2ObIeUnBOwdgDaiWwDc5PDDkAmpa9EgqP3ecC9xPUJjGL4ySKzeFYk2cEWkhl0amCQ1fHCFgkP9Wjm6rCZDPdrXgotYkmieoHvm97pBvbTo+Hsqsn4a4yVeooaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761844906; c=relaxed/simple;
-	bh=M+lkD0z2101EZTsNHSvQtIO2IpVhP4TmImyUnZxYJlQ=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=XCA+tsJrQ1GRJsvPBgcRyJObSFCV7XhExS5xW6jPg5ptukoSIwVqFBjDZv6g4hYy+3VSEbrA5sXbThXuHVNcTrKfbPAa2xZDJ8EgG6lT1rchZoSINn8pD8TZQ3fOrMddrcwhKwwJXJHNd8fS6bPnmdHpG41GH1Np/Y8hGhgrn4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vi7jXVev; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vi7jXVev"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3406aa44a1dso1376721a91.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 10:21:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761844904; x=1762449704; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1PEydywGHVT2WukPesarSlbXobm+ff+b++EOi4BTyU8=;
-        b=vi7jXVevZSYwu8yma4nYdS0WzksLMTwUE9Xhi2rM8JugnJkjky4Q0bpahAU33QPdo2
-         T7bZ3aDqOcxbQRHOuaAecmHevdGH5z2n/2gZy9w6jHrtSgE07hh5kxbexIl6AvYRjST4
-         nJmImpzX3BEzJFm4UW/IXAoXstSFRUT09TtxxKmQBv7nal7EsklH7ps6mxhgy+E9sKiO
-         BQcCd/Wsbys6TNK2OFL4/fLiYfLHSC/6dITqL0UDECzPx7O8jl1KNrF8tNv5qr4ei1X4
-         38pb7CehW/SqGuEpa4FHbMZJUf5SWxvNSEyma1pqQS8qiRshxZjouklVMFmtOajNBtQ3
-         s/FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761844904; x=1762449704;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1PEydywGHVT2WukPesarSlbXobm+ff+b++EOi4BTyU8=;
-        b=fxLZZ1Ih5WavBb7LgEfoq7nhaA7WBMqRAndHLMr0zMXQAfFNwRrsjp1N/uf7FLfBu/
-         DAgbzhhCncfTpeYEzXdegu7nGB2qO86MsD2NhZ1pbPZD6MhxogXBG6As4NpGAz7G75GO
-         uKqTI3a76CHPk4BSO/KWZOxTG+8KgcG5ApmaIBCBrDSzkLFkt6z9ApbflmBs7P2mZbz/
-         Ht4cmP1OWvSiEBIMk9gyX5XcQCXSBIan1ucqIMVmslQNKlhUwxilFAUyWXR8xXNNmxWa
-         OnGm17jXCiLo2ZI2OExliUK4iqmoygQV245J4C3cIfmReHZ39LfLB4KyPyAtN/n77WCy
-         sLAA==
-X-Forwarded-Encrypted: i=1; AJvYcCWYedrONjY2y+CxxRbvlbn34ptIiQReyecF+6xpZe96s/yMVq4VcoKQckXd4w/DsBvJR84M8CeNTlnkm6x7sHMW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9+TyYfTO/H3oULFM9TPJD36CkAhI1xPWKINlTZWbqgZXcNrZr
-	RCyUrF7h/TjjiKnbAp26b7k9QHYG4skGDYicQIw4xqf/uGMO3VyOsRDaO2cEmhiHZJGfFHZ9Lax
-	jfA9GwLyDfA==
-X-Google-Smtp-Source: AGHT+IGUU15B7H38ssSxFVgrFeKI92IY5bfaTIKG3VRo7CD4WQ2pJO8GQ1DIaBrFloEwYObPEcH0tuSm3K9v
-X-Received: from pjzb21.prod.google.com ([2002:a17:90a:e395:b0:332:4129:51b2])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d40c:b0:32b:623d:ee91
- with SMTP id 98e67ed59e1d1-34083070e35mr580511a91.27.1761844904010; Thu, 30
- Oct 2025 10:21:44 -0700 (PDT)
-Date: Thu, 30 Oct 2025 10:21:40 -0700
+	s=arc-20240116; t=1761845573; c=relaxed/simple;
+	bh=KIjAWd5bTmTxiZT0LrGzbix+8eJ4XPaP0KPaWk4ZMcg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bQDa7S7zdG4Vpdj9+TkAVKnelqqqmL/8me313HexWm86OGouG9s/9OnxVkkl2CCKWtq1I/pRA5gT3Wwxe0MGgLI+VSYLG53SNZTT9aGw1iGpKuTsIa59HciclSOKUlbQ2a0+L5rNyFzdHCfBviY4wJpR81o7t6sEXk+SzQkNwLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id C2ED3160153;
+	Thu, 30 Oct 2025 17:32:42 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 0860F20028;
+	Thu, 30 Oct 2025 17:32:40 +0000 (UTC)
+Date: Thu, 30 Oct 2025 13:33:23 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Fangrui Song <maskray@sourceware.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-toolchains@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Concerns about SFrame viability for userspace stack walking
+Message-ID: <20251030133323.3a81c02c@gandalf.local.home>
+In-Reply-To: <CAN30aBF3MofmVTjTZ9KFq9OBM0nA16amP5VFv+VAEJfFkLx0qw@mail.gmail.com>
+References: <3xd4fqvwflefvsjjoagytoi3y3sf7lxqjremhe2zo5tounihe4@3ftafgryadsr>
+	<20251030102626.GR3245006@noisy.programming.kicks-ass.net>
+	<CAN30aBF3MofmVTjTZ9KFq9OBM0nA16amP5VFv+VAEJfFkLx0qw@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.51.1.930.gacf6e81ea2-goog
-Message-ID: <20251030172140.1113556-1-irogers@google.com>
-Subject: [PATCH v2] perf s390-sample-raw: Cache counter names
-From: Ian Rogers <irogers@google.com>
-To: Thomas Richter <tmricht@linux.ibm.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Stat-Signature: 4p48o1owhpks8jbbpor1tt1qxy33puem
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 0860F20028
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18MBl85QywLhxDsOHEJp0r6hNFHraA59G4=
+X-HE-Tag: 1761845560-798367
+X-HE-Meta: U2FsdGVkX197tdFE8k6yvJDR6OnwjBxcHP0TNAczSUS9WbroVPiRedvtEKfy5GxhI+CeuqwExj3h7WZOpoHAcpjO2bH9QtkYWnYafr3ci3+AJYXCLDvJfJPxn2rUuTOrDcUDOWTuAyW5Bl8A0fL0Ixbpc77F/TOpragKsmrupD9umWapOTMJF23ZD8VsNzWdbavnfkd6R3ZscV5arXc4LL6daHD3SxH8qCELr7+vc4US3dWosWdQjNx/uceKvmCDn01GlH0X60b2Q74VMOUym+dKNa+gXpp50ElyX7bj52wR4QerK+R9RDsejXtBnhSYtrkT0O7O9PRmmqOXpESuQXRNwO6phTk5nzJK2+lXaAb9dRxvJiPFxV8fjaOzRByY
 
-Searching all event names is slower now that legacy names are
-included. Add a cache to avoid long iterative searches.
+On Thu, 30 Oct 2025 09:48:50 -0700
+Fangrui Song <maskray@sourceware.org> wrote:
 
-Reported-by: Thomas Richter <tmricht@linux.ibm.com>
-Closes: https://lore.kernel.org/linux-perf-users/09943f4f-516c-4b93-877c-e4a64ed61d38@linux.ibm.com/
-Signed-off-by: Ian Rogers <irogers@google.com>
---
-v2: Small tweak to the cache_key, just make it match the wanted event value.
----
- tools/perf/util/s390-sample-raw.c | 56 ++++++++++++++++++++++++++++---
- 1 file changed, 51 insertions(+), 5 deletions(-)
+> If SFrame is exclusively a kernel-space feature, it could be
+> implemented entirely within objtool =E2=80=93 similar to how objtool --li=
+nk
+> --orc generates ORC info for vmlinux.o. This approach would eliminate
+> the need for any modifications to assemblers and linkers, while
+> allowing SFrame to evolve in any incompatible way.
 
-diff --git a/tools/perf/util/s390-sample-raw.c b/tools/perf/util/s390-sample-raw.c
-index 335217bb532b..f5acf6dfa8d0 100644
---- a/tools/perf/util/s390-sample-raw.c
-+++ b/tools/perf/util/s390-sample-raw.c
-@@ -19,12 +19,14 @@
- 
- #include <sys/stat.h>
- #include <linux/compiler.h>
-+#include <linux/err.h>
- #include <asm/byteorder.h>
- 
- #include "debug.h"
- #include "session.h"
- #include "evlist.h"
- #include "color.h"
-+#include "hashmap.h"
- #include "sample-raw.h"
- #include "s390-cpumcf-kernel.h"
- #include "util/pmu.h"
-@@ -132,8 +134,8 @@ static int get_counterset_start(int setnr)
- }
- 
- struct get_counter_name_data {
--	int wanted;
--	char *result;
-+	long wanted;
-+	const char *result;
- };
- 
- static int get_counter_name_callback(void *vdata, struct pmu_event_info *info)
-@@ -151,12 +153,22 @@ static int get_counter_name_callback(void *vdata, struct pmu_event_info *info)
- 
- 	rc = sscanf(event_str, "event=%x", &event_nr);
- 	if (rc == 1 && event_nr == data->wanted) {
--		data->result = strdup(info->name);
-+		data->result = info->name;
- 		return 1; /* Terminate the search. */
- 	}
- 	return 0;
- }
- 
-+static size_t get_counter_name_hash_fn(long key, void *ctx __maybe_unused)
-+{
-+	return key;
-+}
-+
-+static bool get_counter_name_hashmap_equal_fn(long key1, long key2, void *ctx __maybe_unused)
-+{
-+	return key1 == key2;
-+}
-+
- /* Scan the PMU and extract the logical name of a counter from the event. Input
-  * is the counter set and counter number with in the set. Construct the event
-  * number and use this as key. If they match return the name of this counter.
-@@ -164,17 +176,51 @@ static int get_counter_name_callback(void *vdata, struct pmu_event_info *info)
-  */
- static char *get_counter_name(int set, int nr, struct perf_pmu *pmu)
- {
-+	static struct hashmap *cache;
-+	static struct perf_pmu *cache_pmu;
-+	long cache_key = get_counterset_start(set) + nr;
- 	struct get_counter_name_data data = {
--		.wanted = get_counterset_start(set) + nr,
-+		.wanted = cache_key,
- 		.result = NULL,
- 	};
-+	char *result = NULL;
- 
- 	if (!pmu)
- 		return NULL;
- 
-+	if (cache_pmu == pmu && hashmap__find(cache, cache_key, &result))
-+		return strdup(result);
-+
- 	perf_pmu__for_each_event(pmu, /*skip_duplicate_pmus=*/ true,
- 				 &data, get_counter_name_callback);
--	return data.result;
-+
-+	if (data.result)
-+		result = strdup(data.result);
-+
-+	if (cache_pmu == NULL) {
-+		struct hashmap *tmp = hashmap__new(get_counter_name_hash_fn,
-+						   get_counter_name_hashmap_equal_fn,
-+						   /*ctx=*/NULL);
-+
-+		if (!IS_ERR(cache)) {
-+			cache = tmp;
-+			cache_pmu = pmu;
-+		}
-+	}
-+
-+	if (cache_pmu == pmu) {
-+		char *old_value = NULL, *new_value = strdup(result);
-+
-+		if (new_value) {
-+			hashmap__set(cache, cache_key, new_value, /*old_key=*/NULL, &old_value);
-+			 /*
-+			  * Free in case of a race, but resizing would be broken
-+			f  * in that case.
-+			  */
-+			free(old_value);
-+		}
-+	}
-+	return result;
- }
- 
- static void s390_cpumcfdg_dump(struct perf_pmu *pmu, struct perf_sample *sample)
--- 
-2.51.1.930.gacf6e81ea2-goog
+I'm not sure what you mean here. Yes, it is implemented in the kernel, but
+it is reading user space applications to get the sframes from them.
 
+Every running application would need this information for its executable.
+The kernel is dependent on user space having this.
+
+The only thing the kernel is doing is reading the sframe tables associated
+with the running applications to be able to walk their stacks at runtime to
+do profiling. As Peter asked, the kernel cares extensively on that walking
+being simple. If something goes wrong, you compromise the entire machine.
+
+-- Steve
