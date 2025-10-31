@@ -1,66 +1,66 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C284332919
-	for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 10:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE87333436D
+	for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 10:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761904806; cv=none; b=dLNWqwVBmImzG9Gf7y9XQ0/g6C0dhMaNMP8eIuHj6BCL2/60Di7QmkQmpjKCFt/L7VjnXgM5sa9PDnqc2vXuD3ClxarARe4BhxgI9GOgZCQXUpGsL7xXfbJwhvOk7Wp27cLPQqOUfNrzf7s0Eq/JlXBMMp56nusfjUs0p4rYreY=
+	t=1761904888; cv=none; b=ZVnihFByqVfIwlrT6nz6KaQk7RBPCgP638uhNI4nkHoqv2PIkJ7410je15WE2zooQ7lNT2joVzstRyfiCpIWpHrFggfHNwMS2PR+Y0eLHlOlV5wNa+PGKRzc9EypGZLwCzgwtEHw2AlLLL4nYXoSELtcafcSO1wZG/3eTRKFa+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761904806; c=relaxed/simple;
-	bh=wNnjGniV6pu3D6d0+vHC1OpzEzE1DnHmr+R7k2tu6TU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=F7W0NbcTK/QYUWizpLq5bdYMiTzZGvFpiQaA7DMSp+MU5E4KEFkzf9P4Gd5c3smEOsXizfFgdGeauYa5l+YfHggtksYgH80ZrsHrUswLF4WqEMxzLxYMS1yNVYzeQgtMBnTY+Mq/O2KdEH1Y/kUrE8J2RQNx2vfWR29UMMy09cU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J4f3W9rX; arc=none smtp.client-ip=209.85.128.54
+	s=arc-20240116; t=1761904888; c=relaxed/simple;
+	bh=RxlkwJ3Ojt2di/C4sMLH7o3fnCk6IDvZ1msbl1LANHg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DUigpdKGOZD+HSOmZ/5lh9S4OpV/XPgrhmuHDQJNSniwXUhOazEsrEmp/FEV2ImoeJ6V5S4x0QnaNBct0xx2smT6wtvt5RrwjtVXOHQQeM+2/TiITwKpcNGe50abXuU8Zg1v5qCXo7J+58rZlMf9BDRQ+SZ4NO8bxmMJVW8BCsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YV9fPo2h; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J4f3W9rX"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-471191ac79dso22691715e9.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 03:00:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YV9fPo2h"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-4298b49f103so829321f8f.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 03:01:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1761904803; x=1762509603; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=9XmagYXZGhiRCZo8nGtg5dtjzropHlOVEQuuywu8QoA=;
-        b=J4f3W9rXGjMCaWSR6Lxj7YXEWIJgdZSbBIrNsbATnAknXIGFGL1YFerW/2meokdt5+
-         DNNXhauX+rEW5pjvlg0uAORbrQs4yxcAWuq8Z5wYU7xIUzBVxdHofS+uG2hE13xxh4sM
-         7NSUUgwKy+kKGodo3uFPEEemwhmosAplqPGW809/IH5C9gjZaS826RWPyzAsJAudYPsJ
-         JdKckZN33cePnrmmh6QTxN6+vLeFNqanG3DR3oP9nUFP9zBQAr9x2r8lpLFwLgGgfbBC
-         pjgDts2J7nB3MFJEkwORLcTJRDUv8M2/u+xT0b+VKGnTYAA5i+LysobG0gpmakWDBIiv
-         s5Pg==
+        d=linaro.org; s=google; t=1761904885; x=1762509685; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WXkLRXL/09XSTQrXWbf80a0LR0KorpKiDD0bgtjB+w0=;
+        b=YV9fPo2h3fbM/tKXpU2B05GgGTaHE1f9Cy0JtbhLQPI3iLcIti7wtdA3vpOVdh2JBx
+         yclLSaGRiPcKPpyKa+yCoJk04n5aX7asY0MNea3NjJvYUBJ8nCx1UT6Hwh9zamW4A0/0
+         9y5xbxzc2B7q9UwvQ/7C6Zs9u9sj1Pq68Do+yo2FEaC8UeSl/9OqoP/yeHW0UDPNtq9I
+         2cCLElWRlc6WT3McHf/xcttvNs6hXzwa6Wu8wkKQ5T8nVDF0mawKGtbZcxqlEmMPVLZd
+         j1lfq3h85Aw23c4zyK95dJZq5fwmXMt2FZx0FUHPfl2B3WaBsJ/SMbFp2lhMyzI3yfr3
+         ZCoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761904803; x=1762509603;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1761904885; x=1762509685;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9XmagYXZGhiRCZo8nGtg5dtjzropHlOVEQuuywu8QoA=;
-        b=DztA8MRMw6fzLUrLwTsSKQpugcCkcFTDZRV3w9xL/w17CID+UgtlQMVSWXnctIDq78
-         dVMu7i+zWM0uQelAqFx3rbqW3l6ym/zk2AKsB7s4GNWaE9vFyRJoLCLOIVbFgOhk/XlK
-         wFYBWfweajCk/AnK3UnLC6MhpKfUAdmfSUuopuez2MHnnZuCWfhNEo2FCNQS355IlS8Y
-         ATfonpMOd+j/ReCqJ9KeDyrbPVff90P5BmVNArylVvejPogTIlLSGbVWKtfo+RG2Qjm6
-         +a0niDi+zxjWy1Ng8vQFZUoE6Q0HgQVnXQL/anerJ32bmsAHDKWy3PfCuJ6GsiWBJ1LB
-         9tYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDSK7VJ0MfeV53pRBaRP4ZpdydinjlOtMYN3QzSAoCPUAHo7ZJuExii6TERN7uti4eZrc2ffqU7Gd0FpvOgMrY@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGtfZluiwlc7dG+BrxHcG2wxr6sa5F4BzkjaRbXn+t6Pa25NkF
-	sHTAYc0ajD1YaAjq4YdabHP36MaRv/Nes3KDU8+dwqYpah5kRPVg2yNCYRzbniP6MyQ=
-X-Gm-Gg: ASbGncsDL5TBFlh4EAn400r7uNXD/8FJj1OL1W1/ynzaYF7e03M+NzdzkEiRIyIc049
-	SmBCLFM7R6Kz59ptsznTE8i33sL6Tl4yK8A/2lRwHyTEefq16z1WhOhK7RjFhSeDDeMhoZQmymj
-	b4V0GyeEgUHs50i08vdEwVkMwKCRkCIV95ZQ2cIcCDexj58zpznosgQtALSrCbKOpy/uFLq1dQ8
-	ndh1+Fj9ais0KC3kMkFpm2L4+BXGf7aZzDpsN0aNVKND3IIE4GMBBWpoiifHjAo/AgBEtFuXUJL
-	/A2VQt+1T7vBnCncZTkiwaYV2vynLV/WVzSVSlVPfLKZzddk6CE3N81kKXEDcjFDAACjt/R6Nwb
-	w8VqKAxvnl7Km9kqfgBJF6zkMZ0KThI76/dSrnyVk2dXBTlYg9y925qqt0fWjYT+RxL7qZ80iKw
-	GeETXlQVWUNCVJ/f/M
-X-Google-Smtp-Source: AGHT+IEv9vBf1gcZcP/1EXFL+TdkTt1q9osVqrYbZXlOtnlKXOqyYbm17I+a0qRcWFjfmA40A3E6SA==
-X-Received: by 2002:a05:600c:4e44:b0:45f:2cb5:ecff with SMTP id 5b1f17b1804b1-477308ce7b2mr28429105e9.31.1761904802781;
-        Fri, 31 Oct 2025 03:00:02 -0700 (PDT)
+        bh=WXkLRXL/09XSTQrXWbf80a0LR0KorpKiDD0bgtjB+w0=;
+        b=mN/3lqh6LDSdSVutMbq3UBIY2jRtbCK/PnUNlcO6v8Wf+J1NMunqCXWz+pCGkbetBG
+         hifI3+/8PTlozNhHx7QfZlPawR6JigaIOXepN3eOcR8yAJ7KmrnOvZdR+ZmwyzsW7zcS
+         ec0gmLUEo66q53Q+scGHRR1JTKTbQWOMvnLm52DAApngYVpZ6+y+HQ/D49U3IYRh0a8y
+         o1jeA51BUc2BhoMYTJpI5X34hcJWhKKp1Z3Kn+TrsZEUAIlb7ddG0szPrZGMxwoKOykY
+         2N/wzIEA4iCgXDLW0Ogxdep73uePjO/b8nrSdCxssxF4Y4gWYG5S37wROgd0my/3fQKy
+         e58g==
+X-Forwarded-Encrypted: i=1; AJvYcCWbTjoNShMZ0p5dcT7/yt3jZkh99KmAA5bY+9ev+6JlzOd/MGgESdP08yPGiWHoI3foOZTBX1ldmRa3dw/niGa4@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfJSqcfstRy1hZNBAIvsMuTayq0U5DepC22XQl5gI/5q3ZNk7F
+	aIRApLMLcw1WSt2TqI6ebta40uFEc+Bs0UGVlEvxcFkxAPlfEO2viMFoLnc5ZeBc3YI=
+X-Gm-Gg: ASbGncum+Evv7gSJrIoZRDQ06H4LbKGs3CziTKZ96Vvz5cW8LmsaQvotoOpHURRtxZG
+	NViF+MfVbqjyhd0VJmJj/n4q7h3jiAkuiar4TMFfOFLPxFBCLSUuKJh9yCH2NBUs7snK0zt/hfz
+	T3EyCDLuTYtMhZazFjTdwj9yx1Eh3E4QINAtQyMAm9fZmCYOrhLLnyoeaZTE4+294iD3rJYLAPW
+	jeofufOYbvrhpSDfTPrSKJ/zxap3gdb+5WLrVzkYMJDGNX71AM+Wk1YGAwMHbPuD2la/oCdNtMf
+	YxlPS3dxoexTsQFsXiBq7oNmsHpPOg045jJIoAyroNCFJsxmjq/qBOABKx27TkXm1tbaMII+5EX
+	svzVQeIwMlKhXL6lyP0ukuF7wtZKRVI0a3RXRL4Fux0X9HdV1Taq7MJEyjV6cgHxCU/DIKvfS7L
+	W0tLL0YQ==
+X-Google-Smtp-Source: AGHT+IHILJYq01/jPqFwMyYGkOIuHAOSQvgFVwRuLZ95ODjEyBBLX/lDvwSOY0yg1h/riowuUMPwIg==
+X-Received: by 2002:a05:6000:471c:b0:429:c4ce:eeaa with SMTP id ffacd0b85a97d-429c4ceefd6mr167558f8f.60.1761904885065;
+        Fri, 31 Oct 2025 03:01:25 -0700 (PDT)
 Received: from [192.168.1.3] ([185.48.77.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47728a979b8sm86399575e9.10.2025.10.31.03.00.01
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-429c13e1d8bsm2600821f8f.25.2025.10.31.03.01.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Oct 2025 03:00:02 -0700 (PDT)
-Message-ID: <18df2108-5f09-4806-af0f-3af3fbff3f92@linaro.org>
-Date: Fri, 31 Oct 2025 10:00:00 +0000
+        Fri, 31 Oct 2025 03:01:24 -0700 (PDT)
+Message-ID: <7fbec952-dfbc-4d6d-a6af-819ec9c81dd5@linaro.org>
+Date: Fri, 31 Oct 2025 10:01:23 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,44 +68,100 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tools: Fix typo error in json file
+Subject: Re: [PATCH] tools/perf: Fix spelling typo in tools/perf
 To: Chu Guangqing <chuguangqing@inspur.com>
-References: <20251031031729.2304-1-chuguangqing@inspur.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, john.g.garry@oracle.com, will@kernel.org,
+ mike.leach@linaro.org, leo.yan@linux.dev, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com
+References: <20251031025810.1939-1-chuguangqing@inspur.com>
 Content-Language: en-US
-Cc: john.g.garry@oracle.com, will@kernel.org, mike.leach@linaro.org,
- leo.yan@linux.dev, peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20251031031729.2304-1-chuguangqing@inspur.com>
+In-Reply-To: <20251031025810.1939-1-chuguangqing@inspur.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 31/10/2025 3:17 am, Chu Guangqing wrote:
-> Correct instruction spelling errors.
+On 31/10/2025 2:58 am, Chu Guangqing wrote:
+> The json file incorrectly used "acceses" instead of "accesses".
 > 
 > Signed-off-by: Chu Guangqing <chuguangqing@inspur.com>
-> ---
->   tools/perf/pmu-events/arch/arm64/ampere/emag/cache.json | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/pmu-events/arch/arm64/ampere/emag/cache.json b/tools/perf/pmu-events/arch/arm64/ampere/emag/cache.json
-> index 4cc50b7da526..4001cc5753a7 100644
-> --- a/tools/perf/pmu-events/arch/arm64/ampere/emag/cache.json
-> +++ b/tools/perf/pmu-events/arch/arm64/ampere/emag/cache.json
-> @@ -81,7 +81,7 @@
->           "BriefDescription": "L2D TLB access"
->       },
->       {
-> -        "PublicDescription": "Level 2 access to instruciton TLB that caused a page table walk. This event counts on any instruciton access which causes L2I_TLB_REFILL to count",
-> +        "PublicDescription": "Level 2 access to instruction TLB that caused a page table walk. This event counts on any instruction access which causes L2I_TLB_REFILL to count",
->           "EventCode": "0x35",
->           "EventName": "L2I_TLB_ACCESS",
->           "BriefDescription": "L2I TLB access"
 
 Reviewed-by: James Clark <james.clark@linaro.org>
+
+> ---
+>   .../arch/arm64/ampere/ampereonex/metrics.json    | 16 ++++++++--------
+>   1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/metrics.json b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/metrics.json
+> index 6817cac149e0..a29aadc9b2e3 100644
+> --- a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/metrics.json
+> +++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/metrics.json
+> @@ -388,55 +388,55 @@
+>           "MetricExpr": "L1D_CACHE_RW / L1D_CACHE",
+>           "BriefDescription": "L1D cache access - demand",
+>           "MetricGroup": "Cache",
+> -        "ScaleUnit": "100percent of cache acceses"
+> +        "ScaleUnit": "100percent of cache accesses"
+>       },
+>       {
+>           "MetricName": "l1d_cache_access_prefetches",
+>           "MetricExpr": "L1D_CACHE_PRFM / L1D_CACHE",
+>           "BriefDescription": "L1D cache access - prefetch",
+>           "MetricGroup": "Cache",
+> -        "ScaleUnit": "100percent of cache acceses"
+> +        "ScaleUnit": "100percent of cache accesses"
+>       },
+>       {
+>           "MetricName": "l1d_cache_demand_misses",
+>           "MetricExpr": "L1D_CACHE_REFILL_RW / L1D_CACHE",
+>           "BriefDescription": "L1D cache demand misses",
+>           "MetricGroup": "Cache",
+> -        "ScaleUnit": "100percent of cache acceses"
+> +        "ScaleUnit": "100percent of cache accesses"
+>       },
+>       {
+>           "MetricName": "l1d_cache_demand_misses_read",
+>           "MetricExpr": "L1D_CACHE_REFILL_RD / L1D_CACHE",
+>           "BriefDescription": "L1D cache demand misses - read",
+>           "MetricGroup": "Cache",
+> -        "ScaleUnit": "100percent of cache acceses"
+> +        "ScaleUnit": "100percent of cache accesses"
+>       },
+>       {
+>           "MetricName": "l1d_cache_demand_misses_write",
+>           "MetricExpr": "L1D_CACHE_REFILL_WR / L1D_CACHE",
+>           "BriefDescription": "L1D cache demand misses - write",
+>           "MetricGroup": "Cache",
+> -        "ScaleUnit": "100percent of cache acceses"
+> +        "ScaleUnit": "100percent of cache accesses"
+>       },
+>       {
+>           "MetricName": "l1d_cache_prefetch_misses",
+>           "MetricExpr": "L1D_CACHE_REFILL_PRFM / L1D_CACHE",
+>           "BriefDescription": "L1D cache prefetch misses",
+>           "MetricGroup": "Cache",
+> -        "ScaleUnit": "100percent of cache acceses"
+> +        "ScaleUnit": "100percent of cache accesses"
+>       },
+>       {
+>           "MetricName": "ase_scalar_mix",
+>           "MetricExpr": "ASE_SCALAR_SPEC / OP_SPEC",
+>           "BriefDescription": "Proportion of advanced SIMD data processing operations (excluding DP_SPEC/LD_SPEC) scalar operations",
+>           "MetricGroup": "Instructions",
+> -        "ScaleUnit": "100percent of cache acceses"
+> +        "ScaleUnit": "100percent of cache accesses"
+>       },
+>       {
+>           "MetricName": "ase_vector_mix",
+>           "MetricExpr": "ASE_VECTOR_SPEC / OP_SPEC",
+>           "BriefDescription": "Proportion of advanced SIMD data processing operations (excluding DP_SPEC/LD_SPEC) vector operations",
+>           "MetricGroup": "Instructions",
+> -        "ScaleUnit": "100percent of cache acceses"
+> +        "ScaleUnit": "100percent of cache accesses"
+>       }
+>   ]
 
