@@ -1,135 +1,133 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C731A2FC891
-	for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 16:56:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351682FFFA5
+	for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 17:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761929791; cv=none; b=eRt1MeLLXYxr+QHE4ebaJv5yCmnspflo+5AI5Md4UhAdhgye00JvL2egvy4QkGYqbVA4YYXCEIASdaiNBhf2Dd4Tt3pbTUf58bGR2mczMoAQV0dUqvimddE1izPfcNjE3B72BKFuczgKgZ1DmjpjAMTffLusVP5hJoZa8gQcEJI=
+	t=1761930096; cv=none; b=fdvJ6UFLKclxCUL44KDyFjkKFKyFuqIcRxVkxctsgTtSbsNK/0LKwBQPcT6OKLSUo6+0I0/sXPi0YPmFLo5o3E+wCxwEDVN6XiCphjNh3pK+gK8FnY4uE8RR9y7CzQvSwjolR8o8aUk1xnPKOCfU+7aC4rVwM1WF79QX3jM0JSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761929791; c=relaxed/simple;
-	bh=lkiO8XrUOZOmOcIFgJAFhtGKZWzU3bVRktX8oPYM5CE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DhOSxu1mRYWZXgMlbssUjPfhYfOKquHMLvDYgSWKSpyk3xP2OdqpcWbp10JjABkLr7njZntoVMzbmbPyHUU3a0KpwdxkCC2x/ZbGCkQ1Td38yXMrSrLgpoX2D7YyNwU94jMayQq/w8BLjEN3aZWwCTnqOGivjtRoyhNNQTn1Auc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lxD7e8Cq; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1761930096; c=relaxed/simple;
+	bh=JH7txACGqpu70QrcZpv7eK5Fjn8nvkBMvawjfClTs2U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m58qUYuSyiHDIck7l3RWqa26D8oejRU+bwocb1fNYAVbvuQtOui27ezv23R+P1tmTmBS96Ww3A6an+H5/TNhCxwALm+Wdc/uajlOCEuc/VcjFASQDpL1n/IKvv/2ToJ8eg+ehMvVps9Z7bSNnvXw+j/rUXhjNKbfoZfOihTJdAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mwe7op7I; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=51KCtvsy; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mwe7op7I; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=51KCtvsy; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lxD7e8Cq"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-27eeafd4882so6205ad.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 09:56:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1761929789; x=1762534589; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=orEjtXAHj63cwii1Ewu/bOztRrLitJVVFzVJhGPGPvY=;
-        b=lxD7e8CqaMJnRgSOY9ZtP5qSUPRiHwNshRTXXbo9XQlQn1jYw1eZfnP/tRmGh/GszD
-         ypZMw+aG8oaxfnqxBUJS7F+PZQm9Xxy3AdqBHDAgxu6Zto9D9o5T+I2zJml3L31XIezh
-         H55RRs5WAsMUEWlNmNPmo0SfrkpIWsKMOeYgE/fMcsrtedkQjzx32+3zqrp5PuR1h1vP
-         +D4xRPr4/RJBgQ6/FzCwlbEizcZqvXT0OMrqdQv+OCFn3HU1ofFL2xMYLdsxDFeLERpw
-         KOjMx7HUtLkosN2i6y702EWCdLDIeQBK/lTcYpgFnN5W6aewOqpL3B4sLSTlwFKqwdfa
-         7PrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761929789; x=1762534589;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=orEjtXAHj63cwii1Ewu/bOztRrLitJVVFzVJhGPGPvY=;
-        b=cwzxPaWP/xkDeeng6YsG+gIQGxp+Khf9HVSVXnb6DbUfx3Fq6Z/RYCa3CzTPT0c+RA
-         tXDND9tchnyWXg0Q7UXrLxCJedWtMiuqaFW3RUg8G6MKWZxrlsITCRzmqFdk/giLB620
-         cSVlZA0pkgO+1XRDtI/5GTeCDSwqNDMUPrulVlwnAc65Msqi9ecZReG8gIx7iEIHuAd6
-         lRXHzJgZ+Yop7u9l/KU9zu4oK0U62GVnz8V5BTfi/kASvrczebXstChJ+YU1qpeaTPfm
-         XtQsDtJgszJ4XVsgWQlQfXsJzc/egDyUdMQkyDQJqVvIkxqGNqOubPzfAiugQLQiz7Wd
-         HCwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWoUQvlXR61H0DW/TsBad7kjtCc0PHDyycc0b6XhV6xrm4zw8pNu4UN76PZbN4YrqmA31l1z43DrZvXWRIOxRcx@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywfo5lAnA1FV3T3pv23k3BEgRi7poJfWcjILPRQbmrukerxig7w
-	T9fUPTWlErGWr5orgcsdDt8PY9jEroI0PRzOMPNCgQ88DHFkxjvc2S4e0ZnUWI73fCC6NZPKlxx
-	NJ+TogtCYRP2tgK6YB0wP+UwRv3Mr9JxfxHTxJcFG
-X-Gm-Gg: ASbGncs2q01vGV4mU6C67DXOiSF2H1O0N9R+P0vk6SchrKtpC1arb8uuY02MjqCsubK
-	I8/JhBpOhsmmTdeoUKfxTCoAORIuMnrC3+w8E62Au8rOHQBjDRvd19tGAP53IfJThk+LRntdvyG
-	2i+kAeotu8h5aSjCxwsyiUZvUdLDDw6hGJX0SXFgjE+OvkVHpEdWcOpv0BMmr3c1wgUuD1k9uyR
-	uv871/xD8qqbXrgQxmrGfmlcZ26a+s5EDRpmBrFWKyZ19aGDU92SfzDdT/+TsEJg0sKwMydudcy
-	JZahW8lNCK5nHJw=
-X-Google-Smtp-Source: AGHT+IEsPnPxFIN1hYlO+t/wmUYP6y9esVa2ldoa9AgpQzw0BQvhvOGZ3gJe4GC0IHDy7KEHxRaubt0hT/sM3EKgjeE=
-X-Received: by 2002:a17:902:f60d:b0:295:28a4:f0f5 with SMTP id
- d9443c01a7336-29528a4f6bdmr2781575ad.5.1761929788793; Fri, 31 Oct 2025
- 09:56:28 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mwe7op7I";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="51KCtvsy";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mwe7op7I";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="51KCtvsy"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4A5D42246A;
+	Fri, 31 Oct 2025 17:01:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1761930092; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HlF5qBf4juZSf4H9c9EQslASU5Ma+rHdW8yMnK4XpM8=;
+	b=mwe7op7IGWBd2T1yWkm9oFJ8gaPQgMPXXdpjrt1xjC8yVxCvWnK3PS61Xog73EZaXu184c
+	iE+yz6Sje034eiGaENL1ULEcHtnE90mECVwISIoT5+dpBYsE6N/U//XBEWO5HE8FIGa+PM
+	fWwW7Up4uwImk2se7lW9VidJYROr5rM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1761930092;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HlF5qBf4juZSf4H9c9EQslASU5Ma+rHdW8yMnK4XpM8=;
+	b=51KCtvsyD/VdKcctilOcFtSx25D1O7YVJCsbx9V6MtRBWYM/kA6AdhasBJyCnTwAIsCanK
+	DSSXiqQUxPUrs9CA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1761930092; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HlF5qBf4juZSf4H9c9EQslASU5Ma+rHdW8yMnK4XpM8=;
+	b=mwe7op7IGWBd2T1yWkm9oFJ8gaPQgMPXXdpjrt1xjC8yVxCvWnK3PS61Xog73EZaXu184c
+	iE+yz6Sje034eiGaENL1ULEcHtnE90mECVwISIoT5+dpBYsE6N/U//XBEWO5HE8FIGa+PM
+	fWwW7Up4uwImk2se7lW9VidJYROr5rM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1761930092;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HlF5qBf4juZSf4H9c9EQslASU5Ma+rHdW8yMnK4XpM8=;
+	b=51KCtvsyD/VdKcctilOcFtSx25D1O7YVJCsbx9V6MtRBWYM/kA6AdhasBJyCnTwAIsCanK
+	DSSXiqQUxPUrs9CA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7EC5213393;
+	Fri, 31 Oct 2025 17:01:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id dgonFGvrBGlDIgAAD6G6ig
+	(envelope-from <tonyj@suse.de>); Fri, 31 Oct 2025 17:01:31 +0000
+Date: Fri, 31 Oct 2025 10:01:27 -0700
+From: Tony Jones <tonyj@suse.de>
+To: Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+Subject: Re: addr2line performance
+Message-ID: <aQTrZ54mkx14r_cQ@suse.de>
+References: <aPkivW2WoySU1Zkc@suse.de>
+ <CAP-5=fU4y2y+pOT590GZG-A+zO5YdAAzUyPgUX5RTji0nh6Z+g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251030040140.1115617-1-namhyung@kernel.org>
-In-Reply-To: <20251030040140.1115617-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 31 Oct 2025 09:56:17 -0700
-X-Gm-Features: AWmQ_bmyg0Pz25RVawZdFY6E21GseqbValX9xKWlZmhN4wDaYncuilO84HOs4xo
-Message-ID: <CAP-5=fV3H234wnVkmf04kyJYb=M9gUtZbHigrc7pQKYUXoFSzg@mail.gmail.com>
-Subject: Re: [PATCH] perf lock contention: Load kernel map before lookup
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fU4y2y+pOT590GZG-A+zO5YdAAzUyPgUX5RTji0nh6Z+g@mail.gmail.com>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_TWO(0.00)[2];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spam-Level: 
 
-On Wed, Oct 29, 2025 at 9:01=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On some machines, it caused troubles when it tried to find kernel
-> symbols.  I think it's because kernel modules and kallsyms are messed
-> up during load and split.
->
-> Basically we want to make sure the kernel map is loaded and the code has
-> it in the lock_contention_read().  But recently we added more lookups in
-> the lock_contention_prepare() which is called before _read().
->
-> Also the kernel map (kallsyms) may not be the first one in the group
-> like on ARM.  Let's use machine__kernel_map() rather than just loading
-> the first map.
->
-> Fixes: 688d2e8de231c54e ("perf lock contention: Add -l/--lock-addr option=
-")
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+On Wed, Oct 29, 2025 at 08:51:12AM -0700, Ian Rogers wrote:
+> 
+> I'm not sure there is an explicit discussion rather than discussion on
+> individual patch sets. 
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Thanks for the reply.  I thought the original comment in that BZ
+was talking about plans to remove the current forking of an "addr2line"
+process and communicating via pipe with some library implementation.
+Of course what that library would be if not BFD/LLVM was my question.
+Clearly this was a misread on my part.
 
-Thanks,
-Ian
+I'd seen the patches related to dlopen'ing llvm, backporting this is 
+a possibility since we don't want a rpm requires.
 
-> ---
->  tools/perf/util/bpf_lock_contention.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_=
-lock_contention.c
-> index 60b81d586323f379..7b5671f13c53525d 100644
-> --- a/tools/perf/util/bpf_lock_contention.c
-> +++ b/tools/perf/util/bpf_lock_contention.c
-> @@ -184,6 +184,9 @@ int lock_contention_prepare(struct lock_contention *c=
-on)
->         struct evlist *evlist =3D con->evlist;
->         struct target *target =3D con->target;
->
-> +       /* make sure it loads the kernel map before lookup */
-> +       map__load(machine__kernel_map(con->machine));
-> +
->         skel =3D lock_contention_bpf__open();
->         if (!skel) {
->                 pr_err("Failed to open lock-contention BPF skeleton\n");
-> @@ -749,9 +752,6 @@ int lock_contention_read(struct lock_contention *con)
->                 bpf_prog_test_run_opts(prog_fd, &opts);
->         }
->
-> -       /* make sure it loads the kernel map */
-> -       maps__load_first(machine->kmaps);
-> -
->         prev_key =3D NULL;
->         while (!bpf_map_get_next_key(fd, prev_key, &key)) {
->                 s64 ls_key;
-> --
-> 2.51.1.851.g4ebd6896fd-goog
->
+Cheers!
+
+Tony
+
+-- 
+Tony Jones
+SUSE Kernel Performance Team
