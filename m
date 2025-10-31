@@ -1,121 +1,111 @@
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DA42DCF5B
-	for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 08:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C284332919
+	for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 10:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761899084; cv=none; b=mG2eHMq3ehmh+pUs3bDEBC922aB2ioW2+p9xPzUNol198FIeZNKjPuEXnkx0/iJ2uZBlX8wXHUa+r76hw7igEWgRXWCUArZOEzMNk/v07UcpGMafuQ4hyUVBje2+4I1wNLasb/GoBB+k5ZCxZLdtBg+Av8G+cvrhosEJIXspJC0=
+	t=1761904806; cv=none; b=dLNWqwVBmImzG9Gf7y9XQ0/g6C0dhMaNMP8eIuHj6BCL2/60Di7QmkQmpjKCFt/L7VjnXgM5sa9PDnqc2vXuD3ClxarARe4BhxgI9GOgZCQXUpGsL7xXfbJwhvOk7Wp27cLPQqOUfNrzf7s0Eq/JlXBMMp56nusfjUs0p4rYreY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761899084; c=relaxed/simple;
-	bh=QBdLgXepaoyusDzfPuWF7W5gVFX3pzRYvpA7qsRLNtk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kKaSYoLR8RdcT0LQCkJUlWS1noF8isUseXciAVPsB9mMU4r0qeImVzJxW79EFr7DtfZ7rehtj9yF/WQposnun7CDLfiUrCKPlfI1epPt9xWAWNfzjm48OZKjj4U+tBm5UKth3esvAmjYbXJE0QXsdlss2z+BWhYkZOHQNnC3f+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sourceware.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sourceware.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-5d613937df1so1774375137.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 01:24:42 -0700 (PDT)
+	s=arc-20240116; t=1761904806; c=relaxed/simple;
+	bh=wNnjGniV6pu3D6d0+vHC1OpzEzE1DnHmr+R7k2tu6TU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=F7W0NbcTK/QYUWizpLq5bdYMiTzZGvFpiQaA7DMSp+MU5E4KEFkzf9P4Gd5c3smEOsXizfFgdGeauYa5l+YfHggtksYgH80ZrsHrUswLF4WqEMxzLxYMS1yNVYzeQgtMBnTY+Mq/O2KdEH1Y/kUrE8J2RQNx2vfWR29UMMy09cU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J4f3W9rX; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J4f3W9rX"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-471191ac79dso22691715e9.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 03:00:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1761904803; x=1762509603; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=9XmagYXZGhiRCZo8nGtg5dtjzropHlOVEQuuywu8QoA=;
+        b=J4f3W9rXGjMCaWSR6Lxj7YXEWIJgdZSbBIrNsbATnAknXIGFGL1YFerW/2meokdt5+
+         DNNXhauX+rEW5pjvlg0uAORbrQs4yxcAWuq8Z5wYU7xIUzBVxdHofS+uG2hE13xxh4sM
+         7NSUUgwKy+kKGodo3uFPEEemwhmosAplqPGW809/IH5C9gjZaS826RWPyzAsJAudYPsJ
+         JdKckZN33cePnrmmh6QTxN6+vLeFNqanG3DR3oP9nUFP9zBQAr9x2r8lpLFwLgGgfbBC
+         pjgDts2J7nB3MFJEkwORLcTJRDUv8M2/u+xT0b+VKGnTYAA5i+LysobG0gpmakWDBIiv
+         s5Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761899082; x=1762503882;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YSmGt9VWfBQJDvvEyJ8bQzSLcQfsQHCg2enix3hl0bA=;
-        b=hNOHKuo1LthfsYEUOSyGvZMbQbi6gCtzX1gQgD0jLznOqwQ+Xm9AKfg6tYaAExf0IG
-         cLrpoHLMaF271EtKQWVDG0Mqq90DG+90cVTAxAj77kLpuWiK/+VKxznqtaS+IprVPeKv
-         ohpL0eY1u+ZPm4NG3lHCzoYM9Ns2+byIG5S3eDLUf7PAt78gGLbys22Wn7v7t4wdCAmy
-         QQANrHI5wbAtaXkKB59N54ykYtk7vQoFX1bkN1h8mHbCoN7I0q5RhNNRs3liABgXiQcU
-         MlyhCdLB1n6Qi4VP1sS6BH1kZwsdDW5sR3XpishvHPWa+MQCWg/epWnKVu9clTBZElpT
-         S+4g==
-X-Forwarded-Encrypted: i=1; AJvYcCUPkI6anUQd3qmb4GtL/Sy9yLMkHT2bfw/qi3oXabJE9OQg03BU3LXaJ8OHpEoT2/vxtvLJpjuNNhZwYfM8DqAd@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTyfH91rwgjJnClhexl8xCMNiG7QSffz/MvjvYc5L9f4bPqjkY
-	s+ZrTnVPG3LJn2VKOxtluz05Wfu0TfqJtslHZwkHhQv+f+t0oyXTCL1I+zopDw==
-X-Gm-Gg: ASbGncvnDYruBp4062lgefVP0pY+aVsBLFD8kUtdQ3OzSMJ9sr4wC1xOnEvEmBmsRJc
-	4ejgrwAvK7HjJYlyOY14s7TUTJew2VmvcW0mvclY7GuNVM1Ju/cSxrkQBvjrjZJz9CREskiTbMJ
-	L/cjdn8cgdZp+sBjZJ9F6y1+zKkRMfklnCAaP1/mbz8TZ0HlhINq23mKHQLf20pVZ1IWgOnmWjl
-	6Xq4sLT/Rp5ieiXkW0197yy8SSPHDFEygUBD471jb7WBbl+Ocyodw+Y70EszTQksqlm85P17mgu
-	M++kCQZihRjowyZutlEQKybZ+AWPNGB8czA3EJzaioIYv4HieVZpBXBI8iWMEtoBT9LzTGfkYPk
-	aPVKExYBgbK0RhvlenfdeD7yqzirfbkvyrddXLsS0z39ohKvczOj6yW8obcxtacwOmwP0ICKNoh
-	JrNzX8l/ckQ7CySKpWf5eqOep7OzRrtyARc9eZ28nI
-X-Google-Smtp-Source: AGHT+IGHGHKh+nYYat2AbeCfqL5244kp8Ih3mb4nwwOX21MaI6khBJsw7UoIPDSmNZuKluWfVG9yOA==
-X-Received: by 2002:a05:6102:30c9:10b0:5db:b804:dcc8 with SMTP id ada2fe7eead31-5dbb804e215mr160112137.0.1761899081669;
-        Fri, 31 Oct 2025 01:24:41 -0700 (PDT)
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-93512a554f5sm432563241.5.2025.10.31.01.24.41
-        for <linux-perf-users@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1761904803; x=1762509603;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9XmagYXZGhiRCZo8nGtg5dtjzropHlOVEQuuywu8QoA=;
+        b=DztA8MRMw6fzLUrLwTsSKQpugcCkcFTDZRV3w9xL/w17CID+UgtlQMVSWXnctIDq78
+         dVMu7i+zWM0uQelAqFx3rbqW3l6ym/zk2AKsB7s4GNWaE9vFyRJoLCLOIVbFgOhk/XlK
+         wFYBWfweajCk/AnK3UnLC6MhpKfUAdmfSUuopuez2MHnnZuCWfhNEo2FCNQS355IlS8Y
+         ATfonpMOd+j/ReCqJ9KeDyrbPVff90P5BmVNArylVvejPogTIlLSGbVWKtfo+RG2Qjm6
+         +a0niDi+zxjWy1Ng8vQFZUoE6Q0HgQVnXQL/anerJ32bmsAHDKWy3PfCuJ6GsiWBJ1LB
+         9tYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUDSK7VJ0MfeV53pRBaRP4ZpdydinjlOtMYN3QzSAoCPUAHo7ZJuExii6TERN7uti4eZrc2ffqU7Gd0FpvOgMrY@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGtfZluiwlc7dG+BrxHcG2wxr6sa5F4BzkjaRbXn+t6Pa25NkF
+	sHTAYc0ajD1YaAjq4YdabHP36MaRv/Nes3KDU8+dwqYpah5kRPVg2yNCYRzbniP6MyQ=
+X-Gm-Gg: ASbGncsDL5TBFlh4EAn400r7uNXD/8FJj1OL1W1/ynzaYF7e03M+NzdzkEiRIyIc049
+	SmBCLFM7R6Kz59ptsznTE8i33sL6Tl4yK8A/2lRwHyTEefq16z1WhOhK7RjFhSeDDeMhoZQmymj
+	b4V0GyeEgUHs50i08vdEwVkMwKCRkCIV95ZQ2cIcCDexj58zpznosgQtALSrCbKOpy/uFLq1dQ8
+	ndh1+Fj9ais0KC3kMkFpm2L4+BXGf7aZzDpsN0aNVKND3IIE4GMBBWpoiifHjAo/AgBEtFuXUJL
+	/A2VQt+1T7vBnCncZTkiwaYV2vynLV/WVzSVSlVPfLKZzddk6CE3N81kKXEDcjFDAACjt/R6Nwb
+	w8VqKAxvnl7Km9kqfgBJF6zkMZ0KThI76/dSrnyVk2dXBTlYg9y925qqt0fWjYT+RxL7qZ80iKw
+	GeETXlQVWUNCVJ/f/M
+X-Google-Smtp-Source: AGHT+IEv9vBf1gcZcP/1EXFL+TdkTt1q9osVqrYbZXlOtnlKXOqyYbm17I+a0qRcWFjfmA40A3E6SA==
+X-Received: by 2002:a05:600c:4e44:b0:45f:2cb5:ecff with SMTP id 5b1f17b1804b1-477308ce7b2mr28429105e9.31.1761904802781;
+        Fri, 31 Oct 2025 03:00:02 -0700 (PDT)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-47728a979b8sm86399575e9.10.2025.10.31.03.00.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Oct 2025 01:24:41 -0700 (PDT)
-Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-5db2593c063so1499061137.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 01:24:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXyW6vPW29xY+0ZgJmEfyvZt1G/SYGoc/znKctgA5mN74tNc+51Onxap48LJF8lmCVURP7JwuuuK2Hyr1j7Ez5U@vger.kernel.org
-X-Received: by 2002:a05:6102:508e:b0:5be:d04d:d2c6 with SMTP id
- ada2fe7eead31-5dbb1204032mr790145137.9.1761899080804; Fri, 31 Oct 2025
- 01:24:40 -0700 (PDT)
+        Fri, 31 Oct 2025 03:00:02 -0700 (PDT)
+Message-ID: <18df2108-5f09-4806-af0f-3af3fbff3f92@linaro.org>
+Date: Fri, 31 Oct 2025 10:00:00 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <3xd4fqvwflefvsjjoagytoi3y3sf7lxqjremhe2zo5tounihe4@3ftafgryadsr>
- <20251030102626.GR3245006@noisy.programming.kicks-ass.net>
- <87zf982s52.fsf@linux.intel.com> <bdda89a7-ff60-46b0-8ce3-28ffec1fac2a@sirena.org.uk>
- <aQOvCugzYe/2DcNW@firstfloor.org> <baf2665c-49aa-4b8a-be26-69dc23876bee@sirena.org.uk>
-In-Reply-To: <baf2665c-49aa-4b8a-be26-69dc23876bee@sirena.org.uk>
-From: Fangrui Song <maskray@sourceware.org>
-Date: Fri, 31 Oct 2025 01:24:52 -0700
-X-Gmail-Original-Message-ID: <CAN30aBEVdhju7CG4Tato-D1uof5p+dhTM6nJtjXX_SiYH7fU+Q@mail.gmail.com>
-X-Gm-Features: AWmQ_bkGkpQQsklzLvHTWsBZ_xTryR-WgcL-38L2MiIPvb0SEfuMwf6pZKrIbe4
-Message-ID: <CAN30aBEVdhju7CG4Tato-D1uof5p+dhTM6nJtjXX_SiYH7fU+Q@mail.gmail.com>
-Subject: Re: Concerns about SFrame viability for userspace stack walking
-To: Mark Brown <broonie@kernel.org>
-Cc: Andi Kleen <andi@firstfloor.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Fangrui Song <maskray@sourceware.org>, linux-toolchains@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tools: Fix typo error in json file
+To: Chu Guangqing <chuguangqing@inspur.com>
+References: <20251031031729.2304-1-chuguangqing@inspur.com>
+Content-Language: en-US
+Cc: john.g.garry@oracle.com, will@kernel.org, mike.leach@linaro.org,
+ leo.yan@linux.dev, peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20251031031729.2304-1-chuguangqing@inspur.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 30, 2025 at 11:45=E2=80=AFAM Mark Brown <broonie@kernel.org> wr=
-ote:
->
-> On Thu, Oct 30, 2025 at 11:31:38AM -0700, Andi Kleen wrote:
-> > On Thu, Oct 30, 2025 at 06:07:49PM +0000, Mark Brown wrote:
->
-> > > It's going to take a *considerable* time for the hardware support to
-> > > become standard.
->
-> > Optimizing for the past instead of the future?
->
-> On arm64 no currently available hardware has shadow stack support, and
-> once systems start becoming available it'll take a very long time for
-> that to filter down to even being all newly shipping systems, let alone
-> all systems that people care about running new software on.
->
-> > Not on x86 at least. All my x86 systems have it, except for a few old
-> > skylakes.
->
-> My experience trying to find a system to test changes on was somewhat
-> different :(  I did eventually get something.
 
-I=E2=80=99ve chatted with mobile toolchain developers at the LLVM Dev Mtg, =
-who
-emphasized that size concerns are especially critical for AArch64,
-which is heavily deployed on mobile phones.
-I think Arm ABI makers are unlikely to want a format known not to work
-with mobile Linux to coexist with a future, more widely adopted
-compact format with callee-saved register, LSDA, and personality
-support. I chatted with Peter Smith, who seems to think so, but I
-don't want to put the word into his mouth:)
 
----
+On 31/10/2025 3:17 am, Chu Guangqing wrote:
+> Correct instruction spelling errors.
+> 
+> Signed-off-by: Chu Guangqing <chuguangqing@inspur.com>
+> ---
+>   tools/perf/pmu-events/arch/arm64/ampere/emag/cache.json | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/pmu-events/arch/arm64/ampere/emag/cache.json b/tools/perf/pmu-events/arch/arm64/ampere/emag/cache.json
+> index 4cc50b7da526..4001cc5753a7 100644
+> --- a/tools/perf/pmu-events/arch/arm64/ampere/emag/cache.json
+> +++ b/tools/perf/pmu-events/arch/arm64/ampere/emag/cache.json
+> @@ -81,7 +81,7 @@
+>           "BriefDescription": "L2D TLB access"
+>       },
+>       {
+> -        "PublicDescription": "Level 2 access to instruciton TLB that caused a page table walk. This event counts on any instruciton access which causes L2I_TLB_REFILL to count",
+> +        "PublicDescription": "Level 2 access to instruction TLB that caused a page table walk. This event counts on any instruction access which causes L2I_TLB_REFILL to count",
+>           "EventCode": "0x35",
+>           "EventName": "L2I_TLB_ACCESS",
+>           "BriefDescription": "L2I TLB access"
 
-Intel=E2=80=99s 11th Gen and AMD Zen 3 support hardware shadow stack.
-A software-only stack walking approach (and remains unvetted for
-AArch64-see above) that doesn=E2=80=99t replace .eh_frame would quickly bec=
-ome
-obsolete.
-Shadow stack can be enabled per process, providing flexibility to
-balance performance overhead / memory consumption with profiling
-needs, even for users who don=E2=80=99t prioritize the security hardening
-aspect.
+Reviewed-by: James Clark <james.clark@linaro.org>
+
