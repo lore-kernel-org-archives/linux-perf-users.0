@@ -1,122 +1,257 @@
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D05602D7393
-	for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 05:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC023195E3
+	for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 07:06:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761888503; cv=none; b=qANrgthv3lTChQMtn758VAtdVOHTSbjO5u5bDdym9+WK8P4Ce/y/SKGpDHuuTHCBR8TruAQ+a9eLt2bbpsMe9WsvDkX+iqVsTxb4bIi5gWguwzlwAzT2z0Awp5O2Sts7WtKpo3o3EOKft+BPMUWoueQ4dpw8amK+K+IKpJq3Qhs=
+	t=1761894405; cv=none; b=C6fj9AZ6bNkXUvKMDS6uEIAPmPax18bCZhpnFZ2CAg7/l7uENI243CGbuield+3x/o1xkRaEoGo30QD97iZxcIQY1VTSl4UNFthI3nhpO2dr5qqZwH2EkeTCW/00+w77Oz3f1ApGfsjsCclq+Gd47M6KbdjN3BHa5ODd1hlWEgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761888503; c=relaxed/simple;
-	bh=pqE9Rb4ICM67LXGEhPtxtgsqOngcvbeqlTIxwrpVoxk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UQ/elX3AN6+D77wtJt1kcM0agg2mTKbRtSyMH2XJ6HcgypN08ibpMgvKAcBOUaiAUM2aK5cJ5LpxB7I78ZpHV/AL92G+jAjtj1Bj3DysPOSfzUIqcPK4M17bvgOmkodCWn1VZ+HEJyIPFSD1+aLT44cZ4Q1AnbcZ2DgSjQ9Xsig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sourceware.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sourceware.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-5d5f8e95d5eso1211763137.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 22:28:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761888500; x=1762493300;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pqE9Rb4ICM67LXGEhPtxtgsqOngcvbeqlTIxwrpVoxk=;
-        b=D6evtqF5WeAMB6AADuIgM81iWiuxB+4Rt18p4LyW9I4ZH6op5ftalkIPpgpGmWQ2lN
-         2CbSdD0PJZdSkgShWDtJ3u33UTCyOd+WvUJ+8aOGka4bQ7IpKTB8CtQBetySQtBU2ehq
-         0D79mv971hNiiAcqJQkujX9cXhdmaqiuWHJPnY5v2aVC3czLgRLiKfGWeWdEWYrhZhbf
-         Ly1qc6tAlh/v5EegFWGOJNbUxJjmVtetKdB1diR2gBxrDYVe0WhVHBXeyPufcFtciCEU
-         H05BXuBT8j4cq5/Gaf7tnYP+6qIha3shgBhB7/U5KZmZhblUsmQkk3WcJHajXhvDt2vd
-         x27w==
-X-Forwarded-Encrypted: i=1; AJvYcCWR27FyAFDohmLpM/xY3Wt6P/feWTW4Fv2kq+qV4zKwgFY9GEd4o0JvHoPeOlHpb4HV9MFm5mPP4vpKQEh7iMU1@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMe0ECIyvKGZAu+/RUZigko0fgPzWnjuz8mw7YL5WS7Qqj3Gmn
-	arQ3XkoO3jaKf37IWJYWIqoosq8yj7KlrsACX0HBJhSHAhN/JCuBCQO6oeQD5Q==
-X-Gm-Gg: ASbGnctiDrkHCwKLQprE7UKfMpXI320L5u9TQ/9bdLgM3Q8H8cBHBRWLX2o2b8JMVld
-	DSSWNY8u2H9lrZzEwo8+gYGvJrsIKNEOk+NpTTTwi9lyeHPsxl06B/TVw6+JyfKsi4ELRhZNgM8
-	glnNkbaV+OC7pVYH874mq67/ZvVFmH7G6R28VqIFtfDkL2fNTQSPEgMjydfcGVfikaMmeWf55uR
-	4vF+bHrcGrVHbM+mNj/VGk9GI7FHL32CK6J7twSwTMnrFE0ebrO4qnv3RpcbxRDMmQqKlfJcVBc
-	F16PlwaTtbywG5e0fnuQzewcN2/SNVM5+GlBso6PTAMlPxXVnlYBE7zaBc0cwvY3xeYgJn+lMnf
-	OYJMsjT/LT+InbeOqfCTXxJ9qy65iKHbCiHMd/rUqu+DkyvsOzvdo44WbD6cNtTWCwUHtZdKx2U
-	c+9AwAfGSfpXKewkT6iw3JKOVkrn8jA2krtXgfDsCT
-X-Google-Smtp-Source: AGHT+IHbeGFNqBpGPXS1jmeUTnPfr4Pc+4rw81F4rHlG4qVv3/7swLLWRNjnjsoNPP67M0YLaxJ2iQ==
-X-Received: by 2002:a05:6102:951:b0:5db:ae7f:7b0f with SMTP id ada2fe7eead31-5dbb139bb90mr549500137.44.1761888500327;
-        Thu, 30 Oct 2025 22:28:20 -0700 (PDT)
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-93512d26931sm306679241.16.2025.10.30.22.28.20
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Oct 2025 22:28:20 -0700 (PDT)
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-934ad40c2c2so816782241.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 22:28:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWzmbmVxVqMhrRKPPkP6R8bBFaJ0JKHnK3/bn5BNhM8R9hNx7Fb8B/iFt73wIJbzFY3uEsOwdFcFqqh4qE/rVM8@vger.kernel.org
-X-Received: by 2002:a05:6122:80aa:b0:557:c97f:f987 with SMTP id
- 71dfb90a1353d-5593e5962d9mr775699e0c.15.1761888499850; Thu, 30 Oct 2025
- 22:28:19 -0700 (PDT)
+	s=arc-20240116; t=1761894405; c=relaxed/simple;
+	bh=zpSsdlxAgel8A1maxObCz5dhwToGEFygvGQUwQFns94=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EBKdFLTqtszOA8g9NWYzJbb6yUCBcC/7mdjJkrTlwc5X3hQftwl61Uxe79u/Rd7EOIXlyUpuvQHrPrFq1hTKR9mkQY42rYm731EaHr8Z2oMEWVE9r/y7LpqhTiPGP1SAUieulY45WCOp3kj+lB53iLQtg5yz/3hBM5a0O8XH6VY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Mwt5+D+V; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Mwt5+D+V"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 59UJeAWC020439
+	for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 07:06:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=deI2I+
+	ltGZl4QcQqzmG3fEyLf0TZpKCp3Y/VfQLZlm4=; b=Mwt5+D+VfyODCct22jE9rW
+	02GlXSA8gwVcl1EnrM4K98263KjpYcePxzxxg3aIuJr9xPIjSYZPQWXnhgHQsfD4
+	MLmZEHR5S7WYClz9VEN8xgZ7a3jQI9TwCYfol0efGc3u+kjxuAS7vCLSRZlblvzz
+	qd6Ujuk6QiV0UmC1W2tH0gFy4Jn+1nsxK+LlxPBeJEoDC/gPDD1b0N26J5liSbj2
+	FcOw/kVIlPl2ZlcFlB7+JmF915SIN3Z4el7kqufjBLmPthJ28YVEV6qVTlQvLJsS
+	BIclVB95brI7l6y5wmQzgEpXCMFFlUBfs9MoF4AZvc24q+UYXKnRzwoQKzs07M4w
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34agvbx4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+	for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 07:06:42 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 59V74OFL022587
+	for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 07:06:42 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a34agvbx2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 Oct 2025 07:06:42 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 59V2rXtX019545;
+	Fri, 31 Oct 2025 07:06:41 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4a33xyd11q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 Oct 2025 07:06:41 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 59V76bk037355990
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 31 Oct 2025 07:06:37 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6F2722004B;
+	Fri, 31 Oct 2025 07:06:37 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4119E20040;
+	Fri, 31 Oct 2025 07:06:37 +0000 (GMT)
+Received: from [9.87.152.126] (unknown [9.87.152.126])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 31 Oct 2025 07:06:37 +0000 (GMT)
+Message-ID: <ad38454d-b4b6-4bfa-b179-4a460087247d@linux.ibm.com>
+Date: Fri, 31 Oct 2025 08:06:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <3xd4fqvwflefvsjjoagytoi3y3sf7lxqjremhe2zo5tounihe4@3ftafgryadsr>
- <20251030102626.GR3245006@noisy.programming.kicks-ass.net>
- <CAN30aBF3MofmVTjTZ9KFq9OBM0nA16amP5VFv+VAEJfFkLx0qw@mail.gmail.com> <20251030133323.3a81c02c@gandalf.local.home>
-In-Reply-To: <20251030133323.3a81c02c@gandalf.local.home>
-From: Fangrui Song <maskray@sourceware.org>
-Date: Thu, 30 Oct 2025 22:28:33 -0700
-X-Gmail-Original-Message-ID: <CAN30aBHs_i=Vp0XMRBLgHVtLLCsFCHTRXQFDAeoqpmCgqhST0Q@mail.gmail.com>
-X-Gm-Features: AWmQ_bkkCBb44J8qydEViwGcv7ZrA-RSfc0m9YrKRUVjSWUbtdYeuweqQzkIKto
-Message-ID: <CAN30aBHs_i=Vp0XMRBLgHVtLLCsFCHTRXQFDAeoqpmCgqhST0Q@mail.gmail.com>
-Subject: Re: Concerns about SFrame viability for userspace stack walking
-To: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: Fangrui Song <maskray@sourceware.org>, linux-toolchains@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [linux-next] perf report runtime extremely long
+To: Ian Rogers <irogers@google.com>
+Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Jan Polensky <japo@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>
+References: <09943f4f-516c-4b93-877c-e4a64ed61d38@linux.ibm.com>
+ <79195870-7223-4aeb-beb4-a7d8f1895caa@linux.ibm.com>
+ <CAP-5=fXi=EDU7-tdNLwTKbCHR80_p3=TAe0qF0oE-tXbx35znw@mail.gmail.com>
+ <13800bed-1256-4414-ac8b-e99439c748ec@linux.ibm.com>
+ <3b86c7e0-5b3e-468c-8077-7efa3959d221@linux.ibm.com>
+ <02841ee0-d0b2-48a8-b523-7bcc561ad64f@linux.ibm.com>
+ <CAP-5=fUKaX0b5b3QYarL9qUK4Z=u0zpKnB9XVm-_bOKap7sJag@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <CAP-5=fUKaX0b5b3QYarL9qUK4Z=u0zpKnB9XVm-_bOKap7sJag@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=K+gv3iWI c=1 sm=1 tr=0 ts=69046002 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8 a=XPtN7dBuAgipyJ0TDSUA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: AitCLFYFv2FkYjPVCEuQsmj-ub0UYBtF
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDI4MDE2NiBTYWx0ZWRfX3dXLzktVQwl6
+ dX/EyK2Sr3Smh46GG/x1PXvu10q32BmvlZqbacReDeTMiFQb5pwFitH7oXfKyZ6Fab/gNvKG4uj
+ 3z9M1RDPsEovtWhVlJkI+41sYbkNBPArA8VCHLIjaT8/ybeY8pJrM86YGLfDgwoLIz0BVi2+drM
+ KFRXxb0tP+0IWXqqHxm4fknlVSDwq/45ZieLbP2MZ38mrzTBEYaMhh2/LRX3iIflJXm2O64uly4
+ TpgV30U5ZtmEXDUz/tDvA3XHox1Q4Rq3hDRXIgqCc7jXzfSFVHj7qVVXePyg5mjVJtPKldIBLjk
+ bWpn6jZFXgVKpMmaGN8ayarnjTFYKeXBTUIEqQTvUxGDtt0L3q+PxuwIO3YHUsYGdIiobidSMeM
+ vF2Gv5vQkHG9DLjZBLc5Mkk3nJ1RDw==
+X-Proofpoint-GUID: 9i6XWs76XvThcPf_4CNSdrhthCR4R69M
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-10-31_01,2025-10-29_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 priorityscore=1501 impostorscore=0 suspectscore=0
+ adultscore=0 clxscore=1015 malwarescore=0 phishscore=0 spamscore=0
+ bulkscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2510240000
+ definitions=main-2510280166
 
-On Thu, Oct 30, 2025 at 10:32=E2=80=AFAM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
->
-> On Thu, 30 Oct 2025 09:48:50 -0700
-> Fangrui Song <maskray@sourceware.org> wrote:
->
-> > If SFrame is exclusively a kernel-space feature, it could be
-> > implemented entirely within objtool =E2=80=93 similar to how objtool --=
-link
-> > --orc generates ORC info for vmlinux.o. This approach would eliminate
-> > the need for any modifications to assemblers and linkers, while
-> > allowing SFrame to evolve in any incompatible way.
->
-> I'm not sure what you mean here. Yes, it is implemented in the kernel, bu=
-t
-> it is reading user space applications to get the sframes from them.
->
-> Every running application would need this information for its executable.
-> The kernel is dependent on user space having this.
->
-> The only thing the kernel is doing is reading the sframe tables associate=
-d
-> with the running applications to be able to walk their stacks at runtime =
-to
-> do profiling. As Peter asked, the kernel cares extensively on that walkin=
-g
-> being simple. If something goes wrong, you compromise the entire machine.
->
-> -- Steve
+On 10/30/25 16:57, Ian Rogers wrote:
+> On Thu, Oct 30, 2025 at 7:27 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+>>
+>> On 10/30/25 14:25, Thomas Richter wrote:
+>>> On 10/30/25 09:59, Thomas Richter wrote:
+>>> This is the first bad commit.... (I actually tested it :-(, obviously without -D option )
+>>>
+>>> commit 0012e0fa221bf9cc54aa6a0e94d848653dc781bb (HEAD)
+>>> Author: Ian Rogers <irogers@google.com>
+>>> Date:   Sun Oct 5 11:24:16 2025 -0700
+>>>
+>>>     perf jevents: Add legacy-hardware and legacy-cache json
+>>>
+>>>     The legacy-hardware.json is added containing hardware events similarly
+>>>     to the software.json file. A difference is that for the software PMU
+>>>     the name is known and matches sysfs. In the legacy-hardware.json no
+>>>     Unit/PMU is specified for the events meaning default_core is used and
+>>>     the events will appear for all core PMUs.
+>>>     ......
+>>>
+>>> What puzzles me is that the above patch does not change anything in
+>>> util/s390-sample-raw.c which handles s390 specific sample interpretation.
+>>>
+>>> Maybe that patch affects perf_pmus__find()?
+>>> Not sure how to proceed.
+>>>
+>>> Thanks a lot
+>>
+>> Ian,
+>>
+>> the issue is within function perf_pmu__for_each_event().
+>> Without calling this function the output is as fast as before.
+>> (Well a bit faster, because I replaced this call by strdup("hardcoded-name");)
+>>
+>> I have looked at this code, but I did not understand a thing....
+>> Strange, perf_pmu__for_each_event() did not change in this commit,
+>> but the behavior changed a lot.
+>>
+>> What we need for s390 is some way of faster event name lookup,
+>> the PMU is known, its "cpum_cf". Is there no easy way to
+>> find the events on this PMU (given the event number).
+>>
+>> Maybe a some sort of table, because this lookup is done
+>> millions of times on a large file with samples including raw data
+>>
+>> Ideas?
+> 
+> Thanks Thomas!
+> 
+> The bisect and the behavior make sense now. Previously the legacy
+> events weren't part of perf_pmu__for_each_event and now with the
+> legacy-hardware.json they are. The events were parsed by matching
+> explicitly in the parse-events.l lex parser, but for lots of reasons
+> the json is better. Anyway, there is common functionality for
+> reversing a perf_event_attr.config to an event name in
+> perf_pmu__name_from_config:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/pmu.h?h=perf-tools-next#n306
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/pmu.c?h=perf-tools-next#n2728
+> 
+> The normal case for a PMU is that we want to see if it has an event by
+> name, so we have a hashmap from name to the "alias" information (I
+> don't really like the name "alias", it is information about an event
+> we want to encode):
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/pmu.c?h=perf-tools-next#n58
+> 
+> The use-case for perf_pmu__name_from_config is generally debug output,
+> so there isn't a fast path config to name lookup. Is config to name
+> lookup sufficient in s390-sample-raw.c? I notice that the code is
+> matching the "event=" part of the encoding, which is a sub-part of the
+> config (and may actually be a value in config2 or config3).
+> 
+> I wonder if it would be easier to add a cache of matched names in
+> s390-sample-raw.c? So a global/static hashmap in that C file with a
+> key of set and nr as per get_counter_name (it seems the PMU can be
+> implied to always only be the core PMU) and a value of a strdup-ed
+> counter name.
 
-I suspect your concern is primarily with DWARF expressions (the
-DW_OP_* opcodes), which are needed for complex, unusual frames.
-If the perf subsystem ignores those and focuses only on standard frame
-layouts, ensuring safety becomes much more straightforward.
 
-Compact unwinding formats are designed with this principle in
-mind=E2=80=94they don't use bytecode CFI instructions or DWARF expressions =
-at
-all. Instead, they use a binary search table (similar to
-.eh_frame_hdr) to locate the frame descriptor, then decode it using a
-straightforward nested switch statement based on the compact encoding.
+I do confirm your assessment, here is the proof. A very poor man's caching
+in util/s390-sample-raw.c:
 
-For reference, this is llvm-project/libunwind's implementation for
-i386, x86-64, and aarch64:
-https://github.com/llvm/llvm-project/blob/main/libunwind/src/CompactUnwinde=
-r.hpp
+# git diff
+diff --git a/tools/perf/util/s390-sample-raw.c b/tools/perf/util/s390-sample-raw.c
+index 335217bb532b..b04d3b1a8750 100644
+--- a/tools/perf/util/s390-sample-raw.c
++++ b/tools/perf/util/s390-sample-raw.c
+@@ -162,6 +162,7 @@ static int get_counter_name_callback(void *vdata, struct pmu_event_info *info)
+  * number and use this as key. If they match return the name of this counter.
+  * If no match is found a NULL pointer is returned.
+  */
++static char *ctrname[500];
+ static char *get_counter_name(int set, int nr, struct perf_pmu *pmu)
+ {
+        struct get_counter_name_data data = {
+@@ -171,9 +172,14 @@ static char *get_counter_name(int set, int nr, struct perf_pmu *pmu)
+ 
+        if (!pmu)
+                return NULL;
++if (ctrname[data.wanted]) return strdup(ctrname[data.wanted]);
+ 
+        perf_pmu__for_each_event(pmu, /*skip_duplicate_pmus=*/ true,
+                                 &data, get_counter_name_callback);
++if(data.result)
++    ctrname[data.wanted] = strdup(data.result);
++else
++    ctrname[data.wanted] = strdup("unknown");
+        return data.result;
+ }
+ 
+# cd
+# time mirror-linux-next/tools/perf/perf report -D -i ~/perf.data-test > /dev/null
+
+real	0m25.908s
+user	0m25.548s
+sys	0m0.182s
+# 
+
+> 
+> Let me know what you think and I can send you a patch if you like.
+> 
+> Thanks,
+> Ian
+
+Of course!!
+A hash list is more flexible, but an array is fine too. There are very few holes
+in the counter set numbers, They are listed as "unknown". That does not mean these
+counter do not exist! Most of them have values, but their name was not made public
+in the documentation SA23-2261-09.
+
+And there are more counters from the PAI crypto (172) and PAI NNPA PMUs (36), not much
+but in a different range. So I guess this qualifies for the hash solution.
+
+Thanks a lot
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
+
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
