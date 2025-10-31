@@ -1,214 +1,129 @@
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E817B2F363E;
-	Fri, 31 Oct 2025 02:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4901CEAA3
+	for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 02:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761878216; cv=none; b=VarJ4n03hCBm0j5x6XFJCU+7GdxOoPmLRtgfNu4yZ1gVirbdwUjWVj4BZ5ERyZhvYDxiNSOJ0xroXEDDAapRdrFkDWiVRT6ZH5w1a+ln3NPk7I56YUhx5ITJ9dEl4K7ovt53nKevM30lBJWz4NCSZHMkhL/dWWUwLUo9w81Y3tU=
+	t=1761879054; cv=none; b=g6mzbD/K/Vkskbbl7lgp3la8KJBoLm8aIbvcLzev21B2vUqC6K4dCHfrxyFBXtwOkitdYqcDnIgEnxeMyM2qfHeyw4Jm9RVcy86EQkLqOhMfCug326UP7JaTEkFXb4Bv2SO3jz6aXxOHHIJ3zfqc3HYRiFAk9Juq2YlYAaTfJdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761878216; c=relaxed/simple;
-	bh=NUA053BqgqawXS1Qozx//QoxkeT9MqL31R1qOGEfwBw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EQpGaScj09eS+AJxElpLeorX6EtkY85HeyNSRfwPgr1QlZdqLszYRJbQgyU+AVVFivQl5s6u9a8+NF8Z2dwyr+aX4JRnYQ+E+fsA4mtIsTdDqr/TWujacMbcUe5qI+UvFPgEEXGTEzDKgzLm5feObCgv1dzNZRi+qnI4snsh7pQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=wIL0q/7z; arc=none smtp.client-ip=115.124.30.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="wIL0q/7z"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1761878200; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=PyeoLWnDjTpu6Bq9KrYA09g/UfFxetHtGXnQlFKNsX0=;
-	b=wIL0q/7zMLtxHpx5wliNI3yF9CjFjIreOyY1A7jybBAiV0jdm19YYyS6uK0a0EtDk2BRciFPGn/ljf+WnHDL3pbLnqLj6sRFF5TNP/kjBtpWnZEWeysRKPcqH6vdt/+LBgqAccABO/9HivqSvFub/bAbHl/e3XcocGH04wK0WYY=
-Received: from 30.246.176.102(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WrNSDa1_1761878198 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 31 Oct 2025 10:36:39 +0800
-Message-ID: <5a06462a-697d-47b6-b51e-6438005b6130@linux.alibaba.com>
-Date: Fri, 31 Oct 2025 10:36:37 +0800
+	s=arc-20240116; t=1761879054; c=relaxed/simple;
+	bh=qS8tf6ZdxD5YdgAohIV+PFDGE+5VuGWpefXJWTNedps=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ommJlsG2JYRTcbNbcs4yivtmdLbIuEevOKsuWoCQTfCYuBzJalLupOb9r/iifz0LSt8DGMgyeTi+yBbEhzqBYtX4Cu7RzNWg5VJL92mwvo4/a9xTo3eoUWru4rQ70oFvkMylKHAUc398JXQCyxptDZRhxM8z+3YEzIBFgsHr8vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sourceware.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sourceware.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-5d980e08e06so1260969137.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 19:50:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761879052; x=1762483852;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZDVU1PDXVKtyHtSPl3IIz+yw4eJmqS8Dvhc2np0RKUA=;
+        b=MlzIMR55X2o9G+ynTVgAWOF+hSvJUgsJXHLf4rsw/MqSI4/Nw95HigQJrf/HlNcxuv
+         kfMQ5xxDuwMF5nPBYyjg+SYnsdiUOPWfwmi/k07TIMEhuuPDNFaUtcHDokSaiHn2hpsa
+         7eXE8l4Z4dVp/xsp7xyYQ+bPhKVD+tou4+J+FUIkvVLhOa54sldOYMCNFpOL3RA7GBym
+         6qpqN/tsYn0Q18W8/w7YF2g8UwIAMunVYrJuJvzY4q8WucXnp8ZcTRMUVofyS+Z+CVno
+         TrraA8YUpyNySK1Pu3H+iLbrm/am5DGuB8kQXkbl2VyAiiVkOIUgC+TI1IQT0gTeKeTz
+         IPXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUolg+qmUKgKHlEue1hjG5ZJeU92WWXN4MI/d46zZylMLFJZoytRnd5PdLRJrLj2xJVHAQDxTDE6hFtPGNY1TQp@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeBu4004uYpvebGsJ2n4bPGGGbvV/de35zzB5aJp3r7h7mG2CW
+	GQY0BW+abV6nH3ISRou5F50Siscz1mEyPCdMz/6sAFM3HYdE1GD3eoCUeawtNA==
+X-Gm-Gg: ASbGncsHF41z/s6thFjk0FIktazSf27oHQZ6l+9qIbSZK1OGwjWVN/Nxb1kXHa09fgf
+	TDowALR1grQELZP+yJQCqIRVneBp8hoNYnEb9ew/mwZ8GpAwElTo//e3Mlpt2vwkcdaxJWtXGOx
+	taKN+TRXkdFAz0FkBIOTCpycavlK2gZ/rRszZMi4jaY0qdHAW3F/viaXw4Rtl6arK1tdDCSd+x5
+	AoU/afpoaAzOlCMODAEFFpyr/rjznqHr/IrWnXnNiMzE3k/ENM4oRZsptDzKUgpyNSA0olfWbDt
+	eXKSBu3hkoy7RLdI5uMHA3t3+WiiuvM3HvFXAvzOA/3DdGQooykwNEGn8rxx3k6oQ2Tt9hUjvvi
+	72p7o3vRHxHgOriCIK9DWq67WjR9VVGFb9w+DVabgQwCCEKwUkXHDZcmPb506S4KcjmpdTa/PG+
+	G597dF3By0bzl9VIhibgnoxpCDXDs8qT2wHDjStB8K
+X-Google-Smtp-Source: AGHT+IEeES+EF8SnkNFuopAPBhLS96tqV8Z7wkUZJU1t1WaerCXCLYciGuVpEgTX61FFskx7lpCfgQ==
+X-Received: by 2002:a05:6102:5122:b0:5db:23db:2ad1 with SMTP id ada2fe7eead31-5dbb12ef353mr582549137.28.1761879051414;
+        Thu, 30 Oct 2025 19:50:51 -0700 (PDT)
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-5dbb64bab89sm143535137.14.2025.10.30.19.50.51
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Oct 2025 19:50:51 -0700 (PDT)
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-89019079fbeso929643241.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 19:50:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUZ/3ThaTlDbOw0VqudDx+Lvyn22rCKlza2CHKJOT8ssr/gJGNKbCbAIRFuq58K9zSbbQ5O4HGp7OUP5wUvNV3c@vger.kernel.org
+X-Received: by 2002:a05:6122:2888:b0:54a:8cfe:193e with SMTP id
+ 71dfb90a1353d-5593e3eee23mr689960e0c.5.1761879050970; Thu, 30 Oct 2025
+ 19:50:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf record: skip synthesize event when open evsel failed
-To: Ian Rogers <irogers@google.com>
-Cc: alexander.shishkin@linux.intel.com, peterz@infradead.org,
- james.clark@arm.com, leo.yan@linaro.org, mingo@redhat.com,
- baolin.wang@linux.alibaba.com, acme@kernel.org, mark.rutland@arm.com,
- jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- nathan@kernel.org, bpf@vger.kernel.org
-References: <20251023015043.38868-1-xueshuai@linux.alibaba.com>
- <CAP-5=fWupb62_QKM3bZO9K9yeJqC2H-bdi6dQNM7zAsLTJoDow@mail.gmail.com>
- <fc75b170-86c1-49b6-a321-7dca56ad824a@linux.alibaba.com>
- <eed27aaf-fd0a-4609-a30b-68e7c5c11890@linux.alibaba.com>
- <CAP-5=fVLGRsn7icH1cgmb==f5_D6Vr2CbzirAv7DY4Afjm4O2A@mail.gmail.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <CAP-5=fVLGRsn7icH1cgmb==f5_D6Vr2CbzirAv7DY4Afjm4O2A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <3xd4fqvwflefvsjjoagytoi3y3sf7lxqjremhe2zo5tounihe4@3ftafgryadsr>
+ <aQMUGvXv6sy75nKn@tucnak> <CAN30aBHOw16Tzdn_Z0TZKie7Fyi39bmB2PQK4LB-rjU1vn3zQQ@mail.gmail.com>
+ <aQMcYe5BK+Rsu3xF@tucnak>
+In-Reply-To: <aQMcYe5BK+Rsu3xF@tucnak>
+From: Fangrui Song <maskray@sourceware.org>
+Date: Thu, 30 Oct 2025 19:51:03 -0700
+X-Gmail-Original-Message-ID: <CAN30aBEvVbYh4bUerPSK3nk9VV=Szu845+PVww_XoU4gdMSJLw@mail.gmail.com>
+X-Gm-Features: AWmQ_bkToldiXwOSFlKVHRT7mRZ7QErCYaHn1a_Ye5mYyw3G3dxbB6B8-BAj7j4
+Message-ID: <CAN30aBEvVbYh4bUerPSK3nk9VV=Szu845+PVww_XoU4gdMSJLw@mail.gmail.com>
+Subject: Re: Concerns about SFrame viability for userspace stack walking
+To: Jakub Jelinek <jakub@redhat.com>
+Cc: Fangrui Song <maskray@sourceware.org>, linux-toolchains@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Oct 30, 2025 at 1:06=E2=80=AFAM Jakub Jelinek <jakub@redhat.com> wr=
+ote:
+>
+> On Thu, Oct 30, 2025 at 12:50:42AM -0700, Fangrui Song wrote:
+> > An effective compact unwinding scheme needs to leverage ISA-specific pr=
+operties.
+>
+> Having 40-50 completely different unwinding schemes, one for each
+> architecture or even ISA subset, would be a complete nightmare.  Plus the
+> important property of DWARF is that it is easily extensible.  So, I think=
+ it
+> would be better to invent new DWARF DW_CFA_* arch specific opcodes which
+> would be a shorthand for the most common sequences of unwind info, or all=
+ow
+> the CIEs to define a library of DW_CFA_* sets perhaps with parameters whi=
+ch
+> would then be usable in the FDEs.  There are already some arch specific
+> opcodes, DW_CFA_GNU_window_save for SPARC and
+> DW_CFA_AARCH64_negate_ra_state_with_pc/DW_CFA_AARCH64_negate_ra_state for
+> AArch64, but if somebody took time to look through .eh_frame of many
+> binaries/libraries on several different distributions for particular arch
+> (so that there is no bias in what exact options those distros use etc.) a=
+nd
+> found something that keeps repeating there commonly that could be shorten=
+ed,
+> perhaps the assembler or linker could rewrite sequences of specific .cfi_=
+*
+> directives into something equivalent but shorter once the extension opcod=
+es
+> are added.  Though, there are only very few opcodes left, so taking them
+> should be done with great care and at least one should be left as a
+> multiplexer (single byte opcode followed by uleb128 code for further
+> operation + arguments).
+>
+>         Jakub
 
+That's a good point about being careful with new unwind formats.
+The LLVM compact unwind format, used by Mach-O, utilizes an
+architecture-agnostic page table structure but has
+architecture-specific opcode formats (i386, x86-64, and aarch64).
+I.e. it does not introduce an entirely different format for each arch.
 
-在 2025/10/31 01:32, Ian Rogers 写道:
-> On Wed, Oct 29, 2025 at 5:55 AM Shuai Xue <xueshuai@linux.alibaba.com> wrote:
->>
->>
->>
->> 在 2025/10/24 10:45, Shuai Xue 写道:
->>>
->>>
->>> 在 2025/10/24 00:08, Ian Rogers 写道:
->>>> On Wed, Oct 22, 2025 at 6:50 PM Shuai Xue <xueshuai@linux.alibaba.com> wrote:
->>>>>
->>>>> When using perf record with the `--overwrite` option, a segmentation fault
->>>>> occurs if an event fails to open. For example:
->>>>>
->>>>>     perf record -e cycles-ct -F 1000 -a --overwrite
->>>>>     Error:
->>>>>     cycles-ct:H: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
->>>>>     perf: Segmentation fault
->>>>>         #0 0x6466b6 in dump_stack debug.c:366
->>>>>         #1 0x646729 in sighandler_dump_stack debug.c:378
->>>>>         #2 0x453fd1 in sigsegv_handler builtin-record.c:722
->>>>>         #3 0x7f8454e65090 in __restore_rt libc-2.32.so[54090]
->>>>>         #4 0x6c5671 in __perf_event__synthesize_id_index synthetic-events.c:1862
->>>>>         #5 0x6c5ac0 in perf_event__synthesize_id_index synthetic-events.c:1943
->>>>>         #6 0x458090 in record__synthesize builtin-record.c:2075
->>>>>         #7 0x45a85a in __cmd_record builtin-record.c:2888
->>>>>         #8 0x45deb6 in cmd_record builtin-record.c:4374
->>>>>         #9 0x4e5e33 in run_builtin perf.c:349
->>>>>         #10 0x4e60bf in handle_internal_command perf.c:401
->>>>>         #11 0x4e6215 in run_argv perf.c:448
->>>>>         #12 0x4e653a in main perf.c:555
->>>>>         #13 0x7f8454e4fa72 in __libc_start_main libc-2.32.so[3ea72]
->>>>>         #14 0x43a3ee in _start ??:0
->>>>>
->>>>> The --overwrite option implies --tail-synthesize, which collects non-sample
->>>>> events reflecting the system status when recording finishes. However, when
->>>>> evsel opening fails (e.g., unsupported event 'cycles-ct'), session->evlist
->>>>> is not initialized and remains NULL. The code unconditionally calls
->>>>> record__synthesize() in the error path, which iterates through the NULL
->>>>> evlist pointer and causes a segfault.
->>>>>
->>>>> To fix it, move the record__synthesize() call inside the error check block, so
->>>>> it's only called when there was no error during recording, ensuring that evlist
->>>>> is properly initialized.
->>>>>
->>>>> Fixes: 4ea648aec019 ("perf record: Add --tail-synthesize option")
->>>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->>>>
->>>> This looks great! I wonder if we can add a test, perhaps here:
->>>> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/shell/record.sh?h=perf-tools-next#n435
->>>> something like:
->>>> ```
->>>> $ perf record -e foobar -F 1000 -a --overwrite -o /dev/null -- sleep 0.1
->>>> ```
->>>> in a new test subsection for test_overwrite? foobar would be an event
->>>> that we could assume isn't present. Could you help with a test
->>>> covering the problems you've uncovered and perhaps related flags?
->>>>
->>>
->>> Hi, Ian,
->>>
->>> Good suggestion, I'd like to add a test. But foobar may not a good case.
->>>
->>> Regarding your example:
->>>
->>>     perf record -e foobar -a --overwrite -o /dev/null -- sleep 0.1
->>>     event syntax error: 'foobar'
->>>                          \___ Bad event name
->>>
->>>     Unable to find event on a PMU of 'foobar'
->>>     Run 'perf list' for a list of valid events
->>>
->>>      Usage: perf record [<options>] [<command>]
->>>         or: perf record [<options>] -- <command> [<options>]
->>>
->>>         -e, --event <event>   event selector. use 'perf list' to list available events
->>>
->>>
->>> The issue with using foobar is that it's an invalid event name, and the
->>> perf parser will reject it much earlier. This means the test would exit
->>> before reaching the part of the code path we want to verify (where
->>> record__synthesize() could be called).
->>>
->>> A potential alternative could be testing an error case such as EACCES:
->>>
->>>     perf record -e cycles -C 0 --overwrite -o /dev/null -- sleep 0.1
->>>
->>> This could reproduce the scenario of a failure when attempting to access
->>> a valid event, such as due to permission restrictions. However, the
->>> limitation here is that users may override
->>> /proc/sys/kernel/perf_event_paranoid, which affects whether or not this
->>> test would succeed in triggering an EACCES error.
->>>
->>>
->>> If you have any other suggestions or ideas for a better way to simulate
->>> this situation, I'd love to hear them.
->>>
->>> Thanks.
->>> Shuai
->>
->> Hi, Ian,
->>
->> Gentle ping.
-> 
-> Sorry, for the delay. I was trying to think of a better way given the
-> problems you mention and then got distracted. I wonder if a legacy
-> event that core PMUs never implement would be a good candidate to
-> test. For example, the event "node-prefetch-misses" is for "Local
-> memory prefetch misses" but the memory controller tends to be a
-> separate PMU and this event is never implemented to my knowledge.
-> Running this locally I see:
-> 
-> ```
-> $ perf record -e node-prefetch-misses -a --overwrite -o /dev/null -- sleep 0.1
-> Lowering default frequency rate from 4000 to 1750.
-> Please consider tweaking /proc/sys/kernel/perf_event_max_sample_rate.
-> Error:
-> Failure to open event 'cpu_atom/node-prefetch-misses/' on PMU
-> 'cpu_atom' which will be removed.
-> No fallback found for 'cpu_atom/node-prefetch-misses/' for error 2
-> Error:
-> Failure to open event 'cpu_core/node-prefetch-misses/' on PMU
-> 'cpu_core' which will be removed.
-> No fallback found for 'cpu_core/node-prefetch-misses/' for error 2
-> Error:
-> Failure to open any events for recording.
-> perf: Segmentation fault
->     #0 0x55a487ad8b87 in dump_stack debug.c:366
->     #1 0x55a487ad8bfd in sighandler_dump_stack debug.c:378
->     #2 0x55a4878c6f94 in sigsegv_handler builtin-record.c:722
->     #3 0x7f72aae49df0 in __restore_rt libc_sigaction.c:0
->     #4 0x55a487b57ef8 in __perf_event__synthesize_id_index
-> synthetic-events.c:1862
->     #5 0x55a487b58346 in perf_event__synthesize_id_index synthetic-events.c:1943
->     #6 0x55a4878cb2a3 in record__synthesize builtin-record.c:2150
->     #7 0x55a4878cdada in __cmd_record builtin-record.c:2963
->     #8 0x55a4878d11ca in cmd_record builtin-record.c:4453
->     #9 0x55a48795b3cc in run_builtin perf.c:349
->     #10 0x55a48795b664 in handle_internal_command perf.c:401
->     #11 0x55a48795b7bd in run_argv perf.c:448
->     #12 0x55a48795bb06 in main perf.c:555
->     #13 0x7f72aae33ca8 in __libc_start_call_main libc_start_call_main.h:74
->     #14 0x7f72aae33d65 in __libc_start_main_alias_2 libc-start.c:128
->     #15 0x55a4878acf41 in _start perf[52f41]
-> Segmentation fault
-> ```
+I believe the size issue with .eh_frame is primarily driven by the
+CIE/FDE overhead, not the CFI instructions.
+The inherently large size of a single FDE (around 20 bytes
+https://discourse.llvm.org/t/rfc-improving-compact-x86-64-compact-unwind-de=
+scriptors/47471/10?u=3Dmaskray
+) is a significant contributor to overall size.
 
-
-Hi, Ian，
-
-Is node-prefetch-misses a platform specific event? Running it on ARM Yitian 710
-and Intel SPR platform, I see:
-
-$sudo perf record -e node-prefetch-misses
-Error:
-The node-prefetch-misses event is not supported.
-
-Thanks.
-Shuai
+The performance issue of .eh_frame seems largely related to the byte
+code nature of the CFI instructions.
+By encoding locations with different CFI states explicitly as
+different frame entries makes it faster.
