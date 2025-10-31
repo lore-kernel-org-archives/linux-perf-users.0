@@ -1,133 +1,107 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351682FFFA5
-	for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 17:01:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2999285419
+	for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 17:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761930096; cv=none; b=fdvJ6UFLKclxCUL44KDyFjkKFKyFuqIcRxVkxctsgTtSbsNK/0LKwBQPcT6OKLSUo6+0I0/sXPi0YPmFLo5o3E+wCxwEDVN6XiCphjNh3pK+gK8FnY4uE8RR9y7CzQvSwjolR8o8aUk1xnPKOCfU+7aC4rVwM1WF79QX3jM0JSY=
+	t=1761932994; cv=none; b=vFbHIIjQFa5LxU+ZwHuesw3vD/XHipbXoz4hIA5uDkGz7UJj0P3dNYnq4VpitX5umXe+gQumZMEbqlUZMQh2DA3ZTRBU7hVCQp2qBEWc9fMYkKDpCyyqhCN06rMAzazKMFIjoHyj3LdtRR7ausIzs3QNKVzwDXr83gf+BWyNwvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761930096; c=relaxed/simple;
-	bh=JH7txACGqpu70QrcZpv7eK5Fjn8nvkBMvawjfClTs2U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m58qUYuSyiHDIck7l3RWqa26D8oejRU+bwocb1fNYAVbvuQtOui27ezv23R+P1tmTmBS96Ww3A6an+H5/TNhCxwALm+Wdc/uajlOCEuc/VcjFASQDpL1n/IKvv/2ToJ8eg+ehMvVps9Z7bSNnvXw+j/rUXhjNKbfoZfOihTJdAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mwe7op7I; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=51KCtvsy; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mwe7op7I; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=51KCtvsy; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1761932994; c=relaxed/simple;
+	bh=Jpv2bdZFG2SIkjFxNiLMurxDn/3qIdoC2XeK2N01s3c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FusnI1VjG5W+SaG7LTpHgFN600hO9q1uUt998u3mINe+/ppNgy16H+MydL+gnQ9LwGPiz6vj3TfEK5jGaWSQTp8Z63b/Co3rc6vREp8BVINtBinCFpsK6KPza+KGy/7QldK8GLb+VM7c5TMq8IDf1knxI0Y5hAz9HPs7kQdz2Do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CgDONmcK; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mwe7op7I";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="51KCtvsy";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mwe7op7I";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="51KCtvsy"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4A5D42246A;
-	Fri, 31 Oct 2025 17:01:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1761930092; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HlF5qBf4juZSf4H9c9EQslASU5Ma+rHdW8yMnK4XpM8=;
-	b=mwe7op7IGWBd2T1yWkm9oFJ8gaPQgMPXXdpjrt1xjC8yVxCvWnK3PS61Xog73EZaXu184c
-	iE+yz6Sje034eiGaENL1ULEcHtnE90mECVwISIoT5+dpBYsE6N/U//XBEWO5HE8FIGa+PM
-	fWwW7Up4uwImk2se7lW9VidJYROr5rM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1761930092;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HlF5qBf4juZSf4H9c9EQslASU5Ma+rHdW8yMnK4XpM8=;
-	b=51KCtvsyD/VdKcctilOcFtSx25D1O7YVJCsbx9V6MtRBWYM/kA6AdhasBJyCnTwAIsCanK
-	DSSXiqQUxPUrs9CA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1761930092; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HlF5qBf4juZSf4H9c9EQslASU5Ma+rHdW8yMnK4XpM8=;
-	b=mwe7op7IGWBd2T1yWkm9oFJ8gaPQgMPXXdpjrt1xjC8yVxCvWnK3PS61Xog73EZaXu184c
-	iE+yz6Sje034eiGaENL1ULEcHtnE90mECVwISIoT5+dpBYsE6N/U//XBEWO5HE8FIGa+PM
-	fWwW7Up4uwImk2se7lW9VidJYROr5rM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1761930092;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HlF5qBf4juZSf4H9c9EQslASU5Ma+rHdW8yMnK4XpM8=;
-	b=51KCtvsyD/VdKcctilOcFtSx25D1O7YVJCsbx9V6MtRBWYM/kA6AdhasBJyCnTwAIsCanK
-	DSSXiqQUxPUrs9CA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7EC5213393;
-	Fri, 31 Oct 2025 17:01:31 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id dgonFGvrBGlDIgAAD6G6ig
-	(envelope-from <tonyj@suse.de>); Fri, 31 Oct 2025 17:01:31 +0000
-Date: Fri, 31 Oct 2025 10:01:27 -0700
-From: Tony Jones <tonyj@suse.de>
-To: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: addr2line performance
-Message-ID: <aQTrZ54mkx14r_cQ@suse.de>
-References: <aPkivW2WoySU1Zkc@suse.de>
- <CAP-5=fU4y2y+pOT590GZG-A+zO5YdAAzUyPgUX5RTji0nh6Z+g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CgDONmcK"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-27eeafd4882so18825ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 10:49:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1761932992; x=1762537792; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V2kWXN97vOOBfSdz0VZs3a35PXRDdLyrI3dIgLt3Zf8=;
+        b=CgDONmcKileVq5Qf0b2qwx+l2iGjEgjy/GXT4Sf3Q35QkZ9gNymURRALoU8DTuJ7fu
+         LkZBYai2bmsOoAyasqqJiCyyLBiWuRGP+0qpgjTgSiftwC5p+CwU2VXZsUnzahnJFnvd
+         JlVQN6LyZBGhFMwfMs0rSC69fuG7VpCYs/290p4OqHbTe2aDE7VhNLLNofmdLnPaaNIe
+         lOHLmQ25FPpXw/3qRkxNMSE+33McyW/CVM/GA2OQ+cgo+MThpgB2ZFB/CV6Q0/d8QxhU
+         RFHKACRVnOXvxP7A9I40Cxth1OdkcHyD2AL9uamHzklSgyYvYR2mvmUbpQ/KK6mgkO5M
+         eW8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761932992; x=1762537792;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V2kWXN97vOOBfSdz0VZs3a35PXRDdLyrI3dIgLt3Zf8=;
+        b=hyDgkVWIVM4d9fk7OZQ59wcmO63IOx6qMiaApYy3UxCBJJwYe52StC5vLNf3t7StP2
+         X/ZGdyR+NPPWHHG3AgR/hrd4IWd39OfcAJm/yz+TAF9BynZJhR18OBuodV1zHJDgI/kJ
+         Mw7V9YEctfTjPXod1LzsUyn+esPEB/xpxa/Gtrrr9geRLeQBIe0O00GeddzAxEcJ8JX+
+         r5CRBmjgYz+FONTdo92LFZXIFgr7WuC/iTpjWOlam/eeiOPRE1O+QZAj0DkRpuGm0FjD
+         8eegQgMR4yBApZil14zl0x4zE9yForgp0h/k+C9ZKBJ/yKIf7RhmhgtuzIUmTDPc5TF1
+         dsRw==
+X-Gm-Message-State: AOJu0YwXUxw2KAsuGjl8mwVuVgsKwy401PPUXFNdMH5aa1PAIi/Q1LqH
+	renPrkvIhVz+mSmwNXgnp5ranRf1oCyIqB54LEbhiSJYdORga4qu16MZe+aCFAVOdBRrmlm2/l4
+	H7+HLlJAr67TVST5Yuwx/APzjYuKfDhJ0n35RQ047TFU5ouojy7ANjxYhDko=
+X-Gm-Gg: ASbGncvXstLi70bvbNvGpzQxWSoY/uWRq/9BCv/F4uPKAP+d6yXsvsAbjyKOK5dnXMz
+	ISiZeaZwEpMJNnZbDt9uCKxGSlUO6HfiWtKAw6kZ/F+rQaYF/qwMSWUo2Nw49NxxX/NZaAp+mAR
+	DtG4mBHiU8tocaEHH8072xVP03pB3eaKFX/C4D6Xefyva/Dk2+AKRvxTmWQqD6FySzWwGb2DGLe
+	Jj76R2EpKDyVXTDj2+orcarq7F+U4LTqy00l3rptzrtCx9qDuh50txdm+nb3uuuNB7rybSHprzG
+	oElqhfzzyA0k2mEpnXc2n46KDQ==
+X-Google-Smtp-Source: AGHT+IEGyVoSqLgSdcNny5ZYs6eVBKjfg+XjUWlli4DQ+8Pj2I+fw2p6eqNYvtrG9zf2HqaO2gbndugifjJBc01Ja/A=
+X-Received: by 2002:a17:903:1a67:b0:295:28a4:f0f5 with SMTP id
+ d9443c01a7336-29554c8ddedmr194495ad.5.1761932991797; Fri, 31 Oct 2025
+ 10:49:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fU4y2y+pOT590GZG-A+zO5YdAAzUyPgUX5RTji0nh6Z+g@mail.gmail.com>
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spam-Level: 
+References: <aPkivW2WoySU1Zkc@suse.de> <CAP-5=fU4y2y+pOT590GZG-A+zO5YdAAzUyPgUX5RTji0nh6Z+g@mail.gmail.com>
+ <aQTrZ54mkx14r_cQ@suse.de>
+In-Reply-To: <aQTrZ54mkx14r_cQ@suse.de>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 31 Oct 2025 10:49:40 -0700
+X-Gm-Features: AWmQ_bm7oI1SSElNjUxrEvZKPGDFHrCWjVGbJmBENc3Hm3MYbbt1J-tVds4EVfA
+Message-ID: <CAP-5=fWvzo8nH3ibeVx3UHvAcnJAcQ+JjukWP=bLmY70vTT9zg@mail.gmail.com>
+Subject: Re: addr2line performance
+To: Tony Jones <tonyj@suse.de>
+Cc: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 29, 2025 at 08:51:12AM -0700, Ian Rogers wrote:
-> 
-> I'm not sure there is an explicit discussion rather than discussion on
-> individual patch sets. 
+On Fri, Oct 31, 2025 at 10:01=E2=80=AFAM Tony Jones <tonyj@suse.de> wrote:
+>
+> On Wed, Oct 29, 2025 at 08:51:12AM -0700, Ian Rogers wrote:
+> >
+> > I'm not sure there is an explicit discussion rather than discussion on
+> > individual patch sets.
+>
+> Thanks for the reply.  I thought the original comment in that BZ
+> was talking about plans to remove the current forking of an "addr2line"
+> process and communicating via pipe with some library implementation.
+> Of course what that library would be if not BFD/LLVM was my question.
+> Clearly this was a misread on my part.
+>
+> I'd seen the patches related to dlopen'ing llvm, backporting this is
+> a possibility since we don't want a rpm required.
 
-Thanks for the reply.  I thought the original comment in that BZ
-was talking about plans to remove the current forking of an "addr2line"
-process and communicating via pipe with some library implementation.
-Of course what that library would be if not BFD/LLVM was my question.
-Clearly this was a misread on my part.
+That's great to know and motivates the dlopen work! I can resend a
+rebase of that series, would it be okay to add an Acked-by tag[1] to
+the series saying it'd be useful for SuSE ?
 
-I'd seen the patches related to dlopen'ing llvm, backporting this is 
-a possibility since we don't want a rpm requires.
+Thanks,
+Ian
 
-Cheers!
+[1] https://www.kernel.org/doc/Documentation/process/submitting-patches.rst
 
-Tony
-
--- 
-Tony Jones
-SUSE Kernel Performance Team
+> Cheers!
+>
+> Tony
+>
+> --
+> Tony Jones
+> SUSE Kernel Performance Team
