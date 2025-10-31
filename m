@@ -1,129 +1,154 @@
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from unicom146.biz-email.net (unicom146.biz-email.net [210.51.26.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4901CEAA3
-	for <linux-perf-users@vger.kernel.org>; Fri, 31 Oct 2025 02:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A998C155C97;
+	Fri, 31 Oct 2025 02:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761879054; cv=none; b=g6mzbD/K/Vkskbbl7lgp3la8KJBoLm8aIbvcLzev21B2vUqC6K4dCHfrxyFBXtwOkitdYqcDnIgEnxeMyM2qfHeyw4Jm9RVcy86EQkLqOhMfCug326UP7JaTEkFXb4Bv2SO3jz6aXxOHHIJ3zfqc3HYRiFAk9Juq2YlYAaTfJdg=
+	t=1761879559; cv=none; b=WGYbRKIGXAuglqfnhd4vaQNfLBt4EgBFCNx2iwoQY5Sg/lMMWg7B6h58+r1p6/diwuvQv/EhRKEJ5Aa7xmCGT2L/XBwhjyr0EkEct76YUvoAR/5/1p7HuAfHHgDsRO7WyBQrJeQzKfZm5YnlHNOJOeNydqQRgVT/nnDe/GGT7SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761879054; c=relaxed/simple;
-	bh=qS8tf6ZdxD5YdgAohIV+PFDGE+5VuGWpefXJWTNedps=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ommJlsG2JYRTcbNbcs4yivtmdLbIuEevOKsuWoCQTfCYuBzJalLupOb9r/iifz0LSt8DGMgyeTi+yBbEhzqBYtX4Cu7RzNWg5VJL92mwvo4/a9xTo3eoUWru4rQ70oFvkMylKHAUc398JXQCyxptDZRhxM8z+3YEzIBFgsHr8vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sourceware.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sourceware.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-5d980e08e06so1260969137.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 19:50:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761879052; x=1762483852;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZDVU1PDXVKtyHtSPl3IIz+yw4eJmqS8Dvhc2np0RKUA=;
-        b=MlzIMR55X2o9G+ynTVgAWOF+hSvJUgsJXHLf4rsw/MqSI4/Nw95HigQJrf/HlNcxuv
-         kfMQ5xxDuwMF5nPBYyjg+SYnsdiUOPWfwmi/k07TIMEhuuPDNFaUtcHDokSaiHn2hpsa
-         7eXE8l4Z4dVp/xsp7xyYQ+bPhKVD+tou4+J+FUIkvVLhOa54sldOYMCNFpOL3RA7GBym
-         6qpqN/tsYn0Q18W8/w7YF2g8UwIAMunVYrJuJvzY4q8WucXnp8ZcTRMUVofyS+Z+CVno
-         TrraA8YUpyNySK1Pu3H+iLbrm/am5DGuB8kQXkbl2VyAiiVkOIUgC+TI1IQT0gTeKeTz
-         IPXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUolg+qmUKgKHlEue1hjG5ZJeU92WWXN4MI/d46zZylMLFJZoytRnd5PdLRJrLj2xJVHAQDxTDE6hFtPGNY1TQp@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeBu4004uYpvebGsJ2n4bPGGGbvV/de35zzB5aJp3r7h7mG2CW
-	GQY0BW+abV6nH3ISRou5F50Siscz1mEyPCdMz/6sAFM3HYdE1GD3eoCUeawtNA==
-X-Gm-Gg: ASbGncsHF41z/s6thFjk0FIktazSf27oHQZ6l+9qIbSZK1OGwjWVN/Nxb1kXHa09fgf
-	TDowALR1grQELZP+yJQCqIRVneBp8hoNYnEb9ew/mwZ8GpAwElTo//e3Mlpt2vwkcdaxJWtXGOx
-	taKN+TRXkdFAz0FkBIOTCpycavlK2gZ/rRszZMi4jaY0qdHAW3F/viaXw4Rtl6arK1tdDCSd+x5
-	AoU/afpoaAzOlCMODAEFFpyr/rjznqHr/IrWnXnNiMzE3k/ENM4oRZsptDzKUgpyNSA0olfWbDt
-	eXKSBu3hkoy7RLdI5uMHA3t3+WiiuvM3HvFXAvzOA/3DdGQooykwNEGn8rxx3k6oQ2Tt9hUjvvi
-	72p7o3vRHxHgOriCIK9DWq67WjR9VVGFb9w+DVabgQwCCEKwUkXHDZcmPb506S4KcjmpdTa/PG+
-	G597dF3By0bzl9VIhibgnoxpCDXDs8qT2wHDjStB8K
-X-Google-Smtp-Source: AGHT+IEeES+EF8SnkNFuopAPBhLS96tqV8Z7wkUZJU1t1WaerCXCLYciGuVpEgTX61FFskx7lpCfgQ==
-X-Received: by 2002:a05:6102:5122:b0:5db:23db:2ad1 with SMTP id ada2fe7eead31-5dbb12ef353mr582549137.28.1761879051414;
-        Thu, 30 Oct 2025 19:50:51 -0700 (PDT)
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-5dbb64bab89sm143535137.14.2025.10.30.19.50.51
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Oct 2025 19:50:51 -0700 (PDT)
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-89019079fbeso929643241.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 Oct 2025 19:50:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUZ/3ThaTlDbOw0VqudDx+Lvyn22rCKlza2CHKJOT8ssr/gJGNKbCbAIRFuq58K9zSbbQ5O4HGp7OUP5wUvNV3c@vger.kernel.org
-X-Received: by 2002:a05:6122:2888:b0:54a:8cfe:193e with SMTP id
- 71dfb90a1353d-5593e3eee23mr689960e0c.5.1761879050970; Thu, 30 Oct 2025
- 19:50:50 -0700 (PDT)
+	s=arc-20240116; t=1761879559; c=relaxed/simple;
+	bh=NX+LUOI/DG6pE0xhbeDboThMj5zOWdUpVqcRRjTUk8I=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aHLYe2uFHtMN4vRO/QRciTh89QOh3Z3OD3v64yGgZx536WBhHpWbYn5KUgtd45BaqWtFZ516259nlKmXZY13QTv8+oMYxhbqtIywuSFxKvTZrX1mWRC5j25fxdaavNp3sel5SsvREUoExSkaejdQj/ecO0QVfqJmyEtq1wdCuPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from Jtjnmail201617.home.langchao.com
+        by unicom146.biz-email.net ((D)) with ASMTP (SSL) id 202510311059002425;
+        Fri, 31 Oct 2025 10:59:00 +0800
+Received: from jtjnmailAR01.home.langchao.com (10.100.2.42) by
+ Jtjnmail201617.home.langchao.com (10.100.2.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.58; Fri, 31 Oct 2025 10:58:59 +0800
+Received: from inspur.com (10.100.2.96) by jtjnmailAR01.home.langchao.com
+ (10.100.2.42) with Microsoft SMTP Server id 15.1.2507.58 via Frontend
+ Transport; Fri, 31 Oct 2025 10:58:59 +0800
+Received: from localhost.localdomain.com (unknown [10.94.18.144])
+	by app1 (Coremail) with SMTP id YAJkCsDwdHTxJQRpDoE5AA--.2227S4;
+	Fri, 31 Oct 2025 10:58:59 +0800 (CST)
+From: Chu Guangqing <chuguangqing@inspur.com>
+To: <john.g.garry@oracle.com>, <will@kernel.org>, <james.clark@linaro.org>,
+	<mike.leach@linaro.org>, <leo.yan@linux.dev>, <peterz@infradead.org>,
+	<mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>,
+	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>
+CC: <linux-arm-kernel@lists.infradead.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Chu
+ Guangqing <chuguangqing@inspur.com>
+Subject: [PATCH] tools/perf: Fix spelling typo in tools/perf
+Date: Fri, 31 Oct 2025 10:58:10 +0800
+Message-ID: <20251031025810.1939-1-chuguangqing@inspur.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <3xd4fqvwflefvsjjoagytoi3y3sf7lxqjremhe2zo5tounihe4@3ftafgryadsr>
- <aQMUGvXv6sy75nKn@tucnak> <CAN30aBHOw16Tzdn_Z0TZKie7Fyi39bmB2PQK4LB-rjU1vn3zQQ@mail.gmail.com>
- <aQMcYe5BK+Rsu3xF@tucnak>
-In-Reply-To: <aQMcYe5BK+Rsu3xF@tucnak>
-From: Fangrui Song <maskray@sourceware.org>
-Date: Thu, 30 Oct 2025 19:51:03 -0700
-X-Gmail-Original-Message-ID: <CAN30aBEvVbYh4bUerPSK3nk9VV=Szu845+PVww_XoU4gdMSJLw@mail.gmail.com>
-X-Gm-Features: AWmQ_bkToldiXwOSFlKVHRT7mRZ7QErCYaHn1a_Ye5mYyw3G3dxbB6B8-BAj7j4
-Message-ID: <CAN30aBEvVbYh4bUerPSK3nk9VV=Szu845+PVww_XoU4gdMSJLw@mail.gmail.com>
-Subject: Re: Concerns about SFrame viability for userspace stack walking
-To: Jakub Jelinek <jakub@redhat.com>
-Cc: Fangrui Song <maskray@sourceware.org>, linux-toolchains@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: YAJkCsDwdHTxJQRpDoE5AA--.2227S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxZFy3ArW5XryUtw48uw1Dtrb_yoW5Cr1UpF
+	W8uF4DWr4Sgr9xKas5trWIqF4S9ayruF4ftw1UKw1UuwnrZr1Yga9Fq3s7AF48ZrykGa13
+	uF1qyryUGr1UCw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9j14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
+	6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+	n2IY04v7MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
+	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
+	C2KfnxnUUI43ZEXa7sRidbbtUUUUU==
+X-CM-SenderInfo: 5fkxw35dqj1xlqj6x0hvsx2hhfrp/
+X-CM-DELIVERINFO: =?B?2i/CDZRRTeOiUs3aOqHZ50hzsfHKF9Ds6CbXmDm38RucXu3DYXJR7Zlh9zE0nt/Iac
+	D+KSsk7pV3dl0RDxB5lh+8iA1sgC2aonM+cb2ich98r/c+ONOc/CtnYH4qOsQlllj5oCnS
+	+g25hQ9F1vYY068nJEw=
+Content-Type: text/plain
+tUid: 2025103110590000223a6740299a0011290c2d99340e5e
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-On Thu, Oct 30, 2025 at 1:06=E2=80=AFAM Jakub Jelinek <jakub@redhat.com> wr=
-ote:
->
-> On Thu, Oct 30, 2025 at 12:50:42AM -0700, Fangrui Song wrote:
-> > An effective compact unwinding scheme needs to leverage ISA-specific pr=
-operties.
->
-> Having 40-50 completely different unwinding schemes, one for each
-> architecture or even ISA subset, would be a complete nightmare.  Plus the
-> important property of DWARF is that it is easily extensible.  So, I think=
- it
-> would be better to invent new DWARF DW_CFA_* arch specific opcodes which
-> would be a shorthand for the most common sequences of unwind info, or all=
-ow
-> the CIEs to define a library of DW_CFA_* sets perhaps with parameters whi=
-ch
-> would then be usable in the FDEs.  There are already some arch specific
-> opcodes, DW_CFA_GNU_window_save for SPARC and
-> DW_CFA_AARCH64_negate_ra_state_with_pc/DW_CFA_AARCH64_negate_ra_state for
-> AArch64, but if somebody took time to look through .eh_frame of many
-> binaries/libraries on several different distributions for particular arch
-> (so that there is no bias in what exact options those distros use etc.) a=
-nd
-> found something that keeps repeating there commonly that could be shorten=
-ed,
-> perhaps the assembler or linker could rewrite sequences of specific .cfi_=
-*
-> directives into something equivalent but shorter once the extension opcod=
-es
-> are added.  Though, there are only very few opcodes left, so taking them
-> should be done with great care and at least one should be left as a
-> multiplexer (single byte opcode followed by uleb128 code for further
-> operation + arguments).
->
->         Jakub
+The json file incorrectly used "acceses" instead of "accesses".
 
-That's a good point about being careful with new unwind formats.
-The LLVM compact unwind format, used by Mach-O, utilizes an
-architecture-agnostic page table structure but has
-architecture-specific opcode formats (i386, x86-64, and aarch64).
-I.e. it does not introduce an entirely different format for each arch.
+Signed-off-by: Chu Guangqing <chuguangqing@inspur.com>
+---
+ .../arch/arm64/ampere/ampereonex/metrics.json    | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-I believe the size issue with .eh_frame is primarily driven by the
-CIE/FDE overhead, not the CFI instructions.
-The inherently large size of a single FDE (around 20 bytes
-https://discourse.llvm.org/t/rfc-improving-compact-x86-64-compact-unwind-de=
-scriptors/47471/10?u=3Dmaskray
-) is a significant contributor to overall size.
+diff --git a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/metrics.json b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/metrics.json
+index 6817cac149e0..a29aadc9b2e3 100644
+--- a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/metrics.json
++++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/metrics.json
+@@ -388,55 +388,55 @@
+         "MetricExpr": "L1D_CACHE_RW / L1D_CACHE",
+         "BriefDescription": "L1D cache access - demand",
+         "MetricGroup": "Cache",
+-        "ScaleUnit": "100percent of cache acceses"
++        "ScaleUnit": "100percent of cache accesses"
+     },
+     {
+         "MetricName": "l1d_cache_access_prefetches",
+         "MetricExpr": "L1D_CACHE_PRFM / L1D_CACHE",
+         "BriefDescription": "L1D cache access - prefetch",
+         "MetricGroup": "Cache",
+-        "ScaleUnit": "100percent of cache acceses"
++        "ScaleUnit": "100percent of cache accesses"
+     },
+     {
+         "MetricName": "l1d_cache_demand_misses",
+         "MetricExpr": "L1D_CACHE_REFILL_RW / L1D_CACHE",
+         "BriefDescription": "L1D cache demand misses",
+         "MetricGroup": "Cache",
+-        "ScaleUnit": "100percent of cache acceses"
++        "ScaleUnit": "100percent of cache accesses"
+     },
+     {
+         "MetricName": "l1d_cache_demand_misses_read",
+         "MetricExpr": "L1D_CACHE_REFILL_RD / L1D_CACHE",
+         "BriefDescription": "L1D cache demand misses - read",
+         "MetricGroup": "Cache",
+-        "ScaleUnit": "100percent of cache acceses"
++        "ScaleUnit": "100percent of cache accesses"
+     },
+     {
+         "MetricName": "l1d_cache_demand_misses_write",
+         "MetricExpr": "L1D_CACHE_REFILL_WR / L1D_CACHE",
+         "BriefDescription": "L1D cache demand misses - write",
+         "MetricGroup": "Cache",
+-        "ScaleUnit": "100percent of cache acceses"
++        "ScaleUnit": "100percent of cache accesses"
+     },
+     {
+         "MetricName": "l1d_cache_prefetch_misses",
+         "MetricExpr": "L1D_CACHE_REFILL_PRFM / L1D_CACHE",
+         "BriefDescription": "L1D cache prefetch misses",
+         "MetricGroup": "Cache",
+-        "ScaleUnit": "100percent of cache acceses"
++        "ScaleUnit": "100percent of cache accesses"
+     },
+     {
+         "MetricName": "ase_scalar_mix",
+         "MetricExpr": "ASE_SCALAR_SPEC / OP_SPEC",
+         "BriefDescription": "Proportion of advanced SIMD data processing operations (excluding DP_SPEC/LD_SPEC) scalar operations",
+         "MetricGroup": "Instructions",
+-        "ScaleUnit": "100percent of cache acceses"
++        "ScaleUnit": "100percent of cache accesses"
+     },
+     {
+         "MetricName": "ase_vector_mix",
+         "MetricExpr": "ASE_VECTOR_SPEC / OP_SPEC",
+         "BriefDescription": "Proportion of advanced SIMD data processing operations (excluding DP_SPEC/LD_SPEC) vector operations",
+         "MetricGroup": "Instructions",
+-        "ScaleUnit": "100percent of cache acceses"
++        "ScaleUnit": "100percent of cache accesses"
+     }
+ ]
+-- 
+2.43.7
 
-The performance issue of .eh_frame seems largely related to the byte
-code nature of the CFI instructions.
-By encoding locations with different CFI states explicitly as
-different frame entries makes it faster.
