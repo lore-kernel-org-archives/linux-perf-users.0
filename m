@@ -1,47 +1,49 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB9F38D;
-	Mon,  3 Nov 2025 09:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4A730DEA9;
+	Mon,  3 Nov 2025 13:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762161886; cv=none; b=NA+8alGdaClm2xwfMM6L8WMzC/fhR/Cu0IZoR7BlovtCix1YTOkbrI83bibpcMpdg2s3A6T7RScc/McEDaDtYutT/1et0DjEIr4ELPilNv9C7rnJTIh/IwiutrPFOpShJlMAfHUtBeCyYmGywV9XCSJYdABfhTxC/8n1bSVWIWk=
+	t=1762177464; cv=none; b=ohJe2/1k00evan20xxwBO5yjM18NeTWIwAboXXD3dX4cNwXT9V8oI756nd6KKwTWUKVEc2MMTvnPrfyMiSTHGao5thsOmPwE5ge5ffw9qNxK0oXif3BgRR7diFYcV3p/dSTrjrGuwHy689gvP/IZz/MqvTPloseFRPcLv8Kd3ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762161886; c=relaxed/simple;
-	bh=NLpkZ8bTE+74icQ8CMI6R8oaKaTgGy0pQO09I45Qet0=;
+	s=arc-20240116; t=1762177464; c=relaxed/simple;
+	bh=0MbAV9bNWbSdrKxjEc6SEhW2otB9NDHuKXLNye47LYo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y3noqRwa5bFecG1UY5sGK3oMu3l9NQOTSATJTFZ36z76witVD8UUU+hbLQubLYr9h2XGbymkSiTmaCmxdwJMpSDMgG8RI1jF7U1kW1E0A19sCxuXHIycNTK8KT9/zptVKFOF6ZmC7klHB5op01f9Cm18LDmJudwaU69LaRuoosA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Yd4Mt1Ss; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=t7FVmPeTr36YNs8/qkUMDkbCRWIj1jzeqLUpaEJzUBySZIvA5X3Mk23kKmwoGHr2JSPF3AARhisLH12hl/jqcaaRNXA7Wt/dn4LJ9KJ1bGlVEQj93RLumPHX7Ap8AV/3Nd38ND2SVI1e2m7UKU1hOoilQIBtxNQDZBjKkhskrkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KQw4MTmk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Yd4Mt1Ss"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=XWeojflGB1MzD7+Mi+vtNtY6DeSFIY2a0vDpY04LqDY=; b=Yd4Mt1SsVZogo8v1mbnWiT6UZ0
-	RiGoalpgZi4sy85d+V298cwmHTqZeZP1PjG4aD0RfTi/d98+4zz/FKUAvXEjXAsOZyC7k7Lk7xuYm
-	2DbFXW8aoOc9WLPezimhsWxi3XiRSaxKDrHPNI7qn77NKVz0eJTWFf8GtYF5RbXa+PMLubgAt2iSW
-	ukrpBD0AGqOIGRCR5eqSlNKbRpa1oBwdjtG78XjRZre4sHUs3cbOrcnVjRiu7z6DTEgjCU80p8Luy
-	fXWioqnnOagusK6eBKTwBJHoDk9toSm+Cufg22DVaIHg7UTKz6qS9mp/NsBFNM0JYCm8AY3dWgFMI
-	aQhrdATQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vFpw7-0000000EyiL-3ITR;
-	Mon, 03 Nov 2025 08:29:12 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 24A0330023C; Mon, 03 Nov 2025 10:24:41 +0100 (CET)
-Date: Mon, 3 Nov 2025 10:24:41 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Harvey Tite <HarvT@pm.me>
-Cc: dapeng1.mi@linux.intel.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, octavia.togami@gmail.com,
-	regressions@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [REGRESSION] bisected: perf: hang when using async-profiler
- caused by perf: Fix the POLL_HUP delivery breakage
-Message-ID: <20251103092441.GX3245006@noisy.programming.kicks-ass.net>
-References: <9f94b9b5-0a8a-4f37-8355-0b5461d6ad30@pm.me>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KQw4MTmk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B8F1C4CEE7;
+	Mon,  3 Nov 2025 13:44:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762177464;
+	bh=0MbAV9bNWbSdrKxjEc6SEhW2otB9NDHuKXLNye47LYo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KQw4MTmkeuu7tJsm35ZTr+SPFj62DZG75dkVxgZ7qMlIoDYfG55sxMZzcOuBLZAqE
+	 WCbtKleagoN5AxpZWR519RitBnVTxNUjYMRkoo7H9n0l7SVHDaZlGeK+h/FaHVlF0O
+	 iUWl6eqUOPjvfw9MxqAi0KmTktxc7kKUlmOl+WtMQkejRumLVNkKAdyMlPk2XaWKvg
+	 WAt5CLxLnj7vwOA0XVyipOQiaarEpW2K3BfkXiUvZms3LuR5XyC3qk+a2qyPBiGPf/
+	 /9AnaWLcOX3bjlxjrwvY1unWAAcNTjLqaOtDbSGOMM17hsBgv+uiScOcEYnZ33uKIE
+	 HfHs2TLsiepGw==
+Date: Mon, 3 Nov 2025 13:44:16 +0000
+From: Will Deacon <will@kernel.org>
+To: Yunhui Cui <cuiyunhui@bytedance.com>
+Cc: akpm@linux-foundation.org, alex@ghiti.fr, anup@brainfault.org,
+	aou@eecs.berkeley.edu, atish.patra@linux.dev,
+	catalin.marinas@arm.com, dianders@chromium.org,
+	johannes@sipsolutions.net, lihuafei1@huawei.com,
+	mark.rutland@arm.com, masahiroy@kernel.org, maz@kernel.org,
+	mingo@kernel.org, nicolas.schier@linux.dev, palmer@dabbelt.com,
+	paul.walmsley@sifive.com, suzuki.poulose@arm.com,
+	thorsten.blum@linux.dev, wangjinchao600@gmail.com,
+	yangyicong@hisilicon.com, zhanjie9@hisilicon.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 1/2] watchdog: move arm64 watchdog_hld into common code
+Message-ID: <aQixsIQXTjYyhRVj@willie-the-truck>
+References: <20251014031425.93284-1-cuiyunhui@bytedance.com>
+ <20251014031425.93284-2-cuiyunhui@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,17 +52,38 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9f94b9b5-0a8a-4f37-8355-0b5461d6ad30@pm.me>
+In-Reply-To: <20251014031425.93284-2-cuiyunhui@bytedance.com>
 
-On Mon, Nov 03, 2025 at 01:24:44AM +0000, Harvey Tite wrote:
-> 
-> Hello hope everyone is well, just following up on this bug report, this 
-> appears to have been patched here 
-> https://lore.kernel.org/lkml/20251015051828.12809-1-dapeng1.mi@linux.intel.com/ 
-> thanks to Dapeng Mi; however, the patch email does not appear to have 
-> CCed the regressions or stable list.
+On Tue, Oct 14, 2025 at 11:14:24AM +0800, Yunhui Cui wrote:
+> @@ -306,3 +307,85 @@ void __init hardlockup_config_perf_event(const char *str)
+>  	wd_hw_attr.type = PERF_TYPE_RAW;
+>  	wd_hw_attr.config = config;
+>  }
+> +
+> +#ifdef CONFIG_WATCHDOG_PERF_ADJUST_PERIOD
+> +/*
+> + * Safe maximum CPU frequency in case a particular platform doesn't implement
+> + * cpufreq driver. Although, architecture doesn't put any restrictions on
+> + * maximum frequency but 5 GHz seems to be safe maximum given the available
+> + * CPUs in the market which are clocked much less than 5 GHz. On the other
+> + * hand, we can't make it much higher as it would lead to a large hard-lockup
+> + * detection timeout on parts which are running slower (eg. 1GHz on
+> + * Developerbox) and doesn't possess a cpufreq driver.
+> + */
+> +#define SAFE_MAX_CPU_FREQ	5000000000UL // 5 GHz
+> +__weak u64 hw_nmi_get_sample_period(int watchdog_thresh)
+> +{
+> +	unsigned int cpu = smp_processor_id();
+> +	unsigned long max_cpu_freq;
+> +
+> +	max_cpu_freq = cpufreq_get_hw_max_freq(cpu) * 1000UL;
+> +	if (!max_cpu_freq)
+> +		max_cpu_freq = SAFE_MAX_CPU_FREQ;
+> +
+> +	return (u64)max_cpu_freq * watchdog_thresh;
+> +}
 
-Bah, it looks like I failed to actually apply the patch :/
+Why does this function become __weak? Neither arm64 nor riscv override
+it afaict.
 
-Let me go do so now. It has a Fixes tag, that generally makes it so that
-stable picks it up.
+Will
