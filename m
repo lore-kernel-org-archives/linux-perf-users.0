@@ -1,77 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7742F1F1537;
-	Mon,  3 Nov 2025 07:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB9F38D;
+	Mon,  3 Nov 2025 09:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762155184; cv=none; b=eGcM06iY18EZoZbpgQdzQZEmYS1oh/H45OSUg72WSinCQ6zwT9ruQdgOonNvr/dJd5A/c0wLSBJ6ByctnXYgKvnyy1gE6Un7aaG7u/h0y/tuz0FZXWdz3GLwpm/5dQkqLR9sRPkG0kxBN9QG8nVdYN5B0NWDuujIGoaBfM5Kpz8=
+	t=1762161886; cv=none; b=NA+8alGdaClm2xwfMM6L8WMzC/fhR/Cu0IZoR7BlovtCix1YTOkbrI83bibpcMpdg2s3A6T7RScc/McEDaDtYutT/1et0DjEIr4ELPilNv9C7rnJTIh/IwiutrPFOpShJlMAfHUtBeCyYmGywV9XCSJYdABfhTxC/8n1bSVWIWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762155184; c=relaxed/simple;
-	bh=l5HUEGJQ2l2mq+aTaDpihogl26Os1llfVLM76lsWO6s=;
+	s=arc-20240116; t=1762161886; c=relaxed/simple;
+	bh=NLpkZ8bTE+74icQ8CMI6R8oaKaTgGy0pQO09I45Qet0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oDs3U1hak9QktKbxGddfHm7WUGeisAR1CbVWIJrVSvrGI2urNeJ+yEfzJckwcSjb4T9Y7w+rNp8hDX+4M3W2q5nf03W6Yai61Kd0jLrRt1ajDkdWdmwpwIeOJqewgTIEJ+FR130EEZmy6IVkFbRkIv7YrgqMfaUY+iYUvZ8IsOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=INodRjqq; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y3noqRwa5bFecG1UY5sGK3oMu3l9NQOTSATJTFZ36z76witVD8UUU+hbLQubLYr9h2XGbymkSiTmaCmxdwJMpSDMgG8RI1jF7U1kW1E0A19sCxuXHIycNTK8KT9/zptVKFOF6ZmC7klHB5op01f9Cm18LDmJudwaU69LaRuoosA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Yd4Mt1Ss; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="INodRjqq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762155182; x=1793691182;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=l5HUEGJQ2l2mq+aTaDpihogl26Os1llfVLM76lsWO6s=;
-  b=INodRjqq5g3YH1pVowBMEmyFoN9djrtk5imAnSs1gIqA4OXa7BBbkZF1
-   ktinLYAR4Kq8m80pYRKQxElXUsdx0m4RrF8vMkDYjs5hAU2XXsQ0+WLSH
-   s53U8k4jI+oixFOUJ4QuTX7ODX1KFm5EUePzY8Q5HqDCADY1btVGgb4hu
-   oP6az3HMZ8dA0a80mRuXSFFG4u+RwH98Pr/fQA+9xU44Vz4tjNiAiDG1t
-   LAXszUyG5fTcpi3DTVsTX8Zb1l3GjAwRcWJhN8MFLL27GlkYwlpRCTYhA
-   3bVH7tHhYNS4xxM3zefh0lh85209qudigompNNpoW8v31ZzE7BangRTtl
-   w==;
-X-CSE-ConnectionGUID: k3b+NNwrThqQv0R3yCJkXQ==
-X-CSE-MsgGUID: 6NTQKs5QSkmdUleSHu29EQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11601"; a="64112034"
-X-IronPort-AV: E=Sophos;i="6.19,275,1754982000"; 
-   d="scan'208";a="64112034"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2025 23:33:02 -0800
-X-CSE-ConnectionGUID: wbZmldb1TQKn1RfPq/DltQ==
-X-CSE-MsgGUID: bxAVY6aMRQWiQcpRMmV5Aw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,275,1754982000"; 
-   d="scan'208";a="187250918"
-Received: from smoehrl-linux.amr.corp.intel.com (HELO ashevche-desk.local) ([10.124.220.216])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2025 23:32:57 -0800
-Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1vFp3a-000000054ie-2nUE;
-	Mon, 03 Nov 2025 09:32:50 +0200
-Date: Mon, 3 Nov 2025 09:32:49 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Raag Jadav <raag.jadav@intel.com>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-	netdev@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Florian Westphal <fw@strlen.de>, Phil Sutter <phil@nwl.cc>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Subject: Re: [PATCH net-next v1 1/1] treewide: Rename ERR_PTR_PCPU() -->
- PCPU_ERR_PTR()
-Message-ID: <aQhaobur-9j6ye0m@smile.fi.intel.com>
-References: <20251030083632.3315128-1-andriy.shevchenko@linux.intel.com>
- <20251031164958.29f75595@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Yd4Mt1Ss"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=XWeojflGB1MzD7+Mi+vtNtY6DeSFIY2a0vDpY04LqDY=; b=Yd4Mt1SsVZogo8v1mbnWiT6UZ0
+	RiGoalpgZi4sy85d+V298cwmHTqZeZP1PjG4aD0RfTi/d98+4zz/FKUAvXEjXAsOZyC7k7Lk7xuYm
+	2DbFXW8aoOc9WLPezimhsWxi3XiRSaxKDrHPNI7qn77NKVz0eJTWFf8GtYF5RbXa+PMLubgAt2iSW
+	ukrpBD0AGqOIGRCR5eqSlNKbRpa1oBwdjtG78XjRZre4sHUs3cbOrcnVjRiu7z6DTEgjCU80p8Luy
+	fXWioqnnOagusK6eBKTwBJHoDk9toSm+Cufg22DVaIHg7UTKz6qS9mp/NsBFNM0JYCm8AY3dWgFMI
+	aQhrdATQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vFpw7-0000000EyiL-3ITR;
+	Mon, 03 Nov 2025 08:29:12 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 24A0330023C; Mon, 03 Nov 2025 10:24:41 +0100 (CET)
+Date: Mon, 3 Nov 2025 10:24:41 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Harvey Tite <HarvT@pm.me>
+Cc: dapeng1.mi@linux.intel.com, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, octavia.togami@gmail.com,
+	regressions@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: [REGRESSION] bisected: perf: hang when using async-profiler
+ caused by perf: Fix the POLL_HUP delivery breakage
+Message-ID: <20251103092441.GX3245006@noisy.programming.kicks-ass.net>
+References: <9f94b9b5-0a8a-4f37-8355-0b5461d6ad30@pm.me>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -80,29 +50,17 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251031164958.29f75595@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <9f94b9b5-0a8a-4f37-8355-0b5461d6ad30@pm.me>
 
-On Fri, Oct 31, 2025 at 04:49:58PM -0700, Jakub Kicinski wrote:
-> On Thu, 30 Oct 2025 09:35:53 +0100 Andy Shevchenko wrote:
-> > Make the namespace of specific ERR_PTR() macro leading the thing.
-> > This is already done for IOMEM_ERR_PTR(). Follow the same pattern
-> > in PCPU_ERR_PTR().
+On Mon, Nov 03, 2025 at 01:24:44AM +0000, Harvey Tite wrote:
 > 
-> TBH I find the current naming to be typical. _PCPU() is the "flavor" of
-> the API. Same as we usually append _rcu() to functions which expect
-> to operate under RCU. All error pointer helpers end with _PCPU().
+> Hello hope everyone is well, just following up on this bug report, this 
+> appears to have been patched here 
+> https://lore.kernel.org/lkml/20251015051828.12809-1-dapeng1.mi@linux.intel.com/ 
+> thanks to Dapeng Mi; however, the patch email does not appear to have 
+> CCed the regressions or stable list.
 
-Ah, there is also IS_ERR_PCPU()...
+Bah, it looks like I failed to actually apply the patch :/
 
-> I don't feel strongly so fine if anyone else wants to apply this.
-> But I will not :)
-
-OK.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Let me go do so now. It has a Fixes tag, that generally makes it so that
+stable picks it up.
