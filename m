@@ -1,69 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA51D17A2F0;
-	Fri, 31 Oct 2025 23:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15D026E6F5
+	for <linux-perf-users@vger.kernel.org>; Mon,  3 Nov 2025 01:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761954600; cv=none; b=hYAmJli/dGJMCTz60tPd77XHflY38G3GyXT03pvQ6mc+jwo1S/J7/Np/rqfeGF8SrMkzWdpV9WlOzgOuiZn+3n4QBkcRJbfDChxZkQ5Gjc9dh3XHu/4B79v9mSDG7Q5ha/HUHE+564w7wuCz8dhvmofXs2llta3VYAR1pCAEIRg=
+	t=1762133098; cv=none; b=DFSRYvh1sGOX6iUBeBxQsz5pyv6L6h2vVJtQy5FQc2MXwuM3Mz85w9Fs3OoUkCUgq1V5cPfniURtBnPllyCg+klaCvsdqfkfxligi4mngLGhah+6Vu6xN/G40vjKA4ldjObDoeC8Agkm1Pc27pYnhbEH0R7bnc3VW7W6vkXLeT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761954600; c=relaxed/simple;
-	bh=nZX5tS1tXPuRCqWFG9SL8xYo5+hc5KgXS1X0YbBBRss=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FN9gZcgD6mGtZ9VUKfdH02T2jguLR5ipE6a0SPu6SSOwk5nsiHq0Nlwh0lA9wO7fA42EIB1xx3er/1kZhEAPUSNRCZLmH3VTC9tcf8/dH86LLFN/EQY1xqhXaoOiZCrSc/2h33lOJKqxPwhSLeY4Ia7pVIAPrV36zCMMDLHrGl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a6WdUmFB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762133098; c=relaxed/simple;
+	bh=w1BBSIqKCcTM94TEne3TpOoZOLy52cPnMPLEGRLvFhM=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=b7K4aSUqrRAbmah0oMAz2ATtRyUkf+sr/rZyXi2OopDDyYz3K9lYNX+bWKF4M7CqJibVuTYGe935o8eg+8EFsnlbO3VHOemlQQOYi/dB+FXLaB+J66obOQuwtKnp6LDfOw21xp+eMA1SrFWUuXItaM+YXK648J2RTRe6PmknQ1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=jMK+xN74; arc=none smtp.client-ip=109.224.244.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a6WdUmFB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AEADC4CEE7;
-	Fri, 31 Oct 2025 23:49:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761954600;
-	bh=nZX5tS1tXPuRCqWFG9SL8xYo5+hc5KgXS1X0YbBBRss=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=a6WdUmFBFKmM+JCCebjFrJuP1xMmII6iRm5IkJNoy+adEsXtj0qPDpA2qlxhsJHJj
-	 cHoXbDj9fX34mwRDxdvmKS1+S9kvoIf0PnjqppdoQZLmgOsVmW4iDZaUla7hSINST6
-	 037T5d+PjPBYt+ua+AecXcPmDLuqKsPiLxmHi3SP5T7KwjoILe1TDRUgVxBv8plVHd
-	 xCdde+QdHm0B9nlkOC7Yb0mCWwABgvnbex7S956Gv1gDX6PPB9UKaOIJ43j66d+u+v
-	 EkyHENe1rgYyXTeUYhOQa5hnVjxjKVngVL8YkRkTtVtPnKrIm9progavEgqtlWU4kQ
-	 lZhJh6PeQ/lBw==
-Date: Fri, 31 Oct 2025 16:49:58 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Raag Jadav <raag.jadav@intel.com>, Pablo Neira Ayuso
- <pablo@netfilter.org>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, netdev@vger.kernel.org, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Jozsef Kadlecsik <kadlec@netfilter.org>, Florian Westphal <fw@strlen.de>,
- Phil Sutter <phil@nwl.cc>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon
- Horman <horms@kernel.org>
-Subject: Re: [PATCH net-next v1 1/1] treewide: Rename ERR_PTR_PCPU() -->
- PCPU_ERR_PTR()
-Message-ID: <20251031164958.29f75595@kernel.org>
-In-Reply-To: <20251030083632.3315128-1-andriy.shevchenko@linux.intel.com>
-References: <20251030083632.3315128-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="jMK+xN74"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1762133088; x=1762392288;
+	bh=w1BBSIqKCcTM94TEne3TpOoZOLy52cPnMPLEGRLvFhM=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=jMK+xN74hx1IMa9RRK9nyO/CU+pAHQVtNV/INce79WsHJTPuIk7d9Nxx8K+ixJgZc
+	 uS0bjLRMxYQk5dU+mDhZnAYX+aLZLlvl/buWjicvdBbUMsHaaq+ZqspIAObJOV5yLS
+	 ytpDGv6aqrqG8vim8BqFN64aU5p+b9BZaYTG8YzKl4OgPp8Wh0hOCYKDLLGIF7Ll2Q
+	 LuS6h9t8MHY1FV58wK8V7+roL36YT0eraRwBrBRUa+GSAE/rby//IxVQJ7DLeSmZgg
+	 L7q0md+pJxIyMThg25xRA8iITsk2fd4l/xX85fh0NtkuLerivn5+JF8PLSbFGxvcTe
+	 giqMFyCtphCug==
+Date: Mon, 03 Nov 2025 01:24:44 +0000
+To: dapeng1.mi@linux.intel.com
+From: Harvey Tite <HarvT@pm.me>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, octavia.togami@gmail.com, peterz@infradead.org, regressions@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: [REGRESSION] bisected: perf: hang when using async-profiler caused by perf: Fix the POLL_HUP delivery breakage
+Message-ID: <9f94b9b5-0a8a-4f37-8355-0b5461d6ad30@pm.me>
+Feedback-ID: 38997315:user:proton
+X-Pm-Message-ID: f634007f31f1bd03ce2d4cf8a6fec95a2baaf7a4
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 30 Oct 2025 09:35:53 +0100 Andy Shevchenko wrote:
-> Make the namespace of specific ERR_PTR() macro leading the thing.
-> This is already done for IOMEM_ERR_PTR(). Follow the same pattern
-> in PCPU_ERR_PTR().
 
-TBH I find the current naming to be typical. _PCPU() is the "flavor" of
-the API. Same as we usually append _rcu() to functions which expect
-to operate under RCU. All error pointer helpers end with _PCPU().
+Hello hope everyone is well, just following up on this bug report, this=20
+appears to have been patched here=20
+https://lore.kernel.org/lkml/20251015051828.12809-1-dapeng1.mi@linux.intel.=
+com/=20
+thanks to Dapeng Mi; however, the patch email does not appear to have=20
+CCed the regressions or stable list.
 
-I don't feel strongly so fine if anyone else wants to apply this.
-But I will not :)
+On 2025/10/15 Peter Zijlstra wrote:
+
+ > So yeah, I suppose this works. Let me go queue this up.
+
+In regard to the patch, hence I assume the patch is approved for=20
+implementation in future versions.
+
+This is a critical bug causing widespread irrecoverable system freezes=20
+reported by many users with many differing setups, including myself.=20
+Notably it is being triggered by a minecraft mod called spark with at=20
+least 150 million aggregate downloads=20
+(https://www.curseforge.com/minecraft/mc-mods/spark=20
+https://github.com/lucko/spark/issues/530).
+
+If at all possible I would love to request that this please be=20
+implemented/backported to kernels 6.17 and 6.18.
+
+Thank you.
+
+
