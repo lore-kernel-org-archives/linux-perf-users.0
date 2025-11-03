@@ -1,73 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A479932ED59
-	for <linux-perf-users@vger.kernel.org>; Mon,  3 Nov 2025 14:58:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DD5231B10B;
+	Mon,  3 Nov 2025 15:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762181887; cv=none; b=q6bpn9F+hbCwY3luRo59WTHAroCCu5jvlDFYmrrLe95nT87ZoeVf4XptWP1klGBfztoF7culSjCqB1adq6aI5aqlO5zupL5RzQQIXo7meV009qongmVcpRT614VvIgg8y4VNmyzm/RbCmsGV4jbGjhR/nXAonGM/sXRGV2P9aNU=
+	t=1762183157; cv=none; b=jXnivC7Q+G7buoN2WhHHfo/tNl+S0dphF438j/9aKHNq7L8DPfSEk9RAyOIf++X+4eEChUcGSbnhgNvt3kj/QZtDv9qzzRjWrZmyE756XgTwSn7qoV3nn38svI2pqa6vfbtudePCSbWsPfKLGlczxWnZAP3E7EfIvIPBQsXoW+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762181887; c=relaxed/simple;
-	bh=VB+OJdhFko++Cc4PEpxdVhhL1Tqf3bp8WQNWSVbu7VE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WkZ0JDTFXmAoNOqBsP1TbQ/+iMEUzWDTug769jqXBKH2GI9ZXiSGopocVWL2XOgspMF0uYJBVfLiobZUI2n4Il0xLMtcocLVV12GqUq+iozcEdOwZUbB9UJ2bISZGGxCI6zQmRWqTrNUyq8CNzeuCC+9GOtUR+uPTowUAb7kwCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mdkfw/5V; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mdkfw/5V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 910E1C4CEE7;
-	Mon,  3 Nov 2025 14:58:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762181887;
-	bh=VB+OJdhFko++Cc4PEpxdVhhL1Tqf3bp8WQNWSVbu7VE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Mdkfw/5VBc7WvLgks52fmjnPgUxH4An/R0ffGAuU8ozjeaLHfK+eZAu/FgfgvcFx5
-	 iimo5wFdIP+w6X7S8c9uABeZ6Q0Zrt7Q3EnrSS3v0nhEcsSE9Ur9MaW9/ioMmpujQS
-	 jb0FEa/tNNw0pmHbT+Dim+3LnO4IHMLOPb6YUTShaxH/hDADCdshdRjxaEgS1u8ckq
-	 6DIh0KMPvbP9iwMjDrAX9clDVCKSY7pOdD7WwQmt4Bqtx8YU7zEjvmaMvyvCTiuTeY
-	 IQBVvxEC/6u6Z1yLjP+c7Ib3k5uvBXN8TzlKNIU9Un8hfMsM8tl4fy0/kLfZbuoVO1
-	 VTxiymJYgvnsQ==
-From: Will Deacon <will@kernel.org>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: catalin.marinas@arm.com,
-	kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	mark.rutland@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf/arm-ni: Add NoC S3 support
-Date: Mon,  3 Nov 2025 14:57:49 +0000
-Message-Id: <176217955803.2904482.3019050250965959797.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <ddb1dbaccce2f092bbfe1029982aad3a81bded71.1760960572.git.robin.murphy@arm.com>
-References: <ddb1dbaccce2f092bbfe1029982aad3a81bded71.1760960572.git.robin.murphy@arm.com>
+	s=arc-20240116; t=1762183157; c=relaxed/simple;
+	bh=bqBgRB7rkcR32TlDYtgJPpXAg7EMKp4wB8pN9vCXBMw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AuhcC8pMVk2A/CLTe0WG/b9tpWnIL1TunVP3zWVk6f/xpCFgnjREPSf5A1NubPQqR1mpkffD3FhiTnUvMYkXMIhEo+UbVpdItjjKwpkqlIV7Aznnrwr+9u/oXek7q8mYQxRBKw4IDrcTrXpq7GCGYmFH/zc2bry6ksQjqIPFHfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E171A1D14;
+	Mon,  3 Nov 2025 07:19:06 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A83C3F66E;
+	Mon,  3 Nov 2025 07:19:14 -0800 (PST)
+Date: Mon, 3 Nov 2025 15:19:12 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-perf-users@vger.kernel.org,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: Re: [PATCH 1/1] MAINTAINERS: Add James Clark as a perf tools reviewer
+Message-ID: <20251103151912.GW281971@e132581.arm.com>
+References: <aQjCEfiFLJwApdlj@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aQjCEfiFLJwApdlj@x1>
 
-On Mon, 20 Oct 2025 12:44:19 +0100, Robin Murphy wrote:
-> NoC S3 and its SI L1 sibling look largely similar to their predecessors,
-> but add the notion of subfeatures to the discovery process, which we now
-> use to find the event muxes for each device node. Plus, as ever, more
-> mildly annoying shuffling around of some of the PMU registers (this time
-> it's the counters...)
+On Mon, Nov 03, 2025 at 11:54:09AM -0300, Arnaldo Carvalho de Melo wrote:
+> Just FYI, I'm carrying this on the perf tools tree.
 > 
+> James Clark has been actively reviewing patches and contributing
+> to perf tools. Reflect this by adding him as a reviewer in the
+> MAINTAINERS file.
 > 
-> [...]
+> Reviewed-by: James Clark <james.clark@linaro.org>
+> Acked-by: Ingo Molnar <mingo@kernel.org>
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Applied to will (for-next/perf), thanks!
+Well deserved, James. Congrats!
 
-[1/1] perf/arm-ni: Add NoC S3 support
-      https://git.kernel.org/will/c/8fa08f8835e5
-
-Cheers,
--- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f6cda468095de127..13a80d4a8b6b67dd 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -20157,6 +20157,7 @@ R:	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>  R:	Jiri Olsa <jolsa@kernel.org>
+>  R:	Ian Rogers <irogers@google.com>
+>  R:	Adrian Hunter <adrian.hunter@intel.com>
+> +R:	James Clark <james.clark@linaro.org>
+>  L:	linux-perf-users@vger.kernel.org
+>  L:	linux-kernel@vger.kernel.org
+>  S:	Supported
+> -- 
+> 2.51.0
+> 
