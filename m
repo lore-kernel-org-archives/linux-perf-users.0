@@ -1,125 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100052D5923;
-	Mon,  3 Nov 2025 18:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BDC431E0FD;
+	Mon,  3 Nov 2025 19:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762193008; cv=none; b=BTQ2BNvVvMgpOkpbRtfst/pf0PGGMMBUjHIaXUrjkrEADR/K8+dIaSxHSCWheSUuGlYN1STYkxjq2DyMRANCSuUanVIbT+wxQi3XkrXWdIHbXoMaQnW46m7x3x2L1TSlkuKrO01aui/HutG6Fs4fszTp97eCRtTxRzkBvNL6Xzs=
+	t=1762198195; cv=none; b=TAY8neyKQ4cJs01wfaZZDbZb+eyd5s9L+/1lNrW20Buvzgt0dRPfGlnVTBbLLCuk6wIxA/Oj+VyVLjIdKUC4VBnEJxoOuevq3AMk7oQORmq/A74mJDiLXeDk/OYJCVFcwgV5iiKnwRobuc6dCDKk/wC9lmGgDoMlTzBFHli2Or0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762193008; c=relaxed/simple;
-	bh=n5r3uOjmIK6D05MaUmyFyOQ+o9yCG1GbJnXVqMCdNh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=raRQiLwTk6N7Nzx06rPyL9FdLB0TeyuYzmi8llSU0Ne98D9pvqNSZoP8KCBEQXK/6Z//vlbpMw+QVnifoHH3t+mTXx75uPs0ijR82S6tuJdJiMpWW58ASv/LjMgqaDg7KiZugQTh6dKqis/R/6swGCf7piWQCblD2I7mcwki2V4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HtJTXrYC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762198195; c=relaxed/simple;
+	bh=fRx6PAs2XVngndFqMA4/GPWLhaxYxm4Mi2HGbQkkd2k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ynw07AYGHlbT91VlH1CDykTgeQE6KJGJ2JXygyTH52XXtzn9O6sPWEMCSwFk7gyio4mzqHXWh0H2NVAKjlAiBRGi72U1dFTIT4rdJZYKxVlSOC9Zu6N6ysJP09Gk+k+Sa9GSn9mfkfTEvYcElBDbxAGnWB8oQVyJH703113sq48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fUiglO4K; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HtJTXrYC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5B32C4CEF8;
-	Mon,  3 Nov 2025 18:03:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762193007;
-	bh=n5r3uOjmIK6D05MaUmyFyOQ+o9yCG1GbJnXVqMCdNh0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=HtJTXrYCYOKzo6m1UckSDEsIrDH+N5+bGQXRQhV05LIVguCh618oLSLfA77lKZGJF
-	 XenzXrbv8LLY6S33Bs1vgbN3HbzMxIoVPhlybVgrvonqTIGwL9e3f+d4AHsuzKNMK5
-	 Y9+JXFdtQuWQbLPt80s80gOu8rIKUHgDMcm5Uy2009qActRiw98I1BuP9whYugSF25
-	 q/xLtvpwBEDdJaLiFz/IIVR6JHN+QCi1NpSlwHWat4Q9v3lT2F3oF0BFC7dOZ62N+r
-	 75B6JMNgRVrkPmXJ7M2dLBfa+/DggrRFQ3cpdpXYYP9UsKMyOIvVEJjl5cKu4hg6aw
-	 KJF89Fr9zdvbA==
-Date: Mon, 3 Nov 2025 15:03:23 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Alice Ryhl <aliceryhl@google.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Benno Lossin <lossin@kernel.org>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Danilo Krummrich <dakr@kernel.org>, Gary Guo <gary@garyguo.net>,
-	Trevor Gross <tmgross@umich.edu>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fUiglO4K"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=fRx6PAs2XVngndFqMA4/GPWLhaxYxm4Mi2HGbQkkd2k=; b=fUiglO4KZgrtER9VCvAYhp+N4t
+	ZA9yLPTrbxF/7Oyx0sYrcuUUQuO3xiTdHELm+YBfs6ITCqoZUkuTGRweaZTYoxd72/Canx4Pmn4Dw
+	WE0bjBSyfBg5wdr1wc+5GKhxd4okiwlCFgufC/d4Lrsyez30cF5gt9Lar0BBudLDT2LqoMy0ku028
+	2syGtzANn/Zi8d17nB5OzFfSnz8/8nujDXR43+uI3aNotz4JJ6gNYstqmPu2TfwsMrfqeNE/8v4zP
+	VbOkQl6jow4P2jNjrsqnE1fbSyHKlzui4UdQ+PQo/HHkRXOBabOtItXSUtrVnMctnNWHSTSYXjt4n
+	Nyz76tEw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vG0FQ-0000000G51u-06Gy;
+	Mon, 03 Nov 2025 19:29:49 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id BBF3D300230; Mon, 03 Nov 2025 20:29:48 +0100 (CET)
+Date: Mon, 3 Nov 2025 20:29:48 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Ian Rogers <irogers@google.com>,
 	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1] perf symbols: Handle '1' symbols in /proc/kallsyms
-Message-ID: <aQjua6zkEHYNVN3X@x1>
+	Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: Re: [PATCH 1/1] MAINTAINERS: Add James Clark as a perf tools reviewer
+Message-ID: <20251103192948.GK3419281@noisy.programming.kicks-ass.net>
+References: <aQjCEfiFLJwApdlj@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <aQjCEfiFLJwApdlj@x1>
 
-Just FYI, I'm carrying this on the perf tools tree.
+On Mon, Nov 03, 2025 at 11:54:09AM -0300, Arnaldo Carvalho de Melo wrote:
+> Just FYI, I'm carrying this on the perf tools tree.
 
-I started seeing this in recent Fedora 42 kernels:
-
-  root@x1:~# uname -a
-  Linux x1 6.17.4-200.fc42.x86_64 #1 SMP PREEMPT_DYNAMIC Sun Oct 19 18:47:49 UTC 2025 x86_64 GNU/Linux
-  root@x1:~#
-
-  root@x1:~# perf test 1
-    1: vmlinux symtab matches kallsyms     : FAILED!
-  root@x1:~#
-
-Related to:
-
-  root@x1:~# grep ' 1 ' /proc/kallsyms
-  ffffffffb098bc00 1 __pfx__RNCINvNtNtNtCsfwaGRd4cjqE_4core4iter8adapters3map12map_try_foldjNtCskFudTml27HW_12drm_panic_qr7VersionuINtNtNtBa_3ops12control_flow11ControlFlowB10_ENcB10_0NCINvNvNtNtNtB8_6traits8iterator8Iterator4find5checkB10_NCNvMB12_B10_13from_segments0E0E0B12_
-  ffffffffb098bc10 1 _RNCINvNtNtNtCsfwaGRd4cjqE_4core4iter8adapters3map12map_try_foldjNtCskFudTml27HW_12drm_panic_qr7VersionuINtNtNtBa_3ops12control_flow11ControlFlowB10_ENcB10_0NCINvNvNtNtNtB8_6traits8iterator8Iterator4find5checkB10_NCNvMB12_B10_13from_segments0E0E0B12_
-  root@x1:~#
-
-That is found in:
-
-  root@x1:~# pahole --running_kernel_vmlinux
-  /usr/lib/debug/lib/modules/6.17.4-200.fc42.x86_64/vmlinux
-  root@x1:~#
-
-  root@x1:~# readelf -sW /usr/lib/debug/lib/modules/6.17.4-200.fc42.x86_64/vmlinux | grep __pfx__RNCINvNtNtNtCsfwaGRd4cjqE_4core4iter8adapters3map12map_try_foldjNtCskFudTml27HW_12drm_panic_qr7VersionuINtNtNtBa_3ops12control_flow11ControlFlowB10_ENcB10_0NCINvNvNtNtNtB8_6traits8iterator8Iterator4find5checkB10_NCNvMB12_B10_13from_segments0E0E0B12_
-  150649: ffffffff81f8bc00    16 FUNC    LOCAL  DEFAULT    1 __pfx__RNCINvNtNtNtCsfwaGRd4cjqE_4core4iter8adapters3map12map_try_foldjNtCskFudTml27HW_12drm_panic_qr7VersionuINtNtNtBa_3ops12control_flow11ControlFlowB10_ENcB10_0NCINvNvNtNtNtB8_6traits8iterator8Iterator4find5checkB10_NCNvMB12_B10_13from_segments0E0E0B12_
-  root@x1:~#
-
-But was being filtered out when reading /proc/kallsyms, as the '1'
-symbol type was not being handled, do it, there are just two of them at
-this point.
-
-Cc: Alex Gaynor <alex.gaynor@gmail.com>
-Cc: Alice Ryhl <aliceryhl@google.com>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Benno Lossin <lossin@kernel.org>
-Cc: Björn Roy Baron <bjorn3_gh@protonmail.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>
-Cc: Gary Guo <gary@garyguo.net>
-Cc: Miguel Ojeda <ojeda@kernel.org>
-Cc: Trevor Gross <tmgross@umich.edu>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/symbol.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index cc26b7bf302b29d6..948d3e8ad782bc2a 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -112,9 +112,13 @@ static bool symbol_type__filter(char __symbol_type)
- 	// 'N' first seen in:
- 	// ffffffff9b35d130 N __pfx__RNCINvNtNtNtCsbDUBuN8AbD4_4core4iter8adapters3map12map_try_foldjNtCs6vVzKs5jPr6_12drm_panic_qr7VersionuINtNtNtBa_3ops12control_flow11ControlFlowB10_ENcB10_0NCINvNvNtNtNtB8_6traits8iterator8Iterator4find5checkB10_NCNvMB12_B10_13from_segments0E0E0B12_
- 	// a seemingly Rust mangled name
-+	// Ditto for '1':
-+	// root@x1:~# grep ' 1 ' /proc/kallsyms
-+	// ffffffffb098bc00 1 __pfx__RNCINvNtNtNtCsfwaGRd4cjqE_4core4iter8adapters3map12map_try_foldjNtCskFudTml27HW_12drm_panic_qr7VersionuINtNtNtBa_3ops12control_flow11ControlFlowB10_ENcB10_0NCINvNvNtNtNtB8_6traits8iterator8Iterator4find5checkB10_NCNvMB12_B10_13from_segments0E0E0B12_
-+	// ffffffffb098bc10 1 _RNCINvNtNtNtCsfwaGRd4cjqE_4core4iter8adapters3map12map_try_foldjNtCskFudTml27HW_12drm_panic_qr7VersionuINtNtNtBa_3ops12control_flow11ControlFlowB10_ENcB10_0NCINvNvNtNtNtB8_6traits8iterator8Iterator4find5checkB10_NCNvMB12_B10_13from_segments0E0E0B12_
- 	char symbol_type = toupper(__symbol_type);
- 	return symbol_type == 'T' || symbol_type == 'W' || symbol_type == 'D' || symbol_type == 'B' ||
--	       __symbol_type == 'u' || __symbol_type == 'l' || __symbol_type == 'N';
-+	       __symbol_type == 'u' || __symbol_type == 'l' || __symbol_type == 'N' || __symbol_type == '1';
- }
- 
- static int prefix_underscores_count(const char *str)
--- 
-2.51.1
-
+Thanks!
