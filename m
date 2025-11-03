@@ -1,43 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7BE303CAF;
-	Mon,  3 Nov 2025 14:15:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D199A27EC7C;
+	Mon,  3 Nov 2025 14:31:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762179302; cv=none; b=R51QtpZuIZeUZO/0caGX351TCgOuCFldT4daxq2FXNiT1Ggw99A+jcAe/XUIroxS9TrRGzWXSox7awLrJ6HSN6vBtD6Fz5CKoD3XtUVse3GxC45BOZw5UrAlIdnq8Hi7Di8NH/uXKsBVz9sMJrV9NiPPjFKl1m1DCZ3vMqqu6FQ=
+	t=1762180272; cv=none; b=TvIz9jsuaK6PHgUElAVEt9wY7fJE8M4P9HjfuVllDcfCXqZSqUMWqJqn73u/EbMIrF3cmiKegIVD8RUzAfQY2pf4/TE24FfDTC24x4NqYrkycUchsxnV+lePO654G3Gz2r8uVYNfZuGiM1Y3iAwoKZr4s7QAxEDLl61i6+Urhqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762179302; c=relaxed/simple;
-	bh=fs90Ul4vTnu9dV9I/VxXT9SC/TJ8z2rQUAx6krg4/Gk=;
+	s=arc-20240116; t=1762180272; c=relaxed/simple;
+	bh=s5mGY2hJlehqy9L4juCXHyC5hvvTQy2D2clApxv+kos=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O74wzks0Mo8Dbtc+TpnTHx3i6/CEwckq2wBn4JT2BpTolcXXVtSnox2m+wnbwm0IsKE+5LIe/ag+3OXm2D/KXJLtk+dbaa1QrvoRNyKkbQ93eoL9PSfSLG7hMpvvMZjCU2p8zfdkW39yy6CUCeIwdCMuKlLuDKyUsnAFxSmDDmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X3o01LlD; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=O14zvMFNEhwdbERRn9aX89n2bfWw9/lmVue3DMPydL2F0moAJ7WTxuKO1Jur0d6n9sH9/7d9E6jSVI5sJAvmOTLXDrVgFhEOO7ObZA0cYvml+Vlbj6DkhPjD27/fILFktIZRhGP8dbOGQfn93Sc6aonfyryeO+Ka0GvLaIQc+UI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TRyxR9At; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X3o01LlD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EAD4C4CEE7;
-	Mon,  3 Nov 2025 14:14:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TRyxR9At"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E4B2C4CEE7;
+	Mon,  3 Nov 2025 14:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762179301;
-	bh=fs90Ul4vTnu9dV9I/VxXT9SC/TJ8z2rQUAx6krg4/Gk=;
+	s=k20201202; t=1762180271;
+	bh=s5mGY2hJlehqy9L4juCXHyC5hvvTQy2D2clApxv+kos=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X3o01LlDmBO8alUjN9fiIY8ZAoR7Yj4bPPQbuFzEScyf0Q+7jfwgwoRGax0TZ3ojY
-	 tzyICCPRCpa3zMyy/7yD27/7XPdsRJKROidbqzVoisReUN7xz3/qO5eQpYtP+0n6A+
-	 34LWRNe/+fecNcLTHGQPnYdnTsVIHQS17sRl0IOPv+7Q+bvTglLRtYh82ZIRHggnbS
-	 IlPpUHlT5+zj0383kredcBozFfs9sR65eKFqhRDVZfuacSnlVtfOMy90LDKuqYxA8v
-	 edKiJH984rvPsqH/NuUuzAS/qRIfHyzmhuTlxxicOom0g9wiUFZ31J4wexSJ9qpm8J
-	 tWMwbSQu69+lg==
-Date: Mon, 3 Nov 2025 14:14:56 +0000
+	b=TRyxR9AtU8LB5uO5mPIUStqZ2gK47Cih9yqBxGo0WaoNe4WcQ2pp440PncVgN3Zmq
+	 AIVF4XbvcczvPP7ZRexr5K+3DtxNWyOlIuaB0BmtDHYLFaEMvLQ+Sf8d5biA0B396p
+	 RNJIJ2qfEiKVpakKEOuqQLJ55IngPgJcIoIVccBWrfP7RhjhcJIX9IeTFKqJnY3E89
+	 HQBmIJGYdXV00RYiRPPP/r7xScsWeCgh/eno8CH4dKzUTNFx3Mwh55szuZKnL6YOLR
+	 aCmbpmhJiQ69oY0lUZE/jaO4Q8Jqa6tg/T6z/2svECVynbfBVCH/Kn5yQb3tpF3Sw7
+	 t6gTMp7QkdraQ==
+Date: Mon, 3 Nov 2025 14:31:05 +0000
 From: Will Deacon <will@kernel.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexandru Elisei <alexandru.elisei@arm.com>,
-	James Clark <james.clark@linaro.org>,
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Xu Yang <xu.yang_2@nxp.com>, Mark Rutland <mark.rutland@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
 	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: arm_spe: Ensure trace is disabled when TRUNCATED
- flag is set
-Message-ID: <aQi44CZOiwhI19dd@willie-the-truck>
-References: <20251015-arm_spe_fix_truncated_flag-v1-1-555e328cba05@arm.com>
+	linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Joakim Zhang <qiangqing.zhang@nxp.com>
+Subject: Re: [PATCH v2 4/6] perf/imx_ddr: Add support for PMU in DB (system
+ interconnects)
+Message-ID: <aQi8qUzLHypULQJP@willie-the-truck>
+References: <20251024-qm_dts-v2-0-7a7e07022ed6@nxp.com>
+ <20251024-qm_dts-v2-4-7a7e07022ed6@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,82 +53,82 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251015-arm_spe_fix_truncated_flag-v1-1-555e328cba05@arm.com>
+In-Reply-To: <20251024-qm_dts-v2-4-7a7e07022ed6@nxp.com>
 
-On Wed, Oct 15, 2025 at 07:23:37PM +0100, Leo Yan wrote:
-> The TRUNCATED flag can be set in the following cases:
+On Fri, Oct 24, 2025 at 02:17:14PM -0400, Frank Li wrote:
+> From: Joakim Zhang <qiangqing.zhang@nxp.com>
 > 
->  1. When data loss is detected (PMBSR_EL1.DL == 0b1).
->  2. When arm_spe_perf_aux_output_begin() fails to find a valid limit
->     because it runs out of free space.
+> There is a PMU in DB, which has the same function with PMU in DDR
+> subsystem, the difference is PMU in DB only supports cycles, axid-read,
+> axid-write events.
 > 
-> Currently, only the first case invokes irq_work_run() to execute the
-> event disable callback, while the second case does not.
+> e.g.
+> perf stat -a -e imx8_db0/axid-read,axi_mask=0xMMMM,axi_id=0xDDDD,axi_port=0xPP,axi_channel=0xH/ cmd
+> perf stat -a -e imx8_db0/axid-write,axi_mask=0xMMMM,axi_id=0xDDDD,axi_port=0xPP,axi_channel=0xH/ cmd
 > 
-> Move the call to irq_work_run() later with checking the TRUNCATED flag,
-> so that both cases are handled and redundant calls are avoided.
-> 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
->  drivers/perf/arm_spe_pmu.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
+>  drivers/perf/fsl_imx8_ddr_perf.c | 65 ++++++++++++++++++++++++++++++++++------
+>  1 file changed, 56 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> index fa50645feddadbea5dc1e404f80f62cf5aa96fd4..05ba977f75d607a1d524f68694db9ea18a6ef20c 100644
-> --- a/drivers/perf/arm_spe_pmu.c
-> +++ b/drivers/perf/arm_spe_pmu.c
-> @@ -731,12 +731,6 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
->  	if (act == SPE_PMU_BUF_FAULT_ACT_SPURIOUS)
->  		return IRQ_NONE;
+> diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
+> index 2a8426a74af98cf46725c2c70534829e198746f3..328287ab6326e3832aed85633957196548435d67 100644
+> --- a/drivers/perf/fsl_imx8_ddr_perf.c
+> +++ b/drivers/perf/fsl_imx8_ddr_perf.c
+> @@ -53,18 +53,27 @@
+>  #define to_ddr_pmu(p)		container_of(p, struct ddr_pmu, pmu)
 >  
-> -	/*
-> -	 * Ensure perf callbacks have completed, which may disable the
-> -	 * profiling buffer in response to a TRUNCATION flag.
-> -	 */
-> -	irq_work_run();
-> -
->  	switch (act) {
->  	case SPE_PMU_BUF_FAULT_ACT_FATAL:
->  		/*
-> @@ -765,6 +759,15 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
->  		break;
->  	}
+>  #define DDR_PERF_DEV_NAME	"imx8_ddr"
+> +#define DB_PERF_DEV_NAME	"imx8_db"
+>  #define DDR_CPUHP_CB_NAME	DDR_PERF_DEV_NAME "_perf_pmu"
 >  
-> +	/*
-> +	 * The TRUNCATED flag is set when data loss is detected by PMBSR_EL1.DL,
-> +	 * or arm_spe_perf_aux_output_begin() sets the flag if runs out of free
-> +	 * space. Ensure that all perf callbacks have completed for disabling
-> +	 * the profiling buffer.
-> +	 */
-> +	if (handle->aux_flags & PERF_AUX_FLAG_TRUNCATED)
-> +		irq_work_run();
+>  static DEFINE_IDA(ddr_ida);
+> +static DEFINE_IDA(db_ida);
+>  
+>  /* DDR Perf hardware feature */
+>  #define DDR_CAP_AXI_ID_FILTER			0x1     /* support AXI ID filter */
+>  #define DDR_CAP_AXI_ID_FILTER_ENHANCED		0x3     /* support enhanced AXI ID filter */
+>  #define DDR_CAP_AXI_ID_PORT_CHANNEL_FILTER	0x4	/* support AXI ID PORT CHANNEL filter */
+>  
+> +/* Perf type */
+> +enum fsl_ddr_type {
+> +	DDR_PERF_TYPE = 0,	/* ddr Perf (default) */
+> +	DB_PERF_TYPE,		/* db Perf */
+> +};
+> +
+>  struct fsl_ddr_devtype_data {
+>  	unsigned int quirks;    /* quirks needed for different DDR Perf core */
+>  	const char *identifier;	/* system PMU identifier for userspace */
+> +	enum fsl_ddr_type type;	/* types of Perf, ddr or db */
+>  };
+>  
+>  static const struct fsl_ddr_devtype_data imx8_devtype_data;
+> @@ -98,6 +107,12 @@ static const struct fsl_ddr_devtype_data imx8dxl_devtype_data = {
+>  	.identifier = "i.MX8DXL",
+>  };
+>  
+> +static const struct fsl_ddr_devtype_data imx8dxl_db_devtype_data = {
+> +	.quirks = DDR_CAP_AXI_ID_PORT_CHANNEL_FILTER,
+> +	.identifier = "i.MX8DXL",
 
-I'm not sure about this. afaict, perf_aux_output_begin() can fail
-(return NULL) without setting the TRUNCATED flag but with a disable
-pending in irq work. It also feels a little fragile moving the existing
-irq_work_run() call as that could easily break in future if e.g. irq
-work is used for other manipulation of the buffer controls.
+Is this identifier useful given that you don't add
+'ddr_perf_identifier_attrs' here:
 
-Given that this isn't a fast path, isn't it simpler and safer just to
-do something like the below?
+> +static const struct attribute_group *db_attr_groups[] = {
+> +	&db_perf_events_attr_group,
+> +	&ddr_perf_format_attr_group,
+> +	&ddr_perf_cpumask_attr_group,
+> +	&ddr_perf_filter_cap_attr_group,
+> +	NULL,
+> +};
+
+?
+
+Perhaps it would be better if you avoided adding a new array of attribute
+groups and instead implemented the '.is_visible' callback for
+'ddr_perf_events_attr_group'? That way, you avoid the duplication and
+you can hide everything except for the three events you want in the DB
+PMU.
 
 Will
-
---->8
-
-diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index fa50645fedda..8a38d69e9600 100644
---- a/drivers/perf/arm_spe_pmu.c
-+++ b/drivers/perf/arm_spe_pmu.c
-@@ -758,6 +758,10 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
-                if (!(handle->aux_flags & PERF_AUX_FLAG_TRUNCATED)) {
-                        arm_spe_perf_aux_output_begin(handle, event);
-                        isb();
-+
-+                       /* Insightful comment here */
-+                       if (event->hw.state)
-+                               irq_work_run();
-                }
-                break;
-        case SPE_PMU_BUF_FAULT_ACT_SPURIOUS:
-
