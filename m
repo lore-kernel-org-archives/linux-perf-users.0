@@ -1,90 +1,108 @@
-Received: from ssh247.corpemail.net (ssh247.corpemail.net [210.51.61.247])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE6DE27E045;
-	Mon,  3 Nov 2025 01:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.247
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7742F1F1537;
+	Mon,  3 Nov 2025 07:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762134533; cv=none; b=QudmoDVGMzBe4QDS7PaMHBRxhq2B02uH+XkUe4rohu1gtEUcoNzU0IiuoEgeVIkBM6tAxMVMbp15yAQS9eTjL713mbRRWAIorCt8/fnyIvxfn7oJCm7BRlO3iYbiEFCJ7zoiUTKkk7HxrvQKkikgiNI4gJM9xs55lBaCRisIYIk=
+	t=1762155184; cv=none; b=eGcM06iY18EZoZbpgQdzQZEmYS1oh/H45OSUg72WSinCQ6zwT9ruQdgOonNvr/dJd5A/c0wLSBJ6ByctnXYgKvnyy1gE6Un7aaG7u/h0y/tuz0FZXWdz3GLwpm/5dQkqLR9sRPkG0kxBN9QG8nVdYN5B0NWDuujIGoaBfM5Kpz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762134533; c=relaxed/simple;
-	bh=T834OqKWmV0Fy9zRBH+AZl4fmz5/uHYjIXfITrCsZ6c=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SkR63QSvr9Bh9xHfwRLhp/tIVovTiEQ1No1WMCOkgSs88pU9Ypb7RoCYA/ZTv432DjdqF/OVFkN2atz8k/mj7doi/y54c0wBAjwv+u+8izpZIoWisnq913ZbJ+c0nAAuYcenqVSvQ+QbPzg44kcoB9C4+KheP7KaF0ojcs6hcAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.247
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from Jtjnmail201614.home.langchao.com
-        by ssh247.corpemail.net ((D)) with ASMTP (SSL) id 202511030947356328;
-        Mon, 03 Nov 2025 09:47:35 +0800
-Received: from jtjnmailAR01.home.langchao.com (10.100.2.42) by
- Jtjnmail201614.home.langchao.com (10.100.2.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.58; Mon, 3 Nov 2025 09:47:34 +0800
-Received: from inspur.com (10.100.2.107) by jtjnmailAR01.home.langchao.com
- (10.100.2.42) with Microsoft SMTP Server id 15.1.2507.58 via Frontend
- Transport; Mon, 3 Nov 2025 09:47:34 +0800
-Received: from localhost.localdomain.com (unknown [10.94.13.117])
-	by app3 (Coremail) with SMTP id awJkCsDwmPmyCQhp9KQJAA--.13804S4;
-	Mon, 03 Nov 2025 09:47:30 +0800 (CST)
-From: Chu Guangqing <chuguangqing@inspur.com>
-To: <john.g.garry@oracle.com>, <will@kernel.org>, <james.clark@linaro.org>,
-	<mike.leach@linaro.org>, <leo.yan@linux.dev>, <peterz@infradead.org>,
-	<mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>,
-	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: Chu Guangqing <chuguangqing@inspur.com>
-Subject: [PATCH v2 0/1] Fix spelling typo in tools/perf
-Date: Mon, 3 Nov 2025 09:46:32 +0800
-Message-ID: <20251103014633.1213-1-chuguangqing@inspur.com>
-X-Mailer: git-send-email 2.43.7
+	s=arc-20240116; t=1762155184; c=relaxed/simple;
+	bh=l5HUEGJQ2l2mq+aTaDpihogl26Os1llfVLM76lsWO6s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oDs3U1hak9QktKbxGddfHm7WUGeisAR1CbVWIJrVSvrGI2urNeJ+yEfzJckwcSjb4T9Y7w+rNp8hDX+4M3W2q5nf03W6Yai61Kd0jLrRt1ajDkdWdmwpwIeOJqewgTIEJ+FR130EEZmy6IVkFbRkIv7YrgqMfaUY+iYUvZ8IsOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=INodRjqq; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="INodRjqq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762155182; x=1793691182;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=l5HUEGJQ2l2mq+aTaDpihogl26Os1llfVLM76lsWO6s=;
+  b=INodRjqq5g3YH1pVowBMEmyFoN9djrtk5imAnSs1gIqA4OXa7BBbkZF1
+   ktinLYAR4Kq8m80pYRKQxElXUsdx0m4RrF8vMkDYjs5hAU2XXsQ0+WLSH
+   s53U8k4jI+oixFOUJ4QuTX7ODX1KFm5EUePzY8Q5HqDCADY1btVGgb4hu
+   oP6az3HMZ8dA0a80mRuXSFFG4u+RwH98Pr/fQA+9xU44Vz4tjNiAiDG1t
+   LAXszUyG5fTcpi3DTVsTX8Zb1l3GjAwRcWJhN8MFLL27GlkYwlpRCTYhA
+   3bVH7tHhYNS4xxM3zefh0lh85209qudigompNNpoW8v31ZzE7BangRTtl
+   w==;
+X-CSE-ConnectionGUID: k3b+NNwrThqQv0R3yCJkXQ==
+X-CSE-MsgGUID: 6NTQKs5QSkmdUleSHu29EQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11601"; a="64112034"
+X-IronPort-AV: E=Sophos;i="6.19,275,1754982000"; 
+   d="scan'208";a="64112034"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2025 23:33:02 -0800
+X-CSE-ConnectionGUID: wbZmldb1TQKn1RfPq/DltQ==
+X-CSE-MsgGUID: bxAVY6aMRQWiQcpRMmV5Aw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,275,1754982000"; 
+   d="scan'208";a="187250918"
+Received: from smoehrl-linux.amr.corp.intel.com (HELO ashevche-desk.local) ([10.124.220.216])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2025 23:32:57 -0800
+Received: from andy by ashevche-desk.local with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1vFp3a-000000054ie-2nUE;
+	Mon, 03 Nov 2025 09:32:50 +0200
+Date: Mon, 3 Nov 2025 09:32:49 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Raag Jadav <raag.jadav@intel.com>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+	netdev@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Florian Westphal <fw@strlen.de>, Phil Sutter <phil@nwl.cc>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>
+Subject: Re: [PATCH net-next v1 1/1] treewide: Rename ERR_PTR_PCPU() -->
+ PCPU_ERR_PTR()
+Message-ID: <aQhaobur-9j6ye0m@smile.fi.intel.com>
+References: <20251030083632.3315128-1-andriy.shevchenko@linux.intel.com>
+ <20251031164958.29f75595@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: awJkCsDwmPmyCQhp9KQJAA--.13804S4
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY97AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E
-	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8I
-	cVCY1x0267AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aV
-	CY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAq
-	x4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6x
-	CaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwAC
-	I402YVCY1x02628vn2kIc2xKxwCF04k20xvY0x0EwIxGrwCF54CYxVCY1x0262kKe7AKxV
-	W8ZVWrXwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQvtAUUUUU=
-X-CM-SenderInfo: 5fkxw35dqj1xlqj6x0hvsx2hhfrp/
-X-CM-DELIVERINFO: =?B?BEku65RRTeOiUs3aOqHZ50hzsfHKF9Ds6CbXmDm38RucXu3DYXJR7Zlh9zE0nt/Iac
-	D+KU/myUvcVyK7rkHspOjZBu4Q/51zyjXsDLAUWvI3FwgIEgo4lAMTnf3ETstjRH9TRgfn
-	uLVmFDsoawVDLT+bklM=
-Content-Type: text/plain
-tUid: 20251103094735c696401974d91050ac2f12342e55767b
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251031164958.29f75595@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-v2:
- - The subject of the patch has been modified.
+On Fri, Oct 31, 2025 at 04:49:58PM -0700, Jakub Kicinski wrote:
+> On Thu, 30 Oct 2025 09:35:53 +0100 Andy Shevchenko wrote:
+> > Make the namespace of specific ERR_PTR() macro leading the thing.
+> > This is already done for IOMEM_ERR_PTR(). Follow the same pattern
+> > in PCPU_ERR_PTR().
+> 
+> TBH I find the current naming to be typical. _PCPU() is the "flavor" of
+> the API. Same as we usually append _rcu() to functions which expect
+> to operate under RCU. All error pointer helpers end with _PCPU().
 
-v1:
- - (https://lore.kernel.org/all/20251031025810.1939-1-chuguangqing@inspur.com/)
+Ah, there is also IS_ERR_PCPU()...
 
-Chu Guangqing (1):
-  perf vendor events arm64 AmpereOneX: Fix spelling typo in the metrics
-    file
+> I don't feel strongly so fine if anyone else wants to apply this.
+> But I will not :)
 
- .../arch/arm64/ampere/ampereonex/metrics.json    | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+OK.
 
 -- 
-2.43.7
+With Best Regards,
+Andy Shevchenko
+
 
