@@ -1,81 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D03330B20;
-	Mon,  3 Nov 2025 14:54:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3333432BF25;
+	Mon,  3 Nov 2025 14:58:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762181653; cv=none; b=kjLT/BSQGHCbhxVyG+DCzJIphBWuVbD72JIHhkNikWzVSvSCzBKYJb06Rrkult4efCnY4RWOPPlOMBLPNFIWRI78nAfwxBKczG4PXqp9i6aX2Peo2HeYTSJe1KkngdqqfQDLhE+Dzk6Rb7/gXpDo0TTCnRkUqOjCMJamBVoUnOo=
+	t=1762181886; cv=none; b=XziZUDN6aUd/kheEDsnFCv+Rtjwv/ozQ2AylSBBrAFohaPwkuO/+KC/WFhCTQN5OciHFh3WEwWIbOYmguTlH6u65AiooVyFrhjUAG2FwUFMeX0BjHO/clJxLQg4yKo19GVVnF+Lfx3ME6eTkNFTuZCDEOpy6q55WBvub3v+c2Dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762181653; c=relaxed/simple;
-	bh=4s6jsp1lmDxjMyiq+Fxr6WPmKUWWu6/VM3FszmVU1VI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=aCS4Fx2iaVm1ny1J7vAhyRh4aiAXNO916ttQ+uhkP2a0FPOoRLRFdy3nWkrWTnxzve9xn6UWVST8Jw8MbhUU7xY6iCaNaYG8rOjFoHyMakwSmoY1JQzS5snkbztLNByPX0h5C5wblzXkfUWvYXf24MSDKUhIWiSghcsX54JFSG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5vZMG5u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762181886; c=relaxed/simple;
+	bh=1y8nyhLMPDQthRdVRLcjZW6GOD7VlICRZa0k7+ilTrA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=H1QWKboqTNKajXb0c9PaKd0cZZXgfrqOotmaT9xDADjZZCQyo0TGJGoOQVPb+Ykj9VORhx8812NIp4qtBJ56ap4OI4L6zTvXYjwKvrBgCk/RJUD/AlT+TwmZ3+YOrL7GxPfGz6L10V4SCpbdBHCe0lyfLwKMQQyGdx+JOwjRRNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kCfnTOJL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5vZMG5u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89446C4CEE7;
-	Mon,  3 Nov 2025 14:54:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kCfnTOJL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46F8DC19423;
+	Mon,  3 Nov 2025 14:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762181653;
-	bh=4s6jsp1lmDxjMyiq+Fxr6WPmKUWWu6/VM3FszmVU1VI=;
-	h=Date:From:To:Cc:Subject:From;
-	b=O5vZMG5uImfesosvU8itwVpGUZB0IIm0NYO6GFMKVLryRBt9knXDxQOQuOIraT0Kf
-	 LWrx02Cu/dTYBuafUx6Q42O2ATSOmG1P2fG9l748+pVmpOTBy0Uu9JAdCB1HKACsUa
-	 diOzUbxGG/Sg3//BYwdCImKaZqqGzhTt4Mu9hzbFnZryVL6bnX/6JuvHV3Vw8X3b2v
-	 +swSSFp/6W0SzH6iCG6q1CPjMgr7oZEoeXgyosNh1ye5Cn/VLRMFnKXEZ68qHtrFO6
-	 VbyJGODYYShWYUcSXnZKHStsHiARhk31nQTbelYopzEX+stTKxMMwFTFeTvPWsTZS/
-	 H0ctBwM1LzMtQ==
-Date: Mon, 3 Nov 2025 11:54:09 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
+	s=k20201202; t=1762181885;
+	bh=1y8nyhLMPDQthRdVRLcjZW6GOD7VlICRZa0k7+ilTrA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kCfnTOJLfLYbFN8gxf8ljTASem2Tu+fAvmEW/uOwwSoc0ga4ImCQV6ROb2zk+ESCY
+	 zlH4WPE7jnsRp7F8ony9MkHgiBW+zIQgeQwsmJtm8k/Klst4IwFfm9MSLCN2EAgjb/
+	 HjIme+3dr7vQodUv2pylktxuRhhCyLhxdwxjBD9hPUWPq3dFuqKzl0+peF7GDcy4To
+	 YxL4PDi6L4leuWZG8ExJjNMIcvlDK5TLS1H8PrVPU1k0QTqHNNYhOIY8cvorgeZV1C
+	 JBquY8zJLgCXoTHcRB2IJz4YzNw+L5kSjq2ZBqICnoq+4zPWqyGNBSHNwuRvFrrA8k
+	 ExmZBWC7n421g==
+From: Will Deacon <will@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>,
+	"Rob Herring (Arm)" <robh@kernel.org>
+Cc: catalin.marinas@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH 1/1] MAINTAINERS: Add James Clark as a perf tools reviewer
-Message-ID: <aQjCEfiFLJwApdlj@x1>
+Subject: Re: [PATCH] perf: arm_pmuv3: Add new Cortex and C1 CPU PMUs
+Date: Mon,  3 Nov 2025 14:57:48 +0000
+Message-Id: <176217971597.2906896.12399584424760011005.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20251029213424.2951519-2-robh@kernel.org>
+References: <20251029213424.2951519-2-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Just FYI, I'm carrying this on the perf tools tree.
+On Wed, 29 Oct 2025 16:34:24 -0500, Rob Herring (Arm) wrote:
+> Add CPU PMU compatible strings for Cortex-A320, Cortex-A520AE,
+> Cortex-A720AE, and C1 Nano/Premium/Pro/Ultra.
+> 
+> 
 
-James Clark has been actively reviewing patches and contributing
-to perf tools. Reflect this by adding him as a reviewer in the
-MAINTAINERS file.
+Applied to will (for-next/perf), thanks!
 
-Reviewed-by: James Clark <james.clark@linaro.org>
-Acked-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+[1/1] perf: arm_pmuv3: Add new Cortex and C1 CPU PMUs
+      https://git.kernel.org/will/c/989b40b7578a
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f6cda468095de127..13a80d4a8b6b67dd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20157,6 +20157,7 @@ R:	Alexander Shishkin <alexander.shishkin@linux.intel.com>
- R:	Jiri Olsa <jolsa@kernel.org>
- R:	Ian Rogers <irogers@google.com>
- R:	Adrian Hunter <adrian.hunter@intel.com>
-+R:	James Clark <james.clark@linaro.org>
- L:	linux-perf-users@vger.kernel.org
- L:	linux-kernel@vger.kernel.org
- S:	Supported
+Cheers,
 -- 
-2.51.0
+Will
 
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
