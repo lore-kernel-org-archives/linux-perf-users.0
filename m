@@ -1,105 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B79631B114;
-	Tue,  4 Nov 2025 13:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D3A42E370E
+	for <linux-perf-users@vger.kernel.org>; Tue,  4 Nov 2025 16:04:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762263462; cv=none; b=BAz0L8Ln/R4aODJdG4hHwDNdowjDZFYdnA14YF+U63xG6AjNy5fWDLeN3QRyQct6wBjBSFLSCZQh/QqRonB25Ti/C0/ua1iP5Zd5PNOc3KJdYPyuNrT9mrYHeCgl7MIY8mUuoMdGnx2COlMusjbLUx1golN5EoyaS4P946z+nSg=
+	t=1762272274; cv=none; b=WdFCsws7Y+jyuc9qFV1cMPd9iVcYkTpw5mHuejncnn2SM2lUR0/SwYiiCZBeRsctzomhvoL/ciMPmoZB0qI9FdE2WHpMPf+/ZE/AsBYUo+L9lXxfdwO1GX8IfN+HSS/Q1V1h68amITv9N4CY5SHXviueNktt2XutFYxAVH8c7XI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762263462; c=relaxed/simple;
-	bh=kW/ssnpFqsyUGVSW+ike0uQYSm2DE4pa7UTDsdKBjsY=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=WTk18r90Q3wK7I4HVozoFtQTmsgksoDORSCT9sPpX7iG7WNB3QJyXe7gFS4R0F4zZg4TmLIYAOEt3w7yzcQOg1rvh8sHwluLjH1QBu0bmhS2HvSPrKguLh86LgAAaic9WKxbBrXoMwZ9AOYpEDrgSyNNlkh3hcckEyNEX2IXC7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MoAZWgcd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762272274; c=relaxed/simple;
+	bh=cQsbTTP0VoK4R1L4J+A3IZgU787+pdz4knMRsMv1nqo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RqbbF8Z7Mm1OGHxuob472EsOPXuyNB6L5pYRXRyVFMSrntfSYHj7qexwrXtzPaiFmS8ze+s00xVSpeuTeLJ5dcP3mqCkudGgd695OMBTq1UMk0Aj95AXG5MivXnnfK6UGDrmGx9zAgjEGq5xmNJsqQK1Jh053RibGmyp1bFyRvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hPiZiyt1; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MoAZWgcd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8FB0C4CEF7;
-	Tue,  4 Nov 2025 13:37:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762263461;
-	bh=kW/ssnpFqsyUGVSW+ike0uQYSm2DE4pa7UTDsdKBjsY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MoAZWgcdVfAiKGcImcD9LaLKF/jODEq4BpZLVVjxmTyMzJYQoHekfdrzqPDexT/kz
-	 SINX5UNQfnuV10UlpeRkELACz3eBqcW26FdLPGKgSzMEpqCUIPn44jBlxef8YsIx0S
-	 JOf1dhtBWvuZADG4ioasi8YQmVOHse0RQPRRRDqsyihs5zhgO+OFdwSU22kCur6hcr
-	 RzC7VoPGTFvifLua0W8BJ6uAFh+1RR9/zkxGdd9iZ3mtnrTr14i0Sp0YwdYDuQPxsc
-	 OIWMuySlXsUpKE23viueJZ0lKTpvpp7GHRi9vq/8cbGEJ7s8E3AQGOqJhEE+bmTD5t
-	 uePtyfGV+h1Xg==
-Date: Tue, 4 Nov 2025 22:37:35 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Will Deacon <will@kernel.org>, Catalin
- Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/2] tracing/wprobe: Fix to avoid inifinite watchpoint
- exception on arm64
-Message-Id: <20251104223735.4164f224790ea0aea267dff1@kernel.org>
-In-Reply-To: <176179481538.959775.12326313742393696258.stgit@devnote2>
-References: <176179481538.959775.12326313742393696258.stgit@devnote2>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hPiZiyt1"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2959197b68eso205515ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Nov 2025 08:04:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1762272270; x=1762877070; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i/PHhKT2Znwu9HseVZHKFx2b7TcR0iwcE4g9dNET83U=;
+        b=hPiZiyt1s9tRZjOYlp4tqKdlrosKDIsM5kDLnM7JIq9JnttynUVT8wiqqEJDUhIN3E
+         vdA/oqGhZe4EvyeSfMUKA56SjuNKYxnvTPn+whcDFaEEVsIt6qjXV3ZKiQ3n/2Vlm0Hi
+         8I6o4GfXG+fR8tKlTfqPxEORut0kKXHOEtvgsWo/v1Dc6VoiNEjj63RLUr6SOlSbWzXa
+         KMpwAFYXrXLskQBjhKEIkPYyewV5vMyY5E1KCxj3Ei6wtewPwu+otab92YyDMz7FNJsi
+         XfwjuT1o1CzN7P7l3daY8E6flFDyMZCAjwRvikIi3rcwU0EGCysDTm7kn4v5oplcuro9
+         LrcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762272270; x=1762877070;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=i/PHhKT2Znwu9HseVZHKFx2b7TcR0iwcE4g9dNET83U=;
+        b=Z4PORHBy/8+emBCbsp34bIX21egrLbTDOMbUKHfgLHX1C0ig4XZU/6MpfBuaQTb0S8
+         dP+APW50ABH1OD91GJxl54ePKkLq7CSxYxiwr61FacLZWx5BlgkI3nZuuJUjtAAhWAo3
+         ScnaPaFuqbTDsiRmJ3yIjcCZXXCYx2grGCQmF7dII4Gu9aIOSjK1QO8q694pYrO8lrKz
+         GuMgOwVavEmAM5n1XPQch6YTRNbgjeMVCCarzQjvSq3+miJjBFMgNl44YPp1ObAncWJT
+         iGMWXxb7xVGIgtrCpIftoC71f4SFBTUeE/RChmd46r7lTJ06j3D6pXI/AvJkZ8WF3fql
+         Hxgw==
+X-Forwarded-Encrypted: i=1; AJvYcCU4zfAXClISouX9TA883iPuMVdpYGJ2lQ5DOUNjdNJbjDqTtbX2ABC9FryHAv/e0rr/sNHgXpHejL17hAG7lUWD@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbeHGLjEpbKKbraTSSkkAjBtARnDlI52YVz2ejHAcxQlqr1oZd
+	8nIbLjRFlUE7ypJFL3QstIQNCSGzBFNUz3HywCvFo++SsR2Cs99cuxvf3DslIHcTU+IxRQ3fBej
+	JKhLRDd3D5V7I+WVne5dq+W70TFu9lB0FDbtF9P8H
+X-Gm-Gg: ASbGncsQDTwnMWt86wE/SXSr88c37h6hPSQ4QraKjtcZcNBYEQxLZrL+uzX5s48+07Y
+	zRRSNK+c3/tFam+gkVw8GmjBLLqjNCDZkzzIruUjL5MaGSXdki3MhCFb2gxYJ1xvpStR8MdeXUb
+	paiBTFpE78Jus96DsbXrwrmxZBzIcgkqOif5wSfVvZearTgGnyB/YfPAvlLVbr4zRGrBmqy3z6t
+	S8fs966yxRk++/uKQCzPnVt3a8PzESKuZeLSOyNkzucjmxgpuz4tGfzuelDgkZaGRIDTxClJTv+
+	1wxdYdbEtPmF42Um4jsJppp5EA==
+X-Google-Smtp-Source: AGHT+IGjXe6tai+L3bmj9S0kG8kMQn4+Mnswy5DvtApEzkYyuOlzI93nG7iDt8pZcCkMsglV8Abhd8Un3qRdwGulsuU=
+X-Received: by 2002:a17:902:e747:b0:294:faad:8cb4 with SMTP id
+ d9443c01a7336-295fd8dc897mr4890515ad.8.1762272270004; Tue, 04 Nov 2025
+ 08:04:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20251104092740.108928-3-jingxian.li@shopee.com>
+In-Reply-To: <20251104092740.108928-3-jingxian.li@shopee.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 4 Nov 2025 08:04:17 -0800
+X-Gm-Features: AWmQ_bmkiyFkm8Ccoecp58xI6r2HcrYx5G7YNLVKN7p6ZhL_b0r46BqKLgo_c3U
+Message-ID: <CAP-5=fWvawhzhXx72L4iEPpNqeNW+oHQOTkAOy53z0r8UXnMSA@mail.gmail.com>
+Subject: Re: [PATCH 6.6.y] Revert "perf dso: Add missed dso__put to dso__load_kcore"
+To: "jingxian.li" <jingxian.li@shopee.com>
+Cc: stable@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com, 
+	sashal@kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Gently ping.
+On Tue, Nov 4, 2025 at 1:38=E2=80=AFAM jingxian.li <jingxian.li@shopee.com>=
+ wrote:
+>
+> This reverts commit e5de9ea7796e79f3cd082624f788cc3442bff2a8.
+>
+> The patch introduced `map__zput(new_node->map)` in the kcore load
+> path, causing a segmentation fault when running `perf c2c report`.
+>
+> The issue arises because `maps__merge_in` directly modifies and
+> inserts the caller's `new_map`, causing it to be freed prematurely
+> while still referenced by kmaps.
+>
+> Later branchs (6.12, 6.15, 6.16) are not affected because they use
+> a different merge approach with a lazily sorted array, which avoids
+> modifying the original `new_map`.
+>
+> Fixes: e5de9ea7796e ("perf dso: Add missed dso__put to dso__load_kcore")
+>
+> Signed-off-by: jingxian.li <jingxian.li@shopee.com>
 
-There is a bugfix (or strange behavior) on arm64 hw breakpoint but
-to fix it cleanly, it should change the perf itself (but I'm not
-sure why arm64 changes the behavior only for the default overflow
-handlers.) Anyone knows it?
+Thanks for triaging this and the backport fix!
 
-Thank you,
+Acked-by: Ian Rogers <irogers@google.com>
 
-On Thu, 30 Oct 2025 12:26:55 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-
-> Hi,
-> 
-> Here are patches which fixes a wprobe bug reported by Mark Brown on
-> arm64[1]. The root cause was that the infinite watchpoint exception on
-> the same instruction, because arm64 watchpoint exception happens before
-> the memory access has done, it needs to configure a single-step after
-> calling overflow handler. It does that only for the default overflow
-> handlers, and not for custom overflow handler registered via
-> hw_breakpoint interface.
-> 
-> [1] https://lore.kernel.org/all/aPvwGhMBJqMKcC9D@finisterre.sirena.org.uk/
-> 
-> To fix this issue, this series introduces default_overflow_compatible
-> flag in the perf_event and use it for identifying default overflow
-> handlers instead of checking handler functions everytime[1/2], and
-> set it in wprobe[2/2].
-> 
-> Thank you,
-> 
 > ---
-> 
-> Masami Hiramatsu (Google) (2):
->       perf: Introduce default_overflow_compatible flag
->       tracing: wprobe: Make wprobe_handler default overflow_handler compatible
-> 
-> 
->  include/linux/perf_event.h  |    9 ++-------
->  kernel/events/core.c        |    2 ++
->  kernel/trace/trace_wprobe.c |    7 +++++++
->  3 files changed, 11 insertions(+), 7 deletions(-)
-> 
+>  tools/perf/util/symbol.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 4f0bbebcb6d6..ea24f21aafc3 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -1366,7 +1366,6 @@ static int dso__load_kcore(struct dso *dso, struct =
+map *map,
+>                                 goto out_err;
+>                         }
+>                 }
+> -               map__zput(new_node->map);
+>                 free(new_node);
+>         }
+>
 > --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 2.43.0
+>
+>
