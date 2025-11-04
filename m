@@ -1,225 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A41B33F8A8;
-	Tue,  4 Nov 2025 18:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75E73299A94
+	for <linux-perf-users@vger.kernel.org>; Tue,  4 Nov 2025 18:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762279839; cv=none; b=HVt5p1FJjeD/TxAr3NSUd46xxzaSQkFrpPMWmfpMcw0zWPakaqmYVhS4XN+N0ttYGC0P2O0KTOtgBA5/E1PA7wvYt4IOlYg2a4ZxeK+ojp6wbuZGDd1NHUGOx2b28YCOvnKE8Rv6O3eoPVyf7+Hg8CRNw/1CctjOOvZsDtuROug=
+	t=1762280991; cv=none; b=cTRsSAWPceb9+yyXkS58MmJZH4a6AAbVI9Csfi6YlPbDod5fwnPF0S+8dcrkiro3G8F9qdKIRB19Pc1YgeJfrXrGRQDZAzotZPObz2sgpWk0/FwP/3B/9k5p9MqvrRW9esOUkAA3sYOk4xUvyzMEq+MTIWZGW1ejjFW4mVj//6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762279839; c=relaxed/simple;
-	bh=BOEQH/InhK+EPN1Ed5pwR6+fua/wJd5n8mBh0wZnu7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RvvAy63WOBppkeyMuc6LMOMkGuJ7ca0al//XoDAlXgcgS6Cjw7m+o+KPx+a2+ktXjr/5Ugh9CCUPajDC+d1gsVBN0Anz6heiPB5t92DyczHu1Okvy35N6MyPza4DLqkHbLWdqnS22ZK+BKZGrlFyhtpp2QfyIlJbINlRtcBbwIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u3DSD4LS; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u3DSD4LS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67A75C4AF09;
-	Tue,  4 Nov 2025 18:10:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762279839;
-	bh=BOEQH/InhK+EPN1Ed5pwR6+fua/wJd5n8mBh0wZnu7k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u3DSD4LS0V3MEKs29WXx0AkBIEzIWsUkkt03AXhK92ObSWXqbZCcia96TSev5uLiR
-	 0NYMPCtNRRHwICAkJvRGFUChYXQ85DSaXuOdmNlXKVi4dsSVWhAJ2GCRrVjFJlJKPW
-	 npWzgSIWn13Md5OJ7xR1Se30N1kifoCogo5K/z9HhYzgn8N986x74kQePlNtVBw1Zf
-	 /dj9vH4bSnwjU8Ge2rkJeglQYSKZkwhUw3nXH7oIIpp9Bb4laHmQnGDe56Ys2LXezm
-	 CYenhHk5SdYcu7dNXZhJ/BPuvVSMz5MnXr8OdTjKtTLwB20fmc10xhqDtxiFh/RP1E
-	 +yYnzYWn5Xv+Q==
-Date: Tue, 4 Nov 2025 10:10:32 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Yang Li <yang.lee@linux.alibaba.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] perf stat-shadow: Read tool events directly
-Message-ID: <aQpBmIEX8G7mTrWQ@google.com>
-References: <20251104053449.1208800-1-irogers@google.com>
- <20251104053449.1208800-2-irogers@google.com>
+	s=arc-20240116; t=1762280991; c=relaxed/simple;
+	bh=yYH8xZ0Jz65IWgdyabY4SB+cEF8Iq+weMAOkGBSCulA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XyjeanEkE1XnaDwXtoca58bzxjJMrDak39NBFQqzzCcVfa8/g/wly0lBY9RkEA6fBknBU6koLOVELicHeA8Os3eR1eszezvxkU4MJ5iP8ma8c9C44VxplZl4vr7/QcXiIJRWVp9M/YK/81GV9dV9rMBcqO5bPZ/TtsUfqK9pMr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C69A61CE0;
+	Tue,  4 Nov 2025 10:29:40 -0800 (PST)
+Received: from 010265703453.cambridge.arm.com (010265703453.cambridge.arm.com [10.1.33.58])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D22D23F694;
+	Tue,  4 Nov 2025 10:29:47 -0800 (PST)
+From: Robin Murphy <robin.murphy@arm.com>
+To: will@kernel.org
+Cc: mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] perf/arm-ni: Fix and optimise register offset calculation
+Date: Tue,  4 Nov 2025 18:29:40 +0000
+Message-Id: <5db610facd51b81af04b1afee53191836315b17a.1762264719.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20251104053449.1208800-2-irogers@google.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Ian,
+LKP points out an operator precedence oversight in the new NoC S3
+support that, annoyingly, my local W=1 build didn't flag. In fixing
+that, we can also take the similarly-missed opportunity to cache the
+version check itself at event_init time.
 
-On Mon, Nov 03, 2025 at 09:34:48PM -0800, Ian Rogers wrote:
-> When reading time values for metrics don't use the globals updated in
-> builtin-stat, just read the events as regular events. The only
-> exception is for time events where nanoseconds need converting to
-> seconds as metrics assume time metrics are in seconds.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/stat-shadow.c | 123 +++++++++++++---------------------
->  1 file changed, 45 insertions(+), 78 deletions(-)
-> 
-> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-> index abaf6b579bfc..9fae3d32a519 100644
-> --- a/tools/perf/util/stat-shadow.c
-> +++ b/tools/perf/util/stat-shadow.c
-> @@ -371,6 +371,18 @@ static void print_nsecs(struct perf_stat_config *config,
->  	}
->  }
->  
-> +static double tool_pmu__scale_for_metric(const struct evsel *evsel)
-> +{
-> +	enum tool_pmu_event event = evsel__tool_event(evsel);
-> +
-> +	if (event == TOOL_PMU__EVENT_DURATION_TIME ||
-> +	    event == TOOL_PMU__EVENT_USER_TIME ||
-> +	    event == TOOL_PMU__EVENT_SYSTEM_TIME)
-> +		return 1e-9; /* Scale nanoseconds to seconds. */
-> +
-> +	return 1.0;
-> +}
-> +
->  static int prepare_metric(const struct metric_expr *mexp,
->  			  const struct evsel *evsel,
->  			  struct expr_parse_ctx *pctx,
-> @@ -382,90 +394,45 @@ static int prepare_metric(const struct metric_expr *mexp,
->  
->  	for (i = 0; metric_events[i]; i++) {
->  		char *n;
-> -		double val;
-> +		double val, scale = tool_pmu__scale_for_metric(metric_events[i]);
->  		int source_count = 0;
-> +		struct perf_stat_evsel *ps = metric_events[i]->stats;
-> +		struct perf_stat_aggr *aggr;
->  
-> -		if (evsel__is_tool(metric_events[i])) {
-> -			struct stats *stats;
-> -			double scale;
-> -
-> -			switch (evsel__tool_event(metric_events[i])) {
-> -			case TOOL_PMU__EVENT_DURATION_TIME:
-> -				stats = &walltime_nsecs_stats;
-> -				scale = 1e-9;
-> -				break;
-> -			case TOOL_PMU__EVENT_USER_TIME:
-> -				stats = &ru_stats.ru_utime_usec_stat;
-> -				scale = 1e-6;
-> -				break;
-> -			case TOOL_PMU__EVENT_SYSTEM_TIME:
-> -				stats = &ru_stats.ru_stime_usec_stat;
-> -				scale = 1e-6;
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202511041749.ok8zDP6u-lkp@intel.com/
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/perf/arm-ni.c | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-Do {USER,SYSTEM}_TIME become nanosecond now?
+diff --git a/drivers/perf/arm-ni.c b/drivers/perf/arm-ni.c
+index aa824abc629e..66858c65215d 100644
+--- a/drivers/perf/arm-ni.c
++++ b/drivers/perf/arm-ni.c
+@@ -323,9 +323,15 @@ static int arm_ni_validate_group(struct perf_event *event)
+ 	return 0;
+ }
+ 
++static bool arm_ni_is_7xx(const struct arm_ni *ni)
++{
++	return ni->part == PART_NI_700 || ni->part == PART_NI_710AE;
++}
++
+ static int arm_ni_event_init(struct perf_event *event)
+ {
+ 	struct arm_ni_cd *cd = pmu_to_cd(event->pmu);
++	struct arm_ni *ni;
+ 
+ 	if (event->attr.type != event->pmu->type)
+ 		return -ENOENT;
+@@ -333,7 +339,10 @@ static int arm_ni_event_init(struct perf_event *event)
+ 	if (is_sampling_event(event))
+ 		return -EINVAL;
+ 
+-	event->cpu = cd_to_ni(cd)->cpu;
++	ni = cd_to_ni(cd);
++	event->cpu = ni->cpu;
++	event->hw.flags = arm_ni_is_7xx(ni);
++
+ 	if (NI_EVENT_TYPE(event) == NI_PMU)
+ 		return arm_ni_validate_group(event);
+ 
+@@ -411,18 +420,12 @@ static void arm_ni_init_evcnt(struct hw_perf_event *hw)
+ 	writel_relaxed(S32_MIN, (void __iomem *)hw->event_base);
+ }
+ 
+-static bool arm_ni_is_7xx(const struct arm_ni *ni)
+-{
+-	return ni->part == PART_NI_700 || ni->part == PART_NI_710AE;
+-}
+-
+ static int arm_ni_event_add(struct perf_event *event, int flags)
+ {
+ 	struct arm_ni_cd *cd = pmu_to_cd(event->pmu);
+ 	struct hw_perf_event *hw = &event->hw;
+ 	struct arm_ni_unit *unit;
+ 	enum ni_node_type type = NI_EVENT_TYPE(event);
+-	bool is_7xx = arm_ni_is_7xx(cd_to_ni(cd));
+ 	u32 reg;
+ 
+ 	if (type == NI_PMU) {
+@@ -430,7 +433,7 @@ static int arm_ni_event_add(struct perf_event *event, int flags)
+ 			return -ENOSPC;
+ 		hw->idx = NI_CCNT_IDX;
+ 		hw->event_base = (unsigned long)cd->pmu_base +
+-				 is_7xx ? NI700_PMCCNTR_L : NI_PMCCNTR_L;
++				 (hw->flags ? NI700_PMCCNTR_L : NI_PMCCNTR_L);
+ 		cd->ccnt = event;
+ 		arm_ni_init_ccnt(hw);
+ 	} else {
+@@ -443,7 +446,7 @@ static int arm_ni_event_add(struct perf_event *event, int flags)
+ 		unit = (void *)hw->config_base;
+ 		unit->event[hw->idx] = NI_EVENT_EVENTID(event);
+ 		hw->event_base = (unsigned long)cd->pmu_base +
+-				 is_7xx ? NI700_PMEVCNTR(hw->idx) : NI_PMEVCNTR(hw->idx);
++				 (hw->flags ? NI700_PMEVCNTR(hw->idx) : NI_PMEVCNTR(hw->idx));
+ 		arm_ni_init_evcnt(hw);
+ 		lo_hi_writeq_relaxed(le64_to_cpu(unit->pmusel), unit->pmusela);
+ 
+-- 
+2.34.1
 
-Thanks,
-Namhyung
-
-> +		/*
-> +		 * If there are multiple uncore PMUs and we're not reading the
-> +		 * leader's stats, determine the stats for the appropriate
-> +		 * uncore PMU.
-> +		 */
-> +		if (evsel && evsel->metric_leader &&
-> +		    evsel->pmu != evsel->metric_leader->pmu &&
-> +		    mexp->metric_events[i]->pmu == evsel->metric_leader->pmu) {
-> +			struct evsel *pos;
-> +
-> +			evlist__for_each_entry(evsel->evlist, pos) {
-> +				if (pos->pmu != evsel->pmu)
-> +					continue;
-> +				if (pos->metric_leader != mexp->metric_events[i])
-> +					continue;
-> +				ps = pos->stats;
-> +				source_count = 1;
->  				break;
-> -			case TOOL_PMU__EVENT_NONE:
-> -				pr_err("Invalid tool event 'none'");
-> -				abort();
-> -			case TOOL_PMU__EVENT_MAX:
-> -				pr_err("Invalid tool event 'max'");
-> -				abort();
-> -			case TOOL_PMU__EVENT_HAS_PMEM:
-> -			case TOOL_PMU__EVENT_NUM_CORES:
-> -			case TOOL_PMU__EVENT_NUM_CPUS:
-> -			case TOOL_PMU__EVENT_NUM_CPUS_ONLINE:
-> -			case TOOL_PMU__EVENT_NUM_DIES:
-> -			case TOOL_PMU__EVENT_NUM_PACKAGES:
-> -			case TOOL_PMU__EVENT_SLOTS:
-> -			case TOOL_PMU__EVENT_SMT_ON:
-> -			case TOOL_PMU__EVENT_SYSTEM_TSC_FREQ:
-> -			default:
-> -				pr_err("Unexpected tool event '%s'", evsel__name(metric_events[i]));
-> -				abort();
->  			}
-> -			val = avg_stats(stats) * scale;
-> -			source_count = 1;
-> -		} else {
-> -			struct perf_stat_evsel *ps = metric_events[i]->stats;
-> -			struct perf_stat_aggr *aggr;
-> -
-> +		}
-> +		aggr = &ps->aggr[aggr_idx];
-> +		if (!aggr || !metric_events[i]->supported) {
->  			/*
-> -			 * If there are multiple uncore PMUs and we're not
-> -			 * reading the leader's stats, determine the stats for
-> -			 * the appropriate uncore PMU.
-> +			 * Not supported events will have a count of 0, which
-> +			 * can be confusing in a metric. Explicitly set the
-> +			 * value to NAN. Not counted events (enable time of 0)
-> +			 * are read as 0.
->  			 */
-> -			if (evsel && evsel->metric_leader &&
-> -			    evsel->pmu != evsel->metric_leader->pmu &&
-> -			    mexp->metric_events[i]->pmu == evsel->metric_leader->pmu) {
-> -				struct evsel *pos;
-> -
-> -				evlist__for_each_entry(evsel->evlist, pos) {
-> -					if (pos->pmu != evsel->pmu)
-> -						continue;
-> -					if (pos->metric_leader != mexp->metric_events[i])
-> -						continue;
-> -					ps = pos->stats;
-> -					source_count = 1;
-> -					break;
-> -				}
-> -			}
-> -			aggr = &ps->aggr[aggr_idx];
-> -			if (!aggr)
-> -				break;
-> -
-> -			if (!metric_events[i]->supported) {
-> -				/*
-> -				 * Not supported events will have a count of 0,
-> -				 * which can be confusing in a
-> -				 * metric. Explicitly set the value to NAN. Not
-> -				 * counted events (enable time of 0) are read as
-> -				 * 0.
-> -				 */
-> -				val = NAN;
-> -				source_count = 0;
-> -			} else {
-> -				val = aggr->counts.val;
-> -				if (!source_count)
-> -					source_count = evsel__source_count(metric_events[i]);
-> -			}
-> +			val = NAN;
-> +			source_count = 0;
-> +		} else {
-> +			val = aggr->counts.val * scale;
-> +			if (!source_count)
-> +				source_count = evsel__source_count(metric_events[i]);
->  		}
->  		n = strdup(evsel__metric_id(metric_events[i]));
->  		if (!n)
-> -- 
-> 2.51.2.1006.ga50a493c49-goog
-> 
