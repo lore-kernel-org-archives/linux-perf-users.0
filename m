@@ -1,217 +1,156 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901C1230BDF;
-	Tue,  4 Nov 2025 03:48:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB0E23AE87;
+	Tue,  4 Nov 2025 04:26:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762228140; cv=none; b=lo0JW+fcuYhslT1ht2gSw2LeSHMF/QR/UEhm8XQ5qUEmz7GemcohjXEYbnLTi6gWjrkqHyY02h/3fgWcqCqovDbG5yJxsaLCdCk/69/4A/Pvi7a5x8GORaG8J47GW1VU4rfgvVXIvAR4m1RX7yag27iV/WYUal78CKYwaHKBM5Y=
+	t=1762230394; cv=none; b=OzyLaOnMYrw4tAgUphxNbXS7C3w5uKgeYQGy/BtKDrMvxY21Kzq3BJBw0rYb8SkqeppgexhPDhWKy2phNVmeKCjoe+JQ5K4yy8tdIOTwfEpFODXYBTt6HGtChKlhflBQVJKZbSzR5Ii68EMvEYuI4Z4w86x/AXg24sJHgrsBNEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762228140; c=relaxed/simple;
-	bh=2bkhXRxdJbRGonobS275DIWBRk3WTARXTyVtRmh7dTM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bUhnDG3Zbcv0B6lRGX8KdxBOh76tchu0RyQK7TlU91bkE7lMVqlXzHLG4nGpUBoejA1StF2kYhMn7MGDNTyVcMlP+NNWQpDk6h/Rob8+K1Qcsz6G9keOTpNmv4iybipO9AP5WWSGj5/pGlpExkZdRq9+/KNZieoFK4SxEQv5LgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eLqWKMCb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762230394; c=relaxed/simple;
+	bh=NskOXQTX1AIJssgwS4mypVCGygtDmgNj9O6sSHMG8R0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZLFt7ACxeAWmLSOkl6aNoY/CwkXXsc3XJeyQqk3IDSujkQHpAsmrfTIWZEkPdYiUqm7EbsIx0R/w+3PzPAAFeF+0HXdXXyWsdihDALRkzy1PmkMWFCsKdlJelRfCU2ZeOhWRVXyU8CfyDdXk3BDej4217WwucVI85AW1k6XcAMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HAwYrBpC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eLqWKMCb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAA4AC4CEF7;
-	Tue,  4 Nov 2025 03:48:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HAwYrBpC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 975ECC4CEF8;
+	Tue,  4 Nov 2025 04:26:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762228139;
-	bh=2bkhXRxdJbRGonobS275DIWBRk3WTARXTyVtRmh7dTM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eLqWKMCbAygN0utECwZS9zX+3SvXk5JjT55bL7RoN9cDrDYuYLE3SpAgkY2j0a76+
-	 8NEAl2kAc21Yj9QSfWCrmi/mBd1NJy0XUyYpKJCbHqtrbKm5fgfLEAfT8cL1A26amP
-	 4ParqWs67UtgGSUW5M322Yd19slAgI8F4UZiLp4ljiwwkUCjGnyjZwKBuxyWbYTS/I
-	 q0wiXWLsauLhrlgrREcmBqDpwcQFfox7OJKEFbcLgD9iPp6y7r92fdyWEtbPv77Syc
-	 8IKraFhfIruuUCatjShiWYjAlEoxzI7PD6EQAIrnga5lt48TBoCh7Ih1fpt6L8eZ23
-	 9mK79Lopd0sfA==
-Date: Mon, 3 Nov 2025 19:48:57 -0800
+	s=k20201202; t=1762230393;
+	bh=NskOXQTX1AIJssgwS4mypVCGygtDmgNj9O6sSHMG8R0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HAwYrBpCqyFGCInd2o5bevhIDsTrq/tCUNJ+hOuX4Lb/1y/NqFH0iuS58y5OayUyn
+	 HXppfbcSzDyxmkUkioiUCHNFNkwv7rKU8Mhab0DLbro4klDTPM2KBQJF8uQ1RIVAev
+	 /4lox8h6XwLyd8YQFZGhnA4tHM5OdgerHEGtFUm+cwiOYUwOBaBA3oIKfuc8Phr9LT
+	 vs5iLVxVPXArdIGh3BtqFk2twPZd3S4GY5VASD4OHVNGB3w1XPybcvplIfsG0kRlfJ
+	 QFv4CnxJZ0qqvK8FiX79GmNtLxAUIdE5P8ROCArESJVQGhpHGYLm43A73jsjPHgD9a
+	 exrPt/4Acm4LA==
 From: Namhyung Kim <namhyung@kernel.org>
-To: "Chen, Zide" <zide.chen@intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	thomas.falcon@intel.com, dapeng1.mi@linux.intel.com,
-	xudong.hao@intel.com
-Subject: Re: [PATCH] perf tools: Refactor precise_ip fallback logic
-Message-ID: <aQl3qfyTdAb68l1l@google.com>
-References: <20251022220802.1335131-1-zide.chen@intel.com>
- <aPrktlANBHFtV52B@google.com>
- <576a7d2b-0a82-4738-8b86-507e4d841524@intel.com>
- <aP1ucJiJYBavTHV7@google.com>
- <e10d671a-eb89-4e06-a1eb-e2f12ee41d70@intel.com>
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf record: Make sure to update build-ID cache
+Date: Mon,  3 Nov 2025 20:26:32 -0800
+Message-ID: <20251104042632.1560922-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.51.2.997.g839fc31de9-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <e10d671a-eb89-4e06-a1eb-e2f12ee41d70@intel.com>
 
-Hello,
+Recent change on enabling --buildid-mmap by default brought an issue
+with build-id handling.  With build-ID in MMAP2 records, we don't need
+to save the build-ID table in the header are of a perf data file.
 
-Sorry for the delay.
+But the actual file contents still need to be cached in the debug
+directory for annotation etc.  Split the build-ID header processing and
+caching and make sure perf record to save hit DSOs in the build-ID cache
+by moving perf_session__cache_build_ids() to the end of the record__
+finish_output().
 
-On Mon, Oct 27, 2025 at 11:56:52AM -0700, Chen, Zide wrote:
-> 
-> 
-> On 10/25/2025 5:42 PM, Namhyung Kim wrote:
-> > On Fri, Oct 24, 2025 at 11:03:17AM -0700, Chen, Zide wrote:
-> >>
-> >>
-> >> On 10/23/2025 7:30 PM, Namhyung Kim wrote:
-> >>> Hello,
-> >>>
-> >>> On Wed, Oct 22, 2025 at 03:08:02PM -0700, Zide Chen wrote:
-> >>>> Commit c33aea446bf555ab ("perf tools: Fix precise_ip fallback logic")
-> >>>> unconditionally called the precise_ip fallback and moved it after the
-> >>>> missing-feature checks so that it could handle EINVAL as well.
-> >>>>
-> >>>> However, this introduced an issue: after disabling missing features,
-> >>>> the event could fail to open, which makes the subsequent precise_ip
-> >>>> fallback useless since it will always fail.
-> >>>>
-> >>>> For example, run the following command on Intel SPR:
-> >>>>
-> >>>> $ perf record -e '{cpu/mem-loads-aux/S,cpu/mem-loads,ldlat=3/PS}' -- ls
-> >>>>
-> >>>> Opening the event "cpu/mem-loads,ldlat=3/PS" returns EINVAL when
-> >>>> precise_ip == 3. It then sets attr.inherit = false, which triggers a
-> >>>
-> >>> I'm curious about this part.  Why the kernel set 'inherit = false'?  IOW
-> >>> how did the leader event (mem-loads-aux) succeed with inherit = true
-> >>> then?
-> >>
-> >> Initially, the inherit = true for both the group leader
-> >> (cpu/mem-loads-aux/S) and the event in question (cpu/mem-loads,ldlat=3/PS).
-> >>
-> >> When the second event fails with EINVAL, the current logic calls
-> >> evsel__detect_missing_features() first. Since this is a PERF_SAMPLE_READ
-> >> event, the inherit attribute falls back to false, according to the
-> >> fallback order implemented in evsel__detect_missing_features().
-> > 
-> > Right, that means the kernel doesn't support PERF_SAMPLE_READ with
-> > inherit = true.  How did the first event succeed to open then?
-> 
-> The perf tool sets PERF_SAMPLE_TID for Inherit + PERF_SAMPLE_READ
-> events, as implemented in commit 90035d3cd876 ("tools/perf: Allow
-> inherit + PERF_SAMPLE_READ when opening event").
-> 
-> Meanwhile, commit 7e8b255650fc ("perf: Support PERF_SAMPLE_READ with
-> inherit") rejects a perf event if has_inherit_and_sample_read(attr) is
-> true and PERF_SAMPLE_TID is not set in attr->sample_type.
-> 
-> Therefore, the first event succeeded, while the one opened in
-> evsel__detect_missing_features() which doesn't have PERF_SAMPLE_TID failed.
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/builtin-record.c | 30 +++++++++++++++---------------
+ tools/perf/util/header.c    |  1 -
+ 2 files changed, 15 insertions(+), 16 deletions(-)
 
-Why does the first succeed and the second fail?  Don't they have the
-same SAMPLE_READ and SAMPLE_TID + inherit flags?
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index ffb94a8339b03ec2..fe10bb7f35cbea05 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1890,15 +1890,14 @@ record__finish_output(struct record *rec)
+ 	}
+ 
+ 	/* Buildid scanning disabled or build ID in kernel and synthesized map events. */
+-	if (!rec->no_buildid) {
++	if (!rec->no_buildid || !rec->no_buildid_cache) {
+ 		process_buildids(rec);
+ 
+ 		if (rec->buildid_all)
+ 			perf_session__dsos_hit_all(rec->session);
+ 	}
+ 	perf_session__write_header(rec->session, rec->evlist, fd, true);
+-
+-	return;
++	perf_session__cache_build_ids(rec->session);
+ }
+ 
+ static int record__synthesize_workload(struct record *rec, bool tail)
+@@ -3083,7 +3082,7 @@ static int perf_record_config(const char *var, const char *value, void *cb)
+ 		else if (!strcmp(value, "no-cache"))
+ 			rec->no_buildid_cache = true;
+ 		else if (!strcmp(value, "skip"))
+-			rec->no_buildid = true;
++			rec->no_buildid = rec->no_buildid_cache = true;
+ 		else if (!strcmp(value, "mmap"))
+ 			rec->buildid_mmap = true;
+ 		else if (!strcmp(value, "no-mmap"))
+@@ -4192,24 +4191,25 @@ int cmd_record(int argc, const char **argv)
+ 		record.opts.record_switch_events = true;
+ 	}
+ 
+-	if (!rec->buildid_mmap) {
+-		pr_debug("Disabling build id in synthesized mmap2 events.\n");
+-		symbol_conf.no_buildid_mmap2 = true;
+-	} else if (rec->buildid_mmap_set) {
+-		/*
+-		 * Explicitly passing --buildid-mmap disables buildid processing
+-		 * and cache generation.
+-		 */
+-		rec->no_buildid = true;
+-	}
+ 	if (rec->buildid_mmap && !perf_can_record_build_id()) {
+ 		pr_warning("Missing support for build id in kernel mmap events.\n"
+ 			   "Disable this warning with --no-buildid-mmap\n");
+ 		rec->buildid_mmap = false;
+ 	}
++
+ 	if (rec->buildid_mmap) {
+ 		/* Enable perf_event_attr::build_id bit. */
+ 		rec->opts.build_id = true;
++		/* Disable build-ID table in the header. */
++		rec->no_buildid = true;
++	} else {
++		pr_debug("Disabling build id in synthesized mmap2 events.\n");
++		symbol_conf.no_buildid_mmap2 = true;
++	}
++
++	if (rec->no_buildid_set && rec->no_buildid) {
++		/* -B implies -N for historic reasons. */
++		rec->no_buildid_cache = true;
+ 	}
+ 
+ 	if (rec->opts.record_cgroup && !perf_can_record_cgroup()) {
+@@ -4306,7 +4306,7 @@ int cmd_record(int argc, const char **argv)
+ 
+ 	err = -ENOMEM;
+ 
+-	if (rec->no_buildid_cache || rec->no_buildid) {
++	if (rec->no_buildid_cache) {
+ 		disable_buildid_cache();
+ 	} else if (rec->switch_output.enabled) {
+ 		/*
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 4f2a6e10ed5cc0bd..4de7ca16b5522c47 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -335,7 +335,6 @@ static int write_build_id(struct feat_fd *ff,
+ 		pr_debug("failed to write buildid table\n");
+ 		return err;
+ 	}
+-	perf_session__cache_build_ids(session);
+ 
+ 	return 0;
+ }
+-- 
+2.51.2.997.g839fc31de9-goog
 
-> 
-> 
-> >>
-> >>>
-> >>>> kernel check failure since it doesn't match the group leader's inherit
-> >>>> attribute. As a result, it continues to fail even after precise_ip is
-> >>>> reduced.
-> >>>>
-> >>>> By moving the precise_ip fallback earlier, this issue is resolved, as
-> >>>> well as the kernel test robot report mentioned in commit
-> >>>> c33aea446bf555ab.
-> >>>>
-> >>>> No negative side effects are expected, because the precise_ip level is
-> >>>> restored by evsel__precise_ip_fallback() if the fallback does not help.
-> >>>
-> >>> I'm not sure.. some events may need a different (i.e. lower) precise
-> >>> level than the max.  I think checking the missing feature later will
-> >>> use the max precise level always.
-> >>
-> >> Yes, but seems the basic idea of the event open fallback logic is to
-> >> check whether it's lucky enough to open the event by falling back one
-> >> single attribute, not multiple attributes.
-> >>
-> >> evsel__precise_ip_fallback() can restore the precise_ip level after a
-> >> failed attempt, while evsel__detect_missing_features() cannot recover
-> >> the event attributes from its failed try.
-> > 
-> > I think precise_ip_fallback() is just a trial and error for each possible
-> > value.  While detect_missing_features() checks what the current kernel
-> > supports.  Trying different precise_ip values with unsupported attributes
-> > doesn't make sense.
-> 
-> When it returns -EINVAL, the cause could be an unsupported precise_ip or
-> something else. We could either end up with "trying different precise_ip
-> values with unsupported attributes", or "trying attributes with
-> unsupported precise_ip".
-> 
-> The perf tool’s fallback logic is a “best effort” mechanism to fix only
-> one issue, not multiple ones. So, IMO, we should place
-> evsel__detect_missing_features() as the last fallback attempt, since it
-> does not restore the event attributes after a failed try.
-
-The missing feature check is about the global kernel behavior so there's
-no point to try if we know the kernel won't support those features.
-While precise fallback is per-PMU (and per-event?) behavior so it'd be
-natural to try that after removing must-fail attributes from the missing
-feature tests.
-
-Thanks,
-Namhyung
-
-> >>
-> >> Therefore, falling back precise_ip first maintains the intended
-> >> “one-by-one” fallback logic. If it’s placed later, it may combine two
-> >> fallbacks, which can cause failures like the example above.  Of course,
-> >> in theory, there might be cases where an event can be opened if both
-> >> precise_ip and another feature are relaxed together, but I haven’t
-> >> exhaustively checked whether such cases actually exist.
-> >>
-> >>> Thanks,
-> >>> Namhyung
-> >>>
-> >>>>
-> >>>> This also aligns with commit 2b70702917337a8d ("perf tools: Remove
-> >>>> evsel__handle_error_quirks()").
-> >>>>
-> >>>> Fixes: af954f76eea56453 ("perf tools: Check fallback error and order")
-> >>>> Fixes: c33aea446bf555ab ("perf tools: Fix precise_ip fallback logic")
-> >>>> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> >>>> Signed-off-by: Zide Chen <zide.chen@intel.com>
-> >>>> ---
-> >>>>  tools/perf/util/evsel.c | 6 +++---
-> >>>>  1 file changed, 3 insertions(+), 3 deletions(-)
-> >>>>
-> >>>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> >>>> index ca74514c8707..6ce32533a213 100644
-> >>>> --- a/tools/perf/util/evsel.c
-> >>>> +++ b/tools/perf/util/evsel.c
-> >>>> @@ -2714,12 +2714,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
-> >>>>  	if (err == -EMFILE && rlimit__increase_nofile(&set_rlimit))
-> >>>>  		goto retry_open;
-> >>>>  
-> >>>> +	if (evsel__precise_ip_fallback(evsel))
-> >>>> +		goto retry_open;
-> >>>> +
-> >>>>  	if (err == -EINVAL && evsel__detect_missing_features(evsel, cpu))
-> >>>>  		goto fallback_missing_features;
-> >>>>  
-> >>>> -	if (evsel__precise_ip_fallback(evsel))
-> >>>> -		goto retry_open;
-> >>>> -
-> >>>>  out_close:
-> >>>>  	if (err)
-> >>>>  		threads->err_thread = thread;
-> >>>> -- 
-> >>>> 2.51.0
-> >>>>
-> >>
-> 
