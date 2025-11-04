@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C5813AF2;
-	Tue,  4 Nov 2025 04:52:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD8F8248C;
+	Tue,  4 Nov 2025 04:56:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762231935; cv=none; b=Q0tmjROayg8TwlutNVnL9l900MKWEKSuqP7x+VmzS5tI3jImh1e66pBtrUerCs3Pe1Uhr85WRzSFk+xZ9zzG2TLnkGz+U0nAYUH5ijJK2F3XRuP3RnrLhuMLVOY3uS0+hhgJ1zqAUNlfu92YC13gMN+yzPqZ1E7DQIwVMBNjKTU=
+	t=1762232194; cv=none; b=QxJSKSs5Wq5kUlQzBsehv6GPfgigxBiHLGI/GuKgOwpKmZswAM0rj5i40KrJ0XeHVG7QtT7zJtjuPkz19zRjfvu6RJOJZ1/P+hrVPLTsyKH4z4RBjc3ns2417dvQcwG3YgdNq6J1yZyctunUhjEYn+YLnGYH+prBp+ZevoDYXho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762231935; c=relaxed/simple;
-	bh=tvonMAkdmDIaa9P3/K8ip62gNPVZb1WNmqCGHyIRKyE=;
+	s=arc-20240116; t=1762232194; c=relaxed/simple;
+	bh=dhmMrBLVyxKqMVKDRWFG+f1uPSry0Fn1e2cRqwN+yhA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B8V0ZW4fCGPbvwiOihxbn6j8IwWUfykc+Q/Kar0pA01ZmNzYlS15ZDAXSprACwg1h6KKI4kLaASyq/NXcmaZ1n2hkbfGCrxlyKeGzx/pJEDxFfT88cZ5r0YIKkf88mIQ15dJOBL7oLAKQttWEh/e7orVkjGAL7CmoVNm/gBPEU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HEzZSlc6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kSiAQW68CyxdfD6tX4wnsNJF4+0kNrrCD1hd1c7YGahdXJ6afii9rHAfktXJvmgdVJ1eGyGmHc1hVJ4dRocvy6tlCM07NDtqBoKYlT40jlqS+jylv+RakvF1c7QGbb8ICFlhx9NjD59Bl6XAbjQz3YkbBCc5pomvMGC+OsyCnmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IdvIqm0m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HEzZSlc6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2401DC4CEF8;
-	Tue,  4 Nov 2025 04:52:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IdvIqm0m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BCAEC4CEF7;
+	Tue,  4 Nov 2025 04:56:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762231934;
-	bh=tvonMAkdmDIaa9P3/K8ip62gNPVZb1WNmqCGHyIRKyE=;
+	s=k20201202; t=1762232193;
+	bh=dhmMrBLVyxKqMVKDRWFG+f1uPSry0Fn1e2cRqwN+yhA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HEzZSlc6BED1LfGVfN093g4j53wApkF9FzgaoNaANfFG68717aO04hiYRjQZHEwFm
-	 LZoPPBSZnE9KUhIbudGwgaHeJlhlN0bjgHUObA+B8OGBtBRoKw44e+33klNpRkyHYz
-	 ws5+s2je+o2LmclfgLkJiKJof2vFesoOsqyfUTmd7eO5gm04dUg1Tim2t0wMiLT0ic
-	 e4k6+RK8MOyqanbvhwQCW9BCOt3ud+cuz+zVPkdcJ/XgHItbiYlW9bsOU/o2yF0nil
-	 EcMotjDiEgg9tjCkKkt1dPI/YKyDGZFKUCNJajbIafOhWyy2oBzaCOR2i0D+5BJ6nO
-	 ftN7WeHa/LlIA==
-Date: Mon, 3 Nov 2025 20:52:12 -0800
+	b=IdvIqm0m5T/jQVSaj2gcqgFV2ODzlxZevbS1Rx+z92uRlH8uO+SwcQTblaLEcSDyR
+	 OjpFYwotQkCiPPGZbYrNA90PlooY4n1PQ+HPf8TQaPbwUZxSZJgt626yugupolJqgH
+	 cUvqfBoISpJ3ZzSHX+smQxMbz0SRJJVSlPZCTHQJNU2hemd5E8go9P1ZqbTYmu5wEH
+	 9iMQDv9npjV5eIN3u8cfrLMAOE13na2tXGS+4hh++hnsO2uSof8tzy74yV56/9B6PD
+	 1fc6lESqnC2paB3qaO3JzCloG08dpOnedXmlJP+8tPWj+sNenaU80uKssOl1EWpRIq
+	 tpvrfogCQV90A==
+Date: Mon, 3 Nov 2025 20:56:31 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -45,11 +45,10 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Levi Yun <yeoreum.yun@arm.com>,
 	Yang Li <yang.lee@linux.alibaba.com>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 05/22] perf metricgroup: Add care to picking the evsel
- for displaying a metric
-Message-ID: <aQmGfLVKk0UFGAyd@google.com>
+Subject: Re: [PATCH v1 07/22] perf expr: Add #target_cpu literal
+Message-ID: <aQmHfya8SYIcVGcg@google.com>
 References: <20251024175857.808401-1-irogers@google.com>
- <20251024175857.808401-6-irogers@google.com>
+ <20251024175857.808401-8-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,18 +57,16 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251024175857.808401-6-irogers@google.com>
+In-Reply-To: <20251024175857.808401-8-irogers@google.com>
 
-On Fri, Oct 24, 2025 at 10:58:40AM -0700, Ian Rogers wrote:
-> Rather than using the first evsel in the matched events, try to find
-> the least shared non-tool evsel. The aim is to pick the first evsel
-> that typifies the metric within the list of metrics.
-> 
-> This addresses an issue where Default metric group metrics may lose
-> their counter value due to how the stat displaying hides counters for
-> default event/metric output.
+On Fri, Oct 24, 2025 at 10:58:42AM -0700, Ian Rogers wrote:
+> For CPU nanoseconds a lot of the stat-shadow metrics use either
+> task-clock or cpu-clock, the latter being used when
+> target__has_cpu. Add a #target_cpu literal so that json metrics can
+> perform the same test.
 
-Do you have a command line example to show impact of this change?
+Do we have documentation for the literals and metric expressions in
+general?  I think it's getting complex and we should provide one.
 
 Thanks,
 Namhyung
@@ -77,75 +74,23 @@ Namhyung
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/metricgroup.c | 48 ++++++++++++++++++++++++++++++++++-
->  1 file changed, 47 insertions(+), 1 deletion(-)
+>  tools/perf/util/expr.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 48936e517803..76092ee26761 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -1323,6 +1323,51 @@ static int parse_ids(bool metric_no_merge, bool fake_pmu,
->  	return ret;
->  }
->  
-> +/* How many times will a given evsel be used in a set of metrics? */
-> +static int count_uses(struct list_head *metric_list, struct evsel *evsel)
-> +{
-> +	const char *metric_id = evsel__metric_id(evsel);
-> +	struct metric *m;
-> +	int uses = 0;
-> +
-> +	list_for_each_entry(m, metric_list, nd) {
-> +		if (hashmap__find(m->pctx->ids, metric_id, NULL))
-> +			uses++;
-> +	}
-> +	return uses;
-> +}
-> +
-> +/*
-> + * Select the evsel that stat-display will use to trigger shadow/metric
-> + * printing. Pick the least shared non-tool evsel, encouraging metrics to be
-> + * with a hardware counter that is specific to them.
-> + */
-> +static struct evsel *pick_display_evsel(struct list_head *metric_list,
-> +					struct evsel **metric_events)
-> +{
-> +	struct evsel *selected = metric_events[0];
-> +	size_t selected_uses;
-> +	bool selected_is_tool;
-> +
-> +	if (!selected)
-> +		return NULL;
-> +
-> +	selected_uses = count_uses(metric_list, selected);
-> +	selected_is_tool = evsel__is_tool(selected);
-> +	for (int i = 1; metric_events[i]; i++) {
-> +		struct evsel *candidate = metric_events[i];
-> +		size_t candidate_uses = count_uses(metric_list, candidate);
-> +
-> +		if ((selected_is_tool && !evsel__is_tool(candidate)) ||
-> +		    (candidate_uses < selected_uses)) {
-> +			selected = candidate;
-> +			selected_uses = candidate_uses;
-> +			selected_is_tool = evsel__is_tool(selected);
-> +		}
-> +	}
-> +	return selected;
-> +}
-> +
->  static int parse_groups(struct evlist *perf_evlist,
->  			const char *pmu, const char *str,
->  			bool metric_no_group,
-> @@ -1430,7 +1475,8 @@ static int parse_groups(struct evlist *perf_evlist,
->  			goto out;
->  		}
->  
-> -		me = metricgroup__lookup(&perf_evlist->metric_events, metric_events[0],
-> +		me = metricgroup__lookup(&perf_evlist->metric_events,
-> +					 pick_display_evsel(&metric_list, metric_events),
->  					 /*create=*/true);
->  
->  		expr = malloc(sizeof(struct metric_expr));
+> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+> index 7fda0ff89c16..4df56f2b283d 100644
+> --- a/tools/perf/util/expr.c
+> +++ b/tools/perf/util/expr.c
+> @@ -409,6 +409,9 @@ double expr__get_literal(const char *literal, const struct expr_scanner_ctx *ctx
+>  	} else if (!strcmp("#core_wide", literal)) {
+>  		result = core_wide(ctx->system_wide, ctx->user_requested_cpu_list)
+>  			? 1.0 : 0.0;
+> +	} else if (!strcmp("#target_cpu", literal)) {
+> +		result = (ctx->system_wide || ctx->user_requested_cpu_list)
+> +			? 1.0 : 0.0;
+>  	} else {
+>  		pr_err("Unrecognized literal '%s'", literal);
+>  	}
 > -- 
 > 2.51.1.821.gb6fe4d2222-goog
 > 
