@@ -1,121 +1,285 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75E73299A94
-	for <linux-perf-users@vger.kernel.org>; Tue,  4 Nov 2025 18:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1895D2CCC5
+	for <linux-perf-users@vger.kernel.org>; Tue,  4 Nov 2025 18:47:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762280991; cv=none; b=cTRsSAWPceb9+yyXkS58MmJZH4a6AAbVI9Csfi6YlPbDod5fwnPF0S+8dcrkiro3G8F9qdKIRB19Pc1YgeJfrXrGRQDZAzotZPObz2sgpWk0/FwP/3B/9k5p9MqvrRW9esOUkAA3sYOk4xUvyzMEq+MTIWZGW1ejjFW4mVj//6s=
+	t=1762282037; cv=none; b=oJbJ6KtT+UiD1+8v9gNZ/v5heIskLCduTqAjyYSukARxVw1nZeh6utuSdahw+3x5kdxxBIyFD3RXO/NIeYbZBxBdA9H8WsLK2aD3G3bTmnaqbrOl1Nkx4YL5uhf4pJhyrqlNHltsiKhut1MsLdnLUxFxhtKnMAG1TAEC5FnwrTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762280991; c=relaxed/simple;
-	bh=yYH8xZ0Jz65IWgdyabY4SB+cEF8Iq+weMAOkGBSCulA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XyjeanEkE1XnaDwXtoca58bzxjJMrDak39NBFQqzzCcVfa8/g/wly0lBY9RkEA6fBknBU6koLOVELicHeA8Os3eR1eszezvxkU4MJ5iP8ma8c9C44VxplZl4vr7/QcXiIJRWVp9M/YK/81GV9dV9rMBcqO5bPZ/TtsUfqK9pMr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C69A61CE0;
-	Tue,  4 Nov 2025 10:29:40 -0800 (PST)
-Received: from 010265703453.cambridge.arm.com (010265703453.cambridge.arm.com [10.1.33.58])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D22D23F694;
-	Tue,  4 Nov 2025 10:29:47 -0800 (PST)
-From: Robin Murphy <robin.murphy@arm.com>
-To: will@kernel.org
-Cc: mark.rutland@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] perf/arm-ni: Fix and optimise register offset calculation
-Date: Tue,  4 Nov 2025 18:29:40 +0000
-Message-Id: <5db610facd51b81af04b1afee53191836315b17a.1762264719.git.robin.murphy@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1762282037; c=relaxed/simple;
+	bh=KKMCBwuGCiFUjK2VvVxn1MfvAe2xK1/bDfZAgGnL9ks=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tx2Syh79I6Gk6tQ5BjMMfmEzyFDAo5DGftYXQX9t3/AKgg/pi6yzzOsRZ6781VH4DM6b1TR6K4XvISX4vK4N/32I9VjIWfTl5tZT2Pk/mjpOMZVXNfPQtZj5fl5ZrfEppsuIDR6tQTtNddmCHWfyroBJiFaQNnNFRgv5nWUEFcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=csnmFKmG; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="csnmFKmG"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-27d67abd215so21625ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Nov 2025 10:47:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1762282035; x=1762886835; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P/jlOoGNiDidR02MLTeYPPu7BGXO9FosT3UCDKaUXjo=;
+        b=csnmFKmGXLm1PMbXbzkueEz/JFFx1FoK0OzZWrtYoB3QzAB0rCqxXxD8MjUG6VyYgZ
+         MtJbtmyDNTw74QJEY0qEDnFCGFVjgaTjlXZdtBgPynlBOWO5lPHrglmR2bZh/wR7uEsj
+         b4nX/4FF5P0QC7ZML5mTFnBXfvgtKu+T5QnK4BcqyaZ7Ht5eAvNqAX1PqPYd3VsqPdcv
+         otfSUx8iID+DhicjfxvO1NCAheYmPrrzZ3/xsowWnkiModPGoyaJgt2YksgtOXWgK/aD
+         /h3zcxmf1s+/AEdpvVIl9asGnyb6jD9vDNxyXgRXJC0tqdfXdZHf4C0+LmqwFbrlkp8K
+         yFbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762282035; x=1762886835;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=P/jlOoGNiDidR02MLTeYPPu7BGXO9FosT3UCDKaUXjo=;
+        b=YVMQTK0ddG0POmZ3TQMpMEM/AcAPu1NaExdfD5QOQ9OB23EpnyhOyPXSP8sMuhxkND
+         O7kJKEqWRm3mlPctQn2zj05rTG8SOmf/MuglSh6CG1UQ23iXfY7Ae9t2GsAa7LkQVmFx
+         2aA0EqjPpp6UUWmANdC5UzRHNH3bhDWxnd68HwpsZhqeVHMdOgwAi2RNeTr90i29I1Qe
+         LF3qJfo5uPBYaSOZUuiitVTLu+1MVigM5f7Jqgn8c42CrQWoJ7zSgWZqxthnn01gmxM9
+         d6BEGcbNOJ9242qG09j2YBijtgOHBxDNdEwVJ+R1VOFUu8mist4qE4jucC3L3M7TUqP/
+         YBng==
+X-Forwarded-Encrypted: i=1; AJvYcCUSMVBGkjlrJsUdItGZ7G3aCznQu/h/dtuc4XKuWXjNaKg6kmaglzvTn37FdVJZ4uyQl+RABxq7YQFXBS8gCGs3@vger.kernel.org
+X-Gm-Message-State: AOJu0YwagXq13jYpfwJvisqsX90wgTyGtDa8Qsm99e/D0etAFL7FYZXo
+	3Z70Vl4YjZaRticvwLotYH1uT6mqBPq9K3sZ0BoWZDLBaWm39xd2qwiATgDDRmMokxbovFOu9gW
+	K7roFeHsMk7DJvUYwioWhDmZb6C75ldz6BqmEKXLx
+X-Gm-Gg: ASbGnctm9GR/mtrWZsBYCnmqJ+3+XFy6JKAGHiW1qifRC67CVvcHEDWzH8r18LA5smd
+	Sgk9QS3vpuuQmrun/XVWYzBneikqbPCG4m3iGzIhtTHDgLpq7HlLlQ90ew96zV2NeEc+Y5KTG3k
+	rCdsQ479nYMWJ+w5okjJeOYyEiwhP2sMGmA6ekVNeaLW/6OH5n/3UZjDiDlZmQ7MpqtJCw0lsXc
+	ZuU5a+G/ZrNlgM27Ux9zlDN0P3ncgwdzpSdE+YsSLKGCRdU2Olm/eM1X44r6OZ8xts2PaxEGTZH
+	MdGC2guzKwQdqsQ=
+X-Google-Smtp-Source: AGHT+IFEL1igWzNF0ecT+YC39xo2x7+67kX8Mtuc98edexOzCudTrCWPCDXgDs/thVWs0wQZvcUoCsJmottDgSYXEC4=
+X-Received: by 2002:a17:902:f545:b0:26a:befc:e7e1 with SMTP id
+ d9443c01a7336-29631395060mr342705ad.12.1762282034968; Tue, 04 Nov 2025
+ 10:47:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251104053449.1208800-1-irogers@google.com> <20251104053449.1208800-2-irogers@google.com>
+ <aQpBmIEX8G7mTrWQ@google.com>
+In-Reply-To: <aQpBmIEX8G7mTrWQ@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 4 Nov 2025 10:47:03 -0800
+X-Gm-Features: AWmQ_bm7akqY14bRYWcJu10nqWPgMmWccIgWrGnpR3bhYQqCB_vcGgSafDMyOzM
+Message-ID: <CAP-5=fW20XxHwQnjeJZjLvCF0nVJ8tJ6tDeCm4-eDHKDdg0m4Q@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] perf stat-shadow: Read tool events directly
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Yang Li <yang.lee@linux.alibaba.com>, 
+	James Clark <james.clark@linaro.org>, Thomas Falcon <thomas.falcon@intel.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-LKP points out an operator precedence oversight in the new NoC S3
-support that, annoyingly, my local W=1 build didn't flag. In fixing
-that, we can also take the similarly-missed opportunity to cache the
-version check itself at event_init time.
+On Tue, Nov 4, 2025 at 10:10=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> Hi Ian,
+>
+> On Mon, Nov 03, 2025 at 09:34:48PM -0800, Ian Rogers wrote:
+> > When reading time values for metrics don't use the globals updated in
+> > builtin-stat, just read the events as regular events. The only
+> > exception is for time events where nanoseconds need converting to
+> > seconds as metrics assume time metrics are in seconds.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/stat-shadow.c | 123 +++++++++++++---------------------
+> >  1 file changed, 45 insertions(+), 78 deletions(-)
+> >
+> > diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shado=
+w.c
+> > index abaf6b579bfc..9fae3d32a519 100644
+> > --- a/tools/perf/util/stat-shadow.c
+> > +++ b/tools/perf/util/stat-shadow.c
+> > @@ -371,6 +371,18 @@ static void print_nsecs(struct perf_stat_config *c=
+onfig,
+> >       }
+> >  }
+> >
+> > +static double tool_pmu__scale_for_metric(const struct evsel *evsel)
+> > +{
+> > +     enum tool_pmu_event event =3D evsel__tool_event(evsel);
+> > +
+> > +     if (event =3D=3D TOOL_PMU__EVENT_DURATION_TIME ||
+> > +         event =3D=3D TOOL_PMU__EVENT_USER_TIME ||
+> > +         event =3D=3D TOOL_PMU__EVENT_SYSTEM_TIME)
+> > +             return 1e-9; /* Scale nanoseconds to seconds. */
+> > +
+> > +     return 1.0;
+> > +}
+> > +
+> >  static int prepare_metric(const struct metric_expr *mexp,
+> >                         const struct evsel *evsel,
+> >                         struct expr_parse_ctx *pctx,
+> > @@ -382,90 +394,45 @@ static int prepare_metric(const struct metric_exp=
+r *mexp,
+> >
+> >       for (i =3D 0; metric_events[i]; i++) {
+> >               char *n;
+> > -             double val;
+> > +             double val, scale =3D tool_pmu__scale_for_metric(metric_e=
+vents[i]);
+> >               int source_count =3D 0;
+> > +             struct perf_stat_evsel *ps =3D metric_events[i]->stats;
+> > +             struct perf_stat_aggr *aggr;
+> >
+> > -             if (evsel__is_tool(metric_events[i])) {
+> > -                     struct stats *stats;
+> > -                     double scale;
+> > -
+> > -                     switch (evsel__tool_event(metric_events[i])) {
+> > -                     case TOOL_PMU__EVENT_DURATION_TIME:
+> > -                             stats =3D &walltime_nsecs_stats;
+> > -                             scale =3D 1e-9;
+> > -                             break;
+> > -                     case TOOL_PMU__EVENT_USER_TIME:
+> > -                             stats =3D &ru_stats.ru_utime_usec_stat;
+> > -                             scale =3D 1e-6;
+> > -                             break;
+> > -                     case TOOL_PMU__EVENT_SYSTEM_TIME:
+> > -                             stats =3D &ru_stats.ru_stime_usec_stat;
+> > -                             scale =3D 1e-6;
+>
+> Do {USER,SYSTEM}_TIME become nanosecond now?
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202511041749.ok8zDP6u-lkp@intel.com/
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
- drivers/perf/arm-ni.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+The behavior is the same. In the event system/user time are read as
+microseconds while duration time is nanoseconds, the system/user times
+are scaled to be nanoseconds for some kind of consistency. In the
+metrics we were doing a similar scaling but scaling nanoseconds and
+microseconds to be seconds. Using the events directly we know the
+counts are always in nanoseconds so we just need to do 1 scaling
+factor.
 
-diff --git a/drivers/perf/arm-ni.c b/drivers/perf/arm-ni.c
-index aa824abc629e..66858c65215d 100644
---- a/drivers/perf/arm-ni.c
-+++ b/drivers/perf/arm-ni.c
-@@ -323,9 +323,15 @@ static int arm_ni_validate_group(struct perf_event *event)
- 	return 0;
- }
- 
-+static bool arm_ni_is_7xx(const struct arm_ni *ni)
-+{
-+	return ni->part == PART_NI_700 || ni->part == PART_NI_710AE;
-+}
-+
- static int arm_ni_event_init(struct perf_event *event)
- {
- 	struct arm_ni_cd *cd = pmu_to_cd(event->pmu);
-+	struct arm_ni *ni;
- 
- 	if (event->attr.type != event->pmu->type)
- 		return -ENOENT;
-@@ -333,7 +339,10 @@ static int arm_ni_event_init(struct perf_event *event)
- 	if (is_sampling_event(event))
- 		return -EINVAL;
- 
--	event->cpu = cd_to_ni(cd)->cpu;
-+	ni = cd_to_ni(cd);
-+	event->cpu = ni->cpu;
-+	event->hw.flags = arm_ni_is_7xx(ni);
-+
- 	if (NI_EVENT_TYPE(event) == NI_PMU)
- 		return arm_ni_validate_group(event);
- 
-@@ -411,18 +420,12 @@ static void arm_ni_init_evcnt(struct hw_perf_event *hw)
- 	writel_relaxed(S32_MIN, (void __iomem *)hw->event_base);
- }
- 
--static bool arm_ni_is_7xx(const struct arm_ni *ni)
--{
--	return ni->part == PART_NI_700 || ni->part == PART_NI_710AE;
--}
--
- static int arm_ni_event_add(struct perf_event *event, int flags)
- {
- 	struct arm_ni_cd *cd = pmu_to_cd(event->pmu);
- 	struct hw_perf_event *hw = &event->hw;
- 	struct arm_ni_unit *unit;
- 	enum ni_node_type type = NI_EVENT_TYPE(event);
--	bool is_7xx = arm_ni_is_7xx(cd_to_ni(cd));
- 	u32 reg;
- 
- 	if (type == NI_PMU) {
-@@ -430,7 +433,7 @@ static int arm_ni_event_add(struct perf_event *event, int flags)
- 			return -ENOSPC;
- 		hw->idx = NI_CCNT_IDX;
- 		hw->event_base = (unsigned long)cd->pmu_base +
--				 is_7xx ? NI700_PMCCNTR_L : NI_PMCCNTR_L;
-+				 (hw->flags ? NI700_PMCCNTR_L : NI_PMCCNTR_L);
- 		cd->ccnt = event;
- 		arm_ni_init_ccnt(hw);
- 	} else {
-@@ -443,7 +446,7 @@ static int arm_ni_event_add(struct perf_event *event, int flags)
- 		unit = (void *)hw->config_base;
- 		unit->event[hw->idx] = NI_EVENT_EVENTID(event);
- 		hw->event_base = (unsigned long)cd->pmu_base +
--				 is_7xx ? NI700_PMEVCNTR(hw->idx) : NI_PMEVCNTR(hw->idx);
-+				 (hw->flags ? NI700_PMEVCNTR(hw->idx) : NI_PMEVCNTR(hw->idx));
- 		arm_ni_init_evcnt(hw);
- 		lo_hi_writeq_relaxed(le64_to_cpu(unit->pmusel), unit->pmusela);
- 
--- 
-2.34.1
+Thanks,
+Ian
 
+> > +             /*
+> > +              * If there are multiple uncore PMUs and we're not readin=
+g the
+> > +              * leader's stats, determine the stats for the appropriat=
+e
+> > +              * uncore PMU.
+> > +              */
+> > +             if (evsel && evsel->metric_leader &&
+> > +                 evsel->pmu !=3D evsel->metric_leader->pmu &&
+> > +                 mexp->metric_events[i]->pmu =3D=3D evsel->metric_lead=
+er->pmu) {
+> > +                     struct evsel *pos;
+> > +
+> > +                     evlist__for_each_entry(evsel->evlist, pos) {
+> > +                             if (pos->pmu !=3D evsel->pmu)
+> > +                                     continue;
+> > +                             if (pos->metric_leader !=3D mexp->metric_=
+events[i])
+> > +                                     continue;
+> > +                             ps =3D pos->stats;
+> > +                             source_count =3D 1;
+> >                               break;
+> > -                     case TOOL_PMU__EVENT_NONE:
+> > -                             pr_err("Invalid tool event 'none'");
+> > -                             abort();
+> > -                     case TOOL_PMU__EVENT_MAX:
+> > -                             pr_err("Invalid tool event 'max'");
+> > -                             abort();
+> > -                     case TOOL_PMU__EVENT_HAS_PMEM:
+> > -                     case TOOL_PMU__EVENT_NUM_CORES:
+> > -                     case TOOL_PMU__EVENT_NUM_CPUS:
+> > -                     case TOOL_PMU__EVENT_NUM_CPUS_ONLINE:
+> > -                     case TOOL_PMU__EVENT_NUM_DIES:
+> > -                     case TOOL_PMU__EVENT_NUM_PACKAGES:
+> > -                     case TOOL_PMU__EVENT_SLOTS:
+> > -                     case TOOL_PMU__EVENT_SMT_ON:
+> > -                     case TOOL_PMU__EVENT_SYSTEM_TSC_FREQ:
+> > -                     default:
+> > -                             pr_err("Unexpected tool event '%s'", evse=
+l__name(metric_events[i]));
+> > -                             abort();
+> >                       }
+> > -                     val =3D avg_stats(stats) * scale;
+> > -                     source_count =3D 1;
+> > -             } else {
+> > -                     struct perf_stat_evsel *ps =3D metric_events[i]->=
+stats;
+> > -                     struct perf_stat_aggr *aggr;
+> > -
+> > +             }
+> > +             aggr =3D &ps->aggr[aggr_idx];
+> > +             if (!aggr || !metric_events[i]->supported) {
+> >                       /*
+> > -                      * If there are multiple uncore PMUs and we're no=
+t
+> > -                      * reading the leader's stats, determine the stat=
+s for
+> > -                      * the appropriate uncore PMU.
+> > +                      * Not supported events will have a count of 0, w=
+hich
+> > +                      * can be confusing in a metric. Explicitly set t=
+he
+> > +                      * value to NAN. Not counted events (enable time =
+of 0)
+> > +                      * are read as 0.
+> >                        */
+> > -                     if (evsel && evsel->metric_leader &&
+> > -                         evsel->pmu !=3D evsel->metric_leader->pmu &&
+> > -                         mexp->metric_events[i]->pmu =3D=3D evsel->met=
+ric_leader->pmu) {
+> > -                             struct evsel *pos;
+> > -
+> > -                             evlist__for_each_entry(evsel->evlist, pos=
+) {
+> > -                                     if (pos->pmu !=3D evsel->pmu)
+> > -                                             continue;
+> > -                                     if (pos->metric_leader !=3D mexp-=
+>metric_events[i])
+> > -                                             continue;
+> > -                                     ps =3D pos->stats;
+> > -                                     source_count =3D 1;
+> > -                                     break;
+> > -                             }
+> > -                     }
+> > -                     aggr =3D &ps->aggr[aggr_idx];
+> > -                     if (!aggr)
+> > -                             break;
+> > -
+> > -                     if (!metric_events[i]->supported) {
+> > -                             /*
+> > -                              * Not supported events will have a count=
+ of 0,
+> > -                              * which can be confusing in a
+> > -                              * metric. Explicitly set the value to NA=
+N. Not
+> > -                              * counted events (enable time of 0) are =
+read as
+> > -                              * 0.
+> > -                              */
+> > -                             val =3D NAN;
+> > -                             source_count =3D 0;
+> > -                     } else {
+> > -                             val =3D aggr->counts.val;
+> > -                             if (!source_count)
+> > -                                     source_count =3D evsel__source_co=
+unt(metric_events[i]);
+> > -                     }
+> > +                     val =3D NAN;
+> > +                     source_count =3D 0;
+> > +             } else {
+> > +                     val =3D aggr->counts.val * scale;
+> > +                     if (!source_count)
+> > +                             source_count =3D evsel__source_count(metr=
+ic_events[i]);
+> >               }
+> >               n =3D strdup(evsel__metric_id(metric_events[i]));
+> >               if (!n)
+> > --
+> > 2.51.2.1006.ga50a493c49-goog
+> >
