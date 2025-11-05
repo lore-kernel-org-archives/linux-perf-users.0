@@ -1,124 +1,290 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9047D33FE39;
-	Wed,  5 Nov 2025 19:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0950A3EA8D
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Nov 2025 20:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762370205; cv=none; b=VLGamY8ed98/tFV+GwZKJ8b6m5zEB8s8XwvZMeISRavdThVeGMn5t6iYKSt1XnGsS2B1iGlQRANKHtjs11p8YkTYYxw/FHyiebLeJtdYySo/VAoMPvOJ5n93xJoZY/XfLH9ZbV2EjMoXBGj45jihoxR526PrAvT8y6fhCkjTYLw=
+	t=1762375530; cv=none; b=rwmvi7G3ChYCA8SYvF/dbwh6v9lzUMCMwGp71Cwh2mVKMWwtucjBYqdDxmZBYJD198swpLiIirMVXeE8ei6ABKa2ShNDH1vSbcu+OhCuVp0VFwjKK6c7eOB86lrmEqr5KBcrZFtECt0DzyCI9e1DLh/Sg+PEg9ehlK9sD0gRbAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762370205; c=relaxed/simple;
-	bh=CVnuPNeI2KxsnGTMc+rTKU5SJQwtdJOppjAzw/UjhvU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rbQ3Oi/LO4L7LIOkp9IuSiSVP6ZCbeywXnH3MYGNIykgJ3sRQMqASOuPKVofl/+7Mv0sXbVp18DqOOakD5r4Pg5nZ64PyczUzoRrF/3rhB2ALMTTuUER7Llg6moOknfvaRZoVE7SPgGNBpn2Sx5TgOYRopt5TnTrZDbwPALHF8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kCN9ZCrd; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1762375530; c=relaxed/simple;
+	bh=usZuEfgTiQjSdoGWOEKccGdEdjv0wfrgaBT3Xw39F64=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a4lLey9EbXy3ImZd2goBhY9CtgFa5y0DZsoOP32yRxmr/DBUPcpWb4Jcw6f6ld04ZCby7ECvvX8Htg2BC6HdhaS+71DpBBgii4IMGRrdTnPOIeWqUOD1i2uiNm2AaaDL+GAUaiJPvyWo434LFM2khPvgrBfafXKMJ2RboezGbbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jOWw9QaQ; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kCN9ZCrd"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5A5IYW1F002663;
-	Wed, 5 Nov 2025 19:16:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=cudy57Kz+/xsCe4vk
-	vDXHBNWEy1XnPcnS0mHwL/7slk=; b=kCN9ZCrd4lGpP8fO25UyadPeVgx25VzOn
-	bWFtus3AAnQq/xxBOdEsZq/F5YYJIxQl/i6VokNHsWDMSVvCeB38/s86woFYKJYH
-	qz2O0Upk9yfxVDmRvTu7QqpyruqhJKkANmgaNPbEG1ejt2TJbHMh7r2ZiDaLRCmQ
-	rjAyBwF22aOb+tS4C/i86BjUOCcCPjmI8e+1i7XMo9MCCwpxEVERJSxjabiEvmHu
-	iSfX2d7ljmkaZo/7EVkFxBCRBa5tmAORHogT5ht1WK5ySJoUC52YaGyNBP2S+Fl4
-	nS9GIOmyiDkimx9yOq9Ki7MNIUgGL/1pTMIEpIF/W5jKjE+qdSH0A==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4a57mraxhp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Nov 2025 19:16:40 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5A5IWpvJ027416;
-	Wed, 5 Nov 2025 19:16:39 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4a5vwyhxdw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Nov 2025 19:16:39 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5A5JGZHu23134926
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Nov 2025 19:16:35 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7945920043;
-	Wed,  5 Nov 2025 19:16:35 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F325720040;
-	Wed,  5 Nov 2025 19:16:34 +0000 (GMT)
-Received: from heavy.ibm.com (unknown [9.87.135.254])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  5 Nov 2025 19:16:34 +0000 (GMT)
-From: Ilya Leoshkevich <iii@linux.ibm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [PATCH 4/5] perf test java symbol: Fix a false negative in symbol regex
-Date: Wed,  5 Nov 2025 20:10:27 +0100
-Message-ID: <20251105191626.34998-5-iii@linux.ibm.com>
-X-Mailer: git-send-email 2.51.1
-In-Reply-To: <20251105191626.34998-1-iii@linux.ibm.com>
-References: <20251105191626.34998-1-iii@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jOWw9QaQ"
+Message-ID: <c686a971-1483-42c0-8199-376d4d4b3875@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1762375525;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uYHtYxEt0GXZ3t+T7LTvPbBdGxB31zAaoF7FHEzvEl8=;
+	b=jOWw9QaQmnq5H+hRmtWbA7Vh0xUKS3kjcTe5QtO3EKzUJ56iraZUg3nrHnfDUIzV+7Y/Dl
+	1sy5XiClQxWwcKjELrQJclqX/onQ8y4Pm4OkYP5mKlEtUYB+0M9wK9MUNJkTtYXzQRsLbL
+	4I+ZUAqpT5KU8hJYOaoAWdXd0YFdIIg=
+Date: Wed, 5 Nov 2025 12:45:15 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Xo7ivwsg7DKxB7QieEb-qDgVk3tx50ij
-X-Authority-Analysis: v=2.4 cv=MKhtWcZl c=1 sm=1 tr=0 ts=690ba298 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=VnNF1IyMAAAA:8
- a=Tfjndf6In5KXQWtPGGIA:9
-X-Proofpoint-ORIG-GUID: Xo7ivwsg7DKxB7QieEb-qDgVk3tx50ij
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTAxMDAwMSBTYWx0ZWRfXzXfeARG1L11I
- aqvfq8j9e1HoF0SjYcEKF2LOPq6O03hYEXibMC7WEU7PochIhyX8s+dSi23OlSJ65/v/oI9ssUI
- 0neqMrPDdmsZBLcVYFYfW0pPuyH3/rrXD4hT2Yct3YV9/kERgZ2H3g8b2H0PJZ8Y4XyTRxuCTRK
- 0NyA3KEFM/6peWE2CuQT0nzJZyakPxAsIcOcLViD3C8sgEV/bypYtpUYPgyCQpfKcJFRuYki2gk
- Ww87pTIK5QFlhi+EtnGkzxi5pmH4nKRzcKbENRC7pgNAUcCIQw+W7IEKJwU5Hzlzs20G+Ou6Mzx
- rZdbPNSS0wCGc5hk2pDIGlLVx54u1b3fOLmb0+J7wQdpefe3mBCTgn6oXIwdVKvzuWrYZPvEsLj
- R1+3cyTE1/V5A6QirSe0C5u/cBKo1g==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-05_07,2025-11-03_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 suspectscore=0 bulkscore=0 impostorscore=0 clxscore=1015
- lowpriorityscore=0 malwarescore=0 adultscore=0 phishscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511010001
+Subject: Re: [PATCH bpf-next v4 1/2] perf: Refactor get_perf_callchain
+Content-Language: en-GB
+To: Tao Chen <chen.dylane@linux.dev>, peterz@infradead.org, mingo@redhat.com,
+ acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, song@kernel.org,
+ ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, john.fastabend@gmail.com,
+ kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
+References: <20251028162502.3418817-1-chen.dylane@linux.dev>
+ <20251028162502.3418817-2-chen.dylane@linux.dev>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yonghong Song <yonghong.song@linux.dev>
+In-Reply-To: <20251028162502.3418817-2-chen.dylane@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-There are a lot of symbols like InterpreterRuntime::resolve_get_put()
-in the perf report output, so the existing regex unfortunately always
-matches something. Replace it with a more precise one.
 
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
----
- tools/perf/tests/shell/test_java_symbol.sh | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/test_java_symbol.sh b/tools/perf/tests/shell/test_java_symbol.sh
-index f36c9321568c5..4c6bc57b87181 100755
---- a/tools/perf/tests/shell/test_java_symbol.sh
-+++ b/tools/perf/tests/shell/test_java_symbol.sh
-@@ -55,8 +55,10 @@ fi
- # Below is an example of the instruction samples reporting:
- #   8.18%  jshell           jitted-50116-29.so    [.] Interpreter
- #   0.75%  Thread-1         jitted-83602-1670.so  [.] jdk.internal.jimage.BasicImageReader.getString(int)
-+# Look for them, while avoiding false positives from lines like this:
-+#   0.03%  jshell           libjvm.so             [.] InterpreterRuntime::resolve_get_put(JavaThread*, Bytecodes::Code)
- perf report --stdio -i "$PERF_INJ_DATA" 2>&1 |
--	grep -E " +[0-9]+\.[0-9]+% .* (Interpreter|jdk\.internal).*" >/dev/null 2>&1
-+	grep ' jshell .* jitted-.*\.so .* \(Interpreter$\|jdk\.internal\)' &>/dev/null
- 
- if [ $? -ne 0 ]; then
- 	echo "Fail to find java symbols"
--- 
-2.51.1
+On 10/28/25 9:25 AM, Tao Chen wrote:
+>  From BPF stack map, we want to use our own buffers to avoid
+> unnecessary copy and ensure that the buffer will not be
+> overwritten by other preemptive tasks. Peter suggested
+> provide more flexible stack-sampling APIs, which can be used
+> in BPF, and we can still use the perf callchain entry with
+> the help of these APIs. The next patch will modify the BPF part.
+>
+> Signed-off-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+> ---
+>   include/linux/perf_event.h | 11 +++++-
+>   kernel/bpf/stackmap.c      |  4 +-
+>   kernel/events/callchain.c  | 75 ++++++++++++++++++++++++--------------
+>   kernel/events/core.c       |  2 +-
+>   4 files changed, 61 insertions(+), 31 deletions(-)
+>
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index fd1d91017b9..14a382cad1d 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -67,6 +67,7 @@ struct perf_callchain_entry_ctx {
+>   	u32				nr;
+>   	short				contexts;
+>   	bool				contexts_maxed;
+> +	bool				add_mark;
+>   };
+>   
+>   typedef unsigned long (*perf_copy_f)(void *dst, const void *src,
+> @@ -1718,9 +1719,17 @@ DECLARE_PER_CPU(struct perf_callchain_entry, perf_callchain_entry);
+>   
+>   extern void perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs);
+>   extern void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs);
+> +
+> +extern void __init_perf_callchain_ctx(struct perf_callchain_entry_ctx *ctx,
+> +				      struct perf_callchain_entry *entry,
+> +				      u32 max_stack, bool add_mark);
+> +
+> +extern void __get_perf_callchain_kernel(struct perf_callchain_entry_ctx *ctx, struct pt_regs *regs);
+> +extern void __get_perf_callchain_user(struct perf_callchain_entry_ctx *ctx, struct pt_regs *regs);
+> +
+>   extern struct perf_callchain_entry *
+>   get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+> -		   u32 max_stack, bool crosstask, bool add_mark);
+> +		   u32 max_stack, bool crosstask);
+>   extern int get_callchain_buffers(int max_stack);
+>   extern void put_callchain_buffers(void);
+>   extern struct perf_callchain_entry *get_callchain_entry(int *rctx);
+> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+> index 4d53cdd1374..e28b35c7e0b 100644
+> --- a/kernel/bpf/stackmap.c
+> +++ b/kernel/bpf/stackmap.c
+> @@ -315,7 +315,7 @@ BPF_CALL_3(bpf_get_stackid, struct pt_regs *, regs, struct bpf_map *, map,
+>   		max_depth = sysctl_perf_event_max_stack;
+>   
+>   	trace = get_perf_callchain(regs, kernel, user, max_depth,
+> -				   false, false);
+> +				   false);
+
+This is not a refactor. Here, the add_mark parameter is removed. The 'add_mark'
+value here is expected to be false, but later get_perf_callchain(...) has 'add_mark'
+is true in __init_perf_callchain_ctx().
+
+Applying this patch only on top of bpf-next master branch, we will have the
+following crash:
+
+[  457.730077] bpf_testmod: oh no, recursing into test_1, recursion_misses 1
+[  460.221871] BUG: unable to handle page fault for address: fffa3bfffffff000
+[  460.221912] #PF: supervisor read access in kernel mode
+[  460.221912] #PF: error_code(0x0000) - not-present page
+[  460.221912] PGD 1e0ef1067 P4D 1e0ef0067 PUD 1e0eef067 PMD 1e0eee067 PTE 0
+[  460.221912] Oops: Oops: 0000 [#1] SMP KASAN NOPTI
+[  460.221912] CPU: 2 UID: 0 PID: 2012 Comm: test_progs Tainted: G        W  OE       6.18.0-rc4-gafe2e8
+[  460.221912] Tainted: [W]=WARN, [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
+[  460.221912] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.14.0-0-g155821a1990b-pr4
+[  460.221912] RIP: 0010:kasan_check_range+0x183/0x2c0
+[  460.221912] Code: 41 bf 08 00 00 00 41 29 ef 4d 01 fb 4d 29 de 4d 89 f4 4d 8d 6c 24 07 4d 85 e4 4d 0fd
+[  460.221912] RSP: 0018:ff110001193bfc78 EFLAGS: 00010206
+[  460.221912] RAX: ffd1ffffffd5b301 RBX: dffffc0000000001 RCX: ffffffff819a2ecb
+[  460.221912] RDX: 0000000000000001 RSI: 00000000ffffffb0 RDI: ffd1ffffffd5b360
+[  460.221912] RBP: 0000000000000004 R08: ffd20000ffd5b30f R09: 1ffa40001ffab661
+[  460.221912] R10: dffffc0000000000 R11: fffa3bfffffab670 R12: 000000001ffffff2
+[  460.221912] R13: 0000000003ff58cc R14: 0000000000053990 R15: 0000000000000000
+[  460.221912] FS:  00007f358c6460c0(0000) GS:ff110002384b4000(0000) knlGS:0000000000000000
+[  460.221912] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  460.221912] CR2: fffa3bfffffff000 CR3: 000000011468c006 CR4: 0000000000371ef0
+[  460.221912] Call Trace:
+[  460.221912]  <TASK>
+[  460.221912]  __asan_memset+0x22/0x50
+[  460.221912]  __bpf_get_stack+0x6eb/0x7a0
+[  460.221912]  ? bpf_perf_event_output_raw_tp+0x58c/0x6c0
+[  460.221912]  bpf_get_stack+0x1d/0x30
+[  460.221912]  bpf_get_stack_raw_tp+0x148/0x180
+[  460.221912]  bpf_prog_40e346a03dc2914c_bpf_prog1+0x169/0x1af
+[  460.221912]  bpf_trace_run2+0x1bc/0x350
+[  460.221912]  ? bpf_trace_run2+0x104/0x350
+[  460.221912]  ? trace_sys_enter+0x6b/0xf0
+[  460.221912]  __bpf_trace_sys_enter+0x38/0x60
+[  460.221912]  trace_sys_enter+0xa7/0xf0
+[  460.221912]  syscall_trace_enter+0xfc/0x160
+[  460.221912]  ? entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[  460.221912]  do_syscall_64+0x5a/0xfa0
+[  460.221912]  ? asm_sysvec_apic_timer_interrupt+0x1a/0x20
+[  460.221912]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+
+>   
+>   	if (unlikely(!trace))
+>   		/* couldn't fetch the stack trace */
+> @@ -452,7 +452,7 @@ static long __bpf_get_stack(struct pt_regs *regs, struct task_struct *task,
+>   		trace = get_callchain_entry_for_task(task, max_depth);
+>   	else
+>   		trace = get_perf_callchain(regs, kernel, user, max_depth,
+> -					   crosstask, false);
+> +					   crosstask);
+>   
+>   	if (unlikely(!trace) || trace->nr < skip) {
+>   		if (may_fault)
+> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+> index 808c0d7a31f..2c36e490625 100644
+> --- a/kernel/events/callchain.c
+> +++ b/kernel/events/callchain.c
+> @@ -216,13 +216,54 @@ static void fixup_uretprobe_trampoline_entries(struct perf_callchain_entry *entr
+>   #endif
+>   }
+>   
+> +void __init_perf_callchain_ctx(struct perf_callchain_entry_ctx *ctx,
+> +			       struct perf_callchain_entry *entry,
+> +			       u32 max_stack, bool add_mark)
+> +
+> +{
+> +	ctx->entry		= entry;
+> +	ctx->max_stack		= max_stack;
+> +	ctx->nr			= entry->nr = 0;
+> +	ctx->contexts		= 0;
+> +	ctx->contexts_maxed	= false;
+> +	ctx->add_mark		= add_mark;
+> +}
+> +
+> +void __get_perf_callchain_kernel(struct perf_callchain_entry_ctx *ctx, struct pt_regs *regs)
+> +{
+> +	if (user_mode(regs))
+> +		return;
+> +
+> +	if (ctx->add_mark)
+> +		perf_callchain_store_context(ctx, PERF_CONTEXT_KERNEL);
+> +	perf_callchain_kernel(ctx, regs);
+> +}
+> +
+> +void __get_perf_callchain_user(struct perf_callchain_entry_ctx *ctx, struct pt_regs *regs)
+> +{
+> +	int start_entry_idx;
+> +
+> +	if (!user_mode(regs)) {
+> +		if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
+> +			return;
+> +		regs = task_pt_regs(current);
+> +	}
+> +
+> +	if (ctx->add_mark)
+> +		perf_callchain_store_context(ctx, PERF_CONTEXT_USER);
+> +
+> +	start_entry_idx = ctx->nr;
+> +	perf_callchain_user(ctx, regs);
+> +	fixup_uretprobe_trampoline_entries(ctx->entry, start_entry_idx);
+> +}
+> +
+>   struct perf_callchain_entry *
+>   get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+> -		   u32 max_stack, bool crosstask, bool add_mark)
+> +		   u32 max_stack, bool crosstask)
+>   {
+>   	struct perf_callchain_entry *entry;
+>   	struct perf_callchain_entry_ctx ctx;
+> -	int rctx, start_entry_idx;
+> +	int rctx;
+>   
+>   	/* crosstask is not supported for user stacks */
+>   	if (crosstask && user && !kernel)
+> @@ -232,34 +273,14 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+>   	if (!entry)
+>   		return NULL;
+>   
+> -	ctx.entry		= entry;
+> -	ctx.max_stack		= max_stack;
+> -	ctx.nr			= entry->nr = 0;
+> -	ctx.contexts		= 0;
+> -	ctx.contexts_maxed	= false;
+> +	__init_perf_callchain_ctx(&ctx, entry, max_stack, true);
+>   
+> -	if (kernel && !user_mode(regs)) {
+> -		if (add_mark)
+> -			perf_callchain_store_context(&ctx, PERF_CONTEXT_KERNEL);
+> -		perf_callchain_kernel(&ctx, regs);
+> -	}
+> -
+> -	if (user && !crosstask) {
+> -		if (!user_mode(regs)) {
+> -			if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
+> -				goto exit_put;
+> -			regs = task_pt_regs(current);
+> -		}
+> +	if (kernel)
+> +		__get_perf_callchain_kernel(&ctx, regs);
+>   
+> -		if (add_mark)
+> -			perf_callchain_store_context(&ctx, PERF_CONTEXT_USER);
+> -
+> -		start_entry_idx = entry->nr;
+> -		perf_callchain_user(&ctx, regs);
+> -		fixup_uretprobe_trampoline_entries(entry, start_entry_idx);
+> -	}
+> +	if (user && !crosstask)
+> +		__get_perf_callchain_user(&ctx, regs);
+>   
+> -exit_put:
+>   	put_callchain_entry(rctx);
+>   
+>   	return entry;
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 7541f6f85fc..eb0f110593d 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -8218,7 +8218,7 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
+>   		return &__empty_callchain;
+>   
+>   	callchain = get_perf_callchain(regs, kernel, user,
+> -				       max_stack, crosstask, true);
+> +				       max_stack, crosstask);
+>   	return callchain ?: &__empty_callchain;
+>   }
+>   
 
