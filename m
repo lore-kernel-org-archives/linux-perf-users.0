@@ -1,57 +1,55 @@
 Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10DC3357700
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Nov 2025 23:15:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CED35770C
+	for <linux-perf-users@vger.kernel.org>; Thu,  6 Nov 2025 23:15:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762470951; cv=none; b=JbQtHj0ACKoaIObhv/6niFEyvlmisU8CxaAVdBXRQVFGJqkdsMlqN+65L3+Dk49+rYB7WUwGbMF0mqrDf0oOi4m5q56jHlQ2neCm2GXODHniXTHX9ue/KFPB3U4Q/pPoNSooluBeTHO06KzLb0Y1/qon2MdUweZoDNe/rktfqNY=
+	t=1762470952; cv=none; b=n1vsyLP+tDsjnYMqRjfAlP0tn4NNLhAncGuH2cjd9B4cvLDQk1FdruHLsJNGNpjW2TxayfBs4o/p2Dj5Ps84Wo7+9oigWD0yH8OUHpAJ4SJDFtLrmMT+lx916+OcodjjRU8Bmcst+YH711d6qx6+6mrNBeEA6zkbtLdhZ05TEvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762470951; c=relaxed/simple;
-	bh=Q0N7mHEajp7CpHSIFL6h/1TOyEKdDpSAGm6uWcXAgSk=;
+	s=arc-20240116; t=1762470952; c=relaxed/simple;
+	bh=cRYjlGXMy8oFKWbC/hWw5ZYHF+VQE/hNjMg+FDceiog=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=Dgg5sC+aYgfcwmGhLJeaGjNpqae4waLiz6RZWC7wI283BqJPy6r+B/1m6JWt3etsi6jpC7gwOXbyakXrNPVQtx+TJbMHTf7+bdPnRbvHdcRIdZlNtRcXXgdwlbeErv6FsLdXFd5REmvXhosoJUytslfDvA8h+ekV06DXUPgOx8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zi1WerjT; arc=none smtp.client-ip=209.85.214.201
+	 To:Content-Type; b=E0gb4wmrR4IddA99NQxxwoHprCrm7DqnBa5Pl4NxWm0A10oMLaR85duKfYxnGK2xbSUpqqGmiF3XzrbtnJnYrsFGoxJwr6q/wM4DpU1Y1Hluhtf3T4HEvJzepHecQfFNWklJBwYcB4d7BYrMAEMccBh3dWR4xf+PSgd4ya6CHlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ofuV6ObB; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zi1WerjT"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2956cdcdc17so1485595ad.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 06 Nov 2025 15:15:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ofuV6ObB"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-29557f43d56so1816975ad.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 06 Nov 2025 15:15:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762470948; x=1763075748; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sPtPQ4J4P+ywp9pB0r7lkwULU5SxHoyBfBdCVnJslgs=;
-        b=Zi1WerjTWPN49zeTpJ/Eyx+7gb971ZVOjC7kjGn+GVZKVTWQR/+RxXbBK1CliMo9E2
-         /XCbC0/XYlVuXzCjqCUm7vqRLdvqh0EzavFvkXT1FUDAuOu4DcXVmoMLsth3zmoOyl5i
-         XPDvlLB8JJuNRmJRc6emwykiudgCKZ9TrstQAyEegk+9iEa2WF0zrlJM7sPmWrkSIwSc
-         43iF2o2v+12L2HkGwbvVY80+W5CxtVKvGkwGN0yrz/cjvMtxvSk7ho7UNQKirsE3qS9K
-         bMcnd6HIsIshcwA5PkmTrkIJVETnBA0uUcQoAEzoKkTXw2NqV+uFv4SD/hnbyVN2JyU9
-         H0JQ==
+        d=google.com; s=20230601; t=1762470950; x=1763075750; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QeOSGX6zjeJxTypp9mNQ3u5K3XQByXMA15Am7ZgQNdA=;
+        b=ofuV6ObBPPmqWezc9jqmUBwx/D1hdqxpfmswjvGciCrbSodtpoYGeeJA+ITiU3jg1e
+         PLQkSysTDfY3Oz2Pzaubu/tTe4oYvlQZUr0UGc4qo9r+Ld+EgfdJpPNl8uS/bRH3B78S
+         Cv6eS1KddLsO8ShVrNoj1CHNlLt5JDb9dDN2riH0zJOURKcSw8RSkq+YL+WZNY/3wz5A
+         s9XU5qh5IeR+V9TRM7C5J46UxNalFwNkJBwVeG1i2/cLVXIHqr3i5nZEBj7iGOCbk5sh
+         5elf69XW72c7JJLvgk7JvytzzbcNKLh0Tz362ok5chu1oivsKUglNQzNOt7JJtTBeTn+
+         Ehow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762470948; x=1763075748;
-        h=content-transfer-encoding:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=sPtPQ4J4P+ywp9pB0r7lkwULU5SxHoyBfBdCVnJslgs=;
-        b=Mvg05uT8az83gHsXsf+zb2Wjy4UJK56HxjIYbqOoNgZZFV+OgfjyrIMjA9mRv873vn
-         U8qEiBIeG7EJh90FgjS/UFvuJOcApa7KPQ2TW+w1KLlIPkExu2eNrL1KX9KPvD3vlQpv
-         f/z30e4w8VD0SMm8V6++fQDSTNzJTZQXiuxv+U4APBWPsqKir6CxtstAKxz5RjVKiLNA
-         NqRVsIA5OZzVIpuAXP6CqOUZPhDvJq7eOGk6miBKVCZYV/yAnIicY8vpjltZMEsmcS+A
-         zOhutScQcBDmLSsr+ldttw+RHvhMPP5D2q2OiUgROOOnXuPssKyJqV9DPmFfI8Lk93M5
-         5fNA==
-X-Forwarded-Encrypted: i=1; AJvYcCXdyr4ci0c9FgOlTbHh94VTakelyUFCWJm4Mo5BQZdi4TM3iH9C18L0Wo3yGXVS/Vumj3yrvr5nBTByA+V4e0ER@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtVcP++KjuZ0A5pxrkCxeLhIQKYKMqdDT2YL+a82iwfgahEjlX
-	3QTTw7gcXGvwviUlN70YYVOgvyUbr3KO3oOP5W8EHSC9n0o6l1vQFVYwIXo/SRMSMjyyq98nptp
-	GkwG3QDBBYg==
-X-Google-Smtp-Source: AGHT+IFgspHkzPQud3lsf6qhsPUlMtBDfQ4t4IlKFzgRpIyd300ZfubH6aGgC3NiLmGYUkjY9999nCSEy1/M
-X-Received: from dlbsw5.prod.google.com ([2002:a05:7022:3a85:b0:119:9f33:34a7])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c412:b0:295:59ef:df84
- with SMTP id d9443c01a7336-297c03a5f79mr15755125ad.3.1762470948349; Thu, 06
- Nov 2025 15:15:48 -0800 (PST)
-Date: Thu,  6 Nov 2025 15:14:55 -0800
+        d=1e100.net; s=20230601; t=1762470950; x=1763075750;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QeOSGX6zjeJxTypp9mNQ3u5K3XQByXMA15Am7ZgQNdA=;
+        b=QVoBjtiKLBmQVER0sivj2VJllbIotaGPSenUVqwrAvWG5I/Eh0MWiDTUD3Sz1G8+mz
+         iMwtESaMTfdy39wSFuPsCmH8+rF+TU7dgV23maJyA3wca9lT8YZrqrOheVJRYCnZ4T7I
+         uMDyYyuVxMmzyyRvgyksfYJWeekrUaZ+Znk7nnXfOMKASqvjJWptPqfx/DY9c2zWOn2Q
+         usOLlDMO3HISIhUAnZvWpH/A8LDlF8UKcZtyr+BgLXFUWW+PLbew114cduapgFrroBp/
+         MvM3Q6MiCVf3dl3C4Ni5QrcXL67PhLMLwLOuDyeQ0W+D5n7UZxWuX8dPMGKhKi9a/E5B
+         KwlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUhHrQay5La2AWyDqCki4+MAufZUJXcxHEHP8Ydim2nHqFZ/ZhsCnbE/sIkH23qT2kgkO5z2LY4405mJYI9pjtM@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHQlGaYfwYMhGk9nyZOYin5jCMy1qIyLqjyV3Z8Y/2f8R705dT
+	ZY0RAwjqgVDJkD6utlFJMc+ZMlbHFfsc3A9zm2mW8U+qoQ6cUW9Vr4btuVRkog46Yki7SE4RJ7d
+	d95awfeXXhg==
+X-Google-Smtp-Source: AGHT+IF/UbMhF3+WWa6D4TdUv6rq/CTKUNnCLtxyY13BiT7s7oZAEYlLl9dPSiKMhw4tzrUECRFgGqM8F73X
+X-Received: from dlbur20.prod.google.com ([2002:a05:7022:ea54:b0:119:49ca:6b97])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e801:b0:295:3eb5:6de8
+ with SMTP id d9443c01a7336-297c0386bffmr13308855ad.12.1762470950290; Thu, 06
+ Nov 2025 15:15:50 -0800 (PST)
+Date: Thu,  6 Nov 2025 15:14:56 -0800
 In-Reply-To: <20251106231508.448793-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251106231508.448793-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.2.1041.gc1ab5b90ca-goog
-Message-ID: <20251106231508.448793-6-irogers@google.com>
-Subject: [PATCH v2 05/18] perf stat: Add detail -d,-dd,-ddd metrics
+Message-ID: <20251106231508.448793-7-irogers@google.com>
+Subject: [PATCH v2 06/18] perf script: Change metric format to use json metrics
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,504 +75,321 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, 
 	Weilin Wang <weilin.wang@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Add metrics for the stat-shadow -d, -dd and -ddd events and hard coded
-metrics. Remove the events as these now come from the metrics.
+The metric format option isn't properly supported. This change
+improves that by making the sample events update the counts of an
+evsel, where the shadow metric code expects to read the values.  To
+support printing metrics, metrics need to be found. This is done on
+the first attempt to print a metric. Every metric is parsed and then
+the evsels in the metric's evlist compared to those in perf script
+using the perf_event_attr type and config. If the metric matches then
+it is added for printing. As an event in the perf script's evlist may
+have >1 metric id, or different leader for aggregation, the first
+metric matched will be displayed in those cases.
 
-Following this change a detailed perf stat output looks like:
+An example use is:
 ```
-$ perf stat -a -ddd -- sleep 1
-
- Performance counter stats for 'system wide':
-
-            18,446      context-switches                 #    653.0 cs/sec =
- cs_per_second
-             TopdownL1 (cpu_core)                 #      6.8 %  tma_bad_spe=
-culation
-                                                  #     37.0 %  tma_fronten=
-d_bound       (30.32%)
-             TopdownL1 (cpu_core)                 #     40.1 %  tma_backend=
-_bound
-                                                  #     16.1 %  tma_retirin=
-g             (30.32%)
-               177      page-faults                      #      6.3 faults/=
-sec  page_faults_per_second
-       472,170,922      cpu_atom/cpu-cycles/             #      0.0 GHz  cy=
-cles_frequency       (28.57%)
-       656,868,742      cpu_core/cpu-cycles/             #      0.0 GHz  cy=
-cles_frequency       (38.24%)
-                                                  #     22.2 %  tma_bad_spe=
-culation
-                                                  #     12.2 %  tma_retirin=
-g             (28.55%)
-                                                  #     32.4 %  tma_backend=
-_bound
-                                                  #     33.1 %  tma_fronten=
-d_bound       (35.71%)
-        43,583,604      cpu_atom/branches/               #      1.5 K/sec  =
-branch_frequency     (42.85%)
-        87,140,541      cpu_core/branches/               #      3.1 K/sec  =
-branch_frequency     (54.09%)
-               493      cpu-migrations                   #     17.5 migrati=
-ons/sec  migrations_per_second
-    28,247,893,219      cpu-clock                        #     28.0 CPUs  C=
-PUs_utilized
-       445,297,600      cpu_atom/cpu-cycles/             #      0.4 instruc=
-tions  insn_per_cycle  (42.87%)
-       642,323,993      cpu_core/cpu-cycles/             #      0.8 instruc=
-tions  insn_per_cycle  (62.01%)
-         2,126,311      cpu_atom/branch-misses/          #      6.8 %  bran=
-ch_miss_rate         (35.73%)
-         2,172,775      cpu_core/branch-misses/          #      2.5 %  bran=
-ch_miss_rate         (62.36%)
-         1,855,042      cpu_atom/LLC-loads/              #      0.0 %  llc_=
-miss_rate            (28.56%)
-         2,671,549      cpu_core/LLC-loads/              #     32.5 %  llc_=
-miss_rate            (46.31%)
-         8,440,231      cpu_core/L1-dcache-load-misses/  #      nan %  l1d_=
-miss_rate            (37.99%)
-        10,823,925      cpu_atom/L1-icache-load-misses/  #     19.0 %  l1i_=
-miss_rate            (21.43%)
-        22,602,344      cpu_atom/dTLB-loads/             #      2.0 %  dtlb=
-_miss_rate           (21.44%)
-       136,524,528      cpu_core/dTLB-loads/             #      0.3 %  dtlb=
-_miss_rate           (15.06%)
-
-       1.007665494 seconds time elapsed
+$ perf record -a -e '{instructions,cpu-cycles}:S' -a -- sleep 1
+$ perf script -F period,metric
+...
+     867817
+         metric:    0.30  insn per cycle
+     125394
+         metric:    0.04  insn per cycle
+     313516
+         metric:    0.11  insn per cycle
+         metric:    1.00  insn per cycle
 ```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c                     | 100 +++---------------
- .../arch/common/common/metrics.json           |  54 ++++++++++
- tools/perf/pmu-events/empty-pmu-events.c      |  72 +++++++------
- 3 files changed, 113 insertions(+), 113 deletions(-)
+ tools/perf/builtin-script.c | 239 ++++++++++++++++++++++++++++++++----
+ 1 file changed, 217 insertions(+), 22 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 999c6d587702..0ac3c8906668 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1857,28 +1857,6 @@ static int perf_stat_init_aggr_mode_file(struct perf=
-_stat *st)
- 	return 0;
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 8124fcb51da9..e24c3d9e01a8 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -33,6 +33,7 @@
+ #include "util/path.h"
+ #include "util/event.h"
+ #include "util/mem-info.h"
++#include "util/metricgroup.h"
+ #include "ui/ui.h"
+ #include "print_binary.h"
+ #include "print_insn.h"
+@@ -341,9 +342,6 @@ struct evsel_script {
+        char *filename;
+        FILE *fp;
+        u64  samples;
+-       /* For metric output */
+-       u64  val;
+-       int  gnum;
+ };
+ 
+ static inline struct evsel_script *evsel_script(struct evsel *evsel)
+@@ -2132,13 +2130,161 @@ static void script_new_line(struct perf_stat_config *config __maybe_unused,
+ 	fputs("\tmetric: ", mctx->fp);
  }
-=20
--/* Add legacy hardware/hardware-cache event to evlist for all core PMUs wi=
-thout wildcarding. */
--static int parse_hardware_event(struct evlist *evlist, const char *event,
--				struct parse_events_error *err)
--{
--	char buf[256];
--	struct perf_pmu *pmu =3D NULL;
--
--	while ((pmu =3D perf_pmus__scan_core(pmu)) !=3D NULL) {
--		int ret;
--
--		if (perf_pmus__num_core_pmus() =3D=3D 1)
--			snprintf(buf, sizeof(buf), "%s/%s,name=3D%s/", pmu->name, event, event)=
-;
--		else
--			snprintf(buf, sizeof(buf), "%s/%s/", pmu->name, event);
--
--		ret =3D parse_events(evlist, buf, err);
--		if (ret)
--			return ret;
--	}
--	return 0;
--}
--
- /*
-  * Add default events, if there were no attributes specified or
-  * if -d/--detailed, -d -d or -d -d -d is used:
-@@ -2006,22 +1984,34 @@ static int add_default_events(void)
- 		 * threshold computation, but it will be computed if the events
- 		 * are present.
- 		 */
--		if (metricgroup__has_metric_or_groups(pmu, "Default")) {
--			struct evlist *metric_evlist =3D evlist__new();
-+		const char *default_metricgroup_names[] =3D {
-+			"Default", "Default2", "Default3", "Default4",
+ 
+-static void perf_sample__fprint_metric(struct perf_script *script,
+-				       struct thread *thread,
++struct script_find_metrics_args {
++	struct evlist *evlist;
++	bool system_wide;
++};
++
++static struct evsel *map_metric_evsel_to_script_evsel(struct evlist *script_evlist,
++						      struct evsel *metric_evsel)
++{
++	struct evsel *script_evsel;
++
++	evlist__for_each_entry(script_evlist, script_evsel) {
++		/* Skip if perf_event_attr differ. */
++		if (metric_evsel->core.attr.type != script_evsel->core.attr.type)
++			continue;
++		if (metric_evsel->core.attr.config != script_evsel->core.attr.config)
++			continue;
++		/* Skip if the script event has a metric_id that doesn't match. */
++		if (script_evsel->metric_id &&
++		    strcmp(evsel__metric_id(metric_evsel), evsel__metric_id(script_evsel))) {
++			pr_debug("Skipping matching evsel due to differing metric ids '%s' vs '%s'\n",
++				 evsel__metric_id(metric_evsel), evsel__metric_id(script_evsel));
++			continue;
++		}
++		return script_evsel;
++	}
++	return NULL;
++}
++
++static int script_find_metrics(const struct pmu_metric *pm,
++			       const struct pmu_metrics_table *table __maybe_unused,
++			       void *data)
++{
++	struct script_find_metrics_args *args = data;
++	struct evlist *script_evlist = args->evlist;
++	struct evlist *metric_evlist = evlist__new();
++	struct evsel *metric_evsel;
++	int ret = metricgroup__parse_groups(metric_evlist,
++					/*pmu=*/"all",
++					pm->metric_name,
++					/*metric_no_group=*/false,
++					/*metric_no_merge=*/false,
++					/*metric_no_threshold=*/true,
++					/*user_requested_cpu_list=*/NULL,
++					args->system_wide,
++					/*hardware_aware_grouping=*/false);
++
++	if (ret) {
++		/* Metric parsing failed but continue the search. */
++		goto out;
++	}
++
++	/*
++	 * Check the script_evlist has an entry for each metric_evlist entry. If
++	 * the script evsel was already set up avoid changing data that may
++	 * break it.
++	 */
++	evlist__for_each_entry(metric_evlist, metric_evsel) {
++		struct evsel *script_evsel =
++			map_metric_evsel_to_script_evsel(script_evlist, metric_evsel);
++		struct evsel *new_metric_leader;
++
++		if (!script_evsel) {
++			pr_debug("Skipping metric '%s' as evsel '%s' / '%s' is missing\n",
++				pm->metric_name, evsel__name(metric_evsel),
++				evsel__metric_id(metric_evsel));
++			goto out;
++		}
++
++		if (script_evsel->metric_leader == NULL)
++			continue;
++
++		if (metric_evsel->metric_leader == metric_evsel) {
++			new_metric_leader = script_evsel;
++		} else {
++			new_metric_leader =
++				map_metric_evsel_to_script_evsel(script_evlist,
++								 metric_evsel->metric_leader);
++		}
++		/* Mismatching evsel leaders. */
++		if (script_evsel->metric_leader != new_metric_leader) {
++			pr_debug("Skipping metric '%s' due to mismatching evsel metric leaders '%s' vs '%s'\n",
++				pm->metric_name, evsel__metric_id(metric_evsel),
++				evsel__metric_id(script_evsel));
++			goto out;
++		}
++	}
++	/*
++	 * Metric events match those in the script evlist, copy metric evsel
++	 * data into the script evlist.
++	 */
++	evlist__for_each_entry(metric_evlist, metric_evsel) {
++		struct evsel *script_evsel =
++			map_metric_evsel_to_script_evsel(script_evlist, metric_evsel);
++		struct metric_event *metric_me = metricgroup__lookup(&metric_evlist->metric_events,
++								     metric_evsel,
++								     /*create=*/false);
++
++		if (script_evsel->metric_id == NULL) {
++			script_evsel->metric_id = metric_evsel->metric_id;
++			metric_evsel->metric_id = NULL;
++		}
++
++		if (script_evsel->metric_leader == NULL) {
++			if (metric_evsel->metric_leader == metric_evsel) {
++				script_evsel->metric_leader = script_evsel;
++			} else {
++				script_evsel->metric_leader =
++					map_metric_evsel_to_script_evsel(script_evlist,
++								       metric_evsel->metric_leader);
++			}
++		}
++
++		if (metric_me) {
++			struct metric_expr *expr;
++			struct metric_event *script_me =
++				metricgroup__lookup(&script_evlist->metric_events,
++						    script_evsel,
++						    /*create=*/true);
++
++			if (!script_me) {
++				/*
++				 * As the metric_expr is created, the only
++				 * failure is a lack of memory.
++				 */
++				goto out;
++			}
++			list_splice_init(&metric_me->head, &script_me->head);
++			list_for_each_entry(expr, &script_me->head, nd) {
++				for (int i = 0; expr->metric_events[i]; i++) {
++					expr->metric_events[i] =
++						map_metric_evsel_to_script_evsel(script_evlist,
++									expr->metric_events[i]);
++				}
++			}
++		}
++	}
++	pr_debug("Found metric '%s' whose evsels match those of in the perf data\n",
++		 pm->metric_name);
++	evlist__delete(metric_evlist);
++out:
++	return 0;
++}
++
++static struct aggr_cpu_id script_aggr_cpu_id_get(struct perf_stat_config *config __maybe_unused,
++						    struct perf_cpu cpu)
++{
++	return aggr_cpu_id__global(cpu, /*data=*/NULL);
++}
++
++static void perf_sample__fprint_metric(struct thread *thread,
+ 				       struct evsel *evsel,
+ 				       struct perf_sample *sample,
+ 				       FILE *fp)
+ {
+-	struct evsel *leader = evsel__leader(evsel);
++	static bool init_metrics;
+ 	struct perf_stat_output_ctx ctx = {
+ 		.print_metric = script_print_metric,
+ 		.new_line = script_new_line,
+@@ -2150,23 +2296,72 @@ static void perf_sample__fprint_metric(struct perf_script *script,
+ 			 },
+ 		.force_header = false,
+ 	};
+-	struct evsel *ev2;
+-	u64 val;
++	struct perf_counts_values *count, *old_count;
++	int cpu_map_idx, thread_map_idx, aggr_idx;
++	struct evsel *pos;
++
++	if (!init_metrics) {
++		/* One time initialization of stat_config and metric data. */
++		struct script_find_metrics_args args = {
++			.evlist = evsel->evlist,
++			/* TODO: Determine system-wide based on evlist.. */
++			.system_wide = true,
 +		};
++		if (!stat_config.output)
++			stat_config.output = stdout;
 +
-+		for (size_t i =3D 0; i < ARRAY_SIZE(default_metricgroup_names); i++) {
-+			struct evlist *metric_evlist;
++		if (!stat_config.aggr_map) {
++			/* TODO: currently only global aggregation is supported. */
++			assert(stat_config.aggr_mode == AGGR_GLOBAL);
++			stat_config.aggr_get_id = script_aggr_cpu_id_get;
++			stat_config.aggr_map =
++				cpu_aggr_map__new(evsel->evlist->core.user_requested_cpus,
++						  aggr_cpu_id__global, /*data=*/NULL,
++						  /*needs_sort=*/false);
++		}
+ 
+-	if (!evsel->stats)
+-		evlist__alloc_stats(&stat_config, script->session->evlist, /*alloc_raw=*/false);
+-	if (evsel_script(leader)->gnum++ == 0)
+-		perf_stat__reset_shadow_stats();
+-	val = sample->period * evsel->scale;
+-	evsel_script(evsel)->val = val;
+-	if (evsel_script(leader)->gnum == leader->core.nr_members) {
+-		for_each_group_member (ev2, leader) {
+-			perf_stat__print_shadow_stats(&stat_config, ev2,
+-						      evsel_script(ev2)->val,
+-						      sample->cpu,
+-						      &ctx);
++		metricgroup__for_each_metric(pmu_metrics_table__find(), script_find_metrics, &args);
++		init_metrics = true;
++	}
 +
-+			if (!metricgroup__has_metric_or_groups(pmu, default_metricgroup_names[i=
-]))
-+				continue;
++	if (!evsel->stats) {
++		if (evlist__alloc_stats(&stat_config, evsel->evlist, /*alloc_raw=*/true) < 0)
++			return;
++	}
++	if (!evsel->stats->aggr) {
++		if (evlist__alloc_aggr_stats(evsel->evlist, stat_config.aggr_map->nr) < 0)
++			return;
++	}
 +
-+			if ((int)i > detailed_run)
-+				break;
-=20
-+			metric_evlist =3D evlist__new();
- 			if (!metric_evlist) {
- 				ret =3D -ENOMEM;
--				goto out;
-+				break;
- 			}
--			if (metricgroup__parse_groups(metric_evlist, pmu, "Default",
-+			if (metricgroup__parse_groups(metric_evlist, pmu, default_metricgroup_n=
-ames[i],
- 							/*metric_no_group=3D*/false,
- 							/*metric_no_merge=3D*/false,
- 							/*metric_no_threshold=3D*/true,
- 							stat_config.user_requested_cpu_list,
- 							stat_config.system_wide,
- 							stat_config.hardware_aware_grouping) < 0) {
-+				evlist__delete(metric_evlist);
- 				ret =3D -1;
--				goto out;
-+				break;
- 			}
-=20
- 			evlist__for_each_entry(metric_evlist, evsel)
-@@ -2034,62 +2024,6 @@ static int add_default_events(void)
- 			evlist__delete(metric_evlist);
++	/* Update the evsel's count using the sample's data. */
++	cpu_map_idx = perf_cpu_map__idx(evsel->core.cpus, (struct perf_cpu){sample->cpu});
++	thread_map_idx = perf_thread_map__idx(evsel->core.threads, sample->tid);
++	if (thread_map_idx < 0) {
++		/* Missing thread, check for any thread. */
++		if (perf_thread_map__pid(evsel->core.threads, /*idx=*/0) == -1) {
++			thread_map_idx = 0;
++		} else {
++			pr_info("Missing thread map entry for thread %d\n", sample->tid);
++			return;
++		}
++	}
++	count = perf_counts(evsel->counts, cpu_map_idx, thread_map_idx);
++	old_count = perf_counts(evsel->prev_raw_counts, cpu_map_idx, thread_map_idx);
++	count->val = old_count->val + sample->period;
++	count->run = old_count->run + 1;
++	count->ena = old_count->ena + 1;
++
++	/* Update the aggregated stats. */
++	perf_stat_process_counter(&stat_config, evsel);
++
++	/* Display all metrics. */
++	evlist__for_each_entry(evsel->evlist, pos) {
++		cpu_aggr_map__for_each_idx(aggr_idx, stat_config.aggr_map) {
++			perf_stat__print_shadow_stats(&stat_config, pos,
++						count->val,
++						aggr_idx,
++						&ctx);
  		}
+-		evsel_script(leader)->gnum = 0;
  	}
--
--	/* Detailed events get appended to the event list: */
--
--	if (!ret && detailed_run >=3D  1) {
--		/*
--		 * Detailed stats (-d), covering the L1 and last level data
--		 * caches:
--		 */
--		const char *hw_events[] =3D {
--			"L1-dcache-loads",
--			"L1-dcache-load-misses",
--			"LLC-loads",
--			"LLC-load-misses",
--		};
--
--		for (size_t i =3D 0; i < ARRAY_SIZE(hw_events); i++) {
--			ret =3D parse_hardware_event(evlist, hw_events[i], &err);
--			if (ret)
--				goto out;
--		}
--	}
--	if (!ret && detailed_run >=3D  2) {
--		/*
--		 * Very detailed stats (-d -d), covering the instruction cache
--		 * and the TLB caches:
--		 */
--		const char *hw_events[] =3D {
--			"L1-icache-loads",
--			"L1-icache-load-misses",
--			"dTLB-loads",
--			"dTLB-load-misses",
--			"iTLB-loads",
--			"iTLB-load-misses",
--		};
--
--		for (size_t i =3D 0; i < ARRAY_SIZE(hw_events); i++) {
--			ret =3D parse_hardware_event(evlist, hw_events[i], &err);
--			if (ret)
--				goto out;
--		}
--	}
--	if (!ret && detailed_run >=3D  3) {
--		/*
--		 * Very, very detailed stats (-d -d -d), adding prefetch events:
--		 */
--		const char *hw_events[] =3D {
--			"L1-dcache-prefetches",
--			"L1-dcache-prefetch-misses",
--		};
--
--		for (size_t i =3D 0; i < ARRAY_SIZE(hw_events); i++) {
--			ret =3D parse_hardware_event(evlist, hw_events[i], &err);
--			if (ret)
--				goto out;
--		}
--	}
- out:
- 	if (!ret) {
- 		evlist__for_each_entry(evlist, evsel) {
-diff --git a/tools/perf/pmu-events/arch/common/common/metrics.json b/tools/=
-perf/pmu-events/arch/common/common/metrics.json
-index 017bbdede3d7..89d1d9f61014 100644
---- a/tools/perf/pmu-events/arch/common/common/metrics.json
-+++ b/tools/perf/pmu-events/arch/common/common/metrics.json
-@@ -93,5 +93,59 @@
-         "MetricThreshold": "branch_miss_rate > 0.05",
-         "ScaleUnit": "100%",
-         "DefaultShowEvents": "1"
-+    },
-+    {
-+        "BriefDescription": "L1D  miss rate",
-+        "MetricExpr": "L1\\-dcache\\-load\\-misses / L1\\-dcache\\-loads",
-+        "MetricGroup": "Default2",
-+        "MetricName": "l1d_miss_rate",
-+        "MetricThreshold": "l1d_miss_rate > 0.05",
-+        "ScaleUnit": "100%",
-+        "DefaultShowEvents": "1"
-+    },
-+    {
-+        "BriefDescription": "LLC miss rate",
-+        "MetricExpr": "LLC\\-load\\-misses / LLC\\-loads",
-+        "MetricGroup": "Default2",
-+        "MetricName": "llc_miss_rate",
-+        "MetricThreshold": "llc_miss_rate > 0.05",
-+        "ScaleUnit": "100%",
-+        "DefaultShowEvents": "1"
-+    },
-+    {
-+        "BriefDescription": "L1I miss rate",
-+        "MetricExpr": "L1\\-icache\\-load\\-misses / L1\\-icache\\-loads",
-+        "MetricGroup": "Default3",
-+        "MetricName": "l1i_miss_rate",
-+        "MetricThreshold": "l1i_miss_rate > 0.05",
-+        "ScaleUnit": "100%",
-+        "DefaultShowEvents": "1"
-+    },
-+    {
-+        "BriefDescription": "dTLB miss rate",
-+        "MetricExpr": "dTLB\\-load\\-misses / dTLB\\-loads",
-+        "MetricGroup": "Default3",
-+        "MetricName": "dtlb_miss_rate",
-+        "MetricThreshold": "dtlb_miss_rate > 0.05",
-+        "ScaleUnit": "100%",
-+        "DefaultShowEvents": "1"
-+    },
-+    {
-+        "BriefDescription": "iTLB miss rate",
-+        "MetricExpr": "iTLB\\-load\\-misses / iTLB\\-loads",
-+        "MetricGroup": "Default3",
-+        "MetricName": "itlb_miss_rate",
-+        "MetricThreshold": "itlb_miss_rate > 0.05",
-+        "ScaleUnit": "100%",
-+        "DefaultShowEvents": "1"
-+    },
-+    {
-+        "BriefDescription": "L1 prefetch miss rate",
-+        "MetricExpr": "L1\\-dcache\\-prefetch\\-misses / L1\\-dcache\\-pre=
-fetches",
-+        "MetricGroup": "Default4",
-+        "MetricName": "l1_prefetch_miss_rate",
-+        "MetricThreshold": "l1_prefetch_miss_rate > 0.05",
-+        "ScaleUnit": "100%",
-+        "DefaultShowEvents": "1"
-     }
- ]
-diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-even=
-ts/empty-pmu-events.c
-index 71464b1d8afe..e882c645fbbe 100644
---- a/tools/perf/pmu-events/empty-pmu-events.c
-+++ b/tools/perf/pmu-events/empty-pmu-events.c
-@@ -1314,21 +1314,27 @@ static const char *const big_c_string =3D
- /* offset=3D129185 */ "cycles_frequency\000Default\000cpu\\-cycles / (soft=
-ware@cpu\\-clock\\,name\\=3Dcpu\\-clock@ if #target_cpu else software@task\=
-\-clock\\,name\\=3Dtask\\-clock@)\000\000Cycles per CPU second\000\0001GHz\=
-000\000\000\000011"
- /* offset=3D129361 */ "branch_frequency\000Default\000branches / (software=
-@cpu\\-clock\\,name\\=3Dcpu\\-clock@ if #target_cpu else software@task\\-cl=
-ock\\,name\\=3Dtask\\-clock@)\000\000Branches per CPU second\000\0001000K/s=
-ec\000\000\000\000011"
- /* offset=3D129541 */ "branch_miss_rate\000Default\000branch\\-misses / br=
-anches\000branch_miss_rate > 0.05\000Branch miss rate\000\000100%\000\000\0=
-00\000001"
--/* offset=3D129645 */ "CPI\000\0001 / IPC\000\000\000\000\000\000\000\0000=
-00"
--/* offset=3D129668 */ "IPC\000group1\000inst_retired.any / cpu_clk_unhalte=
-d.thread\000\000\000\000\000\000\000\000000"
--/* offset=3D129732 */ "Frontend_Bound_SMT\000\000idq_uops_not_delivered.co=
-re / (4 * (cpu_clk_unhalted.thread / 2 * (1 + cpu_clk_unhalted.one_thread_a=
-ctive / cpu_clk_unhalted.ref_xclk)))\000\000\000\000\000\000\000\000000"
--/* offset=3D129899 */ "dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_=
-retired.any\000\000\000\000\000\000\000\000000"
--/* offset=3D129964 */ "icache_miss_cycles\000\000l1i\\-loads\\-misses / in=
-st_retired.any\000\000\000\000\000\000\000\000000"
--/* offset=3D130032 */ "cache_miss_cycles\000group1\000dcache_miss_cpi + ic=
-ache_miss_cycles\000\000\000\000\000\000\000\000000"
--/* offset=3D130104 */ "DCache_L2_All_Hits\000\000l2_rqsts.demand_data_rd_h=
-it + l2_rqsts.pf_hit + l2_rqsts.rfo_hit\000\000\000\000\000\000\000\000000"
--/* offset=3D130199 */ "DCache_L2_All_Miss\000\000max(l2_rqsts.all_demand_d=
-ata_rd - l2_rqsts.demand_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_=
-miss\000\000\000\000\000\000\000\000000"
--/* offset=3D130334 */ "DCache_L2_All\000\000DCache_L2_All_Hits + DCache_L2=
-_All_Miss\000\000\000\000\000\000\000\000000"
--/* offset=3D130399 */ "DCache_L2_Hits\000\000d_ratio(DCache_L2_All_Hits, D=
-Cache_L2_All)\000\000\000\000\000\000\000\000000"
--/* offset=3D130468 */ "DCache_L2_Misses\000\000d_ratio(DCache_L2_All_Miss,=
- DCache_L2_All)\000\000\000\000\000\000\000\000000"
--/* offset=3D130539 */ "M1\000\000ipc + M2\000\000\000\000\000\000\000\0000=
-00"
--/* offset=3D130562 */ "M2\000\000ipc + M1\000\000\000\000\000\000\000\0000=
-00"
--/* offset=3D130585 */ "M3\000\0001 / M3\000\000\000\000\000\000\000\000000=
-"
--/* offset=3D130606 */ "L1D_Cache_Fill_BW\000\00064 * l1d.replacement / 1e9=
- / duration_time\000\000\000\000\000\000\000\000000"
-+/* offset=3D129645 */ "l1d_miss_rate\000Default2\000L1\\-dcache\\-load\\-m=
-isses / L1\\-dcache\\-loads\000l1d_miss_rate > 0.05\000L1D  miss rate\000\0=
-00100%\000\000\000\000001"
-+/* offset=3D129761 */ "llc_miss_rate\000Default2\000LLC\\-load\\-misses / =
-LLC\\-loads\000llc_miss_rate > 0.05\000LLC miss rate\000\000100%\000\000\00=
-0\000001"
-+/* offset=3D129862 */ "l1i_miss_rate\000Default3\000L1\\-icache\\-load\\-m=
-isses / L1\\-icache\\-loads\000l1i_miss_rate > 0.05\000L1I miss rate\000\00=
-0100%\000\000\000\000001"
-+/* offset=3D129977 */ "dtlb_miss_rate\000Default3\000dTLB\\-load\\-misses =
-/ dTLB\\-loads\000dtlb_miss_rate > 0.05\000dTLB miss rate\000\000100%\000\0=
-00\000\000001"
-+/* offset=3D130083 */ "itlb_miss_rate\000Default3\000iTLB\\-load\\-misses =
-/ iTLB\\-loads\000itlb_miss_rate > 0.05\000iTLB miss rate\000\000100%\000\0=
-00\000\000001"
-+/* offset=3D130189 */ "l1_prefetch_miss_rate\000Default4\000L1\\-dcache\\-=
-prefetch\\-misses / L1\\-dcache\\-prefetches\000l1_prefetch_miss_rate > 0.0=
-5\000L1 prefetch miss rate\000\000100%\000\000\000\000001"
-+/* offset=3D130337 */ "CPI\000\0001 / IPC\000\000\000\000\000\000\000\0000=
-00"
-+/* offset=3D130360 */ "IPC\000group1\000inst_retired.any / cpu_clk_unhalte=
-d.thread\000\000\000\000\000\000\000\000000"
-+/* offset=3D130424 */ "Frontend_Bound_SMT\000\000idq_uops_not_delivered.co=
-re / (4 * (cpu_clk_unhalted.thread / 2 * (1 + cpu_clk_unhalted.one_thread_a=
-ctive / cpu_clk_unhalted.ref_xclk)))\000\000\000\000\000\000\000\000000"
-+/* offset=3D130591 */ "dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_=
-retired.any\000\000\000\000\000\000\000\000000"
-+/* offset=3D130656 */ "icache_miss_cycles\000\000l1i\\-loads\\-misses / in=
-st_retired.any\000\000\000\000\000\000\000\000000"
-+/* offset=3D130724 */ "cache_miss_cycles\000group1\000dcache_miss_cpi + ic=
-ache_miss_cycles\000\000\000\000\000\000\000\000000"
-+/* offset=3D130796 */ "DCache_L2_All_Hits\000\000l2_rqsts.demand_data_rd_h=
-it + l2_rqsts.pf_hit + l2_rqsts.rfo_hit\000\000\000\000\000\000\000\000000"
-+/* offset=3D130891 */ "DCache_L2_All_Miss\000\000max(l2_rqsts.all_demand_d=
-ata_rd - l2_rqsts.demand_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_=
-miss\000\000\000\000\000\000\000\000000"
-+/* offset=3D131026 */ "DCache_L2_All\000\000DCache_L2_All_Hits + DCache_L2=
-_All_Miss\000\000\000\000\000\000\000\000000"
-+/* offset=3D131091 */ "DCache_L2_Hits\000\000d_ratio(DCache_L2_All_Hits, D=
-Cache_L2_All)\000\000\000\000\000\000\000\000000"
-+/* offset=3D131160 */ "DCache_L2_Misses\000\000d_ratio(DCache_L2_All_Miss,=
- DCache_L2_All)\000\000\000\000\000\000\000\000000"
-+/* offset=3D131231 */ "M1\000\000ipc + M2\000\000\000\000\000\000\000\0000=
-00"
-+/* offset=3D131254 */ "M2\000\000ipc + M1\000\000\000\000\000\000\000\0000=
-00"
-+/* offset=3D131277 */ "M3\000\0001 / M3\000\000\000\000\000\000\000\000000=
-"
-+/* offset=3D131298 */ "L1D_Cache_Fill_BW\000\00064 * l1d.replacement / 1e9=
- / duration_time\000\000\000\000\000\000\000\000000"
- ;
-=20
- static const struct compact_pmu_event pmu_events__common_default_core[] =
-=3D {
-@@ -2621,8 +2627,14 @@ static const struct compact_pmu_event pmu_metrics__c=
-ommon_default_core[] =3D {
- { 129541 }, /* branch_miss_rate\000Default\000branch\\-misses / branches\0=
-00branch_miss_rate > 0.05\000Branch miss rate\000\000100%\000\000\000\00000=
-1 */
- { 127928 }, /* cs_per_second\000Default\000software@context\\-switches\\,n=
-ame\\=3Dcontext\\-switches@ * 1e9 / (software@cpu\\-clock\\,name\\=3Dcpu\\-=
-clock@ if #target_cpu else software@task\\-clock\\,name\\=3Dtask\\-clock@)\=
-000\000Context switches per CPU second\000\0001cs/sec\000\000\000\000011 */
- { 129185 }, /* cycles_frequency\000Default\000cpu\\-cycles / (software@cpu=
-\\-clock\\,name\\=3Dcpu\\-clock@ if #target_cpu else software@task\\-clock\=
-\,name\\=3Dtask\\-clock@)\000\000Cycles per CPU second\000\0001GHz\000\000\=
-000\000011 */
-+{ 129977 }, /* dtlb_miss_rate\000Default3\000dTLB\\-load\\-misses / dTLB\\=
--loads\000dtlb_miss_rate > 0.05\000dTLB miss rate\000\000100%\000\000\000\0=
-00001 */
- { 128929 }, /* frontend_cycles_idle\000Default\000stalled\\-cycles\\-front=
-end / cpu\\-cycles\000frontend_cycles_idle > 0.1\000Frontend stalls per cyc=
-le\000\000\000\000\000\000001 */
- { 128652 }, /* insn_per_cycle\000Default\000instructions / cpu\\-cycles\00=
-0insn_per_cycle < 1\000Instructions Per Cycle\000\0001instructions\000\000\=
-000\000001 */
-+{ 130083 }, /* itlb_miss_rate\000Default3\000iTLB\\-load\\-misses / iTLB\\=
--loads\000itlb_miss_rate > 0.05\000iTLB miss rate\000\000100%\000\000\000\0=
-00001 */
-+{ 130189 }, /* l1_prefetch_miss_rate\000Default4\000L1\\-dcache\\-prefetch=
-\\-misses / L1\\-dcache\\-prefetches\000l1_prefetch_miss_rate > 0.05\000L1 =
-prefetch miss rate\000\000100%\000\000\000\000001 */
-+{ 129645 }, /* l1d_miss_rate\000Default2\000L1\\-dcache\\-load\\-misses / =
-L1\\-dcache\\-loads\000l1d_miss_rate > 0.05\000L1D  miss rate\000\000100%\0=
-00\000\000\000001 */
-+{ 129862 }, /* l1i_miss_rate\000Default3\000L1\\-icache\\-load\\-misses / =
-L1\\-icache\\-loads\000l1i_miss_rate > 0.05\000L1I miss rate\000\000100%\00=
-0\000\000\000001 */
-+{ 129761 }, /* llc_miss_rate\000Default2\000LLC\\-load\\-misses / LLC\\-lo=
-ads\000llc_miss_rate > 0.05\000LLC miss rate\000\000100%\000\000\000\000001=
- */
- { 128161 }, /* migrations_per_second\000Default\000software@cpu\\-migratio=
-ns\\,name\\=3Dcpu\\-migrations@ * 1e9 / (software@cpu\\-clock\\,name\\=3Dcp=
-u\\-clock@ if #target_cpu else software@task\\-clock\\,name\\=3Dtask\\-cloc=
-k@)\000\000Process migrations to a new CPU per CPU second\000\0001migration=
-s/sec\000\000\000\000011 */
- { 128421 }, /* page_faults_per_second\000Default\000software@page\\-faults=
-\\,name\\=3Dpage\\-faults@ * 1e9 / (software@cpu\\-clock\\,name\\=3Dcpu\\-c=
-lock@ if #target_cpu else software@task\\-clock\\,name\\=3Dtask\\-clock@)\0=
-00\000Page faults per CPU second\000\0001faults/sec\000\000\000\000011 */
- { 128765 }, /* stalled_cycles_per_instruction\000Default\000max(stalled\\-=
-cycles\\-frontend, stalled\\-cycles\\-backend) / instructions\000\000Max fr=
-ont or backend stalls per instruction\000\000\000\000\000\000001 */
-@@ -2698,21 +2710,21 @@ static const struct pmu_table_entry pmu_events__tes=
-t_soc_cpu[] =3D {
- };
-=20
- static const struct compact_pmu_event pmu_metrics__test_soc_cpu_default_co=
-re[] =3D {
--{ 129645 }, /* CPI\000\0001 / IPC\000\000\000\000\000\000\000\000000 */
--{ 130334 }, /* DCache_L2_All\000\000DCache_L2_All_Hits + DCache_L2_All_Mis=
-s\000\000\000\000\000\000\000\000000 */
--{ 130104 }, /* DCache_L2_All_Hits\000\000l2_rqsts.demand_data_rd_hit + l2_=
-rqsts.pf_hit + l2_rqsts.rfo_hit\000\000\000\000\000\000\000\000000 */
--{ 130199 }, /* DCache_L2_All_Miss\000\000max(l2_rqsts.all_demand_data_rd -=
- l2_rqsts.demand_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_miss\000=
-\000\000\000\000\000\000\000000 */
--{ 130399 }, /* DCache_L2_Hits\000\000d_ratio(DCache_L2_All_Hits, DCache_L2=
-_All)\000\000\000\000\000\000\000\000000 */
--{ 130468 }, /* DCache_L2_Misses\000\000d_ratio(DCache_L2_All_Miss, DCache_=
-L2_All)\000\000\000\000\000\000\000\000000 */
--{ 129732 }, /* Frontend_Bound_SMT\000\000idq_uops_not_delivered.core / (4 =
-* (cpu_clk_unhalted.thread / 2 * (1 + cpu_clk_unhalted.one_thread_active / =
-cpu_clk_unhalted.ref_xclk)))\000\000\000\000\000\000\000\000000 */
--{ 129668 }, /* IPC\000group1\000inst_retired.any / cpu_clk_unhalted.thread=
-\000\000\000\000\000\000\000\000000 */
--{ 130606 }, /* L1D_Cache_Fill_BW\000\00064 * l1d.replacement / 1e9 / durat=
-ion_time\000\000\000\000\000\000\000\000000 */
--{ 130539 }, /* M1\000\000ipc + M2\000\000\000\000\000\000\000\000000 */
--{ 130562 }, /* M2\000\000ipc + M1\000\000\000\000\000\000\000\000000 */
--{ 130585 }, /* M3\000\0001 / M3\000\000\000\000\000\000\000\000000 */
--{ 130032 }, /* cache_miss_cycles\000group1\000dcache_miss_cpi + icache_mis=
-s_cycles\000\000\000\000\000\000\000\000000 */
--{ 129899 }, /* dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_retired.=
-any\000\000\000\000\000\000\000\000000 */
--{ 129964 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retir=
-ed.any\000\000\000\000\000\000\000\000000 */
-+{ 130337 }, /* CPI\000\0001 / IPC\000\000\000\000\000\000\000\000000 */
-+{ 131026 }, /* DCache_L2_All\000\000DCache_L2_All_Hits + DCache_L2_All_Mis=
-s\000\000\000\000\000\000\000\000000 */
-+{ 130796 }, /* DCache_L2_All_Hits\000\000l2_rqsts.demand_data_rd_hit + l2_=
-rqsts.pf_hit + l2_rqsts.rfo_hit\000\000\000\000\000\000\000\000000 */
-+{ 130891 }, /* DCache_L2_All_Miss\000\000max(l2_rqsts.all_demand_data_rd -=
- l2_rqsts.demand_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_miss\000=
-\000\000\000\000\000\000\000000 */
-+{ 131091 }, /* DCache_L2_Hits\000\000d_ratio(DCache_L2_All_Hits, DCache_L2=
-_All)\000\000\000\000\000\000\000\000000 */
-+{ 131160 }, /* DCache_L2_Misses\000\000d_ratio(DCache_L2_All_Miss, DCache_=
-L2_All)\000\000\000\000\000\000\000\000000 */
-+{ 130424 }, /* Frontend_Bound_SMT\000\000idq_uops_not_delivered.core / (4 =
-* (cpu_clk_unhalted.thread / 2 * (1 + cpu_clk_unhalted.one_thread_active / =
-cpu_clk_unhalted.ref_xclk)))\000\000\000\000\000\000\000\000000 */
-+{ 130360 }, /* IPC\000group1\000inst_retired.any / cpu_clk_unhalted.thread=
-\000\000\000\000\000\000\000\000000 */
-+{ 131298 }, /* L1D_Cache_Fill_BW\000\00064 * l1d.replacement / 1e9 / durat=
-ion_time\000\000\000\000\000\000\000\000000 */
-+{ 131231 }, /* M1\000\000ipc + M2\000\000\000\000\000\000\000\000000 */
-+{ 131254 }, /* M2\000\000ipc + M1\000\000\000\000\000\000\000\000000 */
-+{ 131277 }, /* M3\000\0001 / M3\000\000\000\000\000\000\000\000000 */
-+{ 130724 }, /* cache_miss_cycles\000group1\000dcache_miss_cpi + icache_mis=
-s_cycles\000\000\000\000\000\000\000\000000 */
-+{ 130591 }, /* dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_retired.=
-any\000\000\000\000\000\000\000\000000 */
-+{ 130656 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retir=
-ed.any\000\000\000\000\000\000\000\000000 */
-=20
- };
-=20
---=20
+ }
+ 
+@@ -2348,7 +2543,7 @@ static void process_event(struct perf_script *script,
+ 	}
+ 
+ 	if (PRINT_FIELD(METRIC))
+-		perf_sample__fprint_metric(script, thread, evsel, sample, fp);
++		perf_sample__fprint_metric(thread, evsel, sample, fp);
+ 
+ 	if (verbose > 0)
+ 		fflush(fp);
+-- 
 2.51.2.1041.gc1ab5b90ca-goog
 
