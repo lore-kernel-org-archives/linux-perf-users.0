@@ -1,55 +1,55 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EAE2DE702
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Nov 2025 07:12:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C7C12E7BD3
+	for <linux-perf-users@vger.kernel.org>; Thu,  6 Nov 2025 07:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762413178; cv=none; b=Pr2sJ5llyfLg54Ow9lqlJmYDxz27JKG2BnOUaT7fb7a7sNanUVzhip7UoySPSOj0HN+34VmpJqgLi7TCbz6dpCOttktpnwpheLVtAbXvSZQG68BuguNPLt21QeLRyfdnBuzAohS2cKqbySDzTvrNdGYNRD2a58f1b0gcHWcmiTc=
+	t=1762413179; cv=none; b=chZv9sOulXz1UZQE2Bxa19z0P2R+ocGW2XH/hnUK9704j9oU0RS6ellni7ItlD4S9kkElEzVoYIw4anManOhrqBXiepTg9KXWwQfbk8wIeEwa4gN2wIJllaTt1ssnEtYaq1Eqnar0BsvpGjMGiEjznl5QVuV9F5I4P9CmYGhbB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762413178; c=relaxed/simple;
-	bh=PsrLYZ63S4/Yl5gUDazBRZIT23aCtdqQCezqcEzmpgg=;
+	s=arc-20240116; t=1762413179; c=relaxed/simple;
+	bh=Kqri/Alb+V+w7qzG+QBHkhKocG0ET4LkykOzlLyraoc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=oDOWqBLDJok1Nx3HD0ofl6X9nUC79KwgsoaTXoAiPtTfjOM3RTeclu+AGPq1P6Hc4pqr2934wVkNaUUAlkYjzEo2zL/1WUnB59ruYOr3+Ro1ir2Kk8ftFON1iInCc4quAreWlhgtz5+OYYyKUnDcQ9nkDE/bxXR7SYYkd8KKkMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E0R/icLo; arc=none smtp.client-ip=209.85.215.202
+	 To:Content-Type; b=awvEODDa9Gh9vcsoZUVhqImBrxi6MnFX4FHTKB6puCsKgIh9KmK3FKvXQhqjmU24fGJ6ThRF49DTAWMXfEXc6+u0766n9ixe7gbUnAKLrtanJlWdKCgbUb9X+rWOVlOxCjHLky2Gx+4QDgFm+56iUcSXzaRR/7wyLSG8piwW2B8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yt5EBKFL; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E0R/icLo"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b9a72a43e42so531190a12.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Nov 2025 23:12:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yt5EBKFL"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-294a938fa37so2999855ad.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Nov 2025 23:12:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762413175; x=1763017975; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1762413177; x=1763017977; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=xO1dG1dA38tu5LHgCObN6Aj03K5VCieIjvEPjfcsmMk=;
-        b=E0R/icLo3lPx8rGqKs9fHIP0uUTIBJ7PZ4x/5/gQn/gaEhs13+49OAmO1Dl/O3fJOe
-         QcJqR9SYepqR9DngbK4BgpSEVyLt4rfLlWyPkvUSfzuS+2WlKA1KpDLN9JWofMZjvdVu
-         Adl5mEjx7M4qRHWkY6BAmLcy8wZw9Lo8Ak/I6VwmkgMB0GnsNMovU46nyHC0xPcdVdIL
-         M9rf5dgEP31KJ+xZOgJfqWg0IVUg/iLtY4rGKMeFuesDuOIrXtRuQ0IQhLjc9L+uGDCL
-         J0R+SjJlk46c6Yvmo8CYMaLMr/H1EoexOeTHhZhM4Ys7OfYl13zrnajNsAX6YmbhAe6M
-         ZrHg==
+        bh=78IdArXu/o78rf9RBGlZEphptoytZiyY9nptrqq9n9I=;
+        b=Yt5EBKFLBOAOqqgLuo7UCQCYimDu07kWwX4Rxcu0HP0j8THiSUH1cpAQA2s9pCgyiw
+         UBBqQpZbHamQ+bhOwmIOlRdp+Y42dxsYltQ6q4XyJIzfjQaprBYvVhhjUA8w2MhOMqIY
+         Y08l+7JqHWiKEbg+K1fZfZqSfvwkLceAYZXP4WVzdNJ9QliCq9odxjBL7NuwyfG6bq6h
+         yhGNhvxGu0HIWaGadLnOnuMRWEVDDsjwelHoLale2ODBIuudvu0hkzHHykovuPS7zayb
+         cSLratj6bwf2DPtYOT173y7/itXWyQfLZi1FZ6tb795fgs+2rBy1R2C0NSMDMVNYqj29
+         YGNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762413175; x=1763017975;
+        d=1e100.net; s=20230601; t=1762413177; x=1763017977;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xO1dG1dA38tu5LHgCObN6Aj03K5VCieIjvEPjfcsmMk=;
-        b=fCWft57iJb2OJbYY1GjL92hq04D/xL9rKlfUFVvAGwbtWJw6CLwaEcS+E65Dvehvw1
-         aQBpEd0mLf0guHq1f80EL34hWywMaP2QpDm4u/cp8+hrRBrWtEZuYSilmh+15LGXU5s+
-         oPZszS31Fa8l7XTYXphXPk1XX2OrAMyhtPsJuguixz/DqRkIgX0Wcu+14cFJVaGPJkQC
-         P8Olub6lcZvBdmmDAipMHTY2rROsGdKCbafLJ++8cBqQ1mjBA4XE5SP7TJXWb7MpTbpw
-         8i3+mPlH+QDygX8CxgupOTh9Tm+V80l+X+gm+Mx7ymib7vepXrVuoeBNzt8UbePakxL3
-         5hUw==
-X-Forwarded-Encrypted: i=1; AJvYcCUNzbqc+IaA81nROQXw4wRx8XAdZQp5X/fopLLKSgt4TbGVzxdVEp6sBHOcNidTVnajgMNT80pAjlKcjU43K74z@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqYWIcka2+3irMWvixTG8LHxQR1wcNIrYUvQ/dB63dpKFqzzYx
-	pHiN6IgayL/xdX5MTWyGBYjc1ZAZM5dfnXgKcuXspZGk3xwcVD9mUDVc8uLo2UVpehWuKShobdI
-	5aeU5mTUQpA==
-X-Google-Smtp-Source: AGHT+IHfNtEmB2vzB5Qgk4FgJ6by0dipPevRra6zzBmqo37BLyLVuIe07shcJ43P7IrSPny8s42SfF6V60Pa
-X-Received: from dlad18.prod.google.com ([2002:a05:701b:2212:b0:119:9f33:34af])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:9989:b0:251:43f5:cad4
- with SMTP id adf61e73a8af0-34f84008799mr8440665637.10.1762413174906; Wed, 05
- Nov 2025 23:12:54 -0800 (PST)
-Date: Wed,  5 Nov 2025 23:12:36 -0800
+        bh=78IdArXu/o78rf9RBGlZEphptoytZiyY9nptrqq9n9I=;
+        b=iTp2/4fvIgsi0FejVW58hQ8snaZGs4qmIGfp00lqN63dJ873ckwZsEtAzMXTCnXQDa
+         BvFI+R5lnp4olf0pndxNUyrmUwgJ1BoA2MrNmo3pw9G4CPRnlecLgU390EM3xH9dl2DZ
+         is81MoCjz/vLKID7PHy7ab7A8HQI8/C6aC3ydtZRHKs2h0NOlBR1Xj1DDf5/thSyVRjc
+         xe+WsL79tNZoQI2Q892dW6jGaTQswY9dKulvvRX08hP6uCg5OifdntWGRlWqayp0Hibz
+         Mdrs2Js4zvfa+lgIKQ4YdBI5zs/o4hk/+GSabRjJLSaO8BEZc7/0Qvi4V8qhIgqmgrmd
+         f5Zg==
+X-Forwarded-Encrypted: i=1; AJvYcCXnDLdJ9aTXAf+mWkvDYHabBrH7QBIl3sCK2UTC7+A8/tsaj8UoRPtFcYl+Vh9wWQEYKRuT77zy+95Y+z1NCscM@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRsDgP6dTEh7ynciCMjQBq0JbIxZSZU+JADV7/R4Ak6+KN1Yyn
+	mSLVZqar00L4k+cXjN7k93mwKu7eYq0v3Uy4ENvoAehr+NcIgy89YCtSVM0GvhICdwSrgSd3ywb
+	izh7fN2qgUA==
+X-Google-Smtp-Source: AGHT+IHT3qB+8n6x1TMTaVVHCYrNGzGlIQq4aSpq/V8+riLbDRCRUniwFBQiQEuaxOEgRM16X/FJOKJuYGXA
+X-Received: from dlbuu5.prod.google.com ([2002:a05:7022:7e85:b0:119:49ca:6ba7])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:9303:b0:295:745a:8016
+ with SMTP id d9443c01a7336-2962ad079admr63903935ad.11.1762413177013; Wed, 05
+ Nov 2025 23:12:57 -0800 (PST)
+Date: Wed,  5 Nov 2025 23:12:37 -0800
 In-Reply-To: <20251106071241.141234-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251106071241.141234-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.2.1041.gc1ab5b90ca-goog
-Message-ID: <20251106071241.141234-6-irogers@google.com>
-Subject: [PATCH v3 5/9] perf stat: Reduce scope of ru_stats
+Message-ID: <20251106071241.141234-7-irogers@google.com>
+Subject: [PATCH v3 6/9] perf tool_pmu: More accurately set the cpus for tool events
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,128 +73,106 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The ru_stats are used to capture user and system time stats when a
-process exits. These are then applied to user and system time tool
-events if their reads fail due to the process terminating. Reduce the
-scope now the metric code no longer reads these values.
+The user and system time events can record on different CPUs, but for
+all other events a single CPU map of just CPU 0 makes sense. In
+parse-events detect a tool PMU and then pass the perf_event_attr so
+that the tool_pmu can return CPUs specific for the event. This avoids
+a CPU map of all online CPUs being used for events like
+duration_time. Avoiding this avoids the evlist CPUs containing CPUs
+for which duration_time just gives 0. Minimizing the evlist CPUs can
+remove unnecessary sched_setaffinity syscalls that delay metric
+calculations.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c     | 14 +++++++++++++-
- tools/perf/util/config.c      |  1 -
- tools/perf/util/stat-shadow.c |  2 --
- tools/perf/util/stat.h        | 16 ----------------
- 4 files changed, 13 insertions(+), 20 deletions(-)
+ tools/perf/util/parse-events.c |  9 +++++++--
+ tools/perf/util/tool_pmu.c     | 19 +++++++++++++++++++
+ tools/perf/util/tool_pmu.h     |  1 +
+ 3 files changed, 27 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index d89fa9468f89..3cd663b3b357 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -132,6 +132,7 @@ static bool			interval_count;
- static const char		*output_name;
- static int			output_fd;
- static char			*metrics;
-+static struct rusage_stats	ru_stats;
- 
- struct perf_stat {
- 	bool			 record;
-@@ -729,6 +730,17 @@ static int create_perf_stat_counter(struct evsel *evsel,
- 					      evsel->core.threads);
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 0c0dc20b1c13..7b2422ccb554 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -30,6 +30,7 @@
+ #include "util/event.h"
+ #include "util/bpf-filter.h"
+ #include "util/stat.h"
++#include "util/tool_pmu.h"
+ #include "util/util.h"
+ #include "tracepoint.h"
+ #include <api/fs/tracing_path.h>
+@@ -227,8 +228,12 @@ __add_event(struct list_head *list, int *idx,
+ 	if (pmu) {
+ 		is_pmu_core = pmu->is_core;
+ 		pmu_cpus = perf_cpu_map__get(pmu->cpus);
+-		if (perf_cpu_map__is_empty(pmu_cpus))
+-			pmu_cpus = cpu_map__online();
++		if (perf_cpu_map__is_empty(pmu_cpus)) {
++			if (perf_pmu__is_tool(pmu))
++				pmu_cpus = tool_pmu__cpus(attr);
++			else
++				pmu_cpus = cpu_map__online();
++		}
+ 	} else {
+ 		is_pmu_core = (attr->type == PERF_TYPE_HARDWARE ||
+ 			       attr->type == PERF_TYPE_HW_CACHE);
+diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
+index b895e88ff740..03864a8f5e91 100644
+--- a/tools/perf/util/tool_pmu.c
++++ b/tools/perf/util/tool_pmu.c
+@@ -2,6 +2,7 @@
+ #include "cgroup.h"
+ #include "counts.h"
+ #include "cputopo.h"
++#include "debug.h"
+ #include "evsel.h"
+ #include "pmu.h"
+ #include "print-events.h"
+@@ -12,6 +13,7 @@
+ #include <api/fs/fs.h>
+ #include <api/io.h>
+ #include <internal/threadmap.h>
++#include <perf/cpumap.h>
+ #include <perf/threadmap.h>
+ #include <fcntl.h>
+ #include <strings.h>
+@@ -106,6 +108,23 @@ const char *evsel__tool_pmu_event_name(const struct evsel *evsel)
+ 	return tool_pmu__event_to_str(evsel->core.attr.config);
  }
  
-+static void update_rusage_stats(const struct rusage *rusage)
++struct perf_cpu_map *tool_pmu__cpus(struct perf_event_attr *attr)
 +{
-+	const u64 us_to_ns = 1000;
-+	const u64 s_to_ns = 1000000000;
++	static struct perf_cpu_map *cpu0_map;
++	enum tool_pmu_event event = (enum tool_pmu_event)attr->config;
 +
-+	update_stats(&ru_stats.ru_utime_usec_stat,
-+		(rusage->ru_utime.tv_usec * us_to_ns + rusage->ru_utime.tv_sec * s_to_ns));
-+	update_stats(&ru_stats.ru_stime_usec_stat,
-+		(rusage->ru_stime.tv_usec * us_to_ns + rusage->ru_stime.tv_sec * s_to_ns));
++	if (event <= TOOL_PMU__EVENT_NONE || event >= TOOL_PMU__EVENT_MAX) {
++		pr_err("Invalid tool PMU event config %llx\n", attr->config);
++		return NULL;
++	}
++	if (event == TOOL_PMU__EVENT_USER_TIME || event == TOOL_PMU__EVENT_SYSTEM_TIME)
++		return cpu_map__online();
++
++	if (!cpu0_map)
++		cpu0_map = perf_cpu_map__new_int(0);
++	return perf_cpu_map__get(cpu0_map);
 +}
 +
- static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ static bool read_until_char(struct io *io, char e)
  {
- 	int interval = stat_config.interval;
-@@ -978,7 +990,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 		evlist__reset_aggr_stats(evsel_list);
- 	} else {
- 		update_stats(&walltime_nsecs_stats, t1 - t0);
--		update_rusage_stats(&ru_stats, &stat_config.ru_data);
-+		update_rusage_stats(&stat_config.ru_data);
- 	}
+ 	int c;
+diff --git a/tools/perf/util/tool_pmu.h b/tools/perf/util/tool_pmu.h
+index d642e7d73910..e95fcbd55384 100644
+--- a/tools/perf/util/tool_pmu.h
++++ b/tools/perf/util/tool_pmu.h
+@@ -39,6 +39,7 @@ bool tool_pmu__read_event(enum tool_pmu_event ev, struct evsel *evsel, u64 *resu
+ u64 tool_pmu__cpu_slots_per_cycle(void);
  
- 	/*
-diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-index 6f914620c6ff..cc0746f494f4 100644
---- a/tools/perf/util/config.c
-+++ b/tools/perf/util/config.c
-@@ -45,7 +45,6 @@ struct perf_stat_config stat_config = {
- 	.run_count		= 1,
- 	.metric_only_len	= METRIC_ONLY_LEN,
- 	.walltime_nsecs_stats	= &walltime_nsecs_stats,
--	.ru_stats		= &ru_stats,
- 	.big_num		= true,
- 	.ctl_fd			= -1,
- 	.ctl_fd_ack		= -1,
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 939ac3269a44..c59578886b4f 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -18,7 +18,6 @@
- #include "tool_pmu.h"
+ bool perf_pmu__is_tool(const struct perf_pmu *pmu);
++struct perf_cpu_map *tool_pmu__cpus(struct perf_event_attr *attr);
  
- struct stats walltime_nsecs_stats;
--struct rusage_stats ru_stats;
- 
- enum {
- 	CTX_BIT_USER	= 1 << 0,
-@@ -74,7 +73,6 @@ static int evsel_context(const struct evsel *evsel)
- void perf_stat__reset_shadow_stats(void)
- {
- 	memset(&walltime_nsecs_stats, 0, sizeof(walltime_nsecs_stats));
--	memset(&ru_stats, 0, sizeof(ru_stats));
- }
- 
- static enum stat_type evsel__stat_type(struct evsel *evsel)
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 34f30a295f89..5b8b4675883c 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -102,7 +102,6 @@ struct perf_stat_config {
- 	const char		*csv_sep;
- 	struct stats		*walltime_nsecs_stats;
- 	struct rusage		 ru_data;
--	struct rusage_stats		 *ru_stats;
- 	struct cpu_aggr_map	*aggr_map;
- 	aggr_get_id_t		 aggr_get_id;
- 	struct cpu_aggr_map	*cpus_aggr_map;
-@@ -132,25 +131,10 @@ static inline void init_stats(struct stats *stats)
- 	stats->max  = 0;
- }
- 
--static inline void init_rusage_stats(struct rusage_stats *ru_stats) {
--	init_stats(&ru_stats->ru_utime_usec_stat);
--	init_stats(&ru_stats->ru_stime_usec_stat);
--}
--
--static inline void update_rusage_stats(struct rusage_stats *ru_stats, struct rusage* rusage) {
--	const u64 us_to_ns = 1000;
--	const u64 s_to_ns = 1000000000;
--	update_stats(&ru_stats->ru_utime_usec_stat,
--	             (rusage->ru_utime.tv_usec * us_to_ns + rusage->ru_utime.tv_sec * s_to_ns));
--	update_stats(&ru_stats->ru_stime_usec_stat,
--	             (rusage->ru_stime.tv_usec * us_to_ns + rusage->ru_stime.tv_sec * s_to_ns));
--}
--
- struct evsel;
- struct evlist;
- 
- extern struct stats walltime_nsecs_stats;
--extern struct rusage_stats ru_stats;
- 
- enum metric_threshold_classify {
- 	METRIC_THRESHOLD_UNKNOWN,
+ bool evsel__is_tool(const struct evsel *evsel);
+ enum tool_pmu_event evsel__tool_event(const struct evsel *evsel);
 -- 
 2.51.2.1041.gc1ab5b90ca-goog
 
