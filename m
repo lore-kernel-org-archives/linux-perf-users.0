@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046912D7DEA;
-	Thu,  6 Nov 2025 05:29:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD2D1AA7BF;
+	Thu,  6 Nov 2025 05:50:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762406964; cv=none; b=s+ovVBCcNhJtFiPu+SMRuqoofHosuvPOtN3tHqLD36Pu6v56wo2kgTtpwfiDCdPHt+zLNfzuGq57sY3Y9eqhiZmYechVozEv1Y65ZHEWnl/skYJxS0XDE9sWJIcVCXLJly0xDcMbkMl10fYOcTEJna1fK/kZfIJWSMiyUfBF9Ls=
+	t=1762408221; cv=none; b=hywQJbPqaZp24sbORS3FFrIhkIR0nAumPLfPC57Y4/FbmHIFnXoA+YdvqVAVMmwOtn8+JnxyFFuJ72gpjOE4Bzkji4QdaM6kCtZgn/ukcFPJCfuh6TCT4gYISQTWGq6iaZbc8ocrE838JbVU4NhL38krYFr2nonu9FO1h+dKhao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762406964; c=relaxed/simple;
-	bh=SkogPYk4QLHERBeaT4qVGwEzmHQkhK1nc4xnVl1EdPk=;
+	s=arc-20240116; t=1762408221; c=relaxed/simple;
+	bh=gXgFm0nmB0YJ5yu1Fa9yesgn0tHuol5VteV6hWKXbtU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hVjAS+SGeBamu39Wgtn/V7vYegGihcXPoN68lbq9qfn38KpOW0JBiofCmgTR0W9gLh6k+PBR29IIbtUxpfIshS6vrzorZzsnMAEoNX5E5pYIRrZASkUjXnj+tMZSqDEKMdAjdAz407HdjTGELFPAdEtJTNPgibec/3z57+UNtYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bHegBrAd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mQG1GrHP1Y3MbGDqRVUxilkzcXx2Xfie2KFFsz9vYf9PbPp7DMAtXJX2NlW7FxMQw9OFiCRR/R+gXuQw+qQCDCcllIGgVZ3f4vW964wXxXd2ZPhYsgPsVK/rnAyRbobsr3RXCUtgjAJ0RQzRNwfxiRlqQOALz5j0sXUoAgL4Vbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V9QWCuL3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bHegBrAd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8E49C116C6;
-	Thu,  6 Nov 2025 05:29:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V9QWCuL3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A5A1C4CEF7;
+	Thu,  6 Nov 2025 05:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762406962;
-	bh=SkogPYk4QLHERBeaT4qVGwEzmHQkhK1nc4xnVl1EdPk=;
+	s=k20201202; t=1762408220;
+	bh=gXgFm0nmB0YJ5yu1Fa9yesgn0tHuol5VteV6hWKXbtU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bHegBrAdfErawxZXx4M7QRv7Aze//66m+TtohMSriyskyC1dnpbcNpYLrL4JGhz1x
-	 PLO8bf2s8xuQYBY+my7UlNpFRyvmdf5v7strNJTT6Io0g+4hCJRLnzHxs/DiS/rc41
-	 IIxFNfxITJA/zowoFNzWBJGzEChKy0HlT5CaG2Iq7Mnbc1ksudm0mw4BafRSUK8QcK
-	 xl8wIoP0u5hgU9XgzURyFcTbvgs3UYoqZt7S6iFpwqPZhtc3f17+RmUJt5zwstFPNV
-	 W6GRingAz1iPABVW4jw/un+nx787xlj4YyfUpxDA0GIRXxi+lhJNWHUJFltIKfyE06
-	 JlRGBpMCdinPA==
-Date: Wed, 5 Nov 2025 21:29:20 -0800
+	b=V9QWCuL3sJU5c1A7rBLayKmIjalVa9RTC7+SvjXo7j3b47f+rVt63Xi5ew6bw3WVf
+	 ezfkuqmOLqaPb1SXyxB+p0A/MlmV8rtGi2ozdErE3WlFJA0npklQCwWX7DnLPpjXXU
+	 rPqBNjGew61aVohh3JIq/OkzWKKypytCUS7ovqZeT8xlsih0FB5OOF27znyzltb8pt
+	 Y2EoVf3KCqo8u6ADK7guUbhGeR2LhbaI0GHkBzwubtCdgQntTwHOSgDnBqGhHJyqVJ
+	 dgMHElY4qCOh7218LSWOr+A/AAJumrtOCdyt0PBDybUiR7Mnw1WlpBX+OXMU7NV2Lu
+	 ABk5pQgZOvrhw==
+Date: Wed, 5 Nov 2025 21:50:18 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -34,22 +34,16 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Sumanth Korikkar <sumanthk@linux.ibm.com>,
-	Collin Funk <collin.funk1@gmail.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Levi Yun <yeoreum.yun@arm.com>,
-	Yang Li <yang.lee@linux.alibaba.com>, linux-kernel@vger.kernel.org,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 00/22] Switch the default perf stat metrics to json
-Message-ID: <aQwyMFRvk0gZg88v@google.com>
-References: <20251024175857.808401-1-irogers@google.com>
- <aQmFV7fqURMXQNHC@google.com>
- <CAP-5=fWv1JtKumMpX7Ck+K4ttXTKW-zDQZYen0MxzV1B7VizaQ@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] perf test: Add test that command line period
+ overrides sysfs/json values
+Message-ID: <aQw3GqjU4GRLfjIF@google.com>
+References: <20251029222638.816100-1-irogers@google.com>
+ <20251029222638.816100-2-irogers@google.com>
+ <aQl06yRnXvdBEkJ4@google.com>
+ <CAP-5=fWtixi8ykDp_BO1nz_yj_1wZfUUWrCVb+6WbVE7vON6Eg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,192 +53,80 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWv1JtKumMpX7Ck+K4ttXTKW-zDQZYen0MxzV1B7VizaQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fWtixi8ykDp_BO1nz_yj_1wZfUUWrCVb+6WbVE7vON6Eg@mail.gmail.com>
 
-On Mon, Nov 03, 2025 at 09:09:14PM -0800, Ian Rogers wrote:
-> On Mon, Nov 3, 2025 at 8:47 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On Mon, Nov 03, 2025 at 09:22:00PM -0800, Ian Rogers wrote:
+> On Mon, Nov 3, 2025 at 7:37 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > Hi Ian,
+> > On Wed, Oct 29, 2025 at 03:26:38PM -0700, Ian Rogers wrote:
+> > > The behavior of weak terms is subtle, add a test that they aren't
+> > > accidentally broken.
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/tests/shell/record_weak_term.sh | 25 ++++++++++++++++++++++
+> > >  1 file changed, 25 insertions(+)
+> > >  create mode 100755 tools/perf/tests/shell/record_weak_term.sh
+> > >
+> > > diff --git a/tools/perf/tests/shell/record_weak_term.sh b/tools/perf/tests/shell/record_weak_term.sh
+> > > new file mode 100755
+> > > index 000000000000..7b747b383796
+> > > --- /dev/null
+> > > +++ b/tools/perf/tests/shell/record_weak_term.sh
+> > > @@ -0,0 +1,25 @@
+> > > +#!/bin/bash
+> > > +# record weak terms
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +# Test that command line options override weak terms from sysfs or inbuilt json.
+> > > +set -e
+> > > +
+> > > +shelldir=$(dirname "$0")
+> > > +# shellcheck source=lib/setup_python.sh
+> > > +. "${shelldir}"/lib/setup_python.sh
+> > > +
+> > > +
+> > > +event=$(perf list --json | $PYTHON -c "import json,sys; next((print(e['EventName']) for e in json.load(sys.stdin) if e.get('Encoding') and 'period=' in e.get('Encoding')))")
 > >
-> > On Fri, Oct 24, 2025 at 10:58:35AM -0700, Ian Rogers wrote:
-> > > Prior to this series stat-shadow would produce hard coded metrics if
-> > > certain events appeared in the evlist. This series produces equivalent
-> > > json metrics and cleans up the consequences in tests and display
-> > > output. A before and after of the default display output on a
-> > > tigerlake is:
-> > >
-> > > Before:
-> > > ```
-> > > $ perf stat -a sleep 1
-> > >
-> > >  Performance counter stats for 'system wide':
-> > >
-> > >     16,041,816,418      cpu-clock                        #   15.995 CPUs utilized
-> > >              5,749      context-switches                 #  358.376 /sec
-> > >                121      cpu-migrations                   #    7.543 /sec
-> > >              1,806      page-faults                      #  112.581 /sec
-> > >        825,965,204      instructions                     #    0.70  insn per cycle
-> > >      1,180,799,101      cycles                           #    0.074 GHz
-> > >        168,945,109      branches                         #   10.532 M/sec
-> > >          4,629,567      branch-misses                    #    2.74% of all branches
-> > >  #     30.2 %  tma_backend_bound
-> > >                                                   #      7.8 %  tma_bad_speculation
-> > >                                                   #     47.1 %  tma_frontend_bound
-> > >  #     14.9 %  tma_retiring
-> > > ```
-> > >
-> > > After:
-> > > ```
-> > > $ perf stat -a sleep 1
-> > >
-> > >  Performance counter stats for 'system wide':
-> > >
-> > >              2,890      context-switches                 #    179.9 cs/sec  cs_per_second
-> > >     16,061,923,339      cpu-clock                        #     16.0 CPUs  CPUs_utilized
-> > >                 43      cpu-migrations                   #      2.7 migrations/sec  migrations_per_second
-> > >              5,645      page-faults                      #    351.5 faults/sec  page_faults_per_second
-> > >          5,708,413      branch-misses                    #      1.4 %  branch_miss_rate         (88.83%)
-> > >        429,978,120      branches                         #     26.8 K/sec  branch_frequency     (88.85%)
-> > >      1,626,915,897      cpu-cycles                       #      0.1 GHz  cycles_frequency       (88.84%)
-> > >      2,556,805,534      instructions                     #      1.5 instructions  insn_per_cycle  (88.86%)
-> > >                         TopdownL1                 #     20.1 %  tma_backend_bound
-> > >                                                   #     40.5 %  tma_bad_speculation      (88.90%)
-> > >                                                   #     17.2 %  tma_frontend_bound       (78.05%)
-> > >                                                   #     22.2 %  tma_retiring             (88.89%)
-> > >
-> > >        1.002994394 seconds time elapsed
-> > > ```
-> >
-> > While this looks nicer, I worry about the changes in the output.  And I'm
-> > curious why only the "After" output shows the multiplexing percent.
-> >
-> > >
-> > > Having the metrics in json brings greater uniformity, allows events to
-> > > be shared by metrics, and it also allows descriptions like:
-> > > ```
-> > > $ perf list cs_per_second
-> > > ...
-> > >   cs_per_second
-> > >        [Context switches per CPU second]
-> > > ```
-> > >
-> > > A thorn in the side of doing this work was that the hard coded metrics
-> > > were used by perf script with '-F metric'. This functionality didn't
-> > > work for me (I was testing `perf record -e instructions,cycles` and
-> > > then `perf script -F metric` but saw nothing but empty lines)
-> >
-> > The documentation says:
-> >
-> >         With the metric option perf script can compute metrics for
-> >         sampling periods, similar to perf stat. This requires
-> >         specifying a group with multiple events defining metrics with the :S option
-> >         for perf record. perf will sample on the first event, and
-> >         print computed metrics for all the events in the group. Please note
-> >         that the metric computed is averaged over the whole sampling
-> >         period (since the last sample), not just for the sample point.
-> >
-> > So I guess it should have 'S' modifiers in a group.
+> > This line is too long
 > 
-> Thanks Namhyung. Yes, this is the silly behavior where leader sample
-> events are both treated as an event but then the constituent parts
-> turned into individual events with the period set to the leader sample
-> read counts. Most recently this behavior was disabled by struct
-> perf_tool's dont_split_sample_group in the case of perf inject as it
-> causes events to be processed multiple times. The perf script behavior
-> doesn't rely anywhere on the grouping of the leader sample events and
-> even with it the metric format option doesn't work either - I'll save
-> pasting a screen full of blank lines here.
+> Is there a good way to split such a line?
 
-Right, it seems to be broken at some point.
+Wouldn't this work?
+
+  event=$(perf list --json | python -c '
+  import sys, json
+  for e in json.load(sys.stdin):
+    if e.get("Encoding") and "period=" in e.get("Encoding"):
+      print(e["EventName"])')
 
 > 
-> > > but anyway I decided to fix it to the best of my ability in this
-> > > series. So the script side counters were removed and the regular ones
-> > > associated with the evsel used. The json metrics were all searched
-> > > looking for ones that have a subset of events matching those in the
-> > > perf script session, and all metrics are printed. This is kind of
-> > > weird as the counters are being set by the period of samples, but I
-> > > carried the behavior forward. I suspect there needs to be follow up
-> > > work to make this better, but what is in the series is superior to
-> > > what is currently in the tree. Follow up work could include finding
-> > > metrics for the machine in the perf.data rather than using the host,
-> > > allowing multiple metrics even if the metric ids of the events differ,
-> > > fixing pre-existing `perf stat record/report` issues, etc.
-> > >
-> > > There is a lot of stat tests that, for example, assume '-e
-> > > instructions,cycles' will produce an IPC metric. These things needed
-> > > tidying as now the metric must be explicitly asked for and when doing
-> > > this ones using software events were preferred to increase
-> > > compatibility. As the test updates were numerous they are distinct to
-> > > the patches updating the functionality causing periods in the series
-> > > where not all tests are passing. If this is undesirable the test fixes
-> > > can be squashed into the functionality updates.
-> >
-> > Hmm.. how many of them?  I think it'd better to have the test changes at
-> > the same time so that we can assure test success count after the change.
-> > Can the test changes be squashed into one or two commits?
+> > and needs some explanation like what's like the original text and what it does.
 > 
-> So the patches are below. The first set are all clean up:
-> 
-> > > Ian Rogers (22):
-> > >   perf evsel: Remove unused metric_events variable
-> > >   perf metricgroup: Update comment on location of metric_event list
-> > >   perf metricgroup: Missed free on error path
-> > >   perf metricgroup: When copy metrics copy default information
-> > >   perf metricgroup: Add care to picking the evsel for displaying a
-> > >     metric
-> > >   perf jevents: Make all tables static
+> I thought that was covered in the "if" below:
 
-I've applied most of this part to perf-tools-next, will take a look at
-others later.
+Yeah, but I think it's useful to have an example JSON text.
 
 Thanks,
 Namhyung
 
 > 
-> Then there is the addition of the legacy metrics as json:
-> 
-> > >   perf expr: Add #target_cpu literal
-> > >   perf jevents: Add set of common metrics based on default ones
-> > >   perf jevents: Add metric DefaultShowEvents
-> > >   perf stat: Add detail -d,-dd,-ddd metrics
-> 
-> Then there is the change to make perf script metric format work:
-> 
-> > >   perf script: Change metric format to use json metrics
-> 
-> Then there is a clean up patch:
-> 
-> > >   perf stat: Remove hard coded shadow metrics
-> 
-> Then there are fixes to perf stat's already broken output:
-> 
-> > >   perf stat: Fix default metricgroup display on hybrid
-> > >   perf stat: Sort default events/metrics
-> > >   perf stat: Remove "unit" workarounds for metric-only
-> 
-> Then there are 7 patches updating test expectations. Each patch deals
-> with a separate test to make the resolution clear.
-> 
-> > >   perf test stat+json: Improve metric-only testing
-> > >   perf test stat: Ignore failures in Default[234] metricgroups
-> > >   perf test stat: Update std_output testing metric expectations
-> > >   perf test metrics: Update all metrics for possibly failing default
-> > >     metrics
-> > >   perf test stat: Update shadow test to use metrics
-> > >   perf test stat: Update test expectations and events
-> > >   perf test stat csv: Update test expectations and events
-> 
-> The patch "perf jevents: Add set of common metrics based on default
-> ones" most impacts the output but we don't want to verify the default
-> stat output with the hardcoded metrics that are removed in "perf stat:
-> Remove hard coded shadow metrics". Having a test for both hard coded
-> and json metrics in an intermediate state makes little sense and the
-> default output is impacting by the 3 patches fixing it and removing
-> workarounds.
-> 
-> It is possible to squash things together but I think something is lost
-> in doing so, hence presenting it this way.
+> > > +if [[ "$?" != "0" ]]
+> > > +then
+> > > +  echo "No sysfs/json events with inbuilt period."
+> > > +  exit 2
+> > > +fi
 > 
 > Thanks,
 > Ian
+> 
+> > > +
+> > > +if ! perf record -c 1000 -vv -e "$event" -o /dev/null true 2>&1 | \
+> > > +  grep -q -F '{ sample_period, sample_freq }   1000'
+> > > +then
+> > > +  echo "Unexpected verbose output and sample period"
+> > > +  exit 1
+> > > +fi
+> > > +exit 0
+> > > --
+> > > 2.51.1.851.g4ebd6896fd-goog
+> > >
