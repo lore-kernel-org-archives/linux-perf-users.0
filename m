@@ -1,230 +1,140 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F752DCF71
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Nov 2025 07:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0311F4613
+	for <linux-perf-users@vger.kernel.org>; Thu,  6 Nov 2025 07:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762412936; cv=none; b=tbLLZE8QTtu5nZBQd1pUGWC2x+zkVyJUhkfkq4XBQAvsP6MA7v6+p2mrCKgYtaAcCBooLjnX9C8lQw7+KXElKbh0eL9+F1rKP89TEcqxEdIDNN/alstkz6bjUZHM4fexJqQeQztmJm0hmTqrPJQ8IAa3CGLLTJp9iMY2DM77uyk=
+	t=1762413168; cv=none; b=siw36ad4kXrBw20dzJNQkuQnbbbfDfpVG691uHVquekDpRpX6MwpswS+8SOOPxMMxwmQzFLPRqxTlYOqt0es+oGUdJ12RSg7/8as3zXXy0pPWB/WaJCnamOXfSFO7N9uRrGZUbYAehW9z1nKLxNCJZZVfqLbbFm7nZ0VYjBvtRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762412936; c=relaxed/simple;
-	bh=THnv0UndJyTiTZ2QPj6Ut50kFrcZxBD+Mbx+jjj7+cg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VRdkjMqswukRNbx8S+YfFLC8v8pB/QzgsmG6Yqw4P8jpmkPzqyW375z2NDcYG94Tku+8hl8uIG4zaY2LF9+N+c+K+VzA4PQzwP4TzhxP/BkTgwb822K2OdsnK/tl5cLY5oWOhJSRgurKhC5MCEZOtb1sHIgDWiaFNNaz1QXeVyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FsN9Klp6; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1762413168; c=relaxed/simple;
+	bh=8+UjpKx3squMeS7nyaGruzQoVuSi87GO0yVUBKl3Qyo=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=nniwIrLFuiodPSYncHbRaekLbBos0jmUWAXK+D2Vy/XzLQ56zkbuXzmVDRcEtNKwWVGI9QIa0eJhTo4PhBySvaxdtnxc6PfGB0gW98ozfliWzWwVqzatXZ2ebuZfndxzFdveZ0Q9BWb3D9cu4nOOnDcX2KpU3/IlNy9vZPq7as0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SfvhulN8; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FsN9Klp6"
-Message-ID: <2b031b85-83e6-4604-a25c-c54b32cd47ef@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1762412921;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C4oRvXe2P97p8dPKwu5cDRTYF9I4Pt6azU+UF2IDKoQ=;
-	b=FsN9Klp6gD3jit+EK0n+4bcTUPTpTMSyPziVqlDfcFSJw6e+VOxw45oRAqJ4Xt7C83B5mu
-	+2sLHT3gydagKW+c5o8Jvv1EbicAzZSW8XVjpF8AdR12nKkBxxLzoXkDCzHc+w2/Umv2w/
-	F99ejOkKvkipoXBAQJrrOs8Yhs2xI1k=
-Date: Thu, 6 Nov 2025 15:08:30 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SfvhulN8"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-ba265ee0e34so585987a12.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Nov 2025 23:12:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1762413166; x=1763017966; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=v4AmNcR9EOtX+2dOeKak8qyt5fZmS72AO2PYyA6g9WI=;
+        b=SfvhulN8H7Vh0/S420WL5mPYvJIMgvCalOhwBzn6q+tJnr9w7d8TxBgCnd1pkyX+2g
+         fmIHt9VkUMtBHkCZNgYpp90ijcC4tyz/jqFcQawsV/dMRfZMy2um60dpjBQwm9uVNufp
+         2tB4BUaHRGm817tIFJ9eyQdHFqKv7206h/ybU24m18mvL3ec11BoAEwIGIlN2srrVV1M
+         E4lxYbZh33WZVsxkEAWnd/nCdjpmRcbutPTcQrgeUUjYcq10z5kDUGc/CBLaXUkRM3dJ
+         I/m4UngaaccTNCaagXVCwsQtx6DBYL7SNKTz3i8MHHGG8qJ4j7gcasidbeettU6JRLUQ
+         931g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762413166; x=1763017966;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=v4AmNcR9EOtX+2dOeKak8qyt5fZmS72AO2PYyA6g9WI=;
+        b=FHJrVQCjZDqc01v95LfAy0pHFtgyXGwmRfFyFePEPy/yzt1mAbqqUg+Am/e14hKqn6
+         FQ2loUp+tQE3WXKPpSV6Ytc6/Y6xhltw70MWs95rKPX4faModcIIoui/3cFaE+kawA7C
+         ND5xyPNHdtr8ectaStlk+k7pvFCzHsANHSXb7eHEaTeuGxhy5KD01lJyS5phtmXpcmEN
+         amIHDJUK1Egf2btpmL2BTNRxGO1ZByq8Edtxqq93AyY0IXJw5WGQ7EIfxFKEHr43RrRy
+         G3cp6fQAQYlzS93pPlCdoik1OyHjiYTR0YL+7jivKKeOWWnKclfsSJnfuviHJQwFA3+n
+         /t+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX2n7AUTPhnTEqDJBa1r+BzgjCI1c75bjEaXe1RRWLRQr6BvthlRNxK5sHeKCOivwW/DTWMGFtY3lPwfs6yw2HY@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEtBP6cCX7HUqhQLYv+p5VBsdG1rqNYNrpIGR1bGmxalWjb49F
+	TdM2m2armOroewQY6a9mr+DcmvIE0eVXJzwZEhc+TJ6eYSuhZs+J/JYUjxLMDiJvfvOg/6cZUi/
+	8ZSFL/vJueA==
+X-Google-Smtp-Source: AGHT+IHAS3m5ak0ZRegf6QrMyqscQrZnjpyohHkKP5bd2DSeRdq8p6CNdzksY6FKjWbFLaKHEVFP+yk8y4mc
+X-Received: from dlbqj7.prod.google.com ([2002:a05:7022:ec07:b0:119:49ca:6b88])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3d11:b0:246:d43a:3856
+ with SMTP id adf61e73a8af0-34f83d0f86fmr7785627637.22.1762413165966; Wed, 05
+ Nov 2025 23:12:45 -0800 (PST)
+Date: Wed,  5 Nov 2025 23:12:31 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v4 2/2] bpf: Hold the perf callchain entry until
- used completely
-To: Yonghong Song <yonghong.song@linux.dev>, peterz@infradead.org,
- mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- song@kernel.org, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, john.fastabend@gmail.com,
- kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-References: <20251028162502.3418817-1-chen.dylane@linux.dev>
- <20251028162502.3418817-3-chen.dylane@linux.dev>
- <c352f357-1417-47b5-9d8c-28d99f20f5a6@linux.dev>
- <363717bf-499a-4e47-b2c9-8a6e4105282c@linux.dev>
- <04002253-1edf-4957-a43e-bd6dcc465dcd@linux.dev>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <04002253-1edf-4957-a43e-bd6dcc465dcd@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.51.2.1041.gc1ab5b90ca-goog
+Message-ID: <20251106071241.141234-1-irogers@google.com>
+Subject: [PATCH v3 0/9] perf stat fixes and improvements
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Yang Li <yang.lee@linux.alibaba.com>, 
+	James Clark <james.clark@linaro.org>, Thomas Falcon <thomas.falcon@intel.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-在 2025/11/6 14:20, Yonghong Song 写道:
-> 
-> 
-> On 11/5/25 9:12 PM, Tao Chen wrote:
->> 在 2025/11/6 06:16, Yonghong Song 写道:
->>>
->>>
->>> On 10/28/25 9:25 AM, Tao Chen wrote:
->>>> As Alexei noted, get_perf_callchain() return values may be reused
->>>> if a task is preempted after the BPF program enters migrate disable
->>>> mode. The perf_callchain_entres has a small stack of entries, and
->>>> we can reuse it as follows:
->>>>
->>>> 1. get the perf callchain entry
->>>> 2. BPF use...
->>>> 3. put the perf callchain entry
->>>>
->>>> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
->>>> ---
->>>>   kernel/bpf/stackmap.c | 61 +++++++++++++++++++++++++++++++++ 
->>>> +---------
->>>>   1 file changed, 48 insertions(+), 13 deletions(-)
->>>>
->>>> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
->>>> index e28b35c7e0b..70d38249083 100644
->>>> --- a/kernel/bpf/stackmap.c
->>>> +++ b/kernel/bpf/stackmap.c
->>>> @@ -188,13 +188,12 @@ static void 
->>>> stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
->>>>   }
->>>>   static struct perf_callchain_entry *
->>>> -get_callchain_entry_for_task(struct task_struct *task, u32 max_depth)
->>>> +get_callchain_entry_for_task(int *rctx, struct task_struct *task, 
->>>> u32 max_depth)
->>>>   {
->>>>   #ifdef CONFIG_STACKTRACE
->>>>       struct perf_callchain_entry *entry;
->>>> -    int rctx;
->>>> -    entry = get_callchain_entry(&rctx);
->>>> +    entry = get_callchain_entry(rctx);
->>>>       if (!entry)
->>>>           return NULL;
->>>> @@ -216,8 +215,6 @@ get_callchain_entry_for_task(struct task_struct 
->>>> *task, u32 max_depth)
->>>>               to[i] = (u64)(from[i]);
->>>>       }
->>>> -    put_callchain_entry(rctx);
->>>> -
->>>>       return entry;
->>>>   #else /* CONFIG_STACKTRACE */
->>>>       return NULL;
->>>> @@ -297,6 +294,31 @@ static long __bpf_get_stackid(struct bpf_map *map,
->>>>       return id;
->>>>   }
->>>> +static struct perf_callchain_entry *
->>>> +bpf_get_perf_callchain(int *rctx, struct pt_regs *regs, bool 
->>>> kernel, bool user,
->>>> +               int max_stack, bool crosstask)
->>>> +{
->>>> +    struct perf_callchain_entry_ctx ctx;
->>>> +    struct perf_callchain_entry *entry;
->>>> +
->>>> +    entry = get_callchain_entry(rctx);
->>>
->>> I think this may not work. Let us say we have two bpf programs
->>> both pinned to a particular cpu (migrate disabled but preempt enabled).
->>> get_callchain_entry() calls get_recursion_context() to get the
->>> buffer for a particulart level.
->>>
->>> static inline int get_recursion_context(u8 *recursion)
->>> {
->>>          unsigned char rctx = interrupt_context_level();
->>>          if (recursion[rctx])
->>>                  return -1;
->>>          recursion[rctx]++;
->>>          barrier();
->>>          return rctx;
->>> }
->>>
->>> It is possible that both tasks (at process level) may
->>> reach right before "recursion[rctx]++;".
->>> In such cases, both tasks will be able to get
->>> buffer and this is not right.
->>>
->>> To fix this, we either need to have preempt disable
->>> in bpf side, or maybe we have some kind of atomic
->>> operation (cmpxchg or similar things), or maybe
->>> has a preempt disable between if statement and recursion[rctx]++,
->>> so only one task can get buffer?
->>>
->>
->> Thanks to your reminder, can we add preempt disable before and after 
->> get_callchain_entry, avoid affecting the original functions of perf.
-> 
-> Yes, we get two get_callchain_entry() call site:
->    bpf/stackmap.c: entry = get_callchain_entry(&rctx);
->    events/callchain.c:     entry = get_callchain_entry(&rctx);
-> We need to have preempt_disable()/preempt_enable() around them.
-> 
-> Another choice maybe adds preempt_disable/enable() for
-> get_callchain_entry() and get_perf_callchain() in stackmap.c,
-> assuming these two function usage in other places are for
-> interrupts (softirq, hardirq and nmi) so they are okay.
-> 
-> But maybe the following is better?
-> 
-> diff --git a/kernel/events/internal.h b/kernel/events/internal.h
-> index d9cc57083091..0ccf94315954 100644
-> --- a/kernel/events/internal.h
-> +++ b/kernel/events/internal.h
-> @@ -214,12 +214,9 @@ static inline int get_recursion_context(u8 *recursion)
->   {
->          unsigned char rctx = interrupt_context_level();
-> 
-> -       if (recursion[rctx])
-> +       if (cmpxchg(&recursion[rctx], 0, 1) != 0)
->                  return -1;
-> 
-> -       recursion[rctx]++;
-> -       barrier();
-> -
->          return rctx;
->   }
-> 
+A collection of fixes aiming to stabilize and make more reasonable
+measurements/metrics such as memory bandwidth.
 
-Agree, this seems to have fewer side effects, thanks.
+Tool events are changed from getting a PMU cpu map of all online CPUs
+to either CPU 0 or all online CPUs. This avoids iterating over useless
+CPUs for events in particular `duration_time`. Fix a bug where
+duration_time didn't correct use the previous raw counts and would
+skip values in interval mode.
 
->>
->> Regarding multiple task preemption: if the entry is not released via 
->> put_callchain_entry, it appears that perf's buffer does not support 
->> recording the second task, so it returns directly here.
->>
->>           if (recursion[rctx])
->>                   return -1;
->>
->>>
->>>> +    if (unlikely(!entry))
->>>> +        return NULL;
->>>> +
->>>> +    __init_perf_callchain_ctx(&ctx, entry, max_stack, false);
->>>> +    if (kernel)
->>>> +        __get_perf_callchain_kernel(&ctx, regs);
->>>> +    if (user && !crosstask)
->>>> +        __get_perf_callchain_user(&ctx, regs);
->>>> +
->>>> +    return entry;
->>>> +}
->>>> +
->>>> +static void bpf_put_callchain_entry(int rctx)
->>>
->>> we have bpf_get_perf_callchain(), maybe rename the above
->>> to bpf_put_perf_callchain()?
->>>
->>
->> Ack, thanks.
->>
->>>> +{
->>>> +    put_callchain_entry(rctx);
->>>> +}
->>>> +
->>>
->>> [...]
->>>
->>
->>
-> 
+Change how json metrics handle tool events. Use the counter value
+rather than using shared state with perf stat. A later patch changes
+it so that tool events are read last, so that if reading say memory
+bandwidth counters you don't divide by an earlier read time and exceed
+the theoretical maximum memory bandwidth.
 
+Do some clean up around the shared state in stat-shadow that's no
+longer used. It can be fully removed when the legacy json metrics
+patch series lands:
+https://lore.kernel.org/lkml/20251024175857.808401-1-irogers@google.com/
+
+Change how affinities work with evlist__for_each_cpu. Move the
+affinity code into the iterator to simplify setting it up. Detect when
+affinities will and won't be profitable, for example a tool event and
+a regular perf event (or read group) may face less delay from a single
+IPI for the event read than from a call to sched_setaffinity. Add a
+ --no-affinity flag to perf stat to allow affinities to be disabled.
+
+v3: Add affinity clean ups and read tool events last.
+
+v2: Fixed an aggregation index issue:
+https://lore.kernel.org/lkml/20251104234148.3103176-2-irogers@google.com/
+
+v1:
+https://lore.kernel.org/lkml/20251104053449.1208800-1-irogers@google.com/
+
+Ian Rogers (9):
+  libperf cpumap: Reduce allocations and sorting in intersect
+  perf pmu: perf_cpu_map__new_int to avoid parsing a string
+  perf tool_pmu: Use old_count when computing count values for time
+    events
+  perf stat-shadow: Read tool events directly
+  perf stat: Reduce scope of ru_stats
+  perf tool_pmu: More accurately set the cpus for tool events
+  perf evlist: Reduce affinity use and move into iterator, fix no
+    affinity
+  perf stat: Read tool events last
+  perf stat: Add no-affinity flag
+
+ tools/lib/perf/cpumap.c                |  29 ++--
+ tools/perf/Documentation/perf-stat.txt |   4 +
+ tools/perf/builtin-stat.c              | 189 +++++++++++++++----------
+ tools/perf/util/config.c               |   1 -
+ tools/perf/util/drm_pmu.c              |   2 +-
+ tools/perf/util/evlist.c               | 156 ++++++++++++--------
+ tools/perf/util/evlist.h               |  27 +++-
+ tools/perf/util/hwmon_pmu.c            |   2 +-
+ tools/perf/util/parse-events.c         |   9 +-
+ tools/perf/util/pmu.c                  |  12 ++
+ tools/perf/util/pmu.h                  |   1 +
+ tools/perf/util/stat-shadow.c          | 149 +++++++++----------
+ tools/perf/util/stat.h                 |  16 ---
+ tools/perf/util/tool_pmu.c             |  78 ++++++----
+ tools/perf/util/tool_pmu.h             |   1 +
+ 15 files changed, 395 insertions(+), 281 deletions(-)
 
 -- 
-Best Regards
-Tao Chen
+2.51.2.1041.gc1ab5b90ca-goog
+
