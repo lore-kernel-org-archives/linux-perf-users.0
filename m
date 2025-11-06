@@ -1,128 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 853A721FF2E;
-	Thu,  6 Nov 2025 07:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3962E03E3
+	for <linux-perf-users@vger.kernel.org>; Thu,  6 Nov 2025 07:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762414115; cv=none; b=nF42nqej2ZISvrMu7L4Z//sbX6g5wW2fXiJDYfgXOAIAGSz5lDSky+vfcSMBXkamB5E+GlokKYl3i4kPbzFvHzYDxmY8zDQGZraBrZMLn9GEytGKEKKPnkKcRJv3DBOZqP9jNU6eVUXGVIxR2wFjTl3nqUj6wcWTG9YpuWrwJso=
+	t=1762415493; cv=none; b=AHPJ/wy3XjyaLulPz5U6mm9UJ5IyKPK2H8Czs6lESjmDXAe/IAfablhntfJcwDLcgp+uVVKwGP3Hek2dLd3D+Ne88T/VyoxWUKcdN5DkjFPdgvPcEgQ15uv/Cnv03Px7DQB4A7gjJ4Z/uvGL21mPAjohUnZc07eBJMTnLB0bksk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762414115; c=relaxed/simple;
-	bh=5GFgLQayQxL+0EO09s0cLKYJvaSzj5FZ7EbeMU2N5MQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mZ7HxNP8KL/7nKb8KuIiuwvTsVwBawTpAP9PYiaGZjVwFo8uNaWIIIg4PIGrat6GCnk7caKwg/pP9uKk7XXMqifNBxQhLqjcHaHVKl2B8EkfiKkUk6cAT2Yo4jgiUDPv3BF7EG7QrlVy438RWSQawJC80Ikxl9s8WnwrqUHyPVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k2CHkhgo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762415493; c=relaxed/simple;
+	bh=K65aaEqq/YB61r4p7ihT0ItAeEpKgQgbAjU3OugTSoM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=EFd9UsRoO29ecsAxp46sptJ25jb61fcNXjZA/aXmU/weJE6cQ4rt2DNKpbrubznJGXNtsWH0VA+MVc3Hs6z4f7++0YcIUAmrtPS7GdhWxWYVkJAEh6HzM6glyvBo+NLufMfCzH75xPEmGCl/cmah+C/e7734Pja3MKG28qG3zME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f8VJ+nfa; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k2CHkhgo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7BDAC4CEF7;
-	Thu,  6 Nov 2025 07:28:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762414115;
-	bh=5GFgLQayQxL+0EO09s0cLKYJvaSzj5FZ7EbeMU2N5MQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=k2CHkhgopIagvwdl2Jl3EgYMzCOWTC9ISqFGfMKgY2aexPhkz0ozDZ+4f+7eFL8Ic
-	 xdGbCc42zCobldqNX5u+FdJtZ/d7F4Zo/ecV8OdBGpwsY7haFMD04X4gf1WYmK8jDN
-	 0AptJVgE5uuZicjDtRk+9oMYv7jBZgq1kELiZEEtkuH2Z3scf6k28U5M+zyaOKtUb2
-	 kql2asTemixsFzKHDG6n3oNvQKS5J2wYz1XNLnUiNDJ2wp0VVySuOXoy5HwJQFgKrU
-	 nJjno3/Qu+7LUfqeQM9Cz5ghwgDZjVaxwnEIPs9Q4XdNSpOgDAvBV70iXTyCB0Khek
-	 upj0cTdgY6ong==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf stat: Align metric output without events
-Date: Wed,  5 Nov 2025 23:28:34 -0800
-Message-ID: <20251106072834.1750880-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.51.2.1026.g39e6a42477-goog
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f8VJ+nfa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1762415490;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=p/narQH7oBzjR+CHzap2CS6luEPNI9uaK+xgrYacn+w=;
+	b=f8VJ+nfaVlZo6E6oiajGdSYmRwVZts0co/zxkRoICNDQcEI5deoCMTxw2FinT0yQ/V9Wxb
+	i3pq7tdIc8N1TWa2YFlI2jk8JXeyGxETj/hJztQqFVIIvS3+vSlzWZnuVdho7Zhh7zAdPS
+	G3yVlIrq1dY/b8mrfZXnuWjujgvgBHI=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-53-ecT11MeyOWeocyapa6M-Fg-1; Thu,
+ 06 Nov 2025 02:51:27 -0500
+X-MC-Unique: ecT11MeyOWeocyapa6M-Fg-1
+X-Mimecast-MFC-AGG-ID: ecT11MeyOWeocyapa6M-Fg_1762415486
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4019F180047F;
+	Thu,  6 Nov 2025 07:51:26 +0000 (UTC)
+Received: from fweimer-oldenburg.csb.redhat.com (unknown [10.45.224.98])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8C20C18002B6;
+	Thu,  6 Nov 2025 07:51:24 +0000 (UTC)
+From: Florian Weimer <fweimer@redhat.com>
+To: Indu Bhagat <indu.bhagat@oracle.com>
+Cc: Fangrui Song <maskray@sourceware.org>,
+  linux-toolchains@vger.kernel.org,  linux-perf-users@vger.kernel.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: Concerns about SFrame viability for userspace stack walking
+In-Reply-To: <9c11b765-66df-46f3-b4ea-a0c7f52dac35@oracle.com> (Indu Bhagat's
+	message of "Wed, 5 Nov 2025 16:44:24 -0800")
+References: <3xd4fqvwflefvsjjoagytoi3y3sf7lxqjremhe2zo5tounihe4@3ftafgryadsr>
+	<2d713719-709d-4b46-8234-2dfe948b836a@oracle.com>
+	<CAN30aBGEpwA+ZROXufqBL6MHM70oWTtNpGSioCMhxT8yS2t-Pg@mail.gmail.com>
+	<9c11b765-66df-46f3-b4ea-a0c7f52dac35@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Date: Thu, 06 Nov 2025 08:51:22 +0100
+Message-ID: <lhuikfniop1.fsf@oldenburg.str.redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-One of my concern in the perf stat output was the alignment in the
-metrics and shadow stats.  I think it missed to calculate the basic
-output length using COUNTS_LEN and EVNAME_LEN but missed to add the
-unit length like "msec" and surround 2 spaces.  I'm not sure why it's
-not printed below though.
+* Indu Bhagat:
 
-But anyway, now it shows correctly aligned metric output.
+> PLT stubs may use stack (push to stack). As per the document "A null
+> frame (MODE = 8) is the simplest possible frame, with no allocated
+> stack of either kind (hence no saved registers)".  So null frame can
+> be used for PLT only if the functions invoking the PLT stub were using
+> an RBP-based frame.  Isnt it ?
 
-  $ perf stat true
+I think I said this before, but I don't think new toolchain features
+need to support lazy binding.  Without lazy bindings, the PLT stubs do
+not change the stack pointer or frame pointer and just make a tail call.
 
-   Performance counter stats for 'true':
+Do you see a need for continued support of lazy binding?
 
-             859,772      task-clock                       #    0.395 CPUs utilized
-                   0      context-switches                 #    0.000 /sec
-                   0      cpu-migrations                   #    0.000 /sec
-                  56      page-faults                      #   65.134 K/sec
-           1,075,022      instructions                     #    0.86  insn per cycle
-           1,255,911      cycles                           #    1.461 GHz
-             220,573      branches                         #  256.548 M/sec
-               7,381      branch-misses                    #    3.35% of all branches
-                          TopdownL1                        #     19.2 %  tma_retiring
-                                                           #     28.6 %  tma_backend_bound
-                                                           #      9.5 %  tma_bad_speculation
-                                                           #     42.6 %  tma_frontend_bound
-
-         0.002174871 seconds time elapsed                  ^
-                                                           |
-         0.002154000 seconds user                          |
-         0.000000000 seconds sys                          here
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/stat-display.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index a67b991f4e810336..8fbfec5c0ef7b147 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -439,9 +439,9 @@ static inline void __new_line_std_csv(struct perf_stat_config *config,
- 	aggr_printout(config, os, os->evsel, os->id, os->aggr_nr);
- }
- 
--static inline void __new_line_std(struct outstate *os)
-+static inline void __new_line_std(struct perf_stat_config *config, struct outstate *os)
- {
--	fprintf(os->fh, "                                                 ");
-+	fprintf(os->fh, "%*s", COUNTS_LEN + EVNAME_LEN + config->unit_width + 2, "");
- }
- 
- static void do_new_line_std(struct perf_stat_config *config,
-@@ -450,7 +450,7 @@ static void do_new_line_std(struct perf_stat_config *config,
- 	__new_line_std_csv(config, os);
- 	if (config->aggr_mode == AGGR_NONE)
- 		fprintf(os->fh, "        ");
--	__new_line_std(os);
-+	__new_line_std(config, os);
- }
- 
- static void print_metric_std(struct perf_stat_config *config,
-@@ -583,13 +583,13 @@ static void print_metricgroup_header_std(struct perf_stat_config *config,
- 	int n;
- 
- 	if (!metricgroup_name) {
--		__new_line_std(os);
-+		__new_line_std(config, os);
- 		return;
- 	}
- 
- 	n = fprintf(config->output, " %*s", EVNAME_LEN, metricgroup_name);
- 
--	fprintf(config->output, "%*s", MGROUP_LEN - n - 1, "");
-+	fprintf(config->output, "%*s", MGROUP_LEN + config->unit_width + 2 - n, "");
- }
- 
- /* Filter out some columns that don't work well in metrics only mode */
--- 
-2.51.2.1026.g39e6a42477-goog
+Thanks,
+Florian
 
