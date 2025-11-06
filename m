@@ -1,56 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC0D533C50D;
-	Thu,  6 Nov 2025 19:08:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C606302742;
+	Thu,  6 Nov 2025 19:19:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762456132; cv=none; b=c0YS5EDlFl1HpxnpcnEUrMfn8qhunK1rJkN7e/gRr6AzBvz2TyGuA+LcX7YQsHff5YEyMJMAMpmqua62f3nirIEPr8gEk2xZtMRDb7XQyCS857EG6/l9kVghNRAPT8HInnKZPXG1Z/r+mLcCcJzbQo4i2K0G1u+YlBIkH91Ddyw=
+	t=1762456747; cv=none; b=LWuq09NOK+0n+Rt7gK/K8c9tW/yqGHhIdOq9NFUioMreTZbAoh63CsuxQZbeK5//jtlXb5enZap6g6mELoIUQpnGcgnOHWl0Vh3IiedpPr0GUHXdIGNzqRwivdWxcBReIV3J1hbL6Pn1ChQHYdgpFxHlZUUvq6AV4u3iQvHIH7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762456132; c=relaxed/simple;
-	bh=T9zay+12a0voS7iC6ls/mch2JLcJxMY0qU+AWDdJF/M=;
+	s=arc-20240116; t=1762456747; c=relaxed/simple;
+	bh=BGS5XBZ9SofT+k6xatjSITkWE9+3RxIFgRP/+ftjogw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YFtKDboBFVkNh/3dyycH7iREf3Lqkm30BLqSg5fnwkW1ANniRtkgNgoNGZONJyvkdVzEEJPPDf4TpqT6wf/iq3xoezKNMuPglLbqKYT8sq6w4YbSWbUiN7VTeGK+ePRNN3D7SSb7Ihopq/ItBvnNZYxlEbkXHSevDHvbQoevKhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GnZeZyr8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DJ4zuyMFgSmNMXfocpOTN1QRpLNrIwEnW7Um/XjsWdjv7wU95LKOxXhaQiWJWRqF7XHARPHZJUUvuj/H5BvCKwlOGBR21+weS/1z9dNUZlmU2KfSzhQjbGr8qt5PT7cQJ72MO4eMEW7vGJAt08vZcdoByst3ZL4Z4WAWuItKGWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bpM19gS1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GnZeZyr8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD6ADC113D0;
-	Thu,  6 Nov 2025 19:08:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bpM19gS1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41FC7C16AAE;
+	Thu,  6 Nov 2025 19:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762456130;
-	bh=T9zay+12a0voS7iC6ls/mch2JLcJxMY0qU+AWDdJF/M=;
+	s=k20201202; t=1762456746;
+	bh=BGS5XBZ9SofT+k6xatjSITkWE9+3RxIFgRP/+ftjogw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GnZeZyr8lVHtgMwRQG6RU3DlsYh22jGct8VfVTZU82iKlGyofCTWuHrJfDkvkKLaU
-	 P6o3c1vYPD0TttpI6ef+uGXZQma/KY07Q1KIsN6tKy2lMvMD7LmNd1jSBm2+FxnyGe
-	 l7hdJWtIizZnX1OZkHW/0dZewZXl8AMcjwFxU+VeDjZoJgYUY+hEOFsLVG/gc7NW8d
-	 sDfuEc8Qt9PFRbAxQFvQAmrSxKTgHsb7s2BZi144Ey2G+p8hBMPsCZs80AWWG5I4Zr
-	 aMr/9UDRNn0Tuom+uGx+5Kpwtd+W3/JvDZWFQKbz+ovofLQoI1kSJ2qB+6bqarwqZc
-	 h3x7N++z7qkEA==
-Date: Thu, 6 Nov 2025 11:08:45 -0800
+	b=bpM19gS1g9ba5YHcamOlwfX6wpNqd5AYXZv28AFNE+ZW0di/yCj8mdKabrv6iE3k8
+	 Az5P9rgdf/ESjkZg6rePSiJ3nMingL1XCS7O+2t6kecnSUShvzvTwZ5Ci1xlxpl72x
+	 W5QkS504XaNNhaZ+T1exnb43BTKwiDpRt48VTXn7aaXPo7gHoSUKTMaeFDliZn4RMG
+	 25OVwRCub5968MQZ0mB9/PJkGT/4+ZvgIlmitq2f31ulLQqjmEMrj3qzj4tYcDQvbq
+	 JYsjuP6lwMthOEvFdw26SqeZC2fH6GDcWzJGXr1Y0+mIBYC6hzPGHti0TZ46QJwfQa
+	 GvVWopbcerrRA==
+Date: Thu, 6 Nov 2025 11:19:03 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Gabriel Marin <gmx@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
+Cc: Guilherme Amadio <amadio@gentoo.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Athira Rajeev <atrajeev@linux.ibm.com>,
-	Gautam Menghani <gautam@linux.ibm.com>, tanze <tanze@kylinos.cn>,
-	Andi Kleen <ak@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Zhongqiu Han <quic_zhonhan@quicinc.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Blake Jones <blakejones@google.com>,
-	Anubhav Shelat <ashelat@redhat.com>, Leo Yan <leo.yan@arm.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] perf tool: Add a delegate_tool that just
- delegates actions to another tool
-Message-ID: <aQzyPf1_vln3WoSL@google.com>
-References: <20251105001103.1296863-1-irogers@google.com>
- <20251105001103.1296863-2-irogers@google.com>
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: Crash when running perf top with perf-6.17.7
+Message-ID: <aQz0pwBSEHfkMBZX@google.com>
+References: <aQt66zhfxSA80xwt@gentoo.org>
+ <CAP-5=fX-Z6cKX30TRNYQLnYHzDSaY-yw56BZwk8db0_R3_mcNQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,227 +44,112 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20251105001103.1296863-2-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fX-Z6cKX30TRNYQLnYHzDSaY-yw56BZwk8db0_R3_mcNQ@mail.gmail.com>
 
-On Tue, Nov 04, 2025 at 04:11:03PM -0800, Ian Rogers wrote:
-> Add an ability to be able to compose perf_tools, by having one perform
-> an action and then calling a delegate. Currently the perf_tools have
-> if-then-elses setting the callback and then if-then-elses within the
-> callback. Understanding the behavior is complex as it is in two places
-> and logic for numerous operations, within things like perf inject, is
-> interwoven. By chaining perf_tools together based on command line
-> options this kind of code can be avoided.
+On Wed, Nov 05, 2025 at 09:07:23AM -0800, Ian Rogers wrote:
+> On Wed, Nov 5, 2025 at 8:36 AM Guilherme Amadio <amadio@gentoo.org> wrote:
+> >
+> > Hi Arnaldo,
+> >
+> > After updating to perf-6.17.7, perf top crashes for me (seems to happen
+> > since perf-6.17, but doesn't happen with perf-6.16):
+> >
+> > gentoo perf $ perf top
+> > perf: Segmentation fault
+> > -------- backtrace --------
+> > perf: Segmentation fault
+> > -------- backtrace --------
+> > Segmentation fault         (core dumped) perf top
+> >
+> > The stack trace from the crash is below. If this is not enough information,
+> > please let me know what additional information you'd like to have.
+> 
+> This is a BUILD_NONDISTRO=1 build that is default off and
+> non-distributable as libbfd is incompatible with perf's GPLv2 license.
+> I think the perf libbfd code should just be deleted so we can focus
+> energy on distributable code.
+> 
+> Most recently the libbfd code was factored into its own file:
+> https://lore.kernel.org/lkml/20250929190805.201446-5-irogers@google.com/
+> we still don't have the dlopen support:
+> https://lore.kernel.org/lkml/20251007163835.3152881-1-irogers@google.com/
+> even though shipping with libLLVM/capstone linked (ie not dlopen)
+> isn't possible in distributions like SuSE:
+> https://lore.kernel.org/linux-perf-users/aPkivW2WoySU1Zkc@suse.de/
+> For addr2line the fallback options are fairly clear (LLVM first, then
+> libbfd then the forked command):
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/srcline.c?h=perf-tools-next#n117
+> there should probably be a similar clean up for read build id. That
+> said, the symbol-minimal.c code:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/symbol-minimal.c?h=perf-tools-next#n33
+> has no library or forked tool dependencies, so perhaps we can just use
+> this for all our build ID needs.
+> 
+> I'll see if there's a cleanup for read build id similar to the
+> addr2line cleanup that can be done and try to fix the libbfd
+> implementation in the process. However, as I said at the top, this
+> would be less work if we just delete the code. Do people really care
+> if a build ID, line number of objdump was provided to them by libbfd?
+> I suspect I've introduced this regression by making build ID mmaps the
+> default, anyway...
 
-Can you please explain what the actual usecase is?  Do you plan to use
-it for perf inject?
+Looks like a problem in libbfd.  Why does it crash when reading
+build-ID?  A thread-safety problem?
 
 Thanks,
 Namhyung
 
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/tool.c | 171 +++++++++++++++++++++++++++++++++++++++++
->  tools/perf/util/tool.h |   9 +++
->  2 files changed, 180 insertions(+)
-> 
-> diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
-> index c983b526b30d..22a8a4ffe05f 100644
-> --- a/tools/perf/util/tool.c
-> +++ b/tools/perf/util/tool.c
-> @@ -321,3 +321,174 @@ bool perf_tool__compressed_is_stub(const struct perf_tool *tool)
->  {
->  	return tool->compressed == perf_session__process_compressed_event_stub;
->  }
-> +
-> +#define CREATE_DELEGATE_SAMPLE(name) \
-> +	static int delegate_ ## name(const struct perf_tool *tool, \
-> +				     union perf_event *event, \
-> +				     struct perf_sample *sample, \
-> +				     struct evsel *evsel, \
-> +				     struct machine *machine) \
-> +	{								\
-> +		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
-> +		struct perf_tool *delegate = del_tool->delegate;		\
-> +		return delegate->name(delegate, event, sample, evsel, machine);	\
-> +	}
-> +CREATE_DELEGATE_SAMPLE(read);
-> +CREATE_DELEGATE_SAMPLE(sample);
-> +
-> +#define CREATE_DELEGATE_ATTR(name)					\
-> +	static int delegate_ ## name(const struct perf_tool *tool,	\
-> +				union perf_event *event,		\
-> +				struct evlist **pevlist)		\
-> +	{								\
-> +		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
-> +		struct perf_tool *delegate = del_tool->delegate;		\
-> +		return delegate->name(delegate, event, pevlist);	\
-> +	}
-> +CREATE_DELEGATE_ATTR(attr);
-> +CREATE_DELEGATE_ATTR(event_update);
-> +
-> +#define CREATE_DELEGATE_OE(name)				   \
-> +	static int delegate_ ## name(const struct perf_tool *tool, \
-> +				     union perf_event *event,	   \
-> +				     struct ordered_events *oe)	   \
-> +	{								\
-> +		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
-> +		struct perf_tool *delegate = del_tool->delegate;		\
-> +		return delegate->name(delegate, event, oe);	\
-> +	}
-> +CREATE_DELEGATE_OE(finished_round);
-> +
-> +#define CREATE_DELEGATE_OP(name)				   \
-> +	static int delegate_ ## name(const struct perf_tool *tool, \
-> +				     union perf_event *event, \
-> +				     struct perf_sample *sample, \
-> +				     struct machine *machine) \
-> +	{								\
-> +		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
-> +		struct perf_tool *delegate = del_tool->delegate;		\
-> +		return delegate->name(delegate, event, sample, machine); \
-> +	}
-> +CREATE_DELEGATE_OP(aux);
-> +CREATE_DELEGATE_OP(aux_output_hw_id);
-> +CREATE_DELEGATE_OP(bpf);
-> +CREATE_DELEGATE_OP(cgroup);
-> +CREATE_DELEGATE_OP(comm);
-> +CREATE_DELEGATE_OP(context_switch);
-> +CREATE_DELEGATE_OP(exit);
-> +CREATE_DELEGATE_OP(fork);
-> +CREATE_DELEGATE_OP(itrace_start);
-> +CREATE_DELEGATE_OP(ksymbol);
-> +CREATE_DELEGATE_OP(lost);
-> +CREATE_DELEGATE_OP(lost_samples);
-> +CREATE_DELEGATE_OP(mmap);
-> +CREATE_DELEGATE_OP(mmap2);
-> +CREATE_DELEGATE_OP(namespaces);
-> +CREATE_DELEGATE_OP(text_poke);
-> +CREATE_DELEGATE_OP(throttle);
-> +CREATE_DELEGATE_OP(unthrottle);
-> +
-> +#define CREATE_DELEGATE_OP2(name)					\
-> +	static int delegate_ ## name(const struct perf_tool *tool,	\
-> +				     struct perf_session *session,	\
-> +				     union perf_event *event)		\
-> +	{								\
-> +		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
-> +		struct perf_tool *delegate = del_tool->delegate;		\
-> +		return delegate->name(delegate, session, event);	\
-> +	}
-> +CREATE_DELEGATE_OP2(auxtrace_error);
-> +CREATE_DELEGATE_OP2(auxtrace_info);
-> +CREATE_DELEGATE_OP2(bpf_metadata);
-> +CREATE_DELEGATE_OP2(build_id);
-> +CREATE_DELEGATE_OP2(cpu_map);
-> +CREATE_DELEGATE_OP2(feature);
-> +CREATE_DELEGATE_OP2(finished_init);
-> +CREATE_DELEGATE_OP2(id_index);
-> +CREATE_DELEGATE_OP2(stat);
-> +CREATE_DELEGATE_OP2(stat_config);
-> +CREATE_DELEGATE_OP2(stat_round);
-> +CREATE_DELEGATE_OP2(thread_map);
-> +CREATE_DELEGATE_OP2(time_conv);
-> +CREATE_DELEGATE_OP2(tracing_data);
-> +
-> +#define CREATE_DELEGATE_OP3(name)					\
-> +	static s64 delegate_ ## name(const struct perf_tool *tool,	\
-> +				     struct perf_session *session,      \
-> +				     union perf_event *event)           \
-> +	{								\
-> +		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
-> +		struct perf_tool *delegate = del_tool->delegate;	\
-> +		return delegate->name(delegate, session, event);	\
-> +	}
-> +CREATE_DELEGATE_OP3(auxtrace);
-> +
-> +#define CREATE_DELEGATE_OP4(name)					\
-> +	static int delegate_ ## name(const struct perf_tool *tool, \
-> +			struct perf_session *session, \
-> +			union perf_event *event, \
-> +			u64 data, \
-> +			const char *str) \
-> +	{								\
-> +		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
-> +		struct perf_tool *delegate = del_tool->delegate;		\
-> +		return delegate->name(delegate, session, event, data, str);	\
-> +	}
-> +CREATE_DELEGATE_OP4(compressed);
-> +
-> +void delegate_tool__init(struct delegate_tool *tool, struct perf_tool *delegate)
-> +{
-> +	tool->delegate = delegate;
-> +
-> +	tool->tool.ordered_events = delegate->ordered_events;
-> +	tool->tool.ordering_requires_timestamps = delegate->ordering_requires_timestamps;
-> +	tool->tool.namespace_events = delegate->namespace_events;
-> +	tool->tool.cgroup_events = delegate->cgroup_events;
-> +	tool->tool.no_warn = delegate->no_warn;
-> +	tool->tool.show_feat_hdr = delegate->show_feat_hdr;
-> +
-> +	tool->tool.sample = delegate_sample;
-> +	tool->tool.read = delegate_read;
-> +
-> +	tool->tool.mmap = delegate_mmap;
-> +	tool->tool.mmap2 = delegate_mmap2;
-> +	tool->tool.comm = delegate_comm;
-> +	tool->tool.namespaces = delegate_namespaces;
-> +	tool->tool.cgroup = delegate_cgroup;
-> +	tool->tool.fork = delegate_fork;
-> +	tool->tool.exit = delegate_exit;
-> +	tool->tool.lost = delegate_lost;
-> +	tool->tool.lost_samples = delegate_lost_samples;
-> +	tool->tool.aux = delegate_aux;
-> +	tool->tool.itrace_start = delegate_itrace_start;
-> +	tool->tool.aux_output_hw_id = delegate_aux_output_hw_id;
-> +	tool->tool.context_switch = delegate_context_switch;
-> +	tool->tool.throttle = delegate_throttle;
-> +	tool->tool.unthrottle = delegate_unthrottle;
-> +	tool->tool.ksymbol = delegate_ksymbol;
-> +	tool->tool.bpf = delegate_bpf;
-> +	tool->tool.text_poke = delegate_text_poke;
-> +
-> +	tool->tool.attr = delegate_attr;
-> +	tool->tool.event_update = delegate_event_update;
-> +
-> +	tool->tool.tracing_data = delegate_tracing_data;
-> +
-> +	tool->tool.finished_round = delegate_finished_round;
-> +
-> +	tool->tool.build_id = delegate_build_id;
-> +	tool->tool.id_index = delegate_id_index;
-> +	tool->tool.auxtrace_info = delegate_auxtrace_info;
-> +	tool->tool.auxtrace_error = delegate_auxtrace_error;
-> +	tool->tool.time_conv = delegate_time_conv;
-> +	tool->tool.thread_map = delegate_thread_map;
-> +	tool->tool.cpu_map = delegate_cpu_map;
-> +	tool->tool.stat_config = delegate_stat_config;
-> +	tool->tool.stat = delegate_stat;
-> +	tool->tool.stat_round = delegate_stat_round;
-> +	tool->tool.feature = delegate_feature;
-> +	tool->tool.finished_init = delegate_finished_init;
-> +	tool->tool.bpf_metadata = delegate_bpf_metadata;
-> +	tool->tool.compressed = delegate_compressed;
-> +	tool->tool.auxtrace = delegate_auxtrace;
-> +}
-> diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
-> index 1f1461808371..88337cee1e3e 100644
-> --- a/tools/perf/util/tool.h
-> +++ b/tools/perf/util/tool.h
-> @@ -102,4 +102,13 @@ int process_event_sample_stub(const struct perf_tool *tool,
->  			      struct evsel *evsel,
->  			      struct machine *machine);
->  
-> +struct delegate_tool {
-> +	/** @tool: The actual tool that calls the delegate. */
-> +	struct perf_tool tool;
-> +	/** @delegate: The tool that is delegated to. */
-> +	struct perf_tool *delegate;
-> +};
-> +
-> +void delegate_tool__init(struct delegate_tool *tool, struct perf_tool *delegate);
-> +
->  #endif /* __PERF_TOOL_H */
-> -- 
-> 2.51.2.1006.ga50a493c49-goog
-> 
+> >
+> > Core was generated by `perf top'.
+> > Program terminated with signal SIGSEGV, Segmentation fault.
+> > #0  close_one () at /tmp/portage/sys-libs/binutils-libs-2.45-r1/work/binutils-2.45/bfd/cache.c:197
+> >
+> > warning: 197    /tmp/portage/sys-libs/binutils-libs-2.45-r1/work/binutils-2.45/bfd/cache.c: No such file or directory
+> > [Current thread is 1 (Thread 0x7f8769c466c0 (LWP 144140))]
+> > (gdb) bt
+> > #0  close_one () at /tmp/portage/sys-libs/binutils-libs-2.45-r1/work/binutils-2.45/bfd/cache.c:197
+> > #1  0x00007f87885286dd in _bfd_cache_init_unlocked (abfd=abfd@entry=0x5567f738eb40) at /tmp/portage/sys-libs/binutils-libs-2.45-r1/work/binutils-2.45/bfd/cache.c:561
+> > #2  0x00007f8788529021 in bfd_cache_init (abfd=abfd@entry=0x5567f738eb40) at /tmp/portage/sys-libs/binutils-libs-2.45-r1/work/binutils-2.45/bfd/cache.c:587
+> > #3  0x00007f878853618a in bfd_fopen (filename=filename@entry=0x7f8769c3fa98 "/usr/bin/perf", target=target@entry=0x0, mode=0x7f878860c4b9 "r", fd=84)
+> >     at /tmp/portage/sys-libs/binutils-libs-2.45-r1/work/binutils-2.45/bfd/opncls.c:291
+> > #4  0x00007f87885363c9 in bfd_fdopenr (filename=filename@entry=0x7f8769c3fa98 "/usr/bin/perf", target=target@entry=0x0, fd=<optimized out>)
+> >     at /tmp/portage/sys-libs/binutils-libs-2.45-r1/work/binutils-2.45/bfd/opncls.c:407
+> > #5  0x00005567c5cf4436 in read_build_id (filename=filename@entry=0x7f8769c3fa98 "/usr/bin/perf", bid=bid@entry=0x7f8769c3d8f0, block=block@entry=false)
+> >     at util/symbol-elf.c:886
+> > #6  0x00005567c5cf7240 in filename__read_build_id (filename=filename@entry=0x7f8769c3fa98 "/usr/bin/perf", bid=bid@entry=0x7f8769c3d8f0, block=block@entry=false)
+> >     at util/symbol-elf.c:968
+> > #7  0x00005567c5caaba4 in perf_record_mmap2__read_build_id (event=event@entry=0x7f8769c3fa50, machine=machine@entry=0x5567f7392a00, is_kernel=is_kernel@entry=false)
+> >     at util/synthetic-events.c:404
+> > #8  0x00005567c5cabff2 in perf_event__synthesize_mmap_events (tool=tool@entry=0x0, event=event@entry=0x7f8769c3fa50, pid=pid@entry=144076, tgid=tgid@entry=144076,
+> >     process=process@entry=0x5567c5c5d491 <mmap_handler>, machine=machine@entry=0x5567f7392a00, mmap_data=true) at util/synthetic-events.c:536
+> > #9  0x00005567c5c598fb in machine__init_live (machine=machine@entry=0x5567f7392a00, pid=pid@entry=144076) at util/machine.c:167
+> > #10 0x00005567c5c5b987 in machine__new_live (host_env=host_env@entry=0x7f8769c40b70, kernel_maps=kernel_maps@entry=false, pid=pid@entry=144076) at util/machine.c:178
+> > #11 0x00005567c5c56b13 in __dump_stack (file=0x7f87887f25c0 <_IO_2_1_stdout_>, stackdump=stackdump@entry=0x7f8769c40d90, stackdump_size=15) at util/debug.c:318
+> > #12 0x00005567c5bfb299 in ui__signal_backtrace (sig=<optimized out>) at ui/tui/setup.c:111
+> > #13 <signal handler called>
+> > #14 close_one () at /tmp/portage/sys-libs/binutils-libs-2.45-r1/work/binutils-2.45/bfd/cache.c:197
+> > #15 0x00007f87885286dd in _bfd_cache_init_unlocked (abfd=abfd@entry=0x5567f738e8c0) at /tmp/portage/sys-libs/binutils-libs-2.45-r1/work/binutils-2.45/bfd/cache.c:561
+> > #16 0x00007f8788529021 in bfd_cache_init (abfd=abfd@entry=0x5567f738e8c0) at /tmp/portage/sys-libs/binutils-libs-2.45-r1/work/binutils-2.45/bfd/cache.c:587
+> > #17 0x00007f878853618a in bfd_fopen (filename=filename@entry=0x5567f73ca048 "/usr/lib64/libfribidi.so.0.4.0", target=target@entry=0x0, mode=0x7f878860c4b9 "r", fd=63)
+> >     at /tmp/portage/sys-libs/binutils-libs-2.45-r1/work/binutils-2.45/bfd/opncls.c:291
+> > #18 0x00007f87885363c9 in bfd_fdopenr (filename=filename@entry=0x5567f73ca048 "/usr/lib64/libfribidi.so.0.4.0", target=target@entry=0x0, fd=<optimized out>)
+> >     at /tmp/portage/sys-libs/binutils-libs-2.45-r1/work/binutils-2.45/bfd/opncls.c:407
+> > #19 0x00005567c5cf4436 in read_build_id (filename=filename@entry=0x5567f73ca048 "/usr/lib64/libfribidi.so.0.4.0", bid=bid@entry=0x7f8769c425d0, block=block@entry=false)
+> >     at util/symbol-elf.c:886
+> > #20 0x00005567c5cf7240 in filename__read_build_id (filename=filename@entry=0x5567f73ca048 "/usr/lib64/libfribidi.so.0.4.0", bid=bid@entry=0x7f8769c425d0,
+> >     block=block@entry=false) at util/symbol-elf.c:968
+> > #21 0x00005567c5caaba4 in perf_record_mmap2__read_build_id (event=event@entry=0x5567f73ca000, machine=machine@entry=0x5567f7280b18, is_kernel=is_kernel@entry=false)
+> >     at util/synthetic-events.c:404
+> > #22 0x00005567c5cabff2 in perf_event__synthesize_mmap_events (tool=tool@entry=0x0, event=event@entry=0x5567f73ca000, pid=pid@entry=5227, tgid=5227,
+> >     process=process@entry=0x5567c5c19264 <perf_event__process>, machine=machine@entry=0x5567f7280b18, mmap_data=false) at util/synthetic-events.c:536
+> > #23 0x00005567c5cac2a5 in __event__synthesize_thread (comm_event=comm_event@entry=0x5567f73c8060, mmap_event=mmap_event@entry=0x5567f73ca000,
+> >     fork_event=fork_event@entry=0x5567f73c8080, namespaces_event=namespaces_event@entry=0x5567f7246870, pid=5227, full=full@entry=1,
+> >     process=0x5567c5c19264 <perf_event__process>, tool=0x0, machine=0x5567f7280b18, needs_mmap=true, mmap_data=false) at util/synthetic-events.c:851
+> > #24 0x00005567c5cac50d in __perf_event__synthesize_threads (tool=0x0, process=0x5567c5c19264 <perf_event__process>, machine=0x5567f7280b18, needs_mmap=true,
+> >     mmap_data=false, dirent=0x5567f7377400, start=475, num=19) at util/synthetic-events.c:986
+> > #25 0x00005567c5cac5c4 in synthesize_threads_worker (arg=<optimized out>) at util/synthetic-events.c:1018
+> > #26 0x00007f87886c0379 in start_thread (arg=<optimized out>) at pthread_create.c:448
+> > #27 0x00007f8788728fac in __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+> >
+> >
