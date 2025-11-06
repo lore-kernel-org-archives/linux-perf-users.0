@@ -1,275 +1,221 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A8EF2BE03E;
-	Thu,  6 Nov 2025 06:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B840025228D
+	for <linux-perf-users@vger.kernel.org>; Thu,  6 Nov 2025 06:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762409001; cv=none; b=TDFzuKCpxnVgSPxaqTgfhJ2Uo+L72q0/65TW3ckKBr2yjfTs1zl6HCpu7rCdtw3nqS9ExS+uiWBkK2085vYSjHYsohUHSRmkRJ8X0J+sscfnJwMB9ylzqPI1v+9Xsr6SX5k9oSWeJO2UetnoGJh/XNmjjoXt1ojScQpRDH5IU3E=
+	t=1762410074; cv=none; b=SL9t0SWcGZxGvz4MuPp/SXwzt5qsh7rK68nYNGPVBL8HHH2RhabdSi7/Jb613BcMs1HX8+3l/O0My2TGEto2rvkxZTw3I1osxq3m1Sz0BmMt42UTSm9bV9QpR7OS17vBDMnLV2M7S67VDdV5yW9e26DzRPtFzDPn6QEI28pf90w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762409001; c=relaxed/simple;
-	bh=wf6dbf59RvL8cRrubFJD2UL2fLyYX4BL9MrVrSZpUd4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p6DLPGMgjbSx96d4Pr09CEEknFWyZVcy7G3LrZrnYVyKBbCendnFbHclzmQfKs7oigWahsUHQECDIZrb19qxxrHh7IkhniWTjf3YdsU5Wcpw26Vyh07UtB7SZUrjx7b8YPu3+CKsl6DHvMByPHmXwD304o5RbvypYpan5gubGBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ept7tZwu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762410074; c=relaxed/simple;
+	bh=abKb5CfZvJNGhEenqOGbu+zmBxdUtT+s+KOcu4Z7NB8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KmeAisV5Sn1K7kIBEZX6OM9VAvNKvXm2GSkA6b8rwbXuPNZM3kAiiUWktQaLsEFOMXL1ZDR3pQFKmjRHXsuxI3+7OFAspo7X+woqovBQQejoeyI2TToyEBZIWW/hAKGVHGv0O/WR7nuYmwH4S2oREKPU3E6Jj3FTPFXtq0vqqag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KuyG9orG; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ept7tZwu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D06DCC4CEF7;
-	Thu,  6 Nov 2025 06:03:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762409000;
-	bh=wf6dbf59RvL8cRrubFJD2UL2fLyYX4BL9MrVrSZpUd4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ept7tZwuFYEniBbZ8GYtbfTKKO4SZgJnuNqfjetRzDcjIj6LfnhLeDZaDSwoizG1e
-	 1yB3wJnY+31OBGMpXu8ChMXEnIcVipDggSlmL7TsTlfvv0rCcAabRrSMzZ0j6OCVGj
-	 HuKQfNF3juB95LPYqMhQ40ktIDdG/Wpfs3Yk/PSpJbS2lgeWIkcihaIOnYeOxytPc8
-	 cZpVy+1eavKsddDciWDJinrfBufvXrURZIS8R7ouWYr0pj3+PoafJLAsj61SuRHZ8X
-	 lSPfpc/NoJBQjSqzd92GXtjzv46h+rHCrQyr7VY5YKkW9qg/1a9wgzZkhtrFbcO4bJ
-	 QdPmuOjCFAObQ==
-Date: Wed, 5 Nov 2025 22:03:18 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Sumanth Korikkar <sumanthk@linux.ibm.com>,
-	Collin Funk <collin.funk1@gmail.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Levi Yun <yeoreum.yun@arm.com>,
-	Yang Li <yang.lee@linux.alibaba.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 05/22] perf metricgroup: Add care to picking the evsel
- for displaying a metric
-Message-ID: <aQw6Jje7bSpywGqq@google.com>
-References: <20251024175857.808401-1-irogers@google.com>
- <20251024175857.808401-6-irogers@google.com>
- <aQmGfLVKk0UFGAyd@google.com>
- <CAP-5=fXmT-1io1k1O5d2QMken9aJmGTiuDEz2f-7k8-n=GCWtA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KuyG9orG"
+Message-ID: <04002253-1edf-4957-a43e-bd6dcc465dcd@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1762410068;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hL6DGlvfqnJjww1xq+st54rj3XETpUdgjatzms+S4Zc=;
+	b=KuyG9orGa4Ydr/lDvPCFz2F/1SM92tLvWZIahOwcgGy01ifHNmfKDt0Nkq0r6dWMld659a
+	6QqEJEEJtybZFtKtECAjsuiM17hMGgF91Y+y917HJ5bavnEmPCOg6Ey4cy5cQA06gqZJgd
+	YKp038G/Pqw4uz5z6MmOTX+STYPW1qw=
+Date: Wed, 5 Nov 2025 22:20:58 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Subject: Re: [PATCH bpf-next v4 2/2] bpf: Hold the perf callchain entry until
+ used completely
+Content-Language: en-GB
+To: Tao Chen <chen.dylane@linux.dev>, peterz@infradead.org, mingo@redhat.com,
+ acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, song@kernel.org,
+ ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, john.fastabend@gmail.com,
+ kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
+References: <20251028162502.3418817-1-chen.dylane@linux.dev>
+ <20251028162502.3418817-3-chen.dylane@linux.dev>
+ <c352f357-1417-47b5-9d8c-28d99f20f5a6@linux.dev>
+ <363717bf-499a-4e47-b2c9-8a6e4105282c@linux.dev>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yonghong Song <yonghong.song@linux.dev>
+In-Reply-To: <363717bf-499a-4e47-b2c9-8a6e4105282c@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXmT-1io1k1O5d2QMken9aJmGTiuDEz2f-7k8-n=GCWtA@mail.gmail.com>
-
-On Mon, Nov 03, 2025 at 09:28:44PM -0800, Ian Rogers wrote:
-> On Mon, Nov 3, 2025 at 8:52 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Fri, Oct 24, 2025 at 10:58:40AM -0700, Ian Rogers wrote:
-> > > Rather than using the first evsel in the matched events, try to find
-> > > the least shared non-tool evsel. The aim is to pick the first evsel
-> > > that typifies the metric within the list of metrics.
-> > >
-> > > This addresses an issue where Default metric group metrics may lose
-> > > their counter value due to how the stat displaying hides counters for
-> > > default event/metric output.
-> >
-> > Do you have a command line example to show impact of this change?
-> 
-> You can just run a Topdown metricgroup on Intel to see differences,
-
-Ok, before this change.
-
-  $ perf stat -M topdownL1 true
-  
-   Performance counter stats for 'true':
-  
-           7,754,275      TOPDOWN.SLOTS                    #     37.1 %  tma_backend_bound      
-                                                    #     38.7 %  tma_frontend_bound     
-                                                    #      8.8 %  tma_bad_speculation    
-                                                    #     15.3 %  tma_retiring           
-           1,185,947      topdown-retiring                                                      
-           3,010,483      topdown-fe-bound                                                      
-           2,828,029      topdown-be-bound                                                      
-             729,814      topdown-bad-spec                                                      
-               9,987      INT_MISC.CLEARS_COUNT                                                 
-             221,405      IDQ.MS_UOPS                                                           
-               6,352      INT_MISC.UOP_DROPPING                                                 
-           1,212,644      UOPS_RETIRED.SLOTS                                                    
-             119,895      UOPS_DECODED.DEC0                                                     
-              60,975      cpu/UOPS_DECODED.DEC0,cmask=1/                                        
-           1,639,442      UOPS_ISSUED.ANY                                                       
-             820,982      IDQ.MITE_UOPS                                                         
-  
-         0.001172956 seconds time elapsed
-  
-         0.001269000 seconds user
-         0.000000000 seconds sys
+X-Migadu-Flow: FLOW_OUT
 
 
-And with this change, it does look better.
 
-  $ perf stat -M topdownL1 true
-  
-   Performance counter stats for 'true':
-  
-           7,977,430      TOPDOWN.SLOTS                                                         
-           1,188,793      topdown-retiring                                                      
-           3,159,687      topdown-fe-bound                                                      
-           2,940,699      topdown-be-bound                                                      
-             688,248      topdown-bad-spec                                                      
-               9,749      INT_MISC.CLEARS_COUNT            #     37.5 %  tma_backend_bound      
-                                                    #      8.1 %  tma_bad_speculation    
-             219,145      IDQ.MS_UOPS                      #     14.9 %  tma_retiring           
-               6,188      INT_MISC.UOP_DROPPING            #     39.5 %  tma_frontend_bound     
-           1,205,712      UOPS_RETIRED.SLOTS                                                    
-             117,505      UOPS_DECODED.DEC0                                                     
-              59,891      cpu/UOPS_DECODED.DEC0,cmask=1/                                        
-           1,625,232      UOPS_ISSUED.ANY                                                       
-             805,560      IDQ.MITE_UOPS                                                         
-  
-         0.001629344 seconds time elapsed
-  
-         0.001672000 seconds user
-         0.000000000 seconds sys
+On 11/5/25 9:12 PM, Tao Chen wrote:
+> 在 2025/11/6 06:16, Yonghong Song 写道:
+>>
+>>
+>> On 10/28/25 9:25 AM, Tao Chen wrote:
+>>> As Alexei noted, get_perf_callchain() return values may be reused
+>>> if a task is preempted after the BPF program enters migrate disable
+>>> mode. The perf_callchain_entres has a small stack of entries, and
+>>> we can reuse it as follows:
+>>>
+>>> 1. get the perf callchain entry
+>>> 2. BPF use...
+>>> 3. put the perf callchain entry
+>>>
+>>> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+>>> ---
+>>>   kernel/bpf/stackmap.c | 61 
+>>> ++++++++++++++++++++++++++++++++++---------
+>>>   1 file changed, 48 insertions(+), 13 deletions(-)
+>>>
+>>> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+>>> index e28b35c7e0b..70d38249083 100644
+>>> --- a/kernel/bpf/stackmap.c
+>>> +++ b/kernel/bpf/stackmap.c
+>>> @@ -188,13 +188,12 @@ static void 
+>>> stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
+>>>   }
+>>>   static struct perf_callchain_entry *
+>>> -get_callchain_entry_for_task(struct task_struct *task, u32 max_depth)
+>>> +get_callchain_entry_for_task(int *rctx, struct task_struct *task, 
+>>> u32 max_depth)
+>>>   {
+>>>   #ifdef CONFIG_STACKTRACE
+>>>       struct perf_callchain_entry *entry;
+>>> -    int rctx;
+>>> -    entry = get_callchain_entry(&rctx);
+>>> +    entry = get_callchain_entry(rctx);
+>>>       if (!entry)
+>>>           return NULL;
+>>> @@ -216,8 +215,6 @@ get_callchain_entry_for_task(struct task_struct 
+>>> *task, u32 max_depth)
+>>>               to[i] = (u64)(from[i]);
+>>>       }
+>>> -    put_callchain_entry(rctx);
+>>> -
+>>>       return entry;
+>>>   #else /* CONFIG_STACKTRACE */
+>>>       return NULL;
+>>> @@ -297,6 +294,31 @@ static long __bpf_get_stackid(struct bpf_map *map,
+>>>       return id;
+>>>   }
+>>> +static struct perf_callchain_entry *
+>>> +bpf_get_perf_callchain(int *rctx, struct pt_regs *regs, bool 
+>>> kernel, bool user,
+>>> +               int max_stack, bool crosstask)
+>>> +{
+>>> +    struct perf_callchain_entry_ctx ctx;
+>>> +    struct perf_callchain_entry *entry;
+>>> +
+>>> +    entry = get_callchain_entry(rctx);
+>>
+>> I think this may not work. Let us say we have two bpf programs
+>> both pinned to a particular cpu (migrate disabled but preempt enabled).
+>> get_callchain_entry() calls get_recursion_context() to get the
+>> buffer for a particulart level.
+>>
+>> static inline int get_recursion_context(u8 *recursion)
+>> {
+>>          unsigned char rctx = interrupt_context_level();
+>>          if (recursion[rctx])
+>>                  return -1;
+>>          recursion[rctx]++;
+>>          barrier();
+>>          return rctx;
+>> }
+>>
+>> It is possible that both tasks (at process level) may
+>> reach right before "recursion[rctx]++;".
+>> In such cases, both tasks will be able to get
+>> buffer and this is not right.
+>>
+>> To fix this, we either need to have preempt disable
+>> in bpf side, or maybe we have some kind of atomic
+>> operation (cmpxchg or similar things), or maybe
+>> has a preempt disable between if statement and recursion[rctx]++,
+>> so only one task can get buffer?
+>>
+>
+> Thanks to your reminder, can we add preempt disable before and after 
+> get_callchain_entry, avoid affecting the original functions of perf.
 
-> but they are minor. The main impact is on the Default legacy metrics
-> as those have a counter then a metric, but without this change you get
-> everything grouped on the cpu-clock event and the formatting gets broken.
+Yes, we get two get_callchain_entry() call site:
+   bpf/stackmap.c: entry = get_callchain_entry(&rctx);
+   events/callchain.c:     entry = get_callchain_entry(&rctx);
+We need to have preempt_disable()/preempt_enable() around them.
 
-Do you mean with other changes in this series?  I don't see any
-differences in the output just after this patch..
+Another choice maybe adds preempt_disable/enable() for
+get_callchain_entry() and get_perf_callchain() in stackmap.c,
+assuming these two function usage in other places are for
+interrupts (softirq, hardirq and nmi) so they are okay.
 
-Before:
+But maybe the following is better?
 
-  $ perf stat -a true
+diff --git a/kernel/events/internal.h b/kernel/events/internal.h
+index d9cc57083091..0ccf94315954 100644
+--- a/kernel/events/internal.h
++++ b/kernel/events/internal.h
+@@ -214,12 +214,9 @@ static inline int get_recursion_context(u8 *recursion)
+  {
+         unsigned char rctx = interrupt_context_level();
   
-   Performance counter stats for 'system wide':
+-       if (recursion[rctx])
++       if (cmpxchg(&recursion[rctx], 0, 1) != 0)
+                 return -1;
   
-          19,078,719      cpu-clock                        #    7.256 CPUs utilized             
-                  94      context-switches                 #    4.927 K/sec                     
-                  14      cpu-migrations                   #  733.802 /sec                      
-                  61      page-faults                      #    3.197 K/sec                     
-          43,304,957      instructions                     #    1.10  insn per cycle            
-          39,281,107      cycles                           #    2.059 GHz                       
-           5,012,071      branches                         #  262.705 M/sec                     
-             128,358      branch-misses                    #    2.56% of all branches           
-   #     24.4 %  tma_retiring           
-   #     33.7 %  tma_backend_bound      
-                                                    #      5.9 %  tma_bad_speculation    
-   #     36.0 %  tma_frontend_bound     
-  
-         0.002629534 seconds time elapsed
-  
-After:
-  
-  $ perf stat -a true
-  
-   Performance counter stats for 'system wide':
-  
-           6,201,661      cpu-clock                        #    3.692 CPUs utilized             
-                  24      context-switches                 #    3.870 K/sec                     
-                   7      cpu-migrations                   #    1.129 K/sec                     
-                  60      page-faults                      #    9.675 K/sec                     
-          11,458,681      instructions                     #    1.07  insn per cycle            
-          10,704,978      cycles                           #    1.726 GHz                       
-           2,457,704      branches                         #  396.298 M/sec                     
-              54,553      branch-misses                    #    2.22% of all branches           
-   #     21.4 %  tma_retiring           
-   #     36.1 %  tma_backend_bound      
-                                                    #     10.2 %  tma_bad_speculation    
-   #     32.3 %  tma_frontend_bound     
-  
-         0.001679679 seconds time elapsed
-  
-Thanks,
-Namhyung
+-       recursion[rctx]++;
+-       barrier();
+-
+         return rctx;
+  }
 
+>
+> Regarding multiple task preemption: if the entry is not released via 
+> put_callchain_entry, it appears that perf's buffer does not support 
+> recording the second task, so it returns directly here.
+>
+>           if (recursion[rctx])
+>                   return -1;
+>
+>>
+>>> +    if (unlikely(!entry))
+>>> +        return NULL;
+>>> +
+>>> +    __init_perf_callchain_ctx(&ctx, entry, max_stack, false);
+>>> +    if (kernel)
+>>> +        __get_perf_callchain_kernel(&ctx, regs);
+>>> +    if (user && !crosstask)
+>>> +        __get_perf_callchain_user(&ctx, regs);
+>>> +
+>>> +    return entry;
+>>> +}
+>>> +
+>>> +static void bpf_put_callchain_entry(int rctx)
+>>
+>> we have bpf_get_perf_callchain(), maybe rename the above
+>> to bpf_put_perf_callchain()?
+>>
+>
+> Ack, thanks.
+>
+>>> +{
+>>> +    put_callchain_entry(rctx);
+>>> +}
+>>> +
+>>
+>> [...]
+>>
+>
+>
 
-> As --metric-only is popular when looking at a group of events
-> and the Default legacy metrics are added in subsequent changes it
-> didn't seem right to include the output (it either shows broken things
-> keeping to be somewhat broken or output from later patches).
-> 
-> Thanks,
-> Ian
-> 
-> > Thanks,
-> > Namhyung
-> >
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  tools/perf/util/metricgroup.c | 48 ++++++++++++++++++++++++++++++++++-
-> > >  1 file changed, 47 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> > > index 48936e517803..76092ee26761 100644
-> > > --- a/tools/perf/util/metricgroup.c
-> > > +++ b/tools/perf/util/metricgroup.c
-> > > @@ -1323,6 +1323,51 @@ static int parse_ids(bool metric_no_merge, bool fake_pmu,
-> > >       return ret;
-> > >  }
-> > >
-> > > +/* How many times will a given evsel be used in a set of metrics? */
-> > > +static int count_uses(struct list_head *metric_list, struct evsel *evsel)
-> > > +{
-> > > +     const char *metric_id = evsel__metric_id(evsel);
-> > > +     struct metric *m;
-> > > +     int uses = 0;
-> > > +
-> > > +     list_for_each_entry(m, metric_list, nd) {
-> > > +             if (hashmap__find(m->pctx->ids, metric_id, NULL))
-> > > +                     uses++;
-> > > +     }
-> > > +     return uses;
-> > > +}
-> > > +
-> > > +/*
-> > > + * Select the evsel that stat-display will use to trigger shadow/metric
-> > > + * printing. Pick the least shared non-tool evsel, encouraging metrics to be
-> > > + * with a hardware counter that is specific to them.
-> > > + */
-> > > +static struct evsel *pick_display_evsel(struct list_head *metric_list,
-> > > +                                     struct evsel **metric_events)
-> > > +{
-> > > +     struct evsel *selected = metric_events[0];
-> > > +     size_t selected_uses;
-> > > +     bool selected_is_tool;
-> > > +
-> > > +     if (!selected)
-> > > +             return NULL;
-> > > +
-> > > +     selected_uses = count_uses(metric_list, selected);
-> > > +     selected_is_tool = evsel__is_tool(selected);
-> > > +     for (int i = 1; metric_events[i]; i++) {
-> > > +             struct evsel *candidate = metric_events[i];
-> > > +             size_t candidate_uses = count_uses(metric_list, candidate);
-> > > +
-> > > +             if ((selected_is_tool && !evsel__is_tool(candidate)) ||
-> > > +                 (candidate_uses < selected_uses)) {
-> > > +                     selected = candidate;
-> > > +                     selected_uses = candidate_uses;
-> > > +                     selected_is_tool = evsel__is_tool(selected);
-> > > +             }
-> > > +     }
-> > > +     return selected;
-> > > +}
-> > > +
-> > >  static int parse_groups(struct evlist *perf_evlist,
-> > >                       const char *pmu, const char *str,
-> > >                       bool metric_no_group,
-> > > @@ -1430,7 +1475,8 @@ static int parse_groups(struct evlist *perf_evlist,
-> > >                       goto out;
-> > >               }
-> > >
-> > > -             me = metricgroup__lookup(&perf_evlist->metric_events, metric_events[0],
-> > > +             me = metricgroup__lookup(&perf_evlist->metric_events,
-> > > +                                      pick_display_evsel(&metric_list, metric_events),
-> > >                                        /*create=*/true);
-> > >
-> > >               expr = malloc(sizeof(struct metric_expr));
-> > > --
-> > > 2.51.1.821.gb6fe4d2222-goog
-> > >
