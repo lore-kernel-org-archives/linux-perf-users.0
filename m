@@ -1,215 +1,158 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5606D34CFC0;
-	Thu,  6 Nov 2025 18:52:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7E72DD5F3;
+	Thu,  6 Nov 2025 19:00:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762455173; cv=none; b=LSJUtTDpe1hRIx1GYUQCzjZLasLBM8o/1Ync8X61V6eX1GYZUYVASJc5ydW12b+yRDTFe0LHey4qaRmr+/Aol29HaPABFqRMYNCwK2jrM2z2+wC+91aj8phL63oStQJnpVhxiwbiU2dyBVVCdehLuKBHNbfVyE0VoZaplrK55Xo=
+	t=1762455626; cv=none; b=n+M58PBuxn+s5ayhAf/NcRjEUmu/07LdqzKXQALg+IN9A8uQHCFZ/07vamDeV/OlAypftkJ1osFOh/v08YRr9ENrXJYQA3aasErisCe38HOOpPQzLKnt24rpbCU+f8/ndZz9z3H0GYYfoL8KhErW4hqHKBScKElKYmTKkNoGjV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762455173; c=relaxed/simple;
-	bh=gdBHIuyO6YAVPPQfpte3nOsRwKm35zovfxtH21xO544=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dEn7uXRRwtTMribYZa/BdX7FAh+1P2BlCkWW+/s1lF592+7dryRSJpUmU/4xpTtoR0aFBmAQeOqZWB5CS9HvRXihSxXpNR1V88tBkxxV0mC70ckDScb+AHVIvFvGZ4EOFVQlTRtqvwfkquWOVDdwvyqgkWWXIrfDWBWKSd+6krc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RXbsOCC7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762455626; c=relaxed/simple;
+	bh=sW3D/DUO6/EhIkY8q0f6Kkg/PnTPkA07mZ2Ez9rrBdc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I9H27vY/+hxbTnhoINzDP2fpfIxIiANyu+s8e3KNnT+1el/owjF1kXHCaJg0A1DI99IUPdC/g/PxdLcuZ4g1KzVNeK4lxfnEX1Y6zCTb0N/AVPeZvGKTheMwHN5hugIgfg9EAWpRmwHvyvgt5IDLtCIuAtJUH3nuXzxe+DT/pV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u2zHWdml; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RXbsOCC7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47201C116B1;
-	Thu,  6 Nov 2025 18:52:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u2zHWdml"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15FFDC116B1;
+	Thu,  6 Nov 2025 19:00:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762455172;
-	bh=gdBHIuyO6YAVPPQfpte3nOsRwKm35zovfxtH21xO544=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RXbsOCC7G4EBRbo+awbk8SLjpcL+Y/ewg/k/CaTr5Y07wTcEBiYH+9IfhGoB9mmIY
-	 vdQXOkKQFeBg56mCS6m2Agxfm/kGeZT0DyLbbl3d2WI+sFDx/sCV/ihW/Gs36BvWWX
-	 L8EaHQrkQNARFYSLcoSXnvifVPCf6VP8LfBAZNw0lT4yqLoBpiS8PTuqtdsojy2B0H
-	 HEIWS4xTsDUhGETPhfhxr3mtXwVu1YG35VRFzxx2NRIckDr8JoxQLpuQ/l9BpF2ADZ
-	 3l1PWXPl1jxI947wfgQCqyrmB4N8zlz0tvmkdd20LKV1AX+S+hq66FkydoT47DdO+A
-	 e09GK0gIR0wNw==
-Date: Thu, 6 Nov 2025 10:52:49 -0800
+	s=k20201202; t=1762455626;
+	bh=sW3D/DUO6/EhIkY8q0f6Kkg/PnTPkA07mZ2Ez9rrBdc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=u2zHWdml42KH0K55TUrZUBwO2N64NjE1KEHTrNNutncMKoqkwQGRTBtrTc5ndCKIh
+	 g6e209jA0sqQ7f6xF23hMdwXz70cjf/Jy3DTEPOAYL8zqEM5e6ZoTeHOwPhped16rg
+	 rTdm8Ejg5Q/pZfYElvUzswmCy8SFtuExJa+61RzE8GBv1UYhNAa3iffAY7rSlGD52N
+	 tpFqUOKv2hzBLEQhbBXMu2OrQWbpUKAOeQw2BaYn8NWQBSBSJuKumMVk2y3FtvfbYa
+	 uI5lQgmVLk9CWoidJioFJAwL7xq58ixvlTNW0o1hkA+b9BJXwx/n1Y6V/qEE+wjHV+
+	 nkfrRju3pMLcg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: "Chen, Zide" <zide.chen@intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	thomas.falcon@intel.com, dapeng1.mi@linux.intel.com,
-	xudong.hao@intel.com
-Subject: Re: [PATCH] perf tools: Refactor precise_ip fallback logic
-Message-ID: <aQzugcpRvOcPEEro@google.com>
-References: <20251022220802.1335131-1-zide.chen@intel.com>
- <aPrktlANBHFtV52B@google.com>
- <576a7d2b-0a82-4738-8b86-507e4d841524@intel.com>
- <aP1ucJiJYBavTHV7@google.com>
- <e10d671a-eb89-4e06-a1eb-e2f12ee41d70@intel.com>
- <aQl3qfyTdAb68l1l@google.com>
- <652bf158-ba9e-4a97-b4c3-3a7f7e39fe85@intel.com>
+	James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v2] perf record: Make sure to update build-ID cache
+Date: Thu,  6 Nov 2025 11:00:23 -0800
+Message-ID: <20251106190023.1772629-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.51.2.1041.gc1ab5b90ca-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <652bf158-ba9e-4a97-b4c3-3a7f7e39fe85@intel.com>
 
-On Tue, Nov 04, 2025 at 11:10:44AM -0800, Chen, Zide wrote:
-> 
-> 
-> On 11/3/2025 7:48 PM, Namhyung Kim wrote:
-> > Hello,
-> > 
-> > Sorry for the delay.
-> > 
-> > On Mon, Oct 27, 2025 at 11:56:52AM -0700, Chen, Zide wrote:
-> >>
-> >>
-> >> On 10/25/2025 5:42 PM, Namhyung Kim wrote:
-> >>> On Fri, Oct 24, 2025 at 11:03:17AM -0700, Chen, Zide wrote:
-> >>>>
-> >>>>
-> >>>> On 10/23/2025 7:30 PM, Namhyung Kim wrote:
-> >>>>> Hello,
-> >>>>>
-> >>>>> On Wed, Oct 22, 2025 at 03:08:02PM -0700, Zide Chen wrote:
-> >>>>>> Commit c33aea446bf555ab ("perf tools: Fix precise_ip fallback logic")
-> >>>>>> unconditionally called the precise_ip fallback and moved it after the
-> >>>>>> missing-feature checks so that it could handle EINVAL as well.
-> >>>>>>
-> >>>>>> However, this introduced an issue: after disabling missing features,
-> >>>>>> the event could fail to open, which makes the subsequent precise_ip
-> >>>>>> fallback useless since it will always fail.
-> >>>>>>
-> >>>>>> For example, run the following command on Intel SPR:
-> >>>>>>
-> >>>>>> $ perf record -e '{cpu/mem-loads-aux/S,cpu/mem-loads,ldlat=3/PS}' -- ls
-> >>>>>>
-> >>>>>> Opening the event "cpu/mem-loads,ldlat=3/PS" returns EINVAL when
-> >>>>>> precise_ip == 3. It then sets attr.inherit = false, which triggers a
-> >>>>>
-> >>>>> I'm curious about this part.  Why the kernel set 'inherit = false'?  IOW
-> >>>>> how did the leader event (mem-loads-aux) succeed with inherit = true
-> >>>>> then?
-> >>>>
-> >>>> Initially, the inherit = true for both the group leader
-> >>>> (cpu/mem-loads-aux/S) and the event in question (cpu/mem-loads,ldlat=3/PS).
-> >>>>
-> >>>> When the second event fails with EINVAL, the current logic calls
-> >>>> evsel__detect_missing_features() first. Since this is a PERF_SAMPLE_READ
-> >>>> event, the inherit attribute falls back to false, according to the
-> >>>> fallback order implemented in evsel__detect_missing_features().
-> >>>
-> >>> Right, that means the kernel doesn't support PERF_SAMPLE_READ with
-> >>> inherit = true.  How did the first event succeed to open then?
-> >>
-> >> The perf tool sets PERF_SAMPLE_TID for Inherit + PERF_SAMPLE_READ
-> >> events, as implemented in commit 90035d3cd876 ("tools/perf: Allow
-> >> inherit + PERF_SAMPLE_READ when opening event").
-> >>
-> >> Meanwhile, commit 7e8b255650fc ("perf: Support PERF_SAMPLE_READ with
-> >> inherit") rejects a perf event if has_inherit_and_sample_read(attr) is
-> >> true and PERF_SAMPLE_TID is not set in attr->sample_type.
-> >>
-> >> Therefore, the first event succeeded, while the one opened in
-> >> evsel__detect_missing_features() which doesn't have PERF_SAMPLE_TID failed.
-> > 
-> > Why does the first succeed and the second fail?  Don't they have the
-> > same SAMPLE_READ and SAMPLE_TID + inherit flags?
-> 
-> Sorry, my previous reply wasn’t entirely accurate. The first event
-> (cpu/mem-loads-aux/S) succeeds because it’s not a precise event
-> (precise_ip == 0).
+Recent change on enabling --buildid-mmap by default brought an issue
+with build-id handling.  With build-ID in MMAP2 records, we don't need
+to save the build-ID table in the header of a perf data file.
 
-I'm not sure how it matters.  I've tested the same command line on SPR
-and got this message.  It says it failed to open because of inherit and
-SAMPE_READ.  It didn't have precise_ip too.
+But the actual file contents still need to be cached in the debug
+directory for annotation etc.  Split the build-ID header processing and
+caching and make sure perf record to save hit DSOs in the build-ID cache
+by moving perf_session__cache_build_ids() to the end of the record__
+finish_output().
 
-  $ perf record -e cpu/mem-loads-aux/S -vv true |& less
-  ...
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             4 (cpu)
-    size                             136
-    config                           0x8203 (mem-loads-aux)
-    { sample_period, sample_freq }   4000
-    sample_type                      IP|TID|TIME|READ|ID|PERIOD
-    read_format                      ID|LOST
-    disabled                         1
-    inherit                          1
-    mmap                             1
-    comm                             1
-    freq                             1
-    enable_on_exec                   1
-    task                             1
-    sample_id_all                    1
-    mmap2                            1
-    comm_exec                        1
-    ksymbol                          1
-    bpf_event                        1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid 1161023  cpu 0  group_fd -1  flags 0x8
-  sys_perf_event_open failed, error -22
-  Using PERF_SAMPLE_READ / :S modifier is not compatible with inherit, falling back to no-inherit.
-  ...
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+* fixed commit log  (Ian)
 
-And it fell back to no-inherit and succeeded.  I've also found that it
-worked even with precise_ip = 3.
+ tools/perf/builtin-record.c | 30 +++++++++++++++---------------
+ tools/perf/util/header.c    |  1 -
+ 2 files changed, 15 insertions(+), 16 deletions(-)
 
-  $ perf record -e cpu/mem-loads-aux/PS -vv true |& less
-  ...
-  sys_perf_event_open: pid 1172834  cpu 0  group_fd -1  flags 0x8
-  sys_perf_event_open failed, error -22
-  Using PERF_SAMPLE_READ / :S modifier is not compatible with inherit, falling back to no-inherit.
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             4 (cpu)
-    size                             136
-    config                           0x8203 (mem-loads-aux)
-    { sample_period, sample_freq }   4000
-    sample_type                      IP|TID|TIME|READ|ID|PERIOD
-    read_format                      ID|LOST
-    disabled                         1
-    mmap                             1
-    comm                             1
-    freq                             1
-    enable_on_exec                   1
-    task                             1
-    precise_ip                       3         <<<---- here
-    sample_id_all                    1
-    mmap2                            1
-    comm_exec                        1
-    ksymbol                          1
-    bpf_event                        1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid 1172834  cpu 0  group_fd -1  flags 0x8 = 4
-  ...
-
-And it works fine on my machine.
-
-  $ perf record -e '{cpu/mem-loads-aux/S,cpu/mem-loads/PS}' ls
-  ...
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.033 MB perf.data (6 samples) ]
-
-> 
-> The second event fails with -EINVAL because, on some platforms, events
-> with precise_ip = 3 must be scheduled on fixed counter 0, and it fails
-> if it happens that this counter is unavailable.
-> 
-> In the current code, the first fallback attempt (inherit = 0) also fails
-> because the inherit attribute differs from that of the group leader
-> (first event).
-
-So I don't understand this.  Either the first event failed due to
-inherit set or the second event should succeed with inherit.  Maybe
-there's an unknown bug or something.
-
-Thanks,
-namhyung
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index ffb94a8339b03ec2..fe10bb7f35cbea05 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1890,15 +1890,14 @@ record__finish_output(struct record *rec)
+ 	}
+ 
+ 	/* Buildid scanning disabled or build ID in kernel and synthesized map events. */
+-	if (!rec->no_buildid) {
++	if (!rec->no_buildid || !rec->no_buildid_cache) {
+ 		process_buildids(rec);
+ 
+ 		if (rec->buildid_all)
+ 			perf_session__dsos_hit_all(rec->session);
+ 	}
+ 	perf_session__write_header(rec->session, rec->evlist, fd, true);
+-
+-	return;
++	perf_session__cache_build_ids(rec->session);
+ }
+ 
+ static int record__synthesize_workload(struct record *rec, bool tail)
+@@ -3083,7 +3082,7 @@ static int perf_record_config(const char *var, const char *value, void *cb)
+ 		else if (!strcmp(value, "no-cache"))
+ 			rec->no_buildid_cache = true;
+ 		else if (!strcmp(value, "skip"))
+-			rec->no_buildid = true;
++			rec->no_buildid = rec->no_buildid_cache = true;
+ 		else if (!strcmp(value, "mmap"))
+ 			rec->buildid_mmap = true;
+ 		else if (!strcmp(value, "no-mmap"))
+@@ -4192,24 +4191,25 @@ int cmd_record(int argc, const char **argv)
+ 		record.opts.record_switch_events = true;
+ 	}
+ 
+-	if (!rec->buildid_mmap) {
+-		pr_debug("Disabling build id in synthesized mmap2 events.\n");
+-		symbol_conf.no_buildid_mmap2 = true;
+-	} else if (rec->buildid_mmap_set) {
+-		/*
+-		 * Explicitly passing --buildid-mmap disables buildid processing
+-		 * and cache generation.
+-		 */
+-		rec->no_buildid = true;
+-	}
+ 	if (rec->buildid_mmap && !perf_can_record_build_id()) {
+ 		pr_warning("Missing support for build id in kernel mmap events.\n"
+ 			   "Disable this warning with --no-buildid-mmap\n");
+ 		rec->buildid_mmap = false;
+ 	}
++
+ 	if (rec->buildid_mmap) {
+ 		/* Enable perf_event_attr::build_id bit. */
+ 		rec->opts.build_id = true;
++		/* Disable build-ID table in the header. */
++		rec->no_buildid = true;
++	} else {
++		pr_debug("Disabling build id in synthesized mmap2 events.\n");
++		symbol_conf.no_buildid_mmap2 = true;
++	}
++
++	if (rec->no_buildid_set && rec->no_buildid) {
++		/* -B implies -N for historic reasons. */
++		rec->no_buildid_cache = true;
+ 	}
+ 
+ 	if (rec->opts.record_cgroup && !perf_can_record_cgroup()) {
+@@ -4306,7 +4306,7 @@ int cmd_record(int argc, const char **argv)
+ 
+ 	err = -ENOMEM;
+ 
+-	if (rec->no_buildid_cache || rec->no_buildid) {
++	if (rec->no_buildid_cache) {
+ 		disable_buildid_cache();
+ 	} else if (rec->switch_output.enabled) {
+ 		/*
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 4f2a6e10ed5cc0bd..4de7ca16b5522c47 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -335,7 +335,6 @@ static int write_build_id(struct feat_fd *ff,
+ 		pr_debug("failed to write buildid table\n");
+ 		return err;
+ 	}
+-	perf_session__cache_build_ids(session);
+ 
+ 	return 0;
+ }
+-- 
+2.51.2.1041.gc1ab5b90ca-goog
 
