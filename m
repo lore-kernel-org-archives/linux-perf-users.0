@@ -1,75 +1,74 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78FF34A774
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Nov 2025 18:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1D22D8764
+	for <linux-perf-users@vger.kernel.org>; Thu,  6 Nov 2025 18:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762452330; cv=none; b=YExPW8FQMkmipu4OUMSTKQhvHzPXcqnB9RZSEyFeW+i+Ng8Th8oooTcsi/753mI67eMgD7YabD7lqWIk4769o17NceT20KJCCZypU6lyO+6pJoTy4x3WvQEopnxnNkeJ6GjTxlbDEkfGxtHjgN6XEomZMgXA0x+7JOPUTkzjp5w=
+	t=1762454617; cv=none; b=cmA4o2l1rV2hKa4x+rjCgCGL9aXNiBH5BamcyYE9fy2tjh1c1aMi9xJRuv/Z98OjX5ylqot4WoIcySIVJxQ+JT9gdm/Htkwi8IpUK8k41icPKBk9JY1Os/m/2fSPBksStriwVz/DwUtixw26S8aC/40jc9DwpiS7fL3gQmUlrqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762452330; c=relaxed/simple;
-	bh=G47cfKBtSfZeevthWSR31ey4bcEFvS7hwzCYBKn7lcw=;
+	s=arc-20240116; t=1762454617; c=relaxed/simple;
+	bh=Xgezs5FSuKUDxWZkIg/JG0XAvfAssZlpTqZgQYOOjtw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CCsWcBssa7Jd4P5lgZJHpHNWgcnkJyjJ193lYoYUZqWI8JkueEfAssJBh9tCXPk1y0Ey5dQGxOQrNnEDiarwmJkqPZA3LUozZaU14omxVOZR1jP0AUPfZS0E6t8L9VMhGzGRoq/ARAJqkmULZhM91cm+lX0j12ZEEgEUIVP2reg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lobfpZOC; arc=none smtp.client-ip=209.85.214.174
+	 To:Cc:Content-Type; b=rp2xCG8TFllf8KQR8BLDDzC/7FkDgT21zVsi3EAUJabZbD4slC3pZ97qpkrmqSE+ua+fFm+jmbtSDrOBi2ADnezQ/jgZTOh/MxGx+BqxfTcaUheEpiyhCK+K7C5ox4oIuMjTtKvV4MoTWSRyVuD2IPM7Y/lMQbqfGJ9MMuXz6xY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i35KC73V; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lobfpZOC"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2959197b68eso6455ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 06 Nov 2025 10:05:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i35KC73V"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-294f3105435so13685ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 06 Nov 2025 10:43:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762452328; x=1763057128; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1762454615; x=1763059415; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rxC183go+CfSntXz4o3OVXMqZhSkssDjJAownxyD7QI=;
-        b=lobfpZOC73i18KElFeGlZ4j4eSfgJy+qQY4Wows9VAjLIhaMxzIIxjXzogqhLQKs33
-         QYYZxtsLORP+GnQaC79fogb3RPqxXABMtUd7UEJh6GnA+OKdTK/jsZYJkGs8nvxThs7Z
-         Vxw461d8gEcAjx2+QLKvicdNykU0OZlBOAbHY+57pE1ZOObLXPdCEz5EALXAaGbds8ud
-         LfK83FA5HGsqV11fPwD7TvBOOJ4N4GO/dw3m29JIShxRawQGSBjbc/1PUyolsRsiF56H
-         pT+s8HOK9xABZ2udiYPKBHNnzB5wfG1VNHzE2Qmy79UIO4y1ick/eijldbO20AKQ3YLN
-         AI6A==
+        bh=kx3k3kEep1Osi8t9YC8biS3Xn+GMlwzxfXdy+eSJ/tw=;
+        b=i35KC73VPrU1iUCJP2VhlkFnSui4Qny00LhJCO5H6jzbxw+PaBbt/QF1Ig1+aKwmdi
+         P6mpRtrDpHKks0+qCDc2xm9zQiwLS8V6uS6ncT1AH6TUpPBHrnaW4LiBy5ruhtrDzJHj
+         QFzSO4LtjVeQYYSHjzHr4EpXQDOEdMvp/n9HOUMdD2if0WIJCh21sIDssBrcX7tloeas
+         4POU5gERedBmZS1YkVaCnfk3ee4TwoO3xLBRwI5rtJptNtnF4j/kH+EjEEzu+NsUrmvN
+         DV0vt+cBorylm7jkYePor4IC4D+hfg+Ee0kWDyB/OxFcJr8l2N/R7YnF8CG93/sUtzrQ
+         hSqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762452328; x=1763057128;
+        d=1e100.net; s=20230601; t=1762454615; x=1763059415;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=rxC183go+CfSntXz4o3OVXMqZhSkssDjJAownxyD7QI=;
-        b=j3tzd8jAHPTSsiaDRThJgFbEomsPA4pwNDpXYDr2/3VNzuGo1rGct83z68bGA8Ztfw
-         lZElCRk3p+4HObn5qKkmCUNpT/cRqNfAcKRJmtuRKKjPGNibfKShQBQVKc00WhBnpBo6
-         9lsPO2SjrvOawASNgsn+EpbSJ+ukKkXE0y1D3cRsWjZmRrRHqv7itTiH6Q2PBa0L2Cmd
-         56oGn61SFO9EHsXzesiSfYAIhl0vI67LBbAxkaiIVM5yUoYV7KkKoRff2QaAea6tZmXu
-         Tq8hd0OVcV8w2lcKzKaYO7VixPAJb0Dzk3Dfxn67cF905AnNnLpYok95hLzCDIVpgmfR
-         IRDg==
-X-Forwarded-Encrypted: i=1; AJvYcCWp6MQITDkTKQHpgLRG/goxZ10qGoEQqyJl4cmkoYrVFVCkMLbys9EjhJCjhsZWcljiUblWka9UNI8OoEJ/3/+l@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDnJWcMasE+iigLq+9PGlhQkA7YdTQIXV+XP56TSj6ChQHP31o
-	yMsMPY8WiH1WRpm0WYKDQpwrZEX1p8iXMXk6LhaXwmwVEvw1LGGHLxTEg1wkS270Z7xdjy8biK8
-	KTpehOnGQEwbtrD/fRBcdS1hgd+u4MTJlqyNfYF3P
-X-Gm-Gg: ASbGncutAgxDdshw0SOcIQXVG0ZcAz5K280w0/Xhd2K3yai46ha24jNjAPknl2XsmYT
-	Oep9CLp1pdk3I25IbllaSXK/uLc5ZSTx2qwZSKA1OmmtVuRxnbsXIu2At/+EsplKz3YliGCSmpZ
-	IDrHlOh0uI7u60hY3M7xrXV3CpXH6EGr7IxfbMzv9nHmqOVUqFz5CWOPh59JdSNB/SBhMCBvwKM
-	2yFi1JUVLOGMzMSrXnTSLWkAserojZwr1HzGx5w/kcccFDujPihPqUvUe6Dj8pIPk8Hii93Wt38
-	/kSiCQFHz0+9/Ks=
-X-Google-Smtp-Source: AGHT+IEt3zVmqnMpB8NLx+TNlgsH2bLYgu655fL8Gu0bJ3DdI4KuqTrAFcNRX1jdNBZgaD3q4DilbxV89vWJ3zwGJ74=
-X-Received: by 2002:a17:902:c405:b0:291:6488:5af5 with SMTP id
- d9443c01a7336-297c12ff719mr393215ad.1.1762452327318; Thu, 06 Nov 2025
- 10:05:27 -0800 (PST)
+        bh=kx3k3kEep1Osi8t9YC8biS3Xn+GMlwzxfXdy+eSJ/tw=;
+        b=npKrKvYM78HLk6gpLkO9nBL1cgxvB+guTdj099yHAIXrCi1EpBjwKbuIT+neX9pmPh
+         7n3Ya8DD90ye0d2/mkV9a0B12G9wjAIpasMcByPiBrwIvjlLTWgVdHCt9JThS/5OrK7F
+         QNN/UXMh0rdNKebDX3hxHwPAR78dzfX/qFhnQc2LLAUNVGY4IfEtGvJRhCFEQuVwqgDj
+         c9uefVaGX6D1QMgk0j2qe+RqKkDpye7/151nHLfyyrdT6BolfTPar3mMagyyem/jRX0X
+         bzQlhn+vsefJBBSvI2YslcUszr1uX7pQhfvvSUtJCxlO6W84b//ZuL2PB6G9OjofhJDh
+         g1pQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWH0UwyZfNd2Qpx++DmUwP5wTF137Pr4x3FyRAE2NVpJFQuIWdOR/GWbAXf/GJQ0619N5i8w6FQ/QGDCuD1kSqc@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzr3zeaaOCrr20i/1aZHyx/wQVUy8woflw6ClmmAKnPJGSf5L8v
+	rj4O6GCmnun3IcxXHhZitIUs0Q35X/VreIrtwt+KbJ/8Er7AiiMZ5dw87n1jwoYY7l5t0d44eE/
+	9xhAE8vJqram7dxQda/eAJ/Hq3KRbtEvos69p/37q
+X-Gm-Gg: ASbGnctfDqZ0Hbhlb1WMmm0YCubDCFp0gpknq80x9ip0eWgS0H23RXom1fmGvfAaPEi
+	rfBerb6+4Ro0rEN32Fg2sngphPzoYbt3XyR1MIFxmXgEW5hluGy6HwoI7C23sCmBxFHHpwa2Nzq
+	IQ3WYjDVyQ0bbK2d1mJeXVRHxTNJsjNygjwu4+HpppZClAjV3U41BSkUSgSP7Vw8rKB+zA5KHjD
+	uDVh+hEbaL4FxDtHfP+hSIHFMNe/pyoVzT+YypQkN5Zc/WOXkuITo+CfnmDauslctwOx6F6Wz+5
+	A2IH/hwxj+bLXYwJX2/FRqQepg==
+X-Google-Smtp-Source: AGHT+IF595yXHj1R0vJCF+feMalPWNtb+trAUjO98C5efGBIfaeJjOXXPVeNB7Rs+09OqW76Or/uYcg+9ZG9bBRA+RU=
+X-Received: by 2002:a17:902:db07:b0:274:1a09:9553 with SMTP id
+ d9443c01a7336-297c23c3639mr176895ad.6.1762454615057; Thu, 06 Nov 2025
+ 10:43:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251024175857.808401-1-irogers@google.com> <20251024175857.808401-9-irogers@google.com>
- <aQw-qsVuWf8IHUrL@google.com>
-In-Reply-To: <aQw-qsVuWf8IHUrL@google.com>
+References: <20251024175857.808401-1-irogers@google.com> <20251024175857.808401-8-irogers@google.com>
+ <aQmHfya8SYIcVGcg@google.com>
+In-Reply-To: <aQmHfya8SYIcVGcg@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 6 Nov 2025 10:05:15 -0800
-X-Gm-Features: AWmQ_bmnHR5yZCN2N41QWYjWH64lVy0nNbdqLSAzzwWVEDb2cNmFAqTtrjMe-P0
-Message-ID: <CAP-5=fWx6H9g1c63wmXHRsBfEYYQNQ3p1uBviAzMtchuGB7oog@mail.gmail.com>
-Subject: Re: [PATCH v1 08/22] perf jevents: Add set of common metrics based on
- default ones
+Date: Thu, 6 Nov 2025 10:43:24 -0800
+X-Gm-Features: AWmQ_blYBvvVj5PROyLrN85lROrsLampVhlxTAN2qAyCgPP2Nlsws--HlUu63tU
+Message-ID: <CAP-5=fUcCjDpu3=FNkiayZG7gpTzo9VLnEO-YM_b=GPwdDeLbw@mail.gmail.com>
+Subject: Re: [PATCH v1 07/22] perf expr: Add #target_cpu literal
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
@@ -84,223 +83,59 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 5, 2025 at 10:22=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Mon, Nov 3, 2025 at 8:56=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
 >
-> On Fri, Oct 24, 2025 at 10:58:43AM -0700, Ian Rogers wrote:
-> > Add support to getting a common set of metrics from a default
-> > table. It simplifies the generation to add json metrics at the same
-> > time. The metrics added are CPUs_utilized, cs_per_second,
-> > migrations_per_second, page_faults_per_second, insn_per_cycle,
-> > stalled_cycles_per_instruction, frontend_cycles_idle,
-> > backend_cycles_idle, cycles_frequency, branch_frequency and
-> > branch_miss_rate based on the shadow metric definitions.
-> >
-> > Following this change the default perf stat output on an alderlake look=
-s like:
-> > ```
-> > $ perf stat -a -- sleep 1
-> >
-> >  Performance counter stats for 'system wide':
-> >
-> >     28,165,735,434      cpu-clock                        #   27.973 CPU=
-s utilized
-> >             23,220      context-switches                 #  824.406 /se=
-c
-> >                833      cpu-migrations                   #   29.575 /se=
-c
-> >             35,293      page-faults                      #    1.253 K/s=
-ec
-> >        997,341,554      cpu_atom/instructions/           #    0.84  ins=
-n per cycle              (35.63%)
-> >     11,197,053,736      cpu_core/instructions/           #    1.97  ins=
-n per cycle              (58.21%)
-> >      1,184,871,493      cpu_atom/cycles/                 #    0.042 GHz=
-                         (35.64%)
-> >      5,676,692,769      cpu_core/cycles/                 #    0.202 GHz=
-                         (58.22%)
-> >        150,525,309      cpu_atom/branches/               #    5.344 M/s=
-ec                       (42.80%)
-> >      2,277,232,030      cpu_core/branches/               #   80.851 M/s=
-ec                       (58.21%)
-> >          5,248,575      cpu_atom/branch-misses/          #    3.49% of =
-all branches             (42.82%)
-> >         28,829,930      cpu_core/branch-misses/          #    1.27% of =
-all branches             (58.22%)
-> >                        (software)                 #    824.4 cs/sec  cs=
-_per_second
-> >              TopdownL1 (cpu_core)                 #     12.6 %  tma_bad=
-_speculation
-> >                                                   #     28.8 %  tma_fro=
-ntend_bound       (66.57%)
-> >              TopdownL1 (cpu_core)                 #     25.8 %  tma_bac=
-kend_bound
-> >                                                   #     32.8 %  tma_ret=
-iring             (66.57%)
-> >                        (software)                 #   1253.1 faults/sec=
-  page_faults_per_second
-> >                                                   #      0.0 GHz  cycle=
-s_frequency       (42.80%)
-> >                                                   #      0.2 GHz  cycle=
-s_frequency       (74.92%)
-> >              TopdownL1 (cpu_atom)                 #     22.3 %  tma_bad=
-_speculation
-> >                                                   #     17.2 %  tma_ret=
-iring             (49.95%)
-> >              TopdownL1 (cpu_atom)                 #     30.6 %  tma_bac=
-kend_bound
-> >                                                   #     29.8 %  tma_fro=
-ntend_bound       (49.94%)
-> >                        (cpu_atom)                 #      6.9 K/sec  bra=
-nch_frequency     (42.89%)
-> >                                                   #     80.5 K/sec  bra=
-nch_frequency     (74.93%)
-> >                                                   #     29.6 migrations=
-/sec  migrations_per_second
-> >                                                   #     28.0 CPUs  CPUs=
-_utilized
-> >                        (cpu_atom)                 #      0.8 instructio=
-ns  insn_per_cycle  (42.91%)
-> >                                                   #      2.0 instructio=
-ns  insn_per_cycle  (75.14%)
-> >                        (cpu_atom)                 #      3.8 %  branch_=
-miss_rate         (35.75%)
-> >                                                   #      1.2 %  branch_=
-miss_rate         (66.86%)
-> >
-> >        1.007063529 seconds time elapsed
-> > ```
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  .../arch/common/common/metrics.json           |  86 +++++++++++++
-> >  tools/perf/pmu-events/empty-pmu-events.c      | 115 +++++++++++++-----
-> >  tools/perf/pmu-events/jevents.py              |  21 +++-
-> >  tools/perf/pmu-events/pmu-events.h            |   1 +
-> >  tools/perf/util/metricgroup.c                 |  31 +++--
-> >  5 files changed, 212 insertions(+), 42 deletions(-)
-> >  create mode 100644 tools/perf/pmu-events/arch/common/common/metrics.js=
-on
-> >
-> > diff --git a/tools/perf/pmu-events/arch/common/common/metrics.json b/to=
-ols/perf/pmu-events/arch/common/common/metrics.json
-> > new file mode 100644
-> > index 000000000000..d1e37db18dc6
-> > --- /dev/null
-> > +++ b/tools/perf/pmu-events/arch/common/common/metrics.json
-> > @@ -0,0 +1,86 @@
-> > +[
-> > +    {
-> > +        "BriefDescription": "Average CPU utilization",
-> > +        "MetricExpr": "(software@cpu\\-clock\\,name\\=3Dcpu\\-clock@ i=
-f #target_cpu else software@task\\-clock\\,name\\=3Dtask\\-clock@) / (durat=
-ion_time * 1e9)",
-> > +        "MetricGroup": "Default",
-> > +        "MetricName": "CPUs_utilized",
-> > +        "ScaleUnit": "1CPUs",
-> > +        "MetricConstraint": "NO_GROUP_EVENTS"
-> > +    },
-> > +    {
-> > +        "BriefDescription": "Context switches per CPU second",
-> > +        "MetricExpr": "(software@context\\-switches\\,name\\=3Dcontext=
-\\-switches@ * 1e9) / (software@cpu\\-clock\\,name\\=3Dcpu\\-clock@ if #tar=
-get_cpu else software@task\\-clock\\,name\\=3Dtask\\-clock@)",
-> > +        "MetricGroup": "Default",
-> > +        "MetricName": "cs_per_second",
-> > +        "ScaleUnit": "1cs/sec",
-> > +        "MetricConstraint": "NO_GROUP_EVENTS"
-> > +    },
-> > +    {
-> > +        "BriefDescription": "Process migrations to a new CPU per CPU s=
-econd",
-> > +        "MetricExpr": "(software@cpu\\-migrations\\,name\\=3Dcpu\\-mig=
-rations@ * 1e9) / (software@cpu\\-clock\\,name\\=3Dcpu\\-clock@ if #target_=
-cpu else software@task\\-clock\\,name\\=3Dtask\\-clock@)",
-> > +        "MetricGroup": "Default",
-> > +        "MetricName": "migrations_per_second",
-> > +        "ScaleUnit": "1migrations/sec",
-> > +        "MetricConstraint": "NO_GROUP_EVENTS"
-> > +    },
-> > +    {
-> > +        "BriefDescription": "Page faults per CPU second",
-> > +        "MetricExpr": "(software@page\\-faults\\,name\\=3Dpage\\-fault=
-s@ * 1e9) / (software@cpu\\-clock\\,name\\=3Dcpu\\-clock@ if #target_cpu el=
-se software@task\\-clock\\,name\\=3Dtask\\-clock@)",
-> > +        "MetricGroup": "Default",
-> > +        "MetricName": "page_faults_per_second",
-> > +        "ScaleUnit": "1faults/sec",
-> > +        "MetricConstraint": "NO_GROUP_EVENTS"
-> > +    },
-> > +    {
-> > +        "BriefDescription": "Instructions Per Cycle",
-> > +        "MetricExpr": "instructions / cpu\\-cycles",
-> > +        "MetricGroup": "Default",
-> > +        "MetricName": "insn_per_cycle",
-> > +        "MetricThreshold": "insn_per_cycle < 1",
-> > +        "ScaleUnit": "1instructions"
-> > +    },
-> > +    {
-> > +        "BriefDescription": "Max front or backend stalls per instructi=
-on",
-> > +        "MetricExpr": "max(stalled\\-cycles\\-frontend, stalled\\-cycl=
-es\\-backend) / instructions",
-> > +        "MetricGroup": "Default",
-> > +        "MetricName": "stalled_cycles_per_instruction"
-> > +    },
-> > +    {
-> > +        "BriefDescription": "Frontend stalls per cycle",
-> > +        "MetricExpr": "stalled\\-cycles\\-frontend / cpu\\-cycles",
-> > +        "MetricGroup": "Default",
-> > +        "MetricName": "frontend_cycles_idle",
-> > +        "MetricThreshold": "frontend_cycles_idle > 0.1"
-> > +    },
-> > +    {
-> > +        "BriefDescription": "Backend stalls per cycle",
-> > +        "MetricExpr": "stalled\\-cycles\\-backend / cpu\\-cycles",
-> > +        "MetricGroup": "Default",
-> > +        "MetricName": "backend_cycles_idle",
-> > +        "MetricThreshold": "backend_cycles_idle > 0.2"
-> > +    },
-> > +    {
-> > +        "BriefDescription": "Cycles per CPU second",
-> > +        "MetricExpr": "cpu\\-cycles / (software@cpu\\-clock\\,name\\=
-=3Dcpu\\-clock@ if #target_cpu else software@task\\-clock\\,name\\=3Dtask\\=
--clock@)",
-> > +        "MetricGroup": "Default",
-> > +        "MetricName": "cycles_frequency",
-> > +        "ScaleUnit": "1GHz",
-> > +        "MetricConstraint": "NO_GROUP_EVENTS"
-> > +    },
-> > +    {
-> > +        "BriefDescription": "Branches per CPU second",
-> > +        "MetricExpr": "branches / (software@cpu\\-clock\\,name\\=3Dcpu=
-\\-clock@ if #target_cpu else software@task\\-clock\\,name\\=3Dtask\\-clock=
-@)",
-> > +        "MetricGroup": "Default",
-> > +        "MetricName": "branch_frequency",
-> > +        "ScaleUnit": "1000K/sec",
+> On Fri, Oct 24, 2025 at 10:58:42AM -0700, Ian Rogers wrote:
+> > For CPU nanoseconds a lot of the stat-shadow metrics use either
+> > task-clock or cpu-clock, the latter being used when
+> > target__has_cpu. Add a #target_cpu literal so that json metrics can
+> > perform the same test.
 >
-> Wouldn't it be "1000M/sec" ?
+> Do we have documentation for the literals and metric expressions in
+> general?  I think it's getting complex and we should provide one.
 
-Agreed. Will fix in v2. The existing logic does multiple by 1e9 in one
-place and then divide by 1e3 in another. It would be good if we could
-do better units, based on metric value, but I'll leave that for
-another day.
+So in general all these are documented in the tools events in `perf list`:
+```
+$ perf list
+...
+tool:
+  duration_time
+       [Wall clock interval time in nanoseconds. Unit: tool]
+  has_pmem
+       [1 if persistent memory installed otherwise 0. Unit: tool]
+  num_cores
+       [Number of cores. A core consists of 1 or more thread,with each
+thread being associated
+        with a logical Linux CPU. Unit: tool]
+  num_cpus
+       [Number of logical Linux CPUs. There may be multiple such CPUs
+on a core. Unit: tool]
+  num_cpus_online
+       [Number of online logical Linux CPUs. There may be multiple
+such CPUs on a core. Unit: tool]
+  num_dies
+       [Number of dies. Each die has 1 or more cores. Unit: tool]
+  num_packages
+       [Number of packages. Each package has 1 or more die. Unit: tool]
+  smt_on
+       [1 if simultaneous multithreading (aka hyperthreading) is
+enable otherwise 0. Unit: tool]
+  system_time
+       [System/kernel time in nanoseconds. Unit: tool]
+  system_tsc_freq
+       [The amount a Time Stamp Counter (TSC) increases per second. Unit: t=
+ool]
+  user_time
+       [User (non-kernel) time in nanoseconds. Unit: tool]
+```
 
-> > +        "MetricConstraint": "NO_GROUP_EVENTS"
-> > +    },
-> > +    {
-> > +        "BriefDescription": "Branch miss rate",
-> > +        "MetricExpr": "branch\\-misses / branches",
-> > +        "MetricGroup": "Default",
-> > +        "MetricName": "branch_miss_rate",
-> > +        "MetricThreshold": "branch_miss_rate > 0.05",
->
-> Is MetricThreshold evaluated before scaling?
-
-Yep. Primarily to help share most of the events/calculation with the
-metric being created. Fwiw, the 5% here comes from the existing
-stat-shadow metric threshold.
+We haven't done that with #core_wide and I followed that pattern for
+#target_cpu as they do similar things. The issue with these two
+"literals", why they are hard to be tool events, is that they depend
+on command line options that may be processed after the processing of
+the metrics. We could make tool versions with some plumbing. I'll look
+to add that.
 
 Thanks,
 Ian
@@ -308,7 +143,29 @@ Ian
 > Thanks,
 > Namhyung
 >
->
-> > +        "ScaleUnit": "100%"
-> > +    }
-> > +]
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/expr.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+> > index 7fda0ff89c16..4df56f2b283d 100644
+> > --- a/tools/perf/util/expr.c
+> > +++ b/tools/perf/util/expr.c
+> > @@ -409,6 +409,9 @@ double expr__get_literal(const char *literal, const=
+ struct expr_scanner_ctx *ctx
+> >       } else if (!strcmp("#core_wide", literal)) {
+> >               result =3D core_wide(ctx->system_wide, ctx->user_requeste=
+d_cpu_list)
+> >                       ? 1.0 : 0.0;
+> > +     } else if (!strcmp("#target_cpu", literal)) {
+> > +             result =3D (ctx->system_wide || ctx->user_requested_cpu_l=
+ist)
+> > +                     ? 1.0 : 0.0;
+> >       } else {
+> >               pr_err("Unrecognized literal '%s'", literal);
+> >       }
+> > --
+> > 2.51.1.821.gb6fe4d2222-goog
+> >
