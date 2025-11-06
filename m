@@ -1,221 +1,226 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B840025228D
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Nov 2025 06:21:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC5425228D;
+	Thu,  6 Nov 2025 06:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762410074; cv=none; b=SL9t0SWcGZxGvz4MuPp/SXwzt5qsh7rK68nYNGPVBL8HHH2RhabdSi7/Jb613BcMs1HX8+3l/O0My2TGEto2rvkxZTw3I1osxq3m1Sz0BmMt42UTSm9bV9QpR7OS17vBDMnLV2M7S67VDdV5yW9e26DzRPtFzDPn6QEI28pf90w=
+	t=1762410156; cv=none; b=TUEUdMpLi9sc2VJhDCkQfAnS/J7/eLJk1qpaP0eF0n88Mw1nvKvY21V5zqALUm5twYCuBTBgYz4UO7S5BM9WN4j9VyiOovDGgbFJfApT3VgwjhRSaU8PapKouUV/WkrQT8QmnUhwmbpbExku7AakIVMt753vyD5iYZLBItM9ENs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762410074; c=relaxed/simple;
-	bh=abKb5CfZvJNGhEenqOGbu+zmBxdUtT+s+KOcu4Z7NB8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KmeAisV5Sn1K7kIBEZX6OM9VAvNKvXm2GSkA6b8rwbXuPNZM3kAiiUWktQaLsEFOMXL1ZDR3pQFKmjRHXsuxI3+7OFAspo7X+woqovBQQejoeyI2TToyEBZIWW/hAKGVHGv0O/WR7nuYmwH4S2oREKPU3E6Jj3FTPFXtq0vqqag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KuyG9orG; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1762410156; c=relaxed/simple;
+	bh=La3rE3GWGm2LjHT1GnPHQF4BwIAf4w6c4woYhVapbAY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RxdsI7VcVTZfuyhFCaH7Gdt1s565JSMsRydIJn2qKEebqCRcVmIZjBbGp0FQs0W1pFSIdbME4eJZd0UFwo5x3bSSZoTFDBN9VLoTYF88aWbCTHldmTYJmNqwbaGKRbPsg8z8Zj8IaRNAXxt297YewdFOvJdWeVrgkIQiDlbOjVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fO6Qw65x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KuyG9orG"
-Message-ID: <04002253-1edf-4957-a43e-bd6dcc465dcd@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1762410068;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hL6DGlvfqnJjww1xq+st54rj3XETpUdgjatzms+S4Zc=;
-	b=KuyG9orGa4Ydr/lDvPCFz2F/1SM92tLvWZIahOwcgGy01ifHNmfKDt0Nkq0r6dWMld659a
-	6QqEJEEJtybZFtKtECAjsuiM17hMGgF91Y+y917HJ5bavnEmPCOg6Ey4cy5cQA06gqZJgd
-	YKp038G/Pqw4uz5z6MmOTX+STYPW1qw=
-Date: Wed, 5 Nov 2025 22:20:58 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fO6Qw65x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86ABCC4CEF7;
+	Thu,  6 Nov 2025 06:22:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762410156;
+	bh=La3rE3GWGm2LjHT1GnPHQF4BwIAf4w6c4woYhVapbAY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fO6Qw65xz0wrxc4gj+5Vq15uaz6DCX41MKpAR88jm/KzDyhpJ/oPo7h6QjThU3fyG
+	 QjWpG7RwL1l7purjgr1rWmzcunQ5RW4iCzFamIwXyBepsG2ihqMnqpyM57y5BFe6xk
+	 m/Hv7EAPhzJbtQwUUevIzfV8SEAiubS3Mn8DTwuVWTZyLcdVRWvAPFrhEU1+MJ/D7J
+	 J67GLLU0ttPZ5Pr5vjyFC7Pz7UN1l/+WC1N/IKZok1tk/U8O7RZtWkucR7x3GAxZeS
+	 4NxalVfn9px14RHTAdXFS399WrG3VEyHoLkPjCcAhcDKYyqEmP9xtCWFqo0GO/8kiA
+	 NddiKjgdynuzg==
+Date: Wed, 5 Nov 2025 22:22:34 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>,
+	Chun-Tse Shao <ctshao@google.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Sumanth Korikkar <sumanthk@linux.ibm.com>,
+	Collin Funk <collin.funk1@gmail.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Levi Yun <yeoreum.yun@arm.com>,
+	Yang Li <yang.lee@linux.alibaba.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1 08/22] perf jevents: Add set of common metrics based
+ on default ones
+Message-ID: <aQw-qsVuWf8IHUrL@google.com>
+References: <20251024175857.808401-1-irogers@google.com>
+ <20251024175857.808401-9-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v4 2/2] bpf: Hold the perf callchain entry until
- used completely
-Content-Language: en-GB
-To: Tao Chen <chen.dylane@linux.dev>, peterz@infradead.org, mingo@redhat.com,
- acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com, song@kernel.org,
- ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, john.fastabend@gmail.com,
- kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-References: <20251028162502.3418817-1-chen.dylane@linux.dev>
- <20251028162502.3418817-3-chen.dylane@linux.dev>
- <c352f357-1417-47b5-9d8c-28d99f20f5a6@linux.dev>
- <363717bf-499a-4e47-b2c9-8a6e4105282c@linux.dev>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <363717bf-499a-4e47-b2c9-8a6e4105282c@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251024175857.808401-9-irogers@google.com>
+
+On Fri, Oct 24, 2025 at 10:58:43AM -0700, Ian Rogers wrote:
+> Add support to getting a common set of metrics from a default
+> table. It simplifies the generation to add json metrics at the same
+> time. The metrics added are CPUs_utilized, cs_per_second,
+> migrations_per_second, page_faults_per_second, insn_per_cycle,
+> stalled_cycles_per_instruction, frontend_cycles_idle,
+> backend_cycles_idle, cycles_frequency, branch_frequency and
+> branch_miss_rate based on the shadow metric definitions.
+> 
+> Following this change the default perf stat output on an alderlake looks like:
+> ```
+> $ perf stat -a -- sleep 1
+> 
+>  Performance counter stats for 'system wide':
+> 
+>     28,165,735,434      cpu-clock                        #   27.973 CPUs utilized
+>             23,220      context-switches                 #  824.406 /sec
+>                833      cpu-migrations                   #   29.575 /sec
+>             35,293      page-faults                      #    1.253 K/sec
+>        997,341,554      cpu_atom/instructions/           #    0.84  insn per cycle              (35.63%)
+>     11,197,053,736      cpu_core/instructions/           #    1.97  insn per cycle              (58.21%)
+>      1,184,871,493      cpu_atom/cycles/                 #    0.042 GHz                         (35.64%)
+>      5,676,692,769      cpu_core/cycles/                 #    0.202 GHz                         (58.22%)
+>        150,525,309      cpu_atom/branches/               #    5.344 M/sec                       (42.80%)
+>      2,277,232,030      cpu_core/branches/               #   80.851 M/sec                       (58.21%)
+>          5,248,575      cpu_atom/branch-misses/          #    3.49% of all branches             (42.82%)
+>         28,829,930      cpu_core/branch-misses/          #    1.27% of all branches             (58.22%)
+>                        (software)                 #    824.4 cs/sec  cs_per_second
+>              TopdownL1 (cpu_core)                 #     12.6 %  tma_bad_speculation
+>                                                   #     28.8 %  tma_frontend_bound       (66.57%)
+>              TopdownL1 (cpu_core)                 #     25.8 %  tma_backend_bound
+>                                                   #     32.8 %  tma_retiring             (66.57%)
+>                        (software)                 #   1253.1 faults/sec  page_faults_per_second
+>                                                   #      0.0 GHz  cycles_frequency       (42.80%)
+>                                                   #      0.2 GHz  cycles_frequency       (74.92%)
+>              TopdownL1 (cpu_atom)                 #     22.3 %  tma_bad_speculation
+>                                                   #     17.2 %  tma_retiring             (49.95%)
+>              TopdownL1 (cpu_atom)                 #     30.6 %  tma_backend_bound
+>                                                   #     29.8 %  tma_frontend_bound       (49.94%)
+>                        (cpu_atom)                 #      6.9 K/sec  branch_frequency     (42.89%)
+>                                                   #     80.5 K/sec  branch_frequency     (74.93%)
+>                                                   #     29.6 migrations/sec  migrations_per_second
+>                                                   #     28.0 CPUs  CPUs_utilized
+>                        (cpu_atom)                 #      0.8 instructions  insn_per_cycle  (42.91%)
+>                                                   #      2.0 instructions  insn_per_cycle  (75.14%)
+>                        (cpu_atom)                 #      3.8 %  branch_miss_rate         (35.75%)
+>                                                   #      1.2 %  branch_miss_rate         (66.86%)
+> 
+>        1.007063529 seconds time elapsed
+> ```
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  .../arch/common/common/metrics.json           |  86 +++++++++++++
+>  tools/perf/pmu-events/empty-pmu-events.c      | 115 +++++++++++++-----
+>  tools/perf/pmu-events/jevents.py              |  21 +++-
+>  tools/perf/pmu-events/pmu-events.h            |   1 +
+>  tools/perf/util/metricgroup.c                 |  31 +++--
+>  5 files changed, 212 insertions(+), 42 deletions(-)
+>  create mode 100644 tools/perf/pmu-events/arch/common/common/metrics.json
+> 
+> diff --git a/tools/perf/pmu-events/arch/common/common/metrics.json b/tools/perf/pmu-events/arch/common/common/metrics.json
+> new file mode 100644
+> index 000000000000..d1e37db18dc6
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/common/common/metrics.json
+> @@ -0,0 +1,86 @@
+> +[
+> +    {
+> +        "BriefDescription": "Average CPU utilization",
+> +        "MetricExpr": "(software@cpu\\-clock\\,name\\=cpu\\-clock@ if #target_cpu else software@task\\-clock\\,name\\=task\\-clock@) / (duration_time * 1e9)",
+> +        "MetricGroup": "Default",
+> +        "MetricName": "CPUs_utilized",
+> +        "ScaleUnit": "1CPUs",
+> +        "MetricConstraint": "NO_GROUP_EVENTS"
+> +    },
+> +    {
+> +        "BriefDescription": "Context switches per CPU second",
+> +        "MetricExpr": "(software@context\\-switches\\,name\\=context\\-switches@ * 1e9) / (software@cpu\\-clock\\,name\\=cpu\\-clock@ if #target_cpu else software@task\\-clock\\,name\\=task\\-clock@)",
+> +        "MetricGroup": "Default",
+> +        "MetricName": "cs_per_second",
+> +        "ScaleUnit": "1cs/sec",
+> +        "MetricConstraint": "NO_GROUP_EVENTS"
+> +    },
+> +    {
+> +        "BriefDescription": "Process migrations to a new CPU per CPU second",
+> +        "MetricExpr": "(software@cpu\\-migrations\\,name\\=cpu\\-migrations@ * 1e9) / (software@cpu\\-clock\\,name\\=cpu\\-clock@ if #target_cpu else software@task\\-clock\\,name\\=task\\-clock@)",
+> +        "MetricGroup": "Default",
+> +        "MetricName": "migrations_per_second",
+> +        "ScaleUnit": "1migrations/sec",
+> +        "MetricConstraint": "NO_GROUP_EVENTS"
+> +    },
+> +    {
+> +        "BriefDescription": "Page faults per CPU second",
+> +        "MetricExpr": "(software@page\\-faults\\,name\\=page\\-faults@ * 1e9) / (software@cpu\\-clock\\,name\\=cpu\\-clock@ if #target_cpu else software@task\\-clock\\,name\\=task\\-clock@)",
+> +        "MetricGroup": "Default",
+> +        "MetricName": "page_faults_per_second",
+> +        "ScaleUnit": "1faults/sec",
+> +        "MetricConstraint": "NO_GROUP_EVENTS"
+> +    },
+> +    {
+> +        "BriefDescription": "Instructions Per Cycle",
+> +        "MetricExpr": "instructions / cpu\\-cycles",
+> +        "MetricGroup": "Default",
+> +        "MetricName": "insn_per_cycle",
+> +        "MetricThreshold": "insn_per_cycle < 1",
+> +        "ScaleUnit": "1instructions"
+> +    },
+> +    {
+> +        "BriefDescription": "Max front or backend stalls per instruction",
+> +        "MetricExpr": "max(stalled\\-cycles\\-frontend, stalled\\-cycles\\-backend) / instructions",
+> +        "MetricGroup": "Default",
+> +        "MetricName": "stalled_cycles_per_instruction"
+> +    },
+> +    {
+> +        "BriefDescription": "Frontend stalls per cycle",
+> +        "MetricExpr": "stalled\\-cycles\\-frontend / cpu\\-cycles",
+> +        "MetricGroup": "Default",
+> +        "MetricName": "frontend_cycles_idle",
+> +        "MetricThreshold": "frontend_cycles_idle > 0.1"
+> +    },
+> +    {
+> +        "BriefDescription": "Backend stalls per cycle",
+> +        "MetricExpr": "stalled\\-cycles\\-backend / cpu\\-cycles",
+> +        "MetricGroup": "Default",
+> +        "MetricName": "backend_cycles_idle",
+> +        "MetricThreshold": "backend_cycles_idle > 0.2"
+> +    },
+> +    {
+> +        "BriefDescription": "Cycles per CPU second",
+> +        "MetricExpr": "cpu\\-cycles / (software@cpu\\-clock\\,name\\=cpu\\-clock@ if #target_cpu else software@task\\-clock\\,name\\=task\\-clock@)",
+> +        "MetricGroup": "Default",
+> +        "MetricName": "cycles_frequency",
+> +        "ScaleUnit": "1GHz",
+> +        "MetricConstraint": "NO_GROUP_EVENTS"
+> +    },
+> +    {
+> +        "BriefDescription": "Branches per CPU second",
+> +        "MetricExpr": "branches / (software@cpu\\-clock\\,name\\=cpu\\-clock@ if #target_cpu else software@task\\-clock\\,name\\=task\\-clock@)",
+> +        "MetricGroup": "Default",
+> +        "MetricName": "branch_frequency",
+> +        "ScaleUnit": "1000K/sec",
+
+Wouldn't it be "1000M/sec" ?
 
 
+> +        "MetricConstraint": "NO_GROUP_EVENTS"
+> +    },
+> +    {
+> +        "BriefDescription": "Branch miss rate",
+> +        "MetricExpr": "branch\\-misses / branches",
+> +        "MetricGroup": "Default",
+> +        "MetricName": "branch_miss_rate",
+> +        "MetricThreshold": "branch_miss_rate > 0.05",
 
-On 11/5/25 9:12 PM, Tao Chen wrote:
-> 在 2025/11/6 06:16, Yonghong Song 写道:
->>
->>
->> On 10/28/25 9:25 AM, Tao Chen wrote:
->>> As Alexei noted, get_perf_callchain() return values may be reused
->>> if a task is preempted after the BPF program enters migrate disable
->>> mode. The perf_callchain_entres has a small stack of entries, and
->>> we can reuse it as follows:
->>>
->>> 1. get the perf callchain entry
->>> 2. BPF use...
->>> 3. put the perf callchain entry
->>>
->>> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
->>> ---
->>>   kernel/bpf/stackmap.c | 61 
->>> ++++++++++++++++++++++++++++++++++---------
->>>   1 file changed, 48 insertions(+), 13 deletions(-)
->>>
->>> diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
->>> index e28b35c7e0b..70d38249083 100644
->>> --- a/kernel/bpf/stackmap.c
->>> +++ b/kernel/bpf/stackmap.c
->>> @@ -188,13 +188,12 @@ static void 
->>> stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
->>>   }
->>>   static struct perf_callchain_entry *
->>> -get_callchain_entry_for_task(struct task_struct *task, u32 max_depth)
->>> +get_callchain_entry_for_task(int *rctx, struct task_struct *task, 
->>> u32 max_depth)
->>>   {
->>>   #ifdef CONFIG_STACKTRACE
->>>       struct perf_callchain_entry *entry;
->>> -    int rctx;
->>> -    entry = get_callchain_entry(&rctx);
->>> +    entry = get_callchain_entry(rctx);
->>>       if (!entry)
->>>           return NULL;
->>> @@ -216,8 +215,6 @@ get_callchain_entry_for_task(struct task_struct 
->>> *task, u32 max_depth)
->>>               to[i] = (u64)(from[i]);
->>>       }
->>> -    put_callchain_entry(rctx);
->>> -
->>>       return entry;
->>>   #else /* CONFIG_STACKTRACE */
->>>       return NULL;
->>> @@ -297,6 +294,31 @@ static long __bpf_get_stackid(struct bpf_map *map,
->>>       return id;
->>>   }
->>> +static struct perf_callchain_entry *
->>> +bpf_get_perf_callchain(int *rctx, struct pt_regs *regs, bool 
->>> kernel, bool user,
->>> +               int max_stack, bool crosstask)
->>> +{
->>> +    struct perf_callchain_entry_ctx ctx;
->>> +    struct perf_callchain_entry *entry;
->>> +
->>> +    entry = get_callchain_entry(rctx);
->>
->> I think this may not work. Let us say we have two bpf programs
->> both pinned to a particular cpu (migrate disabled but preempt enabled).
->> get_callchain_entry() calls get_recursion_context() to get the
->> buffer for a particulart level.
->>
->> static inline int get_recursion_context(u8 *recursion)
->> {
->>          unsigned char rctx = interrupt_context_level();
->>          if (recursion[rctx])
->>                  return -1;
->>          recursion[rctx]++;
->>          barrier();
->>          return rctx;
->> }
->>
->> It is possible that both tasks (at process level) may
->> reach right before "recursion[rctx]++;".
->> In such cases, both tasks will be able to get
->> buffer and this is not right.
->>
->> To fix this, we either need to have preempt disable
->> in bpf side, or maybe we have some kind of atomic
->> operation (cmpxchg or similar things), or maybe
->> has a preempt disable between if statement and recursion[rctx]++,
->> so only one task can get buffer?
->>
->
-> Thanks to your reminder, can we add preempt disable before and after 
-> get_callchain_entry, avoid affecting the original functions of perf.
+Is MetricThreshold evaluated before scaling?
 
-Yes, we get two get_callchain_entry() call site:
-   bpf/stackmap.c: entry = get_callchain_entry(&rctx);
-   events/callchain.c:     entry = get_callchain_entry(&rctx);
-We need to have preempt_disable()/preempt_enable() around them.
+Thanks,
+Namhyung
 
-Another choice maybe adds preempt_disable/enable() for
-get_callchain_entry() and get_perf_callchain() in stackmap.c,
-assuming these two function usage in other places are for
-interrupts (softirq, hardirq and nmi) so they are okay.
 
-But maybe the following is better?
-
-diff --git a/kernel/events/internal.h b/kernel/events/internal.h
-index d9cc57083091..0ccf94315954 100644
---- a/kernel/events/internal.h
-+++ b/kernel/events/internal.h
-@@ -214,12 +214,9 @@ static inline int get_recursion_context(u8 *recursion)
-  {
-         unsigned char rctx = interrupt_context_level();
-  
--       if (recursion[rctx])
-+       if (cmpxchg(&recursion[rctx], 0, 1) != 0)
-                 return -1;
-  
--       recursion[rctx]++;
--       barrier();
--
-         return rctx;
-  }
-
->
-> Regarding multiple task preemption: if the entry is not released via 
-> put_callchain_entry, it appears that perf's buffer does not support 
-> recording the second task, so it returns directly here.
->
->           if (recursion[rctx])
->                   return -1;
->
->>
->>> +    if (unlikely(!entry))
->>> +        return NULL;
->>> +
->>> +    __init_perf_callchain_ctx(&ctx, entry, max_stack, false);
->>> +    if (kernel)
->>> +        __get_perf_callchain_kernel(&ctx, regs);
->>> +    if (user && !crosstask)
->>> +        __get_perf_callchain_user(&ctx, regs);
->>> +
->>> +    return entry;
->>> +}
->>> +
->>> +static void bpf_put_callchain_entry(int rctx)
->>
->> we have bpf_get_perf_callchain(), maybe rename the above
->> to bpf_put_perf_callchain()?
->>
->
-> Ack, thanks.
->
->>> +{
->>> +    put_callchain_entry(rctx);
->>> +}
->>> +
->>
->> [...]
->>
->
->
-
+> +        "ScaleUnit": "100%"
+> +    }
+> +]
