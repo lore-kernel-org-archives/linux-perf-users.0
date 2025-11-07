@@ -1,201 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AAB1248F64;
-	Fri,  7 Nov 2025 02:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45ED52EF654
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Nov 2025 02:42:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762481803; cv=none; b=AP5NtModzklvqSSMQR+QcLQdyIvNLDGwSiJifnWRo8sVJNFe7YogETzRkI1FwIN8G+Wu5V2ZaVZrn3G5enaV7tiQANzsvxT192R6aXHBEaDm+dhvFmjONURHRrchDANflxoNRGVYs0AeLwNYNrT4uofEwZjUU7XHU3ojcTzNvJc=
+	t=1762483360; cv=none; b=dMEN/vJb6RLcAcVNDQnPO7b7lZyjw9eRJa5rw57sVxyWQDhxBAOt7Z+FvbEa6i7FKkSN/KpI3Yxw1d2XWTtHzm9XEkhij7Q3BI8bvr9TliwMUE9/Hjv4MFx3wGNxpebBFTgc76C7eq8C7Bc9I5uQDfcEL5rzwL1zjO+xhxvqVkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762481803; c=relaxed/simple;
-	bh=bMJDqvaeAKGKv7h2LPGCCibx6LwxLovMeMKDzrJTLhA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gzCAPpIdDroLf5MerL4mAIkngDqoZYFA15rD3gQRzjUMGkCjt7YFLcrLW+c0TTxT73IWikRtttT6OkuZp10kf0EkBdezpYDndy4uAMxPzorRvq0GfttkNIq2Mkd+lbOdgyo82F/79mt2N2p8dzVHm1NChd6DwG08mdCaG+bxuqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kn//ome2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762483360; c=relaxed/simple;
+	bh=uYfqsgI+4yKP34dOe9Nf3RalYvhP+CX4KYMz72LP0Qc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ufwdT0Z5HcifLKo4rFCb7srIvezitPQLRzozO9uy4NEf8yfESMiiyHU3MJNAFiDyrelxdPp2WO/oTMMZPha6ZbED8CloIeZ9++l1GA5/TYkdQMEtN8vR+UBxX+6qAHGvCYvVcP5G2eUIIebUyrbf5/i5rSicvCc/93q3qUX5qvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=LSQktzlJ; arc=none smtp.client-ip=209.85.167.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kn//ome2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 309A7C4AF0B;
-	Fri,  7 Nov 2025 02:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762481803;
-	bh=bMJDqvaeAKGKv7h2LPGCCibx6LwxLovMeMKDzrJTLhA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Kn//ome2xnLCw6HhTnpK6eIhstQH2Mn3/lrtur3X1RFMydBjaMqeh1Em+mbGwujwC
-	 pbSjLPVz77+hCC5AzumGC5cMn8wkX3/rA7Jc8wjwkqAn41bnoI2WUXXYpTzM7Wt3gD
-	 vxOF9fP6kdSDO4NuWfBNoBmVOI5XKZgiMnJBUUZ2aeEDueI2EXwdU7th8aolHMSbJx
-	 olfFhzNr2w+U3ExviI9fVLSb0Fw0fR5g+cro6p7bhwkHEuTvIb4PaYOjyBmO9mxzU6
-	 Erqr2Pzgg36dMOqMXgo9BF2yObtmoURV9xKdz29NgMNhJO9iZZSCt+pvOEAp58inK5
-	 qdkq8TC0wBDJw==
-Date: Thu, 6 Nov 2025 18:16:40 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ilya Leoshkevich <iii@linux.ibm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: Re: [PATCH 1/5] perf jitdump: Fix PID namespace detection
-Message-ID: <aQ1WiC3Id82pTHAI@google.com>
-References: <20251105191626.34998-1-iii@linux.ibm.com>
- <20251105191626.34998-2-iii@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="LSQktzlJ"
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-4491510f005so76081b6e.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 06 Nov 2025 18:42:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1762483357; x=1763088157; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ta4pHybjsRd5oAb5H49GhrRgg2InYaGc8HOWjDuWw8Q=;
+        b=LSQktzlJNDOWNxrCj20o34ZHK0ILbhIKUhX1ve58RrWkfT1iCPIP1yBhfvpqOclJRL
+         /t8Sf4ZOVzCi4n93EKb2y1H27UKAjXWBt7jrPB1RLGy/Tji2iduu/HCOSMC546s12onR
+         paFkysj4nMTJWo3W9bQgnd+bq8w9jnUaFTc9P1PDZaKlvr9+qKsWKGiGXbL4/fzlx+ql
+         SG/Ku2QVjnQK2BxWzk+Oeh5n8pIQ/D73vUrZ8LXX5+ucm+nInikhsWTHlLXmWO+bbHW+
+         LNj6KssNQV1oFqgeDAqkP3CWx3XYWaEPTN0IKrwr01b1rf+Gx/nyI63KDxpoCECXf6oK
+         oUng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762483357; x=1763088157;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Ta4pHybjsRd5oAb5H49GhrRgg2InYaGc8HOWjDuWw8Q=;
+        b=Dh/txHnN71NFjmCxoDvrInpoZDZV6nSrmnxq6f0pKMuJltJxt1lRlbe9MLXYA1968U
+         U+Z1IVQXuA1KBCV7zcfCcdv6bJl7A1jYyYrgOf22UwrGejOVNRfPgQ0pzhDnPiwkO/zT
+         JQG/jBZx3F9oWy2uqpWW601MSlDJ0HQtMgf09jnl+UrF4ZFiH2BG2Nx3krCj4Nwb6Rav
+         4or5YlBcAgJH0WUgUyKcYYhJWYLVyiG1/TMz4qL/iY4qtOepqPNgNo02sZSngM1OGV6P
+         gmu/+XLylF/wgVGXkUX3Xw/I0kQI+2SHDALxPkrQUod1vqkwSAmWtIlX9yP3BWTQydeF
+         NEKw==
+X-Forwarded-Encrypted: i=1; AJvYcCXvDD31zPTB/bEIf/NeU7vlTuFiTJFuHc0WoJz1S9nMy6Y4MU13ojbzqFfti9THMDhggXapByWY+Ue5D+I7Bv2b@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrnH+meykYhHaS7OXZ2uqMmEEVOuM5b+ja/GFvXXzdasMLH5Uk
+	jqU4XdEHzcP+Iwbix6vhcj+/YJsaBtEyHFC3iqoVeBXEWeOwGZY2cbpAgVJrAq/wQGcMY1tmajF
+	uGLHX4sblhKJGE+9Uj/B6rvettJGC+C6Nsap6kRuNrhIgAYdomRDAMgFhJg==
+X-Gm-Gg: ASbGncu550SqFR0mJzvssGmx5mnHngrfucsQIil6UnY5VUDEunvuLncRnoGS2M4u+4d
+	uIgb/MFK78QSu4edoyySCcRDZlLmtYGykTm1uEban7S3Tv8YrFweN7EAyxmockGK6mupXJ5au8E
+	3CwQyitzohIWSuS7vxhA5XHyYlNgXUMip2O0AjpwV+t9lfR/RaDwXAlW/VnuDVstRXoluwBplZv
+	3WS8N/DlJxZYR6QLNOIl//SIWlbxhNJsAeY6xSg936AJX7arODTdA4Y4sL7kKjTzZp23IzUfL9f
+	bAYrP10y
+X-Google-Smtp-Source: AGHT+IGb0n2soPVhA9HW3Yi/ug81lmtTpcvsCQ9ShMeI3zEImc6F3+dHOysOTdbZsRZbSPkSfqhccOrjI+KKkLT4UmA=
+X-Received: by 2002:a05:6808:f8d:b0:44f:e3d2:59db with SMTP id
+ 5614622812f47-45015d583cemr1045696b6e.16.1762483357292; Thu, 06 Nov 2025
+ 18:42:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20251105191626.34998-2-iii@linux.ibm.com>
+References: <20251014031425.93284-1-cuiyunhui@bytedance.com>
+ <20251014031425.93284-2-cuiyunhui@bytedance.com> <aQixsIQXTjYyhRVj@willie-the-truck>
+In-Reply-To: <aQixsIQXTjYyhRVj@willie-the-truck>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Fri, 7 Nov 2025 10:42:25 +0800
+X-Gm-Features: AWmQ_bkNdWjndV3isxnVf7u1V6RwPPlMP2i7v5fPfn_48ruw1DHahvSQ2HKDsok
+Message-ID: <CAEEQ3wk5Ru4-=4Ecnc6kQAAbR57806xxYTz0o1z4KfgZE6Cg6w@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v4 1/2] watchdog: move arm64 watchdog_hld
+ into common code
+To: Will Deacon <will@kernel.org>
+Cc: akpm@linux-foundation.org, alex@ghiti.fr, anup@brainfault.org, 
+	aou@eecs.berkeley.edu, atish.patra@linux.dev, catalin.marinas@arm.com, 
+	dianders@chromium.org, johannes@sipsolutions.net, lihuafei1@huawei.com, 
+	mark.rutland@arm.com, masahiroy@kernel.org, maz@kernel.org, mingo@kernel.org, 
+	nicolas.schier@linux.dev, palmer@dabbelt.com, paul.walmsley@sifive.com, 
+	suzuki.poulose@arm.com, thorsten.blum@linux.dev, wangjinchao600@gmail.com, 
+	yangyicong@hisilicon.com, zhanjie9@hisilicon.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 05, 2025 at 08:10:24PM +0100, Ilya Leoshkevich wrote:
-> perf inject fails to detect jitdump file produced by a process
-> running in a different PID namespace if this process has not exited
-> yet.
-> 
-> The PID namespace heuristic in jit_detect() compares two PIDs:
-> 
-> * pid: outermost NStgid of mmap(jitdump) caller from perf's PoV.
-> * nsinfo__nstgid(nsi): innermost NStgid of mmap(jitdump) caller from
->                        perf's PoV.
-> 
-> The semantics of the in_pidns variable can be seen in, e.g.,
-> nsinfo__get_nspid(): it's true if and only if perf and the profiled
-> process are in different PID namespaces.
-> 
-> The current logic is clearly inverted: if pid and nsinfo__nstgid(nsi)
-> are different, then the profiled process must be in a different PID
-> namespace. This, of course, ignores that fact that they may end up
-> being equal by accident, but that's not the point here.
-> 
-> Fix by flipping the comparison.
-> 
-> Changing just that, however, breaks the case when the process has
-> exited. Add explicit support for that by adding "synthesized" field to
-> nsinfo, which tracks whether NStgid was obtained from a running
-> process (ignoring considerations of PID reuse or running inject on
-> a different machine). When the namespace information is synthesized,
-> assume the process ran in a different PID namespace.
+Hi Will,
 
-I'm not sure I'm following.  It'd be great if anyone understand the
-topic well could review.
+On Mon, Nov 3, 2025 at 9:44=E2=80=AFPM Will Deacon <will@kernel.org> wrote:
+>
+> On Tue, Oct 14, 2025 at 11:14:24AM +0800, Yunhui Cui wrote:
+> > @@ -306,3 +307,85 @@ void __init hardlockup_config_perf_event(const cha=
+r *str)
+> >       wd_hw_attr.type =3D PERF_TYPE_RAW;
+> >       wd_hw_attr.config =3D config;
+> >  }
+> > +
+> > +#ifdef CONFIG_WATCHDOG_PERF_ADJUST_PERIOD
+> > +/*
+> > + * Safe maximum CPU frequency in case a particular platform doesn't im=
+plement
+> > + * cpufreq driver. Although, architecture doesn't put any restrictions=
+ on
+> > + * maximum frequency but 5 GHz seems to be safe maximum given the avai=
+lable
+> > + * CPUs in the market which are clocked much less than 5 GHz. On the o=
+ther
+> > + * hand, we can't make it much higher as it would lead to a large hard=
+-lockup
+> > + * detection timeout on parts which are running slower (eg. 1GHz on
+> > + * Developerbox) and doesn't possess a cpufreq driver.
+> > + */
+> > +#define SAFE_MAX_CPU_FREQ    5000000000UL // 5 GHz
+> > +__weak u64 hw_nmi_get_sample_period(int watchdog_thresh)
+> > +{
+> > +     unsigned int cpu =3D smp_processor_id();
+> > +     unsigned long max_cpu_freq;
+> > +
+> > +     max_cpu_freq =3D cpufreq_get_hw_max_freq(cpu) * 1000UL;
+> > +     if (!max_cpu_freq)
+> > +             max_cpu_freq =3D SAFE_MAX_CPU_FREQ;
+> > +
+> > +     return (u64)max_cpu_freq * watchdog_thresh;
+> > +}
+>
+> Why does this function become __weak? Neither arm64 nor riscv override
+> it afaict.
 
-> 
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-> ---
->  tools/perf/util/jitdump.c    | 27 +++++++++++++++++++++------
->  tools/perf/util/namespaces.c |  9 +++++++++
->  tools/perf/util/namespaces.h |  2 ++
->  3 files changed, 32 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-> index b062b1f234b62..19e4bc139935b 100644
-> --- a/tools/perf/util/jitdump.c
-> +++ b/tools/perf/util/jitdump.c
-> @@ -788,15 +788,30 @@ jit_detect(const char *mmap_name, pid_t pid, struct nsinfo *nsi, bool *in_pidns)
->  	if (!end)
->  		return -1;
->  
-> -	*in_pidns = pid == nsinfo__nstgid(nsi);
->  	/*
-> -	 * pid does not match mmap pid
-> -	 * pid==0 in system-wide mode (synthesized)
-> +	 * Determine whether the process ran inside a container, and whether it
-> +	 * mapped jit.dump for profiling purposes or by accident. Record this
-> +	 * for further use in jit_inject(). The kernel does not provide PID
-> +	 * namespace information, so we have to resort to guesswork.
->  	 *
-> -	 * If the pid in the file name is equal to the nstgid, then
-> -	 * the agent ran inside a container and perf outside the
-> -	 * container, so record it for further use in jit_inject().
-> +	 * If the process exited and perf had to synthesize the namespace
-> +	 * information, then it's not possible to have any certainty; be
-> +	 * aggressive and assume that the process ran inside a container. This
-> +	 * allows the user to proceed with injection at the cost of a small
-> +	 * probability of injecting irrelevant data.
-> +	 *
-> +	 * If the process' NStgid as observed by perf is different from its
-> +	 * innermost NStgid, then it must have run inside a container. There is
-> +	 * a very small probability that NStgids randomly happenned to be the
-> +	 * same; ignore it.
-> +	 *
-> +	 * pid == 0 means system-wide mode, just proceed.
-> +	 *
-> +	 * Finally, the most straightforward case: if the PID in the file name
-> +	 * is equal to the process' NStgid as observed by perf, then it must be
-> +	 * a match.
->  	 */
-> +	*in_pidns = nsinfo__synthesized(nsi) || pid != nsinfo__nstgid(nsi);
->  	if (pid && !(pid2 == pid || *in_pidns))
->  		return -1;
->  	/*
-> diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
-> index 01502570b32d0..7de5d62e271c4 100644
-> --- a/tools/perf/util/namespaces.c
-> +++ b/tools/perf/util/namespaces.c
-> @@ -132,6 +132,8 @@ int nsinfo__init(struct nsinfo *nsi)
->  
->  	rv = nsinfo__get_nspid(&RC_CHK_ACCESS(nsi)->tgid, &RC_CHK_ACCESS(nsi)->nstgid,
->  			       &RC_CHK_ACCESS(nsi)->in_pidns, spath);
-> +	if (rv == 0)
-> +		RC_CHK_ACCESS(nsi)->synthesized = false;
->  
->  out:
->  	free(newns);
-> @@ -166,6 +168,7 @@ struct nsinfo *nsinfo__new(pid_t pid)
->  	RC_CHK_ACCESS(nsi)->nstgid = pid;
->  	nsinfo__clear_need_setns(nsi);
->  	RC_CHK_ACCESS(nsi)->in_pidns = false;
-> +	RC_CHK_ACCESS(nsi)->synthesized = true;
->  	/* Init may fail if the process exits while we're trying to look at its
->  	 * proc information. In that case, save the pid but don't try to enter
->  	 * the namespace.
-> @@ -197,6 +200,7 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
->  	RC_CHK_ACCESS(nnsi)->nstgid = nsinfo__nstgid(nsi);
->  	RC_CHK_ACCESS(nnsi)->need_setns = nsinfo__need_setns(nsi);
->  	RC_CHK_ACCESS(nnsi)->in_pidns = nsinfo__in_pidns(nsi);
-> +	RC_CHK_ACCESS(nnsi)->synthesized = nsinfo__synthesized(nsi);
->  	if (nsinfo__mntns_path(nsi)) {
->  		RC_CHK_ACCESS(nnsi)->mntns_path = strdup(nsinfo__mntns_path(nsi));
->  		if (!RC_CHK_ACCESS(nnsi)->mntns_path) {
-> @@ -275,6 +279,11 @@ void nsinfo__set_in_pidns(struct nsinfo *nsi)
->  	RC_CHK_ACCESS(nsi)->in_pidns = true;
->  }
->  
-> +bool nsinfo__synthesized(const struct nsinfo *nsi)
-> +{
-> +	return RC_CHK_ACCESS(nsi)->synthesized;
-> +}
-> +
->  void nsinfo__mountns_enter(struct nsinfo *nsi,
->  				  struct nscookie *nc)
->  {
-> diff --git a/tools/perf/util/namespaces.h b/tools/perf/util/namespaces.h
-> index e95c79b80e27c..41ba2ea8137e5 100644
-> --- a/tools/perf/util/namespaces.h
-> +++ b/tools/perf/util/namespaces.h
-> @@ -38,6 +38,7 @@ DECLARE_RC_STRUCT(nsinfo) {
->  	bool			in_pidns;
->  	char			*mntns_path;
->  	refcount_t		refcnt;
-> +	bool			synthesized;
+Would you say there=E2=80=99s any particular issue here? If some architectu=
+res
+might need to override the hw_nmi_get_sample_period() function later
+on, wouldn=E2=80=99t __weak be a more reasonable choice?
 
-It'd be nice if you can put this along with other bool fields.
+>
+> Will
 
 Thanks,
-Namhyung
-
->  };
->  
->  struct nscookie {
-> @@ -60,6 +61,7 @@ pid_t nsinfo__nstgid(const struct nsinfo  *nsi);
->  pid_t nsinfo__pid(const struct nsinfo  *nsi);
->  bool nsinfo__in_pidns(const struct nsinfo  *nsi);
->  void nsinfo__set_in_pidns(struct nsinfo *nsi);
-> +bool nsinfo__synthesized(const struct nsinfo  *nsi);
->  
->  void nsinfo__mountns_enter(struct nsinfo *nsi, struct nscookie *nc);
->  void nsinfo__mountns_exit(struct nscookie *nc);
-> -- 
-> 2.51.1
-> 
+Yunhui
