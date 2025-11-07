@@ -1,291 +1,168 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0DE329C69
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Nov 2025 17:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E883C32C932
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Nov 2025 17:29:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762535241; cv=none; b=KLkQysjB65dCFDFfRlLb6YNbPw+yQqOfw0cPH9hn8272EZyDsghsw/Fm4/KAZO1QMxLw9C6Hupo4kXUsV0VExAKZQRnrPgnTnIH2nI0EZqvxYQcTcHxFhS4GihbRpLlnKMI8Wofm8J2Nql6kta8+M12G0ixOhZ4oDo6NQtBx8SA=
+	t=1762536569; cv=none; b=UFg2UrC0joTmHbGVhE2OPDrbBQnsRMsxnCC/Pbkf5uteuxEaqXB0VSAR24oeP24GPNmGgOTlT28+2Zo5FmRJVSV9j5GhfnA9/YnWLZaFUJTczPC1b0flzy0+uJ8ikrHMr5qmdn2q9+oB4G8HAgSAD3XIGKBRUn28k91FuM/ywf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762535241; c=relaxed/simple;
-	bh=89b4k9S4qNAUMIYu78o2Q3w4FZ/fiShO0OS+LEtI/Fs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=b1nihY1gzDuTfj3hopzZ43V0nJ+lvhVI5c5AjkZoKn7V1MGTIhiy++BF/5p3asWD0JkY6MWUoF8Bgr4kcxaj2fXoBrDf0hNiTyQXfWs+7YYqhQCRE3b/Wks6nK68xTOZLIeYC+DvZ493vPhQXaeanuA79orJGbeiEAj8bkmeAz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UyZcHEqR; arc=none smtp.client-ip=209.85.214.201
+	s=arc-20240116; t=1762536569; c=relaxed/simple;
+	bh=zbewp8TVHFiVctPyX8mXT7il2x1kV98kuvq153m+fKw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PrtVxhc/7KfuYucO/zW5We381bgpKchh3Q6gljypz4zIpmngVcaV0H+IHmoG9snpgXDVySEl7rjVm5CoMyqpLA7FVhOOCr3ObcoPOTmwHZCl+/CpstDneyGclSPKqrzd82TeI3V/awpI2KAsuZ2Wld7MMQptDXT3Vui5/yhVQbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZYgSftOL; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UyZcHEqR"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-290ab8f5af6so10968885ad.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Nov 2025 09:07:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZYgSftOL"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-297e13bf404so21995ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Nov 2025 09:29:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762535239; x=1763140039; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZwQeT+EUx50vTmRKM25nFJZ55VX69pih0pupMwBRMU4=;
-        b=UyZcHEqR6VjjWD9vR3BLgY3xfmvlgawaT6Mp9yqgrHjMaJBdkfBMd23MG0x2FoFnS+
-         aFP4uckRX5+mzhnHCgLxIk8+nPtMAX6n6nfA9RUqkMmQ4hNgat/q7IbVSEv92kVAPRhc
-         SaYLFrJmSNAQbsYi+35RMcmoEqVes8OmkJRQzqt66e77HS+Dk7dmCsZ0SZuJqToEZtsv
-         DBpxkgnZsrNq0MQMpfzRNi6nN3186GJrK2+oceNFdHfnw3bjrBvwHAZqOtQk8oWRbZ1p
-         M6m4ZUrecdET38qKYLAHIW6qNvf8CKBjwCszGrdMqFWlzZUyRXYNC/zTHlpyIvwcOemr
-         CN9w==
+        d=google.com; s=20230601; t=1762536567; x=1763141367; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a7nPM32QNJlieCE/UriyUldASiXn2yq1oLIPB222rdg=;
+        b=ZYgSftOLT7dVTmXt0Vcw2QFA1m4y3NEcRO3EQYy7ztEED0Wlv0Qz+Tx3ZeI1Y7ZmSM
+         e1KiSyDWIO2A7434UwNsBQwxIisNgH+H2Kiq8buwprDC1o+QW7Qo19dMzRuNdLLeBLh3
+         PWxA9Az1fciNVzY7BSHJVbr+9xNdpcEhCVD2Sr5C2eY1JZN50dGWj3gL+8NVlFrN0Dgh
+         2o2lu5cReVdJvjSxuHpsQFt1Chsawee5WEePTtoVCKLgWFRQg6omn+QtPI7M9xhLVLqv
+         wQ7ydhgOB+Kntchvr4x70G7RljocJe1O4zG1zm/eubUis5E6oZa+YOieIC8KInx4U39o
+         8DYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762535239; x=1763140039;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZwQeT+EUx50vTmRKM25nFJZ55VX69pih0pupMwBRMU4=;
-        b=DiGUpcGbAOimlyEkOl/EO7cN+NJGEAdNYWyRaRrjwMLzHZobPVKmYGDucSKSETQ/h0
-         /fYbyL5q7fpJzlENwZs9946yMhZAVkmexecNkyeZmCE5RBB7j8Z/tkdp8ErI7me5uyMH
-         yZ8wnbjYobDoX2fAlbEnujkbiH/hi/z1VcpJJdQxWvZnJ2+2Fk6BsHKze3NgDW7JQ3b1
-         P1WB3OKI17908abqkHEua8MvjLwCqksLWv8Lnw/GkFzR/d+fc3J+a7IlMyCKbuCgB3Mt
-         EaSMZ/3ZJnZa4/XgbfKpHStooqy9HqkZOYb3tsEhA4v8OMeL+1SODeLqaR4rCIpcq5Fv
-         E/cw==
-X-Forwarded-Encrypted: i=1; AJvYcCWUEJnTI1D8Nt0i1ClCyJSFTAZ4pqJGmiTWGzTqu84KKk4pKhx0weoDPQxBjj6SL/Ghj2VKL9AGzXqhy40REqbR@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfcHq5SW5p0P5Hq48FMQtmqBL8MDjmnAtJDSvzfnEBhu4BGNTR
-	/t8uaUs/MeJNXTwqEXYfJncdyQDlUTD+TfIQCrCa8mFVGJH9Kq07bw/dQao+Ozk8/StMkjNB5Fk
-	7PRaTnRAtpA==
-X-Google-Smtp-Source: AGHT+IFf2ROERl93tZEMUSUc1C5M+qPdy6K+Bb64NwcExMZ80JlTfZlXL4r/45CkmlH83g5U4mlnTQDXosbS
-X-Received: from dlkk18.prod.google.com ([2002:a05:7022:6092:b0:119:49ca:6b9e])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:987:b0:294:fc1d:9d0
- with SMTP id d9443c01a7336-297c04820c0mr53283435ad.40.1762535238734; Fri, 07
- Nov 2025 09:07:18 -0800 (PST)
-Date: Fri,  7 Nov 2025 09:07:12 -0800
-In-Reply-To: <20251107170712.2302714-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1762536567; x=1763141367;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=a7nPM32QNJlieCE/UriyUldASiXn2yq1oLIPB222rdg=;
+        b=OEQJT9o0ddsJrVQYqvHHCyYsehWYEv3PEsMQILIaSI5Nu6phU+l+UROx+JxhVw5GXL
+         2DNCS+l4nRmIlgFUHrtuahBHmiOUdyEEEUoZSXCgOikWIonxZlU1peH5s3m3N1trMWQ4
+         f4HSQW+/RJa9Zli/KQvKOaXljADgbBfUu4I/5TrUVR9lg60FsXeLm7k5f+gmLO/TXf2G
+         WRbiIduNjXQrAu/ZNC7LoNDD722aOMjw5Ep+irRbT+aq99u7OiHVidH/yBodi9AfbB8g
+         4sZfEd5H9PQiIMFLiqaHD/hMhITayBhDnmizsXpfst+9w5n2lnpNEa52XUgX2TcN/txW
+         gqOA==
+X-Forwarded-Encrypted: i=1; AJvYcCXG7ydqBUe8ukSahiRd6JYA5eA2kSBgYAWjknIVgrWoYQjjwkeyGXbDp1smKfq1P4yu45dI0VtKrAt5EnCrYhvt@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFxqdvYDBB+dTq4pSrsvIER8AuxlXIp9trUX7H6YM1nK3rFLzJ
+	9OnSkN3GRtZm8wwrlWpamOYB2/BZ/zHa72UhBBUaqezRVQMO2pEWvI7Qa8TVmK+pwy4s0b62T1M
+	2bMSHfARChNXJQksafLjXcq7k8o9drACcTDt5gTp4
+X-Gm-Gg: ASbGncuwoXB6oeLnfgnCnyq2ifwbU99/XZ7tG54sF1QIJ7RDVlPn9BKtBi6pm9/yETE
+	LVGXWZ+fdnIjx7FVB7ErKVyuruB4Tj+pLO6DmVurTEYp/+oGDaqH/ln8ad44wdz7BWaA514bFr/
+	chVQE0gsGJ1R+62V1EbOUFpWkWbxZZYcYJh2413lfGKVVGos591CbIkUWJIw6ESGU7RZksKvFif
+	rhOeYad3G2kF3eO6CDJJK/D4LDiOuWlP9LkL9x9jNSJATUweD2devSiVBY5/Q==
+X-Google-Smtp-Source: AGHT+IHCCUmUqaHnyD1k0tKIu+ZoYBxsPXIJYmkwBgjVCQSW1dvsFN6SmcJdhqi/iyTh3WwlCS+ZKG4Vy9eekXFn/AE=
+X-Received: by 2002:a17:903:3e22:b0:266:b8a2:f5d8 with SMTP id
+ d9443c01a7336-297c55f18e5mr2887095ad.14.1762536566512; Fri, 07 Nov 2025
+ 09:29:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20251107170712.2302714-1-irogers@google.com>
-X-Mailer: git-send-email 2.51.2.1041.gc1ab5b90ca-goog
-Message-ID: <20251107170712.2302714-2-irogers@google.com>
-Subject: [PATCH v2 2/2] perf tool: Add a delegate_tool that just delegates
- actions to another tool
+MIME-Version: 1.0
+References: <20251106233710.463949-1-irogers@google.com> <20251106233710.463949-2-irogers@google.com>
+ <aQ1NwHzzBjA75w5G@google.com>
+In-Reply-To: <aQ1NwHzzBjA75w5G@google.com>
 From: Ian Rogers <irogers@google.com>
-To: Gabriel Marin <gmx@google.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Athira Rajeev <atrajeev@linux.ibm.com>, Gautam Menghani <gautam@linux.ibm.com>, tanze <tanze@kylinos.cn>, 
-	Andi Kleen <ak@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Zhongqiu Han <quic_zhonhan@quicinc.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Blake Jones <blakejones@google.com>, Anubhav Shelat <ashelat@redhat.com>, Leo Yan <leo.yan@arm.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Thomas Falcon <thomas.falcon@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Fri, 7 Nov 2025 09:29:15 -0800
+X-Gm-Features: AWmQ_bkM5BIcKezQ522lHMOqG2MaSEYxoH0S9wPp51pzDlcUltfoHRzwdvlS0aE
+Message-ID: <CAP-5=fUG65e4JzqKbJrJY2DAsj56ZLJwFqekgDScMWTCtzycdg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] perf test: Add test that command line period
+ overrides sysfs/json values
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add an ability to be able to compose perf_tools, by having one perform
-an action and then calling a delegate. Currently the perf_tools have
-if-then-elses setting the callback and then if-then-elses within the
-callback. Understanding the behavior is complex as it is in two places
-and logic for numerous operations, within things like perf inject, is
-interwoven. By chaining perf_tools together based on command line
-options this kind of code can be avoided.
+On Thu, Nov 6, 2025 at 5:39=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> On Thu, Nov 06, 2025 at 03:37:10PM -0800, Ian Rogers wrote:
+> > The behavior of weak terms is subtle, add a test that they aren't
+> > accidentally broken.
+>
+> I've got this error.
+>
+>   $ sudo ./perf test -v 'record weak terms'
+>   --- start ---
+>   test child forked, pid 4014275
+>   Testing that for cpu/event=3D0..0xfff,edge,inv,.../modifier the period =
+is overridden with 1000
+>   Fail: Unexpected verbose output and sample period
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/tool.c | 171 +++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/tool.h |   9 +++
- 2 files changed, 180 insertions(+)
+Ah, the raw encoding from:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/pmus.c?h=3Dperf-tools-next#n745
+this will need skipping.
 
-diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
-index c983b526b30d..22a8a4ffe05f 100644
---- a/tools/perf/util/tool.c
-+++ b/tools/perf/util/tool.c
-@@ -321,3 +321,174 @@ bool perf_tool__compressed_is_stub(const struct perf_tool *tool)
- {
- 	return tool->compressed == perf_session__process_compressed_event_stub;
- }
-+
-+#define CREATE_DELEGATE_SAMPLE(name) \
-+	static int delegate_ ## name(const struct perf_tool *tool, \
-+				     union perf_event *event, \
-+				     struct perf_sample *sample, \
-+				     struct evsel *evsel, \
-+				     struct machine *machine) \
-+	{								\
-+		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
-+		struct perf_tool *delegate = del_tool->delegate;		\
-+		return delegate->name(delegate, event, sample, evsel, machine);	\
-+	}
-+CREATE_DELEGATE_SAMPLE(read);
-+CREATE_DELEGATE_SAMPLE(sample);
-+
-+#define CREATE_DELEGATE_ATTR(name)					\
-+	static int delegate_ ## name(const struct perf_tool *tool,	\
-+				union perf_event *event,		\
-+				struct evlist **pevlist)		\
-+	{								\
-+		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
-+		struct perf_tool *delegate = del_tool->delegate;		\
-+		return delegate->name(delegate, event, pevlist);	\
-+	}
-+CREATE_DELEGATE_ATTR(attr);
-+CREATE_DELEGATE_ATTR(event_update);
-+
-+#define CREATE_DELEGATE_OE(name)				   \
-+	static int delegate_ ## name(const struct perf_tool *tool, \
-+				     union perf_event *event,	   \
-+				     struct ordered_events *oe)	   \
-+	{								\
-+		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
-+		struct perf_tool *delegate = del_tool->delegate;		\
-+		return delegate->name(delegate, event, oe);	\
-+	}
-+CREATE_DELEGATE_OE(finished_round);
-+
-+#define CREATE_DELEGATE_OP(name)				   \
-+	static int delegate_ ## name(const struct perf_tool *tool, \
-+				     union perf_event *event, \
-+				     struct perf_sample *sample, \
-+				     struct machine *machine) \
-+	{								\
-+		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
-+		struct perf_tool *delegate = del_tool->delegate;		\
-+		return delegate->name(delegate, event, sample, machine); \
-+	}
-+CREATE_DELEGATE_OP(aux);
-+CREATE_DELEGATE_OP(aux_output_hw_id);
-+CREATE_DELEGATE_OP(bpf);
-+CREATE_DELEGATE_OP(cgroup);
-+CREATE_DELEGATE_OP(comm);
-+CREATE_DELEGATE_OP(context_switch);
-+CREATE_DELEGATE_OP(exit);
-+CREATE_DELEGATE_OP(fork);
-+CREATE_DELEGATE_OP(itrace_start);
-+CREATE_DELEGATE_OP(ksymbol);
-+CREATE_DELEGATE_OP(lost);
-+CREATE_DELEGATE_OP(lost_samples);
-+CREATE_DELEGATE_OP(mmap);
-+CREATE_DELEGATE_OP(mmap2);
-+CREATE_DELEGATE_OP(namespaces);
-+CREATE_DELEGATE_OP(text_poke);
-+CREATE_DELEGATE_OP(throttle);
-+CREATE_DELEGATE_OP(unthrottle);
-+
-+#define CREATE_DELEGATE_OP2(name)					\
-+	static int delegate_ ## name(const struct perf_tool *tool,	\
-+				     struct perf_session *session,	\
-+				     union perf_event *event)		\
-+	{								\
-+		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
-+		struct perf_tool *delegate = del_tool->delegate;		\
-+		return delegate->name(delegate, session, event);	\
-+	}
-+CREATE_DELEGATE_OP2(auxtrace_error);
-+CREATE_DELEGATE_OP2(auxtrace_info);
-+CREATE_DELEGATE_OP2(bpf_metadata);
-+CREATE_DELEGATE_OP2(build_id);
-+CREATE_DELEGATE_OP2(cpu_map);
-+CREATE_DELEGATE_OP2(feature);
-+CREATE_DELEGATE_OP2(finished_init);
-+CREATE_DELEGATE_OP2(id_index);
-+CREATE_DELEGATE_OP2(stat);
-+CREATE_DELEGATE_OP2(stat_config);
-+CREATE_DELEGATE_OP2(stat_round);
-+CREATE_DELEGATE_OP2(thread_map);
-+CREATE_DELEGATE_OP2(time_conv);
-+CREATE_DELEGATE_OP2(tracing_data);
-+
-+#define CREATE_DELEGATE_OP3(name)					\
-+	static s64 delegate_ ## name(const struct perf_tool *tool,	\
-+				     struct perf_session *session,      \
-+				     union perf_event *event)           \
-+	{								\
-+		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
-+		struct perf_tool *delegate = del_tool->delegate;	\
-+		return delegate->name(delegate, session, event);	\
-+	}
-+CREATE_DELEGATE_OP3(auxtrace);
-+
-+#define CREATE_DELEGATE_OP4(name)					\
-+	static int delegate_ ## name(const struct perf_tool *tool, \
-+			struct perf_session *session, \
-+			union perf_event *event, \
-+			u64 data, \
-+			const char *str) \
-+	{								\
-+		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
-+		struct perf_tool *delegate = del_tool->delegate;		\
-+		return delegate->name(delegate, session, event, data, str);	\
-+	}
-+CREATE_DELEGATE_OP4(compressed);
-+
-+void delegate_tool__init(struct delegate_tool *tool, struct perf_tool *delegate)
-+{
-+	tool->delegate = delegate;
-+
-+	tool->tool.ordered_events = delegate->ordered_events;
-+	tool->tool.ordering_requires_timestamps = delegate->ordering_requires_timestamps;
-+	tool->tool.namespace_events = delegate->namespace_events;
-+	tool->tool.cgroup_events = delegate->cgroup_events;
-+	tool->tool.no_warn = delegate->no_warn;
-+	tool->tool.show_feat_hdr = delegate->show_feat_hdr;
-+
-+	tool->tool.sample = delegate_sample;
-+	tool->tool.read = delegate_read;
-+
-+	tool->tool.mmap = delegate_mmap;
-+	tool->tool.mmap2 = delegate_mmap2;
-+	tool->tool.comm = delegate_comm;
-+	tool->tool.namespaces = delegate_namespaces;
-+	tool->tool.cgroup = delegate_cgroup;
-+	tool->tool.fork = delegate_fork;
-+	tool->tool.exit = delegate_exit;
-+	tool->tool.lost = delegate_lost;
-+	tool->tool.lost_samples = delegate_lost_samples;
-+	tool->tool.aux = delegate_aux;
-+	tool->tool.itrace_start = delegate_itrace_start;
-+	tool->tool.aux_output_hw_id = delegate_aux_output_hw_id;
-+	tool->tool.context_switch = delegate_context_switch;
-+	tool->tool.throttle = delegate_throttle;
-+	tool->tool.unthrottle = delegate_unthrottle;
-+	tool->tool.ksymbol = delegate_ksymbol;
-+	tool->tool.bpf = delegate_bpf;
-+	tool->tool.text_poke = delegate_text_poke;
-+
-+	tool->tool.attr = delegate_attr;
-+	tool->tool.event_update = delegate_event_update;
-+
-+	tool->tool.tracing_data = delegate_tracing_data;
-+
-+	tool->tool.finished_round = delegate_finished_round;
-+
-+	tool->tool.build_id = delegate_build_id;
-+	tool->tool.id_index = delegate_id_index;
-+	tool->tool.auxtrace_info = delegate_auxtrace_info;
-+	tool->tool.auxtrace_error = delegate_auxtrace_error;
-+	tool->tool.time_conv = delegate_time_conv;
-+	tool->tool.thread_map = delegate_thread_map;
-+	tool->tool.cpu_map = delegate_cpu_map;
-+	tool->tool.stat_config = delegate_stat_config;
-+	tool->tool.stat = delegate_stat;
-+	tool->tool.stat_round = delegate_stat_round;
-+	tool->tool.feature = delegate_feature;
-+	tool->tool.finished_init = delegate_finished_init;
-+	tool->tool.bpf_metadata = delegate_bpf_metadata;
-+	tool->tool.compressed = delegate_compressed;
-+	tool->tool.auxtrace = delegate_auxtrace;
-+}
-diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
-index 1f1461808371..88337cee1e3e 100644
---- a/tools/perf/util/tool.h
-+++ b/tools/perf/util/tool.h
-@@ -102,4 +102,13 @@ int process_event_sample_stub(const struct perf_tool *tool,
- 			      struct evsel *evsel,
- 			      struct machine *machine);
- 
-+struct delegate_tool {
-+	/** @tool: The actual tool that calls the delegate. */
-+	struct perf_tool tool;
-+	/** @delegate: The tool that is delegated to. */
-+	struct perf_tool *delegate;
-+};
-+
-+void delegate_tool__init(struct delegate_tool *tool, struct perf_tool *delegate);
-+
- #endif /* __PERF_TOOL_H */
--- 
-2.51.2.1041.gc1ab5b90ca-goog
+Thanks,
+Ian
 
+>   ---- end(-1) ----
+>    92: record weak terms                                               : =
+FAILED!
+>
+> Thanks,
+> Namhyung
+>
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> > v2: Add more comments to the test code and reduce the line length (Namh=
+yung).
+> > ---
+> >  tools/perf/tests/shell/record_weak_term.sh | 36 ++++++++++++++++++++++
+> >  1 file changed, 36 insertions(+)
+> >  create mode 100755 tools/perf/tests/shell/record_weak_term.sh
+> >
+> > diff --git a/tools/perf/tests/shell/record_weak_term.sh b/tools/perf/te=
+sts/shell/record_weak_term.sh
+> > new file mode 100755
+> > index 000000000000..ee4bcc792aeb
+> > --- /dev/null
+> > +++ b/tools/perf/tests/shell/record_weak_term.sh
+> > @@ -0,0 +1,36 @@
+> > +#!/bin/bash
+> > +# record weak terms
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +# Test that command line options override weak terms from sysfs or inb=
+uilt json.
+> > +set -e
+> > +
+> > +shelldir=3D$(dirname "$0")
+> > +# shellcheck source=3Dlib/setup_python.sh
+> > +. "${shelldir}"/lib/setup_python.sh
+> > +
+> > +# Find the first event with a specified period, such as
+> > +# "cpu_core/event=3D0x24,period=3D200003,umask=3D0xff/"
+> > +event=3D$(perf list --json | $PYTHON -c '
+> > +import json, sys
+> > +for e in json.load(sys.stdin):
+> > +    if "Encoding" in e and "period=3D" in e["Encoding"]:
+> > +       print(e["EventName"])
+> > +       sys.exit(0)
+> > +sys.exit(1)
+> > +')
+> > +if [[ "$?" !=3D "0" ]]
+> > +then
+> > +  echo "Skip: No sysfs/json events with inbuilt period."
+> > +  exit 2
+> > +fi
+> > +
+> > +echo "Testing that for $event the period is overridden with 1000"
+> > +perf list --detail "$event"
+> > +if ! perf record -c 1000 -vv -e "$event" -o /dev/null true 2>&1 | \
+> > +  grep -q -F '{ sample_period, sample_freq }   1000'
+> > +then
+> > +  echo "Fail: Unexpected verbose output and sample period"
+> > +  exit 1
+> > +fi
+> > +echo "Success"
+> > +exit 0
+> > --
+> > 2.51.2.1041.gc1ab5b90ca-goog
+> >
