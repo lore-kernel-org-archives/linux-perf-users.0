@@ -1,63 +1,67 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C351326D4F
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Nov 2025 17:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0DE329C69
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Nov 2025 17:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762535239; cv=none; b=ODoHX5uIZeenj1uD/ut7XDty+RwfBc5Bawfodf5TaNHcNqbtWijp3Bp53V6HbP3x2XHuGC6tI+N+9hZHRucRcuxLQ31zBeDpRjN9VM/Hsrob0kEVN3gTh+dcJnq0DJe9kGwulWcAQUawznk4oDXY7Y7PkH1/J5szCOBXeRtpoQc=
+	t=1762535241; cv=none; b=KLkQysjB65dCFDFfRlLb6YNbPw+yQqOfw0cPH9hn8272EZyDsghsw/Fm4/KAZO1QMxLw9C6Hupo4kXUsV0VExAKZQRnrPgnTnIH2nI0EZqvxYQcTcHxFhS4GihbRpLlnKMI8Wofm8J2Nql6kta8+M12G0ixOhZ4oDo6NQtBx8SA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762535239; c=relaxed/simple;
-	bh=t3loWHoPFJqrmX8N2LdL0QGYE6B6TCaC/6UkpYA4edY=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=EhbM64WD5/261M8mKDiYbgxdGAFWWjbvUzSxJB407zopZqHMWkq1HwfVz5iGPOiymbG5dGq+rXK/f0ffKf9I5ndM8GRRM+87rmjTkQq87wqVZwZfCeIizvVBAxj1rcIrWhkPgwLQoP+LS4vJYXP7sD8ruLQuByspvCq2Hw+Yf9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RYNaHPsr; arc=none smtp.client-ip=209.85.215.201
+	s=arc-20240116; t=1762535241; c=relaxed/simple;
+	bh=89b4k9S4qNAUMIYu78o2Q3w4FZ/fiShO0OS+LEtI/Fs=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=b1nihY1gzDuTfj3hopzZ43V0nJ+lvhVI5c5AjkZoKn7V1MGTIhiy++BF/5p3asWD0JkY6MWUoF8Bgr4kcxaj2fXoBrDf0hNiTyQXfWs+7YYqhQCRE3b/Wks6nK68xTOZLIeYC+DvZ493vPhQXaeanuA79orJGbeiEAj8bkmeAz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UyZcHEqR; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RYNaHPsr"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-ba4c6ac8406so865034a12.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Nov 2025 09:07:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UyZcHEqR"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-290ab8f5af6so10968885ad.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Nov 2025 09:07:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762535237; x=1763140037; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=eZGWcXK+w1HKfyzNOkkK1lIBMH54pLXRB3yTsJaIf4o=;
-        b=RYNaHPsrFB5JfHHdmUrElCWowYUtfoe+F0e92Euw6diB/4H9xEMIpxOkzdIjt9ExGQ
-         FXCWX4md7PuHmmJiyJsKFFJDE1ptlXh3jE4QNNrzv8Aoz7KdEsq4MEhXPchA5nCRbHZ+
-         G2KFN6EP4Qxz31OVUv6+4zRAHfu0ltNVyLjRMmnhJgoXAW7pfI2XJTmuVAk4/Wj6E4BI
-         jNyiITK84oe1GY0IeK7lPFkVeRPCz4XfQEMqLy8OzcWeMZPYrEF4AmNzwpzakeXp93K/
-         iCHCaIO7ILQT7/iUw8K1WEiI6nGJz50ZDqIPYOk338y9kNCUlQ8i1OU798XxFRj7usax
-         RiMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762535237; x=1763140037;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1762535239; x=1763140039; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=eZGWcXK+w1HKfyzNOkkK1lIBMH54pLXRB3yTsJaIf4o=;
-        b=tCDyQvwZrmDdtfyIGQPaZxeFZGWZaiZS0N8b2UFUNSBz6776s6qC/Tuad6En3mxBx/
-         cBfDU/99u2M/+7P8XdNLr45xDvRkg6qACIKQ2apIyQMqn0suVuZXLeF7jIC48eVSV30v
-         GoIYFYQ2Gz88egEC5uqLu6T0SjoNB37Tenqi/JZnnKg7mOqVAVdjo1uZKkwoEuNO7/0u
-         HDVI1SHVAyvirkwYqtBoLGz7dV1GlKg3T3Nrw2ROTy/gSavkkZwWz66Jh9hcRBq2z+LR
-         nxYOX2FzJhz8curG4XXqz/tC7ZwBOapmsOuxEhBhyk076tDxOPbuIaUgFLbvDjB3pw4Z
-         2S/w==
-X-Forwarded-Encrypted: i=1; AJvYcCWVwxu3VwddzAfU1lAiNbt33Yh94X+6an8SViHsthSo/Bumoy6KX7jurWVcfw6y999R7aDNKxaNquB0cvKZyf/+@vger.kernel.org
-X-Gm-Message-State: AOJu0YzN2s53DfdMsjktSsC86Iuoq59ldjiPF2qlao4b6HbxRhWckrQ9
-	P6B3vB0fDqguPPMEa0rSjA50QBWHVL+a3YXFB4uz84qtFeWRgxJtWdI+xFtAJMw3/iw9tx4TAlj
-	KVUiPfVygiA==
-X-Google-Smtp-Source: AGHT+IHF/qQ7ExIWZ+gCVabHgj3lJECHwZBz79zaaAWr5tWZTJpDm+3tnRn/NS58HI8qGx6SiqXvhYLByueD
-X-Received: from dlbrl28.prod.google.com ([2002:a05:7022:f51c:b0:11a:126f:ee80])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:b43:b0:295:557e:7467
- with SMTP id d9443c01a7336-297c03c3e25mr54849865ad.17.1762535236616; Fri, 07
- Nov 2025 09:07:16 -0800 (PST)
-Date: Fri,  7 Nov 2025 09:07:11 -0800
+        bh=ZwQeT+EUx50vTmRKM25nFJZ55VX69pih0pupMwBRMU4=;
+        b=UyZcHEqR6VjjWD9vR3BLgY3xfmvlgawaT6Mp9yqgrHjMaJBdkfBMd23MG0x2FoFnS+
+         aFP4uckRX5+mzhnHCgLxIk8+nPtMAX6n6nfA9RUqkMmQ4hNgat/q7IbVSEv92kVAPRhc
+         SaYLFrJmSNAQbsYi+35RMcmoEqVes8OmkJRQzqt66e77HS+Dk7dmCsZ0SZuJqToEZtsv
+         DBpxkgnZsrNq0MQMpfzRNi6nN3186GJrK2+oceNFdHfnw3bjrBvwHAZqOtQk8oWRbZ1p
+         M6m4ZUrecdET38qKYLAHIW6qNvf8CKBjwCszGrdMqFWlzZUyRXYNC/zTHlpyIvwcOemr
+         CN9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762535239; x=1763140039;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZwQeT+EUx50vTmRKM25nFJZ55VX69pih0pupMwBRMU4=;
+        b=DiGUpcGbAOimlyEkOl/EO7cN+NJGEAdNYWyRaRrjwMLzHZobPVKmYGDucSKSETQ/h0
+         /fYbyL5q7fpJzlENwZs9946yMhZAVkmexecNkyeZmCE5RBB7j8Z/tkdp8ErI7me5uyMH
+         yZ8wnbjYobDoX2fAlbEnujkbiH/hi/z1VcpJJdQxWvZnJ2+2Fk6BsHKze3NgDW7JQ3b1
+         P1WB3OKI17908abqkHEua8MvjLwCqksLWv8Lnw/GkFzR/d+fc3J+a7IlMyCKbuCgB3Mt
+         EaSMZ/3ZJnZa4/XgbfKpHStooqy9HqkZOYb3tsEhA4v8OMeL+1SODeLqaR4rCIpcq5Fv
+         E/cw==
+X-Forwarded-Encrypted: i=1; AJvYcCWUEJnTI1D8Nt0i1ClCyJSFTAZ4pqJGmiTWGzTqu84KKk4pKhx0weoDPQxBjj6SL/Ghj2VKL9AGzXqhy40REqbR@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfcHq5SW5p0P5Hq48FMQtmqBL8MDjmnAtJDSvzfnEBhu4BGNTR
+	/t8uaUs/MeJNXTwqEXYfJncdyQDlUTD+TfIQCrCa8mFVGJH9Kq07bw/dQao+Ozk8/StMkjNB5Fk
+	7PRaTnRAtpA==
+X-Google-Smtp-Source: AGHT+IFf2ROERl93tZEMUSUc1C5M+qPdy6K+Bb64NwcExMZ80JlTfZlXL4r/45CkmlH83g5U4mlnTQDXosbS
+X-Received: from dlkk18.prod.google.com ([2002:a05:7022:6092:b0:119:49ca:6b9e])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:987:b0:294:fc1d:9d0
+ with SMTP id d9443c01a7336-297c04820c0mr53283435ad.40.1762535238734; Fri, 07
+ Nov 2025 09:07:18 -0800 (PST)
+Date: Fri,  7 Nov 2025 09:07:12 -0800
+In-Reply-To: <20251107170712.2302714-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20251107170712.2302714-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.2.1041.gc1ab5b90ca-goog
-Message-ID: <20251107170712.2302714-1-irogers@google.com>
-Subject: [PATCH v2 1/2] perf tool: Add the perf_tool argument to all callbacks
+Message-ID: <20251107170712.2302714-2-irogers@google.com>
+Subject: [PATCH v2 2/2] perf tool: Add a delegate_tool that just delegates
+ actions to another tool
 From: Ian Rogers <irogers@google.com>
 To: Gabriel Marin <gmx@google.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -71,792 +75,217 @@ To: Gabriel Marin <gmx@google.com>, Peter Zijlstra <peterz@infradead.org>, Ingo 
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Getting context for what a tool is doing, such as the perf_inject
-instance, using container_of the tool is a common pattern in the
-code. This isn't possible event_op2, event_op3 and event_op4 callbacks
-as the tool isn't passed. Add the argument and then fix function
-signatures to match. As tools maybe reading a tool from somewhere
-else, change that code to use the passed in tool.
+Add an ability to be able to compose perf_tools, by having one perform
+an action and then calling a delegate. Currently the perf_tools have
+if-then-elses setting the callback and then if-then-elses within the
+callback. Understanding the behavior is complex as it is in two places
+and logic for numerous operations, within things like perf inject, is
+interwoven. By chaining perf_tools together based on command line
+options this kind of code can be avoided.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-v2: Fix no auxtrace build (Gabriel Marin).
----
- tools/perf/builtin-annotate.c |  3 ++-
- tools/perf/builtin-evlist.c   |  3 ++-
- tools/perf/builtin-inject.c   | 36 +++++++++++++++------------
- tools/perf/builtin-report.c   |  5 ++--
- tools/perf/builtin-script.c   | 31 +++++++++++++----------
- tools/perf/builtin-stat.c     | 15 ++++++------
- tools/perf/util/auxtrace.c    |  9 ++++---
- tools/perf/util/auxtrace.h    | 18 +++++++++-----
- tools/perf/util/header.c      |  6 +++--
- tools/perf/util/header.h      |  6 +++--
- tools/perf/util/intel-tpebs.c |  3 ++-
- tools/perf/util/session.c     | 35 +++++++++++++-------------
- tools/perf/util/session.h     |  3 ++-
- tools/perf/util/stat.c        |  3 ++-
- tools/perf/util/stat.h        |  3 ++-
- tools/perf/util/tool.c        | 46 ++++++++++++++++++++---------------
- tools/perf/util/tool.h        | 10 +++++---
- 17 files changed, 138 insertions(+), 97 deletions(-)
+ tools/perf/util/tool.c | 171 +++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/tool.h |   9 +++
+ 2 files changed, 180 insertions(+)
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 112b15952016..9c27bb30b708 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -313,7 +313,8 @@ static int process_sample_event(const struct perf_tool *tool,
- 	return ret;
- }
- 
--static int process_feature_event(struct perf_session *session,
-+static int process_feature_event(const struct perf_tool *tool __maybe_unused,
-+				 struct perf_session *session,
- 				 union perf_event *event)
- {
- 	if (event->feat.feat_id < HEADER_LAST_FEATURE)
-diff --git a/tools/perf/builtin-evlist.c b/tools/perf/builtin-evlist.c
-index a9bd7bbef5a9..fb6e2c3c24c8 100644
---- a/tools/perf/builtin-evlist.c
-+++ b/tools/perf/builtin-evlist.c
-@@ -19,7 +19,8 @@
- #include "util/tool.h"
- #include "util/util.h"
- 
--static int process_header_feature(struct perf_session *session __maybe_unused,
-+static int process_header_feature(const struct perf_tool *tool __maybe_unused,
-+				  struct perf_session *session __maybe_unused,
- 				  union perf_event *event __maybe_unused)
- {
- 	session_done = 1;
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index a114b3fa1bea..044074080aa5 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -197,18 +197,20 @@ static int perf_event__drop_oe(const struct perf_tool *tool __maybe_unused,
- }
- #endif
- 
--static int perf_event__repipe_op2_synth(struct perf_session *session,
-+static int perf_event__repipe_op2_synth(const struct perf_tool *tool,
-+					struct perf_session *session __maybe_unused,
- 					union perf_event *event)
- {
--	return perf_event__repipe_synth(session->tool, event);
-+	return perf_event__repipe_synth(tool, event);
- }
- 
--static int perf_event__repipe_op4_synth(struct perf_session *session,
-+static int perf_event__repipe_op4_synth(const struct perf_tool *tool,
-+					struct perf_session *session __maybe_unused,
- 					union perf_event *event,
- 					u64 data __maybe_unused,
- 					const char *str __maybe_unused)
- {
--	return perf_event__repipe_synth(session->tool, event);
-+	return perf_event__repipe_synth(tool, event);
- }
- 
- static int perf_event__repipe_attr(const struct perf_tool *tool,
-@@ -258,12 +260,11 @@ static int copy_bytes(struct perf_inject *inject, struct perf_data *data, off_t
- 	return 0;
- }
- 
--static s64 perf_event__repipe_auxtrace(struct perf_session *session,
-+static s64 perf_event__repipe_auxtrace(const struct perf_tool *tool,
-+				       struct perf_session *session,
- 				       union perf_event *event)
- {
--	const struct perf_tool *tool = session->tool;
--	struct perf_inject *inject = container_of(tool, struct perf_inject,
--						  tool);
-+	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
- 	int ret;
- 
- 	inject->have_auxtrace = true;
-@@ -299,7 +300,8 @@ static s64 perf_event__repipe_auxtrace(struct perf_session *session,
- #else
- 
- static s64
--perf_event__repipe_auxtrace(struct perf_session *session __maybe_unused,
-+perf_event__repipe_auxtrace(const struct perf_tool *tool __maybe_unused,
-+			    struct perf_session *session __maybe_unused,
- 			    union perf_event *event __maybe_unused)
- {
- 	pr_err("AUX area tracing not supported\n");
-@@ -661,12 +663,13 @@ static int perf_event__repipe_exit(const struct perf_tool *tool,
- }
- 
- #ifdef HAVE_LIBTRACEEVENT
--static int perf_event__repipe_tracing_data(struct perf_session *session,
-+static int perf_event__repipe_tracing_data(const struct perf_tool *tool,
-+					   struct perf_session *session,
- 					   union perf_event *event)
- {
--	perf_event__repipe_synth(session->tool, event);
-+	perf_event__repipe_synth(tool, event);
- 
--	return perf_event__process_tracing_data(session, event);
-+	return perf_event__process_tracing_data(tool, session, event);
- }
- #endif
- 
-@@ -1348,7 +1351,7 @@ static int process_build_id(const struct perf_tool *tool,
- {
- 	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
- 
--	return perf_event__process_build_id(inject->session, event);
-+	return perf_event__process_build_id(tool, inject->session, event);
- }
- 
- static int synthesize_build_id(struct perf_inject *inject, struct dso *dso, pid_t machine_pid)
-@@ -1780,9 +1783,10 @@ static int host__repipe(const struct perf_tool *tool,
- 	return perf_event__repipe(tool, event, sample, machine);
- }
- 
--static int host__finished_init(struct perf_session *session, union perf_event *event)
-+static int host__finished_init(const struct perf_tool *tool, struct perf_session *session,
-+			       union perf_event *event)
- {
--	struct perf_inject *inject = container_of(session->tool, struct perf_inject, tool);
-+	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
- 	struct guest_session *gs = &inject->guest_session;
- 	int ret;
- 
-@@ -1829,7 +1833,7 @@ static int host__finished_init(struct perf_session *session, union perf_event *e
- 	if (ret)
- 		return ret;
- 
--	return perf_event__repipe_op2_synth(session, event);
-+	return perf_event__repipe_op2_synth(tool, session, event);
- }
- 
- /*
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 35df04dad2fd..2bc269f5fcef 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -240,10 +240,11 @@ static void setup_forced_leader(struct report *report,
- 		evlist__force_leader(evlist);
- }
- 
--static int process_feature_event(struct perf_session *session,
-+static int process_feature_event(const struct perf_tool *tool,
-+				 struct perf_session *session,
- 				 union perf_event *event)
- {
--	struct report *rep = container_of(session->tool, struct report, tool);
-+	struct report *rep = container_of(tool, struct report, tool);
- 
- 	if (event->feat.feat_id < HEADER_LAST_FEATURE)
- 		return perf_event__process_feature(session, event);
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 8124fcb51da9..d813adbf9889 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2729,7 +2729,8 @@ static int process_switch_event(const struct perf_tool *tool,
- 			   sample->tid);
- }
- 
--static int process_auxtrace_error(struct perf_session *session,
-+static int process_auxtrace_error(const struct perf_tool *tool,
-+				  struct perf_session *session,
- 				  union perf_event *event)
- {
- 	if (scripting_ops && scripting_ops->process_auxtrace_error) {
-@@ -2737,7 +2738,7 @@ static int process_auxtrace_error(struct perf_session *session,
- 		return 0;
- 	}
- 
--	return perf_event__process_auxtrace_error(session, event);
-+	return perf_event__process_auxtrace_error(tool, session, event);
- }
- 
- static int
-@@ -2785,7 +2786,8 @@ process_bpf_events(const struct perf_tool *tool __maybe_unused,
- }
- 
- static int
--process_bpf_metadata_event(struct perf_session *session __maybe_unused,
-+process_bpf_metadata_event(const struct perf_tool *tool __maybe_unused,
-+			   struct perf_session *session __maybe_unused,
- 			   union perf_event *event)
- {
- 	perf_event__fprintf(event, NULL, stdout);
-@@ -3544,7 +3546,8 @@ static void script__setup_sample_type(struct perf_script *script)
- 	}
- }
- 
--static int process_stat_round_event(struct perf_session *session,
-+static int process_stat_round_event(const struct perf_tool *tool __maybe_unused,
-+				    struct perf_session *session,
- 				    union perf_event *event)
- {
- 	struct perf_record_stat_round *round = &event->stat_round;
-@@ -3559,7 +3562,8 @@ static int process_stat_round_event(struct perf_session *session,
- 	return 0;
- }
- 
--static int process_stat_config_event(struct perf_session *session __maybe_unused,
-+static int process_stat_config_event(const struct perf_tool *tool __maybe_unused,
-+				     struct perf_session *session __maybe_unused,
- 				     union perf_event *event)
- {
- 	perf_event__read_stat_config(&stat_config, &event->stat_config);
-@@ -3593,10 +3597,10 @@ static int set_maps(struct perf_script *script)
- }
- 
- static
--int process_thread_map_event(struct perf_session *session,
-+int process_thread_map_event(const struct perf_tool *tool,
-+			     struct perf_session *session __maybe_unused,
- 			     union perf_event *event)
- {
--	const struct perf_tool *tool = session->tool;
- 	struct perf_script *script = container_of(tool, struct perf_script, tool);
- 
- 	if (dump_trace)
-@@ -3615,10 +3619,10 @@ int process_thread_map_event(struct perf_session *session,
- }
- 
- static
--int process_cpu_map_event(struct perf_session *session,
-+int process_cpu_map_event(const struct perf_tool *tool,
-+			  struct perf_session *session __maybe_unused,
- 			  union perf_event *event)
- {
--	const struct perf_tool *tool = session->tool;
- 	struct perf_script *script = container_of(tool, struct perf_script, tool);
- 
- 	if (dump_trace)
-@@ -3636,7 +3640,8 @@ int process_cpu_map_event(struct perf_session *session,
- 	return set_maps(script);
- }
- 
--static int process_feature_event(struct perf_session *session,
-+static int process_feature_event(const struct perf_tool *tool __maybe_unused,
-+				 struct perf_session *session,
- 				 union perf_event *event)
- {
- 	if (event->feat.feat_id < HEADER_LAST_FEATURE)
-@@ -3645,13 +3650,13 @@ static int process_feature_event(struct perf_session *session,
- }
- 
- #ifdef HAVE_AUXTRACE_SUPPORT
--static int perf_script__process_auxtrace_info(struct perf_session *session,
-+static int perf_script__process_auxtrace_info(const struct perf_tool *tool,
-+					      struct perf_session *session,
- 					      union perf_event *event)
- {
--	int ret = perf_event__process_auxtrace_info(session, event);
-+	int ret = perf_event__process_auxtrace_info(tool, session, event);
- 
- 	if (ret == 0) {
--		const struct perf_tool *tool = session->tool;
- 		struct perf_script *script = container_of(tool, struct perf_script, tool);
- 
- 		ret = perf_script__setup_per_event_dump(script);
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 886727ae8529..3c46b92a53ab 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -2197,7 +2197,8 @@ static int __cmd_record(const struct option stat_options[], struct opt_aggr_mode
- 	return argc;
- }
- 
--static int process_stat_round_event(struct perf_session *session,
-+static int process_stat_round_event(const struct perf_tool *tool __maybe_unused,
-+				    struct perf_session *session,
- 				    union perf_event *event)
- {
- 	struct perf_record_stat_round *stat_round = &event->stat_round;
-@@ -2222,10 +2223,10 @@ static int process_stat_round_event(struct perf_session *session,
- }
- 
- static
--int process_stat_config_event(struct perf_session *session,
-+int process_stat_config_event(const struct perf_tool *tool,
-+			      struct perf_session *session,
- 			      union perf_event *event)
- {
--	const struct perf_tool *tool = session->tool;
- 	struct perf_stat *st = container_of(tool, struct perf_stat, tool);
- 
- 	perf_event__read_stat_config(&stat_config, &event->stat_config);
-@@ -2271,10 +2272,10 @@ static int set_maps(struct perf_stat *st)
- }
- 
- static
--int process_thread_map_event(struct perf_session *session,
-+int process_thread_map_event(const struct perf_tool *tool,
-+			     struct perf_session *session __maybe_unused,
- 			     union perf_event *event)
- {
--	const struct perf_tool *tool = session->tool;
- 	struct perf_stat *st = container_of(tool, struct perf_stat, tool);
- 
- 	if (st->threads) {
-@@ -2290,10 +2291,10 @@ int process_thread_map_event(struct perf_session *session,
- }
- 
- static
--int process_cpu_map_event(struct perf_session *session,
-+int process_cpu_map_event(const struct perf_tool *tool,
-+			  struct perf_session *session __maybe_unused,
- 			  union perf_event *event)
- {
--	const struct perf_tool *tool = session->tool;
- 	struct perf_stat *st = container_of(tool, struct perf_stat, tool);
- 	struct perf_cpu_map *cpus;
- 
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 35f4745f6b2b..a224687ffbc1 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -1379,7 +1379,8 @@ static void unleader_auxtrace(struct perf_session *session)
- 	}
- }
- 
--int perf_event__process_auxtrace_info(struct perf_session *session,
-+int perf_event__process_auxtrace_info(const struct perf_tool *tool __maybe_unused,
-+				      struct perf_session *session,
- 				      union perf_event *event)
- {
- 	enum auxtrace_type type = event->auxtrace_info.type;
-@@ -1423,7 +1424,8 @@ int perf_event__process_auxtrace_info(struct perf_session *session,
- 	return 0;
- }
- 
--s64 perf_event__process_auxtrace(struct perf_session *session,
-+s64 perf_event__process_auxtrace(const struct perf_tool *tool __maybe_unused,
-+				 struct perf_session *session,
- 				 union perf_event *event)
- {
- 	s64 err;
-@@ -1820,7 +1822,8 @@ void events_stats__auxtrace_error_warn(const struct events_stats *stats)
- 	}
- }
- 
--int perf_event__process_auxtrace_error(struct perf_session *session,
-+int perf_event__process_auxtrace_error(const struct perf_tool *tool __maybe_unused,
-+				       struct perf_session *session,
- 				       union perf_event *event)
- {
- 	if (auxtrace__dont_decode(session))
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index ed3a1aaaf5d9..b320a387464d 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -615,11 +615,14 @@ void auxtrace_synth_error(struct perf_record_auxtrace_error *auxtrace_error, int
- 			  int code, int cpu, pid_t pid, pid_t tid, u64 ip,
- 			  const char *msg, u64 timestamp);
- 
--int perf_event__process_auxtrace_info(struct perf_session *session,
-+int perf_event__process_auxtrace_info(const struct perf_tool *tool,
-+				      struct perf_session *session,
- 				      union perf_event *event);
--s64 perf_event__process_auxtrace(struct perf_session *session,
-+s64 perf_event__process_auxtrace(const struct perf_tool *tool,
-+				 struct perf_session *session,
- 				 union perf_event *event);
--int perf_event__process_auxtrace_error(struct perf_session *session,
-+int perf_event__process_auxtrace_error(const struct perf_tool *tool,
-+				       struct perf_session *session,
- 				       union perf_event *event);
- int itrace_do_parse_synth_opts(struct itrace_synth_opts *synth_opts,
- 			       const char *str, int unset);
-@@ -728,21 +731,24 @@ int auxtrace_record__options(struct auxtrace_record *itr __maybe_unused,
- }
- 
- static inline
--int perf_event__process_auxtrace_info(struct perf_session *session __maybe_unused,
-+int perf_event__process_auxtrace_info(const struct perf_tool *tool __maybe_unused,
-+				      struct perf_session *session __maybe_unused,
- 				      union perf_event *event __maybe_unused)
- {
- 	return 0;
- }
- 
- static inline
--s64 perf_event__process_auxtrace(struct perf_session *session __maybe_unused,
-+s64 perf_event__process_auxtrace(const struct perf_tool *tool __maybe_unused,
-+				 struct perf_session *session __maybe_unused,
- 				 union perf_event *event __maybe_unused)
- {
- 	return 0;
- }
- 
- static inline
--int perf_event__process_auxtrace_error(struct perf_session *session __maybe_unused,
-+int perf_event__process_auxtrace_error(const struct perf_tool *tool __maybe_unused,
-+				       struct perf_session *session __maybe_unused,
- 				       union perf_event *event __maybe_unused)
- {
- 	return 0;
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 4f2a6e10ed5c..7b83037290d1 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -4541,7 +4541,8 @@ int perf_event__process_event_update(const struct perf_tool *tool __maybe_unused
- }
- 
- #ifdef HAVE_LIBTRACEEVENT
--int perf_event__process_tracing_data(struct perf_session *session,
-+int perf_event__process_tracing_data(const struct perf_tool *tool __maybe_unused,
-+				     struct perf_session *session,
- 				     union perf_event *event)
- {
- 	ssize_t size_read, padding, size = event->tracing_data.size;
-@@ -4589,7 +4590,8 @@ int perf_event__process_tracing_data(struct perf_session *session,
- }
- #endif
- 
--int perf_event__process_build_id(struct perf_session *session,
-+int perf_event__process_build_id(const struct perf_tool *tool __maybe_unused,
-+				 struct perf_session *session,
- 				 union perf_event *event)
- {
- 	__event_process_build_id(&event->build_id,
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index d16dfceccd74..c058021c3150 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -178,10 +178,12 @@ int perf_event__process_event_update(const struct perf_tool *tool,
- size_t perf_event__fprintf_attr(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf_event_update(union perf_event *event, FILE *fp);
- #ifdef HAVE_LIBTRACEEVENT
--int perf_event__process_tracing_data(struct perf_session *session,
-+int perf_event__process_tracing_data(const struct perf_tool *tool,
-+				     struct perf_session *session,
- 				     union perf_event *event);
- #endif
--int perf_event__process_build_id(struct perf_session *session,
-+int perf_event__process_build_id(const struct perf_tool *tool,
-+				 struct perf_session *session,
- 				 union perf_event *event);
- bool is_perf_magic(u64 magic);
- 
-diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
-index 8c9aee157ec4..21359155f2a0 100644
---- a/tools/perf/util/intel-tpebs.c
-+++ b/tools/perf/util/intel-tpebs.c
-@@ -216,7 +216,8 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
- 	return 0;
- }
- 
--static int process_feature_event(struct perf_session *session,
-+static int process_feature_event(const struct perf_tool *tool __maybe_unused,
-+				 struct perf_session *session,
- 				 union perf_event *event)
- {
- 	if (event->feat.feat_id < HEADER_LAST_FEATURE)
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 09af486c83e4..4b0236b2df29 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1437,19 +1437,19 @@ static s64 perf_session__process_user_event(struct perf_session *session,
- 		 */
- 		if (!perf_data__is_pipe(session->data))
- 			lseek(fd, file_offset, SEEK_SET);
--		err = tool->tracing_data(session, event);
-+		err = tool->tracing_data(tool, session, event);
- 		break;
- 	case PERF_RECORD_HEADER_BUILD_ID:
--		err = tool->build_id(session, event);
-+		err = tool->build_id(tool, session, event);
- 		break;
- 	case PERF_RECORD_FINISHED_ROUND:
- 		err = tool->finished_round(tool, event, oe);
- 		break;
- 	case PERF_RECORD_ID_INDEX:
--		err = tool->id_index(session, event);
-+		err = tool->id_index(tool, session, event);
- 		break;
- 	case PERF_RECORD_AUXTRACE_INFO:
--		err = tool->auxtrace_info(session, event);
-+		err = tool->auxtrace_info(tool, session, event);
- 		break;
- 	case PERF_RECORD_AUXTRACE:
- 		/*
-@@ -1459,45 +1459,45 @@ static s64 perf_session__process_user_event(struct perf_session *session,
- 		 */
- 		if (!perf_data__is_pipe(session->data))
- 			lseek(fd, file_offset + event->header.size, SEEK_SET);
--		err = tool->auxtrace(session, event);
-+		err = tool->auxtrace(tool, session, event);
- 		break;
- 	case PERF_RECORD_AUXTRACE_ERROR:
- 		perf_session__auxtrace_error_inc(session, event);
--		err = tool->auxtrace_error(session, event);
-+		err = tool->auxtrace_error(tool, session, event);
- 		break;
- 	case PERF_RECORD_THREAD_MAP:
--		err = tool->thread_map(session, event);
-+		err = tool->thread_map(tool, session, event);
- 		break;
- 	case PERF_RECORD_CPU_MAP:
--		err = tool->cpu_map(session, event);
-+		err = tool->cpu_map(tool, session, event);
- 		break;
- 	case PERF_RECORD_STAT_CONFIG:
--		err = tool->stat_config(session, event);
-+		err = tool->stat_config(tool, session, event);
- 		break;
- 	case PERF_RECORD_STAT:
--		err = tool->stat(session, event);
-+		err = tool->stat(tool, session, event);
- 		break;
- 	case PERF_RECORD_STAT_ROUND:
--		err = tool->stat_round(session, event);
-+		err = tool->stat_round(tool, session, event);
- 		break;
- 	case PERF_RECORD_TIME_CONV:
- 		session->time_conv = event->time_conv;
--		err = tool->time_conv(session, event);
-+		err = tool->time_conv(tool, session, event);
- 		break;
- 	case PERF_RECORD_HEADER_FEATURE:
--		err = tool->feature(session, event);
-+		err = tool->feature(tool, session, event);
- 		break;
- 	case PERF_RECORD_COMPRESSED:
- 	case PERF_RECORD_COMPRESSED2:
--		err = tool->compressed(session, event, file_offset, file_path);
-+		err = tool->compressed(tool, session, event, file_offset, file_path);
- 		if (err)
- 			dump_event(session->evlist, event, file_offset, &sample, file_path);
- 		break;
- 	case PERF_RECORD_FINISHED_INIT:
--		err = tool->finished_init(session, event);
-+		err = tool->finished_init(tool, session, event);
- 		break;
- 	case PERF_RECORD_BPF_METADATA:
--		err = tool->bpf_metadata(session, event);
-+		err = tool->bpf_metadata(tool, session, event);
- 		break;
- 	default:
- 		err = -EINVAL;
-@@ -2647,7 +2647,8 @@ static int perf_session__set_guest_cpu(struct perf_session *session, pid_t pid,
- 	return 0;
- }
- 
--int perf_event__process_id_index(struct perf_session *session,
-+int perf_event__process_id_index(const struct perf_tool *tool __maybe_unused,
-+				 struct perf_session *session,
- 				 union perf_event *event)
- {
- 	struct evlist *evlist = session->evlist;
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index cf88d65a25cb..22d3ff877e83 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -202,7 +202,8 @@ int perf_session__deliver_synth_attr_event(struct perf_session *session,
- 
- int perf_session__dsos_hit_all(struct perf_session *session);
- 
--int perf_event__process_id_index(struct perf_session *session,
-+int perf_event__process_id_index(const struct perf_tool *tool,
-+				 struct perf_session *session,
- 				 union perf_event *event);
- 
- int perf_event__process_finished_round(const struct perf_tool *tool,
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 101ed6c497bc..976a06e63252 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -645,7 +645,8 @@ void perf_stat_process_percore(struct perf_stat_config *config, struct evlist *e
- 		evsel__process_percore(evsel);
- }
- 
--int perf_event__process_stat_event(struct perf_session *session,
-+int perf_event__process_stat_event(const struct perf_tool *tool __maybe_unused,
-+				   struct perf_session *session,
- 				   union perf_event *event)
- {
- 	struct perf_counts_values count, *ptr;
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 34f30a295f89..230474f49315 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -216,7 +216,8 @@ union perf_event;
- struct perf_session;
- struct target;
- 
--int perf_event__process_stat_event(struct perf_session *session,
-+int perf_event__process_stat_event(const struct perf_tool *tool,
-+				   struct perf_session *session,
- 				   union perf_event *event);
- 
- size_t perf_event__fprintf_stat(union perf_event *event, FILE *fp);
 diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
-index e83c7ababc2a..c983b526b30d 100644
+index c983b526b30d..22a8a4ffe05f 100644
 --- a/tools/perf/util/tool.c
 +++ b/tools/perf/util/tool.c
-@@ -13,7 +13,8 @@
- #include <unistd.h>
- 
- #ifdef HAVE_ZSTD_SUPPORT
--static int perf_session__process_compressed_event(struct perf_session *session,
-+static int perf_session__process_compressed_event(const struct perf_tool *tool __maybe_unused,
-+						  struct perf_session *session,
- 						  union perf_event *event, u64 file_offset,
- 						  const char *file_path)
+@@ -321,3 +321,174 @@ bool perf_tool__compressed_is_stub(const struct perf_tool *tool)
  {
-@@ -79,10 +80,9 @@ static int perf_session__process_compressed_event(struct perf_session *session,
+ 	return tool->compressed == perf_session__process_compressed_event_stub;
  }
- #endif
- 
--static int process_event_synth_tracing_data_stub(struct perf_session *session
--						 __maybe_unused,
--						 union perf_event *event
--						 __maybe_unused)
-+static int process_event_synth_tracing_data_stub(const struct perf_tool *tool __maybe_unused,
-+						 struct perf_session *session __maybe_unused,
-+						 union perf_event *event __maybe_unused)
- {
- 	dump_printf(": unhandled!\n");
- 	return 0;
-@@ -90,8 +90,7 @@ static int process_event_synth_tracing_data_stub(struct perf_session *session
- 
- static int process_event_synth_attr_stub(const struct perf_tool *tool __maybe_unused,
- 					 union perf_event *event __maybe_unused,
--					 struct evlist **pevlist
--					 __maybe_unused)
-+					 struct evlist **pevlist __maybe_unused)
- {
- 	dump_printf(": unhandled!\n");
- 	return 0;
-@@ -99,8 +98,7 @@ static int process_event_synth_attr_stub(const struct perf_tool *tool __maybe_un
- 
- static int process_event_synth_event_update_stub(const struct perf_tool *tool __maybe_unused,
- 						 union perf_event *event __maybe_unused,
--						 struct evlist **pevlist
--						 __maybe_unused)
-+						 struct evlist **pevlist __maybe_unused)
- {
- 	if (dump_trace)
- 		perf_event__fprintf_event_update(event, stdout);
-@@ -151,7 +149,8 @@ static int skipn(int fd, off_t n)
- 	return 0;
- }
- 
--static s64 process_event_auxtrace_stub(struct perf_session *session __maybe_unused,
-+static s64 process_event_auxtrace_stub(const struct perf_tool *tool __maybe_unused,
-+				       struct perf_session *session __maybe_unused,
- 				       union perf_event *event)
- {
- 	dump_printf(": unhandled!\n");
-@@ -160,7 +159,8 @@ static s64 process_event_auxtrace_stub(struct perf_session *session __maybe_unus
- 	return event->auxtrace.size;
- }
- 
--static int process_event_op2_stub(struct perf_session *session __maybe_unused,
-+static int process_event_op2_stub(const struct perf_tool *tool __maybe_unused,
-+				  struct perf_session *session __maybe_unused,
- 				  union perf_event *event __maybe_unused)
- {
- 	dump_printf(": unhandled!\n");
-@@ -169,7 +169,8 @@ static int process_event_op2_stub(struct perf_session *session __maybe_unused,
- 
- 
- static
--int process_event_thread_map_stub(struct perf_session *session __maybe_unused,
-+int process_event_thread_map_stub(const struct perf_tool *tool __maybe_unused,
-+				  struct perf_session *session __maybe_unused,
- 				  union perf_event *event __maybe_unused)
- {
- 	if (dump_trace)
-@@ -180,7 +181,8 @@ int process_event_thread_map_stub(struct perf_session *session __maybe_unused,
- }
- 
- static
--int process_event_cpu_map_stub(struct perf_session *session __maybe_unused,
-+int process_event_cpu_map_stub(const struct perf_tool *tool __maybe_unused,
-+			       struct perf_session *session __maybe_unused,
- 			       union perf_event *event __maybe_unused)
- {
- 	if (dump_trace)
-@@ -191,7 +193,8 @@ int process_event_cpu_map_stub(struct perf_session *session __maybe_unused,
- }
- 
- static
--int process_event_stat_config_stub(struct perf_session *session __maybe_unused,
-+int process_event_stat_config_stub(const struct perf_tool *tool __maybe_unused,
-+				   struct perf_session *session __maybe_unused,
- 				   union perf_event *event __maybe_unused)
- {
- 	if (dump_trace)
-@@ -201,7 +204,8 @@ int process_event_stat_config_stub(struct perf_session *session __maybe_unused,
- 	return 0;
- }
- 
--static int process_stat_stub(struct perf_session *perf_session __maybe_unused,
-+static int process_stat_stub(const struct perf_tool *tool __maybe_unused,
-+			     struct perf_session *perf_session __maybe_unused,
- 			     union perf_event *event)
- {
- 	if (dump_trace)
-@@ -211,7 +215,8 @@ static int process_stat_stub(struct perf_session *perf_session __maybe_unused,
- 	return 0;
- }
- 
--static int process_stat_round_stub(struct perf_session *perf_session __maybe_unused,
-+static int process_stat_round_stub(const struct perf_tool *tool __maybe_unused,
-+				   struct perf_session *perf_session __maybe_unused,
- 				   union perf_event *event)
- {
- 	if (dump_trace)
-@@ -221,7 +226,8 @@ static int process_stat_round_stub(struct perf_session *perf_session __maybe_unu
- 	return 0;
- }
- 
--static int process_event_time_conv_stub(struct perf_session *perf_session __maybe_unused,
-+static int process_event_time_conv_stub(const struct perf_tool *tool __maybe_unused,
-+					struct perf_session *perf_session __maybe_unused,
- 					union perf_event *event)
- {
- 	if (dump_trace)
-@@ -231,7 +237,8 @@ static int process_event_time_conv_stub(struct perf_session *perf_session __mayb
- 	return 0;
- }
- 
--static int perf_session__process_compressed_event_stub(struct perf_session *session __maybe_unused,
-+static int perf_session__process_compressed_event_stub(const struct perf_tool *tool __maybe_unused,
-+						       struct perf_session *session __maybe_unused,
- 						       union perf_event *event __maybe_unused,
- 						       u64 file_offset __maybe_unused,
- 						       const char *file_path __maybe_unused)
-@@ -240,7 +247,8 @@ static int perf_session__process_compressed_event_stub(struct perf_session *sess
- 	return 0;
- }
- 
--static int perf_event__process_bpf_metadata_stub(struct perf_session *perf_session __maybe_unused,
-+static int perf_event__process_bpf_metadata_stub(const struct perf_tool *tool __maybe_unused,
-+						 struct perf_session *perf_session __maybe_unused,
- 						 union perf_event *event)
- {
- 	if (dump_trace)
++
++#define CREATE_DELEGATE_SAMPLE(name) \
++	static int delegate_ ## name(const struct perf_tool *tool, \
++				     union perf_event *event, \
++				     struct perf_sample *sample, \
++				     struct evsel *evsel, \
++				     struct machine *machine) \
++	{								\
++		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
++		struct perf_tool *delegate = del_tool->delegate;		\
++		return delegate->name(delegate, event, sample, evsel, machine);	\
++	}
++CREATE_DELEGATE_SAMPLE(read);
++CREATE_DELEGATE_SAMPLE(sample);
++
++#define CREATE_DELEGATE_ATTR(name)					\
++	static int delegate_ ## name(const struct perf_tool *tool,	\
++				union perf_event *event,		\
++				struct evlist **pevlist)		\
++	{								\
++		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
++		struct perf_tool *delegate = del_tool->delegate;		\
++		return delegate->name(delegate, event, pevlist);	\
++	}
++CREATE_DELEGATE_ATTR(attr);
++CREATE_DELEGATE_ATTR(event_update);
++
++#define CREATE_DELEGATE_OE(name)				   \
++	static int delegate_ ## name(const struct perf_tool *tool, \
++				     union perf_event *event,	   \
++				     struct ordered_events *oe)	   \
++	{								\
++		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
++		struct perf_tool *delegate = del_tool->delegate;		\
++		return delegate->name(delegate, event, oe);	\
++	}
++CREATE_DELEGATE_OE(finished_round);
++
++#define CREATE_DELEGATE_OP(name)				   \
++	static int delegate_ ## name(const struct perf_tool *tool, \
++				     union perf_event *event, \
++				     struct perf_sample *sample, \
++				     struct machine *machine) \
++	{								\
++		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
++		struct perf_tool *delegate = del_tool->delegate;		\
++		return delegate->name(delegate, event, sample, machine); \
++	}
++CREATE_DELEGATE_OP(aux);
++CREATE_DELEGATE_OP(aux_output_hw_id);
++CREATE_DELEGATE_OP(bpf);
++CREATE_DELEGATE_OP(cgroup);
++CREATE_DELEGATE_OP(comm);
++CREATE_DELEGATE_OP(context_switch);
++CREATE_DELEGATE_OP(exit);
++CREATE_DELEGATE_OP(fork);
++CREATE_DELEGATE_OP(itrace_start);
++CREATE_DELEGATE_OP(ksymbol);
++CREATE_DELEGATE_OP(lost);
++CREATE_DELEGATE_OP(lost_samples);
++CREATE_DELEGATE_OP(mmap);
++CREATE_DELEGATE_OP(mmap2);
++CREATE_DELEGATE_OP(namespaces);
++CREATE_DELEGATE_OP(text_poke);
++CREATE_DELEGATE_OP(throttle);
++CREATE_DELEGATE_OP(unthrottle);
++
++#define CREATE_DELEGATE_OP2(name)					\
++	static int delegate_ ## name(const struct perf_tool *tool,	\
++				     struct perf_session *session,	\
++				     union perf_event *event)		\
++	{								\
++		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
++		struct perf_tool *delegate = del_tool->delegate;		\
++		return delegate->name(delegate, session, event);	\
++	}
++CREATE_DELEGATE_OP2(auxtrace_error);
++CREATE_DELEGATE_OP2(auxtrace_info);
++CREATE_DELEGATE_OP2(bpf_metadata);
++CREATE_DELEGATE_OP2(build_id);
++CREATE_DELEGATE_OP2(cpu_map);
++CREATE_DELEGATE_OP2(feature);
++CREATE_DELEGATE_OP2(finished_init);
++CREATE_DELEGATE_OP2(id_index);
++CREATE_DELEGATE_OP2(stat);
++CREATE_DELEGATE_OP2(stat_config);
++CREATE_DELEGATE_OP2(stat_round);
++CREATE_DELEGATE_OP2(thread_map);
++CREATE_DELEGATE_OP2(time_conv);
++CREATE_DELEGATE_OP2(tracing_data);
++
++#define CREATE_DELEGATE_OP3(name)					\
++	static s64 delegate_ ## name(const struct perf_tool *tool,	\
++				     struct perf_session *session,      \
++				     union perf_event *event)           \
++	{								\
++		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
++		struct perf_tool *delegate = del_tool->delegate;	\
++		return delegate->name(delegate, session, event);	\
++	}
++CREATE_DELEGATE_OP3(auxtrace);
++
++#define CREATE_DELEGATE_OP4(name)					\
++	static int delegate_ ## name(const struct perf_tool *tool, \
++			struct perf_session *session, \
++			union perf_event *event, \
++			u64 data, \
++			const char *str) \
++	{								\
++		struct delegate_tool *del_tool = container_of(tool, struct delegate_tool, tool); \
++		struct perf_tool *delegate = del_tool->delegate;		\
++		return delegate->name(delegate, session, event, data, str);	\
++	}
++CREATE_DELEGATE_OP4(compressed);
++
++void delegate_tool__init(struct delegate_tool *tool, struct perf_tool *delegate)
++{
++	tool->delegate = delegate;
++
++	tool->tool.ordered_events = delegate->ordered_events;
++	tool->tool.ordering_requires_timestamps = delegate->ordering_requires_timestamps;
++	tool->tool.namespace_events = delegate->namespace_events;
++	tool->tool.cgroup_events = delegate->cgroup_events;
++	tool->tool.no_warn = delegate->no_warn;
++	tool->tool.show_feat_hdr = delegate->show_feat_hdr;
++
++	tool->tool.sample = delegate_sample;
++	tool->tool.read = delegate_read;
++
++	tool->tool.mmap = delegate_mmap;
++	tool->tool.mmap2 = delegate_mmap2;
++	tool->tool.comm = delegate_comm;
++	tool->tool.namespaces = delegate_namespaces;
++	tool->tool.cgroup = delegate_cgroup;
++	tool->tool.fork = delegate_fork;
++	tool->tool.exit = delegate_exit;
++	tool->tool.lost = delegate_lost;
++	tool->tool.lost_samples = delegate_lost_samples;
++	tool->tool.aux = delegate_aux;
++	tool->tool.itrace_start = delegate_itrace_start;
++	tool->tool.aux_output_hw_id = delegate_aux_output_hw_id;
++	tool->tool.context_switch = delegate_context_switch;
++	tool->tool.throttle = delegate_throttle;
++	tool->tool.unthrottle = delegate_unthrottle;
++	tool->tool.ksymbol = delegate_ksymbol;
++	tool->tool.bpf = delegate_bpf;
++	tool->tool.text_poke = delegate_text_poke;
++
++	tool->tool.attr = delegate_attr;
++	tool->tool.event_update = delegate_event_update;
++
++	tool->tool.tracing_data = delegate_tracing_data;
++
++	tool->tool.finished_round = delegate_finished_round;
++
++	tool->tool.build_id = delegate_build_id;
++	tool->tool.id_index = delegate_id_index;
++	tool->tool.auxtrace_info = delegate_auxtrace_info;
++	tool->tool.auxtrace_error = delegate_auxtrace_error;
++	tool->tool.time_conv = delegate_time_conv;
++	tool->tool.thread_map = delegate_thread_map;
++	tool->tool.cpu_map = delegate_cpu_map;
++	tool->tool.stat_config = delegate_stat_config;
++	tool->tool.stat = delegate_stat;
++	tool->tool.stat_round = delegate_stat_round;
++	tool->tool.feature = delegate_feature;
++	tool->tool.finished_init = delegate_finished_init;
++	tool->tool.bpf_metadata = delegate_bpf_metadata;
++	tool->tool.compressed = delegate_compressed;
++	tool->tool.auxtrace = delegate_auxtrace;
++}
 diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
-index 18b76ff0f26a..1f1461808371 100644
+index 1f1461808371..88337cee1e3e 100644
 --- a/tools/perf/util/tool.h
 +++ b/tools/perf/util/tool.h
-@@ -26,10 +26,12 @@ typedef int (*event_attr_op)(const struct perf_tool *tool,
- 			     union perf_event *event,
- 			     struct evlist **pevlist);
+@@ -102,4 +102,13 @@ int process_event_sample_stub(const struct perf_tool *tool,
+ 			      struct evsel *evsel,
+ 			      struct machine *machine);
  
--typedef int (*event_op2)(struct perf_session *session, union perf_event *event);
--typedef s64 (*event_op3)(struct perf_session *session, union perf_event *event);
--typedef int (*event_op4)(struct perf_session *session, union perf_event *event, u64 data,
--			 const char *str);
-+typedef int (*event_op2)(const struct perf_tool *tool, struct perf_session *session,
-+			 union perf_event *event);
-+typedef s64 (*event_op3)(const struct perf_tool *tool, struct perf_session *session,
-+			 union perf_event *event);
-+typedef int (*event_op4)(const struct perf_tool *tool, struct perf_session *session,
-+			 union perf_event *event, u64 data, const char *str);
- 
- typedef int (*event_oe)(const struct perf_tool *tool, union perf_event *event,
- 			struct ordered_events *oe);
++struct delegate_tool {
++	/** @tool: The actual tool that calls the delegate. */
++	struct perf_tool tool;
++	/** @delegate: The tool that is delegated to. */
++	struct perf_tool *delegate;
++};
++
++void delegate_tool__init(struct delegate_tool *tool, struct perf_tool *delegate);
++
+ #endif /* __PERF_TOOL_H */
 -- 
 2.51.2.1041.gc1ab5b90ca-goog
 
