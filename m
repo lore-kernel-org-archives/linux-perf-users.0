@@ -1,109 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BBA072604;
-	Fri,  7 Nov 2025 13:10:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517F432E6BA
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Nov 2025 15:54:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762521056; cv=none; b=hOSw9iStdsrpxr8tm+z5IFg2hqvPP86/BT9PZrwH48X1FSy6uKo18dVXh2GsQDwUOnREETYY2vfRutwKnnefH7V2G3xq40ENn9On3Bz6DXeUSEi2xM2DRRHeOAEbQ3NmOy92/6sBAHp+67KokbLTIqHa6nE/jKcA1fp7YzreKYM=
+	t=1762530845; cv=none; b=nsGR48UZu2ULA61SRMmP/CYLDOVLv/6oAjZb6st8JKWIXT0H4SB/dx2QCH2Cmth2c/YvXQdriyH12wCvY2fTRkECsovThnDALcrje9ODuRKHXX4VmNbNkItQdFWZHUMNZ/EdIveu6lmp8eg0DmwSsAxFNNuoRwUVdp0wyk59U5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762521056; c=relaxed/simple;
-	bh=9yNpA1SE+6LUazhxfaVM0P+KTY2xAhLSO9vXTnuC8wg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E+RRB4j7ehgvHkpUT6gT6uNiESXdHMpnjO2VF43yEQLgCZcBLKE+YvJ09sdBnA2yq4zGOQSwYO013IZtGVHgXJI/SDlmvgXWYsVrd+FvfhcbF6ojz0NMkVeWlCae/UArDL6FFTYS4+cEDIUbty5HT7P34DtD8Roa314JORzkgr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K1pL5YGY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762530845; c=relaxed/simple;
+	bh=f5W0zlQImtuVz4ijpkSE3OW0/YOZZ9zWfzlQ9HOAXB4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t9u0Dpo5IkzzMqFWKGbTBT/ln03YBUS8S03Rh8DDc1Jis9zUqedniGD9qvMFP3WWTNlSBUpfkWyarAkxCVviqXZhpgGQGJ2A7ZwE3LWtXZONHz31c6cqiUyjKEPBBLyn5332D5Q2LMQACe5DbM5+F+vAw5/Zrro5smbNEzj42PM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UAzPiJEy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K1pL5YGY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84724C19421;
-	Fri,  7 Nov 2025 13:10:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UAzPiJEy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00838C4CEF5;
+	Fri,  7 Nov 2025 15:54:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762521056;
-	bh=9yNpA1SE+6LUazhxfaVM0P+KTY2xAhLSO9vXTnuC8wg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K1pL5YGYFuG6hxkKpIelSp4d5IkSoL6mbBtbq2kEckqm8NKtXk0sV5yE4uZEwNt1q
-	 ethdg2+fJxg4IQ7wEAJCWBsr3M4QlRFC7sKNaUDJXDpXrb0nfCOAbjbv0gQI6Bru4h
-	 fydJwyetpw3hex5Orwn9R0FuIcYMuiERvBPHxKwFDX6pnNRSlfwUb95i792MUyccOa
-	 O9tAxtas6uw8A1dp02fOK28qXtF/zEGda7ciCQzGk07YYgKSw4/Oe51Xdq2hvdAj40
-	 vHZ4hzLyNf5jfkxq0b0gGTPJw99/B9LhRb33I8h/Xl0Ebl2LMSB+9pgDUEbMvSEIE1
-	 q358Q5AwLVEig==
-Date: Fri, 7 Nov 2025 13:10:47 +0000
+	s=k20201202; t=1762530844;
+	bh=f5W0zlQImtuVz4ijpkSE3OW0/YOZZ9zWfzlQ9HOAXB4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=UAzPiJEyG3FCC8SZ9HzahNJFivkXiFHaON3c+3tp9cUB1+D/Be4mkAjUHJmn8quAp
+	 UAVjjMXuLqZHVFPr6fg5rkG1N+zQ32zpcYGIOgQ00OxMBWxiY+uSALvx+K6o48SSF9
+	 yfwyB+LEOJ/3QCRnBO9G0djbVbi8FmWDPn1fhaekpUFkXV/AsOTw0prVKBJDZx4AZB
+	 jUP5ABlt6+5i7bWU+KZoHsphmKvsPqhLycjx7yxfED7Vu+b5WUTa2CYhsjXrOjug9S
+	 LvStAC3E9DssfiHxc67kZIRx0KxSRD70YBHTVLVQfDq0yGCTI2nZCaKltHsa9YJt64
+	 y5gfilGwMQ8kA==
 From: Will Deacon <will@kernel.org>
-To: yunhui cui <cuiyunhui@bytedance.com>
-Cc: akpm@linux-foundation.org, alex@ghiti.fr, anup@brainfault.org,
-	aou@eecs.berkeley.edu, atish.patra@linux.dev,
-	catalin.marinas@arm.com, dianders@chromium.org,
-	johannes@sipsolutions.net, lihuafei1@huawei.com,
-	mark.rutland@arm.com, masahiroy@kernel.org, maz@kernel.org,
-	mingo@kernel.org, nicolas.schier@linux.dev, palmer@dabbelt.com,
-	paul.walmsley@sifive.com, suzuki.poulose@arm.com,
-	thorsten.blum@linux.dev, wangjinchao600@gmail.com,
-	yangyicong@hisilicon.com, zhanjie9@hisilicon.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [External] Re: [PATCH v4 1/2] watchdog: move arm64 watchdog_hld
- into common code
-Message-ID: <aQ3v15yrm9JaWgrm@willie-the-truck>
-References: <20251014031425.93284-1-cuiyunhui@bytedance.com>
- <20251014031425.93284-2-cuiyunhui@bytedance.com>
- <aQixsIQXTjYyhRVj@willie-the-truck>
- <CAEEQ3wk5Ru4-=4Ecnc6kQAAbR57806xxYTz0o1z4KfgZE6Cg6w@mail.gmail.com>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: catalin.marinas@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] perf/arm-ni: Fix and optimise register offset calculation
+Date: Fri,  7 Nov 2025 15:53:45 +0000
+Message-Id: <176252278054.581088.13167524929157815362.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <5db610facd51b81af04b1afee53191836315b17a.1762264719.git.robin.murphy@arm.com>
+References: <5db610facd51b81af04b1afee53191836315b17a.1762264719.git.robin.murphy@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEEQ3wk5Ru4-=4Ecnc6kQAAbR57806xxYTz0o1z4KfgZE6Cg6w@mail.gmail.com>
 
-On Fri, Nov 07, 2025 at 10:42:25AM +0800, yunhui cui wrote:
-> On Mon, Nov 3, 2025 at 9:44 PM Will Deacon <will@kernel.org> wrote:
-> >
-> > On Tue, Oct 14, 2025 at 11:14:24AM +0800, Yunhui Cui wrote:
-> > > @@ -306,3 +307,85 @@ void __init hardlockup_config_perf_event(const char *str)
-> > >       wd_hw_attr.type = PERF_TYPE_RAW;
-> > >       wd_hw_attr.config = config;
-> > >  }
-> > > +
-> > > +#ifdef CONFIG_WATCHDOG_PERF_ADJUST_PERIOD
-> > > +/*
-> > > + * Safe maximum CPU frequency in case a particular platform doesn't implement
-> > > + * cpufreq driver. Although, architecture doesn't put any restrictions on
-> > > + * maximum frequency but 5 GHz seems to be safe maximum given the available
-> > > + * CPUs in the market which are clocked much less than 5 GHz. On the other
-> > > + * hand, we can't make it much higher as it would lead to a large hard-lockup
-> > > + * detection timeout on parts which are running slower (eg. 1GHz on
-> > > + * Developerbox) and doesn't possess a cpufreq driver.
-> > > + */
-> > > +#define SAFE_MAX_CPU_FREQ    5000000000UL // 5 GHz
-> > > +__weak u64 hw_nmi_get_sample_period(int watchdog_thresh)
-> > > +{
-> > > +     unsigned int cpu = smp_processor_id();
-> > > +     unsigned long max_cpu_freq;
-> > > +
-> > > +     max_cpu_freq = cpufreq_get_hw_max_freq(cpu) * 1000UL;
-> > > +     if (!max_cpu_freq)
-> > > +             max_cpu_freq = SAFE_MAX_CPU_FREQ;
-> > > +
-> > > +     return (u64)max_cpu_freq * watchdog_thresh;
-> > > +}
-> >
-> > Why does this function become __weak? Neither arm64 nor riscv override
-> > it afaict.
+On Tue, 04 Nov 2025 18:29:40 +0000, Robin Murphy wrote:
+> LKP points out an operator precedence oversight in the new NoC S3
+> support that, annoyingly, my local W=1 build didn't flag. In fixing
+> that, we can also take the similarly-missed opportunity to cache the
+> version check itself at event_init time.
 > 
-> Would you say there’s any particular issue here? If some architectures
-> might need to override the hw_nmi_get_sample_period() function later
-> on, wouldn’t __weak be a more reasonable choice?
+> 
 
-__weak is pretty brittle (it can depend on link order if you have multiple
-targets) and I suspect it prevents inlining when LTO isn't enabled. It's
-cleaner and more robust for architectures to provide their hooks by
-#defining the symbol, as is done commonly in other parts of the kernel.
+Applied to will (for-next/perf), thanks!
 
-But in this particular case, it's completely unnecessary because there
-isn't an architectural override and so this function should simply be
-static.
+[1/1] perf/arm-ni: Fix and optimise register offset calculation
+      https://git.kernel.org/will/c/2d7a82480701
 
+Cheers,
+-- 
 Will
+
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
