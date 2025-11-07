@@ -1,101 +1,125 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6711DDC33
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Nov 2025 01:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9322F5A26;
+	Fri,  7 Nov 2025 01:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762479348; cv=none; b=q2fWlc+vneLAmluHqMAJd+/hPCfIoLQ1NFALXHIEBpA65WkfFz99e4cW0YDjb+XDkdBni+da3N38vRgNiy1hymblBHquA5TNqED7w4gIsso8WQSNvjw8RTkcXxbFGBhgG+1i7oeSB2TcOs4lDMKwUpOPAkRXYGOsWXzZWlVEOJc=
+	t=1762479556; cv=none; b=Q3GC5RcSEgYAy4vlLwTgRp1nBsyslV2iSOBhXyCigbRZRDvtfqvEIp+JGo6/VNTWL5jjAznGB8SxC8pCUjdYvBHm56NnmDEEDxVbVYfxfFSzQwYO/aumn8WmA4Oj4xppVdn9OEpZiHck4UW6PzNZ2o1wGonoc+1tGS7Djjx/0I4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762479348; c=relaxed/simple;
-	bh=ALv3T0LdZlAXXjuCf1bRzW5Nc+7vXsSilbrpqKU8F5I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GmNjkr09n/D38QZSKeTnJz2qV+fdLcn2m3uF/hNY3VT2rYgfDluXvobtuAoOIkxQHZ7BOzbOUCSPhe7mcCwrhEru4eskZ/qUULuUc7ItOsSKeamcXFsX1EW4zUGfUdQ+8xpOeCTOgxmiyHCPx8X+PIQ7nX52YjxZpFHzCgr/010=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QtF9BvTw; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762479556; c=relaxed/simple;
+	bh=BPAKudae5k1OcIVZU1GMTAO6vPioIYL0JFIIjWG5Nl8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YoHTGQvIhyCre3b93KaKIM0oEopWs4P6wdydwkdc3m2W3obUhLSgtE41nHmaimFBWIpGGcOjAwbyIUVWniwQE7bOHn9Lsy/1wfzP6h1i05xziOF6aE49GJH6k5KrfzhSAVSSj8gKksHfG1RP2YryH2rcTnRAbRNQE3IDQ+tXbmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gj9NZLTk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QtF9BvTw"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b9a2e3c4afcso40762a12.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 06 Nov 2025 17:35:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762479346; x=1763084146; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ALv3T0LdZlAXXjuCf1bRzW5Nc+7vXsSilbrpqKU8F5I=;
-        b=QtF9BvTwO99ypH/3su0OUvoDSKhTro4nJ/FhDiw53wO84/KwdBROsltJfelyjWV1/X
-         h5rygbukzif46hJpSYDoAEkQ/B+c/1u9fXhWm9lKZMr6ln71w7MdwWNcO6PwCaN3xmfn
-         iuQA8OaDgsi8mt3TA35PRq/5W2rUBKVoVtGErYfUHnIr/exNiqmv5r12S/gUbwlj9Y9U
-         a+zcUWD1RpwVBYNoGI3tK0wgDX1aovolFtQENUoVi5nNizrU9gImC7gVH23JeMy35fTu
-         K3HFi81dfz6sPbd6IlfSTl45vbVvOV70+i30ezUY7VtglPVs9aAi8lmWj0dlRUeAiW/H
-         HeOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762479346; x=1763084146;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ALv3T0LdZlAXXjuCf1bRzW5Nc+7vXsSilbrpqKU8F5I=;
-        b=jwd/hnfOjRDZGfCG6ufPhlKeAoecQimn+eYknxWY5nbzrjv4s+QUb6+02otThgL/hm
-         hlu7tK/Xnrr/rJ3INI8//juUvt96PhjOr4ViCVfKLpMmOYSfbecAfJ0HRgsSdJtdXAah
-         DnH2RPan3IM5hSnB8/KUVBi07lBqXFBf+97l3aETlrXbiBvN6dDY6Rb1+1UgL42C3y1Z
-         /81jdsxrENLnOrSQHzWT+MLamRglISlsCbz1dFTjGsJBVCrmxUEnrfYOhxK63T0V5dCf
-         Utz/1HPbG4DwgnRQNvqTLwu0G23OeD3u68rTEzy6/kLYDq5Rsu2wluMtasV/FkWqU+lg
-         1I6g==
-X-Forwarded-Encrypted: i=1; AJvYcCXhZuBH2Li0v63NUAdObdAzvidOezAbS2R8OqVLc+hO6gNyAUzwwuT8dpGedVa92lPsTZ/ivntccIRJ1nx6+Dzm@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyma6AS4BX68xZhFp0dL8tqZXher9mwbfYOCt/V2UG1PB9eSZ1i
-	e8PlefYsEDyxel6KDta6Zvg5e6R3+DkpfsP2XOPgk0Yuydg9WNii4M7O9jt+XS0MHk2/EOm3cpA
-	HzObB7BnCrVRRpdhB4lAwL6XRgKZh2xg=
-X-Gm-Gg: ASbGncvnRDy57xBqWJ9bm5CyZSSYs+FRKO7FUrGASr7n6+cd+PW7w5FtfHepQkdYQSU
-	v3wd3+XWA1c9nhqThxptS/9BjDTDKQ0fM0XOuojNg0F/pF3/6cLgzOSlgfrK63wKsSpF0x9OXYV
-	0wNfGTutN/3di7/dd74G18cGswuueZK1vm3cFCXqSC0dfB5YT5TD94iAEpXGF0Zd4cyMKnwOaan
-	QuaMIMxANzuQoYJI0Fdb21Pus+3ldOiOTSsDhTk2mwYbq+Ju08tfDIv7h3P5OTwaj9AS1f+B/ou
-	lL4uH+KyoqDCmMQASuZZlXe83yQGt/x/j3GeDIFnGYGIawg1Y3XvUpR588FmaAgoGt8RsWg94KH
-	ImFY=
-X-Google-Smtp-Source: AGHT+IFdOCSY6O8qmuLhpo+egzhILHqwOsqZrle6tFjkwWMOjETCtWvvAvG3V2hIcW/LcQ1fDLv4kKGz0fqfoB3p3m8=
-X-Received: by 2002:a17:903:41cc:b0:295:558d:a464 with SMTP id
- d9443c01a7336-297c0456faemr10946665ad.7.1762479346436; Thu, 06 Nov 2025
- 17:35:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gj9NZLTk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99207C116C6;
+	Fri,  7 Nov 2025 01:39:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762479556;
+	bh=BPAKudae5k1OcIVZU1GMTAO6vPioIYL0JFIIjWG5Nl8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Gj9NZLTkAHAD7A5L2XvR9EykNxJMSVofNKHydN82UTAOCs2Q5u2YHQ+8PVRmjWMbA
+	 fczWWDVeNMIFAIdstsfIQimN7OZBj6oN+u79GAgMyi7yOlk+0MexfS9kOdZ/PcDLlQ
+	 K7tF/TLInzxnXdutt99SXcEAhnpaRrJWZBoyILcYw3pe5SpBACZcX6X362ceOcZJ6R
+	 kVv0ovfv0Z9YTBZH2T44FONiu03yNtnh7L8FxQayNbTde2T3tLBZZG1qG61Y9cX0uF
+	 VnfnY5VYHPqFmPxN3fxViJ+aipBZheOPkq7kGFTFobpj3Yzqh06TtnYNOvUvdJQ/8P
+	 xHQCAgye6aHsQ==
+Date: Thu, 6 Nov 2025 17:39:12 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] perf test: Add test that command line period
+ overrides sysfs/json values
+Message-ID: <aQ1NwHzzBjA75w5G@google.com>
+References: <20251106233710.463949-1-irogers@google.com>
+ <20251106233710.463949-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aQjua6zkEHYNVN3X@x1> <aQltxZIVd6w5VNtI@google.com> <aQ0ERJiTpiA_rL5D@x1>
-In-Reply-To: <aQ0ERJiTpiA_rL5D@x1>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 7 Nov 2025 02:35:34 +0100
-X-Gm-Features: AWmQ_bk2zd2IkmzGmtFBN6lT1ctf4sW0mHoVMUEeA7J802zxHrPs42dRjI3qLOU
-Message-ID: <CANiq72ns1sRukpX-4L3FgqfJw4nXZ5AyqQKCEeQ=nhyERG7QGA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf symbols: Handle '1' symbols in /proc/kallsyms
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Alice Ryhl <aliceryhl@google.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Benno Lossin <lossin@kernel.org>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Danilo Krummrich <dakr@kernel.org>, Gary Guo <gary@garyguo.net>, 
-	Trevor Gross <tmgross@umich.edu>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251106233710.463949-2-irogers@google.com>
 
-On Thu, Nov 6, 2025 at 9:25=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> So far, '1' symbols are Rust symbols, in the Linux kernel, for unnamed
-> closures and its prefix code checking for stack space, Miguel, do you
-> have something to add?
+On Thu, Nov 06, 2025 at 03:37:10PM -0800, Ian Rogers wrote:
+> The behavior of weak terms is subtle, add a test that they aren't
+> accidentally broken.
 
-Wait, is `1` the symbol type? I don't know what that is. That column
-in `readelf` isn't the symbol type, no?
+I've got this error.
 
-And if I use `nm` on Fedora's `vmlinux`, I get a `t` (and the
-`System.map` has the same). Something is fishy in `/proc/kallsyms`.
+  $ sudo ./perf test -v 'record weak terms'
+  --- start ---
+  test child forked, pid 4014275
+  Testing that for cpu/event=0..0xfff,edge,inv,.../modifier the period is overridden with 1000
+  Fail: Unexpected verbose output and sample period
+  ---- end(-1) ----
+   92: record weak terms                                               : FAILED!
 
-We don't handle the big symbol double-byte... I will send a patch.
+Thanks,
+Namhyung
 
-Cheers,
-Miguel
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+> v2: Add more comments to the test code and reduce the line length (Namhyung).
+> ---
+>  tools/perf/tests/shell/record_weak_term.sh | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100755 tools/perf/tests/shell/record_weak_term.sh
+> 
+> diff --git a/tools/perf/tests/shell/record_weak_term.sh b/tools/perf/tests/shell/record_weak_term.sh
+> new file mode 100755
+> index 000000000000..ee4bcc792aeb
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/record_weak_term.sh
+> @@ -0,0 +1,36 @@
+> +#!/bin/bash
+> +# record weak terms
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Test that command line options override weak terms from sysfs or inbuilt json.
+> +set -e
+> +
+> +shelldir=$(dirname "$0")
+> +# shellcheck source=lib/setup_python.sh
+> +. "${shelldir}"/lib/setup_python.sh
+> +
+> +# Find the first event with a specified period, such as
+> +# "cpu_core/event=0x24,period=200003,umask=0xff/"
+> +event=$(perf list --json | $PYTHON -c '
+> +import json, sys
+> +for e in json.load(sys.stdin):
+> +    if "Encoding" in e and "period=" in e["Encoding"]:
+> +       print(e["EventName"])
+> +       sys.exit(0)
+> +sys.exit(1)
+> +')
+> +if [[ "$?" != "0" ]]
+> +then
+> +  echo "Skip: No sysfs/json events with inbuilt period."
+> +  exit 2
+> +fi
+> +
+> +echo "Testing that for $event the period is overridden with 1000"
+> +perf list --detail "$event"
+> +if ! perf record -c 1000 -vv -e "$event" -o /dev/null true 2>&1 | \
+> +  grep -q -F '{ sample_period, sample_freq }   1000'
+> +then
+> +  echo "Fail: Unexpected verbose output and sample period"
+> +  exit 1
+> +fi
+> +echo "Success"
+> +exit 0
+> -- 
+> 2.51.2.1041.gc1ab5b90ca-goog
+> 
