@@ -1,131 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9BF2E92DA;
-	Sun,  9 Nov 2025 16:58:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEA03002DB
+	for <linux-perf-users@vger.kernel.org>; Sun,  9 Nov 2025 17:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762707496; cv=none; b=INkrUhso5+jMT+x9Ghf3N3cKRZLd3fDi38nUKQf8hkEU8kt914kIpYrJ7oP0DzlSuX+cCBX5IxA5SYXGMj8W0Yr8quXpgpfa5Nx7jhbOpaAmUwpSUUhgVX8dGAd/skM4ScO5iJ4JcTZ2YBvUn2FUC13mR+MZ7DOEq+/czTqq0oY=
+	t=1762707874; cv=none; b=GjZtRubQIPz8EJpIe9VpMPFwn3SPMjTzk9DQH7Kh4PwYdqNxQfSzJHQyi7ljmVYw8ugaMreemkm47lb7+BnEd3B4r1iahl3rmqqubyJvcvRMbGVYSf8B+506fFoAUbhR+f/YuWmJ+vHUMlifXs/9zAk19UR5/jjNBYYLfRbEDc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762707496; c=relaxed/simple;
-	bh=b6sosotwC/oHOg9LGRqzgR279GDoawxDZ0ekAKfx+70=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=fRRvLvSJYfOuOy5zOj0dtWHFqaSQXZ2Q0nmrest63V/Bg9QTkPNiXyYcrtZa1KJOqlqC4o3EYAsJaYqDJghfXV94P813Zsc9GnZhPG+XHu5N/HTDGsabIsVRaKtjoUEkch/rroW1PtXyk8Q9sZ4YWTK/1ZK5Mz43CywtWXDGFpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WqbObaft; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762707874; c=relaxed/simple;
+	bh=4K+T0yvpGk3Q2IrzYuDGX8XEZi6W9MmpXSWX8qogLWs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uonUcuuxl0YSNjwimSO3JQR6LQwrJBtJ4ZxwBW5IKyf9HXXUhSMSYEneGUpGwVqVG7d1UYNh3BUsffBM59cGu1zCuiDy43BMOS5Sr3JHbbqAKg4QUtZzQlEtjytLSWnQ+qCetlPG3RjGEwON6SPFmnKRvQmEreJwzRUaqgnagbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SUWscdTu; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WqbObaft"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E941C16AAE;
-	Sun,  9 Nov 2025 16:58:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762707496;
-	bh=b6sosotwC/oHOg9LGRqzgR279GDoawxDZ0ekAKfx+70=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-	b=WqbObaftT+4n7+zzfmiM089HqwM54MVsjMUJ9epZseSqw6gZ/3qZt6ZwNS7AnFeuY
-	 qyGsV/LWhoXphn7GYJLya36fi6jk9hMZHdnqC+sbgKDUrAZ0vB2Lh/R3PCfJPGjdWY
-	 ypWt31DJK2jZ7TbPx0TDFRZJG+1IzsCxF2qN+05fszTFOzmWgyEUCwwO1aoKYhDsfv
-	 mAweHAp8Xh5KBuSGJchTwXLkfmkcRlgxEOeKpXu8LAS+CuIUadMcX6b5ykA/uk0MfC
-	 DCil7ySHUq+IydX+H8zwQb6Ht8GCnB0+aAGNrrboznizVTPugym50ntrYUrHW6prJy
-	 AiBkqIJ1tb03A==
-Content-Type: multipart/mixed; boundary="===============0591375349055705727=="
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SUWscdTu"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2982237a3b3so518385ad.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 09 Nov 2025 09:04:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762707872; x=1763312672; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4K+T0yvpGk3Q2IrzYuDGX8XEZi6W9MmpXSWX8qogLWs=;
+        b=SUWscdTuz6E8COB4RFi3ARO92QxTVYh+eM1xKZGjF6toaMhbiUpmk8leK7DKEWdVmL
+         T1n7eWLAgZR17BgtucZln5haaFIwIlzBsalpycpO9AxPOEgjT11nWQKYzgTk0Z9K30Kr
+         rFye/XM/FEOlo1TZuOg1+8wKc4EhvaPGuuwf7bsd2id6U4ZThUmIyUTSgvVorWd3erHW
+         mGWG0yFvj5HsGIavX1MJ6qyQVNruD0wj8Ku4SWPkAODcbDrsuB4gTHSFD73zHzYvw9Xh
+         Z/AAbxMNYwNciKd7J61O/9qa17+e9u5qDL/ZsKQWqs+i2yi7vmHiqCc3mSXqFsLZjskb
+         DLoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762707872; x=1763312672;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=4K+T0yvpGk3Q2IrzYuDGX8XEZi6W9MmpXSWX8qogLWs=;
+        b=S8ACDnzxemn2ZTg2tZZxlS3xg1wgofj9CTzaepmyaJN23QLa/3ghW7aTNrmlIApKyR
+         C4AIk/6TaL2qp2WX31OglS2fK7Br1au3HBBX4ZBGywNBDtOCTgTImmSR90Vgdtj7Cryc
+         3O+rns3bP52owCN7mv+WkFoY+AyTy/1gMOxr955ogXkzHbbpWC7bh4sJMudBjjOfdbtZ
+         ExK64Ox/JClJgYmiUOX2ColrSbgDy/3swSKxjB8FxbdL2UZkNEAuGvFBTTzpOxrb1uWs
+         LwZk6guciNG2bORF8jEGYv1B2d3mgHop+mUkKYdenjXkEhju6B9V3cFnbRDxzRUUIEkR
+         K0pA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+tZsHyOWensrFf5lEI6iMLqReDc/wVSR/PAuvCbMGTh8h0tWoVK33ZsbDwPm2pIM5wgdjakTyOHwPdpjEdZJq@vger.kernel.org
+X-Gm-Message-State: AOJu0YyF8Oic/qDqpBxPZ5VxcAgnjl2dJarIYtOTDzqUO5+V43lTIpmb
+	eF8cDyBgdhknPgaw3U6Cc9RYOifL5FjslGO/h+SqVdai8LmNl7OUibe9
+X-Gm-Gg: ASbGncvuYiY8RWybgwuNzbchtKbNpLEI49pi4rnAjS5PQRnJ72oQiSvDgXnIJ1QFgo1
+	hLZe/jCLgvJwoEnSlraT3wlGVFT2mQ0e8lHUBxNs5L8IQB6zjyZ4wsxrQsUaDAcQWpiUV3y96JF
+	ngKWuburipM0CQrNE7V3NT7ZGW7JmxNmNU++/BxzIkoDu7hkiy2tmmBXYaKWeUhkA6erIc3U0vZ
+	vfSbuY8nlKR/kqCxvCTvrv2w0i/KzZENF7O8zNRoC+yDU2OjXJMpmYd/ZsLhFSLgpaaDcSK4rYV
+	rbK+fIFR+hXJxfh7+3O8MF4OI0dcEXF46W+TyzwmfQmm4dI5OatNHqXQVJ2VRdWGXUKvS/z21wT
+	sVxoCFD6THoayhCjC39tOuJv8hsMzhfWepDBQ0cTFMMMY+vb8cDidA08Jkxc7BBVrsWLWjiuQBd
+	Zs0N1ErWRku7pMS5OFLYak/LThrHjEXFDaiEM=
+X-Google-Smtp-Source: AGHT+IEO5xU3ShKvIQJG0EYcsf90e1JVTbxU34yk/YUYIZqWcpmJ8G9BchXReIw1drUaTkP5NUMmRg==
+X-Received: by 2002:a17:903:2f86:b0:297:c71d:851c with SMTP id d9443c01a7336-297e56be50emr71705165ad.36.1762707871570;
+        Sun, 09 Nov 2025 09:04:31 -0800 (PST)
+Received: from DESKTOP-8TIG9K0.localdomain ([119.28.20.50])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29650968253sm117879105ad.20.2025.11.09.09.04.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Nov 2025 09:04:29 -0800 (PST)
+From: Xie Yuanbin <qq570070308@gmail.com>
+To: peterz@infradead.org,
+	david@redhat.com,
+	tglx@linutronix.de,
+	segher@kernel.crashing.org,
+	riel@surriel.com,
+	linux@armlinux.org.uk,
+	mathieu.desnoyers@efficios.com,
+	paulmck@kernel.org,
+	pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	hca@linux.ibm.com,
+	gor@linux.ibm.com,
+	agordeev@linux.ibm.com,
+	borntraeger@linux.ibm.com,
+	svens@linux.ibm.com,
+	davem@davemloft.net,
+	andreas@gaisler.com,
+	luto@kernel.org,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	hpa@zytor.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	anna-maria@linutronix.de,
+	frederic@kernel.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com,
+	morbo@google.com,
+	justinstitt@google.com,
+	qq570070308@gmail.com,
+	thuth@redhat.com,
+	brauner@kernel.org,
+	arnd@arndb.de,
+	jlayton@kernel.org,
+	aalbersh@redhat.com,
+	akpm@linux-foundation.org,
+	david@kernel.org,
+	lorenzo.stoakes@oracle.com,
+	max.kellermann@ionos.com,
+	ryan.roberts@arm.com,
+	nysal@linux.ibm.com,
+	urezki@gmail.com
+Cc: x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	llvm@lists.linux.dev,
+	will@kernel.org
+Subject: Re: [PATCH v2 3/4] Provide the always inline version of some functions
+Date: Mon, 10 Nov 2025 01:04:02 +0800
+Message-ID: <20251109170402.145012-1-qq570070308@gmail.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251109113152.GA2545891@noisy.programming.kicks-ass.net>
+References: <20251109113152.GA2545891@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <886b17f3dd9f9836dd87b9249a01e737088fe52174b8d513ad6350c6bb19ff87@mail.kernel.org>
-In-Reply-To: <20251109163559.4102849-2-chen.dylane@linux.dev>
-References: <20251109163559.4102849-2-chen.dylane@linux.dev>
-Subject: Re: [PATCH bpf-next v5 1/3] perf: Refactor get_perf_callchain
-From: bot+bpf-ci@kernel.org
-To: chen.dylane@linux.dev,peterz@infradead.org,mingo@redhat.com,acme@kernel.org,namhyung@kernel.org,mark.rutland@arm.com,alexander.shishkin@linux.intel.com,jolsa@kernel.org,irogers@google.com,adrian.hunter@intel.com,kan.liang@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org,linux-kernel@vger.kernel.org,bpf@vger.kernel.org,chen.dylane@linux.dev,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
-Date: Sun,  9 Nov 2025 16:58:15 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 
---===============0591375349055705727==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+On Sun, 9 Nov 2025 12:31:52 +0100, Peter Zijlstra wrote:
+> There isn't a single function in the entire kernel with an _ainline
+> suffix, while there are a ton of _inline suffixed functions.
+>
+> On top of that, this function was already marked inline, and your
+> compiler just chose to not inline them for raisins. Just make the thing
+> __always_inline and forget, dont make thing extra ugly for no reason.
 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index fd1d91017..edd3058e4 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -67,6 +67,7 @@ struct perf_callchain_entry_ctx {
->  	u32				nr;
->  	short				contexts;
->  	bool				contexts_maxed;
-> +	bool				add_mark;
->  };
+Simple test: "Make the original functions as __always_inline" VS
+"Add the always inline version of these functions (with _ainline suffix)"
 
-[ ... ]
+compile as OPTIMIZE_FOR_SIZE: the size of bzImage is same
+compile as OPTIMIZE_FOR_PERFORMANCE: disassembly of vmlinux is same
 
-> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-> index 808c0d7a3..fb1f26be2 100644
-> --- a/kernel/events/callchain.c
-> +++ b/kernel/events/callchain.c
+Adding the always-inline version of these functions can provide better
+guidance for compiler optimization, but it does indeed lead to more
+complex code.
+The best solution may be to prompt the compiler to always inline at a
+specific calling point through some keyword.
+I noticed that there are also people discussing this issue on stackerflow
+, but it seems that the current compiler does not have such a feature.
+Link: https://stackoverflow.com/questions/14571593
 
-[ ... ]
+I have no objection to either option; it depends on the opinion of the
+community maintainers.
 
-> +void __get_perf_callchain_user(struct perf_callchain_entry_ctx *ctx, struct pt_regs *regs)
-> +{
-> +	int start_entry_idx;
-> +
-> +	if (!user_mode(regs)) {
-> +		if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
-> +			return;
-> +		regs = task_pt_regs(current);
-> +	}
-> +
-> +	if (ctx->add_mark)
-> +		perf_callchain_store_context(ctx, PERF_CONTEXT_USER);
-> +
-> +	start_entry_idx = ctx->nr;
-                          ^^^^^^^^
-> +	perf_callchain_user(ctx, regs);
-> +	fixup_uretprobe_trampoline_entries(ctx->entry, start_entry_idx);
-> +}
-
-Can this break uprobe trampoline fixups? The original code used
-entry->nr for start_entry_idx, but the refactored version uses ctx->nr.
-
-These two counters track different things:
-- entry->nr counts ALL entries (incremented by both
-  perf_callchain_store_context() and perf_callchain_store())
-- ctx->nr only counts regular callchain entries (incremented only by
-  perf_callchain_store(), not by perf_callchain_store_context())
-
-When add_mark is true, perf_callchain_store_context() increments
-entry->nr but not ctx->nr, causing them to become out of sync.
-
-For example, if kernel callchain collection runs first with add_mark
-set:
-
-  Initial: ctx->nr = entry->nr = 0
-
-  In __get_perf_callchain_kernel():
-    perf_callchain_store_context() stores PERF_CONTEXT_KERNEL marker
-      -> entry->nr becomes 1, ctx->nr still 0
-    perf_callchain_kernel() stores N kernel frames
-      -> entry->nr becomes 1+N, ctx->nr becomes N
-
-  In __get_perf_callchain_user():
-    perf_callchain_store_context() stores PERF_CONTEXT_USER marker
-      -> entry->nr becomes 2+N, ctx->nr still N
-    start_entry_idx = ctx->nr assigns N (should be 2+N)
-    fixup_uretprobe_trampoline_entries() scans from wrong index
-
-This causes fixup_uretprobe_trampoline_entries() to scan kernel
-callchain entries instead of user callchain entries, missing the
-uretprobe trampolines that need to be fixed up.
-
-Should this use ctx->entry->nr instead of ctx->nr?
-
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/19211481431
-
---===============0591375349055705727==--
+Xie Yuanbin
