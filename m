@@ -1,211 +1,131 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FB117A2FC
-	for <linux-perf-users@vger.kernel.org>; Sun,  9 Nov 2025 16:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E9BF2E92DA;
+	Sun,  9 Nov 2025 16:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762706497; cv=none; b=jQWFQAQObRwsgRZjYFJiXF47IBsLGTkXZ7ueuyiggJ7m4uRFDcSDo4w6a31HkPVsSi5ioWn5vQf5dry8zqq0dmHQsQZ0yDfy3RJTF/fkov3X/VW/1/sejHWyW7JwpmK7ys86wZZPBkFyJwnpoKOMh1FL9JSrPWj+Pa4VidEyMCM=
+	t=1762707496; cv=none; b=INkrUhso5+jMT+x9Ghf3N3cKRZLd3fDi38nUKQf8hkEU8kt914kIpYrJ7oP0DzlSuX+cCBX5IxA5SYXGMj8W0Yr8quXpgpfa5Nx7jhbOpaAmUwpSUUhgVX8dGAd/skM4ScO5iJ4JcTZ2YBvUn2FUC13mR+MZ7DOEq+/czTqq0oY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762706497; c=relaxed/simple;
-	bh=uN1XIf9j3EMdH2lDUthVXiX8XqR1YNOhqPiJJ1Yexdo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rRHU0ClIzg40FHUl7zK5rZGE3lLf7160TZFh6AiK+Y61Ul6vnxBB03TZA0XuUpoxBgxhALJZ3h+tAZ1Xo9E8cELhFaSuj84tFrroWE2m3oFsJi9GPA63GlF3rICgYn0Ko2BV6AL/d7pCXXyvp1Bq59bMYgMeUjlS/mx+AEOWVow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=A6C2Pfgy; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1762707496; c=relaxed/simple;
+	bh=b6sosotwC/oHOg9LGRqzgR279GDoawxDZ0ekAKfx+70=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=fRRvLvSJYfOuOy5zOj0dtWHFqaSQXZ2Q0nmrest63V/Bg9QTkPNiXyYcrtZa1KJOqlqC4o3EYAsJaYqDJghfXV94P813Zsc9GnZhPG+XHu5N/HTDGsabIsVRaKtjoUEkch/rroW1PtXyk8Q9sZ4YWTK/1ZK5Mz43CywtWXDGFpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WqbObaft; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="A6C2Pfgy"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-340e525487eso1465576a91.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 09 Nov 2025 08:41:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1762706495; x=1763311295; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jJYfd/k6hiGWNoGkFEOkKPXVXi0TBL8CCpdV4UfaIUU=;
-        b=A6C2PfgykPfFKQ9+UpyaSqsXn2Y9jbP023k5b8qnJnqJ8W7U2orStq3jQRwSYz/rfG
-         yUomKKbZyHv5qg3bQOHlIKV4yuCx91V75ciPKblYhGhOLPaRjpV0+EueVGrGXwTAsExN
-         zQZzSxoP13xISSzfOUWFJOK1whE+/ECdmj7uVLxrYdBi4rRsMDZyaNQOE4edCpqwBsYF
-         RnMDZx6SOx93t/SK7143kbsGzJhR7P22d5qQasAzqtr2IUalbK2rmTAZ/lgWonRrKwox
-         fccbTIahQ7rkE8JG8p0vosZjKNGdGBCEJVdAYomSw80dVmVwGsxxeasI1qn/DWGuQY+9
-         txow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762706495; x=1763311295;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=jJYfd/k6hiGWNoGkFEOkKPXVXi0TBL8CCpdV4UfaIUU=;
-        b=QaxUT4P7kHKUutDBKhAqYx6zY7xo1jG/JdVvwUUrqZuQBcE9nLlgvrRQXTb2vqCp1d
-         mY0iBOi4lik27xCxurJsTWDMNp4DdUjYG8u6MBOIB+3AA8vvV4oJnC4bHj2keIoCYP5r
-         NuTDzAWvqOCgw3Df4k36AefJGGTfCWODRyViMP6DlZGT4VTMGRX7P3wIoGMUNHbozoz0
-         rUdW6Kv2xQe6F+d+0KeYULtbLqslNCcRIA85r1pgUWgOJmfkQ19D5gTpLLNWuX8SbS6+
-         ikwXMU9sQSqPFYm/nB4u2Kqu8U3l2wkqHZGVy0Tg2gE2TAcXqAzeODGk3hJGo6K6j1SU
-         1YGg==
-X-Forwarded-Encrypted: i=1; AJvYcCVeZxSeR92RyqOX4n7uTo0uFr/yLMKutBUhwT2HLie8FlbT9aHR8PrYXw/b/UJfVUb95K8Owz7Cc4aEr253Vfhj@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzs6bzGe6dQZ83BLbTZUOY/SKHovBNgXnmhUxDyMyaiLxqy8+aL
-	X74xjl4GkI43mj3s7p58wnwdBpIdM81j/Y0+i5Twdos23yZnQGCSZtnycDOrGN/gECM=
-X-Gm-Gg: ASbGncuKq44Gb7rA9aufJpY9CYml0rJo531DcCDaOvnF35SLjJ5u+258r9OjC6a84qT
-	67faR/7ML/RsU/QFqx7Z0cGFcquIReWYONfZJDc+i7P2hVQ/M+oZ3FCquIDpR+lyqpl5MkdoKVt
-	cH1aL5NR9HfZJCAA4KtStm3yQvF6gE66gEFZoz4VNh+8zAPztTKPiZgt2jl6wdAQw2zUqDgRfqV
-	vsx0ZEPWtZKxo6tgEiDPOpU8jPYRvb7MdIYjb63kMIJwiGvFOJt5+J3uyp11CxHkB5f9dnqbzo9
-	BUjuwlXqDKlS5/sOal88NXhcja59is+2Jne+XFful8exTwXOLszw4/lt5d0P/PmNrbTHUEzHklj
-	x7FtoJaMaa6IDnTkZrDfds96uR3KEkFQ1xFlgKda6v81YQbrIguZqji3cXTD8FvW+gcJ0UkmWyL
-	Q80LwXZxWFH1B7tysnN+ByEItadac6oli0J6Hd+ng1BehXFU1aYw==
-X-Google-Smtp-Source: AGHT+IET/mGXD2ni7sWPyMN0C+P9SHk0+rmZ5fsof+JSnk24k+RKu+IfUR44fFUSHoQx02HLNj/hkQ==
-X-Received: by 2002:a17:90b:57c4:b0:343:6af9:ad30 with SMTP id 98e67ed59e1d1-3436cd0e005mr6107745a91.34.1762706495237;
-        Sun, 09 Nov 2025 08:41:35 -0800 (PST)
-Received: from T179DVVMRY.bytedance.net ([139.177.225.238])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-343727dcf3dsm4503347a91.19.2025.11.09.08.41.29
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sun, 09 Nov 2025 08:41:34 -0800 (PST)
-From: Liangyan <liangyan.peng@bytedance.com>
-To: peterz@infradead.org,
-	mingo@redhat.com
-Cc: acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	bigeasy@linutronix.de,
-	zengxianjun@bytedance.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Liangyan <liangyan.peng@bytedance.com>
-Subject: [PATCH v2] perf/core: Fix pending work re-queued in __perf_event_overflow
-Date: Mon, 10 Nov 2025 00:41:22 +0800
-Message-Id: <20251109164122.80138-1-liangyan.peng@bytedance.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-145)
-In-Reply-To: <20251109103253.57081-1-liangyan.peng@bytedance.com>
-References: <20251109103253.57081-1-liangyan.peng@bytedance.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WqbObaft"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E941C16AAE;
+	Sun,  9 Nov 2025 16:58:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762707496;
+	bh=b6sosotwC/oHOg9LGRqzgR279GDoawxDZ0ekAKfx+70=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
+	b=WqbObaftT+4n7+zzfmiM089HqwM54MVsjMUJ9epZseSqw6gZ/3qZt6ZwNS7AnFeuY
+	 qyGsV/LWhoXphn7GYJLya36fi6jk9hMZHdnqC+sbgKDUrAZ0vB2Lh/R3PCfJPGjdWY
+	 ypWt31DJK2jZ7TbPx0TDFRZJG+1IzsCxF2qN+05fszTFOzmWgyEUCwwO1aoKYhDsfv
+	 mAweHAp8Xh5KBuSGJchTwXLkfmkcRlgxEOeKpXu8LAS+CuIUadMcX6b5ykA/uk0MfC
+	 DCil7ySHUq+IydX+H8zwQb6Ht8GCnB0+aAGNrrboznizVTPugym50ntrYUrHW6prJy
+	 AiBkqIJ1tb03A==
+Content-Type: multipart/mixed; boundary="===============0591375349055705727=="
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <886b17f3dd9f9836dd87b9249a01e737088fe52174b8d513ad6350c6bb19ff87@mail.kernel.org>
+In-Reply-To: <20251109163559.4102849-2-chen.dylane@linux.dev>
+References: <20251109163559.4102849-2-chen.dylane@linux.dev>
+Subject: Re: [PATCH bpf-next v5 1/3] perf: Refactor get_perf_callchain
+From: bot+bpf-ci@kernel.org
+To: chen.dylane@linux.dev,peterz@infradead.org,mingo@redhat.com,acme@kernel.org,namhyung@kernel.org,mark.rutland@arm.com,alexander.shishkin@linux.intel.com,jolsa@kernel.org,irogers@google.com,adrian.hunter@intel.com,kan.liang@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org,linux-kernel@vger.kernel.org,bpf@vger.kernel.org,chen.dylane@linux.dev,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Sun,  9 Nov 2025 16:58:15 +0000 (UTC)
 
-We got warning below during perf test.
-[  467.100914] [      T1] WARNING: CPU: 0 PID: 1 at kernel/events/core.c:5147 put_pmu_ctx+0x2ef/0x3c0
-[  467.107702] [      T1] CPU: 0 UID: 0 PID: 1 Comm: systemd Kdump: loaded Tainted: G            E       6.18.0-rc4-dirty #114 PREEMPT(voluntary)
-[  467.109835] [      T1] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1
-[  467.111027] [      T1] RIP: 0010:put_pmu_ctx+0x2ef/0x3c0
-[  467.122081] [      T1] Call Trace:
-[  467.122463] [      T1]  <TASK>
-[  467.124822] [      T1]  __free_event+0x337/0xa50
-[  467.125306] [      T1]  perf_pending_task+0x10f/0x3b0
-[  467.125824] [      T1]  task_work_run+0x140/0x210
-[  467.127413] [      T1]  exit_to_user_mode_loop+0x10e/0x130
-[  467.127965] [      T1]  do_syscall_64+0x26d/0x2e0
-[  467.128453] [      T1]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[  467.129025] [      T1] RIP: 0033:0x7f01d22349ca
-[  467.135157] [      T1]  </TASK>
+--===============0591375349055705727==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-A race condition occurs between task context and IRQ context when
-handling sigtrap tracepoint event overflows:
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index fd1d91017..edd3058e4 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -67,6 +67,7 @@ struct perf_callchain_entry_ctx {
+>  	u32				nr;
+>  	short				contexts;
+>  	bool				contexts_maxed;
+> +	bool				add_mark;
+>  };
 
-1. In task context, an event is overflowed and its pending work is
-   queued to task->task_works
-2. Before pending_work is set, the same event overflows in IRQ context
-3. Both contexts queue the same perf pending work to task->task_works
+[ ... ]
 
-This double queuing causes:
-- task_work_run() enters infinite loop calling perf_pending_task()
-- Potential warnings and use-after-free when event is freed in
-perf_pending_task()
+> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+> index 808c0d7a3..fb1f26be2 100644
+> --- a/kernel/events/callchain.c
+> +++ b/kernel/events/callchain.c
 
-Fix the race by disabling interrupts during queuing of perf pending work.
+[ ... ]
 
-The calltrace of re-queuing pending work is something like below.
-[  466.979877] [      C0] CPU: 0 UID: 0 PID: 1 Comm: systemd Kdump: loaded Tainted: G            E       6.18.0-rc4-dirty #114 PREEMPT(voluntary)
-[  466.979889] [      C0] Tainted: [E]=UNSIGNED_MODULE
-[  466.979892] [      C0] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1
-[  466.979897] [      C0] Call Trace:
-[  466.979909] [      C0]  <IRQ>
-[  466.979913] [      C0]  dump_stack_lvl+0x88/0xb0
-[  466.979924] [      C0]  __perf_event_overflow+0xb4f/0xcb0
-[  466.979972] [      C0]  perf_swevent_event+0x230/0x340
-[  466.979980] [      C0]  perf_tp_event+0x412/0x910
-[  466.980355] [      C0]  perf_trace_run_bpf_submit+0x103/0x190
-[  466.980363] [      C0]  perf_trace_kmem_cache_alloc+0x156/0x1b0
-[  466.980374] [      C0]  kmem_cache_alloc_noprof+0x214/0x600
-[  466.980383] [      C0]  __alloc_object+0x2f/0x2d0
-[  466.980392] [      C0]  __create_object+0x22/0x90
-[  466.980402] [      C0]  kmem_cache_alloc_node_noprof+0x39d/0x620
-[  466.980419] [      C0]  kmalloc_reserve+0x167/0x280
-[  466.980428] [      C0]  __alloc_skb+0x12e/0x330
-[  466.980466] [      C0]  napi_alloc_skb+0x147/0x270
-[  466.980473] [      C0]  page_to_skb+0x171/0xaa0 [virtio_net]
-[  466.980498] [      C0]  receive_buf+0x7c9/0x3ae0 [virtio_net]
-[  466.980637] [      C0]  virtnet_poll+0xb98/0x3160 [virtio_net]
-[  466.980749] [      C0]  __napi_poll+0xb0/0x5c0
-[  466.980756] [      C0]  net_rx_action+0x416/0xbb0
-[  466.980809] [      C0]  handle_softirqs+0x186/0x5d0
-[  466.980818] [      C0]  __irq_exit_rcu+0x13f/0x180
-[  466.980826] [      C0]  common_interrupt+0x7a/0xa0
-[  466.980834] [      C0]  </IRQ>
-[  466.980836] [      C0]  <TASK>
-[  466.980839] [      C0]  asm_common_interrupt+0x22/0x40
-[  466.980846] [      C0] RIP: 0010:delay_tsc+0x3a/0xa0
-[  466.980854] [      C0] Code: 44 8b 05 ad 59 90 02 0f 01 f9 66 90 48 c1 e2 20 48 89 d7 48 09 c7 eb 21 65 ff 0d 91 59 90 02 74 57 f3 90 65 ff 05 86 59 90 02 <65> 8b 35 83 59 90 02 41 39 f0 75 28 41 89 f0 0f 01 f9 66 90 48 c1
-[  466.980862] [      C0] RSP: 0018:ff110001009477e0 EFLAGS: 00000283
-[  466.980869] [      C0] RAX: 000000fea17a6aa9 RBX: ff11000100a8c500 RCX: 0000000000000000
-[  466.980874] [      C0] RDX: 000000000026df92 RSI: 0000000000000000 RDI: 000000fea1538b17
-[  466.980878] [      C0] RBP: ff11001b3a03bb20 R08: 0000000000000000 R09: 0000000000af7a2e
-[  466.980883] [      C0] R10: ff1100010093cc87 R11: 000000006a14397b R12: 1fe2200020128f03
-[  466.980887] [      C0] R13: ff11000100a8c64c R14: ff11000100a8c600 R15: ff11000100a8c82c
-[  466.980894] [      C0]  __perf_event_overflow+0x783/0xcb0
-[  466.980937] [      C0]  perf_swevent_event+0x230/0x340
-[  466.980944] [      C0]  perf_tp_event+0x412/0x910
-[  466.981200] [      C0]  perf_trace_run_bpf_submit+0x103/0x190
-[  466.981212] [      C0]  perf_trace_kmem_cache_alloc+0x156/0x1b0
-[  466.981223] [      C0]  kmem_cache_alloc_noprof+0x214/0x600
-[  466.981232] [      C0]  __alloc_object+0x2f/0x2d0
-[  466.981241] [      C0]  __create_object+0x22/0x90
-[  466.981251] [      C0]  __kmalloc_cache_noprof+0x405/0x640
-[  466.981283] [      C0]  kmem_cache_free+0x18a/0x630
-[  466.981300] [      C0]  __fput+0x5c4/0xa70
-[  466.981310] [      C0]  fput_close_sync+0xf2/0x1f0
-[  466.981336] [      C0]  __x64_sys_close+0x88/0xf0
-[  466.981344] [      C0]  do_syscall_64+0x60/0x2e0
-[  466.981351] [      C0]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[  466.981357] [      C0] RIP: 0033:0x7f01d22349ca
-[  466.981399] [      C0]  </TASK>
+> +void __get_perf_callchain_user(struct perf_callchain_entry_ctx *ctx, struct pt_regs *regs)
+> +{
+> +	int start_entry_idx;
+> +
+> +	if (!user_mode(regs)) {
+> +		if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
+> +			return;
+> +		regs = task_pt_regs(current);
+> +	}
+> +
+> +	if (ctx->add_mark)
+> +		perf_callchain_store_context(ctx, PERF_CONTEXT_USER);
+> +
+> +	start_entry_idx = ctx->nr;
+                          ^^^^^^^^
+> +	perf_callchain_user(ctx, regs);
+> +	fixup_uretprobe_trampoline_entries(ctx->entry, start_entry_idx);
+> +}
 
-Fixes: c5d93d23a260 ("perf: Enqueue SIGTRAP always via task_work.")
-Reported-by: Xianjun Zeng <zengxianjun@bytedance.com>
-Signed-off-by: Liangyan <liangyan.peng@bytedance.com>
+Can this break uprobe trampoline fixups? The original code used
+entry->nr for start_entry_idx, but the refactored version uses ctx->nr.
+
+These two counters track different things:
+- entry->nr counts ALL entries (incremented by both
+  perf_callchain_store_context() and perf_callchain_store())
+- ctx->nr only counts regular callchain entries (incremented only by
+  perf_callchain_store(), not by perf_callchain_store_context())
+
+When add_mark is true, perf_callchain_store_context() increments
+entry->nr but not ctx->nr, causing them to become out of sync.
+
+For example, if kernel callchain collection runs first with add_mark
+set:
+
+  Initial: ctx->nr = entry->nr = 0
+
+  In __get_perf_callchain_kernel():
+    perf_callchain_store_context() stores PERF_CONTEXT_KERNEL marker
+      -> entry->nr becomes 1, ctx->nr still 0
+    perf_callchain_kernel() stores N kernel frames
+      -> entry->nr becomes 1+N, ctx->nr becomes N
+
+  In __get_perf_callchain_user():
+    perf_callchain_store_context() stores PERF_CONTEXT_USER marker
+      -> entry->nr becomes 2+N, ctx->nr still N
+    start_entry_idx = ctx->nr assigns N (should be 2+N)
+    fixup_uretprobe_trampoline_entries() scans from wrong index
+
+This causes fixup_uretprobe_trampoline_entries() to scan kernel
+callchain entries instead of user callchain entries, missing the
+uretprobe trampolines that need to be fixed up.
+
+Should this use ctx->entry->nr instead of ctx->nr?
+
+
 ---
-v2: Use guard(irqsave) suggested by Peter.
----
- kernel/events/core.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index cae921f4d137..7c63e5fdd334 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10433,6 +10433,16 @@ static int __perf_event_overflow(struct perf_event *event,
- 
- 		notify_mode = in_nmi() ? TWA_NMI_CURRENT : TWA_RESUME;
- 
-+		/*
-+		 * Task context queues the work via task_work_add() but has not yet
-+		 * set event->pending_work when the same event overflows in
-+		 * IRQ context. The IRQ path, seeing !event->pending_work,
-+		 * queues the work again.
-+		 * The double queuing causes corruption in task->task_works.
-+		 * Prevent this by disabling interrupts around the critical section.
-+		 */
-+		guard(irqsave)();
-+
- 		if (!event->pending_work &&
- 		    !task_work_add(current, &event->pending_task, notify_mode)) {
- 			event->pending_work = pending_id;
--- 
-2.39.3 (Apple Git-145)
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/19211481431
 
+--===============0591375349055705727==--
