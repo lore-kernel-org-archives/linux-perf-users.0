@@ -1,105 +1,87 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074FE153BD9;
-	Mon, 10 Nov 2025 15:48:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 686BB28000B;
+	Mon, 10 Nov 2025 16:28:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762789725; cv=none; b=bTBS+UfuaejFlKhV7g79QT05b4rT6QsK93LCYkSgADfSkdKsaVDDbFxBW59staLNVuixFjBpj43mywOrbepdTwvV0SCXnyDftnzTHhVhE4opezR1iR3Ta8lVyJK9GiHN2orsvVkxNvYeCPRBxYyatA5tT2VkxyxrKiyXoaGWLkw=
+	t=1762792126; cv=none; b=cDCzZ+WfUFOp9Rfue0Syxf4IZ1q6ui8wPYwOqYTXKzcPQgMYyivr3732QXDBmKs6uvkWHsM0HblaHBcLLaDtPyD/WIRCy0NEmJ0hhLh71nWM75FNxmqJKUvSrKyJz23UY6zVqcmU8zqOPhGcToywNu0XT643BJ5kfhJb+LZ8FH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762789725; c=relaxed/simple;
-	bh=Bn2Zyt+aIDLf4tjfg1cxJuUuA6zwIk1XsFG7lBgkeHM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KniyQYUvpAE53kH/LMEGdSgTy6u/Tl4ocaocxe5zDhezh8bRg3MalilQjgXDpsY2kuCzwFKPWh0WDXyyLqsvSqxuhIxKcUPQ9scS8WFhzwyG1F5q85+F8soKNaRuDray/eifc6MA17r6Mgfm0F226duMrQk3AK/h9hJT7fHyC8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=wJ0M+0La; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wJ0M+0La"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=C67O4LVeg8WMDJ8KU9F1/iW0QK6epKrLMnUjULyR+wE=; b=wJ0M+0LacOP1OLv0g4ScRMqglS
-	LJK9h7xh6K4qf0modj5inMpydmTdGbcMa7u9oY50NBpmiUWjjm5opruYL1W72Y/GSXDF7DHO25qvl
-	586Dr6AONOKccWRf436bm2xB571dWjwNdOivv0ZI/CfrO4M/nk0JrLuNmgUUCwJIjsx7OGodPSPQe
-	phSKMDJo6WAUVBX4EMKgDFu58GhCxYg0ZomDpAcyLYAzI8slSTAwij3VIviu89UTMFO0YE+gtPFnF
-	WqwJJegK0lW/mea8+L2aG91IiywF2Z/9h726ZmklZ5XudGqzHMoitlRUo7gWB+t5NQNkaMGgzzgTU
-	eyvGuy2Q==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vIU85-000000016gd-0EKo;
-	Mon, 10 Nov 2025 15:48:29 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id DE6E330029E; Mon, 10 Nov 2025 16:48:27 +0100 (CET)
-Date: Mon, 10 Nov 2025 16:48:27 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH v9 2/5] perf: arm_spe: Add support for filtering on data
- source
-Message-ID: <20251110154827.GA278048@noisy.programming.kicks-ass.net>
-References: <20251029-james-perf-feat_spe_eft-v9-0-d22536b9cf94@linaro.org>
- <20251029-james-perf-feat_spe_eft-v9-2-d22536b9cf94@linaro.org>
+	s=arc-20240116; t=1762792126; c=relaxed/simple;
+	bh=9qj+/Tmhl7LZo6Iri04G9/1be9SzjZcpr/NFCxaSF8s=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bGlnE9gjvIKQ9HcxGNiBONjdmMKReaKyxhVmjKgZI82OiJjMFtjWe8GxnnT+CTzhRtovU7UwJANlBxzS/uiEwxu+5dVm3zsBD+pp8KiaRDGuVLymO1X/b3yYmak4A0YagiwwLvEplTlBENosGpZ0RyBxHkzYaOUXaODB/bPhiLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B49402B;
+	Mon, 10 Nov 2025 08:28:35 -0800 (PST)
+Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 510CF3F66E;
+	Mon, 10 Nov 2025 08:28:42 -0800 (PST)
+From: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v2 0/2] perf: arm_spe: Fix trace disabling for invalid
+ limits
+Date: Mon, 10 Nov 2025 16:28:30 +0000
+Message-Id: <20251110-arm_spe_fix_truncated_flag-v2-0-a629740985cc@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251029-james-perf-feat_spe_eft-v9-2-d22536b9cf94@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAK4SEmkC/42NWwrCMBBFt1Lm20iSMiJ+uQ8pYZpO2wH7IIlBK
+ d27sSvw81wO524QOQhHuFUbBM4SZZkL2FMFfqR5YCVdYbDaotEGFYXJxZVdL2+Xwmv2lLhz/ZM
+ GZQjb+mI11dRCCayBi3XEH03hUWJawuf4yua3/pXNRhmFiFzbq29J473IZ79M0Oz7/gVHBGY6w
+ gAAAA==
+X-Change-ID: 20251015-arm_spe_fix_truncated_flag-1a5b3620a3ab
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexandru Elisei <alexandru.elisei@arm.com>, 
+ James Clark <james.clark@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1762792122; l=1249;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=9qj+/Tmhl7LZo6Iri04G9/1be9SzjZcpr/NFCxaSF8s=;
+ b=QPnGaJt6VTtGLNALrrNz4ryCFP7P25/YrHn2ARSpS71fbBCYa14eb9t0KAoX5HNJCF185nL/F
+ rCj04qrE/0ZA350MgTnck4i4/8EmBl2+CkZVhfJKMuOov2IbYmMDXB1
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-On Wed, Oct 29, 2025 at 03:46:02PM +0000, James Clark wrote:
-> SPE_FEAT_FDS adds the ability to filter on the data source of packets.
-> Like the other existing filters, enable filtering with PMSFCR_EL1.FDS
-> when any of the filter bits are set.
-> 
-> Each bit maps to data sources 0-63 described by bits[0:5] in the data
-> source packet (although the full range of data source is 16 bits so
-> higher value data sources can't be filtered on). The filter is an OR of
-> all the bits, so for example clearing bits 0 and 3 only includes packets
-> from data sources 0 OR 3.
-> 
-> Invert the filter given by userspace so that the default value of 0 is
-> equivalent to including all values (no filtering). This allows us to
-> skip adding a new format bit to enable filtering and still support
-> excluding all data sources which would have been a filter value of 0 if
-> not for the inversion.
+This series fixes trace disabling issues that occur when failed to
+calculate a valid limit (E.g., due to buffer overflow or insufficient
+space during padding).
 
-So from that I'm reading the config4 field will only have like 16 bits,
-but here:
+The first patch improves arm_spe_perf_aux_output_begin() for failure
+handling, ensuring that all failure cases set the PERF_HES_STOPPED
+flag.
 
-> +#define ATTR_CFG_FLD_inv_data_src_filter_CFG	config4	/* inverse of PMSDSFR_EL1 */
-> +#define ATTR_CFG_FLD_inv_data_src_filter_LO	0
-> +#define ATTR_CFG_FLD_inv_data_src_filter_HI	63
+The second patch applies the profiling buffer disable flow in the
+interrupt handler when the PERF_HES_STOPPED flag has been set.
 
-you claim all 64 bits.
+This series has been verified on Orion6 board.
 
-Also, afaict:
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+Changes in v2:
+- Added the patch 01.
+- Did not rely on irq work for disabling as the disable callback will
+  skip operations after PERF_HES_STOPPED flag has been set.
+- Link to v1: https://lore.kernel.org/r/20251015-arm_spe_fix_truncated_flag-v1-1-555e328cba05@arm.com
 
-  #define ATTR_CFG_FLD_min_latency_CFG            config2 /* PMSLATFR_EL1.MINLAT */
-  #define ATTR_CFG_FLD_min_latency_LO             0
-  #define ATTR_CFG_FLD_min_latency_HI             11
+---
+Leo Yan (2):
+      perf: arm_spe: Correct setting the PERF_HES_STOPPED flag
+      perf: arm_spe: Ensure profiling buffer is properly disabled
 
-Still has more than 16 bits left.
+ drivers/perf/arm_spe_pmu.c | 23 ++++++++++++++++++++---
+ 1 file changed, 20 insertions(+), 3 deletions(-)
+---
+base-commit: e9a6fb0bcdd7609be6969112f3fbfcce3b1d4a7c
+change-id: 20251015-arm_spe_fix_truncated_flag-1a5b3620a3ab
 
+Best regards,
+-- 
+Leo Yan <leo.yan@arm.com>
 
-So why exactly are we needing config4? Can we please get a more solid
-argument?
