@@ -1,130 +1,152 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADEF02D949C;
-	Mon, 10 Nov 2025 17:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9418329C52
+	for <linux-perf-users@vger.kernel.org>; Mon, 10 Nov 2025 18:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762796030; cv=none; b=RvFGxNMP0mYG5mfnwrx3s01YvzitCDJCDoxp4O/SJ8pcuFQDvEVv6f510c5VkgUU5Yk/TNYb+p+ZZb9dFLpPr2gmMaws5amZ9yDTkC5uff+94/DO7iDDkrovDQkx3zkjPi2ajlLqFvLMM23uQFwesCzD3VOLpRb1oIxTnu7dkJg=
+	t=1762798773; cv=none; b=SwjxA1623eGadd9M+YHoqSMu8ecy4U+CRr7RRBOTMAFJfX+S2SEAOzut51nDZ3eMr4n+8Uc4YyKgs4k9uzK2SnbReIrli3fqZQT9HTirvGdviNvGoFfmR0Lx4emCnAEq5SJEWlh2XeKCKMsO71u5aIjwOpZaGurM6k9QEObqwW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762796030; c=relaxed/simple;
-	bh=Z65kV1Uw8YhvpmxyXTmJd7OOEOvEvS3Dp6tVF1Yvh40=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B3xLci0Fjt7dsIWrwiUi6WCqftEccWbR/+72XOBahwF6Hl5BpwTwSbKb35kLRosK5i+CizI54yoeqv9nUXkTeweasZLxtXDecMHTXzVf0H0C+mcjORktS85ZVUkGU61S3Ejel/AS3H9iE3KPmZ/eGP5Xlvatm4l4Ov8m250jesc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hDu5eaBS; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hDu5eaBS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=ag6LW6hemevws8YrksBMYRPO4jlV1oMVj+5QJ4bp/14=; b=hDu5eaBS1pVnzx5mZNWnb8VpqO
-	VFIdXUQKfLY8jwIzevEr+VfCN/w6HRq94VSeLELvL0tCdMRmTaKp+OoyCquDJ1YKftqgTXnGuXivN
-	e7G1fRZ4akwXOIQlabKzKhURAD4V49v5AvJZjhK7oI11kCGjD6M+HDEdDojgdSauv5/UUlrCYfnMm
-	VAEBeFyDxGQHEYv+LH8xct0W4ckP/Ijd7RaaLXzyI8yN0V8JTcE+DuFgiFbC9Kj8GA4O/wX2rCojR
-	GDrtV0Zx8uqP60OizixU9gPweGirxQv8fXvN0WQKr4ad6yRB5QhoGbajemapDE6BEyY/3ih/ECIDt
-	Ia90NZoA==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vIVla-00000002xxn-1bOm;
-	Mon, 10 Nov 2025 17:33:22 +0000
-Date: Mon, 10 Nov 2025 17:33:22 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Jinchao Wang <wangjinchao600@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Marco Elver <elver@google.com>, Mike Rapoport <rppt@kernel.org>,
-	Alexander Potapenko <glider@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ben Segall <bsegall@google.com>, Bill Wendling <morbo@google.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	David Kaplan <david.kaplan@amd.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Ian Rogers <irogers@google.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@linaro.org>,
-	Jinjie Ruan <ruanjinjie@huawei.com>, Jiri Olsa <jolsa@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Justin Stitt <justinstitt@google.com>, kasan-dev@googlegroups.com,
-	Kees Cook <kees@kernel.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Liang Kan <kan.liang@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-perf-users@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Mel Gorman <mgorman@suse.de>, Michal Hocko <mhocko@suse.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Nam Cao <namcao@linutronix.de>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Naveen N Rao <naveen@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Rong Xu <xur@google.com>, Sami Tolvanen <samitolvanen@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
-	workflows@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v8 00/27] mm/ksw: Introduce KStackWatch debugging tool
-Message-ID: <aRIh4pBs7KCDhQOp@casper.infradead.org>
-References: <20251110163634.3686676-1-wangjinchao600@gmail.com>
+	s=arc-20240116; t=1762798773; c=relaxed/simple;
+	bh=olKFaO/OI2/liOcPRH5LB4YfTWeqsev/dMmMcseUwUg=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=UAE9IIM8xoeHmhGyHfsyAGXtJR/ovbG7gN/cAP6Oqi0uxrJXF3GtKIUgdHhd2Ra90j3GbYGSa6Vk4p9/5GnXmthMHXjf12gZHMfLvS4rwkCcnalQQphqN+INRAlgqRPqIdeEuXoLAEF89Hj6cv0uFOQeNivkaJxsMTv/yI2oNfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-43373024b5eso19875545ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Nov 2025 10:19:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762798771; x=1763403571;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jmE3j6LxMOU0XTkDOfjLYMmbajGt/pVI8XUPpcWT/4g=;
+        b=oxqPa0Ulkz3TzzD2CxU4/E27w7zWWEUFPwy6rb1JXgwZmzaOzUi/XnHKV/YnGdq1Dp
+         czdfz7WE/6FNVPRp9eEaBjw5B8rAA3nUoNlUoBwXOCGnt0rz9+4L6Qy/No7rYzijk1qL
+         LH7U//B9MY6P1Kvm39J9Pncghkw3559iVB2uM8ubnxCIjNUE5wjNSSJexmDyEKaxhRjd
+         Fi+QpRwer3U9bBeE+x5QXGx1uUAtLxV1C30YwQpheF3CWkR+Abf7YCtkMQWI/OGUZd8X
+         rlN22qc8MDRWYphKXXKT/dNRYiLNe+poiiT/hAKT8tZcxDnQDncoIE/5M3FBPZ7SLzt5
+         CHwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUmm0E9WPqpPW6FrP24iClX9yfFNccZvyaU0YRdyLKHtNd/nZO0AvZsTZtYSlgkO8Rxa8LQAd0ogFaA7DKJEwGa@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXl5Z6sg8/HqTLA4nrUYXiZjOhwl57oquusykcXl1TnF6+Boxr
+	w93sn5CrwIYPVYvANE+ObTQSENUxXNMIGH7iYi96H/BlVKzx9Ra3rncCFH6/BfRuWyw1kb9Zj7d
+	UGYCc+HJybwEE8Sm2FllK3HIScHoxVbHktrngY+E/PImqezFjcNaaYq7Vrss=
+X-Google-Smtp-Source: AGHT+IFwiJZ+Y0/N7OFBA8xydfNiDpVXBtb1ugetPqR0xN9WqGYlLs3Ju1g/vrlLJiU8dybpDGIc9JS1FMpgm4giDu5GF42keP1I
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251110163634.3686676-1-wangjinchao600@gmail.com>
+X-Received: by 2002:a05:6e02:178c:b0:433:4f6b:4ca with SMTP id
+ e9e14a558f8ab-43367e487cdmr103026575ab.24.1762798771097; Mon, 10 Nov 2025
+ 10:19:31 -0800 (PST)
+Date: Mon, 10 Nov 2025 10:19:31 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <69122cb3.a70a0220.22f260.00ff.GAE@google.com>
+Subject: [syzbot] [perf?] WARNING in perf_event_throttle_group
+From: syzbot <syzbot+a945e9d15c8a49a7a7f0@syzkaller.appspotmail.com>
+To: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org, 
+	netdev@vger.kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Nov 11, 2025 at 12:35:55AM +0800, Jinchao Wang wrote:
-> Earlier this year, I debugged a stack corruption panic that revealed the
-> limitations of existing debugging tools. The bug persisted for 739 days
-> before being fixed (CVE-2025-22036), and my reproduction scenario
-> differed from the CVE report—highlighting how unpredictably these bugs
-> manifest.
+Hello,
 
-Well, this demonstrates the dangers of keeping this problem siloed
-within your own exfat group.  The fix made in 1bb7ff4204b6 is wrong!
-It was fixed properly in 7375f22495e7 which lists its Fixes: as
-Linux-2.6.12-rc2, but that's simply the beginning of git history.
-It's actually been there since v2.4.6.4 where it's documented as simply:
+syzbot found the following issue on:
 
-      - some subtle fs/buffer.c race conditions (Andrew Morton, me)
+HEAD commit:    e427054ae7bc Merge branch 'x86-fgraph-bpf-fix-orc-stack-un..
+git tree:       bpf
+console output: https://syzkaller.appspot.com/x/log.txt?x=11f2cb42580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e46b8a1c645465a9
+dashboard link: https://syzkaller.appspot.com/bug?extid=a945e9d15c8a49a7a7f0
+compiler:       Debian clang version 20.1.8 (++20250708063551+0c9f909b7976-1~exp1~20250708183702.136), Debian LLD 20.1.8
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=128bea92580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13b5a412580000
 
-As far as I can tell the changes made in 1bb7ff4204b6 should be
-reverted.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/c1ac942fc5fb/disk-e427054a.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/be05ef12ba31/vmlinux-e427054a.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/c75604292a15/bzImage-e427054a.xz
 
-> Initially, I enabled KASAN, but the bug did not reproduce. Reviewing the
-> code in __blk_flush_plug(), I found it difficult to trace all logic
-> paths due to indirect function calls through function pointers.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+a945e9d15c8a49a7a7f0@syzkaller.appspotmail.com
 
-So why is the solution here not simply to fix KASAN instead of this
-giant patch series?
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 7448 at kernel/events/core.c:2703 perf_event_throttle_group+0x375/0x3d0 kernel/events/core.c:2703
+Modules linked in:
+CPU: 1 UID: 0 PID: 7448 Comm: syz.0.1231 Not tainted syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/02/2025
+RIP: 0010:perf_event_throttle_group+0x375/0x3d0 kernel/events/core.c:2703
+Code: 8a 32 00 e9 ec fe ff ff e8 38 d5 cc ff eb 05 e8 31 d5 cc ff 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 1c d5 cc ff 90 <0f> 0b 90 e9 54 fe ff ff 44 89 f1 80 e1 07 80 c1 03 38 c1 0f 8c c9
+RSP: 0018:ffffc9000ca07490 EFLAGS: 00010293
+RAX: ffffffff81f34174 RBX: ffff88806fddf6c0 RCX: ffff888026e3bc80
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000001
+RBP: 0000000000000000 R08: ffffc9000ca07137 R09: 0000000000000000
+R10: ffffc9000ca07120 R11: fffff52001940e27 R12: ffff88806fddf8d8
+R13: dffffc0000000000 R14: ffff88806fddf8f8 R15: ffffffff8dff1598
+FS:  0000555573ca6500(0000) GS:ffff88812623d000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000200000000040 CR3: 0000000028a98000 CR4: 00000000003526f0
+Call Trace:
+ <TASK>
+ __perf_event_account_interrupt+0x23c/0x250 kernel/events/core.c:10180
+ __perf_event_overflow+0x105/0xe40 kernel/events/core.c:10327
+ perf_swevent_overflow kernel/events/core.c:10467 [inline]
+ perf_swevent_event+0x530/0x5e0 kernel/events/core.c:10505
+ perf_tp_event+0x4f6/0x1380 kernel/events/core.c:11012
+ perf_trace_run_bpf_submit+0xee/0x170 kernel/events/core.c:10936
+ do_perf_trace_lock_acquire include/trace/events/lock.h:24 [inline]
+ perf_trace_lock_acquire+0x335/0x410 include/trace/events/lock.h:24
+ __do_trace_lock_acquire include/trace/events/lock.h:24 [inline]
+ trace_lock_acquire include/trace/events/lock.h:24 [inline]
+ lock_acquire+0x311/0x360 kernel/locking/lockdep.c:5831
+ rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
+ rcu_read_lock include/linux/rcupdate.h:867 [inline]
+ class_rcu_constructor include/linux/rcupdate.h:1195 [inline]
+ futex_hash+0x5d/0x2d0 kernel/futex/core.c:308
+ class_hb_constructor kernel/futex/futex.h:240 [inline]
+ futex_wake+0x161/0x560 kernel/futex/waitwake.c:172
+ do_futex+0x395/0x420 kernel/futex/syscalls.c:135
+ __do_sys_futex kernel/futex/syscalls.c:207 [inline]
+ __se_sys_futex+0x36f/0x400 kernel/futex/syscalls.c:188
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0xfa0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fdfcf98f6c9
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffe276dac28 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: ffffffffffffffda RBX: 00007fdfcfbe5fa8 RCX: 00007fdfcf98f6c9
+RDX: 00000000000f4240 RSI: 0000000000000081 RDI: 00007fdfcfbe5fac
+RBP: 0000000000000000 R08: 3fffffffffffffff R09: 0000000a276daf1f
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fdfcfbe5fac
+R13: 00007fdfcfbe5fa0 R14: 0000000000000843 R15: 0000000000000003
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
