@@ -1,73 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245F81DF270;
-	Sun,  9 Nov 2025 19:51:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B802C86D;
+	Mon, 10 Nov 2025 00:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762717871; cv=none; b=GBkYttf6fawP/JKbkLufTX9zh6XCyRoSqJWkveKx1Kj4sMztRqppnG0sRq4twOBisIIBBTYIeImatKS5p8kYuZ7DCZ8BRxmRptu4KjnHSYr9mcFOu75rSasG/8InNl3xvkZei28j3brpuSnaxCWBDzuP9ihfKWS4s/wBMs50IOM=
+	t=1762734247; cv=none; b=sRb7K70dBW/wTZw8yX1zwZBkA5dY3ImgyA98rXZl0bd2Gl69CH7HCZRBd8gJ/o2YgJQqjAeTbZz5Wv4dSI2W2h365+w6VLo5V4WRoyFfqnk5CwD0SoFjVIblShuqcFWvTW7lU/XsbxLCJ6jQ3ihPs0Y67qvRLqrymgDCOkboxTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762717871; c=relaxed/simple;
-	bh=5yO2N/toACBlh0BNXaaERuOit7EXTzv0ROu0z/vmNYA=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=rbthqqr5VtUr6WlE2hEfQr3WHpFghJK5YyUV633DYfrfgYZT0JYP2TfAd2o2jSg5FsFnrXxq7Cx6TVZh+OxPeZndFkT5nL5PKkvgGFjkHCRHiSEHGiGnW0aOUHfZHIoPJ0g1d0YfUpWChVHY/kxwsIHGsDfY4trrt0Y6MFl9u0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ABYvb9RM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762734247; c=relaxed/simple;
+	bh=KkDnBbXv7Xzquei05MBYy6DLvjm0FU+z4O3Tyv4gLfk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qwPhkyviMhV5M2iREgkW/Zpe5TowYQ/AKCXAjXZYhAt4foCOvBL9PUjVBh1ZcLzeTj2GBDlgnC62bT/mwP24aLMxcf855a3G9sPI+0RHlk/JSUo2qEzjKR1UBGeOaRfAAcbvHLm/G4eRPvbT3+ONGMD2iD96a/5y8iNm3mwSJ+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gAffnJJF; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ABYvb9RM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB20AC4CEF8;
-	Sun,  9 Nov 2025 19:51:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762717871;
-	bh=5yO2N/toACBlh0BNXaaERuOit7EXTzv0ROu0z/vmNYA=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=ABYvb9RMoK4VdSJklM+3GfIdvjyhp5+fBbWZAO/YD9ErHSCo6q5mQQnMFUV+Lm+lM
-	 2fIlXGWSKUhgsdl/jlCdbbcmQLlphTJZSDpCvFJG/w9qRgtPceVYuQE0xztcZ7PrHC
-	 KQ8vCwXJNITKSsrekeQjNH5Lv1YDxvL4yX21QsrgH9ffjT1tKdSvKlx/wobF6iquMK
-	 SnfZ2Fu1h+D6oJkHweRBQmz8okFe/SeRDQz8fPuyT1SuUs9RyBcjD2w4e3HAAFF6Ez
-	 TdWxhzhSk3djlhZ6WUPKHtQvKHYHUqbPXKhzo7fQiPmj+Sn8gosT/cP1Ivy/JsfPdn
-	 83rLBABJlo9kw==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Gabriel Marin <gmx@google.com>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
- Athira Rajeev <atrajeev@linux.ibm.com>, 
- Gautam Menghani <gautam@linux.ibm.com>, tanze <tanze@kylinos.cn>, 
- Andi Kleen <ak@linux.intel.com>, James Clark <james.clark@linaro.org>, 
- Zhongqiu Han <quic_zhonhan@quicinc.com>, 
- Yicong Yang <yangyicong@hisilicon.com>, Blake Jones <blakejones@google.com>, 
- Anubhav Shelat <ashelat@redhat.com>, Leo Yan <leo.yan@arm.com>, 
- Chun-Tse Shao <ctshao@google.com>, Thomas Falcon <thomas.falcon@intel.com>, 
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Ian Rogers <irogers@google.com>
-In-Reply-To: <20251107170712.2302714-1-irogers@google.com>
-References: <20251107170712.2302714-1-irogers@google.com>
-Subject: Re: [PATCH v2 1/2] perf tool: Add the perf_tool argument to all
- callbacks
-Message-Id: <176271786886.1711746.4583976812483575494.b4-ty@kernel.org>
-Date: Sun, 09 Nov 2025 11:51:08 -0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gAffnJJF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762734246; x=1794270246;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=KkDnBbXv7Xzquei05MBYy6DLvjm0FU+z4O3Tyv4gLfk=;
+  b=gAffnJJFjRUZQXBCorU38l14WkPBeSluFQ6WABFCj/hHdBUEGUZGKwYQ
+   kL8p0V1y0v0kDP/ueYsBmDBPKfq32GEfnxRObYNjylcAQD/XmhU/usaVc
+   8qX5cEr4PxqqQCvLZmOfDnroDkY1vnk1hsPe3wBjUYCsC1Wh1I8VD2QxQ
+   Wqqn+ortcdTchU9zLX9ToQI8APVEXPPN66ka17fotkKEFFU5h1m/CdEql
+   EuhJFS+RinQRDIXZ0+G6tPRisjvpNNYAvs04WFLibCpNM+iKgpdG/S+hG
+   TmCCvCY4t1pCQEBfmgD0ZyjXdQZJenKwtkIgNueJK6j73ZJ7AV6Z1qWBW
+   g==;
+X-CSE-ConnectionGUID: IOSI/SOGRM2ZefWYTuK7pA==
+X-CSE-MsgGUID: FpR1VsUlR0asfXa8rGNtXg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11608"; a="64487326"
+X-IronPort-AV: E=Sophos;i="6.19,292,1754982000"; 
+   d="scan'208";a="64487326"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 16:24:05 -0800
+X-CSE-ConnectionGUID: 55pjYh34QuiITY6QpAG7Vg==
+X-CSE-MsgGUID: 1VNSmtqtR5aK7EOpmKsiyw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,292,1754982000"; 
+   d="scan'208";a="187838831"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.65]) ([10.124.232.65])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2025 16:23:57 -0800
+Message-ID: <a0416429-23d4-4f4f-af73-bcd87b4e773c@linux.intel.com>
+Date: Mon, 10 Nov 2025 08:23:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v9 10/12] perf/x86/intel: Update dyn_constranit base on
+ PEBS event precise level
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
+ Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>
+References: <20251029102136.61364-1-dapeng1.mi@linux.intel.com>
+ <20251029102136.61364-11-dapeng1.mi@linux.intel.com>
+ <20251106145217.GA4067720@noisy.programming.kicks-ass.net>
+ <09210c12-cc61-4af5-bd13-830fd9650f9b@linux.intel.com>
+ <20251107130552.GB4067720@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20251107130552.GB4067720@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c04d2
 
-On Fri, 07 Nov 2025 09:07:11 -0800, Ian Rogers wrote:
-> Getting context for what a tool is doing, such as the perf_inject
-> instance, using container_of the tool is a common pattern in the
-> code. This isn't possible event_op2, event_op3 and event_op4 callbacks
-> as the tool isn't passed. Add the argument and then fix function
-> signatures to match. As tools maybe reading a tool from somewhere
-> else, change that code to use the passed in tool.
-> 
-> [...]
-Applied to perf-tools-next, thanks!
 
-Best regards,
-Namhyung
+On 11/7/2025 9:05 PM, Peter Zijlstra wrote:
+> On Fri, Nov 07, 2025 at 02:11:09PM +0800, Mi, Dapeng wrote:
+>> On 11/6/2025 10:52 PM, Peter Zijlstra wrote:
+>>> On Wed, Oct 29, 2025 at 06:21:34PM +0800, Dapeng Mi wrote:
+>>>> arch-PEBS provides CPUIDs to enumerate which counters support PEBS
+>>>> sampling and precise distribution PEBS sampling. Thus PEBS constraints
+>>>> should be dynamically configured base on these counter and precise
+>>>> distribution bitmap instead of defining them statically.
+>>>>
+>>>> Update event dyn_constraint base on PEBS event precise level.
+>>> What happened to this:
+>>>
+>>>   https://lore.kernel.org/all/e0b25b3e-aec0-4c43-9ab2-907186b56c71@linux.intel.com/
+>> About the issue, Kan ever posted a patch to mitigate the risk, but it seems
+>> the patch is not merged yet.
+>>
+>> https://lore.kernel.org/all/20250512175542.2000708-1-kan.liang@linux.intel.com/
+> IIUC the below is what is required handle this new dynamic case, right?
+>
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -5423,6 +5423,8 @@ enum dyn_constr_type {
+>  	DYN_CONSTR_BR_CNTR,
+>  	DYN_CONSTR_ACR_CNTR,
+>  	DYN_CONSTR_ACR_CAUSE,
+> +	DYN_CONSTR_PEBS,
+> +	DYN_CONSTR_PDIST,
+>  
+>  	DYN_CONSTR_MAX,
+>  };
+> @@ -5432,6 +5434,8 @@ static const char * const dyn_constr_typ
+>  	[DYN_CONSTR_BR_CNTR] = "a branch counter logging event",
+>  	[DYN_CONSTR_ACR_CNTR] = "an auto-counter reload event",
+>  	[DYN_CONSTR_ACR_CAUSE] = "an auto-counter reload cause event",
+> +	[DYN_CONSTR_PEBS] = "a PEBS event",
+> +	[DYN_CONSTR_PDIST] = "a PEBS PDIST event",
+>  };
+>  
+>  static void __intel_pmu_check_dyn_constr(struct event_constraint *constr,
+> @@ -5536,6 +5540,14 @@ static void intel_pmu_check_dyn_constr(s
+>  				continue;
+>  			mask = hybrid(pmu, acr_cause_mask64) & GENMASK_ULL(INTEL_PMC_MAX_GENERIC - 1, 0);
+>  			break;
+> +		case DYN_CONSTR_PEBS:
+> +			if (x86_pmu.arch_pebs)
+> +				mask = hybrid(pmu, arch_pebs_cap).counters;
+> +			break;
+> +		case DYN_CONSTR_PDIST:
+> +			if (x86_pmu.arch_pebs)
+> +				mask = hybrid(pmu, arch_pebs_cap).pdists;
+> +			break;
+>  		default:
+>  			pr_warn("Unsupported dynamic constraint type %d\n", i);
+>  		}
+
+Yes, exactly. Thanks.
 
 
