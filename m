@@ -1,142 +1,61 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0242FD7D0
-	for <linux-perf-users@vger.kernel.org>; Mon, 10 Nov 2025 09:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7B02E173B;
+	Mon, 10 Nov 2025 11:22:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762767104; cv=none; b=mGylA/950Bmabi95jbVQuN1hgSELX3kJK40SzrB7vNXylLw9dRMHvf/I1tdz7qLoq9QIs/TYEHv2LOtxLWsF1OuCq3qg7FnILBhmmIimNCaCol8D+Bbh3IagLh71xZDkybBYcgaQxvv1QKhuC8xY+E5H54brrhxSg2D8dJtwq6s=
+	t=1762773733; cv=none; b=EYwCbIpJhaqtaTiyL0CODZchL69ly7ooM695kDpaBH8NWCJt9YxNodzpTvga6HBMkZbJeWq8U/U5C7Mw1RpJKJrmWEhyo3f4LTKUYTqkWJYvYaO67G0DaCTk1j4GX+BcB6etibDhhIN+e9IAzEaR3bUP5vm7l23W6gT3tqAt8kU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762767104; c=relaxed/simple;
-	bh=R4sPwVWsKKDvww/k4FfA6t+mlOFcHNFmY2LFzg0LQDc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iRj/OPKuqx/Ydh9bMG+1YjHlSkhzpMsYHI6b2L5zft+sDSRHyPW/4tJb2er7NBnAmiBqjniont+ccZv4Tmz3l0rTeiCJXAFNB9A1sgzv8nmW5KWgD3r7eZd9obDRjkze7SNeHs3vbkHsPnwDM46JA68hvNPrYqGWYEEOuVlSYTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lNfSJ4A9; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1762773733; c=relaxed/simple;
+	bh=S/6Rr5vew5ydQvjFw7Rv9F5E1IYomQauBG1EVTvft9Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YCmLHC81Hb9x0NqvobrfqQsdPjmFooCeoANnHYA8wW3Oznp+6KdTz0AVPR6b9uNDpP1WvS2bIcL4Iy4paNhHcZ5wgfI16phDE8Jzj/Obm6mKhw15sbfi/ej5gnR6JrluFPXIJTHWemY+WbXw0+cxnOFTNZtH9+zrLL+dGze1vaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERdsz9v5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lNfSJ4A9"
-Message-ID: <9ebb8b72-4b73-4cf5-9054-9134daf16d0d@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1762767089;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gEqwTslyKAJyhJtEPTZjhrfmoW1bErkJB1EH4ikLcaw=;
-	b=lNfSJ4A9dqlet90fBnyfeT7ds2I81ua7PKcHLGykZ2mzA5QFNyWCzXCzI7rfpLAqOmP4wC
-	cXOBn4Pz+abAOeCOyi/NoxUmctIVe3Jd4EiyxwUCW7RKT9dMt2j72XdCXmWOVUazgxmj8p
-	ewq0388oN+sENkpiIck08M25gClCpiY=
-Date: Mon, 10 Nov 2025 17:31:19 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ERdsz9v5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7800CC113D0;
+	Mon, 10 Nov 2025 11:22:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762773730;
+	bh=S/6Rr5vew5ydQvjFw7Rv9F5E1IYomQauBG1EVTvft9Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ERdsz9v5AaHjd0vq+7PXumuP2I04xsTwwjLJX/tXHq6Ttima7t0QpsY9chu2IGQiW
+	 peFMpzB/Zw8Or+Gyosw7jubrETZZMVD2UJnKwbKZBQ0EXrXKr2apcxq3cR30b5gt/n
+	 k4VAJPKBtjwIkC24+4U1dTzbSH+VCzLpSrHZj4NJ1u+75nzzIsWVYVFhwNwXMiFCuf
+	 KEiPiT7we6o1Kc3qdQlbipsUv1HouHkkxOPV9ZxDMgkGoY0xWVISCe+Gx3oQHBEkfA
+	 rIGVTQ5cUtp+UMtkG71m7xisHoXrL4itx9A948jAF3LRF4Ilh14SdijXNoHCUBoBsn
+	 1LTRjosrgIlNA==
+Date: Mon, 10 Nov 2025 11:22:05 +0000
+From: Will Deacon <will@kernel.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: kernelci@lists.linux.dev, kernelci-results@groups.io,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	linux-perf-users@vger.kernel.org,
+	Mark Rutland <mark.rutland@arm.com>, regressions@lists.linux.dev,
+	gus@collabora.com, linux-next@vger.kernel.org
+Subject: Re: [REGRESSION] =?utf-8?Q?next=2Fmaster?=
+ =?utf-8?Q?=3A_=28build=29_implicit_declaration_of_function_=E2=80=98topol?=
+ =?utf-8?B?b2d5X2NvcmVfaGFzX3NtdOKAmTs=?= did you ...
+Message-ID: <aRHK3RPjNq8nbltp@willie-the-truck>
+References: <176225394342.3644.6412596085150396269@efdf33580483>
+ <c13574f7-b13c-42e0-9b35-a2acb594af33@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v5 1/3] perf: Refactor get_perf_callchain
-To: bot+bpf-ci@kernel.org, peterz@infradead.org, mingo@redhat.com,
- acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org, ast@kernel.org, andrii@kernel.org,
- daniel@iogearbox.net, martin.lau@kernel.org, eddyz87@gmail.com,
- yonghong.song@linux.dev, clm@meta.com, ihor.solodrai@linux.dev
-References: <20251109163559.4102849-2-chen.dylane@linux.dev>
- <886b17f3dd9f9836dd87b9249a01e737088fe52174b8d513ad6350c6bb19ff87@mail.kernel.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <886b17f3dd9f9836dd87b9249a01e737088fe52174b8d513ad6350c6bb19ff87@mail.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c13574f7-b13c-42e0-9b35-a2acb594af33@infradead.org>
 
-在 2025/11/10 00:58, bot+bpf-ci@kernel.org 写道:
->> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->> index fd1d91017..edd3058e4 100644
->> --- a/include/linux/perf_event.h
->> +++ b/include/linux/perf_event.h
->> @@ -67,6 +67,7 @@ struct perf_callchain_entry_ctx {
->>   	u32				nr;
->>   	short				contexts;
->>   	bool				contexts_maxed;
->> +	bool				add_mark;
->>   };
-> 
-> [ ... ]
-> 
->> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
->> index 808c0d7a3..fb1f26be2 100644
->> --- a/kernel/events/callchain.c
->> +++ b/kernel/events/callchain.c
-> 
-> [ ... ]
-> 
->> +void __get_perf_callchain_user(struct perf_callchain_entry_ctx *ctx, struct pt_regs *regs)
->> +{
->> +	int start_entry_idx;
->> +
->> +	if (!user_mode(regs)) {
->> +		if (current->flags & (PF_KTHREAD | PF_USER_WORKER))
->> +			return;
->> +		regs = task_pt_regs(current);
->> +	}
->> +
->> +	if (ctx->add_mark)
->> +		perf_callchain_store_context(ctx, PERF_CONTEXT_USER);
->> +
->> +	start_entry_idx = ctx->nr;
->                            ^^^^^^^^
->> +	perf_callchain_user(ctx, regs);
->> +	fixup_uretprobe_trampoline_entries(ctx->entry, start_entry_idx);
->> +}
-> 
-> Can this break uprobe trampoline fixups? The original code used
-> entry->nr for start_entry_idx, but the refactored version uses ctx->nr.
-> 
-> These two counters track different things:
-> - entry->nr counts ALL entries (incremented by both
->    perf_callchain_store_context() and perf_callchain_store())
-> - ctx->nr only counts regular callchain entries (incremented only by
->    perf_callchain_store(), not by perf_callchain_store_context())
-> 
-> When add_mark is true, perf_callchain_store_context() increments
-> entry->nr but not ctx->nr, causing them to become out of sync.
-> 
-> For example, if kernel callchain collection runs first with add_mark
-> set:
-> 
->    Initial: ctx->nr = entry->nr = 0
-> 
->    In __get_perf_callchain_kernel():
->      perf_callchain_store_context() stores PERF_CONTEXT_KERNEL marker
->        -> entry->nr becomes 1, ctx->nr still 0
->      perf_callchain_kernel() stores N kernel frames
->        -> entry->nr becomes 1+N, ctx->nr becomes N
-> 
->    In __get_perf_callchain_user():
->      perf_callchain_store_context() stores PERF_CONTEXT_USER marker
->        -> entry->nr becomes 2+N, ctx->nr still N
->      start_entry_idx = ctx->nr assigns N (should be 2+N)
->      fixup_uretprobe_trampoline_entries() scans from wrong index
-> 
-> This causes fixup_uretprobe_trampoline_entries() to scan kernel
-> callchain entries instead of user callchain entries, missing the
-> uretprobe trampolines that need to be fixed up.
-> 
-> Should this use ctx->entry->nr instead of ctx->nr?
-> 
+On Fri, Nov 07, 2025 at 07:11:49PM -0800, Randy Dunlap wrote:
+> [verified still present in linux-next 20251107]
+> [adding CCs]
 
-Use ctx->entry->nr looks better, will change it.
-> 
-> ---
-> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-> 
-> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/19211481431
+Should be fixed by 7ab06ea41af5 ("arch_topology: Provide a stub
+topology_core_has_smt() for !CONFIG_GENERIC_ARCH_TOPOLOGY") in the Arm
+perf tree (which is merged into -next).
 
-
--- 
-Best Regards
-Tao Chen
+Will
