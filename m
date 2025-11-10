@@ -1,55 +1,55 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E9221C194
-	for <linux-perf-users@vger.kernel.org>; Mon, 10 Nov 2025 01:33:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477A22253EC
+	for <linux-perf-users@vger.kernel.org>; Mon, 10 Nov 2025 01:33:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762738390; cv=none; b=R2lVgMqMS9lm1fUvAqZiYGmwJ8MA2yoGSaozwiHJQG9kmjgTgjpUXxmgYJLuqmDi9hv3jnJ0Y0dHICJCr2+49MAPLwWQhcTpYgDAQ+F7szB4zQrTUJcJAyweVGMUi7NED+SMDqf0xdmpsAHKVbsGLL5l7xjTcNWMFAahvDxBnMA=
+	t=1762738398; cv=none; b=PqQalVdZdBh/a62YckyuZuCZAjEJ/7BprxpyEQYHxNHtMu0aZYlivnt+JRsHfC/tM8eNIgiFRfTSrK1VsiUthKIp5NeDAnMb+obbiXfYQ2jw9MYvhDNMNjFQI0zRasZsArGa7cIq2+9/jxnnVqqkn4O8Cw4yNGgRQUu5S4eguc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762738390; c=relaxed/simple;
-	bh=AX4zMck4hJ8CekkhoIGM9prEjuQFEeMORcOKF9pOIrA=;
+	s=arc-20240116; t=1762738398; c=relaxed/simple;
+	bh=9KbAM0GEDbeVDRR2MPU+M9shRhBY3XqeHfQfM17ikf8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=lgoo7m9YISNKjOaJ4bEYEZ8C348bE5JQNGAWijPy877MggsRSKPcL2ZLOspPo3qA8it2vN5GX28WtJBF52jjapgJD9tdRqMXBqX5tCaLjRWdohkzV8r2mhik3KxuoejNvM9hL/AtyHnQhEx56Ur1wUhwN/A09X/nF4u6UsI14oU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i51VBkJf; arc=none smtp.client-ip=209.85.215.202
+	 To:Content-Type; b=fYx00NXl7KgR4YNZbqZ28EIqriWsLSQqsqRUzDsJe1vmgJkWL+ljya5c8eH9zIOR//CQd2ntCwp/bcZOoef03F8NW7aIkFEprN8PQ2yPnGc5GeL5mC46RPDNDohJaY4lgKtAFLZuEI2LG+eGOPf57s0oZDtI2eP+3sV3JDY5pzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p6vu6Wjc; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i51VBkJf"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b969f3f5c13so2360758a12.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 09 Nov 2025 17:33:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p6vu6Wjc"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-294df925293so30360055ad.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 09 Nov 2025 17:33:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762738388; x=1763343188; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1762738396; x=1763343196; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=pSEYPQKRqvkubRMw5YfRHz+OHOI6nD8jZSkaptJ6Ozg=;
-        b=i51VBkJfJYICAwgJDqyBpWrTHTgYpB5LKFrq8AKkxz8HVdkP3vhVz9yt2i2oJNJNXa
-         bckjpTWIPW0z8sMbQD7TzYnrXoE+HJct39njQTBXpr8h3A76XUvfUoCQt7JTMiR/cRt2
-         LOCwkjgW5mqzCWnRura6vRQMD7FhbN4IyRC+07U0ifTgQrEkSowH181fi3fjgBE3lVLq
-         REyXfEydu4ZKx3N/6p8KDEVevXXM+DMCz8J75NElrUwiPNy5dGelVZ1MpFHXGM8EHWrq
-         TPGZKLAlXvyML4k6+NWrBMt/kKtDBZ+/0p1GDZcc/cJttutaR1DD100k+ERIMgEzk3um
-         81YA==
+        bh=+B0K3ky72wEvP4ZZ6N4wTTYfbWGhIpqa4xNLWDZQi/Y=;
+        b=p6vu6Wjc+T8IMVLqXiP08/Xyy7oHe9/v9u7WdV6TnXqEzftWGaMIS6jJIjTyp3MCfo
+         zOQ+xVUholMj2ppNyq058OxhiIizyMgYP2/Olf6bpC+ThKYTfFOerji6ylSZ7+HsluJa
+         ufM4BvUhh6NQKfGk5E/CHjppTj2yTbOLn60CM77/wkvdGPfEpMmpjGj9gu6pHryO2VyN
+         DlRtKBR1jV60tuv4dl6wIvdrTcs1XqSMr/uVXSLWkHzOuczP9nIcWNWa9KMC1eg/VKRA
+         tisZRWEbQi1uGJd91wfbmC67B3xU3Y7MJ0VNYgjldG55cGn/YMdUb/mlheVfoO0Bdpze
+         JAAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762738388; x=1763343188;
+        d=1e100.net; s=20230601; t=1762738396; x=1763343196;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pSEYPQKRqvkubRMw5YfRHz+OHOI6nD8jZSkaptJ6Ozg=;
-        b=O0AJ73URBbZWJlwQH004RpSQHEeem0rbubcrg0tn4k2mCa7e+IYbQiEo9s58TQUACF
-         NG39ei9bfAPlGjyvOyi51HnmR6cQQu+618b407TT1vRYvX14iBB+Yr6N1J/t4TvOy074
-         /8Pn2GM3sJC2OkA9W1GYsT1pSXtmUSH13NtbI6gJBdRptRzwO4XVaFXd3nDxzniN8Vks
-         8H7FoAa0dtCmTPDL+NIzp4hZfN5PwUaKlRjcizpH4nlkd4sHM+jqyV2MKtLK4QT/6GCj
-         yq30jBdN4MG3pAfWshSDe1tsGkYZ6ZpDEhQQm1VVTuEF+8k1QmVGJGYwL6tnjCBPXcbk
-         eKUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV0Xgx5WkLr98fYep5YHz8kZH35jyCvWp0m1uzR5RvUDWIKfb3DfLgTDWn+TXloUMqGeEav21abQ2473xAWq0q9@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDRO94zz1U1Ve0FbZ6zFrk+vUbZfQvhQDWD9FyJhT7zmY0uFfk
-	HddtCzvcjFQuiX3GCSIT6y10TtsVzRkeNqfrCR9+bWqmvuhMeCbzlVZ4ydAoWFGB4+q6F7r9+yb
-	ilQ6ET4ycuA==
-X-Google-Smtp-Source: AGHT+IEsioVmpfAvAsJ243BW96Rxy80dTUlatEny8pA+pQJ/dH5U12GBogPLq/rlz9xJNcJ4bBYqrILf/NB/
-X-Received: from plii20.prod.google.com ([2002:a17:902:eb54:b0:269:770b:9520])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f601:b0:295:3584:1bbd
- with SMTP id d9443c01a7336-297e56ca193mr86932355ad.41.1762738388100; Sun, 09
- Nov 2025 17:33:08 -0800 (PST)
-Date: Sun,  9 Nov 2025 17:31:50 -0800
+        bh=+B0K3ky72wEvP4ZZ6N4wTTYfbWGhIpqa4xNLWDZQi/Y=;
+        b=Afmw2hgy1KDsFoDQx+i9sYesTy8omxe14aZERUqGedOyBkbQDzf73YD6N6KpiFNArK
+         FXBs7cChezZiRtFF9+Bx+pmpqv/f7/GE28Fpqtcxj1Dobb0KfQnBy68T640MsYT2uRjX
+         4l84lE/hnTRauzGZvS9F3M5Ohu6nJDNzS9Ua4z7rp6IhAOD4x9BuMBeefnkcc9w09jDg
+         J509qlN2u8s35Hbe6i3Lcno2fVLnb/rRh3lb/od78bM0iXIUzIPEOFOHEsSQS81SpI2j
+         k7Dp8pyTraQ2BLPjE7Pgr8fDkAE6toW+JDCExQoKCTSW5jc0TKSAYvxDDfhC1esyVlxv
+         AU0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXB1hQUM5M5N82B4++JQDleVXCm24Mnm02TYV0XUIrUb19K0HmpsQn1Yodqv0QhHChWKo90/i8r/s8eOIOd/ZRf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw46AnaLDJTTHoqiSlYiZ5SEkakJzZV39QsM4AqhgMgv9ub3/UU
+	XrRW4C5KgNXACXancWjPj1yu70cP+UL6OeEIIYFaE0yh0QLpF1hPkBXZ7eG42VaQct8qZzkf7nz
+	9G54p8suuRw==
+X-Google-Smtp-Source: AGHT+IExwjjEFgLDypHhLOgkiBeWdG6nSHclfK6S4i/Wp/ITD3LzlgyqjOj7gx/fs4ccsVG7rjODpy+mD2/a
+X-Received: from pjyp14.prod.google.com ([2002:a17:90a:e70e:b0:340:c1bf:6e2d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:da4b:b0:27e:f018:d2fb
+ with SMTP id d9443c01a7336-297e540dbf8mr80142465ad.6.1762738395522; Sun, 09
+ Nov 2025 17:33:15 -0800 (PST)
+Date: Sun,  9 Nov 2025 17:31:51 -0800
 In-Reply-To: <20251110013152.3099080-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251110013152.3099080-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.2.1041.gc1ab5b90ca-goog
-Message-ID: <20251110013152.3099080-4-irogers@google.com>
-Subject: [PATCH v1 3/5] tool build: Remove __get_cpuid feature test
+Message-ID: <20251110013152.3099080-5-irogers@google.com>
+Subject: [PATCH v1 4/5] perf build: Remove NO_AUXTRACE build option
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -87,101 +87,776 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-This feature test is no longer used so remove.
-
-The function tested by the feature test is used in:
-tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
-however, the Makefile just assumes the presence of the function and
-doesn't perform a build feature test for it.
+The NO_AUXTRACE build option was used when the __get_cpuid feature
+test failed or if it was provided on the command line. The option no
+longer avoids a dependency on a library and so having the option is
+just adding complexity to the code base. Remove the option
+CONFIG_AUXTRACE from Build files and HAVE_AUXTRACE_SUPPORT by assuming
+it is always defined.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/build/Makefile.feature         | 2 --
- tools/build/feature/Makefile         | 4 ----
- tools/build/feature/test-all.c       | 5 -----
- tools/build/feature/test-get_cpuid.c | 8 --------
- 4 files changed, 19 deletions(-)
- delete mode 100644 tools/build/feature/test-get_cpuid.c
+ tools/perf/Documentation/perf-check.txt |   1 -
+ tools/perf/Makefile.config              |   5 -
+ tools/perf/Makefile.perf                |   2 -
+ tools/perf/arch/arm/util/Build          |   2 +-
+ tools/perf/arch/arm/util/pmu.c          |   2 -
+ tools/perf/arch/arm64/util/Build        |  19 +-
+ tools/perf/arch/powerpc/util/Build      |   2 +-
+ tools/perf/arch/s390/util/Build         |   2 +-
+ tools/perf/arch/x86/tests/Build         |   4 +-
+ tools/perf/arch/x86/tests/arch-tests.c  |   4 -
+ tools/perf/arch/x86/util/Build          |   6 +-
+ tools/perf/arch/x86/util/pmu.c          |   2 -
+ tools/perf/builtin-check.c              |   1 -
+ tools/perf/builtin-inject.c             |  15 --
+ tools/perf/builtin-record.c             |  36 ----
+ tools/perf/builtin-script.c             |  12 --
+ tools/perf/tests/make                   |   4 +-
+ tools/perf/util/Build                   |  24 +--
+ tools/perf/util/arm-spe-decoder/Build   |   2 +-
+ tools/perf/util/auxtrace.h              | 220 +-----------------------
+ tools/perf/util/cs-etm-decoder/Build    |   2 +-
+ tools/perf/util/hisi-ptt-decoder/Build  |   2 +-
+ tools/perf/util/intel-pt-decoder/Build  |   8 +-
+ tools/perf/util/synthetic-events.h      |  15 --
+ 24 files changed, 37 insertions(+), 355 deletions(-)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 32bbe29fe5f6..fc6abe369f73 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -90,7 +90,6 @@ FEATURE_TESTS_BASIC :=                  \
-         timerfd                         \
-         zlib                            \
-         lzma                            \
--        get_cpuid                       \
-         bpf                             \
-         scandirat			\
-         sched_getcpu			\
-@@ -146,7 +145,6 @@ FEATURE_DISPLAY ?=              \
-          llvm-perf              \
-          zlib                   \
-          lzma                   \
--         get_cpuid              \
-          bpf			\
-          libaio			\
-          libzstd
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 49b0add392b1..7c90e0d0157a 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -56,7 +56,6 @@ FILES=                                          \
-          test-lzma.bin                          \
-          test-bpf.bin                           \
-          test-libbpf.bin                        \
--         test-get_cpuid.bin                     \
-          test-sdt.bin                           \
-          test-cxx.bin                           \
-          test-gettid.bin			\
-@@ -318,9 +317,6 @@ $(OUTPUT)test-zlib.bin:
- $(OUTPUT)test-lzma.bin:
- 	$(BUILD) -llzma
+diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documentation/perf-check.txt
+index 4c9ccda6ce91..09e1d35677f5 100644
+--- a/tools/perf/Documentation/perf-check.txt
++++ b/tools/perf/Documentation/perf-check.txt
+@@ -50,7 +50,6 @@ feature::
+                 dwarf                   /  HAVE_LIBDW_SUPPORT
+                 dwarf_getlocations      /  HAVE_LIBDW_SUPPORT
+                 dwarf-unwind            /  HAVE_DWARF_UNWIND_SUPPORT
+-                auxtrace                /  HAVE_AUXTRACE_SUPPORT
+                 libbfd                  /  HAVE_LIBBFD_SUPPORT
+                 libbpf-strings          /  HAVE_LIBBPF_STRINGS_SUPPORT
+                 libcapstone             /  HAVE_LIBCAPSTONE_SUPPORT
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 5decc3d5fef8..6b62fea21a0a 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -1113,11 +1113,6 @@ ifndef NO_CAPSTONE
+   endif
+ endif
  
--$(OUTPUT)test-get_cpuid.bin:
--	$(BUILD)
+-ifndef NO_AUXTRACE
+-  $(call detected,CONFIG_AUXTRACE)
+-  CFLAGS += -DHAVE_AUXTRACE_SUPPORT
+-endif
 -
- $(OUTPUT)test-bpf.bin:
- 	$(BUILD)
+ ifdef EXTRA_TESTS
+     $(call detected,CONFIG_EXTRA_TESTS)
+     CFLAGS += -DHAVE_EXTRA_TESTS
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index afeb4e4a8a31..80decc7ce13c 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -84,8 +84,6 @@ include ../scripts/utilities.mak
+ #
+ # Define NO_LZMA if you do not want to support compressed (xz) kernel modules
+ #
+-# Define NO_AUXTRACE if you do not want AUX area tracing support
+-#
+ # Define NO_LIBBPF if you do not want BPF support
+ #
+ # Define NO_LIBCAP if you do not want process capabilities considered by perf
+diff --git a/tools/perf/arch/arm/util/Build b/tools/perf/arch/arm/util/Build
+index f7a8b37d1c68..fd695e1fdaee 100644
+--- a/tools/perf/arch/arm/util/Build
++++ b/tools/perf/arch/arm/util/Build
+@@ -3,4 +3,4 @@ perf-util-y += perf_regs.o
+ perf-util-$(CONFIG_LOCAL_LIBUNWIND)    += unwind-libunwind.o
+ perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
  
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-index 8a354b81417c..eb346160d0ba 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -114,10 +114,6 @@
- # include "test-lzma.c"
- #undef main
+-perf-util-$(CONFIG_AUXTRACE) += pmu.o auxtrace.o cs-etm.o
++perf-util-y += pmu.o auxtrace.o cs-etm.o
+diff --git a/tools/perf/arch/arm/util/pmu.c b/tools/perf/arch/arm/util/pmu.c
+index f70075c89aa0..9be8da5207f5 100644
+--- a/tools/perf/arch/arm/util/pmu.c
++++ b/tools/perf/arch/arm/util/pmu.c
+@@ -20,7 +20,6 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
+ {
+ 	struct perf_cpu_map *intersect, *online = cpu_map__online();
  
--#define main main_test_get_cpuid
--# include "test-get_cpuid.c"
--#undef main
+-#ifdef HAVE_AUXTRACE_SUPPORT
+ 	if (!strcmp(pmu->name, CORESIGHT_ETM_PMU_NAME)) {
+ 		/* add ETM default config here */
+ 		pmu->auxtrace = true;
+@@ -39,7 +38,6 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
+ 		pmu->selectable = true;
+ #endif
+ 	}
+-#endif
+ 	/* Workaround some ARM PMU's failing to correctly set CPU maps for online processors. */
+ 	intersect = perf_cpu_map__intersect(online, pmu->cpus);
+ 	perf_cpu_map__put(online);
+diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
+index a74521b79eaa..d63881081d2e 100644
+--- a/tools/perf/arch/arm64/util/Build
++++ b/tools/perf/arch/arm64/util/Build
+@@ -1,13 +1,14 @@
++perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
++perf-util-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
++perf-util-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
++perf-util-y += ../../arm/util/auxtrace.o
++perf-util-y += ../../arm/util/cs-etm.o
++perf-util-y += ../../arm/util/pmu.o
++perf-util-y += arm-spe.o
+ perf-util-y += header.o
++perf-util-y += hisi-ptt.o
+ perf-util-y += machine.o
++perf-util-y += mem-events.o
+ perf-util-y += perf_regs.o
+-perf-util-y += tsc.o
+ perf-util-y += pmu.o
+-perf-util-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
+-perf-util-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
+-perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
 -
- #define main main_test_bpf
- # include "test-bpf.c"
- #undef main
-@@ -168,7 +164,6 @@ int main(int argc, char *argv[])
- 	main_test_pthread_attr_setaffinity_np();
- 	main_test_pthread_barrier();
- 	main_test_lzma();
--	main_test_get_cpuid();
- 	main_test_bpf();
- 	main_test_scandirat();
- 	main_test_sched_getcpu();
-diff --git a/tools/build/feature/test-get_cpuid.c b/tools/build/feature/test-get_cpuid.c
-deleted file mode 100644
-index bb4f065f28a6..000000000000
---- a/tools/build/feature/test-get_cpuid.c
-+++ /dev/null
-@@ -1,8 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <cpuid.h>
+-perf-util-$(CONFIG_AUXTRACE) += ../../arm/util/pmu.o \
+-			      ../../arm/util/auxtrace.o \
+-			      ../../arm/util/cs-etm.o \
+-			      arm-spe.o mem-events.o hisi-ptt.o
++perf-util-y += tsc.o
+diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powerpc/util/Build
+index a5b0babd307e..3d0d5427aef7 100644
+--- a/tools/perf/arch/powerpc/util/Build
++++ b/tools/perf/arch/powerpc/util/Build
+@@ -10,4 +10,4 @@ perf-util-$(CONFIG_LIBDW) += skip-callchain-idx.o
+ 
+ perf-util-$(CONFIG_LIBUNWIND) += unwind-libunwind.o
+ perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+-perf-util-$(CONFIG_AUXTRACE) += auxtrace.o
++perf-util-y += auxtrace.o
+diff --git a/tools/perf/arch/s390/util/Build b/tools/perf/arch/s390/util/Build
+index 736c0ad09194..c64eb18dbdae 100644
+--- a/tools/perf/arch/s390/util/Build
++++ b/tools/perf/arch/s390/util/Build
+@@ -7,4 +7,4 @@ perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+ perf-util-y += machine.o
+ perf-util-y += pmu.o
+ 
+-perf-util-$(CONFIG_AUXTRACE) += auxtrace.o
++perf-util-y += auxtrace.o
+diff --git a/tools/perf/arch/x86/tests/Build b/tools/perf/arch/x86/tests/Build
+index 7790b3e20f4e..b017d1ca6e3c 100644
+--- a/tools/perf/arch/x86/tests/Build
++++ b/tools/perf/arch/x86/tests/Build
+@@ -3,9 +3,9 @@ perf-test-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
+ 
+ perf-test-y += arch-tests.o
+ perf-test-y += hybrid.o
+-perf-test-$(CONFIG_AUXTRACE) += intel-pt-test.o
++perf-test-y += intel-pt-test.o
+ ifeq ($(CONFIG_EXTRA_TESTS),y)
+-perf-test-$(CONFIG_AUXTRACE) += insn-x86.o
++perf-test-y += insn-x86.o
+ endif
+ perf-test-$(CONFIG_X86_64) += bp-modify.o
+ perf-test-y += amd-ibs-via-core-pmu.o
+diff --git a/tools/perf/arch/x86/tests/arch-tests.c b/tools/perf/arch/x86/tests/arch-tests.c
+index 8f9cfeaa170f..c3e1619c5e79 100644
+--- a/tools/perf/arch/x86/tests/arch-tests.c
++++ b/tools/perf/arch/x86/tests/arch-tests.c
+@@ -3,7 +3,6 @@
+ #include "tests/tests.h"
+ #include "arch-tests.h"
+ 
+-#ifdef HAVE_AUXTRACE_SUPPORT
+ #ifdef HAVE_EXTRA_TESTS
+ DEFINE_SUITE("x86 instruction decoder - new instructions", insn_x86);
+ #endif
+@@ -19,7 +18,6 @@ struct test_suite suite__intel_pt = {
+ 	.test_cases = intel_pt_tests,
+ };
+ 
+-#endif
+ #if defined(__x86_64__)
+ DEFINE_SUITE("x86 bp modify", bp_modify);
+ #endif
+@@ -39,12 +37,10 @@ struct test_suite *arch_tests[] = {
+ #ifdef HAVE_DWARF_UNWIND_SUPPORT
+ 	&suite__dwarf_unwind,
+ #endif
+-#ifdef HAVE_AUXTRACE_SUPPORT
+ #ifdef HAVE_EXTRA_TESTS
+ 	&suite__insn_x86,
+ #endif
+ 	&suite__intel_pt,
+-#endif
+ #if defined(__x86_64__)
+ 	&suite__bp_modify,
+ #endif
+diff --git a/tools/perf/arch/x86/util/Build b/tools/perf/arch/x86/util/Build
+index 06d7c0205b3d..c0dc5965f362 100644
+--- a/tools/perf/arch/x86/util/Build
++++ b/tools/perf/arch/x86/util/Build
+@@ -14,7 +14,7 @@ perf-util-y += iostat.o
+ perf-util-$(CONFIG_LOCAL_LIBUNWIND)    += unwind-libunwind.o
+ perf-util-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+ 
+-perf-util-$(CONFIG_AUXTRACE) += auxtrace.o
++perf-util-y += auxtrace.o
+ perf-util-y += archinsn.o
+-perf-util-$(CONFIG_AUXTRACE) += intel-pt.o
+-perf-util-$(CONFIG_AUXTRACE) += intel-bts.o
++perf-util-y += intel-pt.o
++perf-util-y += intel-bts.o
+diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
+index 58113482654b..a3f96221758d 100644
+--- a/tools/perf/arch/x86/util/pmu.c
++++ b/tools/perf/arch/x86/util/pmu.c
+@@ -273,7 +273,6 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
+ {
+ 	struct perf_pmu_caps *ldlat_cap;
+ 
+-#ifdef HAVE_AUXTRACE_SUPPORT
+ 	if (!strcmp(pmu->name, INTEL_PT_PMU_NAME)) {
+ 		pmu->auxtrace = true;
+ 		pmu->selectable = true;
+@@ -283,7 +282,6 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
+ 		pmu->auxtrace = true;
+ 		pmu->selectable = true;
+ 	}
+-#endif
+ 
+ 	if (x86__is_amd_cpu()) {
+ 		if (strcmp(pmu->name, "ibs_op"))
+diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
+index 9ce2e71999df..d19769a8f689 100644
+--- a/tools/perf/builtin-check.c
++++ b/tools/perf/builtin-check.c
+@@ -42,7 +42,6 @@ struct feature_status supported_features[] = {
+ 	FEATURE_STATUS("dwarf", HAVE_LIBDW_SUPPORT),
+ 	FEATURE_STATUS("dwarf_getlocations", HAVE_LIBDW_SUPPORT),
+ 	FEATURE_STATUS("dwarf-unwind", HAVE_DWARF_UNWIND_SUPPORT),
+-	FEATURE_STATUS("auxtrace", HAVE_AUXTRACE_SUPPORT),
+ 	FEATURE_STATUS_TIP("libbfd", HAVE_LIBBFD_SUPPORT, "Deprecated, license incompatibility, use BUILD_NONDISTRO=1 and install binutils-dev[el]"),
+ 	FEATURE_STATUS("libbpf-strings", HAVE_LIBBPF_STRINGS_SUPPORT),
+ 	FEATURE_STATUS("libcapstone", HAVE_LIBCAPSTONE_SUPPORT),
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 044074080aa5..bd9245d2dd41 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -239,8 +239,6 @@ static int perf_event__repipe_event_update(const struct perf_tool *tool,
+ 	return perf_event__repipe_synth(tool, event);
+ }
+ 
+-#ifdef HAVE_AUXTRACE_SUPPORT
 -
--int main(void)
+ static int copy_bytes(struct perf_inject *inject, struct perf_data *data, off_t size)
+ {
+ 	char buf[4096];
+@@ -297,19 +295,6 @@ static s64 perf_event__repipe_auxtrace(const struct perf_tool *tool,
+ 	return event->auxtrace.size;
+ }
+ 
+-#else
+-
+-static s64
+-perf_event__repipe_auxtrace(const struct perf_tool *tool __maybe_unused,
+-			    struct perf_session *session __maybe_unused,
+-			    union perf_event *event __maybe_unused)
 -{
--	unsigned int eax = 0, ebx = 0, ecx = 0, edx = 0;
--	return __get_cpuid(0x15, &eax, &ebx, &ecx, &edx);
+-	pr_err("AUX area tracing not supported\n");
+-	return -EINVAL;
 -}
+-
+-#endif
+-
+ static int perf_event__repipe(const struct perf_tool *tool,
+ 			      union perf_event *event,
+ 			      struct perf_sample *sample __maybe_unused,
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index fe10bb7f35cb..2584d0d8bc82 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -730,8 +730,6 @@ static void record__sig_exit(void)
+ 	raise(signr);
+ }
+ 
+-#ifdef HAVE_AUXTRACE_SUPPORT
+-
+ static int record__process_auxtrace(const struct perf_tool *tool,
+ 				    struct mmap *map,
+ 				    union perf_event *event, void *data1,
+@@ -889,40 +887,6 @@ static int record__auxtrace_init(struct record *rec)
+ 	return auxtrace_parse_filters(rec->evlist);
+ }
+ 
+-#else
+-
+-static inline
+-int record__auxtrace_mmap_read(struct record *rec __maybe_unused,
+-			       struct mmap *map __maybe_unused)
+-{
+-	return 0;
+-}
+-
+-static inline
+-void record__read_auxtrace_snapshot(struct record *rec __maybe_unused,
+-				    bool on_exit __maybe_unused)
+-{
+-}
+-
+-static inline
+-int auxtrace_record__snapshot_start(struct auxtrace_record *itr __maybe_unused)
+-{
+-	return 0;
+-}
+-
+-static inline
+-int record__auxtrace_snapshot_exit(struct record *rec __maybe_unused)
+-{
+-	return 0;
+-}
+-
+-static int record__auxtrace_init(struct record *rec __maybe_unused)
+-{
+-	return 0;
+-}
+-
+-#endif
+-
+ static int record__config_text_poke(struct evlist *evlist)
+ {
+ 	struct evsel *evsel;
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index d813adbf9889..bd82315bdf8e 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2002,7 +2002,6 @@ static int perf_sample__fprintf_synth_iflag_chg(struct perf_sample *sample, FILE
+ 	return len + perf_sample__fprintf_pt_spacing(len, fp);
+ }
+ 
+-#ifdef HAVE_AUXTRACE_SUPPORT
+ static int perf_sample__fprintf_synth_vpadtl(struct perf_sample *data, FILE *fp)
+ {
+ 	struct powerpc_vpadtl_entry *dtl = (struct powerpc_vpadtl_entry *)data->raw_data;
+@@ -2021,13 +2020,6 @@ static int perf_sample__fprintf_synth_vpadtl(struct perf_sample *data, FILE *fp)
+ 
+ 	return len;
+ }
+-#else
+-static int perf_sample__fprintf_synth_vpadtl(struct perf_sample *data __maybe_unused,
+-		FILE *fp __maybe_unused)
+-{
+-	return 0;
+-}
+-#endif
+ 
+ static int perf_sample__fprintf_synth(struct perf_sample *sample,
+ 				      struct evsel *evsel, FILE *fp)
+@@ -3649,7 +3641,6 @@ static int process_feature_event(const struct perf_tool *tool __maybe_unused,
+ 	return 0;
+ }
+ 
+-#ifdef HAVE_AUXTRACE_SUPPORT
+ static int perf_script__process_auxtrace_info(const struct perf_tool *tool,
+ 					      struct perf_session *session,
+ 					      union perf_event *event)
+@@ -3664,9 +3655,6 @@ static int perf_script__process_auxtrace_info(const struct perf_tool *tool,
+ 
+ 	return ret;
+ }
+-#else
+-#define perf_script__process_auxtrace_info 0
+-#endif
+ 
+ static int parse_insn_trace(const struct option *opt __maybe_unused,
+ 			    const char *str, int unset __maybe_unused)
+diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+index b650ce8864ed..6641701e4828 100644
+--- a/tools/perf/tests/make
++++ b/tools/perf/tests/make
+@@ -88,7 +88,6 @@ make_no_backtrace   := NO_BACKTRACE=1
+ make_no_libcapstone := NO_CAPSTONE=1
+ make_no_libnuma     := NO_LIBNUMA=1
+ make_no_libbionic   := NO_LIBBIONIC=1
+-make_no_auxtrace    := NO_AUXTRACE=1
+ make_no_libbpf	    := NO_LIBBPF=1
+ make_libbpf_dynamic := LIBBPF_DYNAMIC=1
+ make_no_libbpf_DEBUG := NO_LIBBPF=1 DEBUG=1
+@@ -121,7 +120,7 @@ make_static         := LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX3
+ make_minimal        := NO_LIBPYTHON=1 NO_GTK2=1
+ make_minimal        += NO_DEMANGLE=1 NO_LIBELF=1 NO_BACKTRACE=1
+ make_minimal        += NO_LIBNUMA=1 NO_LIBBIONIC=1 NO_LIBDW=1
+-make_minimal        += NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1
++make_minimal        += NO_LIBDW_DWARF_UNWIND=1 NO_LIBBPF=1
+ make_minimal        += NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1
+ make_minimal        += NO_LIBCAP=1 NO_CAPSTONE=1
+ 
+@@ -158,7 +157,6 @@ run += make_no_backtrace
+ run += make_no_libcapstone
+ run += make_no_libnuma
+ run += make_no_libbionic
+-run += make_no_auxtrace
+ run += make_no_libbpf
+ run += make_no_libbpf_DEBUG
+ run += make_no_libllvm
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 4be313cd115a..1c2a43e1dc68 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -129,22 +129,22 @@ perf-util-y += iostat.o
+ perf-util-y += stream.o
+ perf-util-y += kvm-stat.o
+ perf-util-y += lock-contention.o
+-perf-util-$(CONFIG_AUXTRACE) += auxtrace.o
++perf-util-y += auxtrace.o
+ perf-util-y += intel-pt-decoder/
+-perf-util-$(CONFIG_AUXTRACE) += intel-pt.o
+-perf-util-$(CONFIG_AUXTRACE) += intel-bts.o
+-perf-util-$(CONFIG_AUXTRACE) += arm-spe.o
+-perf-util-$(CONFIG_AUXTRACE) += arm-spe-decoder/
+-perf-util-$(CONFIG_AUXTRACE) += hisi-ptt.o
+-perf-util-$(CONFIG_AUXTRACE) += hisi-ptt-decoder/
+-perf-util-$(CONFIG_AUXTRACE) += s390-cpumsf.o
+-perf-util-$(CONFIG_AUXTRACE) += powerpc-vpadtl.o
++perf-util-y += intel-pt.o
++perf-util-y += intel-bts.o
++perf-util-y += arm-spe.o
++perf-util-y += arm-spe-decoder/
++perf-util-y += hisi-ptt.o
++perf-util-y += hisi-ptt-decoder/
++perf-util-y += s390-cpumsf.o
++perf-util-y += powerpc-vpadtl.o
+ 
+ ifdef CONFIG_LIBOPENCSD
+-perf-util-$(CONFIG_AUXTRACE) += cs-etm.o
+-perf-util-$(CONFIG_AUXTRACE) += cs-etm-decoder/
++perf-util-y += cs-etm.o
++perf-util-y += cs-etm-decoder/
+ endif
+-perf-util-$(CONFIG_AUXTRACE) += cs-etm-base.o
++perf-util-y += cs-etm-base.o
+ 
+ perf-util-y += parse-branch-options.o
+ perf-util-y += dump-insn.o
+diff --git a/tools/perf/util/arm-spe-decoder/Build b/tools/perf/util/arm-spe-decoder/Build
+index 960062b3cb9e..ab500e0efe24 100644
+--- a/tools/perf/util/arm-spe-decoder/Build
++++ b/tools/perf/util/arm-spe-decoder/Build
+@@ -1 +1 @@
+-perf-util-$(CONFIG_AUXTRACE) += arm-spe-pkt-decoder.o arm-spe-decoder.o
++perf-util-y += arm-spe-pkt-decoder.o arm-spe-decoder.o
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index b320a387464d..59cf72b935ff 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -7,17 +7,12 @@
+ #ifndef __PERF_AUXTRACE_H
+ #define __PERF_AUXTRACE_H
+ 
+-#include <sys/types.h>
+ #include <errno.h>
+-#include <stdbool.h>
+-#include <stddef.h>
+ #include <stdio.h> // FILE
+-#include <linux/list.h>
+ #include <linux/perf_event.h>
+ #include <linux/types.h>
+-#include <perf/cpumap.h>
+-#include <asm/bitsperlong.h>
+ #include <asm/barrier.h>
++#include <perf/cpumap.h>
+ 
+ union perf_event;
+ struct perf_session;
+@@ -459,8 +454,6 @@ struct addr_filters {
+ 
+ struct auxtrace_cache;
+ 
+-#ifdef HAVE_AUXTRACE_SUPPORT
+-
+ u64 compat_auxtrace_mmap__read_head(struct auxtrace_mmap *mm);
+ int compat_auxtrace_mmap__write_tail(struct auxtrace_mmap *mm, u64 tail);
+ 
+@@ -706,215 +699,4 @@ void itrace_synth_opts__clear_time_range(struct itrace_synth_opts *opts)
+ 	opts->range_num = 0;
+ }
+ 
+-#else
+-#include "debug.h"
+-
+-static inline struct auxtrace_record *
+-auxtrace_record__init(struct evlist *evlist __maybe_unused,
+-		      int *err)
+-{
+-	*err = 0;
+-	return NULL;
+-}
+-
+-static inline
+-void auxtrace_record__free(struct auxtrace_record *itr __maybe_unused)
+-{
+-}
+-
+-static inline
+-int auxtrace_record__options(struct auxtrace_record *itr __maybe_unused,
+-			     struct evlist *evlist __maybe_unused,
+-			     struct record_opts *opts __maybe_unused)
+-{
+-	return 0;
+-}
+-
+-static inline
+-int perf_event__process_auxtrace_info(const struct perf_tool *tool __maybe_unused,
+-				      struct perf_session *session __maybe_unused,
+-				      union perf_event *event __maybe_unused)
+-{
+-	return 0;
+-}
+-
+-static inline
+-s64 perf_event__process_auxtrace(const struct perf_tool *tool __maybe_unused,
+-				 struct perf_session *session __maybe_unused,
+-				 union perf_event *event __maybe_unused)
+-{
+-	return 0;
+-}
+-
+-static inline
+-int perf_event__process_auxtrace_error(const struct perf_tool *tool __maybe_unused,
+-				       struct perf_session *session __maybe_unused,
+-				       union perf_event *event __maybe_unused)
+-{
+-	return 0;
+-}
+-
+-static inline
+-void perf_session__auxtrace_error_inc(struct perf_session *session
+-				      __maybe_unused,
+-				      union perf_event *event
+-				      __maybe_unused)
+-{
+-}
+-
+-static inline
+-void events_stats__auxtrace_error_warn(const struct events_stats *stats
+-				       __maybe_unused)
+-{
+-}
+-
+-static inline
+-int itrace_do_parse_synth_opts(struct itrace_synth_opts *synth_opts __maybe_unused,
+-			       const char *str __maybe_unused, int unset __maybe_unused)
+-{
+-	pr_err("AUX area tracing not supported\n");
+-	return -EINVAL;
+-}
+-
+-static inline
+-int itrace_parse_synth_opts(const struct option *opt __maybe_unused,
+-			    const char *str __maybe_unused,
+-			    int unset __maybe_unused)
+-{
+-	pr_err("AUX area tracing not supported\n");
+-	return -EINVAL;
+-}
+-
+-static inline
+-int auxtrace_parse_snapshot_options(struct auxtrace_record *itr __maybe_unused,
+-				    struct record_opts *opts __maybe_unused,
+-				    const char *str)
+-{
+-	if (!str)
+-		return 0;
+-	pr_err("AUX area tracing not supported\n");
+-	return -EINVAL;
+-}
+-
+-static inline
+-int auxtrace_parse_sample_options(struct auxtrace_record *itr __maybe_unused,
+-				  struct evlist *evlist __maybe_unused,
+-				  struct record_opts *opts __maybe_unused,
+-				  const char *str)
+-{
+-	if (!str)
+-		return 0;
+-	pr_err("AUX area tracing not supported\n");
+-	return -EINVAL;
+-}
+-
+-static inline
+-int auxtrace_parse_aux_action(struct evlist *evlist __maybe_unused)
+-{
+-	pr_err("AUX area tracing not supported\n");
+-	return -EINVAL;
+-}
+-
+-static inline
+-int auxtrace__process_event(struct perf_session *session __maybe_unused,
+-			    union perf_event *event __maybe_unused,
+-			    struct perf_sample *sample __maybe_unused,
+-			    const struct perf_tool *tool __maybe_unused)
+-{
+-	return 0;
+-}
+-
+-static inline
+-void auxtrace__dump_auxtrace_sample(struct perf_session *session __maybe_unused,
+-				    struct perf_sample *sample __maybe_unused)
+-{
+-}
+-
+-static inline
+-int auxtrace__flush_events(struct perf_session *session __maybe_unused,
+-			   const struct perf_tool *tool __maybe_unused)
+-{
+-	return 0;
+-}
+-
+-static inline
+-void auxtrace__free_events(struct perf_session *session __maybe_unused)
+-{
+-}
+-
+-static inline
+-void auxtrace_cache__free(struct auxtrace_cache *auxtrace_cache __maybe_unused)
+-{
+-}
+-
+-static inline
+-void auxtrace__free(struct perf_session *session __maybe_unused)
+-{
+-}
+-
+-static inline
+-int auxtrace_index__write(int fd __maybe_unused,
+-			  struct list_head *head __maybe_unused)
+-{
+-	return -EINVAL;
+-}
+-
+-static inline
+-int auxtrace_index__process(int fd __maybe_unused,
+-			    u64 size __maybe_unused,
+-			    struct perf_session *session __maybe_unused,
+-			    bool needs_swap __maybe_unused)
+-{
+-	return -EINVAL;
+-}
+-
+-static inline
+-void auxtrace_index__free(struct list_head *head __maybe_unused)
+-{
+-}
+-
+-static inline
+-bool auxtrace__evsel_is_auxtrace(struct perf_session *session __maybe_unused,
+-				 struct evsel *evsel __maybe_unused)
+-{
+-	return false;
+-}
+-
+-static inline
+-int auxtrace_parse_filters(struct evlist *evlist __maybe_unused)
+-{
+-	return 0;
+-}
+-
+-int auxtrace_mmap__mmap(struct auxtrace_mmap *mm,
+-			struct auxtrace_mmap_params *mp,
+-			void *userpg, int fd);
+-void auxtrace_mmap__munmap(struct auxtrace_mmap *mm);
+-void auxtrace_mmap_params__init(struct auxtrace_mmap_params *mp,
+-				off_t auxtrace_offset,
+-				unsigned int auxtrace_pages,
+-				bool auxtrace_overwrite);
+-void auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp,
+-				   struct evlist *evlist,
+-				   struct evsel *evsel, int idx);
+-
+-#define ITRACE_HELP ""
+-
+-static inline
+-void itrace_synth_opts__set_time_range(struct itrace_synth_opts *opts
+-				       __maybe_unused,
+-				       struct perf_time_interval *ptime_range
+-				       __maybe_unused,
+-				       int range_num __maybe_unused)
+-{
+-}
+-
+-static inline
+-void itrace_synth_opts__clear_time_range(struct itrace_synth_opts *opts
+-					 __maybe_unused)
+-{
+-}
+-
+-#endif
+-
+ #endif
+diff --git a/tools/perf/util/cs-etm-decoder/Build b/tools/perf/util/cs-etm-decoder/Build
+index 056d665f7f88..27550db2aa4c 100644
+--- a/tools/perf/util/cs-etm-decoder/Build
++++ b/tools/perf/util/cs-etm-decoder/Build
+@@ -1 +1 @@
+-perf-util-$(CONFIG_AUXTRACE) += cs-etm-decoder.o
++perf-util-y += cs-etm-decoder.o
+diff --git a/tools/perf/util/hisi-ptt-decoder/Build b/tools/perf/util/hisi-ptt-decoder/Build
+index 3298f7b7e308..2ee0eb731656 100644
+--- a/tools/perf/util/hisi-ptt-decoder/Build
++++ b/tools/perf/util/hisi-ptt-decoder/Build
+@@ -1 +1 @@
+-perf-util-$(CONFIG_AUXTRACE) += hisi-ptt-pkt-decoder.o
++perf-util-y += hisi-ptt-pkt-decoder.o
+diff --git a/tools/perf/util/intel-pt-decoder/Build b/tools/perf/util/intel-pt-decoder/Build
+index 5b8f0149167d..8fd7e4330044 100644
+--- a/tools/perf/util/intel-pt-decoder/Build
++++ b/tools/perf/util/intel-pt-decoder/Build
+@@ -1,4 +1,4 @@
+-perf-util-$(CONFIG_AUXTRACE) += intel-pt-pkt-decoder.o intel-pt-insn-decoder.o intel-pt-log.o intel-pt-decoder.o
++perf-util-y += intel-pt-pkt-decoder.o intel-pt-insn-decoder.o intel-pt-log.o intel-pt-decoder.o
+ 
+ inat_tables_script = $(srctree)/tools/arch/x86/tools/gen-insn-attr-x86.awk
+ inat_tables_maps = $(srctree)/tools/arch/x86/lib/x86-opcode-map.txt
+@@ -7,11 +7,7 @@ $(OUTPUT)util/intel-pt-decoder/inat-tables.c: $(inat_tables_script) $(inat_table
+ 	$(call rule_mkdir)
+ 	@$(call echo-cmd,gen)$(AWK) -f $(inat_tables_script) $(inat_tables_maps) > $@ || rm -f $@
+ 
+-ifeq ($(SRCARCH),x86)
+-  perf-util-y += inat.o insn.o
+-else
+-  perf-util-$(CONFIG_AUXTRACE) += inat.o insn.o
+-endif
++perf-util-y += inat.o insn.o
+ 
+ $(OUTPUT)util/intel-pt-decoder/inat.o: $(srctree)/tools/arch/x86/lib/inat.c $(OUTPUT)util/intel-pt-decoder/inat-tables.c
+ 	$(call rule_mkdir)
+diff --git a/tools/perf/util/synthetic-events.h b/tools/perf/util/synthetic-events.h
+index ee29615d68e5..f8588b6cf11a 100644
+--- a/tools/perf/util/synthetic-events.h
++++ b/tools/perf/util/synthetic-events.h
+@@ -107,24 +107,9 @@ int machine__synthesize_threads(struct machine *machine, struct target *target,
+ 				struct perf_thread_map *threads, bool needs_mmap, bool data_mmap,
+ 				unsigned int nr_threads_synthesize);
+ 
+-#ifdef HAVE_AUXTRACE_SUPPORT
+ int perf_event__synthesize_auxtrace_info(struct auxtrace_record *itr, const struct perf_tool *tool,
+ 					 struct perf_session *session, perf_event__handler_t process);
+ 
+-#else // HAVE_AUXTRACE_SUPPORT
+-
+-#include <errno.h>
+-
+-static inline int
+-perf_event__synthesize_auxtrace_info(struct auxtrace_record *itr __maybe_unused,
+-				     const struct perf_tool *tool __maybe_unused,
+-				     struct perf_session *session __maybe_unused,
+-				     perf_event__handler_t process __maybe_unused)
+-{
+-	return -EINVAL;
+-}
+-#endif // HAVE_AUXTRACE_SUPPORT
+-
+ #ifdef HAVE_LIBBPF_SUPPORT
+ int perf_event__synthesize_bpf_events(struct perf_session *session, perf_event__handler_t process,
+ 				      struct machine *machine, struct record_opts *opts);
 -- 
 2.51.2.1041.gc1ab5b90ca-goog
 
