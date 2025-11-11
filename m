@@ -1,55 +1,55 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A768034DB7F
-	for <linux-perf-users@vger.kernel.org>; Tue, 11 Nov 2025 04:04:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7C334DCF4
+	for <linux-perf-users@vger.kernel.org>; Tue, 11 Nov 2025 04:04:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762833898; cv=none; b=VTlYuVKgOL3uy66UPh/iYhFT4MI+sJpX7ngsSibuAA0khv8wsPYs0IXze8sSH6ZsLIhF3+Xhp2uwSCRDVx5ES1eO3GEAKhYIs8Df2khB5kfWghJ2Qj0ouX1p6EnYeS9QpCOoDKviBMbvGudL+KRsHia1uChboXoQ8wi+UFAnxcA=
+	t=1762833900; cv=none; b=BZHW7Xb2hYNvaUYMrU0ywbB+yeMRl5gnndx5splp4kXVAq+huDSvQTsscVIbMD1zzE3gvkZ+IpNWfMaDS4SJLmHByhsoBI1ezKTclEi81VX8rt0S+9TrxMbnM7/8yN7WY38v1vwx4rivnw9a5qwf9p4PlgNSa/Ve5YyrOGpOGL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762833898; c=relaxed/simple;
-	bh=LLn9FDAlPcwSWZjUFvp9EB4XY1jJAmyC35CaM/eue2A=;
+	s=arc-20240116; t=1762833900; c=relaxed/simple;
+	bh=sWmDIev9bpAFqHQEit38MtJHcI5r4PnZTO5Rq4PESvU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=a7WfztanP8d8naEce28vEoaGsJ8v4HueFyaKa3O5orQcis3C3UVuvYeeJtYuQYM/WEQ/qxsv/fwJPOvPZzvkEnacvT8upOZLqpqGeB/CbRViSgIx4wmKX7sjMshADblJe+IQHIhDvbogxzbjvoHdBzPnp6pZ8sfabs/rqeZlRH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Xbx1Ui41; arc=none smtp.client-ip=209.85.216.73
+	 To:Content-Type; b=pXOCeHj44tKzrhWfecyBv5dndfTcMbIpRTJtkm4S6pJP2deonnZn41xXceKD5KQO21cKXyVrj4zXrR+gF7TedZIARE8Lb2TPgz8f5WYaiNPFpw09RoA0RwN4+GyIRzfOAGvOHADOWXaQX9Y8+MiV/fAzkF/WRveGyVpwqH5jVQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TOJjg4s2; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xbx1Ui41"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3407734d98bso4943187a91.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Nov 2025 20:04:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TOJjg4s2"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-295592eb5dbso34303015ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Nov 2025 20:04:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762833896; x=1763438696; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1762833898; x=1763438698; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=5Et4hjqXaxJjcCbzTA1Cjej6Oy43GlvxgQk6XgvQSd0=;
-        b=Xbx1Ui41dRNN7nunAER/3qwKYd9Z8U9S5EE6pnP2LTyMEkYcn4Wx7uOZsHWu3J7Suh
-         GYr/OcWmoId7WFFP9qbbDMT/hAZHZ1IGf5D77dOkzasaLTXRPgb2BCUWHn98xomb3yY5
-         UI02dJBU6I8ogRxKdosCaZ/D5P5dhNR5og8IwnjJG6fR96KEzPWVECq1C39ifrgVzfOr
-         SX6DcozH1YLuTNnly4wX4FpnDUZpoh6Byqh64jQUllmUpkFdf0OcYkomCUvp8A0ratIR
-         g4EzObhm0BcHI74DDixZ4uZbtanutLch8r3zx848u/SwtR1jcZN9htCoYPUhQ6ajDXDQ
-         07mQ==
+        bh=9rrubnbGxO/GZTc54MaEZH3FM5tqPTfV8BFx99302Q0=;
+        b=TOJjg4s2uUYgXGYo57ZGDTu+pwW+z8Wb52s2YHvyROvAMg1XM+DUW6IFpMMhqtrEbT
+         b24oVaLLjP8pRlgBxbtO1heHthVgZ89m7+lOm4+ULVjQeesW3vYfx25uOv6cZ8ZfOKbU
+         2XVBXN0aFFw1ZRWIYNpwU52YbMAhVSsK8p1t/08zvzENk3nBYlJyjBCDaUX3/U1mU2gg
+         Dbq8yJHWkuPvHsF5303wM2ut8fHnJMSwAyM5hc941XpHqyPzVDbOaJk8Pi3xF7Yi4H5H
+         ZdtPEVTNnA9xHBMZX9nu73fN14Bfy7uwO2LJ2fMdvH7g3bCY8bnvBWdK3tKaV7aCLFPF
+         jt/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762833896; x=1763438696;
+        d=1e100.net; s=20230601; t=1762833898; x=1763438698;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Et4hjqXaxJjcCbzTA1Cjej6Oy43GlvxgQk6XgvQSd0=;
-        b=XliUrDo8+QN5t8axZFmO7gVZJdgBwIe9/74wG8XPrkC7WxHWC2nPYPEHFeern6D77+
-         toR+QL5MeMQvDnqAjgWz7hscQRPreaAB4EU11fGCs4i1OTgngfyJkymvuoRHPWnr7UIJ
-         2lz6eShpsvY8DDNcWaCruG0Ij2/xtqOzE2ntHZdG1/U5s6xYMUfQYDsISbP/ad6XWDTx
-         p7kxGATBguw9wR2j7Vla9P6g7md5Tx2OAyJQSWJLbp0cbYUEubKO+uNHNUxt/yNmUL5Q
-         lzalo1qQz3jqB134ySQnFpTTxpfG0JeUAaoUMzvK3Wh/dLc6Pl9FNBXptcQupQGENu1m
-         LCTA==
-X-Forwarded-Encrypted: i=1; AJvYcCXLKKPsPtXXcPo1Tlu8i4czi7FDwONPh7jfB+FJoT2wRcrcNg8n8x+Z/0Cc0b97x8N2xpuXgMFAmSaoNM7+GzYB@vger.kernel.org
-X-Gm-Message-State: AOJu0YyA2JIvTlNnU5KOCwHPQEEo8hCNtyv+ePBN2gUWXtH2KZ+xrYBB
-	7jUmKC1VDj7rEGxqUUFoXy9hsoV7r3ohNDKUUvyUpQ39ogrwGL73Zc+StOLfjOFIzIyXg2qF8V6
-	WHvNQjmkKCA==
-X-Google-Smtp-Source: AGHT+IGn0tBeyvmCXlP0g5sTiUGrIOYaiPwsUS9X8uiEM3cJe2lhyUnPrjTMn+mtiKy1m8WpFhJu4/X5j5P7
-X-Received: from dlbbo21.prod.google.com ([2002:a05:7022:4395:b0:119:78ff:fe16])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1aad:b0:295:615d:f1d2
- with SMTP id d9443c01a7336-297e56ca36emr130639925ad.48.1762833895913; Mon, 10
- Nov 2025 20:04:55 -0800 (PST)
-Date: Mon, 10 Nov 2025 20:04:15 -0800
+        bh=9rrubnbGxO/GZTc54MaEZH3FM5tqPTfV8BFx99302Q0=;
+        b=gbXRS6b7Hdkd6pkRxOkXvuPBBCe3nlOER21MGP0jT3YEHj90v9d2H0xLD9xTaukNKm
+         IfjmwBP1JV5DiD7MnL6QNSEZJ4jPU7MUGEPkRUGSXOUpN7AoCGB7/7FsdhnmyskEt7iK
+         r1urENyUFZFyUZK6pB6Zv0SQuDSlr1eaM13x2G2WOnL5L8FB6uJggwYslARI2303f6Dx
+         MTHNqT0KUcyrjDdAv8iWqeo5EujlfAvT+Vd2eA9jFRm8eeWysBSv4TPS3h7T1EusFnGa
+         TmMCjUqSHL/NyLlP0GIQH1TjswKuCgCuFL+iJyXep0oY5/PfsMokbphimHNdwK+JRgVG
+         MXlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXMLpLoavwIAR2jEq1sy+SWjqIQRJx338HAhs5R5FPC4hwlDXzzvXrR0ueP2AbWdhqjVDbpgTm6cMT/oX1lzTGz@vger.kernel.org
+X-Gm-Message-State: AOJu0YypEJcjBAtTGd4NPPEMLd1drxi2fMRHe6Y4mdVhCyWKAiTaUiOp
+	3aa1l6SWKOwce2LNeBX9W9K0cWArdtnaJaRXhEe1OBZ7kNnpxnzYKZGtGY9NebzXhdOx4anpwG1
+	dW8xjsrlabw==
+X-Google-Smtp-Source: AGHT+IHBUjhm1HAHK4fknr5+U2WBmlW8IIK5MxW46rm68+SMCCxdxu4P7aNsuW9rnpZloIRA3zNCNzCWCDVW
+X-Received: from dyctx7.prod.google.com ([2002:a05:7301:5f87:b0:2a4:612e:b41f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:cf42:b0:248:ff5a:b768
+ with SMTP id d9443c01a7336-297e540d533mr131917455ad.10.1762833898118; Mon, 10
+ Nov 2025 20:04:58 -0800 (PST)
+Date: Mon, 10 Nov 2025 20:04:16 -0800
 In-Reply-To: <20251111040417.270945-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251111040417.270945-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.2.1041.gc1ab5b90ca-goog
-Message-ID: <20251111040417.270945-17-irogers@google.com>
-Subject: [PATCH v3 16/18] perf test stat: Update test expectations and events
+Message-ID: <20251111040417.270945-18-irogers@google.com>
+Subject: [PATCH v3 17/18] perf test stat csv: Update test expectations and events
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,49 +76,42 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Weilin Wang <weilin.wang@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-test_stat_record_report and test_stat_record_script used default
-output which triggers a bug when sending metrics. As this isn't
-relevant to the test switch to using named software events.
-
-Update the match in test_hybrid as the cycles event is now cpu-cycles
-to workaround potential ARM issues.
+Explicitly use a metric rather than implicitly expecting '-e
+instructions,cycles' to produce a metric. Use a metric with software
+events to make it more compatible.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/stat.sh | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/tests/shell/lib/stat_output.sh | 2 +-
+ tools/perf/tests/shell/stat+csv_output.sh | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
-index 8a100a7f2dc1..985adc02749e 100755
---- a/tools/perf/tests/shell/stat.sh
-+++ b/tools/perf/tests/shell/stat.sh
-@@ -18,7 +18,7 @@ test_default_stat() {
+diff --git a/tools/perf/tests/shell/lib/stat_output.sh b/tools/perf/tests/shell/lib/stat_output.sh
+index c2ec7881ec1d..3c36e80fe422 100644
+--- a/tools/perf/tests/shell/lib/stat_output.sh
++++ b/tools/perf/tests/shell/lib/stat_output.sh
+@@ -156,7 +156,7 @@ check_metric_only()
+ 		echo "[Skip] CPU-measurement counter facility not installed"
+ 		return
+ 	fi
+-	perf stat --metric-only $2 -e instructions,cycles true
++	perf stat --metric-only $2 -M page_faults_per_second true
+ 	commachecker --metric-only
+ 	echo "[Success]"
+ }
+diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
+index 7a6f6e177402..cd6fff597091 100755
+--- a/tools/perf/tests/shell/stat+csv_output.sh
++++ b/tools/perf/tests/shell/stat+csv_output.sh
+@@ -44,7 +44,7 @@ function commachecker()
+ 	;; "--per-die")		exp=8
+ 	;; "--per-cluster")	exp=8
+ 	;; "--per-cache")	exp=8
+-	;; "--metric-only")	exp=2
++	;; "--metric-only")	exp=1
+ 	esac
  
- test_stat_record_report() {
-   echo "stat record and report test"
--  if ! perf stat record -o - true | perf stat report -i - 2>&1 | \
-+  if ! perf stat record -e task-clock -o - true | perf stat report -i - 2>&1 | \
-     grep -E -q "Performance counter stats for 'pipe':"
-   then
-     echo "stat record and report test [Failed]"
-@@ -30,7 +30,7 @@ test_stat_record_report() {
- 
- test_stat_record_script() {
-   echo "stat record and script test"
--  if ! perf stat record -o - true | perf script -i - 2>&1 | \
-+  if ! perf stat record -e task-clock -o - true | perf script -i - 2>&1 | \
-     grep -E -q "CPU[[:space:]]+THREAD[[:space:]]+VAL[[:space:]]+ENA[[:space:]]+RUN[[:space:]]+TIME[[:space:]]+EVENT"
-   then
-     echo "stat record and script test [Failed]"
-@@ -196,7 +196,7 @@ test_hybrid() {
-   fi
- 
-   # Run default Perf stat
--  cycles_events=$(perf stat -- true 2>&1 | grep -E "/cycles/[uH]*|  cycles[:uH]*  " -c)
-+  cycles_events=$(perf stat -a -- sleep 0.1 2>&1 | grep -E "/cpu-cycles/[uH]*|  cpu-cycles[:uH]*  " -c)
- 
-   # The expectation is that default output will have a cycles events on each
-   # hybrid PMU. In situations with no cycles PMU events, like virtualized, this
+ 	while read line
 -- 
 2.51.2.1041.gc1ab5b90ca-goog
 
