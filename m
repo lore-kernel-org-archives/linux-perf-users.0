@@ -1,55 +1,55 @@
 Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D059534B68F
-	for <linux-perf-users@vger.kernel.org>; Tue, 11 Nov 2025 04:04:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B652734B68F
+	for <linux-perf-users@vger.kernel.org>; Tue, 11 Nov 2025 04:04:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762833892; cv=none; b=YvzJqJvonICf95T+OA14cd+h8Vak4XR2vRQEbTtf6jztPL7BRnLw81TrlDUYa1YamOKK8WTcAVDl1r/BOszdOwMij57ok3fN4fUzQO1Zoay7kX7XFJu1A1G9SPiJyc+Kurc4pOjMxlkV6mRTx65PN4Lm97WJSeAxDlcnDQbuj1c=
+	t=1762833894; cv=none; b=ge54BfBdbp2Ogr10dQ/2EBPt3f5A8fbzdbkGaGSzaUfQMDFKPFhJ2AH940WuLgG57IO1F3lJNEAVTW+I1un7JVT8IZ1ZE8dHIXIT9P6z89PBlGHhqoMLYRcvBK7oO6J2wHm1v6LBflsliCEYJ0yV3jrrH1fmvxTxaBVABTWg5mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762833892; c=relaxed/simple;
-	bh=7NP/VCWcDtaQ9ddY1vDzUSspDiDop3c4KIH6lorm7/g=;
+	s=arc-20240116; t=1762833894; c=relaxed/simple;
+	bh=bWlWZmoSbjMlQJvhT1Kc+8bbCD51npTRBtHHE+YWJoI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=hTKqtoy4l6jBceVfaFc5UEaiqovv/7vB/pQo4M5wDJHgfF0K6XVmv5AuQnRFSPVK6y9UE7MNHU+CPHpwV8LYxa0y7V1CBh6lDdrcm2I1z4kSlWIsMh9Y995Vdx+ALu2PQvpVVuOFM6pBkb3GT7hozoErMpJRF34OIxl3+311XUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kt9tyjrP; arc=none smtp.client-ip=209.85.214.201
+	 To:Content-Type; b=qIMCvRpjuxbYy7z4V/bD8yzYRAJ8TKhBR0BL4OVk5/DRGBcwf3U/5e3IWRvEriJTY/Bfe44KuyLuRrNzEuquEJrm5EuhmcYdaWw+MPH5xHbvf3VcLdQQ88hd3Y2egRZjTlLxWFBhuikx2DvsWO5T2HYSX53GJVVGUhAM1rpuXfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aelZsAfp; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kt9tyjrP"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2982dec5ccbso32107825ad.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Nov 2025 20:04:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aelZsAfp"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-297df52c960so74287875ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Nov 2025 20:04:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762833890; x=1763438690; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1762833892; x=1763438692; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=bf2tG0VSbGuTREXl21iJqSVPQmFIFuxPe8RAulQFiSU=;
-        b=kt9tyjrP4hZkDeoWC7TBY4nQAe1Pt2atieP+gx/2kh12misHkMrsy7YOm+Iygmlb12
-         B8t29ODOvvhV9CadZcrQr3SRw67fowUXo2B3sr6WJO7eamy2zhYEwd9BmMCTxXhjG8H8
-         O2jWyWQ1FZiH5ZqrCPUnKNzGT3MHNDJrYvKesrxdqZ3LrQojyPeB5zYKwCOEbocmeZSS
-         M2FkChLNhnG8J/ewKI7s5cI09unqX+KLIH/TilFTGXAKJR5SPvUohiQpPQJPiEiUEYoZ
-         XFv1WIS4S+FQIwwdp0nXWIY1NZhR1KlrNamGzw59QiMVPfsCInjQgYczT4RC0COOzb2i
-         fT0g==
+        bh=ja604hKaX8qDrZr8dkd1ADzyH8Os+oHlUQ1fcptNWsg=;
+        b=aelZsAfpOM3JxfqCQ/zPPvgLAjX2plnqRxNhPoYwHz2KsxCR3s5f2uu2afV3X7n7yi
+         ee5vaZwb4zBKcLTeaBDHqjU1zTBxa3WFdGISgPuY/VsHyV5TzcXCdENKdpzM/njbtbqF
+         RD5GvkdvF8otfYAB+Dhv+iI0YhnkJoUwkd/BiE/4z0LrUYr1I0pcwArcnALBnOm7Tv78
+         6G2ezJpd6xo3wYaKSgJun16QASLJna6MV/wcW7NBra0Iw6LEPnRzde0kguiiS2dj0FyF
+         2suU7KwwvnMG+SDyqBX81dJTMn1/FZzn2fBVoY1FnlsCiazqGXj1yBh7eEn83AqRq/xx
+         OK3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762833890; x=1763438690;
+        d=1e100.net; s=20230601; t=1762833892; x=1763438692;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bf2tG0VSbGuTREXl21iJqSVPQmFIFuxPe8RAulQFiSU=;
-        b=MFYgRtLVpwR2Go1bDC2+mVBEIzJKDcQUIrHTTMHfmWqhyDq9sq7c0P6pfMqGGt2zQO
-         BXiL83Cw7KAyadvwysSJ5elFAQBtOgK02MDMxrUiMrYCPi0i/ZQie0Olr17tAcT438JE
-         elJfVniBy4hig7hzYUb+MPSeo9MADs4Me/0NDZluqgKrjq/R865AgHyE3ve9LzMk5XRZ
-         aQLxjpbWibNQAzKS7tlHkYkXbl7ZzsntZpiCeBOjze50p1CJPFNrRZXQq5AnyRUOKHel
-         BaQTpCBUVkCRpeTOIiiobPxO/12e3BCHmd1GrkUSrxWXVhsHxCkSmEH6pWXAApiUMaGO
-         fxhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXZ0GEsPg9oyfLOegBr5NVHzW9RByTLJhm3LA4WcuVg4yGHb7WbxxabmYimAwhBpWnco85Q0Map3PrGmQ+iyYHv@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXzyCwOfN5/1XD3yUhUcftHfYO6Nru1f+HCY3iCu3hgERRLLPB
-	9j/W9tqzUvnrdQGWT/t1hKSLALtS3NyfT0UZuum3kLCVnqVIljy4swKDoVkHVqTzwKHfhaK6srg
-	8xu9AZTSPYA==
-X-Google-Smtp-Source: AGHT+IF0XIujBIQ4BHEF6rVrrs4Ei1rf7m9r0QAR9t7GsRl8tXu89zXHQL+Hk/jzWA/cU46Hzzz7xVolj7+P
-X-Received: from dlbrf23.prod.google.com ([2002:a05:7022:f217:b0:119:49ca:6b87])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:19c8:b0:295:fdc2:1f52
- with SMTP id d9443c01a7336-297e5625cf9mr142122905ad.14.1762833890175; Mon, 10
- Nov 2025 20:04:50 -0800 (PST)
-Date: Mon, 10 Nov 2025 20:04:12 -0800
+        bh=ja604hKaX8qDrZr8dkd1ADzyH8Os+oHlUQ1fcptNWsg=;
+        b=hibtRqwlwh1ADgKfngJZP4uWc8zi8ik9X0ub9kblEGqycUd6sIngtujJU5ZHoyYO/s
+         DpkjiqEu366cW8UfW+bTwvk2jS0yFaMxBaIH3nUyp80ZZXYEk07W+0z6Pr7jqZGmePju
+         ZclpxR1MZ96MTbLprMgqXqXtI+vE/SuWGUYaVJQU6yNoLS38Myd/+tSe7PapqcSz9Ile
+         D+rp7+SI42yHjYYddeGVPJQJyThmZZsk+eeOsk8GdmjV10Y4aMi0CUhu9nZAYGHUCjhf
+         0sO8qRIk9CsGTBl6WDnUbLJdewc4HI6mSHYtsVmFzth2BWC59KHorhwaIrT8clSWb9Gw
+         B9zQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUvGJHu8DNvRigHmZSV+LVGDOBT/lAALC+s2735zJLhRZ4MbvT4KrextGccVmmeMFwCGY0ZuRhFrLV6JZAzfjFo@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2Jm9RpSdm8xt0o79D+D9LG6Ycrs5bJ/YyhpDxTIoWAm/03mVy
+	zDHW/EUkrn82QHEIbQNCr5J2Ch1nn8tVOddGTqoS6V1xm1hdmYtbVLNOT4bKt5Ad/Nlko5joz+6
+	2wgWDqgZQjw==
+X-Google-Smtp-Source: AGHT+IErWkHeqed2GrqiOy88wuRY0tqtNPYJOqc0LJ1kt+lmnAJczl2sta01fh79caMHsqjCpCPCmGcxFpwB
+X-Received: from dybpf10.prod.google.com ([2002:a05:7301:410a:b0:2a4:6c32:42a2])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d485:b0:294:f310:5218
+ with SMTP id d9443c01a7336-297e4be8af6mr152083305ad.0.1762833891972; Mon, 10
+ Nov 2025 20:04:51 -0800 (PST)
+Date: Mon, 10 Nov 2025 20:04:13 -0800
 In-Reply-To: <20251111040417.270945-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251111040417.270945-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.2.1041.gc1ab5b90ca-goog
-Message-ID: <20251111040417.270945-14-irogers@google.com>
-Subject: [PATCH v3 13/18] perf test stat: Update std_output testing metric expectations
+Message-ID: <20251111040417.270945-15-irogers@google.com>
+Subject: [PATCH v3 14/18] perf test metrics: Update all metrics for possibly
+ failing default metrics
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,29 +77,33 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Weilin Wang <weilin.wang@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Make the expectations match json metrics rather than the previous hard
-coded ones.
+Default metrics may use unsupported events and be ignored. These
+metrics shouldn't cause metric testing to fail.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/stat+std_output.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/tests/shell/stat_all_metrics.sh | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/stat+std_output.sh b/tools/perf/tests/shell/stat+std_output.sh
-index ec41f24299d9..9c4b92ecf448 100755
---- a/tools/perf/tests/shell/stat+std_output.sh
-+++ b/tools/perf/tests/shell/stat+std_output.sh
-@@ -12,8 +12,8 @@ set -e
- stat_output=$(mktemp /tmp/__perf_test.stat_output.std.XXXXX)
- 
- event_name=(cpu-clock task-clock context-switches cpu-migrations page-faults stalled-cycles-frontend stalled-cycles-backend cycles instructions branches branch-misses)
--event_metric=("CPUs utilized" "CPUs utilized" "/sec" "/sec" "/sec" "frontend cycles idle" "backend cycles idle" "GHz" "insn per cycle" "/sec" "of all branches")
--skip_metric=("stalled cycles per insn" "tma_" "retiring" "frontend_bound" "bad_speculation" "backend_bound" "TopdownL1" "percent of slots")
-+event_metric=("CPUs_utilized" "CPUs_utilized" "cs/sec" "migrations/sec" "faults/sec" "frontend_cycles_idle" "backend_cycles_idle" "GHz" "insn_per_cycle" "/sec" "branch_miss_rate")
-+skip_metric=("tma_" "TopdownL1")
- 
- cleanup() {
-   rm -f "${stat_output}"
+diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
+index 6fa585a1e34c..a7edf01b3943 100755
+--- a/tools/perf/tests/shell/stat_all_metrics.sh
++++ b/tools/perf/tests/shell/stat_all_metrics.sh
+@@ -25,8 +25,13 @@ for m in $(perf list --raw-dump metrics); do
+     # No error result and metric shown.
+     continue
+   fi
+-  if [[ "$result" =~ "Cannot resolve IDs for" ]]
++  if [[ "$result" =~ "Cannot resolve IDs for" || "$result" =~ "No supported events found" ]]
+   then
++    if [[ "$m" == @(l1_prefetch_miss_rate|stalled_cycles_per_instruction) ]]
++    then
++      # Default metrics that may use unsupported events.
++      continue
++    fi
+     echo "Metric contains missing events"
+     echo $result
+     err=1 # Fail
 -- 
 2.51.2.1041.gc1ab5b90ca-goog
 
