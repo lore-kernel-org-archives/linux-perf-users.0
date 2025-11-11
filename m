@@ -1,166 +1,272 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0645E341AC6
-	for <linux-perf-users@vger.kernel.org>; Tue, 11 Nov 2025 07:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D51F248893;
+	Tue, 11 Nov 2025 07:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762846541; cv=none; b=ml7tkqtvlBOKhvKhKnpW3kV/h9gg79ji5BJMQS/ZBZhGnvSRov7PMVdpMatZdfCzvLwqXb0MuCmvhoG2I+mqqknnB8kzJkq/sntCvqstAbQ0nHur8lOd9H7r9UpvIlc4Q05hpnE6pE++sRkgDj8ePMgO9x76CbTsVx5kc5nJK98=
+	t=1762847444; cv=none; b=ooqpIbfn+dopO4xspWZi99IRibBSygcc0H1TMNyhdXSGP2aoOqHtcJ28eOwbHVnDQb9o616Ik3u1oFzBTRBuHrhvdqgCmd3O/WDDEHPio0C8PBYE8auno2YEQYe6ZArCahGSX3NCM2s45SRo9M4mKxBjCkMT2+TU8DelHZKt6N8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762846541; c=relaxed/simple;
-	bh=TXw2u5rDDypAuPP/PEkhaT2sUClVbxjCMBkI2ULXV/E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hOyKPm2Sy7Dckbof+1Xb8N55psbTZzS+M9CXT3Pt+DhvAUzrkoU4N64OpunlKbvGt7AQgq0TSABIFJo6E1suqa9n6B9/EK6KQgWeejnerR8q81i8oq7Fs4CsnSk4Me7+f/MmDI+kfsClbDoMHTc9UrLrvJJm5rMBIxzJAU9AYs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Nsk5NZQM; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1762847444; c=relaxed/simple;
+	bh=vuMoVFupSHUXBD5TFPvCPtN11RLcSgDHxZIZzswyRt4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=maW6/tpSDFGeHIcVfGyxQmGmdyZJBzSO0hKKfwaqgUzVsMUYiXf9A15QqsCYIghU/g0FMb7V37bQcBrb0ZdPkP+rx6KBX0TmOydqo5orcZE9r6Jve8n2r3shVcPSN8M4QLfk5kei75ZK7mTWLZk958p7lbFF0XJQlmTDX0oVC3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O19bfxZN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Nsk5NZQM"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b62e7221351so3242092a12.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Nov 2025 23:35:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1762846539; x=1763451339; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dOOlaVy/20CIon+tjXLAyji+6ZbQKD+NsElw/LVQ6M4=;
-        b=Nsk5NZQMIAtTqaGJT8qrDL3svqUHfaFKEvwVZudVvrqD4K80BApHQIh5EKsi7W5fvp
-         4DwJ5Szs4NEBylUTAWZ94ibBwQmtcKj7TeCU1dvQqcJkBf+GQjWQ3XZ9LRsmY1YiLT7h
-         CftIzSr4fIqj1BVA+SRFWLSZN58aSu/geI65Oaz3+qCYMOWtjZOaBZu11nxBN6yXGcXp
-         AKxrunIW/U1gDj/nwb9JHU0swb8XANRxn/ZK076YVwUDcL57l0eCMuGojlxjXdW/zabh
-         /1jAB4rXiTU+bjogG7ZwyzET4+dK3fpDhO20RaKiw7jam9RxnwcJk3dnvZg2YrXAzGDX
-         QkBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762846539; x=1763451339;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=dOOlaVy/20CIon+tjXLAyji+6ZbQKD+NsElw/LVQ6M4=;
-        b=o1QetZzXlobPNzZzT50PsC8gr0izzaa9vCE8c9KoTBmxbygxr8t6xCKV1NqIgV8bKh
-         xml1mxpB54LydjqIOoxLTYMIrjSKbYN7trwBEkFdch5N6GQOzjI2ge7K9qOjiqDXz0V1
-         f5X2e8QCIdT9xM0XdhHXhVYL7J9dZCGMKzgkcwrC3qIUs2zygixPKPzErM3eML60TVYx
-         1c7IHH2pUzZfyocf3jMZwItob+s8dwhcBgMUnlov3hhcR8nEIXEmS5AHp4/p9IczdkPv
-         PmPBAEkiPapvxUsCCBgcxzjvFq4lV09mCHd5+ioBG9izqfW3S8WY30Rc7oSCm6gDrbO+
-         7YGg==
-X-Forwarded-Encrypted: i=1; AJvYcCVkW3b/ZFJDGCuiBR6U37Ehuq5pFD9cFzOc4Bhnbijwebs/HNK1J/D++g5HtoMi0+HKOr6SE4TXO0FlO6eSGKs7@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCQ0VNKdJ8HUMmqqSMdieajraIVgJznKPoix8IU8u/xGCd/BnX
-	WP++T/X8hJu4tZscyK9bweJ4Y7FN1RF4oTJncJavSrTXHkQg5JhdCqFrUQr+ycqWl/c=
-X-Gm-Gg: ASbGnct4s2Z36w8U0Sih3wUKZq/QqssEgXBjnMV/6Pcoysr5TrH0kCpv3Aty4g6VUUd
-	KMQk9jCTFoobtJfmZBy8s9WGALSjIiHl7XBG65jtWt6LUpNsWh7r+/ky1lZq+3sLl+/+wu3eq8h
-	4jOU0V++upmFWQX4q+WgBP2HC3/Rw8dw3va0YGXmFfesZJiRwnXIl/3p3dbR20FNXpqnBJqZU1e
-	u066X0HeS3SPX8qsNlVMBMs/RDRplnVt56nj4vCLmFHpxHQcgVKa7uLAtNu8GbcKU/my3ohrX1d
-	shfZJBNpzIdHPnuTE53l4ru0e4cYEMWjpI0/ZPfLXQwX201UR8YtYogmE/ZhRjW62+RHZowM5/5
-	LjhT8rx5/fjmHBmwmF8dxWxWL3xV/xG1afYP0A/eCLweT3QCkxzfbiJyZxJJHVisf60ALriurEe
-	wlIy4H8p4tzdLR1eB6Uz0aZ9Z/dHYulWaNxHNnnC/ouA==
-X-Google-Smtp-Source: AGHT+IEUw+72YJMnHDr6LbdwL+uWXqhzBDVKr1Hy8+90WDm/+ZatB8gHaR6Ah1I0Nw0KhXzjZnlq6Q==
-X-Received: by 2002:a17:902:e545:b0:26a:8171:dafa with SMTP id d9443c01a7336-297e564cef9mr165530405ad.21.1762846539211;
-        Mon, 10 Nov 2025 23:35:39 -0800 (PST)
-Received: from L6YN4KR4K9.bytedance.net ([61.213.176.12])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29651c94abasm172928885ad.82.2025.11.10.23.35.31
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 10 Nov 2025 23:35:38 -0800 (PST)
-From: Yunhui Cui <cuiyunhui@bytedance.com>
-To: akpm@linux-foundation.org,
-	alex@ghiti.fr,
-	anup@brainfault.org,
-	aou@eecs.berkeley.edu,
-	atish.patra@linux.dev,
-	catalin.marinas@arm.com,
-	cuiyunhui@bytedance.com,
-	dianders@chromium.org,
-	johannes@sipsolutions.net,
-	lihuafei1@huawei.com,
-	mark.rutland@arm.com,
-	masahiroy@kernel.org,
-	maz@kernel.org,
-	mingo@kernel.org,
-	nicolas.schier@linux.dev,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	suzuki.poulose@arm.com,
-	thorsten.blum@linux.dev,
-	wangjinchao600@gmail.com,
-	will@kernel.org,
-	yangyicong@hisilicon.com,
-	zhanjie9@hisilicon.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Cc: Paul Walmsley <pjw@kernel.org>
-Subject: [PATCH v5 2/2] riscv: add HARDLOCKUP_DETECTOR_PERF support
-Date: Tue, 11 Nov 2025 15:34:59 +0800
-Message-Id: <20251111073459.44030-3-cuiyunhui@bytedance.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
-In-Reply-To: <20251111073459.44030-1-cuiyunhui@bytedance.com>
-References: <20251111073459.44030-1-cuiyunhui@bytedance.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O19bfxZN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C73D0C4CEF7;
+	Tue, 11 Nov 2025 07:50:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762847444;
+	bh=vuMoVFupSHUXBD5TFPvCPtN11RLcSgDHxZIZzswyRt4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O19bfxZNNVrd5ELG/pnDdjCFq+LqYP3lj7A4ofMnvlikXNNd/ySxECqqKiX2IxgiE
+	 2AmvRgcVJoiBJ6VMGHma43EsnRs7IkZRwJhoxAf1lNBQSUs8R7+5rneGG7lAhDzRVy
+	 appYI+1o8wzbiDdB4mDXXxYfbR187dDjHh3Hhjx+Fh60MF/DaQHoJhK3pouVhtGim6
+	 /QRTDmE215rrddJ7X4ByDCle9y97at+blqgiaigArzJ+wh3B8xnSBkct5YTaTVFhpU
+	 0/7LE8q7QYWQQkI4N9c89dar4JGCn23nidg4NmxeUvCzfblkrFVHt0brnwfQOWazq1
+	 VtGN000Iax5JQ==
+Date: Mon, 10 Nov 2025 23:50:42 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: "Chen, Zide" <zide.chen@intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	thomas.falcon@intel.com, dapeng1.mi@linux.intel.com,
+	xudong.hao@intel.com
+Subject: Re: [PATCH] perf tools: Refactor precise_ip fallback logic
+Message-ID: <aRLq0isFxDJlsHlL@google.com>
+References: <aPrktlANBHFtV52B@google.com>
+ <576a7d2b-0a82-4738-8b86-507e4d841524@intel.com>
+ <aP1ucJiJYBavTHV7@google.com>
+ <e10d671a-eb89-4e06-a1eb-e2f12ee41d70@intel.com>
+ <aQl3qfyTdAb68l1l@google.com>
+ <652bf158-ba9e-4a97-b4c3-3a7f7e39fe85@intel.com>
+ <aQzugcpRvOcPEEro@google.com>
+ <5f84fe4f-90ef-42d6-8a3a-c1f515a7832a@intel.com>
+ <aQ5n4ML9lxY4VAxi@google.com>
+ <eb41cde1-9611-4998-a82f-5d6efb80b0d1@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <eb41cde1-9611-4998-a82f-5d6efb80b0d1@intel.com>
 
-Enable the HARDLOCKUP_DETECTOR_PERF function based on RISC-V SSE.
+On Fri, Nov 07, 2025 at 02:31:23PM -0800, Chen, Zide wrote:
+> 
+> 
+> On 11/7/2025 1:42 PM, Namhyung Kim wrote:
+> > On Thu, Nov 06, 2025 at 05:23:09PM -0800, Chen, Zide wrote:
+> >>
+> >>
+> >> On 11/6/2025 10:52 AM, Namhyung Kim wrote:
+> >>> On Tue, Nov 04, 2025 at 11:10:44AM -0800, Chen, Zide wrote:
+> >>>>
+> >>>>
+> >>>> On 11/3/2025 7:48 PM, Namhyung Kim wrote:
+> >>>>> Hello,
+> >>>>>
+> >>>>> Sorry for the delay.
+> >>>>>
+> >>>>> On Mon, Oct 27, 2025 at 11:56:52AM -0700, Chen, Zide wrote:
+> >>>>>>
+> >>>>>>
+> >>>>>> On 10/25/2025 5:42 PM, Namhyung Kim wrote:
+> >>>>>>> On Fri, Oct 24, 2025 at 11:03:17AM -0700, Chen, Zide wrote:
+> >>>>>>>>
+> >>>>>>>>
+> >>>>>>>> On 10/23/2025 7:30 PM, Namhyung Kim wrote:
+> >>>>>>>>> Hello,
+> >>>>>>>>>
+> >>>>>>>>> On Wed, Oct 22, 2025 at 03:08:02PM -0700, Zide Chen wrote:
+> >>>>>>>>>> Commit c33aea446bf555ab ("perf tools: Fix precise_ip fallback logic")
+> >>>>>>>>>> unconditionally called the precise_ip fallback and moved it after the
+> >>>>>>>>>> missing-feature checks so that it could handle EINVAL as well.
+> >>>>>>>>>>
+> >>>>>>>>>> However, this introduced an issue: after disabling missing features,
+> >>>>>>>>>> the event could fail to open, which makes the subsequent precise_ip
+> >>>>>>>>>> fallback useless since it will always fail.
+> >>>>>>>>>>
+> >>>>>>>>>> For example, run the following command on Intel SPR:
+> >>>>>>>>>>
+> >>>>>>>>>> $ perf record -e '{cpu/mem-loads-aux/S,cpu/mem-loads,ldlat=3/PS}' -- ls
+> >>>>>>>>>>
+> >>>>>>>>>> Opening the event "cpu/mem-loads,ldlat=3/PS" returns EINVAL when
+> >>>>>>>>>> precise_ip == 3. It then sets attr.inherit = false, which triggers a
+> >>>>>>>>>
+> >>>>>>>>> I'm curious about this part.  Why the kernel set 'inherit = false'?  IOW
+> >>>>>>>>> how did the leader event (mem-loads-aux) succeed with inherit = true
+> >>>>>>>>> then?
+> >>>>>>>>
+> >>>>>>>> Initially, the inherit = true for both the group leader
+> >>>>>>>> (cpu/mem-loads-aux/S) and the event in question (cpu/mem-loads,ldlat=3/PS).
+> >>>>>>>>
+> >>>>>>>> When the second event fails with EINVAL, the current logic calls
+> >>>>>>>> evsel__detect_missing_features() first. Since this is a PERF_SAMPLE_READ
+> >>>>>>>> event, the inherit attribute falls back to false, according to the
+> >>>>>>>> fallback order implemented in evsel__detect_missing_features().
+> >>>>>>>
+> >>>>>>> Right, that means the kernel doesn't support PERF_SAMPLE_READ with
+> >>>>>>> inherit = true.  How did the first event succeed to open then?
+> >>>>>>
+> >>>>>> The perf tool sets PERF_SAMPLE_TID for Inherit + PERF_SAMPLE_READ
+> >>>>>> events, as implemented in commit 90035d3cd876 ("tools/perf: Allow
+> >>>>>> inherit + PERF_SAMPLE_READ when opening event").
+> >>>>>>
+> >>>>>> Meanwhile, commit 7e8b255650fc ("perf: Support PERF_SAMPLE_READ with
+> >>>>>> inherit") rejects a perf event if has_inherit_and_sample_read(attr) is
+> >>>>>> true and PERF_SAMPLE_TID is not set in attr->sample_type.
+> >>>>>>
+> >>>>>> Therefore, the first event succeeded, while the one opened in
+> >>>>>> evsel__detect_missing_features() which doesn't have PERF_SAMPLE_TID failed.
+> >>>>>
+> >>>>> Why does the first succeed and the second fail?  Don't they have the
+> >>>>> same SAMPLE_READ and SAMPLE_TID + inherit flags?
+> >>>>
+> >>>> Sorry, my previous reply wasn’t entirely accurate. The first event
+> >>>> (cpu/mem-loads-aux/S) succeeds because it’s not a precise event
+> >>>> (precise_ip == 0).
+> >>>
+> >>> I'm not sure how it matters.  I've tested the same command line on SPR
+> >>> and got this message.  It says it failed to open because of inherit and
+> >>> SAMPE_READ.  It didn't have precise_ip too.
+> >>>
+> >>>   $ perf record -e cpu/mem-loads-aux/S -vv true |& less
+> >>>   ...
+> >>>   ------------------------------------------------------------
+> >>>   perf_event_attr:
+> >>>     type                             4 (cpu)
+> >>>     size                             136
+> >>>     config                           0x8203 (mem-loads-aux)
+> >>>     { sample_period, sample_freq }   4000
+> >>>     sample_type                      IP|TID|TIME|READ|ID|PERIOD
+> >>>     read_format                      ID|LOST
+> >>>     disabled                         1
+> >>>     inherit                          1
+> >>>     mmap                             1
+> >>>     comm                             1
+> >>>     freq                             1
+> >>>     enable_on_exec                   1
+> >>>     task                             1
+> >>>     sample_id_all                    1
+> >>>     mmap2                            1
+> >>>     comm_exec                        1
+> >>>     ksymbol                          1
+> >>>     bpf_event                        1
+> >>>   ------------------------------------------------------------
+> >>>   sys_perf_event_open: pid 1161023  cpu 0  group_fd -1  flags 0x8
+> >>>   sys_perf_event_open failed, error -22
+> >>>   Using PERF_SAMPLE_READ / :S modifier is not compatible with inherit, falling back to no-inherit.
+> >>>   ...
+> >>>
+> >>> And it fell back to no-inherit and succeeded.  
+> >>
+> >> On my SPR, with either kernel 6.18.0-rc4 or the older 6.17.0-rc6, my
+> >> test results are different from yours — I didn’t see any EINVAL, and
+> >> there was no fallback. :)
+> > 
+> > Yep, your kernel is recent and has the following commit.
+> > 
+> > 7e8b255650fcfa1d0 ("perf: Support PERF_SAMPLE_READ with inherit")
+> > 
+> > My kernel is 6.6 and it rejects such a combination.  I'll test it on
+> > newer kernels later.
+> > 
+> >>
+> >> It’s strange, but even so, since there’s no group leader in this case, I
+> >> assume that when it falls back to non-inherit, it should pass the
+> >> following check.
+> >>
+> >>         if (task && group_leader &&
+> >>             group_leader->attr.inherit != attr.inherit) {
+> >>                 err = -EINVAL;
+> >>                 goto err_task;
+> >>         }
+> >>
+> >>> I've also found that it
+> >>> worked even with precise_ip = 3.
+> >>>
+> >>>   $ perf record -e cpu/mem-loads-aux/PS -vv true |& less
+> >>>   ...
+> >>>   sys_perf_event_open: pid 1172834  cpu 0  group_fd -1  flags 0x8
+> >>>   sys_perf_event_open failed, error -22
+> >>>   Using PERF_SAMPLE_READ / :S modifier is not compatible with inherit, falling back to no-inherit.
+> >>>   ------------------------------------------------------------
+> >>>   perf_event_attr:
+> >>>     type                             4 (cpu)
+> >>>     size                             136
+> >>>     config                           0x8203 (mem-loads-aux)
+> >>>     { sample_period, sample_freq }   4000
+> >>>     sample_type                      IP|TID|TIME|READ|ID|PERIOD
+> >>>     read_format                      ID|LOST
+> >>>     disabled                         1
+> >>>     mmap                             1
+> >>>     comm                             1
+> >>>     freq                             1
+> >>>     enable_on_exec                   1
+> >>>     task                             1
+> >>>     precise_ip                       3         <<<---- here
+> >>>     sample_id_all                    1
+> >>>     mmap2                            1
+> >>>     comm_exec                        1
+> >>>     ksymbol                          1
+> >>>     bpf_event                        1
+> >>>   ------------------------------------------------------------
+> >>>   sys_perf_event_open: pid 1172834  cpu 0  group_fd -1  flags 0x8 = 4
+> >>>   ...
+> >>
+> >> Again, on my machine, I didn’t see EINVAL, and no fallback to
+> >> non-inherit. In my test, glc_get_event_constraints() successfully forces
+> >> this event (config == 0x8203) to fixed counter 0, so there’s no issue here.
+> > 
+> > That means your missing_features.inherit_sample_read should not be set.
+> > It's strange you have that with the recent kernels.
+> > 
+> > Can you run these commands and show the output here?
+> > 
+> >   $ perf record -e task-clock:S  true
+> >   $ perf evlist -v
+> 
+> On 6.18.0-rc4:
+> 
+> $ perf record -e task-clock:S  true
+> [ perf record: Woken up 2 times to write data ]
+> [ perf record: Captured and wrote 0.006 MB perf.data ]
+> 
+> $ perf evlist -v
+> task-clock:Su: type: 1 (PERF_TYPE_SOFTWARE), size: 136, config: 0x1
+> (PERF_COUNT_SW_TASK_CLOCK), { sample_period, sample_freq }: 4000,
+> sample_type: IP|TID|TIME|READ|ID|PERIOD, read_format: ID|LOST, disabled:
+> 1, inherit: 1, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, freq:
+> 1, enable_on_exec: 1, task: 1, sample_id_all: 1, mmap2: 1, comm_exec: 1,
+> ksymbol: 1, bpf_event: 1, build_id: 1
 
-Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Paul Walmsley <pjw@kernel.org>
----
- arch/riscv/Kconfig           |  3 +++
- drivers/perf/riscv_pmu_sbi.c | 10 ++++++++++
- 2 files changed, 13 insertions(+)
+Thanks for sharing this.  Yep, it has the inherit bit.
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index fadec20b87a8e..74835cdc89ddf 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -186,6 +186,9 @@ config RISCV
- 	select HAVE_PAGE_SIZE_4KB
- 	select HAVE_PCI
- 	select HAVE_PERF_EVENTS
-+	select HAVE_PERF_EVENTS_NMI if RISCV_PMU_SBI_SSE
-+	select HAVE_HARDLOCKUP_DETECTOR_PERF if PERF_EVENTS && HAVE_PERF_EVENTS_NMI
-+	select WATCHDOG_PERF_ADJUST_PERIOD if HARDLOCKUP_DETECTOR_PERF && CPU_FREQ
- 	select HAVE_PERF_REGS
- 	select HAVE_PERF_USER_STACK_DUMP
- 	select HAVE_POSIX_CPU_TIMERS_TASK_WORK
-diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-index c852f64a50221..0c7c5924687c9 100644
---- a/drivers/perf/riscv_pmu_sbi.c
-+++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -22,6 +22,7 @@
- #include <linux/sched/clock.h>
- #include <linux/soc/andes/irq.h>
- #include <linux/workqueue.h>
-+#include <linux/nmi.h>
- 
- #include <asm/errata_list.h>
- #include <asm/sbi.h>
-@@ -1192,6 +1193,13 @@ static int pmu_sbi_setup_sse(struct riscv_pmu *pmu)
- }
- #endif
- 
-+#ifdef CONFIG_HARDLOCKUP_DETECTOR_PERF
-+bool arch_perf_nmi_is_available(void)
-+{
-+	return IS_ENABLED(CONFIG_RISCV_PMU_SBI_SSE);
-+}
-+#endif
-+
- static int pmu_sbi_starting_cpu(unsigned int cpu, struct hlist_node *node)
- {
- 	struct riscv_pmu *pmu = hlist_entry_safe(node, struct riscv_pmu, node);
-@@ -1618,6 +1626,8 @@ static int __init pmu_sbi_devinit(void)
- 	/* Notify legacy implementation that SBI pmu is available*/
- 	riscv_pmu_legacy_skip_init();
- 
-+	lockup_detector_retry_init();
-+
- 	return ret;
- }
- device_initcall(pmu_sbi_devinit)
--- 
-2.39.5
+I think there's a bug in the missing feature test.  Indeed, it should
+also have PERF_SAMPLE_TID for the test according to the kernel comment.
+
+	/*
+	 * We do not support PERF_SAMPLE_READ on inherited events unless
+	 * PERF_SAMPLE_TID is also selected, which allows inherited events to
+	 * collect per-thread samples.
+	 * See perf_output_read().
+	 */
+	if (has_inherit_and_sample_read(attr) && !(attr->sample_type & PERF_SAMPLE_TID))
+		return ERR_PTR(-EINVAL);
+
+I'll send a patch soon.
+
+Thanks,
+Namhyung
 
