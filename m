@@ -1,226 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C3C2D2390;
-	Tue, 11 Nov 2025 22:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A1C1D90DF;
+	Tue, 11 Nov 2025 22:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762900933; cv=none; b=pzNVSwuHkp6PHQu558zrx9XArwoZZLN5Q7UYx2wnpQ9P7pH/H8OBDqqq4KY9h6Ru+mnbm0FQ0BAderq11D9Qy73rMvR0CmMvX+j3SzQhJGybxGuDxcXO45379oE9NJo7BSjv2kVHHtV/JjOx1WX9Fm0HeE/t3NeOPoH44V1Smww=
+	t=1762901370; cv=none; b=JQxm/qk/RAORyHh5QYRDza/0Z9AWkGztV3AeKu7qp1ukLEE+cU2YobDmR1kUufMcScG22fY+aVASRe2s/s15gAruilKdXvwDD7LjnU5VEgD4sa5SKWfO+myxjK1vgq+RqNKLL/nOnEbEl3spADa4NgumC4OUSSl+uONEZV9nHt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762900933; c=relaxed/simple;
-	bh=Lc9vhqqidLUUiVViFMCDBdY4ppWiVH0VoPoZ9DtU8aw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UFUTo6NrWx4K6Jn7gnjmEbQt4MgH/gLSTOAlWM/QHMk/SIE/gdElJSAGfJjLOgJZZpttilUDHN0CvU3n0fImYi3Y1Uq7Qmby4p08bubO7h2fNOl9WzJMFEbm2TpfQ0ywU/1ugN4PFfViZdC2qisvcE5oCUyqBifaBnFF7v6H/3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xnkqmh7V; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762901370; c=relaxed/simple;
+	bh=/fHUw/ANnosy7hAphJl/q9TvTk58/LAGaJ/yzGfpkOw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ec3MDdtzws5YNaRMulWgq1ZeUA6a29ayzzsuYKhRjM3UXl7MtMMsvnCVa0u/jg3n0eowbMVXI0NsiDQ1wlHUS32QkPAQqKJhCdfxuJYyJFVZCfJBrJvW3sNrh+VPVh+yxYN6CD8uewzMtIAx6te4q87QSmsOpHTAxg5f8Y7sAKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ij5J06Xp; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xnkqmh7V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56D8EC4CEF5;
-	Tue, 11 Nov 2025 22:42:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762900929;
-	bh=Lc9vhqqidLUUiVViFMCDBdY4ppWiVH0VoPoZ9DtU8aw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xnkqmh7Vdg5xjX4LAbdSu3EeRd/rn1Eo1xo/XIY+XZjkAhUj4p4h1g29BekPqUl1w
-	 I3MRupU0RubvZN/5IHKyJopF/AvuZBAR7efQDNktscKRPSygncjmry4hbzmYLle7uz
-	 z/8UYuDMBfbqLYpt9Mzxu+GpC1F8GHW9G3vBXhs5WhgHOHyW/r5EdZJDormvABzaKH
-	 egkFVW8oDvmFwnncKjLaIShMjR173Pq5MTPqQALIosy2JQi3+28bLCYe5vm88KzE12
-	 imzxqQWn4ltyHtu3nqGO1NzZ+xYMNQR6x0M2IK0vKchjmJOjsFQtgaFlaatqLoQ+n+
-	 sFMSTzEHV/q0w==
-Date: Tue, 11 Nov 2025 14:42:04 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ij5J06Xp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762901369; x=1794437369;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/fHUw/ANnosy7hAphJl/q9TvTk58/LAGaJ/yzGfpkOw=;
+  b=ij5J06Xp3vHkachmhwiT9P9E2p8xC/FP/Sf5tcpWZpiW7KT7byNFQDze
+   j5Ikl0FzxBIyQUwUkZjeCi7w8E3rDWg+8TbfESY0dwDRx4nB+NcO5TY93
+   AOxZP3GX8KWNv5hvQnG4gNYt347+9CS1tYi7DF6JOMDUl9sD37TZqqsFh
+   DmIM+uqeya7/hDxm5ZrD7qh64tgR5Y9aAFkpYN52W87Z0SyuMhXcrH+GB
+   iFxheB1i++v0RUOFl7inWj7j7BvtzHD6F1mqKiF4R5C+U4KJVm7ry3ZYt
+   xNXaZArSa8YwcjqszPW+CwV02EYVYTfVXyCTjmGUwEI0beRLvf7mYVmEo
+   g==;
+X-CSE-ConnectionGUID: F77s67gOQUC9nmtdI2oiLQ==
+X-CSE-MsgGUID: 04JlmyU5Shqs0NElzLp3tg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11610"; a="90435546"
+X-IronPort-AV: E=Sophos;i="6.19,297,1754982000"; 
+   d="scan'208";a="90435546"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 14:49:28 -0800
+X-CSE-ConnectionGUID: qJRHqiKTSOiUWwCaKbEdYg==
+X-CSE-MsgGUID: 81Btt+n+S6q67465fTl6TQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,297,1754982000"; 
+   d="scan'208";a="219791871"
+Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.43])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 14:49:27 -0800
+From: Zide Chen <zide.chen@intel.com>
+To: Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Sumanth Korikkar <sumanthk@linux.ibm.com>,
-	Collin Funk <collin.funk1@gmail.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Levi Yun <yeoreum.yun@arm.com>,
-	Yang Li <yang.lee@linux.alibaba.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-	Weilin Wang <weilin.wang@intel.com>
-Subject: Re: [PATCH v4 00/18]
-Message-ID: <aRO7vPpfuH7vzRg-@google.com>
-References: <20251111212206.631711-1-irogers@google.com>
+	Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	thomas.falcon@intel.com,
+	dapeng1.mi@linux.intel.com,
+	xudong.hao@intel.com,
+	Zide Chen <zide.chen@intel.com>
+Subject: [PATCH] perf test: Add a perf event fallback test
+Date: Tue, 11 Nov 2025 14:42:46 -0800
+Message-ID: <20251111224246.73673-1-zide.chen@intel.com>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20251111212206.631711-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Nov 11, 2025 at 01:21:48PM -0800, Ian Rogers wrote:
-> Prior to this series stat-shadow would produce hard coded metrics if
-> certain events appeared in the evlist. This series produces equivalent
-> json metrics and cleans up the consequences in tests and display
-> output. A before and after of the default display output on a
-> tigerlake is:
-> 
-> Before:
-> ```
-> $ perf stat -a sleep 1
-> 
->  Performance counter stats for 'system wide':
-> 
->     16,041,816,418      cpu-clock                        #   15.995 CPUs utilized             
->              5,749      context-switches                 #  358.376 /sec                      
->                121      cpu-migrations                   #    7.543 /sec                      
->              1,806      page-faults                      #  112.581 /sec                      
->        825,965,204      instructions                     #    0.70  insn per cycle            
->      1,180,799,101      cycles                           #    0.074 GHz                       
->        168,945,109      branches                         #   10.532 M/sec                     
->          4,629,567      branch-misses                    #    2.74% of all branches           
->  #     30.2 %  tma_backend_bound      
->                                                   #      7.8 %  tma_bad_speculation    
->                                                   #     47.1 %  tma_frontend_bound     
->  #     14.9 %  tma_retiring           
-> ```
-> 
-> After:
-> ```
-> $ perf stat -a sleep 1
-> 
->  Performance counter stats for 'system wide':
-> 
->              2,890      context-switches                 #    179.9 cs/sec  cs_per_second     
->     16,061,923,339      cpu-clock                        #     16.0 CPUs  CPUs_utilized       
->                 43      cpu-migrations                   #      2.7 migrations/sec  migrations_per_second
->              5,645      page-faults                      #    351.5 faults/sec  page_faults_per_second
->          5,708,413      branch-misses                    #      1.4 %  branch_miss_rate         (88.83%)
->        429,978,120      branches                         #     26.8 M/sec  branch_frequency     (88.85%)
->      1,626,915,897      cpu-cycles                       #      0.1 GHz  cycles_frequency       (88.84%)
->      2,556,805,534      instructions                     #      1.5 instructions  insn_per_cycle  (88.86%)
->                         TopdownL1                 #     20.1 %  tma_backend_bound      
->                                                   #     40.5 %  tma_bad_speculation      (88.90%)
->                                                   #     17.2 %  tma_frontend_bound       (78.05%)
->                                                   #     22.2 %  tma_retiring             (88.89%)
-> 
->        1.002994394 seconds time elapsed
-> ```
-> 
-> Having the metrics in json brings greater uniformity, allows events to
-> be shared by metrics, and it also allows descriptions like:
-> ```
-> $ perf list cs_per_second
-> ...
->   cs_per_second
->        [Context switches per CPU second]
-> ```
-> 
-> A thorn in the side of doing this work was that the hard coded metrics
-> were used by perf script with '-F metric'. This functionality didn't
-> work for me (I was testing `perf record -e instructions,cycles`
-> with/without leader sampling and then `perf script -F metric` but saw
-> nothing but empty lines) but anyway I decided to fix it to the best of
-> my ability in this series. So the script side counters were removed
-> and the regular ones associated with the evsel used. The json metrics
-> were all searched looking for ones that have a subset of events
-> matching those in the perf script session, and all metrics are
-> printed. This is kind of weird as the counters are being set by the
-> period of samples, but I carried the behavior forward. I suspect there
-> needs to be follow up work to make this better, but what is in the
-> series is superior to what is currently in the tree. Follow up work
-> could include finding metrics for the machine in the perf.data rather
-> than using the host, allowing multiple metrics even if the metric ids
-> of the events differ, fixing pre-existing `perf stat record/report`
-> issues, etc.
-> 
-> There is a lot of stat tests that, for example, assume '-e
-> instructions,cycles' will produce an IPC metric. These things needed
-> tidying as now the metric must be explicitly asked for and when doing
-> this ones using software events were preferred to increase
-> compatibility. As the test updates were numerous they are distinct to
-> the patches updating the functionality causing periods in the series
-> where not all tests are passing. If this is undesirable the test fixes
-> can be squashed into the functionality updates, but this will be kind
-> of messy, especially as at some points in the series both the old
-> metrics and the new metrics will be displayed.
-> 
-> v4: K/sec to M/sec on branch frequency (Namhyung), perf script -F
->     metric to-done a system-wide calculation (Namhyung) and don't
->     crash because of the CPU map index couldn't be found. Regenerate
->     commit messages but the cpu-clock was always yielding 0 on my
->     machine leading to a lot of nan metric values.
+This adds test cases to verify the precise ip fallback logic:
 
-This is strange.  The cpu-clock should not be 0 as long as you ran it.
-Do you think it's related to the scale unit change?  I tested v3 and
-didn't see the problem.
+- If the system supports precise ip, for an event given with the maximum
+  precision level, it should be able to decrease precise_ip to find a
+  supported level.
+- The same fallback behavior should also work in more complex scenarios,
+  such as event groups or when PEBS is involved
 
-Thanks,
-Namhyung
+Additional fallback tests, such as those covering missing feature cases,
+can be added in the future.
 
-> 
-> v3: Rebase resolving merge conflicts in
->     tools/perf/pmu-events/empty-pmu-events.c by just regenerating it
->     (Dapeng Mi).
->     https://lore.kernel.org/lkml/20251111040417.270945-1-irogers@google.com/
-> 
-> v2: Drop merged patches, add json to document target_cpu/core_wide and
->     example to "Add care to picking the evsel for displaying a metric"
->     commit message (Namhyung).
->     https://lore.kernel.org/lkml/20251106231508.448793-1-irogers@google.com/
-> 
-> v1: https://lore.kernel.org/lkml/20251024175857.808401-1-irogers@google.com/
-> 
-> Ian Rogers (18):
->   perf metricgroup: Add care to picking the evsel for displaying a
->     metric
->   perf expr: Add #target_cpu literal
->   perf jevents: Add set of common metrics based on default ones
->   perf jevents: Add metric DefaultShowEvents
->   perf stat: Add detail -d,-dd,-ddd metrics
->   perf script: Change metric format to use json metrics
->   perf stat: Remove hard coded shadow metrics
->   perf stat: Fix default metricgroup display on hybrid
->   perf stat: Sort default events/metrics
->   perf stat: Remove "unit" workarounds for metric-only
->   perf test stat+json: Improve metric-only testing
->   perf test stat: Ignore failures in Default[234] metricgroups
->   perf test stat: Update std_output testing metric expectations
->   perf test metrics: Update all metrics for possibly failing default
->     metrics
->   perf test stat: Update shadow test to use metrics
->   perf test stat: Update test expectations and events
->   perf test stat csv: Update test expectations and events
->   perf tool_pmu: Make core_wide and target_cpu json events
-> 
->  tools/perf/builtin-script.c                   | 251 ++++++++++-
->  tools/perf/builtin-stat.c                     | 154 ++-----
->  .../arch/common/common/metrics.json           | 151 +++++++
->  .../pmu-events/arch/common/common/tool.json   |  12 +
->  tools/perf/pmu-events/empty-pmu-events.c      | 229 ++++++----
->  tools/perf/pmu-events/jevents.py              |  28 +-
->  tools/perf/pmu-events/pmu-events.h            |   2 +
->  .../tests/shell/lib/perf_json_output_lint.py  |   4 +-
->  tools/perf/tests/shell/lib/stat_output.sh     |   2 +-
->  tools/perf/tests/shell/stat+csv_output.sh     |   2 +-
->  tools/perf/tests/shell/stat+json_output.sh    |   2 +-
->  tools/perf/tests/shell/stat+shadow_stat.sh    |   4 +-
->  tools/perf/tests/shell/stat+std_output.sh     |   4 +-
->  tools/perf/tests/shell/stat.sh                |   6 +-
->  .../perf/tests/shell/stat_all_metricgroups.sh |   3 +
->  tools/perf/tests/shell/stat_all_metrics.sh    |   7 +-
->  tools/perf/util/evsel.h                       |   1 +
->  tools/perf/util/expr.c                        |   8 +-
->  tools/perf/util/metricgroup.c                 |  92 +++-
->  tools/perf/util/stat-display.c                |  55 +--
->  tools/perf/util/stat-shadow.c                 | 404 +-----------------
->  tools/perf/util/stat.h                        |   2 +-
->  tools/perf/util/tool_pmu.c                    |  24 +-
->  tools/perf/util/tool_pmu.h                    |   9 +-
->  24 files changed, 769 insertions(+), 687 deletions(-)
->  create mode 100644 tools/perf/pmu-events/arch/common/common/metrics.json
-> 
-> -- 
-> 2.51.2.1041.gc1ab5b90ca-goog
-> 
+Suggested-by: Ian Rogers <irogers@google.com>
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Zide Chen <zide.chen@intel.com>
+---
+ .../tests/shell/test_event_open_fallback.sh   | 86 +++++++++++++++++++
+ 1 file changed, 86 insertions(+)
+ create mode 100755 tools/perf/tests/shell/test_event_open_fallback.sh
+
+diff --git a/tools/perf/tests/shell/test_event_open_fallback.sh b/tools/perf/tests/shell/test_event_open_fallback.sh
+new file mode 100755
+index 000000000000..72c1ac32c785
+--- /dev/null
++++ b/tools/perf/tests/shell/test_event_open_fallback.sh
+@@ -0,0 +1,86 @@
++#!/bin/bash
++# Perf event open fallback test
++# SPDX-License-Identifier: GPL-2.0
++
++skip_cnt=0
++ok_cnt=0
++err_cnt=0
++
++cleanup()
++{
++	rm -f perf.data
++	rm -f perf.data.old
++	trap - EXIT TERM INT
++}
++
++trap_cleanup()
++{
++	cleanup
++	exit 1
++}
++
++trap trap_cleanup EXIT TERM INT
++
++perf_record()
++{
++	perf record "$@" -- true 1>/dev/null 2>&1
++}
++
++test_decrease_precise_ip()
++{
++	echo "Decrease precise ip test"
++
++	perf list pmu | grep -q 'cycles' || return 2
++
++	if ! perf_record -e cycles; then
++		return 2
++	fi
++
++	# It should reduce precision level down to 0 if needed.
++	if ! perf_record -e cycles:ppp; then
++		return 1
++	fi
++	return 0
++}
++
++test_decrease_precise_ip_complicated()
++{
++	echo "Decrease precise ip test (complicated case)"
++
++	perf list pmu | grep -q 'mem-loads-aux' || return 2
++
++	if ! perf_record -e '{cpu/mem-loads-aux/S,cpu/mem-loads/PS}'; then
++		return 1
++	fi
++	return 0
++}
++
++count_result()
++{
++	if [ "$1" -eq 2 ] ; then
++		skip_cnt=$((skip_cnt + 1))
++		return
++	fi
++	if [ "$1" -eq 0 ] ; then
++		ok_cnt=$((ok_cnt + 1))
++		return
++	fi
++	err_cnt=$((err_cnt + 1))
++}
++
++ret=0
++test_decrease_precise_ip		|| ret=$? ; count_result $ret ; ret=0
++test_decrease_precise_ip_complicated	|| ret=$? ; count_result $ret ; ret=0
++
++cleanup
++
++if [ ${err_cnt} -gt 0 ] ; then
++	exit 1
++fi
++
++if [ ${ok_cnt} -gt 0 ] ; then
++	exit 0
++fi
++
++# Skip
++exit 2
+-- 
+2.51.1
+
