@@ -1,157 +1,141 @@
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D24E339A8
-	for <linux-perf-users@vger.kernel.org>; Tue, 11 Nov 2025 07:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD49281341
+	for <linux-perf-users@vger.kernel.org>; Tue, 11 Nov 2025 07:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762845337; cv=none; b=U9I9yj+3DYpyzwh3QRpgY9RVo2iYY8od7TYGs/tQzm09vZthr3ddkL/hafZS8GXxqPg52brOW7viG3ZRMTxhvghNqwl5ZQrFISbi0rURt7WQH1enrWwFyhROmCHKX3HjsJ72ShT9jWQYsZiriwkcsWlDPxgThzcrPsEOzL1ZRaY=
+	t=1762846527; cv=none; b=dkJyfkxVVz2S3T5za1dH5ug3VglZh9kgBQsEdrSpW1cEOF8oRngZei5bgt+40HnRSbwayZL8rNI1kYV6Zm9IPj03sIuPERFlI+dZl+Qu1ObQ+5wtlOMRHYTt869oglCuct/BTzakk7E+Lvtot9WNgvRxkHz2o7dsDs1ehklySPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762845337; c=relaxed/simple;
-	bh=wrbtYmF5M2Btq/6WUxsAnzshgHMYJjYmmWYOAPlWha4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Wc0PoYG6hSWRTLGn5e0+h+n/Yoab4xCguaHPRDjFiwwP2Mnt711PNmsd6zE+baVZIPtxZvEVoOCMIChiaSM2vMB+NYo2/FRmvoFpz3r/JWLVeginJf1BZMkF0t8UGLekMUg4Vrpg2aEap6fhHSWRZV+UxOn0qTx0puryHjarQbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=RA3qUKG9; arc=none smtp.client-ip=209.85.160.53
+	s=arc-20240116; t=1762846527; c=relaxed/simple;
+	bh=GlLb7hndPvEpfxlqOLmPms+o+qaLaVat60M/Kd9C5Fo=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=ZWSUhKBcPPpr+NecbUoC+U40pXcMbwWBa7yTbx4nPYe0s1hm+8WyBt+A64yjaGnveP0O9CgsW6/fTdacnZMEVLdiTbr05AN7c+TCjH34yLQZQwOm8ZI3WRbateCT9qtfjElqGR2YyB4gqKGj/QCUFwMVyBu+S3XNKIt19Dm8CW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=QVRUMlPH; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="RA3qUKG9"
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-3c97709a4fbso1313188fac.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Nov 2025 23:15:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="QVRUMlPH"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-29516a36affso38208155ad.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Nov 2025 23:35:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1762845333; x=1763450133; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dGMbS3VEvjhgNpVe1MttoJ7jTkjbM/PBhlD1Dx+012U=;
-        b=RA3qUKG9Vay/L9MubkIcoIwyDTpVy40Pn61bYxtFPm9We+inudZzdPs3UmKv8yYVN3
-         F02mlJuse6HRumMBv/t1u+ofTvXZtvJ38F7ff6Uk4fJsRTSIDgEMuN0bzvk6BuEjD8KP
-         Lc2ynXip/Q9MWdzhkrlzPBjbOuTEJ5iOcBzMOycrpQ3I3OmkjHquILuUNbvFvGrWAJdm
-         /a2/6Jx4Snz/EV9tEELhAVUhS1pTjrxpSwEottI5rw97t9f3sVomdrfEntgGDaEFNcFL
-         YaaKPcOm87yUVLf18vkABK/42FF0csCMUd2E2vIqg/OBDQt4gGH671AUrWEZdI8BeC+r
-         3obQ==
+        d=bytedance.com; s=google; t=1762846524; x=1763451324; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=533MpmlhqTKJtLtKqvZVG6ekGMT1k9z8ZUML8V8gWiY=;
+        b=QVRUMlPHi1N9oef9xSGByvemx9lc4kRPfB57aJl+3XVHYiX/3qTIAjM/rkoBbG5W7v
+         J8eLYXodT0uhaC9ZoyGhev3plsko2NivMIZAdehB56kBfTLT354xcX7sB3/fA4mZZTnE
+         +dl53zUvunXp/Jpq2E9yrG8vPV/AF/njQ3CXCS9a4Rjn6N5mrkTUNoC+yRMHWZact2R/
+         KZaKUhU2Y62ezTpDy/ugjz9NRz2sBWJ8O29NW4x6xjwN2JESnRbrVHaNF98DtpmydgrF
+         zD7dO5DjZJXVafHWtOxuwJw0FgXJGG0JBlPWq0ct+ie0wZHm4c8UNdmdJPTcMlh4v1us
+         x1mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762845333; x=1763450133;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=dGMbS3VEvjhgNpVe1MttoJ7jTkjbM/PBhlD1Dx+012U=;
-        b=vt9OM5trGExQlVjIKMd44gMlWaPszWCbT8b0lzOQkOZzYNskolPJEfh1VSgLyAJJZS
-         6KS2b3CHY3pmaXVLR7kcjCUa2np5QWaOgYKFQ2SIrdbBzLuuvLBPF13JvsJTOI3bjxiK
-         iEnnXT4chdi0KPZncmxvAkMDpKdPEXbypQootAKkC60r5zyLMSlZVveOltvqRQGCGhDK
-         x1KmWnnQY6C5JBl7PTYNAD6pGpxNi6bF8M3z3e1GM35jbHQSxI4JcO6aa9D+glm1cBOZ
-         EkOcAk/JE92pLndC6wYjzaTiIPKOXkHDl6XeojtyHuTP7Dsvs5pfG+pyDmRjOKGq+EvJ
-         r2PQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXm7U3YpBNPP7J/1P5tuSE3hIINjxNGmsc2bIn04/GvHhR601qNbWgMMmKax7IFOMDCfYJyKk/1YefJMOKGmVtu@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHg8D59Id0XLfcb2lAC4x8kL+0Y4NmiYSD5jnXK1FsmTui4m6w
-	ZHKlxf1CClPKrd3JlFBXbhqNRVHp8ufTcbLAkE/WgL9K7kx1wIHpE8bD2jchY2CO1RA6SWSHnXU
-	JHqEJsQZLjm0JOH9ZnJIPIYJVzjUDegwGTKUnXi20Bg==
-X-Gm-Gg: ASbGnctdLIlGQN+VYkQ3meKCe07+k9TB1yOBh1xuHH72vXTUkFQ+EvqgbUyZZShjLx5
-	ewk4jBt6TEttslXhCZYuyc6XcuKeYBb973PCfBCFYMPXXrZcNdXuq9E2ZgdK69muH/TzsyUdeAt
-	5C+XAewh1O77E9C2vYMUJjnURsCJbqICMvjKkPA6D/1GpF2uhF+WXHoa4BTh1F964EREFJFirbf
-	JzhJqz7jeSJQqHaRsiOwXXJ82QDd1vIyIy5LqxhpCYUNOEKhUxzcF9GMUeQmFi3Fn6bSBQIEg==
-X-Google-Smtp-Source: AGHT+IHWbJ4Yp3gQoh0gR8ti6hW2JnDfbC3dn3VOEzDDEL8ykj+19tubGTkAQQf4eOHdb+UN2vP0PrZVV2xFeQuhHI4=
-X-Received: by 2002:a05:6808:15a6:b0:44d:badf:f41a with SMTP id
- 5614622812f47-4502a2df5d2mr5427044b6e.32.1762845333082; Mon, 10 Nov 2025
- 23:15:33 -0800 (PST)
+        d=1e100.net; s=20230601; t=1762846524; x=1763451324;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=533MpmlhqTKJtLtKqvZVG6ekGMT1k9z8ZUML8V8gWiY=;
+        b=vTl49lG6JyhwjUlf1QJgPW7ZNoCffA6cVQtLw56Z39EZuX9oVeJJtj1zTS4vnQL35e
+         qBlu0sy7uGRs/jzmZfQgiOYhagjC9wMONi2+TCHto3cfsDUGLmMaPZxnLxDHfMszJAIl
+         GnEnkIkS6bznLRSODrqbuEGu6Ev5ZMMhFnLVHYeEpFXsiw2qH+Omcy9JD623mDQEgo+g
+         39lNThKMn+/ntyf1tSnhP9g+MJLPQ8GY73V33vnbzwqt02tSfyJyZPauWjLmqDAeX9If
+         j/LtXRAm5wTqSfVyaiNCtBe6GE6PtJnJ+sW6KnntcQkwG9hyBaUJVuON0LJgTBtVcWXY
+         PnjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVaNPX/clOJMcaq9vGYR67NH04TXOY6KcPLzEaQGQBJswd/865Qcxdjfb0/DU9LgOcoWli8ZEVIfyBKGPbYAuvx@vger.kernel.org
+X-Gm-Message-State: AOJu0YyviTIHJ/ZhDb3I5dOuylH0fBh2nDGulsilrt/lCV3pX0TMhg1/
+	PG7541MhpBZjCZj2bdcxsJYq3cz7YQFOlRU1gjbLslDrz0KxVaFEEmXCB2ecmkjE0ac=
+X-Gm-Gg: ASbGnct86sHxkpAFwL3HCcItCe0A+Wp7D/KozjjJmxTojy3OdCGgDSjOk7EMvcjiGSA
+	a/DviN2+QSQDFcIalIKb4TmxwEXHDM3QRB5aolZOccdKkeLc0+8aoGJEM87gODg5aPI851lWO8P
+	BU7t1tdabX7/YCHvWgFLr4TZrNUhkOvETNjfIyHBQIL8HDbPtcDiRUEYeUXHOjs/pidfChrSd2s
+	/znzDYquebIyTegus4aDDz3opIzdVahR3hBoz0stca9yk+3vic/avhLmmoE/u+IRw5tfNa/CA2k
+	0XSPCtIETnOvLBzCRcQcqo+TZpQrnFiBoEFDTmP3XtZnXc2D7hUYYBbbv2WXGLfOiRhiJmcnhSX
+	XYN2NjbA7ShVwOmtH6DtS96yW5IC6zn/V5tX2TgF+XWgVCY2jC5Y51QS+7Ed8qAyItCM3F6jsqs
+	3QjKukVYS9zg4FtL0T83LI5BmMYfw//q8=
+X-Google-Smtp-Source: AGHT+IHc4/svjuXEJqiJPblrTTMmTzjo8sWSLvFxa7A/n/1dDjeXQeMDKykLsDl5TXqJ0t2zOlW8CA==
+X-Received: by 2002:a17:902:f684:b0:295:987d:f7ff with SMTP id d9443c01a7336-297e56df951mr138535025ad.42.1762846523563;
+        Mon, 10 Nov 2025 23:35:23 -0800 (PST)
+Received: from L6YN4KR4K9.bytedance.net ([61.213.176.12])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29651c94abasm172928885ad.82.2025.11.10.23.35.15
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 10 Nov 2025 23:35:23 -0800 (PST)
+From: Yunhui Cui <cuiyunhui@bytedance.com>
+To: akpm@linux-foundation.org,
+	alex@ghiti.fr,
+	anup@brainfault.org,
+	aou@eecs.berkeley.edu,
+	atish.patra@linux.dev,
+	catalin.marinas@arm.com,
+	cuiyunhui@bytedance.com,
+	dianders@chromium.org,
+	johannes@sipsolutions.net,
+	lihuafei1@huawei.com,
+	mark.rutland@arm.com,
+	masahiroy@kernel.org,
+	maz@kernel.org,
+	mingo@kernel.org,
+	nicolas.schier@linux.dev,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	suzuki.poulose@arm.com,
+	thorsten.blum@linux.dev,
+	wangjinchao600@gmail.com,
+	will@kernel.org,
+	yangyicong@hisilicon.com,
+	zhanjie9@hisilicon.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH v5 0/2] Add HARDLOCKUP_DETECTOR_PERF support for RISC-V
+Date: Tue, 11 Nov 2025 15:34:57 +0800
+Message-Id: <20251111073459.44030-1-cuiyunhui@bytedance.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251014031425.93284-1-cuiyunhui@bytedance.com>
- <20251014031425.93284-2-cuiyunhui@bytedance.com> <aQixsIQXTjYyhRVj@willie-the-truck>
- <CAEEQ3wk5Ru4-=4Ecnc6kQAAbR57806xxYTz0o1z4KfgZE6Cg6w@mail.gmail.com> <aQ3v15yrm9JaWgrm@willie-the-truck>
-In-Reply-To: <aQ3v15yrm9JaWgrm@willie-the-truck>
-From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Tue, 11 Nov 2025 15:15:21 +0800
-X-Gm-Features: AWmQ_bnoZJigBSCLU3lJje6heEEH-Frt6iL4puU2iLrcXPWUx0zHPoaDlQHxw1Y
-Message-ID: <CAEEQ3wnC-xGZ_m4+vJ42KzU4DdQb1CGfZh_=Nz5wkFuXKS7Y3w@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH v4 1/2] watchdog: move arm64 watchdog_hld
- into common code
-To: Will Deacon <will@kernel.org>
-Cc: akpm@linux-foundation.org, alex@ghiti.fr, anup@brainfault.org, 
-	aou@eecs.berkeley.edu, atish.patra@linux.dev, catalin.marinas@arm.com, 
-	dianders@chromium.org, johannes@sipsolutions.net, lihuafei1@huawei.com, 
-	mark.rutland@arm.com, masahiroy@kernel.org, maz@kernel.org, mingo@kernel.org, 
-	nicolas.schier@linux.dev, palmer@dabbelt.com, paul.walmsley@sifive.com, 
-	suzuki.poulose@arm.com, thorsten.blum@linux.dev, wangjinchao600@gmail.com, 
-	yangyicong@hisilicon.com, zhanjie9@hisilicon.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Will,
+After discussion [1],[2], hardlockup_perf cannot be completely replaced by
+the hardlockup_buddy approach, so this patch is still being submitted.
 
-On Fri, Nov 7, 2025 at 9:11=E2=80=AFPM Will Deacon <will@kernel.org> wrote:
->
-> On Fri, Nov 07, 2025 at 10:42:25AM +0800, yunhui cui wrote:
-> > On Mon, Nov 3, 2025 at 9:44=E2=80=AFPM Will Deacon <will@kernel.org> wr=
-ote:
-> > >
-> > > On Tue, Oct 14, 2025 at 11:14:24AM +0800, Yunhui Cui wrote:
-> > > > @@ -306,3 +307,85 @@ void __init hardlockup_config_perf_event(const=
- char *str)
-> > > >       wd_hw_attr.type =3D PERF_TYPE_RAW;
-> > > >       wd_hw_attr.config =3D config;
-> > > >  }
-> > > > +
-> > > > +#ifdef CONFIG_WATCHDOG_PERF_ADJUST_PERIOD
-> > > > +/*
-> > > > + * Safe maximum CPU frequency in case a particular platform doesn'=
-t implement
-> > > > + * cpufreq driver. Although, architecture doesn't put any restrict=
-ions on
-> > > > + * maximum frequency but 5 GHz seems to be safe maximum given the =
-available
-> > > > + * CPUs in the market which are clocked much less than 5 GHz. On t=
-he other
-> > > > + * hand, we can't make it much higher as it would lead to a large =
-hard-lockup
-> > > > + * detection timeout on parts which are running slower (eg. 1GHz o=
-n
-> > > > + * Developerbox) and doesn't possess a cpufreq driver.
-> > > > + */
-> > > > +#define SAFE_MAX_CPU_FREQ    5000000000UL // 5 GHz
-> > > > +__weak u64 hw_nmi_get_sample_period(int watchdog_thresh)
-> > > > +{
-> > > > +     unsigned int cpu =3D smp_processor_id();
-> > > > +     unsigned long max_cpu_freq;
-> > > > +
-> > > > +     max_cpu_freq =3D cpufreq_get_hw_max_freq(cpu) * 1000UL;
-> > > > +     if (!max_cpu_freq)
-> > > > +             max_cpu_freq =3D SAFE_MAX_CPU_FREQ;
-> > > > +
-> > > > +     return (u64)max_cpu_freq * watchdog_thresh;
-> > > > +}
-> > >
-> > > Why does this function become __weak? Neither arm64 nor riscv overrid=
-e
-> > > it afaict.
-> >
-> > Would you say there=E2=80=99s any particular issue here? If some archit=
-ectures
-> > might need to override the hw_nmi_get_sample_period() function later
-> > on, wouldn=E2=80=99t __weak be a more reasonable choice?
->
-> __weak is pretty brittle (it can depend on link order if you have multipl=
-e
-> targets) and I suspect it prevents inlining when LTO isn't enabled. It's
-> cleaner and more robust for architectures to provide their hooks by
-> #defining the symbol, as is done commonly in other parts of the kernel.
->
-> But in this particular case, it's completely unnecessary because there
-> isn't an architectural override and so this function should simply be
-> static.
+v1->v2:
+The contents of arch/arm64/watchdog_hld.c are directly consolidated into
+kernel/watchdog_perf.c.
 
-Since the function is declared as u64 hw_nmi_get_sample_period(int
-watchdog_thresh) in nmi.h, it cannot be static.
-I will remove the __weak modifier in the next version.
 
->
-> Will
+v2->v3:
+Add CONFIG_WATCHDOG_PERF_ADJUST_PERIOD to enclose the period update logic,
+select it by default on arm64 and riscv, without affecting other arches
+like x86 and PPC.
 
-Thanks,
-Yunhui
+v3->v4:
+Place the line "select WATCHDOG_PERF_ADJUST_PERIOD if HARDLOCKUP_DETECTOR_PERF && CPU_FREQ"
+in the Kconfig files for arm64 and riscv in one line, with no line breaks.
+
+v4->v5:
+Remove __weak from hw_nmi_get_sample_period()
+
+Link: https://lore.kernel.org/all/CAD=FV=UEhVCD6JehQi1wor2sSmtTLDyf=37xfo-DOTK1=u1xzA@mail.gmail.com/ [1]
+Link: https://lore.kernel.org/all/20250916145122.416128-1-wangjinchao600@gmail.com/ [2]
+
+Yunhui Cui (2):
+  watchdog: move arm64 watchdog_hld into common code
+  riscv: add HARDLOCKUP_DETECTOR_PERF support
+
+ arch/arm64/Kconfig               |  1 +
+ arch/arm64/kernel/Makefile       |  1 -
+ arch/arm64/kernel/watchdog_hld.c | 94 --------------------------------
+ arch/riscv/Kconfig               |  3 +
+ drivers/perf/arm_pmu.c           | 10 +++-
+ drivers/perf/riscv_pmu_sbi.c     | 10 ++++
+ include/linux/perf/arm_pmu.h     |  2 -
+ kernel/watchdog_perf.c           | 83 ++++++++++++++++++++++++++++
+ lib/Kconfig.debug                |  8 +++
+ 9 files changed, 114 insertions(+), 98 deletions(-)
+ delete mode 100644 arch/arm64/kernel/watchdog_hld.c
+
+-- 
+2.39.5
+
