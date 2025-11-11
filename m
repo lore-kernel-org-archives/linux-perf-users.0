@@ -1,162 +1,106 @@
 Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01568361DD6
-	for <linux-perf-users@vger.kernel.org>; Tue, 11 Nov 2025 20:52:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C68B29CEB
+	for <linux-perf-users@vger.kernel.org>; Tue, 11 Nov 2025 21:16:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762894378; cv=none; b=hXYK9WM146mr3Focps7iTuREaTmLuVj6GW4EXzK2Ibn7vhWI6ZS270Rcd7Oft6W4U3HpKUF2lks5rKGecDbDP0+u5xCUuIR933yajkK2VvdCyv+RQh0i/Gy1Mpk5M/Rrw3z877BqOl63uvx+8UeVUUyjGJDXG6iQgbyOgmLaEQg=
+	t=1762895802; cv=none; b=NwnUvfVZr2sKnDt/gvypSbvgxWm4XjF3fku68NbWuDflLh2FhmPUd/eGkkiraaOqFFDixlOFSLI+OQTdQHeXv+nYc/40Si/j4DH9PZkv/rNcNzgz3tTpIoI+H7gT+CnQWOOoPLyV4O+CW7EFyt/1ar71kKBl/mZjqGD9s5U6Y60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762894378; c=relaxed/simple;
-	bh=20fW040rhb53y55JF09naa+/dKCrt2hlbFDcMOkDPi0=;
+	s=arc-20240116; t=1762895802; c=relaxed/simple;
+	bh=uFpvkiN+G0wcQVjOlr6G4EunY533wLdSbYoyi98Hhu8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HxaIxOpBsrAHgimY9LgQOI0WFbeWkNs67JddtKW9/DIUFf2boKPAgi/fPjB8IKyIhPMvxSpP+7Jmon11Mg2fwlC9Y9OxnA9ho8/SkWkaV8TQf5+3QR/k73x/k16ic5bTGfeDrOBAbgd25/opIXpxELbSO2Bh/9K4HgFD8zEny8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h9ZMZVW9; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=pCcoiT8hPqzBePa9VRd5TmfYlGGqwjKcqc0GElGFTBOAjd7mItSHH6XWY3TCNt83rWa33DTEZKgTzYn6Zd0qyzHthZVOiQ15FRoRbhhC84bXCOcOxVikeJSCMEBar/ue2bTbGjn484Vhm1mCgEqwqwT3v6Fd+RKTBE1SoeJudRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P5l3AdXQ; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h9ZMZVW9"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2959197b68eso5005ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Nov 2025 12:52:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P5l3AdXQ"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-297dfb8a52dso126715ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Nov 2025 13:16:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762894376; x=1763499176; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1762895801; x=1763500601; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lB20FEz15VtCdLa08O1lBT4Wo59H+loRPzGbfYEV9zE=;
-        b=h9ZMZVW9+kbzRIzRPp1EFrfz1QXoykzoS5GSxlT6a4X79wS99rBS5p5j8Ea5hynnHF
-         d9aFG0nXe1iidsjU7c/P5SIwSc44e0iN+6fbBSt3oCjVBmMaMwrTiGGxfzGM6QjXT+Y2
-         sZ9+T3vMJ+dSEVLg42mFwebAW53IyP/lrnUm8up00Q/4K5R5DG8xFlk5SUY4jcRUQuO6
-         TvkrcuvtIn/sRB6PkmvNEjseE8CeHVsXtLOhbwAaA+GCyUuhdPOOdQ0jE80w/CIuhNfC
-         B1w9TIIsG/WTuVhUDK+lpe/I5mZvdSHiOYzr4rembrfa1CfVxLuVs8cO8RQYROFLQoiO
-         9hoQ==
+        bh=mPCqA1l0SfRDCEzSSk3NUmkIaPJfMJM7jIDnXpJC2Ug=;
+        b=P5l3AdXQhzcj1QEYIOx6UTntFI0p7C3cTyW5em4LR/asPqcynk9y/E/WifHth6xtTZ
+         fgiOOXjUXEylq5SI7h6vHQ1vzFepKON0hgvEio+0xbZCmEh17y54O1TjZuvyKB9bFyQl
+         UFlBNfCP159nYbXCtrwjDY+0XzwX4FcFl8JC7RFhR9TkvqZ4UyTxrGmuoHdRYHP0o8rR
+         I7pHd8ufdDImQ7PWMCpHSha2JPVoXF1EdH/xVb+S/fTdLdTb1dPppM07/WvtRNayvtPv
+         oJRDqNdnS1oN6yOoESYY0frb74ubPZuTl+nA3gkIzfxO4riZ6IO8ZfhI3b2+Cml7wJPC
+         LZow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762894376; x=1763499176;
+        d=1e100.net; s=20230601; t=1762895801; x=1763500601;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=lB20FEz15VtCdLa08O1lBT4Wo59H+loRPzGbfYEV9zE=;
-        b=Qg0eIs4jcLFG7yMAad4yPP8eu0dUVm4XyrrohhkKCdLG18Hdb1Xypq6BdEV65Sd6pE
-         LssYDOUYu6eNz0eWPcrsYJuPYKlpooqUcE3iZFlTtKskbWG2whYZKAq98/w8+35KFMWy
-         m76wt4ZM0un+8nfjSfnM8+IznlJS5v/afU6csPIzZhm5gxq+SWymTFIDlj8aq4blMvIk
-         hu35PbZAexZ2zuMFj5xcjuavYKdnkTMfUj/LGNikZAZnuU5/aVpGbemaiMaLamBK4Vjn
-         ZJMmpj/reioyVnprOxizECWFnGXpKp7WuyAZNPa36V04XcKVN8sWMQj04OLunao9tQbE
-         rJVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsk8Dm+7Ktm3+xpXEbDCYueYOYdOwlYyG0awA2TliWEGYKHnqIADqEggT1urmA1oFiMsGVDJRNS+N6bUdhohYH@vger.kernel.org
-X-Gm-Message-State: AOJu0YzThWTcJn67jT14FwON+EZv+Qeg++xD3whhoG5HjL/ka5fQmc+I
-	fH+T9z5lne2a9Y3K0CspjL4oF8aIGxmFUQN7BoJOEPTtc78zPsLsUEnhTJTq0p/ztkWN+5dg7gW
-	ScWLVSEAXm3Yy9uZ/cyVq3Y4GdrFDTbXj4zsTQWLy
-X-Gm-Gg: ASbGnctm0qtVczyYsTnSwkenEB5HJajxw07C5DMBO+5orEm7tVMVFdciS1ZL9j8iO0s
-	4WhTtG1EvBD0XKvQJGc+R+5u7fuo205aMX5FScoAnxmISvd2yUkPffhzY6s6+Ezej1jQaB+Ivqx
-	okpIpTkDeHVI9m90ElbNSdrFMRS8RqryaQheuMr+DvZgf2Fop3D/coMOvoL/UDuKg4IaH4WMhS3
-	jWRLYCRIibspoFDZefZ4f1Z1t/tQaZoumjZtWlcuhvxyLPukwHFbpH0lJ2iohQqV/T5UykT8AaG
-	KecBVec1X0D3vWE9kIbim9rk8f9z02SKOu17
-X-Google-Smtp-Source: AGHT+IGILWK3Sees47bVwnkZffzKZ3iRj1UHlgzsog5iRfACCsge4YpukstXKacIcop6wyt7zQWQtjZn/9WH5sg+Wl8=
-X-Received: by 2002:a17:902:dace:b0:294:f745:fe7b with SMTP id
- d9443c01a7336-2984f836f94mr862465ad.6.1762894375985; Tue, 11 Nov 2025
- 12:52:55 -0800 (PST)
+        bh=mPCqA1l0SfRDCEzSSk3NUmkIaPJfMJM7jIDnXpJC2Ug=;
+        b=fz0yKq+RwFqhhtpB8KgMa/fvQ3sFOV4iOmFFAFfiWolPbKorSUtGCm9Ln2L8FrWwbS
+         DP6H0JYZAeYgxkaruchMFYY4U7Vn0d78zvcdURTFnpb8yuhHy08ls7EJIQRFamssav77
+         kyuz8ICwLimuABhT9ZY/6EHebmzTOo0ymcR+kvE517w4GhUnBO166Mvei1lyVpOzoDdx
+         YqpmxVo8JIF0ZWB6mC/wyUMqmoEtf/FGfWswvi4fEJ+zyTSNWLAvzZDUqyl760iqyFbd
+         1cY27pRFnefLATpKdGoizX1rqUnytUp2rHMqGvJhzq4YKZygmumVF7RbIImg6HHrs9ER
+         ivGA==
+X-Forwarded-Encrypted: i=1; AJvYcCVniicU6WTYAudyEZfHwe2lHUUFjaMOMSRqa3rnHU5VkW5TCORH4Slb7zdMqEfDyVaJhzb90+8qyWpq6F3/X07H@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxpd4eh1lnPlJQSw0Ivz7PLIbaoRbwccqvjlysvMd4tK8Qm4Qt+
+	wQXfdQpXnWSE5SuqUL2Y/CKPCMEjwzXrJxvIPXDcDE86M2PVb826y8Nq+Y7b7T11OFMVyJ5MjT8
+	MKRTmg1+0el0Zz7LaUqitM5a5r2GikxU=
+X-Gm-Gg: ASbGncuCT7gSTl7DUoFLnoCYA2lA0FL3IdeoNiE1dERB5pVyQQtMXIXnkYD8ezSENwR
+	OAjgx9j0pTZ1KbTd2EAVpnIY8RpPji20kKia+IX3lhzENh0vyhx7i57IEZTq0xhhteXiE2qYrK+
+	fLhgrHFEtPFuo1DEOK5Ri6Geg1MDk2H9pzrddenlfQi1k8Jizk+fnYlSaTqJNq0PfeXplQWYTcc
+	QKtDzbNQplovd666ZWCOPcWr6+l+R7mDIWiLooe0B/zOMwMnE9vTPkNj2vSU7pVEcP2KTNqRmkm
+	5GnGt5Hmio3bcktchr7uBcbZsaq3YuwrzO1GPftNA/E9plpJDtMkmoUXRC7Nny10nKxCnE8Sc43
+	gem4=
+X-Google-Smtp-Source: AGHT+IELxTIhnri+tM+aFMyGi4F2LNmIkSlKfOVg2wV28KftvFNGNsUXaSgAchbqExqA/Xn5/l63ZOKOPdX8SzP3nEo=
+X-Received: by 2002:a17:902:f68e:b0:297:d77c:ef37 with SMTP id
+ d9443c01a7336-2984ede4fc8mr4770075ad.9.1762895800585; Tue, 11 Nov 2025
+ 13:16:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251111040417.270945-1-irogers@google.com> <20251111040417.270945-7-irogers@google.com>
- <aRLeyoCQVG46KKEv@google.com>
-In-Reply-To: <aRLeyoCQVG46KKEv@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 11 Nov 2025 12:52:45 -0800
-X-Gm-Features: AWmQ_blA26dOnpW1ob14QsjySoD5F96dB3XzLqSOWaLQfqP9XTUOou5f3uryFBk
-Message-ID: <CAP-5=fX8yMXKVbV8_TKaP0_jP3YC9AawgOtUsM+++JC9R0-VAQ@mail.gmail.com>
-Subject: Re: [PATCH v3 06/18] perf script: Change metric format to use json metrics
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Sumanth Korikkar <sumanthk@linux.ibm.com>, Collin Funk <collin.funk1@gmail.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Howard Chu <howardchu95@gmail.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Levi Yun <yeoreum.yun@arm.com>, 
-	Yang Li <yang.lee@linux.alibaba.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, 
-	Weilin Wang <weilin.wang@intel.com>
+References: <aQjua6zkEHYNVN3X@x1> <aQltxZIVd6w5VNtI@google.com>
+ <aQ0ERJiTpiA_rL5D@x1> <CANiq72ns1sRukpX-4L3FgqfJw4nXZ5AyqQKCEeQ=nhyERG7QGA@mail.gmail.com>
+In-Reply-To: <CANiq72ns1sRukpX-4L3FgqfJw4nXZ5AyqQKCEeQ=nhyERG7QGA@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 11 Nov 2025 22:16:27 +0100
+X-Gm-Features: AWmQ_bled1nlXpHtecW_FFs9JAWbht0TitHTuf5j8Tw1cdC9Fo7wx2-8srRyEN8
+Message-ID: <CANiq72n88P_EYzS=c1Jfgv2zA-APJT4NrFE4GwEoQtbVS6bpPw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] perf symbols: Handle '1' symbols in /proc/kallsyms
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Zheng Yejian <zhengyejian@huaweicloud.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Alice Ryhl <aliceryhl@google.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Benno Lossin <lossin@kernel.org>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Danilo Krummrich <dakr@kernel.org>, Gary Guo <gary@garyguo.net>, 
+	Trevor Gross <tmgross@umich.edu>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 10, 2025 at 10:59=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
+On Fri, Nov 7, 2025 at 2:35=E2=80=AFAM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
 >
-> On Mon, Nov 10, 2025 at 08:04:05PM -0800, Ian Rogers wrote:
-> > The metric format option isn't properly supported. This change
-> > improves that by making the sample events update the counts of an
-> > evsel, where the shadow metric code expects to read the values.  To
-> > support printing metrics, metrics need to be found. This is done on
-> > the first attempt to print a metric. Every metric is parsed and then
-> > the evsels in the metric's evlist compared to those in perf script
-> > using the perf_event_attr type and config. If the metric matches then
-> > it is added for printing. As an event in the perf script's evlist may
-> > have >1 metric id, or different leader for aggregation, the first
-> > metric matched will be displayed in those cases.
-> >
-> > An example use is:
-> > ```
-> > $ perf record -a -e '{instructions,cpu-cycles}:S' -a -- sleep 1
-> > $ perf script -F period,metric
-> > ...
-> >      867817
-> >          metric:    0.30  insn per cycle
-> >      125394
-> >          metric:    0.04  insn per cycle
-> >      313516
-> >          metric:    0.11  insn per cycle
-> >          metric:    1.00  insn per cycle
-> > ```
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> [SNIP]
-> > @@ -2150,23 +2296,72 @@ static void perf_sample__fprint_metric(struct p=
-erf_script *script,
-> >                        },
-> >               .force_header =3D false,
-> >       };
-> > -     struct evsel *ev2;
-> > -     u64 val;
-> > +     struct perf_counts_values *count, *old_count;
-> > +     int cpu_map_idx, thread_map_idx, aggr_idx;
-> > +     struct evsel *pos;
-> > +
-> > +     if (!init_metrics) {
-> > +             /* One time initialization of stat_config and metric data=
-. */
-> > +             struct script_find_metrics_args args =3D {
-> > +                     .evlist =3D evsel->evlist,
-> > +                     /* TODO: Determine system-wide based on evlist.. =
-*/
-> > +                     .system_wide =3D true,
->
-> Probably you can check if the thread_map has an entry for -1.
+> We don't handle the big symbol double-byte... I will send a patch.
 
-Thanks, done. In testing this I found that the CPU map index lookup
-can fail and so I added the same thread map index workaround of just
-aggregating into the first count.
+For (cross-)reference, I sent this patch a few days ago:
 
-> > +             };
-> > +             if (!stat_config.output)
-> > +                     stat_config.output =3D stdout;
-> > +
-> > +             if (!stat_config.aggr_map) {
-> > +                     /* TODO: currently only global aggregation is sup=
-ported. */
-> > +                     assert(stat_config.aggr_mode =3D=3D AGGR_GLOBAL);
->
-> IIUC there's no option or config to set different aggregation mode for
-> perf script.
+    https://lore.kernel.org/rust-for-linux/20251107050414.511648-1-ojeda@ke=
+rnel.org/
 
-Right. I don't think this patch needs to do everything given the prior
-behavior wasn't working. We can add an aggregation mode. It probably
-makes more sense to work on this in the context of perf stat report.
+And then Gary told me today (thanks!) there was a similar path a year ago:
 
-Thanks,
-Ian
+    https://lore.kernel.org/lkml/20241011143853.3022643-1-zhengyejian@huawe=
+icloud.com/
+
+So I think we should take Zheng's (Cc'd).
+
+Thanks!
+
+Cheers,
+Miguel
