@@ -1,50 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA032957B6;
-	Tue, 11 Nov 2025 08:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6D534FF77
+	for <linux-perf-users@vger.kernel.org>; Tue, 11 Nov 2025 10:51:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762848935; cv=none; b=ZwvUTgj6/dBbZ4b63F5YV+kyTo8atAg7Tg/5R6181dAdsufClYH6CNO8hjFqwIGnDa24pCUH9DGgWxGt/kcmmsFKD7BjaqGbjwzlEqYlaJ/iW9+qHi1OijQcb5aSw9E63Lq29ygow5TWspdSE1mIf1QeA3g3GaO/MA/pjnmTC1Y=
+	t=1762858321; cv=none; b=e1cOTTrfKKSTzxjBcNJygeueCIP0X/T2j0YbU+LPKP3NgcUUv3robST5zPMdncr2G1L5c2TxfhUqfPNreK/6FIxudkPxLXpO3k2sQSFuuOjMVf71Hplm5eUVAmELWsLL9ff46wowf4ek7gNSAqI2Pq/me9h4iiCslqEN8AdKon4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762848935; c=relaxed/simple;
-	bh=DguBCWqKqS+yK4Y/p3bCA8+XgInji4qk9nohQ91vz6g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Tb5t2yaLSZJ24vm7P0MzsQuGMjhuz4IQaPVJ0lQI09lBHc+Qo5oriqwXBfWz56W55LaYSMNJvEk275uxfB3T5fJd02wuEzLcc9UbRZnZ6Nb6aKbvIUeiU230LpLSYyNZMLBqve/YwJflQ/OHGqRHXzouwb7kmTMay57x7bcfMGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MXn/Nn5J; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1762858321; c=relaxed/simple;
+	bh=m6qWbR+1BOc5g/YUkO6gL6vx0ximRu5ja0IB00oIB0Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rcJPtqztffhPV0bZoIUzJe5NbqdR7odUSYBGsKATB2dFGJ4m7+DxGCxuHCxuBFu7qCAmqtOCPNbKflPXNHZse9TS0lFvu+5go6IcdYg9FbKl8tbW2qq7jpyXNCgFqrO+BIW0YK4xVNVVuwqv3aYY8/lfTyjXHJbt0i0wb2vIsBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ier0bqY4; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MXn/Nn5J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762848934; x=1794384934;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=DguBCWqKqS+yK4Y/p3bCA8+XgInji4qk9nohQ91vz6g=;
-  b=MXn/Nn5JXL7huU8PBBiMCxHFBhlrZXWDnz82mEwhZKEz0VG0g0IA+5Ya
-   qQK/uBbd9gSeh19iZwXG5/LNgR4heqBg10N71Zqg+oZ6LPd21rqwOujHX
-   7W3VOxSCNHDnucsHFNWzQef9ISRsD6a1VxtU5x5RFl1uwixHMDUzraW4s
-   W9O8BvCpG8BGWR7fPlI0qVwPaTd/s9A/UEeAYFDCS8JKy1bC7F16HgGS1
-   OKHl0jF9zSzpP7JGCw7CtTqjW8BEeBLEVPASFKsOkO1ufkzQZnjkd5BE5
-   zryGZx2216NEy5nsuPDhMO0aXdOPj66XW9VAS8IV7zFds+TpaJezsRNtO
-   g==;
-X-CSE-ConnectionGUID: ZFmNc7hGRlmjCybHCx+Yaw==
-X-CSE-MsgGUID: Z7AZG0ieTtamtrHJ+N5NBw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11609"; a="68768368"
-X-IronPort-AV: E=Sophos;i="6.19,296,1754982000"; 
-   d="scan'208";a="68768368"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 00:15:33 -0800
-X-CSE-ConnectionGUID: MmuXOI1dRBiU+Ufnli4obA==
-X-CSE-MsgGUID: 5ZnPeF+JS52e3qUEOz+tTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,296,1754982000"; 
-   d="scan'208";a="193902406"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.65]) ([10.124.232.65])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 00:15:28 -0800
-Message-ID: <e0d29714-df04-48f9-8168-770bf05a0f7f@linux.intel.com>
-Date: Tue, 11 Nov 2025 16:15:25 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ier0bqY4"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-42b312a08a2so2083259f8f.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Nov 2025 02:51:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1762858318; x=1763463118; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=U4fv3AqTrlyRPmxlWB1ltGRDPoMxkylJndccFFj9vmU=;
+        b=ier0bqY4y+RoD0OaNwkAWLgWuSC2uFSSOkTQfQsYfQ2ruONR4dtT2K53RqfkxYFcxr
+         oaLUAPg8rBbgqkpfN7QzzpYhMD/hF9dcmEx34NBHm8PytOhZnu3kFP3/ztqlIY3dcY6Q
+         YsrA4dnQ5znrLze/0Q1fpqCaWY0/FE/W7vo/B/qYUUBNVbi5HiEBJyamdt9zpW8UJK90
+         G+AQP0GrC3frGjFx/ud3OTwQwVGeOf3gxI9tlIuD388EzqxdhtjtWrK041tdPjJhrSl5
+         V44aYDSnHv4dO4p9gtBP5zKZg2TzmapjKQr24OA/YYrdPx8OZhAjeGKQGe27z6xa77Uq
+         7ROg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762858318; x=1763463118;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U4fv3AqTrlyRPmxlWB1ltGRDPoMxkylJndccFFj9vmU=;
+        b=pQj5HWY3prfIHJBW97pd9w5tjEC8OQrGs7hkRlyP0cE179ZebpFe4Mpm+1eyFvvASh
+         8MsnMvz0WRgUgLl1j/5KxUATICjUNX6S7A9JJYJSfRAp0o5UD2lQ6int1BZoAJBrJPtv
+         +VIwq5VL9AmhYYXfBl/vG+WTws9GyJ8cE0xWDyVng9SwrzJIM0QZtH2v9Fjr2EnMstcy
+         TF5y/DyzoPpSMT+cYOL6k+9PVT2BJZJJZdadP5hDuEFfvRXWP3MMdvbIHFr+nsGL96vQ
+         e+XDDXMzqQBe1Yo7yOO183pbTTMaHerHNb2p2GssCxGceyVaxola6/Lh4t0gT4GRuexD
+         Qbpg==
+X-Forwarded-Encrypted: i=1; AJvYcCXCntXxR5pWAksE6ZzmtICnUxuREOMrDrmVttWM1/POotZr6Wj/RoKpQ27al+0eXGXqHxMI3pw7JWTB1PjW2bLU@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJneB6Z22S6wZcqzQ2PE0CFaCQKpPNuOwCHMRVMgRSavWZ/uRT
+	mKPDZdPKmHxvd+ArBHppnqRlKCoEDDLqsOu11xkSFdXO8p6nsqijeeGL06iuBmcaZvg=
+X-Gm-Gg: ASbGncsBL6JDas355Hw23UySwtamI1gmCjNdvKB8kdgvl/PpMWEgo9Wiwx9TtEa2myv
+	8KBFaIVUPvr5O8UgufhprgUrjFHmOco87e+Pm23YTKIgoJLhnW58kXSCN8zSbXlmAxaycDYuZgV
+	2rjSHe/CJeGQHZ5SeeGUjvnelhL/cAkFf86R4CkOe41j/8pEWPkQBTjyIyOhLhl3KI5vO7DVDLR
+	wZmT15GtK4xtXey4KQ85w8OtjkTEnZMO5YW88ULHZWahUjFLSTAMr4LtKGUhQQuQpYIjl0d9Sf2
+	FE1THNg7qQ+AnXJQqsx7UBMtWyT77jibYxnfttQbL46qYevmTQEv63qRGOqJEbZ6dlUBmw3XzQZ
+	szjxZ6cwophsBSpUaKkxOBG6FSQkBPnDCGkyHHJyH9nb7Rt0njL7IXoeHc63rWfngXxSS6/otAL
+	Q7LDL7RQ==
+X-Google-Smtp-Source: AGHT+IHhoshuEgKwX8/Ru0TwidruwNS7pASY+Vm/EhvoTXpz7woWAzVfFchx4yQuMVjUwDXm+8FRJQ==
+X-Received: by 2002:a5d:5d87:0:b0:42b:4069:428b with SMTP id ffacd0b85a97d-42b4069458cmr4219569f8f.51.1762858318427;
+        Tue, 11 Nov 2025 02:51:58 -0800 (PST)
+Received: from [192.168.1.3] ([185.48.77.170])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42b316775f2sm17429537f8f.16.2025.11.11.02.51.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Nov 2025 02:51:58 -0800 (PST)
+Message-ID: <8078e440-e97c-425c-b046-987b642640f7@linaro.org>
+Date: Tue, 11 Nov 2025 10:51:56 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,159 +69,93 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/18] perf metricgroup: Add care to picking the evsel
- for displaying a metric
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+Subject: Re: [PATCH v9 2/5] perf: arm_spe: Add support for filtering on data
+ source
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Zenghui Yu <yuzenghui@huawei.com>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
  Namhyung Kim <namhyung@kernel.org>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>,
- Chun-Tse Shao <ctshao@google.com>, Thomas Richter <tmricht@linux.ibm.com>,
- Sumanth Korikkar <sumanthk@linux.ibm.com>,
- Collin Funk <collin.funk1@gmail.com>, Thomas Falcon
- <thomas.falcon@intel.com>, Howard Chu <howardchu95@gmail.com>,
- Levi Yun <yeoreum.yun@arm.com>, Yang Li <yang.lee@linux.alibaba.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Andi Kleen <ak@linux.intel.com>, Weilin Wang <weilin.wang@intel.com>
-References: <20251111040417.270945-1-irogers@google.com>
- <20251111040417.270945-2-irogers@google.com>
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvmarm@lists.linux.dev
+References: <20251029-james-perf-feat_spe_eft-v9-0-d22536b9cf94@linaro.org>
+ <20251029-james-perf-feat_spe_eft-v9-2-d22536b9cf94@linaro.org>
+ <20251110154827.GA278048@noisy.programming.kicks-ass.net>
 Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251111040417.270945-2-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20251110154827.GA278048@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
-On 11/11/2025 12:04 PM, Ian Rogers wrote:
-> Rather than using the first evsel in the matched events, try to find
-> the least shared non-tool evsel. The aim is to pick the first evsel
-> that typifies the metric within the list of metrics.
->
-> This addresses an issue where Default metric group metrics may lose
-> their counter value due to how the stat displaying hides counters for
-> default event/metric output.
->
-> For a metricgroup like TopdownL1 on an Intel Alderlake the change is,
-> before there are 4 events with metrics:
-> ```
-> $ perf stat -M topdownL1 -a sleep 1
->
->  Performance counter stats for 'system wide':
->
->      7,782,334,296      cpu_core/TOPDOWN.SLOTS/          #     10.4 %  tma_bad_speculation
->                                                   #     19.7 %  tma_frontend_bound
->      2,668,927,977      cpu_core/topdown-retiring/       #     35.7 %  tma_backend_bound
->                                                   #     34.1 %  tma_retiring
->        803,623,987      cpu_core/topdown-bad-spec/
->        167,514,386      cpu_core/topdown-heavy-ops/
->      1,555,265,776      cpu_core/topdown-fe-bound/
->      2,792,733,013      cpu_core/topdown-be-bound/
->        279,769,310      cpu_atom/TOPDOWN_RETIRING.ALL/   #     12.2 %  tma_retiring
->                                                   #     15.1 %  tma_bad_speculation
->        457,917,232      cpu_atom/CPU_CLK_UNHALTED.CORE/  #     38.4 %  tma_backend_bound
->                                                   #     34.2 %  tma_frontend_bound
->        783,519,226      cpu_atom/TOPDOWN_FE_BOUND.ALL/
->         10,790,192      cpu_core/INT_MISC.UOP_DROPPING/
->        879,845,633      cpu_atom/TOPDOWN_BE_BOUND.ALL/
-> ```
->
-> After there are 6 events with metrics:
-> ```
-> $ perf stat -M topdownL1 -a sleep 1
->
->  Performance counter stats for 'system wide':
->
->      2,377,551,258      cpu_core/TOPDOWN.SLOTS/          #      7.9 %  tma_bad_speculation
->                                                   #     36.4 %  tma_frontend_bound
->        480,791,142      cpu_core/topdown-retiring/       #     35.5 %  tma_backend_bound
->        186,323,991      cpu_core/topdown-bad-spec/
->         65,070,590      cpu_core/topdown-heavy-ops/      #     20.1 %  tma_retiring
->        871,733,444      cpu_core/topdown-fe-bound/
->        848,286,598      cpu_core/topdown-be-bound/
->        260,936,456      cpu_atom/TOPDOWN_RETIRING.ALL/   #     12.4 %  tma_retiring
->                                                   #     17.6 %  tma_bad_speculation
->        419,576,513      cpu_atom/CPU_CLK_UNHALTED.CORE/
->        797,132,597      cpu_atom/TOPDOWN_FE_BOUND.ALL/   #     38.0 %  tma_frontend_bound
->          3,055,447      cpu_core/INT_MISC.UOP_DROPPING/
->        671,014,164      cpu_atom/TOPDOWN_BE_BOUND.ALL/   #     32.0 %  tma_backend_bound
-> ```
 
-It looks the output of cpu_core and cpu_atom events are mixed together,
-like the "cpu_core/INT_MISC.UOP_DROPPING/". Could we resort the events and
-separate the cpu_core and cpu_atom events output? It would make the output
-more read-friendly. Thanks.
+On 10/11/2025 3:48 pm, Peter Zijlstra wrote:
+> On Wed, Oct 29, 2025 at 03:46:02PM +0000, James Clark wrote:
+>> SPE_FEAT_FDS adds the ability to filter on the data source of packets.
+>> Like the other existing filters, enable filtering with PMSFCR_EL1.FDS
+>> when any of the filter bits are set.
+>>
+>> Each bit maps to data sources 0-63 described by bits[0:5] in the data
+>> source packet (although the full range of data source is 16 bits so
+>> higher value data sources can't be filtered on). The filter is an OR of
+>> all the bits, so for example clearing bits 0 and 3 only includes packets
+>> from data sources 0 OR 3.
+>>
+>> Invert the filter given by userspace so that the default value of 0 is
+>> equivalent to including all values (no filtering). This allows us to
+>> skip adding a new format bit to enable filtering and still support
+>> excluding all data sources which would have been a filter value of 0 if
+>> not for the inversion.
+> 
+> So from that I'm reading the config4 field will only have like 16 bits,
 
+The _data source_ is 16 bits, but the _data source filter_ is 64 bits.
 
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/metricgroup.c | 48 ++++++++++++++++++++++++++++++++++-
->  1 file changed, 47 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 48936e517803..76092ee26761 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -1323,6 +1323,51 @@ static int parse_ids(bool metric_no_merge, bool fake_pmu,
->  	return ret;
->  }
->  
-> +/* How many times will a given evsel be used in a set of metrics? */
-> +static int count_uses(struct list_head *metric_list, struct evsel *evsel)
-> +{
-> +	const char *metric_id = evsel__metric_id(evsel);
-> +	struct metric *m;
-> +	int uses = 0;
-> +
-> +	list_for_each_entry(m, metric_list, nd) {
-> +		if (hashmap__find(m->pctx->ids, metric_id, NULL))
-> +			uses++;
-> +	}
-> +	return uses;
-> +}
-> +
-> +/*
-> + * Select the evsel that stat-display will use to trigger shadow/metric
-> + * printing. Pick the least shared non-tool evsel, encouraging metrics to be
-> + * with a hardware counter that is specific to them.
-> + */
-> +static struct evsel *pick_display_evsel(struct list_head *metric_list,
-> +					struct evsel **metric_events)
-> +{
-> +	struct evsel *selected = metric_events[0];
-> +	size_t selected_uses;
-> +	bool selected_is_tool;
-> +
-> +	if (!selected)
-> +		return NULL;
-> +
-> +	selected_uses = count_uses(metric_list, selected);
-> +	selected_is_tool = evsel__is_tool(selected);
-> +	for (int i = 1; metric_events[i]; i++) {
-> +		struct evsel *candidate = metric_events[i];
-> +		size_t candidate_uses = count_uses(metric_list, candidate);
-> +
-> +		if ((selected_is_tool && !evsel__is_tool(candidate)) ||
-> +		    (candidate_uses < selected_uses)) {
-> +			selected = candidate;
-> +			selected_uses = candidate_uses;
-> +			selected_is_tool = evsel__is_tool(selected);
-> +		}
-> +	}
-> +	return selected;
-> +}
-> +
->  static int parse_groups(struct evlist *perf_evlist,
->  			const char *pmu, const char *str,
->  			bool metric_no_group,
-> @@ -1430,7 +1475,8 @@ static int parse_groups(struct evlist *perf_evlist,
->  			goto out;
->  		}
->  
-> -		me = metricgroup__lookup(&perf_evlist->metric_events, metric_events[0],
-> +		me = metricgroup__lookup(&perf_evlist->metric_events,
-> +					 pick_display_evsel(&metric_list, metric_events),
->  					 /*create=*/true);
->  
->  		expr = malloc(sizeof(struct metric_expr));
+> but here:
+> 
+>> +#define ATTR_CFG_FLD_inv_data_src_filter_CFG	config4	/* inverse of PMSDSFR_EL1 */
+>> +#define ATTR_CFG_FLD_inv_data_src_filter_LO	0
+>> +#define ATTR_CFG_FLD_inv_data_src_filter_HI	63
+> 
+> you claim all 64 bits.
+> 
+> Also, afaict:
+> 
+>    #define ATTR_CFG_FLD_min_latency_CFG            config2 /* PMSLATFR_EL1.MINLAT */
+>    #define ATTR_CFG_FLD_min_latency_LO             0
+>    #define ATTR_CFG_FLD_min_latency_HI             11
+> 
+> Still has more than 16 bits left.
+> 
+> 
+> So why exactly are we needing config4? Can we please get a more solid
+> argument?
+
+Each filter bit position maps onto one numerical data source value. The 
+16 bit field in the data source packet gives us possible data sources 
+from 0 - 65535. The 64 bits of the filter allow us to filter on a subset 
+of data sources (0 - 63), but that uses all 64 bits of the filter with 
+one bit used for each source.
+
+I think you are assuming the data source filter can only filter on a 
+single value as if it was interpreted numerically, rather than bitwise? 
+But it's actually interpreted as a separate filter for each bit, which 
+allows the OR semantics that are described in the commit message.
+
+It might be clearer if I add a few more words to differentiate "data 
+source" and "filter":
+
+   Each bit of the 64 bit filter maps to data sources 0-63 described by
+   bits[0:5] in the data source packet (although the full range of data
+   source is 16 bits so higher value data sources can't be filtered on).
+   The filter is an OR of all the filter bits, so for example clearing
+   filter bits 0 and 3 only includes packets from data sources 0 OR 3.
+
