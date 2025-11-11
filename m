@@ -1,184 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C853277CA4;
-	Tue, 11 Nov 2025 05:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2F834D39B;
+	Tue, 11 Nov 2025 05:46:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762839674; cv=none; b=JWWqi8K0kx1NnWYytPU73HN683mo1azGBOrmHmODMAzng1kzEkzNXGMtbBgESfuAcZIXreG8I5WACI3smjOTkJACYk87dr5EwLChwBDSNq+oBFLZaSdPUAjy2J3K04DAfwBzkvABIm9KGWaIbonIcnmCs5JsOZPO/ORlEbRx4WE=
+	t=1762839975; cv=none; b=M7JEV9dLSThFqmKydbkkaaIJrqNCbd6MoN/0OGXpXAaP4XPrgXH2WaOYKcLUEcUaQicyF7fOtOFNo+M1u2TOmQMTqm2RmvStv4T2M07QF6mvyjohQ6eRNdm9xKCUAi6LjgjBiC/D91LORB86QyWn1tGGblpjDgIfjqEzOehR8gU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762839674; c=relaxed/simple;
-	bh=UKl5cfWkfDgqLxhiY9LC9q152AImaFSKN5Q/dzKwFqk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=jOjy+kbMJXN9JS7ClKhK7koDPwTxwo+O7gDVw+ZvxdRLptmD9okKFzmFon9jvEj8THV6uWYWPXIVVB2juFKGY66DNKRlQ+wQx7NODE2EYdMBiU2WCLqyjiPZqn4esjhzENfOxR3Tec7rLGR2Q4be5LU8QzOJOy+3g2cftB53s+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F2ryLoyj; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F2ryLoyj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762839672; x=1794375672;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=UKl5cfWkfDgqLxhiY9LC9q152AImaFSKN5Q/dzKwFqk=;
-  b=F2ryLoyjUKDCKTNO/zB0J6hNWPIzl6UvKvSnR+lWUzvdFLSpXL0AXoiF
-   CfRYwmauq2skE/iymk6AgBbnupGv95HiuZBRxf+r3raOtnDy7UdBWAiFl
-   CmFSNmqZujLddVDGiYfEP5m57vkPnaV2cFxOJwhrUq8ElbSgKeYbyYruP
-   eOU4j5kl6l963fuLGTIWWIHTV7KuSZ4Oab5AmthJOHoJis1pDOwEU0Jvg
-   nyt1tYZwBhe+FcEqIucr0NaoQNGFw60T+xQSc27okUuxVHHJfwgcu/ixK
-   V8wNiKnkXhMY/NCqToBpFfu0Tsy3WG0a5PAMOyXNxuxeph5jNoyYe1Nfc
-   g==;
-X-CSE-ConnectionGUID: slp9QvKESH+jj56V3GMduw==
-X-CSE-MsgGUID: VmfqLawvSLuIRR3MoYCq8g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11609"; a="75510432"
-X-IronPort-AV: E=Sophos;i="6.19,295,1754982000"; 
-   d="scan'208";a="75510432"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 21:41:11 -0800
-X-CSE-ConnectionGUID: OQsyqQzYQW6c4U4u+n0Xlg==
-X-CSE-MsgGUID: c+qFuzkIRRuGvb8EGikU7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,295,1754982000"; 
-   d="scan'208";a="189613671"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.65]) ([10.124.232.65])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2025 21:41:08 -0800
-Message-ID: <380fd742-a7ed-4d6f-9944-b963869a5cb3@linux.intel.com>
-Date: Tue, 11 Nov 2025 13:41:05 +0800
+	s=arc-20240116; t=1762839975; c=relaxed/simple;
+	bh=rMK6R9Yc2qcB/MA7yTc9sJLcPpokgOVY6BLcqCIPKBI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=idwGHM7hn8vbO4E775xixuCdULEDMvJwfYilJejAmZbwE5Rm5siJ0XhHlgMHuj+uby/GihU2SYpxWTcp9z1cKE+q+/gOOX/2LTxRvAUMvAB5v5FtbjCJzA5pvSvGC8E1KIf82uMdD8xQg2Yk3qJRFxeB1vYpWAy+S7557HWhbco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-01 (Coremail) with SMTP id qwCowADHX8+JzRJp5_ZOAA--.14328S2;
+	Tue, 11 Nov 2025 13:45:46 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	song@kernel.org,
+	thomas.falcon@intel.com,
+	kan.liang@linux.intel.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] perf symbol: Remove unneeded semicolon
+Date: Tue, 11 Nov 2025 13:44:15 +0800
+Message-Id: <20251111054415.3694140-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v9 10/12] perf/x86/intel: Update dyn_constranit base on
- PEBS event precise level
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>
-References: <20251029102136.61364-1-dapeng1.mi@linux.intel.com>
- <20251029102136.61364-11-dapeng1.mi@linux.intel.com>
- <20251106145217.GA4067720@noisy.programming.kicks-ass.net>
- <09210c12-cc61-4af5-bd13-830fd9650f9b@linux.intel.com>
- <20251107130552.GB4067720@noisy.programming.kicks-ass.net>
- <a0416429-23d4-4f4f-af73-bcd87b4e773c@linux.intel.com>
- <20251110090311.GW3245006@noisy.programming.kicks-ass.net>
- <97eb5ae9-6c99-497e-a1b9-80bf365bf2d5@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <97eb5ae9-6c99-497e-a1b9-80bf365bf2d5@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowADHX8+JzRJp5_ZOAA--.14328S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZFWDuF4rXw1xWr17CFyDWrg_yoWfWFX_uw
+	1IkF1qkr1Syas0k347C3y3ZF4fAw4I9w4Fgr93tFs8JayDua1DuFWv9ryDJ3y5Cw15tF9x
+	twn5ArsYqa1I9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbTAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_GrWl42xK82IYc2Ij64vIr4
+	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
+	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
+	v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYE_MDUUUU
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
+Remove unnecessary semicolons reported by Coccinelle/coccicheck and the
+semantic patch at scripts/coccinelle/misc/semicolon.cocci.
 
-On 11/10/2025 5:15 PM, Mi, Dapeng wrote:
-> On 11/10/2025 5:03 PM, Peter Zijlstra wrote:
->> On Mon, Nov 10, 2025 at 08:23:55AM +0800, Mi, Dapeng wrote:
->>
->>>> @@ -5536,6 +5540,14 @@ static void intel_pmu_check_dyn_constr(s
->>>>  				continue;
->>>>  			mask = hybrid(pmu, acr_cause_mask64) & GENMASK_ULL(INTEL_PMC_MAX_GENERIC - 1, 0);
->>>>  			break;
->>>> +		case DYN_CONSTR_PEBS:
->>>> +			if (x86_pmu.arch_pebs)
->>>> +				mask = hybrid(pmu, arch_pebs_cap).counters;
->>>> +			break;
->>>> +		case DYN_CONSTR_PDIST:
->>>> +			if (x86_pmu.arch_pebs)
->>>> +				mask = hybrid(pmu, arch_pebs_cap).pdists;
->>>> +			break;
->>>>  		default:
->>>>  			pr_warn("Unsupported dynamic constraint type %d\n", i);
->>>>  		}
->>> Yes, exactly. Thanks.
->> Excellent. Could you please double check and try the bits I have in
->> queue/perf/core ? I don't think I've got v6 hardware at hand.
-> Sure. I would post test results tomorrow.
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ tools/perf/util/synthetic-events.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hi Peter,
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index fcd1fd13c30e..5aa44c4aba62 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -389,7 +389,7 @@ static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
+ 		dso_id.ino_generation = event->ino_generation;
+ 		dso_id.mmap2_valid = true;
+ 		dso_id.mmap2_ino_generation_valid = true;
+-	};
++	}
+ 
+ 	dso = dsos__findnew_id(&machine->dsos, event->filename, &dso_id);
+ 	if (dso && dso__has_build_id(dso)) {
+-- 
+2.25.1
 
-I tested the queue/perf/core code with a slight code refine on SPR/CWF/PTL.
-In summary, all things look good. The constraints validation passes on all
-these 3 platforms, no overlapped constraints are reported. Besides, perf
-counting/sampling (both legacy PEBS and arch-PEBS) works well, no issue is
-found.
-
-I did a slight change for the intel_pmu_check_dyn_constr() helper. It
-should be good enough to only validate the GP counters for the PEBS counter
-and PDIST constraint check. Beside the code style is refined
-opportunistically. Thanks.
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index aad89c9d9514..81e6c8bcabde 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -5506,7 +5506,7 @@ static void __intel_pmu_check_dyn_constr(struct
-event_constraint *constr,
-                        }
-
-                        if (check_fail) {
--                               pr_info("The two events 0x%llx and 0x%llx
-may not be "
-+                               pr_warn("The two events 0x%llx and 0x%llx
-may not be "
-                                        "fully scheduled under some
-circumstances as "
-                                        "%s.\n",
-                                        c1->code, c2->code,
-dyn_constr_type_name[type]);
-@@ -5519,6 +5519,7 @@ static void intel_pmu_check_dyn_constr(struct pmu *pmu,
-                                       struct event_constraint *constr,
-                                       u64 cntr_mask)
- {
-+       u64 gp_mask = GENMASK_ULL(INTEL_PMC_MAX_GENERIC - 1, 0);
-        enum dyn_constr_type i;
-        u64 mask;
-
-@@ -5533,20 +5534,25 @@ static void intel_pmu_check_dyn_constr(struct pmu *pmu,
-                                mask = x86_pmu.lbr_counters;
-                        break;
-                case DYN_CONSTR_ACR_CNTR:
--                       mask = hybrid(pmu, acr_cntr_mask64) &
-GENMASK_ULL(INTEL_PMC_MAX_GENERIC - 1, 0);
-+                       mask = hybrid(pmu, acr_cntr_mask64) & gp_mask;
-                        break;
-                case DYN_CONSTR_ACR_CAUSE:
--                       if (hybrid(pmu, acr_cntr_mask64) == hybrid(pmu,
-acr_cause_mask64))
-+                       if (hybrid(pmu, acr_cntr_mask64) ==
-+                                       hybrid(pmu, acr_cause_mask64))
-                                continue;
--                       mask = hybrid(pmu, acr_cause_mask64) &
-GENMASK_ULL(INTEL_PMC_MAX_GENERIC - 1, 0);
-+                       mask = hybrid(pmu, acr_cause_mask64) & gp_mask;
-                        break;
-                case DYN_CONSTR_PEBS:
--                       if (x86_pmu.arch_pebs)
--                               mask = hybrid(pmu, arch_pebs_cap).counters;
-+                       if (x86_pmu.arch_pebs) {
-+                               mask = hybrid(pmu, arch_pebs_cap).counters &
-+                                      gp_mask;
-+                       }
-                        break;
-                case DYN_CONSTR_PDIST:
--                       if (x86_pmu.arch_pebs)
--                               mask = hybrid(pmu, arch_pebs_cap).pdists;
-+                       if (x86_pmu.arch_pebs) {
-+                               mask = hybrid(pmu, arch_pebs_cap).pdists &
-+                                      gp_mask;
-+                       }
-                        break;
-                default:
-                        pr_warn("Unsupported dynamic constraint type %d\n", i);
-
-
->
->
->
