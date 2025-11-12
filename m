@@ -1,120 +1,114 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B1723D7D7
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 03:28:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65103237A4F;
+	Wed, 12 Nov 2025 06:38:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762918095; cv=none; b=EuEZlljRxrMWVjYoE6tI1r1dYiy8xidFy/k+/Q527DJe7jQSptgt+k6UtS1ZAxlpe+FxZBeh7QcDfa27i57NWt5ZXx4IPV/s5Flug5rMK52dTdcVKiyT7HvNl+9BFY6cSYTPyvT/IYrgqpvs3SeCFc9rhDM5VJqADlqH5Oivfzk=
+	t=1762929509; cv=none; b=DaqfOFSHkI5aDoofv+hB2cyQ063NR8e18QHR7ZhlZnmMumZC8DVHeneWy57HMDRAJcr3quyWOMDyKrzWb3Nmj94BnlvcbVgc3GvcQaYIAp3NXlQ6BHVHr75SdDGpUD9t9Ou4MISlica9XAhEpvfgFUb8WyJGcyK/dRm2Lwqf8tQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762918095; c=relaxed/simple;
-	bh=fV2iMTMramtjmMeD00HnxbCHxEQvqSmy+lvFzGovXXc=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=e/ZLvF3mG+0DnQgxHzXvjgl3FJShcbZnBTaPeuJjpN+mcobQ1LNttc0nPRLcaTT/TW1gf5cF4tAqlO1h6CtMAPqALe3IQEpIXNWtMttzXs7rUi4anuVP53ex2xRfED10cZIq0AiY7aIDI/opAJKM8PrJurTlFvq5o3XV6WHoIxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=aYbAzKEa; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1762929509; c=relaxed/simple;
+	bh=UWK4MvxcJ9V9gvPyJfgUko5Hc8Kib14+n5ys0xoap9U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q0rRIaJZv4hCbn/5WRc9rl0YYHYRUGQvQ4AKykgxxSua/P4/800SdD+ZT6Nlg73gip3+T0uVQbesV2ED9EmRvfUsrD0yaW5Vk/w3Acl7wo1sd18tU1Ba4BD6CTYrdYq8xFrpy9o0CEp/20H+89rosfhZclRha2UOlWatTeIITNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RLW3qxRe; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="aYbAzKEa"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b6ceb3b68eeso221910a12.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Nov 2025 19:28:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1762918093; x=1763522893; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=MvXqIM2Kx1gC5Q1+jYgAsgab/53O5lp19dTKMbp8FHM=;
-        b=aYbAzKEayV9u9ZGSTcM/+lnl91Bx9q71av84J4Dkf+oiHoc4KX2MboRZEZc+Kc355g
-         isCReynfavRg84I5UPjxcZRvgSPcUmJ+eVUe4nAWKtLtL9jR7t0+E23TvORtdwd24LHv
-         gcB26mq3TlgIzUMBQJgBXUV38/5S0O5rUdLrg7t2pp7K2navVP6ITs9fsDdCdZGgsxuK
-         +8TryJvvkZgCgxKtV78rNZcUkfJscgnfh35Kb7hRLjRGnEtubUeoz59m3srvaWdMiiEE
-         Ng96TQijtWgog2dy0tn/eMP+hFGwmrp+KJDknyDPn+YeUw2jvgG/nb9rJ3Uun8iC6e8U
-         y2vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762918093; x=1763522893;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MvXqIM2Kx1gC5Q1+jYgAsgab/53O5lp19dTKMbp8FHM=;
-        b=aF0jRkxP9/2hdQp6MBLZk+Q3ANKlZ374QmMhd/1cs05+kTXNhrVz3KjEKw9aPm3pGG
-         rmHTGMQt7s7nGD7lTA2r7CMoUwwsqFMfI47UO378Nx5K4pfEVuNoOcNatHbTrDCnNXqR
-         7wxqBb38qoHhqz/EjIGBnEZnfnhDqjRZC8q6JgUS467PtMEbFso5UPKjKcpfSpx6MfFV
-         Z7WvZ4wblUKkdjf6BAJSl3q3k/TItDfF6ikPyaKoiOL6SjbCl8jyUlScJMh3kDYxXORd
-         w9Lv1m1x5C/XbaBnJ0rwDNYIFxOxol6M8ViioJ6Bwc+6M8S9+XxA9oSevmUgMl9jQAPd
-         kvqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUpswgyf0wPWUXBJt/YWK+pprJGblzEmk841YIlDav4rjmWSNn+39lb6ej5oF0LBC/jXwzY+2fTD3SIse+xer4f@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNuom3LWkxJylA4vC7TTj2RjvAHiIJTz6mZR1dx63Bp88UK2aQ
-	xpmZJMj5AkNJMxtzlE2KRZIHBtpmA2Rg581oUXVskyWRd6/qg54ZSKbHZNS1ZNff0vzKZUshIue
-	NEVM2
-X-Gm-Gg: ASbGncuH5NxuXYckXouCbb+5LTDeoZlmk6vminprQuGu1/hOAqwmhCLtPzb+w7fGNAW
-	jZYkz0py+lTkvcSHo1iKcbfBWC8J7ae1J1vPCZyKP+G6a+aKyZLKFBGIphOBj2YnTwZatE0bdrD
-	W/xsl4syJOE6HZrDhQ5/dmb+5uw/SqAvcrKAejQ6raipEfbnX8XG4lZomRIKR5BR5MkDuJy0zEs
-	PAivyFeTXtDemOKv2fqJ3AyvXfWYjOpKpV3Ad5G5E97ENNYaGVL4o4nfMgGTm5Ysl5KQlqffad+
-	nc1gcuKUE06rNPbY1pbjmJVwkD7KgiKkwdGkAt0CA+ae5Ao/78bIQLjxsV5Biw1PeJvHBZ5RPQS
-	Q1zGVn7ejylIa965sIBj05uaQ0+0D1M/gV9KSNLmpG995R0tiIfLpq1/c/kExXcWExn4DVkOezU
-	sOPm+/zNvPQ4mbD2SvfVHre8mcIQ9YjEtNDRWbH23X9Hp8K29z790ZyQ==
-X-Google-Smtp-Source: AGHT+IHjQamBj3bCLsY01rrfJ1JjY59qu2CtviaxITwggjQ7mKKSi5jsY53X1IycsXPEkh4PpaYpUQ==
-X-Received: by 2002:a17:903:fa7:b0:27e:f018:d312 with SMTP id d9443c01a7336-2984ed2b587mr20220615ad.1.1762918092891;
-        Tue, 11 Nov 2025 19:28:12 -0800 (PST)
-Received: from ?IPV6:fdbd:ff1:ce00:1b26:822:3294:d7ca:6065? ([2001:c10:ff04:0:1000:0:1:d])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2984dcd0c41sm12843415ad.87.2025.11.11.19.28.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Nov 2025 19:28:12 -0800 (PST)
-From: Liangyan <liangyan.peng@bytedance.com>
-X-Google-Original-From: Liangyan <liangyan.peng@google.com>
-Message-ID: <b079b4f1-4d11-4137-8204-16935dc12129@google.com>
-Date: Wed, 12 Nov 2025 11:28:05 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RLW3qxRe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762929507; x=1794465507;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=UWK4MvxcJ9V9gvPyJfgUko5Hc8Kib14+n5ys0xoap9U=;
+  b=RLW3qxRebOb/Y6gCURNFsvEL0Uh6Ql/WcTBKKedwa+klVJR7ID0SNm9S
+   DO4lXka31xDNp4wYeVdHgLzSJaDtqg8q3p8TegVrXLNh00P4f+/t31pNq
+   kb0QWTvMJgYWOCD7QwoM+5gFD5p3U2L5yzySOhiR45Zi0iSX1CANMWHCu
+   MM5rbQaX609Nu0iUgT0ksRf0MaVtTBj0eU5DIF2kdxhSlAY3Jv4Y0EDob
+   NyEnJUesMSXTUsiEKYcdruM3Zb1R2ugNwc67RMyS3LTHl4GMaQkYr/eXU
+   r9NJuUSByl2DcehZWsxC1Z5DqYplf1xQdHan5nfh/3KiFAd7QCo4zleO0
+   w==;
+X-CSE-ConnectionGUID: 5jDPiF7iRXaPgYz1UK0YlA==
+X-CSE-MsgGUID: 6adNsMS4T8mZbG3InIp4Bg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11610"; a="75602067"
+X-IronPort-AV: E=Sophos;i="6.19,298,1754982000"; 
+   d="scan'208";a="75602067"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 22:38:26 -0800
+X-CSE-ConnectionGUID: QMvEo/tXQGiD9quo1YjeGw==
+X-CSE-MsgGUID: tuNjSZzbQQC9RW4zDtF6/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,298,1754982000"; 
+   d="scan'208";a="189571577"
+Received: from spr.sh.intel.com ([10.112.229.196])
+  by fmviesa009.fm.intel.com with ESMTP; 11 Nov 2025 22:38:22 -0800
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [PATCH] perf/x86/intel: Fix the building warning for i386 arch
+Date: Wed, 12 Nov 2025 14:35:43 +0800
+Message-Id: <20251112063543.3914136-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [External] Re: [PATCH v2] perf/core: Fix pending work re-queued
- in __perf_event_overflow
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Liangyan <liangyan.peng@bytedance.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, james.clark@linaro.org, zengxianjun@bytedance.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20251109103253.57081-1-liangyan.peng@bytedance.com>
- <20251109164122.80138-1-liangyan.peng@bytedance.com>
- <20251111133023.YqDNgQak@linutronix.de>
-Content-Language: en-US
-In-Reply-To: <20251111133023.YqDNgQak@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+The warnings below are seen for building i386 arch image.
 
+arch/x86/events/intel/ds.c: In function 'intel_pmu_drain_arch_pebs':
+arch/x86/events/intel/ds.c:2983:24: error: cast from pointer to integer of different size [-Werror=pointer-to-int-cast]
+ 2983 |         top = (void *)((u64)cpuc->pebs_vaddr +
+      |                        ^
+arch/x86/events/intel/ds.c:2983:15: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
+ 2983 |         top = (void *)((u64)cpuc->pebs_vaddr +
+      |               ^
+cc1: all warnings being treated as errors
 
-On 2025/11/11 21:30, Sebastian Andrzej Siewior wrote:
-> On 2025-11-10 00:41:22 [+0800], Liangyan wrote:
->> We got warning below during perf test.
-> …
->>
->> A race condition occurs between task context and IRQ context when
->> handling sigtrap tracepoint event overflows:
->>
->> 1. In task context, an event is overflowed and its pending work is
->>    queued to task->task_works
->> 2. Before pending_work is set, the same event overflows in IRQ context
->> 3. Both contexts queue the same perf pending work to task->task_works
->>
->> This double queuing causes:
->> - task_work_run() enters infinite loop calling perf_pending_task()
->> - Potential warnings and use-after-free when event is freed in
->> perf_pending_task()
->>
->> Fix the race by disabling interrupts during queuing of perf pending work.
-> 
-> Makes sense. Lets it does not overflow in NMI, too.
-> Either way I suggest to trim the commit message and remove the
-> backtrace as it probably does not add any value.
-> 
-> Sebastian
+change "u64" to "unsigned long" to fix the building error.
 
-Got it, I will remove the backtrace in the following version.
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Closes: https://lore.kernel.org/all/20251112154200.4d3671f9@canb.auug.org.au/
+Fixes: d21954c8a0ff ("perf/x86/intel: Process arch-PEBS records or record fragments")
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+---
+ arch/x86/events/intel/ds.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index c93bf971d97b..f695de9f7049 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -2979,7 +2979,7 @@ static void intel_pmu_drain_arch_pebs(struct pt_regs *iregs,
+ 	}
+ 
+ 	base = cpuc->pebs_vaddr;
+-	top = (void *)((u64)cpuc->pebs_vaddr +
++	top = (void *)((unsigned long)cpuc->pebs_vaddr +
+ 		       (index.wr << ARCH_PEBS_INDEX_WR_SHIFT));
+ 
+ 	index.wr = 0;
+
+base-commit: 2093d8cf80fa5552d1025a78a8f3a10bf3b6466e
+prerequisite-patch-id: a15bcd62a8dcd219d17489eef88b66ea5488a2a0
+-- 
+2.34.1
 
