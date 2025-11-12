@@ -1,200 +1,200 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2238E271A7B;
-	Wed, 12 Nov 2025 01:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7179C28CF56
+	for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 02:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762911544; cv=none; b=Y6frkJ5Ts3fe+5DgT9j/hiZ1q1LzzlJdSU+1vAUh+0zzTlLgBQdqDrOvNXSwaYq8pEBbYHZ/g6lrdS/34lanymhfu25HbfnxrizfW6CQ4D62rLptQuJh0YFYipNvuqEZ746ZekxFDl8tmw4iE60z9okV4Y4XHG5mB7l6UV6o0J4=
+	t=1762913676; cv=none; b=ZzGa/nBjsviSDOYBeQibGSujhuDVuI/TcM/NeDBA4sl/HScAdXvA1kFVqsRdowVM3xyx9tit/afw6N8E1FJ2pcKHeCm7I1WwPN+fGmN6Nqn/AaD/l13xl667mLA1bZ4r1T3eQtX/IQWheVXXVEgnNAvfYKF5brYBc7GmdLpUqOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762911544; c=relaxed/simple;
-	bh=dC5aByELFmakgvk0wqr11T7toMH8Eh9BJChORDfYCKM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dmZrmp5GhMK4NxtxS+OPBaAsdrdmpjJUgcX0bSz2nvZpNDQqFwGdyAYfLVNhrp3fJeEVcJOAON60d9bm2fS5c9s90WhKGA3M+Vq+//APRwXdUyl08RZJmZSvBE+Mks29pJQHYw2xt5RZ9TF1JSVVBLx5ca+J+hl+rnQqDoTjHZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BSoUN6En; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1762913676; c=relaxed/simple;
+	bh=xwFVvgtw9uBd2ORKsLl6UhYsiyXLrRfI/zUbkQg0RWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M/Lp7zUJlLazX3LLYMW+JWfpGPd+a90tcdISKQ+l2vo7DHWeoWytXQalOFkERpw/i+xpH72oIfTjVe/YSNcxrHEJXpaG4caO+STC/gUB79B1eVTdexRE0hdn2C3Usqmz7Xi9QtfQHFCt0iBOclAwtlVwL2xc4B/n2I3avmH2gnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fuauiSLE; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BSoUN6En"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762911542; x=1794447542;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=dC5aByELFmakgvk0wqr11T7toMH8Eh9BJChORDfYCKM=;
-  b=BSoUN6EnAeY+eqoJ1ONkr2LOzR7m83ZIiNggAFJoakYfS78skFFHac8z
-   UFlqBSZ3pPblq/3LhwXSekKF9tQklsBQNqUXlm3YKI3arKSJ1T55Kyw3c
-   cA632UEe2Ek08DiomYg7a8LUUeEJx4BddaZ9FeefrdP0CUNmqQQL3ucdk
-   n10VZwVa3FiFbjFBa68vlMZw0reb0VqJ8aPj3/QblLT8ubzG2oJ8XQKHB
-   awyRdhFZm+cdpUBTr9gkRVLBP4EpiQZPDoFTnfEo03Xf31I3Bz6Z/doa3
-   YWv0MAreKPykar7a+O0psjG17GeKttZufRCIyw8WlM+EzWgtpgDH5xQa9
-   A==;
-X-CSE-ConnectionGUID: u4r0Hiq5Qfi1Z3IhV3nkwA==
-X-CSE-MsgGUID: fsSUfhVtSsqwCgFd5A+c1Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11610"; a="75652808"
-X-IronPort-AV: E=Sophos;i="6.19,298,1754982000"; 
-   d="scan'208";a="75652808"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 17:39:02 -0800
-X-CSE-ConnectionGUID: DkEeFC4/RZiI0XjFcN+m2A==
-X-CSE-MsgGUID: 0+wKW6W9RGico2I0c3OxGw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,298,1754982000"; 
-   d="scan'208";a="189345608"
-Received: from jbunyan-mobl1.amr.corp.intel.com (HELO [10.125.164.106]) ([10.125.164.106])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 17:39:01 -0800
-Message-ID: <48f84128-bd74-4d82-8095-4b21e386bd81@intel.com>
-Date: Tue, 11 Nov 2025 17:39:00 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fuauiSLE"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-34381ec9197so376825a91.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Nov 2025 18:14:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1762913674; x=1763518474; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=lVQBcx6xFjlJyhg8EGvnzlqkKD9tleq1IsOwgdEnnOg=;
+        b=fuauiSLEBn9GiFcz5fEHg//fVQUy7nVf9NOyhSGqdw78w0KZF7cXP23cqhWiWVs2IH
+         1M7qQ8Q8T0l758X2shuAsdXj7hHQ2xbwdsr7Rikwu0cEAPJQU+ku9XyT86rA/2U8JqAW
+         6sS/u+ePsgpCAZS5Z8lbkgAwyfxIaXOKE6egbPGrWjzZbOcZdnKTR+nC9fcc2UwNdVs4
+         m2jzFR9MPNnWRXsT9+ijW44d5VH7NfM9awbEWhyL6r/NFuJBFLvUnRcw7bMLOSxTwaEF
+         rLDu9Ld+y6vZSR5p38zvNUqiNs3vSQlasopGQVnq/AVn7AFRXoFzszxPTXaGj5hipLuN
+         VwGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762913674; x=1763518474;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lVQBcx6xFjlJyhg8EGvnzlqkKD9tleq1IsOwgdEnnOg=;
+        b=cdZzQJEEQZnmyqHn/f4cAoYV5F9Hxf91CVZbSINPb200eUT/sXcpOEILTEPetYgMor
+         pqR1EC87jgAXcXO0HEnPiapEyUel9YhWbCGnXOjXsRT9i7vRd4OUtZDpA8CZOHEjJ5vn
+         hGbJfHS0Xos/+YoQVriQx1JEbutMHd69Df4jfV3foVg1eFk51FhOfTnIpotazQTwjvVT
+         0Su85GQBrLPKWIuj8ck13DDdQDaOoTbet1h/5US3gtFJL1OfrnqQZNOH1+wgT/DRs0aX
+         dgLenXFkPn50G0BhjRKyYRBn3/pB6iNtoljch9rRf1FLx2eT6X8L9ZZ2c9QZFFYqtsmQ
+         QzQg==
+X-Forwarded-Encrypted: i=1; AJvYcCXCUjD3AMoWSU/mdukt2B3HJOIwISSwLnSiNrau3TfO79lAeXkgmQcnCJApGYvDJUAHobxDJoGWnEvhSMaPd/xA@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxtB8lQCKFBYuOr8JDXTV/pU/J5yXjNdg0FUwPbvJlYxNDxgDF
+	EbEJPgIJACg6PON51bM5iLDtQ3g4IH72smy2og08gFBFilrpO20zk4gd
+X-Gm-Gg: ASbGnctumGNtPGqM5bmHVwja3yEHNIOu5nD3V9isvZ8JHjZSO76RG3htym2szcsK5Jl
+	Ovv6WtS+s+Lyt3qBpLj7fcg4GWeT2n/spn8I+ZnReS/nSB0YBVXfnobAtvgYPwPM2cb7zCpyeTu
+	QfzgUxMtR8yxztq4fire/Gq01iCjIsCQwRWCq17VMOOe3tLvecjNXpslQwO8bHe9DHq7TYmcwsp
+	xC5rbDxco0eL/6bERNYMtE3muUQ7vr6QAP3sIK+ZKKQD9MIal77Sj5ek/9OzaZWHSPQFsJ2zuZJ
+	l2+OvFeWBk+8KMeRJ+9QbAOydS4eXLF4o0vpl016KqcIosOsvuHRcb3EKt0MOTPr081TpB9VVnu
+	r9zszfr53MhyS+n1GXJzhLS06UBYt2CmsQfmIT1UyiapX77k/6Wd7QNIWdBV55+gXWbq29lMCt2
+	lUU98YJvvxr2k=
+X-Google-Smtp-Source: AGHT+IFqj6mSlRUdzokZ1Fx9dnl2ksqvuqBqsXipooXRvbblexf8W6duI6LZnIuMeBzrfzf2MAr1ZQ==
+X-Received: by 2002:a17:90b:1b0c:b0:340:a5b2:c30b with SMTP id 98e67ed59e1d1-343dddf6caemr2117777a91.9.1762913673519;
+        Tue, 11 Nov 2025 18:14:33 -0800 (PST)
+Received: from localhost ([45.8.220.62])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-343e0714267sm559591a91.6.2025.11.11.18.14.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Nov 2025 18:14:32 -0800 (PST)
+Date: Wed, 12 Nov 2025 10:14:29 +0800
+From: Jinchao Wang <wangjinchao600@gmail.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Marco Elver <elver@google.com>, Mike Rapoport <rppt@kernel.org>,
+	Alexander Potapenko <glider@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ben Segall <bsegall@google.com>, Bill Wendling <morbo@google.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	David Kaplan <david.kaplan@amd.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Ian Rogers <irogers@google.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	James Clark <james.clark@linaro.org>,
+	Jinjie Ruan <ruanjinjie@huawei.com>, Jiri Olsa <jolsa@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Justin Stitt <justinstitt@google.com>, kasan-dev@googlegroups.com,
+	Kees Cook <kees@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Liang Kan <kan.liang@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-perf-users@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mel Gorman <mgorman@suse.de>, Michal Hocko <mhocko@suse.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Nam Cao <namcao@linutronix.de>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Naveen N Rao <naveen@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Rong Xu <xur@google.com>, Sami Tolvanen <samitolvanen@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Will Deacon <will@kernel.org>,
+	workflows@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v8 00/27] mm/ksw: Introduce KStackWatch debugging tool
+Message-ID: <aRLmGxKVvfl5N792@ndev>
+References: <20251110163634.3686676-1-wangjinchao600@gmail.com>
+ <aRIh4pBs7KCDhQOp@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf test: Add a perf event fallback test
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
- Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar <mingo@redhat.com>,
- Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- thomas.falcon@intel.com, dapeng1.mi@linux.intel.com, xudong.hao@intel.com
-References: <20251111224246.73673-1-zide.chen@intel.com>
- <aRPdmoNdUWIlWhJU@google.com>
-Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <aRPdmoNdUWIlWhJU@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aRIh4pBs7KCDhQOp@casper.infradead.org>
 
-
-
-On 11/11/2025 5:06 PM, Namhyung Kim wrote:
-> On Tue, Nov 11, 2025 at 02:42:46PM -0800, Zide Chen wrote:
->> This adds test cases to verify the precise ip fallback logic:
->>
->> - If the system supports precise ip, for an event given with the maximum
->>   precision level, it should be able to decrease precise_ip to find a
->>   supported level.
->> - The same fallback behavior should also work in more complex scenarios,
->>   such as event groups or when PEBS is involved
->>
->> Additional fallback tests, such as those covering missing feature cases,
->> can be added in the future.
->>
->> Suggested-by: Ian Rogers <irogers@google.com>
->> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> Signed-off-by: Zide Chen <zide.chen@intel.com>
->> ---
->>  .../tests/shell/test_event_open_fallback.sh   | 86 +++++++++++++++++++
->>  1 file changed, 86 insertions(+)
->>  create mode 100755 tools/perf/tests/shell/test_event_open_fallback.sh
->>
->> diff --git a/tools/perf/tests/shell/test_event_open_fallback.sh b/tools/perf/tests/shell/test_event_open_fallback.sh
->> new file mode 100755
->> index 000000000000..72c1ac32c785
->> --- /dev/null
->> +++ b/tools/perf/tests/shell/test_event_open_fallback.sh
->> @@ -0,0 +1,86 @@
->> +#!/bin/bash
->> +# Perf event open fallback test
->> +# SPDX-License-Identifier: GPL-2.0
->> +
->> +skip_cnt=0
->> +ok_cnt=0
->> +err_cnt=0
->> +
->> +cleanup()
->> +{
->> +	rm -f perf.data
->> +	rm -f perf.data.old
->> +	trap - EXIT TERM INT
->> +}
->> +
->> +trap_cleanup()
->> +{
->> +	cleanup
->> +	exit 1
->> +}
->> +
->> +trap trap_cleanup EXIT TERM INT
->> +
->> +perf_record()
->> +{
->> +	perf record "$@" -- true 1>/dev/null 2>&1
->> +}
->> +
->> +test_decrease_precise_ip()
->> +{
->> +	echo "Decrease precise ip test"
->> +
->> +	perf list pmu | grep -q 'cycles' || return 2
->> +
->> +	if ! perf_record -e cycles; then
->> +		return 2
->> +	fi
->> +
->> +	# It should reduce precision level down to 0 if needed.
->> +	if ! perf_record -e cycles:ppp; then
+On Mon, Nov 10, 2025 at 05:33:22PM +0000, Matthew Wilcox wrote:
+> On Tue, Nov 11, 2025 at 12:35:55AM +0800, Jinchao Wang wrote:
+> > Earlier this year, I debugged a stack corruption panic that revealed the
+> > limitations of existing debugging tools. The bug persisted for 739 days
+> > before being fixed (CVE-2025-22036), and my reproduction scenario
+> > differed from the CVE report—highlighting how unpredictably these bugs
+> > manifest.
 > 
-> I think you need 'P' instead of 'ppp' for automatic precision.
-
-Yes, it's better with "-e cycles:P" to explicitly set evsel.precise_max
-to 1.
-
-> Thanks,
-> Namhyung
+> Well, this demonstrates the dangers of keeping this problem siloed
+> within your own exfat group.  The fix made in 1bb7ff4204b6 is wrong!
+> It was fixed properly in 7375f22495e7 which lists its Fixes: as
+> Linux-2.6.12-rc2, but that's simply the beginning of git history.
+> It's actually been there since v2.4.6.4 where it's documented as simply:
 > 
+>       - some subtle fs/buffer.c race conditions (Andrew Morton, me)
 > 
->> +		return 1
->> +	fi
->> +	return 0
->> +}
->> +
->> +test_decrease_precise_ip_complicated()
->> +{
->> +	echo "Decrease precise ip test (complicated case)"
->> +
->> +	perf list pmu | grep -q 'mem-loads-aux' || return 2
->> +
->> +	if ! perf_record -e '{cpu/mem-loads-aux/S,cpu/mem-loads/PS}'; then
->> +		return 1
->> +	fi
->> +	return 0
->> +}
->> +
->> +count_result()
->> +{
->> +	if [ "$1" -eq 2 ] ; then
->> +		skip_cnt=$((skip_cnt + 1))
->> +		return
->> +	fi
->> +	if [ "$1" -eq 0 ] ; then
->> +		ok_cnt=$((ok_cnt + 1))
->> +		return
->> +	fi
->> +	err_cnt=$((err_cnt + 1))
->> +}
->> +
->> +ret=0
->> +test_decrease_precise_ip		|| ret=$? ; count_result $ret ; ret=0
->> +test_decrease_precise_ip_complicated	|| ret=$? ; count_result $ret ; ret=0
->> +
->> +cleanup
->> +
->> +if [ ${err_cnt} -gt 0 ] ; then
->> +	exit 1
->> +fi
->> +
->> +if [ ${ok_cnt} -gt 0 ] ; then
->> +	exit 0
->> +fi
->> +
->> +# Skip
->> +exit 2
->> -- 
->> 2.51.1
->>
+> As far as I can tell the changes made in 1bb7ff4204b6 should be
+> reverted.
 
+Thank you for the correction and the detailed history. I wasn't aware this
+dated back to v2.4.6.4. I'm not part of the exfat group; I simply
+encountered a bug that 1bb7ff4204b6 happened to resolve in my scenario.
+The timeline actually illustrates the exact problem KStackWatch addresses:
+a bug introduced in 2001, partially addressed in 2025, then properly fixed
+months later. The 24-year gap suggests these silent stack corruptions are
+extremely difficult to locate.
+
+> 
+> > Initially, I enabled KASAN, but the bug did not reproduce. Reviewing the
+> > code in __blk_flush_plug(), I found it difficult to trace all logic
+> > paths due to indirect function calls through function pointers.
+> 
+> So why is the solution here not simply to fix KASAN instead of this
+> giant patch series?
+
+KASAN caught 7375f22495e7 because put_bh() accessed bh->b_count after
+wait_on_buffer() of another thread returned—the stack was invalid.
+In 1bb7ff4204b6 and my case, corruption occurred before the victim
+function of another thread returned. The stack remained valid to KASAN,
+so no warning triggered. This is timing-dependent, not a KASAN deficiency.
+
+Making KASAN treat parts of active stack frame as invalid would be
+complex and add significant overhead, likely worsening the reproduction
+prevention issue. KASAN's overhead already prevented reproduction in my
+environment.
+
+KStackWatch takes a different approach: it watches stack frame regardless
+of whether KASAN considers them valid or invalid, with much less overhead
+thereby preserving reproduction scenarios.
+
+The value proposition:
+Finding where corruption occurs is the bottleneck. Once located,
+subsystem experts can analyze the root cause. Without that location, even
+experts are stuck.
+
+If KStackWatch had existed earlier, this 24-year-old bug might have been
+found sooner when someone hit a similar corruption. The same applies to
+other stack corruption bugs.
+
+I'd appreciate your thoughts on whether this addresses your concerns.
+
+Best regards,
+Jinchao
