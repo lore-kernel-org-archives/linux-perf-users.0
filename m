@@ -1,57 +1,57 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7063F3491E8
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 17:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB49E348862
+	for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 17:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762969193; cv=none; b=OnlOSTyc45erzka0a+ZQKPAP/zh+LKC6zLvwhy0Rc+8o+omVhl/PzLjBH2bc++e9fVMeFF3iqV1+01rLdBRC4ujAuhY+9V7a6N50f7HrB/zWwIqP9i0cK4dK5iDBHA8N7WBzHm5wXGBpuY02cSQUBhkzf5ciy1U8+K+GkekImV0=
+	t=1762969194; cv=none; b=FijiUw8C/PUX+oHpW8WRbyHuZnmXLjaZhwFBKGqlARPOBGS+EUGrOBcxvQ1mtnu/BeGYO4jl276nNfbuO7ExmAehjeOL/+F8UXBdw3UCX44BHBhcYHXAtUa9hWonwIGaaNdGIPO8ucLkpNzN3QTTRfPgk0Ft1e4gklX2zBe6vM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762969193; c=relaxed/simple;
-	bh=WiNWbvfwoo+8EdAa9Uz8Q0T/2sNuMxxs4D8jJ5u/WA8=;
+	s=arc-20240116; t=1762969194; c=relaxed/simple;
+	bh=lbv7KBOnId+FabH1167dMbnJJpBWntZ2AQurHl0Ymh4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=eczAZet6TpXUOuQKFlNJdaboOzSBSvInA7talFuBlAFuCOFM6lZz3yy5vX7dcaL+VuJrJcK+oAWNft5zeM7K3kwEOvixE5rWHWArRLjMA7m2gkk+JS6lGIYTnmfN5XUaLnH4JSFC9D65dV3sx+B2kuSIiTztbXizQvuPtdu3oAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y3tyoGdq; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=WpCqZhWqKyUWSNMNvqFhcT1Yph2uUT1YjO3Z3oqM4mLs45VYIvI/5n22FaH5eemp+PisfRLp+opZiZjtknBVrDLRfc9ncL3LzfXF78m4YDxX36387VFcXZ0oJk++um1IJ85149GKoe5oqnWRfqgcRpVhM7cMW7aeWOdq0PjeArk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=olfkkNhZ; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y3tyoGdq"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7ad1e8ab328so885712b3a.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 09:39:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="olfkkNhZ"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3436e9e3569so2370805a91.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 09:39:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762969190; x=1763573990; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1762969192; x=1763573992; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=3jB11KRi3IX+N8TsZocIARdIpUY/Xl/OcZwePjrIV+8=;
-        b=Y3tyoGdqbebJ/iYR0RzdyQOMJr0PQXO1K+T54w9ajGBsNzvAQIOcBxd34sb3SDUIN1
-         Uwewv+rSjoTz6PjZUjw/rKVp/F7PhrPhbnrYNRuvauRVAoJM/LPX6c94P+2iuSNuit4x
-         1G7wra4+l+EBsIWMFo7nqrlZ1YRlbMai2sCAIgd5duYJpW7UI/qq7WutrL1uYaAt5a7j
-         HifApJZMfD9Lx9xGEp9p3Sm3fjPREK0f2jQ10Qdl+ubFz6RVvhhL/ycu0BUGXItqgK5s
-         ZS8q1cX7Tw1Hx4YfprbeMtf14uVFawUce+uc6m1QnlPTWsyE/yVMnZJV0vDd7PsWrXBI
-         8f0g==
+        bh=5TnDpCtdkW5EjfNm/WK8+BC1Q5HsHLmqdVi4Osqi6cA=;
+        b=olfkkNhZWRcGazUd1JqEEuH+f1nLwKOQBE3vuPUpfH3w1y7gpdR8/nMJJSiSdhqfzr
+         i1hS+OxkvMf9PVLS80WMN4uAGnXbA8BYySRXNqeMpYljUGSEQx02ikTVZZ4KGklkd4Wk
+         O3bTjaRxv8/ZubCS4id0RXbw38eI2RX8KB9zG43dnUK10Oo+/UVAjqk0GrIK5D1PcbVq
+         g6xqUF0veor+AQ1wn/s45vm4oJcjKq9KSYRoKGYrxXHgK6hR48CTtmn/KAnLSL3di5cK
+         /VDXElIeCcPmKBpLMsmEPd9VsA7YUoPhmgZE1DnZJDRoLTFMxl0E5BTS7xKPJfJ/jdWx
+         qHUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762969190; x=1763573990;
+        d=1e100.net; s=20230601; t=1762969192; x=1763573992;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3jB11KRi3IX+N8TsZocIARdIpUY/Xl/OcZwePjrIV+8=;
-        b=DprjwlVi3waMFOHqFLjAjh807uFzH7EYgXl51QGK2KrERB+4lrlStVWsJwZxdUpmjU
-         vSBQu5yJz0Pe7G7PIp1vPlDHVgj7wxBqOE0N4y/csuVSj/OnytCMBU6ckcOHkxe0d34O
-         Wpt4RiY7SKgpPxorg3yUk+qHYgF7cQrc69E27RhMOXbztWdIj9U/rEMt9uV411OzVaU5
-         befkGQ85T4Le664OOJJEV7mStN6xYBbDEKhwFmvTXtGhJvHQTkami1Kv5T32DmbEw0AG
-         HAj685DudlHqxWeNPcQ+6W+phBHf0VZhIJWeH8Rtm4oKbvOdowC3BXN581rS9iNZRb6A
-         PjNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUi8GYPFadgz5kbOLSPj4Zh9rWen8I2GXd88Vkco4L84bR67U3JnK3J4CtqlHjSi5BYNCYshrUlM/tTPYZRygT1@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFDToGfLQEbJdMDFX5wv6cgR0f3tBzV1N2FUrFLFfFOlEt4z8W
-	WDg4XT98GHOdR8G3m6UW9HIcaQqVzE4A40Kzdprj/IUbwprOcGPX6n+NNvmPywevA2Xoi33eh1w
-	aUJewDA==
-X-Google-Smtp-Source: AGHT+IEzUdshi4KJh5WFIAXko+n+YEgi4OqqdjsC4s4GZ3jRZGaScEAL16+P4T3e1ewsgL1T8TGXhgEoctI=
-X-Received: from pge1.prod.google.com ([2002:a05:6a02:2d01:b0:bac:6acd:817e])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:4305:b0:343:9397:c4d5
- with SMTP id adf61e73a8af0-3590908eb63mr5330693637.12.1762969190457; Wed, 12
- Nov 2025 09:39:50 -0800 (PST)
+        bh=5TnDpCtdkW5EjfNm/WK8+BC1Q5HsHLmqdVi4Osqi6cA=;
+        b=tbak0KV/Bis8y5CmjzbMTMWe8E86+HvI56ErkkedecFWuingnq6JRJhFD2lAVSTm++
+         31iQLZPvG/LxINBRN6/e/APlvZY9AIKj6yzBijVCUFqPRZ0oRT3xXqQOM2NJjJ2QXvXy
+         DabJxhKW64dqyf5NMYaX4XfZel4POuv7oa19hiu8KGasatgEDZo9g30DWdCOfhsT44uH
+         SRhkitSr/SL7yzcaNodffAg6YiXPgmAMWncHp9znbTkFuuDsz6ndWNC6GQrj8Tw2D5eV
+         K/TbXCnhBSbOoejmJlkyLCVtj8uIvrUNfuY9KXFZbQqJtYcS0VlkE3bLNXSWtnOme12g
+         IPfw==
+X-Forwarded-Encrypted: i=1; AJvYcCXB7ci4XSCsSUk7mPOXe85F9xCmmRQmCFo8bsma/G6TO7yOT9QMPdgCIYXeCRIL8Jpy8lBg69Uo9S50h/dZHaZr@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIF09sRiDqyFzXRNThPPicI02EEjf1QCsj+c6oWF9myQx4D5y0
+	UPQryQ4KpTIaKvpUBSY33xaYwmpxHg6Fc9G6rGme5eOODK8Jzn2bUfVnplSjXpszMBMyKpDfiOa
+	0DcEOwA==
+X-Google-Smtp-Source: AGHT+IHz/l05PZRgfyqRId2a6PpuZL13C+FOannHS5GzYwvPYmTtNXM3YC7Qpo5B6cCtNaEfJoKUfU9w7hc=
+X-Received: from pjbeu11.prod.google.com ([2002:a17:90a:f94b:b0:338:3e6b:b835])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4a91:b0:341:761c:3330
+ with SMTP id 98e67ed59e1d1-343dde8addfmr4774092a91.23.1762969192338; Wed, 12
+ Nov 2025 09:39:52 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 12 Nov 2025 09:39:42 -0800
+Date: Wed, 12 Nov 2025 09:39:43 -0800
 In-Reply-To: <20251112173944.1380633-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251112173944.1380633-1-seanjc@google.com>
 X-Mailer: git-send-email 2.51.2.1041.gc1ab5b90ca-goog
-Message-ID: <20251112173944.1380633-3-seanjc@google.com>
-Subject: [PATCH 2/4] x86/mtrr: Drop unnecessary export of "mtrr_state"
+Message-ID: <20251112173944.1380633-4-seanjc@google.com>
+Subject: [PATCH 3/4] x86/mm: Drop unnecessary export of "ptdump_walk_pgd_level_debugfs"
 From: Sean Christopherson <seanjc@google.com>
 To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
 	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
@@ -76,28 +76,28 @@ Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
 	Kai Huang <kai.huang@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Don't export "mtrr_state" as usage is limited to arch/x86/kernel/cpu/mtrr
-(and nothing outside of that directory even includes the local mtrr.h).
+Don't export "ptdump_walk_pgd_level_debugfs" as its sole user is
+arch/x86/mm/debug_pagetables.c, which can't be built as a module.
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kernel/cpu/mtrr/generic.c | 1 -
+ arch/x86/mm/dump_pagetables.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/mtrr/generic.c b/arch/x86/kernel/cpu/mtrr/generic.c
-index 8c18327eb10b..0863733858dc 100644
---- a/arch/x86/kernel/cpu/mtrr/generic.c
-+++ b/arch/x86/kernel/cpu/mtrr/generic.c
-@@ -89,7 +89,6 @@ static int mtrr_state_set;
- u64 mtrr_tom2;
+diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
+index a4700ef6eb64..2afa7a23340e 100644
+--- a/arch/x86/mm/dump_pagetables.c
++++ b/arch/x86/mm/dump_pagetables.c
+@@ -486,7 +486,6 @@ void ptdump_walk_pgd_level_debugfs(struct seq_file *m, struct mm_struct *mm,
+ #endif
+ 	ptdump_walk_pgd_level_core(m, mm, pgd, false, false);
+ }
+-EXPORT_SYMBOL_GPL(ptdump_walk_pgd_level_debugfs);
  
- struct mtrr_state_type mtrr_state;
--EXPORT_SYMBOL_GPL(mtrr_state);
- 
- /* Reserved bits in the high portion of the MTRRphysBaseN MSR. */
- u32 phys_hi_rsvd;
+ void ptdump_walk_user_pgd_level_checkwx(void)
+ {
 -- 
 2.51.2.1041.gc1ab5b90ca-goog
 
