@@ -1,124 +1,142 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D94123563CF;
-	Wed, 12 Nov 2025 18:25:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00EEC347BC3
+	for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 19:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762971951; cv=none; b=dshzdNAr5/7scPLvNzCepbE0u7xZ7erV+fl/WLG3AhdB1kQR+p5QULHTS57+V/pKTdqYUSp74lovivJT2u4PtXkuQa2GrRrxJM0+lwg7DSHUscD8ovPAfZzCpFuqzdSujUxXy50aGN87uRWq51YcI9AIzoNew/kKU/bnQ0brEHM=
+	t=1762975897; cv=none; b=RniNvngvIuhjEdM/dTWyH5m1YBtT9NJ7IrX3N8xjmGpuhIIUIlVfj0uAAc+c/HsKLMr1NrJVrxXOxy5WoIAGw/B0mbQQSbXH0cPfR8Nss1/p3kEunWEHO1FS9D0teip1rbTqoli26oN2X6JBe24uUoe3Ld6NI/bI6izghynCgCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762971951; c=relaxed/simple;
-	bh=j0kKyisEY5DmwcHdmpnBBPgPNHOpFS/nrahq6SrMqBE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FnYrw1W5/aS/qEvlUCjelHDNZMWnwHut7g6CJ978NuUwH8vt48laOwc8LHb6hTtQSGGXJJHJg3OYtZV7YKM1w3jJAHX0lOzAbJ5cY2Isju97598W/LAF+HUildDf0/Wxyruj++nzrhJ9wQMXhUfuOTxE9GzGwENaii9+FiqV7yE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FB4B1595;
-	Wed, 12 Nov 2025 10:25:39 -0800 (PST)
-Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C6153F63F;
-	Wed, 12 Nov 2025 10:25:45 -0800 (PST)
-From: Leo Yan <leo.yan@arm.com>
-Date: Wed, 12 Nov 2025 18:24:51 +0000
-Subject: [PATCH v3 25/25] perf arm_spe: Improve SIMD flags setting
+	s=arc-20240116; t=1762975897; c=relaxed/simple;
+	bh=2z30Onwslv/HKcZ2MyBEPI3V6h4LiyRU3iVn30ZBBiU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SsJt1gabM9yVQ0LvTHymNm7fxzrbBsvquM8dkTYuzW4XW3HTyhwypimeZ/kSBT+RxJn8TM6miSE+rRGA9jYF7bAhaxKu04hh7Mx0hJbDEitA8RwVRFG1y6SOFgY+l5hzcxSOLS6wc7E9zvWYN7rutr6cIwoyVZT+DV3TlvHsC2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XI+dJR2B; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XI+dJR2B"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-295c64cb951so25945ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 11:31:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1762975895; x=1763580695; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RcvUwP/777L/eN/ikRIeQAoirqn6cF5E9VLK5dHu84o=;
+        b=XI+dJR2B/uhl/EcDhzNuv0JxL8HI8tLeFuMI4cd0YVx/XV82e7sYf3aLlwUzklIGWC
+         RwO377HM9ThSo80U3843yMPz6UaoETJWPKslnD7b5wLaANRCdt87v7zZ85/o98KHB0tx
+         unffjRMQXuUaGnEIP0CNms81TT7uLLIAt7kiGpEUHKTcWxJ1qJocYLtgza82Hyeqc69m
+         lrgKVzuQPTWE39jxE/fC7HXpTKgi+CskkJ+ovHXcXKoPH6hc77k9I1K3c8Pvwu3E/Dkj
+         PaXjnx/wVIgmrf+gi1MLhWdD5iaNW9hMq15qHvfy1sGfTDPbN6an+cJIgZnBgEyrh3yd
+         bd0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762975895; x=1763580695;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=RcvUwP/777L/eN/ikRIeQAoirqn6cF5E9VLK5dHu84o=;
+        b=N2PeseYzCIWCbRQU2nkT52wjUdCNBKzCmMImir76OHElcx4Lu2NtFjxNPVEuLe6rSa
+         2vCtYO1ieQuug2ESTaIlKQtSrCYGMEjiSVC1XiaUSDDNXBSGC00nRgH2GV37g6qN5cVu
+         c5SboZlC3910nv+8cgTOznM9ZD0UjzhnzcfmPXayDqfqdDHwMnAL7DmwhcokFdEQaoob
+         OXH9bo4VJ60OGyLBo27j4G66pibb+VzmUbJGctaVZ3+sOeQv/nmJNIkUnu4C7Zml9Fmb
+         zb5iYh6JDNw8tJ7M6sF/Vgl/NEuYSCVHSXuwqH+E1AG+3JvUUbsdo72q4xWJRkkp4CT0
+         vqBA==
+X-Gm-Message-State: AOJu0YzzZu7dkA01OTn0ziC/yeHP8epo3iOl6QJ65UQpHhU6xoksu8d4
+	IwUv620qMvrtu3Dq1bi4tMDPwzs9fOi2U6qwg6Ewbz/+3lihUUg3HwIPRTsH0tIIcGFYRraoiR7
+	kQz+cwppmXkoO6FbF2+z9C+HoMzUMs0rh7rpCDFQg
+X-Gm-Gg: ASbGncsBWSH6zk/R3Qk6vfwqRyUVjvVT8GU0hf4wMUMKLH8tuJSOUA+yTT4lrl0QYep
+	+UoPa1sLvm2mvEMeIKymAzGpKsPo/ZO8wNkqQDw7vdUhRXOHTYbgIFx5aEr5yzL/OV67INMseT/
+	iDvAgnVhbAoshygdopmOtmNaYHOkL9eKJI2KE4oSRa29uYOOjVxd+8whLwYRGR6vYZouGkgDLpk
+	IKLsKZMD2uR/VbFsSr/Feg9gHO8QapasdTN1cXTiJVczPV+ZV+hkqPXcFbcy+DHS3GFgkdu86LP
+	v7DSG5GTP8x2bEbyZEbYkgYdQg==
+X-Google-Smtp-Source: AGHT+IEnanRTpKm63zCv33Zb9RXdVcyIJoICIdpTLlTnSgpNWbSyREWjSVvWZ7Ny+8nzA7PjgTs9GzQPNFbYFlXOfLE=
+X-Received: by 2002:a17:903:1251:b0:295:30bc:458e with SMTP id
+ d9443c01a7336-2985b86993amr471875ad.3.1762975894761; Wed, 12 Nov 2025
+ 11:31:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251112-perf_support_arm_spev1-3-v3-25-e63c9829f9d9@arm.com>
-References: <20251112-perf_support_arm_spev1-3-v3-0-e63c9829f9d9@arm.com>
-In-Reply-To: <20251112-perf_support_arm_spev1-3-v3-0-e63c9829f9d9@arm.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, 
- linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1762971891; l=3476;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=j0kKyisEY5DmwcHdmpnBBPgPNHOpFS/nrahq6SrMqBE=;
- b=1QI7VOSWeJUByI6WkD3CdHfdvOvcuZhMDt3TK6LeoHsG/jUOX906/vwRloRmxkhwG4q3cCGqL
- KA3t8y5aN6YCl0YFm+LdfoP7mXkZjO3zX//hFP+0v7wAuqZ86h7Mdx0
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
+References: <20251031162637.1456191-1-irogers@google.com>
+In-Reply-To: <20251031162637.1456191-1-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 12 Nov 2025 11:31:22 -0800
+X-Gm-Features: AWmQ_bkkiP1GXmQJX6oJj_AhVOQ03vFxJ4Fxk2Kf9lhezAqqgbeGmvhNAnlI74s
+Message-ID: <CAP-5=fV1bobHM5bT8xU7sxZAFt03XNaXwTQVGj3hm9RyKsH3fw@mail.gmail.com>
+Subject: Re: [PATCH v1] perf vendor power9 nest metrics: Correct unit from MB
+ to MiB
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, 
+	linux-kernel@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fill in ASE and SME operations for the SIMD arch field.
+On Fri, Oct 31, 2025 at 9:26=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> 6.1e-5 is very close to 1/16384, where 16384 is 2^14, i.e. a power of
+> 2. When units are in powers of 2 the IEC unit is MiB (mebibytes)
+> rather than MB (megabytes) where the values are powers of 10. This
+> patch corrects the unit for uniformity and because such units may be
+> pattern matched against.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Also set the predicate flags for SVE and SME, but differences between
-them: SME does not have a predicate flag, so the setting is based on
-events. SVE provides a predicate flag to indicate whether the predicate
-is disabled, which allows it to be distinguished into four cases: full
-predicates, empty predicates, fully predicated, and disabled predicates.
+Ping.
 
-After:
+Thanks,
+Ian
 
-    perf report -s +simd
-    ...
-    0.06%     0.06%  sve-test  sve-test               [.] setz                                        [p] SVE
-    0.06%     0.06%  sve-test  [kernel.kallsyms]      [k] do_raw_spin_lock
-    0.06%     0.06%  sve-test  sve-test               [.] getz                                        [p] SVE
-    0.06%     0.06%  sve-test  [kernel.kallsyms]      [k] timekeeping_advance
-    0.06%     0.06%  sve-test  sve-test               [.] getz                                        [d] SVE
-    0.06%     0.06%  sve-test  [kernel.kallsyms]      [k] update_load_avg
-    0.06%     0.06%  sve-test  sve-test               [.] getz                                        [e] SVE
-    0.05%     0.05%  sve-test  sve-test               [.] setz                                        [e] SVE
-    0.05%     0.05%  sve-test  [kernel.kallsyms]      [k] update_curr
-    0.05%     0.05%  sve-test  sve-test               [.] setz                                        [d] SVE
-    0.05%     0.05%  sve-test  [kernel.kallsyms]      [k] do_raw_spin_unlock
-    0.05%     0.05%  sve-test  [kernel.kallsyms]      [k] timekeeping_update_from_shadow.constprop.0
-    0.05%     0.05%  sve-test  sve-test               [.] getz                                        [f] SVE
-    0.05%     0.05%  sve-test  sve-test               [.] setz                                        [f] SVE
-
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/perf/util/arm-spe.c | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
-
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 3b2d767f7a3e156594a69e7b546f3156cceb4951..6b76a6e9457adc650b7b790b4ab38cfe9eca5e22 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -353,12 +353,26 @@ static struct simd_flags arm_spe__synth_simd_flags(const struct arm_spe_record *
- 
- 	if (record->op & ARM_SPE_OP_SVE)
- 		simd_flags.arch |= SIMD_OP_FLAGS_ARCH_SVE;
--
--	if (record->type & ARM_SPE_SVE_PARTIAL_PRED)
--		simd_flags.pred |= SIMD_OP_FLAGS_PRED_PARTIAL;
--
--	if (record->type & ARM_SPE_SVE_EMPTY_PRED)
--		simd_flags.pred |= SIMD_OP_FLAGS_PRED_EMPTY;
-+	else if (record->op & ARM_SPE_OP_SME)
-+		simd_flags.arch |= SIMD_OP_FLAGS_ARCH_SME;
-+	else if (record->op & (ARM_SPE_OP_ASE | ARM_SPE_OP_SIMD_FP))
-+		simd_flags.arch |= SIMD_OP_FLAGS_ARCH_ASE;
-+
-+	if (record->op & ARM_SPE_OP_SVE) {
-+		if (!(record->op & ARM_SPE_OP_PRED))
-+			simd_flags.pred = SIMD_OP_FLAGS_PRED_DISABLED;
-+		else if (record->type & ARM_SPE_SVE_PARTIAL_PRED)
-+			simd_flags.pred = SIMD_OP_FLAGS_PRED_PARTIAL;
-+		else if (record->type & ARM_SPE_SVE_EMPTY_PRED)
-+			simd_flags.pred = SIMD_OP_FLAGS_PRED_EMPTY;
-+		else
-+			simd_flags.pred = SIMD_OP_FLAGS_PRED_FULL;
-+	} else {
-+		if (record->type & ARM_SPE_SVE_PARTIAL_PRED)
-+			simd_flags.pred = SIMD_OP_FLAGS_PRED_PARTIAL;
-+		else if (record->type & ARM_SPE_SVE_EMPTY_PRED)
-+			simd_flags.pred = SIMD_OP_FLAGS_PRED_EMPTY;
-+	}
- 
- 	return simd_flags;
- }
-
--- 
-2.34.1
-
+> ---
+>  .../perf/pmu-events/arch/powerpc/power9/nest_metrics.json | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json =
+b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+> index 7a5d1bf543f8..8d028a7c2777 100644
+> --- a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+> +++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+> @@ -29,25 +29,25 @@
+>         "MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT01@ + ne=
+st_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT23@",
+>         "MetricName" : "mcs01-read",
+>         "MetricGroup" : "memory-bandwidth",
+> -       "ScaleUnit": "6.1e-5MB"
+> +       "ScaleUnit": "6.1e-5MiB"
+>      },
+>      {
+>         "MetricExpr" : "nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT01@ + ne=
+st_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT23@",
+>         "MetricName" : "mcs23-read",
+>         "MetricGroup" : "memory-bandwidth",
+> -       "ScaleUnit": "6.1e-5MB"
+> +       "ScaleUnit": "6.1e-5MiB"
+>      },
+>      {
+>         "MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT01@ + ne=
+st_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT23@",
+>         "MetricName" : "mcs01-write",
+>         "MetricGroup" : "memory-bandwidth",
+> -       "ScaleUnit": "6.1e-5MB"
+> +       "ScaleUnit": "6.1e-5MiB"
+>      },
+>      {
+>         "MetricExpr" : "nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT01@ + ne=
+st_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT23@",
+>         "MetricName" : "mcs23-write",
+>         "MetricGroup" : "memory-bandwidth",
+> -       "ScaleUnit": "6.1e-5MB"
+> +       "ScaleUnit": "6.1e-5MiB"
+>      },
+>      {
+>         "MetricExpr" : "nest_powerbus0_imc@PM_PB_CYC@",
+> --
+> 2.51.1.930.gacf6e81ea2-goog
+>
