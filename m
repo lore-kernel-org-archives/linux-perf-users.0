@@ -1,26 +1,27 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E7C134DB67;
-	Wed, 12 Nov 2025 18:25:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 498E934B415;
+	Wed, 12 Nov 2025 18:25:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762971912; cv=none; b=Id483lPRQu+8sXMq+sO5+hJ2LWmX9H7Gld0MRWTilaF0cm5MVTmQhCdR1BpqSDTmNHUKmEkZT39xTVyiVzOiqXQ8UngHZcIYI0bfOyp5trQ/dM6rRs5jxEUaT+0mx7YSHHQm2CzK4F9mWdALsd78XORX5V2kuwtir00aGD5hYxE=
+	t=1762971915; cv=none; b=chUg0hPRCpFa75gz36Cr08S/w1C2PO605xIykeQtGOuiUhtrFkecOC7w9eqGeZk7cpS9ZIlqeopnmq+ObXNMSDWlkubOMJdgfHkVT29MEnfn+jI6L0iC3xT9LzcqmdV/a5bj4L/DxC0m/qYZocW8KdZVd6hKI3JBjLi/KfqZjBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762971912; c=relaxed/simple;
-	bh=qKx9lN2m9B2LaNp9/BsuTsz4PMHucWRf4+sxupt4WJ8=;
+	s=arc-20240116; t=1762971915; c=relaxed/simple;
+	bh=pOn+OweUnZMaNTqqQtY3ZTLc4P+MyZzHAa72JWfU/kw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FW05dHy1mPtb0VivG/lA8scvxGTgRs6Y5Iqfz3YgvMiijciV3lAf5VduILaTqCFyc3v2V6AyEeByhlNMyE1y1eG1MCsRe/IcLoyFT2vhXXjS7udokDeUs92HU57xwpUzoQDodpakR3eFeDh+DP6TPoLfh4eE6TEre74QApRmwKc=
+	 In-Reply-To:To:Cc; b=Vy5oGpQTVj4EfLZ8MiVVxHkNiAOUrs7JH0UVe3vNzZCD0HV17iTaFDSjh+B4g2CM47eCuG+xdi5xrQlzXrZpTm8BPAB0jb7GibAhmEp1nZQRftU0YLeWjOWXQKld5UJCEIAAjd54guj0N5P4u+514vame28W9ZlWQLL+gtfuffo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D96221515;
-	Wed, 12 Nov 2025 10:25:02 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A4281595;
+	Wed, 12 Nov 2025 10:25:05 -0800 (PST)
 Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A42BC3F63F;
-	Wed, 12 Nov 2025 10:25:08 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC1683F63F;
+	Wed, 12 Nov 2025 10:25:10 -0800 (PST)
 From: Leo Yan <leo.yan@arm.com>
-Date: Wed, 12 Nov 2025 18:24:34 +0000
-Subject: [PATCH v3 08/25] perf arm_spe: Consolidate operation types
+Date: Wed, 12 Nov 2025 18:24:35 +0000
+Subject: [PATCH v3 09/25] perf arm_spe: Introduce data processing macro for
+ SVE operations
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -29,7 +30,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251112-perf_support_arm_spev1-3-v3-8-e63c9829f9d9@arm.com>
+Message-Id: <20251112-perf_support_arm_spev1-3-v3-9-e63c9829f9d9@arm.com>
 References: <20251112-perf_support_arm_spev1-3-v3-0-e63c9829f9d9@arm.com>
 In-Reply-To: <20251112-perf_support_arm_spev1-3-v3-0-e63c9829f9d9@arm.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -41,89 +42,83 @@ Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
  linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1762971891; l=2655;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1762971891; l=3135;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=qKx9lN2m9B2LaNp9/BsuTsz4PMHucWRf4+sxupt4WJ8=;
- b=fgY3metDPsIJLUysLmv9P8Ko2c2ueKyZmcpqCJZwANpHcASyl8Ddv3fzJBegrpFNbfc14C+wZ
- vFEHiMJCYkDA63bMayyKDfv6c+wM/8GXcSZcYFJS9Z07qVHlMceTCLg
+ bh=pOn+OweUnZMaNTqqQtY3ZTLc4P+MyZzHAa72JWfU/kw=;
+ b=Uj09w5o4mpLmc/OH6B3x0sC437+uDPHL1CFpYDrOFCfgmY1V2Z1tLwkNnyTvjnOuJV8Q2Z7To
+ xo7tTj7vSySDwbLV1PyCVLqwfRbwMschUG8I2vFXgnMo+qfp+/+/JUp
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-Consolidate operation types in a way:
-
-(a) Extract the second-level types into separate enums.
-(b) The second-level types for memory and SIMD operations are classified
-    by modules. E.g., an operation may relate to general register,
-    SIMD/FP, SVE, etc.
-(c) The associated information tells details. E.g., an operation is
-    load or store, whether it is atomic operation, etc.
-
-Start the enum items for the second-level types from 8 to accommodate
-more entries within a 32-bit integer.
+Introduce the ARM_SPE_OP_DP (data processing) macro as associated
+information for SVE operations. For SVE register access, only
+ARM_SPE_OP_SVE is set; for SVE data processing, both ARM_SPE_OP_SVE and
+ARM_SPE_OP_DP are set together.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/util/arm-spe-decoder/arm-spe-decoder.h | 46 ++++++++++++-----------
- 1 file changed, 24 insertions(+), 22 deletions(-)
+ tools/perf/util/arm-spe-decoder/arm-spe-decoder.c | 4 ++--
+ tools/perf/util/arm-spe-decoder/arm-spe-decoder.h | 4 ++--
+ tools/perf/util/arm-spe.c                         | 5 +----
+ 3 files changed, 5 insertions(+), 8 deletions(-)
 
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+index 847c29385bea8618e14b2eb21a08896041890d89..6974f594f37c9916fff591ced1e9c2d60cf84f14 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+@@ -201,12 +201,12 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
+ 				else
+ 					decoder->record.op |= ARM_SPE_OP_LD;
+ 				if (SPE_OP_PKT_LDST_SUBCLASS_SVE_SME_REG(payload))
+-					decoder->record.op |= ARM_SPE_OP_SVE_LDST;
++					decoder->record.op |= ARM_SPE_OP_SVE;
+ 				break;
+ 			case SPE_OP_PKT_HDR_CLASS_OTHER:
+ 				decoder->record.op |= ARM_SPE_OP_OTHER;
+ 				if (SPE_OP_PKT_OTHER_SUBCLASS_SVE(payload))
+-					decoder->record.op |= ARM_SPE_OP_SVE_OTHER;
++					decoder->record.op |= ARM_SPE_OP_SVE | ARM_SPE_OP_DP;
+ 				break;
+ 			case SPE_OP_PKT_HDR_CLASS_BR_ERET:
+ 				decoder->record.op |= ARM_SPE_OP_BRANCH_ERET;
 diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-index 1259cbadfdc8098019afcd4cf65e733475310392..b555e2cc1dc36f209c23b0d84378da0ee65c1ab3 100644
+index b555e2cc1dc36f209c23b0d84378da0ee65c1ab3..acab6d11096b19b1d31a553c83cba9732ecf5ddb 100644
 --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
 +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-@@ -36,29 +36,31 @@ enum arm_spe_op_type {
- 	ARM_SPE_OP_OTHER	= 1 << 0,
- 	ARM_SPE_OP_LDST		= 1 << 1,
- 	ARM_SPE_OP_BRANCH_ERET	= 1 << 2,
-+};
-+
-+enum arm_spe_2nd_op_ldst {
-+	ARM_SPE_OP_GP_REG		= 1 << 8,
-+	ARM_SPE_OP_UNSPEC_REG		= 1 << 9,
-+	ARM_SPE_OP_NV_SYSREG		= 1 << 10,
-+	ARM_SPE_OP_SIMD_FP		= 1 << 11,
-+	ARM_SPE_OP_SVE_OTHER		= 1 << 12,
-+	ARM_SPE_OP_SVE_LDST		= 1 << 13,
-+
-+	/* Assisted information for memory / SIMD */
-+	ARM_SPE_OP_LD			= 1 << 20,
-+	ARM_SPE_OP_ST			= 1 << 21,
-+	ARM_SPE_OP_ATOMIC		= 1 << 22,
-+	ARM_SPE_OP_EXCL			= 1 << 23,
-+	ARM_SPE_OP_AR			= 1 << 24,
-+};
+@@ -43,8 +43,7 @@ enum arm_spe_2nd_op_ldst {
+ 	ARM_SPE_OP_UNSPEC_REG		= 1 << 9,
+ 	ARM_SPE_OP_NV_SYSREG		= 1 << 10,
+ 	ARM_SPE_OP_SIMD_FP		= 1 << 11,
+-	ARM_SPE_OP_SVE_OTHER		= 1 << 12,
+-	ARM_SPE_OP_SVE_LDST		= 1 << 13,
++	ARM_SPE_OP_SVE			= 1 << 12,
  
--	/* Second level operation type for OTHER */
--	ARM_SPE_OP_SVE_OTHER		= 1 << 16,
--
--	/* Second level operation type for LDST */
--	ARM_SPE_OP_LD			= 1 << 16,
--	ARM_SPE_OP_ST			= 1 << 17,
--	ARM_SPE_OP_ATOMIC		= 1 << 18,
--	ARM_SPE_OP_EXCL			= 1 << 19,
--	ARM_SPE_OP_AR			= 1 << 20,
--	ARM_SPE_OP_SIMD_FP		= 1 << 21,
--	ARM_SPE_OP_GP_REG		= 1 << 22,
--	ARM_SPE_OP_UNSPEC_REG		= 1 << 23,
--	ARM_SPE_OP_NV_SYSREG		= 1 << 24,
--	ARM_SPE_OP_SVE_LDST		= 1 << 25,
--
--	/* Second level operation type for BRANCH_ERET */
--	ARM_SPE_OP_BR_COND		= 1 << 16,
--	ARM_SPE_OP_BR_INDIRECT		= 1 << 17,
--	ARM_SPE_OP_BR_GCS		= 1 << 18,
--	ARM_SPE_OP_BR_CR_BL		= 1 << 19,
--	ARM_SPE_OP_BR_CR_RET		= 1 << 20,
--	ARM_SPE_OP_BR_CR_NON_BL_RET	= 1 << 21,
-+enum arm_spe_2nd_op_branch {
-+	ARM_SPE_OP_BR_COND		= 1 << 8,
-+	ARM_SPE_OP_BR_INDIRECT		= 1 << 9,
-+	ARM_SPE_OP_BR_GCS		= 1 << 10,
-+	ARM_SPE_OP_BR_CR_BL		= 1 << 11,
-+	ARM_SPE_OP_BR_CR_RET		= 1 << 12,
-+	ARM_SPE_OP_BR_CR_NON_BL_RET	= 1 << 13,
+ 	/* Assisted information for memory / SIMD */
+ 	ARM_SPE_OP_LD			= 1 << 20,
+@@ -52,6 +51,7 @@ enum arm_spe_2nd_op_ldst {
+ 	ARM_SPE_OP_ATOMIC		= 1 << 22,
+ 	ARM_SPE_OP_EXCL			= 1 << 23,
+ 	ARM_SPE_OP_AR			= 1 << 24,
++	ARM_SPE_OP_DP			= 1 << 25,	/* Data processing */
  };
  
- enum arm_spe_common_data_source {
+ enum arm_spe_2nd_op_branch {
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index 614ce032f87e46d1f3754258f51bb1693ec128b7..881257d3958705e725f1b7d47b41a93defd231ea 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -346,10 +346,7 @@ static struct simd_flags arm_spe__synth_simd_flags(const struct arm_spe_record *
+ {
+ 	struct simd_flags simd_flags = {};
+ 
+-	if ((record->op & ARM_SPE_OP_LDST) && (record->op & ARM_SPE_OP_SVE_LDST))
+-		simd_flags.arch |= SIMD_OP_FLAGS_ARCH_SVE;
+-
+-	if ((record->op & ARM_SPE_OP_OTHER) && (record->op & ARM_SPE_OP_SVE_OTHER))
++	if (record->op & ARM_SPE_OP_SVE)
+ 		simd_flags.arch |= SIMD_OP_FLAGS_ARCH_SVE;
+ 
+ 	if (record->type & ARM_SPE_SVE_PARTIAL_PRED)
 
 -- 
 2.34.1
