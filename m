@@ -1,129 +1,185 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A31FF32861F
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 16:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A75B33B977
+	for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 16:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762965437; cv=none; b=IbPM2knj7cMRGkjygw/RMxj98iTRzY62fMQ6xQNGwTD7181HM/ycuaGTPz97srt+6dIW//JGyoNFbvFNr5fBy4j8qI7HpywcaEI+eAea9YPqVX/egRBhQu7iZvmBlabcxRa/4iFvaIWZ6wje9ChvJaMTaPW2QJCUMvK/NsFDltQ=
+	t=1762965755; cv=none; b=BbhjBpbdZXbDdy5m6eYPXEK8V6SvO/IcLHCHZ+9BRAnpA53c51YQJA0wsP6RCmK9ubcSyrxqwuwJ9A2jGK45MLP2o3qn13D61Flxt3rWlJj+F3gTluHreLS0XHuwr+zcgaJZuCD6AvwM9WvnvZfWjowjsfKXvPE9ppLKOtumdts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762965437; c=relaxed/simple;
-	bh=y/sJC5qxtjPyc2gXXFUC3VvLNx6ICKkpfTbgbKKn72A=;
+	s=arc-20240116; t=1762965755; c=relaxed/simple;
+	bh=/bSxAcGrhRp7L4ufXIbZzzWuihJrDC7nvf+26+tVFgo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bGnAWlvVTfGzUt9lFBfZKfaYg8zq/XTz0wlI6St0hCMoHHOrhmMeugTtD37xUN6qK8Tuz+xWsq2pwM/PuRstjUb/LkVkf7RIiVa3+YpnARWH3+mQt7fz4IcZa04xbH35J2pDjYMB57yjQ0Tb9FLPSd2fmHM9mkONJcz1uafDxn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gy0HcjD9; arc=none smtp.client-ip=209.85.214.169
+	 To:Cc:Content-Type; b=mOBTazbC5N9I3swtw6c+Nu+kbtjzKlLSZXoGS6M7vzaM1wDbIo/zyzdHL2KDaYfywGFRIWhNxps2XYkDmd5qqIPVAD80OJYrRW7FRdUivMnAHMI36P/feWQg0ZD8VtEAL01jFId0EmPjR8LxcEinmzFasDgtOeYeoSRnbZI9JY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cVAtPhmY; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gy0HcjD9"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-297e13bf404so213845ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 08:37:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cVAtPhmY"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-295c64cb951so229755ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 08:42:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762965435; x=1763570235; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1762965753; x=1763570553; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=y/sJC5qxtjPyc2gXXFUC3VvLNx6ICKkpfTbgbKKn72A=;
-        b=Gy0HcjD9xzLxRB6gTfzDQSHTVAPh1lejuspSshuhoKQ7tCG5PsTilTyPXomt2LxJxP
-         DurhHnEmUpp+osNvu8aIWLElda2zoUHwUcPNDntuj0ryQV9S4v4pzCH/fOcaIwQpXMaH
-         79ZnINvJxTlpvHwoUkRnHEj6hjrMXkpmCchyvTkdAZpMSafcP6OrvsVpvL057T81rKTa
-         zf3F3ASRxkRkYqyZ9/hoSL2trTSHp1GfMtLnV9XfPnY9Y1J0panit4D400lO3tsSpD0L
-         bEz1cy7r3zfmE+SRFlZy2SryrLZoJ9BC841rSuHI5RMh5+BzSLt3qyXQhUWrnVWSfwtG
-         9dZA==
+        bh=oylNPE4uVKQhn2NkMu29EXgAYx+J4vN9SweT4O8izLI=;
+        b=cVAtPhmYDHzakEg5I05otGSgoMSQ+hFCpqXQ9Vw5waHd4Aj5E8PkH3m8w8P8WCH4jb
+         cciBTzdDTLVKfOa8gy7lPWDAxc7Cwn+d+JWrf7u+NwO1Dg+vv0WcaCcy8WL/2f0mVMua
+         JCfc2Omp5bEw7Wc4xlcmr071zl3cks1iZC5HJcttoOoznjChZfeNhtbH5OLBuKapZmFr
+         GJI8DJqlVmicfyHMv7nBgLAkcS7hRJ3TM+tXYmd02KteJqrS7snG44d8FSYkXdNWgLWx
+         scSrjRiByAIdaplGhXR5we/JZ0KWn/5HqTknpxwQlVDE6Xemo6lRVt+dY0oCr1IxWa3a
+         I1yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762965435; x=1763570235;
+        d=1e100.net; s=20230601; t=1762965753; x=1763570553;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=y/sJC5qxtjPyc2gXXFUC3VvLNx6ICKkpfTbgbKKn72A=;
-        b=xJdp77oZ7cwGAn7YbP1qN0MVGi3LvWgqrtyYPFyeMyHw83sFrfoRRWNMEQN6jI2ozE
-         kYoVDvXWd8bP2JaHrDL8w60et/dgRJA9nzYZKmKBHJuVa1v79iFy4Qj6jf9/Iux37mt1
-         vXAhopmgbIOeTAKPN/iawE6SX0DQcekl2ZyspdLtWlYtZxRfNv521SIAPt/zzpyjelIa
-         7V8Bz/ttuq0sj5Z431cvoghndEUwaNJijDzmRxXmrpCj6zphh7j5gGiYznln9uznz8Y9
-         FcF740YzqYTJzlOxIJ1hBvyBsMGcD6+rVSrD6r03Vw2G/mS/mHZhag4VWyie6FFoEqDb
-         4lXw==
-X-Forwarded-Encrypted: i=1; AJvYcCU83lhdo5qKaY81rXmKgzW9qn4DOyKj6eGQi7Z8X30Ac0kOdk49TXjUTUSqrmh/3eQWeKImgKPrraXxvAMFKriK@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrfcoPkrcACGNuxPojVrNzqtEFufDubMHUQN0wsmmB/f3+krQa
-	8UWKXCh8whF3P3KniUcS7CWJ6vSWWGrUzUVTN6MBoOOx6saX9JknDCiBI7pf+vAgeRHdNREj2NB
-	dY2YGGXJXnxIFEODpN2qgYFkaKGkrF+djExC/8WBS
-X-Gm-Gg: ASbGncvLXpFS1KLIebyP216/C2KD1xJpm+65Of0Sn79cXX31P/ugbJgqekf2lbz9GKd
-	oI4GOWMPWt6jFQ8bFw05DgNsr+/jsNnDvxmUIpXT1Kfz+KEc6qC2V8KoKOLmf3EdcRn4XJyMjXs
-	0Zl6rP0Mb41NKVGYNdDlqWXNtD/PLYHGstkAJFpdOo0JiyDqBPoLIc2Z/yRVWREYQCp88dL8Lj/
-	F+pQ9uS6Z3LXjd1y2DFrhtZZF8NajfepS0d3TUjRWXKYa6K6aCs2qyljetHM/6//qCIPxc9l2Cr
-	sYIUqccgjj4e+Nwrh6Mwe45kpbSjtxqfCN2d
-X-Google-Smtp-Source: AGHT+IHhxquoYta/ewaaJ8F5uIvrcKenfoA2sfnZPnx+zkuqIuP54G1ynPHjcOnwZAelhvq2e32oVGJKqjxoueEgunI=
-X-Received: by 2002:a17:902:dace:b0:294:f745:fe7b with SMTP id
- d9443c01a7336-2984f836f94mr5058645ad.6.1762965434663; Wed, 12 Nov 2025
- 08:37:14 -0800 (PST)
+        bh=oylNPE4uVKQhn2NkMu29EXgAYx+J4vN9SweT4O8izLI=;
+        b=pyIHWdsN+PfMwr1bTGTRtth1amSeZSUsVLoGB/dbE8x44sKBDpaZIgfD/KzM9GpjTh
+         WI3zzgG9K6nCY5v0S+596ChgyvMlTFNe8b5sJXrgUnp1x5Nri3wr0Wryu9ZfLcbTET6f
+         Vs9T/5Jas2b+vc2+Yqh/njUpMTk5t9pyx66FduSy09ge09IHbvX/ERXqDyZZRZVI2ih4
+         Ft8bSUUE5Vbf6cX5BiN1R+q7HHi+2FA8JGx6pbYcr3DTbiEuj1/UeLRm2oLoDpxELBbg
+         BJV8Pq2AMAYtAmAzi0NocpJwyAdoSDLgmGL7eyCw8kI5jb04jozvQdnNtA8sK/ACkFyR
+         xBPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVi0bN8aNQayT/kV4N1o2ujzGfIshlF4Cf8W57ItQ60ek11fMwaQC2PbqswutAxdXNE+BsQHisSW3RITQg2Gp0c@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvG9JU2Uja8ZACsG3QuJhfqlMGwcM64xMNET1Vm7waoixweada
+	r22J47/JBAW5SLlk+i2FERwOc9JWK3X8j+/+Mepa+C/LZE945fplpcllsgM2UsO7d1PnC/MTFVF
+	jZiGWyxTFZHoJdGBbefQJnBGx6Nh2s39EaMpkPiWS
+X-Gm-Gg: ASbGncuJkcEbbvmv7FB0DNrak5bYjDv0r0ebKzn3lEFfkLLIRW67KZmY3lj92npEDqU
+	VMu3w7u9Kbx5aXOf9H45TT94UdhEVS06ssE7cQyjF6tSvNsOFlMHuM3KvXbFkcFBGpTJ/OUQ31N
+	cUmwExr6fIILVGkPABaReoASeetxpB2/mqDLmtBnKgF6F94BHZKfdIORlgIIwgaEUEHvjjhS4rd
+	9W1fTXa4OESazOAEAikkSrCvNhUJNvhSUuoPH+qaEuUDiko9V6SM90EoXriiYbQ0Gqtedno4NzN
+	mteOUYQWJJbK87w7zbGV5lys++an2qVbOv/c
+X-Google-Smtp-Source: AGHT+IGcvt334Z1FGLlZNlTy5sWbRse8K04gLzU4vGzUmOzboVYYpE+qoTjqfj4wk2TEaL9VZwvq7RS13Bg49n/566w=
+X-Received: by 2002:a17:903:1a68:b0:295:5138:10f2 with SMTP id
+ d9443c01a7336-29850761942mr2777945ad.11.1762965752176; Wed, 12 Nov 2025
+ 08:42:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250930160923.13728-1-jbrnak@redhat.com> <20250930160923.13728-6-jbrnak@redhat.com>
- <CAP-5=fUJZEoAbNu+ZzjgshHRbq94dLn6-KPdzC=i9i350K=4dw@mail.gmail.com> <aRR788vna0u-CEUU@jbrnak-thinkpadx1carbongen9.tpbc.csb>
-In-Reply-To: <aRR788vna0u-CEUU@jbrnak-thinkpadx1carbongen9.tpbc.csb>
+References: <20251112080526.3971392-1-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20251112080526.3971392-1-dapeng1.mi@linux.intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 12 Nov 2025 08:37:03 -0800
-X-Gm-Features: AWmQ_bnLmYqiIkLsdps-P-2RoGwLA75CBMbitXrKXatjTGST23oU1Vt17CGid5E
-Message-ID: <CAP-5=fWvSVswOwxjQmiDsSmvkD0HdVwPgXWib4zg=SQFyRfTUA@mail.gmail.com>
-Subject: Re: [PATCH v4 5/7] perf test: Introduce storing logs for shell tests
-To: Jakub Brnak <jbrnak@redhat.com>
-Cc: namhyung@kernel.org, acme@kernel.org, acme@redhat.com, 
-	linux-perf-users@vger.kernel.org, mpetlan@redhat.com, vmolnaro@redhat.com
+Date: Wed, 12 Nov 2025 08:42:21 -0800
+X-Gm-Features: AWmQ_bnM7jWScBcxYA5ih0EnQ4GPvFcr1HhXobUst0RWyHfyQ_qayf9TvN2n1hc
+Message-ID: <CAP-5=fUW2CdFnZ3sSOAnEHHqgDV3OB-p3FbfL+KKkvJJ6_smNg@mail.gmail.com>
+Subject: Re: [PATCH] perf: Fix 0 count issue of cpu-clock
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
+	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>, 
+	Zide Chen <zide.chen@intel.com>, Falcon Thomas <thomas.falcon@intel.com>, 
+	Xudong Hao <xudong.hao@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 12, 2025 at 4:44=E2=80=AFAM Jakub Brnak <jbrnak@redhat.com> wro=
-te:
+On Wed, Nov 12, 2025 at 12:07=E2=80=AFAM Dapeng Mi <dapeng1.mi@linux.intel.=
+com> wrote:
 >
-> On Tue, Sep 30, 2025 at 12:00:19PM -0700, Ian Rogers wrote:
-> > On Tue, Sep 30, 2025 at 9:09=E2=80=AFAM Jakub Brnak <jbrnak@redhat.com>=
- wrote:
-> > >
-> > > From: Veronika Molnarova <vmolnaro@redhat.com>
-> > >
-> > > Create temporary directories for storing log files for shell tests
-> > > that could help while debugging. The log files are necessary for
-> > > perftool testsuite test cases also. If the variable PERFTEST_KEEP_LOG=
-S
-> > > is set keep the logs, else delete them.
-> >
-> > I think log files for tests are a good idea. We run tests in parallel
-> > but read the stdout/stderr sequentially. For a failing test we may
-> > fail to read stdout/stderr in some situations as the process has long
-> > since died. Rather than add log files specifically for shell tests
-> > perhaps update start_test to pass the file descriptors to the child
-> > test processes and then clean up in finish_test?
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/builtin-test.c?h=3Dperf-tools-next#n528
-> >
-> > Thanks,
-> > Ian
+> Currently cpu-clock event always returns 0 count, e.g.,
 >
-> Hi Ian,
+> perf stat -e cpu-clock -- sleep 1
 >
-> Thanks for the feedback.
+>  Performance counter stats for 'sleep 1':
+>                  0      cpu-clock                        #    0.000 CPUs =
+utilized
+>        1.002308394 seconds time elapsed
 >
-> You've raised a good point about capturing stdout/stderr for parallel run=
-s,
-> but this patch is solving a different problem.
+> The root cause is the commit 'bc4394e5e79c ("perf: Fix the throttle
+>  error of some clock events")' adds PERF_EF_UPDATE flag check before
+> calling cpu_clock_event_update() to update the count, however the
+> PERF_EF_UPDATE flag is never set when the cpu-clock event is stopped in
+> counting mode (pmu->dev() -> cpu_clock_event_del() ->
+> cpu_clock_event_stop()). This leads to the cpu-clock event count is
+> never updated.
 >
-> The logs we're storing here are test-generated data artifacts, not the
-> stdout/stderr of the test process itself.
+> To fix this issue, force to set PERF_EF_UPDATE flag for cpu-clock event
+> just like what task-clock does. Besides, or flags with PERF_EF_UPDATE
+> for task-clock although currently the flags argument would always be 0.
 >
-> Our patch provides a $PERFSUITE_RUN_DIR environment variable so that comm=
-ands inside the shell script (e.g., perf record)
-> have a known directory to save these files for debugging.
+> Fixes: bc4394e5e79c ("perf: Fix the throttle error of some clock events")
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Sgtm. Is there anyway this can be a common feature with kunit testing?
-It'd be nice to have a similar strategy in the perf tests and kunit,
-for consistency across the code base.
+Thanks Dapeng! This is a fairly major regression and I'm surprised my
+kernel picked it up so quickly. For those interested the relevant part
+of the breaking change is requiring PERF_EF_UPDATE:
 
-Thanks,
+```
+@@ -11829,7 +11834,8 @@ static void cpu_clock_event_start(struct
+perf_event *event, int flags)
+ static void cpu_clock_event_stop(struct perf_event *event, int flags)
+ {
+        perf_swevent_cancel_hrtimer(event);
+-       cpu_clock_event_update(event);
++       if (flags & PERF_EF_UPDATE)
++               cpu_clock_event_update(event);
+ }
+ ```
+
+Reviewed-by: Ian Rogers <irogers@google.com>
+
+Hopefully a maintainer can pick this up quickly. Thanks,
 Ian
 
-> Thanks,
-> Jakub
+> ---
+>
+> With this change, both cpu-clock and task-clock can do counting and
+> samping correctly.
+>
+> 1. perf stat -e cpu-clock,task-clock -- true
+>
+>  Performance counter stats for 'true':
+>            240,636      cpu-clock                        #    0.358 CPUs =
+utilized
+>            243,319      task-clock                       #    0.362 CPUs =
+utilized
+>
+> 2. perf record -e cpu-clock -c 10000 -Iax,bx -- sleep 1
+> [ perf record: Woken up 2 times to write data ]
+> [ perf record: Captured and wrote 0.028 MB perf.data (36 samples) ]
+>
+> 3. perf record -e task-clock -c 10000 -Iax,bx -- sleep 1
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.029 MB perf.data (41 samples) ]
+>
+>  kernel/events/core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index f6a08c73f783..77d3af5959c1 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -11964,7 +11964,7 @@ static int cpu_clock_event_add(struct perf_event =
+*event, int flags)
+>
+>  static void cpu_clock_event_del(struct perf_event *event, int flags)
+>  {
+> -       cpu_clock_event_stop(event, flags);
+> +       cpu_clock_event_stop(event, flags | PERF_EF_UPDATE);
+>  }
+>
+>  static void cpu_clock_event_read(struct perf_event *event)
+> @@ -12043,7 +12043,7 @@ static int task_clock_event_add(struct perf_event=
+ *event, int flags)
+>
+>  static void task_clock_event_del(struct perf_event *event, int flags)
+>  {
+> -       task_clock_event_stop(event, PERF_EF_UPDATE);
+> +       task_clock_event_stop(event, flags | PERF_EF_UPDATE);
+>  }
+>
+>  static void task_clock_event_read(struct perf_event *event)
+>
+> base-commit: 2093d8cf80fa5552d1025a78a8f3a10bf3b6466e
+> prerequisite-patch-id: a15bcd62a8dcd219d17489eef88b66ea5488a2a0
+> prerequisite-patch-id: 2a0eefce67b21d1f30c272fd8115b0dc1aca3897
+> --
+> 2.34.1
 >
