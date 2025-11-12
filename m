@@ -1,63 +1,66 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882CE24A044
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 19:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EEE92C08AF
+	for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 19:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762977199; cv=none; b=i8K0dh7CA2rlGyS7e/krf14CXBAf5Ts2boJLiFo9GdZP68hTH7Or+pwYwjdyk2jJYXayqb3UQ4yAkbYD5R+PdopqHD78NB/Bv8+ObKmnfNSINB3c8ABtZrrrhAEgJRkr9i5T39SOu1ti5vAmtwfPMC0/BJlBiuFl2JvWu+3PJL0=
+	t=1762977201; cv=none; b=sHf/E3g5nCaTx5ZKvrtIlALvesazJrmaJDCJ/ujC+iTiblv7ajiKJ6F+maLJxKWYZMrE4YNWU2j+42K3Is3xqHjB15WjR/p/BGyfdQ3XAQ548GjY7vxqBRNayaj3Z8VLvr5p0lIn7sCnGbKpCv+qFxRpKhcR1sgYu7KMWAj3JW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762977199; c=relaxed/simple;
-	bh=Mt4PkZwYOMGZoupVLZfiSVDVEqcX3IkEmjMvcMEiubE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=KU77aKGWpnUFrc6UC5GfdJcFUGCErYJg4RLlaQV8Fi13eAAt/zggkLuKsh9fmqq+06RFcVq0DHdYjzRr2O8Snj85c7/6JOZOIs8v19q+NBubE6Zqf0vQuxs5Ib9NFIFCfXDqznpLs9M/GQQFAR1wdtJ/6Gtlzk5zetIFt3CMtDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DYkCqFzw; arc=none smtp.client-ip=209.85.215.201
+	s=arc-20240116; t=1762977201; c=relaxed/simple;
+	bh=w4mXTwIUioCEf3aLDXcvRdVOG3IPPERu6LaKLIbBAuQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=YsV/e3FmnXFdDJU5xitKC7/oWwFzVevbfZXK8YYTMzrSqKVmKimsPRLj95LUSwYVSk7bCeZWa3ntHOq/P1Vqa4a00cHn8AOLEBKjMWQpyNiVyN/bo1W1efUNrPTJWT8dKpGt1Y4qCzpy0hv4C4FI0FL2+nQ7EKCJcmOty/g53zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vzAxCyBP; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DYkCqFzw"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-bc349a8a3easo5868a12.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 11:53:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vzAxCyBP"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-34188ba5990so105441a91.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 11:53:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762977198; x=1763581998; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=84G8eoSACWzBai0CppLU75VrSMUpLrAmepVMsjUJ5vs=;
-        b=DYkCqFzwjdhrQPiY5wYYne+HD6HqUpVna5tILWJLVyLPda3JIfiWc1wu73zxd8ViS+
-         chIP5Cn5MXE2hyctowEiplffu+x4w6HCzxaPvGVgEy9tAaegBgV4hMAmtRMGCWzFt1SD
-         epJdBxygVVMKhNjw+7egtHSIISJx88dkg2xp89Y6IElcx2yaqmUZq3CNSTXnxkJomMg7
-         x6AM2OAI6gfwp9yj7bSe7+pME5LCtgHANExMln6GOBY7qkJH7fC20+H2EXce9gKqji+Y
-         FiQUG8Nehge3NWK+SFdWWJ9CaQK0vtUVUYjshetU3KpnLZDsVpX2pR6ZVKTyTgtbS/80
-         64FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762977198; x=1763581998;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1762977200; x=1763582000; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=84G8eoSACWzBai0CppLU75VrSMUpLrAmepVMsjUJ5vs=;
-        b=PtpRjz6wQhRuZov3+r67N1+g5GMDtMHDHUOe4S07Jm/a/kABKZIlbZSHAMk9Bam2iv
-         zhdvfm8eqX3EJh1rsCqM1xXWy8l4DcXJaQVE/0vKG36Qzb1ktKQ6gW0Ig0iTO4nyUUce
-         Pg9MQINIuxngS2VtOZifIAqT4iZwIVJkiYO77wo9C22ZX3fm2kfuLq4or0NoTEvOHz8i
-         23F8+1/XCVh3T12e6IkmmqO22VhRpPoehyaxIGvxPbTmoQDvtaORXqhcIGKe798MX5+i
-         yiDfXPrLteRdSf37ZZFHFuYxyU2SiZnD5Zse6q0ii3s2Qc2UrUBpd7bBbJWISSG6yzVb
-         Tuhg==
-X-Forwarded-Encrypted: i=1; AJvYcCUAtKTWI3WCE3229OfpnOgXjQ84sTIF+Kgj9TSaLDlwLQ5HqCjBV4XXhoWiey6FZ7ax7tkrsLy31UxwFp3aViVY@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcH3SqCsAxL0vILmLSjerzOGy5Z9YZXa2uGaw5csB5TFoPsk2y
-	E8zKOcrfx41IUAmOy4hpSLMOTU4rvFsM3+auvY2LZBd73ElMA6vUXOR6JMc8ZfoXbcQT9uAUk5J
-	dmq9nBLNpKA==
-X-Google-Smtp-Source: AGHT+IGJsZZQpwRbl5QFTT9oCGX/5ODEzI1gvvBHeZMwOQsfJYRjBRBRZfYsO6gV6qpNlx5+42xlWie3dztl
-X-Received: from dlqq42.prod.google.com ([2002:a05:7022:63aa:b0:119:c6ec:cc42])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:fa7:b0:27e:f018:d312
- with SMTP id d9443c01a7336-2984ed2b587mr55528845ad.1.1762977197818; Wed, 12
- Nov 2025 11:53:17 -0800 (PST)
-Date: Wed, 12 Nov 2025 11:53:07 -0800
+        bh=LOuSUBzWe69YA4hvkhtZgT3oWHyjTIb2wmtwYv6DBRI=;
+        b=vzAxCyBPzRnyIRaauU/fx86vo4gYt+70bb+iB9XG1wi1zlMKTNbupZ/JciE4LSVL+i
+         p12SgE2IkNlEyOYWKjBoLKg1A662vf359UJ8HGWH5+1szvFuNcThuo4HZ34FJSWgF4CJ
+         YND+pcpzjBiHldyV0gywxg5qV+bcox2eeB4ufIhazzf01r5/+xBC2T1pJobhfaYtEjv8
+         9vhlaVeZkcGZwWHmgPkscSk5EEa/Sxvvhkr+hxwq7lGutC7JUvUx1Bu1TuVgLLJPPOYU
+         iuih4kzjpYVdExWqW9G/7SQ/0CLlldS5JdnP+OKZx1LnhIeUrp4qxRUuo/R4y9NTFdJM
+         ZSDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762977200; x=1763582000;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LOuSUBzWe69YA4hvkhtZgT3oWHyjTIb2wmtwYv6DBRI=;
+        b=Ny0bJ0a6nk2ZG15bZfRWhlwn/eAJ2vfs5++YNWpKUuLMMEYOyLRlJRosJIIY1pGJh8
+         w8eWDNWPCt5C7HqiTr3eVtpxwVa90ugRL0xwW0EzWNgiQzhX/7lvS+uFbMafcIzKyYXc
+         SqZWKZgOocioQe9WSqazESv2J6EOGHAzaF+eM3F8soqeJ9KASnPrsJnmFQeVW1uNHftK
+         lUT8UMJXq3IdIXP6RJCW0/AsrXd0kA4oORu3aL4ypA47g9TtduQO76wxtvDgEcZ2Kytp
+         nSmzukzzzQ1q3e5+OnwkfuAbd5DscX3JBAJFHqRpDhuwWbsWWutJUgJUoZyIfUYMUWQ9
+         fkWw==
+X-Forwarded-Encrypted: i=1; AJvYcCWVU1Zwh1c/thvyEH0AvxpHx1K9S8NcBp4hv6ed0KyBqh7cFvbi4NmEM+HnoVFIE4VdAE5F43nzZ9E+zOqf/h0l@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDRQIgheSwdF3mCPI8cvjfdWkAhepL8fIYQyzSCE02vCzP2F4t
+	sYTvY8hXVN5OMfFZVgd166LePkRSabIVe0gqXPodcl7jPgFvJYadSI9KIxhgqaU5i6naBRPQ2o6
+	O8+2hE9paOQ==
+X-Google-Smtp-Source: AGHT+IEtfQ4Sqv4rc5xvV8ORzN3/URZ7AozB19pmumlIecktr+wJTuUJm0/zwgHJS4tdicZktfBpuuvUUUKu
+X-Received: from dlbqd14.prod.google.com ([2002:a05:7023:b0e:b0:119:78ff:fe0e])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:dace:b0:297:d777:a2d4
+ with SMTP id d9443c01a7336-2984ede0342mr58377285ad.46.1762977199650; Wed, 12
+ Nov 2025 11:53:19 -0800 (PST)
+Date: Wed, 12 Nov 2025 11:53:08 -0800
+In-Reply-To: <20251112195311.1673981-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20251112195311.1673981-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.2.1041.gc1ab5b90ca-goog
-Message-ID: <20251112195311.1673981-1-irogers@google.com>
-Subject: [PATCH v2 0/4] Test fixes and debug logging
+Message-ID: <20251112195311.1673981-2-irogers@google.com>
+Subject: [PATCH v2 1/4] perf test: Be tolerant of missing json metric none value
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -69,26 +72,38 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Testing in a hypervisor guest showed some issues that these patches
-try to address, or improve the debug situation upon.
+print_metric_only_json and print_metric_end in stat-display.c may
+create a metric value of "none" which fails validation as isfloat. Add
+a helper to properly validate metric numeric values.
 
-v2: Rebase. Tested Arnaldo repeat case on Intel but didn't repro,
-    assume was fixed as part of the legacy metric json test fixes.
-
-v1: https://lore.kernel.org/lkml/20250914182900.1960567-1-irogers@google.com/
-
-Ian Rogers (4):
-  perf test: Be tolerant of missing json metric none value
-  perf parse-events: Add debug logging to perf_event
-  perf test: Don't fail if user rdpmc returns 0 when disabled
-  perf stat: Display metric-only for 0 counters
-
- tools/perf/tests/mmap-basic.c                       | 2 +-
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
  tools/perf/tests/shell/lib/perf_json_output_lint.py | 5 ++++-
- tools/perf/util/parse-events.c                      | 2 ++
- tools/perf/util/stat-display.c                      | 3 +++
- 4 files changed, 10 insertions(+), 2 deletions(-)
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+index 1369baaa0361..dafbde56cc76 100644
+--- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
++++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+@@ -43,6 +43,9 @@ def isint(num):
+ def is_counter_value(num):
+   return isfloat(num) or num == '<not counted>' or num == '<not supported>'
+ 
++def is_metric_value(num):
++  return isfloat(num) or num == 'none'
++
+ def check_json_output(expected_items):
+   checks = {
+       'counters': lambda x: isfloat(x),
+@@ -57,7 +60,7 @@ def check_json_output(expected_items):
+       'event-runtime': lambda x: isfloat(x),
+       'interval': lambda x: isfloat(x),
+       'metric-unit': lambda x: True,
+-      'metric-value': lambda x: isfloat(x),
++      'metric-value': lambda x: is_metric_value(x),
+       'metric-threshold': lambda x: x in ['unknown', 'good', 'less good', 'nearly bad', 'bad'],
+       'metricgroup': lambda x: True,
+       'node': lambda x: True,
 -- 
 2.51.2.1041.gc1ab5b90ca-goog
 
