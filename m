@@ -1,142 +1,94 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00EEC347BC3
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 19:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882CE24A044
+	for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 19:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762975897; cv=none; b=RniNvngvIuhjEdM/dTWyH5m1YBtT9NJ7IrX3N8xjmGpuhIIUIlVfj0uAAc+c/HsKLMr1NrJVrxXOxy5WoIAGw/B0mbQQSbXH0cPfR8Nss1/p3kEunWEHO1FS9D0teip1rbTqoli26oN2X6JBe24uUoe3Ld6NI/bI6izghynCgCU=
+	t=1762977199; cv=none; b=i8K0dh7CA2rlGyS7e/krf14CXBAf5Ts2boJLiFo9GdZP68hTH7Or+pwYwjdyk2jJYXayqb3UQ4yAkbYD5R+PdopqHD78NB/Bv8+ObKmnfNSINB3c8ABtZrrrhAEgJRkr9i5T39SOu1ti5vAmtwfPMC0/BJlBiuFl2JvWu+3PJL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762975897; c=relaxed/simple;
-	bh=2z30Onwslv/HKcZ2MyBEPI3V6h4LiyRU3iVn30ZBBiU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SsJt1gabM9yVQ0LvTHymNm7fxzrbBsvquM8dkTYuzW4XW3HTyhwypimeZ/kSBT+RxJn8TM6miSE+rRGA9jYF7bAhaxKu04hh7Mx0hJbDEitA8RwVRFG1y6SOFgY+l5hzcxSOLS6wc7E9zvWYN7rutr6cIwoyVZT+DV3TlvHsC2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XI+dJR2B; arc=none smtp.client-ip=209.85.214.179
+	s=arc-20240116; t=1762977199; c=relaxed/simple;
+	bh=Mt4PkZwYOMGZoupVLZfiSVDVEqcX3IkEmjMvcMEiubE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=KU77aKGWpnUFrc6UC5GfdJcFUGCErYJg4RLlaQV8Fi13eAAt/zggkLuKsh9fmqq+06RFcVq0DHdYjzRr2O8Snj85c7/6JOZOIs8v19q+NBubE6Zqf0vQuxs5Ib9NFIFCfXDqznpLs9M/GQQFAR1wdtJ/6Gtlzk5zetIFt3CMtDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DYkCqFzw; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XI+dJR2B"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-295c64cb951so25945ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 11:31:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DYkCqFzw"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-bc349a8a3easo5868a12.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 11:53:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762975895; x=1763580695; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RcvUwP/777L/eN/ikRIeQAoirqn6cF5E9VLK5dHu84o=;
-        b=XI+dJR2B/uhl/EcDhzNuv0JxL8HI8tLeFuMI4cd0YVx/XV82e7sYf3aLlwUzklIGWC
-         RwO377HM9ThSo80U3843yMPz6UaoETJWPKslnD7b5wLaANRCdt87v7zZ85/o98KHB0tx
-         unffjRMQXuUaGnEIP0CNms81TT7uLLIAt7kiGpEUHKTcWxJ1qJocYLtgza82Hyeqc69m
-         lrgKVzuQPTWE39jxE/fC7HXpTKgi+CskkJ+ovHXcXKoPH6hc77k9I1K3c8Pvwu3E/Dkj
-         PaXjnx/wVIgmrf+gi1MLhWdD5iaNW9hMq15qHvfy1sGfTDPbN6an+cJIgZnBgEyrh3yd
-         bd0A==
+        d=google.com; s=20230601; t=1762977198; x=1763581998; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=84G8eoSACWzBai0CppLU75VrSMUpLrAmepVMsjUJ5vs=;
+        b=DYkCqFzwjdhrQPiY5wYYne+HD6HqUpVna5tILWJLVyLPda3JIfiWc1wu73zxd8ViS+
+         chIP5Cn5MXE2hyctowEiplffu+x4w6HCzxaPvGVgEy9tAaegBgV4hMAmtRMGCWzFt1SD
+         epJdBxygVVMKhNjw+7egtHSIISJx88dkg2xp89Y6IElcx2yaqmUZq3CNSTXnxkJomMg7
+         x6AM2OAI6gfwp9yj7bSe7+pME5LCtgHANExMln6GOBY7qkJH7fC20+H2EXce9gKqji+Y
+         FiQUG8Nehge3NWK+SFdWWJ9CaQK0vtUVUYjshetU3KpnLZDsVpX2pR6ZVKTyTgtbS/80
+         64FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762975895; x=1763580695;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=RcvUwP/777L/eN/ikRIeQAoirqn6cF5E9VLK5dHu84o=;
-        b=N2PeseYzCIWCbRQU2nkT52wjUdCNBKzCmMImir76OHElcx4Lu2NtFjxNPVEuLe6rSa
-         2vCtYO1ieQuug2ESTaIlKQtSrCYGMEjiSVC1XiaUSDDNXBSGC00nRgH2GV37g6qN5cVu
-         c5SboZlC3910nv+8cgTOznM9ZD0UjzhnzcfmPXayDqfqdDHwMnAL7DmwhcokFdEQaoob
-         OXH9bo4VJ60OGyLBo27j4G66pibb+VzmUbJGctaVZ3+sOeQv/nmJNIkUnu4C7Zml9Fmb
-         zb5iYh6JDNw8tJ7M6sF/Vgl/NEuYSCVHSXuwqH+E1AG+3JvUUbsdo72q4xWJRkkp4CT0
-         vqBA==
-X-Gm-Message-State: AOJu0YzzZu7dkA01OTn0ziC/yeHP8epo3iOl6QJ65UQpHhU6xoksu8d4
-	IwUv620qMvrtu3Dq1bi4tMDPwzs9fOi2U6qwg6Ewbz/+3lihUUg3HwIPRTsH0tIIcGFYRraoiR7
-	kQz+cwppmXkoO6FbF2+z9C+HoMzUMs0rh7rpCDFQg
-X-Gm-Gg: ASbGncsBWSH6zk/R3Qk6vfwqRyUVjvVT8GU0hf4wMUMKLH8tuJSOUA+yTT4lrl0QYep
-	+UoPa1sLvm2mvEMeIKymAzGpKsPo/ZO8wNkqQDw7vdUhRXOHTYbgIFx5aEr5yzL/OV67INMseT/
-	iDvAgnVhbAoshygdopmOtmNaYHOkL9eKJI2KE4oSRa29uYOOjVxd+8whLwYRGR6vYZouGkgDLpk
-	IKLsKZMD2uR/VbFsSr/Feg9gHO8QapasdTN1cXTiJVczPV+ZV+hkqPXcFbcy+DHS3GFgkdu86LP
-	v7DSG5GTP8x2bEbyZEbYkgYdQg==
-X-Google-Smtp-Source: AGHT+IEnanRTpKm63zCv33Zb9RXdVcyIJoICIdpTLlTnSgpNWbSyREWjSVvWZ7Ny+8nzA7PjgTs9GzQPNFbYFlXOfLE=
-X-Received: by 2002:a17:903:1251:b0:295:30bc:458e with SMTP id
- d9443c01a7336-2985b86993amr471875ad.3.1762975894761; Wed, 12 Nov 2025
- 11:31:34 -0800 (PST)
+        d=1e100.net; s=20230601; t=1762977198; x=1763581998;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=84G8eoSACWzBai0CppLU75VrSMUpLrAmepVMsjUJ5vs=;
+        b=PtpRjz6wQhRuZov3+r67N1+g5GMDtMHDHUOe4S07Jm/a/kABKZIlbZSHAMk9Bam2iv
+         zhdvfm8eqX3EJh1rsCqM1xXWy8l4DcXJaQVE/0vKG36Qzb1ktKQ6gW0Ig0iTO4nyUUce
+         Pg9MQINIuxngS2VtOZifIAqT4iZwIVJkiYO77wo9C22ZX3fm2kfuLq4or0NoTEvOHz8i
+         23F8+1/XCVh3T12e6IkmmqO22VhRpPoehyaxIGvxPbTmoQDvtaORXqhcIGKe798MX5+i
+         yiDfXPrLteRdSf37ZZFHFuYxyU2SiZnD5Zse6q0ii3s2Qc2UrUBpd7bBbJWISSG6yzVb
+         Tuhg==
+X-Forwarded-Encrypted: i=1; AJvYcCUAtKTWI3WCE3229OfpnOgXjQ84sTIF+Kgj9TSaLDlwLQ5HqCjBV4XXhoWiey6FZ7ax7tkrsLy31UxwFp3aViVY@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcH3SqCsAxL0vILmLSjerzOGy5Z9YZXa2uGaw5csB5TFoPsk2y
+	E8zKOcrfx41IUAmOy4hpSLMOTU4rvFsM3+auvY2LZBd73ElMA6vUXOR6JMc8ZfoXbcQT9uAUk5J
+	dmq9nBLNpKA==
+X-Google-Smtp-Source: AGHT+IGJsZZQpwRbl5QFTT9oCGX/5ODEzI1gvvBHeZMwOQsfJYRjBRBRZfYsO6gV6qpNlx5+42xlWie3dztl
+X-Received: from dlqq42.prod.google.com ([2002:a05:7022:63aa:b0:119:c6ec:cc42])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:fa7:b0:27e:f018:d312
+ with SMTP id d9443c01a7336-2984ed2b587mr55528845ad.1.1762977197818; Wed, 12
+ Nov 2025 11:53:17 -0800 (PST)
+Date: Wed, 12 Nov 2025 11:53:07 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20251031162637.1456191-1-irogers@google.com>
-In-Reply-To: <20251031162637.1456191-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.51.2.1041.gc1ab5b90ca-goog
+Message-ID: <20251112195311.1673981-1-irogers@google.com>
+Subject: [PATCH v2 0/4] Test fixes and debug logging
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 12 Nov 2025 11:31:22 -0800
-X-Gm-Features: AWmQ_bkkiP1GXmQJX6oJj_AhVOQ03vFxJ4Fxk2Kf9lhezAqqgbeGmvhNAnlI74s
-Message-ID: <CAP-5=fV1bobHM5bT8xU7sxZAFt03XNaXwTQVGj3hm9RyKsH3fw@mail.gmail.com>
-Subject: Re: [PATCH v1] perf vendor power9 nest metrics: Correct unit from MB
- to MiB
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, 
-	linux-kernel@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Chun-Tse Shao <ctshao@google.com>, Thomas Falcon <thomas.falcon@intel.com>, 
+	Yang Li <yang.lee@linux.alibaba.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 31, 2025 at 9:26=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> 6.1e-5 is very close to 1/16384, where 16384 is 2^14, i.e. a power of
-> 2. When units are in powers of 2 the IEC unit is MiB (mebibytes)
-> rather than MB (megabytes) where the values are powers of 10. This
-> patch corrects the unit for uniformity and because such units may be
-> pattern matched against.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Testing in a hypervisor guest showed some issues that these patches
+try to address, or improve the debug situation upon.
 
-Ping.
+v2: Rebase. Tested Arnaldo repeat case on Intel but didn't repro,
+    assume was fixed as part of the legacy metric json test fixes.
 
-Thanks,
-Ian
+v1: https://lore.kernel.org/lkml/20250914182900.1960567-1-irogers@google.com/
 
-> ---
->  .../perf/pmu-events/arch/powerpc/power9/nest_metrics.json | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json =
-b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-> index 7a5d1bf543f8..8d028a7c2777 100644
-> --- a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-> +++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-> @@ -29,25 +29,25 @@
->         "MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT01@ + ne=
-st_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT23@",
->         "MetricName" : "mcs01-read",
->         "MetricGroup" : "memory-bandwidth",
-> -       "ScaleUnit": "6.1e-5MB"
-> +       "ScaleUnit": "6.1e-5MiB"
->      },
->      {
->         "MetricExpr" : "nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT01@ + ne=
-st_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT23@",
->         "MetricName" : "mcs23-read",
->         "MetricGroup" : "memory-bandwidth",
-> -       "ScaleUnit": "6.1e-5MB"
-> +       "ScaleUnit": "6.1e-5MiB"
->      },
->      {
->         "MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT01@ + ne=
-st_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT23@",
->         "MetricName" : "mcs01-write",
->         "MetricGroup" : "memory-bandwidth",
-> -       "ScaleUnit": "6.1e-5MB"
-> +       "ScaleUnit": "6.1e-5MiB"
->      },
->      {
->         "MetricExpr" : "nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT01@ + ne=
-st_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT23@",
->         "MetricName" : "mcs23-write",
->         "MetricGroup" : "memory-bandwidth",
-> -       "ScaleUnit": "6.1e-5MB"
-> +       "ScaleUnit": "6.1e-5MiB"
->      },
->      {
->         "MetricExpr" : "nest_powerbus0_imc@PM_PB_CYC@",
-> --
-> 2.51.1.930.gacf6e81ea2-goog
->
+Ian Rogers (4):
+  perf test: Be tolerant of missing json metric none value
+  perf parse-events: Add debug logging to perf_event
+  perf test: Don't fail if user rdpmc returns 0 when disabled
+  perf stat: Display metric-only for 0 counters
+
+ tools/perf/tests/mmap-basic.c                       | 2 +-
+ tools/perf/tests/shell/lib/perf_json_output_lint.py | 5 ++++-
+ tools/perf/util/parse-events.c                      | 2 ++
+ tools/perf/util/stat-display.c                      | 3 +++
+ 4 files changed, 10 insertions(+), 2 deletions(-)
+
+-- 
+2.51.2.1041.gc1ab5b90ca-goog
+
