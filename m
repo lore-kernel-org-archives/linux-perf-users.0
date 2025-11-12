@@ -1,175 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC53E1A23A0;
-	Wed, 12 Nov 2025 01:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2238E271A7B;
+	Wed, 12 Nov 2025 01:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762909698; cv=none; b=j1us9Xt+AjU0nByZqRENNr9g3MCpfMXD4zjmG+xFq3l6TGBPCRltas1dA8aFRR0dPMcsPhtURbEB9nqylCksa4S2uB8DXBtQ4FcQ9frfaKkeZUpARuNzDHb4E3QGMuexFyMq0t6fdleKXKAuRPqKQp8iyl37GtHkyUmKf/MotTk=
+	t=1762911544; cv=none; b=Y6frkJ5Ts3fe+5DgT9j/hiZ1q1LzzlJdSU+1vAUh+0zzTlLgBQdqDrOvNXSwaYq8pEBbYHZ/g6lrdS/34lanymhfu25HbfnxrizfW6CQ4D62rLptQuJh0YFYipNvuqEZ746ZekxFDl8tmw4iE60z9okV4Y4XHG5mB7l6UV6o0J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762909698; c=relaxed/simple;
-	bh=8bjLCvsDDMG1Xk+9mxuiLdUVVLRsD6kVlBsmX6XuoiU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AUwpJXr5zvXi48oz4tEILvPVxRgRFXU+q1uguHmsxDUKLZkyr3YevcCDID5GseVtsxlYvW0Zqa1y9wbRAkBmKHcvqT3BO2gXiFXSCGO5kM5bOnyujgtDddAsQLeWsynBsSWa9OgTb49HeyEIy3J3ybyNmuxKT928c9+eghMS768=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZgUDxWR4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762911544; c=relaxed/simple;
+	bh=dC5aByELFmakgvk0wqr11T7toMH8Eh9BJChORDfYCKM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dmZrmp5GhMK4NxtxS+OPBaAsdrdmpjJUgcX0bSz2nvZpNDQqFwGdyAYfLVNhrp3fJeEVcJOAON60d9bm2fS5c9s90WhKGA3M+Vq+//APRwXdUyl08RZJmZSvBE+Mks29pJQHYw2xt5RZ9TF1JSVVBLx5ca+J+hl+rnQqDoTjHZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BSoUN6En; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZgUDxWR4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ECF7C116B1;
-	Wed, 12 Nov 2025 01:08:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762909695;
-	bh=8bjLCvsDDMG1Xk+9mxuiLdUVVLRsD6kVlBsmX6XuoiU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZgUDxWR4Rrs0Se3DGWjVsMcwuWsuZ/E+4tyKcWf7BZ1LYPgEI9uzu2xoLgQUkgzIm
-	 1h/3nL27179pfezeNMb4REj+dcVXW2kcidrvN0fW5C+dSqGhrkFWiLx1XHLbQOtAe8
-	 tKhKiKGu92sysCDMRcQT9Qo8nhFQHr7C1hQF6QqZj1ydbVr7G13xmCV3tyzWJPMUmj
-	 yoIKHp4LoEXidxpC+68rstr2w8DxcetS3xS1BfhCOHXWvmTfOKbdw9ivLVqf1+64g8
-	 TYewQm6zP74koTNmZmST+qW7JTYztzKZ7+vdExQ+sYk4PuLq7+y8bXz7qpGTbf9bnZ
-	 BIzhPv/zQRujg==
-Date: Tue, 11 Nov 2025 17:08:11 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Sumanth Korikkar <sumanthk@linux.ibm.com>,
-	Collin Funk <collin.funk1@gmail.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Levi Yun <yeoreum.yun@arm.com>,
-	Yang Li <yang.lee@linux.alibaba.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-	Weilin Wang <weilin.wang@intel.com>
-Subject: Re: [PATCH v4 00/18]
-Message-ID: <aRPd-7nVSrKEwUDN@google.com>
-References: <20251111212206.631711-1-irogers@google.com>
- <aRO7vPpfuH7vzRg-@google.com>
- <CAP-5=fWQqsAHZvyxu6db5Qyfx0n-2pNeYDP7u_WtpxKr2TLHxA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BSoUN6En"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762911542; x=1794447542;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dC5aByELFmakgvk0wqr11T7toMH8Eh9BJChORDfYCKM=;
+  b=BSoUN6EnAeY+eqoJ1ONkr2LOzR7m83ZIiNggAFJoakYfS78skFFHac8z
+   UFlqBSZ3pPblq/3LhwXSekKF9tQklsBQNqUXlm3YKI3arKSJ1T55Kyw3c
+   cA632UEe2Ek08DiomYg7a8LUUeEJx4BddaZ9FeefrdP0CUNmqQQL3ucdk
+   n10VZwVa3FiFbjFBa68vlMZw0reb0VqJ8aPj3/QblLT8ubzG2oJ8XQKHB
+   awyRdhFZm+cdpUBTr9gkRVLBP4EpiQZPDoFTnfEo03Xf31I3Bz6Z/doa3
+   YWv0MAreKPykar7a+O0psjG17GeKttZufRCIyw8WlM+EzWgtpgDH5xQa9
+   A==;
+X-CSE-ConnectionGUID: u4r0Hiq5Qfi1Z3IhV3nkwA==
+X-CSE-MsgGUID: fsSUfhVtSsqwCgFd5A+c1Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11610"; a="75652808"
+X-IronPort-AV: E=Sophos;i="6.19,298,1754982000"; 
+   d="scan'208";a="75652808"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 17:39:02 -0800
+X-CSE-ConnectionGUID: DkEeFC4/RZiI0XjFcN+m2A==
+X-CSE-MsgGUID: 0+wKW6W9RGico2I0c3OxGw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,298,1754982000"; 
+   d="scan'208";a="189345608"
+Received: from jbunyan-mobl1.amr.corp.intel.com (HELO [10.125.164.106]) ([10.125.164.106])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 17:39:01 -0800
+Message-ID: <48f84128-bd74-4d82-8095-4b21e386bd81@intel.com>
+Date: Tue, 11 Nov 2025 17:39:00 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWQqsAHZvyxu6db5Qyfx0n-2pNeYDP7u_WtpxKr2TLHxA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf test: Add a perf event fallback test
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+ Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar <mingo@redhat.com>,
+ Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ thomas.falcon@intel.com, dapeng1.mi@linux.intel.com, xudong.hao@intel.com
+References: <20251111224246.73673-1-zide.chen@intel.com>
+ <aRPdmoNdUWIlWhJU@google.com>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <aRPdmoNdUWIlWhJU@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Nov 11, 2025 at 03:13:35PM -0800, Ian Rogers wrote:
-> On Tue, Nov 11, 2025 at 2:42 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Tue, Nov 11, 2025 at 01:21:48PM -0800, Ian Rogers wrote:
-> > > Prior to this series stat-shadow would produce hard coded metrics if
-> > > certain events appeared in the evlist. This series produces equivalent
-> > > json metrics and cleans up the consequences in tests and display
-> > > output. A before and after of the default display output on a
-> > > tigerlake is:
-> > >
-> > > Before:
-> > > ```
-> > > $ perf stat -a sleep 1
-> > >
-> > >  Performance counter stats for 'system wide':
-> > >
-> > >     16,041,816,418      cpu-clock                        #   15.995 CPUs utilized
-> > >              5,749      context-switches                 #  358.376 /sec
-> > >                121      cpu-migrations                   #    7.543 /sec
-> > >              1,806      page-faults                      #  112.581 /sec
-> > >        825,965,204      instructions                     #    0.70  insn per cycle
-> > >      1,180,799,101      cycles                           #    0.074 GHz
-> > >        168,945,109      branches                         #   10.532 M/sec
-> > >          4,629,567      branch-misses                    #    2.74% of all branches
-> > >  #     30.2 %  tma_backend_bound
-> > >                                                   #      7.8 %  tma_bad_speculation
-> > >                                                   #     47.1 %  tma_frontend_bound
-> > >  #     14.9 %  tma_retiring
-> > > ```
-> > >
-> > > After:
-> > > ```
-> > > $ perf stat -a sleep 1
-> > >
-> > >  Performance counter stats for 'system wide':
-> > >
-> > >              2,890      context-switches                 #    179.9 cs/sec  cs_per_second
-> > >     16,061,923,339      cpu-clock                        #     16.0 CPUs  CPUs_utilized
-> > >                 43      cpu-migrations                   #      2.7 migrations/sec  migrations_per_second
-> > >              5,645      page-faults                      #    351.5 faults/sec  page_faults_per_second
-> > >          5,708,413      branch-misses                    #      1.4 %  branch_miss_rate         (88.83%)
-> > >        429,978,120      branches                         #     26.8 M/sec  branch_frequency     (88.85%)
-> > >      1,626,915,897      cpu-cycles                       #      0.1 GHz  cycles_frequency       (88.84%)
-> > >      2,556,805,534      instructions                     #      1.5 instructions  insn_per_cycle  (88.86%)
-> > >                         TopdownL1                 #     20.1 %  tma_backend_bound
-> > >                                                   #     40.5 %  tma_bad_speculation      (88.90%)
-> > >                                                   #     17.2 %  tma_frontend_bound       (78.05%)
-> > >                                                   #     22.2 %  tma_retiring             (88.89%)
-> > >
-> > >        1.002994394 seconds time elapsed
-> > > ```
-> > >
-> > > Having the metrics in json brings greater uniformity, allows events to
-> > > be shared by metrics, and it also allows descriptions like:
-> > > ```
-> > > $ perf list cs_per_second
-> > > ...
-> > >   cs_per_second
-> > >        [Context switches per CPU second]
-> > > ```
-> > >
-> > > A thorn in the side of doing this work was that the hard coded metrics
-> > > were used by perf script with '-F metric'. This functionality didn't
-> > > work for me (I was testing `perf record -e instructions,cycles`
-> > > with/without leader sampling and then `perf script -F metric` but saw
-> > > nothing but empty lines) but anyway I decided to fix it to the best of
-> > > my ability in this series. So the script side counters were removed
-> > > and the regular ones associated with the evsel used. The json metrics
-> > > were all searched looking for ones that have a subset of events
-> > > matching those in the perf script session, and all metrics are
-> > > printed. This is kind of weird as the counters are being set by the
-> > > period of samples, but I carried the behavior forward. I suspect there
-> > > needs to be follow up work to make this better, but what is in the
-> > > series is superior to what is currently in the tree. Follow up work
-> > > could include finding metrics for the machine in the perf.data rather
-> > > than using the host, allowing multiple metrics even if the metric ids
-> > > of the events differ, fixing pre-existing `perf stat record/report`
-> > > issues, etc.
-> > >
-> > > There is a lot of stat tests that, for example, assume '-e
-> > > instructions,cycles' will produce an IPC metric. These things needed
-> > > tidying as now the metric must be explicitly asked for and when doing
-> > > this ones using software events were preferred to increase
-> > > compatibility. As the test updates were numerous they are distinct to
-> > > the patches updating the functionality causing periods in the series
-> > > where not all tests are passing. If this is undesirable the test fixes
-> > > can be squashed into the functionality updates, but this will be kind
-> > > of messy, especially as at some points in the series both the old
-> > > metrics and the new metrics will be displayed.
-> > >
-> > > v4: K/sec to M/sec on branch frequency (Namhyung), perf script -F
-> > >     metric to-done a system-wide calculation (Namhyung) and don't
-> > >     crash because of the CPU map index couldn't be found. Regenerate
-> > >     commit messages but the cpu-clock was always yielding 0 on my
-> > >     machine leading to a lot of nan metric values.
-> >
-> > This is strange.  The cpu-clock should not be 0 as long as you ran it.
-> > Do you think it's related to the scale unit change?  I tested v3 and
-> > didn't see the problem.
+
+
+On 11/11/2025 5:06 PM, Namhyung Kim wrote:
+> On Tue, Nov 11, 2025 at 02:42:46PM -0800, Zide Chen wrote:
+>> This adds test cases to verify the precise ip fallback logic:
+>>
+>> - If the system supports precise ip, for an event given with the maximum
+>>   precision level, it should be able to decrease precise_ip to find a
+>>   supported level.
+>> - The same fallback behavior should also work in more complex scenarios,
+>>   such as event groups or when PEBS is involved
+>>
+>> Additional fallback tests, such as those covering missing feature cases,
+>> can be added in the future.
+>>
+>> Suggested-by: Ian Rogers <irogers@google.com>
+>> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> Signed-off-by: Zide Chen <zide.chen@intel.com>
+>> ---
+>>  .../tests/shell/test_event_open_fallback.sh   | 86 +++++++++++++++++++
+>>  1 file changed, 86 insertions(+)
+>>  create mode 100755 tools/perf/tests/shell/test_event_open_fallback.sh
+>>
+>> diff --git a/tools/perf/tests/shell/test_event_open_fallback.sh b/tools/perf/tests/shell/test_event_open_fallback.sh
+>> new file mode 100755
+>> index 000000000000..72c1ac32c785
+>> --- /dev/null
+>> +++ b/tools/perf/tests/shell/test_event_open_fallback.sh
+>> @@ -0,0 +1,86 @@
+>> +#!/bin/bash
+>> +# Perf event open fallback test
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +
+>> +skip_cnt=0
+>> +ok_cnt=0
+>> +err_cnt=0
+>> +
+>> +cleanup()
+>> +{
+>> +	rm -f perf.data
+>> +	rm -f perf.data.old
+>> +	trap - EXIT TERM INT
+>> +}
+>> +
+>> +trap_cleanup()
+>> +{
+>> +	cleanup
+>> +	exit 1
+>> +}
+>> +
+>> +trap trap_cleanup EXIT TERM INT
+>> +
+>> +perf_record()
+>> +{
+>> +	perf record "$@" -- true 1>/dev/null 2>&1
+>> +}
+>> +
+>> +test_decrease_precise_ip()
+>> +{
+>> +	echo "Decrease precise ip test"
+>> +
+>> +	perf list pmu | grep -q 'cycles' || return 2
+>> +
+>> +	if ! perf_record -e cycles; then
+>> +		return 2
+>> +	fi
+>> +
+>> +	# It should reduce precision level down to 0 if needed.
+>> +	if ! perf_record -e cycles:ppp; then
 > 
-> It looked like a kernel issue. The raw counts were 0 before being
-> scaled. All metrics always work on unscaled values. It is only the
-> commit messages and the formatting is more important than the numeric
-> values - which were correct for a cpu-clock of 0.
+> I think you need 'P' instead of 'ppp' for automatic precision.
 
-Hmm.. ok.  I don't see the problem when I test the series so it may be
-a problem in your environment.
+Yes, it's better with "-e cycles:P" to explicitly set evsel.precise_max
+to 1.
 
-Thanks,
-Namhyung
+> Thanks,
+> Namhyung
+> 
+> 
+>> +		return 1
+>> +	fi
+>> +	return 0
+>> +}
+>> +
+>> +test_decrease_precise_ip_complicated()
+>> +{
+>> +	echo "Decrease precise ip test (complicated case)"
+>> +
+>> +	perf list pmu | grep -q 'mem-loads-aux' || return 2
+>> +
+>> +	if ! perf_record -e '{cpu/mem-loads-aux/S,cpu/mem-loads/PS}'; then
+>> +		return 1
+>> +	fi
+>> +	return 0
+>> +}
+>> +
+>> +count_result()
+>> +{
+>> +	if [ "$1" -eq 2 ] ; then
+>> +		skip_cnt=$((skip_cnt + 1))
+>> +		return
+>> +	fi
+>> +	if [ "$1" -eq 0 ] ; then
+>> +		ok_cnt=$((ok_cnt + 1))
+>> +		return
+>> +	fi
+>> +	err_cnt=$((err_cnt + 1))
+>> +}
+>> +
+>> +ret=0
+>> +test_decrease_precise_ip		|| ret=$? ; count_result $ret ; ret=0
+>> +test_decrease_precise_ip_complicated	|| ret=$? ; count_result $ret ; ret=0
+>> +
+>> +cleanup
+>> +
+>> +if [ ${err_cnt} -gt 0 ] ; then
+>> +	exit 1
+>> +fi
+>> +
+>> +if [ ${ok_cnt} -gt 0 ] ; then
+>> +	exit 0
+>> +fi
+>> +
+>> +# Skip
+>> +exit 2
+>> -- 
+>> 2.51.1
+>>
 
