@@ -1,88 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51EAE311C35;
-	Wed, 12 Nov 2025 17:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E53162DF136
+	for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 18:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762970244; cv=none; b=Nv0SvhAJ0WwLgw8hzW5JTc+1zAINpOZ5rvjPZXPWXi7Xr8Wb96Q/q7NECtkifapXL/+UTQTayIYK3Bi310ItL3p5Rmis5vo0KF0qmllr5oTRbwbm6wT5ldsyC1rH64oehk2xud/YjKPwjQA5QZcCljBs4c+GWkrajJYs2bnU4dM=
+	t=1762970595; cv=none; b=qsLTBOP+b+I0bOvLEp+kzVEH+oI6KWAi3IKQVP9vcXMDHqW8uSRloEHeUD47UeKiE/BsgQ3FkBAa4R7eLBUJHdNFEG8gYC7Li/mRDH77Yr9vgiukQynmf9tgO3FSe/XjfXtWCF0aGTbM4gVAyrHzGorrM4yyvTBRvlKrpsb6wvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762970244; c=relaxed/simple;
-	bh=o1di7OuEst4aEZFZyN3PTmmE+QLUGKEIgtoF4458n9E=;
+	s=arc-20240116; t=1762970595; c=relaxed/simple;
+	bh=Cypy2EPWHt/1t5JHHDi1BKbSi4YIpHo8BzXPW80idVQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PcNGJLoxZyfvyHvqNBA2U1endzHVlQE5M4ska8dFplndsn80dB0K31MzieZPArFKTffbLY0yLwn4MaLWmLc3q6zsaRxXz4rl97rlDvBQIPXLtRqwi80g3osWsrRDuDfqT/mjr7HZsuwSEYuv+wu3YcEoD49b39KN5X5yb0jd50o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IcTLMq5X; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IcTLMq5X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4580C16AAE;
-	Wed, 12 Nov 2025 17:57:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762970243;
-	bh=o1di7OuEst4aEZFZyN3PTmmE+QLUGKEIgtoF4458n9E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IcTLMq5XPKJywdyizwCrAV4/FNhS3SrNIe+ztycE5p5qWrdjHxLJlBpFhxtk0M7Uh
-	 SajUcako1QYD/4V6hoo9kDzH95ckDmXHpbV2cSnLV24swYeadcs7jWXQID2MvhFIFY
-	 5yzGZPTUb4E7DTraXh5LTzgl5VFxGPjLVYVVDdeS88G6170x1FNhfVqr1YD/0lFb7N
-	 1gpQsqtLihvfXPxNUommXOyY6rj4p/VcgjFxkhdIPRx8JqPWj6I3N7+6zOvjVAJ4r8
-	 p6WJKWg4hCjqBiXbk6DYk9+kgn3m6ncrRV2WtZxFmdgpydLnAngODrJ6Z0Po4QvSxW
-	 g98n+lVGvUdSw==
-Date: Wed, 12 Nov 2025 09:57:19 -0800
-From: Namhyung Kim <namhyung@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=PSCrZXFh1xyFjBnIJRWVZXAHJLhsAJZiKAMISBt6qXORqQRZ+5iodXju24YmDesHggMZavH19P3vHqOB5HktlGZactulJgzMEMCvO9SC3Uf9FeOQqPiPUrzEmLxgNRDZ6TvHmT/qrj/uNqdNZAIW9Uynu9IqIiGOtWiGq/Rw3oY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 734B71515;
+	Wed, 12 Nov 2025 10:03:04 -0800 (PST)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6E673F63F;
+	Wed, 12 Nov 2025 10:03:11 -0800 (PST)
+Date: Wed, 12 Nov 2025 18:03:09 +0000
+From: Leo Yan <leo.yan@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf stat: Align metric output without events
-Message-ID: <aRTKf6iw0sRuC0ww@google.com>
-References: <20251106072834.1750880-1-namhyung@kernel.org>
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 18/25] perf/uapi: Extend data source fields
+Message-ID: <20251112180309.GA3243746@e132581.arm.com>
+References: <20251017-perf_support_arm_spev1-3-v2-0-2d41e4746e1b@arm.com>
+ <20251017-perf_support_arm_spev1-3-v2-18-2d41e4746e1b@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251106072834.1750880-1-namhyung@kernel.org>
+In-Reply-To: <20251017-perf_support_arm_spev1-3-v2-18-2d41e4746e1b@arm.com>
 
-On Wed, Nov 05, 2025 at 11:28:34PM -0800, Namhyung Kim wrote:
-> One of my concern in the perf stat output was the alignment in the
-> metrics and shadow stats.  I think it missed to calculate the basic
-> output length using COUNTS_LEN and EVNAME_LEN but missed to add the
-> unit length like "msec" and surround 2 spaces.  I'm not sure why it's
-> not printed below though.
-> 
-> But anyway, now it shows correctly aligned metric output.
-> 
->   $ perf stat true
-> 
->    Performance counter stats for 'true':
-> 
->              859,772      task-clock                       #    0.395 CPUs utilized
->                    0      context-switches                 #    0.000 /sec
->                    0      cpu-migrations                   #    0.000 /sec
->                   56      page-faults                      #   65.134 K/sec
->            1,075,022      instructions                     #    0.86  insn per cycle
->            1,255,911      cycles                           #    1.461 GHz
->              220,573      branches                         #  256.548 M/sec
->                7,381      branch-misses                    #    3.35% of all branches
->                           TopdownL1                        #     19.2 %  tma_retiring
->                                                            #     28.6 %  tma_backend_bound
->                                                            #      9.5 %  tma_bad_speculation
->                                                            #     42.6 %  tma_frontend_bound
-> 
->          0.002174871 seconds time elapsed                  ^
->                                                            |
->          0.002154000 seconds user                          |
->          0.000000000 seconds sys                          here
-> 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Hi Peter.Z, Ingo,
 
-Applied to perf-tools-next, thanks!
+On Fri, Oct 17, 2025 at 11:05:07AM +0100, Leo Yan wrote:
+> Arm CPUs introduce several new types of memory operations, like MTE tag
+> accessing, system register access for nested virtualization, memcpy &
+> memset, and Guarded Control Stack (GCS).
 
-Best regards,
-Namhyung
+Do you mind review this patch for extending memory data source field?
 
+Thanks,
+Leo
+
+> For memory operation details, Arm SPE provides information like data
+> (parallel) processing, floating-point, predicated, atomic, exclusive,
+> acquire/release, gather/scatter, and conditional.
+> 
+> This commit introduces a field 'mem_op_ext' for extended operation type.
+> The extended operation type can be combined with the existed operation
+> type to express a memory type, for examples, a PERF_MEM_OP_GCS type can
+> be set along with PERF_MEM_OP_LOAD to present a load operation for
+> GCS register access.
+> 
+> Bit fields are also added to represent detailed operation attributes.
+> 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>  include/uapi/linux/perf_event.h | 32 ++++++++++++++++++++++++++++++--
+>  1 file changed, 30 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index 78a362b8002776e5ce83a0d7816601638c61ecc6..9b9fa59fd828756b5e8e93520da5a269f0dfff52 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -1309,14 +1309,32 @@ union perf_mem_data_src {
+>  			mem_snoopx  :  2, /* Snoop mode, ext */
+>  			mem_blk     :  3, /* Access blocked */
+>  			mem_hops    :  3, /* Hop level */
+> -			mem_rsvd    : 18;
+> +			mem_op_ext  :  4, /* Extended type of opcode */
+> +			mem_dp      :  1, /* Data processing */
+> +			mem_fp      :  1, /* Floating-point */
+> +			mem_pred    :  1, /* Predicated */
+> +			mem_atomic  :  1, /* Atomic operation */
+> +			mem_excl    :  1, /* Exclusive */
+> +			mem_ar      :  1, /* Acquire/release */
+> +			mem_sg      :  1, /* Scatter/Gather */
+> +			mem_cond    :  1, /* Conditional */
+> +			mem_rsvd    :  6;
+>  	};
+>  };
+>  #elif defined(__BIG_ENDIAN_BITFIELD)
+>  union perf_mem_data_src {
+>  	__u64 val;
+>  	struct {
+> -		__u64	mem_rsvd    : 18,
+> +		__u64	mem_rsvd    :  6,
+> +			mem_cond    :  1, /* Conditional */
+> +			mem_sg      :  1, /* Scatter/Gather */
+> +			mem_ar      :  1, /* Acquire/release */
+> +			mem_excl    :  1, /* Exclusive */
+> +			mem_atomic  :  1, /* Atomic operation */
+> +			mem_pred    :  1, /* Predicated */
+> +			mem_fp      :  1, /* Floating-point */
+> +			mem_dp      :  1, /* Data processing */
+> +			mem_op_ext  :  4, /* Extended type of opcode */
+>  			mem_hops    :  3, /* Hop level */
+>  			mem_blk     :  3, /* Access blocked */
+>  			mem_snoopx  :  2, /* Snoop mode, ext */
+> @@ -1426,6 +1444,16 @@ union perf_mem_data_src {
+>  /* 5-7 available */
+>  #define PERF_MEM_HOPS_SHIFT			43
+>  
+> +/* Extended type of memory opcode: */
+> +#define PERF_MEM_EXT_OP_NA			0x0    /* Not available */
+> +#define PERF_MEM_EXT_OP_MTE_TAG			0x1    /* MTE tag */
+> +#define PERF_MEM_EXT_OP_NESTED_VIRT		0x2    /* Nested virtualization */
+> +#define PERF_MEM_EXT_OP_MEMCPY			0x3    /* Memory copy */
+> +#define PERF_MEM_EXT_OP_MEMSET			0x4    /* Memory set */
+> +#define PERF_MEM_EXT_OP_SIMD			0x5    /* SIMD */
+> +#define PERF_MEM_EXT_OP_GCS			0x6    /* Guarded Control Stack */
+> +#define PERF_MEM_EXT_OP_SHIFT			46
+> +
+>  #define PERF_MEM_S(a, s) \
+>  	(((__u64)PERF_MEM_##a##_##s) << PERF_MEM_##a##_SHIFT)
+>  
+> 
+> -- 
+> 2.34.1
+> 
