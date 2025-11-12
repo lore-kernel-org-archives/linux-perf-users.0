@@ -1,102 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B951F4F1;
-	Wed, 12 Nov 2025 00:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7DE33F3;
+	Wed, 12 Nov 2025 00:43:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762906633; cv=none; b=FmniUVgR0E5zunQcX80JBSX5Hyi6GBXjhS8kVdB2UofWGL0l3twAzjb+i1DdUzBYUX1VOduWx/gc6lfLBnR0GibzNL2k/55RxhkELkdaD+b8Ms36r9sQBfD+8pgBWOC5EunjoAOwbtd7PXrSKoP5Voe9TTFlCfKJfZ7YxTpXTc0=
+	t=1762908197; cv=none; b=Pg4DOlKoUhPxBMkIR/WyRiswtyRSeNuSJJWwEJmWU8nilaoH/eRojBF/3cLYMHpemWbxVYilLJrny9qxDeNVuoA1t6qxoEcoUF3CQvJdDzlzuzmok4p4TRLWRgvvf5Jb7PEjptZWTL16y317gfPJXYOXUAzCeqr5c1o61X0Fk0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762906633; c=relaxed/simple;
-	bh=c7Acazo6/VSTzsird0Ho5whwvCWjj8rpyxfYP9HRqIQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hKQXY4ExUGCi4ufyOltZ5KTQO/jVqs0gJNnnSJfP5nRsxxWhWR8I88g+frWiMfrCeFL/kRMhNRsGAiitmJFM2rynWfXgJqcbyzV33UkX38sQFcI4m6yeXmRsgvOVE5asjPBRqBszhNzYQAVLGaV/97uWBuTRgCa9sLgsuawi09M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AX0ToDhO; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1762908197; c=relaxed/simple;
+	bh=atpFUL7pJYRuvuflts9DoB2NTZpWxZJSKckn+I2ruEU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E1mF8FAKYQ7zBXk6htCVL8bjf7sasGhLb+ViZ/lUgJdkVpw1RcHc3AVmib25osVRDQZJ/SOP97vYc0g4TMaMgcFg+OyBI4HjXZX/ahMRCprEiaCzz53WdGuesZ5iiQaNK4Z14EGuxCKFowxcf5jqF5DWPX0dm4ihrXhteHBPw84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=azgas3dy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AX0ToDhO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762906632; x=1794442632;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=c7Acazo6/VSTzsird0Ho5whwvCWjj8rpyxfYP9HRqIQ=;
-  b=AX0ToDhOlzKvVPuik5GOtTWGMeBTzqJr3Cbxn30p7arIVoK84nffGtDU
-   gxGUlmQaS7Z7v1RO+ug10UlKB5ChcBNm44XHXrRQHUKlL0YWbn5C7hyN7
-   1z4fDF9JHmMeQ0wphX7U32rtY9fCmAh0PVUaA1N05/atkYTodw4wIbSBT
-   LOc7gWAkgbeDL1/0X9yW2I7sGcHtQnw4TWwbFpqArk8fcKqMpBGX3fLEp
-   9FJw5YBcJ87Cq25BAWznYhSv+s42IcuSDvZ/Lw6WIrAySugqng3c6VgcI
-   4zuoiepsbeT9PVpgCZ6RFiV6bmsBPri2Odg7O+12MvMNiZI3iD5+CXH0E
-   A==;
-X-CSE-ConnectionGUID: 1UhiecGDRw+3r863qdfc1w==
-X-CSE-MsgGUID: EaB7gKu5T7ekmXQrWmfXOg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11610"; a="64874090"
-X-IronPort-AV: E=Sophos;i="6.19,298,1754982000"; 
-   d="scan'208";a="64874090"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 16:17:09 -0800
-X-CSE-ConnectionGUID: HQYDWhPZRQmrtmd8b8OQCg==
-X-CSE-MsgGUID: VhNBE5L1Rg2w4tqrBr35tA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,298,1754982000"; 
-   d="scan'208";a="219802858"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.65]) ([10.124.232.65])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 16:17:00 -0800
-Message-ID: <1a8dcc37-68a3-463f-874e-8bb808047d2d@linux.intel.com>
-Date: Wed, 12 Nov 2025 08:16:58 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="azgas3dy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99DE2C116D0;
+	Wed, 12 Nov 2025 00:43:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762908196;
+	bh=atpFUL7pJYRuvuflts9DoB2NTZpWxZJSKckn+I2ruEU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=azgas3dy3XFARqqEvidJa0zDJCCN7XnLwbpkIQFjp6vDAvrACAJaLkMLIHlYDAevM
+	 5qOm3TBzkj+RieWN/Dy5D7LLJF3nKDdvz3bWveIYxl2W1DFI3zbNO9o1wZVaDSWyhC
+	 mcebqrnLATC0AgtqvMHdolQt3p++6aL4WisX1NPbZRvej6HV6+fQBIUBcjagTlXly0
+	 ham7uuRIpfi6YVap8OBvO+fPt0YvNoqpMeyG7OdtjlDoMwY38pq32tfAx5sSWtZBag
+	 YtNUe+2WRCNNE3TOw893hcCA1TmEaUNvBkhQGq1jilSUWKoNCbERS1ODymBfaU0VsH
+	 lKl36mF/+Ne8Q==
+Date: Tue, 11 Nov 2025 16:43:13 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: "Chen, Zide" <zide.chen@intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf tools: Fix missing feature check for inherit +
+ SAMPLE_READ
+Message-ID: <aRPYITVx_MHKEeFd@google.com>
+References: <20251111075944.2328021-1-namhyung@kernel.org>
+ <ac137eff-674c-4fa4-b870-80878af032a0@intel.com>
+ <aRORSxu22OSf-v0X@google.com>
+ <7ea7c72d-7570-4eca-8a8a-d8f93363691e@intel.com>
+ <aRO5Tuz_-m5PX9Pz@google.com>
+ <3f2e834b-36d1-4227-b1bd-843e824ac353@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v9 10/12] perf/x86/intel: Update dyn_constranit base on
- PEBS event precise level
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>
-References: <20251029102136.61364-1-dapeng1.mi@linux.intel.com>
- <20251029102136.61364-11-dapeng1.mi@linux.intel.com>
- <20251106145217.GA4067720@noisy.programming.kicks-ass.net>
- <09210c12-cc61-4af5-bd13-830fd9650f9b@linux.intel.com>
- <20251107130552.GB4067720@noisy.programming.kicks-ass.net>
- <a0416429-23d4-4f4f-af73-bcd87b4e773c@linux.intel.com>
- <20251110090311.GW3245006@noisy.programming.kicks-ass.net>
- <97eb5ae9-6c99-497e-a1b9-80bf365bf2d5@linux.intel.com>
- <380fd742-a7ed-4d6f-9944-b963869a5cb3@linux.intel.com>
- <20251111113732.GM278048@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20251111113732.GM278048@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3f2e834b-36d1-4227-b1bd-843e824ac353@intel.com>
 
+On Tue, Nov 11, 2025 at 02:36:19PM -0800, Chen, Zide wrote:
+> 
+> 
+> On 11/11/2025 2:31 PM, Namhyung Kim wrote:
+> > On Tue, Nov 11, 2025 at 12:03:22PM -0800, Chen, Zide wrote:
+> >>
+> >>
+> >> On 11/11/2025 11:40 AM, Namhyung Kim wrote:
+> >>> On Tue, Nov 11, 2025 at 11:13:20AM -0800, Chen, Zide wrote:
+> >>>>
+> >>>>
+> >>>> On 11/10/2025 11:59 PM, Namhyung Kim wrote:
+> >>>>> It should also have PERF_SAMPLE_TID to enable inherit and PERF_SAMPLE_READ
+> >>>>> on recent kernels.  Not having _TID makes the feature check wrongly detect
+> >>>>> the inherit and _READ support.
+> >>>>>
+> >>>>> It was reported that the following command failed due to the error in
+> >>>>> the missing feature check on Intel SPR machines.
+> >>>>>
+> >>>>>   $ perf record -e '{cpu/mem-loads-aux/S,cpu/mem-loads,ldlat=3/PS}' -- ls
+> >>>>>   Error:
+> >>>>>   Failure to open event 'cpu/mem-loads,ldlat=3/PS' on PMU 'cpu' which will be removed.
+> >>>>>   Invalid event (cpu/mem-loads,ldlat=3/PS) in per-thread mode, enable system wide with '-a'.
+> >>>>>
+> >>>>> Fixes: 3b193a57baf15c468 ("perf tools: Detect missing kernel features properly")
+> >>>>> Reported-by: "Chen, Zide" <zide.chen@intel.com>
+> >>>>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> >>>>> ---
+> >>>>>  tools/perf/util/evsel.c | 2 +-
+> >>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>>>
+> >>>>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> >>>>> index 67a898cda86ab559..989c56d4a23f74f4 100644
+> >>>>> --- a/tools/perf/util/evsel.c
+> >>>>> +++ b/tools/perf/util/evsel.c
+> >>>>> @@ -2474,7 +2474,7 @@ static bool evsel__detect_missing_features(struct evsel *evsel, struct perf_cpu
+> >>>>>  	/* Please add new feature detection here. */
+> >>>>>  
+> >>>>>  	attr.inherit = true;
+> >>>>> -	attr.sample_type = PERF_SAMPLE_READ;
+> >>>>> +	attr.sample_type = PERF_SAMPLE_READ | PERF_SAMPLE_TID;
+> >>>>
+> >>>>
+> >>>> Seems this could have some unintended side effects. For example,
+> >>>> consider a :ppp event with PERF_SAMPLE_READ and inherit attributes
+> >>>> running on a system where the maximum precise_ip is 2:
+> >>>>
+> >>>> - It fails to open the event on the first attempt;
+> >>>> - It goes through the inherit_sample_read detection and fails again
+> >>>> after removing inherit;
+> >>>
+> >>> This is not what we want.  The kernel supports inherit + SAMPLE_READ
+> >>> so it should not remove the inherit bit.
+> >>>
+> >>>
+> >>>> - Finally, it succeeds after falling back to precision 2 — but the
+> >>>> inherit attribute has been unexpectedly removed.
+> >>>
+> >>> So it'll fallback to precision 2 without removing inherit.
+> >>>
+> >>>>
+> >>>> I may have missed something, but I don’t quite understand why commit
+> >>>> 3b193a57baf15 ("perf tools: Detect missing kernel features properly")
+> >>>> performs the check on a dummy evsel instead of the original one. In this
+> >>>> way, it might incorrectly fall back an attribute that doesn’t actually help.
+> >>>
+> >>> Because different platforms have different limitations on hardware
+> >>> events.  You cannot simply use current event for kernel feature check
+> >>> since it can result in wrong decisions due to the limitation.  So we
+> >>> picked the software event to avoid the hardware characteristics and to
+> >>> focus on kernel features.
+> >>>
+> >>>>
+> >>>> This means evsel__detect_missing_features() could theoretically roll
+> >>>> back a feature that might not actually work. Given that it cannot
+> >>>> restore the original evsel state after a failed attempt, side effects
+> >>>> may occur.
+> >>>
+> >>> The purpose is to turn off the non-supported features only and try with
+> >>> other settings like precise_ip and exclude_kernels and so on.
+> >>
+> >> OK, thanks!
+> > 
+> > Can you please confirm if this patch fixes your problem?
+> 
+> Yes, it works!
 
-On 11/11/2025 7:37 PM, Peter Zijlstra wrote:
-> On Tue, Nov 11, 2025 at 01:41:05PM +0800, Mi, Dapeng wrote:
->
->> I tested the queue/perf/core code with a slight code refine on SPR/CWF/PTL.
->> In summary, all things look good. The constraints validation passes on all
->> these 3 platforms, no overlapped constraints are reported. Besides, perf
->> counting/sampling (both legacy PEBS and arch-PEBS) works well, no issue is
->> found.
-> Excellent, I pushed out to tip/perf/core.
->
->> I did a slight change for the intel_pmu_check_dyn_constr() helper. It
->> should be good enough to only validate the GP counters for the PEBS counter
->> and PDIST constraint check. Beside the code style is refined
->> opportunistically. Thanks.
-> If you could send that as a proper patch -- the thing was horribly
-> whitespace mangled.
+Thanks, I'll add your Tested-by then!
 
-Sure. Would send the patch soon.
-
+Namhyung
 
