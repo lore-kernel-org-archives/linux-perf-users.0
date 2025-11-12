@@ -1,104 +1,92 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4359331A73
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 12:44:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAFC9219A8E;
+	Wed, 12 Nov 2025 13:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762951483; cv=none; b=mQl+GJjSbcEbN5IVl04pwz7haT73f9Fk0XbHG84bybgJWsSnomk7n8HF+VG1NOBNbZCqy7l1cr5P4TflYiPfOv+80zu0V0kLnkZOhIH8/q25RUUNvuWbnZjtvdgMgjoSbZygz4sVL4VZB4GAK2rheFm6qIT3B5iYY8Yy8OVgx0I=
+	t=1762954262; cv=none; b=e/jE43JHQJZeNde5UwJ3QhwNDoLjF5clEgic/6UNsipKB/jl0COZUkRVAS8U2jNoIYDQY6DcvH4xusVVHHUpxB+Ems2QF7N/lWKGfmoftqpzNCrYFq0nT7AlOXv3G1Jruv5ZnPudh6h/C1sWsoWTheyE8FQpgid+UhxRJk2gWRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762951483; c=relaxed/simple;
-	bh=567v1ntpe0vRcrzqlYLmwNeEdmxGAXaWmaKfegiR7RU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lqJJyLD2o6BzWvSnlWMG16tp8BmsryDdrIMj3QEiMOsugyHnoK/pXKPUzyJ4iq76Qn9pug6pGiuN66XUDBZ8EPA1q4sa76IZJiBLM1TJp8kSZOSYKjsCa5+H8TMiLy53Oh/ho2ZoyLqUTZ/CbgnMlWeuvhlhO2/yZ3BHsQ6ZIuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W/NSnBp5; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1762954262; c=relaxed/simple;
+	bh=2poLlO9B5CBMuS1HOT8AsTBXsJggdrQRNTQdmucUiaY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=I8V6w3P3v2q5D4Q2QFKkW3tD4anotFxwFsROno+tEvB2CG7d7QBtH188DP05VAWcDxpXoFYvLGQiNQaQNzosnAI3G8tji8IS02eneCaUUweM1kGS9OtPpUUX0N1x60RKy76jlAuSMo8PgtO/4g5dM3X+Pci6G8LJbtIC45ZuR3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=maQSL4In; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W/NSnBp5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1762951480;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mUViZBQiyYPpr7WESLgYWJ53oA+Voehw73EV9RI/kMQ=;
-	b=W/NSnBp5jz+QzR5xDRLMETv5UL3gm0/zvsGjH8PQeKY9k5VzkjtHnqp8aiTYNdDBjdHX7V
-	aPgqSvm6y7Tz0cGSOoGZ6jgR/+FiBKCObT9P6C9/c56dTGjD1oHcvEiojbz3VWBvQbO8uW
-	qNQsXEQWT+TWVF+m7Zz+BtxhqkiaUgo=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-132-ZBjBsd8UOUmvAzhkXwpbOA-1; Wed,
- 12 Nov 2025 07:44:39 -0500
-X-MC-Unique: ZBjBsd8UOUmvAzhkXwpbOA-1
-X-Mimecast-MFC-AGG-ID: ZBjBsd8UOUmvAzhkXwpbOA_1762951478
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4797E1956096;
-	Wed, 12 Nov 2025 12:44:38 +0000 (UTC)
-Received: from jbrnak-thinkpadx1carbongen9.tpbc.csb (unknown [10.44.32.180])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 74AE130044E6;
-	Wed, 12 Nov 2025 12:44:35 +0000 (UTC)
-Date: Wed, 12 Nov 2025 13:44:31 +0100
-From: Jakub Brnak <jbrnak@redhat.com>
-To: Ian Rogers <irogers@google.com>
-Cc: namhyung@kernel.org, acme@kernel.org, acme@redhat.com,
-	linux-perf-users@vger.kernel.org, mpetlan@redhat.com,
-	vmolnaro@redhat.com
-Subject: Re: [PATCH v4 5/7] perf test: Introduce storing logs for shell tests
-Message-ID: <aRR788vna0u-CEUU@jbrnak-thinkpadx1carbongen9.tpbc.csb>
-References: <20250930160923.13728-1-jbrnak@redhat.com>
- <20250930160923.13728-6-jbrnak@redhat.com>
- <CAP-5=fUJZEoAbNu+ZzjgshHRbq94dLn6-KPdzC=i9i350K=4dw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="maQSL4In"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 288BBC2BC86;
+	Wed, 12 Nov 2025 13:30:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762954261;
+	bh=2poLlO9B5CBMuS1HOT8AsTBXsJggdrQRNTQdmucUiaY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=maQSL4InaEIoWc7a6LxKSVC9E12GsXKu0YLReFJoP/Z9xYuRKa26yQ9AuXQwVgUBa
+	 depJlEKBsRznRaKvsg7BBMhUfrSkQcANG+eY7v6M1pG1X7O75wIQF2CWJcaN//Dz4d
+	 IjV8BqL/Zwf0Mlz3z+5768ooXXso+AOWFezZQqjvgSgU3Rh65rX0CjBK4WxyRNQQI4
+	 d5C2+hEnPBM1Vyv9HRFbWQ8+kJwGTqnkAb7tZ80JiwtmO4pbf8RBb0Qnu3TboZUkLd
+	 VViUWKIKBreX3gztlXzP8qaQqV6QkwXHj611I6ETvBipFWIPLSCUPT2yrcPFGKJUdS
+	 LuW9dGN2at8VA==
+Date: Wed, 12 Nov 2025 22:30:54 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
+ Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v5 6/8] selftests: tracing: Add a basic testcase for
+ wprobe
+Message-Id: <20251112223054.6ae557a50f1d998c9b46861c@kernel.org>
+In-Reply-To: <af8f3543-4af6-48d7-a55a-bab24b6c7c7a@sirena.org.uk>
+References: <175859019940.374439.7398451124225791618.stgit@devnote2>
+	<175859026716.374439.14852239332989324292.stgit@devnote2>
+	<aPvwGhMBJqMKcC9D@finisterre.sirena.org.uk>
+	<20251027224347.4c887cc956df63602f377550@kernel.org>
+	<20251028084222.a3c1ae97d125d9bd88fc565b@kernel.org>
+	<20251028105549.ae94e8eeb42f4efc183d2807@kernel.org>
+	<20251029004219.dc9cda0eb56ae46c55855844@kernel.org>
+	<20251029114317.167b7d908533385c1c9e6782@kernel.org>
+	<20251029172004.a0aca144735f20a6a59d2aa6@kernel.org>
+	<20251030090952.befea7f0cecd5518c7fda02c@kernel.org>
+	<af8f3543-4af6-48d7-a55a-bab24b6c7c7a@sirena.org.uk>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUJZEoAbNu+ZzjgshHRbq94dLn6-KPdzC=i9i350K=4dw@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Sep 30, 2025 at 12:00:19PM -0700, Ian Rogers wrote:
-> On Tue, Sep 30, 2025 at 9:09 AM Jakub Brnak <jbrnak@redhat.com> wrote:
-> >
-> > From: Veronika Molnarova <vmolnaro@redhat.com>
-> >
-> > Create temporary directories for storing log files for shell tests
-> > that could help while debugging. The log files are necessary for
-> > perftool testsuite test cases also. If the variable PERFTEST_KEEP_LOGS
-> > is set keep the logs, else delete them.
+On Wed, 12 Nov 2025 12:15:03 +0000
+Mark Brown <broonie@kernel.org> wrote:
+
+> On Thu, Oct 30, 2025 at 09:09:52AM +0900, Masami Hiramatsu wrote:
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> I think log files for tests are a good idea. We run tests in parallel
-> but read the stdout/stderr sequentially. For a failing test we may
-> fail to read stdout/stderr in some situations as the process has long
-> since died. Rather than add log files specifically for shell tests
-> perhaps update start_test to pass the file descriptors to the child
-> test processes and then clean up in finish_test?
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/builtin-test.c?h=perf-tools-next#n528
+> > There is a single step execution code but only for default overflow_handlers.
+> > This is a bit strange becuase other users can not set it up outside of
+> > the arch dependent code. Even if it can, it is simply redundant.
 > 
-> Thanks,
-> Ian
+> > So I made changes below which allow users to set its own custom handler is
+> > compatible with perf default overflow handlers.
+> > I confirmed this works on both arm and arm64.
+> 
+> I think everyone who knows this code is really snowed under at the
+> minute - can I suggest posting this as a fix for now?  This is still
+> broken on arm64, we'll need a fix (or to disable the feature on the
+> affected arches) one way or another for v6.19.
 
-Hi Ian, 
-
-Thanks for the feedback.
-
-You've raised a good point about capturing stdout/stderr for parallel runs,
-but this patch is solving a different problem.
-
-The logs we're storing here are test-generated data artifacts, not the
-stdout/stderr of the test process itself.
-
-Our patch provides a $PERFSUITE_RUN_DIR environment variable so that commands inside the shell script (e.g., perf record)
-have a known directory to save these files for debugging.
+Sorry, let me drop it from for-next soon.
 
 Thanks,
-Jakub
 
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
