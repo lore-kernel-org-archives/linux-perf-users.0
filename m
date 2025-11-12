@@ -1,54 +1,54 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848212D8DC4
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 07:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C2B2D877F
+	for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 07:43:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762933238; cv=none; b=cQLnmmaJot+lVSVHJXTD/oYncC4TOYvr866maVZL+5A2SU4c1d3pUsOFQJE6X9yVsKyGs/SRHLZ5jFJbp2UEiD2WYlLPHG2VTrwXUSSVD0KVStsE/waZNTaAulW9xsJFMMl7CsjOYJI4E+p5H4xAtPO4TwAEETYfNzEY1EVBAj8=
+	t=1762933398; cv=none; b=Ibb8QE8hXXIntuu34rhh+40SXVH6jW1rj0Lq/c4usN9P/8GkaK9HnbRkWs2eKrX600Q9McoNlIY+TaYKoe7Bj01XKkq5WmlqsjpvCoSmDVmubfvwcmaSzyEqlhN/9n+KVzOlY6Vh6rzITBNwRk6sHiBRQj0g1ovlbHpJZPoYfkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762933238; c=relaxed/simple;
-	bh=4SALSKbCmgX/8BOof2Zi1l+NvRGR0X15IZnZc2+XiB4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=KMoruYVAm59G/pCeGxsaGH+qnFYlzitP+Wabrqp3W643M7/yps7vVC/llC0E1Z1QEffo2UJarkuVeC2yFUrOeNwbNyzv6rsopdsqfrH3gMAlmvSfqr9cP51rVrWJwhn1ymNsRt0dHNU5iZhKZVN9wvacJBo6q1sNoxaWPCLwOpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dPRMm8Ie; arc=none smtp.client-ip=209.85.215.201
+	s=arc-20240116; t=1762933398; c=relaxed/simple;
+	bh=QZumcc+aGuEyWSU11cBF1Lm2JEA58vA2/+jRiRWwFsM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=Xg8ewH3Tcs8IygghqKMaB8z7MjeGucoeIMkn2THqaJAA0o5JCige2u7fMRaIU0JV1kW2Bpt9HC4RNwwMUSQ0kSOz6TPEQbn1qxjv5jTuTe7lgXabQFx8YCxxcdqj8qELSPsAbXxticJeb/g5BZTg+jSusvNd+DF1kcke7kSjEuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e/39kuo1; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dPRMm8Ie"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b5edecdf94eso1211776a12.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Nov 2025 23:40:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e/39kuo1"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b9d73d57328so551546a12.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Nov 2025 23:43:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762933236; x=1763538036; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1762933396; x=1763538196; darn=vger.kernel.org;
         h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=b4j12ALBms7hTL30MK6vG9oB8izvbJzE18Mhy1cM3lQ=;
-        b=dPRMm8IeM8v7ZHg44ZxHO9eBhYxqB6CKGQSO0x52AtARpoJTX1LJ+hl3kD5qzUW5Pw
-         Nl9OW4DOKBuX87Qi0hUeQJkqzEdGT6U7E7jpqdyY7kRc6GSfEd8q6TjF+7t49LHAM2eg
-         Dk2ZwKnRsOyK3i8iYwQBBJu2wZoPRMXnOUv2pTqxIP/XCjwt4MHTGffXpixIkR1PagDC
-         1cE8jPM4NEX7AJrkPZ6STXG4/IoZOHqz9GSEepIIj/gF+rJtvVASQxt/BHFvoCTjvrHe
-         s35pu9NJ33Jmi07d9vXYjEsBtKr2G6SJ70xkUuagqFYSahnUTx9UooiUkLPnV1KuoJDo
-         eUtA==
+        bh=iDxlg3rjq7IUfgkqdF3QzT2vSrqjrpZ2K7ERAvuReQE=;
+        b=e/39kuo1C1lGdvfxoN0gl8F6uTFSZt4e7U9TS2Vd2sELFIfULh2ZIq+VzwP+xe0s55
+         SQgY/4068kWD/yakY0b5ZQL6g/cLnkY21QMaH46M0SWv/czamM7z2j/+ygi0FVS2zHMk
+         nG/skQ/NgXFKKgEWxaZIuZvo0bhQnDH0a0fblDHB7ZRLFToe54D3/5t8USDeNd+Xbjci
+         pxvVd1V4FYEDgcSMJ4yeEezC6lK+6UOdNK8NjbphiSIDYsNWXZjSflNYABXq+uoC0/vC
+         l7R3U3TFIRr/X8qAMVsqyWg4HAX3bWradXz+JeLfAPa0VJ6qci/9b1g3kSt4ktkWP3xS
+         kZbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762933236; x=1763538036;
+        d=1e100.net; s=20230601; t=1762933396; x=1763538196;
         h=to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=b4j12ALBms7hTL30MK6vG9oB8izvbJzE18Mhy1cM3lQ=;
-        b=w2fCzdjwCxljcdwANFna9EWKP4pNPvExHW6uz5eLIoxhtd5ym2En16niOSCMshPpH5
-         Db/X27P+pJcQyWt/UUT5I4q2K4adWgT0fYSh+8lqZxvzURIW13B4XQlFr9J6FzG+JNph
-         qu5vuIzmi/qB6peYvXdDvYD+t1Tz5Lg4NhAckGOs9g5hVAMgXJugMgMjNV+iSZnsM0R5
-         1GTm9oBiGa+s+vScdgWgr5eEkX0olYNTf1y7IIawOeQD3hecsu03Et3Xo8viuemsODig
-         qXIUoWnjEfnn93GzAmjWpyZI2wFyXP//oe6C+k8MSzkqhBXrJaVck06hygszSVF/rBEA
-         +naw==
-X-Forwarded-Encrypted: i=1; AJvYcCVN28Sv/Ws0Qor5QsNr2CJMRP537BvGxMU3udDLCQwWq+tJNHeTO6350zp7mbexRC4DYcFvZseRkeBlKqM8EIne@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXcrwGteCtXsj40xCKaTu27J7ex79S8jIBAjcVfU5U+OJINHT3
-	4LkAZA7CeCWYhGP6Ts/KN4ZqKO9wpd1x9pkNAJQTYLJViQ9DIF64YdsZ/1a/KsDsTCNVnc3fjiH
-	d3PGPX0uCFA==
-X-Google-Smtp-Source: AGHT+IHfhIMW+Y2tjkl213sKicyatqbA81t/2MTS7BpCHBXOS8ZJ+7k32EHIntIqbQvPQ9zP1brPBmH33+Sg
-X-Received: from dycrq20.prod.google.com ([2002:a05:693c:2c14:b0:2a4:74cb:b0ad])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e788:b0:295:70b1:edc8
- with SMTP id d9443c01a7336-2984ed79fd7mr28105145ad.2.1762933235823; Tue, 11
- Nov 2025 23:40:35 -0800 (PST)
-Date: Tue, 11 Nov 2025 23:40:31 -0800
+        bh=iDxlg3rjq7IUfgkqdF3QzT2vSrqjrpZ2K7ERAvuReQE=;
+        b=grTGMBc4itjGnvgKUJeQDIC1MYLUKTR0KqHdUWCzDxTf0qzsZJZghDEHjYwwFtfgZi
+         uGq+CeRbHyoZdifn2JqxpzdnYbM99nl07NMXmMmlmkCl7Q9fJrpKdkX76rqEbBZ25H4Y
+         vEWQwytU1YR/lYCoYAaHo7qHXAfdJUzA4E4vFdONhrNj8Az+4JvMnPxgtQvBnu7uzULG
+         piogmMsJFmkCTrJ3dzULk+HHQqLLn621U3tgJ2ptBRC2UkHNCtOjFviTA0pRBEgdMG7D
+         h6M5Jzd3sTOC1fFGL5EZk1mwBchH2ohvFsjv8+Jvx6uCXa5yRYrQuupOoNE1B5T3J8DF
+         iXTg==
+X-Forwarded-Encrypted: i=1; AJvYcCUH9O3S8mGviDNLW5i/frRWitna5VJ3gptlVor10ZHqoohhPlJ6b95JNNiJcsK5V+dEyve/xLcK5Dtj/QtAuqtQ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxx33rQUvqSTYbOtWMSpzVo/FS6N20SWW8mRii56Z3ZWNkqyAA7
+	xufLpyu3/0CEnEtniFF16QQxOIu1+QR1ZSfaO0lwfYIDEnVWVSssT+KJVuSu+QE7447AelSc/vc
+	H6NbIpHEB2g==
+X-Google-Smtp-Source: AGHT+IFlCJoHl4U0qhCyKZm/cv+eMqTRrwx9eTjHB4ufjp5u24z+RJZmtmB6/nLtuNj70VwaJ52q87cSYoOs
+X-Received: from dlbdx18.prod.google.com ([2002:a05:7022:e12:b0:119:49ca:6b96])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3c8d:b0:34e:cc0a:40b2
+ with SMTP id adf61e73a8af0-3590b02ad56mr2632422637.30.1762933395749; Tue, 11
+ Nov 2025 23:43:15 -0800 (PST)
+Date: Tue, 11 Nov 2025 23:43:11 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -56,8 +56,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.51.2.1041.gc1ab5b90ca-goog
-Message-ID: <20251112074031.1436415-1-irogers@google.com>
-Subject: [PATCH v1] perf libbfd: Ensure libbfd is initialized prior to use
+Message-ID: <20251112074311.1440101-1-irogers@google.com>
+Subject: [PATCH v2] perf libbfd: Ensure libbfd is initialized prior to use
 From: Ian Rogers <irogers@google.com>
 To: Guilherme Amadio <amadio@gentoo.org>, Peter Zijlstra <peterz@infradead.org>, 
 	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,24 +76,18 @@ Closes: https://lore.kernel.org/lkml/aQt66zhfxSA80xwt@gentoo.org/
 Fixes: 95931d9a594d ("perf libbfd: Move libbfd functionality to its own file")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/libbfd.c | 39 +++++++++++++++++++++++++++++++++++++++
+v2: Remove unneeded unistd.h include.
+---
+ tools/perf/util/libbfd.c | 38 ++++++++++++++++++++++++++++++++++++++
  tools/perf/util/mutex.c  | 14 ++++++++++----
  tools/perf/util/mutex.h  |  2 ++
- 3 files changed, 51 insertions(+), 4 deletions(-)
+ 3 files changed, 50 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/util/libbfd.c b/tools/perf/util/libbfd.c
-index 01147fbf73b3..42edb3191d7d 100644
+index 01147fbf73b3..6434c2dccd4a 100644
 --- a/tools/perf/util/libbfd.c
 +++ b/tools/perf/util/libbfd.c
-@@ -19,6 +19,7 @@
- #include <fcntl.h>
- #include <stdio.h>
- #include <stdlib.h>
-+#include <unistd.h>
- #define PACKAGE "perf"
- #include <bfd.h>
- 
-@@ -38,6 +39,39 @@ struct a2l_data {
+@@ -38,6 +38,39 @@ struct a2l_data {
  	asymbol **syms;
  };
  
@@ -133,7 +127,7 @@ index 01147fbf73b3..42edb3191d7d 100644
  static int bfd_error(const char *string)
  {
  	const char *errmsg;
-@@ -132,6 +166,7 @@ static struct a2l_data *addr2line_init(const char *path)
+@@ -132,6 +165,7 @@ static struct a2l_data *addr2line_init(const char *path)
  	bfd *abfd;
  	struct a2l_data *a2l = NULL;
  
@@ -141,7 +135,7 @@ index 01147fbf73b3..42edb3191d7d 100644
  	abfd = bfd_openr(path, NULL);
  	if (abfd == NULL)
  		return NULL;
-@@ -288,6 +323,7 @@ int dso__load_bfd_symbols(struct dso *dso, const char *debugfile)
+@@ -288,6 +322,7 @@ int dso__load_bfd_symbols(struct dso *dso, const char *debugfile)
  	bfd *abfd;
  	u64 start, len;
  
@@ -149,7 +143,7 @@ index 01147fbf73b3..42edb3191d7d 100644
  	abfd = bfd_openr(debugfile, NULL);
  	if (!abfd)
  		return -1;
-@@ -393,6 +429,7 @@ int libbfd__read_build_id(const char *filename, struct build_id *bid, bool block
+@@ -393,6 +428,7 @@ int libbfd__read_build_id(const char *filename, struct build_id *bid, bool block
  	if (fd < 0)
  		return -1;
  
@@ -157,7 +151,7 @@ index 01147fbf73b3..42edb3191d7d 100644
  	abfd = bfd_fdopenr(filename, /*target=*/NULL, fd);
  	if (!abfd)
  		return -1;
-@@ -421,6 +458,7 @@ int libbfd_filename__read_debuglink(const char *filename, char *debuglink,
+@@ -421,6 +457,7 @@ int libbfd_filename__read_debuglink(const char *filename, char *debuglink,
  	asection *section;
  	bfd *abfd;
  
@@ -165,7 +159,7 @@ index 01147fbf73b3..42edb3191d7d 100644
  	abfd = bfd_openr(filename, NULL);
  	if (!abfd)
  		return -1;
-@@ -480,6 +518,7 @@ int symbol__disassemble_bpf_libbfd(struct symbol *sym __maybe_unused,
+@@ -480,6 +517,7 @@ int symbol__disassemble_bpf_libbfd(struct symbol *sym __maybe_unused,
  	memset(tpath, 0, sizeof(tpath));
  	perf_exe(tpath, sizeof(tpath));
  
