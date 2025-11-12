@@ -1,152 +1,189 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6CC25D527
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 16:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4C1343D9E;
+	Wed, 12 Nov 2025 16:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762966216; cv=none; b=TlLXcGI4WAAoFwI542IQdajPymed+WlgzBGww9oFrcy3y/xAyoV2QC3f2LKaXGS6xNic1cvVvMQz4lyfB1CFEAwDHXkfaSDMd5ZkQ0kx4YVCT8uBrtLYQCiqg9gKFX6Zt7Kn+u+5OA+GCbTLhlDFuEwIaA8EOoYJoIIOBV8ELrs=
+	t=1762966508; cv=none; b=aB9zGxDjO2/0EpltMjD8ICSt9ROLb5jT1V+fo5GqANL2+dLotvVWP0OOmWkEQ7gbqf17gCNFy6JNuh5FzSer1sqTE1SLC2JkRucqFkPV6hi93S3O1MuJlRmIOcnzQ84a54xfkqmMa9yX9cOJYqVY7jDwTH7ByJ6L9M/sHarYQEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762966216; c=relaxed/simple;
-	bh=Tiwbde6lhRPpVFkuGMnOq1cdj+tm313o4sMRI6JbwIY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U7bqFTgQ7NX+0XGON/7Tbc46AgtE8tePttcVIie5Vj3vlhH1rHq/5brxxGXws40EtKTosxGFGwijeySiPGyXqFPr6SApqFCbRUO/GFxpFpNA62K3dNC1yxlspcx3C0JFmiEgzOfQeBKUZNXmSiWB5HOScFaztkDSbYqOF2eruWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SC8HyX6o; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1762966508; c=relaxed/simple;
+	bh=WfIods2bJfQPmp7PBIC2biv1hfgAC7/+RMioDm3ndSA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YKPB+2YswBcM8PiabLGga0IlG3QAP1tNhEND90wBF1lIIA9hxpyvr46NsbDBqfi6bJQy+FhlLHGH1V7UTnAokpAF2i0BW+kP1BvS/+m5cm3rt+QaWzaItLTSgUnV/P4fCdflGkvdaacqUZ3l8OdHCkjPhHs7Ffr1Ry4Kgu+EGDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J2AHPp2Y; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SC8HyX6o"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-295c64cb951so231935ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 08:50:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1762966214; x=1763571014; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=im8M93syO4Wdo1dQDINgUp1S7N0dhhvUu+q127lgjpw=;
-        b=SC8HyX6ol1VS7yWQdw286KVJ2HzJk/P4NyrY+t/lIjSFo5wQeNL0ViuXlqUEBsj33T
-         haoBOEJf7mMfhIAkF4hisuoPVktrIP7/wVRsoHraT3g9uZJIzQS1pSw9byeMzhtpegWY
-         oW0Pf0G+IuiPChZm3j0Y3W7VPD9aq0DhH4q8DWFfJjGoA6f8cl4KP/Y9EuE/JPFSfwdT
-         fSa07FvLuuUhLbe+5iN7HjphxyoZZDj12SvDsQbtF06SuDJMGfQ2SKw5L15WTNGugn4s
-         rkhKC2OtkiPEOw1g7ToDNXyokxEAhpXlXm1eASemufSpfRvO5baEbRAdKXpren4fOavj
-         Vqjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762966214; x=1763571014;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=im8M93syO4Wdo1dQDINgUp1S7N0dhhvUu+q127lgjpw=;
-        b=Xapu+YjodaHCXDjwHqgv1Nuc/FC/yKGuUbWjkWl+numwBiW/0/QoY8GvDECwaLtbJ+
-         2lHDiweA8s99G4DlWUiRj78A8v9Ttn5cvs0dU24Ys+QXOCBSjd0sQRujOl1s6DrHP0mO
-         XqTvsADeuq1aVNIFfPHKo2QFxvrWjbMTucyTK4Qz8GJEVZWYz02zcuXC5TNNzkcUdhWX
-         W5TOQUHZxyjbVZh9B+IQ/X/VTlRyPqnXdexTsDzm/YgMwTk6sVzx7b5OSni38puiKXP/
-         B7HcfPve9Dr1BtGft85YgT/KwT3Ger0v4K1F8e2wlvDWtHwonA+Fh5xhR4TsJ8wgof3X
-         JCTg==
-X-Forwarded-Encrypted: i=1; AJvYcCUgNBn4UB+MSus6SB6SZU8/2rux7eKmfWAu5pJODgdkPD/3XdPS8kn5zUWYcAbfT96q9hIGGBmrXZ/O3qepa+xS@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1GnOVPtQDL/PC4mQ7dKCXVewLOESJgri1/A3rJMojTHkk2IlQ
-	BxAGPMpmLAgKK2jG9A8GYNRQt89hYypBWQf9yNyXqZv9XLFy0NrNmH3aaRCpLTBkDw73y84pU1R
-	y/CHKMfV0xs0lBmEDN8Q3DPysrzEOT1uqCkw719Yk
-X-Gm-Gg: ASbGncuXwFniegQ5KpNemnju1gKuILi2Qrc1rrVZ4JgJ+UCx5w52CDby3I8MGoXGZNb
-	tyNG/rbFypJPiTh8y2qb0cu9kWXDZwUtBWunJGCDJE89IYzAQFszDdMeJ/MauPE2fLeHTDhHdon
-	o1ToVmChyZsWU6mrdQu+UGvfaS42QvVsLe2qvSFTwJ47LcXR3goCL3CCVzfZAP8VzIngHUJx+G3
-	DlOWA0i2V1qYQv8KvCCkXJ2n3/QoBhjpCKoO5EpEpnZONJIWYRYGkMiGfLIzVH6Q9T3Zy/TN6K6
-	qKEI9tODb5WqAon9aBTpLQusiSJoQk8/sZjV
-X-Google-Smtp-Source: AGHT+IGwx5bn7xQydBmWpG2XwjQli5nNX+W9qsqwOXGCIONZx5bVCiDz/zbGXu7F7IfB1kae8B/JhUVm1uX9/31LFp0=
-X-Received: by 2002:a17:903:1a68:b0:295:5138:10f2 with SMTP id
- d9443c01a7336-29850761942mr2821745ad.11.1762966213583; Wed, 12 Nov 2025
- 08:50:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J2AHPp2Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1762966506; x=1794502506;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WfIods2bJfQPmp7PBIC2biv1hfgAC7/+RMioDm3ndSA=;
+  b=J2AHPp2YgM8prlrdY3k8mWko5nxW3UwwlhTBV63ZHcPejBAdFNA9NQ/b
+   PGUw2T3LFcsUvsOdvCHOhQ81Rld8M/EIY5LWH2HcaqmFvAGqMSe6ZZ0tq
+   ZkffWLFv/OTrhU3yfz0JAtnt8Xom1cowSv88Vy16YxmhT6E2+CizI6aDH
+   AAawjMLOBSGiE4+lFO8FW3qjeYuc2KnPFYopLUUqdDa2r4jHQ5H0YxXSi
+   CQC1wBv8exJ0Yfavie8Jr6R/mCVs9fAMMAfDDEyD7hRCCDqkSh14ULEzc
+   /cis6E/LFES8MmV4BVqKbuWILNRM5BgUiCVvI6M2ZCToPl6o19pEVQH1J
+   A==;
+X-CSE-ConnectionGUID: Z2/q6B6fTiidC0zBQvHHSQ==
+X-CSE-MsgGUID: 2r81bIqzTJ6qmbiZPpUIeg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11611"; a="64919280"
+X-IronPort-AV: E=Sophos;i="6.19,299,1754982000"; 
+   d="scan'208";a="64919280"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 08:55:00 -0800
+X-CSE-ConnectionGUID: qsZVJDRASg6Nc88wTEmIjQ==
+X-CSE-MsgGUID: YLe/dq/UTyWSb7cCZw0/rQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,299,1754982000"; 
+   d="scan'208";a="189440184"
+Received: from 9cc2c43eec6b.jf.intel.com ([10.54.77.43])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2025 08:55:01 -0800
+From: Zide Chen <zide.chen@intel.com>
+To: Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	thomas.falcon@intel.com,
+	dapeng1.mi@linux.intel.com,
+	xudong.hao@intel.com,
+	Zide Chen <zide.chen@intel.com>
+Subject: [PATCH V2] perf test: Add a perf event fallback test
+Date: Wed, 12 Nov 2025 08:48:23 -0800
+Message-ID: <20251112164823.80168-1-zide.chen@intel.com>
+X-Mailer: git-send-email 2.51.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250909-perf-pmu-cap-docs-v2-1-3c451f7b0b2e@collabora.com> <d01d3f15-c144-4e2a-9aee-6308a897f3f2@linux.intel.com>
-In-Reply-To: <d01d3f15-c144-4e2a-9aee-6308a897f3f2@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 12 Nov 2025 08:50:02 -0800
-X-Gm-Features: AWmQ_bl2JhgUXo9a1z19NSTipK_Tr2OyLPJE-WcM9aaK9x3Mjo8BIxtSG8U4n3s
-Message-ID: <CAP-5=fU2=s+88RQE0iq8DD+mxjMUca4UHkSM3TjkS8T_7p=KKA@mail.gmail.com>
-Subject: Re: [PATCH RESEND v2] perf/headers: Document PERF_PMU_CAP capability flags
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
-Cc: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, kernel@collabora.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	James Clark <james.clark@linaro.org>, "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 10, 2025 at 8:11=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.intel.=
-com> wrote:
->
->
-> On 9/9/2025 7:39 PM, Nicolas Frattaroli wrote:
-> > Over the years, capability flags for perf PMUs were introduced in a
-> >
-> > piecemeal fashion whenever a new driver needed to signal to the perf
-> >
-> > core some limitation or special feature.
-> >
-> >
-> >
-> > Since one more undocumented flag that can have its meaning inferred fro=
-m
-> >
-> > the commit message and implementation never seems that bad, it's
-> >
-> > understandable that this resulted in a total of 11 undocumented
-> >
-> > capability flags, which authors of new perf PMU drivers are expected to
-> >
-> > set correctly for their particular device.
-> >
-> >
-> >
-> > Since I am in the process of becoming such an author of a new perf
-> >
-> > driver, it feels proper to pay it forward by documenting all
-> >
-> > PERF_PMU_CAP_ constants, so that no future person has to go through an
-> >
-> > hour or two of git blame + reading perf core code to figure out which
-> >
-> > capability flags are right for them.
-> >
-> >
-> >
-> > Add comments in kernel-doc format that describes each flag. This follow=
-s
-> >
-> > the somewhat verbose "Object-like macro documentation" format, and can
-> >
-> > be verified with
-> >
-> >
-> >
-> >       ./scripts/kernel-doc -v -none include/linux/perf_event.h
-> >
-> >
-> >
-> > The current in-tree kernel documentation does not include a page on the
-> >
-> > perf subsystem, but once it does, these comments should render as prope=
-r
-> >
-> > documentation annotation. Until then, they'll also be quite useful for
-> >
-> > anyone looking at the header file.
-> >
-> >
-> >
-> > Reviewed-by: James Clark <james.clark@linaro.org>
-> > Reviewed-by: Ian Rogers <irogers@google.com>
-> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> LGTM. Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+This adds test cases to verify the precise ip fallback logic:
 
-Ping.
+- If the system supports precise ip, for an event given with the maximum
+  precision level, it should be able to decrease precise_ip to find a
+  supported level.
+- The same fallback behavior should also work in more complex scenarios,
+  such as event groups or when PEBS is involved
 
-Thanks,
-Ian
+Additional fallback tests, such as those covering missing feature cases,
+can be added in the future.
+
+Suggested-by: Ian Rogers <irogers@google.com>
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Zide Chen <zide.chen@intel.com>
+---
+v2:
+- Incorporated Namhyung's suggestion to change cycles:ppp to cycles:P
+
+ .../tests/shell/test_event_open_fallback.sh   | 86 +++++++++++++++++++
+ 1 file changed, 86 insertions(+)
+ create mode 100755 tools/perf/tests/shell/test_event_open_fallback.sh
+
+diff --git a/tools/perf/tests/shell/test_event_open_fallback.sh b/tools/perf/tests/shell/test_event_open_fallback.sh
+new file mode 100755
+index 000000000000..9c411153c01b
+--- /dev/null
++++ b/tools/perf/tests/shell/test_event_open_fallback.sh
+@@ -0,0 +1,86 @@
++#!/bin/bash
++# Perf event open fallback test
++# SPDX-License-Identifier: GPL-2.0
++
++skip_cnt=0
++ok_cnt=0
++err_cnt=0
++
++cleanup()
++{
++	rm -f perf.data
++	rm -f perf.data.old
++	trap - EXIT TERM INT
++}
++
++trap_cleanup()
++{
++	cleanup
++	exit 1
++}
++
++trap trap_cleanup EXIT TERM INT
++
++perf_record()
++{
++	perf record "$@" -- true 1>/dev/null 2>&1
++}
++
++test_decrease_precise_ip()
++{
++	echo "Decrease precise ip test"
++
++	perf list pmu | grep -q 'cycles' || return 2
++
++	if ! perf_record -e cycles; then
++		return 2
++	fi
++
++	# It should reduce precision level down to 0 if needed.
++	if ! perf_record -e cycles:P; then
++		return 1
++	fi
++	return 0
++}
++
++test_decrease_precise_ip_complicated()
++{
++	echo "Decrease precise ip test (complicated case)"
++
++	perf list pmu | grep -q 'mem-loads-aux' || return 2
++
++	if ! perf_record -e '{cpu/mem-loads-aux/S,cpu/mem-loads/PS}'; then
++		return 1
++	fi
++	return 0
++}
++
++count_result()
++{
++	if [ "$1" -eq 2 ] ; then
++		skip_cnt=$((skip_cnt + 1))
++		return
++	fi
++	if [ "$1" -eq 0 ] ; then
++		ok_cnt=$((ok_cnt + 1))
++		return
++	fi
++	err_cnt=$((err_cnt + 1))
++}
++
++ret=0
++test_decrease_precise_ip		|| ret=$? ; count_result $ret ; ret=0
++test_decrease_precise_ip_complicated	|| ret=$? ; count_result $ret ; ret=0
++
++cleanup
++
++if [ ${err_cnt} -gt 0 ] ; then
++	exit 1
++fi
++
++if [ ${ok_cnt} -gt 0 ] ; then
++	exit 0
++fi
++
++# Skip
++exit 2
+-- 
+2.51.1
+
