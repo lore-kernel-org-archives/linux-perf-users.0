@@ -1,143 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2901F1DFF7;
-	Wed, 12 Nov 2025 00:47:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EACDC2E0;
+	Wed, 12 Nov 2025 01:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762908474; cv=none; b=lScwPjwhiPmmH+abE3/MML4Oz8YhgbbqrkKB4GRJfsejho3JwCQp7dvG7bfGEIIbaAHaV8iY+82iGN+3OSRb9m6lXQUsTZZhCOw4mcpWv32YSfTDRCozjEO+EnCUTYpI9Dih2wCKNX09hXtEW6bMXSKLGC5NCNpZRrB35WgHTJM=
+	t=1762909598; cv=none; b=eEcw/Vi/4oIqCZSi7ZHxrbMwlAnLqQl0SE+mwrC3CCRU9Xx4lS4apbKF2x7nshwN/ZAsGwhOZl+lHWRkORnhjNqpm7snSaFYuaSP23zihAUR9lceCXrlXnRItAZxvnIGIidlG5LBIuC+VIO1Q/B79c8pi8yDhbApCMiiBsm8HM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762908474; c=relaxed/simple;
-	bh=jL6R/IPNeLhRSo2k5vRqel1tHMqnyqJilObXnC4HQV0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VOtpNIsFXsNu1h6cbqfBY0iyWMoMGhmzi2PC6AU7Wea8ECTgu/CcgBu2ymSQssLoBXbIU3yn8Ejj3F/MyMV7VlLIBHRzQRmT/4goq6kY3hIBM0NVRlobtY0hPs6Rwd8hBwRvFthmDa9xgrJakel/MnW+7vpaYGXvx91c9OVFPeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jV6kwMdi; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1762909598; c=relaxed/simple;
+	bh=EUbR/re2ASt9Vb5FItFEba60HxhgOFWy9gdqo3b4Wj8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p9AoMb2xyRBTpn+vQ5337pihMc5FjSqLVNWbaXYkQSP5YWmpfjaoE4LJtHBaieznrC8ZjFBYAsBfc3YYBdmldfcsuWbKM3sN/PAlgH8tmED1NQtGY+4xgNj8t5eCTgUE9gAOg4A4KBfL3wKS46UDYvitu/zt6yw2S4NVGisEE+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LA7rcaSx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jV6kwMdi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1762908472; x=1794444472;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=jL6R/IPNeLhRSo2k5vRqel1tHMqnyqJilObXnC4HQV0=;
-  b=jV6kwMdi0s2qJmDDnHoTTX9tZG1iG9vxCFTSwnFTWRzdYCYLQKfM2Zn5
-   IaxEy3z7F/wujWKFexmgGccUMTAs55Dk5qKHcRpCewb8G3q5BUYfDpajl
-   t8QnGWmpWzjxD1zZwbSqrWxcWwXUYRkFHSLMIh3U/i6kVa5jY/kV1a2RK
-   FG8kVpsE9Wmghc/7RSzoZbfBEAhmv2ke5GEHhCKyRQjWanJVKYnH9nucx
-   osQPorrHGBPQE1EECB/7YuHalmas7iFWGDIhJlVD0AljXWm+XqhT8URIY
-   O27dwerpQArqcGBq00e4za/yuDChvaeLnEGrefB0Zzgu3N1rKUuhm6p2q
-   w==;
-X-CSE-ConnectionGUID: im4wbTdQQm6Tlco4esYI9g==
-X-CSE-MsgGUID: iVuKywPdRoiU5d1vZ2Ro0g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11610"; a="64172926"
-X-IronPort-AV: E=Sophos;i="6.19,298,1754982000"; 
-   d="scan'208";a="64172926"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2025 16:47:52 -0800
-X-CSE-ConnectionGUID: EBJPeTvfR4S2NJpD+to/9Q==
-X-CSE-MsgGUID: TRWnnaQsT66FNNnZ0P1pPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,298,1754982000"; 
-   d="scan'208";a="188725620"
-Received: from spr.sh.intel.com ([10.112.229.196])
-  by fmviesa007.fm.intel.com with ESMTP; 11 Nov 2025 16:47:48 -0800
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LA7rcaSx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A882C4CEF5;
+	Wed, 12 Nov 2025 01:06:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762909598;
+	bh=EUbR/re2ASt9Vb5FItFEba60HxhgOFWy9gdqo3b4Wj8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LA7rcaSxBfCntsSZb963NAhPYDrH4LbzZFq+NNjeQO9ZU7nUAdf47dRX8huD8gknf
+	 n0Bjctx88ehvcI4tnSHMo5r4bhXng5uziws5qk2LYDk92ERHLIORXvzG+6EfhsWYMD
+	 LbE2wJ8ujS141Bdn6fsWgocVBt8/mDpVeyRhk4ifXYKxpxRktjiKHrbOzM8deF5Ms3
+	 w7tOOY57siGHWZqH5mDk3TYTmhayVuOLxeNjzffb5/vTgL+TRHphmozLK+z6IVGP7I
+	 T1ggTypUCvcI1vUJJSeOi7m1dMxzz++bJcVpAXmBNFCiiX94IYM9W6lztRJ8lPR0m8
+	 ZJEq1RktndZIA==
+Date: Tue, 11 Nov 2025 17:06:34 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Zide Chen <zide.chen@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
+	Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH] perf/x86/intel: Only check GP counters for PEBS constraints validation
-Date: Wed, 12 Nov 2025 08:45:13 +0800
-Message-Id: <20251112004513.3279333-1-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	thomas.falcon@intel.com, dapeng1.mi@linux.intel.com,
+	xudong.hao@intel.com
+Subject: Re: [PATCH] perf test: Add a perf event fallback test
+Message-ID: <aRPdmoNdUWIlWhJU@google.com>
+References: <20251111224246.73673-1-zide.chen@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20251111224246.73673-1-zide.chen@intel.com>
 
-It's good enough to only check GP counters for PEBS constraints
-validation since constraints overlap can only happen on GP counters.
+On Tue, Nov 11, 2025 at 02:42:46PM -0800, Zide Chen wrote:
+> This adds test cases to verify the precise ip fallback logic:
+> 
+> - If the system supports precise ip, for an event given with the maximum
+>   precision level, it should be able to decrease precise_ip to find a
+>   supported level.
+> - The same fallback behavior should also work in more complex scenarios,
+>   such as event groups or when PEBS is involved
+> 
+> Additional fallback tests, such as those covering missing feature cases,
+> can be added in the future.
+> 
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Signed-off-by: Zide Chen <zide.chen@intel.com>
+> ---
+>  .../tests/shell/test_event_open_fallback.sh   | 86 +++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100755 tools/perf/tests/shell/test_event_open_fallback.sh
+> 
+> diff --git a/tools/perf/tests/shell/test_event_open_fallback.sh b/tools/perf/tests/shell/test_event_open_fallback.sh
+> new file mode 100755
+> index 000000000000..72c1ac32c785
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/test_event_open_fallback.sh
+> @@ -0,0 +1,86 @@
+> +#!/bin/bash
+> +# Perf event open fallback test
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +skip_cnt=0
+> +ok_cnt=0
+> +err_cnt=0
+> +
+> +cleanup()
+> +{
+> +	rm -f perf.data
+> +	rm -f perf.data.old
+> +	trap - EXIT TERM INT
+> +}
+> +
+> +trap_cleanup()
+> +{
+> +	cleanup
+> +	exit 1
+> +}
+> +
+> +trap trap_cleanup EXIT TERM INT
+> +
+> +perf_record()
+> +{
+> +	perf record "$@" -- true 1>/dev/null 2>&1
+> +}
+> +
+> +test_decrease_precise_ip()
+> +{
+> +	echo "Decrease precise ip test"
+> +
+> +	perf list pmu | grep -q 'cycles' || return 2
+> +
+> +	if ! perf_record -e cycles; then
+> +		return 2
+> +	fi
+> +
+> +	# It should reduce precision level down to 0 if needed.
+> +	if ! perf_record -e cycles:ppp; then
 
-Besides opportunistically refine the code style and use pr_warn() to
-replace pr_info() as the message itself is a warning message.
+I think you need 'P' instead of 'ppp' for automatic precision.
 
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- arch/x86/events/intel/core.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+Thanks,
+Namhyung
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index aad89c9d9514..81e6c8bcabde 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -5506,7 +5506,7 @@ static void __intel_pmu_check_dyn_constr(struct event_constraint *constr,
- 			}
- 
- 			if (check_fail) {
--				pr_info("The two events 0x%llx and 0x%llx may not be "
-+				pr_warn("The two events 0x%llx and 0x%llx may not be "
- 					"fully scheduled under some circumstances as "
- 					"%s.\n",
- 					c1->code, c2->code, dyn_constr_type_name[type]);
-@@ -5519,6 +5519,7 @@ static void intel_pmu_check_dyn_constr(struct pmu *pmu,
- 				       struct event_constraint *constr,
- 				       u64 cntr_mask)
- {
-+	u64 gp_mask = GENMASK_ULL(INTEL_PMC_MAX_GENERIC - 1, 0);
- 	enum dyn_constr_type i;
- 	u64 mask;
- 
-@@ -5533,20 +5534,25 @@ static void intel_pmu_check_dyn_constr(struct pmu *pmu,
- 				mask = x86_pmu.lbr_counters;
- 			break;
- 		case DYN_CONSTR_ACR_CNTR:
--			mask = hybrid(pmu, acr_cntr_mask64) & GENMASK_ULL(INTEL_PMC_MAX_GENERIC - 1, 0);
-+			mask = hybrid(pmu, acr_cntr_mask64) & gp_mask;
- 			break;
- 		case DYN_CONSTR_ACR_CAUSE:
--			if (hybrid(pmu, acr_cntr_mask64) == hybrid(pmu, acr_cause_mask64))
-+			if (hybrid(pmu, acr_cntr_mask64) ==
-+					hybrid(pmu, acr_cause_mask64))
- 				continue;
--			mask = hybrid(pmu, acr_cause_mask64) & GENMASK_ULL(INTEL_PMC_MAX_GENERIC - 1, 0);
-+			mask = hybrid(pmu, acr_cause_mask64) & gp_mask;
- 			break;
- 		case DYN_CONSTR_PEBS:
--			if (x86_pmu.arch_pebs)
--				mask = hybrid(pmu, arch_pebs_cap).counters;
-+			if (x86_pmu.arch_pebs) {
-+				mask = hybrid(pmu, arch_pebs_cap).counters &
-+				       gp_mask;
-+			}
- 			break;
- 		case DYN_CONSTR_PDIST:
--			if (x86_pmu.arch_pebs)
--				mask = hybrid(pmu, arch_pebs_cap).pdists;
-+			if (x86_pmu.arch_pebs) {
-+				mask = hybrid(pmu, arch_pebs_cap).pdists &
-+				       gp_mask;
-+			}
- 			break;
- 		default:
- 			pr_warn("Unsupported dynamic constraint type %d\n", i);
 
-base-commit: 2093d8cf80fa5552d1025a78a8f3a10bf3b6466e
--- 
-2.34.1
-
+> +		return 1
+> +	fi
+> +	return 0
+> +}
+> +
+> +test_decrease_precise_ip_complicated()
+> +{
+> +	echo "Decrease precise ip test (complicated case)"
+> +
+> +	perf list pmu | grep -q 'mem-loads-aux' || return 2
+> +
+> +	if ! perf_record -e '{cpu/mem-loads-aux/S,cpu/mem-loads/PS}'; then
+> +		return 1
+> +	fi
+> +	return 0
+> +}
+> +
+> +count_result()
+> +{
+> +	if [ "$1" -eq 2 ] ; then
+> +		skip_cnt=$((skip_cnt + 1))
+> +		return
+> +	fi
+> +	if [ "$1" -eq 0 ] ; then
+> +		ok_cnt=$((ok_cnt + 1))
+> +		return
+> +	fi
+> +	err_cnt=$((err_cnt + 1))
+> +}
+> +
+> +ret=0
+> +test_decrease_precise_ip		|| ret=$? ; count_result $ret ; ret=0
+> +test_decrease_precise_ip_complicated	|| ret=$? ; count_result $ret ; ret=0
+> +
+> +cleanup
+> +
+> +if [ ${err_cnt} -gt 0 ] ; then
+> +	exit 1
+> +fi
+> +
+> +if [ ${ok_cnt} -gt 0 ] ; then
+> +	exit 0
+> +fi
+> +
+> +# Skip
+> +exit 2
+> -- 
+> 2.51.1
+> 
