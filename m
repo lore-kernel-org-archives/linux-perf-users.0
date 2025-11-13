@@ -1,110 +1,157 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A864C337B9F
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 10:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9AD4337BB5
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 11:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763031473; cv=none; b=dyQNVQAVD5P6ywTTAP5G3+8S+Pep3Kchh8FTQYG/7q87aSbn5mfvgs0wtcJmCF+IJsto4FKS4zck21otEHGsQtzynrcWUoQWE0MCoZIe2xqljk0MbCEO3xlPzImLhyxBg8zSHip6XfFQBCUw2S8+30wn7uOXgegff+V/GuV3at4=
+	t=1763031793; cv=none; b=LL2QOFTSRAJNqfgYg4KWqZJnenNpnLnM6AlPgW2ccVBTbo7LCS21vjfbSIT41PX2F3KCUwd71qGQKd3G07/cL4CL2f6/IidCYrtyboGduJPOrfnkZ/7+rB+Ff+uNL3AXCeQ0gIYSVlfKVdCEF75ITZMN9Z98OVPyInORFIAF8CE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763031473; c=relaxed/simple;
-	bh=JEDHEeHplqXn7/z58T8cqTyw0I4jR/py96X9534o7VQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=iqCY5UZuHvYVli66rqvMUZzABjIdgDYTD/MxzKQor0g9MLFT8Q6EWF05/Q93acNAbTjtal1JSPKBRl7M2Ii0O1S2G7/ZWD3tFV/a9B/G2I0I7OyN51kz1ZTvuKLsBG95wahk4bIaqKBirppCoM5S/uuBofi568qZJmZx6MIQ1h4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5CBE112FC;
-	Thu, 13 Nov 2025 02:57:43 -0800 (PST)
-Received: from e132581.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C34293F66E;
-	Thu, 13 Nov 2025 02:57:49 -0800 (PST)
-From: Leo Yan <leo.yan@arm.com>
-Date: Thu, 13 Nov 2025 10:57:39 +0000
-Subject: [PATCH v2] perf arm_spe: Add CPU variants supporting common data
- source packet
+	s=arc-20240116; t=1763031793; c=relaxed/simple;
+	bh=/cKN1EDDwxjht3NnFiE/uLPr7VcrNdhZ1SW6uQPT/kU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rNUVChMYnh8aq3y0hQ39QqcxK0Rt7RHHYVRbNvvtvmOFhHraCZObERoqI/0Kab2gIe7SPPKKsiMLA6Tl6kUNIar0MY9BgI9liNdFZ4CAHVz1FC3bhdtbcJYa2iLSK/U60266oIqEf8Mxqkn2hGG3WwKSPIUJaVJ2Dl1AHVpNoPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JS29Apz5; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JS29Apz5"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7ade456b6abso532486b3a.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 03:03:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763031791; x=1763636591; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/cKN1EDDwxjht3NnFiE/uLPr7VcrNdhZ1SW6uQPT/kU=;
+        b=JS29Apz5OCvbP9V/BsvGKkvw9kpU9gHQWHtZiMwRVPi9POlCYmXBaignkEAlwHEJz7
+         56hqd5yaBfyeKZYkhhZPYgTLSQ/NWNde0ulfzwbNv/tpfeZQI2sCxKQXo2qg/63iMM/q
+         OGtTPMRkwbr2Vn353EMJcGeIyaeZXQLX20D1SebmUk/UDsSqgQj2K9I+wEr/uCXrn4NS
+         mNOkynCaI3dlOrMeveT4EF3wS4acTbRX9SB84LfUlpHChb+YG5pJ57YxiiNGTqb7M3sz
+         dHL3Mf4GANl3rqY8/b725OUTPSv2x7Yr7kbrfnGZEX2IwcFoddY7HiRvpz1sAqqa7JX6
+         ghhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763031791; x=1763636591;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=/cKN1EDDwxjht3NnFiE/uLPr7VcrNdhZ1SW6uQPT/kU=;
+        b=fcy3c8SMzZY2M2tBHzPda2J1tLaUD5/YjxU6yoO8uBIghc7cYu6cF8jd1yPhPopnHq
+         tgtXzP1BDO6GFXsIWLDUUJJuswa9k1R2f80o5PnpqNRzgo5ksWP/8n+g8Z9Kzary8kte
+         64MaXZ4y65sEb1R/GdF8OS6eSDz04rV5X7SZHmqrPKFC02SdbW5woa0IprpC8MNCOG7U
+         SYbrG/GLfWJF0s103ZbwieyEiaqQEeKjxDHTMAQtkww3tPjZ47W7tQ5BfI/UKLkqYqV0
+         QEmlUlJSkO5dKZa4NVF1icJ7FPRTVT2rsOuIlBIdLsLnzfE+pln5lQhGSJPtQ2B58f0P
+         XjWw==
+X-Forwarded-Encrypted: i=1; AJvYcCV8S7e4y9SxcHupf9mV/0mIKPZ7PwOdE8HImKDaujCv1kGvDhcN+eeuguMII5gm/gRSIAuKqMxhNu3C/FDU4XY6@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjVfI+xuPbkcwrDQIzVLjM5DaAm+gExLqBXwCVw06HFzsr7SAE
+	OxzXCUhPXHJwaZgpqBOhOFW6Df8YZTAoqwR5UB1xEFXzgIzKPwbRDXpp
+X-Gm-Gg: ASbGncvAdhIgQywfpJlDb/546IDSJ8WU/NGw90+UHZdaWvr10k0oD/98YFMAQjhidoz
+	p0mSnOUR3V0pGI+hZEU5R7KJ63yZ6F0U6INPX6LsZhpdJZJysCjWu3QVQyzihjkWZmZqGDI1l55
+	gnMO+Xy6wZ0MUOHdQ9PESeQRcvVOEwvWzf+kHUbgXqzzInWQ5p3C60QnQ+fYIO26SBiL54XXyUi
+	RBcXorCuVz8wJSgrxEpRPGCCNV4y1WKqelF1n8Gyf2FxxP/Ex7R1SzF6abUY8hNHbqRsYhm2+pL
+	9c1jgdOa2UMXQtgl7U2N4WD1bZw3Tq0sJcrI9d7/l9dtJFZgEcBBSRQWzH8M799MqyOUTWTradf
+	lkIgfuh2pvZ7QJPsGLFk//l32AJWUXAEtG/OiCuNdkFB3ncCoqJRfUpGiLWgOSJcyr4UZ4SrF6X
+	Yrnui04BFI5L90n4ixcjEBxyPO
+X-Google-Smtp-Source: AGHT+IGTrsN1hzBjRmhe38pf5EQcIYNA2LTSuiXM2QFdlDo95u5VGbYJOeAKPxxp1waIKqvLyyQ7Tg==
+X-Received: by 2002:a17:903:8cc:b0:298:46a9:df01 with SMTP id d9443c01a7336-2984ed23fcemr89013665ad.3.1763031791060;
+        Thu, 13 Nov 2025 03:03:11 -0800 (PST)
+Received: from DESKTOP-8TIG9K0.localdomain ([119.28.20.50])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2985c242003sm21657015ad.24.2025.11.13.03.02.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Nov 2025 03:03:10 -0800 (PST)
+From: Xie Yuanbin <qq570070308@gmail.com>
+To: qq570070308@gmail.com,
+	riel@surriel.com
+Cc: aalbersh@redhat.com,
+	acme@kernel.org,
+	adrian.hunter@intel.com,
+	agordeev@linux.ibm.com,
+	akpm@linux-foundation.org,
+	alex@ghiti.fr,
+	alexander.shishkin@linux.intel.com,
+	andreas@gaisler.com,
+	andrii@kernel.org,
+	anna-maria@linutronix.de,
+	aou@eecs.berkeley.edu,
+	arnd@arndb.de,
+	baolin.wang@linux.alibaba.com,
+	borntraeger@linux.ibm.com,
+	bp@alien8.de,
+	brauner@kernel.org,
+	bsegall@google.com,
+	dave.hansen@linux.intel.com,
+	davem@davemloft.net,
+	david@kernel.org,
+	david@redhat.com,
+	dietmar.eggemann@arm.com,
+	frederic@kernel.org,
+	gor@linux.ibm.com,
+	hca@linux.ibm.com,
+	hpa@zytor.com,
+	irogers@google.com,
+	james.clark@linaro.org,
+	jlayton@kernel.org,
+	jolsa@kernel.org,
+	juri.lelli@redhat.com,
+	justinstitt@google.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux@armlinux.org.uk,
+	lkp@intel.com,
+	llvm@lists.linux.dev,
+	lorenzo.stoakes@oracle.com,
+	luto@kernel.org,
+	mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com,
+	max.kellermann@ionos.com,
+	mgorman@suse.de,
+	mhiramat@kernel.org,
+	mingo@redhat.com,
+	morbo@google.com,
+	namhyung@kernel.org,
+	nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com,
+	nysal@linux.ibm.com,
+	oleg@redhat.com,
+	osalvador@suse.de,
+	palmer@dabbelt.com,
+	paulmck@kernel.org,
+	peterz@infradead.org,
+	pjw@kernel.org,
+	rostedt@goodmis.org,
+	ryan.roberts@arm.com,
+	segher@kernel.crashing.org,
+	sforshee@kernel.org,
+	sparclinux@vger.kernel.org,
+	svens@linux.ibm.com,
+	tglx@linutronix.de,
+	thuth@redhat.com,
+	urezki@gmail.com,
+	vincent.guittot@linaro.org,
+	vschneid@redhat.com,
+	will@kernel.org,
+	x86@kernel.org
+Subject: Re: [PATCH v3 1/3] Make enter_lazy_tlb inline on x86
+Date: Thu, 13 Nov 2025 19:02:46 +0800
+Message-ID: <20251113110246.57703-1-qq570070308@gmail.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251113105227.57650-2-qq570070308@gmail.com>
+References: <20251113105227.57650-2-qq570070308@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251113-perf_arm_spe_update_midr_list-v2-1-d547768f5520@arm.com>
-X-B4-Tracking: v=1; b=H4sIAKK5FWkC/42NQQ6CMBBFr0JmbU1bqURX3MOQpraDTCK0mSLRE
- O5u5QQu38/L+ytkZMIM12oFxoUyxamAPlTgBzc9UFAoDFpqo6RqRELurePR5oT2lYKb0Y4U2D4
- pz+J+NrX32nkZApRGYuzpvfdvXeGhSJE/+92ifuu/5UUJJS4Ba9kYI0+mbot69HGEbtu2L5oAb
- pXIAAAA
-X-Change-ID: 20251017-perf_arm_spe_update_midr_list-b654cc2ac0dd
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- James Clark <james.clark@linaro.org>, Namhyung Kim <namhyung@kernel.org>, 
- Ian Rogers <irogers@google.com>, Mark Rutland <mark.rutland@arm.com>, 
- Jiri Olsa <jolsa@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- Leo Yan <leo.yan@arm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1763031469; l=2390;
- i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=JEDHEeHplqXn7/z58T8cqTyw0I4jR/py96X9534o7VQ=;
- b=lMdTaX4c6NaFZSKte1Bs7+Lplifa78Kf/rBbmE3GUtVPqWzTzDxV3om6G1IHMWsMvUWe2MIIv
- kfBfJBqLs9uA3rQmeor7cXssSEjLfqvcEYAwyiKAZeU5WojCyXHTj9s
-X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
- pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
+Content-Transfer-Encoding: 8bit
 
-Add the following CPU variants to the list for data source decoding:
+Hi, Rik van Riel!
 
-  - Cortex-A715 [1]
-  - Cortex-A78C [2]
-  - Cortex-X1 [3]
-  - Cortex-X4 [4]
-  - Neoverse V3 [5]
+I fixed a build error in this patch, could you please review it again?
+Link: https://lore.kernel.org/20251113105227.57650-2-qq570070308@gmail.com
+Thanks!
 
-[1] https://developer.arm.com/documentation/101590/0103/Statistical-Profiling-Extension-Support/Statistical-Profiling-Extension-data-source-packet
-[2] https://developer.arm.com/documentation/102226/0002/Debug-descriptions/Statistical-Profiling-Extension/implementation-defined-features-of-SPE
-[3] https://developer.arm.com/documentation/101433/0102/Debug-descriptions/Statistical-Profiling-Extension/implementation-defined-features-of-SPE
-[4] https://developer.arm.com/documentation/102484/0003/Statistical-Profiling-Extension-support/Statistical-Profiling-Extension-data-source-packet
-[5] https://developer.arm.com/documentation/107734/0002/Statistical-Profiling-Extension-support/Statistical-Profiling-Extension-data-source-packet
-
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
-Changes in v2:
-- Rebased on latest perf-tools-next branch.
-- Link to v1: https://lore.kernel.org/r/20251017-perf_arm_spe_update_midr_list-v1-1-9de407550354@arm.com
----
- tools/perf/util/arm-spe.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 614ce032f87e46d1f3754258f51bb1693ec128b7..f5bcc84eaa271f4dcc70bb585e517657e523de11 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -570,16 +570,21 @@ static int arm_spe__synth_instruction_sample(struct arm_spe_queue *speq,
- }
- 
- static const struct midr_range common_ds_encoding_cpus[] = {
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_A715),
- 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A720),
- 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A720AE),
- 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A725),
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_A78C),
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_X1),
- 	MIDR_ALL_VERSIONS(MIDR_CORTEX_X1C),
- 	MIDR_ALL_VERSIONS(MIDR_CORTEX_X3),
-+	MIDR_ALL_VERSIONS(MIDR_CORTEX_X4),
- 	MIDR_ALL_VERSIONS(MIDR_CORTEX_X925),
- 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
- 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2),
- 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1),
- 	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V2),
-+	MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V3),
- 	{},
- };
- 
-
----
-base-commit: da8fcfba0854dbe0b0eca465d35620c9cf4c89c1
-change-id: 20251017-perf_arm_spe_update_midr_list-b654cc2ac0dd
-
-Best regards,
--- 
-Leo Yan <leo.yan@arm.com>
-
+Xie Yuanbin
