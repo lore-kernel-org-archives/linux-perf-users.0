@@ -1,125 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07BF91D435F;
-	Thu, 13 Nov 2025 00:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1B62D3738
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 01:47:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762995433; cv=none; b=kPlQQMKBH9bsRwUsCLHGVVftmgePKC8lj8IGtJDIG/bdsfHWJsExxM+D3uih1j3wMmAkYtGtblm9Y7BBZLmWDNbrKtVfiLl+vNaoNBNTeYxdLR0oQytB/02XVPHaCp+PlRhoYWIHAsTD2ZPAk1YounNcaC/Q2tATedrCiBZ8m/0=
+	t=1762998427; cv=none; b=qCpEUsWiz0gDQCEyug0I3Ipz10DQSwN67SCjhWZzMUOxtyAWWu1Jt2t07y7gJeJNjv/BhK3KJEDl1Ous1epS5QvN3lcb48qVAbBnA1FI7YufZ74n8gJU0lyyheEjsE8qEJ+MJ/NVL7RcPwZmAt643vVNfrDzlR/6iPImmcx9KnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762995433; c=relaxed/simple;
-	bh=em2GZkCqashF0+2U2q61GHmgmICQf/BrVBW91DnIFjE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Q/l9fQgU0Vf2+XvC4Vtpa/Yor77Ycgbh4Rg/wXV6VP0456jaG2M3ywFhlyTz9xyg+1Gb9QjSr1ua5UCu41ZfdHLApvP70ieLbQzmFc72oWF3tuCT9pzvd3Z6VS2433FU0yas8xTVXmPmOMWSqbAW7qm7GO5/LyCNvk+ckJJWHJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GGgOAGPO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1762998427; c=relaxed/simple;
+	bh=eKBqONdiSsBUuobmEdY1mAtYTYL7O9m2hVGhf0V16mA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=T3RdltlpdSCuhkL+2fm49I9o1OXclXyRN1l9QLoKRLHSaDGJ5QpMx2+qq8XlaWN6qOU5RJSjMhWrwZUW+3djDqgmJUwg+Oa9lNj348+PfEJx4CrmxI/dSTiVk63CclwzClzjVErk46i03EiaQE9l7OIECxDoRT9at7d3vElO58g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=KG7OcXl7; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GGgOAGPO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DD2FC116B1;
-	Thu, 13 Nov 2025 00:57:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762995431;
-	bh=em2GZkCqashF0+2U2q61GHmgmICQf/BrVBW91DnIFjE=;
-	h=Date:From:To:Cc:Subject:From;
-	b=GGgOAGPOGNEJWa1f9i7G3am2CMj7dMn5v2/CySU2+HdbK6Pqf69QN3pN1E3RkZ3+s
-	 WS+vvdW9Jm6SP+oNTAcBRi6iLG5xd71aeUTL9zktlO9ciTe5w++stgl9DWKBAU7zSU
-	 QiF2tae+3QCQsTxRlY7BOVeG87zukuI6nEC9kk/hqyoQeo8dzYsG7SYgB37YKfkwxk
-	 /97nDx8RCWB/Sz15QE6d2hH7/Ql92Z+1+RyzoYeGBkJadvGWxhzyK1Q+yiyA57PPTJ
-	 3bQt8rBhctgDLNv18SaEeeXdzpPFxyWqOiGJdxhBtW2ProBrN6X/D2QGhO3x3E8gYU
-	 tTszpvJcGYzKA==
-Date: Wed, 12 Nov 2025 21:57:08 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1] perf build: Don't fail fast path feature detection when
- binutils-devel is not available
-Message-ID: <aRUs5Lp7RM2qx1Gl@x1>
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="KG7OcXl7"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b994baabfcfso183080a12.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 17:47:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1762998425; x=1763603225; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7sKtwP//OgsTzC5xxNl/Xd6UYX/1wT9VConzzoLFoks=;
+        b=KG7OcXl7nxmT2EksNPHe/AKIJuk5Vy9O35FpuQ2rjXW5WqrT3/YWNFJ6h/1s6Tws8P
+         KFQ5IzmnR0fKvxLQLB9y31oIJLHsdKqLRbM9ixCzRIx5rZSlidMXLFPZu06zUzf9lnU8
+         HNxkrzksKrwM9iIddJ3vSGeqaUXPoeWnHbcLFRBho8/jVB4PFqZXiDY48UWX+w4dUe6s
+         KnQm6JsaoEmdBWrw268jdp05SZhLPEKLyGyBXula8iLNwedZK8GXQ1moW8snzTgx2yje
+         OH/PxclioA4yXk5wUhRmI9m+9nbPLjlvfZClqjPUuMIQGMigZ0FyWEQTStKYBSYq/zoB
+         0nbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762998425; x=1763603225;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=7sKtwP//OgsTzC5xxNl/Xd6UYX/1wT9VConzzoLFoks=;
+        b=DqNKTciGYNCI/i/3bIiqemtnIqz/dNnlCDSL+xIyPBLfFRJePec45kVCEviiEK06BU
+         SYk+kWgp+aQVhfIpWCH4Yz/Bsela0OJjz17tBSaxf8Qi2YNS3SCD0Pl1S06puEJR4ZxN
+         V4+jL+C8sNOMnQeJUterzEng9N80Jwq2ORu5mtXA0dRKAt26EyQQbKu/dt8CVVv0Q8Az
+         KBXVrtIMVT3rwrJTr8GhyE7tYjoiaPkmICSc4qbYNwXIYIPXtJCJm8ftTM0MSn1+98sO
+         56wEAoghh0VG8kH71c1QsWAWs0yl0t3WkI0mYIquxxw1Be8OByuNjIa8iE6NeEOygxbo
+         G4Wg==
+X-Forwarded-Encrypted: i=1; AJvYcCXFJX5BS86sOuiTXdpSu44l71UBSq9vNT2y5BdO0uXERvNOxbbYfQfImB9b1VsB4Eu8jd3rRSdrH8FLosKqrDMd@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxkx2BIwKRHUrH8LYs+aEqt/x4hTnuMCNyQuo24/kobaBBOCkyg
+	fPRNT12V0J09G/gytmQk8zf81PXssyFaXaTBGlSTxau6/LmRFwczO9Fl/73YLLlrFQs=
+X-Gm-Gg: ASbGncuYT+ZDlnDJMEmR/Ld8hdGMVoQ84HzM80SclbPooE6A5EXVxRePHWPRQMZ7Znm
+	Ulm86/pRVxS4XrnWXRPgqBmV/UFkaSZpA4BAlwkaCT33kZQUmzawOZZ/5vjN4oyxBXsutkr+Rhs
+	CLntbQQMDDf7egYhzkwUJQ+Bz6Q7Kw8mJLwssHU82kgRnZUciQR8QUF7pmqk20s9bbT7RvsIsMz
+	Bv4HL2g+13JLqIiBF+n2kgnBCKSfFi7MGqZ7g6bD/LpGXMkzwp1dH5Tlyz/Jcv4Q249iMXWPrUg
+	i7wh/eHrhCt/bIZqmrz4vOzZ81LwtrkXPSK0SmymeqYqUnNbyGUZEoMyOy83hVfN9ePpZbozeF1
+	tWebPhbBlyoD4+HZIbOT9dpyJx2OGgNIW84UY+UAjsctlatBdtBaHeHZTesSMKux0sEV6z8d+2O
+	P5kUWsxUSBR5moVERehHTUnQ==
+X-Google-Smtp-Source: AGHT+IFyAjw4zT369i2V/HQmfngUMRA4j/oLD3IR8XNvQ6Htb0EplxsCGv5RKISA4ePCqfHnQtITTg==
+X-Received: by 2002:a17:902:e788:b0:297:d4c4:4d99 with SMTP id d9443c01a7336-2984ed30d02mr63149505ad.6.1762998425114;
+        Wed, 12 Nov 2025 17:47:05 -0800 (PST)
+Received: from sw06.internal.sifive.com ([4.53.31.132])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2985c2ccae8sm4986485ad.98.2025.11.12.17.47.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Nov 2025 17:47:04 -0800 (PST)
+From: Samuel Holland <samuel.holland@sifive.com>
+To: Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <pjw@kernel.org>,
+	linux-riscv@lists.infradead.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	linux-mm@kvack.org
+Cc: devicetree@vger.kernel.org,
+	Suren Baghdasaryan <surenb@google.com>,
+	linux-kernel@vger.kernel.org,
+	Mike Rapoport <rppt@kernel.org>,
+	Michal Hocko <mhocko@suse.com>,
+	Conor Dooley <conor@kernel.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Rob Herring <robh+dt@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Samuel Holland <samuel.holland@sifive.com>
+Subject: [PATCH v3 04/22] perf/events: replace READ_ONCE() with standard page table accessors
+Date: Wed, 12 Nov 2025 17:45:17 -0800
+Message-ID: <20251113014656.2605447-5-samuel.holland@sifive.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20251113014656.2605447-1-samuel.holland@sifive.com>
+References: <20251113014656.2605447-1-samuel.holland@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-tldr; Just FYI, I'm carrying this on the perf tools tree.
+From: Anshuman Khandual <anshuman.khandual@arm.com>
 
-This is one more remnant of the BUILD_NONDISTRO series to make building
-with binutils-devel opt-in due to license incompatibility.
+Replace READ_ONCE() with standard page table accessors i.e pxdp_get() which
+anyways default into READ_ONCE() in cases where platform does not override.
 
-In this case just the references at link time were still in place, which
-make building the test-all.bin file fail, which wasn't detected before
-probably because the last test was done with binutils-devel available,
-doh.
-
-Now:
-
-  $ rpm -q binutils-devel
-  package binutils-devel is not installed
-  $ file /tmp/build/perf-tools/feature/test-all.bin
-  /tmp/build/perf-tools/feature/test-all.bin: ELF 64-bit LSB executable, x86-64, version 1 (SYSV),
-  dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2,
-  BuildID[sha1]=4b5388a346b51f1b993f0b0dbd49f4570769b03c, for GNU/Linux 3.2.0, not stripped
-  $
-
-Fixes: 970ae86307718c34 ("perf build: The bfd features are opt-in, stop testing for them by default")
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Link: https://lore.kernel.org/r/20251006042622.1743675-1-anshuman.khandual@arm.com/
+Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
 ---
- tools/build/feature/Makefile | 4 ++--
- tools/perf/Makefile.config   | 5 ++---
- 2 files changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 49b0add392b1c11a..95646290cb89cda3 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -107,7 +107,7 @@ all: $(FILES)
- __BUILD = $(CC) $(CFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.c,$(@F)) $(LDFLAGS)
-   BUILD = $(__BUILD) > $(@:.bin=.make.output) 2>&1
-   BUILD_BFD = $(BUILD) -DPACKAGE='"perf"' -lbfd -ldl
--  BUILD_ALL = $(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -DPACKAGE='"perf"' -lbfd -ldl -lz -llzma -lzstd
-+  BUILD_ALL = $(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -ldl -lz -llzma -lzstd
+Changes in v3:
+ - Replace my patch with Anshuman Khandual's patch from LKML
+
+Changes in v2:
+ - New patch for v2
+
+ kernel/events/core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 1fd347da9026..fa4f9165bd94 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -8122,7 +8122,7 @@ static u64 perf_get_pgtable_size(struct mm_struct *mm, unsigned long addr)
+ 	pte_t *ptep, pte;
  
- __BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.cpp,$(@F)) $(LDFLAGS)
-   BUILDXX = $(__BUILDXX) > $(@:.bin=.make.output) 2>&1
-@@ -115,7 +115,7 @@ __BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.cpp,$(
- ###############################
+ 	pgdp = pgd_offset(mm, addr);
+-	pgd = READ_ONCE(*pgdp);
++	pgd = pgdp_get(pgdp);
+ 	if (pgd_none(pgd))
+ 		return 0;
  
- $(OUTPUT)test-all.bin:
--	$(BUILD_ALL) || $(BUILD_ALL) -lopcodes -liberty
-+	$(BUILD_ALL)
+@@ -8130,7 +8130,7 @@ static u64 perf_get_pgtable_size(struct mm_struct *mm, unsigned long addr)
+ 		return pgd_leaf_size(pgd);
  
- $(OUTPUT)test-hello.bin:
- 	$(BUILD)
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 5700516aa84aec2c..2dd5f5a60568d002 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -354,9 +354,6 @@ FEATURE_CHECK_LDFLAGS-libpython := $(PYTHON_EMBED_LDOPTS)
+ 	p4dp = p4d_offset_lockless(pgdp, pgd, addr);
+-	p4d = READ_ONCE(*p4dp);
++	p4d = p4dp_get(p4dp);
+ 	if (!p4d_present(p4d))
+ 		return 0;
  
- FEATURE_CHECK_LDFLAGS-libaio = -lrt
+@@ -8138,7 +8138,7 @@ static u64 perf_get_pgtable_size(struct mm_struct *mm, unsigned long addr)
+ 		return p4d_leaf_size(p4d);
  
--FEATURE_CHECK_LDFLAGS-disassembler-four-args = -lbfd -lopcodes -ldl
--FEATURE_CHECK_LDFLAGS-disassembler-init-styled = -lbfd -lopcodes -ldl
--
- CORE_CFLAGS += -fno-omit-frame-pointer
- CORE_CFLAGS += -Wall
- CORE_CFLAGS += -Wextra
-@@ -930,6 +927,8 @@ ifdef BUILD_NONDISTRO
+ 	pudp = pud_offset_lockless(p4dp, p4d, addr);
+-	pud = READ_ONCE(*pudp);
++	pud = pudp_get(pudp);
+ 	if (!pud_present(pud))
+ 		return 0;
  
-   ifeq ($(feature-libbfd), 1)
-     EXTLIBS += -lbfd -lopcodes
-+    FEATURE_CHECK_LDFLAGS-disassembler-four-args = -lbfd -lopcodes -ldl
-+    FEATURE_CHECK_LDFLAGS-disassembler-init-styled = -lbfd -lopcodes -ldl
-   else
-     # we are on a system that requires -liberty and (maybe) -lz
-     # to link against -lbfd; test each case individually here
 -- 
-2.51.1
+2.47.2
 
