@@ -1,55 +1,55 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942D2355038
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 18:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2C335C1B3
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 18:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763057163; cv=none; b=ny9maPOQU1ac6JwMpk4XSjBdvbMMKwpszkj3MYd1zn+X8RsKxg1KgSaZRm2nP2VJFz2UlIIDYQu37mkT6y1k2vaILThj8UuNCil/mrV8aYyLPpOman5MTBBPY/+5UixurAS88Ce+VhP1m0cH/78+73I/oftqPXhUv3s6hSCoPvk=
+	t=1763057165; cv=none; b=UQBmnz7NDZhrJIuNCA4uhZNa4cKQBixhnrMiihBqye6mdsIxCqnmio8sG46pIr6vqOMDgVP/+DUzJiJbAxopJPkgYhRam9BsG1kmhlMv8X3nZBSaPHn20R6lcpFUpIoc6/2656XxrzmxFgQXl7pNEh1M7AFR4Dov3AKWe+ivQFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763057163; c=relaxed/simple;
-	bh=VSPi5b0FYSjK9jbjwqv1ISG3u2SRPYT3qLyoAV5ofDo=;
+	s=arc-20240116; t=1763057165; c=relaxed/simple;
+	bh=tALcLrqXxNWDiOpY9UQxmoxjIfX4GTtZdrGYQN1kydo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=G70ZG8thum6k9p7JxGWCDRV0jprWohu9fZKN4PZeWT0PsAeII3+Od6oUF6/TFiRgXxDQGzhyLskJOhHORSdftpEKU0K0U0ml3puE0ssSTGYJs4Y50Dw5RkQSrHcF7WlUcO1v5Uviue1UQhbQy+I3LbMhyVqEXCmMLvDOqtyPfUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A49xG5wy; arc=none smtp.client-ip=209.85.215.202
+	 To:Content-Type; b=EP1bAWQp3H44SKJpRl40gLivxIPh6F9Lhvo8s/b+PmPVkt47eOj15D0qi9CXv7eVPIzd5AU5W2axPzaWItHu0dawe3i6d4PqtMlqnJi21LC6aAqeJBHZIP+lZvq177d278Gt2eyUvvTrHqZGzGtX2c+oWJMIf0QcITbz2khLhh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f73j4WWj; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A49xG5wy"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b63038a6350so1746905a12.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 10:06:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f73j4WWj"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-ba4c6ac8406so946423a12.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 10:06:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763057161; x=1763661961; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1763057163; x=1763661963; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=gHUlYvYVsoqcUvPe52eoqpv7ujyDyUuBEdGEz9LzsdQ=;
-        b=A49xG5wyyAJoZ5PngxBlKud/0zta7tUNjx7qGEAKodIT7wmBEDzFuxkdx3MkcpoQkj
-         Bg4abRtUjy7DZGvjNvdN9udPDaxv2ugJ9DSVglLCEeeCfHSHYsFGXtfeV4iH1wX0zpIR
-         RXqfC44HG/dOByp8Z1R9zROGOboSoQ2GqXgETlPN8pi/wX4EjN23p0/MCafOAXxB9oB4
-         xfMsdINbfp6si0iiktSriWS4Dp5sASdgwyOlQuNoH+eU4ZubwS+HRfUHe/SbyCSOK221
-         qDpzbU1c4BD4+XIzsclj/Cvnjg44eHUsdouyMsZgk6QB5iiWfGFs10isiWSfIlTyeKVc
-         Em0Q==
+        bh=F7BQwoR1zRfcoaLIGWF72ww+QsUvGUWtVBokWi10jMg=;
+        b=f73j4WWjrPvEVlONYUvSWSQRw3RsgYoigEV/GkwY1Zkq6Q/zpdwV9+qeyDHeHG8D7j
+         JimYgtUXrg0QULPfTySrhskygeoknfdE1bWLE0B+FBac5jHZbldFQ9zGjmBMqn+nXxl9
+         7ftqlFqHaPnhGbEHiqXSQgEe3DAaSd2A2aIexAzivMICXx34jnvjO3Jo3lZxvs09UO8d
+         1SmnGCrMIAO6OxGjus1xli5mZXdZOve6xtsIWX4y+1vsEbH4q1sjJKGgVtsO5bncR/MW
+         UNsvn64p2fymXC9v6rGg0vL64gye2mdsAm3hOAu6sQVmznbh/YIkJM0aSR0QJFzhHd/J
+         DZEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763057161; x=1763661961;
+        d=1e100.net; s=20230601; t=1763057163; x=1763661963;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gHUlYvYVsoqcUvPe52eoqpv7ujyDyUuBEdGEz9LzsdQ=;
-        b=FQthN0G2P38NWWYwUQyd32JRGCLZs/hT16g54vSFbehSMr29kfD9tg4slunqMG277+
-         9hYYR+rd81SO/1v2TQWZ5e8Kkryk9nxEEjbkQmaPn9o4S9aNUC6xwayMKRNvAt2ygYJ+
-         +naoAEECbhhxk02sTbYOIup89QaZfWJGBYteofT0DXINZLFa82/86Hq16t4tt0z9PsOS
-         75/9j60t4VovgjMm657sZK7n5LzPHup1p/g4QlrXsjWuoHZAiGOIjHWDAA6OCkzbhZBS
-         NyVH7ZfNwspUmhj+hrX9O8igeb9Xsy7Coct07QRbrCNJ1PHxbsfXfNXYTBXUjyMeeiZb
-         kjaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU27MZx1G7mCPm2sHqaJ3/gj8VNn2fIuTOhYtG/bpp++OAYsVmb7OUIdTe2WFgTiQ/BddoMv0KTNOrEq/RpwbCd@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJJBckSlFFyTVdIP98yorBCBSyjrQFYXeYOXGnJejDec/Y8vKJ
-	mX587J5PXq3f2YbDUpohKqK7RYsN0DULbfVcYY6T/t04Zjd58bqG7rHD1Y6TUGdFAozQLv3SRcp
-	n9bOHfHYREw==
-X-Google-Smtp-Source: AGHT+IFQJGwfEwwbqk/yBlpxj/IRuM1bsBxCbxuEgwiTito2SNi2QtdAhaXaZUrQ0UBVURt+znfpgQ3dcomE
-X-Received: from dlbrd6.prod.google.com ([2002:a05:7022:f106:b0:119:9f33:34aa])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:701b:2912:b0:119:e569:f86c
- with SMTP id a92af1059eb24-11b40fa9495mr105517c88.9.1763057160835; Thu, 13
- Nov 2025 10:06:00 -0800 (PST)
-Date: Thu, 13 Nov 2025 10:05:15 -0800
+        bh=F7BQwoR1zRfcoaLIGWF72ww+QsUvGUWtVBokWi10jMg=;
+        b=lCV0JgIm0gPus30FPmOOV0bN/tmGozYeWs5oVKRoV1234HBEfhWmKF7Zfw/bv1+bKJ
+         /R+/BoE6D3rc59fhNMnublqJfMBsGFgaVHqGSDv2R0y2epw3iu5vds3aA6S7QZkdqsmu
+         wY5Lugtgk7vJygYDN87oYbMOZPq0Vz/05MojoRCthSzNEQJkyCYLBrM6uO64GQSZaZGd
+         cPE9VSqz5JtyGRTAavECfFP4966Xu47XDkSjViztbmB5Yd9YarYltnMnltEGfS5V7hEO
+         2q45ZGq9YCkotlWLF/QBNkis/uofxOGHqzzZLXysloQDHkrj2qELQUJK494d1eqtMipm
+         oGow==
+X-Forwarded-Encrypted: i=1; AJvYcCWoinEMf6FBa2PxZ/7G87ViPDWLv8VbSosMf695hjTKYhSTkXn5FKlWBXHuzjcWondOWVnF80y9c4Wr43K/ld9w@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmI3u8sTP1VokLVoVDgdrQTBULv8yr0aqWin6fg5Ynfg970irg
+	cyK6CKOZFbdHhXxWyLMMqxQ4DfcBxmPtOnmpr/dBBFvBHlacBLKeZBZG2heNB2Tq1tuXZJ4h/Zb
+	35c8k/LWu6g==
+X-Google-Smtp-Source: AGHT+IE9ZNy2sDxlTj1psbp9B5u18SqT2MXKmQHk6xCZfp+KcS9kKNFdokFtVB9rtsA+pzTjYkPKn+0YDXn9
+X-Received: from dlbrp11.prod.google.com ([2002:a05:7022:160b:b0:119:78ff:fe11])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:d41:b0:119:e56b:91e2
+ with SMTP id a92af1059eb24-11b411f0923mr82675c88.19.1763057163085; Thu, 13
+ Nov 2025 10:06:03 -0800 (PST)
+Date: Thu, 13 Nov 2025 10:05:16 -0800
 In-Reply-To: <20251113180517.44096-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251113180517.44096-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.rc1.455.g30608eb744-goog
-Message-ID: <20251113180517.44096-10-irogers@google.com>
-Subject: [PATCH v4 09/10] perf stat: Read tool events last
+Message-ID: <20251113180517.44096-11-irogers@google.com>
+Subject: [PATCH v4 10/10] perf stat: Add no-affinity flag
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,89 +73,93 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-When reading a metric like memory bandwidth on multiple sockets, the
-additional sockets will be on CPUS > 0. Because of the affinity
-reading, the counters are read on CPU 0 along with the time, then the
-later sockets are read. This can lead to the later sockets having a
-bandwidth larger than is possible for the period of time. To avoid
-this moving the reading of tool events to occur after all other events
-are read.
+Add flag that disables affinity behavior. Using sched_setaffinity to
+place a perf thread on a CPU can avoid certain interprocessor
+interrupts but may introduce a delay due to the scheduling,
+particularly on loaded machines. Add a command line option to disable
+the behavior. This behavior is less present in other tools like `perf
+record`, as it uses a ring buffer and doesn't make repeated system
+calls.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c | 29 ++++++++++++++++++++++++++++-
- tools/perf/util/evlist.c  |  4 ----
- 2 files changed, 28 insertions(+), 5 deletions(-)
+ tools/perf/Documentation/perf-stat.txt | 4 ++++
+ tools/perf/builtin-stat.c              | 6 ++++++
+ tools/perf/util/evlist.c               | 2 +-
+ tools/perf/util/evlist.h               | 1 +
+ 4 files changed, 12 insertions(+), 1 deletion(-)
 
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 1a766d4a2233..1ffb510606af 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -382,6 +382,10 @@ color the metric's computed value.
+ Don't print output, warnings or messages. This is useful with perf stat
+ record below to only write data to the perf.data file.
+ 
++--no-affinity::
++Don't change scheduler affinities when iterating over CPUs. Disables
++an optimization aimed at minimizing interprocessor interrupts.
++
+ STAT RECORD
+ -----------
+ Stores stat data into perf data file.
 diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 947f11b8b106..aec93b91fd11 100644
+index aec93b91fd11..fa42b08bd1df 100644
 --- a/tools/perf/builtin-stat.c
 +++ b/tools/perf/builtin-stat.c
-@@ -379,6 +379,9 @@ static int read_counters_with_affinity(void)
- 		if (evsel__is_bpf(counter))
- 			continue;
- 
-+		if (evsel__is_tool(counter))
-+			continue;
-+
- 		if (!counter->err)
- 			counter->err = read_counter_cpu(counter, evlist_cpu_itr.cpu_map_idx);
- 	}
-@@ -402,6 +405,24 @@ static int read_bpf_map_counters(void)
- 	return 0;
- }
- 
-+static int read_tool_counters(void)
-+{
-+	struct evsel *counter;
-+
-+	evlist__for_each_entry(evsel_list, counter) {
-+		int idx;
-+
-+		if (!evsel__is_tool(counter))
-+			continue;
-+
-+		perf_cpu_map__for_each_idx(idx, counter->core.cpus) {
-+			if (!counter->err)
-+				counter->err = read_counter_cpu(counter, idx);
-+		}
-+	}
-+	return 0;
-+}
-+
- static int read_counters(void)
+@@ -2415,6 +2415,7 @@ static int parse_tpebs_mode(const struct option *opt, const char *str,
+ int cmd_stat(int argc, const char **argv)
  {
- 	int ret;
-@@ -415,7 +436,13 @@ static int read_counters(void)
- 		return ret;
+ 	struct opt_aggr_mode opt_mode = {};
++	bool no_affinity = false;
+ 	struct option stat_options[] = {
+ 		OPT_BOOLEAN('T', "transaction", &transaction_run,
+ 			"hardware transaction statistics"),
+@@ -2543,6 +2544,8 @@ int cmd_stat(int argc, const char **argv)
+ 			"don't print 'summary' for CSV summary output"),
+ 		OPT_BOOLEAN(0, "quiet", &quiet,
+ 			"don't print any output, messages or warnings (useful with record)"),
++		OPT_BOOLEAN(0, "no-affinity", &no_affinity,
++			"don't allow affinity optimizations aimed at reducing IPIs"),
+ 		OPT_CALLBACK(0, "cputype", &evsel_list, "hybrid cpu type",
+ 			"Only enable events on applying cpu with this type "
+ 			"for hybrid platform (e.g. core or atom)",
+@@ -2600,6 +2603,9 @@ int cmd_stat(int argc, const char **argv)
+ 	} else
+ 		stat_config.csv_sep = DEFAULT_SEPARATOR;
  
- 	// Read non-BPF and non-tool counters next.
--	return read_counters_with_affinity();
-+	ret = read_counters_with_affinity();
-+	if (ret)
-+		return ret;
++	if (no_affinity)
++		evsel_list->no_affinity = true;
 +
-+	// Read the tool counters last. This way the duration_time counter
-+	// should always be greater than any other counter's enabled time.
-+	return read_tool_counters();
- }
- 
- static void process_counters(void)
+ 	if (argc && strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
+ 		argc = __cmd_record(stat_options, &opt_mode, argc, argv);
+ 		if (argc < 0)
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index b6df81b8a236..fc3dae7cdfca 100644
+index fc3dae7cdfca..53c8e974de8b 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -368,10 +368,6 @@ static bool evlist__use_affinity(struct evlist *evlist)
+@@ -368,7 +368,7 @@ static bool evlist__use_affinity(struct evlist *evlist)
  	struct perf_cpu_map *used_cpus = NULL;
  	bool ret = false;
  
--	/*
--	 * With perf record core.user_requested_cpus is usually NULL.
--	 * Use the old method to handle this for now.
--	 */
- 	if (!evlist->core.user_requested_cpus ||
+-	if (!evlist->core.user_requested_cpus ||
++	if (evlist->no_affinity || !evlist->core.user_requested_cpus ||
  	    cpu_map__is_dummy(evlist->core.user_requested_cpus))
  		return false;
+ 
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index b4604c3f03d6..c7ba0e0b2219 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -59,6 +59,7 @@ struct event_enable_timer;
+ struct evlist {
+ 	struct perf_evlist core;
+ 	bool		 enabled;
++	bool		 no_affinity;
+ 	int		 id_pos;
+ 	int		 is_pos;
+ 	int		 nr_br_cntr;
 -- 
 2.51.2.1041.gc1ab5b90ca-goog
 
