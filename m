@@ -1,384 +1,152 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C868313296
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 20:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8952E1749;
+	Thu, 13 Nov 2025 22:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763066588; cv=none; b=sN6/JmdAb18ckfNY9BBy56iPmHrUYMyGwzRNpfYmEo0tL8XfsurHfCH0eEWXuCgRne1s6ZaAsoRi24mhLtKTXM/J5ZMVgzcsX+RzAU0ojukq2eU4xIBr+PIDGWtIUqWW/GEgLMaJqVx4nYCWS9dOkNzg3oyBv9N+4yrXt8CNr5Y=
+	t=1763073213; cv=none; b=fhUfQkWtlPJIwn6yplRLHOAdq/GBP9XwqQRFo5WvizVAg+ss/L/9oZct0XLMlOY9+WpyU9olr7RHLPH4Lg7Qki33yy9JqMozfoW/eDecHEBC36gEZawu4zM6beYxA0PcrcM9U65dz+Y4MzkG0lDSI+okxUuLKE3pTAxW4pACj3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763066588; c=relaxed/simple;
-	bh=DdBCjOxZp44RxGg1kTv+u/bNPKQ61xvO9+ai2DAE9Yo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=do6fHV0tQx6iX5b88rnjonayV/DJ3I6MRq66BAXpWLIJlK1i5XR1LN2fGF49FCs6gkUzCVM4EZJhLJwWS3A1QGtAuOMUYtVCIDlXTIg/tU9ubRzMCG5QiLcjLUXyfQ1q17nzDICXf/qRZ4gwJrbIkrb2pxulUjcLdu957C4QfsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KC2N/dMd; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1763073213; c=relaxed/simple;
+	bh=UgTP40gdgm/2g7rUs8/SmLHmEbjBMjU/gtVigiNafN0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RRsiBsnM021uT40TjwrM1WTDCRPDFCVS+6S1cjTZKu/6R5f7HUpVpXi0kK4S06zZvduM3Tisfkp8c12oG9daihjPpfzA+IY0ZLDfYhWVsLaat2MjLl4TTzQ55d9UsI765AmlKF/fJc9krHGZK/AYC3ySyV8rPZS2FxGQtv2aVRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=binPp88N; arc=none smtp.client-ip=148.163.147.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KC2N/dMd"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-295c64cb951so49755ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 12:43:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763066586; x=1763671386; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A4ZRWYfrOgK7GB6iGAUuyC7jCNSfweOp4fkutoHLsWM=;
-        b=KC2N/dMd8UNSumKzcUN8L+apb5H3jZCOvqJydDiQpvNQIfZrO5NIr3JU/btJoRd78u
-         oiBljQqsGQyppm3Zve4cY5LQQLtgK9W7+nK5pQWG42nuN4U1cxaud921UTf1xT+xodde
-         621GQKr4KXeb+yIZzjyF1ffGlMRC2J4vgC70h84YJEnCOPSWSq1xqrv5oGRIa4/c8PCE
-         q2M1oRU9OK/v5bJzR4XYIns/Y82o0z2abjlQU/HfdidM0xzmUaQgKh81rpSlHfzDIzN9
-         Q7/fRqJL5OqI0cd1oNgJfHjtxV/vhQ+dcVatUD/07FWOMbimyjURSWKxG9USRoUi9HVG
-         HBkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763066586; x=1763671386;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=A4ZRWYfrOgK7GB6iGAUuyC7jCNSfweOp4fkutoHLsWM=;
-        b=Law0G6n6DEUNvVa5Z0td3T13z9dBug5imY5w0ASBQrn368zMMcQbXYjLBMwIZxlhaz
-         U1xf4M7zZpGAaebeTG0G+Vo/Sn+FZTs9QrYngnNZXUaXwvRA3HX6pp+YHoVYrmjEPuXY
-         uJRmHPn6Iw4Y6EpNXg1/b8xler3xmIxldAjIu/whY+7ps/9D4g2XcOsaSaqK6fojT5Wp
-         eZm0hwq5Q8yxYPouM4x6b+QewpgbSFnBDoa/xXh8R4yvCC7jiePi3fP2STkU0lqjbGoY
-         S+zFgfHerAicSuuIESSOmir84unaFEe9ORYxTyubYmDXqKJdd9t4Igzrz2D1dywZ+mmR
-         s6yQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCE8xgQLSxyXp+eYhk3VWXvktXpPS7E8L4Z9rtyC/JxhzZBIMLHR1yL1PUdzicvcZAL8qE4k7V5BjrPsnM5PYG@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxb55j1SEmS/TFbqxyCbvarzrfNHmUsr0GyWluPZl+fSxCoYVxW
-	hzFg0ZyAAq9IGf9jU3TfzpeTtfn4a/AtDh2sKjRrVmEQcC7LhiTq7SZm2pGUKRIiIjDhgaGMr7+
-	ft0bzSehEELQj0+rYkWUkXY2SavAmFBFpF0hkbz5z
-X-Gm-Gg: ASbGncuAy9/uSad77QphAg19Xb9I0NJPCCNJY2iUst8l7hlsuPKlzm0zUGLElTwvDFG
-	jBYeJFyVX3HIqe1KYhV05PnlsizDd+z1K+emLKv8OL86gF5XbbRk9MDsGlpU1JdXViw+QkvvYrK
-	qzIKfaV+X3f54xv7OkEkYoT0pXLtZrs/GF8IFZGFEOG6CwhG33j/A2gBSc/G+8mQy84m0ytRO3b
-	A4Lggc90MBq89+bgNdAx1Vk9C81rm4icBZbLRELFQix+mN5KKfSnXHmxXahEtir3eu2OvdER//j
-	l4/JSr13v+A5OaLVGbzqTKSAcYkRRA==
-X-Google-Smtp-Source: AGHT+IEg1DvAH94a3iClW54LUV3iqQMotFqBt4osj+21JbDLtcfZqI059bfvx2acfI32Lqq1024uNUWjb6goqoT/rXU=
-X-Received: by 2002:a17:902:f54b:b0:297:f0aa:d466 with SMTP id
- d9443c01a7336-29869e22c5emr800315ad.8.1763066586092; Thu, 13 Nov 2025
- 12:43:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="binPp88N"
+Received: from pps.filterd (m0134422.ppops.net [127.0.0.1])
+	by mx0b-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5ADJBb5B024101;
+	Thu, 13 Nov 2025 22:32:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pps0720; bh=bcJQQ1KPTwb8eK8XW7TwGgVXE4
+	0jB/JkLsdDLKCcbPI=; b=binPp88NyMn03e/bkmtHSrcjiFLWsHMxcUO6nOtZu6
+	Q3hRxUUXL/r4hHJxxWSO8UQUY72LOs/Zr2g5YYerXE3Zu6zbNHYKblURY8LV6tHy
+	4CoI9IiKb9rvi69Am/pWmOEGd5O7AYr1wmgeF19cdNypM2d+rTYuYCI08HtRkCXi
+	NXYr2WsQ6S/ZWIFSiKOdgv31He+OO03Z4nwnJT310XdpdjcHU9BFh5AQEWZ5xIgR
+	BgLWjliqDaf0iGuMrT/9TC5KNG5+WtA2ylWEk4KNi56ybXGqAkKcimjVxPFrZL5K
+	FTk1zsgcW21EhiMtcuY2ZwNtLldYBMAv2Jhxu/kMwTlg==
+Received: from p1lg14881.it.hpe.com (p1lg14881.it.hpe.com [16.230.97.202])
+	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 4adetdpb71-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Nov 2025 22:32:46 +0000 (GMT)
+Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by p1lg14881.it.hpe.com (Postfix) with ESMTPS id 38522805653;
+	Thu, 13 Nov 2025 22:32:45 +0000 (UTC)
+Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTPS id 38046800E9A;
+	Thu, 13 Nov 2025 22:32:42 +0000 (UTC)
+Date: Thu, 13 Nov 2025 16:32:39 -0600
+From: Steve Wahl <steve.wahl@hpe.com>
+To: Zide Chen <zide.chen@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Dapeng Mi <dapeng1.mi@linux.intel.com>,
+        Xudong Hao <xudong.hao@intel.com>,
+        Falcon Thomas <thomas.falcon@intel.com>,
+        Steve Wahl <steve.wahl@hpe.com>
+Subject: Re: [PATCH 1/2] perf/x86/intel/uncore: Skip discovery table for
+ offline dies
+Message-ID: <aRZch3BMB-kCPDdh@swahl-home.5wahls.com>
+References: <20251029220711.57909-1-zide.chen@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251112074311.1440101-1-irogers@google.com> <CAP-5=fU6xad0EGzQ=gJy6eUJtYrgV2FKSu=JcndeWVTKZE_RrA@mail.gmail.com>
- <aRY-rtsJllzqwDYh@gentoo.org>
-In-Reply-To: <aRY-rtsJllzqwDYh@gentoo.org>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 13 Nov 2025 12:42:54 -0800
-X-Gm-Features: AWmQ_bm58PVJNlrsWXUrjhztWq6nZ0kLAKetgdvIni3tpDpqdRk9BivA1raEDxE
-Message-ID: <CAP-5=fUnJqLT2gkRWLnoiUCEQ5GyMj7TCfrvcjusdtoV_Lhwug@mail.gmail.com>
-Subject: Re: [PATCH v2] perf libbfd: Ensure libbfd is initialized prior to use
-To: Guilherme Amadio <amadio@gentoo.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251029220711.57909-1-zide.chen@intel.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTEzMDA4NiBTYWx0ZWRfXwcXFjhwEH9xa
+ jukJj5ROSsaxrRYAm1+zPMeNzzQtnnfdD6EmHRO4VxEvdzI3pTbM/VnGob/bnIXQdBJDSWcJGDg
+ KEX1zBu8+f1nxidGOTUvnUFEhYwIOypsy48QhgSnaUgaX4nDa5ty1MPas6AUE4s7bkbD39wtCM7
+ 5uGWbYKHHOEhtqQJpSs/osafNgzsjertUhu0hi18upq+8L8V3Q6g9IIol/KDC7d/Y3Sh9mU36cy
+ sR32EB54jyWmtWE8eujdqJvuUv7+2vftHL3oCbzZ7//Rj+BtAzOLrtb8WY6pWKEOUnTqEEJKmIw
+ +AUSTd/VKcRXBY++080uWDFD9/XBYEKs2mAsL6x2my00udeqTjprPJcopZqd1Jf/7jYDA7JP8OI
+ 5wmtvpINTiCYeGFTIuepP0CVS9X2tA==
+X-Proofpoint-GUID: rnJH_0BToN6XgUb0zRTtXEt8uYI9Q1PR
+X-Authority-Analysis: v=2.4 cv=c++mgB9l c=1 sm=1 tr=0 ts=69165c8e cx=c_pps
+ a=FAnPgvRYq/vnBSvlTDCQOQ==:117 a=FAnPgvRYq/vnBSvlTDCQOQ==:17
+ a=kj9zAlcOel0A:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=MvuuwTCpAAAA:8 a=QyXUC8HyAAAA:8 a=2NGp21swkA0pWk24jV0A:9 a=CjuIK1q_8ugA:10
+ a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-ORIG-GUID: rnJH_0BToN6XgUb0zRTtXEt8uYI9Q1PR
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-13_06,2025-11-13_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 clxscore=1011 impostorscore=0 lowpriorityscore=0 spamscore=0
+ suspectscore=0 phishscore=0 adultscore=0 malwarescore=0 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511130086
 
-On Thu, Nov 13, 2025 at 12:25=E2=80=AFPM Guilherme Amadio <amadio@gentoo.or=
-g> wrote:
->
-> Dear Ian,
->
-> On Thu, Nov 13, 2025 at 09:03:42AM -0800, Ian Rogers wrote:
-> > On Tue, Nov 11, 2025 at 11:43=E2=80=AFPM Ian Rogers <irogers@google.com=
-> wrote:
-> > >
-> > > Multiple threads may be creating and destroying BFD objects in
-> > > situations like `perf top`. Without appropriate initialization crashe=
-s
-> > > may occur during libbfd's cache management. BFD's locks require
-> > > recursive mutexes, add support for these.
-> > >
-> > > Reported-by: Guilherme Amadio <amadio@gentoo.org>
-> > > Closes: https://lore.kernel.org/lkml/aQt66zhfxSA80xwt@gentoo.org/
-> > > Fixes: 95931d9a594d ("perf libbfd: Move libbfd functionality to its o=
-wn file")
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> >
-> > I'm hoping adding the missing initialization is just obviously
-> > correct, Guilherme if you could provide a Tested-by it would be great.
->
-> Apologies for the hiatus, just been quite busy at work, but following
-> the emails. Thank you very much for providing a fix, I tried to apply
-> it on perf-tools-next, and perf-tools, but got the build error below
-> (both before and after applying the patch):
->
-> gentoo linux $ git describe && make -B -C tools/perf -f Makefile.perf BUI=
-LD_BPF_SKEL=3D1 BUILD_NONDISTRO=3D1 WERROR=3D0 NO_SHELLCHECK=3D1 NO_CAPSTON=
-E=3D1 DEBUG=3D1 2>&1 | tail -n 20
-> v6.18-rc4-182-gda32d155f4a8
->   CC      util/perf_event_attr_fprintf.o
->   CC      util/evswitch.o
->   CC      util/find_bit.o
->   CC      util/levenshtein.o
->   CC      util/libbfd.o
-> In file included from /usr/include/bfd.h:10,
->                  from /usr/include/dis-asm.h:36,
->                  from /home/amadio/src/linux/tools/include/tools/dis-asm-=
-compat.h:6,
->                  from util/libbfd.c:14:
-> /usr/include/x86_64-pc-linux-gnu/bfd.h:35:2: error: #error config.h must =
-be included before this header
->    35 | #error config.h must be included before this header
->       |  ^~~~~
-> make[3]: *** [/home/amadio/src/linux/tools/build/Makefile.build:86: util/=
-libbfd.o] Error 1
-> make[3]: Leaving directory '/home/amadio/src/linux/tools/perf'
-> make[2]: *** [/home/amadio/src/linux/tools/build/Makefile.build:142: util=
-] Error 2
-> make[2]: Leaving directory '/home/amadio/src/linux/tools/perf'
-> make[1]: *** [Makefile.perf:797: perf-util-in.o] Error 2
-> make[1]: Leaving directory '/home/amadio/src/linux/tools/perf'
-> make: *** [Makefile.perf:289: sub-make] Error 2
-> make: Leaving directory '/home/amadio/src/linux/tools/perf'
->
-> The header in /usr/include/x86_64-pc-linux-gnu/bfd.h:35 has this, right
-> after the include guards:
->
-> /* PR 14072: Ensure that config.h is included first.  */
-> #if !defined PACKAGE && !defined PACKAGE_VERSION
-> #error config.h must be included before this header
-> #endif
->
-> However, I did try a build with BUILD_NONDISTRO disabled and it works, so=
- I'm
-> tempted to change things in Gentoo to have it always disabled or offer li=
-bbfd
-> support with a USE-flag but keep it off by default.
->
-> I bisected the build failure to the same commit you added in the Fixes ta=
-g:
->
->  95931d9a594dd0b5f2191a6a6340549b8f3b031b is the first bad commit
->  commit 95931d9a594dd0b5f2191a6a6340549b8f3b031b
->  Author: Ian Rogers <irogers@google.com>
->  Date:   Mon Sep 29 12:07:54 2025 -0700
->
->      perf libbfd: Move libbfd functionality to its own file
->
->
-> This is the version of binutils-libs I have, in case it's useful:
->
-> gentoo linux $ qfile /usr/include/x86_64-pc-linux-gnu/bfd.h
-> sys-libs/binutils-libs: /usr/include/x86_64-pc-linux-gnu/bfd.h
-> gentoo linux $ equery l binutils-libs
->  * Searching for binutils-libs ...
-> [IP-] [  ] sys-libs/binutils-libs-2.45.1:0/2.45.1
-> gentoo linux $ eselect binutils list
->   [1] x86_64-pc-linux-gnu-2.44
->   [2] x86_64-pc-linux-gnu-2.45.1 *
->
-> Since I couldn't build with the patch, I instead checked out the parent o=
-f the
-> commit above to check if "perf top" worked. However, it still crashed, so
-> I bisected the crash to this commit:
->
->  53b00ff358dc75b12042b2b2aaf1d0e998fd0075 is the first bad commit
->  commit 53b00ff358dc75b12042b2b2aaf1d0e998fd0075
->  Author: Ian Rogers <irogers@google.com>
->  Date:   Thu Jul 24 09:32:48 2025 -0700
->
->      perf record: Make --buildid-mmap the default
->
-> (snip)
->
->  Link: https://lore.kernel.org/r/20250724163302.596743-9-irogers@google.c=
-om
->
-> I hope this is useful in getting the issue better understood.
+Tested-by: Steve Wahl <steve.wahl@hpe.com>
 
-Thanks Guilherme,
+On Wed, Oct 29, 2025 at 03:07:10PM -0700, Zide Chen wrote:
+> This warning can be triggered if NUMA is disabled and the system
+> boots with fewer CPUs than the number of CPUs in die 0.
+> 
+> WARNING: CPU: 9 PID: 7257 at uncore.c:1157 uncore_pci_pmu_register+0x136/0x160 [intel_uncore]
+> 
+> Currently, the discovery table continues to be parsed even if all CPUs
+> in the associated die are offline. This can lead to an array overflow
+> at "pmu->boxes[die] = box" in uncore_pci_pmu_register(), which may
+> trigger the warning above or cause other issues.
+> 
+> Reported-by: Steve Wahl <steve.wahl@hpe.com>
+> Fixes: edae1f06c2cd ("perf/x86/intel/uncore: Parse uncore discovery tables")
+> Signed-off-by: Zide Chen <zide.chen@intel.com>
+> ---
+>  arch/x86/events/intel/uncore.c           | 4 ++++
+>  arch/x86/events/intel/uncore_discovery.c | 2 +-
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+> index ee586eb714ec..5c3aeea5c78d 100644
+> --- a/arch/x86/events/intel/uncore.c
+> +++ b/arch/x86/events/intel/uncore.c
+> @@ -1380,6 +1380,10 @@ static void uncore_pci_pmus_register(void)
+>  
+>  		for (node = rb_first(type->boxes); node; node = rb_next(node)) {
+>  			unit = rb_entry(node, struct intel_uncore_discovery_unit, node);
+> +
+> +			if (WARN_ON(unit->die >= uncore_max_dies()))
+> +				continue;
+> +
+>  			pdev = pci_get_domain_bus_and_slot(UNCORE_DISCOVERY_PCI_DOMAIN(unit->addr),
+>  							   UNCORE_DISCOVERY_PCI_BUS(unit->addr),
+>  							   UNCORE_DISCOVERY_PCI_DEVFN(unit->addr));
+> diff --git a/arch/x86/events/intel/uncore_discovery.c b/arch/x86/events/intel/uncore_discovery.c
+> index 1bf6e4288577..d6aee12139f1 100644
+> --- a/arch/x86/events/intel/uncore_discovery.c
+> +++ b/arch/x86/events/intel/uncore_discovery.c
+> @@ -388,7 +388,7 @@ static bool intel_uncore_has_discovery_tables_pci(int *ignore)
+>  				     (val & UNCORE_DISCOVERY_DVSEC2_BIR_MASK) * UNCORE_DISCOVERY_BIR_STEP;
+>  
+>  			die = get_device_die_id(dev);
+> -			if (die < 0)
+> +			if ((die < 0) || (die >= uncore_max_dies()))
+>  				continue;
+>  
+>  			parse_discovery_table(dev, die, bar_offset, &parsed, ignore);
+> -- 
+> 2.51.1
+> 
 
-so I kind of figured this patch would be the problem. The issue is
-that we're using build-IDs by default now, we use the libbfd code to
-read build IDs, libbfd maintains a cache, because of a lack of proper
-initialization/locking by perf the cache crashes. The crashes would
-have been possible previously, say if you did a perf annotate and that
-loaded lots of things using libbfd, however, those things don't happen
-on threads, etc. we're just in a much more easy to crash situation
-that build IDs are the default.
-
-I couldn't repeat the config.h build failure. This looks like an issue
-in the actual bfd.h and not the perf code. I checked the git logs but
-didn't see anything that looked blame-able.
-
-Thanks,
-Ian
-
-> Best regards,
-> -Guilherme
->
-> >
-> > Thanks,
-> > Ian
-> >
-> > > ---
-> > > v2: Remove unneeded unistd.h include.
-> > > ---
-> > >  tools/perf/util/libbfd.c | 38 ++++++++++++++++++++++++++++++++++++++
-> > >  tools/perf/util/mutex.c  | 14 ++++++++++----
-> > >  tools/perf/util/mutex.h  |  2 ++
-> > >  3 files changed, 50 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/tools/perf/util/libbfd.c b/tools/perf/util/libbfd.c
-> > > index 01147fbf73b3..6434c2dccd4a 100644
-> > > --- a/tools/perf/util/libbfd.c
-> > > +++ b/tools/perf/util/libbfd.c
-> > > @@ -38,6 +38,39 @@ struct a2l_data {
-> > >         asymbol **syms;
-> > >  };
-> > >
-> > > +static bool perf_bfd_lock(void *bfd_mutex)
-> > > +{
-> > > +       mutex_lock(bfd_mutex);
-> > > +       return true;
-> > > +}
-> > > +
-> > > +static bool perf_bfd_unlock(void *bfd_mutex)
-> > > +{
-> > > +       mutex_unlock(bfd_mutex);
-> > > +       return true;
-> > > +}
-> > > +
-> > > +static void perf_bfd_init(void)
-> > > +{
-> > > +       static struct mutex bfd_mutex;
-> > > +
-> > > +       mutex_init_recursive(&bfd_mutex);
-> > > +
-> > > +       if (bfd_init() !=3D BFD_INIT_MAGIC) {
-> > > +               pr_err("Error initializing libbfd\n");
-> > > +               return;
-> > > +       }
-> > > +       if (!bfd_thread_init(perf_bfd_lock, perf_bfd_unlock, &bfd_mut=
-ex))
-> > > +               pr_err("Error initializing libbfd threading\n");
-> > > +}
-> > > +
-> > > +static void ensure_bfd_init(void)
-> > > +{
-> > > +       static pthread_once_t bfd_init_once =3D PTHREAD_ONCE_INIT;
-> > > +
-> > > +       pthread_once(&bfd_init_once, perf_bfd_init);
-> > > +}
-> > > +
-> > >  static int bfd_error(const char *string)
-> > >  {
-> > >         const char *errmsg;
-> > > @@ -132,6 +165,7 @@ static struct a2l_data *addr2line_init(const char=
- *path)
-> > >         bfd *abfd;
-> > >         struct a2l_data *a2l =3D NULL;
-> > >
-> > > +       ensure_bfd_init();
-> > >         abfd =3D bfd_openr(path, NULL);
-> > >         if (abfd =3D=3D NULL)
-> > >                 return NULL;
-> > > @@ -288,6 +322,7 @@ int dso__load_bfd_symbols(struct dso *dso, const =
-char *debugfile)
-> > >         bfd *abfd;
-> > >         u64 start, len;
-> > >
-> > > +       ensure_bfd_init();
-> > >         abfd =3D bfd_openr(debugfile, NULL);
-> > >         if (!abfd)
-> > >                 return -1;
-> > > @@ -393,6 +428,7 @@ int libbfd__read_build_id(const char *filename, s=
-truct build_id *bid, bool block
-> > >         if (fd < 0)
-> > >                 return -1;
-> > >
-> > > +       ensure_bfd_init();
-> > >         abfd =3D bfd_fdopenr(filename, /*target=3D*/NULL, fd);
-> > >         if (!abfd)
-> > >                 return -1;
-> > > @@ -421,6 +457,7 @@ int libbfd_filename__read_debuglink(const char *f=
-ilename, char *debuglink,
-> > >         asection *section;
-> > >         bfd *abfd;
-> > >
-> > > +       ensure_bfd_init();
-> > >         abfd =3D bfd_openr(filename, NULL);
-> > >         if (!abfd)
-> > >                 return -1;
-> > > @@ -480,6 +517,7 @@ int symbol__disassemble_bpf_libbfd(struct symbol =
-*sym __maybe_unused,
-> > >         memset(tpath, 0, sizeof(tpath));
-> > >         perf_exe(tpath, sizeof(tpath));
-> > >
-> > > +       ensure_bfd_init();
-> > >         bfdf =3D bfd_openr(tpath, NULL);
-> > >         if (bfdf =3D=3D NULL)
-> > >                 abort();
-> > > diff --git a/tools/perf/util/mutex.c b/tools/perf/util/mutex.c
-> > > index bca7f0717f35..7aa1f3f55a7d 100644
-> > > --- a/tools/perf/util/mutex.c
-> > > +++ b/tools/perf/util/mutex.c
-> > > @@ -17,7 +17,7 @@ static void check_err(const char *fn, int err)
-> > >
-> > >  #define CHECK_ERR(err) check_err(__func__, err)
-> > >
-> > > -static void __mutex_init(struct mutex *mtx, bool pshared)
-> > > +static void __mutex_init(struct mutex *mtx, bool pshared, bool recur=
-sive)
-> > >  {
-> > >         pthread_mutexattr_t attr;
-> > >
-> > > @@ -27,21 +27,27 @@ static void __mutex_init(struct mutex *mtx, bool =
-pshared)
-> > >         /* In normal builds enable error checking, such as recursive =
-usage. */
-> > >         CHECK_ERR(pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRO=
-RCHECK));
-> > >  #endif
-> > > +       if (recursive)
-> > > +               CHECK_ERR(pthread_mutexattr_settype(&attr, PTHREAD_MU=
-TEX_RECURSIVE));
-> > >         if (pshared)
-> > >                 CHECK_ERR(pthread_mutexattr_setpshared(&attr, PTHREAD=
-_PROCESS_SHARED));
-> > > -
-> > >         CHECK_ERR(pthread_mutex_init(&mtx->lock, &attr));
-> > >         CHECK_ERR(pthread_mutexattr_destroy(&attr));
-> > >  }
-> > >
-> > >  void mutex_init(struct mutex *mtx)
-> > >  {
-> > > -       __mutex_init(mtx, /*pshared=3D*/false);
-> > > +       __mutex_init(mtx, /*pshared=3D*/false, /*recursive=3D*/false)=
-;
-> > >  }
-> > >
-> > >  void mutex_init_pshared(struct mutex *mtx)
-> > >  {
-> > > -       __mutex_init(mtx, /*pshared=3D*/true);
-> > > +       __mutex_init(mtx, /*pshared=3D*/true, /*recursive=3D*/false);
-> > > +}
-> > > +
-> > > +void mutex_init_recursive(struct mutex *mtx)
-> > > +{
-> > > +       __mutex_init(mtx, /*pshared=3D*/false, /*recursive=3D*/true);
-> > >  }
-> > >
-> > >  void mutex_destroy(struct mutex *mtx)
-> > > diff --git a/tools/perf/util/mutex.h b/tools/perf/util/mutex.h
-> > > index 38458f00846f..70232d8d094f 100644
-> > > --- a/tools/perf/util/mutex.h
-> > > +++ b/tools/perf/util/mutex.h
-> > > @@ -104,6 +104,8 @@ void mutex_init(struct mutex *mtx);
-> > >   * process-private attribute.
-> > >   */
-> > >  void mutex_init_pshared(struct mutex *mtx);
-> > > +/* Initializes a mutex that may be recursively held on the same thre=
-ad. */
-> > > +void mutex_init_recursive(struct mutex *mtx);
-> > >  void mutex_destroy(struct mutex *mtx);
-> > >
-> > >  void mutex_lock(struct mutex *mtx) EXCLUSIVE_LOCK_FUNCTION(*mtx);
-> > > --
-> > > 2.51.2.1041.gc1ab5b90ca-goog
-> > >
+-- 
+Steve Wahl, Hewlett Packard Enterprise
