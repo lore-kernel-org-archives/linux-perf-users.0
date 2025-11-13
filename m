@@ -1,46 +1,46 @@
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010011.outbound.protection.outlook.com [52.101.46.11])
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010040.outbound.protection.outlook.com [52.101.201.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16383596F1;
-	Thu, 13 Nov 2025 16:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87DFD359F81;
+	Thu, 13 Nov 2025 16:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.40
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763049791; cv=fail; b=cTZlM/WLOSkr08oULaEsSu5CRKeq2/Wt7rgSqmhpXojnfLtf8s7yuWEjhX07cnSHSVED5DK/ILkOroNQ4MKYWnF1BldSZ3M1UPUo/cQNNn/G3RjS8R0JA6qHw5MWqJstO6dnGj2dkv/WSd6JQ3ewzWuHBSAiXoYL+lUesXcOgKo=
+	t=1763049797; cv=fail; b=nMIxEwnAdWu1JbmEp9Sq2J+qC/hW82CaMoGLm4KYrYOittf8LLpUqXUiTCiHnSEc3SvNL+F3WzSheVvq2KIH2dp8KUQFGR4z0u6KCrEmZrB6FwmLd1B7Kf6OIEMo5/YKef/OFNEnLkXAIoA5ZE6XAfZiquwBQxX72npBPh+f8sM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763049791; c=relaxed/simple;
-	bh=Uf8ce5dKNdIQxHC2lSQniSZbneI6uLPQukJi1q4prb0=;
+	s=arc-20240116; t=1763049797; c=relaxed/simple;
+	bh=S/6MVWRBoVrDldyLxNTrZQlhkjNaa9f6Pgu/aPncE4I=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D83vHOkcJk1Igh0WbKQzEx3QHUI+7RevtE1cN+yTTriw7fUXFyZRBNpj7ZayHpUmTKA3HgpVujJMV8KxYaefVF+CQknOR7shh6LDNhTIH69sDZkBTr0yo2lbYfncFcbnwT/D5I5JL2etxDuVWfr+CccwnrsC4W+ixhGh5CBm8KM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WH6I/+ot; arc=fail smtp.client-ip=52.101.46.11
+	 MIME-Version:Content-Type; b=Jslts/9ZSU6sd2kojo7GIlL2qzyeF3D+JArF8BcPKsmW54ZIqOogEyfeWLFQM4tukI/GQRr9Fut+sjEztgq21ZIi4KNLw3WAuwwAogUZZOPOk5w9R+ihEUy3n9ULSmFvjq35W9CgCtl330Crq+QJqdTJYlk7B4g0jYwyMsOMB6U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3N2jsrTb; arc=fail smtp.client-ip=52.101.201.40
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WH6I/+ot"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3N2jsrTb"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=K89qkGauup0qggeHR13puBkjhoKvuryTMAUQpwVKhvAvzV20pQB8n4XVK+oIhkcy5LacEWJW3CKTTRZxzspEsegEBoBn2cXRzxlozdG0E3cJ50lfaW0mMZwzMRQqCO/Z7lyouuH1cI+LhqUM2hVdhvKA5yLcjkz5ItQer7VKoTgVUrqSIIJHGtq3moYX7YEKpbmArUSBFfr9qp9z+oryKgD04lnAbkaITA/2SbSzNviqW4VXrC4648euXnzaVel6yXti6S1ev4c2D9lyEeAm9ORF5KB2CiOjg/L6bvq2zMvcq6plEnA+CQYhMd+urSuUvBBWnvyBwVcg5WlWXQ3hIw==
+ b=E5Tw1luZ70vkdv1XCwBjjxeoTSAbsS1umomwixpRXUkz7G84DySipxJoiDUfiaVxuqYQ+DcCguoQlRSzX8K+stTQTarTBBVrf4dTfoui6h33LUsRubefa5EZa5yKX10uajpuxSxBUCC2xFAauQ9Ub56ZZx5lTSD9gOQs1rWdWvscMeTv85x4YHAXkGJacKIW42EhSlkVZwikMtnfsREGHfOumbnFkYgA7X3gYnrklk8fL+nmSbuuLwrqMdFPOk9QuqRuDDWaloBbqmoI301vARq64AWAwKFUBNaIg21kELKLfqD/IL/2KV2j8EuSzr9C2HGjgos2cjaQixj6WJtcnQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rSfcRdRWnJlVYoJTjzUrxxTtbzNp49SZY8Pov9SNV+0=;
- b=GMuyckrXSOqpH+nsZTf3ug6OmowljdNLtlTHRjJVXFLlRUgoEVTRbHhlV190zwAH3c0kFdjmZlYXsiMLcNRCAIHPHqRsC3yfE6CqI42a2MW7nqo8Auf6OnMOvrmsKLR3Z3DTaAbjELLxA+y8a7Q6neeyzOFOqyAweWCLNZb58dhR6PcOw1tOXb1rpupS82A9CQ8i5nwyKhdVidslDIdKU1wPkNm/hLyirv2LvN7JbIw2Aiydfo6KcS1DV8HdyU9P7rQSPRShZCEgcq9R+wQygKLWznwY4EPdVI4Cpwbj8uCKrcQtoukqZF+52o8LvJ8I5ypnQgkxDm2IdBdwrWsldw==
+ bh=T45yqGliEcc7povJTtzjKqk3bygF0nRhfq27EfkUwOs=;
+ b=w4O6AftrhRnLLME8tWuFh9hWurW7lXGe0GBM6fXDf1/Uo20K+YbXdv8yJ2R0qPeO1B2ssQWGNeCXBSXiIzjPLfAx2A/Mv0YMRdTwx0gC4FA1939sRQJ0lvDzPPZS2XkMyRketiSAnmBJ/7se8UrMcAjDJIa+1YiDUKlWWm9uei4Jj2TgEwyswzzYeNNlLK5tEPjZTHJydVI4FlMb9uwrmZfPyG21x92wg886h1su9n1amZQh76vGdkEZHHAM8VvyuV0Pskjp4srka4RKnJWNghh3O13MRFLvIYO0/eIjucESvVQ1JM27P1lJGfM9GntQ2pJdlidkkfkMVAegplcd2A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rSfcRdRWnJlVYoJTjzUrxxTtbzNp49SZY8Pov9SNV+0=;
- b=WH6I/+ot90Dwx3LGI7aNS7KAG7CPhqSoL0LbgTsMzhqXsBcPnG1LD1l7rHEHx87z3L+xaC96kVuLB/jNDlDIZVTnUNvSMsfZpyE9dKNjl6HbY/ShyOQZfGBTozoAuASw+0pbFlv/sNyXZBIxWWjmujOxunWzLAnL+DrQiktJyck=
-Received: from SA1P222CA0038.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:2d0::19)
- by IA1PR12MB6209.namprd12.prod.outlook.com (2603:10b6:208:3e7::22) with
+ bh=T45yqGliEcc7povJTtzjKqk3bygF0nRhfq27EfkUwOs=;
+ b=3N2jsrTbVXEPhkaG5zUAHCpvlV/S2b4p6s+wOxIB26FrxjQwLYEWIv9iWu+Ry5n7V8BrkKo4lk3Fc28zE97jaQ2D/LvkqKz5uX5U6xlrvpwmTFJG36MbX7kgjRWAgmQ9Qz8+118xxI/OsQwOvJpxa6oiLn7WzeisL3LV+G/JYgI=
+Received: from SN6PR04CA0089.namprd04.prod.outlook.com (2603:10b6:805:f2::30)
+ by SJ5PPFE4FC9FAB3.namprd12.prod.outlook.com (2603:10b6:a0f:fc02::9a7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.16; Thu, 13 Nov
- 2025 16:03:06 +0000
-Received: from SA2PEPF000015C8.namprd03.prod.outlook.com
- (2603:10b6:806:2d0:cafe::3f) by SA1P222CA0038.outlook.office365.com
- (2603:10b6:806:2d0::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.17; Thu, 13 Nov
+ 2025 16:03:10 +0000
+Received: from SA2PEPF000015C6.namprd03.prod.outlook.com
+ (2603:10b6:805:f2:cafe::93) by SN6PR04CA0089.outlook.office365.com
+ (2603:10b6:805:f2::30) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.9320.17 via Frontend Transport; Thu,
- 13 Nov 2025 16:03:03 +0000
+ 13 Nov 2025 16:03:11 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- SA2PEPF000015C8.mail.protection.outlook.com (10.167.241.198) with Microsoft
+ SA2PEPF000015C6.mail.protection.outlook.com (10.167.241.196) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9320.13 via Frontend Transport; Thu, 13 Nov 2025 16:03:05 +0000
+ 15.20.9320.13 via Frontend Transport; Thu, 13 Nov 2025 16:03:09 +0000
 Received: from BLR-L-RBANGORI.amd.com (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 13 Nov
- 2025 08:03:00 -0800
+ 2025 08:03:05 -0800
 From: Ravi Bangoria <ravi.bangoria@amd.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
 	<namhyung@kernel.org>
@@ -66,9 +66,9 @@ CC: Ravi Bangoria <ravi.bangoria@amd.com>, Tycho Andersen <tycho@kernel.org>,
 	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Santosh
  Shukla" <santosh.shukla@amd.com>, Ananth Narayan <ananth.narayan@amd.com>,
 	Sandipan Das <sandipan.das@amd.com>
-Subject: [PATCH 1/2] perf lock: Fix segfault due to missing kernel map
-Date: Thu, 13 Nov 2025 16:01:23 +0000
-Message-ID: <20251113160124.2695-2-ravi.bangoria@amd.com>
+Subject: [PATCH 2/2] perf test: Fix lock contention test
+Date: Thu, 13 Nov 2025 16:01:24 +0000
+Message-ID: <20251113160124.2695-3-ravi.bangoria@amd.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251113160124.2695-1-ravi.bangoria@amd.com>
 References: <20251113160124.2695-1-ravi.bangoria@amd.com>
@@ -84,88 +84,163 @@ X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF000015C8:EE_|IA1PR12MB6209:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1b86b03d-559b-4381-9c2d-08de22ce2174
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015C6:EE_|SJ5PPFE4FC9FAB3:EE_
+X-MS-Office365-Filtering-Correlation-Id: 524f353c-77c2-4530-584e-08de22ce2441
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|7416014|36860700013|376014;
+	BCL:0;ARA:13230040|7416014|376014|82310400026|1800799024|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?s858b5da4uZtPl0yI9Dk8OxfNcRL59zXVe5nfgGYinUuHMh+kX+EtgjjCymY?=
- =?us-ascii?Q?iwiRNcPhpFmv+K4lymPwFxX5R+d2fTCaCYd5boTlHASUVp+smo249saxkdOy?=
- =?us-ascii?Q?o4asXBNtIBqBE7Ys8wNijiT7Onju5mqiqFBo3cWR8lQLwBSTAzfhrtTplt8g?=
- =?us-ascii?Q?wZHiqlgftg2IGD66/+LRgxJB6YPpoxP2858//Od3IyJkLJlX1zk5GgaQ7xPZ?=
- =?us-ascii?Q?hmPw4N8ogB1RqgbRuqu76R0mpW+GUmgYiPKouTkdQhKnVtiK2KopirVZGaZI?=
- =?us-ascii?Q?N4xrKdjPesq3Gbgsnorin7ifgnGvu5PtnEN79ofaPGmN3ccD8toh642xgnOY?=
- =?us-ascii?Q?s1hc7+Gs/G3wbFjAfGHz0Uq21Oa5VbI1h3qki73x7SwGz+SIYyt+SLMi064g?=
- =?us-ascii?Q?+BM053YCnuVXn5sGYgySH25CDOK/OwJTTEa6+QAsiCyez+yfYaT4ctNkvNr5?=
- =?us-ascii?Q?gn3mOXqC8NVkaHhf38VjAnQH2+qCsvMLBpzK4oVlTdTmJmuk0zjMCRKCFZXX?=
- =?us-ascii?Q?36jWadpe7uUvC5qvfLDW1A7/DcIueoGDm1sKitYnjMllKM7wpUloZwUWLa9W?=
- =?us-ascii?Q?uqqzpNqMVudhQuLRkfAjouW/3ks6pf0zbKR/aVka8qtETn59nxVqDmoHVDlW?=
- =?us-ascii?Q?ea5avlb5zBrgiFcqQro7m1Hooo2peTocsLZuD2iWRKSj+MCLCYHoPNkgiv+V?=
- =?us-ascii?Q?GXw5qkGPnZPxdMCSr+mmQO5Y9ki8hWAc6iP2HKnuu2ZDkIwQw7OR82tr2Sf9?=
- =?us-ascii?Q?cncngdZONoxR6MRW3PfiABFkGOXsy5jAuyxrUaxbtkpMu58KkT7s5vwJ4sjX?=
- =?us-ascii?Q?8uoBDq1Nr0bHcor88tN5BXwyD8+R7RBrTE3X27qsWP7T/TxFj35xEILhxdrL?=
- =?us-ascii?Q?A1NNHtyE1loDgxSYD2tffnb/96MXAr4SLXqzCxtu8duQ5dR8yVTfWOZ2MAt9?=
- =?us-ascii?Q?hySHGjBybiv5ShJPvNXrlA7LOPyNlicy9RIB4h6Rx4WT9sGnmeSZweGAyq87?=
- =?us-ascii?Q?qZKutSchmu9755c67LHzmYyDjwYLK1Dch7m+hoY2JlYFFNhRbgBOgFQYcdLr?=
- =?us-ascii?Q?9bXyoK8jFy3nMvSoEXdGAr9mdKBGc/vChQ0iiL2GNGcBHsLxsQEZHuyS9Vk8?=
- =?us-ascii?Q?ui7R0WGEJvScukjs7ka1yzbj7WKKfAgUXDQm41YM00OMlH4yBtyjfKBfhbsI?=
- =?us-ascii?Q?5I9hqWda11yAQM/pPWKI5xJYZlHbD3Xh+I1AM9GC1Gynu68LQOAZEwvX/MzE?=
- =?us-ascii?Q?BPuEvL22XFeCaib9xqhN0eG+yQUIBI74SckuMwNfMTGvm8XhlmpQQCXgpY3L?=
- =?us-ascii?Q?SsrPyXWzGsv171+OCO2gXKli9w0bO/2rYmxOkHFoChvzBJHq0b4dbTzd4OVS?=
- =?us-ascii?Q?7BNBgJ/wvzaW403QSp4nUOTFGh7pUWNfN2LvY4+ANGxvphwSG36JCQqyX1/f?=
- =?us-ascii?Q?ORKLOdL2FdBAz/BElKjuczPjEPxZBBrakfK2GgdnvTaxv5hWltFzHH7nWaTS?=
- =?us-ascii?Q?uk1kDbnnxRoZg0BsNCaaEXIh4lvT2OyD88rZ62K35AOe5cexxG8fPB1LtNRy?=
- =?us-ascii?Q?sxkTOR2OeEkuHE1GisM=3D?=
+	=?us-ascii?Q?1zw9/vauWAU9hxS4oUDjKauP+/nl+B8hox2eP+SHBXbO3LLxAejZilFhErhC?=
+ =?us-ascii?Q?uPul54NU514popXCuOpJ+O/q39rm5IbdEMAwEo0P72vGrHbIYkAVsiTsfFvI?=
+ =?us-ascii?Q?Yu3VDWSGcihacq2ecExSH8ljzIWdblicCxPemZqTnnASLXQVt4QsgAUpD8zx?=
+ =?us-ascii?Q?2PAxY5jshT+eNC+whQ4CP4Z2kTQiTifr8x4ut3fIoKAN57+ArDuB0YPbZqPA?=
+ =?us-ascii?Q?EU2nqGTsYLikrnztnJWNmx71OU+N3HlOcUAKMzd6BYGZeENL1tbRgh02PU4V?=
+ =?us-ascii?Q?T4MjG1jaT/aYN+i7FbRCnO7Atd+JbQNMxLQqgiBbqc1q4BgSnG1uSEczHuIm?=
+ =?us-ascii?Q?RK7nL28t490S14d8mUGQx+wKU6R4PoffBL7rTq3ixZR5SYeCoFuvLa3gBG5L?=
+ =?us-ascii?Q?0v/SmmtiMYxazLbj7SVCAllCxXlSApW2qe6Id6YXUU6srFrbL/RWW15HZ3Qq?=
+ =?us-ascii?Q?drcLnZxG/kCjwFQ+ArPbFWgEMaOQuqsIxcKFt0+BhW+wsUnydUJPF/EF7rc/?=
+ =?us-ascii?Q?h6LhK2FYRIVlhdvr82xlXy1TZFfb1NZZ/IPypX4vus38nAFyoLPcevKxLT8v?=
+ =?us-ascii?Q?f9k81YdnaJn4P3ggg5xOV1GCpEIFzAGcfcuM9rY8kJ8Z2V6RhOgD65E2HoAO?=
+ =?us-ascii?Q?vCW6MKOLAB4aqm6Qo1OycLFPCxMzPp98dXhmtiROuCJeTC4jqhnnhqTzw1hB?=
+ =?us-ascii?Q?giF57Yh5woxv09vFo5P9OtFPYRwcl8WW2J026cHokGMONRbz7hYzJTvGJwkl?=
+ =?us-ascii?Q?tufdNuhFL3DSuRf+qFjRi6Y74OfLGSMxOCbMXjEJR3kvX6M4Y0okd2UJhfO4?=
+ =?us-ascii?Q?jWfzu65qqoAtLck+eXvsuaWYESYL6EWXSRSib3YZMY+jsWVE/TPb93sL1N/J?=
+ =?us-ascii?Q?MYkxCF9bx1wFUFJ/89haRaeiByHPGlbA9s9N86t8DmBAO1al2sKdjdHh3jcL?=
+ =?us-ascii?Q?SHleJwQwruDxtpcR+8JINaOZasr0epSlhexfAz+ztH4l0LiHLUm66a+bqNPD?=
+ =?us-ascii?Q?ylJMBbIcHc3Mr8UIueN1/hVPwLn8HHSUAmp9A8+mjcnxIDvIHK1wa/lEc1qz?=
+ =?us-ascii?Q?df7IyuNSKP5OoaFEKQVh2AVKLbTGNftBpI7BtJdU/UwV9M9+1nSrIZP4vIn6?=
+ =?us-ascii?Q?HRaeWv2RLrp1A76wukvOC7PQwAJvDJMENJmp9BPHFtkAjLIIs+jZqN24Igrh?=
+ =?us-ascii?Q?7eFMDb6hv6vZJyiu26+t9fsV2TRhUSiK4UzwV7MciVMmzPlplEOjltRJXdgS?=
+ =?us-ascii?Q?Pzaua1N9NDT5/F64cJnxI4UoC0hn7LRrkF51ueNL0nmZ9HHxTKV5oBmXdHH9?=
+ =?us-ascii?Q?ZdM+90vvuOCWv5AwgQiSQwTcx+1XwHX2RjFEycEHFmHLlSgqh3XUjJhyPL83?=
+ =?us-ascii?Q?bRzqEXBl3aqGN8H9wiTC/9qYjeo+3mtCHsuLuyyPXi+t47ib2msNYLVoEDtj?=
+ =?us-ascii?Q?x9fRtCkBn6LoFcReCcu/TJFdX++GmgxfOgek9qWLE5nWHrtOVSr98AUchLPv?=
+ =?us-ascii?Q?yMIxTVri7Lje9VfWeFUSUdmppJZpY3vVVyBm7uH1/tiIY9/vkoafyXJVD+xt?=
+ =?us-ascii?Q?Tkz4gxe7Jq9NFMjHdxw=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(7416014)(36860700013)(376014);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2025 16:03:05.2337
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2025 16:03:09.9344
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b86b03d-559b-4381-9c2d-08de22ce2174
+X-MS-Exchange-CrossTenant-Network-Message-Id: 524f353c-77c2-4530-584e-08de22ce2441
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF000015C8.namprd03.prod.outlook.com
+	SA2PEPF000015C6.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6209
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPFE4FC9FAB3
 
-Kernel maps are encoded in PERF_RECORD_MMAP2 samples but "perf lock
-report" and "perf lock contention" do not process MMAP2 samples.
-Because of that, machine->vmlinux_map stays NULL and any later
-access triggers a segmentation fault. Fix it by adding ->mmap2()
-callbacks.
+Couple of independent fixes:
+1. Wire in SIGSEGV handler that terminates the test with a failure code.
+2. Use "--lock-cgroup" instead of "-g"; "-g" was proposed but never
+   merged. See commit 4d1792d0a256 ("perf lock contention: Add
+   --lock-cgroup option").
+3. Call cleanup() on every normal exit so trap_cleanup() doesn't mistake
+   it for an unexpected signal and emit a false-negative "Unexpected
+   signal in main" message.
 
-Fixes: 53b00ff358dc ("perf record: Make --buildid-mmap the default")
-Reported-by: Tycho Andersen (AMD) <tycho@kernel.org>
+Before patch:
+  # ./perf test -vv "lock contention"
+   85: kernel lock contention analysis test:
+  --- start ---
+  test child forked, pid 610711
+  Testing perf lock record and perf lock contention
+  Testing perf lock contention --use-bpf
+  Testing perf lock record and perf lock contention at the same time
+  Testing perf lock contention --threads
+  Testing perf lock contention --lock-addr
+  Testing perf lock contention --lock-cgroup
+  Unexpected signal in test_aggr_cgroup
+  ---- end(0) ----
+   85: kernel lock contention analysis test                            : Ok
+
+After patch:
+  # ./perf test -vv "lock contention"
+   85: kernel lock contention analysis test:
+  --- start ---
+  test child forked, pid 602637
+  Testing perf lock record and perf lock contention
+  Testing perf lock contention --use-bpf
+  Testing perf lock record and perf lock contention at the same time
+  Testing perf lock contention --threads
+  Testing perf lock contention --lock-addr
+  Testing perf lock contention --lock-cgroup
+  Testing perf lock contention --type-filter (w/ spinlock)
+  Testing perf lock contention --lock-filter (w/ tasklist_lock)
+  Testing perf lock contention --callstack-filter (w/ unix_stream)
+  [Skip] Could not find 'unix_stream'
+  Testing perf lock contention --callstack-filter with task aggregation
+  [Skip] Could not find 'unix_stream'
+  Testing perf lock contention --cgroup-filter
+  Testing perf lock contention CSV output
+  ---- end(0) ----
+   85: kernel lock contention analysis test                            : Ok
+
 Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-Tested-by: Tycho Andersen (AMD) <tycho@kernel.org>
 ---
- tools/perf/builtin-lock.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/tests/shell/lock_contention.sh | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 078634461df2..e8962c985d34 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -1867,6 +1867,7 @@ static int __cmd_report(bool display_info)
- 	eops.sample		 = process_sample_event;
- 	eops.comm		 = perf_event__process_comm;
- 	eops.mmap		 = perf_event__process_mmap;
-+	eops.mmap2		 = perf_event__process_mmap2;
- 	eops.namespaces		 = perf_event__process_namespaces;
- 	eops.tracing_data	 = perf_event__process_tracing_data;
- 	session = perf_session__new(&data, &eops);
-@@ -2023,6 +2024,7 @@ static int __cmd_contention(int argc, const char **argv)
- 	eops.sample		 = process_sample_event;
- 	eops.comm		 = perf_event__process_comm;
- 	eops.mmap		 = perf_event__process_mmap;
-+	eops.mmap2		 = perf_event__process_mmap2;
- 	eops.tracing_data	 = perf_event__process_tracing_data;
+diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
+index 7248a74ca2a3..6dd90519f45c 100755
+--- a/tools/perf/tests/shell/lock_contention.sh
++++ b/tools/perf/tests/shell/lock_contention.sh
+@@ -13,15 +13,18 @@ cleanup() {
+ 	rm -f ${perfdata}
+ 	rm -f ${result}
+ 	rm -f ${errout}
+-	trap - EXIT TERM INT
++	trap - EXIT TERM INT ERR
+ }
  
- 	perf_env__init(&host_env);
+ trap_cleanup() {
++	if (( $? == 139 )); then #SIGSEGV
++		err=1
++	fi
+ 	echo "Unexpected signal in ${FUNCNAME[1]}"
+ 	cleanup
+ 	exit ${err}
+ }
+-trap trap_cleanup EXIT TERM INT
++trap trap_cleanup EXIT TERM INT ERR
+ 
+ check() {
+ 	if [ "$(id -u)" != 0 ]; then
+@@ -145,7 +148,7 @@ test_aggr_cgroup()
+ 	fi
+ 
+ 	# the perf lock contention output goes to the stderr
+-	perf lock con -a -b -g -E 1 -q -- perf bench sched messaging -p > /dev/null 2> ${result}
++	perf lock con -a -b --lock-cgroup -E 1 -q -- perf bench sched messaging -p > /dev/null 2> ${result}
+ 	if [ "$(cat "${result}" | wc -l)" != "1" ]; then
+ 		echo "[Fail] BPF result count is not 1:" "$(cat "${result}" | wc -l)"
+ 		err=1
+@@ -271,7 +274,7 @@ test_cgroup_filter()
+ 		return
+ 	fi
+ 
+-	perf lock con -a -b -g -E 1 -F wait_total -q -- perf bench sched messaging -p > /dev/null 2> ${result}
++	perf lock con -a -b --lock-cgroup -E 1 -F wait_total -q -- perf bench sched messaging -p > /dev/null 2> ${result}
+ 	if [ "$(cat "${result}" | wc -l)" != "1" ]; then
+ 		echo "[Fail] BPF result should have a cgroup result:" "$(cat "${result}")"
+ 		err=1
+@@ -279,7 +282,7 @@ test_cgroup_filter()
+ 	fi
+ 
+ 	cgroup=$(cat "${result}" | awk '{ print $3 }')
+-	perf lock con -a -b -g -E 1 -G "${cgroup}" -q -- perf bench sched messaging -p > /dev/null 2> ${result}
++	perf lock con -a -b --lock-cgroup -E 1 -G "${cgroup}" -q -- perf bench sched messaging -p > /dev/null 2> ${result}
+ 	if [ "$(cat "${result}" | wc -l)" != "1" ]; then
+ 		echo "[Fail] BPF result should have a result with cgroup filter:" "$(cat "${cgroup}")"
+ 		err=1
+@@ -338,4 +341,5 @@ test_aggr_task_stack_filter
+ test_cgroup_filter
+ test_csv_output
+ 
++cleanup
+ exit ${err}
 -- 
 2.51.0
 
