@@ -1,198 +1,218 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010067.outbound.protection.outlook.com [52.101.85.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF0D2FF641
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 04:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763008836; cv=none; b=c4dgjcYSyZ0lhEpB6yru0Loil1DJTGSxw/0bDSLlfmWTzXoa1LzfI/YSXfkyHlfAPezqF4XeOE0wPGTXxY7hukIY8QK8WUJLsoVYbjfig4Rc9tFIY+OIBM1TTR6+su/A6G169RtXmR8BK9SjtZF3Klic/9umKcnpV6F11W9mSHc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763008836; c=relaxed/simple;
-	bh=juu52SAGCZwSkv94b8hvBh3dmTjc+fF26d4odP+mFag=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n0Hb8y4LcsXNmp/b+JQW+Sfut6OoStHDlMLlWXeoQ+MdUkFxMxR6x35lJRscnO8DoJoXuOrXjmP5OyN3yhZnzyMxMpPXqSPq+TvsIMEFA7PP7tuUsdKzZZXTEmN/Fi+Il9P4yVWHkM3Pg4JaLeYHr3Wj4WOcRRoE306ej4P969I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FPu7h28w; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39ECA16DEB3;
+	Thu, 13 Nov 2025 06:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763014726; cv=fail; b=jwahDmpr/rDcq5HkvN4K7y+CsAt8YTJlws9OzxYhGDVv6lOc4H6zTlE7IN5pUrD2qppFVw1ye24bxxXJrLZrHW8MRWHL0LqmW6o67lhMrv3Jkzn1gNuE4I37UxDDnVXiPuT/stznV4O1AhYVCQZQbOQMV4IGGLal0NZwJyU/r/4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763014726; c=relaxed/simple;
+	bh=HABloeY4VYA/kZWMNp2E4T7niFsXX85xrM3uiX3ocPk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=g07OZZrDuYHq4dEVMMsdZWoOFR7XqekwWEy+jyOzPzkb0vZwPhv0HJZZ38jhhGgeTKDSrAyvpOkCNdtX0o9IjyIgCTrNVzLaF5vQ9xHEcsidIAZWtGmbB5x9yiS27U4kbktOsQ5YPW/v52jApP2YjZW/9m6Atye/PI5E7rdoDGA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nksaa7VI; arc=fail smtp.client-ip=52.101.85.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FPu7h28w"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-297f35be2ffso5422485ad.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 20:40:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763008834; x=1763613634; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=FDmPn0Nf9DwhMNzLqfPhzr9P36pEvch2Q8c/oMsgpUY=;
-        b=FPu7h28w5Bd7nPim9PcqKY2VEjzhmMTF01nGfSGnJv4fgOw8lmKEzMPEEWaACULMzd
-         vto5rZQWjyzOPC+geQDWJO6vbIsdF5mQjiEDJScJe5WmvyDlz+uRrHXiEloSRnoHYnxk
-         S7nW7O7dK8FN7LlSPkuYvZx9BO7mg6u4zKupS9ynUjxj2emMKcej1CZIcvv0XSwBBPYT
-         5TUDnY+5mO3fzQCm7rNHzZkBF5dHDOxbp7MZQcKR2GZxIDAq3Z684GKbVrordU9velSl
-         Ri1WcvlQqy1gSxln84sbitZ4XCAo6CwnwyHaidumbeJqYnjuCR1Er35JkFtow9j8Rw2B
-         4rfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763008834; x=1763613634;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FDmPn0Nf9DwhMNzLqfPhzr9P36pEvch2Q8c/oMsgpUY=;
-        b=HuJdxAbLzhjKQJH3tB7keSrBFFxzsqcpvikG2Bwpqevq6YO+bpfuN1oOWmWRDtN8mF
-         YR7gtw5DiGQ+ffK60TNplY8xG26EWygkyMXsxdzQP/wWiEhGHo0DTOONdvZtJj8fdwkT
-         jc3fASsBNNaft2S0GjQzjnUigS1vQ5D78vlDnnNUZcoFhAT1ekN774jjTGRWxZj+24XC
-         5N5VvNvq1F4CiGLm2hw6RaZRlncR3+jWqq/sqH4AfZuDf+HFyrfcY3a2V5qjzkQmGxxv
-         o4tXdEKbubmbBTLEl4R6DNKNqXkc9Bjm98/J/MI0aB/t+0uXYQIibxj1cOWfeS+8OQb1
-         E88w==
-X-Forwarded-Encrypted: i=1; AJvYcCWM/Xc2X2mjLTpjNIIBd1Xupbpo4NBXOLl/7VgV01iUH9Kkgp2bewVLhBTUgO07ParyzlhMUwvEDu29tBAQiIgv@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBtOoC6g64qXbNrYaUOHb3orE7frTIJMDGSRvr0505BbmHZEKm
-	XPEvTX44Fb/FgM57vJYL/WNLpl3D8OdC64/HmQdl7swoPqphWuPVY7Z/
-X-Gm-Gg: ASbGncurwN46qsp/C+xJQ9FsSMENjfluNGabpsUDPCQ+44V3vBcsQACgFVP4BLZ+rRw
-	7SzG8AXgEE09h8mcCAuc6KoJMfWtUzPWJY8z0UgxthamIT5r3TSTKAzg0iEA1w26vQF3GN55BvR
-	wr8qZeaA6IKKB6wIcplAQtk0fjRbwRl03OBtomLSOR5rxKOReb6kvzVKX3dk6vjsNHGRs6C4GeW
-	LUEezyNBr/C9NVpyACssZjKNXXCgcZm3mPVpma6l/oZ7zSAqV/x8u4zgILsSmrh6nbR5UtAibFW
-	1lcG0aS+aAFMS/6h99we9Q9MTntx5wR1+Xk3cA2wAgCuaxzMbrZ70y/F91oqnDubOjZK4PyeeGf
-	0XqY6Y5PRCcBBmn+B8vuRu2JJBI1bSstPZdAoUAYWmLPf662SJYtKDdOTzWHdZc08snHqg8WW1K
-	I8Nrb/Th+/vprw2ffbS9ZrZA==
-X-Google-Smtp-Source: AGHT+IF0ZSMjJ2Lc8kz3EXKwlmPjL5NLaFbg0SkOYJJftW8mAPB0mC+cHp/6QWluZgrL5V9rxEgvaA==
-X-Received: by 2002:a17:902:e788:b0:297:e69d:86ac with SMTP id d9443c01a7336-2984edc8d1bmr74152995ad.39.1763008834480;
-        Wed, 12 Nov 2025 20:40:34 -0800 (PST)
-Received: from localhost ([45.8.220.62])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2985c2b0d68sm8683655ad.61.2025.11.12.20.40.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Nov 2025 20:40:33 -0800 (PST)
-Date: Thu, 13 Nov 2025 12:40:30 +0800
-From: Jinchao Wang <wangjinchao600@gmail.com>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: kasan-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	workflows@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v8 00/27] mm/ksw: Introduce KStackWatch debugging tool
-Message-ID: <aRVhL91rSZXyZ83D@ndev>
-References: <20251110163634.3686676-1-wangjinchao600@gmail.com>
- <aRIh4pBs7KCDhQOp@casper.infradead.org>
- <aRLmGxKVvfl5N792@ndev>
- <aRTv0eHfX0j8vJOW@casper.infradead.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nksaa7VI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PCBUo5QuGvsASK8Jxh/k3R84exKCzErPMJPCgvy6xbBuMcZE3Z2Xese5I6DkmECrzpltpex2zOnqWvaiqm6IOvQGdankSxK2xz8gFntel7XRMZ2/7whKLFjlEN3KSprcUOd0jP40CC+ZimjOFMeW7woEyGjzXF4n4cjt9WeEyji7iVkwtbCBjvJJvM5JkXdhoL6EBpiD3HqI3JElGts/vZVoSq/UPYs6lZ3onnxgBNWLCD6/RFSulmA5MYlVnyPsk1Gle0pYCqMImaoQTQ4vmCZU2Re/yO6zQejy5TbgvGD+OCJMTHuUKWz0bOfAigy+oWZ3/fpU2x5gScUjVooULg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ki5SfqZSgui8p9F3trBBcTU+6h7PjI5NoG/5+VpI8hM=;
+ b=Da8XfgcqIbo7saqxjT6WaFhOVvTtiQhufIEL0jttUfrKRHmkDGm2SxHi3UMdnqodNN8OMJUZfCiURE3merPZp1u3GSzRvYRnTfTxAkWiNTJmQTg4xMfbnDKY5aCP38gF68tJuIHSnjh7nHR211ms6hRiktwpaAkpK42pXC9SQXtDsqlrRpEd0z6JTbgeQSPGGzlRUQ4mhtXqYlGHrPUo5WybF2xxcWsW9K3zDK2hOPVkVodIcHmZ4x9V/dBp35PF+ebrmu4mXiCHcJdPZJyZbGtZH/QvYZNQNz1T3r+SJgcbWGCKeAW+OZc0KmdV0VXyT6d17ohznr8fax7X/B7LiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ki5SfqZSgui8p9F3trBBcTU+6h7PjI5NoG/5+VpI8hM=;
+ b=nksaa7VI4BpaQC7ast0n7Z7XObtcUSbWF8mLuSzkxQUNMKTyo8xsC/zNut5YCycrGLBVM1+oo08PgE+Ue/UDQXMWsekIwHs2aDdOEmzAKnQjBBFOOOnwC0DPsV6NUs/X1Ews9y6SUyj00YOtqgKPz8cK6sK/t1/BLbO05Uh31Ww=
+Received: from CY5PR17CA0030.namprd17.prod.outlook.com (2603:10b6:930:17::19)
+ by LV3PR12MB9215.namprd12.prod.outlook.com (2603:10b6:408:1a0::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9320.15; Thu, 13 Nov
+ 2025 06:18:40 +0000
+Received: from CY4PEPF0000FCC3.namprd03.prod.outlook.com
+ (2603:10b6:930:17:cafe::43) by CY5PR17CA0030.outlook.office365.com
+ (2603:10b6:930:17::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9320.17 via Frontend Transport; Thu,
+ 13 Nov 2025 06:18:40 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ CY4PEPF0000FCC3.mail.protection.outlook.com (10.167.242.105) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9320.13 via Frontend Transport; Thu, 13 Nov 2025 06:18:40 +0000
+Received: from sindhu.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 12 Nov
+ 2025 22:18:36 -0800
+From: Sandipan Das <sandipan.das@amd.com>
+To: <kvm@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+CC: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+	<pbonzini@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Kan Liang
+	<kan.liang@linux.intel.com>, Mingwei Zhang <mizhang@google.com>, Dapeng Mi
+	<dapeng1.mi@linux.intel.com>, "Nikunj A . Dadhania" <nikunj@amd.com>, "Manali
+ Shukla" <manali.shukla@amd.com>, Ravi Bangoria <ravi.bangoria@amd.com>,
+	"Ananth Narayan" <ananth.narayan@amd.com>, Sandipan Das
+	<sandipan.das@amd.com>
+Subject: [RFC PATCH 0/7] KVM: SVM: Support for PMC virtualization
+Date: Thu, 13 Nov 2025 11:48:20 +0530
+Message-ID: <cover.1762960531.git.sandipan.das@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aRTv0eHfX0j8vJOW@casper.infradead.org>
+X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC3:EE_|LV3PR12MB9215:EE_
+X-MS-Office365-Filtering-Correlation-Id: 774fdad7-3c9b-46c5-e807-08de227c7d39
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UnZjZkFrekRCTGV4TWRVU3JXRTJPbUhSa0o5WktKUjB3aXl1NnlHR3hGVlJO?=
+ =?utf-8?B?UW54ZEplL3JuNE50N09uTWN6V3dBSVBYWGNkM3FtSVZsTUZwUHI0bFpiV0g2?=
+ =?utf-8?B?MzRvUEcrcEhzYnNENC9YMG1tTWJRbG5jdWpWcUpaaklHVnoyektvRmVEN0dp?=
+ =?utf-8?B?VDRXckwzQWpJMEwxU2dPTFpsRFFiODlNRlZsbkNzZ2M3TFFPNC9IRTFpN1k3?=
+ =?utf-8?B?NUxlV0FObHRMVnZwa2IwVEx5UGVmNEdZMGEwWXZRRnhiQ0YxaFc4NlFPQzFj?=
+ =?utf-8?B?cEFhL0JsUEo2M1pHdGRvRWZucElnb2Y3WWRpYmRkZDIzelZmS1hlVCt5Y2Fy?=
+ =?utf-8?B?WUpkRmFwMHhNZGU2WUpVaStqL1NFTFRQK0NqTzZnWTlpendqSXplTS94am81?=
+ =?utf-8?B?VE52MDErZ0hyZHhoMjhzWjlxQzhmZXpxM0VwTEZTelRYZUxDMzY3RWFabXpN?=
+ =?utf-8?B?MFRwQjJPT1RHdVc4aWNNbkdqNVNkOEh6YVdEcFlJYlY1bXVVZVBHNmxzdlRE?=
+ =?utf-8?B?dVhBczRBd05rSkdnR2I2UlJueDlwV3RUZE1WY2FicHpoV205cXJxbGpJd1dB?=
+ =?utf-8?B?RHV5c1Q2WksvZnhYazlWQitSRlA2WHdvTTgzMmp4UWJVR3NKN2NPR0Y1U1Zt?=
+ =?utf-8?B?WldYZXFiVW11YUk4eXdlT1Z2UVYyeW9nM0hFc0NPUThSVDRNd1lZWXlUV21V?=
+ =?utf-8?B?UngvWHp1Y1ZKT0NYM2lGdjNZTkFmNTh5RzdLK0ZPb0JWM2pRVHFOTURyVlVx?=
+ =?utf-8?B?SU9JTnFXRmV3TlpRWGlMblpCZndoY2MzY1RQR3VvOVR4cDF4bUhJU1F3Rkpi?=
+ =?utf-8?B?bW5PUjhWMk1WTkptYmZWMThDVXNySlV6UWsxN2E1RWlOYzk3TWVsU0dWTFlD?=
+ =?utf-8?B?ci9mZE0vbStLY3FYOVVTREFLbzJtb0Vrc0VvM1VPNkVISmlldkl4ODBWendB?=
+ =?utf-8?B?RWgvdGQ0aDkwZGw2UTNvVW16WDdCNVZNVGZXTDJDNUVaNHZxckpvU0tEL01R?=
+ =?utf-8?B?bnFEdTdtRktVREVTVkNEZkFZSmdZeUVuYXZEQ0J3NHRhR3NIMEZERTRGcGhK?=
+ =?utf-8?B?VzFXRjZlR2l6Mk81V3daeE1DNHlpMUhJL3hrZFBrdVZRSEVqWTMvRGliRXgx?=
+ =?utf-8?B?TmpzdW5XUUQ2Vm9SaUxDb25HV2FsbDAwL0tJT3U2eTVhZjFWa2NEaFVEWUtK?=
+ =?utf-8?B?RFVUTG1CQUhnZ3RmVDVXTGFyNkZ6YlplL1Znc25UcUQzamp0ZVp1WTBWTU13?=
+ =?utf-8?B?NmxGY0w0UkUxMk52OFlqc0oweStYcjUwUmZRenJyaFdRZHRncTVjZnZhbEE4?=
+ =?utf-8?B?VTZVV1BNZHBkb1lrd0hLNVdPSEFhSHEyVUlJeFZlaE05dTlHUXZoRHBRTmdy?=
+ =?utf-8?B?clBqRmV3MUJQd3BnSW10MjY4aGFUbXlSVzJTWEJ2bnpIbGdUZWZ3bzM1emtk?=
+ =?utf-8?B?ZkJWTFBrVmVYQ0tCVXlwckFyOEc5QklUWm9OWEYrS3J5RWRvN3ZwZm9LV1Rp?=
+ =?utf-8?B?c1l2cDkvZmM4U0NtZXU1Z0h4RkFjcFVhREEveVJqMTR2MC9hTlBMT2gyRHk0?=
+ =?utf-8?B?NGExbmVubnNNRGFrdlVHbU9oLzMwRzZVL3JtQVRIanM1cnhCdmRxYWhXVElD?=
+ =?utf-8?B?Z043cTYvejViNWVYT1pyR3U0ZkZNWmtTQXJJa3o1Q0tBMmo1eGxrcGNQMklw?=
+ =?utf-8?B?RlRCNmd1dFU1VnJDNS9UNzFwaEtrOGtnZnNtelJaSkVMMlBhZFZ4Y3NsOXY4?=
+ =?utf-8?B?WnhySG15RUptRm1ZUGFEaGVMdmRvYkRRTnBIaDhabXM5QUt2VWN6dG5JcWhM?=
+ =?utf-8?B?NlZycDZJTngrV1hmWmhUSFFlcGs2blgzeE14ZWxWOU5zZm1kSW5FS0RuUVNZ?=
+ =?utf-8?B?Y1hxSXJyZ3JvdUJuRmJuazhLenA3bWNqUjFEYUY4MmFCbW1lQnJuNnNFblpl?=
+ =?utf-8?B?bmYvWEpaTDlmSTJNVm1wY29WMGNBZTNseGpnVjVWemoxU2N2VjNFckxmcHhr?=
+ =?utf-8?B?L1RCVC9OR2FqOWZ2NzZ1bVZxTENQNmpMN1Z1V2VpSlMwOGJOdVdvOGQ3N1Qz?=
+ =?utf-8?Q?aTvlwS?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Nov 2025 06:18:40.4538
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 774fdad7-3c9b-46c5-e807-08de227c7d39
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000FCC3.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9215
 
-On Wed, Nov 12, 2025 at 08:36:33PM +0000, Matthew Wilcox wrote:
-> [dropping all the individual email addresses; leaving only the
-> mailing lists]
-> 
-> On Wed, Nov 12, 2025 at 10:14:29AM +0800, Jinchao Wang wrote:
-> > On Mon, Nov 10, 2025 at 05:33:22PM +0000, Matthew Wilcox wrote:
-> > > On Tue, Nov 11, 2025 at 12:35:55AM +0800, Jinchao Wang wrote:
-> > > > Earlier this year, I debugged a stack corruption panic that revealed the
-> > > > limitations of existing debugging tools. The bug persisted for 739 days
-> > > > before being fixed (CVE-2025-22036), and my reproduction scenario
-> > > > differed from the CVE report—highlighting how unpredictably these bugs
-> > > > manifest.
-> > > 
-> > > Well, this demonstrates the dangers of keeping this problem siloed
-> > > within your own exfat group.  The fix made in 1bb7ff4204b6 is wrong!
-> > > It was fixed properly in 7375f22495e7 which lists its Fixes: as
-> > > Linux-2.6.12-rc2, but that's simply the beginning of git history.
-> > > It's actually been there since v2.4.6.4 where it's documented as simply:
-> > > 
-> > >       - some subtle fs/buffer.c race conditions (Andrew Morton, me)
-> > > 
-> > > As far as I can tell the changes made in 1bb7ff4204b6 should be
-> > > reverted.
-> > 
-> > Thank you for the correction and the detailed history. I wasn't aware this
-> > dated back to v2.4.6.4. I'm not part of the exfat group; I simply
-> > encountered a bug that 1bb7ff4204b6 happened to resolve in my scenario.
-> > The timeline actually illustrates the exact problem KStackWatch addresses:
-> > a bug introduced in 2001, partially addressed in 2025, then properly fixed
-> > months later. The 24-year gap suggests these silent stack corruptions are
-> > extremely difficult to locate.
-> 
-> I think that's a misdiagnosis caused by not understanding the limited
-> circumstances in which the problem occurs.  To hit this problem, you
-> have to have a buffer_head allocated on the stack.  That doesn't happen
-> in many places:
-> 
-> fs/buffer.c:    struct buffer_head tmp = {
-> fs/direct-io.c: struct buffer_head map_bh = { 0, };
-> fs/ext2/super.c:        struct buffer_head tmp_bh;
-> fs/ext2/super.c:        struct buffer_head tmp_bh;
-> fs/ext4/mballoc-test.c: struct buffer_head bitmap_bh;
-> fs/ext4/mballoc-test.c: struct buffer_head gd_bh;
-> fs/gfs2/bmap.c: struct buffer_head bh;
-> fs/gfs2/bmap.c: struct buffer_head bh;
-> fs/isofs/inode.c:       struct buffer_head dummy;
-> fs/jfs/super.c: struct buffer_head tmp_bh;
-> fs/jfs/super.c: struct buffer_head tmp_bh;
-> fs/mpage.c:     struct buffer_head map_bh;
-> fs/mpage.c:     struct buffer_head map_bh;
-> 
-> It's far more common for buffer_heads to be allocated from slab and
-> attached to folios.  The other necessary condition to hit this problem
-> is that get_block() has to actually read the data from disk.  That's
-> not normal either!  Most filesystems just fill in the metadata about
-> the block and defer the actual read to when the data is wanted.  That's
-> the high-performance way to do it.
-> 
-> So our opportunity to catch this bug was highly limited by the fact that
-> we just don't run the codepaths that would allow it to trigger.
-> 
-> > > > Initially, I enabled KASAN, but the bug did not reproduce. Reviewing the
-> > > > code in __blk_flush_plug(), I found it difficult to trace all logic
-> > > > paths due to indirect function calls through function pointers.
-> > > 
-> > > So why is the solution here not simply to fix KASAN instead of this
-> > > giant patch series?
-> > 
-> > KASAN caught 7375f22495e7 because put_bh() accessed bh->b_count after
-> > wait_on_buffer() of another thread returned—the stack was invalid.
-> > In 1bb7ff4204b6 and my case, corruption occurred before the victim
-> > function of another thread returned. The stack remained valid to KASAN,
-> > so no warning triggered. This is timing-dependent, not a KASAN deficiency.
-> 
-> I agree that it's a narrow race window, but nevertheless KASAN did catch
-> it with ntfs and not with exfat.  The KASAN documentation states that
-> it can catch this kind of bug:
-> 
-> Generic KASAN supports finding bugs in all of slab, page_alloc, vmap, vmalloc,
-> stack, and global memory.
-> 
-> Software Tag-Based KASAN supports slab, page_alloc, vmalloc, and stack memory.
-> 
-> Hardware Tag-Based KASAN supports slab, page_alloc, and non-executable vmalloc
-> memory.
-> 
-> (hm, were you using hwkasan instead of swkasan, and that's why you
-> couldn't see it?)
-> 
-You're right that these conditions are narrow. However, when these bugs
-hit, they're severe and extremely difficult to debug. This year alone,
-this specific buffer_head bug was hit at least twice: 1bb7ff4204b6 and my
-case. Over 24 years, others likely encountered it but lacked tools to
-pinpoint the root cause.
+AMD Zen 5 processors introduced PMC virtualization. When the feature is
+enabled, hardware can restore and save the guest PMU state at VM-Entry
+and VM-Exit respectively. The host PMU state still needs to be managed
+by software and this is done with the help of the Mediated PMU framework
+which can schedule the host perf events in or out.
 
-I used software KASAN for the exfat case, but the bug didn't reproduce,
-likely due to timing changes from the overhead. More fundamentally, the
-corruption was in-bounds within active stack frames, which KASAN cannot
-detect by design.
+This feature is documented under Section 15.39 in Volume 2 of the AMD64
+Architecture Programmer’s Manual which can be found below.
+https://bugzilla.kernel.org/attachment.cgi?id=306250
 
-Beyond buffer_head, I encountered another stack corruption bug in network
-drivers this year. Without KStackWatch, I had to manually instrument the
-code to locate where corruption occurred.
+The guest PMU state is saved in the VMCB. Hence, struct kvm_pmu goes out
+of sync and does not have the latest PMU state. In some cases, such as
+during event filtering or instruction emulation, the VMCB needs to be
+accessed for reading or writing the current register state. This is done
+using host-initiated MSR accesses but the method may not be ideal and
+perhaps requires additional PMU ops to be introduced. The goal is to
+have data in vendor-specific structures like VMCB functions accessible
+to some of the common KVM x86 PMU functions.
 
-These issues may be more common than they appear. Given Linux's massive
-user base combined with the kernel's huge codebase and the large volume of
-driver code, both in-tree and out-of-tree, even narrow conditions will be
-hit.
+Any feedback is appreciated.
 
-Since posting earlier versions, several developers have contacted me about
-using KStackWatch for their own issues. KStackWatch fills a gap: it can
-pinpoint in-bounds stack corruption with much lower overhead than KASAN.
+Patch Summary
+  * The first three patches add new feature bits and capability flags
+    to detect and advertise support for hardware PMU virtualization.
+  * The fourth patch extends Mediated PMU to make use of hardware PMU
+    virtualization.
+  * The remaining patches add the vendor-specific changes for PMC
+    virtualization.
+
+TODOs
+  * Add appropriate KVM PMU ops to access MSR states from the VMCB.
+  * Make MSR states in the VMCB accessible via KVM_{GET,SET}_MSRS.
+  * Support for SEV-ES and SEV-SNP guests.
+  * Support for nested guests (nSVM).
+  * Support for the IRPerfCount register which is a free-running
+    instructions retired counter.
+
+Testing
+  * Used three different guest PMU configurations.
+    * PerfMonV2 capable - 6 counters with Global Control and Status
+      registers (Zen 4 and later).
+    * PerfCtrExtCore capable - 6 counters but no Global Control and
+      Status registers (Zen 3 and older).
+    * Legacy Guest - 4 counters only (pre-Zen, older than Family 15h).
+  * KVM Unit Tests passed.
+  * Perf Fuzzer passed.
+
+The patches should be applied over v5 of the Mediated PMU series [1]
+along with an RDPMC interception fix [2].
+
+[1] https://lore.kernel.org/all/20250806195706.1650976-1-seanjc@google.com/
+[2] https://lore.kernel.org/all/aN1vfykNs8Dmv_g0@google.com/
+
+Sandipan Das (7):
+  perf: Add a capability for hardware virtualized PMUs
+  x86/cpufeatures: Add PerfCtrVirt feature bit
+  perf/x86/amd/core: Set PERF_PMU_CAP_VIRTUALIZED_VPMU
+  KVM: x86/pmu: Add support for hardware virtualized PMUs
+  KVM: SVM: Add VMCB fields for PMC virtualization
+  KVM: SVM: Add support for PMC virtualization
+  KVM: SVM: Adjust MSR index for legacy guests
+
+ arch/x86/events/amd/core.c         |   3 +
+ arch/x86/events/core.c             |   1 +
+ arch/x86/include/asm/cpufeatures.h |   1 +
+ arch/x86/include/asm/perf_event.h  |   1 +
+ arch/x86/include/asm/svm.h         |  12 ++-
+ arch/x86/kvm/pmu.c                 |  94 ++++++++++++++++++-----
+ arch/x86/kvm/pmu.h                 |   6 ++
+ arch/x86/kvm/svm/pmu.c             | 115 +++++++++++++++++++++++++++++
+ arch/x86/kvm/svm/svm.c             |  52 +++++++++++++
+ arch/x86/kvm/svm/svm.h             |   1 +
+ arch/x86/kvm/vmx/pmu_intel.c       |   1 +
+ arch/x86/kvm/x86.c                 |   4 +
+ arch/x86/kvm/x86.h                 |   1 +
+ include/linux/perf_event.h         |   1 +
+ 14 files changed, 273 insertions(+), 20 deletions(-)
+
+-- 
+2.43.0
+
