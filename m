@@ -1,55 +1,55 @@
 Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796992F5A07
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 18:05:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18DB335A127
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 18:05:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763057151; cv=none; b=RtuolpC8+qo8Y9y/elhbk8P/Xez01NM6achyZihsGw76MF+YNMAMDv5evlldMcmQX3FezdtIacUyLQVQ8a6H7MKBN8RxsmED7PF6y/SHUFL68u5pVLIM1Wt6YAo0QdL+nSYID8XqvzgBuLAhLLE4Nn1qKZQ2qUUKKiORQUteGpY=
+	t=1763057153; cv=none; b=mVskPFwFaxkBvr80TTPj3+bf5w+4YmkpQT7+ECDyAH0+Oq2TW57U2J684tpsi0RwFEXnDKxRXgfBOpVce5wwYeaGq8UQvEdUDnhdj1gI3b0OR5gJTYt1dyLSViF9CRe1qIjKziS+72OIYLs/UvnBxtBHmBzcYX+VI5jPcrd4qN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763057151; c=relaxed/simple;
-	bh=74ic2NR19Qj1jkhqoFr5/GAzNGfc9K6j6Uwf4Hjc/ss=;
+	s=arc-20240116; t=1763057153; c=relaxed/simple;
+	bh=hVJICGlrUy8MMJWuUtg1ckaMNBO234W7zrw4C+CGyhw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=KYLQJincppqa5OLzqY1o93rAUggqNx+fjWVPfZTps+GwJ8evpA/b2yaInnfUYgXUIL6p6sdkN+V1rhAHD+SPW8gxDQop6h24L9NXmRSkSceTooFVrUuQ1OiuLhiwT369AT7rieysgknoABFDkt/XTCKrKjkadVvoaBVCDljgNtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mri/KYzG; arc=none smtp.client-ip=209.85.215.202
+	 To:Content-Type; b=ZcNyxS+hqmaaaJCeYVEylKOOuhQttS/geap3hypja7nTNxZEBGbUFLhUhaiTZoHKYPCGhco40K7rCC1lyvpLoeS3RyDKGETNkLGvfTnbTHpuzTI6BQWHuJwXcIE4zesSNLjjpi5ab1Fa3oVdh768U5N6sT2DD0b8PzUXv3m+7U8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q/IN6cYR; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mri/KYzG"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b5533921eb2so930859a12.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 10:05:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q/IN6cYR"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b95d06db747so1745512a12.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 10:05:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763057149; x=1763661949; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1763057151; x=1763661951; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=JvaqfEqqQj/hZXmBgRInugRb7NiwpIIhCyLsGdqnH4o=;
-        b=mri/KYzGgwNibHkgXkR6nA8YW7d7+yF4GCCymoKxubSUAMemno6qhBFsk+x6Ng8MC3
-         bo2W5Har5/+mQrt0JDaTCT12rV1YUFBsWYdIjOUcZWi9Vr8NqNt1jtIAdsT8VbTbVaKI
-         wacYDUBBMHc4uUPMrwT6nbe3oMhW1J58g8FcHCkYNW4XSsrq6CPQlUzkw6IS3K9Gz6Ol
-         LusZ43K+033Pm3IEKJcZQj7FKCCDrEy6p8DU7cS67OECI6hg5VgmZhQl+8yHIanof7Og
-         zSbHeeItWQhY4XNFAXabmDIlUSAQBB6yaC85ZRIexyofaEWG2Jb54tWA5F73ztpXbBaF
-         dzRg==
+        bh=g1FXHzBhA2SQQSmsUII/uTyO8cL2QPYiQNF1YetQubM=;
+        b=q/IN6cYR5aISncm8WszH5O+k5QUcR+2VJG6+Yfdu4X0qmIig8sBmOQ2kbnrGZKOQES
+         W0PA2GVuqHqfOByDtUez47QiSaNE+kno6cwAN27JvLTE8q7nHKdYAvzmJVuMgHkbcmDk
+         c2sRJEdtYSstP72R4ipL+EcSlJXoPqDIHj40BuqMuvB75tJkfv9gD9giKGZijfBXmC8g
+         24AULUJrKElH9nhPBKxaEUHCfpiLckp0WLLWJHkMPN2NLB55ehhX1RyTRVDdNPqsT6C6
+         sLSVnYW6FB9AKR9dwrD+U6U5bZ5+YGY9q+c7oc7S88p1CgSvAZA7SY2PAvR8rDYkbm3F
+         I57g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763057149; x=1763661949;
+        d=1e100.net; s=20230601; t=1763057151; x=1763661951;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JvaqfEqqQj/hZXmBgRInugRb7NiwpIIhCyLsGdqnH4o=;
-        b=T5w+3otzTsg/mQShWczfFDGFpIXH1ajaKEHDPsSwKefyU1t7hQ5Jc8KIA5hQdLD3q7
-         THC9k/MkkVZICSpOkwStUszcOdNLkm41sIeUUpPaqacPEHe1u7lOP93u3sTqwJNiMGnT
-         88HuLwJcSrT8v9EcthR/d50DCiNHbN0BM/K4WHwL7jpQIc442BhO4VG0fAky/u7BbZ3J
-         mGfcjTJ8PRApeDotj4dWVpMwdlu5+spNqJ4jxw6fu2Qu8qbel+0uCXYTHyks7dYcQ/dy
-         d3a1E4xaMF7ky2BgV36GfPCsbbaVb2AFOTbjV/G8r8mDuTbn0Hfk3zDJabPBTKDAL8gg
-         xASQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXSQgiSo51bnoyH3nt8bSotnqRoaDyjnNpvJP1Zc+nW0jdhKjSNFzCadzeh2nU7SgxfrqPSYur9taGpZwiDTcBr@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcWWnZsISKSY/Pk4w8k4KAY4FRs8LWdEkKb0YXd5xl4ydEALfe
-	uD5tCtFXyHdDrsGTCO0AA/eVhGupzsRX1rH3UclrU+KPmsSsWfEwQfJLa3O3l4hK2QEtjFoTzgd
-	tQB7H2Zmi8w==
-X-Google-Smtp-Source: AGHT+IF0NwPOIq3TmGs4pfWbaVyz7eK77f2zPBftHfCowiKCgIk6oaj+NWaIDUfX61uCgGqUhOiGvhsMQt2A
-X-Received: from dycne3.prod.google.com ([2002:a05:7301:c83:b0:2a4:51e8:c5c8])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7300:bc1a:b0:2a4:3593:6466
- with SMTP id 5a478bee46e88-2a4abb1cf05mr160511eec.22.1763057148729; Thu, 13
- Nov 2025 10:05:48 -0800 (PST)
-Date: Thu, 13 Nov 2025 10:05:09 -0800
+        bh=g1FXHzBhA2SQQSmsUII/uTyO8cL2QPYiQNF1YetQubM=;
+        b=YwSIhQYlIHzw9ZEZbcMUEVYdAWMpXiif8CwpeUy7GqbD8i8R6AL1TIdV8/X3u2l7D+
+         Sg9qgAn+M9AkCoTCNdwfut94c4hW+8ktnp8HbqQ39Zos67XSReBaHorO+dNVgEyF9nLv
+         h/RsiM8ptcox5W7g9Euv5cSUINHyECSZvqLLHLi4uQouxlPwuRm5Gw6HNWm0uoO4gyXb
+         xQ6Vl1Chk/6MD5K8QlGMfiJUc2IHQeCU895bvBooIeZgBzoKSH5pfHu+1uHl2K9jUe6t
+         VIIL/fzkzDPce+IxJa4wzGwDQqwBTHApl+fpJzAJthVUSHuGJDfJo76dgU4zPV7nJC/s
+         1YTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVB4692PQxlGZmgeCACR1UeKyYPMm++Mtxo32FH0wmbxYLDcRYk+LFozqCe7D0uUBRkdaF//zvbEn1GJTYK9Rvb@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQxSOW7jpQ0cr7QtU7OTs6ag/MK6ckGzFx2lVVbhydXzfwSfB6
+	HbZgy0uT9it3hkZme34NYwqsJAx58W/55EKqPmdNs3TJbvKW+R9w5/CR0lOr8ZNQ/NJ/Mjrk7Mk
+	HtF6tokZRog==
+X-Google-Smtp-Source: AGHT+IGtzsF5urWKveWPScCG0h+dMh3vXRquU320w0u1H20MqrHGTFvpU8Dd08FOYTy1HNYzKtEOtnJe5xyJ
+X-Received: from dykh19.prod.google.com ([2002:a05:7300:5713:b0:2a4:738e:9908])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:fd03:b0:2a4:3593:ccb9
+ with SMTP id 5a478bee46e88-2a4ab230e56mr118302eec.0.1763057150808; Thu, 13
+ Nov 2025 10:05:50 -0800 (PST)
+Date: Thu, 13 Nov 2025 10:05:10 -0800
 In-Reply-To: <20251113180517.44096-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251113180517.44096-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.rc1.455.g30608eb744-goog
-Message-ID: <20251113180517.44096-4-irogers@google.com>
-Subject: [PATCH v4 03/10] perf tool_pmu: Use old_count when computing count
- values for time events
+Message-ID: <20251113180517.44096-5-irogers@google.com>
+Subject: [PATCH v4 04/10] perf stat-shadow: Read tool events directly
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -74,178 +73,204 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-When running in interval mode every third count of a time event isn't
-showing properly:
-```
-$ perf stat -e duration_time -a -I 1000
-     1.001082862      1,002,290,425      duration_time
-     2.004264262      1,003,183,516      duration_time
-     3.007381401      <not counted>      duration_time
-     4.011160141      1,003,705,631      duration_time
-     5.014515385      1,003,290,110      duration_time
-     6.018539680      <not counted>      duration_time
-     7.022065321      1,003,591,720      duration_time
-```
-The regression came in with a different fix, found through bisection,
-commit 68cb1567439f ("perf tool_pmu: Fix aggregation on
-duration_time"). The issue is caused by the enabled and running time
-of the event matching the old_count's and creating a delta of 0, which
-is indicative of an error.
+When reading time values for metrics don't use the globals updated in
+builtin-stat, just read the events as regular events. The only
+exception is for time events where nanoseconds need converting to
+seconds as metrics assume time metrics are in seconds.
 
-Fixes: 68cb1567439f ("perf tool_pmu: Fix aggregation on duration_time")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c  | 16 +++++++++--
- tools/perf/util/tool_pmu.c | 59 +++++++++++++++++++++-----------------
- 2 files changed, 46 insertions(+), 29 deletions(-)
+ tools/perf/util/stat-shadow.c | 149 +++++++++++++++-------------------
+ 1 file changed, 66 insertions(+), 83 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 095016b2209e..654f840f7a2f 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -283,17 +283,27 @@ static int read_single_counter(struct evsel *counter, int cpu_map_idx, int threa
- 	if (err && cpu_map_idx == 0 &&
- 	    (evsel__tool_event(counter) == TOOL_PMU__EVENT_USER_TIME ||
- 	     evsel__tool_event(counter) == TOOL_PMU__EVENT_SYSTEM_TIME)) {
--		u64 val, *start_time;
- 		struct perf_counts_values *count =
- 			perf_counts(counter->counts, cpu_map_idx, thread);
-+		struct perf_counts_values *old_count = NULL;
-+		u64 val;
-+
-+		if (counter->prev_raw_counts)
-+			old_count = perf_counts(counter->prev_raw_counts, cpu_map_idx, thread);
- 
--		start_time = xyarray__entry(counter->start_times, cpu_map_idx, thread);
- 		if (evsel__tool_event(counter) == TOOL_PMU__EVENT_USER_TIME)
- 			val = ru_stats.ru_utime_usec_stat.mean;
- 		else
- 			val = ru_stats.ru_stime_usec_stat.mean;
--		count->ena = count->run = *start_time + val;
-+
- 		count->val = val;
-+		if (old_count) {
-+			count->run = old_count->run + 1;
-+			count->ena = old_count->ena + 1;
-+		} else {
-+			count->run++;
-+			count->ena++;
-+		}
- 		return 0;
- 	}
- 	return err;
-diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
-index a72c665ee644..6a9df3dc0e07 100644
---- a/tools/perf/util/tool_pmu.c
-+++ b/tools/perf/util/tool_pmu.c
-@@ -446,16 +446,39 @@ bool tool_pmu__read_event(enum tool_pmu_event ev,
- 	}
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index b3b482e1808f..6c1ad78604e1 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -26,7 +26,32 @@ void perf_stat__reset_shadow_stats(void)
+ 	memset(&ru_stats, 0, sizeof(ru_stats));
  }
  
-+static void perf_counts__update(struct perf_counts_values *count,
-+				const struct perf_counts_values *old_count,
-+				bool raw, u64 val)
+-static int prepare_metric(const struct metric_expr *mexp,
++static bool tool_pmu__is_time_event(const struct perf_stat_config *config,
++				   const struct evsel *evsel, int *tool_aggr_idx)
 +{
-+	/*
-+	 * The values of enabled and running must make a ratio of 100%. The
-+	 * exact values don't matter as long as they are non-zero to avoid
-+	 * issues with evsel__count_has_error.
-+	 */
-+	if (old_count) {
-+		count->val = raw ? val : old_count->val + val;
-+		count->run = old_count->run + 1;
-+		count->ena = old_count->ena + 1;
-+		count->lost = old_count->lost;
-+	} else {
-+		count->val = val;
-+		count->run++;
-+		count->ena++;
-+		count->lost = 0;
++	enum tool_pmu_event event = evsel__tool_event(evsel);
++	int aggr_idx;
++
++	if (event != TOOL_PMU__EVENT_DURATION_TIME &&
++	    event != TOOL_PMU__EVENT_USER_TIME &&
++	    event != TOOL_PMU__EVENT_SYSTEM_TIME)
++		return false;
++
++	if (config) {
++		cpu_aggr_map__for_each_idx(aggr_idx, config->aggr_map) {
++			if (config->aggr_map->map[aggr_idx].cpu.cpu == 0) {
++				*tool_aggr_idx = aggr_idx;
++				return true;
++			}
++		}
++		pr_debug("Unexpected CPU0 missing in aggregation for tool event.\n");
 +	}
++	*tool_aggr_idx = 0; /* Assume the first aggregation index works. */
++	return true;
 +}
 +
- int evsel__tool_pmu_read(struct evsel *evsel, int cpu_map_idx, int thread)
- {
- 	__u64 *start_time, cur_time, delta_start;
--	u64 val;
--	int fd, err = 0;
-+	int err = 0;
- 	struct perf_counts_values *count, *old_count = NULL;
- 	bool adjust = false;
- 	enum tool_pmu_event ev = evsel__tool_event(evsel);
++static int prepare_metric(struct perf_stat_config *config,
++			  const struct metric_expr *mexp,
+ 			  const struct evsel *evsel,
+ 			  struct expr_parse_ctx *pctx,
+ 			  int aggr_idx)
+@@ -36,93 +61,51 @@ static int prepare_metric(const struct metric_expr *mexp,
+ 	int i;
  
- 	count = perf_counts(evsel->counts, cpu_map_idx, thread);
-+	if (evsel->prev_raw_counts)
-+		old_count = perf_counts(evsel->prev_raw_counts, cpu_map_idx, thread);
+ 	for (i = 0; metric_events[i]; i++) {
++		int source_count = 0, tool_aggr_idx;
++		bool is_tool_time =
++			tool_pmu__is_time_event(config, metric_events[i], &tool_aggr_idx);
++		struct perf_stat_evsel *ps = metric_events[i]->stats;
++		struct perf_stat_aggr *aggr;
+ 		char *n;
+ 		double val;
+-		int source_count = 0;
  
- 	switch (ev) {
- 	case TOOL_PMU__EVENT_HAS_PMEM:
-@@ -466,12 +489,11 @@ int evsel__tool_pmu_read(struct evsel *evsel, int cpu_map_idx, int thread)
- 	case TOOL_PMU__EVENT_NUM_PACKAGES:
- 	case TOOL_PMU__EVENT_SLOTS:
- 	case TOOL_PMU__EVENT_SMT_ON:
--	case TOOL_PMU__EVENT_SYSTEM_TSC_FREQ:
- 	case TOOL_PMU__EVENT_CORE_WIDE:
- 	case TOOL_PMU__EVENT_TARGET_CPU:
--		if (evsel->prev_raw_counts)
--			old_count = perf_counts(evsel->prev_raw_counts, cpu_map_idx, thread);
--		val = 0;
-+	case TOOL_PMU__EVENT_SYSTEM_TSC_FREQ: {
-+		u64 val = 0;
+-		if (evsel__is_tool(metric_events[i])) {
+-			struct stats *stats;
+-			double scale;
+-
+-			switch (evsel__tool_event(metric_events[i])) {
+-			case TOOL_PMU__EVENT_DURATION_TIME:
+-				stats = &walltime_nsecs_stats;
+-				scale = 1e-9;
+-				break;
+-			case TOOL_PMU__EVENT_USER_TIME:
+-				stats = &ru_stats.ru_utime_usec_stat;
+-				scale = 1e-6;
++		/*
++		 * If there are multiple uncore PMUs and we're not reading the
++		 * leader's stats, determine the stats for the appropriate
++		 * uncore PMU.
++		 */
++		if (evsel && evsel->metric_leader &&
++		    evsel->pmu != evsel->metric_leader->pmu &&
++		    mexp->metric_events[i]->pmu == evsel->metric_leader->pmu) {
++			struct evsel *pos;
 +
- 		if (cpu_map_idx == 0 && thread == 0) {
- 			if (!tool_pmu__read_event(ev, evsel,
- 						  stat_config.system_wide,
-@@ -481,16 +503,9 @@ int evsel__tool_pmu_read(struct evsel *evsel, int cpu_map_idx, int thread)
- 				val = 0;
++			evlist__for_each_entry(evsel->evlist, pos) {
++				if (pos->pmu != evsel->pmu)
++					continue;
++				if (pos->metric_leader != mexp->metric_events[i])
++					continue;
++				ps = pos->stats;
++				source_count = 1;
+ 				break;
+-			case TOOL_PMU__EVENT_SYSTEM_TIME:
+-				stats = &ru_stats.ru_stime_usec_stat;
+-				scale = 1e-6;
+-				break;
+-			case TOOL_PMU__EVENT_NONE:
+-				pr_err("Invalid tool event 'none'");
+-				abort();
+-			case TOOL_PMU__EVENT_MAX:
+-				pr_err("Invalid tool event 'max'");
+-				abort();
+-			case TOOL_PMU__EVENT_HAS_PMEM:
+-			case TOOL_PMU__EVENT_NUM_CORES:
+-			case TOOL_PMU__EVENT_NUM_CPUS:
+-			case TOOL_PMU__EVENT_NUM_CPUS_ONLINE:
+-			case TOOL_PMU__EVENT_NUM_DIES:
+-			case TOOL_PMU__EVENT_NUM_PACKAGES:
+-			case TOOL_PMU__EVENT_SLOTS:
+-			case TOOL_PMU__EVENT_SMT_ON:
+-			case TOOL_PMU__EVENT_SYSTEM_TSC_FREQ:
+-			case TOOL_PMU__EVENT_CORE_WIDE:
+-			case TOOL_PMU__EVENT_TARGET_CPU:
+-			default:
+-				pr_err("Unexpected tool event '%s'", evsel__name(metric_events[i]));
+-				abort();
  			}
- 		}
--		if (old_count) {
--			count->val = old_count->val + val;
--			count->run = old_count->run + 1;
--			count->ena = old_count->ena + 1;
+-			val = avg_stats(stats) * scale;
+-			source_count = 1;
 -		} else {
--			count->val = val;
--			count->run++;
--			count->ena++;
--		}
-+		perf_counts__update(count, old_count, /*raw=*/false, val);
- 		return 0;
-+	}
- 	case TOOL_PMU__EVENT_DURATION_TIME:
- 		/*
- 		 * Pretend duration_time is only on the first CPU and thread, or
-@@ -506,9 +521,9 @@ int evsel__tool_pmu_read(struct evsel *evsel, int cpu_map_idx, int thread)
- 	case TOOL_PMU__EVENT_USER_TIME:
- 	case TOOL_PMU__EVENT_SYSTEM_TIME: {
- 		bool system = evsel__tool_event(evsel) == TOOL_PMU__EVENT_SYSTEM_TIME;
-+		int fd = FD(evsel, cpu_map_idx, thread);
+-			struct perf_stat_evsel *ps = metric_events[i]->stats;
+-			struct perf_stat_aggr *aggr;
+-
++		}
++		/* Time events are always on CPU0, the first aggregation index. */
++		aggr = &ps->aggr[is_tool_time ? tool_aggr_idx : aggr_idx];
++		if (!aggr || !metric_events[i]->supported) {
+ 			/*
+-			 * If there are multiple uncore PMUs and we're not
+-			 * reading the leader's stats, determine the stats for
+-			 * the appropriate uncore PMU.
++			 * Not supported events will have a count of 0, which
++			 * can be confusing in a metric. Explicitly set the
++			 * value to NAN. Not counted events (enable time of 0)
++			 * are read as 0.
+ 			 */
+-			if (evsel && evsel->metric_leader &&
+-			    evsel->pmu != evsel->metric_leader->pmu &&
+-			    mexp->metric_events[i]->pmu == evsel->metric_leader->pmu) {
+-				struct evsel *pos;
+-
+-				evlist__for_each_entry(evsel->evlist, pos) {
+-					if (pos->pmu != evsel->pmu)
+-						continue;
+-					if (pos->metric_leader != mexp->metric_events[i])
+-						continue;
+-					ps = pos->stats;
+-					source_count = 1;
+-					break;
+-				}
+-			}
+-			aggr = &ps->aggr[aggr_idx];
+-			if (!aggr)
+-				break;
+-
+-			if (!metric_events[i]->supported) {
+-				/*
+-				 * Not supported events will have a count of 0,
+-				 * which can be confusing in a
+-				 * metric. Explicitly set the value to NAN. Not
+-				 * counted events (enable time of 0) are read as
+-				 * 0.
+-				 */
+-				val = NAN;
+-				source_count = 0;
+-			} else {
+-				val = aggr->counts.val;
+-				if (!source_count)
+-					source_count = evsel__source_count(metric_events[i]);
+-			}
++			val = NAN;
++			source_count = 0;
++		} else {
++			val = aggr->counts.val;
++			if (is_tool_time)
++				val *= 1e-9; /* Convert time event nanoseconds to seconds. */
++			if (!source_count)
++				source_count = evsel__source_count(metric_events[i]);
+ 		}
+ 		n = strdup(evsel__metric_id(metric_events[i]));
+ 		if (!n)
+@@ -168,7 +151,7 @@ static void generic_metric(struct perf_stat_config *config,
+ 		pctx->sctx.user_requested_cpu_list = strdup(config->user_requested_cpu_list);
+ 	pctx->sctx.runtime = runtime;
+ 	pctx->sctx.system_wide = config->system_wide;
+-	i = prepare_metric(mexp, evsel, pctx, aggr_idx);
++	i = prepare_metric(config, mexp, evsel, pctx, aggr_idx);
+ 	if (i < 0) {
+ 		expr__ctx_free(pctx);
+ 		return;
+@@ -229,7 +212,7 @@ double test_generic_metric(struct metric_expr *mexp, int aggr_idx)
+ 	if (!pctx)
+ 		return NAN;
  
- 		start_time = xyarray__entry(evsel->start_times, cpu_map_idx, thread);
--		fd = FD(evsel, cpu_map_idx, thread);
- 		lseek(fd, SEEK_SET, 0);
- 		if (evsel->pid_stat) {
- 			/* The event exists solely on 1 CPU. */
-@@ -542,17 +557,9 @@ int evsel__tool_pmu_read(struct evsel *evsel, int cpu_map_idx, int thread)
- 	if (adjust) {
- 		__u64 ticks_per_sec = sysconf(_SC_CLK_TCK);
+-	if (prepare_metric(mexp, /*evsel=*/NULL, pctx, aggr_idx) < 0)
++	if (prepare_metric(/*config=*/NULL, mexp, /*evsel=*/NULL, pctx, aggr_idx) < 0)
+ 		goto out;
  
--		delta_start *= 1000000000 / ticks_per_sec;
-+		delta_start *= 1e9 / ticks_per_sec;
- 	}
--	count->val    = delta_start;
--	count->lost   = 0;
--	/*
--	 * The values of enabled and running must make a ratio of 100%. The
--	 * exact values don't matter as long as they are non-zero to avoid
--	 * issues with evsel__count_has_error.
--	 */
--	count->ena++;
--	count->run++;
-+	perf_counts__update(count, old_count, /*raw=*/true, delta_start);
- 	return 0;
- }
- 
+ 	if (expr__parse(&ratio, pctx, mexp->metric_expr))
 -- 
 2.51.2.1041.gc1ab5b90ca-goog
 
