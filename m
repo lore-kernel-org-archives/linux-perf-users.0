@@ -1,55 +1,55 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4879D30BF55
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 03:21:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5003930CD88
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 03:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763004090; cv=none; b=HeUAyklKYn8ILbB7AALQhoREyg52a5VpRao6cuxV9pzfy3ytiSineR7Rlz39Amulh97RGdgLpgBYu+Z3QxTayAfpESYt8UJUxM3gbIDVeftkYUGnNlJUJicyRf5t0sR30r9v1XlV9SxwGCG4tKRQ51s4Oy7agZ3A2EZ/PgTBKmM=
+	t=1763004092; cv=none; b=OFNEjnkjAwIGz5g9xDhXbISPTPNK5fM3fZ4H/e6NbI4TkYbF1bkiidjq5vemGLKJ0SQCvg33lKcVvUNJgziI9QRMiNJee6rqZ0rig3QzUvefi8kykskHRdDSF+LB6/w3emHnTWgM1Nd8+pEYAknONQQNv1tngljmVn6/zlTefYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763004090; c=relaxed/simple;
-	bh=MTpvxNQIsbhE+YweGRvxHhdlQZZ2uFXAAWC1hzEIqfY=;
+	s=arc-20240116; t=1763004092; c=relaxed/simple;
+	bh=H32Kmb4s4EUbi5GaQqYvBoOMfwS8An4o87KjgWVGEGk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=pj9Sw7niLxsZSEoX86kitt5qOfWcmCmzIEivCYxqZSK/8vbbpPavqUxFF7J207Ec8VLNTfY0HwC6w0PA6CuoiPMGuG/wtKxvvckGy9bczJm/s4kD81572wByyhTp6G0jfbbMbZS2fyBQ6VUB1Y3Nprk5W63IZvjC+YBJs/A9NCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QQMHA3kt; arc=none smtp.client-ip=209.85.215.202
+	 To:Content-Type; b=Qdw7oqMyo2RRSvI4qujdem3Y1N+zWmj1cEJNmbGw/pxTnC4hng0ymIyXlIu18QDBrmfcUKXd84jSRmAOdU9mRZXTC60itPOw+z470i+EXMhISN4DKnxnTo6UTbsWMN2FwrMkr8fSyf+ngSzIEsqr8EwUvfaInHXOY6OW81Fmd7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=k/kISEgw; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QQMHA3kt"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b99f6516262so917761a12.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 19:21:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k/kISEgw"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-297f48e81b8so7635985ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 19:21:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763004089; x=1763608889; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1763004090; x=1763608890; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=46tAwbQ8f//xN3Ry13qDNDr4Q30XuGVyKpDV1Wax+Xg=;
-        b=QQMHA3ktMfiU+vMrw84poHbX/5TBe1W2ZbjIbibCAx1281clSt0YOY4Hgt80bZccwW
-         eZhyg7XFk0JOB3LvgFyasUqrXZa7W8Mix4Kea9zktSDg2Hha1LPRmPYsHlJp7FF5Bk2Y
-         xlkt8yftD8EirW+9LiCc2oT3chhn6Z/FAp5qtoZK4opiy0X0Lcst39dIZ+QnmND6/UM6
-         4EVSy84JPBuKZGd58fJM5Ro16MBwHDJfeYGjFORMYaRiUcUOvtOpt/hCnfIjVnjVdW7U
-         FU2WbKt5ezx6lm8pCsH+fGgDKc2y91oQR/NgXc835V5SnHSyzRJSf964nP0eL4nel6bX
-         iWxw==
+        bh=Q/xav7sGweATI1gLemlCd0Y/xoi8YTcN9Imv7Ww6cug=;
+        b=k/kISEgwtPlECbgBwAeO6OesdCKOoRq4bygVdXTItN5ZJHU9IXxTi1UouxleTgXiHG
+         f43UKQHU9aY8nMHhJRkrWtwkTniE/lOppzWVsHMs939MPdcrk413ayYaKXdehLUZFcPo
+         +oyrlfgo67t1pNDULvLecOAMxTvW8YE9OkTn3Ha9m6NV+pV/2qdG2FI0zFxMdLWB6GVm
+         67qoRDeZcO2jAO/ohGOzUEIkGVd8JRRXOt+unWXgglQKTwE497VUy3uPGGhnd/BCDqZ+
+         DvWbNF0TDqPWuHeSuX+URIeHu+ejINXcHxO9ng+d0bb5WyFVsrDsbHZnUY4u/41MWoDZ
+         0lHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763004089; x=1763608889;
+        d=1e100.net; s=20230601; t=1763004090; x=1763608890;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=46tAwbQ8f//xN3Ry13qDNDr4Q30XuGVyKpDV1Wax+Xg=;
-        b=U3SFbiXk8VPiJejqmwPHrP85BdltK7CWfXjTkmGJWp+grMCMzJzEnxRzOQoKT+I0/m
-         HQ3ZcWd+cicyv3Klx/vFRZFQOvSfvqHMj2+YdewygHMe9Lo15T+U/BPJIndeCnQJtHVr
-         VVJ/y9DokWIM8n4/3XbK94ABcLg+ntrut2xTR6eRibYJxl+bq2XMsK1b9pv7ZS0/jsse
-         gI3ePPytl/gXMrlHxiaMInTs1EAFuAeiYdFqfZacxUgmqAB3b0HDswLtihxHsYE6KTJD
-         pW56lVdkt6AzyLJsXxy2RGKGnKRrpeMGpJ1SYKjXudUBVJzV/SAnx2wZZktXn+iCGtcB
-         yHVw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5slETHrq4ROSUGgHzDvnwC274JpcV6qD+8jaMYB1YhIQjP9gL96al9TIvvaUd+RsUNU3y6/oTNAuo8mVA9cXC@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvrnXGsOBLhnLoJV0rcMIsuUdBJumwU4h6u4osKgikH2D76uJb
-	uYOQPOouw1cx7g33SNCx50u++Z/yHu6kernPLzftWRVlY9iO9VKTr+zk3027vbxAZICeh5PhLcn
-	EFbi8w6NtDg==
-X-Google-Smtp-Source: AGHT+IFxjDiSEA9vnZn0vC4yoKImGg7+gOZ9Xm6w4b9Ab+vLCsp/wcSbIBstaW7u8IZXDNuQ5mIrUqa4yYk2
-X-Received: from dybmw23.prod.google.com ([2002:a05:7300:cd97:b0:2a4:4bd0:6ed8])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:8906:b0:32b:7220:8536
- with SMTP id adf61e73a8af0-35909399efemr6057032637.16.1763004088709; Wed, 12
- Nov 2025 19:21:28 -0800 (PST)
-Date: Wed, 12 Nov 2025 19:20:06 -0800
+        bh=Q/xav7sGweATI1gLemlCd0Y/xoi8YTcN9Imv7Ww6cug=;
+        b=hanxkyy0RLhlwOi6FAE82b06H1WYPZAVt9Gn2A0AA3+Y2Pzoo0QhHhCp2YVTqaoig9
+         B+gdnDzRYhE0uGJjggmB9N4Gf8twB7DyWO8L6uxTbS4Njly93yqCbh4n6mhoJrHR2Tfs
+         /XEmfRHHrtMRHNIcxFo6bymIRkezGhiyhM18fMGw3WZSfCdUNBS0PjJq0NnWDfZYaNiu
+         KbxZ9Yl+BjdXGzaFY6iaziK00qwAnIEhAoYLF/Hud5VR4L37kHodKykySJtUN9ylqFpz
+         mCL93oWninWKO+QV5WUo1DBNV/UEKdAx3Ap3rzefKbwl1OfQ1t0SxbC1ZBgrgiY8xYmB
+         s1tw==
+X-Forwarded-Encrypted: i=1; AJvYcCXOSGlohSB0cJ1uAWPBxyox+kdNky9RaYYy57l0kE/GnWWy5DMRRIW68kUsPk8BI+RvjWctZdMrW92OHtY7eO/c@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSs/s/PJLMisuXACAMe+FeRUQtY8ZBpaMBHte1sJmSA37RE9Jb
+	Bvc5OPQTcPNUBquib1OhGBYPQ4y8qf6SV6d9yTJaUyCSjnCmKg4mbas/h2YreQ5dpVCQHz4psLk
+	0a23aVYlorQ==
+X-Google-Smtp-Source: AGHT+IFVI3FgTE1LB1tkcrGzvX8YL/V7HJxOSDGDYv3mvmQNq20sUUzAhDgaaL0APymsq+Uiq0+1iYBcv0e2
+X-Received: from dlbdz8.prod.google.com ([2002:a05:7022:ec8:b0:119:b185:ea72])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f60c:b0:297:ec44:56f
+ with SMTP id d9443c01a7336-2985a52b15amr20494665ad.14.1763004090460; Wed, 12
+ Nov 2025 19:21:30 -0800 (PST)
+Date: Wed, 12 Nov 2025 19:20:07 -0800
 In-Reply-To: <20251113032040.1994090-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,9 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251113032040.1994090-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.2.1041.gc1ab5b90ca-goog
-Message-ID: <20251113032040.1994090-19-irogers@google.com>
-Subject: [PATCH v8 18/52] perf jevents: Add br metric group for branch
- statistics on AMD
+Message-ID: <20251113032040.1994090-20-irogers@google.com>
+Subject: [PATCH v8 19/52] perf jevents: Add software prefetch (swpf) metric
+ group for AMD
 From: Ian Rogers <irogers@google.com>
 To: Adrian Hunter <adrian.hunter@intel.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
@@ -77,135 +77,130 @@ To: Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The br metric group for branches itself comprises metric groups for
-total, taken, conditional, fused and far metric groups using json
-events. The lack of conditional events on anything but zen2 means this
-category is lacking on zen1, zen3 and zen4.
+Add metrics that give the utility of software prefetches on zen2, zen3
+and zen4.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/amd_metrics.py | 104 +++++++++++++++++++++++++++
- 1 file changed, 104 insertions(+)
+ tools/perf/pmu-events/amd_metrics.py | 101 +++++++++++++++++++++++++++
+ 1 file changed, 101 insertions(+)
 
 diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-events/amd_metrics.py
-index 42e46b33334d..1880ccf9c6fc 100755
+index 1880ccf9c6fc..06cb56cbd617 100755
 --- a/tools/perf/pmu-events/amd_metrics.py
 +++ b/tools/perf/pmu-events/amd_metrics.py
-@@ -18,6 +18,109 @@ cycles = Event("cycles")
- smt_cycles = Select(cycles / 2, Literal("#smt_on"), cycles)
+@@ -121,6 +121,106 @@ def AmdBr():
+                        description="breakdown of retired branch instructions")
  
  
-+def AmdBr():
-+    def Total() -> MetricGroup:
-+        br = Event("ex_ret_brn")
-+        br_m_all = Event("ex_ret_brn_misp")
-+        br_clr = Event("ex_ret_msprd_brnch_instr_dir_msmtch",
-+                       "ex_ret_brn_resync")
++def AmdSwpf() -> Optional[MetricGroup]:
++    """Returns a MetricGroup representing AMD software prefetch metrics."""
++    global _zen_model
++    if _zen_model <= 1:
++        return None
 +
-+        br_r = d_ratio(br, interval_sec)
-+        ins_r = d_ratio(ins, br)
-+        misp_r = d_ratio(br_m_all, br)
-+        clr_r = d_ratio(br_clr, interval_sec)
++    swp_ld = Event("ls_dispatch.ld_dispatch")
++    swp_t0 = Event("ls_pref_instr_disp.prefetch")
++    swp_w = Event("ls_pref_instr_disp.prefetch_w")  # Missing on Zen1
++    swp_nt = Event("ls_pref_instr_disp.prefetch_nta")
++    swp_mab = Event("ls_inef_sw_pref.mab_mch_cnt")
++    swp_l2 = Event("ls_sw_pf_dc_fills.local_l2",
++                   "ls_sw_pf_dc_fills.lcl_l2",
++                   "ls_sw_pf_dc_fill.ls_mabresp_lcl_l2")
++    swp_lc = Event("ls_sw_pf_dc_fills.local_ccx",
++                   "ls_sw_pf_dc_fills.int_cache",
++                   "ls_sw_pf_dc_fill.ls_mabresp_lcl_cache")
++    swp_lm = Event("ls_sw_pf_dc_fills.dram_io_near",
++                   "ls_sw_pf_dc_fills.mem_io_local",
++                   "ls_sw_pf_dc_fill.ls_mabresp_lcl_dram")
++    swp_rc = Event("ls_sw_pf_dc_fills.far_cache",
++                   "ls_sw_pf_dc_fills.ext_cache_remote",
++                   "ls_sw_pf_dc_fill.ls_mabresp_rmt_cache")
++    swp_rm = Event("ls_sw_pf_dc_fills.dram_io_far",
++                   "ls_sw_pf_dc_fills.mem_io_remote",
++                   "ls_sw_pf_dc_fill.ls_mabresp_rmt_dram")
 +
-+        return MetricGroup("lpm_br_total", [
-+            Metric("lpm_br_total_retired",
-+                   "The number of branch instructions retired per second.", br_r,
-+                   "insn/s"),
-+            Metric(
-+                "lpm_br_total_mispred",
-+                "The number of branch instructions retired, of any type, that were "
-+                "not correctly predicted as a percentage of all branch instrucions.",
-+                misp_r, "100%"),
-+            Metric("lpm_br_total_insn_between_branches",
-+                   "The number of instructions divided by the number of branches.",
-+                   ins_r, "insn"),
-+            Metric("lpm_br_total_insn_fe_resteers",
-+                   "The number of resync branches per second.", clr_r, "req/s")
-+        ])
++    # All the swpf that were satisfied beyond L1D are good.
++    all_pf = swp_t0 + swp_w + swp_nt
++    good_pf = swp_l2 + swp_lc + swp_lm + swp_rc + swp_rm
++    bad_pf = max(all_pf - good_pf, 0)
 +
-+    def Taken() -> MetricGroup:
-+        br = Event("ex_ret_brn_tkn")
-+        br_m_tk = Event("ex_ret_brn_tkn_misp")
-+        br_r = d_ratio(br, interval_sec)
-+        ins_r = d_ratio(ins, br)
-+        misp_r = d_ratio(br_m_tk, br)
-+        return MetricGroup("lpm_br_taken", [
-+            Metric("lpm_br_taken_retired",
-+                   "The number of taken branches that were retired per second.",
-+                   br_r, "insn/s"),
-+            Metric(
-+                "lpm_br_taken_mispred",
-+                "The number of retired taken branch instructions that were "
-+                "mispredicted as a percentage of all taken branches.", misp_r,
-+                "100%"),
-+            Metric(
-+                "lpm_br_taken_insn_between_branches",
-+                "The number of instructions divided by the number of taken branches.",
-+                ins_r, "insn"),
-+        ])
++    loc_pf = swp_l2 + swp_lc + swp_lm
++    rem_pf = swp_rc + swp_rm
 +
-+    def Conditional() -> Optional[MetricGroup]:
-+        global _zen_model
-+        br = Event("ex_ret_cond")
-+        br_r = d_ratio(br, interval_sec)
-+        ins_r = d_ratio(ins, br)
++    req_pend = max(0, bad_pf - swp_mab)
 +
-+        metrics = [
-+            Metric("lpm_br_cond_retired", "Retired conditional branch instructions.",
-+                   br_r, "insn/s"),
-+            Metric("lpm_br_cond_insn_between_branches",
-+                   "The number of instructions divided by the number of conditional "
-+                   "branches.", ins_r, "insn"),
-+        ]
-+        if _zen_model == 2:
-+            br_m_cond = Event("ex_ret_cond_misp")
-+            misp_r = d_ratio(br_m_cond, br)
-+            metrics += [
-+                Metric("lpm_br_cond_mispred",
-+                       "Retired conditional branch instructions mispredicted as a "
-+                       "percentage of all conditional branches.", misp_r, "100%"),
-+            ]
++    r1 = d_ratio(ins, all_pf)
++    r2 = d_ratio(swp_ld, all_pf)
++    r3 = d_ratio(swp_t0, interval_sec)
++    r4 = d_ratio(swp_w, interval_sec)
++    r5 = d_ratio(swp_nt, interval_sec)
++    overview = MetricGroup("lpm_swpf_overview", [
++        Metric("lpm_swpf_ov_insn_bt_swpf", "Insn between SWPF", r1, "insns"),
++        Metric("lpm_swpf_ov_loads_bt_swpf", "Loads between SWPF", r2, "loads"),
++        Metric("lpm_swpf_ov_rate_prefetch_t0_t1_t2", "Rate prefetch TO_T1_T2", r3,
++               "insns/sec"),
++        Metric("lpm_swpf_ov_rate_prefetch_w",
++               "Rate prefetch W", r4, "insns/sec"),
++        Metric("lpm_swpf_ov_rate_preftech_nta",
++               "Rate prefetch NTA", r5, "insns/sec"),
++    ])
 +
-+        return MetricGroup("lpm_br_cond", metrics)
++    r1 = d_ratio(swp_mab, all_pf)
++    r2 = d_ratio(req_pend, all_pf)
++    usefulness_bad = MetricGroup("lpm_swpf_usefulness_bad", [
++        Metric("lpm_swpf_use_bad_hit_l1", "Usefulness bad hit L1", r1, "100%"),
++        Metric("lpm_swpf_use_bad_req_pend",
++               "Usefulness bad req pending", r2, "100%"),
++    ])
 +
-+    def Fused() -> MetricGroup:
-+        br = Event("ex_ret_fused_instr", "ex_ret_fus_brnch_inst")
-+        br_r = d_ratio(br, interval_sec)
-+        ins_r = d_ratio(ins, br)
-+        return MetricGroup("lpm_br_cond", [
-+            Metric("lpm_br_fused_retired",
-+                   "Retired fused branch instructions per second.", br_r, "insn/s"),
-+            Metric(
-+                "lpm_br_fused_insn_between_branches",
-+                "The number of instructions divided by the number of fused "
-+                "branches.", ins_r, "insn"),
-+        ])
++    r1 = d_ratio(good_pf, all_pf)
++    usefulness_good = MetricGroup("lpm_swpf_usefulness_good", [
++        Metric("lpm_swpf_use_good_other_src", "Usefulness good other src", r1,
++               "100%"),
++    ])
 +
-+    def Far() -> MetricGroup:
-+        br = Event("ex_ret_brn_far")
-+        br_r = d_ratio(br, interval_sec)
-+        ins_r = d_ratio(ins, br)
-+        return MetricGroup("lpm_br_far", [
-+            Metric("lpm_br_far_retired", "Retired far control transfers per second.",
-+                   br_r, "insn/s"),
-+            Metric(
-+                "lpm_br_far_insn_between_branches",
-+                "The number of instructions divided by the number of far branches.",
-+                ins_r, "insn"),
-+        ])
++    usefulness = MetricGroup("lpm_swpf_usefulness", [
++        usefulness_bad,
++        usefulness_good,
++    ])
 +
-+    return MetricGroup("lpm_br", [Total(), Taken(), Conditional(), Fused(), Far()],
-+                       description="breakdown of retired branch instructions")
++    r1 = d_ratio(swp_l2, good_pf)
++    r2 = d_ratio(swp_lc, good_pf)
++    r3 = d_ratio(swp_lm, good_pf)
++    data_src_local = MetricGroup("lpm_swpf_data_src_local", [
++        Metric("lpm_swpf_data_src_local_l2",
++               "Data source local l2", r1, "100%"),
++        Metric("lpm_swpf_data_src_local_ccx_l3_loc_ccx",
++               "Data source local ccx l3 loc ccx", r2, "100%"),
++        Metric("lpm_swpf_data_src_local_memory_or_io",
++               "Data source local memory or IO", r3, "100%"),
++    ])
++
++    r1 = d_ratio(swp_rc, good_pf)
++    r2 = d_ratio(swp_rm, good_pf)
++    data_src_remote = MetricGroup("lpm_swpf_data_src_remote", [
++        Metric("lpm_swpf_data_src_remote_cache", "Data source remote cache", r1,
++               "100%"),
++        Metric("lpm_swpf_data_src_remote_memory_or_io",
++               "Data source remote memory or IO", r2, "100%"),
++    ])
++
++    data_src = MetricGroup("lpm_swpf_data_src", [
++                           data_src_local, data_src_remote])
++
++    return MetricGroup("lpm_swpf", [overview, usefulness, data_src],
++                       description="Software prefetch breakdown (CCX L3 = L3 of current thread, Loc CCX = CCX cache on some socket)")
 +
 +
  def AmdUpc() -> Metric:
      ops = Event("ex_ret_ops", "ex_ret_cops")
      upc = d_ratio(ops, smt_cycles)
-@@ -83,6 +186,7 @@ def main() -> None:
-     _zen_model = int(_args.model[6:])
+@@ -187,6 +287,7 @@ def main() -> None:
  
      all_metrics = MetricGroup("", [
-+        AmdBr(),
+         AmdBr(),
++        AmdSwpf(),
          AmdUpc(),
          Idle(),
          Rapl(),
