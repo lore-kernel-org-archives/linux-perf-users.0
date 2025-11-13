@@ -1,178 +1,263 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0FB364E9C
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 17:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4C5350A1C
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 17:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763053322; cv=none; b=QySPVXOfRLuIJavEdgvGLk0x/x/XRDTsCagGlTF+M84hreB9ii89R1Dn4mPF96/jdlc6ojA3v1JmRb9oVma3maXM0gMhETuEGpRQftawkBvpgj0kDET0rAld5HG3KTgdCskCwLxta+FDX+rOpPqpMkkiYGHcKfUb4ZctqRxq5/A=
+	t=1763053437; cv=none; b=RoF4/HjWaXe8iDwkK886YUuiafvwXdba9iqdJKkB4YPZP5JXgGf3CnGB2qxHYJ/gtEfHeGWsU1YBlEYIJ9s2TRupGG6dY0O8b5Dr6VJOGexzgTLZ3x1P08i6H1EvHvlZUMH6p+6GlX+huPqcoi4LpP+PKOTgmvt7EJAj/7WTHr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763053322; c=relaxed/simple;
-	bh=3lMEO8PnWX9b3TwsW9iffWpNPUePVf85jIdvmHCE7j0=;
+	s=arc-20240116; t=1763053437; c=relaxed/simple;
+	bh=/zMxXmRHwMx5FxWXmXYeaHBe4SakYThmwqMi97BanJs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UVxnUel0DpbVnMs2+nGCYE0GKj8ZxCahXMAEniAFcVTUPJtGBIpAJeJmBy4bNB+AqTJGcwc8/83/tdUqXVIvrYjSeXgFb2kdxdktHE74QTijLl1zLuPkAZNd0qOASCraP4L1HKyKKqGO/UPUTvyRr3yZ7yi3aEVi6EXpJ2zi0rA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YBSu7rPg; arc=none smtp.client-ip=209.85.214.177
+	 To:Cc:Content-Type; b=hM/4b3Wtyq1TInd/+2ZeOvYY3kJPwt/ltVlQhmkRHnHB+/+VTUh5SJyBn3A7H20NEj8jj5ZR2t5OLqVNLJw2lfkJWmWX3GM+D2GHi1oiTtDZ+W1If8DlVhvSzmkEChzq6F7fGqjtptNBDbeZVyGHL8ZXRtDqdK9p1BhbxcVaw5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Rn6HXpDt; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YBSu7rPg"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2980343d9d1so210045ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 09:02:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rn6HXpDt"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2980343d9d1so210495ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 09:03:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763053320; x=1763658120; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1763053435; x=1763658235; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=71lVmJnPUGpleZ4mKAV+ATu2lJgo6JW7DPtl5X40bXo=;
-        b=YBSu7rPgAYVImkQMvsHZtfA34E044PfSk5RUJYdfs9esn17enafWLvt0uOUieq77D2
-         ILySG7CaDQGd6JBafmiA8qy+MOQdtPRtv6ZFGZpUTvjnRer6UqUhw0o939oM75ci+CD4
-         9lxv7AE+pdKpJRO86PKaA3w4+xmCkY1+GcMav1erL0Q2KBf+Dfk+P19xa1LN/dp8h71a
-         Vu00wX6EfHqdTdK9JI2zHdVgFHmgvi5SVaDSqYEK8RkHSMxhubJxEwXYCpb57Ew8S1Of
-         aatxRRw+jf5XnPoYaSNfwZWjgZxK49pnS4mBqRGdoWN3AZc5qIiU1bx7hr/dqHplGMUK
-         u5QA==
+        bh=L9jp39PTZnkze60I0QGfIIiLZ0y8RHALzXohze63JW8=;
+        b=Rn6HXpDt24ONMgAcpeSTzQM7+ih84v8qdLx4J5E7PH28TDtrKoAx3O75U2/xxEnoAb
+         w7ZwIWgspmufsNah4LkISFLRp48J214fJVsFJruujwrv9iegG9zMS5+enG0IEiCYVPsv
+         kh3lLor5UQ7DRIIYbYKKG3uy0zoseY0pYFBAtdYmXLE5270KlNxS9+OM933pQcSSI5iJ
+         twZAMWGBD4x8fl9ykaxpkBxUvxk1jeH34fRc479k0437UYY+qtW2G/m42hXote+8J50J
+         QPHvydTTnePT5NKwWNm971Hoygc0oZfenhqKv23b5mBrTTzkuP+HlrM7yk0UcaW9ttL0
+         76EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763053320; x=1763658120;
+        d=1e100.net; s=20230601; t=1763053435; x=1763658235;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=71lVmJnPUGpleZ4mKAV+ATu2lJgo6JW7DPtl5X40bXo=;
-        b=w40EA5BGdOqvVlPP9DvK/xU3LUKhZE0q8T4JXgOX+wT+vrZ9yxQuw6rJS/L6AOkYa2
-         mmSkhb1PxLqa/JMXBL4wjS8TPxkdar2ofGeRfUHFpOy8R9vfEnIOCNQUf4GZvJq0UrUw
-         2YdCHKKAk/kUlneGspVTA/KztToqEAXoUZVedxNnscBomMhiEltP0PrD9bdTOnhiEHhu
-         W+Mpf7FXFp0Y3rRhWOOd3CfcF9imW/2O8qNNeBxVXt0GTUdlViO2oVKzDI7PCrN/EAdl
-         qb/uqJxQfe8tde1fVQ9RzwbdGadFkuQBQvXrSE+LJ5k9BTnevX+1gJ+jnippbzOi/Lav
-         k4Ng==
-X-Forwarded-Encrypted: i=1; AJvYcCXLqYpcN8LdzLGOqTGbjBDdS6BDhimvvnB4+BbY16CEfBYbczQda399g9H/WvDrjbsyDDV2OHbqzsVd7bBNfmEj@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw25qDZ8Z71tHeqPliClY7VHZRuPkog464qKaURu8in3hIESE0f
-	xuqxTrz97c5yCa7ip3fVxNrJVp8ozhjDF4kQuo73R5iu9p28nMaTcVNgHG46MVCMI4YHpVz/Oyp
-	HbHUDzl41QUv7vnWKstpc1pvAORrbzbMo5Nr7H3U/
-X-Gm-Gg: ASbGncsHmb0NU6phzPhjf0dmnCXQSuW+YJ9DDZSNSVdwkE4+5+GId2QXC2OOMENqV1Z
-	+QGRnKf1dZD6+XP/bVf719hJFwLt35XxfbWwLZM+VLJYfXis01pkM0rxF2RU+wu9kCtC1tlda/7
-	Dp/RGGfX1sb6kVa/RLqZNdV8wCk4q9ssN9TR5ZzN1Bbkr2l/uZVrD9LjIN+D9Vu4bEYHC8eiAf0
-	HX4f4ViCYyrbsz+WJoq2fcw2nwSP/1bzEV+4Mef6hdSCnoqhotj3lDcE9XcgtxufZCrpiKsZKic
-	ptfUu6Z8zT1U64h9Ha//wRlBvHBGj4Ud1yoOoWgzwspGovA=
-X-Google-Smtp-Source: AGHT+IGPRC+CQUBmBgdB89n61eAw0eI7sbJGyZXKLvUJxxPGOF5tt6zXBQxQuv/YyuQenUu73z2Yj6aCC42mzV1WO3c=
+        bh=L9jp39PTZnkze60I0QGfIIiLZ0y8RHALzXohze63JW8=;
+        b=vejFfB6DFySu6mO7U5CREHdFeggYnjA/QjG2TrNcztsRrSB6gkeBadyLBj9Vi8730j
+         IIlK4GgaklXpV8RKi7zcVgdok7rKE6n400t6Net+OpRvTm1Ios+v45U/7/h8tL84O27u
+         RAYGijF0N4WJWDFqqfqSnm1DJ//Y4oU7U+1C7IdB6Gagk/gBZd/2arfjj4joV2xbbCAB
+         fzkHjSC+V5Th8zE90wX16k2uBIO9TgI6c2fnEkKfTpU52qzHL7tOdNqXu6ujXlnP3tRJ
+         uDrWqVqwKj+KWi2VbCNi/Joy3im+es54mmbf4VAws/BImzqFRdr4ndHVjaLeSMVlN2GW
+         nrZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVyHnO7L2bTfQcesz6vtxCZXLSgadAjR4v2hHlWjw/fhttTy5znQCFnm+MVdBPcy7vZLRPZ3+6bkB1cc8SVpnM9@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKo1j0ZetJh+6VcKNJD5XtW+BU745CkvufeQ6HDiGDFBe+86Ei
+	9WLJQu0Da6bdvImjLHfSS0UpZFEsSTkqKHGUW3nrCKSndxdPc4CbrCSFCUfrXZ58AFwooTzan9V
+	TCOGaeLBdnEDz8rK/5ZdygQdAlwsrwFMLzfq8hF8V
+X-Gm-Gg: ASbGncuwVkRuelHjt+lSoLBHj7sWUNsd1XQA7xBUruVHXMkHYhEz0ir0uokZGgJGdtQ
+	dSTErmPUMKI3guMtuI0S8gp4hb5vEMp6xm6stB+cYkP1BsgsySOLxhYC5U+3D6NsZwIK/irg/3N
+	xkUkFdQ32Z3Thi1iH9Q1YItgvAxmtliqr5kYvIGC1rMs218JR1Z2Z+6CG6kGnIL/kzk4MXlRSAE
+	Bve1HYwXWY1mudX3sW52O6J19KMTmrT5XUdRPlBOtuL2Q8DYaqSTRNBrNi475H/yBd/eV3WA43u
+	LuG6ng3fw5LeMZFlo++jiY8w/g==
+X-Google-Smtp-Source: AGHT+IFg9BvG1WN3LsaStKUeIGWt5YOIvKQjpCAGjZvXUobzmbiejPvoHBnEAurwcNHp2oChrovFcogxaLhAiF1ybP0=
 X-Received: by 2002:a17:903:1c6:b0:290:d7fd:6297 with SMTP id
- d9443c01a7336-2985b7b9694mr6318995ad.2.1763053319900; Thu, 13 Nov 2025
- 09:01:59 -0800 (PST)
+ d9443c01a7336-2985b7b9694mr6329285ad.2.1763053434131; Thu, 13 Nov 2025
+ 09:03:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251112-perf_support_arm_spev1-3-v3-0-e63c9829f9d9@arm.com>
-In-Reply-To: <20251112-perf_support_arm_spev1-3-v3-0-e63c9829f9d9@arm.com>
+References: <20251112074311.1440101-1-irogers@google.com>
+In-Reply-To: <20251112074311.1440101-1-irogers@google.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 13 Nov 2025 09:01:47 -0800
-X-Gm-Features: AWmQ_bmZpgw7lXxzv2FCuAKiN2hVXWb-V-IiXd3o9kNnnrnUCNcZLuky19EZHhk
-Message-ID: <CAP-5=fXiiWRDPzONNNZQZc4QOBQoz=kRnJq77on5r4w9aDx-XA@mail.gmail.com>
-Subject: Re: [PATCH v3 00/25] perf arm_spe: Extend operations
-To: Leo Yan <leo.yan@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date: Thu, 13 Nov 2025 09:03:42 -0800
+X-Gm-Features: AWmQ_bk3fzIBvkpTgav6UiP8QeBpseMD099eBJB45q66bKDNiLcosDDUEPVtsEw
+Message-ID: <CAP-5=fU6xad0EGzQ=gJy6eUJtYrgV2FKSu=JcndeWVTKZE_RrA@mail.gmail.com>
+Subject: Re: [PATCH v2] perf libbfd: Ensure libbfd is initialized prior to use
+To: Guilherme Amadio <amadio@gentoo.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 12, 2025 at 10:24=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
+On Tue, Nov 11, 2025 at 11:43=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
 >
-> This series enhances tooling to support new operations:
+> Multiple threads may be creating and destroying BFD objects in
+> situations like `perf top`. Without appropriate initialization crashes
+> may occur during libbfd's cache management. BFD's locks require
+> recursive mutexes, add support for these.
 >
->   - Support for MTE tag since Arm SPE v1.3;
->   - Support for Advanced SIMD extension and SVE operations;
->   - Support memcpy, memset and GCS operations;
->   - Support extended operations for atomic, Acquire/Release and
->     Exclusive instructions.
->   - Enhance the data source for associated info, like floating-point,
->     conditional, data processing, etc.
->
-> This series is divided into three parts:
->
->   Patches 01 ~ 06: Support raw dump for new operations;
->   Patches 07 ~ 17: Export the operation info into records, so that the
->                    information can be later consumed by samples.
->   Patches 18 ~ 25: Set the operation info into sample's data source and
->                    SIMD flag, and updated the document.
->
-> This patch series is tested on FVP for native parsing and x86_64 for
-> cross parsing.
->
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> Reported-by: Guilherme Amadio <amadio@gentoo.org>
+> Closes: https://lore.kernel.org/lkml/aQt66zhfxSA80xwt@gentoo.org/
+> Fixes: 95931d9a594d ("perf libbfd: Move libbfd functionality to its own f=
+ile")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+I'm hoping adding the missing initialization is just obviously
+correct, Guilherme if you could provide a Tested-by it would be great.
 
-Thanks!
+Thanks,
 Ian
 
 > ---
-> Changes in v3:
-> - Rebased on the latest perf-tools-next branch.
-> - Link to v2: https://lore.kernel.org/r/20251017-perf_support_arm_spev1-3=
--v2-0-2d41e4746e1b@arm.com
->
-> Changes in v2:
-> - Refined to use enums for 2nd operation types. (James)
-> - Avoided adjustment bit positions for operations. (James)
-> - Used enum for extended operation type in uapi header and defined
->   individual bit field for operation details in uaip header. (James)
-> - Refined SIMD flag definitions. (James)
-> - Extracted a separate commit for updating tool's header. (James/Arnaldo)
-> - Minor improvement for printing memory events.
-> - Rebased on the latest perf-tools-next branch.
-> - Link to v1: https://lore.kernel.org/r/20250929-perf_support_arm_spev1-3=
--v1-0-1150b3c83857@arm.com
->
+> v2: Remove unneeded unistd.h include.
 > ---
-> Leo Yan (25):
->       perf arm_spe: Fix memset subclass in operation
->       perf arm_spe: Unify operation naming
->       perf arm_spe: Decode GCS operation
->       perf arm_spe: Rename SPE_OP_PKT_IS_OTHER_SVE_OP macro
->       perf arm_spe: Decode ASE and FP fields in other operation
->       perf arm_spe: Decode SME data processing packet
->       perf arm_spe: Remove unused operation types
->       perf arm_spe: Consolidate operation types
->       perf arm_spe: Introduce data processing macro for SVE operations
->       perf arm_spe: Report register access in record
->       perf arm_spe: Report MTE allocation tag in record
->       perf arm_spe: Report extended memory operations in records
->       perf arm_spe: Report associated info for SVE / SME operations
->       perf arm_spe: Report memset and memcpy in records
->       perf arm_spe: Report GCS in record
->       perf arm_spe: Expose SIMD information in other operations
->       perf arm_spe: Synthesize memory samples for SIMD operations
->       perf/uapi: Extend data source fields
->       tools/include: Sync uapi/linux/perf.h with the kernel sources
->       perf mem: Print extended fields
->       perf arm_spe: Set extended fields in data source
->       perf sort: Support sort ASE and SME
->       perf sort: Sort disabled and full predicated flags
->       perf report: Update document for SIMD flags
->       perf arm_spe: Improve SIMD flags setting
+>  tools/perf/util/libbfd.c | 38 ++++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/mutex.c  | 14 ++++++++++----
+>  tools/perf/util/mutex.h  |  2 ++
+>  3 files changed, 50 insertions(+), 4 deletions(-)
 >
->  include/uapi/linux/perf_event.h                    | 32 ++++++++-
->  tools/include/uapi/linux/perf_event.h              | 32 ++++++++-
->  tools/perf/Documentation/perf-report.txt           |  5 +-
->  tools/perf/util/arm-spe-decoder/arm-spe-decoder.c  | 56 ++++++++++++++--
->  tools/perf/util/arm-spe-decoder/arm-spe-decoder.h  | 61 +++++++++-------=
--
->  .../util/arm-spe-decoder/arm-spe-pkt-decoder.c     | 53 ++++++++-------
->  .../util/arm-spe-decoder/arm-spe-pkt-decoder.h     | 40 +++++++----
->  tools/perf/util/arm-spe.c                          | 77 ++++++++++++++++=
-+-----
->  tools/perf/util/mem-events.c                       | 66 ++++++++++++++++=
-+--
->  tools/perf/util/sample.h                           | 21 ++++--
->  tools/perf/util/sort.c                             | 21 ++++--
->  11 files changed, 359 insertions(+), 105 deletions(-)
-> ---
-> base-commit: da8fcfba0854dbe0b0eca465d35620c9cf4c89c1
-> change-id: 20250820-perf_support_arm_spev1-3-b6efd6fc77b2
+> diff --git a/tools/perf/util/libbfd.c b/tools/perf/util/libbfd.c
+> index 01147fbf73b3..6434c2dccd4a 100644
+> --- a/tools/perf/util/libbfd.c
+> +++ b/tools/perf/util/libbfd.c
+> @@ -38,6 +38,39 @@ struct a2l_data {
+>         asymbol **syms;
+>  };
 >
-> Best regards,
+> +static bool perf_bfd_lock(void *bfd_mutex)
+> +{
+> +       mutex_lock(bfd_mutex);
+> +       return true;
+> +}
+> +
+> +static bool perf_bfd_unlock(void *bfd_mutex)
+> +{
+> +       mutex_unlock(bfd_mutex);
+> +       return true;
+> +}
+> +
+> +static void perf_bfd_init(void)
+> +{
+> +       static struct mutex bfd_mutex;
+> +
+> +       mutex_init_recursive(&bfd_mutex);
+> +
+> +       if (bfd_init() !=3D BFD_INIT_MAGIC) {
+> +               pr_err("Error initializing libbfd\n");
+> +               return;
+> +       }
+> +       if (!bfd_thread_init(perf_bfd_lock, perf_bfd_unlock, &bfd_mutex))
+> +               pr_err("Error initializing libbfd threading\n");
+> +}
+> +
+> +static void ensure_bfd_init(void)
+> +{
+> +       static pthread_once_t bfd_init_once =3D PTHREAD_ONCE_INIT;
+> +
+> +       pthread_once(&bfd_init_once, perf_bfd_init);
+> +}
+> +
+>  static int bfd_error(const char *string)
+>  {
+>         const char *errmsg;
+> @@ -132,6 +165,7 @@ static struct a2l_data *addr2line_init(const char *pa=
+th)
+>         bfd *abfd;
+>         struct a2l_data *a2l =3D NULL;
+>
+> +       ensure_bfd_init();
+>         abfd =3D bfd_openr(path, NULL);
+>         if (abfd =3D=3D NULL)
+>                 return NULL;
+> @@ -288,6 +322,7 @@ int dso__load_bfd_symbols(struct dso *dso, const char=
+ *debugfile)
+>         bfd *abfd;
+>         u64 start, len;
+>
+> +       ensure_bfd_init();
+>         abfd =3D bfd_openr(debugfile, NULL);
+>         if (!abfd)
+>                 return -1;
+> @@ -393,6 +428,7 @@ int libbfd__read_build_id(const char *filename, struc=
+t build_id *bid, bool block
+>         if (fd < 0)
+>                 return -1;
+>
+> +       ensure_bfd_init();
+>         abfd =3D bfd_fdopenr(filename, /*target=3D*/NULL, fd);
+>         if (!abfd)
+>                 return -1;
+> @@ -421,6 +457,7 @@ int libbfd_filename__read_debuglink(const char *filen=
+ame, char *debuglink,
+>         asection *section;
+>         bfd *abfd;
+>
+> +       ensure_bfd_init();
+>         abfd =3D bfd_openr(filename, NULL);
+>         if (!abfd)
+>                 return -1;
+> @@ -480,6 +517,7 @@ int symbol__disassemble_bpf_libbfd(struct symbol *sym=
+ __maybe_unused,
+>         memset(tpath, 0, sizeof(tpath));
+>         perf_exe(tpath, sizeof(tpath));
+>
+> +       ensure_bfd_init();
+>         bfdf =3D bfd_openr(tpath, NULL);
+>         if (bfdf =3D=3D NULL)
+>                 abort();
+> diff --git a/tools/perf/util/mutex.c b/tools/perf/util/mutex.c
+> index bca7f0717f35..7aa1f3f55a7d 100644
+> --- a/tools/perf/util/mutex.c
+> +++ b/tools/perf/util/mutex.c
+> @@ -17,7 +17,7 @@ static void check_err(const char *fn, int err)
+>
+>  #define CHECK_ERR(err) check_err(__func__, err)
+>
+> -static void __mutex_init(struct mutex *mtx, bool pshared)
+> +static void __mutex_init(struct mutex *mtx, bool pshared, bool recursive=
+)
+>  {
+>         pthread_mutexattr_t attr;
+>
+> @@ -27,21 +27,27 @@ static void __mutex_init(struct mutex *mtx, bool psha=
+red)
+>         /* In normal builds enable error checking, such as recursive usag=
+e. */
+>         CHECK_ERR(pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHE=
+CK));
+>  #endif
+> +       if (recursive)
+> +               CHECK_ERR(pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_=
+RECURSIVE));
+>         if (pshared)
+>                 CHECK_ERR(pthread_mutexattr_setpshared(&attr, PTHREAD_PRO=
+CESS_SHARED));
+> -
+>         CHECK_ERR(pthread_mutex_init(&mtx->lock, &attr));
+>         CHECK_ERR(pthread_mutexattr_destroy(&attr));
+>  }
+>
+>  void mutex_init(struct mutex *mtx)
+>  {
+> -       __mutex_init(mtx, /*pshared=3D*/false);
+> +       __mutex_init(mtx, /*pshared=3D*/false, /*recursive=3D*/false);
+>  }
+>
+>  void mutex_init_pshared(struct mutex *mtx)
+>  {
+> -       __mutex_init(mtx, /*pshared=3D*/true);
+> +       __mutex_init(mtx, /*pshared=3D*/true, /*recursive=3D*/false);
+> +}
+> +
+> +void mutex_init_recursive(struct mutex *mtx)
+> +{
+> +       __mutex_init(mtx, /*pshared=3D*/false, /*recursive=3D*/true);
+>  }
+>
+>  void mutex_destroy(struct mutex *mtx)
+> diff --git a/tools/perf/util/mutex.h b/tools/perf/util/mutex.h
+> index 38458f00846f..70232d8d094f 100644
+> --- a/tools/perf/util/mutex.h
+> +++ b/tools/perf/util/mutex.h
+> @@ -104,6 +104,8 @@ void mutex_init(struct mutex *mtx);
+>   * process-private attribute.
+>   */
+>  void mutex_init_pshared(struct mutex *mtx);
+> +/* Initializes a mutex that may be recursively held on the same thread. =
+*/
+> +void mutex_init_recursive(struct mutex *mtx);
+>  void mutex_destroy(struct mutex *mtx);
+>
+>  void mutex_lock(struct mutex *mtx) EXCLUSIVE_LOCK_FUNCTION(*mtx);
 > --
-> Leo Yan <leo.yan@arm.com>
+> 2.51.2.1041.gc1ab5b90ca-goog
 >
