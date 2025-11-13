@@ -1,121 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A634E350A1B;
-	Thu, 13 Nov 2025 12:52:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340472E9749
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 15:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763038365; cv=none; b=hzohrSrL/kgi8U+cUvuGMmz11VK7BbKSOlWmfXfbrdMyRzTV8xUJt3wYcHfA2s3IcH4PZagJQ6L+TB38fG/+B4odRjLbSq3cU1RQpbyyiC+GwcRPEv34CFgOZWf5MqBAAzMe14UKQm1wNdOColf/5d1+KiTO68VlM3H9+30y5nU=
+	t=1763046714; cv=none; b=BDXu+kuWtEG7pFuiorBhSaf4/hpq8gGTKJxeWmySscXasWsY1bhSKPgk4BOQ1x/qKuxC8Z/Li6vbLWwmMtp7tNULXzFmrzcD622kjTJKWY1GaNLqnyCzpgNRQc7cj/eCk1rkLq3oa7mFw8vmTaqTR/jHH2iVXyCufszySFMnt6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763038365; c=relaxed/simple;
-	bh=YO38BrRO3WpSWJadE4XGRbaNi9pExHE9ouW+qph/cF8=;
+	s=arc-20240116; t=1763046714; c=relaxed/simple;
+	bh=PjTYtuAvYqH0+3B7Pow+sBOvhgLLJ1RhoDkzltZbDJA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sVIvMiigRTP0pGd/Adq2u1XF57lg3z4SNmt6ofHyruUP02E6nixtGLH7WCv3op7v1qaUIKDGI5qU9VWVP8EiNXwE5noS8CBmPDoft3xKgJNKJEMiIzFy3vLgQaXulnu7dhgnohHdohPcZLkqvAF3uPdR3Qg7T6uuWWr+A88hErc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lbP7JPSn; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=EbF6vr4uc+yhGH5kFrJc71Yi8aGGK/xUJKhhOdYZHwGFInt5880oQ/dKqePoDkI1ufLVRbPmdGQvRuAVmh+DdeaVsiZIlXGNGncyu3LN92beMgPlbi/4DQWrl9XUIv6H5HvwCoM6gHt1vRBz9n9azF+KRysMhTv0uSK6a7Ig5Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=imX+7Efm; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lbP7JPSn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B932C113D0;
-	Thu, 13 Nov 2025 12:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763038364;
-	bh=YO38BrRO3WpSWJadE4XGRbaNi9pExHE9ouW+qph/cF8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lbP7JPSnqZktjCaFY1/UyCjj2YMhZoijMt1Ag0R9fExG4RR/Q8CoKPJ72ztygNNRK
-	 vEOirNPKf7u0fx4n3AZXzTcckYeYJO/CaEIwJaZadJv/cPbVrvxUOd5y+wr2iti4eo
-	 paT0n4nS0bpK4J+yDLfmypsfg3rSUtG9kaS6aDQxGX9dX9rf/27edTjQwDpyZZFLWn
-	 YTp6unOe/TsaHoWsgMH03UpYvjJROahYyfe8PhTN1B6luyom8PC2ZdsjQNjceLrbzC
-	 RgjrElIejnHoL2SQnz/HTw92lnvMDu02yAq219asuwIzqP3lIuxVQvFVQexk8E5Xvw
-	 SNhnTNTq7xvPQ==
-Date: Thu, 13 Nov 2025 09:52:40 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Falcon <thomas.falcon@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: write bpf_prog (infos|btfs)_cnt to data file
-Message-ID: <aRXUmEfApr9UTfsY@x1>
-References: <20251107173150.135037-1-thomas.falcon@intel.com>
- <aRO6z1Q76852Ig6n@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="imX+7Efm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1763046711;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NGwjSejoi/FNrRgxNYTTmwSshKg7lU07+d+y7DlskH8=;
+	b=imX+7EfmkGJD8e4kL1hGnxmqANnavp0Gh6OyxnNC5nF2EZdJN4qjvnPA4p7Ef+FxMpdgi2
+	8RW6TNDHxYEpKiuIkQcxD57lMMrV8qjgmbgrJqNvcGIsFOs9ZXafEb90xPFxylXsGt2fpw
+	hEYtQs1/HEf5iomKLWu6MPImB1uwHbE=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-277-x1VYgh3MNzm_08JUPF98jA-1; Thu,
+ 13 Nov 2025 10:11:50 -0500
+X-MC-Unique: x1VYgh3MNzm_08JUPF98jA-1
+X-Mimecast-MFC-AGG-ID: x1VYgh3MNzm_08JUPF98jA_1763046708
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5759218002C3;
+	Thu, 13 Nov 2025 15:11:48 +0000 (UTC)
+Received: from jbrnak-thinkpadx1carbongen9.tpbc.csb (unknown [10.43.17.60])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C3812300018D;
+	Thu, 13 Nov 2025 15:11:45 +0000 (UTC)
+Date: Thu, 13 Nov 2025 16:11:42 +0100
+From: Jakub Brnak <jbrnak@redhat.com>
+To: Ian Rogers <irogers@google.com>
+Cc: namhyung@kernel.org, acme@kernel.org, acme@redhat.com,
+	linux-perf-users@vger.kernel.org, mpetlan@redhat.com,
+	vmolnaro@redhat.com
+Subject: Re: [PATCH v4 5/7] perf test: Introduce storing logs for shell tests
+Message-ID: <aRX1Lst9-H7hFjTf@jbrnak-thinkpadx1carbongen9.tpbc.csb>
+References: <20250930160923.13728-1-jbrnak@redhat.com>
+ <20250930160923.13728-6-jbrnak@redhat.com>
+ <CAP-5=fUJZEoAbNu+ZzjgshHRbq94dLn6-KPdzC=i9i350K=4dw@mail.gmail.com>
+ <aRR788vna0u-CEUU@jbrnak-thinkpadx1carbongen9.tpbc.csb>
+ <CAP-5=fWvSVswOwxjQmiDsSmvkD0HdVwPgXWib4zg=SQFyRfTUA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aRO6z1Q76852Ig6n@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWvSVswOwxjQmiDsSmvkD0HdVwPgXWib4zg=SQFyRfTUA@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Tue, Nov 11, 2025 at 02:38:07PM -0800, Namhyung Kim wrote:
-> On Fri, Nov 07, 2025 at 11:31:50AM -0600, Thomas Falcon wrote:
-> > With commit f0d0f978f3f58 ("perf header: Don't write empty BPF/BTF
-> > info"), the write_bpf_( prog_info() | btf() ) functions exit
-> > without writing anything if env->bpf_prog.(infos| btfs)_cnt is zero.
-> > 
-> > process_bpf_( prog_info() | btf() ), however, still expect a "count"
-> > value to exist in the data file. If btf information is empty, for
-> > example, process_bpf_btf will read garbage or some other data as the
-> > number of btf nodes in the data file. As a result, the data file will
-> > not be processed correctly.
-> > 
-> > Instead, write the count to the data file and exit if it is zero.
+On Wed, Nov 12, 2025 at 08:37:03AM -0800, Ian Rogers wrote:
+> On Wed, Nov 12, 2025 at 4:44 AM Jakub Brnak <jbrnak@redhat.com> wrote:
+> >
+> > On Tue, Sep 30, 2025 at 12:00:19PM -0700, Ian Rogers wrote:
+> > > On Tue, Sep 30, 2025 at 9:09 AM Jakub Brnak <jbrnak@redhat.com> wrote:
+> > > >
+> > > > From: Veronika Molnarova <vmolnaro@redhat.com>
+> > > >
+> > > > Create temporary directories for storing log files for shell tests
+> > > > that could help while debugging. The log files are necessary for
+> > > > perftool testsuite test cases also. If the variable PERFTEST_KEEP_LOGS
+> > > > is set keep the logs, else delete them.
+> > >
+> > > I think log files for tests are a good idea. We run tests in parallel
+> > > but read the stdout/stderr sequentially. For a failing test we may
+> > > fail to read stdout/stderr in some situations as the process has long
+> > > since died. Rather than add log files specifically for shell tests
+> > > perhaps update start_test to pass the file descriptors to the child
+> > > test processes and then clean up in finish_test?
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/builtin-test.c?h=perf-tools-next#n528
+> > >
+> > > Thanks,
+> > > Ian
+> >
+> > Hi Ian,
+> >
+> > Thanks for the feedback.
+> >
+> > You've raised a good point about capturing stdout/stderr for parallel runs,
+> > but this patch is solving a different problem.
+> >
+> > The logs we're storing here are test-generated data artifacts, not the
+> > stdout/stderr of the test process itself.
+> >
+> > Our patch provides a $PERFSUITE_RUN_DIR environment variable so that commands inside the shell script (e.g., perf record)
+> > have a known directory to save these files for debugging.
 > 
-> Oh, I'm afraid it'd create a compatibility problem.  But I think this is
-> a right behavior and it's should be fine if it goes to the stable soon.
+> Sgtm. Is there anyway this can be a common feature with kunit testing?
+> It'd be nice to have a similar strategy in the perf tests and kunit,
+> for consistency across the code base.
 > 
-> Arnaldo, can you please take this into perf-tools tree for v6.18?
-
-Ok, agreed, I'm taking your request as an Acked-by, ok?
-
-- Arnaldo
- 
 > Thanks,
-> Namhyung
-> 
-> > 
-> > Fixes: f0d0f978f3f58 ("perf header: Don't write empty BPF/BTF info")
-> > Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
-> > ---
-> >  tools/perf/util/header.c | 10 ++--------
-> >  1 file changed, 2 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> > index db2ad19fa50d..54968881481c 100644
-> > --- a/tools/perf/util/header.c
-> > +++ b/tools/perf/util/header.c
-> > @@ -1022,12 +1022,9 @@ static int write_bpf_prog_info(struct feat_fd *ff,
-> >  
-> >  	down_read(&env->bpf_progs.lock);
-> >  
-> > -	if (env->bpf_progs.infos_cnt == 0)
-> > -		goto out;
-> > -
-> >  	ret = do_write(ff, &env->bpf_progs.infos_cnt,
-> >  		       sizeof(env->bpf_progs.infos_cnt));
-> > -	if (ret < 0)
-> > +	if (ret < 0 || env->bpf_progs.infos_cnt == 0)
-> >  		goto out;
-> >  
-> >  	root = &env->bpf_progs.infos;
-> > @@ -1067,13 +1064,10 @@ static int write_bpf_btf(struct feat_fd *ff,
-> >  
-> >  	down_read(&env->bpf_progs.lock);
-> >  
-> > -	if (env->bpf_progs.btfs_cnt == 0)
-> > -		goto out;
-> > -
-> >  	ret = do_write(ff, &env->bpf_progs.btfs_cnt,
-> >  		       sizeof(env->bpf_progs.btfs_cnt));
-> >  
-> > -	if (ret < 0)
-> > +	if (ret < 0 || env->bpf_progs.btfs_cnt == 0)
-> >  		goto out;
-> >  
-> >  	root = &env->bpf_progs.btfs;
-> > -- 
-> > 2.47.3
-> > 
+> Ian
+
+Hi Ian,
+good point on consistency but KUnit reports pass/fail text from kernel. These perf tests are 
+user-space scripts that test commands which generate data artifacts (like perf.data), not just text results. 
+
+A common strategy for KUnit's text-based status reports versus perf's data 
+file artifacts doesn't seem to fit naturally.
+
+This patch is primarily a hook to support upstreaming the perftool-testsuite, which relies 
+on this directory ($PERFSUITE_RUN_DIR) for its artifact-based debugging. Given it's a 
+different testing model, we feel this approach is appropriate here.
+
+Thanks,
+Jakub
+
