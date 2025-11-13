@@ -1,63 +1,66 @@
 Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B172F0C46
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 18:05:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66DE833F8B3
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 18:05:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763057145; cv=none; b=ABMuYbamYLbNfg7r6Ns+qG9WFsyZMSIblztJM4yGicXBmA/JSvQ3q5qLhVLVlGsPioHxyZwHd8UROx2+DHu0lW1YYn4hiqJkU+9vXgGysxxzvATFHQbPVmaFmzYiV/FLxcetWNFU1fqtqHA498kZqQApPcZ3C3wU/MBNGJeWPLE=
+	t=1763057146; cv=none; b=Mh7XolIueNPV6PVqPN1XMOoEhykku2Xau6qCHcVHj3j50S3ofIVhkrqcbU5YbM2W1InFBuCd8lsk2D5ZOKSbtfPzERjlQqKc1Dt+ZSPkqmHbNbNFeVrCu8WiYpTIR7Gg1W5X1Q6Dl+d/HNM2yejbxD4gteIZU80on82cA424yvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763057145; c=relaxed/simple;
-	bh=fIbR3VjoQNKuRWteZ/Rq8IE3DTA3Dc/bpXH7LDvk30o=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=P55I/m4AykYLTpGncDkK18dqx30MEW43iQ1UWTDo/6uTjQS1+WxYgm7Gtq3hlTEzyLb7H7pHmCCvUFTItr61qW1p2y0T6P4AnZ3K/kml7c6P+4pvVgBrqyZTzSJw4Llffh6fw86CnLdZFGnb3e94v6dBrQ0f1YLQBrr/JPm2mrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HBxfNVec; arc=none smtp.client-ip=209.85.215.201
+	s=arc-20240116; t=1763057146; c=relaxed/simple;
+	bh=0G/j/xJj1qsweoCKMUXKGFzeFo7TvQZ/7fH1qwVBjpI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=FUo+MXoeiLQ6Tixw3rWoBwlLqtpKmrNCauAa9TANOqag2xvPmY04NPX51iWBI5qZSIejen7AE+FxqxPogYNJb5TqR1TQgs4Wr9pmp4D6v4Yi1HI+S7v7AMU+GpNHLFfYMejDdd7oj1fiDfUYGNjWvjrkH9iLPZhNUlzuvSuURMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xDcZvJIE; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HBxfNVec"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b99f6516262so2819768a12.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 10:05:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xDcZvJIE"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b95d06db747so1745383a12.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 10:05:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763057143; x=1763661943; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=gyb0F2Qlt5M9tSooc4A/FTv6d1RAJam7XL9fTqtL1Ys=;
-        b=HBxfNVecJ+vBbpsMTo9qdFmFNUwyjAzcSnkcS15jS+6Oj0/0wpGvtf5F/cCCIh38OS
-         vdBWVc1otioAxlRgogybyKA3b+7esetSX+7G6n7wy1GbAkVKL/LcLp9JhKDfvlrj7wkk
-         0qncAG3UGhFcjtuKA6c02TdGkTspfKVwZW6Q0aYakWfSdPZQmJX6tN/Tt9ebHsb6W09E
-         wQPdF6jWarYEQTdoQaJdXLnDd4SebeSH6MV9VB/SiWqs1u1PGqKIieFDABjPTg0x2KfK
-         tEcdAMpNT4U0mGjl54rgNVk09rk7tnTWBtTil6NOX4fudrxRhUGZu7xstMjeSp8EyGW1
-         Kxcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763057143; x=1763661943;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1763057145; x=1763661945; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=gyb0F2Qlt5M9tSooc4A/FTv6d1RAJam7XL9fTqtL1Ys=;
-        b=lcvgkfcqYKP4Wsp0sjCEocAo9CECUSbdqsYlMuNZUiI2zltwjEy8b5tjEs/u0XkKEZ
-         2bMOtxZjIONLCUIvUFHjSUkiR520LRY53zkYeDZ3spQTv6R49TyKkPduxjaOi23DgonW
-         Sm7bH4BZoQ6SB6SHxywGQ3DTwlkgMqlQJiauAMnAW6oKcGRhi2w/hvjwcS5thNMsmTeF
-         Dp6tIwCVPYjKkvAOQE4tUn7Hu3jEz016G5K1W/AigA2evURkEfisHTWRZXGId/C+6Tyg
-         NC646UudU5xQMLLMyKRi5y5VXGYf8A2ZqRVKq1EoDycsjo8nwIgIUHIoAfP3XeY5Fuqf
-         ayaw==
-X-Forwarded-Encrypted: i=1; AJvYcCVcupiHN1Uo3zDA8Vbd3dCm9MtRi0S18DLdKE2QK+7g/ZVp/jtZw3d2ynhX73wu38T70KltMlUtPkS0aifw1ImN@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeAlquWzcF9knYSIZc8B4xGRLaPN7t0mUoM2qWQqcbWEKE0rQx
-	luw42Re6c46/pnvSbKjrr53op24GI6zIL+lK0IkLrNaMJcBD2emnM/38thqn91eY8bfqjbuN3Md
-	dTahAvI38cg==
-X-Google-Smtp-Source: AGHT+IGp9up41YFf4S6Oc6MkFzcgJYUGUTSUzJW9WfOt4KpNF8fJnbTzSmBWND1D2Ef9BRuW2rfHT9+LwwKB
-X-Received: from dlbds33.prod.google.com ([2002:a05:7022:2521:b0:11a:fa54:2242])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7301:a28:b0:2a4:4527:1f0
- with SMTP id 5a478bee46e88-2a4abb30665mr72844eec.34.1763057142821; Thu, 13
- Nov 2025 10:05:42 -0800 (PST)
-Date: Thu, 13 Nov 2025 10:05:06 -0800
+        bh=BwL0flbR67e6mq7ibhkhVdiS0tjPyP1QzI5zBDpL9cA=;
+        b=xDcZvJIErPpu7Z/SU4vqwwY7t35sXRCkgfC01ash+1zIwWCCD+e3eOxUsotIb88hTZ
+         Le6Lp+GpLTgRFvUBIIiHTfA1kyuvWBcSsYfQVP98jXDVViwDtgfoPbgLvb0MABSzURp6
+         g8zIGRdkqOBSOFjGV5D94LfIj6vtIFELdSlp2/muFz9Qs9uYamoeXcilcqN4VsSGSP1Q
+         MfYH4cbpZSRQx5DcaRMt27a6Xgf37hvaDi4qPZUovVz+UvutIZ4ekxNwIz16pBn2tx2w
+         dWwmK7jp3dLsRHY4ghNolDA5YqOaXc5DBx3YSenlPF6AVln82YXUsO3DYny5+2k3WxU5
+         04zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763057145; x=1763661945;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BwL0flbR67e6mq7ibhkhVdiS0tjPyP1QzI5zBDpL9cA=;
+        b=dAP1PalS/ooR5S2Bi660QfpAzBNH5sYUlSe3YzMM7mgq+AmkV37HOdH2ERDQRoAvc1
+         HX09zBXpTYHhnxOsYLa4i/r0/XfCMXCogYOpLx8XITcZ3AucEixNLaye4S6dUTCESSIM
+         bEFkJxObPRwmRFnRU7C6Ta1ANtn3Qs9roAaZ7HePzpGpYrmH1o+1C8iefmPif/9B0ICj
+         k7XH1WyllEmXjpiP741UTPHv7QjNTcltTLa8Db9a2TU4EOrQWkRxSUJpAX846wYxCVLH
+         SA+eBu3Gi80Kca9Pn07HDQa4i7qcQ1pRdTj248PXJ44+l4OX1Sxc+z5yNmNYgkHM08R8
+         j7ew==
+X-Forwarded-Encrypted: i=1; AJvYcCX4RvPD9zLme28JXHS6796+ORO+DBDDnvVvFdp+tikz8xlBc878Lg4Qm0USueUJUVevNAuQO3stzrk1NEadJDjj@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQAMIk0n1hHmfvNaqbSLh4ORW99l/gpTEw19Gga2ewgKfifehE
+	FzT3Q55cuQNNwGmkApIck4LR+z4jq3om1PDmRI6PlAxRquQvqAMIlM4uj4Ho/dNUlScxWtTZbK2
+	NW3EvW2hDqA==
+X-Google-Smtp-Source: AGHT+IF6Jd/RowQsFfWnNU8wA7E0ssHBi+qEZJ0B7mLoneITR8fS1wlRdblP/48yXPF2vGHx7hvFukXw9/Mb
+X-Received: from dlbqc12.prod.google.com ([2002:a05:7023:a8c:b0:11a:3b81:6bc6])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:7022:6624:b0:11a:468a:cf9b
+ with SMTP id a92af1059eb24-11b034b5b0amr155103c88.9.1763057144586; Thu, 13
+ Nov 2025 10:05:44 -0800 (PST)
+Date: Thu, 13 Nov 2025 10:05:07 -0800
+In-Reply-To: <20251113180517.44096-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20251113180517.44096-1-irogers@google.com>
 X-Mailer: git-send-email 2.52.0.rc1.455.g30608eb744-goog
-Message-ID: <20251113180517.44096-1-irogers@google.com>
-Subject: [PATCH v4 00/10] perf stat fixes and improvements
+Message-ID: <20251113180517.44096-2-irogers@google.com>
+Subject: [PATCH v4 01/10] libperf cpumap: Reduce allocations and sorting in intersect
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -70,77 +73,74 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-A collection of fixes aiming to stabilize and make more reasonable
-measurements/metrics such as memory bandwidth.
+On hybrid platforms the CPU maps are often disjoint. Rather than copy
+CPUs and trim, compute the number of common CPUs, if none early exit,
+otherwise copy in an sorted order. This avoids memory allocation in
+the disjoint case and avoids a second malloc and useless sort in the
+previous trim cases.
 
-Tool events are changed from getting a PMU cpu map of all online CPUs
-to either CPU 0 or all online CPUs. This avoids iterating over useless
-CPUs for events in particular `duration_time`. Fix a bug where
-duration_time didn't correctly use the previous raw counts and would
-skip values in interval mode.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/lib/perf/cpumap.c | 29 +++++++++++++++++++----------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
 
-Change how json metrics handle tool events. Use the counter value
-rather than using shared state with perf stat. A later patch changes
-it so that tool events are read last, so that if reading say memory
-bandwidth counters you don't divide by an earlier read time and exceed
-the theoretical maximum memory bandwidth.
-
-Do some clean up around the shared state in stat-shadow that's no
-longer used.
-
-Change how affinities work with evlist__for_each_cpu. Move the
-affinity code into the iterator to simplify setting it up. Detect when
-affinities will and won't be profitable, for example a tool event and
-a regular perf event (or read group) may face less delay from a single
-IPI for the event read than from a call to sched_setaffinity. Add a
- --no-affinity flag to perf stat to allow affinities to be disabled.
-
-v4: Rebase. Add patch to reduce scope of walltime_nsec_stats now that
-    the legacy metric code is no more. Minor tweak to the ru_stats
-    clean up.
-
-v3: Add affinity clean ups and read tool events last.
-https://lore.kernel.org/lkml/20251106071241.141234-1-irogers@google.com/
-
-v2: Fixed an aggregation index issue:
-https://lore.kernel.org/lkml/20251104234148.3103176-2-irogers@google.com/
-
-v1:
-https://lore.kernel.org/lkml/20251104053449.1208800-1-irogers@google.com/
-
-Ian Rogers (10):
-  libperf cpumap: Reduce allocations and sorting in intersect
-  perf pmu: perf_cpu_map__new_int to avoid parsing a string
-  perf tool_pmu: Use old_count when computing count values for time
-    events
-  perf stat-shadow: Read tool events directly
-  perf stat: Reduce scope of ru_stats
-  perf stat: Reduce scope of walltime_nsecs_stats
-  perf tool_pmu: More accurately set the cpus for tool events
-  perf evlist: Reduce affinity use and move into iterator, fix no
-    affinity
-  perf stat: Read tool events last
-  perf stat: Add no-affinity flag
-
- tools/lib/perf/cpumap.c                |  29 ++--
- tools/perf/Documentation/perf-stat.txt |   4 +
- tools/perf/builtin-stat.c              | 210 +++++++++++++++----------
- tools/perf/tests/parse-metric.c        |   2 -
- tools/perf/tests/pmu-events.c          |   2 -
- tools/perf/util/config.c               |   3 +-
- tools/perf/util/drm_pmu.c              |   2 +-
- tools/perf/util/evlist.c               | 156 +++++++++++-------
- tools/perf/util/evlist.h               |  27 +++-
- tools/perf/util/hwmon_pmu.c            |   2 +-
- tools/perf/util/parse-events.c         |   9 +-
- tools/perf/util/pmu.c                  |  12 ++
- tools/perf/util/pmu.h                  |   1 +
- tools/perf/util/stat-shadow.c          | 152 ++++++++----------
- tools/perf/util/stat.h                 |  23 ---
- tools/perf/util/tool_pmu.c             |  78 ++++++---
- tools/perf/util/tool_pmu.h             |   1 +
- 17 files changed, 407 insertions(+), 306 deletions(-)
-
+diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+index b20a5280f2b3..7e88417ba84d 100644
+--- a/tools/lib/perf/cpumap.c
++++ b/tools/lib/perf/cpumap.c
+@@ -453,21 +453,33 @@ int perf_cpu_map__merge(struct perf_cpu_map **orig, struct perf_cpu_map *other)
+ struct perf_cpu_map *perf_cpu_map__intersect(struct perf_cpu_map *orig,
+ 					     struct perf_cpu_map *other)
+ {
+-	struct perf_cpu *tmp_cpus;
+-	int tmp_len;
+ 	int i, j, k;
+-	struct perf_cpu_map *merged = NULL;
++	struct perf_cpu_map *merged;
+ 
+ 	if (perf_cpu_map__is_subset(other, orig))
+ 		return perf_cpu_map__get(orig);
+ 	if (perf_cpu_map__is_subset(orig, other))
+ 		return perf_cpu_map__get(other);
+ 
+-	tmp_len = max(__perf_cpu_map__nr(orig), __perf_cpu_map__nr(other));
+-	tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
+-	if (!tmp_cpus)
++	i = j = k = 0;
++	while (i < __perf_cpu_map__nr(orig) && j < __perf_cpu_map__nr(other)) {
++		if (__perf_cpu_map__cpu(orig, i).cpu < __perf_cpu_map__cpu(other, j).cpu)
++			i++;
++		else if (__perf_cpu_map__cpu(orig, i).cpu > __perf_cpu_map__cpu(other, j).cpu)
++			j++;
++		else { /* CPUs match. */
++			i++;
++			j++;
++			k++;
++		}
++	}
++	if (k == 0) /* Maps are completely disjoint. */
+ 		return NULL;
+ 
++	merged = perf_cpu_map__alloc(k);
++	if (!merged)
++		return NULL;
++	/* Entries are added to merged in sorted order, so no need to sort again. */
+ 	i = j = k = 0;
+ 	while (i < __perf_cpu_map__nr(orig) && j < __perf_cpu_map__nr(other)) {
+ 		if (__perf_cpu_map__cpu(orig, i).cpu < __perf_cpu_map__cpu(other, j).cpu)
+@@ -476,11 +488,8 @@ struct perf_cpu_map *perf_cpu_map__intersect(struct perf_cpu_map *orig,
+ 			j++;
+ 		else {
+ 			j++;
+-			tmp_cpus[k++] = __perf_cpu_map__cpu(orig, i++);
++			RC_CHK_ACCESS(merged)->map[k++] = __perf_cpu_map__cpu(orig, i++);
+ 		}
+ 	}
+-	if (k)
+-		merged = cpu_map__trim_new(k, tmp_cpus);
+-	free(tmp_cpus);
+ 	return merged;
+ }
 -- 
 2.51.2.1041.gc1ab5b90ca-goog
 
