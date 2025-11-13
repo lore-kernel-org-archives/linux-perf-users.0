@@ -1,164 +1,232 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F4535971B;
-	Thu, 13 Nov 2025 18:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F56F30EF93
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 18:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763058036; cv=none; b=i5T73q9cmPtM0EKTQTPKByJ46hxWodF5biW6eW93ytdRXO/lwMuE4fouUs9zxlxMO/teRvo+aSAix4XToIYb0p1hR005o/J/9vxvq9RjyCJ0OJ0ESfBUBUirMJ30D2lKLZnRVJoCyqugfe+l7ByB2FQTcdqayAqDb+W+up+Ua8I=
+	t=1763058773; cv=none; b=Iw3cHkaLmLt9hIeQO1JHAlY0t8XGGYxuY+oA30q1eK83jcv4NzGJ9IpzIjQ7jgbkHxds+oo27ya7/+lxuyJlYubKAroYywC+QFu9oBB51yBBX3NTjGjoWHruxRt7sSrvyVBYDHn/jvr00wbuB7pqh4aGq2nT8MJ70X52sRfGHnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763058036; c=relaxed/simple;
-	bh=xBPAuk5vfKvWiJamfUh8vtN+hDRtyxOY2R9j/XJFKjc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fHO4N0AkZQZNBAD8eV6Ex7lihfK7CqmK0gn4nEUDbwKX5NGZ9rRkWlNPQNu7rxPVrukC70VWS3Yd63dHICfOH8ZPF0rbJyXQ1WPVyByuuYnV9TouVMtNRxdvs9R26WAWQTdsDSVU5vy8SA//26gPSqcZplts27flTfDeU+jSy1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XpJiW3zf; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1763058773; c=relaxed/simple;
+	bh=YmrKf+fHr63hik3Fn9MO4jfd3CHTuIoq9LFYAuzEtuA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=H5Dvw3Rte9dO2kRoXak+3swJ5Sesqo5mR/y1Csidk7nehKU5MlJlwf1o4CIYdm3RrTle85/SoQYdPa8crzqzHvnY/A4PNPdABHGru7cB/kzyNX21y7EwsGkedp7fChodoZCbCPxx5sh548dCHF7awy1oKHhkG3oefDR0jJ4csQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oHF1VUN2; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XpJiW3zf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1763058033; x=1794594033;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xBPAuk5vfKvWiJamfUh8vtN+hDRtyxOY2R9j/XJFKjc=;
-  b=XpJiW3zf6l/Hv+LBY1YRX0kbTx/oBHgrrcy6DZ5Jmmz8qqezuttH4fv6
-   LmgSJaMq3Ez1XTxk6rNY3vkfrbPoJvDVDMVP2RSABte6T2KBKPYXkR2p3
-   1vl4acKJAjUEvdJFV0xJn/sly3h9YhLsItyyVdtdgiaH+NMXbFT6jeM7U
-   7o60LHh8075pRf36K6nCYB1Gu4bd558vMUksQCKG85SNRMoWdv5TvAWI3
-   fOVNGOLnfN0hfXCwaCDlhzj5xwkUxPpZn2TC6YXEKtT3jmSTfVE/9qkeM
-   nM7CiFgWNMf8EpBJZIHLRibIvxXa8XhsWopnwNhahMlZoyIzP+MqlIZIs
-   A==;
-X-CSE-ConnectionGUID: cdgvioXrT7+2akBqUM54zg==
-X-CSE-MsgGUID: qb7PpgVARCChTIa599eiZw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11612"; a="65243689"
-X-IronPort-AV: E=Sophos;i="6.19,302,1754982000"; 
-   d="scan'208";a="65243689"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 10:20:31 -0800
-X-CSE-ConnectionGUID: +nko5Ir0SgaPEbP1Ndp03g==
-X-CSE-MsgGUID: UdlA+nJBQZandO7u60GayQ==
-X-ExtLoop1: 1
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.108.136]) ([10.125.108.136])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2025 10:20:31 -0800
-Message-ID: <6e84a532-5d30-487f-b849-84893ac2a652@intel.com>
-Date: Thu, 13 Nov 2025 10:20:31 -0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oHF1VUN2"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2980343d9d1so11285ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 10:32:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1763058771; x=1763663571; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2at+nfnIrFBaGGjvDz/u+5B95saiDosUT0lSszTDcTE=;
+        b=oHF1VUN2ZKAs6t0MBG4gIFSJab6XL5hIyI53ONtDM0drM0/zEmwpfXOOBm9YFHzgbI
+         kupKoOMu0Y7wvZ324eXzfYKX7ATONEbianHF8ZQAozyPBKg7+Zv5MBbRODCkrgEmYmkl
+         FcE1FnSbYhwEgzgibku3O6dTuQybiGGf0QeRow+yfH3rTPzM8GVTL8doPUiXScaRiQwW
+         p82cbTnvI93bnhbGhG8yRJEZ8oF1yyBLMsAOGtEC+cLQCaA+jEu5cZOQncEmzo9Q/GLY
+         dAi5eePeGjENkbMxsNCIw+RtgX3SxQyDbmr/3PBPzBIdf+gwggDJj754H9F8fhYS6wAq
+         OzKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763058771; x=1763663571;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=2at+nfnIrFBaGGjvDz/u+5B95saiDosUT0lSszTDcTE=;
+        b=eTpZyczO1mg3b/W8ZJxUTDSrNn5hM1Sp3Yn47rjbwVjFBvuOaLKv6uEZBMTNuudyNG
+         c/cOfzcs9kpZUEaa27qOPzb1iZsAnYp24VM/uqd+b1+jclIx8JU7wSULJXeuBVqBymag
+         WKxDcrbxk5+blE0OHWn7Imu6Eodd2rKMA9BYfpDi9dFpq4QWSM53t+7Q6P0U/8i/nrCi
+         dPdfx5YWdHeFA72ID6dyETsB6oWrdXdtXtm6NedRmbBsb4W31MTLjFTQta86J4WjMeiv
+         qnAGXolH1m4W1pZbskB0VXtCAop6OmVH98r+pmIGARxqhqcj7MBCHDWyiym+8GZ1TDqe
+         BsDA==
+X-Forwarded-Encrypted: i=1; AJvYcCV2wLUd2FpmKsEHsqTOP0rQqj1Y5hYSNAGoykFJzoomKYCp6XM2sf5CLnQrzVpV12c40K2sPZJ1EFNkjMS3hNku@vger.kernel.org
+X-Gm-Message-State: AOJu0YyecjHDooQwHqDDFtH7XKHzAV0H3Q3EDaRDONgS06PhrChGCb/a
+	UXC8iDTEujhp5KQaoDZCyqLh0ObrhlkIFuyLmLg9SPZH2mtoVol4eFpq7omhYhz1ery9TG6ihpA
+	lS5Z6hArLEQkG8Ir1juaAj+bMG9hTBtvlzbZ2n9q8
+X-Gm-Gg: ASbGnctzreHQbVFW3wB/YxHXtK12OXLTW7wQeNamn24iDL+Jr/ujIq/GE39V/B+MC6M
+	O9bC8yx2AOqMhdhDz7BkXcy6PxTgm20MRbiSRDf8Y2limJvq89slfl/UDqnFiM+YFtqFSEZiw9R
+	mN7TH0xRZd27eD1G/f8J6QEcD81D2uk8ot/t6t7SYTN/nq/tJJmKUEuS5EjhCA45TB3JYf4rhFf
+	PkDkPtvr7D0EQbFKx5hc3f3qu7PKAxD+ab2Z8ircysJGTsZr85k/8iaX30VXmXALt4OOe17J39D
+	sxgZxBFRpg+F2cWRUuXEY+BItdiHlw==
+X-Google-Smtp-Source: AGHT+IFskVn+1VHgqG0wsBY7NmWDaJkchDk1EChX8JK7q34LRAj9z24KAzeAwFZsXNEn7tckZKhgiC8T/an5OXZWzx8=
+X-Received: by 2002:a05:7022:3883:b0:119:e56b:c1dd with SMTP id
+ a92af1059eb24-11b47b9963dmr3756c88.8.1763058770164; Thu, 13 Nov 2025 10:32:50
+ -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/events/intel/cstate: Add Pantherlake support
-To: "Kumar, Kaushlendra" <kaushlendra.kumar@intel.com>,
- "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>,
- "namhyung@kernel.org" <namhyung@kernel.org>,
- "jolsa@kernel.org" <jolsa@kernel.org>,
- "Hunter, Adrian" <adrian.hunter@intel.com>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "x86@kernel.org" <x86@kernel.org>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20251112090024.3298186-1-kaushlendra.kumar@intel.com>
- <1ba407b6-a108-41ce-b1b2-3c03aa25d272@intel.com>
- <LV3PR11MB87682D759248CA310546261CF5CDA@LV3PR11MB8768.namprd11.prod.outlook.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <LV3PR11MB87682D759248CA310546261CF5CDA@LV3PR11MB8768.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20251113082852.2902356-1-tmricht@linux.ibm.com>
+In-Reply-To: <20251113082852.2902356-1-tmricht@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 13 Nov 2025 10:32:38 -0800
+X-Gm-Features: AWmQ_bl_CF5Q64y_3HTsx4geNTxOXsCYssyD0TUV6zDIKddUsfOVBFDoJHZrOqg
+Message-ID: <CAP-5=fUNQL_qr_MY7VaJVVfC4gsxu0Gg4pAGPNfFY7onJVgGRQ@mail.gmail.com>
+Subject: Re: [PATCH linux-next] perf stat: Regression perf stat -T cpi fails
+ on s390 z/VM guest systems
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org, 
+	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, 
+	hca@linux.ibm.com, japo@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 11/12/25 20:05, Kumar, Kaushlendra wrote:
-> On 11/12/25, [Reviewer Name] wrote:
->> On 11/12/25 01:00, Kaushlendra Kumar wrote:
->>> It supports the same C-state residency counters as
->>> Lunarlake.This enables monitoring of C1, C6, C7 core states and
->>> C2,C3,C6,C10 package states residency counters on Pantherlake
->>> platforms.
->> 
->> Is this actually documented? Or is there just a smoke-filled room
->> at Intel somewhere where this is decided?
-> 
-> Good point. Baseline for Pantherlake is Lunarlake with respect to C
-> states. It is documented in internal documents. This approach is
-> consistent with similar implementations throughout the kernel
-> codebase for related CPU families.
+On Thu, Nov 13, 2025 at 12:29=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.=
+com> wrote:
+>
+> On s390 z/VM systems (linux guest on s390 LPAR) this happens:
+>
+>  # perf test 96 97
+>  96: perf all metricgroups test        : FAILED!
+>  97: perf all metrics test             : FAILED!
+>
+> This test works on the linux repo:
+>  # perf test 95 96
+>  95: perf all metricgroups test        : Ok
+>  96: perf all metrics test             : Ok
+>
+> On both systems the command
+>  # ./perf list --raw-dump metric
+>  cpi est_cpi finite_cpi l1mp l2p l3p l4lp l4rp memp prbstate scpl1m \
+>         tlb_miss tlb_percent transaction
+> shows the same list of available metrics.
+>
+> On z/VM the CPU Measurement facilities do not exist:
+>
+>  # ll  /sys/devices/cpum_cf/events
+>  ls: cannot access '/sys/devices/cpum_cf/events': No such file or directo=
+ry
+>  #
+>
+> The json files for s390 define the metric 'cpi' in
+> arch/s390/cf_z16/transaction.json:
+>
+>   {
+>     "BriefDescription": "Cycles per Instruction",
+>     "MetricName": "cpi",
+>     "MetricExpr": "CPU_CYCLES / INSTRUCTIONS \
+>                                 if has_event(INSTRUCTIONS) else 0"
+>   },
+>
+> The macro has_event(INSTRUCTIONS) now refers to a legacy event which
+> always exists. It is always true even when the hardware does not
+> support this event. Change the has_event(xxx) to check for a hardware
+> event not available, for example CPU_CYCLES.
+>
+> Fixes: 0012e0fa221b ("perf jevents: Add legacy-hardware and legacy-cache =
+json")
+> Suggested by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 
-It needs to be publicly documented somewhere. It doesn't have to be
-fancy: a web page or white paper would be fine.
+This fix is equivalent to:
+https://lore.kernel.org/lkml/20251112162439.1553368-1-irogers@google.com/
+I'm easy about which one is picked up, the commit message here has more det=
+ail.
 
-I know it's been allowed to slide up until now. But, according to[1]:
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-	We (Intel) continuously improve, enabling us to be more curious,
-	bold and innovative.
+Thanks,
+Ian
 
-So, can we try to improve this, please?
-
-...>> Also, why *can't* this just be enumerated?
-> 
-> Could you clarify what you mean by "enumerated"? Are you suggesting:
-> 1. Runtime detection instead of static matching?
-> 2. A different approach to CPU model matching?
-> 3. Something else?
-> 
-> The current approach follows the established pattern for other Intel 
-> CPU models in this driver. If there's a preferred alternative approach, 
-> I'm happy to implement it.
-Your patch effectively says:
-
-	PTL supports C10 package states residency counters
-
-(among others of course). Why can't there be a bit in CPUID or an MSR
-somewhere that, when set, means the same thing? That way, we don't have
-to keep patching the kernel every time there's a new CPU model.
-
-I guess in general PMU things haven't been architectural. But this seems
-like something that wouldn't be too hard for the CPU itself to enumerate
-to software.
-
-1.
-https://www.intel.com/content/www/us/en/corporate-responsibility/our-values.html
+> ---
+>  tools/perf/pmu-events/arch/s390/cf_z16/transaction.json | 8 ++++----
+>  tools/perf/pmu-events/arch/s390/cf_z17/transaction.json | 8 ++++----
+>  2 files changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json b/to=
+ols/perf/pmu-events/arch/s390/cf_z16/transaction.json
+> index 3ab1d3a6638c..26c550621d6a 100644
+> --- a/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
+> +++ b/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
+> @@ -7,17 +7,17 @@
+>    {
+>      "BriefDescription": "Cycles per Instruction",
+>      "MetricName": "cpi",
+> -    "MetricExpr": "CPU_CYCLES / INSTRUCTIONS if has_event(INSTRUCTIONS) =
+else 0"
+> +    "MetricExpr": "CPU_CYCLES / INSTRUCTIONS if has_event(CPU_CYCLES) el=
+se 0"
+>    },
+>    {
+>      "BriefDescription": "Problem State Instruction Ratio",
+>      "MetricName": "prbstate",
+> -    "MetricExpr": "(PROBLEM_STATE_INSTRUCTIONS / INSTRUCTIONS) * 100 if =
+has_event(INSTRUCTIONS) else 0"
+> +    "MetricExpr": "(PROBLEM_STATE_INSTRUCTIONS / INSTRUCTIONS) * 100 if =
+has_event(CPU_CYCLES) else 0"
+>    },
+>    {
+>      "BriefDescription": "Level One Miss per 100 Instructions",
+>      "MetricName": "l1mp",
+> -    "MetricExpr": "((L1I_DIR_WRITES + L1D_DIR_WRITES) / INSTRUCTIONS) * =
+100 if has_event(INSTRUCTIONS) else 0"
+> +    "MetricExpr": "((L1I_DIR_WRITES + L1D_DIR_WRITES) / INSTRUCTIONS) * =
+100 if has_event(CPU_CYCLES) else 0"
+>    },
+>    {
+>      "BriefDescription": "Percentage sourced from Level 2 cache",
+> @@ -52,7 +52,7 @@
+>    {
+>      "BriefDescription": "Estimated Instruction Complexity CPI infinite L=
+evel 1",
+>      "MetricName": "est_cpi",
+> -    "MetricExpr": "(CPU_CYCLES / INSTRUCTIONS) - (L1C_TLB2_MISSES / INST=
+RUCTIONS) if has_event(INSTRUCTIONS) else 0"
+> +    "MetricExpr": "(CPU_CYCLES / INSTRUCTIONS) - (L1C_TLB2_MISSES / INST=
+RUCTIONS) if has_event(CPU_CYCLES) else 0"
+>    },
+>    {
+>      "BriefDescription": "Estimated Sourcing Cycles per Level 1 Miss",
+> diff --git a/tools/perf/pmu-events/arch/s390/cf_z17/transaction.json b/to=
+ols/perf/pmu-events/arch/s390/cf_z17/transaction.json
+> index 74df533c8b6f..4d296e0c8934 100644
+> --- a/tools/perf/pmu-events/arch/s390/cf_z17/transaction.json
+> +++ b/tools/perf/pmu-events/arch/s390/cf_z17/transaction.json
+> @@ -7,17 +7,17 @@
+>    {
+>      "BriefDescription": "Cycles per Instruction",
+>      "MetricName": "cpi",
+> -    "MetricExpr": "CPU_CYCLES / INSTRUCTIONS if has_event(INSTRUCTIONS) =
+else 0"
+> +    "MetricExpr": "CPU_CYCLES / INSTRUCTIONS if has_event(CPU_CYCLES) el=
+se 0"
+>    },
+>    {
+>      "BriefDescription": "Problem State Instruction Ratio",
+>      "MetricName": "prbstate",
+> -    "MetricExpr": "(PROBLEM_STATE_INSTRUCTIONS / INSTRUCTIONS) * 100 if =
+has_event(INSTRUCTIONS) else 0"
+> +    "MetricExpr": "(PROBLEM_STATE_INSTRUCTIONS / INSTRUCTIONS) * 100 if =
+has_event(CPU_CYCLES) else 0"
+>    },
+>    {
+>      "BriefDescription": "Level One Miss per 100 Instructions",
+>      "MetricName": "l1mp",
+> -    "MetricExpr": "((L1I_DIR_WRITES + L1D_DIR_WRITES) / INSTRUCTIONS) * =
+100 if has_event(INSTRUCTIONS) else 0"
+> +    "MetricExpr": "((L1I_DIR_WRITES + L1D_DIR_WRITES) / INSTRUCTIONS) * =
+100 if has_event(CPU_CYCLES) else 0"
+>    },
+>    {
+>      "BriefDescription": "Percentage sourced from Level 2 cache",
+> @@ -52,7 +52,7 @@
+>    {
+>      "BriefDescription": "Estimated Instruction Complexity CPI infinite L=
+evel 1",
+>      "MetricName": "est_cpi",
+> -    "MetricExpr": "(CPU_CYCLES / INSTRUCTIONS) - (L1C_TLB2_MISSES / INST=
+RUCTIONS) if has_event(INSTRUCTIONS) else 0"
+> +    "MetricExpr": "(CPU_CYCLES / INSTRUCTIONS) - (L1C_TLB2_MISSES / INST=
+RUCTIONS) if has_event(CPU_CYCLES) else 0"
+>    },
+>    {
+>      "BriefDescription": "Estimated Sourcing Cycles per Level 1 Miss",
+> --
+> 2.51.1
+>
