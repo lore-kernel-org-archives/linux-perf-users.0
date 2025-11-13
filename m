@@ -1,210 +1,386 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED1E333754;
-	Thu, 13 Nov 2025 08:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F124331A6D
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 10:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763023056; cv=none; b=ueWYtd80rhPzuaSmNtwo+QaW5ybyyG4Kp9grFo1wNShaDeyi1nRBvR/YonenviS84OF/rQHVc9EOc0doAEPVJh/GE4lmyJzNbt+4un4Qq22CitW8QDK3gS0jkfwb2BMPS9cDHTSdCcOXZFVrlf9um4ZgdvRZyk2Dtp2IxgaW1Js=
+	t=1763031177; cv=none; b=Y4j0oeAL6ZqLvqeeZcTJjXU4avPwl8G8TDivlRdTVDWw1AG3oClyyIgzdSV4GsnfYGoOsnWgHPt28KrcLnHw8v1smlXw9R6MzAT3M03GUbvOROtcVKLEw4L8o9lNF8hxFxyJNpGYy8FEP6GDIBWyoWZ47BM/tdjfwp8F5C7n1fI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763023056; c=relaxed/simple;
-	bh=XFYtsFL4rpmfEMgLFxyr4sNRrEnFuAf9G3+wCL0Lr9c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=lgh1UjjneEQvAf4EwyLc6sz668v0S+8gmYUGqx96OxMBifcrudeeF6xe2AwyM9k5ywXgPcI1j8uTf2Z8LWgi23pLepdjQPwt9PmDQCMGCQUmE03AzaL0Ud/zxZtSOKA4kBdusdOQrSCcjyb9cA9jWiFLkg6HZcacbSAjhiyhAkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=njdUq3Yj; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1763031177; c=relaxed/simple;
+	bh=ptjnN+kV6KtL9cjMx1i4vilb0N1AN7KTugMe4NyA6zk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oYEB+eWHx5gyaCJy5OWrNRTQ0y79/9oL7wXwPjk0UxM/dttZM90cs8aiY+u3LnPIB+ZEoy4VB/G4TL+UZuGBBQI+cBVPOh5sShv933b3qTnD+EkQsLgZeilJMpUVkhSZaJPhOYMCgZw9vvoPlEPs3810TyDOhXHG+BCaUsTyf2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WUEAdvHt; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="njdUq3Yj"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5ACI2788023602;
-	Thu, 13 Nov 2025 08:37:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=YkcNE8
-	5OfSU+IA4LUllS6N/nKIwxBgZ9u3GoTRgAqeQ=; b=njdUq3Yjp47sadiE5s8U3+
-	odAAhyfbfaoAkpUsn+gNQxglhUJ5TS3z21E1vug94eDk3eKC9VxfirN95aDI+v4U
-	gNdi2NA7EnYTpAgzvfqFDxTAzHsNNTBJjw23vTYrVCWUABpfvBw/tVy9YP331Yn9
-	AKUgq5j+PvfzL0AedTuTuDSJQJOp9lvM43Cyz8jQSO6ffTLtRpPgQfgRFKG2z6Hk
-	Mj4xvYn+1FB9ou07oKVK2Qi9TfDMuiZmXT1XLyxizT4lca6HEI0q2qYpUstNfg9Z
-	SXFC89GGY01nwqFBDNTuiEGYkdIRRtx2AkAoQmFFMIvNS0oVM73bhthC7nNRPTbw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aa5cjdqk3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Nov 2025 08:37:21 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.1.12/8.18.0.8) with ESMTP id 5AD8GsPu014482;
-	Thu, 13 Nov 2025 08:37:21 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aa5cjdqk0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Nov 2025 08:37:21 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AD8QX4X007375;
-	Thu, 13 Nov 2025 08:37:20 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4aajdjmnmk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 13 Nov 2025 08:37:20 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AD8bIJZ44761540
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 13 Nov 2025 08:37:18 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 71E6E20040;
-	Thu, 13 Nov 2025 08:37:18 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 42D0220043;
-	Thu, 13 Nov 2025 08:37:18 +0000 (GMT)
-Received: from [9.152.212.92] (unknown [9.152.212.92])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 13 Nov 2025 08:37:18 +0000 (GMT)
-Message-ID: <65e7c3a9-dd73-4d4b-b255-0b2e8cd919cc@linux.ibm.com>
-Date: Thu, 13 Nov 2025 09:37:17 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WUEAdvHt"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-3437ea05540so667439a91.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 02:52:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763031174; x=1763635974; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3OrLY1Uohp4fNrpBoSywOsXuTx3rqnDqEt2AlKMMSpE=;
+        b=WUEAdvHtk39Ef92MgKvBDjyB91pInZlKhkChZhKq72cQha3UFIbikQdlykmF9J4HKb
+         0yjfXuOeFUWwWnTvsD//wkWZJLF/suCzzCeiV+s2aPt8LUvybIozBNC/j4rGkmOcATf0
+         N5/OAf+XDReo/c8KuvPVs7gGi6RIgQ2B5qswtQEbwYh6RjNCOaNEy74WaGUlL7GnXIRb
+         97XgEdMzS9QU41H9aP0MXCxbe/Z02RIY2pXoFe+Px+x5S5rGvK+vuEXcsmFZvPuG9cw2
+         +1qaCBqPtnaQQ5JCdU0zFJr/RRb51CbuKKoIt8XGNDnPVzKsw71wwxjtPkpBC8lPqjVb
+         oPpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763031174; x=1763635974;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3OrLY1Uohp4fNrpBoSywOsXuTx3rqnDqEt2AlKMMSpE=;
+        b=g5z7GX2rrMWk1Nj2qPdK7qAmNl9QPXUbauP31N2+Ewe+bl0xswWBbtzAHOcpzYHNOI
+         qPBF//XKQQJ+GrczotJ2Yl5ENkSf7UN/KouDMTvzN7HbIbOMomRdi/y8cJa2ah3ubzh3
+         K6EWSntjvPvXbMLQAY8RiJ0Gxkf3kyB584/NYSf3FgjaZiI4ez5oFvt7zz4ZSN+Ouasz
+         7rh7c5B31m2cFoY31s3QDFIxDkAkZwyebl8blGupSm+wx8s7/ht0yEb/sICm37eZNROu
+         3BV+y6p2xXdVyT6thXACPhrSw6dcvcuKSbK+LK9r7dpwGQWFCsrhSaoQzRqdeSA1WoCq
+         VS6A==
+X-Forwarded-Encrypted: i=1; AJvYcCW4BYRIX1C5M7b52/MOjmwFHQ9ruW/zzolUcYvVmkHBAc2tHNXOKw0fgM9tzSXKOg/yWz6yRkZGQhrTdMTh4d3x@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSBDCuvzAmCf4M9LyoX+adaP2MfJkQGKladIWV9PEHPhrt+B0c
+	L6LTwVTAHdjELpYEewFc0os9puokw/Ez1kqKdTFA9GFiKNOmh8ehTjgV
+X-Gm-Gg: ASbGncs7yDCPbV/9jWDJz+k+MSanlmD1+8lU9HovZWPYHq3FzmGVgtOVBU4i6ZjAu8E
+	iB/KKUxqR5B8+UM/Ker2PtUghgjFt/bRRyzh61wm8hlyn6koUGIlByZ2kXsQfm2y3WsaLklGm+6
+	wONXCJBycE1Xkszi2grqxuoqFRN97hoxMf/m2+Ego8B7aC404+ldhBaQEsIFTWyinwwbEvDUBan
+	e02gBhin/tDsupqxJJ/6lSRQLkq1EKGrhVxc7rlTAoJwTjVkp4fpBbChMxzrdYDRVuYMRp07ogp
+	JxOuyd5RPlh8vtxH8EJD04nzK6apr9JEkLJH3Y4he0zOK3yBbz65tVBMTcLeuJcauC5zzHEnk+Q
+	86YkjNcmS4oFq1nM2AvKNrP9wif6cEP8Rrmb5Pv8hhai7YLGu3lUae4WbO1CK8nGT9L6L7IrZq3
+	fJmqQK4h55nuahnRqUbyWR1bKStZlqg0LR3L0=
+X-Google-Smtp-Source: AGHT+IHzp6UCtl35V4whLnPDL/LSjb2HQjwqo7fMEKu5Lo9MkJ9BX0nvNUtMKAS1HyvsK3oZoUW6iA==
+X-Received: by 2002:a17:90a:fc50:b0:343:a631:28a8 with SMTP id 98e67ed59e1d1-343dded5123mr8338802a91.37.1763031173562;
+        Thu, 13 Nov 2025 02:52:53 -0800 (PST)
+Received: from DESKTOP-8TIG9K0.localdomain ([119.28.20.50])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-343ed4c939dsm2139616a91.6.2025.11.13.02.52.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Nov 2025 02:52:52 -0800 (PST)
+From: Xie Yuanbin <qq570070308@gmail.com>
+To: tglx@linutronix.de,
+	riel@surriel.com,
+	segher@kernel.crashing.org,
+	david@redhat.com,
+	peterz@infradead.org,
+	hpa@zytor.com,
+	osalvador@suse.de,
+	linux@armlinux.org.uk,
+	mathieu.desnoyers@efficios.com,
+	paulmck@kernel.org,
+	pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	hca@linux.ibm.com,
+	gor@linux.ibm.com,
+	agordeev@linux.ibm.com,
+	borntraeger@linux.ibm.com,
+	svens@linux.ibm.com,
+	davem@davemloft.net,
+	andreas@gaisler.com,
+	luto@kernel.org,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	anna-maria@linutronix.de,
+	frederic@kernel.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com,
+	morbo@google.com,
+	justinstitt@google.com,
+	qq570070308@gmail.com,
+	thuth@redhat.com,
+	brauner@kernel.org,
+	arnd@arndb.de,
+	sforshee@kernel.org,
+	mhiramat@kernel.org,
+	andrii@kernel.org,
+	oleg@redhat.com,
+	jlayton@kernel.org,
+	aalbersh@redhat.com,
+	akpm@linux-foundation.org,
+	david@kernel.org,
+	lorenzo.stoakes@oracle.com,
+	baolin.wang@linux.alibaba.com,
+	max.kellermann@ionos.com,
+	ryan.roberts@arm.com,
+	nysal@linux.ibm.com,
+	urezki@gmail.com
+Cc: x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	llvm@lists.linux.dev,
+	will@kernel.org
+Subject: [PATCH v3 0/3] Optimize code generation during context switching
+Date: Thu, 13 Nov 2025 18:52:24 +0800
+Message-ID: <20251113105227.57650-1-qq570070308@gmail.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf vendor metrics s390: Avoid
- has_event(INSTRUCTIONS)
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20251112162439.1553368-1-irogers@google.com>
-Content-Language: en-US
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <20251112162439.1553368-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Ss+dKfO0 c=1 sm=1 tr=0 ts=691598c1 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=1XWaLZrsAAAA:8 a=fUDWYMiWWKKnppuCQBQA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=cPQSjfK2_nFv0Q5t_7PE:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTA4MDA5NSBTYWx0ZWRfX9G7o8WaoYxwL
- iIyTgyWqW+LiGG5dX6ix+HQAr2Ng/HSOhKmUB4CNgx7iner9r2AVLjC/uLdHrAmjIWPB9wyBIBZ
- NolwbFynjg81vRs6h/Q0IKblrPjHEGPLTKbCNt85zawJu06DJCgQcCWI6TRZaMtpSx23grFNgs7
- 2Suh9B3OZGIzSs/K6+b8av+xKasUr/wygujSBuuGtLFgUWeOUbazs6VEE7lxtLPQ8rauICuEXuj
- Tn2U7fZ6xtTVSQr7i+lIKSNY6Zy4oRpvMdbuBtOl5NyeYQifj80VzQVhQauSDHXR77moIN9iplv
- KxiKXF0jc2Nmn3UvmkaDmgU6IWHeBAMB7WVUXDnWrFqeUBOmrfOzl+r+EynwP/DBBTP6YuKV6Ch
- cAkrSsiogcmkiy1d3N7/PHRJEO71gA==
-X-Proofpoint-GUID: cyUXZenfqsSFp9aKtaueDUcyCZZJPUN4
-X-Proofpoint-ORIG-GUID: OcGosf5xEsxzDEsbsxIzaz_u17H_SL7c
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-12_06,2025-11-12_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 suspectscore=0 impostorscore=0 bulkscore=0 phishscore=0
- lowpriorityscore=0 adultscore=0 priorityscore=1501 spamscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511080095
 
-On 11/12/25 17:24, Ian Rogers wrote:
-> The instructions event is now provided in json meaning the has_event
-> test always succeeds. Switch to using non-legacy event names in the
-> affected metrics.
-> 
-> Reported-by: Thomas Richter <tmricht@linux.ibm.com>
-> Closes: https://lore.kernel.org/linux-perf-users/3e80f453-f015-4f4f-93d3-8df6bb6b3c95@linux.ibm.com/
-> Fixes: 0012e0fa221b ("perf jevents: Add legacy-hardware and legacy-cache json")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/pmu-events/arch/s390/cf_z16/transaction.json | 8 ++++----
->  tools/perf/pmu-events/arch/s390/cf_z17/transaction.json | 8 ++++----
->  2 files changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json b/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
-> index 3ab1d3a6638c..57b785307a85 100644
-> --- a/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
-> +++ b/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
-> @@ -7,17 +7,17 @@
->    {
->      "BriefDescription": "Cycles per Instruction",
->      "MetricName": "cpi",
-> -    "MetricExpr": "CPU_CYCLES / INSTRUCTIONS if has_event(INSTRUCTIONS) else 0"
-> +    "MetricExpr": "CPU_CYCLES / INSTRUCTIONS if has_event(CPU_CYCLES) else 0"
->    },
->    {
->      "BriefDescription": "Problem State Instruction Ratio",
->      "MetricName": "prbstate",
-> -    "MetricExpr": "(PROBLEM_STATE_INSTRUCTIONS / INSTRUCTIONS) * 100 if has_event(INSTRUCTIONS) else 0"
-> +    "MetricExpr": "(PROBLEM_STATE_INSTRUCTIONS / INSTRUCTIONS) * 100 if has_event(PROBLEM_STATE_INSTRUCTIONS) else 0"
->    },
->    {
->      "BriefDescription": "Level One Miss per 100 Instructions",
->      "MetricName": "l1mp",
-> -    "MetricExpr": "((L1I_DIR_WRITES + L1D_DIR_WRITES) / INSTRUCTIONS) * 100 if has_event(INSTRUCTIONS) else 0"
-> +    "MetricExpr": "((L1I_DIR_WRITES + L1D_DIR_WRITES) / INSTRUCTIONS) * 100 if has_event(L1I_DIR_WRITES) else 0"
->    },
->    {
->      "BriefDescription": "Percentage sourced from Level 2 cache",
-> @@ -52,7 +52,7 @@
->    {
->      "BriefDescription": "Estimated Instruction Complexity CPI infinite Level 1",
->      "MetricName": "est_cpi",
-> -    "MetricExpr": "(CPU_CYCLES / INSTRUCTIONS) - (L1C_TLB2_MISSES / INSTRUCTIONS) if has_event(INSTRUCTIONS) else 0"
-> +    "MetricExpr": "(CPU_CYCLES / INSTRUCTIONS) - (L1C_TLB2_MISSES / INSTRUCTIONS) if has_event(CPU_CYCLES) else 0"
->    },
->    {
->      "BriefDescription": "Estimated Sourcing Cycles per Level 1 Miss",
-> diff --git a/tools/perf/pmu-events/arch/s390/cf_z17/transaction.json b/tools/perf/pmu-events/arch/s390/cf_z17/transaction.json
-> index 74df533c8b6f..7ded6a5a76c0 100644
-> --- a/tools/perf/pmu-events/arch/s390/cf_z17/transaction.json
-> +++ b/tools/perf/pmu-events/arch/s390/cf_z17/transaction.json
-> @@ -7,17 +7,17 @@
->    {
->      "BriefDescription": "Cycles per Instruction",
->      "MetricName": "cpi",
-> -    "MetricExpr": "CPU_CYCLES / INSTRUCTIONS if has_event(INSTRUCTIONS) else 0"
-> +    "MetricExpr": "CPU_CYCLES / INSTRUCTIONS if has_event(CPU_CYCLES) else 0"
->    },
->    {
->      "BriefDescription": "Problem State Instruction Ratio",
->      "MetricName": "prbstate",
-> -    "MetricExpr": "(PROBLEM_STATE_INSTRUCTIONS / INSTRUCTIONS) * 100 if has_event(INSTRUCTIONS) else 0"
-> +    "MetricExpr": "(PROBLEM_STATE_INSTRUCTIONS / INSTRUCTIONS) * 100 if has_event(PROBLEM_STATE_INSTRUCTIONS) else 0"
->    },
->    {
->      "BriefDescription": "Level One Miss per 100 Instructions",
->      "MetricName": "l1mp",
-> -    "MetricExpr": "((L1I_DIR_WRITES + L1D_DIR_WRITES) / INSTRUCTIONS) * 100 if has_event(INSTRUCTIONS) else 0"
-> +    "MetricExpr": "((L1I_DIR_WRITES + L1D_DIR_WRITES) / INSTRUCTIONS) * 100 if has_event(L1I_DIR_WRITES) else 0"
->    },
->    {
->      "BriefDescription": "Percentage sourced from Level 2 cache",
-> @@ -52,7 +52,7 @@
->    {
->      "BriefDescription": "Estimated Instruction Complexity CPI infinite Level 1",
->      "MetricName": "est_cpi",
-> -    "MetricExpr": "(CPU_CYCLES / INSTRUCTIONS) - (L1C_TLB2_MISSES / INSTRUCTIONS) if has_event(INSTRUCTIONS) else 0"
-> +    "MetricExpr": "(CPU_CYCLES / INSTRUCTIONS) - (L1C_TLB2_MISSES / INSTRUCTIONS) if has_event(L1C_TLB2_MISSES) else 0"
->    },
->    {
->      "BriefDescription": "Estimated Sourcing Cycles per Level 1 Miss",
+The purpose of this series of patches is to optimize the performance of
+context switching. It does not change the code logic, but only modifies
+the inline attributes of some functions.
 
-Thanks a lot.
+It is found that `finish_task_switch` is not inlined even in the O2 level
+optimization. This may affect performance for the following reasons:
+1. It is in the context switching code, which is a hot code path.
+2. Because of the modern CPU mitigations for vulnerabilities, inside
+switch_mm, the instruction pipeline and cache may be cleared.
+finish_task_switch is right after that, so the performance is greatly
+affected by function calls and branch jumps.
+3. The __schedule function has __sched attribute, which makes it be
+placed in the ".sched.text" section, while finish_task_switch does not,
+which causes their distance to be very far in binary, aggravating the
+above performance degradation.
 
-Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Thomas Richter <tmricht@linux.ibm.com>
+This series of patches mainly does the following things:
+1. Make enter_lazy_tlb inline on x86.
+2. Make raw_spin_rq_unlock inline.
+3. Let the finish_task_switch function be called inline during context
+switching.
+4. Set the subfunctions called by finish_task_switch to be inline:
+After finish_task_switch is changed to an inline function, the number of
+calls to the subfunctions (called by finish_task_switch) increases in
+this translation unit due to the inline expansion of finish_task_switch.
+For example, the finish_lock_switch function originally had only one
+calling point in core.o (in finish_task_switch func), but because the
+finish_task_switch was inlined, the calling points become two.
+Due to compiler optimization strategies, these functions may transition
+from inline functions to non inline functions, which can actually lead to
+performance degradation.
+Make the subfunctions of finish_task_stwitch inline to prevent
+degradation.
+
+Performance test data for these patches:
+Time spent on calling finish_task_switch (unit: rdtsc):
+ | compiler && appended cmdline | without patches | with patches  |
+ | gcc + NA                     | 13.93 - 13.94   | 12.39 - 12.44 |
+ | gcc + "spectre_v2_user=on"   | 24.69 - 24.85   | 13.68 - 13.73 |
+ | clang + NA                   | 13.89 - 13.90   | 12.70 - 12.73 |
+ | clang + "spectre_v2_user=on" | 29.00 - 29.02   | 18.88 - 18.97 |
+
+Note: I use x86 for testing here. Different architectures have different
+cmdlines for configuring mitigations. For example, on arm64, spectre v2
+mitigation is enabled by default, and it should be disabled by adding
+"nospectre_v2" to the cmdline.
+
+Test info:
+1. kernel source:
+linux-next
+commit 9c0826a5d9aa4d52206d ("Add linux-next specific files for 20251107")
+2. test machine:
+cpu: intel i5-8300h@4Ghz
+mem: DDR4 2666MHz
+Bare-metal boot, non-virtualized environment
+3. compiler:
+gcc: gcc version 15.2.0 (Debian 15.2.0-7) with
+GNU ld (GNU Binutils for Debian) 2.45
+clang: Debian clang version 21.1.4 (8) with
+Debian LLD 21.1.4 (compatible with GNU linkers)
+4. config:
+base on default x86_64_defconfig, and setting:
+CONFIG_HZ=100
+CONFIG_DEBUG_ENTRY=n
+CONFIG_X86_DEBUG_FPU=n
+CONFIG_EXPERT=y
+CONFIG_MODIFY_LDT_SYSCALL=n
+CONFIG_CGROUPS=n
+CONFIG_BLK_DEV_NVME=y
+5. test method:
+Use rdtsc (cntvct_el0 can be use on arm64/arm) to obtain timestamps
+before and after finish_task_switch calling point, and created multiple
+processes to trigger context switches, then calculated the average
+duration of the finish_task_switch call.
+Note that using multiple processes rather than threads is recommended for
+testing, because this will trigger switch_mm (where spectre v2 mitigations
+may be performed) during context switching.
+The test code is attached at the end of the mail.
+
+
+I also tested the impact on bzImage size, which may affect
+embedded devices:
+1. kernel source && compiler: same as above
+2. config:
+base on default x86_64_defconfig, and setting:
+CONFIG_SCHED_CORE=y
+CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+CONFIG_NO_HZ_FULL=y
+
+bzImage size:
+ | compiler | without patches | with patches  |
+ | clang    | 13722624        | 13722624      |
+ | gcc      | 12596224        | 12596224      |
+
+No size changes were found on bzImage.
+
+testing code:
+kernel(just for testing, not a commit):
+```c
+diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+index 8a4ac4841be6..5a42ec008620 100644
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -395,6 +395,7 @@
+ 468	common	file_getattr		sys_file_getattr
+ 469	common	file_setattr		sys_file_setattr
+ 470	common	listns			sys_listns
++471	common	sched_test		sys_sched_test
+ 
+ #
+ # Due to a historical design error, certain syscalls are numbered differently
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 81cf8452449a..d7e2095aeb7d 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5195,6 +5195,36 @@ asmlinkage __visible void schedule_tail(struct task_struct *prev)
+ 	calculate_sigpending();
+ }
+ 
++static DEFINE_PER_CPU(uint64_t, start_time);
++static DEFINE_PER_CPU(uint64_t, total_time);
++static DEFINE_PER_CPU(uint64_t, total_count);
++
++static __always_inline uint64_t test_rdtsc(void)
++{
++    register uint64_t rax __asm__("rax");
++    register uint64_t rdx __asm__("rdx");
++
++    __asm__ __volatile__ ("rdtsc" : "=a"(rax), "=d"(rdx));
++    return rax | (rdx << 32);
++}
++
++static __always_inline void test_start(void)
++{
++	raw_cpu_write(start_time, test_rdtsc());
++}
++
++static __always_inline void test_end(void)
++{
++	const uint64_t end_time = test_rdtsc();
++	const uint64_t cost_time = end_time - raw_cpu_read(start_time);
++
++	raw_cpu_add(total_time, cost_time);
++	if (unlikely(raw_cpu_inc_return(total_count) % (1 << 20) == 0)) {
++		pr_emerg("cpu %d total_time %llu\n", raw_smp_processor_id(), raw_cpu_read(total_time));
++		raw_cpu_write(total_time, 0);
++	}
++}
++
+ /*
+  * context_switch - switch to the new MM and the new thread's register state.
+  */
+@@ -5264,7 +5294,10 @@ context_switch(struct rq *rq, struct task_struct *prev,
+ 	switch_to(prev, next, prev);
+ 	barrier();
+ 
+-	return finish_task_switch(prev);
++	test_start();
++	rq = finish_task_switch(prev);
++	test_end();
++	return rq;
+ }
+ 
+ /*
+@@ -10861,3 +10894,18 @@ void sched_change_end(struct sched_change_ctx *ctx)
+ 		p->sched_class->prio_changed(rq, p, ctx->prio);
+ 	}
+ }
++
++static struct task_struct *wait_task;
++
++SYSCALL_DEFINE0(sched_test)
++{
++	preempt_disable();
++	while (1) {
++		if (likely(wait_task))
++			wake_up_process(wait_task);
++		wait_task = current;
++		set_current_state(TASK_UNINTERRUPTIBLE);
++		__schedule(SM_NONE);
++	}
++	return 0;
++}
+```
+
+User program:
+```c
+int main()
+{
+	cpu_set_t mask;
+	if (fork())
+		sleep(1);
+
+	CPU_ZERO(&mask);
+	CPU_SET(5, &mask); // Assume that cpu5 exists
+	assert(sched_setaffinity(0, sizeof(mask), &mask) == 0);
+	syscall(471);
+	// unreachable
+	return 0;
+}
+```
+
+Usage:
+1. set core5 as isolated cpu: add "isolcpus=5" to cmdline
+2. run user programe
+3. wait for kernel print
+
+v2->v3: https://lore.kernel.org/20251108172346.263590-1-qq570070308@gmail.com
+  - Fix building error in patch 1
+  - Simply add the __always_inline attribute to the existing function,
+    Instead of adding the always inline version functions
+
+v1->v2: https://lore.kernel.org/20251024182628.68921-1-qq570070308@gmail.com
+  - Make raw_spin_rq_unlock inline
+  - Make __balance_callbacks inline
+  - Add comments for always inline functions
+  - Add Performance Test Data
+
+Xie Yuanbin (3):
+  Make enter_lazy_tlb inline on x86
+  Make raw_spin_rq_unlock inline
+  Make finish_task_switch and its subfuncs inline in context switching
+
+ arch/arm/include/asm/mmu_context.h      |  2 +-
+ arch/riscv/include/asm/sync_core.h      |  2 +-
+ arch/s390/include/asm/mmu_context.h     |  2 +-
+ arch/sparc/include/asm/mmu_context_64.h |  2 +-
+ arch/x86/include/asm/mmu_context.h      | 23 ++++++++++++++++++++++-
+ arch/x86/include/asm/sync_core.h        |  2 +-
+ arch/x86/mm/tlb.c                       | 21 ---------------------
+ include/linux/perf_event.h              |  2 +-
+ include/linux/sched/mm.h                | 10 +++++-----
+ include/linux/tick.h                    |  4 ++--
+ include/linux/vtime.h                   |  8 ++++----
+ kernel/sched/core.c                     | 19 +++++++------------
+ kernel/sched/sched.h                    | 24 ++++++++++++++----------
+ 13 files changed, 60 insertions(+), 61 deletions(-)
 
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
+2.51.0
 
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
