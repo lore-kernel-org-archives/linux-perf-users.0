@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BBEF30ACE7
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 03:21:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4879D30BF55
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Nov 2025 03:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763004088; cv=none; b=aR/NMwe6MidBkh2x+DKgjfLH7FFG85i6r6SuTk+6ey61VhB1JE5cx5Qbkv2UPXBlQiABUfF9Zl97VfJxXDnRUXdqT7kw7HjVWG12PKGhDmPiLkzgQn/lbIn2jJj5qQ5IFD4SLmnRiOWyWxrmlk6CrrRXNzzeDbsp0FG5RcvZ2Bw=
+	t=1763004090; cv=none; b=HeUAyklKYn8ILbB7AALQhoREyg52a5VpRao6cuxV9pzfy3ytiSineR7Rlz39Amulh97RGdgLpgBYu+Z3QxTayAfpESYt8UJUxM3gbIDVeftkYUGnNlJUJicyRf5t0sR30r9v1XlV9SxwGCG4tKRQ51s4Oy7agZ3A2EZ/PgTBKmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763004088; c=relaxed/simple;
-	bh=B8lkbetWKiGNIsi91sd8YrgblwbzZ9lrZIRvSGABaSA=;
+	s=arc-20240116; t=1763004090; c=relaxed/simple;
+	bh=MTpvxNQIsbhE+YweGRvxHhdlQZZ2uFXAAWC1hzEIqfY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=XW350bknPcwUamPzNX4JEHbumRUtccXbAjqFLQHglY+uTjgkU5RM6kqR7atLtt8R5rH0rzBO1eu8DJntIHx1aKbViuG1os55QyR9DU13fM4QlHcO2vMjJnO7B6c8sQVNsuYLpgIXRMPn2HEnkeChLzyxejys1D8A/AaL7pWNp3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l/3YZ651; arc=none smtp.client-ip=209.85.214.201
+	 To:Content-Type; b=pj9Sw7niLxsZSEoX86kitt5qOfWcmCmzIEivCYxqZSK/8vbbpPavqUxFF7J207Ec8VLNTfY0HwC6w0PA6CuoiPMGuG/wtKxvvckGy9bczJm/s4kD81572wByyhTp6G0jfbbMbZS2fyBQ6VUB1Y3Nprk5W63IZvjC+YBJs/A9NCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QQMHA3kt; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l/3YZ651"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-29845b18d1aso4340255ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 19:21:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QQMHA3kt"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b99f6516262so917761a12.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Nov 2025 19:21:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1763004087; x=1763608887; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1763004089; x=1763608889; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=GojlKXXeIlWC1RlOdbmNF9Co4cMdGfhXPPYbUElx0PE=;
-        b=l/3YZ651OWUXlfGPzSFHq5kDMDijdeiG2WQkkYS0bp7zAe7xVtH75bpzbDZC9LvzVY
-         Rm4niXI+n4dm99wil+AATajAowXSfTjRf29NfALKdVYOf9fpwOumHcLe4aAyGVNpPSYp
-         AaPGFOm+l/Af1tcfb5p9gVD0bBlM4BWVj+NKkE3lkwt6OyeBQGGw5XULNXJ/nmGdZq8E
-         30VVAMzf1r63WNED6FXtQc8jJEyOxFBkrDWgloYQlbDOV9VSvulqKzPZL8byjTNgkopB
-         mPu5CeucO2M65gzLHK7iTacQupWzvTkdpjCDz1GQCfn0QcCTRkQGe08p5KFjXdVUr01s
-         yyWA==
+        bh=46tAwbQ8f//xN3Ry13qDNDr4Q30XuGVyKpDV1Wax+Xg=;
+        b=QQMHA3ktMfiU+vMrw84poHbX/5TBe1W2ZbjIbibCAx1281clSt0YOY4Hgt80bZccwW
+         eZhyg7XFk0JOB3LvgFyasUqrXZa7W8Mix4Kea9zktSDg2Hha1LPRmPYsHlJp7FF5Bk2Y
+         xlkt8yftD8EirW+9LiCc2oT3chhn6Z/FAp5qtoZK4opiy0X0Lcst39dIZ+QnmND6/UM6
+         4EVSy84JPBuKZGd58fJM5Ro16MBwHDJfeYGjFORMYaRiUcUOvtOpt/hCnfIjVnjVdW7U
+         FU2WbKt5ezx6lm8pCsH+fGgDKc2y91oQR/NgXc835V5SnHSyzRJSf964nP0eL4nel6bX
+         iWxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763004087; x=1763608887;
+        d=1e100.net; s=20230601; t=1763004089; x=1763608889;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GojlKXXeIlWC1RlOdbmNF9Co4cMdGfhXPPYbUElx0PE=;
-        b=YFLSiOy2vdQlH27/QIqwKpl92btNBZ7zk8l3gK+1ETaDSTKcYs3BP/U1WwYkXpEHhg
-         +IxxJPJx2sCN+AKA9haWjSkuVSAN6DOCO4ucba679sr3lUXCPe2hqQwN1qbSQ2iihFKP
-         C5iMpQfqnW+iunHU47I+qzPhD2yiGm5vksEc73716cDrqPsaMoHr67UGB0Z1ks6YAlwO
-         f27mn4s3rOilkGVb8EYfrC7bICIajjMXlcBMpICnHYGGBf8n5cjOM0yPQiPAgAcU3MAn
-         GO9UJ3p18+U1aO7VDiUcQ4gy/YeXHF1/6XDnphtq15tz0e7jdzhokHUyQbOhXwGTuoNF
-         WAxg==
-X-Forwarded-Encrypted: i=1; AJvYcCWW7FBryAo8VMtOanhIOWPt1J6eoUg0yI6zA31Rg6ZeejhimeS9lrhVbu83ULFxXM+/IlmZlkwmgOZ32xyYjGwr@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqY4c0QFkZo+5ds8jzJGP50EtO820P8wPDflxsmtwu3uFfg1pF
-	4x4g8QV0L4wGKuWilWbuuw1np/1q08ZpkxIZRaA8Hu35F/ckGFf+nv1EWeMW7zuJpkJrA8RV+Zg
-	/JaIgYGeIxQ==
-X-Google-Smtp-Source: AGHT+IHsv0wCUr4pcyK7ZKuQfbUgkUGpid5htJyGlM0w6i46UINI2OHaBEkE4F63Sjg9i6YhTCkUksnrBVuN
-X-Received: from dlbbs33.prod.google.com ([2002:a05:7022:921:b0:119:78ff:fe12])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:3b8b:b0:294:f711:baa
- with SMTP id d9443c01a7336-2984ed2b6e3mr66202765ad.2.1763004086743; Wed, 12
- Nov 2025 19:21:26 -0800 (PST)
-Date: Wed, 12 Nov 2025 19:20:05 -0800
+        bh=46tAwbQ8f//xN3Ry13qDNDr4Q30XuGVyKpDV1Wax+Xg=;
+        b=U3SFbiXk8VPiJejqmwPHrP85BdltK7CWfXjTkmGJWp+grMCMzJzEnxRzOQoKT+I0/m
+         HQ3ZcWd+cicyv3Klx/vFRZFQOvSfvqHMj2+YdewygHMe9Lo15T+U/BPJIndeCnQJtHVr
+         VVJ/y9DokWIM8n4/3XbK94ABcLg+ntrut2xTR6eRibYJxl+bq2XMsK1b9pv7ZS0/jsse
+         gI3ePPytl/gXMrlHxiaMInTs1EAFuAeiYdFqfZacxUgmqAB3b0HDswLtihxHsYE6KTJD
+         pW56lVdkt6AzyLJsXxy2RGKGnKRrpeMGpJ1SYKjXudUBVJzV/SAnx2wZZktXn+iCGtcB
+         yHVw==
+X-Forwarded-Encrypted: i=1; AJvYcCU5slETHrq4ROSUGgHzDvnwC274JpcV6qD+8jaMYB1YhIQjP9gL96al9TIvvaUd+RsUNU3y6/oTNAuo8mVA9cXC@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvrnXGsOBLhnLoJV0rcMIsuUdBJumwU4h6u4osKgikH2D76uJb
+	uYOQPOouw1cx7g33SNCx50u++Z/yHu6kernPLzftWRVlY9iO9VKTr+zk3027vbxAZICeh5PhLcn
+	EFbi8w6NtDg==
+X-Google-Smtp-Source: AGHT+IFxjDiSEA9vnZn0vC4yoKImGg7+gOZ9Xm6w4b9Ab+vLCsp/wcSbIBstaW7u8IZXDNuQ5mIrUqa4yYk2
+X-Received: from dybmw23.prod.google.com ([2002:a05:7300:cd97:b0:2a4:4bd0:6ed8])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:8906:b0:32b:7220:8536
+ with SMTP id adf61e73a8af0-35909399efemr6057032637.16.1763004088709; Wed, 12
+ Nov 2025 19:21:28 -0800 (PST)
+Date: Wed, 12 Nov 2025 19:20:06 -0800
 In-Reply-To: <20251113032040.1994090-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20251113032040.1994090-1-irogers@google.com>
 X-Mailer: git-send-email 2.51.2.1041.gc1ab5b90ca-goog
-Message-ID: <20251113032040.1994090-18-irogers@google.com>
-Subject: [PATCH v8 17/52] perf jevents: Add upc metric for uops per cycle for AMD
+Message-ID: <20251113032040.1994090-19-irogers@google.com>
+Subject: [PATCH v8 18/52] perf jevents: Add br metric group for branch
+ statistics on AMD
 From: Ian Rogers <irogers@google.com>
 To: Adrian Hunter <adrian.hunter@intel.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
@@ -76,66 +77,138 @@ To: Adrian Hunter <adrian.hunter@intel.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The metric adjusts for whether or not SMT is on.
+The br metric group for branches itself comprises metric groups for
+total, taken, conditional, fused and far metric groups using json
+events. The lack of conditional events on anything but zen2 means this
+category is lacking on zen1, zen3 and zen4.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/amd_metrics.py | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ tools/perf/pmu-events/amd_metrics.py | 104 +++++++++++++++++++++++++++
+ 1 file changed, 104 insertions(+)
 
 diff --git a/tools/perf/pmu-events/amd_metrics.py b/tools/perf/pmu-events/amd_metrics.py
-index f51a044b8005..42e46b33334d 100755
+index 42e46b33334d..1880ccf9c6fc 100755
 --- a/tools/perf/pmu-events/amd_metrics.py
 +++ b/tools/perf/pmu-events/amd_metrics.py
-@@ -3,14 +3,26 @@
- import argparse
- import math
- import os
-+from typing import Optional
- from metric import (d_ratio, has_event, max, Event, JsonEncodeMetric,
--                    JsonEncodeMetricGroupDescriptions, LoadEvents, Metric,
--                    MetricGroup, Select)
-+                    JsonEncodeMetricGroupDescriptions, Literal, LoadEvents,
-+                    Metric, MetricGroup, Select)
+@@ -18,6 +18,109 @@ cycles = Event("cycles")
+ smt_cycles = Select(cycles / 2, Literal("#smt_on"), cycles)
  
- # Global command line arguments.
- _args = None
--
-+_zen_model: int = 1
- interval_sec = Event("duration_time")
-+ins = Event("instructions")
-+cycles = Event("cycles")
-+# Number of CPU cycles scaled for SMT.
-+smt_cycles = Select(cycles / 2, Literal("#smt_on"), cycles)
+ 
++def AmdBr():
++    def Total() -> MetricGroup:
++        br = Event("ex_ret_brn")
++        br_m_all = Event("ex_ret_brn_misp")
++        br_clr = Event("ex_ret_msprd_brnch_instr_dir_msmtch",
++                       "ex_ret_brn_resync")
++
++        br_r = d_ratio(br, interval_sec)
++        ins_r = d_ratio(ins, br)
++        misp_r = d_ratio(br_m_all, br)
++        clr_r = d_ratio(br_clr, interval_sec)
++
++        return MetricGroup("lpm_br_total", [
++            Metric("lpm_br_total_retired",
++                   "The number of branch instructions retired per second.", br_r,
++                   "insn/s"),
++            Metric(
++                "lpm_br_total_mispred",
++                "The number of branch instructions retired, of any type, that were "
++                "not correctly predicted as a percentage of all branch instrucions.",
++                misp_r, "100%"),
++            Metric("lpm_br_total_insn_between_branches",
++                   "The number of instructions divided by the number of branches.",
++                   ins_r, "insn"),
++            Metric("lpm_br_total_insn_fe_resteers",
++                   "The number of resync branches per second.", clr_r, "req/s")
++        ])
++
++    def Taken() -> MetricGroup:
++        br = Event("ex_ret_brn_tkn")
++        br_m_tk = Event("ex_ret_brn_tkn_misp")
++        br_r = d_ratio(br, interval_sec)
++        ins_r = d_ratio(ins, br)
++        misp_r = d_ratio(br_m_tk, br)
++        return MetricGroup("lpm_br_taken", [
++            Metric("lpm_br_taken_retired",
++                   "The number of taken branches that were retired per second.",
++                   br_r, "insn/s"),
++            Metric(
++                "lpm_br_taken_mispred",
++                "The number of retired taken branch instructions that were "
++                "mispredicted as a percentage of all taken branches.", misp_r,
++                "100%"),
++            Metric(
++                "lpm_br_taken_insn_between_branches",
++                "The number of instructions divided by the number of taken branches.",
++                ins_r, "insn"),
++        ])
++
++    def Conditional() -> Optional[MetricGroup]:
++        global _zen_model
++        br = Event("ex_ret_cond")
++        br_r = d_ratio(br, interval_sec)
++        ins_r = d_ratio(ins, br)
++
++        metrics = [
++            Metric("lpm_br_cond_retired", "Retired conditional branch instructions.",
++                   br_r, "insn/s"),
++            Metric("lpm_br_cond_insn_between_branches",
++                   "The number of instructions divided by the number of conditional "
++                   "branches.", ins_r, "insn"),
++        ]
++        if _zen_model == 2:
++            br_m_cond = Event("ex_ret_cond_misp")
++            misp_r = d_ratio(br_m_cond, br)
++            metrics += [
++                Metric("lpm_br_cond_mispred",
++                       "Retired conditional branch instructions mispredicted as a "
++                       "percentage of all conditional branches.", misp_r, "100%"),
++            ]
++
++        return MetricGroup("lpm_br_cond", metrics)
++
++    def Fused() -> MetricGroup:
++        br = Event("ex_ret_fused_instr", "ex_ret_fus_brnch_inst")
++        br_r = d_ratio(br, interval_sec)
++        ins_r = d_ratio(ins, br)
++        return MetricGroup("lpm_br_cond", [
++            Metric("lpm_br_fused_retired",
++                   "Retired fused branch instructions per second.", br_r, "insn/s"),
++            Metric(
++                "lpm_br_fused_insn_between_branches",
++                "The number of instructions divided by the number of fused "
++                "branches.", ins_r, "insn"),
++        ])
++
++    def Far() -> MetricGroup:
++        br = Event("ex_ret_brn_far")
++        br_r = d_ratio(br, interval_sec)
++        ins_r = d_ratio(ins, br)
++        return MetricGroup("lpm_br_far", [
++            Metric("lpm_br_far_retired", "Retired far control transfers per second.",
++                   br_r, "insn/s"),
++            Metric(
++                "lpm_br_far_insn_between_branches",
++                "The number of instructions divided by the number of far branches.",
++                ins_r, "insn"),
++        ])
++
++    return MetricGroup("lpm_br", [Total(), Taken(), Conditional(), Fused(), Far()],
++                       description="breakdown of retired branch instructions")
 +
 +
-+def AmdUpc() -> Metric:
-+    ops = Event("ex_ret_ops", "ex_ret_cops")
-+    upc = d_ratio(ops, smt_cycles)
-+    return Metric("lpm_upc", "Micro-ops retired per core cycle (higher is better)",
-+                  upc, "uops/cycle")
+ def AmdUpc() -> Metric:
+     ops = Event("ex_ret_ops", "ex_ret_cops")
+     upc = d_ratio(ops, smt_cycles)
+@@ -83,6 +186,7 @@ def main() -> None:
+     _zen_model = int(_args.model[6:])
  
- 
- def Idle() -> Metric:
-@@ -45,6 +57,7 @@ def Rapl() -> MetricGroup:
- 
- def main() -> None:
-     global _args
-+    global _zen_model
- 
-     def dir_path(path: str) -> str:
-         """Validate path is a directory for argparse."""
-@@ -67,7 +80,10 @@ def main() -> None:
-     directory = f"{_args.events_path}/x86/{_args.model}/"
-     LoadEvents(directory)
- 
-+    _zen_model = int(_args.model[6:])
-+
      all_metrics = MetricGroup("", [
-+        AmdUpc(),
++        AmdBr(),
+         AmdUpc(),
          Idle(),
          Rapl(),
-     ])
 -- 
 2.51.2.1041.gc1ab5b90ca-goog
 
