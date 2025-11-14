@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451F52EB5CE;
-	Fri, 14 Nov 2025 19:03:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F10299A85;
+	Fri, 14 Nov 2025 19:07:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763147005; cv=none; b=o1jLrs+YAiSsUHG+YUVp98pr6m6+qz81qNJxORwC222/TSyISJLZp+DEFU1ypfXwx5zpXtlf+CvzqPjmguVhbg/Ozh8OGfKLUJLaByTaA87p1LB7UWjnbsHIK9e0hu0zsEumtP3Dq3vu0Cjx0zw0SGIEQggxuVkd+b4P67LV5yQ=
+	t=1763147243; cv=none; b=kUAkOMVSexzSWi5IwW4BstLgX4ftnmQ0eXC/wT9N6NvGOjgSZgrf5lfo95OMP+W834vmE41J9IZAHL3G/5WGFWaf6B6aiqKn3amF3ibasG6/oWcVIlKhqOM/JfhouYYPAstFTipcD0/Tq/3fM8hbQQfyRjQb8my/AsgZHJK/YP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763147005; c=relaxed/simple;
-	bh=I4cSupUj1yArQFO8j1TCBB0/g4NCXS877IPEVCWSoLU=;
+	s=arc-20240116; t=1763147243; c=relaxed/simple;
+	bh=T+6m79C1S+qXKvbd8TIafPQij3gEVwY7boGCZm9bvEA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ctP16LWeankZjy4RwKNvxOMGpIgGwlgthQmkxuXi6sN2nJCyeb6YJa6+UTQ0MMit0C8qkNK40EvID+Lzp9ybWF14ETtUggZ705GFJ+AsNfYTEMijXKI44tSYG5k9cVgqJKWN7f/rX/5nUyC9jb5Hx7YBKgIh6HVu0K9mMt5Vi2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQKSbZqN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=m+Jobv0Sje2/5oWLoMTfdinAU2ZJ2xZ0ec4j/cGZP3CJYkAhBVMbT90K2zs/U48kZlqJbR3cLRJsVg//Ph6YkOUS9ikozeR1gSST77L1bXaIerenAMwUxhMYvMio0+U2z9C4D13IrqSqC48boqigE4Iaj9bfcb0WWZpFbRygWok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mXWGyI0D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQKSbZqN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1DC6C113D0;
-	Fri, 14 Nov 2025 19:03:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mXWGyI0D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74813C19425;
+	Fri, 14 Nov 2025 19:07:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763147005;
-	bh=I4cSupUj1yArQFO8j1TCBB0/g4NCXS877IPEVCWSoLU=;
+	s=k20201202; t=1763147243;
+	bh=T+6m79C1S+qXKvbd8TIafPQij3gEVwY7boGCZm9bvEA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rQKSbZqNUvwki5F6jHL4I1rbKp1a2uZkPOyno1R7vn2giJMLL2XFOqLxCvf5wtSAO
-	 ijhLgcnoJrxVM/iy9bsR+alcglMAbf8LLbHzCx+8gQ/Lhar4mL+RnXMQaLqA5DFXG+
-	 FnW3idINe1hZe40IbZlP+E1vlEBNOQV3Yx5iaPB2yjios9M3wGWsYUoxbWwELWabnh
-	 eD7ZDCJt0k+Dpoc1CKY2FZs9BcxDH3C5n1DkD247jnkyVNBYxFzilrp3mIPPRUY/0l
-	 jGwq/W3L1xnAUH6jfqH/9tHleqk/3oQ+fzgiRP8xYPlxP3A9VufTCHu1bZ7//wjKuf
-	 O9jBV0E9NXW3A==
-Date: Fri, 14 Nov 2025 11:03:23 -0800
+	b=mXWGyI0D6uUean14VZhXESSeZSO5Ep42W1SS2MLi9x9MtRlqyuSzHrp3Yqh5XhkuY
+	 P1+rQx1xeGIJ19coVzan6eKBm0efl3pC/7uicHO/uR/U+ho0z2ofoZYasIRJbfjlJA
+	 aPnfWR9y1qt/phSI3esM+2J4cF8Bug5Wue3En/4B8bmCpYqXE1ZSnDRsVePnaKcPRG
+	 WLC4Thp0wQ+Qm4W5BRsn/adamRp/ePAeQvGc8zGmyafyoQtJCKi6Z77PEbqxuxD/IH
+	 cBTPs1r7w9VJGOpZMnKgN6gScjCFuGIaWfyf4PdUfoqZDhDF6SGqmDM3cZNWe2z1d3
+	 +WCSkU+8qzldw==
+Date: Fri, 14 Nov 2025 11:07:21 -0800
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -35,12 +35,17 @@ Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Pablo Galindo <pablogsal@gmail.com>
-Subject: Re: [PATCH 2/2] perf test: Add python JIT dump test
-Message-ID: <aRd8-4e5apdL7R6Z@google.com>
-References: <20251114092914.217533-1-namhyung@kernel.org>
- <20251114092914.217533-2-namhyung@kernel.org>
- <CAP-5=fWLGQJ+jdc1kqSo0+wy6AVa2Dm-yp7OX8q+bNw94aV3FA@mail.gmail.com>
+	Steven Rostedt <rostedt@goodmis.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] perf tools: Minimal DEFERRED_CALLCHAIN support
+Message-ID: <aRd96Ue-k9z_hC2K@google.com>
+References: <20251114070018.160330-1-namhyung@kernel.org>
+ <20251114070018.160330-3-namhyung@kernel.org>
+ <CAP-5=fVrpBjsJ7=BZQmhXKcaN+OYTY5_gOVj-Qs+33cH0gft7Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,143 +55,142 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWLGQJ+jdc1kqSo0+wy6AVa2Dm-yp7OX8q+bNw94aV3FA@mail.gmail.com>
+In-Reply-To: <CAP-5=fVrpBjsJ7=BZQmhXKcaN+OYTY5_gOVj-Qs+33cH0gft7Q@mail.gmail.com>
 
-On Fri, Nov 14, 2025 at 09:44:21AM -0800, Ian Rogers wrote:
-> On Fri, Nov 14, 2025 at 1:29 AM Namhyung Kim <namhyung@kernel.org> wrote:
+On Fri, Nov 14, 2025 at 09:52:41AM -0800, Ian Rogers wrote:
+> On Thu, Nov 13, 2025 at 11:00 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > Add a test case for the python interpreter like below so that we can
-> > make sure it won't break again.  To validate the effect of build-ID
-> > generation, it adds and removes the JIT'ed DSOs to/from the build-ID
-> > cache for the test.
+> > Add a new event type for deferred callchains and a new callback for the
+> > struct perf_tool.  For now it doesn't actually handle the deferred
+> > callchains but it just marks the sample if it has the PERF_CONTEXT_
+> > USER_DEFFERED in the callchain array.
 > >
-> >   $ perf test -vv jitdump
-> >    84: python profiling with jitdump:
-> >   --- start ---
-> >   test child forked, pid 214316
-> >   Run python with -Xperf_jit
-> >   [ perf record: Woken up 5 times to write data ]
-> >   [ perf record: Captured and wrote 1.180 MB /tmp/__perf_test.perf.data.XbqZNm (140 samples) ]
-> >   Generate JIT-ed DSOs using perf inject
-> >   Add JIT-ed DSOs to the build-ID cache
-> >   Check the symbol containing the script name
-> >   Found 108 matching lines
-> >   Remove JIT-ed DSOs from the build-ID cache
-> >   ---- end(0) ----
-> >    84: python profiling with jitdump                                   : Ok
+> > At least, perf report can dump the raw data with this change.  Actually
+> > this requires the next commit to enable attr.defer_callchain, but if you
+> > already have a data file, it'll show the following result.
 > >
-> > Cc: Pablo Galindo <pablogsal@gmail.com>
-> > Link: https://docs.python.org/3/howto/perf_profiling.html#how-to-work-without-frame-pointers
+> >   $ perf report -D
+> >   ...
+> >   0x2158@perf.data [0x40]: event: 22
+> >   .
+> >   . ... raw event: size 64 bytes
+> >   .  0000:  16 00 00 00 02 00 40 00 06 00 00 00 0b 00 00 00  ......@.........
+> >   .  0010:  03 00 00 00 00 00 00 00 a7 7f 33 fe 18 7f 00 00  ..........3.....
+> >   .  0020:  0f 0e 33 fe 18 7f 00 00 48 14 33 fe 18 7f 00 00  ..3.....H.3.....
+> >   .  0030:  08 09 00 00 08 09 00 00 e6 7a e7 35 1c 00 00 00  .........z.5....
+> >
+> >   121163447014 0x2158 [0x40]: PERF_RECORD_CALLCHAIN_DEFERRED(IP, 0x2): 2312/2312: 0xb00000006
+> >   ... FP chain: nr:3
+> >   .....  0: 00007f18fe337fa7
+> >   .....  1: 00007f18fe330e0f
+> >   .....  2: 00007f18fe331448
+> >   : unhandled!
+> >
 > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > > ---
-> >  tools/perf/tests/shell/jitdump-python.sh | 41 ++++++++++++++++++++++++
-> >  tools/perf/tests/shell/jitdump-test.py   | 14 ++++++++
-> >  2 files changed, 55 insertions(+)
-> >  create mode 100755 tools/perf/tests/shell/jitdump-python.sh
-> >  create mode 100644 tools/perf/tests/shell/jitdump-test.py
+> >  tools/lib/perf/include/perf/event.h       |  8 ++++++++
+> >  tools/perf/util/event.c                   |  1 +
+> >  tools/perf/util/evsel.c                   | 19 +++++++++++++++++++
+> >  tools/perf/util/machine.c                 |  1 +
+> >  tools/perf/util/perf_event_attr_fprintf.c |  2 ++
+> >  tools/perf/util/sample.h                  |  2 ++
+> >  tools/perf/util/session.c                 | 20 ++++++++++++++++++++
+> >  tools/perf/util/tool.c                    |  1 +
+> >  tools/perf/util/tool.h                    |  3 ++-
+> >  9 files changed, 56 insertions(+), 1 deletion(-)
 > >
-> > diff --git a/tools/perf/tests/shell/jitdump-python.sh b/tools/perf/tests/shell/jitdump-python.sh
-> > new file mode 100755
-> > index 0000000000000000..101c15e65da1a0c0
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/jitdump-python.sh
-> > @@ -0,0 +1,41 @@
-> > +#!/bin/bash
-> > +# python profiling with jitdump
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +
-> > +if ! command -v python > /dev/null; then
-> > +    echo "Skip: no python found"
-> > +    exit 2
-> > +fi
+> > diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
+> > index aa1e91c97a226e1a..769bc48ca85c0eb8 100644
+> > --- a/tools/lib/perf/include/perf/event.h
+> > +++ b/tools/lib/perf/include/perf/event.h
+> > @@ -151,6 +151,13 @@ struct perf_record_switch {
+> >         __u32                    next_prev_tid;
+> >  };
+> >
+> > +struct perf_record_callchain_deferred {
+> > +       struct perf_event_header header;
+> > +       __u64                    cookie;
 > 
-> Can this just reuse the python set up logic in:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/shell/lib/setup_python.sh?h=perf-tools-next
+> Could we add a comment that this value is used to match user and
+> kernel stack traces together? I don't believe that intent is
+> immediately obvious from the word "cookie".
 
-Will do!
+Sounds good, will add.
 
 > 
+> > +       __u64                    nr;
+> > +       __u64                    ips[];
+> > +};
 > > +
-> > +SHELLDIR=$(dirname $0)
-> > +PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXXX)
+> >  struct perf_record_header_attr {
+> >         struct perf_event_header header;
+> >         struct perf_event_attr   attr;
+> > @@ -523,6 +530,7 @@ union perf_event {
+> >         struct perf_record_read                 read;
+> >         struct perf_record_throttle             throttle;
+> >         struct perf_record_sample               sample;
+> > +       struct perf_record_callchain_deferred   callchain_deferred;
+> >         struct perf_record_bpf_event            bpf;
+> >         struct perf_record_ksymbol              ksymbol;
+> >         struct perf_record_text_poke_event      text_poke;
+> > diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+> > index fcf44149feb20c35..4c92cc1a952c1d9f 100644
+> > --- a/tools/perf/util/event.c
+> > +++ b/tools/perf/util/event.c
+> > @@ -61,6 +61,7 @@ static const char *perf_event__names[] = {
+> >         [PERF_RECORD_CGROUP]                    = "CGROUP",
+> >         [PERF_RECORD_TEXT_POKE]                 = "TEXT_POKE",
+> >         [PERF_RECORD_AUX_OUTPUT_HW_ID]          = "AUX_OUTPUT_HW_ID",
+> > +       [PERF_RECORD_CALLCHAIN_DEFERRED]        = "CALLCHAIN_DEFERRED",
+> >         [PERF_RECORD_HEADER_ATTR]               = "ATTR",
+> >         [PERF_RECORD_HEADER_EVENT_TYPE]         = "EVENT_TYPE",
+> >         [PERF_RECORD_HEADER_TRACING_DATA]       = "TRACING_DATA",
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index 989c56d4a23f74f4..244b3e44d090d413 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -3089,6 +3089,20 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+> >         data->data_src = PERF_MEM_DATA_SRC_NONE;
+> >         data->vcpu = -1;
+> >
+> > +       if (event->header.type == PERF_RECORD_CALLCHAIN_DEFERRED) {
+> > +               const u64 max_callchain_nr = UINT64_MAX / sizeof(u64);
 > > +
-> > +echo "Run python with -Xperf_jit"
-> > +perf record -k 1 -g --call-graph dwarf -o "${PERF_DATA}" -- python -Xperf_jit ${SHELLDIR}/jitdump-test.py
+> > +               data->callchain = (struct ip_callchain *)&event->callchain_deferred.nr;
+> > +               if (data->callchain->nr > max_callchain_nr)
+> > +                       return -EFAULT;
+> > +
+> > +               data->deferred_cookie = event->callchain_deferred.cookie;
+> > +
+> > +               if (evsel->core.attr.sample_id_all)
+> > +                       perf_evsel__parse_id_sample(evsel, event, data);
+> > +               return 0;
+> > +       }
+> > +
+> >         if (event->header.type != PERF_RECORD_SAMPLE) {
+> >                 if (!evsel->core.attr.sample_id_all)
+> >                         return 0;
+> > @@ -3219,6 +3233,11 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+> >                 if (data->callchain->nr > max_callchain_nr)
+> >                         return -EFAULT;
+> >                 sz = data->callchain->nr * sizeof(u64);
+> > +               if (evsel->core.attr.defer_callchain && data->callchain->nr >= 2 &&
+> > +                   data->callchain->ips[data->callchain->nr - 2] == PERF_CONTEXT_USER_DEFERRED) {
+> > +                       data->deferred_cookie = data->callchain->ips[data->callchain->nr - 1];
+> > +                       data->deferred_callchain = true;
+> > +               }
 > 
-> We can avoid an additional file by using the REPL, this is why the
-> java test is using jshell:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/shell/test_java_symbol.sh?h=perf-tools-next#n41
+> It'd be nice to have a comment saying what is going on here. I can see
+> that if there are 2 stack slots and the 2nd is a magic value then the
+> first should be read as the "cookie". At a first look this code is
+> difficult to parse so a comment would add value.
 
-I thought that too, but I wanted a filename to check the result.
-Hmm.. probably I can use a different pattern without it.
+Will add the comment.
 
-> 
-> > +
-> > +_PID=$(perf report -i "${PERF_DATA}" -F pid -q -g none | cut -d: -f1 -s)
-> > +PID=$(echo -n $_PID)  # remove newlines
-> > +
-> > +echo "Generate JIT-ed DSOs using perf inject"
-> > +perf inject -i "${PERF_DATA}" -j -o "${PERF_DATA}.jit"
-> 
-> Thomas Richter did a workaround in the Java version to avoid debuginfod queries:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/shell/test_java_symbol.sh?h=perf-tools-next#n59
-
-Yep, will add.
-
-> 
-> > +
-> > +echo "Add JIT-ed DSOs to the build-ID cache"
-> > +for F in /tmp/jitted-${PID}-*.so; do
-> > +  perf buildid-cache -a "${F}"
-> > +done
-> > +
-> > +echo "Check the symbol containing the script name"
-> > +NUM=$(perf report -i "${PERF_DATA}.jit" -s sym | grep -c jitdump-test.py)
-> > +
-> > +echo "Found ${NUM} matching lines"
-> > +
-> > +echo "Remove JIT-ed DSOs from the build-ID cache"
-> > +for F in /tmp/jitted-${PID}-*.so; do
-> > +  perf buildid-cache -r "${F}"
-> > +done
-> > +
-> > +rm -f ${PERF_DATA} ${PERF_DATA}.jit /tmp/jit-${PID}.dump /tmp/jitted-${PID}-*.so
-> 
-> It'd be nice to have this in a function that also gets run if there is
-> a trap. It looks like the Java test is missing a call to cleanup_files
-> on the success path.
-
-I thought that it will go the end of the script regardless of any
-command failures but we should protect it from Ctrl-C as well.. ok.
-
-Thanks for your review!
+Thanks,
 Namhyung
 
-> 
-> > +
-> > +if [ "${NUM}" -eq 0 ]; then
-> > +    exit 1
-> > +fi
-> > diff --git a/tools/perf/tests/shell/jitdump-test.py b/tools/perf/tests/shell/jitdump-test.py
-> > new file mode 100644
-> > index 0000000000000000..b427363ae4956db6
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/jitdump-test.py
-> > @@ -0,0 +1,14 @@
-> > +def foo(n):
-> > +    result = 0
-> > +    for _ in range(n):
-> > +        result += 1
-> > +    return result
-> > +
-> > +def bar(n):
-> > +    foo(n)
-> > +
-> > +def baz(n):
-> > +    bar(n)
-> > +
-> > +if __name__ == "__main__":
-> > +    baz(1000000)
-> > --
-> > 2.52.0.rc1.455.g30608eb744-goog
-> >
+ 
+> >                 OVERFLOW_CHECK(array, sz, max_size);
+> >                 array = (void *)array + sz;
+> >         }
