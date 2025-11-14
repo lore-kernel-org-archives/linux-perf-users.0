@@ -1,89 +1,68 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4697833FE28;
-	Fri, 14 Nov 2025 18:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DF282C21D3;
+	Fri, 14 Nov 2025 18:35:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763144999; cv=none; b=C1ToYehYnQms5uTDVpfYfwadSOVjiQ/x12O8XTrZNesrotTiPoTdeGHOenXjfO4HGWYVljq2Lcw9+HV/pyN1Lk+Z8XNqxBpL0tpNEw1bfjbtXctgnN67BQvBCBFGnlsDFHMuA8kDhbbAWFyJvrtT/g96jDGQnX0STAqmczfr27Y=
+	t=1763145327; cv=none; b=Fm39rA8hI3Xq9Dwq5O/mMCFAOfJh+5vIsjoUIZ8D8oblwAF+FfQ/oSLti2vy8mRejTfH4Gtrt/zxadBavvcTLCnwpf4XcSSncwVYBw5oa0z7WJjmSUxtLkuLWKZx+etBCZDAeFoSjUCDmO2ETl9C7j+xiFH85o7BCpVPXLX8/jQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763144999; c=relaxed/simple;
-	bh=MuE00RlRt5TaXhbVb88Eon6dOwMEUNP6+OfSFtX3BL4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j2nXn/96L6mGGaLCLHbQcMAmNxorDBo7rDyv6SgH35tbYfHWrqiT3IOGyZ8QuiMlY8uxRHqWuoK+0jhs1Qoc+ENI4KTOMsOJ+R8YEipMEja0i+Uba22zlzinduTlMnW9TBnpJJtZIxOhJ0rfPDP1duKEUEMUVc5noQH/KoPgW9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 0E0DD88D66;
-	Fri, 14 Nov 2025 18:29:55 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id CC8D120019;
-	Fri, 14 Nov 2025 18:29:51 +0000 (UTC)
-Date: Fri, 14 Nov 2025 13:30:09 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, James Clark <james.clark@linaro.org>, Jiri Olsa
- <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, LKML
- <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Josh
- Poimboeuf <jpoimboe@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, Jens
- Remus <jremus@linux.ibm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] perf record: Enable defer_callchain for user
- callchains
-Message-ID: <20251114133009.7dd97625@gandalf.local.home>
-In-Reply-To: <CAP-5=fU33sEARn0tc1hSMahBVCvs0cy+Cu-J6+BG0Cm-nuwKnA@mail.gmail.com>
-References: <20251114070018.160330-1-namhyung@kernel.org>
-	<20251114070018.160330-4-namhyung@kernel.org>
-	<CAP-5=fVEuYXw+P-+Z7bU7Z-+7dsHPPfABh5pdnPtfvH-23u4Qw@mail.gmail.com>
-	<CAP-5=fU33sEARn0tc1hSMahBVCvs0cy+Cu-J6+BG0Cm-nuwKnA@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1763145327; c=relaxed/simple;
+	bh=ZSzk9hs9x/7uPAy2OYyIor7FVN392iJxedW4H6o7HYQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=gM5TfOyPfCbJF0Pwnpca7tuZr5A7l5XeF0bvuk0rGy0inA9JzpbryArXP3E4UhrfW6Jz8OyAKLMNqTSqJZKQ+CQvHr3STiUNpW9wHPDjfrYkfjXCw7wAt6cuVnJQmnNR/GrADRJOc2S+e3kq6Z8fYT8AqKar1RUM7UUI9xm+Zig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TUW6bUjT; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TUW6bUjT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FF28C19421;
+	Fri, 14 Nov 2025 18:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763145326;
+	bh=ZSzk9hs9x/7uPAy2OYyIor7FVN392iJxedW4H6o7HYQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=TUW6bUjTtUzg8GhhAqNNsGVFjTjlFXoeY9FOisEouindBecGIV6OfaCoOKMNzHhMt
+	 mM7UwlOa1wpkSrNzBJ+ZCqKvMr3iY1Q771JEEvsSA0Ad4r048Tcl0MEnAEf60z1pmx
+	 KE2sDrBjClOn8fWll4XCo2Pun5gls/464jAgV/At5H0gL+8t77edltjmwTbFrjVz+Q
+	 WfoLngHBFgd2MNnL4l95rqPwvM3Ri3QSs0seBqIUbqzA8xsKN1ug4vhDnkNIjQQCqQ
+	 oJLqJ168P4Lq5jqXU5C1OC6aZRbZV5+idnZjiBbo1mB6t8WpL3t2fZRro1yCxpfuI8
+	 nyBvvowyj+9dg==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, 
+ Adrian Hunter <adrian.hunter@intel.com>, Ingo Molnar <mingo@redhat.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Zide Chen <zide.chen@intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ thomas.falcon@intel.com, dapeng1.mi@linux.intel.com, xudong.hao@intel.com
+In-Reply-To: <20251112164823.80168-1-zide.chen@intel.com>
+References: <20251112164823.80168-1-zide.chen@intel.com>
+Subject: Re: [PATCH V2] perf test: Add a perf event fallback test
+Message-Id: <176314532528.3522480.1979899143868946845.b4-ty@kernel.org>
+Date: Fri, 14 Nov 2025 10:35:25 -0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: CC8D120019
-X-Stat-Signature: e4h1wsdthf3s8d6ipz5chnb3ec6jqm8a
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18GvnCPKnF36vsYyzn+Csf+m+zAY1sPZXQ=
-X-HE-Tag: 1763144991-458139
-X-HE-Meta: U2FsdGVkX1/z3/4C/Oq4/6qS9X+vWlEB1TJNGRfAaZuinb6TQH63CK25vD1MOjhdWYdQ81XYIf8/Ewog8Pk648f9WFO/md0suX8ejYp5mhg8K/yCpL8ohgBzSWSPhdZSVf8/wDxPeVpRECeo6/VqLvAwQHats8nKo3zXpAlL5qMLZ7e523rudNqyTsITjMIflgRCj/ZOioAN1GQHSueA0ZlopgY9hZSk/K7L4Ru2l6hBepI88GgmKpcy7MxTZOPBsm47j6Fz6lFiEXf9y+wQgFAmmtXICxmbrlM6eWcVB+J7g5ezLkE1J+IHENWjVZF61YW0w3Iqser6XqYMb5gLiRrR5yD14unE
+X-Mailer: b4 0.15-dev-c04d2
 
-On Fri, 14 Nov 2025 10:09:26 -0800
-Ian Rogers <irogers@google.com> wrote:
-
-> Just to be clear. I don't think the behavior of using frame pointers
-> should change. Deferral has downsides, for example:
+On Wed, 12 Nov 2025 08:48:23 -0800, Zide Chen wrote:
+> This adds test cases to verify the precise ip fallback logic:
 > 
->   $ perf record -g -a sleep 1
-
-The biggest advantage of the deferred callstack is that there's much less
-duplication of data in the ring buffer. Especially when you have deep
-stacks and long system calls.
-
-Now, if we have frame pointers enabled, we could possibly add a feature to
-the deferred unwinder where it could try to do the deferred immediately and
-if it faults it then waits until going back to user space. This means that
-the frame pointer version should work (unless the user space stack was
-swapped out).
-
+> - If the system supports precise ip, for an event given with the maximum
+>   precision level, it should be able to decrease precise_ip to find a
+>   supported level.
+> - The same fallback behavior should also work in more complex scenarios,
+>   such as event groups or when PEBS is involved
 > 
-> Without deferral kernel stack traces will contain both kernel and user
-> traces. With deferral the user stack trace is only generated when the
-> system call returns and so there is a chance for kernel stack traces
-> to be missing their user part. An obvious behavioral change. I think
-> for what you are doing here we can have an option something like:
-> 
->   $ perf record --call-graph fp-deferred -a sleep 1
+> [...]
+Applied to perf-tools-next, thanks!
 
-I would be OK with this but I would prefer a much shorter name. Adding 20
-characters to the command line will likely keep people from using it.
+Best regards,
+Namhyung
 
--- Steve
+
